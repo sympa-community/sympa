@@ -35,25 +35,51 @@ AC_PREFIX_DEFAULT(/home/sympa)
 
 ## Directories setup
 ## for main config files
-sysconfdir=/etc
 
-## for executable programs
-bindir='${prefix}/bin'
+## location of main config files
+CONFDIR='/etc'
+AC_ARG_WITH(confdir, [  --with-confdir=DIR     Sympa main configuration files in DIR  (default /etc)], [CONFDIR="$withval"])
+AC_SUBST(CONFDIR)
 
-## for executable programs run by sysadmin
-sbindir='${prefix}/bin'
+## location of CGIs
+CGIDIR='${prefix}/bin'
+AC_ARG_WITH(cgidir, [  --with-cgidir=DIR     CGIs in DIR  (default ${prefix}/bin)], [CGIDIR="$withval"])
+AC_SUBST(CGIDIR)
 
-## for libraries
-libdir='${prefix}/bin'
+## location of user executables
+BINDIR='${prefix}/bin'
+AC_ARG_WITH(bindir, [  --with-bindir=DIR     user executables in DIR (default ${prefix}/bin). queue and bouncequeue programs will be installed in this directory. If sendmail is configured to use smrsh (check the mailer prog definition in your sendmail.cf), this should point to /etc/smrsh. This is probably the case if you are using Linux], [BINDIR="$withval"])
+AC_SUBST(BINDIR)
 
-## for *read-only* data files
-datadir='${prefix}/bin/etc'
+## location of system admin executables
+SBINDIR='${prefix}/bin'
+AC_ARG_WITH(sbindir, [  --with-sbindir=DIR     system admin executables in DIR (default ${prefix}/bin)], [SBINDIR="$withval"])
+AC_SUBST(SBINDIR)
 
-## for modifiable data files
-localstatedir='${prefix}/expl'
+## location of program executables
+LIBEXECDIR='${prefix}/bin'
+AC_ARG_WITH(libexecdir, [  --with-libexecdir=DIR     program executables in DIR (default ${prefix}/bin)], [LIBEXECDIR="$withval"])
+AC_SUBST(LIBEXECDIR)
 
-## documentation
-mandir='/usr/local/man'
+## location of Perl modules
+LIBDIR='${prefix}/bin'
+AC_ARG_WITH(libdir, [  --with-libdir=DIR     Perl modules in DIR (default ${prefix}/bin)], [LIBDIR="$withval"])
+AC_SUBST(LIBDIR)
+
+## location of default *read-only* data files
+DATADIR='${prefix}/bin/etc'
+AC_ARG_WITH(datadir, [  --with-datadir=DIR     default *read-only* data files in DIR (default ${prefix}/bin/etc)], [DATADIR="$withval"])
+AC_SUBST(DATADIR)
+
+## location of modifiable data files
+EXPLDIR='${prefix}/expl'
+AC_ARG_WITH(expldir, [  --with-expldir=DIR     modifiable data files in DIR (default ${prefix}/expl)], [EXPLDIR="$withval"])
+AC_SUBST(EXPLDIR)
+
+## location of documentation
+MANDIR='/usr/local/man'
+AC_ARG_WITH(mandir, [  --with-mandir=DIR     documentation in DIR (default /usr/local/man)], [MANDIR="$withval"])
+AC_SUBST(MANDIR)
 
 ## SYS V init scripts directory
 INITDIR=/etc/rc.d/init.d

@@ -81,6 +81,9 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 CVS2CL = @CVS2CL@
+DATADIR = @DATADIR@
+EXPLDIR = @EXPLDIR@
+LIBEXECDIR = @LIBEXECDIR@
 MAINT = @MAINT@
 MAJOR_VERSION = @MAJOR_VERSION@
 MAKEINFO = @MAKEINFO@
@@ -92,7 +95,7 @@ VERSION = @VERSION@
 USER = @USER@
 GROUP = @GROUP@
 
-CONFDIR = ${sysconfdir}
+CONFDIR = @CONFDIR@
 
 PERL = @PERL@
 
@@ -104,26 +107,26 @@ SYMPA_VERSION = @VERSION@
 
 DIR = ${prefix}
 
-EXPL_DIR = ${localstatedir}
+EXPL_DIR = @EXPLDIR@
 
 PIDDIR = @PIDDIR@
 
-MAILERPROGDIR = ${bindir}
+MAILERPROGDIR = @BINDIR@
 
 #RPMTOPDIR	=	`rpm --eval %_topdir`
 RPMTOPDIR = /usr/src/redhat
 
-MANDIR = ${mandir}
+MANDIR = @MANDIR@
 
 INITDIR = @INITDIR@
 
-BINDIR = ${bindir}
+BINDIR = @BINDIR@
 
-SBINDIR = ${sbindir}
+SBINDIR = @SBINDIR@
 
-CGIDIR = $(SBINDIR)
+CGIDIR = @CGIDIR@
 
-LIBDIR = ${libdir}
+LIBDIR = @LIBDIR@
 
 SPOOLDIR = $(DIR)/spool
 
@@ -167,7 +170,7 @@ CFLAGS = -g
 
 CONFIG = $(CONFDIR)/sympa.conf
 WWSCONFIG = $(CONFDIR)/wwsympa.conf
-ETCBINDIR = ${datadir}
+ETCBINDIR = @DATADIR@
 NLSDIR = $(DIR)/nls
 
 #ifeq ($(shell uname), Linux)

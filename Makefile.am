@@ -29,7 +29,7 @@ USER	=	@USER@
 GROUP	=	@GROUP@
 
 ## configuration file
-CONFDIR	=	${sysconfdir}
+CONFDIR	=	@CONFDIR@
 
 ##  Perl path
 PERL	=	@PERL@
@@ -48,7 +48,7 @@ SYMPA_VERSION	=	@VERSION@
 ## installed (usefull for packagers of Sympa)
 DIR	=	${prefix}
 
-EXPL_DIR	=	${localstatedir}
+EXPL_DIR	=	@EXPLDIR@
 
 ## PID location
 PIDDIR	=	@PIDDIR@
@@ -56,24 +56,24 @@ PIDDIR	=	@PIDDIR@
 ## Both queue and bouncequeue are lunched by sendmail. If sendmail
 ## is configured to used smrsh (check the mailer prog definition), thoses
 ## files needs to be installed in /etc/smrsh.  
-MAILERPROGDIR	=	${bindir}
+MAILERPROGDIR	=	@BINDIR@
 
 #RPMTOPDIR	=	`rpm --eval %_topdir`
 RPMTOPDIR	=	/usr/src/redhat
 
-MANDIR		=	${mandir}
+MANDIR		=	@MANDIR@
 
 ## SYSV init scripts directory
 INITDIR		=	@INITDIR@
 
 ## no more used ##
-BINDIR		=	${bindir}
+BINDIR		=	@BINDIR@
 
-SBINDIR		=	${sbindir}
+SBINDIR		=	@SBINDIR@
 
-CGIDIR		=	$(SBINDIR)
+CGIDIR		=	@CGIDIR@
 
-LIBDIR		=	${libdir}
+LIBDIR		=	@LIBDIR@
 
 ## Spools directory
 SPOOLDIR	=	$(DIR)/spool
@@ -134,7 +134,7 @@ CFLAGS	=	-g
 
 CONFIG		=	$(CONFDIR)/sympa.conf
 WWSCONFIG	=	$(CONFDIR)/wwsympa.conf
-ETCBINDIR	=	${datadir}
+ETCBINDIR	=	@DATADIR@
 NLSDIR		=	$(DIR)/nls
 
 #ifeq ($(shell uname), Linux)
