@@ -5563,11 +5563,10 @@ sub sync_include {
 	    my $u = $new_subscribers->{$email};
 	    $u->{'included'} = 1;
 	    push @add_tab, $u;
-	    $users_added++;
 	}
     }
 
-    unless( $self->add_user( @add_tab ) ) {
+    unless( $users_added = $self->add_user( @add_tab ) ) {
 	&do_log('err', 'List:sync_include(%s): Failed to add new users', $name);
 	next;
     }
@@ -5597,12 +5596,11 @@ sub sync_include {
 		## Tag user for deletion
 	    }else {
 		push(@deltab, $email);
-		$users_removed++;
 	    }
 	}
     }
     if ($users_removed) {
-	unless($self->delete_user(@deltab)) {
+	unless($users_removed = $self->delete_user(@deltab)) {
 	    &do_log('err', 'List:sync_include(%s): Failed to delete %s',
 		    $name, $users_removed);
 	    return undef;
