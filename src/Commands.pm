@@ -578,6 +578,7 @@ sub subscribe {
 	## Send a notice to the owners.
         my $keyauth = $list->compute_auth($sender,'add');
 	$list->send_sub_to_owner($sender, $keyauth, $Conf{'sympa'}, $comment);
+	$list->store_susbscription_request($sender, $comment);
 	do_log('info', 'SUB %s from %s forwarded to the owners of the list (%d seconds)', $which, $sender,time-$time_command);   
 	return 1;
     }
@@ -922,6 +923,7 @@ sub add {
 	    $u->{'date'} = $u->{'update_date'} = time;
 	    
 	    return undef unless $list->add_user($u);
+	    $list->delete_susbscription_request($email);
 	    push @msg::report, sprintf Msg(6, 37, "User %s has been added to the list %s.\n"), $email, $which;
 	}
     

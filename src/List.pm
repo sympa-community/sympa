@@ -1489,11 +1489,6 @@ sub distribute_msg {
     }
     $self->archive_msg($msgtostore);
 
-    ## Does the list accept digest mode
-    if ($self->is_digest()){
-	$self->archive_msg_digest($msgtostore);
-    }
-
     ## Change the reply-to header if necessary. 
     if ($self->{'admin'}{'reply_to_header'}) {
 	unless ($hdr->get('Reply-To') && ($self->{'admin'}{'reply_to_header'}{'apply'} ne 'forced')) {
@@ -1555,6 +1550,11 @@ sub distribute_msg {
 	}
     }
     
+    ## Does the list accept digest mode
+    if ($self->is_digest()){
+	$self->archive_msg_digest($msgtostore);
+    }
+
     ## Blindly send the message to all users.
     my $numsmtp = $self->send_msg($msg, $msg_file, $encrypt);
     unless (defined ($numsmtp)) {
@@ -5911,7 +5911,80 @@ sub _urlize_part {
      }	
 }
 
- 
+sub store_susbscription_request {
+    my ($self, $email, $gecos) = @_;
+    do_log('debug2', 'List::store_susbscription_request(%s, %s, %s)', $self->{'name'}, $email, $gecos);
+
+    my $filename = $Conf{'queuesubscribe'}.'/'.$self->{'name'}.'.'.time.'.'.int(rand(1000));
+    
+    unless (open REQUEST, ">$filename") {
+	do_log('notice', 'Could not open %s', $filename);
+	return undef;
+    }
+
+    printf REQUEST "$email\t$gecos\n";
+    close REQUEST;
+
+    return 1;
+} 
+
+sub get_susbscription_requests {
+    my ($self) = shift;
+    do_log('debug2', 'List::get_susbscription_requests(%s)', $self->{'name'});
+
+    my %subscriptions;
+
+    unless (opendir SPOOL, $Conf{'queuesubscribe'}) {
+	&do_log('info', 'Unable to read spool %s', $Conf{'queuemod'});
+	return undef;
+    }
+
+    foreach my $filename (sort grep(/^$self->{'name'}\.\d+\.\d+$/, readdir SPOOL)) {
+	unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
+	    do_log('notice', 'Could not open %s', $filename);
+	    return undef;
+	}
+	my $line = <REQUEST>;
+	$line =~ /^((\S+|\".*\")\@\S+)\s*(.*)$/;
+	my $email = $1;
+	$subscriptions{$email} = {'gecos' => $3};
+	
+	$filename =~ /^$self->{'name'}\.(\d+)\.\d+$/;
+	$subscriptions{$email}{'date'} = $1;
+	close REQUEST;
+    }
+    closedir SPOOL;
+
+    return \%subscriptions;
+} 
+
+sub delete_susbscription_request {
+    my ($self, $email) = @_;
+    do_log('debug2', 'List::delete_susbscription_request(%s, %s)', $self->{'name'}, $email);
+
+    unless (opendir SPOOL, $Conf{'queuesubscribe'}) {
+	&do_log('info', 'Unable to read spool %s', $Conf{'queuemod'});
+	return undef;
+    }
+
+    foreach my $filename (sort grep(/^$self->{'name'}\.\d+\.\d+$/, readdir SPOOL)) {
+	unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
+	    do_log('notice', 'Could not open %s', $filename);
+	    return undef;
+	}
+	my $line = <REQUEST>;
+	close REQUEST;
+	if ($line =~ /^$email\s/) {
+	    unless (unlink "$Conf{'queuesubscribe'}/$filename") {
+		do_log('notice', 'Could not delete file %s', $filename);
+		next;
+	    }
+	}
+    }
+    closedir SPOOL;
+
+    return 1;
+} 
 
 #################################################################
 

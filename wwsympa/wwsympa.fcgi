@@ -125,9 +125,11 @@ my %comm = ('home' => 'do_home',
 	 'login' => 'do_login',
 	 'subscribe' => 'do_subscribe',
 	 'subrequest' => 'do_subrequest',
+	 'subindex' => 'do_subindex',
 	 'suboptions' => 'do_suboptions',
 	 'signoff' => 'do_signoff',
 	 'sigrequest' => 'do_sigrequest',
+	 'ignoresub' => 'do_ignoresub',
 	 'which' => 'do_which',
 	 'lists' => 'do_lists',
 	 'info' => 'do_info',
@@ -240,6 +242,8 @@ my %action_args = ('default' => ['list'],
 		'subscribe' => ['list','email','passwd'],
 		'subrequest' => ['list','email'],
 		'subrequest' => ['list'],
+		'subindex' => ['list'],
+                'ignoresub' => ['list','@email','@gecos'],
 		'signoff' => ['list','email','passwd'],
 		'sigrequest' => ['list','email'],
 		'set' => ['list','email','reception','gecos'],
@@ -294,7 +298,9 @@ my %action_type = ('editfile' => 'admin',
 		'close_list' =>'admin',
 		'restore_list' => 'admin',
 		'd_admin' => 'admin',
-		'remind' => 'admin');
+		'remind' => 'admin',
+		'subindex' => 'admin',
+		'ignoresub' => 'admin');
 
 ## Open log
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
@@ -2457,6 +2463,12 @@ sub do_add {
 		$user{$1} = $3;
 	    }
 	}
+    }elsif ($in{'email'} =~ /,/) {
+	foreach my $pair (split /\0/, $in{'email'}) {
+	    if ($pair =~ /,/) {
+		$user{$`} = $';
+	    }
+	}
     }elsif ($in{'email'}) {
 	$user{$in{'email'}} = $in{'gecos'};
     }else {
@@ -2498,6 +2510,9 @@ sub do_add {
 	    next;
 	}
 
+	## Delete subscription request if any
+	$list->delete_susbscription_request($email);
+	
 	$total++;
 	
 	unless ($in{'quiet'}) {
@@ -7561,4 +7576,75 @@ sub do_attach {
     $param->{'bypass'} = 'asis';
 }
 
+sub do_subindex {
+    &wwslog('debug', 'do_subindex');
+
+    unless ($param->{'list'}) {
+	&error_message('missing_arg', {'argument' => 'list'});
+	&wwslog('info','do_subindex: no list');
+	return undef;
+    }
     
+    unless ($param->{'user'}{'email'}) {
+	&error_message('missing_arg', {'argument' => 'list'});
+	&wwslog('info','do_subindex: no user');
+	$param->{'previous_action'} = 'modindex';
+	$param->{'previous_list'} = $in{'list'};
+	return 'loginrequest';
+    }
+ 
+    unless ($list->am_i('owner', $param->{'user'}{'email'})) {
+	&error_message('may_not');
+	&wwslog('info','do_subindex: %s not owner', $param->{'user'}{'email'});
+	return 'admin';
+    }
+
+
+    my $subscriptions = $list->get_susbscription_requests();
+    foreach my $sub (keys %{$subscriptions}) {
+	$subscriptions->{$sub}{'date'} = &POSIX::strftime("%d %b %Y", localtime($subscriptions->{$sub}{'date'}));
+    }
+
+    $param->{'subscriptions'} = $subscriptions;
+
+    return 1;
+}
+  
+sub do_ignoresub {
+    &wwslog('debug', 'do_ignoresub');
+
+    my @users;
+
+    unless ($param->{'list'}) {
+	&error_message('missing_arg', {'argument' => 'list'});
+	&wwslog('info','do_ignoresub: no list');
+	return undef;
+    }
+    
+    unless ($param->{'user'}{'email'}) {
+	&error_message('missing_arg', {'argument' => 'list'});
+	&wwslog('info','do_ignoresub: no user');
+	$param->{'previous_action'} = 'modindex';
+	$param->{'previous_list'} = $in{'list'};
+	return 'loginrequest';
+    }
+ 
+    unless ($list->am_i('owner', $param->{'user'}{'email'})) {
+	&error_message('may_not');
+	&wwslog('info','do_ignoresub: %s not owner', $param->{'user'}{'email'});
+	return 'admin';
+    }
+
+    foreach my $pair (split /\0/, $in{'email'}) {
+	if ($pair =~ /,/) {
+	    push @users, $`;
+	}
+    }
+
+    foreach my $u (@users) {
+	$list->delete_susbscription_request($u);
+    }
+    
+    return 'subindex';
+}
+  
