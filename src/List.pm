@@ -2408,6 +2408,12 @@ sub get_subscriber {
 	my $statement;
 	my $date_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'date_subscriber', 'date_subscriber';
 
+	## Use session cache
+	if (defined $list_cache{'get_subscriber'}{$name}{$email}) {
+	    &do_log('debug2', 'xxx Use cache(get_subscriber, %s,%s)', $name, $email);
+	    return $list_cache{'get_subscriber'}{$name}{$email};
+	}
+
 	## Check database connection
 	unless ($dbh and $dbh->ping) {
 	    return undef unless &db_connect();
@@ -2447,6 +2453,9 @@ sub get_subscriber {
 	$sth->finish();
 
 	$sth = pop @sth_stack;
+
+	## Set session cache
+	$list_cache{'get_subscriber'}{$name}{$email} = $user;
 
 	return $user;
     }else {
@@ -3276,6 +3285,9 @@ sub request_action {
 	    return undef ;
 	}
 
+	## provide subscriber information
+	$context->{'subscriber'} = $list->get_subscriber($context->{'sender'});
+
 	my @operations = split /\./, $operation;
 	my $data_ref;
 	if ($#operations == 0) {
@@ -3403,6 +3415,9 @@ sub get_action {
 	    return undef ;
 	}
 
+	## provide subscriber information
+	$context->{'subscriber'} = $list->get_subscriber($context->{'sender'});
+
 	@rules = @{$list->{'admin'}{$operation}{'rules'}};
 	$name = $list->{'admin'}{$operation}{'name'};
     }else{
@@ -3529,6 +3544,11 @@ sub verify {
 		do_log('notice','Unknown list parameter %s in rule %s', $value, $condition);
 		return undef;
 	    }
+
+	    ## Sender's user/subscriber attributes (if subscriber)
+	}elsif (($value =~ /\[(user|subscriber)\-\>([\w\-]+)\]/i) && defined ($context->{$1})) {
+
+	    $value =~ s/\[(user|subscriber)\-\>([\w\-]+)\]/$context->{$1}{$2}/;
 
 	    ## SMTP Header field
 	}elsif ($value =~ /\[header\-\>([\w\-]+)\]/i) {

@@ -2976,7 +2976,7 @@ Rules are defined as follows :
                 | is_owner (<listname>, <var>)
                 | is_editor (<listname>, <var>)
                 | is_listmaster (<var>)
-<var> ::= [email] | [sender] | [list-><list\_key\_word>] | [conf-><conf\_key\_word>] | [header-><smtp\_key\_word>] |  <string>
+<var> ::= [email] | [sender] | [subscriber-><subscriber\_key\_word>] | [list-><list\_key\_word>] | [conf-><conf\_key\_word>] | [header-><smtp\_key\_word>] |  <string>
 
 <listname> ::= [listname] | <listname_string>
 
@@ -2989,6 +2989,8 @@ Rules are defined as follows :
              | reject
              | request_auth
              | owner
+
+<subscriber\_key\_word> ::= email | gecos | bounce | reception | visibility | date <additional\_subscriber\_fields>
 
 <list\_key\_word> ::= name | host | lang | max\_size | priority | reply\_to | 
 		      status | subject | account | 
