@@ -81,7 +81,7 @@ installetc:
 		ERROR_COLOR=$(ERROR_COLOR); export ERROR_COLOR;\
 		SHADED_COLOR=$(SHADED_COLOR); export SHADED_COLOR;\
 		cd etc;\
-		$(PERL) ../../subst.pl mhonarc-ressources \
+		$(PERL) ../../subst.pl mhonarc-ressources README \
 	)
 	@( \
 		UMASK=0664; export UMASK;\
