@@ -57,7 +57,7 @@ make  sources languages
 %install
 rm -rf $RPM_BUILD_ROOT
 
-make INITDIR=/etc/rc.d/init.d HOST=MYHOST DIR=%{home_s} EXPL_DIR=%{home_s}/expl PIDDIR=--PIDDIR-- BINDIR=%{home_s}/bin SBINDIR=%{home_s}/sbin LIBDIR=%{home_s}/lib MAILERPROGDIR=/etc/smrsh ETCBINDIR=%{home_s}/bin/etc DESTDIR=$RPM_BUILD_ROOT MANDIR=%{man_dir} ICONSDIR=--ICONSDIR-- install
+make INITDIR=/etc/rc.d/init.d HOST=MYHOST DIR=%{home_s} EXPL_DIR=%{home_s}/expl PIDDIR=--PIDDIR-- BINDIR=%{home_s}/bin SBINDIR=%{home_s}/sbin LIBDIR=%{home_s}/lib MAILERPROGDIR=/etc/smrsh ETCBINDIR=%{home_s}/bin/etc DESTDIR=$RPM_BUILD_ROOT MANDIR=%{man_dir} ICONSDIR=--ICONSDIR-- CGIDIR=%{home_s}/sbin install
 
 ## Setting Runlevels
 for I in 0 1 2 6; do
