@@ -1,6 +1,42 @@
 *****    Changes which are not compatible with previous versions are
 *****    listed using "*****"in the margin. Please check this at least.
 
+3.1b.13 Fri 13 Apr 2001
+
+  New features :
+
+	[Petr Prazak] Translations of Sympa to Czech (nle & templates)
+
+	Auto-install of aliases at list creation time 
+	New parameter in wwsympa.conf: alias_manager
+	[Harald	Wilhelmi] run newliases via a C wrapper
+
+	src/sympa.pl: --import option 
+
+	doc/sympa.man: Man pages for sympa
+
+	src/sympa.pl: --help and --version options
+
+	wwsympa/wwsympa.fcgi: New feature: Add Javascript cookie check
+
+	wwsympa/wwsympa.fcgi: search_user for listmaster, available
+	from "sympa admin" web page
+
+  Bug Fixes :
+
+	src/List.pm: when subscribers are extracted from an SQL query,
+	the query ends getting emails at first empty entry
+
+	src/sympa.pl: [reported by Jérôme Marant] parameter
+	for --debug is compulsory
+
+	wwsympa/wwsympa.fcgi: no more lowercase in shared ; otherwise
+	could not access files with uppercase letters
+
+	src/List.pm: Set list's lang for owner notification
+	(instead of subscriber's lang)
+	
+
 3.1b.12 4 Apr 2001
 
   New features :
