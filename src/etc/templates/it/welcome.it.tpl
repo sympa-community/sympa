@@ -44,4 +44,4 @@ Tutto quello che riguarda questa lista :
 
 
 </BODY></HTML>
---===Sympa===
+--===Sympa===--

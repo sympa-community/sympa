@@ -43,4 +43,4 @@ Pôr mais informação acerca de esta lista :
 <A HREF="[conf->wwsympa_url]/info/[list->name]">[conf->wwsympa_url]/info/[list->name]</A>
 
 </BODY></HTML>)
---===Sympa===
+--===Sympa===--
