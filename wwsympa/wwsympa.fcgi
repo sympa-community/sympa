@@ -4473,7 +4473,7 @@ sub _install_aliases {
     &wwslog('info', "_install_aliases($list->{'name'},$list->{'admin'}{'host'})");
 
     my $alias_manager = '--SBINDIR--/alias_manager.pl';
-    &do_log('notice',"$alias_manager add $list->{'name'} $list->{'admin'}{'host'}");
+    &do_log('debug2',"$alias_manager add $list->{'name'} $list->{'admin'}{'host'}");
     if (-x $alias_manager) {
 	system ("$alias_manager add $list->{'name'} $list->{'admin'}{'host'}") ;
 	if ($? == '0') {
