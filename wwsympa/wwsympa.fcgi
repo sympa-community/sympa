@@ -4707,19 +4707,19 @@ sub do_editsubscriber {
 	return undef;
     }
 
-    $param->{'subscriber'} = $user;
-    $param->{'subscriber'}{'escaped_email'} = &tools::escape_html($param->{'subscriber'}{'email'});
+    $param->{'current_subscriber'} = $user;
+    $param->{'current_subscriber'}{'escaped_email'} = &tools::escape_html($param->{'current_subscriber'}{'email'});
 
-    $param->{'subscriber'}{'date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'date'}));
-    $param->{'subscriber'}{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'update_date'}));
+    $param->{'current_subscriber'}{'date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'date'}));
+    $param->{'current_subscriber'}{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'update_date'}));
 
     ## Prefs
-    $param->{'subscriber'}{'reception'} ||= 'mail';
-    $param->{'subscriber'}{'visibility'} ||= 'noconceal';
+    $param->{'current_subscriber'}{'reception'} ||= 'mail';
+    $param->{'current_subscriber'}{'visibility'} ||= 'noconceal';
     foreach my $m (keys %wwslib::reception_mode) {		
       if ($list->is_available_reception_mode($m)) {
 	$param->{'reception'}{$m}{'description'} = $wwslib::reception_mode{$m};
-	if ($param->{'subscriber'}{'reception'} eq $m) {
+	if ($param->{'current_subscriber'}{'reception'} eq $m) {
 	    $param->{'reception'}{$m}{'selected'} = 'SELECTED';
 	}else {
 	    $param->{'reception'}{$m}{'selected'} = '';
@@ -4730,9 +4730,9 @@ sub do_editsubscriber {
     ## Bounces
     if ($user->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/) {
 	my @bounce = ($1, $2, $3, $5);
-    	$param->{'subscriber'}{'first_bounce'} = &POSIX::strftime("%d %b %Y", localtime($bounce[0]));
-    	$param->{'subscriber'}{'last_bounce'} = &POSIX::strftime("%d %b %Y", localtime($bounce[1]));
-    	$param->{'subscriber'}{'bounce_count'} = $bounce[2];
+    	$param->{'current_subscriber'}{'first_bounce'} = &POSIX::strftime("%d %b %Y", localtime($bounce[0]));
+    	$param->{'current_subscriber'}{'last_bounce'} = &POSIX::strftime("%d %b %Y", localtime($bounce[1]));
+    	$param->{'current_subscriber'}{'bounce_count'} = $bounce[2];
 	if ($bounce[3] =~ /^(\d+\.(\d+\.\d+))$/) {
 	   $user->{'bounce_code'} = $1;
 	   $user->{'bounce_status'} = $wwslib::bounce_status{$2};
