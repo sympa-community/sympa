@@ -1730,6 +1730,8 @@ required:
 
 \subsection {\cfkeyword {db\_type}}
 
+	\texttt {Format: db\_type mysql | Pg | Oracle | Sybase}
+
         Database management system used (e.g. MySQL, Pg, Oracle)
 	
 	This corresponds to the PERL DataBase Driver (DBD) name and
@@ -5008,7 +5010,7 @@ is used to begin a paragraph defining the SQL query parameters :
 \label {db-type}
 \lparam {db\_type} \textit {dbd\_name} 
 
-The type of database (Oracle, MySQL , PostgreSQL, Sybase ...). This value identifies the PERL
+The type of database (mysql, Pg, Oracle, Sybase, CSV ...). This value identifies the PERL
 DataBase Driver (DBD) to be used, and is therefore case-sensitive.
 
 \item
