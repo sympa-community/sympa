@@ -856,6 +856,7 @@ sub get_parameters {
 	$param->{'use_ssl'} = 0;
     }
     
+    $param->{'path_info'} = $ENV{'PATH_INFO'};
     $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{$ENV{'SERVER_NAME'}};
 
 
