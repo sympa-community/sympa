@@ -24,6 +24,9 @@ Aucun message à modérer pour la liste [notice->list]
 [ELSIF notice->msg=subscribers_update_soon]
 La liste des membres de la liste sera générée/mise à jour dans un moment (quelques minutes).
 
+[ELSIF notice->msg=add_performed]
+[notice->total] adresses ont été abonnées
+
 [ELSE]
 [notice->msg]
 

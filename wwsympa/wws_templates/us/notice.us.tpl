@@ -30,6 +30,9 @@ No message to moderate for list [notice->list]
 [ELSIF notice->msg=subscribers_update_soon]
 The list of list members will be built/updated soon (a few minutes).
 
+[ELSIF notice->msg=add_performed]
+[notice->total] addresses have been subscribed
+
 [ELSE]
 [notice->msg]
 
