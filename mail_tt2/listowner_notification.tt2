@@ -1,7 +1,7 @@
 From: [% conf.email %]@[% conf.host %]
 To: [% FILTER qencode %][%|loc%]Listowners[%END%][%END%] <[% to %]>
 [% IF type == 'arc_quota_exceeded' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" archive quota exceeded[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 archive quota exceeded[%END%][%END%]
 
 [%|loc(list.name,list.host,size,conf.host,conf.listmaster_email)%]%1 archive quota exceeded. 
 Total size used for %1@%2 archive is %3 Bytes. Messages
