@@ -475,5 +475,17 @@ return @auth;
 
 }
 
+## returns a robot conf parameter
+sub get_robot_conf {
+    my ($robot, $param) = @_;
+
+    if (defined $Conf{'robots'}{$robot} && defined $Conf{'robots'}{$robot}{$param}) {
+	return $Conf{'robots'}{$robot}{$param};
+    }
+    
+    ## default
+    return $Conf{$param};
+}
+
 ## Packages must return true.
 1;

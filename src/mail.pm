@@ -52,7 +52,7 @@ sub mailback {
 
    my ($fh, $sympa_file);
    
-   my $sympa_email =  $Conf{'robots'}{$robot}{'sympa'} || $Conf{'sympa'};
+   my $sympa_email =  &Conf::get_robot_conf($robot, 'sympa');
 
    ## Don't fork if used by a CGI (FastCGI problem)
    if (defined $send_spool) {
@@ -120,7 +120,7 @@ sub mailarc {
    if (!open(IN, $filename)) {
       fatal_err("Can't send %s to %s: %m", $filename, join(',', @rcpt));
    }
-   my($fh) = &smtp::smtpto($Conf{'request'}, \@rcpt);
+   my($fh) = &smtp::smtpto($Conf{'robots'}{$robot}{'sympa'} || $Conf{'request'}, \@rcpt);
    printf $fh "To: %s\n", join(",\n   ", @rcpt);
    print $fh "Subject: $subject\n";
    printf $fh "MIME-Version: %s\n", Msg(12, 1, '1.0');
@@ -165,7 +165,7 @@ sub mailfile {
 
        ## Don't fork if used by a CGI (FastCGI problem)
        if (defined $send_spool) {
-	   my $sympa_email = $data->{'conf'}{'sympa'} || $Conf{'sympa'};
+	   my $sympa_email = $data->{'conf'}{'sympa'} || &Conf::get_robot_conf($robot, 'sympa');
 	   $sympa_file = "$send_spool/T.$sympa_email.".time.'.'.int(rand(10000));
 	   
 	   unless (open TMP, ">$sympa_file") {

@@ -396,9 +396,7 @@ while ($query = &new_loop()) {
 
     foreach my $p ('dark_color','light_color','text_color','bg_color','error_color',
 		   'selected_color','shaded_color') { 
-	$param->{$p} = $Conf{'robots'}{$robot}{$p}
-	if (defined $Conf{'robots'}{$robot} && $Conf{'robots'}{$robot}{$p});
-	$param->{$p} ||= $Conf{$p};
+	$param->{$p} = &Conf::get_robot_conf($robot, $p);
     }
     
     $param->{'path_cgi'} = $ENV{'SCRIPT_NAME'};
@@ -2408,7 +2406,7 @@ sub do_subscribe {
     
     if ($sub_is =~ /owner/) {
 	my $keyauth = $list->compute_auth($param->{'user'}{'email'}, 'add');
-	$list->send_sub_to_owner($param->{'user'}{'email'}, $keyauth, $Conf{'sympa'}, $param->{'user'}{'gecos'});
+	$list->send_sub_to_owner($param->{'user'}{'email'}, $keyauth, &Conf::get_robot_conf($robot, 'sympa'), $param->{'user'}{'gecos'});
 	&message('sent_to_owner');
 	&wwslog('info', 'do_subscribe: subscribe sent to owner');
 
@@ -3235,7 +3233,7 @@ sub do_distribute {
 	return undef;
     }
     my $extention = time.".".int(rand 9999) ;
-    my $sympa_email = $Conf{'robots'}{$robot}{'sympa'} || $Conf{'sympa'};
+    my $sympa_email = &Conf::get_robot_conf($robot, 'sympa');
     unless (open DISTRIBUTE, ">$Conf{'queue'}/T.$sympa_email.$extention") {
 	&error_message('failed');
 	&wwslog('info','do_distribute: could not create %s: %s', "$Conf{'queue'}/T.$sympa_email.$extention",$!);
@@ -4145,7 +4143,7 @@ sub list_check_smtp {
     my $suffixes = $Conf{'robots'}{$robot}{'list_check_suffixes'} || $Conf{'list_check_suffixes'};
     return 0 
 	unless ($smtp_relay && $suffixes);
-    my $domain = $Conf{'robots'}{$robot}{'host'} || $Conf{'host'};
+    my $domain = &Conf::get_robot_conf($robot, 'host');
     &wwslog('debug', 'list_check_smtp(%s)',$in{'listname'});
     @suf = split(/,/,$suffixes);
     return 0 if ! @suf;
@@ -7929,9 +7927,9 @@ sub do_remind {
 	$mail_command = sprintf "REMIND %s", $param->{'list'};
     }
 
-    open REMIND, ">$Conf{'queue'}/T.$Conf{'sympa'}.$extention" ;
+    open REMIND, ">$Conf{'queue'}/T.".&Conf::get_robot_conf($robot, 'sympa').".$extention" ;
     
-    printf REMIND ("X-Sympa-To: %s\n",$Conf{'sympa'});
+    printf REMIND ("X-Sympa-To: %s\n",&Conf::get_robot_conf($robot, 'sympa'));
     printf REMIND ("Message-Id: <%s\@wwsympa>\n", time);
     printf REMIND ("From: %s\n\n", $param->{'user'}{'email'});
 
@@ -7939,7 +7937,7 @@ sub do_remind {
 
     close REMIND;
 
-    rename("$Conf{'queue'}/T.$Conf{'sympa'}.$extention","$Conf{'queue'}/$Conf{'sympa'}.$extention");
+    rename("$Conf{'queue'}/T.".&Conf::get_robot_conf($robot, 'sympa').".$extention","$Conf{'queue'}/".&Conf::get_robot_conf($robot, 'sympa').".$extention");
 
     &message('performed_soon');
 

@@ -90,7 +90,7 @@ sub safefork {
 ## Check for commands in the body of the message. Returns true
 ## if there are some commands in it.
 sub checkcommand {
-   my($msg, $sender) = @_;
+   my($msg, $sender, $robot) = @_;
    do_log('debug2', 'tools::checkcommand(msg->head->get(subject): %s,%s)',$msg->head->get('Subject'), $sender);
 
    my($avoid, $i);
@@ -102,7 +102,7 @@ sub checkcommand {
    if ($subject) {
       foreach $avoid (@avoid_hdr) {
          if ($subject =~ /^\s*(quiet)?($avoid)(\s+|$)/im) {
-            &rejectMessage($msg, $sender);
+            &rejectMessage($msg, $sender,$robot);
             return 1;
          }
       }
@@ -125,10 +125,10 @@ sub checkcommand {
 }
 
 sub rejectMessage {
-   my($msg, $sender) = @_;
+   my($msg, $sender, $robot) = @_;
    do_log('debug2', 'tools::rejectMessage(%s)', $sender);
 
-   *REJ = smtp::smtpto($Conf{'request'}, \$sender);
+   *REJ = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
    print REJ "To: $sender\n";
    print REJ "Subject: [sympa] " . Msg(5, 2, "Misadressed message ?") . "\n";
    printf REJ "MIME-Version: %s\n", Msg(12, 1, '1.0');
@@ -149,7 +149,7 @@ so that he can take care of your problem.
 Thank you for your attention.
 
 ------ Beginning of the suspect message --------
-"), "$Conf{'sympa'}", $Conf{'request'};
+"), &Conf::get_robot_conf($robot, 'sympa'), &Conf::get_robot_conf($robot, 'request');
    $msg->print(\*REJ);
    print REJ Msg(5, 4, "------- Fin message suspect ---------\n");
    close(REJ);

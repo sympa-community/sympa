@@ -1348,6 +1348,7 @@ sub send_alert_to_owner {
     my $admin = $self->{'admin'}; 
     my $name = $self->{'name'};
     my $host = $admin->{'host'};
+    my $robot = $self->{'domain'};
 
     return unless ($name && $admin);
     
@@ -1367,7 +1368,7 @@ sub send_alert_to_owner {
 	my $rate = int ($data->{'rate'} * 10) / 10;
 
 	my $subject = sprintf(Msg(8, 28, "WARNING: bounce rate too high in list %s"), $name);
-	my $body = sprintf Msg(8, 27, "Bounce rate in list %s is %d%%.\nYou should delete bouncing subscribers : %s/reviewbouncing/%s"), $name, $rate, $Conf{'wwsympa_url'}, $name ;
+	my $body = sprintf Msg(8, 27, "Bounce rate in list %s is %d%%.\nYou should delete bouncing subscribers : %s/reviewbouncing/%s"), $name, $rate, &Conf::get_robot_conf($robot, 'wwsympa_url'), $name ;
 	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
     }else {
 	do_log('info', 'Unknown alert %s', $alert);
@@ -1381,6 +1382,8 @@ sub send_notify_to_listmaster {
     my ($operation, $robot, @param) = @_;
     do_log('debug2', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
 
+    my $sympa = &Conf::get_robot_conf($robot, 'sympa');
+
     ## No DataBase
     if ($operation eq 'no_db') {
         my $body = "Cannot connect to database $Conf{'db_name'}, Sympa dying." ; 
@@ -1390,9 +1393,10 @@ sub send_notify_to_listmaster {
     ## creation list requested
     }elsif ($operation eq 'request_list_creation') {
 	my $list = new List $param[0];
+	my $host = &Conf::get_robot_conf($robot, 'host');
 
-	$list->send_file('listmaster_notification', $Conf{'listmaster'}, $robot,
-			 {'to' => "listmaster\@$Conf{'host'}",
+	$list->send_file('listmaster_notification', &Conf::get_robot_conf($robot, 'listmaster'), $robot,
+			 {'to' => "listmaster\@$host",
 			  'type' => 'request_list_creation',
 			  'email' => $param[1]});
 
@@ -1400,7 +1404,7 @@ sub send_notify_to_listmaster {
     }elsif ($operation eq 'loop_command') {
 	my $file = $param[0];
 
-	my $notice = build MIME::Entity (From => $Conf{'sympa'},
+	my $notice = build MIME::Entity (From => $sympa,
 					 To => $Conf{'listmaster'},
 					 Subject => 'Loop detected',
 					 Data => 'A loop has been detected with the following message');
@@ -1537,7 +1541,9 @@ sub send_sig_to_owner {
     my $admin = $self->{'admin'}; 
     my $name = $self->{'name'};
     my $host = $admin->{'host'};
-    
+    my $robot = $self->{'domain'};
+    my $sympa = &Conf::get_robot_conf($robot, 'sympa');
+
     return unless ($name && $admin && $who);
     
     foreach $i (@{$admin->{'owner'}}) {
@@ -1555,7 +1561,7 @@ sub send_sig_to_owner {
 
     my $subject = sprintf(Msg(8, 24, "%s UNsubscription request"), $name);
     my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
-    my $body = sprintf Msg(8, 25, $msg::sig_owner), $name, $Conf{'sympa'}, $keyauth, $name, $escaped_who, $Conf{'sympa'}, $keyauth, $name, $who;
+    my $body = sprintf Msg(8, 25, $msg::sig_owner), $name, $sympa, $keyauth, $name, $escaped_who, $sympa, $keyauth, $name, $who;
     &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
 }
 
@@ -1568,6 +1574,7 @@ sub send_to_editor {
    my $admin = $self->{'admin'};
    my $name = $self->{'name'};
    my $host = $admin->{'host'};
+   my $robot = $self->{'domain'};
    my $modqueue = $Conf{'queuemod'};
    return unless ($name && $admin);
   
@@ -1648,7 +1655,7 @@ sub send_to_editor {
 								'boundary' => $boundary,
 								'msg' => $file,
 								'method' => $method,
-								'from' => $Conf{'email'}.'@'.$Conf{'host'}
+								'from' => &Conf::get_robot_conf($robot, 'sympa')
 								});
    }
    return $modkey;
@@ -1666,9 +1673,12 @@ sub send_auth {
    my $admin = $self->{'admin'};
    my $name = $self->{'name'};
    my $host = $admin->{'host'};
+   my $robot = $self->{'domain'};
    my $authqueue = $Conf{'queueauth'};
    return undef unless ($name && $admin);
   
+   my $sympa = &Conf::get_robot_conf($robot, 'sympa');
+
    my @now = localtime(time);
    my $messageid = $now[6].$now[5].$now[4].$now[3].$now[2].$now[1]."."
                    .int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6))
@@ -1693,7 +1703,7 @@ sub send_auth {
    close IN; close OUT;
  
    my $hdr = new Mail::Header;
-   $hdr->add('From', sprintf Msg(12, 4, 'SYMPA <%s>'), $Conf{'sympa'});
+   $hdr->add('From', sprintf Msg(12, 4, 'SYMPA <%s>'), $sympa);
    $hdr->add('To', $sender );
 #   $hdr->add('Subject', Msg(8, 16, "Authentication needed"));
    $hdr->add('Subject', "confirm $modkey");
@@ -1701,12 +1711,12 @@ sub send_auth {
    $hdr->add('Content-Type',"multipart/mixed; boundary=\"$boundary\"") ;
    $hdr->add('Content-Transfert-Encoding', "8bit");
    
-   *DESC = smtp::smtpto($Conf{'request'}, \$sender);
+   *DESC = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
    $hdr->print(\*DESC);
    print DESC "\n";
    print DESC "--$boundary\n";
    print DESC "Content-Type: text/plain\n\n";
-   printf DESC Msg(8, 12,"In order to broadcast the following message into list %s, either click on this link:\nmailto:%s?subject=CONFIRM%%20%s\nOr reply to %s with this subject :\nCONFIRM %s"), $name, $Conf{'sympa'}, $modkey, $Conf{'sympa'}, $modkey;
+   printf DESC Msg(8, 12,"In order to broadcast the following message into list %s, either click on this link:\nmailto:%s?subject=CONFIRM%%20%s\nOr reply to %s with this subject :\nCONFIRM %s"), $name, $sympa, $modkey, $sympa, $modkey;
    print DESC "--$boundary\n";
    print DESC "Content-Type: message/rfc822\n\n";
    
@@ -1730,6 +1740,7 @@ sub distribute_msg {
 
     my $hdr = $msg->head;
     my ($name, $host) = ($self->{'name'}, $self->{'admin'}{'host'});
+    my $robot = $self->{'domain'};
 
     ## Update the stats, and returns the new X-Sequence, if any.
     my $sequence = $self->update_stats($bytes);
@@ -1800,18 +1811,18 @@ sub distribute_msg {
     ## Add RFC 2369 header fields
     foreach my $field (@{$Conf{'rfc2369_header_fields'}}) {
 	if ($field eq 'help') {
-	    $hdr->add('List-Help', sprintf ('<mailto:%s@%s?subject=help>', $Conf{'email'}, $Conf{'host'}));
+	    $hdr->add('List-Help', sprintf ('<mailto:%s@%s?subject=help>', &Conf::get_robot_conf($robot, 'email'), &Conf::get_robot_conf($robot, 'host')));
 	}elsif ($field eq 'unsubscribe') {
-	    $hdr->add('List-Unsubscribe', sprintf ('<mailto:%s@%s?subject=unsubscribe%%20%s>', $Conf{'email'}, $Conf{'host'}, $self->{'name'}));
+	    $hdr->add('List-Unsubscribe', sprintf ('<mailto:%s@%s?subject=unsubscribe%%20%s>', &Conf::get_robot_conf($robot, 'email'), &Conf::get_robot_conf($robot, 'host'), $self->{'name'}));
 	}elsif ($field eq 'subscribe') {
-	    $hdr->add('List-Subscribe', sprintf ('<mailto:%s@%s?subject=subscribe%%20%s>', $Conf{'email'}, $Conf{'host'}, $self->{'name'}));
+	    $hdr->add('List-Subscribe', sprintf ('<mailto:%s@%s?subject=subscribe%%20%s>', &Conf::get_robot_conf($robot, 'email'), &Conf::get_robot_conf($robot, 'host'), $self->{'name'}));
 	}elsif ($field eq 'post') {
 	    $hdr->add('List-Post', sprintf ('<mailto:%s@%s>', $self->{'name'}, $self->{'admin'}{'host'}));
 	}elsif ($field eq 'owner') {
 	    $hdr->add('List-Owner', sprintf ('<mailto:%s-request@%s>', $self->{'name'}, $self->{'admin'}{'host'}));
 	}elsif ($field eq 'archive') {
-	    if (defined ($Conf{'wwsympa_url'}) and $self->is_web_archived()) {
-		$hdr->add('List-Archive', sprintf ('<%s/arc/%s>', $Conf{'wwsympa_url'}, $self->{'name'}));
+	    if (&Conf::get_robot_conf($robot, 'wwsympa_url') and $self->is_web_archived()) {
+		$hdr->add('List-Archive', sprintf ('<%s/arc/%s>', Conf::get_robot_conf($robot, 'wwsympa_url'), $self->{'name'}));
 	    }
 	}
     }
@@ -1839,6 +1850,7 @@ sub send_msg {
     
     my $hdr = $msg->head;
     my $name = $self->{'name'};
+    my $robot = $self->{'domain'};
     my $admin = $self->{'admin'};
     my $total = $self->{'total'};
     my @sender_hdr = Mail::Address->parse($hdr->get('From'));
@@ -1992,7 +2004,7 @@ sub send_msg {
 	}
 	my $mime_types = &tools::load_mime_types();
 	for (my $i=0 ; $i < $url_msg->parts ; $i++) {
-	    &_urlize_part ($url_msg->parts ($i), $expl, $dir1, $i, $mime_types, $name) ;
+	    &_urlize_part ($url_msg->parts ($i), $expl, $dir1, $i, $mime_types, $name, &Conf::get_robot_conf($robot, 'wwsympa_url')) ;
 	}
         ## Add a footer
 	my $new_msg = _add_parts($url_msg,  $name, $self->{'admin'}{'footer_type'});
@@ -2354,15 +2366,13 @@ sub send_global_file {
     }
 
     foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url') {
-	$data->{'conf'}{$p} = $Conf{'robots'}{$robot}{$p}
-	if (defined $Conf{'robots'}{$robot});
-	$data->{'conf'}{$p} ||= $Conf{$p};
+	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
 
     $data->{'conf'}{'version'} = $main::Version;
 		   $data->{'from'} = $data->{'conf'}{'request'};
     $data->{'robot_domain'} = $robot;
-    $data->{'return_path'} = $Conf{'request'};
+    $data->{'return_path'} = &Conf::get_robot_conf($robot, 'request');
 
     mail::mailfile($filename, $who, $data, $robot);
 
@@ -2444,9 +2454,7 @@ sub send_file {
     }
     
     foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url') {
-	$data->{'conf'}{$p} = $Conf{'robots'}{$robot}{$p}
-	if (defined $Conf{'robots'}{$robot});
-	$data->{'conf'}{$p} ||= $Conf{$p};
+	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
 
     $data->{'list'}{'lang'} = $self->{'admin'}{'lang'};
@@ -3683,9 +3691,7 @@ sub request_action {
 	my $scenario;
 	my $p;
 	
-	$p = $Conf{'robots'}{$robot}{$operation}
-	if (defined $Conf{'robots'}{$robot});
-	$p ||= $Conf{$operation};
+	$p = &Conf::get_robot_conf($robot, $operation);
 
 	return undef 
 	    unless ($scenario = &_load_scenario_file ($operation, $robot, $p));
@@ -3812,8 +3818,9 @@ sub verify {
 
 	## Config param
 	if ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
-	    if ($Conf{$1}) {
-		$value =~ s/\[conf\-\>([\w\-]+)\]/$Conf{$1}/;
+	    if (my $conf_value = &Conf::get_robot_conf($context->{'robot_domain'}, $1)) {
+		
+		$value =~ s/\[conf\-\>([\w\-]+)\]/$conf_value/;
 	    }else{
 		do_log('err',"unknown variable context $value in rule $condition");
 		return undef;
@@ -3995,7 +4002,7 @@ sub verify {
 	my $regexp = $1;
 	
 	if ($regexp =~ /\[host\]/) {
-	    my $reghost = $Conf{'host'};
+	    my $reghost = &Conf::get_robot_conf($context->{'robot_domain'}, 'host');
             $reghost =~ s/\./\\./g ;
             $regexp =~ s/\[host\]/$reghost/g ;
 	}
@@ -5661,7 +5668,7 @@ sub request_auth {
     
     my $keyauth;
     my ($body, $command);
-    my $robot_email = "$Conf{'email'}\@$robot";
+    my $robot_email = &Conf::get_robot_conf($robot, 'sympa');
     if (ref($self) eq 'List') {
 	my $listname = $self->{'name'};
 
@@ -6252,7 +6259,7 @@ sub _load_list_param {
 
     ## Search configuration file
     if (ref($value) && defined $value->{'conf'}) {
-	$value = $Conf::Conf{$value->{'conf'}};
+	$value = &Conf::get_robot_conf($robot, $value->{'conf'});
     }
 
     ## Synonyms
@@ -6700,7 +6707,8 @@ sub _urlize_part {
     my $i = shift;
     my $mime_types = shift;
     my $list = shift;
-      
+    my $wwsympa_url = shift;
+
     my $head = $message->head ;
     my $encoding = $head->mime_encoding ;
 
@@ -6759,7 +6767,7 @@ sub _urlize_part {
 	$head->delete('Content-Disposition');
 # it seems that the 'name=' option doesn't work if the file name has got an extension like '.xxx'-> '.' is replaced with '_'
 	$filename =~ s/\./\_/g;
-	$head->add('Content-type', "message/external-body; access-type=URL; URL=$Conf{'wwsympa_url'}/attach/$list$dir/$filename; name=\"$filename\"; size=\"$size\"");
+	$head->add('Content-type', "message/external-body; access-type=URL; URL=$wwsympa_url/attach/$list$dir/$filename; name=\"$filename\"; size=\"$size\"");
 
 	$message->parts([]);
 	$message->bodyhandle (new MIME::Body::Scalar "$body" );

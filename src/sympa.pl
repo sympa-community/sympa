@@ -542,7 +542,9 @@ sub DoFile {
     my $sender = $sender_hdr[0]->address;
 
     ## Loop prevention
-    if ($sender =~ /^(mailer-daemon|sympa|listserv|mailman|majordomo|smartlist|$Conf{'email'})/mio) {
+    my $conf_email = &Conf::get_robot_conf($robot, 'email');
+    my $conf_host = &Conf::get_robot_conf($robot, 'host');
+    if ($sender =~ /^(mailer-daemon|sympa|listserv|mailman|majordomo|smartlist|$conf_email)/mio) {
 	do_log('notice','Ignoring message which would cause a loop, sent by %s', $sender);
 	return undef;
     }
@@ -558,8 +560,8 @@ sub DoFile {
     my $bytes = -s $file;
     
     my ($list, $host, $name);   
-    if ($listname =~ /^(sympa|listmaster|$Conf{'email'})(\@$Conf{'host'})?$/i) {
-	$host = $Conf{'host'};
+    if ($listname =~ /^(sympa|listmaster|$conf_email)(\@$conf_host)?$/i) {
+	$host = $conf_host;
 	$name = $listname;
     }else {
 	$list = new List ($listname);
@@ -622,7 +624,7 @@ sub DoFile {
 
 	## Mail adressed to the robot and mail 
 	## to <list>-subscribe or <list>-unsubscribe are commands
-    }elsif (($rcpt =~ /^(sympa|$Conf{'email'})(\@\S+)?$/i) || ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o)) {
+    }elsif (($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) || ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o)) {
 	$status = &DoCommand($rcpt, $robot, $msg, $file);
 	
 	## forward mails to <list>-request <list>-owner etc
@@ -678,17 +680,17 @@ sub DoFile {
 	## Prepare the reply message
 	my $reply_hdr = new Mail::Header;
 #	$reply_hdr->add('From', sprintf Msg(12, 4, 'SYMPA <%s>'), $Conf{'sympa'});
-	$reply_hdr->add('From', sprintf Msg(12, 4, 'SYMPA <%s>'), "$Conf{'email'}\@$robot");
+	$reply_hdr->add('From', sprintf Msg(12, 4, 'SYMPA <%s>'), &Conf::get_robot_conf($robot, 'sympa'));
 	$reply_hdr->add('To', $sender);
 	$reply_hdr->add('Subject', Msg(4, 17, 'Output of your commands'));
-	$reply_hdr->add('X-Loop', $Conf{'sympa'});
+	$reply_hdr->add('X-Loop', &Conf::get_robot_conf($robot, 'sympa'));
 	$reply_hdr->add('MIME-Version', Msg(12, 1, '1.0'));
 	$reply_hdr->add('Content-type', sprintf 'text/plain; charset=%s', 
 			Msg(12, 2, 'us-ascii'));
 	$reply_hdr->add('Content-Transfer-Encoding', Msg(12, 3, '7bit'));
 	
 	## Open the SMTP process for the response to the command.
-	*FH = &smtp::smtpto($Conf{'request'}, \$sender);
+	*FH = &smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
 	$reply_hdr->print(\*FH);
 	
 	foreach (@msg::report) {
@@ -748,7 +750,7 @@ sub DoForward {
 
     if ($function eq 'listmaster') {
 	$recepient="$function";
-	$host = $Conf{'host'};
+	$host = &Conf::get_robot_conf($robot, 'host');
 	$priority = 0;
     }else {
 	unless ($list = new List ($name)) {
@@ -770,7 +772,8 @@ sub DoForward {
     $hdr->delete('X-Sympa-To:');
 
     if ($function eq "listmaster") {
-	@rcpt = @{$Conf{'listmasters'}};
+	my $listmasters = &Conf::get_robot_conf($robot, 'listmasters');
+	@rcpt = @{$listmasters};
 	do_log('notice', 'Warning : no listmaster defined in sympa.conf') 
 	    unless (@rcpt);
 	
@@ -823,7 +826,7 @@ sub DoForward {
 	return undef;
     }else{
  
-	*SIZ = smtp::smtpto($Conf{'request'}, \@rcpt);
+	*SIZ = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \@rcpt);
 	$msg->print(\*SIZ);
 	close(SIZ);
 	
@@ -859,7 +862,7 @@ sub DoMessage{
 	&List::send_global_file('list_unknown', $sender, $robot,
 				{'list' => $which,
 				 'date' => &POSIX::strftime("%d %b %Y  %H:%M", localtime(time)),
-				 'boundary' => $Conf{'sympa'}.time,
+				 'boundary' => &Conf::get_robot_conf($robot, 'sympa').time,
 				 'header' => $hdr->as_string()
 				});
 	return undef;
@@ -873,8 +876,8 @@ sub DoMessage{
 
     do_log('info', "Processing message for %s with priority %s, %s", $name,$list->{'admin'}{'priority'}, $messageid );
     
-
-    if ($sender =~ /^(mailer-daemon|sympa|listserv|majordomo|smartlist|mailman|$Conf{'email'})/mio) {
+    my $conf_email = &Conf::get_robot_conf($robot, 'sympa');
+    if ($sender =~ /^(mailer-daemon|sympa|listserv|majordomo|smartlist|mailman|$conf_email)/mio) {
 	do_log('notice', 'Ignoring message which would cause a loop');
 	return undef;
     }
@@ -887,7 +890,7 @@ sub DoMessage{
     # Reject messages with commands
     if ($Conf{'misaddressed_commands'} =~ /reject/i) {
 	## Check the message for commands and catch them.
-	if (tools::checkcommand($msg, $sender)) {
+	if (tools::checkcommand($msg, $sender, $robot)) {
 	    &do_log('notice', 'Found command in message, ignoring message');
 	    
 	    return undef;
@@ -910,8 +913,8 @@ sub DoMessage{
     my $max_size = $list->get_max_size() || $Conf{'max_size'};
     if ($max_size && $bytes > $max_size) {
 	do_log('notice', 'Message for %s from %s too large (%d > %d)', $name, $sender, $bytes, $max_size);
-	*SIZ  = smtp::smtpto($Conf{'request'}, \$sender);
-	print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'request'}) . "\n";
+	*SIZ  = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
+	print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), &Conf::get_robot_conf($robot, 'request')) . "\n";
 	printf SIZ "To: %s\n", $sender;
 	printf SIZ "Subject: " . Msg(4, 11, "Your message for list %s has been rejected") . "\n", $name;
 	printf SIZ "MIME-Version: %s\n", Msg(12, 1, '1.0');
@@ -990,8 +993,8 @@ sub DoMessage{
 	    if ($tpl) {
 		$list->send_file($tpl, $sender, $robot, {});
 	    }else {
-		*SIZ  = smtp::smtpto($Conf{'request'}, \$sender);
-		print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'request'}) . "\n";
+		*SIZ  = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
+		print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), &Conf::get_robot_conf($robot, 'request')) . "\n";
 		printf SIZ "To: %s\n", $sender;
 		printf SIZ "Subject: " . Msg(4, 11, "Your message for list %s has been rejected")."\n", $name ;
 		printf SIZ "MIME-Version: %s\n", Msg(12, 1, '1.0');

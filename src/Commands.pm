@@ -141,6 +141,9 @@ sub help {
     shift;
     my $robot=shift;
 
+    my $sympa = &Conf::get_robot_conf($robot, 'sympa');
+    my $host = &Conf::get_robot_conf($robot, 'host');
+
     do_log('debug', 'Commands::help to robot %s',$robot);
 
     # sa ne prends pas en compte la structure des répertoires par lang.
@@ -160,8 +163,8 @@ sub help {
     }elsif (open IN, 'helpfile'){
 	## Old style
 	while (<IN>){
-	    s/\[sympa_email\]/$Conf{'sympa'}/g;
-	    s/\[sympa_host\]/$Conf{'host'}/g;
+	    s/\[sympa_email\]/$sympa/g;
+	    s/\[sympa_host\]/$host/g;
 	    push @msg::report, $_ ;
 	}
 	close IN;
@@ -169,8 +172,8 @@ sub help {
 	if ((List::get_which ($sender,$robot,'owner'))||(List::get_which ($sender,$robot,'editor'))){
 	    if (open IN, 'helpfile.advanced'){
 		while (<IN>){
-		    s/\[sympa_email\]/$Conf{'sympa'}/g;
-		    s/\[sympa_host\]/$Conf{'host'}/g;
+		    s/\[sympa_email\]/$sympa/g;
+		    s/\[sympa_host\]/$host/g;
 		    push @msg::report, $_ ;
 		}
 		close IN;
@@ -211,6 +214,9 @@ sub lists {
 
     shift; 
     my $robot=shift;
+
+    my $sympa = &Conf::get_robot_conf($robot, 'sympa');
+    my $host = &Conf::get_robot_conf($robot, 'host');
 
     do_log('debug2', 'Commands::lists for robot %s', $robot);
 
@@ -331,7 +337,7 @@ sub stats {
 		     );
 	
 	$list->send_file('stats_report', $sender, $robot, {'stats' => \%stats, 
-							   'from' => "SYMPA <$Conf{'email'}\@$robot>",
+							   'from' => "SYMPA <$sympa>",
 							   'subject' => "STATS $list->{'name'}"});
 	
 	do_log('info', 'STATS %s from %s accepted (%d seconds)', $listname, sender, time-$time_command);
@@ -388,6 +394,8 @@ sub last {
     my $which = shift;
     my $robot = shift;
 
+    my $sympa = &Conf::get_robot_conf($robot, 'sympa');
+
     do_log('debug2', 'Commands::last(%s, %s)', $which);
 
     my $list = new List ($which);
@@ -415,7 +423,7 @@ sub last {
 	do_log('info', 'LAST %s from %s refused, archive access not allowed', $which, $sender);
 	return 'not_allowed';
     }
-    my ($fd) = &smtp::smtpto("$Conf{'sympa'}",\$sender); 
+    my ($fd) = &smtp::smtpto($sympa,\$sender); 
     unless (open(MSG, "$list->{'dir'}/archives/last_message")) { 
 	print "unable to open last_message";
     }
@@ -472,6 +480,8 @@ sub review {
     my $sign_mod = shift ;
 
     do_log('debug', 'Commands::review(%s,%s,%s)', $listname,$robot,$sign_mod );
+
+    my $sympa = &Conf::get_robot_conf($robot, 'sympa');
 
     my $user;
     my $list = new List ($listname);
@@ -546,7 +556,7 @@ sub review {
 	} while ($user = $list->get_next_user());
 	$list->send_file('review', $sender, $robot, {'users' => \@users, 
 					     'total' => $list->get_total(),
-					     'from' => "SYMPA <$Conf{'email'}\@$robot>",
+					     'from' => "SYMPA <$sympa>",
 					     'subject' => "REVIEW $listname"});
 
 	do_log('info', 'REVIEW %s from %s accepted (%d seconds)', $listname, $sender,time-$time_command);
@@ -655,7 +665,7 @@ sub subscribe {
 	    unless ($action =~ /quiet/i);
 	## Send a notice to the owners.
         my $keyauth = $list->compute_auth($sender,'add');
-	$list->send_sub_to_owner($sender, $keyauth, $Conf{'sympa'}, $comment);
+	$list->send_sub_to_owner($sender, $keyauth, &Conf::get_robot_conf($robot, 'sympa'), $comment);
 	$list->store_susbscription_request($sender, $comment);
 	do_log('info', 'SUB %s from %s forwarded to the owners of the list (%d seconds)', $which, $sender,time-$time_command);   
 	return 1;
@@ -738,6 +748,8 @@ sub info {
 
     do_log('debug2', 'Commands::info(%s,%s)', $listname,$robot);
 
+    my $sympa = &Conf::get_robot_conf($robot, 'sympa');
+
     my $list = new List ($listname);
     unless (($list)&&(&List::list_by_robot($listname,$robot))) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
@@ -786,7 +798,7 @@ sub info {
     if ($action =~ /do_it/i) {
 
 	my %data = %{$list->{'admin'}};
-	$data{'from'} = "SYMPA <$Conf{'sympa'}>";
+	$data{'from'} = "SYMPA <$sympa>";
 	$data{'subject'} = "INFO $listname";
 	foreach my $p ('subscribe','unsubscribe','send','review') {
 	    $data{$p} = $data{$p}->{'title'}{$list->{'admin'}{'lang'}};
@@ -801,7 +813,7 @@ sub info {
 
 	$data{'available_reception_mode'} = $list->available_reception_mode();
 
-	my $wwsympa_url = $Conf{'robots'}{$robot}{'wwsympa_url'} || $Conf{'wwsympa_url'};
+	my $wwsympa_url = &Conf::get_robot_conf($robot, 'wwsympa_url');
 	$data{'url'} = $wwsympa_url.'/info/'.$list->{'name'};
 
 	$list->send_file('info_report', $sender, $robot, \%data);
@@ -832,7 +844,7 @@ sub signoff {
     do_log('debug2', 'Commands::signoff(%s,%s)', $which,$sign_mod);
 
     my ($l,$list,$auth_method);
-    my $host = $Conf{'host'};
+    my $host = &Conf::get_robot_conf($robot, 'host');
 
     ## $email is defined if command is "unsubscribe <listname> <e-mail>"    
     unless ($which =~ /^(\*|[\w\.\-]+)(\@$host)?(\s+(.+))?$/) {
@@ -1079,6 +1091,8 @@ sub invite {
     my $sign_mod = shift ;
     do_log('debug2', 'Commands::invite(%s,%s)', $what,$sign_mod);
 
+    my $sympa = &Conf::get_robot_conf($robot, 'sympa');
+
     $what =~ /^(\S+)\s+(\S+)(\s+(.+))?\s*$/;
     my($which, $email, $comment) = ($1, $2, $4);
     my $auth_method ;
@@ -1156,7 +1170,7 @@ sub invite {
 		my $keyauth = $list->compute_auth ($email, 'subscribe');
 		my $command = "auth $keyauth sub $which $comment";
 		$context{'subject'} = $command;
-		$context{'url'}= "mailto:$Conf{'email'}\@$robot?subject=$command";
+		$context{'url'}= "mailto:$sympa?subject=$command";
 		$context{'url'} =~ s/\s/%20/g;
 		$list->send_file('invite', $email, $robot, \%context);            
 		do_log('info', 'INVITE %s %s from %s accepted, auth requested (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
@@ -1164,7 +1178,7 @@ sub invite {
 
 	    }elsif ($action !~ /reject/i) {
                 $context{'subject'} = "sub $which $comment";
-		$context{'url'}= "mailto:$Conf{'email'}\@$robot?subject=$context{'subject'}";
+		$context{'url'}= "mailto:$sympa?subject=$context{'subject'}";
 		$context{'url'} =~ s/\s/%20/g;
 		$list->send_file('invite', $email, $robot,\%context) ;      
 		do_log('info', 'INVITE %s %s from %s accepted,  (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
@@ -1195,7 +1209,7 @@ sub remind {
 
     do_log('debug2', 'Commands::remind(%s,%s)', $which,$sign_mod);
 
-    my $host = $Conf{'host'};
+    my $host = &Conf::get_robot_conf($robot, 'host');
     
     my $auth_method ;
     my %context;
@@ -1780,8 +1794,8 @@ sub confirm {
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
-	    *SIZ  = smtp::smtpto($Conf{'request'}, \$sender);
-	    print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'request'}) . "\n";
+	    *SIZ  = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
+	    print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), &Conf::get_robot_conf($robot, 'request')) . "\n";
 	    printf SIZ "To: %s\n", $sender;
 	    printf SIZ "Subject: " . Msg(4, 11, "Your message for list %s has been rejected") . "\n", $name;
 	    printf SIZ "MIME-Version: %s\n", Msg(12, 1, '1.0');
@@ -2029,7 +2043,7 @@ sub expire {
 	    unlink "$queueexpire\/\.$name\_$auth";
 
 	    push @msg::report, sprintf Msg(6, 56, $msg::expire_comment), $name, $d2;	   	    	    
-	    push @msg::report, sprintf Msg(6, 69, "%s posted your expiration message to the following addresses :\n"), $Conf{'sympa'};
+	    push @msg::report, sprintf Msg(6, 69, "%s posted your expiration message to the following addresses :\n"), &Conf::get_robot_conf($robot, 'sympa');
 
 	    ## Send the confirmation request to concerned subscribers
 	    my $user;
@@ -2064,7 +2078,7 @@ sub expire {
     }else { 
         ## Ask the requestor for an authentication
 	$key=substr(Digest::MD5::md5_hex(join('/', $list->get_cookie(), $name, $sender, $d1, $d2, 'expire', time)), -8);
-	push @msg::report, sprintf Msg(6, 48, $msg::expire_need_auth), $name, $d1, $Conf{'sympa'},$key,$name, $d1, $d2;
+	push @msg::report, sprintf Msg(6, 48, $msg::expire_need_auth), $name, $d1, &Conf::get_robot_conf($robot, 'sympa'),$key,$name, $d1, $d2;
 
 	$limitday= time - 86400* $d1;
 	$confirmday= time + 86400* $d2;
@@ -2171,7 +2185,7 @@ sub expireindex {
 
 	 push @msg::report, sprintf Msg(6, 49, $msg::expire_running), $name, $proprio, POSIX::strftime("%a %b %e %H:%M:%S %Y",@timefile), $d1, $d2, POSIX::strftime("%a %b %e %H:%M:%S %Y", localtime($confirmday));
 
-	push @msg::report, sprintf Msg(6, 52, "%s did not receive confirmation for the following addresses :\n"), $Conf{'sympa'};
+	push @msg::report, sprintf Msg(6, 52, "%s did not receive confirmation for the following addresses :\n"), &Conf::get_robot_conf($robot, 'sympa');
 	push @msg::report, "\n";
 	my $temp = 0;
 	my $user;
