@@ -3,6 +3,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 
+<!-- comment -->
 <HEAD>
 <SCRIPT LANGUAGE="JavaScript">
 <!-- for other browsers
