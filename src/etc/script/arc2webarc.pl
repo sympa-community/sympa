@@ -30,6 +30,14 @@ my %month_idx = qw(jan 1
 my @msgs;
 my %nummsg;
 
+my %options;
+# load options ?
+#$main::options{'debug'} = 1;
+#$main::options{'debug2'} = 1 if ($main::options{'debug'});
+
+# this line is necessary - without it the new List fails.
+my $pinfo = &List::_apply_defaults();
+
 $| = 1;
 
 die "Usage : $ARGV[-1] <listname>" unless ($#ARGV >= 0);
