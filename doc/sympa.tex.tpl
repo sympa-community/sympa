@@ -2019,49 +2019,6 @@ since \WWSympa might need to remind users of their passwords.
 The security of \WWSympa rests on the security of your database. 
 
 
-\section {Sharing \WWSympa authentication with other applications}
-
-You might want to make other web applications collaborate with \Sympa,
-and share the same authentication system. \Sympa uses
-HTTP cookies to carry users' auth information from page to page.
-This cookie carries no information concerning privileges. To make your application
-work with \Sympa, you have two possibilities :
-
-\begin {itemize}
-
-\item Delegating authentication operations to \WWSympa \\
-If you want to avoid spending a lot of time programming a CGI to do Login, Logout
-and Remindpassword, you can copy \WWSympa's login page to your 
-application, and then make use of the cookie information within your application. 
-The cookie format is :
-\begin{verbatim}
-user=<user_email>:<md5>
-\end{verbatim}
-
-where <user\_email> is the user's complete e-mail address, and
-<md5> is a MD5 checksum of the <user\_email>+\Sympa \cfkeyword {cookie}
-configuration parameter.
-Your application needs to know what the \cfkeyword {cookie} parameter
-is, so it can check the HTTP cookie validity ; this is a secret shared
-between \WWSympa and your application.
-\WWSympa's \textit {loginrequest} page can be called to return to the
-referrer URL when an action is performed. Here is a sample HTML anchor :
-
-\begin{verbatim}
-<A HREF="/wws/loginrequest/referrer">Login page</A>
-\end{verbatim}
-
-
-\item Using \WWSympa's HTTP cookie format within your auth module \\
-To cooperate with \WWSympa, you simply need to adopt its HTTP
-cookie format and share the secret it uses to generate MD5 checksums,
-i.e. the \cfkeyword {cookie} configuration parameter. In this way, \WWSympa
-will accept users authenticated through your application without
-further authentication.
-
-
-\end {itemize}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Using Sympa with an RDBMS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2768,6 +2725,74 @@ site web templates, before falling back on its defaults.
 
 Your list web template files should be placed in the \tildedir {sympa/expl/\samplelist/wws\_templates} 
 directory ; your site web templates in \tildedir {sympa/expl/wws\_templates} directory.
+
+Note that web colors are defined in \Sympa's main Makefile (see \ref {makefile},
+page~\pageref {makefile}).
+
+
+\section {Sharing data with other applications}
+
+You may extract subscribers for a list from any of :
+\begin{itemize}
+
+\item a text file
+
+\item a Relational database
+
+\item a n LDAP directory
+
+\end{itemize}
+
+See lparam {user\_data\_source} liste parameter \ref {user-data-source}, page~\pageref {user-data-source}.
+
+The \textbf {subscriber\_table} and \textbf {user\_table} can have more fields than
+the one used by \Sympa. by defining these additional fields, they will be available
+from within \Sympa's scenario and templates (see \ref {db-additional-subscriber-fields}, 
+page~\pageref {db-additional-subscriber-fields} and \ref {db-additional-user-fields}, page~\pageref {db-additional-user-fields}).
+
+
+\section {Sharing \WWSympa authentication with other applications}
+
+You might want to make other web applications collaborate with \Sympa,
+and share the same authentication system. \Sympa uses
+HTTP cookies to carry users' auth information from page to page.
+This cookie carries no information concerning privileges. To make your application
+work with \Sympa, you have two possibilities :
+
+\begin {itemize}
+
+\item Delegating authentication operations to \WWSympa \\
+If you want to avoid spending a lot of time programming a CGI to do Login, Logout
+and Remindpassword, you can copy \WWSympa's login page to your 
+application, and then make use of the cookie information within your application. 
+The cookie format is :
+\begin{verbatim}
+user=<user_email>:<md5>
+\end{verbatim}
+
+where <user\_email> is the user's complete e-mail address, and
+<md5> is a MD5 checksum of the <user\_email>+\Sympa \cfkeyword {cookie}
+configuration parameter.
+Your application needs to know what the \cfkeyword {cookie} parameter
+is, so it can check the HTTP cookie validity ; this is a secret shared
+between \WWSympa and your application.
+\WWSympa's \textit {loginrequest} page can be called to return to the
+referrer URL when an action is performed. Here is a sample HTML anchor :
+
+\begin{verbatim}
+<A HREF="/wws/loginrequest/referrer">Login page</A>
+\end{verbatim}
+
+
+\item Using \WWSympa's HTTP cookie format within your auth module \\
+To cooperate with \WWSympa, you simply need to adopt its HTTP
+cookie format and share the secret it uses to generate MD5 checksums,
+i.e. the \cfkeyword {cookie} configuration parameter. In this way, \WWSympa
+will accept users authenticated through your application without
+further authentication.
+
+\end {itemize}
+
 
 \section {Internationalization}
 \label {internationalization}
@@ -3942,7 +3967,8 @@ sources (list, flat file, result of LDAP or SQL query).
        (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
 
 \item \lparam {user\_data\_source} \texttt {include} 
-       
+\label {user-data-source}       
+
        Here, subscribers are not defined \emph {extensively} (enumeration
        of their e-mail addresses) but \emph {intensively} (definition of criteria
        subscribers must satisfy). Includes can be performed 
