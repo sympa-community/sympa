@@ -196,7 +196,7 @@
 <binding name="SOAP" type="tns:SympaPort">
 <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
 	<operation name="which">
-		<soap:operation soapAction="urn:sympasoap"/>
+		<soap:operation soapAction="urn:sympasoap#which"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -209,7 +209,7 @@
 			</output>
 	</operation>
 	<operation name="isSubscriber">
-		<soap:operation soapAction="urn:sympasoap"/>
+		<soap:operation soapAction="urn:sympasoap#isSubscriber"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -222,7 +222,7 @@
 			</output>
 	</operation>
 	<operation name="amI">
-		<soap:operation soapAction="urn:sympasoap"/>
+		<soap:operation soapAction="urn:sympasoap#amI"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -235,7 +235,7 @@
 			</output>
 	</operation>
 	<operation name="review">
-		<soap:operation soapAction="urn:sympasoap"/>
+		<soap:operation soapAction="urn:sympasoap#review"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -248,7 +248,7 @@
 			</output>
 	</operation>
 	<operation name="subscribe">
-		<soap:operation soapAction="urn:sympasoap"/>
+		<soap:operation soapAction="urn:sympasoap#subscribe"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -261,7 +261,7 @@
 			</output>
 	</operation>
 	<operation name="signoff">
-		<soap:operation soapAction="urn:sympasoap"/>
+		<soap:operation soapAction="urn:sympasoap#signoff"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -274,7 +274,7 @@
 			</output>
 	</operation>
 	<operation name="login">
-		<soap:operation soapAction="urn:sympasoap"/>
+		<soap:operation soapAction="urn:sympasoap#login"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -287,7 +287,7 @@
 			</output>
 	</operation>
 	<operation name="lists">
-		<soap:operation soapAction="urn:sympasoap"/>
+		<soap:operation soapAction="urn:sympasoap#lists"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -300,7 +300,7 @@
 			</output>
 	</operation>
 	<operation name="check_cookie">
-		<soap:operation soapAction="urn:sympasoap"/>
+		<soap:operation soapAction="urn:sympasoap#check_cookie"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
