@@ -354,6 +354,7 @@ my %alias = ('reply-to' => 'reply_to',
 		      },
 	    'digest' => {'file_format' => '\d+(\s*,\s*\d+)*\s+\d+:\d+',
 			 'format' => {'days' => {'format' => [1..7],
+						 'file_format' => '1|2|3|4|5|6|7',
 						 'occurrence' => '1-n',
 						 'title_id' => 23
 						 },
