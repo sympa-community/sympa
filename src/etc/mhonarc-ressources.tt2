@@ -56,10 +56,10 @@ utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
 </TextEncode>
 -->
 
-<-- With data translated to UTF-8, it simplifies CHARSETCONVERTERS -->
 <CharsetConverters override>
-default; mhonarc::htmlize
+default; -decode-
 </CharsetConverters>
+
 
 <-- Need to also register UTF-8-aware text clipping function -->
 <TextClipFunc>
