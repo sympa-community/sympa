@@ -3,24 +3,24 @@
 <form action="[% path_cgi %]" method="post">
 <table style="width: 100%;" border="0">
 <tr><th style="background: [% dark_color %];">
-<span style="color: [% bg_color %];">[%|l%]Subscriber information[%END%]</span>
+<span style="color: [% bg_color %];">[%|loc%]Subscriber information[%END%]</span>
 </th></tr><tr><td>
 <input type="hidden" name="previous_action" value="[% previous_action %]" />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="email" value="[% current_subscriber.escaped_email %]" />
 <dl>
 <dd><label>Email : <input type="text" name="new_email" value="[% current_subscriber.escaped_email %]" size="25" /></label></dd>
-<dd><label>[%|l%]Name :[%END%] <input type="text" name="gecos" value="[% current_subscriber.gecos %]" size="25" /></label></dd>
-<dd>[%|l(current_subscriber.date)%]Subscribed since %1[%END%]</dd>
-<dd>[%|l(current_subscriber.update_date)%]Last update : %1[%END%]</dd>
-<dd><label>[%|l%]Reception :[%END%] <select name="reception">
+<dd><label>[%|loc%]Name :[%END%] <input type="text" name="gecos" value="[% current_subscriber.gecos %]" size="25" /></label></dd>
+<dd>[%|loc(current_subscriber.date)%]Subscribed since %1[%END%]</dd>
+<dd>[%|loc(current_subscriber.update_date)%]Last update : %1[%END%]</dd>
+<dd><label>[%|loc%]Reception :[%END%] <select name="reception">
 		  [% FOREACH r = reception %]
 		    <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
 		  [% END %]
 	        </select></label></dd>
 
-<dd>[%|l(current_subscriber.visibility)%]Visibility : %1[%END%]</dd>
-<dd>[%|l(current_subscriber.lang)%]Language : %1[%END%]</dd>
+<dd>[%|loc(current_subscriber.visibility)%]Visibility : %1[%END%]</dd>
+<dd>[%|loc(current_subscriber.lang)%]Language : %1[%END%]</dd>
 [% IF additional_fields %]
 [% FOREACH field = additional_fields %]
  [% IF field.value.type == 'enum' %]
@@ -35,22 +35,22 @@
  [% END %]
 [% END %]
 [% END %]
-<dd><input type="submit" name="action_set" value="[%|l%]Update[%END%]" />
-<input type="submit" name="action_del" value="[%|l%]Unsubscribe the User[%END%]" />
-<label><input type="checkbox" name="quiet" /> [%|l%]quiet[%END%]</label>
+<dd><input type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
+<input type="submit" name="action_del" value="[%|loc%]Unsubscribe the User[%END%]" />
+<label><input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]</label>
 </dd>
 </dl>
 </td></tr>
 [% IF current_subscriber.bounce %]
 <tr><th style="background: [% error_color %];">
-<span style="color: [% bg_color %];">[%|l%]Bouncing address[%END%]</span>
+<span style="color: [% bg_color %];">[%|loc%]Bouncing address[%END%]</span>
 </th></tr><tr><td>
 <dl>
-<dd>[%|l(current_subscriber.bounce_status)%]Status : %1[%END%] ([% current_subscriber.bounce_code %])</dd>
-<dd>[%|l(current_subscriber.bounce_count)%]Bounces count : %1[%END%]</dd>
-<dd>[%|l(current_subscriber.first_bounce,current_subscriber.last_bounce)%]Period : from %1 to %2[%END%]</dd>
-<dd><a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.escaped_email %]">[%|l%]View last bounce[%END%]</a></dd>
-<dd><input type="submit" name="action_resetbounce" value="[%|l%]Reset errors[%END%]" /></dd>
+<dd>[%|loc(current_subscriber.bounce_status)%]Status : %1[%END%] ([% current_subscriber.bounce_code %])</dd>
+<dd>[%|loc(current_subscriber.bounce_count)%]Bounces count : %1[%END%]</dd>
+<dd>[%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]Period : from %1 to %2[%END%]</dd>
+<dd><a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.escaped_email %]">[%|loc%]View last bounce[%END%]</a></dd>
+<dd><input type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" /></dd>
 </dl>
 </td></tr>
 [% END %]

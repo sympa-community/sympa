@@ -1,6 +1,6 @@
 From: [% conf.email %]@[% conf.host %]
-Subject: [% FILTER qencode %][%|l%]Your document has been rejected.[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]Your document has been rejected.[%END%][%END%]
 
-[%|l(filename,list.name,list.host,rejected_by)%]Your document %1  for list %2@%3
+[%|loc(filename,list.name,list.host,rejected_by)%]Your document %1  for list %2@%3
 has been rejected by %4 list editor.[%END%]
 

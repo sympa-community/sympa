@@ -1,16 +1,16 @@
 From: [% list.name %]-request@[% list.host %]
-Subject: [% FILTER qencode %][%|l(list.name,list.host)%]crypted message for list %1@%2[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name,list.host)%]crypted message for list %1@%2[%END%][%END%]
 Mime-version: 1.0
 Content-Type: text/plain
 Content-transfer-encoding: 8bit
 
-[%|l(mail.sender,mail.subject)%]An encrypted message from %1 has been distributed to
+[%|loc(mail.sender,mail.subject)%]An encrypted message from %1 has been distributed to
 Subject : %2[%END%]
 
-[%|l(user.email)%]It was not possible to send it to you because the mailing list manager
+[%|loc(user.email)%]It was not possible to send it to you because the mailing list manager
 was unable to access to your personal certificat (email %1).[%END%]
-[%|l(conf.email,conf.host)%]Please, in order to receive futur crypted messages send a signed message
+[%|loc(conf.email,conf.host)%]Please, in order to receive futur crypted messages send a signed message
 to  %1@%2 .[%END%]
 
-[%|l%]Any information about this list :[%END%]
+[%|loc%]Any information about this list :[%END%]
 [% conf.wwsympa_url %]/info/[% list.name %]

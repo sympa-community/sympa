@@ -161,6 +161,7 @@ sub parse_tt2 {
 	FILTERS => {
 	    unescape => \&CGI::Util::unescape,
 	    l => [\&maketext, 1],
+	    loc => [\&maketext, 1],
 	    qencode => [\&qencode, 0]
 	    },
        #PRE_CHOMP   => 1,

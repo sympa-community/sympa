@@ -1,9 +1,9 @@
 <!-- $Id$ -->
 
 [% IF action == 'search_list' %]
-  [%|l(occurrence)%]%1 occurrence(s) found[%END%]<BR><BR>
+  [%|loc(occurrence)%]%1 occurrence(s) found[%END%]<BR><BR>
 [% ELSIF action == 'search_user' %]
-  [%|l(email)%]<B>%1</B> is subscribed to the following mailing lists[%END%]
+  [%|loc(email)%]<B>%1</B> is subscribed to the following mailing lists[%END%]
 [% END %]
 
 <TABLE BORDER="0" WIDTH="100%">
@@ -14,7 +14,7 @@
        [% PROCESS 'button_header.tt2' %]
        <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
              <FONT COLOR="[% selected_color %]" SIZE="-1">
-              <A HREF="[% path_cgi %]/admin/[% l.key %]" ><b>[%|l%]admin[%END%]</b></A>
+              <A HREF="[% path_cgi %]/admin/[% l.key %]" ><b>[%|loc%]admin[%END%]</b></A>
          </FONT>
        </TD>
      [% PROCESS 'button_footer.tt2' %]
@@ -36,13 +36,13 @@
 
 [% IF action == 'which' %]
 [% IF ! which %]
-&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|l(user.email)%]No subscriptions with address <B>%1</B>![%END%]</FONT>
+&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|loc(user.email)%]No subscriptions with address <B>%1</B>![%END%]</FONT>
 <BR>
 [% END %]
 
 [% IF unique != '1' %]
 <TABLE>
-&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|l%]See your subscriptions with the following email addresses[%END%]</FONT><BR>
+&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|loc%]See your subscriptions with the following email addresses[%END%]</FONT><BR>
 <BR><BR>
 
  <TR> 
@@ -61,14 +61,14 @@
 
 <TABLE>
 <TR>
-&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|l%]Unify your subscriptions with the email[%END%] <B>[% user.email %]</B></FONT><BR> 
-&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|l%]That is to say using a unique email address in Sympa for your subscriptions and preferences[%END%]</FONT>
+&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|loc%]Unify your subscriptions with the email[%END%] <B>[% user.email %]</B></FONT><BR> 
+&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|loc%]That is to say using a unique email address in Sympa for your subscriptions and preferences[%END%]</FONT>
 
 <TR>
 <TD>
     <FORM ACTION="[% path_cgi %]" METHOD=POST>
   
-&nbsp;&nbsp;<INPUT TYPE="submit" NAME="action_unify_email" VALUE="[%|l%]Validate[%END%]"></FONT>
+&nbsp;&nbsp;<INPUT TYPE="submit" NAME="action_unify_email" VALUE="[%|loc%]Validate[%END%]"></FONT>
     </FORM>
 </TD>
 </TR>

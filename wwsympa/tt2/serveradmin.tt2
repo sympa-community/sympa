@@ -9,7 +9,7 @@
             <TR>
              <TH BGCOLOR="[% selected_color %]" WIDTH="50%">
               <FONT COLOR="[% bg_color %]">
-	        [%|l%]Virtual Robots[%END%]
+	        [%|loc%]Virtual Robots[%END%]
               </FONT>
              </TH>
             </TR>
@@ -19,13 +19,13 @@
 
      <TR><TD>
     [% IF robots %]
-      [%|l%]The following virtual robots are running on this server :[%END%]<UL>
+      [%|loc%]The following virtual robots are running on this server :[%END%]<UL>
          [% FOREACH vr = robots %]
 	    <LI><A HREF="[% vr.value.wwsympa_url %]/serveradmin">[% vr.key %]</A>
 	 [% END %]
       </UL>
     [% ELSE %]
-      [%|l%]No Virtual Robot defined on this server[%END%]
+      [%|loc%]No Virtual Robot defined on this server[%END%]
     [% END %]
      <BR>
      </TD></TR>
@@ -37,7 +37,7 @@
             <TR>
              <TH BGCOLOR="[% selected_color %]" WIDTH="50%">
               <FONT COLOR="[% bg_color %]">
-	        [%|l%]Lists[%END%]
+	        [%|loc%]Lists[%END%]
               </FONT>
              </TH>
             </TR>
@@ -47,25 +47,25 @@
      <TD>
      [% PROCESS 'button_header.tt2' %]
        <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
-      <A HREF="[% path_cgi %]/get_pending_lists">[%|l%]Pending lists[%END%]</A>
+      <A HREF="[% path_cgi %]/get_pending_lists">[%|loc%]Pending lists[%END%]</A>
        </TD>
      [% PROCESS 'button_footer.tt2' %]
 
      [% PROCESS 'button_header.tt2' %]
        <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
-      <A HREF="[% path_cgi %]/get_latest_lists">[%|l%]Latest lists[%END%]</A>
+      <A HREF="[% path_cgi %]/get_latest_lists">[%|loc%]Latest lists[%END%]</A>
        </TD>
      [% PROCESS 'button_footer.tt2' %]
 
      [% PROCESS 'button_header.tt2' %]
 	<TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
-	<A HREF="[% path_cgi %]/get_inactive_lists">[%|l%]Inactive lists[%END%]</A>
+	<A HREF="[% path_cgi %]/get_inactive_lists">[%|loc%]Inactive lists[%END%]</A>
 	</TD>
      [% PROCESS 'button_footer.tt2' %]
 
      [% PROCESS 'button_header.tt2' %]
        <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
-      <A HREF="[% path_cgi %]/get_closed_lists">[%|l%]Closed lists[%END%]</A>
+      <A HREF="[% path_cgi %]/get_closed_lists">[%|loc%]Closed lists[%END%]</A>
        </TD>
      [% PROCESS 'button_footer.tt2' %]
 
@@ -77,7 +77,7 @@
             <TR>
              <TH BGCOLOR="[% selected_color %]" WIDTH="50%">
               <FONT COLOR="[% bg_color %]">
-	        [%|l%]Users[%END%]
+	        [%|loc%]Users[%END%]
               </FONT>
              </TH>
             </TR>
@@ -88,7 +88,7 @@
         <FORM ACTION="[% path_cgi %]" METHOD="POST">
 	  <INPUT NAME="email" SIZE="30" VALUE="[% email %]">
 	  <INPUT TYPE="hidden" NAME="action" VALUE="search_user">
-	  <INPUT TYPE="submit" NAME="action_search_user" VALUE="[%|l%]Search User[%END%]">
+	  <INPUT TYPE="submit" NAME="action_search_user" VALUE="[%|loc%]Search User[%END%]">
 	</FORM>     
       <BR></TD></TR>
 
@@ -99,7 +99,7 @@
             <TR>
              <TH BGCOLOR="[% selected_color %]" WIDTH="50%">
               <FONT COLOR="[% bg_color %]">
-	        [%|l%]Templates[%END%] 
+	        [%|loc%]Templates[%END%] 
               </FONT>
              </TH>
             </TR>
@@ -109,30 +109,30 @@
       <TR>
         <TD NOWRAP>
 	  <FORM ACTION="[% path_cgi %]" METHOD=POST>
-	    <FONT COLOR="[% dark_color %]"><B>[%|l%]Setting defaults list templates[%END%]</B></FONT><BR>
+	    <FONT COLOR="[% dark_color %]"><B>[%|loc%]Setting defaults list templates[%END%]</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [% FOREACH f = lists_default_files %]
 	        <OPTION VALUE='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]
 	      [% END %]
 	    </SELECT>
-	    <INPUT TYPE="submit" NAME="action_editfile" VALUE="[%|l%]Edit[%END%]">
+	    <INPUT TYPE="submit" NAME="action_editfile" VALUE="[%|loc%]Edit[%END%]">
 	  </FORM>
 
 	  <FORM ACTION="[% path_cgi %]" METHOD=POST>
-	    <FONT COLOR="[% dark_color %]"><B>[%|l%]Setting site templates[%END%]</B></FONT><BR>
+	    <FONT COLOR="[% dark_color %]"><B>[%|loc%]Setting site templates[%END%]</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [% FOREACH f = server_files %]
 	        <OPTION VALUE='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]
 	      [% END %]
 	    </SELECT>
-	    <INPUT TYPE="submit" NAME="action_editfile" VALUE="[%|l%]Edit[%END%]">
+	    <INPUT TYPE="submit" NAME="action_editfile" VALUE="[%|loc%]Edit[%END%]">
 	  </FORM>
 	</TD>
       </TR>
       <TR><TD>
      [% PROCESS 'button_header.tt2' %]
        <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
-        <A HREF="[% path_cgi %]/view_translations">[%|l%]Customize templates[%END%]</A>
+        <A HREF="[% path_cgi %]/view_translations">[%|loc%]Customize templates[%END%]</A>
        </TD>
       [% PROCESS 'button_footer.tt2' %]
       <BR></TD></TR>
@@ -143,7 +143,7 @@
             <TR>
              <TH BGCOLOR="[% selected_color %]" WIDTH="50%">
               <FONT COLOR="[% bg_color %]">
-	        [%|l%]Archives[%END%]
+	        [%|loc%]Archives[%END%]
               </FONT>
              </TH>
             </TR>
@@ -153,21 +153,21 @@
 
       <TR>
         <TD>
-<FONT COLOR="[% dark_color %]"><B>[%|l%]Rebuild HTML archives using "arctxt" directories as input.[%END%]</FONT>
+<FONT COLOR="[% dark_color %]"><B>[%|loc%]Rebuild HTML archives using "arctxt" directories as input.[%END%]</FONT>
         </TD>
       </TR>
       <TR>
         <TD>
           <FORM ACTION="[% path_cgi %]" METHOD=POST>
-	  <INPUT TYPE="submit" NAME="action_rebuildallarc" VALUE="[%|l%]ALL[%END%]"><BR>
-	[%|l%]May take a lot of CPU time,  be careful ![%END%]
+	  <INPUT TYPE="submit" NAME="action_rebuildallarc" VALUE="[%|loc%]ALL[%END%]"><BR>
+	[%|loc%]May take a lot of CPU time,  be careful ![%END%]
           </FORM>
 	</TD>
 
     <TD ALIGN="CENTER"> 
           <FORM ACTION="[% path_cgi %]" METHOD=POST>
 	  <INPUT TYPE="text" NAME="list" SIZE="20">
-          <INPUT TYPE="submit" NAME="action_rebuildarc" VALUE="[%|l%]Rebuild archive[%END%]">
+          <INPUT TYPE="submit" NAME="action_rebuildarc" VALUE="[%|loc%]Rebuild archive[%END%]">
           </FORM>
     </TD>
 
@@ -178,7 +178,7 @@
         <TD>
 	  <FONT COLOR="[% dark_color %]">
 	  <A HREF="[% path_cgi %]/scenario_test">
-	     <b>[%|l%]Scenari test module[%END%]</b>
+	     <b>[%|loc%]Scenari test module[%END%]</b>
           </A>
           </FONT>
 	</TD>
@@ -189,5 +189,5 @@
 <BR><BR>
 
 [% IF loop_count %]
-[%|l(process_id,loop_count,start_time)%]This FastCGI process (%1) has served %2 since %3.[%END%]
+[%|loc(process_id,loop_count,start_time)%]This FastCGI process (%1) has served %2 since %3.[%END%]
 [% END %]

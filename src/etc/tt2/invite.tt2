@@ -1,13 +1,13 @@
 From: [% requested_by %]
 Reply-To: [% conf.sympa %]
-Subject: [% FILTER qencode %][%|l(list.name)%]Invitation to join list %1[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Invitation to join list %1[%END%][%END%]
 Mime-version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-transfer-encoding: 8bit
 
-[%|l(list.subject)%]This list is about %1, so you are probably concerned.[%END%]
+[%|loc(list.subject)%]This list is about %1, so you are probably concerned.[%END%]
 
-[%|l%]To subscribe just reply to this message or hit the following mailto url :[%END%]
+[%|loc%]To subscribe just reply to this message or hit the following mailto url :[%END%]
 [% url %]
 
-[%|l%]If you don't want to subscribe just ignore this message.[%END%]
+[%|loc%]If you don't want to subscribe just ignore this message.[%END%]

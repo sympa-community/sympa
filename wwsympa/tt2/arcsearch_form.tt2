@@ -8,11 +8,11 @@
 <div style="text-align: center; margin-left: auto; margin-right: auto;">
 <table style="width: 100%;">
 <tr><td style="background: [% light_color %]; text-align: center;">
-<span style="font-size: larger;">[%|l%]Search field :[%END%] </span><a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><span style="font-size: 1.44em; color: [% dark_color %];"><strong>[% archive_name %]</strong></span></a>
+<span style="font-size: larger;">[%|loc%]Search field :[%END%] </span><a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><span style="font-size: 1.44em; color: [% dark_color %];"><strong>[% archive_name %]</strong></span></a>
 </td><td style="background: [% light_color %]; text-align: center;">
 <input name="key_word" type="text" size="30" value="[% key_word %]" />
 <input name="action" type="hidden" value="arcsearch" />
-<input name="action_arcsearch" type="submit" value="[%|l%]Search[%END%]" />
+<input name="action_arcsearch" type="submit" value="[%|loc%]Search[%END%]" />
 </td></tr></table>
 </div>
 <p></p>
@@ -20,54 +20,54 @@
 <table cellspacing="0" cellpadding="0">
 
 <tr style="white-space: nowrap;" valign="top">
-<th><strong>[%|l%]Search[%END%]</strong></th>
-<td><label><input type="radio" name="how" value="phrase" checked="checked" /> <strong>[%|l%]this sentence[%END%]</strong></label></td>
-<td><label><input type="radio" name="how" value="all" /> <strong>[%|l%]all of these words[%END%]</strong></label></td>
-<td><label><input type="radio" name="how" value="any" /> <strong>[%|l%]one of these words[%END%]</strong></label></td>
+<th><strong>[%|loc%]Search[%END%]</strong></th>
+<td><label><input type="radio" name="how" value="phrase" checked="checked" /> <strong>[%|loc%]this sentence[%END%]</strong></label></td>
+<td><label><input type="radio" name="how" value="all" /> <strong>[%|loc%]all of these words[%END%]</strong></label></td>
+<td><label><input type="radio" name="how" value="any" /> <strong>[%|loc%]one of these words[%END%]</strong></label></td>
 </tr>
 
 <tr style="white-space: nowrap;" valign="top">
-<th><strong>[%|l%]Prefer[%END%]</strong></th>
-<td><label><input type="radio" name="age" value="new" checked="checked" /> <span style="color: [% dark_color %];"><strong>[%|l%]newest messages[%END%]</strong></span></label></td>
-<td><label><input type="radio" name="age" value="old" /> <span style="color: [% dark_color %];"><strong>[%|l%]oldest messages[%END%]</strong></span></label></td>
+<th><strong>[%|loc%]Prefer[%END%]</strong></th>
+<td><label><input type="radio" name="age" value="new" checked="checked" /> <span style="color: [% dark_color %];"><strong>[%|loc%]newest messages[%END%]</strong></span></label></td>
+<td><label><input type="radio" name="age" value="old" /> <span style="color: [% dark_color %];"><strong>[%|loc%]oldest messages[%END%]</strong></span></label></td>
 </tr>
 
 <tr style="white-space: nowrap;" valign="top">
-<th><strong>[%|l%]Case[%END%] </strong></th>
-<td><label><input type="radio" name="case" value="off" checked="checked" /> <span style="color: [% dark_color %];"><strong>[%|l%]insensitive[%END%]</strong></span></label></td>
-<td><label><input type="radio" name="case" value="on" /> <span style="color: [% dark_color %];"><strong>[%|l%]sensitive[%END%]</strong></span></label></td>
+<th><strong>[%|loc%]Case[%END%] </strong></th>
+<td><label><input type="radio" name="case" value="off" checked="checked" /> <span style="color: [% dark_color %];"><strong>[%|loc%]insensitive[%END%]</strong></span></label></td>
+<td><label><input type="radio" name="case" value="on" /> <span style="color: [% dark_color %];"><strong>[%|loc%]sensitive[%END%]</strong></span></label></td>
 </tr>
 
 <tr style="white-space: nowrap;" valign="top">
-<th><strong>[%|l%]Check[%END%]</strong></th>
-<td><label><input type="radio" name="match" value="partial" checked="checked" /> <span style="color: [% dark_color %];"><strong>[%|l%]part of word[%END%]</strong></span></label></td>
-<td><label><input type="radio" name="match" value="exact" /> <span style="color: [% dark_color %];"><strong>[%|l%]entire word[%END%]</strong></span></label></td>
+<th><strong>[%|loc%]Check[%END%]</strong></th>
+<td><label><input type="radio" name="match" value="partial" checked="checked" /> <span style="color: [% dark_color %];"><strong>[%|loc%]part of word[%END%]</strong></span></label></td>
+<td><label><input type="radio" name="match" value="exact" /> <span style="color: [% dark_color %];"><strong>[%|loc%]entire word[%END%]</strong></span></label></td>
 </tr>
 
 <tr style="white-space: nowrap;" valign="top">
-<th><strong>[%|l%]Layout[%END%]</strong></th>
-<td><label><input type="radio" name="limit" value="10" checked="checked" /> <span style="color: [% dark_color %];"><strong>10</strong></span> [%|l%]results by page[%END%]</label></td>
-<td><label><input type="radio" name="limit" value="25" /> <span style="color: [% dark_color %];"><strong>25</strong></span> [%|l%]results by page[%END%]</label></td>
-<td><label><input type="radio" name="limit" value="50" /> <span style="color: [% dark_color %];"><strong>50</strong></span> [%|l%]results by page[%END%]</label></td>
+<th><strong>[%|loc%]Layout[%END%]</strong></th>
+<td><label><input type="radio" name="limit" value="10" checked="checked" /> <span style="color: [% dark_color %];"><strong>10</strong></span> [%|loc%]results by page[%END%]</label></td>
+<td><label><input type="radio" name="limit" value="25" /> <span style="color: [% dark_color %];"><strong>25</strong></span> [%|loc%]results by page[%END%]</label></td>
+<td><label><input type="radio" name="limit" value="50" /> <span style="color: [% dark_color %];"><strong>50</strong></span> [%|loc%]results by page[%END%]</label></td>
 </tr>
 
 <tr style="white-space: nowrap;" valign="top">
-<th rowspan="2"><strong>[%|l%]Search area[%END%]</strong></th>
-<td><label><input type="checkbox" name="from" value="True" /> <span style="color: [% dark_color %];"><strong>[%|l%]Sender[%END%]</strong></span></label></td>
+<th rowspan="2"><strong>[%|loc%]Search area[%END%]</strong></th>
+<td><label><input type="checkbox" name="from" value="True" /> <span style="color: [% dark_color %];"><strong>[%|loc%]Sender[%END%]</strong></span></label></td>
 
-<td><label><input type="checkbox" name="subj" value="True" checked="checked" /> <span style="color: [% dark_color %];"> <strong>[%|l%]Subject[%END%]</strong></span></label></td>
+<td><label><input type="checkbox" name="subj" value="True" checked="checked" /> <span style="color: [% dark_color %];"> <strong>[%|loc%]Subject[%END%]</strong></span></label></td>
 </tr>
 
 <tr style="white-space: nowrap;" valign="top">
-<td><label><input type="checkbox" name="date" value="True" /> <span style="color: [% dark_color %];"><strong>[%|l%]Date[%END%]</strong></span></label></td>
+<td><label><input type="checkbox" name="date" value="True" /> <span style="color: [% dark_color %];"><strong>[%|loc%]Date[%END%]</strong></span></label></td>
 
-<td><label><input type="checkbox" name="body" value="True" checked="checked" /> <span style="color: [% dark_color %];"><strong>[%|l%]Body[%END%]</strong></span></label></td>
+<td><label><input type="checkbox" name="body" value="True" checked="checked" /> <span style="color: [% dark_color %];"><strong>[%|loc%]Body[%END%]</strong></span></label></td>
 </tr>
 
 </table>
 
 <dl>
-<dt><strong>[%|l%]Extend search field[%END%]</strong>
+<dt><strong>[%|loc%]Extend search field[%END%]</strong>
 <dd>
 <select name="directories" multiple="multiple" size="4">    
 

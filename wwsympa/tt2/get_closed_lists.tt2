@@ -3,14 +3,14 @@
 
 <form action="[% path_cgi %]" method="post">
 
-<strong>[%|l%]Closed lists[%END%]</strong>
+<strong>[%|loc%]Closed lists[%END%]</strong>
 <p></p>
 <table style="width: 100%;">
  <tr style="background: [% light_color %];">
    <th><strong>X</strong></th>
-   <th><strong>[%|l%]list name[%END%]</strong></th>
-   <th><strong>[%|l%]list subject[%END%]</strong></th>
-   <th><strong>[%|l%]Requested by[%END%]</strong></th>
+   <th><strong>[%|loc%]list name[%END%]</strong></th>
+   <th><strong>[%|loc%]list subject[%END%]</strong></th>
+   <th><strong>[%|loc%]Requested by[%END%]</strong></th>
  </tr>
 
 [% FOREACH list = closed %]
@@ -23,7 +23,7 @@
 [% END %]
 </table>
 
-<input type="submit" name="action_purge_list" value="[%|l%]Purge selected lists[%END%]" />
+<input type="submit" name="action_purge_list" value="[%|loc%]Purge selected lists[%END%]" />
 
 </form>
 

@@ -1,11 +1,11 @@
 From: [% conf.email %]@[% conf.host %]
 To: [% to %]
 [% IF type == 'auto_notify_bouncers' %]
-Subject: [% FILTER qencode %][%|l(list.name)%]Your bouncing address in list %1[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Your bouncing address in list %1[%END%][%END%]
 
-[%|l(list.name,to,subscriber.first_bounce)%]Messages from list %1 that were sent to your address %2
+[%|loc(list.name,to,subscriber.first_bounce)%]Messages from list %1 that were sent to your address %2
 generated non-delivery reports since %3. 
 If this problem persists, you will be automatically unsubscribed from the list.[%END%]
 
-[%|l%]You can contact list owner:[%END%] [% list.name %]-request@[% conf.host %]
+[%|loc%]You can contact list owner:[%END%] [% list.name %]-request@[% conf.host %]
 [% END %]

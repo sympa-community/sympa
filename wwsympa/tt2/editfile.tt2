@@ -8,10 +8,10 @@
 <textarea name="content" cols="80" rows="25">
 [% INSERT $filepath IF filepath %]
 </textarea>
-  <input type="submit" name="action_savefile" value="[%|l%]Save[%END%]" />
+  <input type="submit" name="action_savefile" value="[%|loc%]Save[%END%]" />
 
 [% ELSE %]
-[%|l%]You can edit several messages/files associated to your list :[%END%]<br /><br />
+[%|loc%]You can edit several messages/files associated to your list :[%END%]<br /><br />
 
 <dl>
 <dd><input type="hidden" name="list" value="[% list %]" />
@@ -20,7 +20,7 @@
 	        <option value="[% f.key %]" [% f.value.selected %]>[% f.value.complete %]</option>
 	      [% END %]
 	    </select>
-	    <input type="submit" name="action_editfile" value="[%|l%]Edit[%END%]" />
+	    <input type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
 </dd></dl>
 <p></p>
 [% PROCESS 'help_editfile.tt2' %]

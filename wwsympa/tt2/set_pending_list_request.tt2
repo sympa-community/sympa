@@ -8,13 +8,13 @@
 <TD>
 <TABLE BORDER=0 WIDTH=100% >
 <TR BGCOLOR="[% light_color %]">
- <TD><B>[%|l%]Listname :[%END%]</B></TD><TD WIDTH=100% >[% list %]</TD>
+ <TD><B>[%|loc%]Listname :[%END%]</B></TD><TD WIDTH=100% >[% list %]</TD>
 </TR>
 <TR BGCOLOR="[% light_color %]">
- <TD><B>[%|l%]Subject :[%END%] </B></TD><TD WIDTH=100%>[% list_subject %]</TD>
+ <TD><B>[%|loc%]Subject :[%END%] </B></TD><TD WIDTH=100%>[% list_subject %]</TD>
 </TR>
 <TR BGCOLOR="[% light_color %]">
- <TD NOWRAP><B>[%|l%]List requested by[%END%] </B></TD><TD WIDTH=100%>[% list_request_by %] [%|l(list_request_date)%] on %1[%END%]</TD>
+ <TD NOWRAP><B>[%|loc%]List requested by[%END%] </B></TD><TD WIDTH=100%>[% list_request_by %] [%|loc(list_request_date)%] on %1[%END%]</TD>
 </TR>
 </TABLE>
 </TD>
@@ -31,13 +31,13 @@
 <INPUT TYPE="hidden" NAME="serial" VALUE="[% list_serial %]">
 
 <MENU>
-<INPUT TYPE="radio" NAME="status" VALUE="closed">[%|l%]Close it[%END%] &nbsp;&nbsp;
-<INPUT TYPE="radio" NAME="status" VALUE="open">[%|l%]Install it[%END%] &nbsp;&nbsp;
+<INPUT TYPE="radio" NAME="status" VALUE="closed">[%|loc%]Close it[%END%] &nbsp;&nbsp;
+<INPUT TYPE="radio" NAME="status" VALUE="open">[%|loc%]Install it[%END%] &nbsp;&nbsp;
 </MENU>
 </TD>
 <TD>
-<INPUT TYPE="submit" NAME="action_install_pending_list" VALUE="[%|l%]submit[%END%]">
-<INPUT TYPE="checkbox" NAME="notify" CHECKED>[%|l%]notify owner[%END%]
+<INPUT TYPE="submit" NAME="action_install_pending_list" VALUE="[%|loc%]submit[%END%]">
+<INPUT TYPE="checkbox" NAME="notify" CHECKED>[%|loc%]notify owner[%END%]
 </FORM>
 </TD>
 </TR>
@@ -48,7 +48,7 @@
 <TABLE BORDER=0 WIDTH=100%>
 <TR>
  <TD ALIGN=CENTER>
-   <B>[%|l%]Information file[%END%]</B> 
+   <B>[%|loc%]Information file[%END%]</B> 
    [% IF is_listmaster %]
       ([% list_info %])
    [% END %]
@@ -64,7 +64,7 @@
  </TD>
 </TR>
 <TR>
- <TD ALIGN=CENTER><B>[%|l%]Configuration file[%END%]</B>
+ <TD ALIGN=CENTER><B>[%|loc%]Configuration file[%END%]</B>
    [% IF is_listmaster %]
       ([% list_config %])
    [% END %]

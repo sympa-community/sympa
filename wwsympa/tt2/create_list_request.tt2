@@ -6,19 +6,19 @@
 
 <table>
  <tr>
-   <tr style="white-space: nowrap;"><label for="listname"><strong>[%|l%]List name:[%END%]</strong></label></th>
+   <tr style="white-space: nowrap;"><label for="listname"><strong>[%|loc%]List name:[%END%]</strong></label></th>
    <td><input type="text" id="listname" name="listname" size="30" VALUE="[% saved.listname %]" /></td>
-   <td><img src="[% icons_url %]/unknown.png" alt="[%|l%]the list name ; be careful, not its address ![%END%]" /></td>
+   <td><img src="[% icons_url %]/unknown.png" alt="[%|loc%]the list name ; be careful, not its address ![%END%]" /></td>
  </tr>
  
  <tr>
-   <th style="white-space: nowrap;"><strong>[%|l%]Owner:[%END%]</strong></th>
+   <th style="white-space: nowrap;"><strong>[%|loc%]Owner:[%END%]</strong></th>
    <td><em>[% user.email %]</em></td>
-   <td><img src="[% icons_url %]/unknown.png" alt="[%|l%]You are the privileged owner of this list[%END%]" /></td>
+   <td><img src="[% icons_url %]/unknown.png" alt="[%|loc%]You are the privileged owner of this list[%END%]" /></td>
  </tr>
 
  <tr>
-   <th valign="top" style="white-space: nowrap;"><strong>[%|l%]List type :[%END%]</strong></th>
+   <th valign="top" style="white-space: nowrap;"><strong>[%|loc%]List type :[%END%]</strong></th>
    <td>
      <ul>
   [% FOREACH template = list_list_tpl %]
@@ -35,17 +35,17 @@
   [% END %]
      </ul>
     </td>
-    <td valign="top"><img src="[% icons_url %]/unknown.png" alt="[%|l%]The list type is a set of parameters' profile. Parameters will be editable, once the list created[%END%]" /></td>
+    <td valign="top"><img src="[% icons_url %]/unknown.png" alt="[%|loc%]The list type is a set of parameters' profile. Parameters will be editable, once the list created[%END%]" /></td>
  </tr>
  <tr>
-   <th style="white-space: nowrap;"><label for="subject"><strong>[%|l%]Subject:[%END%]</strong></label></th>
+   <th style="white-space: nowrap;"><label for="subject"><strong>[%|loc%]Subject:[%END%]</strong></label></th>
    <td><input type="text" name="subject" id="subject" size="60" value="[% saved.subject %]" /></td>
-   <td><img src="[% icons_url %]/unknown.png" alt="[%|l%]The list's subject[%END%]" /></td>
+   <td><img src="[% icons_url %]/unknown.png" alt="[%|loc%]The list's subject[%END%]" /></td>
  </tr>
  <tr>
-   <th style="white-space: nowrap;"><label for="topics"><strong>[%|l%]Topics:[%END%]</strong></label></th>
+   <th style="white-space: nowrap;"><label for="topics"><strong>[%|loc%]Topics:[%END%]</strong></label></th>
    <td><select id="topics" name="topics">
-	<option value="">[%|l%]--Select a topic--[%END%]</option>
+	<option value="">[%|loc%]--Select a topic--[%END%]</option>
 	[% FOREACH topic = list_of_topics %]
 	  <option value="[% topic.key %]"
 	  [% IF topic.value.selected %]
@@ -58,16 +58,16 @@
 	  [% END %]
 	  [% END %]
 	[% END %]
-	<option value="other">[%|l%]Other[%END%]</option>
+	<option value="other">[%|loc%]Other[%END%]</option>
      </select>
    </td>
-   <td valign="top"><img src="[% icons_url %]/unknown.png" alt="[%|l%]List classification in the directory[%END%]" /></td>
+   <td valign="top"><img src="[% icons_url %]/unknown.png" alt="[%|loc%]List classification in the directory[%END%]" /></td>
  </tr>
 
  <tr>
-   <th valign="top" style="white-space: nowrap;"><label for="info"><strong>[%|l%]Description:[%END%]</strong></label></th>
+   <th valign="top" style="white-space: nowrap;"><label for="info"><strong>[%|loc%]Description:[%END%]</strong></label></th>
    <td><textarea cols="60" rows="10" id="info" name="info">[% saved.info %]</textarea></td>
-   <td valign="top"><img src="[% icons_url %]/unknown.png" alt="[%|l%]A few lines describing the list[%END%]" /></td>
+   <td valign="top"><img src="[% icons_url %]/unknown.png" alt="[%|loc%]A few lines describing the list[%END%]" /></td>
  </tr>
 
  <tr>
@@ -75,7 +75,7 @@
     <table>
      <tr>
       <td style="background: [% light_color %];">
-<input type="submit" name="action_create_list" value="[%|l%]Submit your creation request[%END%]" />
+<input type="submit" name="action_create_list" value="[%|loc%]Submit your creation request[%END%]" />
       </td>
      </tr></table>
 </td></tr>

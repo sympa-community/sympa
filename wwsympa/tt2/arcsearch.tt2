@@ -1,35 +1,35 @@
 <!-- $Id$ -->
 
-<h2>[%|l%]Result of your search in the archive[%END%] 
+<h2>[%|loc%]Result of your search in the archive[%END%] 
 <a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><span style="color: [% dark_color %];">[% list %]</span></a> : </h2>
 
-<p>[%|l%]Search field :[%END%] 
+<p>[%|loc%]Search field :[%END%] 
 [% FOREACH u = directories %]
  <a href="[% path_cgi %]/arc/[% list %]/[% u %]"><span style="color: [% dark_color %];">[% u %]</font></a> - 
 [% END %]
 </p>
 <p>
-[%|l(key_word)%]Parameters of these search make on <strong> &quot;%1&quot;</strong>[%END%] 
+[%|loc(key_word)%]Parameters of these search make on <strong> &quot;%1&quot;</strong>[%END%] 
 <em>
 
 [% IF how == 'phrase' %]
-	[%|l%](This sentence,[%END%] 
+	[%|loc%](This sentence,[%END%] 
 [% ELSIF how == 'any' %]
-	[%|l%](All of this words,[%END%] 
+	[%|loc%](All of this words,[%END%] 
 [% ELSE %]
-	[%|l%](Each of this words,[%END%] 
+	[%|loc%](Each of this words,[%END%] 
 [% END %]
 
 [% IF case %]
-	[%|l%]case insensitive[%END%] 
+	[%|loc%]case insensitive[%END%] 
 [% ELSE %]
-	[%|l%]case sensitive[%END%] 
+	[%|loc%]case sensitive[%END%] 
 [% END %]
 
 [% IF match %]
-	[%|l%]and checking on part of word)[%END%]
+	[%|loc%]and checking on part of word)[%END%]
 [% ELSE %]
-	[%|l%]and checking on entire word)[%END%]
+	[%|loc%]and checking on entire word)[%END%]
 [% END %]
 </em>
 </p>
@@ -37,9 +37,9 @@
 <hr />
 
 [% IF age %]
-	<p><strong>[%|l%]Newest messages first[%END%]</strong></p>
+	<p><strong>[%|loc%]Newest messages first[%END%]</strong></p>
 [% ELSE %]
-	<p><strong>[%|l%]Oldest messages first[%END%]</strong></p>
+	<p><strong>[%|loc%]Oldest messages first[%END%]</strong></p>
 [% END %]
 
 <dl>
@@ -49,23 +49,23 @@
 </dl>
 
 <dl>
-<strong>[%|l%]Result[%END%]</strong>
-<dt><strong>[%|l(searched,num)%]%1 messages selected out of %2[%END%]...</strong><br />
+<strong>[%|loc%]Result[%END%]</strong>
+<dt><strong>[%|loc(searched,num)%]%1 messages selected out of %2[%END%]...</strong><br />
 
 [% IF body %]
-	<dd>[%|l(body_count)%]%1 hits on message's Body[%END%]<br /></dd>
+	<dd>[%|loc(body_count)%]%1 hits on message's Body[%END%]<br /></dd>
 [% END %]
 
 [% IF subj %]
-	<dd>[%|l(subj_count)%]%1 hits on message's Subject field[%END%]<br /></dd>
+	<dd>[%|loc(subj_count)%]%1 hits on message's Subject field[%END%]<br /></dd>
 [% END %]
 
 [% IF from %]
-	<dd>[%|l(from_count)%] %1 hits on message's From field[%END%]<br /></dd>
+	<dd>[%|loc(from_count)%] %1 hits on message's From field[%END%]<br /></dd>
 [% END %]
 
 [% IF date %]
-	<dd>[%|l(date_count)%]%1 hits on message's Date field[%END%]<br /></dd>
+	<dd>[%|loc(date_count)%]%1 hits on message's Date field[%END%]<br /></dd>
 [% END %]
 
 </dl>
@@ -106,14 +106,14 @@
 [% END %]
 
 [% IF continue %]
-	<input name="action_arcsearch" type="submit" value="[%|l%]Continue search[%END%]" />
+	<input name="action_arcsearch" type="submit" value="[%|loc%]Continue search[%END%]" />
 [% END %]
 
-<input name="action_arcsearch_form" type="submit" value="[%|l%]New search[%END%]" />
+<input name="action_arcsearch_form" type="submit" value="[%|loc%]New search[%END%]" />
 </form>
 <hr />
-<p>[%|l%]Based on <em><a href="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></em>, search engine of MHonArc archives[%END%]</p>
+<p>[%|loc%]Based on <em><a href="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></em>, search engine of MHonArc archives[%END%]</p>
 
 
-<a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><strong>[%|l(archive_name)%]Return to archive %1[%END%] 
+<a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><strong>[%|loc(archive_name)%]Return to archive %1[%END%] 
 </strong></a><br />

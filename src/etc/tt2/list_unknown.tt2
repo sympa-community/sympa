@@ -1,6 +1,6 @@
 From: [% conf.email %]@[% conf.host %]
 To: [% to %]
-Subject: [% FILTER qencode %][%|l%]List unknown[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
 Mime-version: 1.0
 Content-Type: multipart/report; report-type=delivery-status; 
 	boundary="[% boundary %]"
@@ -9,17 +9,17 @@ Content-Type: multipart/report; report-type=delivery-status;
 Content-Description: Notification
 Content-Type: text/plain
 
-[%|l%]This is an automatic response sent by Sympa Mailing Lists Manager.[%END%]
+[%|loc%]This is an automatic response sent by Sympa Mailing Lists Manager.[%END%]
 
-[%|l%]The following address is not a known mailing list :[%END%]
+[%|loc%]The following address is not a known mailing list :[%END%]
 
 	[% list %]
 
-[%|l%]To find out the correct listname, ask for this server's lists directory :[%END%]
+[%|loc%]To find out the correct listname, ask for this server's lists directory :[%END%]
 
 	mailto:[% conf.email %]@[% conf.host %]?subject=WHICH
 
-[%|l(conf.host)%]For further assistance, please contact listmaster@%1[%END%]
+[%|loc(conf.host)%]For further assistance, please contact listmaster@%1[%END%]
 
 --[% boundary %]
 Content-Type: message/delivery-status

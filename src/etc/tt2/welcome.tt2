@@ -1,5 +1,5 @@
 From: [% conf.email %]@[% conf.host %]
-Subject: [% FILTER qencode %][%|l(list.name)%]Welcome to list %1[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Welcome to list %1[%END%][%END%]
 Mime-version: 1.0
 Content-Type: multipart/alternative; boundary="===Sympa==="
 
@@ -7,15 +7,15 @@ Content-Type: multipart/alternative; boundary="===Sympa==="
 Content-Type: text/plain; charset=iso-8859-1
 Content-transfer-encoding: 8bit
 
-[%|l(list.name,list.host)%]Welcome to list %1@%2[%END%]
-[%|l(user.email)%]Your subscription email is %1[%END%]
+[%|loc(list.name,list.host)%]Welcome to list %1@%2[%END%]
+[%|loc(user.email)%]Your subscription email is %1[%END%]
 [% IF user.password %]
-[%|l(user.password)%]Your password: %1.[%END%]
+[%|loc(user.password)%]Your password: %1.[%END%]
 [% END %]
 
 [% INSERT "${list.dir}/info" %]
 
-[%|l%]Everything about this list:[%END%]
+[%|loc%]Everything about this list:[%END%]
 [% conf.wwsympa_url %]/info/[% list.name %]
 
 --===Sympa===
@@ -24,14 +24,14 @@ Content-transfer-encoding: 8bit
 
 <HTML>
 <HEAD>
-<TITLE>[%|l(list.name,list.host)%]Welcome to list %1@%2[%END%]</title>
+<TITLE>[%|loc(list.name,list.host)%]Welcome to list %1@%2[%END%]</title>
 <BODY  BGCOLOR=#ffffff>
 
-<B>[%|l(list.name,list.host)%]Welcome to list %1@%2[%END%] </B><BR>
-[%|l(user.email)%]Your subscription email is %1[%END%] 
+<B>[%|loc(list.name,list.host)%]Welcome to list %1@%2[%END%] </B><BR>
+[%|loc(user.email)%]Your subscription email is %1[%END%] 
 [% IF user.password %] 
 <BR>
-[%|l(user.password)%]Your password: %1.[%END%]
+[%|loc(user.password)%]Your password: %1.[%END%]
 [% END %]
 <BR><BR>
 <PRE>
@@ -39,7 +39,7 @@ Content-transfer-encoding: 8bit
 </PRE>
 
 <HR>
-[%|l%]Everything about this list:[%END%]
+[%|loc%]Everything about this list:[%END%]
 <A HREF="[% conf.wwsympa_url %]/info/[% list.name %]">[% conf.wwsympa_url %]/info/[% list.name %]</A>
 
 

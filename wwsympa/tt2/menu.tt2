@@ -6,7 +6,7 @@
   <TR ALIGN=center BGCOLOR="[% dark_color %]">
   [% IF auth_method == 'smime' %]
   <TD bgcolor="[% bg_color %]">
-<A HREF="[% path_cgi %]/show_cert" onClick="winhelp=window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=320');winlogin.focus()" TARGET="wws_help"><IMG SRC="[% icons_url %]/locked.png" align="center" alt="[%|l%]security info[%END%]" border=0></A>
+<A HREF="[% path_cgi %]/show_cert" onClick="winhelp=window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=320');winlogin.focus()" TARGET="wws_help"><IMG SRC="[% icons_url %]/locked.png" align="center" alt="[%|loc%]security info[%END%]" border=0></A>
   [% ELSE %]
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">
@@ -19,7 +19,7 @@
      [% ELSE %]
       <A HREF="[% path_cgi %]/logout/[% action %]/[% list %]" >
      [% END %]
-     <FONT SIZE=-1><B>[%|l%]Logout[%END%]</B></FONT></A>
+     <FONT SIZE=-1><B>[%|loc%]Logout[%END%]</B></FONT></A>
      </TD>
   [% ELSE %]
      <TD NOWRAP BGCOLOR="[% bg_color %]" ALIGN="center"><IMG SRC="[% icons_url %]/locked.png" align="center" alt="https"></TD>
@@ -32,7 +32,7 @@
       <A HREF="[% path_cgi %]/nomenu/loginrequest/[% action %]/[% list %]"
      [% END %]
        onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=550,height=300')" TARGET="wws_login">
-       <FONT SIZE=-1><B>[%|l%]Login[%END%]</B></FONT></A>
+       <FONT SIZE=-1><B>[%|loc%]Login[%END%]</B></FONT></A>
       </TD>
   [% END %]
     </TR>
@@ -54,11 +54,11 @@
   [% IF may_create_list %]
    [% IF action == 'create_list_request' %]
     <TD NOWRAP BGCOLOR="[% selected_color %]" ALIGN="center">
-        <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|l%]Create list[%END%]</B></FONT>
+        <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|loc%]Create list[%END%]</B></FONT>
     </TD>
    [% ELSE %]
     <TD NOWRAP BGCOLOR="[% light_color %]"  ALIGN="center">
-	 <A HREF="[% path_cgi %]/create_list_request" ><FONT SIZE=-1><B>[%|l%]Create list[%END%]</B></FONT></A>
+	 <A HREF="[% path_cgi %]/create_list_request" ><FONT SIZE=-1><B>[%|loc%]Create list[%END%]</B></FONT></A>
     </TD>
    [% END %]
   [% END %]
@@ -66,11 +66,11 @@
   [% IF is_listmaster %]
    [% IF action == 'serveradmin' %]
     <TD NOWRAP BGCOLOR="[% selected_color %]" ALIGN="center">
-        <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|l%]Sympa admin[%END%]</B></FONT>
+        <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|loc%]Sympa admin[%END%]</B></FONT>
     </TD>
    [% ELSE %]
     <TD NOWRAP BGCOLOR="[% light_color %]"  ALIGN="center">
-	 <A HREF="[% path_cgi %]/serveradmin" ><font size=-1><B>[%|l%]Sympa admin[%END%]</B></FONT></A>
+	 <A HREF="[% path_cgi %]/serveradmin" ><font size=-1><B>[%|loc%]Sympa admin[%END%]</B></FONT></A>
     </TD>
    [% END %]
   [% END %]
@@ -79,46 +79,46 @@
 
   [% IF action == 'pref' %]
   <TD NOWRAP BGCOLOR="[% selected_color %]"  ALIGN="center">
-      <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|l%]Preferences[%END%]</B></FONT>
+      <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|loc%]Preferences[%END%]</B></FONT>
   </TD>
   [% ELSE %]
   <TD NOWRAP BGCOLOR="[% light_color %]">
-      <A HREF="[% path_cgi %]/pref/[% action %]/[% list %]" ><FONT SIZE=-1><B>[%|l%]Preferences[%END%]</B></FONT></A>
+      <A HREF="[% path_cgi %]/pref/[% action %]/[% list %]" ><FONT SIZE=-1><B>[%|loc%]Preferences[%END%]</B></FONT></A>
   </TD>
   [% END %]
 
   [% IF action == 'which' %]
   <TD NOWRAP BGCOLOR="[% selected_color %]" ALIGN="center">
-      <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|l%]Your subscriptions[%END%]</B></FONT>
+      <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|loc%]Your subscriptions[%END%]</B></FONT>
   </TD>
   [% ELSE %]
   <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center">
-      <A HREF="[% path_cgi %]/which" ><FONT SIZE=-1><B>[%|l%]Your subscriptions[%END%]</B></FONT></A>
+      <A HREF="[% path_cgi %]/which" ><FONT SIZE=-1><B>[%|loc%]Your subscriptions[%END%]</B></FONT></A>
    </TD>
    [% END %]
   
   [% ELSE %]
   <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center">
-      <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|l%]Pref[%END%]</B></FONT>
+      <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|loc%]Pref[%END%]</B></FONT>
   </TD>
   <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center">
-      <FONT SIZE=-1 COLOR="[% bg_color %]"><B>[%|l%]Your subscriptions[%END%]</B></FONT>
+      <FONT SIZE=-1 COLOR="[% bg_color %]"><B>[%|loc%]Your subscriptions[%END%]</B></FONT>
   </TD>
   [% END %]
 
   [% IF action == 'home' %]
-  <TD NOWRAP BGCOLOR="[% selected_color %]" ALIGN="center"><FONT SIZE=-1 COLOR=[% bg_color %]><B>[%|l%]Home[%END%]</B></FONT></TD>
+  <TD NOWRAP BGCOLOR="[% selected_color %]" ALIGN="center"><FONT SIZE=-1 COLOR=[% bg_color %]><B>[%|loc%]Home[%END%]</B></FONT></TD>
   [% ELSE %]
   <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center">
-      <A HREF="[% path_cgi %]/"><FONT SIZE=-1><B>[%|l%]Home[%END%]</B></FONT></A>
+      <A HREF="[% path_cgi %]/"><FONT SIZE=-1><B>[%|loc%]Home[%END%]</B></FONT></A>
   </TD>
   [% END %]
 
   [% IF action == 'help' %]
-  <TD NOWRAP BGCOLOR="[% selected_color %]" ALIGN="center"><FONT SIZE=-1 COLOR=[% bg_color %]><B>[%|l%]Help[%END%]</B></FONT></TD>
+  <TD NOWRAP BGCOLOR="[% selected_color %]" ALIGN="center"><FONT SIZE=-1 COLOR=[% bg_color %]><B>[%|loc%]Help[%END%]</B></FONT></TD>
   [% ELSE %]
   <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center">
-      <A HREF="[% path_cgi %]/help" ><FONT SIZE=-1><B>[%|l%]Help[%END%]</B></FONT></A>
+      <A HREF="[% path_cgi %]/help" ><FONT SIZE=-1><B>[%|loc%]Help[%END%]</B></FONT></A>
   </TD>
   [% END %]
 </TR>

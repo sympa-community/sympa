@@ -17,11 +17,11 @@
 
       [% IF action == 'info' %]
         <TD WIDTH=100% BGCOLOR="[% selected_color %]" NOWRAP align=right>
-           <font color="[% bg_color %]" size=-1><b>[%|l%]List info[%END%]</b></font>
+           <font color="[% bg_color %]" size=-1><b>[%|loc%]List info[%END%]</b></font>
         </TD>
       [% ELSE %]
         <TD WIDTH=100% BGCOLOR="[% light_color %]" NOWRAP align=right>
-        <A HREF="[% path_cgi %]/info/[% list %]" ><font size=-1><b>[%|l%]List info[%END%]</b>
+        <A HREF="[% path_cgi %]/info/[% list %]" ><font size=-1><b>[%|loc%]List info[%END%]</b>
         </font></A>
         </TD>
       [% END %]
@@ -41,22 +41,22 @@
   <TD WIDTH=110 COLSPAN=3 BGCOLOR="[% bg_color %]" NOWRAP align=left>
      [% PROCESS 'list_button_header.tt2' %]
         <TD BGCOLOR="[% light_color %]">
-	  [%|l%]Subscribers:[%END%] <B>[% total %]</B><BR>
+	  [%|loc%]Subscribers:[%END%] <B>[% total %]</B><BR>
 	  <BR>
-	  [%|l%]Owners[%END%]
+	  [%|loc%]Owners[%END%]
 	  [% FOREACH o = owner %]
 	    [% o.value.mailto %]
 	  [% END %]
 	  <BR>
 	  [% IF is_moderated %]
-	    [%|l%]Moderators[%END%]
+	    [%|loc%]Moderators[%END%]
 	    [% FOREACH e = editor %]
 		[% e.value.mailto %]
 	    [% END %]
 	  [% END %]
           <BR>
 	  [% IF list_as_x509_cert %]
-          <BR><A HREF="[% path_cgi %]/load_cert/[% list %]"><font size="-1"><b>[%|l%]Load certificate[%END%]<b></font></A><BR>
+          <BR><A HREF="[% path_cgi %]/load_cert/[% list %]"><font size="-1"><b>[%|loc%]Load certificate[%END%]<b></font></A><BR>
           [% END %]
      [% PROCESS 'list_button_footer.tt2' %]
   </TD>
@@ -73,17 +73,17 @@
      [% PROCESS 'list_button_header.tt2' %]
 
    [% IF action == 'admin' %]
-        <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right><font color="[% bg_color %]" size=-1><b>[%|l%]List admin[%END%]</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right><font color="[% bg_color %]" size=-1><b>[%|loc%]List admin[%END%]</b></font></TD>
    [% ELSIF action_type == 'admin' %]
         <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right>
         <b>
-         <A HREF="[% path_cgi %]/admin/[% list %]" ><FONT COLOR="[% bg_color %]" SIZE="-1">[%|l%]List admin[%END%]</FONT></A>
+         <A HREF="[% path_cgi %]/admin/[% list %]" ><FONT COLOR="[% bg_color %]" SIZE="-1">[%|loc%]List admin[%END%]</FONT></A>
         </b>
         </TD>
    [% ELSE %]
         <TD WIDTH="100%" BGCOLOR="[% light_color %]" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[% path_cgi %]/admin/[% list %]" >[%|l%]List admin[%END%]</A>
+         <A HREF="[% path_cgi %]/admin/[% list %]" >[%|loc%]List admin[%END%]</A>
         </b></font>
         </TD>
    [% END %]
@@ -102,20 +102,20 @@
   <TD WIDTH=110 COLSPAN=3 BGCOLOR="[% bg_color %]" NOWRAP align=left>
      [% PROCESS 'list_button_header.tt2' %]
         <TD BGCOLOR="[% light_color %]">
-	   [%|l%]Bounced email rate:[%END%] <B>[% bounce_rate %]%</B><BR>
+	   [%|loc%]Bounced email rate:[%END%] <B>[% bounce_rate %]%</B><BR>
            <BR>
         [% IF is_editor %]
  	   [% IF mod_total == '0' %]
-	   [%|l%]No message to moderate[%END%]
+	   [%|loc%]No message to moderate[%END%]
            [% ELSE %]
-           [%|l%]Messages to moderate :[%END%]<B> [% mod_total %]</B>
+           [%|loc%]Messages to moderate :[%END%]<B> [% mod_total %]</B>
            [% END %]
            [% IF shared == 'exist' %]
              <BR><BR>
              [% IF mod_total_shared == '0' %]
-             [%|l%]No document to moderate[%END%]
+             [%|loc%]No document to moderate[%END%]
              [% ELSE %]
-             <B>[%|l%]Documents to moderate :[%END%]<B> [% mod_total_shared %]</B>
+             <B>[%|loc%]Documents to moderate :[%END%]<B> [% mod_total_shared %]</B>
              [% END %]
            [% END %]
          [% END %]
@@ -141,11 +141,11 @@
   <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
      [% PROCESS 'list_button_header.tt2' %]
       [% IF action == 'suboptions' %]
-        <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right><font color="[% bg_color %]" size=-1><b>[%|l%]Subscriber Options[%END%]</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right><font color="[% bg_color %]" size=-1><b>[%|loc%]Subscriber Options[%END%]</b></font></TD>
       [% ELSE %]
         <TD WIDTH="100%" BGCOLOR="[% light_color %]" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[% path_cgi %]/suboptions/[% list %]" >[%|l%]Subscriber Options[%END%]</A>
+         <A HREF="[% path_cgi %]/suboptions/[% list %]" >[%|loc%]Subscriber Options[%END%]</A>
         </b></font>
         </TD>
       [% END %]
@@ -168,17 +168,17 @@
   <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
      [% PROCESS 'list_button_header.tt2' %]
       [% IF action == 'signoff' %]
-        <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right><font color="[% bg_color %]" size=-1><b>[%|l%]Unsubscribe[%END%]</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right><font color="[% bg_color %]" size=-1><b>[%|loc%]Unsubscribe[%END%]</b></font></TD>
       [% ELSIF user.email %]
         <TD WIDTH="100%" BGCOLOR="[% light_color %]" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[% path_cgi %]/signoff/[% list %]" onClick="request_confirm_link('[% path_cgi %]/signoff/[% list %]', '[%|l(list)%]Do you really want to unsubscribe from list %1?[%END%]'); return false;">[%|l%]Unsubscribe[%END%]</A>
+         <A HREF="[% path_cgi %]/signoff/[% list %]" onClick="request_confirm_link('[% path_cgi %]/signoff/[% list %]', '[%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%]'); return false;">[%|loc%]Unsubscribe[%END%]</A>
         </b></font>
         </TD>
        [% ELSE %]
         <TD WIDTH="100%" BGCOLOR="[% light_color %]" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[% path_cgi %]/sigrequest/[% list %]">[%|l%]Unsubscribe[%END%]</A>
+         <A HREF="[% path_cgi %]/sigrequest/[% list %]">[%|loc%]Unsubscribe[%END%]</A>
         </b></font>
         </TD>
        [% END %]
@@ -197,7 +197,7 @@
      [% PROCESS 'list_button_header.tt2' %]
         <TD WIDTH="100%" BGCOLOR="[% light_color %]" NOWRAP align=right>
         <font size=-1><b>
-     <A HREF="[% path_cgi %]/subscribe/[% list %]" onClick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[%|l(list)%]Do you really want to subscribe to list %1?[%END%]'); return false;">[%|l%]Subscribe[%END%]</A>
+     <A HREF="[% path_cgi %]/subscribe/[% list %]" onClick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[%|loc(list)%]Do you really want to subscribe to list %1?[%END%]'); return false;">[%|loc%]Subscribe[%END%]</A>
         </b></font>
         </TD>
      [% PROCESS 'list_button_footer.tt2' %]
@@ -229,21 +229,21 @@
   <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
      [% PROCESS 'list_button_header.tt2' %]
    [% IF action == 'subrequest' %]
-        <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right><font color="[% bg_color %]" size=-1><b>[%|l%]Subscribe[%END%]</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right><font color="[% bg_color %]" size=-1><b>[%|loc%]Subscribe[%END%]</b></font></TD>
    [% ELSE %]
         <TD WIDTH="100%" BGCOLOR="[% light_color %]" NOWRAP align=right>
     [% IF may_subscribe == '1' %]
       [% IF user.email %]
         <font size=-1><b>
-     <A HREF="[% path_cgi %]/subscribe/[% list %]" onClick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[%|l(list)%]Do you really want to subscribe to list %1?[%END%]'); return false;">[%|l%]Subscribe[%END%]</A>
+     <A HREF="[% path_cgi %]/subscribe/[% list %]" onClick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[%|loc(list)%]Do you really want to subscribe to list %1?[%END%]'); return false;">[%|loc%]Subscribe[%END%]</A>
         </b></font>
       [% ELSE %]
          <font size=-1><b>
-     <A HREF="[% path_cgi %]/subrequest/[% list %]">[%|l%]Subscribe[%END%]</A>
+     <A HREF="[% path_cgi %]/subrequest/[% list %]">[%|loc%]Subscribe[%END%]</A>
         </b></font>
       [% END %]
     [% ELSE %]
-	<font size=-1 COLOR="[% bg_color %]"><b>[%|l%]Subscribe[%END%]</b></font>
+	<font size=-1 COLOR="[% bg_color %]"><b>[%|loc%]Subscribe[%END%]</b></font>
     [% END %]
         </TD>
    [% END %]
@@ -267,11 +267,11 @@
         <TD WIDTH="100%" BGCOLOR="[% light_color %]" NOWRAP align=right>
        [% IF user.email %]
         <font size=-1><b>
-         <A HREF="[% path_cgi %]/signoff/[% list %]" onClick="request_confirm_link('[% path_cgi %]/signoff/[% list %]', '[%|l(list)%]Do you really want to unsubscribe from list %1?[%END%]'); return false;">[%|l%]Unsubscribe[%END%]</A>
+         <A HREF="[% path_cgi %]/signoff/[% list %]" onClick="request_confirm_link('[% path_cgi %]/signoff/[% list %]', '[%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%]'); return false;">[%|loc%]Unsubscribe[%END%]</A>
         </b></font>
        [% ELSE %]
        <font size=-1><b>
-         <A HREF="[% path_cgi %]/sigrequest/[% list %]">[%|l%]Unsubscribe[%END%]</A>
+         <A HREF="[% path_cgi %]/sigrequest/[% list %]">[%|loc%]Unsubscribe[%END%]</A>
         </b></font>
        [% END %]
         </TD>
@@ -295,29 +295,29 @@
      [% PROCESS 'list_button_header.tt2' %]
    [% IF action == 'arc' %]
         <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right>
-          <font size=-1 COLOR="[% bg_color %]"><b>[%|l%]Archive[%END%]</b></font>
+          <font size=-1 COLOR="[% bg_color %]"><b>[%|loc%]Archive[%END%]</b></font>
 	</TD>
    [% ELSIF action == 'arcsearch_form' %]
         <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right>
-          <font size=-1 COLOR="[% bg_color %]"><b>[%|l%]Archive[%END%]</b></font>
+          <font size=-1 COLOR="[% bg_color %]"><b>[%|loc%]Archive[%END%]</b></font>
 	</TD>
    [% ELSIF action == 'arcsearch' %]
         <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right>
-          <font size=-1 COLOR="[% bg_color %]"><b>[%|l%]Archive[%END%]</b></font>
+          <font size=-1 COLOR="[% bg_color %]"><b>[%|loc%]Archive[%END%]</b></font>
 	</TD>
    [% ELSIF action == 'arc_protect' %]
         <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right>
-          <font size=-1 COLOR="[% bg_color %]"><b>[%|l%]Archive[%END%]</b></font>
+          <font size=-1 COLOR="[% bg_color %]"><b>[%|loc%]Archive[%END%]</b></font>
 	</TD>
   [% ELSE %]
 
         <TD WIDTH="100%" BGCOLOR="[% light_color %]" NOWRAP align=right>
    [% IF arc_access %]
         <font size=-1><b>
-         <A HREF="[% path_cgi %]/arc/[% list %]" >[%|l%]Archive[%END%]</A>
+         <A HREF="[% path_cgi %]/arc/[% list %]" >[%|loc%]Archive[%END%]</A>
         </b></font>
    [% ELSE %]
-        <font size=-1 COLOR="[% bg_color %]"><b>[%|l%]Archive[%END%]</b></font>
+        <font size=-1 COLOR="[% bg_color %]"><b>[%|loc%]Archive[%END%]</b></font>
    [% END %]
         </TD>
    [% END %]
@@ -341,17 +341,17 @@
      [% PROCESS 'list_button_header.tt2' %]
    [% IF action == 'compose_mail' %]
         <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right>
-          <font size=-1 COLOR="[% bg_color %]"><b>[%|l%]Post[%END%]</b></font>
+          <font size=-1 COLOR="[% bg_color %]"><b>[%|loc%]Post[%END%]</b></font>
 	</TD>
   [% ELSE %]
 
         <TD WIDTH="100%" BGCOLOR="[% light_color %]" NOWRAP align=right>
    [% IF may_post %]
         <font size=-1><b>
-         <A HREF="[% path_cgi %]/compose_mail/[% list %]" >[%|l%]Post[%END%]</A>
+         <A HREF="[% path_cgi %]/compose_mail/[% list %]" >[%|loc%]Post[%END%]</A>
         </b></font>
    [% ELSE %]
-        <font size=-1 COLOR="[% bg_color %]"><b>[%|l%]Post[%END%]</b></font>
+        <font size=-1 COLOR="[% bg_color %]"><b>[%|loc%]Post[%END%]</b></font>
    [% END %]
         </TD>
    [% END %]
@@ -380,12 +380,12 @@
       [% IF may_d_read %]
         <TD WIDTH="100%" BGCOLOR="[% light_color %]" NOWRAP align=right>
          <font size=-1><b>
-         <A HREF="[% path_cgi %]/d_read/[% list %]/" >[%|l%]Shared web[%END%]</A>
+         <A HREF="[% path_cgi %]/d_read/[% list %]/" >[%|loc%]Shared web[%END%]</A>
          </b></font>
         </TD>
       [% ELSE %]
         <TD WIDTH="100%" BGCOLOR="[% light_color %]" NOWRAP align=right>
-         <font size=-1 COLOR="[% bg_color %]"><b>[%|l%]Shared web[%END%]</b></font>
+         <font size=-1 COLOR="[% bg_color %]"><b>[%|loc%]Shared web[%END%]</b></font>
         </TD>
       [% END %]
     [% END %]
@@ -409,12 +409,12 @@
      [% PROCESS 'list_button_header.tt2' %]
       [% IF action == 'review' %]
         <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right>
-          <font size=-1 COLOR="[% bg_color %]"><b>[%|l%]Review[%END%]</b></font>
+          <font size=-1 COLOR="[% bg_color %]"><b>[%|loc%]Review[%END%]</b></font>
 	</TD>
       [% ELSE %]
         <TD WIDTH="100%" BGCOLOR="[% light_color %]" NOWRAP align=right>
          <font size=-1><b>
-         <A HREF="[% path_cgi %]/review/[% list %]" >[%|l%]Review[%END%]</A>
+         <A HREF="[% path_cgi %]/review/[% list %]" >[%|loc%]Review[%END%]</A>
          </b></font>
 	</TD>
       [% END %]

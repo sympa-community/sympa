@@ -10,7 +10,7 @@
       <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
       <INPUT TYPE="hidden" NAME="action" VALUE="add">
       <INPUT TYPE="text" NAME="email" SIZE="35">
-      <INPUT TYPE="submit" NAME="action_add" VALUE="Add"> [%|l%]quiet[%END%]<INPUT TYPE="checkbox" NAME="quiet">
+      <INPUT TYPE="submit" NAME="action_add" VALUE="Add"> [%|loc%]quiet[%END%]<INPUT TYPE="checkbox" NAME="quiet">
     </FORM>
 </TD>
 </TR>
@@ -19,7 +19,7 @@
      [% PROCESS 'button_header.tt2' %]
        <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[% selected_color %]" SIZE="-1">
-         <A HREF="[% path_cgi %]/subindex/[% list %]" ><b>[%|l%]Pending subscriptions[%END%]</b></A>
+         <A HREF="[% path_cgi %]/subindex/[% list %]" ><b>[%|loc%]Pending subscriptions[%END%]</b></A>
          </FONT>
        </TD>
      [% PROCESS 'button_footer.tt2' %]
@@ -28,7 +28,7 @@
      [% PROCESS 'button_header.tt2' %]
        <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[% selected_color %]" SIZE="-1">
-         <A HREF="[% path_cgi %]/add_request/[% list %]" ><b>[%|l%]Multiple add[%END%]</b></A>
+         <A HREF="[% path_cgi %]/add_request/[% list %]" ><b>[%|loc%]Multiple add[%END%]</b></A>
          </FONT>
        </TD>
      [% PROCESS 'button_footer.tt2' %]
@@ -39,7 +39,7 @@
        <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[% selected_color %]" SIZE="-1">
 
-         <A HREF="[% path_cgi %]/remind/[% list %]" onClick="request_confirm_link('[% path_cgi %]/remind/[% list %]', '[%|l(total)%]Do you really want to send a subscription remind message to the %1 subscribers ?[%END%]'); return false;"><b>[%|l%]Remind all subscribers[%END%]</b></A>
+         <A HREF="[% path_cgi %]/remind/[% list %]" onClick="request_confirm_link('[% path_cgi %]/remind/[% list %]', '[%|loc(total)%]Do you really want to send a subscription remind message to the %1 subscribers ?[%END%]'); return false;"><b>[%|loc%]Remind all subscribers[%END%]</b></A>
 
          </FONT>
        </TD>
@@ -55,11 +55,11 @@
 <INPUT TYPE=hidden NAME=list VALUE="[% list %]">
 <INPUT TYPE="hidden" NAME="action" VALUE="search">
 <INPUT SIZE="18" NAME=filter VALUE="[% filter %]">
-<INPUT TYPE="submit" NAME="action_search" VALUE="[%|l%]Search[%END%]">
+<INPUT TYPE="submit" NAME="action_search" VALUE="[%|loc%]Search[%END%]">
 [% IF action == 'search' %]
-<BR>[%|l(occurrence)%]%1 occurrence(s) found[%END%]<BR>
+<BR>[%|loc(occurrence)%]%1 occurrence(s) found[%END%]<BR>
 [% IF too_many_select %]
-[%|l%]Selection too wide, can not show selection[%END%]
+[%|loc%]Selection too wide, can not show selection[%END%]
 [% END %]
 [% END %]
 </FORM>
@@ -75,18 +75,18 @@
   <TR><TD ALIGN="left" NOWRAP>
   [% IF is_owner %]
 
-    <!--INPUT TYPE="button" NAME="action_del" VALUE="[%|l%]Delete selected email addresses[%END%]" onClick="return request_confirm('[%|l%]Do you really want to unsubscribe ALL selected subscribers ?[%END%]')"-->
+    <!--INPUT TYPE="button" NAME="action_del" VALUE="[%|loc%]Delete selected email addresses[%END%]" onClick="return request_confirm('[%|loc%]Do you really want to unsubscribe ALL selected subscribers ?[%END%]')"-->
 
-    <INPUT TYPE="submit" NAME="action_del" VALUE="[%|l%]Delete selected email addresses[%END%]">
+    <INPUT TYPE="submit" NAME="action_del" VALUE="[%|loc%]Delete selected email addresses[%END%]">
 
-    <INPUT TYPE="checkbox" NAME="quiet"> [%|l%]quiet[%END%]
+    <INPUT TYPE="checkbox" NAME="quiet"> [%|loc%]quiet[%END%]
   [% END %]
   </TD>
   <TD WIDTH="100%">&nbsp;</TD>
   [% IF action != 'search' %]
   <TD NOWRAP>
 	<INPUT TYPE="hidden" NAME="sortby" VALUE="[% sortby %]">
-	<INPUT TYPE="submit" NAME="action_review" VALUE="[%|l%]Page size[%END%]">
+	<INPUT TYPE="submit" NAME="action_review" VALUE="[%|loc%]Page size[%END%]">
 	        <SELECT NAME="size">
                   <OPTION VALUE="[% size %]" SELECTED>[% size %]
 		  <OPTION VALUE="25">25
@@ -97,13 +97,13 @@
    </TD>
    <TD>
    [% IF prev_page %]
-    <A HREF="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><IMG SRC="[% icons_url %]/left.png" BORDER=0 ALT="[%|l%]Previous page[%END%]"></A>
+    <A HREF="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><IMG SRC="[% icons_url %]/left.png" BORDER=0 ALT="[%|loc%]Previous page[%END%]"></A>
    [% END %]
    [% IF page %]
      page [% page %] / [% total_page %]
    [% END %]
    [% IF next_page %]
-     <A HREF="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><IMG SRC="[% icons_url %]/right.png" BORDER="0" ALT="[%|l%]Next page[%END%]"></A>
+     <A HREF="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><IMG SRC="[% icons_url %]/right.png" BORDER="0" ALT="[%|loc%]Next page[%END%]"></A>
    [% END %]
   [% END %]
   </TD></TR>
@@ -116,52 +116,52 @@
 	[% END %]
         [% IF sortby == 'email' %]
   	    <TH NOWRAP COLSPAN=2 BGCOLOR="[% selected_color %]">
-	    <FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|l%]Email[%END%]</b></FONT>
+	    <FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|loc%]Email[%END%]</b></FONT>
 	[% ELSE %]
 	    <TH NOWRAP COLSPAN=2>
 	    <A HREF="[% path_cgi %]/review/[% list %]/1/[% size %]/email" >
-	    <FONT SIZE="-1"><b>[%|l%]Email[%END%]</b></FONT></A>
+	    <FONT SIZE="-1"><b>[%|loc%]Email[%END%]</b></FONT></A>
 	[% END %]
 	</TH>
         [% IF sortby == 'domain' %]
   	    <TH NOWRAP BGCOLOR="[% selected_color %]">
-	    <FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|l%]Domain[%END%]</b></FONT>
+	    <FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|loc%]Domain[%END%]</b></FONT>
 	[% ELSE %]
 	    <TH NOWRAP>
 	    <A HREF="[% path_cgi %]/review/[% list %]/1/[% size %]/domain" >
-	    <FONT SIZE="-1"><b>[%|l%]Domain[%END%]</b></FONT></A>
+	    <FONT SIZE="-1"><b>[%|loc%]Domain[%END%]</b></FONT></A>
 	[% END %]
 	</TH>
 	[% IF sortby == 'name' %]
 	<TH NOWRAP BGCOLOR="[% selected_color %]">
-	  <FONT COLOR="[% bg_color %]" SIZE="-1">[%|l%]Name[%END%]</FONT>
+	  <FONT COLOR="[% bg_color %]" SIZE="-1">[%|loc%]Name[%END%]</FONT>
 	[% ELSE %]
 	<TH NOWRAP>
 		<A HREF="[% path_cgi %]/review/[% list %]/1/[% size %]/name">
-		<FONT SIZE="-1">[%|l%]Name[%END%]</FONT></a>
+		<FONT SIZE="-1">[%|loc%]Name[%END%]</FONT></a>
 	[% END %] 
 	</TH>
         [% IF is_owner %]
-	  <TH><FONT SIZE="-1"><B>[%|l%]Reception[%END%]</B></FONT>
+	  <TH><FONT SIZE="-1"><B>[%|loc%]Reception[%END%]</B></FONT>
 	  </TH>
 	  [% IF list_conf.user_data_source == 'include2' %]
          [% IF sortby == 'sources' %]
   	    <TH NOWRAP BGCOLOR="[% selected_color %]">
-	    <FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|l%]Sources[%END%]</b></FONT>
+	    <FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|loc%]Sources[%END%]</b></FONT>
 	[% ELSE %]
 	    <TH NOWRAP>
 	    <A HREF="[% path_cgi %]/review/[% list %]/1/[% size %]/sources" >
-	    <FONT SIZE="-1"><b>[%|l%]Sources[%END%]</b></FONT></A>
+	    <FONT SIZE="-1"><b>[%|loc%]Sources[%END%]</b></FONT></A>
 	[% END %]
 	</TH>
           [% END %]
 	  [% IF sortby == 'date' %]
   	    <TH NOWRAP BGCOLOR="[% selected_color %]">
-	    <FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|l%]Sub date[%END%]</b></FONT>
+	    <FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|loc%]Sub date[%END%]</b></FONT>
 	  [% ELSE %]
 	    <TH NOWRAP><FONT SIZE="-1">
 	    <A HREF="[% path_cgi %]/review/[% list %]/1/[% size %]/date" >
-	    <b>[%|l%]Sub date[%END%]</b></A></FONT>
+	    <b>[%|loc%]Sub date[%END%]</b></A></FONT>
 	  [% END %]
           </TH>
 	  <TH><FONT SIZE="-1"><B>Last update</B></FONT></TH>
@@ -196,7 +196,7 @@
  	        [% u.email %]
  	      [% END %]
 	  </FONT></TD>
-            <TD ALIGN="right"BGCOLOR="[% error_color %]"><FONT SIZE=-1 COLOR="[% bg_color %]"><B>[%|l%]bouncing[%END%]</B></FONT>
+            <TD ALIGN="right"BGCOLOR="[% error_color %]"><FONT SIZE=-1 COLOR="[% bg_color %]"><B>[%|loc%]bouncing[%END%]</B></FONT>
 	    </TD>
 
 	 [% ELSE %]
@@ -261,22 +261,22 @@
 
         <!--INPUT TYPE="button" NAME="action_del" VALUE="Delete selected email addresses" onClick="return request_confirm('Do you really want to unsubscribe ALL selected subscribers ?')"-->
 
-	<INPUT TYPE="submit" NAME="action_del" VALUE="[%|l%]Delete selected email addresses[%END%]">
+	<INPUT TYPE="submit" NAME="action_del" VALUE="[%|loc%]Delete selected email addresses[%END%]">
 
-        <INPUT TYPE="checkbox" NAME="quiet"> [%|l%]quiet[%END%]
+        <INPUT TYPE="checkbox" NAME="quiet"> [%|loc%]quiet[%END%]
       [% END %]
     </TD>
 
    [% IF action != 'search' %]
     <TD ALIGN="right">
        [% IF prev_page %]
-	 <A HREF="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><IMG SRC="[% icons_url %]/left.png" BORDER=0 ALT="[%|l%]Previous page[%END%]"></A>
+	 <A HREF="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><IMG SRC="[% icons_url %]/left.png" BORDER=0 ALT="[%|loc%]Previous page[%END%]"></A>
        [% END %]
        [% IF page %]
   	  page [% page %] / [% total_page %]
        [% END %]
        [% IF next_page %]
-	  <A HREF="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><IMG SRC="[% icons_url %]/right.png" BORDER=0 ALT="[%|l%]Next page[%END%]"></A>
+	  <A HREF="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><IMG SRC="[% icons_url %]/right.png" BORDER=0 ALT="[%|loc%]Next page[%END%]"></A>
        [% END %]
     </TD>
    [% END %]

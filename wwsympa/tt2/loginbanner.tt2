@@ -2,25 +2,25 @@
 
 <BR>
 [% IF password_sent %]
-  [%|l(init_email)%]Your password has been sent to your email address %1.<BR>Please check your e-mail box to provide your password below.[%END%]
+  [%|loc(init_email)%]Your password has been sent to your email address %1.<BR>Please check your e-mail box to provide your password below.[%END%]
   <BR><BR>
 [% END %]
 
 [% IF action == 'loginrequest' %]
- [%|l%]You need to login to access your custom WWSympa environment or to perform a privileged operation (one that requires your email address).[%END%]
+ [%|loc%]You need to login to access your custom WWSympa environment or to perform a privileged operation (one that requires your email address).[%END%]
 [% ELSE %]
- [%|l%]Most mailing list features require your email. Some mailing lists are hidden to  unidentified persons.<BR>
+ [%|loc%]Most mailing list features require your email. Some mailing lists are hidden to  unidentified persons.<BR>
  In order to benefit from the full services provided by this server, you probably need to identify yourself first.[%END%] <BR>
 [% IF use_sso %]
 [% IF use_passwd == '1' %]
 
-[%|l%]To login, select your organization authentication server below.<BR>
+[%|loc%]To login, select your organization authentication server below.<BR>
 If it is not listed or if you don't have any, login using your email and password on the right column.[%END%]
 
 [% END %]
 [% ELSE %]
 [% IF use_passwd == '1' %]
-[%|l%]Login with you email address and password. You can request a password reminder.[%END%]
+[%|loc%]Login with you email address and password. You can request a password reminder.[%END%]
 [% END %]
 [% END %]
 
@@ -45,13 +45,13 @@ If it is not listed or if you don't have any, login using your email and passwor
          <TR BGCOLOR="[% light_color %]">
           <TD NOWRAP align=center>
      	      <INPUT TYPE=hidden NAME=list VALUE="[% list %]">
-     	      <FONT SIZE=-1 COLOR="[% selected_color %]"><b>[%|l%]Magic authentification[%END%]
+     	      <FONT SIZE=-1 COLOR="[% selected_color %]"><b>[%|loc%]Magic authentification[%END%]
 
                 [% FOREACH server = sso %]
                    <INPUT TYPE="hidden" NAME="auth_service_name" VALUE="[% server.key %]">
                 [% END %]
               </SELECT>
-              <INPUT TYPE="submit" NAME="action_sso_login" VALUE="[%|l%]Go[%END%]" SELECTED>
+              <INPUT TYPE="submit" NAME="action_sso_login" VALUE="[%|loc%]Go[%END%]" SELECTED>
 
    	    </TD>
      	  </TR>
@@ -70,14 +70,14 @@ If it is not listed or if you don't have any, login using your email and passwor
          <TR BGCOLOR="[% light_color %]">
           <TD NOWRAP align=center>
      	      <INPUT TYPE=hidden NAME=list VALUE="[% list %]">
-     	      <FONT SIZE=-1 COLOR="[% selected_color %]"><b>[%|l%]Choose your authentication server[%END%]
+     	      <FONT SIZE=-1 COLOR="[% selected_color %]"><b>[%|loc%]Choose your authentication server[%END%]
 
               <SELECT NAME="auth_service_name" onchange="this.form.submit();">
                 [% FOREACH server = sso %]
                    <OPTION VALUE="[% server.key %]">[% server.value %]
                 [% END %]
               </SELECT>
-              <INPUT TYPE="submit" NAME="action_sso_login" VALUE="[%|l%]Go[%END%]" SELECTED>
+              <INPUT TYPE="submit" NAME="action_sso_login" VALUE="[%|loc%]Go[%END%]" SELECTED>
 
 
    	    </TD>
@@ -109,7 +109,7 @@ If it is not listed or if you don't have any, login using your email and passwor
      	      <FONT SIZE=-1 COLOR="[% selected_color %]"><b>email address <INPUT TYPE="text" NAME="email" SIZE=20 VALUE="[% init_email %]">
       	      password : </b>
               <INPUT TYPE=password NAME=passwd SIZE=8>&nbsp;&nbsp;
-              <INPUT TYPE="submit" NAME="action_login" VALUE="[%|l%]Login[%END%]" SELECTED>
+              <INPUT TYPE="submit" NAME="action_login" VALUE="[%|loc%]Login[%END%]" SELECTED>
    	    </TD>
      	  </TR>
        </TABLE>
@@ -119,7 +119,7 @@ If it is not listed or if you don't have any, login using your email and passwor
 
 <TABLE border=0><TR>
 <TD>
-<I>[%|l%]If you never had a password from that server or if you don't remember it :[%END%]</I>
+<I>[%|loc%]If you never had a password from that server or if you don't remember it :[%END%]</I>
 </TD><TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
   <TR ALIGN=center BGCOLOR="[% dark_color %]">
@@ -133,7 +133,7 @@ If it is not listed or if you don't have any, login using your email and passwor
          <A HREF="[% path_cgi %]/nomenu/remindpasswd/referer/[% referer %]"
       [% END %]
        onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=300')" TARGET="wws_login">
-     <FONT SIZE=-1><B>[%|l%]Send me a password[%END%]</B></FONT></A>
+     <FONT SIZE=-1><B>[%|loc%]Send me a password[%END%]</B></FONT></A>
      </TD>
     </TR>
   </TABLE>

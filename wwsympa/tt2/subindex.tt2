@@ -5,10 +5,10 @@
       <TR BGCOLOR="[% dark_color %]">
         <TH><FONT SIZE="-1" COLOR="[% bg_color %]"><B>X</B></FONT></TH>
         <TH NOWRAP COLSPAN=2 >
-	<FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|l%]Email[%END%]</b></FONT></TH>
-        <TH><FONT COLOR="[% bg_color %]" SIZE="-1"><B>[%|l%]Name[%END%]</B></FONT></TH>
+	<FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|loc%]Email[%END%]</b></FONT></TH>
+        <TH><FONT COLOR="[% bg_color %]" SIZE="-1"><B>[%|loc%]Name[%END%]</B></FONT></TH>
         <TH NOWRAP>
-	<FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|l%]Date[%END%]</b></FONT></TH>
+	<FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|loc%]Date[%END%]</b></FONT></TH>
       </TR>
       
       [% IF subscriptions %]
@@ -45,11 +45,11 @@
         [% END %]
 
         [% ELSE %]
-         <TR COLSPAN="4"><TH>[%|l%]No subscription requests[%END%]</TH></TR>
+         <TR COLSPAN="4"><TH>[%|loc%]No subscription requests[%END%]</TH></TR>
         [% END %]
       </TABLE>
 <INPUT TYPE="hidden" NAME="previous_action" VALUE="subindex">
 <INPUT TYPE="hidden" NAME="previous_list" VALUE="[% list %]">
-<INPUT TYPE="submit" NAME="action_add" VALUE="[%|l%]Add selected addresses[%END%]">
-<INPUT TYPE="submit" NAME="action_ignoresub" VALUE="[%|l%]Reject selected addresses[%END%]">
+<INPUT TYPE="submit" NAME="action_add" VALUE="[%|loc%]Add selected addresses[%END%]">
+<INPUT TYPE="submit" NAME="action_ignoresub" VALUE="[%|loc%]Reject selected addresses[%END%]">
 </FORM>

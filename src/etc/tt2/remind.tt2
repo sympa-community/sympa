@@ -1,10 +1,10 @@
 From: [% conf.email %]@[% conf.host %]
-Subject: [% FILTER qencode %][%|l(list.name)%]Reminder of your subscription to %1[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Reminder of your subscription to %1[%END%][%END%]
 
-[%|l(list.name,list.host,user.email,user.password)%]Your are subscriber of list %1@%2 with  email %3[%END%]
+[%|loc(list.name,list.host,user.email,user.password)%]Your are subscriber of list %1@%2 with  email %3[%END%]
 
-[%|l(user.password)%]Your password : %1[%END%]
+[%|loc(user.password)%]Your password : %1[%END%]
 
-[%|l%]Everything about this list : [%END%][% conf.wwsympa_url %]/info/[% list.name %]
-[%|l%]Unsubscription :[%END%]
+[%|loc%]Everything about this list : [%END%][% conf.wwsympa_url %]/info/[% list.name %]
+[%|loc%]Unsubscription :[%END%]
 mailto:[% conf.email %]@[% conf.host %]?subject=sig%20[% list.name %]%20[% user.email %]

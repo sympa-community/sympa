@@ -8,13 +8,13 @@
 <TD>
 <TABLE BORDER=0 WIDTH=100% >
 <TR BGCOLOR="[% light_color %]">
- <TD><B>[%|l%]Listname :[%END%]</B></TD><TD WIDTH=100% >[% list %]</TD>
+ <TD><B>[%|loc%]Listname :[%END%]</B></TD><TD WIDTH=100% >[% list %]</TD>
 </TR>
 <TR BGCOLOR="[% light_color %]">
- <TD><B>[%|l%]Subject :[%END%] </B></TD><TD WIDTH=100%>[% list_subject %]</TD>
+ <TD><B>[%|loc%]Subject :[%END%] </B></TD><TD WIDTH=100%>[% list_subject %]</TD>
 </TR>
 <TR BGCOLOR="[% light_color %]">
- <TD NOWRAP><B>[%|l%]List requested by[%END%] </B></TD><TD WIDTH=100%>[% list_request_by %] [%|l(list_request_date)%]on %1[%END%]</TD>
+ <TD NOWRAP><B>[%|loc%]List requested by[%END%] </B></TD><TD WIDTH=100%>[% list_request_by %] [%|loc(list_request_date)%]on %1[%END%]</TD>
 </TR>
 </TABLE>
 </TD>
@@ -23,10 +23,10 @@
 <BR><BR>
 [% IF is_listmaster %]
 [% IF auto_aliases %]
-[%|l%]Aliases have been installed.[%END%]
+[%|loc%]Aliases have been installed.[%END%]
 [% ELSE %]
 <TABLE BORDER=1>
-<TR BGCOLOR="[% light_color %]"><TD align=center>[%|l%]Aliases you should install in your mailer[%END%]</TD></TR>
+<TR BGCOLOR="[% light_color %]"><TD align=center>[%|loc%]Aliases you should install in your mailer[%END%]</TD></TR>
 <TR>
 <TD>
 <pre><code>

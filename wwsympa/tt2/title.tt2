@@ -10,15 +10,15 @@
           <b>[% user.email %]</b>
          <CENTER>
  	 [% IF is_listmaster %]
-	  [%|l%]Listmaster[%END%]
+	  [%|loc%]Listmaster[%END%]
 	 [% ELSIF is_privileged_owner %]
-          [%|l%]Privileged owner[%END%]
+          [%|loc%]Privileged owner[%END%]
 	 [% ELSIF is_owner %]
-          [%|l%]Owner[%END%]
+          [%|loc%]Owner[%END%]
          [% ELSIF is_editor %]
-          [%|l%]Editor[%END%]
+          [%|loc%]Editor[%END%]
          [% ELSIF is_subscriber %]
-	  [%|l%]Subscriber[%END%]
+	  [%|loc%]Subscriber[%END%]
 	 [% END %]
 	  </CENTER>
 	 [% END %]

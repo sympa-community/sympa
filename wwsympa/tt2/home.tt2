@@ -3,7 +3,7 @@
 <br /><p></o> 
 <table border="0" style="background: [% light_color %];"><tr><td>
 <p style="text-align: justify;">
-[%|l(conf.email,conf.host)%]This server provides you access to your environment on mailing list server %1@%2. Starting from this URL, you can perform subscription options, unsubscription,
+[%|loc(conf.email,conf.host)%]This server provides you access to your environment on mailing list server %1@%2. Starting from this URL, you can perform subscription options, unsubscription,
 archives, list management and so on.[%END%]
 </p>
 </td></tr></table>
@@ -13,7 +13,7 @@ archives, list management and so on.[%END%]
 <table border="0" style="margin-left: auto; margin-right: auto;">
  <tr>
   <th style="background: [% selected_color %];">
-   <span style="color: [% bg_color %];">[%|l%]Mailing lists[%END%]</span>
+   <span style="color: [% bg_color %];">[%|loc%]Mailing lists[%END%]</span>
   </th>
  </tr>
  <tr>
@@ -23,7 +23,7 @@ archives, list management and so on.[%END%]
      [% FOREACH topic = topics %]
       o
       [% IF topic.id == 'topicsless' %]
-       <a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[%|l%]Others[%END%]</strong></a><br />
+       <a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[%|loc%]Others[%END%]</strong></a><br />
       [% ELSE %]
        <a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[% topic.current_title %]</strong></a><br />
       [% END %]
@@ -46,7 +46,7 @@ archives, list management and so on.[%END%]
      [% PROCESS 'button_header.tt2' %]
       <td style="background: [% light_color %]; white-space: nowrap; text-align: center;"> 
       <a href="[% path_cgi %]/lists">
-     <span style="font-size: smaller;"><strong>[%|l%]view all lists[%END%]</strong></span></a>
+     <span style="font-size: smaller;"><strong>[%|loc%]view all lists[%END%]</strong></span></a>
      </td>
      [% PROCESS 'button_footer.tt2' %]
 </td>
@@ -55,10 +55,10 @@ archives, list management and so on.[%END%]
         <FORM ACTION="[% path_cgi %]" METHOD=POST> 
          <INPUT SIZE=25 NAME=filter VALUE=[% filter %]>
          <INPUT TYPE="hidden" NAME="action" VALUE="search_list">
-         <INPUT TYPE="submit" NAME="action_search_list" VALUE="[%|l%]Search lists[%END%]">
+         <INPUT TYPE="submit" NAME="action_search_list" VALUE="[%|loc%]Search lists[%END%]">
 	  <br />
-	 <INPUT TYPE="radio" NAME="extended" VALUE="0" checked>[%|l%]Local[%END%]
-         <INPUT TYPE="radio" NAME="extended" VALUE="1">[%|l%]Extended search[%END%]
+	 <INPUT TYPE="radio" NAME="extended" VALUE="0" checked>[%|loc%]Local[%END%]
+         <INPUT TYPE="radio" NAME="extended" VALUE="1">[%|loc%]Extended search[%END%]
 	 
         </FORM>
    </TD>

@@ -7,11 +7,11 @@
    <tr><td>[% f %]</td></tr>
   [% END %]
    <tr><td>&nbsp; </td></tr>
-   <tr><td>[%|l%]already exist(s), do you want to confirm the install and erase the old file(s) or cancel the install ?[%END%]
+   <tr><td>[%|loc%]already exist(s), do you want to confirm the install and erase the old file(s) or cancel the install ?[%END%]
    </td></tr>
  <tr>
-  <td><input type="submit" name="mode_confirm" value="[%|l%]Confirm[%END%]" /></td>
-  <td><input type="submit" name="mode_cancel" value="[%|l%]Cancel[%END%]" /></td>
+  <td><input type="submit" name="mode_confirm" value="[%|loc%]Confirm[%END%]" /></td>
+  <td><input type="submit" name="mode_cancel" value="[%|loc%]Cancel[%END%]" /></td>
  </tr>
  </table>
  <input type="hidden" name="list" value="[% list %]" />

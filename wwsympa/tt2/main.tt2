@@ -3,7 +3,7 @@
 
 <!-- comment -->
 <HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=[%|l%]_charset_[%END%]">
+<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=[%|loc%]_charset_[%END%]">
 
 [% IF use_htmlarea %]
 <script type="text/javascript">
@@ -86,7 +86,7 @@
   function check_cookie() {
  
      if (GetCookie('sympauser') == null) {
-        alert("[%|l%]Sympa could not set a cookie for login.\n Your should setup your navigator to accept cookies[%END%]");
+        alert("[%|loc%]Sympa could not set a cookie for login.\n Your should setup your navigator to accept cookies[%END%]");
      }
   }
 [% END %]

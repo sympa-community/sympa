@@ -1,40 +1,40 @@
 [% FOREACH notice = notices %]
 
 [% IF notice.msg == 'sent_to_owner' %]
-[%|l%]Your request has been forwarded to the list owner[%END%]
+[%|loc%]Your request has been forwarded to the list owner[%END%]
 
 [% ELSIF notice.msg == 'add_performed' %]
-[%|l(notice.total)%]%1 subscribers added[%END%]
+[%|loc(notice.total)%]%1 subscribers added[%END%]
 
 [% ELSIF notice.msg == 'performed' %]
-[%|l(notice.action)%]%1 : action succeeded[%END%]
+[%|loc(notice.action)%]%1 : action succeeded[%END%]
 
 [% ELSIF notice.msg == 'list_config_updated' %]
-[%|l%]Configuration file has been updated[%END%]
+[%|loc%]Configuration file has been updated[%END%]
 
 [% ELSIF notice.msg == 'upload_success' %] 
-[%|l(notice.path)%]File %1 successfully uploaded![%END%]
+[%|loc(notice.path)%]File %1 successfully uploaded![%END%]
 
 [% ELSIF notice.msg == to_moderate %]
-[%|l(notice.path)%]File %1 waiting for moderation[%END%]
+[%|loc(notice.path)%]File %1 waiting for moderation[%END%]
 
 [% ELSIF notice.msg == 'save_success' %] 
-[%|l(notice.path)%]File %1 saved[%END%]
+[%|loc(notice.path)%]File %1 saved[%END%]
 
 [% ELSIF notice.msg == 'password_sent' %]
-[%|l%]Your password has been emailed to you[%END%]
+[%|loc%]Your password has been emailed to you[%END%]
 
 [% ELSIF notice.msg == 'you_should_choose_a_password' %]
-[%|l%]To choose your password go to 'preferences', from the upper menu.[%END%]
+[%|loc%]To choose your password go to 'preferences', from the upper menu.[%END%]
 
 [% ELSIF notice.msg == 'no_msg' %] 
-[%|l(notice.list)%]No message and no document to moderate for list %1[%END%]
+[%|loc(notice.list)%]No message and no document to moderate for list %1[%END%]
 
 [% ELSIF notice.msg == 'subscribers_update_soon' %]
-[%|l%]The list of list members will be built/updated soon (a few minutes).[%END%]
+[%|loc%]The list of list members will be built/updated soon (a few minutes).[%END%]
 
 [% ELSIF notice.msg == 'add_performed' %]
-[%|l(notice.total)%]%1 addresses have been subscribed[%END%]
+[%|loc(notice.total)%]%1 addresses have been subscribed[%END%]
 
 [% ELSE %]
 [% notice.msg %]

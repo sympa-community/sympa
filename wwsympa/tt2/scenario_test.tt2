@@ -7,11 +7,11 @@
     <TABLE BORDER=0 CELLPADDING=10>
       <TR VALIGN="top">
         <TD COLSPAN=2 NOWRAP>
-    	<FONT COLOR="[% dark_color %]"><CENTER><B>[%|l%]Scenario test module[%END%]</b></CENTER></FONT><BR>
+    	<FONT COLOR="[% dark_color %]"><CENTER><B>[%|loc%]Scenario test module[%END%]</b></CENTER></FONT><BR>
         </TD>
       </TR>
       <TR>
-        <TD>[%|l%]Scenari name[%END%]</TD>
+        <TD>[%|loc%]Scenari name[%END%]</TD>
         <TD>
 	  <SELECT NAME="scenario">
 	      [% FOREACH sc = scenario %]
@@ -21,7 +21,7 @@
         </TD>
     </TR>
     <TR>
-        <TD>[%|l%]Listname[%END%]</TD>
+        <TD>[%|loc%]Listname[%END%]</TD>
 
         <TD>
 	  <SELECT NAME="listname">
@@ -32,31 +32,31 @@
         </TD>
     </TR>
     <TR>
-        <TD>[%|l%]sender email[%END%]</TD>
+        <TD>[%|loc%]sender email[%END%]</TD>
         <TD>
           <INPUT TYPE="text" NAME="sender" SIZE="20" value="[% sender %]">
         </TD>
     </TR>
     <TR>
-        <TD>[%|l%]Related email[%END%]</TD>
+        <TD>[%|loc%]Related email[%END%]</TD>
         <TD>
           <INPUT TYPE="text" NAME="email" SIZE="20" value="[% email %]">
         </TD>
     </TR>
     <TR>
-        <TD>[%|l%]Remote addr[%END%]</TD>
+        <TD>[%|loc%]Remote addr[%END%]</TD>
         <TD>
           <INPUT TYPE="text" NAME="remote_addr" SIZE="16" value="[% remote_addr %]">
         </TD>
     </TR>
     <TR>
-        <TD>[%|l%]Remote host[%END%]</TD>	
+        <TD>[%|loc%]Remote host[%END%]</TD>	
         <TD>
           <INPUT TYPE="text" NAME="remote_host" SIZE="16" value="[% remote_host %]">
         </TD>
     </TR>
     <TR>
-        <TD>[%|l%]Auth method[%END%]</TD>
+        <TD>[%|loc%]Auth method[%END%]</TD>
         <TD>
           <SELECT NAME="auth_method">
               [% FOREACH a = auth_method %]
@@ -67,7 +67,7 @@
     </TR>
     <TR>
 
-	<TD><INPUT TYPE="submit" NAME="action_scenario_test" VALUE="[%|l%]get matched rule[%END%]"></TD>
+	<TD><INPUT TYPE="submit" NAME="action_scenario_test" VALUE="[%|loc%]get matched rule[%END%]"></TD>
         <TD bgcolor="[% dark_color %]">
           [% IF scenario_action %]
              <code>[% scenario_condition %], [% scenario_auth_method %] -> [% scenario_action %]</code>

@@ -44,7 +44,7 @@ thrd1.html
 
 $PREVPGLINK$
 <TD  NOWRAP BGCOLOR="(-% light_color %-)" ALIGN="CENTER"><b>$NUMOFMSG$ 
-(-%|l($PAGENUM$,$NUMOFPAGES$)%-)mails, page # %1/%2(-%END%-)
+(-%|loc($PAGENUM$,$NUMOFPAGES$)%-)mails, page # %1/%2(-%END%-)
 </B></TD>
 $NEXTPGLINK$
 
@@ -53,11 +53,11 @@ $NEXTPGLINK$
 <TD NOWRAP BGCOLOR="(-% light_color %-)" ALIGN=CENTER>
 
 <FONT COLOR="(-% bg_color %-)" SIZE="-1"><b>
-(-%|l%-)Chronological(-%END%-)
+(-%|loc%-)Chronological(-%END%-)
 </b></FONT>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <A HREF="thrd$PAGENUM$.html" STYLE="TEXT-DECORATION: NONE"><FONT size=-1>
-<B>(-%|l%-)Thread(-%END%-)</B>
+<B>(-%|loc%-)Thread(-%END%-)</B>
 </FONT></A>
 </TD></TR></TABLE>
 </TD></TR></TABLE>
@@ -71,7 +71,7 @@ $NEXTPGLINK$
 <HR>
 <P>
 <font size=-1 color="(-% dark_color %-)">
-(-%|l%-)Archive powered by(-%END%-)
+(-%|loc%-)Archive powered by(-%END%-)
  <A HREF="$DOCURL$">MhonArc $VERSION$ </A>.
 (-%TAGS [% %]%-)
 </IDXPGEND>
@@ -106,7 +106,7 @@ $NEXTPGLINK$
 <TIDXPGEND>
 
 <font size=-1 color="(-% dark_color %-)">
-(-%|l%-)Archive powered by(-%END%-)
+(-%|loc%-)Archive powered by(-%END%-)
  <A HREF="$DOCURL$">MhonArc $VERSION$ </A>.
 (-%TAGS [% %]%-)
 </TIDXPGEND>
@@ -123,19 +123,19 @@ $NEXTPGLINK$
 <TR ALIGN=CENTER VALIGN=MIDDLE>
 
 $TPREVPGLINK$
-<TD  NOWRAP BGCOLOR="(-% light_color %-)" ALIGN="CENTER">(-%|l('$PAGENUM$','$NUMOFPAGES$')%-)page n&#176; %1/%2(-%END%-)</TD>
+<TD  NOWRAP BGCOLOR="(-% light_color %-)" ALIGN="CENTER">(-%|loc('$PAGENUM$','$NUMOFPAGES$')%-)page n&#176; %1/%2(-%END%-)</TD>
 $TNEXTPGLINK$
 
 <td NOWRAP BGCOLOR="(-% light_color %-)" align="center">
 <A HREF="mail$PAGENUM$.html" STYLE="TEXT-DECORATION: NONE">
 <font size=-1><b>
-(-%|l%-)Chronological(-%END%-)
+(-%|loc%-)Chronological(-%END%-)
 </B></FONT></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <FONT COLOR="(-% bg_color %-)" SIZE="-1">
 <b>
-(-%|l%-)Thread(-%END%-)
+(-%|loc%-)Thread(-%END%-)
 </b></FONT>
 
 </TD></TR></TABLE>
@@ -162,7 +162,7 @@ $TNEXTPGLINK$
 
 <TCONTBEGIN>
 <LI><STRONG>$SUBJECTNA$</STRONG>, <EM>
-(-%|l%-)next(-%END%-)
+(-%|loc%-)next(-%END%-)
 </em>
 </TCONTBEGIN>
 
@@ -197,7 +197,7 @@ $TNEXTPGLINK$
 
 <TLiNone>
 <LI><EM>
-(-%|l%-)Message not available(-%END%-)
+(-%|loc%-)Message not available(-%END%-)
 </EM>
 </TLiNone>
 <TLINoneEnd>
@@ -295,13 +295,13 @@ $TNEXTPGLINK$
 <TR ALIGN=CENTER VALIGN=MIDDLE>
  $PREVBUTTON$
  <TD NOWRAP BGCOLOR="(-% light_color %-)" ALIGN="CENTER"><A HREF="$IDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
-(-%|l%-)Chronological(-%END%-)
+(-%|loc%-)Chronological(-%END%-)
 </B></FONT></A></TD>
 $NEXTBUTTON$ 
 <TD WIDTH=40% BGCOLOR="(-% light_color %-)">&nbsp;</TD>
 $TPREVBUTTON$ 
 <TD  NOWRAP BGCOLOR="(-% light_color %-)" ALIGN="CENTER"><A HREF="$TIDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
-(-%|l%-)Thread(-%END%-)
+(-%|loc%-)Thread(-%END%-)
 </B></FONT></A></TD>
 
 $TNEXTBUTTON$ 
@@ -334,12 +334,12 @@ $TNEXTBUTTON$
   <INPUT TYPE="hidden" NAME="in_reply_to" VALUE="$MSGID$">
   <INPUT TYPE="hidden" NAME="subject" VALUE="Re: $SUBJECTNA$">
   <INPUT TYPE="hidden" NAME="list" VALUE="(-% list %-)">
-(-%|l%-)Reply to sender(-%END%-)
+(-%|loc%-)Reply to sender(-%END%-)
 <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
-(-%|l%-)to list(-%END%-)
+(-%|loc%-)to list(-%END%-)
 <INPUT TYPE="radio" NAME="to" VALUE="(-% list %-) (-% list_conf.host %-)">
-<INPUT TYPE="submit" NAME="action_compose_mail" VALUE="(-%|l%-)Reply(-%END%-)">
-<INPUT TYPE="submit" NAME="action_send_me" VALUE="(-%|l(user.email)%-)send it back to %1(-%END%-)">	
+<INPUT TYPE="submit" NAME="action_compose_mail" VALUE="(-%|loc%-)Reply(-%END%-)">
+<INPUT TYPE="submit" NAME="action_send_me" VALUE="(-%|loc(user.email)%-)send it back to %1(-%END%-)">	
 
 (-% IF action != 'viewmod' %-)
 (-% IF user.email == '$FROMADDR$' %-)
@@ -347,14 +347,14 @@ $TNEXTBUTTON$
   <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
   <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
   <INPUT TYPE="hidden" NAME="action" VALUE="">
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="(-%|l%-)tag this mail for deletion(-%END%-)" onClick="return request_confirm('(-%|l%-)Do you really want to delete this message ?(-%END%-)')">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="(-%|loc%-)tag this mail for deletion(-%END%-)" onClick="return request_confirm('(-%|loc%-)Do you really want to delete this message ?(-%END%-)')">
 
 (-% ELSIF is_owner %-)
   <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
   <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
   <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
   <INPUT TYPE="hidden" NAME="action" VALUE="">
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="(-%|l%-)tag this mail for deletion(-%END%-)" onClick="return request_confirm('(-%|l%-)Do you really want to delete this message ?(-%END%-)')">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="(-%|loc%-)tag this mail for deletion(-%END%-)" onClick="return request_confirm('(-%|loc%-)Do you really want to delete this message ?(-%END%-)')">
 (-% END %-)
 (-% END %-)
 </FORM>
@@ -431,7 +431,7 @@ Subject:strong
 </DayEnd>
 
 <WEEKDAYS>
-(-%|l%-)Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday(-%END%-)
+(-%|loc%-)Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday(-%END%-)
 </WEEKDAYS>
 
 (-% IF lang == 'cz' %-)
@@ -449,7 +449,7 @@ P:M:T:K:N:R:L
 (-% END %-)
 
 <MONTHS>
-(-%|l%-)January:February:March:April:May:June:July:August:September:October:November:December(-%END%-)
+(-%|loc%-)January:February:March:April:May:June:July:August:September:October:November:December(-%END%-)
 </MONTHS>
 
 (-% IF lang == 'cz' %-)

@@ -1,10 +1,10 @@
 From: [% conf.email %]@[% conf.host %]
-Subject: [% FILTER qencode %][%|l(list.name)%]%1 mailing list creation[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]%1 mailing list creation[%END%][%END%]
 
-[%|l(list.name,list.host)%]%1@%2 mailing list has been activated by listmaster.[%END%]
+[%|loc(list.name,list.host)%]%1@%2 mailing list has been activated by listmaster.[%END%]
 
-[%|l%]homepage[%END%]
+[%|loc%]homepage[%END%]
 [% conf.wwsympa_url %]/info/[% list.name %]
 
-[%|l(list.name)%]%1 admin page[%END%]
+[%|loc(list.name)%]%1 admin page[%END%]
 [% conf.wwsympa_url %]/admin/[% list.name %]

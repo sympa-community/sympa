@@ -2,10 +2,10 @@
 
   <FORM ACTION="[% path_cgi %]" METHOD=POST>
 
-  [%|l%]You are subscribed since[%END%] <FONT COLOR="[% dark_color %]">[% subscriber.date %]</FONT>  <BR><BR>
-  [%|l%]Last update:[%END%] <FONT COLOR="[% dark_color %]">[% subscriber.update_date %]</FONT>  <BR><BR>
+  [%|loc%]You are subscribed since[%END%] <FONT COLOR="[% dark_color %]">[% subscriber.date %]</FONT>  <BR><BR>
+  [%|loc%]Last update:[%END%] <FONT COLOR="[% dark_color %]">[% subscriber.update_date %]</FONT>  <BR><BR>
      <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-     [%|l%]Reception mode :[%END%] 
+     [%|loc%]Reception mode :[%END%] 
      <SELECT NAME="reception">
         [% FOREACH r = reception %]
           <OPTION VALUE="[% r.key %]" [% r.value.selected %]>[% r.value.description %]
@@ -20,7 +20,7 @@
      [% PROCESS 'button_footer.tt2' %]
 
      <BR>
-     [%|l%]Visibility :[%END%]
+     [%|loc%]Visibility :[%END%]
      <SELECT NAME="visibility">
         [% FOREACH r = visibility %]
           <OPTION VALUE="[% r.key %]" [% r.value.selected %]>[% r.value.description %]
@@ -28,6 +28,6 @@
      </SELECT>
 
      <BR>
-     <INPUT TYPE="submit" NAME="action_set" VALUE="[%|l%]Update[%END%]">
+     <INPUT TYPE="submit" NAME="action_set" VALUE="[%|loc%]Update[%END%]">
      
 </FORM>

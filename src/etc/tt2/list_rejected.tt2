@@ -1,4 +1,4 @@
 From: [% conf.email %]@[% conf.host %]
 Subject: [% FILTER qencode %][% list.name %][%END%]
 
-[%|l(list.name,list.host)%]%1@%2 mailing list has been rejected by listmaster.[%END%]
+[%|loc(list.name,list.host)%]%1@%2 mailing list has been rejected by listmaster.[%END%]

@@ -1,8 +1,8 @@
 
-[%|l(user.email)%]Summary of your subscription (using the e-mail %1).[%END%]
-[%|l%]If you want to unsubscribe from some list, please save this mail.[%END%]
+[%|loc(user.email)%]Summary of your subscription (using the e-mail %1).[%END%]
+[%|loc%]If you want to unsubscribe from some list, please save this mail.[%END%]
 
-[%|l%]Foreach list here is a mailto to use if you want to unsubscribe.[%END%]
+[%|loc%]Foreach list here is a mailto to use if you want to unsubscribe.[%END%]
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 [% FOREACH l = lists %]
@@ -12,7 +12,7 @@
 
 [% IF user.password %]
 
-[%|l(conf.wwsympa_url,user.email,user.password)%]In order to authenticate on the web interface(%1)
+[%|loc(conf.wwsympa_url,user.email,user.password)%]In order to authenticate on the web interface(%1)
 use your e-mail %2 and your password %3[%END%]
 
 [% END %]

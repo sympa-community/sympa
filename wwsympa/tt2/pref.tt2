@@ -7,7 +7,7 @@
             <TR>
              <TH BGCOLOR="[% selected_color %]" WIDTH="50%">
               <FONT COLOR="[% bg_color %]">
-                [%|l%]Your environment[%END%]
+                [%|loc%]Your environment[%END%]
               </FONT>
              </TH>
             </TR>
@@ -19,23 +19,23 @@
           <FORM ACTION="[% path_cgi %]" METHOD=POST>
          
             <FONT COLOR="[% dark_color %]">Email  </FONT> [% user.email %]<BR><BR>
-            <FONT COLOR="[% dark_color %]">[%|l%]Name[%END%]</FONT>
+            <FONT COLOR="[% dark_color %]">[%|loc%]Name[%END%]</FONT>
             <INPUT TYPE="text" NAME="gecos" SIZE=20 VALUE="[% user.gecos %]"><BR><BR>
-            <FONT COLOR="[% dark_color %]">[%|l%]Language[%END%] </FONT>
+            <FONT COLOR="[% dark_color %]">[%|loc%]Language[%END%] </FONT>
             <SELECT NAME="lang">
               [% FOREACH l = languages %]
                 <OPTION VALUE='[% l.key %]' [% l.value.selected %]>[% l.value.complete %]
               [% END %]
             </SELECT>
             <BR><BR>
-            <FONT COLOR="[% dark_color %]">[%|l%]Connexion expiration period[%END%] </FONT>
+            <FONT COLOR="[% dark_color %]">[%|loc%]Connexion expiration period[%END%] </FONT>
             <SELECT NAME="cookie_delay">
               [% FOREACH period = cookie_periods %]
                 <OPTION VALUE="[% period.value %]" [% period.selected %]>[% period.desc %]
               [% END %]
             </SELECT>
             <BR><BR>
-            <INPUT TYPE="submit" NAME="action_setpref" VALUE="[%|l%]Submit[%END%]">
+            <INPUT TYPE="submit" NAME="action_setpref" VALUE="[%|loc%]Submit[%END%]">
           </FORM>
         </TD>
       </TR>
@@ -47,11 +47,11 @@
             <TR>
              <TH WIDTH="50%" BGCOLOR="[% selected_color %]">
               <FONT COLOR="[% bg_color %]">
-                [%|l%]Changing your email address[%END%]
+                [%|loc%]Changing your email address[%END%]
               </FONT>
              </TH><TH WIDTH="50%" BGCOLOR="[% selected_color %]">
               <FONT COLOR="[% bg_color %]">
-                [%|l%]Changing your password[%END%]
+                [%|loc%]Changing your password[%END%]
               </FONT>
              </TH>
             </TR>
@@ -64,18 +64,18 @@
            <TD>
            <FORM ACTION="[% path_cgi %]" METHOD=POST>
         
-            <BR><BR><FONT COLOR="[% dark_color %]">[%|l%]New email address :[%END%] </FONT>
+            <BR><BR><FONT COLOR="[% dark_color %]">[%|loc%]New email address :[%END%] </FONT>
             <BR>&nbsp;&nbsp;&nbsp;<INPUT NAME="email" SIZE=15>
-            <BR><BR><INPUT TYPE="submit" NAME="action_change_email" VALUE="[%|l%]Submit[%END%]">
+            <BR><BR><INPUT TYPE="submit" NAME="action_change_email" VALUE="[%|loc%]Submit[%END%]">
             </FORM>
         </TD>
         <TD>
           <FORM ACTION="[% path_cgi %]" METHOD=POST>
-            <BR><BR><FONT COLOR="[% dark_color %]">[%|l%]New password :[%END%] </FONT>
+            <BR><BR><FONT COLOR="[% dark_color %]">[%|loc%]New password :[%END%] </FONT>
             <BR>&nbsp;&nbsp;&nbsp;<INPUT TYPE="password" NAME="newpasswd1" SIZE=15>
-            <BR><FONT COLOR="[% dark_color %]">[%|l%]Re-enter your new password :[%END%] </FONT>
+            <BR><FONT COLOR="[% dark_color %]">[%|loc%]Re-enter your new password :[%END%] </FONT>
             <BR>&nbsp;&nbsp;&nbsp;<INPUT TYPE="password" NAME="newpasswd2" SIZE=15>
-            <BR><BR><INPUT TYPE="submit" NAME="action_setpasswd" VALUE="[%|l%]Submit[%END%]">
+            <BR><BR><INPUT TYPE="submit" NAME="action_setpasswd" VALUE="[%|loc%]Submit[%END%]">
             </FORM>
 	    [% END %]
 
@@ -86,7 +86,7 @@
             <TR>
              <TH WIDTH="50%" BGCOLOR="[% selected_color %]">
               <FONT COLOR="[% bg_color %]">
-                [%|l%]Your other email addresses[%END%]
+                [%|loc%]Your other email addresses[%END%]
               </FONT>
              </TH>
             </TR>
@@ -110,15 +110,15 @@
       <TD>
 	    <FORM ACTION="[% path_cgi %]" METHOD=POST> 
 	    <BR>
-	    <FONT COLOR="[% dark_color %]">[%|l%]Other email address :[%END%] </FONT>
+	    <FONT COLOR="[% dark_color %]">[%|loc%]Other email address :[%END%] </FONT>
 	    &nbsp;&nbsp;&nbsp;<INPUT NAME="new_alternative_email" SIZE=15>
-	    &nbsp;&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|l%]Password :[%END%] </FONT>
+	    &nbsp;&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|loc%]Password :[%END%] </FONT>
 	    &nbsp;&nbsp;&nbsp;<INPUT TYPE = "password" NAME="new_password" SIZE=8>
-            &nbsp;&nbsp;&nbsp &nbsp; <INPUT TYPE="submit" NAME="action_record_email" VALUE="[%|l%]Submit[%END%]">
+            &nbsp;&nbsp;&nbsp &nbsp; <INPUT TYPE="submit" NAME="action_record_email" VALUE="[%|loc%]Submit[%END%]">
             </FORM>
       </TD>
       <TD VALIGN="middle">
-      [%|l%]This other email address, that should be known by Sympa, will be recognized by Sympa as 
+      [%|loc%]This other email address, that should be known by Sympa, will be recognized by Sympa as 
 	an alternate email address. You will also be able to unify your subscriptions with
 	your main email address.[%END%]  
       </TD>

@@ -1,14 +1,14 @@
 <!-- $Id$ -->
 
 [% IF status == 'open' %]
-[%|l%]Your list is created.[%END%]<br /> 
-[%|l%]You can configure it via the admin button beside.[%END%]
+[%|loc%]Your list is created.[%END%]<br /> 
+[%|loc%]You can configure it via the admin button beside.[%END%]
 <br />
 [% IF auto_aliases %]
-[%|l%]Aliases have been installed.[%END%]
+[%|loc%]Aliases have been installed.[%END%]
 [% ELSE %]
  <table border="1">
- <tr style="background: [% light_color %];"><td style="text-align: center;">[%|l%]Required aliases[%END%]</td></tr>
+ <tr style="background: [% light_color %];"><td style="text-align: center;">[%|loc%]Required aliases[%END%]</td></tr>
  <tr>
  <td>
  <pre><code>
@@ -20,6 +20,6 @@
 [% END %]
 
 [% ELSE %]
-[%|l%]Your list creation request is registered. You can now  modify its
+[%|loc%]Your list creation request is registered. You can now  modify its
 configuration using the admin button but the list will be unusable until the listmaster validates it.[%END%]
 [% END %]

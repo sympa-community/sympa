@@ -5,9 +5,9 @@
   <INPUT TYPE="hidden" NAME="id" VALUE="[% id %]">
 <TABLE>
 <TR BGCOLOR="[% bg_color %]"><TD>
-  <INPUT TYPE="submit" NAME="action_distribute" VALUE="[%|l%]Distribute[%END%]">
-  <INPUT TYPE="submit" NAME="action_reject.quiet" VALUE="[%|l%]Reject[%END%]">
-  <INPUT TYPE="submit" NAME="action_reject" VALUE="[%|l%]Notified reject[%END%]">
+  <INPUT TYPE="submit" NAME="action_distribute" VALUE="[%|loc%]Distribute[%END%]">
+  <INPUT TYPE="submit" NAME="action_reject.quiet" VALUE="[%|loc%]Reject[%END%]">
+  <INPUT TYPE="submit" NAME="action_reject" VALUE="[%|loc%]Notified reject[%END%]">
 </TD></TR></TABLE>
 </FORM>
 [% PROCESS 'msg00000.html' %]

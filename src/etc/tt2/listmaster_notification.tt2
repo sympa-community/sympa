@@ -1,48 +1,48 @@
 From: [% conf.email %]@[% conf.host %]
 To: Listmaster <[% to %]>
 [% IF type == 'request_list_creation' -%]
-Subject: [% FILTER qencode %][%|l(list.name)%]List "%1" creation request[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" creation request[%END%][%END%]
 
 [% list.name %]@[% list.host %]
 [% list.subject %]
 [% conf.wwsympa_url %]/info/[% list.name %]
 
-[%|l%]To activate/delete this mailing list :[%END%]
+[%|loc%]To activate/delete this mailing list :[%END%]
 [% conf.wwsympa_url %]/get_pending_lists
 [% ELSIF type == 'virus_scan_failed' -%]
-Subject: [% FILTER qencode %][%|l%]Antivirus scan failed[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]Antivirus scan failed[%END%][%END%]
 
-[%|l%]The antivirus scan has failed while processing the following file:[%END%]
+[%|loc%]The antivirus scan has failed while processing the following file:[%END%]
 	[% filename %]
 
-[%|l%]The returned error message :[%END%]
+[%|loc%]The returned error message :[%END%]
 	[% error_msg %]
 [% ELSIF type == 'edit_list_error' -%]
-Subject: [% FILTER qencode %][%|l%]incorrect format of edit_list.conf[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%END%]
 
-[%|l%]edit_list.conf format has changed :
+[%|loc%]edit_list.conf format has changed :
 'default' is no more accepted for a population.[%END%]
 
-[%|l(param0)%]Refer to documentation to adapt %1.[%END%]
-[%|l(param0)%]Until then we recommend your remove %1 ;
+[%|loc(param0)%]Refer to documentation to adapt %1.[%END%]
+[%|loc(param0)%]Until then we recommend your remove %1 ;
 default configuration will be used.[%END%]
 [% ELSIF type == 'sync_include_failed' -%]
-Subject: [% FILTER qencode %][%|l(param0)%]subscribers update failed for list %1[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(param0)%]subscribers update failed for list %1[%END%][%END%]
 
-[%|l%]Sympa could not include subscribers from external data sources ; the
+[%|loc%]Sympa could not include subscribers from external data sources ; the
 database or LDAP directory might be unreachable.[%END%] 
-[%|l%]Check Sympa log files for more precise information[%END%]
+[%|loc%]Check Sympa log files for more precise information[%END%]
 [% ELSIF type == 'automatic_bounce_management' -%]
-Subject: [% FILTER qencode %][%|l(list.name)%]List %1 automatic bounce management[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 automatic bounce management[%END%][%END%]
 
 [% IF action == 'notify_bouncers' -%]
-[%|l(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
+[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
 notified that they might be removed from list %2:[%END%]
 [% ELSIF action == 'remove_bouncers' -%]
-[%|l(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
+[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
 removed from list %2:[%END%]
 [% ELSIF action == 'none' -%]
-[%|l(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
+[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
 selected by Sympa as severe bouncing addresses:[%END%]
 [%END%]
 
@@ -50,7 +50,7 @@ selected by Sympa as severe bouncing addresses:[%END%]
 [% user %]
 [%END%]
 
-[%|l%]Managing bouncing subscribers:[%END%] [conf->wwsympa_url]/reviewbouncing/[list->name]
+[%|loc%]Managing bouncing subscribers:[%END%] [conf->wwsympa_url]/reviewbouncing/[list->name]
 [% ELSE -%]
 Subject: [% FILTER qencode %][% type %][%END%]
 

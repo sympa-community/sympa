@@ -1,30 +1,30 @@
 From: [% conf.email %]@[% conf.host %]
-To: [%|l%]Listowners[%END%] <[% to %]>
+To: [%|loc%]Listowners[%END%] <[% to %]>
 [% IF type == 'arc_quota_exceeded' -%]
-Subject: [% FILTER qencode %][%|l(list.name)%]List "%1" archive quota exceeded[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" archive quota exceeded[%END%][%END%]
 
-[%|l(list.name,list.host,size,conf.host)%]%1 archive quota exceeded. 
+[%|loc(list.name,list.host,size,conf.host)%]%1 archive quota exceeded. 
 Total size used for %1@%2 archive is %3 Bytes. Messages
 are no more web-archived. Please contact listmaster@%4. [%END%]
 
 [% ELSIF type == 'arc_quota_95' -%]
-Subject: [% FILTER qencode %][%|l(list.name,rate)%]List "%1" warning : archive %2% full[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name,rate)%]List "%1" warning : archive %2% full[%END%][%END%]
 
-[%|l(rate2,list.name,list.host,rate)%]%2@%3 archives use %4% of allowed disk quota.[%END%]
-[%|l(list.name,size)%]Total size used for %1@%2 Bytes.[%END%]
+[%|loc(rate2,list.name,list.host,rate)%]%2@%3 archives use %4% of allowed disk quota.[%END%]
+[%|loc(list.name,size)%]Total size used for %1@%2 Bytes.[%END%]
 
-[%|l(conf.host)%]Messages are still archived but you should contact listmaster@%1[%END%]. 
+[%|loc(conf.host)%]Messages are still archived but you should contact listmaster@%1[%END%]. 
 [% ELSIF type == 'automatic_bounce_management' -%]
-Subject: [% FILTER qencode %][%|l(list.name)%]List %1 automatic bounce management[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 automatic bounce management[%END%][%END%]
 
 [% IF action == 'notify_bouncers' -%]
-[%|l(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
+[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
 notified that they might be removed from list %2:[%END%]
 [% ELSIF action == 'remove_bouncers' -%]
-[%|l(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
+[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
 removed from list %2:[%END%]
 [% ELSIF action == 'none' -%]
-[%|l(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
+[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
 selected by Sympa as severe bouncing addresses:[%END%]
 [%END%]
 
@@ -32,5 +32,5 @@ selected by Sympa as severe bouncing addresses:[%END%]
 [% user %]
 [%END%]
 
-[%|l%]Managing bouncing subscribers:[%END%] [conf->wwsympa_url]/reviewbouncing/[list->name]
+[%|loc%]Managing bouncing subscribers:[%END%] [conf->wwsympa_url]/reviewbouncing/[list->name]
 [% END %]

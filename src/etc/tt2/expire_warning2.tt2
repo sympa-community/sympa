@@ -1,11 +1,11 @@
 From: [% conf.email %]@[% conf.host %]
-Subject: [% FILTER qencode %][%|l(list.name)%]resubscription to %1[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]resubscription to %1[%END%][%END%]
 
- [%|l(list.name,list.host,user.email)%]You have been subscriber of list %1@%2 with email %3 for 1 year or more;[%END%]
+ [%|loc(list.name,list.host,user.email)%]You have been subscriber of list %1@%2 with email %3 for 1 year or more;[%END%]
 mailto:[% conf.email %]@[% conf.host %]?subject=sub%20[% list.name %]
 
-[%|l(user.password)%]your password : %1[%END%]
+[%|loc(user.password)%]your password : %1[%END%]
 
-[%|l%]Everything about this list : [%END%][% conf.wwsympa_url %]/info/[% list.name %]
-[%|l%]Unsubscription :[%END%]
+[%|loc%]Everything about this list : [%END%][% conf.wwsympa_url %]/info/[% list.name %]
+[%|loc%]Unsubscription :[%END%]
 mailto:[% conf.email %]@[% conf.host %]?subject=sig%20[% list.name %]%20[% user.email %]

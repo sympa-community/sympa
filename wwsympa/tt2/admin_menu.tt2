@@ -2,19 +2,19 @@
 
 <!-- begin admin_menu.tt2 -->
     <td style="background: [% selected_color %]; text-align: center;" colspan="9">
-	  <span style="color: [% bg_color %]"><strong>[%|l%]List Administration Panel[%END%]</strong></span>
+	  <span style="color: [% bg_color %]"><strong>[%|loc%]List Administration Panel[%END%]</strong></span>
     </td>
     </tr>
     <tr>
         [% IF action == 'review' %]
     <td style="background: [% selected_color %]; text-align: center;">
-       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Subscribers[%END%]</strong></span>
+       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Subscribers[%END%]</strong></span>
     </td>
     [% ELSE %]
     <td style="background: [% light_color %]; text-align: center;">
        [% IF is_owner %]
        <a href="[% path_cgi %]/review/[% list %]">
-       <span style="font-size: smaller;"><strong>[%|l%]Subscribers[%END%]</strong></span></a>
+       <span style="font-size: smaller;"><strong>[%|loc%]Subscribers[%END%]</strong></span></a>
        [% END %]
     </td>
     [% END %]
@@ -22,41 +22,41 @@
     [% IF action == 'edit_list_request' %]
     <td style="background: [% selected_color %]; text-align: center;">
       <a href="[% path_cgi %]/edit_list_request/[% list %]">
-      <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Edit List Config[%END%]</strong></span></a>
+      <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Edit List Config[%END%]</strong></span></a>
     </td>
     [% ELSE %]
     <td style="background: [% light_color %]; text-align: center;">
         <a href="[% path_cgi %]/edit_list_request/[% list %]">
-          <span style="font-size: smaller;"><strong>[%|l%]Edit List Config[%END%]</strong></span></a>
+          <span style="font-size: smaller;"><strong>[%|loc%]Edit List Config[%END%]</strong></span></a>
     </td>
     [% END %]
 
     [% IF action == 'modindex' %]
     <td style="background: [% selected_color %]; text-align: center;">
-       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Moderate[%END%]</strong></span>
+       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Moderate[%END%]</strong></span>
     </td>
     [% ELSE %]
        [% IF is_editor %]
        <td style="background: [% light_color %]; text-align: center;">
          <a href="[% path_cgi %]/modindex/[% list %]">
-         <span style="font-size: smaller;"><strong>[%|l%]Moderate[%END%]</strong></span></a>
+         <span style="font-size: smaller;"><strong>[%|loc%]Moderate[%END%]</strong></span></a>
        </td>
        [% ELSE %]
          <td style="background: [% light_color %]; text-align: center;">
-           <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Moderate[%END%]</strong></span>
+           <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Moderate[%END%]</strong></span>
          </td>
        [% END %]
     [% END %]
 
     [% IF action == 'editfile' %]
     <td style="background: [% selected_color %]; text-align: center;">
-       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Customizing[%END%]</strong></span>
+       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Customizing[%END%]</strong></span>
     </td>
     [% ELSE %]
     <td style="background: [% light_color %]; text-align: center;">
        [% IF is_owner %]
        <a href="[% path_cgi %]/editfile/[% list %]">
-       <span style="font-size: smaller;"><strong>[%|l%]Customizing[%END%]</strong></span></a>
+       <span style="font-size: smaller;"><strong>[%|loc%]Customizing[%END%]</strong></span></a>
        [% END %]
     </td>
     [% END %]
@@ -71,7 +71,7 @@
     <td style="background: [% light_color %]; text-align: center;">
         [% IF is_owner %]
         <a href="[% path_cgi %]/arc_manage/[% list %]">
-	<span style="font-size: smaller;"><strong>[%|l%]Manage Archives[%END%]</strong></span></a>
+	<span style="font-size: smaller;"><strong>[%|loc%]Manage Archives[%END%]</strong></span></a>
         [% END %]
     </td>
     [% END %]
@@ -79,13 +79,13 @@
 
     [% IF action == 'reviewbouncing' %]
     <td style="background: [% selected_color %]; text-align: center;">
-       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Bounces[%END%]</strong></span>
+       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Bounces[%END%]</strong></span>
     </td>
     [% ELSE %]
     <td style="background: [% light_color %]; text-align: center;">
        [% IF is_owner %]
        <a href="[% path_cgi %]/reviewbouncing/[% list %]">
-       <span style="font-size: smaller;"><strong>[%|l%]Bounces[%END%]</strong></span></a>
+       <span style="font-size: smaller;"><strong>[%|loc%]Bounces[%END%]</strong></span></a>
        [% END %]
     </td>
     [% END %]
@@ -94,16 +94,16 @@
 	[% IF shared == 'none' %]
           [% IF is_privileged_owner %]
           <a href="[% path_cgi %]/d_admin/[% list %]/create">
-             <span style="font-size: smaller;"><strong>[%|l%]Create Shared[%END%]</strong></span></a>
+             <span style="font-size: smaller;"><strong>[%|loc%]Create Shared[%END%]</strong></span></a>
           [% ELSE %]
-             <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Create Shared[%END%]</strong></span>
+             <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Create Shared[%END%]</strong></span>
           [% END %]
 	[% ELSIF shared == 'deleted' %]
           <a href="[% path_cgi %]/d_admin/[% list %]/restore">
-             <span style="font-size: smaller;"><strong>[%|l%]Restore shared[%END%]</strong></span></a>
+             <span style="font-size: smaller;"><strong>[%|loc%]Restore shared[%END%]</strong></span></a>
 	[% ELSIF shared == 'exist' %]
           <a href="[% path_cgi %]/d_admin/[% list %]/delete" >
-             <span style="font-size: smaller;"><strong>[%|l%]Delete Shared[%END%]</strong></span></a>
+             <span style="font-size: smaller;"><strong>[%|loc%]Delete Shared[%END%]</strong></span></a>
         [% ELSE %]
           <span style="font-size: smaller; color: red;">
           [% shared %]
@@ -115,21 +115,21 @@
        [% IF list_conf.status == 'closed' %]         
         [% IF is_privileged_owner %]                   
         <a href="[% path_cgi %]/restore_list/[% list %]" >
-          <span style="font-size: smaller;"><strong>[%|l%]Restore List[%END%]</strong></span></a>
+          <span style="font-size: smaller;"><strong>[%|loc%]Restore List[%END%]</strong></span></a>
         [% ELSE %]                               
-          <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Restore List[%END%]</strong></span>
+          <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Restore List[%END%]</strong></span>
         [% END %]                              
        [% ELSIF is_privileged_owner %]                 
-        <a href="[% path_cgi %]/close_list/[% list %]" onclick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[%|l(list)%]Are you sure you wish to close %1 list ?[%END%]'); return false;"><span style="font-size: smaller;"><strong>[%|l%]Remove List[%END%]</strong></span></a>
+        <a href="[% path_cgi %]/close_list/[% list %]" onclick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[%|loc(list)%]Are you sure you wish to close %1 list ?[%END%]'); return false;"><span style="font-size: smaller;"><strong>[%|loc%]Remove List[%END%]</strong></span></a>
        [% ELSIF is_owner %]                      
-       <a href="[% path_cgi %]/close_list/[% list %]" onclick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[%|l(list)%]Are you sure you wish to close %1 list ?[%END%]'); return false;"><span style="font-size: smaller;"><strong>[%|l%]Remove List[%END%]</strong></span></a>
+       <a href="[% path_cgi %]/close_list/[% list %]" onclick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[%|loc(list)%]Are you sure you wish to close %1 list ?[%END%]'); return false;"><span style="font-size: smaller;"><strong>[%|loc%]Remove List[%END%]</strong></span></a>
        [% END %]                               
     </td>       
   <td style="background: [% light_color %]; text-align: center;">
     [% IF may_create_list %]
-      <a href="[% path_cgi %]/rename_list_request/[% list %]"><span style="font-size: smaller;"><strong>[%|l%]Rename List[%END%]</strong></span></a>
+      <a href="[% path_cgi %]/rename_list_request/[% list %]"><span style="font-size: smaller;"><strong>[%|loc%]Rename List[%END%]</strong></span></a>
     [% ELSE %]
-      <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Rename List[%END%]</strong></span>
+      <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Rename List[%END%]</strong></span>
     [%END%]
   </td>
     [% IF action == 'edit_list_request' %]
@@ -137,33 +137,33 @@
     <tr>
     <td style="background: [% selected_color %]; text-align: center;">
        <a href="[% path_cgi %]/edit_list_request/[% list %]/description">
-       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]List Definition[%END%]</strong></span></a>
+       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]List Definition[%END%]</strong></span></a>
     </td>
     <td style="background: [% selected_color %]; text-align: center;">
        <a href="[% path_cgi %]/edit_list_request/[% list %]/sending">
-       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Sending/Reception[%END%]</strong></span></a>
+       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Sending/Reception[%END%]</strong></span></a>
     </td> 
     <td style="background: [% selected_color %]; text-align: center;">
        <a href="[% path_cgi %]/edit_list_request/[% list %]/command">
-       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Privileges[%END%]</strong></span></a>
+       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Privileges[%END%]</strong></span></a>
     </td>
     <td style="background: [% selected_color %]; text-align: center;">
        <a href="[% path_cgi %]/edit_list_request/[% list %]/archives">
-       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Archives[%END%]</strong></span></a>
+       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Archives[%END%]</strong></span></a>
     </td> 
     <td style="background: [% selected_color %]; text-align: center;">
        <a href="[% path_cgi %]/edit_list_request/[% list %]/bounces">
-       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Bounce Settings[%END%]</strong></span></a>
+       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Bounce Settings[%END%]</strong></span></a>
     </td>
     
     <td style="background: [% selected_color %]; text-align: center;">
        <a href="[% path_cgi %]/edit_list_request/[% list %]/other">
-       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Miscellaneous[%END%]</strong></span></a>
+       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Miscellaneous[%END%]</strong></span></a>
     </td>
     [% IF is_listmaster %]
     <td style="background: [% selected_color %]; text-align: center;">
        <a href="[% path_cgi %]/edit_list_request/[% list %]/data_source">
-       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|l%]Data Source[%END%]</strong></span></a>
+       <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Data Source[%END%]</strong></span></a>
     </td>                             
     [% ELSE %]
     <td style="background: [% selected_color %]; text-align: center;">

@@ -1,37 +1,37 @@
 <!-- $Id$ -->
 
-[%|l%]Service messages description :[%END%]<ul>
-<li>[%|l%]Welcome message: This message is sent to new subscribers. It can be
+[%|loc%]Service messages description :[%END%]<ul>
+<li>[%|loc%]Welcome message: This message is sent to new subscribers. It can be
 a full MIME structured message (only for MIME gurus).[%END%]</li>
 
-<li>[%|l%]Unsubscription message : This message is sent when users leave the list
+<li>[%|loc%]Unsubscription message : This message is sent when users leave the list
 using the UNSUBSCRIBE command.[%END%]</li>
 
-<li>[%|l%]Deletion message : This message is sent to users when you
+<li>[%|loc%]Deletion message : This message is sent to users when you
 remove them from the list using the DEL command (unless you hit the
 Quiet button.[%END%]</li>
 
-<li>[%|l%]Remind message : This message is sent to each subscriber
+<li>[%|loc%]Remind message : This message is sent to each subscriber
 when using the command  REMIND. It's very useful to help people who are
 confused about their own subscription emails or people who are not able to
 unsubscribe themselves.[%END%]</li>
 
-<li>[%|l%]Subscribing invitation message : it is sent to a person if some user  
+<li>[%|loc%]Subscribing invitation message : it is sent to a person if some user  
 use the INVITE command to invite someone for subscription.[%END%]</li>
 </ul>
 
-[%|l%]Other files/pages description :[%END%]<ul>
+[%|loc%]Other files/pages description :[%END%]<ul>
 
-<li>[%|l%]List homepage : HTML text to describe the list. It is printed on the
+<li>[%|loc%]List homepage : HTML text to describe the list. It is printed on the
 right-hand side of the main list page. (default for this is the list description)[%END%]</li>
 
-<li>[%|l%]List description : This text is sent as an answer to the mail command
-INFO. It can also be included in the[%END%] <em>[%|l%]Welcome message[%END%]</em>.</li>
+<li>[%|loc%]List description : This text is sent as an answer to the mail command
+INFO. It can also be included in the[%END%] <em>[%|loc%]Welcome message[%END%]</em>.</li>
 
-<li>[%|l%]Message header: If this file is not empty, it is added as a MIME
+<li>[%|loc%]Message header: If this file is not empty, it is added as a MIME
 attachment at the beginning of each message distributed to the list.[%END%]</li>
 
-<li>[%|l%]Message footer : same as <em>Message header,</em> but attached at the
+<li>[%|loc%]Message footer : same as <em>Message header,</em> but attached at the
 end of the message.[%END%]</li>
 
 </ul>

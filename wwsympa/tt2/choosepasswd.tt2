@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 
-[%|l%]You need to choose a password for your WWSympa environment.
+[%|loc%]You need to choose a password for your WWSympa environment.
 You will need this password to perform privileged operations.[%END%]
 
 <form action="[% path_cgi %]" method="post">
@@ -10,15 +10,15 @@ You will need this password to perform privileged operations.[%END%]
 [% IF init_passwd %]
   <input type="hidden" name="passwd" value="[% user.password %]" />
 [% ELSE %]
-  <label><span style="color: [% dark_color %];">[%|l%]Current password :[%END%] </span>
+  <label><span style="color: [% dark_color %];">[%|loc%]Current password :[%END%] </span>
   <input type="password" name="passwd" size="15" /></label>
 [% END %]
 
-<br /><br /><label><span style="color: [% dark_color %];">[%|l%]New password :[%END%] </span>
+<br /><br /><label><span style="color: [% dark_color %];">[%|loc%]New password :[%END%] </span>
 <input type="password" name="newpasswd1" size="15" /></label>
-<br /><br /><label><span style="color: [% dark_color %];">[%|l%]New password again :[%END%] </span>
+<br /><br /><label><span style="color: [% dark_color %];">[%|loc%]New password again :[%END%] </span>
 <input type="password" name="newpasswd2" size="15" /></label>
-<br /><br /><input type="submit" name="action_setpasswd" value="[%|l%]Submit[%END%]" />
+<br /><br /><input type="submit" name="action_setpasswd" value="[%|loc%]Submit[%END%]" />
 
 </form>
 

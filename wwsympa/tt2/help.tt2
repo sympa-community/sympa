@@ -5,57 +5,57 @@
 
 [% ELSE %]
 <br />
-[%|l%]WWSympa provides  you access to your environment on mailing list server[%END%]
+[%|loc%]WWSympa provides  you access to your environment on mailing list server[%END%]
 <strong>[% conf.email %]@[% conf.host %]</strong>.
 <br /><br />
-[%|l%]Functions, equivalent to Sympa robot commands, are accessible in
+[%|loc%]Functions, equivalent to Sympa robot commands, are accessible in
 the higher part of the user interface's banner. WWSympa provides 
 a customized environment with access to the following functions :[%END%]
 
 <ul>
-<li><a href="[% path_cgi %]/pref">[%|l%]Preferences[%END%]</a> [%|l%]: user preferences. This is proposed to identified users only.[%END%]</li>
+<li><a href="[% path_cgi %]/pref">[%|loc%]Preferences[%END%]</a> [%|loc%]: user preferences. This is proposed to identified users only.[%END%]</li>
 
-<li><a href="[% path_cgi %]/lists">[%|l%]Public lists[%END%]</a> [%|l%]: directory of lists available on the server[%END%]</li>
+<li><a href="[% path_cgi %]/lists">[%|loc%]Public lists[%END%]</a> [%|loc%]: directory of lists available on the server[%END%]</li>
 
-<li><a href="[% path_cgi %]/which">[%|l%]Your subscriptions[%END%]</a> [%|l%]: your environment as a subscriber or as owner[%END%]</li>
+<li><a href="[% path_cgi %]/which">[%|loc%]Your subscriptions[%END%]</a> [%|loc%]: your environment as a subscriber or as owner[%END%]</li>
 
-<li><a href="[% path_cgi %]/loginrequest">[%|l%]Login[%END%]</a> / <a href="[% path_cgi %]/logout">[%|l%]Logout[%END%]</a> [%|l%]: Login / Logout from WWSympa.[%END%]</li>
+<li><a href="[% path_cgi %]/loginrequest">[%|loc%]Login[%END%]</a> / <a href="[% path_cgi %]/logout">[%|loc%]Logout[%END%]</a> [%|loc%]: Login / Logout from WWSympa.[%END%]</li>
 </ul>
 
-<h2>[%|l%]Login[%END%]</h2>
+<h2>[%|loc%]Login[%END%]</h2>
 
 [% IF auth == 'classic' %]
-[%|l%]When authenticating ([%END%]<a href="[% path_cgi %]/loginrequest">[%|l%]Login[%END%]</a>[%|l%]), provide your email address and associated password.[%END%]
+[%|loc%]When authenticating ([%END%]<a href="[% path_cgi %]/loginrequest">[%|loc%]Login[%END%]</a>[%|loc%]), provide your email address and associated password.[%END%]
 <br /><br />
-[%|l%]Once you have been authenticated, a <em>cookie</em> containing your login 
+[%|loc%]Once you have been authenticated, a <em>cookie</em> containing your login 
 information make your connection to WWSympa last. The lifetime of this
 <em>cookie</em> is customizeable through your <strong>Preferences</strong>[%END%]. 
 
 <br /><br />
 [% END %]
 
-[%|l%]You can logout (deletion of the cookie) at any time using logout button.[%END%]
+[%|loc%]You can logout (deletion of the cookie) at any time using logout button.[%END%]
 
-<h5>[%|l%]Login issues[%END%]</h5>
+<h5>[%|loc%]Login issues[%END%]</h5>
 
-<em>[%|l%]I am not a list subscriber[%END%] </em><br />
-[%|l%]Your are therefore not registered in Sympa user database and you can't login.
+<em>[%|loc%]I am not a list subscriber[%END%] </em><br />
+[%|loc%]Your are therefore not registered in Sympa user database and you can't login.
 If you subscribe to a list, WWSympa will give you an initial password.[%END%]
 <br /><br />
 
-<em>[%|l%]I am subscriber to at least one list but I have no password[%END%]</em><br />
-[%|l%]To receive your password :[%END%] 
+<em>[%|loc%]I am subscriber to at least one list but I have no password[%END%]</em><br />
+[%|loc%]To receive your password :[%END%] 
 <a href="[% path_cgi %]/remindpasswd">[% path_cgi %]/remindpasswd</a>
 <br /><br />
 
-<em>[%|l%]I forgot my password[%END%]</em><br />
+<em>[%|loc%]I forgot my password[%END%]</em><br />
 
-[%|l%]WWSympa can remind you your password by email :[%END%]
+[%|loc%]WWSympa can remind you your password by email :[%END%]
 <a href="[% path_cgi %]/remindpasswd">[% path_cgi %]/remindpasswd</a>
 
 <p></p>
 
-[%|l%]To contact this service administrator :[%END%] <a href="mailto:listmaster@[% conf.host %]">listmaster@[% conf.host %]</a>
+[%|loc%]To contact this service administrator :[%END%] <a href="mailto:listmaster@[% conf.host %]">listmaster@[% conf.host %]</a>
 [% END %]
 
 

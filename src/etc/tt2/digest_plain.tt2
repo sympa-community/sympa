@@ -1,13 +1,13 @@
 From: [% from %]
 To: [% to %]
 Reply-to: [% reply %]
-Subject: [% FILTER qencode %][%|l(list.name,date)%]%1 Digest %2[%END%][%END%]
-Content-Type: text/plain; charset=[%|l%]_charset_[%END%];
-Content-transfer-encoding: [%|l%]_encoding_[%END%]
+Subject: [% FILTER qencode %][%|loc(list.name,date)%]%1 Digest %2[%END%][%END%]
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-transfer-encoding: [%|loc%]_encoding_[%END%]
 
-[%|l(list.name,date)%]%1 Digest %2[%END%]
+[%|loc(list.name,date)%]%1 Digest %2[%END%]
 
-[%|l%]Table of contents:[%END%]
+[%|loc%]Table of contents:[%END%]
 
 [% FOREACH m = msg_list %]
 [% m.id %]. [% m.subject %] - [% m.from %]
@@ -25,7 +25,7 @@ Subject: [% m.subject %]
 ------------------------------
 
 [% END %]
-[%|l(list.name,date)%]End of %1 Digest %2[%END%]
+[%|loc(list.name,date)%]End of %1 Digest %2[%END%]
 *********************************************
 
 

@@ -1,22 +1,22 @@
-[%|l(list.name,list.host)%]Information regarding list %1@%2[%END%] :
+[%|loc(list.name,list.host)%]Information regarding list %1@%2[%END%] :
 
-[%|l(subject)%]Subject            : %1[%END%]
+[%|loc(subject)%]Subject            : %1[%END%]
 [% FOREACH o = owner %]
-[%|l(o.gecos)%]Owner              : %1[%END%] <[% o.email %]>
+[%|loc(o.gecos)%]Owner              : %1[%END%] <[% o.email %]>
 [% END %]
 [% FOREACH e = editor %]
-[%|l(e.gecos)%]Moderator          : %1[%END%] <[% e.email %]>
+[%|loc(e.gecos)%]Moderator          : %1[%END%] <[% e.email %]>
 [% END %]
-[%|l(subscribe)%]Subscription       : %1[%END%]
-[%|l(unsubscribe)%]Unsubscription     : %1[%END%]
-[%|l(send)%]Sending messages   : %1[%END%]
-[%|l(review)%]Review subscribers : %1[%END%]
-[%|l(reply_to)%]Reply to           : %1[%END%]
-[%|l(max_size)%]Maximum size       : %1[%END%]
+[%|loc(subscribe)%]Subscription       : %1[%END%]
+[%|loc(unsubscribe)%]Unsubscription     : %1[%END%]
+[%|loc(send)%]Sending messages   : %1[%END%]
+[%|loc(review)%]Review subscribers : %1[%END%]
+[%|loc(reply_to)%]Reply to           : %1[%END%]
+[%|loc(max_size)%]Maximum size       : %1[%END%]
 [% IF digest %]
-[%|l(digest)%]Digest       : %1[%END%]
+[%|loc(digest)%]Digest       : %1[%END%]
 [% END %]
-[%|l(available_reception_mode)%]Reception modes    : %1[%END%]
-[%|l(url)%]Homepage           : %1[%END%]
+[%|loc(available_reception_mode)%]Reception modes    : %1[%END%]
+[%|loc(url)%]Homepage           : %1[%END%]
 
 [% PROCESS 'info' %]
