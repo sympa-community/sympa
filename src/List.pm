@@ -1620,18 +1620,15 @@ sub load {
  	    unless ($family = $self->get_family()) {
  		&do_log('err', 'Impossible to get list %s family : %s. The list is set in status error_config',$self->{'name'},$self->{'admin'}{'family_name'});
  		$self->set_status_error_config('no_list_family',$self->{'name'}, $admin->{'family_name'});
- 		return undef;
  	    }  
  	    my $error = $family->check_param_constraint($self);
  	    unless($error) {
  		&do_log('err', 'Impossible to check parameters constraint for list % set in status error_config',$self->{'name'});
  		$self->set_status_error_config('no_check_rules_family',$self->{'name'}, $family->{'name'});
- 		return undef;
  	    }
 	    if (ref($error) eq 'ARRAY') {
  		&do_log('err', 'The list "%s" does not respect the rules from its family %s',$self->{'name'}, $family->{'name'});
  		$self->set_status_error_config('no_respect_rules_family',$self->{'name'}, $family->{'name'});
- 		return undef;
  	    }
  	}
      } 
