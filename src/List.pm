@@ -6777,6 +6777,12 @@ sub create_db {
 	return undef;
     }
 
+    ## Grant privileges
+    unless ($drh->do("GRANT ALL ON $Conf{'db_name'}.* TO $Conf{'db_user'}\@localhost IDENTIFIED BY '$Conf{'db_passwd'}'")) {
+	&do_log('err', 'Cannot grant privileges to %s on database %s : %s', $Conf{'db_user'}, $Conf{'db_name'}, $drh->errstr);
+	return undef;
+    }
+
     &do_log('notice', 'Database %s created', $Conf{'db_name'});
 
     $drh->disconnect();
