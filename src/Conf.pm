@@ -22,7 +22,7 @@ my @valid_options = qw(
 		       queueauth queuetask queuebounce queuedigest queueexpire queuemod queuesubscribe queueoutgoing tmpdir
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor
 		       remind_return_path request_priority rfc2369_header_fields sendmail sleep 
-		       sort sympa_priority syslog logmail umask welcome_return_path wwsympa_url
+		       sort sympa_priority syslog log_smtp umask welcome_return_path wwsympa_url
                        openssl trusted_ca_options key_passwd ssl_cert_dir remove_headers
 		       antivirus_path antivirus_args anonymous_header_fields
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
@@ -68,7 +68,7 @@ my %Default_Conf =
      'clean_delay_queuemod' => 10,
      'clean_delay_queueauth' => 3,
      'log_socket_type'      => 'unix',
-     'logmail'      => 'off',
+     'log_smtp'      => '',
      'remind_return_path' => 'owner',
      'welcome_return_path' => 'owner',
      'db_type' => '',
@@ -289,7 +289,7 @@ sub load_robots {
 				  wwsympa_url     => 1,
 				  'title'         => 1,
 				  default_home    => 1,
-				  logmail         => 1,
+				  log_smtp        => 1,
 				  create_list     => 1,
 				  dark_color      => 1,
 				  light_color     => 1,
@@ -338,7 +338,7 @@ sub load_robots {
 
 	$robot_conf->{$robot}{'email'} ||= $Conf{'email'};
 
-	$robot_conf->{$robot}{'logmail'} ||= $Conf{'logmail'};
+	$robot_conf->{$robot}{'log_smtp'} ||= $Conf{'log_smtp'};
 
 	$robot_conf->{$robot}{'wwsympa_url'} ||= 'http://'.$robot_conf->{$robot}{'http_host'}.'/wws';
 
