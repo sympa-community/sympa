@@ -3207,8 +3207,6 @@ sub do_distribute {
 	return undef;
     }
 
-    &do_log('debug', "XXXXX: $Conf{'queue'}/T.$sympa_email.$extention");
-
     printf DISTRIBUTE ("X-Sympa-To: %s\n",$sympa_email);
     printf DISTRIBUTE ("Message-Id: <%s\@wwsympa>\n", time);
     printf DISTRIBUTE ("From: %s\n\n", $param->{'user'}{'email'});
@@ -7974,7 +7972,7 @@ sub do_send_mail {
 
     &mail::mailback(\@body, 
                     {'Subject' => $in{'subject'}, 'In-Reply-To' => $in{'in_reply_to'}}, 
-		    $param->{'user'}{'email'}, $to, $to);
+		    $param->{'user'}{'email'}, $to, $robot, $to);
 
     &message('performed');
     return 'info';

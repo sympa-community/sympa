@@ -2025,7 +2025,7 @@ sub expire {
 		push @msg::report, "   $user->{'email'}\n";      
 		&mail::mailback(\@msgexp, 
 				{'Subject' => sprintf(Msg(6, 21, "Renewal of your subscription to %s"), $name)},
-				'sympa', $user->{'email'}, $user->{'email'});
+				'sympa', $user->{'email'}, $user->{'email'}, $robot);
 	    } while ($user = $list->get_next_user());
 
 	    push @msg::report, "\n";

@@ -28,14 +28,16 @@ sub set_send_spool {
 ## Mail back a response to the given address.
 ## Data is a reference to an array or a scalar.
 sub mailback {
-   my($data, $headers, $from, $to, @rcpt) = @_;
+   my($data, $headers, $from, $to, $robot, @rcpt) = @_;
    do_log('debug2', 'mail::mailback(%s, %s)', $from, join(',', @rcpt));
 
    my ($fh, $sympa_file);
    
+   my $sympa_email =  $Conf{'robots'}{$robot}{'sympa'} || $Conf{'sympa'};
+
    ## Don't fork if used by a CGI (FastCGI problem)
    if (defined $send_spool) {
-       $sympa_file = "$send_spool/T.sympa.".time.'.'.int(rand(10000));
+       $sympa_file = "$send_spool/T.$sympa_email.".time.'.'.int(rand(10000));
        my $rcpt = join ',', @rcpt;
 
        unless (open TMP, ">$sympa_file") {
@@ -44,12 +46,12 @@ sub mailback {
        }
        
        printf TMP "X-Sympa-To: %s\n", $rcpt;
-       printf TMP "X-Sympa-From: %s\n", $Conf{'sympa'};
+       printf TMP "X-Sympa-From: %s\n", $sympa_email;
        printf TMP "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($rcpt);
        
        $fh = \*TMP;
    }else {
-       $fh = smtp::smtpto("$Conf{'sympa'}", \@rcpt);
+       $fh = smtp::smtpto($sympa_email, \@rcpt);
    }
    
    ## Charset for encoding
@@ -57,7 +59,7 @@ sub mailback {
 
    printf $fh "To:  %s\n", MIME::Words::encode_mimewords($to, 'Q', $charset);
    if ($from eq 'sympa') {
-       printf $fh "From: %s\n", MIME::Words::encode_mimewords((sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'sympa'})), 'Q', $charset);
+       printf $fh "From: %s\n", MIME::Words::encode_mimewords((sprintf (Msg(12, 4, 'SYMPA <%s>'), $sympa_email)), 'Q', $charset);
    }else {
        printf $fh "From: %s\n", $from;
    }
@@ -145,11 +147,6 @@ sub mailfile {
        ## Don't fork if used by a CGI (FastCGI problem)
        if (defined $send_spool) {
 	   my $sympa_email = $data->{'conf'}{'sympa'} || $Conf{'sympa'};
-	   if ($robot eq $Conf{'domain'}) {
-	       $sympa_email = $Conf{'email'};
-	   }else {
-	       $sympa_email = $Conf{'robots'}{$robot}{'sympa'};
-	   }
 	   $sympa_file = "$send_spool/T.$sympa_email.".time.'.'.int(rand(10000));
 	   
 	   unless (open TMP, ">$sympa_file") {

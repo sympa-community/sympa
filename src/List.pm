@@ -1170,7 +1170,7 @@ sub send_alert_to_owner {
 
 	my $subject = sprintf(Msg(8, 28, "WARNING: bounce rate too high in list %s"), $name);
 	my $body = sprintf Msg(8, 27, "Bounce rate in list %s is %d%%.\nYou should delete bouncing subscribers : %s/reviewbouncing/%s"), $name, $rate, $Conf{'wwsympa_url'}, $name ;
-	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, @rcpt);
+	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
     }else {
 	do_log('info', 'Unknown alert %s', $alert);
     }
@@ -1180,14 +1180,14 @@ sub send_alert_to_owner {
 
 ## Send a sub/sig notice to the owners.
 sub send_notify_to_listmaster {
-    my ($operation, @param) = @_;
+    my ($operation, $robot, @param) = @_;
     do_log('info', 'List::send_notify_to_listmaster(%s,%s )', $operation, @param );
 
     ## No DataBase
     if ($operation eq 'no_db') {
         my $body = "Cannot connect to database $Conf{'db_name'}, Sympa dying." ; 
 	my $to = sprintf "Listmaster <%s>", $Conf{'listmaster'};
-	mail::mailback (\$body, {'Subject' => 'No DataBase'}, 'sympa', $to, $Conf{'listmaster'});
+	mail::mailback (\$body, {'Subject' => 'No DataBase'}, 'sympa', $to, $robot, $Conf{'listmaster'});
 
     ## creation list requested
     }elsif ($operation eq 'request_list_creation') {
@@ -1250,7 +1250,7 @@ sub send_notify_to_owner {
 	my ($body, $subject);
 	$subject = sprintf (Msg(8, 21, "WARNING: %s list %s from %s %s"), $operation, $name, $who, $gecos);
 	$body = sprintf (Msg(8, 23, "WARNING : %s %s failed to signoff from %s\nbecause his address was not found in the list\n (You may help this person)\n"),$who, $gecos, $name);
-	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, @rcpt);
+	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
     }else {
 	my ($body, $subject);
 	$subject = sprintf(Msg(8, 21, "FYI: %s list %s from %s %s"), $operation, $name, $who, $gecos);
@@ -1259,7 +1259,7 @@ sub send_notify_to_owner {
 	}else {
 	    $body = sprintf Msg(8, 22, "FYI command %s list %s from %s %s \n (no action needed)\n"),$operation, $name, $who, $gecos ;
 	}
-	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, @rcpt);
+	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to,$self->{'domain'}, @rcpt);
     }
     
 }
@@ -1295,7 +1295,7 @@ sub send_sub_to_owner {
    my $subject = sprintf(Msg(8, 2, "%s subscription request"), $name);
    my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
    my $body = sprintf Msg(8, 3, $msg::sub_owner), $name, $replyto, $keyauth, $name, $escaped_who, $escaped_gecos, $replyto, $keyauth, $name, $who, $gecos;
-   &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, @rcpt);
+   &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
 
 }
 
@@ -1310,7 +1310,7 @@ sub notify_sender{
 
    my $subject = sprintf Msg(4, 40, 'Moderating your message');
    my $body = sprintf Msg(4, 38, "Your message for list %s has been forwarded to editor(s)\n"), $name;
-   &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $sender, $sender);
+   &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $sender, $self->{'domain'}, $sender);
 }
 
 ## Send a Unsubscription request to the owners.
@@ -1341,7 +1341,7 @@ sub send_sig_to_owner {
     my $subject = sprintf(Msg(8, 24, "%s UNsubscription request"), $name);
     my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
     my $body = sprintf Msg(8, 25, $msg::sig_owner), $name, $Conf{'sympa'}, $keyauth, $name, $escaped_who, $Conf{'sympa'}, $keyauth, $name, $who;
-    &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, @rcpt);
+    &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
 }
 
 ## Send a message to the editor
@@ -5387,7 +5387,7 @@ sub request_auth {
 	}
     }
 
-    &mail::mailback (\$body, {'Subject' => $command}, 'sympa', $email, $email);
+    &mail::mailback (\$body, {'Subject' => $command}, 'sympa', $email, $robot, $email);
 
     return 1;
 }
