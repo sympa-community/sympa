@@ -10542,7 +10542,7 @@ sub notify_bouncers{
 
     foreach my $user (@$reftab){
  	&do_log('notice','Notifying bouncing subsrciber of list %s : %s', $self->{'name'}, $user);
-	$self->sendnotify_to_subscriber('auto_notify_bouncers',$user);
+	$self->send_notify_to_subscriber('auto_notify_bouncers',$user);
     }
     return 1;
 }
