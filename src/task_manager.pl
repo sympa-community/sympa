@@ -37,7 +37,6 @@ use MD5;
 use smtp;
 use wwslib;
  
-require 'parser.pl';
 require 'tools.pl';
 
 my $opt_d;
@@ -368,7 +367,7 @@ sub create {
 
     ## creation
     open (TASK, ">$task_file");
-    parse_tpl ($Rdata, $model_file, TASK);
+    &List::parse_tpl ($Rdata, $model_file, TASK);
     close (TASK);
     
     # special checking for list whose user_data_source config parmater is include. The task won't be created if there is a delete_subs command

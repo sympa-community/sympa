@@ -35,9 +35,6 @@ use Getopt::Long;
 
 use strict vars;
 
-## Template parser
-require "--LIBDIR--/parser.pl";
-
 ## Sympa API
 use List;
 use mail;
@@ -799,7 +796,7 @@ while ($query = &new_loop()) {
 	    $param->{'list_conf'} = $list->{'admin'};
 	}
 
-	&parse_tpl($param,$main , STDOUT);
+	&List::parse_tpl($param,$main , STDOUT);
     }    
 
     # At the end of this loop reset variables is important to use this cgi as a CGI::fast 
@@ -4360,7 +4357,7 @@ sub do_create_list {
     $parameters->{'topics'} = $in{'topics'};
 
     open CONFIG, ">$list_dir/config";
-    &parse_tpl($parameters, $template_file, CONFIG);
+    &List::parse_tpl($parameters, $template_file, CONFIG);
     close CONFIG;
     
     open INFO, ">$list_dir/info" ;
