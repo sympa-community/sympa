@@ -417,12 +417,12 @@ my %in_regexp = (
 		 ## File names
 		 'file' => '[\w\-\.]+', 
 		 'arc_file' => '[\w\-\.]+', 
-		 'path' => '^[<>\\\*\$]+',
-		 'dir' => '^[<>\\\*\$]+',
-		 'name_doc' => '^[<>\\\*\$]+',
-		 'shortname' => '^[<>\\\*\$]+',
-		 'new_name' => '^[<>\\\*\$]+',
-		 'id' => '^[<>\\\*\$]+',
+		 'path' => '[^<>\\\*\$]+',
+		 'dir' => '[^<>\\\*\$]+',
+		 'name_doc' => '[^<>\\\*\$]+',
+		 'shortname' => '[^<>\\\*\$]+',
+		 'new_name' => '[^<>\\\*\$]+',
+		 'id' => '[^<>\\\*\$]+',
 
 		 ## URL
 		 'referer' => '[^\\\$\*\"\'\`\^\|\<\>]+',
@@ -430,9 +430,9 @@ my %in_regexp = (
 		 'url' => '[^\\\$\*\"\'\`\^\|\<\>]+',
 
 		 ## Msg ID
-		 'msgid' => '[^\\\$\*\"\'\`\^\|\<\>]+',
-		 'in_reply_to' => '[^\\\$\*\"\'\`\^\|\<\>]+',
-		 'message_id' => '[^\\\$\*\"\'\`\^\|\<\>]+',
+		 'msgid' => '[^\\\$\*\"\'\`\^\|]+',
+		 'in_reply_to' => '[^\\\$\*\"\'\`\^\|]+',
+		 'message_id' => '[^\\\$\*\"\'\`\^\|]+',
 
 		 ## Password
 		 'passwd' => '.+',
@@ -629,10 +629,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'auth_method'} = 'md5';
 
      ## Get PATH_INFO parameters
-     unless (&get_parameters()) {	 
-	 &send_html('tt2_error.tt2');
-	 next;
-     }
+     &get_parameters();
 
      if (($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS') &&
 	 ($in{'action'} ne 'sso_login')) { ## Do not check client certificate automatically if in sso_login 
@@ -1235,9 +1232,18 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     }
 	 foreach my $one_p (split /\0/, $in{$p}) {
 	     unless ($one_p =~ /^$regexp$/) {
+		 ## Dump parameters in a tmp file for later analysis
+		 my $dump_file = '/tmp/sympa_dump.'.time."$$$.";
+		 unless (open DUMP, ">$dump_file") {
+		     &wwslog('err','get_parameters: failed to create %s : %s', $dump_file, $!);		     
+		 }
+		 &tools::dump_var(\%in, 0, \*DUMP);
+		 close DUMP;
+
 		 &error_message('syntax_errors', {'params' => $p} );
-		 &wwslog('err','get_parameters: syntax error for parameter %s', $p);
-		 return undef;
+		 &wwslog('err','get_parameters: syntax error for parameter %s ; dumped vars in %s', $p, $dump_file);
+		 $in{$p} = '';
+		 next;
 	     }
 	 }
      }
