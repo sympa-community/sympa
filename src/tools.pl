@@ -997,10 +997,10 @@ sub split_mail {
 	    printf "\t-------\t Create file %s\n", $pathname.'.'.$fileExt ;
 	    
 	    ## Delete files created twice or more (with Content-Type.name and Content-Disposition.filename)
-	    $message->purge ;
-    
-	
+	    $message->purge ;	
     }
+    
+    return 1;
 }
 
 sub virus_infected {
