@@ -1471,8 +1471,10 @@ is still recognized but should not be used anymore.
 \subsection {\cfkeyword {spam\_protection}}  
 
     \index{spam\_protection}
+	 \default {javascript}
+
 	There is a need to protection Sympa web site against spambot which collect
-        email adresse in public web site. Various method are availible into Sympa
+        email adresse in public web site. Various method are availble into Sympa
         and you can choose it with \cfkeyword {spam\_protection} and
         \cfkeyword {web\_archive\_spam\_protection} parameters.
         Possible value are :
@@ -1483,16 +1485,15 @@ see a  nice mailto adresses where others have nothing.
 \item none : no protection against spammer.
 \end{itemize}
 
-	 \default {javascript}
 
 \subsection {\cfkeyword {web\_archive\_spam\_protection}}
+	  \default {cookie}
 
 	Idem \cfkeyword {spam\_protection} but restricted to web archive.
         A additional value is availible : cookie which mean that users
         must submit a small form in order to receive a cookie before
         browsing archives. This block all robot, even google and co.
 
-	  \default {cookie}
 
 \subsection {\cfkeyword {dark\_color} \cfkeyword {light\_color} \cfkeyword {text\_color} \cfkeyword {bg\_color} \cfkeyword {error\_color} \cfkeyword {selected\_color} \cfkeyword {shaded\_color}}
 \label {colors}
@@ -3634,7 +3635,6 @@ You can change the parser's behvior by setting unsetting options. Available opti
   \item \textbf {ignore\_undef} : undefined variables won't be parsed. Default behavior is
     to process undef variables like empty variables.
 
-\end {itemize}
 
 \begin {quote}
 \begin{verbatim}
@@ -3644,6 +3644,18 @@ Here is an unparsed undef variable : [unknown_var]
 \end{verbatim}
 \end {quote}
 
+
+  \item \textbf {escape\_html} : escape some HTML tag characters while including files
+
+\end {itemize}
+
+\begin {quote}
+\begin{verbatim}
+[SETOPTION escape_html]
+[INCLUDE '/var/www/html/sample.html]
+[UNSETOPTION escape_html]
+\end{verbatim}
+\end {quote}
 
 \section {Site template files}
 \label{site-tpl}
@@ -6313,7 +6325,6 @@ halt_rate	20
         messages. See \cfkeyword {remind\_return\_path} \file {sympa.conf}
 	parameter (\ref{kw-remind-return-path}, page~\pageref{kw-remind-return-path}).
 
-
 \section {Archive related}
 
 \Sympa maintains 2 kinds of archives: mail archives and web archives.
@@ -6417,6 +6428,34 @@ Predefined scenarii are :
 This parameter specifies the disk quota for the list's web archives, in kilobytes. This parameter's default is
 \cfkeyword {default\_archive\_quota} \file {sympa.conf} parameter. If quota is exceeded, messages are no more 
 archived, list owner is notified. When archives are 95\% full, the list owner is warned.
+
+\section {Spam protection}
+
+\subsection {spam\_protection}  
+
+    \index{spam\_protection}
+	\default {\cfkeyword {spam\_protection} robot parameter}
+
+	There is a need to protection Sympa web site against spambot which collect
+        email adresse in public web site. Various method are availible into Sympa
+        and you can choose it with \cfkeyword {spam\_protection} and
+        \cfkeyword {web\_archive\_spam\_protection} parameters.
+        Possible value are :
+\begin {itemize}
+\item javascript : the adresse is hidden using a javascript. User who enable javascript can
+see a  nice mailto adresses where others have nothing.
+\item at : the @ char is replaced by the string " AT ".
+\item none : no protection against spammer.
+\end{itemize}
+
+
+\subsection {web\_archive\_spam\_protection}
+	\default {\cfkeyword {web\_archive\_spam\_protection} robot parameter}
+
+	Idem \cfkeyword {spam\_protection} but restricted to web archive.
+        A additional value is available : cookie which mean that users
+        must submit a small form in order to receive a cookie before
+        browsing archives. This block all robot, even google and co.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
