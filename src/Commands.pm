@@ -238,51 +238,11 @@ sub lists {
 	}
     }
 
-    # sa et si lists.$lang.tpl ?? Ca coince !!! Cela ne marche pas si le template existe !!!
-    if ((-r "$Conf{'etc'}/$robot/templates/lists.tpl") || (-r "$Conf{'etc'}/templates/lists.tpl") || (-r "--ETCBINDIR--/templates/lists.tpl")) {
-	my $data = {};
-	$data->{'lists'} = $lists;
-	$data->{'subject'} = MIME::Words::encode_mimewords(sprintf Msg(6, 82, "Public lists"));
-
-	&List::send_global_file('lists', $sender, $robot, $data);
-
-    }elsif (-r  'lists') {
-	## Static lists
-	open IN, 'lists';
-	while (<IN>) {
-	    push @msg::report, $_;
-	}
-	close IN;
-
-    }elsif ((-r 'lists.header') or (-r 'lists.footer')) {
-	## Header + Dynamic + Footer
-        my ($l, $list, $name, $subject);
-
-        ## Header file
-        if ( open HEADER, 'lists.header' ) {
-           while (<HEADER>) {
-	      push @msg::report, $_;
-           }
-           close HEADER;
-        }
- 
-	foreach $l (sort keys %{$lists}) {
-	   $name = $l . '.' x (22 - length($l));
-	   $subject = $lists->{$l}{'subject'};
-	   push @msg::report, "$name : $subject\n";
-	}
-
-        ## Footer file
-        if ( open FOOTER, 'lists.footer' ) {
-           while (<FOOTER>) {
-               push @msg::report, $_;
-           }
-           close FOOTER;
-        }
-    }else {
-        &do_log('info', 'Missing lists.tpl');
-        return undef;
-    }
+    my $data = {};
+    $data->{'lists'} = $lists;
+    $data->{'subject'} = MIME::Words::encode_mimewords(sprintf Msg(6, 82, "Public lists"));
+    
+    &List::send_global_file('lists', $sender, $robot, $data);
 
     do_log('info', 'LISTS from %s accepted (%d seconds)', $sender, time-$time_command);
 
