@@ -636,7 +636,8 @@ sub subscribe {
 	return 'not_allowed';
     }
     if ($action =~ /owner/i) {
-	push @msg::report, sprintf Msg(6, 25, $msg::subscription_forwarded);
+	push @msg::report, sprintf Msg(6, 25, $msg::subscription_forwarded)
+	    unless ($action =~ /quiet/i);
 	## Send a notice to the owners.
         my $keyauth = $list->compute_auth($sender,'add');
 	$list->send_sub_to_owner($sender, $keyauth, $Conf{'sympa'}, $comment);
@@ -890,7 +891,8 @@ sub signoff {
     }
 
     if ($action =~ /owner/i) {
-	push @msg::report, sprintf Msg(6, 25, $msg::subscription_forwarded);
+	push @msg::report, sprintf Msg(6, 25, $msg::subscription_forwarded)
+	    unless ($action =~ /quiet/i);
 	## Send a notice to the owners.
 	my $keyauth = $list->compute_auth($sender,'del');
 	$list->send_sig_to_owner($sender, $keyauth);
