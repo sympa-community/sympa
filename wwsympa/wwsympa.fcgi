@@ -1018,11 +1018,12 @@ sub do_login {
     }
     
     unless ($user->{'password'}) {
-	&error_message('passwd_not_found', {'email' => $in{'email'}});
-	&wwslog('info','do_login: password for user %s not found', $in{'email'});
-	$param->{'init_email'} = $in{'email'};
-	$param->{'escaped_init_email'} = &tools::escape_chars($in{'email'});
-	return 'loginrequest';
+	$user->{'password'} = &tools::tmp_passwd($in{'email'});
+#	&error_message('passwd_not_found', {'email' => $in{'email'}});
+#	&wwslog('info','do_login: password for user %s not found', $in{'email'});
+#	$param->{'init_email'} = $in{'email'};
+#	$param->{'escaped_init_email'} = &tools::escape_chars($in{'email'});
+#	return 'loginrequest';
     }
     
     unless ($in{'passwd'} eq $user->{'password'}) {
