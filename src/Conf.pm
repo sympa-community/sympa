@@ -185,7 +185,7 @@ my %Default_Conf =
      'urlize_min_size' => 10240, ## 10Kb
      'supported_lang' => 'fr,en_US,hu,it',
      'web_recode_to' => '',
-     'default_remind_task' => '2month',
+     'default_remind_task' => '',
      );
    
 my $wwsconf;
