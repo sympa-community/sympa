@@ -4509,7 +4509,7 @@ sub verify {
 	    if (defined ($context->{'msg'})) {
 		my $header = $context->{'msg'}->head;
 		my $field = $header->get($field_name);
-		$value =~ s/\[(msg_header|header)\-\>$field_name/$field/;
+		$value =~ s/\[(msg_header|header)\-\>$field_name\]/$field/;
 	    }else {
 		return -1 * $negation;
 	    }
