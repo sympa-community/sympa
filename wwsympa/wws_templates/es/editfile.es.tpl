@@ -20,7 +20,7 @@
 	    <INPUT TYPE="submit" NAME="action_editfile" VALUE="Editar">
 
 <P>
-[PARSE '--ETCBINDIR--/wws_templates/help_editfile.tpl']
+[PARSE '--ETCBINDIR--/wws_templates/help_editfile.es.tpl']
 
 [ENDIF]
 </FORM>
