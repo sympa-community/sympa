@@ -8493,7 +8493,7 @@ sub do_d_savefile {
 	 $param->{'path'} = &format_path('without_slash',$path);
 	 $param->{'shortname'} = $fname;
 	 
-	 return 'd_read';
+	 return 1;
      }
      
      
