@@ -6094,20 +6094,18 @@ Example : (cn=testgroup,dc=cru,dc=fr should be a groupOfUniqueNames here)
 \begin{verbatim}
 
     include_ldap_2level_query
-    host ldap.cru.fr
-    suffix1 cn=testgroup, dc=cru, dc=fr
-    timeout1 10
-    filter1 (objectClass=*)
-    attrs1 uniqueMember
+    host ldap.univ.fr
+    port 389
+    suffix1 ou=Groups,dc=univ,dc=fr
+    scope1 one
+    filter1 (&(objectClass=groupOfUniqueNames) (| (cn=cri)(cn=ufrmi)))
+    attrs1 uniquemember
     select1 all
-    scope1 base
-    suffix2 dc=cru, dc=fr
-    timeout2 10
-    filter2 (&(dn=[attrs1]) (c=fr))
+    suffix2 [attrs1]
+    scope2 base
+    filter2 (objectClass=n2pers)
     attrs2 mail
-    select2 regex
-    regex2 ^*@cru.fr$
-    scope2 one
+    select2 first
 
 \end{verbatim}
 \end {quote}
