@@ -811,6 +811,7 @@ sub DoSendMessage {
 
     $hdr->delete('X-Sympa-Checksum');
     $hdr->delete('X-Sympa-To');
+    $hdr->delete('X-Sympa-From');
     
     ## Multiple recepients
     my @rcpts = split /,/,$rcpt;
