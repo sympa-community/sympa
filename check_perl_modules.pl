@@ -131,9 +131,13 @@ sub check_modules {
 
     foreach $mod (sort keys %todo) {
 	printf ("%-20s %-15s", $mod, $todo{$mod});
+	
 	$status = &test_module($mod);
 	if ($status == 1) {
 	    $vs = "$mod" . "::VERSION";
+
+	    $vs = 'mhonarc::VERSION' if $mod =~ /^mhonarc/i;
+
 	    $v = $$vs;
 	    $rv = $versions{$mod} || "1.0" ;
 	    ### OK: check version
@@ -205,6 +209,10 @@ sub test_module {
 
     $filename =~ s/::/\//g;
     $filename .= ".pm";
+    
+    ## Exception for mhonarc
+    $filename = 'mhamain.pl' if $filename =~ /^mhonarc/i;
+
     return 1 if $INC{$filename};
     
   ITER: {
