@@ -1,0 +1,6 @@
+title.us public list multipart/mixed messages are forwarded to moderator
+title.fr liste ouverte mais attachements passés au modérateur
+
+match([header->Content-Type],/attachment/)      	smtp,smime,md5    -> editorkey
+match([header->Content-Disposition],/multipart\/mixed/) smtp,smime,md5    -> editorkey
+true()                                         		smtp,md5    -> do_it
