@@ -210,7 +210,7 @@ CONFIRM %s %s\n"
 14	"Fin del Resumen de la lista %s"
 15	"Hay %d mensajes para ser moderados para la lista %s"
 16	"Solicitud de autentificación"
-21	"Para su información: %s lista %s de %s %s\n"
+21	"Para su información: %s lista %s de %s %s"
 22	"Para su información: comando %s a la lista %s de %s %s \n(ninguna acción requerida).\n"
 23	"ATENCIÓN: %s %s falló en una tentativa de anular una subscripción a la lista %s\n\
 debido a que la dirección no se encontró en la lista\n\
