@@ -1570,6 +1570,13 @@ sub send_notify_to_owner {
 	my $body = sprintf Msg(8, 25, $msg::sig_owner), $name, $sympa, $param->{'keyauth'}, $name, $escaped_who, $sympa, $param->{'keyauth'}, $name, $param->{'who'};
 	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
 
+    }elsif ($param->{'type'} eq 'bounce_rate') {
+	my $rate = int ($param->{'rate'} * 10) / 10;
+
+        my $subject = sprintf(Msg(8, 28, "WARNING: bounce rate too high in list %s"), $name);
+        my $body = sprintf Msg(8, 27, "Bounce rate in list %s is %d%%.\nYou should delete bouncing subscribers : %s/reviewbouncing/%s"), $name, $rate, &Conf::get_robot_conf($self->{'domain'}, 'wwsympa_url'), $name ;
+        &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
+
     }elsif ($param->{'who'}) {
 	my ($body, $subject);
 	$subject = sprintf(Msg(8, 21, "FYI: %s list %s from %s %s"), $param->{'type'}, $name, $param->{'who'}, $param->{'gecos'});
@@ -1905,7 +1912,8 @@ sub send_msg {
 	($admin->{'user_data_source'} eq 'include2')){
 	my $rate = $self->get_total_bouncing() * 100 / $total;
 	if ($rate > $self->{'admin'}{'bounce'}{'warn_rate'}) {
-	    $self->send_alert_to_owner('bounce_rate', {'rate' => $rate});
+	    $self->send_notify_to_owner({'type' => 'bounce_rate',
+					 'rate' => $rate});
 	}
     }
 
@@ -7109,6 +7117,7 @@ sub _urlize_part {
     ## Store body in file 
     if (open OFILE, ">$expl/$dir/$filename") {
 	my @ct = split(/;/,$head->get('Content-type'));
+	chomp ($ct[0]); 
    	printf OFILE "Content-type: %s\n\n", $ct[0];
     } else {
 	&do_log('notice', "Unable to open $expl/$dir/$filename") ;
