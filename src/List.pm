@@ -2159,8 +2159,10 @@ sub get_subscriber {
 	}
 	
 	my $user = $sth->fetchrow_hashref;
-	$$user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
-	  unless ($self->is_available_reception_mode($$user{'reception'}));
+
+	$user->{'reception'} ||= 'mail';
+	$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+	  unless ($self->is_available_reception_mode($user->{'reception'}));
 
 	$sth->finish();
 
@@ -2173,8 +2175,10 @@ sub get_subscriber {
 	    unless $self->{'users'}{$email};
 
 	my %user = split(/\n/, $self->{'users'}{$email});
+
+	$user{'reception'} ||= 'mail';
 	$user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
-	  unless ($self->is_available_reception_mode($user{'reception'}));
+	     unless ($self->is_available_reception_mode($user{'reception'}));
 	
 	return \%user;
     }
@@ -2297,8 +2301,9 @@ sub get_first_user {
 	
 	my $user = $sth->fetchrow_hashref;
 	if (defined $user) {
-	  $$user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
-	    unless ($self->is_available_reception_mode($$user{'reception'}));
+	    $user->{'reception'} ||= 'mail';
+	    $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+	    unless ($self->is_available_reception_mode($user->{'reception'}));
 	}
 
 	return $user;
@@ -2306,10 +2311,12 @@ sub get_first_user {
 	my ($i, $j);
 	my $ref = $self->{'ref'};
 	
-	if ($ref->seq($i, $j, R_FIRST) == 0)  {
+	 if ($ref->seq($i, $j, R_FIRST) == 0)  {
 	    my %user = split(/\n/, $j);
+
+	    $user{'reception'} ||= 'mail';
 	    $user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
-	      unless ($self->is_available_reception_mode($user{'reception'}));
+	    unless ($self->is_available_reception_mode($user{'reception'}));
 	    return \%user;
 	}
 	return undef;
@@ -2325,7 +2332,8 @@ sub get_next_user {
 	my $user = $sth->fetchrow_hashref;
 
 	if (defined $user) {
-	  $$user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+	    $user->{'reception'} ||= 'mail';
+	    $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	    unless ($self->is_available_reception_mode($$user{'reception'}));
 	}
 	else {
@@ -2342,6 +2350,8 @@ sub get_next_user {
 	
 	if ($ref->seq($i, $j, R_NEXT) == 0) {
 	    my %user = split(/\n/, $j);
+
+	    $user{'reception'} ||= 'mail';
 	    $user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	      unless ($self->is_available_reception_mode($user{'reception'}));
 	    return \%user;
