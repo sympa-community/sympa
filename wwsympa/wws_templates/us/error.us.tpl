@@ -72,7 +72,7 @@ You are already subscriber in list [error->list]
 Failed adding user [error->user]
 
 [ELSIF error->msg=failed]
-Action failed
+[error->action]: action failed
 
 [ELSIF error->msg=not_subscriber]
 You are not subscriber in list [error->list]

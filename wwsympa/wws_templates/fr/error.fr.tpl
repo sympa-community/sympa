@@ -66,7 +66,7 @@ Vous êtes déjà abonné à la liste [error->list]
 [error->email] est déjà abonné à la liste [error->list] 
 
 [ELSIF error->msg=failed]
-L'opération a échoué
+[error->action] : l'opération a échoué
 
 [ELSIF error->msg=not_subscriber]
 Vous n'êtes pas abonné à la liste [error->list]
