@@ -528,7 +528,7 @@ sub _load_auth {
 			  'user_table' => {'regexp' => '.*',
 					   'negative_regexp' => '.*'},
 			  
-			  'cas' => {'host' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
+			  'cas' => {'base_url' => 'http(s)?:/.*',
 				    'non_blocking_redirection' => 'on|off',
 				    'login_uri' => '.*',
 				    'logout_uri' => '.*',
