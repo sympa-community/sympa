@@ -949,7 +949,7 @@ sub load {
 		 || defined $self->{'admin'}{'include_list'}
 		 || defined $self->{'admin'}{'include_sql_query'}
 		 || defined $self->{'admin'}{'include_ldap_query'}
-		 || defined $self->{'admin'}{'include_admin'}
+#		 || defined $self->{'admin'}{'include_admin'}
 		 ) {
 	    &do_log('notice', 'Include paragraph missing in configuration file');
 	    return undef;
@@ -4327,7 +4327,7 @@ sub _load_users_include {
     $btree->{'compare'} = '_compare_addresses';
     my $ref = tie %users, 'DB_File', undef, O_CREAT|O_RDWR, 0600, $btree;
     return undef unless ($ref);
-    foreach my $type ('include_list','include_file','include_ldap_query','include_sql_query','include_admin') {
+    foreach my $type ('include_list','include_file','include_ldap_query','include_sql_query') {
 	foreach my $incl (@{$admin->{$type}}) {
 	    ## get the list of users
 	    if ($type eq 'include_sql_query') {
@@ -4344,12 +4344,12 @@ sub _load_users_include {
 		}
 	    }elsif ($type eq 'include_file') {
 		$total += _include_users_file (\%users, $incl, $admin->{'default_user_options'});
-	    }elsif ($type eq 'include_admin') {
-		my $result = _include_users_admin (\%users, $incl,$name);
-		$total += $result->{'total'};
-		foreach my $list_dependance ($result->{'depend_on'}) {
-		    $depend_on->{$list_dependance} = 1 ;
-		}
+#	    }elsif ($type eq 'include_admin') {
+#		my $result = _include_users_admin (\%users, $incl,$name);
+#		$total += $result->{'total'};
+#		foreach my $list_dependance ($result->{'depend_on'}) {
+#		    $depend_on->{$list_dependance} = 1 ;
+#		}
 	    }
 	}
     }
