@@ -388,6 +388,7 @@ $set 16 Titres des paramètres de config de listes
 145	"filtre (2nd niveau)"
 146	"attribut à extraire (2nd niveau)"
 147	"sélection (2nd niveau)"
+148	"variable d'environnement pour la connexion"
 197	"portée de la recherche (1er niveau)"
 198	"délai de connexion (1er niveau)"
 199	"portée de la recherche (2nd niveau)"

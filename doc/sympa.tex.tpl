@@ -5029,6 +5029,21 @@ include_sql_query
 Connexion timeout is set to 5 seconds.
 
 \item 
+\label {db\_env}
+\lparam {db\_env} \textit {list\_of\_var\_def}
+
+Sets a list of environment variables to set before database connexion.
+This is a ';' separated list of variable assignment.
+
+Example for Oracle:
+\begin {quote}
+\begin{verbatim}
+db_env	ORACLE_TERM=vt100;ORACLE_HOME=/var/hote/oracle/7.3.4
+\end{verbatim}
+\end {quote}
+
+
+\item 
 \label {user}
 \lparam {user} \textit {user\_id}
 

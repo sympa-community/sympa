@@ -668,10 +668,10 @@ sub ciphersaber_installed {
 # create a cipher
 sub cookie_changed {
     my $current=shift;
-    my $unchanged = 1 ;
-    if (-f "$Conf{'etc'}/cookies") {
-	unless (open COOK, "$Conf{'etc'}/cookies") {
-	    do_log('err', "Unable to read $Conf{'etc'}/cookies \n") ;
+    my $changed = 1 ;
+    if (-f "$Conf{'etc'}/cookies.history") {
+	unless (open COOK, "$Conf{'etc'}/cookies.hystory") {
+	    do_log('err', "Unable to read $Conf{'etc'}/cookies.hystory") ;
 	    return undef ; 
 	}
 	my $oldcook = <COOK>;
@@ -681,21 +681,22 @@ sub cookie_changed {
 	
 
 	if ($cookies[$#cookies] eq $current) {
+	    do_log('debug2', "cookie is stable") ;
 	    $changed = 0;
-	}else{
-	    push @cookies, $current ;
-	    unless (open COOK, ">$Conf{'etc'}/cookies") {
-		do_log('err', "Unable to create $Conf{'etc'}/cookies \n") ;
-		return undef ; 
-	    }
-	    printf COOK "%s",join(" ",@cookies) ;
-	    
-	    close COOK;
+#	}else{
+#	    push @cookies, $current ;
+#	    unless (open COOK, ">$Conf{'etc'}/cookies.hystory") {
+#		do_log('err', "Unable to create $Conf{'etc'}/cookies.hystory") ;
+#		return undef ; 
+#	    }
+#	    printf COOK "%s",join(" ",@cookies) ;
+#	    
+#	    close COOK;
 	}
 	return $changed ;
     }else{
-	unless (open COOK, ">$Conf{'etc'}/cookies") {
-	    do_log('err', "Unable to create $Conf{'etc'}/cookies \n") ;
+	unless (open COOK, ">$Conf{'etc'}/cookies.history") {
+	    do_log('err', "Unable to create $Conf{'etc'}/cookies.hystory") ;
 	    return undef ; 
 	}
 	printf COOK "$current ";

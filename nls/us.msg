@@ -372,6 +372,7 @@ $set 16 Listm parameters titles
 145	"second-level filter template"
 146	"second-level extracted attribute"
 147	"second-level selection"
+148	"environment variables for database connexion"
 197	"first-level search scope"
 198	"first-level connection timeout"
 199	"second-level search scope"

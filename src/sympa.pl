@@ -139,7 +139,8 @@ if ($Conf{'db_name'} and $Conf{'db_type'}) {
 &tools::ciphersaber_installed();
 
 if (&tools::cookie_changed($Conf{'cookie'})) {
-    &fatal_err('sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage');
+     &fatal_err('sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage.\
+                  restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at etc/cookie.history file)');
     exit;
 }
 

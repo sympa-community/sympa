@@ -648,24 +648,30 @@ my %alias = ('reply-to' => 'reply_to',
 								       'title_id' => 94,
 								       'order' => 4
 								       },
+						 'db_env' => {'format' => '\w+\=\S+',
+							      'occurrence' => '0-n',
+							      'order' => 5,
+							      'split_char' => ';',
+							      'title_id' => 148
+							      },
 						 'user' => {'format' => '\S+',
 							    'occurrence' => '1',
 							    'title_id' => 49,
-							    'order' => 5
+							    'order' => 6
 							    },
 						 'passwd' => {'format' => '.+',
 							      'title_id' => 50,
-							      'order' => 6
+							      'order' => 7
 							      },
 						 'sql_query' => {'format' => $regexp{'sql_query'},
 								 'length' => 50,
 								 'occurrence' => '1',
 								 'title_id' => 51,
-								 'order' => 7
+								 'order' => 8
 								 },
 						 'f_dir' => {'format' => '.+',
 							     'title_id' => 52,
-							     'order' => 8
+							     'order' => 9
 							     }
 					     },
 				    'occurrence' => '0-n',
@@ -5174,6 +5180,16 @@ sub _include_users_sql {
 
     if ($param->{'connect_options'}) {
 	$connect_string .= ';' . $param->{'connect_options'};
+    }
+
+    ## Set environment variables
+    ## Used by Oracle (ORACLE_HOME)
+    if ($param->{'db_env'}) {
+	foreach my $env (@{$param->{'db_env'}}) {
+	    if ($env =~ /^(\w+)\=(\S+)$/) {
+		$ENV{$1} = $2;
+	    }
+	}
     }
 
     unless ($dbh = DBI->connect($connect_string, $user, $passwd)) {
