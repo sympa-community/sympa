@@ -1996,7 +1996,7 @@ sub send_msg {
     my $name = $self->{'name'};
     my $robot = $self->{'domain'};
     my $admin = $self->{'admin'};
-    my $total = $self->{'total'};
+    my $total = $self->get_total('nocache');
     my $sender_line = $hdr->get('From');
     my @sender_hdr = Mail::Address->parse($sender_line);
     my %sender_hash;
