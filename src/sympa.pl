@@ -952,10 +952,10 @@ sub DoMessage{
 	do_log('info', 'Message for %s from %s sent to editors', $name, $sender);
 	$list->notify_sender($sender) unless ($2 eq 'quiet');
 	return 1;
-    }elsif($action =~ /^reject\(\'?(\w+)\'?\)(\s?,\s?(quiet))?/) {
-	my $tpl = $1;
+    }elsif($action =~ /^reject(\(\'?(\w+)\'?\))?(\s?,\s?(quiet))?/) {
+	my $tpl = $2;
 	do_log('notice', 'Message for %s from %s rejected(%s) because sender not allowed', $name, $sender, $tpl);
-	unless ($3 eq 'quiet') {
+	unless ($4 eq 'quiet') {
 	    if ($tpl) {
 		$list->send_file($tpl, $sender, $robot, {});
 	    }else {
