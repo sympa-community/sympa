@@ -72,6 +72,7 @@ installtemplates:
 	TEXT_COLOR=$(TEXT_COLOR); export TEXT_COLOR; \
 	BG_COLOR=$(BG_COLOR); export BG_COLOR; \
 	ERROR_COLOR=$(ERROR_COLOR); export ERROR_COLOR; \
+	SHADED_COLOR=$(SHADED_COLOR); export SHADED_COLOR; \
 	COL1=5; export COL1; \
 	COL2=40; export COL2; \
 	COL3=30; export COL3; \

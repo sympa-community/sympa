@@ -36,6 +36,7 @@ installetc:
 		BG_COLOR=$(BG_COLOR); export BG_COLOR;\
 		TEXT_COLOR=$(TEXT_COLOR); export TEXT_COLOR;\
 		ERROR_COLOR=$(ERROR_COLOR); export ERROR_COLOR;\
+		SHADED_COLOR=$(SHADED_COLOR); export SHADED_COLOR;\
 		cd etc;\
 		$(PERL) ../../subst.pl mhonarc-ressources \
 	)
