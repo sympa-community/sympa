@@ -153,8 +153,8 @@ POSTMAP=/usr/sbin/postmap
 AC_ARG_WITH(postmap, [  --with-postmap=FULLPATH     set path to postfix postmap command (default /usr/sbin/postmap)], [POSTMAP="$withval"])
 AC_SUBST(POSTMAP)
 
-POSTMAP_ARG=
-AC_ARG_WITH(postmap_arg, [  --with-postmap_arg=ARGS     set arguments to postfix postmap command (default NONE)], [POSTMAP_ARG="$withval"])
+POSTMAP_ARG=${VIRTUAL_ALIASES}
+AC_ARG_WITH(postmap_arg, [  --with-postmap_arg=ARGS     set arguments to postfix postmap command (default [same as virtual_aliases])], [POSTMAP_ARG="$withval"])
 AC_SUBST(POSTMAP_ARG)
 
 dnl Initialize maintainer mode

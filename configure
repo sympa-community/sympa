@@ -57,7 +57,7 @@ ac_help="$ac_help
 ac_help="$ac_help
   --with-postmap=FULLPATH     set path to postfix postmap command (default /usr/sbin/postmap)"
 ac_help="$ac_help
-  --with-postmap_arg=ARGS     set arguments to postfix postmap command (default NONE)"
+  --with-postmap_arg=ARGS     set arguments to postfix postmap command (default [same as virtual_aliases])"
 ac_help="$ac_help
   --enable-maintainer-mode enable make rules and dependencies not useful
                           (and sometimes confusing) to the casual installer"
@@ -1696,7 +1696,7 @@ fi
 
 
 
-POSTMAP_ARG=
+POSTMAP_ARG=${VIRTUAL_ALIASES}
 # Check whether --with-postmap_arg or --without-postmap_arg was given.
 if test "${with_postmap_arg+set}" = set; then
   withval="$with_postmap_arg"
