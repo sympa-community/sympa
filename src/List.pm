@@ -4931,7 +4931,7 @@ sub _include_users_ldap {
     ## Connection timeout (default is 120)
     #my $timeout = 30; 
     
-    unless ($ldaph = Net::LDAP->new($host, port => "$port", timeout => $param->{'timeout'})) {
+    unless ($ldaph = Net::LDAP->new($host, port => "$port", timeout => $param->{'timeout'}, async => 1)) {
 	do_log('notice',"Can\'t connect to LDAP server '$host' '$port' : $@");
 	return undef;
     }
@@ -4964,14 +4964,11 @@ sub _include_users_ldap {
     ## Counters.
     my $total = 0;
     my $dn; 
-   
-    ## returns a reference to a HASH where the keys are the DNs
-    ##  the second level hash's hold the attributes
-    my $all_entries = $fetch->as_struct ;
-
     my @emails;
-    foreach $dn (keys %$all_entries) { 
-	my $entry = $all_entries->{$dn}{$ldap_attrs};
+
+    while (my $e = $fetch->shift_entry) {
+
+	my $entry = $e->get_value($ldap_attrs);
 	
 	## Multiple values
 	if (ref($entry) eq 'ARRAY') {
@@ -5045,7 +5042,7 @@ sub _include_users_ldap_2level {
     ## Connection timeout (default is 120)
     #my $timeout = 30; 
     
-    unless ($ldaph = Net::LDAP->new($host, port => "$port", timeout => $param->{'timeout'})) {
+    unless ($ldaph = Net::LDAP->new($host, port => "$port", timeout => $param->{'timeout'}, async => 1)) {
 	do_log('notice',"Can\'t connect to LDAP server '$host' '$port' : $@");
 	return undef;
     }
@@ -5081,11 +5078,11 @@ sub _include_users_ldap_2level {
    
     ## returns a reference to a HASH where the keys are the DNs
     ##  the second level hash's hold the attributes
-    my $all_entries = $fetch->as_struct ;
 
     my (@attrs, @emails);
-    foreach $dn (keys %$all_entries) { 
-	my $entry = $all_entries->{$dn}{$ldap_attrs1};
+ 
+    while (my $e = $fetch->shift_entry) {
+	my $entry = $e->get_value($ldap_attrs1);
 	
 	## Multiple values
 	if (ref($entry) eq 'ARRAY') {
@@ -5116,10 +5113,9 @@ sub _include_users_ldap_2level {
 
 	## returns a reference to a HASH where the keys are the DNs
 	##  the second level hash's hold the attributes
-	my $all_entries = $fetch->as_struct ;
 
-	foreach $dn (keys %$all_entries) { 
-	    my $entry = $all_entries->{$dn}{$ldap_attrs2};
+	while (my $e = $fetch->shift_entry) {
+	    my $entry = $e->get_value($ldap_attrs2);
 
 	    ## Multiple values
 	    if (ref($entry) eq 'ARRAY') {
