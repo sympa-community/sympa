@@ -1,5 +1,5 @@
 From: [% conf.email %]@[% conf.host %]
-Subject: [%|l(list.name)%]resubscription to %1[%END%]
+Subject: [% FILTER qencode %][%|l(list.name)%]resubscription to %1[%END%][%END%]
 
  [%|l(list.name,list.host,user.email)%]You have been subscriber of list %1@%2 with email %3 for 1 year or more;[%END%]
 mailto:[% conf.email %]@[% conf.host %]?subject=sub%20[% list.name %]

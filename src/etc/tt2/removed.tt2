@@ -1,8 +1,6 @@
 From: [% conf.email %]@[% conf.host %]
 Subject: [% FILTER qencode %][%|l(list.name)%]Removed from %1[%END%][%END%]
 
-
-
 [%|l(user.email,list.name,list.host)%]Your address (%1) has been removed from list
 %2@%3, probably because we received
 non-delivery reports for your address.[%END%]

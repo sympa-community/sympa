@@ -1,5 +1,5 @@
 From: [% conf.email %]@[% conf.host %]
-To:
+To: [% to %]
 [% IF type == 'auto_notify_bouncers' %]
 Subject: [% FILTER qencode %][%|l(list.name)%]Your bouncing address in list %1[%END%][%END%]
 
