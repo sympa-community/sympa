@@ -1365,8 +1365,22 @@ sub CleanSpool {
     foreach my $f (sort @qfile) {
 
 	if ((stat "$spool_dir/$f")[9] < (time - $clean_delay * 60 * 60 * 24)) {
-	    unlink ("$spool_dir/$f") ;
-	    do_log('notice', 'Deleting old file %s', "$spool_dir/$f");
+	    if (-f "$spool_dir/$f") {
+		unlink ("$spool_dir/$f") ;
+		do_log('notice', 'Deleting old file %s', "$spool_dir/$f");
+	    }elsif (-d "$spool_dir/$f") {
+		unless (opendir(DIR, "$spool_dir/$f")) {
+		    &do_log('err', 'Cannot open directory %s : %s', "$spool_dir/$f", $!);
+		    next;
+		}
+		my @files = sort grep (!/^\./,readdir(DIR));
+		foreach my $file (@files) {
+		    unlink ("$spool_dir/$f/$file");
+		}	
+			
+		rmdir ("$spool_dir/$f") ;
+		do_log('notice', 'Deleting old directory %s', "$spool_dir/$f");
+	    }
 	}
     }
 
@@ -1374,3 +1388,5 @@ sub CleanSpool {
 }
 
 1;
+
+
