@@ -2949,7 +2949,7 @@ sub get_user_db {
 
     if ($Conf{'db_type'} eq 'Oracle') {
 	## "AS" not supported by Oracle
-	$statement = sprintf "SELECT email_user \"email\", gecos_user \"gecos\", password_user \"password\", cookie_delay_user \"cookie_delay\", lang_user \"lang\", attributes \"attributes\" %s FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
+	$statement = sprintf "SELECT email_user \"email\", gecos_user \"gecos\", password_user \"password\", cookie_delay_user \"cookie_delay\", lang_user \"lang\", attributes_user \"attributes\" %s FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
     }else {
 	$statement = sprintf "SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang %s, attributes_user AS attributes FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
     }
