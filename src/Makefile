@@ -2,7 +2,7 @@ CDEFS	=	-DCONFIG=\"$(CONFIG)\"
 
 SRC	=	sympa.pl Archive.pm Commands.pm Conf.pm \
 		Language.pm List.pm Log.pm mail.pm msg.pl \
-		smtp.pm tools.pl Version.pm parser.pl
+		smtp.pm tools.pl Version.pm parser.pl alias_manager.pl
 
 all:	queue bouncequeue
 
@@ -112,6 +112,7 @@ subst:
 		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR;\
 		CONFIG=$(CONFIG); export CONFIG;\
 		SYMPA_VERSION=$(SYMPA_VERSION); export SYMPA_VERSION;\
+		SENDMAIL_ALIASES=$(SENDMAIL_ALIASES); export SENDMAIL_ALIASES;\
 		$(PERL) ../subst.pl $(SRC) \
 	)
 

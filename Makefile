@@ -61,6 +61,16 @@ SHADED_COLOR	=	'\#eeeeee'
 ## Target directory for installing Icons
 ICONSDIR	=	/home/httpd/icons
 
+## Path to newaliases command (or what else may be called to rebuild
+## Mail aliases database)
+NEWALIASES    =       /usr/bin/newaliases
+
+## The sendmail aliases file we use. Better use a seperate one for sympa.
+## Of cause a extra alias file must be generated with proper permissions
+## (owner sympa, write access for sympa, no write access for anyone else)
+## and declared in sendmail.cf!
+SENDMAIL_ALIASES=     /etc/mail/sympa_aliases
+
 ## Path to gencat program (creates the .cat catalog file using the .msg)
 GENCAT	= 	/usr/bin/gencat
 
@@ -117,7 +127,8 @@ sources:
 	DIR='${DIR}' BINDIR='${BINDIR}' WWSBINDIR='${WWSBINDIR}' \
 	MAILERPROGDIR='${MAILERPROGDIR}' ETCBINDIR='${ETCBINDIR}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
-	USER='${USER}' GROUP='${GROUP}');
+	USER='${USER}' GROUP='${GROUP}' \
+	SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' NEWALIASES='${NEWALIASES}');
 
 doc:	doc/sympa.tex 
 	@echo "Making doc"
@@ -155,7 +166,8 @@ installsrc:
 	DIR='${DIR}' BINDIR='${BINDIR}' WWSBINDIR='${WWSBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
 	DESTDIR='${DESTDIR}' DARK_COLOR='${DARK_COLOR}' LIGHT_COLOR='${LIGHT_COLOR}' \
 	TEXT_COLOR='${TEXT_COLOR}' BG_COLOR='${BG_COLOR}' ERROR_COLOR='${ERROR_COLOR}' \
-	SHADED_COLOR='${SHADED_COLOR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' \
+	SHADED_COLOR='${SHADED_COLOR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
+	ETCBINDIR='${ETCBINDIR}' SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' \
 	USER='${USER}' GROUP='${GROUP}' newinstall) || exit 1;
 
 installnls:
@@ -163,6 +175,7 @@ installnls:
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
 	DIR='${DIR}' NLSDIR='${NLSDIR}' ETCBINDIR='${ETCBINDIR}' \
 	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
+	SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' \
 	USER='${USER}' GROUP='${GROUP}' GENCAT='${GENCAT}' newinstall) || exit 1;
 
 installwws:
