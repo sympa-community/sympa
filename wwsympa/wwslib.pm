@@ -283,9 +283,9 @@ sub new_passwd {
 ## Basic check of an email address
 sub valid_email {
     my $email = shift;
-
-    $email =~ /^(\S+|\".*\")@\S+$/;
-
+    
+#    $email =~ /^(\S+|\".*\")@\S+$/;
+    $email =~ /^([^\s<>]+|\".*\")(@\S+)$/;
 }
 
 # create a cipher
