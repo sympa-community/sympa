@@ -2049,6 +2049,9 @@ sub do_review {
 
 	$i->{'reception'} ||= 'mail';
 
+	$i->{'email'} =~ /\@(.+)$/;
+	$i->{'domain'} = $1;
+
 	## Escape some weird chars
 	$i->{'escaped_email'} = &tools::escape_chars($i->{'email'});
 

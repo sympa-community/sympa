@@ -117,6 +117,15 @@ La sélection est trop large, impossible d'afficher la sélection
 	    <FONT SIZE="-1"><b>Email</b></A>
 	[ENDIF]
 	</TH>
+	[IF sortby=domain]
+  	    <TH NOWRAP COLSPAN=2 BGCOLOR="[selected_color]">
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Domaine</b></FONT>
+	[ELSE]
+	    <TH NOWRAP COLSPAN=2>
+	    <A HREF="[path_cgi]/review/[list]/1/[size]/domain" >
+	    <FONT SIZE="-1"><b>Domaine</b></A>
+	[ENDIF]
+	</TH>
         <TH><FONT SIZE="-1"><B>Nom</B></FONT>
 	</TH>
         [IF is_owner]
@@ -172,6 +181,12 @@ La sélection est trop large, impossible d'afficher la sélection
 	      [ENDIF]
 	  </FONT></TD>
 	 [ENDIF]
+
+	  <TD>
+	    <FONT SIZE=-1>
+	        [u->domain]
+	    </FONT>
+	  </TD>
 
 	  <TD>
              <FONT SIZE=-1>

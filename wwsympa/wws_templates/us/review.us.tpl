@@ -123,6 +123,15 @@ Selection too wide, can not show selection
 	    <FONT SIZE="-1"><b>Email</b></A>
 	[ENDIF]
 	</TH>
+        [IF sortby=domain]
+  	    <TH NOWRAP COLSPAN=2 BGCOLOR="[selected_color]">
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Domain</b></FONT>
+	[ELSE]
+	    <TH NOWRAP COLSPAN=2>
+	    <A HREF="[path_cgi]/review/[list]/1/[size]/domain" >
+	    <FONT SIZE="-1"><b>Domain</b></A>
+	[ENDIF]
+	</TH>
         <TH><FONT SIZE="-1"><B>Name</B></FONT>
 	</TH>
         [IF is_owner]
@@ -179,6 +188,11 @@ Selection too wide, can not show selection
 	  </FONT></TD>
 	 [ENDIF]
 
+	  <TD>
+             <FONT SIZE=-1>
+	        [u->domain]
+	     </FONT>
+          </TD>
 	  <TD>
              <FONT SIZE=-1>
 	        [u->gecos]&nbsp;
