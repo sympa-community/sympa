@@ -3213,7 +3213,7 @@ sub do_redirect {
  #    $param->{'conf'} = \%Conf;
 
      ## Lists Default files
-     foreach my $f ('welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl','your_infected_msg.tpl') {
+     foreach my $f ('welcome.tt2','bye.tt2','removed.tt2','message.footer','message.header','remind.tt2','invite.tt2','reject.tt2','your_infected_msg.tt2') {
 	 if ($wwslib::filenames{$f}{'gettext_id'}){
 	     $param->{'lists_default_files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
 	 }else {
@@ -3229,11 +3229,11 @@ sub do_redirect {
      }
 
      ## Server files
-     foreach my $f ('helpfile.tpl','lists.tpl','global_remind.tpl','summary.tpl','create_list_request.tpl','list_created.tpl','list_aliases.tpl') {
+     foreach my $f ('helpfile.tt2','lists.tt2','global_remind.tt2','summary.tt2','create_list_request.tt2','list_created.tt2','list_aliases.tt2') {
 	 $param->{'server_files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
 	 $param->{'server_files'}{$f}{'selected'} = '';
      }
-     $param->{'server_files'}{'helpfile.tpl'}{'selected'} = 'SELECTED';
+     $param->{'server_files'}{'helpfile.tt2'}{'selected'} = 'SELECTED';
 
      return 1;
  }
@@ -4021,7 +4021,7 @@ sub do_redirect {
 
      unless ($in{'file'}) {
 	 ## Messages edition
-	 foreach my $f ('info','homepage','welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl','your_infected_msg.tpl') {
+	 foreach my $f ('info','homepage','welcome.tt2','bye.tt2','removed.tt2','message.footer','message.header','remind.tt2','invite.tt2','reject.tt2','your_infected_msg.tt2') {
 	     next unless ($list->may_edit($f, $param->{'user'}{'email'}) eq 'write');
 	     if ($wwslib::filenames{$f}{'gettext_id'}) {
 		 $param->{'files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
