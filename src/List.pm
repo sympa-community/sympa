@@ -4275,7 +4275,7 @@ sub request_action {
 		}
 
 		## Check syntax of returned action
-		unless ($rule->{'action'} =~ /^(do_it|reject|request_auth|owner|editor|editorkey)/) {
+		unless ($rule->{'action'} =~ /^(do_it|reject|request_auth|owner|editor|editorkey|listmaster)/) {
 		    &do_log('err', "Matched unknown action '%s' in scenario", $rule->{'action'});
 		    return undef;
 		}
