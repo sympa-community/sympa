@@ -43,6 +43,14 @@ my %data = ('escaped_start' => '[STARTPARSE]',
 	    'date' => &POSIX::strftime("%d %B %Y", localtime((stat($in_file))[9])),
 	    'version' => $version
 	    );
+
+## All DIR variables
+foreach my $k (keys %ENV) {
+#    if ($k =~ /DIR$/) {
+	$data{$k} = $ENV{$k};
+#    }
+}
+
 ## scenari
 foreach my $file (<../src/etc/scenari/*.*>) {
     $file =~ /\/(\w+)\.(\w+)$/;

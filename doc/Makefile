@@ -81,7 +81,22 @@ sympa.pdf: sympa.tex
 	$(PDFLATEX) sympa.tex
 
 sympa.tex: sympa.tex.tpl
-	$(PERL) ./parse_tex.pl sympa.tex.tpl sympa.tex
+	@(DIR='${DIR}'; export DIR; \
+	BINDIR='${BINDIR}'; export BINDIR; \
+	EXPL_DIR='${EXPL_DIR}'; export EXPL_DIR; \
+	SBINDIR='${SBINDIR}'; export SBINDIR; \
+	LIBDIR='${LIBDIR}'; export LIBDIR; \
+	NLSDIR='${NLSDIR}'; export NLSDIR; \
+	SPOOLDIR='${SPOOLDIR}'; export SPOOLDIR; \
+	SCRIPTDIR='${SCRIPTDIR}'; export SCRIPTDIR; \
+	WWSBINDIR='${WWSBINDIR}'; export WWSBINDIR; \
+	MAILERPROGDIR='${MAILERPROGDIR}'; export MAILERPROGDIR; \
+	ETCBINDIR='${ETCBINDIR}'; export ETCBINDIR; \
+	ETCDIR='${ETCDIR}'; export ETCDIR; \
+	PIDDIR='${ETCDIR}'; export PIDDIR; \
+	CONFIG='${CONFIG}'; export CONFIG; \
+	WWSCONFIG='${WWSCONFIG}'; export WWSCONFIG; \
+	$(PERL) ./parse_tex.pl sympa.tex.tpl sympa.tex;)
 
 sympa.dvi: sympa.tex $(EPS)
 	cp /dev/null sympa.ind
@@ -131,6 +146,9 @@ install: makedir
 		echo "Installing documentation...$(DESTDIR)$(DOCDIR)/$$f"; \
 		cp $$f $(DESTDIR)$(DOCDIR); \
 	done
+	@if [  -d $(DESTDIR)$(DOCDIR)/sympa ]; then \
+		rm -rf $(DESTDIR)$(DOCDIR)/sympa; \
+	fi
 	cp -R sympa/ $(DESTDIR)$(DOCDIR)
 
 
