@@ -446,7 +446,7 @@ build_rh_rpm: clean
 		tar -cvf $(RPMTOPDIR)/SOURCES/sympa-$(SYMPA_VERSION).tar sympa-$(SYMPA_VERSION); \
 		gzip $(RPMTOPDIR)/SOURCES/sympa-$(SYMPA_VERSION).tar; \
 	)
-	rpm  -ba $(RPMTOPDIR)/SPECS/sympa.spec
+	rpmbuild  -ba $(RPMTOPDIR)/SPECS/sympa.spec
 
 build_mdk_rpm: clean
 	@echo "Building Mandrake RPM in $(RPMTOPDIR) ..."
@@ -486,7 +486,7 @@ build_mdk_rpm: clean
 		tar -cvf $(RPMTOPDIR)/SOURCES/sympa-$(SYMPA_VERSION).tar sympa-$(SYMPA_VERSION); \
 		bzip2 $(RPMTOPDIR)/SOURCES/sympa-$(SYMPA_VERSION).tar; \
 	)
-	rpm -ba $(RPMTOPDIR)/SPECS/sympa.spec
+	rpmbuild -ba $(RPMTOPDIR)/SPECS/sympa.spec
 
 tag:	ChangeLog
 	@if [ ! $(NEW_VERSION) ]; then \
