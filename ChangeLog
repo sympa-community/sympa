@@ -1,3 +1,209 @@
+2004-02-17 13:56  salaun
+
+	* src/etc/script/sympa: [L. Veillon] Fix: sh does not accept
+	undefined variables on Solaris
+
+2004-02-17 11:00  salaun
+
+	* doc/sympa.tex.tpl: [BugID 256] Fix: incorrect path for
+	wws_templates
+
+2004-02-17 10:47  salaun
+
+	* src/etc/script/sympa: [BugID 256] Fix: OSTYPE not defined on
+	Solaris, now running 'uname -s' if OSTYPE is not defined
+
+2004-02-16 17:31  salaun
+
+	* Makefile.am, Makefile.in, configure, configure.in,
+	doc/sympa.tex.tpl: [BugID 257] FIx: Add --with-lockdir to configure
+
+2004-02-16 17:05  salaun
+
+	* src/List.pm: Change: now creating a MIME::Entity in
+	send_msg_digest() instead of Mail::Internet. ake it possible to use
+	body_as_string()
+
+2004-02-16 16:44  salaun
+
+	* src/List.pm: Fix previous change
+
+2004-02-16 16:29  salaun
+
+	* src/List.pm: [reported by C. Hastie] Change: only loop once among
+	subscribers in List::send_msg_digest()
+
+2004-02-16 11:55  salaun
+
+	* src/List.pm: [reported by C. Hastie] Fix: Decode From: and
+	Subject: header fields only in the table of content, not in rfc822
+	parts
+
+2004-02-03 12:21  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: remove bounces directory when purging
+	a list
+
+2004-02-03 09:08  salaun
+
+	* src/List.pm: [I. Kim] Fix: When using the generic sso,
+	user_attributes were not parsed in authorization scenarios
+
+2004-02-02 17:15  salaun
+
+	* wwsympa/wws_templates/fr/help_editlist.fr.tpl: Remove hard-coded
+	colors
+
+2004-02-02 16:39  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/serveradmin.fr.tpl,
+	wws_templates/us/get_inactive_lists.us.tpl,
+	wws_templates/us/serveradmin.us.tpl: New feature: new "list of
+	inactive lists" from the serveradmin interface
+
+2004-02-02 14:38  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	html/index.html, html/node1.html, html/node10.html,
+	html/node11.html, html/node12.html, html/node13.html,
+	html/node14.html, html/node15.html, html/node16.html,
+	html/node17.html, html/node18.html, html/node19.html,
+	html/node2.html, html/node20.html, html/node21.html,
+	html/node22.html, html/node23.html, html/node24.html,
+	html/node3.html, html/node4.html, html/node5.html, html/node6.html,
+	html/node7.html, html/node8.html, html/node9.html, html/sympa.html,
+	html/sympa.ps: Added documentation for include2
+
+2004-02-02 12:07  salaun
+
+	* src/etc/templates/fr/bye.fr.tpl,
+	src/etc/templates/fr/invite.fr.tpl,
+	src/etc/templates/fr/welcome.fr.tpl,
+	wwsympa/wws_templates/fr/editfile.fr.tpl,
+	wwsympa/wws_templates/fr/help_editfile.fr.tpl,
+	wwsympa/wws_templates/fr/help_editlist.fr.tpl: [H. Maza] Changes:
+	updating online help
+
+2004-01-30 15:38  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	html/index.html, html/node1.html, html/node10.html,
+	html/node11.html, html/node12.html, html/node13.html,
+	html/node14.html, html/node15.html, html/node16.html,
+	html/node17.html, html/node18.html, html/node19.html,
+	html/node2.html, html/node20.html, html/node21.html,
+	html/node22.html, html/node23.html, html/node24.html,
+	html/node3.html, html/node4.html, html/node5.html, html/node6.html,
+	html/node7.html, html/node8.html, html/node9.html, html/sympa.html,
+	html/sympa.ps: Update doc: multiple virtual robots management
+
+2004-01-30 15:00  salaun
+
+	* src/List.pm: Fix: First look for the list directory in a
+	subdirectory of expl/
+
+2004-01-30 14:57  salaun
+
+	* src/Conf.pm: Change: Initialize the %Conf::robots hash with
+	default robot ; can be overloaded by a Virtual Robot
+
+2004-01-30 11:38  salaun
+
+	* src/List.pm: [BugID 250] Fix: Escape more chars in custom_subject
+	('(',')','-')
+
+2004-01-29 18:00  salaun
+
+	* doc/sympa.tex.tpl, wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/us/main.us.tpl: Plugging of a on line html
+	editor in the shared document feature
+
+2004-01-28 15:36  salaun
+
+	* src/List.pm: [reoprted by A. Bernstein] Fix: indexes were not
+	automatically added by sympa.pl
+
+2004-01-28 14:15  salaun
+
+	* src/List.pm: Fix: lowercase current subscribers email address
+	before running a sync_include() to prevent duplicate entries
+	problem
+
+2004-01-20 17:12  salaun
+
+	* doc/html/: node22.html, node23.html, node24.html: Added new
+	documentation paragraphs
+
+2004-01-20 17:01  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by V. Mathieu & I. Kim] Fix:
+	authentication failed with first defined CAS or generic_sso entry
+	(if at the beginning of auth.conf)
+
+2004-01-20 16:52  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix typo
+
+2004-01-15 17:25  salaun
+
+	* src/: List.pm, smtp.pm: [reported by T. Herrero] Fix:
+	smtp::mailto() failed if the subscriber_table included entries with
+	empty email addresses. Some checks have been added
+
+2004-01-15 16:22  salaun
+
+	* wwsympa/: wwsympa.fcgi,
+	wws_templates/us/sso_login_succeeded.us.tpl: [reported by V.
+	Mathieu] Fix: when authenticating in the nomenu window, the user
+	was not brought back to the main window
+
+2004-01-15 15:35  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	html/index.html, html/node1.html, html/node10.html,
+	html/node11.html, html/node12.html, html/node13.html,
+	html/node14.html, html/node15.html, html/node16.html,
+	html/node17.html, html/node18.html, html/node19.html,
+	html/node2.html, html/node20.html, html/node21.html,
+	html/node3.html, html/node4.html, html/node5.html, html/node6.html,
+	html/node7.html, html/node8.html, html/node9.html, html/sympa.html,
+	html/sympa.ps: [D. Dussart] Add Java SOAP client documentation
+
+2004-01-15 14:32  salaun
+
+	* src/smtp.pm: Fix: -m option was not logging sendmail calls
+
+2004-01-15 14:31  salaun
+
+	* src/smtp.pm: Fix: Exit if message could not be opened
+
+2004-01-15 09:04  salaun
+
+	* src/List.pm: Fix: Sympa would die if a list custom_subject
+	contained '+' chars
+
+2004-01-12 13:49  salaun
+
+	* missing: Regenerate the 'missing' file (rm missing;automake -a)
+
+2004-01-12 10:21  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: no more try to create a Message object
+	(missing X-Sympa-To)
+
+2004-01-12 09:31  salaun
+
+	* .version, ChangeLog, NEWS, doc/sympa.pdf, doc/sympa.ps,
+	doc/sympa.tex, doc/html/index.html, doc/html/node1.html,
+	doc/html/node10.html, doc/html/node11.html, doc/html/node12.html,
+	doc/html/node13.html, doc/html/node14.html, doc/html/node15.html,
+	doc/html/node16.html, doc/html/node17.html, doc/html/node18.html,
+	doc/html/node19.html, doc/html/node2.html, doc/html/node20.html,
+	doc/html/node21.html, doc/html/node3.html, doc/html/node4.html,
+	doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	doc/html/sympa.ps: Preparing 4.0.b2
+
 2004-01-12 09:18  salaun
 
 	* soap/Makefile: Fix: failed installing sympa_soap_client.pl script

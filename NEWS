@@ -3,6 +3,68 @@
 
 (See Changelog file for the full changes log)
 
+4.0.a9		17 February 2004
+
+   New features :
+
+	wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi,wwsympa/wws_templates/us/main.us.tpl: 
+	Plugging of a on line html editor in the shared document feature
+
+	wwsympa/:  new "list of	inactive lists" from the serveradmin interface
+
+	doc/: Added documentation for include2
+
+   Changes :
+
+	doc/ [D. Dussart] Add Java SOAP client documentation
+
+	doc/ Update doc: multiple virtual robots management
+
+	src/etc/templates/, wwsympa/wws_templates/: [H. Maza] updating online help
+
+	Makefile.am, configure.in,: [BugID 257] Add --with-lockdir to configure
+        
+	src/List.pm:  now creating a MIME::Entity in send_msg_digest() instead of Mail::Internet. 
+	make it possible to use	body_as_string()
+
+	src/Conf.pm: Initialize the %Conf::robots hash with default robot ; can be overloaded by a Virtual Robot
+
+   Bug fixes :
+
+	src/List.pm:  Sympa would die if a list custom_subject contained '+' chars
+
+	src/smtp.pm: Exit if message could not be opened
+
+	src/smtp.pm:  -m option was not logging sendmail calls
+
+	wwsympa/: wwsympa.fcgi,	wws_templates/us/sso_login_succeeded.us.tpl: [reported by V.Mathieu] 
+	when authenticating in the nomenu window, the user was not brought back to the main window
+
+	wwsympa/wwsympa.fcgi: [reported by V. Mathieu & I. Kim] authentication failed with first defined CAS 
+	or generic_sso entry (if at the beginning of auth.conf)
+
+	src/: List.pm, smtp.pm: [reported by T. Herrero] : smtp::mailto() failed if the subscriber_table included 
+	entries with empty email addresses. Some checks have been added
+
+	src/List.pm: lowercase current subscribers email address before running a sync_include() 
+	to prevent duplicate entries problem
+
+	src/List.pm: [reoprted by A. Bernstein] indexes were not automatically added by sympa.pl
+
+	src/List.pm: [BugID 250] Escape more chars in custom_subject ('(',')','-')
+
+	src/List.pm: [I. Kim] : When using the generic sso, user_attributes were not parsed in authorization scenarios
+
+	wwsympa/wwsympa.fcgi: Fix: remove bounces directory when purging a list
+
+	src/List.pm: [reported by C. Hastie] Decode From: and Subject: header fields only in the table of content, 
+	not in rfc822 parts
+
+	src/List.pm: [reported by C. Hastie] : only loop once among subscribers in List::send_msg_digest()
+
+	src/etc/script/sympa: [BugID 256] OSTYPE not defined on Solaris, now running 'uname -s' if OSTYPE is not defined
+
+
 4.0.b2		12 January 2004
 
    Fix : 
