@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2004-06-23 10:35+0200\n"
+"PO-Revision-Date: 2004-06-23 10:46+0200\n"
 "Last-Translator: Olivier Salaun <olivier.salaun@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
@@ -197,6 +197,10 @@ msgstr "%s a posté votre message d'expiration aux adresses suivantes :\n"
 msgid "(All of this words,"
 msgstr "(Tout ces mots,"
 
+#: wwsympa/tt2/help_editlist.tt2:18
+msgid "(Default value: reception mail,notice,digest,digestplain,summary,nomail)"
+msgstr "(Valeur par défaut : reception mail)"
+
 #: wwsympa/tt2/arcsearch.tt2:21
 msgid "(Each of this words,"
 msgstr "(Chacun de ces mots,"
@@ -265,7 +269,7 @@ msgstr "1 semaine"
 
 # nlsref 12,1
 #: src/Commands.pm:1750 src/mail.pm:126 src/mail.pm:227 src/mail.pm:88
-#: src/sympa.pl:1060 src/sympa.pl:1310 src/sympa.pl:775 src/sympa.pl:987
+#: src/sympa.pl:1061 src/sympa.pl:1311 src/sympa.pl:776 src/sympa.pl:988
 #: src/tools.pl:129
 msgid "1.0"
 msgstr "1.0"
@@ -289,8 +293,8 @@ msgstr "6 heures"
 #: src/Commands.pm:1752 src/etc/tt2/digest.tt2:10 src/etc/tt2/digest.tt2:36
 #: src/etc/tt2/digest_plain.tt2:6 src/etc/tt2/moderate.tt2:10
 #: src/etc/tt2/urlized_part.tt2:3 src/mail.pm:128 src/mail.pm:229
-#: src/mail.pm:90 src/sympa.pl:1062 src/sympa.pl:1313 src/sympa.pl:778
-#: src/sympa.pl:989 src/tools.pl:131
+#: src/mail.pm:90 src/sympa.pl:1063 src/sympa.pl:1314 src/sympa.pl:779
+#: src/sympa.pl:990 src/tools.pl:131
 msgid "7bit"
 msgstr "8bit"
 
@@ -377,6 +381,15 @@ msgstr ""
 "<b>Abonnés</b> : Gestion des abonnés, ajout/suppression, recherche, erreurs, "
 "etc."
 
+#: wwsympa/tt2/help_editlist.tt2:19
+msgid ""
+"<i>modelist</i> is a list of modes (mail, notice, digest, digestplain, "
+"summary, nomail), separated by commas. Only these modes will be allowed for "
+"the subscribers of this list. If a subscriber has a reception mode not in "
+"the list, sympa uses the mode specified in the default_user_options "
+"paragraph."
+msgstr "<I>modelist</I> est une liste de modes de réception (mail, notice, digest, digestplain, summary, nomail), séparés par des virgules. Seuls ces modes de réception seront accessibles aux abonnés de la liste. Si un abonné a positionné un mode de réception non autorisé, sympa utilisera le mode de réception par défaut pour la liste."
+
 #: wwsympa/tt2/create_list_request.tt2:72
 msgid "A few lines describing the list"
 msgstr "La liste en quelques lignes"
@@ -403,7 +416,7 @@ msgid "Access rights for the document %1"
 msgstr "Droit d'accès au document %1"
 
 # nlsref 16,1
-#: src/List.pm:275
+#: src/List.pm:274
 msgid "Account"
 msgstr "Compte"
 
@@ -446,7 +459,7 @@ msgid "All commands must be sent to the electronic address %1"
 msgstr "Toutes les commandes doivent être adressées à l'adresse %1"
 
 # nlsref 4,28
-#: src/sympa.pl:1336
+#: src/sympa.pl:1337
 msgid ""
 "Among subscriber of list %s since %d days, %d didn't confirm there "
 "subscription.\n"
@@ -479,7 +492,7 @@ msgstr ""
 "DEL.\n"
 
 # nlsref 16,3
-#: src/List.pm:283
+#: src/List.pm:282
 msgid "Anonymous sender"
 msgstr "Auteur anonyme"
 
@@ -507,7 +520,7 @@ msgid "Archive Management"
 msgstr "Gestion des archives"
 
 # nlsref 16,212
-#: src/List.pm:302
+#: src/List.pm:301
 msgid "Archive encrypted mails as cleartext"
 msgstr "Archivage des messages cryptés"
 
@@ -535,7 +548,7 @@ msgid "Article to be approved for %1"
 msgstr "Message à modérer pour %1"
 
 # nlsref 16,31
-#: src/List.pm:493
+#: src/List.pm:492
 msgid "Attachment type"
 msgstr "Type d'attachement"
 
@@ -544,7 +557,7 @@ msgid "Auth method"
 msgstr "Méthode d'authentification"
 
 # nlsref 8,16
-#: src/List.pm:2050
+#: src/List.pm:2025
 msgid "Authentication requested"
 msgstr "Authentification demandée"
 
@@ -558,7 +571,7 @@ msgid "Available commands are:"
 msgstr "Les commandes disponibles sont :"
 
 # nlsref 16,88
-#: src/List.pm:312
+#: src/List.pm:311
 msgid "Available subscription options"
 msgstr "Options d'abonné disponibles"
 
@@ -619,7 +632,7 @@ msgid "Bounce Settings"
 msgstr "Gestion des erreurs"
 
 # nlsref 8,27
-#: src/List.pm:1783
+#: src/List.pm:1759
 msgid ""
 "Bounce rate in list %s is %d%%.\n"
 "\n"
@@ -645,7 +658,7 @@ msgid "Bounces count : %1"
 msgstr "Nombre de retours : %1"
 
 # nlsref 16,7
-#: src/List.pm:331 wwsympa/tt2/edit_list_request.tt2:9
+#: src/List.pm:330 wwsympa/tt2/edit_list_request.tt2:9
 msgid "Bounces management"
 msgstr "Gestion des bounces"
 
@@ -742,7 +755,7 @@ msgstr ""
 "Surveillez votre boîte aux lettres et fournissez ce mot de passe\n"
 "ici dès sa réception.\n"
 
-#: wwsympa/tt2/loginbanner.tt2:75
+#: wwsympa/tt2/loginbanner.tt2:74
 msgid "Choose your authentication server"
 msgstr "Sélectionnez votre serveur d'authentification"
 
@@ -769,7 +782,7 @@ msgid "Command 'quit' found : ignoring end of message.\n"
 msgstr "Commande 'quit' trouvée : la fin du message est ignorée.\n"
 
 # nlsref 4,19
-#: src/sympa.pl:1192 src/sympa.pl:1223
+#: src/sympa.pl:1193 src/sympa.pl:1224
 msgid "Command not understood: ignoring end of message.\n"
 msgstr "Commande non comprise : la fin du message est ignorée.\n"
 
@@ -858,7 +871,7 @@ msgid "Creation date"
 msgstr "Date de création"
 
 # nlsref 16,12
-#: src/List.pm:404
+#: src/List.pm:403
 msgid "Creation of the list"
 msgstr "Création de la liste"
 
@@ -867,7 +880,7 @@ msgid "Current password :"
 msgstr "Mot de passe actuel :"
 
 # nlsref 16,16
-#: src/List.pm:411
+#: src/List.pm:410
 msgid "Custom header field"
 msgstr "Champs d'entête personnalisés"
 
@@ -907,7 +920,7 @@ msgid "Date"
 msgstr "Date"
 
 # nlsref 8,25
-#: src/List.pm:1776
+#: src/List.pm:1752
 msgid ""
 "Dear owner of list %s,\n"
 "\n"
@@ -929,27 +942,27 @@ msgstr ""
 "Ou alors envoyez un mail à %s avec comme objet :\n"
 "AUTH %s DEL %s %s\n"
 
-#: wwsympa/tt2/help_editlist.tt2:133 wwsympa/tt2/help_editlist.tt2:140
-#: wwsympa/tt2/help_editlist.tt2:33 wwsympa/tt2/help_editlist.tt2:43
-#: wwsympa/tt2/help_editlist.tt2:46 wwsympa/tt2/help_editlist.tt2:49
-#: wwsympa/tt2/help_editlist.tt2:59 wwsympa/tt2/help_editlist.tt2:62
-#: wwsympa/tt2/help_editlist.tt2:65
+#: wwsympa/tt2/help_editlist.tt2:132 wwsympa/tt2/help_editlist.tt2:139
+#: wwsympa/tt2/help_editlist.tt2:32 wwsympa/tt2/help_editlist.tt2:42
+#: wwsympa/tt2/help_editlist.tt2:45 wwsympa/tt2/help_editlist.tt2:48
+#: wwsympa/tt2/help_editlist.tt2:58 wwsympa/tt2/help_editlist.tt2:61
+#: wwsympa/tt2/help_editlist.tt2:64
 msgid "Default value:"
 msgstr "Valeur par défaut :"
 
-#: wwsympa/tt2/help_editlist.tt2:29
+#: wwsympa/tt2/help_editlist.tt2:28
 msgid "Default value: bounce_halt_rate robot parameter"
 msgstr "Valeur par défaut : paramètre global bounce_halt_rate"
 
-#: wwsympa/tt2/help_editlist.tt2:26
+#: wwsympa/tt2/help_editlist.tt2:25
 msgid "Default value: bounce_warn_rate robot parameter"
 msgstr "Valeur par défaut : paramètre global bounce_warn_rate"
 
-#: wwsympa/tt2/help_editlist.tt2:172
+#: wwsympa/tt2/help_editlist.tt2:171
 msgid "Defines who can access the web archive for the list."
 msgstr "Définit qui peut accéder aux archives web de la liste."
 
-#: wwsympa/tt2/help_editlist.tt2:84
+#: wwsympa/tt2/help_editlist.tt2:83
 msgid ""
 "Definition of digest mode. If this parameter is present, subscribers can "
 "select the option of receiving messages in multipart/digest MIME format, or "
@@ -1027,7 +1040,7 @@ msgid "Digest for list %1"
 msgstr "Compilation de la liste %1"
 
 # nlsref 16,22
-#: src/List.pm:457
+#: src/List.pm:456
 msgid "Digest frequency"
 msgstr "Périodicité des compilations"
 
@@ -1115,7 +1128,7 @@ msgstr "Messages en attente de modération : "
 msgid "Domain"
 msgstr "Domaine"
 
-#: wwsympa/tt2/help_editlist.tt2:102
+#: wwsympa/tt2/help_editlist.tt2:101
 msgid ""
 "Domain name of the list, default is the robot domain name set in the related "
 "robot.conf file or in file /etc/sympa.conf."
@@ -1134,16 +1147,18 @@ msgstr ""
 "L'adresse électronique %s n'a pas été trouvée\n"
 "sur la liste.\n"
 
-#: wwsympa/tt2/help_editlist.tt2:60
+#: wwsympa/tt2/help_editlist.tt2:59
 msgid ""
 "Each bouncing user have a score (from 0 to 100).This parameter defines limit "
 "between each category of bouncing users.For example, level 2 is for users "
 "with a score between 80 and 100."
 msgstr ""
-"Chaque abonné en erreur se voit affecter un score (de 0 à 100). Ce paramètre détermine les seuils entre chaque catégories d'abonnés en erreur. Par exemple, par défaut le niveau 2 concerne les abonnés en erreur "
-"dont le score est compris entre 80 et 100"
+"Chaque abonné en erreur se voit affecter un score (de 0 à 100). Ce paramètre "
+"détermine les seuils entre chaque catégories d'abonnés en erreur. Par "
+"exemple, par défaut le niveau 2 concerne les abonnés en erreur dont le score "
+"est compris entre 80 et 100"
 
-#: wwsympa/tt2/help_editlist.tt2:44
+#: wwsympa/tt2/help_editlist.tt2:43
 msgid ""
 "Each bouncing user have a score (from 0 to 100).This parameter defines lower "
 "limit foreach category of bouncing users.for example, level 1 begins from 45 "
@@ -1191,7 +1206,7 @@ msgstr "Edition du fichier %1"
 msgid "Editor"
 msgstr "Modérateur"
 
-#: wwsympa/tt2/help_editlist.tt2:86
+#: wwsympa/tt2/help_editlist.tt2:85
 msgid ""
 "Editors are responsible for moderating messages. If the mailing list is "
 "moderated, messages posted to the list will first be passed to the editors, "
@@ -1204,7 +1219,7 @@ msgstr ""
 "des champs"
 
 #: wwsympa/tt2/review.tt2:119 wwsympa/tt2/review.tt2:123
-#: wwsympa/tt2/subindex.tt2:8
+#: wwsympa/tt2/reviewbouncing.tt2:62 wwsympa/tt2/subindex.tt2:8
 msgid "Email"
 msgstr "Email"
 
@@ -1223,7 +1238,7 @@ msgid "End of digest for list %1 - %2"
 msgstr "Fin de compilation de la liste %1 - %2"
 
 # nlsref 4,24
-#: src/sympa.pl:1308
+#: src/sympa.pl:1309
 msgid "End of your EXPIRE command on list %s"
 msgstr "Fin de votre commande EXPIRE de la liste %s"
 
@@ -1251,7 +1266,7 @@ msgid "Everything about this list:"
 msgstr "Pour tout savoir sur cette liste :"
 
 # nlsref 16,10
-#: src/List.pm:380
+#: src/List.pm:379
 msgid "Expiration of unmoderated messages"
 msgstr "Expiration des messages non modérés"
 
@@ -1264,7 +1279,7 @@ msgid "Extended search"
 msgstr "Recherche étendue"
 
 # nlsref 8,22
-#: src/List.pm:1798
+#: src/List.pm:1774
 msgid ""
 "FYI command %s list %s from %s %s \n"
 " (no action needed)\n"
@@ -1273,7 +1288,7 @@ msgstr ""
 "(aucune action requise)\n"
 
 # nlsref 8,26
-#: src/List.pm:1796
+#: src/List.pm:1772
 msgid ""
 "FYI command %s list %s from %s %s validated by %s\n"
 " (no action needed)\n"
@@ -1282,11 +1297,11 @@ msgstr ""
 "(aucune action requise)\n"
 
 # nlsref 8,21
-#: src/List.pm:1752 src/List.pm:1794
+#: src/List.pm:1728 src/List.pm:1770
 msgid "FYI: %s list %s from %s %s"
 msgstr "Pour info %s liste %s de %s %s"
 
-#: wwsympa/tt2/help_editlist.tt2:87
+#: wwsympa/tt2/help_editlist.tt2:86
 msgid ""
 "FYI: Defining editors will not make the list moderated ; you will have to "
 "set the \"send\" parameter."
@@ -1294,7 +1309,7 @@ msgstr ""
 "Remarque : La définition de modérateurs n'est pas suffisante pour rendre la "
 "liste modérée ; vous devrez également éditer le paramètre \"send\""
 
-#: wwsympa/tt2/help_editlist.tt2:88
+#: wwsympa/tt2/help_editlist.tt2:87
 msgid ""
 "FYI: If the list is moderated, any editor can distribute or reject a message "
 "without the knowledge or consent of the other editors. Messages that have "
@@ -1326,7 +1341,7 @@ msgid "Failed to change your subscriber options for list %s.\n"
 msgstr "Vos options d'abonné à la liste %s n'ont pu être mises à jour.\n"
 
 # nlsref 8,7
-#: src/List.pm:5005
+#: src/List.pm:4980
 msgid "File"
 msgstr "Fichier"
 
@@ -1346,7 +1361,7 @@ msgid "File %1 waiting for moderation"
 msgstr "Fichier %1 en attente de modération"
 
 # nlsref 16,34
-#: src/List.pm:508
+#: src/List.pm:507
 msgid "File inclusion"
 msgstr "Inclusion d'un fichier"
 
@@ -1355,7 +1370,7 @@ msgstr "Inclusion d'un fichier"
 msgid "For further assistance, please contact listmaster@%1"
 msgstr "Pour plus de détails, contactez listmaster@%1"
 
-#: wwsympa/tt2/help_editlist.tt2:113
+#: wwsympa/tt2/help_editlist.tt2:112
 msgid ""
 "For this operation, one Sympa site act as a server while the other one act "
 "as client. On the server side, the only setting needed is to give permission "
@@ -1368,7 +1383,7 @@ msgstr ""
 "un scénario)."
 
 # nlsref 16,32
-#: src/List.pm:497
+#: src/List.pm:496
 msgid "Forced reply address"
 msgstr "Adresse de réponse forcée"
 
@@ -1402,7 +1417,7 @@ msgstr ""
 "GET <liste> <fichier>           * Obtenir le fichier <fichier> de l'archive "
 "de la liste <liste>"
 
-#: wwsympa/tt2/loginbanner.tt2:56 wwsympa/tt2/loginbanner.tt2:83
+#: wwsympa/tt2/loginbanner.tt2:55 wwsympa/tt2/loginbanner.tt2:82
 msgid "Go"
 msgstr "Valider"
 
@@ -1490,7 +1505,7 @@ msgstr "INFO <liste>                * Obtenir des informations sur une liste"
 msgid "INVITE <list> <email>       * Invite <email> for subscription in <list>"
 msgstr "INVITE <liste> <email>       * Inviter <email> à s'abonner à la liste"
 
-#: wwsympa/tt2/help_editlist.tt2:174
+#: wwsympa/tt2/help_editlist.tt2:173
 msgid ""
 "Idem spam_protection but restricted to web archive. A additional value is "
 "available: cookie which mean that users must submit a small form in order to "
@@ -1502,7 +1517,7 @@ msgstr ""
 "(positionnant un cookie) à l'entrèe des archives. Ce système bloque tous les "
 "robots, y compris Google."
 
-#: wwsympa/tt2/help_editlist.tt2:176
+#: wwsympa/tt2/help_editlist.tt2:175
 msgid ""
 "If set to unique, the welcome message is sent using a unique return path in "
 "order to remove the subscriber immediately in the case of a bounce."
@@ -1511,7 +1526,7 @@ msgstr ""
 "adresse de retour unique, permettant de supprimer immédiatement un nouvel "
 "abonné en erreur."
 
-#: wwsympa/tt2/help_editlist.tt2:138
+#: wwsympa/tt2/help_editlist.tt2:137
 msgid ""
 "If value was set to other_email, this parameter defines the e-mail address "
 "used."
@@ -1524,12 +1539,12 @@ msgstr ""
 msgid "If you don't want to subscribe just ignore this message."
 msgstr "Si vous ne voulez pas vous abonner, ignorez ce message."
 
-#: wwsympa/tt2/loginbanner.tt2:125 wwsympa/tt2/sigrequest.tt2:71
+#: wwsympa/tt2/loginbanner.tt2:124 wwsympa/tt2/sigrequest.tt2:71
 msgid "If you never had a password from that server or if you don't remember it :"
 msgstr "Si vous n'avez jamais eu de mot de passe ou si vous l'avez oublié :"
 
 # nlsref 4,27
-#: src/sympa.pl:1356
+#: src/sympa.pl:1357
 msgid ""
 "If you want to remove these subscriber from the list, use the following "
 "commands :\n"
@@ -1540,7 +1555,7 @@ msgid "If you want to unsubscribe from some list, please save this mail."
 msgstr "Pour pouvoir vous désabonner d'une liste, conservez ce message."
 
 # nlsref 4,37
-#: src/sympa.pl:1145
+#: src/sympa.pl:1146
 msgid ""
 "Ignoring message body not in text/plain, please use text/plain only \n"
 "(or put your command in the subject).\n"
@@ -1564,7 +1579,7 @@ msgid "Inactive lists"
 msgstr "Listes inactives"
 
 # nlsref 16,75
-#: src/List.pm:970
+#: src/List.pm:946
 msgid "Inclusions timeout"
 msgstr "Expiration des inclusions"
 
@@ -1624,7 +1639,7 @@ msgstr ""
 "sein d'un message au format MIME multipart/digest.\n"
 
 # nlsref 16,33
-#: src/List.pm:502
+#: src/List.pm:501
 msgid "Internet domain"
 msgstr "Domaine internet"
 
@@ -1658,12 +1673,12 @@ msgid "LAST <list>                 * Used to received the last message from <lis
 msgstr "LAST <liste>                 * Recevoir le dernier message de la liste"
 
 # nlsref 16,135
-#: src/List.pm:702
+#: src/List.pm:678
 msgid "LDAP 2-level query inclusion"
 msgstr "Inclusion d'une requête LDAP (2 passes)"
 
 # nlsref 16,35
-#: src/List.pm:595
+#: src/List.pm:571
 msgid "LDAP query inclusion"
 msgstr "Inclusion d'une requête LDAP"
 
@@ -1683,7 +1698,7 @@ msgid "Language : %1"
 msgstr "Langue : %1"
 
 # nlsref 16,55
-#: src/List.pm:807
+#: src/List.pm:783
 msgid "Language of the list"
 msgstr "Langue de la liste"
 
@@ -1699,7 +1714,7 @@ msgid "Last update : %1"
 msgstr "Dernière mise à jour : %1"
 
 # nlsref 16,77
-#: src/List.pm:995
+#: src/List.pm:971
 msgid "Last update of config"
 msgstr "Dernière mise à jour de la config"
 
@@ -1829,7 +1844,7 @@ msgstr ""
 "droite de la page de la liste. (a pour défaut la description de la liste)\n"
 
 # nlsref 16,44
-#: src/List.pm:707
+#: src/List.pm:683
 msgid "List inclusion"
 msgstr "Inclusion d'une liste"
 
@@ -1853,7 +1868,7 @@ msgstr "La liste est privée : vous ne pouvez pas consulter les archives.\n"
 msgid "List name:"
 msgstr "Nom de liste :"
 
-#: wwsympa/tt2/help_editlist.tt2:92
+#: wwsympa/tt2/help_editlist.tt2:91
 msgid ""
 "List owners may decide to add message headers or footers to messages sent "
 "via the list. This parameter defines the way a footer/header is added to a "
@@ -1919,7 +1934,7 @@ msgid "Local"
 msgstr "Localement"
 
 #: wwsympa/tt2/help.tt2:22 wwsympa/tt2/help.tt2:25 wwsympa/tt2/help.tt2:28
-#: wwsympa/tt2/loginbanner.tt2:115 wwsympa/tt2/menu.tt2:35
+#: wwsympa/tt2/loginbanner.tt2:114 wwsympa/tt2/menu.tt2:35
 msgid "Login"
 msgstr "Login"
 
@@ -1927,7 +1942,7 @@ msgstr "Login"
 msgid "Login issues"
 msgstr "Problèmes de Login"
 
-#: wwsympa/tt2/loginbanner.tt2:24
+#: wwsympa/tt2/loginbanner.tt2:23
 msgid ""
 "Login with you email address and password. You can request a password "
 "reminder."
@@ -1947,12 +1962,12 @@ msgstr ""
 "MODINDEX <liste>                 * Modération: consultation de la liste des "
 "messages à modérer"
 
-#: wwsympa/tt2/loginbanner.tt2:49
+#: wwsympa/tt2/loginbanner.tt2:48
 msgid "Magic authentification"
 msgstr "Authentification magique"
 
 # nlsref 16,19
-#: wwsympa/tt2/help_editlist.tt2:78
+#: wwsympa/tt2/help_editlist.tt2:77
 msgid "Mail reception mode."
 msgstr "mode de réception des messages"
 
@@ -1964,11 +1979,11 @@ msgstr "Listes de diffusion"
 msgid "Manage Archives"
 msgstr "Gérer les archives"
 
-#: src/List.pm:352
+#: src/List.pm:351
 msgid "Management of bouncers, 1st level"
 msgstr "Gestion des abonnés en erreur, 1er niveau"
 
-#: src/List.pm:373
+#: src/List.pm:372
 msgid "Management of bouncers, 2nd level"
 msgstr "Gestion des abonnés en erreur, 2nd niveau"
 
@@ -1978,7 +1993,7 @@ msgid "Managing bouncing subscribers:"
 msgstr "Gestion des abonnés en erreur"
 
 # nlsref 16,56
-#: src/List.pm:814
+#: src/List.pm:790
 msgid "Maximum message size"
 msgstr "Taille maximum des messages"
 
@@ -1987,7 +2002,7 @@ msgstr "Taille maximum des messages"
 msgid "Maximum size       : %1"
 msgstr "Taille maximale    : %1"
 
-#: wwsympa/tt2/help_editlist.tt2:119
+#: wwsympa/tt2/help_editlist.tt2:118
 msgid "Maximum size of a message in 8-bit bytes."
 msgstr "Taille maximale des messages autorisée (exprimée en octets)"
 
@@ -2003,10 +2018,11 @@ msgid ""
 "possible that the virus didn't come from your computer. In that case, please "
 "disregard this message.\n"
 msgstr ""
-"Il peut être prudent de passer votre poste de travail à l'anti-virus.\n\n"
-"Remarque : de nombreux virus falsifient l'adresse de l'expéditeur."
-"Il se peut donc que ce virus ne provienne pas de votre ordinateur."
-"Dans ce cas, vous pouvez ignorer cette alerte.\n"
+"Il peut être prudent de passer votre poste de travail à l'anti-virus.\n"
+"\n"
+"Remarque : de nombreux virus falsifient l'adresse de l'expéditeur.Il se peut "
+"donc que ce virus ne provienne pas de votre ordinateur.Dans ce cas, vous "
+"pouvez ignorer cette alerte.\n"
 
 # nlsref 6,44
 #: src/Commands.pm:1666 src/Commands.pm:1769
@@ -2102,7 +2118,7 @@ msgid "Moderated, with editor confirmation"
 msgstr "Modérée, avec confirmation du modérateur"
 
 # nlsref 4,40
-#: src/List.pm:1888
+#: src/List.pm:1864
 msgid "Moderating your message"
 msgstr "Modération de votre message"
 
@@ -2122,7 +2138,7 @@ msgid "Moderator          : %1"
 msgstr "Modérateur         : %1"
 
 # nlsref 16,26
-#: src/List.pm:484 wwsympa/tt2/list_menu.tt2:53
+#: src/List.pm:483 wwsympa/tt2/list_menu.tt2:53
 msgid "Moderators"
 msgstr "Modérateurs"
 
@@ -2135,7 +2151,7 @@ msgstr "Moderateurs de la liste %1"
 msgid "Modifier"
 msgstr "Modifier"
 
-#: wwsympa/tt2/loginbanner.tt2:14
+#: wwsympa/tt2/loginbanner.tt2:13
 msgid ""
 "Most mailing list features require your email. Some mailing lists are hidden "
 "to  unidentified persons.<BR>\n"
@@ -2155,7 +2171,7 @@ msgstr "Abonnements par lot"
 msgid "My password ?"
 msgstr "Envoyez-moi mon mot de passe"
 
-#: wwsympa/tt2/help_editlist.tt2:31
+#: wwsympa/tt2/help_editlist.tt2:30
 msgid ""
 "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
 "will be halted, i.e. they are retained for subsequent moderation. Once the "
@@ -2174,7 +2190,7 @@ msgstr "Nom"
 msgid "Name :"
 msgstr "Nom :"
 
-#: wwsympa/tt2/help_editlist.tt2:34
+#: wwsympa/tt2/help_editlist.tt2:33
 msgid ""
 "Name of the task template use to remove old bounces. Usefull to remove "
 "bounces for a subscriber email if some message are distributed without "
@@ -2183,8 +2199,8 @@ msgid ""
 msgstr ""
 "Nom du modèle de tache utilisé pour réinitialiser le compteur d'erreurs pour "
 "les abonnés n'ayant pas généré de rapports d'erreur suite aux dernières "
-"diffusions de message dans la liste. "
-"Actif si le processus task_manager s'exécute."
+"diffusions de message dans la liste. Actif si le processus task_manager "
+"s'exécute."
 
 #: wwsympa/tt2/pref.tt2:69
 msgid "New email address :"
@@ -2223,7 +2239,7 @@ msgstr "Newsletter, limité aux modérateurs après confirmation"
 msgid "Next page"
 msgstr "Page suivante"
 
-#: wwsympa/tt2/help_editlist.tt2:178
+#: wwsympa/tt2/help_editlist.tt2:177
 msgid "No Comment"
 msgstr "Pas de commentaire"
 
@@ -2237,7 +2253,7 @@ msgid "No bounces for user  %1"
 msgstr "Aucun bounce pour l'utilisateur %1"
 
 # nlsref 4,39
-#: src/sympa.pl:1214
+#: src/sympa.pl:1215
 msgid "No command found in message"
 msgstr "Aucune commande n'a été reconnue dans votre message"
 
@@ -2293,7 +2309,7 @@ msgstr "Nomail"
 msgid "Not subscribed: %1"
 msgstr "Pas abonné : %1"
 
-#: wwsympa/tt2/help_editlist.tt2:135
+#: wwsympa/tt2/help_editlist.tt2:134
 msgid ""
 "Note: it is inadvisable to change this parameter, and particularly "
 "inadvisable to set it to list. Experience has shown it to be almost "
@@ -2380,7 +2396,7 @@ msgstr ""
 "a destination de %2 contenait le virus suivant : %1.\n"
 
 # nlsref 16,57
-#: src/List.pm:845 wwsympa/tt2/title.tt2:17
+#: src/List.pm:821 wwsympa/tt2/title.tt2:17
 msgid "Owner"
 msgstr "Propriétaires"
 
@@ -2404,7 +2420,7 @@ msgstr "Propriétaire :"
 msgid "Owners"
 msgstr "Propriétaires"
 
-#: wwsympa/tt2/help_editlist.tt2:121
+#: wwsympa/tt2/help_editlist.tt2:120
 msgid ""
 "Owners are managing subscribers of the list. They may review subscribers and "
 "add or delete email addresses from the mailing list. If you are a privileged "
@@ -2421,7 +2437,7 @@ msgstr ""
 "qu'un seul propriétaire privilégié."
 
 # nlsref 8,1
-#: src/List.pm:1748 src/List.pm:1763 src/List.pm:1775
+#: src/List.pm:1724 src/List.pm:1739 src/List.pm:1751
 msgid "Owners of list %s"
 msgstr "Proprietaires de la liste %s"
 
@@ -2515,7 +2531,7 @@ msgid "Previous page"
 msgstr "Page précédente"
 
 # nlsref 16,63
-#: src/List.pm:851
+#: src/List.pm:827
 msgid "Priority"
 msgstr "Priorité de la liste"
 
@@ -2532,7 +2548,7 @@ msgstr "Privée, modérée pour les non abonnés"
 msgid "Privilege for adding (ADD command) a subscriber to the list"
 msgstr "Qui peut ajouter des abonnés (commande ADD) dans la liste"
 
-#: wwsympa/tt2/help_editlist.tt2:15
+#: wwsympa/tt2/help_editlist.tt2:14
 msgid "Privilege for reading mail archives and frequency of archiving"
 msgstr ""
 "Droit de consultation des archives mail et définition de la fréquence "
@@ -2593,7 +2609,7 @@ msgid "REView <list>               * Displays the subscribers to <list>"
 msgstr "REView <liste>               * Recevoir la liste des abonnés à la liste"
 
 # nlsref 16,16
-#: src/List.pm:901
+#: src/List.pm:877
 msgid "RFC 2369 Header fields"
 msgstr "Champs d'entête compatibles RFC 2369"
 
@@ -2669,7 +2685,7 @@ msgstr ""
 "au cas où celles-ci ne connaissent plus leur adresse d'abonnement.\n"
 
 # nlsref 16,65
-#: src/List.pm:860
+#: src/List.pm:836
 msgid "Remind return-path"
 msgstr "Return-path de remind"
 
@@ -2743,7 +2759,7 @@ msgid "Reply"
 msgstr "Répondre"
 
 # nlsref 16,66
-#: src/List.pm:869 src/List.pm:889
+#: src/List.pm:845 src/List.pm:865
 msgid "Reply address"
 msgstr "Adresse de réponse"
 
@@ -2794,7 +2810,7 @@ msgid "Result of your search in the archive"
 msgstr "Résultat de votre recherche dans l'archive"
 
 # nlsref 4,17
-#: src/sympa.pl:773
+#: src/sympa.pl:774
 msgid "Results of your commands"
 msgstr "Resultats de vos commandes"
 
@@ -2856,12 +2872,12 @@ msgstr ""
 "(fichier texte)"
 
 # nlsref 16,51
-#: src/List.pm:779
+#: src/List.pm:755
 msgid "SQL query"
 msgstr "requête SQL"
 
 # nlsref 16,45
-#: src/List.pm:794
+#: src/List.pm:770
 msgid "SQL query inclusion"
 msgstr "Inclusion d'une requête SQL"
 
@@ -2878,8 +2894,8 @@ msgstr ""
 "liste"
 
 # nlsref 12,4
-#: src/Commands.pm:1747 src/List.pm:2048 src/mail.pm:81 src/sympa.pl:1057
-#: src/sympa.pl:1306 src/sympa.pl:770 src/sympa.pl:771 src/sympa.pl:984
+#: src/Commands.pm:1747 src/List.pm:2023 src/mail.pm:81 src/sympa.pl:1058
+#: src/sympa.pl:1307 src/sympa.pl:771 src/sympa.pl:772 src/sympa.pl:985
 msgid "SYMPA <%s>"
 msgstr "SYMPA <%s>"
 
@@ -2889,10 +2905,11 @@ msgid ""
 "functions such as subscriptions, moderation, and archive management."
 msgstr ""
 "SYMPA est un gestionnaire de listes électroniques. Il permet d'automatiser\n"
-"les fonctions de gestion des listes telles que les abonnements, la modération\n"
+"les fonctions de gestion des listes telles que les abonnements, la "
+"modération\n"
 "et la gestion des archives."
 
-#: wwsympa/tt2/help_editlist.tt2:127
+#: wwsympa/tt2/help_editlist.tt2:126
 msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr "Idem \"welcome_return_path\" mais appliqué au message de rappel"
 
@@ -2935,7 +2952,7 @@ msgid "Search lists"
 msgstr "Chercher une liste"
 
 # nlsref 16,11
-#: src/List.pm:386
+#: src/List.pm:385
 msgid "Secret string for generating unique keys"
 msgstr "Secret pour la génération de clefs"
 
@@ -2953,7 +2970,7 @@ msgstr ""
 msgid "Selection too wide, can not show selection"
 msgstr "La sélection est trop large, impossible d'afficher la sélection"
 
-#: wwsympa/tt2/loginbanner.tt2:139
+#: wwsympa/tt2/loginbanner.tt2:138
 msgid "Send me a password"
 msgstr "Envoyez-moi un mot de passe"
 
@@ -2988,7 +3005,7 @@ msgid "Sent mega-bytes             :      %1"
 msgstr "Méga-octets reçus           :      %1"
 
 # nlsref 16,69
-#: src/List.pm:912
+#: src/List.pm:888
 msgid "Serial number of the config"
 msgstr "Numéro de série de la config"
 
@@ -3018,7 +3035,7 @@ msgid "Shared document directory size"
 msgstr "Taille de l'espace documentaire"
 
 # nlsref 16,70
-#: src/List.pm:931
+#: src/List.pm:907
 msgid "Shared documents"
 msgstr "Partage de documents"
 
@@ -3050,7 +3067,7 @@ msgid "Size (Kb)"
 msgstr "Taille (Ko)"
 
 # nlsref 6,260
-#: src/List.pm:6738
+#: src/List.pm:6713
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -3079,7 +3096,7 @@ msgstr ""
 "ce message."
 
 # nlsref 6,260
-#: src/List.pm:6731
+#: src/List.pm:6706
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be removed from list '%s'.\n"
@@ -3108,7 +3125,7 @@ msgstr ""
 "ce message."
 
 # nlsref 6,39
-#: src/List.pm:6743 src/List.pm:6748
+#: src/List.pm:6718 src/List.pm:6723
 msgid ""
 "Someone (hopefully you) requested a user of list %s to be\n"
 "added or removed.\n"
@@ -3177,7 +3194,7 @@ msgid "Status : %1"
 msgstr "Type d'erreur : %1"
 
 # nlsref 16,71
-#: src/List.pm:947
+#: src/List.pm:923
 msgid "Status of the list"
 msgstr "Etat de la liste"
 
@@ -3201,12 +3218,12 @@ msgid "Subject :"
 msgstr "Sujet :"
 
 # nlsref 16,72
-#: src/List.pm:953
+#: src/List.pm:929
 msgid "Subject of the list"
 msgstr "Objet de la liste"
 
 # nlsref 16,17
-#: src/List.pm:416
+#: src/List.pm:415
 msgid "Subject tagging"
 msgstr "Marquage du sujet des messages"
 
@@ -3269,7 +3286,7 @@ msgid "Subscription       : %1"
 msgstr "Abonnement         : %1"
 
 # nlsref 16,18
-#: src/List.pm:430
+#: src/List.pm:429
 msgid "Subscription profile"
 msgstr "Profil d'abonnement"
 
@@ -3279,7 +3296,7 @@ msgid "Subscription reminder sent to each of %d %s subscribers\n"
 msgstr "Rappel d'abonnement envoyé aux %d abonnés de %s.\n"
 
 # nlsref 8,2
-#: src/List.pm:1762
+#: src/List.pm:1738
 msgid "Subscription request to list %s"
 msgstr "Demande d'abonnement à la liste %s"
 
@@ -3293,7 +3310,7 @@ msgid "Summary"
 msgstr "Summary"
 
 # nlsref 8,31
-#: src/List.pm:2676
+#: src/List.pm:2651
 msgid "Summary of list %s"
 msgstr "Résumé de la liste %s"
 
@@ -3310,7 +3327,7 @@ msgstr "Lundi:Mardi:Mercredi:Jeudi:Vendredi:Samedi:Dimanche"
 msgid "Sympa admin"
 msgstr "Admin Sympa"
 
-#: wwsympa/tt2/help_editlist.tt2:168
+#: wwsympa/tt2/help_editlist.tt2:167
 msgid ""
 "Sympa allows the list owner to choose how Sympa loads list member data. "
 "Subscriber information can be stored in a text file or relational database, "
@@ -3321,7 +3338,7 @@ msgstr ""
 "liste sont définis. La liste des membres peut être issue d'un fichier texte, "
 "d'une autre liste, d'une base de données relationnelle ou d'un annuaire LDAP."
 
-#: wwsympa/tt2/help_editlist.tt2:164
+#: wwsympa/tt2/help_editlist.tt2:163
 msgid ""
 "Sympa caches user data extracted using the include parameter. Their TTL "
 "(time-to-live) within Sympa can be controlled using this parameter. The "
@@ -3331,7 +3348,7 @@ msgstr ""
 "durée de vie de ce cache est controllée par le paramètre \"ttl\". La valeur "
 "par défaut est 3600 (exprimé en secondes)."
 
-#: wwsympa/tt2/help_editlist.tt2:112
+#: wwsympa/tt2/help_editlist.tt2:111
 msgid ""
 "Sympa can contact another Sympa service using https to fetch a remote list "
 "in order to include each member of a remote list as subscriber. You may "
@@ -3364,19 +3381,22 @@ msgstr ""
 "Vous devez probablement paramétrer votre navigateur pour qu'il accepte les "
 "cookies."
 
-#: wwsympa/tt2/help_editlist.tt2:98
+#: wwsympa/tt2/help_editlist.tt2:97
 msgid ""
 "Sympa will not create new MIME parts, but will try to append the header/"
 "footer to the body of the message. Predefined message-footers will be "
 "ignored. Headers/footers may be appended to text/plain messages only."
-msgstr "Sympa ne va pas créer de nouvelle partie MIME, mais juste essayer d'ajouter l'entête/pied au corps du message. Les entêtes/pieds ne peuvent être ajoutés qu'à des message au format text/plain."
+msgstr ""
+"Sympa ne va pas créer de nouvelle partie MIME, mais juste essayer d'ajouter "
+"l'entête/pied au corps du message. Les entêtes/pieds ne peuvent être ajoutés "
+"qu'à des message au format text/plain."
 
 #. (error.params)
 #: wwsympa/tt2/error.tt2:98
 msgid "Syntax errors with the following parameters : %1"
 msgstr "Erreurs de syntaxe des paramètres suivants : %1"
 
-#: src/List.pm:2560 src/etc/tt2/digest.tt2:12 src/etc/tt2/digest_plain.tt2:10
+#: src/List.pm:2535 src/etc/tt2/digest.tt2:12 src/etc/tt2/digest_plain.tt2:10
 msgid "Table of contents:"
 msgstr "Sommaire :"
 
@@ -3385,7 +3405,7 @@ msgid "Templates"
 msgstr "Les templates"
 
 # nlsref 16,4
-#: src/List.pm:297
+#: src/List.pm:296
 msgid "Text archives"
 msgstr "Archives textuelles"
 
@@ -3406,7 +3426,7 @@ msgstr ""
 "Le fichier %1 qui était joint à ce message a été gardé sur le serveur de "
 "listes "
 
-#: wwsympa/tt2/help_editlist.tt2:40
+#: wwsympa/tt2/help_editlist.tt2:39
 msgid ""
 "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
 "management.<BR>\n"
@@ -3417,7 +3437,7 @@ msgstr ""
 "\tLe 1er niveau est le niveau le plus bas pour les abonnés générant des "
 "erreurs.\n"
 
-#: wwsympa/tt2/help_editlist.tt2:56
+#: wwsympa/tt2/help_editlist.tt2:55
 msgid ""
 "The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
 "management.<BR>\n"
@@ -3464,7 +3484,7 @@ msgstr ""
 "La phase d'authentification a échoué.\n"
 "\n"
 
-#: wwsympa/tt2/help_editlist.tt2:17
+#: wwsympa/tt2/help_editlist.tt2:16
 msgid ""
 "The available_user_options parameter starts a paragraph to define available "
 "options for the subscribers of the list."
@@ -3481,7 +3501,7 @@ msgstr "L'identité du certificat est :"
 msgid "The configuration file contains errors.\n"
 msgstr "Le fichier de configuration contient des erreurs.\n"
 
-#: wwsympa/tt2/help_editlist.tt2:141
+#: wwsympa/tt2/help_editlist.tt2:140
 msgid ""
 "The default is to respect (preserve) the existing Reply-To: SMTP header "
 "field in incoming messages. If set to forced, Reply-To: SMTP header field "
@@ -3490,11 +3510,13 @@ msgstr ""
 "Par défaut le champ d'entête SMTP Reply-to: est préservé. Si ce paramètre "
 "est positionné à \"forced\" le champ d'entête est remplacé."
 
-#: wwsympa/tt2/help_editlist.tt2:95
+#: wwsympa/tt2/help_editlist.tt2:94
 msgid "The default value. Sympa will add the footer/header as a new MIME part."
-msgstr "La valeur par défaut. Sympa ajoutera l'entête (ou le pied de message) en tant qu'attachement MIME."
+msgstr ""
+"La valeur par défaut. Sympa ajoutera l'entête (ou le pied de message) en "
+"tant qu'attachement MIME."
 
-#: wwsympa/tt2/help_editlist.tt2:76
+#: wwsympa/tt2/help_editlist.tt2:75
 msgid ""
 "The default_user_options parameter starts a paragraph to define a default "
 "profile for the subscribers of the list."
@@ -3566,7 +3588,7 @@ msgstr ""
 "La liste des membres de la liste sera générée/mise à jour dans un moment "
 "(quelques minutes)."
 
-#: wwsympa/tt2/help_editlist.tt2:27
+#: wwsympa/tt2/help_editlist.tt2:26
 msgid ""
 "The list owner receives a warning whenever a message is distributed and the "
 "number (percentage) of bounces exceeds this value."
@@ -3590,7 +3612,7 @@ msgstr "L'object de la liste"
 msgid "The passwords you typed do not match"
 msgstr "Les 2 mots de passe sont différents"
 
-#: wwsympa/tt2/help_editlist.tt2:123
+#: wwsympa/tt2/help_editlist.tt2:122
 msgid ""
 "The priority with which Sympa will process messages for this list. This "
 "level of priority is applied while the message is going through the spool. "
@@ -3600,7 +3622,7 @@ msgstr ""
 "est appliquée aux messages dans la file d'attente. Le niveau \"z\" permet "
 "d'immobiliser les messages dans la file d'attente."
 
-#: wwsympa/tt2/help_editlist.tt2:131
+#: wwsympa/tt2/help_editlist.tt2:130
 msgid ""
 "The reply_to_header parameter starts a paragraph defining what Sympa will "
 "place in the Reply-To: SMTP header field of the messages it distributes."
@@ -3618,7 +3640,7 @@ msgstr ""
 "La périodicité d'envoi des compilation est définie par le gestionnaire de la "
 "liste."
 
-#: wwsympa/tt2/help_editlist.tt2:160
+#: wwsympa/tt2/help_editlist.tt2:159
 msgid "The subscribe parameter defines the rules for subscribing to the list."
 msgstr "Le paramètre \"subsribe\" définit les règles de la procédure d'abonnement."
 
@@ -3632,7 +3654,7 @@ msgstr "L'utilisateur %s a été retiré de %s\n"
 msgid "There are %1 messages to be moderated for list %2@%3"
 msgstr "Il y a %1 messages à modérer pour la liste %2@%3."
 
-#: wwsympa/tt2/help_editlist.tt2:151
+#: wwsympa/tt2/help_editlist.tt2:150
 msgid ""
 "There is a need to protect Sympa web site against spambot which collect "
 "email address in public web site. Various methods are available in Sympa and "
@@ -3644,7 +3666,7 @@ msgstr ""
 "proposées par Sympa. Les valeurs possibles sont :"
 
 # nlsref 4,26
-#: src/sympa.pl:1338
+#: src/sympa.pl:1339
 msgid "These subscribers are :\n"
 msgstr "Ces abonnés sont :\n"
 
@@ -3753,11 +3775,11 @@ msgstr ""
 "comme une adresse alternative. Vous pourrez unifier vos abonnement avec "
 "votre adresse principale.\n"
 
-#: wwsympa/tt2/help_editlist.tt2:24
+#: wwsympa/tt2/help_editlist.tt2:23
 msgid "This paragraph defines bounce management parameters:"
 msgstr "Ce paragraphe définit les paramètres de gestion des abonnés en erreur :"
 
-#: wwsympa/tt2/help_editlist.tt2:108
+#: wwsympa/tt2/help_editlist.tt2:107
 msgid ""
 "This paragraph defines parameters for a query returning a list of "
 "subscribers. This paragraph is used only if user_data_source is set to "
@@ -3768,7 +3790,7 @@ msgstr ""
 "user_data_source est positionné à include. Le module Perl Net::LDAP doit "
 "avoir été préalablement installé sur le serveur."
 
-#: wwsympa/tt2/help_editlist.tt2:106
+#: wwsympa/tt2/help_editlist.tt2:105
 msgid ""
 "This paragraph defines parameters for a two-level query returning a list of "
 "subscribers. Usually the first-level query returns a list of DNs and the "
@@ -3777,7 +3799,7 @@ msgid ""
 "the Net::LDAP (perlldap) PERL module."
 msgstr "Ce pa"
 
-#: wwsympa/tt2/help_editlist.tt2:149
+#: wwsympa/tt2/help_editlist.tt2:148
 msgid ""
 "This paragraph defines read and edit access to the shared document "
 "repository."
@@ -3785,7 +3807,7 @@ msgstr ""
 "Ce paragraphe définit les droits d'accès en lecture et en écriture sur "
 "l'espace des documents partagés."
 
-#: wwsympa/tt2/help_editlist.tt2:162
+#: wwsympa/tt2/help_editlist.tt2:161
 msgid ""
 "This parameter allows the classification of lists. You may define multiple "
 "topics as well as hierarchical ones. WWSympa's list of public lists uses "
@@ -3795,7 +3817,7 @@ msgstr ""
 "catégories, éventuellement hiérarchiques. Le classement des listes publiques "
 "est construit en exploitant ce paramètre."
 
-#: wwsympa/tt2/help_editlist.tt2:117
+#: wwsympa/tt2/help_editlist.tt2:116
 msgid ""
 "This parameter defines the language used for the list. It is used to "
 "initialize a user's language preference; Sympa command reports are extracted "
@@ -3805,7 +3827,7 @@ msgstr ""
 "déterminer la langue par défaut des abonnés ; les traductions des interfaces "
 "sont extraites du catalogue de messages correspondant."
 
-#: wwsympa/tt2/help_editlist.tt2:47
+#: wwsympa/tt2/help_editlist.tt2:46
 msgid ""
 "This parameter defines which task is automaticaly applied on level 1 "
 "bouncers."
@@ -3813,7 +3835,7 @@ msgstr ""
 "Ce paramètre définit quelle opération est effectué sur les abonnés en erreur "
 "de niveau 1."
 
-#: wwsympa/tt2/help_editlist.tt2:63
+#: wwsympa/tt2/help_editlist.tt2:62
 msgid ""
 "This parameter defines which task is automaticaly applied on level 2 "
 "bouncers."
@@ -3821,7 +3843,7 @@ msgstr ""
 "Ce paramètre définit quelle opération est effectué sur les abonnés en erreur "
 "de niveau 2."
 
-#: wwsympa/tt2/help_editlist.tt2:158
+#: wwsympa/tt2/help_editlist.tt2:157
 msgid ""
 "This parameter indicates the subject of the list, which is sent in response "
 "to the LISTS mail command. The subject is a free form text limited to one "
@@ -3830,7 +3852,7 @@ msgstr ""
 "Ce paramètre indique l'objet de la liste, qui aparait comme descriptif dans "
 "la liste des listes. Le format est libre, mais limité à une ligne."
 
-#: wwsympa/tt2/help_editlist.tt2:134
+#: wwsympa/tt2/help_editlist.tt2:133
 msgid ""
 "This parameter indicates whether the Reply-To: field should indicate the "
 "sender of the message (sender), the list itself (list), both list and sender "
@@ -3841,7 +3863,7 @@ msgstr ""
 "(list), les deux (all) ou à une adresse arbitraire (définie par le paramètre "
 "other_email)."
 
-#: wwsympa/tt2/help_editlist.tt2:170
+#: wwsympa/tt2/help_editlist.tt2:169
 msgid ""
 "This parameter indicates whether the list should feature in the output "
 "generated in response to a LISTS command or should be shown in the list "
@@ -3850,7 +3872,7 @@ msgstr ""
 "Ce paramètre indique si la liste doit aparaître dans la liste des listes "
 "publiques."
 
-#: wwsympa/tt2/help_editlist.tt2:70
+#: wwsympa/tt2/help_editlist.tt2:69
 msgid ""
 "This parameter is a confidential item for generating authentication keys for "
 "administrative commands (ADD, DELETE, etc.). This parameter should remain "
@@ -3861,7 +3883,7 @@ msgstr ""
 "les clefs d'authentification, les clefs de modération, encrypter les mots de "
 "passe. "
 
-#: wwsympa/tt2/help_editlist.tt2:74
+#: wwsympa/tt2/help_editlist.tt2:73
 msgid ""
 "This parameter is optional. It specifies a string which is added to the "
 "subject of distributed messages (intended to help users who do not use "
@@ -3873,7 +3895,7 @@ msgstr ""
 "disposant pas d'outils de tri des messages entrants). Cette chaîne sera "
 "encadrée par les caractères []."
 
-#: wwsympa/tt2/help_editlist.tt2:72
+#: wwsympa/tt2/help_editlist.tt2:71
 msgid ""
 "This parameter is optional. The headers specified will be added to the "
 "headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
@@ -3884,63 +3906,83 @@ msgstr ""
 "messages diffusés dans la liste. Il est possible dajouter plusieurs champs "
 "d'entête."
 
-#: wwsympa/tt2/help_editlist.tt2:166
+#: wwsympa/tt2/help_editlist.tt2:165
 msgid ""
 "This parameter specifies the unsubscription method for the list. Use "
 "open_notify or auth_notify to allow owner notification of each unsubscribe "
 "command."
-msgstr "Ce paramètre définit la méthode de désabonnement pour la liste. Optez pour 'open_notify' ou 'auth_notify' pour être alerté à chaque désabonnement."
+msgstr ""
+"Ce paramètre définit la méthode de désabonnement pour la liste. Optez pour "
+"'open_notify' ou 'auth_notify' pour être alerté à chaque désabonnement."
 
-#: wwsympa/tt2/help_editlist.tt2:147
-msgid "This parameter specifies who can send messages to the list."
-msgstr "Ce paramètre définit qui peut poster des messages dans la liste."
-
-#: wwsympa/tt2/help_editlist.tt2:145
+#: wwsympa/tt2/help_editlist.tt2:144
 msgid ""
-"This parameter specifies who can use read addresses of subscribers. Since "
+"This parameter specifies who can access the list of members. Since "
 "subscriber addresses can be abused by spammers, it is strongly recommended "
 "that you only authorize owners or subscribers to access the subscriber list. "
 msgstr ""
-"Ce paramètre définit qui a accès à la liste des abonnés. "
-"A cause des problèmes de spam, nous vous recommandons de n'autoriser que les propriétaires de la liste ou les abonnés."
+"Ce paramètre définit qui a accès à la liste des abonnés. A cause des "
+"problèmes de spam, nous vous recommandons de n'autoriser que les "
+"propriétaires de la liste ou les abonnés."
 
-#: wwsympa/tt2/help_editlist.tt2:82
+#: wwsympa/tt2/help_editlist.tt2:146
+msgid "This parameter specifies who can send messages to the list."
+msgstr "Ce paramètre définit qui peut poster des messages dans la liste."
+
+#: wwsympa/tt2/help_editlist.tt2:81
 msgid "This parameter specifies who is authorized to use the DEL command."
 msgstr "Ce paramètre définit qui est autorisé à supprimer des abonnés (commande DEL)."
 
-#: wwsympa/tt2/help_editlist.tt2:125
+#: wwsympa/tt2/help_editlist.tt2:124
 msgid "This parameter specifies who is authorized to use the remind command."
-msgstr "Ce paramètre définit qui peut démarrer un processus de rappel des abonnements (commande REMIND)"
+msgstr ""
+"Ce paramètre définit qui peut démarrer un processus de rappel des "
+"abonnements (commande REMIND)"
 
-#: wwsympa/tt2/help_editlist.tt2:90
+#: wwsympa/tt2/help_editlist.tt2:89
 msgid ""
-"This parameter states which model is used to create a remind task. A expire "
+"This parameter states which model is used to create a expire task. An expire "
 "task regurlaly checks the inscription or reinscription date of subscribers "
 "and asks them to renew their subscription. If they don't they are deleted."
-msgstr "Ce paramètre détermine quel modèle de tache est utilisé par le processus d'expiration des abonnements. Un processus d'expiration  est exécuté régulièrement ; il explite la date d'abonnement des abonnés et requiert un renouvellement de leur abonnement. S'ils ne se réabonnent pas ils sont désabonnés."
+msgstr ""
+"Ce paramètre détermine quel modèle de tache est utilisé par le processus "
+"d'expiration des abonnements. Un processus d'expiration  est exécuté "
+"régulièrement ; il explite la date d'abonnement des abonnés et requiert un "
+"renouvellement de leur abonnement. S'ils ne se réabonnent pas ils sont "
+"désabonnés."
 
-#: wwsympa/tt2/help_editlist.tt2:129
+#: wwsympa/tt2/help_editlist.tt2:128
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regurlaly sends to the subscribers a message which reminds them their "
 "subscription to list."
-msgstr "Ce paramètre détermine quel modèle de tache est utilisé par le processus de rappel des abonnements. Un processus d'expiration  est exécuté régulièrement ; il envoie à chaque abonné un message de rappel de son abonnement."
+msgstr ""
+"Ce paramètre détermine quel modèle de tache est utilisé par le processus de "
+"rappel des abonnements. Un processus d'expiration  est exécuté "
+"régulièrement ; il envoie à chaque abonné un message de rappel de son "
+"abonnement."
 
-#: wwsympa/tt2/help_editlist.tt2:115
+#: wwsympa/tt2/help_editlist.tt2:114
 msgid ""
 "This parameter will be interpreted only if the user_data_source value is set "
 "to include, and is used to begin a paragraph defining the SQL query "
 "parameters. "
-msgstr "Ce paramètre n'est utile que si le paramètre 'user_data_source' a pour valeur 'include'. Il définit une requête SQL retournant une liste d'adresses email."
+msgstr ""
+"Ce paramètre n'est utile que si le paramètre 'user_data_source' a pour "
+"valeur 'include'. Il définit une requête SQL retournant une liste d'adresses "
+"email."
 
-#: wwsympa/tt2/help_editlist.tt2:104
+#: wwsympa/tt2/help_editlist.tt2:103
 msgid ""
 "This parameter will be interpreted only if the user_data_source value is set "
 "to include. The file should contain one e-mail address per line (lines "
 "beginning with a \"#\" are ignored)."
-msgstr "Ce paramètre n'est utile que si le paramètre 'user_data_source' a pour valeur 'include'. Le fichier spécifié doit contenir une adresse email par ligne (les lignes préfixées par le caractère # sont ignorées)."
+msgstr ""
+"Ce paramètre n'est utile que si le paramètre 'user_data_source' a pour "
+"valeur 'include'. Le fichier spécifié doit contenir une adresse email par "
+"ligne (les lignes préfixées par le caractère # sont ignorées)."
 
-#: wwsympa/tt2/help_editlist.tt2:110
+#: wwsympa/tt2/help_editlist.tt2:109
 msgid ""
 "This parameter will be interpreted only if user_data_source is set to "
 "include. All subscribers of list listname become subscribers of the current "
@@ -3950,7 +3992,14 @@ msgid ""
 "therefore include lists which are also defined by the inclusion of other "
 "lists. Be careful, however, not to include list A in list B and then list B "
 "in list A, since this will give rise an infinite loop."
-msgstr "Ce paramètre n'est utile que si le paramètre 'user_data_source' a pour valeur 'include'. Les abonnés de la liste spécifée seront abonnés à la liste courante. Vous pouvez inclure autant de listes que nécessaire. N'importe quelle liste peut être incluse, peut importe la définition de user_data_source pour cette liste. Vous pouvez donc inclure une liste qui elle-même inclue une autre liste. Attention cependant à ne pas inclure une liste A dans une liste B et la liste B dans la liste A."
+msgstr ""
+"Ce paramètre n'est utile que si le paramètre 'user_data_source' a pour "
+"valeur 'include'. Les abonnés de la liste spécifée seront abonnés à la liste "
+"courante. Vous pouvez inclure autant de listes que nécessaire. N'importe "
+"quelle liste peut être incluse, peut importe la définition de "
+"user_data_source pour cette liste. Vous pouvez donc inclure une liste qui "
+"elle-même inclue une autre liste. Attention cependant à ne pas inclure une "
+"liste A dans une liste B et la liste B dans la liste A."
 
 #: wwsympa/tt2/sigrequest.tt2:43 wwsympa/tt2/subrequest.tt2:38
 msgid ""
@@ -4069,7 +4118,7 @@ msgid "To distribute the attached message in list %1:"
 msgstr "Pour diffuser le message ci-joint dans la liste %1,"
 
 # nlsref 8,12
-#: src/List.pm:2061
+#: src/List.pm:2036
 msgid ""
 "To distribute the attached message in list %s :\n"
 "mailto:%s?subject=CONFIRM%%20%s\n"
@@ -4088,22 +4137,25 @@ msgstr ""
 "Pour chercher l'adresse de la liste, consultez la liste des listes de ce "
 "serveur :"
 
-#: wwsympa/tt2/help_editlist.tt2:13
+#: wwsympa/tt2/help_editlist.tt2:12
 msgid ""
-"To hide the sender's email address before distributing the message.\n"
-"        It is replaced by the provided email address.\n"
+"To hide the sender's email address before distributing the message. It is "
+"replaced by the provided email address."
 msgstr ""
-"Pour dissimuler l'adresse email de l'expéditeur avant de diffuser un message. \n"
-"L'adresse est remplacée par la valeur spécifiée.\n"
+"Pour dissimuler l'adresse email de l'expéditeur avant de diffuser un "
+"message. L'adresse est remplacée par la valeur spécifiée."
 
-#: wwsympa/tt2/loginbanner.tt2:19
+#: wwsympa/tt2/loginbanner.tt2:18
 msgid ""
 "To login, select your organization authentication server below.<BR>\n"
 "If it is not listed or if you don't have any, login using your email and "
 "password on the right column.\n"
 msgstr ""
-"Pour vous identifier, sélectionnez le serveur d'authentification de votre organisme ci-dessous.<BR> \n"
-"S'il n'est pas listé ou si vous n'avez pas d'organisme de rattachement, identifiez-vous en fournissant votre adresse email et votre mot de passe dans la colonne de droite.\n"
+"Pour vous identifier, sélectionnez le serveur d'authentification de votre "
+"organisme ci-dessous.<BR> \n"
+"S'il n'est pas listé ou si vous n'avez pas d'organisme de rattachement, "
+"identifiez-vous en fournissant votre adresse email et votre mot de passe "
+"dans la colonne de droite.\n"
 
 # nlsref 6,57
 #: src/Commands.pm:1953
@@ -4161,7 +4213,7 @@ msgid "Toggle Selection"
 msgstr "Inverser la Selection"
 
 # nlsref 16,74
-#: src/List.pm:963
+#: src/List.pm:939
 msgid "Topics for the list"
 msgstr "Catégorie de la liste"
 
@@ -4187,10 +4239,13 @@ msgstr "UNSubscribe * <EMAIL>       * Se désabonner de toutes les listes."
 msgid ""
 "UNSubscribe <list> <EMAIL>  * To quit <list>. <EMAIL> is an optional email "
 "address, usefull if different from your \"From:\" address."
-msgstr "UNSubscribe <liste> <email>  * Se désabonner de la liste <liste>. L'adresse email (<email>) est optionnelle ; uniquement requise si vous voulez vous désabonner d'une adresse différente de votre champ From."
+msgstr ""
+"UNSubscribe <liste> <email>  * Se désabonner de la liste <liste>. L'adresse "
+"email (<email>) est optionnelle ; uniquement requise si vous voulez vous "
+"désabonner d'une adresse différente de votre champ From."
 
 # nlsref 8,24
-#: src/List.pm:1774
+#: src/List.pm:1750
 msgid "UNsubscription request from list %s"
 msgstr "Demande de desabonnement de la liste %s"
 
@@ -4199,7 +4254,7 @@ msgid "URL"
 msgstr "URL"
 
 # nlsref 3,1
-#: src/sympa.pl:1235
+#: src/sympa.pl:1236
 msgid "Unable to access directory %s : %m"
 msgstr "Impossible d'aller dans le repertoire %s : %m"
 
@@ -4210,7 +4265,8 @@ msgid ""
 "This message may already have been sent by one of the list's moderators\n"
 msgstr ""
 "Impossible d'accéder au message à modérer de la liste %s avec la clé %s.\n"
-"Il se peut que ce message ait déjà été diffusé par un modérateur de la liste.\n"
+"Il se peut que ce message ait déjà été diffusé par un modérateur de la "
+"liste.\n"
 
 # nlsref 6,68
 #: src/Commands.pm:1700
@@ -4232,7 +4288,9 @@ msgid ""
 "was received without Message-Id. Please refer to listmaster with\n"
 "complete URL of the concerned message\n"
 msgstr ""
-"Impossible de trouver le message à supprimer. Il a probablement été reçu sans l'entête Message-Id:. Merci de contacter le listmaster et de lui transmettre l'URL\n"
+"Impossible de trouver le message à supprimer. Il a probablement été reçu "
+"sans l'entête Message-Id:. Merci de contacter le listmaster et de lui "
+"transmettre l'URL\n"
 "du message à détruire.\n"
 
 #. (error.path)
@@ -4261,7 +4319,7 @@ msgid "Unsubscribe"
 msgstr "Désabonnement"
 
 # nlsref 6,71
-#: soap/sympasoap.pm:550 src/Commands.pm:937 wwsympa/wwsympa.fcgi:3029
+#: soap/sympasoap.pm:550 src/Commands.pm:937 wwsympa/wwsympa.fcgi:3040
 msgid "Unsubscribe from list %s"
 msgstr "Desabonnement de la liste %s"
 
@@ -4340,7 +4398,7 @@ msgid "User certificate belong to"
 msgstr "Certificat pour"
 
 # nlsref 16,81
-#: src/List.pm:1000
+#: src/List.pm:976
 msgid "User data source"
 msgstr "Source de données"
 
@@ -4379,29 +4437,34 @@ msgid "Visibility : %1"
 msgstr "Visibilité : %1"
 
 # nlsref 16,82
-#: src/List.pm:1006
+#: src/List.pm:982
 msgid "Visibility of the list"
 msgstr "Visibilité de la liste"
 
-#: wwsympa/tt2/help_editlist.tt2:79
+#: wwsympa/tt2/help_editlist.tt2:78
 msgid "Visibility of the subscriber with the REVIEW command."
 msgstr "Visibilité de l'abonné dans la liste des abonnés (commande REVIEW)."
 
 # nlsref 8,23
-#: src/List.pm:1753
-msgid "WARNING : %s %s failed to unsubscribe from %s because his address was\n"
+#: src/List.pm:1729
+msgid ""
+"WARNING : %s %s failed to unsubscribe from %s because his address was not "
+"found in the list\n"
+" (You may help this person)"
 msgstr ""
 "ATTENTION : %s %s n'est pas parvenu à se désabonner de la liste %s\n"
-"(Vous devriez peut-être aider cette personne)\n"
+"(Vous devriez peut-être aider cette personne)"
 
 # nlsref 8,28
-#: src/List.pm:1782
+#: src/List.pm:1758
 msgid "WARNING: bounce rate too high in list %s"
 msgstr "ATTENTION: taux de bounces trop eleve dans la liste %s"
 
 #: src/etc/tt2/helpfile.tt2:20
 msgid "WHICH                       * Displays which lists you are subscribed to"
-msgstr "WHICH                       * Recevoir la liste des listes auxquelles vous êtes abonné"
+msgstr ""
+"WHICH                       * Recevoir la liste des listes auxquelles vous "
+"êtes abonné"
 
 #: wwsympa/tt2/help.tt2:53
 msgid "WWSympa can remind you your password by email :"
@@ -4416,7 +4479,7 @@ msgid "We stopped delivery of this email."
 msgstr "Nous avons interrompu le transfert de ce message avant sa diffusion."
 
 # nlsref 16,83
-#: src/List.pm:1022
+#: src/List.pm:998
 msgid "Web archives"
 msgstr "Archives web"
 
@@ -4440,13 +4503,13 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:693 soap/sympasoap.pm:694 src/Commands.pm:1053
 #: src/Commands.pm:1054 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:2800 wwsympa/wwsympa.fcgi:2801
-#: wwsympa/wwsympa.fcgi:3392 wwsympa/wwsympa.fcgi:3393
+#: wwsympa/wwsympa.fcgi:2811 wwsympa/wwsympa.fcgi:2812
+#: wwsympa/wwsympa.fcgi:3403 wwsympa/wwsympa.fcgi:3404
 msgid "Welcome on list %s"
 msgstr "Bienvenue sur la liste %s"
 
 # nlsref 16,85
-#: src/List.pm:1028
+#: src/List.pm:1004
 msgid "Welcome return-path"
 msgstr "Return-path d'abonnement"
 
@@ -4465,70 +4528,74 @@ msgstr "Bienvenue dans la liste %1@%2"
 msgid "When authenticating ("
 msgstr "Lors de l'authentification ("
 
-#: wwsympa/tt2/help_editlist.tt2:50
+#: wwsympa/tt2/help_editlist.tt2:49
 msgid ""
 "When automatic task is executed on level 1 bouncers, a notification email "
 "can be send to listowner or listmaster."
-msgstr "Lorsque la tache est exécutée sur les abonnés en erreur de niveau 1, le propriétaire ou le listmaster peuvent être notifiés par email."
+msgstr ""
+"Lorsque la tache est exécutée sur les abonnés en erreur de niveau 1, le "
+"propriétaire ou le listmaster peuvent être notifiés par email."
 
-#: wwsympa/tt2/help_editlist.tt2:66
+#: wwsympa/tt2/help_editlist.tt2:65
 msgid ""
 "When automatic task is executed on level 2 bouncers, a notification email "
 "can be send to listowner or listmaster."
-msgstr "Lorsque la tache est exécutée sur les abonnés en erreur de niveau 2, le propriétaire ou le listmaster peuvent être notifiés par email."
+msgstr ""
+"Lorsque la tache est exécutée sur les abonnés en erreur de niveau 2, le "
+"propriétaire ou le listmaster peuvent être notifiés par email."
 
 # nlsref 16,2
-#: src/List.pm:279
+#: src/List.pm:278
 msgid "Who can add subscribers"
 msgstr "Qui peut ajouter des abonnés"
 
 # nlsref 16,21
-#: src/List.pm:434
+#: src/List.pm:433
 msgid "Who can delete subscribers"
 msgstr "Qui peut supprimer des abonnés"
 
 # nlsref 16,87
-#: src/List.pm:920
+#: src/List.pm:896
 msgid "Who can edit"
 msgstr "droit d'édition"
 
 # nlsref 16,54
-#: src/List.pm:802
+#: src/List.pm:778
 msgid "Who can invite people"
 msgstr "Qui peut inviter à s'abonner"
 
 # nlsref 16,67
-#: src/List.pm:894
+#: src/List.pm:870
 msgid "Who can review subscribers"
 msgstr "Qui a accès à la liste des abonnés"
 
 # nlsref 16,68
-#: src/List.pm:905
+#: src/List.pm:881
 msgid "Who can send messages"
 msgstr "Qui peut diffuser des messages"
 
 # nlsref 16,64
-#: src/List.pm:855
+#: src/List.pm:831
 msgid "Who can start a remind process"
 msgstr "Qui peut déclencher un processus de rappel des abonnements"
 
 # nlsref 16,73
-#: src/List.pm:957
+#: src/List.pm:933
 msgid "Who can subscribe to the list"
 msgstr "Qui peut s'abonner"
 
 # nlsref 16,76
-#: src/List.pm:974
+#: src/List.pm:950
 msgid "Who can unsubscribe"
 msgstr "Qui peut se désabonner"
 
 # nlsref 16,86
-#: src/List.pm:916
+#: src/List.pm:892
 msgid "Who can view"
 msgstr "droit de consultation"
 
 # nlsref 16,53
-#: src/List.pm:798
+#: src/List.pm:774
 msgid "Who can view list information"
 msgstr "Qui a accès aux informations sur la liste"
 
@@ -4609,7 +4676,14 @@ msgid ""
 "body is ignored if the Content-Type is different from text/plain but even "
 "with crasy mailer using multipart and text/html for any message, commands in "
 "the subject are recognized."
-msgstr "Il est possible de mettre plusieurs commandes dans chaque message. Les commandes doivent apparaître dans le corps du message et chaque ligne ne doit contenir qu'une seule commande. Sympa ignore le corps du message si celui-ci n'est pas de type Content-type: text/plain, mais même si vous êtes fanatique d'un agent de messagerie qui fabrique systématiquement des messages multipart ou text/html, les commandes placées dans le sujet du messages sont reconnues."
+msgstr ""
+"Il est possible de mettre plusieurs commandes dans chaque message. Les "
+"commandes doivent apparaître dans le corps du message et chaque ligne ne "
+"doit contenir qu'une seule commande. Sympa ignore le corps du message si "
+"celui-ci n'est pas de type Content-type: text/plain, mais même si vous êtes "
+"fanatique d'un agent de messagerie qui fabrique systématiquement des "
+"messages multipart ou text/html, les commandes placées dans le sujet du "
+"messages sont reconnues."
 
 # nlsref 6,58
 #: src/Commands.pm:2154
@@ -4629,7 +4703,7 @@ msgstr ""
 "initial"
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3030 wwsympa/wwsympa.fcgi:3498
+#: wwsympa/wwsympa.fcgi:3041 wwsympa/wwsympa.fcgi:3509
 msgid "You have been removed from list %s.\n"
 msgstr "Vous avez désabonné de la liste %s.\n"
 
@@ -4656,7 +4730,9 @@ msgstr "Vous avez édité un paramètre interdit : %1"
 msgid ""
 "You have forgotten your password, or you never had any password related to "
 "this server"
-msgstr "Vous avez oublié votre mot de passe ou vous n'avez pas encore de mot de passe sur ce serveur"
+msgstr ""
+"Vous avez oublié votre mot de passe ou vous n'avez pas encore de mot de "
+"passe sur ce serveur"
 
 #. (user.email)
 #: wwsympa/tt2/login.tt2:3
@@ -4691,11 +4767,13 @@ msgstr ""
 msgid "You need to login"
 msgstr "Vous devez vous identifier"
 
-#: wwsympa/tt2/loginbanner.tt2:11
+#: wwsympa/tt2/loginbanner.tt2:10
 msgid ""
 "You need to login to access your custom WWSympa environment or to perform a "
 "privileged operation (one that requires your email address)."
-msgstr "Vous devez vous identifier pour accéder à votre environnement personnalisé ou effectuer une opération privilégiée (requérant votre adresse email)."
+msgstr ""
+"Vous devez vous identifier pour accéder à votre environnement personnalisé "
+"ou effectuer une opération privilégiée (requérant votre adresse email)."
 
 # nlsref 6,16
 #: src/Commands.pm:1102 src/Commands.pm:1403 src/Commands.pm:594
@@ -4705,10 +4783,11 @@ msgid ""
 "email address. Please try subscribing using your canonical address.\n"
 msgstr ""
 "Vous avez très probablement validé votre abonnement en utilisant une\n"
-"adresse différente. Veuillez reformuler une demande d'abonnement en utilisant votre adresse canonique.\n"
+"adresse différente. Veuillez reformuler une demande d'abonnement en "
+"utilisant votre adresse canonique.\n"
 
 # nlsref 6,79
-#: src/List.pm:6753 src/List.pm:6760
+#: src/List.pm:6728 src/List.pm:6735
 msgid ""
 "You requested a subscription reminder to be sent\n"
 "to each subscriber of list %s\n"
@@ -4895,7 +4974,7 @@ msgid "Your list is created."
 msgstr "Votre liste est créée."
 
 # nlsref 4,12
-#: src/sympa.pl:990
+#: src/sympa.pl:991
 msgid ""
 "Your message could not be sent because its size \n"
 "was over the maximum size allowed on this list.\n"
@@ -4913,12 +4992,12 @@ msgstr ""
 "a été rejeté par %3, modérateur de la liste.\n"
 
 # nlsref 4,38
-#: src/List.pm:1889
+#: src/List.pm:1865
 msgid "Your message for list %s has been forwarded to editor(s)\n"
 msgstr "Votre message pour la liste %s a été transmis au(x) modérateur(s)\n"
 
 # nlsref 4,15
-#: src/Commands.pm:1753 src/sympa.pl:1063
+#: src/Commands.pm:1753 src/sympa.pl:1064
 msgid ""
 "Your message for list %s has been rejected.\n"
 "The message is thus sent back to you.\n"
@@ -4940,7 +5019,7 @@ msgid "Your message signature was succesfuly verified using S/MIME"
 msgstr "Signature S/MIME correctement vérifiée"
 
 # nlsref 4,11
-#: src/Commands.pm:1749 src/sympa.pl:1059 src/sympa.pl:986
+#: src/Commands.pm:1749 src/sympa.pl:1060 src/sympa.pl:987
 msgid "Your message to %s has been rejected"
 msgstr "Votre message pour %s a ete rejete"
 
@@ -4967,13 +5046,15 @@ msgstr "Votre mot de passe est : %1"
 msgid "Your password has been emailed to you"
 msgstr "Votre mot de passe vous a été transmis par email"
 
-#: wwsympa/tt2/loginbanner.tt2:6
+#. (init_email)
+#: wwsympa/tt2/loginbanner.tt2:5
 msgid ""
-"Your password has been sent to your email address [% init_email %].<BR>\n"
-"  Please check your e-mail box to provide your password below.\n"
+"Your password has been sent to your email address %1.<BR>Please check your e-"
+"mail box to provide your password below."
 msgstr ""
-"Votre mot de passe vous a été transmis à l'adresse email [% init_email %].<BR>\n"
-"Relevez votre boîte aux lettres pour renseigner votre mot de passe ci-dessous.\n"
+"Votre mot de passe vous a été transmis à l'adresse email %1<BR>"
+"Relevez votre boîte aux lettres pour renseigner votre mot de passe ci-"
+"dessous."
 
 #: wwsympa/tt2/error.tt2:160
 msgid ""
@@ -5000,7 +5081,10 @@ msgid ""
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
 "\n"
-msgstr "Votre demande d'abonnement (ou de désabonnement) a été envoyée aux propriétaires de la liste pour examen. Vous recevrez une notification lorsque ceux-ci vous auront abonné (ou désabonné) à la liste.\n"
+msgstr ""
+"Votre demande d'abonnement (ou de désabonnement) a été envoyée aux "
+"propriétaires de la liste pour examen. Vous recevrez une notification "
+"lorsque ceux-ci vous auront abonné (ou désabonné) à la liste.\n"
 
 # nlsref 6,25
 #: src/Commands.pm:625 src/Commands.pm:883
@@ -5011,20 +5095,16 @@ msgid ""
 "\n"
 msgstr ""
 "Votre demande d'abonnement (ou de désabonnement) a été envoyée aux "
-"propriétaires de la liste pour examen. Vous recevrez une notification lorsque ceux-ci vous auront abonné (ou désabonné) à la liste.\n"
+"propriétaires de la liste pour examen. Vous recevrez une notification "
+"lorsque ceux-ci vous auront abonné (ou désabonné) à la liste.\n"
 
 #. (user.email)
-#: src/etc/tt2/welcome.tt2:31
+#: src/etc/tt2/welcome.tt2:11 src/etc/tt2/welcome.tt2:31
 msgid "Your subscription email is %1"
 msgstr "Votre adresse d'abonné est : %1"
 
-#. (user.email)
-#: src/etc/tt2/welcome.tt2:11
-msgid "Your subscription email is %3"
-msgstr "Votre adresse d'abonné est %1"
-
 # nlsref 6,18
-#: src/Commands.pm:1475 wwsympa/wwsympa.fcgi:3497
+#: src/Commands.pm:1475 wwsympa/wwsympa.fcgi:3508
 msgid "Your subscription to list %s has been removed."
 msgstr "Vous avez été retiré de la liste %s"
 
@@ -5104,7 +5184,8 @@ msgstr ""
 "\n"
 "Une commande EXPIRE est en cours d'exécution pour la liste %s.\n"
 "Elle a été exécutée par le propriétaire %s (%s)\n"
-"Un seul processus 'expire' peut être déclenché à la fois pour une même liste.\n"
+"Un seul processus 'expire' peut être déclenché à la fois pour une même "
+"liste.\n"
 "L'expiration en cours concerne les personnes abonnées depuis plus \n"
 "de %d jours n'ayant pas confirmé leur abonnement. L'expiration \n"
 "s'arrêtera dans %d jour(s) (%s).\n"
@@ -5127,7 +5208,7 @@ msgstr ""
 "DEL.\n"
 
 # nlsref 8,3
-#: src/List.pm:1764
+#: src/List.pm:1740
 msgid ""
 "\n"
 "Dear owner of list %s,\n"
@@ -5180,14 +5261,6 @@ msgstr ""
 " - contenir au moins 20 mots\n"
 " - se terminer par la commande QUIT\n"
 
-#: src/PlainDigest.pm:323
-msgid ""
-"\n"
-"[ ** Unable to process HTML message part * *]\n"
-msgstr ""
-"\n"
-"[ ** impossible de traiter la partie du messageau format HTML * *]\n"
-
 #: src/PlainDigest.pm:334
 msgid ""
 "\n"
@@ -5195,6 +5268,14 @@ msgid ""
 msgstr ""
 "\n"
 "[ ** impossible de traiter la partie du messageau format HTML **]\n"
+
+#: src/PlainDigest.pm:323
+msgid ""
+"\n"
+"[ ** Unable to process HTML message part **]\n"
+msgstr ""
+"\n"
+"[ ** impossible de traiter la partie du messageau format HTML * *]\n"
 
 # nlsref 6,73
 #: src/Commands.pm:2353
@@ -5222,22 +5303,17 @@ msgstr ""
 "Voici les listes dont vous êtes propriétaire :\n"
 "\n"
 
-# nlsref 16,210
-#: src/List.pm:514
-msgid "a listname or list address or *@<domain> or *@*"
-msgstr "une adresse"
-
 #: wwsympa/tt2/d_read.tt2:11 wwsympa/tt2/d_read.tt2:138
 #: wwsympa/tt2/d_read.tt2:215
 msgid "access"
 msgstr "accès"
 
 # nlsref 16,6
-#: src/List.pm:1010 src/List.pm:293
+#: src/List.pm:292 src/List.pm:986
 msgid "access right"
 msgstr "droit d'accès"
 
-#: src/List.pm:343 src/List.pm:364
+#: src/List.pm:342 src/List.pm:363
 msgid "action for this population"
 msgstr "action pour cette population"
 
@@ -5261,11 +5337,6 @@ msgstr "ajout par le proprio sans authentification (notification)"
 msgid "admin"
 msgstr "admin"
 
-# nlsref 16,211
-#: src/List.pm:520
-msgid "admin role selection"
-msgstr "dsf"
-
 #: wwsympa/tt2/arcsearch_form.tt2:25
 msgid "all of these words"
 msgstr "Tout ces mots"
@@ -5274,10 +5345,12 @@ msgstr "Tout ces mots"
 msgid ""
 "already exist(s), do you want to confirm the install and erase the old file"
 "(s) or cancel the install ?"
-msgstr "Le fichier existe déja ; voulez-vous vraimentr écraser l'ancienne version ou annuler l'opération ?"
+msgstr ""
+"Le fichier existe déja ; voulez-vous vraimentr écraser l'ancienne version ou "
+"annuler l'opération ?"
 
 # nlsref 16,27
-#: wwsympa/tt2/help_editlist.tt2:137
+#: wwsympa/tt2/help_editlist.tt2:136
 msgid "an_email_address"
 msgstr "adresse_email"
 
@@ -5350,7 +5423,7 @@ msgid "case sensitive"
 msgstr "distinction majuscules/minuscules activée"
 
 # nlsref 16,208
-#: src/List.pm:729
+#: src/List.pm:705
 msgid "certificate for authentication by remote Sympa"
 msgstr "Certificat pour authentification de la connection"
 
@@ -5380,12 +5453,12 @@ msgid "conceal unless user is logged in"
 msgstr "liste visible pour les utilisateurs identifiés uniquement"
 
 # nlsref 16,94
-#: src/List.pm:760
+#: src/List.pm:736
 msgid "connection options"
 msgstr "paramètres de connexion"
 
 # nlsref 16,98
-#: src/List.pm:585
+#: src/List.pm:561
 msgid "connection timeout"
 msgstr "délai de connexion"
 
@@ -5395,17 +5468,17 @@ msgid "crypted message for list %1@%2"
 msgstr "Message confidentiel de la liste %1@%2"
 
 # nlsref 16,48
-#: src/List.pm:756
+#: src/List.pm:732
 msgid "database name"
 msgstr "nom de la base"
 
 # nlsref 16,46
-#: src/List.pm:746
+#: src/List.pm:722
 msgid "database type"
 msgstr "type de la base"
 
 # nlsref 16,23
-#: src/List.pm:441
+#: src/List.pm:440
 msgid "days"
 msgstr "jours"
 
@@ -5455,17 +5528,13 @@ msgstr ""
 msgid "editor rejection message"
 msgstr "message de rejet par le modérateur"
 
-#: wwsympa/tt2/reviewbouncing.tt2:62
-msgid "email"
-msgstr "Email"
-
 # nlsref 16,27
-#: src/List.pm:464 src/List.pm:820
+#: src/List.pm:463 src/List.pm:796
 msgid "email address"
 msgstr "adresse email"
 
 # nlsref 16,205
-#: src/List.pm:936 src/List.pm:941
+#: src/List.pm:912 src/List.pm:917
 msgid "email address protection method"
 msgstr "methode de protection des adresses (contre le spam)"
 
@@ -5478,7 +5547,7 @@ msgid "email2@dom2 Name2"
 msgstr "email2@dom2 Nom 2"
 
 # nlsref 14,2
-#: wwsympa/wwsympa.fcgi:6278 wwsympa/wwsympa.fcgi:797
+#: wwsympa/wwsympa.fcgi:6288 wwsympa/wwsympa.fcgi:797
 msgid "english"
 msgstr "français"
 
@@ -5487,52 +5556,52 @@ msgid "entire word"
 msgstr "partie de mot"
 
 # nlsref 16,148
-#: src/List.pm:765
+#: src/List.pm:741
 msgid "environment variables for database connexion"
 msgstr "variable d'environnement pour la connexion"
 
 # nlsref 16,42
-#: src/List.pm:569
+#: src/List.pm:545
 msgid "extracted attribute"
 msgstr "attribut à extraire"
 
 # nlsref 16,41
-#: src/List.pm:563
+#: src/List.pm:539
 msgid "filter"
 msgstr "filtre"
 
 # nlsref 16,198
-#: src/List.pm:647
+#: src/List.pm:623
 msgid "first-level connection timeout"
 msgstr "délai de connexion (1er niveau)"
 
 # nlsref 16,142
-#: src/List.pm:631
+#: src/List.pm:607
 msgid "first-level extracted attribute"
 msgstr "attribut à extraire (1er niveau)"
 
 # nlsref 16,141
-#: src/List.pm:626
+#: src/List.pm:602
 msgid "first-level filter"
 msgstr "filtre (1er niveau)"
 
 # nlsref 16,201
-#: src/List.pm:653
+#: src/List.pm:629
 msgid "first-level regular expression"
 msgstr "expression régulière (1er niveau)"
 
 # nlsref 16,197
-#: src/List.pm:641
+#: src/List.pm:617
 msgid "first-level search scope"
 msgstr "portée de la recherche (1er niveau)"
 
 # nlsref 16,143
-#: src/List.pm:636
+#: src/List.pm:612
 msgid "first-level selection"
 msgstr "sélection (1er niveau)"
 
 # nlsref 16,140
-#: src/List.pm:620
+#: src/List.pm:596
 msgid "first-level suffix"
 msgstr "suffixe (1er niveau)"
 
@@ -5545,7 +5614,7 @@ msgid "for anyone without authentication"
 msgstr "ouvert a tous sans authentification"
 
 # nlsref 16,5
-#: src/List.pm:288
+#: src/List.pm:287
 msgid "frequency"
 msgstr "périodicité"
 
@@ -5559,7 +5628,7 @@ msgid "global remind message"
 msgstr "message de rappel global"
 
 # nlsref 16,9
-#: src/List.pm:327
+#: src/List.pm:326
 msgid "halt rate"
 msgstr "seuil d'interruption"
 
@@ -5573,7 +5642,7 @@ msgid "homepage"
 msgstr "La page d'accueil de la liste"
 
 # nlsref 16,24
-#: src/List.pm:447
+#: src/List.pm:446
 msgid "hour"
 msgstr "heure"
 
@@ -5682,7 +5751,7 @@ msgid "message header"
 msgstr "attachement de début de message"
 
 # nlsref 16,25
-#: src/List.pm:453
+#: src/List.pm:452
 msgid "minute"
 msgstr "minute"
 
@@ -5691,11 +5760,15 @@ msgid "moderate"
 msgstr "Modérer"
 
 #: src/etc/scenari/d_edit.editor:1
+msgid "moderated for subscribers"
+msgstr "modérée pour les abonnés"
+
+#: src/etc/scenari/d_edit.editor.~1.2.~:1
 msgid "moderated to subscribers"
 msgstr "modérée pour les abonnés"
 
 # nlsref 16,29
-#: src/List.pm:474 src/List.pm:830
+#: src/List.pm:473 src/List.pm:806
 msgid "name"
 msgstr "nom"
 
@@ -5724,7 +5797,7 @@ msgstr "suivant"
 msgid "no conceal"
 msgstr "liste visible"
 
-#: wwsympa/tt2/help_editlist.tt2:155
+#: wwsympa/tt2/help_editlist.tt2:154
 msgid "no protection against spammer."
 msgstr "pas de protection contre le spam"
 
@@ -5732,7 +5805,7 @@ msgstr "pas de protection contre le spam"
 msgid "nobody can review"
 msgstr "pour personne"
 
-#: src/List.pm:348 src/List.pm:369
+#: src/List.pm:347 src/List.pm:368
 msgid "notification"
 msgstr "notification"
 
@@ -5758,13 +5831,9 @@ msgid "only owner (and listmaster)"
 msgstr "proprio de list seulement (et listmaster)"
 
 # nlsref 16,92
-#: src/List.pm:880
+#: src/List.pm:856
 msgid "other email address"
 msgstr "autre adresse email"
-
-#: src/etc/scenari/unsubscribe.owner.~1.11.~:1
-msgid "owner approval"
-msgstr "soumis à autorisation du proprio"
 
 #: src/etc/scenari/subscribe.owner:1 src/etc/scenari/unsubscribe.owner:1
 msgid "owners approval"
@@ -5795,17 +5864,17 @@ msgid "password: %1"
 msgstr "%1"
 
 # nlsref 16,30
-#: src/List.pm:479
+#: src/List.pm:478
 msgid "private information"
 msgstr "informations privées"
 
 # nlsref 16,61
-#: src/List.pm:835
+#: src/List.pm:811
 msgid "private informations"
 msgstr "informations privées"
 
 # nlsref 16,62
-#: src/List.pm:840
+#: src/List.pm:816
 msgid "profile"
 msgstr "profil"
 
@@ -5840,25 +5909,12 @@ msgid "quiet"
 msgstr "sans prévenir"
 
 # nlsref 16,203
-#: src/List.pm:1017 src/List.pm:927
+#: src/List.pm:903 src/List.pm:993
 msgid "quota"
 msgstr "quota"
 
-#: wwsympa/tt2/help_editlist.tt2:20
-msgid ""
-"reception <i>modelist</i> (Default value: reception mail,notice,digest,"
-"digestplain,summary,nomail)<BR><BR>\n"
-"              <i>modelist</i> is a list of modes (mail, notice, digest, "
-"digestplain, summary, nomail), separated by commas. Only these modes will be "
-"allowed for the subscribers of this list. If a subscriber has a reception "
-"mode not in the list, sympa uses the mode specified in the "
-"default_user_options paragraph.\n"
-msgstr ""
-"xx\n"
-"xx\n"
-
 # nlsref 16,19
-#: src/List.pm:309 src/List.pm:421 src/List.pm:469 src/List.pm:825
+#: src/List.pm:308 src/List.pm:420 src/List.pm:468 src/List.pm:801
 msgid "reception mode"
 msgstr "mode de réception"
 
@@ -5868,32 +5924,32 @@ msgid "remind message"
 msgstr "message de rappel individualisé"
 
 # nlsref 16,36
-#: src/List.pm:537 src/List.pm:600 src/List.pm:712 src/List.pm:751
+#: src/List.pm:513 src/List.pm:576 src/List.pm:688 src/List.pm:727
 msgid "remote host"
 msgstr "serveur distant"
 
 # nlsref 16,206
-#: src/List.pm:741
+#: src/List.pm:717
 msgid "remote list inclusion"
 msgstr "inclusion de liste distante"
 
 # nlsref 16,39
-#: src/List.pm:553 src/List.pm:616 src/List.pm:773
+#: src/List.pm:529 src/List.pm:592 src/List.pm:749
 msgid "remote password"
 msgstr "mot de passe"
 
 # nlsref 16,207
-#: src/List.pm:724
+#: src/List.pm:700
 msgid "remote path of sympa list dump"
 msgstr "path du dump de la liste distante"
 
 # nlsref 16,37
-#: src/List.pm:543 src/List.pm:606 src/List.pm:718
+#: src/List.pm:519 src/List.pm:582 src/List.pm:694
 msgid "remote port"
 msgstr "port"
 
 # nlsref 16,38
-#: src/List.pm:548 src/List.pm:611 src/List.pm:769
+#: src/List.pm:524 src/List.pm:587 src/List.pm:745
 msgid "remote user"
 msgstr "utilisateur"
 
@@ -5914,13 +5970,9 @@ msgid "requires authentication then owner approval"
 msgstr "sousmis a authentification puis accord du proprio"
 
 # nlsref 16,93
-#: src/List.pm:885
+#: src/List.pm:861
 msgid "respect of existing header field"
 msgstr "respect du champ existant"
-
-#: src/etc/scenari/remind.owner.~1.8.~:1
-msgid "restricted to list owner"
-msgstr "restreint au proprio de list"
 
 #: src/etc/scenari/d_edit.owner:1 src/etc/scenari/d_read.owner:1
 #: src/etc/scenari/edit_list.owner:1 src/etc/scenari/remind.owner:1
@@ -5973,42 +6025,42 @@ msgid "results by page"
 msgstr "résultats par page"
 
 # nlsref 16,97
-#: src/List.pm:579
+#: src/List.pm:555
 msgid "search scope"
 msgstr "portée de la recherche"
 
 # nlsref 16,200
-#: src/List.pm:685
+#: src/List.pm:661
 msgid "second-level connection timeout"
 msgstr "élai de connexion (2nd niveau)"
 
 # nlsref 16,146
-#: src/List.pm:669
+#: src/List.pm:645
 msgid "second-level extracted attribute"
 msgstr "attribut à extraire (2nd niveau)"
 
 # nlsref 16,145
-#: src/List.pm:663
+#: src/List.pm:639
 msgid "second-level filter template"
 msgstr "filtre (2nd niveau)"
 
 # nlsref 16,202
-#: src/List.pm:691
+#: src/List.pm:667
 msgid "second-level regular expression"
 msgstr "expression régulière (1nd niveau)"
 
 # nlsref 16,199
-#: src/List.pm:679
+#: src/List.pm:655
 msgid "second-level search scope"
 msgstr "portée de la recherche (2nd niveau)"
 
 # nlsref 16,147
-#: src/List.pm:674
+#: src/List.pm:650
 msgid "second-level selection"
 msgstr "sélection (2nd niveau)"
 
 # nlsref 16,144
-#: src/List.pm:657
+#: src/List.pm:633
 msgid "second-level suffix template"
 msgstr "suffixe (2nd niveau)"
 
@@ -6017,7 +6069,7 @@ msgid "security info"
 msgstr "sécurité"
 
 # nlsref 16,43
-#: src/List.pm:574
+#: src/List.pm:550
 msgid "selection (if multiple)"
 msgstr "sélection (si multiple)"
 
@@ -6040,8 +6092,7 @@ msgid "session"
 msgstr "la session"
 
 # nlsref 16,209
-#: src/List.pm:526 src/List.pm:589 src/List.pm:695 src/List.pm:734
-#: src/List.pm:787
+#: src/List.pm:565 src/List.pm:671 src/List.pm:710 src/List.pm:763
 msgid "short name for this source"
 msgstr "nom court pour cette source"
 
@@ -6072,7 +6123,7 @@ msgid "subscription request confirmed"
 msgstr "demande d'abonnement après confirmation"
 
 # nlsref 16,40
-#: src/List.pm:557
+#: src/List.pm:533
 msgid "suffix"
 msgstr "suffixe"
 
@@ -6085,15 +6136,18 @@ msgstr "résumé des messages"
 msgid "tag this mail for deletion"
 msgstr "marquer ce message pour suppression"
 
-#: wwsympa/tt2/help_editlist.tt2:154
+#: wwsympa/tt2/help_editlist.tt2:153
 msgid "the @ char is replaced by the string \" AT \"."
 msgstr "le caractère @ est remplacé par la chaîne \"AT\"."
 
-#: wwsympa/tt2/help_editlist.tt2:153
+#: wwsympa/tt2/help_editlist.tt2:152
 msgid ""
 "the address is hidden using a javascript. User who enable javascript can see "
 "a nice mailto address where others have nothing."
-msgstr "l'adresse email est dissimulée en utilisant javascript. L'utilisateur ayant activé javascript dans son navigateur voit les adresses email affichées normalement."
+msgstr ""
+"l'adresse email est dissimulée en utilisant javascript. L'utilisateur ayant "
+"activé javascript dans son navigateur voit les adresses email affichées "
+"normalement."
 
 #: wwsympa/tt2/create_list_request.tt2:11
 msgid "the list name ; be careful, not its address !"
@@ -6103,7 +6157,7 @@ msgstr "Attention, le nom pas l'adresse !"
 msgid "this sentence"
 msgstr "Cette phrase"
 
-#: src/List.pm:338 src/List.pm:359
+#: src/List.pm:337 src/List.pm:358
 msgid "threshold"
 msgstr "seuil"
 
@@ -6128,13 +6182,13 @@ msgstr "message de désabonnement"
 #: src/Commands.pm:1751 src/etc/tt2/digest.tt2:9
 #: src/etc/tt2/digest_plain.tt2:5 src/etc/tt2/urlized_part.tt2:1
 #: src/mail.pm:127 src/mail.pm:228 src/mail.pm:77 src/mail.pm:89
-#: src/sympa.pl:1061 src/sympa.pl:1311 src/sympa.pl:777 src/sympa.pl:988
+#: src/sympa.pl:1062 src/sympa.pl:1312 src/sympa.pl:778 src/sympa.pl:989
 #: src/tools.pl:130 src/tt2native.pl:27 wwsympa/tt2/main.tt2:6
 msgid "us-ascii"
 msgstr "iso-8859-1"
 
 # nlsref 16,91
-#: src/List.pm:875 wwsympa/tt2/help_editlist.tt2:133
+#: src/List.pm:851 wwsympa/tt2/help_editlist.tt2:132
 msgid "value"
 msgstr "valeur"
 
@@ -6148,12 +6202,12 @@ msgid "virus infection message"
 msgstr "rejet d'un message contenant un virus"
 
 # nlsref 16,20
-#: src/List.pm:426
+#: src/List.pm:425
 msgid "visibility"
 msgstr "visibilité"
 
 # nlsref 16,8
-#: src/List.pm:320
+#: src/List.pm:319
 msgid "warn rate"
 msgstr "seuil d'alerte"
 
@@ -6181,6 +6235,26 @@ msgstr "votre adresse électronique : %1"
 #: src/etc/tt2/sendpasswd.tt2:30
 msgid "your password : %1"
 msgstr "votre mot de passe         : %1"
+
+#~ msgid "Your subscription email is %3"
+#~ msgstr "Votre adresse d'abonné est %1"
+
+# nlsref 16,210
+#~ msgid "a listname or list address or *@<domain> or *@*"
+#~ msgstr "une adresse"
+
+# nlsref 16,211
+#~ msgid "admin role selection"
+#~ msgstr "dsf"
+
+#~ msgid "email"
+#~ msgstr "Email"
+
+#~ msgid "owner approval"
+#~ msgstr "soumis à autorisation du proprio"
+
+#~ msgid "restricted to list owner"
+#~ msgstr "restreint au proprio de list"
 
 #~ msgid "Do you want to cancel the upload?"
 #~ msgstr "Voulez-vous annuler le chargement ?"
