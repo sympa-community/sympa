@@ -394,7 +394,6 @@ while ($query = &new_loop()) {
 	&POSIX::setlocale(&POSIX::LC_ALL, Msg(14, 1, 'en_US'));
 
 	unless ($comm{$action}) {
-	    $param->{'error'}{'action'} = $action;
 	    &message('unknown_action');
 	    &wwslog('info','unknown action %s', $action);
 	    last;
@@ -642,8 +641,16 @@ sub wwslog {
 
 ## Return a message to the client
 sub message {
-    my ($msg) = pop;
+    my ($msg, $data) = @_;
+    
+    $data ||= {};
 
+    $data->{'action'} = $param->{'action'};
+    $data->{'msg'} = $msg;
+
+    push @{$param->{'errors'}}, $data;
+    
+    ## For compatibility
     $param->{'error_msg'} ||= $msg;
 
 }
@@ -773,8 +780,7 @@ sub check_param {
 
    if ($in{'list'}) {
        unless ($list = new List ($in{'list'})) {
-	   $param->{'error'}{'list'} = $in{'list'};
-	   &message('unknown_list');
+	   &message('unknown_list', {'list' => $in{'list'}} );
 	   &wwslog('info','check_param: unknown list %s', $in{'list'});
 	   return undef;
        }
@@ -918,8 +924,7 @@ sub do_login {
     my $next_action;
     
     if ($param->{'user'}{'email'}) {
-	$param->{'error'}{'email'} = $param->{'user'}{'email'};
-	&message('already_login');
+	&message('already_login', {'email' => $param->{'user'}{'email'}});
 	&wwslog('info','do_login: user %s already logged in', $param->{'user'}{'email'});
 	return undef;
     }
@@ -931,8 +936,7 @@ sub do_login {
     }
     
     unless (&wwslib::valid_email($in{'email'})) {
-	$param->{'error'}{'email'} = $in{'email'};
-	&message('incorrect_email');
+	&message('incorrect_email', {'email' => $in{'email'}});
 	&wwslog('info','do_login: incorrect email %s', $in{'email'});
 	return undef;
     }    
@@ -954,8 +958,7 @@ sub do_login {
     }
     
     unless ($user->{'password'}) {
-	$param->{'error'}{'email'} = $in{'email'};
-	&message('passwd_not_found');
+	&message('passwd_not_found', {'email' => $in{'email'}});
 	&wwslog('info','do_login: password for user %s not found', $in{'email'});
 	$param->{'init_email'} = $in{'email'};
 	return 'loginrequest';
@@ -1000,8 +1003,7 @@ sub do_loginrequest {
     &wwslog('debug','do_loginrequest');
     
     if ($param->{'user'}{'email'}) {
-	$param->{'error'}{'email'} = $param->{'user'}{'email'};
-	&message('already_login');
+	&message('already_login', {'email' => $param->{'user'}{'email'}});
 	&wwslog('info','do_loginrequest: already logged in as %s', $param->{'user'}{'email'});
 	return undef;
     }
@@ -1072,8 +1074,7 @@ sub do_remindpasswd {
     &wwslog('debug', 'do_remindpasswd(%s)', $in{'email'}); 
     
     if ($in{'email'} and ! &wwslib::valid_email($in{'email'})) {
-	$param->{'error'}{'email'} = $in{'email'};
-	&message('incorrect_email');
+	&message('incorrect_email', {'email' => $in{'email'}});
 	&wwslog('info','do_remindpasswd: incorrect email %s', $in{'email'});
 	return undef;
     }
@@ -1098,8 +1099,7 @@ sub do_sendpasswd {
     }
     
     unless (&wwslib::valid_email($in{'email'})) {
-	$param->{'error'}{'email'} = $in{'email'};
-	&message('incorrect_email');
+	&message('incorrect_email', {'email' => $in{'email'}});
 	&wwslog('info','do_sendpasswd: incorrect email %s', $in{'email'});
 	return 'remindpasswd';
     }
@@ -1267,8 +1267,7 @@ sub do_info {
     &wwslog('debug', 'do_info');
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_info: no list');
 	return undef;
     }
@@ -1280,7 +1279,6 @@ sub do_info {
 					 'remote_host' => $param->{'remote_host'},
 					 'remote_addr' => $param->{'remote_addr'}});
     unless ($action =~ /do_it/) {
-	$param->{'error'}{'action'} = 'info';
 	&message('may_not');
 	&wwslog('info','do_info: may not view info');
 	return undef;
@@ -1302,8 +1300,7 @@ sub do_info {
 	my ($s, $m);
 
 	unless($s = $list->get_subscriber($param->{'user'}{'email'})) {
-	    $param->{'error'}{'email'} = $param->{'user'}{'email'};
-	    &message('subscriber_not_found');
+	    &message('subscriber_not_found', {'email' => $param->{'user'}{'email'}});
 	    &wwslog('info', 'do_info: subscriber %s not found', $param->{'user'}{'email'});
 	    return undef;
 	}
@@ -1345,8 +1342,7 @@ sub do_review {
     my $sortby = $in{'sortby'} || 'email';
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_review: no list');
 	return undef;
     }
@@ -1358,7 +1354,6 @@ sub do_review {
 					 'remote_host' => $param->{'remote_host'},
 					 'remote_addr' => $param->{'remote_addr'}});
     unless ($action =~ /do_it/) {
-	$param->{'error'}{'action'} = 'review';
 	&message('may_not');
 	&wwslog('info','do_review: may not review');
 	return undef;
@@ -1377,8 +1372,7 @@ sub do_review {
 	if ($param->{'total'} % $size);
 
     if ($param->{'page'} > $param->{'total_page'}) {
-	$param->{'error'}{'page'} = $param->{'page'};
-	&message('no_page');
+	&message('no_page', {'page' => $param->{'page'}});
 	&wwslog('info','do_review: no page %d', $param->{'page'});
 	return undef;
     }
@@ -1439,8 +1433,7 @@ sub do_search {
     &wwslog('debug', 'do_search(%s)', $in{'filter'});
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_search: no list');
 	return undef;
     }
@@ -1460,7 +1453,6 @@ sub do_search {
 					 'remote_addr' => $param->{'remote_addr'}});
 
     unless ($action =~ /do_it/) {
-	$param->{'error'}{'action'} = 'review';
 	&message('may_not');
 	&wwslog('info','do_search: may not review');
 	return undef;
@@ -1571,8 +1563,7 @@ sub do_set {
     my $email;
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_set: no list');
 	return undef;
     }
@@ -1585,7 +1576,6 @@ sub do_set {
     
     if ($in{'email'}) {
     	unless ($param->{'is_owner'}) {
-	    $param->{'error'}{'action'} = 'set';
 	    &message('may_not');
 	    &wwslog('info','do_set: not owner');
 	    return undef;
@@ -1640,7 +1630,6 @@ sub do_set {
 	return undef;
     }
     
-    $param->{'error'}{'action'} = 'set';
     &message('performed');
     
     return 'info';
@@ -1695,22 +1684,19 @@ sub do_viewfile {
     &wwslog('debug', 'do_viewfile');
 
     unless ($in{'file'}) {
-	$param->{'error'}{'argument'} = 'file';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'file'});
 	&wwslog('info','do_viewfile: no file');
 	return undef;
     }
 
     unless (defined $wwslib::filenames{$in{'file'}}) {
-	$param->{'error'}{'file'} = $in{'file'};
-	&message('file_not_editable');
+	&message('file_not_editable', {'file' => $in{'file'}});
 	&wwslog('info','do_viewfile: file %s not editable', $in{'file'});
 	return undef;
     }
 
    unless ($param->{'list'}) {
-       $param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_viewfile: no list');
 	return undef;
     }
@@ -1734,8 +1720,7 @@ sub do_subscribe {
     &wwslog('debug', 'do_subscribe(%s)', $in{'email'});
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_subscribe: no list');
 	return undef;
     }
@@ -1765,8 +1750,7 @@ sub do_subscribe {
     }
 
     if ($param->{'is_subscriber'} ) {
-	$param->{'error'}{'list'} = $list->{'name'};
-	&message('already_subscriber');
+	&message('already_subscriber', {'list' => $list->{'name'}});
 	&wwslog('info','do_subscribe: %s already subscriber', $param->{'user'}{'email'});
 	return undef;
     }
@@ -1778,7 +1762,6 @@ sub do_subscribe {
 					'remote_addr' => $param->{'remote_addr'}});
 
     if ($sub_is eq 'closed') {
-	$param->{'error'}{'action'} = 'subscribe';
        	&message('may_not');
 	&wwslog('info', 'do_subscribe: subscribe closed');
 	return undef;
@@ -1819,7 +1802,6 @@ sub do_subscribe {
 	}
     }
     
-    $param->{'error'}{'action'} = 'subscribe';
     &message('performed');
 
 #    return 'suboptions';
@@ -1831,8 +1813,7 @@ sub do_suboptions {
     &wwslog('debug', 'do_suboptions()');
     
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_suboptions: no list');
 	return undef;
     }
@@ -1844,8 +1825,7 @@ sub do_suboptions {
     }
 
     unless($list->is_user($param->{'user'}{'email'})) {
-	$param->{'error'}{'list'} = $list->{'name'};
-	&message('not_subscriber');
+	&message('not_subscriber', {'list' => $list->{'name'}});
 	&wwslog('info','do_suboptions: %s not subscribed to %s',$param->{'user'}{'email'}, $param->{'list'} );
 	return undef;
     }
@@ -1853,8 +1833,7 @@ sub do_suboptions {
     my ($s, $m);
     
     unless($s = $list->get_subscriber($param->{'user'}{'email'})) {
-	$param->{'error'}{'email'} = $param->{'user'}{'email'};
-	&message('subscriber_not_found');
+	&message('subscriber_not_found', {'email' => $param->{'user'}{'email'}});
 	&wwslog('info', 'do_info: subscriber %s not found', $param->{'user'}{'email'});
 	return undef;
     }
@@ -1893,8 +1872,7 @@ sub do_subrequest {
     &wwslog('debug', 'do_subrequest(%s)', $in{'email'});
     
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_subrequest: no list');
 	return undef;
     }
@@ -1914,8 +1892,7 @@ sub do_subrequest {
 
 	## Subscriber ?
 	if ($param->{'is_subscriber'}) {
-	    $param->{'error'}{'list'} = $list->{'name'};
-	    &message('already_subscriber');
+	    &message('already_subscriber', {'list' => $list->{'name'}});
 	    &wwslog('info','do_subscribe: %s already subscriber', $param->{'user'}{'email'});
 	    return undef;
 	}
@@ -1960,8 +1937,7 @@ sub do_signoff {
     &wwslog('debug', 'do_signoff');
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_signoff: no list');
 	return undef;
     }
@@ -1993,8 +1969,7 @@ sub do_signoff {
     }
     
     unless ($list->is_user($param->{'user'}{'email'})) {
-	$param->{'error'}{'list'} = $list->{'name'};
-	&message('not_subscriber');
+	&message('not_subscriber', {'list' => $list->{'name'}});
 	&wwslog('info','do_signoff: %s not subscribed to %s',$param->{'user'}{'email'}, $param->{'list'} );
 	return undef;
     }
@@ -2008,7 +1983,6 @@ sub do_signoff {
     $param->{'may_signoff'} = 1 if ($sig_is =~ /do_it|owner/);
     
     if ($sig_is =~ /reject/) {
-	$param->{'error'}{'action'} = 'unsubscribe';
 	&message('may_not');
 	&wwslog('info', 'do_signoff: %s may not signoff from %s'
 		, $param->{'user'}{'email'}, $param->{'list'});
@@ -2038,7 +2012,6 @@ sub do_signoff {
 	$list->send_file('bye', $param->{'user'}{'email'}, \%context);
     }
 
-    $param->{'error'}{'action'} = 'unsubscribe';
     &message('performed');
     $param->{'is_subscriber'} = 0;
     $param->{'may_signoff'} = 0;
@@ -2051,8 +2024,7 @@ sub do_sigrequest {
     &wwslog('debug', 'do_sigrequest(%s)', $in{'email'});
     
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_sigrequest: no list');
 	return undef;
     }
@@ -2153,7 +2125,6 @@ sub do_setpasswd {
 	
     $param->{'user'}{'password'} =  $in{'newpasswd1'};
 
-    $param->{'error'}{'action'} = 'setpassword';
     &message('performed');
 
     if ($in{'previous_action'}) {
@@ -2169,8 +2140,7 @@ sub do_admin {
     &wwslog('debug', 'do_admin');
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_admin: no list');
 	return undef;
     }
@@ -2184,7 +2154,6 @@ sub do_admin {
     }
  
     unless ($param->{'is_owner'} or $param->{'is_editor'}) {
-	$param->{'error'}{'action'} = 'admin';
 	&message('may_not');
 	&wwslog('info','do_admin: %s not priv user', $param->{'user'}{'email'});
 	return undef;
@@ -2218,7 +2187,6 @@ sub do_serveradmin {
     }
  
     unless ($param->{'is_listmaster'}) {
-	$param->{'error'}{'action'} = 'serveradmin';
 	&message('may_not');
 	&wwslog('info','do_admin: %s not listmaster', $param->{'user'}{'email'});
 	return undef;
@@ -2247,8 +2215,7 @@ sub do_add_request {
     &wwslog('debug', 'do_add_request(%s)', $in{'email'});
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_add_request: no list');
 	return undef;
     }
@@ -2269,7 +2236,6 @@ sub do_add_request {
 					 'remote_addr' => $param->{'remote_addr'}});
 
     unless ($add_is =~ /do_it/) {
-	$param->{'error'}{'action'} = 'add';
 	&message('may_not');
 	&wwslog('info','do_add_request: %s may not add', $param->{'user'}{'email'});
 	return undef;
@@ -2285,8 +2251,7 @@ sub do_add {
     my %user;
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_add: no list');
 	return undef;
     }
@@ -2305,7 +2270,6 @@ sub do_add {
 					 'remote_addr' => $param->{'remote_addr'}});
 
     unless ($add_is =~ /do_it/) {
-	$param->{'error'}{'action'} = 'add';
 	&message('may_not');
 	&wwslog('info','do_add: %s may not add', $param->{'user'}{'email'});
 	return undef;
@@ -2325,21 +2289,20 @@ sub do_add {
 	return undef;
     }
 
+    my $total = 0;
     foreach my $email (keys %user) {
 
 	unless (&wwslib::valid_email($email)) {
-	    $param->{'error'}{'email'} = $email;
-	    &message('incorrect_email');
+	    &message('incorrect_email', {'email' => $email});
 	    &wwslog('info','do_add: incorrect email %s', $email);
-	    return undef;
+	    next;
 	}
 
 	if ( $list->is_user($email) ) {
-	    $param->{'error'}{'email'} = $email;
-	    $param->{'error'}{'list'} = $list->{'name'};
-	    &message('user_already_subscriber');
+	    &message('user_already_subscriber', {'email' => $email,
+						 'list' => $list->{'name'}});
 	    &wwslog('info','do_add: %s already subscriber', $email);
-	    return undef;
+	    next;
 	}
     
 	my $u2 = &List::get_user_db($email);
@@ -2351,11 +2314,12 @@ sub do_add {
 	$u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
 
 	unless( $list->add_user($u)) {
-	    $param->{'error'}{'action'} = 'add';
-	    &message('failed');
-	    &wwslog('info','do_add: failed');
-	    return undef;
+	    &message('failed_add', {'user' => $email});
+	    &wwslog('info','do_add: failed adding %s', $email);
+	    next;
 	}
+
+	$total++;
 	
 	$list->save();
 	unless ($in{'quiet'}) {
@@ -2366,8 +2330,11 @@ sub do_add {
 	}
     }
     
-    $param->{'error'}{'action'} = 'add';
-    &message('performed');
+    if ($total == 0) {
+	return undef;
+    }else {
+	&message('add_performed', {'total' => $total});
+    }
 
     return 'review';
 }
@@ -2378,8 +2345,7 @@ sub do_del {
     &wwslog('debug', 'do_del()');
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_del: no list');
 	return undef;
     }
@@ -2406,7 +2372,6 @@ sub do_del {
 					 'remote_addr' => $param->{'remote_addr'}});
 
     unless ( $del_is =~ /do_it/) {
-	$param->{'error'}{'action'} = 'del';
 	&message('may_not');
 	&wwslog('info','do_del: %s may not del', $param->{'user'}{'email'});
 	return undef;
@@ -2425,7 +2390,6 @@ sub do_del {
 	}
 	
 	unless( $list->delete_user($email)) {
-	    $param->{'error'}{'action'} = 'del';
 	    &message('failed');
 	    &wwslog('info','do_del: failed for %s', $email);
 	    return undef;
@@ -2451,7 +2415,6 @@ sub do_del {
 	}
     }
 
-    $param->{'error'}{'action'} = 'del';
     &message('performed');
     $param->{'is_subscriber'} = 1;
     $param->{'may_signoff'} = 1;
@@ -2464,15 +2427,13 @@ sub do_modindex {
     my $msg;
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_modindex: no list');
 	return undef;
     }
     
     unless ($param->{'user'}{'email'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_modindex: no user');
 	$param->{'previous_action'} = 'modindex';
 	$param->{'previous_list'} = $in{'list'};
@@ -2480,7 +2441,6 @@ sub do_modindex {
     }
  
     unless ($list->am_i('editor', $param->{'user'}{'email'})) {
-	$param->{'error'}{'action'} = 'modindex';
 	&message('may_not');
 	&wwslog('info','do_modindex: %s not editor', $param->{'user'}{'email'});
 	return 'admin';
@@ -2535,29 +2495,25 @@ sub do_reject {
     my ($msg, $file);
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_reject: no list');
 	return undef;
     }
     
     unless ($param->{'user'}{'email'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('no_user');
 	&wwslog('info','do_reject: no user');
 	return 'loginrequest';
     }
  
     unless ($list->am_i('editor', $param->{'user'}{'email'})) {
-	$param->{'error'}{'action'} = 'reject';
 	&message('may_not');
 	&wwslog('info','do_reject: %s not editor', $param->{'user'}{'email'});
 	return undef;
     }
 
     unless ($in{'id'}) {
-	$param->{'error'}{'argument'} = 'msgid';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'msgid'});
 	&wwslog('info','do_reject: no msgid');
 	return undef;
     }
@@ -2586,7 +2542,6 @@ sub do_reject {
 	close(IN);  
 	
 	unless (unlink($file)) {
-	    $param->{'error'}{'action'} = 'reject';
 	    &message('failed');
 	    &wwslog('info','do_reject: failed to erase %s', $file);
 	    return undef;
@@ -2594,7 +2549,6 @@ sub do_reject {
 	
     }
 
-    $param->{'error'}{'action'} = 'reject';
     &message('performed');
     
     return 'modindex';
@@ -2606,8 +2560,7 @@ sub do_distribute {
     my ($msg, $file);
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_distribute: no list');
 	return undef;
     }
@@ -2619,15 +2572,13 @@ sub do_distribute {
     }
     
     unless ($list->am_i('editor', $param->{'user'}{'email'})) {
-	$param->{'error'}{'action'} = 'distribute';
 	&message('may_not');
 	&wwslog('info','do_distribute: %s not editor', $param->{'user'}{'email'});
 	return undef;
     }
 
     unless ($in{'id'}) {
-	$param->{'error'}{'argument'} = 'msgid';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'msgid'});
 	&wwslog('info','do_distribute: no msgid');
 	return undef;
     }
@@ -2644,7 +2595,6 @@ sub do_distribute {
 
 	printf DISTRIBUTE ("QUIET DISTRIBUTE %s %s\n",$list->{'name'},$id);
 	unless (rename($file,"$file.distribute")) {
-	    $param->{'error'}{'action'} = 'distribute';
 	    &message('failed');
 	    &wwslog('info','do_distribute: failed to rename %s', $file);
 	}
@@ -2654,7 +2604,6 @@ sub do_distribute {
     close DISTRIBUTE;
     rename("$Conf{'queue'}/T.$Conf{'sympa'}.$extention","$Conf{'queue'}/$Conf{'sympa'}.$extention");
 
-    $param->{'error'}{'action'} = 'distribute';
     &message('performed_soon');
     
     return 'modindex';
@@ -2665,8 +2614,7 @@ sub do_viewmod {
     my $msg;
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_viewmod: no list');
 	return undef;
     }
@@ -2678,14 +2626,12 @@ sub do_viewmod {
     }
  
     unless ($in{'id'}) {
-	$param->{'error'}{'argument'} = 'msgid';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'msgid'});
 	&wwslog('info','do_viewmod: no msgid');
 	return undef;
     }
    
     unless ($list->am_i('editor', $param->{'user'}{'email'})) {
-	$param->{'error'}{'action'} = 'viewmod';
 	&message('may_not');
 	&wwslog('info','do_viewmod: %s not editor', $param->{'user'}{'email'});
 	return undef;
@@ -2759,8 +2705,7 @@ sub do_editfile {
     }
 
     unless (defined $wwslib::filenames{$in{'file'}}) {
-	$param->{'error'}{'file'} = $in{'file'};
-	&message('file_not_editable');
+	&message('file_not_editable', {'file' => $in{'file'}});
 	&wwslog('info','do_editfile: file %s not editable', $in{'file'});
 	return undef;
     }
@@ -2775,7 +2720,6 @@ sub do_editfile {
 
     if ($param->{'list'}) {
 	unless ($list->may_edit($in{'file'}, $param->{'user'}{'email'}) eq 'write') {
-	    $param->{'error'}{'action'} = 'editfile';
 	    &message('may_not');
 	    &wwslog('info','do_editfile: not allowed');
 	    return undef;
@@ -2790,8 +2734,7 @@ sub do_editfile {
 	}
     }else {
 	unless (&List::is_listmaster($param->{'user'}{'email'})) {
-	    $param->{'error'}{'argument'} = 'list';
-	    &message('missing_arg');
+	    &message('missing_arg', {'argument' => 'list'});
 	    &wwslog('info','do_editfile: no list');
 	    return undef;
 	}
@@ -2806,7 +2749,6 @@ sub do_editfile {
     }
 
     if ($param->{'filepath'} && (! -r $param->{'filepath'})) {
-	$param->{'error'}{'action'} = 'editfile';
 	&message('failed');
 	&wwslog('info','do_editfile: cannot read %s', $param->{'filepath'});
 	return undef;
@@ -2822,8 +2764,7 @@ sub do_savefile {
     $param->{'subtitle'} = sprintf $param->{'subtitle'}, $in{'file'};
 
     unless ($in{'file'}) {
-	$param->{'error'}{'argument'} = 'file';
-	&message('missing_arg');
+	&message('missing_arg'. {'argument' => 'file'});
 	&wwslog('info','do_savefile: no file');
 	return undef;
     }
@@ -2836,7 +2777,6 @@ sub do_savefile {
 
     if ($param->{'list'}) {
 	unless ($list->am_i('owner', $param->{'user'}{'email'})) {
-	    $param->{'error'}{'action'} = 'savefile';
 	    &message('may_not');
 	    &wwslog('info','do_savefile: not allowed');
 	    return undef;
@@ -2845,8 +2785,7 @@ sub do_savefile {
 	$param->{'filepath'} = "$Conf{'home'}/$list->{'name'}/$in{'file'}";
     }else {
 	unless (&List::is_listmaster($param->{'user'}{'email'})) {
-	    $param->{'error'}{'argument'} = 'list';
-	    &message('missing_arg');
+	    &message('missing_arg', {'argument' => 'list'});
 	    &wwslog('info','do_savefile: no list');
 	    return undef;
 	}
@@ -2855,7 +2794,6 @@ sub do_savefile {
     }
 
     unless ((! -e $param->{'filepath'}) or (-w $param->{'filepath'})) {
-	$param->{'error'}{'action'} = 'savefile';
 	&message('failed');
 	&wwslog('info','do_savefile: cannot write %s', $param->{'filepath'});
 	return undef;
@@ -2877,7 +2815,6 @@ sub do_savefile {
 	unlink $param->{'filepath'};
     }
 
-    $param->{'error'}{'action'} = 'savefile';
     &message('performed');
 
 #    undef $in{'file'};
@@ -2892,8 +2829,7 @@ sub do_arc {
     my $index = $wwsconf->{'archive_default_index'};
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_arc: no list');
 	return undef;
     }
@@ -2904,7 +2840,6 @@ sub do_arc {
 				    'sender' => $param->{'user'}{'email'},
 				    'remote_host' => $param->{'remote_host'},
 				    'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i) {
-	$param->{'error'}{'action'} = 'arc';
 	&message('may_not');
 	&wwslog('info','do_arc: access denied for %s', $param->{'user'}{'email'});
 	return undef;
@@ -2993,7 +2928,6 @@ sub do_remove_arc {
 #    }
 
     if ($in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
-	$param->{'error'}{'action'} = 'remove_arc';
 	&message('may_not_remove_arc');
 	&wwslog('info','remove_arc: no message id found');
 	$param->{'status'} = 'no_msgid';
@@ -3040,7 +2974,6 @@ sub do_remove_arc {
 	    my $file = "$Conf{'queueoutgoing'}/.remove.$list->{'name'}\@$list->{'admin'}{'host'}.$in{'yyyy'}-$in{'month'}.".time;
 
             unless (open REBUILD, ">$file") {
-                $param->{'error'}{'action'} = 'remove';
                 &message('failed');
 	        &wwslog('info','do_remove: cannot create %s', $file);
 	        return undef;
@@ -3072,8 +3005,7 @@ sub do_arcsearch_form {
     &wwslog('debug', 'do_arcsearch_form(%s)', $param->{'list'});
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-        &message('missing_arg');
+        &message('missing_arg', {'argument' => 'list'});
         &wwslog('info','do_arcsearch_form: no list');
         return undef;
     }
@@ -3084,7 +3016,6 @@ sub do_arcsearch_form {
 				    'sender' => $param->{'user'}{'email'},
 				    'remote_host' => $param->{'remote_host'},
 				    'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i) {
-	$param->{'error'}{'action'} = 'arcsearch_form';
         &message('may_not');
         &wwslog('info','do_arcsearch_form: access denied for %s', $param->{'user'}{'email'});
         return undef;
@@ -3110,8 +3041,7 @@ sub do_arcsearch {
     &wwslog('debug', 'do_arcsearch(%s)', $param->{'list'});
 
     unless ($param->{'list'}) {
-        $param->{'error'}{'argument'} = 'list';
-	&message('missing_argument');
+	&message('missing_argument', {'argument' => 'list'});
         &wwslog('info','do_arcsearch: no list');
         return undef;
     }
@@ -3122,7 +3052,6 @@ sub do_arcsearch {
 				    'sender' => $param->{'user'}{'email'},
 				    'remote_host' => $param->{'remote_host'},
 				    'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i) {
-        $param->{'error'}{'action'} = 'arcsearch';
 	&message('may_not');
         &wwslog('info','do_arcsearch: access denied for %s', $param->{'user'}{'email'});
         return undef;
@@ -3156,8 +3085,7 @@ sub do_arcsearch {
     
     ## User didn't enter any search terms
     if ($in{'key_word'} =~ /^\s*$/) {
-        $param->{'error'}{'argument'} = 'key_word';
-	&message('missing_argument');
+	&message('missing_argument', {'argument' => 'key_word'});
         &wwslog('info','do_arcsearch: no search term');
 	return undef;
     }
@@ -3246,8 +3174,7 @@ sub do_arcsearch_id {
     &wwslog('debug', 'do_arcsearch_id(%s)', $param->{'list'});
 
     unless ($param->{'list'}) {
-        $param->{'error'}{'argument'} = 'list';
-    &message('missing_argument');
+	&message('missing_argument', {'argument' => 'list'});
         &wwslog('info','do_arcsearch_id: no list');
         return undef;
     }
@@ -3258,8 +3185,7 @@ sub do_arcsearch_id {
                     'sender' => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
                     'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i) {
-        $param->{'error'}{'action'} = 'arcsearch_id';
-    &message('may_not');
+	&message('may_not');
         &wwslog('info','do_arcsearch_id: access denied for %s', $param->{'user'}{'email'});
         return undef;
     }
@@ -3276,8 +3202,7 @@ sub do_arcsearch_id {
 
     ## User didn't enter any search terms
     if ($in{'key_word'} =~ /^\s*$/) {
-        $param->{'error'}{'argument'} = 'key_word';
-    &message('missing_argument');
+	&message('missing_argument', {'argument' => 'key_word'});
         &wwslog('info','do_arcsearch_id: no search term');
     return undef;
     }
@@ -3469,8 +3394,7 @@ sub do_create_list {
     $in{'listname'} = lc ($in{'listname'});
 
     unless ($in{'listname'} =~ /^[a-z0-9][a-z0-9\-\+\._]*$/i) {
-	$param->{'error'}{'listname'} = $in{'listname'};
-	&message('incorrect_listname');
+	&message('incorrect_listname', {'listname' => $in{'listname'}});
 	return 'create_list_request';
     }
    
@@ -3513,7 +3437,6 @@ sub do_create_list {
     &wwslog('info',"do_create_list, get action : $param->{'create_action'} ");
     
     if ($param->{'create_action'} =~ /reject/) {
-	$param->{'error'}{'action'} = 'create_list';
 	&message('may_not');
 	&wwslog('info','do_create_list: not allowed');
 	return undef;
@@ -3522,7 +3445,6 @@ sub do_create_list {
     }elsif  ($param->{'create_action'} =~ /do_it/i) {
 	$param->{'status'} = 'open' ;
     }else{
-	$param->{'error'}{'action'} = 'create_list';
 	&message('internal_scenario_error');
 	&wwslog('info','do_create_list: internal error in scenario create_list');
 	return undef;
@@ -3596,7 +3518,6 @@ sub do_create_list_request {
     }
 
     if ($param->{'create_action'} =~ /reject/) {
-	$param->{'error'}{'action'} = 'create_list';
 	&message('may_not');
 	&wwslog('info','do_create_list: not allowed');
 	return undef;
@@ -3669,15 +3590,13 @@ sub do_editsubscriber {
     my $user;
 
     unless ($param->{'is_owner'}) {
-	$param->{'error'}{'action'} = 'editsubscriber';
 	&message('may_not');
 	&wwslog('info','do_editsubscriber: may not edit');
 	return undef;
     }
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_editsubscriber: no list');
 	return undef;
     }
@@ -3691,8 +3610,7 @@ sub do_editsubscriber {
     $in{'email'} = &tools::unescape_chars($in{'email'});
 
     unless($user = $list->get_subscriber($in{'email'})) {
-	$param->{'error'}{'email'} = $in{'email'};
-	&message('subscriber_not_found');
+	&message('subscriber_not_found', {'email' => $in{'email'}});
 	&wwslog('info','do_editsubscriber: subscriber %s not found', $in{'email'});
 	return undef;
     }
@@ -3736,14 +3654,12 @@ sub do_viewconfig {
     &wwslog('debug', 'do_viewconfig(%s)');
     unless ($param->{'list'}) {
 
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_viewbounce: no list');
 	return undef;
     }
 
     unless ($param->{'is_owner'}) {
-	$param->{'error'}{'action'} = 'viewconfig';
 	&message('may_not');
 	&wwslog('info','do_viewconfig: may not view');
 	return undef;
@@ -3756,15 +3672,13 @@ sub do_viewbounce {
     &wwslog('debug', 'do_viewbounce(%s)', $in{'email'});
 
     unless ($param->{'is_owner'}) {
-	$param->{'error'}{'action'} = 'viewbounce';
 	&message('may_not');
 	&wwslog('info','do_viewbounce: may not view');
 	return undef;
     }
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_viewbounce: no list');
 	return undef;
     }
@@ -3780,8 +3694,7 @@ sub do_viewbounce {
     $param->{'lastbounce_path'} = "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email";
 
     unless (-r $param->{'lastbounce_path'}) {
-	$param->{'error'}{'email'} = $in{'email'};
-	&message('no_bounce');
+	&message('no_bounce', {'email' => $in{'email'}});
 	&wwslog('info','do_viewbounce: no bounce %s', $param->{'lastbounce_path'});
 	return undef;
     }
@@ -3841,14 +3754,12 @@ sub do_reviewbouncing {
     my $size = $in{'size'} || $wwsconf->{'review_page_size'};
 
     unless ($in{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_reviewbouncing: no list');
 	return undef;
     }
 
     unless ($param->{'is_owner'}) {
-	$param->{'error'}{'action'} = 'reviewbouncing';
 	&message('may_not');
 	&wwslog('info','do_reviewbouncing: may not review');
 	return 'admin';
@@ -3861,8 +3772,7 @@ sub do_reviewbouncing {
 	if ($param->{'bounce_total'} % $size);
 
     if ($param->{'page'} > $param->{'total_page'}) {
-	$param->{'error'}{'page'} = $param->{'page'};
-	&message('no_page');
+	&message('no_page', {'page' => $param->{'page'}});
 	&wwslog('info','do_reviewbouncing: no page %d', $param->{'page'});
 	return 'admin';
     }
@@ -3918,8 +3828,7 @@ sub do_resetbounce {
     &wwslog('debug', 'do_resetbounce()');
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_resetbounce: no list');
 	return undef;
     }
@@ -3947,7 +3856,6 @@ sub do_resetbounce {
 	 'remote_addr' => $param->{'remote_addr'}});
     
     unless ( $del_is =~ /do_it/) {
-	$param->{'error'}{'action'} = 'del';
 	&message('may_not');
 	&wwslog('info','do_resetbounce: %s may not reset', $param->{'user'}{'email'});
 	return undef;
@@ -3960,14 +3868,12 @@ sub do_resetbounce {
 	my $escaped_email = &tools::escape_chars($email);
     
 	unless ( $list->is_user($email) ) {
-	    $param->{'error'}{'email'} = $email;
-	    &message('not_subscriber');
+	    &message('not_subscriber', {'email' => $email});
 	    &wwslog('info','do_del: %s not subscribed', $email);
 	    return undef;
 	}
 	
 	unless( $list->update_user($email, {'bounce' => 'NULL'})) {
-	    $param->{'error'}{'action'} = 'del';
 	    &message('failed');
 	    &wwslog('info','do_resetbounce: failed update database for %s', $email);
 	    return undef;
@@ -3989,8 +3895,7 @@ sub do_rebuildarc {
     &wwslog('debug', 'do_rebuildarc(%s, %s)', $param->{'list'}, $in{'month'});
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_rebuildarc: no list');
 	return undef;
     }
@@ -4002,7 +3907,6 @@ sub do_rebuildarc {
     }
 
     unless ($param->{'is_listmaster'}) {
-	$param->{'error'}{'action'} = 'rebuildarc';
 	&message('may_not');
 	&wwslog('info','do_rebuildarc: not listmaster');
 	return undef;
@@ -4011,7 +3915,6 @@ sub do_rebuildarc {
     my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'admin'}{'host'}";
 
     unless (open REBUILD, ">$file") {
-	$param->{'error'}{'action'} = 'rebuildarc';
 	&message('failed');
 	&wwslog('info','do_rebuildarc: cannot create %s', $file);
 	return undef;
@@ -4022,7 +3925,6 @@ sub do_rebuildarc {
     print REBUILD ' ';
     close REBUILD;
 
-    $param->{'error'}{'action'} = 'rebuildarc';
     &message('performed');
 
     return 'admin';
@@ -4039,7 +3941,6 @@ sub do_rebuildallarc {
     }
 
     unless ($param->{'is_listmaster'}) {
-	$param->{'error'}{'action'} = 'rebuildallarc';
 	&message('may_not');
 	&wwslog('info','do_rebuildallarc: not listmaster');
 	return undef;
@@ -4050,7 +3951,6 @@ sub do_rebuildallarc {
         my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'admin'}{'host'}";
 
 	unless (open REBUILD, ">$file") {
-	    $param->{'error'}{'action'} = 'rebuildarc';
 	    &message('failed');
 	    &wwslog('info','do_rebuildarc: cannot create %s', $file);
 	    return undef;
@@ -4131,7 +4031,6 @@ sub do_edit_list {
     }
 
     unless ($param->{'is_owner'}) {
-	$param->{'error'}{'action'} = 'edit_list';
 	&message('may_not');
 	&wwslog('info','do_edit_list: not allowed');
 	return undef;
@@ -4166,8 +4065,7 @@ sub do_edit_list {
 
     ## Did the config changed ?
     unless ($list->{'admin'}{'serial'} == $in{'serial'}) {
-	$param->{'error'}{'email'} = $list->{'admin'}{'update'}{'email'};
-	&message('config_changed');
+	&message('config_changed', {'email' => $list->{'admin'}{'update'}{'email'}});
 	&wwslog('info','do_edit_list: Config file has been modified(%d => %d) by %s. Cannot apply changes', $in{'single_param.serial'}, $list->{'admin'}{'serial'}, $list->{'admin'}{'update'}{'email'});
 	return undef;
     }
@@ -4256,8 +4154,7 @@ sub do_edit_list {
 
     ## Syntax errors
     if ($#syntax_error > -1) {
-	$param->{'error'}{'params'} = join(',',@syntax_error);
-	&message('syntax_errors');
+	&message('syntax_errors', {'params' => join(',',@syntax_error)});
 	foreach my $pname (@syntax_error) {
 	    &wwslog('info','do_edit_list: Syntax errors, param %s=\'%s\'', $pname, $new_admin->{$pname});
 	}
@@ -4387,7 +4284,6 @@ sub do_edit_list_request {
     }
 
     unless ($param->{'is_owner'}) {
-	$param->{'error'}{'action'} = 'edit_list_request';
 	&message('may_not');
 	&wwslog('info','do_edit_list: not allowed');
 	return undef;
@@ -4591,7 +4487,6 @@ sub do_close_list_request {
     &wwslog('debug', 'do_close_list_request()');
 
     unless ($param->{'is_listmaster'}) {
-	$param->{'error'}{'action'} = 'close_list';
 	&message('may_not');
 	&wwslog('info','do_close_list_request: not listmaster');
 	return undef;
@@ -4610,7 +4505,6 @@ sub do_close_list {
     &wwslog('debug', 'do_close_list_request()');
     
     unless ($param->{'is_listmaster'}) {
-	$param->{'error'}{'action'} = 'close_list';
 	&message('may_not');
 	&wwslog('info','do_close_list: not listmaster');
 	return undef;
@@ -4646,7 +4540,6 @@ sub do_restore_list {
     &wwslog('debug', 'do_restore_list()');
     
     unless ($param->{'is_listmaster'}) {
-	$param->{'error'}{'action'} = 'close_list';
 	&message('may_not');
 	&wwslog('info','do_restore_list: not listmaster');
 	return undef;
@@ -5152,8 +5045,7 @@ sub do_d_read {
 
     ### action relative to a list ?
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_d_read: no list');
 	return undef;
     }
@@ -5187,24 +5079,21 @@ sub do_d_read {
     ### Document exist ? 
     unless (-e "$doc") {
 	&wwslog('info',"do_d_read : unable to read $shareddir/$path : no such file or directory");
-	$param->{'error'}{'path'} = $path;
-	&message('no_such_document');
+	&message('no_such_document', {'path' => $path});
 	return undef;
     }
 
     ### Document has non-size zero?
     unless (-s "$doc") {
 	&wwslog('info',"do_d_read : unable to read $shareddir/$path : empty document");
-	$param->{'error'}{'path'} = $path;
-	&message('empty_document');
+	&message('empty_document', {'path' => $path});
 	return undef;
     }
 
     ### Document isn't a description file
     unless ($path !~ /\.desc/) {
-	$param->{'error'}{'path'} = $path;
 	&wwslog('info',"do_d_read : $shareddir/$path : description file");
-	&message('no_such_document');
+	&message('no_such_document', {'path' => $path});
 	return undef;
     }
 
@@ -5216,7 +5105,6 @@ sub do_d_read {
     my %access = &d_access_control(\%mode,$path);
     my $may_read = $access{'may'}{'read'};
     unless ($may_read) {
-	$param->{'error'}{'action'} = 'd_read';
 	&message('may_not');
 	&wwslog('info','d_read : access denied for %s', $param->{'user'}{'email'});
 	return undef;
@@ -5594,23 +5482,20 @@ sub do_d_editfile {
         
     ### action relative to a list ?
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_d_editfile: no list');
 	return undef;
     }
 
     unless ($path) {
-	$param->{'error'}{'argument'} = 'file name';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'file name'});
 	&wwslog('info','do_d_editfile: no file name');
 	return undef;
     }   
 
     # Existing document? File?
     unless (-f "$shareddir/$path") {
-	$param->{'error'}{'path'} = $path;
-	&message('no_such_file');
+	&message('no_such_file', {'path' => $path});
 	&wwslog('info',"d_editfile : Cannot edit $shareddir/$path : not an existing file");
 	return undef;
     }
@@ -5618,9 +5503,8 @@ sub do_d_editfile {
        
     ### Document isn't a description file?
     unless ($path !~ /\.desc/) {
-	$param->{'error'}{'path'} = $path;
 	&wwslog('info',"do_editdile : $shareddir/$path : description file");
-	&message('no_such_document');
+	&message('no_such_document', {'path' => $path});
 	return undef;
     }
     
@@ -5631,7 +5515,6 @@ sub do_d_editfile {
     my $may_edit = $access{'may'}{'edit'};
    
     unless ($may_edit) {
-	$param->{'error'}{'action'} = 'd_editfile';
 	&message('may_not');
 	&wwslog('info','d_editfile : access denied for %s', $param->{'user'}{'email'});
 	return undef;
@@ -5705,17 +5588,15 @@ sub do_d_describe {
 ####  Controls
     ### action relative to a list ?
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_d_describe: no list');
 	return undef;
     }
 
     ### Document isn't a description file?
     unless ($path !~ /\.desc/) {
-	$param->{'error'}{'path'} = $path;
 	&wwslog('info',"do_d_describe : $shareddir/$path : description file");
-	&message('no_such_document');
+	&message('no_such_document', {'path' => $path});
 	return undef;
     }
     
@@ -5749,7 +5630,6 @@ sub do_d_describe {
     my %access = &d_access_control(\%mode,$path);
        
     unless ($access{'may'}{'edit'}) {
-	$param->{'error'}{'action'} = 'd_describe';
 	&message('may_not');
 	&wwslog('info','d_describe : access denied for %s', $param->{'user'}{'email'});
 	return undef;
@@ -5857,8 +5737,7 @@ sub do_d_savefile {
 ####  Controls
     ### action relative to a list ?
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_d_savefile : no list');
 	return undef;
     }
@@ -5888,8 +5767,7 @@ sub do_d_savefile {
     ### Document isn't a description file
     unless ($path !~ /\.desc/) {
 	&wwslog('info',"do_d_savefile : $shareddir/$path : description file");
-	$param->{'error'}{'path'} = $path;
-	&message('no_such_document');
+	&message('no_such_document', {'path' => $path});
 	return undef;
     }
 
@@ -5899,7 +5777,6 @@ sub do_d_savefile {
     my %access = &d_access_control(\%mode,$path);
       
     unless ($access{'may'}{'edit'}) {
-	$param->{'error'}{'action'} = 'd_savefile';
 	&message('may_not');
 	&wwslog('info','d_savefile : access denied for %s', $param->{'user'}{'email'});
 	return undef;
@@ -5925,9 +5802,8 @@ sub do_d_savefile {
 
 	    rename("$shareddir/$path.old","$shareddir/$path");
 
-	    $param->{'error'}{'reason'} = $1;
-	    $param->{'error'}{'path'} = $path;
-	    &message('cannot_overwrite');
+	    &message('cannot_overwrite', {'reason' => $1,
+					  'path' => $path});
 	    &wwslog('info',"do_d_savefile : Cannot open for replace $shareddir/$path : $!");
 	    return undef;
 	}
@@ -5982,8 +5858,7 @@ sub do_d_savefile {
 
     }
 
-    $param->{'error'}{'path'}="$path";
-    &message('save_success');
+    &message('save_success', {'path' => $path});
     return 'd_editfile';
 }
 
@@ -6021,15 +5896,13 @@ sub do_d_overwrite {
 ####### Controls
     ### action relative to a list ?
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_d_overwrite : no list');
 	return undef;
     }
 
     # uploaded file must have a name 
     unless ($fname) {
-	$param->{'error'}{'action'} = 'file name';
 	&message('missing_arg');
 	&wwslog('info',"do_d_overwrite : No file specified to overwrite");
 	return undef;
@@ -6037,9 +5910,8 @@ sub do_d_overwrite {
 
     ### Document isn't a description file?
     unless ($path !~ /\.desc/) {
-	$param->{'error'}{'path'} = $path;
 	&wwslog('info',"do_d_overwrite : $shareddir/$path : description file");
-	&message('no_such_document');
+	&message('no_such_document', {'path' => $path});
 	return undef;
     }
 
@@ -6064,7 +5936,6 @@ sub do_d_overwrite {
     my %access = &d_access_control(\%mode,$path);
    
     unless ($access{'may'}{'edit'}) {
-	$param->{'error'}{'action'} = 'd_overwrite';
 	&message('may_not');
 	&wwslog('info','do_d_overwrite :  access denied for %s', $param->{'user'}{'email'});
 	return undef;
@@ -6085,9 +5956,8 @@ sub do_d_overwrite {
     
     # Creation of the shared file
     unless (open FILE, ">$shareddir/$path") {
-	$param->{'error'}{'path'} = $path;
-	$param->{'error'}{'reason'} = $!;
-	&message('cannot_overwrite');
+	&message('cannot_overwrite', {'path' => $path,
+				      'reason' => $!});
 	&wwslog('info',"d_overwrite : Cannot open for replace $shareddir/$path : $!");
 	return undef;
     }
@@ -6144,8 +6014,7 @@ sub do_d_overwrite {
     #$in{'path'} = $dir;
     
     # message of success
-    $param->{'error'}{'path'}=$path;
-    &message('upload_success');
+    &message('upload_success', {'path' => $path});
     return 'd_editfile';
 }
 
@@ -6180,8 +6049,7 @@ sub do_d_upload {
 # Controls
     ### action relative to a list ?
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_d_upload : no list');
 	return undef;
     }
@@ -6199,8 +6067,7 @@ sub do_d_upload {
 	    $fname =~ /\w$/ and 
 	    $fname =~ /^[\w\-\.]+$/ and
 	    $fname !~ /\.desc/) {
-	$param->{'error'}{'name'}=$fname;
-	&message('incorrect_name');
+	&message('incorrect_name', {'name' => $fname});
 	&wwslog('info',"do_d_upload : Unable to create file $fname : incorrect name");
 	return undef;
     }
@@ -6217,9 +6084,8 @@ sub do_d_upload {
     
     # the file mustn't already exist
     if (-e "$shareddir/$path$fname") {
-	$param->{'error'}{'path'}="$path$fname";
-	$param->{'error'}{'reason'} = "file already exists";
-	&message('cannot_upload');
+	&message('cannot_upload', {'path' => "$path$fname",
+				   'reason' => "file already exists"});
 	&wwslog('info',"do_d_upload : Unable to create $shareddir/$path$fname : file already exists");
 	return undef;
     }
@@ -6231,7 +6097,6 @@ sub do_d_upload {
     my %access = &d_access_control(\%mode,$path);
    
     unless ($access{'may'}{'edit'}) {
-	$param->{'error'}{'action'} = 'd_upload';
 	&message('may_not');
 	&wwslog('info','do_d_upload : access denied for %s', $param->{'user'}{'email'});
 	return undef;
@@ -6240,8 +6105,7 @@ sub do_d_upload {
     ## Exception index.html
     unless ($fname !~ /^index.html?$/i) {
 	unless ($access{'may'}{'control'}) {
-	    $param->{'error'}{'dir'} = $path;
-	    &message('index_html');
+	    &message('index_html', {'dir' => $path});
 	    &wwslog('info',"do_d_upload : $param->{'user'}{'email'} not authorized to upload a INDEX.HTML file in $path");
 	    return undef;
 	}
@@ -6252,9 +6116,8 @@ sub do_d_upload {
 # Creation of the shared file
     my $fh = $query->upload('uploaded_file');
     unless (open FILE, ">$shareddir/$path$fname") {
-	$param->{'error'}{'path'} =  "$path$fname";
-	$param->{'error'}{'reason'} =  $!;
-	&message('cannot_upload');
+	&message('cannot_upload', {'path' => "$path$fname",
+				   'reason' => $!});
 	&wwslog('info',"do_d_upload : Cannot open file $shareddir/$path$fname : $!");
 	return undef;
     }
@@ -6277,10 +6140,6 @@ sub do_d_upload {
        
     close DESC;
     
-    # message of success
-    #$param->{'error'}{'path'}="$path$fname";
-    #&message('upload_success');
-     
     ## ???
     $in{'list'} = $list_name;
     return 'd_read';
@@ -6316,34 +6175,30 @@ sub do_d_delete {
 #### Controls
     ### action relative to a list ?
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_d_delete : no list');
 	return undef;
     }
 
     ## must be something to delete
     unless ($document) {
-	$param->{'error'}{'argument'} = 'document';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'document'});
 	&wwslog('info',"do_d_delete : no document to delete has been specified");
 	return undef;
     }
 
     ### Document isn't a description file?
     unless ($document !~ /^\.desc/) {
-	$param->{'error'}{'path'} = $path;
 	&wwslog('info',"do_d_delete : $shareddir/$path : description file");
-	&message('no_such_document');
+	&message('no_such_document', {'path' => $path});
 	return undef;
     }
 
         
     ### Document exists?
     unless (-e "$shareddir/$path") {
-	$param->{'error'}{'path'} = $path;
 	&wwslog('info',"do_d_delete : $shareddir/$path : no such file or directory");
-	&message('no_such_document');
+	&message('no_such_document', {'path' => $path});
 	return undef;
     }
 
@@ -6359,7 +6214,6 @@ sub do_d_delete {
 	my %access = &d_access_control(\%mode,$path);
    
 	unless ($access{'may'}{'edit'}) {
-	    $param->{'error'}{'action'} = 'd_delete';
 	    &message('may_not');
 	    &wwslog('info','do_d_delete : access denied for %s', $param->{'user'}{'email'});
 	    return undef;
@@ -6372,8 +6226,7 @@ sub do_d_delete {
 	  # test for "ordinary" files
 	my @test = grep !/^\./, @readdir;
 	if ($#test != -1) {
-	    $param->{'error'}{'directory'} = $path;
-	    &message('full_directory');
+	    &message('full_directory', {'directory' => $path});
 	    &wwslog('info',"do_d_delete : Failed to erase $doc : directory not empty");
 	    return undef;
 	}
@@ -6407,7 +6260,6 @@ sub do_d_delete {
 	my %access = &d_access_control(\%mode,$path);
    
 	unless ($access{'may'}{'edit'}) {
-	    $param->{'error'}{'action'} = 'd_delete';
 	    &message('may_not');
 	    &wwslog('info','do_d_delete : access denied for %s', $param->{'user'}{'email'});
 	    return undef;
@@ -6460,8 +6312,7 @@ sub do_d_create_dir {
 ### Controls
     ### action relative to a list ?
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_d_create_dir : no list');
 	return undef;
     }
@@ -6478,8 +6329,7 @@ sub do_d_create_dir {
 	    $name_doc =~ /\w$/ and 
 	    $name_doc =~ /^[\w\-\.]+$/ and
 	    $name_doc !~ /\.desc/) {
-	$param->{'error'}{'name'} = $name_doc;
-	&message('incorrect_name');
+	&message('incorrect_name', {'name' => $name_doc});
 	&wwslog('info',"do_d_create_dir : Unable to create directory $name_doc : incorrect name");
 	return undef;
     }
@@ -6491,7 +6341,6 @@ sub do_d_create_dir {
     my %access = &d_access_control(\%mode,$path);
     
     unless ($access{'may'}{'edit'}) {
-	$param->{'error'}{'action'} = 'd_create_dir';
 	&message('may_not');
 	&wwslog('info','do_d_create_dir :  access denied for %s', $param->{'user'}{'email'});
 	return undef;
@@ -6510,9 +6359,8 @@ sub do_d_create_dir {
       	
     # Creation of the new directory
     unless (mkdir ("$document",0777)) {
-	$param->{'error'}{'path'} = $document;
-	$param->{'error'}{'reason'} = $!;
-	&message('cannot_create_dir');
+	&message('cannot_create_dir', {'path' => $document,
+				       'reason' => $!});
 	&wwslog('info',"do_d_create_dir : Unable to create $document : $!");
 	return undef;
     }
@@ -6563,32 +6411,28 @@ sub do_d_control {
 
     ### action relative to a list ?
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_d_control: no list');
 	return undef;
     }
 
     unless ($path) {
-	$param->{'error'}{'argument'} = 'document name';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'document_name'});
 	&wwslog('info','do_d_control: no document name');
 	return undef;
     }   
 
     # Existing document? 
     unless (-e "$shareddir/$path") {
-	$param->{'error'}{'path'} = $path;
-	&message('no_such_document');
+	&message('no_such_document', {'path' => $path});
 	&wwslog('info',"do_d_control : Cannot control $shareddir/$path : not an existing document");
 	return undef;
     }
 
     ### Document isn't a description file?
     unless ($path !~ /\.desc/) {
-	$param->{'error'}{'path'} = $path;
 	&wwslog('info',"do_d_control : $shareddir/$path : description file");
-	&message('no_such_document');
+	&message('no_such_document', {'path' => $path});
 	return undef;
     }
     
@@ -6597,7 +6441,6 @@ sub do_d_control {
     $mode{'control'} = 1;
     my %access = &d_access_control(\%mode,$path);
     unless ($access{'may'}{'control'}) {
-	$param->{'error'}{'action'} = 'd_control';
 	&message('may_not');
 	&wwslog('info','d_control : access denied for %s', $param->{'user'}{'email'});
 	return undef;
@@ -6715,8 +6558,7 @@ sub do_d_change_access {
 ####  Controls
     ### action relative to a list ?
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_d_change_access: no list');
 	return undef;
     }
@@ -6744,7 +6586,6 @@ sub do_d_change_access {
     my %access = &d_access_control(\%mode,$path);
        
     unless ($access{'may'}{'control'}) {
-	$param->{'error'}{'action'} = 'd_change_access';
 	&message('may_not');
 	&wwslog('info','d_change_access : access denied for %s', $param->{'user'}{'email'});
 	return undef;
@@ -6841,8 +6682,7 @@ sub do_d_set_owner {
 ####  Controls
     ### action relative to a list ?
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_d_set_owner: no list');
 	return undef;
     }
@@ -6858,8 +6698,7 @@ sub do_d_set_owner {
 
     # the email must look like an email "somebody@somewhere"
     unless ($in{'content'} =~ /^[\w\.\-\~]+\@[\w\.\-\~]+$/) {
-	$param->{'error'}{'email'} = $in{'content'};
-	&message('incorrect_email');
+	&message('incorrect_email', {'email' => $in{'content'}});
 	&wwslog('info',"d_set_owner : $in{'content'} : incrorrect email");
 	return undef;
     }
@@ -6884,7 +6723,6 @@ sub do_d_set_owner {
     my %access = &d_access_control(\%mode,$path);
        
     unless ($access{'may'}{'control'}) {
-	$param->{'error'}{'action'} = 'd_set_owner';
 	&message('may_not');
 	&wwslog('info','d_set_owner : access denied for %s', $param->{'user'}{'email'});
 	return undef;
@@ -6893,8 +6731,7 @@ sub do_d_set_owner {
     my $may_set = 1;
    
     unless ($may_set) {
-	$param->{'error'}{'directory'} = $path;
-	&message('full_directory');
+	&message('full_directory', {'directory' => $path});
 	&wwslog('info',"d_set_owner : cannot set owner of a full directory");
 	return undef;
     }
@@ -7006,8 +6843,7 @@ sub do_remind {
     &wwslog('debug', 'do_remind()');
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_remind: no list');
 	return undef;
     }
@@ -7024,7 +6860,6 @@ sub do_remind {
 				    'sender' => $param->{'user'}{'email'},
 				    'remote_host' => $param->{'remote_host'},
 				    'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i) {
-	$param->{'error'}{'action'} = 'remind';
 	&message('may_not');
 	&wwslog('info','do_remind: access denied for %s', $param->{'user'}{'email'});
 	return undef;
@@ -7040,7 +6875,6 @@ sub do_remind {
 				    'remote_host' => $param->{'remote_host'},
 				    'remote_addr' => $param->{'remote_addr'}}) =~ /reject/i) {
 	
-	$param->{'error'}{'action'} = 'remind';
 	&message('may_not');
 	&wwslog('info','remind : access denied for %s', $param->{'user'}{'email'});
 	return undef;
@@ -7061,7 +6895,6 @@ sub do_remind {
 
     rename("$Conf{'queue'}/T.$Conf{'sympa'}.$extention","$Conf{'queue'}/$Conf{'sympa'}.$extention");
 
-    $param->{'error'}{'action'} = 'remind';
     &message('performed_soon');
 
     return 'admin';
@@ -7072,8 +6905,7 @@ sub do_load_cert {
     &wwslog('debug','do_load_cert(%s)', $param->{'list'});
 
     unless ($param->{'list'}) {
-	$param->{'error'}{'argument'} = 'list';
-	&message('missing_arg');
+	&message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_load_cert: no list');
 	return undef;
     }
