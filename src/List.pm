@@ -1821,7 +1821,7 @@ sub send_msg_digest {
 				   From       => $param->{'from'},
 				   'Reply-to' => $param->{'reply'},
 				   Type       => 'multipart/mixed',
-				   Subject    => sprintf(Msg(8, 9, "Digest of list %s"),$listname)
+				   Subject    => MIME::Words::encode_mimewords(sprintf(Msg(8, 9, "Digest of list %s"),$listname))
 				   );
     
     my $table_of_content = MIME::Entity->build (Type        => 'text/plain; charset=iso-8859-1',
