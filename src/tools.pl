@@ -852,7 +852,7 @@ sub as_singlepart {
     }
 
     # Now look for the preferred_type and if found, make this the main message
-    my @parts = $msg->parts();
+    @parts = $msg->parts();
     foreach my $index (0..$#parts) {
 	if ($parts[$index]->effective_type() =~ /^$preferred_type$/) {
 	    ## Only keep the first matching part

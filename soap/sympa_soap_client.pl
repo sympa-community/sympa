@@ -19,6 +19,7 @@ use SOAP::Lite;
 
 use lib '--LIBDIR--';
 use Conf;
+require 'tools.pl';
 #use Log;
 
 use strict;
@@ -32,7 +33,6 @@ my $sympa_conf_file = '--CONFIG--';
 
 my ($service, $reponse, @ret, $val, %fault);
 
-print "Debut\n";
 # Change to the path of Sympa.wsdl
 $service = SOAP::Lite->service('http://www.cru.fr/wws/wsdl');
 #    ->outputxml(1);
@@ -47,9 +47,7 @@ $service = SOAP::Lite->service('http://www.cru.fr/wws/wsdl');
 #$reponse = $service->do_login($ARGV[0],$ARGV[1],$ARGV[2]);
 #$reponse =  $service->do_lists($ARGV[0],$ARGV[1],$ARGV[2],$ARGV[3],$ARGV[4]);
 
-print "Avant\n";
 $reponse = $service->do_which($ARGV[0],$ARGV[1]);
-print "Après\n";
 
 # If we get a fault
 if ($service->call->fault)
@@ -69,7 +67,7 @@ else
 	@ret = $service->call->result;
     }
     
-    &tools::dump_vars(\@res, 0);
+    &tools::dump_var(\@ret, 0, \*STDOUT);
 
 }
 
