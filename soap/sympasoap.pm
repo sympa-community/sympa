@@ -177,6 +177,8 @@ sub casLogin {
     my $proxyTicket = shift;
 
     my $http_host = $ENV{'SERVER_NAME'};
+    my $sender = $ENV{'USER_EMAIL'};
+    my $robot = $ENV{'SYMPA_ROBOT'};
     &Log::do_log('notice', 'casLogin(%s)', $proxyTicket);
     
     unless ($http_host and $proxyTicket) {
