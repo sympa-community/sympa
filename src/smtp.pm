@@ -136,7 +136,7 @@ sub smtpto {
        } else {
 	   $str .= join(' ', @$rcpt);
        }
-       do_log('debug3', $str);
+       do_log('notice', $str);
    }
    close(IN);
    $opensmtp++;
