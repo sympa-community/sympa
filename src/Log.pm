@@ -41,6 +41,8 @@ sub fatal_err {
     syslog('err', "Exiting.");
     $m =~ s/%m/$errno/g;
 
+    my $full_msg = sprintf $m,@_;
+
     ## Notify listmaster
     &List::send_notify_to_listmaster('sympa_died', $Conf{'domain'}, $m);
 
