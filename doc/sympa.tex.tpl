@@ -1202,7 +1202,7 @@ template.
     \index{aliases}
 
 Mail aliases are required in Sympa for \file {sympa.pl} to receive mail commands and 
-list messages. These aliases management will depend on the MTA (\unixcmd {sendmail}, \unixcmd {qmail},
+list messages. Management of these aliases management will depend on the MTA (\unixcmd {sendmail}, \unixcmd {qmail},
 \unixcmd {postfix}, \unixcmd {exim}) you're using, where you store aliases and whether
 you are managing virtual domains or not.
 
@@ -1214,21 +1214,19 @@ An electronic list manager such as \Sympa is built around two processing steps:
 
 \begin {itemize}
     \item a message sent to a list or to \Sympa itself
-        (for subscribe, unsubscribe, help messages, etc.) is received
-        by the SMTP server (\unixcmd {sendmail} or \unixcmd {qmail}).
-        The SMTP server, on reception of this message, runs the
+        (commands such as subscribe or unsubscribe) is received
+        by the SMTP server. The SMTP server, on reception of this message, runs the
         \file {queue} program (supplied in this package) to store
-        the message in a queue, i.e. in a special directory.
+        the message in a spool.
 
     \item the \file {sympa.pl} daemon, set in motion at
-        system startup, scans the queue. As soon as it
+        system startup, scans this spool. As soon as it
         detects a new message, it processes it and performs the
-        requested action (distribution or processing of an
-        administrative request).
+        requested action (distribution or processing of a command).
 
 \end {itemize}
 
-To separate the processing of administrative requests (subscription,
+To separate the processing of commands (subscription,
 unsubscription, help requests, etc.) from the processing of messages destined for mailing
 lists, a special mail alias is reserved for administrative requests, so
 that \Sympa can be permanently accessible to users. The following
@@ -1237,13 +1235,17 @@ lines must therefore be added to the \unixcmd {sendmail} alias file
 
 \begin {quote}
 \begin{verbatim}
-sympa:             "| /home/sympa/bin/queue sympa"
-listmaster: 	   "| /home/sympa/bin/queue listmaster"
-bounce+*:          "| /home/sympa/bin/bouncequeue sympa"
+sympa:             "| /home/sympa/bin/queue sympa@\samplerobot"
+listmaster: 	   "| /home/sympa/bin/queue listmaster@\samplerobot"
+bounce+*:          "| /home/sympa/bin/bouncequeue sympa@\samplerobot"
 sympa-request:     postmaster
 sympa-owner:       postmaster
 \end{verbatim}
 \end {quote}
+
+Note: if you run \Sympa virtual robots, you will need one \mailaddr {sympa}
+alias entry per virtual robot (see virtual robots section, \ref {virtual-robot},
+page~\pageref {virtual-robot}).
 
 \mailaddr {sympa-request} should be the address of the robot
 \textindex {administrator}, i.e. a person who looks after
@@ -1272,17 +1274,14 @@ listserv-owner:    sympa-owner
 \end{verbatim}
 \end {quote}
 
-Note: it will also be necessary to add entries in this alias file
-when lists are created (see list creation section, \ref {list-aliases},
-page~\pageref {list-aliases}).
-
-
 \section {List aliases}
 \label {list-aliases}
     \index{aliases}
     \index{mail aliases}
 
 For each new list, it is necessary to create up to six mail aliases (at least three).
+If you managed to setup the alias manager (see next section) then \Sympa will
+install automatically the following aliases for you.
 
 For example, to create the \mailaddr {\samplelist} list, the following
 aliases must be added:
@@ -1291,22 +1290,22 @@ aliases must be added:
     \tt
     \begin {tabular} {ll}
         \mailaddr {\samplelist}:         &
-            "|/home/sympa/bin/queue \samplelist"
+            "|/home/sympa/bin/queue \samplelist@\samplerobot"
             \\
         \mailaddr {\samplelist-request}: &
-            "|/home/sympa/bin/queue \samplelist-request"
+            "|/home/sympa/bin/queue \samplelist-request@\samplerobot"
             \\
         \mailaddr {\samplelist-editor}:  &
-            "|/home/sympa/bin/queue \samplelist-editor"
+            "|/home/sympa/bin/queue \samplelist-editor@\samplerobot"
             \\
         \mailaddr {\samplelist-owner}:   &
-            "|/home/sympa/bin/bouncequeue \samplelist
+            "|/home/sympa/bin/bouncequeue \samplelist@\samplerobot
             \\
         \mailaddr {\samplelist-subscribe}:   &
-            "|/home/sympa/bin/queue \samplelist-subscribe"
+            "|/home/sympa/bin/queue \samplelist-subscribe@\samplerobot@\samplerobot"
             \\
         \mailaddr {\samplelist-unsubscribe}: &
-            "|/home/sympa/bin/queue \samplelist-unsubscribe"
+            "|/home/sympa/bin/queue \samplelist-unsubscribe@\samplerobot"
             \\
 
     \end {tabular}
@@ -1346,29 +1345,65 @@ be for you to manage your list!
 \section {Alias manager}
 \label {alias-manager}	
 
-The \file {alias\_manager.pl} script does aliases management :cript that will install aliases for a new list
-and delete aliases for closed lists. You can use the one of the following scripts distributed with 
-\Sympa: \tildefile {sympa/bin/alias\_manager.pl} for sendmail-style aliases with a single
-aliases file or \tildefile {sympa/bin/postfix\_manager.pl} for postfix-like aliases using
-an additional \index{virtusertable}.
+The \file {alias\_manager.pl} script does aliases management. It is run by \WWSympa and
+ will install aliases for a new list and delete aliases for closed lists. 
+%You can use the following script distributed with 
+%\Sympa: \tildefile {sympa/bin/alias\_manager.pl} for sendmail-style aliases with a single aliases file.
+% or \tildefile {sympa/bin/postfix\_manager.pl} for postfix-like aliases using
+%an additional \index{virtusertable}.
 
-
-Theses expect the following arguments :
+The script expects the following arguments :
 \begin{enumerate}
   \item add | del
   \item \texttt{<}list name\texttt{>}
   \item \texttt{<}list domain\texttt{>}
 \end{enumerate}
-Example : \tildefile {sympa/bin/alias\_manager.pl} add \samplelist cru.fr
+Example : \tildefile {sympa/bin/alias\_manager.pl add \samplelist cru.fr}
 
 \tildefile {sympa/bin/alias\_manager.pl} works on the alias file as defined
 by the \index{SENDMAIL\_ALIASES} variable in the main Makefile (see \ref {makefile},  
 page~\pageref {makefile}). It runs a \unixcmd{newaliases} command (via
 \file {aliaswrapper}), after any changes to aliases file.
 
-\tildefile {sympa/bin/postfix\_manager.pl} also requires \index{VIRTUAL\_ALIASES}
-variable to be defined in the Makefile. It runs a \unixcmd{postmap} command (via
-\file {virtualwrapper}), after any changes to virtualtable file.
+If you manage virtual domains with your mail server, then you might want to change
+the form of aliases used by the alias\_manager. You can customize the \file {list\_aliases}
+template that is parsed to generate list aliases (see\ref {list-aliases-tpl},  
+page~\pageref {list-aliases-tpl}).
+
+%\tildefile {sympa/bin/postfix\_manager.pl} also requires \index{VIRTUAL\_ALIASES}
+%variable to be defined in the Makefile. It runs a \unixcmd{postmap} command (via
+%\file {virtualwrapper}), after any changes to virtualtable file.
+
+\section {Virtual domains}
+\label {virtual-domains}	
+
+When using virtual domains with \unixcmd {sendmail} or \unixcmd {postfix}, you can't
+refer to  \mailaddr {\samplelist@\samplerobot} on the right-hand side of an 
+\file {/etc/aliases} entry. You need to define an additional entry in a virtual table.
+You can also add a unique entry, with a regular expression, for your domain. 
+
+With Postfix, you should edit the \file {/etc/postfix/virtual.regexp} file as follows :
+\begin {quote}
+\begin{verbatim}
+/^(.*)\samplerobot$/	 \samplerobot-${1}
+\end{verbatim}
+\end {quote}
+ Entries in the 'aliases' file will look like this :
+\begin {quote}
+\begin{verbatim}
+    \samplerobot-sympa:   "|/home/sympa/bin/sympa.pl sympa@\samplerobot"
+    .....
+    \samplerobot-listA:   "|/home/sympa/bin/sympa.pl listA@\samplerobot"
+\end{verbatim}
+\end {quote}
+
+With Sendmail, add the following entry to \file {/etc/mail/virtusertable} file :
+\begin {quote}
+\begin{verbatim}
+@\samplerobot       \samplerobot-%1%3
+\end{verbatim}
+\end {quote}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -4636,6 +4671,12 @@ when one of the list owners sends the \mailcmd {REMIND} command
 
 Template for summaries (reception mode close to digest), 
 see~\ref {cmd-setsummary}, page~\pageref {cmd-setsummary}.
+
+\subsection {list\_aliases.tpl}
+\label{list-aliases-tpl}
+
+Template that defines list mail alises. It is used by the alias\_manager script.
+
 
 \section {Stats file}
     \label {stats-file}
