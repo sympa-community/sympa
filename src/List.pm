@@ -4240,13 +4240,14 @@ sub verify {
 	    }
 
 	    ## Sender's user/subscriber attributes (if subscriber)
-	}elsif (($value =~ /\[user\-\>([\w\-]+)\]/i) && defined ($context->{'user'})) {
+	}elsif ($value =~ /\[user\-\>([\w\-]+)\]/i) {
 
+	    $context->{'user'} ||= &get_user_db($context->{'sender'});	    
 	    $value =~ s/\[user\-\>([\w\-]+)\]/$context->{'user'}{$1}/;
 
 	}elsif (($value =~ /\[subscriber\-\>([\w\-]+)\]/i) && defined ($context->{'sender'} ne 'nobody')) {
 	    
-	    $context->{'subscriber'} = $list->get_subscriber($context->{'sender'});
+	    $context->{'subscriber'} ||= $list->get_subscriber($context->{'sender'});
 	    $value =~ s/\[subscriber\-\>([\w\-]+)\]/$context->{'subscriber'}{$1}/;
 
 	    ## SMTP Header field
