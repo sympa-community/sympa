@@ -1474,14 +1474,7 @@ sub load {
     }elsif($self->{'admin'}{'user_data_source'} eq 'include') {
 
     ## include other subscribers as defined in include directives (list|ldap|sql|file|owners|editors)
-	unless ( defined $self->{'admin'}{'include_file'}
-		 || defined $self->{'admin'}{'include_list'}
-		 || defined $self->{'admin'}{'include_remote_sympa_list'}
-		 || defined $self->{'admin'}{'include_sql_query'}
-		 || defined $self->{'admin'}{'include_ldap_query'}
-		 || defined $self->{'admin'}{'include_ldap_2level_query'}
-		 || defined $self->{'admin'}{'include_admin'}
-		 ) {
+	unless ( $self->has_include_data_sources()) {
 	    &do_log('err', 'Include paragraph missing in configuration file %s', "$self->{'dir'}/config");
 #	    return undef;
 	}
@@ -8651,6 +8644,17 @@ sub create_shared {
     return 1;
 }
 
+## check if a list  has include-type data sources
+sub has_include_data_sources {
+    my $self = shift;
+
+    foreach my $type ('include_file','include_list','include_remote_sympa_list','include_sql_query',
+		      'include_ldap_query','include_ldap_2level_query','include_admin') {
+	return 1 if (defined $self->{'admin'}{$type});
+    }
+    
+    return 0
+}
 
 #################################################################
 
