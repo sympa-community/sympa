@@ -1211,7 +1211,7 @@ Lowercases e-mail addresses in database.
    
 \item \option {--make\_alias\_file}
   
-Create an aliases file in /tmp/ with all list aliases. It uses the list\_aliases.tpl
+Create an aliases file in /tmp/ with all list aliases (only list which status is 'open'). It uses the list\_aliases.tpl
 template.
 
 \item \option {--version} | \option {-v}
