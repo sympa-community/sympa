@@ -31,7 +31,7 @@ sympaconf="--CONFIG--"
 wwsympaconf="--WWSCONFIG--"
 
 ##'echo -n' not supported with SH on Solaris
-if [ ${OSTYPE} == "solaris" ]; then
+if [ ${OSTYPE} = "solaris" ]; then
   echo_opt=""
 else
   echo_opt="-n"
@@ -47,7 +47,7 @@ sympa_status() {
         return 1
     fi
  
-    if [ ${OSTYPE} != "solaris" ]; then
+    if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "solaris" ]; then
       status $1.pl
 
     else
@@ -83,7 +83,7 @@ sympa_module_start() {
 #		startparam=""
 #	fi
  
-	if [ ${OSTYPE} == "IRIX" ]; then
+	if [ ${OSTYPE} = "IRIX" ]; then
 		$sympadir/$1.pl $startparam && echo "success" || echo "failure"
 	else
 		$sympadir/$1.pl $startparam && success || failure
@@ -103,7 +103,7 @@ sympa_start() {
 		3)
 			echo $echo_opt "Starting module $1.pl: "
 			sympa_module_start $1
-			if [ ${OSTYPE} == "solaris" ]; then
+			if [ ${OSTYPE} = "solaris" ]; then
 				if [ $? -eq 0 ]; then
         	                       	echo "$1.pl started: success"
 	                       	else
@@ -114,7 +114,7 @@ sympa_start() {
 		1) 
 			echo $echo_opt "Starting $1, overwritting old pid file."
 			sympa_module_start $1
-			if [ ${OSTYPE} == "solaris" ]; then
+			if [ ${OSTYPE} = "solaris" ]; then
 				if [ $? -eq 0 ]; then
         	                       	echo "$1.pl started: success"
 	                       	else
@@ -137,15 +137,25 @@ sympa_stop() {
     fi
  
 	if [ -f --PIDDIR--/$1.pid ]; then
-		echo -n "Stopping module $1.pl: "
+		echo $echo_opt "Stopping module $1.pl: "
 		pid=`head -1 --PIDDIR--/$1.pid`
-		if [ ${OSTYPE} == "IRIX" ]; then
+		running=`ps -A | grep " $pid"`
+		if [ "$running" != "" ]; then
+		    if [ ${OSTYPE} = "IRIX" ]; then
 			kill -TERM $pid && echo "success" || echo "failure"
-		else
+		    elif [ ${OSTYPE} = "solaris" ]; then
+			echo "Stopping module $1.pl: terminated"
+			kill -TERM $pid
+		    else
 			kill -TERM $pid && success || failure
+		    fi		    
+		else
+		    echo "died"
 		fi
-		rm -f /var/run/$1.pl.pid
+		rm -f --PIDDIR--/$1.pid
 		echo
+	else
+	        echo "Module $1.pl not running"
 	fi
 }
 
