@@ -1,6 +1,24 @@
 From: [conf->email]@[conf->host]
 Subject: Üdvözlünk a(z) [list->name] levelezõlistán
 Mime-version: 1.0
+Content-Type: multipart/alternative; boundary="===Sympa==="
+
+--===Sympa===
+Content-Type: text/plain; charset=iso-8859-2
+Content-transfer-encoding: 8bit
+
+Üdvözlünk a(z) [list->name]@[list->host] levelezõlistán.
+Feliratkozási e-mail címed: [user->email]
+[IF user->password]
+Jelszavad: [user->password].
+[ENDIF]
+
+[PARSE 'info']
+
+A listáról bõvebben itt olvashatsz:
+[conf->wwsympa_url]/info/[list->name]
+
+--===Sympa===
 Content-Type: text/html; charset=iso-8859-2
 Content-transfer-encoding: 8bit
 
@@ -26,4 +44,4 @@ A listáról bõvebben itt olvashatsz:
 
 
 </body></html>
-
+--===Sympa===
