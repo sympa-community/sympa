@@ -28,6 +28,8 @@ MINOR_VERSION=[`expr $VERSION : '[0-9][0-9]*\.\([0-9][0-9]*\)'`]
 AC_SUBST(MINOR_VERSION)
 MICRO_VERSION=[`expr $VERSION : '[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)'`]
 AC_SUBST(MICRO_VERSION)
+AC_CANONICAL_SYSTEM
+AC_CANONICAL_HOST
 AM_INIT_AUTOMAKE([sympa], $VERSION, nosubst)
 AC_PREREQ(2.13)
 
@@ -109,7 +111,12 @@ AC_PATH_PROG(OPENSSL, openssl, /usr/local/ssl/bin)
 AC_ARG_WITH(openssl, [  --with-openssl=FULLPATH       set path to OpenSSL (default /usr/local/ssl/bin/openssl)], [OPENSSL="$withval"])
 AC_SUBST(OPENSSL)
 
-AC_PATH_PROG(GENCAT, gencat, /usr/bin/gencat)
+AC_PATH_PROG(GENCAT, gencat, "/usr/bin/gencat -m")
+case "$build_os" in
+irix*) 
+	GENCAT="$GENCAT -m"
+	;;
+esac
 AC_ARG_WITH(gencat, [  --with-gencat=FULLPATH       set path to gencat (default /usr/bin/gencat)], [GENCAT="$withval"])
 AC_SUBST(GENCAT)
 
