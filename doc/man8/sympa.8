@@ -25,8 +25,18 @@ Forces \fBSympa\fR to use an alternative configuration file.
 Default behavior is to use the configuration file as defined in the 
 Makefile. 
 .TP
-\fB\-\--import\fR=\fIlist\fR
+\fB\-\-import\fR=\fIlist\fR
 Import subscribers in the list. Data are read from STDIN.
+The imported data should contain one entry per line : the first field
+is an email address, the second (optional) field is the free form name.
+Fields are spaces-separated.
+Sample :
+.nf
+## Data to be imported
+## email	gecos
+john.steward@some.company.com		John - accountant
+mary.blacksmith@another.company.com	Mary - secretary
+.fi 
 .TP
 \fB\-k\fR, \fB\-\-keepcopy\fR=\fIdirectory\fR
 This option tells \fBSympa\fR to keep a copy of every incoming message, 
