@@ -6662,7 +6662,7 @@ sub do_edit_list {
 
      foreach my $l (@lists) {
 	 my $list = new List ($l);
-	 $list->{'purge'}($param->{'user'}{'email'});
+	 $list->purge($param->{'user'}{'email'});
      }    
 
      &message('performed');
