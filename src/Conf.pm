@@ -40,8 +40,8 @@ my @valid_options = qw(
 		       cookie cookie_cas_expire create_list crl_dir crl_update_task db_host db_env db_name 
 		       db_options db_passwd db_type db_user db_port db_additional_subscriber_fields db_additional_user_fields
 		       default_shared_quota default_archive_quota default_list_priority edit_list email etc
-		       global_remind home host domain lang listmaster log_socket_type log_level 
-		       misaddressed_commands misaddressed_commands_regexp max_size maxsmtp msgcat nrcpt 
+		       global_remind home host domain lang listmaster localedir log_socket_type log_level 
+		       misaddressed_commands misaddressed_commands_regexp max_size maxsmtp nrcpt 
 		       owner_priority pidfile spool queue queueauth queuetask queuebounce queuedigest 
 		       queueexpire queuemod queuesubscribe queueoutgoing tmpdir
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor
@@ -82,7 +82,7 @@ my %Default_Conf =
      'domain'  => undef,
      'email'   => 'sympa',
      'pidfile' => '--PIDDIR--/sympa.pid',
-     'msgcat'  => '--NLSDIR--',
+     'localedir'  => '--LOCALEDIR--',
      'sort'    => 'fr,ca,be,ch,uk,edu,*,com',
      'spool'   => '--SPOOLDIR--',
      'queue'   => undef,

@@ -109,9 +109,9 @@ AC_ARG_WITH(etcdir, [  --with-etcdir=DIR     Config directories populated by the
 AC_SUBST(ETCDIR)
 
 ## directory for language files
-NLSDIR='${prefix}/nls'
-AC_ARG_WITH(nlsdir, [  --with-nlsdir=DIR     create language files in DIR  (default ${prefix}/nls)], [NLSDIR="$withval"])
-AC_SUBST(NLSDIR)
+LOCALEDIR='${prefix}/locale'
+AC_ARG_WITH(localedir, [  --with-localedir=DIR     create language files in DIR  (default ${prefix}/locale)], [LOCALEDIR="$withval"])
+AC_SUBST(LOCALEDIR)
 
 ## directory for Documentation files
 DOCDIR='${prefix}/doc'

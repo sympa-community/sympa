@@ -74,7 +74,7 @@ CGIDIR		=	@CGIDIR@
 
 LIBDIR		=	@LIBDIR@
 
-NLSDIR		=	@NLSDIR@
+LOCALEDIR	=	@LOCALEDIR@
 
 DOCDIR		=	@DOCDIR@
 
@@ -214,7 +214,7 @@ documentation: doc/sympa.tex.tpl doc/Makefile
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
 	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' \
 	MAILERPROGDIR='${MAILERPROGDIR}' ETCBINDIR='${ETCBINDIR}' ETCDIR='${ETCDIR}' PIDDIR='${PIDDIR}' \
-	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' EXPL_DIR='${EXPL_DIR}' NLSDIR='${NLSDIR}' SPOOLDIR='${SPOOLDIR}' \
+	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' EXPL_DIR='${EXPL_DIR}' LOCALEDIR='${LOCALEDIR}' SPOOLDIR='${SPOOLDIR}' \
 	SCRIPTDIR='${SCRIPTDIR}' \
 	USER='${USER}' GROUP='${GROUP}');
 
@@ -250,7 +250,7 @@ importantchanges:
 locale:
 	@(cd po && echo "making in po/...." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
-	DIR='${DIR}' NLSDIR='${NLSDIR}' ETCBINDIR='${ETCBINDIR}' \
+	DIR='${DIR}' LOCALEDIR='${LOCALEDIR}' ETCBINDIR='${ETCBINDIR}' \
 	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	LOCALEDIR='${prefix}/locale' SCRIPTDIR='${SCRIPTDIR}' \
 	USER='${USER}' GROUP='${GROUP}') || exit 1;
@@ -258,7 +258,7 @@ locale:
 installlocale:
 	@(cd po && echo "making install in po/...." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
-	DIR='${DIR}' NLSDIR='${NLSDIR}' ETCBINDIR='${ETCBINDIR}' \
+	DIR='${DIR}' LOCALEDIR='${LOCALEDIR}' ETCBINDIR='${ETCBINDIR}' \
 	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	LOCALEDIR='${prefix}/locale' \
 	USER='${USER}' GROUP='${GROUP}' install) || exit 1;
@@ -266,7 +266,7 @@ installlocale:
 updatelocale:
 	@(cd po && echo "make update-po in po/...." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
-	DIR='${DIR}' NLSDIR='${NLSDIR}' ETCBINDIR='${ETCBINDIR}' \
+	DIR='${DIR}' LOCALEDIR='${LOCALEDIR}' ETCBINDIR='${ETCBINDIR}' \
 	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	LOCALEDIR='${prefix}/locale' SCRIPTDIR='${SCRIPTDIR}' \
 	USER='${USER}' GROUP='${GROUP}' update-po) || exit 1;
@@ -276,7 +276,7 @@ installsrc:
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' SYMPA_VERSION='${SYMPA_VERSION}' \
 	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' \
 	DESTDIR='${DESTDIR}' MAILERPROGDIR='${MAILERPROGDIR}' EXPL_DIR='${EXPL_DIR}' LIBEXECDIR='${LIBEXECDIR}' \
-	PIDDIR='${PIDDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' NLSDIR='${NLSDIR}' \
+	PIDDIR='${PIDDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' LOCALEDIR='${LOCALEDIR}' \
 	ETCBINDIR='${ETCBINDIR}' ETCDIR='${ETCDIR}' SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' \
 	VIRTUAL_ALIASES='${VIRTUAL_ALIASES}'  HOST='${HOST}' COOKIE='${COOKIE}' \
 	SPOOLDIR='${SPOOLDIR}' LOG_SOCKET_TYPE='${LOG_SOCKET_TYPE}' \
@@ -449,7 +449,7 @@ build_rh_rpm: clean
                 EXPLDIR='/var/sympa/expl'; export EXPLDIR; \
                 LIBDIR='/usr/lib/sympa/bin'; export LIBDIR; \
                 CGIDIR='/var/www/cgi-bin'; export CGIDIR; \
-                NLSDIR='/usr/lib/sympa/nls'; export NLSDIR; \
+                LOCALEDIR='/usr/lib/sympa/locale'; export LOCALEDIR; \
 		SCRIPTDIR='/var/sympa/bin'; export SCRIPTDIR; \
 		LIBEXECDIR='/var/sympa/bin'; export LIBEXECDIR; \
 		SAMPLEDIR='/usr/share/sympa/examples'; export SAMPLEDIR; \
@@ -490,7 +490,7 @@ build_mdk_rpm: clean
                 EXPLDIR='/var/lib/sympa/expl'; export EXPLDIR; \
                 LIBDIR='/usr/lib/sympa/bin'; export LIBDIR; \
                 CGIDIR='/var/www/cgi-bin'; export CGIDIR; \
-                NLSDIR='/usr/lib/sympa/nls'; export NLSDIR; \
+                LOCALEDIR='/usr/lib/sympa/locale'; export LOCALEDIR; \
 		SCRIPTDIR='/usr/lib/sympa/bin'; export SCRIPTDIR; \
 		LIBEXECDIR='/usr/lib/sympa/bin'; export LIBEXECDIR; \
 		SAMPLEDIR='/usr/share/sympa/examples'; export SAMPLEDIR; \

@@ -81,7 +81,7 @@ rm -rf $RPM_BUILD_ROOT
 --with-datadir=--DATADIR-- \
 --with-expldir=--EXPLDIR-- \
 --with-piddir=--PIDDIR-- \
---with-nlsdir=--NLSDIR-- \
+--with-localedir=--LOCALEDIR-- \
 --with-scriptdir=--SCRIPTDIR-- \
 --with-sampledir=--SAMPLEDIR-- \
 --with-spooldir=--SPOOLDIR-- \
@@ -322,10 +322,10 @@ done
 %attr(-,-,-) --LIBEXECDIR--/*
 
 # Locales
-#%dir --NLSDIR--
---NLSDIR--/
+#%dir --LOCALEDIR--
+--LOCALEDIR--/
 
-# ATTENTION A VOIR %{_libdir}/sympa/nls/*.msg
+# ATTENTION A VOIR %{_libdir}/sympa/locale/*.po
  
 # Data
 %{data_s}/
@@ -398,7 +398,7 @@ rm -rf $RPM_BUILD_ROOT
 --with-mandir=/usr/share/man \
 --with-piddir=/var/run/sympa \
 --with-openssl=/usr/bin/openssl \
---with-nlsdir=/usr/lib/sympa/nls \
+--with-localedir=/usr/lib/sympa/locale \
 --with-scriptdir=/usr/lib/sympa/bin \
 --with-sampledir=/usr/share/sympa/examples \
 --with-spooldir=/var/spool/sympa

@@ -86,7 +86,7 @@ sympa.tex: sympa.tex.tpl
 	EXPL_DIR='${EXPL_DIR}'; export EXPL_DIR; \
 	SBINDIR='${SBINDIR}'; export SBINDIR; \
 	LIBDIR='${LIBDIR}'; export LIBDIR; \
-	NLSDIR='${NLSDIR}'; export NLSDIR; \
+	LOCALEDIR='${LOCALEDIR}'; export LOCALEDIR; \
 	SPOOLDIR='${SPOOLDIR}'; export SPOOLDIR; \
 	SCRIPTDIR='${SCRIPTDIR}'; export SCRIPTDIR; \
 	WWSBINDIR='${WWSBINDIR}'; export WWSBINDIR; \

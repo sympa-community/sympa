@@ -112,6 +112,8 @@ Index</A>
 <DD><A HREF="node4.html#4715">3.3</A>
 <DT><STRONG><TT>-with-libexecdir=DIR</TT> option</STRONG>
 <DD><A HREF="node4.html#4691">3.3</A>
+<DT><STRONG><TT>-with-localedir=DIR</TT> option</STRONG>
+<DD><A HREF="node4.html#4736">3.3</A>
 <DT><STRONG><TT>-with-lockdir=DIR</TT> option</STRONG>
 <DD><A HREF="node4.html#4727">3.3</A>
 <DT><STRONG><TT>-with-mandir=DIR</TT> option</STRONG>
@@ -120,8 +122,6 @@ Index</A>
 <DD><A HREF="node4.html#4771">3.3</A>
 <DT><STRONG><TT>-with-newaliases_arg=ARGS</TT> option</STRONG>
 <DD><A HREF="node4.html#4774">3.3</A>
-<DT><STRONG><TT>-with-nlsdir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4736">3.3</A>
 <DT><STRONG><TT>-with-openssl=FULLPATH</TT> option</STRONG>
 <DD><A HREF="node4.html#4751">3.3</A>
 <DT><STRONG><TT>-with-perl=FULLPATH</TT> option</STRONG>
@@ -371,7 +371,7 @@ Index</A>
 <DD><A HREF="node3.html#4402">2.1</A>
 <DT><STRONG><TT>/home/sympa/expl/X509-user-certs/</TT> directory</STRONG>
 <DD><A HREF="node21.html#8405">20.5.1</A>
-<DT><STRONG><TT>/home/sympa/nls</TT> directory</STRONG>
+<DT><STRONG><TT>/home/sympa/locale</TT> directory</STRONG>
 <DD><A HREF="node3.html#4405">2.1</A>
  | <A HREF="node6.html#5597">5.7.1</A>
  | <A HREF="node13.html#6729">12.6.1</A>
@@ -1005,6 +1005,12 @@ Index</A>
  | <A HREF="node22.html#8452">21.1</A>
 <DT><STRONG><TT>load_subscribers.pl</TT> file</STRONG>
 <DD><A HREF="node7.html#5862">6.5.2</A>
+<DT><STRONG><TT>locale</TT> configuration keyword</STRONG>
+<DD><A HREF="node6.html#5610">5.7.2</A>
+<DT><STRONG><TT>locale/</TT> directory</STRONG>
+<DD><A HREF="node4.html#4657">3.3</A>
+<DT><STRONG><TT>localedir</TT> configuration keyword</STRONG>
+<DD><A HREF="node6.html#5592">no title</A>
 <DT><STRONG>localization</STRONG>
 <DD><A HREF="node13.html#1914">12.6</A>
 <DT><STRONG><TT>log_facility</TT> list parameter</STRONG>
@@ -1105,8 +1111,6 @@ Index</A>
  | <A HREF="node3.html#4465">2.2</A>
 <DT><STRONG><TT>msg_count</TT> file</STRONG>
 <DD><A HREF="node18.html#8294">17.</A>
-<DT><STRONG><TT>msgcat</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5592">no title</A>
 <DT><STRONG><TT>Msql-Mysql-modules</TT> perl module</STRONG>
 <DD><A HREF="node7.html#5822">6.2</A>
 <DT><STRONG><TT>mydirectory</TT> directory</STRONG>
@@ -1153,10 +1157,6 @@ Index</A>
 <DT><STRONG><TT>newaliases</TT> UNIX command</STRONG>
 <DD><A HREF="node5.html#5104">4.1</A>
  | <A HREF="node5.html#5169">4.3</A>
-<DT><STRONG><TT>nls</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5610">5.7.2</A>
-<DT><STRONG><TT>nls/</TT> directory</STRONG>
-<DD><A HREF="node4.html#4657">3.3</A>
 <DT><STRONG><TT>Notification</TT> list parameter</STRONG>
 <DD><A HREF="node16.html#8027">15.5.2</A>
  | <A HREF="node16.html#8047">15.5.3</A>
@@ -1559,7 +1559,7 @@ Index</A>
 <DD><A HREF="node16.html#7465">15.2.5</A>
 <DT><STRONG><TT>src/</TT> directory</STRONG>
 <DD><A HREF="node4.html#4660">3.3</A>
-<DT><STRONG><TT>~src/nls/Makefile</TT> file</STRONG>
+<DT><STRONG><TT>~src/locale/Makefile</TT> file</STRONG>
 <DD><A HREF="node6.html#5600">5.7.1</A>
 <DT><STRONG>statistics</STRONG>
 <DD><A HREF="node14.html#2216">13.8</A>
@@ -1663,7 +1663,7 @@ Index</A>
  | <A HREF="node13.html#6739">12.6.1</A>
 <DT><STRONG><TT>~sympa/bin/</TT> directory</STRONG>
 <DD><A HREF="node4.html#4804">3.3</A>
-<DT><STRONG><TT>~sympa/nls</TT> directory</STRONG>
+<DT><STRONG><TT>~sympa/locale</TT> directory</STRONG>
 <DD><A HREF="node4.html#4957">3.7</A>
 <DT><STRONG><TT>~sympa/src/</TT> directory</STRONG>
 <DD><A HREF="node4.html#4643">3.3</A>
@@ -1896,7 +1896,7 @@ Index</A>
 <BR><HR>
 <ADDRESS>
 root
-2004-07-02
+2004-07-06
 </ADDRESS>
 </BODY>
 </HTML>

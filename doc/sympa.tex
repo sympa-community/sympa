@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {02 July 2004}
+    \date {06 July 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -589,9 +589,8 @@ a virtual robot or for the whole site.
 	\item \dir {/home/sympa/expl/X509-user-certs}\\
 	The directory where Sympa stores all user's certificates
 
-	\item \dir {/home/sympa/nls}\\
-	Internationalization directory. It contains XPG4-compatible
-	message catalogues. \Sympa has currently been translated
+	\item \dir {/home/sympa/locale}\\
+	Internationalization directory. It contains message catalogues in the GNU .po format. \Sympa has currently been translated
 	into 14 different languages.
 
 	\item \dir {/home/sympa/spool}\\
@@ -792,8 +791,6 @@ You should have a UNIX system that is more or less recent in order
 to be able to use \Sympa. In particular, it is necessary
 that your system have an ANSI C compiler (in other words, your compiler
 should support prototypes);
-%, as well as XPG4-standard \textindex {NLS}
-%(Native Language Support, for languages other than English) extensions.
 
 \Sympa has been installed and tested on the following
 systems, therefore you should not have any special problems:
@@ -809,11 +806,6 @@ systems, therefore you should not have any special problems:
 \end {itemize}
 
 Anyone willing to port it to NT ? ;-)
-
-% If your UNIX system has a \unixcmd {gencat} command as well as
-% \unixcmd {catgets(3)} and \unixcmd {catopen(3)} functions, it is
-% likely that it has \textindex {NLS} extensions and that these extensions comply
-% with the XPG4 specifications.
 
 Finally, most UNIX systems are now supplied with an ANSI C compiler;
 if this is not the case, you can install the \unixcmd {gcc} compiler,
@@ -954,7 +946,7 @@ directory named \dir {sympa-\version/} where all the useful files
 and directories will be located. In particular, you will have a
 \dir {doc/} directory containing this documentation in various
 formats; a \dir {sample/} directory containing a few examples of
-configuration files; an \dir {nls/} directory where multi-lingual
+configuration files; a \dir {locale/} directory where multi-lingual
 messages are stored; and, of course, the \dir {src/} directory for the
 mail robot and \dir {wwsympa} for the web interface.
 
@@ -1019,7 +1011,7 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 
 \item \option {--with-etcdir=DIR}, Config directories populated by the user are in DIR (default /home/sympa/etc)
 
-\item \option {--with-nlsdir=DIR}, create language files in DIR (default /home/sympa/nls)
+\item \option {--with-localedir=DIR}, create language files in DIR (default /home/sympa/locale)
 
 \item \option {--with-scriptdir=DIR}, create script files in DIR (default /home/sympa/script)
 
@@ -1165,7 +1157,7 @@ messages distribution.
 \item \option {--lang \textit {catalog}} | \option {-l \textit {catalog}}
   
   Set this option to use a language catalog for \Sympa. 
-  The corresponding catalog file must be located in \tildedir {sympa/nls}
+  The corresponding catalog file must be located in \tildedir {sympa/locale}
   directory. 
   
 \item \option {--keepcopy \textit {recipient\_directory}} | \option {-k \textit {recipient\_directory}}
@@ -1905,19 +1897,18 @@ see a  nice mailto adresses where others have nothing.
 
 \section {Internationalization related}    
 
-\subsection {\cfkeyword {msgcat}}   
+\subsection {\cfkeyword {localedir}}   
 
-	\default{\dir {/home/sympa/nls}}
+	\default{\dir {/home/sympa/locale}}
 
-        The location of multilingual (nls) catalog files. Must correspond to
-	\tildefile {src/nls/Makefile}.
+        The location of multilingual catalog files. Must correspond to	\tildefile {src/locale/Makefile}.
 
 \subsection {\cfkeyword {lang}}   
 
 	\default {us}
 
         This is the default language for \Sympa. The message
-	catalog (.msg) located in the corresponding \cfkeyword {nls} directory
+	catalog (.msg) located in the corresponding \cfkeyword {locale} directory
 	will be used.
 
 \section {Bounce related}
@@ -5039,7 +5030,7 @@ Nowadays \Sympa is able to keep track of individual users' language preferences.
 
 Every message sent by \Sympa to users, owners and editors is outside
 the code, in a message catalog. These catalogs are located in the
-\dir {/home/sympa/nls} directory. Messages have currently been
+\dir {/home/sympa/locale} directory. Messages have currently been
 translated into 14 different languages : 
 
 \begin{itemize}
