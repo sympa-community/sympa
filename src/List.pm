@@ -3565,6 +3565,9 @@ sub update_user {
 	    }
 	}
 
+	## Reset session cache
+	$list_cache{'get_subscriber'}{$name}{$who} = undef;
+
 	## Subscribers in text file
     }else {
 	my $user = $self->{'users'}->{$who};
