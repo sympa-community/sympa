@@ -87,7 +87,7 @@
         [%|l%]FYI: Defining editors will not make the list moderated ; you will have to set the "send" parameter.[%END%]<BR>
         [%|l%]FYI: If the list is moderated, any editor can distribute or reject a message without the knowledge or consent of the other editors. Messages that have not been distributed or rejected will remain in the moderation spool until they are acted on.[%END%]
       [% ELSIF p.NAME == 'expire_task' %]
-        [%|l%]This parameter states which model is used to create a remind task. A expire task regurlaly checks the inscription or reinscription date of subscribers and asks them to renew their subscription. If they don't they are deleted.[%END%]
+        [%|l%]This parameter states which model is used to create a expire task. An expire task regurlaly checks the inscription or reinscription date of subscribers and asks them to renew their subscription. If they don't they are deleted.[%END%]
       [% ELSIF p.NAME == 'footer_type' %]
         [%|l%]List owners may decide to add message headers or footers to messages sent via the list. This parameter defines the way a footer/header is added to a message.[%END%]<BR><BR>
         <UL>
