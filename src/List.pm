@@ -4851,20 +4851,33 @@ sub probe_db {
 	    
 	    foreach my $f (keys %{$db_struct{$t}}) {
 		unless ($real_struct{$t}{$f}) {
-		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. It should have the following type: \'%s\'', $f, $t, $Conf{'db_name'}, $db_struct{$t}{$f});
-		    &do_log('info', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
-		    return undef;
+		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, $Conf{'db_name'});
+		    
+		    unless ($dbh->do("ALTER TABLE $t ADD $f $db_struct{$t}{$f}")) {
+			&do_log('info', 'Could not add field \'%s\' to table\'%s\'.', $f, $t);
+			&do_log('info', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
+			return undef;
+		    }
+
+		    &do_log('info', 'Database structure updated');
+		    next;
 		}
 		
 		unless ($real_struct{$t}{$f} eq $db_struct{$t}{$f}) {
-		     &do_log('info', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT has awaited type. It should have the following type: \'%s\'', $f, $t, $Conf{'db_name'}, $db_struct{$t}{$f});
-		     &do_log('info', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
-		    return undef;
+		     &do_log('info', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', $f, $t, $Conf{'db_name'}, $db_struct{$t}{$f});
+
+		     unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$t}{$f}")) {
+			 &do_log('info', 'Could not change field \'%s\' in table\'%s\'.', $f, $t);
+			 &do_log('info', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
+			 return undef;
+		     }
+		     
+		     &do_log('info', 'Database structure updated');
 		}
 	    }
 	}
     }
-
+    
     return 1;
 }
 
