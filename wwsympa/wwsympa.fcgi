@@ -298,7 +298,7 @@ my %action_args = ('default' => ['list'],
 		'search' => ['list','filter'],
 		'search_user' => ['email'],
 		'set_lang' => ['lang'],
-		'attach' => ['list','@path'],
+		'attach' => ['list','dir','file'],
 		'change_identity' => ['email','previous_action','previous_list'],
 		'edit_list_request' => ['list','group'],
 		'rename_list' => ['list','new_list','new_robot'],
@@ -8929,7 +8929,7 @@ sub do_attach {
     my $list_name = $list->{'name'};
 
     # relative path / directory shared of the document 
-    my $path = $in{'path'};
+    my $path = &tools::escape_chars($in{'dir'}).'/'.$in{'file'};
     my $path_orig = $path;
   
     # path of the urlized directory

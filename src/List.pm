@@ -7516,7 +7516,7 @@ sub _urlize_part {
 	# it seems that the 'name=' option doesn't work 
 	# if the file name has got an extension like '.xxx'-> '.' is replaced with '_'
 	(my $file_name = $filename) =~ s/\./\_/g;
-	$head->add('Content-type', "message/external-body; access-type=URL; URL=$wwsympa_url/attach/$list$dir/$filename; name=\"$file_name\"; size=\"$size\"");
+	$head->add('Content-type', "message/external-body; access-type=URL; URL=\"$wwsympa_url/attach/$list$dir/$filename\"; name=\"$file_name\"; size=\"$size\"");
 
 	$message->parts([]);
 	$message->bodyhandle (new MIME::Body::Scalar "$body" );
