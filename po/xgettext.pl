@@ -319,9 +319,17 @@ foreach my $entry (sort keys %Lexicon) {
 sub output {
     my $str = shift;
 
+    ## Normalize
+    $str =~ s/\\n/\n/g;
+
     if ($str =~ /\n/) {
 	print "\"\"\n";
-	print "\"$_\\n\"\n" foreach split(/\n/, $str, -1);
+
+	## Avoid additional \n entries
+	my @lines = split(/\n/, $str, -1);
+	pop @lines if ($lines[$#lines] eq '');
+
+	print "\"$_\\n\"\n" foreach @lines;
     }
     else {
 	print "\"$str\"\n"
