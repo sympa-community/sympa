@@ -502,7 +502,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 'title_id' => 54,
 			 'group' => 'command'
 			 },
-	    'lang' => {'format' => ['fr','us','de','it','fi','es','cn-big5','cn-gb'],
+	    'lang' => {'format' => ['fr','us','de','it','fi','es','cn-big5','cn-gb','pl','cz'],
 		       'default' => {'conf' => 'lang'},
 		       'title_id' => 55,
 		       'group' => 'description'
