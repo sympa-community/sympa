@@ -26,7 +26,7 @@ use lib '--LIBDIR--';
 
 use strict vars;
 use POSIX;
-use Conf;
+require 'Conf.pm' unless ($ARGV[0] eq '-c');
 
 ## Configuration
 
@@ -562,7 +562,7 @@ foreach my $i (0..$#params) {
     if ($file eq 'wwsympa.conf') {	
 	$current_value = $wwsconf->{$name} ;
     }elsif ($file eq 'sympa.conf') {
-	$current_value = $Conf{$name}; 
+	$current_value = $Conf::Conf{$name}; 
     }else {
 	printf STDERR "incorrect definition of $name\n";
     }
