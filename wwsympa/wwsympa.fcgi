@@ -403,7 +403,8 @@ while ($query = &new_loop()) {
 
    
     ##Cookie extern : sympa_alt_email
-    %{$param->{'alt_emails'}} 
+    ## !!
+#    %{$param->{'alt_emails'}} 
     my %emails = &cookielib::check_cookie_extern($ENV{'HTTP_COOKIE'},$Conf{'cookie'});
     my $user_email = lc($param->{'user'}{'email'});
     
