@@ -2394,9 +2394,9 @@ sub get_subscriber {
 
 	if ($Conf{'db_type'} eq 'Oracle') {
 	    ## "AS" not supported by Oracle
-	    $statement = sprintf "SELECT email_user \"email\", comment_subscriber \"gecos\", lang_user \"lang\", bounce_subscriber \"bounce\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", %s \"date\"  FROM user_table, subscriber_table WHERE (email_user = %s AND list_subscriber = %s AND user_subscriber = %s)", $date_field, $dbh->quote($email), $dbh->quote($name), $dbh->quote($email);
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", bounce_subscriber \"bounce\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", %s \"date\"  FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $dbh->quote($email), $dbh->quote($name);
 	}else {
-	    $statement = sprintf "SELECT email_user AS email, comment_subscriber AS gecos, lang_user AS lang, bounce_subscriber AS bounce, reception_subscriber AS reception, visibility_subscriber AS visibility, %s AS date  FROM user_table, subscriber_table WHERE (email_user = %s AND list_subscriber = %s AND user_subscriber = %s)", $date_field, $dbh->quote($email), $dbh->quote($name), $dbh->quote($email);
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, reception_subscriber AS reception, visibility_subscriber AS visibility, %s AS date  FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $dbh->quote($email), $dbh->quote($name);
 	}
 
 	push @sth_stack, $sth;
