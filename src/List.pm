@@ -1018,6 +1018,7 @@ my %list_of_lists = ();
 my %list_of_robots = ();
 my %list_of_topics = ();
 my %edit_list_conf = ();
+my %list_of_fh = ();
 
 ## Last modification times
 my %mtime;
@@ -3189,20 +3190,9 @@ sub get_first_user {
 		}
 		close $lock_file;
 
-		## Read access to prevent "Bad file number" error on Solaris
-		unless (open FH, "$lock_file") {
-		    &do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+		unless ($list_of_fh{$lock_file} = &tools::lock($lock_file,'read')) {
 		    return undef;
 		}
-		
-		unless (flock (FH, LOCK_SH | LOCK_NB)) {
-		    &do_log('notice','Waiting for reading lock on %s', $lock_file);
-		    unless (flock (FH, LOCK_SH)) {
-			&do_log('err', 'Failed locking %s: %s', $lock_file, $!);
-			return undef;
-		    }
-		}
-		&do_log('debug2', 'Got lock for reading on %s', $lock_file);
 	    }
 	}
 
@@ -3358,6 +3348,24 @@ sub get_first_user {
 	    $user->{'subscribed'} = 1
 		if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
 	}
+	else {
+	    $sth->finish;
+	    $sth = pop @sth_stack;
+	    	    
+	    if ($self->{'admin'}{'user_data_source'} eq 'include2') {
+		## Release the Shared lock
+		$include_lock_count--;
+
+		## Last lock
+		if ($include_lock_count == 0) {
+		    my $lock_file = $self->{'dir'}.'/include.lock';
+		    unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
+			return undef;
+		    }
+		    delete $list_of_fh{$lock_file};
+		}
+	    }
+	}
 
 	## If no offset (for LIMIT) was used, update total of subscribers
 	unless ($offset) {
@@ -3427,9 +3435,10 @@ sub get_next_user {
 		## Last lock
 		if ($include_lock_count == 0) {
 		    my $lock_file = $self->{'dir'}.'/include.lock';
-		    flock(FH,LOCK_UN);
-		    close FH;
-		    &do_log('debug2', 'Release lock on %s', $lock_file);
+		    unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
+			return undef;
+		    }
+		    delete $list_of_fh{$lock_file};
 		}
 	    }
 	}
@@ -3489,20 +3498,10 @@ sub get_first_bouncing_user {
 	    }
 	    close $lock_file;
 	    
-	    ## Read access to prevent "Bad file number" error on Solaris
-	    unless (open FH, "$lock_file") {
-		&do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+
+	    unless ($list_of_fh{$lock_file} = &tools::lock($lock_file,'read')) {
 		return undef;
 	    }
-
-	    unless (flock (FH, LOCK_SH | LOCK_NB)) {
-		&do_log('notice','Waiting for reading lock on %s', $lock_file);
-		unless (flock (FH, LOCK_SH)) {
-		    &do_log('err', 'Failed locking %s: %s', $lock_file, $!);
-		    return undef;
-		}
-	    }
-	    &do_log('debug2', 'Got lock for reading on %s', $lock_file);
 	}
     }
 
@@ -3543,13 +3542,32 @@ sub get_first_bouncing_user {
     
     my $user = $sth->fetchrow_hashref;
 	    
-    &do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
-	if (! $user->{'email'});
+    if (defined $user) {
+	&do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
+	    if (! $user->{'email'});
+	
+	## In case it was not set in the database
+	$user->{'subscribed'} = 1
+	    if (defined ($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
 
-    ## In case it was not set in the database
-    $user->{'subscribed'} = 1
-	if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
-    
+    }else {
+	$sth->finish;
+	$sth = pop @sth_stack;
+	
+	if ($self->{'admin'}{'user_data_source'} eq 'include2') {
+	    ## Release the Shared lock
+	    $include_lock_count--;
+	    
+	    ## Last lock
+	    if ($include_lock_count == 0) {
+		my $lock_file = $self->{'dir'}.'/include.lock';
+		unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
+		    return undef;
+		}
+		delete $list_of_fh{$lock_file};
+	    }
+	}
+    }
     return $user;
 }
 
@@ -3590,9 +3608,10 @@ sub get_next_bouncing_user {
 	    ## Last lock
 	    if ($include_lock_count == 0) {
 		my $lock_file = $self->{'dir'}.'/include.lock';
-		flock(FH,LOCK_UN);
-		close FH;
-		&do_log('debug2', 'Release lock on %s', $lock_file);
+		unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
+		    return undef;
+		}
+		delete $list_of_fh{$lock_file};
 	    }
 	}
     }
@@ -6032,6 +6051,7 @@ sub _load_users_include {
 
 	## Lock DB_File
 	my $fd = $ref->fd;
+
 	unless (open DB_FH, "+<&$fd") {
 	    &do_log('err', 'Cannot open %s: %s', $db_file, $!);
 	    return undef;
@@ -6245,19 +6265,9 @@ sub sync_include {
 
     ## Get an Exclusive lock
     my $lock_file = $self->{'dir'}.'/include.lock';
-    unless (open FH, ">>$lock_file") {
-	&do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+    unless ($list_of_fh{$lock_file} = &tools::lock($lock_file,'write')) {
 	return undef;
     }
-    unless (flock (FH, LOCK_EX | LOCK_NB)) {
-	&do_log('notice','Waiting for writing lock on %s', $lock_file);
-	unless (flock (FH, LOCK_EX)) {
-	    &do_log('err', 'Failed locking %s: %s', $lock_file, $!);
-	    return undef;
-	}
-    }
-    &do_log('debug2', 'Got lock for writing on %s', $lock_file);
-
 
     ## Go through new users
     my @add_tab;
@@ -6356,9 +6366,10 @@ sub sync_include {
     &do_log('notice', 'List:sync_include(%s): %d users updated', $name, $users_updated);
 
     ## Release lock
-    flock(FH,LOCK_UN);
-    close FH;
-    &do_log('debug2', 'Release lock on %s', $lock_file);
+    unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
+	return undef;
+    }
+    delete $list_of_fh{$lock_file};
 
     ## Get and save total of subscribers
     $self->{'total'} = _load_total_db($self->{'name'}, 'nocache');

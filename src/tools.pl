@@ -1937,5 +1937,72 @@ sub higher_version {
     return 0;
 }
 
+sub LOCK_SH {1};
+sub LOCK_EX {2};
+sub LOCK_NB {4};
+sub LOCK_UN {8};
+
+
+
+## lock a file 
+sub lock {
+    my $lock_file = shift;
+    my $mode = shift; ## read or write
+    
+    my $operation;
+    my $open_mode;
+
+    if ($mode eq 'read') {
+	$operation = LOCK_SH;
+    }else {
+	$operation = LOCK_EX;
+	$open_mode = '>>';
+    }
+    
+    ## Read access to prevent "Bad file number" error on Solaris
+    unless (open FH, $open_mode.$lock_file) {
+	&do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+	return undef;
+    }
+    
+    my $got_lock = 1;
+    unless (flock (FH, $operation | LOCK_NB)) {
+	&do_log('notice','Waiting for %s lock on %s', $mode, $lock_file);
+	$got_lock = undef;
+	for (my $i = 1; $i < 10; $i++) {
+	    sleep (10 * $i);
+	    if (flock (FH, $operation | LOCK_NB)) {
+		$got_lock = 1;
+		last;
+	    }
+	    &do_log('notice','Waiting for %s lock on %s', $mode, $lock_file);
+	}
+    }
+	
+    if ($got_lock) {
+	&do_log('debug2', 'Got lock for %s on %s', $mode, $lock_file);
+    }else {
+	&do_log('err', 'Failed locking %s: %s', $lock_file, $!);
+	return undef;
+    }
+
+    return \*FH;
+}
+
+## unlock a file 
+sub unlock {
+    my $lock_file = shift;
+    my $fh = shift;
+    
+    unless (flock($fh,LOCK_UN)) {
+	&do_log('err', 'Failed UNlocking %s: %s', $lock_file, $!);
+	return undef;
+    }
+    close $fh;
+    &do_log('debug2', 'Release lock on %s', $lock_file);
+    
+    return 1;
+}
+
 1;
 
