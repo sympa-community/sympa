@@ -36,4 +36,5 @@ marqués par Sympa comme des adresses gravement en erreur :
 [user]
 [END]
 
+Gérer les abonnés en erreur: [conf->wwsympa_url]/reviewbouncing/[list->name]
 [ENDIF]

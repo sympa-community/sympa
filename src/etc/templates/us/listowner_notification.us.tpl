@@ -34,5 +34,5 @@ selected by Sympa as severe bouncing addresses :
 [user]
 [END]
 
-
+Managing bouncing subscribers : [conf->wwsympa_url]/reviewbouncing/[list->name]
 [ENDIF]
