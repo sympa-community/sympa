@@ -7612,15 +7612,15 @@ sub remove_task {
 sub db_log {
 
     my $process = shift;
-    my $email_user = shift;
+    my $email_user = shift; $email_user = lc($email_user);
     my $auth = shift;
-    my $ip = shift;
-    my $ope = shift;
-    my $list = shift;
-    my $robot = shift;
-    my $arg = shift;
+    my $ip = shift; $ip = lc($ip);
+    my $ope = shift; $ope = lc($ope);
+    my $list = shift; $list = lc($list);
+    my $robot = shift; $robot = lc($robot);
+    my $arg = shift; 
     my $status = shift;
-    my $list_subscriber = shift;
+    my $subscriber_count = shift;
 
     do_log ('info',"db_log (PROCESS = $process, EMAIL = $email_user, AUTH = $auth, IP = $ip, OPERATION = $ope, LIST = $list,ROBOT = $robot, ARG = $arg ,STATUS = $status , LIST= list_subscriber)");
 
@@ -7635,15 +7635,15 @@ sub db_log {
     }
     $auth = '' if ($auth eq 'null');
 
-
     my $date=time;
-    my $date_operation = sprintf $date_format{'write'}{$Conf{'db_type'}}, $date, $date;
     
     ## Insert in log_table
 
-    my $statement = 'INSERT INTO log_table (id, date_operation, pid, process, email_user, auth, ip, operation, operation_list, operation_robot, operation_arg, operation_status, list_subscriber) ';
 
-    my $statement_value = sprintf "VALUES ('',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $date_operation,$dbh->quote($$),$dbh->quote($process),$dbh->quote($email_user),$dbh->quote($auth),$dbh->quote($ip),$dbh->quote($ope),$dbh->quote($list),$dbh->quote($robot),$dbh->quote($arg),$dbh->quote($status),$dbh->quote($list_subscriber);		    
+
+    my $statement = 'INSERT INTO log_table (id, date, pid, process, email_user, auth, ip, operation, list, robot, arg, status, subscriber_count) ';
+
+    my $statement_value = sprintf "VALUES ('',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $date,$dbh->quote($$),$dbh->quote($process),$dbh->quote($email_user),$dbh->quote($auth),$dbh->quote($ip),$dbh->quote($ope),$dbh->quote($list),$dbh->quote($robot),$dbh->quote($arg),$dbh->quote($status),$dbh->quote($subscriber_count);		    
     $statement = $statement.$statement_value;
     
 		    unless ($dbh->do($statement)) {
@@ -7651,6 +7651,78 @@ sub db_log {
 			return undef;
 		    }
 
+}
+
+# Scan log_table with appropriate select 
+sub get_first_db_log {
+
+    my $select = shift;
+
+    do_log('info','get_first_db_log (%s)',$select);
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+
+    my $statement; 
+
+    if ($Conf{'db_type'} eq 'Oracle') {
+	## "AS" not supported by Oracle
+	$statement = "SELECT date \"date\", pid \"pid\", process \"process\", email_user \"email\", auth \"auth\", ip \"ip\",operation \"operation\", list \"list\", robot \"robot\", arg \"arg\", status \"status\", subscriber_count \"count\" FROM log_table WHERE 1 ";
+    }else{
+	$statement = "SELECT date AS date, pid AS pid, process AS process, email_user AS email, auth AS auth, ip AS ip, operation AS operation, list AS list, robot AS robot, arg AS arg, status AS status, subscriber_count AS count FROM log_table WHERE 1 ";	
+    }
+
+    if ($select->{'list'}) {
+	$select->{'list'} = lc ($select->{'list'});
+	$statement .= sprintf "AND list = %s ",$select->{'list'}; 
+    }
+   
+    if ($select->{'robot'}) {
+	$select->{'robot'} = lc ($select->{'robot'});
+	$statement .= sprintf "AND robot = %s ",$select->{'robot'}; 
+    }
+   
+    if ($select->{'ip'}) {
+	$select->{'ip'} = lc ($select->{'ip'});
+	$statement .= sprintf "AND ip = %s ",$select->{'ip'}; 
+    }
+   
+    if ($select->{'ope'}) {
+	$select->{'ope'} = lc ($select->{'ope'});
+	$statement .= sprintf "AND operation = %s ",$select->{'operation'}; 
+    }
+
+
+    push @sth_stack, $sth;
+
+    do_log('info',"xxxxxxxxxxxxxx statement $statement ");
+
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+
+    do_log('info',"xxxxxxxxxxxxxx found 1");
+  
+    return ($sth->fetchrow_hashref);
+
+}
+
+sub get_next_db_log {
+
+    my $log = $sth->fetchrow_hashref;
+    
+    unless (defined $log) {
+	$sth->finish;
+	$sth = pop @sth_stack;
+    }
+    return $log;
 }
 
 #################################################################

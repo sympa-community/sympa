@@ -299,7 +299,7 @@ my %action_args = ('default' => ['list'],
 		'attach' => ['list','@path'],
 		'change_identity' => ['email','previous_action','previous_list'],
 		'edit_list_request' => ['list','group'],
-		'viewlogs' => ['list','email_regexp','since','page']
+		'viewlogs' => ['list']
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -1216,14 +1216,14 @@ sub do_login {
     if ($param->{'user'}{'email'}) {
 	&error_message('already_login', {'email' => $param->{'user'}{'email'}});
 	&wwslog('info','do_login: user %s already logged in', $param->{'user'}{'email'});
-	&List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'login','',$robot,'','already logged');
+	# &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'login','',$robot,'','already logged');
 	return 'home';
     }
 
     unless ($in{'email'}) {
 	&error_message('no_email');
 	&wwslog('info','do_login: no email');
-	&List::db_log('wwsympa','nobody',$param->{'auth_method'},$ip,'login','',$robot,'','no email');
+	# &List::db_log('wwsympa','nobody',$param->{'auth_method'},$ip,'login','',$robot,'','no email');
 	return 'home';
     }
     
@@ -1244,7 +1244,7 @@ sub do_login {
     ##authentication of the sender
     unless($param->{'user'} = &check_auth($in{'email'},$in{'passwd'})){
 	&error_message('failed');
-	&List::db_log('wwsympa',$in{'email'},'null',$ip,'login','',$robot,'','failed');
+	# &List::db_log('wwsympa',$in{'email'},'null',$ip,'login','',$robot,'','failed');
 	do_log('notice', "Authentication failed\n");
 	if ($in{'previous_action'}) {
 	    delete $in{'passwd'};
@@ -1254,12 +1254,12 @@ sub do_login {
 	    return 'loginrequest';
 	}
     } 
-    &List::db_log('wwsympa',$in{'email'},'null',$ip,'login','',$robot,'','done');
+    # &List::db_log('wwsympa',$in{'email'},'null',$ip,'login','',$robot,'','done');
 
     my $email = lc($param->{'user'}{'email'});
     unless($param->{'alt_emails'}{$email}){
 	unless(&cookielib::set_cookie_extern($Conf{'cookie'},$param->{'cookie_domain'},%{$param->{'alt_emails'}})){
-	    &List::db_log('wwsympa',$email,'null',$ip,'login','',$robot,'','Could not set cookie');
+	    # &List::db_log('wwsympa',$email,'null',$ip,'login','',$robot,'','Could not set cookie');
 	    &wwslog('notice', 'Could not set HTTP cookie for external_auth');
 	    exit -1;
 	}
@@ -1784,7 +1784,7 @@ sub do_logout {
 	return undef;
     }
     
-    &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'logout','',$robot,'','done');
+    # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'logout','',$robot,'','done');
 
     delete $param->{'user'};
     $param->{'lang'} = $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'}) || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
@@ -1816,7 +1816,7 @@ sub do_remindpasswd {
     
     $param->{'email'} = $in{'email'};
 
-    &List::db_log('wwsympa',$in{'email'},'null',$ip,'remindpasswd','',$robot,'','done');
+    ('wwsympa',$in{'email'},'null',$ip,'remindpasswd','',$robot,'','done');
     
     if ($in{'previous_action'} eq 'referer') {
 	$param->{'referer'} = &tools::escape_chars($in{'previous_list'});
@@ -1883,7 +1883,7 @@ sub do_sendpasswd {
 	if ($param->{'user'}{'password'} =~ /^init/);
     
     &List::send_global_file('sendpasswd', $in{'email'}, $robot, $param);
-    &List::db_log('wwsympa',$in{'email'},'null',$ip,'sendpasswd','',$robot,'','done');
+    ('wwsympa',$in{'email'},'null',$ip,'sendpasswd','',$robot,'','done');
 
     
     $param->{'email'} = $in{'email'};
@@ -1949,7 +1949,7 @@ sub do_which {
 	}
 	
     }
-    &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'which','',$robot,'','done');
+    ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'which','',$robot,'','done');
     return 1;
 }
 
@@ -2109,14 +2109,14 @@ sub do_review {
     unless ($action =~ /do_it/) {
 	&error_message('may_not');
 	&wwslog('info','do_review: may not review');
-	&List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','may not');
+	('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','may not');
 	return undef;
     }
 
     unless ($param->{'total'}) {
 	&error_message('no_subscriber');
 	&wwslog('info','do_review: no subscriber');
-	&List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','no subscriber');
+	('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','no subscriber');
 	return 1;
     }
 
@@ -2128,7 +2128,7 @@ sub do_review {
 
     if ($param->{'page'} > $param->{'total_page'}) {
 	&error_message('no_page', {'page' => $param->{'page'}});
-	&List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','out of pages');
+	('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','out of pages');
 	&wwslog('info','do_review: no page %d', $param->{'page'});
 	return undef;
     }
@@ -2214,7 +2214,7 @@ sub do_review {
 
     ## additional DB fields
     $param->{'additional_fields'} = $Conf{'db_additional_subscriber_fields'};
-    &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','done');
+    ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','done');
     return 1;
 }
 
@@ -3131,7 +3131,7 @@ sub do_add {
     unless ($add_is =~ /do_it/) {
 	&error_message('may_not');
 	&wwslog('info','do_add: %s may not add', $param->{'user'}{'email'});
-	&List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$in{'email'},'may not');
+	('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$in{'email'},'may not');
 	return undef;
     }
     
@@ -3166,7 +3166,7 @@ sub do_add {
 	unless (&tools::valid_email($email)) {
 	    &error_message('incorrect_email', {'email' => $email});
 	    &wwslog('info','do_add: incorrect email %s', $email);
-	    &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$email,"incorrect_email");
+	    ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$email,"incorrect_email");
 	    next;
 	}
 
@@ -3176,7 +3176,7 @@ sub do_add {
 	    &error_message('user_already_subscriber', {'email' => $email,
 						       'list' => $list->{'name'}});
 	    &wwslog('info','do_add: %s already subscriber', $email);
-	    &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$email,"already subscriber");
+	    ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$email,"already subscriber");
 	    next;
 	}
     
@@ -3187,10 +3187,10 @@ sub do_add {
 					'update_date' => time})) {
 		&error_message('failed');
 		&wwslog('info', 'do_add: update failed');
-		&List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$email,"update failed");
+		('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$email,"update failed");
 		return undef;
 	    }
-	    &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$email,"updated");
+	    ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$email,"updated");
 
 	}else {
 	    my $u2 = &List::get_user_db($email);
@@ -3228,13 +3228,13 @@ sub do_add {
     unless( defined $total) {
 	&error_message('failed_add');
 	&wwslog('info','do_add: failed adding');
-	&List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$comma_emails,'failed',$total);
+	('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$comma_emails,'failed',$total);
 	return undef;
     }
 
     $list->save();
     &message('add_performed', {'total' => $total});
-    &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$comma_emails,'done',$total) if (@new_users);
+    ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$comma_emails,'done',$total) if (@new_users);
     return 'review';
 }
 
@@ -3272,7 +3272,7 @@ sub do_del {
 
     unless ( $del_is =~ /do_it/) {
 	&error_message('may_not');
-	&List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$in{'email'},'may not');
+	('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$in{'email'},'may not');
 	&wwslog('info','do_del: %s may not del', $param->{'user'}{'email'});
 	return undef;
     }
@@ -3289,7 +3289,7 @@ sub do_del {
 
 	unless ( defined($user_entry) && ($user_entry->{'subscribed'} == 1) ) {
 	    &error_message('not_subscriber', {'email' => $email});
-	    &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'not subscriber');
+	    ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'not subscriber');
 	    &wwslog('info','do_del: %s not subscribed', $email);
 	    next;
 	}
@@ -3299,7 +3299,7 @@ sub do_del {
 				       {'subscribed' => 0,
 					'update_date' => time})) {
 		&error_message('failed');
-		&List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'failed subscriber included');
+		('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'failed subscriber included');
 		&wwslog('info', 'do_del: update failed');
 		return undef;
 	    }
@@ -3333,10 +3333,10 @@ sub do_del {
     unless( defined $total) {
 	&error_message('failed');
 	&wwslog('info','do_del: failed');
-	&List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,join('.',@removed_users),'failed');
+	('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,join('.',@removed_users),'failed');
 	return undef;
     }
-    &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,join(',',@removed_users),'done',$total) if (@removed_users) ;
+    ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,join(',',@removed_users),'done',$total) if (@removed_users) ;
     $list->save();
 
     &message('performed');
@@ -9107,9 +9107,30 @@ sub do_view_template {
     return 1;
 }
 
-## view logs stored in MySQL
+## view logs stored in RDBMS
+## this function as been writen in order to allow list owner and listmater to views logs
+## of there robot or there is real problems with privacy policy and law in such services.
+## 
 sub do_viewlogs {
-#    &do_log('info', 'do_viewlogs(%s,%s,%s,%s)',$list,$email_regexp,$since);
+    &do_log('info', 'do_viewlogs()');
+
+    my $list = new List ($param->{'list'});
+
+    unless ($param->{'is_listmaster'}) {
+	&error_message('may_not');
+	&wwslog('info','do_viewlogs may_not from %s in list %s', $param->{'user'}{'email'}, $param->{'list'});
+	# &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'viewlogs',$param->{'list'},$robot,'','may not');
+	return undef;
+    }
+    my @lines;
+    my $select = ('list'=> $param->{'list'},'robot'=> $param->{'robot'});
+
+    for (my $line = &List::get_first_db_log($select); $line; $line = &List::get_next_db_log()) {
+	# $line->{'date'} = &POSIX::strftime("%d %b %Y %H:%M:%S", $line->{'date'} );
+	
+	push @lines, sprintf ('%s %8s %15s@%20s %20s %25s %5s %s %s %s',$line->{'date'},$line->{'process'},$line->{'list'},$line->{'robot'},$line->{'ip'},$line->{'email'},$line->{'auth'},$line->{'operation'}, $line->{'operation_arg'}, $line->{'status'}); 
+    }
+    $param->{'log_entries'} = \@lines;
 
     return 1;
 }

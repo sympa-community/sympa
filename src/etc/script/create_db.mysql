@@ -30,24 +30,24 @@ CREATE TABLE subscriber_table (
 	INDEX (user_subscriber,list_subscriber)
 );
 
-CREATE TABLE log_table (
-	id			INT UNSIGNED DEFAULT 0 NOT NULL auto_increment,
-	date			int NOT NULL,
-	pid			int,
-	process			enum ('task','archived','sympa','wwsympa','bounced'),
-  	email_user          	varchar (100),
-	auth			enum ('smtp','md5','smime','null'),	
-	ip			varchar (15),
-  	operation		varchar (40),
-	list			varchar (50),
-	robot			varchar (60),
-	operation_arg		varchar (100),
-	operation_status	varchar (100),
-	subscriber8count	int,
-	PRIMARY KEY (id),
-	INDEX (date),	
-	INDEX (robot),
-	INDEX (list),
-	INDEX (email_user)
-);
+# CREATE TABLE log_table (
+# 	id			INT UNSIGNED DEFAULT 0 NOT NULL auto_increment,
+# 	date			int NOT NULL,
+# 	pid			int,
+# 	process			enum ('task','archived','sympa','wwsympa','bounced'),
+#   	email_user          	varchar (100),
+# 	auth			enum ('smtp','md5','smime','null'),	
+# 	ip			varchar (15),
+#   	operation		varchar (40),
+# 	list			varchar (50),
+# 	robot			varchar (60),
+# 	arg			varchar (100),
+# 	status			varchar (100),
+# 	subscriber_count	int,
+# 	PRIMARY KEY (id),
+# 	INDEX (date),	
+# 	INDEX (robot),
+# 	INDEX (list),
+# 	INDEX (email_user)
+# );
 
