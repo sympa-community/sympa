@@ -2913,6 +2913,26 @@ since \WWSympa might need to remind users of their passwords.
 The security of \WWSympa rests on the security of your database. 
 
 
+\section {Logging in as listmaster}
+
+Once \Sympa is running you should log in on the web interface as a privileged user (listmaster)
+to explore the admin interface, create mailing lists.
+
+Multiple email addresses can be declared as listmaster via the \file {sympa.conf} (or \file {robot.conf})
+\cfkeyword {listmaster} configuration parameter (see \ref {exp-admin},  page~\pageref {exp-admin}). Note
+that listmasters on the main robot (declared in  \file {sympa.conf}) also have listmaster privileges on
+the virtual robots but they will not receive the various mail notifications (list creation, warnings,...)
+regarding these virtual robots.
+
+The listmasters should log in with their canonical email address as an identifier (not \textit {listmaster@my.host}).
+The associated password is not declared in sympa.conf ; it will be allocated by \Sympa when first hitting
+the \textbf {Send me a password} button on the web interface. As for any user, the password can then be modified via the 
+\textbf {Preferenced} menu.
+
+Note that you must start the \file {sympa.pl} process with the web interface ; it is in responsible for delivering 
+mail messages including password reminders.
+
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Sympa SOAP Server
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {21 April 2004}
+    \date {03 June 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -3080,6 +3080,26 @@ since \WWSympa might need to remind users of their passwords.
 The security of \WWSympa rests on the security of your database. 
 
 
+\section {Logging in as listmaster}
+
+Once \Sympa is running you should log in on the web interface as a privileged user (listmaster)
+to explore the admin interface, create mailing lists.
+
+Multiple email addresses can be declared as listmaster via the \file {sympa.conf} (or \file {robot.conf})
+\cfkeyword {listmaster} configuration parameter (see \ref {exp-admin},  page~\pageref {exp-admin}). Note
+that listmasters on the main robot (declared in  \file {sympa.conf}) also have listmaster privileges on
+the virtual robots but they will not receive the various mail notifications (list creation, warnings,...)
+regarding these virtual robots.
+
+The listmasters should log in with their canonical email address as an identifier (not \textit {listmaster@my.host}).
+The associated password is not declared in sympa.conf ; it will be allocated by \Sympa when first hitting
+the \textbf {Send me a password} button on the web interface. As for any user, the password can then be modified via the 
+\textbf {Preferenced} menu.
+
+Note that you must start the \file {sympa.pl} process with the web interface ; it is in responsible for delivering 
+mail messages including password reminders.
+
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Sympa SOAP Server
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -6067,25 +6087,25 @@ output generated in response to a \mailcmd {LISTS} command.
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.conceal})
 	\end {htmlonly}\\
-	conceal except for subscribers
+	
 
      \item \lparam {visibility} \texttt {intranet}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.intranet})
 	\end {htmlonly}\\
-	intranet access
+	
 
      \item \lparam {visibility} \texttt {noconceal}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.noconceal})
 	\end {htmlonly}\\
-	no conceal
+	
 
      \item \lparam {visibility} \texttt {secret}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.secret})
 	\end {htmlonly}\\
-	conceal even for subscribers
+	
 
 \end {itemize}
 
@@ -6706,73 +6726,73 @@ Predefined authorization scenarios are :
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.auth})
 	\end {htmlonly}\\
-subscription request confirmed
+
 
      \item \lparam {subscribe} \texttt {auth\_notify}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.auth\_notify})
 	\end {htmlonly}\\
-need authentication (notification is sent to owners)
+
 
      \item \lparam {subscribe} \texttt {auth\_owner}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.auth\_owner})
 	\end {htmlonly}\\
-requires authentication then owner approval
+
 
      \item \lparam {subscribe} \texttt {closed}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.closed})
 	\end {htmlonly}\\
-subscribe is impossible
+
 
      \item \lparam {subscribe} \texttt {intranet}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.intranet})
 	\end {htmlonly}\\
-restricted to local domain users
+
 
      \item \lparam {subscribe} \texttt {intranetorowner}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.intranetorowner})
 	\end {htmlonly}\\
-local domain users or owner approval
+
 
      \item \lparam {subscribe} \texttt {open}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.open})
 	\end {htmlonly}\\
-for anyone without authentication
+
 
      \item \lparam {subscribe} \texttt {open\_notify}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.open\_notify})
 	\end {htmlonly}\\
-anyone, notification is sent to list owner
+
 
      \item \lparam {subscribe} \texttt {open\_quiet}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.open\_quiet})
 	\end {htmlonly}\\
-anyone, no welcome message
+
 
      \item \lparam {subscribe} \texttt {owner}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.owner})
 	\end {htmlonly}\\
-owners approval
+
 
      \item \lparam {subscribe} \texttt {smime}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.smime})
 	\end {htmlonly}\\
-requires S/MIME signed
+
 
      \item \lparam {subscribe} \texttt {smimeorowner}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.smimeorowner})
 	\end {htmlonly}\\
-requires S/MIME signed or owner approval
+
 
 
 \end {itemize}
@@ -6794,37 +6814,37 @@ Predefined authorization scenarios are :
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.auth})
 	\end {htmlonly}\\
-	need authentication
+	
 
      \item \lparam {unsubscribe} \texttt {auth\_notify} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.auth\_notify})
 	\end {htmlonly}\\
-	authentication requested, notification sent to owner
+	
 
      \item \lparam {unsubscribe} \texttt {closed} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.closed})
 	\end {htmlonly}\\
-	impossible
+	
 
      \item \lparam {unsubscribe} \texttt {open} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.open})
 	\end {htmlonly}\\
-	anyone without authentication
+	
 
      \item \lparam {unsubscribe} \texttt {open\_notify} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.open\_notify})
 	\end {htmlonly}\\
-	without authentication, notification is sent to owners
+	
 
      \item \lparam {unsubscribe} \texttt {owner} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.owner})
 	\end {htmlonly}\\
-	owner approval
+	
 
 \end {itemize}
 
@@ -6844,25 +6864,25 @@ Predefined authorization scenarios are :
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/add.auth})
 	\end {htmlonly}\\
-	add need authentication
+	
 
      \item \lparam {add} \texttt {closed}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/add.closed})
 	\end {htmlonly}\\
-	add impossible
+	
 
      \item \lparam {add} \texttt {owner}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/add.owner})
 	\end {htmlonly}\\
-	add performed by list owner do not need authentication
+	
 
      \item \lparam {add} \texttt {owner\_notify}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/add.owner\_notify})
 	\end {htmlonly}\\
-	add performed by owner do not need authentication (notification)
+	
 
 \end {itemize}
 
@@ -6883,25 +6903,25 @@ Predefined authorization scenarios are :
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/del.auth})
 	\end {htmlonly}\\
-	deletion performed only by list owners, need authentication
+	
 
      \item \lparam {del} \texttt {closed} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/del.closed})
 	\end {htmlonly}\\
-	remove subscriber impossible
+	
 
      \item \lparam {del} \texttt {owner} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/del.owner})
 	\end {htmlonly}\\
-	by owner without authentication
+	
 
      \item \lparam {del} \texttt {owner\_notify} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/del.owner\_notify})
 	\end {htmlonly}\\
-	list owners, authentication not needed (notification)
+	
 
 \end {itemize}
 
@@ -6922,13 +6942,13 @@ Predefined authorization scenarios are :
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/remind.listmaster})
 	\end {htmlonly}\\
-	listmaster only
+	
 
      \item \lparam {remind} \texttt {owner} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/remind.owner})
 	\end {htmlonly}\\
-	restricted to list owner
+	
 
 \end {itemize}
 
@@ -6973,127 +6993,127 @@ parameter are pointers to \emph {scenarios}.
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.closed})
 	\end {htmlonly}\\
-	closed
+	
 
      \item \lparam {send} \texttt {editorkey} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.editorkey})
 	\end {htmlonly}\\
-	Moderated
+	
 
      \item \lparam {send} \texttt {editorkeyonly} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.editorkeyonly})
 	\end {htmlonly}\\
-	Moderated, even for moderators
+	
 
      \item \lparam {send} \texttt {editorkeyonlyauth} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.editorkeyonlyauth})
 	\end {htmlonly}\\
-	Moderated, with editor confirmation
+	
 
      \item \lparam {send} \texttt {intranet} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.intranet})
 	\end {htmlonly}\\
-	restricted to local domain
+	
 
      \item \lparam {send} \texttt {intranetorprivate} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.intranetorprivate})
 	\end {htmlonly}\\
-	restricted to local domain and subscribers
+	
 
      \item \lparam {send} \texttt {newsletter} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.newsletter})
 	\end {htmlonly}\\
-	Newsletter, restricted to moderators
+	
 
      \item \lparam {send} \texttt {newsletterkeyonly} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.newsletterkeyonly})
 	\end {htmlonly}\\
-	Newsletter, restricted to moderators after confirmation
+	
 
      \item \lparam {send} \texttt {private} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.private})
 	\end {htmlonly}\\
-	restricted to subscribers
+	
 
      \item \lparam {send} \texttt {private\_smime} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.private\_smime})
 	\end {htmlonly}\\
-	restricted to subscribers check smime signature
+	
 
      \item \lparam {send} \texttt {privateandeditorkey} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.privateandeditorkey})
 	\end {htmlonly}\\
-	Moderated, restricted to subscribers
+	
 
      \item \lparam {send} \texttt {privateandnomultipartoreditorkey} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.privateandnomultipartoreditorkey})
 	\end {htmlonly}\\
-	Moderated, for non subscribers sending multipart messages
+	
 
      \item \lparam {send} \texttt {privatekey} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.privatekey})
 	\end {htmlonly}\\
-	restricted to subscribers with previous md5 authentication
+	
 
      \item \lparam {send} \texttt {privatekeyandeditorkeyonly} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.privatekeyandeditorkeyonly})
 	\end {htmlonly}\\
-	Moderated, for subscribers and moderators
+	
 
      \item \lparam {send} \texttt {privateoreditorkey} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.privateoreditorkey})
 	\end {htmlonly}\\
-	Private, moderated for non subscribers
+	
 
      \item \lparam {send} \texttt {privateorpublickey} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.privateorpublickey})
 	\end {htmlonly}\\
-	Private, confirmation for non subscribers
+	
 
      \item \lparam {send} \texttt {public} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.public})
 	\end {htmlonly}\\
-	public list
+	
 
      \item \lparam {send} \texttt {public\_nobcc} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.public\_nobcc})
 	\end {htmlonly}\\
-	public list, Bcc rejected (anti-spam)
+	
 
      \item \lparam {send} \texttt {publickey} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.publickey})
 	\end {htmlonly}\\
-	anyone with previous md5 authentication
+	
 
      \item \lparam {send} \texttt {publicnoattachment} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.publicnoattachment})
 	\end {htmlonly}\\
-	public list multipart/mixed messages are forwarded to moderator
+	
 
      \item \lparam {send} \texttt {publicnomultipart} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.publicnomultipart})
 	\end {htmlonly}\\
-	public list multipart messages are rejected
+	
 
 \end {itemize}
 
@@ -7116,37 +7136,37 @@ Predefined authorization scenarios are :
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.closed})
 	\end {htmlonly}\\
-	nobody can review
+	
 
      \item \lparam {review} \texttt {intranet} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.intranet})
 	\end {htmlonly}\\
-	restricted to subscribers or local domain users
+	
 
      \item \lparam {review} \texttt {listmaster} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.listmaster})
 	\end {htmlonly}\\
-	listmaster only
+	
 
      \item \lparam {review} \texttt {owner} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.owner})
 	\end {htmlonly}\\
-	only owner (and listmaster)
+	
 
      \item \lparam {review} \texttt {private} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.private})
 	\end {htmlonly}\\
-	restricted to subscribers
+	
 
      \item \lparam {review} \texttt {public} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.public})
 	\end {htmlonly}\\
-	anyone can do it !
+	
 
 \end {itemize}
 
@@ -7174,19 +7194,19 @@ Predefined authorization scenarios are :
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_read.owner})
 	\end {htmlonly}\\
-	restricted to list owners
+	
 
      \item \lparam {d\_read} \texttt {private} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_read.private})
 	\end {htmlonly}\\
-	restricted to subscribers
+	
 
      \item \lparam {d\_read} \texttt {public} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_read.public})
 	\end {htmlonly}\\
-	public documents
+	
 
 \end {itemize}
 
@@ -7208,31 +7228,25 @@ Predefined authorization scenarios are :
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.editor})
 	\end {htmlonly}\\
-	moderated to subscribers
-
-     \item \lparam {d\_edit} \texttt {e} 
-	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.e})
-	\end {htmlonly}\\
-	moderated to subscribers
+	
 
      \item \lparam {d\_edit} \texttt {owner} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.owner})
 	\end {htmlonly}\\
-	restricted to list owners
+	
 
      \item \lparam {d\_edit} \texttt {private} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.private})
 	\end {htmlonly}\\
-	restricted to subscribers
+	
 
      \item \lparam {d\_edit} \texttt {public} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.public})
 	\end {htmlonly}\\
-	public documents
+	
 
 \end {itemize}
 
@@ -7788,37 +7802,37 @@ Predefined authorization scenarios are :
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.closed})
 	\end {htmlonly}\\
-	closed
+	
 
      \item \lparam {access} \texttt {intranet} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.intranet})
 	\end {htmlonly}\\
-	restricted to local domain users
+	
 
      \item \lparam {access} \texttt {listmaster} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.listmaster})
 	\end {htmlonly}\\
-	listmaster
+	
 
      \item \lparam {access} \texttt {owner} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.owner})
 	\end {htmlonly}\\
-	by owner
+	
 
      \item \lparam {access} \texttt {private} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.private})
 	\end {htmlonly}\\
-	subscribers only
+	
 
      \item \lparam {access} \texttt {public} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.public})
 	\end {htmlonly}\\
-	public
+	
 
 \end {itemize}
 
