@@ -1219,7 +1219,8 @@ sub send_notify_to_listmaster {
 	&send_global_file('listmaster_notification', $Conf{'listmaster'}, $robot,
 			 {'to' => "listmaster\@$Conf{'host'}",
 			  'type' => 'virus_scan_failed',
-			  'error_msg' => $param[0]});	
+			  'filename' => $param[0],
+			  'error_msg' => $param[1]});	
     }
     
     return 1;

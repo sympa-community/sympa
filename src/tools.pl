@@ -852,7 +852,7 @@ sub virus_infected {
 	}
 
 	$error_msg = $result
-	    if ($status != 0);
+	    if ($status != 0 && $status != 13);
 
     ## Trend Micro
     }elsif ($Conf{'antivirus_path'} =~  /\/vscan$/) {
@@ -901,7 +901,7 @@ sub virus_infected {
 
     ## Error while running antivir, notify listmaster
     if ($error_msg) {
-	&List::send_notify_to_listmaster('virus_scan_failed', $Conf{'domain'}, ($error_msg));
+	&List::send_notify_to_listmaster('virus_scan_failed', $Conf{'domain'}, ($file,$error_msg));
     }
 
     ## if debug mode is active, the working directory is kept
