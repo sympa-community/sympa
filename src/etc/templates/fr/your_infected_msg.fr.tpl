@@ -1,5 +1,5 @@
 From: [from]
-Subject: Détection de virus.
+Subject: D=?iso-8859-1?Q?=E9?=tection de virus.
 Mime-version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-transfer-encoding: 8bit
