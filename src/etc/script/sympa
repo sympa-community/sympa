@@ -73,7 +73,11 @@ sympa_module_start() {
 #		startparam=""
 #	fi
  
-	$sympadir/$1.pl $startparam && success || failure
+	if [ ${OSTYPE} == "IRIX" ]; then
+		$sympadir/$1.pl $startparam && echo "success" || echo "failure"
+	else
+		$sympadir/$1.pl $startparam && success || failure
+	fi
 	echo
 }
 
@@ -111,7 +115,11 @@ sympa_stop() {
 	if [ -f --PIDDIR--/$1.pid ]; then
 		echo -n "Stopping module $1.pl: "
 		pid=`head -1 --PIDDIR--/$1.pid`
-		kill -TERM $pid && success || failure
+		if [ ${OSTYPE} == "IRIX" ]; then
+			kill -TERM $pid && echo "success" || echo "failure"
+		else
+			kill -TERM $pid && success || failure
+		fi
 		rm -f /var/run/$1.pl.pid
 		echo
 	fi
