@@ -1367,8 +1367,7 @@ sub send_to_editor {
    my $messageid=$now[6].$now[5].$now[4].$now[3].$now[2].$now[1]."."
                  .int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6))."\@".$host;
    my $modkey=Digest::MD5->md5_hex(join('/', $self->get_cookie(),$messageid));
-   my $boundary ="__ \<$messageid\>" 
-       if ($method eq 'md5');
+   my $boundary ="__ \<$messageid\>";
    
    ## Keeps a copy of the message
    if ($method eq 'md5'){  
@@ -2142,6 +2141,7 @@ sub send_global_file {
     $data->{'conf'}{'email'} = $Conf{'robots'}{$robot}{'email'} || $Conf{'email'};
     $data->{'conf'}{'host'} = $Conf{'robots'}{$robot}{'host'} || $Conf{'host'};
     $data->{'conf'}{'sympa'} = $Conf{'robots'}{$robot}{'sympa'} || $Conf{'sympa'};
+    $data->{'conf'}{'request'} = $Conf{'robots'}{$robot}{'request'} || $Conf{'request'};
     $data->{'conf'}{'listmaster'} = $Conf{'robots'}{$robot}{'listmaster'} || $Conf{'listmaster'};
     $data->{'conf'}{'wwsympa_url'} = $Conf{'robots'}{$robot}{'wwsympa_url'} || $Conf{'wwsympa_url'};
     $data->{'conf'}{'version'} = $main::Version;
