@@ -5681,6 +5681,8 @@ sub verify {
 	    
 	    my @bodies;
 	    my @parts = $context->{'msg'}->parts();
+	    
+	    ## Should be recurcive...
 	    foreach my $i (0..$#parts) {
 		next unless ($parts[$i]->effective_type() =~ /^text/);
 		next unless ($parts[$i]->bodyhandle);
