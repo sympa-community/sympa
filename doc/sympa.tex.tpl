@@ -4982,8 +4982,6 @@ giving details regarding the owner's characteristics:
 This parameter indicates the subject of the list, which is sent in
 response to the \mailcmd {LISTS} mail command. The subject is
 a free form text limited to one line.
-This parameter is \emph {not} used by \Sympa if the \tildefile
-{sympa/expl/lists} file (a static list of lists) exists.
 
 \subsection {topics}
     \label {par-topics}
@@ -5002,9 +5000,7 @@ uses this parameter.
 	\scenarized {visibility}
 
 This parameter indicates whether the list should feature in the
-output generated in response to a \mailcmd {LISTS} command. This
-parameter is \emph {not} used by \Sympa if the \tildefile
-{sympa/expl/lists} file (a static list of lists) exists.
+output generated in response to a \mailcmd {LISTS} command.
 
 \begin {itemize}
 [STARTPARSE]
@@ -6699,15 +6695,10 @@ Most user commands have three-letter abbreviations (e.g. \texttt
         \label {cmd-lists}
 
         Provides the names of lists managed by \Sympa.  This list
-        can either be generated dynamically, using the \lparam {visibility}
-        (see \ref {par-visibility}, page~\pageref {par-visibility})
-        and \texttt {subject} list parameters (\ref {par-subject},
-        page~\pageref {par-subject}), as well as \tildefile
-        {sympa/expl/lists.header} and \tildefile
-        {sympa/expl/lists.footer}). It can also be generated
-        statically by including the contents of the \tildefile
-        {sympa/expl/lists} file, which must be updated manually by
-        the robot \textindex {administrator}.
+        is generated dynamically, using the \lparam {visibility}
+        (see \ref {par-visibility}, page~\pageref {par-visibility}).
+	The \texttt {lists.tpl} template defines the message return
+	by the \mailcmd {LISTS} command.
 
     \item  \mailcmd {REVIEW} \textit {listname}
         \label {cmd-review}
