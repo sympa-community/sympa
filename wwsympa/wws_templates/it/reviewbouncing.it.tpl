@@ -55,12 +55,12 @@
     </TABLE>
 
     <TABLE WIDTH="100%" BORDER=1>
-      <TR BGCOLOR="#ff6666" NOWRAP>
-	<TH><FONT COLOR="#ffffff">X</FONT></TH>
-        <TH><FONT COLOR="#ffffff">email</FONT></TH>
-	<TH><FONT COLOR="#ffffff">bounce count</FONT></TH>
-	<TH><FONT COLOR="#ffffff">period</FONT></TH>
-	<TH NOWRAP><FONT COLOR="#ffffff">type</FONT></TH>
+      <TR BGCOLOR="--ERROR_COLOR--" NOWRAP>
+	<TH><FONT COLOR="--BG_COLOR--">X</FONT></TH>
+        <TH><FONT COLOR="--BG_COLOR--">email</FONT></TH>
+	<TH><FONT COLOR="--BG_COLOR--">bounce count</FONT></TH>
+	<TH><FONT COLOR="--BG_COLOR--">period</FONT></TH>
+	<TH NOWRAP><FONT COLOR="--BG_COLOR--">type</FONT></TH>
       </TR>
       
       [FOREACH u IN members]

@@ -46,11 +46,11 @@ devez probablement vous identifier préalablement.<BR>
 <I>Si vous n'avez jamais eu de mot de passe sur ce serveur ou si vous l'avez oublié :</I>
 </TD><TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="#330099">
+  <TR ALIGN=center BGCOLOR="--DARK_COLOR--">
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
-      <TD NOWRAP BGCOLOR="#ccccff" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
 	<A HREF="[path_cgi]/nomenu/remindpasswd/referer/[referer]"
          onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=300')" TARGET="wws_login" >
 

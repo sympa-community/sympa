@@ -2,7 +2,7 @@
       <TR VALIGN="top">
         <TD NOWRAP>
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
-	    <FONT COLOR="#330099"><B>Settaggi di default per le liste</B></FONT><BR>
+	    <FONT COLOR="--DARK_COLOR--"><B>Settaggi di default per le liste</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [FOREACH f IN lists_default_files]
 	        <OPTION VALUE='[f->NAME]' [f->selected]>[f->complete]
@@ -12,7 +12,7 @@
 	  </FORM>
 
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
-	    <FONT COLOR="#330099"><B>Settaggio dei template</B></FONT><BR>
+	    <FONT COLOR="--DARK_COLOR--"><B>Settaggio dei template</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [FOREACH f IN server_files]
 	        <OPTION VALUE='[f->NAME]' [f->selected]>[f->complete]
@@ -35,7 +35,7 @@
 
       <TR>
         <TD>
-	  <FONT COLOR="#330099">
+	  <FONT COLOR="--DARK_COLOR--">
 	  <A HREF="[path_cgi]/scenario_test">
 	     <b>Modulo di test degli scenari</b>
           </A>

@@ -1,6 +1,6 @@
   <FORM ACTION="[path_cgi]" METHOD=POST>
 
-  Sei iscritto dal <FONT COLOR="#330099">[subscriber->date]</FONT>  <BR><BR>
+  Sei iscritto dal <FONT COLOR="--DARK_COLOR--">[subscriber->date]</FONT>  <BR><BR>
      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
      Modalit&agrave; di ricezione  : 
      <SELECT NAME="reception">

@@ -6,9 +6,9 @@
 <P>
 <TABLE>
  <TR>
-   <TD Colspan=3 bgcolor="#ccccff"><B>Liste in attesa</B></TD>
+   <TD Colspan=3 bgcolor="--LIGHT_COLOR--"><B>Liste in attesa</B></TD>
  </TR>
- <TR bgcolor="#ccccff">
+ <TR bgcolor="--LIGHT_COLOR--">
    <TD><B>nome della lista</B></TD>
    <TD><B>soggetto</B></TD>
    <TD><B>Richiesto da</B></TD>

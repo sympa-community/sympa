@@ -2,7 +2,7 @@
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="id" VALUE="[id]">
 <TABLE>
-<TR BGCOLOR="#ffffff"><TD>
+<TR BGCOLOR="--BG_COLOR--"><TD>
   <INPUT TYPE="submit" NAME="action_distribute" VALUE="Distribuisci">
   <INPUT TYPE="submit" NAME="action_reject.quiet" VALUE="Rigetta">
   <INPUT TYPE="submit" NAME="action_reject" VALUE="Rigetta con notifica">

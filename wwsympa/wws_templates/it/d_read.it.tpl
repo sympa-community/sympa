@@ -14,9 +14,9 @@
   [ENDIF]
    
   <TABLE width=100%>
-  <TR BGCOLOR="#330099">
+  <TR BGCOLOR="--DARK_COLOR--">
    
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">Documento</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Documento</font></TD>
   [IF  order_by<>order_by_doc]  
     <form method="post" ACTION="[path_cgi]">  
     <TD ALIGN="right">
@@ -31,7 +31,7 @@
   </TR></TABLE>
   </th>
   
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">Autore</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Autore</font></TD>
   [IF  order_by<>order_by_author]  
     <form method="post" ACTION="[path_cgi]">  
     <TD ALIGN="right">
@@ -46,7 +46,7 @@
   </TR></TABLE>
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">Dimensioni (Kb)</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Dimensioni (Kb)</font></TD>
   [IF order_by<>order_by_size] 
     <form method="post" ACTION="[path_cgi]">
     <TD ALIGN="right">
@@ -61,7 +61,7 @@
   </TR></TABLE>   
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">Ultimo aggiornamento</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Ultimo aggiornamento</font></TD>
   [IF order_by<>order_by_date]
     <form method="post" ACTION="[path_cgi]">
     <TD ALIGN="right">
@@ -76,19 +76,19 @@
   </TR></TABLE>  
   </th> 
 
-  <th ALIGN="left"><font color="#ffffff">Descrizione</font></th> 
-  <th ALIGN="center"><font color="#ffffff">Modifica</font></th> 
-  <th ALIGN="center"><font color="#ffffff">Cancella</font></th>
-  <th ALIGN="center"><font color="#ffffff">Accedi</font></th></TR>
+  <th ALIGN="left"><font color="--BG_COLOR--">Descrizione</font></th> 
+  <th ALIGN="center"><font color="--BG_COLOR--">Modifica</font></th> 
+  <th ALIGN="center"><font color="--BG_COLOR--">Cancella</font></th>
+  <th ALIGN="center"><font color="--BG_COLOR--">Accedi</font></th></TR>
       
   [IF empty]
-    <TR BGCOLOR="#ccccff">
+    <TR BGCOLOR="--LIGHT_COLOR--">
     <TD COLSPAN=8 ALIGN="center"> Folder vuoto </TD>
     </TR>
   [ELSE]   
     [IF sort_subdirs]
       [FOREACH s IN sort_subdirs] 
-        <TR BGCOLOR="#ccccff">        
+        <TR BGCOLOR="--LIGHT_COLOR--">        
 	<TD> <A HREF="[path_cgi]/d_read/[list]/[path][s->doc]/"> 
 	<IMG ALIGN=bottom BORDER=0 SRC=[s->icon]> [s->doc]</A></TD>
 	<TD>
@@ -140,7 +140,7 @@
 
     [IF sort_files]
       [FOREACH f IN sort_files]
-        <TR BGCOLOR="#ccccff"> 
+        <TR BGCOLOR="--LIGHT_COLOR--"> 
         <TD>&nbsp;
         [IF f->html]
 	  <A HREF="[path_cgi]/d_read/[list]/[path][f->doc]" TARGET="html_window">

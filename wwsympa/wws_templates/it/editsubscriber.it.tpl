@@ -1,7 +1,7 @@
 <FORM ACTION="[path_cgi]" METHOD=POST>
 <TABLE WIDTH="100%" BORDER=0>
-<TR><TH BGCOLOR="#330099">
-<FONT COLOR="#ffffff">Informazione del sottoscrivente</FONT>
+<TR><TH BGCOLOR="--DARK_COLOR--">
+<FONT COLOR="--BG_COLOR--">Informazione del sottoscrivente</FONT>
 </TH></TR><TR><TD>
 <INPUT TYPE="hidden" NAME="previous_action" VALUE=[previous_action]>
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
@@ -24,8 +24,8 @@
 </DL>
 </TD></TR>
 [IF subscriber->bounce]
-<TR><TH BGCOLOR="#ff6666">
-<FONT COLOR="#ffffff">Indirizzo non funzionante</FONT>
+<TR><TH BGCOLOR="--ERROR_COLOR--">
+<FONT COLOR="--BG_COLOR--">Indirizzo non funzionante</FONT>
 </TD></TR><TR><TD>
 <DL>
 <DD>Stato : [subscriber->bounce_status] ([subscriber->bounce_code])

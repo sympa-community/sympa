@@ -4,7 +4,7 @@
 
       <FORM ACTION="[path_cgi]" METHOD=POST>
 	  <INPUT TYPE="hidden" NAME="referer" VALUE="[referer]">
-        <FONT COLOR="#330099"><B>indirizzo e-mail</B> </FONT>
+        <FONT COLOR="--DARK_COLOR--"><B>indirizzo e-mail</B> </FONT>
         [IF email]
 	  [email]
           <INPUT TYPE="hidden" NAME="email" VALUE="[email]">

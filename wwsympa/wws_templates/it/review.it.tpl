@@ -12,11 +12,11 @@
     </FORM>
 </TD>
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="#330099" VALIGN="top">
+ <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
    <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
      <TR>
-       <TD BGCOLOR="#ccccff" ALIGN="center" VALIGN="top">
-         <FONT COLOR="#3366cc" SIZE="-1">
+       <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="center" VALIGN="top">
+         <FONT COLOR="--SELECTED_COLOR--" SIZE="-1">
          <A HREF="[base_url][path_cgi]/add_request/[list]" STYLE="TEXT-DECORATION: NONE"><b>Aggiunta multipla</b></A>
          </FONT>
        </TD>
@@ -94,13 +94,13 @@
   </TABLE>
 
     <TABLE WIDTH="100%" BORDER="1">
-      <TR BGCOLOR="#ccccff">
+      <TR BGCOLOR="--LIGHT_COLOR--">
 	[IF is_owner]
 	   <TH><FONT SIZE="-1"><B>X</B></FONT></TH>
 	[ENDIF]
         [IF sortby=email]
-  	    <TH NOWRAP COLSPAN=2 BGCOLOR="#3366cc">
-	    <FONT COLOR="#ffffff" SIZE="-1"><b>Email</b></FONT>
+  	    <TH NOWRAP COLSPAN=2 BGCOLOR="--SELECTED_COLOR--">
+	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Email</b></FONT>
 	[ELSE]
 	    <TH NOWRAP COLSPAN=2>
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/email" STYLE="TEXT-DECORATION: NONE">
@@ -113,8 +113,8 @@
 	  <TH><FONT SIZE="-1"><B>Ricezione</B></FONT>
 	  </TH>
 	  [IF sortby=date]
-  	    <TH NOWRAP BGCOLOR="#3366cc">
-	    <FONT COLOR="#ffffff" SIZE="-1"><b>Dal</b></FONT>
+  	    <TH NOWRAP BGCOLOR="--SELECTED_COLOR--">
+	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Dal</b></FONT>
 	  [ELSE]
 	    <TH NOWRAP><FONT SIZE="-1">
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/date" STYLE="TEXT-DECORATION: NONE">
@@ -144,8 +144,8 @@
  	        [u->email]
  	      [ENDIF]
 	  </FONT></TD>
-            <TD ALIGN="right"BGCOLOR="#ff6666"><FONT SIZE=-1>
-		<FONT COLOR="#ffffff"><B>i messaggi rimbalzano</B></FONT>
+            <TD ALIGN="right"BGCOLOR="--ERROR_COLOR--"><FONT SIZE=-1>
+		<FONT COLOR="--BG_COLOR--"><B>i messaggi rimbalzano</B></FONT>
 	    </TD>
 
 	 [ELSE]

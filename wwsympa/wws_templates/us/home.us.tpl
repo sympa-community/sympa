@@ -39,11 +39,11 @@ archives, list management and so on.
    <TR>
 <TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="#330099">
+  <TR ALIGN=center BGCOLOR="--DARK_COLOR--">
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
-      <TD NOWRAP BGCOLOR="#ccccff" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
       <A HREF="[path_cgi]/lists" >
      <FONT SIZE=-1><B>view all lists</B></FONT></A>
      </TD>

@@ -1,5 +1,5 @@
     <BR><P> 
-<TABLE BORDER=0 BGCOLOR="#ccccff"><TR><TD>
+<TABLE BORDER=0 BGCOLOR="--LIGHT_COLOR--"><TR><TD>
 <P align=justify>
 Questo server fornisce alcuni servizi avanzati per la mailing list presso <b>[conf->email]@[conf->host]</b>. <br>Da queste pagine, 
 puoi iscriverti, cancellarti, controllare gli archvi, richiedere la creazione di liste, ecc. ecc.
@@ -10,8 +10,8 @@ puoi iscriverti, cancellarti, controllare gli archvi, richiedere la creazione di
 <CENTER>
 <TABLE BORDER=0>
  <TR>
-  <TH BGCOLOR="#3366cc">
-   <FONT COLOR="#ffffff">Liste</FONT>
+  <TH BGCOLOR="--SELECTED_COLOR--">
+   <FONT COLOR="--BG_COLOR--">Liste</FONT>
   </TH>
  </TR>
  <TR>
@@ -39,11 +39,11 @@ puoi iscriverti, cancellarti, controllare gli archvi, richiedere la creazione di
    <TR>
 <TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="#330099">
+  <TR ALIGN=center BGCOLOR="--DARK_COLOR--">
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
-      <TD NOWRAP BGCOLOR="#ccccff" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
       <A HREF="[path_cgi]/lists" STYLE="TEXT-DECORATION: NONE">
      <FONT SIZE=-1><B>Lista completa</B></FONT></A>
      </TD>
@@ -71,9 +71,9 @@ puoi iscriverti, cancellarti, controllare gli archvi, richiedere la creazione di
 
 [IF ! user->email]
 <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="0" VALIGN="top">
-   <TR><TD BGCOLOR="#330099">
+   <TR><TD BGCOLOR="--DARK_COLOR--">
           <TABLE BORDER="0" WIDTH="100%"  VALIGN="top"> 
-              <TR><TD BGCOLOR="#ffffff">
+              <TR><TD BGCOLOR="--BG_COLOR--">
 [PARSE '--ETCBINDIR--/wws_templates/loginbanner.it.tpl']
 </TD></TR></TABLE>
 </TD></TR></TABLE>

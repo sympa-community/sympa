@@ -8,13 +8,13 @@ Dovrai utilizzare questa password per accedere alle funzioni privilegiate.
 [IF init_passwd]
   <INPUT TYPE="hidden" NAME="passwd" VALUE="[user->password]">
 [ELSE]
-  <FONT COLOR="#330099">Current password : </FONT>
+  <FONT COLOR="--DARK_COLOR--">Current password : </FONT>
   <INPUT TYPE="password" NAME="passwd" SIZE=15>
 [ENDIF]
 
-<BR><BR><FONT COLOR="#330099">New password : </FONT>
+<BR><BR><FONT COLOR="--DARK_COLOR--">New password : </FONT>
 <INPUT TYPE="password" NAME="newpasswd1" SIZE=15>
-<BR><BR><FONT COLOR="#330099">New password again : </FONT>
+<BR><BR><FONT COLOR="--DARK_COLOR--">New password again : </FONT>
 <INPUT TYPE="password" NAME="newpasswd2" SIZE=15>
 <BR><BR><INPUT TYPE="submit" NAME="action_setpasswd" VALUE="Vai">
 

@@ -1,9 +1,9 @@
 <H2>Risultati della ricerca negli archivi
-<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="#330099">[list]</font></a> : </H2>
+<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="--DARK_COLOR--">[list]</font></a> : </H2>
 
 <P>Campo di ricerca : 
 [FOREACH u IN directories]
-<A HREF="[path_cgi]/arc/[list]/[u]"><FONT COLOR="#330099">[u]</font></a> - 
+<A HREF="[path_cgi]/arc/[list]/[u]"><FONT COLOR="--DARK_COLOR--">[u]</font></a> - 
 [END]
 </P>
 
@@ -109,7 +109,7 @@ Parametri di questa ricerca fatti su <b> &quot;[key_word]&quot;</b>
 <INPUT NAME=action_arcsearch_form TYPE=submit VALUE="Nuova ricerca">
 </FORM>
 <HR>
-Basata su <Font size=+1 color="#330099"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font>, motore di ricerca degli archivi di <B>MHonArc</B><p>
+Basata su <Font size=+1 color="--DARK_COLOR--"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font>, motore di ricerca degli archivi di <B>MHonArc</B><p>
 
 <A HREF="[path_cgi]/arc/[list]/[archive_name]"><B>Torna all'archivio [archive_name] 
 </B></A><br>
