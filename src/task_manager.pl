@@ -43,6 +43,7 @@ require 'tools.pl';
 my $opt_d;
 my $opt_F;
 my %options;
+
 &GetOptions(\%main::options, 'dump=s', 'debug|d', 'log_level=s', 'foreground', 'config|f=s', 
 	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s', 'lowercase');
 
@@ -162,7 +163,7 @@ undef my $log; # won't execute send_msg and delete_subs commands if true, only l
 #$log = 1;
 
 ## list of list task models
-my @list_models = ('expire', 'remind');
+my @list_models = ('expire', 'remind', 'sync_include');
 
 ## hash of the global task models
 my %global_models = (#'crl_update_task' => 'crl_update', 
@@ -178,9 +179,9 @@ my %months = ('Jan', 0, 'Feb', 1, 'Mar', 2, 'Apr', 3, 'May', 4,  'Jun', 5,
 ###### DEFINITION OF AVAILABLE COMMANDS FOR TASKS ######
 
 my $date_arg_regexp1 = '\d+|execution_date';
-my $date_arg_regexp2 = '(\d\d\d\dy)(\d+m)?(\d+d)?(\d+h)?(\d+min)?'; 
-my $date_arg_regexp3 = '(\d+|execution_date)(\+|\-)(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?';
-my $delay_regexp = '(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?';
+my $date_arg_regexp2 = '(\d\d\d\dy)(\d+m)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?'; 
+my $date_arg_regexp3 = '(\d+|execution_date)(\+|\-)(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?';
+my $delay_regexp = '(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?';
 my $var_regexp ='@\w+'; 
 my $subarg_regexp = '(\w+)(|\((.*)\))'; # for argument with sub argument (ie arg(sub_arg))
                  
@@ -198,6 +199,7 @@ my %commands = ('next'                  => ['date', '\w*'],
 		                           #Number of days (delay)
 		'chk_cert_expiration'   => ['\w+', 'date'],
 		                           #template  date
+		'sync_include'          => [],
 		);
 
 # commands which use a variable. If you add such a command, the first parameter must be the variable
@@ -308,7 +310,14 @@ while (!$end) {
 	foreach my $model (keys %used_list_models) {
 	    unless ($used_list_models{$model}) {
 		my $model_task_parameter = "$model".'_task';
-		if ( $list->{'admin'}{$model_task_parameter} ) {
+		
+		if ( $model eq 'sync_include') {
+		    next unless ($list->{'admin'}{'user_data_source'} eq 'include2');
+		    
+		    create ($current_date, 'INIT', $model, 'ttl', 'list', \%data);
+
+		}elsif ($list->{'admin'}{$model_task_parameter} ) {
+
 		    #printf "xxxxxxxxxxxxx appel 2 : model_task_parameter $model_task_parameter $list->{'admin'}{$model_task_parameter}\n";
 		    #printf "%s\n", join("|",%{$list->{'admin'}{$model_task_parameter}});
 
@@ -371,6 +380,8 @@ sub create {
     # for a list
     if ($object  eq 'list') {
 	my $list = new List($list_name);
+
+	$Rdata->{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
 
 	if (open (MODEL, "$list->{'dir'}/list_task_models/$model_name")) {
 	    $model_file = "$Conf{'home'}/$list_name/list_task_models/$model_name";
@@ -648,7 +659,7 @@ sub execute {
     my %result; # stores the result of the chk_line subroutine
     my %vars; # list of task vars
     my $lnb = 0; # line number
-
+    
     unless ( open (TASK, $task_file) ) {
 	&do_log ('err', "error : can't read the task $task_file");
 	return undef;
@@ -704,6 +715,8 @@ sub cmd_process {
     my $Rvars = $_[3]; # variable list of the task
     my $lnb = $_[4]; # line number
 
+    &do_log('debug2', 'cmd_process(%s, %s, %d)', $command, $task_file, $lnb);
+
      # building of %context
     my %context; # datas necessary to command processing
     $context{'task_file'} = $task_file; # long task file name
@@ -722,6 +735,7 @@ sub cmd_process {
     return exec_cmd ($Rarguments) if ($command eq 'exec');
     return update_crl ($Rarguments, \%context) if ($command eq 'update_crl');
     return expire_bounce ($Rarguments, \%context) if ($command eq 'expire_bounce');
+    return sync_include(\%context) if ($command eq 'sync_include');
 
      # commands which use a variable
     return send_msg ($Rarguments, $Rvars, \%context) if ($command eq 'send_msg');       
@@ -846,7 +860,7 @@ sub select_subs {
     my %selection; # hash of subscribers who match the condition
     my $list = new List ($context->{'object_name'});
     
-    if ( $list->{'admin'}{'user_data_source'} =~ /database|file/) {
+    if ( $list->{'admin'}{'user_data_source'} =~ /database|file|include2/) {
         for ( my $user = $list->get_first_user(); $user; $user = $list->get_next_user() ) { 
             push (@users, $user);
 	}
@@ -978,7 +992,7 @@ sub expire_bounce {
     my @tab = @{$Rarguments};
     my $delay = $tab[0];
 
-    do_log('debug2',"bounce expiration task  using $delay days as delay");
+    do_log('debug2','expire_bounce(%d)',$delay);
     foreach my $listname (&List::get_lists('*') ) {
 	my $list = new List ($listname);
 	# the reference date is the date until which we expire bounces in second
@@ -1259,4 +1273,18 @@ sub error {
     do_log ('err', "$message");
     change_label ($task_file, 'ERROR') unless ($task_file eq '');
     &List::send_notify_to_listmaster ('error in task', $Conf{'domain'}, @param);
+}
+
+sub sync_include {
+    my $context = $_[0];
+
+    &do_log('debug2', 'sync_include(%s)', $context->{'object_name'});
+
+    my $list = new List($context->{'object_name'});
+    unless (defined $list) {
+	error ($context->{'task_file'}, "Unknown list $context->{'object_name'}");
+	return undef;
+    }
+
+    $list->sync_include();
 }
