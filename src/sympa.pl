@@ -164,6 +164,8 @@ while (!$end) {
 
     &Language::SetLang($Language::default_lang);
 
+    &List::init_list_cache();
+
     if (!opendir(DIR, $Conf{'queue'})) {
 	fatal_err("Can't open dir %s: %m", $Conf{'queue'}); ## No return.
     }

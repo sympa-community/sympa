@@ -140,6 +140,8 @@ while (!$end) {
     
     sleep 2;
     
+    &List::init_list_cache();
+
     unless (opendir(DIR, $queue)) {
 	fatal_err("Can't open dir %s: %m", $queue); ## No return.
     }

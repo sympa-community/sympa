@@ -362,6 +362,7 @@ while ($query = &new_loop()) {
     $param->{'remote_addr'} = $ENV{'REMOTE_ADDR'} ;
     $param->{'remote_host'} = $ENV{'REMOTE_HOST'};
 
+    &List::init_list_cache();
 
     ## Session loop
     while ($action) {

@@ -112,6 +112,8 @@ print "queue : $queue\n";
 ## infinite loop scanning the queue (unless a sig TERM is received
 while (!$end) {
 
+    &List::init_list_cache();
+    
    unless (opendir(DIR, $queue)) {
        fatal_err("Can't open dir %s: %m", $queue); ## No return.
    }

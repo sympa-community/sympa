@@ -172,6 +172,9 @@ use MIME::Parser;
 
 ## Database and SQL statement handlers
 my ($dbh, $sth, @sth_stack, $use_db);
+
+my %list_cache;
+
 my %date_format = (
 		   'read' => {
 		       'Pg' => 'date_part(\'epoch\',%s)',
@@ -2394,39 +2397,48 @@ sub is_user {
     my ($self, $who) = @_;
     $who= lc($who);
     do_log('debug2', 'List::is_user(%s)', $who);
+    
+    return undef unless ($self && $who);
+    
+    if ($self->{'admin'}{'user_data_source'} eq 'database') {
+	
+	my $statement;
+	my $name = $self->{'name'};
+	
+	## Use cache
+	&do_log('debug', '... is_subscriber(%s,%s)', $name, $who);
+	if (defined $list_cache{'is_user'}{$name}{$who}) {
+	    return $list_cache{'is_user'}{$name}{$who};
+	}
+	
+	## Check database connection
+	unless ($dbh and $dbh->ping) {
+	    return undef unless &db_connect();
+	}	   
+	
+	## Query the Database
+	$statement = sprintf "SELECT count(*) FROM subscriber_table WHERE (list_subscriber = %s AND user_subscriber = %s)",$dbh->quote($name), $dbh->quote($who);
+	
+	push @sth_stack, $sth;
+	
+	unless ($sth = $dbh->prepare($statement)) {
+	    do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
+	    return undef;
+	}
+	
+	unless ($sth->execute) {
+	    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    return undef;
+	}
+	
+	my $is_user = $sth->fetchrow;
+	
+	$sth->finish();
+	
+	$sth = pop @sth_stack;
 
-   return undef unless ($self && $who);
-
-   if ($self->{'admin'}{'user_data_source'} eq 'database') {
-   
-       my $statement;
-       my $name = $self->{'name'};
-
-       ## Check database connection
-       unless ($dbh and $dbh->ping) {
-	   return undef unless &db_connect();
-       }	   
-
-       ## Query the Database
-       $statement = sprintf "SELECT count(*) FROM subscriber_table WHERE (list_subscriber = %s AND user_subscriber = %s)",$dbh->quote($name), $dbh->quote($who);
-       
-       push @sth_stack, $sth;
-
-       unless ($sth = $dbh->prepare($statement)) {
-	   do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
-	   return undef;
-       }
-       
-       unless ($sth->execute) {
-	   do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-	   return undef;
-       }
-       
-       my $is_user = $sth->fetchrow;
-
-       $sth->finish();
-
-       $sth = pop @sth_stack;
+       ## Set cache
+       $list_cache{'is_user'}{$name}{$who} = $is_user;
 
        return $is_user;
    }else {
@@ -2992,6 +3004,13 @@ sub get_action {
 }
 
 
+## Initialize internal list cache
+sub init_list_cache {
+    &do_log('debug2', 'List::init_list_cache()');
+    
+    undef %list_cache;
+}
+
 ## check if email respect some condition
 sub verify {
     my ($context, $condition) = @_;
@@ -3132,7 +3151,7 @@ sub verify {
     ##### condition is_owner, is_subscriber and is_editor
     if ($condition_key =~ /is_owner|is_subscriber|is_editor/i) {
 
-	my $list2;
+	my ($list2, $result);
 
 	if ($args[1] eq 'nobody') {
 	    return -1 * $negation ;
@@ -3145,6 +3164,7 @@ sub verify {
 	}
 
 	if ($condition_key eq 'is_subscriber') {
+	    return $result * $negation;
 	    if ($list2->is_user($args[1])) {
 		return $negation ;
 	    }else{
