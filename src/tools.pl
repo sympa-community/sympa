@@ -101,7 +101,7 @@ sub checkcommand {
    ## Check for commands in the subject.
    my $subject = $msg->head->get('Subject');
    if ($subject) {
-       if ($Conf{'misaddressed_commands_regexp'} && ($subject =~ /^$Conf{'misaddressed_commands_regexp'}$/im)) {
+       if ($Conf{'misaddressed_commands_regexp'} && ($subject =~ /^$Conf{'misaddressed_commands_regexp'}\b/im)) {
 	   &rejectMessage($msg, $sender,$robot);
 	   return 1;
        }
