@@ -43,7 +43,7 @@ my %equiv = ( "user unknown" => '5.1.1',
 
 
 require "--BINDIR--/bounce-lib.pl";
-require "--BINDIR--/wws-lib.pl";
+require "--BINDIR--/wwslib.pl";
 
 getopts('dF');
 
