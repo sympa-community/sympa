@@ -1331,8 +1331,8 @@ sub load {
 		 || defined $self->{'admin'}{'include_ldap_2level_query'}
 #		 || defined $self->{'admin'}{'include_admin'}
 		 ) {
-	    &do_log('notice', 'Include paragraph missing in configuration file %s', "$self->{'dir'}/config");
-	    return undef;
+	    &do_log('err', 'Include paragraph missing in configuration file %s', "$self->{'dir'}/config");
+#	    return undef;
 	}
 
 	$time_subscribers = (stat("$self->{'dir'}/subscribers.db"))[9] if (-f "$self->{'dir'}/subscribers.db");
