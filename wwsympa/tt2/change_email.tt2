@@ -1,12 +1,12 @@
 <!-- $Id$ -->
 
-[%|l%]You will receive an email, reminding you your password.[%END%]<BR>
+[%|l%]You will receive an email, reminding you your password.[%END%]<br />
 [%|l%]To confirm your email address change, please enter the password
 you received below :[%END%]
 
-<FORM ACTION="[% path_cgi %]" METHOD=POST>
-    <INPUT TYPE="hidden" NAME="email" VALUE="[% email %]">
-    <FONT COLOR="[% dark_color %]">[%|l(email)%]Password for %1[%END%]: </FONT>
-    <BR>&nbsp;&nbsp;&nbsp;<INPUT TYPE="password" NAME="password" SIZE=15>
-    <BR><BR><INPUT TYPE="submit" NAME="action_change_email" VALUE="[%|l%]Change my email address[%END%]">
-</FORM>
+<form action="[% path_cgi %]" method="post">
+    <input type="hidden" name="email" value="[% email %]" />
+    <label><span style="color: [% dark_color %];">[%|l(email)%]Password for %1[%END%]: </span>
+    <br />&nbsp;&nbsp;&nbsp;<input type="password" name="password" size="15" /></label>
+    <br /><br /><input type="submit" name="action_change_email" value="[%|l%]Change my email address[%END%]" />
+</form>

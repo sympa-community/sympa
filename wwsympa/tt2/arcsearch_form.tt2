@@ -1,84 +1,83 @@
 <!-- $Id$ -->
 
-<FORM METHOD=POST ACTION="[% path_cgi %]">
+<form method="post" action="[% path_cgi %]">
 
-<INPUT NAME=list TYPE=hidden VALUE="[% list %]">
-<INPUT NAME=archive_name TYPE=hidden VALUE="[% archive_name %]">
+<input name="list" type="hidden" value="[% list %]" />
+<input name="archive_name" type="hidden" value="[% archive_name %]" />
 
-<center>
-<TABLE width=100%>
-<TR><td bgcolor="[% light_color %]" align=center>
-<font size=+1>[%|l%]Search field :[%END%] </font><A HREF=[% path_cgi %]/arc/[% list %]/[% archive_name %]><font size=+2 color="[% dark_color %]"><b>[% archive_name %]</b></font></A>
-</TD><TD bgcolor="[% light_color %]" align=center>
-<INPUT NAME=key_word     TYPE=text   SIZE=30 VALUE="[% key_word %]">
-<INPUT NAME="action"  TYPE="hidden" Value="arcsearch">
-<INPUT NAME=action_arcsearch TYPE=submit VALUE="[%|l%]Search[%END%]">
-</TD></TR></TABLE>
- </center>
-<P>
+<div style="text-align: center; margin-left: auto; margin-right: auto;">
+<table style="width: 100%;">
+<tr><td style="background: [% light_color %]; text-align: center;">
+<span style="font-size: larger;">[%|l%]Search field :[%END%] </span><a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><span style="font-size: 1.44em; color: [% dark_color %];"><strong>[% archive_name %]</strong></span></a>
+</td><td style="background: [% light_color %]; text-align: center;">
+<input name="key_word" type="text" size="30" value="[% key_word %]" />
+<input name="action" type="hidden" value="arcsearch" />
+<input name="action_arcsearch" type="submit" value="[%|l%]Search[%END%]" />
+</td></tr></table>
+</div>
+<p></p>
 
-<TABLE CELLSPACING=0	CELLPADDING=0>
+<table cellspacing="0" cellpadding="0">
 
-<TR VALIGN="TOP" NOWRAP>
-<TD><b>[%|l%]Search[%END%]</b></TD>
-<TD><INPUT TYPE=RADIO NAME=how VALUE="phrase" CHECKED> <b>[%|l%]this sentence[%END%]</b></TD>
-<TD><INPUT TYPE=RADIO NAME=how VALUE="all"> <b>[%|l%]all of these words[%END%]</b></TD>
-<TD><INPUT TYPE=RADIO NAME=how VALUE="any"> <B>[%|l%]one of these words[%END%]</b></TD>
-</TR>
+<tr style="white-space: nowrap;" valign="top">
+<th><strong>[%|l%]Search[%END%]</strong></th>
+<td><label><input type="radio" name="how" value="phrase" checked="checked" /> <strong>[%|l%]this sentence[%END%]</strong></label></td>
+<td><label><input type="radio" name="how" value="all" /> <strong>[%|l%]all of these words[%END%]</strong></label></td>
+<td><label><input type="radio" name="how" value="any" /> <strong>[%|l%]one of these words[%END%]</strong></label></td>
+</tr>
 
-<P><TR VALIGN="TOP" NOWRAP>
-<TD><b>[%|l%]Prefer[%END%]</b></TD>
-<TD><INPUT TYPE=RADIO NAME=age VALUE="new" CHECKED> <font color="[% dark_color %]"><b>[%|l%]newest messages[%END%]</b></font></TD>
-<TD><INPUT TYPE=RADIO NAME=age VALUE="old"> <font color="[% dark_color %]"><b>[%|l%]oldest messages[%END%]</b></font></TD>
-</TR>
+<tr style="white-space: nowrap;" valign="top">
+<th><strong>[%|l%]Prefer[%END%]</strong></th>
+<td><label><input type="radio" name="age" value="new" checked="checked" /> <span style="color: [% dark_color %];"><strong>[%|l%]newest messages[%END%]</strong></span></label></td>
+<td><label><input type="radio" name="age" value="old" /> <span style="color: [% dark_color %];"><strong>[%|l%]oldest messages[%END%]</strong></span></label></td>
+</tr>
 
-<P><TR VALIGN="TOP" NOWRAP>
-<TD><b>[%|l%]Case[%END%] </b></TD>
-<TD><INPUT TYPE=RADIO NAME=case VALUE="off" CHECKED> <font color="[% dark_color %]"><B>[%|l%]insensitive[%END%]</b></font></TD>
-<TD><INPUT TYPE=RADIO NAME=case VALUE="on"> <font color="[% dark_color %]"><B>[%|l%]sensitive[%END%]</B></font></TD>
-</TR>
+<tr style="white-space: nowrap;" valign="top">
+<th><strong>[%|l%]Case[%END%] </strong></th>
+<td><label><input type="radio" name="case" value="off" checked="checked" /> <span style="color: [% dark_color %];"><strong>[%|l%]insensitive[%END%]</strong></span></label></td>
+<td><label><input type="radio" name="case" value="on" /> <span style="color: [% dark_color %];"><strong>[%|l%]sensitive[%END%]</strong></span></label></td>
+</tr>
 
-<P><TR VALIGN="TOP" NOWRAP>
-<TD><b>[%|l%]Check[%END%]</b></TD>
-<TD><INPUT TYPE=RADIO NAME=match VALUE="partial" CHECKED> <font color="[% dark_color %]"><B>[%|l%]part of word[%END%]</b></font></TD>
-<TD><INPUT TYPE=RADIO NAME=match VALUE="exact"> <font color="[% dark_color %]"><B>[%|l%]entire word[%END%]</b></font></TD>
-</TR>
+<tr style="white-space: nowrap;" valign="top">
+<th><strong>[%|l%]Check[%END%]</strong></th>
+<td><label><input type="radio" name="match" value="partial" checked="checked" /> <span style="color: [% dark_color %];"><strong>[%|l%]part of word[%END%]</strong></span></label></td>
+<td><label><input type="radio" name="match" value="exact" /> <span style="color: [% dark_color %];"><strong>[%|l%]entire word[%END%]</strong></span></label></td>
+</tr>
 
-<P><TR VALIGN="TOP" NOWRAP>
-<TD><b>[%|l%]Layout[%END%]</b></TD>
-<TD><INPUT TYPE=RADIO NAME=limit VALUE="10" CHECKED> <font color="[% dark_color %]"><B>10</b></font> [%|l%]results by page[%END%]
-</TD>
-<TD><INPUT TYPE=RADIO NAME=limit VALUE="25"> <font color="[% dark_color %]"><B>25</b></font> [%|l%]results by page[%END%]</TD>
-<TD><INPUT TYPE=RADIO NAME=limit VALUE="50"> <font color="[% dark_color %]"><B>50</b></font> [%|l%]results by page[%END%]</TD>
-</TR>
+<tr style="white-space: nowrap;" valign="top">
+<th><strong>[%|l%]Layout[%END%]</strong></th>
+<td><label><input type="radio" name="limit" value="10" checked="checked" /> <span style="color: [% dark_color %];"><strong>10</strong></span> [%|l%]results by page[%END%]</label></td>
+<td><label><input type="radio" name="limit" value="25" /> <span style="color: [% dark_color %];"><strong>25</strong></span> [%|l%]results by page[%END%]</label></td>
+<td><label><input type="radio" name="limit" value="50" /> <span style="color: [% dark_color %];"><strong>50</strong></span> [%|l%]results by page[%END%]</label></td>
+</tr>
 
-<P><TR VALIGN="TOP" NOWRAP>
-<TD><b>[%|l%]Search area[%END%]</b></TD>
-<TD><INPUT TYPE=checkbox NAME=from Value="True"> <font color="[% dark_color %]"><B>[%|l%]Sender[%END%]</B></font>
+<tr style="white-space: nowrap;" valign="top">
+<th rowspan="2"><strong>[%|l%]Search area[%END%]</strong></th>
+<td><label><input type="checkbox" name="from" value="True" /> <span style="color: [% dark_color %];"><strong>[%|l%]Sender[%END%]</strong></span></label></td>
 
-<TD><INPUT TYPE=checkbox NAME=subj Value="True" checked> <font color="[% dark_color %]"> <B>[%|l%]Subject[%END%]</B></font>
-</TR>
+<td><label><input type="checkbox" name="subj" value="True" checked="checked" /> <span style="color: [% dark_color %];"> <strong>[%|l%]Subject[%END%]</strong></span></label></td>
+</tr>
 
-<P><TR VALIGN="TOP" NOWRAP>
-<TD>&#160;</TD>
-<TD><INPUT TYPE=checkbox NAME=date Value="True"> <font color="[% dark_color %]"><B>[%|l%]Date[%END%]</B></font>
+<tr style="white-space: nowrap;" valign="top">
+<td><label><input type="checkbox" name="date" value="True" /> <span style="color: [% dark_color %];"><strong>[%|l%]Date[%END%]</strong></span></label></td>
 
-<TD><INPUT TYPE=checkbox NAME=body Value="True" checked> <font color="[% dark_color %]"><B>[%|l%]Body[%END%]</B></font>
-</TR>
+<td><label><input type="checkbox" name="body" value="True" checked="checked" /> <span style="color: [% dark_color %];"><strong>[%|l%]Body[%END%]</strong></span></label></td>
+</tr>
 
-</TABLE>
+</table>
 
-<DL>
-<DT><b>[%|l%]Extend search field[%END%]</b>
-<SELECT NAME="directories" MULTIPLE SIZE=4>    
+<dl>
+<dt><strong>[%|l%]Extend search field[%END%]</strong>
+<dd>
+<select name="directories" multiple="multiple" size="4">    
 
 [% FOREACH u = yyyymm %]
     [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
 
-<OPTION VALUE="[% u %]">[% u %]
+<option value="[% u %]">[% u %]</option>
 
 [% END %] 
 
-</SELECT></DL>
+</select></dd></dl>
 
-</FORM>
+</form>

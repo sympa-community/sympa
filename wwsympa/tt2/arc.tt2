@@ -1,141 +1,141 @@
 <!-- $Id$ -->
 
-    <P><BR>
-    <TABLE BORDER=0 WIDTH=100%>
+    <br />
+    <table border="0" style="width: 100%;">
 
-    <TR><TD ALIGN="left">
-	<FORM METHOD=POST ACTION="[% path_cgi %]">
+    <tr><td style="text-align: left;">
+	<form method="post" action="[% path_cgi %]">
 
-	<INPUT NAME=list TYPE=hidden VALUE="[% list %]">
-	<INPUT NAME=archive_name TYPE=hidden VALUE="[% archive_name %]">
-	<INPUT NAME=how   TYPE=hidden VALUE="phrase">
-	<INPUT NAME=age   TYPE=hidden VALUE="new">
-	<INPUT NAME=case  TYPE=hidden VALUE="off"> 
-	<INPUT NAME=match TYPE=hidden VALUE="partial">
-	<INPUT NAME=limit TYPE=hidden VALUE="10"> 
-	<INPUT NAME=body  TYPE=hidden Value="True">
-	<INPUT NAME=subj  TYPE=hidden Value="True">
-	<INPUT NAME=key_word     TYPE=text   SIZE=17>
-	<INPUT NAME="action"  TYPE="hidden" Value="arcsearch">
-	<INPUT TYPE="submit" NAME="action_arcsearch" VALUE="[%|l%]Search[%END%]"><BR>
-	<A HREF="[% path_cgi %]/arcsearch_form/[% list %]/[% archive_name %]">[%|l%]Advanced search[%END%]</A>
+	<input name="list" type="hidden" value="[% list %]" />
+	<input name="archive_name" type="hidden" value="[% archive_name %]" />
+	<input name="how"   type="hidden" value="phrase" />
+	<input name="age"   type="hidden" value="new" />
+	<input name="case"  type="hidden" value="off" /> 
+	<input name="match" type="hidden" value="partial" />
+	<input name="limit" type="hidden" value="10" /> 
+	<input name="body"  type="hidden" Value="true" />
+	<input name="subj"  type="hidden" Value="true" />
+	<input name="key_word"     type="text"   size="17" />
+	<input name="action"  type="hidden" value="arcsearch" />
+	<input type="submit" name="action_arcsearch" value="[%|l%]Search[%END%]" /><br />
+	<a href="[% path_cgi %]/arcsearch_form/[% list %]/[% archive_name %]">[%|l%]Advanced search[%END%]</a>
 
-	</FORM>
+	</form>
 
-    </TD>
+    </td>
 
 
-    <TD ALIGN=right>
-    <TABLE BORDER=0>
+    <td style="text-align: right;">
+    <table border="0">
    
     [% FOREACH year = calendar %]
 
-      <TR BGCOLOR="[% light_color %]">
-        <TD BGCOLOR="[% bg_color %]"><FONT SIZE="-1"><B>[% year.key %]</B></FONT> </TD>
+      <tr style="background: [% light_color %];">
+        <td style="background: [% bg_color %];"><span style="font-size: smaller;"><strong>[% year.key %]</strong></span> </td>
 
-        <TD>
+        <td>
         [% IF year.value.item('01') %]
-	   <A HREF="[% path_cgi %]/arc/[% list %]/[% year.key %]-01/"><FONT SIZE="-1"><b>01</b></FONT></A>
+	   <a href="[% path_cgi %]/arc/[% list %]/[% year.key %]-01/"><span style="font-size: smaller;"><strong>01</strong></span></a>
         [% ELSE %]
-	  <FONT SIZE="-1" COLOR="[% bg_color %]">01</FONT>
+	  <span style="font-size: smaller; color: [% bg_color %];">01</span>
         [% END %]
-	</TD>
+	</td>
 
-        <TD>
+        <td>
         [% IF year.value.item('02') %]
-	  <A HREF="[% path_cgi %]/arc/[% list %]/[% year.key %]-02/"><FONT SIZE="-1"><b>02</b></FONT></A>
+	  <a href="[% path_cgi %]/arc/[% list %]/[% year.key %]-02/"><span style="font-size: smaller;"><strong>02</strong></span></a>
         [% ELSE %]
- 	  <FONT SIZE="-1" COLOR="[% bg_color %]">02</FONT>
+ 	  <span style="font-size: smaller; color: [% bg_color %];">02</span>
         [% END %]
-	</TD>
+	</td>
 
-        <TD>
+        <td>
         [% IF year.value.item('03') %]
-	  <A HREF="[% path_cgi %]/arc/[% list %]/[% year.key %]-03/"><FONT SIZE="-1"><b>03</b></FONT></A>
+	  <a href="[% path_cgi %]/arc/[% list %]/[% year.key %]-03/"><span style="font-size: smaller;"><strong>03</strong></span></a>
         [% ELSE %]
- 	  <FONT SIZE="-1" COLOR="[% bg_color %]">03</FONT>
+ 	  <span style="font-size: smaller; color: [% bg_color %];">03</span>
         [% END %]
-	</TD>
+	</td>
 
-        <TD>
+        <td>
         [% IF year.value.item('04') %]
-	  <A HREF="[% path_cgi %]/arc/[% list %]/[% year.key %]-04/"><FONT SIZE="-1"><b>04</b></FONT></A>
+	  <a href="[% path_cgi %]/arc/[% list %]/[% year.key %]-04/"><span style="font-size: smaller;"><strong>04</strong></span></a>
         [% ELSE %]
- 	  <FONT SIZE="-1" COLOR="[% bg_color %]">04</FONT>
+ 	  <span style="font-size: smaller; color: [% bg_color %];">04</span>
          [% END %]
-	</TD>
-        <TD>
+	</td>
+        <td>
 
         [% IF year.value.item('05') %]
-	  <A HREF="[% path_cgi %]/arc/[% list %]/[% year.key %]-05/"><FONT SIZE="-1"><b>05</b></FONT></A>
+	  <a href="[% path_cgi %]/arc/[% list %]/[% year.key %]-05/"><span style="font-size: smaller;"><strong>05</strong></span></a>
         [% ELSE %]
- 	  <FONT SIZE="-1" COLOR="[% bg_color %]">05</FONT>
+ 	  <span style="font-size: smaller; color: [% bg_color %];">05</span>
         [% END %]
-	</TD>
+	</td>
 
-        <TD>
+        <td>
         [% IF year.value.item('06') %]
-	  <A HREF="[% path_cgi %]/arc/[% list %]/[% year.key %]-06/"><FONT SIZE="-1"><b>06</b></FONT></A>
+	  <a href="[% path_cgi %]/arc/[% list %]/[% year.key %]-06/"><span style="font-size: smaller;"><strong>06</strong></span></a>
         [% ELSE %]
- 	  <FONT SIZE="-1" COLOR="[% bg_color %]">06</FONT>
+ 	  <span style="font-size: smaller; color: [% bg_color %];">06</span>
         [% END %]
-	</TD>
+	</td>
 
-        <TD>
+        <td>
         [% IF year.value.item('07') %]
-	  <A HREF="[% path_cgi %]/arc/[% list %]/[% year.key %]-07/"><FONT SIZE="-1"><b>07</b></FONT></A>
+	  <a href="[% path_cgi %]/arc/[% list %]/[% year.key %]-07/"><span style="font-size: smaller;"><strong>07</strong></span></a>
         [% ELSE %]
- 	  <FONT SIZE="-1" COLOR="[% bg_color %]">07</FONT>
+ 	  <span style="font-size: smaller; color: [% bg_color %];">07</span>
         [% END %]
-	</TD>
+	</td>
 
-        <TD>
+        <td>
         [% IF year.value.item('08') %]
-	  <A HREF="[% path_cgi %]/arc/[% list %]/[% year.key %]-08/"><FONT SIZE="-1"><b>08</B></FONT></A>
+	  <a href="[% path_cgi %]/arc/[% list %]/[% year.key %]-08/"><span style="font-size: smaller;"><strong>08</B></span></a>
         [% ELSE %]
- 	  <FONT SIZE="-1" COLOR="[% bg_color %]">08</FONT>
+ 	  <span style="font-size: smaller; color: [% bg_color %];">08</span>
         [% END %]
-	</TD>
-        <TD>
+	</td>
+        <td>
 
         [% IF year.value.item('09') %]
-	  <A HREF="[% path_cgi %]/arc/[% list %]/[% year.key %]-09/"><FONT SIZE="-1"><b>09</b></FONT></A>
+	  <a href="[% path_cgi %]/arc/[% list %]/[% year.key %]-09/"><span style="font-size: smaller;"><strong>09</strong></span></a>
         [% ELSE %]
- 	  <FONT SIZE="-1" COLOR="[% bg_color %]">09</FONT>
+ 	  <span style="font-size: smaller; color: [% bg_color %];">09</span>
         [% END %]
-	</TD>
+	</td>
 
-        <TD>
+        <td>
         [% IF year.value.item('10') %]
-	  <A HREF="[% path_cgi %]/arc/[% list %]/[% year.key %]-10/"><FONT SIZE="-1"><b>10</b></FONT></A>
+	  <a href="[% path_cgi %]/arc/[% list %]/[% year.key %]-10/"><span style="font-size: smaller;"><strong>10</strong></span></a>
         [% ELSE %]
- 	  <FONT SIZE="-1" COLOR="[% bg_color %]">10</FONT>
+ 	  <span style="font-size: smaller; color: [% bg_color %];">10</span>
         [% END %]
-	</TD>
+	</td>
 
-        <TD>
+        <td>
         [% IF year.value.item('11') %]
-	  <A HREF="[% path_cgi %]/arc/[% list %]/[% year.key %]-11/"><FONT SIZE="-1"><b>11</B></FONT></A>
+	  <a href="[% path_cgi %]/arc/[% list %]/[% year.key %]-11/"><span style="font-size: smaller;"><strong>11</B></span></a>
         [% ELSE %]
- 	  <FONT SIZE="-1" COLOR="[% bg_color %]">11</FONT>
+ 	  <span style="font-size: smaller; color: [% bg_color %];">11</span>
         [% END %]
-	</TD>
+	</td>
 
-        <TD>
+        <td>
         [% IF year.value.item('12') %]
-	  <A HREF="[% path_cgi %]/arc/[% list %]/[% year.key %]-12/"><FONT SIZE="-1"><b>12</b></FONT></A>
+	  <a href="[% path_cgi %]/arc/[% list %]/[% year.key %]-12/"><span style="font-size: smaller;"><strong>12</strong></span></a>
         [% ELSE %]
- 	  <FONT SIZE="-1" COLOR="[% bg_color %]">12</FONT>
+ 	  <span style="font-size: smaller; color: [% bg_color %];">12</span>
         [% END %]
-	</TD>
+	</td>
 
 
-      </TR>
+      </tr>
 
     [% END %]    
-    </TABLE>
-    </TD></TR>
-    </TABLE>
+    </table>
+    </td></tr>
+    </table>
 
 
     [% PROCESS $file IF file %]

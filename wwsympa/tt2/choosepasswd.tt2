@@ -3,22 +3,22 @@
 [%|l%]You need to choose a password for your WWSympa environment.
 You will need this password to perform privileged operations.[%END%]
 
-<FORM ACTION="[% path_cgi %]" METHOD=POST>
-<INPUT TYPE="hidden" NAME="previous_action" VALUE="[% previous_action %]">
-<INPUT TYPE="hidden" NAME="previous_list" VALUE="[% previous_list %]">
+<form action="[% path_cgi %]" method="post">
+<input type="hidden" name="previous_action" value="[% previous_action %]" />
+<input type="hidden" name="previous_list" value="[% previous_list %]" />
 
 [% IF init_passwd %]
-  <INPUT TYPE="hidden" NAME="passwd" VALUE="[% user.password %]">
+  <input type="hidden" name="passwd" value="[% user.password %]" />
 [% ELSE %]
-  <FONT COLOR="[% dark_color %]">[%|l%]Current password :[%END%] </FONT>
-  <INPUT TYPE="password" NAME="passwd" SIZE=15>
+  <label><span style="color: [% dark_color %];">[%|l%]Current password :[%END%] </span>
+  <input type="password" name="passwd" size="15" /></label>
 [% END %]
 
-<BR><BR><FONT COLOR="[% dark_color %]">[%|l%]New password :[%END%] </FONT>
-<INPUT TYPE="password" NAME="newpasswd1" SIZE=15>
-<BR><BR><FONT COLOR="[% dark_color %]">[%|l%]New password again :[%END%] </FONT>
-<INPUT TYPE="password" NAME="newpasswd2" SIZE=15>
-<BR><BR><INPUT TYPE="submit" NAME="action_setpasswd" VALUE="[%|l%]Submit[%END%]">
+<br /><br /><label><span style="color: [% dark_color %];">[%|l%]New password :[%END%] </span>
+<input type="password" name="newpasswd1" size="15" /></label>
+<br /><br /><label><span style="color: [% dark_color %];">[%|l%]New password again :[%END%] </span>
+<input type="password" name="newpasswd2" size="15" /></label>
+<br /><br /><input type="submit" name="action_setpasswd" value="[%|l%]Submit[%END%]" />
 
-</FORM>
+</form>
 

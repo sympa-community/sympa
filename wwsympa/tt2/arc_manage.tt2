@@ -1,24 +1,27 @@
 
 <!-- begin arc_manage.tt2 -->
-<Hr><b>[%|l%]Archive Management[%END%]</b>
-<BR>
+<hr /><strong>[%|l%]Archive Management[%END%]</strong>
+<br />
 [%|l%]Select below Archives months you want to delete or download (ZiP format):[%END%]
-<DL>
-<DT>[%|l%]Archives Selection:[%END%]
-<FORM  NAME= "zip_form" METHOD=POST ACTION= "[% path_cgi %]">
-<SELECT NAME="directories" MULTIPLE SIZE=4>    
+<dl>
+<dt>[%|l%]Archives Selection:[%END%]</dt>
+<dd>
+<form name="zip_form" method="post" action="[% path_cgi %]">
+<select name="directories" multiple="multiple" size="4">    
 
 	[% FOREACH u = yyyymm %]
-	<OPTION	VALUE="[% u %]">[% u %]
+	<option	value="[% u %]">[% u %]</option>
 
 	[% END %] 
 	
-</SELECT>
-<INPUT NAME="list" TYPE=hidden VALUE="[% list %]">
-<INPUT NAME="zip" TYPE=hidden VALUE="0">
-<INPUT Type="submit" NAME="action_arc_download" VALUE="[%|l%]DownLoad ZipFile[%END%]">
-<INPUT Type="submit" NAME="action_arc_delete" VALUE="[%|l%]Delete Selected Month(s)[%END%]" onClick="return dbl_confirm(this.form,'[%|l%]Do you really want to delete Selected Archives?[%END%]','[%|l%]Do you want to DownLoad a Zip of the selected Archives before?[%END%]')">
-</DL>
-</FORM>
-<Hr>
+</select>
+<input name="list" type="hidden" value="[% list %]" />
+<input name="zip" type="hidden" value="0" />
+<input type="submit" name="action_arc_download" value="[%|l%]DownLoad ZipFile[%END%]" />
+<input type="submit" name="action_arc_delete" value="[%|l%]Delete Selected Month(s)[%END%]" onclick="return dbl_confirm(this.form,'[%|l%]Do you really want to delete Selected Archives?[%END%]','[%|l%]Do you want to DownLoad a Zip of the selected Archives before?[%END%]')" />
+</dd>
+
+</dl>
+</form>
+<hr />
 <!-- end  arc_manage.tt2 -->

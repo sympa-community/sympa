@@ -1,17 +1,17 @@
 <!-- $Id$ -->
 
-<FORM ACTION="[% path_cgi %]" METHOD="POST">
-[%|l(user.email)%]From: %1[%END%]<BR>
-[%|l(mailto)%]To: %1[%END%]<BR>
-[%|l%]Subject:[%END%] <INPUT TYPE="text" SIZE ="45" NAME="subject" VALUE="[% subject %]">
-<INPUT TYPE="submit" NAME="action_send_mail" VALUE="[%|l%]Send this mail[%END%]">
-<BR>
-<INPUT TYPE="hidden" NAME="in_reply_to" value="[% in_reply_to %]">
-<INPUT TYPE="hidden" NAME="message_id" value="[% message_id %]">
-<INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-<INPUT TYPE="hidden" NAME="to" VALUE="[% local_to %] [% domain_to %]">
+<form action="[% path_cgi %]" method="post">
+[%|l(user.email)%]From: %1[%END%]<br />
+[%|l(mailto)%]To: %1[%END%]<br />
+<label>[%|l%]Subject:[%END%] <input type="text" size="45" name="subject" value="[% subject %]" /></label>
+<input type="submit" name="action_send_mail" value="[%|l%]Send this mail[%END%]" />
+<br />
+<input type="hidden" name="in_reply_to" value="[% in_reply_to %]" />
+<input type="hidden" name="message_id" value="[% message_id %]" />
+<input type="hidden" name="list" VALUE="[% list %]" />
+<input type="hidden" name="to" VALUE="[% local_to %] [% domain_to %]" />
 
-<TEXTAREA NAME="body" COLS=80 ROWS=25>
-</TEXTAREA>
+<textarea name="body" cols="80" rows="25">
+</textarea>
 
-</FORM>
+</form>

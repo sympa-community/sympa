@@ -1,15 +1,15 @@
 <!-- $Id$ -->
 
-    <FORM ACTION="[% path_cgi %]" METHOD="POST">
-      <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+    <form action="[% path_cgi %]" method="post" class="add-request">
+      <input type="hidden" name="list" value="[% list %]" />
 
-        <TEXTAREA NAME="dump" COLS=80 ROWS=25>[%|l%]email1@dom1 Name1[%END%]
+        <textarea name="dump" cols="80" rows="25">[%|l%]email1@dom1 Name1[%END%]
 [%|l%]email2@dom2 Name2[%END%]
 	.......
-        </TEXTAREA>
+        </textarea>
 
 
-      <INPUT TYPE="submit" NAME="action_add" VALUE="[%|l%]Add subscribers[%END%]">
-      <INPUT TYPE="checkbox" NAME="quiet"> [%|l%]quiet[%END%]
+      <input type="submit" name="action_add" value="[%|l%]Add subscribers[%END%]" />
+      <label><input type="checkbox" name="quiet"> [%|l%]quiet[%END%]</label>
 
-    </FORM>
+    </form>

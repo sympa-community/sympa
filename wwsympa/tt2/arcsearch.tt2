@@ -1,16 +1,16 @@
 <!-- $Id$ -->
 
-<H2>[%|l%]Result of your search in the archive[%END%] 
-<A HREF="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><FONT COLOR="[% dark_color %]">[% list %]</font></a> : </H2>
+<h2>[%|l%]Result of your search in the archive[%END%] 
+<a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><span style="color: [% dark_color %];">[% list %]</span></a> : </h2>
 
-<P>[%|l%]Search field :[%END%] 
+<p>[%|l%]Search field :[%END%] 
 [% FOREACH u = directories %]
- <A HREF="[% path_cgi %]/arc/[% list %]/[% u %]"><FONT COLOR="[% dark_color %]">[% u %]</font></a> - 
+ <a href="[% path_cgi %]/arc/[% list %]/[% u %]"><span style="color: [% dark_color %];">[% u %]</font></a> - 
 [% END %]
-</P>
-
-[%|l(key_word)%]Parameters of these search make on <b> &quot;%1&quot;</b>[%END%] 
-<I>
+</p>
+<p>
+[%|l(key_word)%]Parameters of these search make on <strong> &quot;%1&quot;</strong>[%END%] 
+<em>
 
 [% IF how == 'phrase' %]
 	[%|l%](This sentence,[%END%] 
@@ -20,8 +20,6 @@
 	[%|l%](Each of this words,[%END%] 
 [% END %]
 
-<i>
-
 [% IF case %]
 	[%|l%]case insensitive[%END%] 
 [% ELSE %]
@@ -29,90 +27,93 @@
 [% END %]
 
 [% IF match %]
-	[%|l%]and checking on part of word)[%END%]</i>
+	[%|l%]and checking on part of word)[%END%]
 [% ELSE %]
-	[%|l%]and checking on entire word)[%END%]</i>
+	[%|l%]and checking on entire word)[%END%]
 [% END %]
-<p>
+</em>
+</p>
 
-<HR>
+<hr />
 
 [% IF age %]
-	<B>[%|l%]Newest messages first[%END%]</b><P>
+	<p><strong>[%|l%]Newest messages first[%END%]</strong></p>
 [% ELSE %]
-	<B>[%|l%]Oldest messages first[%END%]</b><P>
+	<p><strong>[%|l%]Oldest messages first[%END%]</strong></p>
 [% END %]
 
+<dl>
 [% FOREACH u = res %]
-	<DT><A HREF=[% u.value.file %]>[% u.value.subj %]</A> -- <EM>[% u.value.date %]</EM><DD>[% u..value.from %]<PRE>[% u.value.body_string %]</PRE>
+	<dt><a href=[% u.value.file %]>[% u.value.subj %]</a> -- <em>[% u.value.date %]</em><dd>[% u..value.from %]<pre>[% u.value.body_string %]</pre></dd>
 [% END %]
+</dl>
 
-<DL>
-<B>[%|l%]Result[%END%]</b>
-<DT><B>[%|l(searched,num)%]%1 messages selected out of %2[%END%]...</b><BR>
+<dl>
+<strong>[%|l%]Result[%END%]</strong>
+<dt><strong>[%|l(searched,num)%]%1 messages selected out of %2[%END%]...</strong><br />
 
 [% IF body %]
-	<DD>[%|l(body_count)%]%1 hits on message's Body[%END%]<BR>
+	<dd>[%|l(body_count)%]%1 hits on message's Body[%END%]<br /></dd>
 [% END %]
 
 [% IF subj %]
-	<DD>[%|l(subj_count)%]%1 hits on message's Subject field[%END%]<BR>
+	<dd>[%|l(subj_count)%]%1 hits on message's Subject field[%END%]<br /></dd>
 [% END %]
 
 [% IF from %]
-	<DD>[%|l(from_count)%] %1 hits on message's From field[%END%]<BR>
+	<dd>[%|l(from_count)%] %1 hits on message's From field[%END%]<br /></dd>
 [% END %]
 
 [% IF date %]
-	<DD>[%|l(date_count)%]%1 hits on message's Date field[%END%]<BR>
+	<dd>[%|l(date_count)%]%1 hits on message's Date field[%END%]<br /></dd>
 [% END %]
 
 </dl>
 
-<FORM METHOD=POST ACTION="[% path_cgi %]">
-<INPUT TYPE=hidden NAME=list		 VALUE="[% list %]">
-<INPUT TYPE=hidden NAME=archive_name VALUE="[% archive_name %]">
-<INPUT TYPE=hidden NAME=key_word     VALUE="[% key_word %]">
-<INPUT TYPE=hidden NAME=how          VALUE="[% how %]">
-<INPUT TYPE=hidden NAME=age          VALUE="[% age %]">
-<INPUT TYPE=hidden NAME=case         VALUE="[% case %]">
-<INPUT TYPE=hidden NAME=match        VALUE="[% match %]">
-<INPUT TYPE=hidden NAME=limit        VALUE="[% limit %]">
-<INPUT TYPE=hidden NAME=body_count   VALUE="[% body_count %]">
-<INPUT TYPE=hidden NAME=date_count   VALUE="[% date_count %]">
-<INPUT TYPE=hidden NAME=from_count   VALUE="[% from_count %]">
-<INPUT TYPE=hidden NAME=subj_count   VALUE="[% subj_count %]">
-<INPUT TYPE=hidden NAME=previous     VALUE="[% searched %]">
+<form method="post" action="[% path_cgi %]">
+<input type="hidden" name="list" value="[% list %]" />
+<input type="hidden" name="archive_name" value="[% archive_name %]" />
+<input type="hidden" name="key_word" value="[% key_word %]" />
+<input type="hidden" name="how" value="[% how %]" />
+<input type="hidden" name="age" value="[% age %]" />
+<input type="hidden" name="case" value="[% case %]" />
+<input type="hidden" name="match" value="[% match %]" />
+<input type="hidden" name="limit" value="[% limit %]" />
+<input type="hidden" name="body_count" value="[% body_count %]" />
+<input type="hidden" name="date_count" value="[% date_count %]" />
+<input type="hidden" name="from_count" value="[% from_count %]" />
+<input type="hidden" name="subj_count" value="[% subj_count %]" />
+<input type="hidden" name="previous" value="[% searched %]" />
 
 [% IF body %]
-	<INPUT TYPE=hidden NAME=body Value="[% body %]">
+	<input type="hidden" name="body" value="[% body %]" />
 [% END %]
 
 [% IF subj %]
-	<INPUT TYPE=hidden NAME=subj Value="[% subj %]">
+	<input type="hidden" name="subj" value="[% subj %]" />
 [% END %]
 
 [% IF from %]
-	<INPUT TYPE=hidden NAME=from Value="[% from %]">
+	<input type="hidden" name="from" value="[% from %]" />
 [% END %]
 
 [% IF date %]
-	<INPUT TYPE=hidden NAME=date Value="[% date %]">
+	<input type="hidden" name="date" value="[% date %]" />
 [% END %]
 
 [% FOREACH u = directories %]
-	<INPUT TYPE=hidden NAME=directories Value="[% u %]">
+	<input type="hidden" name="directories" value="[% u %]" />
 [% END %]
 
 [% IF continue %]
-	<INPUT NAME=action_arcsearch TYPE=submit VALUE="[%|l%]Continue search[%END%]">
+	<input name="action_arcsearch" type="submit" value="[%|l%]Continue search[%END%]" />
 [% END %]
 
-<INPUT NAME=action_arcsearch_form TYPE=submit VALUE="[%|l%]New search[%END%]">
-</FORM>
-<HR>
-[%|l%]Based on <i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i>, search engine of MHonArc archives[%END%]<p>
+<input name="action_arcsearch_form" type="submit" value="[%|l%]New search[%END%]" />
+</form>
+<hr />
+<p>[%|l%]Based on <em><a href="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></em>, search engine of MHonArc archives[%END%]</p>
 
 
-<A HREF="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><B>[%|l(archive_name)%]Return to archive %1[%END%] 
-</B></A><br>
+<a href="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><strong>[%|l(archive_name)%]Return to archive %1[%END%] 
+</strong></a><br />

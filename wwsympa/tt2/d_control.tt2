@@ -1,58 +1,60 @@
 <!-- $Id$ -->
 
-<H1>[%|l(visible_path)%]Access rights for the document %1[%END%]</H1>
-    [%|l(owner)%]Owner : %1[%END%] <BR>
-    [%|l(doc_date)%]Last update : %1[%END%] <BR>
-    [%|l(doc_title)%]Description : %1[%END%] <BR><BR>
-<H3><A HREF="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <IMG ALIGN="bottom"  src="[% father_icon %]"> [%|l%]Up to higher level directory[%END%] </A></H3>
+<h1>[%|l(visible_path)%]Access rights for the document %1[%END%]</h1>
+    [%|l(owner)%]Owner : %1[%END%] <br />
+    [%|l(doc_date)%]Last update : %1[%END%] <br />
+    [%|l(doc_title)%]Description : %1[%END%] <br /><br />
+<h3><a href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <img style="vertical-align: bottom;" src="[% father_icon %]" /> [%|l%]Up to higher level directory[%END%] </a></h3>
 
-<TABLE width=100%>
+<table style="width: 100%;">
 
-  <TR VALIGN="top">
-  <TD>
+  <tr valign="top">
+  <td>
 
-  <FORM ACTION="[% path_cgi %]" METHOD="POST">
-  <B>[%|l%]Read access[%END%]</B><BR>
-  <SELECT NAME="read_access">
+  <form action="[% path_cgi %]" method="post">
+  <label><strong>[%|l%]Read access[%END%]</strong><br />
+  <select name="read_access">
   [% FOREACH s = scenari_read %]
-    <OPTION VALUE='[% s.key %]' [% s.value.selected %]>[% s.value.title %]
+    <option value='[% s.key %]' [% s.value.selected %]>[% s.value.title %]</option>
   [% END %]
-  </SELECT>
-  <BR>
+  </select>
+  </label>
+  <br />
 
-  <B>[%|l%]Edit access[%END%]</B><BR>
-  <SELECT NAME="edit_access">
+  <label><strong>[%|l%]Edit access[%END%]</strong><br />
+  <select name="edit_access">
   [% FOREACH s = scenari_edit %]
-    <OPTION VALUE='[% s.key %]' [% s.value.selected %]>[% s.value.title %]
+    <option value='[% s.key %]' [% s.value.selected %]>[% s.value.title %]</option>
   [% END %]
-  </SELECT>
-  <BR>
+  </select>
+  </label>
+  <br />
    
-   <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-   <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
-   <INPUT TYPE="hidden" NAME="serial" VALUE="[% serial_desc %]">
-   <INPUT TYPE="submit" NAME="action_d_change_access" VALUE="[%|l%]change access[%END%]">
-   </FORM>
+   <input type="hidden" name="list" value="[% list %]" />
+   <input type="hidden" name="path" value="[% path %]" />
+   <input type="hidden" name="serial" value="[% serial_desc %]" />
+   <input type="submit" name="action_d_change_access" value="[%|l%]change access[%END%]" />
+   </form>
 
-   </TD>
+   </td>
 
    [% IF set_owner %]
-     <TD>
-     <B>[%|l(visible_path)%]Set the owner of the directory %1[%END%]</B>
+     <td>
+     <label for="content"><strong>[%|l(visible_path)%]Set the owner of the directory %1[%END%]</strong></label>
 
-     <FORM ACTION="[% path_cgi %]" METHOD="POST">
-     <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-     <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
-     <INPUT TYPE="hidden" NAME="serial" VALUE="[% serial_desc %]">
-     <INPUT TYPE="hidden" NAME="action" VALUE="d_set_owner">
-     <INPUT MAXLENGTH=50 NAME="content" VALUE="[% owner %]" SIZE=30>
-     <INPUT TYPE="submit" NAME="action_d_set_owner" VALUE="[%|l%]Set owner[%END%]">
-     </FORM>
+     <form action="[% path_cgi %]" method="post">
+     <input type="hidden" name="list" value="[% list %]" />
+     <input type="hidden" name="path" value="[% path %]" />
+     <input type="hidden" name="serial" value="[% serial_desc %]" />
+     <input type="hidden" name="action" value="d_set_owner" />
+     <input maxlength="50" name="content" id="content" value="[% owner %]" size="30" />
+     <input type="submit" name="action_d_set_owner" value="[%|l%]Set owner[%END%]" />
+     </form>
 
-     </TD>
+     </td>
   [% END %]
 
-</TR>
+</tr>
 
-</TABLE>
+</table>
 

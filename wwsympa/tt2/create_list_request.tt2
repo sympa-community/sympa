@@ -1,88 +1,89 @@
 <!-- $Id$ -->
 
 
-<FORM ACTION="[% path_cgi %]" METHOD=POST>
+<form action="[% path_cgi %]" method="post">
 
-<P>
-<TABLE>
- <TR>
-   <TD NOWRAP><B>[%|l%]List name:[%END%]</B></TD>
-   <TD><INPUT TYPE="text" NAME="listname" SIZE=30 VALUE="[% saved.listname %]"></TD>
-   <TD><img src="[% icons_url %]/unknown.png" alt="[%|l%]the list name ; be careful, not its address ![%END%]"></TD>
- </TR>
+
+<table>
+ <tr>
+   <tr style="white-space: nowrap;"><label for="listname"><strong>[%|l%]List name:[%END%]</strong></label></th>
+   <td><input type="text" id="listname" name="listname" size="30" VALUE="[% saved.listname %]" /></td>
+   <td><img src="[% icons_url %]/unknown.png" alt="[%|l%]the list name ; be careful, not its address ![%END%]" /></td>
+ </tr>
  
- <TR>
-   <TD NOWRAP><B>[%|l%]Owner:[%END%]</B></TD>
-   <TD><I>[% user.email %]</I></TD>
-   <TD><img src="[% icons_url %]/unknown.png" alt="[%|l%]You are the privileged owner of this list[%END%]"></TD>
- </TR>
+ <tr>
+   <th style="white-space: nowrap;"><strong>[%|l%]Owner:[%END%]</strong></th>
+   <td><em>[% user.email %]</em></td>
+   <td><img src="[% icons_url %]/unknown.png" alt="[%|l%]You are the privileged owner of this list[%END%]" /></td>
+ </tr>
 
- <TR>
-   <TD valign=top NOWRAP><B>[%|l%]List type :[%END%]</B></TD>
-   <TD>
-     <MENU>
+ <tr>
+   <th valign="top" style="white-space: nowrap;"><strong>[%|l%]List type :[%END%]</strong></th>
+   <td>
+     <ul>
   [% FOREACH template = list_list_tpl %]
-     <INPUT TYPE="radio" NAME="template" Value="[% template.key %]"
+      <li>
+     <label><input type="radio" name="template" value="[% template.key %]"
      [% IF template.valuye.selected %]
-       CHECKED
+       checked="checked"
      [% END %]
-     > [% template.key %]<BR>
-     <BLOCKQUOTE>
+     /> [% template.key %]</label><br />
+     <blockquote>
      [% PROCESS $template.value.comment IF template.value.comment %]
-     </BLOCKQUOTE>
-     <BR>
+     </blockquote>
+     </li>
   [% END %]
-     </MENU>
-    </TD>
-    <TD valign=top><img src="[% icons_url %]/unknown.png" alt="[%|l%]The list type is a set of parameters' profile. Parameters will be editable, once the list created[%END%]"></TD>
- </TR>
- <TR>
-   <TD NOWRAP><B>[%|l%]Subject:[%END%]</B></TD>
-   <TD><INPUT TYPE="text" NAME="subject" SIZE=60 VALUE="[% saved.subject %]"></TD>
-   <TD><img src="[% icons_url %]/unknown.png" alt="[%|l%]The list's subject[%END%]"></TD>
- </TR>
- <TR>
-   <TD NOWRAP><B>[%|l%]Topics:[%END%]</B></TD>
-   <TD><SELECT NAME="topics">
-	<OPTION VALUE="">[%|l%]--Select a topic--[%END%]
+     </ul>
+    </td>
+    <td valign="top"><img src="[% icons_url %]/unknown.png" alt="[%|l%]The list type is a set of parameters' profile. Parameters will be editable, once the list created[%END%]" /></td>
+ </tr>
+ <tr>
+   <th style="white-space: nowrap;"><label for="subject"><strong>[%|l%]Subject:[%END%]</strong></label></th>
+   <td><input type="text" name="subject" id="subject" size="60" value="[% saved.subject %]" /></td>
+   <td><img src="[% icons_url %]/unknown.png" alt="[%|l%]The list's subject[%END%]" /></td>
+ </tr>
+ <tr>
+   <th style="white-space: nowrap;"><label for="topics"><strong>[%|l%]Topics:[%END%]</strong></label></th>
+   <td><select id="topics" name="topics">
+	<option value="">[%|l%]--Select a topic--[%END%]</option>
 	[% FOREACH topic = list_of_topics %]
-	  <OPTION VALUE="[% topic.key %]"
+	  <option value="[% topic.key %]"
 	  [% IF topic.value.selected %]
-	    SELECTED
+	    selected="selected"
 	  [% END %]
-	  >[% topic.value.current_title %]
+	  >[% topic.value.current_title %]</option>
 	  [% IF topic.value.sub %]
 	  [% FOREACH subtopic = topic.value.sub %]
-	     <OPTION VALUE="[% topic.key %]/[% subtopic.key %]">[% topic.value.current_title %] / [% subtopic.value.current_title %]
+	     <option value="[% topic.key %]/[% subtopic.key %]">[% topic.value.current_title %] / [% subtopic.value.current_title %]</option>
 	  [% END %]
 	  [% END %]
 	[% END %]
-	<OPTION VALUE="other">[%|l%]Other[%END%]
-     </SELECT>
-   </TD>
-   <TD valign=top><img src="[% icons_url %]/unknown.png" alt="[%|l%]List classification in the directory[%END%]"></TD>
- </TR>
+	<option value="other">[%|l%]Other[%END%]</option>
+     </select>
+   </td>
+   <td valign="top"><img src="[% icons_url %]/unknown.png" alt="[%|l%]List classification in the directory[%END%]" /></td>
+ </tr>
 
- <TR>
-   <TD valign=top NOWRAP><B>[%|l%]Description:[%END%]</B></TD>
-   <TD><TEXTAREA COLS=60 ROWS=10 NAME="info">[% saved.info %]</TEXTAREA></TD>
-   <TD valign=top><img src="[% icons_url %]/unknown.png" alt="[%|l%]A few lines describing the list[%END%]"></TD>
- </TR>
+ <tr>
+   <th valign="top" style="white-space: nowrap;"><label for="info"><strong>[%|l%]Description:[%END%]</strong></label></th>
+   <td><textarea cols="60" rows="10" id="info" name="info">[% saved.info %]</textarea></td>
+   <td valign="top"><img src="[% icons_url %]/unknown.png" alt="[%|l%]A few lines describing the list[%END%]" /></td>
+ </tr>
 
- <TR>
-   <TD COLSPAN=2 ALIGN="center">
-    <TABLE>
-     <TR>
-      <TD BGCOLOR="[% light_color %]">
-<INPUT TYPE="submit" NAME="action_create_list" VALUE="[%|l%]Submit your creation request[%END%]">
-      </TD>
-     </TR></TABLE>
-</TD></TR>
-</TABLE>
+ <tr>
+   <td colspan="2" style="text-align: center;">
+    <table>
+     <tr>
+      <td style="background: [% light_color %];">
+<input type="submit" name="action_create_list" value="[%|l%]Submit your creation request[%END%]" />
+      </td>
+     </tr></table>
+</td></tr>
+</table>
 
 
 
-</FORM>
+</form>
 
 
 
