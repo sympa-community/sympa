@@ -686,7 +686,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 'title_id' => 54,
 			 'group' => 'command'
 			 },
-	    'lang' => {'format' => ['fr','us','de','it','fi','es','tw','cn','pl','cz','hu'],
+	    'lang' => {'format' => ['fr','us','de','it','fi','es','tw','cn','pl','cz','hu','ro'],
 		       'default' => {'conf' => 'lang'},
 		       'title_id' => 55,
 		       'group' => 'description'
@@ -2007,7 +2007,7 @@ sub send_msg {
     if (@tabrcpt) {
 	## Add a footer
 	unless ($msg->head->get('Content-Type') =~ /multipart\/signed/i) {
-	    my $new_msg = _add_parts($msg,  $name, $self->{'admin'}{'footer_type'});
+	    my $new_msg = $self->add_parts($msg);
 	    if (defined $new_msg) {
 		$msg = $new_msg;
 		$msg_file = '_ALTERED_';
@@ -2032,7 +2032,7 @@ sub send_msg {
 	}
 	
 	## Add a footer
-	my $new_msg = _add_parts($txt_msg,  $name, $self->{'admin'}{'footer_type'});
+	my $new_msg = $self->add_parts($txt_msg);
 	if (defined $new_msg) {
 	    $txt_msg = $new_msg;
         }
@@ -2046,7 +2046,7 @@ sub send_msg {
 	    do_log('notice', 'Multipart message changed to singlepart');
 	}
         ## Add a footer
-	my $new_msg = _add_parts($html_msg,  $name, $self->{'admin'}{'footer_type'});
+	my $new_msg = $self->add_parts($html_msg);
 	if (defined $new_msg) {
 	    $html_msg = $new_msg;
         }
@@ -2082,7 +2082,7 @@ sub send_msg {
 	    &_urlize_part ($url_msg->parts ($i), $expl, $dir1, $i, $mime_types, $name, &Conf::get_robot_conf($robot, 'wwsympa_url')) ;
 	}
         ## Add a footer
-	my $new_msg = _add_parts($url_msg,  $name, $self->{'admin'}{'footer_type'});
+	my $new_msg = $self->add_parts($url_msg);
 	if (defined $new_msg) {
 	    $url_msg = $new_msg;
 	} 
@@ -2094,13 +2094,16 @@ sub send_msg {
    }
 
 ## Add footer/header to a message
-sub _add_parts {
-    my ($msg, $listname, $type) = @_;
-    do_log('debug3', 'List:_add_parts(%s, %s, %s)', $msg, $listname, $type);
+sub add_parts {
+    my ($self, $msg, $listname, $type) = @_;
+    do_log('debug3', 'List:add_parts(%s, %s, %s)', $msg, $listname, $type);
+
+    my ($listname,$type) = ($self->{'name'}, $self->{'admin'}{'footer_type'});
+    my $listdir = $self->{'dir'};
 
     my ($header, $headermime);
-    foreach my $file ("$listname/message.header", 
-		      "$listname/message.header.mime",
+    foreach my $file ("$listdir/message.header", 
+		      "$listdir/message.header.mime",
 		      "$Conf{'etc'}/templates/message.header", 
 		      "$Conf{'etc'}/templates/message.header.mime") {
 	if (-f $file) {
@@ -2114,8 +2117,8 @@ sub _add_parts {
     }
 
     my ($footer, $footermime);
-    foreach my $file ("$listname/message.footer", 
-		      "$listname/message.footer.mime",
+    foreach my $file ("$listdir/message.footer", 
+		      "$listdir/message.footer.mime",
 		      "$Conf{'etc'}/templates/message.footer", 
 		      "$Conf{'etc'}/templates/message.footer.mime") {
 	if (-f $file) {
@@ -2386,7 +2389,7 @@ sub send_msg_digest {
 	$msg->add_part($digest); 
 	
 	## Add a footer
-	my $new_msg = _add_parts($msg, $param->{'name'}, $self->{'admin'}{'footer_type'});
+	my $new_msg = $self->add_parts($msg);
 	if (defined $new_msg) {
 	    $msg = $new_msg;
 	}
