@@ -5864,7 +5864,7 @@ sub probe_db {
 		      'update_subscriber' => 'datetime',
 		      'visibility_subscriber' => 'varchar(20)',
 		      'reception_subscriber' => 'varchar(20)',
-		      'bounce_subscriber' => 'varchar(30)',
+		      'bounce_subscriber' => 'varchar(35)',
 		      'comment_subscriber' => 'varchar(150)'}
 		     );
 
