@@ -12,6 +12,8 @@ use POSIX;
 sub check_cookie {
 
     my $http_cookie = shift;
+    $http_cookie =~ s/%40/@/ ; 
+    $http_cookie =~ s/%3A/:/ ; 
     my $secret = shift;
 
     ## Scan parameters
