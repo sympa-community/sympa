@@ -854,7 +854,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	 ## Action template
 	 if (defined $param->{'action'}) {
-	     $param->{'action_template'} = &tools::get_filename('etc', "web_tt2/$param->{'action'}.$param->{'lang'}.tt2", $robot,$list);
+	     $param->{'action_template'} = &tools::get_filename('etc', "web_tt2/$param->{'action'}.tt2", $robot,$list);
 	     unless ($param->{'action_template'})  {
 		 &error_message('template_error');
 		 &do_log('info',"unable to find template for $param->{'action'}");
@@ -862,14 +862,14 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 ## Menu template
-	 $param->{'menu_template'} = &tools::get_filename('etc', "web_tt2/menu.$param->{'lang'}.tt2", $robot,$list);
+	 $param->{'menu_template'} = &tools::get_filename('etc', "web_tt2/menu.tt2", $robot,$list);
 	 unless ($param->{'menu_template'})  {
 	     &error_message('template_error');
 	     &do_log('info','unable to find menu template');
 	 }
 
 	 ## List_menu template
-	 $param->{'list_menu_template'} = &tools::get_filename('etc', "web_tt2/list_menu.$param->{'lang'}.tt2", $robot,$list);
+	 $param->{'list_menu_template'} = &tools::get_filename('etc', "web_tt2/list_menu.tt2", $robot,$list);
 
 	 unless ($param->{'list_menu_template'})  {
 	     &error_message('template_error');
@@ -877,7 +877,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 ## admin_menu template
-	 $param->{'admin_menu_template'} = &tools::get_filename('etc', "web_tt2/admin_menu.$param->{'lang'}.tt2", $robot,$list);
+	 $param->{'admin_menu_template'} = &tools::get_filename('etc', "web_tt2/admin_menu.tt2", $robot,$list);
 
 	 unless ($param->{'admin_menu_template'})  {
 	     &error_message('template_error');
@@ -885,7 +885,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 ## Title template
-	 $param->{'title_template'} = &tools::get_filename('etc', "web_tt2/title.$param->{'lang'}.tt2", $robot,$list);
+	 $param->{'title_template'} = &tools::get_filename('etc', "web_tt2/title.tt2", $robot,$list);
 
 	 unless ($param->{'title_template'})  {
 	     &error_message('template_error');
@@ -893,7 +893,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 ## Error template
-	  $param->{'error_template'} = &tools::get_filename('etc', "web_tt2/error.$param->{'lang'}.tt2", $robot,$list);
+	  $param->{'error_template'} = &tools::get_filename('etc', "web_tt2/error.tt2", $robot,$list);
 
 	 unless ($param->{'error_template'})  {
 	     &error_message('template_error');
@@ -901,7 +901,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 ## Notice template
-	 $param->{'notice_template'} = &tools::get_filename('etc', "web_tt2/notice.$param->{'lang'}.tt2", $robot,$list);
+	 $param->{'notice_template'} = &tools::get_filename('etc', "web_tt2/notice.tt2", $robot,$list);
 
 	 unless ($param->{'notice_template'})  {
 	     &error_message('template_error');
@@ -909,10 +909,10 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 ## Help template
-	 $param->{'help_template'} = &tools::get_filename('etc', "web_tt2/help_$param->{'help_topic'}.$param->{'lang'}.tpl", $robot,$list);
+	 $param->{'help_template'} = &tools::get_filename('etc', "web_tt2/help_$param->{'help_topic'}.tt2", $robot,$list);
 
 	 ## main template
-	 my $main = &tools::get_filename('etc', "web_tt2/main.$param->{'lang'}.tt2", $robot,$list);
+	 my $main = &tools::get_filename('etc', "web_tt2/main.tt2", $robot,$list);
 
 	 unless ($main)  {
 	     &error_message('template_error');
@@ -3174,7 +3174,7 @@ sub do_redirect {
      }
 
      ## Messages edition
-     foreach my $f ('info','homepage','welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl') {
+     foreach my $f ('info','homepage','welcome.tt2','bye.tt2','removed.tt2','message.footer','message.header','remind.tt2','invite.tt2','reject.tt2') {
 	 next unless ($list->may_edit($f, $param->{'user'}{'email'}) eq 'write');
 	 if ($wwslib::filenames{$f}{'gettext_id'}) {
 	     $param->{'files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
@@ -4056,7 +4056,7 @@ sub do_redirect {
 
 	 ## Add list lang to tpl filename
 	 my $file = $in{'file'};
-	 $file =~ s/\.tpl$/\.$list->{'admin'}{'lang'}\.tpl/;
+	 #$file =~ s/\.tpl$/\.$list->{'admin'}{'lang'}\.tpl/;
 
 	 ## Look for the template
 	 $param->{'filepath'} = &tools::get_filename('etc','tt2/'.$file,$robot, $list);
@@ -4076,11 +4076,11 @@ sub do_redirect {
 	 my $file = $in{'file'};
 
 	 ## Look for the template
-	 if ($file eq 'list_aliases.tpl') {
+	 if ($file eq 'list_aliases.tt2') {
 	     $param->{'filepath'} = &tools::get_filename('etc',$file,$robot);
 	 }else {
-	     my $lang = &Conf::get_robot_conf($robot, 'lang');
-	     $file =~ s/\.tpl$/\.$lang\.tpl/;
+	     #my $lang = &Conf::get_robot_conf($robot, 'lang');
+	     #$file =~ s/\.tpl$/\.$lang\.tpl/;
 
 	     $param->{'filepath'} = &tools::get_filename('etc','tt2/'.$file,$robot);
 	 }
@@ -4129,13 +4129,13 @@ sub do_redirect {
 	 }
 
 	 if ($robot ne $Conf{'domain'}) {
-	     if ($in{'file'} eq 'list_aliases.tpl') {
+	     if ($in{'file'} eq 'list_aliases.tt2') {
 		 $param->{'filepath'} = "$Conf{'etc'}/$robot/$in{'file'}";
 	     }else {
 		 $param->{'filepath'} = "$Conf{'etc'}/$robot/tt2/$in{'file'}";
 	     }
 	 }else {
-	      if ($in{'file'} eq 'list_aliases.tpl') {
+	      if ($in{'file'} eq 'list_aliases.tt2') {
 		  $param->{'filepath'} = "$Conf{'etc'}/$in{'file'}";
 	      }else {
 		  $param->{'filepath'} = "$Conf{'etc'}/tt2/$in{'file'}";
@@ -5027,7 +5027,7 @@ sub do_set_pending_list_request {
      }
 
      unless ($param->{'auto_aliases'}) {
-	 my $template_file = &tools::get_filename('etc', 'list_aliases.tpl', $robot);
+	 my $template_file = &tools::get_filename('etc', 'list_aliases.tt2', $robot);
 	 my @aliases ;
 	 my %data;
 	 $data{'list'}{'domain'} = $data{'robot'} = $robot;
@@ -7318,7 +7318,7 @@ sub merge_edit{
 	 # name of the file "index.html" if exists in the directory read
 	 my $indexhtml;
 	 # boolean : one of the subdirectories or files inside
-	 # can be edited -> normal mode of read -> d_read.tpl;
+	 # can be edited -> normal mode of read -> d_read.tt2;
 	 my $normal_mode;
 
 
@@ -9597,7 +9597,7 @@ sub creation_desc_file {
 	  return undef;
       }
 
-      foreach my $tpl (sort grep(/\.tpl$/, readdir TPL)) {
+      foreach my $tpl (sort grep(/\.tt2$/, readdir TPL)) {
 	  my @token = split /\./, $tpl;
 	  if ($#token == 2) {
 	      $param->{'tpl'}{$token[0]}{$token[1]} = 'bin';
