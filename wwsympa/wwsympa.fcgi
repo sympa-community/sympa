@@ -848,13 +848,8 @@ sub check_param_in {
 	   $param->{'is_editor'} = $list->am_i('editor', $param->{'user'}{'email'});
 	   $param->{'is_priv'} = $param->{'is_owner'} || $param->{'is_editor'};
 
-	   my $may_post = &List::request_action ('send',$param->{'auth_method'},
-						 {'listname' => $param->{'list'}, 
-						  'sender' => $param->{'user'}{'email'},
-						  'remote_host' => $param->{'remote_host'},
-						  'remote_addr' => $param->{'remote_addr'}});
-	   $param->{'may_post'} = 1 
-	       unless ($may_post =~ /reject/);
+	   ## If user is identified
+	   $param->{'may_post'} = 1;
        }
 	
        $param->{'is_moderated'} = $list->is_moderated();
