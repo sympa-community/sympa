@@ -5589,7 +5589,7 @@ sub sync_include {
     &do_log('notice', 'List:sync_include(%s): %d users removed', $name, $users_updated);
 
     ## Get and save total of subscribers
-    $self->{'total'} = _load_total_db($self->{'name'});
+    $self->{'total'} = _load_total_db($self->{'name'}, 'nocache');
     $self->{'last_sync'} = time;
     $self->savestats();
 
@@ -5616,6 +5616,7 @@ sub _inclusion_loop {
 
 sub _load_total_db {
     my $name = shift;
+    my $option = shift;
     do_log('debug2', 'List::_load_total_db(%s)', $name);
 
     unless ($List::use_db) {
@@ -5624,7 +5625,7 @@ sub _load_total_db {
     }
     
     ## Use session cache
-    if (defined $list_cache{'load_total_db'}{$name}) {
+    if (($option ne 'nocache') && (defined $list_cache{'load_total_db'}{$name})) {
 	&do_log('debug3', 'xxx Use cache(load_total_db, %s)', $name);
 	return $list_cache{'load_total_db'}{$name};
     }
