@@ -1,8 +1,8 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
   [IF status=auth]
-      Le szeretnél iratkozni a(z) [list] listáról. <BR>Leiratkozásod
-      megerõsítéséhez kattints a lenti gombra:<BR>
+    Le szeretnél iratkozni a(z) [list] listáról. <BR>Leiratkozásod
+    megerõsítéséhez kattints a lenti gombra:<BR>
 	<BR>
 
 	<FORM ACTION="[path_cgi]" METHOD=POST>
@@ -30,19 +30,20 @@
 	a(z) [list] listáról való leiratkozásodhoz.
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="#330099"><B>Email cím</B> </FONT>[email]<BR>
-            <FONT COLOR="#330099"><B>Jelszó</B> </FONT> 
+          <FONT COLOR="--DARK_COLOR--"><B>Email cím</B> </FONT>[email]<BR>
+            <FONT COLOR="--DARK_COLOR--"><B>Jelszó</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
         &nbsp; &nbsp; &nbsp;<INPUT TYPE="submit" NAME="action_signoff" VALUE="Leiratkozás">
         </FORM>
 
+
 	A jelszavaddal és email címeddel az egyéni beállításaidat
 	tudod késöbb megváltoztatni.
 
-  [ELSIF ! email]
-      Kérlek add meg az email címedet a(z) [list] listáról való leiratkozási kérelemhez.
+   [ELSIF ! email]
+        Kérlek add meg az email címedet a(z) [list] listáról való leiratkozási kérelemhez.
 
       <FORM ACTION="[path_cgi]" METHOD=POST>
           <B>Email címed:</B> 
@@ -58,8 +59,8 @@
 	lent a jelszavadat:
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="#330099"><B>e-mail address</B> </FONT>[email]<BR>
-            <FONT COLOR="#330099"><B>password</B> </FONT> 
+          <FONT COLOR="--DARK_COLOR--"><B>Email cím</B> </FONT>[email]<BR>
+            <FONT COLOR="--DARK_COLOR--"><B>Jelszó</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">

@@ -14,9 +14,9 @@
   <TR><TH ALIGN="left" BGCOLOR="--SELECTED_COLOR--"><FONT COLOR="--BG_COLOR--">[file->NAME]</FONT></TH>
   [FOREACH translation IN file]
       [IF translation=none]
-	<TD BGCOLOR="--BG_COLOR--"><A HREF="[path_cgi]/translate/[file->NAME]/[translation->NAME]">Lássuk</A></TD>
+	<TD BGCOLOR="--BG_COLOR--"><A HREF="[path_cgi]/translate/[file->NAME]/[translation->NAME]">Szerkesztés</A></TD>
       [ELSE]
-	<TD><FONT COLOR="--BG_COLOR--">nyelven</FONT></TD>
+	<TD><FONT COLOR="--BG_COLOR--">lefordítva</FONT></TD>
       [ENDIF]
   [END]
   </TR>

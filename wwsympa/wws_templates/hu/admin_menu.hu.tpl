@@ -21,13 +21,13 @@
     <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER">
 	[IF shared=none]
           <A HREF="[base_url][path_cgi]/d_admin/[list]/create" >
-             <FONT size=-1><b>Megosztott lista létrehozása<b></font></A>
+             <FONT size=-1><b>Megosztott mappa létrehozása<b></font></A>
 	[ELSIF shared=deleted]
           <A HREF="[base_url][path_cgi]/d_admin/[list]/restore" >
-             <FONT size=-1><b>Megosztott lista helyreállítása</b></font></A>
+             <FONT size=-1><b>Megosztott mappa helyreállítása</b></font></A>
 	[ELSIF shared=exist]
           <A HREF="[base_url][path_cgi]/d_admin/[list]/delete" >
-             <FONT size=-1><b>Megosztott lista törlése</b></font></A>
+             <FONT size=-1><b>Megosztott mappa törlése</b></font></A>
         [ELSE]
           <FONT size=1 color=red>
           [shared]
@@ -73,7 +73,7 @@
 
     [IF action=modindex]
     <TD BGCOLOR="--SELECTED_COLOR--" ALIGN="CENTER">
-       <FONT size="-1" COLOR="--BG_COLOR--"><b>Moderate</b></FONT>
+       <FONT size="-1" COLOR="--BG_COLOR--"><b>Moderálás</b></FONT>
     </TD>
     [ELSE]
        [IF is_editor]

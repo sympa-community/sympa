@@ -81,7 +81,7 @@
   <TD ALIGN="left"><font color="--BG_COLOR--">Leírás</font></TD> 
   <TD ALIGN="center"><font color="--BG_COLOR--">Szerkeszt</font></TD> 
   <TD ALIGN="center"><font color="--BG_COLOR--">Töröl</font></TD>
-  <TD ALIGN="center"><font color="--BG_COLOR--">Megnyit</font></TD></TR>
+  <TD ALIGN="center"><font color="--BG_COLOR--">Hozzáférés</font></TD></TR>
       
   [IF empty]
     <TR BGCOLOR="--LIGHT_COLOR--" VALIGN="top">
@@ -247,7 +247,7 @@
     [IF path]
       <B> Hozz létre egy új könyvtárat a(z) [path]-on belül</B> <BR>
     [ELSE]
-      <B> Hozz létre egy új könyvtárat a MEGOSZTOTTban</B> <BR>
+      <B> Hozz létre egy új könyvtárat a KÖZÖS OLDALakon belül</B> <BR>
     [ENDIF]
     <input MAXLENGTH=30 type="text" name="name_doc">
     </TD>
@@ -268,7 +268,7 @@
    [IF path]
      <B> Tölts fel egy új állományt a(z) [path]-ba</B><BR>
    [ELSE]
-     <B> Tölts fel egy új állományt a MEGOSZTOTTba </B><BR>
+     <B> Tölts fel egy új állományt a KÖZÖS KÖNYVTÁRba </B><BR>
    [ENDIF]
    <input type="file" name="uploaded_file">
    </TD>

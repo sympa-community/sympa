@@ -1,11 +1,10 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
     <BR><P> 
-<TABLE BORDER=0 BGCOLOR="#ccccff"><TR><TD>
+<TABLE BORDER=0 BGCOLOR="--LIGHT_COLOR--"><TR><TD>
 <P align=justify>
 A [conf->email]@[conf->host] levelezõlista szerveren tárolt beállításaidat tudod itt megváltoztatni.
-Ezen az Internet címen a feliratkozásodat, leiratkozásodat, beállításaid módosítását, az archívum megtekintését
-és még sok minden mást tehetsz meg.
+Ezen az Internet címen a feliratkozásodat, leiratkozásodat, beállításaid módosítását, az archívum megtekintését és még sok minden mást tehetsz meg.
 </P>
 </TD></TR></TABLE>
 <BR><BR>
@@ -13,8 +12,8 @@ Ezen az Internet címen a feliratkozásodat, leiratkozásodat, beállításaid módosít
 <CENTER>
 <TABLE BORDER=0>
  <TR>
-  <TH BGCOLOR="#3366cc">
-   <FONT COLOR="#ffffff">Levelezõlisták</FONT>
+  <TH BGCOLOR="--SELECTED_COLOR--">
+   <FONT COLOR="--BG_COLOR--">Levelezõlisták</FONT>
   </TH>
  </TR>
  <TR>
@@ -45,13 +44,13 @@ Ezen az Internet címen a feliratkozásodat, leiratkozásodat, beállításaid módosít
    <TR>
 <TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="#330099">
+  <TR ALIGN=center BGCOLOR="--DARK_COLOR--">
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
-      <TD NOWRAP BGCOLOR="#ccccff" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
       <A HREF="[path_cgi]/lists" >
-     <FONT SIZE=-1><B>view all lists</B></FONT></A>
+     <FONT SIZE=-1><B>mutasd az összes listát</B></FONT></A>
      </TD>
     </TR>
   </TABLE>
@@ -77,10 +76,10 @@ Ezen az Internet címen a feliratkozásodat, leiratkozásodat, beállításaid módosít
 
 [IF ! user->email]
 <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="0" VALIGN="top">
-   <TR><TD BGCOLOR="#330099">
+   <TR><TD BGCOLOR="--DARK_COLOR--">
           <TABLE BORDER="0" WIDTH="100%"  VALIGN="top"> 
-              <TR><TD BGCOLOR="#ffffff">
-[PARSE '/home/sympa/bin/etc/wws_templates/loginbanner.hu.tpl']
+              <TR><TD BGCOLOR="--BG_COLOR--">
+[PARSE '--ETCBINDIR--/wws_templates/loginbanner.hu.tpl']
 </TD></TR></TABLE>
 </TD></TR></TABLE>
 

@@ -14,11 +14,11 @@
     </FORM>
 </TD>
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="#330099" VALIGN="top">
+ <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
    <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
      <TR>
-       <TD BGCOLOR="#ccccff" ALIGN="center" VALIGN="top">
-         <FONT COLOR="#3366cc" SIZE="-1">
+       <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="center" VALIGN="top">
+         <FONT COLOR="--SELECTED_COLOR--" SIZE="-1">
          <A HREF="[base_url][path_cgi]/add_request/[list]" ><b>Tagok hozzáadása</b></A>
          </FONT>
        </TD>
@@ -28,11 +28,11 @@
 </TD>
 
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="#330099" VALIGN="top">
+ <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
    <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
      <TR>
-       <TD BGCOLOR="#ccccff" ALIGN="center" VALIGN="top">
-         <FONT COLOR="#3366cc" SIZE="-1">
+       <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="center" VALIGN="top">
+         <FONT COLOR="--SELECTED_COLOR--" SIZE="-1">
 
          <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Tényleg szeretnél a(z) [total] új tagnak üdvözlõ szöveget küldeni?'); return false;"><b>Újak értesítése</b></A>
 
@@ -56,7 +56,7 @@
 [IF action=search]
 <BR>[occurrence] találat<BR>
 [IF too_many_select]
-Túl sok a találat, nem jeleníthetõ meg. 
+Túl sok a találat, nem jeleníthetõ meg.
 [ENDIF]
 [ENDIF]
 </FORM>
@@ -97,7 +97,7 @@ Túl sok a találat, nem jeleníthetõ meg.
     <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Elõzõ oldal"></A>
    [ENDIF]
    [IF page]
-    Oldalak [page] / [total_page]
+     Oldalak [page] / [total_page]
    [ENDIF]
    [IF next_page]
      <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.gif" BORDER="0" ALT="Következõ oldal"></A>
@@ -107,13 +107,13 @@ Túl sok a találat, nem jeleníthetõ meg.
   </TABLE>
 
     <TABLE WIDTH="100%" BORDER="1">
-      <TR BGCOLOR="#ccccff">
+      <TR BGCOLOR="--LIGHT_COLOR--">
 	[IF is_owner]
 	   <TH><FONT SIZE="-1"><B>X</B></FONT></TH>
 	[ENDIF]
         [IF sortby=email]
-  	    <TH NOWRAP COLSPAN=2 BGCOLOR="#3366cc">
-	    <FONT COLOR="#ffffff" SIZE="-1"><b>Email</b></FONT>
+  	    <TH NOWRAP COLSPAN=2 BGCOLOR="--SELECTED_COLOR--">
+	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Email</b></FONT>
 	[ELSE]
 	    <TH NOWRAP COLSPAN=2>
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/email" >
@@ -126,8 +126,8 @@ Túl sok a találat, nem jeleníthetõ meg.
 	  <TH><FONT SIZE="-1"><B>Fogadás</B></FONT>
 	  </TH>
 	  [IF sortby=date]
-  	    <TH NOWRAP BGCOLOR="#3366cc">
-	    <FONT COLOR="#ffffff" SIZE="-1"><b>Feliratkozva</b></FONT>
+  	    <TH NOWRAP BGCOLOR="--SELECTED_COLOR--">
+	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Feliratkozva</b></FONT>
 	  [ELSE]
 	    <TH NOWRAP><FONT SIZE="-1">
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/date" >
@@ -139,7 +139,7 @@ Túl sok a találat, nem jeleníthetõ meg.
       
       [FOREACH u IN members]
 	[IF dark=1]
-	  <TR BGCOLOR="#eeeeee">
+	  <TR BGCOLOR="--SHADED_COLOR--">
 	[ELSE]
           <TR>
 	[ENDIF]
@@ -162,8 +162,8 @@ Túl sok a találat, nem jeleníthetõ meg.
  	        [u->email]
  	      [ENDIF]
 	  </FONT></TD>
-            <TD ALIGN="right"BGCOLOR="#ff6666"><FONT SIZE=-1>
-		<FONT COLOR="#ffffff"><B>visszaküldések</B></FONT>
+            <TD ALIGN="right"BGCOLOR="--ERROR_COLOR--"><FONT SIZE=-1>
+		<FONT COLOR="--BG_COLOR--"><B>visszaküldések</B></FONT>
 	    </TD>
 
 	 [ELSE]
@@ -219,7 +219,7 @@ Túl sok a találat, nem jeleníthetõ meg.
 	 <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Elõzõ oldal"></A>
        [ENDIF]
        [IF page]
-  	  [page] oldal / [total_page]
+  	  Oldalak [page] / [total_page]
        [ENDIF]
        [IF next_page]
 	  <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.gif" BORDER=0 ALT="Következõ oldal"></A>
@@ -227,8 +227,10 @@ Túl sok a találat, nem jeleníthetõ meg.
     </TD>
    [ENDIF]
     </TR>
+    [IF is_owner]
     <TR><TD><input type=button value="Kijelölés megfordítása" onClick="toggle_selection(document.myform.email)">
     </TD></TR>
+    [ENDIF]
     </TABLE>
     </FORM>
 
