@@ -4551,7 +4551,8 @@ sub _prepare_data {
 		$d = {};
 	    }
 
-	    foreach my $k (keys %{$struct->{'format'}}) {
+	    foreach my $k (sort {$struct->{'format'}{$a}{'order'} <=> $struct->{'format'}{$b}{'order'}} 
+			   keys %{$struct->{'format'}}) {
 		## Prepare data recursively
 		my $v = &_prepare_data($k, $struct->{'format'}{$k}, $d->{$k});
 		$v->{'may_edit'} = $list->may_edit("$name.$k",$param->{'user'}{'email'});

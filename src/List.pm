@@ -243,6 +243,9 @@ my %alias = ('reply-to' => 'reply_to',
 ##               example : a list may have multiple owner 
 ## title_id :    Title reference in NLS catalogues
 ## group :       Group of parameters
+## obsolete :    Obsolete parameter ; should not be displayed 
+##               nor saved
+## order :       Order of parameters within paragraph
 ###############################################################
 %::pinfo = ('account' => {'format' => '\S+',
 			  'length' => 10,
@@ -259,11 +262,13 @@ my %alias = ('reply-to' => 'reply_to',
 				   },
 	    'archive' => {'format' => {'period' => {'format' => ['day','week','month','quarter','year'],
 						    'synonym' => {'weekly' => 'week'},
-						    'title_id' => 5
+						    'title_id' => 5,
+						    'order' => 1
 						},
 				       'access' => {'format' => ['open','private','public','owner','closed'],
 						    'synonym' => {'open' => 'public'},
-						    'title_id' => 6
+						    'title_id' => 6,
+						    'order' => 2
 						}
 				   },
 			  'title_id' => 4,
@@ -283,13 +288,15 @@ my %alias = ('reply-to' => 'reply_to',
 						      'length' => 3,
 						      'unit' => '%',
 						      'default' => {'conf' => 'bounce_warn_rate'},
-						      'title_id' => 8
+						      'title_id' => 8,
+						      'order' => 1
 						  },
 				      'halt_rate' => {'format' => '\d+',
 						      'length' => 3,
 						      'unit' => '%',
 						      'default' => {'conf' => 'bounce_halt_rate'},
-						      'title_id' => 9
+						      'title_id' => 9,
+						      'order' => 2
 						  }
 				  },
 			 'title_id' => 7,
@@ -310,14 +317,17 @@ my %alias = ('reply-to' => 'reply_to',
 		     },
 	    'creation' => {'format' => {'date_epoch' => {'format' => '\d+',
 							 'occurrence' => '1',
-							 'title_id' => 13
+							 'title_id' => 13,
+							 'order' => 3
 						     },
 					'date' => {'format' => '.+',
-						   'title_id' => 14
+						   'title_id' => 14,
+						   'order' => 2
 						   },
 					'email' => {'format' => $regexp{'email'},
 						    'occurrence' => '1',
-						    'title_id' => 15
+						    'title_id' => 15,
+						    'order' => 1
 						    }
 				    },
 			   'title_id' => 12,
@@ -338,11 +348,13 @@ my %alias = ('reply-to' => 'reply_to',
 	    'default_user_options' => {'format' => {'reception' => {'format' => ['digest','mail','nomail',
 										 'summary','notice'],
 								    'default' => 'mail',
-								    'title_id' => 19
+								    'title_id' => 19,
+								    'order' => 1
 								    },
 						    'visibility' => {'format' => ['conceal','noconceal'],
 								     'default' => 'noconceal',
-								     'title_id' => 20
+								     'title_id' => 20,
+								     'order' => 2
 								     }
 						},
 				       'title_id' => 18,
@@ -356,17 +368,20 @@ my %alias = ('reply-to' => 'reply_to',
 			 'format' => {'days' => {'format' => [1..7],
 						 'file_format' => '1|2|3|4|5|6|7',
 						 'occurrence' => '1-n',
-						 'title_id' => 23
+						 'title_id' => 23,
+						 'order' => 1
 						 },
 				      'hour' => {'format' => '\d+',
 						 'length' => 2,
 						 'occurrence' => '1',
-						 'title_id' => 24
+						 'title_id' => 24,
+						 'order' => 2
 						 },
 				      'minute' => {'format' => '\d+',
 						   'length' => 2,
 						   'occurrence' => '1',
-						   'title_id' => 25
+						   'title_id' => 25,
+						   'order' => 3
 						   }
 				  },
 			 'title_id' => 22,
@@ -375,19 +390,23 @@ my %alias = ('reply-to' => 'reply_to',
 	    'editor' => {'format' => {'email' => {'format' => $regexp{'email'},
 						  'length' => 30,
 						  'occurrence' => '1',
-						  'title_id' => 27
+						  'title_id' => 27,
+						  'order' => 1
 						  },
 				      'reception' => {'format' => ['mail','nomail'],
 						      'default' => 'mail',
-						      'title_id' => 28
+						      'title_id' => 28,
+						      'order' => 4
 						      },
 				      'gecos' => {'format' => '.+',
 						  'length' => 30,
-						  'title_id' => 29
+						  'title_id' => 29,
+						  'order' => 2
 						  },
 				      'info' => {'format' => '.+',
 						 'length' => 30,
-						 'title_id' => 30
+						 'title_id' => 30,
+						 'order' => 3
 						 }
 				  },
 			 'occurrence' => '0-n',
@@ -423,36 +442,44 @@ my %alias = ('reply-to' => 'reply_to',
 
 	    'include_ldap_query' => {'format' => {'host' => {'format' => $regexp{'host'},
 							     'occurrence' => '1',
-							     'title_id' => 36
+							     'title_id' => 36,
+							     'order' => 1
 							     },
 						  'port' => {'format' => '\d+',
 							     'default' => 389,
 							     'length' => 4,
-							     'title_id' => 37
+							     'title_id' => 37,
+							     'order' => 2
 							     },
 						  'user' => {'format' => '.*',
-							     'title_id' => 38
+							     'title_id' => 38,
+							     'order' => 3
 							     },
 						  'passwd' => {'format' => '.*',
 							       'length' => 10,
-							       'title_id' => 39
+							       'title_id' => 39,
+							       'order' => 3
 							       },
 						  'suffix' => {'format' => '.*',
-							       'title_id' => 40
+							       'title_id' => 40,
+							       'order' => 4
 							       },
 						  'filter' => {'format' => '.*',
 							       'length' => 50,
 							       'occurrence' => '1',
-							       'title_id' => 41
+							       'title_id' => 41,
+							       'order' => 5
 							       },
 						  'attrs' => {'format' => '\w+',
 							      'length' => 15,
 							      'default' => 'mail',
-							      'title_id' => 42 
+							      'title_id' => 42,
+							      'order' => 6 
 							      },
 						  'select' => {'format' => ['all','first'],
 							       'default' => 'first',
-							       'title_id' => 43
+							       'title_id' => 43,
+							       'order' => 7
 							       }  
 					      },
 				     'occurrence' => '0-n',
@@ -466,30 +493,37 @@ my %alias = ('reply-to' => 'reply_to',
 			       },
 	    'include_sql_query' => {'format' => {'db_type' => {'format' => ['mysql','Pg','Oracle','Sybase'],
 							       'occurrence' => '1',
-							       'title_id' => 46
+							       'title_id' => 46,
+							       'order' => 1
 							       },
 						 'host' => {'format' => $regexp{'host'},
 							    'occurrence' => '1',
-							    'title_id' => 47
+							    'title_id' => 47,
+							    'order' => 2
 							    },
 						 'db_name' => {'format' => '\S+',
 							       'occurrence' => '1',
-							       'title_id' => 48 
+							       'title_id' => 48,
+							       'order' => 3 
 							       },
 						 'user' => {'format' => '\S+',
 							    'occurrence' => '1',
-							    'title_id' => 49
+							    'title_id' => 49,
+							    'order' => 4
 							    },
 						 'passwd' => {'format' => '.+',
-							      'title_id' => 50
+							      'title_id' => 50,
+							      'order' => 5
 							      },
 						 'sql_query' => {'format' => $regexp{'sql_query'},
 								 'length' => 50,
 								 'occurrence' => '1',
-								 'title_id' => 51
+								 'title_id' => 51,
+								 'order' => 6
 								 },
 						 'f_dir' => {'format' => '.+',
-							     'title_id' => 52
+							     'title_id' => 52,
+							     'order' => 7
 							     }
 					     },
 				    'occurrence' => '0-n',
@@ -519,23 +553,28 @@ my %alias = ('reply-to' => 'reply_to',
 	    'owner' => {'format' => {'email' => {'format' => $regexp{'email'},
 						 'length' =>30,
 						 'occurrence' => '1',
-						 'title_id' => 58
+						 'title_id' => 58,
+						 'order' => 1
 						 },
 				     'reception' => {'format' => ['mail','nomail'],
 						     'default' => 'mail',
-						     'title_id' => 59 
+						     'title_id' => 59,
+						     'order' =>5
 						     },
 				     'gecos' => {'format' => '.+',
 						 'length' => 30,
-						 'title_id' => 60
+						 'title_id' => 60,
+						 'order' => 2
 						 },
 				     'info' => {'format' => '.+',
 						'length' => 30,
-						'title_id' => 61
+						'title_id' => 61,
+						'order' => 3
 						},
 				     'profile' => {'format' => ['privileged','normal'],
 						   'default' => 'normal',
-						   'title_id' => 62
+						   'title_id' => 62,
+						   'order' => 4
 						   }
 				 },
 			'occurrence' => '1-n',
@@ -566,14 +605,17 @@ my %alias = ('reply-to' => 'reply_to',
 	    'reply_to_header' => {'format' => {'value' => {'format' => ['sender','list','other_email'],
 							   'default' => 'sender',
 							   'title_id' => 91,
-							   'occurrence' => '1'
+							   'occurrence' => '1',
+							   'order' => 1
 							   },
 					       'other_email' => {'format' => $regexp{'email'},
-								 'title_id' => 92
+								 'title_id' => 92,
+								 'order' => 2
 								 },
 					       'apply' => {'format' => ['forced','respect'],
 							   'default' => 'respect',
-							   'title_id' => 93
+							   'title_id' => 93,
+							   'order' => 3
 							   }
 					   },
 				  'title_id' => 90,
@@ -595,10 +637,12 @@ my %alias = ('reply-to' => 'reply_to',
 			 'group' => 'other'
 			 },
 	    'shared_doc' => {'format' => {'d_read' => {'scenario' => 'd_read',
-						       'title_id' => 86
+						       'title_id' => 86,
+						       'order' => 1
 						       },
 					  'd_edit' => {'scenario' => 'd_edit',
-						       'title_id' => 87
+						       'title_id' => 87,
+						       'order' => 2
 						       }
 				      },
 			     'title_id' => 70,
@@ -639,16 +683,19 @@ my %alias = ('reply-to' => 'reply_to',
 	    'update' => {'format' => {'date_epoch' => {'format' => '\d+',
 						       'length' => 8,
 						       'occurrence' => '1',
-						       'title_id' => 78
+						       'title_id' => 78,
+						       'order' => 3
 						       },
 				      'date' => {'format' => '.+',
 						 'length' => 30,
-						 'title_id' => 79
+						 'title_id' => 79,
+						 'order' => 2
 						 },
 				      'email' => {'format' => $regexp{'email'},
 						  'length' => 30,
 						  'occurrence' => '1',
-						  'title_id' => 80
+						  'title_id' => 80,
+						  'order' => 1
 						  }
 				  },
 			 'title_id' => 77,
