@@ -1628,6 +1628,10 @@ sub distribute {
 
     ## Open and parse the file
     my $message = new Message($file);
+    unless (defined $message) {
+	do_log('err', 'Unable to create Message object %s', $file);
+	return undef;
+    }
 
     my $msg = $message->{'msg'};
     my $hdr= $msg->head;
