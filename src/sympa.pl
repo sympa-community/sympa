@@ -985,10 +985,12 @@ sub DoMessage{
     my $rc;
    
     if ($rc= &tools::virus_infected($msg, $file)) {
-	printf "do message, virus= $rc \n";
-	$list->send_file('your_infected_msg', $sender, $robot, {'virus_name' => $rc,
-							'recipient' => $name.'@'.$host,
-							'lang' => $list->{'admin'}{'lang'}});
+	if ($Conf{'antivirus_notify'} eq 'sender') {
+	    #printf "do message, virus= $rc \n";
+	    $list->send_file('your_infected_msg', $sender, $robot, {'virus_name' => $rc,
+								    'recipient' => $name.'@'.$host,
+								    'lang' => $list->{'admin'}{'lang'}});
+	}
 	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $name, $host, $sender, $rc);
 	return undef;
     }
