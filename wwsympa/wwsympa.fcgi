@@ -569,7 +569,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	      do_log ('notice',"Internal error while receiving a CAS ticket $in{'checked_cas'} ");
 	 }
      }elsif(($Conf{'cas_number'} > 0) &&
-	    ($in{'action'} !~ /^login|sso_login$/)) { # some cas server are defined but no CAS ticket detected
+	    ($in{'action'} !~ /^login|sso_login|wsdl$/)) { # some cas server are defined but no CAS ticket detected
 	 if (&cookielib::get_do_not_use_cas($ENV{'HTTP_COOKIE'})) {
 	     &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},1,$Conf{'cookie_cas_expire'}); # refresh CAS cookie;
 	 }else{
