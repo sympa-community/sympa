@@ -464,7 +464,7 @@ my %in_regexp = (
 		 'new_email' => $tools::regexp{'email'},
 		 'pending_email' => $tools::regexp{'email'},
 		 'sender' => $tools::regexp{'email'},
-		 'to' => $tools::regexp{'email'},
+		 'to' => $tools::regexp{'listname'}.'\s'.$tools::regexp{'host'},
 
 		 ## Host
 		 'new_robot' => $tools::regexp{'host'},
@@ -1233,7 +1233,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 foreach my $one_p (split /\0/, $in{$p}) {
 	     unless ($one_p =~ /^$regexp$/) {
 		 ## Dump parameters in a tmp file for later analysis
-		 my $dump_file = '/tmp/sympa_dump.'.time."$$$.";
+		 my $dump_file = '/tmp/sympa_dump.'.time.'.'.$$;
 		 unless (open DUMP, ">$dump_file") {
 		     &wwslog('err','get_parameters: failed to create %s : %s', $dump_file, $!);		     
 		 }
