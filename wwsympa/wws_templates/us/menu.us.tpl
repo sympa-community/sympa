@@ -43,16 +43,7 @@
 
 
 </TD>
-<TD WIDTH=100% BGCOLOR="--BG_COLOR--">
-<FORM ACTION="[path_cgi]" METHOD="POST">
-<INPUT TYPE="hidden" NAME="action" VALUE="set_lang">
-<SELECT NAME="lang" onchange="this.form.submit()">
-[FOREACH lang IN  languages]
-  <OPTION VALUE="[lang->NAME]" [lang->selected]>[lang->complete]
-[END]
-</SELECT>
-</FORM>
-</TD>
+<TD WIDTH=100% BGCOLOR="--BG_COLOR--">&nbsp;</TD>
 
 <TD>
 
