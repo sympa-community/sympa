@@ -3743,10 +3743,10 @@ sub load_scenario_list {
     my ($self, $action) = @_;
     do_log('debug2', 'List::_load_scenario_list(%s)', $action);
 
-    my $directory = "$Conf{'home'}/$self->{'name'}/scenari";
+    my $directory = "$Conf{'home'}/$self->{'name'}";
     my %list_of_scenario;
 
-    foreach my $dir ($directory, "$Conf{'etc'}/scenari", "--ETCBINDIR--/scenari") {
+    foreach my $dir ("$directory/scenari", "$Conf{'etc'}/scenari", "--ETCBINDIR--/scenari") {
 	while (<$dir/$action.*>) {
 	    next unless (/$action\.(\w+)$/);
 	    my $name = $1;
