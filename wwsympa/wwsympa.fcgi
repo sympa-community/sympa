@@ -4368,18 +4368,22 @@ sub do_edit_list {
 	foreach my $i (0..$#{$p}) {
 
 	    ## Scenario
+	    ## Eg: 'subscribe'
 	    if ($pinfo->{$pname}{'scenario'} || $pinfo->{$pname}{'task'}) {
 		if ($p->[$i]{'name'} ne $new_p->[$i]{'name'}) {
 		    $changed{$pname} = 1; next;
 		}
 		## Hash
+		## Ex: 'owner'
 	    }elsif (ref ($pinfo->{$pname}{'format'}) eq 'HASH') {
 		
 		## Foreach Keys
+		## Ex: 'owner->email'
 		foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
 
 		    next unless ($list->may_edit("$pname.$key",$param->{'user'}{'email'}) eq 'write');
 
+		    ## Ex: 'shared_doc->d_read'
 		    if ($pinfo->{$pname}{'format'}{$key}{'scenario'} || $pinfo->{$pname}{'format'}{$key}{'task'}) {
 			if ($p->[$i]{$key}{'name'} ne $new_p->[$i]{$key}{'name'}) {
 			    $changed{$pname} = 1; next;
@@ -4393,6 +4397,7 @@ sub do_edit_list {
 			    }
 
 			    ## Multiple param, foreach entry
+			    ## Ex: 'digest->days'
 			    foreach my $index (0..$#{$p->[$i]{$key}}) {
 				
 				my $format = $pinfo->{$pname}{'format'}{$key}{'format'};
@@ -4410,6 +4415,7 @@ sub do_edit_list {
 			    }
 
 			## Single Param
+			## Ex: 'owner->email'
 			}else {
 			    if ($p->[$i]{$key} ne $new_p->[$i]{$key}) {
 
@@ -4434,7 +4440,8 @@ sub do_edit_list {
 			}
 		    }
 		}
-		## Scalar
+	    ## Scalar
+	    ## Ex: 'max_size'
 	    }else {
 		if ($p->[$i] ne $new_p->[$i]) {
 		    unless ($new_p->[$i] =~ /^$pinfo->{$pname}{'file_format'}$/) {
