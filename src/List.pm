@@ -3785,7 +3785,7 @@ sub print_info {
 ## load a scenario if not inline (in the list configuration file)
 sub _load_scenario_file {
     my ($function, $name, $directory)= @_;
-    do_log('debug2', 'List::_load_scenario_file(%s, %s)', $function, $name);
+    do_log('debug2', 'List::_load_scenario_file(%s, %s, %s)', $function, $name, $directory);
 
 
     my $structure;
