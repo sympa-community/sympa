@@ -5556,14 +5556,14 @@ sub get_robots {
     my(@robots, $r);
     do_log('debug2', 'List::get_robots()');
 
-    unless (opendir(DIR, '--DIR--/etc')) {
-	do_log('err',"Unable to open --DIR--/etc");
+    unless (opendir(DIR, $Conf{'etc'})) {
+	do_log('err',"Unable to open $Conf{'etc'}");
 	return undef;
     }
     my $use_default_robot = 1 ;
     foreach $r (sort readdir(DIR)) {
 	next unless (($r !~ /^\./o) && (-d "$Conf{'home'}/$r"));
-	next unless (-r "--DIR--/etc/$r/robot.conf");
+	next unless (-r "$Conf{'etc'}/$r/robot.conf");
 	push @robots, $r;
 	undef $use_default_robot if ($r eq $Conf{'host'});
     }

@@ -135,7 +135,7 @@ my $end = 0;
 
 my $spool_task = $Conf{'queuetask'};
 my $std_global_task_model_dir = "--ETCBINDIR--/global_task_models";
-my $user_global_task_model_dir = "--DIR--/etc/global_task_models";
+my $user_global_task_model_dir = "$Conf{'etc'}/global_task_models";
 my $cert_dir = $Conf{'ssl_cert_dir'};
 my @tasks; # list of tasks in the spool
 
@@ -345,8 +345,8 @@ sub create {
 	    $model_file = "$Conf{'home'}/$list_name/list_task_models/$model_name";
 	} elsif (open (MODEL, "$Conf{'etc'}/list_task_models/$model_name")) {
 	    $model_file = "$Conf{'etc'}/list_task_models/$model_name";
-	} elsif (open (MODEL, "--DIR--/bin/etc/list_task_models/$model_name")) {
-	    $model_file = "--DIR--/bin/etc/list_task_models/$model_name";
+	} elsif (open (MODEL, "--ETCBINDIR--/list_task_models/$model_name")) {
+	    $model_file = "--ETCBINDIR--/list_task_models/$model_name";
 	} else { 
 	    &do_log ('err', "error : unable to find $model_name, creation aborted");
 	    return undef;

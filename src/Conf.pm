@@ -325,16 +325,16 @@ sub load_robots {
 				  list_check_smtp => 1,
 				  list_check_suffixes => 1 );
 
-    unless (opendir DIR,'--DIR--/etc' ) {
-	printf STDERR "Unable to open directory --DIR--/etc for virtual robots config\n" ;
+    unless (opendir DIR,$Conf{'etc'} ) {
+	printf STDERR "Unable to open directory $Conf{'etc'} for virtual robots config\n" ;
 	return undef;
     }
 
     foreach $robot (readdir(DIR)) {
-	next unless (-d "--DIR--/etc/$robot");
-	next unless (-r "--DIR--/etc/$robot/robot.conf");
-	unless (open (ROBOT_CONF,"--DIR--/etc/$robot/robot.conf")) {
-	    printf STDERR "load robots config: Unable to open --DIR--/etc/$robot/robot.conf\n"; 
+	next unless (-d "$Conf{'etc'}/$robot");
+	next unless (-r "$Conf{'etc'}/$robot/robot.conf");
+	unless (open (ROBOT_CONF,"$Conf{'etc'}/$robot/robot.conf")) {
+	    printf STDERR "load robots config: Unable to open $Conf{'etc'}/$robot/robot.conf\n"; 
 	    next ;
 	}
 	
@@ -423,7 +423,7 @@ sub checkfiles {
 ##########################################
 
 sub _load_auth {
-    my $config = '--DIR--/etc/auth.conf';
+    my $config = $Conf{'etc'}.'/auth.conf';
     my $line_num = 0;
     my $config_err = 0;
     my @paragraphs;
