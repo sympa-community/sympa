@@ -824,7 +824,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
      }elsif ($param->{'redirect_to'}) {
-	 do_log ('debug',"wwsympa.fcgi::main Location: $param->{'redirect_to'}");
+	 do_log ('debug',"Redirecting to $param->{'redirect_to'}");
 	 print "Location: $param->{'redirect_to'}\n\n";
      }else {
 	 ## Send HTML
