@@ -6140,13 +6140,13 @@ sub do_restore_list {
     $list->save_config($param->{'user'}{'email'});
 
     if ($list->{'admin'}{'user_data_source'} eq 'file') {
-	$list->{'users'} = &List::_load_users_file("$list->{'name'}/subscribers.closed.dump");
+	$list->{'users'} = &List::_load_users_file("$list->{'dir'}/subscribers.closed.dump");
 	$list->save();
     }elsif ($list->{'admin'}{'user_data_source'} eq 'database') {
-	unless (-f "$list->{'name'}/subscribers.closed.dump") {
+	unless (-f "$list->{'dir'}/subscribers.closed.dump") {
 	    &wwslog('notice', 'No subscribers to restore');
 	}
-	my @users = &List::_load_users_file("$list->{'name'}/subscribers.closed.dump");
+	my @users = &List::_load_users_file("$list->{'dir'}/subscribers.closed.dump");
 	
 	## Insert users in database
 	foreach my $user (@users) {
