@@ -30,14 +30,14 @@ use Conf;
 
 ## Configuration
 
-my $new_wws_conf = '/tmp/wwsympa.conf';
+my $new_wwsympa_conf = '/tmp/wwsympa.conf';
 my $new_sympa_conf = '/tmp/sympa.conf';
 
 my $wwsconf = {};
 
 ## Change to your wwsympa.conf location
-my $conf_file = '--WWSCONFIG--';
-my $sympa_conf_file = '--CONFIG--';
+my $wwsympa_conf = '--WWSCONFIG--';
+my $sympa_conf = '--CONFIG--';
 my $somechange = 0;
 
 ## parameters that can be edited with this script
@@ -391,19 +391,19 @@ my @params = ({'title' => 'Directories and file location'},
 
 
 ## Load config 
-unless ($wwsconf = &wwslib::load_config($conf_file)) {
-    &fatal_err('Unable to load config file %s', $conf_file);
+unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
+    die('Unable to load config file %s', $wwsympa_conf);
 }
 
 #printf "Conf WWS: %s\n", join(',', %{$wwsconf});
 
 ## Load sympa config
-unless (&Conf::load( $sympa_conf_file )) {
-    &fatal_err('Unable to load sympa config file %s', $sympa_conf_file);
+unless (&Conf::load( $sympa_conf )) {
+    die('Unable to load sympa config file %s', $sympa_conf);
 }
 
-unless (open (WWSYMPA,"> $new_wws_conf")){
-    printf STDERR "unable to open $new_wws_conf, exiting";
+unless (open (WWSYMPA,"> $new_wwsympa_conf")){
+    printf STDERR "unable to open $new_wwsympa_conf, exiting";
     exit;
 };
 
@@ -468,44 +468,26 @@ close WWSYMPA;
 
 if ($somechange ne '0') {
 
-    open (IN, "$conf_file");
     my $date = &POSIX::strftime("%d.%b.%Y-%H.%M.%S", localtime(time));
-    unless (open (OUT, ">$conf_file.$date")) {
-	printf STDERR "unable to rename $conf_file, aborting without saving change\n";
-	exit;
-    }
-    while (<IN>){printf OUT $_;}
-    close IN;
-    close OUT;
 
-    open (IN, "$sympa_conf_file");
-    unless (open (OUT, ">sympa_conf_file.$date")) {
-	printf STDERR "unable to rename $sympa_conf_file, aborting without saving change\n";
-	exit;
+    unless (rename $wwsympa_conf, $wwsympa_conf.'.'.$date) {
+	die "Unable to rename $wwsympa_conf\n";
     }
-    while (<IN>){printf OUT $_;}
-    close IN;
-    close OUT;
 
-    open (IN, "$new_sympa_conf");
-    unless (open (OUT, ">$sympa_conf_file")) {
-	printf STDERR "unable to save $sympa_conf_file, aborting without saving change\n";
-	exit;
+    unless (rename $sympa_conf, $sympa_conf.'.'.$date) {
+	die "Unable to rename $sympa_conf\n";
     }
-    while (<IN>){printf OUT $_;}
-    close IN;
-    close OUT;
 
-    open (IN, "$new_wws_conf");
-    unless (open (OUT, ">$conf_file")) {
-	printf STDERR "unable to save $conf_file, aborting without saving change\n";
-	exit;
+    unless (rename $new_wwsympa_conf, $wwsympa_conf) {
+	die "Unable to rename $new_wwsympa_conf\n";
     }
-    while (<IN>){printf OUT $_;}
-    close IN;
-    close OUT;
+    
+    unless (rename $new_sympa_conf, $sympa_conf) {
+	die "Unable to rename $new_sympa_conf\n";
+    }
 
-    printf "$sympa_conf_file and $conf_file updated. Previous version saved in $sympa_conf_file.$date and $conf_file.$date\n";
+
+    printf "$sympa_conf and $wwsympa_conf have been updated.\nPrevious versions have been saved as $sympa_conf.$date and $wwsympa_conf.$date\n";
 }
     
 
