@@ -102,7 +102,7 @@ my %Default_Conf =
      'bg_color' => '--BG_COLOR--',
      'error_color' => '--ERROR_COLOR--',
      'selected_color' => '--SELECTED_COLOR--',
-     'shaded_color' => '--SHARED_COLOR--'
+     'shaded_color' => '--SHADED_COLOR--'
    );
    
 %Conf = ();
