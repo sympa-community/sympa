@@ -2796,8 +2796,6 @@ sub do_viewmod {
 	close MSG;
 	close ARCMOD;
 	chdir $Conf{'home'};
-
-#	system "cd $Conf{'queuemod'}/.$list->{'name'}_$in{'id'} ; $wwsconf->{'mhonarc'}  -single -rcfile $mhonarc_ressources -definevars \"listname=$list->{'name'} hostname=$list->{'admin'}{'host'} \" $Conf{'queuemod'}/$list->{'name'}_$in{'id'} >msg00000.html";
     }
 
     if ($in{'file'}) {

@@ -32,13 +32,14 @@ use CPAN;
 	     'MIME::Tools' => '5.209',
 	     'File::Spec' => '0.8',
              'Crypt::CipherSaber' => '0.50',
-	     'CGI' => '2.52');
+	     'CGI' => '2.52',
+	     'Digest::MD5' => '2.00');
 
 ### key:left "module" used by SYMPA, 
 ### right CPAN module.		     
 %req_CPAN = ('DB_File' => 'DB_FILE',
 	     'Locale::Msgcat' => 'Msgcat',
-	     'MD5' => 'MD5',
+	     'Digest::MD5' => 'Digest-MD5',
 	     'Mail::Internet' =>, 'MailTools',
 	     'IO::Scalar' => 'IO-stringy',
 	     'MIME::Tools' => 'MIME-tools',

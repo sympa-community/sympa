@@ -5,7 +5,7 @@ use Exporter;
 @EXPORT = ();
 
 
-use MD5;
+use Digest::MD5;
 use POSIX;
 use CGI::Cookie;
 use Log;
@@ -165,7 +165,7 @@ sub get_mac {
 
 
 
-	my $md5 = new MD5;
+	my $md5 = new Digest::MD5;
 
 	$md5->reset;
 	$md5->add($email.$secret);

@@ -641,13 +641,13 @@ sub escape_html {
 sub tmp_passwd {
     my $email = shift;
 
-    return ('init'.substr(MD5->hexhash(join('/', $Conf{'cookie'}, $email)), -8)) ;
+    return ('init'.substr(Digest::MD5->md5_hex(join('/', $Conf{'cookie'}, $email)), -8)) ;
 }
 
 # Check sum used to authenticate communication from wwsympa to sympa
 sub sympa_checksum {
     my $rcpt = shift;
-    return (substr(MD5->hexhash(join('/', $Conf{'cookie'}, $rcpt)), -10)) ;
+    return (substr(Digest::MD5->md5_hex(join('/', $Conf{'cookie'}, $rcpt)), -10)) ;
 }
 
 # create a cipher
