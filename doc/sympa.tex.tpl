@@ -4209,44 +4209,60 @@ archiving frequency defined by the \lparam {archive} parameter.
 
 Sympa is designed to manage multiple distinct mailing list servers on
 a single host with a single Sympa installation. Sympa virtual robots
-are likely Apache virtual hosting. Sympa virtual robot definition include
-a specific email adress for the robot itself and its lists and also a virtual
-http server. Each robot provide access to a set of lists, each list are
+are like Apache virtual hosting. Sympa virtual robot definition includes
+a specific email address for the robot itself and its lists and also a virtual
+http server. Each robot provides access to a set of lists, each list is
 related to only one robot.
 
-All configuration parameters can be define for each robot except Sympa
-installation parameters such as binary and spool location, smtp engine,
-antivirus plugging etc.
+Most configuration parameters can be define for each robot except 
+general Sympa installation parameters (binary and spool location, smtp engine,
+antivirus plugging,...).
 
 \section {Robot definition}
 
-A robot is named by its domain, let's say \samplerobot and and defined by a directory 
+A robot is named by its domain, let's say \samplerobot and defined by a directory 
 \tildedir {sympa/etc/\samplerobot}. This directory must contain at least a 
-\file {robot.conf} file. This files as the same format as  \file {/etc/sympa.conf}
+\file {robot.conf} file. This files has the same format as  \file {/etc/sympa.conf}
 (have a look at robot.conf in the sample dir).
 Only the following parameters can be redefined for a particular robot :
 
 \begin {itemize}
-\item http\_host
-\item title
-\item default\_home
-\item lang
-\item listmaster
-\item max\_size
-\item dark\_color, light\_color, text\_color, bg\_color, error\_color, selected\_color, shaded\_color 
+
+	\item \cfkeyword {http\_host} \\
+	This hostname will be compared with 'SERVER_NAME' ENV var in wwsympa.fcgi
+	to deduce the current Virtual Robot
+
+	\item \cfkeyword {host}\\
+	The hostname used by Sympa when sending emails
+
+	\item \cfkeyword {email}
+
+	\item \cfkeyword {title}
+
+	\item \cfkeyword {default\_home}
+	
+	\item \cfkeyword {create\_list}
+
+	\item \cfkeyword {lang}
+
+	\item \cfkeyword {listmaster}
+
+	\item \cfkeyword {max\_size]
+
+	\item \cfkeyword {dark\_color}, \cfkeyword {light\_color}, \cfkeyword {text\_color}, \cfkeyword {bg\_color}, \cfkeyword {error\_color}, \cfkeyword {selected\_color}, \cfkeyword {shaded\_color} 
 \end {itemize}
 
-Thoses settings overwrite the equivalent global parameter as defined in \file {/etc/sympa.conf}
-for \samplerobot robot. The http\_host parameter is compared by wwsympa with the HTTP\_HOST
-envirronement variable to recognize which robot is in used. 
+These settings overwrite the equivalent global parameter as defined in \file {/etc/sympa.conf}
+for \samplerobot robot ; the main \cfkeyword {listmaster} still has privileges on Virtual
+Robots though. The http\_host parameter is compared by wwsympa with the SERVER\_NAME
+environment variable to recognize which robot is in used. 
 
 \subsection {Robot customization}
 
-If exists \tildedir {sympa/etc/\samplerobot/wws\_templates/},
+\tildedir {sympa/etc/\samplerobot/wws\_templates/},
 \tildedir {sympa/etc/\samplerobot/templates/}, 
-\tildedir {sympa/etc/\samplerobot/scenari/} directries are applied when
-loading templates or scenarii before searching into \tildedir {sympa/etc} and  \tildedir {sympa/bin/etc}. this allow to define specific access and specific look for a particular robot.
-
+\tildedir {sympa/etc/\samplerobot/scenari/} directries are searched when
+loading templates or scenari before searching into \tildedir {sympa/etc} and  \tildedir {sympa/bin/etc}. This allows to define different privileges and a different GUI for a Virtual Robot.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
