@@ -536,12 +536,13 @@ sub review {
 	}
 	do {
 	    ## Owners bypass the visibility option
-	    next if ( ($user->{'visibility'} eq 'conceal') 
-		      and (! $is_owner) );
+	    unless ( ($user->{'visibility'} eq 'conceal') 
+		     and (! $is_owner) ) {
 
-	    ## Lower case email address
-	    $user->{'email'} =~ y/A-Z/a-z/;
-	    push @users, $user;
+		## Lower case email address
+		$user->{'email'} =~ y/A-Z/a-z/;
+		push @users, $user;
+	    }
 	} while ($user = $list->get_next_user());
 	$list->send_file('review', $sender, $robot, {'users' => \@users, 
 					     'total' => $list->get_total(),
