@@ -5226,12 +5226,14 @@ The \lparam {reply\_to} parameter starts a paragraph defining
 
 \item \lparam {value}   \texttt {sender} $|$
     			\texttt {list}   $|$
+    			\texttt {all}    $|$
     			\texttt {other\_email}
 	\default {sender}
 
 	This parameter indicates whether the \rfcheader {Reply-To} field
 	should indicate the sender of the message (\texttt {sender}),
-	the list itself (\texttt {list}) or an arbitrary e-mail address (defined by the
+	the list itself (\texttt {list}), both list and sender (\texttt {all})
+        or an arbitrary e-mail address (defined by the
 	\lparam {other\_email} parameter).
 
 Note: it is inadvisable to change this parameter, and particularly inadvisable to
