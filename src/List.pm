@@ -4084,7 +4084,7 @@ sub request_action {
 		if ($debug) {
 		    return ("error-performing-condition : $rule->{'condition'}",$rule->{'auth_method'},'reject') ;
 		}
-		#return 'reject';
+		&List::send_notify_to_listmaster('error-performing-condition', $robot, $context->{'listname'}."  ".$rule->{'condition'} );
 		return undef;
 	    }
 	    if ($result == -1) {
@@ -4256,8 +4256,10 @@ sub verify {
 	    if (defined ($context->{$1})) {
 		$value =~ s/\[(\w+)\]/$context->{$1}/i;
 	    }else{
-		do_log('err',"unknown variable context $value in rule $condition");
-		return undef;
+		do_log('debug',"undefine variable context $value in rule $condition");
+		# a condition related to a undefined context variable is always false
+		return -1 * $negation;
+ #		return undef;
 	    }
 	    
 	}elsif ($value =~ /^'(.*)'$/ || $value =~ /^"(.*)"$/) {
