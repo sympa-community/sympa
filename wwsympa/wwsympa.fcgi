@@ -295,7 +295,7 @@ my %action_args = ('default' => ['list'],
 		'latest_arc' => ['list'],
 		'arc_manage' => ['list'],                                          
 		'arcsearch_form' => ['list','archive_name'],
-		'arcsearch_id' => ['list','archive_name','key_word'],
+		'arcsearch_id' => ['list','archive_name','msgid'],
 		'rebuildarc' => ['list','month'],
 		'rebuildallarc' => [],
 		'arc_download' => ['list'],
@@ -5279,7 +5279,7 @@ sub get_timelocal_from_date {
 
  ## Search message-id in web archives
  sub do_arcsearch_id {
-     &wwslog('info', 'do_arcsearch_id(%s,%s)', $param->{'list'},$in{'key_word'});
+     &wwslog('info', 'do_arcsearch_id(%s,%s)', $param->{'list'},$in{'msgid'});
 
      unless ($param->{'list'}) {
 	 &error_message('missing_argument', {'argument' => 'list'});
@@ -5323,29 +5323,29 @@ sub get_timelocal_from_date {
  #    $search->directories ($search->archive_name);
 
      ## User didn't enter any search terms
-     if ($in{'key_word'} =~ /^\s*$/) {
-	 &error_message('missing_argument', {'argument' => 'key_word'});
+     if ($in{'msgid'} =~ /^\s*$/) {
+	 &error_message('missing_argument', {'argument' => 'msgid'});
 	 &wwslog('info','do_arcsearch_id: no search term');
-     return undef;
+	 return undef;
      }
 
-     $param->{'key_word'} = &tools::unescape_chars($in{'key_word'});
-     $in{'key_word'} =~ s/\@/\\\@/g;
-     $in{'key_word'} =~ s/\[/\\\[/g;
-     $in{'key_word'} =~ s/\]/\\\]/g;
-     $in{'key_word'} =~ s/\(/\\\(/g;
-     $in{'key_word'} =~ s/\)/\\\)/g;
-     $in{'key_word'} =~ s/\$/\\\$/g;
-     $in{'key_word'} =~ s/\*/\\\*/g;
+     $param->{'msgid'} = &tools::unescape_chars($in{'msgid'});
+     $in{'msgid'} =~ s/\@/\\\@/g;
+     $in{'msgid'} =~ s/\[/\\\[/g;
+     $in{'msgid'} =~ s/\]/\\\]/g;
+     $in{'msgid'} =~ s/\(/\\\(/g;
+     $in{'msgid'} =~ s/\)/\\\)/g;
+     $in{'msgid'} =~ s/\$/\\\$/g;
+     $in{'msgid'} =~ s/\*/\\\*/g;
 
      ## Mhonarc escapes '-' characters (&#45;)
-     $in{'key_word'} =~ s/\-/\&\#45\;/g;
+     $in{'msgid'} =~ s/\-/\&\#45\;/g;
 
      $search->limit (1);
 
-     my @words = split(/\s+/,$in{'key_word'});
+     my @words = split(/\s+/,$in{'msgid'});
      $search->words (\@words);
-     $search->clean_words ($in{'key_word'});
+     $search->clean_words ($in{'msgid'});
      my @clean_words = @words;
 
      $search->key_word (join('|',@words));
@@ -5364,11 +5364,9 @@ sub get_timelocal_from_date {
 
      $param->{'res'} = $search->res;
 
-     wwslog('notice','MESS_ID : %s',$in{'key_word'});
-
      unless ($#{$param->{'res'}} >= 0) {
 	 &error_message('msg_not_found');
-	 &wwslog('info','No message found in archives matching Message-ID %s', $in{'key_word'});
+	 &wwslog('info','No message found in archives matching Message-ID %s', $in{'msgid'});
 	 return 'arc';
      }
 
