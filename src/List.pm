@@ -2066,15 +2066,24 @@ sub send_global_file {
 	$data->{'user'}{'password'} = &tools::tmp_passwd($who);
     }
 
+    ## Lang
+    my $lang = $data->{'user'}{'lang'} || $Conf{'lang'};
+
     ## What file   
-    if (-r "$Conf{'etc'}/templates/$action.tpl") {
-	$filename = "$Conf{'etc'}/templates/$action.tpl";
-    }elsif (-r "--ETCBINDIR--/templates/$action.tpl") {
-	$filename = "--ETCBINDIR--/templates/$action.tpl";
-    }else{
-	$filename = '' ;
+    foreach my $f ("$Conf{'etc'}/templates/$action.tpl","--ETCBINDIR--/templates/$action.tpl") {
+	if (-r "$f.$lang") {
+	    $filename = "$f.$lang";
+	    last;
+	}elsif (-r $f) {
+	    $filename = $f;
+	    last;
+	}
+    }
+
+    unless ($filename) {
 	do_log ('err',"Unable to open file $Conf{'etc'}/templates/$action.tpl NOR --ETCBINDIR--/templates/$action.tpl");
     }
+
     $data->{'conf'}{'email'} = $Conf{'email'};
     $data->{'conf'}{'host'} = $Conf{'host'};
     $data->{'conf'}{'sympa'} = $Conf{'sympa'};
@@ -2131,23 +2140,22 @@ sub send_file {
 	}
     }
 
+    ## Lang
+    my $lang = $data->{'user'}{'lang'} || $self->{'lang'} || $Conf{'lang'};
+
     ## What file   
-    if (-r "$action.tpl") {
-	$filename = "$action.tpl";
-    }elsif (-r "$action.mime") {
-	$filename = "$action.mime";
-    }elsif (-r "$action") {
-	$filename = "$action";
-    }elsif (-r "$Conf{'etc'}/templates/$action.tpl") {
-	$filename = "$Conf{'etc'}/templates/$action.tpl";
-    }elsif (-r "$Conf{'home'}/$action.mime") {
-	$filename = "$Conf{'home'}/$action.mime";
-    }elsif (-r "$Conf{'home'}/$action") {
-	$filename = "$Conf{'home'}/$action";
-    }elsif (-r "--ETCBINDIR--/templates/$action.tpl") {
-	$filename = "--ETCBINDIR--/templates/$action.tpl";
-    }else {
-	$filename = '';
+    foreach my $f ("$action.tpl","$action.mime","$action","$Conf{'etc'}/templates/$action.tpl",
+		   "$Conf{'home'}/$action.mime","$Conf{'home'}/$action","--ETCBINDIR--/templates/$action.tpl") {
+	if (-r "$f.$lang") {
+	    $filename = "$f.$lang";
+	    last;
+	}elsif (-r $f) {
+	    $filename = $f;
+	    last;
+	}
+    }
+
+    unless ($filename) {
 	do_log ('err',"Unable to open file $action.tpl in list directory NOR $Conf{'etc'}/templates/$action.tpl NOR --ETCBINDIR--/templates/$action.tpl");
     }
     
@@ -2179,14 +2187,13 @@ sub send_file {
     }else{
 	$data->{'from'} = "$name-request\@$data->{'list'}{'host'}";
     }
-    ## xxx  est-ce que cela ne peut pas s'écrire simplement :
-    ## xxx  $data->{'context'}=$context; 
+
     foreach my $key (keys %{$context}) {
 	$data->{'context'}{$key} = $context->{$key};
     }
 
     ## 2.7b
-    unless ($filename eq '') {
+    if ($filename) {
         mail::mailfile($filename, $who, $data, $sign_mode);
     }
     chdir $Conf{'home'};
@@ -3567,8 +3574,7 @@ sub verify {
 		my $field = $header->get($1);
 		$value =~ s/\[header\-\>([\w\-]+)\]/$field/;
 	    }else {
-		do_log('notice',"unknown variable context $value in rule $condition");
-		return undef;
+		return -1;
 	    }
 
 	    ## Quoted string
