@@ -4563,9 +4563,9 @@ sub _load_stats_file {
    my ($stats, $total);
  
    if (open(L, $file)){     
-       if (<L> =~ /^(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/) {
+       if (<L> =~ /^(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(\s+(\d+))?/) {
 	   $stats = [ $1, $2, $3, $4];
-	   $total = $5;
+	   $total = $6;
        } else {
 	   $stats = [ 0, 0, 0, 0];
 	   $total = 0;
