@@ -6363,10 +6363,6 @@ sub do_edit_list {
 
 	     $list_of_task->{$d->{'name'}}{'selected'} = 1;
 
-	     foreach my $key (keys %{$list_of_task}) {
-		 $list_of_task->{$key}{'title'} = $list_of_task->{$key}{'title'}{$param->{'lang'}} || $key;
-	     }
-
 	     $p->{'value'} = $list_of_task;
 
 	 }elsif (ref ($struct->{'format'}) eq 'HASH') {

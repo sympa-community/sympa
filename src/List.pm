@@ -5269,8 +5269,21 @@ sub load_task_list {
 	    
 	    next if (defined $list_of_task{$name});
 	    
-	    $list_of_task{$name}{'title'} = &List::_load_task_title ($file);
 	    $list_of_task{$name}{'name'} = $name;
+
+	    my $titles = &List::_load_task_title ($file);
+
+	    ## Set the title in the current language
+	    if (defined  $titles->{&Language::GetLang()}) {
+		$list_of_task{$name}{'title'} = $titles->{&Language::GetLang()};
+	    }elsif (defined $titles->{'gettext'}) {
+		$list_of_task{$name}{'title'} = gettext( $titles->{'gettext'});
+	    }elsif (defined $titles->{'us'}) {
+		$list_of_task{$name}{'title'} = gettext( $titles->{'us'});		
+	    }else {
+		$list_of_task{$name}{'title'} = $name;		     
+	    }
+
 	}
     }
 

@@ -24,7 +24,7 @@ msgstr ""
 "#-#-#-#-#  zh_CN.po (PACKAGE VERSION)  #-#-#-#-#\n"
 
 #. (from_count)
-#: wwsympa/tt2/arcsearch.tt2:63
+#: wwsympa/tt2/arcsearch.tt2:64
 msgid " %1 hits on message's From field"
 msgstr ""
 
@@ -113,17 +113,17 @@ msgid ""
 msgstr ""
 
 #. (body_count)
-#: wwsympa/tt2/arcsearch.tt2:55
+#: wwsympa/tt2/arcsearch.tt2:56
 msgid "%1 hits on message's Body"
 msgstr ""
 
 #. (date_count)
-#: wwsympa/tt2/arcsearch.tt2:67
+#: wwsympa/tt2/arcsearch.tt2:68
 msgid "%1 hits on message's Date field"
 msgstr ""
 
 #. (subj_count)
-#: wwsympa/tt2/arcsearch.tt2:59
+#: wwsympa/tt2/arcsearch.tt2:60
 msgid "%1 hits on message's Subject field"
 msgstr ""
 
@@ -138,7 +138,7 @@ msgid "%1 mailing list creation"
 msgstr ""
 
 #. (searched,num)
-#: wwsympa/tt2/arcsearch.tt2:52
+#: wwsympa/tt2/arcsearch.tt2:53
 msgid "%1 messages selected out of %2"
 msgstr "在 %2 中选中了 %1 个邮件"
 
@@ -241,48 +241,39 @@ msgid ""
 "\n"
 msgstr "------ Éæ¼°µ½µÄÓÊ¼þ½áÊø ------\n"
 
-#: wwsympa/tt2/create_list_request.tt2:47
+#: wwsympa/tt2/create_list_request.tt2:48
 msgid "--Select a topic--"
 msgstr "--选择话题--"
 
 # nlsref 17,6
-#: wwsympa/wwslib.pm:57
+#: wwsympa/wwslib.pm:52
 msgid "1 day"
 msgstr ""
 
 # nlsref 17,4
-#: wwsympa/wwslib.pm:55
+#: wwsympa/wwslib.pm:50
 msgid "1 hour"
 msgstr ""
 
 # nlsref 17,7
-#: wwsympa/wwslib.pm:58
+#: wwsympa/wwslib.pm:53
 msgid "1 week"
 msgstr ""
 
 # nlsref 17,2
-#: wwsympa/wwslib.pm:53
+#: wwsympa/wwslib.pm:48
 msgid "10 minutes"
 msgstr ""
 
 # nlsref 17,3
-#: wwsympa/wwslib.pm:54
+#: wwsympa/wwslib.pm:49
 msgid "30 minutes"
 msgstr ""
 
 # nlsref 17,5
-#: wwsympa/wwslib.pm:56
+#: wwsympa/wwslib.pm:51
 msgid "6 hours"
 msgstr ""
-
-# nlsref 12,3
-#: src/Commands.pm:1752 src/etc/tt2/digest.tt2:10 src/etc/tt2/digest.tt2:34
-#: src/etc/tt2/digest_plain.tt2:6 src/etc/tt2/moderate.tt2:10
-#: src/etc/tt2/urlized_part.tt2:3 src/mail.pm:128 src/mail.pm:229
-#: src/mail.pm:90 src/sympa.pl:1062 src/sympa.pl:1313 src/sympa.pl:778
-#: src/sympa.pl:989 src/tools.pl:131
-msgid "7bit"
-msgstr "8bit"
 
 #: wwsympa/tt2/help.tt2:22
 msgid ": Login / Logout from WWSympa."
@@ -314,65 +305,68 @@ msgstr ": 您作为订阅者或拥有者的环境。"
 msgid "<B>%1</B> is subscribed to the following mailing lists"
 msgstr "<B>%1</B> 已订阅下列邮递表"
 
-#: wwsympa/tt2/help_admin.tt2:5
-#, fuzzy
-msgid "<b>Create shared</b> : initializes the shared document web space."
-msgstr "初始化共享文档的网页空间。"
-
-#: wwsympa/tt2/help_admin.tt2:10
-msgid ""
-"<b>Customizing</b> : editing of various files and messages attached to your "
-"list."
-msgstr ""
-
-#: wwsympa/tt2/help_admin.tt2:6
-msgid ""
-"<b>Delete shared</b> closes it. It can be restored using \"Restore shared\" "
-"button"
-msgstr ""
-
-#: wwsympa/tt2/help_admin.tt2:7
-msgid ""
-"<b>Edit list config</b>:  must be used with care : it allows to modify some "
-"of the list parameters. The list of parameters you can modify depends on "
-"your privilege."
-msgstr ""
-
-#: wwsympa/tt2/help_admin.tt2:11
-msgid ""
-"<b>Manage Archives</b>  : Allow you to download and delete list archives."
-msgstr ""
-
-#: wwsympa/tt2/help_admin.tt2:9
-#, fuzzy
-msgid ""
-"<b>Moderate</b> : reject and accept messages and documents for distribution."
-msgstr ": 接受或拒绝邮件的分发"
-
-#: wwsympa/tt2/help_admin.tt2:4
-#, fuzzy
-msgid ""
-"<b>Remove list</b> : completely removes the current list. Listmaster "
-"privileges are required to Restore a list"
-msgstr "完全删除当前邮递表。需要邮递表管理员特权来"
-
-#: wwsympa/tt2/help_admin.tt2:8
-#, fuzzy
-msgid ""
-"<b>Subscribers</b> : subscribers management, add, del, search, bounces, "
-"etc..."
-msgstr ": 邮递表订阅者管理，包括添加、删除、查找、退信等。"
-
 #: wwsympa/tt2/help_editlist.tt2:18
 msgid ""
-"<i>modelist</i> is a list of modes (mail, notice, digest, digestplain, "
+"<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, "
 "summary, nomail), separated by commas. Only these modes will be allowed for "
 "the subscribers of this list. If a subscriber has a reception mode not in "
 "the list, sympa uses the mode specified in the default_user_options "
 "paragraph."
 msgstr ""
 
-#: wwsympa/tt2/create_list_request.tt2:69
+#: wwsympa/tt2/help_admin.tt2:5
+#, fuzzy
+msgid ""
+"<strong>Create shared</strong> : initializes the shared document web space."
+msgstr "初始化共享文档的网页空间。"
+
+#: wwsympa/tt2/help_admin.tt2:10
+msgid ""
+"<strong>Customizing</strong> : editing of various files and messages "
+"attached to your list."
+msgstr ""
+
+#: wwsympa/tt2/help_admin.tt2:6
+msgid ""
+"<strong>Delete shared</strong> closes it. It can be restored using \"Restore "
+"shared\" button"
+msgstr ""
+
+#: wwsympa/tt2/help_admin.tt2:7
+msgid ""
+"<strong>Edit list config</strong>:  must be used with care : it allows to "
+"modify some of the list parameters. The list of parameters you can modify "
+"depends on your privilege."
+msgstr ""
+
+#: wwsympa/tt2/help_admin.tt2:11
+msgid ""
+"<strong>Manage Archives</strong>  : Allow you to download and delete list "
+"archives."
+msgstr ""
+
+#: wwsympa/tt2/help_admin.tt2:9
+#, fuzzy
+msgid ""
+"<strong>Moderate</strong> : reject and accept messages and documents for "
+"distribution."
+msgstr ": 接受或拒绝邮件的分发"
+
+#: wwsympa/tt2/help_admin.tt2:4
+#, fuzzy
+msgid ""
+"<strong>Remove list</strong> : completely removes the current list. "
+"Listmaster privileges are required to Restore a list"
+msgstr "完全删除当前邮递表。需要邮递表管理员特权来"
+
+#: wwsympa/tt2/help_admin.tt2:8
+#, fuzzy
+msgid ""
+"<strong>Subscribers</strong> : subscribers management, add, del, search, "
+"bounces, etc..."
+msgstr ": 邮递表订阅者管理，包括添加、删除、查找、退信等。"
+
+#: wwsympa/tt2/create_list_request.tt2:70
 msgid "A few lines describing the list"
 msgstr "几行对邮递表的描述文字"
 
@@ -402,11 +396,11 @@ msgstr "文档 %1 的访问权限"
 msgid "Account"
 msgstr "ÕÊºÅ"
 
-#: wwsympa/tt2/d_read.tt2:292
+#: wwsympa/tt2/d_read.tt2:271
 msgid "Add"
 msgstr "新增"
 
-#: wwsympa/tt2/d_read.tt2:285
+#: wwsympa/tt2/d_read.tt2:264
 msgid "Add a bookmark"
 msgstr "建立新的书签"
 
@@ -480,7 +474,7 @@ msgstr ""
 msgid "Any information about this list :"
 msgstr ""
 
-#: wwsympa/tt2/d_editfile.tt2:58
+#: wwsympa/tt2/d_editfile.tt2:60
 msgid "Apply"
 msgstr "应用"
 
@@ -510,7 +504,7 @@ msgstr ""
 msgid "Archive powered by"
 msgstr ""
 
-#: wwsympa/tt2/admin_menu.tt2:151 wwsympa/tt2/edit_list_request.tt2:8
+#: wwsympa/tt2/admin_menu.tt2:152 wwsympa/tt2/edit_list_request.tt2:8
 #: wwsympa/tt2/serveradmin.tt2:146
 msgid "Archives"
 msgstr "Archives setup"
@@ -521,7 +515,7 @@ msgid "Archives Selection:"
 msgstr "切换选取"
 
 #. (list)
-#: wwsympa/tt2/admin_menu.tt2:122 wwsympa/tt2/admin_menu.tt2:124
+#: wwsympa/tt2/admin_menu.tt2:123 wwsympa/tt2/admin_menu.tt2:125
 msgid "Are you sure you wish to close %1 list ?"
 msgstr ""
 
@@ -558,10 +552,10 @@ msgstr ""
 msgid "Available subscription options"
 msgstr "¿ÉÌá¹©µÄ¶©ÔÄÑ¡Ïî"
 
-#: wwsympa/tt2/arcsearch.tt2:114
+#: wwsympa/tt2/arcsearch.tt2:115
 msgid ""
-"Based on <i><A HREF=\"http://www.mhonarc.org/contrib/marc-search/\">Marc-"
-"Search</a></i>, search engine of MHonArc archives"
+"Based on <em><a href=\"http://www.mhonarc.org/contrib/marc-search/\">Marc-"
+"Search</a></em>, search engine of MHonArc archives"
 msgstr ""
 
 #. (total,list.name)
@@ -591,7 +585,7 @@ msgid ""
 "selected by Sympa as severe bouncing addresses:\n"
 msgstr ""
 
-#: wwsympa/tt2/arcsearch_form.tt2:66
+#: wwsympa/tt2/arcsearch_form.tt2:64
 msgid "Body"
 msgstr "Body"
 
@@ -599,7 +593,7 @@ msgstr "Body"
 msgid "Bookmark URL"
 msgstr "设定书签网址"
 
-#: wwsympa/tt2/admin_menu.tt2:155
+#: wwsympa/tt2/admin_menu.tt2:156
 msgid "Bounce Settings"
 msgstr ""
 
@@ -626,7 +620,7 @@ msgid "Bounces"
 msgstr "退信地址"
 
 #. (current_subscriber.bounce_count)
-#: wwsympa/tt2/editsubscriber.tt2:49
+#: wwsympa/tt2/editsubscriber.tt2:50
 msgid "Bounces count : %1"
 msgstr "退信计数: %1"
 
@@ -641,7 +635,7 @@ msgstr ""
 "#-#-#-#-#  zh_CN.po (PACKAGE VERSION)  #-#-#-#-#\n"
 "Bounces management"
 
-#: wwsympa/tt2/editsubscriber.tt2:45
+#: wwsympa/tt2/editsubscriber.tt2:46
 msgid "Bouncing address"
 msgstr "退信地址"
 
@@ -787,7 +781,7 @@ msgstr ""
 msgid "Connexion expiration period"
 msgstr "连接过期时间"
 
-#: wwsympa/tt2/arcsearch.tt2:108
+#: wwsympa/tt2/arcsearch.tt2:109
 msgid "Continue search"
 msgstr "继续查找"
 
@@ -814,20 +808,20 @@ msgstr ""
 msgid "Create Shared"
 msgstr ""
 
-#: wwsympa/tt2/d_read.tt2:267 wwsympa/tt2/d_read.tt2:272
+#: wwsympa/tt2/d_read.tt2:246 wwsympa/tt2/d_read.tt2:251
 msgid "Create a new file"
 msgstr "建立新的文件"
 
 #. (visible_path)
-#: wwsympa/tt2/d_read.tt2:246
+#: wwsympa/tt2/d_read.tt2:225
 msgid "Create a new folder inside the folder %1"
 msgstr "在文件夹 %1 里建立新文件夹"
 
-#: wwsympa/tt2/d_read.tt2:248
+#: wwsympa/tt2/d_read.tt2:227
 msgid "Create a new folder inside the folder SHARED"
 msgstr "在文件夹 SHARED 里建立新文件夹"
 
-#: wwsympa/tt2/d_read.tt2:254
+#: wwsympa/tt2/d_read.tt2:233
 msgid "Create a new subdirectory"
 msgstr "建立新的子目录"
 
@@ -869,7 +863,12 @@ msgstr ""
 msgid "DISTribute <list> <key>        * Moderation: to validate a message"
 msgstr ""
 
-#: wwsympa/tt2/admin_menu.tt2:165
+#: src/etc/global_task_models/eval_bouncers.daily.task:1
+#, fuzzy
+msgid "Daily evaluation of bouncing users"
+msgstr "邮递表没有被退信的订阅者"
+
+#: wwsympa/tt2/admin_menu.tt2:166
 msgid "Data Source"
 msgstr "size=\"-1\"><b>定制</b"
 
@@ -881,7 +880,7 @@ msgstr "磁盘数据已经改变。无法应用您的修改"
 msgid "Data sources setup"
 msgstr "Data sources setup"
 
-#: wwsympa/tt2/arcsearch_form.tt2:64 wwsympa/tt2/modindex.tt2:17
+#: wwsympa/tt2/arcsearch_form.tt2:62 wwsympa/tt2/modindex.tt2:17
 #: wwsympa/tt2/modindex.tt2:69 wwsympa/tt2/subindex.tt2:11
 msgid "Date"
 msgstr ",AHUFZ(B"
@@ -942,7 +941,7 @@ msgstr ""
 msgid "Delete"
 msgstr "删除"
 
-#: wwsympa/tt2/arc_manage.tt2:20
+#: wwsympa/tt2/arc_manage.tt2:21
 #, fuzzy
 msgid "Delete Selected Month(s)"
 msgstr "删除选中的用户"
@@ -965,12 +964,12 @@ msgid ""
 msgstr ""
 
 #. (visible_path)
-#: wwsympa/tt2/d_editfile.tt2:47
+#: wwsympa/tt2/d_editfile.tt2:48
 msgid "Describe the directory %1"
 msgstr "对目录 %1 进行描述"
 
 #. (visible_path)
-#: wwsympa/tt2/d_editfile.tt2:49
+#: wwsympa/tt2/d_editfile.tt2:50
 msgid "Describe the file %1"
 msgstr "对文件 %1 进行描述"
 
@@ -981,7 +980,7 @@ msgstr "对文件 %1 进行描述"
 msgid "Description : %1"
 msgstr "描述: %1"
 
-#: wwsympa/tt2/create_list_request.tt2:67
+#: wwsympa/tt2/create_list_request.tt2:68
 msgid "Description:"
 msgstr "描述:"
 
@@ -1020,17 +1019,17 @@ msgid "Do you really want to delete %1 ?"
 msgstr "确定要删除 %1 ?"
 
 #. (visible_path,s.doc,f.size)
-#: wwsympa/tt2/d_read.tt2:202
+#: wwsympa/tt2/d_read.tt2:187
 #, fuzzy
 msgid "Do you really want to delete %1%2 (%3 Kb) ?"
 msgstr "您确定要删除 %1%2 吗 ?"
 
 #. (visible_path,s.doc)
-#: wwsympa/tt2/d_read.tt2:125
+#: wwsympa/tt2/d_read.tt2:122
 msgid "Do you really want to delete %1%2 ?"
 msgstr "您确定要删除 %1%2 吗 ?"
 
-#: wwsympa/tt2/arc_manage.tt2:20
+#: wwsympa/tt2/arc_manage.tt2:21
 #, fuzzy
 msgid "Do you really want to delete Selected Archives?"
 msgstr "确定要删除 %1 ?"
@@ -1073,7 +1072,7 @@ msgstr "Do you really want to unsubscribe ALL selected subscribers ?"
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "您确定要从 %1 退订?"
 
-#: wwsympa/tt2/arc_manage.tt2:20
+#: wwsympa/tt2/arc_manage.tt2:21
 msgid "Do you want to DownLoad a Zip of the selected Archives before?"
 msgstr ""
 
@@ -1096,7 +1095,7 @@ msgid ""
 "robot.conf file or in file /etc/sympa.conf."
 msgstr ""
 
-#: wwsympa/tt2/arc_manage.tt2:19
+#: wwsympa/tt2/arc_manage.tt2:20
 msgid "DownLoad ZipFile"
 msgstr ""
 
@@ -1119,7 +1118,7 @@ msgid ""
 "to level_2_treshold."
 msgstr ""
 
-#: wwsympa/tt2/d_read.tt2:87 wwsympa/tt2/editfile.tt2:22
+#: wwsympa/tt2/d_read.tt2:87 wwsympa/tt2/editfile.tt2:23
 #: wwsympa/tt2/serveradmin.tt2:118 wwsympa/tt2/serveradmin.tt2:128
 msgid "Edit"
 msgstr "编辑"
@@ -1128,12 +1127,12 @@ msgstr "编辑"
 msgid "Edit List Config"
 msgstr "建立共享"
 
-#: wwsympa/tt2/d_control.tt2:23
+#: wwsympa/tt2/d_control.tt2:24
 msgid "Edit access"
 msgstr "编辑"
 
 #. (visible_path)
-#: wwsympa/tt2/d_editfile.tt2:89
+#: wwsympa/tt2/d_editfile.tt2:94
 #, fuzzy
 msgid "Edit the file %1"
 msgstr "%1 文件的编修"
@@ -1190,7 +1189,7 @@ msgid "End of your EXPIRE command on list %s"
 msgstr "ÓÊµÝ±í %s ÉÏµÄ EXPIRE ÃüÁîÍê³É"
 
 # nlsref 1,3
-#: src/Conf.pm:212
+#: src/Conf.pm:214
 msgid "Error at line %d : %s"
 msgstr "´íÎó·¢ÉúÔÚµÚ %d ÐÐ: %s"
 
@@ -1214,7 +1213,7 @@ msgstr ""
 msgid "Expiration of unmoderated messages"
 msgstr "Î´Í¨¹ý¼à¹ÜµÄÓÊ¼þ¹ýÆÚÊ±¼ä"
 
-#: wwsympa/tt2/arcsearch_form.tt2:72
+#: wwsympa/tt2/arcsearch_form.tt2:70
 msgid "Extend search field"
 msgstr "Extend search field"
 
@@ -1698,7 +1697,7 @@ msgstr ""
 msgid "List Administration Panel"
 msgstr "邮递表管理面板"
 
-#: wwsympa/tt2/admin_menu.tt2:139
+#: wwsympa/tt2/admin_menu.tt2:140
 msgid "List Definition"
 msgstr ""
 
@@ -1726,7 +1725,7 @@ msgstr "邮递表管理"
 msgid "List aliases have been removed."
 msgstr "邮递表的别名已删除。"
 
-#: wwsympa/tt2/create_list_request.tt2:63
+#: wwsympa/tt2/create_list_request.tt2:64
 msgid "List classification in the directory"
 msgstr "目录中的邮递表分类"
 
@@ -1942,7 +1941,7 @@ msgstr "ÓÊ¼þ %s (·¢ÍùÓÊµÝ±í %s)±»¾Ü¾ø¡£\n"
 
 #: wwsympa/tt2/help_editfile.tt2:35
 msgid ""
-"Message footer : same as <i>Message header,</i> but attached at the\n"
+"Message footer : same as <em>Message header,</em> but attached at the\n"
 "end of the message.\n"
 msgstr ""
 
@@ -1974,7 +1973,7 @@ msgstr ""
 msgid "Messages to moderate :"
 msgstr "要监管的邮件:"
 
-#: wwsympa/tt2/admin_menu.tt2:160 wwsympa/tt2/edit_list_request.tt2:12
+#: wwsympa/tt2/admin_menu.tt2:161 wwsympa/tt2/edit_list_request.tt2:12
 msgid "Miscellaneous"
 msgstr "Other parameters"
 
@@ -2122,11 +2121,11 @@ msgstr "新口令:"
 msgid "New password again :"
 msgstr "再次输入新口令:"
 
-#: wwsympa/tt2/arcsearch.tt2:111
+#: wwsympa/tt2/arcsearch.tt2:112
 msgid "New search"
 msgstr "新的查找"
 
-#: wwsympa/tt2/arcsearch.tt2:41
+#: wwsympa/tt2/arcsearch.tt2:40
 msgid "Newest messages first"
 msgstr "最新邮件优先"
 
@@ -2240,15 +2239,15 @@ msgstr ""
 msgid "Number of received messages :      %1"
 msgstr ""
 
-#: wwsympa/tt2/arcsearch.tt2:43
+#: wwsympa/tt2/arcsearch.tt2:42
 msgid "Oldest messages first"
 msgstr "最旧邮件优先"
 
 #: wwsympa/tt2/help.tt2:32
 msgid ""
-"Once you have been authenticated, a <I>cookie</I> containing your login \n"
+"Once you have been authenticated, a <em>cookie</em> containing your login \n"
 "information make your connection to WWSympa last. The lifetime of this\n"
-"<I>cookie</I> is customizeable through your <b>Preferences</b>\n"
+"<em>cookie</em> is customizeable through your <strong>Preferences</strong>\n"
 msgstr ""
 
 #: wwsympa/tt2/remove_arc.tt2:5
@@ -2262,7 +2261,7 @@ msgstr ""
 msgid "Or send a message to %1@%2 with the following subject :"
 msgstr ""
 
-#: wwsympa/tt2/create_list_request.tt2:60
+#: wwsympa/tt2/create_list_request.tt2:61
 msgid "Other"
 msgstr "其它"
 
@@ -2338,7 +2337,8 @@ msgstr "页面大小"
 
 #. (key_word)
 #: wwsympa/tt2/arcsearch.tt2:12
-msgid "Parameters of these search make on <b> &quot;%1&quot;</b>"
+#, fuzzy
+msgid "Parameters of these search make on <strong> &quot;%1&quot;</strong>"
 msgstr ""
 "查找参数的应用范围 <b> &quot;%1&quot;</b>\n"
 "<"
@@ -2366,7 +2366,7 @@ msgid "Pending subscriptions"
 msgstr "您订阅的邮递表"
 
 #. (current_subscriber.first_bounce,current_subscriber.last_bounce)
-#: wwsympa/tt2/editsubscriber.tt2:50
+#: wwsympa/tt2/editsubscriber.tt2:51
 msgid "Period : from %1 to %2"
 msgstr "时间: 从 %1 到 %2"
 
@@ -2451,7 +2451,7 @@ msgstr ""
 msgid "Privileged owner"
 msgstr "有特权的所有者"
 
-#: wwsympa/tt2/admin_menu.tt2:147 wwsympa/tt2/edit_list_request.tt2:7
+#: wwsympa/tt2/admin_menu.tt2:148 wwsympa/tt2/edit_list_request.tt2:7
 msgid "Privileges"
 msgstr "Commands setup"
 
@@ -2474,8 +2474,8 @@ msgstr ""
 "#-#-#-#-#  zh_CN.po (PACKAGE VERSION)  #-#-#-#-#\n"
 "公开邮递表"
 
-#: wwsympa/tt2/d_editfile.tt2:33 wwsympa/tt2/d_editfile.tt2:96
-#: wwsympa/tt2/d_read.tt2:314
+#: wwsympa/tt2/d_editfile.tt2:101 wwsympa/tt2/d_editfile.tt2:33
+#: wwsympa/tt2/d_read.tt2:293
 msgid "Publish"
 msgstr "发布"
 
@@ -2524,6 +2524,11 @@ msgstr ""
 #: wwsympa/tt2/serveradmin.tt2:170
 msgid "Rebuild archive"
 msgstr "重建归档"
+
+#. (stats.byte_rcv)
+#: src/etc/tt2/stats_report.tt2:6
+msgid "Received mega-bytes             :      %1"
+msgstr ""
 
 #: wwsympa/tt2/review.tt2:145
 msgid "Reception"
@@ -2598,7 +2603,7 @@ msgstr "远程地址"
 msgid "Remote host"
 msgstr "远程主机"
 
-#: wwsympa/tt2/admin_menu.tt2:122 wwsympa/tt2/admin_menu.tt2:124
+#: wwsympa/tt2/admin_menu.tt2:123 wwsympa/tt2/admin_menu.tt2:125
 msgid "Remove List"
 msgstr ""
 
@@ -2608,24 +2613,24 @@ msgid "Removed from %1"
 msgstr ""
 
 # nlsref 16,29
-#: wwsympa/tt2/d_editfile.tt2:77
+#: wwsympa/tt2/d_editfile.tt2:82
 #, fuzzy
 msgid "Rename"
 msgstr "Ãû×Ö"
 
-#: wwsympa/tt2/admin_menu.tt2:129 wwsympa/tt2/admin_menu.tt2:131
+#: wwsympa/tt2/admin_menu.tt2:130 wwsympa/tt2/admin_menu.tt2:132
 #, fuzzy
 msgid "Rename List"
 msgstr "删除邮递表"
 
 #. (visible_path)
-#: wwsympa/tt2/d_editfile.tt2:67
+#: wwsympa/tt2/d_editfile.tt2:70
 #, fuzzy
 msgid "Rename directory %1"
 msgstr "无法建立目录 %1"
 
 #. (visible_path)
-#: wwsympa/tt2/d_editfile.tt2:69
+#: wwsympa/tt2/d_editfile.tt2:72
 msgid "Rename file %1"
 msgstr ""
 
@@ -2680,7 +2685,7 @@ msgstr "所需别名"
 msgid "Required file does not exist.\n"
 msgstr "ÐèÒªµÄÎÄ¼þ²»´æÔÚ¡£\n"
 
-#: wwsympa/tt2/editsubscriber.tt2:52
+#: wwsympa/tt2/editsubscriber.tt2:53
 msgid "Reset errors"
 msgstr "重置错误计数"
 
@@ -2688,7 +2693,7 @@ msgstr "重置错误计数"
 msgid "Reset errors for selected users"
 msgstr "为选中的用户重置错误计数"
 
-#: wwsympa/tt2/admin_menu.tt2:117 wwsympa/tt2/admin_menu.tt2:119
+#: wwsympa/tt2/admin_menu.tt2:118 wwsympa/tt2/admin_menu.tt2:120
 msgid "Restore List"
 msgstr "监管"
 
@@ -2696,7 +2701,7 @@ msgstr "监管"
 msgid "Restore shared"
 msgstr "恢复共享"
 
-#: wwsympa/tt2/arcsearch.tt2:51
+#: wwsympa/tt2/arcsearch.tt2:52
 msgid "Result"
 msgstr "结果"
 
@@ -2710,7 +2715,7 @@ msgid "Results of your commands"
 msgstr "ÄúµÄÃüÁîÖ´ÐÐµÄ½á¹û"
 
 #. (archive_name)
-#: wwsympa/tt2/arcsearch.tt2:117
+#: wwsympa/tt2/arcsearch.tt2:118
 msgid "Return to archive %1"
 msgstr "回到归档 %1"
 
@@ -2820,7 +2825,7 @@ msgstr "查找"
 msgid "Search User"
 msgstr "查找使用者"
 
-#: wwsympa/tt2/arcsearch_form.tt2:56
+#: wwsympa/tt2/arcsearch_form.tt2:55
 msgid "Search area"
 msgstr "查找域"
 
@@ -2862,7 +2867,7 @@ msgstr "给我发送口令"
 msgid "Send this mail"
 msgstr ",AKM3vSJ<~(B"
 
-#: wwsympa/tt2/arcsearch_form.tt2:57
+#: wwsympa/tt2/arcsearch_form.tt2:56
 msgid "Sender"
 msgstr "发件人"
 
@@ -2871,18 +2876,13 @@ msgstr "发件人"
 msgid "Sending messages   : %1"
 msgstr ""
 
-#: wwsympa/tt2/admin_menu.tt2:143
+#: wwsympa/tt2/admin_menu.tt2:144
 msgid "Sending/Reception"
 msgstr "><b>监管</b"
 
 #: wwsympa/tt2/edit_list_request.tt2:6
 msgid "Sending/reception setup"
 msgstr "Sending/reception setup"
-
-#. (stats.byte_rcv)
-#: src/etc/tt2/stats_report.tt2:6
-msgid "Sent mega-bytes             :      %1"
-msgstr ""
 
 # nlsref 16,69
 #: src/List.pm:888
@@ -2893,12 +2893,12 @@ msgstr "ÅäÖÃµÄÐòÁÐºÅ"
 msgid "Service messages description :"
 msgstr "这个表单用来编辑您的邮递表的几个文件:"
 
-#: wwsympa/tt2/d_control.tt2:49
+#: wwsympa/tt2/d_control.tt2:51
 msgid "Set owner"
 msgstr "设置所有者"
 
 #. (visible_path)
-#: wwsympa/tt2/d_control.tt2:41
+#: wwsympa/tt2/d_control.tt2:43
 msgid "Set the owner of the directory %1"
 msgstr "设置目录 %1 的所有者"
 
@@ -2942,7 +2942,7 @@ msgid "Size (Kb)"
 msgstr "大小(KB)"
 
 # nlsref 6,260
-#: src/List.pm:6736
+#: src/List.pm:6749
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -2972,7 +2972,7 @@ msgstr ""
 "Èç¹ûÄú²»ÏëÖ´ÐÐÕâ¸ö²Ù×÷£¬ÇëºöÂÔ±¾ÓÊ¼þ¡£"
 
 # nlsref 6,260
-#: src/List.pm:6729
+#: src/List.pm:6742
 #, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
@@ -3003,7 +3003,7 @@ msgstr ""
 "Èç¹ûÄú²»ÏëÖ´ÐÐÕâ¸ö²Ù×÷£¬ÇëºöÂÔ±¾ÓÊ¼þ¡£"
 
 # nlsref 6,39
-#: src/List.pm:6741 src/List.pm:6746
+#: src/List.pm:6754 src/List.pm:6759
 msgid ""
 "Someone (hopefully you) requested a user of list %s to be\n"
 "added or removed.\n"
@@ -3066,7 +3066,7 @@ msgid "Sources"
 msgstr "size=\"-1\"><b>定制</b"
 
 #. (current_subscriber.bounce_status)
-#: wwsympa/tt2/editsubscriber.tt2:48
+#: wwsympa/tt2/editsubscriber.tt2:49
 msgid "Status : %1"
 msgstr "状态: %1"
 
@@ -3080,7 +3080,7 @@ msgstr "ÓÊµÝ±í×´Ì¬"
 msgid "Sub date"
 msgstr "按日期排序"
 
-#: wwsympa/tt2/arcsearch_form.tt2:59 wwsympa/tt2/get_inactive_lists.tt2:9
+#: wwsympa/tt2/arcsearch_form.tt2:58 wwsympa/tt2/get_inactive_lists.tt2:9
 #: wwsympa/tt2/get_latest_lists.tt2:8 wwsympa/tt2/modindex.tt2:19
 msgid "Subject"
 msgstr "标题"
@@ -3105,7 +3105,7 @@ msgstr "ÓÊµÝ±íÖ÷Ìâ"
 msgid "Subject tagging"
 msgstr "±êÌâ±ê¼Ç"
 
-#: wwsympa/tt2/compose_mail.tt2:6 wwsympa/tt2/create_list_request.tt2:40
+#: wwsympa/tt2/compose_mail.tt2:6 wwsympa/tt2/create_list_request.tt2:41
 msgid "Subject:"
 msgstr "主题:"
 
@@ -3114,7 +3114,7 @@ msgstr "主题:"
 msgid "Submit"
 msgstr "提交"
 
-#: wwsympa/tt2/create_list_request.tt2:77
+#: wwsympa/tt2/create_list_request.tt2:78
 msgid "Submit your creation request"
 msgstr "提交您的创建请求"
 
@@ -3281,14 +3281,14 @@ msgstr ""
 #: wwsympa/tt2/help_editlist.tt2:38
 msgid ""
 "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
-"management.<BR>\n"
+"management.<br />\n"
 "\tLevel 1 is the lower level of bouncing users\n"
 msgstr ""
 
 #: wwsympa/tt2/help_editlist.tt2:54
 msgid ""
 "The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
-"management.<BR>\n"
+"management.<br />\n"
 "\tLevel 2 is the highest level of bouncing users\n"
 msgstr ""
 
@@ -3427,13 +3427,13 @@ msgid ""
 "number (percentage) of bounces exceeds this value."
 msgstr ""
 
-#: wwsympa/tt2/create_list_request.tt2:37
+#: wwsympa/tt2/create_list_request.tt2:38
 msgid ""
 "The list type is a set of parameters' profile. Parameters will be editable, "
 "once the list created"
 msgstr "邮递表类型是参数集配置。可以在邮递表创建后编辑参数"
 
-#: wwsympa/tt2/create_list_request.tt2:42
+#: wwsympa/tt2/create_list_request.tt2:43
 msgid "The list's subject"
 msgstr "这是邮递表的主题"
 
@@ -3922,7 +3922,7 @@ msgstr "切换选取"
 msgid "Topics for the list"
 msgstr "ÓÊµÝ±í»°Ìâ"
 
-#: wwsympa/tt2/create_list_request.tt2:45
+#: wwsympa/tt2/create_list_request.tt2:46
 msgid "Topics:"
 msgstr "话题:"
 
@@ -3951,7 +3951,7 @@ msgstr ""
 msgid "UNsubscription request from list %s"
 msgstr "ÍË¶©ÓÊµÝ±í %s ÇëÇó"
 
-#: wwsympa/tt2/d_read.tt2:287
+#: wwsympa/tt2/d_read.tt2:266
 msgid "URL"
 msgstr "title"
 
@@ -4005,7 +4005,7 @@ msgstr "ÎÞ·¨¶ÁÈ¡°ïÖúÎÄ¼þ: %s\n"
 msgid "Unify your subscriptions with the email"
 msgstr "以电邮位址"
 
-#: wwsympa/tt2/d_read.tt2:109 wwsympa/tt2/d_read.tt2:178
+#: wwsympa/tt2/d_read.tt2:109 wwsympa/tt2/d_read.tt2:170
 msgid "Unknown"
 msgstr "未知"
 
@@ -4017,7 +4017,7 @@ msgid "Unsubscribe"
 msgstr "退订"
 
 # nlsref 6,71
-#: soap/sympasoap.pm:550 src/Commands.pm:937 wwsympa/wwsympa.fcgi:3039
+#: soap/sympasoap.pm:550 src/Commands.pm:937 wwsympa/wwsympa.fcgi:3043
 msgid "Unsubscribe from list %s"
 msgstr "ÍË¶©ÓÊµÝ±í %s"
 
@@ -4065,12 +4065,16 @@ msgstr "> 转到上一级目录"
 msgid "Update"
 msgstr "更新"
 
+#: src/etc/list_task_models/sync_include.ttl.task:1
+msgid "Update of list members based on the TTL"
+msgstr ""
+
 #. (visible_path)
-#: wwsympa/tt2/d_read.tt2:306
+#: wwsympa/tt2/d_read.tt2:285
 msgid "Upload a file inside the folder %1"
 msgstr "上传一个文件到文件夹 %1 中"
 
-#: wwsympa/tt2/d_read.tt2:308
+#: wwsympa/tt2/d_read.tt2:287
 msgid "Upload a file inside the folder SHARED"
 msgstr "上传一个文件到文件夹 SHARED 中"
 
@@ -4116,7 +4120,7 @@ msgstr ""
 msgid "Validate"
 msgstr "确定"
 
-#: wwsympa/tt2/editsubscriber.tt2:51
+#: wwsympa/tt2/editsubscriber.tt2:52
 msgid "View last bounce"
 msgstr "查看最后的退信"
 
@@ -4197,8 +4201,8 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:693 soap/sympasoap.pm:694 src/Commands.pm:1053
 #: src/Commands.pm:1054 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:2810 wwsympa/wwsympa.fcgi:2811
-#: wwsympa/wwsympa.fcgi:3402 wwsympa/wwsympa.fcgi:3403
+#: wwsympa/wwsympa.fcgi:2814 wwsympa/wwsympa.fcgi:2815
+#: wwsympa/wwsympa.fcgi:3406 wwsympa/wwsympa.fcgi:3407
 msgid "Welcome on list %s"
 msgstr "»¶Ó­¼ÓÈëÓÊµÝ±í %s"
 
@@ -4384,7 +4388,7 @@ msgid ""
 msgstr "您并未选取口令, 请要求一份原先口令的提醒"
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3040 wwsympa/wwsympa.fcgi:3508
+#: wwsympa/wwsympa.fcgi:3044 wwsympa/wwsympa.fcgi:3512
 #, fuzzy
 msgid "You have been removed from list %s.\n"
 msgstr "ÓÃ»§ %s ÒÑ¾­´ÓÓÊµÝ±í %s ÖÐÉ¾³ý¡£\n"
@@ -4459,7 +4463,7 @@ msgstr ""
 "Çë³¢ÊÔÊ¹ÓÃÖ÷ÒªµÄÓÊ¼þµØÖ·À´¶©ÔÄ¡£"
 
 # nlsref 6,79
-#: src/List.pm:6751 src/List.pm:6758
+#: src/List.pm:6764 src/List.pm:6771
 msgid ""
 "You requested a subscription reminder to be sent\n"
 "to each subscriber of list %s\n"
@@ -4755,7 +4759,7 @@ msgid "Your subscription email is %1"
 msgstr ""
 
 # nlsref 6,18
-#: src/Commands.pm:1475 wwsympa/wwsympa.fcgi:3507
+#: src/Commands.pm:1475 wwsympa/wwsympa.fcgi:3511
 msgid "Your subscription to list %s has been removed."
 msgstr "ÄúÒÑ¾­ÍË¶©ÓÊµÝ±í %s¡£"
 
@@ -4934,17 +4938,8 @@ msgstr ""
 "ÄúÊÇÏÂÁÐÓÊµÝ±íµÄËùÓÐÕß:\n"
 "\n"
 
-#: src/sympa.pl:1061 src/sympa.pl:1311 src/sympa.pl:777 src/sympa.pl:988
-msgid "_encoding_"
-msgstr ""
-
-#: wwsympa/wwsympa.fcgi:6287 wwsympa/wwsympa.fcgi:799
-#, fuzzy
-msgid "_language_"
-msgstr "语言"
-
-#: wwsympa/tt2/d_read.tt2:11 wwsympa/tt2/d_read.tt2:137
-#: wwsympa/tt2/d_read.tt2:213
+#: wwsympa/tt2/d_read.tt2:11 wwsympa/tt2/d_read.tt2:131
+#: wwsympa/tt2/d_read.tt2:195
 msgid "access"
 msgstr "存取"
 
@@ -4995,11 +4990,11 @@ msgstr ""
 msgid "an_email_address"
 msgstr "µç×ÓÓÊ¼þµØÖ·"
 
-#: wwsympa/tt2/arcsearch.tt2:34
+#: wwsympa/tt2/arcsearch.tt2:32
 msgid "and checking on entire word)"
 msgstr "和检查整个词)"
 
-#: wwsympa/tt2/arcsearch.tt2:32
+#: wwsympa/tt2/arcsearch.tt2:30
 msgid "and checking on part of word)"
 msgstr "和检查词的部分)"
 
@@ -5064,11 +5059,11 @@ msgstr ""
 msgid "bye !"
 msgstr ""
 
-#: wwsympa/tt2/arcsearch.tt2:26
+#: wwsympa/tt2/arcsearch.tt2:24
 msgid "case insensitive"
 msgstr "不区分大小写"
 
-#: wwsympa/tt2/arcsearch.tt2:28
+#: wwsympa/tt2/arcsearch.tt2:26
 msgid "case sensitive"
 msgstr "区分大小写"
 
@@ -5077,7 +5072,7 @@ msgstr "区分大小写"
 msgid "certificate for authentication by remote Sympa"
 msgstr ""
 
-#: wwsympa/tt2/d_control.tt2:34
+#: wwsympa/tt2/d_control.tt2:36
 msgid "change access"
 msgstr "修改权限"
 
@@ -5121,6 +5116,16 @@ msgstr ""
 msgid "crypted message for list %1@%2"
 msgstr ""
 
+#: src/etc/global_task_models/chk_cert_expiration.daily.task:1
+msgid ""
+"daily certificate expiration date checking ; users are warned when their "
+"certificate has expired or expires within 3 days"
+msgstr ""
+
+#: src/etc/global_task_models/crl_update.daily.task:1
+msgid "daily update of the certificate revocation list"
+msgstr ""
+
 # nlsref 16,48
 #: src/List.pm:732
 msgid "database name"
@@ -5140,13 +5145,17 @@ msgstr "Ìì"
 msgid "default"
 msgstr "默认"
 
-#: wwsympa/tt2/d_read.tt2:10 wwsympa/tt2/d_read.tt2:125
-#: wwsympa/tt2/d_read.tt2:202
+#: wwsympa/tt2/d_read.tt2:10 wwsympa/tt2/d_read.tt2:122
+#: wwsympa/tt2/d_read.tt2:187
 msgid "delete"
 msgstr "删除"
 
+#: src/etc/global_task_models/purge_orphan_bounces.monthly.task:1
+msgid "delete monthly bounces for unsubscribed addresses"
+msgstr ""
+
 # nlsref 15,3
-#: wwsympa/wwslib.pm:66
+#: wwsympa/wwslib.pm:61
 msgid "deletion message"
 msgstr "É¾³ýÏûÏ¢"
 
@@ -5155,7 +5164,7 @@ msgid "deletion performed only by list owners, need authentication"
 msgstr ""
 
 # nlsref 15,10
-#: wwsympa/wwslib.pm:73
+#: wwsympa/wwslib.pm:68
 msgid "directory of lists"
 msgstr "ÓÊµÝ±íÄ¿Â¼"
 
@@ -5164,7 +5173,7 @@ msgstr "ÓÊµÝ±íÄ¿Â¼"
 msgid "e-mail address"
 msgstr "电子邮件地址"
 
-#: wwsympa/tt2/d_read.tt2:119 wwsympa/tt2/d_read.tt2:194
+#: wwsympa/tt2/d_read.tt2:118 wwsympa/tt2/d_read.tt2:184
 #: wwsympa/tt2/d_read.tt2:9
 msgid "edit"
 msgstr "edit"
@@ -5176,7 +5185,7 @@ msgid ""
 msgstr ""
 
 # nlsref 15,7
-#: wwsympa/wwslib.pm:70
+#: wwsympa/wwslib.pm:65
 msgid "editor rejection message"
 msgstr "±à¼­¾Ü¾øÏûÏ¢"
 
@@ -5205,6 +5214,10 @@ msgstr "整个"
 # nlsref 16,148
 #: src/List.pm:741
 msgid "environment variables for database connexion"
+msgstr ""
+
+#: src/etc/list_task_models/expire.yearly.task:1
+msgid "expiration routine run yearly"
 msgstr ""
 
 # nlsref 16,42
@@ -5271,7 +5284,7 @@ msgid "get matched rule"
 msgstr "获取应用的规则"
 
 # nlsref 15,11
-#: wwsympa/wwslib.pm:74
+#: wwsympa/wwslib.pm:69
 msgid "global remind message"
 msgstr "È«¾ÖÌáÐÑÏûÏ¢"
 
@@ -5281,7 +5294,7 @@ msgid "halt rate"
 msgstr "Í£Ö¹±ÈÂÊ"
 
 # nlsref 15,9
-#: wwsympa/wwslib.pm:72
+#: wwsympa/wwslib.pm:67
 msgid "help file"
 msgstr "°ïÖúÎÄ¼þ"
 
@@ -5328,22 +5341,22 @@ msgid "just for listmaster"
 msgstr ""
 
 # nlsref 15,18
-#: wwsympa/wwslib.pm:81
+#: wwsympa/wwslib.pm:76
 msgid "list aliases template"
 msgstr ""
 
 # nlsref 15,16
-#: wwsympa/wwslib.pm:79
+#: wwsympa/wwslib.pm:74
 msgid "list creation notification message"
 msgstr ""
 
 # nlsref 15,15
-#: wwsympa/wwslib.pm:78
+#: wwsympa/wwslib.pm:73
 msgid "list creation request message"
 msgstr ""
 
 # nlsref 15,13
-#: wwsympa/wwslib.pm:76
+#: wwsympa/wwslib.pm:71
 msgid "list description"
 msgstr "ÓÊµÝ±íÃèÊö"
 
@@ -5354,7 +5367,7 @@ msgid ""
 msgstr ""
 
 # nlsref 15,14
-#: wwsympa/wwslib.pm:77
+#: wwsympa/wwslib.pm:72
 msgid "list homepage"
 msgstr "ÓÊµÝ±íÖ÷Ò³"
 
@@ -5390,12 +5403,12 @@ msgid "mails, page # %1/%2"
 msgstr "第%1页，共%2页"
 
 # nlsref 15,4
-#: wwsympa/wwslib.pm:67
+#: wwsympa/wwslib.pm:62
 msgid "message footer"
 msgstr "ÓÊ¼þ½Ç×¢"
 
 # nlsref 15,5
-#: wwsympa/wwslib.pm:68
+#: wwsympa/wwslib.pm:63
 msgid "message header"
 msgstr "ÓÊ¼þÍ·"
 
@@ -5404,7 +5417,7 @@ msgstr "ÓÊ¼þÍ·"
 msgid "minute"
 msgstr "·ÖÖÓ"
 
-#: wwsympa/tt2/d_read.tt2:224
+#: wwsympa/tt2/d_read.tt2:204
 #, fuzzy
 msgid "moderate"
 msgstr "监管"
@@ -5413,11 +5426,6 @@ msgstr "监管"
 #, fuzzy
 msgid "moderated for subscribers"
 msgstr "邮递表没有订阅者"
-
-#: src/etc/scenari/d_edit.editor.~1.2.~:1
-#, fuzzy
-msgid "moderated to subscribers"
-msgstr "删除选中的订阅者"
 
 # nlsref 16,29
 #: src/List.pm:473 src/List.pm:806
@@ -5573,6 +5581,10 @@ msgstr ""
 msgid "public list, Bcc rejected (anti-spam)"
 msgstr ""
 
+#: src/etc/global_task_models/purge_user_table.monthly.task:1
+msgid "purge of orphan entries in user table every month"
+msgstr ""
+
 #: wwsympa/tt2/add_request.tt2:13 wwsympa/tt2/editsubscriber.tt2:40
 #: wwsympa/tt2/review.tt2:13 wwsympa/tt2/review.tt2:266
 #: wwsympa/tt2/review.tt2:82 wwsympa/tt2/reviewbouncing.tt2:107
@@ -5590,9 +5602,21 @@ msgid "reception mode"
 msgstr "½ÓÊÕÄ£Ê½"
 
 # nlsref 15,6
-#: wwsympa/wwslib.pm:69
+#: wwsympa/wwslib.pm:64
 msgid "remind message"
 msgstr "ÌáÐÑÏûÏ¢"
+
+#: src/etc/list_task_models/remind.2month.task:1
+msgid "remind message sent to subscribers every 2 month"
+msgstr ""
+
+#: src/etc/list_task_models/remind.monthly.task:1
+msgid "remind message sent to subscribers every month"
+msgstr ""
+
+#: src/etc/list_task_models/remind.yearly.task:1
+msgid "remind message sent to subscribers every year"
+msgstr ""
 
 # nlsref 16,36
 #: src/List.pm:513 src/List.pm:576 src/List.pm:688 src/List.pm:727
@@ -5694,8 +5718,8 @@ msgstr ""
 msgid "resubscription to %1"
 msgstr ""
 
-#: wwsympa/tt2/arcsearch_form.tt2:49 wwsympa/tt2/arcsearch_form.tt2:51
-#: wwsympa/tt2/arcsearch_form.tt2:52
+#: wwsympa/tt2/arcsearch_form.tt2:49 wwsympa/tt2/arcsearch_form.tt2:50
+#: wwsympa/tt2/arcsearch_form.tt2:51
 msgid "results by page"
 msgstr ""
 
@@ -5763,7 +5787,7 @@ msgid "sensitive"
 msgstr "区分"
 
 # nlsref 17,1
-#: wwsympa/wwslib.pm:52
+#: wwsympa/wwslib.pm:47
 msgid "session"
 msgstr ""
 
@@ -5792,7 +5816,7 @@ msgid "subscribers update failed for list %1"
 msgstr ""
 
 # nlsref 15,8
-#: wwsympa/wwslib.pm:71
+#: wwsympa/wwslib.pm:66
 msgid "subscribing invitation message"
 msgstr "¶©ÔÄÑûÇëÏûÏ¢"
 
@@ -5807,7 +5831,7 @@ msgid "suffix"
 msgstr "ºó×º"
 
 # nlsref 15,12
-#: wwsympa/wwslib.pm:75
+#: wwsympa/wwslib.pm:70
 msgid "summary message"
 msgstr "ÕªÒªÏûÏ¢"
 
@@ -5838,7 +5862,7 @@ msgstr "(本句话，"
 msgid "threshold"
 msgstr ""
 
-#: wwsympa/tt2/d_read.tt2:286
+#: wwsympa/tt2/d_read.tt2:265
 msgid "title"
 msgstr "URL"
 
@@ -5847,23 +5871,15 @@ msgstr "URL"
 msgid "to list"
 msgstr "恢复"
 
-#: wwsympa/tt2/d_read.tt2:173
+#: wwsympa/tt2/d_read.tt2:165
 #, fuzzy
 msgid "to moderate"
 msgstr "监管"
 
 # nlsref 15,2
-#: wwsympa/wwslib.pm:65
+#: wwsympa/wwslib.pm:60
 msgid "unsubscription message"
 msgstr "ÍË¶©ÏûÏ¢"
-
-# nlsref 12,2
-#: src/Commands.pm:1751 src/etc/tt2/digest.tt2:9
-#: src/etc/tt2/digest_plain.tt2:5 src/etc/tt2/urlized_part.tt2:1
-#: src/mail.pm:127 src/mail.pm:228 src/mail.pm:77 src/mail.pm:89
-#: src/tools.pl:130 src/tt2.pl:115 wwsympa/tt2/main.tt2:6
-msgid "us-ascii"
-msgstr "gb2312"
 
 # nlsref 16,91
 #: src/List.pm:851 wwsympa/tt2/help_editlist.tt2:131
@@ -5875,7 +5891,7 @@ msgid "view all lists"
 msgstr "检视所有邮递表"
 
 # nlsref 15,17
-#: wwsympa/wwslib.pm:80
+#: wwsympa/wwslib.pm:75
 msgid "virus infection message"
 msgstr ""
 
@@ -5890,7 +5906,7 @@ msgid "warn rate"
 msgstr "¾¯¸æ±ÈÂÊ"
 
 # nlsref 15,1
-#: wwsympa/wwslib.pm:64
+#: wwsympa/wwslib.pm:59
 msgid "welcome message"
 msgstr "»¶Ó­´Ç"
 
@@ -5913,6 +5929,22 @@ msgstr ""
 #: src/etc/tt2/sendpasswd.tt2:30
 msgid "your password : %1"
 msgstr "口令: %1"
+
+# nlsref 12,3
+#~ msgid "7bit"
+#~ msgstr "8bit"
+
+#, fuzzy
+#~ msgid "_language_"
+#~ msgstr "语言"
+
+#, fuzzy
+#~ msgid "moderated to subscribers"
+#~ msgstr "删除选中的订阅者"
+
+# nlsref 12,2
+#~ msgid "us-ascii"
+#~ msgstr "gb2312"
 
 #~ msgid "%1 occurrences found"
 #~ msgstr "找到 %1 个相关邮递表"
