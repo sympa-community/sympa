@@ -2786,19 +2786,21 @@ sub get_subscriber {
 	
 	my $user = $sth->fetchrow_hashref;
 
-	$user->{'reception'} ||= 'mail';
-	$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
-	  unless ($self->is_available_reception_mode($user->{'reception'}));
+	if (defined $user) {
+	    $user->{'reception'} ||= 'mail';
+	    $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+	    unless ($self->is_available_reception_mode($user->{'reception'}));
+	    
+	    $user->{'update_date'} ||= $user->{'date'};
 
-	$user->{'update_date'} ||= $user->{'date'};
+	    ## In case it was not set in the database
+	    $user->{'subscribed'} = 1
+		if ($self->{'admin'}{'user_data_source'} eq 'database');
+	}
 
 	$sth->finish();
 
 	$sth = pop @sth_stack;
-
-	## In case it was not set in the database
-	$user->{'subscribed'} = 1
-	    if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
 
 	## Set session cache
 	$list_cache{'get_subscriber'}{$name}{$email} = $user;
