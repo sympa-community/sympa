@@ -354,10 +354,13 @@ sub smime_sign_check {
 
 
 
-    my $temporary_file = "/tmp/smime-sender.".$$ ; 
-    do_log('debug3', "xxx $Conf{'openssl'} smime -verify  $Conf{'trusted_ca_options'} -signer  $temporary_file");
-    ## OpenSSL does not return error status ; should check first line of STDOUT
-    unless (open (MSGDUMP, "| $Conf{'openssl'} smime -verify  $Conf{'trusted_ca_options'} -signer $temporary_file > /dev/null")) {
+    my $temporary_file = "/tmp/smime-sender.".$$ ;
+    my $trusted_ca_options = '';
+    $trusted_ca_options = "-CAfile $Conf{'cafile'}" if (defined $Conf{'cafile'});
+    $trusted_ca_options = "-CApath $Conf{'capath'}" if (defined $Conf{'capath'});
+    do_log('debug3', "$Conf{'openssl'} smime -verify  $trusted_ca_options -signer  $temporary_file");
+
+    unless (open (MSGDUMP, "| $Conf{'openssl'} smime -verify  $trusted_ca_options -signer $temporary_file > /dev/null")) {
 
 	do_log('err', "unable to verify smime signature from $sender $verify");
 	return undef ;
@@ -370,46 +373,66 @@ sub smime_sign_check {
 
     print MSGDUMP <MSG>;
     close MSGDUMP;
+    my $status = $?/256 ;
     close MSG;
+    if ($status == '1') {
+	do_log('err', "Openssl ERROR while parsing the command options : $Conf{'openssl'} smime -verify  $Conf{'trusted_ca_options'} -signer  $temporary_file");
+	return undef ;
+    }
+    if ($status == '2') {
+	do_log('err', "One of input file could not be read : $Conf{'openssl'} smime -verify  $Conf{'trusted_ca_options'} -signer  $temporary_file");
+	return undef ;
+    }
+    if ($status == '3') {
+	do_log('err', "Error creating the PKCS#7 file: $Conf{'openssl'} smime -verify  $Conf{'trusted_ca_options'} -signer  $temporary_file");
+	return undef ;
+    }
+    if ($status == '4') {
+	do_log('err', "Error while verifying the message signature. The message may have been corrupted");
+	return undef ;
+    }
+    if ($status == '5') {
+	do_log('err', "The message signature is checked but could not write out the signers certificates");
+    }    
     
     ## second step is the message signer match the sender
     ## a better analyse should be performed to extract the signer email. 
     my $signer = `cat $temporary_file | $Conf{'openssl'}  x509 -subject -noout`;
 
-
-    if ($signer =~ /email=$sender/i) {
-	do_log('debug', "S/MIME signed message, signature checked and sender match signer(%s)",$signer);
-        ## store the signer certificat
-	unless (-d $Conf{'ssl_cert_dir'}) {
-	    if ( mkdir ($Conf{'ssl_cert_dir'}, 0775)) {
-		do_log('info', "creating spool $Conf{'ssl_cert_dir'}");
-	    }else{
-		do_log('err', "Unable to create user certificat directory $Conf{'ssl_cert_dir'}");
-	    }
-	}
-	my $filename = "$Conf{'ssl_cert_dir'}/".&escape_chars($sender);
-
-	open (CERTIF,$temporary_file);
-	if (open (USERCERTIF, "> $filename")) {
-	    print USERCERTIF <CERTIF> ;
-	    close USERCERTIF ;
-	}else{
-	    &do_log('err','Unable to rename %s %s',$temporary_file,$filename);
-	}
-	close CERTIF;
-	unlink($temporary_file) unless ($main::options{'debug'}) ;	
-
-	$is_signed->{'body'} = 'smime';
-
-	# futur version should check if the subject was part of the SMIME signature.
-	$is_signed->{'subject'} = undef;
-	return $is_signed;
-    }else{
+    unless ($signer =~ /email=$sender/i) {
 	unlink($temporary_file) unless ($main::options{'debug'}) ;	
 	do_log('notice', "S/MIME signed message, sender($sender) do NOT match signer($signer)",$sender,$signer);
 	return undef;
     }
-    return undef ;    
+
+    do_log('debug', "S/MIME signed message, signature checked and sender match signer(%s)",$signer);
+    ## store the signer certificat
+    unless (-d $Conf{'ssl_cert_dir'}) {
+	if ( mkdir ($Conf{'ssl_cert_dir'}, 0775)) {
+	    do_log('info', "creating spool $Conf{'ssl_cert_dir'}");
+	}else{
+	    do_log('err', "Unable to create user certificat directory $Conf{'ssl_cert_dir'}");
+	}
+    }
+    my $filename = "$Conf{'ssl_cert_dir'}/".&escape_chars($sender);
+    
+    open (CERTIF,$temporary_file);
+    if (open (USERCERTIF, "> $filename")) {
+	print USERCERTIF <CERTIF> ;
+	close USERCERTIF ;
+    }else{
+	&do_log('err','Unable to rename %s %s',$temporary_file,$filename);
+    }
+    close CERTIF;
+    
+    
+    unlink($temporary_file) unless ($main::options{'debug'}) ;	
+    
+    $is_signed->{'body'} = 'smime';
+    
+    # futur version should check if the subject was part of the SMIME signature.
+    $is_signed->{'subject'} = undef;
+    return $is_signed;
 }
 
 # input : msg object, return a new message object encrypted
