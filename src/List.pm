@@ -1662,11 +1662,14 @@ sub send_notify_to_listmaster {
 	}
 	my $host = &Conf::get_robot_conf($robot, 'host');
 
-	$list->send_file('listmaster_notification', &Conf::get_robot_conf($robot, 'listmaster'), $robot,
-			 {'to' => "listmaster\@$host",
-			  'type' => 'request_list_creation',
-			  'email' => $param[1]});
-
+	&send_global_file('listmaster_notification', &Conf::get_robot_conf($robot, 'listmaster'), $robot,
+			  {'to' => "listmaster\@$host",
+			   'list' => {'name' => $list->{'name'},
+				      'host' => $list->{'domain'},
+				      'subject' => $list->{'admin'}{'subject'}},
+			   'type' => 'request_list_creation',
+			   'email' => $param[1]});
+	
     ## Loop detected in Sympa
     }elsif ($operation eq 'loop_command') {
 	my $file = $param[0];
