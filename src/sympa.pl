@@ -860,19 +860,21 @@ sub DoForward {
     my $msg_copy = $msg->dup;
 
     if ($rc = &tools::virus_infected($msg_copy, $file)) {
-	if ($list) {
-	    $list->send_file('your_infected_msg', $sender, $robot, 
-			     {'virus_name' => $rc,
-			      'recipient' => $recepient.'@'.$host,
-			      'lang' => $list->{'admin'}{'lang'}});
+	if ($Conf{'antivirus_notify'} eq 'sender') {
+	    if ($list) {
+		$list->send_file('your_infected_msg', $sender, $robot, 
+				 {'virus_name' => $rc,
+				  'recipient' => $recepient.'@'.$host,
+				  'lang' => $list->{'admin'}{'lang'}});
+	    }
+	    else {
+		my %context;
+		$context{'virus_name'} = $rc ;
+		$context{'recipient'} = $recepient.'@'.$host;
+		$context{'lang'} = &Conf::get_robot_conf($robot, 'lang');
+		&List::send_global_file('your_infected_msg', $sender, $robot, \%context );
+	    }    
 	}
-	else {
-	    my %context;
-	    $context{'virus_name'} = $rc ;
-	    $context{'recipient'} = $recepient.'@'.$host;
-	    $context{'lang'} = &Conf::get_robot_conf($robot, 'lang');
-	    &List::send_global_file('your_infected_msg', $sender, $robot, \%context );
-	}    
 	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $recepient, $host, $sender, $rc);
 
 	return undef;

@@ -2027,6 +2027,12 @@ antivirus_args  --stdout
 \end{verbatim}
 \end {quote}
       	
+\subsection {\cfkeyword {antivirus\_notify}} \texttt {sender} | \texttt {nobody}
+
+	\default {sender}
+
+This parameter tells if \Sympa should notify the email sender when a virus has been
+detected.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

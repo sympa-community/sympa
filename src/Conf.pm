@@ -46,7 +46,7 @@ my @valid_options = qw(
 		       remind_return_path request_priority rfc2369_header_fields sendmail sendmail_args sleep 
 		       sort sympa_priority syslog log_smtp umask welcome_return_path wwsympa_url
                        openssl capath cafile  key_passwd ssl_cert_dir remove_headers
-		       antivirus_path antivirus_args anonymous_header_fields
+		       antivirus_path antivirus_args antivirus_notify anonymous_header_fields
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
 		       ldap_export_dnmanager ldap_export_connection_timeout
@@ -131,6 +131,7 @@ my %Default_Conf =
      'remove_headers' => 'Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To',
      'antivirus_path' => '',
      'antivirus_args' => '',
+     'antivirus_notify' => 'sender',
      'anonymous_header_fields' => 'Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender',
      'dark_color' => '#330099',
      'light_color' => '#ccccff',
