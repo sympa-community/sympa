@@ -43,13 +43,13 @@ sub reaper {
    while (($i = waitpid(-1, $block ? &POSIX::WNOHANG : 0)) > 0) {
       $block = 1;
       if (!defined($pid{$i})) {
-         print STDERR "Reaper waited $i, unknown process to me\n" if ($main::opt_d);
+         print STDERR "Reaper waited $i, unknown process to me\n" if ($main::options{'debug'});
          next;
       }
       $opensmtp--;
       delete($pid{$i});
    }
-   printf STDERR "Reaper unwaited pids : %s\nOpen = %s\n", join(' ', sort keys %pid), $opensmtp if ($main::opt_d);
+   printf STDERR "Reaper unwaited pids : %s\nOpen = %s\n", join(' ', sort keys %pid), $opensmtp if ($main::options{'debug'});
    return $i;
 }
 
@@ -81,9 +81,9 @@ sub smtpto {
    
    ## Check how many open smtp's we have, if too many wait for a few
    ## to terminate and then do our job.
-   print STDERR "Open = $opensmtp\n" if ($main::opt_d);
+   print STDERR "Open = $opensmtp\n" if ($main::options{'debug'});
    while ($opensmtp > $Conf{'maxsmtp'}) {
-       print STDERR "Smtpto: too many open SMTP ($opensmtp), calling reaper\n" if ($main::opt_d);
+       print STDERR "Smtpto: too many open SMTP ($opensmtp), calling reaper\n" if ($main::options{'debug'});
        last if (&reaper(0) == -1); ## Blocking call to the reaper.
    }
 
@@ -114,7 +114,7 @@ sub smtpto {
        }
        exit 1; ## Should never get there.
    }
-   if ($main::opt_m) {
+   if ($main::options{'messages'}) {
        $str = "safefork: $Conf{'sendmail'} -oi -odi -oem -f $from ";
        if (ref($rcpt) eq 'SCALAR') {
 	   $str .= $$rcpt;

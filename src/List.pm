@@ -709,7 +709,7 @@ sub new {
 	# use the current list in memory and update it
 	$liste=$list_of_lists{$name};
     }else{
-	do_log('debug', 'List object %s created', $name) if $main::opt_d; ##TEMP
+	do_log('debug', 'List object %s created', $name) if $main::options{'debug'}; ##TEMP
 
 	# create a new object list
 	bless $liste, $pkg;
@@ -3893,7 +3893,7 @@ sub _include_users_file {
 	do_log('info', 'Unable to open file "%s"' , $filename);
 	return undef;
     }
-    do_log('debug','including file %s' , $filename) if ($main::opt_d);
+    do_log('debug','including file %s' , $filename) if ($main::options{'debug'});
     
     while (<INCLUDE>) {
 	next if /^\s*$/;
@@ -3951,16 +3951,16 @@ sub _include_users_ldap {
 	return undef;
     }
     
-    do_log('debug', "Connected to LDAP server $host:$port") if ($main::opt_d);
+    do_log('debug', "Connected to LDAP server $host:$port") if ($main::options{'debug'});
     
     unless ($ldaph->bind ($user, password => "$passwd")) {
 	do_log ('notice',"Can\'t bind with server $host:$port as user '$user' : $@");
 	return undef;
     }
 
-    do_log('debug', "Binded to LDAP server $host:$port ; user : '$user'") if ($main::opt_d);
+    do_log('debug', "Binded to LDAP server $host:$port ; user : '$user'") if ($main::option{'debug'});
     
-    do_log('debug', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $host, $ldap_suffix, $ldap_filter, $ldap_attrs) if ($main::opt_d);
+    do_log('debug', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $host, $ldap_suffix, $ldap_filter, $ldap_attrs) if ($main::options{'debug'});
     unless ($fetch = $ldaph->search ( base => $ldap_suffix,
                                       filter => $ldap_filter,
 				      attrs => $ldap_attrs)) {
@@ -4007,7 +4007,7 @@ sub _include_users_ldap {
 	}
     }
 
-    do_log ('debug',"unbinded from LDAP server %s:%s ",$host,$port) if ($main::opt_d);
+    do_log ('debug',"unbinded from LDAP server %s:%s ",$host,$port) if ($main::options{'debug'});
     do_log ('debug','%d subscribers included from LDAP query',$total);
 
     return $total;
@@ -4211,7 +4211,7 @@ sub _save_users_file {
     
     my($k, $s);
     
-    do_log('debug','Saving user file %s', $file) if ($main::opt_d);
+    do_log('debug','Saving user file %s', $file) if ($main::options{'debug'});
     
     rename("$file", "$file.old");
     open SUB, "> $file" or return undef;

@@ -324,7 +324,7 @@ sub smime_sign {
     }
     close NEWMSG ;
 
-    unlink ($temporary_file) unless ($main::opt_d || $main::opt_D) ;
+    unlink ($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;
     
     ## foreach header defined in  the incomming message but undefined in the
     ## crypted message, add this header in the crypted form.
@@ -393,7 +393,7 @@ sub smime_sign_check {
 	    &do_log('err','Unable to rename %s %s',$temporary_file,$filename);
 	}
 	close CERTIF;
-	unlink($temporary_file) unless ($main::opt_d || $main::opt_D) ;	
+	unlink($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;	
 
 	$is_signed->{'body'} = 'smime';
 
@@ -401,7 +401,7 @@ sub smime_sign_check {
 	$is_signed->{'subject'} = undef;
 	return $is_signed;
     }else{
-	unlink($temporary_file) unless ($main::opt_d || $main::opt_D) ;	
+	unlink($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;	
 	do_log('notice', "S/MIME signed message, sender($sender) do NOT match signer($signer)",$sender,$signer);
 	return undef;
     }
@@ -449,7 +449,7 @@ sub smime_encrypt {
 	    return undef;
 	}
 	close NEWMSG ;
-	unlink ($temporary_file) unless ($main::opt_d || $main::opt_D) ;
+	unlink ($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;
 
 	## foreach header defined in  the incomming message but undefined in the
         ## crypted message, add this header in the crypted form.
@@ -523,7 +523,7 @@ sub smime_decrypt {
 	return undef;
     }
     close NEWMSG ;
-    unlink ($temporary_file) unless ($main::opt_d || $main::opt_D) ;
+    unlink ($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;
     
     ## foreach header defined in the incomming message but undefined in the
     ## decrypted message, add this header in the decrypted form.
