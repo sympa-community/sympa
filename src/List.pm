@@ -4492,6 +4492,7 @@ sub _include_users_ldap {
     }
     
     foreach my $email (@emails) {
+	next if ($email =~ /^\s*$/);
 	my %u = %{$default_user_options};
 	$u{'email'} = $email;
 	$u{'date'} = time;
