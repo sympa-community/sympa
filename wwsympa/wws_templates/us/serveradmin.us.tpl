@@ -154,7 +154,7 @@
         <TD>
           <FORM ACTION="[path_cgi]" METHOD=POST>
 	  <INPUT TYPE="submit" NAME="action_rebuildallarc" VALUE="ALL"><BR>
-	May take a lot of time CPU,  be carefull !
+	May take a lot of CPU time,  be careful !
           </FORM>
 	</TD>
 

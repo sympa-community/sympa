@@ -2,7 +2,7 @@
 
 <!-- begin admin_menu.us.tpl -->
     <TD BGCOLOR="[selected_color]" ALIGN="CENTER" COLSPAN="7">
-	<FONT COLOR="[bg_color]"><b>List adminstration panel</b></font>
+	<FONT COLOR="[bg_color]"><b>List administration panel</b></font>
     </TD>
     </TR>
     <TR>

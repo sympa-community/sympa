@@ -49,7 +49,7 @@ Parameters of these search make on <b> &quot;[key_word]&quot;</b>
 
 <DL>
 <B>Result</b>
-<DT><B>[searched] messages selected amongst [num]...</b><BR>
+<DT><B>[searched] messages selected out of [num]...</b><BR>
 
 [IF body]
 	<DD><B>[body_count]</b> hits on message's <i>Body</i><BR>

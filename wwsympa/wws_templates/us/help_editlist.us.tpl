@@ -17,11 +17,11 @@
  add or delete email addresses from the mailing list. If you are privileged
  owner of the list, you can choose other owners for the mailing list. 
 Privileged owners may edit a bit more options than other owners. There can
-only be one privileged owner per list ; his/her email addresse may not
+only be one privileged owner per list ; his/her email address may not
 be edited from the web.
 [ELSIF p->NAME=editor]
-Editors are responsible of messages moderation. If the mailing list is moderated, messages posted to the list will first be passsed to the editors, 
-who will decide to distridute or to reject it. <BR>
+Editors are responsible of messages moderation. If the mailing list is moderated, messages posted to the list will first be passed to the editors, 
+who will decide to distribute or to reject it. <BR>
 FYI: Defining editors will not make the list moderated ; you will have to
 set the "send" parameter.<BR>
 FYI: If the list is moderated, the first editor distributing or rejecting 

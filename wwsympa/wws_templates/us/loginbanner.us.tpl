@@ -3,7 +3,7 @@
 <BR>
 [IF password_sent]
   Your password has been sent to your email address [init_email].<BR>
-  Please check your e-mail box to provide your password bellow.
+  Please check your e-mail box to provide your password below.
   <BR><BR>
 [ENDIF]
 

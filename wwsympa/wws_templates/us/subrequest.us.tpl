@@ -3,7 +3,7 @@
   [IF status=auth]
 
 	You requested subscription to list [list]. <BR>To confirm
-	your request, please click the button bellow :<BR>
+	your request, please click the button below :<BR>
 	<BR>
 
 	<FORM ACTION="[path_cgi]" METHOD=POST>
@@ -16,12 +16,12 @@
 
     	You requested a subscription to list [list]. 
 	<BR><BR>
-	To confirm your identity and avoid anyeone from subscribing you to 
+	To confirm your identity and prevent anyone from subscribing you to 
 	this list against your will, a message containing your password
 	will be sent to you. <BR><BR>
 
 	Check your mailbox for new messages and enter below the
-	password. This will confirm your subrscription to list [list].
+	password. This will confirm your subscription to list [list].
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
           <FONT COLOR="[dark_color]"><B>e-mail address</B> </FONT>[email]<BR>

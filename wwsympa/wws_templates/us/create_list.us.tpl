@@ -20,6 +20,6 @@ Aliases have been installed.
 [ENDIF]
 
 [ELSE]
-Your list creation request is registred. You can now  modify its
+Your list creation request is registered. You can now  modify its
 configuration using the admin button but the list will be unusable until the listmaster validates it.
 [ENDIF]

@@ -56,7 +56,7 @@
 	  [ENDIF]
           <BR>
 	  [IF list_as_x509_cert]
-          <BR><A HREF="[path_cgi]/load_cert/[list]"><font size="-1"><b>Load certificat<b></font></A><BR>
+          <BR><A HREF="[path_cgi]/load_cert/[list]"><font size="-1"><b>Load certificate<b></font></A><BR>
           [ENDIF]
      [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>

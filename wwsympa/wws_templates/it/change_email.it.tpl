@@ -2,7 +2,7 @@
 
 You will receive an email, reminding you your password.<BR>
 To confirm your email address change, please enter the password
-you received bellow :
+you received below :
 
 <FORM ACTION="[path_cgi]" METHOD=POST>
     <INPUT TYPE="hidden" NAME="email" VALUE="[email]">

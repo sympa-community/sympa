@@ -2,7 +2,7 @@
 
   [IF status=auth]
       You requested unsubscription from list [list]. <BR>To confirm
-      your request, please click the button bellow :<BR>
+      your request, please click the button below :<BR>
 	<BR>
 
 	<FORM ACTION="[path_cgi]" METHOD=POST>
@@ -23,7 +23,7 @@
   [ELSIF init_passwd]
     	You requested unsubscription from list [list]. 
 	<BR><BR>
-	To confirm your identity and avoid anyeone from unsubscribing you from 
+	To confirm your identity and prevent anyone from unsubscribing you from 
 	this list against your will, a message containing an URL
 	will be sent to you. <BR><BR>
 
@@ -44,7 +44,7 @@
 	allow you to access your custom environment.
 
   [ELSIF ! email]
-      Please gives your email adresse for your unsubscription request from list [list].
+      Please gives your email address for your unsubscription request from list [list].
 
       <FORM ACTION="[path_cgi]" METHOD=POST>
           <B>Your e-mail address :</B> 

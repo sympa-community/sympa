@@ -25,9 +25,9 @@ a customized environment with access to the following functions :
 <H2>Login</H2>
 
 [IF auth=classic]
-When authentifying (<A HREF="[path_cgi]/loginrequest">Login</A>), provide your email address and associated password.
+When authenticating (<A HREF="[path_cgi]/loginrequest">Login</A>), provide your email address and associated password.
 <BR><BR>
-Once are authentified, a <I>cookie</I> containing your login 
+Once you have been authenticated, a <I>cookie</I> containing your login 
 information make your connection to WWSympa last. The lifetime of this 
 <I>cookie</I> is customizeable through your  
 <A HREF="[path_cgi]/pref">preferences</A>. 

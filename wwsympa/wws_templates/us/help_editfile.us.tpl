@@ -3,7 +3,7 @@
 This form is made for editing several files of your list :
 <UL>
 <LI>Message header: if not empty, this file is added as an Mime
-attachement in the beginning og each message distributed in the list.
+attachment in the beginning of each message distributed in the list.
 
 <LI>Message footer : same as <i>Message header</i> but attached at the
 end of the message.
@@ -25,9 +25,9 @@ remove them from the list using the DEL command (unless you hit the
 <i>quiet</i> button.
 
 <LI>Remind message : This message is sent to each subscriber
-when using the command  REMIND. It's very usefull to help person
-confused with their own subscription email or person who are not able to
-un subscribe themself.
+when using the command  REMIND. It's very useful to help people who are
+confused about their own subscription emails or people who are not able to
+unsubscribe themselves.
 
 <LI>Subscribing invitation message : it is sent to a person if some user  
 use the INVITE command to invite someone for subscription.

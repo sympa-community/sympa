@@ -2,7 +2,7 @@
 
 <BR>
 [IF password_sent]
-  Your password as been sent to [init_email].<BR>
+  Your password has been sent to [init_email].<BR>
   Check your mailbox to complete the following form. 
   <BR><BR>
 [ENDIF]

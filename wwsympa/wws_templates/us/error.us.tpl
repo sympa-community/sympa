@@ -35,8 +35,8 @@ No password for user "[error->email]"
 [ELSIF error->msg=incorrect_passwd]
 Provided password is incorrect
 
-[ELSIF error->msg=uncomplete_passwd]
-Provided password is uncomplete
+[ELSIF error->msg=incomplete_passwd]
+Provided password is incomplete
 
 [ELSIF error->msg=no_user]
 You need to login
@@ -142,7 +142,7 @@ Failed : [error->directory] not empty
 You did not choose a password, request a reminder of the initial password
 
 [ELSIF error->msg=change_email_failed]
-Could not change email for liste [error->list]
+Could not change email for list [error->list]
 
 [ELSIF error->msg=change_email_failed_because_subscribe_not_allowed]
 Could not change subscription address for list '[error->list]'

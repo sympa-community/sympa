@@ -8,7 +8,7 @@
  <TR>
    <TD NOWRAP><B>List name:</B></TD>
    <TD><INPUT TYPE="text" NAME="listname" SIZE=30 VALUE="[saved->listname]"></TD>
-   <TD><img src="[icons_url]/unknown.png" alt="the list name ; be carefull, not its address !"></TD>
+   <TD><img src="[icons_url]/unknown.png" alt="the list name ; be careful, not its address !"></TD>
  </TR>
  
  <TR>
