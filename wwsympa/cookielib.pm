@@ -202,8 +202,8 @@ sub check_cookie_extern {
 	    }
 	    return (\%alt_emails);
 	}
-	return undef ;
     }
+    return undef
 }
 
 
