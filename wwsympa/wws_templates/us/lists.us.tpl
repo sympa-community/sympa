@@ -10,15 +10,15 @@
    [FOREACH l IN which]
      <TR>
       [IF l->admin]
-       <TD BGCOLOR="[dark_color]">
-          <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="1">
-           <TR><TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+       <TD>
+       [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
              <FONT COLOR="[selected_color]" SIZE="-1">
               <A HREF="[base_url][path_cgi]/admin/[l->NAME]" ><b>admin</b></A>
          </FONT>
        </TD>
-     </TR>
- </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+
 </TD>
      [ELSE]
        <TD>&nbsp;</TD>
