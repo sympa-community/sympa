@@ -1,26 +1,31 @@
+# List.pm -  This module provides parsing functions for sympa template files.
+# These templates consists of text files including variables and directives
+# (IF, FOREACH, INCLUDE, PARSE,...)
+# RCS Identication ; $Revision$ ; $Date$ 
+#
+# Sympa - SYsteme de Multi-Postage Automatique
+# Copyright (c) 1997, 1998, 1999, 2000, 2001 Comite Reseau des Universites
+# Copyright (c) 1997,1998, 1999 Institut Pasteur & Christophe Wolfhugel
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 use FileHandle;
 
-## 20/07/2000 restore context after FOREACH
-## 15/05/2000 [STOPPARSE] loop problem corrected
-## 21/04/2000 [STOPPARSE]...[STARTPARSE]
-## 21/10/99  INCLUDE et PARSE manipule des noms de fichiers et non des 
-## variables
-## 04/10/99  INCLUDE is now PARSE, INCLUDE preserves content of file
-## Version Mai 1999
-## 15/11/99  [IF ! var]
-##           spaces accepted whithin []                  
-## 16/11/99  Don't process empty FOREACH
-## 17/11/99  Added [ELSIF...]
-## 22/11/99  force Single-line regexp search
-
 my ($index, @t, $data, $internal);
 
-## Routine Perl permettant d'interpreter un modele de document HTML ou autre
-## pouvant contenir des variables ainsi que des directives IF, FOREACH, INCLUDE, PARSE
-## Copyright Comite Reseau des Universites 1999
-## Olivier.Salaun@cru.fr
-
+## The main parsing sub
 sub parse_tpl {
     my ($template, $output);
     ($data, $template, $output) = @_;
@@ -65,6 +70,7 @@ sub parse_tpl {
 
 return 1;
 
+## Processes [SET xx=yy] 
 sub do_setvar {
     my $echo = shift;
 
@@ -79,6 +85,7 @@ sub do_setvar {
     return;
 }
 
+## Processe [INCLUDE 'file']
 sub do_include {
     my $file = pop;
 
@@ -88,6 +95,7 @@ sub do_include {
     close $fh;
 }
 
+## Processe [IF ...]
 ## $echo possible values : 0, 1, -1
 sub do_if {
     my ($echo) = @_;
@@ -146,6 +154,7 @@ sub do_if {
     return;
 }
 
+## Processe [FOREACH x IN y]
 sub do_foreach {
     my ($echo) = @_;
     my ($i, $val, $var, $struct, $start);
@@ -230,6 +239,7 @@ sub do_foreach {
     return;
 }
 
+## Processes [STOPPARSE]
 sub do_stopparse {
     print STDERR "[$index]\tsub do_stopparse\n" if $opt_p;
     print STDERR "\t$t[$index]" if $opt_p;
@@ -244,6 +254,7 @@ sub do_stopparse {
     return;
 }
 
+## Main processing sub
 sub process {
     my ($echo) = @_;
 
@@ -288,7 +299,7 @@ sub process {
     return;
 }
 
-
+## Instanciates variables
 sub do_parse {
 
     print STDERR "[$index]\tsub do_parse\n" if $opt_p;
