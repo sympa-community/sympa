@@ -517,6 +517,12 @@ sub checkfiles {
 	}
     }
 
+    ## queuebounce and bounce_path pointing to the same directory
+    if ($Conf{'queuebounce'} eq $wwsconf->{'bounce_path'}) {
+	&do_log('err', 'Error in config : queuebounce and bounce_path parameters pointing to the same directory (%s)', $Conf{'queuebounce'});
+	&List::send_notify_to_listmaster('queuebounce_and_bounce_path_are_the_same', $Conf{'domain'}, $Conf{'queuebounce'});
+	$config_err++;
+    }
 
     return undef if ($config_err);
     return 1;
