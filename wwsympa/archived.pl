@@ -135,7 +135,7 @@ while (!$end) {
 
    ## this sleep is important to be raisonably sure that sympa is not currently
    ## writting the file this deamon is openning. 
-   sleep 2;
+   sleep 6;
 
    foreach my $file (@files) {
 
