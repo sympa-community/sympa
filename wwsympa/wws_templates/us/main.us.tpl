@@ -139,7 +139,13 @@ onLoad="setTimeout('refresh_mom_and_die()',1000);"
   <TABLE BORDER="0" ALIGN="right">
    <TR>
     <TD><I>Powered by</I></TD>
-    <TD><A HREF="http://listes.cru.fr/sympa/"><IMG SRC="[icons_url]/logo-s.gif" ALT="Sympa [version]" BORDER="0" ></A></TD>
+    <TD><A HREF="http://listes.cru.fr/sympa/">
+            [IF auth_method=smime]
+            <IMG SRC="[icons_url]/logo-s-lock.gif" ALT="Sympa [version]" BORDER="0" >
+            [ELSE]
+            <IMG SRC="[icons_url]/logo-s.gif" ALT="Sympa [version]" BORDER="0" >
+            [ENDIF]
+            </A></TD>
    </TR>
   </TABLE>
 [ENDIF]
