@@ -3001,7 +3001,7 @@ sub do_add {
 	}
     }elsif ($in{'email'} =~ /,/) {
 	foreach my $pair (split /\0/, $in{'email'}) {
-	    if ($pair =~ /(^(.+),(.+)$/) {
+	    if ($pair =~ /^(.+),(.+)$/) {
 		$user{$1} = $2;
 	    }
 	}
