@@ -1760,8 +1760,9 @@ sub confirm {
 	$hdr->add('X-Validation-by', $sender);
 	
 	## Distribute the message
-	my $numsmtp;
-	unless ($numsmtp = $list->distribute_msg($message)) {
+	my $numsmtp = $list->distribute_msg($message);
+	unless (defined $numsmtp) {
+	    do_log('info','Unable to send message to list %s', $list->{'name'});
 	    return undef;
 	}
 
