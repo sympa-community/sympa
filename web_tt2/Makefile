@@ -45,7 +45,6 @@ installtemplates:
 	@echo
 	@echo "Installing web templates..."
 		( \
-		cd tt2; \
 		PERL=$(PERL); export PERL; \
 		UMASK=0644; export UMASK; \
 		INSTALLDIR=$(ETCBINDIR)/web_tt2; export INSTALLDIR; \
