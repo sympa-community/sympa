@@ -6035,6 +6035,8 @@ sub do_d_savefile {
 	close FILE;
     }
 
+    unlink "$shareddir/$path.old";
+
     # Description file
     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
     my $dir = $1;
