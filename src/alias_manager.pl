@@ -72,7 +72,7 @@ $data{'default_domain'} = $default_domain;
 $data{'is_default_domain'} = 1 if ($domain == $default_domain);
 my $template_file = &tools::get_filename('etc', 'alias.tpl', $domain);
 my @aliases ;
-&parse_tpl (\%data,$template_file,\@aliases);
+&parser::parse_tpl (\%data,$template_file,\@aliases);
 
 
 if ($operation eq 'add') {
