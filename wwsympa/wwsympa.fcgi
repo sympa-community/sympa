@@ -4468,7 +4468,7 @@ sub do_create_list {
     $parameters->{'topics'} = $in{'topics'};
 
     open CONFIG, ">$list_dir/config";
-    &parse::parse_tpl($parameters, $template_file, CONFIG);
+    &parser::parse_tpl($parameters, $template_file, CONFIG);
     close CONFIG;
     
     ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
