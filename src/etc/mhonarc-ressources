@@ -425,13 +425,14 @@ $TNEXTBUTTON$
   <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
   <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
   <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
+  <INPUT TYPE="hidden" NAME="action" VALUE="remove_arc">
 
 [IF lang=fr]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="marquer ce message pour suppression">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="marquer ce message pour suppression" onClick="request_confirm(this.form,'Voulez-vous vraiment supprimer ce message ?')">
 [ELSIF lang=cz]
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="oznaèit tuto zprávu ke smazání">
 [ELSE]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="tag this mail for deletion">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="request_confirm(this.form,'Do you really want to delete this message ?')">
 [ENDIF]
 </br>
   </FORM>
