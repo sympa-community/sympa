@@ -1731,7 +1731,7 @@ sub do_subscribe {
     $param->{'may_subscribe'} = 1;
     
     if ($sub_is eq 'owner') {
-	my $keyauth = $list->compute_auth($param->{'user'}{'email', 'add');
+	my $keyauth = $list->compute_auth($param->{'user'}{'email'}, 'add');
 	$list->send_sub_to_owner($param->{'user'}{'email'}, $keyauth, $Conf{'sympa'}, $param->{'user'}{'gecos'});
 	&message('sent_to_owner');
 	&wwslog('info', 'do_subscribe: subscribe sent to owner');
