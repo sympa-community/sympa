@@ -3416,6 +3416,8 @@ Rules are defined as follows :
              | reject(<tpl_name>)
              | request_auth
              | owner
+	     | editor
+	     | editorkey
 
 <tpl_name> ::= corresponding template (<tpl_name>.tpl) is send to the sender
 
