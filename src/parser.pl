@@ -62,6 +62,7 @@ sub parse_tpl {
     if (ref($output) eq 'ARRAY') {           
 	$current_output = $output;       
     }else {           
+	$current_output = $output;       
 	$old_desc = select;      
 	select $output;       
     }
