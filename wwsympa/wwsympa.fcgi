@@ -413,7 +413,8 @@ while ($query = &new_loop()) {
 
 	if ($action eq $old_action) {
 	    &wwslog('info','Stopping loop with %s action', $action);
-	    undef $action;
+	    #undef $action;
+	    $action = 'home';
 	}
 	
 	undef $action if ($action == 1);
@@ -445,10 +446,10 @@ while ($query = &new_loop()) {
 	    }
 
 	    &cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $wwsconf->{'cookie_domain'},$delay ) || exit;
+
+	}elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/){
+	    &cookielib::set_cookie('unknown', $Conf{'cookie'}, $wwsconf->{'cookie_domain'}, 'now');
 	}
-#elsif ($ENV{'HTTP_COOKIE'} =~ /user\=/){
-#	    &cookielib::set_cookie('unknown',$Conf{'cookie'}, $wwsconf->{'cookie_domain'}, 'now');
-#	}
     }
 
     # if bypass defined use file extention, if bypass = 'extrem' leave the action send the content-type
@@ -1009,6 +1010,13 @@ sub do_login {
     }
     
     $param->{'user'} = $user;
+
+    if ($in{'newpasswd1'} && $in{'newpasswd2'}) {
+	my $old_action = $param->{'action'};
+	$param->{'action'} = 'setpasswd';
+	&do_setpasswd();
+	$param->{'action'} = $old_action;
+    }
     
     if ($in{'referer'}) {
 	$param->{'redirect_to'} = &tools::unescape_chars($in{'referer'});
@@ -1844,6 +1852,10 @@ sub do_subscribe {
     
     &message('performed');
 
+    if ($in{'previous_action'}) {
+	return $in{'previous_action'};
+    }
+
 #    return 'suboptions';
     return 'info';
 }
@@ -1984,9 +1996,7 @@ sub do_signoff {
 
     unless ($param->{'user'}{'email'}) {
 	unless ($in{'email'}) {
-	    &message('no_user');
-	    &wwslog('info','do_signoff: no user');
-	    return 'loginrequest';
+	    return 'sigrequest';
 	}
 
 	## Perform login first
@@ -2078,7 +2088,7 @@ sub do_sigrequest {
     
     ## Not auth & no email
     unless ($in{'email'}) {
-	return 'sigrequest';
+	return 1;
     }
     
     ## Basic check of email if provided
@@ -2104,7 +2114,7 @@ sub do_sigrequest {
 	    &do_sendpasswd();
 	    $param->{'email'} =$in{'email'};
 	    $param->{'init_passwd'} = 1;
-	    return 'sigrequest';
+	    return 1;
 	}
     }else {
 	$param->{'not_subscriber'} = 1;
@@ -2127,12 +2137,12 @@ sub do_setpasswd {
 	return 'loginrequest';
     }
 
-     unless ($in{'newpasswd1'}) {
+    unless ($in{'newpasswd1'}) {
 	&message('no_passwd');
 	&wwslog('info','do_setpasswd: no newpasswd1');
 	return undef;
     }
-  
+    
     unless ($in{'newpasswd2'}) {
 	&message('no_passwd');
 	&wwslog('info','do_setpasswd: no newpasswd2');
