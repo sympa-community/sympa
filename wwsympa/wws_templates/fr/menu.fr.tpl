@@ -41,6 +41,7 @@
     </TR>
   </TABLE>
   [ENDIF]
+ </TD>
 </TR>
 </TABLE>
 
