@@ -101,7 +101,7 @@ exactly who is authorized to perform the relevant operations, along with the
 authentication method to be used. Currently, authentication can be based
 on either an SMTP From header, a password, or an S/MIME signature.
 <BR><I>Sympa</I> is also able to extract electronic
-addresses from an <A NAME="4606"></A>LDAP directory or <A NAME="4607"></A>SQL server, and include them
+addresses from an <A NAME="4607"></A>LDAP directory or <A NAME="4608"></A>SQL server, and include them
 dynamically in a list.
 
 <P>
@@ -159,7 +159,7 @@ in a single software package, including:
 
 <UL>
 <LI>the use of your preferred SMTP engine, e.g.
-                <A NAME="4615"></A><TT>sendmail</TT>, <A NAME="4618"></A><TT>qmail</TT> or <A NAME="4621"></A><TT>postfix</TT>
+                <A NAME="4616"></A><TT>sendmail</TT>, <A NAME="4619"></A><TT>qmail</TT> or <A NAME="4622"></A><TT>postfix</TT>
 
 <P>
 </LI>
@@ -191,10 +191,10 @@ in a single software package, including:
 <P>
 </LI>
 <LI><B>MIME support</B>. <I>Sympa</I> naturally respects
-        <A NAME="4625"></A>MIME in the distribution process, and in addition
+        <A NAME="4626"></A>MIME in the distribution process, and in addition
         allows list owners to configure their lists with
         welcome, goodbye and other predefined messages using complex
-        <A NAME="4626"></A>MIME structures. For example, a welcome message can be
+        <A NAME="4627"></A>MIME structures. For example, a welcome message can be
         <B>i</B>n multipart/alternative format, using <B>text/html</B>,
         <B>audio/x-wav</B>&nbsp;:-), or whatever (Note that <I>Sympa</I> 
         commands in multipart messages are successfully processed, provided that
@@ -204,14 +204,14 @@ in a single software package, including:
 </LI>
 <LI>The <B>sending process is controlled</B> on a per-list basis.
         The list definition allows a number of different actions for
-        each incoming message. A <A NAME="4628"></A><TT>private</TT> list is a list where
+        each incoming message. A <A NAME="4629"></A><TT>private</TT> list is a list where
         only subscribers can send messages. A list configured using
-        <A NAME="4631"></A><TT>privateoreditorkey</TT> mode accepts incoming messages
+        <A NAME="4632"></A><TT>privateoreditorkey</TT> mode accepts incoming messages
         from subscribers, but will forward any other (i.e. non-subscriber) message
 	to the editor with a one-time secret numeric key that will be used by the
         editor to <I>reject</I> or <I>distribute</I> it.
         For details about the different sending modes, refer to the
-        <A NAME="4634"></A><TT>send</TT> parameter (<A HREF="node17.html#par-send">16.3.8</A>, page&nbsp;<A HREF="node17.html#par-send"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
+        <A NAME="4635"></A><TT>send</TT> parameter (<A HREF="node17.html#par-send">16.3.8</A>, page&nbsp;<A HREF="node17.html#par-send"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
 	The sending process configuration (as well as most other list
 	operations) is defined using  an <B>authorization scenario</B>. Any listmaster
         can define new authorization scenarios in order to complement the 20
@@ -224,13 +224,13 @@ Example : forward multipart messages to the list editor, while
 </LI>
 <LI>Privileged operations can be performed by list editors or
         list owners (or any other user category), as defined in the list
-        <A NAME="4637"></A><TT>config</TT> file or by
-        the robot <A NAME="4640"></A>administrator, the listmaster, defined
-        in the <A NAME="4641"></A><TT>/etc/sympa.conf</TT>  global configuration file (listmaster
+        <A NAME="4638"></A><TT>config</TT> file or by
+        the robot <A NAME="4641"></A>administrator, the listmaster, defined
+        in the <A NAME="4642"></A><TT>/etc/sympa.conf</TT>  global configuration file (listmaster
         can also be defined for a particular virtual robot).
-        Privileged operations include the usual <A NAME="4644"></A><TT>ADD</TT>, <A NAME="4647"></A><TT>DELETE</TT> or <A NAME="4650"></A><TT>REVIEW</TT> commands, which can be
+        Privileged operations include the usual <A NAME="4645"></A><TT>ADD</TT>, <A NAME="4648"></A><TT>DELETE</TT> or <A NAME="4651"></A><TT>REVIEW</TT> commands, which can be
         authenticated via a one-time password or an S/MIME signature.
-	 Any list owner using the <A NAME="4653"></A><TT>EXPIRE</TT>
+	 Any list owner using the <A NAME="4654"></A><TT>EXPIRE</TT>
         command can require the renewal of subscriptions. This is made
         possible by the presence of a subscription date stored in the
         <I>Sympa</I> database.
@@ -238,7 +238,7 @@ Example : forward multipart messages to the list editor, while
 <P>
 <A NAME="wwsympa"></A> 
 </LI>
-<LI>textbf Web interface : <A NAME="4657"></A><I>WWSympa</I>  is a global Web interface to all <I>Sympa</I> functions
+<LI>textbf Web interface : <A NAME="4658"></A><I>WWSympa</I>  is a global Web interface to all <I>Sympa</I> functions
     	(including administration). It provides :
 
 <P>
@@ -283,10 +283,10 @@ Example : forward multipart messages to the list editor, while
 <LI><B>RDBMS</B> : the internal subscriber and administrative data structure can be stored in a
         database or, for compatibility with versions 1.x, in text
         files for subscriber data. The introduction of databases came out of the
-        <A NAME="4661"></A><I>WWSympa</I> project.  The database ensures a secure access to
-        shared data. The PERL database API <A NAME="4664"></A><TT>DBI</TT>/<A NAME="4667"></A><TT>DBD</TT> enables
-        interoperability with various <A NAME="4670"></A>RDBMS (<A NAME="4671"></A>MySQL, <A NAME="4672"></A>PostgreSQL,
-        <A NAME="4673"></A>Oracle, <A NAME="4674"></A>Sybase).
+        <A NAME="4662"></A><I>WWSympa</I> project.  The database ensures a secure access to
+        shared data. The PERL database API <A NAME="4665"></A><TT>DBI</TT>/<A NAME="4668"></A><TT>DBD</TT> enables
+        interoperability with various <A NAME="4671"></A>RDBMS (<A NAME="4672"></A>MySQL, <A NAME="4673"></A>PostgreSQL,
+        <A NAME="4674"></A>Oracle, <A NAME="4675"></A>Sybase).
 	(See ref sec-rdbms, page&nbsp;<A HREF="node7.html#sec-rdbms"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
@@ -297,15 +297,15 @@ Example : forward multipart messages to the list editor, while
 
 <P>
 </LI>
-<LI><B><A NAME="4676"></A>LDAP-based mailing lists</B> : e-mail addresses can be retrieved dynamically from a database
-    	accepting <A NAME="4677"></A>SQL queries, or from an <A NAME="4678"></A>LDAP directory. In the interest
+<LI><B><A NAME="4677"></A>LDAP-based mailing lists</B> : e-mail addresses can be retrieved dynamically from a database
+    	accepting <A NAME="4678"></A>SQL queries, or from an <A NAME="4679"></A>LDAP directory. In the interest
 	of reasonable response times, <I>Sympa</I> retains the data source in an
 	internal cache controlled by a TTL (Time To Live) parameter.
 	(See <A HREF="node17.html#include-ldap-query">16.2.6</A>, page&nbsp;<A HREF="node17.html#include-ldap-query"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
 </LI>
-<LI><B><A NAME="4680"></A>LDAP authentication</B>:  via uid and emails stored 
+<LI><B><A NAME="4681"></A>LDAP authentication</B>:  via uid and emails stored 
       	in LDAP Directories.  Alternative email addresses, extracted from LDAP 
         directory, may be used to "unify" subscriptions.
 	(See ref ldap-auth, page&nbsp;<A HREF="node10.html#ldap-auth"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
@@ -351,7 +351,7 @@ for information about project direction.
 
 <P>
 <I>Sympa</I> development started from scratch in 1995. The goal was to
-ensure continuity with the <A NAME="4684"></A>TULP list manager, produced
+ensure continuity with the <A NAME="4685"></A>TULP list manager, produced
 partly by the initial author of <I>Sympa</I>: Christophe Wolfhugel.
 
 <P>
@@ -369,7 +369,7 @@ Other date :
 <P>
 
 <UL>
-<LI>Mar 1999 Internal use of a database (Mysql), definition of list subscriber with external datasource (RDBMS or <A NAME="4687"></A>LDAP).
+<LI>Mar 1999 Internal use of a database (Mysql), definition of list subscriber with external datasource (RDBMS or <A NAME="4688"></A>LDAP).
 </LI>
 <LI>Oct 1999 Stable version of WWsympa, introduction of authorization scenarios.
 </LI>
@@ -383,7 +383,7 @@ Other date :
 </LI>
 <LI>Jun 2001 Auto-install of aliases at list creation time, antivirus scanner plugging
 </LI>
-<LI>Jan 2002 Virtual robot, <A NAME="4688"></A>LDAP authentication
+<LI>Jan 2002 Virtual robot, <A NAME="4689"></A>LDAP authentication
 </LI>
 <LI>Aug 2003 Automatic bounces management
 </LI>
@@ -448,7 +448,7 @@ Our thanks to all contributors, including:
 <P>
 </LI>
 <LI>Vincent Mathieu, Lynda Amadouche, John Dalbec for their integration
-	of <A NAME="4691"></A>LDAP features in <I>Sympa</I>.
+	of <A NAME="4692"></A>LDAP features in <I>Sympa</I>.
 
 <P>
 </LI>
@@ -521,7 +521,7 @@ Our thanks to all contributors, including:
 
 <P>
 </LI>
-<LI>All contributors and beta-testers cited in the <A NAME="4693"></A><TT>RELEASE_NOTES</TT> file, who, by serving as guinea pigs and
+<LI>All contributors and beta-testers cited in the <A NAME="4694"></A><TT>RELEASE_NOTES</TT> file, who, by serving as guinea pigs and
        being the first to use it, made it possible to quickly and
        efficiently debug the <I>Sympa</I> software.
 

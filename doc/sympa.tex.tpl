@@ -1146,7 +1146,7 @@ using  \file {testlogs.pl}.
 \section {INIT script}
 \label{init}
 
-The \unixcmd {make install} step should have installed a sysV init script in
+The \unixcmd {make install} step should have installed a \unixcmd {sympa} init script in
 your \dir {/etc/rc.d/init.d/} directory (you can change this at \unixcmd {configure}
 time with the \option {--with-initdir} option). You should edit your runlevels to make
 sure \Sympa starts after Apache and MySQL. Note that \textindex{MySQL} should
