@@ -7001,7 +7001,7 @@ sub do_edit_list {
 
 		 if ($is_author) {
 		     $result{'may'}{'read'} = 1;
-		 $result{'may'}{'edit'} = &merge_edit($may_edit,1);
+		     $result{'may'}{'edit'} = 1;
 		     $result{'may'}{'control'} = 1;
 		     return %result;
 		 }
