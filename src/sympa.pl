@@ -301,6 +301,8 @@ while (!$end) {
 
     my $filename;
     my $listname;
+    my $robot;
+
     my $highest_priority = 'z'; ## lowest priority
     
     ## Scans files in queue
@@ -330,13 +332,25 @@ while (!$end) {
 	next if ($t_filename =~ /^T\./);
 
 	## Extract listname from filename
-	$listname = $1;
-	$listname =~ s/\@.*$//;
-	$listname =~ y/A-Z/a-z/;
+	# $listname = $1;
+	# $listname =~ s/\@.*$//; 
+	# $listname =~ y/A-Z/a-z/;
+
+	($listname, $robot) = split(/\@/,$1);
+	
+	$listname = lc($listname);
+	if ($robot) {
+	    $robot=lc($robot);
+	}else{
+	    $robot = lc($Conf{'host'});
+	}
+	do_log('debug', "listname %s    robot  %s", $listname,$robot);
+
 	if ($listname =~ /^(\S+)-(request|owner|editor|subscribe|unsubscribe)$/) {
 	    ($listname, $type) = ($1, $2);
 	}
 
+	# (sa) le terme "(\@$Conf{'host'})?" est inutile
 	unless ($listname =~ /^(sympa|listmaster|$Conf{'email'})(\@$Conf{'host'})?$/i) {
 	    $list = new List ($listname);
 	}
@@ -374,7 +388,7 @@ while (!$end) {
     do_log('debug', "Processing %s with priority %s", "$Conf{'queue'}/$filename", $highest_priority) 
 	if ($main::options{'debug'});
 
-    my $status = &DoFile($listname, "$Conf{'queue'}/$filename");
+    my $status = &DoFile($listname, $robot, "$Conf{'queue'}/$filename");
     
     if (defined($status)) {
 	do_log('debug', "Finished %s", "$Conf{'queue'}/$filename") if ($main::options{'debug'});
@@ -420,8 +434,8 @@ sub sigterm {
 ## call the adequate function wether we have received a command or a
 ## message to be redistributed to a list.
 sub DoFile {
-    my ($listname, $file) = @_;
-    &do_log('debug2', 'DoFile(%s)', $file);
+    my ($listname, $robot, $file) = @_;
+    &do_log('debug', 'DoFile(%s, %s, %s)', $listname ,$robot, $file);
     
     my $status;
     
@@ -496,7 +510,7 @@ sub DoFile {
 	do_log('notice', 'no X-Sympa-To found, ignoring message file %s', $file);
 	return undef;
     }
-    
+
     ## Strip of the initial X-Sympa-To field
     $hdr->delete('X-Sympa-To');
     
@@ -551,12 +565,12 @@ sub DoFile {
     }
 
     if ($rcpt =~ /^listmaster(\@(\S+))?$/) {
-	$status = &DoForward('sympa', 'listmaster', $msg, $file, $sender);
+	$status = &DoForward('sympa', 'listmaster', $robot, $msg, $file, $sender);
 
 	## Mail adressed to the robot and mail 
 	## to <list>-subscribe or <list>-unsubscribe are commands
-    }elsif (($rcpt =~ /^(sympa|$Conf{'email'})(\@$Conf{'host'})?$/i) || ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o)) {
-	$status = &DoCommand($rcpt, $msg, $file);
+    }elsif (($rcpt =~ /^(sympa|$Conf{'email'})(\@\S+)?$/i) || ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o)) {
+	$status = &DoCommand($rcpt, $robot, $msg, $file);
 	
 	## forward mails to <list>-request <list>-owner etc
     }elsif ($rcpt =~ /^(\S+)-(request|owner|editor)(\@(\S+))?$/o) {
@@ -568,12 +582,12 @@ sub DoFile {
 	if (($function eq 'request') and ($subject_field =~ /^\s*(subscribe|unsubscribe)(\s*$name)?\s*$/i) ) {
 	    my $command = $1;
 	    
-	    $status = &DoCommand("$name-$command", $msg, $file);
+	    $status = &DoCommand("$name-$command", $robot, $msg, $file);
 	}else {
-	    $status = &DoForward($name, $function, $msg, $file, $sender);
+	    $status = &DoForward($name, $function, $robot, $msg, $file, $sender);
 	}       
     }else {
-	$status =  &DoMessage($rcpt, $msg, $bytes, $file, $is_crypted);
+	$status =  &DoMessage($rcpt, $msg, $robot,$bytes, $file, $is_crypted);
     }
     
 
@@ -610,7 +624,8 @@ sub DoFile {
 
 	## Prepare the reply message
 	my $reply_hdr = new Mail::Header;
-	$reply_hdr->add('From', sprintf Msg(12, 4, 'SYMPA <%s>'), $Conf{'sympa'});
+#	$reply_hdr->add('From', sprintf Msg(12, 4, 'SYMPA <%s>'), $Conf{'sympa'});
+	$reply_hdr->add('From', sprintf Msg(12, 4, 'SYMPA <%s>'), "$Conf{'email'}\@$robot");
 	$reply_hdr->add('To', $sender);
 	$reply_hdr->add('Subject', Msg(4, 17, 'Output of your commands'));
 	$reply_hdr->add('X-Loop', $Conf{'sympa'});
@@ -669,7 +684,7 @@ sub DoSendMessage {
 
 ## Handles a message sent to [list]-editor, [list]-owner or [list]-request
 sub DoForward {
-    my($name, $function, $msg, $file, $sender) = @_;
+    my($name, $function, $robot, $msg, $file, $sender) = @_;
     &do_log('debug2', 'DoForward(%s, %s, %s, %s)', $name, $function, $file, $sender);
 
     my $hdr = $msg->head;
@@ -736,7 +751,7 @@ sub DoForward {
     my $rc;
     if ($rc = &tools::virus_infected($msg, $file)) {
 	if ($list) {
-	    $list->send_file('your_infected_msg', $sender, 
+	    $list->send_file('your_infected_msg', $sender, $robot, 
 			     {'virus_name' => $rc,
 			      'recipient' => $recepient.'@'.$host,
 			      'lang' => $list->{'admin'}{'lang'}});
@@ -746,7 +761,7 @@ sub DoForward {
 	    $context{'virus_name'} = $rc ;
 	    $context{'recipient'} = $recepient.'@'.$host;
 	    $context{'lang'} = $Conf{'lang'};
-	    &List::send_global_file('your_infected_msg', $sender,\%context );
+	    &List::send_global_file('your_infected_msg', $sender, $robot, \%context );
 	}    
 	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $recepient, $host, $sender, $rc);
 
@@ -765,8 +780,8 @@ sub DoForward {
 
 ## Handles a message sent to a list.
 sub DoMessage{
-    my($which, $msg, $bytes, $file, $encrypt ) = @_;
-    &do_log('debug2', 'DoMessage(%s, %s, msg from %s, %s, %s,%s)', $which, $msg, $msg->head->get('From'), $bytes, $file, $encrypt);
+    my($which, $msg, $robot, $bytes, $file, $encrypt ) = @_;
+    &do_log('debug2', 'DoMessage(%s, %s, %s, msg from %s, %s, %s,%s)', $which, $msg, $robot, $msg->head->get('From'), $bytes, $file, $encrypt);
     
     ## List and host.
     my($listname, $host) = split(/[@\s]+/, $which);
@@ -786,7 +801,7 @@ sub DoMessage{
     ## List unknown
     unless ($list) {
 	&do_log('notice', 'Unknown list %s', $listname);
-	&List::send_global_file('list_unknown', $sender, 
+	&List::send_global_file('list_unknown', $sender, $robot,
 				{'list' => $which,
 				 'date' => &POSIX::strftime("%d %b %Y  %H:%M", localtime(time)),
 				 'boundary' => $Conf{'sympa'}.time,
@@ -851,7 +866,7 @@ sub DoMessage{
    
     if ($rc= &tools::virus_infected($msg, $file)) {
 	printf "do message, virus= $rc \n";
-	$list->send_file('your_infected_msg', $sender, {'virus_name' => $rc,
+	$list->send_file('your_infected_msg', $sender, $robot, {'virus_name' => $rc,
 							'recipient' => $name.'@'.$host,
 							'lang' => $list->{'admin'}{'lang'}});
 	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $name, $host, $sender, $rc);
@@ -863,17 +878,15 @@ sub DoMessage{
     
     my $action ;
     if ($is_signed->{'body'}) {
-	$action = &List::request_action ('send', 'smime',
+	$action = &List::request_action ('send', 'smime',$robot,
 					 {'listname' => $name,
 					  'sender' => $sender,
 					  'msg' => $msg });
-#	$action = &List::get_action ('send',$name,$sender,'smime',$hdr);
     }else{
-	$action = &List::request_action ('send', 'smtp',
+	$action = &List::request_action ('send', 'smtp',$robot,
 					 {'listname' => $name,
 					  'sender' => $sender,
 					  'msg' => $msg });
-	#$action = &List::get_action ('send',$name,$sender,'smtp',$hdr);
     }
 
     if ($action =~ /^do_it/) {
@@ -913,7 +926,7 @@ sub DoMessage{
 	    if ($action =~ /send_file\s?\(\[sender\],\'?([^\'\)]+)\'?\)/) {
 		my $file = $1;
 		$file =~ s/\.tpl$//;
-		$list->send_file($file, $sender, {});
+		$list->send_file($file, $sender, $robot, {});
 	    }else {
 		*SIZ  = smtp::smtpto($Conf{'request'}, \$sender);
 		print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'request'}) . "\n";
@@ -935,8 +948,8 @@ sub DoMessage{
 
 ## Handles a command sent to the list manager.
 sub DoCommand {
-    my($rcpt, $msg, $file) = @_;
-    &do_log('debug2', 'DoCommand(%s)', $rcpt);
+    my($rcpt, $robot, $msg, $file) = @_;
+    &do_log('debug', 'DoCommand(%s %s %s %s) ', $rcpt, $robot, $msg, $file);
 
     ## Now check if the sender is an authorized address.
     my $hdr = $msg->head;
@@ -956,7 +969,7 @@ sub DoCommand {
     ## If X-Sympa-To = <listname>-<subscribe|unsubscribe> parse as a unique command
     if ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o) {
 	do_log('debug',"processing message for $1-$2");
-	&Commands::parse($sender,"$2 $1");
+	&Commands::parse($sender,$robot,"$2 $1");
 	return 1; 
     }
     
@@ -967,7 +980,7 @@ sub DoCommand {
     $subject_field =~ s/\n//mg; ## multiline subjects
     $subject_field =~ s/^\s*(Re:)?\s*(.*)\s*$/$2/i;
 
-    $success ||= &Commands::parse($sender, $subject_field, $is_signed->{'subject'}) ;
+    $success ||= &Commands::parse($sender, $robot, $subject_field, $is_signed->{'subject'}) ;
 
     ## Make multipart singlepart
     if ($msg->is_multipart()) {
@@ -1029,7 +1042,7 @@ sub DoCommand {
 	    }
 	    &do_log('debug2',"is_signed->body $is_signed->{'body'}");
 
-	    unless ($status = Commands::parse($sender, $i, $is_signed->{'body'})) {
+	    unless ($status = Commands::parse($sender, $robot, $i, $is_signed->{'body'})) {
 		push @msg::report, sprintf Msg(4, 19, "Command not understood: ignoring end of message.\n");
 		last;
 	    }
@@ -1056,7 +1069,7 @@ sub DoCommand {
     # processing the expire function
     if ($expire){
 	print STDERR "expire\n";
-	unless (&Commands::parse($sender, $expire, @msgexpire)) {
+	unless (&Commands::parse($sender, $robot, $expire, @msgexpire)) {
 	    print Msg(4, 19, "Command not understood: ignoring end of message.\n");
 	}
     }
@@ -1211,3 +1224,11 @@ sub ProcessExpire{
 
 
 1;
+
+
+
+
+
+
+
+

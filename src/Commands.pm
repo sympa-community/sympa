@@ -59,10 +59,11 @@ my $email_regexp = '\S+|\".*\"@\S+';
 ## the arguments to the command.
 sub parse {
    $sender = lc(shift);
+   my $robot = shift;
    my $i = shift;
    my $sign_mod = shift;
 
-   do_log('debug2', 'Commands::parse(%s, %s, %s)', $sender, $i,$sign_mod );
+   do_log('debug', 'Commands::parse(%s, %s, %s, %s)', $sender, $robot, $i,$sign_mod );
 
    my @msgsup = @_; ## For special commands (such as expire) needing
                     ## a message within a command
@@ -95,9 +96,9 @@ sub parse {
 	   my $status;
 
 	   if (@msgsup) { ## The command expects a message
-	       $status = & {$comms{$j}}($args, @msgsup);
+	       $status = & {$comms{$j}}($args, $robot, @msgsup);
 	   }else {
-	       $status = & {$comms{$j}}($args,$sign_mod);
+	       $status = & {$comms{$j}}($args, $robot, $sign_mod);
 	   }
 	   return $status;
        }
@@ -118,21 +119,25 @@ sub finished {
 
 ## Send the help file for the software
 sub help {
-    do_log('debug2', 'Commands::help');
 
-    if (-r "$Conf{'etc'}/templates/helpfile.tpl") {
+    shift;
+    my $robot=shift;
+
+    do_log('debug', 'Commands::help to robot %s',$robot);
+
+    # sa ne prends pas en compte la structure des répertoires par lang.
+    if ((-r "$Conf{'etc'}/templates/helpfile.tpl")||("$Conf{'etc'}/$robot/templates/helpfile.tpl")) {
 
 	my $data = {};
 
-	my @owner = &List::get_which ($sender, 'owner');
-	my @editor = &List::get_which ($sender, 'editor');
+	my @owner = &List::get_which ($sender, $robot,'owner');
+	my @editor = &List::get_which ($sender, $robot, 'editor');
 	
 	$data->{'is_owner'} = 1 if ($#owner > -1);
 	$data->{'is_editor'} = 1 if ($#editor > -1);
-
 	$data->{'subject'} = sprintf Msg(6, 81, "User guide");
 
-	&List::send_global_file("helpfile", $sender, $data);
+	&List::send_global_file("helpfile", $sender, $robot, $data);
     
     }elsif (open IN, 'helpfile'){
 	## Old style
@@ -143,7 +148,7 @@ sub help {
 	}
 	close IN;
 
-	if ((List::get_which ($sender,'owner'))||(List::get_which ($sender,'editor'))){
+	if ((List::get_which ($sender,$robot,'owner'))||(List::get_which ($sender,$robot,'editor'))){
 	    if (open IN, 'helpfile.advanced'){
 		while (<IN>){
 		    s/\[sympa_email\]/$Conf{'sympa'}/g;
@@ -160,15 +165,15 @@ sub help {
 
 	my $data = {};
 
-	my @owner = &List::get_which ($sender, 'owner');
-	my @editor = &List::get_which ($sender, 'editor');
+	my @owner = &List::get_which ($sender,$robot, 'owner');
+	my @editor = &List::get_which ($sender,$robot, 'editor');
 	
 	$data->{'is_owner'} = 1 if ($#owner > -1);
 	$data->{'is_editor'} = 1 if ($#editor > -1);
 
 	$data->{'subject'} = sprintf Msg(6, 81, "User guide");
 
-	&List::send_global_file("helpfile", $sender, $data);
+	&List::send_global_file("helpfile", $sender, $robot, $data);
 
     }else{
 	push @msg::report, sprintf Msg(6, 2, "Could not read help file: %s\n"), $!;
@@ -185,7 +190,11 @@ sub help {
 
 ## Sends back the list of public lists on this node.
 sub lists {
-    do_log('debug2', 'Commands::lists');
+
+    shift; 
+    my $robot=shift;
+
+    do_log('debug2', 'Commands::lists for robot %s', $robot);
 
     my $data = {};
     my $lists = {};
@@ -194,23 +203,25 @@ sub lists {
 	my $list = new List ($l);
 
 	next unless ($list);
-	# my $action = &List::get_action('visibility', $l, $sender, 'smtp');
-	my $action = &List::request_action('visibility','smtp',
-                                            {'listname' => $l, 
+	# skip list that are not in the current robot_domain
+        next unless ($list->{'admin'}{'host'} eq $robot);
+
+	my $action = &List::request_action('visibility','smtp',$robot,
+                                            {'listname' => $l,
                                              'sender' => $sender });
 	if ($action eq 'do_it') {
 	    $lists->{$l}{'subject'} = $list->{'admin'}{'subject'};
 	    $lists->{$l}{'host'} = $list->{'admin'}{'host'};
 	}
     }
-    
-    if (-r "$Conf{'etc'}/templates/lists.tpl") {
-	my $data = {};
 
+    # sa et si lists.$lang.tpl ?? Ca coince !!! Cela ne marche pas si le template existe !!!
+    if ((-r "$Conf{'etc'}/$robot/templates/lists.tpl") || (-r "$Conf{'etc'}/templates/lists.tpl") || (-r "--ETCBINDIR--/templates/lists.tpl")) {
+	my $data = {};
 	$data->{'lists'} = $lists;
 	$data->{'subject'} = sprintf Msg(6, 82, "Public lists");
 
-	&List::send_global_file('lists', $sender, $data);
+	&List::send_global_file('lists', $sender, $robot, $data);
 
     }elsif (-r  'lists') {
 	## Static lists
@@ -251,7 +262,7 @@ sub lists {
 	$data->{'lists'} = $lists;
 	$data->{'subject'} = sprintf Msg(6, 82, "Public lists");
 
-	&List::send_global_file('lists', $sender, $data);
+	&List::send_global_file('lists', $sender, $robot,  $data);
 
     }else {
         &do_log('info', 'Missing lists.tpl');
@@ -266,24 +277,26 @@ sub lists {
 ## Sends the statistics about a list.
 sub stats {
     my $which = shift;
+    my $robot=shift;
 
     do_log('debug2', 'Commands::stats(%s)', $which);
 
     my $list = new List ($which);
-    if (! $list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'STATS %s from %s refused, unknown list', $which, $sender);
+	do_log('info', 'STATS %s from %s refused, unknown list for robot %s', $which, $sender,$robot);
 	return 'unknown_list';
     }
 
+    # sa pas de controle sur qui à le droit de faire stats !!!
     my %stats = ('msg_rcv' => $list->{'stats'}[0],
 		 'msg_sent' => $list->{'stats'}[1],
 		 'byte_rcv' => sprintf ('%9.2f', ($list->{'stats'}[2] / 1024 / 1024)),
 		 'byte_sent' => sprintf ('%9.2f', ($list->{'stats'}[3] / 1024 / 1024))
 		 );
 
-    $list->send_file('stats_report', $sender, {'stats' => \%stats, 
-					'from' => "SYMPA <$Conf{'sympa'}>",
+    $list->send_file('stats_report', $sender, $robot, {'stats' => \%stats, 
+					'from' => "SYMPA <$Conf{'email'}\@$robot>",
 					'subject' => "STATS $list->{'name'}"});
     
     do_log('info', 'STATS %s from %s accepted (%d seconds)', $which, sender, time-$time_command);
@@ -294,12 +307,14 @@ sub stats {
 ## Sends back the requested archive file
 sub getfile {
     my($which, $file) = split(/\s+/, shift);
+    my $robot=shift;
+
     do_log('debug2', 'Commands::getfile(%s, %s)', $which, $file);
 
     my $list = new List ($which);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'GET %s %s from %s refused, unknown list', $which, $file, $sender);
+	do_log('info', 'GET %s %s from %s refused, list unknown for robot %s', $which, $file, $sender, $robot);
 	return 'unknownlist';
     }
 
@@ -335,12 +350,14 @@ sub getfile {
 ## Sends back the requested archive file
 sub last {
     my $which = shift;
+    my $robot = shift;
+
     do_log('debug2', 'Commands::last(%s, %s)', $which);
 
     my $list = new List ($which);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'}))  {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'LAST %s from %s refused, unknown list', $which, $sender);
+	do_log('info', 'LAST %s from %s refused, list unknown for robot %s', $which, $sender, $robot);
 	return 'unknownlist';
     }
 
@@ -378,12 +395,15 @@ sub last {
 ## Lists the archived files
 sub index {
     my $which = shift;
-    do_log('debug2', 'Commands::which(%s)', $which);
+    my $robot = shift;
+
+
+    do_log('debug2', 'Commands::index(%s) robot (%s)',$which,$robot);
 
     my $list = new List ($which);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'INDEX %s from %s refused, unknown list', $which, $sender);
+	do_log('info', 'INDEX %s from %s refused, list unknown for robot %s', $which, $sender,$robot);
 	return 'unknown_list';
     }
 
@@ -399,7 +419,7 @@ sub index {
     }
     unless ($list->is_archived()) {
 	push @msg::report, sprintf Msg(6, 7, "No files are available for this list.\n");
-      do_log('info', 'INDEX %s from %s refused, list not archived', $which, $sender);
+	do_log('info', 'INDEX %s from %s refused, list not archived', $which, $sender);
 	return 'no_archive';
     }
     my @l = $list->archive_ls();
@@ -412,14 +432,16 @@ sub index {
 ## Sends the list of subscribers to the requester.
 sub review {
     my $listname  = shift;
+    my $robot = shift;
+
     my $sign_mod = shift ;
-    do_log('debug2', 'Commands::review(%s,%s)', $listname,$sign_mod );
+    do_log('debug', 'Commands::review(%s,%s)', $listname,$sign_mod );
 
     my $user;
     my $list = new List ($listname);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
-	do_log('info', 'REVIEW %s from %s refused, unknown list', $listname,$sender);
+	do_log('info', 'REVIEW %s from %s refused, list unknown to robot %s', $listname,$sender,$robot);
 	return 'unknown_list';
     }
     
@@ -443,14 +465,14 @@ sub review {
     }
 
 #    my $action = &List::get_action ('review',$listname,$sender,$auth_method);
-    my $action = &List::request_action ('review',$auth_method,
+    my $action = &List::request_action ('review',$auth_method,$robot,
                                      {'listname' => $listname,
                                       'sender' => $sender});
 
 
     if ($action =~ /request_auth/i) {
 	do_log ('debug',"auth requested from $sender");
-        $list->request_auth ($sender,'review');
+        $list->request_auth ($sender,'review',$robot);
 	do_log('info', 'REVIEW %s from %s, auth requested (%d seconds)', $listname, $sender,time-$time_command);
 	return 1;
     }
@@ -479,9 +501,9 @@ sub review {
 	    push @users, $user;
 	} while ($user = $list->get_next_user());
 
-	$list->send_file('review', $sender, {'users' => \@users, 
+	$list->send_file('review', $sender, $robot, {'users' => \@users, 
 					     'total' => $list->get_total(),
-					     'from' => "SYMPA <$Conf{'sympa'}>",
+					     'from' => "SYMPA <$Conf{'email'}\@$robot>",
 					     'subject' => "REVIEW $listname"});
 
 	do_log('info', 'REVIEW %s from %s accepted (%d seconds)', $listname, $sender,time-$time_command);
@@ -496,6 +518,8 @@ sub review {
 ## Verify an S/MIME signature
 sub verify {
     my $listname = shift ;
+    my $robot = shift;
+
     my $sign_mod = shift ;
     do_log('debug2', 'Commands::verify(%s)', $sign_mod );
     
@@ -519,7 +543,10 @@ sub verify {
 ## command. Format is : sub list optionnal comment
 sub subscribe {
     my $what = shift;
+    my $robot = shift;
+
     my $sign_mod = shift ;
+
     do_log('debug2', 'Commands::subscribe(%s,%s)', $what,$sign_mod);
 
     $what =~ /^(\S+)(\s+(.+))?\s*$/;
@@ -529,7 +556,7 @@ sub subscribe {
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
     my $list = new List ($which);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'SUB %s from %s refused, unknown list', $which,$sender);
 	return 'unknown_list';
@@ -561,7 +588,7 @@ sub subscribe {
     }
     ## query what to do with this subscribtion request
     
-    my $action = &List::request_action('subscribe',$auth_method,
+    my $action = &List::request_action('subscribe',$auth_method,$robot,
 				       {'listname' => $which, 
 					'sender' => $sender });
 #    my $action = &List::get_action ('subscribe',$which,$sender,$auth_method);
@@ -585,7 +612,7 @@ sub subscribe {
     if ($action =~ /request_auth/i) {
 	my $cmd = 'subscribe';
 	$cmd = "quiet $cmd" if $quiet;
-	$list->request_auth ($sender, $cmd, $comment );
+	$list->request_auth ($sender, $cmd, $robot, $comment );
 	do_log('info', 'SUB %s from %s, auth requested (%d seconds)', $which, $sender,time-$time_command);
 	return 1;
     }
@@ -633,7 +660,7 @@ sub subscribe {
 	    my %context;
 	    $context{'subject'} = sprintf(Msg(8, 6, "Welcome to list %s"), $list->{'name'});
 	    $context{'body'} = sprintf(Msg(8, 6, "You are now subscriber of list %s"), $list->{'name'});
-	    $list->send_file('welcome', $sender, \%context);
+	    $list->send_file('welcome', $sender, $robot, \%context);
 	}
 
 	## If requested send notification to owners
@@ -653,14 +680,15 @@ sub subscribe {
 ## Sends the information file to the requester
 sub info {
     my $listname = shift;
+    my $robot = shift;
     my $sign_mod = shift ;
 
     do_log('debug2', 'Commands::info(%s)', $listname);
 
     my $list = new List ($listname);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
-	do_log('info', 'INFO %s from %s refused, unknown list', $listname,$sender);
+	do_log('info', 'INFO %s from %s refused, unknown list for robot %s', $listname,$sender,$robot);
 	return 'unknown_list';
     }
 
@@ -684,7 +712,7 @@ sub info {
     }
 
     #my $action = &List::get_action('info',$listname,$sender,$auth_method);
-    my $action = &List::request_action('info',$auth_method,
+    my $action = &List::request_action('info',$auth_method,$robot,
 				       {'listname' => $listname, 
 					'sender' => $sender });
     
@@ -712,14 +740,14 @@ sub info {
 	$data{'available_reception_mode'} = $list->available_reception_mode();
 	$data{'url'} = $Conf{'wwsympa_url'}.'/info/'.$list->{'name'};
 
-	$list->send_file('info_report', $sender, \%data);
+	$list->send_file('info_report', $sender, $robot, \%data);
 
 	do_log('info', 'INFO %s from %s accepted (%d seconds)', $listname, $sender,time-$time_command);
 	return 1;
     }
     if ($action =~ /request_auth/) {
 	do_log ('debug',"auth requested from $sender");
-        $list->request_auth ($sender,'info');
+        $list->request_auth ($sender,'info', $robot);
 	do_log('info', 'REVIEW %s from %s, auth requested (%d seconds)', $listname, $sender,time-$time_command);
 	return 1;
     }
@@ -734,6 +762,8 @@ sub info {
 ## command. Format is : sig list
 sub signoff {
     my $which = shift;
+    my $robot = shift;
+
     my $sign_mod = shift ;
     do_log('debug2', 'Commands::signoff(%s,%s)', $which,$sign_mod);
 
@@ -751,7 +781,7 @@ sub signoff {
     
     if ($which eq '*') {
 	my $success ;
-	foreach $l ( List::get_which ($email,'member') ){
+	foreach $l ( List::get_which ($email,$robot,'member') ){
             $success ||= &signoff($l,$email);
 	}
 	return ($success);
@@ -760,9 +790,9 @@ sub signoff {
     $list = new List ($which);
     
     ## Is this list defined
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'SIG %s %s from %s, unknown list', $which,$email,$sender);
+	do_log('info', 'SIG %s %s from %s, unknown list for robot %s', $which,$email,$sender,$robot);
 	return 'unknown_list';
     }
 
@@ -785,7 +815,7 @@ sub signoff {
     }  
     
     #my $action = &List::get_action('unsubscribe',$which,$sender,$email,$auth_method);
-    my $action = &List::request_action('unsubscribe',$auth_method,
+    my $action = &List::request_action('unsubscribe',$auth_method,$robot,
 				       {'listname' => $which, 
 					'sender' => $sender });
     
@@ -797,7 +827,7 @@ sub signoff {
     if ($action =~ /request_auth\s*\(\s*\[\s*(email|sender)\s*\]\s*\)/i) {
 	my $cmd = 'signoff';
 	$cmd = "quiet $cmd" if $quiet;
-	$list->request_auth ($$1, $cmd);
+	$list->request_auth ($$1, $cmd, $robot);
 	do_log('info', 'SIG %s from %s auth requested (%d seconds)', $which, $sender,time-$time_command);
 	return 1;
     }
@@ -840,7 +870,7 @@ sub signoff {
 	    my %context;
 	    $context{'subject'} = sprintf(Msg(6 , 71, 'Signoff from list %s'), $list->{'name'});
 	    $context{'body'} = sprintf(Msg(6 , 31, "You have been removed from list %s.\n Thanks for being with us.\n"), $list->{'name'});
-	    $list->send_file('bye', $email, \%context);
+	    $list->send_file('bye', $email, $robot, \%context);
 	}
 
 	do_log('info', 'SIG %s from %s accepted (%d seconds, %d subscribers)', $which, $email, time-$time_command, $list->get_total() );
@@ -855,6 +885,8 @@ sub signoff {
 ## and sends acknowledgements unless quiet add.
 sub add {
     my $what = shift;
+    my $robot = shift;
+
     my $sign_mod = shift ;
 
     do_log('debug2', 'Commands::add(%s,%s)', $what,$sign_mod );
@@ -866,9 +898,9 @@ sub add {
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
     my $list = new List ($which);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'ADD %s %s from %s refused, unknown list', $which, $email,$sender);
+	do_log('info', 'ADD %s %s from %s refused, unknown list for robot %s', $which, $email,$sender,$robot);
 	return 'unknown_list';
     }
 
@@ -890,7 +922,7 @@ sub add {
     }
     
     #my $action = &List::get_action ('add',$which,$sender,$email,$auth_method);
-    my $action = &List::request_action('add',$auth_method,
+    my $action = &List::request_action('add',$auth_method,$robot,
 				       {'listname' => $which, 
 					'sender' => $sender });
     
@@ -903,7 +935,7 @@ sub add {
     if ($action =~ /request_auth/i) {
 	my $cmd = 'add';
 	$cmd = "quiet $cmd" if $quiet;
-        $list->request_auth ($sender, $cmd, $email, $comment);
+        $list->request_auth ($sender, $cmd, $robot, $email, $comment);
 	do_log('info', 'ADD %s from %s, auth requested(%d seconds)', $which, $sender,time-$time_command);
 	return 1;
     }
@@ -942,7 +974,7 @@ sub add {
 	    my %context;
 	    $context{'subject'} = sprintf(Msg(8, 6, "Welcome to list %s"), $list->{'name'});
 	    $context{'body'} = sprintf(Msg(8, 6, "You are now subscriber of list %s"), $list->{'name'});
-	    $list->send_file('welcome', $email, \%context);
+	    $list->send_file('welcome', $email, $robot, \%context);
 	}
 
 	do_log('info', 'ADD %s %s from %s accepted (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
@@ -958,6 +990,7 @@ sub add {
 ## Invite someone to subscribe
 sub invite {
     my $what = shift;
+    my $robot=shift;
     my $sign_mod = shift ;
     do_log('debug2', 'Commands::invite(%s,%s)', $what,$sign_mod);
 
@@ -968,9 +1001,9 @@ sub invite {
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
     my $list = new List ($which);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'INVITE %s %s from %s refused, unknown list', $which, $email,$sender);
+	do_log('info', 'INVITE %s %s from %s refused, unknown list for robot', $which, $email,$sender,$robot);
 	return 'unknown_list';
     }
     
@@ -991,8 +1024,7 @@ sub invite {
 	$auth_method='smtp';
     }
     
-    #my $action = &List::get_action ('invite',$which,$sender,$auth_method);
-    my $action = &List::request_action('invite',$auth_method,
+    my $action = &List::request_action('invite',$auth_method,$robot,
 				       {'listname' => $which, 
 					'sender' => $sender });
 
@@ -1003,7 +1035,7 @@ sub invite {
     }
     
     if ($action =~ /request_auth/i) {
-        $list->request_auth ($sender, 'invite', $email, $comment);
+        $list->request_auth ($sender, 'invite', $robot, $email, $comment);
 	do_log('info', 'INVITE %s from %s, auth requested (%d seconds)', $which, $sender,time-$time_command);
 	return 1;
     }
@@ -1020,8 +1052,7 @@ sub invite {
 	    $context{'user'}{'gecos'} = $comment;
 	    $context{'requested_by'} = $sender;
 
-	    #my $action =  &List::get_action ('subscribe', $which, $email, 'smtp');
-	    my $action = &List::request_action('subscribe','smtp',
+	    my $action = &List::request_action('subscribe','smtp',$robot,
 					       {'listname' => $which, 
 						'sender' => $sender });
 
@@ -1029,17 +1060,17 @@ sub invite {
 		my $keyauth = $list->compute_auth ($email, 'subscribe');
 		my $command = "auth $keyauth sub $which $comment";
 		$context{'subject'} = $command;
-		$context{'url'}= "mailto:$Conf{'sympa'}?subject=$command";
+		$context{'url'}= "mailto:$Conf{'email'}\@$robot?subject=$command";
 		$context{'url'} =~ s/\s/%20/g;
-		$list->send_file('invite', $email, \%context);            
+		$list->send_file('invite', $email, $robot, \%context);            
 		do_log('info', 'INVITE %s %s from %s accepted, auth requested (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
 		push @msg::report, sprintf Msg(6, 85, "User %s has been invited to subscribe in list %s.\n"),$email,$which;
 
 	    }elsif ($action !~ /reject/i) {
                 $context{'subject'} = "sub $which $comment";
-		$context{'url'}= "mailto:$Conf{'sympa'}?subject=$context{'subject'}";
+		$context{'url'}= "mailto:$Conf{'email'}\@$robot?subject=$context{'subject'}";
 		$context{'url'} =~ s/\s/%20/g;
-		$list->send_file('invite', $email, \%context) ;            
+		$list->send_file('invite', $email, $robot,\%context) ;            
 		do_log('info', 'INVITE %s %s from %s accepted,  (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
 		push @msg::report, sprintf Msg(6, 85, "User %s has been invited to subscribe in list %s.\n"),$email,$which;
 
@@ -1058,6 +1089,7 @@ sub invite {
 ## send a personal reminder to each subscriber of a list
 sub remind {
     my $which = shift;
+    my $robot = shift;
     my $sign_mod = shift ;
 
     do_log('debug2', 'Commands::remind(%s,%s)', $which,$sign_mod);
@@ -1078,9 +1110,9 @@ sub remind {
 
     unless ($listname eq '*') {
 	$list = new List ($listname);
-	unless ($list) {
+	unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	    push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
-	    do_log('info', 'REMIND %s from %s refused, unknown list', $which, $sender);
+	    do_log('info', 'REMIND %s from %s refused, unknown list for robot %s', $which, $sender,$robot);
 	    return 'unknown_list';
 	}
     }
@@ -1113,7 +1145,7 @@ sub remind {
 
     if ($listname eq '*') {
 	#$action = &List::get_action ('global_remind',$sender,$auth_method);
-	my $action = &List::request_action('global_remind',$auth_method,
+	my $action = &List::request_action('global_remind',$auth_method,$robot,
 					   {'sender' => $sender });
 	
     }else{
@@ -1123,7 +1155,7 @@ sub remind {
 	$host = $list->{'admin'}{'host'};
 
 	#$action = &List::get_action ('remind',$listname,$sender,$auth_method);
-	my $action = &List::request_action('remind',$auth_method,
+	my $action = &List::request_action('remind',$auth_method,$robot,
 					   {'listname' => $listename, 
 					    'sender' => $sender });
     }
@@ -1135,9 +1167,9 @@ sub remind {
     }elsif ($action =~ /request_auth/i) {
 	do_log ('debug',"auth requested from $sender");
 	if ($listname eq '*') {
-	    &List::request_auth ($sender,'remind');
+	    &List::request_auth ($sender,'remind', $robot);
 	}else {
-	    $list->request_auth ($sender,'remind');
+	    $list->request_auth ($sender,'remind', $robot);
 	}
 	do_log('info', 'REMIND %s from %s, auth requested (%d seconds)', $listname, $sender,time-$time_command);
 	return 1;
@@ -1145,9 +1177,9 @@ sub remind {
 
 	if ($listname ne '*') {
 
-	    unless ($list) {
+	    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 		push @msg::report, sprintf Msg(6, 5, "List '%s' not found.\n"), $which;
-		do_log('info', 'REMIND %s from %s refused, unknown list', $listname,$sender);
+		do_log('info', 'REMIND %s from %s refused, unknown list for robot %s', $listname,$sender,$robot);
 		return 'unknown_list';
 	    }
 	    
@@ -1164,7 +1196,7 @@ sub remind {
 		$context{'subject'} = sprintf(Msg(6, 76, "Subscription reminder of list %s"), $list->{'name'});
 		$context{'body'} = sprintf(Msg(6, 77, "You are subscriber of the list %s with email %s.\n"), $list->{'name'}, $user->{'email'});
 
-		$list->send_file('remind', $user->{'email'}, \%context);
+		$list->send_file('remind', $user->{'email'},$robot, \%context);
 		$total += 1 ;
 	    } while ($user = $list->get_next_user());
 	    
@@ -1185,12 +1217,13 @@ sub remind {
 
 		my $list = new List ($listname);
 		next unless $list;
+		next unless ($robot eq $list->{'admin'}{'host'});
 
 		next unless ($user = $list->get_first_user()) ;
 
 		do {
 		    my $email = lc ($user->{'email'});
-		    if (List::request_action('visibility','smtp',
+		    if (List::request_action('visibility','smtp',$robot,
 					     {'listname' => $listname, 
 					      'sender' => $email}) eq 'do_it') {
 			push @{$global_subscription{$email}},$listname;
@@ -1219,7 +1252,7 @@ sub remind {
 		$context{'user'}{'gecos'} = $global_info{$email}{'gecos'};
                 @{$context{'lists'}} = @{$global_subscription{$email}};
 
-		&List::send_global_file('global_remind', $email, \%context);
+		&List::send_global_file('global_remind', $email, $robot, \%context);
 	    }
 	    push @msg::report, sprintf ("The Reminder has been sent to %d users\n",$count);
 	}
@@ -1236,6 +1269,8 @@ sub remind {
 ## sends acknowledgements unless quiet is specifies.
 sub del {
     my $what = shift;
+    my $robot = shift;
+
     my $sign_mod = shift ;
 
     do_log('debug2', 'Commands::del(%s,%s)', $what,$sign_mod);
@@ -1247,9 +1282,9 @@ sub del {
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
     my $list = new List ($which);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'DEL %s %s from %s refused, unknown list', $which, $who,$sender);
+	do_log('info', 'DEL %s %s from %s refused, unknown list for robot %s', $which, $who,$sender,$robot);
 	return 'unknown_list';
     }
 
@@ -1273,7 +1308,7 @@ sub del {
 
 
     ## query what to do with this DEL request
-    my $action = &List::request_action ('del',$auth_method,
+    my $action = &List::request_action ('del',$auth_method,$robot,
 					{'listname' =>$which,
 					 'sender' => $sender,
 					 'email' => $who,
@@ -1289,7 +1324,7 @@ sub del {
     if ($action =~ /request_auth/i) {
 	my $cmd = 'del';
 	$cmd = "quiet $cmd" if $quiet;
-        $list->request_auth ($sender, $cmd, $who );
+        $list->request_auth ($sender, $cmd, $robot, $who );
 	do_log('info', 'DEL %s %s from %s, auth requested (%d seconds)', $which, $who, $sender,time-$time_command);
 	return 1;
     }
@@ -1319,7 +1354,7 @@ sub del {
 	    $context{'subject'} = sprintf(Msg(6, 18, "You have been removed from list %s\n"), $list->{'name'});
 	    $context{'body'} = sprintf(Msg(6, 31, "You have been removed from list %s.\nThanks for being with us.\n"), $list->{'name'});
 	    
-	    $list->send_file('removed', $who, \%context);
+	    $list->send_file('removed', $who, $robot, \%context);
 	    
 	}
 	push @msg::report, sprintf Msg(6, 38, $msg::user_removed_from_list), $who, $which;
@@ -1338,6 +1373,8 @@ sub del {
 ## Change subscription options (reception or visibility)
 sub set {
     my $what = shift;
+    my $robot = shift;
+
     do_log('debug2', 'Commands::set(%s)', $what);
 
     $what =~ /^\s*(\S+)\s+(\S+)\s*$/; 
@@ -1357,7 +1394,7 @@ sub set {
     if ($which eq "*"){
         my ($l);
 	my $status;
-	foreach $l ( List::get_which ($sender,'member')){
+	foreach $l ( List::get_which ($sender,$robot,'member')){
 	    my $current_status = &set ("$l $mode");
 	    $status ||= $current_status;
 	}
@@ -1368,9 +1405,9 @@ sub set {
     ## if this list is unknown to us.
     my $list = new List ($which);
 
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'SET %s %s from %s refused, unknown list', $which, $mode, $sender);
+	do_log('info', 'SET %s %s from %s refused, unknown list for robot %s', $which, $mode, $sender,$robot);
 	return 'unknown_list';
     }
 
@@ -1438,6 +1475,8 @@ sub set {
 ## distribute the broadcast of a moderated message
 sub distribute {
     my ($what) = @_;
+    my $robot = shift;
+
     do_log('debug2', 'Commands::distribute(%s)', $what);
 
     $what =~ /^\s*(\S+)\s+(.+)\s*$/;
@@ -1447,9 +1486,9 @@ sub distribute {
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
     my $list = new List ($which);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'DISTRIBUTE %s %s from %s refused, unknown list', $which, $key, $sender);
+	do_log('info', 'DISTRIBUTE %s %s from %s refused, unknown list for robot %s', $which, $key, $sender,$robot);
 	return 'unknown_list';
     }
 
@@ -1524,6 +1563,8 @@ sub distribute {
 # confirm the authentication of a message
 sub confirm {
     my $what = shift;
+    my $robot = shift;
+
     do_log('debug2', 'Commands::confirm(%s)', $what);
 
     $what =~ /^\s*(\S+)\s*$/;
@@ -1582,9 +1623,9 @@ sub confirm {
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
     my $list = new List ($which);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'}))  {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'CONFIRM %s from %s refused, unknown list', $which,$sender);
+	do_log('info', 'CONFIRM %s from %s refused, unknown list for robot %s', $which,$sender,$robot);
 	return 'unknown_list';
     }
 
@@ -1596,7 +1637,7 @@ sub confirm {
     my $hdr= $msg->head;
 
     #my $action = &List::get_action ('send',$name,$sender,'md5',$hdr);
-    my $action = &List::request_action('send','md5',
+    my $action = &List::request_action('send','md5',$robot,
 				       {'listname' => $name, 
 					'sender' => $sender ,
 					'msg' => $msg});
@@ -1645,6 +1686,8 @@ sub confirm {
 ## Refuse and delete  a moderated message
 sub reject {
     my $what = shift;
+    my $robot = shift;
+
     do_log('debug2', 'Commands::reject(%s)', $what);
 
     $what =~ /^(\S+)\s+(.+)\s*$/;
@@ -1654,9 +1697,9 @@ sub reject {
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
     my $list = new List ($which);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'REJECT %s %s from %s refused, unknown list', $which, $key, $sender);
+	do_log('info', 'REJECT %s %s from %s refused, unknown list for robot %s', $which, $key, $sender,$robot);
 	return 'unknown_list';
     }
 
@@ -1713,7 +1756,7 @@ sub reject {
 	    do_log('debug2', 'message %s by %s rejected sender %s',$context{'subject'},$context{'rejected_by'},$rejected_sender);
 
 
-	    $list->send_file('reject', $rejected_sender, \%context);
+	    $list->send_file('reject', $rejected_sender, $robot, \%context);
 	}
     }
     close(IN);
@@ -1726,6 +1769,8 @@ sub reject {
 ## EXPIRE <list> <from nb day> <nb day to confirm>
 sub expire {
     my $what = shift;
+    my $robot=shift;
+
     do_log('debug2', 'Commands::expire(%s)', $what);
 
     my @msgexp = @_;
@@ -1744,9 +1789,9 @@ sub expire {
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
     my $list = new List ($name);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $name;
-	do_log('info', 'EXPIRE %s %d %d from %s refused, unknown list', $name, $d1 , $d2, $sender);
+	do_log('info', 'EXPIRE %s %d %d from %s refused, unknown list for robot %s', $name, $d1 , $d2, $sender,$robot);
 	return 'unknown_list';
     }
 
@@ -1918,11 +1963,14 @@ sub expire {
 sub _expirecheck {
 ## list all expired adress in a list
     my ($name,$limitday) = @_;
+    my $robot = shift;
+
     my $list,$user,$count;
 
-    unless ($list = new List ($name)) {
+    my $list = new List ($name);
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	do_log ('info',"unable to create list for expire $name");
-	return ;
+	return 'unknown_list';
     }
     
     $count = 0 ;
@@ -1942,15 +1990,17 @@ sub _expirecheck {
 ## Give the current configuration of the expiration
 sub expireindex {
     my $name = shift;
+    my $robot = shift;
+
     $name =~ y/A-Z/a-z/;
     do_log('debug2', 'Commands::expireindex(%s)', $name);
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
     my $list = new List ($name);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $name;
-	do_log('info', 'EXPIREINDEX %s from %s refused, unknown list', $name, $sender);
+	do_log('info', 'EXPIREINDEX %s from %s refused, unknown list for list %s', $name, $sender,$robot);
 	return 'unknown_list';
     } 
 
@@ -2037,15 +2087,16 @@ sub expireindex {
 ## Give the current configuration of the expiration
 sub expiredel {
     my $name = shift;
+    my $robot = shift;
     $name =~ y/A-Z/a-z/;
     do_log('debug2', 'Commands::expiredel(%s)', $name);
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
     my $list = new List ($name);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $name;
- 	do_log('info', 'EXPIREDEL %s from %s refused, unknown list', $name, $sender);
+ 	do_log('info', 'EXPIREDEL %s from %s refused, unknown list for robot', $name, $sender, $robot);
  	return 'unknown_list';
     }
 
@@ -2081,14 +2132,15 @@ sub expiredel {
 ## usage :    modindex <liste> 
 sub modindex {
     my $name = shift;
+    my $robot = shift;
     do_log('debug2', 'Commands::modindex(%s)', $name);
     
     $name =~ y/A-Z/a-z/;
 
     my $list = new List ($name);
-    unless ($list) {
+    unless (($list)&&($robot eq $list->{'admin'}{'host'})) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $name;
-	do_log('info', 'MODINDEX %s from %s refused, unknown list', $name, $sender);
+	do_log('info', 'MODINDEX %s from %s refused, unknown list for robot %s', $name, $sender, $robot);
 	return 'unknown_list';
     }
 
@@ -2168,7 +2220,7 @@ sub modindex {
 	return 'no_file';
     }  
     
-    $list->send_file('modindex', $sender, {'spool' => \@spool,
+    $list->send_file('modindex', $sender, $robot, {'spool' => \@spool,
 					   'total' => $n,
 					   'boundary1' => "==main $now[6].$now[5].$now[4].$now[3]==",
 					   'boundary2' => "==digest $now[6].$now[5].$now[4].$now[3]=="});
@@ -2183,20 +2235,20 @@ sub modindex {
 ## return information about the sender 
 sub which {
     my($listname, @which);
+    my $robot = shift;
     do_log('debug2', 'Commands::which(%s)', $listname);
     
     ## Subscriptions
     push @msg::report, sprintf  Msg(6, 67, "List of your current subscriptions : \n\n");    
-    foreach $listname (List::get_which ($sender,'member')){
-	next unless (&List::request_action ('visibility', 'smtp',
+    foreach $listname (List::get_which ($sender,$robot,'member')){
+	next unless (&List::request_action ('visibility', 'smtp',$robot,
 					    {'listname' =>  $listname,
 					     'sender' => $sender}) =~ /do_it/);
-
 	push @msg::report, sprintf "\t%s\n",$listname;
     }
 
     ## Ownership
-    if (@which = List::get_which ($sender,'owner')){
+    if (@which = List::get_which ($sender,$robot,'owner')){
 	push @msg::report, sprintf  Msg(6, 72, " Here are the lists where you are owner: \n\n");
 	foreach $listname (@which){
 	    push @msg::report, sprintf "\t%s\n",$listname;
@@ -2204,7 +2256,7 @@ sub which {
     }
 
     ## Editorship
-    if (@which = List::get_which ($sender,'editor')){
+    if (@which = List::get_which ($sender,$robot,'editor')){
 	push @msg::report, sprintf  Msg(6, 73, " Here are the lists where you are editor: \n\n");
 	foreach $listname (@which){
 	    push @msg::report, sprintf "\t%s\n",$listname;
