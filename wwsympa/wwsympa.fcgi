@@ -3965,7 +3965,7 @@ sub do_get_closed_lists {
     } 
 
     foreach my $l ( &List::get_lists('*') ) {
-	my $list = new List ($l);
+	my $list = new List ($l,$robot);
 	if ($list->{'admin'}{'status'} eq 'closed') {
 	    $param->{'closed'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 	    $param->{'closed'}{$l}{'by'} = $list->{'admin'}{'creation'}{'email'};
