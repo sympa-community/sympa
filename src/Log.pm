@@ -100,6 +100,8 @@ sub do_connect {
     if ($log_socket_type =~ /^(unix|inet)$/i) {
       Sys::Syslog::setlogsock(lc($log_socket_type));
     }
+    # close log may be usefull : if parent processus did open log child process inherit the openlog with parameters from parent process 
+    closelog ; 
     openlog("$log_service\[$$\]", 'ndelay', $log_facility);
 }
 

@@ -1670,18 +1670,24 @@ sub distribute {
     $hdr->add('X-Validation-by', $sender);
 
     ## Distribute the message
-    my $numsmtp =$list->distribute_msg($message);
-    unless (defined $numsmtp) {
-	return undef;
-    }
-    unless ($numsmtp) {
-	do_log('info', 'Message for %s from %s accepted but all subscribers use digest,nomail or summary',$which, $sender);
-    } 
-    do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions), size=%d',
-	   $which, $sender, time - $start_time, $numsmtp, $bytes);
+    if (($daemon_usage eq  'message') || ($daemon_usage eq  'command_and_message')) {
 
-    push @msg::report, sprintf gettext("Message %s for list %s has been distributed.\n"), $key, $name   unless ($quiet || ($action =~ /quiet/i ));
-    do_log('info', 'DISTRIBUTE %s %s from %s accepted (%d seconds)', $name, $key, $sender, time-$time_command);
+	my $numsmtp =$list->distribute_msg($message);
+	unless (defined $numsmtp) {
+	    return undef;
+	}
+	unless ($numsmtp) {
+	    do_log('info', 'Message for %s from %s accepted but all subscribers use digest,nomail or summary',$which, $sender);
+	} 
+	do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions), size=%d', $which, $sender, time - $start_time, $numsmtp, $bytes);
+	
+	push @msg::report, sprintf gettext("Message %s for list %s has been distributed.\n"), $key, $name   unless ($quiet || ($action =~ /quiet/i ));
+	do_log('info', 'DISTRIBUTE %s %s from %s accepted (%d seconds)', $name, $key, $sender, time-$time_command);
+    }else{   
+	# this message is to be distributed but this daemon is dedicated to commands -> move it to distribution spool
+	return undef unless (&tools::move_message($file,$name,$robot)) ;	    
+	do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $name, $sender, $Conf{'queuedistribute'},$hdr->get('Message-Id'));
+    }
     unlink($file);
     
     return 1;
@@ -1777,14 +1783,20 @@ sub confirm {
 	$hdr->add('X-Validation-by', $sender);
 	
 	## Distribute the message
-	my $numsmtp = $list->distribute_msg($message);
-	unless (defined $numsmtp) {
-	    do_log('info','Unable to send message to list %s', $list->{'name'});
-	    return undef;
-	}
+	if (($daemon_usage eq  'message') || ($daemon_usage eq  'command_and_message')) {
+	    my $numsmtp = $list->distribute_msg($message);
+	    unless (defined $numsmtp) {
+		do_log('info','Unable to send message to list %s', $list->{'name'});
+		return undef;
+	    }
 
-	push @msg::report, sprintf gettext("Message %s for list %s has been distributed.\n"), $key, $name   unless ($quiet || ($action =~ /quiet/i ));
-	do_log('info', 'CONFIRM %s from %s for list %s accepted (%d seconds)', $key, $sender, $which, time-$time_command);
+	    push @msg::report, sprintf gettext("Message %s for list %s has been distributed.\n"), $key, $name   unless ($quiet || ($action =~ /quiet/i ));
+	    do_log('info', 'CONFIRM %s from %s for list %s accepted (%d seconds)', $key, $sender, $which, time-$time_command);
+	}else{
+	    # this message is to be distributed but this daemon is dedicated to commands -> move it to distribution spool
+	    return undef unless (&tools::move_message($file,$name,$robot)) ;	    
+	    do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $name, $sender, $Conf{'queuedistribute'},$hdr->get('Message-Id'));
+	}
 	unlink($file);
 	
 	return 1;

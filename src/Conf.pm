@@ -39,10 +39,11 @@ my @valid_options = qw(
 		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod 
 		       cookie cookie_cas_expire create_list crl_dir crl_update_task db_host db_env db_name 
 		       db_options db_passwd db_type db_user db_port db_additional_subscriber_fields db_additional_user_fields
-		       default_shared_quota default_archive_quota default_list_priority edit_list email etc
+		       default_shared_quota default_archive_quota default_list_priority distribution_mode edit_list email etc
 		       global_remind home host domain lang listmaster localedir log_socket_type log_level 
 		       misaddressed_commands misaddressed_commands_regexp max_size maxsmtp nrcpt 
-		       owner_priority pidfile spool queue queueauth queuetask queuebounce queuedigest 
+		       owner_priority pidfile pidfile_distribute
+		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest 
 		       queueexpire queuemod queuesubscribe queueoutgoing tmpdir
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor
 		       purge_user_table_task  purge_orphan_bounces_task eval_bouncers_task process_bouncers_task
@@ -84,10 +85,12 @@ my %Default_Conf =
      'domain'  => undef,
      'email'   => 'sympa',
      'pidfile' => '--PIDDIR--/sympa.pid',
+     'pidfile_distribute' => '--PIDDIR--/sympa-distribute.pid',
      'localedir'  => '--LOCALEDIR--',
      'sort'    => 'fr,ca,be,ch,uk,edu,*,com',
      'spool'   => '--SPOOLDIR--',
      'queue'   => undef,
+     'queuedistribute' => undef,
      'queuedigest'=> undef,
      'queuemod'   => undef,
      'queueexpire'=> undef,
@@ -115,6 +118,7 @@ my %Default_Conf =
      'db_port' => '',
      'db_additional_subscriber_fields' => '',
      'db_additional_user_fields' => '',
+     'distribution_mode' => 'single',
      'listmaster' => undef,
      'default_list_priority' => 5,
      'sympa_priority' => 1,
@@ -237,6 +241,9 @@ sub load {
 
     unless (defined $o{'queuedigest'}) {
 	$o{'queuedigest'}[0] = "$spool/digest";
+    }
+    unless (defined $o{'queuedistribute'}) {
+	$o{'queuedistribute'}[0] = "$spool/distribute";
     }
     unless (defined $o{'queuemod'}) {
 	$o{'queuemod'}[0] = "$spool/moderation";
@@ -485,7 +492,7 @@ sub checkfiles {
 	}
     }
     
-    foreach my $qdir ('spool','queue','queuedigest','queuemod','queueexpire','queueauth','queueoutgoing','queuebounce','queuesubscribe','queuetask','tmpdir')
+    foreach my $qdir ('spool','queue','queuedigest','queuemod','queueexpire','queueauth','queueoutgoing','queuebounce','queuesubscribe','queuetask','queuedistribute','tmpdir')
     {
 	unless (-d $Conf{$qdir}) {
 	    do_log('info', "creating spool $Conf{$qdir}");
@@ -501,6 +508,14 @@ sub checkfiles {
 	    do_log('info', "creating spool $Conf{'queue'}/bad");
 	    unless ( mkdir ($Conf{'queue'}.'/bad', 0775)) {
 		do_log('err', 'Unable to create spool %s', $Conf{'queue'}.'/bad');
+		$config_err++;
+	    }
+	}
+    ## Also create distribute/bad/
+    unless (-d $Conf{'queuedistribute'}.'/bad') {
+	    do_log('info', "creating spool $Conf{'queuedistribute'}/bad");
+	    unless ( mkdir ($Conf{'queuedistribute'}.'/bad', 0775)) {
+		do_log('err', 'Unable to create spool %s', $Conf{'queuedistribute'}.'/bad');
 		$config_err++;
 	    }
 	}

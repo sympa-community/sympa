@@ -405,6 +405,8 @@ Our thanks to all contributors, including:
 
 \begin {itemize}
 
+  \item Gwenaelle Bouteille who joined the development team for a few months and produced a great job for various feature introduced in V5 (familly, RSS, shared document moderation, ...).
+
   \item Pierre David, who in addition to his help and suggestions
        in developing the code, participated more than actively in
        producing this manual.
@@ -609,7 +611,7 @@ a virtual robot or for the whole site.
 %\Sympa has currently been translatedinto 14 different languages.
 
 	\item \dir {[SPOOLDIR]}\\
-	\Sympa uses 7 different spools (see \ref{spools}, page~\pageref{spools}).
+	\Sympa uses 8 different spools (see \ref{spools}, page~\pageref{spools}).
 
 	\item \dir {[DIR]/src/}\\
 	\Sympa sources.
@@ -725,6 +727,12 @@ in \file {sympa.conf}.
 	For storing incoming messages (including commands).
 
 	\item \dir {[SPOOLDIR]/msg/bad/}\\
+	\Sympa stores rejected messages in this directory
+
+	\item \dir {[SPOOLDIR]/distribute/}\\
+	For storing message ready for distribution. This spool is used only if the installation run 2 sympa.pl daemon, one for commands, one for messages. 
+
+	\item \dir {[SPOOLDIR]/distribute/bad/}\\
 	\Sympa stores rejected messages in this directory
 	
 	\item \dir {[SPOOLDIR]/task/}\\
@@ -1160,6 +1168,10 @@ messages distribution.
   Debugging information is output to STDERR, along with standard log
   information. Each function call is traced. Useful while reporting
   a bug.
+
+\item \option {--service}  
+  
+  Sets \Sympa daemon in way it process only message distribution (process\_message) or in way it process only command (process\_command).
   
 \item \option {--config \textit {config\_file}} | \option {-f \textit {config\_file}}
   
@@ -1679,6 +1691,16 @@ see a  nice mailto adresses where others have nothing.
 
 \section {Sending related}
 
+\subsection {\cfkeyword {distribution\_mode}}
+
+	\default {single} 
+	Use this parameter to determine if your installation nrun only one sympa.pl daemon that process both messages
+        to distribute and commands (single) or if sympa.pl will fork to run two separate processus one dedicated to message distribution
+	and one dedicated to commands and message pre-processing (fork). The second choice make a better priority processing for message
+        distribution and faster command response, but it require a bit more computer ressources.
+
+	\example {distribution\_mode fork}
+
 \subsection {\cfkeyword {maxsmtp}} 
 
 	\default {20}
@@ -1842,7 +1864,15 @@ see a  nice mailto adresses where others have nothing.
         \file {queue} program and the \file {sympa.pl} daemon. This
         parameter is mandatory.
 
-        \example {queue          /home/sympa/queue}
+	\example {\dir {[SPOOLDIR]/msg}}
+
+\subsection {\cfkeyword {queuedistribute}} 
+	\index{spool}
+	\index{distribution}
+	
+	\default {\dir {[SPOOLDIR]/distribute}}
+
+        This parameter is optional and retained solely for backward compatibility.
 
 
 \subsection {\cfkeyword {queuemod}}  
@@ -5248,7 +5278,7 @@ To create a list, some data concerning list parameters are required :
 Moreover of these required data, provided values are assigned to vars being in the list creation template. 
 Then the result is the list configuration file :\\
 
-\centerline{\includegraphics*[width=13cm]{/tmp/creation.jpg}} 
+% \centerline{\includegraphics*[width=13cm]{/tmp/creation.jpg}} 
 
 On the Web interface, these data are given by the list creator in the web form. On command line these 
 data are given by an xml file.

@@ -1970,5 +1970,32 @@ sub unlock {
     return 1;
 }
 
+
+sub move_message {
+# move a message to distribute spool
+
+    my($file, $listname, $robot) = @_;
+    &do_log('debug2', "tools::move_mesage($file,$listname,$robot)");
+
+    my $dir = $Conf{'queuedistribute'};    
+    my $filename = "$listname\@$robot.".time.'.'.int(rand(999));
+
+    unless (open OUT, ">$dir/T.$filename") {
+	&do_log('err', 'Cannot create file %s', "$dir/T.$filename");
+	return undef;
+    }
+    
+    unless (open IN, $file) {
+	&do_log('err', 'Cannot open file %s', $file);
+	return undef;
+    }
+    
+    print OUT <IN>; close IN; close OUT;
+    unless (rename "$dir/T.$filename", "$dir/$filename") {
+	&do_log('err', 'Cannot rename file %s into %s',"$dir/T.$filename","$dir/$filename" );
+	return undef;
+    }
+    return 1;
+}
 1;
 

@@ -76,6 +76,7 @@ Options:
    -k, --keepcopy=dir                    : keep a copy of incoming message
    -l, --lang=LANG                       : use a language catalog for Sympa
    -m, --mail                            : log calls to sendmail
+   --service == process_command|process_message  : process dedicated to messages distribution or to commands (default both)
    --dump=list|ALL                       : dumps subscribers 
    --make_alias_file                     : create file in /tmp with all aliases (usefull when aliases.tpl is changed)
    --lowercase                           : lowercase email addresses in database
@@ -107,7 +108,7 @@ encryption.
 
 ## Check --dump option
 my %options;
-unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'config|f=s', 
+unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
 		    'close_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s',
 		    'input_file=s')) {
@@ -155,6 +156,8 @@ my %msgid_table;
 # this loop is run foreach HUP signal received
 my $signal = 0;
 
+my $daemon_usage ; 
+
 while ($signal ne 'term') { #as long as a SIGTERM is not received }
 
 my $config_file = $main::options{'config'} || '--CONFIG--';
@@ -200,8 +203,15 @@ if (!chdir($Conf{'home'})) {
    fatal_err("Can't chdir to %s: %m", $Conf{'home'});
    ## Function never returns.
 }
+if ($main::options{'service'} eq 'process_message') {
+    $daemon_usage = 'message';
+}elsif ($main::options{'service'} eq 'process_command') {
+    $daemon_usage = 'command';
+}else{
+    $daemon_usage = 'command_and_message'; # default is to run one sympa.pl server for both commands and message 
+}
 
-if ($signal ne 'hup' ) {
+if ($signal ne 'hup') {
     ## Put ourselves in background if we're not in debug mode. That method
     ## works on many systems, although, it seems that Unix conceptors have
     ## decided that there won't be a single and easy way to detach a process
@@ -216,19 +226,43 @@ if ($signal ne 'hup' ) {
 	open(STDERR, ">> /dev/null");
 	open(STDOUT, ">> /dev/null");
 	setpgrp(0, 0);
-	if ((my $child_pid = fork) != 0) {
-	    do_log('debug', "Starting server, pid $child_pid");
+	# start the main sympa.pl daemon
 
-	    exit(0);
+	if (($Conf{'distribution_mode'} eq 'single') || ($daemon_usage ne 'command_and_message')){ 
+	    printf STDERR "Starting server for $daemon_usage\n";
+	    do_log('debug', "Starting server for $daemon_usage");
+	    if ((my $child_pid = fork) != 0) {
+		do_log('debug', "Server for $daemon_usage started, pid $child_pid, exiting from initial process");
+		exit(0);
+	    }
+	}else{
+	    $daemon_usage = 'command'; # fork sympa.pl dedicated to commands
+	    do_log('debug', "Starting server for commands");
+	    if ((my $child_pid = fork) != 0) {
+		do_log('info', "Server for commands started, pid $child_pid");
+		$daemon_usage = 'message'; # main process continue in order to fork
+		do_log('debug', "Starting server for messages");	    
+		if ((my $child_pid = fork) != 0) {
+		    do_log('debug', "Server for messages started, pid $child_pid, exiting from initial process");
+		    exit(0);	# exit from main process	
+		}	
+	    }
 	}
     }
-    
+
+    my $service = 'sympa';
+    $service .= '(message)' if ($daemon_usage eq 'message');
+    $service .= '(command)' if ($daemon_usage eq 'command');
+    do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, $service);
+
+    do_log('debug', "Running server $$ with daemon_usage = $daemon_usage ");
     unless ($main::options{'batch'} ) {
 	## Create and write the pidfile
-	&tools::write_pid($Conf{'pidfile'}, $$);
+	my $file = $Conf{'pidfile'};
+	$file = $Conf{'pidfile_distribute'} if ($daemon_usage eq 'message') ;
+	&tools::write_pid($file, $$);
     }	
 
-    do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
 
     # Set the UserID & GroupID for the process
     $( = $) = (getgrnam('--GROUP--'))[2];
@@ -611,6 +645,10 @@ my $index_queueexpire = 0; # verify the expire queue
 my $index_cleanqueue = 0; 
 my @qfile;
 
+my $spool = $Conf{'queue'};
+# if daemon is dedicated to message change the current spool
+$spool = $Conf{'queuedistribute'} if ($daemon_usage eq 'message');
+
 ## This is the main loop : look after files in the directory, handles
 ## them, sleeps a while and continues the good job.
 while (!$signal) {
@@ -626,31 +664,34 @@ while (!$signal) {
 
     &List::init_list_cache();
 
-    if (!opendir(DIR, $Conf{'queue'})) {
-	fatal_err("Can't open dir %s: %m", $Conf{'queue'}); ## No return.
+    if (!opendir(DIR, $spool)) {
+	fatal_err("Can't open dir %s: %m", $spool); ## No return.
     }
     @qfile = sort grep (!/^\./,readdir(DIR));
     closedir(DIR);
+
+    unless ($daemon_usage eq 'command')  { # process digest only in distribution mode
+	## Scan queuedigest
+	if ($index_queuedigest++ >=$digestsleep){
+	    $index_queuedigest=0;
+	    &SendDigest();
+	}
+    }
+    unless ($daemon_usage eq 'message') { # process expire and bads only in command mode 
+	## Scan the queueexpire
+	if ($index_queueexpire++ >=$expiresleep){
+	    $index_queueexpire=0;
+	    &ProcessExpire();
+	}
     
-    ## Scan queuedigest
-    if ($index_queuedigest++ >=$digestsleep){
-	$index_queuedigest=0;
-	&SendDigest();
+	## Clean queue (bad)
+	if ($index_cleanqueue++ >= 100){
+	    $index_cleanqueue=0;
+	    &CleanSpool("$spool/bad", $Conf{'clean_delay_queue'});
+	    &CleanSpool($Conf{'queuemod'}, $Conf{'clean_delay_queuemod'});
+	    &CleanSpool($Conf{'queueauth'}, $Conf{'clean_delay_queueauth'});
+	}
     }
-    ## Scan the queueexpire
-    if ($index_queueexpire++ >=$expiresleep){
-	$index_queueexpire=0;
-	&ProcessExpire();
-    }
-
-    ## Clean queue (bad)
-    if ($index_cleanqueue++ >= 100){
-	$index_cleanqueue=0;
-	&CleanSpool("$Conf{'queue'}/bad", $Conf{'clean_delay_queue'});
-	&CleanSpool($Conf{'queuemod'}, $Conf{'clean_delay_queuemod'});
-	&CleanSpool($Conf{'queueauth'}, $Conf{'clean_delay_queueauth'});
-    }
-
     my $filename;
     my $listname;
     my $robot;
@@ -670,8 +711,8 @@ while (!$signal) {
 
 	## test ever if it is an old bad file
 	if ($t_filename =~ /^BAD\-/i){
-	    if ((stat "$Conf{'queue'}/$t_filename")[9] < (time - $Conf{'clean_delay_queue'}*86400) ){
-		unlink ("$Conf{'queue'}/$t_filename") ;
+	    if ((stat "$spool/$t_filename")[9] < (time - $Conf{'clean_delay_queue'}*86400) ){
+		unlink ("$spool/$t_filename") ;
 		do_log('notice',"Deleting bad message %s because too old", $t_filename);
 	    };
 	    next;
@@ -735,7 +776,7 @@ while (!$signal) {
 	next;
     }
 
-    do_log('debug', "Processing %s with priority %s", "$Conf{'queue'}/$filename", $highest_priority) ;
+    do_log('debug', "Processing %s with priority %s", "$spool/$filename", $highest_priority) ;
     
     if ($main::options{'mail'} != 1) {
 	$main::options{'mail'} = $robot if ($Conf{'robots'}{$robot}{'log_smtp'});
@@ -745,30 +786,30 @@ while (!$signal) {
     ## Set NLS default lang for current message
     $Language::default_lang = $main::options{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
-    my $status = &DoFile("$Conf{'queue'}/$filename");
+    my $status = &DoFile("$spool/$filename");
     
     if (defined($status)) {
-	do_log('debug', "Finished %s", "$Conf{'queue'}/$filename") ;
+	do_log('debug', "Finished %s", "$spool/$filename") ;
 
 	if ($main::options{'keepcopy'}) {
-	    unless (rename "$Conf{'queue'}/$filename", $main::options{'keepcopy'}."/$filename") {
-		do_log('notice', 'Could not rename %s to %s: %s', "$Conf{'queue'}/$filename", $main::options{'keepcopy'}."/$filename", $!);
-		unlink("$Conf{'queue'}/$filename");
+	    unless (rename "$spool/$filename", $main::options{'keepcopy'}."/$filename") {
+		do_log('notice', 'Could not rename %s to %s: %s', "$spool/$filename", $main::options{'keepcopy'}."/$filename", $!);
+		unlink("$spool/$filename");
 	    }
 	}else {
-	    unlink("$Conf{'queue'}/$filename");
+	    unlink("$spool/$filename");
 	}
     }else {
-	my $bad_dir = "$Conf{'queue'}/bad";
+	my $bad_dir = "$spool/bad";
 
 	if (-d $bad_dir) {
-	    unless (rename("$Conf{'queue'}/$filename", "$bad_dir/$filename")){
+	    unless (rename("$spool/$filename", "$bad_dir/$filename")){
 		&fatal_err("Exiting, unable to rename bad file $filename to $bad_dir/$filename (check directory permission)");
 	    }
 	    do_log('notice', "Moving bad file %s to bad/", $filename);
 	}else{
 	    do_log('notice', "Missing directory '%s'", $bad_dir);
-	    unless (rename("$Conf{'queue'}/$filename", "$Conf{'queue'}/BAD-$filename")) {
+	    unless (rename("$spool/$filename", "$spool/BAD-$filename")) {
 		&fatal_err("Exiting, unable to rename bad file $filename to BAD-$filename");
 	    }
 	    do_log('notice', "Renaming bad file %s to BAD-%s", $filename, $filename);
@@ -823,29 +864,25 @@ sub DoFile {
     
     my ($listname, $robot);
     my $status;
-
+    
     my $message = new Message($file);
     unless (defined $message) {
 	do_log('err', 'Unable to create Message object %s', $file);
 	return undef;
     }
     
-#    open TMP, ">/tmp/dump";
-#    $message->dump(\*TMP);
-#    close TMP;
-
     my $msg = $message->{'msg'};
     my $hdr = $msg->head;
     my $rcpt = $message->{'rcpt'};
     
-    # message prepared by wwsympa and distributed by sympa
+    # message prepared by wwsympa and distributed by sympa # dual
     if ( $hdr->get('X-Sympa-Checksum')) {
 	return (&DoSendMessage ($msg)) ;
     }
-
+    
     ## get listname & robot
     ($listname, $robot) = split(/\@/,$rcpt);
-
+    
     $robot = lc($robot);
     $listname = lc($listname);
     $robot ||= $Conf{'host'};
@@ -855,13 +892,13 @@ sub DoFile {
     if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
 	($listname, $type) = ($1, $2);
     }
-
+    
     # setting log_level using conf unless it is set by calling option
     unless ($main::options{'log_level'}) {
 	$log_level = $Conf{'robots'}{$robot}{'log_level'};
 	do_log('debug', "Setting log level with $robot configuration (or sympa.conf) : $log_level"); 
     }
-
+    
     ## Ignoring messages with no sender
     my $sender = $message->{'sender'};
     unless ($sender) {
@@ -943,10 +980,10 @@ sub DoFile {
 
    #  anti-virus
 	my $rc= &tools::virus_infected($message->{'msg'}, $message->{'filename'});
-    if ($rc) {
-	if ($Conf{'antivirus_notify'} eq 'sender') {
-	    #printf "do message, virus= $rc \n";
-	    &List::send_global_file('your_infected_msg', $sender, $robot, {'virus_name' => $rc,
+	if ($rc) {
+	    if ($Conf{'antivirus_notify'} eq 'sender') {
+		#printf "do message, virus= $rc \n";
+		&List::send_global_file('your_infected_msg', $sender, $robot, {'virus_name' => $rc,
 									   'recipient' => $name.'@'.$host,
 									   'lang' => $Language::default_lang});
 	}
@@ -956,8 +993,13 @@ sub DoFile {
 	&List::send_notify_to_listmaster('antivirus_failed',$robot,"Could not scan $file; The message has been saved as BAD."); 
 	return undef;
     }
-   #  
-
+  
+    if ($daemon_usage eq 'message') {
+	if (($rcpt =~ /^listmaster(\@(\S+))?$/) || ($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) || ($type =~ /^(subscribe|unsubscribe)$/o) || ($type =~ /^(request|owner|editor)$/o)) {
+	    do_log('err','internal serveur error : distribution daemon should never proceed with command');
+	    return undef;
+	} 
+    }
     if ($rcpt =~ /^listmaster(\@(\S+))?$/) {
 	$status = &DoForward('sympa', 'listmaster', $robot, $msg, $file, $sender);
 
@@ -976,8 +1018,8 @@ sub DoFile {
 	    $status = &DoCommand("$listname-$command", $robot, $msg, $file);
 	}else {
 	    $status = &DoForward($listname, $type, $robot, $msg, $file, $sender);
-	}       
-    }else {
+	}         
+    }else {	
 	$status =  &DoMessage($rcpt, $message, $robot);
     }
     
@@ -1264,27 +1306,31 @@ sub DoMessage{
 					  'message' => $message });
     }
 
-    return undef
-	unless (defined $action);
+    return undef unless (defined $action);
 
-    if ($action =~ /^do_it/) {
-	
-	my $numsmtp = $list->distribute_msg($message);
-
-	## Keep track of known message IDs...if any
-	$msgid_table{$listname}{$messageid}++
-	    if ($messageid);
-	
-	unless (defined($numsmtp)) {
-	    do_log('info','Unable to send message to list %s', $listname);
-	    return undef;
+    do_log('info', "xxxxxxxxxxxxxxxxxx action : $action daemon_usage $daemon_usage" );
+    if (($action =~ /^do_it/) || ($daemon_usage eq 'message')) {
+	    
+	if (($daemon_usage eq  'message') || ($daemon_usage eq  'command_and_message')) {
+	    my $numsmtp = $list->distribute_msg($message);
+	    
+	    ## Keep track of known message IDs...if any
+	    $msgid_table{$listname}{$messageid}++ if ($messageid);
+	    
+	    unless (defined($numsmtp)) {
+		do_log('info','Unable to send message to list %s', $listname);
+		return undef;
+	    }
+	    
+	    do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions), message-id=%s, size=%d', $listname, $sender, time - $start_time, $numsmtp, $messageid, $message->{'size'});
+	    return 1;
+	}else{   
+	    # this message is to be distributed but this daemon is dedicated to commands -> move it to distribution spool
+	    return undef unless (&tools::move_message($message->{'filename'},$listname,$robot)) ;	    
+	    do_log('info', 'Message for %s from %s moved in spool %s for distribution message-id=%s', $listname, $sender, $Conf{'queuedistribute'},$messageid);
+	    return 1;
 	}
-
-	do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions), size=%d', $listname, $sender, time - $start_time, $numsmtp, $message->{'size'});
 	
-	## Everything went fine, return TRUE in order to remove the file from
-	## the queue.
-	return 1;
     }elsif($action =~ /^request_auth/){
     	my $key = $list->send_auth($message);
 	do_log('notice', 'Message for %s from %s kept for authentication with key %s', $listname, $sender, $key);
