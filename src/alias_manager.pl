@@ -5,6 +5,7 @@
 
 my $alias_file = '--SENDMAIL_ALIASES--';
 my $tmp_alias_file = '/tmp/sympa_aliases.new';
+my $lock_file = '--DIR--/alias_manager.lock';
 my $default_domain;
 my $path_to_queue = '--MAILERPROGDIR--/queue';
 my $path_to_bouncequeue = '--MAILERPROGDIR--/bouncequeue';
@@ -38,6 +39,10 @@ unless (-w "$alias_file") {
 }
 
 if ($operation eq 'add') {
+    ## Create a lock
+    open(LF, ">>$lock_file") || die "Can't open lock file $lock_file";
+    flock LF, 2;
+
     ## Check existing aliases
     exit(-1) if (&already_defined($listname.$suffix, $domain));
 	
@@ -59,8 +64,18 @@ if ($operation eq 'add') {
 	    printf ALIAS "$address: \"\|$path_to_queue $listname$suffix\"\n";
 	}
     }
+
+    close ALIAS;
+
+    ## Unlock
+    flock LF, 8;
+    close LF;
     
 }elsif ($operation eq 'del') {
+
+    ## Create a lock
+    open(LF, ">>$lock_file") || die "Can't open lock file $lock_file";
+    flock LF, 2;
 
     unless (open  ALIAS, "$alias_file") {
 	die "Could not read $alias_file";
@@ -107,6 +122,10 @@ if ($operation eq 'add') {
     print OLDALIAS <NEWALIAS>;
     close OLDALIAS ;
     close NEWALIAS;
+
+    ## Unlock
+    flock LF, 8;
+    close LF;
 
 }else {
     die "Action $operation not implemented yet";
