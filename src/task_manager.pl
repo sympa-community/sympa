@@ -330,7 +330,10 @@ while (!$end) {
     &smtp::reaper;
 }
 
-&do_log ('notice', 'task_manager exited normally due to signal');
+&do_log ('notice', 'task_manager exited normally due to signal'); 
+unless (unlink $wwsconf->{'task_manager_pidfile'}) { 
+    fatal_err("Could not delete %s, exiting", $wwsconf->{'task_manager_pidfile'}); 
+} 
 exit(0);
 
 ####### SUBROUTINES #######
