@@ -8,7 +8,7 @@ $quote "
 $set 1	Messages used while processing the configuration file
 1	"The configuration file contains errors.\n"
 3	"Error at line %d : %s"
-102	"2.8.1"
+102	"3.3a"
 
 $set 2	Messages used by Conf when verifying the files
 

@@ -6,7 +6,7 @@ $quote "
 $set 1	Messages utilisés pour l'analyse du fichier de configuration
 1	"Le fichier de configuration contient des erreurs.\n"
 3	"Erreur ligne %d : %s"
-102	"2.8.1"
+102	"3.3a"
 
 $set 2	Messages utilisés par Conf dans la vérification des fichiers
 
