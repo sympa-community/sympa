@@ -4232,6 +4232,9 @@ sub do_arcsearch_id {
     $in{'key_word'} =~ s/\)/\\\)/g;
     $in{'key_word'} =~ s/\$/\\\$/g;
 
+    ## Mhonarc escapes '-' characters (&#45;)
+    $in{'key_word'} =~ s/\-/\&\#45\;/g;
+
     $search->limit (1);
 
     my @words = split(/\s+/,$in{'key_word'});
