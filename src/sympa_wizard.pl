@@ -428,7 +428,7 @@ my @params = ({'title' => 'Directories and file location'},
 
 	       {'name' => 'default_shared_quota',
 	       'query' => 'Default disk quota for shared repository',
-	       'file' => 'wwsympa.conf','edit' => '1',
+	       'file' => 'sympa.conf','edit' => '1',
 	       'advice' =>''},
 
 	      {'name' => 'dark_color',
