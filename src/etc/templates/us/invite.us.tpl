@@ -41,11 +41,20 @@ Per iscriversi risponda a questo messaggio o clicchi l'URL :
 [url]
 
 Se non vuole iscriversi, ignori questo messaggio.
+[ELSIF list->lang=pl]
+Witaj,
+
+Zapraszam Ciê do zapisania na listê [list->name]@[list->host].
+Tematem listy jest [list->subject], wiêc mo¿e Ciê to zainteresowaæ.
+
+¯eby siê zapisaæ odpowiedz na ten list klikaj±c na url :
+[url]
+
+Je¿eli nie chesz siê zapisaæ, nie odpowiadaj na ten list.
 
 [ELSE]
 Hi,
 
-I invite you to subscribe to [list->name]@[list->host] mailling list.
 This list is about [list->subject], so you are probably concern.
 
 To subscribe just reply to this message or hit the following mailto url :

@@ -7,6 +7,9 @@ Directorio de las listas de [conf->email]@[conf->host]
 [ELSIF user->lang=it]
 Ecco l'elenco delle liste di [conf->email]@[conf->host]
 
+[ELSIF user->lang=pl]
+Oto lista list od [conf->email]@[conf->host]
+
 [ELSE]
 Here is the list of list from [conf->email]@[conf->host]
 
