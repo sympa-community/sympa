@@ -24,6 +24,8 @@
     \usepackage{times}
     \usepackage[latin1]{inputenc}
     \usepackage{hyperref}
+    \usepackage{graphicx} 
+
 %    \hypersetup{pdfauthor={},%
 %            pdftitle={},pdftex}
     \renewcommand {\ttdefault} {cmtt}
@@ -1197,7 +1199,8 @@ page~\pageref{list-creation-sympa}.
 
 Close the list (changing its status to closed), remove aliases and remove
 subscribers from DB (a dump is created in the list directory to allow restoring
-the list)
+the list). See \ref{family-close-list}, page~\pageref{family-close-list} when you
+are in a family context.
 
 \item \option {--dump \textit {listname \texttt {|} ALL}}
   
@@ -1230,7 +1233,21 @@ template.
 Instantiate the family \textit {familyname}. See \ref{lists-families}, 
 page~\pageref{lists-families}.
 
-  
+\item \option {--close\_family \textit {familyname} --robot \textit {robotname}}
+   
+   Close the \textit {familyname} family. See \ref{family-closure}, 
+   page~\pageref{family-closure}.
+ 
+ \item \option {--add\_list \textit {familyname} --robot \textit {robotname} --input\_file \textit {list\_file.xml}}
+ 
+   Add the list described in the XML file to the \textit{familyname} family. See \ref{family-add-list}, 
+   page~\pageref{family-add-list}.
+ 
+ \item \option {--modify\_list \textit {familyname} --robot \textit {robotname} --input\_file \textit {list\_file.xml}}
+ 
+   Modify the existing family list, with description contained in the XML file. See \ref{family-modify-list}, 
+   page~\pageref{family-modify-list}.
+    
 \end {itemize}
 
 
@@ -4029,9 +4046,7 @@ will make it ignored at either a global, robot or list level.
 [STARTPARSE]
 \textit {Example :} 
 \begin {quote}
-\begin{verbatim}
 [ETCDIR]/\samplerobot/scenari/send.intranetorprivate:ignore
-\end{verbatim}
 \end {quote}
 
 The \texttt{intranetorprivate} \texttt{send} scenario will be hidden (on the web admin interface),
@@ -5233,7 +5248,7 @@ To create a list, some data concerning list parameters are required :
 Moreover of these required data, provided values are assigned to vars being in the list creation template. 
 Then the result is the list configuration file :\\
 
-schémas\\
+\centerline{\includegraphics*[width=13cm]{/tmp/creation.jpg}} 
 
 On the Web interface, these data are given by the list creator in the web form. On command line these 
 data are given by an xml file.
@@ -5376,9 +5391,7 @@ This way to create lists is independent of family.
 
 Here is a sample command to create one list :.
 \begin {quote}
-\begin{verbatim}
-sympa.pl --create_list --robot my_robot --input_file my_file.xml
-\end{verbatim}   
+sympa.pl --create\_list --robot \samplerobot --input\_file my\_file.xml
 \end {quote}
 
 The list is created under the \file{my\_robot} robot and the list 
@@ -5589,7 +5602,8 @@ Here is a list of operation performed on a family :
     \item modification : modification of family properties. The modification is effective at the next instantiation time, that have consequences on every list.
     \item closure : closure of each list.
     \item adding one list to a family.
-    \item removing one list to a family
+    \item closing one family list.
+    \item modifying one family list.
 
 \end {itemize}
 
@@ -5624,7 +5638,7 @@ In this directory you must provide these files :
       It is easy to create new list templates by modifying existing ones. See \ref{list-tpl}, page~\pageref{list-tpl}
       and \ref{tpl-format}, page~\pageref{tpl-format}.\\
 
-\textit {Examples:} 
+\textit {Example:} 
 \begin {quote}
 \begin{verbatim}
 [STOPPARSE]
@@ -5726,6 +5740,7 @@ shared_doc.d_edit   editor
 	level order: list, family, robot, server site or distribution. 
 
 \subsection {Instantiation}
+\label{family-instantiation}
 
 Instantiation permits to generate lists.You must provide an XML file that is 
 composed of lists description, the root element is \textit{family} and is only 
@@ -5733,10 +5748,10 @@ composed of \textit{list} elements. List elements are described in section
 \ref{list-creation-sympa}, page~\pageref{list-creation-sympa}. Each list is described 
 by the set of values for affectation list parameters.
 
-Here is an exemple line command to instantiate a family :
+Here is an sample command to instantiate a family :
 \begin {quote}
 \begin{verbatim}
-sympa.pl --instantiate_family my_family --robot my_robot --input_file my_file.xml
+sympa.pl --instantiate\_family my_family --robot \samplerobot --input\_file my\_file.xml
 \end{verbatim}
 \end {quote}
 This means lists that belong to family \file{my\_family} will be created under the robot 
@@ -5808,13 +5823,57 @@ To modify a family, you have to edit family files manually. The modification wil
 new family properties and they would be set in status error\_config immediately.
 
 \subsection {Closure}
-Not already done.
+
+ \label{family-closure}
+ 
+ Closes every list (installed under the indicated robot) 
+ of this family : lists status are set to \file {family\_closed}, aliases are 
+ removed and subscribers are removed from DB. (a dump is created in the list 
+ directory to allow restoration of the list).
+ 
+ Here is a sample command to close a family :
+ \begin {quote}
+ sympa.pl --close\_family my\_family --robot \samplerobot 
+ \end {quote} 
 
 \subsection {Adding one list}
-Not already done.
+
+\label{family-add-list}
+ 
+ Adds a list to the family without instantiate all the family. The list is created
+ as if it was created during an instantiation, under the indicated robot. The XML file
+ describes the list and the root element is \file{<list>}. List elements are described in section 
+ \ref{list-creation-sympa}, page~\pageref{list-creation-sympa}.
+ 
+ Here is a sample command to add a list to a family :
+ \begin {quote}
+ sympa.pl --add\_list my\_family --robot \samplerobot  --input\_file my\_file.xml
+ \end {quote} 
 
 \subsection {Removing one list}
-Not already done.
+
+Closes the list  installed under the indicated robot : the list status is set to
+  \file {family\_closed}, aliases are 
+ removed and subscribers are removed from DB. (a dump is created in the list 
+ directory to allow restoring the list).
+ 
+ Here is a sample command to close a list family (same as an orphan list) :
+ \begin {quote}
+ sympa.pl --close\_list my\_list@\samplerobot
+ \end {quote} 
+ 
+ \subsection {Modifying one list}
+ \label{family-modify-list}
+ 
+ Modifies a family list without instantiating the whole family. The list (installed under the indicated robot) 
+ is modified as if it was modified during an instantiation. The XML file
+ describes the list and the root element is \file{<list>}. List elements are described in section 
+ \ref{list-creation-sympa}, page~\pageref{list-creation-sympa}.
+ 
+ Here is a sample command to modify a list to a family :
+ \begin {quote}
+ sympa.pl --modify\_list my\_family --robot \samplerobot --input\_file my\_file.xml
+ \end {quote} 
 
 \subsection {List parameters edition in a family context}
     \label{list-param-edit-family}
