@@ -20,13 +20,13 @@ Messages are still archived but you should contact listmaster@[conf->host].
 Subject:List [list->name] automatic bounce management
 
 [IF action=notify_bouncers]
-Because we received MANY non-delivery reports, the subsribers listed bellow have been
+Because we received MANY non-delivery reports, the [total] subsribers listed bellow have been
 notified that they might be removed from list [list->name] :
 [ELSIF action=remove_bouncers]
-Because we received MANY non-delivery reports, the subsribers listed bellow have been
+Because we received MANY non-delivery reports, the [total] subsribers listed bellow have been
 removed from list [list->name] :
 [ELSIF action=none]
-Because we received MANY non-delivery reports, the subsribers listed bellow have been
+Because we received MANY non-delivery reports, the [total] subsribers listed bellow have been
 selected by Sympa as severe bouncing addresses :
 [ENDIF]
 

@@ -41,13 +41,13 @@ Consultez les logs de Sympa pour plus de précisions.
 Subject: Gestion automatique des abonnés en erreur de la liste [list->name]
 
 [IF action=notify_bouncers]
-Notre serveur ayant reçu de NOMBREUX rapports de non-remise, les abonnés listés ci-dessous ont été
+Notre serveur ayant reçu de NOMBREUX rapports de non-remise, les [aaa] abonnés listés ci-dessous ont été
 informés qu'ils risquaient d'être désabonné de la liste [list->name] :
 [ELSIF action=remove_bouncers]
-Notre serveur ayant reçu de NOMBREUX rapports de non-remise, les abonnés listés ci-dessous ont été
+Notre serveur ayant reçu de NOMBREUX rapports de non-remise, les [aaa] abonnés listés ci-dessous ont été
 désabonnés de la liste [list->name] :
 [ELSIF action=none]
-Notre serveur ayant reçu de NOMBREUX rapports de non-remise, les abonnés listés ci-dessous ont été
+Notre serveur ayant reçu de NOMBREUX rapports de non-remise, les [aaa] abonnés listés ci-dessous ont été
 marqués par Sympa comme des adresses gravement en erreur :
 [ENDIF]
 

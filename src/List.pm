@@ -1661,11 +1661,13 @@ sub send_notify_to_listmaster {
 	my $list = new List $param[0];
 	my $host = &Conf::get_robot_conf($robot, 'host');
 
+
 	$list->send_file('listmaster_notification',&Conf::get_robot_conf($robot, 'listmaster'), $robot,
 			  {'to' => "listmaster\@$host",
 			   'type' => 'automatic_bounce_management',
 			   'action' => $param[1],
-			   'user_list' => $param[2]});		
+			   'user_list' => $param[2],
+			   'total' => $#{$param[2]} + 1});		
 
     }else {
 	my $data = {'to' => "listmaster\@$Conf{'host'}",
@@ -1785,7 +1787,9 @@ sub new_send_notify_to_owner {
 	$self->send_file('listowner_notification',\@to, $robot,
 			 {'type' => 'automatic_bounce_management',
 			  'action' => $param[1],
-			  'user_list' => $param[2]});		
+			  'user_list' => $param[2],
+			  'total' => $#{$param[2]} + 1
+			 });		
     }
     return 1;
 }
@@ -1802,7 +1806,8 @@ sub send_notify_to_subscriber{
      if ($operation eq 'auto_notify_bouncers') {	
 	 $self->send_file('subscriber_notification',$who, $robot,
 			  {'to' => "$who",
-			   'type' => 'auto_notify_bouncers'});			       		
+			   'type' => 'auto_notify_bouncers',
+		       });			       		
 	 
      }
     return 1;
