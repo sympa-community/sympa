@@ -194,12 +194,12 @@ $set 7	Messages syslog des commandes (Commands.pm)
 
 $set 8	Messages utilises dans List.pm
 1	"Proprietaires de la liste %s"
-2	"Demande d'abonnement a la liste %s"
-3	"Cher(s) propriétaires de la liste %s,\n\n\
+2	"Demande d'abonnement à la liste %s"
+3	"Cher propriétaire de la liste %s,\n\n\
 Un utilisateur a demandé à être abonné à votre liste. Pour valider cette,\n\
-demande, vous voudrez bien cliquez sur ce lien :\n\
+demande, vous voudrez bien cliquer sur ce lien :\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n\n\
-Ou alors envoyez un mail à %s avec comme objet :\n\
+Ou alors envoyer un mail à %s avec comme objet :\n\
 AUTH %s ADD %s %s %s\n"
 4	"Moderateurs de la liste %s"
 5	"[%s] Article a approuver"
