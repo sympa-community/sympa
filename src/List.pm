@@ -3530,16 +3530,8 @@ sub verify {
 	my $value=$1;
 
 	## Variable
-	if ($value =~ /\[(\w+)\]/i) {
-	    if (defined ($context->{$1})) {
-		$value =~ s/\[(\w+)\]/$context->{$1}/i;
-	    }else{
-		do_log('notice',"unknown variable context $value in rule $condition");
-		return undef;
-	    }
-	    
-	    ## Config param
-	}elsif ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
+	## Config param
+	if ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
 	    if ($Conf{$1}) {
 		$value =~ s/\[conf\-\>([\w\-]+)\]/$Conf{$1}/;
 	    }else{
@@ -3564,16 +3556,55 @@ sub verify {
 	    $value =~ s/\[(user|subscriber)\-\>([\w\-]+)\]/$context->{$1}{$2}/;
 
 	    ## SMTP Header field
-	}elsif ($value =~ /\[header\-\>([\w\-]+)\]/i) {
-	    if (defined ($context->{'hdr'})) {
-		my $header = $context->{'hdr'};
-		my $field = $header->get($1);
+	}elsif ($value =~ /\[(msg_header|header)\-\>([\w\-]+)\]/i) {
+	    if (defined ($context->{'msg'})) {
+		my $header = $context->{'msg'}->head;
+		my $field = $header->get($2);
 		$value =~ s/\[header\-\>([\w\-]+)\]/$field/;
 	    }else {
 		return -1;
 	    }
+	    
+	}elsif ($value =~ /\[msg_body\]/i) {
+	    return -1 unless (defined ($context->{'msg'}));
+	    return -1 unless (defined ($context->{'msg'}->effective_type() =~ /^text/));
+	    return -1 unless (defined $context->{'msg'}->bodyhandle);
+
+	    $value = $context->{'msg'}->bodyhandle->as_string();
+
+	}elsif ($value =~ /\[msg_part\-\>body\]/i) {
+	    return -1 unless (defined ($context->{'msg'}));
+	    
+	    my @bodies;
+	    my @parts = $context->{'msg'}->parts();
+	    foreach my $i (0..$#parts) {
+		next unless ($parts[$i]->effective_type() =~ /^text/);
+		next unless ($parts[$i]->bodyhandle);
+
+		push @bodies, $parts[$i]->bodyhandle->as_string();
+	    }
+	    $value = \@bodies;
+
+	}elsif ($value =~ /\[msg_part\-\>type\]/i) {
+	    return -1 unless (defined ($context->{'msg'}));
+	    
+	    my @types;
+	    my @parts = $context->{'msg'}->parts();
+	    foreach my $i (0..$#parts) {
+		push @types, $parts[$i]->effective_type();
+	    }
+	    $value = \@types;
 
 	    ## Quoted string
+	}elsif ($value =~ /\[(\w+)\]/i) {
+
+	    if (defined ($context->{$1})) {
+		$value =~ s/\[(\w+)\]/$context->{$1}/i;
+	    }else{
+		do_log('notice',"unknown variable context $value in rule $condition");
+		return undef;
+	    }
+	    
 	}elsif ($value =~ /^'(.*)'$/ || $value =~ /^"(.*)"$/) {
 	    $value = $1;
 	}
@@ -3673,22 +3704,36 @@ sub verify {
             $regexp =~ s/\[host\]/$reghost/g ;
 	}
 
-	&do_log('debug2', 'ARG0: %s', $args[0]);
-	&do_log('debug2', 'ARG1: %s', $args[1]);
-	if ($args[0] =~ /$regexp/i) {
-	    return $negation ;
-	}else{
-	    return -1 * $negation ;
+	if (ref($args[0])) {
+	    foreach my $arg (@{$args[0]}) {
+		return $negation 
+		    if ($arg =~ /$regexp/i);
+	    }
+	}else {
+	    if ($args[0] =~ /$regexp/i) {
+		return $negation ;
+	    }
 	}
+	
+	return -1 * $negation ;
+
     }
 
     ## equal
     if ($condition_key eq 'equal') {
-	if ($args[0] =~ /^$args[1]$/i) {
-	    return $negation ;
-	}else{
-	    return -1 * $negation ;
+	if (ref($args[0])) {
+	    foreach my $arg (@{$args[0]}) {
+		&do_log('debug2', 'ARG: %s', $arg);
+		return $negation 
+		    if ($arg =~ /^$args[1]$/i);
+	    }
+	}else {
+	    if ($args[0] =~ /^$args[1]$/i) {
+		return $negation ;
+	    }
 	}
+
+	return -1 * $negation ;
     }
     return undef;
 }

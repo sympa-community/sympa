@@ -2991,7 +2991,7 @@ A scenario consists of rules, evaluated in order beginning with the first.
 Rules are defined as follows :
 \begin {quote}
 \begin{verbatim}
-<rule> ::= <condition> <auth\_list> -> <action>
+<rule> ::= <condition> <auth_list> -> <action>
 
 <condition> ::= [!] <condition
 		| true ()
@@ -3001,11 +3001,11 @@ Rules are defined as follows :
                 | is_owner (<listname>, <var>)
                 | is_editor (<listname>, <var>)
                 | is_listmaster (<var>)
-<var> ::= [email] | [sender] | [subscriber-><subscriber\_key\_word>] | [list-><list\_key\_word>] | [conf-><conf\_key\_word>] | [header-><smtp\_key\_word>] |  <string>
+<var> ::= [email] | [sender] | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] | [msg_part->type] | [msg_part->body] | <string>
 
 <listname> ::= [listname] | <listname_string>
 
-<auth\_list> ::= <auth>,<auth\_list> | <auth>
+<auth_list> ::= <auth>,<auth_list> | <auth>
 
 <auth> ::= smtp|md5|smime
 
@@ -3015,20 +3015,22 @@ Rules are defined as follows :
              | request_auth
              | owner
 
-<subscriber\_key\_word> ::= email | gecos | bounce | reception | visibility | date <additional\_subscriber\_fields>
+<subscriber_key_word> ::= email | gecos | bounce | reception | visibility | date <additional_subscriber_fields>
 
-<list\_key\_word> ::= name | host | lang | max\_size | priority | reply\_to | 
-		      status | subject | account | 
+<list_key_word> ::= name | host | lang | max_size | priority | reply_to | 
+		    status | subject | account | 
 
-<conf\_key\_word> ::= host | email | listmaster | default\_list\_priority | 
-		      sympa\_priority | request\_priority | lang | max\_size
+<conf_key_word> ::= host | email | listmaster | default_list_priority | 
+		      sympa_priority | request_priority | lang | max_size
 	 	      
 \end{verbatim}
 \end{quote}
 
 perl\_regexp can contain the string [host] (interpreted at run time as the list or robot domain).
-The variable notation [header-$>$<smtp\_key\_word>] is interpreted as the SMTP header value only when performing
+The variable notation [msg\_header-$>$<smtp\_key\_word>] is interpreted as the SMTP header value only when performing
 the sending message scenario. It can be used, for example, to require editor validation for multipart messages.
+[msg\_part-$>$type] and [msg\_part-$>$body] are the MIME parts content-types and bodies ; the body is available
+for MIME parts in text/xxx format only.
 
 %[idees de scenario]
 
