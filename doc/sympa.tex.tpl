@@ -2505,10 +2505,10 @@ database were to become inaccessible.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter {Using \Sympa with \index {LDAP}}
+\chapter {Using \Sympa with LDAP}
 \label {ldap}
 
-LDAP is a client-server protocol for accessing a directory service. Sympa
+\index {LDAP} is a client-server protocol for accessing a directory service. Sympa
 provide various features based on access to one or more LDAP directories :
 
 \begin{itemize}
