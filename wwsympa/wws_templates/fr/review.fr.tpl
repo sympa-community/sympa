@@ -9,7 +9,7 @@
       <INPUT TYPE="hidden" NAME="previous_action" VALUE="review">
       <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
       <INPUT TYPE="hidden" NAME="action" VALUE="add">
-      <INPUT TYPE="text" NAME="email" SIZE="18">
+      <INPUT TYPE="text" NAME="email" SIZE="35">
       <INPUT TYPE="submit" NAME="action_add" VALUE="Ajout"> en douce<INPUT TYPE="checkbox" NAME="quiet">
     </FORM>
 </TD>
