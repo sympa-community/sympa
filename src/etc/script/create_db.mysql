@@ -1,0 +1,28 @@
+## MySQL Database creation script
+
+CREATE DATABASE sympa;
+
+## Connect to DB 
+\r sympa
+
+CREATE TABLE user_table (
+  	email_user          	varchar (100) NOT NULL,
+  	gecos_user          	varchar (150),
+  	password_user		varchar (20),
+	cookie_delay_user	int,
+	lang_user		varchar (10),
+	PRIMARY KEY (email_user)
+);
+
+CREATE TABLE subscriber_table (
+  	list_subscriber       	varchar (50) NOT NULL,
+	user_subscriber		varchar (100) NOT NULL,
+	date_subscriber		datetime NOT NULL,
+	update_subscriber	datetime,
+	visibility_subscriber	varchar (20),
+	reception_subscriber	varchar (20),
+	bounce_subscriber	varchar (30),
+	PRIMARY KEY (list_subscriber, user_subscriber)
+);
+
+

@@ -1,0 +1,9 @@
+title.us non subscribers and multipart messages are sent to editor
+title.fr les messages des non abonnés et les messages multipart sont soumis aux modérateurs
+title.de non subscribers and multipart messages are sent to editor
+title.es mensajes de los subscriptores son enviados al editor (multipart messages are sent to editor)
+
+match([header->Content-Type],/multipart/)      smtp,smime,md5  -> editorkey
+is_subscriber([listname],[sender])             smtp,md5        -> do_it
+is_editor([listname],[sender])                 smtp,md5        -> do_it
+true()                                         smtp,smime,md5  -> editorkey

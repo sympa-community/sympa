@@ -1,0 +1,9 @@
+title.us need authentication (notification is sent to owners)
+title.fr soumis a authentification (notification des proprio)
+title.de need authentication (notification is sent to owners)
+title.es ncesita autentificación (notificación es enviada a los propietarios)
+
+# do not authentify nor notify updates 
+is_subscriber ([listname],[sender])  smtp,smime,md5 -> do_it
+true()				     smtp -> request_auth
+true()				     md5,smime  -> do_it,notify

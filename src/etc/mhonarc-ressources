@@ -1,0 +1,500 @@
+<!-- =============== Mhonarc ressources, you must check mhonarc documentation              -->
+
+<NOMAILTO>
+<MULTIPG>
+
+<IDXSIZE>
+30
+</IDXSIZE>
+
+<NODOC>
+<Sort>
+
+<!-- should not be changed -->
+<IDXFNAME>
+mail1.html
+</IDXFNAME>
+
+<!-- should not be changed -->
+<TIDXFNAME>
+thrd1.html
+</TIDXFNAME>
+
+<!-- =============== Index page description -->
+
+<!--  mail1.html -->
+<IDXPGBEGIN>
+
+<CENTER>
+<P>
+<FONT COLOR="--DARK_COLOR--" SIZE=+1><B>$mois$ $yyyy$</B></FONT>
+<HR WIDTH=30%>
+
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="--DARK_COLOR--"><TD>
+  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
+<TR ALIGN=CENTER VALIGN=MIDDLE>
+
+$PREVPGLINK$
+<TD  NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER"><b>$NUMOFMSG$ 
+[IF lang=fr]
+ messages, page n&#176;
+[ELSE]
+ mails, page # 
+[ENDIF]
+  $PAGENUM$/$NUMOFPAGES$</B></TD>
+$NEXTPGLINK$
+
+</TD>
+
+<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN=CENTER>
+
+<FONT COLOR="--BG_COLOR--" SIZE="-1"><b>
+[IF lang=fr]
+Suivi chronologique
+[ELSE]
+Chronological
+[ENDIF]
+</b></FONT>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<A HREF="thrd$PAGENUM$.html" STYLE="TEXT-DECORATION: NONE"><FONT size=-1>
+[IF lang=fr]
+<b>Suivi de conversation</b> <i>thread</i>
+[ELSE]
+<B>Thread</B>
+[ENDIF]
+</FONT></A>
+</TD></TR></TABLE>
+</TD></TR></TABLE>
+
+</CENTER>
+
+</IDXPGBEGIN>
+
+<!--  maillist.html bottom -->
+<IDXPGEND>
+<HR>
+<P>
+<font size=-1 color="--DARK_COLOR--">
+[IF lang=fr]
+Archives basées sur
+[ELSE]
+Archive powered by
+[ENDIF]
+ <A HREF="$DOCURL$">MhonArc $VERSION$ </A>.
+
+</IDXPGEND>
+
+<!-- top of message list -->
+<ListBegin>
+<ul>
+</LISTBEGIN>
+
+<!-- bottom of message list -->
+<LISTEND>
+</ul>
+</LISTEND>  
+
+
+<!-- item of maillist.html -->
+<LITEMPLATE> 
+<LI><b> $SUBJECT$ </b> <code>$FROMADDR$</code>
+</LITEMPLATE> 
+
+
+<!--threads index -->
+
+
+<!-- top of thread index -->
+<TIDXPGBEGIN>
+
+</TIDXPGBEGIN>
+
+<!-- bottom of threads index -->
+
+<TIDXPGEND>
+
+<font size=-1 color="--DARK_COLOR--">
+[IF lang=fr]
+ Les archives de wwsympa sont basées sur
+[ELSE]
+Archive powered by
+[ENDIF]
+ <A HREF="$DOCURL$">MhonArc $VERSION$ </A>.
+
+</TIDXPGEND>
+
+<THEAD>
+<center>
+
+<font color="--DARK_COLOR--" size=+1><b>$mois$ $yyyy$</b></font>
+<HR width=30%>
+
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="--DARK_COLOR--"><TD>
+  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
+<TR ALIGN=CENTER VALIGN=MIDDLE>
+
+$TPREVPGLINK$
+<TD  NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER">page n&#176; $PAGENUM$ / $NUMOFPAGES$</TD>
+$TNEXTPGLINK$
+
+<td NOWRAP BGCOLOR="--LIGHT_COLOR--" align="center">
+<A HREF="mail$PAGENUM$.html" STYLE="TEXT-DECORATION: NONE">
+<font size=-1><b>
+[IF lang=fr]
+Suivi chronologique
+[ELSE]
+Chronological
+[ENDIF]
+</B></FONT></A>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<FONT COLOR="--BG_COLOR--" SIZE="-1">
+[IF lang=fr]
+<b>Suivi de conversation</b> <i>thread</i> 
+[ELSE]
+<b>Thread</b>
+[ENDIF]
+</b></FONT>
+
+</TD></TR></TABLE>
+</TD></TR></TABLE>
+</CENTER>
+
+<UL>
+</THEAD>
+
+<TFOOT>
+</UL>
+<HR>
+
+</TFOOT>
+
+<TTOPBEGIN>
+<LI><b> $SUBJECT$ </b> <code>$FROMADDR$</code><BR>
+</TTOPBEGIN>
+
+<TTOPEND>
+</LI>
+</TTOPEND>
+
+
+<TCONTBEGIN>
+<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>
+[IF lang=fr]
+suite
+[ELSE]
+next
+[ENDIF]
+</em>
+</TCONTBEGIN>
+
+<TCONTEND>
+</LI>
+</TCONTEND>
+
+<TSUBLISTBEG>
+<UL>
+</TSUBLISTBEG>
+
+<TSUBLISTEND>
+</UL>
+</TSUBLISTEND>
+
+<TSUBJECTBEG>
+<!-- suite possible evaluee sur la base du sujet -->
+</TSUBJECTBEG>
+
+<TSINGLETXT>
+<LI><b> $SUBJECT$ </b><code>$FROMADDR$</code>
+</LI>
+</TSINGLETXT>
+
+<TLITXT>
+<LI><b> $SUBJECT$ </b><code>$FROMADDR$</code>
+</TLITXT>
+
+<TLIEND>
+</LI>
+</TLIEND>
+
+<TLiNone>
+<LI><EM>
+[IF lang=fr]
+Message non disponible
+[ELSE]
+Message not availible
+[ENDIF]
+</EM>
+</TLiNone>
+<TLINoneEnd>
+</LI>
+</TLINoneEnd>
+
+<!-- links definition -->
+<PrevPgLink chop>
+<td NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;<A HREF="$PREVPG$" ><FONT FACE=Arial,Helvetica COLOR="--DARK_COLOR--"><IMG SRC="/icons/left.gif" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
+</PrevPgLink>
+
+<PrevPgLinkIA chop>
+<td NOWRAP BGCOLOR="--LIGHT_COLOR--">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</PrevPgLinkIA>
+
+<NextPgLink chop>
+<td NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;<A HREF="$NEXTPG$"><FONT FACE=Arial,Helvetica COLOR="--DARK_COLOR--"><IMG SRC="/icons/right.gif" height=20 border=0 align=center></font></A>&nbsp;&nbsp;</td>
+</NextPgLink>
+
+<NextPgLinkIA chop>
+<td NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</NextPgLinkIA>
+
+<TPrevPgLink chop>
+<td NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;<A HREF="$TPREVPG$"><FONT FACE=Arial,Helvetica COLOR="--DARK_COLOR--"><IMG SRC="/icons/left.gif" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
+</TPrevPgLink>
+
+<TPrevPgLinkIA chop>
+<td NOWRAP BGCOLOR="--LIGHT_COLOR--">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</TPrevPgLinkIA>
+
+<TNextPgLink chop>
+<td NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center" >&nbsp;&nbsp;<A HREF="$TNEXTPG$"><FONT FACE=Arial,Helvetica COLOR="--DARK_COLOR--"><IMG SRC="/icons/right.gif" height=20 border=0 align=center></font></A>&nbsp;&nbsp;</td>
+</TNextPgLink>
+
+<TNextPgLinkIA chop>
+<td NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</TNextPgLinkIA>
+
+<PREVBUTTON>
+<TD  NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;<A HREF="$PREVMSG$"><IMG SRC="/icons/left.gif" HEIGHT=20 BORDER=0 ALIGN=MIDDLE></A>&nbsp;&nbsp;</TD>
+</PREVBUTTON>
+
+<PREVBUTTONIA>
+<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</PREVBUTTONIA>
+
+<!-- next message button -->
+
+<NEXTBUTTON>
+<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp<A HREF="$NEXTMSG$"><IMG SRC="/icons/right.gif" height=20 border=0 align=middle></A>&nbsp;&nbsp</td>
+</NEXTBUTTON>
+
+<NEXTBUTTONIA>
+<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</NEXTBUTTONIA>
+
+
+<TPREVBUTTON>
+<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;<A HREF="$TPREVMSG$"><IMG SRC="/icons/left.gif" height=20 border=0 align=middle></A>&nbsp;&nbsp;</TD>
+</TPREVBUTTON>
+
+<TPREVBUTTONIA>
+<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TPREVBUTTONIA>
+
+<!-- prev message button in thread page -->
+
+<TNEXTBUTTON>
+<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp<A HREF="$TNEXTMSG$"><IMG SRC="/icons/right.gif" height=20 border=0 align=middle></A>&nbsp;&nbsp</td>
+</TNEXTBUTTON>
+
+<TNEXTBUTTONIA>
+<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TNEXTBUTTONIA>
+
+
+<!-- ==================================  Les messages -->
+
+<MSGPGBEGIN>
+
+</MSGPGBEGIN>
+
+<TOPLINKS>
+<center>
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="--DARK_COLOR--"><TD>
+  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
+<TR ALIGN=CENTER VALIGN=MIDDLE>
+ $PREVBUTTON$
+ <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER"><A HREF="$IDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
+[IF lang=fr]
+Chronologie
+[ELSE]
+Chronological
+[ENDIF]
+</B></FONT></A></TD>
+$NEXTBUTTON$ 
+<TD WIDTH=40% BGCOLOR="--LIGHT_COLOR--">&nbsp;</TD>
+$TPREVBUTTON$ 
+<TD  NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER"><A HREF="$TIDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
+[IF lang=fr]
+Conversation
+[ELSE]
+Thread
+[ENDIF]
+</B></FONT></A></TD>
+
+$TNEXTBUTTON$ 
+
+</TR></TABLE>
+</TD></TR></TABLE>
+
+</center>
+<HR>
+
+</TOPLINKS>
+
+<BOTLINKS>
+<UL>
+</BOTLINKS>
+
+<SubjectHeader>
+<TABLE border=0 width=100%>
+<TR bgcolor="--BG_COLOR--">
+ <TD>
+  <FONT size=+1 COLOR="--DARK_COLOR--"><B> $SUBJECTNA$</B></FONT><FONT size=+1> $FROMNAME$ </FONT>
+ </TD>
+
+ <TD ALIGN=RIGHT NOWRAP>
+
+[IF action<>viewmod]
+[IF user->email=$FROMADDR$]
+  <FORM ACTION="[path_cgi]" METHOD=POST>
+  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+  <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
+  <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
+  <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="
+[IF lang=fr]
+  marquer ce message pour suppression
+[ELSE]
+  tag this mail for deletion
+[ENDIF]
+"></br>
+  </FORM>
+[ELSIF is_owner]
+  <FORM ACTION="[path_cgi]" METHOD=POST>
+  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+  <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
+  <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
+  <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="
+[IF lang=fr]
+  marquer ce message pour suppression
+[ELSE]
+  tag this mail for deletion
+[ENDIF]
+"></br>
+  </FORM>
+[ENDIF]
+
+[ENDIF]
+ </TD>
+ </TR>
+</TABLE>
+
+</SubjectHeader>
+
+<!-- Le message lui-même -->
+<!-- éléments d'entête qu'il ne faut pas afficher -->
+<EXCS>
+content-
+errors-to
+forward
+lines
+mime-
+message-id
+nntp-
+originator
+path
+precedence
+received
+replied
+return-path
+status
+sender
+via
+list-archive
+list-help
+list-owner
+list-post
+list-subscribe
+list-unsubscribe
+in-reply-to
+</EXCS>
+
+<!-- ordre d'affichage des éléments de l'entête -->
+<FIELDORDER>
+from
+to
+cc
+subject
+date
+-extra-
+</FIELDORDER>
+
+<LABELSTYLES>
+From:strong
+To:strong
+Subject:strong
+-default-:em
+</LABELSTYLES>
+
+<!-- ====================================== DIVERS -->
+<DAYBEGIN>
+<LI><strong>$DDMMYY$</strong><ul>
+</DAYBEGIN>
+
+<DayEnd>
+</li></ul>
+</DayEnd>
+
+<WEEKDAYS>
+[IF lang=fr]
+Dimanche
+[ELSE]
+Sunday
+[ENDIF]
+:
+[IF lang=fr]
+Lundi
+[ELSE]
+Monday
+[ENDIF]
+:
+[IF lang=fr]
+Mardi
+[ELSE]
+Tuesday
+[ENDIF]
+:
+[IF lang=fr]
+Mercredi
+[ELSE]
+Wednesday
+[ENDIF]
+:
+[IF lang=fr]
+Jeudi
+[ELSE]
+Thursday
+[ENDIF]
+:
+[IF lang=fr]
+Vendredi
+[ELSE]
+Friday
+[ENDIF]
+:
+[IF lang=fr]
+Samedi
+[ELSE]
+Saturday
+[ENDIF]
+</WEEKDAYS>
+
+<MONTHS>
+Janvier:Fevrier:Mars:Avril:Mai:Juin:Juillet:Aout:Septembre:Octobre:Novembre:Decembre
+</MONTHS>
+
+<MsgLocalDateFmt>
+%A %d %B %Y
+</MsgLocalDateFmt>
+

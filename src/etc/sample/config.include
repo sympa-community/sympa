@@ -1,0 +1,51 @@
+subject This sample show how to define a list using include directives
+
+owner
+email serge.aumont@cru.fr
+
+editor
+email olivier.salaun@cru.fr
+gecos C.R.U
+
+send editorkeyonly
+
+
+#using include subscribe and unsubscribe are closed anyway
+subscription closed
+
+unsubscribe closed
+
+cookie 123 nous irons aux bois
+
+review owner
+
+# user data is defined with include
+user_data_source include
+
+# this list first include subscribers of another list named test
+include_list test
+
+# include a liste of email from a file
+include_file /tmp/tagada
+
+# include person named "Durand" found in bigfoot
+include_ldap_query
+  host ldap.bigfoot.com
+  filter (&(cn=Durand) (c=fr))
+
+include_ldap_query
+  host ldap.cru.fr
+  suffix dc=cru, dc=fr
+  filter (cn=Aumont)
+
+# include student email from a oracle database
+include_sql_query
+      db_type oracle
+      db_name scolarite
+      host sqlserv.admin.univ-machin.fr
+      user banalise
+      passwd mysecret
+      sql_query SELECT DISTINCT email FROM student
+
+# this TTL is set to a very small value for test
+ttl 20

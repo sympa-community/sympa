@@ -1,0 +1,15 @@
+
+      Usted no tiene una contraseña en este servidor o se le ha olvidado<br>
+      Se le será enviada por email :
+
+      <FORM ACTION="[path_cgi]" METHOD=POST>
+	  <INPUT TYPE="hidden" NAME="referer" VALUE="[referer]">
+        <FONT COLOR="--DARK_COLOR--"><B>Dirección E-mail</B> </FONT>
+        [IF email]
+	  [email]
+          <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
+	[ELSE]
+	  <INPUT TYPE="text" NAME="email" SIZE="20">
+	[ENDIF]
+        &nbsp; &nbsp; &nbsp;<INPUT TYPE="submit" NAME="action_sendpasswd" VALUE="Enviarme mi contraseña">
+      </FORM>

@@ -1,0 +1,36 @@
+## Oracle Database creation script
+## Fabien Marquois <fmarquoi@univ-lr.fr>
+
+/Bases/oracle/product/7.3.4.1/bin/sqlplus loginsystem/passwdoracle <<-!
+ create user SYMPA identified by SYMPA default tablespace TABLESP
+temporary tablespace TEMP;
+ grant create session to SYMPA;
+ grant create table to SYMPA;
+ grant create synonym to SYMPA;
+ grant create view to SYMPA;
+ grant execute any procedure to SYMPA;
+ grant select any table to SYMPA;
+ grant select any sequence to SYMPA;
+ grant resource to SYMPA;
+!
+
+/Bases/oracle/product/7.3.4.1/bin/sqlplus SYMPA/SYMPA <<-!
+CREATE TABLE user_table (
+        email_user              varchar2(100) NOT NULL,
+        gecos_user              varchar2(150),
+        password_user           varchar2(20),
+        cookie_delay_user       number,
+        lang_user               varchar2(10),
+        CONSTRAINT ind_user PRIMARY KEY (email_user)
+);
+CREATE TABLE subscriber_table (
+        list_subscriber         varchar2(50) NOT NULL,
+        user_subscriber         varchar2(100) NOT NULL,
+        date_subscriber         date NOT NULL,
+	update_subscriber	date,
+        visibility_subscriber   varchar2(20),
+        reception_subscriber    varchar2(20),
+ 	bounce_subscriber       varchar2 (30),
+        CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber,user_subscriber)
+);
+!

@@ -1,0 +1,7 @@
+title.fr les membres du domaine local
+title.us anyone from local domain 
+title.es cualquier miembro del dominio local 
+
+is_listmaster([ sender])     md5,smime -> do_it
+match([sender],/[conf->host]$/)    md5,smime -> listmaster,notify
+

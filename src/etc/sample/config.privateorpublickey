@@ -1,0 +1,28 @@
+## Template for a private list ; non-subscribers can contribute
+## to the list after authentication (against anonymous Spam)
+
+
+# anybody can submit messages, subscriber's one are ditributes automaticaly
+# others need first an authentification.
+send privateorpublic
+
+archive
+period week
+access private
+
+reply_to sender
+
+## Authentification of subscription, owner is notified
+subscribe auth,notify
+
+## Owner is notified of unsubscriptions
+unsubscribe open,notify
+
+## Access to list members is restricted to subscribers themselves
+review owner
+
+owner
+email proprio@un.domaine
+
+owner
+email proprio2@second.domaine

@@ -1,0 +1,5352 @@
+%
+% Copyright (C) 1999, Institut Pasteur & Christophe Wolfhugel
+% Copyright (C) 1999, Comité Réseau des Universités & Serge Aumont, Olivier Salaün
+% Copyright (C) 1999, UVSQ & Pierre David
+% 
+%
+% Historique
+%   1999/04/12 : pda@prism.uvsq.fr : conversion to latex2e
+%
+
+
+\documentclass [twoside,a4paper] {report}
+
+    \usepackage {epsfig}
+    \usepackage {xspace}
+    \usepackage {makeidx}
+    \usepackage {html}
+
+    \usepackage {palatino}
+    \renewcommand {\ttdefault} {cmtt}
+
+    \setlength {\parskip} {5mm}
+    \setlength {\parindent} {0mm}
+
+    \pagestyle {headings}
+    \makeindex
+
+    \sloppy
+
+    \usepackage [dvips] {changebar}
+    % \begin {changebar} ... \end {changebar}
+    % ou \cbstart ... \cbend   et \cbdelete
+
+    %
+    % Change bars are not well rendered by latex2html
+    %
+
+    \begin {htmlonly}
+        \renewcommand {\cbstart} {}
+        \renewcommand {\cbend} {}
+        \renewcommand {\cbdelete} {}
+    \end {htmlonly}
+
+    % black text on a white background, links unread in red
+    % \bodytext {TEXT="#000000" BGCOLOR="#ffffff" LINK="#ff0000"}
+    % black text on a white background
+    \bodytext {TEXT="#000000" BGCOLOR="#ffffff"}
+
+    \newcommand {\fig} [2]
+    {
+        \begin {figure} [htbp]
+            \hrule
+            \vspace {3mm}
+            \begin {center}
+                \epsfig {figure=#1.ps}
+%                \epsffile {figure=#1.ps}
+            \end {center}
+            \vspace {2mm}
+            \caption {#2}
+            \vspace {3mm}
+            \hrule
+            \label {fig:#1}
+        \end {figure}
+    }
+
+    \newcommand {\version} {2.7}
+
+    \newcommand {\samplelist} {mylist}
+
+    % #1 = text to index and to display
+    \newcommand {\textindex} [1] {\index{#1}#1}
+
+    % #1 = sort key, #2 displayed in text and index
+    \newcommand {\textindexbis} [2] {\index{#1@#2}#2}
+
+    \newcommand {\Sympa} {\textit {Sympa}\xspace}
+
+    \newcommand {\WWSympa} {\textindexbis {WWSympa}{\textit {WWSympa}}\xspace}
+
+    % #1 = sort key, #2 : displayed in text and index, #3 displayed in index
+    \newcommand {\ttindex} [3]  {\index{#1@\texttt {#2} #3}\texttt {#2}}
+
+    \newcommand {\example} [1] {Example: \texttt {#1}}
+
+    \newcommand {\unixcmd} [1] {\ttindex {#1} {#1} {Unix command}}
+
+    \newcommand {\mailcmd} [1] {\ttindex {#1} {#1} {mail command}}
+
+    \newcommand {\cfkeyword} [1] {\ttindex {#1} {#1} {configuration keyword}}
+
+    \newcommand {\default} [1]  {(Default value: \texttt {#1})}
+
+    \newcommand {\scenarized} [1] {\texttt {#1} parameter is defined by scenario (see~\ref {scenarii}, page~\pageref {scenarii})}
+
+    \newcommand {\lparam} [1] {\ttindex {#1} {#1} {list parameter}}
+
+    \newcommand {\file} [1] {\ttindex {#1} {#1} {file}}
+
+    \newcommand {\dir} [1]  {\ttindex {#1} {#1} {directory}}
+
+    \newcommand {\tildefile} [1] {\ttindex {#1} {\~{}#1} {file}}
+
+    \newcommand {\tildedir} [1] {\ttindex {#1} {\~{}#1} {directory}}
+
+    \newcommand {\rfcheader} [1] {\ttindex {#1:} {#1:} {header}}
+
+    % Notice: use {\at} when using \mailaddr
+    \newcommand {\at} {\char64}
+    \newcommand {\mailaddr} [1] {\texttt {#1}}   
+% mail address
+%        {\ttindex {#1} {#1} {mail address}}
+
+
+\begin {document}
+
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software}
+    \author {
+        Serge Aumont,
+        Olivier Sala\"un,
+        Christophe Wolfhugel,
+         }
+    \date {September 2000}
+\begin {htmlonly}
+For printing purpose, use the 
+\htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
+\end {htmlonly}
+
+\maketitle
+
+
+{
+    \setlength {\parskip} {0cm}
+
+
+
+    \cleardoublepage
+
+    \tableofcontents
+    % \listoffigures
+    % \listoftables
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Presentation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Presentation}
+
+\Sympa is an electronic mailing list manager.  It is used to automate
+list management functions such as subscription, moderation,
+archive and shared documents management. 
+It also includes management functions which
+would normally require a high quantity of work that may be time
+consumming and costly for the list owner.  Examples of these
+functions include automatic management of subscription renewals,
+list maintenance ...
+
+\Sympa is designed to manage many different kind of lists. It includes
+a web interface for all list function including management. It allows
+fine definition of each list feature such as sender autorisation,
+moderating process,  etc. \Sympa is designed to define for each list
+and for each feature on the list who can perform the
+operation and which method is used to authenticate this personn. Currently
+the authentication available method can be based either on the smtp From
+header, a password, or S/MIME signature.\\
+\Sympa is also able extract electronic
+addresses from an LDAP directory or any SQL server and include them
+dynamically in a list.
+
+\Sympa  manages sending of messages to the lists, e.g.  their
+routing up to the destination, and therefore makes it possible to
+reduce the load on the computer system hosting \Sympa.  In
+configurations that have enough memory, \Sympa is especially well
+adapted for large lists: for a 20,000 subscribers list, it takes
+less than 6 minutes to send a message to 95 percent of the subscribers,
+assuming that the network is available (tested on a 300~MHz, 256~MB
+i386 serveur with Linux).
+
+This guide covers installation, configuration and management of
+the current release (\version) of
+\htmladdnormallink {sympa} {http://listes.cru.fr/sympa/}.
+
+\section {License}
+
+\Sympa is a free software, you may distribute it under the terms
+of the
+\htmladdnormallinkfoot {GNU General Public License Version 2}
+        {http://www.gnu.org/copyleft/gpl.html}
+
+You may make and give away verbatim copies of the source form of
+this package without restriction, provided that you duplicate all
+of the original copyright notices and associated disclaimers.
+
+\section {Features}
+
+\Sympa provide all the basic features that any mailing list management robot
+should include. Most \Sympa features have equivalent into different
+software, but \Sympa provides all of thoses features
+into a single software, including:
+
+\begin {itemize}
+    \item High speed distribution process and load control. \Sympa
+        can be tuned to allow the system administrator to control
+        the amount of computer resources used.  Its algorithm
+        is optimized:
+
+        \begin {itemize}
+            \item use of your prefered SMTP engine, e.g.
+                \unixcmd {sendmail}, \unixcmd {qmail} or \unixcmd
+                {postfix}.
+
+            \item tune the maximum number of SMTP child processes.
+
+            \item sort email by domain and tune recipient grouping
+                factor (depending on repartion of subscriber's
+                domain)
+
+            \item detailed logs.
+
+        \end {itemize}
+
+    \item \textbf {Multilingual} messages. Current version of
+        \Sympa allows the administrator to choose the language
+        catalog at run time. Currently, \Sympa robot is available for
+        french, english, spanish, italian, german, finish and chinese
+	(Big5 and GB) languages (web interface is available
+        for french, english and spanish).
+
+    \item \textbf {MIME support}. Of course, \Sympa respects
+        \textindex {MIME} in the distribution process but also,
+        \Sympa allows list owner to configure their list with
+        welcome, goodbye and other predefined messages using complex
+        \textindex {MIME} structure, e.g. welcome message can be
+        \textbf {multipart/alternative} using \textbf {text/html},
+        \textbf {audio/x-wav}~:-) or whatever (Note that \Sympa
+        recognize commands in multipart messages as soon as one
+        part is \textbf {text/plain }).
+
+    \item The \textbf {sending process is controlled} per list.
+        The list definition allows many different actions for
+        each incomming message. A \lparam {private} list is a list where
+        only subscribers can send messages. A list configured using
+        \lparam {privateoreditorkey} mode accepts incoming messages
+        from subscribers, otherwise \Sympa forwards it to the editor
+        with a one time secret numeric key that will be used by the
+        editor to \textit {reject} or \textit {distribute} the
+        message. For details about all sending modes, refer to the
+        \lparam {send} parameter (\ref {par-send}, page~\pageref
+        {par-send}). The sending process configuration (as well as most other list
+	operation) is defined using  a \textbf {scenario}. Any listmaster
+        can define new scenario in order to describe some configuration
+        different from the 20 predefined configuration distributed. \\
+        Exemple : forward multipart messages to the list editor and  immediatly
+        distribute the others.
+        
+    \item Privileged operations can be performed by list editor or
+        list owner (or any other user category) as defined in list
+        \file {config} file or by
+        the robot \textindex {administrator}: listmaster defined
+        in the \file {/etc/sympa.conf} global configuration file.
+        Those operation are the usual \mailcmd {ADD}, \mailcmd
+        {DELETE} or \mailcmd {REVIEW} commands which can be
+        authentified using a one time password or using S/MIME signature.
+	 Any list owner using \mailcmd {EXPIRE}
+        command can ask for renewal of subscriptions.  This is made
+        possible thanks to the subscription date stored in the
+        \Sympa database.
+
+
+    \item Dynamically include electronic addresses from a source
+        that can be either a database accepting SQL queries or an
+        LDAP directory. \Sympa keeps in his cache the data source
+        using a TTL (Time To Live) parameter for reasonable response
+        delays.
+
+    \item Include lists subscriber set in one list. This is a real
+        inclusion, not a dirty subscribtion a lists to a list.
+
+    \item Internal subscriber data structure can be stored in a
+        database or, for compatibility with versions 1.x, in text
+        files. The choice of using a database was driven by the
+        \WWSympa project.  The database ensures a secure access to
+        shared data. The perl database API \textit {dbi/dbd} enables
+        interoperability with various RDBMS (MySQL, PostgreSQL,
+        Oracle, Sybase).
+
+    \label {wwsympa} 
+    \item {\WWSympa} is a global Web interface to all \Sympa functions
+    	(including administration). It supplies :
+
+        \begin {itemize}
+
+	    \item classification of lists, search index
+
+            \item access controle to all functions including to the list of lists
+                  so WWsympa is particulary adpated to be the main groupware tool
+                  of a intranet
+ 
+       	    \item management of list shared documents (download, upload, specific
+		  access control for each document)
+
+            \item to each user, an HTML document presenting his current
+                  subscriptions including access to archives, subscription options
+
+            \item to list owners, list management tools (bounce processing, edition of
+                  list parameters, moderation of incoming messages
+
+            \item to robot administrators, list creation, global robot
+                  configuration \index{administrator}
+
+        \end {itemize}
+
+
+
+\end {itemize}
+
+
+\section {Project directions}
+
+Future developpement should introduce:
+
+\begin {itemize}
+
+    \item Virtual robot definition, ISP would appreciate the
+        equivalent of \htmladdnormallinkfoot {Apache} {http://www.apache.org}
+        virtual server feature applied to mailing lists.
+
+    \item Additional groupeware features such as calendar, scenari editor...
+
+    \item Pluggin commercial antivirus
+ 
+    \item Subscriber preference for multipart/alternative messages reception.
+          Some news paper publish both text/plain and text/html version of
+          there mails. It should be nice to provide a sungle list for both format.
+
+\end {itemize}
+
+\section {History}
+
+\Sympa developement started from scratch in 1995. The goal was to
+ensure continuity for the \textindex {TULP} list manager, produced
+partly by the initial author of \Sympa: Christophe Wolfhugel.
+
+New functionalities  were required, but for which the code of TULP
+was no more adequate to continue its life cycle. \Sympa initial
+version brings authentication, flexible management of commands,
+high performances in internal data access and object oriented code
+for easy code maintenance.
+
+It took nearly two years to come out  with the first market releases.
+
+\section {Authors and credits}
+
+Christophe Wolfhugel is the author of the first beta version of
+\Sympa, this work was performed while he was working for the
+\htmladdnormallinkfoot {Institut Pasteur} {http://www.pasteur.fr}.
+
+Later developments are mainly driven by the
+\htmladdnormallinkfoot {Comit\'e R\'eseaux des Universit\'es} {http://www.cru.fr}
+(Olivier Sala\"un and Serge Aumont) in charge of a large mailing
+list service.
+
+We would like to thank contributors, among which:
+
+\begin {itemize}
+
+   \item Pierre David, who in addition to his help and suggestions
+       in developing the code, participated more than actively in
+       the manual that you have in your hands.
+
+  \item Ollivier Robert, Usenet Canal Historique and the good manners
+      guru in the Perl program.
+
+  \item Rapha\"el Hertzog (debian) and St\'ephane Poirey (redhat) for
+      Linux packages.
+
+  \item Olivier Lacroix for all his perseverance in bug fixing.
+
+  \item Fabien Marquois who introduced many new features such as
+      digest.
+
+  \item Alex Nappa and Josep Roman for their spanish translations
+
+  \item Carsten Clasohm and Jens-Uwe Gaspar for their german translations
+
+  \item Marco Ferrante for his italian translations
+
+  \item Hubert Ulliac for search in archive base on marcsearch.pm
+
+  \item Tung Siu Fai for his chinese translations
+
+  \item and also: Manuel Valente, Dominique ROUSSEAU,
+    Laurent Ghys, Francois Petillon, Guy Brand, Jean Brange, Fabrice
+    Gaillard, Hervé Maza
+
+   \item Persuaded anonymous ones who never missed a chance to
+       remind us that \textit {smartlist} already did all that
+       better.
+
+   \item All contributors and beta-testers cited in the \file
+       {RELEASE\_NOTES} file who by serving as guinea pigs and
+       being the first to use it, made it possible to quickly and
+       efficiently debug the \Sympa software.
+
+    \item Bernard Barbier, without whom \Sympa would not
+        have a name.
+
+\end {itemize}
+
+May those people we have forgotten to thank accept our apologies
+and make us aware of it so that we can correct this error in future
+releases of this documentation.
+
+\section {Mailing list and support}
+    \label {sympa@cru.fr}
+
+If you wish to contact the authors of \Sympa, please use the address
+\mailaddr {sympa-authors{\at}cru.fr}.
+
+There are also a \htmladdnormallinkfoot {few mailing-lists about \Sympa} {http://listes.cru.fr/wws/lists/informatique/sympa} :
+
+	\begin {itemize}
+	   \item  \mailaddr {sympa-users{\at}cru.fr} general info list
+	   
+	   \item   \mailaddr {sympa-fr{\at}cru.fr}, for french-speaking users
+			   
+	   \item   \mailaddr {sympa-announce{\at}cru.fr}, \Sympa announces
+			  
+	   \item   \mailaddr {sympa-dev{\at}cru.fr}, \Sympa developpers
+			  
+	\end {itemize}
+
+To join, send the following message to \mailaddr {sympa{\at}cru.fr}:
+
+\begin {quote}
+    \texttt {subscribe} \textit {Listname} \textit {Firstname} \textit {Name}
+\end {quote}
+
+(replace \textit {Listname}, \textit {Firstname} and \textit {Name} by the list name, your first name and your family name).
+
+You may also have a look at the \Sympa \htmladdnormallink {home page} {http://listes.cru.fr/sympa},
+you will find the upto date version, \htmladdnormallink {FAQ} {http://listes.cru.fr/sympa/fom-serve/cache/1.html} and so on.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Overview, what is it made of ?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\chapter {Overview, what is it made of ?}
+
+%\begin {htmlonly}
+%<A NAME="overview">
+%\end {htmlonly}
+
+\section {Organization}
+\label {organization}
+
+Here is a snapshot of what \Sympa looks like once it has settled 
+on your system. This also reveals the pruduct's philosophy I guess.
+
+\begin {itemize}
+
+	\item \tildedir {sympa/}\\
+	The root directory of \Sympa, you will find almost everything
+	related to \Sympa under this directory, except logs and main
+	configuration files.
+	
+	\item \tildedir {sympa/bin/}\\
+	This directory contains the binaries, including CGI. It
+	also contains the default scenarios, templates and configuration
+	files.
+
+	\item \tildedir {sympa/bin/etc/}\\
+	\Sympa will find here defaults for what it expects in 
+	\tildedir {sympa/etc/} (scenarios, templates and configuration
+	files, recognized S/Mime certificates).
+
+	\item \tildedir {sympa/etc/}\\
+	This is your site's configuration directory. Take a look at
+	\tildedir {sympa/bin/etc/} for designing your own.
+
+	\item \tildedir {sympa/etc/create\_list\_templates/}\\
+	Here are your list's templates, those proposed at list
+	creation time.
+
+	\item \tildedir {sympa/etc/scenari/}\\
+	This directory will contain your scenarios. If you don't
+	know what the hell is a scenario, refer to \ref {scenarii}, 
+	page~\pageref {scenarii}.
+	
+	\item \tildedir {sympa/etc/wws\_templates/}\\
+	The web interface (\WWSympa) is made of template HTML
+	files parsed by the CGI program.
+
+	\item \tildedir {sympa/etc/templates/}\\
+	Some replies of the mail robot are defined by templates
+	(\file{welcome.tpl} for SUBSCRIBE). You can overload
+	these template files in the list's directory, here are
+	the defaults.
+
+	\item \tildedir {sympa/expl/}\\
+	The working directory of \Sympa.
+
+	\item \tildedir {sympa/expl/\samplelist}\\
+	The list directory, refer to \ref {list-directory}, 
+	page~\pageref {list-directory}.
+
+	\item \tildedir {sympa/nls/}\\
+	Internationalization directory. It contains XPG4-compatible
+	messages catalogues. \Sympa has currently been translated
+	to 8 different languages.
+
+	\item \tildedir {sympa/spool/}\\
+	\Sympa uses 6 different spools.
+
+	\item \tildedir {sympa/src/}\\
+	Here is where we store \Sympa sources.
+
+\end {itemize}
+
+\section {Binaries}
+\label {binaries}
+
+\begin {itemize}
+
+	\item \file {sympa.pl}\\
+	The main daemon ; it processes commands and delivers
+	messages. It is permanently scanning the \dir {msg/} spool.
+
+	\item \file {wwsympa.fcgi}\\
+	This is the CGI program, proposing a complete web interface
+	to mailing lists. It can work in both classical CGI and
+	FastCGI modes ; we recommand FastCGI mode though, being
+	up to 10 times faster.
+
+	\item \file {bounced.pl}\\
+	This daemon processes bounces (non-delivery messages),
+	looking for the bad addresses. List owners will later
+	access bounces information via \WWSympa. It is permanently 
+	scanning the \dir {bounce/} spool.
+
+	\item \file {archived.pl}\\
+	This daemon feeds the web archives, converting messages
+	to HTML format and linking them. It uses the amazing 
+	\file {MhOnArc}. It is permanently scanning the \dir {outgoing/} 
+	spool.
+
+	\item \file {queue}\\
+	This small program gets the incoming messages from the aliases
+	and store them in \dir {msg/} spool.
+
+	\item \file {bouncequeue}\\
+	Same as \file {queue} for bounces. It stores bounces in 
+	\dir {bounce/} spool.
+
+\end {itemize}
+
+\section {Configuration files}
+
+\begin {itemize}
+
+	\item \file {sympa.conf}\\
+	The main configuration file.
+	See \ref{exp-admin}, page~\pageref{exp-admin}.
+	
+
+	\item \file {wwsympa.conf}\\
+	\WWSympa configuration file.
+	See \ref{wwsympa}, page~\pageref{wwsympa}.
+	
+	\item \file {edit\_list.conf}\\
+	It defines what parameters/files are editable by
+	owners. See \ref{list-edition}, page~\pageref{list-edition}.
+
+	\item \file {topics.conf}\\
+	Define your site's topics (classification in \WWSympa) in this 
+	file with titles. A sample is provided in \dir {sample/} directory
+	of the sympa distribution.
+	See \ref{topics}, page~\pageref{topics}.
+
+\end {itemize}
+
+\section {Spools}
+\label {spools}
+
+\begin {itemize}
+
+	\item \tildedir {sympa/spool/auth/}\\
+	For storing messsages until it has been confirmed.
+
+	\item \tildedir {sympa/spool/bounce/}\\
+	For storing incoming bouncing messages.
+
+	\item \tildedir {sympa/spool/digest/}\\
+	For storing lists' digests before it is sent.
+
+	\item \tildedir {sympa/spool/expire/}\\
+	Related to expire process.
+
+	\item \tildedir {sympa/spool/mod/}\\
+	For storing unmoderated messages.
+
+	\item \tildedir {sympa/spool/msg/}\\
+	For storing incoming messages (including commands).
+
+	\item \tildedir {sympa/spool/outgoing/}\\
+	\file {sympa.pl} dumps messages i this spool 
+	for \file {archived.pl} to archive them.
+
+\end {itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Installing Sympa
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\chapter {Installing \Sympa}
+
+%\begin {htmlonly}
+%<A NAME="installsympa">
+%\end {htmlonly}
+
+\Sympa is a program written in Perl language. It also calls a short
+program written in C to perform some tasks for which it is not
+reasonable to entrust an interpreted language.
+
+\section {Getting \Sympa, related links}
+
+The \Sympa distribution is available from
+\htmladdnormallink {\texttt {http://listes.cru.fr/sympa/}}
+    {http://listes.cru.fr/sympa/}.
+All important resources are referenced there:
+
+\begin {itemize}
+    \item sources
+    \item \file {RELEASE\_NOTES}
+    \item .rpm and .deb packages for Linux
+    \item user mailing list
+        (see~\ref {sympa@cru.fr}, page~\pageref {sympa@cru.fr})
+    \item contributions
+    \item ...
+\end {itemize}
+
+
+\section {Prerequisites}
+
+\Sympa installation and configuration are relatively easy
+tasks for an administrator who already has a good deal of experience
+with Unix systems and installation of tools written in Perl.
+
+The user will note that a large part of the installation time will
+be devoted to installation of the prerequisites if they are not
+already on the system. The number of ancillary tools required is
+not really of great importance, but on a current Unix system, it
+should be possible to do this without much of a problem. We strongly
+advise carrying out the system installations and checks in the
+order listed below; these steps will be explained in detail in later
+sections.
+
+\begin {itemize}
+    \item identification of characteristics of Unix system that
+        will host \Sympa.
+
+    \item installation of DB Berkeley module (already installed on
+      most UNIX systems).
+
+    \item installation of
+        \htmladdnormallinkfoot {CPAN (Comprehensive Perl Archive Network)}
+                {http://www.perl.com/CPAN}
+        modules.
+
+    \item creation of a Unix user.
+
+\end {itemize}
+
+\subsection {System requirements}
+
+You should have a Unix system that is more or less recent in order
+to be able to use \Sympa. In particular, it is necessary
+that your system have an ANSI C compiler (on the whole, in the case
+which is of interest to us, your compiler should support prototypes)
+as well as XPG4-standard \textindex {NLS} (Native Language Support, for
+languages other than English) extensions.
+
+\Sympa has been installed and tested on the following
+systems, therefore you should not have any special problems:
+
+\begin {itemize}
+    \item Linux (various distributions)
+    \item FreeBSD 2.2.x and 3.x
+    \item Digital Unix 4.x
+    \item Solaris 2.5 and 2.6
+    \item AIX 4.x
+    \item HP-UX 10.20
+\end {itemize}
+
+Anyone willing to port it on NT ? ;-)
+
+If your Unix system has a \unixcmd {gencat} command as well as
+\unixcmd {catgets(3)} and \unixcmd {catopen(3)} functions, it is
+likely that it has \textindex {NLS} extensions and that these extensions comply
+with the XPG4 specifications.
+
+Finally, most Unix systems are now supplied with an ANSI C compiler;
+if this is not the case, you can install the \unixcmd {gcc} compiler,
+which you will find on the nearest GNU site, for example
+\htmladdnormallinkfoot {in France} {ftp://ftp.oleane.net/pub/mirrors/gnu/}.
+
+To complete the operation, you should make sure that you have a
+recent enough release of the \unixcmd {sendmail} MTA, e.g. release
+\htmladdnormallinkfoot {8.9.x} {ftp://ftp.oleane.net/pub/mirrors/sendmail-ucb/}
+or a more recent release. You may also use \unixcmd {postfix} or
+\unixcmd {qmail}.
+
+\subsection {Install Berkeley DB (NEWDB)}
+
+Unix systems often have a highly simple system to manage indexed
+files.  This consists of extensions known under the name \texttt
+{dbm} and \texttt {ndbm}. For many programs, these are not sufficient,
+and in particular for \Sympa, which uses the \textindex {DB package}
+initially developed at the University of California in Berkeley,
+and which is now maintained by the company \htmladdnormallinkfoot
+{Sleepycat software} {http://www.sleepycat.com}.  Many UNIX  systems
+like Linux, FreeBSD or Digital Unix 4.x have the DB package in the
+standard version. If not you should install this tool if you have not 
+already done so.
+
+You can retrieve DB on the
+\htmladdnormallinkfoot {Sleepycat site} {http://www.sleepycat.com/}
+and read its documentation to install it in your system.
+
+\subsection {Install Perl and CPAN modules}
+
+To be able to use \Sympa, you must have release 5.004\_03 of the
+Perl language or a later release and several CPAN modules.
+
+At \texttt {make} time, \unixcmd {check\_perl\_modules.pl} script is run to
+check required Perl and CPAN modules versions. If a CPAN module is
+missing or out of date, this script will install it for you. 
+
+You can also download and install CPAN modules yourself. You will find 
+a current release of the Perl interpreter in the nearest CPAN archive. 
+If you do not know where to find a nearby site, use the
+\htmladdnormallinkfoot {CPAN multiplexer} {http://www.perl.com/CPAN/src/latest.tar.gz};
+it will find one for you.
+
+\subsection {Required CPAN modules}
+
+Here are CPAN modules required by \Sympa that not incuded in Perl's
+distribution. We'll try to keep this list uptodate ; if you have any doubt
+run \unixcmd {check\_perl\_modules.pl} script.
+
+\begin {itemize}
+   \item DB\_File (v. 1.50 or higher)
+   \item Msgcat
+   \item MD5
+   \item MailTools (version 1.13 and upper)
+   \item MIME-tools (may require IO/Stringy)
+   \item MIME-Base64
+\end {itemize}
+
+Since release 2, \Sympa requires a DMBS to work properly. It stores 
+users subscriptions and preferences in a database. \Sympa is also
+able to extract user data from within an external database. 
+These features require that you install database-related Perl libraries.
+This includes the generic Database interface (DBI) and a Database Driver
+for your RDBMS (DBD) :
+
+\begin {itemize}
+   \item \textbf {DBI} (DataBase Interface)
+
+   \item \textbf {DBD} (DataBase Driver) related to your RDBMS (e.g.
+       Msql-Mysql-modules for MySQL)
+
+\end {itemize}
+
+If you plan to interface \Sympa with an LDAP directory to build
+dynamical mailing lists, you need to install Perl LDAP libraries :
+
+\begin {itemize}
+    \item \textbf {Net::LDAP} (perlldap).
+
+\end {itemize}
+
+\subsection {Create a Unix user}
+
+Last step before installing \Sympa: create a Unix user, and
+preferably, a group specific to the program. Most of the installation
+will be carried out with this account. We suggest that you use the
+name \texttt {sympa} for both user and group. Note that UID.GID must be
+the same as your httpd. If you are running a dedicated httpd server,
+this can be sympa.sympa, else it is possible either to define a virtual httpd
+server setting UID GID, either to run \Sympa as nobody.nobody. 
+This last solution is not safe because the information managed by \Sympa
+will be owned by nobody.
+
+In the rest of this documentation, numerous files will be located
+in the user's login directory which you will have created in your
+system or in a sub-directory. We will mark this login directory
+with \tildedir {sympa/}.
+
+\section {Compilation and installation }
+
+Before using \Sympa, you have to customize the sources so that you
+can specify a few specific parameters in your installation.
+
+To start, extract the sources from the archive file, for example
+from the \tildedir {sympa/} directory: the archive will create a
+directory named \dir {sympa-\version/} where all the useful files
+and directories will be located. In particular, you will have a
+\dir {doc/} directory containing this documentation in various
+formats, a \dir {sample/} directory containing a few examples of
+a configuration file, \dir {nls/} directory where multi-linguage
+messages are stored and of course, the \dir {src/} directory for the
+mail robot and \dir {wwsympa} for the web interface.
+
+Example:
+
+\begin {quote}
+\tt
+\# su - \\
+\$ gzip -dc sympa-\version.tar.gz | tar xf -
+\end {quote}
+
+Before running \unixcmd {make} in the main
+directory, you have to edit and configure \file {Makefile}
+so that you can customize the first part
+in them. We advise against changing anything located after the STOP
+line.
+
+The \file {Makefile} file contains explanations for the fields,
+which you may have to change. They are mainly :
+\begin {itemize}
+\item USER and GROUP, the id of daemons.
+\item CONFIG and WWSCONFIG, the robot and the cgi configuration location
+\item DIR, the \Sympa home dir
+\item MAILERPROGDIR, the location of queue and bouncequeue programs. If sendmail
+is configured to used smrsh (check the mailer prog definition in your sendmail.cf), queue and bouncequeue needs to be installed in /etc/smrsh.  This is probably your case if you are using
+redhat 6.X.
+\item INITDIR, the directory to install SYSV init script (typically /etc.rc.d/init.d/)
+\item DESTDIR, can be set in the main Makefile to install sympa in DESTDIR/DIR (instead of DIR).
+This is usefull for building RPM and DEB packages.
+\item PERL, SH and CC and GENCAT, respectivly perl, sh, cc and gencat location. 
+\item DARK\_COLOR, LIGHT\_COLOR, TEXT\_COLOR, BG\_COLOR, ERROR\_COLOR to define wwsympa
+RBG colors
+\end {itemize}
+
+Once this file has been configured, you need to run \texttt
+{make;make~install} commands.  This
+ generates the binary  for the \file {queue} program, and the nls and installs
+the \Sympa and \WWSympa programs in their final slot, while having propagated
+a few parameters in the Perl files, as for example the access path
+to the Perl program. The make command includes a checking of cpan modules.
+ 
+If everything goes smoothly, the \tildedir {sympa/bin/} directory
+will contain various Perl programs as well as the \file {queue}
+binary.  You will note that this binary has the \index{set-uid-on-exec
+bit} \textit {set-uid-on-exec} bit (owner is the \texttt {sympa}
+user): this is normal and indispensable for \Sympa to run correctly.
+
+\subsection {Choosing directory location}
+
+All directories are defined in \file {/etc/sympa.conf} file which
+is read by \Sympa at runtime. While installing \Sympa, if no \file {sympa.conf} file
+was found, a sample one will be installed.
+To see the default directories organization refer to \ref {organization}, 
+page~\pageref {organization}.
+
+It is possible to disperse files and directories everywhere in the
+Unix system, however we recommand storing all the directories and
+files in  the \texttt {sympa} user's login directory.
+
+You also have to create these directories now. You can use restrictive
+authorizations if you like, since only programs running with the
+\texttt {sympa} account will have to access them.
+
+
+\section {Robot aliases}
+    \index{aliases}
+    \index{mail aliases}
+
+An electronic list manager such as \Sympa runs in two steps:
+
+\begin {itemize}
+    \item a message sent to a list or to \Sympa itself
+        (for subscribe, unsubscribe, help messages, etc.) is received
+        by the SMTP server (\unixcmd {sendmail} or \unixcmd {qmail}).
+        The SMTP server, on reception of this message, runs the
+        \file {queue} program (supplied in this package) to store
+        the message in a queue, e.g.  in a special directory.
+
+    \item the \file {sympa.pl} daemon, run once and for all during
+        startup of the system, scans the queue. As soon as it
+        detects a new message, it processes it and performs the
+        requested action (distribution or processing of an
+        administrative request).
+
+\end {itemize}
+
+To differentiate processing of administrative requests (subscription,
+unsubscription, help request, etc.) from messages sent to a list,
+a special mail alias is reserved for administrative requests, so
+that \Sympa can be accessible and users can join it. Thus, the
+lines below must be added to the \unixcmd {sendmail} alias file
+(often \file {/etc/aliases}):
+
+\begin {quote}
+\begin{verbatim}
+sympa:             "| /home/sympa/bin/queue sympa"
+listmaster: 	   "| /home/sympa/bin/queue listmaster"
+bounce+*:          "| /home/sympa/bin/bouncequeue sympa"
+sympa-request:     postmaster
+sympa-owner:       postmaster
+\end{verbatim}
+\end {quote}
+
+\mailaddr {sympa-request} should be the address of the robot
+\textindex {administrator}, who is the person who takes care of
+\Sympa management (here \mailaddr {postmaster{\at}cru.fr}).
+
+\mailaddr {sympa-owner} is the return address for \Sympa error
+messages.
+
+The alias bounce+* is dedicated to collect bounces. It is usefull
+only if at least one list use \texttt { welcome\_return\_path unique } or
+\texttt { remind\_return\_path unique}.
+Do not forget to run \unixcmd {newaliases} after any change to
+the \file {/etc/aliases} file!
+
+Note: aliases based on \mailaddr {listserv} (in addition to those
+based on \mailaddr {sympa}) can be added in order to facilitate
+the task of users accustomed to the \mailaddr {listserv} and
+\mailaddr {majordomo} names. For example:
+
+\begin {quote}
+\begin{verbatim}
+listserv:          sympa
+listserv-request:  sympa-request
+majordomo:         sympa
+listserv-owner:    sympa-owner
+\end{verbatim}
+\end {quote}
+
+Note: it will also be necessary to add entries in this alias file
+to create lists (see list creation section, \ref {list-aliases},
+page~\pageref {list-aliases}).
+
+
+\section {Logs}
+
+\Sympa keeps traces of each of its procedures in its log file.
+Nevertheless, this requires configuration of the \unixcmd {syslogd}
+daemon.  \Sympa's by default is to use \texttt {local1} facility
+(\lparam {syslog} parameter in \file {sympa.conf})
+,WWSympa uses (\lparam {log\_facility} parameter
+in \file {wwsympa.conf}), the default is \Sympa's log facility.\\
+Thus, a line must be added in the \unixcmd {syslogd} configuration file (\file
+{/etc/syslog.conf}). For example:
+
+\begin {quote}
+\begin{verbatim}
+local1.*       /var/log/sympa 
+\end{verbatim}
+\end {quote}
+
+Then reload \unixcmd {syslogd}.
+
+Depending on your platform, your syslog daemon may use either
+UDP or Unix socket. \Sympa's default is to use Unix socket ;
+you may change this behaviour by editing \file {sympa.conf}'s
+\lparam {log\_socket\_type} parameter (\ref{par-log-socket-type},
+page~\pageref{par-log-socket-type}).
+
+\section {Daemon loading}
+
+Once all files are configured, all you have to do is start \Sympa.
+At startup, \file {sympa.pl} will change its UID to sympa (as defined in \file {Makefile}).
+To do this, add the following sequence or its equivalent in your
+\file {/etc/rc.local}:
+
+\begin {quote}
+\begin{verbatim}
+
+~sympa/bin/sympa.pl
+~sympa/bin/archived.pl
+~sympa/bin/bounced.pl
+
+\end{verbatim}
+\end {quote}
+
+\file {sympa.pl} recognises the following command line arguments:
+
+\begin {itemize}
+
+\item -d 
+  
+  Sets \Sympa in debug mode and keeps it attached to the terminal. 
+  Debug information are printed to STDERR as well as standard log
+  information.
+  
+\item -dD 
+
+  Sets debug mode in maximum verbosity, tracing each subroutine calls. Usefull for
+  contributor.
+  
+\item -f \textit {config\_file}
+  
+  Forces \Sympa to use an alternate configuration file. Default behaviour is
+  to use configuration file as defined in the Makefile (\$CONFIG).
+  
+\item -m 
+  
+  \Sympa will log calls to sendmail, including recipients. Usefull to
+  keep track of each mail sent (log files may grow faster though).
+  
+\item -l \textit {catalog}
+  
+  Set this option to use a language catalog for \Sympa. 
+  The corresponding catalog file must be located in \tildedir {sympa/nls}
+  directory. 
+  
+  For example, with the \file {fr.cat} catalog:
+  
+  \begin {quote}
+\begin{verbatim}
+/home/sympa/bin/sympa.pl
+\end{verbatim}
+  \end {quote}
+  
+\end {itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% sympa.conf params
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\chapter {sympa.conf parameters}
+    \label {exp-admin}
+    \index{sympa.conf}
+    \index{configuration file}
+
+The \file {/etc/sympa.conf} configuration file contains numerous
+parameters which are read on start-up of \Sympa and allow the
+program to run.  If you have to change this file, do not forget
+that you have to restart \Sympa. 
+
+The \file {/etc/sympa.conf} file contains directives in the following
+format:
+
+\begin {quote}
+    \textit {keyword    value}
+\end{quote}
+
+Comments start with the \texttt {\#} character at the beginning of
+a line.  Empty lines are also considered as comments and are ignored.
+There should only be one directive per line, but their order in
+the file is of no importance.
+
+\section {Site customization}
+
+\subsection {\cfkeyword {host}}
+
+        This keyword is \textbf {mandatory}. It is the name of the
+        machine used in \rfcheader {From} header during responses
+        to administrative requests.
+
+        \example {host listhost.cru.fr}
+
+\subsection {\cfkeyword {email}} 
+	
+	\default {sympa}
+
+        Address (left part, name before the \texttt {@} sign) used
+        in \rfcheader {From} header during responses to administrative
+        requests.
+
+        \example {email           listserv}
+
+\subsection {\cfkeyword {listmaster}} 
+
+        The list of email address  of listmasters (person who can perform
+        global  serveur command).
+
+        \example {listmaster postmaster@cru.fr,root@home.cru.fr}
+
+\subsection {\cfkeyword {wwsympa\_url}}  
+
+	 \default {http://<host>/wws}
+
+	This is the root URL of \WWSympa.
+
+        \example {wwsympa\_url https://my.server/wws}
+
+\subsection {\cfkeyword {cookie}} 
+
+	This string is used to generate MD5 authentication keys.
+	It allows such authentication keys to differ from one
+	site to another.
+
+        \example {cookie gh869jku5}
+
+\section {Directories}
+
+\subsection {\cfkeyword {home}}
+
+	 \default {\tildedir {sympa/expl}}
+
+        The directory containing lists' subdirectories.
+
+        \example {home          /home/sympa/expl}
+
+\subsection {\cfkeyword {etc}}
+
+	 \default {\tildedir {sympa/etc}}
+
+        This is the local directory for configuration files (like
+	\file {edit\_list.conf}. It contains 3 subdirectories :
+	\dir {scenari} for local scenari and \dir {templates}
+	for local site's templates and default lists' templates and \dir {wws\_templates}
+        for local site's html templates.
+
+        \example {home          /home/sympa/etc}
+
+\section {System related}
+
+\subsection {\cfkeyword {syslog}} 
+
+	\default {LOCAL1}
+
+        Name of sub-system (facility) for sending messages.
+
+        \example {syslog          LOCAL2}
+
+\subsection {\cfkeyword {log\_socket\_type}} 
+    \label {par-log-socket-type}
+
+	\default {inet}
+
+        \Sympa communication with \unixcmd {syslogd} can be performed
+        using either UDP or Unix socket type.  Set \cfkeyword
+        {log\_socket\_type} to \texttt {inet} to use UDP or \texttt
+        {unix} for Unix sockets.
+
+\subsection {\cfkeyword {pidfile}} 
+
+	\default {\tildefile {sympa/sympa.pid}}
+
+        The file where the \file {sympa.pl} daemon stores its
+        process number. Warning: the \texttt {sympa} user must be
+        able to write in this file, and to create it if it doesn't
+        exist.
+
+        \example {pidfile         /var/run/sympa.pid}
+
+\subsection {\cfkeyword {umask}} 
+
+	\default {027}
+
+        Default mask for file creation (see \unixcmd {umask}(2)).
+
+        \example {umask 007}
+
+\section {Sending related}
+
+\subsection {\cfkeyword {maxsmtp}} 
+
+	\default {20}
+
+        Maximum number of SMTP delivery child processes launched
+        by  \Sympa. This is the main load control parameter.
+
+        \example {maxsmtp           500}
+
+
+\subsection {\cfkeyword {max\_size}} 
+
+	\default {5 Mb}
+
+	Maximum size allowed for messages distributed by \Sympa.
+	This may be custumized per list by setting \lparam {max\_size} 
+	list parameter.
+
+        \example {max\_size           2097152}
+
+\subsection {\cfkeyword {nrcpt}} 
+
+	\default {25}
+
+        Maximum number of recipients per \unixcmd {sendmail} call.
+        This grouping factor makes it possible for the MTA (\unixcmd
+        {sendmail}) to optimize the number of SMTP sessions for
+        message distribution.
+
+\subsection {\cfkeyword {avg}} 
+
+	\default {10}
+
+        Maximum number of different internet domains within addresses per
+        \unixcmd {sendmail} call.
+
+\subsection {\cfkeyword {sendmail}} 
+
+	\default {/usr/sbin/sendmail}
+
+        Absolute call path to SMTP message transfert agent (\unixcmd
+        {sendmail} for example).
+
+        \example {sendmail        /usr/sbin/sendmail}
+
+
+\subsection {\cfkeyword {rfc2369\_header\_fields}} 
+
+	\default {help,subscribe,unsubscribe,post,owner,archive}
+
+	RFC2369 compliant header fields (List-xxx) to be added to 
+	distributed messages. These header-fields should be implemented
+	by MUAs, adding menus.
+
+\subsection {\cfkeyword {remove\_headers}} 
+
+        \default {Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To}
+
+        This is the list of headers that \Sympa should remove from the
+        outgoing messages. Use it, for example, to ensure some privacy
+        to your users, while not retaining all the anonymous options.
+        It is (for the moment) site-wide. It is applied before the
+        \Sympa, {rfc2369\_header\_fields}, and {custom\_header} fields are
+        added.
+
+\example {remove\_headers      Resent-Date,Resent-From,Resent-To,Resent-Message-Id,Sender,Delivered-To,Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To}
+
+
+\section {Spool related}
+
+\subsection {\cfkeyword {spool}}
+
+        \default {\tildedir {sympa/spool}}
+
+	The parent directory which contains all the other spools.  
+        
+
+\subsection {\cfkeyword {queue}} 
+
+        The absolute path of the directory which contains the queue, used both by the
+        \file {queue} program and the \file {sympa.pl} daemon. This
+        parameter is mandatory.
+
+        \example {queue          /home/sympa/queue}
+
+
+\subsection {\cfkeyword {queuemod}}  
+        \label {cf:queuemod}
+        \index{moderation}
+
+	\default {\tildedir {sympa/spool/moderation}}
+
+        This parameter is optional and still supported for backward compatibility.
+
+
+\subsection {\cfkeyword {queuedigest}}  
+        \index{digest}
+        \index{spool}
+
+	\default {\tildedir  {digest}}
+
+        This parameter is optional and still supported for backward compatibility.
+
+\subsection {\cfkeyword {queueexpire}}  
+
+	\default {\tildedir {sympa/spool/expire}}
+
+        This parameter is optional and still supported for backward compatibility.
+
+\subsection {\cfkeyword {queueauth}} 
+
+	\default {\tildedir {sympa/spool/auth}}
+
+        This parameter is optional and still supported for backward compatibility.
+
+\subsection {\cfkeyword {queueoutgoing}} 
+
+	\default {\tildedir {sympa/spool/outgoing}}
+
+	This parameter is optional and still supported for backward compatibility.
+
+\subsection {\cfkeyword {queuebounce}} 
+    \index{bounce}
+
+	\default {\tildedir {sympa/spool/bounce}}
+
+        Spool to store bounces (non-delivery reports) received at \samplelist-owner 
+	or bounce+* address by \file {bouncequeue} program. This parameter is mandatory
+        and must be a absolute path.
+
+
+\subsection {\cfkeyword {sleep}}  
+        \label {kw-sleep}
+
+	\default {5}
+
+        Waiting period (in seconds) between each scan of main queue.
+        Never set this value to~0!
+
+\subsection {\cfkeyword {clean\_delay\_queue}} 
+
+	\default {1}
+
+        Conservation time (in days) for ``bad'' messages in
+        \textindex {spool} (as specified by \cfkeyword {queue}).
+        \Sympa keeps messages rejected for various reasons (badly
+        formatted messages, messages coming from loops, etc.) in
+        this directory, under a name prefixed by \texttt {BAD}.
+        This configuration variable controls the number of days
+        these messages are kept.
+
+        \example {clean\_delay\_queue 3}
+
+\subsection {\cfkeyword {clean\_delay\_queuemod}} 
+
+	\default {10}
+
+        Expiration date (in days) in \textindex {moderation}
+        \textindex {spool} (as specified by \cfkeyword {queuemod}).
+        Beyond this deadline, messages that have not been processed
+        are deleted.  The content of this spool can be consulted
+        for each moderated list using a key along with the \mailcmd
+        {MODINDEX} command.
+
+\subsection {\cfkeyword {clean\_delay\_queueauth}}  
+
+	\default {3}
+
+        Expiration delay (in days) in an \textindex {authentication}
+        queue.  Beyond this deadline, messages not enabled are
+        deleted.
+
+\section {Internationalization related}    
+
+\subsection {\cfkeyword {msgcat}}   
+
+	\default{\tildedir {sympa/nls}}
+
+        This is the multilinguale catalogs location (nls). Must be
+        set accordind to the \tildefile {src/nls/Makefile}.
+
+\subsection {\cfkeyword {lang}}   
+
+	\default {us}
+
+        The is the language for \Sympa. The corresponding message
+	catalog (.cat) located in \cfkeyword {msgcat} directory
+	will be used.
+
+\section {Bounce related}
+
+\subsection {\cfkeyword {bounce\_warn\_rate}}
+        \label {kw-bounce-warn-rate}
+         
+        \default {30}
+
+	This is the site default value for \lparam {bounce}.
+	Above this rate of bouncing addresses in a list, listowner
+	receives a warning for each mail distributed in the
+	list.
+
+\subsection {\cfkeyword {bounce\_halt\_rate}}
+        \label {kw-bounce-halt-rate}
+         
+        \default {50}
+
+	\texttt {NOT USED YET}
+
+	This is the site default value for \lparam {bounce}.
+	Above this rate of bouncing addresses in a list, messages
+	for the list aren't distributed.
+
+\subsection {\cfkeyword {welcome\_return\_path}}
+        \label {kw-welcome-return-path}
+         
+        \default {owner}
+
+	If set to string \texttt {unique}, sympa will use a unique email adresse in the
+        return path starting with \texttt {bounce+} in order to remove the related subscriber.
+        You need the \texttt {bounced} deamon and the plussed aliases as in 
+        sendmail 8.7 and above.
+
+\subsection {\cfkeyword {remind\_return\_path}}
+        \label {kw-remind-return-path}
+         
+        \default {owner}
+
+        Like \cfkeyword {welcome\_return\_path} but efficient with the remind message.
+
+\section {Priority related}
+
+\subsection {\cfkeyword {sympa\_priority}}  
+        \label {kw-sympa-priority}
+
+	\default {1}
+
+        Priority applied to \Sympa commands while running the spool.
+
+        Available since release 2.3.1.
+
+\subsection {\cfkeyword {request\_priority}}  
+        \label {kw-request-priority}
+
+	\default {0}
+
+        Priority for processing of messages for \samplelist-request,
+	ie for owners of the list.
+
+        Available since release 2.3.3
+
+\subsection {\cfkeyword {owner\_priority}}  
+        \label {kw-owner-priority}
+
+	\default {9}
+
+        Priority for processing messages for \samplelist-owner in
+	the spool. This address will receive non-delivery reports
+	(bounces) and should have a low priority.
+
+        Available since release 2.3.3
+
+
+\subsection {\cfkeyword {default\_list\_priority}}  
+        \label {kw-default-list-priority}
+
+	\default {5}
+
+        Default priority for messages if not defined in list
+        configuration file.
+
+        Available since release 2.3.1.
+
+\section {Database related}
+
+The following parameters are needed when using a RDBMS and not
+required otherwise:
+
+\subsection {\cfkeyword {db\_type}}
+
+        Database management system used (e.g. mysql, Pg, Oracle)
+	
+	This corresponds to the DataBase Driver (DBD) name and
+	is therefore case-sensitive.
+
+\subsection {\cfkeyword {db\_name}} 
+
+	\default {sympa}
+
+        Name of the database containing user information. See
+        detailed description on database structure, \ref{rdbms-struct},
+        page~\pageref{rdbms-struct}.
+
+\subsection {\cfkeyword {db\_host}}
+
+        Database host name.
+
+\subsection {\cfkeyword {db\_user}}
+
+        User with read access on the database.
+
+\subsection {\cfkeyword {db\_passwd}}
+
+        Password for \cfkeyword {db\_user}.
+
+\section {Loop prevention}
+
+   The following define your loop prevention policy for commands.
+(see~\ref {loop-detection}, page~\pageref {loop-detection})
+
+\subsection {\cfkeyword {loop\_command\_max}}
+
+	\default {200}
+
+	The maximum number of command reports sent to an email
+	address. When it is reached, messages are kept as BAD
+	and reports are not sent anymore.
+
+\subsection {\cfkeyword {loop\_command\_sampling\_delay}} 
+
+	\default {3600}
+
+	This parameter defines the delay, expressed in seconds, over 
+	which the counter of sent report (to an email address) is decreased.
+
+\subsection {\cfkeyword {loop\_command\_decrease\_factor}} 
+
+	\default {0.5}
+
+	This is the decreasing factor (\texttt {from 0 to 1}), used to
+	determine the new report counter when the delay is over.
+
+\section {S/MIME configuration}
+
+\Sympa optionaly can verify and use S/MIME signature for security purpose.
+In this case, two optionel parameters must be assigned by the listmaster,
+see \ref {smimeconf},  page~\pageref {smimeconf}.
+
+\begin{itemize}
+
+  \item \cfkeyword {openssl} : the path for the openssl binary file,
+         
+  \item \cfkeyword {trusted\_ca\_options} : the option used by openssl
+        for trusted CA certificates. Required if cfkeyword {openssl} is defined.
+	
+  \item \cfkeyword {password} : the password for list's private key encryption. If not
+	define \Sympa assume that list private key are not crypted.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% WWSympa
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {WWSympa}
+
+
+WWSympa is \Sympa's web interface.
+
+\section {Organization}
+\label {wwsympa}
+
+\WWSympa is fully integrated with \Sympa. It uses \file {sympa.conf}
+and \Sympa's libraries. Default \Sympa installation will also
+install WWSympa.
+
+Every single piece of HTML in \WWSympa is out of the CGI code,
+in template files (See \ref {tpl-format}, page~\pageref {tpl-format}).
+This eases internationalization of pages, as well as per-site
+customization. 
+
+The code consists of one single Perl CGI script, \file {wwsympa.fcgi}.
+To ensure good performences you can configure \WWSympa to use
+FastCGI ; the CGI will be persistent in memory.\\
+Every data will be accessed through the CGI, including web archives.
+This is required to allow the authentication scheme to be applied
+on everything.
+
+Authentication is based on passwords stored in the database table
+user\_table ; passwords are not crypted to allow reminding
+of passwords. To keep track of authentication information, \WWSympa
+uses HTTP cookies, stored on the client side. The HTTP cookie only 
+indicates that a specified email address has been authentified ;
+privileges are evaluated when an action is requested.
+
+The web interface is unique for listmaster, list owners, subscribers,
+others. They may access the same URLs with a different view of it, depending of their privileges. 
+
+\WWSympa's main loop's algorithm is roughly : 
+\begin {enumerate}
+	\item Check of authentication informations returned by 
+	the HTTP cookie
+
+	\item Evaluation of the privileged of the user for the
+        requested action 
+
+	\item Processing of the requested action 
+
+	\item Setup of variables resulting from the action 
+
+	\item Parsing of the HTML template files
+\end {enumerate}
+
+\section {Installation}
+
+%\begin {htmlonly}
+%<A NAME='installwwsympa'>
+%\end {htmlonly}
+
+
+\begin{enumerate}
+
+\item Edit \Sympa's main Makefile to customize destination dir, conf location,...
+
+\item Install \Sympa
+
+\item \%make installwws
+
+\item edit your \file {/etc/wwsympa.conf} ; here are the recognized parameters :
+
+ 	\begin{itemize}
+
+	\item default\_home \\
+	\default {home} \\
+        What action perform for WWSympa home page. If you have just a few list
+	the default 'home' that present the list of lists organised by topics
+        should be change for 'lists' a alphabetical list of lists.
+
+	\item arc\_path \\
+	\default {/home/httpd/html/arc} \\
+	Where to store html archives. This parameter is used
+        by \file {archived.pl} daemon. It is a good idea to install archive
+        out of the web hierarchy to prevent a back door in the access control
+        powered by WWSympa. Never mind you may have to install those archives
+        under apache tree if it's configured with a chroot.
+
+	\item archive\_default\_index thrd | mail \\
+	\default {thrd} \\
+	The default index when enterring web archives ; for either threaded or
+	chronological order.
+
+	\item archived\_pidfile  \\
+	\default {archived.pid} \\
+	The file containing the PID of \file {archived.pl}.
+
+	\item bounce\_path \\
+	\default {/var/bounce} \\
+	Root directory for storing bounces (non-delivery reports). This parameter
+	is mainly used by \file {bounced.pl} daemon.
+
+	\item bounced\_pidfile  \\
+	\default {bounced.pid} \\
+	The file containing the PID of \file {bounced.pl}.
+
+	\item cookie\_expire \\
+	\default {30}
+	HTTP cookies lifetime (in minutes). This is the default value
+	used when users didn't set it.
+
+	\item cookie\_domain \\
+	\default {localhost} \\
+	Domain for the HTTP cookies. If beginning with a dot ('.'),
+	cookie is available within the specified internet domain,
+	otherwise, for the specified host. Example : 
+		\begin {quote}
+		\begin{verbatim}
+		   cookie_domain cru.fr
+		   cookie is available for host 'cru.fr'
+
+		   cookie_domain .cru.fr
+		   cookie is available for any host within 'cru.fr' domain
+		\end{verbatim}
+		\end {quote}
+	Default is nice unless \WWSympa's authentication process
+        is shared with some other application on some others host.  
+
+	\item icons\_url \\
+	\default {/icons} \\
+	URL of WWSympa's icons directory.
+
+      	\item log\_facility \\
+
+	WWSympa will log using this facility, default is \Sympa's syslog
+        facility.
+	Configure your syslog according to this parameter
+
+	\item mhonarc \\
+	\default {/usr/bin/mhonarc} \\
+	Path to the wonderfull MHonArc program. Required for html archives
+	http://www.oac.uci.edu/indiv/ehood/mhonarc.html
+
+	\item title \\
+	\default {Mailing Lists Service} \\
+	The name of your mailing lists service. It will appear in
+	the Title section of WWSympa.
+
+      	\item use\_fast\_cgi   0 | 1 \\
+	\default {1} \\
+	Choose to use or not FastCGI. On listes.cru.fr using FastCGI 
+	with WWSympa fasten up to 10 times. Refer to 
+       	\htmladdnormallink {http://www.fastcgi.com/} {http://www.fastcgi.com/}
+	and the apache config section of this document for details about 
+	FastCGI.
+
+	\end{itemize}
+
+\item set \file {sympa.conf} parameter \cfkeyword {wwsympa\_url}
+	to the base URL of your \WWSympa
+
+\end{enumerate} 
+
+\section {MhOnArc}
+ 
+MHonArc is a nice converter from mime messages to html. Refer to
+\htmladdnormallink {http://www.oac.uci.edu/indiv/ehood/mhonarc.html}
+{http://www.oac.uci.edu/indiv/ehood/mhonarc.html}.
+
+The long mhonarc ressource file is used in a special way with \WWSympa
+because mhonarc is used to produce not html document but only part of them
+that are included in a complete document starting with <HTML> and terminating
+with </HTML> ;-)
+The best way to start is to use the MhOnArc ressource file as
+provided in \WWSympa distribution. 
+
+The mhonarc ressources  file name is \file {mhonarc-ressources}. 
+You may locate this file either in \begin{enumerate}
+ 	\item \tildedir {sympa/expl/\samplelist/mhonarc-ressources}
+	in order to create specific archive look for one list
+
+	\item or \tildedir {sympa/bin/mhonarc-ressources}
+
+\end{enumerate}
+
+\section {Archiving daemon}
+
+\file {archived.pl} is intended to convert messages coming from \Sympa's spools 
+and to call \file {mhonarc} to create html version located according to the 
+"arc\_path" wwsympa parameter. You should probably install these archives 
+out of \Sympa home\_dir. (we think the initial choice of \Sympa to 
+store mail archive in the \tildedir {sympa/expl/\samplelist} directory). Note that html archive 
+contains a text version of any message and are totaly separed from \Sympa's main archive.
+
+\begin{enumerate}
+
+\item create a directory according "arc\_path" wwsympa parameter. (must be owned by sympa)
+     do not need to be under apache space unless your server runs a chroot.
+
+\item foreach list, if you need web archive create a new webarchive pragraph in list config
+     example :
+\begin {quote}
+\begin{verbatim}
+     web_archive
+     access public|private|owner|listmaster|closed
+\end{verbatim}
+\end {quote}
+
+     If web\_archive is define for a list any message distributed by this list is copied
+     in \tildedir {sympa/spool/outgoing/}. (No need to create crazy subscribers that receive
+     a copy of messages)
+
+\item launch \file {archived.pl}. It MUST run under the same uid/gid then 
+\Sympa and Apache
+ 
+\item check \WWSympa logs or start \file {archived.pl} in debug mode (-d). 
+
+\item If you change mhonarc ressources, in order to rebuild all the archive 
+using the new look define for mhonarc, just create a empty file owned by 
+\Sympa  in \tildedir {sympa/spool/outgoing} named ".rebuild.\samplelist@myhost". 
+
+\begin {quote}
+\begin{verbatim}
+     example : su sympa -c "touch ~sympa/spool/outgoing/.rebuild.sympa-fr@cru.fr"
+\end{verbatim}
+\end {quote}
+You can also rebuild web archives from within the admin page of the list.
+
+\end{enumerate}
+ 
+\section {HTTPD setup}
+
+\subsection {wwsympa.fcgi access privilege}
+ 
+      
+     Because Sympa and WWsympa share a lot of files \file {wwsympa.fcgi},
+     must run under same 
+     uid/gid than \file {archived.pl}, \file {bounced.pl} and \file {sympa.pl}.
+     This can be done by various configuration :
+\begin{itemize}
+\item On various operating system, you have nothing to set up because
+      wwsympa.fcgi is installed with suid and sgid bits, but this may failed
+      if script using Suid are refused by your system.
+
+\item Run a dedicated Apache server under sympa.sympa uid/gid (Apache default
+      is nobody.nobody)
+
+\item Use a virtual Apache server with sympa.sympa uid/gid ; you need a apache
+      compiled with suexec.
+
+\item otherwise, you can skip operating protection about Suid scripts
+      using a short C program who start \file {wwsympa.fcgi} and who is
+      owned by sympa and as the Suid bit. Here is a example (without garanty).
+\begin {quote}
+\begin{verbatim}
+
+#include <unistd.h>
+
+#define WWSYMPA "/home/sympa/bin/wwsympa.fcgi"
+
+int main(int argn, char **argv, char **envp) {
+  execve(WWSYMPA,argv,envp);
+}
+
+\end{verbatim}
+\end{quote}
+\end{itemize}
+
+\subsection {Instaling wwsympa.fcgi in your Apache server}
+     If you chose to run \file {wwsympa.fcgi} as a simple CGI, you just need to
+     script alias it. 
+
+\begin {quote}
+\begin{verbatim}
+     Example :
+       	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+\end{verbatim}
+\end{quote}
+
+     Running  FastCGI will provide much faster responses from your server and 
+     lower load (to understand why, read 
+     \htmladdnormallink 
+     {http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm}
+     {http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm})
+     
+\begin {quote}
+\begin{verbatim}
+     Example :
+	FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 2
+	<Location /wws>
+   	  SetHandler fastcgi-script
+	</Location>
+
+	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+
+ \end{verbatim}
+\end{quote}
+    
+
+\section {Database configuration}
+
+\WWSympa needs a RDBMS (Relational Database Management System) to
+run. All database access is performed via \Sympa API. \Sympa
+currently interfaces with \htmladdnormallink {MySQL}
+{http://www.mysql.net/}, \htmladdnormallink {PostgreSQL}
+{http://www.postgresql.pyrenet.fr/}, \htmladdnormallink {Oracle}
+{http://www.oracle.com/database/} and \htmladdnormallink {Sybase}
+{http://www.sybase.com/index_sybase.html}.
+
+Database is needed to store user passwords and preferences.
+The database structure is documented in \Sympa documentation ;
+scripts for creating it are also provided with \Sympa distribution
+(in \dir {script}). 
+
+User information (password and prefs) are stored in «User» table.
+User passwords stored in database are NOT CRYPTED since \WWSympa
+might need to remind users with their passwords. 
+\WWSympa security relies on your database's security. 
+
+
+\section {Sharing \WWSympa authentication with other applications}
+
+You might want to make other web applications collaborate with \Sympa.
+Then you need to share the same authentication system. \Sympa uses
+HTTP cookies to carry user's auth information from page to page.
+This cookie carries no priviliege information. To make your application
+work with \Sympa you have two solutions :
+
+\begin {itemize}
+
+\item Delegating authentication operations to \WWSympa \\
+If you want to save time programming a CGI that does Login, Logout
+and Remindpassword, you can use \WWSympa's login page from your 
+application and then exploits the cookie information in your application. 
+The cookie format is :
+\begin{verbatim}
+user=<user_email>:<md5>
+\end{verbatim}
+
+where <user\_email> is the user's complete email address and
+<md5> if a MD5 checksum of the <user\_email>+\Sympa \cfkeyword {cookie}
+configuration parameter.
+Your application needs to know what the \cfkeyword {cookie} parameter
+is, so it can check the HTTP cookie validity ; this is a shared secret
+between \WWSympa and your application.
+\WWSympa's \textit {loginrequest} page can be called to return to the
+referer URL when action is performed. Here is a sample HTML anchor :
+
+\begin{verbatim}
+<A HREF="/wws/loginrequest/referer">Login page</A>
+\end{verbatim}
+
+
+\item Using \WWSympa's HTTP cookie format within your auth module \\
+To cooperate with \WWSympa, all you need to do is adopt its HTTP
+cookie format and share its secret, used to generate MD5 checksum,
+ie the \cfkeyword {cookie} configuration parameter. Thereby \WWSympa
+will accept users authentified through your application without
+further authentication.
+
+
+\end {itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Using Sympa with a RDBMS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Using \Sympa with a RDBMS}
+\label {sec-rdbms}
+
+It is possible for \Sympa to store its user information within
+a Relational DataBase System. Currently you can use one of the following
+DBMS : MySQL, PostgreSQL, Oracle, Sybase. Interfacing with other RDBMS
+requires only a few changes in the code since the API used, 
+\htmladdnormallinkfoot {DBI} {http://www.symbolstone.org/technology/perl/DBI/} 
+(DataBase Interface), has DBD (DataBase Drivers) for many DBMS.
+
+\section {Prerequisites}
+
+You need to have a DataBase System installed (not necessarily 
+on the same host as \Sympa) and the client librairies for that
+Database installed on the machine, as far as a Perl DBD (DataBase
+Driver) is provided for it. 
+Check the \htmladdnormallinkfoot
+{DBI Module Availability} {http://www.symbolstone.org/technology/perl/DBI/}.
+
+\section {Installing Perl modules}
+
+\Sympa will use DBI to communicate with the database system and
+therefore requires the DBD for your database system. DBI and 
+DBD::YourDB (Msql-Mysql-modules for MySQL) are distributed as 
+CPAN modules. Refer to ~\ref 
+{Install other required CPAN modules}, page~\pageref 
+{Install other required CPAN modules} for installation
+details of these modules.
+
+\section {Creating sympa DataBase}
+
+\subsection {Database structure}
+
+The sympa database structure is slightly different from the
+structure of a \file {subscribers} file. A \file {subscribers}
+file is a text file based on paragraphs (almost similar to 
+the \file {config} file) ; each paragraph completely describes 
+a subscriber. If somebody is subscribed to two lists, he/she 
+appears in both subscribers files.
+
+The DataBase distinguishes information relative to a person (email,
+real name, password) and his/her subscription options (list
+concerned, date of subscription, reception option, visibility 
+option). This results in separating the data in two tables :
+user\_table and subscriber\_table joined together by a user/subscriber email.
+
+\subsection {Database creation}
+
+\file {create\_db} script below will create the sympa database for 
+you. You can find it in the \dir {script/} directory of the 
+distribution (currently scripts are available for mysql, postgresql, Oracle and Sybase).
+
+\begin {quote}
+\begin{verbatim}
+
+## MySQL Database creation script
+CREATE DATABASE sympa;
+
+## Connect to DB 
+\r sympa
+
+CREATE TABLE user_table (
+  	email_user          	varchar (100) NOT NULL,
+  	gecos_user          	varchar (150),
+  	password_user		varchar (20),
+	cookie_delay_user	int,
+	lang_user		varchar (10),
+	PRIMARY KEY (email_user)
+);
+
+CREATE TABLE subscriber_table (
+  	list_subscriber       	varchar (50) NOT NULL,
+	user_subscriber		varchar (100) NOT NULL,
+	date_subscriber		datetime NOT NULL,
+	visibility_subscriber	varchar (20),
+	reception_subscriber	varchar (20),
+	bounce_subscriber	varchar (30),
+	update_subscriber 	datetime,
+	PRIMARY KEY (list_subscriber, user_subscriber)
+);
+
+\end{verbatim}
+\end {quote}
+
+You can execute the script using a simple SQL shell such as
+mysql or psql.
+
+Example:
+
+\begin {quote}
+\begin{verbatim}
+# mysql  < create_db.mysql
+\end{verbatim}  
+\end {quote}
+
+\subsection {Importing data from subscribers files}
+
+You might need to import subscribers data from an older
+version of \Sympa into sympa database. Simply edit the 
+list configuration using \WWSympa (this requires listmaster privileges) 
+and change the data source from \textbf {file} to \textbf {database}. 
+
+
+
+\section {\Sympa configuration}
+
+To store subscribers information in your newly created
+database, you first need to tell \Sympa what kind of
+database he's going to work with, then you must configure
+your list to work with the database.
+
+You define the database source in \file {sympa.conf} :
+\cfkeyword {db\_type}, \cfkeyword {db\_name}, 
+\cfkeyword {db\_host}, \cfkeyword {db\_user}, 
+\cfkeyword {db\_passwd}.
+
+If you are interfacing \Sympa with an Oracle database, 
+\cfkeyword {db\_name} is the SID.
+
+All your lists are now configured to use the database,
+unless you set list parameter \lparam {user\_data\_source} 
+to \textbf {file} or \textbf {include}. 
+
+\Sympa will now extract and store user
+information for this list from the database instead of using
+\file {subscribers} file. Though subscribers information are 
+dumped in \file {subscribers.db.dump} at every shutdown 
+to allow hand rescue restart (by renaming subscribers.db.dump to
+subscribers and changing user\_data\_source parameter) if the database 
+is out of order.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SMIME
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\cleardoublepage
+\chapter {\Sympa with S/MIME and HTTPS}
+    \label {smime}
+
+S/MIME is a cryptographic method for Mime messages based on X509 certificate.
+Before to install \Sympa S/Mime features named S/Sympa, you must be
+persuaded that  ``S/MIME'' mean ``Secure MIME'' and has nothing to
+do with ``Simple''.
+
+This chapter just describes what security level is provided by \Sympa while
+using S/MIME messages and how to configure \Sympa for it. It is not intended
+to teach anyone what S/Mime is and why it is so complex ! RFCs number 2311,
+2312, 2632, 2633 and 2634  and a lot of literature about S/MIME, PKCS\#7
+and PKI is available on the Internet. \Sympa 2.7 is the first version of
+\Sympa including S/MIME features, this is beta-testing features.
+
+\section {Signed messages distribution}
+
+Nothing to do.
+You probably imagine that any mailing list manager (or any mail forwarder)
+is compatible with S/MIME signature as long as it respects MIME structure of incomming
+messages. You are right. Even Majordomo can distribute a signed message !
+As \Sympa provides nice MIME compatibility, You don't need to do
+anything in order to allow subscribers to verify signed messages distributed
+through a list. This is not a performence at all, any processus that
+distributes messages  are compatible with end user
+signing processus. Sympa just skips message footer attachement (ref \ref {messagefooter}, page~\pageref {messagefooter}) to prevent any
+body corruption which would break the signature.
+
+\section {Use of S/MIME signature by Sympa itself}
+
+Sympa is able to verify S/MIME signatures in order to apply S/MIME
+authentication method for the message handling. 
+Currently, this feature is limited to the
+distribution process and to commands when sympa find them in the message
+body.  The reasons of this limitation is related to current S/MIME
+usage.
+S/MIME signature structure is based on a encryption of a digest of the
+message. Most S/MIME agent does not include any part of the
+message headers in the message digest so anyone can modify the message
+header without signature corruption ! This is easy to do, for example, anyone
+can edit a signed message with his prefered message agent, modify whatever
+header he want (for example the \texttt {Subject:} , the \texttt {Date:} and
+the \texttt {To:} and redistribute the message in a list or to the robot
+without breaking the signature.
+
+So we can not apply S/MIME
+authentication method to command parsed in the \texttt {Subject:} field of a
+message or via the \texttt {-subscribe} or \texttt {-unsubscribe} email
+adresse. 
+
+\section {Use of S/MIME encryption} 
+
+S/Sympa is not a implementation of ``S/MIME Symmetric Key Distribution''
+internet draft. This sophisticated scheme is requiered for large lists
+with encryption. So, there is still some task for later developpement :) 
+
+We assume that S/Sympa distribute message as received, ie uncrypted if the
+list received a uncrypted message, crypted otherwise.
+
+In order to be able to send encrypted message to a list, the sender need
+to use the X509 certificat of the list. Sympa will send a crypted message
+to each subscriber using subscribers certificate. To provide this feature,
+\Sympa needs to manage one certificate for each list and one for each
+subscriber. This is availible in Sympa version number 2.8 and above.
+
+\section {S/Sympa configuration} 
+
+\subsection {Installation}
+\label {smimeinstall}
+
+All you need is to install openssl (http://www.openssl.org), the minimum requirement is
+the \texttt {OpenSSL 0.9.5a}. OpenSSL is used by \Sympa as an external plugin
+(like sendmail or postfix), so it must be installed with the apropriate access
+(x for sympa.sympa). 
+
+\subsection {configuration in sympa.conf}
+\label {smimeconf}
+
+S/Sympa configuration is very simple. If you are used to Apache SSL, you
+will not be desorientate. If you are OpenSSL guru, you will
+feel at home and perhaps you will suggest us some changes.
+ 
+The minimum is to teach Sympa where is the binary file for openssl program
+and where are the certificates of the trusted certificate authority. 
+This is done using the optional parameters \unixcmd {openssl} and
+\cfkeyword {trusted\_ca\_options}.
+\begin{itemize}
+
+  \item \cfkeyword {openssl} : the path for the openssl binary file,
+         unsually \texttt {/usr/local/ssl/bin/openssl}
+  \item \cfkeyword {trusted\_ca\_options} : the option used by openssl
+        for trusted CA certificates. 
+        The file \cfkeyword {/home/sympa/bin/etc/ca-bundle.crt} is distributed
+        with Sympa and describes a wellknown set of CA as the default Netscape
+        navigator configuration. You can use this set of certificate as trusted
+        setting  \texttt {trusted\_ca\_options -CAfile /home/sympa/bin/etc/ca-bundle.crt}.
+        You can also used the \cfkeyword {-CApath} \unixcmd {openssl} option or both 
+        \cfkeyword {-CApath} and \cfkeyword {-CAfile}. Example :       
+        \texttt {trusted\_ca\_options -CApath /home/sympa/etc/ssl.crt -CAfile /home/sympa/bin/etc/ca-bundle.crt}.
+
+	Both  \cfkeyword {-CAfile} file and \cfkeyword {-CApath} directory
+        should be share with your Apache+mod\_ssl configuration. It is usefull
+	for S/Sympa web interface.  Please refer to Openssl documentation for details.
+  \item \cfkeyword {key\_passord} : the password use to protect all list private 	key. xxxxxxx	
+\end{itemize}
+
+
+\subsection {configuration to recognize S/MIME signature}
+\label {smimeforsign}
+
+Once  \texttt {openssl} installed and  \texttt {sympa.conf} configured,
+you S/Sympa is ready to use S/Mime signature for any operation authentication. You just need to use the appropriate scenario for the operation you want
+to secure. 
+(see \ref {scenarii}, page~\pageref {scenarii}).
+
+When receiving a message, \Sympa apply
+the scenario  with the apropriate authentication method parameter.
+In most case, the authentication method is ``\texttt {smtp}'', in case
+the message is signed and the signature as been checked and match the
+sender email, \Sympa apply ``\texttt {smime}'' authentication
+method.
+
+Take care that if the scenario ignores this authentication method, the
+operation requested will be rejected. Subsequently, scenario from version
+previous to 2.7 are not compatible with the OpenSSL configuration of Sympa. 
+All
+standard scenario (thoses who are distributed with sympa)
+now includes \texttt {smime} method. The following example is
+named \texttt {send.private\_smime} limit send to subscribers using S/mime signature :
+
+\begin {quote}
+\begin{verbatim}
+title.us restricted to subscribers check smime signature
+title.fr limité aux abonnés, vérif de la signature smime
+
+is_subscriber([listname],[sender])             smime  -> do_it
+is_editor([listname],[sender])                 smime  -> do_it
+is_owner([listname],[sender])                  smime  -> do_it
+\end{verbatim}
+\end {quote}
+
+It as also possible to mixe various authentication method in a single scenario ; this one
+\texttt {send.private\_key} require either md5 return key or S/Mime signature :
+\begin {quote}
+\begin{verbatim}
+title.us restricted to subscribers with previous md5 authentication
+title.fr réservé aux abonnés avec authentification MD5 préalable
+
+is_subscriber([listname],[sender]) smtp          -> request_auth
+true()                             md5,smime     -> do_it
+\end{verbatim}
+\end {quote}
+
+\subsection {distributing encrypted messages}
+\label {smimeforencrypt}
+
+In this section describe S/Sympa encryption features. The goal is to use
+S/MIME encryption list subscribers distribution if the message as been
+received encrypted from its sender. 
+
+Why S/Sympa is concerned by S/MIME encryption distribution process ?
+That's because encryption is made using the \textbf {recepient} X509
+certificat whereas signature need the sender private key. So a encrypted
+message can be read by the recepient only if he is owner of the private
+key associated with the certificat.
+Therefore the only way to encrypt a message for a list of recepients is
+to encrypt and send the message foreach recepient. That's what S/Sympa
+do when distributing a encrypted message.
+
+The S/Sympa encryption feature in the distribution process suppose that sympa
+as received a encrypted message for some list. To be able to encrypt a message
+for a list, the sender must have some access to a X509 certificat of the list.
+So the first think to do is to install a certificat and a private key for
+the list.
+The processus to manage and to obtain certificats is complex. Current version
+of S/Sympa assume that list certificat and private key are installed by
+the listmaster.
+It is a nice idea to have a look at OpenCA (http://www.openca.org)
+documentation and/or PKI providers web documentation.
+You can use commercial certificats or self made ones. Of course, the
+certificat must ,be approved for email aplication and issued by one of
+the trusted CA described in \cfkeyword {-CAfile} file or
+\cfkeyword {-CApath} OpenSSL option. 
+
+
+The list private key must be installed in a file named
+\tildedir {sympa/expl/\samplelist/private\_key}. All the list private
+keys must be encrypted using a single password defined by the
+parameter \cfkeyword {password} in \cfkeyword {sympa.conf}.
+
+
+\subsubsection {Use of Netscape navigator to get X509 list certificat}
+
+In many case e-mail X509 certificate are distributed vis a web server and
+loaded in the browser using your mouse :) Netscape allow to exports
+certificate in a file. So one way to get list certificat is to get e-mail
+certificate for the list canonical adress in your brower and to export and install it for Sympa :
+\begin {enumerate}
+\item browse the net and load a certificate for the list adress on some
+PKI provider (your own OpenCa pki server , thawte, verisign, ...). Be
+carefull :  the certificat email must be exctly the canonical adress of
+your  list, otherwise, the signature will be incorrect (sender email will
+not match signer email).
+\item on the security menu, select the intended certificate and export
+it. Netscape will promt you for a password and a filename to encrypt
+the output file. The format use by Netscape is  ``pkcs\#12''. 
+Copy this file in the list home directory.
+\item convert the pkcs\#12 file into a pair of pem file :
+\cfkeyword {cert.pem} and \cfkeyword {private\_key} using
+the \unixcmd {~sympa/bin/p12topem.pl} script. Use \unixcmd
+{p12topem.pl -help} for details.
+\item be sure that \cfkeyword {cert.pem} and \cfkeyword {private\_key}
+are owned by sympa with ``r'' access.
+\item As soon as certificat is installed for a list the list  home page
+include a new link to load the certificat in users brower, and the welcome
+messages is signed by the list.
+\end {enumerate} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Customization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Customizing \Sympa/\WWSympa}
+    \label {customization}
+
+\section {Template files format}
+\label{tpl-format}
+\index{templates format}
+
+Template files within \Sympa and \WWSympa are text files containing 
+programming elements (variables, conditions, loops, file inclusions)
+that will be parsed in order to adapt to the runtime context. These 
+templates are an extension of programs and therefore give access to 
+a limited list a variables (those defined in the '\textit {hash}' 
+parameter given to the parser). 
+
+Review the Site template files (\ref {site-tpl}, page~\pageref {site-tpl}) 
+and List template files (\ref {list-tpl}, page~\pageref {list-tpl}).
+
+Let us describe the syntaxic elements of templates.
+
+\subsection {Variables}
+
+Variables are enclosed between brackets '\textit {[]}'. The variable name
+is composed of alphanumericals (0-1a-zA-Z) or underscores (\_).
+The syntax for accessing an element in a '\textit{hash}' is [hash-$>$elt].
+
+\textit {Examples:} 
+\begin {quote}
+\begin{verbatim}
+[url]
+[is_owner]
+[list->name]
+[user->lang]
+\end{verbatim}
+\end {quote}
+
+Foreach template you wish to customize, check the available variables in the
+documentation.
+
+\subsection {Conditions}
+
+Conditions include variables comparisons (= and <>) or existance.
+Conditions syntaxic elements are [IF xxx], [ELSE], [ELSIF xxx] and
+[ENDIF].
+
+\textit {Examples:} 
+\begin {quote}
+\begin{verbatim}
+[IF  user->lang=fr]
+Bienvenue dans la liste [list->name]
+[ELSIF user->lang=es]
+Bienvenida en la lista [list->name]
+[ELSE]
+Welcome in list [list->name]
+[ENDIF]
+
+[IF is_owner]
+The following commands are available only 
+for lists's owners or moderators:
+....
+[ENDIF]
+\end{verbatim}
+\end {quote}
+
+\subsection {Loops}
+
+Loops allows to go through a list of elements (internally represented by a 
+'\textit{hash}' or an '\textit{array}'). 
+
+\texttt{Example :}
+\begin {quote}
+\begin{verbatim}
+A review of public lists
+
+[FOREACH l IN lists]
+   [l->NAME] 
+   [l->subject]
+[END]
+\end{verbatim}
+\end {quote}
+
+\texttt {[elt-$>$NAME]} is a special element of the current entry providing 
+the key in the '\textit{hash}' (here the list name). When going the
+an '\textit{array}', \texttt{[elt-$>$INDEX]} is the index of the current
+entry.
+
+\subsection {File inclusions}
+
+You can include another file within a template . The specified file can be 
+included asis or parsed itself (there is no loop detection). The file 
+path is either specified in the directive or accessed in a variable.
+
+Inclusion of a text file :
+
+\begin {quote}
+\begin{verbatim}
+[INCLUDE 'archives/last_message']
+[INCLUDE file_path]
+\end{verbatim}
+\end {quote}
+
+The first example includes a file which relative path is \file {archives/last\_message}.
+The second example includes a file which path is in file\_path variable.
+
+Inclusion and parsing of a template file :
+
+\begin {quote}
+\begin{verbatim}
+[PARSE 'welcome.tpl']
+[PARSE file_path]
+\end{verbatim}
+\end {quote}
+
+The first example includes the template file \file {welcome.tpl}.
+The second example includes a template file which path is in file\_path variable.
+
+\section {Site template files}
+\label{site-tpl}
+\index{templates, site}
+
+These files are used by Sympa as service messages for \mailcmd {HELP}, 
+\mailcmd {LISTS} and \mailcmd {REMIND *} commands. These files are interpreted 
+(parsed) by \Sympa and respect the template format ; every file has a .tpl extension. 
+See \ref {tpl-format}, 
+page~\pageref {tpl-format}. 
+
+Sympa looks for these files in the following order (where $<$list$>$ is the
+listname if defined, $<$action$>$ is the name of the command and $<$lang$>$ is
+the prefered language of the user) :
+\begin {enumerate}
+	\item \tildedir {sympa/expl/$<$list$>$/$<$action$>$.$<$lang$>$.tpl}. 
+	\item \tildedir {sympa/expl/$<$list$>$/$<$action$>$.tpl}. 
+	\item \tildedir {sympa/etc/templates/$<$action$>$.$<$lang$>$.tpl}. 
+	\item \tildedir {sympa/etc/templates/$<$action$>$.tpl}. 
+	\item \tildedir {sympa/bin/etc/templates/$<$action$>$.$<$lang$>$.tpl}.
+	\item \tildedir {sympa/bin/etc/templates/$<$action$>$.tpl}.
+\end {enumerate}
+
+If the file starts with a From: line it is considered as
+a full message and will be sent (after parsing) without adding SMTP
+headers. Else file is taken as a text/plain message body.
+
+The following variables may be used in these template files :
+
+\begin {itemize}
+
+	\item[-] [conf-$>$email] : sympa email address local part
+
+	\item[-] [conf-$>$host] : sympa host name
+
+	\item[-] [conf-$>$sympa] : sympa's complete email address
+
+	\item[-] [conf-$>$wwsympa\_url] : \WWSympa root URL
+
+	\item[-] [conf-$>$listmaster] : listmaster email addresses
+
+	\item[-] [user-$>$email] : user email address
+
+	\item[-] [user-$>$gecos] : user gecos field (usually his/her name)
+
+	\item[-] [user-$>$password] : user password
+
+	\item[-] [user-$>$lang] : user language	
+
+\end {itemize}
+
+\subsection {helpfile.tpl} 
+
+
+	This file is sent in response to a \mailcmd {HELP} command. 
+	You may use additional variables
+\begin {itemize}
+
+	\item[-] [is\_owner] : TRUE if the user is list owner
+
+	\item[-] [is\_editor] : TRUE if the user is list editor
+
+\end {itemize}
+
+\subsection {lists.tpl} 
+
+	File returned by \mailcmd {LISTS} command. 
+	An additional variable is available :
+\begin {itemize}
+
+	\item[-] [lists] : this is a hashtable indexed by list names
+			containing lists' subjects. Only lists visible
+			for this user (refering to \lparam {visibility} 
+			list parameter avec listed.
+\end {itemize}
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+Here are public lists for [conf->email]@[conf->host]
+
+[FOREACH l IN lists]
+	
+ [l->NAME]: [l->subject]
+
+[END]
+
+\end{verbatim}
+\end {quote}
+
+\subsection {global\_remind.tpl} 
+
+	This file is sent in used by \mailcmd {REMIND *} command. 
+	(see~\ref {cmd-remind}, page~\pageref {cmd-remind})
+	You may use additional variables
+\begin {itemize}
+
+	\item[-] [lists] : this is a array containig listnames the user
+			is subscribed to.
+\end {itemize}
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+
+This is a subscription reminder.
+
+You are subscribed to the following lists :
+[FOREACH l IN lists
+	
+ [l] : [conf->wwsympa\_url]/info/[l]
+
+[END]
+
+Your subscriber email : [user->email]
+Your password : [user->password]
+
+\end{verbatim}
+\end {quote}
+
+\section {Web template files}
+\label{web-tpl}
+\index{templates, web}
+
+You may define your own web template files, different from the standard
+ones. \WWSympa first looks for list specific web templates, then for
+site web templates, at last uses its default. 
+
+Your list web template files should be placed in \tildedir {sympa/expl/\samplelist/wws\_templates} 
+directory ; your site web templates in \tildedir {sympa/expl/wws\_templates} directory.
+
+\section {Internationalization}
+\label {internationalization}
+\index{internationalization}
+\index{localization}
+
+\Sympa has originally been designed as a multi-lingual Mailing List
+Manager. First versions of \Sympa already separated messages from
+the code itself, messages being stored in NLS catalogues (according 
+to XPG4 standard). Later a \lparam{lang} list parameter was introduced.
+Now \Sympa also keeps track of users' language preference.
+
+
+\subsection {\Sympa internationalization}
+
+Every message sent by \Sympa to users, owners, editors is outside
+the code, in a message catalog. These catalogs are located in 
+\tildedir{sympa/nls/} directory. These messages have currently been
+translated into 6 different languages : 
+
+\begin{itemize}
+
+\item us: US english
+
+\item fr: French
+
+\item es: Spanish
+
+\item de: German
+
+\item it: Italian
+
+\item cn-big5: BIG5 Chinese (Honk Kong, Taiwan)
+
+\item cn-gb: GB Chinese (Mainland China)
+
+\end{itemize}
+
+To tell \Sympa to use a message catalog, you can either set 
+the \cfkeyword{lang} parameter in \file{sympa.conf} or
+set \file{sympa.pl} \texttt{-l} option on the command line.
+
+\subsection {List internationalization}
+
+\lparam{lang} list parameter defines the language for a list.
+It is currently used by \WWSympa and to initialize user's
+language preference at subscription time.
+
+In future versions, all messages returned by \Sympa concerning
+a list should be in the list's language. 
+
+\subsection {User internationalization}
+
+The user language preference is currently exploited by \WWSympa
+only. There is no email-based command for a user to set his/her
+language. The language preference is initialized when the user
+subscribes to his/her first list. \WWSympa allows the user to change 
+it.
+
+\section {Topics}
+\label{topics}
+\index{topics}
+
+\WWSympa's homepage shows a list of topics for classifying
+mailing lists. This is dynamically generated, based on lists'
+configuration parameter \lparam {topics}. A list may appear 
+in multiple categories.
+
+The list of topics is defined in \file {topics.conf} configuration
+file in \tildedir {sympa/etc} directory. The format of this file is 
+as follows :
+\begin{quote}
+\begin{verbatim}
+<topic1_name>
+title	<topic1 title>
+visibility <topic1 visibility>
+....
+<topicn_name/subtopic_name>
+title	<topicn title>
+\end{verbatim}
+\end{quote}
+
+As you can see, you can use subtopics, the separator being \textit {/}.
+The topic name is composed of alphanumericals (0-1a-zA-Z) or underscores (\_).
+The order the topics are listed is respected in \WWSympa's homepage.
+The \textbf {visibility} line defines who can view the topic (now available for subtopics).
+It refers to the associated topics\_visibility scenario.
+You will find a sample of \file {topics.conf} in \dir {sample} 
+directory ; NONE is installed as default. 
+
+
+\section {Scenarii}
+    \label {scenarii}
+    \index{scenario}
+
+List parameters controlling commands' behaviour indicates a scenario.
+Example : the parameter send private is related to the scenario send.private.
+There are tree locations for scenario. When \Sympa applies a scenario, it looks first for it
+into the related list directory \tildedir {sympa/expl/$<$list$>$/scenari}, if it is not found, it scans \tildedir {sympa/etc/scenari}
+and then in \tildedir {sympa/bin/etc/scenari} which is the directory intall by the Makefile.
+
+A scenario is a small configuration langage to describe who
+can perform an operation and what authentication method is requested for it.
+A scenario is a ordered set of rules. The goal is to provide a simple and
+flexible way to configure authorization and authentication for each operation.
+
+
+Each scenario rule contains :
+\begin{itemize}
+\item a condition : the condition is evaluated by \Sympa. It can use some
+  variables such as $[$sender$]$ for the sender email $[$list$]$ for the listname etc.
+\item a authentication method. The authentication method can be \cfkeyword {smtp},
+\cfkeyword {md5} or \cfkeyword {smime}. The rule is applyed by \Sympa if both condition
+and authentication method match the runtime context. \cfkeyword {smtp} is used if
+\Sympa use the SMTP \cfkeyword {from:} header , \cfkeyword {md5} is used is a unique
+md5 key as been returned by the requestor to valid is message, \cfkeyword {smime}
+is used for signed messages (see \ref {smimeforsign}, page~\pageref {smimeforsign}).
+\item a returned atomic action that will be executed by \Sympa if the rule match
+
+\end{itemize}
+
+ 
+Example
+
+\begin{quote}
+del.auth
+\begin{verbatim}
+title.us deletion performed only by list owners, need authentication
+title.fr suppression réservée au propriétaire avec authentification
+title.es eliminación reservada sólo para el propietario, necesita autentificación
+
+
+  is_owner([listname],[sender])  smtp       -> request_auth
+  is_listmaster([sender])        smtp       -> request_auth
+  true()                         md5,smime  -> do_it
+\end{verbatim}
+\end{quote}
+
+Scenari can also contain includes :
+
+\begin{quote}
+\begin{verbatim}
+    subscribe
+        include commonreject
+        match([sender], /cru\.fr$/)          smtp,smime -> do_it
+	true()                               smtp,smime -> owner
+\end{verbatim}
+\end{quote}
+	    
+
+In this case sympa apply reccursively the scenario named \texttt {include.commonreject}
+before introducing the other rules. This as been introduced in
+order to made a liter administration of common rules.
+
+A bunch of scenari is provided with \Sympa distribution ; it provides
+all possible configurations as defined in previous releases of \Sympa
+($<$= 2.3) whithout any change in your list configuration files. 
+
+These standard scenari are located in \tildedir {sympa/bin/scenari/}
+directory. Default scenari are named <command>.default.
+
+You may also define and name your own scenari. Store them in 
+\tildedir {sympa/etc/scenari} directory. 
+Example:
+
+Copy the previous scenario in \file {scenari/subscribe.rennes1} :
+
+\begin {quote}
+\begin{verbatim}
+equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -> reject
+match([sender], /univ-rennes1\.fr$/) smtp,smime -> do_it
+true()                               smtp,smime -> owner
+\end{verbatim}
+\end{quote}
+
+You may now refer to this scenario in any list configuration file as :
+
+\begin {quote}
+\begin{verbatim}
+subscribe rennes1
+\end{verbatim}
+\end{quote}
+
+A scenario consists in rules, evaluated from the first to the last. 
+Rules are defined as follows :
+\begin {quote}
+\begin{verbatim}
+<rule> ::= <condition> <auth\_list> -> <action>
+
+<condition> ::= [!] <condition
+		| true ()
+                | equal (<var>, <var>)
+                | match (<var>, /perl_regexp/)
+                | is_subscriber (<listname>, <var>)
+                | is_owner (<listname>, <var>)
+                | is_editor (<listname>, <var>)
+                | is_listmaster (<var>)
+<var> ::= [email] | [sender] | [host] | [header-><smtp\_key\_word>] |  <string>
+<listname> ::= [listname] | <listname_string>
+
+<auth\_list> ::= <auth>,<auth\_list> | <auth>
+
+<auth> ::= smtp|md5|smime
+
+<action> ::=   do_it [,notify]
+             | do_it [,quiet]
+             | reject
+             | request_auth
+             | owner
+\end{verbatim}
+\end{quote}
+
+perl\_regexp can containt the string [host] (it will be interpreted at run time as the list or robot domain.
+The variable notation [header-$>$<smtp\_key\_word>] is interpreted as the SMTP header value only when performing
+the sending message scenario. It can be use for exemple to ask editor validation for multipart messages.
+
+%[idees de scenario]
+
+\section {Loop detection}
+    \label {loop-detection}
+    \index{loop-detection}
+
+\Sympa uses multiple tools to avoid loops in Mailing lists
+
+First it rejects messages that either come from a robot (based on the
+From: and other header fields) or messages that contain commands.
+
+Every message sent by \Sympa includes a X-Loop header field set to
+the listname. If the message comes back, \Sympa will detect that
+it has already been sent (unless X-Loop header fields have been
+erased).
+
+\Sympa keeps track of Message IDs and will refuse to send multiple
+message with the same message ID in the same mailing list.
+
+At last \Sympa can detect loops due to command reports. 
+Example of loop:
+
+\begin {quote}
+\begin{verbatim}
+1 - X sends a command to Sympa
+2 - Sympa sends a command report to X
+3 - X has installed a home-made vacation program replying to programs
+4 - Sympa processes the reply and sends a report
+5 - Looping to step 3
+\end{verbatim}
+\end {quote}
+
+\Sympa keeps track of each reports sent to an address in an internal counter.
+The loop detection algorithm is :
+
+\begin {itemize}
+
+	\item Increment the counter
+
+	\item If we are within the sampling period (as defined by
+	\cfkeyword {loop\_command\_sampling\_delay} parameter)
+
+	\begin {itemize}
+		\item Then, if the counter exceeds the 
+		\cfkeyword {loop\_command\_max} parameter then 
+		don't send the report and notify the listmaster
+
+		\item Else, start a new sampling period and reinitialize
+		the counter,  ie multiply it by the 
+		\cfkeyword {loop\_command\_decrease\_factor} parameter
+	\end {itemize}
+
+
+\end {itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mailing lists definition
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Mailing list definition}
+    \label {ml-creation}
+
+The mailling list creation tool is Sympa's web interface. However this
+web feature is available only from 2.7 release. Previous  version users
+have to create new lists with there favorit text file editor.  
+
+This chapter describe how to create mailing list without using
+web tools. See~\ref {web-ml-creation}, page~\pageref {web-ml-creation} to
+do it using WWSympa, you will do it in a easier way.
+
+To create a mailing list, only system mail aliases modification requires
+system privileges. Other tasks will be carried out under \texttt
+{sympa} UID in order to guarantee that the files created have the
+right permissions.
+
+
+\begin {itemize}
+        \item add aliases in alias file
+
+        \item create the list directory  \tildedir {sympa/expl/\samplelist}
+
+        \item create configuration file in \tildedir
+            {sympa/expl/\samplelist} directory
+
+        \item create  customized message files (welcome, bye, removed
+          remind, message.header, message.footer) if needed ; you probably need at least the
+          welcome.
+
+\end {itemize}
+
+
+\section {Mail aliases}
+    \label {list-aliases}
+    \index{aliases}
+    \index{mail aliases}
+
+For each new list, it is necessary to create three mail aliases
+(the location of the \unixcmd {sendmail} alias file varies from
+one system to another).
+
+For example, to create the \mailaddr {\samplelist} list, the following
+aliases must be added:
+
+\begin {quote}
+    \tt
+    \begin {tabular} {ll}
+        \mailaddr {\samplelist}:         &
+            "|/home/sympa/bin/queue \samplelist"
+            \\
+        \mailaddr {\samplelist-request}: &
+            "|/home/sympa/bin/queue \samplelist-request"
+            \\
+        \mailaddr {\samplelist-editor}:  &
+            "|/home/sympa/bin/queue \samplelist-editor"
+            \\
+        \mailaddr {\samplelist-owner}:   &
+            "|/home/sympa/bin/bouncequeue \samplelist
+            \\
+        \mailaddr {\samplelist-subscribe}:   &
+            "|/home/sympa/bin/queue \samplelist-subscribe"
+            \\
+        \mailaddr {\samplelist-unsubscribe}: &
+            "|/home/sympa/bin/queue \samplelist-unsubscribe"
+            \\
+
+    \end {tabular}
+\end {quote}
+
+%This example demonstrates how to define a list with the low priority
+%level 2. Messages for editor and owner will be processed by \Sympa
+%with greater priority (level 1) than messages to the list itself.
+
+The address \mailaddr {\samplelist-request} should be the address
+of the person in charge of \mailaddr {\samplelist} list management
+(the list \textindex {owner}).  \Sympa will forward messages for
+\mailaddr {\samplelist-request} to the owner of list \mailaddr
+{\samplelist} defined in \tildefile {sympa/expl/\samplelist/config}
+file.  This feature avoids later changes to this alias when updating
+owner's addresses.
+
+The address \mailaddr {\samplelist-editor} can be used as \mailaddr
+{\samplelist-request} to contact the list editors if defined in
+\tildefile {sympa/expl/\samplelist/config}.  This address definition
+is not mandatory.
+
+The address \mailaddr {\samplelist-owner} is the address receiving
+non-delivery reports. \file {bouncequeue} program stores these messages 
+in \dir {queuebounce} directory. \WWSympa ((see~\ref {wwsympa}, page~\pageref {wwsympa}) may then analyze them and provide a web access to them.
+
+The address \mailaddr {\samplelist-subscribe} is for a fast and
+easy to explain subscription. Be carefull: subscription is so easy
+that spammer may subscribe by accident.
+
+The address \mailaddr {\samplelist-unsubscribe} is for simple
+unsubscription. By the way, everything that simplifies unsubscription
+simplifies list administration.
+
+
+\section {List directory}
+\label {list-directory}
+
+Each list has its own directory which name defines the list name. We
+recommend to create it with the same name as the alias. This directory is
+located in the \tildedir {sympa/expl} according to \cfkeyword{home}
+defined in \file {/etc/sympa.conf} file.
+
+Here is a list of files/directories you may find in the list's directory :
+
+\begin {quote}
+\begin{verbatim}
+archives/
+bye.tpl
+config
+info
+invite.tpl
+homepage
+message.header
+message.footer
+reject.tpl
+remind.tpl
+removed.tpl
+stats
+subscribers
+welcome.tpl
+\end{verbatim}
+\end {quote}
+
+\section {List configuration file}
+    \label {exp-config}
+
+
+The configuration file for the \mailaddr {\samplelist} list is named
+\tildefile {sympa/expl/\samplelist/config}. \Sympa reads it into memory
+the first time the list is referred to. This file is not rewritten by 
+\Sympa; as a result, it is possible to put comment lines in it. 
+It is possible to change this file when the program is running. 
+Changes are then taken into account the next time the list is
+accessed. Be careful to provide read access for \Sympa on this file !
+
+You will find a few configuration files in \dir {sample} directory. Copy
+one of them to \tildefile {sympa/expl/\samplelist/config} and customize it.
+
+List configuration parameters are reviewed in list creation section, \ref {list-configuration-param}, page~\pageref {list-configuration-param}.
+
+\section {Examples of configuration files}
+
+This first example is for a list open to everyone:
+
+\begin {quote}
+\begin{verbatim}
+subject First example (an open list)
+
+visibility noconceal
+
+owner
+email Pierre.David@prism.uvsq.fr
+
+send public
+
+review public
+\end{verbatim}
+\end {quote}
+
+The second example is for a moderated list with authentified subscription:
+\index{moderation}
+\index{authentication}
+
+\begin {quote}
+\begin{verbatim}
+subject Second example (a moderated list)
+
+visibility noconceal
+
+owner
+email moi@ici.fr
+
+editor
+email big.prof@ailleurs.edu
+
+send editor
+
+subscribe auth
+
+review owner
+
+reply_to list
+
+cookie 142cleliste
+\end{verbatim}
+\end {quote}
+
+The third example is for a moderated list, with subscription
+controlled by the owner, and running in digest mode. Subscribers
+who are in \textindex {digest} mode receive the mail on Monday and
+Thursday.
+
+\begin {quote}
+\begin{verbatim}
+owner
+email moi@ici.fr
+
+editor
+email prof@ailleurs.edu
+
+send editor
+
+subscribe owner
+
+review owner
+
+reply\_to list
+
+digest 1,4 12:00
+\end{verbatim}
+\end {quote}
+
+\section {Subscribers file}
+    \label {file-subscribers}
+    \index{subscriber file}
+
+\textbf {WARNING}: \Sympa will not use this file if the list is configured in \texttt {include} or \texttt {database} \lparam{user\_data\_source}.
+
+The \tildefile {sympa/expl/\samplelist/subscribers} file is created and is
+automatically filled in. It contains information about list
+subscribers.  It is not advisable to edit this file.  Main parameters
+are:
+
+\begin {itemize}
+    \item \lparam {email} \textit {address}
+
+        Email address of subscriber.
+
+    \item  \lparam {gecos} \textit {data} 
+
+        Information about subscriber (family name, first name,
+        etc.) This parameter is optional on signing up.
+
+    \item \lparam {reception}
+            \texttt {nomail} $|$
+            \texttt {digest} $|$
+            \texttt {summary}
+        \label {par-reception} 
+
+        Special receive mode for emails that the subscriber has
+        selected. The mode can be either \textit {nomail},  \textit
+        {digest} or \textit {summary}.  In normal receive mode, the receive attribute
+        no longer appears for this subscriber.  See the \mailcmd
+        {SET~LISTNAME~SUMMARY} (\ref {cmd-setsummary}, 
+        page~\pageref {cmd-setsummary}) ,
+        or \mailcmd {SET~LISTNAME~NOMAIL} command (\ref {cmd-setnomail},
+        page~\pageref {cmd-setnomail}), and the \lparam {digest}
+        parameter (\ref {par-digest}, page~\pageref {par-digest}).
+
+    \item \lparam {visibility} \texttt {conceal}  
+        \label {par-visibility-conceal}
+
+        Special mode which allows subscriber to be invisible when
+        there is a \mailcmd {REVIEW} command in the list.  If this
+        parameter does not exist, the subscriber remains visible
+        by \mailcmd {REVIEW}.  Note: this option does not affect
+        the results of a \mailcmd {REVIEW} command issued by an
+        owner.  See the \mailcmd {SET~LISTNAME~MAIL} command (\ref
+        {cmd-setconceal}, page~\pageref {cmd-setconceal}) for
+        details.
+
+\end {itemize}
+
+
+\section {Info file}
+
+\tildefile {sympa/expl/\samplelist/info} should contain a detailed text
+description of the list. If is used by \mailcmd {INFO} command. 
+It can also be referenced from template files for service messages.
+
+\section {Homepage file}
+
+\tildefile {sympa/expl/\samplelist/homepage} is the HTML text 
+on the \WWSympa info page for the list.
+
+\section {List template files}
+\label{list-tpl}
+\index{templates, list}
+
+These files are used by Sympa as service messages for commands such as
+\mailcmd {SUB}, \mailcmd {ADD}, \mailcmd {SIG}, \mailcmd {DEL}, \mailcmd {REJECT}. 
+These files are interpreted (parsed) by \Sympa and respect the template 
+format ; every file has the .tpl extension. See \ref {tpl-format}, 
+page~\pageref {tpl-format}. 
+
+Sympa looks for these files in the following order :
+\begin {enumerate}
+ 	\item \tildedir {sympa/expl/\samplelist/<file>.tpl} 
+	\item \tildedir {sympa/etc/templates/<file>.tpl}. 
+	\item \tildedir {sympa/bin/etc/templates/<file>.tpl}.
+\end {enumerate}
+
+If the file starts with a From: line it is considered as
+a full message and will be sent (after parsing) without adding SMTP
+headers. Else file is taken as a text/plain message body.
+
+The following variables may be used in list template files :
+
+\begin {itemize}
+
+	\item[-] [conf-$>$email] : sympa email address local part
+
+	\item[-] [conf-$>$host] : sympa host name
+
+	\item[-] [conf-$>$sympa] : sympa's complete email address
+
+	\item[-] [conf-$>$wwsympa\_url] : \WWSympa root URL
+
+	\item[-] [conf-$>$listmaster] : listmaster email addresses
+
+	\item[-] [list-$>$name] : list name
+
+	\item[-] [list-$>$host] : list hostname
+
+	\item[-] [list-$>$lang] : list language
+
+	\item[-] [list-$>$subject] : list subject
+
+	\item[-] [list-$>$owner] : list owners table hash
+
+	\item[-] [user-$>$email] : user email address
+
+	\item[-] [user-$>$gecos] : user gecos field (usually his/her name)
+
+	\item[-] [user-$>$password] : user password
+
+	\item[-] [user-$>$lang] : user language
+	
+
+\end {itemize}
+
+You may also dynamically include a file from a template using the
+[INCLUDE] directive.
+
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+Dear [user->email],
+
+Welcome to list [list->name.@[list->host].
+
+Presentation of the list :
+[INCLUDE 'info']
+
+Owners of liste [list->name] are :
+[FOREACH ow IN list->owner]
+   [ow->gecos] <[ow->email]>
+[END]
+
+
+\end{verbatim}
+\end {quote}
+
+\subsection {welcome.tpl} 
+
+\Sympa will send a welcome message for each subscription. The welcome 
+message can be customized for each list.
+
+\subsection {bye.tpl} 
+
+Sympa will send an unsubscription message for each received SIGNOFF 
+mail command.
+
+\subsection {removed.tpl} 
+
+This message is sent to users that have been deleted (using \mailcmd {DELETE} 
+command) from the list by the list owner.
+
+\subsection {reject.tpl} 
+
+\Sympa will send a reject message to the sender of a message that is rejected
+par the list editor. If the editor prefixe the \mailcmd {REJECT} with the
+keyword QUIET, the reject message is not sent.
+
+\subsection {invite.tpl} 
+
+This message is sent to users that have been invited (using \mailcmd {INVITE} 
+command) to subscribe to a list. 
+
+You may use additional variables
+\begin {itemize}
+
+	\item[-] [requested\_by] : email of the person who sent the 
+		\mailcmd{INVITE} command
+
+	\item[-] [url] : the mailto: URL to subscribe to the list
+
+\end {itemize}
+
+\subsection {remind.tpl}
+
+This file contains a message which is sent to each subscriber
+when one of the list owners sends the command \mailcmd {REMIND}
+ (see~\ref {cmd-remind}, page~\pageref {cmd-remind}).
+
+\section {Stats file}
+    \label {stats-file}
+    \index{statistics}
+
+\tildefile {sympa/expl/\samplelist/stats} is a text file containing 
+statistics about the list. These informations are numerics separated
+by white spaces within a single line :
+
+\begin {itemize}
+
+	\item Number of messages sent, used to generate X-sequence headers
+
+	\item Number of messages X nb recipients 
+
+	\item Number of bytes X nb messages
+
+	\item Number of bytes X nb messages X nb recipients
+
+	\item Number of subscribers
+
+\end {itemize}
+
+\section {Message header and footer} 
+\label {messagefooter}
+
+You may create \tildefile {sympa/expl/\samplelist/message.header} and
+\tildefile {sympa/expl/\samplelist/message.footer} files. Their content
+is added, either at the beginning or at the end of each message 
+before the distribution process. 
+
+\lparam {footer\_type} list parameter defines whether to attach the 
+header/footer content as a MIME part (except for multipart/alternative 
+messages) or to append them to the message body (if a text/plain message).
+
+\subsection {Archives directory}    
+
+\tildedir {sympa/expl/\samplelist/archives/} directory contains the 
+archived  messages if the list is archived, see \ref {par-archive}, 
+page~\pageref {par-archive}. The files are named in accordance with the 
+frequency of archiving defined with the \lparam {archive} parameter.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% List configuration parameters
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Creating and editing mailing using the web}
+    \label {web-ml-creation}
+
+The mailing list management by list owners process is designed for
+web interface. It is based on strict definition of privileges of
+listmaster, main list owner and basic list owner. The goal is to
+allow each listmaster to define who can create a list and what
+parameter can be set by owners. Therefore, a complete
+installation need some effort on the configaration side, though defaults
+are acceptable for most sites.
+
+Some features are allready available, others will be soon, this is mentioned 
+in this documention.
+
+\section {List creation}
+
+Lismasters have all privileges. Currently it
+is defined in \file {sympa.conf} but in the future, it might be possible to
+define one listmaster per virtual robot. As the default behaviour, newly created
+lists are activated by listmaster ; list creation is available to any intranet user 
+(ie : users with an email address within the same domain as Sympa).
+This is controlled by \cfkeyword {create\_list} scenario.
+
+\subsection {create\_list scenario}
+
+This scenario can apply any condition about the [sender]
+(ie: WWSympa user), and it must return \cfkeyword {reject}, \cfkeyword {do\_it}
+or \cfkeyword {listmaster}.
+The "create" button is available from the main menu only if the user is
+allowed by the create\_list scenario.
+If the scenario returns \cfkeyword {do\_it}, the list will be created and installed ;
+if it returns "listmaster", the user is allowed to create a list but
+the list is created with the \cfkeyword {pending} status
+and only owner of the list can view or use it. In order to
+install or reject new list, the listmaster need to open the list of pending lists
+using the "pending list" button on the "server admin"
+menu. Then he can install or reject pending lists.
+
+\subsection {typical list profile}
+
+Many different usages are possible for mailing list. \Sympa proposes a
+large set of parameters for each list in order to adapt the list's behaviour
+to any kind of usage. It may be difficult for users to choose any of the
+list parameters to define a list profile. So the create list form just asks
+the list creator to choose a profile for his/her list and complete it with
+owner email, list subject and short list description.
+
+The list profiles can be stored in \tildedir {sympa/etc/create\_list\_templates} or
+\tildedir {sympa/bin/etc/create\_list\_templates} which come with Sympa's
+distribution and should not be modified.  
+\tildedir {sympa/etc/create\_list\_templates} which will not be
+overwritten by make install and is intended to contain site customization.
+
+
+A list profile is nearly a list configuration but some fields such as owner email
+will be replaced by WWSympa et installation time. It is easy to create new list 
+templates by modifying an existing one. Contributions to the distribution are welcome.
+
+You might want to hide or modify profiles (unusefull or dangerous 
+for your site). If a profile exists both in the local site directory
+\tildedir {sympa/etc/create\_list\_templates} and
+\tildedir {sympa/bin/etc/create\_list\_templates} directory, then the local profile 
+will be used by WWSympa. 
+
+Another way to control publically available profiles is to
+edit \cfkeyword {create\_list.conf} file (the default for this file is in
+\tildedir {sympa/bin/etc/} directory and you can create one in \tildedir {sympa/etc/}).
+This allows to list available list templates. Example :
+\begin {quote}
+\begin{verbatim}
+# Dont allow the public_anonymous profile
+public_anonymous hidden
+* read
+\end{verbatim}
+\end{quote}
+
+
+When a list is created, whatever is it's status \cfkeyword {pending} or
+\cfkeyword {open}, the owner can use WWSympa admin features to modify the list
+parameters (in futur version) or to edit welcome message and so on.
+
+WSYympa keeps creation and modification authors and date in the list's
+\file {config} file (previous configuration file are saved).
+
+\subsection {creating list alias}
+ Managing alias need root access and is depending on the local mail organization.
+So it'is not for sympa application tomodify and install aliases. We plans to
+introduce a plugin solution so anyone can write its own alias generation. Not
+yet available.
+
+\section {List edition}
+\label {list-edition}
+
+For each parameter, you can choose via \tildefile {sympa/etc/edit\_list.conf}
+configuration file who can edit list parameters ; the default 
+\tildefile {sympa/bin/etc/edit\_list.conf} is reasonnably safe.
+
+\begin {quote}
+\begin{verbatim}
+     examples :
+
+         \# only listmaster can edit user\_data\_source, priority, ...
+         user\_data\_source listmaster  
+
+         priority listmaster
+      
+         \# only privileged owner can modify  editor parameter, send, ...
+         editor privileged\_owner
+
+         send privileged\_owner
+
+         \# other parameters can be changed by simple owners
+         default owner
+\end{verbatim}
+\end {quote}
+
+      Privileged owners are defined in list's \file {config} file as follows :
+	\begin {quote}
+	\begin{verbatim}
+		owner
+		email his@email
+      		profile privileged
+	\end{verbatim}
+	\end {quote}
+
+      The following rules are hardcoded in wwsympa :
+\begin {itemize}
+
+\item listmaster is privileged owner of any list 
+
+\item listmaster is the only one who can edit the "profile privileged"
+      owner attribut. 
+
+\item owner can edit there own attibut (except profile and email)
+
+\item when creating a new list the requestor is privileged owner
+
+\item privileged owner can edit any gecos,reception,info attribut
+of any owner
+
+\item privileged owner can edit owner's emails (unless the owner he is
+editing is privileged)
+
+\end {itemize}
+
+      The goal is to define two trust level for owners (some can just 
+      edit gadget like "custom\_subject", some others can edit important
+      parameters, but keep control of crutial parameters like 
+      the list of privileged owners or user\_data\_sources. So owners can change
+      there e-mail (asking to a privileged owner to do it), but they can't
+      give away the list mangement responsability to someone else without
+      refering to listmaster.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% List configuration parameters
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {List configuration parameters}
+    \label {list-configuration-param}
+
+
+The configuration file is made up of paragraphs separated by empty
+lines and introduced by a keyword.
+
+% [sa] Incomplet, énumération mal présentée et non cliquable
+% [pda] : c'est maintenant cliquable. Pour la présentation, on verra plus tard, lorsque ce sera complet
+
+However the number of parameters is important, the minimal list
+definition is very short, only  \lparam {owner} and \lparam {subject}
+parameter are needed  because all the other parameter have a default value.
+
+\begin {quote}
+    \textit {keyword value}
+\end {quote}
+
+\textbf {WARNING}: configuration parameters must be separated by
+empty lines and EMPTY LINES ONLY !
+
+\section {List description}
+
+\subsection {editor}
+    \label {par-editor}
+    \index{moderation}
+
+The \file {config} file contains one \lparam {editor} paragraph
+per \textindex {moderator} (or editor).
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+editor
+email Pierre.David@prism.uvsq.fr
+gecos Pierre (Université de Versaille St Quentin)
+\end{verbatim}
+\end {quote}
+
+The editor of a list is the only one authorized to send messages
+in the list when the \lparam {send} parameter (see~\ref {par-send},
+page~\pageref {par-send}) is set to \lparam {editor}.\lparam
+{editorkey} or \lparam {editorkeyonly}
+This parameter is used also to redistribute mail in some other situation
+( \lparam {privateoreditorkey} ).
+
+The syntax of this directive is the same as that of the \lparam
+{owner} parameter (see~\ref {par-owner}, page~\pageref {par-owner}),
+even when several moderators are defined.
+
+\subsection {host}
+ \label {par-host}
+ \index{host}
+
+	\default {\cfkeyword {host} robot parameter}
+
+\lparam {host} \textit {fully-qualified-domain-name}
+
+Domain name hosting the list (used for \rfcheader {From} , for
+example).Default value is set in
+ \file {/etc/sympa.conf} file.
+
+\subsection {lang}
+    \label {par-lang}
+
+	\default {\cfkeyword {lang} robot parameter}
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+\lparam {lang} cn-big5
+\end{verbatim}
+\end {quote}
+
+This parameter defines the language used for the list. It is
+exploited to initialize user's lang preference ; \Sympa command
+reports are extracted from the associated messages catalog.
+
+See \ref {internationalization}, page~\pageref {internationalization}
+for available langages.
+
+\subsection {owner}
+    \label {par-owner}
+
+
+The \file {config} file contains one \lparam {owner} paragraph per owner. 
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+owner
+email serge.aumont@cru.fr
+gecos C.R.U.
+info Tel: 02 99 76 45 34
+reception nomail
+\end{verbatim}
+\end {quote}
+
+The list owner is usually the person who has the authorization to send
+\mailcmd {ADD} (see~\ref {cmd-add}, page~\pageref {cmd-add}) and
+\mailcmd {DELETE} (see~\ref {cmd-delete}, page~\pageref {cmd-delete})
+commands on behalf of other users.
+
+When the \lparam {subscribe} parameter (see~\ref {par-subscribe},
+page~\pageref {par-subscribe}) specifies a restricted list, the
+owner is the only one who has the capability to subscribe users.
+In this case, \mailcmd {SUBSCRIBE} requests are forwarded to him.
+
+There may be several owners of a single list; in this case, each
+owner is defined by a paragraph introduced by the \lparam {owner}
+keyword.
+
+The \lparam {owner} directive is followed by one or several lines
+giving details regarding the owner's characteristics:
+
+\begin {itemize}
+    \item  \lparam {email} \textit {address}
+
+        Owner's email address
+
+    \item  \lparam {reception nomail}
+
+        Optional attribute for an owner who don't want to receive
+        mails.  Useful to define an owner with multiple email
+        addresses: they are all recognized when \Sympa receives
+        mail, but only some of them are recipient of administrative
+        mail from \Sympa.
+
+    \item  \lparam {gecos} \textit {data}
+
+        Public information on the owner
+
+    \item \lparam {info} \textit {data}
+
+	Available since release 2.3
+
+	Private information on the owner
+
+    \item \lparam {profile} \texttt {privileged} $|$
+	                    \texttt {normal}
+
+	Available since release 2.3.5
+
+	Profile of the owner. This is currently used to restrict
+	access to some feature in WWSympa such as adding new owners
+	to a list.
+
+\end {itemize}
+
+\subsection {subject}
+    \label {par-subject}
+
+\lparam {subject} \textit {subject-of-the-list}
+
+This parameter indicates the subject of the list, which is sent in
+response to the \mailcmd {LISTS} mail command. The subject is
+a free form text limited to one line.
+This parameter is \emph {not} used by \Sympa if \tildefile
+{sympa/expl/lists} file exists (e.g.  static list of lists).
+
+\subsection {topics}
+    \label {par-topics}
+
+\lparam {topics} computing/internet,education/university
+
+This parameter allows classification of lists. You may define multiple 
+topics as well as hierarchical ones. \WWSympa's list of public lists 
+uses this parameter.
+
+\subsection {visibility }
+    \label {par-visibility}
+
+	\default {conceal}
+
+	\scenarized {visibility}
+
+\lparam {visibility}
+    \texttt {conceal} $|$
+    \texttt {noconceal}
+
+This parameter indicates whether the list should be listed when
+replying to \mailcmd {LISTS} command.  This parameter is \emph {not}
+used by \Sympa if \tildefile {sympa/expl/lists} file exists
+(e.g. static list of lists).
+
+
+\section {Data source related}
+
+\subsection {user\_data\_source}
+
+    	\label {par-user-data-source}
+	\index{user-data-source}
+
+	\default {file|database, if using a DBMS}
+
+\lparam {user\_data\_source}
+   \texttt {file} $|$
+   \texttt {database} $|$
+   \texttt {include}
+
+Sympa allows the mailing list manager to choose how \Sympa loads
+subscribers' data. Subscriber's informations can be stored in a text 
+file, in a RDBMS or included from various external sources (list,
+flat file, LDAP directory, RDBMS).
+
+\begin {itemize}
+\item  \lparam {user\_data\_source} \texttt {file}
+
+       When this value is used subscribers data
+       are stored in a file which name is define \file
+       {sympa.conf}, parameter \cfkeyword {subscribers}.
+       This is maintened for backwared compatibility.
+
+\item  \lparam {user\_data\_source} \texttt {database} 
+
+       This mode as been introduced to store data in a RDBMS 
+       in order to share subscribers data with a HTTP interface 
+       and also to be able to manage very large mailing lists 
+       (tested with MySql, 200.000 subscribers in a single list). 
+       We strongly recommend to use this value (and of course to
+       configure a RDBMS). This improve Sympa performence and solve
+       possible conflict with sympa and wwsympa.
+        Please refer to the 
+       section \"Using \Sympa with a RDBMS\" 
+       (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
+
+\item \lparam {user\_data\_source} \texttt {include} 
+       
+       Subscribers list is not define by email enumeration 
+       but by subscriber properties. Include can be performed 
+       by extracting emails using a SQL or LDAP query or 
+       by including other mailing lists. Compulsary include 
+       paragraphs are needed (at least one), each defining a
+       data source. These paragraphs' name can be one of
+       \lparam {include\_file}, \lparam {include\_list}, 
+	\lparam {include\_sql\_query} or \lparam {include\_ldap\_query}. 
+\end {itemize}
+
+
+\subsection {ttl}
+
+    	\label {ttl}
+	\index{ttl}
+
+	\default {3600}
+
+\lparam {ttl} \texttt {delay\_in\_seconds} 
+
+\Sympa caches users data extracted using the include parameter.
+The time to leave of these data in \Sympa can be controled with this
+parameter. The default value is 3600.
+
+\subsection {include\_list}
+
+    	\label {include-list}
+	\index{include-list}
+
+\lparam {include\_list} \texttt {listname}
+
+This parameter will be interpreted only if 
+\lparam {user\_data\_source} is set to \texttt {include}.
+All subscribers of list \texttt {listname} will become subscribers 
+of the current list. You may include as many lists as needed using one
+\lparam {include\_list} \texttt {listname} line for each included
+list. You can include any list whatever is
+its  \lparam {user\_data\_source} definition. In particular, you can
+include lists which are also defined by inclusion of other lists. 
+Be carefull not to include list \texttt {A} in list \texttt {B} and
+then list \texttt {B} in list \texttt {A} : this would start an 
+infinite loop.
+
+
+\subsection {include\_sql\_query}
+    \label {include-sql-query}
+
+\lparam {include\_sql\_query}
+
+This parameter will be interpreted only if the
+\lparam {user\_data\_source} value is set to  \texttt {include}, it is
+the begining of a paragraph which defines the SQL query parameters :
+
+\begin{itemize}
+
+\item
+\label {db-type}
+\lparam {db\_type} \textit {dbd\_name} 
+
+This is the DBD name (Oracle, mysql , Pg, Sybase ...). You must respect the case.
+
+\item
+\label {host}
+\lparam {host} \textit {hostname}
+
+The Database Server \Sympa will try to connect to.
+
+\item
+\label {db-name}
+\lparam {db\_name} \textit {sympa\_db\_name}
+
+The hostname of the database system.
+
+\item 
+\label {user}
+\lparam {user} \textit {user\_id}
+
+The user id to connect to the database.
+
+\item 
+\label {passwd}
+\lparam {passwd} \textit {some secret}
+
+The user passwd for \lparam {user}.
+
+
+\item
+\label {sql-query}
+\lparam {sql\_query} \textit {a query string}
+The sql query string. Of course, this query must select e-mail, only
+e-mail !
+
+
+\end{itemize}
+
+Example :
+
+\begin {quote}
+\begin{verbatim}
+
+user_data_source include
+
+include_sql_query
+      db_type oracle
+      host sqlserv.admin.univ-x.fr
+      user banalise
+      passwd mysecret
+      db_name scolarship
+      sql_query SELECT DISTINCT email FROM student
+
+\end{verbatim}
+\end{quote}
+
+\subsection {include\_ldap\_query}
+    \label {include-ldap-query}
+
+\lparam {include\_ldap\_query}
+
+This paragraph defines parameters for a LDAP query returning a
+list of subscribers. This paragraph is used only if \lparam
+{user\_data\_source} is set to \texttt {include}. This feature
+requires Net::LDAP (perlldap) Perl module.
+
+\begin{itemize}
+
+\item
+\label {host}
+\lparam {host} \textit {ldap\_directory\_hostname} 
+
+Name of the LDAP directory host.
+
+\item
+\label {port}
+\lparam {port} \textit {ldap\_directory\_port} (Default 389) 
+
+Port on which the Directory is accepting connections.
+
+\item
+\label {user}
+\lparam {user} \textit {ldap\_user\_name}
+
+Username with read access on the LDAP directory.
+
+\item
+\label {passwd}
+\lparam {passwd} \textit {LDAP\_user\_password}
+
+Password for \lparam {user}.
+
+
+\item
+\label {suffix}
+\lparam {suffix} \textit {directeory name}
+
+Defines the naming space covered by the search (optional, depending on
+the LDAP server).
+
+\item
+\label {filter}
+\lparam {filter} \textit {search\_filter}
+
+Defines the LDAP search filter (RFC 2254 compliant).
+
+\item
+\label {attrs}
+\lparam {attrs} \textit {mail\_attribute} 
+\default {mail}
+
+The attribute containing the email address(es) in the returned object.
+
+\item
+\label {select}
+\lparam {select} \textit {first $|$ all}
+\default {first}
+
+If the query returns multiple values, do we keep the first one or all 
+of them.
+
+\end{itemize}
+
+Example :
+
+\begin{quote}
+\begin{verbatim}
+
+    include_ldap_query
+    host ldap.cru.fr
+    suffix dc=cru, dc=fr
+    filter (&(cn=aumont) (c=fr))
+    attrs mail
+    select first
+
+\end{verbatim}
+\end{quote}
+
+
+\subsection {include\_file}
+    \label {include-file}
+
+\lparam {include\_file} \texttt {path to file} 
+
+This parameter will be interpreted only if the
+\lparam {user\_data\_source} value is set to  \texttt {include},
+the file is interpreted as one email per line (line beginning with a
+"\#" are ignored).
+
+\section {Commands' behaviour}
+
+\subsection {subscribe}
+    \label {par-subscribe}
+
+	\default {open}
+
+	\scenarized {subscribe}
+
+Subscribe parameter define the rules for subscribing to the list. 
+Predefined scenari are :
+
+\lparam {subscribe}
+    \texttt {open} $|$
+    \texttt {owner} $|$
+    \texttt {closed} $|$
+    \texttt {auth} $|$
+
+
+\begin {itemize}
+    \item \lparam {subscribe} \texttt {open}[\texttt {\_notify}]
+
+          Anyone can join the list with the \mailcmd {SUBSCRIBE}
+          mail command. Optional notification of each succesful
+          subscription to owners can be set for each list with:
+
+          \texttt {subscribe open\_notify}.
+
+    \item \lparam {subscribe} \texttt {owner}
+
+          Only the owner (see \lparam {owner} above) can subscribe
+          or unsubscribe a user. The owner should send an \mailcmd
+          {ADD} mail command to subscribe the user.
+
+    \item \lparam {subscribe} \texttt {closed}
+
+          Any subscription is refused, except indirectly by the
+          owner using the \mailcmd {ADD} command (see~\ref {cmd-add},
+          page~\pageref {cmd-add}). This parameter is forced to
+          \texttt {closed} value for lists defined using
+          \lparam {user\_data\_source}\texttt {include}.
+          
+
+    \item \lparam {subscribe} \texttt {auth}[\texttt {\_notify}]
+
+        Use of the \mailcmd {SUBSCRIBE} command requires prior
+        \textindex {authentication} of the origin of the subscription
+        request. \Sympa sends a key to the requesting party, who
+        should in return send \Sympa a \mailcmd {SUBSCRIBE} command
+        prefixed with \lparam {auth}~\textit {key}.
+
+        Note: The \lparam {cookie} parameter (see~\ref {par-cookie},
+        page~\pageref {par-cookie}) allows allocation of a single
+        key.
+
+
+\end {itemize}
+
+When the optional \texttt {notify} parameter option is set, owners receive
+a notification of each subscription, unless their owner definition
+include the \texttt {nomail} option.
+
+\subsection {unsubscribe}
+    \label {par-unsubscribe}
+
+	\default {open}
+
+	\scenarized {unsubscribe}
+
+This parameter specifies the unsubscription method for the list.
+Use \texttt {open\_notify} or \texttt {auth\_notify} to allow owner
+notification of each unsubscribe command. 
+Predefined scenari are :
+
+
+\lparam {unsubscribe}
+    \texttt {open}[\texttt {\_notify}] $|$
+    \texttt {auth}[\texttt {\_notify}]
+    \texttt {owner}
+    \texttt {closed}
+
+\begin {itemize}
+    \item \lparam {unsubscribe} \texttt {open}
+
+          Anyone can unsubscribe from the list.
+
+    \item \lparam {unsubscribe} \texttt {auth}
+
+        Use of the \mailcmd {SIGNOFF} command requires prior
+        \textindex {authentication}
+        of the sender. To perform this authentification, \Sympa
+        sends a key, indicating that the ``\lparam {auth}~\textit
+        {key}'' parameter should be put in front of the command.
+
+        Note: it is advisable to enter the \lparam {cookie} parameter
+        (see~\ref {par-cookie}, page~\pageref {par-cookie}).
+
+    \item \lparam {unsubscribe} \texttt {closed}
+      
+        Unsubscription is not allowed. This parameter is forced to
+        \texttt {closed} value for lists defined using \lparam
+        {user\_data\_source}~\texttt {include}.
+
+\end {itemize}
+
+\subsection {add}
+    \label {par-add}
+
+	\default {owner}
+
+	\scenarized {add}
+
+This parameter specifies who can perform \mailcmd {ADD} command
+Predefined scenari are :
+
+
+\lparam {add}
+    \texttt {auth} $|$
+    \texttt {owner}  $|$
+    \texttt {closed}
+
+\begin {itemize}
+    \item \lparam {add} \texttt {owner}
+
+          Only owners can add subscribers to the list.
+
+    \item \lparam {add} \texttt {auth}
+
+        Use of the \mailcmd {ADD} command requires prior
+        \textindex {authentication}
+        of the owner. To perform this authentification, \Sympa
+        sends a key, indicating that the ``\lparam {auth}~\textit
+        {key}'' parameter should be put in front of the command.
+
+    \item \lparam {unsubscribe} \texttt {closed}
+      
+         \mailcmd {ADD} is not allowed. This parameter is forced to
+        \texttt {closed} value for lists defined using \lparam
+        {user\_data\_source}~\texttt {include}.
+
+\end {itemize}
+
+\subsection {del}
+    \label {par-del}
+
+	\default {owner}
+
+	\scenarized {del}
+
+This parameter specifies who can perform \mailcmd {DEL} command
+Predefined scenari are :
+
+
+\lparam {del}
+    \texttt {auth} $|$
+    \texttt {owner}  $|$
+    \texttt {closed}
+
+\begin {itemize}
+    \item \lparam {del} \texttt {owner}
+
+          Only owners can delete subscribers of the list.
+
+    \item \lparam {DEL} \texttt {auth}
+
+        Use of the \mailcmd {DEL} command requires prior
+        \textindex {authentication}
+        of the owner. To perform this authentification, \Sympa
+        sends a key, indicating that the ``\lparam {auth}~\textit
+        {key}'' parameter should be put in front of the command.
+
+    \item \lparam {DEL} \texttt {closed}
+      
+         \mailcmd {DEL} is not allowed. This parameter is forced to
+        \texttt {closed} value for lists defined using \lparam
+        {user\_data\_source}~\texttt {include}.
+
+\end {itemize}
+
+
+\subsection {remind}
+    \label {par-remind}
+
+	\default {owner}
+
+	\scenarized {remind}
+
+This parameter specifies who can perform \mailcmd {remind} command
+Predefined scenari are :
+
+
+\lparam {remind}
+    \texttt {owner}  $|$
+    \texttt {listmaster}
+
+\begin {itemize}
+    \item \lparam {remind} \texttt {owner}
+
+          Only owners can perform \mailcmd {remind} for the list.
+
+    \item \lparam {remind} \texttt {listmaster}
+
+        Use of the \mailcmd {remind} is a listmaster privilege.
+
+\end {itemize}
+
+
+\subsection {send}
+    \label {par-send}
+
+	\default {private}
+
+	\scenarized {send}
+
+Predifined scenarii are :
+
+    \texttt {public} $|$
+    \texttt {private} $|$
+    \texttt {privateoreditorkey} $|$
+    \texttt {privateorpublickey} $|$
+    \texttt {editor} $|$
+    \texttt {editorkey} $|$
+    \texttt {editorkeyonly}
+
+This parameter specifies who can send messages to the list ; it is performed by scenari :
+
+\begin {itemize}
+    \item \lparam {send} \texttt {public} 
+
+        Anyone can send a message to the list, including non-subscribers.
+
+    \item \lparam {send} \texttt {publickey} 
+
+        Anyone can send a message to the list, including non-subscribers;
+        \textindex {authentication} is automatically requested by return mail.
+
+    \item \lparam {send} \texttt {private}
+
+        Only subscribers or owners can send a message.
+
+    \item \lparam {send} \texttt {privatekey}
+
+        Only subscribers or owners can send a message; \textindex
+        {authentication}
+        is systematically requested by return mail.
+
+    \item \lparam {send} \texttt {privateorpublickey} 
+
+        Anyone can send a message to the list. Authentication is
+        requested by return mail for non-subscribers.
+
+    \item \lparam {send} \texttt {privateoreditorkey} 
+
+        Anyone can send a message to the list. Message for which
+        the sender is not a subscriber are sent to the list editor
+        to confirm or reject its distribution.
+
+    \item \lparam {send} \texttt {editorkeyonly}
+
+        All messages are stored on the server awaiting approval
+        for distribution. An enabling key is sent to the moderators
+        wit a copy of the message. The message is distributed when
+        the \Sympa robot receives a \mailcmd {DISTRIBUTE} command
+        with the sole key referring to the queued message.
+
+        The \mailcmd {REJECT} command delete the message from the
+        \textindex {moderation} spool (see \cfkeyword {queuemod}
+        configuration variable).
+
+        This method is used for:
+
+        \begin {itemize}
+            \item rather sure identification of the \textindex
+                {moderator}
+
+            \item total independence of moderation mode in
+                relation to mail user agent (MUA) type used by
+                moderators
+
+            \item Minimum cooperation between moderators in the
+                case of sharing of this responsibility.
+
+        \end {itemize}
+
+        With this method, it is not possible for the \textindex
+        {moderator} to change the message, which is always refused
+        or distributed as a whole. This moderation feature is only
+        available as of release 1.2.0 of \Sympa.
+
+    \item \lparam {send} \texttt {editor}
+
+        In this configuration, \Sympa distributes the messages for
+        which at least one of the SMTP fields \rfcheader {From},
+        \rfcheader {X-Sender} contains
+        the address of one of the moderators, distributing these
+        in the list (see \lparam {editor} parameter for list
+        description file, \ref {par-editor}, page~\pageref
+        {par-editor}).
+
+        In the opposite case, it sends these list moderators a
+        message entitled ``\textit {Article to moderate}'' containing
+        a copy of the article to be distributed. It is up to the
+        \textindex {moderator} to send this copy of the message to
+        be distributed back to the list, using the redirect,
+        redistribute, forward or other functions from its MUA
+        (moderation depends on processing of headers, managed by
+        each MUA).
+
+        It should be noted that the security level of this method
+        is associated to the enabling level of the message SMTP
+        fields; it is therefore rather low.
+
+    \item \lparam {send} \texttt {editorkey}
+
+        This method mixes \lparam {send editor} and \lparam {send
+        editorkeyonly} functionalities: If one of the SMTP fields
+        \rfcheader {From}, \rfcheader {X-Sender} or \rfcheader
+        {Approved} contains the address of one of the moderators,
+        the message is distributed without any control.
+
+        In the opposite case, it works in the same way as a moderated
+        list with \lparam {send editorkeyonly}.
+
+        Available as of release 1.2.0 of \Sympa.
+
+\end {itemize}
+
+\subsection {review}
+    \label {par-review}
+
+	\default {owner}
+
+	\scenarized {review}
+
+This parameter specifies who can use the
+\mailcmd {REVIEW} (see~\ref {cmd-review}, page~\pageref {cmd-review}),
+administrative requests. 
+Predifined scenari are :
+
+\lparam {review}
+    \texttt {public} $|$
+    \texttt {private} $|$
+    \texttt {owner} $|$
+
+
+\begin {itemize}
+    \item \lparam {review} \texttt {public}
+
+        \mailcmd {REVIEW} access is not protected and anyone, even
+        non-subscribers, can use it.
+
+    \item \lparam {review} \texttt {private}
+
+        The \mailcmd {REVIEW} command is only authorized for
+        subscribers.
+
+    \item \lparam {review} \texttt {owner}
+
+        Only the list owner can use it.
+
+\end {itemize}
+\subsection {shared documents}
+    \label {par-shared}
+    \index{shared}
+
+\subsubsection {Read access}
+
+	\default {private}
+
+This parameter specifies who can read shared documents 
+the \dir {shared} directory of the list (list what it
+contains).
+
+Predifined scenari are :
+
+\lparam {d\_read}
+    \texttt {public} $|$
+    \texttt {private} $|$
+    \texttt {owner} $|$
+
+
+\begin {itemize}
+    \item \lparam {d\_read} \texttt {public}
+
+        \mailcmd {READ} access is not protected and anyone, even
+        non-subscribers, can read the directory \dir {shared}.
+
+    \item \lparam {d\_read} \texttt {private}
+
+        Reading the directory \dir {shared} is only authorized for
+        subscribers, list owner and listmater.
+
+    \item \lparam {d\_read} \texttt {owner}
+
+        Only the list owner and the listmaster can read the directory \dir {shared}.
+
+\end {itemize}
+
+\subsubsection {Edit access}
+
+	\default {owner}
+
+This parameter specifies who can edit  
+in the \dir {shared} directory of the list (who can upload files,
+and create subdirectories).
+
+Predifined scenari are :
+
+\lparam {d\_edit}
+    \texttt {public} $|$
+    \texttt {private} $|$
+    \texttt {owner} $|$
+
+
+\begin {itemize}
+    \item \lparam {d\_edit} \texttt {public}
+
+        \mailcmd {EDIT} access is not protected and anyone, even
+        non-subscribers, can edit in the directory \dir {shared}.
+
+    \item \lparam {d\_read} \texttt {private}
+
+        Editing the directory \dir {shared} is only authorized for
+        subscribers, list owner and listmater.
+
+    \item \lparam {d\_read} \texttt {owner}
+
+        Only the list owner and the listmaster can edit in the directory \dir {shared}.
+
+\end {itemize}
+
+\section {List tuning}
+
+\subsection {reply\_to}
+    \label {par-reply-to}
+
+	\default {sender}
+
+\lparam {reply\_to}
+    \texttt {sender} $|$
+    \texttt {list}   $|$
+    \texttt {email}
+
+This parameter indicates whether the \rfcheader {Reply-To} field
+should point to the sender of the message (\texttt {sender}) or to
+the list itself (\texttt {list}), to anyother e-mail. If \rfcheader {Reply-To} SMTP header field is set in incoming message, \Sympa will not modify it.
+If \lparam {forced\_reply\_to} is set, \lparam {reply\_to} is ignored by \Sympa.
+
+Note: it is unadvisable to change this field, especially to point
+to the list. Experience demonstrates that numerous users, thinking
+they are responding to the sender, send private messages to a list.
+This can lead to an embarrassing situation.
+
+
+\subsection {forced\_reply\_to}
+    \label {par-forced-reply-to}
+
+\lparam {forced\_reply\_to}
+    \texttt {sender} $|$
+    \texttt {list}   $|$
+    \texttt {email}
+
+This parameter is like the  \lparam {reply\_to} parameter but using 
+this parameter \Sympa overrights any existing rfcheader {Reply-To} SMTP
+header.
+
+
+\subsection {max\_size}
+ \label {par-max-size}
+ \index{max-size}
+
+	\default {\cfkeyword {max\_size} robot parameter}
+
+\lparam {max\_size} \textit {number-of-bytes}
+
+Maximum size of a message in 8-bit bytes. Default value is set in
+ \file {/etc/sympa.conf} file.
+
+
+\subsection {anonymous\_sender}
+    	\label {par-anonymous-sender}
+    	\index{anonymous\_sender}
+
+	\lparam {anonymous\_sender} \textit {value}
+
+If this parameter is set for a list, all messages distributed in that list are
+anonymized. The SMTP \texttt {From:} fields are replace by \lparam {anonymous\_sender}).
+value. Various other field are removed (\texttt {Received:, Reply-To:, Sender: 
+X-Sender:, Message-id:, Resent-From:}
+
+\subsection {custom\_header}
+    	\label {par-custom-header}
+    	\index{custom-header}
+
+	\lparam {custom\_header} \textit {header-field}\texttt {:} \textit {value}
+
+This parameter is optional. The header specified with this parameter
+will be placed in each of the message headers distributed in the
+list. As of release 1.2.2 of \Sympa, it is possible to put several
+custom header lines in the configuration file at the same time.
+
+% [pda] : faudrait le mettre en anglais
+% [sa] A voir laisse le commentaire
+\example {custom\_header X-url: http://www.cru.fr/listes/apropos/sedesabonner.faq.html}.
+
+\subsection {custom\_subject}
+
+	\label {par-custom-subject}
+	\index{custom-subject}
+
+	\lparam {custom\_subject} \textit {value}
+
+This parameter is optional. This parameter specifies a string which is
+added to the subject of distributed messages (this is intented to help
+users who do not use automatic tools to sort incoming messages).
+
+\example {custom\_subject [sympa-users]}.
+
+\subsection {footer\_type}
+    	\label {par-footer-type}
+	\index{footer-type}
+
+	\default {mime}
+
+\lparam {footer\_type (optional, default value is mime)}
+   \texttt {mime} $|$
+   \texttt {append}
+
+List owners may decide to add message header or footer to messages
+sent to the list. This parameter defines the way a footer/header is
+added to a message.
+
+\begin {itemize}
+\item  \lparam {footer\_type} \texttt {mime}
+
+       This is the default value. Sympa will add properly the
+       footer/header as a new MIME part. If message if
+       multipart/alternative, nothing is added (would require another
+       level of MIME encapsulation).
+
+
+\item  \lparam {footer\_type} \texttt {append} 
+
+        In this configuration, sympa won't create new MIME parts but
+        will try to append the header/footer to the body of the
+        message. \tildefile
+        {sympa/expl/\samplelist/message.footer.mime} will be
+        ignored. Header/footer may be appendeded to text/plain
+        messages only.
+
+
+\end {itemize}
+
+\subsection {digest}
+
+    	\label {par-digest}
+    	\index{digest}
+
+	\lparam {digest} \textit {daylist} \textit {hour}\texttt {:}\textit {minutes}
+
+Definition of \lparam {digest} mode. If this parameter is filled
+in, subscribers can select the receive option in multipart/digest
+MIME format.  Messages are then grouped together and this compilation
+is sent to the subscribers in accordance with the rythm selected
+with this parameter.
+
+\textit {Daylist} designates a list of days in the week in number
+format (from 0 for Sunday to 6 for Saturday), separated by commas.
+
+\example {digest 1,2,3,4,5 15:30} 
+
+In this example, \Sympa sends digests at 3:30 PM from Monday to Friday.
+
+\textbf {WARNING}: if the sending time is too late, \Sympa may not
+be able to process it. It is essential that \Sympa scans the digest
+queue at least once between the time laid down for sending of the
+digest and 12:00~PM. Usually do not use digest time later than
+11:00~PM.
+
+
+\subsection {default\_user\_options}
+
+    	\label {par-default-user-options}
+	\index{default-user-options}
+
+	\lparam {default\_user\_options} parameter starts a paragraph to
+	define a default profile for the subscribers of the list.
+
+\begin {itemize}
+    \item \lparam {reception}
+            \texttt {digest} $|$
+            \texttt {summary} $|$
+            \texttt {nomail} $|$
+            \texttt {mail}
+
+        Mail reception mode.
+
+    \item \lparam {visibility}
+            \texttt {conceal} $|$
+            \texttt {noconceal} 
+
+        Visibility of the subscriber with the \mailcmd {REVIEW}
+        command.
+
+\end {itemize}
+
+
+\subsection {cookie}
+
+    	\label {par-cookie}
+	\index{cookie}
+
+	\default {\cfkeyword {cookie} robot parameter}
+
+\lparam {cookie} \textit {random-numbers-or-letters}
+
+This parameter is a secret item for generating \textindex
+{authentication} keys for administrative commands (\mailcmd {ADD},
+\mailcmd {DELETE}, etc.).  This parameter should remain secret,
+even for owners. The cookie is applied to all list owners, and is
+only taken into account when the owner has the \lparam {auth}
+parameter (\lparam {owner} parameter, see~\ref {par-owner},
+page~\pageref {par-owner}).
+
+\example {cookie secret22}
+
+\subsection {priority}
+    \label {par-priority}
+
+	\default {\cfkeyword {default\_list\_priority} robot parameter}
+
+\lparam {priority} \textit {0-9a-z}
+
+This is the priority \Sympa will process messages for this list.
+This is applied while going through the spool. 
+
+0 is the highest priority. The following priorities can be used:  
+\texttt {0...9~A...Z~a...z}.
+\texttt {z} is a special priority since messages will
+stay in spool forever (useful to hangup a list).
+
+Available since release 2.3.1.
+
+\section {bounce}
+    \label {bounce}
+
+\lparam {bounce}
+
+This paragraph defines bounce management parameters :
+
+\begin{itemize}
+
+
+\item
+\label {welcome-return-path}
+\lparam {welcome\_return\_path} 
+
+	\default {\cfkeyword {welcome\_return\_path} robot parameter}
+
+	If set to \cfkeyword {unique}, the welcome message is sent using
+        a unique return path in order to remove the subscriber in case
+	of a bounce. 
+
+\item
+\label {remind-return-path}
+\lparam {remind\_return\_path} 
+
+	\default {\cfkeyword {remind\_return\_path} robot parameter}
+
+	Same as \cfkeyword {welcome\_return\_path} but applyed for remind
+        message.
+
+\item
+\label {warn-rate}
+\lparam {warn\_rate} 
+
+	\default {\cfkeyword {bounce\_warn\_rate} robot parameter}
+
+	Above this rate of bouncing addresses in a list,
+	listowner receives a warning for each mail distributed in the list. 
+
+\item
+\label {halt-rate}
+\lparam {halt\_rate} 
+
+	\default {\cfkeyword {bounce\_halt\_rate} robot parameter}
+
+	\texttt {NOT USED YET}
+
+	If bounce rate reaches the \texttt {halt\_rate}, messages 
+	for the list will be halted, ie they are kept for later 
+	moderation.Above this rate of bouncing addresses in a list,
+	messages for the list aren't distributed. 
+	
+\end{itemize}
+
+\section {Archives related}
+
+\subsection {archive}
+    \label {par-archive}
+    \index{archive}
+
+If the \file {config} file contains  a \lparam {archive} paragraph
+\Sympa will manage an archive of this list
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+archive
+period week
+access private
+\end{verbatim}
+\end {quote}
+
+If parameter \lparam {archive} is specified, archives are
+accessible to users through the \mailcmd {GET} command, 
+and the index of the list archives is given by the \mailcmd {INDEX}
+command (last message of a list is available using  \mailcmd {LAST} command).
+
+
+\lparam {period}
+    \texttt {day} $|$
+    \texttt {week} $|$
+    \texttt {month} $|$
+    \texttt {quarter} $|$
+    \texttt {year}
+
+
+This parameter specifies how archiving is organised: by \texttt
+{day}, by \texttt {week}, by \texttt {month}, by \texttt {quarter}
+or by \texttt {year}.  Generation of automatic list archives requires
+creation of an archive directory in the root of the list (\tildedir
+{sympa/expl/\samplelist/archives/}) where these documents will be
+put.
+
+\lparam {access}
+    \texttt {private} $|$
+    \texttt {public} $|$
+    \texttt {owner} $|$
+    \texttt {closed} $|$
+
+
+This parameter specifies who is allowed to send \mailcmd {GET}, \mailcmd {LAST}  or \mailcmd {INDEX}  commands.
+
+
+
+\subsection {web\_archive}
+    \label {par-web-archive}
+    \index{web\_archive}
+
+If the \file {config} file contains  a \lparam {web\_archive} paragraph
+\Sympa will copy all messages ditributed in the list to the
+"queueoutgoing"  spool. It is intented to be use with WWSympa html
+archive tools. This paragraph must contain at least the access
+parameter to control who can browse the web archive.
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+web_archive
+access private
+\end{verbatim}
+\end {quote}
+
+
+Value for web\_archive access parameter must be one of the following :
+\lparam {access}
+    \texttt {private} $|$
+    \texttt {public} $|$
+    \texttt {owner} $|$
+    \texttt {closed} $|$
+    \texttt {listmaster} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Shared documents
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Shared documents}
+    \label {shared}
+    \index{shared}
+
+Shared documents are documents that various users can manipulate
+on-line via the web interface of \Sympa, whether they're authorized
+to. A shared space belongs to a list, and the users of this list 
+can upload, download, delete... documents in the shared space.
+
+\WWSympa shared web features are basic. The goal is not to provide
+one more sophisticated tool for web publishing, as web dav or such
+product like \textit {Rearsite} provide.
+Anyhow, it is very useful to be able to define privilege on
+web documents in relation with list attributes, like \textit {subscribers},
+\textit {list owners}, or \textit {list editors}.
+
+In order to have a better control on the documents of
+the shared space, each document is linked with specific information : 
+its access rights. The safety is thus ensured.
+
+Shared documents of a list are stored in the directory 
+\tildedir {sympa/expl/\samplelist/shared}. 
+
+This chapter describe how the shared documents are managed, 
+especially considering access rights control. 
+In the following, we will see :  
+
+\begin {itemize}
+       	\item the kind of operations performed on shared documents 
+
+        \item the access rights management  
+
+        \item the access rights control specification
+	
+	\item the actions on shared documents behaviour
+        
+	\item the template files
+\end {itemize}
+
+\section {The three kind of operations on a document}
+    \label {shared-operations}
+Concerning shared documents, we can distinguish three kind of operations which
+have the same constraints relating to access control :
+\begin{itemize}
+	\item The reading operation :\\
+	It consists in :
+	\begin{itemize}
+		\item If it's a directory, open it and list its content (only the
+		sub-documents the user is authorized to ``see'').
+		\item If it's a file, download it, but also display it if it's a
+		viewable file (\textit {text/plain}, \textit {text/html} or image). 
+	\end{itemize}
+	\item The edition operation :\\
+	It regroups :
+		\begin{itemize}
+		\item Subdirectory creation	
+		\item File uploading
+		\item Description of a document (title and basic information)
+		\item Edition on-line of a text file
+		\item Document (file or directory) removal. 
+		If it's a directory, it must be empty.
+		\end{itemize}
+	These various actions have the same behaviour concerning access rights. If a user is
+	authorized to edit a directory, he can create a subdirectory or upload a file inside,
+	describe or delete this directory. If a user is authorized to edit a file, he can edit
+	it on-line, describe it, replace or remove it.  
+	\item The control operation :\\
+	The control operation is directly linked with the access rights notion. If we want the
+	shared documents to be safe, we have to control the access on document. Everybody must not
+	be authorized to do everything on shared documents. Consequently, each document has
+	specific access rights for reading and editing. The control on this document consists
+	in changing this Read/Edit rights.\\
+	The control operation has more restrictive access rights than the two other operations.
+	Only the owner of a document, the privileged owner of the list and the listmaster have
+	control rights on a document. So, another action possible on a document if you can
+	control it is to set the owner of a document.  
+\end{itemize}
+	
+
+
+\section {The description file}
+\label {shared-desc-file}
+The information (title, owner, access rights...) relative to each document must be stocked. That's 
+why each shared document is linked with a special file called a description file.
+These files have the prefix \file {.desc}.
+
+The description file of a directory having the path \dir {mydirectory/mysubdirectory} has the path
+\dir {mydirectory/mysubdirectory/.desc} .
+The description file of a file having the path \dir {mydirectory/mysubdirectory/myfile.myextension} has the path
+\dir {mydirectory/mysubdirectory/.desc.myfile.myextension} .
+
+\subsection {Structure of description files}
+
+Here is the structure of a decription file of a document : file or directory.
+You should \textit {never} have to edit those files.
+ 
+\begin {quote}
+\begin{verbatim}
+title
+  <description of the file in several words>
+
+creation
+  email        <email of the owner of the document> 
+  date_epoch   <date_epoch of the creation of the document>
+
+access
+ read <access rights for read>
+ edit <access rights for edit>
+\end{verbatim}
+\end {quote}
+
+This example is for a document that subscribers can read and only the owner of the document
+and the owner of the list can edit.
+\begin {quote}
+\begin{verbatim}
+title
+  module C++ which uses the class List
+
+creation
+  email Bill.Gates@Cplusplus.com
+  date_epoch 998698638
+
+access
+ read  private
+ edit  owner
+\end{verbatim}
+\end {quote}
+
+\section {The predifined scenarii}
+    \label {shared-scenarii}
+
+\subsection {The scenario public}
+The scenario \textbf {public} is the most permissive scenario. It enables anyone (including
+unknown users) to perform the action.
+
+\subsection {The scenario private}
+The scenario \textbf {private} is the basic scenario of a shared space. Every subscriber of
+the list is authorized to perform the action. The scenario \textbf {private} is the default
+read scenario of the \dir {shared} when the shared space is created. 
+The default scenario is used only in the list configuration. You can modify it editing
+the list configuration file.
+
+\subsection {The scenario owner}
+The scenario \textbf {owner} is the more restrictive scenario of a shared space.
+Only the listmaster, the owners of the list, and the owner of the document
+or those of one of the parent documents are allowed to perform the action.
+The default scenario for editing is the scenario \textbf {owner} in the list
+configuration. 
+
+\section {The access control}
+    \label {shared-access}
+The access control is an important operation, which is performed
+before every access to a document of the shared space.
+
+The access control on a document of the hierarchy is an iterative
+operation on all its parent directories. 
+Here are the regulars adopted for the access control.
+
+\subsection {The listmaster and privileged owner case}
+Listmaster and privileged list owner are particular users in the shared
+web. They are allowed to perform every action on every document of
+the shared space. This precaution permits to keep the control on
+the shared space. Listmaster and privileged owner can't be excluded
+from any document of the shared space.
+ 
+\subsection {The directory \dir {shared} special case}
+In order to allow to have a root directory more restrictive than
+the subdirectories, the directory \dir {shared} (root directory) has
+a special treatment concerning the access control.
+The access rights for read and edit are those of the list configuration file.
+The control on the root directory is specific. 
+The users allowed to change access rights on directory shared are those allowed to edit the
+configuration of the list. 
+ 
+\subsection {General case}
+Let's take a document with a relative path in the shared space 
+\dir {mydirectory/mysubdirectory/myfile}. This is \textit {not} a document
+of the \textit {root} directory. Let's suppose that a user \textbf {X} wants to perform one
+of the three operations (read, edit, control) on this document.
+The access control will use the following process :
+\begin{itemize}
+	\item Reading operation case\\
+	To be authorized to perform the reading action on the document
+	\dir {mydirectory/mysubdirectory/myfile}, the user \textbf {X} must be
+	authorized in the description file to read each document of the
+	path in their description file.
+	Thus, to be allowed to read the file 
+	\dir {mydirectory/mysubdirectory/myfile}, \textbf {X} must be allowed
+	to read \dir {myfile} (the scenario of the description file
+	of \dir {myfile} must return \textit {do\_it} with the user \textbf {X}), but
+	must also be allowed to read \dir {mysubdirectory} 
+	and \dir {mydirectory}.\\
+	However, the owner of a document or of one of the parent directories
+	of the document are allowed to perform \textbf {each action on the document}.
+	So, the owners of \dir {myfile}, \dir {mysubdirectory},
+	and \dir {mydirectory} are authorized to read
+	 \dir {mydirectory/mysubdirectory/myfile}.
+
+	So we can resume this with :
+\begin {quote}
+\begin{verbatim}
+	X can read <a/b/c> 
+
+	if			  
+
+	(X can read <c>
+	AND X can read <b>
+	AND X can read <a>)
+					
+	OR
+
+	(X owner of <c>
+	OR X owner of <b>
+	OR X owner of <a>)
+\end{verbatim}			
+\end {quote}
+
+	\item Editing operation case\\
+	The regulars for edit are exactly the same as read.
+\begin {quote}
+\begin{verbatim}
+	X can edit <a/b/c> 
+	
+	if 
+		
+	(X can edit <c>
+	AND X can edit <b>				
+	AND X can edit <a>)
+					
+	OR
+
+	(X owner of <c>
+	OR X owner of <b>
+	OR X owner of <a>)
+\end{verbatim}			
+\end {quote}
+
+	\item Control operation case\\
+	The access control before performing the control action (change rights
+	or set the owner of a document) is much more restrictive.
+	Only the owner of a document or the owners of one of the parent
+	documents are allowed to control this document.
+	Which can be resumed with :
+\begin {quote}
+\begin{verbatim}
+	X can control <a/b/c> 
+
+	if
+					
+	(X owner of <c>
+	OR X owner of <b>
+	OR X owner of <a>)
+\end{verbatim}			
+\end {quote}
+
+\end{itemize}
+
+\section {The shared documents actions behaviour}
+
+The shared web feature has called for some new actions.
+\begin{itemize}
+	\item action D\_ADMIN\\
+	Create the shared web, close it or restore it. The d\_admin action is accessible
+	from the page \textbf {admin} of the list.
+	\item action D\_READ\\
+	Reads the document after read access control. If it's a folder, lists all the subdocuments that can
+	be read. If it's a file, shows it if it is viewable and download it else.
+	If the document to read contains a file named \file {index.html} or \file {index.htm} and if
+	the user has no other privileges than read on all the documents inside, the read action will
+	consist in displaying the index.
+	The d\_read action is accessible from the page \textbf {info} of the list.
+	\item action D\_CREATE\_DIR\\
+	Creates a new subdirectory in a directory that can be edited. 
+	The creator is the owner of the directory. The access rights are
+	those of the parent directory.
+	\item action D\_DESCRIBE\\
+	Describes a document that can be edited.
+	\item action D\_DELETE\\
+	Deletes a document after edit access control. If it's a folder, it has to be empty.
+	\item action D\_UPLOAD\\
+	Uploads a file in a directory that can be edited.  
+	\item action D\_OVERWRITE\\
+	Overwrites a file if it can be edited. The new owner of the file is the one who has done
+	the overwriting operation.
+	\item actions D\_EDIT\_FILE and D\_SAVE\_FILE\\
+	Edits a file and save it after edit access control. The new owner of the file is the one 
+	who has done the saving operation. 
+	\item action D\_CHANGE\_ACCESS\\
+	Changes the access right to a document (read or edit) if can be controled. 
+	\item action D\_SET\_OWNER\\
+	Changes the owner of a directory if can be controled. The directory must be empty. The new 
+	owner can be anyone but he will have to identify to perform any action on the document.
+
+\end{itemize}
+
+\section {The template files}
+The following template files have been created for shared web:
+
+\subsection {d\_read.tpl} 
+The default page for reading a document. If it's a file, display it if it's
+viewable and download it. If it's a directory, shows the listing of all
+the subdocuments that can be read, and for each one, proposes the buttons 
+to perform actions that are allowed. If the directory can be
+edited, proposes the buttons to describe it, upload a file
+inside, create a new subdirectory. If it can be edit, propose a button to
+edit the access to it. 
+\subsection {d\_editfile.tpl} 
+The page used to edit a file. If it's a text file, permits to edit it on-line.
+The description of the file can be edited in this page. The file can be replaced
+by another using this page.
+
+\subsection {d\_control.tpl}
+The page to edit the access rights and the owner of a document. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Using Sympa commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Bounces management}
+
+\Sympa allows bounces (non-delivery reports) management. This
+prevents list owners from receiving each bounce (1 per message
+sent to a bouncing subscriber) in their own mailbox. Without
+an automatic processing of bounces, list owners either become
+mad or just delete them without further attention.
+
+Bounces are received at \samplelist-owner address, which should
+be sent to \file {bouncequeue} program through aliases :
+
+\begin {quote}
+\begin{verbatim}
+	\samplelist-owner: "|/home/sympa/bin/bouncequeue \samplelist"
+\end{verbatim}
+\end {quote}
+
+\file {bouncequeue} (see \ref{binaries}, page~\pageref{binaries}), stores bounces in a
+\tildedir {sympa/spool/bounce/} spool.
+
+Bounces are then processed by \file {bounced.pl} daemon
+This daemon analyses bounces to find out what
+email addresses are concerned and what kind of error was generated.
+If bouncing addresses matche a subscriber's address, information 
+are stored in \Sympa database (in subscriber\_table). Moreover, latest
+bounce itself is archived in \dir {bounce\_path/\samplelist/email}
+(where bounce\_path is defined in a \file {wwsympa.conf} parameter and
+email is the user email address).
+
+When reviewing a list, bouncing addresses are tagged as bouncing ;
+you may access further information such as : first and last bounces
+date, number of received bounces for the address, the last bounce itself.
+
+Further development of \Sympa should allow automatic deletion
+of bouncing addresses.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Using Sympa commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Using \Sympa commands}
+
+Users interact with \Sympa, of course, when they send messages to
+one of the lists, but also indirectly through administrative requests
+(subscription, list of users, etc.).
+
+This section describes administrative requests, as well as interaction
+modes in the case of private and moderated lists.  Administrative
+requests are messages whose body contains commands understood by
+\Sympa, one per line. These commands can be indiscriminately placed
+in the \rfcheader {Subject} or in the body of the message. The
+\rfcheader {To} address is generally the \mailaddr {sympa{\at}domain}
+alias, although it is also advisable to recognize the \mailaddr
+{listserv{\at}domain} address.
+
+Example:
+
+\begin {quote}
+\begin{verbatim}
+From: pda@prism.uvsq.fr
+To: sympa@cru.fr
+
+LISTS
+INFO sympa-users
+REVIEW sympa-users
+QUIT
+\end{verbatim}
+\end {quote}
+
+Most user commands can have three-letter abbreviations (e.g. \texttt
+{REV} instead of \mailcmd {REVIEW}).
+
+\section {User commands}
+
+\begin {itemize}
+    \item  \mailcmd {HELP}
+
+        Provides the instructions for use of \Sympa commands.  The
+        result is the content of the \file {helpfile.tpl} template
+        file. 
+
+    \item  \mailcmd {INFO} \textit {listname}
+
+        Provides the welcome message for the specified list. The
+        result is the content of the \tildefile {welcome[.mime]}.
+
+    \item  \mailcmd {LISTS}
+        \label {cmd-lists}
+
+        Provides the names of lists managed by \Sympa.  This list
+        can either be generated dynamically, using \lparam {visibility}
+        (see \ref {par-visibility}, page~\pageref {par-visibility})
+        and \texttt {subject} list parameters (\ref {par-subject},
+        page~\pageref {par-subject}) but also \tildefile
+        {sympa/expl/lists.header} and \tildefile
+        {sympa/expl/lists.footer}).  It can also be generated
+        statically by including contents of the \tildefile
+        {sympa/expl/lists} file, which must be updated manually by
+        the robot \textindex {administrator}.
+
+    \item  \mailcmd {REVIEW} \textit {listname}
+        \label {cmd-review}
+
+        Provides the parameters of the specified list (owner,
+        subscription mode, etc.), as well as the addresses of
+        subscribers if the run mode authorizes it. See the \lparam
+        {review} parameter (\ref {par-review}, page~\pageref
+        {par-review}) for the configuration file of each list,
+        which controls consultation authorizations for the subscriber
+        list. Since subscriber addresses can be abused by spammers,
+        it is strongly advised to \textbf {only authorize owners
+        to access the susbcriber list}.
+
+    \item  \mailcmd {WHICH}
+         \label {cmd-which}
+
+        Returns the list of lists to which one is subscribed,
+        as well as the configuration of his or her subscription to
+        each of the lists (DIGEST, NOMAIL, SUMMARY, CONCEAL).
+
+\item  \mailcmd {STATS} \textit {listname}
+        \label {cmd-stats}
+
+        Provides statistics for the specified list:
+        number of messages received, number of messages sent,
+        mega-bytes received, mega-bytes sent. This is the contents
+        of the \tildefile {sympa/expl/stats} file
+
+    \item  \mailcmd {INDEX} \textit {listname}
+        \label {cmd-index}
+
+        Provides index of archives for specified list. Access rights
+        to this function are the same as for the \mailcmd {GET}
+        command. 
+
+    \item  \mailcmd {GET} \textit {listname} \textit {archive}
+        \label {cmd-get}
+
+        To retrieve archives for list (see above).  Access
+        rights are the same as for the \mailcmd {REVIEW} command.
+        See \lparam {review} parameter (\ref {par-review},
+        page~\pageref {par-review}).
+
+    \item  \mailcmd {LAST} \textit {listname}
+        \label {cmd-last}
+
+        To receive the last message distributed in a list (see above).  Access
+        rights are the same as for the \mailcmd {GET} command.
+
+    \item  \mailcmd {SUBSCRIBE} \textit {listname firstname name}
+        \label {cmd-subscribe}
+
+        Requests sign-up to the specified list. The \textit
+        {firstname} and \textit {name} are optional. If the
+        list is parameterized with a restricted subscription (see
+        \lparam {subscribe} parameter, \ref {par-subscribe},
+        page~\pageref {par-subscribe}), this command is sent to the
+        list owner for approval.
+
+    \item  \mailcmd {INVITE} \textit {listname user@host name}
+        \label {cmd-invite}
+
+        Invite someone to subscribe to the specified list. The 
+        \textit {name} is optional. The command is similar to the
+        \mailcmd {ADD} but the specified person is not added to the
+        list but invited to subscribe to it accordind to the 
+        \lparam {subscribe} parameter, \ref {par-subscribe},
+        page~\pageref {par-subscribe}).
+
+
+    \item  \mailcmd {SIGNOFF} \textit {listname} [ \textit {user@host} ]
+        \label {cmd-signoff}
+
+        Requests unsubscription from the specified list.
+        \mailcmd {SIGNOFF *} means unsubscription from all lists.
+
+    \item  \mailcmd {SET} \textit {listname} \texttt {DIGEST}
+        \label {cmd-setdigest}
+
+        Puts the subscriber in \textit {digest} mode for the \textit
+        {listname} list.  Instead of receiving mail from the list
+        in a normal manner, the subscriber will periodically receive
+        it in a DIGEST. This DIGEST compiles a group of messages
+        from the list, using multipart/digest mime format.
+
+        The sending period for these DIGESTS is regulated by the
+        list owner using the \lparam {digest} parameter (see~\ref
+        {par-digest}, page~\pageref {par-digest}).  See the \mailcmd
+        {SET~LISTNAME~MAIL} command (\ref {cmd-setmail}, page~\pageref
+        {cmd-setmail}) and the \lparam {reception} parameter (\ref
+        {par-reception}, page~\pageref {par-reception}).
+
+    \item  \mailcmd {SET} \textit {listname} \texttt {SUMMARY}
+        \label {cmd-setsummary}
+
+        Puts the subscriber in \textit {summary} mode for the \textit
+        {listname} list.  Instead of receiving mail from the list
+        in a normal manner, the subscriber will periodically receive
+        the list of messages. This mode is very close to the DIGEST
+        reception mode but the subscriber receive only the list of messages.
+
+        This option is available only if the digest mode is set.
+
+    \item  \mailcmd {SET} \textit {listname} \texttt {NOMAIL}
+        \label {cmd-setnomail}
+
+        Puts subscriber in \textit {nomail} mode for the \textit
+        {listname} list.  This mode is used when a subscriber wants
+        to no longer receive mail from the list; nevertheless he
+        or she maintains the capability of writing in the list.
+        This mode therefore prevents the subscriber from unsubscribing
+        and subscribing later on.  See the \mailcmd {SET~LISTNAME~MAIL}
+        command (\ref {cmd-setmail}, page~\pageref {cmd-setmail}) and
+        the \lparam {reception} (\ref {par-reception}, page~\pageref
+        {par-reception}). 
+
+    \item  \mailcmd {SET} \textit {listname} \texttt {MAIL}
+        \label {cmd-setmail}
+
+        Puts the subcriber in normal mode (default) for the \textit
+        {listname} list.  This option is mainly used to cancel the
+        \textit {nomail}, \textit {summary} or \textit {digest} modes. If the subscriber
+        was in \textit {nomail} mode, he or she will again receive
+        mail from the list in a normal manner.  See the \mailcmd
+        {SET~LISTNAME~NOMAIL} command (\ref {cmd-setnomail},
+        page~\pageref {cmd-setnomail}) and the \lparam {reception}
+        parameter (\ref {par-reception}, page~\pageref {par-reception}).
+
+    \item  \mailcmd {SET} \textit {listname} \texttt {CONCEAL}
+        \label {cmd-setconceal}
+
+        Puts the subscriber in \textit {conceal} mode for the
+        \textit {listname} list.  The subscriber will then become
+        invisible during \mailcmd {REVIEW} on this list. Only owners
+        will see the whole subscriber list.
+
+        See the \mailcmd {SET~LISTNAME~NOCONCEAL} command (\ref
+        {cmd-setnoconceal}, page~\pageref {cmd-setnoconceal}) and
+        the \lparam {visibility} parameter (\ref {par-visibility},
+        page~\pageref {par-visibility}).
+
+
+    \item  \mailcmd {SET} \textit {listname} \texttt {NOCONCEAL}
+        \label {cmd-setnoconceal}
+
+        Puts the subscriber in \textit {noconceal} mode (default)
+        for \textit {listname} list. The subscriber will then
+        become visible during \mailcmd {REVIEW} of this list. The
+        \textit {conceal} mode is then cancelled.
+
+        See \mailcmd {SET~LISTNAME~CONCEAL} command (\ref
+        {cmd-setconceal}, page~\pageref {cmd-setconceal}) and
+        \lparam {visibility} parameter (\ref {par-visibility},
+        page~\pageref {par-visibility}).
+
+
+    \item  \mailcmd {QUIT}
+        \label {cmd-quit}
+
+        Ends acceptance of commands. This can prove useful when
+        the message contains additional lines, as for example in
+        the case where a signature is automatically added by the
+        user's program.
+
+    \item  \mailcmd {CONFIRM} \textit {key}
+        \label {cmd-confirm}
+
+        If the \lparam {send} parameter of a list is set to \texttt
+        {privatekey, publickey} or \texttt {privateorpublickey},
+        messages are only distributed in the list after an
+        \textindex {authentication} phase by return mail, using a
+        one-time password (numeric key). For this authentication,
+        the sender of the message is requested to post the ``\mailcmd
+        {CONFIRM}~\textit {key}'' command to \Sympa.
+
+    \item  \mailcmd {QUIET}
+
+        This command is used for silent (mute) processing: no
+        performance report is returned for commands prefixed with
+        \mailcmd {QUIET}).
+
+\end {itemize}
+
+\section {Owner commands}
+
+Some administrative requests are only available to list owner(s).
+They are indispensable for all procedures in limited access mode,
+and to perform requests in place of users.
+These requests are:
+
+\begin {itemize}
+    \item \mailcmd {ADD} \textit {listname user@host firstname name}
+        \label {cmd-add}
+
+        Add command similar to \mailcmd {SUBSCRIBE}
+
+    \item \mailcmd {DELETE} \textit {listname user@host}
+        \label {cmd-delete}
+
+        Delete command similar to \mailcmd {SIGNOFF}
+
+    \item \mailcmd {REMIND} \textit {listname} or \mailcmd {REMIND} \textit {*}
+	\label {cmd-remind}
+
+        \mailcmd {REMIND} is used usually by list owner in order to send
+        an individual service message to each subscriber. This
+        message is make by parsing the remind.tpl file.
+
+        \mailcmd {REMIND} is used to send to each subscriber of any list a single
+        message with a summary of his/her subscriptions. In this case the 
+        message sent is built by parsing the global\_remind.tpl file.
+        Freach list  sympa test if the list is setup as hidden 
+	to each subscriber (parameter lparam {visibility}). By default this 
+	command usage is limited to listmasters. 
+	Processing may take a lot of time !
+	
+    \item  \mailcmd {EXPIRE}
+        \label {cmd-expire}
+
+        % [pda] : huh ???
+        % [sa] on touche pas la doc avant d'avoir revu le code
+        \textit {listname}
+        \textit {age (in days)}
+        \textit {deadline (in days)}
+        (listname) (age (in days)) (deadline (in days))
+        \textit {explanatory text to be sent to concerned subscribers}
+
+
+        This command activates an \textindex {expiration} process
+        for former subscribers of the designated list. Subscribers
+        for which no procedures have been enabled for more than
+        \textit {age} days receive the explanatory text appended
+        to the \mailcmd {EXPIRE} command. This text, which must be
+        adapted by the list owner for each subscriber population,
+        should explain to the people receiving this message that
+        they can update their subscription date so as to not be
+        deleted from the subscriber list, within a deadline of
+        \textit {deadline} days.
+
+        Past this deadline, the initiator of the \mailcmd {EXPIRE}
+        command receives the list of persons who have not confirmed
+        their subscription.  It is up to the initiator to send
+        \Sympa the corresponding \mailcmd {DELETE} commands.
+
+        Any operation updating the subscription date of an address
+        serves as confirmation of subscription. This is also the
+        case for \mailcmd {SET} option selecting commands and for
+        the \mailcmd {SUBSCRIBE} subscription command itself. The fact
+        of sending a message to the list also updates the subscription
+        date.
+
+        The explanatory message should contain at least 20 words;
+        it is possible to delimit it by the word \mailcmd {QUIT},
+        in particular in order not to include a signature, which
+        would systematically end the command message.
+
+        A single expiration process can be activated at any given
+        time for a given list. The \mailcmd {EXPIRE} command
+        systematically gives rise to \textindex {authentication}
+        by return mail.  The \mailcmd {EXPIRE} command has \textbf
+        {no effect on the subscriber list}.
+
+    \item  \mailcmd {EXPIREINDEX} \textit {listname}
+       \label {cmd-expireindex}
+
+       Makes it possible, at any time, for an expiration process
+       activated using an \mailcmd {EXPIRE} command to receive the
+       list of addresses for which no enabling has been received.
+
+    \item  \mailcmd {EXPIREDEL} \textit {listname}
+       \label {cmd-expiredel}
+
+       Deletion of a process activated using the \mailcmd {EXPIRE}
+       command.  The \mailcmd {EXPIREDEL} command has no effect on
+       subscribers, but it possible to activate a new expiration
+       process with new deadlines.
+
+\end {itemize}
+
+As above, these commands can be prefixed with \mailcmd {QUIET} to
+indicate processing without acknowledgment of receipt.
+
+
+\section {Moderator commands}
+    \label {moderation}
+
+\Sympa only distributes messages enabled by one of the moderators
+(editor) of the list in the moderated list. Moderators have several
+methods for enabling message distribution, depending on the \lparam
+{send} list parameter (\ref {par-send}, page~\pageref {par-send}).
+
+\begin {itemize}
+    \item  \mailcmd {DISTRIBUTE} \textit {listname} \textit {key}
+        \label {cmd-distribute}
+
+        If the \lparam {send} parameter of a list is set to \texttt
+        {editorkey} or \texttt {editorkeyonly}, each message queued
+        for \textindex {moderation} is stored in a spool (see~\ref
+        {cf:queuemod}, page~\pageref {cf:queuemod}), and a key is
+        associated to it.
+
+        The \textindex {moderator} must use this command to enable
+        message distribution.
+
+    \item  \mailcmd {REJECT} \textit {listname} \textit {key}
+        \label {cmd-reject}
+
+        The message with the \textit {key} key is deleted from the
+        moderation \textindex {spool} of the \textit {listname}
+        list.
+
+    \item  \mailcmd {MODINDEX} \textit {listname}
+        \label {cmd-modindex}
+
+        This command sends back the list of messages queued for
+        moderation for the \textit {listname} list.
+
+        The result is presented in the form of an index, which
+        supplies, for each message, its sending date, its sender,
+        its size, and the key associated to it, as well as all
+        messages in the form of a digest.
+
+\end {itemize}
+
+% [pda] : c'est intéressant, mais c'est en français et ce n'est pas dans cette doc. Je pense que le mieux serait de le traduire en anglais et de l'inclure dans cette doc
+% [sa] : OK a faire laisse le commentaire.
+% [pda] : et de renvoyer l'URL ci-dessus vers la page HTML correspondante dans la doc
+See also the
+\htmladdnormallinkfoot {advice documents for the moderation} {http://listes.cru.fr/admin/moderation.html}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appendices
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Index
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\printindex
+
+\end {document}

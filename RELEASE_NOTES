@@ -1,0 +1,2528 @@
+*****    Changes which are not compatible with previous versions are
+*****    listed using "*****"in the margin. Please check this at least.
+
+
+3.0   4 Jan 2001
+
+	3.0 is a major release of Sympa. It include a lot of changes
+        but no significant uncompatible changes. Major new features :
+        
+             -list configuration edition. At last !!!
+             -S/MIME encryption and HTTPS authentication (because
+              OpenSSL itself is a beta test distribution, all features
+              based on OpenSSL are distributed under beta testing status)
+             -Shared web space for each list.
+             -New web navigation ergonomie.
+
+        This version 3.0 as been distributed under alpha and beta testing
+        version since October and as been widely tested. Special thanks to
+        Olivier Lacroix for a lot of contributions.        
+
+  Changes :
+
+        tarball now include a KOWNBUGS file.
+
+  Bug fixes :
+
+	[Olivier LACROIX <Olivier.Lacroix@ciril.fr>]
+	Corrected es.msg for HPUX
+	Corrected chmod (for HPUX compatibility) in wwsympa/Makefile
+
+	wwsympa::Savefile() failed because filename was lost when calling
+        editfile() afterward (may_edit on an unblessed list reference)
+        
+3.0b.9	23 Dec 2000
+  Bug Fixes :
+
+	[reported by Jean-Luc OMS <Jean-Luc.Oms AT lirmm.fr>]
+	"comment" files used for site's list templates
+
+	[Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+	Fixed message rejection format in sympa.pl
+
+        [Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+	Replace system call to MhOnArc in wwsympa.fcgi
+
+        [reported by François Dagorn <dagorn AT univ-rennes1.fr>]
+	When subscribtion is sent to owner, the approve command
+        should be a mailto:
+
+	[reported by Fil <fil AT bok.net>]
+        Using uniq Return-path impossible with postfix. Replace the
+        separator char "/" by "==".  
+	
+        [Jérôme Marant <jmarant AT free.fr>]
+	Missing "CREATE DATABASE" in create_db.Pg
+
+3.0b.8	18 Dec 2000
+
+  New features :
+	Sympa not archive anymore message with 'X-no-archive: yes' or
+        'Restrict: no-external-archive' smtp header.
+
+	[Fil <fil AT bok.net>]
+	New "remove_headers" parameter in sympa.conf
+	It tells sympa what SMTP header fields to remove in distributed
+	messages.
+
+*****	You need to add an alias for listmaster :
+*****	listmaster: "|/home/sympa/bin/queue listmaster"
+
+	New optional wwsympa.conf parameter "default_home" in order to choose
+        another home page for exemple "lists"
+
+        A new link to load X509 certificat in list page is added
+        if list as it's own email certificat.
+
+	New sympa.conf parameter "ssl_cert_dir"
+	Default is expl/X509-user-certs
+	Its value in sample sympa.conf can be overwritten with SSLCERTDIR variable
+	at make time
+
+	New [list->xxx] vars available within scenario conditions
+
+  Bug fixes :
+
+	[reported by Hubert Ulliac <Hubert.Ulliac AT Uhb.Fr>]
+	First subscriber in digest mode did NOT receive digests
+	The problem was due to a missing parameter at mailto() call
+
+	[reported by Hubert Ulliac <Hubert.Ulliac AT Uhb.Fr>]
+	[conf->xx] where not recognised in scenari match() conditions
+
+	Fix welcome message lost when must be signed
+        (bug introduced in 3.0b4)
+
+	Reviewbouncing failed with "No Page 1" error message.
+
+	[Philippe Bricout <pbricout AT setra.fr>]
+	Change some hard-coded path to --ETCBINDIR-- in wws_templates
+
+	[reported by J.E. Gadenne <jeg AT lettres.net>]
+	Escape '<' and '>' chars in modindex's Subject field
+
+	[Jérôme Marant <jmarant AT free.fr>]
+	Delete Perl interpreter calls in perl modules
+	Correct privileges on mhonarc-ressources file
+
+	[Philippe Bricout <pbricout AT setra.fr>]
+        fixe bugs in wwstemplates\admin_menu.*tpl
+         
+        [Olivier LACROIX <Olivier.Lacroix AT ciril.fr>] fixe the
+        "%s" bug in sentence "Your message for list %s has been ..."
+        fr translation of d_read template
+
+	Could not change "digest" time in edit_list_request form
+
+	[reported by Didier Lamballais <Didier.Lamballais AT irisa.fr>]
+	Makefile : Missing conditional around Perl 5.6.0 warning
+
+	"Make clean" now deletes the "bouncequeue" program
+
+        Remove unused module sign_filter.pl 
+
+	Fix reviewbouncing
+
+  Changes :
+
+	[Josep Roman <josep.roman AT zuerich-see.ch>]
+	Updated spanish wws_templates
+
+	Return the filled form when an error occurs in create_list
+
+	Use a new window for Login
+
+	Resulting addresses of a "search" are selected
+	Deletion requires confirmation
+
+	Subscribe/signoff web confirmation now performed with Javascript
+
+	wwsympa.fcgi : default cookie expiration is 0 min
+	Login will last until the web browser is closed.
+
+3.0b.4	30 Nov 2000
+
+  New features :
+
+	[Josep Roman <josep.roman@zuerich-see.ch>]
+	Complete spanish translations of the web interface, including update of es.msg
+
+	Change_email feature in WWSympa (accessible from prefs)
+
+	[requested by Geoffrey Lee <snailtalk AT linux-mandrake.com>]
+	Makefile : include RPMTOPDIR variable
+
+	Makefile : new "make rpm" building Linux RPM binaries for both
+	RedHat and Mandrake.
+
+	Makefile : new PIDDIR variable ; creating spool directories
+
+        [reported by Patrick BROSSIER <Patrick.Brossier AT mgm.fr>]
+	The main CGI (wwsympa.fcgi) can now be installed elsewhere (not BINDIR)
+	by setting WWSBINDIR in Makefile
+       
+        [Renato Bonomini <renato AT ramiola.dsmnet.it>]
+	Translation of web templates in Italian
+
+  Bug fixes :
+
+	[reported by Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+	Changes in mail::mailback() to leave messages in msg/ spool
+	when working with FastCGI
+
+	[Robert Marchand <robert.marchand AT UMontreal.CA>]
+	A few bug fixes in Makefiles
+
+	[reported by Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+	"unknown locale" errors in wwsympa log file
+
+	[Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+	chomp() on From: in DoSendMessage()
+	Corrected template inclusions
+
+	archived.pl : backslashed '$' in msgid before system call to mhonarc
+
+	Under some circonstances (FastCGI+Perl 5.6+...), WWSympa was dying
+	with the following error :
+	FastCGI: server wsympa.fcgi stderr: Not a GLOB reference 
+	This happened while sending a service message (welcome, bye,...)
+	because of the fork performed by WWSympa, not supported by FastCGI.
+	WWSympa now completely relies on Sympa for message distribution.
+	Communication is performed via spool/msg/.
+	
+	Could not set owner of non-empty directories or documents in shared.
+
+	Better check of email addresses in ADD and DEL commands
+
+	Marc/Search.pm : add trailing '/' to directories to make it work
+	(on Linux system) with symbolic links
+
+	Corrected REMIND from the web
+
+
+  Changes
+
+	Search among subscribers limited to 500 records
+
+	Sympa deletes its pidfile when exiting
+
+	wwsympa.fcgi : request a confirmation before unsubscription
+
+	Generalization of mail::mailback() in List.pm
+
+	wwsympa.fcgi (edit_list) : deleting an email address, deletes the
+	corresponding owner/editor entry
+
+	WWSympa.fcgi installed with SetUID bit
+
+        New admin information in list_menu 
+
+        french templates
+
+3.0a.1
+
+
+  Bug fixes
+
+	Pass the module name to CPAN::Shell->install(), not the package name 
+
+       	A few corrections in load_subscribers.pl
+
+	Multple "list" INPUTs in wws_templates/review.tpl
+
+       	[reported by Jean-Marc Larre <Jean-Marc.Larre AT cesr.fr>]
+       	Accept complex string for 'user' entry in paragraph 'include_ldap_query'
+
+       	Error in review.tpl ; could not delete users form review page.
+
+       	[Bill Shirley <bill AT shirleyfamily.net] 
+	a few bugs in documentation
+
+3.0a	30 Oct 2000
+
+	3.0 is a major release of Sympa. It include a lot of changes
+        but no significant uncompatible changes. The 3 major new features
+        are :
+             -list configuration edition. At last !!!
+             -S/MIME encryption and HTTPS authentication
+             -Shared web space for each list.
+
+
+   New features:
+
+	S/MIME : Sympa now can be configured to distribute encrypted messages
+        (need a email certificate for the list). It also sign welcome message
+        comming from a list (in order to distribute the list certificate).
+        HTTPS authentication can be used with user certificate. In this case
+        no login form is needed at all.
+
+	"edit_list" action in WWSympa : a important change in internal
+        data structure for list configuration. You must check that sympa.sympa
+        has write access on config files.
+
+	Shared web features set. This developpement from Sophie Le Floch
+        sophie.le-floch AT cru.fr is intended for new groupware features
+        in WWSympa.
+	
+****	New design for web navigation. All web templates are changed. 3.0a
+****    include ONLY us web templates. Of course 3.0 release will contain
+        previous french and spanish translation. Translators are invited to take
+        contact with us.
+
+
+	New parameters in "include_ldap_query" paragraph :
+	   o attrs <mail_attribute> (default 'mail') attribute
+           containing the email address(es)
+           o select <first | all> (default 'first') if the query
+           returns multiple values, do we keep the first one or all of them
+
+	Add a protection at the entrance of archives. If the user is
+	not identified, he/she has to click a button to access archives.
+
+	New parameter "visibility" for a topic in topics.conf
+	It refers to "topics_visibility" scenario
+
+	Check Message-IDs to avoid loops.
+
+	"default_user_options" now applied to included users.
+	
+	Importing lists to 'database' mode can be performed using
+	WWSympa. All you have to do is edit the list config (in WWSympa)
+	and change the user_data_source from 'file' to 'database'.
+
+
+    Changes :
+
+**** 	[] are automatically added to the custom subject
+
+****    Daemons(sympa.pl, archived.pl, bounced.pl) now set their UID themselves.
+****    You can thereby run them with root privileges (a script is provided
+****	in script/ directory for starting/stoping Sympa)
+
+	No more list_parameter.conf : comments are in wws_template files
+	titles are in NLS
+
+	"make install" will install sample sympa.conf and wwsympa.conf 
+	if none exist
+
+	Added "INITDIR" var in Makefile, to install SYSV init scripts
+
+	No more translations in wwsympa.fcgi and wws-lib.pl
+
+	["Pascal J. Bourguignon" <pjb AT imaginet.fr>
+	Add missing error messages to queue.c
+	
+	Multipart/report messages are ignored in distribution process
+
+        Disposition-Notification-To headers are removed before distribution
+
+	Search (among subscribers) in WWSympa, also searches the gecos
+
+	Included files can now have a gecos column
+
+	Set a password for users subscribing/ed via email.
+	It can be added in templates ([user->password])
+
+	Do not enter user information in user_table before he/she has
+	subscribed.
+
+	Set "log_socket-type" to "inet" in sample/sympa.conf if on a Linux 
+	system.
+
+	[requested by Geoffrey Lee <snailtalk AT linux-mandrake.com>]
+	"DESTDIR" can be set in the main Makefile to install it in
+	directory different from "DIR"
+	This should make RPM & DEB packagers' life easier.
+
+	Install samples in $(DIR)/sample
+
+	Install scripts in ~sympa/bin/
+	Variables parsed at make time in scripts
+
+	[requested by Mathieu Arnold <arn_mat AT club-internet.fr>]
+	Add "quiet" option to multiple add
+
+	"editor,quiet" & "editorkey,quiet" actions in "send" scenario
+	
+	New "close_list" and "restore-list" features in WWSympa
+
+	Made List::request_auth() and List::compute_auth() object methods
+
+	List::_load_users_file() split in 2 subroutines
+
+	Scripts in script/ are now parsed, via a Makefile and installed.
+
+	Access to "info" page is controlled by "info" list parameter
+
+    Bug fixes :
+	
+        [Jean-Marc Larre <Jean-Marc.Larre AT cesr.fr>] fixe LDAP interoperability
+        problem with Netscape directory server.
+
+	Use List::distribute_msg() with CONFIRM command.
+	This will allow usage of anonymous_sender with confirmations.
+
+	[Cedric Scott <cedric.scott AT sse.ie>] fix the quiet option
+        in scenario.
+
+	Fixe am_i('editor',..) in order to make owners as default editors
+
+	List::verify() failed to evaluate [conf->xxx] and [header->xxx]
+	if not exact match
+
+	[Thibault Verollet <tverollet AT jetmultimedia.fr>]
+	INSERT IGNORE in load_subscribers.pl
+
+	[reported by Richard Balint <balint AT balintrc.oca.udayton.edu>]
+	List::send_msg_digest() does a BULK call to sendmail with ALL 
+	the recepients (in Digest mode)
+
+	Bounced.pl failed writing bounces in OTHER directories
+
+	Bounced enable to remove errors (get_action replace by request_action)
+        Idem for Commands.pm : del
+
+	[reported by Patrick CAO HUU THIEN <cao_huu_thien AT inrp.fr>]
+	Strip end of lines from wwsympa.conf
+
+	[reported by  Christian Perez <cperez AT drecam.saclay.cea.fr>]
+	Syntaxe error in Archi.pm and arc2webarc.pl 
+	(COMPILANT => COMPLIANT)
+
+	[reported by Odile Germes <odile.germes AT univ-rennes1.fr>]
+	Sympa would die while archiving a message for a list
+	not in database mode.
+
+	[Hadmut Danisch <hadmut AT danisch.de>]
+	SQL query for MySQL changed from :
+		bounce_subscriber != 'NULL'
+	to :
+		bounce_subscriber is not NULL
+
+	[reported by "J.E. Gadenne" <jeg AT lettres.net>]
+	Decode messages subject, included in reject.tpl
+
+	[reported by Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+	With PostgreSQL, WHICH failed because SELECT is case-sensitive.
+	Sender email address is now lower-cased in Commands.pm
+
+	'comment' files in create_list_templates/ directories are
+	now available from within 'create_list_request' template
+
+	Changed Language.pm to use multiple NLS catalogues.
+	Command reports related to a list now use its language.
+
+	Number of subscribers of lists in 'include' mode is now correct.
+	
+	Variables in match expresions (/[var]/) were not evaluated
+	in scenario 
+
+	[Dominique ROUSSEAU <d.rousseau AT mail.dotcom.fr>]
+	archived.pl could not log anymore
+
+	[Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+	Rejection and forwarding reports did not include correct
+	MIME headers
+
+	Don't log strings with \0, driving syslogd mad.
+
+	In WWSympa, listmaster has privileged_owner privileges
+
+	[Dominique ROUSSEAU <d.rousseau AT mail.dotcom.fr>]
+	Pass the umask to mhonarc in archived.pl
+
+	[reported by Laurent Aublet-Cuvelier <Laurent.Aublet-Cuvelier AT imag.fr>]
+	X-Sympa-To should be assigned 'email'@'host' as defined in sympa.conf.
+
+	Rename a message as BAD if it cannot be opened
+
+	[reported by Hervé Maza <herve.maza AT education.gouv.fr>]
+	Add Subject: to moderation notification message
+
+	Create "spool/" directory before attempting to create spools.
+
+	[reported by Denis Havlik <denis AT mandrakesoft.com>]
+	Header and Footer were not added in 'append' mode
+
+	Could not remove_arc with Message-IDs containing a '$'
+
+	$sortby now used in List::get_first_user() for Oracle and Sybase
+
+	Deletes all Mail::Internet in Commands.pm
+
+	[Hubert Ulliac <Hubert.Ulliac AT Uhb.Fr>]
+	Corrected scenario "access_web_archive.intranet"
+
+        fix &is_web_archived function in order to adapt it to the new
+        load_admin proc. 
+
+	fix incorrect storage of user certificats
+
+	[reported by Olivier LACROIX <Olivier.Lacroix AT ciril.fr> and
+        Bertrand.Poulet AT pasteur-lille.fr (Bertrand Poulet) ]
+	Fix src/Makefile in order to update queue and bouncequeue when
+	edition main Makefile.
+
+	[reported by Mathieu Arnold <arn_mat AT club-internet.fr>]
+	Confirmation for QUIET commands now works
+
+	Change to check_perl_modules.pl :
+	argument passed to CPAN::Shell->install() is the module name
+
+	Save a copy of messages for digest before customizations
+	(custom_subject, List-xx header fields, footer, ...)
+
+	Warn if topics.conf is empty while creating list.
+
+	[Luc Saillard <luc.saillard AT alcove.fr>]
+	Aditional Bounce recognition (Wanadoo, Postfix, bigfoot)
+
+	Don't consider messages as BAD if list has 0 subscriber
+
+	[reported by Emmanuelle Rivière <cdb AT bok.net>]
+	Hide recepients of summaries
+
+	[reported by Michel Bouissou <michel.bouissou AT i-quake.com>]
+	Corrected templates edition in serveradmin
+
+	[Laurent Rathle <lrathle AT teaser.fr>]
+	Corrected scenario_test, wrong path to scenari
+
+	[Raymond Bourges <raymond.bourges AT univ-rennes1.fr>]>
+	Missing quote in arcsearch_form.fr.tpl
+
+
+2.7.3 25 July 2000
+
+    Bug Fixes :
+
+	[Gustavo Araujo Bittencourt <gustavo.bittencourt AT capes.gov.br>]
+	Database name hard-coded for one query (Sybase only)
+
+	[Marc Baudoin <babafou AT pasteur.fr>]
+	Add <> to anonymous_sender MessageID
+
+	Replace real color by --XX_COLORS-- in mhonarc-ressources
+
+	Allow welcome.tpl edition in edit_list.conf
+
+	Correct path for aliases when creating a list.
+
+	[Laurent Ghys <Laurent.Ghys AT ircam.fr>]
+	Sort %todo in check_perl_modules.pl to avoid error message with CGI::Fast
+
+	[Gustavo Araujo Bittencourt <gustavo.bittencourt AT capes.gov.br>]
+	Changed connect string for Sybase ("server" instead of "host")
+
+	[Christophe Labouisse <labouiss AT cybercable.fr>]
+	NULL characters are coded as 'NULL' with PostgreSQL ('\N' with MySQL)
+
+	[reported by Didier Lamballais <Didier.Lamballais AT irisa.fr>]
+	WWSympa would not use its "log_facility" parameter
+
+	[jmr AT computing.com]
+	Corrected the LIMIT clause for to work with PostgreSQL 
+	LIMIT { count | ALL } [ { OFFSET | , } start ]
+
+	Decode headers of command messages.
+
+	Don't save decoded body data (MIME::Parser) to disk in bounced.pl
+
+    Changes :
+
+	Give up the "cgi-lib"-like ReadParse, to allow file upload.
+
+	Every log entry is preceded by the service (sympa|wwsympa|bounced|archived)
+	
+	MIME::tools now requires File::Spec
+
+
+2.7.2 30 June 2000
+
+    Bug Fixes :
+
+	[PORTE Olivier <porte AT dsi.cnrs.fr>]
+	Corrected "returned" to "return" in Commands.pm
+	(4/07/2000)
+
+        One more bug in modindex
+
+    Changes :
+        [Josep Román <josep.roman AT zuerich-see.ch>] 
+	update spanish templates
+
+2.7.1 30 June 2000
+
+    Bug Fixes :
+	[reported by Claude Gross <Claude.Gross AT urec.cnrs.fr>] 
+        Inhibit message footer insertion in multipart/(signed|alternative)
+        messages !
+
+	wws : default Content-Type 'application/octect-stream' for
+        unknown file extention while viewing archive and moderated
+        message attachement.
+
+	wws : fixed modindex templates in order to be able to view
+	message without subject
+
+	[Christophe Labouisse <labouiss AT cybercable.fr>]
+        bounced.pl : fixed test on regular file
+
+	[proposed by Christophe Labouisse <labouiss AT cybercable.fr>]
+        Sympa : patch file for List.pm is included in src directory, 
+        not yet tested by Sympa authors :
+        http://listes.cru.fr/wws/arc/sympa-dev/2000-06/msg00017.html
+
+    Changes :
+	
+        New list optional parameter paragraph shared_doc for a futur
+        set of features.
+     
+2.7   27 June 2000
+
+    New features :
+
+	[Christophe Labouisse <labouiss AT cybercable.fr>]
+	bounced.pl patched to recognise Postfix bounces
+
+	[proposed by Dominique Marant <Dominique.Marant AT univ-lille1.fr>]
+	New configuration parameter "rfc2369_header_fields" to add 
+	RFC2369 compliant header fields (List-xxx).
+
+    Changes :
+
+*****	Requires MIME::Parser >= 5.209
+	
+	[Josep Román <josep.roman AT zuerich-see.ch>]
+	Updated nls/es.msg
+
+	Default log_facility in wwsympa.conf is now sympa's log facility
+        (used by wwsympa, archived and bounced)
+
+	The directory for list creation templates is renamed
+        "create_list_templates" 
+	
+    Bug Fixes :
+
+	[reported by John Sheehy <jes AT e-techservices.com>]
+	Corrected permissions on sample files wwsympa.conf
+	& sympa.conf
+
+	Fixed privileges to rw.r..r.. in bin/etc/
+
+        [reported by Dominique Marant <Dominique.Marant AT univ-lille1.fr>]
+	location of mhonarc-ressources file is now ~sympa/expl/<listname> or
+        ~sympa/etc or ~sympa/bin/etc
+
+        [reported by Lucas <Lucas AT ians.be>]
+	Reply-to in list info command when using forced_reply_to
+
+	[reported by Jean-Charles Godien <godien AT univ-nc.nc>]
+	incorrect subscribtion form for closed list if user is
+        not logged in
+
+	[reported by Dominique Marant <Dominique.Marant AT univ-lille1.fr>]
+	Ignoring temporary files T.<my_list> in bounce spool
+
+	[Didier Lamballais <Didier.Lamballais AT irisa.fr>]
+	'hostname --long' on Solaris systems sets hostname to '--long'
+	Changes in the Makefile to make it work on Solaris
+
+	[reported by Josep Román <josep.roman AT zuerich-see.ch>]
+	Sympa is unable to use default helpfile.tpl and lists.tpl
+
+2.7b.3 16 June 2000
+
+    Changes :
+
+	Set -d option when using -D
+
+	Add "Pragma: no-cache" to HTTP headers
+
+    Bug fixes :
+	
+	[reported by Dominique Marant <Dominique.Marant AT univ-lille1.fr>]
+	In WWS, editfile would always show the site's default.
+	Missing last;
+
+	[Didier Lamballais <Didier.Lamballais AT irisa.fr>]
+	Missing spaces before batslashes in main Makefile
+
+	[reported by Patrick BROSSIER <Patrick.Brossier AT mgm.fr>]
+	Bounced.pl failed to load sympa conf file
+
+	When asking WWS for archives of not archived list :
+	Can't use an undefined value as an ARRAY reference
+
+	Failed to decode message bodies with MIME::tools 5.xxx
+	Now uses bodyhandle() method instead of body().
+
+2.7b.2 15 June 2000
+
+    Bug fixes :
+	
+	Unknown list parameters welcome_return_path, remind_return_path,
+	serial
+
+	Failed to store S/MIME certificates
+       
+        Fixed SMIME feature in various commands
+
+2.7b.1 14 June 2000
+
+    New features :
+
+	Boucing addresses are sorted by (last_bounce, bounce_class,
+        bounce_count)in reviewbouncing page
+
+	"make" now installs required CPAN modules
+
+	WWSympa is now a part of sympa. Default installation location
+*****   for wwsympa is now the same as sympa (you may update your
+*****   httpd.conf)
+
+*****   Simplifyed installation process with a Makefile in upper directory
+*****   level. Others Makefile should not be applyed "by hand" anymore.
+
+	You way define WWSympa colors in the main Makefile
+
+	New etc/list_parameters.<lang>
+
+	Allow templates in list's directory (eg info.tpl)
+
+	Use a new message template named reject.tpl to send a notification
+        to the sender of a rejected message while rejected by a editor.
+        (quiet reject inibit this feature)
+
+	View unmoderated messages on the web via MhOnArc for better viewing
+	of complex MIME messages
+
+	Implement wws/loginrequest/referer ; once logged in, WWS
+	redirects to the referer URL
+
+	[laurent Merot <laurent.merot AT univ-rennes1.fr>]
+	New Sympa logo
+
+	Commands in multipart messages are recognized in the first text/plain
+        part.
+
+	RFC 2369 compliant header fields (List-xxx) are automaticaly
+        added to distributed messages.
+
+	New list parameter forced_reply_to like reply_to but overrights
+        existing Reply-To: header.
+
+    Changes :
+
+	[proposed by Dominique Marant <Dominique.Marant AT univ-lille1.fr>]
+	Show the site's default in edit_file if the template doesn't
+	exist for the list. This makes the action more user-friendly
+	and helps owners understand templates format.
+
+	Supressed 'sympa_conf_file' param in wwsympa.conf
+
+	Initial password generated randomly
+
+	List-related makefile test the list's language instead of
+	the user language
+
+        New HTTP cookie format. This cookie can be checked without access to
+        user passwd. The goal is to allow different application to use
+	Sympa cookies. New library module : cookie-lib.pl for developpers who
+	want to share authentication with WWSympa. 
+
+        New optional WWsympa parameter cookie_domain, used to control
+        the domaine validity of Sympa cookies. 
+
+	Scenario can be now located in the list directory. Sympa search
+        scenario in the following order :
+          -  ~sympa/expl/<listname>/scenari/
+          -  ~sympa/etc/scenari/
+          -  ~sympa/bin/etc/scenari/
+        ~sympa/bin/scenari/ does not exist any more
+
+	Replace --VAR-- in sample conf files
+
+*****	Extend topics.conf format in paragraph mode for further lang info
+*****	and scenarization, look at the sample to update you topics.conf
+
+    Bug Fixes :
+
+	Add "hidden" inputs in forms to allow submit when hitting "Return".
+
+	[reported by Mathieu Arnold <arn_mat AT club-internet.fr>]
+	"SET * <OPTION>" would only work on the first subscribed list .
+
+	[reported by Dominique Marant <Dominique.Marant AT univ-lille1.fr>]
+	Quoted strings not accepted as arguments to conditions in scenario.
+
+	Attached document in web archives accessible through WWSympa.
+
+	Sympa died if it failed to parse a message.
+
+	Use &MIME::Words::decode_mimewords() instead of &tools::decode_string()
+	in wwsympa.fcgi
+
+
+	When a subscriber is deleted from a list, his record is deleted in
+        user_table if he/she has no more subscription. This partly prevents
+        discrepancy of database	size.
+
+	Ignore white spaces at the end of sympa.conf lines
+
+	[reported by Yves Maniette <et AT xps.sct.ub.es>]
+	"unrecognized escape sequences" in fr.msg and es.msg
+
+	[reported by Patrick BROSSIER <Patrick.Brossier AT mgm.fr>]
+	Use sympa.conf's "log_socket_type" in archived.pl & bounced.pl
+
+	[Patrick BROSSIER <Patrick.Brossier AT mgm.fr>]
+	Create $(ICONSDIR) in Makefile
+
+	[reported by Raymond Bourges <raymond.bourges AT univ-rennes1.fr>]
+	WWSympa did not use user prefs for cookie expiration
+
+	[reported by Christophe Turbout <Christophe.Turbout AT info.unicaen.fr>]
+	Loosing topics info while creating lists
+
+	No more duplicated headers fields (From, Subject, To) in digests.
+	Now using MIME::Words
+
+	Archive message when sent to zero subscriber.
+
+2.7a 22 mai 2000
+
+    New features : (WWsympa list creation, S/MIME handling, remove in archive
+                    nls for fi, sorting lists by topics , ...)
+
+	Search_list feature in WWSympa
+
+	New ICONSDIR in WWSympa's Makefile
+	New wwsympa.conf parameter icons_url
+
+	Update all send scenario in order to accept smime messages
+
+	script/arc2webarc.pl : for converting sympa archives in wwsympa format.
+
+	Quiet DEL from the web
+
+	etc/topics.conf
+
+	Debug mode set when URL looks like wws/debug/xxx or wws/debug2/xxx
+
+	New subscriber option "summary", available if list have a digest.
+        Allow reception of just the list of messages (usefull if the
+        list is archived).
+
+	"Lists" page sorting lists by topics (see topics list param)
+
+	SORT feature in REVIEW page.
+	REVIEW is faster, thanks to LIMIT use in SQL selections
+
+	New "homepage" file included in the info page of the list.
+	"info" file is now text/plain, dedicated to the INFO
+	mail command. Info page prints "homepage" file or "info" file.
+
+       	WWsympa include list creation (at last !)   
+
+       	Four new list parameters :
+         -1- topics (optional). (key words about the list)
+         -2- creation (optional)  include date of creation and creator email
+         -3- update (optional) idem creation
+         -4- serial (optional) (used for writting access conflict
+             resolution on the config file)
+	 -5- status (open|closed|pending)
+       
+       	Creation, update and serial are initialized by WWS's create_list.
+
+	Operation access_web_archive now uses scenario (apply from
+        web_archibe/access list parameter). Available scenario include
+        previous keyword values and a new one name intranet. This
+        scenario uses [remote_host] the client host name or
+        [remote_addr] the client host addr  in order to allow privilege
+        definition based on the browser host (not only on the email).
+
+        [remote_host] and [remote_addr] are also useable in review 
+        and visibility scenario. They should become availible in
+        any scenario soon.  
+
+	New operation for list configuration file display available
+        from list admin page.
+
+        rule in a scenario now accept a list of auth method :
+        exemple :  is_subcriber([listname],[sender]) smime,md5 -> do_it
+
+	List::get_first_user() has 3 new parameters :
+	  o sortby : may be "domain"(default), "email" or "date"
+	  o offset, rows : the offset of the row to return and the 
+	    number of rows. 
+	When these last parameters are set, a LIMIT clause is added to 
+	the SELECT.
+
+	[Mikko "Bemmu" Sepponen <lomise AT uta.fi>]
+	Translation of Sympa in Finish (NLS only)
+
+        WWS archives are now parsed. 
+          - the mhonarc_ressources file do not use anymore
+           ".fr" or ".us" suffix but it the preference langage
+           is applyed at runtime so anyone can chose it's lang.
+          - the message sender can remove its messages
+            (the remove button is inserted only to appropriate
+            users : message sender, list owner and listmaster)
+*****   REQUIRE MHonArc v2.4.6 available from <http://www.mhonarc.org>. Check:
+*****   http://www.xray.mpe.mpg.de/mailing-lists/mhonarc/2000-04/msg00028.html
+*****   You need to rebuild all your archive. This can be done
+*****   using WWSympa (new feature in the "Server Admin" page).
+        
+       	New template tags : [STOPPARSE] and [STARTPARSE]
+        (mainly to prevent abusive parse in mail archive)
+          
+        New send scenarii that reject multipart messages
+        or request editor if message is multipart.
+
+                
+    Changes :
+
+	Sympa notifies listmaster and dies when database is unreachable.
+
+	Reverse order in REVIEW by date
+
+	WWSympa RELEASE NOTES integrated into main release notes
+	
+	Control on email addresses (when subscribing) is more strict.
+
+	New directory lists_templates both under ~sympa/bin/etc
+        and  ~sympa/etc/ to store list profile used by WWSympa
+        create list.
+
+	Sympa no more reports signatures (quit command found).
+	Replying to sender when no command was found.
+
+	No more warning when using an old NLS catalogue file
+
+	Sympa.conf parameter queuemod, queueexpire, queueoutgoing,
+        queueauth and queuedigest are optionel. Sympa create all its
+        spool at run time. 
+
+	[Raphael Hertzog <rhertzog AT hrnet.fr>]
+	Reintroducing alternatives to mailto: for REJECT,
+	DISTRIBUTE, CONFIRM. Changed us.msg and fr.msg only.
+
+    Bug Fixes
+
+	No host in X-loop for lists with "host" config param
+
+	[reported by Philippe Bricout <pbricout AT setra.fr>]
+	chmod user.group not valid on Solaris system
+	Replaced by chown + chgrp
+
+	Deleting last bounce when doing a resetbounce
+
+	[reported by David E. Bernholdt <bernhold AT npac.syr.edu>]
+	Sympa processes the message body if no command processing 
+	succeeded in the Subject:
+
+	[reported by Jacques PYRAT <webmaster AT tregouet.org>]
+	Preserve Subject header field encoding for messages.
+
+	[reported by Hugo Frappier <hugo_f AT hotmail.com>]
+	Use log_socket_type parameter within WWSympa.
+
+	Bug detected in Mail::Header caused Sympa to "sleep".
+	You should update to Mail::Header 1.18, when it is
+	available
+
+	Delete file when saving an empty file.
+
+	The parser failed when processing interleaved loops
+
+	Add smtp::reaper to wwsympa main loop
+
+	No more "Sympa not setup to use DBI" logged by archived.pl
+
+	[Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+	When archived.pl saved mail in arctxt it would
+	not close the file descriptor. If the archived 
+	process was killed, the last mail is never written.
+
+	Setting gecos from editsubscriber now works.
+
+	[reported by X-Term <xterm AT beta.cosapidata.com.pe>]
+	Corrected bug in archived.pl :
+	"No db_name defined in configuration file"
+
+	[reported by X-Term <xterm AT beta.cosapidata.com.pe>]
+	Setting reception would delete the user's gecos
+
+	[X-Term <xterm AT beta.cosapidata.com.pe>]
+	Corrected admin.es.tpl
+
+	[email] may be used in del scenari
+
+	In order to respect the maxsmtp sympa parameter, WWSympa
+	moderation process do not distribute messages itself. It
+        just put a valid distribute command in Sympa's spool.
+
+	No more "No directory for list sympa" when parsing a
+	command.
+	
+	Reload total of subscribers from database when stats file
+	has changed. Total of subscribers used to be incorrect
+	due to Sympa and WWSympa working on the same data.
+
+	[reported by Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+	Added missing scenario invite.closed
+
+	[reported by Albert Bruc <abruc AT electron-libre.com>]
+	Add a subject "No subject" in modindex page to access
+	messages
+
+	MD5 confirmation keys are based on time only.
+	To ensure keys for different messages are different,
+	sympa sleeps 1 second before generating the MD5 key.
+
+	[reported by X-Term <xterm AT beta.cosapidata.com.pe>]
+	Corrupted helpfile.tpl
+
+2.6.1   05 April 2000
+
+   Bug Fixes :
+
+	Incorrect inclusion of archives in arc.us.tpl
+
+2.6	03 April 2000
+
+    New features :
+
+	First implementation of remove_arc
+
+	Multiple add
+
+	[list->owner] is made available in list templates
+	Example :
+		[FOREACH ow IN list->owner]
+		  [ow->gecos] <mailto:[ow->email]>
+		[END]
+
+	Loop control : 3 new parameters define the site
+	policy regarding loop control on command reports : 
+	loop_command_max, loop_command_sampling_delay and 
+	loop_command_decrease_factor
+
+    Changes :
+
+	Allow "+" in listnames
+
+    Bug fixes :
+
+	Correction in the Makefile, ie trying to install files
+	before creating DEST directory.
+
+	Command reports were not sent when using <listname>-<command> 
+	addresses
+
+	Unset locale LC_ALL while defining cookie expiration date
+	so the client understands it
+
+	Possible loop with reset_bounce action
+
+	Rename a message to BAD-xx when it is rejected.
+
+	Added X-Loop: header field to command reports
+
+	List::is_digest() fixed  (bug from 2.5.4b)
+
+	[Richard Balint <balint AT balintrc.oca.udayton.edu>]
+	queue.c patched to match exact keyword "queue" in sympa.conf
+	Applied to bouncequeue.c as well
+
+	Restore case-sensitive search of NAME and INDEX in parser.pl
+
+
+2.5.4b  23 March 2000
+
+   New Features :
+
+	Setlang for POSIX::strftime() use
+
+	Gecos (user name) may be given at subscription time.
+
+	Contextual help.
+   
+	Owners can choose review/reviewbounce page size from admin page.
+
+	Added 'Reset errors' in bounce review page.
+
+	[Hubert Ulliac <Hubert.Ulliac AT Uhb.Fr>]
+	Search feature in web archives. This is based on MarcSearch,
+	a search engine dedicated to MhOnArc, written by Eric D. Friedman
+	<edf2 AT pacbell.net>.
+
+        [Josep Román <josep.roman AT zuerich-see.ch>]
+	Translations of templates to spanish (changes in wws-lib.pl
+	and wwsympa.fcgi also)
+
+    Changes :
+
+	New subscribers are not obliged to set their password.
+
+	Added "sigrequest" action and "unsubscribe" to info page. 
+
+	"mhonarc-ressources" renamed "mhonarc-ressources.default".
+
+	"log_socket_type" parameter's default becomes "unix".
+	On Linux systems, syslogd requires an additional -r option
+	to log via UDP.
+
+	[Alberto Pasquale <techlist AT pianeta.it>]
+	Improvements in it.msg
+	Translation of templates to italian	
+
+    Bug fixes :
+
+	[reported by Christophe Harbine <Christophe.Harbine AT univ-savoie.fr>]
+	Review page size was not respected when datasource was an inclusion.
+	(the same problem appeared when using flat users file or Oracle/Sybase
+	database)
+
+	No more "Sympa not setup to use DBI" logged by bounced.pl
+
+	Set NLS language in wwsympa.
+	
+	[Hervé MAZA <herve.maza AT education.gouv.fr>]
+	Save files (as listmaster) in etc/templates/ instead
+	of expl/ (in do_savefile()).
+
+	Lowercase listname
+
+	Archived.pl did not use default mhonarc ressource file.
+
+        [Hervé Maza <herve.maza AT education.gouv.fr>]
+	bounced died when using unique return_path. Fixed.
+
+	[reported by Stephane Igounet <Stephane.Igounet AT univ-avignon.frd>]
+	Sympa would die when receiving a WHICH if DBI is not
+	installed. Corrected
+
+	[reported by Alberto Pasquale <techlist AT pianeta.it>]
+	user->lang variable was not accessible in global templates
+	when not using a database. $lang variable becomes 
+	$Language::sympa_lang
+
+	[Laurent LAVAUD <laurent.lavaud AT u-bordeaux2.fr>]
+	Changed the connect string for PostgreSQL
+
+	[Hervé Maza <herve.maza AT education.gouv.fr>]
+	Corrections in List::is_moderated()
+
+	Number of subscribers updated in stats file
+
+        Fixed INVITE scenario usage for INVITE command
+
+        Fixed NLS usage for send auth context (fixe done in
+        fr.msg and us.msg, need to be propagated in other NLS)
+
+2.5.3b  9 March 2000
+
+     New features :
+
+*****	New "cookie" parameter in sympa.conf
+*****	We HIGHLY RECOMMEND set this parameter to have
+*****	different MD5 authentication keys from one site to another
+
+	[Josep Román <josep.roman AT zuerich-see.ch>]
+	Translation to spanish of :
+		+ Sympa templates
+		+ scenari descriptions
+		+ WWSympa templates
+	Update of es.msg
+
+	[Thierry Charles <tcharles AT electron-libre.com>]
+	[Albert Bruc <abruc AT electron-libre.com>]
+	Sympa now recognises Sybase databases. 
+	You need to install the Sybase openclient first,
+	(http://www.sybase.com/products/databaseservers/linux/linux1192_reg.html)
+	and then dbd-Sybase.
+	(http://www.cpan.org/authors/id/TIMB/DBI/)
+	
+     Changes :
+
+***** 	Abandon of inline scenarii (defined in list config file)
+*****	Sympa now expects a scenario name in list config files.
+*****	This is required to go further in list creation/edition in WWSympa
+	
+*****	Sympa's license is now GPL ONLY (users of previous versions 
+*****	may choose between GPL and Artistic licenses). This is needed
+*****	to allow inclusion of other GPL librairies within Sympa
+*****	distribution (including WWSympa).
+
+	[Carsten Clasohm <cc AT clasohm.com>]
+	Update of de.msg
+
+     Bug Fixes :
+	
+	Default value for "reply_to" parameter is "sender"
+
+	[Raphael Hertzog <rhertzog AT hrnet.fr>]
+	Reintroduce $(DESTDIR) in Makefile and subst.pl
+	This simplifies the task of creating packages.
+
+	Sympa deletes a digest for unknown lists
+
+	List's hostname available in lists.pl, [l->host]
+
+	[reported by Mathieu ARNOLD <arn_mat AT club-internet.fr>]
+	List's "host" parameter uncompletely used ; when forwarding
+	requests to owners for instance.
+
+	[Hervé MAZA <herve.maza AT education.gouv.fr>]	
+	Corrected $list->info()
+	Corrected REMIND when authentifying
+	Corrected loop in global_remind.tpl
+
+2.5.2  18 Feb 2000
+
+     Bux fixes :
+ 
+	$List::use_db initialized 
+
+	loginbanner translated to french
+
+      	"subscribe.open" scenario was corrupted ; it was including
+      	an unknown scenario
+
+   Changes :
+	
+	WWSympa requires a RDBMS
+
+2.5.1  18 Feb 2000
+
+     Bux fixes :
+
+      Sympa died when sending a message in an empty list with error msg :
+      Illegal division by zero at /var/sympa/bin/List.pm line 751
+
+      "bouncequeue" program accesses sympa.conf to locate "queuebounce" directory.
+      There is no more default value for "queuebounce" (and "queue") in
+      Conf.pm.
+
+      Sympa died while parsing a template, it could not connect to an unknown
+      database type :
+      Can't connect(DBI::dbname=sympa;host=  ), no database driver specified 
+      and DBI_DSN env var not set at /home/sympa/bin/List.pm line 216
+
+      [Patrick BROSSIER <Patrick.Brossier AT mgm.fr>]
+      Make of cn-gb and cn-big5 catalogs failed because of \" ending lines.
+
+
+     New features :
+     
+      scenari can contain include directive. If a scenario contain 
+      the line include foo
+      the scenario will load the file include.foo according to the
+      location preference. This is introduce in order to share
+      various rules by deffernt scenario in order to made liter
+      administration. Can be use for example to manage a blacklist.
+    
+
+     Changes :
+
+      Sympa will not die if NLS catalogue version is different
+      from Sympa version.
+
+2.5  16 Feb 2000
+
+   For more information on how to update to this version :
+   http://listes.cru.fr/sympa/howtoupdate.html
+
+   New features :
+
+	error.<lang>.tpl
+
+	Moderation can be performed from viewmod page
+
+	"Rebuild archives" function restricted to listmaster
+
+	New resetbounce action
+
+	CHeck Sympa version number
+
+	Service files edition is controlled by etc/edit_list.conf
+
+	New action viewfile
+
+	Initial login way be performed via an URL, a new
+	password is requested.
+
+ 	Admin interface now includes bounce management
+
+     	[Tung Siu Fai <sftung AT hongkong.com>]
+     	Chinese localisation (8 bits) are now available :
+	 cn-big5 -> BIG5 chinese (hong kong, taiwan)
+	 cn-gb -> GB chinese (mainland china)
+
+     	[Marco Ferrante <ferrante AT unige.it>]
+     	New italian NLS (nls/it.msg)
+
+     	[Fabien Marquois <fmarquoi AT univ-lr.fr>]
+     	You may use Sympa with Oracle databases.
+     	Major differences between Oracle and MySQL :
+	- connection string uses a sid instead of a dbname
+	- $dbh->tables() function doesn't work, a SELECT is performed
+	instead
+	- no oracle equivalent for UNIX_TIMESTAMP(), a tricky formula
+	is used instead
+	- no "AS" in SELECT
+	- there are case problems with table names
+	- "date" is a keyword ; it needs to be quoted
+
+     	New parameter "wwsympa_url" in sympa.conf. Default is 
+     	http://<host>/wws
+
+     	make installs a default edit_list.conf in ~sympa/bin/
+
+     	New list parameters "bounce", defining above what bounce rate owners
+     	should be alerted, above what rate postings should be halted in
+     	the list. The halting feature is not yet implemented.
+     	Defaults for these parameters are defined by global parameters
+     	"bounce_warn_rate" and "bounce_halt_rate"
+
+     	New user command "INVITE <listname> <email> <gecos>" used to
+     	send a message (see invite.tpl) to ask someone to subscribe
+     	to a list (the guest user just need to reply the mail to subscribe).
+     
+     	New user command "LAST <listname>" can be used to received the
+     	last message distributed in list <listname>
+
+     	New "etc" parameter in sympa.conf, defining a configuration directory.
+     	This etc contain local files that are never updated by "make install",
+     	in particular etc/scenari and etc/templates  are local where
+     	bin/scenari and bin/templates contains defaults.
+
+######   You must now remove the old scenari sympa.conf parameter (replaced by 
+######   etc/scenari)
+
+     	Total of subscribers logged while performing a SUB, SIG, ADD or DEL
+
+     	REMIND * is a new command, each subscriber received a personal
+     	summari of it list subscription. It use ~sympa/etc/global_remind.tpl
+
+     	In sympa.conf you can define multiple listmasters introducing
+     	a comma separated list of email in the sympa.conf listmaster
+     	parameter. 
+
+     	new list option : hidden sender for anonymous list Setting the
+     	list parameter "anonymous_sender" to some email, the From: field
+     	of any message to distribute is replaced by the parameter value. Various
+     	smtp field are removed.
+     
+     	new list option : welcome and/or remind message Return-path can
+     	use can be unique in order to remove automatically subscribers
+     	if there welcome or remind message bounce.
+ 
+     	3 new functions in List.pm : get_first_bouncing_use(),
+     	get_next_bouncing_use() and get_total_bouncing()
+
+   Changes :
+
+	Documentation is now included in Sympa documentation
+
+     	"Archives" link in info.tpl is now a button to stop harvester
+
+        Bounced now remove user when welcome or remind message
+        which are sent using a unique return-path are bounced.
+        need "sendmail plussed aliases" and welcome_return_path
+        or remind_return_path list parameter set to the value "unique".
+
+	Host added to listnames when doing a LISTS
+
+	Store bounces info (<first_bounce> <last_bounce> <number_of_bounces>) 
+	in database (bounce_user in user_table)
+
+****** You need to change your mysql/pgsql database structure:
+****** ALTER TABLE subscriber_table ADD bounce_subscriber varchar (30);
+****** ALTER TABLE subscriber_table ADD update_subscriber datetime;
+****** ALTER TABLE user_table CHANGE lang_user lang_user varchar (10);
+
+	Default value for "user_data_source" list parameter is
+	"database" when defining db_xxx parameters in sympa.conf.
+
+*****  	All Sympa parameters defining filenames are NOT recognised
+*****	anymore. This includes "subscribers", "config", "info",
+*****	"stats", "welcome", "archives", "bye", "removed", "help",
+*****	"help_advanced", "lists_header", "lists_footer", 
+*****	"message_header", "message_footer"
+*****	If you changed the default values of these parameters
+*****	in sympa.conf (example: subscribers   abonnes), except
+***** 	"reminder" that becomes "remind"
+*****	YOU MUST rename the files the standard way, ie as defined 
+*****	in documentation.
+
+     	User lang is initialized at subscription time.
+
+     	[Josep Román <josep.roman AT zuerich-see.ch>]
+     	Corrections in es.msg
+
+     	Makefile doesn't use "install" anymore.
+
+     	No more unwanted command reports.
+
+     	@sth_stack in List.pm allows to perform a new query while reviewing one.
+
+     	**TO PACKAGERS**
+     	--BIN-- in sample/sympa.conf has been corrected to --DIR--
+
+     	New chapter about WWSympa in documentation
+
+     	Sympa supports templates for global service messages ("helpfile",
+     	"lists") as well as list service messages ("welcome", "bye", "removed",
+     	"reminder","invite"). These files have a ".tpl" extension. Global ones
+     	are located in ~sympa/etc/templates/, list specific in ~sympa/expl/<list>/ 
+     	directory. Compatibility with old-style files (in ~sympa/expl/) 
+     	is maintained. 
+     	Templates begining with a From: line are considered as full
+     	messages, no header is added (except To:).
+
+     	INFO now includes content of list's "info" file.
+     	REVIEW only shows subscribers' list, not configuration
+     	informations.
+
+     	List::get_subscriber now returns bounce info.
+
+     	Bounces info are now stored in sympa database
+
+   Bug fixes :
+
+	Empty files are deleted (save_file)	
+
+	Exotic chars (0x25, 0x22, 0x20, 0x2f), in email addresses are escaped.
+
+	[reported by Lalot Dominique <lalot AT univ-aix.fr>]
+	Review was limited to authentified users, though review
+	was public.
+
+	Subscribers don't access date & reception info in REVIEW
+	
+	[reported by Hubert Ulliac <Hubert.Ulliac AT Uhb.Fr>]
+	Subscription dates now Y2K compliant in REVIEW
+
+ 	Archives are now working in english
+
+	Set correct access to directories created at make time
+
+	Corrected date in bounces historique
+
+	Lists in "subscribe auth" mode were considered as closed
+
+     	[Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+     	Gencat failed compiling on HPUX systems. 
+     	$delset have been deleted from nls/*.msg
+
+     	[reported by Vincent Jardin <jardin AT enst.fr>]
+     	When parsing an empty header field, it cleans it up and deletes 
+     	the carriage return (\n) at the end of the field. When printing 
+     	the Mail::Internet header, this \n is missing.
+     	A patch (patch.mailheader) has been proposed by the author of 
+     	Mail::Internet
+
+     	[reported Richard Balint <richard.balint AT notes.udayton.edu>]
+     	Sympa died when openning an unknown scenario. Fixed by adding a
+     	default in the code which always return "reject"
+
+     	[reported by Emmanuel POIRET <E.poiret AT edf.fr>]
+     	Whitespaces are not cleaned at the end of a command (reported
+     	for DEL)
+
+     	Corrected error message in log file when doing info :
+     	"internal error, no sender find in List::verify, report authors"
+
+     	Actions and menu templates now have defaults (templates/<action>.default.tpl).
+
+     	List parameter "lang" was overidden by robot lang.
+
+     	[Hubert Ulliac <Hubert.Ulliac AT Uhb.Fr>] 
+     	Using postfix, all subscribers received a digest if no subscriber 
+     	choose the digest option. Fixed.
+
+     	[Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+     	Whitespaces are now cleaned at the end of commands.
+
+2.4 13 Dec 1999
+
+   New features :      
+
+	WWSympa now includes a Makefile.
+	wws_path var from wwsympa.conf is now obsolet
+
+	Translation of titles and filenames to english
+
+	Add now accepts gecos
+
+	Default values for config parameters.
+
+	Some templates have been translated. Lang user pref is now used.
+
+	Usage of language information sent by the client (HTTP_ACCEPT_LANGUAGE)
+	to initialize lang_user field in database.
+
+	Privileges of the user (user/editor/owner/listmaster)have been added 
+	to the menu.
+
+     	Scenari for send parameter are available ! Check send.* in the 
+     	scenari directory. The send scenari is paticular because you can
+     	check headers in rules :  exemple.
+      	  match ([header->Content-Type],/multipart/)  smtp -> editorkey
+          (semantic is multipart messages must be approved by editor)
+
+     	The list parameter "visibility" is performed by scenari. The goal
+     	is to provide defferent lists of lists depending of the context
+     	(mainly depending on the sender). The following exemple show how
+     	to use visibility scenario in order to provide intranet lists
+
+     	visibility 
+       	 match ([sender],/cru\.fr/)  smtp -> do_it
+
+     	New "profile" parameter in owner paragraph.
+
+     	New spool for storing bounces, defined by "queuebounce" parameter.
+     
+	New bouncequeue binary
+
+   Changes :
+
+	Multiple DEL from REVIEW page.
+
+	WWSympa looks for a site template (eg: ~sympa/expl/welcome.tpl) when 
+	editing a service message. Template can include the "info" file of
+	the list ([PARSE info_file]). If a such a template exists, owners can't 
+	edit message, only listmaster can.
+	
+	Regexp in "search" are made simple : only "*" wild character
+	is supported.
+
+	main.tpl has been split, each action has .tpl file
+	this should make internationalization easier
+
+	Subroutines' parameters are now logged
+
+	User email and list added to the log
+
+	Search matches sub-strings
+
+	<PRE> added to info if not HTML
+
+     	Notification of sender when message is forwarded to editor
+
+     	Contacting owners if no editor is defined
+
+     	From field (SYsteme de MultiPostage Automatique) is in NLS
+
+     	Documentation has been updated and slightly reorganized.
+
+     	Moderation key has been added to the log at allocation,
+     	distribution or rejection.
+
+     	Default value for send is set to 'private'
+
+     	Now scenario optionaly include title.<lang> <string> in order to
+     	print the scenario title in wwsympa (edit_list_request and info)
+     	This is compatible with old scenari style
+	
+   Bug Fixes :
+
+	Editfile & Savefile were not working in 0.3.2 because of
+	changes in parser
+
+	[Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+	Lists in "subscribe auth" were seen as closed (pb in unsubscriber.*
+	scenarii)
+
+	Corrected "unknown auth method" is ADD action.
+
+	PARSEs are now relative to templates dir (no more absolute path)
+
+	[reported by <miguel AT presence1.observatoiredesmarques.fr>]
+	Problems with scenarii auth_xxx
+
+	[Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+	Notification of owners when deleting or adding users.
+
+	WWSympa now bypass the parser when asked for a non-html
+	document from the archives
+	
+	Reject subrequests for users already subscribed or with 
+	incorrect email address
+
+	Default prefs/lang is no more deutch, but sympa's or list's
+	language
+
+	Incorrect [sympa->email] and [sympa->host] in templates.
+
+	Corrected icones/ to icons/ in mhomarc ressource files
+
+    	[reported by Patrick Brossier <Patrick.Brossier AT mgm.fr>]
+    	HASH(0x....) in wws/info
+
+    	[reported by Philippe Allart <pallart AT nordnet.fr>]
+    	Incorrect reference to config file (--CONF-- instead of --CONFIG--)
+    	in archived.pl and bounced.pl
+
+    	Corrected "lists" results when not authentified
+
+     	incorrect content-type in confirmation requests
+
+     	[reported by Emmanuel POIRET <E.poiret AT edf.fr>]
+     	"Add" was forced to "closed" when "subscribe" was "closed"
+
+     	dynamic LISTS commands are logged
+
+     	[reported Jean-Pierre Doucet <jpd AT univ-lyon1.fr>]
+     	For each command, Sympa says "No directory for list sympa"
+     	It tries to create a "sympa"list object. This bug had no consequences
+     	on Sympa behaviour.
+
+     	Remind command did not work with lists in database mode.
+
+     	[Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+     	bug in Command.pm, when parsing an auth command, so 
+     	all auth message returns "No command found in message".
+
+     	[Jean-Christophe Basaille <Jean-Christophe.Basaille AT u-bourgogne.fr>]    
+     	oldadd entry has been deleted in %comms
+
+     	Log message size whith DISTRIBUTE.
+
+2.3.4 28 Oct 1999
+
+   New features : 
+
+	Edition of info file
+	
+     	[requested by Craig Carey <research AT ijs.co.nz>]
+     	Sympa simulates Smartlist behaviour with command addressed to <list>-request
+     	in subject. Commands recognised are "subscribe" and "unsubscribe"
+
+     	new request_list, create_list and info parameters
+
+     	email address are now allowed in "reply_to" list parameter.
+
+   Changes :
+
+     	list returned by REVIEW is now sorted
+
+     	Listmaster is owner of every list
+     
+     	List::get_subscriber() returns «lang» and «gecos» from user_table.
+
+     	New robot configuration parameter "helpfile_advanced"
+
+     	possibility to use [host] in pcregexp use for scenario
+     
+     	New scenari subscribe.intranet subscribe.intranetorowner and
+     	subscribe.open_quiet
+	
+   Bug Fixes :
+
+	Corrected "already login" ; do_login() & do_logout() were called
+	twice.
+
+	Sauver le  fichier %s
+
+	Corrected subscribe & signoff (get-notify_state() is upsolet)
+
+    	First alpha version of WWSympa
+
+     	Subject of messages are now Q- and B- decoded (to avoid
+     	multiple custom-subject).
+
+     	Sympa died while trying to process a T.xxx file (temporary
+     	file created by queue prog) in the queue
+
+     	Reply-to: header was corrupted when reply_to parameter was
+     	not set.
+
+     	owner and editor definition now eliminate space at the the end
+     	of line
+
+     	Sympa now uses $dbh->ping() (instead of $dbh->{Active}) to 
+     	check database connectivity.
+
+     	Sympa would loop on an incoming message for an unknown list
+
+     	"use strict" in sympa.pl => DoFile now take listname as argument
+
+2.3.3 29 Sept 1999
+
+   New features :
+
+     	New "max_size" parameter in sympa.conf, maximum size allowed
+     	for messages. 
+
+     	New "lang" parameter in sympa.conf for default language.
+
+     	[Jens-Uwe Gaspar <gaspar AT tellux.de>]
+     	German helpfile
+
+   Changes :
+
+     	Command-line option "-l" (language catalog) used to accept
+     	a filename as an argument ; it now take a language.
+	  Eg : %sympa.pl -l fr
+
+     	Priorities for -owner and -request are no more list priority.
+     	Two new global parameters define these priorities : «owner_priority» 
+     	and «request_priority».
+
+     	Command & messages priority added to the log.
+
+     	New subroutine &List::is_listmaster()
+
+     	[Olivier.Lacroix AT ciril.fr]
+     	In scenario add, action "do_it,notify" is now possible
+     	(usefull for list with multiple owners and subscribe controled
+     	by  owners)
+
+   Bug Fixes :
+
+     	[Olivier LACROIX <Olivier.Lacroix AT ciril.fr>]
+     	Now accepting is_editor in scenari (corrected in &List::verify()).
+
+     	Sympa uses parameter "default_list_priority".
+
+     	[Olivier.Lacroix AT ciril.fr]
+     	Small adjustement in output of signoff command
+
+2.3.2 21 Sept 1999
+
+   Changes :
+
+     	Changes in documentation : DB 2.x is now supported by DB_File.pm
+
+     	load_subscribers.pl lowercases addresses before insertion in database.
+     	This is needed by PostgreSQL, which is case sensitive.
+
+   Bug Fixes :
+
+     	[reported by "Frederic ALLIOD" <falliod AT jetmultimedia.fr>]
+     	This occures when sending a message to an email address beginning
+     	with a "-". When invoking sendmail, this is considered by sendmail 
+     	like an argument which he doesn't understand. Sendmail call fails
+     	and Sympa dies. 
+
+     	Digest infos returned by Sympa are HASH(0x5f5a38)
+
+2.3.1 16 Sept 1999
+
+   Bug Fixes :
+   
+      	<listname>-subscribe and <listname>-unsubscribe messages are not 
+      	processed by Sympa
+
+2.3.0 16 Sept 1999
+
+    New features :
+
+      	["Carsten Clasohm" <cc AT clasohm.com>]
+      	New german dictionnary (de.msg)      
+
+    Changes :
+
+      	[requested by <Michel.Beheregaray AT univ-pau.fr>]
+      	Sympa now only includes the first email address from LDAP
+      	entries.
+
+      	Priorities are now defined in list configuration files (instead
+      	of aliases) by «priority» parameter. New (optional) parameters
+      	in sympa.conf : «sympa_priority» and «default_list_priority». 
+      	Changes in aliases : no more priority param is needed
+      	(though old style remains compatible)
+
+      	[proposed by Carsten Clasohm]
+      	Use lowercase email addresses in List.pm in ordrer 
+      	for comptability with case-sensitive DBMS such as PostgreSQL.
+
+      	Clean the "To:" header for mail sent to editors and owners.
+
+      	Digest : the "Reply-to:" is set to the list if requested
+      	by the replyto list parameter
+
+    Bug Fixes :
+
+      	Sympa used to systematically send a digest on Sunday (for
+      	list in digest mode only).
+
+      	Correction of "match()" condition in scenari.
+
+2.3Beta 9 September 1999
+
+    New features :
+
+      	Optional "info" parameter in owner/editor paragraphs, allowing 
+      	to store private information (such as tel number) about these 
+      	people.
+
+      	In order to use MhOnac to make html archive, Sympa copy
+      	all messages distributed in a list which config file
+      	containt a "web_archive" paragraph in the "queueoutgoing"
+      	parameter.
+
+      	[proposed by Manuel Valente <mvalente AT france-cybermedia.fr>]
+      	Requested by users not afraid to corrupt original MIME
+      	content-type and encoding! "footer_type" parameter in list
+      	config. May be "mime"(default) or "append".
+
+      	[asked by Manuel Valente <mvalente AT france-cybermedia.fr>]
+      	"message.header"[.mime] appended at the beginning of messages.
+
+      	Commands del, add, sig, rev, info are now controled by scenari
+      
+*****  New syntax for condition in scenario rules.
+***** This will affect your scenari if you write your own scenari
+***** in previous versions. If so, check scenari from src/scenari dir.
+
+      
+    Changes :
+       
+      	[reported by Carsten Clasohm <clasohm AT rivalnet.com>]
+      	Table names "user" and "subscriber" respectively become
+      	"user_table" and "subscriber_table". This is needed because
+      	of a conflict with "USER" keyword in PostgreSQL v 6.4
+      	(Define USER as synonym for CURRENT_USER per SQL92 specs).
+
+****** You need to change your database structure:
+****** with MySQL :
+******    ALTER TABLE user RENAME user_table;
+******    ALTER TABLE subscriber RENAME subscriber_table;
+******
+****** with PostgreSQL :
+******    ALTER TABLE user RENAME TO user_table;
+******    ALTER TABLE subscriber RENAME TO subscriber_table;
+
+
+      	[Dominique ROUSSEAU <rousseau AT neuronnexion.fr>]
+      	List.pm is patched so PostgreSQL can be used to store internal
+      	subscriber data.
+
+      	Added distribute_msg() and get_mod_spool_size()
+
+      	Added message size to the log
+
+      	Charset and Transfer-Encoding are now fully defined in language
+      	catalogues.
+
+      	Review command do not return the adminsitrative list info when
+      	user isn't allowed to review a list.
+     
+      	Info return the adminsitrative info about a list, not the
+      	welcome message.
+
+      	List::probe_db() does checking of database 
+      
+      	Sympa warns if it finds unexpected parameters in list config.
+
+    Bug Fixes :
+    
+      	[reported by Michel BEHEREGARAY <Michel.Beheregaray AT univ-pau.fr>]
+      	"include_ldap_query" are now correctly parsed by Sympa. There
+      	used to be a problem because of "host" parameter. 
+
+      	set the process umask as defined in sympa.conf
+    
+      	listname provided to MODINDEX cmd has been made insensitive
+      
+      	[reported by Patrick Brossier <Patrick.Brossier AT mgm.fr>]
+      	subscribers total corrected when using a database
+
+      	Sympa did not keep messages detected as BAD-xxx
+          (no from found, loop problems, ...)
+
+      	Sympa now loads editors and owners GECOS 
+
+      	Lists using includes now set correctly the scenario subscribe.closed
+
+      	Sympa perfoms correctly list configuration comments in paragraph
+      	mode. Warning when an unknown list parameter is found.
+
+      	[reported by Dominique ROUSSEAU <rousseau AT neuronnexion.fr>]
+      	No footer attachement if msg is multipart/alternative
+
+      	[Raphael Hertzog <rhertzog AT hrnet.fr>]
+      	Corrections to src/Makefile (scenari installation) and
+      	doc/sympa.tex ("a4" extension no more used).
+
+      	"subscribe xxx,yyy" was not recognised
+
+2.2.7 22 June 1999
+
+    Bug Fixes :
+
+      	Fatal bug in HELP and WHICH commands for sites not using DBMs.
+      	(Can't connect(DBI::dbname=sympa;host=  ), no database driver
+      	specified)
+
+      	Default scenari directory in Conf.pm
+
+      	Reload $* and $/ after each dofile. It seem's to fix the 
+      	bug specific to solaris ("No from found ..." for all messages
+      	after a WHICH) !!!
+
+2.2.6 17 June 1999
+
+    Changes :
+
+      	new archive parameters per list  :
+      	archive
+      	period [day|week|month|quater|year]
+      	access [public|private|owner|closed]
+      
+      	New owner command : REMIND [listname] 
+      	each subscriber receive a personal reminder. The reminder
+      	message is constructed using ~expl/[listname]/remider.mime or
+      	~expl/[listname]/remider or ~expl/remider.mime or ...
+
+      	Messages welcome, removed, bye, reminder are parsed 
+      	at runtime for variables instanciation. The following keystring
+      	are parsed :
+      	[listname] [subscriber_email] [sympa_email] [sympa_host]
+      	Now you can use a single welcome message for all list :
+      	"welcome to [listname], your  email is [subscriber_email]  ..."
+
+      	The helpfile is now splitted into two files : helfile
+      	and helpfile.advanced, only list owner and list editor will
+      	receive bothg the helfile and the helfile.advanced section.
+      	[sympa_email] is replaced by it value at runtime.
+****** So you need to update your helpfile and create
+****** helpfile.advanced, look in sample dir
+
+      	"user_data_source include" allow multiple include sections
+
+      	new include type :  include_list [listname]
+                          include_file [path to a file]
+
+      	parameter "unsubscription owner" is recognized
+
+      	New fields added to the database :
+	  lang_user
+	  cookie_delay_user
+****** You need to change your mysql database structure:
+****** ALTER TABLE user ADD cookie_delay_user  int,
+******                  ADD lang_user	  char (5);
+
+
+      	Better management of error codes (undef|1) thoughout 
+      	do_commands procedures.
+
+      	Message body is ignored if a command is found in the subject
+
+    Bug Fixes :
+
+      	[Laurent Ghys <Laurent.Ghys AT ircam.fr>]
+      	Better checking of modules in check_perl_modules.pl
+
+      	[Francois Petillon <fanch AT netra.uic.asso.fr>]
+      	Better checking pseudo MIME messages (rfc 1049) when parsing
+      	commands. 
+
+      	include_file fixed
+
+      	Ignore «Re:» in front of commands in subjects
+      	Process commands in subjects longer than 79 characters 
+      	(Mail::Header) 
+
+      	Decoding of "_" in Q-coded subjects
+
+      	From: header fields of reports from sympa respect «host» config
+      	; files sent (welcome, bye,...) are from <listname>-request.
+            
+
+2.2.5	18 may 1999
+
+
+      	"subscription" list parameter is now "subscribe" for simplification
+      	("subscription" and "unsubscription" are still accepted).
+
+      	Lists subject returned by LISTS was truncated to 4 lines. It is now
+      	extended to 8 lines.
+
+      	List params "reply-to" and "custom-header" are changed to "reply_to"
+      	and "cutom_header" ; previous syntax will still be recognized.
+
+      	Creation of new susbscribers file is logged.
+
+      	Safefork now waits longer before giving up.
+
+      	[Laurent Ghys <Laurent.Ghys AT ircam.fr>]
+      	Call to check_perl_modules.pl added to the Makefile
+
+    New features :
+      
+      	New is_user_db and add_user_db in List.pm
+
+      	Loop prevention based on "Content-Identifier: Auto-replied"
+      	non standard header. This header is used by crasy X400 mailer.
+
+    Bug Fixes :
+
+      	Correction of List::get_state ("open" instead of "public")
+
+      	Cleaning up in Locale messages loading code (no more "Locale
+      	file not used, using builtin messages)
+
+      	Content-disposition of messages within digests have been changed
+      	to "inline" ; there were problems with Eudora and MSMail.
+      
+      	Subject of messages sent to sympa (ie commands) are
+      	QuotedPrintable and Base64 decoded before processing
+      	; new &tools::decode_string function.
+
+      	Updates using ADD turned subscription mode to digest. Corrected.
+
+      	[Guy Brand <guybrand AT chimie.u-strasbg.fr>]
+      	Many syntax corrections in NLS catalogues.
+
+2.2.4	29 april 1999
+
+      Changes :
+    
+          new optional parameters in sympa.conf for the  file name of
+            subscribers file ,welcome message, stats, archives
+            directory, list config file.
+
+          default for subscribers is 'subscribers'
+                  for welcome is 'welcome'
+
+*****   These 2 default values are not compatible with previous
+*****   versions. In this case you must rename all 'bienvenue' files
+*****   in 'welcome' and all 'abonnes' files in
+*****   'subscribers' ; otherwise add 2 lines in sympa.conf :
+ 
+        subscribers abonnes
+
+        welcome bienvenue
+	
+*****	Defaults for spools path have been changed in Conf.pm:
+*****		queue/		=> 	spool/msg/
+*****		queueauth/	=>	spool/auth/
+		queuedigest	=>	spool/digest/
+		queuemoderation	=>	spool/mod/
+		queueexpire	=>	spool/expire/
+	
+      New features :
+
+	[Alex Nappa <alex.nappa AT imag.fr>]
+	New Spanish dictionnary (es.msg).
+
+      Bug Fixes :
+      
+	Corrections in List::get_lists()
+
+	msg-xxx files created by MIME::Parser are now cleaned
+
+2.2.3b    20 april 1999
+
+      Changes :
+	
+	New parameter "suffix" in include_ldap_query paragraph (list config)
+
+	Digest are now in "multipart/digest" format, conforming to RFC 2046
+	(you need to install "MIME-tools" CPAN module)
+
+	Trailer is now added to Digest messages
+
+	Independant "_add_trailer" subroutine
+
+	You need to update to Mail/Tools v 1.13
+
+2.2.2b	   13 april 1999
+	
+      New features :
+
+        [Jean Brange <jean AT kubos.org>]
+        Per list "custom_subject" parameter. The value of this parameter
+        is a string which is added to the subject.
+
+	[Jean Brange <jean AT kubos.org>]
+	message.footer file : If this file exists in the list directory,
+        it is added to message
+	This feature require MIME::Parser part of "MIME-tools" CPAN module
+
+	Added sub update_user_db to update information in user table
+	(password, gecos).
+
+      Bug fixes :
+
+	Correction of working version 2.2.1b : Help command needed DBI
+	to be installed.
+
+	us.msg corrected line 64 (reported by Luc VEILLON)
+
+      Changes :
+
+        Use "require" insteed of "use" when possible to make installation
+        easier.
+
+	Documentation is now in Tex format (SGML has been abandonned), currently
+	in update process. French version is not maintained anymore.
+	
+
+2.2.1b     8 march 99
+
+      New features :                (note yet documented)
+
+	External data source can be CSV (Comma Separarted Values) files.
+	Files are accessed using DBI and DBD::CSV. List config looks like :
+
+		user_data_source include
+
+	        include_sql_query
+        	db_type CSV
+	        f_dir /home/sympa/import/
+        	sql_query SELECT email FROM students WHERE domain='physics'
+
+      Changes :
+
+	In order to make new langage nls file easier to produce,
+        internationalization of log messages has been deleted. 
+	NLS catalog's consistency can been checked (using nls/check.pl).
+
+        Update sample/helpfile.(fr|en)
+
+
+2.2b    31 March 99
+      
+      New features :            
+    
+	Subscriber list can be stored in a Database (Mysql). The
+	Database parameters (db_type, db_name, db_host, db_user
+	and db_passwd) have been added to sympa.conf.
+
+	Sympa is able to dynamically load the subscriber list from
+	an external datasource (DBM or LDAP). This can be specified
+	in the list config. file whithin a include_sql_query or
+	include_ldap_query paragraph. (not yet documented but
+        easy to confugure using config samples).
+
+	List parameter user_data_source specifies what kind of
+	datasource the list use for the user database. Possible
+	values are file, database or include.
+  
+        User command unsubscribe now accept optionaly a email as
+        second parameter. Sample : "unsubscribe * foo@cru.fr"
+        if email is different from sender ask md5 authentification.
+        
+        Definition of privateoreditorkey as a value the paramer send.
+
+	New entry listmaster in sympa.conf to allow a site administrator
+	to manage lists.
+
+      Changes :
+
+	Sympa may now be distributed under the GPL (GNU General Public 
+	Licence Version 2)
+
+	WHICH command's result doesn't contain lists configuration
+	info anymore. It now returns ownership and "editorship"
+	information. 
+
+	Total of subscribers has been added to stats file.
+
+      Bug fixes :
+	
+	Content-transfer-encoding fixed for key moderation 
+	messages (reported by Andre Lagadec).
+
+	Retun-path: and reply-to: SMTP fields corrected in
+	digest messages (reported by Raymond Bourges).
+
+        Fix the MD5  check sum case sensitive bug
+
+	Auth is made more simple by just replying to the request
+	(Command present in the Subject:).
+
+1.5            1 march 99
+
+      New features :
+      
+        Support alias for <listname>-subscribe and <listname>-unsubscribe
+        toto-unsubscribe: "| ~sympa/expl/mqueue 1 toto-unsubscribe"       
+
+        new subscriber : send       sympa/expl/[listname]/bienvenue.mime
+                        else send  sympa/expl/[listname]/bienvenue
+			else send  sympa/expl/bienvenue.mime
+			else send  sympa/expl/bienvenue
+			else send  a default welcome message according to nls
+			
+        unsubscribtion : send       sympa/expl/[listname]/bye.mime
+                        else send  sympa/expl/[listname]/bye
+			else send  sympa/expl/bye.mime
+			else send  sympa/expl/bye
+			else send  a default unsubscribtion message according to nls
+
+        In those files (template) the string "[listname]" is replaced by the list name.
+      
+      Bug Fix :
+       
+        Check Content-Type and Content-Transfert-Encoding for commands
+
+	Differences between French and English NLS catalogs have been corrected.
+
+	[ Olivier LACROIX <Olivier.Lacroix AT ciril.fr> ]
+	Correction of default_user_options parsing (pb with visibility).
+
+	Conf::Default_Conf is now correctly used. $DIR defined in Makefile
+	is used for the defaults.
+	
+	(private|public|editor)key : fixed
+
+1.4.2-1   19 February 1999
+
+      Bug Fix :
+      
+        Sympa now recognises any command sent in the Subject of a message.
+      
+        [ Fabrice Gaillard <gaillard AT ina.fr> ]
+        Changes to NLS catalogs to fix problems under NetBSD1.3.2.
+
+        Sympa was sending -request messages to other lists' owners. This
+	bug is now fixed.
+
+        [ Laurent Ghys <Laurent.Ghys AT ircam.fr> ]
+	Mailto URLs sent to subscribers now contain %20 instead of spaces.
+
+      Changes :
+        
+	[ Raphael Hertzog <rhertzog AT hrnet.fr> ]
+	Most global parameters now have default values in Conf.pm
+
+        Deletion of purge and reconfirm commands.
+
+1.4.2   5 Febrary 99
+
+      New features :
+	
+	The result of LISTS command can now be automatically generated.
+	It uses 2 extra parameters / list :
+	    + visibility [ conceal | noconceal ]
+	    + subject 
+	You can although define a header (lists.header) and footer 
+	(lists.footer). Location of these files are defined in sympa.conf.
+
+        [ Olivier LACROIX <Olivier.Lacroix AT ciril.fr> ]
+        default_user_options per/list parameter to define a profile
+	for subscribers (reception & visibility).	
+
+        [ Laurent Ghys <Laurent.Ghys AT ircam.fr> ]
+	Sympa now checks if NLS version have been updated (if not  => exit).
+
+      Corrections :
+      
+	[ Laurent Ghys <Laurent.Ghys AT ircam.fr> ]
+	Documention refers to Perl 5.004_03 as a prerequisite
+
+        [ Laurent Ghys <Laurent.Ghys AT ircam.fr> ]
+        Sort NLS messages (260 & 261) within delset 6.
+
+        Replacement of some spaces with tabs in NLS between msg number
+	and msg (Pb under HPUX reported by Olivier LACROIX 
+	<Olivier.Lacroix AT ciril.fr>).
+1.4.1
+      Changes :
+	Now accept message without @ in sender address
+
+      Bug corrections :
+	
+	Your e-mail address has been removed from list %s.
+
+1.4.0  Janary 1999
+        
+      Changes :
+
+	Previous parameter 'tri' in sympa.conf is now renamed to 'sort'
+	Compatibility with previous 'tri' is assured.
+
+        The doc/  makefile use LANG variable to prepare french or
+	english documentation. Use make LANG=fr or make LANG=gb or edit
+	makefile to chose your langage.
+	
+	The nls/ directory include us.msg and fr.msg (us.msg was proposed
+	by Stephane Alnet).
+	
+      New feature :
+
+        -for each list config file, you can chose to notify
+	 owner for each subscription and/or unsubscribtion
+	 using parameters :
+	           subscribtion [open|auth],notify
+	           unsubscribe  [open|auth],notify
+		  
+        - Allow option "reception nomail" in owner and editor definition.
+	  usefull to define multiple address of one privilegied person.
+	
+        - Add sympa version number at the end of command  «HELP» result.
+	
+	- Allow file bienvenue.mime insteed of bienvenue. In this case
+	  bienvenue.mime is sent as is so you can use complexe mime structure
+	  in the welcome message.
+
+        - use URL mailto: in auth subscrition request (subscrition auth)
+	
+        - Sympa use his config to forward mails to owners and editor
+	  so you can use the following aliases in your sendmail 
+	  (no nedd to update alias when changing owner addresse) :
+	
+          toto-request: "| ~sympa/expl/mqueue 1 toto-request"
+	  toto-editor:  "| ~sympa/expl/mqueue 1 toto-editor"
+
+        - Star convention to specify  all lists in user's commands
+	
+  	     -SIGnoff *
+	     -SET * <mail|nomail|digest|conceal|noconceal>
+
+        - priority z and Z are null priority, message stay
+	  in queue forever. Usefull to hangup a list.
+	  
+	 Bug correction  :
+	 
+	 -when unsubscribe is auth don't ask authentification
+	  if the sender is not subscriber at all.
+	  
+	
+	
+1.3.4-1 29 décembre 1998
+
+        Correction dans la numérotation des messages de fr.msg.
+
+1.3.4	22 décembre 1998
+
+	Les "digest" sont au format MIME, il faut maintenant installer
+	le module CPAN MIME-Base64 en plus des autres modules déjà.
+
+	Quelques petits défauts de corrigés.
+
+1.3.3	10 décembre 1998
+
+	Nouvelle option log_socket_type dans sympa.conf pour choisir la
+	journalisation via UDP ou un socket Unix.
+
+	La limite "anti-commandes" passe de 20 lignes à 15 lignes dans le
+	corps du message (c'était vraiment pénible).
+
+	On peut maintenant utiliser DESTDIR. Exemple :
+		make install DESTDIR=/mnt
+	Le nom DESTDIR est préfixé au répertoire DIR du fichier Makefile
+	(proposition de Raphaël Hertzog).
+	
+	Nouvelle fonction : on peut dorénavant mettre des commandes dans
+	le fichier sympa.conf. Exemple :
+		host	`cat /etc/hostname`
+	(proposition de Raphaël Hertzog).
+
+1.3.2	18 septembre 1998
+
+	Avec certaines versions de l'interpéteur Perl, "smtp.pm::reaper"
+	ne se comportait pas correctement.
+
+	IMPORTANT : changement des conditions d'utilisation, de modification
+	et de diffusion de Sympa (grosso-modo on adopte GPL) -- ceci afin de
+	permette création et la diffusion d'un module Debian sympa.deb.
+
+1.3.1-2	6 juillet 1998
+
+	Correction d'une erreur dans sympa.pl rejettant les messages et
+	commandes provenant des domaines contenant les chaines "listeserv" ou
+	"sympa" (par exemple sympatico.ca).
+	Correction d'un défaut mineur dans Commands.pm.
+
+1.3.1	1 juillet 1998
+
+	Création automatique du répertoire "archives" d'une liste, si besoin
+	est.
+	Correction des messages associés à la commande EXPIRE.
+	Restructuration du chapitre 7 (Commands.pm) du catalogue français.
+	Ajout d'entête MIME dans les notifications de rejet (contribution
+	d'Olivier.Lacroix AT ciril.fr).
+	Journalisation des boucles
+	Mise à jour de la détection des commandes dans les messages.
+
+1.3.0	11 juin 1998	Contributions du CRU (Fabien Marquois)
+
+	Nouveautés dans les commandes WHICH, expiration des abonnements,
+	diffusion des messages pour les listes modérées, état des messages en
+	attente.
+
+	Nouvelles options de configuration : authentification des signatures de
+	messages, valeurs privatekey, publickey et privateorpublickey pour le
+	paramètre "send" ; paramètres clean_delay_queueauth et queueauth dans
+	sympa.conf ; paramètre clean_delay_queue dans sympa.conf ; paramètre
+	queueexpire dans sympa.conf ; paramètre clean_delay_queuemod dans
+	sympa.conf ; paramètre sleep dans sympa.conf.
+
+	Corrections : la date d'abonnement ou de dernière confirmation
+	d'abonnement est mise à jour lorsque celui-ci envoie un mail dans
+	la liste, uniformisation des logs de Sympa, correction de la
+	vérification du champ x-loop des messages modérés, mise à jour de la
+	documentation, utilisation du cookie dans la génération des clés de
+	modération.
+
+1.2.2	20 mai 1998	Contributions du CRU (Fabien Marquois)
+
+	Corrections de défauts et nouvelles fonctions : plusieurs
+	"custom-header", traiter les réponses préfixées par ">",
+	présentation en MIME des messages à modérer, accents supprimés
+	des journaux (syslog ne sait pas faire), gestion des accents dans
+	certaines commandes, journalisation de la durée des commandes.
+
+	Makefile pour générer et installer le catalogue de Sympa.
+
+1.2.1	15 mai 1998	Contributions du CRU (Fabien Marquois)
+
+	Corrections de défauts de la 1.2.0 : review, génération des clés de
+	modération.
+
+1.2.0	13 mai 1998	Contributions du CRU (Fabien Marquois)
+
+	Refonte de la documentation : fonctions non encore documentées,
+	fichiers de configuration, notes pour certains Unix.
+
+	Nouvelles fonctions : digest, modérator avec editorkey et
+	editorkeyonly, commentaires dans les fichiers de configuration,
+	liste rouge (conceal, noconceal), nomail, custom-header, tri par
+	priorité selon le domaine destination.
+
+	Corrections : problème d'allocation mémoire, mot-clé msgcat pris en
+	compte, corrections pour "confirm", fonction stats plus précise,
+	problèmes avec les guillements dans le catalogue des messages.
+
+0.011	2 février 1998
+
+	Légers changements dans Makefile (création du répertoire bin qui
+	n'était pas faite au bon endroit).
+
+	Les commandes add/del ne fonctionnaient pas comme prévu dans certains
+	cas à cause d'une erreur de programmation.
+
+	Ajout systématique des entêtes MIME du catalogue des messages (si elles
+	sont définies).
+
+0.010   27 janvier 1998
+
+	Modifications dans le fichier fr.msg -> il faut refaire le catalogue
+	avec "gencat".
+
+	Les commandes add/del permettent l'usage de l'authentifieur MD5. Pour
+	cela il faut que le propriétaire de la liste ait "auth md5" dans le
+	fichier de configuration.
+
+	Une erreur dans Archive.pm mettait des dates fantaisistes dans la date
+	de création d'une archive.
+
+	On journalise la durée de l'envoi des messages ainsi que le nombre de
+	sessions SMTP.
+
+	Gestion des entêtes MIME (à définir à la fin de fr.msg).
+
+0.009   10 décembre 1997
+
+	Correction d'une erreur dans les expressions régulières de gestion des
+	commandes : cela pouvait faire échouer l'usage de l'authentifieur dans
+	certains cas très rares.
+
+	Ajout de l'entête X-Loop et traitement visant à prevenir les boucles.
+
+	Erreur dans le total du nombre d'abonnés : l'ajout d'un utilisateur
+	n'était pas comptabilisé.
+
+	Reply List ne fonctionnait pas dans certains cas en raison d'une faute
+	de programmation.
+
+0.008	15 novembre 1997
+
+	Corrigé quelques bugs et rajout de l'option maxsmtp dans sympa.conf.
+
+0.007   10 novembre 1997
+
+	La modération était en avance sur son temps : on revient à la (mauvaise)
+	vieille méthode (AtArticle to modérate).
+	Corrections mineures dans les autres modules.
+	Le fichier fr.msg a été corrigé et étendu.
+
+0.006   15 septembre 1997
+
+	Beaucoup de changements dans de nombreux modules, notamment un
+	début d'écriture en objet pour certains d'entre eux. Quelques
+	corrections de défauts. A se demander si on ne devrait pas
+	appeler cela une béta de la version 2 de Sympa.
+
+
+0.005	8 juillet 1997
+
+	version.pl -> Version.pm      log.pl -> Log.pm
+
+	La commande `get' fonctionne enfin.
+
+	Certaines fonctions passent du module `tools' vers `list' où elles
+	sont mieux à leur place.
+
+	Bug dans list.pl lorsque le fichier des abonnés n'existe pas il faut
+	refuser de charger la liste [signalé par Olivier Lacroix].
+
+	La substitution remplace également le chemin vers le fichier de
+	configuration définit dans le Makefile. Cela fonctionnait déjà
+	pour le programme queue, mais par pour sympa.pl [O. Lacroix].
+
+0.004	17 juin 1997
+
+	La documentation évolue un peu.
+
+	La commande reconfirm envoie un message aux abonnés qui n'ont pas
+	confirmé leur abonnement à la liste depuis le délais indiqué en
+	paramètre. Le troisième argument est le nombre de semaines de
+	grâce (donné à titre indicatif). Ex : reconfirm tulp-fr 2 4.
+
+	La commande purge permet de virer les abonnés qui n'ont pas
+	renouvellé leur abonnement depuis le nombre de mois indiqué
+	en argument. Ex : purge tulp-fr 2.
+
+	L'authentification est maintenant supportée pour les commandes
+	sub et sig : il faut mettre le drapeau `auth' dans le champ
+	subscription du fichier de configuration (et non pas md5).
+
+	Le paquettage MD5 (dans CPAN) n'est plus facultatif : vous devez
+	l'installer pour utiliser Sympa.
+
+	Correction de quelques bugs dans la gestion des entêtes
+	[A. Thivillon].
+
+0.003	13 juin 1997
+
+	*** ATTENTION - IMPORTANT ***
+	Pour utiliser Sympa vous devez installer le paquettage DB de
+	Berkeley dans une version supportée par Perl (use DB_File),
+	et il vous faut aussi installer MailTools (dans CPAN).
+
+	Correction de 2 petits bugs de programmation [Alain Thivillon].
+	Changement de la chaine de reconnaisance what(1) (bug signale
+	par O. Robert).
+
+	Utilisation de my a la place de local, usage de my devant $id (pour
+	use strict) [O. Robert].
+
+	La fonction "index" a été rajoutée et fonctionne.
+
+	Le tri des abonnés se fait maintenant par un arbre binaire en
+	utilisant le module DB_File. C'est beaucoup plus rapide pour
+	les grandes listes.
+
+	Le module rfc822.pl n'est plus nécessaire, il a été supprimé de
+	la distribution. Le programme utilise maintenant Mail::Address
+	(disponible dans CPAN).
+
+0.002	19 mai 1997
+
+	Ajout du nombre d'abonnés à la liste en dernière ligne de la
+	commande Review.
+
+0.001	1er avril 1997
+
+	Première version de tests diffusée à un large public.
+

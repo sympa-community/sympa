@@ -1,0 +1,43 @@
+/* Sybase Database creation script 2.5.2 */
+/* Thierry Charles <tcharles@electron-libre.com> */
+
+
+/* sympa database must have been created */
+/* eg: create database sympa on your_device_data=10 log on your_device_log=4 */
+use sympa
+go
+
+create table user_table
+(
+    email_user             varchar(100)           not null,
+    gecos_user             varchar(150)           null    ,
+    password_user          varchar(20)            null    ,
+    cookie_delay_user      numeric                null    ,
+    lang_user              varchar(10)            null    ,
+    constraint ind_user primary key (email_user)
+)
+go
+
+create index email_user_fk on user_table (email_user)
+go
+
+
+create table subscriber_table
+(
+    list_subscriber        varchar(50)            not null,
+    user_subscriber        varchar(100)           not null,
+    date_subscriber        datetime               not null,
+    update_subscriber      datetime               null,
+    visibility_subscriber  varchar(20)            null    ,
+    reception_subscriber   varchar(20)            null    ,
+    bounce_subscriber      varchar(30)            null    ,
+    constraint ind_subscriber primary key (list_subscriber, user_subscriber)
+)
+go
+
+create index list_subscriber_fk on subscriber_table (list_subscriber)
+go
+
+create index user_subscriber_fk on subscriber_table (user_subscriber)
+go
+

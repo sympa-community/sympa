@@ -1,0 +1,8 @@
+title.us editor using md5 key
+title.fr modérée avec clef md5
+title.de editor using md5 key
+title.es editor usando clave md5
+
+is_editor([listname],[sender])                 smtp,smime,md5    -> do_it
+is_editor([listname],[header->X-sender])       smtp,smime,md5    -> do_it
+true()                                         smtp,smime,md5    -> editorkey

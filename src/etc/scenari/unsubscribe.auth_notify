@@ -1,0 +1,9 @@
+title.fr authentification demandée, notification du proprio
+title.us authentication requested, notification sent to owner
+title.de authentication requested, notification sent to owner
+title.es autentificación solicitada, notificación enviada al propietario
+
+!is_subscriber ([listname],[email]) smtp,md5,smime -> do_it,notify
+true()                              smtp           -> request_auth([email])
+true()			            md5,smime      -> do_it,notify
+

@@ -1,0 +1,8 @@
+title.fr listmaster seulement
+title.us listmaster only
+title.de listmaster only
+title.es sólo para el listmaster
+
+# only listmaster can perform remind
+is_listmaster([sender])   smtp   -> request_auth
+is_listmaster([sender])    md5,smime    -> do_it

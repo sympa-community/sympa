@@ -1,0 +1,13 @@
+title.us subscriber email are authenticated then sent to editor
+title.fr authentification des messages des abonnés puis modération
+title.de subscriber email are authenticated then sent to editor
+title.es mensajes del subscriptor son autentificados y luego enviados al editor
+
+is_subscriber([listname],[sender]) smtp            -> request_auth
+is_subscriber([listname],[sender]) md5,smime	   -> editorkey
+is_editor([listname],[sender])     smtp            -> request_auth
+is_editor([listname],[sender])	   md5,smime       -> do_it
+
+
+
+

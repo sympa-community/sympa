@@ -1,0 +1,43 @@
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+Broken S/MIME signature
+[2.x -> 3.0] 
+
+        S/MIME signature is altered by Sympa distribution processus
+        if original message contains base64 attachement. This bug cames
+        with all previous 2.X and 3.X version. The reason is that
+        MIME::parser print method do not restore the original
+        base64 presentation (the number of chars per line is completly
+        free, but the S/MIME check sum of the message of course is
+        depending of that.
+        The solution is to distribute the original message file (except
+        headers) insteed of the Mime::entity dump.  There is a lot of
+        dependence including the case of crypted and signed messages,
+        header/footer attachement.
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+Can't delete owner
+[3.0a.x ->3.0]
+
+        When deleting owner or editor, wwsympa return a syntaxe error
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+Owners can change their email
+[3.0a.x -> 3.0]
+
+       	Privileged owners can edit their own email address. This is
+        should be impossible because listmaster must be able to control
+        who own lists.
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+Improper lang when notify
+[3.0a.x -> 3.0]
+
+        Notificatication of messages to moderate sent to list editor
+        use the lang preference of the message Sender. Of course it should
+        use the editor lang preference.
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

@@ -1,0 +1,9 @@
+title.us restricted to local domain users
+title.fr limité aux utilisateurs du domaine local
+title.de restricted to local domain users
+title.es restringido a los usuarios locales
+
+# if subscriber request come from local domain do_it else reject
+is_subscriber([listname],[sender]) smtp,smime,md5    -> do_it
+match([sender],/[conf->host]$/)          smtp,smime,md5    -> do_it
+

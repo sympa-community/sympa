@@ -1,0 +1,34 @@
+## List template for an intranet usage (no visibility from the outside)
+
+subject Sample provided for an intranet list
+
+## Not listed with LIST command
+visibility conceal
+
+send private
+
+## list archived weekly access restricted to subscribers.
+archive
+  period week
+  access private
+
+## Reply-To: header field is set to the sender email
+reply_to list
+
+## Subscription need approval of the owner
+subscribe open
+
+## Unsubscription is free, owner is notified
+unsubscribe open,notify
+
+## Owners ONLY have access to the list subscribers
+review owner
+
+## The owners
+owner
+email first_owner@my.domain
+
+owner
+email second_owner@my.domain
+
+

@@ -1,0 +1,29 @@
+-- PostgreSQL Database creation script
+
+CREATE DATABASE sympa;
+
+-- Connect to DB 
+\connect sympa
+
+DROP TABLE user_table;
+CREATE TABLE user_table (
+  	email_user          	varchar (100) NOT NULL,
+  	gecos_user          	varchar (150),
+	cookie_delay_user       int4,
+        password_user		varchar (20),
+        lang_user               varchar (10),
+	CONSTRAINT ind_user PRIMARY KEY (email_user)
+);
+
+DROP TABLE subscriber_table;
+CREATE TABLE subscriber_table (
+  	list_subscriber       	varchar (50) NOT NULL,
+	user_subscriber		varchar (100) NOT NULL,
+	date_subscriber		datetime NOT NULL,
+	update_subscriber 	datetime,
+	visibility_subscriber	varchar (20),
+	reception_subscriber	varchar (20),
+	bounce_subscriber	varchar (30),
+	CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber, user_subscriber)
+);
+

@@ -1,0 +1,9 @@
+title.us local domain users or after owner autorisation 
+title.fr usager du domaine local ou via autorisation du proprio
+title.de local domain users or after owner autorisation
+title.es usuarios del dominio local o tras autorización del propietario
+
+# if subscriber request come from local domain do_it else reject
+is_subscriber([listname],[sender]) smtp,smime,md5    -> do_it
+match([sender],/[conf->host]$/)          smtp,smime,md5    -> do_it
+true()                             smtp,smime,md5    -> owner

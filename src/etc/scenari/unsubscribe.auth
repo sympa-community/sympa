@@ -1,0 +1,8 @@
+title.fr possible après authentification
+title.us need authentication
+title.de need authentication
+title.es necesita autentificación
+
+!is_subscriber ([listname],[email]) smtp,smime,md5 -> do_it
+true()                              smtp           -> request_auth([email])
+true()			            md5,smime      -> do_it

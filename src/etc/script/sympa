@@ -1,0 +1,187 @@
+#! --SH--
+#
+# sympa			Mailing Lists Management System
+#
+# Written by Michel Bouissou  20/07/2000
+#
+# Modified by Olivier Salaun 27/07/2000
+#    - translations
+#    - lang parameter deleted (defined in sympa.conf)
+#    - introduced --VARS-- parsed by Makefile
+#    - no more sympauser since sympa sets its UID
+# Modified by Michel Bouissou  27/07/2000
+#
+# chkconfig: 345 95 05
+# description: sympa is a powerfull mailing lists management system.
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Get config.
+. /etc/sysconfig/network
+
+# Sympa parameters
+# Sympa binaries directory
+sympadir="--BINDIR--"
+
+# Sympa config files directory
+sympaconf="--CONFIG--"
+wwsympaconf="--WWSCONFIG--"
+
+# End of parameters
+
+# Current state of the module
+sympa_status() {
+    # Test syntax.
+    if [ $# = 0 ] ; then
+        echo "Usage: sympa_status {program}"
+        return 1
+    fi
+ 
+    # First try "pidof"
+    pid=`pidof -x $1.pl`
+    if [ "$pid" != "" ] ; then
+            echo "$1 (pid $pid) is active..."
+            return 0
+    fi
+ 
+    # Next try "/var/run/*.pid" files
+    if [ -f /var/run/$1.pl.pid ] ; then
+            pid=`head -1 /var/run/$1.pl.pid`
+            if [ "$pid" != "" ] ; then
+                    echo "$1 died, pid file remains."
+                    return 1
+            fi
+    fi
+    echo "$1 is stopped."
+    return 3
+}
+
+# Start a module
+sympa_module_start() {
+    if [ $# = 0 ] ; then
+        echo "Usage: sympa_module_start {program}"
+        return 1
+    fi
+
+#	if [ $1 = "sympa" -a $lang != "" ]; then
+#		startparam="-l $lang"
+#	else
+#		startparam=""
+#	fi
+ 
+	daemon $sympadir/$1.pl $startparam
+	sleep 1
+	pid=`pidof -x $sympadir/$1.pl`
+	if [ $pid ]; then
+		echo $pid > /var/run/$1.pl.pid
+	fi
+	echo
+}
+
+# Test state of module before startup
+sympa_start() {
+    if [ $# = 0 ] ; then
+        echo "Usage: sympa_start {program}"
+        return 1
+    fi
+ 
+	echo -n "Starting module $1.pl: "
+	sympa_status $1 > /dev/null
+	case "$?" in
+		3)
+			sympa_module_start $1
+			;;
+		1)
+			echo "Starting $1, overwritting old pid file."
+			sympa_module_start $1
+			;;
+		0)
+			echo "$1 seems active. No action will be taken."
+			echo "Try \"sympa status\" or \"sympa restart"\".
+			;;
+	esac
+}
+
+# Stop a module
+sympa_stop() {
+    if [ $# = 0 ] ; then
+        echo "Usage: sympa_stop {program}"
+        return 1
+    fi
+ 
+	if [ -f /var/run/$1.pl.pid ]; then
+		echo -n "Stopping module $1.pl: "
+		killproc $1.pl
+		rm -f /var/run/$1.pl.pid
+		echo
+	fi
+}
+
+
+# Check that networking is up.
+if [ ${NETWORKING} = "no" ]
+then
+	exit 0
+fi
+
+# Check config files
+[ -d $sympadir ] || exit 0
+[ -f $sympaconf ] || exit 0
+[ -f $wwsympaconf ] || exit 0
+
+# See how we were called.
+case "$1" in
+  start)
+	if [ ! -f /var/lock/subsys/sympa ]; then
+		echo "Starting Sympa subsystem: "
+		sympa_start sympa
+		sympa_start archived
+		sympa_start bounced
+		touch /var/lock/subsys/sympa
+		echo
+	else
+
+		echo "Sympa seems active. No action will be taken."
+		echo "Try \"sympa status\" or \"sympa restart"\".
+
+	fi
+	;;
+  stop)
+	echo "Stopping Sympa subsystem: "
+	sympa_stop bounced
+	sympa_stop archived
+	sympa_stop sympa
+	if [ -f /var/lock/subsys/sympa ]; then
+		rm -f /var/lock/subsys/sympa
+	fi
+	;;
+  status)
+	echo "Status of Sympa subsystem: "
+	echo -n "Status file for subsystem "
+	if [ -f /var/lock/subsys/sympa ]; then
+		echo "found."
+	else
+		echo "NOT found."
+	fi
+	sympa_status sympa
+	sympa_status archived
+	sympa_status bounced
+	;;
+  restart)
+	echo "Restarting Sympa subsystem: "
+	$0 stop
+	$0 start
+	echo
+	;;
+  *)
+	echo "Usage: $0 {start|stop|status|restart}"
+	exit 1
+	;;
+esac
+
+exit 0
+
+
+
+

@@ -1,0 +1,8 @@
+title.fr proprio de liste, pas d'authentification (notification)
+title.us list owners, authentication not needed (notification)
+title.de list owners, authentication not needed (notification)
+title.es propietario de la lista, no necesita autentificación (notificación)
+
+is_owner([listname],[sender])  smtp,smime,md5 -> do_it,notify
+is_listmaster([sender])        smtp           -> request_auth
+

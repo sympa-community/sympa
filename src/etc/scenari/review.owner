@@ -1,0 +1,8 @@
+title.us only owner (and listmaster)
+title.fr proprio de list seulement (et listmaster)
+title.de only owner (and listmaster)
+title.es sólo propietario (y listmaster)
+
+# only owner's may perform a review command
+is_owner([listname],[sender])      smtp,md5,smime  -> do_it
+is_listmaster([sender])            smtp,md5,smime  -> do_it

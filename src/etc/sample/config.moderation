@@ -1,0 +1,22 @@
+## Template of a moderated list ; moderator is notified when a message
+## is proposed and receives a MD5 key. He can either DISTRIBUTE or REJECT
+## it. (see also editor or editorkey)
+send editorkeyonly
+
+reply_to list
+
+subscribe open
+
+unsubscribe open,notify
+
+review owner
+
+owner
+email owner1@xx.domain
+
+## 2 editors for this list
+editor
+email moderateur@un.domaine
+
+editor
+email foo@ailleur.nul.part
