@@ -28,41 +28,41 @@
 [% IF errors %] [%|loc%]Server error[%END%] [% END %]
 [% IF action == 'latest_lists' %] 
  [%- IF count -%]
-   [%|loc%]The [% count %] latest created lists[%END%] 
+   [%|loc(count)%]The %1 latest created lists[%END%] 
  [%- ELSE -%]
    [%|loc%]The latest created lists[%END%] 
  [%- END %]
  [%- IF for -%]
-   [%-|loc%]for [% for %] days[%END%]
+   [%-|loc(for)%]for %1 days[%END%]
  [%- END -%]
  [% IF subtitle %] - [% subtitle %] [% END %]
 [%- ELSIF action == 'active_lists' %]  
  [%- IF count -%]
-   [%|loc%]The [% count %] most active lists[%END%] 
+   [%|loc(count)%]The %1 most active lists[%END%] 
  [%- ELSE -%]
    [%|loc%]The most active lists[%END%] 
  [%- END %]
  [%- IF for -%]
-   [%-|loc%]for [% for %] days[%END%] 	
+   [%-|loc(for)%]for %1 days[%END%] 	
  [%- END %]
  [% IF subtitle %] - [% subtitle %] [% END %]
 [%- ELSIF action == 'latest_arc' %]  
  [%- IF count -%]
-   [%|loc%]The [% count %] latest messages[%END%] 
+   [%|loc(count)%]The %1 latest messages[%END%] 
  [%- ELSE -%]
    [%|loc%]The latest messages[%END%] 
  [%- END %]
  [%- IF for -%]
-   [%-|loc%]for [% for %] days [%END%] 	
+   [%-|loc(for)%]for %1 days [%END%] 	
  [%- END %]
 [%- ELSIF action == 'latest_d_read' %]  
  [%- IF count -%]
-   [%|loc%]The [% count %] latest shared documents[%END%] 
+   [%|loc(count)%]The %1 latest shared documents[%END%] 
  [%- ELSE -%]
    [%|loc%]The latest shared documents[%END%] 
  [%- END %]
  [%- IF for -%]
-   [%-|loc%]for [% for %] days [%END%] 	
+   [%-|loc(for)%]for %1 days [%END%] 	
  [%- END %]
 [%- END %]
   </description>
@@ -98,9 +98,8 @@
  [% FOREACH l = active_lists -%]
   <item>
     <title>
-     [%|loc(l.name,l.host,l.subject,l.msg_count)%]%1@%2 - %3 : %4 messages
-	[% IF l.average %] - [% l.average %] by day [%END%]
-     [%END%]
+     [%|loc(l.name,l.host,l.subject,l.msg_count)%]%1@%2 - %3 : %4 messages[%END%]
+	[% IF l.average %] - [%|loc(l.average)%]%1 by day [%END%]
     </title>
     <link>[% base_url %][% path_cgi %]/info/[% l.name %]</link>
   </item>
@@ -109,7 +108,7 @@
  [% FOREACH a = archives -%]
   <item>
     <title>
-     [%|loc%][% a.subject %] - [% a.from %] - [% a.date %][%END%]
+     [% a.subject %] - [% a.from %] - [% a.date %]
     </title>
     <link>[% conf.wwsympa_url %]/arcsearch_id/[% list %]/[% a.year_month %]/[% a.message_id %]</link>
   </item>
@@ -124,7 +123,7 @@
     <link>[% d.url %]</link>
     [% ELSE -%]
      <title>
-     [%|loc(d.name)%]%1[%END%]
+     [% d.name %]
     </title>
     <link>[% base_url %][% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]/[% d.escaped_name %]</link>
     [% END -%]
