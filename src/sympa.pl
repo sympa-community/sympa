@@ -1037,6 +1037,8 @@ sub SendDigest{
 	    return undef;
 	}
 
+	&Language::SetLang($list->{'admin'}{'lang'});
+
 	if ($list->get_nextdigest()){
 	    ## Blindly send the message to all users.
 	    do_log('info', "Sending digest to list %s", $listname);
