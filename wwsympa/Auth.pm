@@ -324,12 +324,16 @@ sub ldap_authentication {
 
 
 sub check_cas_login {
-    my $host = shift;  #may include :port extention
+    my $base_url = shift;  #may include :port extention
     my $uri = shift;
     my $service = shift; #   Application return URL
     my $blocking_check = shift; #   Option to be used for non blocking redirect
 
-    do_log ('debug',"Auth::check_login($host,$port,$uri,backurl=$service,blocking=$blocking_check)");
+    do_log ('debug',"Auth::check_login($base_url,$uri,backurl=$service,blocking=$blocking_check)");
+
+    my $host;
+    $base_url =~ /^http(s)?:\/\/(.+)$/ && ($host = $2);
+
     my ($hostname,$port) = split(/:/,$host);
     $port ||= '443';
 

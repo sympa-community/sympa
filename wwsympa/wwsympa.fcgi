@@ -553,16 +553,16 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 do_log ('debug',"CAS ticket is detected. in{'ticket'}=$in{'ticket'} in{'checked_cas'}=$in{'checked_cas'}");
 	 if ($in{'checked_cas'} =~ /^(\d+)\,?/) {
 	     my $cas_id = $1;    
-	     my $host = $Conf{'auth_services'}[$cas_id]{'host'};
+	     my $base_url = $Conf{'auth_services'}[$cas_id]{'base_url'};
 	     my $login_uri = $Conf{'auth_services'}[$cas_id]{'login_uri'};
 	     my $check_uri = $Conf{'auth_services'}[$cas_id]{'check_uri'};
 
-	     my $net_id = &Auth::check_cas_login($host,$check_uri,&wwslib::get_my_url(),'no_blocking');
+	     my $net_id = &Auth::check_cas_login($base_url,$check_uri,&wwslib::get_my_url(),'no_blocking');
 
 	     
-	     &do_log('debug',"Requesting CAS ticket validation to through Auth::check_cas_login($host,$check_uri,...) return $net_id");
+	     &do_log('debug',"Requesting CAS ticket validation to through Auth::check_cas_login($base_url,$check_uri,...) return $net_id");
 	     if($net_id != -1) { # the ticket is valid net-id
-		 do_log('notice',"login CAS OK server = $host,netid=$net_id,cas_id=$cas_id" );
+		 do_log('notice',"login CAS OK server = $base_url,netid=$net_id,cas_id=$cas_id" );
 		 $param->{'user'}{'email'} = lc(&Auth::cas_get_email_by_net_id($net_id,$cas_id));
 		 $param->{'auth'} = 'cas';
 
@@ -598,7 +598,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		     $return_url .= '?checked_cas='.$Conf{'cas_id'}{$auth_service->{'auth_service_name'}};
 		 }
 		 
-		 my $redirect_url = &Auth::check_cas_login($auth_service->{'host'},$auth_service->{'login_uri'},$return_url,'no_blocking');
+		 my $redirect_url = &Auth::check_cas_login($auth_service->{'base_url'},$auth_service->{'login_uri'},$return_url,'no_blocking');
 		 
 		 if ($redirect_url =~ /http(s)+\:\//i) {
 		     $in{'action'} = 'redirect';
@@ -1549,7 +1549,7 @@ sub do_sso_login {
 
     ## This is a CAS service
     if (my $cas_id = $Conf{'cas_id'}{$in{'auth_service_name'}}) {
-	my $host = $Conf{'auth_services'}[$cas_id]{'host'};
+	my $base_url = $Conf{'auth_services'}[$cas_id]{'base_url'};
 	my $login_uri = $Conf{'auth_services'}[$cas_id]{'login_uri'};
 	
 	my $path = '';
@@ -1561,7 +1561,7 @@ sub do_sso_login {
 	}
 	my $service = "$param->{'base_url'}$param->{'path_cgi'}".$path."?checked_cas=".$cas_id;
 	
-	my $redirect_url = &Auth::check_cas_login($host,$login_uri,$service); 
+	my $redirect_url = &Auth::check_cas_login($base_url,$login_uri,$service); 
 	&do_log('info', 'do_sso_login: redirect_url(%s)', $redirect_url);
 	if ($redirect_url =~ /http(s)+\:\//i) {
 	    $in{'action'} = 'redirect';
@@ -1897,10 +1897,10 @@ sub do_redirect {
      my $cas_id = &cookielib::get_cas_server($ENV{'HTTP_COOKIE'});
      if (defined $cas_id) {
 	 # this user was logged using CAS
-	 my $host = $Conf{'auth_services'}[$cas_id]{'host'};
+	 my $base_url = $Conf{'auth_services'}[$cas_id]{'base_url'};
 	 my $logout_uri = $Conf{'auth_services'}[$cas_id]{'logout_uri'};
 	 $in{'action'} = 'redirect';
-	 $param->{'redirect_to'} = 'https://'.$host.$logout_uri.'?service='.&wwslib::get_my_url().'&gateway=1';
+	 $param->{'redirect_to'} = $base_url.$logout_uri.'?service='.&wwslib::get_my_url().'&gateway=1';
 	 &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
 	 &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id, 'now');
 	 return 'redirect';
