@@ -6618,7 +6618,6 @@ sub do_d_change_access {
     ## End of controls
     
     # Description file
-    my $path;
     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
     my $dir = $1;
     my $file = $3;
@@ -6687,9 +6686,10 @@ sub do_d_change_access {
 
 sub do_d_set_owner {
     #action_args == ['list','@path']
-    &wwslog('debug', 'do_d_change_access(%s)', $in{'path'});
+    &wwslog('debug', 'do_d_set_owner(%s)', $in{'path'});
     
     # Variables
+    my $desc_file;
     my $expl = $Conf{'home'};
 
     my $path = lc($in{'path'});
@@ -6728,8 +6728,6 @@ sub do_d_set_owner {
     
     # Access control
     ## father directory
-    my $desc_file;
-    my $path;
     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
     my $dir = $1; 
     my $file = $3;
