@@ -7795,6 +7795,8 @@ sub make_visible_path {
      ## parameters of the current directory
      $param->{'doc_date'} =  &POSIX::strftime("%d %b %y  %H:%M", localtime($info[9]));
 
+     &tt2::allow_absolute_path();
+
      $param->{'father_icon'} = $icon_table{'father'};
      return 1;
  }
