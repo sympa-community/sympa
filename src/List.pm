@@ -3238,6 +3238,7 @@ sub send_global_file {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
 
+    $data->{'sender'} = $who;
     $data->{'conf'}{'version'} = $main::Version;
 		   $data->{'from'} = $data->{'conf'}{'request'};
     $data->{'robot_domain'} = $robot;
@@ -3342,6 +3343,7 @@ sub send_file {
 	return undef;
     }
 
+    $data->{'sender'} = $who;
     $data->{'list'}{'lang'} = $self->{'admin'}{'lang'};
     $data->{'list'}{'name'} = $name;
     $data->{'list'}{'domain'} = $data->{'robot_domain'} = $robot;
