@@ -198,6 +198,7 @@ checkmhonarc:
 		echo "##################################"; \
 		echo "## You don't have mhonarc installed."; \
 		echo "## Mhonarc is required to manage web archives."; \
+		echo "## Mhonarc web site : http://www.mhonarc.org"; \
 		echo "#####################################################"; \
 	fi
 
