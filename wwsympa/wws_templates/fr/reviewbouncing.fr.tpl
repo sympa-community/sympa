@@ -57,18 +57,18 @@
     </TABLE>
 
     <TABLE WIDTH="100%" BORDER=1>
-      <TR BGCOLOR="--ERROR_COLOR--" NOWRAP>
-	<TH><FONT COLOR="--BG_COLOR--">X</FONT></TH>
-        <TH><FONT COLOR="--BG_COLOR--">email</FONT></TH>
-	<TH><FONT COLOR="--BG_COLOR--">Nombre d'erreurs</FONT></TH>
-	<TH><FONT COLOR="--BG_COLOR--">période</FONT></TH>
-	<TH NOWRAP><FONT COLOR="--BG_COLOR--">type</FONT></TH>
+      <TR BGCOLOR="[error_color]" NOWRAP>
+	<TH><FONT COLOR="[bg_color]">X</FONT></TH>
+        <TH><FONT COLOR="[bg_color]">email</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">Nombre d'erreurs</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">période</FONT></TH>
+	<TH NOWRAP><FONT COLOR="[bg_color]">type</FONT></TH>
       </TR>
       
       [FOREACH u IN members]
 
 	[IF dark=1]
-	  <TR BGCOLOR="--SHADED_COLOR--">
+	  <TR BGCOLOR="[error_color]">
 	[ELSE]
           <TR>
 	[ENDIF]

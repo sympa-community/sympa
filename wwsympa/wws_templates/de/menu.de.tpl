@@ -3,9 +3,9 @@
 <!-- begin menu.tpl -->
 <TABLE CELLPADDING="0" CELLSPACING="0" WIDTH="100%" BORDER="0"><TR><TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="--DARK_COLOR--">
+  <TR ALIGN=center BGCOLOR="[dark_color]">
   [IF auth_method=smime]
-  <TD bgcolor="--BG_COLOR--">
+  <TD bgcolor="[bg_color]">
 <A HREF="[path_cgi]/show_cert" onClick="winhelp=window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=320');winlogin.focus()" TARGET="wws_help"><IMG SRC="[icons_url]/locked.gif" align="center" alt="security info" border=0></A>
   [ELSE]
   <TD>
@@ -13,7 +13,7 @@
      <TR> 
   [IF user->email]
   [IF auth_method=md5]
-      <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
      [IF referer]
       <A HREF="[path_cgi]/logout/referer/[referer]" >
      [ELSE]
@@ -22,10 +22,10 @@
      <FONT SIZE=-1><B>Abmelden</B></FONT></A>
      </TD>
   [ELSE]
-     <TD NOWRAP BGCOLOR="--BG_COLOR--" ALIGN="center"><IMG SRC="[icons_url]/locked.gif" align="center" alt="https"></TD>
+     <TD NOWRAP BGCOLOR="[bg_color]" ALIGN="center"><IMG SRC="[icons_url]/locked.gif" align="center" alt="https"></TD>
   [ENDIF]
   [ELSE]
-      <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
      [IF referer]
       <A HREF="[path_cgi]/nomenu/loginrequest/referer/[referer]"
      [ELSE]
@@ -43,20 +43,20 @@
 
 
 </TD>
-<TD WIDTH=100% BGCOLOR="--BG_COLOR--">&nbsp;</TD>
+<TD WIDTH=100% BGCOLOR="[bg_color]">&nbsp;</TD>
 <TD>
 
 <TABLE CELLPADDING=0 CELLSPACING=0 WIDTH="100%" BORDER=0>
-  <TR ALIGN=center BGCOLOR="--DARK_COLOR--"><TD>
+  <TR ALIGN=center BGCOLOR="[dark_color]"><TD>
   <TABLE WIDTH="100%" BORDER=0 CELLSPACING=2 CELLPADDING=2>
      <TR> 
   [IF may_create_list]
    [IF action=create_list_request]
-    <TD NOWRAP BGCOLOR="--SELECTED_COLOR--" ALIGN="center">
-        <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Liste anlegen</B></FONT>
+    <TD NOWRAP BGCOLOR="[selected_color]" ALIGN="center">
+        <FONT SIZE=-1 COLOR=[bg_color] ><B>Liste anlegen</B></FONT>
     </TD>
    [ELSE]
-    <TD NOWRAP BGCOLOR="--LIGHT_COLOR--"  ALIGN="center">
+    <TD NOWRAP BGCOLOR="[light_color]"  ALIGN="center">
 	 <A HREF="[path_cgi]/create_list_request" ><FONT SIZE=-1><B>Liste anlegen</B></FONT></A>
     </TD>
    [ENDIF]
@@ -64,11 +64,11 @@
 
   [IF is_listmaster]
    [IF action=serveradmin]
-    <TD NOWRAP BGCOLOR="--SELECTED_COLOR--" ALIGN="center">
-        <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Sympa Admin</B></FONT>
+    <TD NOWRAP BGCOLOR="[selected_color]" ALIGN="center">
+        <FONT SIZE=-1 COLOR=[bg_color] ><B>Sympa Admin</B></FONT>
     </TD>
    [ELSE]
-    <TD NOWRAP BGCOLOR="--LIGHT_COLOR--"  ALIGN="center">
+    <TD NOWRAP BGCOLOR="[light_color]"  ALIGN="center">
 	 <A HREF="[path_cgi]/serveradmin" ><font size=-1><B>Sympa Admin</B></FONT></A>
     </TD>
    [ENDIF]
@@ -77,46 +77,46 @@
   [IF user->email]
 
   [IF action=pref]
-  <TD NOWRAP BGCOLOR="--SELECTED_COLOR--"  ALIGN="center">
-      <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Einstellungen</B></FONT>
+  <TD NOWRAP BGCOLOR="[selected_color]"  ALIGN="center">
+      <FONT SIZE=-1 COLOR=[bg_color] ><B>Einstellungen</B></FONT>
   </TD>
   [ELSE]
-  <TD NOWRAP BGCOLOR="--LIGHT_COLOR--">
+  <TD NOWRAP BGCOLOR="[light_color]">
       <A HREF="[path_cgi]/pref/[action]/[list]" ><FONT SIZE=-1><B>Einstellungen</B></FONT></A>
   </TD>
   [ENDIF]
 
   [IF action=which]
-  <TD NOWRAP BGCOLOR="--SELECTED_COLOR--" ALIGN="center">
-      <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Ihre Abonnements</B></FONT>
+  <TD NOWRAP BGCOLOR="[selected_color]" ALIGN="center">
+      <FONT SIZE=-1 COLOR=[bg_color] ><B>Ihre Abonnements</B></FONT>
   </TD>
   [ELSE]
-  <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">
+  <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">
       <A HREF="[path_cgi]/which" ><FONT SIZE=-1><B>Ihre Abonnements</B></FONT></A>
    </TD>
    [ENDIF]
   
   [ELSE]
-  <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">
-      <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Einstellungen</B></FONT>
+  <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">
+      <FONT SIZE=-1 COLOR=[bg_color] ><B>Einstellungen</B></FONT>
   </TD>
-  <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">
-      <FONT SIZE=-1 COLOR="--BG_COLOR--"><B>Ihre Abonnements</B></FONT>
+  <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">
+      <FONT SIZE=-1 COLOR="[bg_color]"><B>Ihre Abonnements</B></FONT>
   </TD>
   [ENDIF]
 
   [IF action=home]
-  <TD NOWRAP BGCOLOR="--SELECTED_COLOR--" ALIGN="center"><FONT SIZE=-1 COLOR=--BG_COLOR--><B>Hauptseite</B></FONT></TD>
+  <TD NOWRAP BGCOLOR="[selected_color]" ALIGN="center"><FONT SIZE=-1 COLOR=[bg_color]><B>Hauptseite</B></FONT></TD>
   [ELSE]
-  <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">
+  <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">
       <A HREF="[path_cgi]/"><FONT SIZE=-1><B>Hauptseite</B></FONT></A>
   </TD>
   [ENDIF]
 
   [IF action=help]
-  <TD NOWRAP BGCOLOR="--SELECTED_COLOR--" ALIGN="center"><FONT SIZE=-1 COLOR=--BG_COLOR--><B>Hilfe</B></FONT></TD>
+  <TD NOWRAP BGCOLOR="[selected_color]" ALIGN="center"><FONT SIZE=-1 COLOR=[bg_color]><B>Hilfe</B></FONT></TD>
   [ELSE]
-  <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">
+  <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">
       <A HREF="[path_cgi]/help" ><FONT SIZE=-1><B>Hilfe</B></FONT></A>
   </TD>
   [ENDIF]

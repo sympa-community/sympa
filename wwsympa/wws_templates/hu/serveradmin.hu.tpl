@@ -4,7 +4,7 @@
       <TR VALIGN="top">
         <TD NOWRAP>
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
-	    <FONT COLOR="--DARK_COLOR--"><B>A lista alapértelmezett sablonjainak beállítása</B></FONT><BR>
+	    <FONT COLOR="[dark_color]"><B>A lista alapértelmezett sablonjainak beállítása</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [FOREACH f IN lists_default_files]
 	        <OPTION VALUE='[f->NAME]' [f->selected]>[f->complete]
@@ -14,7 +14,7 @@
 	  </FORM>
 
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
-	    <FONT COLOR="--DARK_COLOR--"><B>A rendszer sablonjainak beállítása</B></FONT><BR>
+	    <FONT COLOR="[dark_color]"><B>A rendszer sablonjainak beállítása</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [FOREACH f IN server_files]
 	        <OPTION VALUE='[f->NAME]' [f->selected]>[f->complete]
@@ -36,7 +36,7 @@
       <TR><TD><A HREF="[path_cgi]/view_translations"><B>Sablonok módosítása</B></A></TD></TR>
       <TR>
         <TD>
-<FONT COLOR="--DARK_COLOR--"><B>HTML archívum frissítése</B> az <CODE>arctxt</CODE> könyvtár felhasználásával.
+<FONT COLOR="[dark_color]"><B>HTML archívum frissítése</B> az <CODE>arctxt</CODE> könyvtár felhasználásával.
         </TD>
       </TR>
       <TR>
@@ -59,7 +59,7 @@
 
       <TR>
         <TD>
-	  <FONT COLOR="--DARK_COLOR--">
+	  <FONT COLOR="[dark_color]">
 	  <A HREF="[path_cgi]/scenario_test">
 	     <b>Változatok kipróbálása</b>
           </A>

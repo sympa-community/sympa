@@ -23,10 +23,10 @@ usare i comandi privilegiati (quelli che richiedono il tuo indirizzo).
 	<INPUT TYPE="hidden" NAME="action" VALUE="login">
 
         <TABLE BORDER=0 width=100% CELLSPACING=0 CELLPADDING=0>
-         <TR BGCOLOR="--LIGHT_COLOR--">
+         <TR BGCOLOR="[light_color]">
           <TD NOWRAP align=center>
      	      <INPUT TYPE=hidden NAME=list VALUE="[list]">
-     	      <FONT SIZE=-1 COLOR="--SELECTED_COLOR--"><b>email <INPUT TYPE=text NAME=email SIZE=20 VALUE="[init_email]">
+     	      <FONT SIZE=-1 COLOR="[selected_color]"><b>email <INPUT TYPE=text NAME=email SIZE=20 VALUE="[init_email]">
       	      password : </b>
               <INPUT TYPE=password NAME=passwd SIZE=8>&nbsp;&nbsp;
               <INPUT TYPE="submit" NAME="action_login" VALUE="Login" SELECTED>
@@ -37,19 +37,19 @@ usare i comandi privilegiati (quelli che richiedono il tuo indirizzo).
 
 <CENTER>
 
-    <FONT COLOR="--DARK_COLOR--"><B>email</B></FONT> &egrave; il tuo indirizzo con cui ti sei iscritto.
-    <FONT COLOR="--DARK_COLOR--"><B>password</B></FONT> &egrave; la tua password.<BR><BR>
+    <FONT COLOR="[dark_color]"><B>email</B></FONT> &egrave; il tuo indirizzo con cui ti sei iscritto.
+    <FONT COLOR="[dark_color]"><B>password</B></FONT> &egrave; la tua password.<BR><BR>
 
 <TABLE border=0><TR>
 <TD>
 <I>Se non hai mai ottenuto una password per questo servizio o l'hai dimenticata:</I>
 </TD><TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="--DARK_COLOR--">
+  <TR ALIGN=center BGCOLOR="[dark_color]">
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
-      <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
       <A HREF="[path_cgi]/nomenu/remindpasswd/referer/[referer]" onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=300')" TARGET="wws_login" >
      <FONT SIZE=-1><B>Mandami la password</B></FONT></A>
      </TD>

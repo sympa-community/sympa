@@ -2,13 +2,13 @@
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 
     <TABLE WIDTH="100%" BORDER="1">
-      <TR BGCOLOR="--DARK_COLOR--">
-        <TH><FONT SIZE="-1" COLOR="--BG_COLOR--"><B>X</B></FONT></TH>
+      <TR BGCOLOR="[dark_color]">
+        <TH><FONT SIZE="-1" COLOR="[bg_color]"><B>X</B></FONT></TH>
         <TH NOWRAP COLSPAN=2 >
-	<FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Email</b></FONT></TH>
-        <TH><FONT COLOR="--BG_COLOR--" SIZE="-1"><B>Name</B></FONT></TH>
+	<FONT COLOR="[bg_color]" SIZE="-1"><b>Email</b></FONT></TH>
+        <TH><FONT COLOR="[bg_color]" SIZE="-1"><B>Name</B></FONT></TH>
         <TH NOWRAP>
-	<FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Date</b></FONT></TH>
+	<FONT COLOR="[bg_color]" SIZE="-1"><b>Date</b></FONT></TH>
       </TR>
       
       [IF subscriptions]
@@ -16,7 +16,7 @@
       [FOREACH sub IN subscriptions]
 
 	[IF dark=1]
-	  <TR BGCOLOR="--SHADED_COLOR--">
+	  <TR BGCOLOR="[shaded_color]">
 	[ELSE]
           <TR>
 	[ENDIF]

@@ -1,4 +1,4 @@
-<!-- RCS Identication ; $Revision$ ; $Date$ -->
+<!-- Rcs Identication ; $Revision$ ; $Date$ -->
 
 <P>
 <TABLE width=100% border="0" VALIGN="top">
@@ -14,11 +14,11 @@
     </FORM>
 </TD>
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+ <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
    <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
      <TR>
-       <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="center" VALIGN="top">
-         <FONT COLOR="--SELECTED_COLOR--" SIZE="-1">
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+         <FONT COLOR="[selected_color]" SIZE="-1">
          <A HREF="[base_url][path_cgi]/add_request/[list]" ><b>Ajout multiple</b></A>
          </FONT>
        </TD>
@@ -27,11 +27,11 @@
  </TABLE>
 </TD>
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+ <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
    <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
      <TR>
-       <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="center" VALIGN="top">
-         <FONT COLOR="--SELECTED_COLOR--" SIZE="-1">
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+         <FONT COLOR="[selected_color]" SIZE="-1">
          <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Êtes-vous sûr de vouloir envoyer un rappel d\'abonnement à chacun des [total] abonnés ?'); return false;"><b>Rappel des abonnements</b></A>
          </FONT>
        </TD>
@@ -101,13 +101,13 @@ La sélection est trop large, impossible d'afficher la sélection
   </TABLE>
 
     <TABLE WIDTH="100%" BORDER="1">
-      <TR BGCOLOR="--LIGHT_COLOR--">
+      <TR BGCOLOR="[light_color]">
 	[IF is_owner]
 	   <TH><FONT SIZE="-1"><B>X</B></FONT></TH>
 	[ENDIF]
         [IF sortby=email]
-  	    <TH NOWRAP COLSPAN=2 BGCOLOR="--SELECTED_COLOR--">
-	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Email</b></FONT>
+  	    <TH NOWRAP COLSPAN=2 BGCOLOR="[selected_color]">
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Email</b></FONT>
 	[ELSE]
 	    <TH NOWRAP COLSPAN=2>
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/email" >
@@ -120,8 +120,8 @@ La sélection est trop large, impossible d'afficher la sélection
 	  <TH><FONT SIZE="-1"><B>Réception</B></FONT>
 	  </TH>
 	  [IF sortby=date]
-  	    <TH NOWRAP BGCOLOR="--SELECTED_COLOR--">
-	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Abonné depuis</b></FONT>
+  	    <TH NOWRAP BGCOLOR="[selected_color]">
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Abonné depuis</b></FONT>
 	  [ELSE]
 	    <TH NOWRAP><FONT SIZE="-1">
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/date" >
@@ -138,7 +138,7 @@ La sélection est trop large, impossible d'afficher la sélection
       [FOREACH u IN members]
 
 	[IF dark=1]
-	  <TR BGCOLOR="--SHADED_COLOR--">
+	  <TR BGCOLOR="[error_color]">
 	[ELSE]
           <TR>
 	[ENDIF]
@@ -161,8 +161,8 @@ La sélection est trop large, impossible d'afficher la sélection
  	        [u->email]
  	      [ENDIF]
 	  </FONT></TD>
-            <TD ALIGN="right"BGCOLOR="--ERROR_COLOR--"><FONT SIZE=-1>
-		<FONT COLOR="--BG_COLOR--"><B>en erreur</B></FONT>
+            <TD ALIGN="right"BGCOLOR="[error_color]"><FONT SIZE=-1>
+		<FONT COLOR="[bg_color]"><B>en erreur</B></FONT>
 	    </TD>
 
 	 [ELSE]

@@ -30,8 +30,8 @@
 	a(z) [list] listáról való leiratkozásodhoz.
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>Email cím</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>Jelszó</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>Email cím</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>Jelszó</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -59,8 +59,8 @@
 	lent a jelszavadat:
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>Email cím</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>Jelszó</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>Email cím</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>Jelszó</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">

@@ -1,11 +1,11 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 <H2>Result of your search in the archive 
-<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="--DARK_COLOR--">[list]</font></a> : </H2>
+<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="[dark_color]">[list]</font></a> : </H2>
 
 <P>Search field : 
 [FOREACH u IN directories]
-<A HREF="[path_cgi]/arc/[list]/[u]"><FONT COLOR="--DARK_COLOR--">[u]</font></a> - 
+<A HREF="[path_cgi]/arc/[list]/[u]"><FONT COLOR="[dark_color]">[u]</font></a> - 
 [END]
 </P>
 
@@ -111,7 +111,7 @@ Parameters of these search make on <b> &quot;[key_word]&quot;</b>
 <INPUT NAME=action_arcsearch_form TYPE=submit VALUE="New search">
 </FORM>
 <HR>
-Based on <Font size=+1 color="--DARK_COLOR--"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font>, search engine of <B>MHonArc</B> archives<p>
+Based on <Font size=+1 color="[dark_color]"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font>, search engine of <B>MHonArc</B> archives<p>
 
 
 <A HREF="[path_cgi]/arc/[list]/[archive_name]"><B>Return to archive [archive_name] 

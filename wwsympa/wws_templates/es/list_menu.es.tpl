@@ -3,28 +3,28 @@
 <!-- begin list_menu.tpl -->
 <TABLE border="0"  CELLPADDING="0" CELLSPACING="0">
  <TR VALIGN="top"><!-- empty line in the left menu panel -->
-  <TD WIDTH="--COL1--" BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
-  <TD WIDTH="--COL2--" BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL1--" BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL2--" BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL3--" ></TD>
   <TD WIDTH="--COL4--" ></TD>
  </TR>
  <TR>
-  <TD WIDTH="--COL1--" BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL1--" BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
 
 <!-- begin -->
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
    <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
     <TR>
-     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+     <TD BGCOLOR="[dark_color]" VALIGN="top">
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
 
       [IF action=info]
-        <TD WIDTH=100% BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right>
-           <font color="--BG_COLOR--" size=-1><b>Info de la lista</b></font>
+        <TD WIDTH=100% BGCOLOR="[selected_color]" NOWRAP align=right>
+           <font color="[bg_color]" size=-1><b>Info de la lista</b></font>
         </TD>
       [ELSE]
-        <TD WIDTH=100% BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+        <TD WIDTH=100% BGCOLOR="[light_color]" NOWRAP align=right>
         <A HREF="[path_cgi]/info/[list]" ><font size=-1><b>Info de la lista</b>
         </font></A>
         </TD>
@@ -41,18 +41,18 @@
   <TD WIDTH=--COL4--></TD>
  </TR>
  <TR><!-- empty line in the left menu panel -->
-  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
  <TR><!-- Panel list info -->
-  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=--COL234-- COLSPAN=3 BGCOLOR="--BG_COLOR--" NOWRAP align=left>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL234-- COLSPAN=3 BGCOLOR="[bg_color]" NOWRAP align=left>
    <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
     <TR>
-     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+     <TD BGCOLOR="[dark_color]" VALIGN="top">
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
-        <TD BGCOLOR="--LIGHT_COLOR--">
+        <TD BGCOLOR="[light_color]">
 	  Suscriptores: <B>[total]</B><BR>
 	  <BR>
 	  Propietarios
@@ -79,30 +79,30 @@
   </TD>
  </TR>
  <TR><!-- empty line in the left menu panel -->
-  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
    [IF is_priv]
  <TR><!-- for listmaster owner and editor -->
-  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
 
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
    <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
     <TR>
-     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+     <TD BGCOLOR="[dark_color]" VALIGN="top">
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
 
    [IF action=admin]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Admin la lista</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Admin la lista</b></font></TD>
    [ELSIF action_type=admin]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right>
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right>
         <b>
-         <A HREF="[path_cgi]/admin/[list]" ><FONT COLOR="--BG_COLOR--" SIZE="-1">Admin la lista</FONT></A>
+         <A HREF="[path_cgi]/admin/[list]" ><FONT COLOR="[bg_color]" SIZE="-1">Admin la lista</FONT></A>
         </b>
         </TD>
    [ELSE]
-        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+        <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
         <font size=-1><b>
          <A HREF="[path_cgi]/admin/[list]" >Admin la lista</A>
         </b></font>
@@ -119,18 +119,18 @@
   <TD WIDTH=--COL4--></TD>
  </TR>
  <TR>
-  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
  <TR><!-- Panel admin info -->
-  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=--COL234-- COLSPAN=3 BGCOLOR="--BG_COLOR--" NOWRAP align=left>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL234-- COLSPAN=3 BGCOLOR="[bg_color]" NOWRAP align=left>
    <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
     <TR>
-     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+     <TD BGCOLOR="[dark_color]" VALIGN="top">
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
-        <TD BGCOLOR="--LIGHT_COLOR--">
+        <TD BGCOLOR="[light_color]">
 	   Ratio de errores : <B>[bounce_rate]%</B><BR>
            <BR>
 	   [if mod_total=0]
@@ -148,7 +148,7 @@
   </TD>
  </TR>
  <TR>
-  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
 
@@ -158,18 +158,18 @@
    <!-- Subscription depending on susbscriber or not, email define or not etc -->
    [IF is_subscriber=1]
  <TR>
-  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
 
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
    <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
     <TR>
-     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+     <TD BGCOLOR="[dark_color]" VALIGN="top">
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
       [IF action=suboptions]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Opciones del Suscriptor</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Opciones del Suscriptor</b></font></TD>
       [ELSE]
-        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+        <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
         <font size=-1><b>
          <A HREF="[path_cgi]/suboptions/[list]" >Opciones del Suscriptor</A>
         </b></font>
@@ -186,7 +186,7 @@
   </TD>
  </TR>
  <TR>
-  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
    [IF may_subscribe<>1]
@@ -195,17 +195,17 @@
    [ENDIF] 
    [IF may_signoff=1] 
  <TR>
-  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
    <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
     <TR>
-     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+     <TD BGCOLOR="[dark_color]" VALIGN="top">
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
       [IF action=signoff]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Darse de baja</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Darse de baja</b></font></TD>
       [ELSE]
-        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+        <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
         <font size=-1><b>
          <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', '¿Confirma su petición de baja de la lista [list]?'); return false;">Darse de baja</A>
         </b></font>
@@ -223,15 +223,15 @@
  </TR>
    [ELSE]
  <TR>
-  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
    <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
     <TR>
-     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+     <TD BGCOLOR="[dark_color]" VALIGN="top">
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
-        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
-        <font size=-1 COLOR="--BG_COLOR--"><b>Darse de baja</b></font>
+        <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
+        <font size=-1 COLOR="[bg_color]"><b>Darse de baja</b></font>
         </TD>
         <TD WIDTH=--COL4--></TD>
        </TR>
@@ -249,23 +249,23 @@
       <!-- else is_subscriber -->
 
  <TR>
-  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
    <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
     <TR>
-     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+     <TD BGCOLOR="[dark_color]" VALIGN="top">
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
    [IF action=subrequest]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Suscribirse</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Suscribirse</b></font></TD>
    [ELSE]
-        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+        <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
    [IF may_subscribe=1]
         <font size=-1><b>
          <A HREF="[path_cgi]/subscribe/[list]" onClick="request_confirm_link('[path_cgi]/subscribe/[list]', '¿Confirma que desea darse de alta en la lista [list]?'); return false;">Suscribirse</A>
         </b></font>
    [ELSE]
-	<font size=-1 COLOR="--BG_COLOR--"><b>Suscribirse</b></font>
+	<font size=-1 COLOR="[bg_color]"><b>Suscribirse</b></font>
    [ENDIF]
         </TD>
    [ENDIF]
@@ -282,19 +282,19 @@
 
    [IF may_signoff]
  <TR>
-  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
  <TR>
-  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
    <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
     <TR>
-     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+     <TD BGCOLOR="[dark_color]" VALIGN="top">
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
 
-        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+        <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
         <font size=-1><b>
          <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', '¿Confirma su petición de baja de la lista [list]?'); return false;">Darse de baja</A>
         </b></font>
@@ -313,43 +313,43 @@
       <!-- END is_subscriber -->
    [ENDIF]
  <TR>
-  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
    [IF is_archived]
  <TR>
-  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
    <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
     <TR>
-     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+     <TD BGCOLOR="[dark_color]" VALIGN="top">
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
    [IF action=arc]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right>
-          <font size=-1 COLOR="--BG_COLOR--"><b>Archivo</b></font>
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right>
+          <font size=-1 COLOR="[bg_color]"><b>Archivo</b></font>
 	</TD>
    [ELSIF action=arcsearch_form]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right>
-          <font size=-1 COLOR="--BG_COLOR--"><b>Archivo</b></font>
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right>
+          <font size=-1 COLOR="[bg_color]"><b>Archivo</b></font>
 	</TD>
    [ELSIF action=arcsearch]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right>
-          <font size=-1 COLOR="--BG_COLOR--"><b>Archivo</b></font>
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right>
+          <font size=-1 COLOR="[bg_color]"><b>Archivo</b></font>
 	</TD>
    [ELSIF action=arc_protect]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right>
-          <font size=-1 COLOR="--BG_COLOR--"><b>Archivo</b></font>
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right>
+          <font size=-1 COLOR="[bg_color]"><b>Archivo</b></font>
 	</TD>
   [ELSE]
 
-        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+        <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
    [IF arc_access]
         <font size=-1><b>
          <A HREF="[path_cgi]/arc/[list]" >Archivo</A>
         </b></font>
    [ELSE]
-        <font size=-1 COLOR="--BG_COLOR--"><b>Archivo</b></font>
+        <font size=-1 COLOR="[bg_color]"><b>Archivo</b></font>
    [ENDIF]
         </TD>
    [ENDIF]
@@ -364,7 +364,7 @@
   <TD WIDTH=--COL4--></TD>
  </TR>
  <TR>
-  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
       <!-- END is_archived -->
@@ -372,26 +372,26 @@
     
  <!-- Post -->
  <TR>
-  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
    <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
     <TR>
-     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+     <TD BGCOLOR="[dark_color]" VALIGN="top">
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
    [IF action=compose_mail]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right>
-          <font size=-1 COLOR="--BG_COLOR--"><b>Redactar</b></font>
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right>
+          <font size=-1 COLOR="[bg_color]"><b>Redactar</b></font>
 	</TD>
   [ELSE]
 
-        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+        <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
    [IF may_post]
         <font size=-1><b>
          <A HREF="[path_cgi]/compose_mail/[list]" >Redactar</A>
         </b></font>
    [ELSE]
-        <font size=-1 COLOR="--BG_COLOR--"><b>Redactar</b></font>
+        <font size=-1 COLOR="[bg_color]"><b>Redactar</b></font>
    [ENDIF]
         </TD>
    [ENDIF]
@@ -406,34 +406,34 @@
   <TD WIDTH=--COL4--></TD>
  </TR>
  <TR>
-  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
       <!-- END post -->
       
     [IF shared=exist]
  <TR>
-  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp; </TD>   
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp; </TD>   
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
    <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
     <TR>
-     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+     <TD BGCOLOR="[dark_color]" VALIGN="top">
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
     [IF action=d_read]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1>
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1>
          <b>Web compartida</b></font>
         </TD>
     [ELSE]
       [IF may_d_read]
-        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+        <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
          <font size=-1><b>
          <A HREF="[path_cgi]/d_read/[list]/" >Web compartida</A>
          </b></font>
         </TD>
       [ELSE]
-        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
-         <font size=-1 COLOR="--BG_COLOR--"><b>Web compartida</b></font>
+        <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
+         <font size=-1 COLOR="[bg_color]"><b>Web compartida</b></font>
         </TD>
       [ENDIF]
     [ENDIF]
@@ -449,21 +449,21 @@
   <TD WIDTH=--COL4--></TD>
  </TR> 
  <TR>
-  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
     [ENDIF]
 
     [IF may_review]
  <TR>
-  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
    <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
     <TR>
-     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+     <TD BGCOLOR="[dark_color]" VALIGN="top">
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
-        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+        <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
          <font size=-1><b>
          <A HREF="[path_cgi]/review/[list]" >Revisar</A>
          </b></font>
@@ -477,7 +477,7 @@
   <TD WIDTH=--COL4--></TD>
  </TR>
  <TR>
-  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
     [ENDIF]

@@ -10,13 +10,13 @@ Esta contraseña le permitirá acceder a funciones especiales.
 [IF init_passwd]
   <INPUT TYPE="hidden" NAME="passwd" VALUE="[user->password]">
 [ELSE]
-  <FONT COLOR="--DARK_COLOR--">Contraseña actual: </FONT>
+  <FONT COLOR="[dark_color]">Contraseña actual: </FONT>
   <INPUT TYPE="password" NAME="passwd" SIZE=15>
 [ENDIF]
 
-<BR><BR><FONT COLOR="--DARK_COLOR--">Contraseña nueva: </FONT>
+<BR><BR><FONT COLOR="[dark_color]">Contraseña nueva: </FONT>
 <INPUT TYPE="password" NAME="newpasswd1" SIZE=15>
-<BR><BR><FONT COLOR="--DARK_COLOR--">Contraseña nueva (repetir): </FONT> 
+<BR><BR><FONT COLOR="[dark_color]">Contraseña nueva (repetir): </FONT> 
 <INPUT TYPE="password" NAME="newpasswd2" SIZE=15>
 <BR><BR><INPUT TYPE="submit" NAME="action_setpasswd" VALUE="Aceptar">
 

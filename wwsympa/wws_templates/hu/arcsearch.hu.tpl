@@ -1,11 +1,11 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 <H2>Találatok a(z) 
-<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="--DARK_COLOR--">[list]</font></a> archívumban: </H2>
+<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="[dark_color]">[list]</font></a> archívumban: </H2>
 
 <P>Keresési tartomány: 
 [FOREACH u IN directories]
-<A HREF="[path_cgi]/arc/[list]/[u]"><FONT COLOR="--DARK_COLOR--">[u]</font></a> - 
+<A HREF="[path_cgi]/arc/[list]/[u]"><FONT COLOR="[dark_color]">[u]</font></a> - 
 [END]
 </P>
 
@@ -111,7 +111,7 @@ Megadott paraméterek a keresésben a(z) <b> &quot;[key_word]&quot;</b> kulcsszava
 <INPUT NAME=action_arcsearch_form TYPE=submit VALUE="Új keresés">
 </FORM>
 <HR>
-Keresést az archívumban a <b>MHonArc</b> keresõ programja, a <Font size=+1 color="--DARK_COLOR--"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font> végezte.<p>
+Keresést az archívumban a <b>MHonArc</b> keresõ programja, a <Font size=+1 color="[dark_color]"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font> végezte.<p>
 
 
 <A HREF="[path_cgi]/arc/[list]/[archive_name]"><B>Vissza a(z) [archive_name] archívumhoz

@@ -234,10 +234,14 @@ sub load {
 ## load each virtual robots configuration files
 sub load_robots {
     
-    do_log('info', "load_robots"); 
+    do_log('debug', "load_robots"); 
+
+    printf STDERR  "1xxxxxxxxx load_robots\n";
 
     my %robot_conf ;
-    my %valid_robot_key_words = ( 'http_host' => ' ', listmaster => ' ', 'title' => ' ',
+    my %valid_robot_key_words = ( 'http_host' => ' ', 
+				  listmaster => ' ', 'title' => ' ',
+				  default_home => 'home',
 				  dark_color      =>       ' ',
 				  light_color     =>       ' ',
 				  text_color      =>       ' ', 

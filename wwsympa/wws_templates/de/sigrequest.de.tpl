@@ -32,8 +32,8 @@
 	Mailing-Liste [list].
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>EMail-Adresse</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>Passwort</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>EMail-Adresse</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>Passwort</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -60,8 +60,8 @@
 	zur Best&auml;tigung Ihrer Abmeldung f&uer die Liste [list] ein.
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>EMail-Adresse</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>Passwort</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>EMail-Adresse</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>Passwort</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">

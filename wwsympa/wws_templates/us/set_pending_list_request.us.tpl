@@ -4,16 +4,16 @@
 
 <BR>
 <TABLE BORDER=0 WIDTH=100% >
-<TR BGCOLOR="--LIGHT_COLOR--">
+<TR BGCOLOR="[light_color]">
 <TD>
 <TABLE BORDER=0 WIDTH=100% >
-<TR BGCOLOR="--LIGHT_COLOR--">
+<TR BGCOLOR="[light_color]">
  <TD><B>Listname :</B></TD><TD WIDTH=100% >[list]</TD>
 </TR>
-<TR BGCOLOR="--LIGHT_COLOR--">
+<TR BGCOLOR="[light_color]">
  <TD><B>Subject : </B></TD><TD WIDTH=100%>[list_subject]</TD>
 </TR>
-<TR BGCOLOR="--LIGHT_COLOR--">
+<TR BGCOLOR="[light_color]">
  <TD NOWRAP><B>List requested by </B></TD><TD WIDTH=100%>[list_request_by] <B>on</B> [list_request_date]</TD>
 </TR>
 </TABLE>

@@ -25,10 +25,10 @@ privileged operation (one that requires your email address).
 	<INPUT TYPE="hidden" NAME="nomenu" VALUE="[nomenu]">
 
         <TABLE BORDER=0 width=100% CELLSPACING=0 CELLPADDING=0>
-         <TR BGCOLOR="--LIGHT_COLOR--">
+         <TR BGCOLOR="[light_color]">
           <TD NOWRAP align=center>
      	      <INPUT TYPE=hidden NAME=list VALUE="[list]">
-     	      <FONT SIZE=-1 COLOR="--SELECTED_COLOR--"><b>email <INPUT TYPE=text NAME=email SIZE=20 VALUE="[init_email]">
+     	      <FONT SIZE=-1 COLOR="[selected_color]"><b>email <INPUT TYPE=text NAME=email SIZE=20 VALUE="[init_email]">
       	      password : </b>
               <INPUT TYPE=password NAME=passwd SIZE=8>&nbsp;&nbsp;
               <INPUT TYPE="submit" NAME="action_login" VALUE="Login" SELECTED>
@@ -47,11 +47,11 @@ privileged operation (one that requires your email address).
 <I>If you never had a password from that server or if you don't remember it :</I>
 </TD><TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="--DARK_COLOR--">
+  <TR ALIGN=center BGCOLOR="[dark_color]">
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
-      <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
       [IF escaped_init_email]
          <A HREF="[path_cgi]/nomenu/sendpasswd/[escaped_init_email]"
       [ELSE]

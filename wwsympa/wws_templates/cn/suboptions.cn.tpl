@@ -2,7 +2,7 @@
 
   <FORM ACTION="[path_cgi]" METHOD=POST>
 
-  您于<FONT COLOR="--DARK_COLOR--">[subscriber->date]</FONT>其开始订阅  <BR><BR>
+  您于<FONT COLOR="[dark_color]">[subscriber->date]</FONT>其开始订阅  <BR><BR>
      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
      接收模式: 
      <SELECT NAME="reception">

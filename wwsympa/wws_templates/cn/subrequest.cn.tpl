@@ -21,8 +21,8 @@
 	检查您的邮件箱，然后在下面输入口令。这将确认您订阅邮递表 [list]。
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>e-mail address</B> </FONT>[email]<BR>
-	  <FONT COLOR="--DARK_COLOR--"><B>口令</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>e-mail address</B> </FONT>[email]<BR>
+	  <FONT COLOR="[dark_color]"><B>口令</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -36,7 +36,7 @@
   [ELSIF status=notauth_noemail]
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>您的电子邮件地址</B> 
+          <FONT COLOR="[dark_color]"><B>您的电子邮件地址</B> 
 	  <INPUT  NAME="email" SIZE="30"><BR>
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="action" VALUE="subrequest">
@@ -49,8 +49,8 @@
 	为了确认您订阅邮递表 [list]，请在下面输入您的口令:
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>电子邮件地址</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>口令</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>电子邮件地址</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>口令</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -62,7 +62,7 @@
 
   [ELSIF status=notauth_subscriber]
 
-	<FONT COLOR="--DARK_COLOR--"><B>您已经订阅了邮递表 [list]。
+	<FONT COLOR="[dark_color]"><B>您已经订阅了邮递表 [list]。
 	</FONT>
 	<BR><BR>
 

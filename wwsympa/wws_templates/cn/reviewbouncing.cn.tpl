@@ -57,12 +57,12 @@
     </TABLE>
 
     <TABLE WIDTH="100%" BORDER=1>
-      <TR BGCOLOR="--ERROR_COLOR--" NOWRAP>
-	<TH><FONT COLOR="--BG_COLOR--">X</FONT></TH>
-        <TH><FONT COLOR="--BG_COLOR--">邮件</FONT></TH>
-	<TH><FONT COLOR="--BG_COLOR--">退信计数</FONT></TH>
-	<TH><FONT COLOR="--BG_COLOR--">间隔</FONT></TH>
-	<TH NOWRAP><FONT COLOR="--BG_COLOR--">类型</FONT></TH>
+      <TR BGCOLOR="[error_color]" NOWRAP>
+	<TH><FONT COLOR="[bg_color]">X</FONT></TH>
+        <TH><FONT COLOR="[bg_color]">邮件</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">退信计数</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">间隔</FONT></TH>
+	<TH NOWRAP><FONT COLOR="[bg_color]">类型</FONT></TH>
       </TR>
       
       [FOREACH u IN members]

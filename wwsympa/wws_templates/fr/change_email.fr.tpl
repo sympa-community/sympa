@@ -6,7 +6,7 @@ le mot de passe reçu par mail :
 
 <FORM ACTION="[path_cgi]" METHOD=POST>
     <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
-    <FONT COLOR="--DARK_COLOR--">Mot de passe pour [email]: </FONT>
+    <FONT COLOR="[dark_color]">Mot de passe pour [email]: </FONT>
     <BR>&nbsp;&nbsp;&nbsp;<INPUT TYPE="password" NAME="password" SIZE=15>
     <BR><BR><INPUT TYPE="submit" NAME="action_change_email" VALUE="Valider le changement">
 </FORM>

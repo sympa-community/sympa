@@ -2,8 +2,8 @@
 
   <FORM ACTION="[path_cgi]" METHOD=POST>
 
-  Vous êtes inscrit(e) depuis <FONT COLOR="--DARK_COLOR--">[subscriber->date]</FONT>  <BR><BR>
-  Dernière mise à jour : <FONT COLOR="--DARK_COLOR--">[subscriber->update_date]</FONT>  <BR><BR>
+  Vous êtes inscrit(e) depuis <FONT COLOR="[dark_color]">[subscriber->date]</FONT>  <BR><BR>
+  Dernière mise à jour : <FONT COLOR="[dark_color]">[subscriber->update_date]</FONT>  <BR><BR>
      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
      Mode de réception : 
      <SELECT NAME="reception">

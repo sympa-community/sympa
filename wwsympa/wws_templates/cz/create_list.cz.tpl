@@ -8,7 +8,7 @@ Mù¾ete nyní zmìnit její parametry pomoci tlaèítka <B>Admin</B>.
 Aliasy jsou nainstalovány.
 [ELSE]
  <TABLE BORDER=1>
- <TR BGCOLOR="--LIGHT_COLOR--"><TD align=center>Vy¾adované aliasy</TD></TR>
+ <TR BGCOLOR="[light_color]"><TD align=center>Vy¾adované aliasy</TD></TR>
  <TR>
  <TD>
  <pre><code>

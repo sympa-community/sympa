@@ -4,7 +4,7 @@
 
   <table>
     <tr>
-      <td>Está suscrito desde el</td><td><FONT COLOR="--DARK_COLOR--">[subscriber->date]</FONT></td>
+      <td>Está suscrito desde el</td><td><FONT COLOR="[dark_color]">[subscriber->date]</FONT></td>
     </tr>
     <tr>      
       <td>Sistema de recepción :</td> 

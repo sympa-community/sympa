@@ -30,8 +30,8 @@
 	la password. Questo confermer&agrave; la cancellazione della tua sottoscrizione alla lista [list].
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>indirizzo e-mail</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>password</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>indirizzo e-mail</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>password</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -53,8 +53,8 @@
 	la password :
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>indirizzo e-mail</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>password</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>indirizzo e-mail</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>password</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">

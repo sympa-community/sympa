@@ -1,7 +1,7 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
     <BR><P> 
-<TABLE BORDER=0 BGCOLOR="--LIGHT_COLOR--"><TR><TD>
+<TABLE BORDER=0 BGCOLOR="[light_color]"><TR><TD>
 <P align=justify>
 This server provides you access to your environment on mailing list server [conf->email]@[conf->host]. Starting from this URL, you can perform subscription options, unsubscription,
 archives, list management and so on.
@@ -12,8 +12,8 @@ archives, list management and so on.
 <CENTER>
 <TABLE BORDER=0>
  <TR>
-  <TH BGCOLOR="--SELECTED_COLOR--">
-   <FONT COLOR="--BG_COLOR--">Mailing lists</FONT>
+  <TH BGCOLOR="[selected_color]">
+   <FONT COLOR="[bg_color]">Mailing lists</FONT>
   </TH>
  </TR>
  <TR>
@@ -44,11 +44,11 @@ archives, list management and so on.
    <TR>
 <TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="--DARK_COLOR--">
+  <TR ALIGN=center BGCOLOR="[dark_color]">
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
-      <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
       <A HREF="[path_cgi]/lists" >
      <FONT SIZE=-1><B>view all lists</B></FONT></A>
      </TD>
@@ -76,9 +76,9 @@ archives, list management and so on.
 
 [IF ! user->email]
 <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="0" VALIGN="top">
-   <TR><TD BGCOLOR="--DARK_COLOR--">
+   <TR><TD BGCOLOR="[dark_color]">
           <TABLE BORDER="0" WIDTH="100%"  VALIGN="top"> 
-              <TR><TD BGCOLOR="--BG_COLOR--">
+              <TR><TD BGCOLOR="[bg_color]">
 [PARSE '--ETCBINDIR--/wws_templates/loginbanner.us.tpl']
 </TD></TR></TABLE>
 </TD></TR></TABLE>

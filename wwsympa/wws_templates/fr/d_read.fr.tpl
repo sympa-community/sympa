@@ -21,9 +21,9 @@
   [ENDIF]
    
   <TABLE width=100% CELLPADDING="0">
-  <TR BGCOLOR="--DARK_COLOR--">
+  <TR BGCOLOR="[dark_color]">
    
-  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="--BG_COLOR--">Document</font></TD>
+  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="[bg_color]">Document</font></TD>
   [IF  order_by<>order_by_doc]  
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">  
@@ -38,7 +38,7 @@
   </TR></TABLE>
   </th>
   
-  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="--BG_COLOR--">Auteur</font></TD>
+  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="[bg_color]">Auteur</font></TD>
   [IF  order_by<>order_by_author]  
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">  
@@ -53,7 +53,7 @@
   </TR></TABLE>
   </th> 
 
-  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="--BG_COLOR--">Taille (Ko)</font></TD>
+  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="[bg_color]">Taille (Ko)</font></TD>
   [IF order_by<>order_by_size] 
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -68,7 +68,7 @@
   </TR></TABLE>   
   </th> 
 
-  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="--BG_COLOR--">Mise à jour</font></TD>
+  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="[bg_color]">Mise à jour</font></TD>
   [IF order_by<>order_by_date]
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -83,18 +83,18 @@
   </TR></TABLE>  
   </th> 
 
-  <TD ALIGN="center"><font color="--BG_COLOR--">Editer</font></TD> 
-  <TD ALIGN="center"><font color="--BG_COLOR--">Supprimer</font></TD>
-  <TD ALIGN="center"><font color="--BG_COLOR--">Accès</font></TD></TR>
+  <TD ALIGN="center"><font color="[bg_color]">Editer</font></TD> 
+  <TD ALIGN="center"><font color="[bg_color]">Supprimer</font></TD>
+  <TD ALIGN="center"><font color="[bg_color]">Accès</font></TD></TR>
       
   [IF empty]
-    <TR BGCOLOR="--LIGHT_COLOR--">
+    <TR BGCOLOR="[light_color]">
     <TD COLSPAN=8 ALIGN="center"> Dossier vide </TD>
     </TR>
   [ELSE]   
     [IF sort_subdirs]
       [FOREACH s IN sort_subdirs] 
-        <TR BGCOLOR="--LIGHT_COLOR--">        
+        <TR BGCOLOR="[light_color]">        
 	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[escaped_path][s->escaped_doc]/"> 
 	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]" ALT="[s->title]"> [s->doc]</A></TD>
 	<TD>
@@ -141,7 +141,7 @@
 
     [IF sort_files]
       [FOREACH f IN sort_files]
-        <TR BGCOLOR="--LIGHT_COLOR--"> 
+        <TR BGCOLOR="[light_color]"> 
         <TD NOWRAP>
         [IF f->html]
 	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]" TARGET="html_window">

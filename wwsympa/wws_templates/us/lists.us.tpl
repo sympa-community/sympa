@@ -10,10 +10,10 @@
    [FOREACH l IN which]
      <TR>
      [IF l->admin]
-       <TD BGCOLOR="--DARK_COLOR--">
+       <TD BGCOLOR="[dark_color]">
           <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="1">
-           <TR><TD BGCOLOR="--LIGHT_COLOR--" ALIGN="center" VALIGN="top">
-             <FONT COLOR="--SELECTED_COLOR--" SIZE="-1">
+           <TR><TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+             <FONT COLOR="[selected_color]" SIZE="-1">
               <A HREF="[base_url][path_cgi]/admin/[l->NAME]" ><b>admin</b></A>
          </FONT>
        </TD>

@@ -96,7 +96,7 @@ A {
   </TITLE>
 </HEAD>
 
-<BODY bgcolor="--BG_COLOR--" text="--TEXT_COLOR--" link="--SELECTED_COLOR--" vlink="--SELECTED_COLOR--" 
+<BODY bgcolor="[bg_color]" text="[text_color]" link="[selected_color]" vlink="[selected_color]" 
 onLoad="
 [IF cookie_set]
 check_cookie(); 
@@ -109,9 +109,9 @@ setTimeout('refresh_mom_and_die()',1000);
 [IF nomenu]
     [IF errors]
           <TABLE>
-          <TR BGCOLOR="--ERROR_COLOR--">
+          <TR BGCOLOR="[error_color]">
             <TD>
-              <FONT COLOR="--BG_COLOR--">
+              <FONT COLOR="[bg_color]">
        [PARSE error_template]
        </FONT>
             </TD>
@@ -120,9 +120,9 @@ setTimeout('refresh_mom_and_die()',1000);
     [ENDIF]
     [IF notices]
           <TABLE>
-          <TR BGCOLOR="--SHADED_COLOR--">
+          <TR BGCOLOR="[shaded_color]">
             <TD>
-              <FONT COLOR="--TEXT_COLOR--">
+              <FONT COLOR="[text_color]">
        [PARSE notice_template]
        </FONT>
             </TD>
@@ -146,9 +146,9 @@ setTimeout('refresh_mom_and_die()',1000);
         <TD WIDTH="100%">
       [IF errors]
             <TABLE>
-            <TR BGCOLOR="--ERROR_COLOR--">
+            <TR BGCOLOR="[error_color]">
               <TD>
-                <FONT COLOR="--BG_COLOR--">
+                <FONT COLOR="[bg_color]">
 	        [PARSE error_template]
 	        </FONT>
               </TD>
@@ -157,9 +157,9 @@ setTimeout('refresh_mom_and_die()',1000);
       [ENDIF]
       [IF notices]
             <TABLE>
-            <TR BGCOLOR="--SHADED_COLOR--">
+            <TR BGCOLOR="[shaded_color]">
               <TD>
-                <FONT COLOR="--TEXT_COLOR--">
+                <FONT COLOR="[text_color]">
 	        [PARSE notice_template]
 	        </FONT>
               </TD>
@@ -167,7 +167,7 @@ setTimeout('refresh_mom_and_die()',1000);
             </TABLE>
       [ENDIF]
 
-            <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="0" VALIGN="top"><TR><TD BGCOLOR="--DARK_COLOR--">
+            <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="0" VALIGN="top"><TR><TD BGCOLOR="[dark_color]">
             <TABLE BORDER="0" WIDTH="100%"  VALIGN="top">
 
       [IF action_type=admin]
@@ -175,7 +175,7 @@ setTimeout('refresh_mom_and_die()',1000);
                 [PARSE admin_menu_template]
             </TR>
             <TR VALIGN="top">
-               <TD colspan="7" BGCOLOR="--BG_COLOR--" >
+               <TD colspan="7" BGCOLOR="[bg_color]" >
                  [IF active]
                    [PARSE action_template]
                  [ENDIF]
@@ -183,7 +183,7 @@ setTimeout('refresh_mom_and_die()',1000);
             </TR>
 	  
           [ELSE]
-            <TR VALIGN="top"><TD BGCOLOR="--BG_COLOR--">
+            <TR VALIGN="top"><TD BGCOLOR="[bg_color]">
             [IF active]
               [PARSE action_template]
             [ENDIF]

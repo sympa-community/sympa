@@ -66,7 +66,7 @@
  </TR>
 
 <TR><TD COLSPAN=2 ALIGN="center">
-<TABLE><TR><TD BGCOLOR="--LIGHT_COLOR--">
+<TABLE><TR><TD BGCOLOR="[light_color]">
 <INPUT TYPE="submit" NAME="action_create_list" VALUE="Spedisci la tua richiesta di creazione"></TD></TR></TABLE
 </TD></TR>
 </TABLE>

@@ -4,16 +4,16 @@
 
 <BR>
 <TABLE BORDER=0 WIDTH=100% >
-<TR BGCOLOR="--LIGHT_COLOR--">
+<TR BGCOLOR="[light_color]">
 <TD>
 <TABLE BORDER=0 WIDTH=100% >
-<TR BGCOLOR="--LIGHT_COLOR--">
+<TR BGCOLOR="[light_color]">
  <TD><B>Nome della lista :</B></TD><TD WIDTH=100% >[list]</TD>
 </TR>
-<TR BGCOLOR="--LIGHT_COLOR--">
+<TR BGCOLOR="[light_color]">
  <TD><B>Subject : </B></TD><TD WIDTH=100%>[list_subject]</TD>
 </TR>
-<TR BGCOLOR="--LIGHT_COLOR--">
+<TR BGCOLOR="[light_color]">
  <TD NOWRAP><B>Lista richiesta da </B></TD><TD WIDTH=100%>[list_request_by] <B>il</B> [list_request_date]</TD>
 </TR>
 </TABLE>
@@ -35,7 +35,7 @@
 <INPUT TYPE="radio" NAME="status" VALUE="open">Installala &nbsp;&nbsp;
 </MENU>
 </TD><TD>
-<TD BGCOLOR="--LIGHT_COLOR--">
+<TD BGCOLOR="[light_color]">
 <INPUT TYPE="submit" NAME="action_install_pending_list" VALUE="invia">
 </FORM>
 </TD>

@@ -32,8 +32,8 @@
 	confirm your unsubscription from list [list].
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>e-mail address</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>password</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>e-mail address</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>password</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -60,8 +60,8 @@
 	your password below :
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>e-mail address</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>password</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>e-mail address</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>password</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">

@@ -9,7 +9,7 @@ Vous pouvez la configurer via le bouton <b>admin</b> ci-contre.
 Les alias ont été installés.
 [ELSE]
  <TABLE BORDER=1>
- <TR BGCOLOR="--LIGHT_COLOR--"><TD align=center>Les alias à installer </TD></TR>
+ <TR BGCOLOR="[light_color]"><TD align=center>Les alias à installer </TD></TR>
  <TR>
  <TD>
  <pre><code>

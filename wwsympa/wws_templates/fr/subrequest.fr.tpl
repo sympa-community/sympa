@@ -23,8 +23,8 @@
         ici dès sa réception.<BR>
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>adresse de messagerie</B> </FONT>[email]<BR>
-	  <FONT COLOR="--DARK_COLOR--"><B>mot de passe </B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>adresse de messagerie</B> </FONT>[email]<BR>
+	  <FONT COLOR="[dark_color]"><B>mot de passe </B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -38,7 +38,7 @@
   [ELSIF status=notauth_noemail]
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>Votre adresse de messagerie :</B> 
+          <FONT COLOR="[dark_color]"><B>Votre adresse de messagerie :</B> 
 	  <INPUT  NAME="email" SIZE="30"><BR>
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="action" VALUE="subrequest">
@@ -52,8 +52,8 @@
         votre mot de passe :
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>Adresse de messagerie</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>mot de passe</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>Adresse de messagerie</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>mot de passe</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -66,7 +66,7 @@
 
   [ELSIF status=notauth_subscriber]
 
-	<FONT COLOR="--DARK_COLOR--"><B>Vous êtes déjà abonné à la liste [list].
+	<FONT COLOR="[dark_color]"><B>Vous êtes déjà abonné à la liste [list].
 	</FONT>
 	<BR><BR>
 

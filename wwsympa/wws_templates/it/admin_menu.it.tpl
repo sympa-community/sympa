@@ -1,25 +1,25 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 <!-- begin admin_menu.it.tpl -->
-    <TD BGCOLOR="--SELECTED_COLOR--" ALIGN="CENTER" COLSPAN="7">
-	<FONT COLOR="--BG_COLOR--"><b>Pannello di amministrazione della lista</b></font>
+    <TD BGCOLOR="[selected_color]" ALIGN="CENTER" COLSPAN="7">
+	<FONT COLOR="[bg_color]"><b>Pannello di amministrazione della lista</b></font>
     </TD>
     </TR>
     <TR>
-    <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER">
+    <TD BGCOLOR="[light_color]" ALIGN="CENTER">
        [IF list_conf->status=closed]
 	[IF is_listmaster]
         <A HREF="[base_url][path_cgi]/restore_list/[list]">
           <FONT size="-1"><b>Ripristina la mailing list</b></font></A>
         [ELSE]
-          <FONT size="-1" COLOR="--BG_COLOR--"><b>Ripristina la mailing list</b></font>
+          <FONT size="-1" COLOR="[bg_color]"><b>Ripristina la mailing list</b></font>
         [ENDIF]
        [ELSE]
         <A HREF="[base_url][path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Sei sicuro di voler chiudere la lista [list]?'); return false;"><FONT size=-1><b>Elimina la mailing list</b></font></A>
        [ENDIF]
     </TD>
         
-    <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER">
+    <TD BGCOLOR="[light_color]" ALIGN="CENTER">
 	[IF shared=none]
           <A HREF="[base_url][path_cgi]/d_admin/[list]/create">
              <FONT size=-1><b>Crea uno spazio web condiviso</b></font></A>
@@ -36,22 +36,22 @@
     </TD>
 
     [IF action=edit_list_request]
-    <TD BGCOLOR="--SELECTED_COLOR--" ALIGN="CENTER">
-      <FONT size="-1" COLOR="--BG_COLOR--"><b>Modifica la configurazione della lista</b></FONT>
+    <TD BGCOLOR="[selected_color]" ALIGN="CENTER">
+      <FONT size="-1" COLOR="[bg_color]"><b>Modifica la configurazione della lista</b></FONT>
     </TD>
     [ELSE]
-    <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER">
+    <TD BGCOLOR="[light_color]" ALIGN="CENTER">
 	<A HREF="[path_cgi]/edit_list_request/[list]">
           <FONT size="-1"><b>Modifica la configurazione della lista</b></FONT></A>
     </TD>
     [ENDIF]
 
     [IF action=review]
-    <TD BGCOLOR="--SELECTED_COLOR--" ALIGN="CENTER">
-       <FONT size="-1" COLOR="--BG_COLOR--"><b>Utenti iscritti</b></FONT>
+    <TD BGCOLOR="[selected_color]" ALIGN="CENTER">
+       <FONT size="-1" COLOR="[bg_color]"><b>Utenti iscritti</b></FONT>
     </TD>
     [ELSE]
-    <TD BGCOLOR=--LIGHT_COLOR-- ALIGN=CENTER>
+    <TD BGCOLOR=[light_color] ALIGN=CENTER>
        [IF is_owner]
        <A HREF="[base_url][path_cgi]/review/[list]">
        <FONT size="-1"><b>Utenti iscritti</b></FONT></A>
@@ -60,11 +60,11 @@
     [ENDIF]
 
     [IF action=reviewbouncing]
-    <TD BGCOLOR="--SELECTED_COLOR--" ALIGN="CENTER">
-       <FONT size="-1" COLOR="--BG_COLOR--"><b>Messaggi con indirizzo errato</b></FONT>
+    <TD BGCOLOR="[selected_color]" ALIGN="CENTER">
+       <FONT size="-1" COLOR="[bg_color]"><b>Messaggi con indirizzo errato</b></FONT>
     </TD>
     [ELSE]
-    <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER">
+    <TD BGCOLOR="[light_color]" ALIGN="CENTER">
        [IF is_owner]
        <A HREF="[base_url][path_cgi]/reviewbouncing/[list]">
        <FONT size="-1"><b>Messaggi con indirizzo errato</b></FONT></A>
@@ -73,11 +73,11 @@
     [ENDIF]
 
     [IF action=modindex]
-    <TD BGCOLOR="--SELECTED_COLOR--" ALIGN="CENTER">
-       <FONT size="-1" COLOR="--BG_COLOR--"><b>Modera</b></FONT>
+    <TD BGCOLOR="[selected_color]" ALIGN="CENTER">
+       <FONT size="-1" COLOR="[bg_color]"><b>Modera</b></FONT>
     </TD>
     [ELSE]
-    <TD BGCOLOR="--LIGHT_COLOR--" ALIGN=CENTER>
+    <TD BGCOLOR="[light_color]" ALIGN=CENTER>
        [IF is_owner]
        <A HREF="[base_url][path_cgi]/modindex/[list]">
        <FONT size="-1"><b>Modera</b></FONT></A>
@@ -86,11 +86,11 @@
     [ENDIF]
 
     [IF action=editfile]
-    <TD BGCOLOR="--SELECTED_COLOR--" ALIGN="CENTER">
-       <FONT size="-1" COLOR="--BG_COLOR--"><b>Modifica le preferenze</b></FONT>
+    <TD BGCOLOR="[selected_color]" ALIGN="CENTER">
+       <FONT size="-1" COLOR="[bg_color]"><b>Modifica le preferenze</b></FONT>
     </TD>
     [ELSE]
-    <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER">
+    <TD BGCOLOR="[light_color]" ALIGN="CENTER">
        [IF is_owner]
        <A HREF="[base_url][path_cgi]/editfile/[list]">
        <FONT size="-1"><b>Modifica le preferenze</b></FONT></A>

@@ -1,7 +1,7 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
     <BR><P> 
-<TABLE BORDER=0 BGCOLOR="--LIGHT_COLOR--"><TR><TD>
+<TABLE BORDER=0 BGCOLOR="[light_color]"><TR><TD>
 <P align=justify>
 Diese Seiten erm&ouml;glichen Ihnen den Zugang zu Ihren Mailing-List-Einstellungen
 f&uuml;r [conf->email]@[conf->host]. Ausgehend von dieser URL k&ouml;nnen Sie 
@@ -15,8 +15,8 @@ Mailing-Listen-Management, usw.
 <CENTER>
 <TABLE BORDER=0>
  <TR>
-  <TH BGCOLOR="--SELECTED_COLOR--">
-   <FONT COLOR="--BG_COLOR--">Mailing-Listen</FONT>
+  <TH BGCOLOR="[selected_color]">
+   <FONT COLOR="[bg_color]">Mailing-Listen</FONT>
   </TH>
  </TR>
  <TR>
@@ -47,11 +47,11 @@ Mailing-Listen-Management, usw.
    <TR>
 <TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="--DARK_COLOR--">
+  <TR ALIGN=center BGCOLOR="[dark_color]">
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
-      <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
       <A HREF="[path_cgi]/lists" >
      <FONT SIZE=-1><B>Alle Listen ansehen</B></FONT></A>
      </TD>
@@ -79,9 +79,9 @@ Mailing-Listen-Management, usw.
 
 [IF ! user->email]
 <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="0" VALIGN="top">
-   <TR><TD BGCOLOR="--DARK_COLOR--">
+   <TR><TD BGCOLOR="[dark_color]">
           <TABLE BORDER="0" WIDTH="100%"  VALIGN="top"> 
-              <TR><TD BGCOLOR="--BG_COLOR--">
+              <TR><TD BGCOLOR="[bg_color]">
 [PARSE '--ETCBINDIR--/wws_templates/loginbanner.de.tpl']
 </TD></TR></TABLE>
 </TD></TR></TABLE>

@@ -2,7 +2,7 @@
 
   <FORM ACTION="[path_cgi]" METHOD=POST>
 
-  Sie erhalten die Liste seit <FONT COLOR="--DARK_COLOR--">[subscriber->date]</FONT>  <BR><BR>
+  Sie erhalten die Liste seit <FONT COLOR="[dark_color]">[subscriber->date]</FONT>  <BR><BR>
      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
      Zustellungsmodus: 
      <SELECT NAME="reception">

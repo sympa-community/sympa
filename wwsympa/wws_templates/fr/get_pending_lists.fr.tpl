@@ -8,9 +8,9 @@
 <P>
 <TABLE>
  <TR>
-   <TD Colspan=3 bgcolor="--LIGHT_COLOR--"><B>Listes en attentes</B></TD>
+   <TD Colspan=3 bgcolor="[light_color]"><B>Listes en attentes</B></TD>
  </TR>
- <TR bgcolor="--LIGHT_COLOR--">
+ <TR bgcolor="[light_color]">
    <TD><B>Nom de liste</B></TD>
    <TD><B>Object de la liste</B></TD>
    <TD><B>Demandée par </B></TD>

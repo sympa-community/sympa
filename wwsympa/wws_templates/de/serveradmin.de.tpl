@@ -4,7 +4,7 @@
       <TR VALIGN="top">
         <TD NOWRAP>
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
-	    <FONT COLOR="--DARK_COLOR--"><B>Standard-Listen-Templates setzen</B></FONT><BR>
+	    <FONT COLOR="[dark_color]"><B>Standard-Listen-Templates setzen</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [FOREACH f IN lists_default_files]
 	        <OPTION VALUE='[f->NAME]' [f->selected]>[f->complete]
@@ -14,7 +14,7 @@
 	  </FORM>
 
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
-	    <FONT COLOR="--DARK_COLOR--"><B>Listen-Templates f&uuml;r diese Maschine setzen</B></FONT><BR>
+	    <FONT COLOR="[dark_color]"><B>Listen-Templates f&uuml;r diese Maschine setzen</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [FOREACH f IN server_files]
 	        <OPTION VALUE='[f->NAME]' [f->selected]>[f->complete]
@@ -36,7 +36,7 @@
       <TR><TD><A HREF="[path_cgi]/view_translations"><B>Templates anpassen</B></A></TD></TR>
       <TR>
         <TD>
-<FONT COLOR="--DARK_COLOR--"><B>Baue HTML-Archive neu auf</B> basierend auf <CODE>arctxt</CODE>-Verzeichnissen als Eingabe.
+<FONT COLOR="[dark_color]"><B>Baue HTML-Archive neu auf</B> basierend auf <CODE>arctxt</CODE>-Verzeichnissen als Eingabe.
         </TD>
       </TR>
       <TR>
@@ -59,7 +59,7 @@
 
       <TR>
         <TD>
-	  <FONT COLOR="--DARK_COLOR--">
+	  <FONT COLOR="[dark_color]">
 	  <A HREF="[path_cgi]/scenario_test">
 	     <b>Szenarien-Test-Modul</b>
           </A>

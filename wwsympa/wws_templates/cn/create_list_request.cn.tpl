@@ -70,7 +70,7 @@
    <TD COLSPAN=2 ALIGN="center">
     <TABLE>
      <TR>
-      <TD BGCOLOR="--LIGHT_COLOR--">
+      <TD BGCOLOR="[light_color]">
 <INPUT TYPE="submit" NAME="action_create_list" VALUE="提交您的创建请求">
       </TD>
      </TR></TABLE>

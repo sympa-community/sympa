@@ -165,8 +165,8 @@ sub load_config {
     }
 
     # robots <robot_domain>,<http_host>,<robot title>(|<robot_domain>,<http_host>,<robot title>)+
-    foreach my $robot (split /|/, $conf->{'robots'}) {
-	my ($domain,host,$title) = split /,/;
+    foreach my $robot (split /\|/, $conf->{'robots'}) {
+	my ($domain,$host,$title) = split /\,/, $robot  ;
 	$conf->{'robot_domain'}{$host} = $domain;
 	$conf->{'robot_title'}{$domain} = $title;
     }

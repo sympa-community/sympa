@@ -24,8 +24,8 @@
 	password. This will confirm your subrscription to list [list].
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>e-mail address</B> </FONT>[email]<BR>
-	  <FONT COLOR="--DARK_COLOR--"><B>password</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>e-mail address</B> </FONT>[email]<BR>
+	  <FONT COLOR="[dark_color]"><B>password</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -40,7 +40,7 @@
   [ELSIF status=notauth_noemail]
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>Your e-mail address</B> 
+          <FONT COLOR="[dark_color]"><B>Your e-mail address</B> 
 	  <INPUT  NAME="email" SIZE="30"><BR>
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="action" VALUE="subrequest">
@@ -54,8 +54,8 @@
 	your password below :
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>e-mail address</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>password</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>e-mail address</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>password</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -67,7 +67,7 @@
 
   [ELSIF status=notauth_subscriber]
 
-	<FONT COLOR="--DARK_COLOR--"><B>You are already subscriber of list [list].
+	<FONT COLOR="[dark_color]"><B>You are already subscriber of list [list].
 	</FONT>
 	<BR><BR>
 

@@ -10,14 +10,14 @@
 
 
   [IF p->changed=1]
-    <TH WIDTH="100%" BGCOLOR="--ERROR_COLOR--">
+    <TH WIDTH="100%" BGCOLOR="[error_color]">
   [ELSE]
-    <TH WIDTH="100%" BGCOLOR="--DARK_COLOR--">
+    <TH WIDTH="100%" BGCOLOR="[dark_color]">
   [ENDIF]
 
-   <TABLE WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" CELLPADDING="1" CELLSPACING="1"> 
+   <TABLE WIDTH="100%" BGCOLOR="[selected_color]" CELLPADDING="1" CELLSPACING="1"> 
   <TR><TH ALIGN="left" WIDTH="90%">
-   <FONT SIZE="-1" COLOR="--BG_COLOR--">
+   <FONT SIZE="-1" COLOR="[bg_color]">
     [IF p->title]
       [p->title] 
       [IF is_listmaster]      
@@ -32,7 +32,7 @@
       (default)
     [ENDIF]
   [ENDIF]
-  </TH><TH BGCOLOR="--LIGHT_COLOR--">
+  </TH><TH BGCOLOR="[light_color]">
   <A HREF="[path_cgi]/help/editlist#[p->name]" onClick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" TARGET="wws_help"  STYLE="TEXT-DECORATION: NONE"><FONT SIZE="-1">Help</FONT></A>
   </TH></TR></TABLE>
 
@@ -266,7 +266,7 @@
   </DL>
 
   [IF p->default=1]
-    <FONT COLOR="--BG_COLOR--"><B>default</B></FONT>
+    <FONT COLOR="[bg_color]"><B>default</B></FONT>
   [ENDIF]
 
 

@@ -7,7 +7,7 @@
     <TABLE BORDER=0 CELLPADDING=10>
       <TR VALIGN="top">
         <TD COLSPAN=2 NOWRAP>
-    	<FONT COLOR="--DARK_COLOR--"><CENTER><B>Modulo di test degli scenari</b></CENTER></FONT><BR>
+    	<FONT COLOR="[dark_color]"><CENTER><B>Modulo di test degli scenari</b></CENTER></FONT><BR>
         </TD>
       </TR>
       <TR>
@@ -68,7 +68,7 @@
     <TR>
 
 	<TD><INPUT TYPE="submit" NAME="action_scenario_test" VALUE="prova la regola"></TD>
-        <TD bgcolor="--DARK_COLOR--">
+        <TD bgcolor="[dark_color]">
           [IF scenario_action]
              <code>[scenario_condition], [scenario_auth_method] -> [scenario_action]</code>
           [ELSE]

@@ -6,7 +6,7 @@ en el siguiente formulario:
 
 <FORM ACTION="[path_cgi]" METHOD=POST>
     <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
-    <FONT COLOR="--DARK_COLOR--">Contraseña de [email]: </FONT>
+    <FONT COLOR="[dark_color]">Contraseña de [email]: </FONT>
     <BR>&nbsp;&nbsp;&nbsp;<INPUT TYPE="password" NAME="password" SIZE=15>
     <BR><BR><INPUT TYPE="submit" NAME="action_change_email" VALUE="Enviar">
 </FORM>

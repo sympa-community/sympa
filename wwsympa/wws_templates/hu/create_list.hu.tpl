@@ -8,7 +8,7 @@ Az <B>admin</B> gombra kattintva állíthatod be a paramétereit.
 A lista bejegyzések (aliases) elmentve.
 [ELSE]
  <TABLE BORDER=1>
- <TR BGCOLOR="--LIGHT_COLOR--"><TD align=center>Szükséges bejegyzések</TD></TR>
+ <TR BGCOLOR="[light_color]"><TD align=center>Szükséges bejegyzések</TD></TR>
  <TR>
  <TD>
  <pre><code>

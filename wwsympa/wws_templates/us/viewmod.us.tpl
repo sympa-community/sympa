@@ -4,7 +4,7 @@
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="id" VALUE="[id]">
 <TABLE>
-<TR BGCOLOR="--BG_COLOR--"><TD>
+<TR BGCOLOR="[bg_color]"><TD>
   <INPUT TYPE="submit" NAME="action_distribute" VALUE="Distribute">
   <INPUT TYPE="submit" NAME="action_reject.quiet" VALUE="Reject">
   <INPUT TYPE="submit" NAME="action_reject" VALUE="Notified reject">

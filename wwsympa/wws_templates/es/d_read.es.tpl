@@ -31,9 +31,9 @@
   [ENDIF]
    
   <TABLE width=100%>
-  <TR BGCOLOR="--DARK_COLOR--">
+  <TR BGCOLOR="[dark_color]">
    
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Documento</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">Documento</font></TD>
   [IF  order_by<>order_by_doc]  
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">  
@@ -48,7 +48,7 @@
   </TR></TABLE>
   </th>
   
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Autor</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">Autor</font></TD>
   [IF  order_by<>order_by_author]  
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">  
@@ -63,7 +63,7 @@
   </TR></TABLE>
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Tamaño (Kb)</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">Tamaño (Kb)</font></TD>
   [IF order_by<>order_by_size] 
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -78,7 +78,7 @@
   </TR></TABLE>   
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Ult. actualización</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">Ult. actualización</font></TD>
   [IF order_by<>order_by_date]
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -93,19 +93,19 @@
   </TR></TABLE>  
   </th> 
 
-  <th ALIGN="left"><font color="--BG_COLOR--">Descripción</font></th> 
-  <th ALIGN="center"><font color="--BG_COLOR--">Editar</font></th> 
-  <th ALIGN="center"><font color="--BG_COLOR--">Borrar</font></th>
-  <th ALIGN="center"><font color="--BG_COLOR--">Acceso</font></th></TR>
+  <th ALIGN="left"><font color="[bg_color]">Descripción</font></th> 
+  <th ALIGN="center"><font color="[bg_color]">Editar</font></th> 
+  <th ALIGN="center"><font color="[bg_color]">Borrar</font></th>
+  <th ALIGN="center"><font color="[bg_color]">Acceso</font></th></TR>
       
   [IF empty]
-    <TR BGCOLOR="--LIGHT_COLOR--" VALIGN="top">
+    <TR BGCOLOR="[light_color]" VALIGN="top">
     <TD COLSPAN=8 ALIGN="center"> Carpeta vacía</TD>
     </TR>
   [ELSE]   
     [IF sort_subdirs]
       [FOREACH s IN sort_subdirs] 
-        <TR BGCOLOR="--LIGHT_COLOR--">        
+        <TR BGCOLOR="[light_color]">        
 	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[path][s->doc]/"> 
 	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]"> [s->doc]</A></TD>
 	<TD>
@@ -157,7 +157,7 @@
 
     [IF sort_files]
       [FOREACH f IN sort_files]
-        <TR BGCOLOR="--LIGHT_COLOR--"> 
+        <TR BGCOLOR="[light_color]"> 
         <TD>&nbsp;
         [IF f->html]
 	  <A HREF="[path_cgi]/d_read/[list]/[path][f->doc]" TARGET="html_window">

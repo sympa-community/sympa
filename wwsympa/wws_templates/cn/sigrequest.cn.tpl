@@ -28,8 +28,8 @@
 	确认您退订邮递表 [list]。
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>e-mail address</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>口令</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>e-mail address</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>口令</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -54,8 +54,8 @@
 	为了确认您退订邮递表 [list]，请在下面输入您的口令:
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>e-mail address</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>口令</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>e-mail address</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>口令</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">

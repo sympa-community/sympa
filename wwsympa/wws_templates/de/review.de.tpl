@@ -147,7 +147,7 @@ Zu viele Suchergebnisse. Kann Resultate nich anzeigen.
 	 [IF is_owner]
 	    <TD>
 	      [IF action=search]
-	        <INPUT TYPE=checkbox name="email" value="[u->escaped_email]">
+	        <INPUT TYPE=checkbox name="email" value="[u->escaped_email]" CHECKED>
 	      [ELSE]
 	        <INPUT TYPE=checkbox name="email" value="[u->escaped_email]">
 	      [ENDIF]

@@ -87,7 +87,7 @@ my %msgid_table;
 # this loop is run foreach HUP signal received
 my $signal = 0;
 
-while (1) {
+while ($signal ne 'term') { #as long as a SIGTERM is not received }
 
 my $config_file = $main::options{'config'} || '--CONFIG--';
 ## Load configuration file
@@ -228,7 +228,7 @@ if ($main::options{'keepcopy'}) {
 }
 
 
-unless ($signal = 'hup' ) {
+if ($signal ne 'hup' ) {
     ## Put ourselves in background if we're not in debug mode. That method
     ## works on many systems, although, it seems that Unix conceptors have
     ## decided that there won't be a single and easy way to detach a process
@@ -358,7 +358,7 @@ while (!$signal) {
 	}else{
 	    $robot = lc($Conf{'host'});
 	}
-	do_log('debug', "listname %s    robot  %s", $listname,$robot);
+	# do_log('debug', "listname %s    robot  %s", $listname,$robot);
 
 	if ($listname =~ /^(\S+)-(request|owner|editor|subscribe|unsubscribe)$/) {
 	    ($listname, $type) = ($1, $2);
@@ -428,8 +428,7 @@ while (!$signal) {
 ## Disconnect from Database
 List::db_disconnect if ($List::dbh);
 
-last if ($signal = 'term'); 
-}
+} #end of block while ($signal ne 'term'){
 
 do_log('notice', 'Sympa exited normally due to signal');
 unless (unlink $Conf{'pidfile'}) {
@@ -448,12 +447,11 @@ sub sigterm {
 ## When we catch SIGHUP, just change the value of the loop
 ## variable.
 sub sighup {
-    do_log('notice', 'signal HUP received, still processing current task');
     if ($main::options{'mail'}) {
-	do_log('notice', 'signal HUP received, switch of -mail logging option and continue current task');
+	do_log('notice', 'signal HUP received, switch of the "-mail" logging option and continue current task');
 	undef $main::options{'mail'};
     }else{
-	do_log('notice', 'signal HUP received, switch on -mail logging option and continue current task');
+	do_log('notice', 'signal HUP received, switch on the "-mail" logging option and continue current task');
 	$main::options{'mail'} = 1;
     }
     $signal = 'hup';

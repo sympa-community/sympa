@@ -4,7 +4,7 @@
       <TR VALIGN="top">
         <TD NOWRAP>
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
-	    <FONT COLOR="--DARK_COLOR--"><B>设置默认邮递表模板</B></FONT><BR>
+	    <FONT COLOR="[dark_color]"><B>设置默认邮递表模板</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [FOREACH f IN lists_default_files]
 	        <OPTION VALUE='[f->NAME]' [f->selected]>[f->complete]
@@ -14,7 +14,7 @@
 	  </FORM>
 
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
-	    <FONT COLOR="--DARK_COLOR--"><B>设置站点模板</B></FONT><BR>
+	    <FONT COLOR="[dark_color]"><B>设置站点模板</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [FOREACH f IN server_files]
 	        <OPTION VALUE='[f->NAME]' [f->selected]>[f->complete]
@@ -28,7 +28,7 @@
       <TR><TD><A HREF="[path_cgi]/view_translations"><B>定制模板</B></A></TD></TR>
       <TR>
         <TD>
-<FONT COLOR="--DARK_COLOR--">使用<CODE>arctxt</CODE>目录作为输入<B>重建 HTML 归档</B>。
+<FONT COLOR="[dark_color]">使用<CODE>arctxt</CODE>目录作为输入<B>重建 HTML 归档</B>。
         </TD>
       </TR>
       <TR>
@@ -51,7 +51,7 @@
 
       <TR>
         <TD>
-	  <FONT COLOR="--DARK_COLOR--">
+	  <FONT COLOR="[dark_color]">
 	  <A HREF="[path_cgi]/scenario_test">
 	     <b>情景测试模块</b>
           </A>

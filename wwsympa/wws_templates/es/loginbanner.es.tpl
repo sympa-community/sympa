@@ -21,10 +21,10 @@ Para poder utilizar todas las funciones, lo mejor es que se autentifique primero
 	<INPUT TYPE="hidden" NAME="action" VALUE="login">
 
         <TABLE BORDER=0 width=100% CELLSPACING=0 CELLPADDING=0>
-         <TR BGCOLOR="--LIGHT_COLOR--">
+         <TR BGCOLOR="[light_color]">
           <TD NOWRAP align=center>
      	      <INPUT TYPE=hidden NAME=list VALUE="[list]">
-     	      <FONT SIZE=-1 COLOR="--SELECTED_COLOR--"><b>E-mail <INPUT TYPE=text NAME=email SIZE=20 VALUE="[init_email]"> Contraseña : </b>
+     	      <FONT SIZE=-1 COLOR="[selected_color]"><b>E-mail <INPUT TYPE=text NAME=email SIZE=20 VALUE="[init_email]"> Contraseña : </b>
               <INPUT TYPE=password NAME=passwd SIZE=8>&nbsp;&nbsp;
               <INPUT TYPE="submit" NAME="action_login" VALUE="Login" SELECTED>
    	    </TD>
@@ -34,19 +34,19 @@ Para poder utilizar todas las funciones, lo mejor es que se autentifique primero
 
 <CENTER>
 
-    <FONT COLOR="--DARK_COLOR--"><B>E-mail</B></FONT> es su dirección de correo.
-    <FONT COLOR="--DARK_COLOR--"><B>Contraseña</B></FONT> es su contraseña.<BR><BR>
+    <FONT COLOR="[dark_color]"><B>E-mail</B></FONT> es su dirección de correo.
+    <FONT COLOR="[dark_color]"><B>Contraseña</B></FONT> es su contraseña.<BR><BR>
 
 <TABLE border=0><TR>
 <TD>
 <I>Si usted no tiene una contraseña o la ha olvidado :</I>
 </TD><TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="--DARK_COLOR--">
+  <TR ALIGN=center BGCOLOR="[dark_color]">
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
-      <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
       <A HREF="[path_cgi]/nomenu/remindpasswd/referer/[referer]" 
       onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=300')" TARGET="wws_login">
      <FONT SIZE=-1><B>Enviarme una contraseña</B></FONT></A>

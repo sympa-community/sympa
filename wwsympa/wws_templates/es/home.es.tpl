@@ -1,7 +1,7 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
     <BR><P> 
-<TABLE BORDER=0 BGCOLOR="--LIGHT_COLOR--"><TR><TD>
+<TABLE BORDER=0 BGCOLOR="[light_color]"><TR><TD>
 <P align=justify>
 Este servidor le proporciona acceso a su entorno de las listas de correo del servidor [conf->email]@[conf->host]. Desde esta URL, se pueden cambiar subscripciones, opciones, anularlas, acceder a los archivos, etc.
 </P>
@@ -11,8 +11,8 @@ Este servidor le proporciona acceso a su entorno de las listas de correo del ser
 <CENTER>
 <TABLE BORDER=0>
  <TR>
-  <TH BGCOLOR="--SELECTED_COLOR--">
-   <FONT COLOR="--BG_COLOR--">Listas de Correo</FONT>
+  <TH BGCOLOR="[selected_color]">
+   <FONT COLOR="[bg_color]">Listas de Correo</FONT>
   </TH>
  </TR>
  <TR>
@@ -43,11 +43,11 @@ Este servidor le proporciona acceso a su entorno de las listas de correo del ser
    <TR>
 <TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="--DARK_COLOR--">
+  <TR ALIGN=center BGCOLOR="[dark_color]">
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
-      <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
       <A HREF="[path_cgi]/lists" >
      <FONT SIZE=-1><B>ver todas las listas</B></FONT></A>
      </TD>
@@ -75,9 +75,9 @@ Este servidor le proporciona acceso a su entorno de las listas de correo del ser
 
 [IF ! user->email]
 <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="0" VALIGN="top">
-   <TR><TD BGCOLOR="--DARK_COLOR--">
+   <TR><TD BGCOLOR="[dark_color]">
           <TABLE BORDER="0" WIDTH="100%"  VALIGN="top"> 
-              <TR><TD BGCOLOR="--BG_COLOR--">
+              <TR><TD BGCOLOR="[bg_color]">
 [PARSE '--ETCBINDIR--/wws_templates/loginbanner.es.tpl']
 </TD></TR></TABLE>
 </TD></TR></TABLE>

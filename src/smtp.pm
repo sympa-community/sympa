@@ -114,7 +114,7 @@ sub smtpto {
        }
        exit 1; ## Should never get there.
    }
-   if ($main::options{'messages'}) {
+   if ($main::options{'mail'}) {
        $str = "safefork: $Conf{'sendmail'} -oi -odi -oem -f $from ";
        if (ref($rcpt) eq 'SCALAR') {
 	   $str .= $$rcpt;

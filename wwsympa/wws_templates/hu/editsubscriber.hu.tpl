@@ -2,8 +2,8 @@
 
 <FORM ACTION="[path_cgi]" METHOD=POST>
 <TABLE WIDTH="100%" BORDER=0>
-<TR><TH BGCOLOR="--DARK_COLOR--">
-<FONT COLOR="--BG_COLOR--">Információk a listatagokról</FONT>
+<TR><TH BGCOLOR="[dark_color]">
+<FONT COLOR="[bg_color]">Információk a listatagokról</FONT>
 </TH></TR><TR><TD>
 <INPUT TYPE="hidden" NAME="previous_action" VALUE=[previous_action]>
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
@@ -26,8 +26,8 @@
 </DL>
 </TD></TR>
 [IF subscriber->bounce]
-<TR><TH BGCOLOR="--ERROR_COLOR--">
-<FONT COLOR="--BG_COLOR--">Visszapattanó címek</FONT>
+<TR><TH BGCOLOR="[error_color]">
+<FONT COLOR="[bg_color]">Visszapattanó címek</FONT>
 </TD></TR><TR><TD>
 <DL>
 <DD>Állapot: [subscriber->bounce_status] ([subscriber->bounce_code])

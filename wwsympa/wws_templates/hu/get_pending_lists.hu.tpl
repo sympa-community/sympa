@@ -8,9 +8,9 @@
 <P>
 <TABLE>
  <TR>
-   <TD Colspan=3 bgcolor="--LIGHT_COLOR--"><B>Engedélyezésre váró listák</B></TD>
+   <TD Colspan=3 bgcolor="[light_color]"><B>Engedélyezésre váró listák</B></TD>
  </TR>
- <TR bgcolor="--LIGHT_COLOR--">
+ <TR bgcolor="[light_color]">
    <TD><B>A lista neve</B></TD>
    <TD><B>A lista tárgya</B></TD>
    <TD><B>Kérelmezõje</B></TD>

@@ -1,11 +1,11 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 <H2>Résultat de votre recherche dans l'archive
-<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="--DARK_COLOR--">[list]</font></a> : </H2>
+<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="[dark_color]">[list]</font></a> : </H2>
 
 <P>Etendue de la recherche : 
 [FOREACH u IN directories]
-<A HREF="[path_cgi]/arc/[list]/[u]"><FONT COLOR="--DARK_COLOR--">[u]</font></a> - 
+<A HREF="[path_cgi]/arc/[list]/[u]"><FONT COLOR="[dark_color]">[u]</font></a> - 
 [END]
 </P>
 
@@ -111,7 +111,7 @@ Recherche effectuée sur <b> &quot;[key_word]&quot;</b>
 <INPUT NAME=action_arcsearch_form TYPE=submit VALUE="Nouvelle recherche">
 </FORM>
 <HR>
-Recherche basée sur le moteur <Font size=+1 color="--DARK_COLOR--"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font><p>
+Recherche basée sur le moteur <Font size=+1 color="[dark_color]"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font><p>
 
 
 <A HREF="[path_cgi]/arc/[list]/[archive_name]"><B>Retour dans l'archive [archive_name] 

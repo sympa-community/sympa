@@ -25,8 +25,8 @@
 	la password. Questo confermer&agrave; la tua sottoscrizione alla lista [list].
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>indirizzo e-mail</B> </FONT>[email]<BR>
-	  <FONT COLOR="--DARK_COLOR--"><B>password</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>indirizzo e-mail</B> </FONT>[email]<BR>
+	  <FONT COLOR="[dark_color]"><B>password</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -41,7 +41,7 @@
   [ELSIF status=notauth_noemail]
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>Il tuo indirizzo e-mail</B> 
+          <FONT COLOR="[dark_color]"><B>Il tuo indirizzo e-mail</B> 
 	  <INPUT  NAME="email" SIZE="30"><BR>
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="action" VALUE="subrequest">
@@ -55,8 +55,8 @@
 	la password :
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>Indirizzo e-mail</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>password</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>Indirizzo e-mail</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>password</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -68,7 +68,7 @@
 
   [ELSIF status=notauth_subscriber]
 
-	<FONT COLOR="--DARK_COLOR--"><B>Sei gi&agrave; iscritto alla lista [list].
+	<FONT COLOR="[dark_color]"><B>Sei gi&agrave; iscritto alla lista [list].
 	</FONT>
 	<BR><BR>
 

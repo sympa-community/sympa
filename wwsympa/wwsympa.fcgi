@@ -416,7 +416,7 @@ while ($query = &new_loop()) {
     }
     
     ## Action
-    my $action = $in{'action'} || $Conf{'robots'}{$robot}{'default_home'};
+    my $action = $in{'action'} || $Conf{'robots'}{$robot}{'default_home'} || $wwsconf->{'default_home'} ;
 #    $param->{'lang'} = $param->{'user'}{'lang'} || $Conf{'lang'};
     $param->{'remote_addr'} = $ENV{'REMOTE_ADDR'} ;
     $param->{'remote_host'} = $ENV{'REMOTE_HOST'};
@@ -425,7 +425,7 @@ while ($query = &new_loop()) {
 
     ## Session loop
     while ($action) {
-
+	printf STDERR "1xxxxx action : $action\n";
 	unless (&check_param_in()) {
 	    &error_message('wrong_param');
 	    &wwslog('info','Wrong parameters');
@@ -437,7 +437,8 @@ while ($query = &new_loop()) {
 	
 	## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
 	    
-	$param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || $list->{'admin'}{'lang'} || $Conf{'lang'};
+	printf STDERR "1xxxxx lang cookie_lang : $param->{'cookie_lang'}, user :  $param->{'user'}{'lang'} , robot : $Conf{'robots'}{$robot}{'lang'}\n";
+	$param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || $list->{'admin'}{'lang'} || $Conf{'robots'}{$robot}{'lang'} || $Conf{'lang'};
 	&Language::SetLang($param->{'lang'});
 	&POSIX::setlocale(&POSIX::LC_ALL, Msg(14, 1, 'en_US'));
 
@@ -925,7 +926,7 @@ sub check_param_in {
     }
     
     ## listmaster has owner and editor privileges for the list
-    if (&List::is_listmaster($param->{'user'}{'email'}),$robot) {
+    if (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
 	$param->{'is_listmaster'} = 1;
     }
 
@@ -3032,6 +3033,7 @@ sub do_savefile {
 
 	$param->{'filepath'} = "$Conf{'home'}/$list->{'name'}/$in{'file'}";
     }else {
+	printf STDERR "1xxxx  is_listmaster($param->{'user'}{'email'}),$robot)\n";
 	unless (&List::is_listmaster($param->{'user'}{'email'}),$robot) {
 	    &error_message('missing_arg', {'argument' => 'list'});
 	    &wwslog('info','do_savefile: no list');

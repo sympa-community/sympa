@@ -1657,7 +1657,7 @@ sub send_msg {
        }
    }    
 
-    ## xxxx sa  return 0  = Pb  ?
+    ## sa  return 0  = Pb  ?
     unless (@tabrcpt || @tabrcpt_notice || @tabrcpt_txt || @tabrcpt_html || @tabrcpt_url) {
 	&do_log('info', 'No subscriber for sending msg in list %s', $name);
 	return 0;

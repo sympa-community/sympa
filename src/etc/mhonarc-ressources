@@ -51,15 +51,15 @@ thrd1.html
 
 <CENTER>
 <P>
-<FONT COLOR="--DARK_COLOR--" SIZE=+1><B>$mois$ $yyyy$</B></FONT>
+<FONT COLOR="[dark_color]" SIZE=+1><B>$mois$ $yyyy$</B></FONT>
 <HR WIDTH=30%>
 
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="--DARK_COLOR--"><TD>
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="[dark_color]"><TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
 <TR ALIGN=CENTER VALIGN=MIDDLE>
 
 $PREVPGLINK$
-<TD  NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER"><b>$NUMOFMSG$ 
+<TD  NOWRAP BGCOLOR="[light_color]" ALIGN="CENTER"><b>$NUMOFMSG$ 
 [IF lang=fr]
  messages, page n&#176;
 [ELSIF lang=cz]
@@ -74,9 +74,9 @@ $NEXTPGLINK$
 
 </TD>
 
-<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN=CENTER>
+<TD NOWRAP BGCOLOR="[light_color]" ALIGN=CENTER>
 
-<FONT COLOR="--BG_COLOR--" SIZE="-1"><b>
+<FONT COLOR="[bg_color]" SIZE="-1"><b>
 [IF lang=fr]
 Suivi chronologique
 [ELSIF lang=cz]
@@ -110,7 +110,7 @@ Chronological
 <IDXPGEND>
 <HR>
 <P>
-<font size=-1 color="--DARK_COLOR--">
+<font size=-1 color="[dark_color]">
 [IF lang=fr]
 Archives basées sur
 [ELSIF lang=cz]
@@ -153,7 +153,7 @@ Archive powered by
 
 <TIDXPGEND>
 
-<font size=-1 color="--DARK_COLOR--">
+<font size=-1 color="[dark_color]">
 [IF lang=fr]
  Les archives de wwsympa sont basées sur
 [ELSIF lang=cz]
@@ -170,18 +170,18 @@ Archive powered by
 <THEAD>
 <center>
 
-<font color="--DARK_COLOR--" size=+1><b>$mois$ $yyyy$</b></font>
+<font color="[dark_color]" size=+1><b>$mois$ $yyyy$</b></font>
 <HR width=30%>
 
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="--DARK_COLOR--"><TD>
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="[dark_color]"><TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
 <TR ALIGN=CENTER VALIGN=MIDDLE>
 
 $TPREVPGLINK$
-<TD  NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER">page n&#176; $PAGENUM$ / $NUMOFPAGES$</TD>
+<TD  NOWRAP BGCOLOR="[light_color]" ALIGN="CENTER">page n&#176; $PAGENUM$ / $NUMOFPAGES$</TD>
 $TNEXTPGLINK$
 
-<td NOWRAP BGCOLOR="--LIGHT_COLOR--" align="center">
+<td NOWRAP BGCOLOR="[light_color]" align="center">
 <A HREF="mail$PAGENUM$.html" STYLE="TEXT-DECORATION: NONE">
 <font size=-1><b>
 [IF lang=fr]
@@ -196,7 +196,7 @@ Chronological
 </B></FONT></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-<FONT COLOR="--BG_COLOR--" SIZE="-1">
+<FONT COLOR="[bg_color]" SIZE="-1">
 [IF lang=fr]
 <b>Suivi de conversation</b> <i>thread</i> 
 [ELSIF lang=cz]
@@ -292,72 +292,72 @@ Message not availible
 
 <!-- links definition -->
 <PrevPgLink chop>
-<td NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;<A HREF="$PREVPG$" ><FONT FACE=Arial,Helvetica COLOR="--DARK_COLOR--"><IMG SRC="/icons/left.gif" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;<A HREF="$PREVPG$" ><FONT FACE=Arial,Helvetica COLOR="[dark_color]"><IMG SRC="/icons/left.gif" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
 </PrevPgLink>
 
 <PrevPgLinkIA chop>
-<td NOWRAP BGCOLOR="--LIGHT_COLOR--">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="[light_color]">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </PrevPgLinkIA>
 
 <NextPgLink chop>
-<td NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;<A HREF="$NEXTPG$"><FONT FACE=Arial,Helvetica COLOR="--DARK_COLOR--"><IMG SRC="/icons/right.gif" height=20 border=0 align=center></font></A>&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;<A HREF="$NEXTPG$"><FONT FACE=Arial,Helvetica COLOR="[dark_color]"><IMG SRC="/icons/right.gif" height=20 border=0 align=center></font></A>&nbsp;&nbsp;</td>
 </NextPgLink>
 
 <NextPgLinkIA chop>
-<td NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </NextPgLinkIA>
 
 <TPrevPgLink chop>
-<td NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;<A HREF="$TPREVPG$"><FONT FACE=Arial,Helvetica COLOR="--DARK_COLOR--"><IMG SRC="/icons/left.gif" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;<A HREF="$TPREVPG$"><FONT FACE=Arial,Helvetica COLOR="[dark_color]"><IMG SRC="/icons/left.gif" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
 </TPrevPgLink>
 
 <TPrevPgLinkIA chop>
-<td NOWRAP BGCOLOR="--LIGHT_COLOR--">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="[light_color]">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </TPrevPgLinkIA>
 
 <TNextPgLink chop>
-<td NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center" >&nbsp;&nbsp;<A HREF="$TNEXTPG$"><FONT FACE=Arial,Helvetica COLOR="--DARK_COLOR--"><IMG SRC="/icons/right.gif" height=20 border=0 align=center></font></A>&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="[light_color]" ALIGN="center" >&nbsp;&nbsp;<A HREF="$TNEXTPG$"><FONT FACE=Arial,Helvetica COLOR="[dark_color]"><IMG SRC="/icons/right.gif" height=20 border=0 align=center></font></A>&nbsp;&nbsp;</td>
 </TNextPgLink>
 
 <TNextPgLinkIA chop>
-<td NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="[light_color]" ALIGN="center" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </TNextPgLinkIA>
 
 <PREVBUTTON>
-<TD  NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;<A HREF="$PREVMSG$"><IMG SRC="/icons/left.gif" HEIGHT=20 BORDER=0 ALIGN=MIDDLE></A>&nbsp;&nbsp;</TD>
+<TD  NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;<A HREF="$PREVMSG$"><IMG SRC="/icons/left.gif" HEIGHT=20 BORDER=0 ALIGN=MIDDLE></A>&nbsp;&nbsp;</TD>
 </PREVBUTTON>
 
 <PREVBUTTONIA>
-<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </PREVBUTTONIA>
 
 <!-- next message button -->
 
 <NEXTBUTTON>
-<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp<A HREF="$NEXTMSG$"><IMG SRC="/icons/right.gif" height=20 border=0 align=middle></A>&nbsp;&nbsp</td>
+<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp<A HREF="$NEXTMSG$"><IMG SRC="/icons/right.gif" height=20 border=0 align=middle></A>&nbsp;&nbsp</td>
 </NEXTBUTTON>
 
 <NEXTBUTTONIA>
-<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </NEXTBUTTONIA>
 
 
 <TPREVBUTTON>
-<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;<A HREF="$TPREVMSG$"><IMG SRC="/icons/left.gif" height=20 border=0 align=middle></A>&nbsp;&nbsp;</TD>
+<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;<A HREF="$TPREVMSG$"><IMG SRC="/icons/left.gif" height=20 border=0 align=middle></A>&nbsp;&nbsp;</TD>
 </TPREVBUTTON>
 
 <TPREVBUTTONIA>
-<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TPREVBUTTONIA>
 
 <!-- prev message button in thread page -->
 
 <TNEXTBUTTON>
-<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp<A HREF="$TNEXTMSG$"><IMG SRC="/icons/right.gif" height=20 border=0 align=middle></A>&nbsp;&nbsp</td>
+<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp<A HREF="$TNEXTMSG$"><IMG SRC="/icons/right.gif" height=20 border=0 align=middle></A>&nbsp;&nbsp</td>
 </TNEXTBUTTON>
 
 <TNEXTBUTTONIA>
-<TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TNEXTBUTTONIA>
 
 
@@ -369,11 +369,11 @@ Message not availible
 
 <TOPLINKS>
 <center>
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="--DARK_COLOR--"><TD>
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="[dark_color]"><TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
 <TR ALIGN=CENTER VALIGN=MIDDLE>
  $PREVBUTTON$
- <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER"><A HREF="$IDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
+ <TD NOWRAP BGCOLOR="[light_color]" ALIGN="CENTER"><A HREF="$IDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
 [IF lang=fr]
 Chronologie
 [ELSIF lang=cz]
@@ -385,9 +385,9 @@ Chronological
 [ENDIF]
 </B></FONT></A></TD>
 $NEXTBUTTON$ 
-<TD WIDTH=40% BGCOLOR="--LIGHT_COLOR--">&nbsp;</TD>
+<TD WIDTH=40% BGCOLOR="[light_color]">&nbsp;</TD>
 $TPREVBUTTON$ 
-<TD  NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER"><A HREF="$TIDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
+<TD  NOWRAP BGCOLOR="[light_color]" ALIGN="CENTER"><A HREF="$TIDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
 [IF lang=fr]
 Conversation
 [ELSIF lang=cz]
@@ -415,9 +415,9 @@ $TNEXTBUTTON$
 
 <SubjectHeader>
 <TABLE border=0 width=100%>
-<TR bgcolor="--BG_COLOR--">
+<TR bgcolor="[bg_color]">
  <TD Valign=top>
-  <FONT size=+1 COLOR="--DARK_COLOR--"><B> $SUBJECTNA$</B></FONT><FONT size=+1> $FROMNAME$ </FONT>
+  <FONT size=+1 COLOR="[dark_color]"><B> $SUBJECTNA$</B></FONT><FONT size=+1> $FROMNAME$ </FONT>
  </TD>
 
 <TD ALIGN=RIGHT NOWRAP>

@@ -16,9 +16,9 @@
   [ENDIF]
    
   <TABLE width=100%>
-  <TR BGCOLOR="--DARK_COLOR--">
+  <TR BGCOLOR="[dark_color]">
    
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Dokumentumok</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">Dokumentumok</font></TD>
   [IF  order_by<>order_by_doc]  
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">  
@@ -33,7 +33,7 @@
   </TR></TABLE>
   </th>
   
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Szerzõ</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">Szerzõ</font></TD>
   [IF  order_by<>order_by_author]  
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">  
@@ -48,7 +48,7 @@
   </TR></TABLE>
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Méret (Kb)</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">Méret (Kb)</font></TD>
   [IF order_by<>order_by_size] 
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -63,7 +63,7 @@
   </TR></TABLE>   
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Utolsó módosítás</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">Utolsó módosítás</font></TD>
   [IF order_by<>order_by_date]
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -78,19 +78,19 @@
   </TR></TABLE>  
   </th> 
 
-  <TD ALIGN="left"><font color="--BG_COLOR--">Leírás</font></TD> 
-  <TD ALIGN="center"><font color="--BG_COLOR--">Szerkeszt</font></TD> 
-  <TD ALIGN="center"><font color="--BG_COLOR--">Töröl</font></TD>
-  <TD ALIGN="center"><font color="--BG_COLOR--">Hozzáférés</font></TD></TR>
+  <TD ALIGN="left"><font color="[bg_color]">Leírás</font></TD> 
+  <TD ALIGN="center"><font color="[bg_color]">Szerkeszt</font></TD> 
+  <TD ALIGN="center"><font color="[bg_color]">Töröl</font></TD>
+  <TD ALIGN="center"><font color="[bg_color]">Hozzáférés</font></TD></TR>
       
   [IF empty]
-    <TR BGCOLOR="--LIGHT_COLOR--" VALIGN="top">
+    <TR BGCOLOR="[light_color]" VALIGN="top">
     <TD COLSPAN=8 ALIGN="center"> Üres könyvtár </TD>
     </TR>
   [ELSE]   
     [IF sort_subdirs]
       [FOREACH s IN sort_subdirs] 
-        <TR BGCOLOR="--LIGHT_COLOR--">        
+        <TR BGCOLOR="[light_color]">        
 	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[path][s->doc]/"> 
 	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]"> [s->doc]</A></TD>
 	<TD>
@@ -133,7 +133,7 @@
 
     [IF sort_files]
       [FOREACH f IN sort_files]
-        <TR BGCOLOR="--LIGHT_COLOR--"> 
+        <TR BGCOLOR="[light_color]"> 
         <TD>&nbsp;
         [IF f->html]
 	  <A HREF="[path_cgi]/d_read/[list]/[path][f->doc]" TARGET="html_window">

@@ -14,11 +14,11 @@
     </FORM>
 </TD>
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+ <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
    <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
      <TR>
-       <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="center" VALIGN="top">
-         <FONT COLOR="--SELECTED_COLOR--" SIZE="-1">
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+         <FONT COLOR="[selected_color]" SIZE="-1">
          <A HREF="[base_url][path_cgi]/add_request/[list]" ><b>Multiple add</b></A>
          </FONT>
        </TD>
@@ -28,11 +28,11 @@
 </TD>
 
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+ <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
    <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
      <TR>
-       <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="center" VALIGN="top">
-         <FONT COLOR="--SELECTED_COLOR--" SIZE="-1">
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+         <FONT COLOR="[selected_color]" SIZE="-1">
 
          <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Do you really want to send a subscription remind message to the [total] subscribers ?'); return false;"><b>Remind all subscribers</b></A>
 
@@ -107,13 +107,13 @@ Selection too wide, can not show selection
   </TABLE>
 
     <TABLE WIDTH="100%" BORDER="1">
-      <TR BGCOLOR="--LIGHT_COLOR--">
+      <TR BGCOLOR="[light_color]">
 	[IF is_owner]
 	   <TH><FONT SIZE="-1"><B>X</B></FONT></TH>
 	[ENDIF]
         [IF sortby=email]
-  	    <TH NOWRAP COLSPAN=2 BGCOLOR="--SELECTED_COLOR--">
-	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Email</b></FONT>
+  	    <TH NOWRAP COLSPAN=2 BGCOLOR="[selected_color]">
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Email</b></FONT>
 	[ELSE]
 	    <TH NOWRAP COLSPAN=2>
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/email" >
@@ -126,8 +126,8 @@ Selection too wide, can not show selection
 	  <TH><FONT SIZE="-1"><B>Reception</B></FONT>
 	  </TH>
 	  [IF sortby=date]
-  	    <TH NOWRAP BGCOLOR="--SELECTED_COLOR--">
-	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Sub date</b></FONT>
+  	    <TH NOWRAP BGCOLOR="[selected_color]">
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Sub date</b></FONT>
 	  [ELSE]
 	    <TH NOWRAP><FONT SIZE="-1">
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/date" >
@@ -143,7 +143,7 @@ Selection too wide, can not show selection
       
       [FOREACH u IN members]
 	[IF dark=1]
-	  <TR BGCOLOR="--SHADED_COLOR--">
+	  <TR BGCOLOR="[shaded_color]">
 	[ELSE]
           <TR>
 	[ENDIF]
@@ -166,8 +166,8 @@ Selection too wide, can not show selection
  	        [u->email]
  	      [ENDIF]
 	  </FONT></TD>
-            <TD ALIGN="right"BGCOLOR="--ERROR_COLOR--"><FONT SIZE=-1>
-		<FONT COLOR="--BG_COLOR--"><B>bouncing</B></FONT>
+            <TD ALIGN="right"BGCOLOR="[error_color]"><FONT SIZE=-1>
+		<FONT COLOR="[bg_color]"><B>bouncing</B></FONT>
 	    </TD>
 
 	 [ELSE]

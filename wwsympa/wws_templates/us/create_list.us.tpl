@@ -8,7 +8,7 @@ You can configure it via the <B>admin</B> button beside.
 Aliases have been installed.
 [ELSE]
  <TABLE BORDER=1>
- <TR BGCOLOR="--LIGHT_COLOR--"><TD align=center>Required aliases</TD></TR>
+ <TR BGCOLOR="[light_color]"><TD align=center>Required aliases</TD></TR>
  <TR>
  <TD>
  <pre><code>

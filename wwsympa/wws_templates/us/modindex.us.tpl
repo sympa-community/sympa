@@ -3,18 +3,18 @@
   <FORM ACTION="[path_cgi]" METHOD=POST>
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 <TABLE>
-<TR BGCOLOR="--BG_COLOR--"><TD>
+<TR BGCOLOR="[bg_color]"><TD>
   <INPUT TYPE="submit" NAME="action_distribute" VALUE="Distribute">
   <INPUT TYPE="submit" NAME="action_reject.quiet" VALUE="Reject">
   <INPUT TYPE="submit" NAME="action_reject" VALUE="Notified reject">
 </TD></TR></TABLE>  
     <TABLE BORDER="1" WIDTH="100%">
-      <TR BGCOLOR="--DARK_COLOR--">
-	<TH><FONT COLOR="--BG_COLOR--">X</FONT></TH>
-        <TH><FONT COLOR="--BG_COLOR--">Date</FONT></TH>
-	<TH><FONT COLOR="--BG_COLOR--">Author</FONT></TH>
-	<TH><FONT COLOR="--BG_COLOR--">Subject</FONT></TH>
-	<TH><FONT COLOR="--BG_COLOR--">Size</FONT></TH>
+      <TR BGCOLOR="[dark_color]">
+	<TH><FONT COLOR="[bg_color]">X</FONT></TH>
+        <TH><FONT COLOR="[bg_color]">Date</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">Author</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">Subject</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">Size</FONT></TH>
       </TR>	 
       [FOREACH msg IN spool]
         <TR>
@@ -41,7 +41,7 @@
       [END] 
     </TABLE>
 <TABLE>
-<TR BGCOLOR="--BG_COLOR--"><TD>
+<TR BGCOLOR="[bg_color]"><TD>
   <INPUT TYPE="submit" NAME="action_distribute" VALUE="Distribute">
   <INPUT TYPE="submit" NAME="action_reject.quiet" VALUE="Reject">
   <INPUT TYPE="submit" NAME="action_reject" VALUE="Notified reject">

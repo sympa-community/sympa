@@ -8,7 +8,7 @@ Sie k&ouml;nnen sie &uuml;ber den <B>admin</B>-Knopf konfiguriern.
 Mail-Aliase wurden installiert.
 [ELSE]
  <TABLE BORDER=1>
- <TR BGCOLOR="--LIGHT_COLOR--"><TD align=center>Ben&ouml;tigte Mail Aliase</TD></TR>
+ <TR BGCOLOR="[light_color]"><TD align=center>Ben&ouml;tigte Mail Aliase</TD></TR>
  <TR>
  <TD>
  <pre><code>

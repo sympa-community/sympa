@@ -23,8 +23,8 @@
 	listára történõ feliratkozásod megerõsítéséhez.
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>email cím</B> </FONT>[email]<BR>
-	  <FONT COLOR="--DARK_COLOR--"><B>jelszó</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>email cím</B> </FONT>[email]<BR>
+	  <FONT COLOR="[dark_color]"><B>jelszó</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -39,7 +39,7 @@
   [ELSIF status=notauth_noemail]
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>Email címed</B> 
+          <FONT COLOR="[dark_color]"><B>Email címed</B> 
 	  <INPUT  NAME="email" SIZE="30"><BR>
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="action" VALUE="subrequest">
@@ -53,8 +53,8 @@
 	add meg a jelszavadat:
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>Email cím</B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>Jelszó</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>Email cím</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>Jelszó</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -66,7 +66,7 @@
 
   [ELSIF status=notauth_subscriber]
 
-	<FONT COLOR="--DARK_COLOR--"><B>Már tagja vagy a(z) [list] listának.
+	<FONT COLOR="[dark_color]"><B>Már tagja vagy a(z) [list] listának.
 	</FONT>
 	<BR><BR>
 

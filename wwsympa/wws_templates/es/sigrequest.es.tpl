@@ -28,8 +28,8 @@
    Dicha contraseña confirmará su anulación a la lista [list].
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>Dirección E-mail </B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>Contraseña</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>Dirección E-mail </B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>Contraseña</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -53,8 +53,8 @@
 	Para confirmar la anulación de su suscripción a la lista [list], digite la siguiente contraseña:
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="--DARK_COLOR--"><B>E-mail </B> </FONT>[email]<BR>
-            <FONT COLOR="--DARK_COLOR--"><B>Contraseña</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>E-mail </B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>Contraseña</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
