@@ -35,6 +35,30 @@
     self.close()
   }
 
+[IF cookie_set]
+  function GetCookie (name) {
+     var arg = name + "=";
+     var alen = arg.length;
+     var clen = document.cookie.length;
+     var i = 0;
+     while (i < clen) {
+       var j = i + alen;
+       if (document.cookie.substring(i, j) == arg)
+         return getCookieVal (j);
+         i = document.cookie.indexOf(" ", i) + 1;
+         if (i == 0) break; 
+       }
+     return null;
+  }  
+
+  function check_cookie() {
+ 
+     if (GetCookie('sympauser') == null) {
+        alert("Sympa could not set a cookie for login.\n Your should setup your navigator to accept cookies");
+     }
+  }
+[ENDIF]
+
   function toggle_selection(myfield) {
     for (i = 0; i < myfield.length; i++) {
     [STOPPARSE]
@@ -65,11 +89,15 @@ A {
   </TITLE>
 </HEAD>
 
-<BODY bgcolor="--BG_COLOR--" text="--TEXT_COLOR--" link="--SELECTED_COLOR--" vlink="--SELECTED_COLOR--"
-[IF back_to_mom]
-onLoad="setTimeout('refresh_mom_and_die()',1000);"
+<BODY bgcolor="--BG_COLOR--" text="--TEXT_COLOR--" link="--SELECTED_COLOR--" vlink="--SELECTED_COLOR--" 
+onLoad="
+[IF cookie_set]
+check_cookie(); 
 [ENDIF]
->
+[IF back_to_mom]
+setTimeout('refresh_mom_and_die()',1000);
+[ENDIF]
+">
 
 [IF nomenu]
     [IF errors]

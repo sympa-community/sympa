@@ -450,8 +450,12 @@ while ($query = &new_loop()) {
 		$delay = 'session';
 	    }
 
-	    &cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $wwsconf->{'cookie_domain'},$delay ) || exit;
-
+	    unless (&cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $wwsconf->{'cookie_domain'},$delay )) {
+		&wwslog('notice', 'Could not set HTTP cookie');
+		exit -1;
+	    }
+	    $param->{'cookie_set'} = 1;
+	    
 	}elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/){
 	    &cookielib::set_cookie('unknown', $Conf{'cookie'}, $wwsconf->{'cookie_domain'}, 'now');
 	}
