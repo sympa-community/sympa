@@ -1478,6 +1478,7 @@ sub do_sso_login {
     my $host = $Conf{'auth_services'}[$cas_id]{'host'};
     my $login_uri = $Conf{'auth_services'}[$cas_id]{'login_uri'};
     
+    do_log('info',"xxxxxxxxxxxxxxxxxxxyy  auth_service_name : $in{'auth_service_name'} cas_id : $cas_id ");
 
     my $path = '';
     if ($in{'previous_action'}) {

@@ -37,6 +37,33 @@ A cet effet, identifiez-vous de préférence en sélectionnant le serveur d'authent
 
 [IF use_sso]
 <TD valign='top'>
+[IF sso_number = 1]	
+
+    <FORM ACTION="[path_cgi]" METHOD=POST> 
+        <INPUT TYPE="hidden" NAME="previous_action" VALUE="[previous_action]">
+        <INPUT TYPE="hidden" NAME="previous_list" VALUE="[previous_list]">
+	<INPUT TYPE="hidden" NAME="referer" VALUE="[referer]">
+	<INPUT TYPE="hidden" NAME="action" VALUE="sso_login">
+	<INPUT TYPE="hidden" NAME="nomenu" VALUE="[nomenu]">
+	
+
+        <TABLE BORDER=0 width=100% CELLSPACING=0 CELLPADDING=0>
+         <TR BGCOLOR="[light_color]">
+          <TD NOWRAP align=center>
+     	      <INPUT TYPE=hidden NAME=list VALUE="[list]">
+     	      <FONT SIZE=-1 COLOR="[selected_color]"><b>Authentification magique&nbsp;
+
+                [FOREACH server IN sso]
+                   <INPUT TYPE="hidden" NAME="auth_service_name" VALUE="[server->NAME]">
+                [END]
+              </SELECT>
+              <INPUT TYPE="submit" NAME="action_sso_login" VALUE="go" SELECTED>
+
+   	    </TD>
+     	  </TR>
+       </TABLE>
+ </FORM> 
+[ELSE]
     <FORM ACTION="[path_cgi]" METHOD=POST> 
         <INPUT TYPE="hidden" NAME="previous_action" VALUE="[previous_action]">
         <INPUT TYPE="hidden" NAME="previous_list" VALUE="[previous_list]">
@@ -51,25 +78,19 @@ A cet effet, identifiez-vous de préférence en sélectionnant le serveur d'authent
      	      <INPUT TYPE=hidden NAME=list VALUE="[list]">
      	      <FONT SIZE=-1 COLOR="[selected_color]"><b>Choississez le serveur CAS dont vous dépendez 
 
-	[IF sso_number = 1]
-                [FOREACH server IN sso]
-			<INPUT TYPE="hidden" NAME="auth_service_name" VALUE="[server->NAME]">
-                [END]
-              <INPUT TYPE="submit" NAME="action_sso_login" VALUE="Authentification unique" SELECTED>
-	[ELSE]
               <SELECT NAME="auth_service_name" onchange="this.form.submit();">
                 [FOREACH server IN sso]
-                   <OPTION VALUE="[server->NAME]" [server->selected]>[server->NAME]
+                   <OPTION VALUE="[server->NAME]">[server->NAME]
                 [END]
               </SELECT>
               <INPUT TYPE="submit" NAME="action_sso_login" VALUE="Go" SELECTED>
-	[END]
 
 
    	    </TD>
      	  </TR>
        </TABLE>
- </FORM> 
+ </FORM>
+[END] 
 </TD>
 
 [ENDIF]
