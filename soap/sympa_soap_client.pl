@@ -28,38 +28,37 @@ use strict;
 my ($service, $reponse, @ret, $val, %fault);
 
 ## Cookies management
-my $uri = new URI('http://www.cru.fr/wwsoap');
+my $uri = new URI($ARGV[0]);
 
 my $cookies = HTTP::Cookies->new(ignore_discard => 1,
 				 file => '/tmp/my_cookies' );
 $cookies->load();
 printf "%s\n", $cookies->as_string();
 
-#$cookies->set_cookie(0, 'Y_Y_Y_Y' => 'X_X_X_X', '/', 'www.cru.fr');
 
 # Change to the path of Sympa.wsdl
-#$service = SOAP::Lite->service('http://www.cru.fr/wws/wsdl');
-#$reponse = $service->login($ARGV[0],$ARGV[1]);
+#$service = SOAP::Lite->service($ARGV[0]);
+#$reponse = $service->login($ARGV[1],$ARGV[2]);
 
-#my $soap = SOAP::Lite->service('http://www.cru.fr/wws/wsdl');
+#my $soap = SOAP::Lite->service($ARGV[0]);
 
 my $soap = new SOAP::Lite();
 #$soap->on_debug(sub{print@_});
 $soap->uri('urn:sympasoap');
-$soap->proxy('http://www.cru.fr/wwsoap',
+$soap->proxy($ARGV[0],
 	     cookie_jar =>$cookies);
 
 
 print "LOGIN....\n";
 
 #$reponse = $soap->casLogin($ARGV[0]);
-$reponse = $soap->login($ARGV[0],$ARGV[1]);
+$reponse = $soap->login($ARGV[1],$ARGV[2]);
 $cookies->save;
 &print_result($reponse);
 my $md5 = $reponse->result;
 
 print "\n\nAuthenticateAndRun simple which....\n";
-$reponse = $soap->authenticateAndRun($ARGV[0],$md5,'which');
+$reponse = $soap->authenticateAndRun($ARGV[1],$md5,'which');
 &print_result($reponse);
 
 #printf "%s\n", $cookies->as_string();
