@@ -93,16 +93,17 @@ LOCKDIR		=	/var/lock/subsys
 
 ## Path to newaliases command (or what else may be called to rebuild
 ## Mail aliases database)
-NEWALIASES    =       /usr/bin/newaliases
+NEWALIASES    =       @NEWALIASES@
 
 ## Argument to newaliases command
 # NEWALIASES_ARG	=	hash:/etc/mail/sympa_aliases
+NEWALIASES_ARG	=	@NEWALIASES_ARG@
 
 ## The sendmail aliases file we use. Better use a seperate one for sympa.
 ## Of cause a extra alias file must be generated with proper permissions
 ## (owner sympa, write access for sympa, no write access for anyone else)
 ## and declared in sendmail.cf!
-SENDMAIL_ALIASES=     /etc/mail/sympa_aliases
+SENDMAIL_ALIASES=     @SENDMAIL_ALIASES@
 
 ## Path to gencat program (creates the .cat catalog file using the .msg)
 GENCAT	= 	@GENCAT@

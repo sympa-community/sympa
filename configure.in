@@ -58,12 +58,15 @@ AC_PROG_MAKE_SET
 AC_AIX
 
 AC_PATH_PROG(PERL, perl, /usr/bin/perl)
+AC_ARG_WITH(perl, [  --with-perl=FULLPATH       set full path to Perl interpreter (default /usr/bin/perl)], [PERL="$withval"])
 AC_SUBST(PERL)
 
 AC_PATH_PROG(OPENSSL, openssl, /usr/local/ssl/bin)
+AC_ARG_WITH(openssl, [  --with-openssl=FULLPATH       set path to OpenSSL (default /usr/local/ssl/bin/openssl)], [OPENSSL="$withval"])
 AC_SUBST(OPENSSL)
 
 AC_PATH_PROG(GENCAT, gencat, /usr/bin/gencat)
+AC_ARG_WITH(gencat, [  --with-gencat=FULLPATH       set path to gencat (default /usr/bin/gencat)], [GENCAT="$withval"])
 AC_SUBST(GENCAT)
 
 AC_PATH_PROG(CVS2CL, cvs2cl.pl, /usr/local/bin)
@@ -78,6 +81,18 @@ AC_SUBST(USER)
 GROUP=sympa
 AC_ARG_WITH(group, [  --with-group=LOGIN     set sympa group name (default sympa)], [GROUP="$withval"])
 AC_SUBST(GROUP)
+
+SENDMAIL_ALIASES=/etc/mail/sympa_aliases
+AC_ARG_WITH(sendmail_aliases, [  --with-sendmail_aliases=ALIASFILE     set sendmail aliases file to be used by Sympa (default /etc/mail/sympa_aliases)], [SENDMAIL_ALIASES="$withval"])
+AC_SUBST(SENDMAIL_ALIASES)
+
+NEWALIASES=/usr/bin/newaliases
+AC_ARG_WITH(newaliases, [  --with-newaliases=FULLPATH     set path to sendmail newaliases command (default /usr/bin/newaliases)], [NEWALIASES="$withval"])
+AC_SUBST(NEWALIASES)
+
+NEWALIASES_ARG=
+AC_ARG_WITH(newaliases_arg, [  --with-newaliases_arg=ARGS     set arguments to newaliases command (default NONE)], [NEWALIASES_ARG="$withval"])
+AC_SUBST(NEWALIASES_ARG)
 
 dnl Initialize maintainer mode
 AM_MAINTAINER_MODE
