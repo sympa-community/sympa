@@ -1286,7 +1286,7 @@ sub remind {
     return undef
 	unless (defined $action);
 
-    if ($action =~ /reject(\(\'?(\w+)\'?\))/i) {
+    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
 	my $tpl = $2;
 	do_log ('info',"Remind for list $listname from $sender refused");
 	if ($tpl) {
@@ -1294,7 +1294,7 @@ sub remind {
 	}else {
 	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform command %s in list %s\n"),'remind',$listname;
 	}
-	return 0;
+	return 'not_allowed';
     }elsif ($action =~ /request_auth/i) {
 	do_log ('debug2',"auth requested from $sender");
 	if ($listname eq '*') {
