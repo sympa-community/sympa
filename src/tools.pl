@@ -328,7 +328,8 @@ sub get_list_list_tpl {
 	return undef;
     }
     
-    foreach my $dir ('--ETCBINDIR--/create_list_templates', "$Conf{'etc'}/create_list_templates") {
+    foreach my $dir ('--ETCBINDIR--/create_list_templates', "$Conf{'etc'}/create_list_templates",
+		     "$Conf{'etc'}/$robot/create_list_templates") {
 	if (opendir(DIR, $dir)) {
 	    foreach my $template ( sort grep (!/^\./,readdir(DIR))) {
 
