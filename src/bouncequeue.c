@@ -84,7 +84,7 @@ main(int argn, char **argv)
 
    /* Usage : bouncequeue list-name */
    if (argn != 2) {
-      exit(EX_TEMPFAIL);
+      exit(EX_USAGE);
    }
 
    listname = malloc(strlen(argv[1]) + 1);
@@ -92,9 +92,9 @@ main(int argn, char **argv)
      strcpy(listname, argv[1]);
 
    if ((bouncedir = readconf(CONFIG)) == NULL)
-      exit(EX_TEMPFAIL);
+      exit(EX_CONFIG);
    if (chdir(bouncedir) == -1) {
-      exit(EX_TEMPFAIL);
+      exit(EX_NOPERM);
    }
    umask(027);
    sprintf(qfile, "T.%s.%ld.%d", listname, time(NULL), getpid());

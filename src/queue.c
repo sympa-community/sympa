@@ -88,7 +88,7 @@ main(int argn, char **argv)
    if ((argn < 2) || (argn >3)) {
      fprintf(stderr,"%s: usage error, one one list-name argument expected.\n",
             argv[0]);
-      exit(EX_TEMPFAIL);
+      exit(EX_USAGE);
    }
 
    if (argn == 2) {
@@ -107,13 +107,13 @@ main(int argn, char **argv)
    if ((queuedir = readconf(CONFIG)) == NULL){
      fprintf(stderr,"%s: cannot read configuration file '%s'.\n",
             argv[0],CONFIG);
-      exit(EX_TEMPFAIL);
+      exit(EX_CONFIG);
    }
    if (chdir(queuedir) == -1) {
      char* buffer=(char*)malloc(strlen(argv[0])+strlen(queuedir)+80);
      sprintf(buffer,"%s: while changing dir to '%s'",argv[0],queuedir);
      perror(buffer);
-     exit(EX_TEMPFAIL);
+     exit(EX_NOPERM);
    }
    umask(027);
    sprintf(qfile, "T.%s.%ld.%d", listname, time(NULL), getpid());
