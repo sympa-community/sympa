@@ -376,14 +376,14 @@ sub smime_sign_check {
     if ($signer =~ /email=$sender/i) {
 	do_log('debug', "S/MIME signed message, signature checked and sender match signer(%s)",$signer);
         ## store the signer certificat
-	unless (-d $Conf{'ssl_crt_dir'}) {
-	    if ( mkdir ($Conf{'ssl_crt_dir'}, 0775)) {
-		do_log('info', "creating spool $Conf{'ssl_crt_dir'}");
+	unless (-d $Conf{'ssl_cert_dir'}) {
+	    if ( mkdir ($Conf{'ssl_cert_dir'}, 0775)) {
+		do_log('info', "creating spool $Conf{'ssl_cert_dir'}");
 	    }else{
-		do_log('err', "Unable to create user certificat directory $Conf{'ssl_crt_dir'}");
+		do_log('err', "Unable to create user certificat directory $Conf{'ssl_cert_dir'}");
 	    }
 	}
-	my $filename = "$Conf{'ssl_crt_dir'}/".&escape_chars($sender);
+	my $filename = "$Conf{'ssl_cert_dir'}/".&escape_chars($sender);
 
 	open (CERTIF,$temporary_file);
 	if (open (USERCERTIF, "> $filename")) {
@@ -422,7 +422,7 @@ sub smime_encrypt {
     if ($list eq 'list') {
 	$usercert = "$Conf{'home'}/$email/cert.pem";
     }else{
-	$usercert = "$Conf{'ssl_crt_dir'}/".&tools::escape_chars($email);
+	$usercert = "$Conf{'ssl_cert_dir'}/".&tools::escape_chars($email);
     }
     if (-r $usercert) {
 	unless (open (MSGDUMP , "> $Conf{'tmpdir'}/MSG.$$")) {
