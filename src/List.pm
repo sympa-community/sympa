@@ -2523,7 +2523,7 @@ sub send_file {
     ## Any recepients
     if ((ref ($who) && ($#{$who} < 0)) ||
 	(!ref ($who) && ($who eq ''))) {
-	&do_log('debug', 'No recipient for sending %s', $action);
+	&do_log('err', 'No recipient for sending %s', $action);
 	return undef;
     }
 
@@ -2652,7 +2652,7 @@ sub delete_user_db {
 	$statement = sprintf "DELETE FROM user_table WHERE (email_user =%s)", $dbh->quote($who); 
 	
 	unless ($dbh->do($statement)) {
-	    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	    return undef;
 	}
     }
@@ -2686,7 +2686,7 @@ sub delete_user {
 	    $statement = sprintf "DELETE FROM subscriber_table WHERE (user_subscriber=%s AND list_subscriber=%s)",$dbh->quote($who), $dbh->quote($name);
 	    
 	    unless ($dbh->do($statement)) {
-		do_log('debug','Unable to execute SQL statement %s : %s', $statement, $dbh->errstr);
+		do_log('err','Unable to execute SQL statement %s : %s', $statement, $dbh->errstr);
 		return undef;
 	    }   
 
@@ -2791,12 +2791,12 @@ sub get_user_db {
     push @sth_stack, $sth;
 
     unless ($sth = $dbh->prepare($statement)) {
-	do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
 	return undef;
     }
     
     unless ($sth->execute) {
-	do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
     
@@ -2836,12 +2836,12 @@ sub get_all_user_db {
     push @sth_stack, $sth;
 
     unless ($sth = $dbh->prepare($statement)) {
-	do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
 	return undef;
     }
     
     unless ($sth->execute) {
-	do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
     
@@ -2898,12 +2898,12 @@ sub get_subscriber {
 	push @sth_stack, $sth;
 
 	unless ($sth = $dbh->prepare($statement)) {
-	    do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
+	    do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
 	    return undef;
 	}
 	
 	unless ($sth->execute) {
-	    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	    return undef;
 	}
 	
@@ -3108,12 +3108,12 @@ sub get_first_user {
 	push @sth_stack, $sth;
 
 	unless ($sth = $dbh->prepare($statement)) {
-	    do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
+	    do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
 	    return undef;
 	}
 	
 	unless ($sth->execute) {
-	    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	    return undef;
 	}
 	
@@ -3282,12 +3282,12 @@ sub get_first_bouncing_user {
     push @sth_stack, $sth;
 
     unless ($sth = $dbh->prepare($statement)) {
-	do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
 	return undef;
     }
     
     unless ($sth->execute) {
-	do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
     
@@ -3381,12 +3381,12 @@ sub get_total_bouncing {
     push @sth_stack, $sth;
 
     unless ($sth = $dbh->prepare($statement)) {
-	do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
 	return undef;
     }
     
     unless ($sth->execute) {
-	do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
     
@@ -3424,12 +3424,12 @@ sub is_user_db {
    push @sth_stack, $sth;
 
    unless ($sth = $dbh->prepare($statement)) {
-       do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
+       do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
        return undef;
    }
    
    unless ($sth->execute) {
-       do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+       do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
        return undef;
    }
    
@@ -3472,12 +3472,12 @@ sub is_user {
 	push @sth_stack, $sth;
 	
 	unless ($sth = $dbh->prepare($statement)) {
-	    do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
+	    do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
 	    return undef;
 	}
 	
 	unless ($sth->execute) {
-	    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	    return undef;
 	}
 	
@@ -3595,7 +3595,7 @@ sub update_user {
 	    }
 	    
 	    unless ($dbh->do($statement)) {
-		do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+		do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 		return undef;
 	    }
 	}
@@ -3688,7 +3688,7 @@ sub update_user_db {
 	    , join(',', @set_list), $dbh->quote($who); 
     
     unless ($dbh->do($statement)) {
-	do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
     
@@ -3747,7 +3747,7 @@ sub add_user_db {
 	, join(',', @insert_field), join(',', @insert_value); 
     
     unless ($dbh->do($statement)) {
-	do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
     
@@ -3792,7 +3792,7 @@ sub add_user {
 		    $statement = sprintf "INSERT INTO user_table (email_user, gecos_user, lang_user, password_user) VALUES (%s,%s,%s,%s)",$dbh->quote($who), $dbh->quote($new_user->{'gecos'}), $dbh->quote($new_user->{'lang'}), $dbh->quote($new_user->{'password'});
 		    
 		    unless ($dbh->do($statement)) {
-			do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+			do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 			return undef;
 		    }
 		}
@@ -3802,7 +3802,7 @@ sub add_user {
 	    $statement = sprintf "INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, date_subscriber, update_subscriber, reception_subscriber, visibility_subscriber,subscribed_subscriber,included_subscriber,include_sources_subscriber) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", $dbh->quote($who), $dbh->quote($new_user->{'gecos'}), $dbh->quote($name), $date_field, $update_field, $dbh->quote($new_user->{'reception'}), $dbh->quote($new_user->{'visibility'}), $dbh->quote($new_user->{'subscribed'}), $dbh->quote($new_user->{'included'}), $dbh->quote($new_user->{'id'});
 	    
 	    unless ($dbh->do($statement)) {
-		do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+		do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 		return undef;
 	    }
 	    $total++;
@@ -5277,7 +5277,7 @@ sub _include_users_ldap {
     do_log('debug2', 'List::_include_users_ldap');
     
     unless (require Net::LDAP) {
-	do_log('debug2',"Unable to use LDAP library, install perl-ldap (CPAN) first");
+	do_log('err',"Unable to use LDAP library, install perl-ldap (CPAN) first");
 	return undef;
     }
     
@@ -5440,12 +5440,12 @@ sub _include_users_ldap_2level {
     
     if ( defined $user ) {
 	unless ($ldaph->bind ($user, password => "$passwd")) {
-	    do_log('notice',"Can\'t bind with server $host:$port as user '$user' : $@");
+	    do_log('err',"Can\'t bind with server $host:$port as user '$user' : $@");
 	    return undef;
 	}
     }else {
 	unless ($ldaph->bind ) {
-	    do_log('notice',"Can\'t do anonymous bind with server $host:$port : $@");
+	    do_log('err',"Can\'t do anonymous bind with server $host:$port : $@");
 	    return undef;
 	}
     }
@@ -5457,7 +5457,7 @@ sub _include_users_ldap_2level {
                                       filter => "$ldap_filter1",
 				      attrs => "$ldap_attrs1",
 				      scope => "$ldap_scope1")) {
-        do_log('debug2',"Unable to perform LDAP search in $ldap_suffix1 for $ldap_filter1 : $@");
+        do_log('err',"Unable to perform LDAP search in $ldap_suffix1 for $ldap_filter1 : $@");
         return undef;
     }
     
@@ -5496,7 +5496,7 @@ sub _include_users_ldap_2level {
 					filter => "$filter2",
 					attrs => "$ldap_attrs2",
 					scope => "$ldap_scope2")) {
-	    do_log('debug2',"Unable to perform LDAP search in $suffix2 for $filter2 : $@");
+	    do_log('err',"Unable to perform LDAP search in $suffix2 for $filter2 : $@");
 	    return undef;
 	}
 
@@ -5521,7 +5521,7 @@ sub _include_users_ldap_2level {
     }
     
     unless ($ldaph->unbind) {
-	do_log('notice','Can\'t unbind from  LDAP server %s:%s',$host,$port);
+	do_log('err','Can\'t unbind from  LDAP server %s:%s',$host,$port);
 	return undef;
     }
     
@@ -5567,7 +5567,7 @@ sub _include_users_sql {
     &do_log('debug2','List::_include_users_sql()');
 
     unless ( require DBI ){
-	do_log('notice',"Intall module DBI (CPAN) before using include_sql_query");
+	do_log('err',"Intall module DBI (CPAN) before using include_sql_query");
 	return undef ;
     }
 
@@ -5616,17 +5616,17 @@ sub _include_users_sql {
     }
 
     unless ($dbh = DBI->connect($connect_string, $user, $passwd)) {
-	do_log('notice','Can\'t connect to Database %s',$db_name);
+	do_log('err','Can\'t connect to Database %s',$db_name);
 	return undef;
     }
     do_log('debug2','Connected to Database %s',$db_name);
     
     unless ($sth = $dbh->prepare($sql_query)) {
-        do_log('notice','Unable to prepare SQL query : %s', $dbh->errstr);
+        do_log('err','Unable to prepare SQL query : %s', $dbh->errstr);
         return undef;
     }
     unless ($sth->execute) {
-        do_log('notice','Unable to perform SQL query %s : %s ',$sql_query, $dbh->errstr);
+        do_log('err','Unable to perform SQL query %s : %s ',$sql_query, $dbh->errstr);
         return undef;
     }
     
@@ -5729,7 +5729,7 @@ sub _load_users_include {
 		}elsif ($type eq 'include_list') {
 		    $depend_on->{$name} = 1 ;
 		    if (&_inclusion_loop ($name,$incl,$depend_on)) {
-			do_log('notice','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
+			do_log('err','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
 		    }else{
 			$depend_on->{$incl};
 			$included = _include_users_list (\%users, $incl, $admin->{'default_user_options'}, 'tied');
@@ -5840,7 +5840,7 @@ sub _load_users_include2 {
 	    }elsif ($type eq 'include_list') {
 		$depend_on->{$name} = 1 ;
 		if (&_inclusion_loop ($name,$incl,$depend_on)) {
-		    do_log('notice','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
+		    do_log('err','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
 		}else{
 		    $depend_on->{$incl};
 		    $included = _include_users_list (\%users, $incl, $admin->{'default_user_options'});
