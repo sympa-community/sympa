@@ -381,7 +381,7 @@ my $pinfo = &List::_apply_defaults();
 &tools::ciphersaber_installed();
 
 my $zip_is_installed ;
-if (require Archive::Zip) {
+if (eval "require Archive::Zip") {
     $zip_is_installed = 1;
 }
 
@@ -1770,7 +1770,7 @@ sub do_sso_login_succeeded {
      unless (&tools::get_filename('etc', 'auth.conf', $robot)) {
 	 return undef;
      }
-     unless (require Net::LDAP) {
+     unless (eval "require Net::LDAP") {
 	 do_log ('err',"Unable to use LDAP library, Net::LDAP required,install perl-ldap (CPAN) first");
 	 return undef;
      }
@@ -1805,7 +1805,7 @@ sub do_sso_login_succeeded {
 
 	     my $ldap_anonymous;
 	     if ($ldap->{'use_ssl'}) {
-		 unless (require Net::LDAPS) {
+		 unless (eval "require Net::LDAPS") {
 		     do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
 		     return undef;
 		 } 
@@ -4822,7 +4822,7 @@ sub do_set_pending_list_request {
      }
      push @addresses,"$list\@" . $domain;
 
-     unless (require Net::SMTP) {
+     unless (eval "require Net::SMTP") {
 	 do_log ('err',"Unable to use Net library, Net::SMTP required, install it (CPAN) first");
 	 return undef;
      }

@@ -118,7 +118,7 @@ sub export_list{
 	push(@editor_names,$element->{'gecos'}) if(defined $element->{'gecos'});
     }
 
-    unless (require Net::LDAP) {
+    unless (eval "require Net::LDAP") {
        &Log::do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
        return undef;
     }
@@ -198,7 +198,7 @@ sub delete_list{
 
     my $already_binded = 1;
 
-    unless (require Net::LDAP) {
+    unless (eval "require Net::LDAP") {
         &Log::do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
         return undef;
     }
@@ -259,7 +259,7 @@ sub get_exported_lists{
 
     my %lists;
     
-    unless (require Net::LDAP) {
+    unless (eval "require Net::LDAP") {
 	&Log::do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
         return undef;
     }
@@ -309,7 +309,7 @@ sub get_dn_anonymous{
     $datas->{'timeout'} = 20 unless($datas->{'timeout'});
     $datas->{'scope'} = 'sub' unless($datas->{'scope'});
     
-    unless (require Net::LDAP) {
+    unless (eval "require Net::LDAP") {
         &Log::do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
         return undef;
     }

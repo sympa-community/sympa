@@ -50,12 +50,12 @@ sub get_https{
 	    return undef;
 	}
 
-	unless (require IO::Socket::SSL) {
+	unless (eval "require IO::Socket::SSL") {
 	    do_log('err',"Unable to use SSL library, IO::Socket::SSL required, install IO-Socket-SSL (CPAN) first");
 	    return undef;
 	}
 	
-	unless (require LWP::UserAgent) {
+	unless (eval "require LWP::UserAgent") {
 	    do_log('err',"Unable to use LWP library, LWP::UserAgent required, install LWP (CPAN) first");
 	    return undef;
 	}
@@ -129,12 +129,12 @@ sub get_https2{
 	    return undef;
 	}
 
-	unless (require IO::Socket::SSL) {
+	unless (eval "require IO::Socket::SSL") {
 	    do_log('err',"Unable to use SSL library, IO::Socket::SSL required, install IO-Socket-SSL (CPAN) first");
 	    return undef;
 	}
 	
-	unless (require LWP::UserAgent) {
+	unless (eval "require LWP::UserAgent") {
 	    do_log('err',"Unable to use LWP library, LWP::UserAgent required, install LWP (CPAN) first");
 	    return undef;
 	}

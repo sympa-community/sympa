@@ -336,12 +336,12 @@ sub get_https2{
 	    return undef;
 	}
 	
-	unless (require IO::Socket::SSL) {
+	unless (eval "require IO::Socket::SSL") {
 	    $errors = sprintf "Unable to use SSL library, IO::Socket::SSL required, install IO-Socket-SSL (CPAN) first\n";
 	    return undef;
 	}
 	
-	unless (require LWP::UserAgent) {
+	unless (eval "require LWP::UserAgent") {
 	    $errors = sprintf "Unable to use LWP library, LWP::UserAgent required, install LWP (CPAN) first\n";
 	    return undef;
 	}

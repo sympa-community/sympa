@@ -297,7 +297,7 @@ sub valid_email {
 
 # create a cipher
 sub ciphersaber_installed {
-    if (require (Crypt::CipherSaber)) {
+    if (eval "require Crypt::CipherSaber") {
 	return &Crypt::CipherSaber->new($Conf{'cookie'});
     }else{
 	return ('no_cipher');

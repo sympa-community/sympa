@@ -149,16 +149,16 @@ sub ldap_authentication {
 	 return undef;
      }
 
-     unless (require Net::LDAP) {
+     unless (eval "require Net::LDAP") {
 	 do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
 	 return undef;
      }
-     unless (require Net::LDAP::Entry) {
+     unless (eval "require Net::LDAP::Entry") {
 	 do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
 	 return undef;
      }
 
-     unless (require Net::LDAP::Message) {
+     unless (eval "require Net::LDAP::Message") {
 	 do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
 	 return undef;
      }
@@ -182,7 +182,7 @@ sub ldap_authentication {
 	     ##anonymous bind in order to have the user's DN
 	     my $ldap_anonymous;
 	     if ($ldap->{'use_ssl'}) {
-		 unless (require Net::LDAPS) {
+		 unless (eval "require Net::LDAPS") {
 		     do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
 		     return undef;
 		 } 
@@ -235,7 +235,7 @@ sub ldap_authentication {
 	     ##  bind with the DN and the pwd
 	     my $ldap_passwd;
 	     if ($ldap->{'use_ssl'}) {
-		 unless (require Net::LDAPS) {
+		 unless (eval "require Net::LDAPS") {
 		     do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
 		     return undef;
 		 } 
@@ -330,16 +330,16 @@ sub cas_get_email_by_net_id {
 
     do_log ('info',"Auth::cas_get_email_by_net_id($net_id,$auth_id)");
 
-    unless (require Net::LDAP) {
+    unless (eval "require Net::LDAP") {
 	do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
 	return undef;
     }
-    unless (require Net::LDAP::Entry) {
+    unless (eval "require Net::LDAP::Entry") {
 	do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
 	return undef;
     }
     
-    unless (require Net::LDAP::Message) {
+    unless (eval "require Net::LDAP::Message") {
 	do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
 	return undef;
     }
@@ -364,7 +364,7 @@ sub cas_get_email_by_net_id {
 	    $param{'sslversion'} = $ldap->{'ldap_ssl_version'} if ($ldap->{'ldap_ssl_version'});
 	    $param{'ciphers'} = $ldap->{'ldap_ssl_ciphers'} if ($ldap->{'ldap_ssl_ciphers'});
 
-	    unless (require Net::LDAPS) {
+	    unless (eval "require Net::LDAPS") {
 		do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
 		return undef;
 	    } 

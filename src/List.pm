@@ -1052,7 +1052,7 @@ sub db_connect {
 
     my $connect_string;
 
-    unless (require DBI) {
+    unless (eval "require DBI") {
 	do_log('info',"Unable to use DBI library, install DBI (CPAN) first");
 	return undef;
     }
@@ -2237,7 +2237,7 @@ sub send_msg {
     ##Send message for normal reception mode
     if (@tabrcpt) {
 	## Add a footer
-	unless ($message->{'smime_signed'}) {
+	unless ($message->{'protected'}) {
 	    my $new_msg = $self->add_parts($message->{'msg'});
 	    if (defined $new_msg) {
 		$message->{'msg'} = $new_msg;
@@ -4681,7 +4681,7 @@ sub search{
         return $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'};
     }
 
-    unless (require Net::LDAP) {
+    unless (eval "require Net::LDAP") {
 	do_log('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
 	return undef;
     }
@@ -5543,7 +5543,7 @@ sub _include_users_ldap {
     my ($users, $param, $default_user_options, $tied) = @_;
     do_log('debug2', 'List::_include_users_ldap');
     
-    unless (require Net::LDAP) {
+    unless (eval "require Net::LDAP") {
 	do_log('err',"Unable to use LDAP library, install perl-ldap (CPAN) first");
 	return undef;
     }
@@ -5667,7 +5667,7 @@ sub _include_users_ldap_2level {
     my ($users, $param, $default_user_options,$tied) = @_;
     do_log('debug2', 'List::_include_users_ldap_2level');
     
-    unless (require Net::LDAP) {
+    unless (eval "require Net::LDAP") {
 	do_log('err',"Unable to use LDAP library, install perl-ldap (CPAN) first");
 	return undef;
     }
@@ -5836,7 +5836,7 @@ sub _include_users_sql {
 
     &do_log('debug2','List::_include_users_sql()');
 
-    unless ( require DBI ){
+    unless ( eval "require DBI" ){
 	do_log('err',"Intall module DBI (CPAN) before using include_sql_query");
 	return undef ;
     }
