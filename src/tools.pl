@@ -599,9 +599,9 @@ sub escape_chars {
     my $ord_except = ord($except) if (defined $except);
 
     ## Escape chars
-    ##  !"#$%&'()+,:;<=>? AND accented chars
+    ##  !"#$%&'()+,:;<=>?[] AND accented chars
     ## escape % first
-    foreach my $i (0x25,0x20..0x24,0x26..0x2c,0x3a..0x3f,0xc0..0xff) {
+    foreach my $i (0x25,0x20..0x24,0x26..0x2c,0x3a..0x3f,0x5b,0x5d,0xc0..0xff) {
 	next if ($i == $ord_except);
 	my $hex_i = sprintf "%lx", $i;
 	$s =~ s/\x$hex_i/%$hex_i/g;
@@ -616,7 +616,7 @@ sub unescape_chars {
     my $s = shift;
 
     $s =~ s/%a5/\//g;  ## Special traetment for '/'
-    foreach my $i (0x20..0x2c,0x3a..0x3f,0xc0..0xff) {
+    foreach my $i (0x20..0x2c,0x3a..0x3f,0x5b,0x5d,0xc0..0xff) {
 	my $hex_i = sprintf "%lx", $i;
 	my $hex_s = sprintf "%c", $i;
 	$s =~ s/%$hex_i/$hex_s/g;
