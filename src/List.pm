@@ -5323,7 +5323,7 @@ sub _load_users_include {
     ## Inclusion failed, clear cache
     unless (defined $total) {
 	undef $ref;
-	untie %users;
+	#untie %users;
 	close DB_FH;
 	unlink $db_file;
 	return undef;
@@ -5336,7 +5336,7 @@ sub _load_users_include {
 	if $total;
 
     undef $ref;
-    untie %users;
+    #untie %users;
     close DB_FH;
     $l;
 }
