@@ -484,12 +484,12 @@ while ($query = &new_loop()) {
 	    @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
 	}
 	
-
+	
 	foreach my $l (@{$param->{'get_which'}}) {
 	    my $list = new List ($l);
-	    $param->{'which'}{$l}{'subject'} = $list->{'admin'}{'subject'};
-	    $param->{'which'}{$l}{'host'} = $list->{'admin'}{'host'};
-	    $param->{'which'}{$l}{'info'} = 1;
+	    $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
+	    $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
+	    $param->{'which_info'}{$l}{'info'} = 1;
 	}
        
     }else{
@@ -578,7 +578,7 @@ while ($query = &new_loop()) {
 	$param->{'title'} = $wwsconf->{'title'} unless $param->{'title'};
     }
 
-    ## Set cookies "your_subscribtion"
+    ## Set cookies "your_subscribtions"
     if ($param->{'user'}{'email'}) {
 	# if at least one element defined in get_which tab
 	if ($param->{'get_which'}[0]) {
@@ -1775,7 +1775,9 @@ sub do_which {
 	    $param->{'which'}{$l}{'host'} = $list->{'admin'}{'host'};
 	    
 	    if ($role eq 'member') {
-		$param->{'which'}{$l}{'info'} = 1;
+		$param->{'which_info'}{$l}{'info'} = 1;
+		$param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
+		$param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
 		push @{$param->{'get_which'}}, $l;
 	    }else {
 		$param->{'which'}{$l}{'admin'} = 1;
