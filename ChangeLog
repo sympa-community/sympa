@@ -1,3 +1,117 @@
+2005-01-10 13:26  sympa-authors
+
+	* web_tt2/: create_list_request.tt2, edit_list_request.tt2,
+	  home.tt2, loginbanner.tt2, main.tt2, pref.tt2, remindpasswd.tt2,
+	  rename_list_request.tt2, review.tt2, tt2_error.tt2:
+	  [P.Levesque]Changes: complete XHTML compliance work :     -
+	  missing gettext tags	   - added <label> tags to forms     -
+	  cosmetic adjustment of the Pref page	   - alignment and label
+	  tags added to the edit_list page     - 'alt' tags replaced with
+	  'title' tags when appropriate
+
+2005-01-10 12:17  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: Fix: htmlize text/plain messages
+	  in archives, otherwise <> chars are not correctly printed
+
+2005-01-10 11:11  serge.aumont
+
+	* src/Commands.pm:
+
+	  fixe a bug where default deamon_usage never send message
+
+2005-01-10 11:07  sympa-authors
+
+	* web_tt2/tt2_error.tt2, wwsympa/wwsympa.fcgi: New feature: perform
+	  security checks on incoming parameters syntax
+
+2005-01-07 15:35  sympa-authors
+
+	* src/List.pm: [H.Gabor] Fix: Postgresql does not support && and ||
+	  ; replaced them with OR and AND
+
+2005-01-07 11:12  sympa-authors
+
+	* src/: List.pm, Message.pm, smtp.pm, sympa.pl: Changes :	*
+	  no more encode subject in smtp::sendto() because subject was not
+	  decoded	       * store decoded subject and charset in
+	  Message.pm		   * DoCommand parameter in now a Message
+	  object
+
+2005-01-06 15:40  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: Add keepspace to text/plain
+	  filter args
+
+2005-01-06 10:32  sympa-authors
+
+	* web_tt2/: active_lists.tt2, d_upload.tt2, editfile.tt2, home.tt2,
+	  info.tt2, install_pending_list.tt2, latest_arc.tt2,
+	  latest_d_read.tt2, latest_lists.tt2, list_button_footer.tt2,
+	  list_button_header.tt2, list_menu.tt2, lists.tt2, login.tt2,
+	  loginbanner.tt2, main.tt2, menu.tt2, modindex.tt2, notice.tt2,
+	  pref.tt2, remindpasswd.tt2, remove_arc.tt2,
+	  rename_list_request.tt2, review.tt2, reviewbouncing.tt2, rss.tt2,
+	  scenario_test.tt2, serveradmin.tt2, set_pending_list_request.tt2,
+	  show_cert.tt2, sigrequest.tt2, stats.tt2, subindex.tt2,
+	  suboptions.tt2, subrequest.tt2, title.tt2, tt2_error.tt2,
+	  view_template.tt2, viewbounce.tt2, viewmod.tt2: [P.Levesque] made
+	  Sympa XHTML compliant
+
+2005-01-06 10:22  sympa-authors
+
+	* NEWS: update
+
+2005-01-05 17:37  sympa-authors
+
+	* src/List.pm: Change: use tools::lock() and tools::unlock() for
+	  include_admin
+
+2005-01-05 17:03  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/index.html, html/node1.html, html/node10.html,
+	  html/node11.html, html/node12.html, html/node13.html,
+	  html/node14.html, html/node15.html, html/node16.html,
+	  html/node17.html, html/node18.html, html/node19.html,
+	  html/node2.html, html/node20.html, html/node21.html,
+	  html/node22.html, html/node23.html, html/node24.html,
+	  html/node3.html, html/node4.html, html/node5.html,
+	  html/node6.html, html/node7.html, html/node8.html,
+	  html/node9.html, html/sympa.html, html/sympa.ps: New feature:
+	  Upgrade chapter added
+
+2005-01-05 12:17  sympa-authors
+
+	* wwsympa/archived.pl: Remove previous HTML files
+
+2005-01-05 10:30  sympa-authors
+
+	* Makefile.in, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node3.html, doc/html/node4.html, doc/html/node5.html,
+	  doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	  doc/html/node9.html, doc/html/sympa.html, doc/html/sympa.ps:
+	  Update
+
+2005-01-04 17:45  sympa-authors
+
+	* wwsympa/archived.pl: Fix previous changes
+
+2005-01-04 17:32  sympa-authors
+
+	* wwsympa/archived.pl: Fix: remove HTML files before rebuilding
+	  archives
+
+2005-01-04 11:37  sympa-authors
+
+	* .version, ChangeLog, NEWS: preparing 5.0b
+
 2005-01-03 17:51  sympa-authors
 
 	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,

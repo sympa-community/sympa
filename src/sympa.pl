@@ -156,7 +156,7 @@ my %msgid_table;
 # this loop is run foreach HUP signal received
 my $signal = 0;
 
-my $daemon_usage ; 
+local $main::daemon_usage; 
 
 while ($signal ne 'term') { #as long as a SIGTERM is not received }
 
@@ -204,11 +204,11 @@ if (!chdir($Conf{'home'})) {
    ## Function never returns.
 }
 if ($main::options{'service'} eq 'process_message') {
-    $daemon_usage = 'message';
+    $main::daemon_usage = 'message';
 }elsif ($main::options{'service'} eq 'process_command') {
-    $daemon_usage = 'command';
+    $main::daemon_usage = 'command';
 }else{
-    $daemon_usage = 'command_and_message'; # default is to run one sympa.pl server for both commands and message 
+    $main::daemon_usage = 'command_and_message'; # default is to run one sympa.pl server for both commands and message 
 }
 
 if ($signal ne 'hup') {
@@ -228,19 +228,19 @@ if ($signal ne 'hup') {
 	setpgrp(0, 0);
 	# start the main sympa.pl daemon
 
-	if (($Conf{'distribution_mode'} eq 'single') || ($daemon_usage ne 'command_and_message')){ 
-	    printf STDERR "Starting server for $daemon_usage\n";
-	    do_log('debug', "Starting server for $daemon_usage");
+	if (($Conf{'distribution_mode'} eq 'single') || ($main::daemon_usage ne 'command_and_message')){ 
+	    printf STDERR "Starting server for $main::daemon_usage\n";
+	    do_log('debug', "Starting server for $main::daemon_usage");
 	    if ((my $child_pid = fork) != 0) {
-		do_log('debug', "Server for $daemon_usage started, pid $child_pid, exiting from initial process");
+		do_log('debug', "Server for $main::daemon_usage started, pid $child_pid, exiting from initial process");
 		exit(0);
 	    }
 	}else{
-	    $daemon_usage = 'command'; # fork sympa.pl dedicated to commands
+	    $main::daemon_usage = 'command'; # fork sympa.pl dedicated to commands
 	    do_log('debug', "Starting server for commands");
 	    if ((my $child_pid = fork) != 0) {
 		do_log('info', "Server for commands started, pid $child_pid");
-		$daemon_usage = 'message'; # main process continue in order to fork
+		$main::daemon_usage = 'message'; # main process continue in order to fork
 		do_log('debug', "Starting server for messages");	    
 		if ((my $child_pid = fork) != 0) {
 		    do_log('debug', "Server for messages started, pid $child_pid, exiting from initial process");
@@ -251,15 +251,15 @@ if ($signal ne 'hup') {
     }
 
     my $service = 'sympa';
-    $service .= '(message)' if ($daemon_usage eq 'message');
-    $service .= '(command)' if ($daemon_usage eq 'command');
+    $service .= '(message)' if ($main::daemon_usage eq 'message');
+    $service .= '(command)' if ($main::daemon_usage eq 'command');
     do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, $service);
 
-    do_log('debug', "Running server $$ with daemon_usage = $daemon_usage ");
+    do_log('debug', "Running server $$ with main::daemon_usage = $main::daemon_usage ");
     unless ($main::options{'batch'} ) {
 	## Create and write the pidfile
 	my $file = $Conf{'pidfile'};
-	$file = $Conf{'pidfile_distribute'} if ($daemon_usage eq 'message') ;
+	$file = $Conf{'pidfile_distribute'} if ($main::daemon_usage eq 'message') ;
 	&tools::write_pid($file, $$);
     }	
 
@@ -647,7 +647,7 @@ my @qfile;
 
 my $spool = $Conf{'queue'};
 # if daemon is dedicated to message change the current spool
-$spool = $Conf{'queuedistribute'} if ($daemon_usage eq 'message');
+$spool = $Conf{'queuedistribute'} if ($main::daemon_usage eq 'message');
 
 ## This is the main loop : look after files in the directory, handles
 ## them, sleeps a while and continues the good job.
@@ -670,14 +670,14 @@ while (!$signal) {
     @qfile = sort grep (!/^\./,readdir(DIR));
     closedir(DIR);
 
-    unless ($daemon_usage eq 'command')  { # process digest only in distribution mode
+    unless ($main::daemon_usage eq 'command')  { # process digest only in distribution mode
 	## Scan queuedigest
 	if ($index_queuedigest++ >=$digestsleep){
 	    $index_queuedigest=0;
 	    &SendDigest();
 	}
     }
-    unless ($daemon_usage eq 'message') { # process expire and bads only in command mode 
+    unless ($main::daemon_usage eq 'message') { # process expire and bads only in command mode 
 	## Scan the queueexpire
 	if ($index_queueexpire++ >=$expiresleep){
 	    $index_queueexpire=0;
@@ -992,7 +992,7 @@ sub DoFile {
 	return undef;
     }
   
-    if ($daemon_usage eq 'message') {
+    if ($main::daemon_usage eq 'message') {
 	if (($rcpt =~ /^$Conf{'listmaster_email'}(\@(\S+))?$/) || ($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) || ($type =~ /^(subscribe|unsubscribe)$/o) || ($type =~ /^(request|owner|editor)$/o)) {
 	    do_log('err','internal serveur error : distribution daemon should never proceed with command');
 	    return undef;
@@ -1303,9 +1303,9 @@ sub DoMessage{
 
     return undef unless (defined $action);
 
-    if (($action =~ /^do_it/) || ($daemon_usage eq 'message')) {
+    if (($action =~ /^do_it/) || ($main::daemon_usage eq 'message')) {
 	    
-	if (($daemon_usage eq  'message') || ($daemon_usage eq  'command_and_message')) {
+	if (($main::daemon_usage eq  'message') || ($main::daemon_usage eq  'command_and_message')) {
 	    my $numsmtp = $list->distribute_msg($message);
 	    
 	    ## Keep track of known message IDs...if any
