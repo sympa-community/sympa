@@ -101,14 +101,18 @@ installqueue:
 
 installwrapper:
 	@echo "Installing AliasWrapper binary..."
-	cp aliaswrapper $(DESTDIR)$(MAILERPROGDIR)/
+	cp aliaswrapper $(DESTDIR)$(LIBEXECDIR)/
 	@echo "Installing VirtualWrapper binary..."
-	cp virtualwrapper $(DESTDIR)$(MAILERPROGDIR)/
+	cp virtualwrapper $(DESTDIR)$(LIBEXECDIR)/
 
 makedir:
 	@if [ ! -d $(DESTDIR)$(MAILERPROGDIR) ]; then \
 		echo "Creating required directory $(DESTDIR)$(MAILERPROGDIR)"; \
 		mkdir -p $(DESTDIR)$(MAILERPROGDIR); \
+	fi
+	@if [ ! -d $(DESTDIR)$(LIBEXECDIR) ]; then \
+		echo "Creating required directory $(DESTDIR)$(LIBEXECDIR)"; \
+		mkdir -p $(DESTDIR)$(LIBEXECDIR); \
 	fi
 	@if [ ! -d $(DESTDIR)$(BINDIR) ]; then \
 		echo "Creating required directory $(DESTDIR)$(BINDIR)"; \
@@ -153,10 +157,10 @@ installmod:
 	chgrp -R $(GROUP) $(DESTDIR)$(SBINDIR)
 	chown -R $(USER) $(DESTDIR)$(LIBDIR)
 	chgrp -R $(GROUP) $(DESTDIR)$(LIBDIR)
-	chown root $(DESTDIR)$(MAILERPROGDIR)/aliaswrapper
-	chgrp $(GROUP) $(DESTDIR)$(MAILERPROGDIR)/aliaswrapper
-	chown root $(DESTDIR)$(MAILERPROGDIR)/virtualwrapper
-	chgrp $(GROUP) $(DESTDIR)$(MAILERPROGDIR)/virtualwrapper
+	chown root $(DESTDIR)$(LIBEXECDIR)/aliaswrapper
+	chgrp $(GROUP) $(DESTDIR)$(LIBEXECDIR)/aliaswrapper
+	chown root $(DESTDIR)$(LIBEXECDIR)/virtualwrapper
+	chgrp $(GROUP) $(DESTDIR)$(LIBEXECDIR)/virtualwrapper
 	@echo "Setting privileges..."
 	chmod 755 $(DESTDIR)$(SBINDIR) $(DESTDIR)$(ETCBINDIR) 
 	chmod 755 $(DESTDIR)$(ETCBINDIR)/scenari $(DESTDIR)$(ETCBINDIR)/templates $(DESTDIR)$(ETCBINDIR)/list_task_models $(DESTDIR)$(ETCBINDIR)/global_task_models
@@ -164,8 +168,8 @@ installmod:
 	chmod 644 $(DESTDIR)$(ETCBINDIR)/*.conf $(DESTDIR)$(ETCBINDIR)/*.crt 
 	chmod 600 $(DESTDIR)$(ETCBINDIR)/ca-bundle.crt
 	chmod 4755 $(DESTDIR)$(MAILERPROGDIR)/queue $(DESTDIR)$(MAILERPROGDIR)/bouncequeue
-	chmod 4750 $(DESTDIR)$(MAILERPROGDIR)/aliaswrapper
-	chmod 4750 $(DESTDIR)$(MAILERPROGDIR)/virtualwrapper
+	chmod 4750 $(DESTDIR)$(LIBEXECDIR)/aliaswrapper
+	chmod 4750 $(DESTDIR)$(LIBEXECDIR)/virtualwrapper
 
 queue: queue.c Makefile ../Makefile
 	$(CC) $(CFLAGS) $(CDEFS) -o queue queue.c

@@ -26,7 +26,7 @@ SUBSTSRC	=	load_subscribers.pl arc2webarc.pl testldap.pl p12topem.pl init_commen
 INITSRC		=	sympa
 
 #SCRIPTDIR	=	../../../script
-SCRIPTDIR	=	$(BINDIR)
+SCRIPTDIR	=	$(SBINDIR)
 
 all:	
 
