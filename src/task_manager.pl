@@ -93,8 +93,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
      open(STDERR, ">> /dev/null");
      open(STDOUT, ">> /dev/null");
      if (open(TTY, "/dev/tty")) {
-         ioctl(TTY, 0x20007471, 0);         # XXX s/b
-	 &TIOCNOTTY;
+         ioctl(TTY, 0x20007471, 0);         # XXX s/b &TIOCNOTTY
 #       ioctl(TTY, &TIOCNOTTY, 0);                                             
          close(TTY);
      }
@@ -1152,6 +1151,7 @@ sub in {
 sub change_label {
     my $task_file = $_[0];
     my $new_label = $_[1];
+    &do_log ('notice', "xxxxxxxxxxxxxxxxxxxxxxxxxxx rename $task_file  in $new_label");
     
     my $new_task_file = $task_file;
     $new_task_file =~ s/(.+\.)(\w*)(\.\w+\.\w+$)/$1$new_label$3/;
