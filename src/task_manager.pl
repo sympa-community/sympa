@@ -56,6 +56,16 @@ my $sympa_conf_file = '--CONFIG--';
 my $wwsconf = {};
 my $adrlist = {};
 
+# some regexp that all modules should use and share
+my %regexp = ('email' => '(\S+|\".*\")(@\S+)',
+            'host' => '[\w\.\-]+',
+            'listname' => '[a-z0-9][a-z0-9\-\._]+',
+            'sql_query' => 'SELECT.*',
+            'scenario' => '[\w,\.\-]+',
+            'task' => '\w+'
+            );
+
+
 # Load WWSympa configuration
 unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
     &do_log ('err', 'error : unable to load config file');
@@ -221,9 +231,10 @@ while (!$end) {
     my @tasks = sort epoch_sort (grep !/^\.\.?$/, readdir DIR);
 
     ## processing of tasks anterior to the current date
-    &do_log ('notice', 'processing of tasks anterior to the current date');
+    &do_log ('debug2', 'processing of tasks anterior to the current date');
     foreach my $task (@tasks) {
-	$task =~ /^(\d+)\.\w*\.\w+\.(\w+)$/;
+	$task =~ /^(\d+)\.\w*\.\w+\.($regexp{'listname'})$/;
+	&do_log ('debug2', "procesing %s/%s", $spool_task,$task);
 	last unless ($1 < $current_date);
 	if ($2 ne '_global') { # list task
 	    my $list = new List ($2);
@@ -617,7 +628,7 @@ sub execute {
     my $label = $1;
     return undef if ($label eq 'ERROR');
 
-    &do_log ('notice', "* execution of the task $task_file");
+    &do_log ('debug2', "* execution of the task $task_file");
     unless ($label eq '') {
 	while ( <TASK> ) {
 	    $lnb++;
@@ -665,11 +676,11 @@ sub cmd_process {
      # building of %context
     my %context; # datas necessary to command processing
     $context{'task_file'} = $task_file; # long task file name
-    $task_file =~ /.+\/([\w\.]+)$/;
+    $task_file =~ /.+\/($regexp{'listname'})$/;
     $context{'task_name'} = $1; # task file name
-    $context{'task_name'} =~ /(\d+)\..+/;
+    $context{'task_name'} =~ /^(\d+)\..+/;
     $context{'execution_date'} = $1; # task execution date
-    $context{'task_name'} =~ /^\w+\.\w*\.\w+\.(\w+)$/;
+    $context{'task_name'} =~ /^\w+\.\w*\.\w+\.($regexp{'listname'})$/;
     $context{'object_name'} = $1; # object of the task
     $context{'line_number'} = $lnb;
 
@@ -770,7 +781,7 @@ sub next_cmd {
     
     &do_log ('notice', "line $context->{'line_number'} : next ($date, $label)");
 
-    $context->{'task_name'} =~ /\w*\.\w*\.(\w*)\.(\w*)/;
+    $context->{'task_name'} =~ /\w*\.\w*\.(\w*)\.($regexp{'listname'})/;
     my $new_task = "$date.$label.$1.$2";
     my $human_date = &tools::adate ($date);
     my $new_task_file = "$spool_task/$new_task";
