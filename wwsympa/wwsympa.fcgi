@@ -3072,18 +3072,15 @@ sub do_add {
 	}
     }
     
-    unless( $total = $list->add_user(@new_users)) {
+    $total = $list->add_user(@new_users);
+    unless( defined $total) {
 	&error_message('failed_add');
 	&wwslog('info','do_add: failed adding');
 	return undef;
     }
 
-    if ($total == 0) {
-	return undef;
-    }else {
-	$list->save();
-	&message('add_performed', {'total' => $total});
-    }
+    $list->save();
+    &message('add_performed', {'total' => $total});
 
     return 'review';
 }
@@ -3175,7 +3172,8 @@ sub do_del {
 	}
     }
     
-    unless( $total = $list->delete_user(@removed_users)) {
+    $total = $list->delete_user(@removed_users);
+    unless( defined $total) {
 	&error_message('failed');
 	&wwslog('info','do_del: failed');
 	return undef;
@@ -3183,7 +3181,7 @@ sub do_del {
 
     $list->save();
 
-    &message('performed') if ($total > 0);
+    &message('performed');
     $param->{'is_subscriber'} = 1;
     $param->{'may_signoff'} = 1;
     
