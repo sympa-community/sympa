@@ -181,7 +181,7 @@ sub check_pwd {
 	return undef;
     }
 
-    unless ($pwd eq $real_pwd) {
+    unless (lc($pwd) eq lc($real_pwd)) {
         &Log::do_log('info', 'check_pwd: incorrect password');
 	&main::message('incorrect_password');
         return undef;
@@ -223,7 +223,7 @@ sub new_passwd {
 	$passwd .= chr(int(rand 26) + ord('a'));
     }
 
-    return 'INIT'.$passwd;
+    return 'init'.$passwd;
 }
 
 ## Basic check of an email address

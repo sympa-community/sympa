@@ -2113,6 +2113,9 @@ sub get_user_db {
     ## decrypt password
     if ((defined $user) && $user->{'password'}) {
 	$user->{'password'} = &tools::decrypt_password($user->{'password'});
+	
+	## case-insensitive password
+	$user->{'password'} =~ tr/A-Z/a-z/;
     }
 
     return $user;

@@ -942,6 +942,9 @@ sub do_login {
 	$param->{'init_email'} = $in{'email'};
 	return 'loginrequest';
     }
+
+    ## Make password case-insensitive !!
+    $in{'passwd'} =~ tr/A-Z/a-z/;
     
     unless ($user = &List::get_user_db($in{'email'})) {
 	
@@ -2129,6 +2132,9 @@ sub do_setpasswd {
 	&wwslog('info','do_setpasswd: different newpasswds');
 	return undef;
     }
+
+    ## Make password case-insensitive
+    $in{'newpasswd1'} =~ tr/A-Z/a-z/;
   
     if (&List::is_user_db($param->{'user'}{'email'})) {
 	unless ( &List::update_user_db($param->{'user'}{'email'}, {'password' => $in{'newpasswd1'}} )) {
