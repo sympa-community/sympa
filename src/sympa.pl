@@ -919,11 +919,9 @@ sub DoFile {
 	
     ## Initialize command report
     undef @msg::report;  
-    
+	
     ## Q- and B-decode subject
-    my $subject_field = &MIME::Words::decode_mimewords($hdr->get('Subject'));
-    chomp $subject_field;
-#    $hdr->replace('Subject', $subject_field);
+    my $subject_field = $message->{'decoded_subject'};
         
     my ($list, $host, $name);   
     if ($listname =~ /^(sympa|$Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
@@ -1006,7 +1004,7 @@ sub DoFile {
 	## Mail adressed to the robot and mail 
 	## to <list>-subscribe or <list>-unsubscribe are commands
     }elsif (($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) || ($type =~ /^(subscribe|unsubscribe)$/o)) {
-	$status = &DoCommand($rcpt, $robot, $msg, $file);
+	$status = &DoCommand($rcpt, $robot, $message);
 	
 	## forward mails to <list>-request <list>-owner etc
     }elsif ($type =~ /^(request|owner|editor)$/o) {
@@ -1015,7 +1013,7 @@ sub DoFile {
 	if (($type eq 'request') and ($subject_field =~ /^\s*(subscribe|unsubscribe)(\s*$listname)?\s*$/i) ) {
 	    my $command = $1;
 	    
-	    $status = &DoCommand("$listname-$command", $robot, $msg, $file);
+	    $status = &DoCommand("$listname-$command", $robot, $message);
 	}else {
 	    $status = &DoForward($listname, $type, $robot, $msg, $file, $sender);
 	}         
@@ -1206,12 +1204,9 @@ sub DoMessage{
 
     my $hdr = $message->{'msg'}->head;
     
-    my $from_field = $hdr->get('From');
     my $messageid = $hdr->get('Message-Id');
 
-    my @sender_hdr = Mail::Address->parse($from_field);
-
-    my $sender = $sender_hdr[0]->address || '';
+    my $sender = $message->{'sender'};
 
     ## Search for the list
     my $list = new List ($listname);
@@ -1374,23 +1369,23 @@ sub DoMessage{
 
 ## Handles a command sent to the list manager.
 sub DoCommand {
-    my($rcpt, $robot, $msg, $file) = @_;
+    my($rcpt, $robot, $message) = @_;
+    my $msg = $message->{'msg'};
+    my $file = $message->{'filename'};
     &do_log('debug', 'DoCommand(%s %s %s %s) ', $rcpt, $robot, $msg, $file);
-
+    
     ## Now check if the sender is an authorized address.
     my $hdr = $msg->head;
     
     ## Decode headers
     #$hdr->decode();
     
-    my $from_field = $hdr->get('From');
     my $messageid = $hdr->get('Message-Id');
     my ($success, $status);
     
     do_log('debug', "Processing command with priority %s, %s", $Conf{'sympa_priority'}, $messageid );
     
-    my @sender_hdr = Mail::Address->parse($from_field);
-    my $sender = $sender_hdr[0]->address;
+    my $sender = $message->{'sender'};
 
     ## Detect loops
     if ($msgid_table{$robot}{$messageid}) {
@@ -1411,8 +1406,7 @@ sub DoCommand {
     
     ## Process the Subject of the message
     ## Search and process a command in the Subject field
-    my $subject_field = &MIME::Words::decode_mimewords($hdr->get('Subject'));
-    chomp $subject_field;
+    my $subject_field = $message->{'decoded_subject'};
     $subject_field =~ s/\n//mg; ## multiline subjects
     $subject_field =~ s/^\s*(Re:)?\s*(.*)\s*$/$2/i;
 

@@ -92,6 +92,14 @@ sub new {
     }
     $message->{'sender'} = lc($sender_hdr[0]->address);
 
+    ## Store decoded subject
+    my @decoded_subject =  &MIME::Words::decode_mimewords($hdr->get('Subject'));
+    foreach my $token (@decoded_subject) {
+	$message->{'decoded_subject'} .= $token->[0]; 
+	$message->{'subject_charset'} ||= $token->[1]; 
+    }
+    chomp $message->{'decoded_subject'};
+
     ## Extract recepient address (X-Sympa-To)
     $message->{'rcpt'} = $hdr->get('X-Sympa-To');
     chomp $message->{'rcpt'};

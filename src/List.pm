@@ -2627,7 +2627,7 @@ sub distribute_msg {
 
     ## Add Custom Subject
     if ($self->{'admin'}{'custom_subject'}) {
-	my $subject_field = &MIME::Words::decode_mimewords($message->{'msg'}->head->get('Subject'));
+	my $subject_field = $message->{'decoded_subject'};
 	$subject_field =~ s/^\s*(.*)\s*$/$1/; ## Remove leading and trailing blanks
 
 	## Search previous subject tagging in Subject
