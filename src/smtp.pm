@@ -58,6 +58,10 @@ sub reaper {
 ## which can be imported by other parties.
 sub smtpto {
    my($from, $rcpt, $sign_mode) = @_;
+
+   unless ($from) {
+       &do_log('err', 'Missing Return-Path in smtp::smtpto()');
+   }
    
    if (ref($rcpt) eq 'SCALAR') {
        do_log('debug2', 'smtp::smtpto(%s, %s, %s )', $from, $$rcpt,$sign_mode);
