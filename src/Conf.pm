@@ -358,7 +358,7 @@ sub load_robots {
 				  list_check_smtp => 1,
 				  list_check_suffixes => 1,
 				  spam_protection => 1,
-				  web_archive_spam_protection =>
+				  web_archive_spam_protection => 1
 				  );
 
     ## Load wwsympa.conf
