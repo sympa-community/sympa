@@ -21,6 +21,5 @@ Aliases have been installed.
 
 [ELSE]
 Your list creation request is registred. You can now  modify its
-configuration using the admin button but the list will be usuable
-when the listmaster will valid it.
+configuration using the admin button but the list will be unusable until the listmaster validates it.
 [ENDIF]
