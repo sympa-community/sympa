@@ -1744,7 +1744,7 @@ sub confirm {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
 	    *SIZ  = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
-	    print SIZ "From: " . sprintf (gettext("SYMPA <%s>"), &Conf::get_robot_conf($robot, 'request')) . "\n";
+	    printf SIZ "From: SYMPA <%s>\n", &Conf::get_robot_conf($robot, 'request');
 	    printf SIZ "To: %s\n", $sender;
 	    printf SIZ "Subject: " . gettext("Your message to %s has been rejected") . "\n", $name;
 	    printf SIZ "MIME-Version: 1.0\n";

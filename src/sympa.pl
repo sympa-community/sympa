@@ -768,8 +768,7 @@ sub DoFile {
 
 	## Prepare the reply message
 	my $reply_hdr = new Mail::Header;
-#	$reply_hdr->add('From', sprintf gettext("SYMPA <%s>"), $Conf{'sympa'});
-	$reply_hdr->add('From', sprintf gettext("SYMPA <%s>"));
+	$reply_hdr->add('From', sprintf "SYMPA <%s>", $Conf{'sympa'});
 	$reply_hdr->add('To', $sender);
 	$reply_hdr->add('Subject', gettext("Results of your commands"));
 	$reply_hdr->add('X-Loop', &Conf::get_robot_conf($robot, 'sympa'));
@@ -982,7 +981,7 @@ sub DoMessage{
     if ($max_size && $message->{'size'} > $max_size) {
 	do_log('notice', 'Message for %s from %s rejected because too large (%d > %d)', $listname, $sender, $message->{'size'}, $max_size);
 	*SIZ  = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
-	print SIZ "From: " . sprintf (gettext("SYMPA <%s>"), &Conf::get_robot_conf($robot, 'request')) . "\n";
+	print SIZ "From: " . sprintf ("SYMPA <%s>", &Conf::get_robot_conf($robot, 'request')) . "\n";
 	printf SIZ "To: %s\n", $sender;
 	printf SIZ "Subject: " . gettext("Your message to %s has been rejected") . "\n", $listname;
 	printf SIZ "MIME-Version: 1.0\n";
@@ -1055,7 +1054,7 @@ sub DoMessage{
 		$list->send_file($tpl, $sender, $robot, {});
 	    }else {
 		*SIZ  = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
-		print SIZ "From: " . sprintf (gettext("SYMPA <%s>"), &Conf::get_robot_conf($robot, 'request')) . "\n";
+		print SIZ "From: " . sprintf ("SYMPA <%s>", &Conf::get_robot_conf($robot, 'request')) . "\n";
 		printf SIZ "To: %s\n", $sender;
 		printf SIZ "Subject: " . gettext("Your message to %s has been rejected")."\n", $listname ;
 		printf SIZ "MIME-Version: 1.0\n";
@@ -1304,7 +1303,7 @@ sub ProcessExpire{
 	
 	    ## Prepare the reply message
 	    my $reply_hdr = new Mail::Header;
-	    $reply_hdr->add('From', sprintf gettext("SYMPA <%s>"), $Conf{'sympa'});
+	    $reply_hdr->add('From', sprintf "SYMPA <%s>", $Conf{'sympa'});
 	    $reply_hdr->add('To', $proprio);
  	    $reply_hdr->add('Subject',sprintf( gettext("End of your EXPIRE command on list %s"),$expire));
 

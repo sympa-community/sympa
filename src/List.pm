@@ -2020,7 +2020,7 @@ sub send_auth {
    close IN; close OUT;
  
    my $hdr = new Mail::Header;
-   $hdr->add('From', sprintf gettext("SYMPA <%s>"), $sympa);
+   $hdr->add('From', sprintf "SYMPA <%s>", $sympa);
    $hdr->add('To', $sender );
 #   $hdr->add('Subject', gettext("Authentication requested"));
    $hdr->add('Subject', "confirm $modkey");

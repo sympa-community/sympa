@@ -78,7 +78,7 @@ sub mailback {
 
    printf $fh "To:  %s\n", MIME::Words::encode_mimewords($to, 'Q', $charset);
    if ($from eq 'sympa') {
-       printf $fh "From: %s\n", MIME::Words::encode_mimewords((sprintf (gettext("SYMPA <%s>"), $sympa_email)), 'Q', $charset);
+       printf $fh "From: %s\n", MIME::Words::encode_mimewords((sprintf ("SYMPA <%s>", $sympa_email)), 'Q', $charset);
    }else {
        printf $fh "From: %s\n", MIME::Words::encode_mimewords($from, 'Q', $charset);
    }
