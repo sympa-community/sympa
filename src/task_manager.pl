@@ -662,8 +662,12 @@ sub execute {
 	return undef;
     }
 
+    # get the task name, without the path
+    my @path = split /\\/, $task_file;
+    my $task_name = $path[$#path];
+
     # positioning at the right label
-    $_[0] =~ /\w*\.(\w*)\..*/;
+    $task_name =~ /\w*\.(\w*)\..*/;
     my $label = $1;
     return undef if ($label eq 'ERROR');
 
