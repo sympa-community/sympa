@@ -1,3 +1,44 @@
+2002-01-25 10:46  salaun
+
+	* important_changes.pl: Better version comparison
+
+2002-01-25 10:34  salaun
+
+	* Makefile.am, Makefile.in, wwsympa/Makefile: [reported by J.
+	Marant] WWSBINDIR var in Makefile had desappeared.  Reintroduce it
+	as 'CGIDIR'
+
+2002-01-25 10:03  salaun
+
+	* src/alias_manager.pl: [reported by Sergiy Zhuk] wrong argument to
+	bouncequeue Also add @domain to arguments, even if default_domain
+
+2002-01-24 17:01  salaun
+
+	* doc/sympa.tex.tpl, src/List.pm: [requested by Vincent Mathieu]
+	Allow replicates in LDAP search filters
+
+2002-01-24 15:25  salaun
+
+	* doc/sympa.tex.tpl: [reported by Benoit Marchal] Corrections in
+	the documentation
+
+2002-01-24 12:35  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Sergiy Zhuk] Bug fix: Could
+	not delete scalar multiple parameters (like 'include_list') via
+	edit_list form. Now delete empty parameters after full syntax
+	checking ; this avoids parameter entries shifting.
+
+2002-01-24 12:28  salaun
+
+	* wwsympa/wwsympa.fcgi: Bug fix: buggy macro Did not check new
+	multiple parameter
+
+2002-01-23 16:59  salaun
+
+	* .version, ChangeLog, NEWS: Prepare 3.3.2
+
 2002-01-23 13:52  salaun
 
 	* src/: List.pm, task_manager.pl: Log cleanup Desactivate beta

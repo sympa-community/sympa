@@ -3,7 +3,7 @@
 
 (See Changelog file for the full changes log)
 
-3.3.2		23 Jan 2002
+3.3.3		25 Jan 2002
 
    New features :
 
@@ -16,6 +16,8 @@
 	[Luca Maranzano] Add support for the Sophos antivirus
 
    Changes :
+	Makefile.am, wwsympa/Makefile: [reported by J.Marant] WWSBINDIR 
+        var in Makefile had desappeared.  Reintroduce it as 'CGIDIR'
 
 	wwsympa/wwsympa.fcgi: Initialisation of all lists context while
 	starting wwsympa using fastcgi.
@@ -26,6 +28,12 @@
 
    Bug fixes : 
 
+	src/List.pm: suppress 'untie %users' in	_load_users_include get_subscriber() 
+	and is_user() subroutines failed with 'include' type of lists
+	
+	src/alias_manager.pl: [reported by Sergiy Zhuk] wrong argument to
+	bouncequeue Also add @domain to arguments, even if default_domain
+
 	src/smtp.pm: [John Dalbec] Patch for exim compatibility
 
 	task_manager.pl: desactivate global_remind task (not implemented yet)
@@ -35,15 +43,16 @@
 	src/Commands.pm: REVIEW requested by non-owners failed
 	(command not found) if a 'concealed' subscriber was found.
 
+	wwsympa/wwsympa.fcgi: [reported by Sergiy Zhuk] Bug fix: Could
+	not delete scalar multiple parameters (like 'include_list') via
+	edit_list form.
+
 	some default robot conf parameters where used instead of virtual robot
 	ones. Added Conf::get_robot_conf() subroutine
 
 	src/List.pm: Fix: do not save empty list parameters 
 
 	[reported by J.	Marant] use $Conf{'etc'} instead of --DIR--/etc
-
-	src/List.pm: suppress 'untie %users' in	_load_users_include get_subscriber() 
-	and is_user() subroutines failed with 'include' type of lists
 
 	wwsympa/wwsympa.fcgi: [John Dalbec] save stats file when data_source changed
 
