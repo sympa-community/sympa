@@ -772,9 +772,10 @@ sub next_cmd {
     my $date = &tools::epoch_conv ($tab[0], $context->{'execution_date'}); # conversion of the date argument into epoch format
     my $label = $tab[1];
     
-    &do_log ('notice', "line $context->{'line_number'} : next ($date, $label)");
+    &do_log ('notice', "line $context->{'line_number'} of $context->{'task_name'} : next ($date, $label)");
 
-    $context->{'task_name'} =~ /\w*\.\w*\.(\w*)\.($regexp{'listname'})/;
+    $context->{'task_name'} =~ /\w*\.\w*\.(\w*)\.(($regexp{'listname'})|_global)/;
+
     my $new_task = "$date.$label.$1.$2";
     my $human_date = &tools::adate ($date);
     my $new_task_file = "$spool_task/$new_task";
@@ -927,16 +928,62 @@ sub exec_cmd {
     
     return 1;
 }
+
 sub expire_bounce {
-    # If a bounce is older then $list->{get_latest_distribution_date}-$delai expire the bounce
+    # If a bounce is older then $list->get_latest_distribution_date()-$delai expire the bounce
     # Is this variable my be set in to task modele ?
     my $Rarguments = $_[0];
     my $context = $_[1];
     
     my $execution_date = $context->{'execution_date'};
     my @tab = @{$Rarguments};
-    my $delai = $tab[0];
-    do_log('notice',"yeeeeeeh $delai");
+    my $delay = $tab[0];
+
+    do_log('debug2',"bounce expiration task  using $delay days as delay");
+    foreach my $listname (&List::get_lists('*') ) {
+	my $list = new List ($listname);
+	# the reference date is the date until which we expire bounces in second
+        # the latest_distribution_date is the date of last distribution #days from 01 01 1970
+	unless ( $list->{'admin'}{'user_data_source'} eq 'database' ) {
+	    # do_log('notice','bounce expiration : skipping list %s because not using database',$listname);
+	    next;
+	}
+	
+	unless ($list->get_latest_distribution_date()) {
+	    do_log('notice','bounce expiration : skipping list %s because could not get latest distribution date',$listname);
+	    next;
+	}
+	my $refdate = (($list->get_latest_distribution_date() - $delay) * 3600 * 24);
+	
+	for (my $u = $list->get_first_bouncing_user(); $u ; $u = $list->get_next_bouncing_user()) {
+	    $u->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
+            $u->{'last_bounce'} = $2;
+	    if ($u->{'last_bounce'} < $refdate) {
+		my $email = $u->{'email'};
+		
+		unless ( $list->is_user($email) ) {
+		    do_log('info','expire_bounce: %s not subscribed', $email);
+		    next;
+		}
+		
+		unless( $list->update_user($email, {'bounce' => 'NULL', 'update_date' => time})) {
+		    do_log('info','expire_bounce: failed update database for %s', $email);
+		    next;
+		}
+		my $escaped_email = &tools::escape_chars($email);
+		unless (unlink "$wwsconf->{'bounce_path'}/$listname/$escaped_email") {
+		    do_log('info','expire_bounce: failed deleting %s', "$wwsconf->{'bounce_path'}/$listname/$escaped_email");
+	           next;
+		}
+		do_log('info','expire bounces for subscriber %s of list %s (last distribution %s, last bounce %s )',
+                       $email,$listname,
+                       &POSIX::strftime("%d %b %Y", localtime($list->get_latest_distribution_date() * 3600 * 24)),
+		       &POSIX::strftime("%d %b %Y", localtime($u->{'last_bounce'})));
+		
+	    }
+	}
+    }
+
     return 1;
 }
 
@@ -1151,7 +1198,6 @@ sub in {
 sub change_label {
     my $task_file = $_[0];
     my $new_label = $_[1];
-    &do_log ('notice', "xxxxxxxxxxxxxxxxxxxxxxxxxxx rename $task_file  in $new_label");
     
     my $new_task_file = $task_file;
     $new_task_file =~ s/(.+\.)(\w*)(\.\w+\.\w+$)/$1$new_label$3/;
