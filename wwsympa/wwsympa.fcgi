@@ -4920,9 +4920,11 @@ sub do_edit_list {
 
 	    my $last_index = $#{$new_admin->{$pname}};
 	    
-	    $#{$list->{'admin'}{$pname}} < $last_index ?
-		$to_index = $last_index
-		    : $to_index = $#{$list->{'admin'}{$pname}};
+	    if ($#{$list->{'admin'}{$pname}} < $last_index) {
+		$to_index = $last_index;
+	    }else {
+		$to_index = $#{$list->{'admin'}{$pname}};
+	    }
 
 	    if ($#{$list->{'admin'}{$pname}} != $last_index) {
 		$changed{$pname} = 1; 
