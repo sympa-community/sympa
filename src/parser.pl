@@ -32,7 +32,7 @@ my ($index, @t, $data, $internal, $previous_file, %option, $current_output);
 ## Parameters are   
 ## data: a HASH ref containing the data   
 ## template : a filename or a ARRAY ref that contains the template   
-## output : a Filedescriptor or a SCALAR ref for the output
+## output : a Filedescriptor or a ARRAY ref for the output
 sub parse_tpl {
     my ($template, $output);
     ($data, $template, $output, $recurse) = @_;
