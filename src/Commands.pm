@@ -1093,8 +1093,18 @@ sub remind {
         return 'syntax_error';
     }
 
-    $listname = $1;
-    
+    my $listname = $1;
+    my $list;
+
+    unless ($listname eq '*') {
+	$list = new List ($listname);
+	unless ($list) {
+	    push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
+	    do_log('info', 'REMIND %s from %s refused, unknown list', $which, $sender);
+	    return 'unknown_list';
+	}
+    }
+
     if ($sign_mod eq 'smime') {
 	$auth_method='smime';
     }elsif ($auth ne '') {
@@ -1119,13 +1129,12 @@ sub remind {
     }else {
 	$auth_method='smtp';
     }
-    my $action,$list;
+    my $action;
 
     if ($listname eq '*') {
 	$action = &List::get_action ('global_remind',$sender,$auth_method);
     }else{
-	$list = new List ($listname); 
-
+	
 	&Language::SetLang($list->{'admin'}{'lang'});
 
 	$host = $list->{'admin'}{'host'};
