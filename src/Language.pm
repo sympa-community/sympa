@@ -141,6 +141,7 @@ sub maketext {
 }
 
 sub gettext {
+    &do_log('debug2', 'Language::gettext(%s)', $_[0]);
 
     ## This prevents meta information to be returned if the string to translate is empty
     if ($_[0] eq '') {

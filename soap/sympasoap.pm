@@ -34,6 +34,7 @@ use Conf;
 use Log;
 use Auth;
 use CAS;
+use Language;
 
 ## Define types of SOAP type listType
 my %types = ('listType' => {'listAddress' => 'string',
@@ -624,7 +625,12 @@ owners for approval. You will receive a notification when you will have
 been subscribed (or unsubscribed) to the list.\n");
       ## Send a notice to the owners.
       my $keyauth = $list->compute_auth($sender,'add');
-      $list->send_sub_to_owner($sender, $keyauth, &Conf::get_robot_conf($robot, 'sympa'), $gecos);
+      $list->send_notify_to_owner({'who' => $sender,
+				   'keyauth' => $list->compute_auth($sender,'add'),
+				   'replyto' => &Conf::get_robot_conf($robot, 'sympa'),
+				   'gecos' => $gecos,
+				   'type' => 'subrequest'});
+#      $list->send_sub_to_owner($sender, $keyauth, &Conf::get_robot_conf($robot, 'sympa'), $gecos);
       $list->store_susbscription_request($sender, $gecos);
       &Log::do_log('info', 'SOAP subscribe : %s from %s forwarded to the owners of the list (%d seconds)',$listname,$sender,time-$time_command);
       return SOAP::Data->name('result')->type('boolean')->value(1);

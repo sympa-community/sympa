@@ -2661,7 +2661,6 @@ sub send_global_file {
     my($action, $who, $robot, $context) = @_;
     do_log('debug2', 'List::send_global_file(%s, %s, %s)', $action, $who, $robot);
 
-    my $filename;
     my $data = $context;
 
     unless ($data->{'user'}) {
@@ -2689,6 +2688,8 @@ sub send_global_file {
 	&tt2::add_include_path($d);
     }
 
+    my $filename = &tools::get_filename('etc', $action.'.tt2', $robot);
+
     foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title') {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
@@ -2698,7 +2699,7 @@ sub send_global_file {
     $data->{'robot_domain'} = $robot;
     $data->{'return_path'} = &Conf::get_robot_conf($robot, 'request');
 
-    &mail::mailfile($action.'.tt2', $who, $data, $robot);
+    &mail::mailfile($filename, $who, $data, $robot);
 
     return 1;
 }
@@ -2709,7 +2710,6 @@ sub send_file {
     do_log('debug2', 'List::send_file(%s, %s, %s, %s)', $action, $who, $robot);
 
     my $name = $self->{'name'};
-    my $filename;
     my $sign_mode;
 
     my $data = $context;
@@ -2774,6 +2774,8 @@ sub send_file {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
 
+    my $filename = &tools::get_filename('etc', $action.'.tt2', $robot, $self);
+
     $data->{'list'}{'lang'} = $self->{'admin'}{'lang'};
     $data->{'list'}{'name'} = $name;
     $data->{'list'}{'domain'} = $data->{'robot_domain'} = $robot;
@@ -2803,7 +2805,7 @@ sub send_file {
 	$data->{'context'}{$key} = $context->{$key};
     }
 
-    &mail::mailfile($action.'.tt2', $who, $data, $self->{'domain'}, $sign_mode);
+    &mail::mailfile($filename, $who, $data, $self->{'domain'}, $sign_mode);
 
     return 1;
 }

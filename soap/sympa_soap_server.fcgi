@@ -21,6 +21,7 @@ use List;
 use smtp;
 use Conf;
 use Log;
+use Language;
 use sympasoap;
 
 ## WWSympa librairies

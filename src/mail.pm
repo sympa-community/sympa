@@ -234,7 +234,8 @@ sub mailfile {
        if ($filename =~ /\.tt2$/) {
 	   #&parser::parse_tpl($data, $filename, \$fh);
 	   my $output;
-	   &tt2::parse_tt2($data, $filename, \$output);
+	   my @path = split /\//, $filename;	   
+	   &tt2::parse_tt2($data, $path[$#path], \$output);
 	   #warn 'from tmpl:',join('',$output);
 	   print $fh join('',$output);
 
