@@ -72,7 +72,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {5.0a}
+    \newcommand {\version} {5.0a.1}
 
     \newcommand {\samplelist} {mylist}
 
@@ -126,13 +126,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.0a\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.0a.1\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {13 December 2004}
+    \date {14 December 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -344,6 +344,8 @@ in a single software package, including:
 %	revocation lists. It is also possible to write one's own task models to meet 
 %	particular needs. Unique actions may also be scheduled by this way.
 
+     \item channel RSS.
+ 
 \end {itemize}
 
 \section {Project directions}
@@ -1559,6 +1561,14 @@ listmaster-test: 	"| /home/sympa/bin/queue listmaster@\samplerobot"
 	This is the root URL of \WWSympa.
 
         \example {wwsympa\_url https://my.server/sympa}
+
+\subsection {\cfkeyword {rss\_url}}  
+
+	 \default {http://\texttt{<}host\texttt{>}/sympa/rss}
+
+	This is the root URL of \WWSympa's rss channel.
+
+        \example {wwsympa\_url https://my.server/sympa/rss}
 
 \subsection {\cfkeyword {soap\_url}}  
 
@@ -3319,6 +3329,114 @@ the \textbf {Send me a password} button on the web interface. As for any user, t
 
 Note that you must start the \file {sympa.pl} process with the web interface ; it is in responsible for delivering 
 mail messages including password reminders.
+
+\section {RSS channel}
+
+See \ref {rss}, page~\pageref {rss}. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sympa RSS Channel
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Sympa RSS channel}
+\label{rss}
+\index{rss}
+
+This service is provided by \WWSympa (\Sympa's web interface). 
+Here is the root of \WWSympa's rss channel :\\
+
+      \default {http://\texttt{<}host\texttt{>}/wws/rss}\\
+      \example {https://my.server/wws/rss}
+
+The access control of RSS queries proceed on the same way as \WWSympa actions referred to.
+\Sympa provides the following RSS features :
+\begin{itemize}
+   \item the latest created lists on a robot (\file{latest\_lists}) ;
+   \item the most active lists on a robot(\file{active\_lists}) ;  
+   \item the latest messages of a list (\file{active\_arc}) ;   
+   \item the latest shared documents of a list (\file{latest\_d\_read}) ; 
+\end{itemize}
+
+
+\section {\file{latest\_lists}}
+
+This provides the latest created lists.  
+
+      \example {http://my.server/wws/rss/latest\_lists?for=3\&count=6}\\
+      This provides the 6 latest created lists for the last 3 days.\\
+
+      \example {http://my.server/wws/rss/latest\_lists/computing?count=6}\\ 
+      This provides the 6 latest created lists with topic ``computing''.\\
+
+Parameters : 
+\begin{itemize}
+  \item \file{for} : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+  \item \file{count} : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+  \item topic : the topic is indicated in the path info (see example below with topic computing). 
+    This parameter is optional.
+\end{itemize}
+
+\section {\file{active\_lists}}
+
+This provides the most active lists, based on the number of distributed messages (number of received messages).  
+
+      \example {http://my.server/wws/rss/active\_lists?for=3\&count=6}\\
+      This provides the 6 most active lists for the last 3 days.\\
+
+      \example {http://my.server/wws/rss/active\_lists/computing?count=6}\\ 
+      This provides the 6 most active lists with topic ``computing''.\\
+
+Parameters : 
+\begin{itemize}
+   \item \file{for} : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+  \item \file{count} : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+ \item topic : the topic is indicated in the path info (see example below with topic computing). 
+    This parameter is optional.
+\end{itemize}
+
+\section {\file{latest\_arc}}
+
+This provides the latest messages of a list.  
+
+      \example {http://my.server/wws/rss/latest\_arc/\samplelist?for=3\&count=6}\\
+      This provides the 6 latest messages received on the \samplelist  list for the last 3 days.\\
+
+Parameters : 
+\begin{itemize}
+   \item list : the list is indicated in the path info. This parameter is mandatory.
+   \item \file{for} : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+  \item \file{count} : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+\end{itemize}
+
+\section {\file{latest\_d\_read}}
+
+This provides the latest updated and uploaded shared documents of a list.  
+
+      \example {http://my.server/wws/rss/latest\_d\_read/\samplelist?for=3\&count=6}\\
+      This provides the 6 latest documents uploaded or updated on the \samplelist  list for the last 3 days.\\
+
+Parameters : 
+\begin{itemize}
+   \item list : the list is indicated in the path info. This parameter is mandatory.
+   \item \file{for} : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+  \item \file{count} : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+\end{itemize}
+
+
+
+
+
+
+
 
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

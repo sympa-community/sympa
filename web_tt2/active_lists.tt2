@@ -3,13 +3,13 @@
 
 <h2> <strong>
  [% IF count %]
-   [%|loc%] The [% count %] most active lists [%END%] 
+   [%|loc(count)%] The %1 most active lists [%END%] 
  [% ELSE %]
    [%|loc%] The active lists [%END%] 
  [% END %]
 
  [% IF for %]
-   [%|loc%] for [% for %] days [%END%] 	
+   [%|loc(loc)%] for %1 days [%END%] 	
  [% END %]
 </strong> </h2> 	
 
