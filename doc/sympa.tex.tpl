@@ -66,7 +66,7 @@
 
     \newcommand {\samplelist} {mylist}
 
-    \newcommand {\samplerobot} {my\.domain\.org}
+    \newcommand {\samplerobot} {my.domain.org}
 
     % #1 = text to index and to display
     \newcommand {\textindex} [1] {\index{#1}#1}
@@ -4254,6 +4254,18 @@ Most configuration parameters can be define for each robot except
 general Sympa installation parameters (binary and spool location, smtp engine,
 antivirus plugging,...).
 
+The virtual robot name as define every where in Sympa documentation and configuration file is the internet domaine of the robot.
+
+\section {How to create a virtual robot}
+
+You don't need to install several Sympa server. One sympa.pl deamon and one or more fastcgi server can serve all virtual robot. Just configure the server environement in order to accept the new domain definition.
+\begin {itemize}
+\item The DNS must be configured in order to define a new mail exange record (MX) to route message to your server. A new host (A record) or alias (CNAME) are mandatory to define the new web server.
+\item Configure you MTA (sendmail, postfix, ...) to accept incomming messages for the new robot domain.
+\item Define a virtual host in your httpd server. The fastcgi servers defined in the common section of you httpd server can be used by each virtual server. You don't need to run dedicated fascgi server for each virtual robot.
+\item Define the virtual robot in Sympa configuration (current version of Sympa do not yet allow to create Sympa robot using administration web interface).
+\end {itemize}
+
 \section {Robot definition}
 
 A robot is named by its domain, let's say \samplerobot and defined by a directory 
@@ -4297,9 +4309,11 @@ environment variable to recognize which robot is in used.
 
 \subsection {Robot customization}
 
+If needed, you cancustomize each virtual robot using its set of templates and scenario.
+
 \tildedir {sympa/etc/\samplerobot/wws\_templates/},
 \tildedir {sympa/etc/\samplerobot/templates/}, 
-\tildedir {sympa/etc/\samplerobot/scenari/} directries are searched when
+\tildedir {sympa/etc/\samplerobot/scenari/} directories are searched when
 loading templates or scenari before searching into \tildedir {sympa/etc} and  \tildedir {sympa/bin/etc}. This allows to define different privileges and a different GUI for a Virtual Robot.
 
 
