@@ -4029,7 +4029,10 @@ sub do_edit_list {
 
 	## Single vs multiple parameter
 	if ($pinfo->{$pname}{'occurrence'} =~ /n$/) {
-	    if ($#{$list->{'admin'}{$pname}} != $#{$new_admin->{$pname}}) {
+
+	    my $last_index = $#{$new_admin->{$pname}};
+
+	    if ($#{$list->{'admin'}{$pname}} != $last_index) {
 		$changed{$pname} = 1; next;
 	    }
 	    $p = $list->{'admin'}{$pname};
@@ -4329,8 +4332,10 @@ sub _prepare_data {
 	    $data2 = $data;
 
 	    ## Add an empty entry
-	    push @{$data2}, undef
-		unless ($name eq 'days');
+	    unless ($name eq 'days') {
+		push @{$data2}, undef;
+		&do_log('debug', 'xxx Add 1 %s', $name);
+	    }
 	}else {
 	    $data2 = [undef];
 	}
