@@ -2062,7 +2062,7 @@ sub expire {
 	}
     }else { 
         ## Ask the requestor for an authentication
-	$key=substr(Digest::MD5->md5_hex(join('/', $list->get_cookie(), $name, $sender, $d1, $d2, 'expire', time)), -8);
+	$key=substr(Digest::MD5::md5_hex(join('/', $list->get_cookie(), $name, $sender, $d1, $d2, 'expire', time)), -8);
 	push @msg::report, sprintf Msg(6, 48, $msg::expire_need_auth), $name, $d1, $Conf{'sympa'},$key,$name, $d1, $d2;
 
 	$limitday= time - 86400* $d1;

@@ -1574,7 +1574,7 @@ sub send_to_editor {
    my @now = localtime(time);
    my $messageid=$now[6].$now[5].$now[4].$now[3].$now[2].$now[1]."."
                  .int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6))."\@".$host;
-   my $modkey=Digest::MD5->md5_hex(join('/', $self->get_cookie(),$messageid));
+   my $modkey=Digest::MD5::md5_hex(join('/', $self->get_cookie(),$messageid));
    my $boundary ="__ \<$messageid\>";
    
    ## Keeps a copy of the message
@@ -1673,7 +1673,7 @@ sub send_auth {
    my $messageid = $now[6].$now[5].$now[4].$now[3].$now[2].$now[1]."."
                    .int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6))
 		   .int(rand(6)).int(rand(6))."\@".$host;
-   my $modkey = Digest::MD5->md5_hex(join('/', $self->get_cookie(),$messageid));
+   my $modkey = Digest::MD5::md5_hex(join('/', $self->get_cookie(),$messageid));
    my $boundary = "----------------- Message-Id: \<$messageid\>" ;
    my $contenttype = "Content-Type: message\/rfc822";
      
@@ -5736,7 +5736,7 @@ sub compute_auth {
 	$cookie = $Conf{'cookie'};
     }
     
-    $key = substr(Digest::MD5->md5_hex(join('/', $cookie, $listname, $email, $cmd)), -8) ;
+    $key = substr(Digest::MD5::md5_hex(join('/', $cookie, $listname, $email, $cmd)), -8) ;
 
     return $key;
 }
