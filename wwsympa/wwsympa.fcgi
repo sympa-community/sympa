@@ -5231,7 +5231,7 @@ sub do_d_read {
     }
 
     ### Document exist ? 
-    unless (-e "$doc") {
+    unless (-r "$doc") {
 	&wwslog('info',"do_d_read : unable to read $shareddir/$path : no such file or directory");
 	&error_message('no_such_document', {'path' => $path});
 	return undef;
@@ -5806,7 +5806,7 @@ sub do_d_describe {
 	    $desc_file = "$shareddir/$dir.desc.$file";
 	}
 
-	if (-e "$desc_file"){
+	if (-r "$desc_file"){
 	    # if description file already exists : open it and modify it
 	    my %desc_hash = &get_desc_file ("$desc_file");
 
