@@ -6146,7 +6146,7 @@ sub sync_include {
 
     ## Load a hash with the old subscribers
     for (my $user=$self->get_first_user(); $user; $user=$self->get_next_user()) {
-	$old_subscribers{$user->{'email'}} = $user;
+	$old_subscribers{lc($user->{'email'})} = $user;
 	$total++;
     }
 
