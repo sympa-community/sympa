@@ -8759,12 +8759,6 @@ sub maintenance {
     ## Migration to tt2
     unless (&tools::higher_version($previous_version, '4.2b')) {
 
-	&do_log('notice','Initializing the new admin_table...');
-	foreach my $l ( &List::get_lists('*') ) {
-	    my $list = new List ($l); 
-	    $list->sync_include_admin();
-	}
-
 	&do_log('notice','Migrating templates to TT2 format...');	
 	
 	unless (open EXEC, '--SCRIPTDIR--/tpl2tt2.pl|') {
@@ -8788,6 +8782,15 @@ sub maintenance {
 	}	
     }
     
+    ## Initializing the new admin_table
+    unless (&tools::higher_version($previous_version, '4.2b.4')) {
+	&do_log('notice','Initializing the new admin_table...');
+	foreach my $l ( &List::get_lists('*') ) {
+	    my $list = new List ($l); 
+	    $list->sync_include_admin();
+	}
+    }
+
     ## Saving current version
     unless (open VFILE, ">$version_file") {
 	do_log('err', "Unable to open %s : %s", $version_file, $!);
