@@ -279,7 +279,7 @@ sub stats {
     do_log('debug2', 'Commands::stats(%s)', $which);
 
     my $list = new List ($which);
-    unless (($list) && (&list_by_robot ($which,$robot)) {
+    unless (($list) && (&list_by_robot ($which,$robot))) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'STATS %s from %s refused, unknown list for robot %s', $which, $sender,$robot);
 	return 'unknown_list';
