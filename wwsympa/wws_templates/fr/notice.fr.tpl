@@ -21,6 +21,9 @@ Pour choisir votre mot de passe, allez dans vos 'Préférences', depuis le menu su
 [ELSIF notice->msg=no_msg] 
 Aucun message à modérer pour la liste [notice->list]
 
+[ELSIF notice->msg=subscribers_update_soon]
+La liste des membres de la liste sera générée/mise à jour dans un moment (quelques minutes).
+
 [ELSE]
 [notice->msg]
 

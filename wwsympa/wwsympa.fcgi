@@ -5154,7 +5154,12 @@ sub do_edit_list {
 	    }elsif (($list->{'admin'}{'user_data_source'} eq 'database') &&
 		    ($new_admin->{'user_data_source'} eq 'include2')) {
 		$list->update_user('*', {'subscribed' => 1});
+		&message('subscribers_update_soon');
 	    }
+
+	    ## Update total of subscribers
+	    $list->{'total'} = &List::_load_total_db($list->{'name'});
+	    $list->savestats();
 	}
 
         #If no directory, delete the entry
