@@ -4115,20 +4115,9 @@ sub get_first_admin_user {
 	
 	close $lock_file;
 	
-	## Read access to prevent "Bad file number" error on Solaris
-	unless (open FH, "$lock_file") {
-	    &do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+	unless ($list_of_fh{$lock_file} = &tools::lock($lock_file,'read')) {
 	    return undef;
 	}
-	
-	unless (flock (FH, LOCK_SH | LOCK_NB)) {
-	    &do_log('notice','Waiting for reading lock on %s', $lock_file);
-	    unless (flock (FH, LOCK_SH)) {
-		&do_log('err', 'Failed locking %s: %s', $lock_file, $!);
-		return undef;
-	    }
-	}
-	&do_log('debug2', 'Got lock for reading on %s', $lock_file); 
     }
           
     my $name = $self->{'name'};
@@ -4391,9 +4380,10 @@ sub get_next_admin_user {
 	## Last lock
 	if ($include_admin_user_lock_count == 0) {
 	    my $lock_file = $self->{'dir'}.'/include_admin_user.lock';
-	    flock(FH,LOCK_UN);
-	    close FH;
-	    &do_log('debug2', 'Release lock on %s', $lock_file);
+	    unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
+		return undef;
+	    }
+	    delete $list_of_fh{$lock_file};
 	}
     }
    return $admin_user;
@@ -8087,14 +8077,9 @@ sub sync_include_admin {
 	    &do_log('err', 'Cannot open %s: %s', $lock_file, $!);
 	    return undef;
 	}
-	unless (flock (FH, LOCK_EX | LOCK_NB)) {
-	    &do_log('notice','Waiting for writing lock on %s', $lock_file);
-	    unless (flock (FH, LOCK_EX)) {
-		&do_log('err', 'Failed locking %s: %s', $lock_file, $!);
-		return undef;
-	    }
+	unless ($list_of_fh{$lock_file} = &tools::lock($lock_file,'write')) {
+	    return undef;
 	}
-	&do_log('debug2', 'Got lock for writing on %s', $lock_file);
 	
 	## Go through new admin_users_include
 	foreach my $email (keys %{$new_admin_users_include}) {
@@ -8261,9 +8246,10 @@ sub sync_include_admin {
 	}
 
 	## Release lock
-	flock(FH,LOCK_UN);
-	close FH;
-	&do_log('debug2', 'Release lock on %s', $lock_file);
+	unless (&tools::unlock($lock_file, $list_of_fh{$lock_file})) {
+	    return undef;
+	}
+	delete $list_of_fh{$lock_file};
     }	
    
     $self->{'last_sync_admin_user'} = time;
