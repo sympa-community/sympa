@@ -5052,7 +5052,7 @@ sub _load_admin_file {
 	
 	## Look for first valid line
 	unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
-	    &do_log('info', 'Bad paragraph "%s"', @paragraph);
+	    &do_log('info', 'Bad paragraph "%s" in %s', @paragraph, $config_file);
 	    next;
 	}
 	    
@@ -5065,7 +5065,7 @@ sub _load_admin_file {
 	}
 	
 	unless (defined $::pinfo{$pname}) {
-	    &do_log('info', 'Unknown parameter "%s"', $pname);
+	    &do_log('info', 'Unknown parameter "%s" in %s', $pname, $config_file);
 	    next;
 	}
 
@@ -5073,7 +5073,7 @@ sub _load_admin_file {
 	if (defined $admin{$pname}) {
 	    unless (($::pinfo{$pname}{'occurrence'} eq '0-n') or
 		    ($::pinfo{$pname}{'occurrence'} eq '1-n')) {
-		&do_log('info', 'Multiple parameter "%s"', $pname);
+		&do_log('info', 'Multiple parameter "%s" in %s', $pname, $config_file);
 	    }
 	}
 	
@@ -5081,7 +5081,7 @@ sub _load_admin_file {
 	if (ref $::pinfo{$pname}{'file_format'} eq 'HASH') {
 	    ## This should be a paragraph
 	    unless ($#paragraph > 0) {
-		&do_log('info', 'Expecting a paragraph for "%s" parameter', $pname);
+		&do_log('info', 'Expecting a paragraph for "%s" parameter in %s', $pname, $config_file);
 	    }
 	    
 	    ## Skipping first line
@@ -5092,18 +5092,18 @@ sub _load_admin_file {
 		next if ($paragraph[$i] =~ /^\s*\#/);
 		
 		unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
-		    &do_log('info', 'Bad line "%s"',$paragraph[$i]);
+		    &do_log('info', 'Bad line "%s" in %s',$paragraph[$i], $config_file);
 		}
 		
 		my $key = $1;
 		
 		unless (defined $::pinfo{$pname}{'file_format'}{$key}) {
-		    &do_log('info', 'Unknown key "%s" in paragraph "%s"', $key, $pname);
+		    &do_log('info', 'Unknown key "%s" in paragraph "%s" in %s', $key, $pname, $config_file);
 		    next;
 		}
 		
 		unless ($paragraph[$i] =~ /^\s*$key\s+($::pinfo{$pname}{'file_format'}{$key}{'file_format'})\s*$/i) {
-		    &do_log('info', 'Bad value "%s" for parameter "%s" in paragraph "%s"', $paragraph[$i], $key, $pname);
+		    &do_log('info', 'Bad value "%s" for parameter "%s" in paragraph "%s" in %s', $paragraph[$i], $key, $pname, $config_file);
 		    next;
 		}
 
@@ -5124,7 +5124,7 @@ sub _load_admin_file {
 		## Required fields
 		if ($::pinfo{$pname}{'file_format'}{$k}{'occurrence'} eq '1') {
 		    unless (defined $hash{$k}) {
-			&do_log('info', 'Missing key "%s" in param "%s"', $k, $pname);
+			&do_log('info', 'Missing key "%s" in param "%s" in %s', $k, $pname, $config_file);
 			$missing_required_field++;
 		    }
 		}
@@ -5144,11 +5144,11 @@ sub _load_admin_file {
 	}else {
 	    ## This should be a single line
 	    unless ($#paragraph == 0) {
-		&do_log('info', 'Expecting a single line for "%s" parameter', $pname);
+		&do_log('info', 'Expecting a single line for "%s" parameter in %s', $pname, $config_file);
 	    }
 
 	    unless ($paragraph[0] =~ /^\s*$pname\s+($::pinfo{$pname}{'file_format'})\s*$/i) {
-		&do_log('info', 'Bad value "%s" for parameter "%s"', $paragraph[0], $pname);
+		&do_log('info', 'Bad value "%s" for parameter "%s" in %s', $paragraph[0], $pname, $config_file);
 		next;
 	    }
 
@@ -5200,7 +5200,7 @@ sub _load_admin_file {
 	## Required fields
 	if ($::pinfo{$p}{'occurrence'} =~ /^1(-n)?$/ ) {
 	    unless (defined $admin{$p}) {
-		&do_log('info','Missing parameter "%s"', $p);
+		&do_log('info','Missing parameter "%s" in %s', $p, $config_file);
 	    }
 	}
     }
