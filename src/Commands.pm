@@ -470,7 +470,10 @@ sub review {
 	    push @users, $user;
 	} while ($user = $list->get_next_user());
 
-	$list->send_file('review', $sender, {'users' => \@users, 'total' => $list->get_total()});
+	$list->send_file('review', $sender, {'users' => \@users, 
+					     'total' => $list->get_total(),
+					     'from' => "SYMPA <$Conf{'sympa'}>",
+					     'subject' => "REVIEW $listname"});
 
 	do_log('info', 'REVIEW %s from %s accepted (%d seconds)', $listname, $sender,time-$time_command);
 	

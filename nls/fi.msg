@@ -52,7 +52,6 @@ $set 6	Messages du module Commands.pm
 9	"Lista on yksityinen : Et voi lukea arkistoja.\n"
 10	"Lista on yksityinen : Et voi selata tiedostoja.\n"
 11	"Lista on yksityinen : Et voi selata tilaajalistaa.\n"
-12	"Tilaajat : %d\n"
 13	"Syntaksivirhe komennossa.\n"
 15	"Käyttöoikeuksien tarkastusprosessi epäonnistui\n\n"
 16	"Vahvistit listan tilauksen luultavasti eri sähköpostiosoitteesta.\n\

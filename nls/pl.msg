@@ -54,7 +54,6 @@ $set 6	Messages du module Commands.pm
 9	"Lista prywatna : Nie mo¿esz odczytywaæ jej archiwów.\n"
 10	"Lista prywatna : Nie mo¿esz przegl±daæ dostêpnych plików s.\n"
 11	"Lista priwatna : Nie mo¿esz przegl±daæ listy zapisanych.\n"
-12	"Zapisani : %d\n"
 13	"B³±d sk³adni polecenia.\n"
 15	"B³±d procesu autentyfikacji\n\n"
 16	"Prawdopodobnie potwierdzi³e¶ swój udzia³ w li¶cie u¿ywaj±c innego adresu\n\

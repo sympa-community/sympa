@@ -62,7 +62,6 @@ $set 6  Mensajes del módulo de Commands.pm
 9	"La lista es privada: usted no puede consultar los archivos.\n"
 10	"La lista es privada: usted no puede consultar la lista de los archivos disponibles.\n"
 11	"La lista es privada: usted no puede consultar la lista de los suscriptores.\n"
-12	"El número de suscriptores es: %d\n"
 13	"Error de sintaxis.\n"
 15	"El proceso de autentificación ha fallado.\n\n"
 16	"Usted probablemente confirmó su suscripción con una dirección electrónica diferente.\n\

@@ -55,7 +55,6 @@ $set 6	Messages du module Commands.pm
 9	"Tato konference je soukromá : Nemù¾ete èít archiv.\n"
 10	"Tato konference je soukromá : Nelze prohlí¾et dostupné soubory.\n"
 11	"Tato konference je soukromá : Nelze prohlí¾et seznam èlenù.\n"
-12	"Èlenové : %d\n"
 13	"Chyba v pøíkazu.\n"
 15	"Proces ovìøení toto¾nosti selhal.\n\n"
 16	"Patrnì jste potvrdil va¹e pøihlá¹ení z jiné\n\

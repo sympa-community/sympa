@@ -1,7 +1,3 @@
-From: SYMPA <[conf->sympa]>
-To: [to]
-Subject: REVIEW [list->name]
-
 Les abonnés à la liste [list->name]@[list->host] :
 
 [FOREACH u in users]

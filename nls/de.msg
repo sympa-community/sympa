@@ -13,7 +13,8 @@ $set 2	Messages used by Conf when verifying the files
 
 $set 3	Misc. messages in the main program
 1	"Auf Verzeichnis %s kann nicht zugegriffen werden: %m"
-
+Iscritti alla lista : %d\n"
+13	"Errore di sintassi 
 $set 4	Messages used in the main loop
 11	"Nachricht an %s abgelehnt"
 12	"Ihre Nachricht konnte nicht gesendet werden, weil sie\n\
@@ -64,7 +65,6 @@ $set 6	Messages du module Commands.pm
 10	"Die Liste ist privat. Sie können die verfügbaren Dateien\n\
 nicht auflisten\n"
 11	"Die Liste ist privat. Sie können die Mitglieder nicht auflisten.\n"
-12	"Abonnenten: %d\n"
 13	"Syntaxfehler im Befehl.\n"
 15	"Die Authentifizierung ist fehlgeschlagen.\n\n"
 16	"Sie haben Ihr Abonnement wahrscheinlich unter einer\n\
