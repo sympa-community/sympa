@@ -693,6 +693,202 @@ sub decrypt_password {
     return ($cipher->decrypt(&MIME::Base64::decode($inpasswd)));
 }
 
+sub load_mime_types {
+    my $types = {};
 
+    my @localisation = ('/etc/mime.types',
+			'/usr/local/apache/conf/mime.types',
+			'/etc/httpd/conf/mime.types','mime.types');
+
+    foreach my $loc (@localisation) {
+        next unless (-r $loc);
+
+        unless(open (CONF, $loc)) {
+            printf STDERR "load_mime_types: unable to open $loc\n";
+            return undef;
+        }
+    }
+    
+    while (<CONF>) {
+        next if /^\s*\#/;
+        
+        if (/^(\S+)\s+(.+)\s*$/i) {
+            my ($k, $v) = ($1, $2);
+            
+            my @extensions = split / /, $v;
+        
+            ## provides file extention, given the content-type
+            if ($#extensions >= 0) {
+                $types->{$k} = $extensions[0];
+            }
+    
+            foreach my $ext (@extensions) {
+                $types->{$ext} = $k;
+            }
+            next;
+        }
+    }
+    
+    close FILE;
+    return $types;
+}
+
+sub split_mail {
+    my $message = shift ; 
+    my $pathname = shift ;
+    my $dir = shift ;
+
+    my $head = $message->head ;
+    my $body = $message->body ;
+    my $encoding = $head->mime_encoding ;
+
+    if ($message->is_multipart
+	|| ($message->mime_type eq 'message/rfc822')) {
+
+        for (my $i=0 ; $i < $message->parts ; $i++) {
+            &split_mail ($message->parts ($i), $pathname.'.'.$i, $dir) ;
+        }
+    }
+    else { 
+	    my $fileExt ;
+
+	    if ($head->mime_attr("content_type.name") =~ /\.(\S+)/) {
+		$fileExt = $1 ;
+	    }
+	    elsif ($head->recommended_filename =~ /\.(\S+)/) {
+		$fileExt = $1 ;
+	    }
+	    else {
+		my $mime_types = &load_mime_types();
+
+		$fileExt=$mime_types->{$head->mime_type};
+		my $var=$head->mime_type;
+	    }
+	
+	    
+
+	    ## Store body in file 
+	    unless (open OFILE, ">$dir/$pathname.$fileExt") {
+		print STDERR "Unable to open $dir/$pathname.$fileExt\n" ;
+		return undef ; 
+	    }
+	    
+	    if ($encoding =~ /^binary|7bit|8bit|base64|quoted-printable|x-uu|x-uuencode|x-gzip64$/ ) {
+		open TMP, ">$dir/$pathname.$fileExt.$encoding";
+		$message->print_body (\*TMP);
+		close TMP;
+
+		open BODY, "$dir/$pathname.$fileExt.$encoding";
+
+		my $decoder = new MIME::Decoder $encoding;
+		$decoder->decode(\*BODY, \*OFILE);
+		unlink "$dir/$pathname.$fileExt.$encoding";
+	    }else {
+		$message->print_body (\*OFILE) ;
+	    }
+	    close (OFILE);
+	    printf "\t-------\t Create file %s\n", $pathname.'.'.$fileExt ;
+	    
+	    ## Delete files created twice or more (with Content-Type.name and Content-Disposition.filename)
+	    $message->purge ;
+    
+	
+    }
+}
+
+sub virus_infected {
+    my $mail = shift ;
+    my $file = shift ;
+    
+    # there is no virus anywhere if there is no antivus tools installed
+    return 0 unless ($Conf{'antivirus_path'} );
+    
+    my @name = split(/\//,$file);
+    printf " name $name[$#name]\n";
+    my $work_dir = "${Conf{'tmpdir'}}/antivirus";
+    printf "work dir $work_dir \n";
+    
+    unless ((-d $work_dir) ||( mkdir $work_dir)) {
+	do_log('err', "Unable to create tmp antivirus directory $work_dir");
+	printf "Unable to create tmp antivirus directory $work_dir";
+	return 0;
+    }
+
+    $work_dir = "${Conf{'tmpdir'}}/antivirus/${name[$#name]}";
+    printf "work dir $work_dir \n";
+    
+    unless ( mkdir ($work_dir)) {
+	do_log('err', "Unable to create tmp antivirus directory $work_dir");
+	printf "Unable to create tmp antivirus directory $work_dir";
+	return 0;
+    }
+
+    #$mail->dump_skeleton;
+
+    ## Call the procedure of spliting mail
+    &split_mail ($mail,'msg', $work_dir) ;
+
+    my $virusfound; 
+
+    if ("${Conf{'antivirus_path'}}" =~ /uvscan$/) {
+
+	# impossible to look for viruses with no option set
+	return 0 unless ($Conf{'antivirus_args'});
+    
+	open (ANTIVIR,"$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ; 
+		
+	while (<ANTIVIR>) {
+	    if (/^\s*Found the\s+(.*)\s*virus.*$/i){
+		$virusfound = $1;
+	    }
+	}
+	close ANTIVIR;
+    
+	my $status = $?/256 ;
+
+        ## uvscan status =13 (*256) => virus
+        if (( $status == 13) and not($virusfound)) { 
+	    $virusfound = "unknown";
+	}
+    }    
+    elsif("${Conf{'antivirus_path'}}" =~ /fsav$/) {
+	$dbdir=$` ;
+
+	# impossible to look for viruses with no option set
+	return 0 unless ($Conf{'antivirus_args'});
+
+	open (ANTIVIR,"$Conf{'antivirus_path'} --databasedirectory $dbdir $Conf{'antivirus_args'} $work_dir |") ;
+
+	while (<ANTIVIR>) {
+
+	    if (/infection:\s+(.*)/){
+		$virusfound = $1;
+	    }
+	}
+	
+	close ANTIVIR;
+    
+	my $status = $?/256 ;
+
+        ## fsecure status =3 (*256) => virus
+        if (( $status == 3) and not($virusfound)) { 
+	    $virusfound = "unknown";
+	}    
+
+    }
+## if debug mode is active, the working directory is kept
+    unless ($main::opt_d || $main::opt_D) {
+	opendir (DIR, ${work_dir});
+	my @list = readdir(DIR);
+	close (DIR);
+        foreach (@list) {
+	    my $nbre = unlink ("$work_dir/$_")  ;
+	}
+	rmdir ($work_dir) ;
+    }
+   
+    return ($virusfound);
+   
+}
 
 1;

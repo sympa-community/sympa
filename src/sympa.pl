@@ -531,8 +531,8 @@ sub DoFile {
     }
 
     if ($rcpt =~ /^listmaster(\@(\S+))?$/) {
-	
-	$status = &DoForward('sympa', 'listmaster', $msg);
+	printf "****427******forward\n";
+	$status = &DoForward('sympa', 'listmaster', $msg, $file, $sender);
 
 	## Mail adressed to the robot and mail 
 	## to <list>-subscribe or <list>-unsubscribe are commands
@@ -551,7 +551,8 @@ sub DoFile {
 	    
 	    $status = &DoCommand("$name-$command", $msg, $file);
 	}else {
-	    $status = &DoForward($name, $function, $msg);
+printf "*****447*****forward \n";
+	    $status = &DoForward($name, $function, $msg, $file, $sender);
 	}       
     }else {
 	$status =  &DoMessage($rcpt, $msg, $bytes, $file, $is_crypted);
@@ -650,8 +651,8 @@ sub DoSendMessage {
 
 ## Handles a message sent to [list]-editor, [list]-owner or [list]-request
 sub DoForward {
-    my($name,$function,$msg) = @_;
-    &do_log('debug2', 'DoForward(%s, %s)', $name, $function);
+    my($name, $function, $msg, $file, $sender) = @_;
+    &do_log('debug2', 'DoForward(%s, %s, %s, %s)', $name, $function, $file, $sender);
 
     my $hdr = $msg->head;
     my $messageid = $hdr->get('Message-Id');
@@ -713,11 +714,30 @@ sub DoForward {
 	do_log('notice', "Message for %s-%s ignored, %s undefined in list %s", $name, $function, $function, $name);
 	return undef;
     }
-    *SIZ = smtp::smtpto($Conf{'request'}, \@rcpt);
-    $msg->print(\*SIZ);
-    close(SIZ);
-    
-    do_log('info',"Message for %s forwarded", $recepient);
+   
+    my $rc;
+    if ($rc = &tools::virus_infected($msg, $file)) {
+	if ($list) {
+	    $list->send_file('your_infected_msg', $sender, 
+			     {'virus_name' => $rc,
+			      'recipient' => $list->{'name'}.'@'.$list->{'admin'}{'host'},
+			      'lang' => $list->{'admin'}{'lang'}});
+	}
+	else {
+	    my %context;
+	    $context{'virus_name'} = $rc ;
+	    $context{'recipient'} = $hdr->get('To');
+	    $context{'lang'} = $Conf{'lang'};
+	    &List::send_global_file('infected_msg', $sender,\%context );
+	}    
+    }else{
+ 
+	*SIZ = smtp::smtpto($Conf{'request'}, \@rcpt);
+	$msg->print(\*SIZ);
+	close(SIZ);
+	
+	do_log('info',"Message for %s forwarded", $recepient);
+    }
     return 1;
 }
 
@@ -791,10 +811,18 @@ sub DoMessage{
 	close(SIZ);
 	return undef;
     }
+     
+    my $rc;
+   
+    if ($rc= &tools::virus_infected($msg, $file)) {
+	printf "do message, virus= $rc \n";
+	$list->send_file('your_infected_msg', $sender, {'virus_name' => $rc});
+ 
+	return undef;
+    }
     
     ## Call scenarii : auth_method MD5 do not have any sense in send
     ## scenarii because auth is perfom by distribute or reject command.
- 
     
     my $action ;
     if ($is_signed->{'body'}) {

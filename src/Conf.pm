@@ -23,6 +23,7 @@ my @valid_options = qw(
 		       remind_return_path request_priority rfc2369_header_fields sendmail sleep 
 		       sort sympa_priority syslog umask welcome_return_path wwsympa_url
                        openssl trusted_ca_options key_passwd ssl_cert_dir remove_headers
+		       antivirus_path antivirus_args
 );
 my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
@@ -84,7 +85,10 @@ my %Default_Conf =
      'loop_command_sampling_delay' => 3600,
      'loop_command_decrease_factor' => 0.5,
      'rfc2369_header_fields' => 'help,subscribe,unsubscribe,post,owner,archive',
-     'remove_headers' => 'Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To'
+     'remove_headers' => 'Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To',
+     'antivirus_path' => '',
+     'antivirus_args' => '',
+     
    );
    
 %Conf = ();
