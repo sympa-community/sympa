@@ -96,7 +96,7 @@
           <A HREF="[% path_cgi %]/d_admin/[% list %]/create" >
              <FONT size=-1><b>[%|l%]Create Shared[%END%]</b></font></A>
           [% ELSE %]
-             <FONT size=-1 COLOR="[% bg_color %]"><b>Create Shared</b></font>
+             <FONT size=-1 COLOR="[% bg_color %]"><b>[%|l%]Create Shared[%END%]</b></font>
           [% END %]
 	[% ELSIF shared == 'deleted' %]
           <A HREF="[% path_cgi %]/d_admin/[% list %]/restore" >

@@ -14,7 +14,7 @@
  <TD><B>[%|l%]Subject :[%END%] </B></TD><TD WIDTH=100%>[% list_subject %]</TD>
 </TR>
 <TR BGCOLOR="[% light_color %]">
- <TD NOWRAP><B>[%|l%]List requested by[%END%] </B></TD><TD WIDTH=100%>[% list_request_by %] <B>[%|l%]on[%END%]</B> [% list_request_date %]</TD>
+ <TD NOWRAP><B>[%|l%]List requested by[%END%] </B></TD><TD WIDTH=100%>[% list_request_by %] [%|l(list_request_date)%] on %1[%END%]</TD>
 </TR>
 </TABLE>
 </TD>

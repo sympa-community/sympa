@@ -14,10 +14,10 @@
 [%|l%]Configuration file has been updated[%END%]
 
 [% ELSIF notice.msg == 'upload_success' %] 
-File [%|l(notice.path)%]%1 successfully uploaded![%END%]
+[%|l(notice.path)%]File %1 successfully uploaded![%END%]
 
 [% ELSIF notice.msg == to_moderate %]
-File [%|l(notice.path)%]File %1 waiting for moderation[%END%]
+[%|l(notice.path)%]File %1 waiting for moderation[%END%]
 
 [% ELSIF notice.msg == 'save_success' %] 
 [%|l(notice.path)%]File %1 saved[%END%]
