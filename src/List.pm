@@ -4507,6 +4507,12 @@ sub probe_db {
     do_log('debug2', 'List::probe_db()');    
     my (%checked, $table);
 
+    my %db_struct = ('user_table' => ['email_user','gecos_user','password_user','cookie_delay_user','lang_user'],
+		     'subscriber_table' => ['list_subscriber','user_subscriber','date_subscriber',
+					    'update_subscriber','visibility_subscriber','reception_subscriber',
+					    'comment_subscriber']
+		     );
+
     ## Is the Database defined
     unless ($Conf{'db_name'}) {
 	&do_log('info', 'No db_name defined in configuration file');
@@ -4517,13 +4523,41 @@ sub probe_db {
 	return undef unless &db_connect();
     }
 	
-    my @tables;
+    my (@tables, $fields, %real_struct);
     if ($Conf{'db_type'} eq 'mysql') {
+	
+	## Get tables
 	unless (@tables = $dbh->func( '_ListTables' )) {
 	    &do_log('info', 'Can\'t load tables list from database %s : %s', $Conf{'db_name'}, $dbh->errstr);
 	    return undef;
 	}
 
+	## Get fields
+#	foreach my $t (@tables) {
+#	    &do_log('debug', 'Table %s', $t);
+
+#	    unless ($sth = $dbh->prepare("LISTFIELDS $t")) {
+#		do_log('debug','Unable to prepare SQL query : %s', $dbh->errstr);
+#		return undef;
+#	    }
+
+#	    unless ($sth->execute) {
+#		do_log('debug','Unable to execute SQL query : %s', $dbh->errstr);
+#		return undef;
+#	    }
+	    
+#	    unless ($sth->rows) {
+#		&do_log('info', 'Can\'t load fields list from database %s, table %s : %s', 
+#			$Conf{'db_name'}, $t, $dbh->errstr);
+#		return undef;
+#	    }
+	    
+#	    while (my $f = $sth->fetchrow()) {
+#		&do_log('debug', 'Field %s', $f);
+#		$real_struct{$t}{$f} = 1;
+#	    }
+#	}
+	
     }elsif ($Conf{'db_type'} eq 'Pg') {
 	
 	unless (@tables = $dbh->tables) {
@@ -4588,6 +4622,22 @@ sub probe_db {
 	unless ($checked{$table}) {
 	    &do_log('info', 'Table %s not found in database %s', $table, $Conf{'db_name'});
 	    return undef;
+	}
+    }
+
+    if (%real_struct) {
+	foreach my $t (keys %db_struct) {
+	    unless ($real_struct{$t}) {
+		&do_log('info', 'Table %s not found in database %s', $t, $Conf{'db_name'});
+		return undef;
+	    }
+	    
+	    foreach my $f (@{$db_struct{$t}}) {
+		unless ($real_struct{$t}{$f}) {
+		    &do_log('info', 'Field %s not found in database %s, table %s', $f, $Conf{'db_name'}, $t);
+		    return undef;
+		}
+	    }
 	}
     }
 
