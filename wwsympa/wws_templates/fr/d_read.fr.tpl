@@ -78,10 +78,10 @@
   </TR></TABLE>  
   </th> 
 
-  <th ALIGN="left"><font color="--BG_COLOR--">Description</font></th> 
-  <th ALIGN="center"><font color="--BG_COLOR--">Editer</font></th> 
-  <th ALIGN="center"><font color="--BG_COLOR--">Supprimer</font></th>
-  <th ALIGN="center"><font color="--BG_COLOR--">Accès</font></th></TR>
+  <TD ALIGN="left"><font color="--BG_COLOR--">Description</font></TD> 
+  <TD ALIGN="center"><font color="--BG_COLOR--">Editer</font></TD> 
+  <TD ALIGN="center"><font color="--BG_COLOR--">Supprimer</font></TD>
+  <TD ALIGN="center"><font color="--BG_COLOR--">Accès</font></TD></TR>
       
   [IF empty]
     <TR BGCOLOR="--LIGHT_COLOR--">
@@ -91,7 +91,7 @@
     [IF sort_subdirs]
       [FOREACH s IN sort_subdirs] 
         <TR BGCOLOR="--LIGHT_COLOR--">        
-	<TD> <A HREF="[path_cgi]/d_read/[list]/[path][s->doc]/"> 
+	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[path][s->doc]/"> 
 	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]"> [s->doc]</A></TD>
 	<TD>
 	[IF s->author_known] 
@@ -135,7 +135,7 @@
     [IF sort_files]
       [FOREACH f IN sort_files]
         <TR BGCOLOR="--LIGHT_COLOR--"> 
-        <TD>&nbsp;
+        <TD NOWRAP>
         [IF f->html]
 	  <A HREF="[path_cgi]/d_read/[list]/[path][f->doc]" TARGET="html_window">
 	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]"> [f->doc] </A>
