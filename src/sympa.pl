@@ -1184,7 +1184,8 @@ sub DoCommand {
 	    }
 	    $i =~ s/^\s*>?\s*(.*)\s*$/$1/g;
 	    next if ($i =~ /^$/); ## skip empty lines
-	    
+	    next if ($i =~ /^\s*\#/) ;
+    
 	    # exception in the case of command expire
 	    if ($i =~ /^exp(ire)?\s/i){
 		$expire = $i;
