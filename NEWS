@@ -3,7 +3,7 @@
 
 (See Changelog file for the full changes log)
 
-5.0b.2		15 March 2005
+5.0		04 April 2005
 
    New features :
 
@@ -14,6 +14,10 @@
 	wwsympa/wwsympa.fcgi: now performs syntaxical checks on incoming parameters to prevent malicious code injection
 
    Changes :
+
+	wwsympa/wwsympa.fcgi: [proposed by S.Ducoulombier] base URL for viewmod and archives now uses the wwsympa_url parameter
+
+	mail_tt2/: most service messages no more refer to user password
 
 	po/: Update PO and POT
 
@@ -30,6 +34,23 @@
 	wwsympa/wwsympa.fcgi: [BugID 369] [A.Bernstein]: check 'send' scenario to determine if 'Post' button is shown
 
    Bug fixes :
+
+	mail_tt2/welcome.tt2: [reported by P.Chevalier] failed to parse default welcome.tt2 if info file was not found
+
+	src/List.pm: [reported by P.Young] Fix: add_user() failed if one entry could not be added. Replaced 'return undef' with 'next'
+
+	soap/sympa_soap_server.fcgi, src/List.pm, src/task_manager.pl, wwsympa/archived.pl, wwsympa/wwsympa.fcgi: 
+	daemons should not start if database is not available.  Admin hash used to be undef if database was not available ; 
+	changed this behavior.  If list status is set to error_config, no more save the config to preserve list config file
+
+	src/task_manager.pl: Add a log entry when running a task ; do not execute a task if the associated parameter is 
+	no more defined
+
+	wwsympa/wwsympa.fcgi (1.513): Check 'size' type in review ; prevent division by zero
+
+	wwsympa/wwsympa.fcgi (1.512): Allow web message composition, even for moderated lists
+
+	src/List.pm (1.522): [BugID 394] Sympa died while calling MIME::Entity::remove_sig()
 
 	wwsympa/wwsympa.fcgi: [BugID 391]: wwsympa did not rise an error if user provided no password at login
 
