@@ -1,62 +1,62 @@
 <!-- $Id$ -->
 
-    <BR><P> 
-<TABLE BORDER=0 BGCOLOR="[% light_color %]"><TR><TD>
-<P align=justify>
+<br /><p></o> 
+<table border="0" style="background: [% light_color %];"><tr><td>
+<p style="text-align: justify;">
 [%|l(conf.email,conf.host)%]This server provides you access to your environment on mailing list server %1@%2. Starting from this URL, you can perform subscription options, unsubscription,
 archives, list management and so on.[%END%]
-</P>
-</TD></TR></TABLE>
-<BR><BR>
+</p>
+</td></tr></table>
+<br /><br />
 
-<CENTER>
-<TABLE BORDER=0>
- <TR>
-  <TH BGCOLOR="[% selected_color %]">
-   <FONT COLOR="[% bg_color %]">[%|l%]Mailing lists[%END%]</FONT>
-  </TH>
- </TR>
- <TR>
-  <TD>
-   <TABLE BORDER=0 CELLPADDING=3><TR VALIGN="top">
-    <TD WIDTH=33% NOWRAP>
+<div style="text-align: center;">
+<table border="0" style="margin-left: auto; margin-right: auto;">
+ <tr>
+  <th style="background: [% selected_color %];">
+   <span style="color: [% bg_color %];">[%|l%]Mailing lists[%END%]</span>
+  </th>
+ </tr>
+ <tr>
+  <td>
+   <table border="0" cellpadding="3"><tr valign="top">
+    <td style="width: 33%; white-space: nowrap;">
      [% FOREACH topic = topics %]
       o
       [% IF topic.id == 'topicsless' %]
-       <A HREF="[% path_cgi %]/lists/[% topic.id %]"><B>[%|l%]Others[%END%]</B></A><BR>
+       <a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[%|l%]Others[%END%]</strong></a><br />
       [% ELSE %]
-       <A HREF="[% path_cgi %]/lists/[% topic.id %]"><B>[% topic.current_title %]</B></A><BR>
+       <a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[% topic.current_title %]</strong></a><br />
       [% END %]
 
       [% IF topic.sub %]
       [% FOREACH subtopic = topic.sub %]
-       <FONT SIZE="-1">
-	&nbsp;&nbsp;<A HREF="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]">[% subtopic.value.current_title %]</A><BR>
-       </FONT>
+       <span style="font-size: smaller;">
+	&nbsp;&nbsp;<a href="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]">[% subtopic.value.current_title %]</a><br />
+       </span>
       [% END %]
       [% END %]
       [% IF topic.next %]
-	</TD><TD></TD><TD WIDTH=33% NOWRAP>
+	</td><td></td><td style="width: 33%; white-space: nowrap;">
       [% END %]
      [% END %]
-    </TD>	
-   </TR>
-   <TR>
-<TD>
+    </td>	
+   </tr>
+   <tr>
+<td>
      [% PROCESS 'button_header.tt2' %]
-      <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center"> 
-      <A HREF="[% path_cgi %]/lists" >
-     <FONT SIZE=-1><B>[%|l%]view all lists[%END%]</B></FONT></A>
-     </TD>
+      <td style="background: [% light_color %]; white-space: nowrap; text-align: center;"> 
+      <a href="[% path_cgi %]/lists">
+     <span style="font-size: smaller;"><strong>[%|l%]view all lists[%END%]</strong></span></a>
+     </td>
      [% PROCESS 'button_footer.tt2' %]
-</TD>
+</td>
 <TD width=100%></TD>
 <TD NOWRAP>
         <FORM ACTION="[% path_cgi %]" METHOD=POST> 
          <INPUT SIZE=25 NAME=filter VALUE=[% filter %]>
          <INPUT TYPE="hidden" NAME="action" VALUE="search_list">
          <INPUT TYPE="submit" NAME="action_search_list" VALUE="[%|l%]Search lists[%END%]">
-	  <BR>
+	  <br />
 	 <INPUT TYPE="radio" NAME="extended" VALUE="0" checked>[%|l%]Local[%END%]
          <INPUT TYPE="radio" NAME="extended" VALUE="1">[%|l%]Extended search[%END%]
 	 
@@ -68,7 +68,7 @@ archives, list management and so on.[%END%]
  </TD>
 </TR>
 </TABLE>
-</CENTER>
+</div>
 
 [% IF ! user.email %]
 <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="0" VALIGN="top">
@@ -80,4 +80,4 @@ archives, list management and so on.[%END%]
 </TD></TR></TABLE>
 
 [% END %]
-<BR><BR>
+<br /><br />

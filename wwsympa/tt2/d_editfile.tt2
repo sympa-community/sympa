@@ -1,100 +1,105 @@
 <!-- $Id$ -->
 
 [% IF url %]
-<H1>[%|l(visible_path)%]Edition of the bookmark %1[%END%]</H1>
+<h1>[%|l(visible_path)%]Edition of the bookmark %1[%END%]</h1>
 [% ELSIF directory %]
-<H1>[%|l(visible_path)%]Edition of the directory %1[%END%]</H1>
+<h1>[%|l(visible_path)%]Edition of the directory %1[%END%]</h1>
 [% ELSE %]
-<H1>[%|l(visible_path)%]Edition of the file %1[%END%]</H1>
+<h1>[%|l(visible_path)%]Edition of the file %1[%END%]</h1>
 [% END %]
-    [%|l(doc_owner)%]Owner : %1[%END%] <BR>
-    [%|l(doc_date)%]Last update : %1[%END%] <BR>
-    [%|l(desc)%]Description : %1[%END%] <BR><BR>
-<H3><A HREF="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <IMG ALIGN="bottom"  src="[% father_icon %]" BORDER="0"> [%|l%]Up to higher level directory[%END%] </A></H3>
+    [%|l(doc_owner)%]Owner : %1[%END%] <br />
+    [%|l(doc_date)%]Last update : %1[%END%] <br />
+    [%|l(desc)%]Description : %1[%END%] <br /><br />
+<h3><a href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <img style="border: 0px; vertical-align: bottom;" src="[% father_icon %]"> [%|l%]Up to higher level directory[%END%] </a></h3>
 
-<TABLE CELLSPACING=15>
+<table cellspacing="15">
 
   [% IF !directory %]
-  <TR>
-  <form method="post" ACTION="[% path_cgi %]" ENCTYPE="multipart/form-data">
-  <TD ALIGN="right" VALIGN="bottom">
+  <tr>
+  <form method="post" action="[% path_cgi %]" enctype="multipart/form-data">
+  <td style="text-align: right;" valign="bottom">
   [% IF url %]
-  <B> [%|l%]Bookmark URL[%END%] </B><BR> 
-  <input name="url" VALUE="[% url %]">
+  <label><strong> [%|l%]Bookmark URL[%END%] </strong><br /> 
+  <input name="url" value="[% url %]" /></label>
   [% ELSE %]
-  <B> [%|l(visible_path)%]Replace the file %1 by your file[%END%] </B><BR> 
-  <input type="file" name="uploaded_file">
+  <label><strong> [%|l(visible_path)%]Replace the file %1 by your file[%END%] </strong><br /> 
+  <input type="file" name="uploaded_file" /></label>
   [% END %]
-  </TD>
-  <TD ALIGN="left" VALIGN="bottom"> 
+  </td>
+  <td style="text-align: left;" valign="bottom"> 
   [% IF url %]
-  <input type="submit" value="[%|l%]Modifier[%END%]" name="action_d_savefile">
+  <input type="submit" value="[%|l%]Modifier[%END%]" name="action_d_savefile" />
   [% ELSE %]
-  <input type="submit" value="[%|l%]Publish[%END%]" name="action_d_overwrite">
+  <input type="submit" value="[%|l%]Publish[%END%]" name="action_d_overwrite" />
   [% END %]
-  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-  <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
-  <INPUT TYPE="hidden" NAME="serial" VALUE="[% serial_file %]">
-  </TD>
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="path" value="[% path %]" />
+  <input type="hidden" name="serial" value="[% serial_file %]" />
+  </td>
   </form>
-  </TR>
+  </tr>
   [% END %]
 
-  <TR>
-  <FORM ACTION="[% path_cgi %]" METHOD="POST">
-  <TD ALIGN="right" VALIGN="bottom">
+  <tr>
+  <form action="[% path_cgi %]" method="post">
+  <td style="text-align: right;" valign="bottom">
+  <label>
   [% IF directory %]
-  <B> [%|l(visible_path)%]Describe the directory %1[%END%]</B><BR>
+  <strong> [%|l(visible_path)%]Describe the directory %1[%END%]</strong><br />
   [% ELSE %]
-  <B> [%|l(visible_path)%]Describe the file %1[%END%]</B><BR>
+  <strong> [%|l(visible_path)%]Describe the file %1[%END%]</strong><br />
   [% END %]
-  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-  <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
-  <INPUT TYPE="hidden" NAME="serial" VALUE="[% serial_desc %]">
-  <INPUT TYPE="hidden" NAME="action" VALUE="d_describe">
-  <INPUT SIZE=50 MAXLENGTH=100 NAME="content" VALUE="[% desc %]">
-  </TD>
-  <TD ALIGN="left" VALIGN="bottom">
-  <INPUT SIZE=50 MAXLENGTH=100 TYPE="submit" NAME="action_d_describe" VALUE="[%|l%]Apply[%END%]">
-  </TD>
-  </FORM>
-  </TR>
+  <input size="50" maxlength="100" name="content" value="[% desc %]" />
+  </label>
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="path" value="[% path %]" />
+  <input type="hidden" name="serial" value="[% serial_desc %]" />
+  <input type="hidden" name="action" value="d_describe" />
+  </td>
+  <td style="text-align: left;" valign="bottom">
+  <input size="50" maxlength="100" type="submit" name="action_d_describe" value="[%|l%]Apply[%END%]" />
+  </td>
+  </form>
+  </tr>
 
-  <TR>
-  <FORM ACTION="[% path_cgi %]" METHOD="POST">
-  <TD ALIGN="right" VALIGN="bottom">
+  <tr>
+  <form action="[% path_cgi %]" method="post">
+  <td style="text-align: right;" valign="bottom">
+  <label>
   [% IF directory %]
-  <B> [%|l(visible_path)%]Rename directory %1[%END%]</B><BR>
+  <strong> [%|l(visible_path)%]Rename directory %1[%END%]</strong><br />
   [% ELSE %]
-  <B> [%|l(visible_path)%]Rename file %1[%END%]</B><BR>
+  <strong> [%|l(visible_path)%]Rename file %1[%END%]</strong><br />
   [% END %]
-  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-  <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
-  <INPUT TYPE="hidden" NAME="serial" VALUE="[% serial_desc %]">
-  <INPUT TYPE="hidden" NAME="action" VALUE="d_rename">
-  <INPUT SIZE=50 MAXLENGTH=100 NAME="new_name"></TD>
-  <TD ALIGN="left" VALIGN="bottom">
-  <INPUT SIZE=20 MAXLENGTH=50 TYPE="submit" NAME="action_d_rename" VALUE="[%|l%]Rename[%END%]">
-  </TD>
-  </FORM>
-  </TR>
+  <input size="50" maxlength="100" name="new_name" />
+  </label>
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="path" value="[% path %]" />
+  <input type="hidden" name="serial" value="[% serial_desc %]" />
+  <input type="hidden" name="action" value="d_rename" />
+  </td>
+  <td style="text-align: left;" valign="bottom">
+  <input size="20" maxlength="50" type="submit" name="action_d_rename" value="[%|l%]Rename[%END%]" />
+  </td>
+  </form>
+  </tr>
 
-</TABLE>
-<BR>
-<BR>
+</table>
+<br />
+<br />
 
 [% IF !url %]
 [% IF textfile %]
-  <FORM ACTION="[% path_cgi %]" METHOD="POST">
-  <B> [%|l(visible_path)%]Edit the file %1[%END%]</B><BR>
-  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-  <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
-  <INPUT TYPE="hidden" NAME="serial" VALUE="[% serial_file %]">
-  <TEXTAREA NAME="content" COLS=80 ROWS=25>
+  <form action="[% path_cgi %]" method="post">
+  <label><strong> [%|l(visible_path)%]Edit the file %1[%END%]</strong><br />
+  <textarea name="content" cols="80" rows="25">
 [% INSERT $filepath IF filepath %]
-  </TEXTAREA><BR>
-  <INPUT TYPE="submit" NAME="action_d_savefile" VALUE="[%|l%]Publish[%END%]">
-  </FORM>
+  </textarea></label><br />
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="path" value="[% path %]" />
+  <input type="hidden" name="serial" value="[% serial_file %]" />
+  <input type="submit" name="action_d_savefile" value="[%|l%]Publish[%END%]" />
+  </form>
 [% END %]
 [% END %]
 

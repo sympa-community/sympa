@@ -1,28 +1,29 @@
 <!-- $Id$ -->
 
-<FORM ACTION="[% path_cgi %]" METHOD="POST">
+<form action="[% path_cgi %]" method="POST">
 
 [% IF file %]
-  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-  <INPUT TYPE="hidden" NAME="file" VALUE="[% file %]">
-<TEXTAREA NAME="content" COLS=80 ROWS=25>
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="file" value="[% file %]" />
+<textarea name="content" cols="80" rows="25">
 [% INSERT $filepath IF filepath %]
-</TEXTAREA>
-  <INPUT TYPE="submit" NAME="action_savefile" VALUE="[%|l%]Save[%END%]">
+</textarea>
+  <input type="submit" name="action_savefile" value="[%|l%]Save[%END%]" />
 
 [% ELSE %]
-[%|l%]You can edit several messages/files associated to your list :[%END%]<BR><BR>
+[%|l%]You can edit several messages/files associated to your list :[%END%]<br /><br />
 
-<DD><INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-	     <SELECT NAME="file">
+<dl>
+<dd><input type="hidden" name="list" value="[% list %]" />
+	     <select name="file">
 	      [% FOREACH f = files %]
-	        <OPTION VALUE="[% f.key %]" [% f.value.selected %]>[% f.value.complete %]
+	        <option value="[% f.key %]" [% f.value.selected %]>[% f.value.complete %]</option>
 	      [% END %]
-	    </SELECT>
-	    <INPUT TYPE="submit" NAME="action_editfile" VALUE="[%|l%]Edit[%END%]">
-
-<P>
+	    </select>
+	    <input type="submit" name="action_editfile" value="[%|l%]Edit[%END%]" />
+</dd></dl>
+<p></p>
 [% PROCESS 'help_editfile.tt2' %]
 
 [% END %]
-</FORM>
+</form>

@@ -41,7 +41,7 @@
 [% ELSIF error.msg == 'may_not' %]
 [%|l(error.action)%]%1 : you are not allowed to perform this action[%END%]
 [% IF ! user.email %]
-<BR>[%|l%]you need to login[%END%]
+<br />[%|l%]you need to login[%END%]
 [% END %]
 
 [% ELSIF error.msg == 'no_subscriber' %]
@@ -165,5 +165,5 @@ because you are not allowed to unsubscribe.[%END%]
 [% error.msg %]
 [% END %]
 
-<BR>
+<br />
 [% END %]

@@ -4,69 +4,58 @@
  [% PROCESS $help_template IF help_template %]
 
 [% ELSE %]
-<BR>
+<br />
 [%|l%]WWSympa provides  you access to your environment on mailing list server[%END%]
-<B>[% conf.email %]@[% conf.host %]</B>.
-<BR><BR>
+<strong>[% conf.email %]@[% conf.host %]</strong>.
+<br /><br />
 [%|l%]Functions, equivalent to Sympa robot commands, are accessible in
 the higher part of the user interface's banner. WWSympa provides 
 a customized environment with access to the following functions :[%END%]
 
-<UL>
-<LI><A HREF="[% path_cgi %]/pref">[%|l%]Preferences[%END%]</A> [%|l%]: user preferences. This is proposed to identified users only.[%END%]
+<ul>
+<li><a href="[% path_cgi %]/pref">[%|l%]Preferences[%END%]</a> [%|l%]: user preferences. This is proposed to identified users only.[%END%]</li>
 
-<LI><A HREF="[% path_cgi %]/lists">[%|l%]Public lists[%END%]</A> [%|l%]: directory of lists available on the server[%END%]
+<li><a href="[% path_cgi %]/lists">[%|l%]Public lists[%END%]</a> [%|l%]: directory of lists available on the server[%END%]</li>
 
-<LI><A HREF="[% path_cgi %]/which">[%|l%]Your subscriptions[%END%]</A> [%|l%]: your environment as a subscriber or as owner[%END%]
+<li><a href="[% path_cgi %]/which">[%|l%]Your subscriptions[%END%]</a> [%|l%]: your environment as a subscriber or as owner[%END%]</li>
 
-<LI><A HREF="[% path_cgi %]/loginrequest">[%|l%]Login[%END%]</A> / <A HREF="[% path_cgi %]/logout">[%|l%]Logout[%END%]</A> [%|l%]: Login / Logout from WWSympa.[%END%]
-</UL>
+<li><a href="[% path_cgi %]/loginrequest">[%|l%]Login[%END%]</a> / <a href="[% path_cgi %]/logout">[%|l%]Logout[%END%]</a> [%|l%]: Login / Logout from WWSympa.[%END%]</li>
+</ul>
 
-<H2>[%|l%]Login[%END%]</H2>
+<h2>[%|l%]Login[%END%]</h2>
 
 [% IF auth == 'classic' %]
-[%|l%]When authenticating ([%END%]<A HREF="[% path_cgi %]/loginrequest">[%|l%]Login[%END%]</A>[%|l%]), provide your email address and associated password.[%END%]
-<BR><BR>
-[%|l%]Once you have been authenticated, a <I>cookie</I> containing your login 
+[%|l%]When authenticating ([%END%]<a href="[% path_cgi %]/loginrequest">[%|l%]Login[%END%]</a>[%|l%]), provide your email address and associated password.[%END%]
+<br /><br />
+[%|l%]Once you have been authenticated, a <em>cookie</em> containing your login 
 information make your connection to WWSympa last. The lifetime of this
-<I>cookie</I> is customizeable through your <b>Preferences</b>[%END%]. 
+<em>cookie</em> is customizeable through your <strong>Preferences</strong>[%END%]. 
 
-<BR><BR>
+<br /><br />
 [% END %]
 
 [%|l%]You can logout (deletion of the cookie) at any time using logout button.[%END%]
 
-<H5>[%|l%]Login issues[%END%]</H5>
+<h5>[%|l%]Login issues[%END%]</h5>
 
-<I>[%|l%]I am not a list subscriber[%END%] </I><BR>
+<em>[%|l%]I am not a list subscriber[%END%] </em><br />
 [%|l%]Your are therefore not registered in Sympa user database and you can't login.
 If you subscribe to a list, WWSympa will give you an initial password.[%END%]
-<BR><BR>
+<br /><br />
 
-<I>[%|l%]I am subscriber to at least one list but I have no password[%END%]</I><BR>
+<em>[%|l%]I am subscriber to at least one list but I have no password[%END%]</em><br />
 [%|l%]To receive your password :[%END%] 
-<A HREF="[% path_cgi %]/remindpasswd">[% path_cgi %]/remindpasswd</A>
-<BR><BR>
+<a href="[% path_cgi %]/remindpasswd">[% path_cgi %]/remindpasswd</a>
+<br /><br />
 
-<I>[%|l%]I forgot my password[%END%]</I><BR>
+<em>[%|l%]I forgot my password[%END%]</em><br />
 
 [%|l%]WWSympa can remind you your password by email :[%END%]
-<A HREF="[% path_cgi %]/remindpasswd">[% path_cgi %]/remindpasswd</A>
+<a href="[% path_cgi %]/remindpasswd">[% path_cgi %]/remindpasswd</a>
 
-<P>
+<p></p>
 
-[%|l%]To contact this service administrator :[%END%] <A HREF="mailto:listmaster@[% conf.host %]">listmaster@[% conf.host %]</A>
+[%|l%]To contact this service administrator :[%END%] <a href="mailto:listmaster@[% conf.host %]">listmaster@[% conf.host %]</a>
 [% END %]
-
-
-
-
-
-
-
-
-
-
-
 
 

@@ -1,10 +1,10 @@
 <!-- $Id$ -->
 
 [% FOREACH p = param %]
-  <A NAME="[% p.key %]"></a>
-  <B>[% p.value.title %]</B> ([% p.key %]):
-  <DL>
-    <DD>
+  <a name="[% p.key %]"></a>
+  <strong>[% p.value.title %]</strong> ([% p.key %]):
+  <dl>
+    <dd>
       [% IF p.key == 'add' %]
         [%|l%]Privilege for adding (ADD command) a subscriber to the list[%END%]
       [% ELSIF p.key == 'anonymous_sender' %]
@@ -12,58 +12,58 @@
       [% ELSIF p.key == 'archive' %]
         [%|l%]Privilege for reading mail archives and frequency of archiving[%END%]
       [% ELSIF p.key == 'available_user_options' %]
-        [%|l%]The available_user_options parameter starts a paragraph to define available options for the subscribers of the list.[%END%]<BR><BR>
-        <UL>
-          <LI>reception <i>modelist</i> [%|l%](Default value: reception mail,notice,digest,digestplain,summary,nomail)[%END%]<BR><BR>
-              [%|l%]<i>modelist</i> is a list of modes (mail, notice, digest, digestplain, summary, nomail), separated by commas. Only these modes will be allowed for the subscribers of this list. If a subscriber has a reception mode not in the list, sympa uses the mode specified in the default_user_options paragraph.[%END%]
-          </LI>
-        </UL>
+        [%|l%]The available_user_options parameter starts a paragraph to define available options for the subscribers of the list.[%END%]<br /><br />
+        <ul>
+          <li>reception <em>modelist</em> [%|l%](Default value: reception mail,notice,digest,digestplain,summary,nomail)[%END%]<br /><br />
+              [%|l%]<em>modelist</em> is a list of modes (mail, notice, digest, digestplain, summary, nomail), separated by commas. Only these modes will be allowed for the subscribers of this list. If a subscriber has a reception mode not in the list, sympa uses the mode specified in the default_user_options paragraph.[%END%]
+          </li>
+        </ul>
       [% ELSIF p.key == 'bounce' %]
-        [%|l%]This paragraph defines bounce management parameters:[%END%]<BR><BR>
-        <UL>
-          <LI>warn_rate ([%|l%]Default value: bounce_warn_rate robot parameter[%END%])<BR><BR>
-              [%|l%]The list owner receives a warning whenever a message is distributed and the number (percentage) of bounces exceeds this value.[%END%]<BR><BR>
-          </LI>
-          <LI>halt_rate ([%|l%]Default value: bounce_halt_rate robot parameter[%END%])<BR><BR>
+        [%|l%]This paragraph defines bounce management parameters:[%END%]<br /><br />
+        <ul>
+          <li>warn_rate ([%|l%]Default value: bounce_warn_rate robot parameter[%END%])<br /><br />
+              [%|l%]The list owner receives a warning whenever a message is distributed and the number (percentage) of bounces exceeds this value.[%END%]<br /><br />
+          </li>
+          <li>halt_rate ([%|l%]Default value: bounce_halt_rate robot parameter[%END%])<br /><br />
               [%|l%]NOT USED YET. If bounce rate reaches the halt_rate, messages for the list will be halted, i.e. they are retained for subsequent moderation. Once the number of bounces exceeds this value, messages for the list are no longer
-              distributed.[%END%]<BR><BR>
-           </LI>
-           <LI>expire_bounce_task ([%|l%]Default value:[%END%] daily)<BR><BR>
+              distributed.[%END%]<br /><br />
+           </li>
+           <li>expire_bounce_task ([%|l%]Default value:[%END%] daily)<br /><br />
                [%|l%]Name of the task template use to remove old bounces. Usefull to remove bounces for a subscriber email if some message are distributed without receiving new bounce. In this case, the subscriber email seems to be OK again. Active if task_manager.pl is running.[%END%]
-           </LI>
-         </UL>
+           </li>
+         </ul>
 
       [% ELSIF p.key == 'bouncers_level1' %]
-        [%|l%]The Bouncers_level1 paragraphs defines the automatic behavior of bounce management.<BR>
-	Level 1 is the lower level of bouncing users[%END%] <BR><BR>
+        [%|l%]The Bouncers_level1 paragraphs defines the automatic behavior of bounce management.<br />
+	Level 1 is the lower level of bouncing users[%END%] <br /><br />
 
-        <UL>
-          <LI>rate ([%|l%]Default value:[%END%] 45)<BR><BR>
-	      [%|l%]Each bouncing user have a score (from 0 to 100).This parameter defines lower limit foreach category of bouncing users.for example, level 1 begins from 45 to level_2_treshold.[%END%]<BR><BR>
-          </LI>
-          <LI> action ([%|l%]Default value:[%END%] notify_bouncers)<BR><BR>
-	       [%|l%]This parameter defines which task is automaticaly applied on level 1 bouncers.[%END%]<BR><BR>
-          </LI>
-           <LI>Notification  ([%|l%]Default value:[%END%] owner)<BR><BR>
-	       [%|l%]When automatic task is executed on level 1 bouncers, a notification email can be send to listowner or listmaster.[%END%]<BR><BR>
-           </LI>
-        </UL>    
+        <ul>
+          <li>rate ([%|l%]Default value:[%END%] 45)<br /><br />
+	      [%|l%]Each bouncing user have a score (from 0 to 100).This parameter defines lower limit foreach category of bouncing users.for example, level 1 begins from 45 to level_2_treshold.[%END%]<br /><br />
+          </li>
+          <li> action ([%|l%]Default value:[%END%] notify_bouncers)<br /><br />
+	       [%|l%]This parameter defines which task is automaticaly applied on level 1 bouncers.[%END%]<br /><br />
+          </li>
+           <li>Notification  ([%|l%]Default value:[%END%] owner)<br /><br />
+	       [%|l%]When automatic task is executed on level 1 bouncers, a notification email can be send to listowner or listmaster.[%END%]<br /><br />
+           </li>
+        </ul>    
 
       [% ELSIF p.key == 'bouncers_level2' %]
-        [%|l%]The Bouncers_levelX paragraphs defines the automatic behavior of bounce management.<BR>
-	Level 2 is the highest level of bouncing users[%END%] <BR><BR>
+        [%|l%]The Bouncers_levelX paragraphs defines the automatic behavior of bounce management.<br />
+	Level 2 is the highest level of bouncing users[%END%] <br /><br />
 
-        <UL>
-          <LI>rate ([%|l%]Default value:[%END%] 80)<BR><BR>
-	      [%|l%]Each bouncing user have a score (from 0 to 100).This parameter defines limit between each category of bouncing users.For example, level 2 is for users with a score between 80 and 100.[%END%]<BR><BR>
-          </LI>
-          <LI>action ([%|l%]Default value:[%END%] notify_bouncers)<BR><BR>
-	       [%|l%]This parameter defines which task is automaticaly applied on level 2 bouncers.[%END%]<BR><BR>
-          </LI>
-           <LI>Notification ([%|l%]Default value:[%END%] owner)<BR><BR>
-	       [%|l%]When automatic task is executed on level 2 bouncers, a notification email can be send to listowner or listmaster.[%END%]<BR><BR>
-           </LI>
-        </UL>    
+        <ul>
+          <li>rate ([%|l%]Default value:[%END%] 80)<br /><br />
+	      [%|l%]Each bouncing user have a score (from 0 to 100).This parameter defines limit between each category of bouncing users.For example, level 2 is for users with a score between 80 and 100.[%END%]<br /><br />
+          </li>
+          <li>action ([%|l%]Default value:[%END%] notify_bouncers)<br /><br />
+	       [%|l%]This parameter defines which task is automaticaly applied on level 2 bouncers.[%END%]<br /><br />
+          </li>
+           <li>Notification ([%|l%]Default value:[%END%] owner)<br /><br />
+	       [%|l%]When automatic task is executed on level 2 bouncers, a notification email can be send to listowner or listmaster.[%END%]<br /><br />
+           </li>
+        </ul>    
       [% ELSIF p.key == 'cookie' %]
         [%|l%]This parameter is a confidential item for generating authentication keys for administrative commands (ADD, DELETE, etc.). This parameter should remain concealed, even for owners. The cookie is applied to all list owners, and is only taken into account when the owner has the auth parameter.[%END%]
       [% ELSIF p.key == 'custom_header' %]
@@ -71,31 +71,31 @@
       [% ELSIF p.key == 'custom_subject' %]
         [%|l%]This parameter is optional. It specifies a string which is added to the subject of distributed messages (intended to help users who do not use automatic tools to sort incoming messages). This string will be surrounded by [] characters.[%END%]
       [% ELSIF p.key == 'default_user_options' %]
-        [%|l%]The default_user_options parameter starts a paragraph to define a default profile for the subscribers of the list.[%END%]<BR><BR>
-        <UL>
-          <LI>reception notice | digest | summary | nomail | mail<BR><BR>[%|l%]Mail reception mode.[%END%]<BR><BR></LI>
-          <LI>visibility conceal | noconceal<BR><BR>[%|l%]Visibility of the subscriber with the REVIEW command.[%END%]</LI>
-        </UL>
+        [%|l%]The default_user_options parameter starts a paragraph to define a default profile for the subscribers of the list.[%END%]<br /><br />
+        <ul>
+          <li>reception notice | digest | summary | nomail | mail<br /><br />[%|l%]Mail reception mode.[%END%]<br /><br /></li>
+          <li>visibility conceal | noconceal<br /><br />[%|l%]Visibility of the subscriber with the REVIEW command.[%END%]</li>
+        </ul>
       [% ELSIF p.key == 'del' %]
         [%|l%]This parameter specifies who is authorized to use the DEL command.[%END%]
       [% ELSIF p.key == 'digest' %]
         [%|l%]Definition of digest mode. If this parameter is present, subscribers can select the option of receiving messages in multipart/digest MIME format, or as a plain text digest. Messages are then grouped together, and compilations of messages are sent to subscribers in accordance with the rhythm selected with this parameter.[%END%]
       [% ELSIF p.key == 'editor' %]
-        [%|l%]Editors are responsible for moderating messages. If the mailing list is moderated, messages posted to the list will first be passed to the editors, who will decide whether to distribute or reject it.[%END%] <BR>
-        [%|l%]FYI: Defining editors will not make the list moderated ; you will have to set the "send" parameter.[%END%]<BR>
+        [%|l%]Editors are responsible for moderating messages. If the mailing list is moderated, messages posted to the list will first be passed to the editors, who will decide whether to distribute or reject it.[%END%] <br />
+        [%|l%]FYI: Defining editors will not make the list moderated ; you will have to set the "send" parameter.[%END%]<br />
         [%|l%]FYI: If the list is moderated, any editor can distribute or reject a message without the knowledge or consent of the other editors. Messages that have not been distributed or rejected will remain in the moderation spool until they are acted on.[%END%]
       [% ELSIF p.key == 'expire_task' %]
         [%|l%]This parameter states which model is used to create a expire task. An expire task regurlaly checks the inscription or reinscription date of subscribers and asks them to renew their subscription. If they don't they are deleted.[%END%]
       [% ELSIF p.key == 'footer_type' %]
-        [%|l%]List owners may decide to add message headers or footers to messages sent via the list. This parameter defines the way a footer/header is added to a message.[%END%]<BR><BR>
-        <UL>
-          <LI>footer_type mime<BR><BR>
-              [%|l%]The default value. Sympa will add the footer/header as a new MIME part.[%END%]<BR><BR>
-          </LI>
-          <LI>footer_type append<BR><BR>
+        [%|l%]List owners may decide to add message headers or footers to messages sent via the list. This parameter defines the way a footer/header is added to a message.[%END%]<br /><br />
+        <ul>
+          <li>footer_type mime<br /><br />
+              [%|l%]The default value. Sympa will add the footer/header as a new MIME part.[%END%]<br /><br />
+          </li>
+          <li>footer_type append<br /><br />
               [%|l%]Sympa will not create new MIME parts, but will try to append the header/footer to the body of the message. Predefined message-footers will be ignored. Headers/footers may be appended to text/plain messages only.[%END%]
-          </LI>
-        </UL>
+          </li>
+        </ul>
       [% ELSIF p.key == 'host' %]
         [%|l%]Domain name of the list, default is the robot domain name set in the related robot.conf file or in file /etc/sympa.conf.[%END%]
       [% ELSIF p.key == 'include_file' %]
@@ -107,7 +107,7 @@
       [% ELSIF p.key == 'include_list' %]
         [%|l%]This parameter will be interpreted only if user_data_source is set to include. All subscribers of list listname become subscribers of the current list. You may include as many lists as required, using one include_list listname line for each included list. Any list at all may be included; the user_data_source definition of the included list is irrelevant, and you may therefore include lists which are also defined by the inclusion of other lists. Be careful, however, not to include list A in list B and then list B in list A, since this will give rise an infinite loop.[%END%]
       [% ELSIF p.key == 'include_remote_sympa_list' %]
-        [%|l%]Sympa can contact another Sympa service using https to fetch a remote list in order to include each member of a remote list as subscriber. You may include as many lists as required, using one include_remote_sympa_list paragraph for each included list. Be careful, however, not to give rise an infinite loop making cross includes.[%END%]<BR><BR>
+        [%|l%]Sympa can contact another Sympa service using https to fetch a remote list in order to include each member of a remote list as subscriber. You may include as many lists as required, using one include_remote_sympa_list paragraph for each included list. Be careful, however, not to give rise an infinite loop making cross includes.[%END%]<br /><br />
         [%|l%]For this operation, one Sympa site act as a server while the other one act as client. On the server side, the only setting needed is to give permission to the remote Sympa to review the list. This is controled by the review scenario. [%END%]
       [% ELSIF p.key == 'include_sql_query' %]
         [%|l%]This parameter will be interpreted only if the user_data_source value is set to include, and is used to begin a paragraph defining the SQL query parameters. [%END%]
@@ -126,32 +126,32 @@
       [% ELSIF p.key == 'remind_task' %]
         [%|l%]This parameter states which model is used to create a remind task. A remind task regurlaly sends to the subscribers a message which reminds them their subscription to list.[%END%]
       [% ELSIF p.key == 'reply_to_header' %]
-        [%|l%]The reply_to_header parameter starts a paragraph defining what Sympa will place in the Reply-To: SMTP header field of the messages it distributes.[%END%]<BR><BR>
-        <UL>
-          <LI>[%|l%]value[%END%] sender | list | all | other_email ([%|l%]Default value:[%END%] sender)<BR><BR>
-              [%|l%]This parameter indicates whether the Reply-To: field should indicate the sender of the message (sender), the list itself (list), both list and sender (all) or an arbitrary e-mail address (defined by the other_email parameter).[%END%]<BR><BR>
-              [%|l%]Note: it is inadvisable to change this parameter, and particularly inadvisable to set it to list. Experience has shown it to be almost inevitable that users, mistakenly believing that they are replying only to the sender, will send private messages to a list. This can lead, at the very least, to embarrassment, and sometimes to more serious consequences.[%END%]<BR><BR>
-          </LI>
-          <LI>other_email [%|l%]an_email_address[%END%]<BR><BR>
-              [%|l%]If value was set to other_email, this parameter defines the e-mail address used.[%END%]<BR><BR>
-          </LI>
-          <LI>apply respect | forced ([%|l%]Default value:[%END%] respect)<BR><BR>
+        [%|l%]The reply_to_header parameter starts a paragraph defining what Sympa will place in the Reply-To: SMTP header field of the messages it distributes.[%END%]<br /><br />
+        <ul>
+          <li>[%|l%]value[%END%] sender | list | all | other_email ([%|l%]Default value:[%END%] sender)<br /><br />
+              [%|l%]This parameter indicates whether the Reply-To: field should indicate the sender of the message (sender), the list itself (list), both list and sender (all) or an arbitrary e-mail address (defined by the other_email parameter).[%END%]<br /><br />
+              [%|l%]Note: it is inadvisable to change this parameter, and particularly inadvisable to set it to list. Experience has shown it to be almost inevitable that users, mistakenly believing that they are replying only to the sender, will send private messages to a list. This can lead, at the very least, to embarrassment, and sometimes to more serious consequences.[%END%]<br /><br />
+          </li>
+          <li>other_email [%|l%]an_email_address[%END%]<br /><br />
+              [%|l%]If value was set to other_email, this parameter defines the e-mail address used.[%END%]<br /><br />
+          </li>
+          <li>apply respect | forced ([%|l%]Default value:[%END%] respect)<br /><br />
                [%|l%]The default is to respect (preserve) the existing Reply-To: SMTP header field in incoming messages. If set to forced, Reply-To: SMTP header field will be overwritten.[%END%]
-          </LI>
-        </UL>
+          </li>
+        </ul>
       [% ELSIF p.key == 'review' %]
         [%|l%]This parameter specifies who can access the list of members. Since subscriber addresses can be abused by spammers, it is strongly recommended that you only authorize owners or subscribers to access the subscriber list. [%END%]
       [% ELSIF p.key == 'send' %]
-        [%|l%]This parameter specifies who can send messages to the list.[%END%]<BR><BR>
+        [%|l%]This parameter specifies who can send messages to the list.[%END%]<br /><br />
       [% ELSIF p.key == 'shared_doc' %]
         [%|l%]This paragraph defines read and edit access to the shared document repository.[%END%]
       [% ELSIF p.key == 'spam_protection' %]
-        [%|l%]There is a need to protect Sympa web site against spambot which collect email address in public web site. Various methods are available in Sympa and you can choose it with spam_protection and web_archive_spam_protection parameters. Possible value are:[%END%]<BR><BR>
-        <UL>
-          <LI>javascript: [%|l%]the address is hidden using a javascript. User who enable javascript can see a nice mailto address where others have nothing.[%END%]</LI>
-          <LI>at: [%|l%]the @ char is replaced by the string " AT ".[%END%]</LI>
-          <LI>none : [%|l%]no protection against spammer.[%END%]</LI>
-        </UL>
+        [%|l%]There is a need to protect Sympa web site against spambot which collect email address in public web site. Various methods are available in Sympa and you can choose it with spam_protection and web_archive_spam_protection parameters. Possible value are:[%END%]<br /><br />
+        <ul>
+          <li>javascript: [%|l%]the address is hidden using a javascript. User who enable javascript can see a nice mailto address where others have nothing.[%END%]</li>
+          <li>at: [%|l%]the @ char is replaced by the string " AT ".[%END%]</li>
+          <li>none : [%|l%]no protection against spammer.[%END%]</li>
+        </ul>
       [% ELSIF p.key == 'subject' %]
         [%|l%]This parameter indicates the subject of the list, which is sent in response to the LISTS mail command. The subject is a free form text limited to one line.[%END%]
       [% ELSIF p.key == 'subscribe' %]
@@ -175,6 +175,6 @@
       [% ELSE %]
         [%|l%]No Comment[%END%]
       [% END %]
-    </DD>
-  </DL>
+    </dd>
+  </dl>
 [% END %]

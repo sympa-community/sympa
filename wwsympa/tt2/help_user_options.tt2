@@ -1,58 +1,58 @@
 <!-- $Id$ -->
-<P>
+<p>
 [%|l%]This is a description of the reception modes available in Sympa. These options are mutually exclusive, which means that you can't set two different reception modes at the same time. Only some of the modes might be available for specific mailing lists.[%END%]
-</P>
-<UL>
+</p>
+<ul>
 
-<LI>[%|l%]Digest[%END%]<BR>
+<li>[%|l%]Digest[%END%]<br />
 [%|l%]Instead of receiving individual mail messages from the list, the subscriber will periodically 
 receive batched messages in a Digest. This Digest compiles a group of messages from the list, using
 the multipart/digest MIME format.[%END%] 
-<BR><BR>
-[%|l%]The sending interval for these Digests is defined by the list owner.[%END%]<BR><BR>
+<br /><br />
+[%|l%]The sending interval for these Digests is defined by the list owner.[%END%]<br /><br /></li>
 
-<LI>[%|l%]DigestPlain[%END%]<BR>
+<li>[%|l%]DigestPlain[%END%]<br />
 [%|l%]Similar to the Digest option in that the subscriber will periodically 
 receive batched messages in a Digest. With DigestPlain the Digest is sent in a plain text 
 format, with all attachments stripped out. DigestPlain is useful if your email software doesn't
 display multipart/digest format messages well.[%END%]
-<BR><BR>
-[%|l%]The sending interval for these Digests is defined by the list owner.[%END%]<BR><BR>
+<br /><br />
+[%|l%]The sending interval for these Digests is defined by the list owner.[%END%]<br /><br /></li>
 	
-<LI>[%|l%]Summary[%END%]<BR> 
+<li>[%|l%]Summary[%END%]<br /> 
 
 [%|l%]Instead of receiving individual mail messages from the list, the subscriber will periodically 
 receive a list of messages. This mode is very close to the Digest reception mode but the 
 subscriber receives only the list of messages.[%END%] 
-<BR><BR>
+<br /><br /></li>
 
-<LI>[%|l%]Nomail[%END%] <BR>
+<li>[%|l%]Nomail[%END%] <br />
 
-[%|l%]This mode is used when a subscriber no longer wishes to receive mail from the list, but nevertheless wishes to retain the ability to post to the list. This mode therefore prevents the subscriber from unsubscribing and subscribing later on.[%END%] <BR><BR>
+[%|l%]This mode is used when a subscriber no longer wishes to receive mail from the list, but nevertheless wishes to retain the ability to post to the list. This mode therefore prevents the subscriber from unsubscribing and subscribing later on.[%END%] <br /><br /></li>
 
-<LI>Txt <BR>
-
-[%|l%]This mode is used when a subscriber wishes to receive mails sent in both HTML and plain text formats
-only in plain text format.[%END%]<BR><BR>
-
-<LI>Html<BR> 
+<li>Txt <br />
 
 [%|l%]This mode is used when a subscriber wishes to receive mails sent in both HTML and plain text formats
-only in HTML format.[%END%]<BR><BR>
+only in plain text format.[%END%]<br /><br /></li>
 
-<LI>Urlize<BR> 
+<li>Html<br /> 
+
+[%|l%]This mode is used when a subscriber wishes to receive mails sent in both HTML and plain text formats
+only in HTML format.[%END%]<br /><br /></li>
+
+<li>Urlize<br /> 
 
 [%|l%]This mode is used when a subscriber does not want to receive attached files. The attached files are 
-replaced by a URL leading to the file stored on the list site.[%END%] <BR><BR>
+replaced by a URL leading to the file stored on the list site.[%END%] <br /><br /></li>
 
-<LI>Not_me<BR> 
+<li>Not_me<br /> 
 
 [%|l%]This mode is used when a subscriber does not want to receive copies of messages that he or she has sent to 
-the list.[%END%] <BR><BR>
+the list.[%END%] <br /><br /></li>
 
-<LI>Normal<BR>
+<li>Normal<br />
 
 [%|l%]This option is used mainly to cancel the nomail, summary or digest modes. If the subscriber was 
-in nomail mode, he or she will again receive individual mail messages from the list.[%END%] <BR><BR>
+in nomail mode, he or she will again receive individual mail messages from the list.[%END%] <br /><br /></li>
 
-</UL>
+</ul>

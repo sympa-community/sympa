@@ -4,10 +4,10 @@
 <br />
 [%|l%]Select below Archives months you want to delete or download (ZiP format):[%END%]
 <dl>
-<dt>[%|l%]Archives Selection:[%END%]</dt>
+<dt><label for="directories">[%|l%]Archives Selection:[%END%]</label></dt>
 <dd>
 <form name="zip_form" method="post" action="[% path_cgi %]">
-<select name="directories" multiple="multiple" size="4">    
+<select name="directories" id="directories" multiple="multiple" size="4">    
 
 	[% FOREACH u = yyyymm %]
 	<option	value="[% u %]">[% u %]</option>

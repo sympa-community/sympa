@@ -1,22 +1,22 @@
-<FORM ACTION="[% path_cgi %]" METHOD="POST">
+<form action="[% path_cgi %]" method="post">
  
 
- <BR> 
- <TABLE>
+ <br /> 
+ <table>
   [% FOREACH f = list_file %]
-   <TR><TD>[% f %]</TD></TR>
+   <tr><td>[% f %]</td></tr>
   [% END %]
-   <TR><TD>&nbsp; </TD></TR>
-   <TR><TD>[%|l%]already exist(s), do you want to confirm the install and erase the old file(s) or cancel the install ?[%END%]
-   </TD></TR>
- <TR>
-  <TD><INPUT TYPE="submit" NAME="mode_confirm" VALUE="[%|l%]Confirm[%END%]" ></TD>
-  <TD><INPUT TYPE="submit" NAME="mode_cancel" VALUE="[%|l%]Cancel[%END%]" ></TD>
- </TR>
- </TABLE>
- <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+   <tr><td>&nbsp; </td></tr>
+   <tr><td>[%|l%]already exist(s), do you want to confirm the install and erase the old file(s) or cancel the install ?[%END%]
+   </td></tr>
+ <tr>
+  <td><input type="submit" name="mode_confirm" value="[%|l%]Confirm[%END%]" /></td>
+  <td><input type="submit" name="mode_cancel" value="[%|l%]Cancel[%END%]" /></td>
+ </tr>
+ </table>
+ <input type="hidden" name="list" value="[% list %]" />
 [% FOREACH elt = id %]
- <INPUT TYPE="hidden" NAME="id" VALUE="[% elt %]">
+ <input type="hidden" name="id" value="[% elt %]" />
 [% END %]
- <INPUT TYPE="hidden" NAME="action_d_install_shared" VALUE="1"> 
-</FORM>  
+ <input type="hidden" name="action_d_install_shared" value="1" /> 
+</form>  

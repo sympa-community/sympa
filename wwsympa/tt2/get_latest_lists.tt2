@@ -1,21 +1,21 @@
 <!-- $Id$ -->
 
 
-<TABLE WIDTH="100%">
- <TR bgcolor="[% light_color %]">
-   <TD><B>[%|l%]Creation date[%END%]</B></TD>
-   <TD><B>[%|l%]Listname[%END%]</B></TD>
-   <TD><B>[%|l%]Subject[%END%]</B></TD>
- </TR>
+<table style="width: 100%;">
+ <tr style="background: [% light_color %];">
+   <th><strong>[%|l%]Creation date[%END%]</strong></th>
+   <th><strong>[%|l%]Listname[%END%]</strong></th>
+   <th><strong>[%|l%]Subject[%END%]</strong></th>
+ </tr>
 
 [% FOREACH list = latest_lists %]
-<TR>
-<TD>[% list.creation_date %]</TD>
-<TD><A HREF="[% path_cgi %]/admin/[% list.name %]">[% list.name %]</A></TD>
-<TD>[% list.subject %]</TD>
-</TR>
+<tr>
+<td>[% list.creation_date %]</td>
+<td><a href="[% path_cgi %]/admin/[% list.name %]">[% list.name %]</a></td>
+<td>[% list.subject %]</td>
+</tr>
 [% END %]
-</TABLE>
+</table>
 
 
 
