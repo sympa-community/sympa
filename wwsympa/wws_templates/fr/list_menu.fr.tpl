@@ -202,10 +202,16 @@
        <TR>
       [IF action=signoff]
         <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Désabonnement</b></font></TD>
-      [ELSE]
+      [ELSIF user->email]
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[path_cgi]/signofft/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Voulez-vous vous désabonner de la liste [list]?'); return false;">Désabonnement</A>
+         <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Voulez-vous vous désabonner de la liste [list]?'); return false;">Désabonnement</A>
+        </b></font>
+        </TD>
+      [ELSE]
+       <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+        <font size=-1><b>
+         <A HREF="[path_cgi]/sigrequest/[list]">Désabonnement</A>
         </b></font>
         </TD>
       [ENDIF]
@@ -260,7 +266,11 @@
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
    [IF may_subscribe=1]
         <font size=-1><b>
+	[IF user->email]
          <A HREF="[path_cgi]/subscribe/[list]" onClick="request_confirm_link('[path_cgi]/subscribe/[list]', 'Voulez-vous vous abonner à la liste [list]?'); return false;">Abonnement</A>
+	[ELSE]
+         <A HREF="[path_cgi]/subrequest/[list]">Abonnement</A>
+	[ENDIF]
         </b></font>
    [ELSE]
 	<font size=-1 COLOR="--BG_COLOR--"><b>Abonnement</b></font>
@@ -294,7 +304,11 @@
 
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
         <font size=-1><b>
+	[IF user->email]
          <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Voulez-vous vous désabonner de la liste [list]?'); return false;">Désabonnement</A>
+	[ELSE]
+	  <A HREF="[path_cgi]/sigrequest/[list]">Désabonnement</A>
+	[ENDIF]
         </b></font>
         </TD>
        </TR>

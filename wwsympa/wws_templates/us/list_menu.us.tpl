@@ -189,10 +189,6 @@
   <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
-   [IF may_subscribe<>1]
-        <!-- Should we print something in case subscribtion is closed ?? ->
-        <!-- END may subscribe -->     
-   [ENDIF] 
    [IF may_signoff=1] 
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
@@ -205,11 +201,19 @@
       [IF action=signoff]
         <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Unsubscribe</b></font></TD>
       [ELSE]
+       [IF user->email]
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
         <font size=-1><b>
          <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Do you really want to unsubscribe from list [list]?'); return false;">Unsubscribe</A>
         </b></font>
         </TD>
+       [ELSE]
+        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+        <font size=-1><b>
+         <A HREF="[path_cgi]/sigrequest/[list]">Unsubscribe</A>
+        </b></font>
+        </TD>
+       [ENDIF]
       [ENDIF]
 
        </TR>
@@ -260,13 +264,19 @@
         <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Subscribe</b></font></TD>
    [ELSE]
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
-   [IF may_subscribe=1]
+    [IF may_subscribe=1]
+      [IF user->email]
         <font size=-1><b>
      <A HREF="[path_cgi]/subscribe/[list]" onClick="request_confirm_link('[path_cgi]/subscribe/[list]', 'Do you really want to subscribe to list [list]?'); return false;">Subscribe</A>
         </b></font>
-   [ELSE]
+      [ELSE]
+         <font size=-1><b>
+     <A HREF="[path_cgi]/subrequest/[list]">Subscribe</A>
+        </b></font>
+      [ENDIF]
+    [ELSE]
 	<font size=-1 COLOR="--BG_COLOR--"><b>Subscribe</b></font>
-   [ENDIF]
+    [ENDIF]
         </TD>
    [ENDIF]
 
@@ -295,9 +305,15 @@
        <TR>
 
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+       [IF user->email]
         <font size=-1><b>
          <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Do you really want to unsubscribe from list [list]?'); return false;">Unsubscribe</A>
         </b></font>
+       [ELSE]
+       <font size=-1><b>
+         <A HREF="[path_cgi]/sigrequest/[list]">Unsubscribe</A>
+        </b></font>
+       [ENDIF]
         </TD>
        </TR>
       </TABLE>
