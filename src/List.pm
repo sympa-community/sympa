@@ -4429,6 +4429,14 @@ sub archive_msg_digest {
    $self->store_digest( $msg) if ($self->{'name'});
 }
 
+## Is the list moderated ?                                                          
+sub is_moderated {
+    
+    return 1 if (defined shift->{'admin'}{'editor'});
+                                                          
+    return 0;
+}
+
 ## Is the list archived ?
 sub is_archived {
     do_log('debug3', 'List::is_archived');
