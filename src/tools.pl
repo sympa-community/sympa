@@ -13,7 +13,7 @@ use Log;
 #my $id = '@(#)$Id$';
 
 ## global var to store a CipherSaber object 
-my $ cipher;
+my $cipher;
 
 ## Sorts the list of adresses by domain name
 ## Input : users hash
@@ -640,10 +640,20 @@ sub sympa_checksum {
 
 # create a cipher
 sub ciphersaber_installed {
-    if (require Crypt::CipherSaber) {
-	return Crypt::CipherSaber->new($Conf{'cookie'});
+
+    my $is_installed;
+    foreach my $dir (@INC) {
+	if (-f "$dir/Crypt/CipherSaber.pm") {
+	    $is_installed = 1;
+	    last;
+	}
+    }
+
+    if ($is_installed) {
+	require Crypt::CipherSaber;
+	$cipher = Crypt::CipherSaber->new($Conf{'cookie'});
     }else{
-	return ('no_cipher');
+	$cipher = 'no_cipher';
     }
 }
 

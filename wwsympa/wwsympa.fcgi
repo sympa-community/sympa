@@ -293,6 +293,8 @@ unless ($List::use_db = &List::probe_db()) {
 
 my $pinfo = &List::_apply_defaults();
 
+&tools::ciphersaber_installed();
+
 %::changed_params;
 
 my (%in, $query);
@@ -2395,6 +2397,9 @@ sub do_add {
 
     my $total = 0;
     foreach my $email (keys %user) {
+
+	## Clean email
+	$email =~ s/^\s*(\S.*\S)\s*$/$1/;
 
 	unless (&wwslib::valid_email($email)) {
 	    &error_message('incorrect_email', {'email' => $email});

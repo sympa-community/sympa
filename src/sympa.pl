@@ -87,6 +87,8 @@ if ($Conf{'db_name'} and $Conf{'db_type'}) {
 ## Apply defaults to %List::pinfo
 &List::_apply_defaults();
 
+&tools::ciphersaber_installed();
+
 ## Set locale configuration
 $main::options{'lang'} =~ s/\.cat$//; ## Compatibility with version < 2.3.3
 $Language::default_lang = $main::options{'lang'} || $Conf{'lang'};
