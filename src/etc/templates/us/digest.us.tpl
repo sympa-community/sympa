@@ -9,7 +9,7 @@ Content-Type: multipart/mixed; boundary="[boundary1]"
 Content-Type: text/plain
 Content-transfer-encoding: 7bit
 
-Table of content:
+Table of contents:
 
 [FOREACH m IN msg_list]
 [m->id]. [m->subject] - [m->from]
