@@ -735,10 +735,18 @@ sub smime_decrypt {
 ## Make a multipart/alternative, a singlepart
 sub as_singlepart {
     &do_log('debug2', 'tools::as_singlepart()');
-    my ($msg, $preferred_type) = @_;
+    my ($msg, $preferred_type, $loops) = @_;
     my $done = 0;
+    $loops++;
     
-    if ($msg->effective_type() =~ /^multipart\/alternative/) {
+    if ($loops > 4) {
+	do_log('err', 'Could not change multipart to singlepart');
+	return undef;
+    }
+
+    if ($msg->effective_type() =~ /^$preferred_type$/) {
+	$done = 1;
+    }elsif ($msg->effective_type() =~ /^multipart\/alternative/) {
 	my @parts = $msg->parts();
 	foreach my $index (0..$#parts) {
 	    if (($parts[$index]->effective_type() =~ /^$preferred_type$/) ||
@@ -752,11 +760,23 @@ sub as_singlepart {
 		last;
 	    }
 	}
+    }elsif ($msg->effective_type() =~ /multipart\/signed/) {
+	my @parts = $msg->parts();
+	## Only keep the first part
+	$msg->parts([$parts[0]]);
+	$msg->make_singlepart();
+	
+	$done ||= &as_singlepart($msg, $preferred_type, $loops);
+
     }elsif ($msg->effective_type() =~ /^multipart/) {
 	my @parts = $msg->parts();
 	foreach my $index (0..$#parts) {
 	    if ($parts[$index]->effective_type() =~ /^multipart\/alternative/) {
-		$done ||= &as_singlepart($parts[$index], $preferred_type);
+		if (&as_singlepart($parts[$index], $preferred_type, $loops)) {
+		    $msg->parts([$parts[$index]]);
+		    $msg->make_singlepart();
+		    $done = 1;
+		}
 	    }
 	}    
     }

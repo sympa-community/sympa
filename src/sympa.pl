@@ -1121,15 +1121,16 @@ sub DoCommand {
     $success ||= &Commands::parse($sender, $robot, $subject_field, $is_signed->{'subject'}) ;
 
     ## Make multipart singlepart
-    my $loops;
-    while ($msg->is_multipart()) {
-	$loops++;
-	if (&tools::as_singlepart($msg, 'text/plain')) {
-	    do_log('notice', 'Multipart message changed to singlepart');
-	}
-	if ($loops > 2) {
-	    do_log('notice', 'Could not change multipart to singlepart');
+    if ($msg->is_multipart()) {
+	my $status = &tools::as_singlepart($msg, 'text/plain');
+
+	unless (defined $status) {
+	    do_log('err', 'Could not change multipart to singlepart');
 	    return undef;
+	}
+
+	if ($status) {
+	    do_log('notice', 'Multipart message changed to singlepart');
 	}
     }
 
