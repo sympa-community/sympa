@@ -4373,7 +4373,8 @@ sub get_nextdigest {
 ## load a scenario if not inline (in the list configuration file)
 sub _load_scenario_file {
     my ($function, $robot, $name, $directory)= @_;
-    do_log('debug2', 'List::_load_scenario_file(%s, %s, %s, %s)', $function, $robot, $name, $directory);
+    ## Too much log
+#    do_log('debug2', 'List::_load_scenario_file(%s, %s, %s, %s)', $function, $robot, $name, $directory);
 
     my $structure;
     
