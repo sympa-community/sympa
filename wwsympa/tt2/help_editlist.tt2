@@ -213,7 +213,7 @@
           <LI>unsubscribe owner<BR>[%|l%]owner approval[%END%]<BR><BR></LI>
         </UL>
       [% ELSIF p.NAME == 'user_data_source' %]
-        [%|l%]Sympa allows the mailing list manager to choose how Sympa loads subscriber data. Subscriber information can be stored in a text file or relational database, or included from various external sources (list, flat file, result of or query).[%END%]
+        [%|l%]Sympa allows the list owner to choose how Sympa loads subscriber data. Subscriber information can be stored in a text file or relational database, or included from various external sources (list, flat file, result of or query).[%END%]
       [% ELSIF p.NAME == 'visibility' %]
         [%|l%]This parameter indicates whether the list should feature in the output generated in response to a LISTS command or should be shown in the list overview of the web-interface.[%END%]
       [% ELSIF p.NAME == 'web_archive' %]
