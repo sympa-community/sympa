@@ -10,9 +10,16 @@ $ENV{'LC_ALL'} = 'C';
 
 my $date = (stat($in_file))[9];
 
+open VERSION, '../.version';
+my $version = <VERSION>;
+chomp $version;
+close VERSION;
+
 ## Init struct
 my %data = ('escaped_start' => '[STARTPARSE]',
-	    'date' => &POSIX::strftime("%d %B %Y", localtime((stat($in_file))[9])));
+	    'date' => &POSIX::strftime("%d %B %Y", localtime((stat($in_file))[9])),
+	    'version' => $version
+	    );
 ## scenari
 foreach my $file (<../src/etc/scenari/*.*>) {
     $file =~ /\/(\w+)\.(\w+)$/;

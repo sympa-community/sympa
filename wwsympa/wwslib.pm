@@ -125,7 +125,8 @@ sub load_config {
 			default_home => 'home',
 			log_facility => '',
 			alias_manager => '',
-			robots => ''
+			robots => '',
+			password_case => 'insensitive'
 			);
 
     my $conf = \%default_conf;
@@ -214,27 +215,6 @@ sub load_mime_types {
     
     close FILE;
     return $types;
-}
-
-## Check user password in sympa database
-sub check_pwd {
-    my ($email, $pwd) = @_;
-    my $user = &List::get_user_db($email);
-    my $real_pwd = $user->{'password'};
-
-    unless ($real_pwd) {
-	&Log::do_log('info', 'password not found or user %s unknown', $email);
-	&main::message('pwd_not_found');
-	return undef;
-    }
-
-    unless (lc($pwd) eq lc($real_pwd)) {
-        &Log::do_log('info', 'check_pwd: incorrect password');
-	&main::message('incorrect_password');
-        return undef;
-    } 
-
-    return 1;
 }
 
 ## Returns user information extracted from the cookie

@@ -1250,7 +1250,8 @@ sub authentication{
     }
     
     ## Password in DB is case-insensitive
-    if(lc($pwd) eq $user->{'password'}){
+    if((($wwsconf->{'password_case'} eq 'insensitive') && (lc($pwd) eq lc($user->{'password'})))
+       || ($pwd eq $user->{'password'})) {
 	$param->{'auth'} = 'classic';
 	$param->{'alt_emails'}{$email} = 'classic' if($email);
 	return $user;
@@ -2704,9 +2705,6 @@ sub do_setpasswd {
 	return undef;
     }
 
-    ## Make password case-insensitive
-#    $in{'newpasswd1'} =~ tr/A-Z/a-z/;
-  
     if (&List::is_user_db($param->{'user'}{'email'})) {
 	unless ( &List::update_user_db($param->{'user'}{'email'}, {'password' => $in{'newpasswd1'}} )) {
 	    &error_message('failed');

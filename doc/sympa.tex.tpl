@@ -112,13 +112,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software}
+[STARTPARSE]
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version [version]\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-[STARTPARSE]
     \date {[date]}
 [STOPPARSE]
 \begin {htmlonly}
@@ -1154,13 +1154,13 @@ be used as a synonim.
 
         \example {listmaster postmaster@cru.fr,root@cru.fr}
 
-\subsection {\cfkeyword {WWSympa\_url}}  
+\subsection {\cfkeyword {wwsympa\_url}}  
 
 	 \default {http://<host>/wws}
 
 	This is the root URL of \WWSympa.
 
-        \example {WWSympa\_url https://my.server/wws}
+        \example {wwsympa\_url https://my.server/wws}
 
 \subsection {\cfkeyword {dark\_color} \cfkeyword {light\_color} \cfkeyword {text\_color} \cfkeyword {bg\_color} \cfkeyword {error\_color} \cfkeyword {selected\_color} \cfkeyword {shaded\_color}}
 \label {colors}
@@ -1927,6 +1927,15 @@ others. Depending on permissions, the same URL may generate a different view.
 	\default {/usr/bin/mhonarc} \\
 	Path to the (superb) MhOnArc program. Required for html archives
 	http://www.oac.uci.edu/indiv/ehood/mhonarc.html
+
+	\subsection {password\_case sensitive | insensitive}
+	\default {insensitive} \\
+	If set to \textbf {insensitive}, WWSympa's password check will be insensitive.
+	This only concerns passwords stored in Sympa database, not the ones in LDAP.
+	
+	\textbf {Be carefull :} in previous 3.xx versions of Sympa, passworsd were 
+	lowercased before database insertion. Therefore changing to case-sensitive 
+	password checking could bring you some password checking problems.
 
 	\subsection {title}
 	\default {Mailing List Service} \\
