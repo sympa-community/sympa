@@ -4745,10 +4745,16 @@ sub load_topics {
 		    push @raugh_data, $topic;
 		    $topic = {};
 		}
-	    }
-	    
+	    }	    
 	}
 	close FILE;
+
+	## Last topic
+	if (defined $topic->{'name'}) {
+	    push @raugh_data, $topic;
+	    $topic = {};
+	}
+
 	$mtime[0] = (stat($conf_file))[9];
 
 	unless ($#raugh_data > -1) {
