@@ -14,7 +14,7 @@ create table user_table
     password_user          varchar(40)            null    ,
     cookie_delay_user      numeric                null    ,
     lang_user              varchar(10)            null    ,
-    attributes_user	   text                   null    ,
+    attributes_user	   varchar(255)           null    ,
     constraint ind_user primary key (email_user)
 )
 go
@@ -47,22 +47,22 @@ go
 create index user_subscriber_fk on subscriber_table (user_subscriber)
 go
 
-#create table admin_table 
-#(
-#	list_admin 		varchar(50)       not null,
-# 	user_admin 		varchar(100) 	  not null,
-###	role_admin 		enum('listmaster','owner','editor') not null,
-#	date_admin 		datetime 	  not null,
-#	update_admin 		datetime          null,
-#	reception_admin 	varchar(20)       null,
-#	comment_admin 		varchar(150)	  null,
-#	subscribed_admin  	numeric           null,
-#	included_admin  	numeric           null,
-#	include_sources_admin  	varchar(50)       null,
-#	info_admin   		varchar(150)      null,
-###	profile_admin  		enum('privileged','normal') null,
-#       constraint ind_admin primary key (list_admin, user_admin,role_admin)
-#)
+create table admin_table 
+(
+	list_admin 		varchar(50)       not null,
+ 	user_admin 		varchar(100) 	  not null,
+	role_admin 		varchar(15)       not null,
+	date_admin 		datetime 	  not null,
+	update_admin 		datetime          null,
+	reception_admin 	varchar(20)       null,
+	comment_admin 		varchar(150)	  null,
+	subscribed_admin  	numeric           null,
+	included_admin  	numeric           null,
+	include_sources_admin  	varchar(50)       null,
+	info_admin   		varchar(150)      null,
+	profile_admin  		varchar(15)       null,
+       constraint ind_admin primary key (list_admin, user_admin,role_admin)
+)
 go
 
 create index list_admin_fk on admin_table (list_admin)
