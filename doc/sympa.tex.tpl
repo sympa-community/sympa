@@ -1471,6 +1471,26 @@ be used as a synonim.
 	removed when a mailing list is setup in anonymous mode (see 
 	\ref {par-anonymous-sender},  page~\pageref {par-anonymous-sender}).
 
+\subsection {\cfkeyword {list\_check\_smtp}} 
+
+        \default {NONE}
+
+	If this parameter is set with a SMTP server address, \Sympa will check if alias
+	with the same name as the list you're gonna create already exists on the
+	SMTP server. It is robot specific, i.e. you can specify a different SMTP
+	server for every virtual robot you are running. This is needed if you are
+	running \Sympa on somehost.foo.org, but you handle all your mail on a
+	separate mail relay.
+
+\subsection {\cfkeyword {list\_check\_suffixes}} 
+
+        \default {request,owner,unsubscribe}
+
+	This paramater is a comma-separated list of admin suffixes you're using
+	for \Sympa aliases, i.e. \samplelist-request, \samplelist-owner etc...
+	This parameter is used with \cfkeyword {list\_check\_smtp} parameter.
+
+
 \section {Spool related}
 \label {spool-related}
 
