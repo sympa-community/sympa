@@ -4042,12 +4042,8 @@ sub do_set_pending_list_request {
 	return undef;
     } 
 
-    my $list_dir;
-    if ($robot ne $Conf{'domain'}) {
-	$list_dir = $Conf{'home'}.'/'.$robot.'/'.$in{'list'};
-    }else {
-	$list_dir = $Conf{'home'}.'/'.$in{'list'};
-    }
+    my $list_dir = $list->{'dir'};
+
     $param->{'list_config'} = $list_dir.'/config';
     $param->{'list_info'} = $list_dir.'/info';
     $param->{'list_subject'} = $list->{'admin'}{'subject'};
