@@ -28,8 +28,6 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw();
 
-require IO::Socket::SSL;
-require LWP::UserAgent;
 use Log;
 
 # request a document using https, return status and content
@@ -49,6 +47,16 @@ sub get_https{
 
 	unless ( -r ($trusted_ca_file) ||  (-d $trusted_ca_path )) {
 	    do_log ('err','error : incorrect access to both cafile and capath');
+	    return undef;
+	}
+
+	unless (require IO::Socket::SSL) {
+	    do_log('err',"Unable to use SSL library, IO::Socket::SSL required, install IO-Socket-SSL (CPAN) first");
+	    return undef;
+	}
+	
+	unless (require LWP::UserAgent) {
+	    do_log('err',"Unable to use LWP library, LWP::UserAgent required, install LWP (CPAN) first");
 	    return undef;
 	}
 
@@ -117,6 +125,16 @@ sub get_http2s{
 
 	unless ( -r ($trusted_ca_file) ||  (-d $trusted_ca_path )) {
 	    do_log ('err','error : incorrect access to both cafile and capath');
+	    return undef;
+	}
+
+	unless (require IO::Socket::SSL) {
+	    do_log('err',"Unable to use SSL library, IO::Socket::SSL required, install IO-Socket-SSL (CPAN) first");
+	    return undef;
+	}
+	
+	unless (require LWP::UserAgent) {
+	    do_log('err',"Unable to use LWP library, LWP::UserAgent required, install LWP (CPAN) first");
 	    return undef;
 	}
 
