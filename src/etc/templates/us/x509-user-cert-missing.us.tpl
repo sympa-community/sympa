@@ -77,7 +77,7 @@ Mime-version: 1.0
 Content-Type: text/plain
 Content-transfer-encoding: 8bit
 
-Un encrypted message from [mail->sender] has been distributed to
+An encrypted message from [mail->sender] has been distributed to
 [list->name]@[list->host] list subscribers.
 Subject : [mail->subject]
 
