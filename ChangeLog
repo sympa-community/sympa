@@ -1,3 +1,87 @@
+2002-03-22 17:22  salaun
+
+	* wwsympa/wws_templates/: fr/help.fr.tpl, fr/pref.fr.tpl,
+	us/pref.us.tpl: [Benoit Marchal] Better translations
+
+2002-03-22 15:07  salaun
+
+	* doc/sympa.tex.tpl, src/List.pm: [requested by Janek Hiis] New
+	feature: custom subject can now refer to list variables
+	([list->name] or [list->sequence])
+
+2002-03-22 14:25  salaun
+
+	* src/parser.pl: New feature: extend parse_tpl parameters format.
+	Allow an ARRAY ref for $template Allow a SCALAR ref for $output
+
+2002-03-22 13:48  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Robert Marchand] Bug fix:
+	password setup notice appeared twice
+
+2002-03-22 11:52  salaun
+
+	* doc/sympa.tex.tpl: Add doc for 'log_level' sympa.conf param
+
+2002-03-22 11:34  salaun
+
+	* src/List.pm: Changes: query DB for # of subscribers only if
+	called without LIMIT in get_first_user ; perform total-- just
+	before savestats (could be reinit because of get_which())
+
+2002-03-21 18:02  salaun
+
+	* src/List.pm: Change: when evaluating a scenario, load subscriber
+	database entry only if needed
+
+2002-03-21 17:29  salaun
+
+	* src/List.pm: Change: if list has 0 subscriber, each time a new()
+	is performed, the database was queried
+
+2002-03-21 13:58  salaun
+
+	* src/List.pm: Add concerned config file to log error message
+
+2002-03-21 12:00  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix
+
+2002-03-21 11:54  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Herve.Brunet] Bug fix: "Sympa
+	could not set a cookie for login" when accessing WWSympa via a
+	hostname different from the Servername.  If http_host does NOT
+	match cookie_domain then set cookie_domain to http_host
+
+2002-03-21 10:51  salaun
+
+	* wwsympa/wwsympa.fcgi: [Hanke Penning] Bug fix: navigation in
+	archives failed with HTTPS HTTP_HOST env variable already contained
+	the TCP port
+
+2002-03-15 16:29  salaun
+
+	* src/aliaswrapper.c: [Nicolas Orlando Nappe] Bug fix: aliaswrapper
+	exited with a bad address error (on RH 7.2 + gcc3) execle expects a
+	pointer to NULL rather than a NULL pointer in the environment
+
+2002-03-14 16:56  salaun
+
+	* doc/sympa.tex.tpl: Document expire_bounce sympa.conf parameter
+
+2002-03-14 13:47  salaun
+
+	* set_symlinks.pl: Security fix: default REVIEW was public !!
+
+2002-03-13 14:49  salaun
+
+	* src/etc/script/sympa.spec: Set ICONSDIR
+
+2002-03-13 12:16  salaun
+
+	* .version, ChangeLog, NEWS: preparing 3.3.4b.3
+
 2002-03-13 11:46  salaun
 
 	* doc/sympa.tex.tpl: Update scenrio paragraph

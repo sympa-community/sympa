@@ -3,6 +3,47 @@
 
 (See Changelog file for the full changes log)
 
+3.3.4b.4	26 Mar 2002
+
+   New features :
+
+	src/List.pm: custom subject can now refer to list variables
+	([list->name] or [list->sequence])
+
+	src/parser.pl: extend parse_tpl parameters format.
+	Allow an ARRAY ref for $template Allow a SCALAR ref for $output
+
+   Changes :
+
+	src/List.pm: query DB for # of subscribers only if
+	called without LIMIT in get_first_user ; perform total-- just
+	before savestats (could be reinit because of get_which())
+
+	src/List.pm: when evaluating a scenario, load subscriber
+	database entry only if needed
+
+	src/List.pm: if list has 0 subscriber, each time a new()
+	is performed, the database was queried
+
+   Bug fixes:
+
+	wwsympa/wwsympa.fcgi: [reported by Herve.Brunet] "Sympa
+	could not set a cookie for login" when accessing WWSympa via a
+	hostname different from the Servername.  If http_host does NOT
+	match cookie_domain then set cookie_domain to http_host
+
+	wwsympa/wwsympa.fcgi: [Hanke Penning] navigation in archives failed 
+	with HTTPS HTTP_HOST env variable already contained the TCP port
+
+	wwsympa/wwsympa.fcgi: [reported by Robert Marchand] 
+	password setup notice appeared twice
+
+	src/aliaswrapper.c: [Nicolas Orlando Nappe] aliaswrapper
+	exited with a bad address error (on RH 7.2 + gcc3) execle expects a
+	pointer to NULL rather than a NULL pointer in the environment
+
+	set_symlinks.pl: Security fix: default REVIEW was public
+
 3.3.4b.3	13 Mar 2002
 
    New features :
