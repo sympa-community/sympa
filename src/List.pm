@@ -1767,7 +1767,10 @@ sub send_msg_digest {
     $msg->add_part($digest); 
 
     ## Add a footer
-    $msg = _add_parts($msg, $param->{'name'}, $self->{'admin'}{'footer_type'});
+    my $new_msg = _add_parts($msg, $param->{'name'}, $self->{'admin'}{'footer_type'});
+    if (defined $new_msg) {
+	$msg = $new_msg;
+    }
 
     ## Send digest
     &smtp::mailto($msg, $param->{'return_path'}, 'none', '_ALTERED_', @tabrcpt );
