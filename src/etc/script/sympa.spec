@@ -10,8 +10,8 @@ Version:  %{version}
 Release:  %{release}
 Copyright:  GPL
 Group: --APPGROUP--
-Source:  http://listes.cru.fr/sympa/distribution/%{name}-%{version}.tar.--ZIPEXT--
-URL: http://listes.cru.fr/sympa/
+Source:  http://www.sympa.org/distribution/%{name}-%{version}.tar.--ZIPEXT--
+URL: http://www.sympa.org/
 Requires: perl >= 0:5.005
 Requires: perl-MailTools >= 1.14
 Requires: perl-MIME-Base64   >= 1.0
