@@ -663,8 +663,11 @@ sub subscribe {
     if ($action =~ /owner/i) {
 	push @msg::report, sprintf Msg(6, 25, $msg::subscription_forwarded);
 	## Send a notice to the owners.
-        my $keyauth = $list->compute_auth($sender,'add');
-	$list->send_sub_to_owner($sender, $keyauth, &Conf::get_robot_conf($robot, 'sympa'), $comment);
+	$list->send_notify_to_owner({'who' => $sender,
+				     'keyauth' => $list->compute_auth($sender,'add'),
+				     'replyto' => &Conf::get_robot_conf($robot, 'sympa'),
+				     'comment' => $comment,
+				     'type' => 'subrequest'});
 	$list->store_susbscription_request($sender, $comment);
 	do_log('info', 'SUB %s from %s forwarded to the owners of the list (%d seconds)', $which, $sender,time-$time_command);   
 	return 1;
@@ -922,8 +925,9 @@ sub signoff {
 	push @msg::report, sprintf Msg(6, 25, $msg::subscription_forwarded)
 	    unless ($action =~ /quiet/i);
 	## Send a notice to the owners.
-	my $keyauth = $list->compute_auth($sender,'del');
-	$list->send_sig_to_owner($sender, $keyauth);
+	$list->send_notify_to_owner({'who' => $sender,
+				     'keyauth' => $list->compute_auth($sender,'del'),
+				     'type' => 'sigrequest'});
 	do_log('info', 'SIG %s from %s forwarded to the owners of the list (%d seconds)', $which, $sender,time-$time_command);   
 	return 1;
     }

@@ -1521,6 +1521,30 @@ sub send_notify_to_owner {
 	$subject = sprintf (Msg(8, 21, "WARNING: %s list %s from %s %s"), $param->{'type'}, $name, $param->{'who'}, $param->{'gecos'});
 	$body = sprintf (Msg(8, 23, "WARNING : %s %s failed to signoff from %s\nbecause his address was not found in the list\n (You may help this person)\n"),$param->{'who'}, $param->{'gecos'}, $name);
 	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
+    }elsif ($param->{'type'} eq 'subrequest') {
+	## Replace \s by %20 in email
+	my $escaped_gecos = $param->{'gecos'};
+	$escaped_gecos =~ s/\s/\%20/g;
+	my $escaped_who = $param->{'who'};
+	$escaped_who =~ s/\s/\%20/g;
+
+	my $subject = sprintf(Msg(8, 2, "%s subscription request"), $name);
+	my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
+	my $body = sprintf Msg(8, 3, $msg::sub_owner), $name, $param->{'replyto'}, $param->{'keyauth'}, $name, $escaped_who, $escaped_gecos, $param->{'replyto'}, $param->{'keyauth'}, $name, $param->{'who'}, $param->{'gecos'};
+	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
+
+    }elsif ($param->{'type'} eq 'sigrequest') {
+	my $sympa = &Conf::get_robot_conf($self->{'domain'}, 'sympa');
+	
+	## Replace \s by %20 in email
+	my $escaped_who = $param->{'who'};
+	$escaped_who =~ s/\s/\%20/g;
+
+	my $subject = sprintf(Msg(8, 24, "%s UNsubscription request"), $name);
+	my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
+	my $body = sprintf Msg(8, 25, $msg::sig_owner), $name, $sympa, $param->{'keyauth'}, $name, $escaped_who, $sympa, $param->{'keyauth'}, $name, $param->{'who'};
+	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
+
     }elsif ($param->{'who'}) {
 	my ($body, $subject);
 	$subject = sprintf(Msg(8, 21, "FYI: %s list %s from %s %s"), $param->{'type'}, $name, $param->{'who'}, $param->{'gecos'});
@@ -1538,38 +1562,6 @@ sub send_notify_to_owner {
     
 }
 
-## Send a subscription request to the owners.
-sub send_sub_to_owner {
-   my($self, $who, $keyauth, $replyto, $gecos) = @_;
-   do_log('debug3', 'List::send_sub_to_owner(%s, %s, %s, %s)', $who, $keyauth, $replyto, $gecos);
-
-   my($i, @rcpt);
-   my $admin = $self->{'admin'}; 
-   my $name = $self->{'name'};
-   my $host = $admin->{'host'};
-
-   return unless ($name && $admin && $who);
-
-   @rcpt = $self->get_owners_email();
-
-   unless (@rcpt) {
-       do_log('notice', 'Warning : no owner defined or  all of them use nomail option in list %s', $name );
-       return undef;
-   }
-
-   ## Replace \s by %20 in gecos and email
-   my $escaped_gecos = $gecos;
-   $escaped_gecos =~ s/\s/\%20/g;
-   my $escaped_who = $who;
-   $escaped_who =~ s/\s/\%20/g;
-
-   my $subject = sprintf(Msg(8, 2, "%s subscription request"), $name);
-   my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
-   my $body = sprintf Msg(8, 3, $msg::sub_owner), $name, $replyto, $keyauth, $name, $escaped_who, $escaped_gecos, $replyto, $keyauth, $name, $who, $gecos;
-   &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
-
-}
-
 ## Send a notification to authors of messages sent to editors
 sub notify_sender{
    my($self, $sender) = @_;
@@ -1582,36 +1574,6 @@ sub notify_sender{
    my $subject = sprintf Msg(4, 40, 'Moderating your message');
    my $body = sprintf Msg(4, 38, "Your message for list %s has been forwarded to editor(s)\n"), $name;
    &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $sender, $self->{'domain'}, $sender);
-}
-
-## Send a Unsubscription request to the owners.
-sub send_sig_to_owner {
-    my($self, $who, $keyauth) = @_;
-    do_log('debug3', 'List::send_sig_to_owner(%s)', $who);
-    
-    my($i, @rcpt);
-    my $admin = $self->{'admin'}; 
-    my $name = $self->{'name'};
-    my $host = $admin->{'host'};
-    my $robot = $self->{'domain'};
-    my $sympa = &Conf::get_robot_conf($robot, 'sympa');
-
-    return unless ($name && $admin && $who);
-    
-    @rcpt = $self->get_owners_email();
-
-    unless (@rcpt) {
-	do_log('notice', 'Warning : no owner defined or  all of them use nomail option in list %s', $name );
-    }
-
-   ## Replace \s by %20 in email
-   my $escaped_who = $who;
-   $escaped_who =~ s/\s/\%20/g;
-
-    my $subject = sprintf(Msg(8, 24, "%s UNsubscription request"), $name);
-    my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
-    my $body = sprintf Msg(8, 25, $msg::sig_owner), $name, $sympa, $keyauth, $name, $escaped_who, $sympa, $keyauth, $name, $who;
-    &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
 }
 
 ## Send a message to the editor

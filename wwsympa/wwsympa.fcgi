@@ -2409,8 +2409,11 @@ sub do_subscribe {
     $param->{'may_subscribe'} = 1;
     
     if ($sub_is =~ /owner/) {
-	my $keyauth = $list->compute_auth($param->{'user'}{'email'}, 'add');
-	$list->send_sub_to_owner($param->{'user'}{'email'}, $keyauth, &Conf::get_robot_conf($robot, 'sympa'), $param->{'user'}{'gecos'});
+	$list->send_notify_to_owner({'who' => $param->{'user'}{'email'},
+				     'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'add'),
+				     'replyto' => &Conf::get_robot_conf($robot, 'sympa'),
+				     'comment' => $param->{'user'}{'gecos'},
+				     'type' => 'subrequest'});
 	$list->store_susbscription_request($param->{'user'}{'email'});
 	&message('sent_to_owner');
 	&wwslog('info', 'do_subscribe: subscribe sent to owner');
@@ -2633,8 +2636,9 @@ sub do_signoff {
 		, $param->{'user'}{'email'}, $param->{'list'});
 	return undef;
     }elsif ($sig_is =~ /owner/) {
-	my $keyauth = $list->compute_auth($param->{'user'}{'email'}, 'del');
-	$list->send_sig_to_owner($param->{'user'}{'email'}, $keyauth);
+	$list->send_notify_to_owner({'who' => $param->{'user'}{'email'},
+				     'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'del'),
+				     'type' => 'sigrequest'});
 	&message('sent_to_owner');
 	&wwslog('info', 'do_signoff: signoff sent to owner');
 	return undef;
