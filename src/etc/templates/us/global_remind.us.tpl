@@ -19,7 +19,7 @@ Voici pour chaque liste  une méthode de désabonnement :
 [IF user->password]
 
 Pour vous identifier sous  [conf->wwsympa_url] , votre adresse
-de login est [user->email], votre mot de passe [user->passwd]
+de login est [user->email], votre mot de passe [user->password]
 
 [ENDIF]
 
@@ -38,7 +38,7 @@ Por cada lista existe un método para anular la subscripción:
 [IF user->password]
 
 Para autentificarse usando el interface web wwsympa [conf->wwsympa_url]
-utilice su e-mail [user->email] y su contraseña [user->passwd]
+utilice su e-mail [user->email] y su contraseña [user->password]
 
 [ENDIF]
 
@@ -60,7 +60,7 @@ Ecco per ciascuna lista un link per cancellare l'iscrizione :
 [IF user->password]
 
 Per identificarsi su  [conf->wwsympa_url] , il suo
-indirizzo di login e' [user->email], la sua password [user->passwd]
+indirizzo di login e' [user->email], la sua password [user->password]
 
 [ENDIF]
 
@@ -79,7 +79,7 @@ Dla ka¿dej listy mo¿esz klikn±æ na link ¿eby wypisaæ swój adres.
 [IF user->password]
 
 Aby zalogowaæ siê do interfejsu WWW pod adresem [conf->wwsympa_url]
-u¿yj swojego adresu email [user->email] i swojego has³a [user->passwd]
+u¿yj swojego adresu email [user->email] i swojego has³a [user->password]
 
 [ENDIF]
 
@@ -105,7 +105,7 @@ Pro ka¾dou konferenci je zde odkaz, kterým se mù¾ete odhlásit.
 Pro ovìøení toto¾nosti na WWW rozhraní 
 na adrese [conf->wwsympa_url]
 pou¾ijte svoji emailovou adresu [user->email] 
-a svoje heslo [user->passwd]
+a svoje heslo [user->password]
 
 [ENDIF]
 
@@ -124,7 +124,7 @@ können Sie einfach die angebenen mailtos benutzen:
 
 Wenn Sie die Web-Schnittstelle [conf->wwsympa_url] benutzen wollen,
 sollten Sie sich mit Ihrer EMail-Adresse [user->email] und Ihrem
-Passwort [user->passwd] anmelden.
+Passwort [user->password] anmelden.
 
 [ENDIF]
 
@@ -143,7 +143,7 @@ Foreach list here is a mailto to use if you want to unsubscribe.
 [IF user->password]
 
 In order to authenticate your self using wwsympa [conf->wwsympa_url]
-use your e-mail [user->email] and your password [user->passwd]
+use your e-mail [user->email] and your password [user->password]
 
 [ENDIF]
 
