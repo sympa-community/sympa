@@ -4081,7 +4081,7 @@ sub do_redirect {
 	 #$file =~ s/\.tpl$/\.$list->{'admin'}{'lang'}\.tpl/;
 
 	 ## Look for the template
-	 $param->{'filepath'} = &tools::Sget_filename('etc',$subdir.$file,$robot, $list);
+	 $param->{'filepath'} = &tools::get_filename('etc',$subdir.$file,$robot, $list);
 
 	 ## Default for 'homepage' is 'info'
 	 if (($in{'file'} eq 'homepage') &&
@@ -6617,7 +6617,7 @@ sub _prepare_data {
 
 	     if ($restrict) {
 		 &_restrict_values($p->{'value'},$constraint);
-	     } 	    	     
+	     }
 
 	 }elsif ($struct->{'datasource'}) {
 	     $p_glob->{'type'} = 'datasource';
@@ -6703,6 +6703,19 @@ sub _prepare_data {
 
      return $p_glob;
  }
+
+## Restrict allowed values in the hash
+sub _restrict_values {
+    my $values = shift;    #ref on hash of values
+    my $allowed = shift;   #ref on hash of allowed values
+    &do_log('debug3', '_restrict_values()');
+
+    foreach my $v (keys %{$values}) {
+	unless (defined $allowed->{$v}) {
+	    delete $values->{$v};
+	}
+    }
+}
 
  ## NOT USED anymore (expect chinese)
  sub do_close_list_request {

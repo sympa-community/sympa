@@ -347,7 +347,8 @@ sub _getChildren {
 	# TEXT_NODE
 	}elsif ($type == 3) {
 	    my $value = $child->nodeValue;
-	    $value =~ s/(\s)+//;
+#	    $value =~ s/(\s)+//;
+	    $value =~ s/^(\s)+//;
 	    unless ($value eq "") {
 		$string = $string.$value;
 		if ($return eq "hash") {

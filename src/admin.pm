@@ -353,12 +353,12 @@ sub create_list{
     
     $list->{'admin'}{'creation'}{'date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
-    if (defined $param->{'creation_email'}) {
+    if ($param->{'creation_email'}) {
 	$list->{'admin'}{'creation'}{'email'} = $param->{'creation_email'};
     } else {
 	$list->{'admin'}{'creation'}{'email'} = $Conf{'listmaster'};
     }
-    if (defined $param->{'status'}) {
+    if ($param->{'status'}) {
 	$list->{'admin'}{'status'} = $param->{'status'};
     } else {
 	$list->{'admin'}{'status'} = 'open';
@@ -451,13 +451,13 @@ sub update_list{
 ############## ? update
     $list->{'admin'}{'creation'}{'date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
-    if (defined $param->{'creation_email'}) {
+    if ($param->{'creation_email'}) {
 	$list->{'admin'}{'creation'}{'email'} = $param->{'creation_email'};
     } else {
 	$list->{'admin'}{'creation'}{'email'} = $Conf{'listmaster'};
     }
 
-    if (defined $param->{'status'}) {
+    if ($param->{'status'}) {
 	$list->{'admin'}{'status'} = $param->{'status'};
     } else {
 	$list->{'admin'}{'status'} = 'open';

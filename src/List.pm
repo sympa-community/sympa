@@ -1355,6 +1355,7 @@ sub set_status_family_closed {
 	unless ($self->new_send_notify_to_owner($message,@param)){
 	    &do_log('err','Impossible to send notify to owner informing status family_closed for the list %s',$self->{'name'});
 	}
+# messages : close_list
     }
     return 1;
 }
@@ -1534,14 +1535,10 @@ sub save_config {
  
     ## Update management info
     $self->{'admin'}{'serial'}++;
-#   $self->{'admin'}{'defaults'}{'serial'} = 0;
     $self->{'admin'}{'update'} = {'email' => $email,
 				  'date_epoch' => time,
 				  'date' => &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time))
 				  };
-#   $self->{'admin'}{'defaults'}{'update'} = 0;
-#    $self->{'admin'}{'defaults'}{'family_name'} = 0;
-#    $self->{'admin'}{'defaults'}{'latest_instantiation'} = 0;
 
     unless (&_save_admin_file($config_file_name, $old_config_file_name, $self->{'admin'})) {
 	&do_log('info', 'unable to save config file %s', $config_file_name);
@@ -10420,7 +10417,7 @@ sub get_next_db_log {
     return $log;
 }
 
-## Close the list (remove from DB, remove aliases, change status to 'closed')
+## Close the list (remove from DB, remove aliases, change status to 'closed' or 'family_closed')
 sub close {
     my ($self, $email, $status) = @_;
 

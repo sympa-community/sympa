@@ -84,6 +84,14 @@ Options:
    --instantiate_family=family_name  --robot=robot_name < file.xml       
                                          : instantiate family_name lists described in the file.xml under robot_name,
                                            the family directory must exist
+  --add_list=family_name --robot=robot_name < file.xml
+                                         : add the list described by the file.xml under robot_name, to the family
+                                           family_name.
+   --modify_list=family_name --robot=robot_name < file.xml
+                                         : modify the existing list installed under the robot_name robot and that 
+                                           belongs to family_name family. The new description is in the file.xml
+   --close_family=family_name --robot=robot_name 
+                                         : close lists of family_name family under robot_name.      
 
    --close_list=LISTNAME[\@ROBOT]         : close a list
    --log_level=LEVEL                     : sets Sympa log level
@@ -101,7 +109,7 @@ encryption.
 my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
-		    'close_list=s','create_list','instantiate_family=s','robot=s')) {
+		    'close_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s')) {
     &fatal_err("Unknown options.");
 }
 
@@ -118,7 +126,10 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
 				     $main::options{'dump'} ||
 				     $main::options{'close_list'} ||
 				     $main::options{'create_list'} ||
-				     $main::options{'instantiate_family'});
+				     $main::options{'instantiate_family'} ||
+				     $main::options{'add_list'} ||
+				     $main::options{'modify_list'} ||
+				     $main::options{'close_family'});
 
 ## Batch mode, ie NOT daemon
  $main::options{'batch'} = 1 if ($main::options{'dump'} || 
@@ -129,7 +140,10 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
 				 $main::options{'lowercase'} ||
 				 $main::options{'close_list'} ||
 				 $main::options{'create_list'} ||
-				 $main::options{'instantiate_family'});
+				 $main::options{'instantiate_family'} ||
+				 $main::options{'add_list'} ||
+				 $main::options{'modify_list'} ||
+				 $main::options{'close_family'});
 
 $log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
@@ -343,9 +357,16 @@ if ($main::options{'dump'}) {
 	exit 1;
     }
 
-    unless ($list->close()) {
-	print STDERR "Could not close list $main::options{'close_list'}\n";
-	exit 1;	
+    if ($list->{'admin'}{'family_name'}) {
+ 	unless($list->set_status_family_closed('close_list',$list->{'name'})) {
+ 	    print STDERR "Could not close list $main::options{'close_list'}\n";
+ 	    exit 1;	
+ 	}
+    } else {
+	unless ($list->close()) {
+	    print STDERR "Could not close list $main::options{'close_list'}\n";
+	    exit 1;	
+	}
     }
 
     printf STDOUT "List %s has been closed, aliases have been removed\n", $list->{'name'};
@@ -406,6 +427,114 @@ if ($main::options{'dump'}) {
     my $string = $family->get_instantiation_results();
     print STDERR $string;
     
+    exit 0;
+}elsif ($main::options{'add_list'}) {
+     
+    my $robot;
+    unless ($robot = $main::options{'robot'}) {
+ 	print STDERR $usage_string;
+ 	exit 1;
+    }
+    my $family_name;
+    unless ($family_name = $main::options{'add_list'}) {
+ 	print STDERR $usage_string;
+ 	exit 1;
+    }
+    
+    print STDOUT "\n************************************************************\n";
+    
+    my $family;
+    unless ($family = new Family($family_name,$robot)) {
+ 	print STDERR "The family $family_name does not exist, impossible to add a list\n";
+ 	exit 1;
+    }
+    
+    my $result;
+    unless ($result = $family->add_list(\*STDIN)) {
+ 	print STDERR "\nImpossible to add a list to the family : action stopped \n";
+ 	exit 1;
+    } 
+    
+    print STDOUT "\n************************************************************\n";
+    
+    unless (defined $result->{'ok'}) {
+ 	print STDERR "$result->{'string_info'}";
+ 	print STDERR "\n The action has been stopped because of error :\n";
+ 	print STDERR "$result->{'string_error'}";
+ 	exit 1;
+    }
+    
+    print STDOUT $result->{'string_info'};
+    exit 0;
+}
+
+##########################################
+elsif ($main::options{'modify_list'}) {
+    
+    my $robot;
+    unless ($robot = $main::options{'robot'}) {
+ 	print STDERR $usage_string;
+ 	exit 1;
+    }
+    my $family_name;
+    unless ($family_name = $main::options{'modify_list'}) {
+ 	print STDERR $usage_string;
+ 	exit 1;
+    }
+    
+    print STDOUT "\n************************************************************\n";
+    
+    my $family;
+    unless ($family = new Family($family_name,$robot)) {
+ 	print STDERR "The family $family_name does not exist, impossible to modify the list.\n";
+ 	exit 1;
+    }
+    
+    my $result;
+    unless ($result = $family->modify_list(\*STDIN)) {
+ 	print STDERR "\nImpossible to modify the family list : action stopped. \n";
+ 	exit 1;
+    } 
+    
+    print STDOUT "\n************************************************************\n";
+    
+    unless (defined $result->{'ok'}) {
+ 	print STDERR "$result->{'string_info'}";
+ 	print STDERR "\nThe action has been stopped because of error :\n";
+ 	print STDERR "$result->{'string_error'}";
+ 	exit 1;
+    }
+    
+    print STDOUT $result->{'string_info'};
+    exit 0;
+}
+
+##########################################
+elsif ($main::options{'close_family'}) {
+    
+    my $robot;
+    unless ($robot = $main::options{'robot'}) {
+ 	print STDERR $usage_string;
+ 	exit 1;
+    }
+    my $family_name;
+    unless ($family_name = $main::options{'close_family'}) {
+ 	print STDERR $usage_string;
+ 	exit 1;
+    }
+    my $family;
+    unless ($family = new Family($family_name,$robot)) {
+ 	print STDERR "The family $family_name does not exist, impossible family closure\n";
+ 	exit 1;
+    }
+    
+    my $string;
+    unless ($string = $family->close()) {
+ 	print STDERR "\nImpossible family closure : action stopped \n";
+ 	exit 1;
+    } 
+    
+    print STDOUT $string;
     exit 0;
 }
  

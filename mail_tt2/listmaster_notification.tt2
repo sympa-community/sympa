@@ -47,7 +47,7 @@ Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END
 [%|loc%]The list status has been set to error_config.[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 
-[% ELSIF type == 'error_family_file' -%]
+[% ELSIF type == 'error_copy_file' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
 
 [%|loc(param0,param1)%]Errors occured while copying family %2 file in list %1 directory.[%END%]
@@ -104,6 +104,14 @@ Subject: [% FILTER qencode %][%|loc(param0)%]admins update failed for list %1[%E
 =======
 [%|loc%]Sympa could not include admins from external data sources ; the database or LDAP directory might be unreachable. 
 Check Sympa log files for more precise information[%END%]
+
+[% ELSIF type == 'modify_list_family' -%]
+Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+
+[%|loc(param0,param1)%]Sympa could not modify list %1 (Family %2)[%END%]
+[%|loc%]The list status has been set to error_config.[%END%]
+[%|loc%]Check Sympa log files for more precise information.[%END%]
+
 [% ELSIF type == 'automatic_bounce_management' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 automatic bounce management[%END%][%END%]
 
