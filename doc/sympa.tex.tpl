@@ -222,7 +222,7 @@ in a single software package, including:
     \item \textbf {Multilingual} messages. The current version of
         \Sympa allows the administrator to choose the language
         catalog at run time. At the present time the \Sympa robot is available in
-        Chinese (Big5 and GB), Czech, English, Finnish, French, German, Hungrian, Italian, Polish, 
+        Chinese (Big5 and GB), Czech, English, Finnish, French, German, Hungarian, Italian, Polish, 
 	Portuguese, Spanish. The web interface is available in English, Spanish
 	and French.
 
@@ -2723,7 +2723,7 @@ translated into 10 different languages :
 
 \item fr: French
 
-\item hu: hungrian
+\item hu: hungarian
 
 \item it: Italian
 
