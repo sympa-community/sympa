@@ -1000,7 +1000,7 @@ sub virus_infected {
         if (( $status == 3) and not($virusfound)) { 
             $virusfound = "unknown";
         }    
-    }elsif ("${Conf{'antivirus_path'}}" =~ /AvpLinux$/) {
+    }elsif ("${Conf{'antivirus_path'}}" =~ /kavscanner/) {
 
 	# impossible to look for viruses with no option set
 	unless ($Conf{'antivirus_args'}) {
@@ -1014,7 +1014,7 @@ sub virus_infected {
 	    if (/infected:\s+(.*)/){
 		$virusfound = $1;
 	    }
-	    elsif (/suspicion:\s+(.*)/){
+	    elsif (/suspicion:\s+(.*)/i){
 		$virusfound = $1;
 	    }
 	}
