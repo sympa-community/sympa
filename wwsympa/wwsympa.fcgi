@@ -2420,7 +2420,7 @@ sub do_set {
     ## Lower-case new email address
     $in{'new_email'} = lc( $in{'new_email'});
 
-    if ($in{'email'} ne $in{'new_email'}) {
+    if ($in{'new_email'} && ($in{'email'} ne $in{'new_email'})) {
 
 	unless ($in{'new_email'} && &tools::valid_email($in{'new_email'})) {
 	    &do_log('notice', "do_set:incorrect email %s",$in{'new_email'});
