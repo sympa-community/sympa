@@ -3157,6 +3157,7 @@ sub do_modindex {
 	unless (open MSG, "$Conf{'queuemod'}/$msg") {
 	    &error_message('msg_error');
 	    &wwslog('info','do_modindex: unable to read msg %s', $msg);
+	    closedir SPOOL;
 	    return 'admin';
 	}
 
@@ -3173,6 +3174,7 @@ sub do_modindex {
 	    $param->{'spool'}{$id}{$field} =~ s/>/&gt;/;
 	}
     }
+    closedir SPOOL
 
     unless ($param->{'spool'}) {
 	&message('no_msg', {'list' => $in{'list'}});
@@ -3592,7 +3594,8 @@ sub do_arc {
 		$latest = $1 if ($latest < $1);
 	    }
 	}
-
+	closedir ARC;
+	
 	$in{'arc_file'} = $index.$latest.".html";
     }
 
@@ -3652,6 +3655,7 @@ sub do_remove_arc {
     if (-d $url_dir) {
  	opendir DIR, "$url_dir";
     	my @list = readdir(DIR);
+	closedir DIR;
     	close (DIR);
     	foreach (@list) {
             unlink ("$url_dir/$_")  ;
@@ -3700,6 +3704,7 @@ sub do_remove_arc {
             unless (open REBUILD, ">$file") {
                 &error_message('failed');
 	        &wwslog('info','do_remove: cannot create %s', $file);
+		closedir ARC;
 	        return undef;
             }
  
@@ -3715,6 +3720,8 @@ sub do_remove_arc {
 	    last;
 	}
     }
+    closedir ARC;
+
     unless ($message) {
 	&wwslog('info', 'do_remove_arc : no file match msgid');
 	$param->{'status'} = 'not_found';
@@ -6216,7 +6223,8 @@ sub do_d_read {
 	}
 
 	my @dir = grep !/^\./, readdir DIR;
-
+	closedir DIR;
+	
 	# empty directory?
 	$param->{'empty'} = ($#dir == -1);
 
@@ -8014,7 +8022,7 @@ sub do_view_translations {
 	 }
      }
 
-     close TPL;
+     closedir TPL;
 
      foreach my $l (keys %lang) {
 	 foreach my $t (keys %{$param->{'tpl'}}) {
