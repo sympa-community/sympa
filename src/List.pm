@@ -1078,11 +1078,19 @@ sub load {
 	    return undef;
 	}
 
+	my $last_include = (stat("$self->{'dir'}/subscribers.db"))[9];
+
 	$m2 = $self->{'mtime'}->[1]; 
-	## if (first time ) OR (Config has changed) OR( TTL has expired ) then reload
-	if ( (!$self->{'mtime'}->[0]) || ( $m1 > $self->{'mtime'}->[0]) || (time > ($self->{'mtime'}->[1] + $self->{'admin'}{'ttl'}))) {
-	    $users = _load_users_include($name,$self->{'admin'});
+	## if (Config has changed) OR( TTL has expired ) then reload
+	if ( ($self->{'mtime'}->[0] && ($m1 > $self->{'mtime'}->[0])) || 
+	     ( $m1 > $last_include) || 
+	     (time > ($last_include + $self->{'admin'}{'ttl'}))) {
+
+	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 0);
 	    $m2 = time;
+	}elsif (! $self->{'users'}) {
+	    ## Use cache
+	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 1);
 	}
 	
     }else { 
@@ -1092,20 +1100,17 @@ sub load {
     
 ## Load stats file if first new() or stats file changed
     my ($stats, $total);
-    ($stats, $total) = _load_stats_file("$self->{'dir'}/stats")
-	if (!$m3 || ($m3 > $self->{'mtime'}->[2]));
-    
-#    my $stats = _load_stats_file("$self->{'dir'}/stats")  if ($self->{'name'} ne $name || $m3 > $self->{'mtime'}->[2]);
-    
+    ($stats, $total) = _load_stats_file("$self->{'dir'}/stats");
     
     $self->{'stats'} = $stats if ($stats);
     $self->{'users'} = $users->{'users'} if ($users);
     $self->{'ref'}   = $users->{'ref'} if ($users);
-    
-    if ($users) {
-	$self->{'total'} = $users->{'total'}
-    }elsif ($total && ($self->{'admin'}{'user_data_source'} eq 'database')) {
-	$self->{'total'} = $total 
+        
+#    my $previous_total = $self->{'total'};
+    if ($users && defined($users->{'total'})) {
+	$self->{'total'} = $users->{'total'};
+    }elsif ($total) {
+	$self->{'total'} = $total;
     }
 
     $self->{'mtime'} = [ $m1, $m2, $m3 ];
@@ -2364,6 +2369,7 @@ sub get_default_user_options {
 sub get_total {
     my $self = shift;
     my $name = $self->{'name'};
+    &do_log('debug','List::get_total(%s)', $name);
 
 #    if ($self->{'admin'}{'user_data_source'} eq 'database') {
 	## If stats file was updated
@@ -2665,7 +2671,7 @@ sub get_first_user {
 	    $self->{'total'} = &_load_total_db($self->{'name'});
 	    $self->savestats();
 #	}
-
+	
 	return $user;
     }else {
 	my ($i, $j);
@@ -2673,6 +2679,8 @@ sub get_first_user {
 	
 	 if (defined($ref) && $ref->seq($i, $j, R_FIRST) == 0)  {
 	    my %user = split(/\n/, $j);
+
+	    $self->{'_loading_total'} = 1;
 
 	    $user{'reception'} ||= 'mail';
 	    $user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
@@ -2686,7 +2694,7 @@ sub get_first_user {
 ## Loop for all subsequent users.
 sub get_next_user {
     my $self = shift;
-    do_log('debug2', 'List::get_next_user');
+#    do_log('debug2', 'List::get_next_user');
 
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
 	my $user = $sth->fetchrow_hashref;
@@ -2713,11 +2721,18 @@ sub get_next_user {
 	if ($ref->seq($i, $j, R_NEXT) == 0) {
 	    my %user = split(/\n/, $j);
 
+	    $self->{'_loading_total'}++;
+
 	    $user{'reception'} ||= 'mail';
 	    $user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	      unless ($self->is_available_reception_mode($user{'reception'}));
 	    return \%user;
 	}
+	## Update total
+	$self->{'total'} = $self->{'_loading_total'}; 
+	$self->{'_loading_total'} = undef;
+	$self->savestats();
+
 	return undef;
     }
 }
@@ -2775,7 +2790,7 @@ sub get_first_bouncing_user {
 ## Loop for all subsequent bouncing users.
 sub get_next_bouncing_user {
     my $self = shift;
-    do_log('debug2', 'List::get_next_bouncing_user');
+#    do_log('debug2', 'List::get_next_bouncing_user');
 
     unless ($self->{'admin'}{'user_data_source'} eq 'database') {
 	&do_log('info', 'Function available for lists in database mode only');
@@ -4761,7 +4776,9 @@ sub _include_users_sql {
 sub _load_users_include {
     my $name = shift; 
     my $admin = shift ;
-    do_log('debug2', 'List::_load_users_include for list %s',$name);
+    my $db_file = shift;
+    my $use_cache = shift;
+    do_log('debug2', 'List::_load_users_include for list %s ; use_cache: %d',$name, $use_cache);
 
     my (%users, $depend_on);
     my $total = 0;
@@ -4770,8 +4787,11 @@ sub _load_users_include {
     my $btree = new DB_File::BTREEINFO;
     return undef unless ($btree);
     $btree->{'compare'} = '_compare_addresses';
-    my $ref = tie %users, 'DB_File', undef, O_CREAT|O_RDWR, 0600, $btree;
+    my $ref = tie %users, 'DB_File', $db_file, O_CREAT|O_RDWR, 0600, $btree;
+#    my $ref = tie %users, 'DB_File', undef, O_CREAT|O_RDWR, 0600, $btree;
     return undef unless ($ref);
+
+    unless ($use_cache) {
     foreach my $type ('include_list','include_file','include_ldap_query','include_sql_query') {
 	foreach my $incl (@{$admin->{$type}}) {
 	    ## get the list of users
@@ -4798,11 +4818,13 @@ sub _load_users_include {
 	    }
 	}
     }
+    }
 
     my $l = {	 'ref'    => $ref,
-		 'users'  => \%users,
-		 'total'  => $total
+		 'users'  => \%users
 	     };
+    $l->{'total'} = $total
+	if $total;
 
     $l;
 }
