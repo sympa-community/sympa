@@ -30,7 +30,7 @@ sub parse_tpl {
     my ($template, $output);
     ($data, $template, $output) = @_;
 
-    print STDERR "\tsub parse_tpl $template\n" if $opt_p;
+    &do_log('debug2','Parser [%d] parse_tpl(%s)', $index, $template);
 
     my ($hash, $foreach);
     
@@ -89,6 +89,8 @@ sub do_setvar {
 sub do_include {
     my $file = pop;
 
+    &do_log('debug2','Parser [%d] do_include(%s)', $index, $file);
+
     my $fh = new FileHandle $file;
 
     print <$fh>;
@@ -100,8 +102,7 @@ sub do_include {
 sub do_if {
     my ($echo) = @_;
 
-    print STDERR "[$index]\tsub do_if ($echo)\n" if $opt_p;
-    print STDERR "\t$t[$index]" if $opt_p;
+    &do_log('debug3','Parser [%d] do_if(%s)', $index, $t[$index]);
 
     $echo = -1 if ($echo == 1);
 
@@ -159,8 +160,7 @@ sub do_foreach {
     my ($echo) = @_;
     my ($i, $val, $var, $struct, $start);
 
-    print STDERR "[$index]\tsub do_foreach ($echo)\n" if $opt_p;
-    print STDERR "\t$t[$index]" if $opt_p;
+    &do_log('debug3','Parser [%d] do_foreach(%s)', $index, $t[$index]);
 
     if (/\[\s*FOREACH\s+(\w+)\s+IN\s+(\w+)(\->(\w+))?\s*\]/i) {
 	($var, $key, $key2) = ($1, $2, $4);
@@ -241,8 +241,8 @@ sub do_foreach {
 
 ## Processes [STOPPARSE]
 sub do_stopparse {
-    print STDERR "[$index]\tsub do_stopparse\n" if $opt_p;
-    print STDERR "\t$t[$index]" if $opt_p;
+
+    &do_log('debug3','Parser [%d] do_stopparse()', $index);
 
     $index++;
 
@@ -261,8 +261,6 @@ sub process {
     my $backup_echo;
 
     $echo = 0 if ($echo == -1);
-
-    print STDERR "[$index]\tsub process ($echo)\n" if $opt_p;
 
     while ($_ = $t[++$index]) {
 	if (/\[\s*IF.*\]/i) {
@@ -302,8 +300,7 @@ sub process {
 ## Instanciates variables
 sub do_parse {
 
-    print STDERR "[$index]\tsub do_parse\n" if $opt_p;
-    print STDERR "\t$t[$index]" if $opt_p;
+    &do_log('debug4','Parser [%d] parse(%s)', $index, $t[$index]);
 
     $_ = $t[$index];
     
@@ -326,7 +323,7 @@ sub do_eval {
     }elsif ($var =~ /^(\w+)$/) {
 	return $data->{$1};
     }else {
-	print STDERR "Unable to parse '$var'\n" if $opt_p;
+	&do_log('err','Parser [%d] unable to parse %s', $index, $var;
     }
 
     return '';
