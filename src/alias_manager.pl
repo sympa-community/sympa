@@ -54,8 +54,8 @@ unless (open CONF, $sympa_conf_file) {
     die "Could not read $sympa_conf_file";
 }
 while (<CONF>) {
-    if (/^\s*host\s+(\S+)\s*$/) {
-	$default_domain = $1;
+    if (/^\s*(host|domain)\s+(\S+)\s*$/) {
+	$default_domain = $2;
 	last;
     }
 }
@@ -84,14 +84,14 @@ if ($operation eq 'add') {
     # print ALIAS "# --- aliases for list $listname\n";
     foreach my $suffix ('', '-request', '-owner', '-unsubscribe') {
 	
-	my $address = $listname . $suffix;
-	$address .= '@'.$domain
+	my $alias = $listname . $suffix;
+	$alias .= '@'.$domain
 	    unless ($domain eq $default_domain);
 	
 	if ($suffix eq '-owner') {
-	    printf ALIAS "$address: \"\|$path_to_bouncequeue $address\"\n";
+	    printf ALIAS "$alias: \"\|$path_to_bouncequeue $listname\@$domain\"\n";
 	}else {
-	    printf ALIAS "$address: \"\|$path_to_queue $address\"\n";
+	    printf ALIAS "$alias: \"\|$path_to_queue $listname$suffix\@$domain\"\n";
 	}
     }
 
