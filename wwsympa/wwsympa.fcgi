@@ -6430,8 +6430,11 @@ sub do_d_read {
 
 	if ($path) {
 	    # building of the parent directory path
-	    $path =~ /^(([^\/]*\/)*)([^\/]+)$/; 
-	    $param->{'father'} = $1;
+	    if ($path =~ /^(([^\/]*\/)*)([^\/]+)$/) {
+		$param->{'father'} = $1;
+	    }else {
+		$param->{'father'} = '';
+	    }
 	    $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
 	    
 	    
@@ -6565,8 +6568,11 @@ sub do_d_editfile {
     }
 
     #Current directory
-    $path =~ /^(.*)\/([^\/]+)$/; 
-    $param->{'father'} = $1;    
+    if ($path =~ /^(.*)\/([^\/]+)$/) {
+	$param->{'father'} = $1;
+    }else {
+	$param->{'father'} = '';
+    }
     $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
 
     # Description of the file
@@ -7579,8 +7585,11 @@ sub do_d_control {
 
     
     #Current directory
-    $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-    $param->{'father'} = $1;    
+    if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
+	$param->{'father'} = $1;    
+    }else {
+	$param->{'father'} = '';
+    }
     $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
     
     my $desc_file;
@@ -7649,8 +7658,11 @@ sub do_d_control {
     }
 
     ## father directory
-    $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-    $param->{'father'} = $1;    
+    if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
+	$param->{'father'} = $1;    
+    }else {
+	$param->{'father'} = '';
+    }
     $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
 
     $param->{'set_owner'} = 1;
