@@ -6227,6 +6227,7 @@ sub do_d_read {
 			
 			# description
 			$subdirs{$d}{'title'} = $desc_hash{'title'};
+			$subdirs{$d}{'escaped_title'}=&tools::escape_html($desc_hash{'title'});
 
 			# Author
 			if ($desc_hash{'email'}) {
@@ -6352,6 +6353,7 @@ sub do_d_read {
 			# fill the file hash
 			  # description of the file
 			$files{$d}{'title'} = $desc_hash{'title'};
+			$files{$d}{'escaped_title'}=&tools::escape_html($desc_hash{'title'});
 			  # author
 			if ($desc_hash{'email'}) {
 			    $files{$d}{'author'} = $desc_hash{'email'};

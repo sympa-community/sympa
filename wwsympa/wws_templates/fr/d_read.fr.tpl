@@ -96,7 +96,7 @@
       [FOREACH s IN sort_subdirs] 
         <TR BGCOLOR="[light_color]">        
 	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[escaped_path][s->escaped_doc]/"> 
-	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]" ALT="[s->title]"> [s->doc]</A></TD>
+	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]" ALT="[s->escaped_title]"> [s->doc]</A></TD>
 	<TD>
 	[IF s->author_known] 
 	  <A HREF="mailto:[s->author]">[s->author]</A>  
@@ -145,13 +145,13 @@
         <TD NOWRAP>
         [IF f->html]
 	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]" TARGET="html_window">
-	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->doc] </A>
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->escaped-title]"> [f->doc] </A>
 	[ELSIF f->url]
 	  <A HREF="[f->url]" TARGET="html_window">
-	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->anchor] </A>
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->escaped_title]"> [f->anchor] </A>
 	[ELSE]
 	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]">
-	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->doc] </A>
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->escaped_title]"> [f->doc] </A>
         [ENDIF] 
 	</TD>  
 	 
