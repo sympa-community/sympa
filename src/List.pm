@@ -1314,13 +1314,11 @@ sub distribute_msg {
     }
     
     ## Remove unwanted headers if present.
-    &do_log('notice','remove_headers... '.$Conf{'remove_headers'});
     if ($Conf{'remove_headers'}) {
         foreach my $field (@{$Conf{'remove_headers'}}) {
             $hdr->delete($field);
         }
     }
-    &do_log('notice','remove_headers done');
 
     ## Add useful headers
     $hdr->add('X-Loop', "$name\@$host");
