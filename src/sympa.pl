@@ -179,11 +179,11 @@ if ($main::options{'dump'}) {
 
 	my $email = lc($1);
 	my $gecos = $4;
-	my %u = $list->{'admin'}{'default_user_options'};
-	$u{'email'} = $email;
-	$u{'gecos'} = $gecos;
+	my $u = $list->get_default_user_options();
+	$u->{'email'} = $email;
+	$u->{'gecos'} = $gecos;
 
-	unless ($list->add_user(\%u)) {
+	unless ($list->add_user($u)) {
 	    printf STDERR "\nCould not add %s\n", $email;
 	    next;
 	}
