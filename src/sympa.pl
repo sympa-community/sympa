@@ -1049,7 +1049,9 @@ sub DoMessage{
 	
 	my $numsmtp = $list->distribute_msg($message);
 
-	$msgid_table{$listname}{$messageid}++;
+	## Keep track of known message IDs...if any
+	$msgid_table{$listname}{$messageid}++
+	    if ($messageid);
 	
 	unless (defined($numsmtp)) {
 	    do_log('info','Unable to send message to list %s', $listname);
@@ -1128,7 +1130,10 @@ sub DoCommand {
 	do_log('notice', 'Found known Message-ID, ignoring command which would cause a loop');
 	return undef;
     }
-    $msgid_table{$robot}{$messageid}++;
+    
+    ## Keep track of known message IDs...if any
+    $msgid_table{$robot}{$messageid}++
+	if ($messageid);
 
     ## If X-Sympa-To = <listname>-<subscribe|unsubscribe> parse as a unique command
     if ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o) {
