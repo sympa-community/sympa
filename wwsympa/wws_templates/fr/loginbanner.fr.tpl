@@ -36,9 +36,6 @@ A cet effet, identifiez-vous de préférence en sélectionnant le serveur d'authent
 <TR>
 
 [IF use_sso]
-[IF sso_number = 1]
-
-[ELSE]
 <TD valign='top'>
     <FORM ACTION="[path_cgi]" METHOD=POST> 
         <INPUT TYPE="hidden" NAME="previous_action" VALUE="[previous_action]">
@@ -52,7 +49,7 @@ A cet effet, identifiez-vous de préférence en sélectionnant le serveur d'authent
          <TR BGCOLOR="[light_color]">
           <TD NOWRAP align=center>
      	      <INPUT TYPE=hidden NAME=list VALUE="[list]">
-     	      <FONT SIZE=-1 COLOR="[selected_color]"><b>Choississez le serveur CAS dont vous dépendez
+     	      <FONT SIZE=-1 COLOR="[selected_color]"><b>Choississez le serveur CAS dont vous dépendez 
 
 	[IF sso_number = 1]
                 [FOREACH server IN sso]
@@ -74,7 +71,7 @@ A cet effet, identifiez-vous de préférence en sélectionnant le serveur d'authent
        </TABLE>
  </FORM> 
 </TD>
-[ENDIF]
+
 [ENDIF]
 
 <TD valign='top'>

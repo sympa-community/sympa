@@ -234,7 +234,8 @@ my %comm = ('home' => 'do_home',
 	 'attach' => 'do_attach',
 	 'change_identity' => 'do_change_identity',
 	 'stats' => 'do_stats',
-	 'viewlogs'=> 'do_viewlogs'
+	 'viewlogs'=> 'do_viewlogs',
+	 'wsdl'=> 'do_wsdl'
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -313,7 +314,8 @@ my %action_args = ('default' => ['list'],
 		'edit_list_request' => ['list','group'],
 		'rename_list' => ['list','new_list','new_robot'],
 		'redirect' => [],
-#		'viewlogs' => ['list']
+#		'viewlogs' => ['list'],
+		'wsdl' => []
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -538,6 +540,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 
 	     my $net_id = &Auth::check_cas_login($host,$check_uri,$return_url,'no_blocking');
+
 	     
 	     &do_log('debug',"Requesting CAS ticket validation to through Auth::check_cas_login($host,$check_uri,$return_url,'no_blocking') return $net_id");
 	     if($net_id != -1) { # the ticket is valid net-id
@@ -553,7 +556,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }else{
 	      do_log ('notice',"Internal error while receiving a CAS ticket $in{'checked_cas'} ");
 	 }
-     }elsif($Conf{'cas_number'} >> 0) { # some cas server are defined but no CAS ticket detected
+     }elsif($Conf{'cas_number'} > 0) { # some cas server are defined but no CAS ticket detected
 	 if (&cookielib::get_do_not_use_cas($ENV{'HTTP_COOKIE'})) {
 	     &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},1,$Conf{'cookie_cas_expire'}); # refresh CAS cookie;
 	     $param->{'auth_method'} = 'md5';
@@ -578,7 +581,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		     $return_url .= '?checked_cas='.$Conf{'cas_id'}{$auth_service->{'auth_service_name'}};
 		 }
 		 my $redirect_url = &Auth::check_cas_login($auth_service->{'host'},$auth_service->{'login_uri'},$return_url,'no_blocking');
-		 
 		 
 		 if ($redirect_url =~ /http(s)+\:\//i) {
 		     $in{'action'} = 'redirect';
@@ -683,6 +685,10 @@ if ($wwsconf->{'use_fast_cgi'}) {
          $action = &{$comm{$action}}();
 
          delete($param->{'action'}) if (! defined $action);
+	 
+	 do_log ('debug',"xxxxxxxxxxxxxxxxx acxtion $action old_action = $old_action");
+	 last if ($action =~ /redirect/) ; # after redirect do not send anything, it will crash fcgi lib
+
 
          if ($action eq $old_action) {
              &wwslog('info','Stopping loop with %s action', $action);
@@ -795,6 +801,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
      }elsif ($param->{'redirect_to'}) {
+	 do_log ('debug',"wwsympa.fcgi::main Location: $param->{'redirect_to'}");
 	 print "Location: $param->{'redirect_to'}\n\n";
      }else {
 	 ## Send HTML
@@ -1432,14 +1439,14 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
  ## Login WWSympa
 sub do_sso_login {
-    &wwslog('info', 'do_sso_login(%s)', $in{'auth_service_name'});
+    &do_log('info', 'do_sso_login(%s)', $in{'auth_service_name'});
     
     &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},0,'now'); #when user require CAS login, reset do_not_use_cas cookie
     my $next_action;     
     
     if ($param->{'user'}{'email'}) {
 	&error_message('already_login', {'email' => $param->{'user'}{'email'}});
-	&wwslog('info','do_login: user %s already logged in', $param->{'user'}{'email'});
+	&do_log('info','do_login: user %s already logged in', $param->{'user'}{'email'});
 	# &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'login','',$robot,'','already logged');
 	return 'home';
     }
@@ -1447,7 +1454,7 @@ sub do_sso_login {
     
     unless ($in{'auth_service_name'}) {
 	&error_message('no_authentication_service_name');
-	&wwslog('info','do_sso_login: no auth_service_name');
+	&do_log('info','do_sso_login: no auth_service_name');
 	return 'home';
     }
 
@@ -1466,12 +1473,17 @@ sub do_sso_login {
     my $service = "$param->{'base_url'}$param->{'path_cgi'}".$path."?checked_cas=".$cas_id;
     
     my $redirect_url = &Auth::check_cas_login($host,$login_uri,$service); 
+    &do_log('info', 'do_sso_login: redirect_url(%s)', $redirect_url);
     if ($redirect_url =~ /http(s)+\:\//i) {
 	$in{'action'} = 'redirect';
+	&do_log('info', 'xxxxxxxxxxxxxxxx go for do_redirect_url(%s)', $redirect_url);
 	$param->{'redirect_to'} = $redirect_url;
-	return('redirect');	
+	$param->{'bypass'} = 'extreme';
+	print "Location: $param->{'redirect_to'}\n\n";
+	#printf "Location: https://sso-cas.univ-rennes1.fr/login?service=http://www.cru.fr/wws\n\n";
+	#return('redirect');	
     }
-    
+       
 }
 
 
@@ -9710,35 +9722,27 @@ sub do_arc_download {
     return 1;
 }
 
-sub do_arc_delete {
+sub do_wsdl {
   
-    my @abs_dirs;
-    
-    &wwslog('info', "do_arc_delete ($in{'list'})");
-    
-    unless (defined  $in{'directories'}){
-      	&error_message('month_not_found');
-	&wwslog('info','No Archives months selected');
-	return 'arc_manage';
-    }
-    
-    ## if user want to download archives before delete
-    &wwslog('notice', "ZIP: $in{'zip'}");
-    if ($in{'zip'} == 1) {
-	&do_arc_download();
-    }
-  
-    
-    foreach my $dir (split/\0/, $in{'directories'}) {
-	push(@abs_dirs ,$wwsconf->{'arc_path'}.'/'.$in{'list'}.'@'.$param->{'host'}.'/'.$dir);
-    }
+    &do_log('info', "do_wsdl ()");
+    my $sympawsdl = '--ETCBINDIR--/sympa.wsdl';
 
-    unless (tools::remove_dir(@abs_dirs)) {
-	&wwslog('info','Error while Calling tools::remove_dir');
+    unless (-r $sympawsdl){
+      	&error_message('404');
+	&wwslog('info','could not find $sympawsdl');
+	return undef;
     }
+    $param->{'bypass'} = 'extreme';
+    printf "Content-type: text/xml\n\n";
     
-    &message('performed');
-    return 'arc_manage';
+    unless (open (WSDL,$sympawsdl)) {
+	&error_message('404');
+	&wwslog('info','could not open $sympawsdl');
+	return undef;	
+    }
+    print <WSDL>;
+    close WSDL;
+    return 1;
 }
 		
 
