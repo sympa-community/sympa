@@ -835,7 +835,8 @@ sub signoff {
     if ($action =~ /owner/i) {
 	push @msg::report, sprintf Msg(6, 25, $msg::subscription_forwarded);
 	## Send a notice to the owners.
-	$list->send_sig_to_owner($sender);
+	my $keyauth = $list->compute_auth($sender,'del');
+	$list->send_sig_to_owner($sender, $keyauth);
 	do_log('info', 'SIG %s from %s forwarded to the owners of the list (%d seconds)', $which, $sender,time-$time_command);   
 	return 1;
     }
