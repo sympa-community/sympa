@@ -220,8 +220,8 @@ in a single software package, including:
     \item \textbf {Multilingual} messages. The current version of
         \Sympa allows the administrator to choose the language
         catalog at run time. At the present time the \Sympa robot is available in
-        English, Spanish, French, German, Italian, Polish, Finnish and Chinese
-	(Big5 and GB). The web interface is available in English, Spanish
+        Chinese (Big5 and GB), Czech, English, Finnish, French, German, Hungrian, Italian, Polish, 
+	Portuguese, Spanish. The web interface is available in English, Spanish
 	and French.
 
     \item \textbf {MIME support}. \Sympa naturally respects
@@ -2687,7 +2687,7 @@ Nowadays \Sympa is able to keep track of individual users' language preferences.
 Every message sent by \Sympa to users, owners and editors is outside
 the code, in a message catalog. These catalogs are located in the
 \tildedir{sympa/nls/} directory. Messages have currently been
-translated into 6 different languages : 
+translated into 10 different languages : 
 
 \begin{itemize}
 
@@ -2695,11 +2695,17 @@ translated into 6 different languages :
 
 \item cn-gb: GB Chinese (Mainland China)
 
+\item cz: Czech
+
 \item de: German
 
 \item es: Spanish
 
+\item fi: Finnish
+
 \item fr: French
+
+\item hu: hungrian
 
 \item it: Italian
 
