@@ -964,6 +964,10 @@ sub split_mail {
 		open BODY, "$dir/$pathname.$fileExt.$encoding";
 
 		my $decoder = new MIME::Decoder $encoding;
+		unless (defined $decoder) {
+		    &do_log('err', 'Cannot create decoder for %s', $encoding);
+		    return undef;
+		}
 		$decoder->decode(\*BODY, \*OFILE);
 		unlink "$dir/$pathname.$fileExt.$encoding";
 	    }else {
