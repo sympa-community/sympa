@@ -65,7 +65,7 @@ unless ($default_domain) {
 }
 
 unless (-w "$alias_file") {
-    die "Unable to access to $alias_file";
+    die "Unable to access $alias_file";
 }
 
 if ($operation eq 'add') {
@@ -81,7 +81,7 @@ if ($operation eq 'add') {
     }
     
     ## Write aliases
-    print ALIAS "# --- aliases for list $listname\n";
+    # print ALIAS "# --- aliases for list $listname\n";
     foreach my $suffix ('', '-request', '-owner', '-unsubscribe') {
 	
 	my $address = $listname . $suffix;
@@ -157,6 +157,7 @@ if ($operation eq 'add') {
     print OLDALIAS <NEWALIAS>;
     close OLDALIAS ;
     close NEWALIAS;
+    unlink $tmp_alias_file;
 
     ## Newaliases
     unless (system($alias_wrapper) == 0) {
