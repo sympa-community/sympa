@@ -984,6 +984,8 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 \item \unixcmd {--with-user=LOGIN}, set sympa user name (default sympa)\\
 \Sympa daemons are running under this UID.
 
+\item \unixcmd {--with-group=LOGIN}, set sympa group name (default sympa)\\
+\Sympa daemons are running under this UID.
 
 \item \unixcmd {--with-sendmail\_aliases=ALIASFILE}, set sendmail aliases file (default /etc/mail/sympa\_aliases)\\
 This is used by the alias\_manager script.
