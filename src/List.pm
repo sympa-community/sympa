@@ -25,6 +25,7 @@ use strict;
 require X509;
 require Exporter;
 require 'tools.pl';
+require 'parser.pl';
 my @ISA = qw(Exporter);
 my @EXPORT = qw(%list_of_lists);
 
@@ -1969,13 +1970,24 @@ sub send_msg {
 
     ## Add Custom Subject
     if ($admin->{'custom_subject'}) {
-	my $tag = '['.$admin->{'custom_subject'}.']';
-	my $subject_field = $msg->head->get('Subject');
+	my $subject_field = &MIME::Words::decode_mimewords($msg->head->get('Subject'));
 	$subject_field =~ s/^\s*(.*)\s*$/$1/;
-	if (index(&MIME::Words::decode_mimewords($subject_field), $tag) <0) {
-	    $msg->head->delete('Subject');
-	    $msg->head->add('Subject', $tag." ".$subject_field);
-	}
+
+	## Search previous subject tagging in Subject
+	my $tag_regexp = $admin->{'custom_subject'};
+	$tag_regexp =~ s/\[\S+\]/\.\+/g;
+	$subject_field =~ s/\[$tag_regexp\]//;
+
+	## Add subject tag
+	$msg->head->delete('Subject');
+	my @parsed_tag;
+	&parse_tpl({'list' => {'name' => $self->{'name'},
+			       'sequence' => $self->{'stats'}->[0]
+			       }},
+		   [$admin->{'custom_subject'}], \@parsed_tag);
+
+
+	$msg->head->add('Subject', '['.$parsed_tag[0].']'." ".$subject_field);
     }
  
     ## Who is the enveloppe sender ?

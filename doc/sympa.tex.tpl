@@ -6036,8 +6036,13 @@ custom header lines in the configuration file at the same time.
 This parameter is optional. It specifies a string which is
 added to the subject of distributed messages (intended to help
 users who do not use automatic tools to sort incoming messages).
+This string will be surrounded by [] characters.
 
-\example {custom\_subject [sympa-users]}.
+The custom subject can also refer to list variables ([list->sequence] in the example bellow).
+
+\example {custom\_subject sympa-users}.
+
+\example {custom\_subject newsletter num [list->sequence]}.
 
 \subsection {footer\_type}
     	\label {par-footer-type}
