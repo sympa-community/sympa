@@ -32,7 +32,7 @@
    <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
    <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
    <INPUT TYPE="hidden" NAME="serial" VALUE="[serial_desc]">
-   <INPUT TYPE="submit" NAME="action_d_change_access" VALUE="changer les droits">
+   <INPUT TYPE="submit" NAME="action_d_change_access" VALUE="Changer les droits">
    </FORM>
 
    </TD>

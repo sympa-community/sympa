@@ -10,7 +10,7 @@ WWSympa vous donne accès à votre environnement sur le serveur de listes
 <BR><BR>
 Seules les fonctions qui vous sont autorisées sont affichées dans
 chaque page. Cette interface est donc plus complète et facile à utiliser
-si vous êtes identifiés préalablement (via le bouton login). Exemple :
+si vous vous êtes identifiés préalablement (via le bouton login). Exemple :
 
 <UL>
 <LI><TABLE CELLPADDING="2" CELLSPACING="2" BORDER="0">
@@ -49,8 +49,8 @@ si vous êtes identifiés préalablement (via le bouton login). Exemple :
 </TR>
 </TABLE>
 </TD><TD> : certaines listes sont
-accessibles à certaines catégories de personnes. Si vous n'êtes pas identfié,
-cette page ne délivre que la liste des listes publiques. 
+accessibles à certaines catégories de personnes. Si vous n'êtes pas identifié,
+cette page ne délivre que la liste des listes publiques.
 </TD></TR></TABLE>
 
 <LI>
@@ -103,15 +103,15 @@ cette page ne délivre que la liste des listes publiques.
 </TR>
 </TABLE>
 </TD><TD>
- : connexion / déconnexion .
+ : connexion / déconnexion.
 </TD></TR></TABLE>
 </UL>
 
 <H2>Login</H2>
 
 [IF auth=classic]
-Le bouton Login, permet de vous identifier auprès du
-serveur en renseignant votre adresse email et le mot de passe associé.
+Le bouton Login permet de vous identifier auprès du
+serveur en renseignant votre adresse e-mail et le mot de passe associé.
 Si vous avez oublié votre mot de passe, ou si vous n'en avez jamais eu aucun, le bouton
 <TABLE CELLPADDING="2" CELLSPACING="2"  BORDER="0">
   <TR ALIGN=center BGCOLOR="[dark_color]">
@@ -131,9 +131,9 @@ de la page d'accueil permet de vous en faire allouer (ou ré-allouer) un.
 <BR><BR>
 [ENDIF]
 
-Une fois authentifié un <I>cookie</I> contenant vos information de connexion
-est envoyé à votre navigateur. Votre adresse apparait en haut à gauche de la page.
-La durée de vie de ce cookie est paramétrable via 
+Une fois authentifié, un <I>cookie</I> contenant vos informations de connexion
+est envoyé à votre navigateur. Votre adresse apparaît en haut à gauche de la page.
+La durée de vie de ce cookie est paramétrable via
 <TABLE CELLPADDING="2" CELLSPACING="2" BORDER="0">
   <TR ALIGN=center BGCOLOR="[dark_color]">
   <TD>

@@ -29,12 +29,12 @@ abonné à la liste. Cela évite de se désabonner puis de se réabonner à la liste.
 <LI>Txt <BR>
 
 Ce mode permet de ne recevoir que la version texte (text/plain) des messages
-posté sous les 2 formes texte et HTML.<BR><BR>
+postés sous les 2 formes texte et HTML.<BR><BR>
 
 <LI>Html<BR> 
 
 Ce mode permet de ne recevoir que la version html (text/html) des messages
-posté sous les 2 formes texte et HTML.<BR><BR>
+postés sous les 2 formes texte et HTML.<BR><BR>
 
 <LI>Urlize<BR> 
 

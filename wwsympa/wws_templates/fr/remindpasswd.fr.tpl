@@ -3,7 +3,7 @@
 
       Vous avez oublié votre mot de passe ou vous n'avez pas encore de mot de
       passe sur ce serveur<BR>
-      Un mot de passe va vous être envoyé par email :
+      Un mot de passe va vous être envoyé par e-mail :
 
       <FORM ACTION="[path_cgi]" METHOD=POST>
 	  <INPUT TYPE="hidden" NAME="referer" VALUE="[referer]">

@@ -2,7 +2,7 @@
 
   [IF status=auth]
 
-        Vous avez demandé un abonnement à la liste  [list], merci de confirmer
+        Vous avez demandé un abonnement à la liste [list], merci de confirmer
         cette demande :<BR>
 	<BR>
 	<FORM ACTION="[path_cgi]" METHOD=POST>
@@ -15,11 +15,11 @@
   [ELSIF status=notauth_passwordsent]
 
 	Vous avez demandé un abonnement à la liste  [list]<BR>
-        Pour valider votre identité et empécher un tiers de vous abonner à
+        Pour valider votre identité et empêcher un tiers de vous abonner à
         votre insu, un message vous a été posté. Il contient votre mot de 
 	passe et vous permettra de valider cet abonnement. <BR><BR>
 
-        Surveillez votre boite aux lettres et fournissez ce mot de passe
+        Surveillez votre boîte aux lettres et fournissez ce mot de passe
         ici dès sa réception.<BR>
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>

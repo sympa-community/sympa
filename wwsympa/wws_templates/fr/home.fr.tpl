@@ -6,7 +6,7 @@
 Ce serveur vous propose un accès à votre environnement de listes sur
 [conf->email]@[conf->host]. A partir de cette URL vous pouvez choisir
 vos options d'abonnement, vous désabonner, accéder aux archives ou gérer
-les listes dont vous êtes propriétaire , etc.
+les listes dont vous êtes propriétaire, etc.
 </P>
 </TD></TR></TABLE>
 <BR><BR>

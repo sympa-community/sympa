@@ -41,7 +41,7 @@
   <TD WIDTH=--COL234-- COLSPAN=3 BGCOLOR="[bg_color]" NOWRAP align=left>
      [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
         <TD BGCOLOR="[light_color]">
-	  Abonnés: <B>[total]</B><BR>
+	  Abonnés : <B>[total]</B><BR>
 	  Propriétaires :
 	  [FOREACH o IN owner]
 	    [IF o->gecos]
@@ -110,7 +110,7 @@
   <TD WIDTH=--COL234-- COLSPAN=3 BGCOLOR="[bg_color]" NOWRAP align=left>
      [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
         <TD BGCOLOR="[light_color]">
-	   Taux d'adresse en erreur: <B>[bounce_rate]%</B><BR><BR>
+	   Taux d'adresses en erreur : <B>[bounce_rate]%</B><BR><BR>
 	   [if mod_total=0]
 	   Aucun message à modérer
            [else]

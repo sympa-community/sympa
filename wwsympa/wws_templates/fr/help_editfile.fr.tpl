@@ -7,7 +7,7 @@ du format MIME).
 
 <LI>Message de désabonnement : Envoyé aux personnes qui se désabonnent de la liste.
 
-<LI>Message de suppression : Envoyé aux personnes supprimés de la liste des abonnés
+<LI>Message de suppression : Envoyé aux personnes supprimées de la liste des abonnés
 par le propriétaire de la liste ou via le module de gestion des erreurs.
 
 <LI>Message de rappel individualisé : Message envoyé à chaque abonné lors du rappel des abonnements. Ce message peut être envoyé depuis l'interface d'administration de liste dans la page <i>abonnés</i>. Cette procédure est très utile

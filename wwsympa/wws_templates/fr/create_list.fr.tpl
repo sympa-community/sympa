@@ -3,7 +3,7 @@
 [IF status=open]
 
 Votre liste est créée.<BR> 
-Vous pouvez la configurer via le bouton <b>admin</b> ci-contre.
+Vous pouvez la configurer via le bouton <b>Admin liste</b> ci-contre.
 <BR>
 [IF auto_aliases]
 Les alias ont été installés.
@@ -22,7 +22,7 @@ Les alias ont été installés.
 [ELSE]
 
 Votre demande de création de liste est enregistrée. Vous pouvez 
-la modifier en utilisant le bouton <b>admin</b>. Mais cette liste
+la modifier en utilisant le bouton <b>Admin liste</b>. Mais cette liste
 ne sera effectivement installée et rendue visible sur ce serveur
 que quand le listmaster validera sa création.
 [ENDIF]

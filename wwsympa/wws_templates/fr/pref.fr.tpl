@@ -19,7 +19,7 @@
         <TD>
           <FORM ACTION="[path_cgi]" METHOD=POST>
          
-            <FONT COLOR="[dark_color]">Adresse email :  </FONT> [user->email]<BR><BR>
+            <FONT COLOR="[dark_color]">Adresse e-mail : </FONT> [user->email]<BR><BR>
             <FONT COLOR="[dark_color]">Nom</FONT>
             <INPUT TYPE="text" NAME="gecos" SIZE=20 VALUE="[user->gecos]"><BR><BR>
             <FONT COLOR="[dark_color]">Langue </FONT>
@@ -49,7 +49,7 @@
             <TR>
              <TH WIDTH="50%" BGCOLOR="[selected_color]">
               <FONT COLOR="[bg_color]">
-                Changement d'adresse email
+                Changement d'adresse e-mail
               </FONT>
              </TH><TH WIDTH="50%" BGCOLOR="[selected_color]">
               <FONT COLOR="[bg_color]">
@@ -66,7 +66,7 @@
            <TD>
            <FORM ACTION="[path_cgi]" METHOD=POST>
         
-            <BR><BR><FONT COLOR="[dark_color]">Nouvelle adresse email : </FONT>
+            <BR><BR><FONT COLOR="[dark_color]">Nouvelle adresse e-mail : </FONT>
             <BR>&nbsp;&nbsp;&nbsp;<INPUT NAME="email" SIZE=15>
             <BR><BR><INPUT TYPE="submit" NAME="action_change_email" VALUE="Valider">
             </FORM>
@@ -75,7 +75,7 @@
           <FORM ACTION="[path_cgi]" METHOD=POST>
             <BR><BR><FONT COLOR="[dark_color]">Nouveau mot de passe : </FONT>
             <BR>&nbsp;&nbsp;&nbsp;<INPUT TYPE="password" NAME="newpasswd1" SIZE=15>
-            <BR><FONT COLOR="[dark_color]">Resaisissez le nouveau mot de passe : </FONT>
+            <BR><FONT COLOR="[dark_color]">Ressaisissez le nouveau mot de passe : </FONT>
             <BR>&nbsp;&nbsp;&nbsp;<INPUT TYPE="password" NAME="newpasswd2" SIZE=15>
             <BR><BR><INPUT TYPE="submit" NAME="action_setpasswd" VALUE="Valider">
             </FORM>
@@ -88,7 +88,7 @@
             <TR>
              <TH WIDTH="50%" BGCOLOR="[selected_color]">
               <FONT COLOR="[bg_color]">
-                Vos autres adresses email
+                Vos autres adresses e-mail
               </FONT>
              </TH>
             </TR>
@@ -113,7 +113,7 @@
       <TD>
 	    <FORM ACTION="[path_cgi]" METHOD=POST> 
 	    <BR>
-	    <FONT COLOR="[dark_color]">Autre adresse email : </FONT>
+	    <FONT COLOR="[dark_color]">Autre adresse e-mail : </FONT>
 	    &nbsp;&nbsp;&nbsp;<INPUT NAME="new_alternative_email" SIZE=15><BR>
 	    &nbsp;&nbsp;&nbsp;<FONT COLOR="[dark_color]">Mot de passe : </FONT>
 	    &nbsp;&nbsp;&nbsp;<INPUT TYPE = "password" NAME="new_password" SIZE=8>
@@ -121,7 +121,7 @@
             </FORM>
       </TD>
       <TD VALIGN="middle">
-       Cette autre adresse email, qui doit être connue de Sympa, sera reconnue comme une adresse
+       Cette autre adresse e-mail, qui doit être connue de Sympa, sera reconnue comme une adresse
 	alternative. Vous pourrez unifier vos abonnement avec votre adresse principale.      </TD>
       </TR>
     </TABLE>

@@ -61,7 +61,7 @@
     </TD>
    [ELSE]
     <TD NOWRAP BGCOLOR="[light_color]"  ALIGN="center">
-	 <A HREF="[path_cgi]/create_list_request" ><FONT SIZE=-1><B>Creation de liste</B></FONT></A>
+	 <A HREF="[path_cgi]/create_list_request" ><FONT SIZE=-1><B>Création de liste</B></FONT></A>
     </TD>
    [ENDIF]
   [ENDIF]

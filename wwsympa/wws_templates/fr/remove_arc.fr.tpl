@@ -2,7 +2,7 @@
 
 [IF status = done]
 <b>Opération réussie</b>. Le message sera détruit rapidement (quelques
-minutes). N'oubliez pas de rafraichir la page concernée pour le vérifier.
+minutes). N'oubliez pas de rafraîchir la page concernée pour le vérifier.
 [ELSIF status = no_msgid]
 <b>Impossible de trouver le message à détruire</b>, probablement, ce
 message a été reçu sans l'entête <code>Message-Id:</code>. Merci

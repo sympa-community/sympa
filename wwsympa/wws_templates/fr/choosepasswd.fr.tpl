@@ -1,6 +1,6 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-Vous devez choisir un mot de passe pour votre envirronement
+Vous devez choisir un mot de passe pour votre environnement
 de listes de diffusion <i>Sympa</i>. Ce mot de passe vous permettra
 d'accéder aux opérations privilégiées.
 

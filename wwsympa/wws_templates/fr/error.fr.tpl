@@ -70,7 +70,7 @@ Vous êtes déjà abonné à la liste [error->list]
 
 [ELSIF error->msg=not_subscriber]
 [IF error->email]
-  Pas abonné: [error->email]
+  Pas abonné : [error->email]
 [ELSE]
 Vous n'êtes pas abonné à la liste [error->list]
 [ENDIF]
@@ -85,65 +85,65 @@ Les 2 mots de passe sont différents
 Aucun bounce pour l'utilisateur [error->email]
 
 [ELSIF error->msg=update_privilege_bypassed]
-Vous avez édité un paramètre interdit: [error->pname]
+Vous avez édité un paramètre interdit : [error->pname]
 
 [ELSIF error->msg=config_changed]
 Le fichier de configuration a été modifié par [error->email]. Impossible d'appliquer vos modifications
 
 [ELSIF error->msg=syntax_errors]
-Erreurs de syntaxe des paramètres suivants :[error->params]
+Erreurs de syntaxe des paramètres suivants : [error->params]
 
 [ELSIF error->msg=no_such_document]
-[error->path] : document inexistant 
+[error->path] : document inexistant
 
 [ELSIF error->msg=no_such_file]
-[error->path] : fichier inexistant 
+[error->path] : fichier inexistant
 
 [ELSIF error->msg=empty_document] 
 Impossible de lire [error->path] : document vide
 
-[ELSIF error->msg=no_description] 
+[ELSIF error->msg=no_description]
 Aucune description spécifiée
 
 [ELSIF error->msg=no_content]
-Echec : votre zone d'édition est vide  
+Echec : votre zone d'édition est vide
 
 [ELSIF error->msg=no_name]
-Aucun nom specifié  
+Aucun nom spécifié
 
 [ELSIF error->msg=incorrect_name]
-[error->name] : nom incorrect  
+[error->name] : nom incorrect
 
 [ELSIF error->msg = index_html]
-Vous n'êtes pas autorisé à déposer un fichier INDEX.HTML dans [error->dir] 
+Vous n'êtes pas autorisé à déposer un fichier INDEX.HTML dans [error->dir]
 
 [ELSIF error->msg=synchro_failed]
-Les données ont changé sur le disque. Impossible d'appliquer vos modifications 
+Les données ont changé sur le disque. Impossible d'appliquer vos modifications
 
 [ELSIF error->msg=cannot_overwrite] 
 Impossible d'écraser le fichier [error->path] : [error->reason]
 
 [ELSIF error->msg=cannot_upload] 
-Impossible de déposer le  fichier [error->path] : [error->reason]
+Impossible de déposer le fichier [error->path] : [error->reason]
 
 [ELSIF error->msg=cannot_create_dir] 
 Impossible de créer le répertoire [error->path] : [error->reason]
 
 [ELSIF error->msg=full_directory]
-Echec : le répertoire [error->directory] n'est pas vide  
+Echec : le répertoire [error->directory] n'est pas vide
 
 [ELSIF error->msg=init_passwd]
 Vous n'avez pas défini de mot de passe, demandez un rappel du mot de passe initial
 
 [ELSIF error->msg=change_email_failed]
-Changement d'adresse email impossible dans la liste [error->list]
+Changement d'adresse e-mail impossible dans la liste [error->list]
 
 [ELSIF error->msg=change_email_failed_because_subscribe_not_allowed]
-Changement d'adresse email impossible dans la liste [error->list]
+Changement d'adresse e-mail impossible dans la liste [error->list]
 parce que l'abonnement avec la nouvelle adresse n'est pas autorisé.
 
 [ELSIF error->msg=change_email_failed_because_unsubscribe_not_allowed]
-Changement d'adresse email impossible dans la liste [error->list]
+Changement d'adresse e-mail impossible dans la liste [error->list]
 parce que le désabonnement n'est pas autorisé.
 
 [ELSIF error->msg=shared_full]

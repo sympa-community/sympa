@@ -3,7 +3,7 @@
 <BR>
 [IF password_sent]
   Votre mot de passe vous a été envoyé à l'adresse [init_email].<BR>
-  Relevez votre boïte aux lettres  pour renseigner votre mot de passe ci-dessous. 
+  Relevez votre boîte aux lettres pour renseigner votre mot de passe ci-dessous. 
   <BR><BR>
 [ENDIF]
 
@@ -14,7 +14,7 @@ Identifiez-vous pour : <UL>
 </UL>
 
 [ELSE]
- La plupart des services nécessitent votre adresse email. Certaines listes sont
+ La plupart des services nécessitent votre adresse e-mail. Certaines listes sont
 cachées aux personnes non identifées.<BR>
 Pour bénéficier de l'accès intégral à ce serveur de listes, vous
 devez probablement vous identifier préalablement.<BR>
@@ -60,7 +60,7 @@ devez probablement vous identifier préalablement.<BR>
       [ENDIF]
          onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=300')" TARGET="wws_login" >
 
-     <FONT SIZE=-1><B>Envoyez moi mon mot de passe</B></FONT></A>
+     <FONT SIZE=-1><B>Envoyez-moi mon mot de passe</B></FONT></A>
      </TD>
     </TR>
   </TABLE>

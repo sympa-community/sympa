@@ -16,7 +16,7 @@
 	 [ELSIF is_owner]
           Gestionnaire
          [ELSIF is_editor]
-          Moderateur
+          Modérateur
          [ELSIF is_subscriber]
 	  Abonné
 	 [ENDIF]

@@ -10,7 +10,7 @@
       <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
       <INPUT TYPE="hidden" NAME="action" VALUE="add">
       <INPUT TYPE="text" NAME="email" SIZE="35">
-      <INPUT TYPE="submit" NAME="action_add" VALUE="Ajout"> en douce<INPUT TYPE="checkbox" NAME="quiet">
+      <INPUT TYPE="submit" NAME="action_add" VALUE="Ajout"> sans prévenir<INPUT TYPE="checkbox" NAME="quiet">
     </FORM>
 </TD>
 </TR><TR>
@@ -72,7 +72,7 @@ La sélection est trop large, impossible d'afficher la sélection
   <TR><TD ALIGN="left">
   [IF is_owner]
     <INPUT TYPE="submit" NAME="action_del" VALUE="Désabonner les adresses sélectionnées">
-    <INPUT TYPE="checkbox" NAME="quiet"> en douce
+    <INPUT TYPE="checkbox" NAME="quiet"> sans prévenir
   [ENDIF]
   </TD>
   <TD>
@@ -110,11 +110,11 @@ La sélection est trop large, impossible d'afficher la sélection
 	[ENDIF]
         [IF sortby=email]
   	    <TH NOWRAP COLSPAN=2 BGCOLOR="[selected_color]">
-	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Email</b></FONT>
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>E-mail</b></FONT>
 	[ELSE]
 	    <TH NOWRAP COLSPAN=2>
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/email" >
-	    <FONT SIZE="-1"><b>Email</b></FONT></A>
+	    <FONT SIZE="-1"><b>E-mail</b></FONT></A>
 	[ENDIF]
 	</TH>
 	[IF sortby=domain]
@@ -224,7 +224,7 @@ La sélection est trop large, impossible d'afficher la sélection
     <TR><TD ALIGN="left">
       [IF is_owner]
         <INPUT TYPE="submit" NAME="action_del" VALUE="Désabonner les adresses sélectionnées">
-        <INPUT TYPE="checkbox" NAME="quiet"> en douce
+        <INPUT TYPE="checkbox" NAME="quiet"> sans prévenir
       [ENDIF]
     </TD>
 
@@ -243,7 +243,7 @@ La sélection est trop large, impossible d'afficher la sélection
    [ENDIF]
     </TR>
     [IF is_owner]
-    <TR><TD><input type=button value="Inverser la Selection" onClick="toggle_selection(document.myform.email)">
+    <TR><TD><input type=button value="Inverser la sélection" onClick="toggle_selection(document.myform.email)">
     </TD></TR>
     [ENDIF]
     </TABLE>

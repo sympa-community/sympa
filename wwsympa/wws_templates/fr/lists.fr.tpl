@@ -74,7 +74,7 @@
 <TABLE>
 <TR>
 &nbsp;&nbsp;<FONT COLOR="[dark_color]">Unifier vos abonnements avec l'adresse <B>[user->email]</B></FONT><BR>
-&nbsp;&nbsp;<FONT COLOR="[dark_color]">C'est à dire utiliser une unique adresse dans Sympa pour vos abonnements et préferences</FONT>
+&nbsp;&nbsp;<FONT COLOR="[dark_color]">C'est-à-dire utiliser une unique adresse dans Sympa pour vos abonnements et préférences</FONT>
 <TR>
 <TD>
     <FORM ACTION="[path_cgi]" METHOD=POST>

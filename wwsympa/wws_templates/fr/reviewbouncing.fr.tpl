@@ -28,7 +28,7 @@
     <TR><TD ALIGN="left" NOWRAP>
         <BR>
         <INPUT TYPE="submit" NAME="action_del" VALUE="Supprimer les adresses sélectionnées">
-        <INPUT TYPE="checkbox" NAME="quiet"> Sans prévenir
+        <INPUT TYPE="checkbox" NAME="quiet"> sans prévenir
 
 	<INPUT TYPE="hidden" NAME="sortby" VALUE="[tri]">
 	<INPUT TYPE="submit" NAME="action_reviewbouncing" VALUE="Taille de page">
@@ -59,7 +59,7 @@
     <TABLE WIDTH="100%" BORDER=1>
       <TR BGCOLOR="[error_color]" NOWRAP>
 	<TH><FONT COLOR="[bg_color]">X</FONT></TH>
-        <TH><FONT COLOR="[bg_color]">email</FONT></TH>
+        <TH><FONT COLOR="[bg_color]">e-mail</FONT></TH>
 	<TH><FONT COLOR="[bg_color]">Nombre d'erreurs</FONT></TH>
 	<TH><FONT COLOR="[bg_color]">période</FONT></TH>
 	<TH NOWRAP><FONT COLOR="[bg_color]">type</FONT></TH>

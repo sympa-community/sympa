@@ -9,7 +9,7 @@
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 <INPUT TYPE="hidden" NAME="email" VALUE="[subscriber->escaped_email]">
 <DL>
-<DD>Email : <INPUT NAME="new_email" VALUE="[subscriber->email]" SIZE="25">
+<DD>E-mail : <INPUT NAME="new_email" VALUE="[subscriber->email]" SIZE="25">
 <DD>Nom : <INPUT NAME="gecos" VALUE="[subscriber->gecos]" SIZE="25">
 <DD>Abonné depuis : [subscriber->date]
 <DD>Dernière mise à jour : [subscriber->update_date]
@@ -28,7 +28,7 @@
 </TD></TR>
 [IF subscriber->bounce]
 <TR><TH BGCOLOR="[error_color]">
-<FONT COLOR="[bg_color]">Address en erreur</FONT>
+<FONT COLOR="[bg_color]">Adresse en erreur</FONT>
 </TH></TR><TR><TD>
 <DL>
 <DD>Type d'erreur : [subscriber->bounce_status] ([subscriber->bounce_code])

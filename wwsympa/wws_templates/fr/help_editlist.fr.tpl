@@ -2,7 +2,7 @@
 
 [FOREACH p IN param]
 <A NAME="[p->NAME]">
-<B>[p->title]</B> ([p->NAME]):
+<B>[p->title]</B> ([p->NAME]) :
 <DL>
 <DD>
 [IF p->NAME=subject]
@@ -45,7 +45,7 @@
   Définit le ou les propriétaires de la liste.
 [ELSIF p->NAME=send]
   Définit qui peut envoyer des messages à la liste.<br>
-  Dans la plupart des cas, le droit de poster dans une liste est:<br>
+  Dans la plupart des cas, le droit de poster dans une liste est :<br>
   - soit réservé aux abonnés de cette liste, sans modération, et c'est alors le
     paramètre "private" qui s'applique.<br>
   - soit soumis à l'approbation du message par les modérateurs de la
@@ -54,12 +54,12 @@
   - soit la liste est de type "lettre d'information" issue uniquement des
     modérateurs, et il faut alors utiliser "newsletter",
     "newsletterkey" ou "newsletterkeyonly".<br>
-  Les modes d'approbation diffèrent selon la sécurité qu'ils apportent:<br>
-  - editor ou editorkey: Un message provenant (from) du modérateur sera diffusé directement.
+  Les modes d'approbation diffèrent selon la sécurité qu'ils apportent :<br>
+  - editor ou editorkey : Un message provenant (from) du modérateur sera diffusé directement.
     Un message ne provenant pas du modérateur sera transmis à celui-ci pour
     approbation. Cependant, l'authenticité de la provenance n'est pas vérifiée,
     aussi, une forme de falsification est possible.<br>
-  - editorkeyonly: Tout message devra être confirmé par le modérateur (au moyen
+  - editorkeyonly : Tout message devra être confirmé par le modérateur (au moyen
     d'une clé de contrôle qui lui sera envoyée par le serveur), MEME si ce
     message semble provenir directement du modérateur lui-même. Ceci limite très
     fortement les possibilités de fraude dans la diffusion de messages, mais rend
@@ -72,7 +72,7 @@
   pas été définie comme modérée.<br>
   Pour que la modération soit active, il faut définir ce comportement dans le
   paramètre "send" (Qui peut diffuser des messages).<br>
-  Astuce: Si la liste n'est pas modérée, et que l'on ne souhaite pas afficher de
+  Astuce : Si la liste n'est pas modérée, et que l'on ne souhaite pas afficher de
   nom ou d'adresse e-mail de modérateur sur la page "Info" de la liste, il est
   possible d'indiquer "Liste non modérée" par exemple, à la place du nom du
   premier modérateur.
@@ -105,22 +105,22 @@
   Evitez de choisir un horaire compris entre 23h et minuit.
 [ELSIF p->NAME=available_user_options]
   Définit quelles sont les options de réception disponibles pour cette
-liste:<br>
-  - digest: Ne recevoir que la compilation périodique de la liste.<br>
-  - mail: Recevoir tous les mails individuels transmis par la liste.<br>
-  - nomail: Ne RIEN recevoir du tout.<br>
-  - notice: Etre uniquement informé des sujets des messages qui passent sur la
+liste :<br>
+  - digest : Ne recevoir que la compilation périodique de la liste.<br>
+  - mail : Recevoir tous les mails individuels transmis par la liste.<br>
+  - nomail : Ne RIEN recevoir du tout.<br>
+  - notice : Etre uniquement informé des sujets des messages qui passent sur la
     liste.<br>
-  - summary: Recevoir périodiquement une compilation qui ne comprend que les
+  - summary : Recevoir périodiquement une compilation qui ne comprend que les
     sujets des messages, sans leur contenu.
 [ELSIF p->NAME=default_user_options]
   Définit quelle option de réception (voir available_user_options) sera affectée par défaut
   à un nouvel abonné de cette liste.
 [ELSIF p->NAME=reply_to]
   Définit ce qui se passe par défaut quand un abonné utilise le bouton
-  "répondre" sur un message provenant de la liste:<br>
-  - list: La réponse est adressée à la liste.<br>
-  - sender: La réponse est adressée à l'auteur du message original.
+  "répondre" sur un message provenant de la liste :<br>
+  - list : La réponse est adressée à la liste.<br>
+  - sender : La réponse est adressée à l'auteur du message original.
 [ELSIF p->NAME=forced_reply_to]
   Même fonction que pour "reply-to", mais permet de "forcer" l'adresse de
   réponse, même si le message envoyé à la liste spécifiait une adresse de réponse
@@ -157,10 +157,10 @@ liste:<br>
   être mis en place dans un "espace partagé" correspondant à cette liste de
   diffusion.
 [ELSIF p->NAME=status]
-  Indique l'état actuel de cette liste:<br>
-  - Open: Liste active<br>
-  - Closed: Liste fermée<br>
-  - Pending: Liste en attente d'approbation et d'installation par
+  Indique l'état actuel de cette liste :<br>
+  - Open : Liste active<br>
+  - Closed : Liste fermée<br>
+  - Pending : Liste en attente d'approbation et d'installation par
     l'administrateur du serveur (listmaster).
 [ELSIF p->NAME=anonymous_sender]
   Si on désire que les messages transmis sur la liste masquent l'adresse e-mail
@@ -176,11 +176,11 @@ liste:<br>
   message transmis sur cette liste.
 [ELSIF p->NAME=footer_type]
   Indique la manière dont l'en-tête et le pied-de-lettre standard de la liste sont ajoutés aux messages
-  diffusés sur cette liste:<br>
-  - mime: Ces éléments seront ajoutés au message sous forme de parties MIME
+  diffusés sur cette liste :<br>
+  - mime : Ces éléments seront ajoutés au message sous forme de parties MIME
     séparées. Si le message est au départ de type multipart/alternative, ces
     éléments seront cependant ignorés.<br>
-  - append: Sympa ne créera pas de parties MIME, mais ajoutera directement les
+  - append : Sympa ne créera pas de parties MIME, mais ajoutera directement les
     textes d'en-tête et de pied-de-lettre au corps du message, uniquement si
     celui-ci est de type text/plain. Dans le cas contraire, rien ne sera ajouté.
 [ELSIF p->NAME=priority]

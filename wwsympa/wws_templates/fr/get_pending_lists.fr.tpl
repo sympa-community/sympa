@@ -8,7 +8,7 @@
 <P>
 <TABLE>
  <TR>
-   <TD Colspan=3 bgcolor="[light_color]"><B>Listes en attentes</B></TD>
+   <TD Colspan=3 bgcolor="[light_color]"><B>Listes en attente</B></TD>
  </TR>
  <TR bgcolor="[light_color]">
    <TD><B>Nom de liste</B></TD>
