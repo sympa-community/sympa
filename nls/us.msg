@@ -391,6 +391,7 @@ $set 16 Listm parameters titles
 91	"value"
 92	"other email address"
 93	"respect of existing header field"
+94	"connection options"
 
 $set 17 Cookie expiration periods
 1	"session"

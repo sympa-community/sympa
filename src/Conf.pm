@@ -14,7 +14,7 @@ use Carp;
 my @valid_options = qw(
 		       avg bounce_warn_rate bounce_halt_rate
 		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod 
-		       cookie create_list db_host db_name db_passwd db_type db_user 
+		       cookie create_list db_host db_name db_options db_passwd db_type db_user 
 		       default_list_priority edit_list email etc
 		       global_remind home host lang listmaster log_socket_type 
 		       max_size maxsmtp msgcat nrcpt owner_priority pidfile spool queue 
@@ -67,6 +67,7 @@ my %Default_Conf =
      'db_host' => '',
      'db_user' => '', 
      'db_passwd'  => '',
+     'db_options' => '',
      'listmaster' => undef,
      'default_list_priority' => 5,
      'sympa_priority' => 1,

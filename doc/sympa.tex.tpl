@@ -1522,6 +1522,19 @@ required:
 
         Password for \cfkeyword {db\_user}.
 
+\subsection {\cfkeyword {db\_options}}
+
+	If these options are defined, they will be appended to the
+	database connect string.
+
+Example for MySQL:
+\begin {quote}
+\begin{verbatim}
+db_options	mysql_read_default_file=/home/joe/my.cnf
+\end{verbatim}
+\end {quote}
+   
+
 \section {Loop prevention}
 
    The following define your loop prevention policy for commands.
@@ -3936,6 +3949,14 @@ The Database Server \Sympa will try to connect to.
 \lparam {db\_name} \textit {sympa\_db\_name}
 
 The hostname of the database system.
+
+\item
+\label {connect-options}
+\lparam {connect\_options} \textit {option1=x;option2=y}
+
+These options ar appended to the connect string.
+This parameter is optional.
+
 
 \item 
 \label {user}

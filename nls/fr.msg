@@ -393,6 +393,7 @@ $set 16 Titres des paramètres de config de listes
 91	"valeur"
 92	"autre adresse email"
 93	"respect du champ existant"
+94	"paramètres de connexion"
 
 $set 17 Cookie expiration periods
 1	"la session"

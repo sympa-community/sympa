@@ -505,24 +505,28 @@ my %alias = ('reply-to' => 'reply_to',
 							       'title_id' => 48,
 							       'order' => 3 
 							       },
+						 'connect_options' => {'format' => '.+',
+								       'title_id' => 94,
+								       'order' => 4
+								       },
 						 'user' => {'format' => '\S+',
 							    'occurrence' => '1',
 							    'title_id' => 49,
-							    'order' => 4
+							    'order' => 5
 							    },
 						 'passwd' => {'format' => '.+',
 							      'title_id' => 50,
-							      'order' => 5
+							      'order' => 6
 							      },
 						 'sql_query' => {'format' => $regexp{'sql_query'},
 								 'length' => 50,
 								 'occurrence' => '1',
 								 'title_id' => 51,
-								 'order' => 6
+								 'order' => 7
 								 },
 						 'f_dir' => {'format' => '.+',
 							     'title_id' => 52,
-							     'order' => 7
+							     'order' => 8
 							     }
 					     },
 				    'occurrence' => '0-n',
@@ -763,6 +767,10 @@ sub db_connect {
 
     }else {
 	$connect_string = sprintf 'DBI:%s:dbname=%s;host=%s', $Conf{'db_type'}, $Conf{'db_name'}, $Conf{'db_host'};
+    }
+
+    if ($Conf{'db_options'}) {
+	$connect_string .= ';' . $Conf{'db_options'};
     }
 
     unless ( $dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'}) ) {
@@ -4460,6 +4468,10 @@ sub _include_users_sql {
 	$connect_string = "DBI:Sybase:dbname=$db_name;server=$host";
     }else {
 	$connect_string = "DBI:$db_type:$db_name:$host";
+    }
+
+    if ($param->{'connect_options'}) {
+	$connect_string .= ';' . $param->{'connect_options'};
     }
 
     unless ($dbh = DBI->connect($connect_string, $user, $passwd)) {
