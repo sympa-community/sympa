@@ -25,7 +25,7 @@ use CPAN;
 ## assume version = 1.0 if not specified.
 ## 
 %versions = ('perl' => '5.005',
-             'Net::LDAP' =>, '0.26', 
+             'Net::LDAP' =>, '0.27', 
 	     'perl-ldap' => '0.10',
 	     'Mail::Internet' => '1.51', 
 	     'DBI' => '1.06',
