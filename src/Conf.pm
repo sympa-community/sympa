@@ -593,7 +593,18 @@ sub _load_auth {
 			  'generic_sso' => {'service_name' => '.+',
 					    'service_id' => '\S+',
 					    'http_header_prefix' => '\w+',
-					    'email_http_header' => '\w+'
+					    'email_http_header' => '\w+',
+					    'ldap_host' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
+					    'ldap_bind_dn' => '.+',
+					    'ldap_bind_password' => '.+',
+					    'ldap_timeout'=> '\d+',
+					    'ldap_suffix'=> '.+',
+					    'ldap_scope' => 'base|one|sub',
+					    'ldap_get_email_by_uid_filter' => '.+',
+					    'ldap_email_attribute' => '\w+',
+					    'ldap_use_ssl' => '1',
+					    'ldap_ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1',
+					    'ldap_ssl_ciphers' => '[\w:]+'
 					    }
 			  );
     

@@ -576,7 +576,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	     if(defined $net_id) { # the ticket is valid net-id
 		 do_log('notice',"login CAS OK server netid=$net_id" );
-		 $param->{'user'}{'email'} = lc(&Auth::cas_get_email_by_net_id($net_id,$cas_id));
+		 $param->{'user'}{'email'} = lc(&Auth::get_email_by_net_id($cas_id, {'uid' => $net_id}));
 		 $param->{'auth'} = 'cas';
 
 		 &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id);
@@ -1593,8 +1593,21 @@ sub do_sso_login {
 	    
 	    return 1;
 	}
-	
-	my $email = lc($ENV{$Conf{'auth_services'}[$sso_id]{'email_http_header'}});
+
+	my $email;
+	if (defined $Conf{'auth_services'}[$sso_id]{'email_http_header'}) {
+	    $email = lc($ENV{$Conf{'auth_services'}[$sso_id]{'email_http_header'}});
+	}else {
+	    unless (defined $Conf{'auth_services'}[$sso_id]{'ldap_host'} &&
+		    defined $Conf{'auth_services'}[$sso_id]{'ldap_get_email_by_uid_filter'}) {
+		&error_message('no_identified_user');
+		&do_log('err','do_sso_login: auth.conf error : either email_http_header or ldap_host/ldap_get_email_by_uid_filter entries should be defined');
+		return 'home';	
+	    }
+	    
+	    $email = &Auth::get_email_by_net_id($sso_id, \%ENV);
+	}
+
 	unless ($email) {
 	    &error_message('no_identified_user');
 	    &do_log('err','do_sso_login: user could not be identified, no %s HTTP header set', $Conf{'auth_services'}[$sso_id]{'email_http_header'});

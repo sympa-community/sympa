@@ -329,12 +329,12 @@ sub ldap_authentication {
 
 
 # fetch user email using his cas net_id and the paragrapah number in auth.conf
-sub cas_get_email_by_net_id {
+sub get_email_by_net_id {
     
-    my $net_id = shift;   
     my $auth_id = shift;
+    my $attributes = shift;
 
-    do_log ('info',"Auth::cas_get_email_by_net_id($net_id,$auth_id)");
+    do_log ('info',"Auth::get_email_by_net_id($auth_id,$attribute->{'uid'})");
 
     unless (eval "require Net::LDAP") {
 	do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
@@ -356,8 +356,8 @@ sub cas_get_email_by_net_id {
 
     my $ldap = @{$Conf{'auth_services'}}[$auth_id];
     my $filter = $ldap->{'ldap_get_email_by_uid_filter'} ;
-    $filter =~ s/\[uid\]/$net_id/ig;
 
+    $filter =~ s/\[([\w-]+)\]/$attributes->{$1}/ig;
 
     foreach my $host (split(/,/,$ldap->{'ldap_host'})){
 

@@ -220,7 +220,7 @@ sub casLogin {
     } 
 
     ## Now fetch email attribute from LDAP
-    unless ($email = &Auth::cas_get_email_by_net_id($user, $cas_id)) {
+    unless ($email = &Auth::get_email_by_net_id($cas_id, {'uid' => $user})) {
 	&do_log('err','Could not get email address from LDAP for user %s', $user);
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authentification failed')

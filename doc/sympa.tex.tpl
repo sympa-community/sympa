@@ -3198,7 +3198,9 @@ The authentication method has first been introduced to allow interraction with \
 \end {quote}
 
 
-The SSO is also expected to provide user attributes including the user email address as environment variables. To make the SSO appear in the login menu, a \textbf {generic\_sso} paragraph describing the SSO service should be added to  \file {auth.conf}. The format of this paragraph is described in the following section.
+\Sympa will get user attributes via environment variables. In the most simple case the SSO will provide the user email address. If not, Sympa can be configured to look for the user email address in a LDAP directory (the search filter will make use of user information inherited from the SSO Apache module).
+
+To plug a new SSO server in your Sympa server you should add a \textbf {generic\_sso} paragraph (describing the SSO service) in your \file {auth.conf} configuration file (See  \ref {generic-sso-format}, page~\pageref {generic-sso-format}). Once this paragraph has been added, the SSO service name will be automatically added to the web login menu.
 
 Apart from the user email address, the SSO can provide other user attributes that \Sympa will store in the user\_table DB table (for persistancy) and make them available in the [user\_attributes] structure that you can use within authorization scenarios (see~\ref {rules}, page~\pageref {rules}) or in web templates via the [\% user.attributes \%] structure.
 
@@ -3491,6 +3493,7 @@ are \cfkeyword {regexp} or \cfkeyword {negative\_regexp} which are perl regular 
 
 
 \subsection {generic\_sso paragraph}
+\label {generic-sso-format}
 
  \begin{itemize}
 
@@ -3509,6 +3512,62 @@ Sympa gets user attributes from environment variables comming from the web serve
 This parameter defines the environment variable that will contain the authenticated user's email address.
 
 \end{itemize}
+
+The following parameters define how Sympa can retrieve the user email address ; \textbf {these are only useful if the email\_http\_header entry was not defined :}
+
+ \begin{itemize}
+
+\item{ldap\_host}\\
+	The LDAP host Sympa will connect to fetch user email. The ldap\_host include the
+        port number and it may be a comma separated list of redondant host.   
+
+\item{ldap\_bind\_dn}\\
+	The DN used to bind to this server. Anonymous bind is used if this parameter is not defined.
+				    
+\item{ldap\_bind\_password}\\
+	The password used unless anonymous bind is used.
+
+\item{ldap\_suffix}\\
+	The LDAP suffix used when seraching user email
+
+\item{ldap\_scope}\\
+	The scope used when seraching user email, possible values are \texttt {sub}, \texttt {base}, and \texttt {one}.
+
+\item{ldap\_get\_email\_by\_uid\_filter}\\
+	The filter to perform the email search. It can refer to any environment variables inherited from the SSO module, as shown below.
+	Example : 
+	\begin {quote}
+	  \begin{verbatim}
+[STOPPARSE]
+	    ldap_get_email_by_uid_filter    (mail=[SSL_CLIENT_S_DN_Email])
+[STARTPARSE]
+	  \end{verbatim}
+	\end {quote}
+
+\item{ldap\_email\_attribute}\\
+	The attribut name to be used as user canonical email. In the current version of sympa only the first value returned by the LDAP server is used.
+
+\item{ldap\_timeout}\\
+	The time out for the search.
+
+\item{ldap\_use\_ssl}
+   
+        If set to \texttt {1}, connection to the LDAP server will use SSL (LDAPS).
+
+\item{ldap\_ssl\_version}
+
+        This defines the version of the SSL/TLS protocol to use. Defaults of \textindex {Net::LDAPS} to \texttt {sslv2/3}, 
+	other possible values are \texttt {sslv2}, \texttt {sslv3}, and \texttt {tlsv1}.
+
+\item{ldap\_ssl\_ciphers}
+  
+        Specify which subset of cipher suites are permissible for this connection, using the  
+	OpenSSL string format. The default value of \textindex {Net::LDAPS} for ciphers is \texttt {ALL}, 
+	which permits all ciphers, even those that don't encrypt!
+
+
+ \end{itemize}
+
 
 \subsection {cas paragraph}
 
@@ -3571,10 +3630,10 @@ the CAS server is out of order the access to Sympa services is impossible.
 	The password used unless anonymous bind is used.
 
 \item{ldap\_suffix}\\
-	The LDAP suffix use when seraching user email
+	The LDAP suffix used when seraching user email
 
 \item{ldap\_scope}\\
-	The scope use when seraching user email, possible values are \texttt {sub}, \texttt {base}, and \texttt {one}.
+	The scope used when seraching user email, possible values are \texttt {sub}, \texttt {base}, and \texttt {one}.
 
 \item{ldap\_get\_email\_by\_uid\_filter}\\
 	The filter to perform the email search.
