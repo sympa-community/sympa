@@ -1,3 +1,71 @@
+2002-04-17 14:09  salaun
+
+	* src/List.pm: [reported by John Dalbec] delete unused subroutines
+
+2002-04-17 09:15  salaun
+
+	* src/List.pm: delete unused subroutine
+
+2002-04-16 17:39  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: don't try to log errors before the
+	openlog
+
+2002-04-16 15:56  salaun
+
+	* src/: Conf.pm, List.pm, etc/templates/cn/sendpasswd.cn.tpl,
+	etc/templates/cz/sendpasswd.cz.tpl,
+	etc/templates/de/sendpasswd.de.tpl,
+	etc/templates/fr/sendpasswd.fr.tpl,
+	etc/templates/hu/sendpasswd.hu.tpl,
+	etc/templates/it/sendpasswd.it.tpl,
+	etc/templates/ro/sendpasswd.ro.tpl,
+	etc/templates/us/sendpasswd.us.tpl: [reported by Frederic Connes]
+	Bug: main title used in sendpassword template instead of robot
+	title.	Fix: Load wwsympa.conf in Conf.pm ; use [conf->title]
+	instead of [wwsconf->title]
+
+2002-04-16 14:47  salaun
+
+	* src/etc/templates/: de/welcome.de.tpl, es/welcome.es.tpl,
+	hu/welcome.hu.tpl, it/welcome.it.tpl, pl/welcome.pl.tpl,
+	pt/welcome.pt.tpl, us/welcome.us.tpl: [Frederic Connes] Fix
+	boundary in welcome messages
+
+2002-04-16 14:21  salaun
+
+	* nls/ro.msg: [Valics Lehel] Update
+
+2002-04-16 12:16  salaun
+
+	* ChangeLog, doc/sympa.tex.tpl, nls/ro.msg,
+	src/etc/templates/ro/bye.ro.tpl,
+	src/etc/templates/ro/certif_warning.ro.tpl,
+	src/etc/templates/ro/expire_deletion.ro.tpl,
+	src/etc/templates/ro/expire_warning1.ro.tpl,
+	src/etc/templates/ro/expire_warning2.ro.tpl,
+	src/etc/templates/ro/global_remind.ro.tpl,
+	src/etc/templates/ro/helpfile.ro.tpl,
+	src/etc/templates/ro/info_report.ro.tpl,
+	src/etc/templates/ro/invite.ro.tpl,
+	src/etc/templates/ro/list_created.ro.tpl,
+	src/etc/templates/ro/list_unknown.ro.tpl,
+	src/etc/templates/ro/listowner_notification2.ro.tpl,
+	src/etc/templates/ro/lists.ro.tpl,
+	src/etc/templates/ro/moderate.ro.tpl,
+	src/etc/templates/ro/modindex.ro.tpl,
+	src/etc/templates/ro/reject.ro.tpl,
+	src/etc/templates/ro/remind.ro.tpl,
+	src/etc/templates/ro/removed.ro.tpl,
+	src/etc/templates/ro/review.ro.tpl,
+	src/etc/templates/ro/sendpasswd.ro.tpl,
+	src/etc/templates/ro/stats_report.ro.tpl,
+	src/etc/templates/ro/summary.ro.tpl,
+	src/etc/templates/ro/welcome.ro.tpl,
+	src/etc/templates/ro/x509-user-cert-missing.ro.tpl,
+	src/etc/templates/ro/your_infected_msg.ro.tpl: [Valics Lehel] NLS
+	update, Mail templates translation to Romanian
+
 2002-04-12 13:50  salaun
 
 	* src/List.pm: Bug fix: messages Header/footer addition did not

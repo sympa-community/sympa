@@ -469,7 +469,7 @@ releases of this documentation.
 If you wish to contact the authors of \Sympa, please use the address
 \mailaddr {sympa-authors{\at}cru.fr}.
 
-There are also a few \htmladdnormallinkfoot {mailing-lists about \Sympa} {http://listes.cru.fr/wws/lists/informatique/sympa} :
+There are also a few \htmladdnormallinkfoot {mailing-lists about \Sympa} {http://listes.cru.fr/sympa/lists/informatique/sympa} :
 
 	\begin {itemize}
 	   \item  \mailaddr {sympa-users{\at}cru.fr} general info list
@@ -1285,11 +1285,11 @@ is still recognized but should not be used anymore.
 
 \subsection {\cfkeyword {wwsympa\_url}}  
 
-	 \default {http://\texttt{<}host\texttt{>}/wws}
+	 \default {http://\texttt{<}host\texttt{>}/sympa}
 
 	This is the root URL of \WWSympa.
 
-        \example {wwsympa\_url https://my.server/wws}
+        \example {wwsympa\_url https://my.server/sympa}
 
 \subsection {\cfkeyword {dark\_color} \cfkeyword {light\_color} \cfkeyword {text\_color} \cfkeyword {bg\_color} \cfkeyword {error\_color} \cfkeyword {selected\_color} \cfkeyword {shaded\_color}}
 \label {colors}
@@ -2075,7 +2075,7 @@ int main(int argn, char **argv, char **envp) {
 \begin {quote}
 \begin{verbatim}
      Example :
-       	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+       	ScriptAlias /sympa /home/sympa/bin/wwsympa.fcgi
 \end{verbatim}
 \end {quote}
 
@@ -2089,11 +2089,11 @@ int main(int argn, char **argv, char **envp) {
 \begin{verbatim}
      Example :
 	FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 2
-	<Location /wws>
+	<Location /sympa>
    	  SetHandler fastcgi-script
 	</Location>
 
-	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+	ScriptAlias /sympa /home/sympa/bin/wwsympa.fcgi
 
  \end{verbatim}
 \end {quote}
@@ -3166,11 +3166,11 @@ FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 3 -idle-timeout 120
   DocumentRoot /var/www/your.virtual.domain
   ServerName your.virtual.domain
 
-  <Location /wws>
+  <Location /sympa>
      SetHandler fastcgi-script
   </Location>
 
-  ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+  ScriptAlias /sympa /home/sympa/bin/wwsympa.fcgi
 
 </VirtualHost>
 \end{verbatim}
@@ -3576,7 +3576,7 @@ between \WWSympa and your application.
 referrer URL when an action is performed. Here is a sample HTML anchor :
 
 \begin{verbatim}
-<A HREF="/wws/loginrequest/referrer">Login page</A>
+<A HREF="/sympa/loginrequest/referrer">Login page</A>
 \end{verbatim}
 
 
