@@ -337,7 +337,7 @@ $set 16 parameters titles
 37	"Port auf entferntem Rechner"
 38	"Benutzer auf entferntem Rechner"
 39	"Passwort auf entferntem Rechner"
-40	"Endung"
+40	"Suffix"
 41	"Filter"
 42	"extrahiertes Attribut"
 43	"Auswahl (falls mehrere)"

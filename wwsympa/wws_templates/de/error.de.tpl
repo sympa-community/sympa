@@ -91,7 +91,7 @@ Sie haben versucht ein Parameter ohne die erforderlichen Rechte zu &auml;ndern: 
 
 [ELSIF error->msg=config_changed]
 Konfigurationsdatei wurde ge&auml;nder durch [error->email]. Ihre
-&Auml;nderungen k&onnen nicht durchgef&uhrt werden.
+&Auml;nderungen k&ouml;nnen nicht durchgef&uuml;hrt werden.
 
 [ELSIF error->msg=syntax_errors]
 Syntax-Fehler in folgenden Parametern : [error->params]
