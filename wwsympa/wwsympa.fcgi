@@ -4742,7 +4742,7 @@ sub do_editsubscriber {
     }
 
     ## Additional DB fields
-    if (defined ($Conf{'db_additional_subscriber_fields'})) {
+    if ($Conf{'db_additional_subscriber_fields'}) {
 	my @additional_fields = split ',', $Conf{'db_additional_subscriber_fields'};
 	
 	my %data;
