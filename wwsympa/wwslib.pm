@@ -254,7 +254,7 @@ sub load_mime_types {
 sub get_email_from_cookie {
 #    &Log::do_log('debug', 'get_email_from_cookie');
     my $secret = shift;
-    my $email ;
+    my ($email, $auth) ;
 
     unless ($secret) {
 	&main::message('error in sympa configuration');
@@ -266,13 +266,14 @@ sub get_email_from_cookie {
 	&Log::do_log('info', ' ENV{HTTP_COOKIE} undefined, authentication failure');
     }
 
-    unless ( $email = &cookielib::check_cookie ($ENV{'HTTP_COOKIE'}, $secret)) {
+    ($email, $auth) = &cookielib::check_cookie ($ENV{'HTTP_COOKIE'}, $secret);
+    unless ( $email) {
 	&main::message('auth failed');
 	&Log::do_log('info', 'get_email_from_cookie: auth failed for user %s', $email);
 	return undef;
     }    
 
-    return $email;
+    return ($email, $auth);
 }
 
 sub new_passwd {

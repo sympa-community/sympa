@@ -2874,9 +2874,9 @@ On the \Sympa web interface (\WWSympa) the user can authenticate in 4 different 
 has been done on \Sympa serveur). Default authentication mean is via the user's email address and a password 
 managed by \Sympa itself. If an LDAP authentication backend (or multiple) has been defined, then the user 
 can authentication with his/her LDAP uid and password. \Sympa is also able to delegate the authentication
-job to a web Single SignOn system ; currently only \htmladdnormallink {CAS} {http://www.yale.edu/tp/auth/} 
-(the Yale University system) is supported. When contacted via HTTPS, \Sympa can make use of X509 client
-certificates to authenticate users.
+job to a web Single SignOn system ; currently \htmladdnormallink {CAS} {http://www.yale.edu/tp/auth/} 
+(the Yale University system) or a generic SSO setup, adapted to SSO products providing an Apache module. 
+When contacted via HTTPS, \Sympa can make use of X509 client certificates to authenticate users.
 
 The authorization process in \Sympa (authorization scenarios) refers to authentication methods. The 
 same authorization scenarios are used for both mail and web accesss ; therefore some authentication 
@@ -2951,6 +2951,35 @@ After this operation, the address in the field FROM will be the Canonic email, i
 That means that \Sympa will get this email and use it during all the session until you clearly ask \Sympa to change your email address via the two pages : which and pref.
   
 
+\section {Generis SSO authentication}
+\label {generic-sso}
+
+The authentication method has first been introduced to allow interraction with \htmladdnormallink {Shibboleth} {http://shibboleth.internet2.edu/}, Internet2's inter-institutional authentication system. But it should be usable with any SSO system that provides an Apache authentication module being able to protect a specified URL on the site (not the whole site). Here is a sample httpd.conf that shib-protects the associated Sympa URL :
+\begin {quote}
+\begin{verbatim}
+...
+<Location /wws/sso_login/inqueue>
+  AuthType shibboleth
+  require affiliation ~ ^member@.+$
+</Location>
+...
+\end{verbatim}
+\end {quote}
+
+
+The SSO is also expected to provide user attributes including the user email address as environment variables. To make the SSO appear in the login menu, a textbf {generic\_sso} paragraph describing the SSO service should be added to  \file {auth.conf}. The format of this paragraph is described in the following section.
+
+Apart from the user email address, the SSO can provide other user attributes that \Sympa will store in the user\_table DB table (for persistancy) and make them available in the [user\_attributes] structure that you can use within authorization scenarios (see~\ref {rules}, page~\pageref {rules}).
+
+\section {CAS-based authentication}
+\label {cas}
+
+CAS is Yale university SSO software. Sympa can use CAS authentication service.
+
+The listmaster should define at least one or more CAS servers (\textbf {cas} paragraph) in \file {auth.conf}. If \textbf 
+{non\_blocking\_redirection} parameter was set for a CAS server then Sympa will try a transparent login on this server
+when the user accesses the web interface. If one CAS server redirect the user to Sympa with a valid ticket Sympa receives a user ID from the CAS server. It then connects to the related LDAP directory to get the user email address. If no CAS server returns a valid user ID, Sympa will let the user either select a CAS server to login or perform a Sympa login.
+
 \section {auth.conf}
 \label {auth-conf}
 
@@ -2958,20 +2987,10 @@ The \file {[ETCDIR]/auth.conf} configuration file contains numerous
 parameters which are read on start-up of \Sympa. If you change this file, do not forget
 that you will need to restart wwsympa.fcgi afterwards. 
 
-The \file {[ETCDIR]/auth.conf} is organised in paragraphs. Each paragraph describe a authentication 
-service with all needed parameter to perform a authentication using this service. Current version of
-\Sympa can perform  authentication though ldap directory, Central Authentication Service (CAS is a
-Single Sign On service designed by Yale University  http://www.yale.edu/tp/cas/ ) or using internal user\_table.
-
-Sympa parse each authentication service and try to use it depending on input datas from cookies and form parameters. At the first
-stage Sympa always check its own authentication cookie comming from the client. If recognized and valid the user email is extracted
-and authentication is finished. 
-
-Next step is to try http redirection to each defined CAS server, if one CAS server redirect the user
-to Sympa with a valid ticket Sympa receive a user id from the CAS server and connect to the related LDAP directory to get the user
-email. If no CAS server return a ticket, inorder to continue without this redirection stage for each page, Sympa store this
-information to user browser using a cookie name "do\_not\_use\_cas" (the delay this cookie is valid is controled by
-(\cfkeyword {cookie\_cas\_expire} parameter in file \file {sympa.conf}).
+The \file {[ETCDIR]/auth.conf} is organised in paragraphs. Each paragraph describes an authentication 
+service with all required parameters to perform an authentication using this service. Current version of
+\Sympa can perform authentication through LDAP directories, using an external Single Sign-On Service (like CAS 
+or Shibboleth), or using internal user\_table.
 
 The login page contains 2 forms : the login form and the SSO. When users hit the login form, each ldap or user\_table authentication
 paragraph is applied unless email adress input from form match the \cfkeyword {negative\_regexp} or do not match \cfkeyword {regexp}. 
@@ -3011,6 +3030,7 @@ Example :
 cas
 	host				sso-cas.cru.fr:443
 	login_uri			/login
+	non_blocking_redirection        on
 	check_uri			/validate
 	logout_uri			/logout
 	auth_service_name		cas-cru
@@ -3021,6 +3041,13 @@ cas
 	ldap_scope			sub
 	ldap_email_attribute		mail
 
+## The URL corresponding to the service_id should be protected by the SSO (Shibboleth in the exampl)
+## The URL would look like http://yourhost.yourdomain/wws/sso_login/inqueue in the following example
+generic_sso
+        service_name       InQueue Federation
+        service_id         inqueue
+        http_header_prefix HTTP_SHIB
+        email_http_header  HTTP_SHIB_EP_AFFILIATION
 
 ldap
 	regexp				univ-rennes1\.fr
@@ -3234,6 +3261,26 @@ a class of email.
 \end{itemize}
 
 
+\subsection {generic\_sso paragraph}
+
+ \begin{itemize}
+
+ \item{service\_name} \\
+This is the SSO service name that will be proposed to the user in the login banner menu.
+
+\item{service\_id} \\
+This service ID is used as a parameter by sympa to refer to the SSO service (instead of the service name). 
+
+A corresponding URL on the local web server should be protected by the SSO system ; this URL would look like textbf {http://yourhost.yourdomain/wws/sso\_login/inqueue} if the service\_id is \textbf {inqueue}.
+
+\item{http\_header\_prefix} \\
+Sympa gets user attributes from environment variables comming from the web server. These variables are then stored in the user\_table DB table for later use in authorization scenarios (in [user_attributes] structure). Only environment variables starting with the defined prefix will kept.
+
+\item{email\_http\_header} \\
+This parameter defines the environment variable that will contain the authenticated user's email address.
+
+\end{itemize}
+
 \subsection {cas paragraph}
 
 
@@ -3408,6 +3455,7 @@ title.es eliminación reservada sólo para el propietario, necesita autentificació
 \end {quote}
 
 \section {rules specifications}
+\label {rules}
 
 An authorization scenario consists of rules, evaluated in order beginning with the first. 
 Rules are defined as follows :
@@ -3427,7 +3475,7 @@ Rules are defined as follows :
                 | older (<date>, <date>)    # true if first date is anterior to the second date
                 | newer (<date>, <date>)    # true if first date is posterior to the second date
 <var> ::= [email] | [sender] | [user-><user_key_word>] | [previous_email]
-                  | [remote_host] | [remote_addr]
+                  | [remote_host] | [remote_addr] | [user_attributes-><user_attributes_keyword>]
 	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
 		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
 	 	  | [msg_part->type] | [msg_part->body] | [msg_encrypted] | [is_bcc] | [current_date] | <string>
@@ -3466,6 +3514,8 @@ Rules are defined as follows :
 
 <user_key_word> ::= email | gecos | lang | password | cookie_delay_user
 	            | <additional_user_fields>
+
+<user_attributes_key_word> ::= one of the user attributes provided by the SSO system via environment variables. The [user_attributes] structure is available only if user authenticated with a generic_sso.
 
 <subscriber_key_word> ::= email | gecos | bounce | reception 
 	                  | visibility | date | update_date

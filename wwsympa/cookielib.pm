@@ -48,12 +48,14 @@ sub check_cookie {
 	
 	next unless ($cookie->name =~ /^(sympauser|user)$/);
 
-	if ($cookie->value =~ /^(.*):(\S+)\s*$/) {
-	    my ($email, $mac) = ($1, $2);
+	my @values = split /:/,$cookie->value; 
+	if ($#values >= 1) {
+	    my ($email, $mac, $auth) = @values;
+	    $auth ||= 'classic';
 
 	    ## Check the MAC
 	    if (&get_mac($email,$secret) eq $mac) {
-		return $email;
+		return ($email, $auth);
 	    }
 	}	
     }
@@ -96,7 +98,7 @@ sub check_lang_cookie {
 
 ## Set user $email cookie, ckecksum use $secret, expire=(now|session|#sec) domain=(localhost|<a domain>)
 sub set_cookie {
-    my ($email, $secret, $http_domain, $expires) = @_ ;
+    my ($email, $secret, $http_domain, $expires, $auth) = @_ ;
 
     unless ($email) {
 	return undef;
@@ -115,6 +117,9 @@ sub set_cookie {
     }
 
     my $value = sprintf '%s:%s', $email, &get_mac($email,$secret);
+    if ($auth ne 'classic') {
+	$value .= ':'.$auth;
+    }
     my $cookie;
     if ($expires =~ /session/i) {
 	$cookie = new CGI::Cookie (-name    => 'sympauser',
@@ -213,7 +218,7 @@ sub check_cookie_extern {
 	
 	next unless ($cookie->name =~ /sympa_altemails/);
 	
-	if ($cookie->value =~ /^(\S+)&(\w+)$/) {
+ 	if ($cookie->value =~ /^(\S+)&(\w+)$/) {
 	    return undef unless (&get_mac($1,$secret) eq $2) ;
 		
 	    my %alt_emails ;
@@ -247,7 +252,7 @@ sub set_cookie_extern {
     my $emails = join(',',@mails);
 
     $value = sprintf '%s&%s',$emails,&get_mac($emails,$secret);
-  
+ 
     if ($http_domain eq 'localhost') {
 	$http_domain="";
     }

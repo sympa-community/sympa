@@ -2932,9 +2932,9 @@ sub get_user_db {
 
     if ($Conf{'db_type'} eq 'Oracle') {
 	## "AS" not supported by Oracle
-	$statement = sprintf "SELECT email_user \"email\", gecos_user \"gecos\", password_user \"password\", cookie_delay_user \"cookie_delay\", lang_user \"lang\" %s FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
+	$statement = sprintf "SELECT email_user \"email\", gecos_user \"gecos\", password_user \"password\", cookie_delay_user \"cookie_delay\", lang_user \"lang\", attributes \"attributes\" %s FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
     }else {
-	$statement = sprintf "SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang %s FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
+	$statement = sprintf "SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang %s, attributes_user AS attributes FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
     }
     
     push @sth_stack, $sth;
@@ -3832,6 +3832,7 @@ sub update_user_db {
 		      password => 'password_user',
 		      cookie_delay => 'cookie_delay_user',
 		      lang => 'lang_user',
+		      attributes => 'attributes_user',
 		      email => 'email_user'
 		      );
     
@@ -3896,7 +3897,8 @@ sub add_user_db {
 		      gecos => 'gecos_user',
 		      password => 'password_user',
 		      cookie_delay => 'cookie_delay_user',
-		      lang => 'lang_user'
+		      lang => 'lang_user',
+		      attributes => 'attributes_user'
 		      );
     
     ## Check database connection
@@ -4351,6 +4353,16 @@ sub verify {
 
 	    $context->{'user'} ||= &get_user_db($context->{'sender'});	    
 	    $value =~ s/\[user\-\>([\w\-]+)\]/$context->{'user'}{$1}/;
+
+	}elsif ($value =~ /\[user_attributes\-\>([\w\-]+)\]/i) {
+	    
+	    $context->{'user'} ||= &get_user_db($context->{'sender'});	    
+	    foreach my $attr (split /;/, $context->{'user'}{'attributes'}) {
+		my ($key, $value) = split /=/, $attr;
+		$context->{'user_attributes'}{$key} = $value;
+	    }
+
+	    $value =~ s/\[env\-\>([\w\-]+)\]/$context->{'user_attributes'}{$1}/;
 
 	}elsif (($value =~ /\[subscriber\-\>([\w\-]+)\]/i) && defined ($context->{'sender'} ne 'nobody')) {
 	    
@@ -6685,7 +6697,8 @@ sub probe_db {
 		      'gecos_user' => 'varchar(150)',
 		      'password_user' => 'varchar(40)',
 		      'cookie_delay_user' => 'int(11)',
-		      'lang_user' => 'varchar(10)'},
+		      'lang_user' => 'varchar(10)',
+		      'attributes_user' => 'text'},
 		     'subscriber_table' => 
 		     {'list_subscriber' => 'varchar(50)',
 		      'user_subscriber' => 'varchar(100)',

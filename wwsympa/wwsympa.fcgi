@@ -534,8 +534,10 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     ## Compatibility issue with old a-sign.at certs
 	     $param->{'user'}{'email'} = lc($1);
 	 }
+	 
 	 if($param->{user}{email}) {
 	     $param->{'auth_method'} = 'smime';
+	     $param->{'auth'} = 'x509';
 	     $param->{'ssl_client_s_dn'} = $ENV{'SSL_CLIENT_S_DN'};
 	     $param->{'ssl_client_v_end'} = $ENV{'SSL_CLIENT_V_END'};
 	     $param->{'ssl_client_i_dn'} =  $ENV{'SSL_CLIENT_I_DN'};
@@ -543,7 +545,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
      }elsif ($ENV{'HTTP_COOKIE'} =~ /(user|sympauser)\=/) {
-         $param->{'user'}{'email'} = &wwslib::get_email_from_cookie($Conf{'cookie'});
+         ($param->{'user'}{'email'}, $param->{'auth'}) = &wwslib::get_email_from_cookie($Conf{'cookie'});
 	 
      }elsif($in{'ticket'}=~/(S|P)T\-/){ # the request contain a vas named ticket that use CAS ticket format
 	 &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},0,'now'); #reset the cookie do_not_use_cas because this client probably use CAS
@@ -562,6 +564,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     if($net_id != -1) { # the ticket is valid net-id
 		 do_log('notice',"login CAS OK server = $host,netid=$net_id,cas_id=$cas_id" );
 		 $param->{'user'}{'email'} = lc(&Auth::cas_get_email_by_net_id($net_id,$cas_id));
+		 $param->{'auth'} = 'cas';
 
 		 &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id);
 	     }else{
@@ -616,7 +619,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'alt_emails'} = &cookielib::check_cookie_extern($ENV{'HTTP_COOKIE'},$Conf{'cookie'},$param->{'user'}{'email'});
 
      if ($param->{'user'}{'email'}) {
-         $param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
+#         $param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
 
          if (&List::is_user_db($param->{'user'}{'email'})) {
              $param->{'user'} = &List::get_user_db($param->{'user'}{'email'});
@@ -738,23 +741,25 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
      }
      ## Set cookies unless client use https authentication
-     unless (($ENV{'SSL_CLIENT_S_DN_Email'}) && ($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS')) {
-	 if ($param->{'user'}{'email'}) {
+     if ($param->{'user'}{'email'}) {
+	 if ($param->{'user'}{'email'} ne 'x509') {
 	     my $delay = $param->{'user'}{'cookie_delay'};
 	     unless (defined $delay) {
 		 $delay = $wwsconf->{'cookie_expire'};
 	     }
-
+	     
 	     if ($delay == 0) {
 		 $delay = 'session';
 	     }
-
-	     unless (&cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $param->{'cookie_domain'},$delay )) {
+	     
+	     $param->{'auth'} ||= 'classic';
+	     
+	     unless (&cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $param->{'cookie_domain'},$delay, $param->{'auth'} )) {
 		 &wwslog('notice', 'Could not set HTTP cookie');
 		 exit -1;
 	     }
 	     $param->{'cookie_set'} = 1;
-
+	     
 	     ##Cookie extern : sympa_altemails
 	     my $number = 0;
 	     foreach my $element (keys %{$param->{'alt_emails'}}){
@@ -766,11 +771,11 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		  &wwslog('notice', 'Could not set HTTP cookie for external_auth');
 		  exit -1;
 	     }
-
-	 }elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/){
-	     &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
 	 }
+     }elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/){
+	 &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
      }
+
 
      ## Available languages
      my $saved_lang = &Language::GetLang();
@@ -1434,7 +1439,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }
 
      ##authentication of the sender
-     unless($param->{'user'} = &Auth::check_auth($in{'email'},$in{'passwd'})){
+     my $data;
+     unless($data = &Auth::check_auth($in{'email'},$in{'passwd'})){
 	 &error_message('failed');
 	 # &List::db_log('wwsympa',$in{'email'},'null',$ip,'login','',$robot,'','failed');
 	 do_log('notice', "Authentication failed\n");
@@ -1448,6 +1454,16 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     return  'loginrequest';
 	 }
      } 
+     $param->{'user'} = $data->{'user'};
+     $param->{'auth'} = $data->{'auth'};
+
+     ## Set alt_email
+     if ($data->{'alt_emails'}) {
+	 foreach my $k (keys %{$data->{'alt_emails'}}) {
+	     $param->{'alt_emails'}{$k} = $data->{'alt_emails'}{$k};
+	 }
+     }
+
      # &List::db_log('wwsympa',$in{'email'},'null',$ip,'login','',$robot,'','done');
 
      my $email = lc($param->{'user'}{'email'});
@@ -1459,10 +1475,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
      }
 
-     ##
-
      ## Current authentication mode
-     $param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
+     #$param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
 
      $param->{'lang'} = $user->{'lang'} || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
      $param->{'cookie_lang'} = undef;    
@@ -1564,7 +1578,7 @@ sub do_sso_login {
 	    return 1;
 	}
 	
-	my $email = $ENV{$Conf{'auth_services'}[$sso_id]{'email_http_header'}};
+	my $email = lc($ENV{$Conf{'auth_services'}[$sso_id]{'email_http_header'}});
 	unless ($email) {
 	    &error_message('no_identified_user');
 	    &do_log('err','do_sso_login: user could not be identified, no %s HTTP header set', $Conf{'auth_services'}[$sso_id]{'email_http_header'});
@@ -1572,13 +1586,37 @@ sub do_sso_login {
 	}
 
 	$param->{'user'}{'email'} = $email;
+	$param->{'auth'} = 'generic_sso';
+	
 	&do_log('notice', 'User identified as %s', $email);
 	my $prefix = $Conf{'auth_services'}[$sso_id]{'http_header_prefix'};
+	
+	my @sso_attr;
 	foreach my $k (keys %ENV) {
 	    if ($k =~ /^$prefix/) {
+		push @sso_attr, "$k=$ENV{$k}";
 		&do_log('notice', 'Var : %s = %s', $k, $ENV{$k});
 	    }
 	}
+
+	my $all_sso_attr = join ';', @sso_attr;
+
+	## Create user entry if required
+	unless (&List::is_user_db($email)) {
+	    unless (&List::add_user_db({'email' => $email})) {
+		&error_message('add_failed');
+		&wwslog('info','do_sso_login: add failed');
+		return undef;
+	    }
+	 }
+
+
+	unless (&List::update_user_db($email,
+				      {'attributes' => $all_sso_attr })) {
+		 &error_message('update_failed');
+		 &wwslog('info','do_sso_login: update failed');
+		 return undef;
+	     }
 
 	return 'home';
     }else {
@@ -1590,282 +1628,6 @@ sub do_sso_login {
 
     return 1;
 }
-
-
- ## authentication : via email or uid
- sub check_auth_old{
-
-     my $auth = shift; ## User email or UID
-     my $pwd = shift; ## Password
-
-
-     my ($canonic, $user);
-
-     if( &tools::valid_email($auth)) {
-	 return &Auth::authentication($auth,$pwd);
-
-     }else{
-	 ## This is an UID
-	 if ($canonic = &Auth::ldap_authentication($auth,$pwd,'uid_filter')){
-	     $param->{'auth'} = 'ldap';   
-	     $param->{'alt_emails'}{$canonic} = 'ldap' if($canonic);
-
-	     unless($user = &List::get_user_db($canonic)){
-		 $user = {'email' => $canonic};
-	     }
-	     return $user;
-
-	 }else{
-	     &error_message('incorrect_passwd');
-	     &wwslog('notice', "Incorrect Ldap password");
-	     return undef;
-	 }
-     }
- }
-
-
-sub authentication_old {
-    
-    my ($email,$pwd) = @_;
-    my ($user,$canonic);
-
-    unless ($user = &List::get_user_db($email)) {
-	$user = {'email' => $email,
-		 'password' => &tools::tmp_passwd($email)
-		 };
-    }    
-    unless ($user->{'password'}) {
-	$user->{'password'} = &tools::tmp_passwd($email);
-    }
-    
-    &wwslog('info',"auth_services : $#{$Conf{'auth_services'}}") ;
-
-    foreach my $auth_service (@{$Conf{'auth_services'}}){
-	next if ($email !~ /$auth_service->{'regexp'}/i);
-	next if (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
-	if ($auth_service->{'auth_type'} eq 'user_table') {
-     
-	    if((($wwsconf->{'password_case'} eq 'insensitive') && (lc($pwd) eq lc($user->{'password'}))) || ($pwd eq $user->{'password'})) {
-		$param->{'auth'} = 'classic';
-		$param->{'alt_emails'}{$email} = 'classic' if($email);
-		return $user;
-	    }
-	}elsif($auth_service->{'auth_type'} eq 'ldap') {
-	    if ($canonic = &Auth::ldap_authentication($email,$pwd,'email_filter')){
-		$param->{'auth'} = 'ldap';
-		unless($user = &List::get_user_db($canonic)){
-		    $user = {'email' => $canonic};
-		}
-		$param->{'alt_emails'}{$canonic} = 'ldap';
-		return $user;
-	    }
-	}
-    }
-    foreach my $auth_service (@{$Conf{'auth_services'}}){
-	next unless ($email !~ /$auth_service->{'regexp'}/i);
-	next unless (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
-	if ($auth_service->{'auth_type'} eq 'user_table') {
-	    if ($user->{'password'} =~ /^init/i) {
-		&error_message('init_passwd');
-		last;
-	    }
-	}
-    }
-    &error_message('incorrect_passwd');
-    &wwslog('info','authentication: incorrect password for user %s', $email);
-
-    $param->{'init_email'} = $email;
-    $param->{'escaped_init_email'} = &tools::escape_chars($email);
-    return undef;
-}
-
-
-sub ldap_authentication_old {
-
-     my ($auth,$pwd,$whichfilter) = @_;
-     my ($cnx, $mesg, $host,$ldap_passwd,$ldap_anonymous);
-
-     unless (&tools::get_filename('etc', 'auth.conf', $robot)) {
-	 return undef;
-     }
-
-     ## No LDAP entry is defined in auth.conf
-     if ($#{$Conf{'auth_services'}} < 0) {
-	 &do_log('notice', 'Skipping empty auth.conf');
-	 return undef;
-     }
-
-     unless (require Net::LDAP) {
-	 do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
-	 return undef;
-     }
-     unless (require Net::LDAP::Entry) {
-	 do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
-	 return undef;
-     }
-
-     unless (require Net::LDAP::Message) {
-	 do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
-	 return undef;
-     }
-     
-     foreach my $ldap (@{$Conf{'auth_services'}}){
-	 # only ldap service are to be applied here
-	 next unless ($ldap->{'auth_type'} eq 'ldap');
-
-	 # skip ldap auth service if the user id or email do not match regexp auth service parameter
-	 next unless ($auth =~ /$ldap->{'regexp'}/i);
-  
-	 foreach $host (split(/,/,$ldap->{'host'})){
-
-	     my @alternative_conf = split(/,/,$ldap->{'alternative_email_attribute'});
-	     my $attrs = $ldap->{'email_attribute'};
-	     my $filter = $ldap->{'get_dn_by_uid_filter'} if($whichfilter eq 'uid_filter');
-	     $filter = $ldap->{'get_dn_by_email_filter'} if($whichfilter eq 'email_filter');
-	     $filter =~ s/\[sender\]/$auth/ig;
-
-	     ##anonymous bind in order to have the user's DN
-	     my $ldap_anonymous;
-	     if ($ldap->{'use_ssl'}) {
-		 unless (require Net::LDAPS) {
-		     do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
-		     return undef;
-		 } 
-
-		 my %param;
-		 $param{'timeout'} = $ldap->{'timeout'} if ($ldap->{'timeout'});
-		 $param{'sslversion'} = $ldap->{'ssl_version'} if ($ldap->{'ssl_version'});
-		 $param{'ciphers'} = $ldap->{'ssl_ciphers'} if ($ldap->{'ssl_ciphers'});
-
-		 $ldap_anonymous = Net::LDAPS->new($host,%param);
-	     }else {
-		 $ldap_anonymous = Net::LDAP->new($host,timeout => $ldap->{'timeout'});
-	     }
-
-	     unless ($ldap_anonymous ){
-		 do_log ('err','Unable to connect to the LDAP server %s',$host);
-		 next;
-	     }
-
-	     my $cnx;
-	     ## Not always anonymous...
-	     if (defined ($ldap->{'bind_dn'}) && defined ($ldap->{'bind_password'})) {
-		 $cnx = $ldap_anonymous->bind($ldap->{'bind_dn'}, password =>$ldap->{'bind_password'});
-	     }else {
-		 $cnx = $ldap_anonymous->bind;
-	     }
-
-	     unless(defined($cnx) && ($cnx->code() == 0)){
-		 do_log('notice',"Can\'t bind to LDAP server $host");
-		 last;
-		 #do_log ('err','Ldap Error : %s, Ldap server error : %s',$cnx->error,$cnx->server_error);
-		 #$ldap_anonymous->unbind;
-	     }
-
-	     $mesg = $ldap_anonymous->search(base => $ldap->{'suffix'},
-					     filter => "$filter",
-					     scope => $ldap->{'scope'} ,
-					     timeout => $ldap->{'timeout'});
-
-	     if ($mesg->count() == 0) {
-		 do_log('notice','No entry in the Ldap Directory Tree of %s for %s',$host,$auth);
-		 $ldap_anonymous->unbind;
-		 last;
-	     }
-
-	     my $refhash=$mesg->as_struct();
-	     my (@DN) = keys(%$refhash);
-	     $ldap_anonymous->unbind;
-
-	     ##  bind with the DN and the pwd
-	     my $ldap_passwd;
-	     if ($ldap->{'use_ssl'}) {
-		 unless (require Net::LDAPS) {
-		     do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
-		     return undef;
-		 } 
-
-		 my %param;
-		 $param{'timeout'} = $ldap->{'timeout'} if ($ldap->{'timeout'});
-		 $param{'sslversion'} = $ldap->{'ssl_version'} if ($ldap->{'ssl_version'});
-		 $param{'ciphers'} = $ldap->{'ssl_ciphers'} if ($ldap->{'ssl_ciphers'});
-
-		 $ldap_passwd = Net::LDAPS->new($host,%param);
-	     }else {
-		 $ldap_passwd = Net::LDAP->new($host,timeout => $ldap->{'timeout'});
-	     }
-
-	     unless ($ldap_passwd) {
-		 do_log('err','Unable to (re) connect to the LDAP server %s', $host);
-		 do_log ('err','Ldap Error : %s, Ldap server error : %s',$ldap_passwd->error,$ldap_passwd->server_error);
-		 next;
-	     }
-
-	     $cnx = $ldap_passwd->bind($DN[0], password => $pwd);
-	     unless(defined($cnx) && ($cnx->code() == 0)){
-		 do_log('notice', 'Incorrect password for user %s ; host: %s',$auth, $host);
-		 #do_log ('err','Ldap Error : %s, Ldap server error : %s',$cnx->error,$cnx->server_error);
-		 $ldap_passwd->unbind;
-		 last;
-	     }
-	     # this bind is anonymous and may return 
-	     # $ldap_passwd->bind($DN[0]);
-	     $mesg= $ldap_passwd->search ( base => $ldap->{'suffix'},
-					   filter => "$filter",
-					   scope => $ldap->{'scope'},
-					   timeout => $ldap->{'timeout'}
-					   );
-
-	     if ($mesg->count() == 0) {
-		 do_log('notice',"No entry in the Ldap Directory Tree of %s,$host");
-		 $ldap_passwd->unbind;
-		 last;
-	     }
-
-	     ## To get the value of the canonic email and the alternative email
-	     my (@canonic_email, @alternative);
-
-	     ## Keep previous alt emails not from LDAP source
-	     my $previous = {};
-	     foreach my $alt (keys %{$param->{'alt_emails'}}) {
-		 $previous->{$alt} = $param->{'alt_emails'}{$alt} if ($param->{'alt_emails'}{$alt} ne 'ldap');
-	     }
-	     $param->{'alt_emails'} = {};
-
-	     my $entry = $mesg->entry(0);
-	     @canonic_email = $entry->get_value($attrs,alloptions);
-	     foreach my $email (@canonic_email){
-		 my $e = lc($email);
-		 $param->{'alt_emails'}{$e} = 'ldap' if ($e);
-	     }
-
-	     foreach my $attribute_value (@alternative_conf){
-		 @alternative = $entry->get_value($attribute_value,alloptions);
-		 foreach my $alter (@alternative){
-		     my $a = lc($alter); 
-		     $param->{'alt_emails'}{$a} = 'ldap' if($a) ;
-		 }
-	     }
-
-	     ## Restore previous emails
-	     foreach my $alt (keys %{$previous}) {
-		 $param->{'alt_emails'}{$alt} = $previous->{$alt};
-	     }
-
-	     $ldap_passwd->unbind or do_log('notice', "unable to unbind");
-	     do_log('debug3',"canonic: $canonic_email[0]");
-	     return lc($canonic_email[0]);
-	 }
-
-	 next unless ($ldap_anonymous);
-	 next unless ($ldap_passwd);
-	 next unless (defined($cnx) && ($cnx->code() == 0));
-	 next if($mesg->count() == 0);
-	 next if($mesg->code() != 0);
-	 next unless ($host);
-     }
- }
-
 
 
  sub do_unify_email {
@@ -2827,8 +2589,8 @@ sub do_redirect {
      }else {
 	 $changes->{'email'} = $param->{'user'}{'email'};
 	 unless (&List::add_user_db($changes)) {
-	     &error_message('update_failed');
-	     &wwslog('info','do_pref: update failed');
+	     &error_message('add_failed');
+	     &wwslog('info','do_pref: add failed');
 	     return undef;
 	 }
      }
@@ -7296,6 +7058,7 @@ sub do_redirect {
 			 if ($desc_hash{'email'}) {
 			     $files{$d}{'author'} = $desc_hash{'email'};
 			     $files{$d}{'author_known'} = 1;
+			     $files{$d}{'author_mailto'} = &mailto($list,$desc_hash{'email'});
 			 }
 		     } else {
 			 if ($may_edit) {

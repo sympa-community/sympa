@@ -12,6 +12,7 @@ CREATE TABLE user_table (
 	cookie_delay_user       int4,
         password_user		varchar (40),
         lang_user               varchar (10),
+	attributes_user		text,
 	CONSTRAINT ind_user PRIMARY KEY (email_user)
 );
 

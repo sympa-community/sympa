@@ -51,13 +51,14 @@ use List;
      }else{
 	 ## This is an UID
 	 if ($canonic = &ldap_authentication($auth,$pwd,'uid_filter')){
-	     $param->{'auth'} = 'ldap';   
-	     $param->{'alt_emails'}{$canonic} = 'ldap' if($canonic);
 
 	     unless($user = &List::get_user_db($canonic)){
 		 $user = {'email' => $canonic};
 	     }
-	     return $user;
+	     return {'user' => $user,
+		     'auth' => 'ldap',
+		     'alt_emails' => {$canonic => 'ldap'}
+		 };
 
 	 }else{
 	     &main::error_message('incorrect_passwd');
@@ -90,18 +91,20 @@ sub authentication {
 	if ($auth_service->{'auth_type'} eq 'user_table') {
      
 	    if((($wwsconf->{'password_case'} eq 'insensitive') && (lc($pwd) eq lc($user->{'password'}))) || ($pwd eq $user->{'password'})) {
-		$param->{'auth'} = 'classic';
-		$param->{'alt_emails'}{$email} = 'classic' if($email);
-		return $user;
+		return {'user' => $user,
+			'auth' => 'classic',
+			'alt_emails' => {$email => 'classic'}
+			};
 	    }
 	}elsif($auth_service->{'auth_type'} eq 'ldap') {
 	    if ($canonic = &ldap_authentication($email,$pwd,'email_filter')){
-		$param->{'auth'} = 'ldap';
 		unless($user = &List::get_user_db($canonic)){
 		    $user = {'email' => $canonic};
 		}
-		$param->{'alt_emails'}{$canonic} = 'ldap';
-		return $user;
+		return {'user' => $user,
+			'auth' => 'ldap',
+			'alt_emails' => {$email => 'ldap'}
+			};
 	    }
 	}
     }
