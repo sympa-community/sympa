@@ -19,4 +19,13 @@ The antivirus scan has failed while processing the following file:
 
 The returned error message :
 	[error_msg]
+[ELSIF type=edit_list_error]
+Subject: incorrect format of edit_list.conf
+
+edit_list.conf format has changed :
+'default' is no mode accepted for a population.
+
+Refer to documentation to adapt [param0].
+Until then we recommend your remove [param0] ; 
+default configuration will be used.
 [ENDIF]
