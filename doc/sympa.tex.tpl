@@ -3783,7 +3783,10 @@ parameter is \emph {not} used by \Sympa if the \tildefile
 \begin {itemize}
 [STARTPARSE]
 [FOREACH s IN scenari->visibility]
-     \item \lparam {visibility} \texttt {[s->name]} \\
+     \item \lparam {visibility} \texttt {[s->name]}
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.[s->name]})
+	\end {htmlonly}\\
 	[s->title]
 
 [END]
@@ -4055,8 +4058,11 @@ Predefined scenarii are :
 \begin {itemize}
 [STARTPARSE]
 [FOREACH s IN scenari->subscribe]
-     \item \lparam {subscribe} \texttt {[s->name]} \\
-	[s->title]
+     \item \lparam {subscribe} \texttt {[s->name]}
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.[s->name]})
+	\end {htmlonly}\\
+[s->title]
 
 [END]
 [STOPPARSE]
@@ -4077,7 +4083,10 @@ Predefined scenarii are :
 \begin {itemize}
 [STARTPARSE]
 [FOREACH s IN scenari->unsubscribe]
-     \item \lparam {unsubscribe} \texttt {[s->name]} \\
+     \item \lparam {unsubscribe} \texttt {[s->name]} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.[s->name]})
+	\end {htmlonly}\\
 	[s->title]
 
 [END]
@@ -4098,7 +4107,10 @@ Predefined scenarii are :
 \begin {itemize}
 [STARTPARSE]
 [FOREACH s IN scenari->add]
-     \item \lparam {add} \texttt {[s->name]} \\
+     \item \lparam {add} \texttt {[s->name]}
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/add.[s->name]})
+	\end {htmlonly}\\
 	[s->title]
 
 [END]
@@ -4120,7 +4132,10 @@ Predefined scenarii are :
 \begin {itemize}
 [STARTPARSE]
 [FOREACH s IN scenari->del]
-     \item \lparam {del} \texttt {[s->name]} \\
+     \item \lparam {del} \texttt {[s->name]} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/del.[s->name]})
+	\end {htmlonly}\\
 	[s->title]
 
 [END]
@@ -4142,7 +4157,10 @@ Predefined scenarii are :
 \begin {itemize}
 [STARTPARSE]
 [FOREACH s IN scenari->remind]
-     \item \lparam {remind} \texttt {[s->name]} \\
+     \item \lparam {remind} \texttt {[s->name]} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/remind.[s->name]})
+	\end {htmlonly}\\
 	[s->title]
 
 [END]
@@ -4163,7 +4181,10 @@ parameter are pointers to \emph {scenarii}.
 \begin {itemize}
 [STARTPARSE]
 [FOREACH s IN scenari->send]
-     \item \lparam {send} \texttt {[s->name]} \\
+     \item \lparam {send} \texttt {[s->name]} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.[s->name]})
+	\end {htmlonly}\\
 	[s->title]
 
 [END]
@@ -4187,7 +4208,10 @@ Predefined scenarii are :
 \begin {itemize}
 [STARTPARSE]
 [FOREACH s IN scenari->review]
-     \item \lparam {review} \texttt {[s->name]} \\
+     \item \lparam {review} \texttt {[s->name]} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.[s->name]})
+	\end {htmlonly}\\
 	[s->title]
 
 [END]
@@ -4216,7 +4240,10 @@ Predefined scenarii are :
 \begin {itemize}
 [STARTPARSE]
 [FOREACH s IN scenari->d_read]
-     \item \lparam {d\_read} \texttt {[s->name]} \\
+     \item \lparam {d\_read} \texttt {[s->name]} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_read.[s->name]})
+	\end {htmlonly}\\
 	[s->title]
 
 [END]
@@ -4239,7 +4266,10 @@ Predefined scenarii are :
 \begin {itemize}
 [STARTPARSE]
 [FOREACH s IN scenari->d_edit]
-     \item \lparam {d\_edit} \texttt {[s->name]} \\
+     \item \lparam {d\_edit} \texttt {[s->name]} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.[s->name]})
+	\end {htmlonly}\\
 	[s->title]
 
 [END]
