@@ -1492,24 +1492,38 @@ sub do_record_email{
     my $user;
     my $new_email;
     
+    unless ($param->{'user'}{'email'}) {
+	&error_message('no_user');
+	&wwslog('info','do_record_email: no user');
+	return 'pref';
+    }
+
     ##To verify that the user is in User_table 
     ##To verify the associated password 
     ##If not in User table we add him 
     
     unless(&wwslib::valid_email($in{'new_alternative_email'})){
+	&error_message('incorrect_email', {'email' => $in{'new_alternative_email'}});
 	&do_log('notice', "do_record_email:incorrect email %s",$in{'new_alternative_email'});
 	return 'pref';
     }
     
+    ## Alt email is the same as main email address
+    unless ($in{'new_alternative_email'} eq $param->{'user'}{'email'}) {
+	&error_message('incorrect_email', {'email' => $in{'new_alternative_email'}});
+	&do_log('notice', "do_record_email:incorrect email %s",$in{'new_alternative_email'});
+	return 'pref';
+    }
+
     my $new_user;
     
-   $user = &List::get_user_db($in{'new_alternative_email'});
-   $user->{'password'} ||= &tools::tmp_passwd($in{'new_alternative_email'});	
-   unless($in{'new_password'} eq $user->{'password'}){
-       &error_message('incorrect_passwd');
-       &wwslog('info','do_record_email: incorrect password for user %s', $in{'new_alternative_email'});
-       return 'pref';
-   }  
+    $user = &List::get_user_db($in{'new_alternative_email'});
+    $user->{'password'} ||= &tools::tmp_passwd($in{'new_alternative_email'});	
+    unless($in{'new_password'} eq $user->{'password'}){
+	&error_message('incorrect_passwd');
+	&wwslog('info','do_record_email: incorrect password for user %s', $in{'new_alternative_email'});
+	return 'pref';
+    }  
     
     ##To add this alternate email in the cookie sympa_altemails   
     $param->{'alt_emails'}{$in{'new_alternative_email'}} = 'classic';
