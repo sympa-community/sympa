@@ -80,7 +80,7 @@
 
   <TD ALIGN="left"><font color="--BG_COLOR--">Description</font></TD> 
   <TD ALIGN="center"><font color="--BG_COLOR--">Edit</font></TD> 
-  <TD ALIGN="center"><font color="--BG_COLOR--">Delete</font></D>
+  <TD ALIGN="center"><font color="--BG_COLOR--">Delete</font></TD>
   <TD ALIGN="center"><font color="--BG_COLOR--">Access</font></TD></TR>
       
   [IF empty]
