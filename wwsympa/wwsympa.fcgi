@@ -4157,7 +4157,8 @@ sub do_edit_list {
 		}
 		## Hash
 	    }elsif (ref ($pinfo->{$pname}{'format'}) eq 'HASH') {
-
+		
+		## Foreach Keys
 		foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
 
 		    next unless ($list->may_edit("$pname.$key",$param->{'user'}{'email'}) eq 'write');
@@ -4167,29 +4168,36 @@ sub do_edit_list {
 			    $changed{$pname} = 1; next;
 			}
 		    }else{
+			## Multiple param
 			if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~ /n$/) {
 
 			    if ($#{$p->[$i]{$key}} != $#{$new_p->[$i]{$key}}) {
 				$changed{$pname} = 1; next;
 			    }
+
+			    ## Multiple param, foreach entry
 			    foreach my $index (0..$#{$p->[$i]{$key}}) {
+				
 				if ($p->[$i]{$key}[$index] ne $new_p->[$i]{$key}[$index]) {
-				    unless ($new_p->[$i]{$key}[$index] =~ /^$pinfo->{$pname}{'format'}{$key}{'file_format'}$/) {
+				    
+				    if ($new_p->[$i]{$key}[$index] !~ /^$pinfo->{$pname}{'format'}{$key}{'file_format'}$/) {
 					push @syntax_error, $pname;
 				    }
 				    $changed{$pname} = 1; next;
 				}
 			    }
+
+			## Single Param
 			}else {
 			    if ($p->[$i]{$key} ne $new_p->[$i]{$key}) {
-				unless ($new_p->[$i]{$key} =~ /^$pinfo->{$pname}{'format'}{$key}{'file_format'}$/) {
+
+				## If empty and is primary key => delete entry
+				if ((! $new_p->[$i]{$key}) && ($pinfo->{$pname}{'format'}{$key}{'occurrence'} eq '1')) {
+				    splice @{$new_p}, $i, 1;
+				}elsif ($new_p->[$i]{$key} !~ /^$pinfo->{$pname}{'format'}{$key}{'file_format'}$/) {
 				    push @syntax_error, $pname;
 				}
 				
-				## If empty and is primary key => delete entry
-				if ((! $new_p->[$i]{$key}) && ($pinfo->{$pname}{'format'}{$key}{'occurrence'} eq '1')) {				
-				    splice @{$new_p}, $i, 1;
-				}
 				$changed{$pname} = 1; next;
 			    }
 			}
