@@ -46,6 +46,15 @@ my $wwsconf = {};
 my $conf_file = '--WWSCONFIG--';
 my $sympa_conf_file = '--CONFIG--';
 
+
+
+my $loop = 0;
+my $list;
+my $param = {};
+my $robot ;
+
+
+
 ## Load config 
 unless ($wwsconf = &wwslib::load_config($conf_file)) {
     &error_message('unable to load config file');
@@ -61,19 +70,13 @@ unless (&Conf::load( $sympa_conf_file )) {
 
 &mail::set_send_spool($Conf{'queue'});
 
-my $mime_types = &wwslib::load_mime_types();
-
 if ($wwsconf->{'use_fast_cgi'}) {
     require CGI::Fast;
 }else {
     require CGI;
 }
+my $mime_types = &wwslib::load_mime_types();
 
-
-my $loop = 0;
-my $list;
-my $param = {};
-my $robot ;
 
 # hash of all the description files already loaded
 # format :
@@ -313,12 +316,13 @@ my $pinfo = &List::_apply_defaults();
 my (%in, $query);
 
 ## Main loop
+
 while ($query = &new_loop()) {
 
     undef $param;
     undef $list;
     undef $robot;
-
+    
     &Language::SetLang($Language::default_lang);
 
     ## Get params in a hash
@@ -345,9 +349,9 @@ while ($query = &new_loop()) {
 
 
 
-    printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot,  Conf{'robots'}{$robot}: $Conf{'robots'}{$robot}\n";
-    printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, title :  $Conf{'robots'}{$robot}->{'title'}\n";
-    printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, listmaster :  $Conf{'robots'}{$robot}->{'listmasters'}\n";
+   # printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot,  Conf{'robots'}{$robot}: $Conf{'robots'}{$robot}\n";
+   #  printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, title :  $Conf{'robots'}{$robot}->{'title'}\n";
+   #  printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, listmaster :  $Conf{'robots'}{$robot}->{'listmasters'}\n";
 
 
 
@@ -412,7 +416,7 @@ while ($query = &new_loop()) {
     }
     
     ## Action
-    my $action = $in{'action'} ||  $wwsconf->{'default_home'};
+    my $action = $in{'action'} || $Conf{'robots'}{$robot}{'default_home'};
 #    $param->{'lang'} = $param->{'user'}{'lang'} || $Conf{'lang'};
     $param->{'remote_addr'} = $ENV{'REMOTE_ADDR'} ;
     $param->{'remote_host'} = $ENV{'REMOTE_HOST'};
@@ -428,8 +432,7 @@ while ($query = &new_loop()) {
 	    last;
 	}
 
-	# $param->{'host'} = $list->{'admin'}{'host'} || $Conf{'host'};
-	$param->{'host'} = $list->{'admin'}{'host'} || $robot;
+	$param->{'host'} = $list->{'domain'} || $robot;
 	$param->{'domain'} = $param->{'host'};
 	
 	## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
@@ -470,7 +473,7 @@ while ($query = &new_loop()) {
     $param->{'action_type'} = 'none' unless ($param->{'is_priv'});
 
     if ($param->{'list'}) {
-	$param->{'title'} = "$param->{'list'}\@$param->{'host'}";
+	$param->{'title'} = "$param->{'list'}\@$list->{'admin'}{'host'}";
     }else {
 	$param->{'title'} = $Conf{'robots'}{$robot}{'title'};
 	$param->{'title'} = $wwsconf->{'title'} unless $param->{'title'};
@@ -922,7 +925,7 @@ sub check_param_in {
     }
     
     ## listmaster has owner and editor privileges for the list
-    if (&List::is_listmaster($param->{'user'}{'email'}),$list->{'admin'}{'host'}) {
+    if (&List::is_listmaster($param->{'user'}{'email'}),$robot) {
 	$param->{'is_listmaster'} = 1;
     }
 
@@ -1408,7 +1411,7 @@ sub do_lists {
     my @lists;
     &wwslog('debug', 'do_lists(%s,%s)', $in{'topic'}, $in{'subtopic'});
 
-    my %topics = &List::load_topics();
+    my %topics = &List::load_topics($robot);
 
     if ($in{'topic'}) {
 	if ($in{'subtopic'}) {
@@ -2978,7 +2981,7 @@ sub do_editfile {
 	    }
 	}
     }else {
-	unless (&List::is_listmaster($param->{'user'}{'email'})) {
+	unless (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
 	    &error_message('missing_arg', {'argument' => 'list'});
 	    &wwslog('info','do_editfile: no list');
 	    return undef;
@@ -3029,7 +3032,7 @@ sub do_savefile {
 
 	$param->{'filepath'} = "$Conf{'home'}/$list->{'name'}/$in{'file'}";
     }else {
-	unless (&List::is_listmaster($param->{'user'}{'email'})) {
+	unless (&List::is_listmaster($param->{'user'}{'email'}),$robot) {
 	    &error_message('missing_arg', {'argument' => 'list'});
 	    &wwslog('info','do_savefile: no list');
 	    return undef;
@@ -3792,7 +3795,7 @@ sub do_create_list_request {
     }
 
     my %topics;
-    unless (%topics = &List::load_topics()) {
+    unless (%topics = &List::load_topics($robot)) {
 	&error_message('unable_to_load_list_of_topics');
     }
     $param->{'list_of_topics'} = \%topics;
@@ -3820,7 +3823,7 @@ sub do_create_list_request {
 sub do_home {
     &wwslog('debug', 'do_home');
 
-    my %topics = &List::load_topics();
+    my %topics = &List::load_topics($robot);
     
     my $total = 0;
     foreach my $t (sort {$topics{$a}{'order'} <=> $topics{$b}{'order'}} keys %topics) {
@@ -4609,7 +4612,7 @@ sub _prepare_edit_form {
 		push @topics, $topic->{'value'};
 	    }
 	    undef $p->{'value'};
-	    my %list_of_topics = &List::load_topics();
+	    my %list_of_topics = &List::load_topics($robot);
 	    foreach my $selected_topic (@topics) {
 		my $menu = {};
 		foreach my $topic (keys %list_of_topics) {
@@ -4804,7 +4807,7 @@ sub do_close_list {
     }      
     
     ## Dump subscribers
-    $list->_save_users_file("$list->{'name'}/subscribers.closed.dump");
+    $list->_save_users_file("$list->{'dir'}/$list->{'name'}/subscribers.closed.dump");
     
     ## Delete users
     my @users;
