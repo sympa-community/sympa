@@ -15,11 +15,11 @@
 </TD>
 
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+ <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
    <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
      <TR>
-       <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="center" VALIGN="top">
-         <FONT COLOR="--SELECTED_COLOR--" SIZE="-1">
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+         <FONT COLOR="[selected_color]" SIZE="-1">
          <A HREF="[base_url][path_cgi]/add_request/[list]" ><b>Añadir varios</b></A>
          </FONT>
        </TD>
@@ -29,11 +29,11 @@
 </TD>
 
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+ <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
    <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
      <TR>
-       <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="center" VALIGN="top">
-         <FONT COLOR="--SELECTED_COLOR--" SIZE="-1">
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+         <FONT COLOR="[selected_color]" SIZE="-1">
          <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', '¿Seguro que quiere enviar un recordatorio de suscripción a los [total] suscritos?'); return false;"><b>Recordatorio a todos los suscritos</b></A>
          </FONT>
        </TD>
@@ -103,13 +103,13 @@ La selección es demasiado genérica, no se puede mostrar
   </TABLE>
 
     <TABLE WIDTH="100%" BORDER="1">
-      <TR BGCOLOR="--LIGHT_COLOR--">
+      <TR BGCOLOR="[light_color]">
 	[IF is_owner]
 	   <TH><FONT SIZE="-1"><B>X</B></FONT></TH>
 	[ENDIF]
         [IF sortby=email]
-  	    <TH NOWRAP COLSPAN=2 BGCOLOR="--SELECTED_COLOR--">
-	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Email</b></FONT>
+  	    <TH NOWRAP COLSPAN=2 BGCOLOR="[selected_color]">
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Email</b></FONT>
 	[ELSE]
 	    <TH NOWRAP COLSPAN=2>
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/email" >
@@ -122,8 +122,8 @@ La selección es demasiado genérica, no se puede mostrar
 	  <TH><FONT SIZE="-1"><B>Recepción</B></FONT>
 	  </TH>
 	  [IF sortby=date]
-  	    <TH NOWRAP BGCOLOR="--SELECTED_COLOR--">
-	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Fecha sus.</b></FONT>
+  	    <TH NOWRAP BGCOLOR="[selected_color]">
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Fecha sus.</b></FONT>
 	  [ELSE]
 	    <TH NOWRAP><FONT SIZE="-1">
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/date" >
@@ -136,7 +136,7 @@ La selección es demasiado genérica, no se puede mostrar
       [FOREACH u IN members]
 
 	[IF dark=1]
-	  <TR BGCOLOR="--SHADED_COLOR--">
+	  <TR BGCOLOR="[shaded_color]">
 	[ELSE]
           <TR>
 	[ENDIF]
@@ -159,8 +159,8 @@ La selección es demasiado genérica, no se puede mostrar
  	        [u->email]
  	      [ENDIF]
 	  </FONT></TD>
-            <TD ALIGN="right"BGCOLOR="--ERROR_COLOR--"><FONT SIZE=-1>
-		<FONT COLOR="--BG_COLOR--"><B>erróneos</B></FONT>
+            <TD ALIGN="right"BGCOLOR="[error_color]"><FONT SIZE=-1>
+		<FONT COLOR="[bg_color]"><B>erróneos</B></FONT>
 	    </TD>
 
 	 [ELSE]
