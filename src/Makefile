@@ -100,7 +100,7 @@ installmod:
 	chmod 755 $(DESTDIR)$(ETCBINDIR)/scenari $(DESTDIR)$(ETCBINDIR)/templates
 	chmod 755 $(DESTDIR)$(ETCBINDIR)/create_list_templates
 	chmod 644 $(DESTDIR)$(ETCBINDIR)/*.conf $(DESTDIR)$(ETCBINDIR)/*.crt 
-	chmod 400 $(DESTDIR)$(ETCBINDIR)/ca-bundle.crt
+	chmod 600 $(DESTDIR)$(ETCBINDIR)/ca-bundle.crt
 	chmod 4755 $(DESTDIR)$(MAILERPROGDIR)/queue $(DESTDIR)$(MAILERPROGDIR)/bouncequeue
 	chmod 4750 $(DESTDIR)$(MAILERPROGDIR)/aliaswrapper
 
