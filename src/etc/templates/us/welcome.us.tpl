@@ -1,5 +1,5 @@
 From: [conf->email]@[conf->host]
-Subject: Welcome in list [list->name]
+Subject: Welcome to list [list->name]
 Mime-version: 1.0
 Content-Type: multipart/alternative; boundary="===Sympa==="
 
@@ -7,7 +7,7 @@ Content-Type: multipart/alternative; boundary="===Sympa==="
 Content-Type: text/plain; charset=iso-8859-1
 Content-transfer-encoding: 8bit
 
-Welcome in list [list->name]@[list->host].
+Welcome to list [list->name]@[list->host].
 Your subscription email is [user->email]
 [IF user->password]
 Your password : [user->password].
@@ -24,10 +24,10 @@ Content-transfer-encoding: 8bit
 
 <HTML>
 <HEAD>
-<TITLE>Welcome in list [list->name]@[list->host]</title>
+<TITLE>Welcome to list [list->name]@[list->host]</title>
 <BODY  BGCOLOR=#ffffff>
 
-<B>Welcome in list [list->name]@[list->host]. </B><BR>
+<B>Welcome to list [list->name]@[list->host]. </B><BR>
 Your subscription email is [user->email] 
 [IF user->password] 
 <BR>
