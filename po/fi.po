@@ -24,10 +24,16 @@ msgstr ""
 "#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
 
 #. (from_count)
-#: wwsympa/tt2/arcsearch.tt2:65
+#: wwsympa/tt2/arcsearch.tt2:63
 #, fuzzy
 msgid " %1 hits on message's From field"
 msgstr "osumaa viestin"
+
+#. (list_request_date)
+#: wwsympa/tt2/set_pending_list_request.tt2:17
+#, fuzzy
+msgid " on %1"
+msgstr "Vastaanottaja: %1"
 
 #. (conf.title,list)
 #: src/etc/tt2/sendpasswd.tt2:5
@@ -45,44 +51,55 @@ msgid "%1 / your environment"
 msgstr "%1 / asetuksesi"
 
 #. (error.path)
-#: wwsympa/tt2/error.tt2:104
+#: wwsympa/tt2/error.tt2:103
 msgid "%1 : No such file"
 msgstr "%1 : Tiedostoa ei olemassa"
 
 #. (error.path)
-#: wwsympa/tt2/error.tt2:101
+#: wwsympa/tt2/error.tt2:100
 msgid "%1 : No such file or directory"
 msgstr "%1 : Tiedosto tai hakemisto ei olemassa"
 
 #. (notice.action)
-#: wwsympa/tt2/notice.tt2:11
+#: wwsympa/tt2/notice.tt2:10
 msgid "%1 : action succeeded"
 msgstr "%1 : toiminto onnistui"
 
 #. (error.file)
-#: wwsympa/tt2/error.tt2:61
+#: wwsympa/tt2/error.tt2:60
 msgid "%1 : file not editable"
 msgstr "%1 : tiedosto ei ole muutettavissa"
 
 #. (error.name)
-#: wwsympa/tt2/error.tt2:119
+#: wwsympa/tt2/error.tt2:118
 msgid "%1 : incorrect name"
 msgstr "%1 : väärä nimi"
 
 #. (error.action)
-#: wwsympa/tt2/error.tt2:7
+#: wwsympa/tt2/error.tt2:6
 msgid "%1 : unknown action"
 msgstr "%1 : tuntematon toiminto"
 
 #. (error.list)
-#: wwsympa/tt2/error.tt2:10
+#: wwsympa/tt2/error.tt2:9
 msgid "%1 : unknown list"
 msgstr "%1 : tuntamaton lista"
 
 #. (error.action)
-#: wwsympa/tt2/error.tt2:43
+#: wwsympa/tt2/error.tt2:42
 msgid "%1 : you are not allowed to perform this action"
 msgstr "%1 : sinulla ei ole oikeuksia suorittaa tätä toimenpidettä"
+
+#. (list.name,date)
+#: src/etc/tt2/digest_plain.tt2:4 src/etc/tt2/digest_plain.tt2:8
+#, fuzzy
+msgid "%1 Digest %2"
+msgstr "Kooste"
+
+#. (notice.total)
+#: wwsympa/tt2/notice.tt2:37
+msgid "%1 addresses have been subscribed"
+msgstr ""
 
 #. (list.name)
 #: src/etc/tt2/list_created.tt2:9
@@ -98,25 +115,25 @@ msgid ""
 msgstr ""
 
 #. (body_count)
-#: wwsympa/tt2/arcsearch.tt2:57
+#: wwsympa/tt2/arcsearch.tt2:55
 #, fuzzy
 msgid "%1 hits on message's Body"
 msgstr "osumaa viestin"
 
 #. (date_count)
-#: wwsympa/tt2/arcsearch.tt2:69
+#: wwsympa/tt2/arcsearch.tt2:67
 #, fuzzy
 msgid "%1 hits on message's Date field"
 msgstr "osumaa viestin"
 
 #. (subj_count)
-#: wwsympa/tt2/arcsearch.tt2:61
+#: wwsympa/tt2/arcsearch.tt2:59
 #, fuzzy
 msgid "%1 hits on message's Subject field"
 msgstr "osumaa viestin"
 
 #. (error.email,error.list)
-#: wwsympa/tt2/error.tt2:67
+#: wwsympa/tt2/error.tt2:66
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1 on jo tilaajana listalla %2"
 
@@ -126,32 +143,22 @@ msgid "%1 mailing list creation"
 msgstr "%1 listan luonti"
 
 #. (searched,num)
-#: wwsympa/tt2/arcsearch.tt2:54
+#: wwsympa/tt2/arcsearch.tt2:52
 msgid "%1 messages selected out of %2"
 msgstr "%1 viestiä valittuna %2 viestistä..."
 
 #. (occurrence)
-#: wwsympa/tt2/review.tt2:60
+#: wwsympa/tt2/lists.tt2:4 wwsympa/tt2/review.tt2:60
 msgid "%1 occurrence(s) found"
 msgstr "%1 osumaa löytyi"
 
-#. (occurrence)
-#: wwsympa/tt2/lists.tt2:4
-msgid "%1 occurrences found"
-msgstr "%1 osumaa löytynyt"
-
 #. (notice.total)
-#: wwsympa/tt2/notice.tt2:8
+#: wwsympa/tt2/notice.tt2:7
 msgid "%1 subscribers added"
 msgstr "%1 tilaajaa lisätty"
 
-#. (notice.path)
-#: wwsympa/tt2/notice.tt2:17
-msgid "%1 successfully uploaded!"
-msgstr "%1 ladattu onnistuneesti!"
-
 #. (error.action)
-#: wwsympa/tt2/error.tt2:73
+#: wwsympa/tt2/error.tt2:72
 msgid "%1: action failed"
 msgstr "%1: toimepide epäonnistui"
 
@@ -172,25 +179,30 @@ msgid "%2@%3 archives use %4% of allowed disk quota."
 msgstr "Lista \"%1\" varoitus : arkisto %2% täynnä"
 
 # nlsref 6,52
-#: src/Commands.pm:2152
+#: src/Commands.pm:2137
 msgid "%s did not receive confirmation for the following addresses :\n"
 msgstr "%s ei vastaanottanut vahvistusta seuraaville osoitteille :\n"
 
 # nlsref 6,91
-#: src/Commands.pm:1548
+#: src/Commands.pm:1540
 msgid "%s mailing list does not provide subscriber preferences.\n"
 msgstr "%s postituslista ei salli tilaajan asetuksiin muutoksia.\n"
 
 # nlsref 6,69
-#: src/Commands.pm:2009
+#: src/Commands.pm:1994
 msgid "%s posted your expiration message to the following addresses :\n"
 msgstr "%s lähetti tilauksen päättymisviestisi seuraaviin osoitteisiin :\n"
 
-#: wwsympa/tt2/arcsearch.tt2:19
+#: wwsympa/tt2/arcsearch.tt2:18
 msgid "(All of this words,"
 msgstr "(Kaikki sanat,"
 
-#: wwsympa/tt2/arcsearch.tt2:21
+#: wwsympa/tt2/help_editlist.tt2:17
+msgid ""
+"(Default value: reception mail,notice,digest,digestplain,summary,nomail)"
+msgstr ""
+
+#: wwsympa/tt2/arcsearch.tt2:20
 msgid "(Each of this words,"
 msgstr "(Jokainen sanoista,"
 
@@ -199,7 +211,7 @@ msgstr "(Jokainen sanoista,"
 msgid "(Subject of your mail : %1)"
 msgstr "Tarkista [% list.name %] listan käyttö :"
 
-#: wwsympa/tt2/arcsearch.tt2:17
+#: wwsympa/tt2/arcsearch.tt2:16
 msgid "(This sentence,"
 msgstr "(Tämä lause,"
 
@@ -207,79 +219,74 @@ msgstr "(Tämä lause,"
 msgid "), provide your email address and associated password."
 msgstr "), anna email osoitteesi ja salasana."
 
+#: src/PlainDigest.pm:238
+msgid ""
+"** Warning: Message part originally used character set %s\n"
+"    Some characters may be lost or incorrect **\n"
+"\n"
+msgstr ""
+
 #: src/etc/tt2/your_infected_msg.tt2:4
 msgid "***** V I R U S    A L E R T *****"
 msgstr ""
 
-#: wwsympa/tt2/remove_arc.tt2:14
-msgid ""
-", please refer to listmaster with\n"
-"complete URL of the incriminated message.\n"
-msgstr ""
-
-#: wwsympa/tt2/remove_arc.tt2:9
-msgid ""
-", probably this message\n"
-"was received without Message-Id. Please refer to listmaster with\n"
-"complete URL of the incriminated message\n"
-msgstr ""
-
 # nlsref 5,4
-#: src/tools.pl:116
+#: src/tools.pl:135
 msgid "------ End of suspected message ------\n"
 msgstr "------ Epäselvän viestin loppu ------\n"
 
-#: wwsympa/tt2/create_list_request.tt2:48
+#: src/PlainDigest.pm:258
+msgid "-----End of Delivery Status Report-----\n"
+msgstr ""
+
+# nlsref 5,4
+#: src/PlainDigest.pm:199
+#, fuzzy
+msgid ""
+"-----End of original message from %s-----\n"
+"\n"
+msgstr "------ Epäselvän viestin loppu ------\n"
+
+#: wwsympa/tt2/create_list_request.tt2:47
 msgid "--Select a topic--"
 msgstr "--Valitse aihe--"
 
-#: wwsympa/tt2/remove_arc.tt2:5
-msgid ""
-". The message will be deleted as soon\n"
-"as possible. This task may be down in a few minutes.\n"
-msgstr ""
-
 # nlsref 17,6
-#: wwsympa/wwslib.pm:50
+#: wwsympa/wwslib.pm:57
 msgid "1 day"
 msgstr "1 päivä"
 
 # nlsref 17,4
-#: wwsympa/wwslib.pm:48
+#: wwsympa/wwslib.pm:55
 msgid "1 hour"
 msgstr "1 tunti"
 
 # nlsref 17,7
-#: wwsympa/wwslib.pm:51
+#: wwsympa/wwslib.pm:58
 msgid "1 week"
 msgstr "1 viikko"
 
-# nlsref 12,1
-#: src/Commands.pm:1766 src/mail.pm:126 src/mail.pm:222 src/mail.pm:88
-#: src/sympa.pl:1052 src/sympa.pl:1295 src/sympa.pl:738 src/sympa.pl:970
-#: src/tools.pl:110
-msgid "1.0"
-msgstr "1.0"
-
 # nlsref 17,2
-#: wwsympa/wwslib.pm:46
+#: wwsympa/wwslib.pm:53
 msgid "10 minutes"
 msgstr "10 minuuttia"
 
 # nlsref 17,3
-#: wwsympa/wwslib.pm:47
+#: wwsympa/wwslib.pm:54
 msgid "30 minutes"
 msgstr "30 minuuttia"
 
 # nlsref 17,5
-#: wwsympa/wwslib.pm:49
+#: wwsympa/wwslib.pm:56
 msgid "6 hours"
 msgstr "6 tuntia"
 
 # nlsref 12,3
-#: src/Commands.pm:1768 src/mail.pm:128 src/mail.pm:224 src/mail.pm:90
-#: src/sympa.pl:1054 src/sympa.pl:1298 src/sympa.pl:741 src/sympa.pl:972
-#: src/tools.pl:112
+#: src/Commands.pm:1752 src/etc/tt2/digest.tt2:10 src/etc/tt2/digest.tt2:34
+#: src/etc/tt2/digest_plain.tt2:6 src/etc/tt2/moderate.tt2:10
+#: src/etc/tt2/urlized_part.tt2:3 src/mail.pm:128 src/mail.pm:229
+#: src/mail.pm:90 src/sympa.pl:1062 src/sympa.pl:1313 src/sympa.pl:778
+#: src/sympa.pl:989 src/tools.pl:131
 msgid "7bit"
 msgstr "8bit"
 
@@ -287,7 +294,7 @@ msgstr "8bit"
 msgid ": Login / Logout from WWSympa."
 msgstr ": Kirjautuminen/Kirjautuminen ulos WWWSympassa."
 
-#: wwsympa/tt2/error.tt2:22
+#: wwsympa/tt2/error.tt2:21
 msgid ": bad listname"
 msgstr ": väärä listan nimi"
 
@@ -300,7 +307,7 @@ msgstr ": hakemisto listoista jotka ovat saatavilla tällä palvelimella"
 msgid ": user preferences. This is proposed to identified users only."
 msgstr ": käyttäjän asetukset. Tämä on vain tunnistetuille käyttäjille."
 
-#: wwsympa/tt2/error.tt2:28
+#: wwsympa/tt2/error.tt2:27
 msgid ": user unknown"
 msgstr ": käyttäjä tuntematon"
 
@@ -344,7 +351,8 @@ msgstr ""
 
 #: wwsympa/tt2/help_admin.tt2:9
 #, fuzzy
-msgid "<b>Moderate</b> : reject and accept messages for distribution."
+msgid ""
+"<b>Moderate</b> : reject and accept messages and documents for distribution."
 msgstr ": tilaajien hallinta, lisäys, poisto, haku, palaavat viestit, jne..."
 
 #: wwsympa/tt2/help_admin.tt2:4
@@ -361,15 +369,16 @@ msgid ""
 "etc..."
 msgstr ": tilaajien hallinta, lisäys, poisto, haku, palaavat viestit, jne..."
 
-#: src/etc/tt2/helpfile.tt2:44
-msgid "<list> archive file list"
-msgstr "<list> arkistojen listaus"
+#: wwsympa/tt2/help_editlist.tt2:18
+msgid ""
+"<i>modelist</i> is a list of modes (mail, notice, digest, digestplain, "
+"summary, nomail), separated by commas. Only these modes will be allowed for "
+"the subscribers of this list. If a subscriber has a reception mode not in "
+"the list, sympa uses the mode specified in the default_user_options "
+"paragraph."
+msgstr ""
 
-#: src/etc/tt2/helpfile.tt2:39
-msgid "<list> reception in normal mode"
-msgstr "<list> vastaanotto normaali tilassa"
-
-#: wwsympa/tt2/create_list_request.tt2:72
+#: wwsympa/tt2/create_list_request.tt2:69
 msgid "A few lines describing the list"
 msgstr "Listan kuvaus muutamalla rivillä"
 
@@ -377,7 +386,11 @@ msgstr "Listan kuvaus muutamalla rivillä"
 msgid "A virus in your email"
 msgstr "Virus viestissäsi"
 
-#: wwsympa/tt2/serveradmin.tt2:159
+#: src/etc/tt2/helpfile.tt2:47
+msgid "ADD <list> user@host Full name  * To add a user to a list"
+msgstr ""
+
+#: wwsympa/tt2/serveradmin.tt2:162
 msgid "ALL"
 msgstr "KAIKKI"
 
@@ -385,21 +398,21 @@ msgstr "KAIKKI"
 msgid "Access"
 msgstr "Oikeudet"
 
-#. (path)
+#. (visible_path)
 #: wwsympa/tt2/d_control.tt2:3
 msgid "Access rights for the document %1"
 msgstr "Dokumentin saantioikeudet %1"
 
 # nlsref 16,1
-#: src/List.pm:282
+#: src/List.pm:274
 msgid "Account"
 msgstr "Tili"
 
-#: wwsympa/tt2/d_read.tt2:266
+#: wwsympa/tt2/d_read.tt2:292
 msgid "Add"
 msgstr "Lisää"
 
-#: wwsympa/tt2/d_read.tt2:259
+#: wwsympa/tt2/d_read.tt2:285
 msgid "Add a bookmark"
 msgstr "Lisää kirjanmerkki"
 
@@ -412,11 +425,11 @@ msgid "Add subscribers"
 msgstr "Lisää tilaajia"
 
 #. (error.email)
-#: wwsympa/tt2/error.tt2:19
+#: wwsympa/tt2/error.tt2:18
 msgid "Address \"%1\" is incorrect"
 msgstr "Osoite \"%1\" on väärä"
 
-#: wwsympa/tt2/arc.tt2:20
+#: wwsympa/tt2/arc.tt2:21
 msgid "Advanced search"
 msgstr "Erikois haku"
 
@@ -429,12 +442,12 @@ msgid "Aliases you should install in your mailer"
 msgstr "Aliakset jotka sinun tulee asentaa postiohjelmaan"
 
 #. (conf.sympa)
-#: src/etc/tt2/helpfile.tt2:11
+#: src/etc/tt2/helpfile.tt2:10
 msgid "All commands must be sent to the electronic address %1"
 msgstr ""
 
 # nlsref 4,28
-#: src/sympa.pl:1321
+#: src/sympa.pl:1336
 msgid ""
 "Among subscriber of list %s since %d days, %d didn't confirm there "
 "subscription.\n"
@@ -450,7 +463,7 @@ msgid ""
 msgstr ""
 
 # nlsref 6,56
-#: src/Commands.pm:2027
+#: src/Commands.pm:2012
 msgid ""
 "An expiration process for list %s has been started. This process\n"
 "will end in %d days. You will then receive the list of subscribers \n"
@@ -464,7 +477,7 @@ msgstr ""
 "Voit sitten poistaa nuo tilaajat itse DEL-komennon avulla.\n"
 
 # nlsref 16,3
-#: src/List.pm:290
+#: src/List.pm:282
 msgid "Anonymous sender"
 msgstr "Anonyymi lähettäjä"
 
@@ -480,23 +493,37 @@ msgstr ""
 msgid "Apply"
 msgstr "Toteuta"
 
-#: wwsympa/tt2/list_menu.tt2:309 wwsympa/tt2/list_menu.tt2:312
+#: wwsympa/tt2/list_menu.tt2:298 wwsympa/tt2/list_menu.tt2:302
+#: wwsympa/tt2/list_menu.tt2:306 wwsympa/tt2/list_menu.tt2:310
+#: wwsympa/tt2/list_menu.tt2:317 wwsympa/tt2/list_menu.tt2:320
 msgid "Archive"
 msgstr "Arkisto"
 
+# #-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#
+# nlsref 16,7
+#: wwsympa/tt2/arc_manage.tt2:3
+#, fuzzy
+msgid "Archive Management"
+msgstr ""
+"#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
+"Hyljättyjen viestien hallinta\n"
+"#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
+"Väärien osoitteiden hallinta"
+
 # nlsref 16,212
-#: src/List.pm:309
+#: src/List.pm:301
 msgid "Archive encrypted mails as cleartext"
 msgstr ""
 
-#: src/etc/mhonarc-ressources:111 src/etc/mhonarc-ressources:76
-msgid "Archive powered by"
-msgstr ""
-
-#: wwsympa/tt2/admin_menu.tt2:144 wwsympa/tt2/edit_list_request.tt2:8
-#: wwsympa/tt2/serveradmin.tt2:143
+#: wwsympa/tt2/admin_menu.tt2:151 wwsympa/tt2/edit_list_request.tt2:8
+#: wwsympa/tt2/serveradmin.tt2:146
 msgid "Archives"
 msgstr "Arkistot"
+
+#: wwsympa/tt2/arc_manage.tt2:7
+#, fuzzy
+msgid "Archives Selection:"
+msgstr "Toggle Selection"
 
 #. (list)
 #: wwsympa/tt2/admin_menu.tt2:122 wwsympa/tt2/admin_menu.tt2:124
@@ -509,31 +536,65 @@ msgid "Article to be approved for %1"
 msgstr "Viesti hyväksyntää varten listalle %1"
 
 # nlsref 16,31
-#: src/List.pm:458
+#: src/List.pm:492
 msgid "Attachment type"
 msgstr "Liitteen tyyppi"
 
-#: wwsympa/tt2/scenario_test.tt2:61
+#: wwsympa/tt2/scenario_test.tt2:59
 msgid "Auth method"
 msgstr "Tunnistus tapa"
 
 # nlsref 8,16
-#: src/List.pm:1877
+#: src/List.pm:2026
 msgid "Authentication requested"
 msgstr "Tarvitaan käyttöoikeuksien vahvistus"
 
-#: wwsympa/tt2/d_read.tt2:42 wwsympa/tt2/modindex.tt2:15
+#: wwsympa/tt2/d_read.tt2:42 wwsympa/tt2/modindex.tt2:18
+#: wwsympa/tt2/modindex.tt2:70
 msgid "Author"
 msgstr "Lähettäjä"
 
-#: src/etc/tt2/helpfile.tt2:19
+#: src/etc/tt2/helpfile.tt2:14
 msgid "Available commands are:"
 msgstr ""
 
 # nlsref 16,88
-#: src/List.pm:319
+#: src/List.pm:311
 msgid "Available subscription options"
 msgstr "Saatavilla olevat tilaus asetukset"
+
+#: wwsympa/tt2/arcsearch.tt2:114
+msgid ""
+"Based on <i><A HREF=\"http://www.mhonarc.org/contrib/marc-search/\">Marc-"
+"Search</a></i>, search engine of MHonArc archives"
+msgstr ""
+
+#. (total,list.name)
+#: src/etc/tt2/listmaster_notification.tt2:40
+#: src/etc/tt2/listowner_notification.tt2:22
+msgid ""
+"Because we received MANY non-delivery reports, the %1 subscribers listed "
+"below have been\n"
+"notified that they might be removed from list %2:\n"
+msgstr ""
+
+#. (total,list.name)
+#: src/etc/tt2/listmaster_notification.tt2:43
+#: src/etc/tt2/listowner_notification.tt2:25
+msgid ""
+"Because we received MANY non-delivery reports, the %1 subscribers listed "
+"below have been\n"
+"removed from list %2:\n"
+msgstr ""
+
+#. (total,list.name)
+#: src/etc/tt2/listmaster_notification.tt2:46
+#: src/etc/tt2/listowner_notification.tt2:28
+msgid ""
+"Because we received MANY non-delivery reports, the %1 subscribers listed "
+"below have been\n"
+"selected by Sympa as severe bouncing addresses:\n"
+msgstr ""
 
 #: wwsympa/tt2/arcsearch_form.tt2:66
 msgid "Body"
@@ -543,12 +604,12 @@ msgstr "Sisältö"
 msgid "Bookmark URL"
 msgstr "Kirjanmerkin URL"
 
-#: wwsympa/tt2/admin_menu.tt2:148
+#: wwsympa/tt2/admin_menu.tt2:155
 msgid "Bounce Settings"
 msgstr "><b>Omat asetukset</b></FONT>"
 
 # nlsref 8,27
-#: src/List.pm:1686
+#: src/List.pm:1760
 msgid ""
 "Bounce rate in list %s is %d%%.\n"
 "\n"
@@ -561,18 +622,23 @@ msgstr ""
 "joille lähetetyt viestit ovat palanneet takaisin : \n"
 "%s/reviewbouncing/%s"
 
-#: wwsympa/tt2/list_menu.tt2:107
+#: wwsympa/tt2/list_menu.tt2:105
 msgid "Bounced email rate:"
 msgstr "Palautuneiden viestien määrä:"
 
+#: wwsympa/tt2/admin_menu.tt2:82 wwsympa/tt2/admin_menu.tt2:88
+#, fuzzy
+msgid "Bounces"
+msgstr "><b>Omat asetukset</b></FONT>"
+
 #. (current_subscriber.bounce_count)
-#: wwsympa/tt2/editsubscriber.tt2:52
+#: wwsympa/tt2/editsubscriber.tt2:49
 msgid "Bounces count : %1"
 msgstr "Palanneiden viestien määrä : %1"
 
 # #-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,7
-#: src/List.pm:338 wwsympa/tt2/edit_list_request.tt2:9
+#: src/List.pm:330 wwsympa/tt2/edit_list_request.tt2:9
 #, fuzzy
 msgid "Bounces management"
 msgstr ""
@@ -581,22 +647,38 @@ msgstr ""
 "#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
 "Väärien osoitteiden hallinta"
 
-#: wwsympa/tt2/editsubscriber.tt2:48
+#: wwsympa/tt2/editsubscriber.tt2:45
 msgid "Bouncing address"
 msgstr "Palatut viestit osoitteeseen"
 
+#: src/etc/tt2/helpfile.tt2:40
+msgid ""
+"CONFIRM <key>               * Confirmation for sending a message (depending "
+"on the list's configuration)"
+msgstr ""
+
+#: wwsympa/tt2/d_install_shared.tt2:14
+msgid "Cancel"
+msgstr ""
+
 #. (error.path)
-#: wwsympa/tt2/error.tt2:134
+#: wwsympa/tt2/error.tt2:133
+#, fuzzy
+msgid "Cannot create %1"
+msgstr "Hakemistoa ei voida luoda %1"
+
+#. (error.path)
+#: wwsympa/tt2/error.tt2:136
 msgid "Cannot create directory %1"
 msgstr "Hakemistoa ei voida luoda %1"
 
 #. (error.path)
-#: wwsympa/tt2/error.tt2:128
+#: wwsympa/tt2/error.tt2:127
 msgid "Cannot overwrite file %1"
 msgstr "Tiedostoa ei voida tallentaa %1"
 
 #. (error.path)
-#: wwsympa/tt2/error.tt2:131
+#: wwsympa/tt2/error.tt2:130
 msgid "Cannot upload file %1"
 msgstr "Tiedostoa ei voida ladata(upload) %1"
 
@@ -616,11 +698,11 @@ msgstr "Sertifikaatin myöntäjä"
 msgid "Change my email address"
 msgstr "Muuta email osoitteeni"
 
-#: wwsympa/tt2/pref.tt2:52
+#: wwsympa/tt2/pref.tt2:50
 msgid "Changing your email address"
 msgstr "Email osoitteen muuttaminen"
 
-#: src/etc/tt2/sendpasswd.tt2:32 wwsympa/tt2/pref.tt2:56
+#: src/etc/tt2/sendpasswd.tt2:32 wwsympa/tt2/pref.tt2:54
 msgid "Changing your password"
 msgstr "Salasanan muuttaminen"
 
@@ -652,10 +734,10 @@ msgid ""
 "\tpassword. This will confirm your subscription to list %1\n"
 msgstr ""
 
-#: src/etc/mhonarc-ressources:134 src/etc/mhonarc-ressources:298
-#: src/etc/mhonarc-ressources:58
-msgid "Chronological"
-msgstr ""
+#: wwsympa/tt2/loginbanner.tt2:73
+#, fuzzy
+msgid "Choose your authentication server"
+msgstr "Kun tunnistaudut("
 
 #: wwsympa/tt2/show_cert.tt2:11
 msgid "Cipher key size used"
@@ -666,27 +748,27 @@ msgstr "Käytetyn salatekstiavaimen koko"
 msgid "Close it"
 msgstr "Suljetut listat"
 
-#: wwsympa/tt2/get_closed_lists.tt2:6 wwsympa/tt2/serveradmin.tt2:63
+#: wwsympa/tt2/get_closed_lists.tt2:6 wwsympa/tt2/serveradmin.tt2:68
 msgid "Closed lists"
 msgstr "Suljetut listat"
 
 # nlsref 4,18
-#: src/Commands.pm:135
+#: src/Commands.pm:131
 msgid "Command 'quit' found : ignoring end of message.\n"
 msgstr "Käskyä 'quit' ei löytynyt : viestin loppuosasta ei välitetä.\n"
 
 # nlsref 4,19
-#: src/sympa.pl:1177 src/sympa.pl:1208
+#: src/sympa.pl:1192 src/sympa.pl:1223
 msgid "Command not understood: ignoring end of message.\n"
 msgstr "Käskyä ei ymmärretty : viestin loppuosasta ei välitetä.\n"
 
 # nlsref 6,13
-#: src/Commands.pm:1209 src/Commands.pm:1885 src/Commands.pm:818
+#: src/Commands.pm:1201 src/Commands.pm:1870 src/Commands.pm:813
 msgid "Command syntax error.\n"
 msgstr "Syntaksivirhe komennossa.\n"
 
 #. (error.email)
-#: wwsympa/tt2/error.tt2:95
+#: wwsympa/tt2/error.tt2:94
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr ""
 "Asetustiedostoa on muutettu %1 toimesta. Ei voida ottaa käyttöön muutoksia."
@@ -695,61 +777,59 @@ msgstr ""
 msgid "Configuration file"
 msgstr "Asetus tiedosto"
 
-#: wwsympa/tt2/notice.tt2:14
+#: wwsympa/tt2/notice.tt2:13
 msgid "Configuration file has been updated"
 msgstr "Asetustiedosto on päivitetty"
 
-#: src/etc/tt2/helpfile.tt2:49
-msgid ""
-"Confirmation for sending a message (depending\n"
-"                               on the list's configuration)\n"
+#: wwsympa/tt2/d_install_shared.tt2:13
+msgid "Confirm"
 msgstr ""
 
-#: wwsympa/tt2/pref.tt2:32
+#: wwsympa/tt2/pref.tt2:31
 msgid "Connexion expiration period"
 msgstr "Yhteyden voimassaoloaika"
 
-#: wwsympa/tt2/arcsearch.tt2:111
+#: wwsympa/tt2/arcsearch.tt2:108
 msgid "Continue search"
 msgstr "Jatka hakua"
 
 #. (error.list)
-#: wwsympa/tt2/error.tt2:143
+#: wwsympa/tt2/error.tt2:145
 msgid "Could not change email for list %1"
 msgstr "Email osoitteen muuttaminen listaan %1 epäonnistui"
 
 #. (error.list)
-#: wwsympa/tt2/error.tt2:151
+#: wwsympa/tt2/error.tt2:153
 msgid ""
 "Could not change your subscription address for the list '%1%'\n"
 "because you are not allowed to unsubscribe.\n"
 msgstr ""
 
 #. (error.list)
-#: wwsympa/tt2/error.tt2:147
+#: wwsympa/tt2/error.tt2:149
 msgid ""
 "Could not change your subscription address for the list '%1'\n"
 "because your new address is not allowed to subscribe.\n"
 msgstr ""
 
-#: wwsympa/tt2/admin_menu.tt2:97
+#: wwsympa/tt2/admin_menu.tt2:97 wwsympa/tt2/admin_menu.tt2:99
 msgid "Create Shared"
 msgstr ""
 
-#: wwsympa/tt2/d_read.tt2:241 wwsympa/tt2/d_read.tt2:246
+#: wwsympa/tt2/d_read.tt2:267 wwsympa/tt2/d_read.tt2:272
 msgid "Create a new file"
 msgstr "Luo uusi tiedosto"
 
-#. (path)
-#: wwsympa/tt2/d_read.tt2:220
+#. (visible_path)
+#: wwsympa/tt2/d_read.tt2:246
 msgid "Create a new folder inside the folder %1"
 msgstr "Luo uusi kansio hakemiston %1 sisään"
 
-#: wwsympa/tt2/d_read.tt2:222
+#: wwsympa/tt2/d_read.tt2:248
 msgid "Create a new folder inside the folder SHARED"
 msgstr "Luo uusi hakemiston JAETTU sisään"
 
-#: wwsympa/tt2/d_read.tt2:228
+#: wwsympa/tt2/d_read.tt2:254
 msgid "Create a new subdirectory"
 msgstr "Luo uusi alihakemisto"
 
@@ -757,12 +837,12 @@ msgstr "Luo uusi alihakemisto"
 msgid "Create list"
 msgstr "Luo lista"
 
-#: wwsympa/tt2/get_latest_lists.tt2:6
+#: wwsympa/tt2/get_inactive_lists.tt2:6 wwsympa/tt2/get_latest_lists.tt2:6
 msgid "Creation date"
 msgstr "Luonti pvm"
 
 # nlsref 16,12
-#: src/List.pm:369
+#: src/List.pm:403
 msgid "Creation of the list"
 msgstr "Listan luominen"
 
@@ -771,11 +851,11 @@ msgid "Current password :"
 msgstr "Nykyinen salasana :"
 
 # nlsref 16,16
-#: src/List.pm:376
+#: src/List.pm:410
 msgid "Custom header field"
 msgstr "Mukautettu otsikko kenttä"
 
-#: wwsympa/tt2/serveradmin.tt2:132
+#: wwsympa/tt2/serveradmin.tt2:135
 msgid "Customize templates"
 msgstr "Muuta malleja"
 
@@ -783,11 +863,21 @@ msgstr "Muuta malleja"
 msgid "Customizing"
 msgstr "Hallitse"
 
-#: wwsympa/tt2/admin_menu.tt2:158
+#: src/etc/tt2/helpfile.tt2:48
+#, fuzzy
+msgid "DEL <list> user@host            * To delete a user from a list"
+msgstr "Poistaaksesi tilaajan listalta"
+
+#: src/etc/tt2/helpfile.tt2:55
+#, fuzzy
+msgid "DISTribute <list> <key>        * Moderation: to validate a message"
+msgstr "Hallinta: hyväksy viesti"
+
+#: wwsympa/tt2/admin_menu.tt2:165
 msgid "Data Source"
 msgstr "size=\"-1\"><b>Omat asetukset</b"
 
-#: wwsympa/tt2/error.tt2:125
+#: wwsympa/tt2/error.tt2:124
 msgid "Data have changed on disk. Cannot apply your changes"
 msgstr "Data on muuttunut levyllä. Muutoksia ei voida ottaa käyttöön."
 
@@ -795,13 +885,13 @@ msgstr "Data on muuttunut levyllä. Muutoksia ei voida ottaa käyttöön."
 msgid "Data sources setup"
 msgstr "Data lähteiden asetukset"
 
-#: wwsympa/tt2/arcsearch_form.tt2:64 wwsympa/tt2/modindex.tt2:14
-#: wwsympa/tt2/subindex.tt2:11
+#: wwsympa/tt2/arcsearch_form.tt2:64 wwsympa/tt2/modindex.tt2:17
+#: wwsympa/tt2/modindex.tt2:69 wwsympa/tt2/subindex.tt2:11
 msgid "Date"
 msgstr "Pvm"
 
 # nlsref 8,25
-#: src/List.pm:1679
+#: src/List.pm:1753
 msgid ""
 "Dear owner of list %s,\n"
 "\n"
@@ -820,25 +910,53 @@ msgstr ""
 "\n"
 "DEL %s %s\n"
 
+#: wwsympa/tt2/help_editlist.tt2:131 wwsympa/tt2/help_editlist.tt2:138
+#: wwsympa/tt2/help_editlist.tt2:31 wwsympa/tt2/help_editlist.tt2:41
+#: wwsympa/tt2/help_editlist.tt2:44 wwsympa/tt2/help_editlist.tt2:47
+#: wwsympa/tt2/help_editlist.tt2:57 wwsympa/tt2/help_editlist.tt2:60
+#: wwsympa/tt2/help_editlist.tt2:63
+msgid "Default value:"
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:27
+msgid "Default value: bounce_halt_rate robot parameter"
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:24
+msgid "Default value: bounce_warn_rate robot parameter"
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:170
+msgid "Defines who can access the web archive for the list."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:82
+msgid ""
+"Definition of digest mode. If this parameter is present, subscribers can "
+"select the option of receiving messages in multipart/digest MIME format, or "
+"as a plain text digest. Messages are then grouped together, and compilations "
+"of messages are sent to subscribers in accordance with the rhythm selected "
+"with this parameter."
+msgstr ""
+
 #: wwsympa/tt2/d_read.tt2:88
 msgid "Delete"
 msgstr "Poista"
+
+#: wwsympa/tt2/arc_manage.tt2:20
+#, fuzzy
+msgid "Delete Selected Month(s)"
+msgstr "Poista valitut tilaajat"
 
 #: wwsympa/tt2/admin_menu.tt2:106
 msgid "Delete Shared"
 msgstr ""
 
-#: wwsympa/tt2/review.tt2:78 wwsympa/tt2/review.tt2:80
+#: wwsympa/tt2/review.tt2:264 wwsympa/tt2/review.tt2:78
+#: wwsympa/tt2/review.tt2:80 wwsympa/tt2/reviewbouncing.tt2:106
+#: wwsympa/tt2/reviewbouncing.tt2:30
 msgid "Delete selected email addresses"
 msgstr "Poista valitut email osoitteet"
-
-#: wwsympa/tt2/reviewbouncing.tt2:115
-msgid "Delete selected subscribers"
-msgstr "Poista valitut käyttäjät"
-
-#: wwsympa/tt2/reviewbouncing.tt2:30
-msgid "Delete selected users"
-msgstr "Poista valitut tilaajat"
 
 #: wwsympa/tt2/help_editfile.tt2:12
 msgid ""
@@ -847,12 +965,12 @@ msgid ""
 "Quiet button.\n"
 msgstr ""
 
-#. (path)
+#. (visible_path)
 #: wwsympa/tt2/d_editfile.tt2:47
 msgid "Describe the directory %1"
 msgstr "Kuvaa hakemisto %1"
 
-#. (path)
+#. (visible_path)
 #: wwsympa/tt2/d_editfile.tt2:49
 msgid "Describe the file %1"
 msgstr "Kuvaa tiedosto %1"
@@ -864,7 +982,7 @@ msgstr "Kuvaa tiedosto %1"
 msgid "Description : %1"
 msgstr "Kuvaus : %1"
 
-#: wwsympa/tt2/create_list_request.tt2:70
+#: wwsympa/tt2/create_list_request.tt2:67
 msgid "Description:"
 msgstr "Kuvaus:"
 
@@ -872,61 +990,57 @@ msgstr "Kuvaus:"
 msgid "Digest"
 msgstr "Kooste"
 
+#. (digest)
+#: src/etc/tt2/info_report.tt2:17
+#, fuzzy
+msgid "Digest       : %1"
+msgstr "Vastaanotto tilat  : [% available_reception_mode %]"
+
 #. (list.name)
 #: src/etc/tt2/digest.tt2:4
 msgid "Digest for list %1"
 msgstr "Listan %1 digest"
 
 # nlsref 16,22
-#: src/List.pm:422
+#: src/List.pm:456
 msgid "Digest frequency"
 msgstr "Digest aikaväli"
 
-#: src/etc/tt2/helpfile.tt2:23
-msgid "Directory of lists managed on this node"
-msgstr "Hakemisto listoista joita palvelimella on olemassa"
+#: wwsympa/tt2/help_user_options.tt2:14
+#, fuzzy
+msgid "DigestPlain"
+msgstr "Kooste"
 
-#: src/etc/tt2/helpfile.tt2:65
-msgid ""
-"Displays the current expiration process\n"
-"                                   state for <list>\n"
-msgstr ""
-
-#: src/etc/tt2/helpfile.tt2:24
-msgid "Displays the subscribers to <list>"
-msgstr "Näyttää tilaajat listlle <list>"
-
-#: src/etc/tt2/helpfile.tt2:25
-msgid "Displays which lists you are subscribed to"
-msgstr "Näyttää mitä listoja tilaat"
-
-#: wwsympa/tt2/modindex.tt2:46 wwsympa/tt2/viewmod.tt2:8
+#: wwsympa/tt2/modindex.tt2:10 wwsympa/tt2/modindex.tt2:48
+#: wwsympa/tt2/viewmod.tt2:8
 msgid "Distribute"
 msgstr "Lähetä"
 
-#: wwsympa/tt2/view_translations.tt2:20
-msgid "Do it"
-msgstr "Toteuta"
-
-#. (path)
+#. (visible_path)
 #: wwsympa/tt2/d_read.tt2:10
 msgid "Do you really want to delete %1 ?"
 msgstr "Do you really want to delete %1 ?"
 
-#. (path,s.doc,f.size)
-#: wwsympa/tt2/d_read.tt2:189
+#. (visible_path,s.doc,f.size)
+#: wwsympa/tt2/d_read.tt2:202
 #, fuzzy
 msgid "Do you really want to delete %1%2 (%3 Kb) ?"
 msgstr "Do you really want to delete %1%2 ?"
 
-#. (path,s.doc)
-#: wwsympa/tt2/d_read.tt2:122
+#. (visible_path,s.doc)
+#: wwsympa/tt2/d_read.tt2:125
 msgid "Do you really want to delete %1%2 ?"
 msgstr "Do you really want to delete %1%2 ?"
 
-#: src/etc/mhonarc-ressources:351 src/etc/mhonarc-ressources:360
-msgid "Do you really want to delete this message ?"
-msgstr ""
+#: wwsympa/tt2/arc_manage.tt2:20
+#, fuzzy
+msgid "Do you really want to delete Selected Archives?"
+msgstr "Do you really want to delete %1 ?"
+
+#: wwsympa/tt2/rename_list_request.tt2:14
+#, fuzzy
+msgid "Do you really want to rename this list?"
+msgstr "Haluatko varmasti tilata listan %1"
 
 #. (total)
 #: wwsympa/tt2/reviewbouncing.tt2:16
@@ -943,12 +1057,7 @@ msgid ""
 msgstr "Haluatko varmasti lähettää muistutusviestin kaikille %1 tilaajalle ?"
 
 #. (list)
-#: wwsympa/tt2/list_menu.tt2:230
-msgid "Do you really want to subscribe to list %1"
-msgstr "Haluatko varmasti tilata listan %1"
-
-#. (list)
-#: wwsympa/tt2/list_menu.tt2:192
+#: wwsympa/tt2/list_menu.tt2:200 wwsympa/tt2/list_menu.tt2:238
 msgid "Do you really want to subscribe to list %1?"
 msgstr ""
 
@@ -957,26 +1066,59 @@ msgid "Do you really want to unsubscribe ALL selected subscribers ?"
 msgstr "Haluatko varmasti poistaa KAIKKI valitut käyttäjät ?"
 
 #. (list)
-#: wwsympa/tt2/list_menu.tt2:262
-msgid "Do you really want to unsubscribe from list %1"
-msgstr "Haluatko varmasti poistaa tilauksen listalta %1"
-
-#. (list)
-#: wwsympa/tt2/list_menu.tt2:167
+#: wwsympa/tt2/list_menu.tt2:175 wwsympa/tt2/list_menu.tt2:270
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "Haluatko varmasti poistua listalta %1?"
+
+#: wwsympa/tt2/arc_manage.tt2:20
+msgid "Do you want to DownLoad a Zip of the selected Archives before?"
+msgstr ""
 
 #: wwsympa/tt2/d_read.tt2:27
 msgid "Document"
 msgstr "Dokumentti"
 
+#: wwsympa/tt2/list_menu.tt2:118
+#, fuzzy
+msgid "Documents to moderate :"
+msgstr "Hallittavat viestit :"
+
+#: wwsympa/tt2/review.tt2:128 wwsympa/tt2/review.tt2:132
+#, fuzzy
+msgid "Domain"
+msgstr "Ei viestejä"
+
+#: wwsympa/tt2/help_editlist.tt2:100
+msgid ""
+"Domain name of the list, default is the robot domain name set in the related "
+"robot.conf file or in file /etc/sympa.conf."
+msgstr ""
+
+#: wwsympa/tt2/arc_manage.tt2:19
+msgid "DownLoad ZipFile"
+msgstr ""
+
 # nlsref 6,33
-#: src/Commands.pm:1456 src/Commands.pm:1558
+#: src/Commands.pm:1448 src/Commands.pm:1550
 msgid "E-mail address %s was not found in the list.\n"
 msgstr "Sähköpostiosoitetta %s ei löytynyt listalta.\n"
 
-#: wwsympa/tt2/d_read.tt2:87 wwsympa/tt2/editfile.tt2:23
-#: wwsympa/tt2/serveradmin.tt2:114 wwsympa/tt2/serveradmin.tt2:125
+#: wwsympa/tt2/help_editlist.tt2:58
+msgid ""
+"Each bouncing user have a score (from 0 to 100).This parameter defines limit "
+"between each category of bouncing users.For example, level 2 is for users "
+"with a score between 80 and 100."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:42
+msgid ""
+"Each bouncing user have a score (from 0 to 100).This parameter defines lower "
+"limit foreach category of bouncing users.for example, level 1 begins from 45 "
+"to level_2_treshold."
+msgstr ""
+
+#: wwsympa/tt2/d_read.tt2:87 wwsympa/tt2/editfile.tt2:22
+#: wwsympa/tt2/serveradmin.tt2:118 wwsympa/tt2/serveradmin.tt2:128
 msgid "Edit"
 msgstr "Muuta"
 
@@ -984,21 +1126,27 @@ msgstr "Muuta"
 msgid "Edit List Config"
 msgstr "Luo jaettu"
 
-#: wwsympa/tt2/d_control.tt2:24
+#: wwsympa/tt2/d_control.tt2:23
 msgid "Edit access"
 msgstr "Muutos oikeus"
 
-#. (path)
+#. (visible_path)
+#: wwsympa/tt2/d_editfile.tt2:89
+#, fuzzy
+msgid "Edit the file %1"
+msgstr "Tiedoston muuttaminen%1"
+
+#. (visible_path)
 #: wwsympa/tt2/d_editfile.tt2:4
 msgid "Edition of the bookmark %1"
 msgstr "Kirjamerkin muuttaminen %1"
 
-#. (path)
+#. (visible_path)
 #: wwsympa/tt2/d_editfile.tt2:6
 msgid "Edition of the directory %1"
 msgstr "Hakemiston muuttaminen %1"
 
-#. (path)
+#. (visible_path)
 #: wwsympa/tt2/d_editfile.tt2:8
 msgid "Edition of the file %1"
 msgstr "Tiedoston muuttaminen%1"
@@ -1007,28 +1155,49 @@ msgstr "Tiedoston muuttaminen%1"
 msgid "Editor"
 msgstr "Tarkistaja"
 
-#: wwsympa/tt2/d_read.tt2:93
+#: wwsympa/tt2/help_editlist.tt2:84
+msgid ""
+"Editors are responsible for moderating messages. If the mailing list is "
+"moderated, messages posted to the list will first be passed to the editors, "
+"who will decide whether to distribute or reject it."
+msgstr ""
+
+#: wwsympa/tt2/review.tt2:119 wwsympa/tt2/review.tt2:123
+#: wwsympa/tt2/reviewbouncing.tt2:62 wwsympa/tt2/subindex.tt2:8
+#, fuzzy
+msgid "Email"
+msgstr "Ei viestejä"
+
+#: wwsympa/tt2/d_read.tt2:97
 msgid "Empty folder"
 msgstr "Tyhjä kansio"
 
 #. (list.name,date)
-#: src/etc/tt2/digest.tt2:39
+#: src/etc/tt2/digest_plain.tt2:28
+#, fuzzy
+msgid "End of %1 Digest %2"
+msgstr "Listan %1 digestin loppu - %2"
+
+#. (list.name,date)
+#: src/etc/tt2/digest.tt2:37
 msgid "End of digest for list %1 - %2"
 msgstr "Listan %1 digestin loppu - %2"
 
 # nlsref 4,24
-#: src/sympa.pl:1293
+#: src/sympa.pl:1308
 msgid "End of your EXPIRE command on list %s"
 msgstr "EXPIRE-käskysi loppu listalla %s"
 
 # nlsref 1,3
-#: src/Conf.pm:197
+#: src/Conf.pm:212
 msgid "Error at line %d : %s"
 msgstr "Virhe rivillä %d : %s"
 
-#: wwsympa/tt2/remove_arc.tt2:13
-msgid "Error while deleting this message"
-msgstr "Virhe viestiä poistettaessa"
+#: wwsympa/tt2/remove_arc.tt2:14
+msgid ""
+"Error while deleting this message, please refer to listmaster with\n"
+"complete URL of the concerned message.\n"
+msgstr ""
 
 #: src/etc/tt2/expire_warning1.tt2:9 src/etc/tt2/expire_warning2.tt2:9
 #: src/etc/tt2/remind.tt2:8
@@ -1040,7 +1209,7 @@ msgid "Everything about this list:"
 msgstr "Kaikki tiedot listasta:"
 
 # nlsref 16,10
-#: src/List.pm:345
+#: src/List.pm:379
 msgid "Expiration of unmoderated messages"
 msgstr "Tarkistamattomien viestin erääntymisaika"
 
@@ -1048,12 +1217,12 @@ msgstr "Tarkistamattomien viestin erääntymisaika"
 msgid "Extend search field"
 msgstr "Jatkettu hakukenttä"
 
-#: wwsympa/tt2/home.tt2:63
+#: wwsympa/tt2/home.tt2:61
 msgid "Extended search"
 msgstr "Erikois haku"
 
 # nlsref 8,22
-#: src/List.pm:1695
+#: src/List.pm:1775
 msgid ""
 "FYI command %s list %s from %s %s \n"
 " (no action needed)\n"
@@ -1062,7 +1231,7 @@ msgstr ""
 " (tähän ei tarvitse puuttua)\n"
 
 # nlsref 8,26
-#: src/List.pm:1693
+#: src/List.pm:1773
 msgid ""
 "FYI command %s list %s from %s %s validated by %s\n"
 " (no action needed)\n"
@@ -1071,41 +1240,66 @@ msgstr ""
 " (sinun ei tarvitse tehdä mitään)\n"
 
 # nlsref 8,21
-#: src/List.pm:1655 src/List.pm:1691
+#: src/List.pm:1729 src/List.pm:1771
 msgid "FYI: %s list %s from %s %s"
 msgstr "FYI: %s listalla %s lähteestä %s %s"
 
+#: wwsympa/tt2/help_editlist.tt2:85
+msgid ""
+"FYI: Defining editors will not make the list moderated ; you will have to "
+"set the \"send\" parameter."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:86
+msgid ""
+"FYI: If the list is moderated, any editor can distribute or reject a message "
+"without the knowledge or consent of the other editors. Messages that have "
+"not been distributed or rejected will remain in the moderation spool until "
+"they are acted on."
+msgstr ""
+
 #. (error.directory)
-#: wwsympa/tt2/error.tt2:137
+#: wwsympa/tt2/error.tt2:139
 msgid "Failed : %1 not empty"
 msgstr "Virhe : %1 ei ole tyhjä"
 
-#: wwsympa/tt2/error.tt2:113
+#: wwsympa/tt2/error.tt2:112
 msgid "Failed : your content is empty"
 msgstr "Epäonnistui: sisältö on tyhjä"
 
 #. (error.user)
-#: wwsympa/tt2/error.tt2:70
+#: wwsympa/tt2/error.tt2:69
 msgid "Failed to add user %1"
 msgstr "Käyttäjän %1 lisääminen epäonnistui"
 
 # nlsref 6,92
-#: src/Commands.pm:1581 src/Commands.pm:1594
+#: src/Commands.pm:1573 src/Commands.pm:1586
 msgid "Failed to change your subscriber options for list %s.\n"
 msgstr "Tilausasetusten muuttaaminen epäonnistui listalle %s.\n"
 
 # nlsref 8,7
-#: src/List.pm:4731
+#: src/List.pm:4999
 msgid "File"
 msgstr "Tiedosto"
 
 #. (notice.path)
-#: wwsympa/tt2/notice.tt2:20
+#: wwsympa/tt2/notice.tt2:22
 msgid "File %1 saved"
 msgstr "File %1 tallennettu"
 
+#. (notice.path)
+#: wwsympa/tt2/notice.tt2:16
+#, fuzzy
+msgid "File %1 successfully uploaded!"
+msgstr "%1 ladattu onnistuneesti!"
+
+#. (notice.path)
+#: wwsympa/tt2/notice.tt2:19
+msgid "File %1 waiting for moderation"
+msgstr ""
+
 # nlsref 16,34
-#: src/List.pm:473
+#: src/List.pm:507
 msgid "File inclusion"
 msgstr "Tiedoston liittäminen"
 
@@ -1114,8 +1308,16 @@ msgstr "Tiedoston liittäminen"
 msgid "For further assistance, please contact listmaster@%1"
 msgstr "Lisätietoja saat ottamalla yhteyttä listmaster@%1"
 
+#: wwsympa/tt2/help_editlist.tt2:111
+msgid ""
+"For this operation, one Sympa site act as a server while the other one act "
+"as client. On the server side, the only setting needed is to give permission "
+"to the remote Sympa to review the list. This is controled by the review "
+"scenario. "
+msgstr ""
+
 # nlsref 16,32
-#: src/List.pm:462
+#: src/List.pm:496
 msgid "Forced reply address"
 msgstr "Pakotettu vastausosoite"
 
@@ -1140,11 +1342,24 @@ msgid ""
 "a customized environment with access to the following functions :\n"
 msgstr ""
 
+#: src/etc/tt2/helpfile.tt2:37
+#, fuzzy
+msgid "GET <list> <file>           * To get <file> of <list> archive"
+msgstr "Saadaksesi tiedosto <file> listan <list> arkistosta"
+
+#: wwsympa/tt2/loginbanner.tt2:54 wwsympa/tt2/loginbanner.tt2:80
+msgid "Go"
+msgstr ""
+
+#: src/etc/tt2/helpfile.tt2:16
+msgid "HELp                        * This help file"
+msgstr ""
+
 #: wwsympa/tt2/show_cert.tt2:5
 msgid "HTTPS authentication information"
 msgstr "HTTPS tunnistus tiedot"
 
-#: wwsympa/tt2/edit_list_request.tt2:48 wwsympa/tt2/menu.tt2:118
+#: wwsympa/tt2/edit_list_request.tt2:47 wwsympa/tt2/menu.tt2:118
 #: wwsympa/tt2/menu.tt2:121
 msgid "Help"
 msgstr "Apua"
@@ -1155,7 +1370,7 @@ msgid "Help on Sympa: %1%2"
 msgstr "Apua Sympan käyttöön: %1%2"
 
 # nlsref 6,67
-#: src/Commands.pm:2350
+#: src/Commands.pm:2335
 msgid ""
 "Here are the lists you are currently subscribe to :\n"
 "\n"
@@ -1178,7 +1393,7 @@ msgid "Home"
 msgstr "Aloitussivu"
 
 #. (url)
-#: src/etc/tt2/info_report.tt2:22
+#: src/etc/tt2/info_report.tt2:20
 msgid "Homepage           : %1"
 msgstr "Vastaanotto tilat  : [% available_reception_mode %]"
 
@@ -1208,17 +1423,52 @@ msgstr "Tilaan listan %1"
 msgid "I unsubscribe from list %1"
 msgstr "Poistun listalta %1"
 
+#: src/etc/tt2/helpfile.tt2:36
+#, fuzzy
+msgid "INDex <list>                * <list> archive file list"
+msgstr "<list> arkistojen listaus"
+
+#: src/etc/tt2/helpfile.tt2:17
+#, fuzzy
+msgid "INFO <list>                 * Information about a list"
+msgstr "Tietoja listoista"
+
+#: src/etc/tt2/helpfile.tt2:39
+#, fuzzy
+msgid "INVITE <list> <email>       * Invite <email> for subscription in <list>"
+msgstr "Kutsu <email> tilaajaksi listalle <list>"
+
+#: wwsympa/tt2/help_editlist.tt2:172
+msgid ""
+"Idem spam_protection but restricted to web archive. A additional value is "
+"available: cookie which mean that users must submit a small form in order to "
+"receive a cookie before browsing archives. This block all robot, even google "
+"and co."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:174
+msgid ""
+"If set to unique, the welcome message is sent using a unique return path in "
+"order to remove the subscriber immediately in the case of a bounce."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:136
+msgid ""
+"If value was set to other_email, this parameter defines the e-mail address "
+"used."
+msgstr ""
+
 #: src/etc/tt2/invite.tt2:13
 msgid "If you don't want to subscribe just ignore this message."
 msgstr "Jos et halua tilata, poista vain viesti."
 
-#: wwsympa/tt2/loginbanner.tt2:46 wwsympa/tt2/sigrequest.tt2:71
+#: wwsympa/tt2/loginbanner.tt2:122 wwsympa/tt2/sigrequest.tt2:71
 msgid ""
 "If you never had a password from that server or if you don't remember it :"
 msgstr "Jos et ole koskaan saanut salasanaa tai et muista sitä :"
 
 # nlsref 4,27
-#: src/sympa.pl:1341
+#: src/sympa.pl:1356
 msgid ""
 "If you want to remove these subscriber from the list, use the following "
 "commands :\n"
@@ -1230,7 +1480,7 @@ msgid "If you want to unsubscribe from some list, please save this mail."
 msgstr "Yhteenveto tilauksestasi (käyttäen osoitetta [% user.email %])."
 
 # nlsref 4,37
-#: src/sympa.pl:1131
+#: src/sympa.pl:1145
 msgid ""
 "Ignoring message body not in text/plain, please use text/plain only \n"
 "(or put your command in the subject).\n"
@@ -1239,33 +1489,21 @@ msgstr ""
 "(tai laita käskysi subject-kenttään).\n"
 
 #. (conf.wwsympa_url,user.email,user.password)
-#: src/etc/tt2/global_remind.tt2:17
+#: src/etc/tt2/global_remind.tt2:16
 msgid ""
 "In order to authenticate on the web interface(%1)\n"
 "use your e-mail %2 and your password %3\n"
 msgstr ""
 
-#: wwsympa/tt2/loginbanner.tt2:16
-msgid ""
-"In order to benefit from the full services provided by this server, you "
-"probably\n"
-" need to identify yourself first.\n"
-msgstr ""
+#: wwsympa/tt2/serveradmin.tt2:62
+#, fuzzy
+msgid "Inactive lists"
+msgstr "Uusimmat listat"
 
 # nlsref 16,75
-#: src/List.pm:926
+#: src/List.pm:946
 msgid "Inclusions timeout"
 msgstr "Liittämisen aikaraja"
-
-#: src/etc/tt2/helpfile.tt2:51
-msgid ""
-"Indicates the end of the commands (to ignore a\n"
-"                               signature)\n"
-msgstr ""
-
-#: src/etc/tt2/helpfile.tt2:22
-msgid "Information about a list"
-msgstr "Tietoja listoista"
 
 #: wwsympa/tt2/set_pending_list_request.tt2:51
 msgid "Information file"
@@ -1282,16 +1520,21 @@ msgid "Information regarding list %1@%2"
 msgstr "Tietoja listasta %1@%2"
 
 # nlsref 6,36
-#: src/Commands.pm:1031
+#: src/Commands.pm:1026
 msgid "Information regarding user %s have been updated for list %s.\n"
 msgstr "Käyttäjää %s koskevat tiedot on päivitetty listalle %s.\n"
+
+#: wwsympa/tt2/modindex.tt2:62 wwsympa/tt2/modindex.tt2:97
+#, fuzzy
+msgid "Install"
+msgstr "Asenna &nbsp;&nbsp;"
 
 #: wwsympa/tt2/set_pending_list_request.tt2:35
 #, fuzzy
 msgid "Install it"
 msgstr "Asenna &nbsp;&nbsp;"
 
-#: wwsympa/tt2/help_user_options.tt2:18
+#: wwsympa/tt2/help_user_options.tt2:26
 msgid ""
 "Instead of receiving individual mail messages from the list, the subscriber "
 "will periodically \n"
@@ -1310,18 +1553,16 @@ msgid ""
 msgstr ""
 
 # nlsref 16,33
-#: src/List.pm:467
+#: src/List.pm:501
 msgid "Internet domain"
 msgstr "Internet domain"
 
 # nlsref 8,29
-#: src/Commands.pm:1147
-msgid "Invitation to join list %s"
+#. (list.name)
+#: src/etc/tt2/invite.tt2:3
+#, fuzzy
+msgid "Invitation to join list %1"
 msgstr "Kutsu listalle %s liittymiseksi"
-
-#: src/etc/tt2/helpfile.tt2:47
-msgid "Invite <email> for subscribtion in <list>"
-msgstr "Kutsu <email> tilaajaksi listalle <list>"
 
 #. (user.email)
 #: src/etc/tt2/x509-user-cert-missing.tt2:11
@@ -1330,33 +1571,38 @@ msgid ""
 "was unable to access to your personal certificat (email %1).\n"
 msgstr ""
 
-#: src/etc/mhonarc-ressources:456
+#: src/etc/tt2/helpfile.tt2:38
+#, fuzzy
 msgid ""
-"January:February:March:April:May:June:July:August:September:October:November:"
-"December"
-msgstr ""
+"LAST <list>                 * Used to received the last message from <list>"
+msgstr "Käytä saadaksesi viimeisin viesti listalta <list>"
 
 # nlsref 16,135
-#: src/List.pm:665
+#: src/List.pm:678
 msgid "LDAP 2-level query inclusion"
 msgstr "LDAP 2-tason kyselyn liittäminen"
 
 # nlsref 16,35
-#: src/List.pm:559
+#: src/List.pm:571
 msgid "LDAP query inclusion"
 msgstr "LDAP kyselyn liittäminen"
+
+#: src/etc/tt2/helpfile.tt2:18
+#, fuzzy
+msgid "LISts                       * Directory of lists managed on this node"
+msgstr "Hakemisto listoista joita palvelimella on olemassa"
 
 #: wwsympa/tt2/pref.tt2:24
 msgid "Language"
 msgstr "Kieli"
 
 #. (current_subscriber.lang)
-#: wwsympa/tt2/editsubscriber.tt2:24
+#: wwsympa/tt2/editsubscriber.tt2:23
 msgid "Language : %1"
 msgstr ""
 
 # nlsref 16,55
-#: src/List.pm:770
+#: src/List.pm:783
 msgid "Language of the list"
 msgstr "Listan kieli"
 
@@ -1372,7 +1618,7 @@ msgid "Last update : %1"
 msgstr "Viim. päivitys : %1"
 
 # nlsref 16,77
-#: src/List.pm:951
+#: src/List.pm:971
 msgid "Last update of config"
 msgstr "Asetuksia viimeksi muutettu"
 
@@ -1380,16 +1626,34 @@ msgstr "Asetuksia viimeksi muutettu"
 msgid "Last update:"
 msgstr "Viim. päivitys:"
 
-#: wwsympa/tt2/serveradmin.tt2:57
+#: wwsympa/tt2/serveradmin.tt2:56
 msgid "Latest lists"
 msgstr "Uusimmat listat"
+
+#: wwsympa/tt2/get_inactive_lists.tt2:7
+#, fuzzy
+msgid "Latest message"
+msgstr "Uusi viesti ensiksi"
 
 #: wwsympa/tt2/arcsearch_form.tt2:48
 msgid "Layout"
 msgstr "Ulkoasu"
 
+# #-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#
+# nlsref 16,7
+#. (list.name)
+#: src/etc/tt2/listmaster_notification.tt2:36
+#: src/etc/tt2/listowner_notification.tt2:18
+#, fuzzy
+msgid "List %1 automatic bounce management"
+msgstr ""
+"#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
+"Hyljättyjen viestien hallinta\n"
+"#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
+"Väärien osoitteiden hallinta"
+
 # nlsref 6,90
-#: src/Commands.pm:1573
+#: src/Commands.pm:1565
 #, fuzzy
 msgid "List %s allows only these reception modes : %s\n"
 msgstr ""
@@ -1397,7 +1661,7 @@ msgstr ""
 "Asetukseasi ei ole muutettu.\n"
 
 # nlsref 6,45
-#: src/Commands.pm:1565
+#: src/Commands.pm:1557
 msgid ""
 "List %s does not accept the DIGEST mode. Your configuration regarding this "
 "command has not been updated.\n"
@@ -1406,23 +1670,23 @@ msgstr ""
 "päivitetty.\n"
 
 # nlsref 6,54
-#: src/Commands.pm:2186 src/Commands.pm:2230
+#: src/Commands.pm:2171 src/Commands.pm:2215
 msgid "List %s is not currently running an expiration process.\n"
 msgstr "Listalla %s ei ole tällä hetkellä menossa expire-prosessia.\n"
 
 # nlsref 6,5
-#: src/Commands.pm:1094 src/Commands.pm:1220 src/Commands.pm:1293
-#: src/Commands.pm:1397 src/Commands.pm:1541 src/Commands.pm:1624
-#: src/Commands.pm:1807 src/Commands.pm:1896 src/Commands.pm:2107
-#: src/Commands.pm:2205 src/Commands.pm:2249 src/Commands.pm:267
-#: src/Commands.pm:323 src/Commands.pm:368 src/Commands.pm:414
-#: src/Commands.pm:455 src/Commands.pm:577 src/Commands.pm:723
-#: src/Commands.pm:837 src/Commands.pm:973
+#: src/Commands.pm:1088 src/Commands.pm:1212 src/Commands.pm:1285
+#: src/Commands.pm:1389 src/Commands.pm:1533 src/Commands.pm:1616
+#: src/Commands.pm:1792 src/Commands.pm:1881 src/Commands.pm:2092
+#: src/Commands.pm:2190 src/Commands.pm:2234 src/Commands.pm:263
+#: src/Commands.pm:319 src/Commands.pm:364 src/Commands.pm:410
+#: src/Commands.pm:451 src/Commands.pm:573 src/Commands.pm:718
+#: src/Commands.pm:832 src/Commands.pm:968
 msgid "List '%s' does not exist.\n"
 msgstr "Listaa '%s' ei ole olemassa.\n"
 
 # nlsref 6,3
-#: src/Commands.pm:508
+#: src/Commands.pm:504
 msgid "List '%s' has no subscriber.\n"
 msgstr ""
 
@@ -1430,7 +1694,7 @@ msgstr ""
 msgid "List Administration Panel"
 msgstr "Listojen hallinnan paneeli"
 
-#: wwsympa/tt2/admin_menu.tt2:132
+#: wwsympa/tt2/admin_menu.tt2:139
 msgid "List Definition"
 msgstr ""
 
@@ -1449,8 +1713,8 @@ msgstr "Listan \"%1\" luonti pyyntö"
 msgid "List \"%1\" warning : archive %2% full"
 msgstr "Lista \"%1\" varoitus : arkisto %2% täynnä"
 
-#: wwsympa/tt2/list_menu.tt2:78 wwsympa/tt2/list_menu.tt2:82
-#: wwsympa/tt2/list_menu.tt2:88
+#: wwsympa/tt2/list_menu.tt2:76 wwsympa/tt2/list_menu.tt2:80
+#: wwsympa/tt2/list_menu.tt2:86
 msgid "List admin"
 msgstr "Listan hallinta"
 
@@ -1458,7 +1722,7 @@ msgstr "Listan hallinta"
 msgid "List aliases have been removed."
 msgstr "Listan aliakset on poistettu."
 
-#: wwsympa/tt2/create_list_request.tt2:66
+#: wwsympa/tt2/create_list_request.tt2:63
 msgid "List classification in the directory"
 msgstr "Listan määrittely hakemistossa"
 
@@ -1472,11 +1736,11 @@ msgid ""
 "INFO. It can also be included in the\n"
 msgstr ""
 
-#: wwsympa/tt2/error.tt2:52
+#: wwsympa/tt2/error.tt2:51
 msgid "List has no bouncing subscribers"
 msgstr "Listalla ei ole tavoittamattomia tilaajia"
 
-#: wwsympa/tt2/error.tt2:49
+#: wwsympa/tt2/error.tt2:48
 msgid "List has no subscribers"
 msgstr "Listalla ei ole tilaajia"
 
@@ -1488,7 +1752,7 @@ msgid ""
 msgstr ""
 
 # nlsref 16,44
-#: src/List.pm:670
+#: src/List.pm:683
 msgid "List inclusion"
 msgstr "Listan liittäminen"
 
@@ -1497,18 +1761,25 @@ msgid "List info"
 msgstr "Listan tiedot"
 
 # nlsref 6,10
-#: src/Commands.pm:425
+#: src/Commands.pm:421
 msgid "List is Private : You can not browse available files.\n"
 msgstr "Lista on yksityinen : Et voi selata tiedostoja.\n"
 
 # nlsref 6,9
-#: src/Commands.pm:347 src/Commands.pm:387
+#: src/Commands.pm:343 src/Commands.pm:383
 msgid "List is Private : You can not read the archives.\n"
 msgstr "Lista on yksityinen : Et voi lukea arkistoja.\n"
 
 #: wwsympa/tt2/create_list_request.tt2:9
 msgid "List name:"
 msgstr "Listan nimi:"
+
+#: wwsympa/tt2/help_editlist.tt2:90
+msgid ""
+"List owners may decide to add message headers or footers to messages sent "
+"via the list. This parameter defines the way a footer/header is added to a "
+"message."
+msgstr ""
 
 #: wwsympa/tt2/install_pending_list.tt2:17
 #: wwsympa/tt2/set_pending_list_request.tt2:17
@@ -1523,11 +1794,27 @@ msgstr "Listan tyyppi :"
 msgid "List unknown"
 msgstr "Lista tuntematon"
 
+#: wwsympa/tt2/modindex.tt2:7
+#, fuzzy
+msgid "Listing messages to moderate"
+msgstr "Ei viestejä hallittavana"
+
+#: wwsympa/tt2/modindex.tt2:59
+#, fuzzy
+msgid "Listing of documents shared to moderate"
+msgstr "Ei viestejä hallittavana"
+
 #: wwsympa/tt2/d_read.tt2:21
 msgid "Listing of folder SHARED"
 msgstr "JAETUN hakemiston listaus"
 
-#: wwsympa/tt2/get_latest_lists.tt2:7 wwsympa/tt2/scenario_test.tt2:25
+#: wwsympa/tt2/title.tt2:13
+#, fuzzy
+msgid "Listmaster"
+msgstr "listan nimi"
+
+#: wwsympa/tt2/get_inactive_lists.tt2:8 wwsympa/tt2/get_latest_lists.tt2:7
+#: wwsympa/tt2/scenario_test.tt2:24
 msgid "Listname"
 msgstr "Listan nimi"
 
@@ -1540,20 +1827,20 @@ msgstr "Listan nimi :"
 msgid "Listowners"
 msgstr "Listowners"
 
-#: wwsympa/tt2/serveradmin.tt2:41
+#: wwsympa/tt2/serveradmin.tt2:40
 msgid "Lists"
 msgstr "Listat"
 
-#: wwsympa/tt2/list_menu.tt2:61
+#: wwsympa/tt2/list_menu.tt2:59
 msgid "Load certificate"
 msgstr "Lataa sertifikaatti"
 
-#: wwsympa/tt2/home.tt2:62
+#: wwsympa/tt2/home.tt2:60
 msgid "Local"
 msgstr "Paikallinen"
 
 #: wwsympa/tt2/help.tt2:22 wwsympa/tt2/help.tt2:25 wwsympa/tt2/help.tt2:28
-#: wwsympa/tt2/loginbanner.tt2:33 wwsympa/tt2/menu.tt2:35
+#: wwsympa/tt2/loginbanner.tt2:112 wwsympa/tt2/menu.tt2:35
 msgid "Login"
 msgstr "Kirjaudu"
 
@@ -1561,39 +1848,91 @@ msgstr "Kirjaudu"
 msgid "Login issues"
 msgstr "Kirjautumis asiaa"
 
+#: wwsympa/tt2/loginbanner.tt2:23
+#, fuzzy
+msgid ""
+"Login with you email address and password. You can request a password "
+"reminder."
+msgstr "), anna email osoitteesi ja salasana."
+
 #: wwsympa/tt2/help.tt2:22 wwsympa/tt2/menu.tt2:22
 msgid "Logout"
 msgstr "Kirjaudu ulos"
+
+#: src/etc/tt2/helpfile.tt2:57
+msgid ""
+"MODINDEX <list>                 * Moderation: to consult the list of "
+"messages to moderate"
+msgstr ""
+
+#: wwsympa/tt2/loginbanner.tt2:48
+#, fuzzy
+msgid "Magic authentification"
+msgstr "Kun tunnistaudut("
+
+# nlsref 16,19
+#: wwsympa/tt2/help_editlist.tt2:76
+#, fuzzy
+msgid "Mail reception mode."
+msgstr "vastaanotto moodi"
 
 #: wwsympa/tt2/home.tt2:16
 msgid "Mailing lists"
 msgstr "Postituslistat"
 
+#: wwsympa/tt2/admin_menu.tt2:74
+#, fuzzy
+msgid "Manage Archives"
+msgstr "Arkistot"
+
+#: src/List.pm:351
+msgid "Management of bouncers, 1st level"
+msgstr ""
+
+#: src/List.pm:372
+msgid "Management of bouncers, 2nd level"
+msgstr ""
+
+#: src/etc/tt2/listmaster_notification.tt2:53
+#: src/etc/tt2/listowner_notification.tt2:35
+#, fuzzy
+msgid "Managing bouncing subscribers:"
+msgstr "Listalla ei ole tavoittamattomia tilaajia"
+
 # nlsref 16,56
-#: src/List.pm:777
+#: src/List.pm:790
 msgid "Maximum message size"
 msgstr "Viestin max. koko"
 
 #. (max_size)
-#: src/etc/tt2/info_report.tt2:17
+#: src/etc/tt2/info_report.tt2:15
 msgid "Maximum size       : %1"
 msgstr "Tilauksen poisto   : [% unsubscribe %]"
 
-#: src/etc/tt2/your_infected_msg.tt2:12
-msgid "May be it is usefull to check your system for viruses."
-msgstr "Pysäytimme viestin jakelun."
+#: wwsympa/tt2/help_editlist.tt2:117
+msgid "Maximum size of a message in 8-bit bytes."
+msgstr ""
 
-#: wwsympa/tt2/serveradmin.tt2:160
+#: wwsympa/tt2/serveradmin.tt2:163
 msgid "May take a lot of CPU time,  be careful !"
 msgstr "Saattaa viedä paljon CPU aikaa, ole varovainen !"
 
+#: src/etc/tt2/your_infected_msg.tt2:14
+msgid ""
+"Maybe it is usefull to check your system for viruses.\n"
+"\n"
+"Note, however, that many viruses fake sender's e-mail address, so it is "
+"possible that the virus didn't come from your computer. In that case, please "
+"disregard this message.\n"
+msgstr ""
+
 # nlsref 6,44
-#: src/Commands.pm:1683 src/Commands.pm:1784
+#: src/Commands.pm:1666 src/Commands.pm:1769
 msgid "Message %s for list %s has been distributed.\n"
 msgstr "Listan %s viesti on pistetty levitykseen.\n"
 
 # nlsref 6,43
-#: src/Commands.pm:1843
+#: src/Commands.pm:1828
 msgid "Message %s for list %s has been rejected.\n"
 msgstr "Listan %s viesti on poistettu.\n"
 
@@ -1609,33 +1948,34 @@ msgid ""
 "attachment at the beginning of each message distributed to the list.\n"
 msgstr ""
 
-#: src/etc/mhonarc-ressources:202
-msgid "Message not available"
-msgstr ""
-
-#: src/etc/tt2/helpfile.tt2:35
-msgid "Message reception in compilation mode"
-msgstr "Viestien vastaanotto koostetilassa"
-
 #. (conf.host)
 #: src/etc/tt2/listowner_notification.tt2:16
 msgid "Messages are still archived but you should contact listmaster@%1"
 msgstr "Lista \"[% list.name %]\" varoitus : arkisto [% rate %]% täynnä"
 
-#: wwsympa/tt2/list_menu.tt2:112
+#. (list.name,to,subscriber.first_bounce)
+#: src/etc/tt2/subscriber_notification.tt2:8
+msgid ""
+"Messages from list %1 that were sent to your address %2\n"
+"generated non-delivery reports since %3. \n"
+"If this problem persists, you will be automatically unsubscribed from the "
+"list.\n"
+msgstr ""
+
+#: wwsympa/tt2/list_menu.tt2:111
 msgid "Messages to moderate :"
 msgstr "Hallittavat viestit :"
 
-#: wwsympa/tt2/admin_menu.tt2:153 wwsympa/tt2/edit_list_request.tt2:12
+#: wwsympa/tt2/admin_menu.tt2:160 wwsympa/tt2/edit_list_request.tt2:12
 msgid "Miscellaneous"
 msgstr "Sekalaiset"
 
 #. (error.argument)
-#: wwsympa/tt2/error.tt2:86
+#: wwsympa/tt2/error.tt2:85
 msgid "Missing argument %1"
 msgstr "Puuttuva argumentti %1"
 
-#: wwsympa/tt2/error.tt2:58
+#: wwsympa/tt2/error.tt2:57
 msgid "Missing filter"
 msgstr "Puuttuva suodatin"
 
@@ -1653,7 +1993,6 @@ msgstr "Poista jaettu"
 msgid "Moderated, even for moderators"
 msgstr ""
 
-#: src/etc/scenari/send.privateandnomultipartoreditorkey.orig:1
 #: src/etc/scenari/send.privateandnomultipartoreditorkey:1
 msgid "Moderated, for non subscribers sending multipart messages"
 msgstr ""
@@ -1662,18 +2001,6 @@ msgstr ""
 msgid "Moderated, for subscribers and moderators"
 msgstr ""
 
-# #-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#
-# nlsref 16,26
-#: src/etc/scenari/send.editor:1
-#, fuzzy
-msgid "Moderated, old style"
-msgstr ""
-"#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
-"Moderaattorit\n"
-"#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
-"Hallitsijat"
-
-#: src/etc/scenari/send.privateandeditorkey.orig:1
 #: src/etc/scenari/send.privateandeditorkey:1
 #, fuzzy
 msgid "Moderated, restricted to subscribers"
@@ -1684,37 +2011,34 @@ msgid "Moderated, with editor confirmation"
 msgstr ""
 
 # nlsref 4,40
-#: src/List.pm:1715
+#: src/List.pm:1865
 msgid "Moderating your message"
 msgstr "Viestiäsi tarkistetaan ennen julkaisua"
+
+# #-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#
+# nlsref 16,26
+#: wwsympa/tt2/d_read.tt2:91
+#, fuzzy
+msgid "Moderation"
+msgstr ""
+"#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
+"Moderaattorit\n"
+"#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
+"Hallitsijat"
 
 #. (list.name)
 #: src/etc/tt2/modindex.tt2:2
 msgid "Moderation spool for list %1"
 msgstr "Hallinta jono (spool) listalle %1"
 
-#: src/etc/tt2/helpfile.tt2:79
-msgid ""
-"Moderation: to consult the message list to\n"
-"                                   moderate\n"
-msgstr ""
-
-#: src/etc/tt2/helpfile.tt2:77
-msgid "Moderation: to reject a message"
-msgstr "Hallinta: hylkää viesti"
-
-#: src/etc/tt2/helpfile.tt2:76
-msgid "Moderation: to validate a message"
-msgstr "Hallinta: hyväksy viesti"
-
 #. (e.gecos)
-#: src/etc/tt2/info_report.tt2:10
+#: src/etc/tt2/info_report.tt2:8
 msgid "Moderator          : %1"
 msgstr "Hallitsija          : %1"
 
 # #-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
-#: src/List.pm:449 wwsympa/tt2/list_menu.tt2:53
+#: src/List.pm:483 wwsympa/tt2/list_menu.tt2:52
 #, fuzzy
 msgid "Moderators"
 msgstr ""
@@ -1732,17 +2056,32 @@ msgstr "Moderators of list %1"
 msgid "Modifier"
 msgstr "Muuttaja"
 
-#: wwsympa/tt2/loginbanner.tt2:14
+#: wwsympa/tt2/loginbanner.tt2:13
 msgid ""
 "Most mailing list features require your email. Some mailing lists are hidden "
-"to unidentified persons."
+"to  unidentified persons.<BR>\n"
+" In order to benefit from the full services provided by this server, you "
+"probably need to identify yourself first.\n"
+msgstr ""
+
+#: wwsympa/tt2/review.tt2:31
+msgid "Multiple add"
 msgstr ""
 
 #: wwsympa/tt2/subrequest.tt2:65
 msgid "My password ?"
 msgstr "Salasanani ?"
 
-#: wwsympa/tt2/pref.tt2:22 wwsympa/tt2/subindex.tt2:9
+#: wwsympa/tt2/help_editlist.tt2:29
+msgid ""
+"NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
+"will be halted, i.e. they are retained for subsequent moderation. Once the "
+"number of bounces exceeds this value, messages for the list are no longer\n"
+"              distributed.\n"
+msgstr ""
+
+#: wwsympa/tt2/pref.tt2:22 wwsympa/tt2/review.tt2:137
+#: wwsympa/tt2/review.tt2:141 wwsympa/tt2/subindex.tt2:9
 msgid "Name"
 msgstr "Nimi"
 
@@ -1750,11 +2089,24 @@ msgstr "Nimi"
 msgid "Name :"
 msgstr "Nimi :"
 
-#: wwsympa/tt2/pref.tt2:69
+#: wwsympa/tt2/help_editlist.tt2:32
+msgid ""
+"Name of the task template use to remove old bounces. Usefull to remove "
+"bounces for a subscriber email if some message are distributed without "
+"receiving new bounce. In this case, the subscriber email seems to be OK "
+"again. Active if task_manager.pl is running."
+msgstr ""
+
+#: wwsympa/tt2/pref.tt2:67
 msgid "New email address :"
 msgstr "Uusi email osoite :"
 
-#: wwsympa/tt2/choosepasswd.tt2:17 wwsympa/tt2/pref.tt2:76
+#: wwsympa/tt2/rename_list_request.tt2:3
+#, fuzzy
+msgid "New list name:"
+msgstr "listan nimi"
+
+#: wwsympa/tt2/choosepasswd.tt2:17 wwsympa/tt2/pref.tt2:74
 msgid "New password :"
 msgstr "Uusi salasana :"
 
@@ -1762,11 +2114,11 @@ msgstr "Uusi salasana :"
 msgid "New password again :"
 msgstr "Uusi salasana uudelleen :"
 
-#: wwsympa/tt2/arcsearch.tt2:114
+#: wwsympa/tt2/arcsearch.tt2:111
 msgid "New search"
 msgstr "Uusi haku"
 
-#: wwsympa/tt2/arcsearch.tt2:42
+#: wwsympa/tt2/arcsearch.tt2:41
 msgid "Newest messages first"
 msgstr "Uusi viesti ensiksi"
 
@@ -1778,74 +2130,95 @@ msgstr ""
 msgid "Newsletter, restricted to moderators after confirmation"
 msgstr ""
 
-#: wwsympa/tt2/review.tt2:106 wwsympa/tt2/reviewbouncing.tt2:127
-#: wwsympa/tt2/reviewbouncing.tt2:52
+#: wwsympa/tt2/review.tt2:106 wwsympa/tt2/review.tt2:279
+#: wwsympa/tt2/reviewbouncing.tt2:118 wwsympa/tt2/reviewbouncing.tt2:52
 msgid "Next page"
 msgstr "Next page"
 
-#: wwsympa/tt2/serveradmin.tt2:29
+#: wwsympa/tt2/help_editlist.tt2:176
+msgid "No Comment"
+msgstr ""
+
+#: wwsympa/tt2/serveradmin.tt2:28
 msgid "No Virtual Robot defined on this server"
 msgstr "Ei Virtuaali robotteja määriteltynä tällä palvelimella"
 
 #. (error.email)
-#: wwsympa/tt2/error.tt2:89
+#: wwsympa/tt2/error.tt2:88
 msgid "No bounces for user  %1"
 msgstr "Ei palaavia viestejä käyttäjällä %1"
 
 # nlsref 4,39
-#: src/sympa.pl:1199
+#: src/sympa.pl:1214
 msgid "No command found in message"
 msgstr "Viestistä ei löytynyt komentoa"
 
-#: wwsympa/tt2/error.tt2:110
+#: wwsympa/tt2/error.tt2:109
 msgid "No description specified"
 msgstr "Kuvausta ei määritelty"
 
-#: wwsympa/tt2/list_menu.tt2:110
-msgid "No message to moderate"
+#: wwsympa/tt2/list_menu.tt2:116
+#, fuzzy
+msgid "No document to moderate"
 msgstr "Ei viestejä hallittavana"
 
 #. (notice.list)
-#: wwsympa/tt2/notice.tt2:29
-msgid "No message to moderate for list %1"
+#: wwsympa/tt2/notice.tt2:31
+#, fuzzy
+msgid "No message and no document to moderate for list %1"
 msgstr "Ei viestejä hallittavana listalla %1"
 
-#: wwsympa/tt2/error.tt2:116
+#: wwsympa/tt2/list_menu.tt2:109
+msgid "No message to moderate"
+msgstr "Ei viestejä hallittavana"
+
+#: wwsympa/tt2/error.tt2:115
 msgid "No name specified"
 msgstr "Nimeä ei määritelty"
 
 #. (error.page)
-#: wwsympa/tt2/error.tt2:55
+#: wwsympa/tt2/error.tt2:54
 msgid "No page %1"
 msgstr "Ei sivua %1"
 
-#: wwsympa/tt2/error.tt2:31
+#: wwsympa/tt2/error.tt2:30
 msgid "No password for user"
 msgstr "Ei salasanaa käyttäjälle"
 
-#: wwsympa/tt2/modindex.tt2:35
+#: wwsympa/tt2/modindex.tt2:37
 msgid "No subject"
 msgstr "Ei otsikkoa"
 
-#: wwsympa/tt2/subindex.tt2:49
+#: wwsympa/tt2/subindex.tt2:48
 msgid "No subscription requests"
 msgstr "Ei tilauspyyntöjä"
 
 #. (user.email)
-#: wwsympa/tt2/lists.tt2:40
+#: wwsympa/tt2/lists.tt2:39
 msgid "No subscriptions with address <B>%1</B>!"
 msgstr "Ei tilauksia osoitteella <B>%1</B>!</"
 
-#: wwsympa/tt2/help_user_options.tt2:21
+#: wwsympa/tt2/help_user_options.tt2:29
 msgid "Nomail"
 msgstr "Ei viestejä"
 
 #. (error.email)
-#: wwsympa/tt2/error.tt2:77
+#: wwsympa/tt2/error.tt2:76
 msgid "Not subscribed: %1"
 msgstr "Ei tilaajana: %1"
 
-#: wwsympa/tt2/modindex.tt2:48 wwsympa/tt2/viewmod.tt2:10
+#: wwsympa/tt2/help_editlist.tt2:133
+msgid ""
+"Note: it is inadvisable to change this parameter, and particularly "
+"inadvisable to set it to list. Experience has shown it to be almost "
+"inevitable that users, mistakenly believing that they are replying only to "
+"the sender, will send private messages to a list. This can lead, at the very "
+"least, to embarrassment, and sometimes to more serious consequences."
+msgstr ""
+
+#: wwsympa/tt2/modindex.tt2:12 wwsympa/tt2/modindex.tt2:50
+#: wwsympa/tt2/modindex.tt2:64 wwsympa/tt2/modindex.tt2:99
+#: wwsympa/tt2/viewmod.tt2:10
 msgid "Notified reject"
 msgstr "Hylkää tiedottaen"
 
@@ -1859,7 +2232,7 @@ msgstr "Vastaanotettujen viestien lkm :      [% stats.msg_rcv %]"
 msgid "Number of received messages :      %1"
 msgstr "Vastaanotettujen viestien lkm :      %1"
 
-#: wwsympa/tt2/arcsearch.tt2:44
+#: wwsympa/tt2/arcsearch.tt2:43
 msgid "Oldest messages first"
 msgstr "Vanhin viestin ensiksi"
 
@@ -1870,20 +2243,22 @@ msgid ""
 "<I>cookie</I> is customizeable through your <b>Preferences</b>\n"
 msgstr ""
 
-#: wwsympa/tt2/remove_arc.tt2:4
-msgid "Operation successful"
-msgstr "Operaatio onnistui"
+#: wwsympa/tt2/remove_arc.tt2:5
+msgid ""
+"Operation successful. The message will be deleted as soon\n"
+"as possible. This task may be performed in a few minutes.\n"
+msgstr ""
 
 #. (conf.email,conf.host)
 #: src/etc/tt2/moderate.tt2:15 src/etc/tt2/moderate.tt2:20
 msgid "Or send a message to %1@%2 with the following subject :"
 msgstr "tai lähetä viesti osoitteeseen %1@%2 seuraavalla otsikolla :"
 
-#: wwsympa/tt2/create_list_request.tt2:63
+#: wwsympa/tt2/create_list_request.tt2:60
 msgid "Other"
 msgstr "Muu"
 
-#: wwsympa/tt2/pref.tt2:116
+#: wwsympa/tt2/pref.tt2:113
 msgid "Other email address :"
 msgstr "Vaihtoehtoinen email osoite :"
 
@@ -1891,7 +2266,7 @@ msgstr "Vaihtoehtoinen email osoite :"
 msgid "Other files/pages description :"
 msgstr "Muut tiedosto/sivu kuvaukset :"
 
-#: wwsympa/tt2/home.tt2:27
+#: wwsympa/tt2/home.tt2:26
 msgid "Others"
 msgstr "Muut"
 
@@ -1899,18 +2274,18 @@ msgstr "Muut"
 #: src/etc/tt2/your_infected_msg.tt2:8
 msgid ""
 "Our viruschecker found a virus named %1\n"
-"in a message adressed to %2 and that seems\n"
+"in a message addressed to %2 and that seems\n"
 "to be yours (From: %3).\n"
 msgstr ""
 
 # #-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,57
-#: src/List.pm:808 wwsympa/tt2/title.tt2:17
+#: src/List.pm:821 wwsympa/tt2/title.tt2:17
 msgid "Owner"
 msgstr "Omistaja"
 
 #. (o.gecos)
-#: src/etc/tt2/info_report.tt2:6
+#: src/etc/tt2/info_report.tt2:5
 msgid "Owner              : %1"
 msgstr "Omistaja              : %1"
 
@@ -1929,8 +2304,18 @@ msgstr "Omistajan email:"
 msgid "Owners"
 msgstr "Omistajat"
 
+#: wwsympa/tt2/help_editlist.tt2:119
+msgid ""
+"Owners are managing subscribers of the list. They may review subscribers and "
+"add or delete email addresses from the mailing list. If you are a privileged "
+"owner of the list, you can choose other owners for the mailing list. "
+"Privileged owners may edit a few more options than other owners. There can "
+"only be one privileged owner per list; his/her email address may not be "
+"edited from the web."
+msgstr ""
+
 # nlsref 8,1
-#: src/List.pm:1651 src/List.pm:1666 src/List.pm:1678
+#: src/List.pm:1725 src/List.pm:1740 src/List.pm:1752
 msgid "Owners of list %s"
 msgstr "Listan %s omistajat"
 
@@ -1939,11 +2324,11 @@ msgid "Page size"
 msgstr "Sivun koko"
 
 #. (key_word)
-#: wwsympa/tt2/arcsearch.tt2:13
+#: wwsympa/tt2/arcsearch.tt2:12
 msgid "Parameters of these search make on <b> &quot;%1&quot;</b>"
 msgstr "Haun parametrit sanalle <b> &quot;%1&quot;</b>"
 
-#: wwsympa/tt2/pref.tt2:118
+#: wwsympa/tt2/pref.tt2:115
 msgid "Password :"
 msgstr "Salasana :"
 
@@ -1952,34 +2337,40 @@ msgstr "Salasana :"
 msgid "Password for %1"
 msgstr "Salasana osoitteelle%1"
 
-#: wwsympa/tt2/get_pending_lists.tt2:11 wwsympa/tt2/serveradmin.tt2:51
+#: wwsympa/tt2/modindex.tt2:71
+msgid "Path"
+msgstr ""
+
+#: wwsympa/tt2/get_pending_lists.tt2:11 wwsympa/tt2/serveradmin.tt2:50
 msgid "Pending lists"
 msgstr "Odottavat listat"
 
+#: wwsympa/tt2/review.tt2:22
+#, fuzzy
+msgid "Pending subscriptions"
+msgstr "Tilaukset"
+
 #. (current_subscriber.first_bounce,current_subscriber.last_bounce)
-#: wwsympa/tt2/editsubscriber.tt2:53
+#: wwsympa/tt2/editsubscriber.tt2:50
 msgid "Period : from %1 to %2"
 msgstr "Ajanjakso : lähettäjä %1 vastaanottaja %2"
 
-#: wwsympa/tt2/loginbanner.tt2:6
-msgid "Please check your e-mail box to provide your password below."
-msgstr "Tarkista postisi ja anna salasana alle."
+#: wwsympa/tt2/error.tt2:15
+msgid "Please provide your email address"
+msgstr "Anna email osoite"
 
 #. (list)
 #: wwsympa/tt2/sigrequest.tt2:46
 msgid ""
-"Please gives your email address for your unsubscription request from list %1."
+"Please provide your email address for your unsubscription request from list %"
+"1."
 msgstr ""
 
-#: wwsympa/tt2/error.tt2:16
-msgid "Please provide your email address"
-msgstr "Anna email osoite"
-
-#: wwsympa/tt2/error.tt2:25
+#: wwsympa/tt2/error.tt2:24
 msgid "Please provide your password"
 msgstr "Anna salasanasi"
 
-#: wwsympa/tt2/error.tt2:160
+#: wwsympa/tt2/error.tt2:162
 msgid "Please select archive months"
 msgstr ""
 
@@ -1990,12 +2381,12 @@ msgid ""
 "to  %1@%2 .\n"
 msgstr ""
 
-#: wwsympa/tt2/list_menu.tt2:336 wwsympa/tt2/list_menu.tt2:343
-#: wwsympa/tt2/list_menu.tt2:346
+#: wwsympa/tt2/list_menu.tt2:344 wwsympa/tt2/list_menu.tt2:351
+#: wwsympa/tt2/list_menu.tt2:354
 msgid "Post"
 msgstr "Lähetä"
 
-#: src/etc/tt2/helpfile.tt2:82
+#: src/etc/tt2/helpfile.tt2:60
 msgid "Powered by Sympa"
 msgstr "Alustana Sympa"
 
@@ -2011,13 +2402,13 @@ msgstr "Hakujärjestys"
 msgid "Preferences"
 msgstr "Asetukset"
 
-#: wwsympa/tt2/review.tt2:100 wwsympa/tt2/reviewbouncing.tt2:121
-#: wwsympa/tt2/reviewbouncing.tt2:46
+#: wwsympa/tt2/review.tt2:100 wwsympa/tt2/review.tt2:273
+#: wwsympa/tt2/reviewbouncing.tt2:112 wwsympa/tt2/reviewbouncing.tt2:46
 msgid "Previous page"
 msgstr "Edell sivu"
 
 # nlsref 16,63
-#: src/List.pm:814
+#: src/List.pm:827
 msgid "Priority"
 msgstr "Prioriteetti"
 
@@ -2030,38 +2421,76 @@ msgstr ""
 msgid "Private, moderated for non subscribers"
 msgstr "Listalla ei ole tilaajia"
 
+# nlsref 16,73
+#: wwsympa/tt2/help_editlist.tt2:9
+#, fuzzy
+msgid "Privilege for adding (ADD command) a subscriber to the list"
+msgstr "Kuka voi tilata listaa"
+
+#: wwsympa/tt2/help_editlist.tt2:13
+msgid "Privilege for reading mail archives and frequency of archiving"
+msgstr ""
+
 #: wwsympa/tt2/title.tt2:15
 msgid "Privileged owner"
 msgstr "Oikeutettu omistaja"
 
-#: wwsympa/tt2/admin_menu.tt2:140 wwsympa/tt2/edit_list_request.tt2:7
+#: wwsympa/tt2/admin_menu.tt2:147 wwsympa/tt2/edit_list_request.tt2:7
 msgid "Privileges"
 msgstr "Oikeudet"
 
-#: wwsympa/tt2/error.tt2:37
+#: wwsympa/tt2/error.tt2:36
 msgid "Provided password is incomplete"
 msgstr "Annettu salasana on puutteellinen"
 
-#: wwsympa/tt2/error.tt2:34
+#: wwsympa/tt2/error.tt2:33
 msgid "Provided password is incorrect"
 msgstr "Annettu salasana on väärä"
 
 # #-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 6,82
-#: src/Commands.pm:249 wwsympa/tt2/help.tt2:18
+#: src/Commands.pm:245 wwsympa/tt2/help.tt2:18
 msgid "Public lists"
 msgstr "Julkiset listat"
 
 #: wwsympa/tt2/d_editfile.tt2:33 wwsympa/tt2/d_editfile.tt2:96
-#: wwsympa/tt2/d_read.tt2:288
+#: wwsympa/tt2/d_read.tt2:314
 msgid "Publish"
 msgstr "Julkista"
 
-#: wwsympa/tt2/get_closed_lists.tt2:27
+#: wwsympa/tt2/get_closed_lists.tt2:26
 msgid "Purge selected lists"
 msgstr "Poista valitut listat"
 
-#: wwsympa/tt2/pref.tt2:78
+#: src/etc/tt2/helpfile.tt2:41
+msgid ""
+"QUIT                        * Indicates the end of the commands (to ignore a "
+"signature)"
+msgstr ""
+
+#: src/etc/tt2/helpfile.tt2:56
+#, fuzzy
+msgid "REJect <list> <key>            * Moderation: to reject a message"
+msgstr "Hallinta: hylkää viesti"
+
+#: src/etc/tt2/helpfile.tt2:51
+msgid ""
+"REMIND <list>                   * Send a reminder message to each subscriber "
+"(this is a way to inform anyone what is his real subscribing email)."
+msgstr ""
+
+#: src/etc/tt2/helpfile.tt2:19
+#, fuzzy
+msgid "REView <list>               * Displays the subscribers to <list>"
+msgstr "Näyttää tilaajat listlle <list>"
+
+# nlsref 16,16
+#: src/List.pm:877
+#, fuzzy
+msgid "RFC 2369 Header fields"
+msgstr "Mukautettu otsikko kenttä"
+
+#: wwsympa/tt2/pref.tt2:76
 msgid "Re-enter your new password :"
 msgstr "Salasana uudelleen :"
 
@@ -2069,21 +2498,13 @@ msgstr "Salasana uudelleen :"
 msgid "Read access"
 msgstr "Lukuoikeus"
 
-#: wwsympa/tt2/serveradmin.tt2:153
+#: wwsympa/tt2/serveradmin.tt2:156
 msgid "Rebuild HTML archives using \"arctxt\" directories as input."
 msgstr ""
 
-#: wwsympa/tt2/serveradmin.tt2:167
+#: wwsympa/tt2/serveradmin.tt2:170
 msgid "Rebuild archive"
 msgstr "Luo arkisto uudelleen"
-
-#: src/etc/tt2/helpfile.tt2:37
-msgid "Receiving message subject only"
-msgstr "Ainoastaan viestien otsikon vastaanotto"
-
-#: src/etc/tt2/helpfile.tt2:36
-msgid "Receiving the message index only"
-msgstr "Ainoastaan viestien listauksen vastaanotto"
 
 #: wwsympa/tt2/review.tt2:145
 msgid "Reception"
@@ -2098,7 +2519,7 @@ msgid "Reception mode :"
 msgstr "Vastaanotto tila :"
 
 #. (available_reception_mode)
-#: src/etc/tt2/info_report.tt2:21
+#: src/etc/tt2/info_report.tt2:19
 msgid "Reception modes    : %1"
 msgstr "Vastaanotto tilat  : %1"
 
@@ -2107,7 +2528,9 @@ msgstr "Vastaanotto tilat  : %1"
 msgid "Refer to documentation to adapt %1."
 msgstr ""
 
-#: wwsympa/tt2/modindex.tt2:47 wwsympa/tt2/viewmod.tt2:9
+#: wwsympa/tt2/modindex.tt2:11 wwsympa/tt2/modindex.tt2:49
+#: wwsympa/tt2/modindex.tt2:63 wwsympa/tt2/modindex.tt2:98
+#: wwsympa/tt2/viewmod.tt2:9
 msgid "Reject"
 msgstr "Hylkää"
 
@@ -2115,7 +2538,7 @@ msgstr "Hylkää"
 msgid "Reject selected addresses"
 msgstr "Hylkää valitut osoitteet"
 
-#: wwsympa/tt2/scenario_test.tt2:43
+#: wwsympa/tt2/scenario_test.tt2:41
 msgid "Related email"
 msgstr "Asiaan liittyvä email"
 
@@ -2132,25 +2555,26 @@ msgid ""
 msgstr ""
 
 # nlsref 16,65
-#: src/List.pm:823
+#: src/List.pm:836
 msgid "Remind return-path"
 msgstr "Muistutuksen palaa-polku"
 
 # nlsref 6,76
-#: src/Commands.pm:1308
+#: src/Commands.pm:1300
 msgid "Reminder of your %s subscription"
 msgstr "Muistutus %s tilauksestasi"
 
 #. (list.name)
 #: src/etc/tt2/remind.tt2:2
-msgid "Reminder of your subscribtion to %1"
+#, fuzzy
+msgid "Reminder of your subscription to %1"
 msgstr "Muistutus tilauksestasi listalle %1"
 
-#: wwsympa/tt2/scenario_test.tt2:49
+#: wwsympa/tt2/scenario_test.tt2:47
 msgid "Remote addr"
 msgstr "Etäosoite"
 
-#: wwsympa/tt2/scenario_test.tt2:55
+#: wwsympa/tt2/scenario_test.tt2:53
 msgid "Remote host"
 msgstr "Etäpalvelin"
 
@@ -2163,33 +2587,58 @@ msgstr ""
 msgid "Removed from %1"
 msgstr "Poistettu listalta %1"
 
+# nlsref 16,29
+#: wwsympa/tt2/d_editfile.tt2:77
+#, fuzzy
+msgid "Rename"
+msgstr "nimi"
+
+#: wwsympa/tt2/admin_menu.tt2:129 wwsympa/tt2/admin_menu.tt2:131
+#, fuzzy
+msgid "Rename List"
+msgstr "Poista lista"
+
+#. (visible_path)
+#: wwsympa/tt2/d_editfile.tt2:67
+#, fuzzy
+msgid "Rename directory %1"
+msgstr "Hakemistoa ei voida luoda %1"
+
+#. (visible_path)
+#: wwsympa/tt2/d_editfile.tt2:69
+#, fuzzy
+msgid "Rename file %1"
+msgstr "Poistettu listalta %1"
+
+#: wwsympa/tt2/edit_list_request.tt2:11
+#, fuzzy
+msgid "Rename list"
+msgstr "Poista lista"
+
+#: wwsympa/tt2/rename_list_request.tt2:14
+#, fuzzy
+msgid "Rename this list"
+msgstr "Poista lista"
+
 # nlsref 6,21
-#: src/Commands.pm:2021
+#: src/Commands.pm:2006
 msgid "Renewal of your subscription to list '%s'"
 msgstr "Tilauksen uusiminen listalle '%s'"
 
-#. (path)
+#. (visible_path)
 #: wwsympa/tt2/d_editfile.tt2:25
 msgid "Replace the file %1 by your file"
 msgstr "Korvaa tiedosto %1 omalla tiedostolla"
 
-#: src/etc/mhonarc-ressources:341
-msgid "Reply"
-msgstr ""
-
 # nlsref 16,66
-#: src/List.pm:832 src/List.pm:852
+#: src/List.pm:845 src/List.pm:865
 msgid "Reply address"
 msgstr "Vastausosoite (reply)"
 
 #. (reply_to)
-#: src/etc/tt2/info_report.tt2:16
+#: src/etc/tt2/info_report.tt2:14
 msgid "Reply to           : %1"
 msgstr "Tilauksen poisto   : [% unsubscribe %]"
-
-#: src/etc/mhonarc-ressources:337
-msgid "Reply to sender"
-msgstr ""
 
 #: wwsympa/tt2/get_closed_lists.tt2:13 wwsympa/tt2/get_pending_lists.tt2:16
 msgid "Requested by"
@@ -2200,15 +2649,15 @@ msgid "Required aliases"
 msgstr "Vaaditut aliakset"
 
 # nlsref 6,8
-#: src/Commands.pm:337 src/Commands.pm:342 src/Commands.pm:382
+#: src/Commands.pm:333 src/Commands.pm:338 src/Commands.pm:378
 msgid "Required file does not exist.\n"
 msgstr "Tarvittavaa tiedostoa ei ole.\n"
 
-#: wwsympa/tt2/editsubscriber.tt2:55
+#: wwsympa/tt2/editsubscriber.tt2:52
 msgid "Reset errors"
 msgstr "Tyhjää virheet"
 
-#: wwsympa/tt2/reviewbouncing.tt2:117 wwsympa/tt2/reviewbouncing.tt2:55
+#: wwsympa/tt2/reviewbouncing.tt2:108 wwsympa/tt2/reviewbouncing.tt2:55
 msgid "Reset errors for selected users"
 msgstr "Nollaa virheet valituilta käyttäjiltä"
 
@@ -2220,7 +2669,7 @@ msgstr "Hallinnointi"
 msgid "Restore shared"
 msgstr "Palauta jaettu"
 
-#: wwsympa/tt2/arcsearch.tt2:53
+#: wwsympa/tt2/arcsearch.tt2:51
 msgid "Result"
 msgstr "Tulokset"
 
@@ -2229,49 +2678,101 @@ msgid "Result of your search in the archive"
 msgstr "Hakusi arkistossa tuotti seuraavat tulokset"
 
 # nlsref 4,17
-#: src/sympa.pl:736
+#: src/sympa.pl:773
 msgid "Results of your commands"
 msgstr "Käskyjesi lopputulos"
 
 #. (archive_name)
-#: wwsympa/tt2/arcsearch.tt2:120
+#: wwsympa/tt2/arcsearch.tt2:117
 msgid "Return to archive %1"
 msgstr "Palaa arkistoon %1"
 
-#: wwsympa/tt2/list_menu.tt2:404
+#: wwsympa/tt2/list_menu.tt2:412 wwsympa/tt2/list_menu.tt2:417
 msgid "Review"
 msgstr "Tarkista"
 
 #. (review)
-#: src/etc/tt2/info_report.tt2:15
+#: src/etc/tt2/info_report.tt2:13
 msgid "Review subscribers : %1"
 msgstr "Tilauksen poisto   : [% unsubscribe %]"
 
 # nlsref 5,2
-#: src/tools.pl:109
+#: src/tools.pl:128
 msgid "Routing error ?"
 msgstr "Reititysvirhe ?"
 
+#: src/etc/tt2/helpfile.tt2:32
+#, fuzzy
+msgid ""
+"SET <list>|* CONCEAL        * To become unlisted (hidden subscriber address)"
+msgstr "Salaa osoitteesi muilta"
+
+#: src/etc/tt2/helpfile.tt2:27
+#, fuzzy
+msgid "SET <list>|* DIGEST         * Message reception in compilation mode"
+msgstr "Viestien vastaanotto koostetilassa"
+
+#: src/etc/tt2/helpfile.tt2:31
+#, fuzzy
+msgid "SET <list>|* MAIL           * <list> reception in normal mode"
+msgstr "<list> vastaanotto normaali tilassa"
+
+#: src/etc/tt2/helpfile.tt2:33
+#, fuzzy
+msgid "SET <list>|* NOCONCEAL      * Subscriber address visible via REView"
+msgstr "Tilaajan osoite näkyvissä REView komennon kautta"
+
+#: src/etc/tt2/helpfile.tt2:26
+#, fuzzy
+msgid ""
+"SET <list>|* NOMAIL         * To suspend the message reception for <list>"
+msgstr "Pysäyttääksesi viestien vastaanoton listalta <list>"
+
+#: src/etc/tt2/helpfile.tt2:30
+#, fuzzy
+msgid "SET <list>|* NOTICE         * Receiving message subject only"
+msgstr "Ainoastaan viestien otsikon vastaanotto"
+
+#: src/etc/tt2/helpfile.tt2:29
+#, fuzzy
+msgid "SET <list>|* SUMMARY        * Receiving the message index only"
+msgstr "Ainoastaan viestien listauksen vastaanotto"
+
+#: src/etc/tt2/helpfile.tt2:28
+msgid ""
+"SET <list|*> DIGESTPLAIN    * Message reception in compilation mode, sent as "
+"a plain text email with all attachments"
+msgstr ""
+
 # nlsref 16,51
-#: src/List.pm:742
+#: src/List.pm:755
 msgid "SQL query"
 msgstr "SQL kysely"
 
 # nlsref 16,45
-#: src/List.pm:757
+#: src/List.pm:770
 msgid "SQL query inclusion"
 msgstr "SQL kyselyn liittäminen"
 
-# nlsref 12,4
-#: src/Commands.pm:1763 src/List.pm:1875 src/mail.pm:81 src/sympa.pl:1049
-#: src/sympa.pl:1291 src/sympa.pl:733 src/sympa.pl:734 src/sympa.pl:967
-msgid "SYMPA <%s>"
-msgstr "SYMPA <%s>"
+#: src/etc/tt2/helpfile.tt2:49
+#, fuzzy
+msgid "STATS <list>                    * To consult the statistics for <list>"
+msgstr "Saadaksesi tilastot listalle <list>"
 
-#: src/etc/tt2/helpfile.tt2:9
+#: src/etc/tt2/helpfile.tt2:21
 msgid ""
-"SYMPA is an electronic mailing-list manager that automates list management\n"
-"functions such as subscriptions, moderation, and archive management.\n"
+"SUBscribe <list> <name>     * To subscribe or to confirm a subscription to "
+"<list>."
+msgstr ""
+
+#: src/etc/tt2/helpfile.tt2:8
+msgid ""
+"SYMPA is an electronic mailing-list manager that automates list management "
+"functions such as subscriptions, moderation, and archive management."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:125
+msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr ""
 
 #: wwsympa/tt2/editfile.tt2:11
@@ -2282,7 +2783,7 @@ msgstr "Tallenna"
 msgid "Scenari name"
 msgstr "Skenaarion nimi"
 
-#: wwsympa/tt2/serveradmin.tt2:178
+#: wwsympa/tt2/serveradmin.tt2:181
 msgid "Scenari test module"
 msgstr "Skenaario testi moduuli"
 
@@ -2290,13 +2791,13 @@ msgstr "Skenaario testi moduuli"
 msgid "Scenario test module"
 msgstr "Skenaario testi moduuli"
 
-#: wwsympa/tt2/arc.tt2:19 wwsympa/tt2/arcsearch_form.tt2:15
+#: wwsympa/tt2/arc.tt2:20 wwsympa/tt2/arcsearch_form.tt2:15
 #: wwsympa/tt2/arcsearch_form.tt2:23 wwsympa/tt2/review.tt2:58
 #: wwsympa/tt2/reviewbouncing.tt2:11
 msgid "Search"
 msgstr "Etsi"
 
-#: wwsympa/tt2/serveradmin.tt2:86
+#: wwsympa/tt2/serveradmin.tt2:91
 msgid "Search User"
 msgstr "Etsi käyttäjä"
 
@@ -2308,32 +2809,29 @@ msgstr "Hakualue"
 msgid "Search field :"
 msgstr "Hakukenttä :"
 
-#: wwsympa/tt2/home.tt2:60
+#: wwsympa/tt2/home.tt2:58
 msgid "Search lists"
 msgstr "Hae listoista"
 
 # nlsref 16,11
-#: src/List.pm:351
+#: src/List.pm:385
 msgid "Secret string for generating unique keys"
 msgstr "Salainen avain ainutlaatuisten avainten luontiin"
 
-#: wwsympa/tt2/lists.tt2:46
+#: wwsympa/tt2/lists.tt2:45
 msgid "See your subscriptions with the following email addresses"
 msgstr "Tarkista tilauksesi seuraavilla osoitteilla"
+
+#: wwsympa/tt2/arc_manage.tt2:5
+msgid ""
+"Select below Archives months you want to delete or download (ZiP format):"
+msgstr ""
 
 #: wwsympa/tt2/review.tt2:62
 msgid "Selection too wide, can not show selection"
 msgstr "Valinta liian laaja, ei voida näyttää"
 
-#: src/etc/tt2/helpfile.tt2:72
-msgid ""
-"Send a reminder message to each\n"
-"                                   subscriber (this is a way to inform\n"
-"                                   anyone what is his real subscribing\n"
-"                                   email).\n"
-msgstr ""
-
-#: wwsympa/tt2/loginbanner.tt2:60
+#: wwsympa/tt2/loginbanner.tt2:136
 msgid "Send me a password"
 msgstr "Lähetä salasana"
 
@@ -2350,11 +2848,11 @@ msgid "Sender"
 msgstr "Lähettäjä"
 
 #. (send)
-#: src/etc/tt2/info_report.tt2:14
+#: src/etc/tt2/info_report.tt2:12
 msgid "Sending messages   : %1"
 msgstr "Tilaus       : [% subscribe %]"
 
-#: wwsympa/tt2/admin_menu.tt2:136
+#: wwsympa/tt2/admin_menu.tt2:143
 msgid "Sending/Reception"
 msgstr "><b>Hallinnointi</b"
 
@@ -2368,7 +2866,7 @@ msgid "Sent mega-bytes             :      %1"
 msgstr "Vastaanotettujen viestien lkm :      [% stats.msg_rcv %]"
 
 # nlsref 16,69
-#: src/List.pm:868
+#: src/List.pm:888
 msgid "Serial number of the config"
 msgstr "Asetusten sarjanumero"
 
@@ -2376,20 +2874,20 @@ msgstr "Asetusten sarjanumero"
 msgid "Service messages description :"
 msgstr "Palveluviestien kuvaus:"
 
-#: wwsympa/tt2/d_control.tt2:51
+#: wwsympa/tt2/d_control.tt2:49
 msgid "Set owner"
 msgstr "Aseta omistaja"
 
-#. (path)
-#: wwsympa/tt2/d_control.tt2:43
+#. (visible_path)
+#: wwsympa/tt2/d_control.tt2:41
 msgid "Set the owner of the directory %1"
 msgstr "Aseta hakemiston omistaja %1"
 
-#: wwsympa/tt2/serveradmin.tt2:107
+#: wwsympa/tt2/serveradmin.tt2:112
 msgid "Setting defaults list templates"
 msgstr "Asetetaan lista oletusmallit"
 
-#: wwsympa/tt2/serveradmin.tt2:118
+#: wwsympa/tt2/serveradmin.tt2:122
 msgid "Setting site templates"
 msgstr "Asetetaan sivuston oletusmallit"
 
@@ -2398,15 +2896,25 @@ msgid "Shared document directory size"
 msgstr "Jaetun dokementtihakemiston koko"
 
 # nlsref 16,70
-#: src/List.pm:887
+#: src/List.pm:907
 msgid "Shared documents"
 msgstr "Jaetut dokumentit"
 
-#: wwsympa/tt2/list_menu.tt2:375 wwsympa/tt2/list_menu.tt2:380
+#: wwsympa/tt2/list_menu.tt2:383 wwsympa/tt2/list_menu.tt2:388
 msgid "Shared web"
 msgstr "Jaettu WWW"
 
-#: wwsympa/tt2/modindex.tt2:17
+#: wwsympa/tt2/help_user_options.tt2:18
+msgid ""
+"Similar to the Digest option in that the subscriber will periodically \n"
+"receive batched messages in a Digest. With DigestPlain the Digest is sent in "
+"a plain text \n"
+"format, with all attachments stripped out. DigestPlain is useful if your "
+"email software doesn't\n"
+"display multipart/digest format messages well.\n"
+msgstr ""
+
+#: wwsympa/tt2/modindex.tt2:20 wwsympa/tt2/modindex.tt2:72
 msgid "Size"
 msgstr "Koko"
 
@@ -2414,41 +2922,8 @@ msgstr "Koko"
 msgid "Size (Kb)"
 msgstr "Koko (Kb)"
 
-# nlsref 6,261
-#: src/List.pm:6438
-#, fuzzy
-msgid ""
-"Someone (hopefully you) asked for you e-mail address\n"
-"to be removed from list '%s'.\n"
-"If you want this action to be taken, please \n"
-"\n"
-"- reply to this mail\n"
-"OR\n"
-"- send a message to '%s' with subject\n"
-" %s\n"
-"OR\n"
-"- hit the following mailto %s\n"
-"\n"
-"This can be done via the URL %s\n"
-"If you do not want this action to be taken, you can safely ignore\n"
-"this message"
-msgstr ""
-"Joku (toivon mukaan sinä) pyysi että mailiosoitteesi\n"
-"poistetaan listalta '%s'.\n"
-"Jos haluat että näin tehdään niin \n"
-"\n"
-"- vastaa tähän mailiin\n"
-"TAI\n"
-"- lähetä viesti osoitteeseen '%s' ja laita subject-kenttään\n"
-" %s\n"
-"TAI\n"
-"- käytä tätä: %s\n"
-"\n"
-"Tämä voidaan tehdä URLin %s avulla\n"
-"Jos et halua että näin tapahtuu, voit vain unohtaa tämän viestin."
-
 # nlsref 6,260
-#: src/List.pm:6445
+#: src/List.pm:6736
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -2478,8 +2953,40 @@ msgstr ""
 "Jos et halua että mailiosoitettasi lisätään listalle, sinun ei\n"
 "tarvitse reagoida mitenkään."
 
+# nlsref 6,260
+#: src/List.pm:6729
+#, fuzzy
+msgid ""
+"Someone (hopefully you) asked for your e-mail address\n"
+"to be removed from list '%s'.\n"
+"If you want this action to be taken, please \n"
+"\n"
+"- reply to this mail\n"
+"OR\n"
+"- send a message to '%s' with subject\n"
+" %s\n"
+"OR\n"
+"- hit the following mailto %s\n"
+"\n"
+"If you do not want this action to be taken, you can safely ignore\n"
+"this message"
+msgstr ""
+"Joku (toivottavasti sinä) pyysi sähköpostiosoitteesi\n"
+"lisäämistä listalle '%s'.\n"
+"Jos haluat että näin tapahtuu niin\n"
+"\n"
+"- vastaa tähän mailiin\n"
+"TAI\n"
+"- lähetä viesti osoitteeseen %s ja laita subject-kenttään\n"
+" %s\n"
+"TAI\n"
+"- käytä tätä: %s\n"
+"\n"
+"Jos et halua että mailiosoitettasi lisätään listalle, sinun ei\n"
+"tarvitse reagoida mitenkään."
+
 # nlsref 6,39
-#: src/List.pm:6450 src/List.pm:6455
+#: src/List.pm:6741 src/List.pm:6746
 msgid ""
 "Someone (hopefully you) requested a user of list %s to be\n"
 "added or removed.\n"
@@ -2502,9 +3009,10 @@ msgstr ""
 "Jos et halua tehdä tätä, älä reagoi tähän viestiin.\n"
 
 # nlsref 6,48
-#: src/Commands.pm:2045
+#: src/Commands.pm:2030
+#, fuzzy
 msgid ""
-"Someone (hopefully you) resquested that the subscribers to the list\n"
+"Someone (hopefully you) requested that the subscribers to the list\n"
 "'%s' for more than %d days have to confirm their subscription.\n"
 "If you do not want this action to be taken, simply ignore this message.\n"
 "To confirm this action, please send an e-mail to '%s', with the following "
@@ -2537,18 +3045,28 @@ msgstr "Lajittele nimen mukaan"
 msgid "Sort by size"
 msgstr "Lajittele koon mukaan"
 
+#: wwsympa/tt2/review.tt2:150 wwsympa/tt2/review.tt2:154
+#, fuzzy
+msgid "Sources"
+msgstr "size=\"-1\"><b>Omat asetukset</b"
+
 #. (current_subscriber.bounce_status)
-#: wwsympa/tt2/editsubscriber.tt2:51
+#: wwsympa/tt2/editsubscriber.tt2:48
 msgid "Status : %1"
 msgstr "Tilanne : %1"
 
 # nlsref 16,71
-#: src/List.pm:903
+#: src/List.pm:923
 msgid "Status of the list"
 msgstr "Listan status"
 
-#: wwsympa/tt2/arcsearch_form.tt2:59 wwsympa/tt2/get_latest_lists.tt2:8
-#: wwsympa/tt2/modindex.tt2:16
+#: wwsympa/tt2/review.tt2:160 wwsympa/tt2/review.tt2:164
+#, fuzzy
+msgid "Sub date"
+msgstr "Lajittele pvm mukaan"
+
+#: wwsympa/tt2/arcsearch_form.tt2:59 wwsympa/tt2/get_inactive_lists.tt2:9
+#: wwsympa/tt2/get_latest_lists.tt2:8 wwsympa/tt2/modindex.tt2:19
 msgid "Subject"
 msgstr "Otsikko"
 
@@ -2563,31 +3081,31 @@ msgid "Subject :"
 msgstr "Otsikko :"
 
 # nlsref 16,72
-#: src/List.pm:909
+#: src/List.pm:929
 msgid "Subject of the list"
 msgstr "Listan otsikko"
 
 # nlsref 16,17
-#: src/List.pm:381
+#: src/List.pm:415
 msgid "Subject tagging"
 msgstr "Otsikon muuttaminen"
 
-#: wwsympa/tt2/compose_mail.tt2:6 wwsympa/tt2/create_list_request.tt2:41
+#: wwsympa/tt2/compose_mail.tt2:6 wwsympa/tt2/create_list_request.tt2:40
 msgid "Subject:"
 msgstr "Otsikko:"
 
-#: wwsympa/tt2/choosepasswd.tt2:21 wwsympa/tt2/pref.tt2:120
-#: wwsympa/tt2/pref.tt2:40 wwsympa/tt2/pref.tt2:71 wwsympa/tt2/pref.tt2:80
+#: wwsympa/tt2/choosepasswd.tt2:21 wwsympa/tt2/pref.tt2:117
+#: wwsympa/tt2/pref.tt2:38 wwsympa/tt2/pref.tt2:69 wwsympa/tt2/pref.tt2:78
 msgid "Submit"
 msgstr "Lähetä"
 
-#: wwsympa/tt2/create_list_request.tt2:80
+#: wwsympa/tt2/create_list_request.tt2:77
 msgid "Submit your creation request"
 msgstr "Lähetä luontipyyntö"
 
-#: wwsympa/tt2/list_menu.tt2:192 wwsympa/tt2/list_menu.tt2:224
-#: wwsympa/tt2/list_menu.tt2:230 wwsympa/tt2/list_menu.tt2:234
-#: wwsympa/tt2/list_menu.tt2:238 wwsympa/tt2/subrequest.tt2:34
+#: wwsympa/tt2/list_menu.tt2:200 wwsympa/tt2/list_menu.tt2:232
+#: wwsympa/tt2/list_menu.tt2:238 wwsympa/tt2/list_menu.tt2:242
+#: wwsympa/tt2/list_menu.tt2:246 wwsympa/tt2/subrequest.tt2:34
 #: wwsympa/tt2/subrequest.tt2:64
 msgid "Subscribe"
 msgstr "Tilaa"
@@ -2601,13 +3119,9 @@ msgstr "Tilauksen alkamispvm %1"
 msgid "Subscriber"
 msgstr "Tilaaja"
 
-#: wwsympa/tt2/list_menu.tt2:136 wwsympa/tt2/list_menu.tt2:140
+#: wwsympa/tt2/list_menu.tt2:144 wwsympa/tt2/list_menu.tt2:148
 msgid "Subscriber Options"
 msgstr "Tilaajan Asetukset"
-
-#: src/etc/tt2/helpfile.tt2:41
-msgid "Subscriber address visible via REView"
-msgstr "Tilaajan osoite näkyvissä REView komennon kautta"
 
 #: wwsympa/tt2/editsubscriber.tt2:6
 msgid "Subscriber information"
@@ -2628,36 +3142,36 @@ msgid ""
 msgstr ""
 
 #. (subscribe)
-#: src/etc/tt2/info_report.tt2:12
+#: src/etc/tt2/info_report.tt2:10
 msgid "Subscription       : %1"
 msgstr "Tilaus       : %1"
 
 # nlsref 16,18
-#: src/List.pm:395
+#: src/List.pm:429
 msgid "Subscription profile"
 msgstr "Tilausprofiili"
 
 # nlsref 6,78
-#: src/Commands.pm:1315
+#: src/Commands.pm:1307
 msgid "Subscription reminder sent to each of %d %s subscribers\n"
 msgstr "Tilausmuistutus lähetetty jokaiselle %d:lle listan %s tilaajista\n"
 
 # nlsref 8,2
-#: src/List.pm:1665
+#: src/List.pm:1739
 msgid "Subscription request to list %s"
 msgstr "Tilauspyyntö listalle %s"
 
 # nlsref 6,83
-#: src/Commands.pm:1326
+#: src/Commands.pm:1318
 msgid "Subscription summary"
 msgstr "Tilausyhteenveto"
 
-#: wwsympa/tt2/help_user_options.tt2:14
+#: wwsympa/tt2/help_user_options.tt2:22
 msgid "Summary"
 msgstr "Yhteenveto"
 
 # nlsref 8,31
-#: src/List.pm:2487
+#: src/List.pm:2652
 msgid "Summary of list %s"
 msgstr "Yhteenveto listasta %s"
 
@@ -2666,13 +3180,33 @@ msgstr "Yhteenveto listasta %s"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Yhteenveto tilauksestasi (käyttäen osoitetta %1)."
 
-#: src/etc/mhonarc-ressources:438
-msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
-msgstr ""
-
 #: wwsympa/tt2/menu.tt2:69 wwsympa/tt2/menu.tt2:73
 msgid "Sympa admin"
 msgstr "Sympan hallinta"
+
+#: wwsympa/tt2/help_editlist.tt2:166
+msgid ""
+"Sympa allows the list owner to choose how Sympa loads list member data. "
+"Subscriber information can be stored in a text file or relational database, "
+"or included from various external sources (list, flat file, result of or "
+"query)."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:162
+msgid ""
+"Sympa caches user data extracted using the include parameter. Their TTL "
+"(time-to-live) within Sympa can be controlled using this parameter. The "
+"default value is 3600"
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:110
+msgid ""
+"Sympa can contact another Sympa service using https to fetch a remote list "
+"in order to include each member of a remote list as subscriber. You may "
+"include as many lists as required, using one include_remote_sympa_list "
+"paragraph for each included list. Be careful, however, not to give rise an "
+"infinite loop making cross includes."
+msgstr ""
 
 #: src/etc/tt2/listmaster_notification.tt2:33
 msgid ""
@@ -2680,30 +3214,39 @@ msgid ""
 "database or LDAP directory might be unreachable.\n"
 msgstr ""
 
+#: wwsympa/tt2/main.tt2:89
+msgid ""
+"Sympa could not set a cookie for login.\n"
+" Your should setup your navigator to accept cookies"
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:96
+msgid ""
+"Sympa will not create new MIME parts, but will try to append the header/"
+"footer to the body of the message. Predefined message-footers will be "
+"ignored. Headers/footers may be appended to text/plain messages only."
+msgstr ""
+
 #. (error.params)
-#: wwsympa/tt2/error.tt2:98
+#: wwsympa/tt2/error.tt2:97
 msgid "Syntax errors with the following parameters : %1"
 msgstr "Syntaksi virhe seuraavissa parametreissa: %1"
 
-#: src/List.pm:2369 src/List.pm:2440
+#: src/List.pm:2536 src/etc/tt2/digest.tt2:12 src/etc/tt2/digest_plain.tt2:10
 #, fuzzy
-msgid "Table of content"
+msgid "Table of contents:"
 msgstr "Sisällysluettelo:"
 
-#: src/etc/tt2/digest.tt2:12
-msgid "Table of content:"
-msgstr "Sisällysluettelo:"
-
-#: wwsympa/tt2/serveradmin.tt2:97
+#: wwsympa/tt2/serveradmin.tt2:102
 msgid "Templates"
 msgstr "Oletusmallit"
 
 # nlsref 16,4
-#: src/List.pm:304
+#: src/List.pm:296
 msgid "Text archives"
 msgstr "Teksti arkistot"
 
-#: wwsympa/tt2/lists.tt2:67
+#: wwsympa/tt2/lists.tt2:65
 msgid ""
 "That is to say using a unique email address in Sympa for your subscriptions "
 "and preferences"
@@ -2711,8 +3254,29 @@ msgstr ""
 "Tämä on uniikki email osoite Sympassa tilauksia ja asetuksia varten\n"
 "</FONT"
 
+#. (file_name)
+#: src/etc/tt2/urlized_part.tt2:5
+msgid ""
+"The %1 file that was initially attached to this message has been stored of "
+"the mailing lists server:"
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:38
+msgid ""
+"The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
+"management.<BR>\n"
+"\tLevel 1 is the lower level of bouncing users\n"
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:54
+msgid ""
+"The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
+"management.<BR>\n"
+"\tLevel 2 is the highest level of bouncing users\n"
+msgstr ""
+
 # nlsref 6,47
-#: src/Commands.pm:1909 src/Commands.pm:2122 src/Commands.pm:2218
+#: src/Commands.pm:1894 src/Commands.pm:2107 src/Commands.pm:2203
 msgid ""
 "The EXPIRE, EXPIREINDEX and EXPIREDEL commands are restricted to the owners "
 "of the list.\n"
@@ -2723,7 +3287,7 @@ msgstr ""
 "Et kuulu listan %s omistajiin.\n"
 
 # nlsref 6,46
-#: src/Commands.pm:2261
+#: src/Commands.pm:2246
 #, fuzzy
 msgid "The MODINDEX command is restricted to moderators.\n"
 msgstr ""
@@ -2731,7 +3295,7 @@ msgstr ""
 "Et kuulu listan %s moderaattoreihin.\n"
 
 # nlsref 6,84
-#: src/Commands.pm:1142
+#: src/Commands.pm:1136
 msgid "The User '%s' is already subscriber of list '%s'\n"
 msgstr "Käyttäjä '%s' on jo listan '%s' tilaaja\n"
 
@@ -2740,9 +3304,9 @@ msgid "The antivirus scan has failed while processing the following file:"
 msgstr "Antivirus skannaus epäonnistui"
 
 # nlsref 6,15
-#: src/Commands.pm:1107 src/Commands.pm:1242 src/Commands.pm:1410
-#: src/Commands.pm:1981 src/Commands.pm:470 src/Commands.pm:597
-#: src/Commands.pm:738 src/Commands.pm:850 src/Commands.pm:986
+#: src/Commands.pm:1101 src/Commands.pm:1234 src/Commands.pm:1402
+#: src/Commands.pm:1966 src/Commands.pm:466 src/Commands.pm:593
+#: src/Commands.pm:733 src/Commands.pm:845 src/Commands.pm:981
 msgid ""
 "The authentication process failed\n"
 "\n"
@@ -2750,16 +3314,40 @@ msgstr ""
 "Käyttöoikeuksien tarkastusprosessi epäonnistui\n"
 "\n"
 
+#: wwsympa/tt2/help_editlist.tt2:15
+msgid ""
+"The available_user_options parameter starts a paragraph to define available "
+"options for the subscribers of the list."
+msgstr ""
+
 #: src/etc/tt2/certif_warning.tt2:5
 msgid "The certificate subject is :"
 msgstr "Tunnistussertifikaatin voimassaoloaika loppuu [% expiration_date %]"
 
 # nlsref 1,1
-#: src/alias_manager.pl:34
-msgid "The configuration file contains errors.\n"
+#: src/alias_manager.pl:40
+#, fuzzy
+msgid "The configuration file --CONFIG-- contains errors.\n"
 msgstr "Asetustiedostossa on virheitä.\n"
 
-#: wwsympa/tt2/error.tt2:154
+#: wwsympa/tt2/help_editlist.tt2:139
+msgid ""
+"The default is to respect (preserve) the existing Reply-To: SMTP header "
+"field in incoming messages. If set to forced, Reply-To: SMTP header field "
+"will be overwritten."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:93
+msgid "The default value. Sympa will add the footer/header as a new MIME part."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:74
+msgid ""
+"The default_user_options parameter starts a paragraph to define a default "
+"profile for the subscribers of the list."
+msgstr ""
+
+#: wwsympa/tt2/error.tt2:156
 msgid "The document repository exceed disk quota."
 msgstr ""
 
@@ -2768,14 +3356,14 @@ msgid "The following address is not a known mailing list :"
 msgstr ""
 "Tämä on automaattinen vastaus jonka lähetti Sympa Postituslista ohjelmisto."
 
-#: src/etc/tt2/helpfile.tt2:55
+#: src/etc/tt2/helpfile.tt2:45
 msgid ""
 "The following commands are available only for lists's owners or moderators:"
 msgstr ""
 "Seuraavat komennot ovat saatavilla vain listan omistajille ja hallitsijoille:"
 
 # nlsref 5,3
-#: src/tools.pl:114
+#: src/tools.pl:133
 msgid ""
 "The following message was sent to a list while it seems to contain\n"
 "commands like subscribe, unsubscribe, help, index, get, ...\n"
@@ -2811,35 +3399,63 @@ msgstr ""
 msgid "The following virtual robots are running on this server :"
 msgstr "Seuraavat Virtuaali robotit pyörivät tällä palvelimella :"
 
-#: wwsympa/tt2/notice.tt2:32
+#. (conf.wwsympa_url,list.name)
+#: src/etc/tt2/d_install_shared.tt2:7
+msgid "The list document repository : %1/d_read/%2"
+msgstr ""
+
+#: wwsympa/tt2/notice.tt2:34
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr "Ei viestejä hallittavana listalla [% notice.list %]"
 
-#: wwsympa/tt2/create_list_request.tt2:38
+#: wwsympa/tt2/help_editlist.tt2:25
+msgid ""
+"The list owner receives a warning whenever a message is distributed and the "
+"number (percentage) of bounces exceeds this value."
+msgstr ""
+
+#: wwsympa/tt2/create_list_request.tt2:37
 msgid ""
 "The list type is a set of parameters' profile. Parameters will be editable, "
 "once the list created"
 msgstr ""
 "Listan tyyppi on joukko parametrejä, joita voi muuttaa kun lista on luotu"
 
-#: wwsympa/tt2/create_list_request.tt2:43
+#: wwsympa/tt2/create_list_request.tt2:42
 msgid "The list's subject"
 msgstr "Listan otsikko"
 
-#: wwsympa/tt2/error.tt2:83
+#: wwsympa/tt2/error.tt2:82
 msgid "The passwords you typed do not match"
 msgstr "Salasanat eivät täsmää"
+
+#: wwsympa/tt2/help_editlist.tt2:121
+msgid ""
+"The priority with which Sympa will process messages for this list. This "
+"level of priority is applied while the message is going through the spool. "
+"The z priority will freeze the message in the spool."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:129
+msgid ""
+"The reply_to_header parameter starts a paragraph defining what Sympa will "
+"place in the Reply-To: SMTP header field of the messages it distributes."
+msgstr ""
 
 #: src/etc/tt2/listmaster_notification.tt2:18
 msgid "The returned error message :"
 msgstr "Saatu virheilmoitus :"
 
-#: wwsympa/tt2/help_user_options.tt2:12
+#: wwsympa/tt2/help_user_options.tt2:12 wwsympa/tt2/help_user_options.tt2:20
 msgid "The sending interval for these Digests is defined by the list owner."
 msgstr ""
 
+#: wwsympa/tt2/help_editlist.tt2:158
+msgid "The subscribe parameter defines the rules for subscribing to the list."
+msgstr ""
+
 # nlsref 6,38
-#: src/Commands.pm:1489
+#: src/Commands.pm:1481
 msgid "The user %s has been removed from the list %s/\n"
 msgstr "Käyttäjä %s on poistettu listalta %s/\n"
 
@@ -2848,13 +3464,21 @@ msgstr "Käyttäjä %s on poistettu listalta %s/\n"
 msgid "There are %1 messages to be moderated for list %2@%3"
 msgstr "%1 viestiä odottaa hallintaa listalle %2@%3"
 
+#: wwsympa/tt2/help_editlist.tt2:149
+msgid ""
+"There is a need to protect Sympa web site against spambot which collect "
+"email address in public web site. Various methods are available in Sympa and "
+"you can choose it with spam_protection and web_archive_spam_protection "
+"parameters. Possible value are:"
+msgstr ""
+
 # nlsref 4,26
-#: src/sympa.pl:1323
+#: src/sympa.pl:1338
 msgid "These subscribers are :\n"
 msgstr "Tilaajiin kuuluu :\n"
 
 #. (process_id,loop_count,start_time)
-#: wwsympa/tt2/serveradmin.tt2:189
+#: wwsympa/tt2/serveradmin.tt2:192
 msgid "This FastCGI process (%1) has served %2 since %3."
 msgstr "Tämä FastCGI prosessi (%1) on ollut ajossa %2 %3 asti."
 
@@ -2863,10 +3487,6 @@ msgid ""
 "This button aims at protecting mailing lists archives against Spam Harvester."
 msgstr ""
 "Tämän napin tarkoitus on suojella postituslista-arkistoja SPAMia vastaan."
-
-#: src/etc/tt2/helpfile.tt2:21
-msgid "This help file"
-msgstr "Tämä tiedosto"
 
 #: wwsympa/tt2/help_user_options.tt2:3
 msgid ""
@@ -2887,25 +3507,25 @@ msgid "This list is about %1, so you are probably concerned."
 msgstr "[% ELSE %]"
 
 # nlsref 6,7
-#: src/Commands.pm:331 src/Commands.pm:376 src/Commands.pm:430
+#: src/Commands.pm:327 src/Commands.pm:372 src/Commands.pm:426
 msgid "This list's archives do not contain any file.\n"
 msgstr "Tämän listan arkistot eivät sisällä mitään tiedostoa.\n"
 
-#: wwsympa/tt2/help_user_options.tt2:38
+#: wwsympa/tt2/help_user_options.tt2:46
 msgid ""
 "This mode is used when a subscriber does not want to receive attached files. "
 "The attached files are \n"
 "replaced by a URL leading to the file stored on the list site.\n"
 msgstr ""
 
-#: wwsympa/tt2/help_user_options.tt2:43
+#: wwsympa/tt2/help_user_options.tt2:51
 msgid ""
 "This mode is used when a subscriber does not want to receive copies of "
 "messages that he or she has sent to \n"
 "the list.\n"
 msgstr ""
 
-#: wwsympa/tt2/help_user_options.tt2:23
+#: wwsympa/tt2/help_user_options.tt2:31
 msgid ""
 "This mode is used when a subscriber no longer wishes to receive mail from "
 "the list, but nevertheless wishes to retain the ability to post to the list. "
@@ -2913,21 +3533,21 @@ msgid ""
 "subscribing later on."
 msgstr ""
 
-#: wwsympa/tt2/help_user_options.tt2:33
+#: wwsympa/tt2/help_user_options.tt2:41
 msgid ""
 "This mode is used when a subscriber wishes to receive mails sent in both "
 "HTML and plain text formats\n"
 "only in HTML format.\n"
 msgstr ""
 
-#: wwsympa/tt2/help_user_options.tt2:28
+#: wwsympa/tt2/help_user_options.tt2:36
 msgid ""
 "This mode is used when a subscriber wishes to receive mails sent in both "
 "HTML and plain text formats\n"
 "only in plain text format.\n"
 msgstr ""
 
-#: wwsympa/tt2/help_user_options.tt2:48
+#: wwsympa/tt2/help_user_options.tt2:56
 msgid ""
 "This option is used mainly to cancel the nomail, summary or digest modes. If "
 "the subscriber was \n"
@@ -2935,13 +3555,176 @@ msgid ""
 "the list.\n"
 msgstr ""
 
-#: wwsympa/tt2/pref.tt2:126
+#: wwsympa/tt2/pref.tt2:123
 msgid ""
 "This other email address, that should be known by Sympa, will be recognized "
 "by Sympa as \n"
 "\tan alternate email address. You will also be able to unify your "
 "subscriptions with\n"
 "\tyour main email address.\n"
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:22
+msgid "This paragraph defines bounce management parameters:"
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:106
+msgid ""
+"This paragraph defines parameters for a query returning a list of "
+"subscribers. This paragraph is used only if user_data_source is set to "
+"include. This feature requires the Net::LDAP (perlldap) PERL module."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:104
+msgid ""
+"This paragraph defines parameters for a two-level query returning a list of "
+"subscribers. Usually the first-level query returns a list of DNs and the "
+"second-level queries convert the DNs into e-mail addresses. This paragraph "
+"is used only if user_data_source is set to include. This feature requires "
+"the Net::LDAP (perlldap) PERL module."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:147
+msgid ""
+"This paragraph defines read and edit access to the shared document "
+"repository."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:160
+msgid ""
+"This parameter allows the classification of lists. You may define multiple "
+"topics as well as hierarchical ones. WWSympa's list of public lists uses "
+"this parameter."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:115
+msgid ""
+"This parameter defines the language used for the list. It is used to "
+"initialize a user's language preference; Sympa command reports are extracted "
+"from the associated message catalog."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:45
+msgid ""
+"This parameter defines which task is automaticaly applied on level 1 "
+"bouncers."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:61
+msgid ""
+"This parameter defines which task is automaticaly applied on level 2 "
+"bouncers."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:156
+msgid ""
+"This parameter indicates the subject of the list, which is sent in response "
+"to the LISTS mail command. The subject is a free form text limited to one "
+"line."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:132
+msgid ""
+"This parameter indicates whether the Reply-To: field should indicate the "
+"sender of the message (sender), the list itself (list), both list and sender "
+"(all) or an arbitrary e-mail address (defined by the other_email parameter)."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:168
+msgid ""
+"This parameter indicates whether the list should feature in the output "
+"generated in response to a LISTS command or should be shown in the list "
+"overview of the web-interface."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:68
+msgid ""
+"This parameter is a confidential item for generating authentication keys for "
+"administrative commands (ADD, DELETE, etc.). This parameter should remain "
+"concealed, even for owners. The cookie is applied to all list owners, and is "
+"only taken into account when the owner has the auth parameter."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:72
+msgid ""
+"This parameter is optional. It specifies a string which is added to the "
+"subject of distributed messages (intended to help users who do not use "
+"automatic tools to sort incoming messages). This string will be surrounded "
+"by [] characters."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:70
+msgid ""
+"This parameter is optional. The headers specified will be added to the "
+"headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
+"it is possible to put several custom header lines in the configuration file "
+"at the same time."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:164
+msgid ""
+"This parameter specifies the unsubscription method for the list. Use "
+"open_notify or auth_notify to allow owner notification of each unsubscribe "
+"command."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:143
+msgid ""
+"This parameter specifies who can access the list of members. Since "
+"subscriber addresses can be abused by spammers, it is strongly recommended "
+"that you only authorize owners or subscribers to access the subscriber list. "
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:145
+msgid "This parameter specifies who can send messages to the list."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:80
+msgid "This parameter specifies who is authorized to use the DEL command."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:123
+msgid "This parameter specifies who is authorized to use the remind command."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:88
+msgid ""
+"This parameter states which model is used to create a expire task. An expire "
+"task regurlaly checks the inscription or reinscription date of subscribers "
+"and asks them to renew their subscription. If they don't they are deleted."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:127
+msgid ""
+"This parameter states which model is used to create a remind task. A remind "
+"task regurlaly sends to the subscribers a message which reminds them their "
+"subscription to list."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:113
+msgid ""
+"This parameter will be interpreted only if the user_data_source value is set "
+"to include, and is used to begin a paragraph defining the SQL query "
+"parameters. "
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:102
+msgid ""
+"This parameter will be interpreted only if the user_data_source value is set "
+"to include. The file should contain one e-mail address per line (lines "
+"beginning with a \"#\" are ignored)."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:108
+msgid ""
+"This parameter will be interpreted only if user_data_source is set to "
+"include. All subscribers of list listname become subscribers of the current "
+"list. You may include as many lists as required, using one include_list "
+"listname line for each included list. Any list at all may be included; the "
+"user_data_source definition of the included list is irrelevant, and you may "
+"therefore include lists which are also defined by the inclusion of other "
+"lists. Be careful, however, not to include list A in list B and then list B "
+"in list A, since this will give rise an infinite loop."
 msgstr ""
 
 #: wwsympa/tt2/sigrequest.tt2:43 wwsympa/tt2/subrequest.tt2:38
@@ -2959,13 +3742,8 @@ msgid ""
 "archives, list management and so on.\n"
 msgstr ""
 
-#: src/etc/mhonarc-ressources:140 src/etc/mhonarc-ressources:304
-#: src/etc/mhonarc-ressources:62
-msgid "Thread"
-msgstr ""
-
 # nlsref 6,61
-#: src/Commands.pm:1926
+#: src/Commands.pm:1911
 msgid "Thus, your message is sent back to you :\n"
 msgstr "Viestisi on lähetetty sinulle takaisin :\n"
 
@@ -2977,23 +3755,7 @@ msgstr ""
 msgid "To activate/delete this mailing list :"
 msgstr "Aktivoidaksesi/poistaaksesi listan :"
 
-#: src/etc/tt2/helpfile.tt2:57
-msgid "To add a user to a list"
-msgstr "Lisätäksesi tilaajan listalle"
-
-#: src/etc/tt2/helpfile.tt2:40
-msgid "To become unlisted (hidden subscriber address)"
-msgstr "Salaa osoitteesi muilta"
-
-#: src/etc/tt2/helpfile.tt2:63
-msgid ""
-"To begin an expiration process for <list>\n"
-"                                   subscribers who have not confirmed their\n"
-"                                   subscription for <old> days. The\n"
-"                                   subscribers have <delay> days to confirm\n"
-msgstr ""
-
-#: wwsympa/tt2/notice.tt2:26
+#: wwsympa/tt2/notice.tt2:28
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr "Valitaksesi salasana mene 'asetukset' sivulle, ylävalikon kautta."
 
@@ -3048,23 +3810,9 @@ msgid ""
 "\tyour password below :\n"
 msgstr ""
 
-#: src/etc/tt2/helpfile.tt2:59
-msgid "To consult the statistics for <list>"
-msgstr "Saadaksesi tilastot listalle <list>"
-
 #: wwsympa/tt2/help.tt2:58
 msgid "To contact this service administrator :"
 msgstr "Ottaaksesi yhteyttä tämän palvelun ylläpitäjään :"
-
-#: src/etc/tt2/helpfile.tt2:67
-msgid ""
-"To de-activate the expiration process for\n"
-"                                   <list>\n"
-msgstr ""
-
-#: src/etc/tt2/helpfile.tt2:58
-msgid "To delete a user from a list"
-msgstr "Poistaaksesi tilaajan listalta"
 
 #. (list.name)
 #: src/etc/tt2/moderate.tt2:13
@@ -3072,7 +3820,7 @@ msgid "To distribute the attached message in list %1:"
 msgstr "Lähettääksesi ohessa olevan viestin listalle %1:"
 
 # nlsref 8,12
-#: src/List.pm:1888
+#: src/List.pm:2037
 msgid ""
 "To distribute the attached message in list %s :\n"
 "mailto:%s?subject=CONFIRM%%20%s\n"
@@ -3089,23 +3837,21 @@ msgid ""
 msgstr ""
 "Löytääksesi oikean listan nimen, kysy sitä palvelimen listahakemistosta :"
 
-#: src/etc/tt2/helpfile.tt2:45
-msgid "To get <file> of <list> archive"
-msgstr "Saadaksesi tiedosto <file> listan <list> arkistosta"
-
-#: src/etc/tt2/helpfile.tt2:31
+#: wwsympa/tt2/help_editlist.tt2:11
 msgid ""
-"To quit <list>. <EMAIL> is an optional \n"
-"                               email address, usefull if different from\n"
-"                               your \"From:\" address.\n"
+"To hide the sender's email address before distributing the message. It is "
+"replaced by the provided email address."
 msgstr ""
 
-#: src/etc/tt2/helpfile.tt2:32
-msgid "To quit all lists."
-msgstr "Poistuaksesi kaikilta listoilta."
+#: wwsympa/tt2/loginbanner.tt2:18
+msgid ""
+"To login, select your organization authentication server below.<BR>\n"
+"If it is not listed or if you don't have any, login using your email and "
+"password on the right column.\n"
+msgstr ""
 
 # nlsref 6,57
-#: src/Commands.pm:1968
+#: src/Commands.pm:1953
 #, fuzzy
 msgid ""
 "To read the list of subscribers who haven't confirm their\n"
@@ -3134,7 +3880,7 @@ msgid "To reject it (it will be removed):"
 msgstr "Hylätäksesi viestin (se poistetaan) :"
 
 # nlsref 6,53
-#: src/Commands.pm:1970 src/Commands.pm:2028
+#: src/Commands.pm:1955 src/Commands.pm:2013
 msgid "To stop the expiration process : EXPIREDEL %s\n"
 msgstr "Expire-prosessin lopettaminen : EXPIREDEL %s\n"
 
@@ -3142,16 +3888,6 @@ msgstr "Expire-prosessin lopettaminen : EXPIREDEL %s\n"
 msgid ""
 "To subscribe just reply to this message or hit the following mailto url :"
 msgstr "Tervehdys,"
-
-#: src/etc/tt2/helpfile.tt2:27
-msgid ""
-"To subscribe or to confirm a subscription to\n"
-"                               <list>.\n"
-msgstr ""
-
-#: src/etc/tt2/helpfile.tt2:34
-msgid "To suspend the message reception for <list>"
-msgstr "Pysäyttääksesi viestien vastaanoton listalta <list>"
 
 #: src/etc/tt2/sendpasswd.tt2:22
 #, fuzzy
@@ -3164,16 +3900,16 @@ msgstr "Pyysit tilausta postituslistalle [% list %]."
 msgid "To: %1"
 msgstr "Vastaanottaja: %1"
 
-#: wwsympa/tt2/reviewbouncing.tt2:130
+#: wwsympa/tt2/reviewbouncing.tt2:121
 msgid "Toggle Selection"
 msgstr "Toggle Selection"
 
 # nlsref 16,74
-#: src/List.pm:919
+#: src/List.pm:939
 msgid "Topics for the list"
 msgstr "Listan aiheita"
 
-#: wwsympa/tt2/create_list_request.tt2:46
+#: wwsympa/tt2/create_list_request.tt2:45
 msgid "Topics:"
 msgstr "Aiheet:"
 
@@ -3183,26 +3919,36 @@ msgid "Total size used for %1@%2 Bytes."
 msgstr "Lista \"%1\" varoitus : arkisto [% rate %]% täynnä"
 
 #. (total)
-#: src/etc/tt2/review.tt2:8
+#: src/etc/tt2/review.tt2:7
 msgid "Total subscribers : %1"
 msgstr "Tilaajaa yhteensä : %1"
 
+#: src/etc/tt2/helpfile.tt2:24
+msgid "UNSubscribe * <EMAIL>       * To quit all lists."
+msgstr ""
+
+#: src/etc/tt2/helpfile.tt2:23
+msgid ""
+"UNSubscribe <list> <EMAIL>  * To quit <list>. <EMAIL> is an optional email "
+"address, usefull if different from your \"From:\" address."
+msgstr ""
+
 # nlsref 8,24
-#: src/List.pm:1677
+#: src/List.pm:1751
 msgid "UNsubscription request from list %s"
 msgstr "Tilauksen päättämispyyntö listalta %s"
 
-#: wwsympa/tt2/d_read.tt2:261
+#: wwsympa/tt2/d_read.tt2:287
 msgid "URL"
 msgstr "otsikko"
 
 # nlsref 3,1
-#: src/sympa.pl:1220
+#: src/sympa.pl:1235
 msgid "Unable to access directory %s : %m"
 msgstr "Hakemiston %s käyttäminen ei onnistu : %m"
 
 # nlsref 6,41
-#: src/Commands.pm:1647 src/Commands.pm:1837
+#: src/Commands.pm:1708 src/Commands.pm:1822
 #, fuzzy
 msgid ""
 "Unable to access the moderated message on list %s with key %s.\n"
@@ -3213,7 +3959,7 @@ msgstr ""
 ".\n"
 
 # nlsref 6,68
-#: src/Commands.pm:1717
+#: src/Commands.pm:1700
 msgid "Unable to access to the message authenticated with key %s.\n"
 msgstr "En voinut käyttää avaimella %s vahvistettua viestiä.\n"
 
@@ -3222,53 +3968,61 @@ msgstr "En voinut käyttää avaimella %s vahvistettua viestiä.\n"
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "Ei voitu luoda kanavaa smtpto:ssa : %m"
 
-#: wwsympa/tt2/remove_arc.tt2:11 wwsympa/tt2/remove_arc.tt2:7
+#: wwsympa/tt2/remove_arc.tt2:11
 msgid "Unable to find the message to delete"
 msgstr "Viestiä ei löydy poistettavaksi"
 
+#: wwsympa/tt2/remove_arc.tt2:9
+msgid ""
+"Unable to find the message to delete, probably this message\n"
+"was received without Message-Id. Please refer to listmaster with\n"
+"complete URL of the concerned message\n"
+msgstr ""
+
 #. (error.path)
-#: wwsympa/tt2/error.tt2:107
+#: wwsympa/tt2/error.tt2:106
 msgid "Unable to read %1 : empty document"
 msgstr "Luku epäonnistui%1 : tyhjä dokumentti"
 
 # nlsref 6,2
-#: src/Commands.pm:205
+#: src/Commands.pm:201
 msgid "Unable to read help file : %s\n"
 msgstr "Ohjetiedoston luku epäonnistui : %s\n"
 
-#: wwsympa/tt2/lists.tt2:66
+#: wwsympa/tt2/lists.tt2:64
 msgid "Unify your subscriptions with the email"
 msgstr "Yhdistä tilauksesi seuraavalla osoitteella"
 
-#: wwsympa/tt2/d_read.tt2:106 wwsympa/tt2/d_read.tt2:166
+#: wwsympa/tt2/d_read.tt2:109 wwsympa/tt2/d_read.tt2:178
 msgid "Unknown"
 msgstr "Tuntematon"
 
-#: wwsympa/tt2/list_menu.tt2:163 wwsympa/tt2/list_menu.tt2:167
-#: wwsympa/tt2/list_menu.tt2:173 wwsympa/tt2/list_menu.tt2:262
-#: wwsympa/tt2/list_menu.tt2:266 wwsympa/tt2/sigrequest.tt2:39
+#: wwsympa/tt2/list_menu.tt2:171 wwsympa/tt2/list_menu.tt2:175
+#: wwsympa/tt2/list_menu.tt2:181 wwsympa/tt2/list_menu.tt2:270
+#: wwsympa/tt2/list_menu.tt2:274 wwsympa/tt2/sigrequest.tt2:39
 #: wwsympa/tt2/sigrequest.tt2:53 wwsympa/tt2/sigrequest.tt2:68
 msgid "Unsubscribe"
 msgstr "Poistu listalta"
 
 # nlsref 6,71
-#: src/Commands.pm:942 wwsympa/wwsympa.fcgi:2913
+#: soap/sympasoap.pm:550 src/Commands.pm:937 wwsympa/wwsympa.fcgi:3039
 msgid "Unsubscribe from list %s"
 msgstr "Lopeta tilauksesi listalle %s"
 
-#: wwsympa/tt2/editsubscriber.tt2:42
+#: wwsympa/tt2/editsubscriber.tt2:39
 msgid "Unsubscribe the User"
 msgstr "Poista käyttäjän tilaus"
 
-#: src/etc/tt2/expire_warning1.tt2:10 src/etc/tt2/expire_warning2.tt2:10
-#: src/etc/tt2/remind.tt2:9
-msgid "Unsubscribtion :"
-msgstr "Tilauksen poisto :"
-
 #. (unsubscribe)
-#: src/etc/tt2/info_report.tt2:13
+#: src/etc/tt2/info_report.tt2:11
 msgid "Unsubscription     : %1"
 msgstr "Tilaus       : [% subscribe %]"
+
+#: src/etc/tt2/expire_warning1.tt2:10 src/etc/tt2/expire_warning2.tt2:10
+#: src/etc/tt2/remind.tt2:9
+#, fuzzy
+msgid "Unsubscription :"
+msgstr "Tilauksen poisto :"
 
 #. (list.name)
 #: src/etc/tt2/bye.tt2:2
@@ -3293,36 +4047,32 @@ msgstr ""
 msgid "Up to higher level directory"
 msgstr "Ylempään hakemistoon"
 
-#: wwsympa/tt2/edit_list_request.tt2:353 wwsympa/tt2/editsubscriber.tt2:41
-#: wwsympa/tt2/suboptions.tt2:33
+#: wwsympa/tt2/edit_list_request.tt2:341 wwsympa/tt2/editsubscriber.tt2:38
+#: wwsympa/tt2/suboptions.tt2:31
 msgid "Update"
 msgstr "Päivitä"
 
-#. (path)
-#: wwsympa/tt2/d_read.tt2:280
+#. (visible_path)
+#: wwsympa/tt2/d_read.tt2:306
 msgid "Upload a file inside the folder %1"
 msgstr "Lähetä tiedoston kansioon %1"
 
-#: wwsympa/tt2/d_read.tt2:282
+#: wwsympa/tt2/d_read.tt2:308
 msgid "Upload a file inside the folder SHARED"
 msgstr "Lähetä tiedoston kansioon JAETTU"
 
-#: src/etc/tt2/helpfile.tt2:46
-msgid "Used to received the last message from <list>"
-msgstr "Käytä saadaksesi viimeisin viesti listalta <list>"
-
 # nlsref 6,85
-#: src/Commands.pm:1168 src/Commands.pm:1176
+#: src/Commands.pm:1160 src/Commands.pm:1168
 msgid "User %s has been invited to subscribe in list %s.\n"
 msgstr "Käyttäjä %s on kutsuttu liittymään listan %s tilaajaksi.\n"
 
 # nlsref 6,37
-#: src/Commands.pm:1043
+#: src/Commands.pm:1037
 msgid "User %s is now subscriber of list %s.\n"
 msgstr "Käyttäjä %s on nyt listan %s tilaaja.\n"
 
 # nlsref 6,86
-#: src/Commands.pm:1184
+#: src/Commands.pm:1176
 msgid "User %s is unwanted in list %s.\n"
 msgstr "Käyttäjää %s ei haluta listalle %s.\n"
 
@@ -3331,12 +4081,12 @@ msgid "User certificate belong to"
 msgstr "Käyttäjän sertifikaatti kuuluu"
 
 # nlsref 16,81
-#: src/List.pm:956
+#: src/List.pm:976
 msgid "User data source"
 msgstr "Käyttäjän datalähde"
 
 # nlsref 6,81
-#: src/Commands.pm:164 src/Commands.pm:200
+#: src/Commands.pm:160 src/Commands.pm:196
 msgid "User guide"
 msgstr "Käyttäjän opas"
 
@@ -3344,15 +4094,16 @@ msgstr "Käyttäjän opas"
 msgid "User's Guide"
 msgstr "Käyttäjän Opas"
 
-#: wwsympa/tt2/serveradmin.tt2:75
+#: wwsympa/tt2/serveradmin.tt2:80
 msgid "Users"
 msgstr "Käyttäjät"
 
-#: wwsympa/tt2/lists.tt2:74
-msgid "Valider"
+#: wwsympa/tt2/lists.tt2:71
+#, fuzzy
+msgid "Validate"
 msgstr "Tarkista"
 
-#: wwsympa/tt2/editsubscriber.tt2:54
+#: wwsympa/tt2/editsubscriber.tt2:51
 msgid "View last bounce"
 msgstr "Katso viimeksi palannut viesti"
 
@@ -3360,26 +4111,33 @@ msgstr "Katso viimeksi palannut viesti"
 msgid "Virtual Robots"
 msgstr "Virtuaali Robotit"
 
-#: wwsympa/tt2/suboptions.tt2:24
+#: wwsympa/tt2/suboptions.tt2:23
 msgid "Visibility :"
 msgstr "Näkyvyys :"
 
 #. (current_subscriber.visibility)
-#: wwsympa/tt2/editsubscriber.tt2:23
+#: wwsympa/tt2/editsubscriber.tt2:22
 msgid "Visibility : %1"
 msgstr ""
 "Näkyvyys : %1\n"
 "<DD>Kieli"
 
 # nlsref 16,82
-#: src/List.pm:961
+#: src/List.pm:982
 msgid "Visibility of the list"
 msgstr "Listan näkyminen"
 
+#: wwsympa/tt2/help_editlist.tt2:77
+msgid "Visibility of the subscriber with the REVIEW command."
+msgstr ""
+
 # nlsref 8,23
-#: src/List.pm:1656
+#: src/List.pm:1730
 #, fuzzy
-msgid "WARNING : %s %s failed to unsubscribe from %s because his address was\n"
+msgid ""
+"WARNING : %s %s failed to unsubscribe from %s because his address was not "
+"found in the list\n"
+" (You may help this person)"
 msgstr ""
 "VAROITUS : %s %s ei onnistunut lähtemään listalta %s koska hänen "
 "osoitteensa\n"
@@ -3387,9 +4145,15 @@ msgstr ""
 " (Voisit auttaa tätä henkilöä)\n"
 
 # nlsref 8,28
-#: src/List.pm:1685
+#: src/List.pm:1759
 msgid "WARNING: bounce rate too high in list %s"
 msgstr "VAROITUS: palanneiden (bounce) viestien osuus liian suuri listalla %s"
+
+#: src/etc/tt2/helpfile.tt2:20
+#, fuzzy
+msgid ""
+"WHICH                       * Displays which lists you are subscribed to"
+msgstr "Näyttää mitä listoja tilaat"
 
 #: wwsympa/tt2/help.tt2:53
 msgid "WWSympa can remind you your password by email :"
@@ -3404,7 +4168,7 @@ msgid "We stopped delivery of this email."
 msgstr "Pysäytimme viestin jakelun."
 
 # nlsref 16,83
-#: src/List.pm:977
+#: src/List.pm:998
 msgid "Web archives"
 msgstr "WWW arkistot"
 
@@ -3423,14 +4187,15 @@ msgid ""
 msgstr ""
 
 # nlsref 8,6
-#: src/Commands.pm:1059 src/Commands.pm:1060 src/Commands.pm:690
-#: src/Commands.pm:691 wwsympa/wwsympa.fcgi:2684 wwsympa/wwsympa.fcgi:2685
-#: wwsympa/wwsympa.fcgi:3261 wwsympa/wwsympa.fcgi:3262
+#: soap/sympasoap.pm:693 soap/sympasoap.pm:694 src/Commands.pm:1053
+#: src/Commands.pm:1054 src/Commands.pm:685 src/Commands.pm:686
+#: wwsympa/wwsympa.fcgi:2810 wwsympa/wwsympa.fcgi:2811
+#: wwsympa/wwsympa.fcgi:3402 wwsympa/wwsympa.fcgi:3403
 msgid "Welcome on list %s"
 msgstr "Tervetuloa listalle %s"
 
 # nlsref 16,85
-#: src/List.pm:983
+#: src/List.pm:1004
 msgid "Welcome return-path"
 msgstr "Tervetuloviestin paluu-polku"
 
@@ -3449,68 +4214,80 @@ msgstr "Tervetuloa listalle %1@%2"
 msgid "When authenticating ("
 msgstr "Kun tunnistaudut("
 
+#: wwsympa/tt2/help_editlist.tt2:48
+msgid ""
+"When automatic task is executed on level 1 bouncers, a notification email "
+"can be send to listowner or listmaster."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:64
+msgid ""
+"When automatic task is executed on level 2 bouncers, a notification email "
+"can be send to listowner or listmaster."
+msgstr ""
+
 # nlsref 16,2
-#: src/List.pm:286
+#: src/List.pm:278
 msgid "Who can add subscribers"
 msgstr "Kuka voi lisätä tilaajia"
 
 # nlsref 16,21
-#: src/List.pm:399
+#: src/List.pm:433
 msgid "Who can delete subscribers"
 msgstr "Kuka voi poistaa tilaajia"
 
 # nlsref 16,87
-#: src/List.pm:876
+#: src/List.pm:896
 msgid "Who can edit"
 msgstr "Kuka voi muuttaa"
 
 # nlsref 16,54
-#: src/List.pm:765
+#: src/List.pm:778
 msgid "Who can invite people"
 msgstr "Kuka saa kutsua tilaajia"
 
 # nlsref 16,67
-#: src/List.pm:857
+#: src/List.pm:870
 msgid "Who can review subscribers"
 msgstr "Kuka voi katsoa tilaajia"
 
 # nlsref 16,68
-#: src/List.pm:861
+#: src/List.pm:881
 msgid "Who can send messages"
 msgstr "Kuka voi lähettää viestejä"
 
 # nlsref 16,64
-#: src/List.pm:818
+#: src/List.pm:831
 msgid "Who can start a remind process"
 msgstr "Kuka voi aloittaa muistutusprosessin"
 
 # nlsref 16,73
-#: src/List.pm:913
+#: src/List.pm:933
 msgid "Who can subscribe to the list"
 msgstr "Kuka voi tilata listaa"
 
 # nlsref 16,76
-#: src/List.pm:930
+#: src/List.pm:950
 msgid "Who can unsubscribe"
 msgstr "Ketä voi lopettaa tilauksen"
 
 # nlsref 16,86
-#: src/List.pm:872
+#: src/List.pm:892
 msgid "Who can view"
 msgstr "Kuka voi katsoa"
 
 # nlsref 16,53
-#: src/List.pm:761
+#: src/List.pm:774
 msgid "Who can view list information"
 msgstr "Kuka voi katsoa listan tiedot"
 
 #. (error.email)
-#: wwsympa/tt2/error.tt2:13
+#: wwsympa/tt2/error.tt2:12
 msgid "You are already logged in as %1"
 msgstr "Olet jo kirjautuneena sisään %1"
 
 #. (error.list)
-#: wwsympa/tt2/error.tt2:64
+#: wwsympa/tt2/error.tt2:63
 msgid "You are already subscribed to the list %1"
 msgstr "Olet jo tilajaana listalla %1"
 
@@ -3519,25 +4296,20 @@ msgstr "Olet jo tilajaana listalla %1"
 msgid "You are already subscriber of list %1"
 msgstr "Olet jo tilaajana listalla %1"
 
-# nlsref 8,30
-#: src/Commands.pm:1148
-msgid "You are invited to join list %s"
-msgstr "Sinut on kutsuttu listalle %s"
-
 # nlsref 6,77
-#: src/Commands.pm:1309
+#: src/Commands.pm:1301
 msgid "You are member of list %s with email %s\n"
 msgstr "Olet listan %s tilaaja sähköpostiosoitteella %s\n"
 
 # nlsref 6,80
-#: src/Commands.pm:1009 src/Commands.pm:1129 src/Commands.pm:1276
-#: src/Commands.pm:1437 src/Commands.pm:293 src/Commands.pm:497
-#: src/Commands.pm:623 src/Commands.pm:760 src/Commands.pm:874
+#: src/Commands.pm:1004 src/Commands.pm:1123 src/Commands.pm:1268
+#: src/Commands.pm:1429 src/Commands.pm:289 src/Commands.pm:493
+#: src/Commands.pm:619 src/Commands.pm:755 src/Commands.pm:869
 msgid "You are not allowed to perform command %s in list %s\n"
 msgstr "Komennon %s suorittaminen listalla %s kielletty\n"
 
 #. (error.list)
-#: wwsympa/tt2/error.tt2:79
+#: wwsympa/tt2/error.tt2:78
 #, fuzzy
 msgid "You are not subscribed to list %1"
 msgstr "Et ole tilaajana listalla %1"
@@ -3565,6 +4337,10 @@ msgstr "Voit valita ryhmän parametreja joita muuttaa :"
 msgid "You can configure it via the admin button beside."
 msgstr "Voit muuttaa asetuksia"
 
+#: src/etc/tt2/subscriber_notification.tt2:10
+msgid "You can contact list owner:"
+msgstr ""
+
 #: wwsympa/tt2/editfile.tt2:14
 msgid "You can edit several messages/files associated to your list :"
 msgstr "Voit muuttaa useita viestejä/tiedostoja jotka liittyvät listaasi:"
@@ -3577,40 +4353,39 @@ msgstr ""
 "Voit kirjautua ulos (<I>kuitin</I> poisto) milloin tahansa\n"
 "<"
 
-#: src/etc/tt2/helpfile.tt2:17
+#: src/etc/tt2/helpfile.tt2:12
 msgid ""
 "You can put multiple commands in a message. These commands must appear in "
-"the\n"
-"message body and each line must contain only one command. The message body\n"
-"is ignored if the Content-Type is different from text/plain but even with\n"
-"crasy mailer using multipart and text/html for any message, commands in the\n"
-"subject are recognized.\n"
+"the message body and each line must contain only one command. The message "
+"body is ignored if the Content-Type is different from text/plain but even "
+"with crasy mailer using multipart and text/html for any message, commands in "
+"the subject are recognized."
 msgstr ""
 
 # nlsref 6,58
-#: src/Commands.pm:2169
+#: src/Commands.pm:2154
 msgid ""
 "You can remove these subscriber from the list by using the following "
 "commands :\n"
 msgstr "Voit poistaa nämä tilaajat listalta seuraavia käskyjä käyttäen :\n"
 
-#: src/etc/tt2/expire_deletion.tt2:8 src/etc/tt2/removed.tt2:10
+#: src/etc/tt2/expire_deletion.tt2:8 src/etc/tt2/removed.tt2:8
 msgid "You can subscribe again :"
 msgstr ""
 
-#: wwsympa/tt2/error.tt2:140
+#: wwsympa/tt2/error.tt2:142
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr "Et valinnut salasanaa, pyydä muistutus alkuperäisestä salasanasta"
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:2914 wwsympa/wwsympa.fcgi:3365
+#: wwsympa/wwsympa.fcgi:3040 wwsympa/wwsympa.fcgi:3508
 #, fuzzy
 msgid "You have been removed from list %s.\n"
 msgstr "Käyttäjä %s on poistettu listalta %s/\n"
 
 # nlsref 6,31
-#: src/Commands.pm:1484 src/Commands.pm:943
+#: soap/sympasoap.pm:551 src/Commands.pm:1476 src/Commands.pm:938
 msgid ""
 "You have been removed from list %s.\n"
 "Thank you for using this list.\n"
@@ -3625,7 +4400,7 @@ msgid ""
 msgstr "tilauksen uusintapyyntö listalle %1"
 
 #. (error.pname)
-#: wwsympa/tt2/error.tt2:92
+#: wwsympa/tt2/error.tt2:91
 msgid "You have changed a parameter without permissions: %1"
 msgstr "Muutit parametria ilman oikeuksia: %1"
 
@@ -3641,7 +4416,7 @@ msgid "You have logged in with email address %1"
 msgstr "Olet kirjautuneena osoitteella %1"
 
 # nlsref 6,55
-#: src/Commands.pm:2225
+#: src/Commands.pm:2210
 msgid "You just stopped the expiration process for list %s\n"
 msgstr "Listaa %s koskeva expire-prosessi lopetettu\n"
 
@@ -3657,19 +4432,19 @@ msgid ""
 "You will need this password to perform privileged operations.\n"
 msgstr ""
 
-#: wwsympa/tt2/error.tt2:40
+#: wwsympa/tt2/error.tt2:39
 msgid "You need to login"
 msgstr "Sinun täytyy kirjautua"
 
-#: wwsympa/tt2/loginbanner.tt2:12
+#: wwsympa/tt2/loginbanner.tt2:10
 msgid ""
-"You need to login to access your custom WWSympa environment or to perform a\n"
-"privileged operation (one that requires your email address).\n"
+"You need to login to access your custom WWSympa environment or to perform a "
+"privileged operation (one that requires your email address)."
 msgstr ""
 
 # nlsref 6,16
-#: src/Commands.pm:1108 src/Commands.pm:1411 src/Commands.pm:598
-#: src/Commands.pm:851 src/Commands.pm:987
+#: src/Commands.pm:1102 src/Commands.pm:1403 src/Commands.pm:594
+#: src/Commands.pm:846 src/Commands.pm:982
 #, fuzzy
 msgid ""
 "You probably confirmed your subscription using a different\n"
@@ -3679,7 +4454,7 @@ msgstr ""
 "Yritä listan tilaamista alkuperäisestä osoitteesta."
 
 # nlsref 6,79
-#: src/List.pm:6460 src/List.pm:6467
+#: src/List.pm:6751 src/List.pm:6758
 msgid ""
 "You requested a subscription reminder to be sent\n"
 "to each subscriber of list %s\n"
@@ -3740,7 +4515,7 @@ msgid "You won't receive the signed messages from your lists."
 msgstr "Käytä saadaksesi viimeisin viesti listalta <list>"
 
 #. (error.dir)
-#: wwsympa/tt2/error.tt2:122
+#: wwsympa/tt2/error.tt2:121
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr "Sinulla ei ole oikeuksia ladata INDEX.HTML:ää hakemistoon %1"
 
@@ -3754,7 +4529,7 @@ msgid ""
 msgstr "Email osoitteesi (%1) on poistettu listalta %2@%3"
 
 #. (user.email,list.name,list.host)
-#: src/etc/tt2/removed.tt2:8
+#: src/etc/tt2/removed.tt2:6
 msgid ""
 "Your address (%1) has been removed from list\n"
 "%2@%3, probably because we received\n"
@@ -3780,10 +4555,44 @@ msgstr ""
 msgid "Your authentification certificate will expire on %1."
 msgstr "sertifikaatti vanhenemassa"
 
+#. (list.name)
+#: src/etc/tt2/subscriber_notification.tt2:4
+#, fuzzy
+msgid "Your bouncing address in list %1"
+msgstr "Palatut viestit osoitteeseen"
+
 # nlsref 6,40
-#: src/Commands.pm:1587 src/Commands.pm:1600
+#: src/Commands.pm:1579 src/Commands.pm:1592
 msgid "Your configuration regarding list %s has been updated.\n"
 msgstr "Listaan %s liittyvät asetukset on päivitetty.\n"
+
+# nlsref 4,38
+#. (filename,list.name,list.host,rejected_by)
+#: src/etc/tt2/d_reject_shared.tt2:5
+#, fuzzy
+msgid ""
+"Your document %1  for list %2@%3\n"
+"has been rejected by %4 list editor.\n"
+msgstr "Viestisi listalle %s on annettu eteenpäin toimittajille\n"
+
+# nlsref 4,38
+#. (filename,list.name,list.host,installed_by)
+#: src/etc/tt2/d_install_shared.tt2:5
+#, fuzzy
+msgid ""
+"Your document %1 for list %2@%3\n"
+"has been installed by %4 list editor.\n"
+msgstr "Viestisi listalle %s on annettu eteenpäin toimittajille\n"
+
+#: src/etc/tt2/d_install_shared.tt2:2
+#, fuzzy
+msgid "Your document has been installed."
+msgstr "Viestisi on hylätty"
+
+#: src/etc/tt2/d_reject_shared.tt2:2
+#, fuzzy
+msgid "Your document has been rejected."
+msgstr "Viestisi on hylätty"
 
 #: wwsympa/tt2/remindpasswd.tt2:12 wwsympa/tt2/subrequest.tt2:43
 msgid "Your e-mail address"
@@ -3794,7 +4603,7 @@ msgid "Your e-mail address :"
 msgstr "Email osoite :"
 
 # nlsref 6,30
-#: src/Commands.pm:905
+#: src/Commands.pm:900
 msgid ""
 "Your e-mail address has not been found in the list %s. Maybe\n"
 "you subscribed from a different e-mail address ?\n"
@@ -3823,7 +4632,7 @@ msgid "Your list is created."
 msgstr "Listasi on luotu."
 
 # nlsref 4,12
-#: src/sympa.pl:973
+#: src/sympa.pl:990
 msgid ""
 "Your message could not be sent because its size \n"
 "was over the maximum size allowed on this list.\n"
@@ -3841,12 +4650,12 @@ msgid ""
 msgstr "Viestisi listalle %s on annettu eteenpäin toimittajille\n"
 
 # nlsref 4,38
-#: src/List.pm:1716
+#: src/List.pm:1866
 msgid "Your message for list %s has been forwarded to editor(s)\n"
 msgstr "Viestisi listalle %s on annettu eteenpäin toimittajille\n"
 
 # nlsref 4,15
-#: src/Commands.pm:1769 src/sympa.pl:1055
+#: src/Commands.pm:1753 src/sympa.pl:1063
 msgid ""
 "Your message for list %s has been rejected.\n"
 "The message is thus sent back to you.\n"
@@ -3864,17 +4673,17 @@ msgid "Your message has been rejected."
 msgstr "Viestisi on hylätty"
 
 # nlsref 6,262
-#: src/Commands.pm:550
+#: src/Commands.pm:546
 msgid "Your message signature was succesfuly verified using S/MIME"
 msgstr "Viestisi allekirjoitus tarkistettiin onnistuneesti S/MIME:n avulla"
 
 # nlsref 4,11
-#: src/Commands.pm:1765 src/sympa.pl:1051 src/sympa.pl:969
+#: src/Commands.pm:1749 src/sympa.pl:1059 src/sympa.pl:986
 msgid "Your message to %s has been rejected"
 msgstr "Viestisi listalle %s on hylätty"
 
 # nlsref 6,263
-#: src/Commands.pm:553
+#: src/Commands.pm:549
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not\n"
 "verify the signature (be aware that Sympa can't check signature if you use "
@@ -3884,37 +4693,45 @@ msgstr ""
 " tarkistamaan allekirjoitusta (muista että Sympa ei voi tarkistaa "
 "allekirjoitusta jos käytät otsikkoriviä komennon antamiseen)."
 
-#: wwsympa/tt2/pref.tt2:91
+#: wwsympa/tt2/pref.tt2:89
 msgid "Your other email addresses"
 msgstr "Vaihtoehtoinen email osoite"
 
 #. (user.password)
-#: src/etc/tt2/remind.tt2:6 src/etc/tt2/welcome.tt2:13
-#: src/etc/tt2/welcome.tt2:34
+#: src/etc/tt2/remind.tt2:6
 msgid "Your password : %1"
 msgstr "Salasanasi : %1."
 
-#: wwsympa/tt2/notice.tt2:23
+#: wwsympa/tt2/notice.tt2:25
 msgid "Your password has been emailed to you"
 msgstr "Salasanasi on lähetetty emailina"
 
 #. (init_email)
 #: wwsympa/tt2/loginbanner.tt2:5
-msgid "Your password has been sent to your email address %1"
-msgstr "Salasanasi on lähetetty osoitteeseen %1"
+#, fuzzy
+msgid ""
+"Your password has been sent to your email address %1.<BR>Please check your e-"
+"mail box to provide your password below."
+msgstr "Tarkista postisi ja anna salasana alle."
 
-#: wwsympa/tt2/error.tt2:157
+#: wwsympa/tt2/error.tt2:159
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post "
 "you a reminder"
 msgstr ""
 
-#: wwsympa/tt2/notice.tt2:5
+#. (user.password)
+#: src/etc/tt2/welcome.tt2:13 src/etc/tt2/welcome.tt2:34
+#, fuzzy
+msgid "Your password: %1."
+msgstr "Salasanasi : %1."
+
+#: wwsympa/tt2/notice.tt2:4
 msgid "Your request has been forwarded to the list owner"
 msgstr "Pyyntösi on lähetetty listan omistajalle"
 
 # nlsref 6,25
-#: src/Commands.pm:629 src/Commands.pm:888
+#: soap/sympasoap.pm:622
 #, fuzzy
 msgid ""
 "Your request of subscription/unssubscribtion has been forwarded to the "
@@ -3928,19 +4745,27 @@ msgstr ""
 "listan omistajien hyväksyttäväksi. Saat vahvistuksen kun listan tilaus\n"
 "(tai listalta poistuminen) on hyväksytty.\n"
 
+# nlsref 6,25
+#: src/Commands.pm:625 src/Commands.pm:883
+#, fuzzy
+msgid ""
+"Your request to subscribe/unsubscribe has been forwarded to the list's\n"
+"owners for approval. You will receive a notification when you will have\n"
+"been subscribed (or unsubscribed) to the list.\n"
+"\n"
+msgstr ""
+"Pyyntösi listalle liittymiseen tai listalta poistumiseen on lähetetty "
+"eteenpäin\n"
+"listan omistajien hyväksyttäväksi. Saat vahvistuksen kun listan tilaus\n"
+"(tai listalta poistuminen) on hyväksytty.\n"
+
 #. (user.email)
-#: src/etc/tt2/welcome.tt2:31
+#: src/etc/tt2/welcome.tt2:11 src/etc/tt2/welcome.tt2:31
 msgid "Your subscription email is %1"
 msgstr "Tilauksesi osoite on %1"
 
-#. (user.email)
-#: src/etc/tt2/welcome.tt2:11
-#, fuzzy
-msgid "Your subscription email is %3"
-msgstr "Tilauksesi osoite on %1"
-
 # nlsref 6,18
-#: src/Commands.pm:1483 wwsympa/wwsympa.fcgi:3364
+#: src/Commands.pm:1475 wwsympa/wwsympa.fcgi:3507
 msgid "Your subscription to list %s has been removed."
 msgstr "Tilauksesi listalle %s on poistettu."
 
@@ -3962,8 +4787,41 @@ msgstr ""
 "Sinun täytyy muokata smtp.pm moduulia asettaaksesi arvon\n"
 "muuttujalle $max_arg.\n"
 
+#: src/PlainDigest.pm:353
+msgid "[ Image%s ]"
+msgstr ""
+
+#: src/PlainDigest.pm:327
+msgid "[ Text converted from HTML ]\n"
+msgstr ""
+
+#: src/PlainDigest.pm:296 src/PlainDigest.pm:317
+msgid ""
+"\n"
+"%*(* Unable to process HTML message part **)\n"
+msgstr ""
+
+#: src/PlainDigest.pm:250
+msgid ""
+"\n"
+"%An( attachment of type %s was included here)\n"
+msgstr ""
+
+#: src/PlainDigest.pm:189
+msgid ""
+"\n"
+"%Attached( message follows)\n"
+"-----Original message-----\n"
+msgstr ""
+
+#: src/PlainDigest.pm:256
+msgid ""
+"\n"
+"-----Delivery Status Report-----\n"
+msgstr ""
+
 # nlsref 6,49
-#: src/Commands.pm:1967 src/Commands.pm:2150
+#: src/Commands.pm:1952 src/Commands.pm:2135
 #, fuzzy
 msgid ""
 "\n"
@@ -3982,7 +4840,7 @@ msgstr ""
 "päättyy %d:ssä päivässä (%s).\n"
 
 # nlsref 6,56
-#: src/Commands.pm:2008
+#: src/Commands.pm:1993
 #, fuzzy
 msgid ""
 "\n"
@@ -3998,7 +4856,7 @@ msgstr ""
 "Voit sitten poistaa nuo tilaajat itse DEL-komennon avulla.\n"
 
 # nlsref 8,3
-#: src/List.pm:1667
+#: src/List.pm:1741
 #, fuzzy
 msgid ""
 "\n"
@@ -4020,7 +4878,7 @@ msgstr ""
 "mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
 
 # nlsref 6,70
-#: src/Commands.pm:187
+#: src/Commands.pm:183
 msgid ""
 "\n"
 "Powered by Sympa %s : http://www.sympa.org/\n"
@@ -4029,7 +4887,7 @@ msgstr ""
 "Powered by Sympa %s : http://listes.cru.fr/sympa/\n"
 
 # nlsref 6,60
-#: src/Commands.pm:1924
+#: src/Commands.pm:1909
 #, fuzzy
 msgid ""
 "\n"
@@ -4048,8 +4906,20 @@ msgstr ""
 " - sisältää ainakin 20 sanaa,\n"
 " - ja loppua QUIT-sanaan.\n"
 
+#: src/PlainDigest.pm:334
+msgid ""
+"\n"
+"[ ** Unable to process HTML message part ** ]\n"
+msgstr ""
+
+#: src/PlainDigest.pm:323
+msgid ""
+"\n"
+"[ ** Unable to process HTML message part **]\n"
+msgstr ""
+
 # nlsref 6,73
-#: src/Commands.pm:2368
+#: src/Commands.pm:2353
 msgid ""
 "\n"
 "\n"
@@ -4062,7 +4932,7 @@ msgstr ""
 "\n"
 
 # nlsref 6,72
-#: src/Commands.pm:2360
+#: src/Commands.pm:2345
 msgid ""
 "\n"
 "\n"
@@ -4074,20 +4944,24 @@ msgstr ""
 "Listat, joiden omistaja olet:\n"
 "\n"
 
-# nlsref 16,210
-#: src/List.pm:479
-msgid "a listname or list address or *@<domain> or *@*"
-msgstr ""
+#: wwsympa/wwsympa.fcgi:6287 wwsympa/wwsympa.fcgi:799
+#, fuzzy
+msgid "_language_"
+msgstr "Kieli"
 
-#: wwsympa/tt2/d_read.tt2:11 wwsympa/tt2/d_read.tt2:134
-#: wwsympa/tt2/d_read.tt2:200
+#: wwsympa/tt2/d_read.tt2:11 wwsympa/tt2/d_read.tt2:137
+#: wwsympa/tt2/d_read.tt2:213
 msgid "access"
 msgstr "oikeudet"
 
 # nlsref 16,6
-#: src/List.pm:300 src/List.pm:965
+#: src/List.pm:292 src/List.pm:986
 msgid "access right"
 msgstr "sisäänpääsy oikeus"
+
+#: src/List.pm:342 src/List.pm:363
+msgid "action for this population"
+msgstr ""
 
 #: src/etc/scenari/add.closed:1
 msgid "add impossible"
@@ -4106,25 +4980,32 @@ msgstr ""
 msgid "add performed by owner do not need authentication (notification)"
 msgstr ""
 
-#: wwsympa/tt2/lists.tt2:18
+#: wwsympa/tt2/lists.tt2:17
 msgid "admin"
 msgstr "hallitsija"
-
-# nlsref 16,211
-#: src/List.pm:485
-msgid "admin role selection"
-msgstr ""
 
 #: wwsympa/tt2/arcsearch_form.tt2:25
 #, fuzzy
 msgid "all of these words"
 msgstr "(Kaikki sanat,"
 
-#: wwsympa/tt2/arcsearch.tt2:35
+#: wwsympa/tt2/d_install_shared.tt2:10
+msgid ""
+"already exist(s), do you want to confirm the install and erase the old file"
+"(s) or cancel the install ?"
+msgstr ""
+
+# nlsref 16,27
+#: wwsympa/tt2/help_editlist.tt2:135
+#, fuzzy
+msgid "an_email_address"
+msgstr "email osoite"
+
+#: wwsympa/tt2/arcsearch.tt2:34
 msgid "and checking on entire word)"
 msgstr "ja tarkistaa koko sanan)"
 
-#: wwsympa/tt2/arcsearch.tt2:33
+#: wwsympa/tt2/arcsearch.tt2:32
 msgid "and checking on part of word)"
 msgstr "ja tarkistaa osan sanasta)"
 
@@ -4168,8 +5049,14 @@ msgid "authentication requested, notification sent to owner"
 msgstr "%s tarvitsee vahvistusta komennolle %s\n"
 
 #: wwsympa/tt2/reviewbouncing.tt2:63
-msgid "bounce count"
+#, fuzzy
+msgid "bounce score"
 msgstr "palautuneiden viestin lkm"
+
+#: wwsympa/tt2/review.tt2:199
+#, fuzzy
+msgid "bouncing"
+msgstr "käyttäen"
 
 #: src/etc/scenari/access_web_archive.owner:1
 #, fuzzy
@@ -4184,20 +5071,20 @@ msgstr ""
 msgid "bye !"
 msgstr "näkemisiin !"
 
-#: wwsympa/tt2/arcsearch.tt2:27
+#: wwsympa/tt2/arcsearch.tt2:26
 msgid "case insensitive"
 msgstr "EI ota huomioon isot ja pienet kirjaimet"
 
-#: wwsympa/tt2/arcsearch.tt2:29
+#: wwsympa/tt2/arcsearch.tt2:28
 msgid "case sensitive"
 msgstr "OTTAA huomioon isot ja pienet kirjaimet"
 
 # nlsref 16,208
-#: src/List.pm:692
+#: src/List.pm:705
 msgid "certificate for authentication by remote Sympa"
 msgstr ""
 
-#: wwsympa/tt2/d_control.tt2:36
+#: wwsympa/tt2/d_control.tt2:34
 msgid "change access"
 msgstr "muuta oikeuksia"
 
@@ -4227,12 +5114,12 @@ msgid "conceal unless user is logged in"
 msgstr ""
 
 # nlsref 16,94
-#: src/List.pm:723
+#: src/List.pm:736
 msgid "connection options"
 msgstr "yhteysasetukset"
 
 # nlsref 16,98
-#: src/List.pm:549
+#: src/List.pm:561
 msgid "connection timeout"
 msgstr "Yhteyden aikaraja"
 
@@ -4242,30 +5129,31 @@ msgid "crypted message for list %1@%2"
 msgstr "salakirjoitettu viesti listalle %1@%2"
 
 # nlsref 16,48
-#: src/List.pm:719
+#: src/List.pm:732
 msgid "database name"
 msgstr "tietokannan nimi"
 
 # nlsref 16,46
-#: src/List.pm:709
+#: src/List.pm:722
 msgid "database type"
 msgstr "tietokannan tyyppi"
 
 # nlsref 16,23
-#: src/List.pm:406
+#: src/List.pm:440
 msgid "days"
 msgstr "päivää"
 
-#: wwsympa/tt2/edit_list_request.tt2:341
+#: wwsympa/tt2/edit_list_request.tt2:329
 msgid "default"
 msgstr "oletus"
 
-#: wwsympa/tt2/d_read.tt2:10 wwsympa/tt2/d_read.tt2:122
+#: wwsympa/tt2/d_read.tt2:10 wwsympa/tt2/d_read.tt2:125
+#: wwsympa/tt2/d_read.tt2:202
 msgid "delete"
 msgstr "poista"
 
 # nlsref 15,3
-#: wwsympa/wwslib.pm:59
+#: wwsympa/wwslib.pm:66
 msgid "deletion message"
 msgstr "poistamis viesti"
 
@@ -4274,7 +5162,7 @@ msgid "deletion performed only by list owners, need authentication"
 msgstr ""
 
 # nlsref 15,10
-#: wwsympa/wwslib.pm:66
+#: wwsympa/wwslib.pm:73
 msgid "directory of lists"
 msgstr "Listojen hakemisto"
 
@@ -4283,7 +5171,7 @@ msgstr "Listojen hakemisto"
 msgid "e-mail address"
 msgstr "email osoite"
 
-#: wwsympa/tt2/d_read.tt2:116 wwsympa/tt2/d_read.tt2:181
+#: wwsympa/tt2/d_read.tt2:119 wwsympa/tt2/d_read.tt2:194
 #: wwsympa/tt2/d_read.tt2:9
 msgid "edit"
 msgstr "muuta"
@@ -4295,34 +5183,26 @@ msgid ""
 msgstr ""
 
 # nlsref 15,7
-#: wwsympa/wwslib.pm:63
+#: wwsympa/wwslib.pm:70
 msgid "editor rejection message"
 msgstr "ylläpitäjän hylkäys viesti"
 
 # nlsref 16,27
-#: src/List.pm:429 src/List.pm:783
+#: src/List.pm:463 src/List.pm:796
 msgid "email address"
 msgstr "email osoite"
 
-# nlsref 16,205
-#: src/List.pm:892 src/List.pm:897
-msgid "email adress protection method"
+#: src/List.pm:912 src/List.pm:917
+msgid "email address protection method"
 msgstr ""
 
-#: wwsympa/tt2/loginbanner.tt2:41
-#, fuzzy
-msgid "email, is your subscriber email address"
-msgstr ", on tilaus osoite"
+#: wwsympa/tt2/add_request.tt2:6
+msgid "email1@dom1 Name1"
+msgstr ""
 
-# nlsref 14,1
-#: wwsympa/wwsympa.fcgi:578
-msgid "en_US"
-msgstr "fi_FI"
-
-# nlsref 14,2
-#: wwsympa/wwsympa.fcgi:5850 wwsympa/wwsympa.fcgi:681
-msgid "english"
-msgstr "finnish"
+#: wwsympa/tt2/add_request.tt2:7
+msgid "email2@dom2 Name2"
+msgstr ""
 
 #: wwsympa/tt2/arcsearch_form.tt2:44
 #, fuzzy
@@ -4330,52 +5210,52 @@ msgid "entire word"
 msgstr "koko"
 
 # nlsref 16,148
-#: src/List.pm:728
+#: src/List.pm:741
 msgid "environment variables for database connexion"
 msgstr "ympäristömuuttujat tietokantayhteydelle"
 
 # nlsref 16,42
-#: src/List.pm:533
+#: src/List.pm:545
 msgid "extracted attribute"
 msgstr "purettu attribuutti"
 
 # nlsref 16,41
-#: src/List.pm:527
+#: src/List.pm:539
 msgid "filter"
 msgstr "suodatin"
 
 # nlsref 16,198
-#: src/List.pm:610
+#: src/List.pm:623
 msgid "first-level connection timeout"
 msgstr "ykköstason yhteyden aikaraja"
 
 # nlsref 16,142
-#: src/List.pm:594
+#: src/List.pm:607
 msgid "first-level extracted attribute"
 msgstr "ykköstason purettu atribuutti"
 
 # nlsref 16,141
-#: src/List.pm:589
+#: src/List.pm:602
 msgid "first-level filter"
 msgstr "ykköstason suodatin"
 
 # nlsref 16,201
-#: src/List.pm:616
+#: src/List.pm:629
 msgid "first-level regular expression"
 msgstr "ykköstason regular expression"
 
 # nlsref 16,197
-#: src/List.pm:604
+#: src/List.pm:617
 msgid "first-level search scope"
 msgstr "ykköstason haun laajuus"
 
 # nlsref 16,143
-#: src/List.pm:599
+#: src/List.pm:612
 msgid "first-level selection"
 msgstr "ykköstason valinta"
 
 # nlsref 16,140
-#: src/List.pm:583
+#: src/List.pm:596
 msgid "first-level suffix"
 msgstr "ykköstason jälkiliite"
 
@@ -4388,27 +5268,27 @@ msgid "for anyone without authentication"
 msgstr ""
 
 # nlsref 16,5
-#: src/List.pm:295
+#: src/List.pm:287
 msgid "frequency"
 msgstr "lähetysväli"
 
-#: wwsympa/tt2/scenario_test.tt2:73
+#: wwsympa/tt2/scenario_test.tt2:70
 #, fuzzy
 msgid "get matched rule"
 msgstr "hae toteutettu sääntö"
 
 # nlsref 15,11
-#: wwsympa/wwslib.pm:67
+#: wwsympa/wwslib.pm:74
 msgid "global remind message"
 msgstr "yleinen muistutus viesti"
 
 # nlsref 16,9
-#: src/List.pm:334
+#: src/List.pm:326
 msgid "halt rate"
 msgstr "pysäytysnopeus"
 
 # nlsref 15,9
-#: wwsympa/wwslib.pm:65
+#: wwsympa/wwslib.pm:72
 msgid "help file"
 msgstr "apua tiedosto"
 
@@ -4417,7 +5297,7 @@ msgid "homepage"
 msgstr "[% list.name %] listan luonti"
 
 # nlsref 16,24
-#: src/List.pm:412
+#: src/List.pm:446
 msgid "hour"
 msgstr "tuntia"
 
@@ -4455,22 +5335,22 @@ msgid "just for listmaster"
 msgstr ""
 
 # nlsref 15,18
-#: wwsympa/wwslib.pm:74
+#: wwsympa/wwslib.pm:81
 msgid "list aliases template"
 msgstr ""
 
 # nlsref 15,16
-#: wwsympa/wwslib.pm:72
+#: wwsympa/wwslib.pm:79
 msgid "list creation notification message"
 msgstr "listan luomisilmoitus viesti"
 
 # nlsref 15,15
-#: wwsympa/wwslib.pm:71
+#: wwsympa/wwslib.pm:78
 msgid "list creation request message"
 msgstr "listan luomispyyntö viesti"
 
 # nlsref 15,13
-#: wwsympa/wwslib.pm:69
+#: wwsympa/wwslib.pm:76
 msgid "list description"
 msgstr "listan kuvaus"
 
@@ -4481,7 +5361,7 @@ msgid ""
 msgstr ""
 
 # nlsref 15,14
-#: wwsympa/wwslib.pm:70
+#: wwsympa/wwslib.pm:77
 msgid "list homepage"
 msgstr "listan kotisivu"
 
@@ -4510,32 +5390,38 @@ msgstr ""
 msgid "local domain users or owner approval"
 msgstr ""
 
-#: wwsympa/tt2/loginbanner.tt2:23
-msgid "login"
-msgstr "login"
-
-#. ($PAGENUM$,$NUMOFPAGES$)
-#: src/etc/mhonarc-ressources:49
-msgid "mails, page # %1/%2"
-msgstr ""
-
 # nlsref 15,4
-#: wwsympa/wwslib.pm:60
+#: wwsympa/wwslib.pm:67
 msgid "message footer"
 msgstr "viestin alaosa"
 
 # nlsref 15,5
-#: wwsympa/wwslib.pm:61
+#: wwsympa/wwslib.pm:68
 msgid "message header"
 msgstr "viestin yläosa"
 
 # nlsref 16,25
-#: src/List.pm:418
+#: src/List.pm:452
 msgid "minute"
 msgstr "minuuttia"
 
+#: wwsympa/tt2/d_read.tt2:224
+#, fuzzy
+msgid "moderate"
+msgstr "Poista jaettu"
+
+#: src/etc/scenari/d_edit.editor:1
+#, fuzzy
+msgid "moderated for subscribers"
+msgstr "Listalla ei ole tilaajia"
+
+#: src/etc/scenari/d_edit.editor.~1.2.~:1
+#, fuzzy
+msgid "moderated to subscribers"
+msgstr "Poista valitut käyttäjät"
+
 # nlsref 16,29
-#: src/List.pm:439 src/List.pm:793
+#: src/List.pm:473 src/List.pm:806
 msgid "name"
 msgstr "nimi"
 
@@ -4557,13 +5443,13 @@ msgstr ""
 msgid "newest messages"
 msgstr "Uusi viesti ensiksi"
 
-#: src/etc/mhonarc-ressources:167
-msgid "next"
-msgstr ""
-
 #: src/etc/scenari/topics_visibility.noconceal:1
 #: src/etc/scenari/visibility.noconceal:1
 msgid "no conceal"
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:153
+msgid "no protection against spammer."
 msgstr ""
 
 # nlsref 16,86
@@ -4571,6 +5457,10 @@ msgstr ""
 #, fuzzy
 msgid "nobody can review"
 msgstr "Kuka voi katsoa"
+
+#: src/List.pm:347 src/List.pm:368
+msgid "notification"
+msgstr ""
 
 #: wwsympa/tt2/set_pending_list_request.tt2:40
 msgid "notify owner"
@@ -4581,10 +5471,11 @@ msgstr "huomauta omistajaa"
 msgid "oldest messages"
 msgstr "Vanhin viestin ensiksi"
 
+#. (list_request_date)
 #: wwsympa/tt2/install_pending_list.tt2:17
-#: wwsympa/tt2/set_pending_list_request.tt2:17
-msgid "on"
-msgstr "pvm"
+#, fuzzy
+msgid "on %1"
+msgstr "Vastaanottaja: %1"
 
 #: wwsympa/tt2/arcsearch_form.tt2:26
 #, fuzzy
@@ -4596,27 +5487,18 @@ msgid "only owner (and listmaster)"
 msgstr ""
 
 # nlsref 16,92
-#: src/List.pm:843
+#: src/List.pm:856
 msgid "other email address"
 msgstr "muu email osoite"
 
-#: src/etc/scenari/unsubscribe.owner:1
-msgid "owner approval"
-msgstr ""
-
-#: src/etc/scenari/subscribe.owner:1
+#: src/etc/scenari/subscribe.owner:1 src/etc/scenari/unsubscribe.owner:1
 msgid "owners approval"
 msgstr ""
 
 #. (page,total_page)
-#: wwsympa/tt2/reviewbouncing.tt2:124 wwsympa/tt2/reviewbouncing.tt2:49
+#: wwsympa/tt2/reviewbouncing.tt2:115 wwsympa/tt2/reviewbouncing.tt2:49
 msgid "page %1 / %2"
 msgstr "page %1 / %2"
-
-#. ('$PAGENUM$','$NUMOFPAGES$')
-#: src/etc/mhonarc-ressources:128
-msgid "page n&#176; %1/%2"
-msgstr ""
 
 #: wwsympa/tt2/arcsearch_form.tt2:43
 #, fuzzy
@@ -4628,36 +5510,23 @@ msgstr "sanasta"
 msgid "password"
 msgstr "salasana"
 
-#: wwsympa/tt2/loginbanner.tt2:31
-msgid "password :"
-msgstr "salasana :"
-
-#: wwsympa/tt2/loginbanner.tt2:42
-#, fuzzy
-msgid "password, is your password."
-msgstr ", on salasana."
-
 #. (newuser.password)
 #: src/etc/tt2/sendpasswd.tt2:17 src/etc/tt2/sendpasswd.tt2:24
 msgid "password: %1"
 msgstr "Pyysit tilausta postituslistalle [% list %]."
 
-#: wwsympa/tt2/reviewbouncing.tt2:64
-msgid "period"
-msgstr "ajanjakso"
-
 # nlsref 16,30
-#: src/List.pm:444
+#: src/List.pm:478
 msgid "private information"
 msgstr "yksityiset tiedot"
 
 # nlsref 16,61
-#: src/List.pm:798
+#: src/List.pm:811
 msgid "private informations"
 msgstr "yksityiset tiedot"
 
 # nlsref 16,62
-#: src/List.pm:803
+#: src/List.pm:816
 msgid "profile"
 msgstr "profiili"
 
@@ -4679,7 +5548,6 @@ msgstr "Jaetut dokumentit"
 msgid "public list"
 msgstr "Julkiset listat"
 
-#: src/etc/scenari/send.publicnomultipart.orig:1
 #: src/etc/scenari/send.publicnomultipart:1
 msgid "public list multipart messages are rejected"
 msgstr ""
@@ -4692,54 +5560,54 @@ msgstr ""
 msgid "public list, Bcc rejected (anti-spam)"
 msgstr ""
 
-#: wwsympa/tt2/add_request.tt2:13 wwsympa/tt2/editsubscriber.tt2:43
-#: wwsympa/tt2/review.tt2:82 wwsympa/tt2/reviewbouncing.tt2:116
-#: wwsympa/tt2/reviewbouncing.tt2:31
+#: wwsympa/tt2/add_request.tt2:13 wwsympa/tt2/editsubscriber.tt2:40
+#: wwsympa/tt2/review.tt2:13 wwsympa/tt2/review.tt2:266
+#: wwsympa/tt2/review.tt2:82 wwsympa/tt2/reviewbouncing.tt2:107
 msgid "quiet"
 msgstr "hiljainen"
 
 # nlsref 16,203
-#: src/List.pm:883 src/List.pm:972
+#: src/List.pm:903 src/List.pm:993
 msgid "quota"
 msgstr ""
 
 # nlsref 16,19
-#: src/List.pm:316 src/List.pm:386 src/List.pm:434 src/List.pm:788
+#: src/List.pm:308 src/List.pm:420 src/List.pm:468 src/List.pm:801
 msgid "reception mode"
 msgstr "vastaanotto moodi"
 
 # nlsref 15,6
-#: wwsympa/wwslib.pm:62
+#: wwsympa/wwslib.pm:69
 msgid "remind message"
 msgstr "muistutus viesti"
 
 # nlsref 16,36
-#: src/List.pm:502 src/List.pm:564 src/List.pm:675 src/List.pm:714
+#: src/List.pm:513 src/List.pm:576 src/List.pm:688 src/List.pm:727
 msgid "remote host"
 msgstr "etäpalvelin"
 
 # nlsref 16,206
-#: src/List.pm:704
+#: src/List.pm:717
 msgid "remote list inclusion"
 msgstr ""
 
 # nlsref 16,39
-#: src/List.pm:517 src/List.pm:579 src/List.pm:736
+#: src/List.pm:529 src/List.pm:592 src/List.pm:749
 msgid "remote password"
 msgstr "etäpalvelimen salasana"
 
 # nlsref 16,207
-#: src/List.pm:687
+#: src/List.pm:700
 msgid "remote path of sympa list dump"
 msgstr ""
 
 # nlsref 16,37
-#: src/List.pm:508 src/List.pm:570 src/List.pm:681
+#: src/List.pm:519 src/List.pm:582 src/List.pm:694
 msgid "remote port"
 msgstr "etäpalvelimen portti"
 
 # nlsref 16,38
-#: src/List.pm:512 src/List.pm:574 src/List.pm:732
+#: src/List.pm:524 src/List.pm:587 src/List.pm:745
 msgid "remote user"
 msgstr "etäpalvelimen käyttäjätunnus"
 
@@ -4761,20 +5629,13 @@ msgid "requires authentication then owner approval"
 msgstr ""
 
 # nlsref 16,93
-#: src/List.pm:848
+#: src/List.pm:861
 msgid "respect of existing header field"
 msgstr "käytä olemassaolevaa otsikko kenttää"
 
-#: src/etc/scenari/remind.owner:1
-msgid "restricted to list owner"
-msgstr ""
-
-#: src/etc/scenari/edit_list.owner:1
-msgid "restricted to list owners"
-msgstr ""
-
 #: src/etc/scenari/d_edit.owner:1 src/etc/scenari/d_read.owner:1
-msgid "restricted to list owners and document author"
+#: src/etc/scenari/edit_list.owner:1 src/etc/scenari/remind.owner:1
+msgid "restricted to list owners"
 msgstr ""
 
 #: src/etc/scenari/create_list.listmaster:1
@@ -4826,56 +5687,56 @@ msgid "results by page"
 msgstr "tulosta sivulla"
 
 # nlsref 16,97
-#: src/List.pm:543
+#: src/List.pm:555
 msgid "search scope"
 msgstr "haun laajuus"
 
 # nlsref 16,200
-#: src/List.pm:648
+#: src/List.pm:661
 msgid "second-level connection timeout"
 msgstr "kakkostason yhteyden aikaraja"
 
 # nlsref 16,146
-#: src/List.pm:632
+#: src/List.pm:645
 msgid "second-level extracted attribute"
 msgstr "kakkostason purettu atribuutti"
 
 # nlsref 16,145
-#: src/List.pm:626
+#: src/List.pm:639
 msgid "second-level filter template"
 msgstr "kakkostason suodatin"
 
 # nlsref 16,202
-#: src/List.pm:654
+#: src/List.pm:667
 msgid "second-level regular expression"
 msgstr "kakkostason regular expression"
 
 # nlsref 16,199
-#: src/List.pm:642
+#: src/List.pm:655
 msgid "second-level search scope"
 msgstr "kakkostason haun laajuus"
 
 # nlsref 16,147
-#: src/List.pm:637
+#: src/List.pm:650
 msgid "second-level selection"
 msgstr "kakkostason valinta"
 
 # nlsref 16,144
-#: src/List.pm:620
+#: src/List.pm:633
 msgid "second-level suffix template"
 msgstr "kakkostason jälkiliite"
 
+#: wwsympa/tt2/menu.tt2:9
+#, fuzzy
+msgid "security info"
+msgstr "Listan tiedot"
+
 # nlsref 16,43
-#: src/List.pm:538
+#: src/List.pm:550
 msgid "selection (if multiple)"
 msgstr "valinta (jos useampia)"
 
-#. (user.email)
-#: src/etc/mhonarc-ressources:342
-msgid "send it back to %1"
-msgstr ""
-
-#: wwsympa/tt2/scenario_test.tt2:37
+#: wwsympa/tt2/scenario_test.tt2:35
 msgid "sender email"
 msgstr "lähettäjän email"
 
@@ -4884,13 +5745,12 @@ msgid "sensitive"
 msgstr "OTTAA huomioon"
 
 # nlsref 17,1
-#: wwsympa/wwslib.pm:45
+#: wwsympa/wwslib.pm:52
 msgid "session"
 msgstr "sessio"
 
 # nlsref 16,209
-#: src/List.pm:491 src/List.pm:553 src/List.pm:658 src/List.pm:697
-#: src/List.pm:750
+#: src/List.pm:565 src/List.pm:671 src/List.pm:710 src/List.pm:763
 msgid "short name for this source"
 msgstr ""
 
@@ -4903,11 +5763,6 @@ msgstr "lähetä"
 msgid "subscribe is impossible"
 msgstr "Poista käyttäjän tilaus"
 
-#: src/etc/scenari/visibility.private:1
-#, fuzzy
-msgid "subscribers"
-msgstr "Tilaajat"
-
 #: src/etc/scenari/access_web_archive.private:1
 #, fuzzy
 msgid "subscribers only"
@@ -4919,7 +5774,7 @@ msgid "subscribers update failed for list %1"
 msgstr "Kunnes olet sen tehnyt, suosittelemme parametrin %1 poistoa"
 
 # nlsref 15,8
-#: wwsympa/wwslib.pm:64
+#: wwsympa/wwslib.pm:71
 msgid "subscribing invitation message"
 msgstr "tilauskutsu viesti"
 
@@ -4929,17 +5784,23 @@ msgid "subscription request confirmed"
 msgstr "Ei tilauspyyntöjä"
 
 # nlsref 16,40
-#: src/List.pm:521
+#: src/List.pm:533
 msgid "suffix"
 msgstr "jälkiliite(suffix)"
 
 # nlsref 15,12
-#: wwsympa/wwslib.pm:68
+#: wwsympa/wwslib.pm:75
 msgid "summary message"
 msgstr "yhteenveto viesti"
 
-#: src/etc/mhonarc-ressources:351 src/etc/mhonarc-ressources:360
-msgid "tag this mail for deletion"
+#: wwsympa/tt2/help_editlist.tt2:152
+msgid "the @ char is replaced by the string \" AT \"."
+msgstr ""
+
+#: wwsympa/tt2/help_editlist.tt2:151
+msgid ""
+"the address is hidden using a javascript. User who enable javascript can see "
+"a nice mailto address where others have nothing."
 msgstr ""
 
 #: wwsympa/tt2/create_list_request.tt2:11
@@ -4951,60 +5812,59 @@ msgstr "listan nimi; ole tarkkana, ei osoite !"
 msgid "this sentence"
 msgstr "(Tämä lause,"
 
-#: wwsympa/tt2/d_read.tt2:260
+#: src/List.pm:337 src/List.pm:358
+msgid "threshold"
+msgstr ""
+
+#: wwsympa/tt2/d_read.tt2:286
 msgid "title"
 msgstr "URL"
 
-#: src/etc/mhonarc-ressources:339
-msgid "to list"
-msgstr ""
-
-#: wwsympa/tt2/view_translations.tt2:22
-msgid "translated"
-msgstr "käännetty"
-
-#: wwsympa/tt2/reviewbouncing.tt2:65
-msgid "type"
-msgstr "tyyppi"
+#: wwsympa/tt2/d_read.tt2:173
+#, fuzzy
+msgid "to moderate"
+msgstr "Poista jaettu"
 
 # nlsref 15,2
-#: wwsympa/wwslib.pm:58
+#: wwsympa/wwslib.pm:65
 msgid "unsubscription message"
 msgstr "lopetus viesti"
 
 # nlsref 12,2
-#: src/Commands.pm:1767 src/mail.pm:127 src/mail.pm:223 src/mail.pm:77
-#: src/mail.pm:89 src/smtp.pm:166 src/sympa.pl:1053 src/sympa.pl:1296
-#: src/sympa.pl:740 src/sympa.pl:971 src/tools.pl:111 wwsympa/tt2/main.tt2:6
+#: src/Commands.pm:1751 src/etc/tt2/digest.tt2:9
+#: src/etc/tt2/digest_plain.tt2:5 src/etc/tt2/urlized_part.tt2:1
+#: src/mail.pm:127 src/mail.pm:228 src/mail.pm:77 src/mail.pm:89
+#: src/sympa.pl:1061 src/sympa.pl:1311 src/sympa.pl:777 src/sympa.pl:988
+#: src/tools.pl:130 src/tt2.pl:115 wwsympa/tt2/main.tt2:6
 msgid "us-ascii"
 msgstr "iso-8859-1"
 
 # nlsref 16,91
-#: src/List.pm:838
+#: src/List.pm:851 wwsympa/tt2/help_editlist.tt2:131
 msgid "value"
 msgstr "arvo"
 
-#: wwsympa/tt2/home.tt2:51
+#: wwsympa/tt2/home.tt2:49
 msgid "view all lists"
 msgstr "katso kaikkia listoja"
 
 # nlsref 15,17
-#: wwsympa/wwslib.pm:73
+#: wwsympa/wwslib.pm:80
 msgid "virus infection message"
 msgstr "virusilmoitus viesti"
 
 # nlsref 16,20
-#: src/List.pm:391
+#: src/List.pm:425
 msgid "visibility"
 msgstr "näkyvyys"
 
 # nlsref 16,8
-#: src/List.pm:327
+#: src/List.pm:319
 msgid "warn rate"
 msgstr "varoistusnopeus"
 
 # nlsref 15,1
-#: wwsympa/wwslib.pm:57
+#: wwsympa/wwslib.pm:64
 msgid "welcome message"
 msgstr "tervetuloa viesti"
 
@@ -5013,7 +5873,7 @@ msgstr "tervetuloa viesti"
 msgid "without authentication, notification is sent to owners"
 msgstr "sertifikaatti vanhenemassa"
 
-#: wwsympa/tt2/error.tt2:45
+#: wwsympa/tt2/error.tt2:44
 msgid "you need to login"
 msgstr "sinun täytyy kirjautua"
 
@@ -5028,6 +5888,139 @@ msgstr ""
 #: src/etc/tt2/sendpasswd.tt2:30
 msgid "your password : %1"
 msgstr "Muuten sinut poistetaan listalta viikon kuluttua."
+
+#~ msgid "%1 occurrences found"
+#~ msgstr "%1 osumaa löytynyt"
+
+# nlsref 12,1
+#~ msgid "1.0"
+#~ msgstr "1.0"
+
+#~ msgid "Delete selected subscribers"
+#~ msgstr "Poista valitut käyttäjät"
+
+#~ msgid "Do it"
+#~ msgstr "Toteuta"
+
+#~ msgid "Do you really want to unsubscribe from list %1"
+#~ msgstr "Haluatko varmasti poistaa tilauksen listalta %1"
+
+#~ msgid "Error while deleting this message"
+#~ msgstr "Virhe viestiä poistettaessa"
+
+#~ msgid "May be it is usefull to check your system for viruses."
+#~ msgstr "Pysäytimme viestin jakelun."
+
+# #-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#
+# nlsref 16,26
+#, fuzzy
+#~ msgid "Moderated, old style"
+#~ msgstr ""
+#~ "#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
+#~ "Moderaattorit\n"
+#~ "#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
+#~ "Hallitsijat"
+
+#~ msgid "Operation successful"
+#~ msgstr "Operaatio onnistui"
+
+# nlsref 12,4
+#~ msgid "SYMPA <%s>"
+#~ msgstr "SYMPA <%s>"
+
+# nlsref 6,261
+#, fuzzy
+#~ msgid ""
+#~ "Someone (hopefully you) asked for you e-mail address\n"
+#~ "to be removed from list '%s'.\n"
+#~ "If you want this action to be taken, please \n"
+#~ "\n"
+#~ "- reply to this mail\n"
+#~ "OR\n"
+#~ "- send a message to '%s' with subject\n"
+#~ " %s\n"
+#~ "OR\n"
+#~ "- hit the following mailto %s\n"
+#~ "\n"
+#~ "This can be done via the URL %s\n"
+#~ "If you do not want this action to be taken, you can safely ignore\n"
+#~ "this message"
+#~ msgstr ""
+#~ "Joku (toivon mukaan sinä) pyysi että mailiosoitteesi\n"
+#~ "poistetaan listalta '%s'.\n"
+#~ "Jos haluat että näin tehdään niin \n"
+#~ "\n"
+#~ "- vastaa tähän mailiin\n"
+#~ "TAI\n"
+#~ "- lähetä viesti osoitteeseen '%s' ja laita subject-kenttään\n"
+#~ " %s\n"
+#~ "TAI\n"
+#~ "- käytä tätä: %s\n"
+#~ "\n"
+#~ "Tämä voidaan tehdä URLin %s avulla\n"
+#~ "Jos et halua että näin tapahtuu, voit vain unohtaa tämän viestin."
+
+#, fuzzy
+#~ msgid "Table of content"
+#~ msgstr "Sisällysluettelo:"
+
+#~ msgid "This help file"
+#~ msgstr "Tämä tiedosto"
+
+#~ msgid "To add a user to a list"
+#~ msgstr "Lisätäksesi tilaajan listalle"
+
+#~ msgid "To quit all lists."
+#~ msgstr "Poistuaksesi kaikilta listoilta."
+
+# nlsref 8,30
+#~ msgid "You are invited to join list %s"
+#~ msgstr "Sinut on kutsuttu listalle %s"
+
+#~ msgid "Your password has been sent to your email address %1"
+#~ msgstr "Salasanasi on lähetetty osoitteeseen %1"
+
+#, fuzzy
+#~ msgid "Your subscription email is %3"
+#~ msgstr "Tilauksesi osoite on %1"
+
+#, fuzzy
+#~ msgid "email, is your subscriber email address"
+#~ msgstr ", on tilaus osoite"
+
+# nlsref 14,1
+#~ msgid "en_US"
+#~ msgstr "fi_FI"
+
+# nlsref 14,2
+#~ msgid "english"
+#~ msgstr "finnish"
+
+#~ msgid "login"
+#~ msgstr "login"
+
+#~ msgid "on"
+#~ msgstr "pvm"
+
+#~ msgid "password :"
+#~ msgstr "salasana :"
+
+#, fuzzy
+#~ msgid "password, is your password."
+#~ msgstr ", on salasana."
+
+#~ msgid "period"
+#~ msgstr "ajanjakso"
+
+#, fuzzy
+#~ msgid "subscribers"
+#~ msgstr "Tilaajat"
+
+#~ msgid "translated"
+#~ msgstr "käännetty"
+
+#~ msgid "type"
+#~ msgstr "tyyppi"
 
 # nlsref 1,102
 #~ msgid "3.3a"
@@ -5134,9 +6127,6 @@ msgstr "Muuten sinut poistetaan listalta viikon kuluttua."
 #~ msgid "Rebuild HTML archives"
 #~ msgstr "Luo HTML arkistot uudelleen"
 
-#~ msgid "Remove list"
-#~ msgstr "Poista lista"
-
 #~ msgid "Restore list"
 #~ msgstr "Listan palautukseen"
 
@@ -5205,9 +6195,6 @@ msgstr "Muuten sinut poistetaan listalta viikon kuluttua."
 
 #~ msgid "this words"
 #~ msgstr "sanoista"
-
-#~ msgid "using"
-#~ msgstr "käyttäen"
 
 #~ msgid "word"
 #~ msgstr "sana"
