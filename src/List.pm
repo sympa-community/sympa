@@ -301,6 +301,11 @@ my %alias = ('reply-to' => 'reply_to',
 			  'title_id' => 4,
 			  'group' => 'archives'
 		      },
+	    'archive_crypted_msg' => {'format' => ['cleartext','decrypted'],
+				    'default' => 'cleartext',
+				    'title_id' => 212,
+				    'group' => 'archives'
+				    },
 	    'available_user_options' => {'format' => {'reception' => {'format' => ['mail','notice','digest','summary','nomail','txt','html','urlize','not_me'],
 								      'occurrence' => '1-n',
 								      'split_char' => ',',
@@ -1871,7 +1876,9 @@ sub send_auth {
 
 ## Distribute a message to the list
 sub distribute_msg {
-    my($self, $msg, $bytes, $msg_file, $encrypt) = @_;
+    my($self, $message) = @_;
+    my ($msg, $bytes, $msg_file, $encrypt) = ($message->{'msg'}, $message->{'size'}, $message->{'msg_as_string'}, $message->{'smime_crypted'});
+    $encrypt = 'smime_crypted' if ( $encrypt);
     do_log('debug2', 'List::distribute_msg(%s, %s, %s, %s, %s)', $self->{'name'}, $msg, $bytes, $msg_file, $encrypt);
 
     my $hdr = $msg->head;
@@ -1895,8 +1902,9 @@ sub distribute_msg {
 
     ## Archives
     my $msgtostore = $msg;
-    if ($encrypt eq 'smime_crypted'){
-	$msgtostore = &tools::smime_encrypt($msg->head, $msg->body_as_string,$self->{'name'},'list');
+    if (($encrypt eq 'smime_crypted') &&
+	($self->{admin}{archive_crypted_msg} eq 'cleartext')) {
+	$msgtostore = $message->{'orig_msg'};
     }
     $self->archive_msg($msgtostore);
 

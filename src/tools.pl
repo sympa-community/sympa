@@ -453,7 +453,7 @@ sub smime_sign_check {
     }
 
     if ($message->{'smime_crypted'}) {
-	print MSGDUMP ${$message->{'decrypted_msg_as_string'}};
+	print MSGDUMP ${$message->{'msg_as_string'}};
     }else {
 	unless (open MSG, $file) {
 	    do_log('err', 'Unable to open file %s: %s', $file, $!);
@@ -487,10 +487,10 @@ sub smime_sign_check {
     
     ## second step is the message signer match the sender
     ## a better analyse should be performed to extract the signer email. 
-    my $signer = `cat $temporary_file | $Conf{'openssl'}  x509 -email -noout`;
+    my $signer = `cat $temporary_file | $Conf{'openssl'}  x509 -subject -noout`;
     chomp $signer;
 
-    unless (lc($signer) eq lc(sender)) {
+    unless ($signer =~ /(email=$sender|\+MAIL=$sender)/i) {
 	unlink($temporary_file) unless ($main::options{'debug'}) ;	
 	do_log('notice', "S/MIME signed message, sender($sender) does NOT match signer($signer)",$sender,$signer);
 	return undef;

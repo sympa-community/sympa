@@ -651,8 +651,7 @@ sub DoFile {
     ## encrypted message
     if ($message->{'smime_crypted'}) {
 	$is_crypted = 'smime_crypted';
-	$file = '_ALTERED_';
-	($msg, $file) = ($message->{'decrypted_msg'}, $message->{'decrypted_msg_as_string'});
+	($msg, $file) = ($message->{'msg'}, $message->{'msg_as_string'});
 	unless (defined($msg)) {
 	    do_log('debug','unable to decrypt message');
 	    ## xxxxx traitement d'erreur ?
@@ -890,7 +889,7 @@ sub DoForward {
 ## Handles a message sent to a list.
 sub DoMessage{
     my($which, $message, $robot) = @_;
-    my ($msg, $file, $bytes) = ($message->{'msg'}, $message->{'filename'}, $message->{'size'});
+    my ($msg, $file, $bytes) = ($message->{'msg'}, $message->{'msg_as_string'}, $message->{'size'});
     my $encrypt;
     $encrypt = 'smime_crypted' if ($message->{'smime_crypted'});
     &do_log('debug', 'DoMessage(%s, %s, %s, msg from %s, %s, %s,%s)', $which, $msg, $robot, $msg->head->get('From'), $bytes, $file, $encrypt);
@@ -1016,7 +1015,7 @@ sub DoMessage{
 
     if ($action =~ /^do_it/) {
 	
-	my $numsmtp = $list->distribute_msg($msg, $bytes, $file, $encrypt);
+	my $numsmtp = $list->distribute_msg($message);
 
 	$msgid_table{$listname}{$messageid}++;
 	

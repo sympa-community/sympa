@@ -388,6 +388,7 @@ $set 16 parameters titles
 92	"Andere EMail-Adresse"
 93	"Berücksichtung existierender Felder im Nachrichtenkopf"
 94	"Verbindungseinstellungen"
+212	"Verschlüsselte Mails im Klartext archivieren"
 
 $set 17 Cookie expiration periods
 1	"Sitzung"

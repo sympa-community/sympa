@@ -387,7 +387,7 @@ $set 16 Listm parameters titles
 209	"short name for this source"
 210	"a listname or list address or *@<domain> or *@*"
 211	"admin role selection"
-
+212	"Archive encrypted mails as cleartext"
 
 $set 17 Cookie expiration periods
 1	"session"

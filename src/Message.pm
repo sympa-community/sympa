@@ -114,20 +114,18 @@ sub new {
 	## Decrypt messages
 	if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
 	    ($hdr->get('Content-Type') !~ /signed-data/)){
-	    ($message->{'decrypted_msg'}, $message->{'decrypted_msg_as_string'}) = &tools::smime_decrypt ($msg, $message->{'list'});
-	    if ($message->{'decrypted_msg'}) {
+	    my ($dec, $dec_as_string) = &tools::smime_decrypt ($msg, $message->{'list'});
+	    if ($dec) {
 		$message->{'smime_crypted'} = 1;
+		$message->{'orig_msg'} = $message->{'msg'};
+		$message->{'msg'} = $dec;
+		$message->{'msg_as_string'} = $dec_as_string;
+		$hdr = $dec->head;
 		do_log('debug', "message %s has been decrypted", $file);
 	    }
-	    ## Il faudrait traiter les cas d'erreur (0 différent de undef)
+	    ## We should process errors here (0 != undef)
 	}
 	
-	## If message was crypted, now work with decrypted message
-	if ($message->{'smime_crypted'}) {
-	    $msg = $message->{'decrypted_msg'};
-	    $hdr = $msg->head;
-	}
-
 	## Check S/MIME signatures
 	if ($hdr->get('Content-Type') =~ /multipart\/signed|application\/(x-)?pkcs7-mime/i) {
 	    my $signed = &tools::smime_sign_check ($message);

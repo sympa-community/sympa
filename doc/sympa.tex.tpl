@@ -6455,6 +6455,19 @@ This parameter specifies the disk quota for the list's web archives, in kilobyte
 \cfkeyword {default\_archive\_quota} \file {sympa.conf} parameter. If quota is exceeded, messages are no more 
 archived, list owner is notified. When archives are 95\% full, the list owner is warned.
 
+\subsection {archive\_crypted\_msg}
+\label {archive-crypted-msg}
+
+	\default {cleartext}
+
+	\lparam {archive\_crypted\_msg} cleartext \texttt{|} decrypted
+
+	This parameter defines Sympa behavior while archiving S/MIME crypted messages.
+	If set to \texttt {cleartext} the original crypted form of the message will
+	be archived ; if set to  \texttt {decrypted} a decrypted message will be
+	archived. Note that this apply to both mail and web archives ; also to
+	digests.
+
 \section {Spam protection}
 
 \subsection {spam\_protection}  

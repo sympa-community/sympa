@@ -1642,7 +1642,7 @@ sub distribute {
     if ($message->{'smime_crypted'}) {
 	$is_crypted = 'smime_crypted';
 	$file = '_ALTERED_';
-	($msg, $file) = ($message->{'decrypted_msg'}, $message->{'decrypted_msg_as_string'});
+	($msg, $file) = ($message->{'msg'}, $message->{'msg_as_string'});
 	unless (defined($msg)) {
 	    do_log('debug','unable to decrypt message');
 	    ## xxxxx traitement d'erreur ?
@@ -1658,7 +1658,7 @@ sub distribute {
 
     ## Distribute the message
     my $numsmtp;
-    unless ($numsmtp = $list->distribute_msg($msg, $bytes, $file, $is_crypted)) {
+    unless ($numsmtp = $list->distribute_msg($message)) {
 	return undef;
     }
 
@@ -1762,7 +1762,7 @@ sub confirm {
 	
 	## Distribute the message
 	my $numsmtp;
-	unless ($numsmtp = $list->distribute_msg($msg, $bytes, $file, $is_crypted)) {
+	unless ($numsmtp = $list->distribute_msg($message)) {
 	    return undef;
 	}
 
