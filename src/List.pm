@@ -2432,7 +2432,7 @@ sub send_file {
 	$data->{'context'}{$key} = $context->{$key};
     }
 
-    ## 2.7b
+    chdir $self->{'dir'};
     if ($filename) {
         mail::mailfile($filename, $who, $data, $self->{'domain'}, $sign_mode);
     }
