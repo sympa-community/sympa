@@ -15,7 +15,7 @@ You are already logged in as [error->email]
 Please provide your email address
 
 [ELSIF error->msg=incorrect_email]
-Address "[error->email]" in incorrect
+Address "[error->email]" is incorrect
 
 [ELSIF error->msg=incorrect_listname]
 "[error->listname]" : bad listname
@@ -25,9 +25,6 @@ Please provide your password
 
 [ELSIF error->msg=user_not_found]
 "[error->email]" : user unknown
-
-[ELSIF error->msg=user_not_found]
-"[error->email]" is not a subscriber
 
 [ELSIF error->msg=passwd_not_found]
 No password for user "[error->email]"
@@ -48,10 +45,10 @@ You need to login
 [ENDIF]
 
 [ELSIF error->msg=no_subscriber]
-List has no subscriber
+List has no subscribers
 
 [ELSIF error->msg=no_bounce]
-List has no bouncing subscriber
+List has no bouncing subscribers
 
 [ELSIF error->msg=no_page]
 No page [error->page]
@@ -63,32 +60,32 @@ Missing filter
 [error->file] : file not editable
 
 [ELSIF error->msg=already_subscriber]
-You are already subscriber in list [error->list]
+You are already subscribed to the list [error->list]
 
 [ELSIF error->msg=user_already_subscriber]
-[error->email] is already subscriber in list [error->list] 
+[error->email] is already subscribed to the list [error->list] 
 
 [ELSIF error->msg=failed_add]
-Failed adding user [error->user]
+Failed to add user [error->user]
 
 [ELSIF error->msg=failed]
 [error->action]: action failed
 
 [ELSIF error->msg=not_subscriber]
 [IF error->email]
-  Not subscriber: [error->email]
+  Not subscribed: [error->email]
 [ELSE]
-You are not subscriber in list [error->list]
+You are not subscribed to the list [error->list]
 [ENDIF]
 
 [ELSIF error->msg=diff_passwd]
-The 2 passwords differ
+The passwords you typed do not match
 
 [ELSIF error->msg=missing_arg]
 Missing argument [error->argument]
 
 [ELSIF error->msg=no_bounce]
-No bounce for user  [error->email]
+No bounces for user  [error->email]
 
 [ELSIF error->msg=update_privilege_bypassed]
 You have changed a parameter without permissions: [error->pname]
@@ -145,12 +142,12 @@ You did not choose a password, request a reminder of the initial password
 Could not change email for list [error->list]
 
 [ELSIF error->msg=change_email_failed_because_subscribe_not_allowed]
-Could not change subscription address for list '[error->list]'
-because subscription with new address is not allowed.
+Could not change your subscription address for the list '[error->list]'
+because your new address is not allowed to subscribe.
 
 [ELSIF error->msg=change_email_failed_because_unsubscribe_not_allowed]
-Could not change subscription address for list '[error->list]'
-because unsubscription is not allowed.
+Could not change your subscription address for the list '[error->list]'
+because you are not allowed to unsubscribe.
 
 [ELSIF error->msg=shared_full]
 The document repository exceed disk quota.

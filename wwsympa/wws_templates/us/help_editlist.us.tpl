@@ -13,20 +13,22 @@
 [ELSIF p->NAME=archive]
   Privilege for reading mail archives and frequency of archiving
 [ELSIF p->NAME=owner]
-  Owners are managing subscribers of the list. They may review subscribers,
- add or delete email addresses from the mailing list. If you are privileged
+ Owners are managing subscribers of the list. They may review subscribers and
+ add or delete email addresses from the mailing list. If you are a privileged
  owner of the list, you can choose other owners for the mailing list. 
-Privileged owners may edit a bit more options than other owners. There can
-only be one privileged owner per list ; his/her email address may not
-be edited from the web.
+ Privileged owners may edit a few more options than other owners. There can
+ only be one privileged owner per list; his/her email address may not
+ be edited from the web.
 [ELSIF p->NAME=editor]
-Editors are responsible of messages moderation. If the mailing list is moderated, messages posted to the list will first be passed to the editors, 
-who will decide to distribute or to reject it. <BR>
-FYI: Defining editors will not make the list moderated ; you will have to
-set the "send" parameter.<BR>
-FYI: If the list is moderated, the first editor distributing or rejecting 
-a message will make the decision for other editors. If none of them make 
-a decision, the message will remain unmoderated in the moderation spool.
+  Editors are responsible for moderating messages. If the mailing list is
+  moderated, messages posted to the list will first be passed to the editors, 
+  who will decide whether to distribute or reject it. <BR>
+  FYI: Defining editors will not make the list moderated ; you will have to
+  set the "send" parameter.<BR>
+  FYI: If the list is moderated, any editor can distribute or reject a message
+  without the knowledge or consent of the other editors. Messages that have not
+  been distributed or rejected will remain in the moderation spool until they
+  are acted on.
 [ELSE]
   No Comment
 [ENDIF]
