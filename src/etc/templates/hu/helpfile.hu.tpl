@@ -2,18 +2,19 @@
               SYMPA -- Systeme de Multi-Postage Automatique
                        (Automatikus Levelezõ Rendszer)
 
-                                Felhasználói Kézikönyv
+                         Felhasználói Kézikönyv
 
 SYMPA egy automatikus levelezõlista-kezelõ program, mellyel a listakezelést,
 mint pl. a feliratkozásokat, moderálást és archíválást lehet elvégezni.
 
-Minden parancsot a következõ email címre kell küldeni: [conf->sympa]
+Minden parancsot a következõ e-mail címre kell küldeni: [conf->sympa]
 
 Egy levélben több parancsot is meg lehet adni. A parancsokat a levél 
 törzsében, soronként egyesével kell megadni. A levél törzse csak akkor
-kerül feldologzásra, ha az sima szöveges formátumûm, vagyis a Content-Type
-text/plain. A program képes a levél tárgyában megadott email parancsok 
-értelmezésére, amely néhány levelezõkliens használatánál elõfordulhat.
+kerül feldologzásra, ha az sima szöveges formátumú, vagyis a Content-Type
+text/plain. Ha ettõl eltérõ formátumú a levél, akkor a program a levél 
+tárgyában megadott e-mail parancsokat használja fel (ritka esetben ez is
+elõfordulhat).
 
 Az alkalmazható parancsok a következõk:
 
@@ -26,7 +27,7 @@ Az alkalmazható parancsok a következõk:
 			       <listá>-ra. <GECOS> kiegészítõ információkat
 			       tartalmazhat a feliratkozóról.
 
- UNSubscribe <lista> <EMAIL> * Törlés a <listá>-ról. <EMAIL> az az email 
+ UNSubscribe <lista> <EMAIL> * Törlés a <listá>-ról. <EMAIL> az az e-mail 
 			       cím, amellyel a lista tagja vagy, hasznos
 			       ha a jelenlegi címed eltér a nyilvántartottól.
  
@@ -38,7 +39,7 @@ Az alkalmazható parancsok a következõk:
  SET <lista|*> NOTICE        * Csak a levelek tárgysorának fogadása
 
  SET <lista|*> MAIL          * Levélfogadás <listá>-ról hagyományos módon
- SET <lista|*> CONCEAL       * Címed elrejtése (titkos lesz az email címed)
+ SET <lista|*> CONCEAL       * Címed elrejtése (titkos lesz az e-mail címed)
  SET <lista|*> NOCONCEAL     * Címed megjelenik a REView parancs kiemenetében
 
 
@@ -53,7 +54,7 @@ Az alkalmazható parancsok a következõk:
 
 [IF is_owner]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-Parancsok csak a lista tulajdonosának vagy szerkesztõjének:
+Csak a lista tulajdonosnál vagy szerkesztõnél használható parancsok:
 
  ADD <lista> user@host Knév Vnév  * Tag hozzáadása a listához
  DEL <lista> user@host            * Tag törlése a listáról
@@ -82,4 +83,4 @@ Parancsok csak a lista tulajdonosának vagy szerkesztõjének:
 
 [ENDIF]
 
-Powered by Sympa [conf->version] : http://listes.cru.fr/sympa/
+Mûködteti a Sympa [conf->version] : http://listes.cru.fr/sympa/

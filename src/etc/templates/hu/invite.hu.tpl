@@ -5,14 +5,14 @@ Mime-version: 1.0
 Content-Type: text/plain; charset=iso-8859-2
 Content-transfer-encoding: 8bit
 
+[ELSE]
 Üdv!
 
 Szeretnénk, ha  a(z) [list->name]@[list->host] lista tagja lennél.
 A lista témaköre: [list->subject]
 
 Ha fel szeretnél iratkozni, akkor válaszolj erre a levélre vagy
-erre a címre:
+kattints erre a címre:
 [url]
 
-Ha nem érdekel a lista, akkor nyugodtan töröld ezt a levelet.
-
+Ha nem szeretnél feliratkozni, akkor nyugodtan töröld ezt a levelet.

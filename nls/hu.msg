@@ -1,12 +1,13 @@
 $ April 2001, Initial Hungarian translation by Szilard Vizi <vizisz@freemail.hu>
 $ June 2001, Updating with the help of Attila Szabo <szabo.a@oep.hu>
+$ October 2001 Changes and updates with the help of <nug@sch.bme.hu>
 
 $quote "
 
 $set 1	Messages used while processing the configuration file
 1	"A konfigurációs állomány hibás.\n"
 3	"Hiba a(z) %d sorban: %s"
-102	"2.8.1"
+102	"3.3a"
 
 $set 2	Messages used by Conf when verifying the files
 
@@ -30,7 +31,7 @@ Leveled:\n"
 37	"A levél törzse nem sima szöveges formátumú, figyelmen kívül lett hagyva.\n Kérlek csak sima szöveges formátumot használj (vagy parancsot a levél tárgyában adj meg).\n"
 38	"%s listára küldött leveled a szerkesztõ(k)höz lett továbbítva\n"
 39	"Nem található parancs a levélben."
-40	"Leveled engedélyeztetése"
+40	"Leveled megjelenésérõl a moderátor dönt."
 
 $set 5	Messages used in the tools module
 1	"Safefork nem tud új folyamatot indítani: %m"
@@ -42,7 +43,7 @@ ilyen leveleket nem a listára, hanem kizárólag a(z) %s címre kell\n\
 küldeni.\n\n\
 Ha leveled a listára lett küldve, akkor a levelezõlista-kezelõ a\n\
 parancsokat végrehajtja. Ekkor fordulj a(z) %s üzemeltetõjéhez,\n\
-hogy leveledrõl gondoskodjon.\n\n\
+hogy leveledrõl a továbbiakban gondoskodjon.\n\n\
 Köszönöm megértésedet.\n\n\
 ------ Problémás levél eleje ------\n"
 4	"------ Problémás levél vége ------\n"
@@ -55,29 +56,28 @@ $set 6	Messages du module Commands.pm
 9	"Privát lista: Az archívumot nem olvashatod.\n"
 10	"Privát lista: Az elérhetõ állományok között nem böngészhetsz.\n"
 11	"Privát lista: A tagok listáját nem tekintheted meg.\n"
-12	"Listatagok: %d\n"
 13	"Hibásan megadott parancs.\n"
-15	"Hiba az azonosításkor\n\n"
-16	"Feliratkozásodat valószínûleg egy másik email címrõl erõsítetted\n\
-meg. Kérlek a megfelelõ email címedet használd feliratkozáshoz."
+15	"Hiba az azonosításkor!\n\n"
+16	"Feliratkozásodat valószínûleg egy másik e-mail címrõl erõsítetted\n\
+meg. Kérlek a megfelelõ e-mail címedet használd feliratkozáshoz."
 18	"A(z) %s listáról töröltek."
 21	"'%s' listán feliratkozásod meg lett újítva"
 24	"A listára való jelentkezés jelenleg szünetel.\n"
 25	"Fel/leiratkozásod a lista tulajdonosának jóváhagyásra továbbítva lett.\n\
-A tulajdonos döntésérõl (fel/leiratkozásod ügyében) emailben\n\
+A tulajdonos döntésérõl (fel/leiratkozásod ügyében) e-mailben\n\
 értesítést fogsz kapni.\n"
 26	"A(z) %s listáról nem lehet leiratkozni.\n"
 27	"Feliratkozási információid frissítve lettek.\n"
 28	"A(z) %s lista tagja lettél.\n"
 29	"A listával kapcsolatos információkat külön levélben fogod megkapni.\n"
-30	"%s listán nem található az email címed. Nem lehet, hogy egy\n\
-másik email címmel iratkoztál fel?\n"
+30	"%s listán nem található az e-mail címed. Nem lehet, hogy egy\n\
+másik e-mail címmel iratkoztál fel?\n"
 31	"%s listáról sikeresen leiratkoztál.\n\
 Köszönjük, hogy eddig velünk voltál.\n"
 32	"Csak a(z) %s lista tulajdonosa jogosult tagok felvételére vagy törlésére.\n\
 Ezt a parancsot nem használhatod, vagy az azonosításodhoz nem adtad\n\
 meg a szükséges adatokat.\n"
-33	"%s email cím nem található a listán.\n"
+33	"%s e-mail cím nem található a listán.\n"
 34	"%s, a lista tulajdonosa törölt\n\
 a listáról.\n\n\
 Általában a nem megfelelõen mûködõ címeket távolítja el ilyenkor a\n\
@@ -89,16 +89,16 @@ kérjük, feliratkozásod kérlek újítsd meg.\n"
 38	"%s felhasználó a(z) %s listáról törölve lett/\n"
 39	"Valaki (remélhetõleg te) a(z) %s listára egy felhasználót akar\n\
 felvenni vagy arról törölni.\n\n\
-A parancs végrehajtásához a(z) %s címre, kell\n\
-kell elküldeni a következõt:\n\n\
+A parancs végrehajtásához a(z) %s címre kell\n\
+elküldeni a következõt:\n\n\
    %s\n\n\
 Ha a parancsot nem akarod végrehajtani, akkor töröld ezt a levelet.\n"
 40	"%s listán a beállításaid frissítve lettek.\n"
 41	"A(z) %s listán a(z) %s jelzésû moderált levél nem lehet elérni.\n\
 A levélrõl valószínûleg az egyik moderátor már gondoskodott.\n"
 43	"A(z) %s levelet a(z) %s listán visszautasították.\n"
-44	"A(z) %s levet engedélyezték a(z) %s listán megjelenésre.\n"
-45	"%s listán nincs DIGEST mód. Ez a beállítasod figyelmen kívül lett hagyva.\n"
+44	"A(z) %s levél megjelenhet a(z) %s listán.\n"
+45	"%s listán nincs DIGEST mód. Ez a beállításod figyelmen kívül lett hagyva.\n"
 46	"A MODINDEX parancsot csak a moderátorok használhatják.\n\
 Te nem vagy a(z) %s lista moderátorai között.\n"
 47	"Az EXPIRE, EXPIREINDEX es EXPIREDEL parancsokat csakis a lista tulajdonosai használhatják.\n\
@@ -138,19 +138,19 @@ A indoklás szövegének\n\n\
 67	"Jelenleg a következõ listáknak vagy tagja:\n\n"
 68	"A(z) %s kulccsal azonosított üzenetet nem lehet elérni.\n"
 69	"%s a megerõsítési üzenetedet a következõ címre küldte el:\n"
-70	"\nSympa levelezõlista-kezelõ%s : http://listes.cru.fr/sympa/\n"
+70	"\nSympa levelezõlista-kezelõ %s : http://listes.cru.fr/sympa/\n"
 71	"Leiratkozás a(z) %s listáról"
 72	"\n\nAz következõ listák tulajdonosa vagy:\n\n"
 73	"\n\nAz következõ listák szerkesztõje vagy:\n\n"
 74	"%s -nek azonosítani kell magát az %s parancs végrehajtásához\n"
 75	"Engedélyezve, hogy bármely listáról %s leiratkozhasson \n"
 76	"Emlékeztetõ %s listatagságodról"
-77	"%s listán %s email címmel vagy nyilvántartva\n"
+77	"%s listán %s e-mail címmel vagy nyilvántartva\n"
 78	"Listatagsági emlékeztetõ elküldése minden %d %s tagnak\n"
 79	"Listagsági emlékeztetõ elküldését kérvényezted a(z) %s lista\n\
 minden tagjának.\n\n\
 A parancs megerõsítéséhez %s címre küldj egy levelet \n\
-a következõ tartalommali:\n\n\
+a következõ tartalommal:\n\n\
    %s\n\n\
 Ha nem akarod a parancsot megerõsíteni, akkor hagyd figyelmen kívül azt a levelet.\n"
 80	"A(z) %s parancsot nem futtathatod a(z) %s listán.\n"
@@ -164,7 +164,7 @@ Ha nem akarod a parancsot megerõsíteni, akkor hagyd figyelmen kívül azt a levele
 Beállításaid nem változtak meg.\n"
 91	"%s levelezõlistán a tagok nem rendelkezhetnek egyéni beállításokkal"
 92	"Nem sikerült módosítani a beállításaidat a(z) %s listán."
-260	"Valaki (remélhetõleg te) az email címeddel szeretne  a(z) '%s'\n\
+260	"Valaki (remélhetõleg te) az e-mail címeddel szeretne  a(z) '%s'\n\
 listára feliratkozni.\n\
 Ha a feliratkozást meg akarod erõsíteni, akkor\n\
 \n\
@@ -174,7 +174,7 @@ Ha a feliratkozást meg akarod erõsíteni, akkor\n\
  \n\
 Ha nem akarod feliratkozásodat megerõsíteni, akkor hagyd figyelmen\n\
 kívül ezt a levelet.\n"
-261	"Valaki (remélhetõleg te) az email címeddel le akar iratkozni\n\
+261	"Valaki (remélhetõleg te) az e-mail címeddel le akar iratkozni\n\
 a(z) '%s' listáról.\n\
 Ha a leiratkozást meg akarod erõsíteni, akkor\n\
  - válaszolj erre a levélre, \nVAGY\n\
@@ -190,18 +190,21 @@ kívül ezt a levelet."
 $set 7	Commands syslog messages (Commands.pm)
 
 $set 8	Messages used in List.pm
-1	"a(z) %s lista tulajdonosai"
+1	"A(z) %s lista tulajdonosai"
 2	"Feliratkozási kérelem a(z) %s listára"
 3	"Tisztelt %s lista tulajdonosa!\n\n\
-Egy felhasználó a lista tagja szeretne lenne. A feliratkozás\n\
-engedélyezéséhez használd a következõ parancsot:\n\n\
-mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
+Egy felhasználó a lista tagja szeretne lenne. A feliratkozást a\n\n\
+mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n\n\
+címen, vagy a(z) %s címre küldött e-maillel, melynek a tárgya\n\n\
+AUTH %s ADD %s %s %s\n\n\
+legyen, tudod engedélyezni.\n"
 6	"Üdvözlünk a(z) %s listán"
 7	"Állomány"
 9	"Digest a(z) %s listán"
-12	"A(z) %s listán a melléklet megjelenésének jóváhagyásához használd a következõt:\n\
+12	"A(z) %s listán a melléklet megjelenésének a következõt paranccsal\n\
+engedélyezheted:\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
-Vagy %s címre küldj egy levelet a következõ tárggyal:\n\
+vagy a(z) %s címre a következõ tárggyal küldj egy engedélyezõ levelet:\n\
 CONFIRM %s\n"
 13	"Tartalomjegyzék" 
 14	"Digest vége a(z) %s listán"
@@ -212,9 +215,11 @@ CONFIRM %s\n"
 a(z) %s listán\n (Segítened kell neki).\n"
 24	"LEiratkozási kérelem a(z) %s listán"
 25	"Tisztelt %s lista tulajdonos!\n\n\
-Egy felhasználó le szeretne iratkozni a listáról. A leiratkozás\n\
-engedélyezéséhez használd a következõ parancsot:\n\n\
-DEL %s %s\n"
+Egy felhasználó le szeretne iratkozni a listáról. A leiratkozást a\n\n\
+mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n\n\
+címen, vagy a(z) %s címre küldött e-maillel, melynek a tárgya\n\n\
+AUTH %s DEL %s %s\n\n\
+legyen, tudod engedélyezni.\n"
 26	"BIZ: %s parancs a(z) %s listán %s %s felhasználótól, jóváhagyta: %s\n (nincs teendõ)\n"
 27	"A(z) %s listán a visszapattanási arány %d%%.\n\n\
 Érdemes törölni a továbbküldõ tagokat: \n\
@@ -228,7 +233,7 @@ $set 11	Messages used by the smtp module.
 1	"A rendszer nem felel meg a POSIX P1003.1 szabványnak, vagy\n\
 a Perl rendszer POSIX könyvtárában nincs megadva a _SC_ARG_MAX konstans.\n\
 Az $max_arg változó beállításához az smtp.pm modult módosítani kell.\n"
-2	"Nem lehet az smtptp -hoz kapcsolódni: %m"
+2	"Nem lehet az smtpto-hoz kapcsolódni: %m"
 
 $set 12 MIME headers
 1	"1.0"
@@ -255,6 +260,9 @@ $set 15 Templates files
 12	"összefoglaló szöveg"
 13	"lista leírása"
 14	"lista honlap"
+15	"listalétrehozási kérelem szövege"
+16	"értesítési üzenet sikeres listalétrehozásról"
+17	"értesítési üzenet vírus fertõzéskor"
 
 $set 16 Listm parameters titles
 1	"Azonosító"
@@ -280,7 +288,7 @@ $set 16 Listm parameters titles
 24	"Óra"
 25	"Perc"
 26	"Moderátorok"
-27	"Email cím"
+27	"E-mail cím"
 28	"Levélkézbesítés"
 29	"Név"
 30	"Személyes adat"
@@ -310,7 +318,7 @@ $set 16 Listm parameters titles
 55	"A lista nyelve"
 56	"Maximális levélméret"
 57	"Tulajdonos"
-58	"Email cím"
+58	"E-mail cím"
 59	"Levélkézbesítés"
 60	"Név"
 61	"Személyes adatok"
@@ -341,8 +349,11 @@ $set 16 Listm parameters titles
 89	"levélkézbesítés"
 90	"Válsz cím"
 91	"érték"
-92	"más email cím"
+92	"más e-mail cím"
 93	"létezõ fejléc figyelembevéve"
+94	"kapcsolat beállításai"
+97	"keresési tartomány"
+98	"kapcsolat várakozási ideje"
 
 $set 17 Cookie expiration periods
 1	"a folyamat bezárásakor"
@@ -352,4 +363,3 @@ $set 17 Cookie expiration periods
 5	"6 óra múlva"
 6	"1 nap múlva"
 7	"1 hét múlva"
-
