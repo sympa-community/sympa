@@ -135,7 +135,7 @@ sub Locale2Lang {
 sub Lang2Locale {
     my $lang = shift;
 
-    return $lang2locale{$lang};
+    return $lang2locale{$lang} || $lang;
 }
 
 sub maketext {
