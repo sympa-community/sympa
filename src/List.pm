@@ -3611,7 +3611,7 @@ sub is_listmaster {
 
     if ($robot && (defined $Conf{'robots'}{$robot}) && $Conf{'robots'}{$robot}{'listmasters'}) {
 	foreach my $listmaster (@{$Conf{'robots'}{$robot}{'listmasters'}}){
-	    return 1 if ($listmaster =~ /^\s*$who\s*$/i);
+	    return 1 if (lc($listmaster) eq lc($who));
 	} 
     }
 	
@@ -3641,12 +3641,12 @@ sub am_i {
     if ($function =~ /^editor$/i){
 	if ($self->{'admin'}{$function} && ($#{$self->{'admin'}{$function}} >= 0)) {
 	    foreach $u (@{$self->{'admin'}{$function}}) {
-		return 1 if ($u->{'email'} =~ /^$who$/i);
+		return 1 if (lc($u->{'email'}) eq lc($who));
 	    }
 	    ## if no editor defined, owners has editor privilege
 	}else{
 	    foreach $u (@{$self->{'admin'}{'owner'}}) {
-		return 1 if ($u->{'email'} =~ /^$who$/i);
+		return 1 if (lc($u->{'email'}) eq lc($who));
 	    } 
 	}
 	return undef;
@@ -3656,12 +3656,12 @@ sub am_i {
 	return undef unless ($self->{'admin'} && $self->{'admin'}{'owner'});
 	
 	foreach $u (@{$self->{'admin'}{'owner'}}) {
-	    return 1 if ($u->{'email'} =~ /^$who$/i);
+	    return 1 if (lc($u->{'email'}) eq lc($who));
 	}
     }
     elsif ($function =~ /^privileged_owner$/i) {
 	foreach $u (@{$self->{'admin'}{'owner'}}) {
-	    return 1 if (($u->{'email'} =~ /^$who$/i) && ($u->{'profile'} =~ 'privileged'));
+	    return 1 if ((lc($u->{'email'}) eq lc($who)) && ($u->{'profile'} =~ 'privileged'));
 	}
     }
     return undef;
