@@ -2,11 +2,11 @@ From: [conf->sympa]
 Reply-to: [conf->request]
 To: [newuser->email]
 [IF action=subrequest]
-Subject: [wwsconf->title] / liitumine listiga [list]
+Subject: [conf->title] / liitumine listiga [list]
 [ELSIF action=sigrequest]
-Subject: [wwsconf->title] / lakumine listist [list]
+Subject: [conf->title] / lakumine listist [list]
 [ELSE]
-Subject: [wwsconf->title] / info teie konto kohta
+Subject: [conf->title] / info teie konto kohta
 [ENDIF]
 
 [IF action=subrequest]
@@ -34,7 +34,7 @@ Oma parooli saate vahetada siit:
 [ENDIF]
 
 
-[wwsconf->title]: [base_url][path_cgi] 
+[conf->title]: [base_url][path_cgi] 
 
 Abi Sympa kohta: [base_url][path_cgi]/help
 

@@ -17,7 +17,7 @@ Per confermare la tua iscrizione, usa questo link
 
 [ENDIF]
 
-[wwsconf->title]
+[conf->title]
 [base_url][path_cgi]
 
 Per accedere alle tue sottoscrizioni

@@ -35,6 +35,6 @@ A jelszavadat az alábbi címen tudod megváltoztatni
 [ENDIF]
 
 
-[wwsconf->title]: [base_url][path_cgi] 
+[conf->title]: [base_url][path_cgi] 
 
 Súgó a Sympa használatához: [base_url][path_cgi]/help

@@ -34,7 +34,7 @@ Pentru a schimba parola apasa pe:
 [ENDIF]
 
 
-[wwsconf->title]: [base_url][path_cgi] 
+[conf->title]: [base_url][path_cgi] 
 
 Ajutor Sympa: [base_url][path_cgi]/help
 

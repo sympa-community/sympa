@@ -34,7 +34,7 @@ Changing your password
 [ENDIF]
 
 
-[wwsconf->title]: [base_url][path_cgi] 
+[conf->title]: [base_url][path_cgi] 
 
 Help on Sympa: [base_url][path_cgi]/help
 

@@ -29,7 +29,7 @@ Subject: 您的 [conf->title] 环境设置
 [ENDIF]
 
 
-[wwsconf->title]: [base_url][path_cgi] 
+[conf->title]: [base_url][path_cgi] 
 
 Sympa 的帮助: [base_url][path_cgi]/help
 

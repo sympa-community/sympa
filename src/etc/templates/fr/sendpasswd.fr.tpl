@@ -33,6 +33,6 @@ Changement de mot de passe
 [base_url][path_cgi]/choosepasswd/[newuser->escaped_email]/[newuser->password]
 [ENDIF]
 
-[wwsconf->title] : [base_url][path_cgi] 
+[conf->title] : [base_url][path_cgi] 
 
 Aide sur Sympa : [base_url][path_cgi]/help

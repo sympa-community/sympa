@@ -36,6 +36,6 @@ Pro zmìnu Va¹eho hesla:
 [base_url][path_cgi]/choosepasswd/[newuser->escaped_email]/[newuser->password]
 [ENDIF]
 
-[wwsconf->title]: [base_url][path_cgi] 
+[conf->title]: [base_url][path_cgi] 
 
 Nápovìda pro systém Sympa: [base_url][path_cgi]/help

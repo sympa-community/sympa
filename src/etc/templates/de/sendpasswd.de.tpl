@@ -35,7 +35,7 @@ Zum aendern Ihres Passwortes:
 [ENDIF]
 
 
-[wwsconf->title]: [base_url][path_cgi] 
+[conf->title]: [base_url][path_cgi] 
 
 Hilfe ueber Sympa: [base_url][path_cgi]/help
 
