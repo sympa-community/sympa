@@ -2160,7 +2160,6 @@ sub send_file {
     }
 
     ## Lang
-    &do_log('debug', 'LANG: %s', $data->{'user'}{'lang'});
     my $lang = $data->{'user'}{'lang'} || $self->{'lang'} || $Conf{'lang'};
 
     ## What file   
@@ -3230,18 +3229,16 @@ sub is_listmaster {
 
     return 0 unless ($who);
 
-    printf STDERR "xxxxxxx is_listmaster (email=$who, robot=$robot)\n";
-
-    if ($robot) {
+    if ($robot && @{$Conf{'robots'}{$robot}{'listmasters'}}) {
 	foreach my $listmaster (@{$Conf{'robots'}{$robot}{'listmasters'}}){
 	    return 1 if ($listmaster =~ /^\s*$who\s*$/i);
-	}    
-    }
-    if ($Conf{'host'} eq $robot) {
+	} 
+    }else {
 	foreach my $listmaster (@{$Conf{'listmasters'}}){
 	    return 1 if ($listmaster =~ /^\s*$who\s*$/i);
 	}    
     }
+
     return 0;
 }
 
