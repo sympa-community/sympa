@@ -608,7 +608,7 @@ a virtual robot or for the whole site.
 	The main daemon ; it processes commands and delivers
 	messages. Continuously scans the \dir {msg/} spool.
 
-	\item \file {sympa_wizard.pl}\\
+	\item \file {sympa\_wizard.pl}\\
 	A wizard to edit \file {sympa.conf} and \file {wwsympa.conf}.
 	Maybe it is a good idea to run it at the beginning, but thoses
 	file can also be edited with your favorite text editor. 
@@ -1005,7 +1005,7 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 
 \item \option {--with-sendmail\_aliases=ALIASFILE}, set aliases file to be used by Sympa (default /etc/mail/sympa\_aliases)\\
 
-\item \option {--with-virtual_aliases=ALIASFILE}, set postfix virtual file to be used by Sympa (default /etc/mail/sympa_virtual)\\
+\item \option {--with-virtual\_aliases=ALIASFILE}, set postfix virtual file to be used by Sympa (default /etc/mail/sympa\_virtual)\\
 
 This is used by the \file {alias\_manager.pl} script :
 
@@ -1017,7 +1017,7 @@ This is used by the \file {postfix\_manager.pl} script :
 
 \item \option {--with-postmap=FULLPATH}, set path to postfix postmap command (default /usr/sbin/postmap)
 
-\item \option {--with-postmap_arg=ARGS}, set arguments to postfix postmap command (default NONE)
+\item \option {--with-postmap\_arg=ARGS}, set arguments to postfix postmap command (default NONE)
 
 
 \end {itemize}
@@ -2175,7 +2175,7 @@ To run \WWSympa with FastCGI, you need to install :
 	page~\pageref {makefile}). It runs a \unixcmd{newaliases} command (via
 	\file {aliaswrapper}), after any changes to aliases file.
 
-	\tildefile {sympa/bin/postfix\_manager.pl} also requires \index{VIRTUAL_ALIASES}
+	\tildefile {sympa/bin/postfix\_manager.pl} also requires \index{VIRTUAL\_ALIASES}
 	variable to be defined in the Makefile. It runs a \unixcmd{postmap} command (via
 	\file {virtualwrapper}), after any changes to virtualtable file.
 
