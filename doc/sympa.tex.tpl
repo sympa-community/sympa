@@ -201,7 +201,7 @@ mailing list applications, \Sympa is unique in including features
 in a single software package, including:
 
 \begin {itemize}
-    \item High speed distribution processing and load control. \Sympa
+    \item \textbf {High speed distribution processing} and \textbf {load control}. \Sympa
         can be tuned to allow the system administrator to control
         the amount of computer resources used.  Its optimized algorithm
         allows:
@@ -268,35 +268,8 @@ in a single software package, including:
         possible by the presence of a subscription date stored in the
         \Sympa database.
 
-    \item full virtual robot definition : one real \Sympa installation
-        can provide multiple virtual robots with both email and web interface
-        customization.
-
-    \item E-mail addresses can be retrieved dynamically from a database
-    	accepting SQL queries, or from an LDAP directory. In the interest
-	of reasonable response times, \Sympa retains the data source in an
-	internal cache controlled by a TTL (Time To Live) parameter.
-
-    \item Inclusion of the subscribers of one list among the subscribers of
-    	another. This is real inclusion, not the dirty, multi-level cascading
-	one might otherwise obtain by simply "subscribing list B to list A".
-	 
-    \item The internal subscriber data structure can be stored in a
-        database or, for compatibility with versions 1.x, in text
-        files. The introduction of databases came out of the
-        \WWSympa project.  The database ensures a secure access to
-        shared data. The PERL database API \textit {dbi/dbd} enables
-        interoperability with various RDBMS (MySQL, PostgreSQL,
-        Oracle, Sybase).
-
-    \item Various task automatic processing. List master may use predefined 
-	task models to automate recurrent processings such as regurlaly 
-	reminding subscribers their belonging to a list or updating certificate
-	revocation lists. It is also possible to write one's own task models to meet 
-	particular needs. Unique actions may also be scheduled by this way.
-
     \label {wwsympa} 
-    \item {\WWSympa} is a global Web interface to all \Sympa functions
+    \item textbf {Web interface} : {\WWSympa} is a global Web interface to all \Sympa functions
     	(including administration). It provides :
 
         \begin {itemize}
@@ -321,14 +294,52 @@ in a single software package, including:
                   configuration) \index{administrator}
 
         \end {itemize}
+	(See ref {WWSympa}}, page~\pageref {WWSympa}})
 
+    \item \textbf {RDBMS} : the internal subscriber data structure can be stored in a
+        database or, for compatibility with versions 1.x, in text
+        files. The introduction of databases came out of the
+        \WWSympa project.  The database ensures a secure access to
+        shared data. The PERL database API \textit {dbi/dbd} enables
+        interoperability with various RDBMS (MySQL, PostgreSQL,
+        Oracle, Sybase).
+	(See ref {sec-rdbms}, page~\pageref {sec-rdbms})
 
+    \item \textbf {Virtual robots} : a single \Sympa installation
+        can provide multiple virtual robots with both email and web interface
+        customization (See \ref {virtual-robot}, page~\pageref {virtual-robot}).
+
+    \item \textbf {LDAP-based mailing lists} : e-mail addresses can be retrieved dynamically from a database
+    	accepting SQL queries, or from an LDAP directory. In the interest
+	of reasonable response times, \Sympa retains the data source in an
+	internal cache controlled by a TTL (Time To Live) parameter.
+	(See ref {include-ldap-query}, page~\pageref {include-ldap-query})
+
+    \item \textbf {LDAP authentication}:  via uid and emails stored 
+      	in LDAP Directories.  Alternative email addresses, extracted from LDAP 
+        directory, may be used to "unify" subscriptions.
+	(See ref {ldap-auth}, page~\pageref {ldap-auth})
+
+    \item \textbf {Antivirus scanner} : \Sympa extracts attachements from incoming
+	messages and run a virus scanner on them. Curently working with McAfee/uvscan,
+	Fsecure/fsav, AVP and Trend Micro/VirusWall.
+	(See ref {Antivirus}, page~\pageref {Antivirus})
+
+    \item Inclusion of the subscribers of one list among the subscribers of
+    	another. This is real inclusion, not the dirty, multi-level cascading
+	one might otherwise obtain by simply "subscribing list B to list A".
+
+%    \item Various task automatic processing. List master may use predefined 
+%	task models to automate recurrent processings such as regurlaly 
+%	reminding subscribers their belonging to a list or updating certificate
+%	revocation lists. It is also possible to write one's own task models to meet 
+%	particular needs. Unique actions may also be scheduled by this way.
 
 \end {itemize}
 
 \section {Project directions}
 
-\Sympa is a very activ project : check the release note 
+\Sympa is a very active project : check the release note 
 \htmladdnormallinkfoot {release note} {http://listes.cru.fr/sympa/release.shtml}.
 So it is no longer possible to
 maintain multiple document about Sympa project direction.
@@ -377,20 +388,38 @@ Our thanks to all contributors, including:
 
 \begin {itemize}
 
-   \item Pierre David, who in addition to his help and suggestions
+  \item Pierre David, who in addition to his help and suggestions
        in developing the code, participated more than actively in
        producing this manual.
 
-  \item Ollivier Robert, Usenet Canal Historique and the good manners
-      guru in the PERL program.
+  \item David Lewis who corrected this documentation
 
-  \item Rapha\"el Hertzog (debian) and St\'ephane Poirey (redhat) for
+  \item Philippe Rivière for its persevering in \Sympa tuning with Postfix.
+
+  \item Vincent Mathieu, Lynda amadouche, John Dalbec for there integration
+	of LDAP features in \Sympa.
+
+  \item Rapha\"el Hertzog (debian), Jerome Marant (debian) and St\'ephane Poirey (redhat) for
       Linux packages.
 
   \item Olivier Lacroix, for all his perseverance in bug fixing.
 
+  \item Hubert Ulliac for search in archive base on marcsearch.pm
+
+  \item Florent Guilleux who wrote the Task Manager
+
+  \item Nadia Euzen for developping the antivirus scanner pluggin.
+
   \item Fabien Marquois, who introduced many new features such as
       the digest.
+
+  \item Vizi Szilard for his Hungarian translations
+
+  \item Petr Prazak for his Czech translations
+
+  \item Rodrigo Filgueira Prates for his Portuguese translations
+
+  \item Lukasz Zalubski for his Polish translations
 
   \item Alex Nappa and Josep Roman for their Spanish translations
 
@@ -398,13 +427,11 @@ Our thanks to all contributors, including:
 
   \item Marco Ferrante for his Italian translations
 
-  \item Hubert Ulliac for search in archive base on marcsearch.pm
-
-  \item Tung Siu Fai for his Chinese translations
+  \item Tung Siu Fai, Wang Jian and Autrijus Tang for their Chinese translations
 
   \item and also: Manuel Valente, Dominique ROUSSEAU,
     Laurent Ghys, Francois Petillon, Guy Brand, Jean Brange, Fabrice
-    Gaillard, Hervé Maza
+    Gaillard, Hervé Maza, Harald Wilhelmi, 
 
    \item Anonymous critics who never missed a chance to
        remind us that \textit {smartlist} already did all that
@@ -414,6 +441,9 @@ Our thanks to all contributors, including:
        {RELEASE\_NOTES} file, who, by serving as guinea pigs and
        being the first to use it, made it possible to quickly and
        efficiently debug the \Sympa software.
+
+  \item Ollivier Robert, Usenet Canal Historique and the good manners
+      guru in the PERL program.
 
     \item Bernard Barbier, without whom \Sympa would not
         have a name.
@@ -624,6 +654,13 @@ a virtual robot or for the whole site.
 	\dir {sample/} directory of the sympa distribution.
 	See \ref{topics}, page~\pageref{topics}.
 
+	\item \file {auth.conf}\\
+	Defines sources for LDAP-based authentication.
+
+	\item \file {robot.conf}\\
+	It is a subset of \file {sympa.conf} defining a Virtual robot 
+	(one per Virtual robot).
+
 \end {itemize}
 
 \section {Spools}
@@ -651,6 +688,9 @@ in \file {sympa.conf}.
 
 	\item \tildedir {sympa/spool/msg/}\\
 	For storing incoming messages (including commands).
+
+	\item \tildedir {sympa/spool/msg/bad/}\\
+	\Sympa stores rejected messages in this directory
 	
 	\item \tildedir {sympa/spool/task/}\\
 	For storing all created tasks.
@@ -720,7 +760,7 @@ detail in later sections.
 
     \item creation of a UNIX user
 
-    \item The web interface for Sympa named WWSympa require one of Oracle, MySQL, Sybase or Postgres RDBMS. Please refers to \"\Sympa and its database\" section
+    \item The web interface for Sympa named WWSympa requires one of Oracle, MySQL, Sybase or Postgres RDBMS. Please refers to \"\Sympa and its database\" section
        (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
 
 \end {itemize}
@@ -804,10 +844,13 @@ run the \unixcmd {check\_perl\_modules.pl} script.
 \begin {itemize}
    \item DB\_File (v. 1.50 or later)
    \item Msgcat
-   \item MD5
+   \item Digest-MD5
    \item MailTools (version 1.13 o later)
+   \item IO-stringy
    \item MIME-tools (may require IO/Stringy)
    \item MIME-Base64
+   \item CGI
+   \item File-Spec
 \end {itemize}
 
 Since release 2, \Sympa requires an RDBMS to work properly. It stores 
@@ -833,17 +876,30 @@ dynamical mailing lists, you need to install PERL LDAP libraries :
 
 \end {itemize}
 
+Passwords in Sympa database can be crypted ; therefore you need to
+install the following reversible cryptography library :
+
+\begin {itemize}
+
+    \item \textbf {CipherSaber}
+
+\end {itemize}
+
+For performence concerns, we recommend using \WWSympa as a persistent CGI,
+using FastCGI. Therefore you need to install the following Perl module :
+
+\begin {itemize}
+
+    \item \textbf {FCGI}
+
+\end {itemize}
+
 \subsection {Create a UNIX user}
 
 The final step prior to installing \Sympa: create a UNIX user (and
 if possible a group) specific to the program. Most of the installation
 will be carried out with this account. We suggest that you use the
-name \texttt {sympa} for both user and group. Note that UID.GID must be
-the same as your httpd. If you are running a dedicated httpd server,
-this can be sympa.sympa, otherwise it is possible either to define a virtual httpd
-server setting UID.GID, or to run \Sympa as nobody.nobody. 
-This second solution is not advisable because the information managed by \Sympa
-will be owned by nobody.
+name \texttt {sympa} for both user and group. 
 
 Numerous files will be located in the \Sympa user's login directory.
 Throughout the remainder of this documentation we shall refer to this
@@ -1888,26 +1944,6 @@ others. Depending on permissions, the same URL may generate a different view.
 	\item Parse the HTML template files
 \end {enumerate}
 
-\section {Installation}
-
-%\begin {htmlonly}
-%<A NAME='installwwsympa'>
-%\end {htmlonly}
-
-
-\begin{enumerate}
-
-\item Edit \Sympa's main Makefile to customize destination dir, conf location,...
-
-\item Install \Sympa
-
-\item cutomize your \file {/etc/wwsympa.conf}
-
-\item set \file {sympa.conf} parameter \cfkeyword {wwsympa\_url}
-	to the base URL of your \WWSympa
-
-\end{enumerate} 
-
 \section {wwsympa.conf parameters}
 
 	\subsection {alias\_manager}
@@ -2418,6 +2454,7 @@ provide various features based on access to one or more LDAP directories :
 
 
 \section {Authentication via uid or alternate email}
+\label {ldap-auth}
 
 \Sympa stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication . The  module of LDAP authentication allows to use \Sympa in intranet without duplicating the user's passwords. 
 
