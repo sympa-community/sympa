@@ -1067,8 +1067,9 @@ sub db_connect {
 
     ## Used by Oracle (ORACLE_HOME)
     if ($Conf{'db_env'}) {
-	foreach my $env (keys %{$Conf{'db_env'}}) {
-	    $ENV{$env} = $Conf{'db_env'}{$env};
+	foreach my $env (split /;/, $Conf{'db_env'}) {
+	    my ($key, $value) = split /=/, $env;
+	    $ENV{$key} = $value if ($key);
 	}
     }
 
@@ -5801,10 +5802,9 @@ sub _include_users_sql {
     ## Set environment variables
     ## Used by Oracle (ORACLE_HOME)
     if ($param->{'db_env'}) {
-	foreach my $env (@{$param->{'db_env'}}) {
-	    if ($env =~ /^(\w+)\=(\S+)$/) {
-		$ENV{$1} = $2;
-	    }
+	foreach my $env (split /;/,$param->{'db_env'}) {
+	    my ($key, $value) = split /=/, $env;
+	    $ENV{$key} = $value if ($key);
 	}
     }
 
