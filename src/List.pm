@@ -3207,18 +3207,20 @@ sub get_user_db {
 
     $sth = pop @sth_stack;
 
-    ## decrypt password
-    if ((defined $user) && $user->{'password'}) {
-	$user->{'password'} = &tools::decrypt_password($user->{'password'});
-    }
+    if (defined $user) {
+	## decrypt password
+	if ($user->{'password'}) {
+	    $user->{'password'} = &tools::decrypt_password($user->{'password'});
+	}
 
-    ## Turn user_attributes into a hash
-    my $attributes = $user->{'attributes'};
-    $user->{'attributes'} = undef;
-    foreach my $attr (split /;/, $attributes) {
-	my ($key, $value) = split /=/, $attr;
-	$user->{'attributes'}{$key} = $value;
-    }    
+	## Turn user_attributes into a hash
+	my $attributes = $user->{'attributes'};
+	$user->{'attributes'} = undef;
+	foreach my $attr (split /;/, $attributes) {
+	    my ($key, $value) = split /=/, $attr;
+	    $user->{'attributes'}{$key} = $value;
+	}    
+    }
 
     return $user;
 }
