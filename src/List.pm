@@ -5451,6 +5451,14 @@ sub _load_admin_file {
 	}
     }
 
+    ## Do we have a database config/access
+    if ($admin{'user_data_source'} eq 'database') {
+	unless ($List::use_db) {
+	    &do_log('info', 'Sympa not setup to use DBI or no database access');
+	    return undef;
+	}
+    }
+
     ## This default setting MUST BE THE LAST ONE PERFORMED
     if ($admin{'status'} ne 'open') {
 	## requested and closed list are just list hidden using visibility parameter
