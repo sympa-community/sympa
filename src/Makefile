@@ -175,10 +175,6 @@ installmod:
 	done
 	chown -R $(USER) $(DESTDIR)$(ETCBINDIR)
 	chgrp -R $(GROUP) $(DESTDIR)$(ETCBINDIR)
-	chown root $(DESTDIR)$(LIBEXECDIR)/aliaswrapper
-	chgrp $(GROUP) $(DESTDIR)$(LIBEXECDIR)/aliaswrapper
-	chown root $(DESTDIR)$(LIBEXECDIR)/virtualwrapper
-	chgrp $(GROUP) $(DESTDIR)$(LIBEXECDIR)/virtualwrapper
 	@echo "Setting privileges..."
 	chmod 755 $(DESTDIR)$(SBINDIR) $(DESTDIR)$(ETCBINDIR) 
 	chmod 755 $(DESTDIR)$(ETCBINDIR)/scenari $(DESTDIR)$(ETCBINDIR)/templates $(DESTDIR)$(ETCBINDIR)/list_task_models $(DESTDIR)$(ETCBINDIR)/global_task_models
@@ -191,7 +187,7 @@ installmod:
 		chmod 4755 $(DESTDIR)$(MAILERPROGDIR)/$$file; \
 	done
 	@for file in $(libexec_SRC) ; do \
-		chown $(USER) $(DESTDIR)$(LIBEXECDIR)/$$file; \
+		chown root $(DESTDIR)$(LIBEXECDIR)/$$file; \
 		chgrp $(GROUP) $(DESTDIR)$(LIBEXECDIR)/$$file; \
 		chmod 4750 $(DESTDIR)$(LIBEXECDIR)/$$file; \
 	done
