@@ -158,9 +158,9 @@ sub maketext {
     my $translation = &gettext ($msg);
 
     ## replace parameters in string
-    $translation =~ s/\%\%/_ESCAPED_\%_/eg; ## First escape '%%'
+    $translation =~ s/\%\%/'_ESCAPED_'.'%_'/eg; ## First escape '%%'
     $translation =~ s/\%(\d+)/$_[$1-1]/eg;
-    $translation =~ s/_ESCAPED_\%_/\%\%/eg; ## Unescape '%%'
+    $translation =~ s/_ESCAPED_%\_/'%%'/eg; ## Unescape '%%'
 
     return $translation;
 }
