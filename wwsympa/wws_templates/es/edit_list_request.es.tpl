@@ -1,14 +1,14 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 [IF !group]
-You can choose below a subset of parameters to edit : <UL>
-<LI><A HREF="[path_cgi]/edit_list_request/[list]/description" >List definition</A>
-<LI><A HREF="[path_cgi]/edit_list_request/[list]/sending" >Sending/reception setup</A>
-<LI><A HREF="[path_cgi]/edit_list_request/[list]/command" >Commands setup</A>
-<LI><A HREF="[path_cgi]/edit_list_request/[list]/archives" >Archives setup</A>
-<LI><A HREF="[path_cgi]/edit_list_request/[list]/bounces" >Bounces management</A>
-<LI><A HREF="[path_cgi]/edit_list_request/[list]/data_source" >Data sources setup</A>
-<LI><A HREF="[path_cgi]/edit_list_request/[list]/other" >Other parameters</A>
+Puede escoger un subconjunto de los parámetros a editar: <UL>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/description" >Definición de la Lista</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/sending" >Configurar Envio/Recepción</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/command" >Configurar Comandos</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/archives" >Configuración de los Archivos</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/bounces" >Gestión de los mensajes devueltos</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/data_source" >Configurar la fuente de datos</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/other" >Otros parámetros</A>
 </UL>
 [ELSE]
 <FORM ACTION="[path_cgi]" METHOD="POST">

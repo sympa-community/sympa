@@ -2,15 +2,15 @@
 
 <BR>
 [IF password_sent]
-  Your password has been sent to your email address [init_email].<BR>
-  Please check your e-mail box to provide your password below.
+  Su contraseña ha sido enviado a su dirección de correo [init_email].<BR>
+  Por favor, lea su correo para obtener la contraseña.
   <BR><BR>
 [ENDIF]
 
 [IF action=loginrequest]
  Usted necesita hacer un login para acceder a su entorno de WWSympa o para efectuar una operación privilegiada (una que requiera su email).
 [ELSE]
- La mayoría de las funciones de las listas de correo requieren su email. Algunas de las funcionas de las listas de correo están ocultas a personas no autentificadas.<br>
+ La mayoría de las funciones de las listas de correo requieren su email. Algunas de las funciones de las listas de correo están ocultas a personas no autentificadas.<br>
 Para poder utilizar todas las funciones, lo mejor es que se autentifique primero.<br>
 [ENDIF]
 

@@ -21,7 +21,7 @@
 
 <TR VALIGN="TOP" NOWRAP>
 <TD><b>Buscar</b></TD>
-<TD><INPUT TYPE=RADIO NAME=how VALUE="phrase" CHECKED> this <font color="[dark_color]"><B>frase</b></font></TD>
+<TD><INPUT TYPE=RADIO NAME=how VALUE="phrase" CHECKED> esta <font color="[dark_color]"><B>frase</b></font></TD>
 <TD><INPUT TYPE=RADIO NAME=how VALUE="all"> <font color="[dark_color]"><b>all of</b></font> estas palabras</TD>
 <TD><INPUT TYPE=RADIO NAME=how VALUE="any"> <font color="[dark_color]"><B>one of</b></font> estas palabras</TD>
 </TR>
