@@ -2015,7 +2015,9 @@ sub do_subscribe {
 
 	return 'info';
     }elsif ($sub_is =~ /do_it/) {
-	my $u = $list->get_default_user_options();
+	my $defaults = $list->get_default_user_options();
+	my $u;
+	%{$u} = %{$defaults};
 	$u->{'email'} = $param->{'user'}{'email'};
 	$u->{'gecos'} = $param->{'user'}{'gecos'} || $in{'gecos'};
 	$u->{'date'} = $u->{'update_date'} = time;
@@ -2554,7 +2556,9 @@ sub do_add {
 	}
     
 	my $u2 = &List::get_user_db($email);
-	my $u = $list->get_default_user_options();
+	my $defaults = $list->get_default_user_options();
+	my $u;
+	%{$u} = %{$defaults};
 	$u->{'email'} = $email;
 	$u->{'gecos'} = $user{$email} || $u2->{'gecos'};
 	$u->{'date'} = $u->{'update_date'} = time;
