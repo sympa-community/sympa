@@ -9,9 +9,6 @@ Content-transfer-encoding: 8bit
 
 [%|loc(list.name,list.host)%]Welcome to list %1@%2[%END%]
 [%|loc(user.email)%]Your subscription email is %1[%END%]
-[% IF user.password -%]
-[%|loc(user.password)%]Your password: %1.[%END%]
-[% END %]
 
 [% INSERT "info" %]
 
@@ -29,10 +26,6 @@ Content-transfer-encoding: 8bit
 
 <B>[%|loc(list.name,list.host)%]Welcome to list %1@%2[%END%] </B><BR>
 [%|loc(user.email)%]Your subscription email is %1[%END%] 
-[% IF user.password -%] 
-<BR>
-[%|loc(user.password)%]Your password: %1.[%END%]
-[% END %]
 <BR><BR>
 <PRE>
 [% INSERT "info" %]

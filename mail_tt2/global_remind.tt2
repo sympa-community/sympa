@@ -10,9 +10,3 @@
 [% END %]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-[% IF user.password %]
-
-[%|loc(conf.wwsympa_url,user.email,user.password)%]In order to authenticate on the web interface(%1)
-use your e-mail %2 and your password %3[%END%]
-
-[% END %]
