@@ -3,6 +3,32 @@
 
 (See Changelog file for the full changes log)
 
+3.4		15 October 2002
+
+   Changes :
+
+
+
+   Bug fixes :
+
+	[reported by O. Lacroix & V. Mathieu] Better syntaxical checks on email addresses ; 
+	also lowercase
+
+	src/List.pm: 'db_env' no more a multiple parameter ; variables/values pairs should be 
+	separated by ';' Fixes the problem with 'ARRAYxxxx' appearing in the 'db_env' entry of 
+	edit_list web form
+
+	src/etc/list_aliases.tpl: Fix: incorrect alias parameters
+	
+	[BugID 50] allow (privileged) listowner to close/restore list.  
+	Also allow shared opening/closure
+
+	wwsympa/wwsympa.fcgi: [BugID 52] Fix : Moderated messages were not accessible from the web 
+	interface. WWSympa runs as user	'sympa' and the mhonarc process that generates HTML version of
+	moderated messages also requires to run as user 'sympa'. Obviously Perl refused to allow this 
+	script to run as SetUID 'sympa' because	mhonarc had double quotes (") in its argument.
+
+
 3.3.6b.6	03 October 2002
 
    Changes :

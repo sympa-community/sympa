@@ -1,3 +1,63 @@
+2002-10-15 15:34  salaun
+
+	* src/Commands.pm, src/List.pm, src/tools.pl, wwsympa/wwslib.pm,
+	wwsympa/wwsympa.fcgi: [reported by O. Lacroix & V. Mathieu] Better
+	syntaxical checks on email addresses ; also lowercase
+
+2002-10-15 12:18  salaun
+
+	* src/List.pm: Fix: 'db_env' no more a multiple parameter ;
+	variables/values pairs should be separated by ';' Fixes the problem
+	with 'ARRAYxxxx' appearing in the 'db_env' entry of edit_list web
+	form
+
+2002-10-15 11:32  salaun
+
+	* doc/sympa.tex.tpl: Fix typo
+
+2002-10-15 09:44  salaun
+
+	* src/etc/list_aliases.tpl: Fix: incorrect alias parameters
+
+2002-10-11 15:43  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/cn/admin_menu.cn.tpl,
+	wws_templates/cz/admin_menu.cz.tpl,
+	wws_templates/de/admin_menu.de.tpl,
+	wws_templates/es/admin_menu.es.tpl,
+	wws_templates/et/admin_menu.et.tpl,
+	wws_templates/fi/admin_menu.fi.tpl,
+	wws_templates/fr/admin_menu.fr.tpl,
+	wws_templates/hu/admin_menu.hu.tpl,
+	wws_templates/it/admin_menu.it.tpl,
+	wws_templates/nl/admin_menu.nl.tpl,
+	wws_templates/ro/admin_menu.ro.tpl,
+	wws_templates/us/admin_menu.us.tpl: [BugID 50] Fix: allow
+	(privileged) listowner to close/restore list.  Also allow shared
+	opeming/closure
+
+2002-10-10 18:04  salaun
+
+	* wwsympa/wwsympa.fcgi: [BugID 52] Fix : Moderated messages were
+	not accessible from the web interface.	WWSympa runs as user
+	'sympa' and the mhonarc process that generates HTML version of
+	moderated messages also requires to run as user 'sympa'. Obviously
+	Perl refused to allow this script to run as SetUID 'sympa' because
+	mhonarc had double quotes (") in its argument.
+
+2002-10-10 17:55  salaun
+
+	* .version, ChangeLog, NEWS: Updated
+
+2002-10-08 15:07  salaun
+
+	* src/etc/mhonarc-ressources: Fix previous changes
+
+2002-10-08 14:59  salaun
+
+	* src/etc/mhonarc-ressources, wwsympa/wws_templates/us/main.us.tpl:
+	Fix: messages removal failed
+
 2002-10-08 11:47  salaun
 
 	* wwsympa/archived.pl: Remove traces
