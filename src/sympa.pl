@@ -63,10 +63,7 @@ my $digestsleep = 5;
 ## Init random engine
 srand (time());
 
-my $version_string = "Sympa version is $Version
-
-Try $0 --help for further information about Sympa
-";
+my $version_string = "Sympa version is $Version\n";
 
 my $usage_string = "Usage:
    $0 [OPTIONS]
@@ -108,6 +105,14 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
 				     $main::options{'make_alias_file'} || 
 				     $main::options{'lowercase'} || 
 				     $main::options{'dump'});
+
+## Batch mode, ie NOT daemon
+ $main::options{'batch'} = 1 if ($main::options{'dump'} || 
+				 $main::options{'help'} ||
+				 $main::options{'version'} || 
+				 $main::options{'import'} || 
+				 $main::options{'make_alias_file'} ||
+				 $main::options{'lowercase'} );
 
 $log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
@@ -194,9 +199,7 @@ if ($signal ne 'hup' ) {
 	}
     }
     
-    unless ($main::options{'dump'} || $main::options{'help'} ||
-	    $main::options{'version'} || $main::options{'import'} || $main::options{'make_alias_file'} ||
-	    $main::options{'lowercase'} ) {
+    unless ($main::options{'batch'} ) {
 	## Create and write the pidfile
 	&tools::write_pid($Conf{'pidfile'}, $$);
     }	
@@ -212,10 +215,8 @@ if ($signal ne 'hup' ) {
 
  ## Most initializations have now been done.
     do_log('notice', "Sympa $Version started");
-    printf "Sympa $Version started\n";
 }else{
     do_log('notice', "Sympa $Version reload config");
-    printf "Sympa $Version reload config\n";
     $signal = '0';
 }
 
