@@ -245,6 +245,9 @@ foreach my $str (sort keys %file) {
     my $entry = $file{$str};
     my $lexi = $Lexicon{$ostr};
 
+    ## Skip meta information (specific to Sympa)
+    next if ($str =~ /^_\w+\_$/);
+
 #    $str =~ s/\\/\\\\/g;
     $str =~ s/\"/\\"/g;
     $lexi =~ s/\\/\\\\/g;
