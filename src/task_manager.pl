@@ -683,6 +683,7 @@ sub execute {
     }
 
     # execution
+    my $status;
     while ( <TASK> ) {
   
 	chomp;
@@ -700,11 +701,21 @@ sub execute {
 					      
 	# processing of the commands
 	if ($result{'nature'} eq 'command') {
-	    last unless cmd_process ($result{'command'}, $result{'Rarguments'}, $task_file, \%vars, $lnb);
+	    $status = &cmd_process ($result{'command'}, $result{'Rarguments'}, $task_file, \%vars, $lnb);
+	    last unless $status;
 	}
     } 
 
     close (TASK);
+
+    unless (defined $status) {
+	&do_log('err', 'Error while processing task, removing %s', $task_file);
+	unless (unlink($task_file)) {
+	    &do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+	    return undef;
+	}
+	return undef;
+    }
 
     return 1;
 }
@@ -757,7 +768,7 @@ sub cmd_process {
  
  # remove files whose name is given in the key 'file' of the hash
 sub rm_file {
-        
+    
     my $Rarguments = $_[0];
     my $Rvars = $_[1];
     my $context = $_[2];
@@ -773,6 +784,8 @@ sub rm_file {
 	    return undef;
 	}
     }
+
+    return 1;
 }
 
 sub stop {
@@ -786,7 +799,7 @@ sub stop {
 	&do_log ('notice', "--> $task_file deleted")
 	    : error ($task_file, "error in stop command : unable to delete task file");
 
-    return undef;
+    return 0;
 }
 
 sub send_msg {
@@ -886,7 +899,7 @@ sub next_cmd {
 
     &do_log ('notice', "--> new task $model ($human_date)");
     
-    return undef;
+    return 0;
 }
 
 sub select_subs {
@@ -1336,3 +1349,4 @@ sub sync_include {
 
     $list->sync_include();
 }
+
