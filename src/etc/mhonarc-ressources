@@ -52,6 +52,8 @@ $PREVPGLINK$
  levelek, oldalak
 [ELSIF lang=et]
  kirju, lehekülg #
+[ELSIF lang=de]
+ Mitteilungen, Seite
 [ELSE]
  mails, page # 
 [ENDIF]
@@ -71,6 +73,8 @@ Chronologicky
 Idõrendben
 [ELSIF lang=et]
 Ajaline
+[ELSIF lang=de]
+Chronologisch
 [ELSE]
 Chronological
 [ENDIF]
@@ -174,7 +178,11 @@ Archive powered by
 <TR ALIGN=CENTER VALIGN=MIDDLE>
 
 $TPREVPGLINK$
+[IF lang=de]
+<TD  NOWRAP BGCOLOR="[light_color]" ALIGN="CENTER">Seite $PAGENUM$ / $NUMOFPAGES$</TD>
+[ELSE]
 <TD  NOWRAP BGCOLOR="[light_color]" ALIGN="CENTER">page n&#176; $PAGENUM$ / $NUMOFPAGES$</TD>
+[ENDIF]
 $TNEXTPGLINK$
 
 <td NOWRAP BGCOLOR="[light_color]" align="center">
@@ -188,6 +196,8 @@ Chronologicky
 Idõrendben
 [ELSIF lang=et]
 Ajaline
+[ELSIF lang=de]
+Chronologisch
 [ELSE]
 Chronological
 [ENDIF]
@@ -242,6 +252,8 @@ dal¹í
 következõ
 [ELSIF lang=et]
 edasi
+[ELSIF lang=de]
+weiter
 [ELSE]
 next
 [ENDIF]
@@ -291,6 +303,8 @@ Zpráva není dostupná
 A levél nem érhetõ el.
 [ELSIF lang=et]
 Kirja ei ole.
+[ELSIF lang=de]
+Mitteilung nicht vorhanden
 [ELSE]
 Message not available
 [ENDIF]
@@ -392,6 +406,8 @@ Chronologicky
 Idõrendben
 [ELSIF lang=et]
 Ajaline
+[ELSIF lang=de]
+Chronologisch
 [ELSE]
 Chronological
 [ENDIF]
@@ -408,6 +424,8 @@ Téma
 Téma
 [ELSIF lang=et]
 Teema järgi
+[ELSIF lang=de]
+Thread
 [ELSE]
 Thread
 [ENDIF]
@@ -459,6 +477,10 @@ $TNEXTBUTTON$
   Vasta saatjale <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
   listi <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list_conf->host]">
   <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Vasta">
+[ELSIF lang=de]
+  Antwort an Sender <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
+  an Liste <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list_conf->host]">
+  <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Antworten">
 [ELSE] 
   Reply to sender <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
   to list <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list_conf->host]">
@@ -483,6 +505,8 @@ $TNEXTBUTTON$
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre">
 [ELSIF lang=et]
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks">
+[ELSIF lang=de]
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren">
 [ELSE]
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="tag this mail for deletion">
 [ENDIF]
@@ -503,6 +527,8 @@ $TNEXTBUTTON$
   <INPUT TYPE="button" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre" onClick="request_confirm(this.form,'Tényleg törölni szeretnéd ezt a levelet?')">
 [ELSIF lang=et]
   <INPUT TYPE="button" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks" onClick="request_confirm(this.form,'Oled kindel, et soovid selle kirja ära kustutada?')">
+[ELSIF lang=de]
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren" onClick="request_confirm(this.form,'Wollen Sie wirklich diese Mitteilung löschen?')">
 [ELSE]
   <INPUT TYPE="button" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="request_confirm(this.form,'Do you really want to delete this message ?')">
 [ENDIF]
@@ -588,6 +614,8 @@ Nedìle
 Vasárnap
 [ELSIF lang=et]
 Pühapäev
+[ELSIF lang=de]
+Sonntag
 [ELSE]
 Sunday
 [ENDIF]
@@ -600,6 +628,8 @@ Pondìlí
 Hétfõ
 [ELSIF lang=et]
 Esmaspäev
+[ELSIF lang=de]
+Montag
 [ELSE]
 Monday
 [ENDIF]
@@ -612,6 +642,8 @@ Mardi
 Kedd
 [ELSIF lang=et]
 Teisipäev
+[ELSIF lang=de]
+Dienstag
 [ELSE]
 Tuesday
 [ENDIF]
@@ -624,6 +656,8 @@ Støeda
 Szerda
 [ELSIF lang=et]
 Kolmapäev
+[ELSIF lang=de]
+Mittwoch
 [ELSE]
 Wednesday
 [ENDIF]
@@ -636,6 +670,8 @@ Jeudi
 Csütörtök
 [ELSIF lang=et]
 Neljapäev
+[ELSIF lang=de]
+Donnerstag
 [ELSE]
 Thursday
 [ENDIF]
@@ -648,6 +684,8 @@ Pátek
 Péntek
 [ELSIF lang=et]
 Reede
+[ELSIF lang=de]
+Freitag
 [ELSE]
 Friday
 [ENDIF]
@@ -660,6 +698,8 @@ Sobota
 Szombat
 [ELSIF lang=et]
 Laupäev
+[ELSIF lang=de]
+Samstag
 [ELSE]
 Saturday
 [ENDIF]
@@ -688,6 +728,8 @@ Leden:Únor:Bøezen:Duben:Kvìten:Èerven:Èervenec:Srpen:Záøí:Øíjen:Listopad:Prosine
 Január:Február:Március:Április:Május:Június:Július:Augusztus:Szeptember:Október:November:December
 [ELSIF lang=et]
 Jaanuar:Veebruar:Märts:Aprill:Mai:Juuni:Juuli:August:September:Oktoober:November:Detsember
+[ELSIF lang=de]
+Januar:Februar:März:April:Mai:Juni:Juli:August:September:Oktober:November:Dezember
 [ELSE]
 January:February:March:April:May:June:July:August:September:October:November:December
 [ENDIF]
