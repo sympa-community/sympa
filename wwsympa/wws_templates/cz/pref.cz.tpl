@@ -3,11 +3,11 @@
 
     <TABLE WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
       <TR VALIGN="top">
-        <TH BGCOLOR="#330099" COLSPAN="2">
+        <TH BGCOLOR="[dark_color]" COLSPAN="2">
           <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
             <TR>
-             <TH BGCOLOR="#3366cc" WIDTH="50%">
-	      <FONT COLOR="#ffffff">
+             <TH BGCOLOR="[selected_color]" WIDTH="50%">
+	      <FONT COLOR="[bg_color]">
 	        Va¹e prostøedí
 	      </FONT>
 	     </TH>
@@ -20,17 +20,17 @@
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
 	    <INPUT TYPE="hidden" NAME="previous_action" VALUE="[previous_action]">
 	    <INPUT TYPE="hidden" NAME="previous_list" VALUE="[previous_list]">
-  	    <FONT COLOR="#330099">Email </FONT> [user->email]<BR><BR>
-	    <FONT COLOR="#330099">Jméno</FONT> 
+  	    <FONT COLOR="[dark_color]">Email </FONT> [user->email]<BR><BR>
+	    <FONT COLOR="[dark_color]">Jméno</FONT> 
 	    <INPUT TYPE="text" NAME="gecos" SIZE=20 VALUE="[user->gecos]"><BR><BR> 
-	    <FONT COLOR="#330099">Jazyk</FONT>
+	    <FONT COLOR="[dark_color]">Jazyk</FONT>
 	    <SELECT NAME="lang">
 	      [FOREACH l IN languages]
 	        <OPTION VALUE="[l->NAME]" [l->selected]>[l->complete]
 	      [END]
 	    </SELECT>
 	    <BR><BR>
-	    <FONT COLOR="#330099">Doba kdy vypr¹í ovìøení toto¾nosti </FONT>
+	    <FONT COLOR="[dark_color]">Doba kdy vypr¹í ovìøení toto¾nosti </FONT>
 	    <SELECT NAME="cookie_delay">
 	      [FOREACH period IN cookie_periods]
 	        <OPTION VALUE="[period->value]" [period->selected]>[period->desc]
@@ -42,15 +42,15 @@
 	</TD>
       </TR>
       <TR VALIGN="top">
-        <TH BGCOLOR="#330099" COLSPAN="2">
+        <TH BGCOLOR="[dark_color]" COLSPAN="2">
           <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
             <TR>
-	     <TH WIDTH="50%" BGCOLOR="#3366cc">
-	      <FONT COLOR="#ffffff">
+	     <TH WIDTH="50%" BGCOLOR="[selected_color]">
+	      <FONT COLOR="[bg_color]">
 	        Zmìna Va¹í emailové adresy
 	      </FONT>
-	     </TH><TH WIDTH="50%" BGCOLOR="#3366cc">
-	      <FONT COLOR="#ffffff">
+	     </TH><TH WIDTH="50%" BGCOLOR="[selected_color]">
+	      <FONT COLOR="[bg_color]">
 	        Zmìna Va¹eho hesla
 	      </FONT>
 	     </TH>
@@ -63,7 +63,7 @@
    	    <FORM ACTION="[path_cgi]" METHOD=POST>
 	    <INPUT TYPE="hidden" NAME="previous_action" VALUE="[previous_action]">
 	    <INPUT TYPE="hidden" NAME="previous_list" VALUE="[previous_list]">
-	    <BR><BR><BR><FONT COLOR="#330099">Nová adresa : </FONT>
+	    <BR><BR><BR><FONT COLOR="[dark_color]">Nová adresa : </FONT>
 	    <BR>&nbsp;&nbsp;&nbsp;<INPUT NAME="email" SIZE=15>
 	    <BR><BR><BR><INPUT TYPE="submit" NAME="action_change_email" VALUE="Odeslat">
 	    </FORM>
@@ -72,9 +72,9 @@
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
 	    <INPUT TYPE="hidden" NAME="previous_action" VALUE="[previous_action]">
 	    <INPUT TYPE="hidden" NAME="previous_list" VALUE="[previous_list]">
-	    <BR><BR><BR><FONT COLOR="#330099">Nové heslo : </FONT>
+	    <BR><BR><BR><FONT COLOR="[dark_color]">Nové heslo : </FONT>
 	    <BR>&nbsp;&nbsp;&nbsp;<INPUT TYPE="password" NAME="newpasswd1" SIZE=15>
-	    <BR><FONT COLOR="#330099">Zopakujte nové heslo : </FONT>
+	    <BR><FONT COLOR="[dark_color]">Zopakujte nové heslo : </FONT>
 	    <BR>&nbsp;&nbsp;&nbsp;<INPUT TYPE="password" NAME="newpasswd2" SIZE=15>
 	    <BR><BR><BR><INPUT TYPE="submit" NAME="action_setpasswd" VALUE="Odeslat">
 	    </FORM>

@@ -10,13 +10,13 @@
 [IF init_passwd]
   <INPUT TYPE="hidden" NAME="passwd" VALUE="[user->password]">
 [ELSE]
-  <FONT COLOR="#330099">当前口令: </FONT>
+  <FONT COLOR="[dark_color]">当前口令: </FONT>
   <INPUT TYPE="password" NAME="passwd" SIZE=15>
 [ENDIF]
 
-<BR><BR><FONT COLOR="#330099">新口令: </FONT>
+<BR><BR><FONT COLOR="[dark_color]">新口令: </FONT>
 <INPUT TYPE="password" NAME="newpasswd1" SIZE=15>
-<BR><BR><FONT COLOR="#330099">再次输入新口令: </FONT>
+<BR><BR><FONT COLOR="[dark_color]">再次输入新口令: </FONT>
 <INPUT TYPE="password" NAME="newpasswd2" SIZE=15>
 <BR><BR><INPUT TYPE="submit" NAME="action_setpasswd" VALUE="提交">
 

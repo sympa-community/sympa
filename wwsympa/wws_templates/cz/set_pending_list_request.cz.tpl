@@ -4,16 +4,16 @@
 
 <BR>
 <TABLE BORDER=0 WIDTH=100% >
-<TR BGCOLOR="#ccccff">
+<TR BGCOLOR="[light_color]">
 <TD>
 <TABLE BORDER=0 WIDTH=100% >
-<TR BGCOLOR="#ccccff">
+<TR BGCOLOR="[light_color]">
  <TD><B>Jméno konference :</B></TD><TD WIDTH=100% >[list]</TD>
 </TR>
-<TR BGCOLOR="#ccccff">
+<TR BGCOLOR="[light_color]">
  <TD><B>Subjekt : </B></TD><TD WIDTH=100%>[list_subject]</TD>
 </TR>
-<TR BGCOLOR="#ccccff">
+<TR BGCOLOR="[light_color]">
  <TD NOWRAP><B>Po¾adoval </B></TD><TD WIDTH=100%>[list_request_by] <B>v</B> [list_request_date]</TD>
 </TR>
 </TABLE>
@@ -35,7 +35,7 @@
 <INPUT TYPE="radio" NAME="status" VALUE="open">Nainstalovat &nbsp;&nbsp;
 </MENU>
 </TD><TD>
-<TD BGCOLOR="#ccccff">
+<TD BGCOLOR="[light_color]">
 <INPUT TYPE="submit" NAME="action_install_pending_list" VALUE="Odeslat">
 </FORM>
 </TD>

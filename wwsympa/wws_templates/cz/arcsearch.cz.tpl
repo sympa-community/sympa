@@ -1,11 +1,11 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 <H2>Výsledek Va¹eho hledání v archívu
-<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="#330099">[list]</font></a> : </H2>
+<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="[dark_color]">[list]</font></a> : </H2>
 
 <P>Pole hledání : 
 [FOREACH u IN directories]
-<A HREF="[path_cgi]/arc/[list]/[u]"><FONT COLOR="#330099">[u]</font></a> - 
+<A HREF="[path_cgi]/arc/[list]/[u]"><FONT COLOR="[dark_color]">[u]</font></a> - 
 [END]
 </P>
 
@@ -111,7 +111,7 @@ Parametry toho hledání <b> &quot;[key_word]&quot;</b>
 <INPUT NAME=action_arcsearch_form TYPE=submit VALUE="Nové hledání">
 </FORM>
 <HR>
-Zalo¾eno na <Font size=+1 color="#330099"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font>, vyhledávacím stroji<B>MHonArc</B> archívù<p>
+Zalo¾eno na <Font size=+1 color="[dark_color]"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font>, vyhledávacím stroji<B>MHonArc</B> archívù<p>
 
 
 <A HREF="[path_cgi]/arc/[list]/[archive_name]"><B>Návrat k archívu [archive_name] 

@@ -57,18 +57,18 @@
     </TABLE>
 
     <TABLE WIDTH="100%" BORDER=1>
-      <TR BGCOLOR="#ff6666" NOWRAP>
-	<TH><FONT COLOR="#ffffff">X</FONT></TH>
-        <TH><FONT COLOR="#ffffff">email</FONT></TH>
-	<TH><FONT COLOR="#ffffff">poèet vrácených zpráv</FONT></TH>
-	<TH><FONT COLOR="#ffffff">období</FONT></TH>
-	<TH NOWRAP><FONT COLOR="#ffffff">typ</FONT></TH>
+      <TR BGCOLOR="[error_color]" NOWRAP>
+	<TH><FONT COLOR="[bg_color]">X</FONT></TH>
+        <TH><FONT COLOR="[bg_color]">email</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">poèet vrácených zpráv</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">období</FONT></TH>
+	<TH NOWRAP><FONT COLOR="[bg_color]">typ</FONT></TH>
       </TR>
       
       [FOREACH u IN members]
 
 	[IF dark=1]
-	  <TR BGCOLOR="#eeeeee">
+	  <TR BGCOLOR="[shaded_color]">
 	[ELSE]
           <TR>
 	[ENDIF]

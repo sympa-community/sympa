@@ -24,10 +24,10 @@
 	<INPUT TYPE="hidden" NAME="nomenu" VALUE="[nomenu]">
 
         <TABLE BORDER=0 width=100% CELLSPACING=0 CELLPADDING=0>
-         <TR BGCOLOR="#ccccff">
+         <TR BGCOLOR="[light_color]">
           <TD NOWRAP align=center>
      	      <INPUT TYPE=hidden NAME=list VALUE="[list]">
-     	      <FONT SIZE=-1 COLOR="#3366cc"><b>Email cím:<INPUT TYPE=text NAME=email SIZE=20 VALUE="[init_email]">
+     	      <FONT SIZE=-1 COLOR="[selected_color]"><b>Email cím:<INPUT TYPE=text NAME=email SIZE=20 VALUE="[init_email]">
       	      Jelszó: </b>
               <INPUT TYPE=password NAME=passwd SIZE=8>&nbsp;&nbsp;
               <INPUT TYPE="submit" NAME="action_login" VALUE="Belépés" SELECTED>
@@ -46,11 +46,11 @@
 <I>Ha a szerverhezen nincsen jelszavad, vagy elfelejtetted, akkor:</I>
 </TD><TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="#330099">
+  <TR ALIGN=center BGCOLOR="[dark_color]">
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
-      <TD NOWRAP BGCOLOR="#ccccff" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
       [IF escaped_init_email]
          <A HREF="[path_cgi]/nomenu/sendpasswd/[escaped_init_email]"
       [ELSE]

@@ -72,7 +72,7 @@
    <TD COLSPAN=2 ALIGN="center">
     <TABLE>
      <TR>
-      <TD BGCOLOR="#ccccff">
+      <TD BGCOLOR="[light_color]">
 <INPUT TYPE="submit" NAME="action_create_list" VALUE="Odeslat po¾adavek na vytvoøení">
       </TD>
      </TR></TABLE>

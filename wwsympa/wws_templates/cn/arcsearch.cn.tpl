@@ -1,11 +1,11 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 <H2>在存档中搜索的结果
-<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="#330099">[list]</font></a>: </H2>
+<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="[dark_color]">[list]</font></a>: </H2>
 
 <P>查找域:
 [FOREACH u IN directories]
-<A HREF="[path_cgi]/arc/[list]/[u]"><FONT COLOR="#330099">[u]</font></a> - 
+<A HREF="[path_cgi]/arc/[list]/[u]"><FONT COLOR="[dark_color]">[u]</font></a> - 
 [END]
 </P>
 
@@ -111,7 +111,7 @@
 <INPUT NAME=action_arcsearch_form TYPE=submit VALUE="新的查找">
 </FORM>
 <HR>
-基于<Font size=+1 color="#330099"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font>，<B>MHonArc</B>归档的搜索引擎<p>
+基于<Font size=+1 color="[dark_color]"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font>，<B>MHonArc</B>归档的搜索引擎<p>
 
 
 <A HREF="[path_cgi]/arc/[list]/[archive_name]"><B>回到归档 [archive_name] 

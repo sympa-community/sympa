@@ -15,9 +15,9 @@
   [ENDIF]
    
   <TABLE width=100%>
-  <TR BGCOLOR="#330099">
+  <TR BGCOLOR="[dark_color]">
    
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">文档</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">文档</font></TD>
   [IF  order_by<>order_by_doc]  
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">  
@@ -32,7 +32,7 @@
   </TR></TABLE>
   </th>
   
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">作者</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">作者</font></TD>
   [IF  order_by<>order_by_author]  
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">  
@@ -47,7 +47,7 @@
   </TR></TABLE>
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">大小(KB)</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">大小(KB)</font></TD>
   [IF order_by<>order_by_size] 
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -62,7 +62,7 @@
   </TR></TABLE>   
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">最后更新</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">最后更新</font></TD>
   [IF order_by<>order_by_date]
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -77,19 +77,19 @@
   </TR></TABLE>  
   </th> 
 
-  <th ALIGN="left"><font color="#ffffff">描述</font></th> 
-  <th ALIGN="center"><font color="#ffffff">编辑</font></th> 
-  <th ALIGN="center"><font color="#ffffff">删除</font></th>
-  <th ALIGN="center"><font color="#ffffff">存取</font></th></TR>
+  <th ALIGN="left"><font color="[bg_color]">描述</font></th> 
+  <th ALIGN="center"><font color="[bg_color]">编辑</font></th> 
+  <th ALIGN="center"><font color="[bg_color]">删除</font></th>
+  <th ALIGN="center"><font color="[bg_color]">存取</font></th></TR>
       
   [IF empty]
-    <TR BGCOLOR="#ccccff" VALIGN="top">
+    <TR BGCOLOR="[light_color]" VALIGN="top">
     <TD COLSPAN=8 ALIGN="center"> 空文件夹 </TD>
     </TR>
   [ELSE]   
     [IF sort_subdirs]
       [FOREACH s IN sort_subdirs] 
-        <TR BGCOLOR="#ccccff">        
+        <TR BGCOLOR="[light_color]">        
 	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[path][s->doc]/"> 
 	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]"> [s->doc]</A></TD>
 	<TD>
@@ -142,7 +142,7 @@
 
     [IF sort_files]
       [FOREACH f IN sort_files]
-        <TR BGCOLOR="#ccccff"> 
+        <TR BGCOLOR="[light_color]"> 
         <TD>&nbsp;
         [IF f->html]
 	  <A HREF="[path_cgi]/d_read/[list]/[path][f->doc]" TARGET="html_window">

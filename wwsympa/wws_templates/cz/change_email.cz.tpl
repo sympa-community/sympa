@@ -6,7 +6,7 @@ které jste obdr¾el, ní¾e :
 
 <FORM ACTION="[path_cgi]" METHOD=POST>
     <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
-    <FONT COLOR="#330099">Heslo pro [email]: </FONT>
+    <FONT COLOR="[dark_color]">Heslo pro [email]: </FONT>
     <BR>&nbsp;&nbsp;&nbsp;<INPUT TYPE="password" NAME="password" SIZE=15>
     <BR><BR><INPUT TYPE="submit" NAME="action_change_email" VALUE="Zmìnit mou emailovou adresu">
 </FORM>

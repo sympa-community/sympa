@@ -1,6 +1,6 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
     <BR><P> 
-<TABLE BORDER=0 BGCOLOR="#ccccff"><TR><TD>
+<TABLE BORDER=0 BGCOLOR="[light_color]"><TR><TD>
 <P align=justify>
 您可以在这里访问邮递表服务器 [conf->email]@[conf->host]。从这里，您可以订阅、退订、查看邮递表存档和进行邮递表管理等。
 </P>
@@ -10,8 +10,8 @@
 <CENTER>
 <TABLE BORDER=0>
  <TR>
-  <TH BGCOLOR="#3366cc">
-   <FONT COLOR="#ffffff">邮递表</FONT>
+  <TH BGCOLOR="[selected_color]">
+   <FONT COLOR="[bg_color]">邮递表</FONT>
   </TH>
  </TR>
  <TR>
@@ -42,11 +42,11 @@
    <TR>
 <TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="#330099">
+  <TR ALIGN=center BGCOLOR="[dark_color]">
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
-      <TD NOWRAP BGCOLOR="#ccccff" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
       <A HREF="[path_cgi]/lists" >
      <FONT SIZE=-1><B>查看所有邮递表</B></FONT></A>
      </TD>
@@ -74,9 +74,9 @@
 
 [IF ! user->email]
 <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="0" VALIGN="top">
-   <TR><TD BGCOLOR="#330099">
+   <TR><TD BGCOLOR="[dark_color]">
           <TABLE BORDER="0" WIDTH="100%"  VALIGN="top"> 
-              <TR><TD BGCOLOR="#ffffff">
+              <TR><TD BGCOLOR="[bg_color]">
 [PARSE '/var/lib/sympa/bin/etc/wws_templates/loginbanner.cn-gb.tpl']
 </TD></TR></TABLE>
 </TD></TR></TABLE>

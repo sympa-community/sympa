@@ -21,8 +21,8 @@ Zkontrolujte si Va¹i schránku a vlo¾te heslo. Tímto potvrdíte Va¹e pøihlá¹ení
 do konference [list].
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="#330099"><B>e-mail address</B> </FONT>[email]<BR>
-	  <FONT COLOR="#330099"><B>heslo</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>e-mail address</B> </FONT>[email]<BR>
+	  <FONT COLOR="[dark_color]"><B>heslo</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -36,7 +36,7 @@ vlastnímu prostøedí.
   [ELSIF status=notauth_noemail]
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="#330099"><B>Your e-mail address</B> 
+          <FONT COLOR="[dark_color]"><B>Your e-mail address</B> 
 	  <INPUT  NAME="email" SIZE="30"><BR>
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="action" VALUE="subrequest">
@@ -47,8 +47,8 @@ vlastnímu prostøedí.
 Pro potvrzení Va¹eho pøihlá¹ení do konference [list], vlo¾te Va¹e heslo:
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="#330099"><B>emailová adresa</B> </FONT>[email]<BR>
-            <FONT COLOR="#330099"><B>heslo</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>emailová adresa</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>heslo</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -60,7 +60,7 @@ Pro potvrzení Va¹eho pøihlá¹ení do konference [list], vlo¾te Va¹e heslo:
 
   [ELSIF status=notauth_subscriber]
 
-	<FONT COLOR="#330099"><B>Jste ji¾ èlenem konference [list].
+	<FONT COLOR="[dark_color]"><B>Jste ji¾ èlenem konference [list].
 	</FONT>
 	<BR><BR>
 

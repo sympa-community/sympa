@@ -15,11 +15,11 @@
     </FORM>
 </TD>
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="#330099" VALIGN="top">
+ <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
    <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
      <TR>
-       <TD BGCOLOR="#ccccff" ALIGN="center" VALIGN="top">
-         <FONT COLOR="#3366cc" SIZE="-1">
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+         <FONT COLOR="[selected_color]" SIZE="-1">
          <A HREF="[base_url][path_cgi]/add_request/[list]" ><b>Vícenásobné pøidání</b></A>
          </FONT>
        </TD>
@@ -29,11 +29,11 @@
 </TD>
 
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="#330099" VALIGN="top">
+ <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
    <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
      <TR>
-       <TD BGCOLOR="#ccccff" ALIGN="center" VALIGN="top">
-         <FONT COLOR="#3366cc" SIZE="-1">
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+         <FONT COLOR="[selected_color]" SIZE="-1">
 
          <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Chcete opravdu poslat pøipomínací zprávu k [total] èlenùm?'); return false;"><b>Upomenout èleny</b></A>
 
@@ -108,13 +108,13 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
   </TABLE>
 
     <TABLE WIDTH="100%" BORDER="1">
-      <TR BGCOLOR="#ccccff">
+      <TR BGCOLOR="[light_color]">
 	[IF is_owner]
 	   <TH><FONT SIZE="-1"><B>X</B></FONT></TH>
 	[ENDIF]
         [IF sortby=email]
-  	    <TH NOWRAP COLSPAN=2 BGCOLOR="#3366cc">
-	    <FONT COLOR="#ffffff" SIZE="-1"><b>Emailová adresa</b></FONT>
+  	    <TH NOWRAP COLSPAN=2 BGCOLOR="[selected_color]">
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Emailová adresa</b></FONT>
 	[ELSE]
 	    <TH NOWRAP COLSPAN=2>
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/email" >
@@ -127,8 +127,8 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
 	  <TH><FONT SIZE="-1"><B>Zpùsob pøijímání</B></FONT>
 	  </TH>
 	  [IF sortby=date]
-  	    <TH NOWRAP BGCOLOR="#3366cc">
-	    <FONT COLOR="#ffffff" SIZE="-1"><b>Datum pøihlá¹ení</b></FONT>
+  	    <TH NOWRAP BGCOLOR="[selected_color]">
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Datum pøihlá¹ení</b></FONT>
 	  [ELSE]
 	    <TH NOWRAP><FONT SIZE="-1">
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/date" >
@@ -140,7 +140,7 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
       
       [FOREACH u IN members]
 	[IF dark=1]
-	  <TR BGCOLOR="#eeeeee">
+	  <TR BGCOLOR="[shaded_color]">
 	[ELSE]
           <TR>
 	[ENDIF]
@@ -159,8 +159,8 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
  	        [u->email]
  	      [ENDIF]
 	  </FONT></TD>
-            <TD ALIGN="right"BGCOLOR="#ff6666"><FONT SIZE=-1>
-		<FONT COLOR="#ffffff"><B>vracející se zprávy</B></FONT>
+            <TD ALIGN="right"BGCOLOR="[error_color]"><FONT SIZE=-1>
+		<FONT COLOR="[bg_color]"><B>vracející se zprávy</B></FONT>
 	    </TD>
 
 	 [ELSE]

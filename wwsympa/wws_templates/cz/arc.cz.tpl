@@ -29,14 +29,14 @@
    
     [FOREACH year IN calendar]
 
-      <TR BGCOLOR="#ccccff">
-        <TD BGCOLOR="#ffffff"><FONT SIZE="-1"><B>[year->NAME]</B></FONT> </TD>
+      <TR BGCOLOR="[light_color]">
+        <TD BGCOLOR="[bg_color]"><FONT SIZE="-1"><B>[year->NAME]</B></FONT> </TD>
 
         <TD>
         [IF year->01]
 	   <A HREF="[path_cgi]/arc/[list]/[year->NAME]-01"><FONT SIZE="-1"><b>01</b></FONT></A>
         [ELSE]
-	  <FONT SIZE="-1" COLOR="#ffffff">01</FONT>
+	  <FONT SIZE="-1" COLOR="[bg_color]">01</FONT>
         [ENDIF]
 	</TD>
 
@@ -44,7 +44,7 @@
         [IF year->02]
 	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-02"><FONT SIZE="-1"><b>02</b></FONT></A>
         [ELSE]
- 	  <FONT SIZE="-1" COLOR="#ffffff">02</FONT>
+ 	  <FONT SIZE="-1" COLOR="[bg_color]">02</FONT>
         [ENDIF]
 	</TD>
 
@@ -52,7 +52,7 @@
         [IF year->03]
 	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-03"><FONT SIZE="-1"><b>03</b></FONT></A>
         [ELSE]
- 	  <FONT SIZE="-1" COLOR="#ffffff">03</FONT>
+ 	  <FONT SIZE="-1" COLOR="[bg_color]">03</FONT>
         [ENDIF]
 	</TD>
 
@@ -60,7 +60,7 @@
         [IF year->04]
 	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-04"><FONT SIZE="-1"><b>04</b></FONT></A>
         [ELSE]
- 	  <FONT SIZE="-1" COLOR="#ffffff">04</FONT>
+ 	  <FONT SIZE="-1" COLOR="[bg_color]">04</FONT>
          [ENDIF]
 	</TD>
         <TD>
@@ -68,7 +68,7 @@
         [IF year->05]
 	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-05"><FONT SIZE="-1"><b>05</b></FONT></A>
         [ELSE]
- 	  <FONT SIZE="-1" COLOR="#ffffff">05</FONT>
+ 	  <FONT SIZE="-1" COLOR="[bg_color]">05</FONT>
         [ENDIF]
 	</TD>
 
@@ -76,7 +76,7 @@
         [IF year->06]
 	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-06"><FONT SIZE="-1"><b>06</b></FONT></A>
         [ELSE]
- 	  <FONT SIZE="-1" COLOR="#ffffff">06</FONT>
+ 	  <FONT SIZE="-1" COLOR="[bg_color]">06</FONT>
         [ENDIF]
 	</TD>
 
@@ -84,7 +84,7 @@
         [IF year->07]
 	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-07"><FONT SIZE="-1"><b>07</b></FONT></A>
         [ELSE]
- 	  <FONT SIZE="-1" COLOR="#ffffff">07</FONT>
+ 	  <FONT SIZE="-1" COLOR="[bg_color]">07</FONT>
         [ENDIF]
 	</TD>
 
@@ -92,7 +92,7 @@
         [IF year->08]
 	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-08"><FONT SIZE="-1"><b>08</FONT></A>
         [ELSE]
- 	  <FONT SIZE="-1" COLOR="#ffffff">08</FONT>
+ 	  <FONT SIZE="-1" COLOR="[bg_color]">08</FONT>
         [ENDIF]
 	</TD>
         <TD>
@@ -100,7 +100,7 @@
         [IF year->09]
 	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-09"><FONT SIZE="-1"><b>09</b></FONT></A>
         [ELSE]
- 	  <FONT SIZE="-1" COLOR="#ffffff">09</FONT>
+ 	  <FONT SIZE="-1" COLOR="[bg_color]">09</FONT>
         [ENDIF]
 	</TD>
 
@@ -108,7 +108,7 @@
         [IF year->10]
 	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-10"><FONT SIZE="-1"><b>10</b></FONT></A>
         [ELSE]
- 	  <FONT SIZE="-1" COLOR="#ffffff">10</FONT>
+ 	  <FONT SIZE="-1" COLOR="[bg_color]">10</FONT>
         [ENDIF]
 	</TD>
 
@@ -116,7 +116,7 @@
         [IF year->11]
 	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-11"><FONT SIZE="-1"><b>11</FONT></A>
         [ELSE]
- 	  <FONT SIZE="-1" COLOR="#ffffff">11</FONT>
+ 	  <FONT SIZE="-1" COLOR="[bg_color]">11</FONT>
         [ENDIF]
 	</TD>
 
@@ -124,7 +124,7 @@
         [IF year->12]
 	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-12"><FONT SIZE="-1"><b>12</b></FONT></A>
         [ELSE]
- 	  <FONT SIZE="-1" COLOR="#ffffff">12</FONT>
+ 	  <FONT SIZE="-1" COLOR="[bg_color]">12</FONT>
         [ENDIF]
 	</TD>
 

@@ -4,7 +4,7 @@
       <TR VALIGN="top">
         <TD NOWRAP>
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
-	    <FONT COLOR="#330099"><B>Nastavení standardních ¹ablon konference</B></FONT><BR>
+	    <FONT COLOR="[dark_color]"><B>Nastavení standardních ¹ablon konference</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [FOREACH f IN lists_default_files]
 	        <OPTION VALUE='[f->NAME]' [f->selected]>[f->complete]
@@ -14,7 +14,7 @@
 	  </FORM>
 
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
-	    <FONT COLOR="#330099"><B>Nastavení ¹ablon serveru</B></FONT><BR>
+	    <FONT COLOR="[dark_color]"><B>Nastavení ¹ablon serveru</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [FOREACH f IN server_files]
 	        <OPTION VALUE='[f->NAME]' [f->selected]>[f->complete]
@@ -36,7 +36,7 @@
       <TR><TD><A HREF="[path_cgi]/view_translations"><B>Upravit ¹ablony</B></A></TD></TR>
       <TR>
         <TD>
-<FONT COLOR="#330099"><B>Znovu sestavit HTML archívy</B> pomocí <CODE>arctxt</CODE> adresáøe jako vstup.
+<FONT COLOR="[dark_color]"><B>Znovu sestavit HTML archívy</B> pomocí <CODE>arctxt</CODE> adresáøe jako vstup.
         </TD>
       </TR>
       <TR>
@@ -59,7 +59,7 @@
 
       <TR>
         <TD>
-	  <FONT COLOR="#330099">
+	  <FONT COLOR="[dark_color]">
 	  <A HREF="[path_cgi]/scenario_test">
 	     <b>Modul testu scénáøe</b>
           </A>

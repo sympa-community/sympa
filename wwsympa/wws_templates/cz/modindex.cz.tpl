@@ -3,18 +3,18 @@
   <FORM ACTION="[path_cgi]" METHOD=POST>
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 <TABLE>
-<TR BGCOLOR="#ffffff"><TD>
+<TR BGCOLOR="[bg_color]"><TD>
   <INPUT TYPE="submit" NAME="action_distribute" VALUE="Rozeslat">
   <INPUT TYPE="submit" NAME="action_reject.quiet" VALUE="Odmítnout">
   <INPUT TYPE="submit" NAME="action_reject" VALUE="Odmítnutí s upozornìním">
 </TD></TR></TABLE>  
     <TABLE BORDER="1" WIDTH="100%">
-      <TR BGCOLOR="#330099">
-	<TH><FONT COLOR="#ffffff">X</FONT></TH>
-        <TH><FONT COLOR="#ffffff">Datum</FONT></TH>
-	<TH><FONT COLOR="#ffffff">Autor</FONT></TH>
-	<TH><FONT COLOR="#ffffff">Subjekt</FONT></TH>
-	<TH><FONT COLOR="#ffffff">Velikost</FONT></TH>
+      <TR BGCOLOR="[dark_color]">
+	<TH><FONT COLOR="[bg_color]">X</FONT></TH>
+        <TH><FONT COLOR="[bg_color]">Datum</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">Autor</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">Subjekt</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">Velikost</FONT></TH>
       </TR>	 
       [FOREACH msg IN spool]
         <TR>
@@ -41,7 +41,7 @@
       [END] 
     </TABLE>
 <TABLE>
-<TR BGCOLOR="#ffffff"><TD>
+<TR BGCOLOR="[bg_color]"><TD>
   <INPUT TYPE="submit" NAME="action_distribute" VALUE="Rozeslat">
   <INPUT TYPE="submit" NAME="action_reject.quiet" VALUE="Odmítnout">
   <INPUT TYPE="submit" NAME="action_reject" VALUE="Rozeslání s upozornìním">

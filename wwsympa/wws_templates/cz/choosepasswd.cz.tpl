@@ -10,13 +10,13 @@ pro pøístup do vyhrazených oblastí.
 [IF init_passwd]
   <INPUT TYPE="hidden" NAME="passwd" VALUE="[user->password]">
 [ELSE]
-  <FONT COLOR="#330099">Souèasné heslo : </FONT>
+  <FONT COLOR="[dark_color]">Souèasné heslo : </FONT>
   <INPUT TYPE="password" NAME="passwd" SIZE=15>
 [ENDIF]
 
-<BR><BR><FONT COLOR="#330099">Nové heslo : </FONT>
+<BR><BR><FONT COLOR="[dark_color]">Nové heslo : </FONT>
 <INPUT TYPE="password" NAME="newpasswd1" SIZE=15>
-<BR><BR><FONT COLOR="#330099">Nové heslo znovu : </FONT>
+<BR><BR><FONT COLOR="[dark_color]">Nové heslo znovu : </FONT>
 <INPUT TYPE="password" NAME="newpasswd2" SIZE=15>
 <BR><BR><INPUT TYPE="submit" NAME="action_setpasswd" VALUE="Odeslat">
 

@@ -2,8 +2,8 @@
 
 <FORM ACTION="[path_cgi]" METHOD=POST>
 <TABLE WIDTH="100%" BORDER=0>
-<TR><TH BGCOLOR="#330099">
-<FONT COLOR="#ffffff">邮递表订阅者信息</FONT>
+<TR><TH BGCOLOR="[dark_color]">
+<FONT COLOR="[bg_color]">邮递表订阅者信息</FONT>
 </TH></TR><TR><TD>
 <INPUT TYPE="hidden" NAME="previous_action" VALUE=[previous_action]>
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
@@ -26,8 +26,8 @@
 </DL>
 </TD></TR>
 [IF subscriber->bounce]
-<TR><TH BGCOLOR="#ff6666">
-<FONT COLOR="#ffffff">退信地址</FONT>
+<TR><TH BGCOLOR="[error_color]">
+<FONT COLOR="[bg_color]">退信地址</FONT>
 </TD></TR><TR><TD>
 <DL>
 <DD>状态: [subscriber->bounce_status] ([subscriber->bounce_code])

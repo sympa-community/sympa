@@ -2,7 +2,7 @@
 
   <FORM ACTION="[path_cgi]" METHOD=POST>
 
-   <FONT COLOR="#330099">[subscriber->date]</FONT> óta vagy feliratkozva. <BR><BR>
+   <FONT COLOR="[dark_color]">[subscriber->date]</FONT> óta vagy feliratkozva. <BR><BR>
      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
      Fogadási mód: 
      <SELECT NAME="reception">

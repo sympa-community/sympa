@@ -1,7 +1,7 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
     <BR><P> 
-<TABLE BORDER=0 BGCOLOR="#ccccff"><TR><TD>
+<TABLE BORDER=0 BGCOLOR="[light_color]"><TR><TD>
 <P align=justify>
 
 Tento server poskytuje pøístup k Va¹emu prostøedí na konferenèním serveru
@@ -15,8 +15,8 @@ odhlá¹ení, prohlí¾et archívy, správu konferenci atd.
 <CENTER>
 <TABLE BORDER=0>
  <TR>
-  <TH BGCOLOR="#3366cc">
-   <FONT COLOR="#ffffff">Konference</FONT>
+  <TH BGCOLOR="[selected_color]">
+   <FONT COLOR="[bg_color]">Konference</FONT>
   </TH>
  </TR>
  <TR>
@@ -47,11 +47,11 @@ odhlá¹ení, prohlí¾et archívy, správu konferenci atd.
    <TR>
 <TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="#330099">
+  <TR ALIGN=center BGCOLOR="[dark_color]">
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
-      <TD NOWRAP BGCOLOR="#ccccff" ALIGN="center"> 
+      <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
       <A HREF="[path_cgi]/lists" >
      <FONT SIZE=-1><B>zobrazit v¹echny konference</B></FONT></A>
      </TD>
@@ -79,9 +79,9 @@ odhlá¹ení, prohlí¾et archívy, správu konferenci atd.
 
 [IF ! user->email]
 <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="0" VALIGN="top">
-   <TR><TD BGCOLOR="#330099">
+   <TR><TD BGCOLOR="[dark_color]">
           <TABLE BORDER="0" WIDTH="100%"  VALIGN="top"> 
-              <TR><TD BGCOLOR="#ffffff">
+              <TR><TD BGCOLOR="[bg_color]">
 [PARSE '/home/sympa/bin/etc/wws_templates/loginbanner.cz.tpl']
 </TD></TR></TABLE>
 </TD></TR></TABLE>

@@ -8,9 +8,9 @@
 <P>
 <TABLE>
  <TR>
-   <TD Colspan=3 bgcolor="#ccccff"><B>Èekající konference</B></TD>
+   <TD Colspan=3 bgcolor="[light_color]"><B>Èekající konference</B></TD>
  </TR>
- <TR bgcolor="#ccccff">
+ <TR bgcolor="[light_color]">
    <TD><B>jméno</B></TD>
    <TD><B>subjekt</B></TD>
    <TD><B>kdo po¾aduje</B></TD>

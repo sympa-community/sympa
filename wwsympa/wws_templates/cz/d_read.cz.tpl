@@ -16,9 +16,9 @@
   [ENDIF]
    
   <TABLE width=100%>
-  <TR BGCOLOR="#330099">
+  <TR BGCOLOR="[dark_color]">
    
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">Dokument</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">Dokument</font></TD>
   [IF  order_by<>order_by_doc]  
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">  
@@ -33,7 +33,7 @@
   </TR></TABLE>
   </th>
   
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">Autor</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">Autor</font></TD>
   [IF  order_by<>order_by_author]  
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">  
@@ -48,7 +48,7 @@
   </TR></TABLE>
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">Velikost (Kb)</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">Velikost (Kb)</font></TD>
   [IF order_by<>order_by_size] 
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -63,7 +63,7 @@
   </TR></TABLE>   
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">Poslední zmìna</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[bg_color]">Poslední zmìna</font></TD>
   [IF order_by<>order_by_date]
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -78,19 +78,19 @@
   </TR></TABLE>  
   </th> 
 
-  <TD ALIGN="left"><font color="#ffffff">Popis</font></TD> 
-  <TD ALIGN="center"><font color="#ffffff">Upravit</font></TD> 
-  <TD ALIGN="center"><font color="#ffffff">Smazat</font></TD>
-  <TD ALIGN="center"><font color="#ffffff">Oprávnìní</font></TD></TR>
+  <TD ALIGN="left"><font color="[bg_color]">Popis</font></TD> 
+  <TD ALIGN="center"><font color="[bg_color]">Upravit</font></TD> 
+  <TD ALIGN="center"><font color="[bg_color]">Smazat</font></TD>
+  <TD ALIGN="center"><font color="[bg_color]">Oprávnìní</font></TD></TR>
       
   [IF empty]
-    <TR BGCOLOR="#ccccff" VALIGN="top">
+    <TR BGCOLOR="[light_color]" VALIGN="top">
     <TD COLSPAN=8 ALIGN="center"> Prázdný adresáø </TD>
     </TR>
   [ELSE]   
     [IF sort_subdirs]
       [FOREACH s IN sort_subdirs] 
-        <TR BGCOLOR="#ccccff">        
+        <TR BGCOLOR="[light_color]">        
 	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[path][s->doc]/"> 
 	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]"> [s->doc]</A></TD>
 	<TD>
@@ -133,7 +133,7 @@
 
     [IF sort_files]
       [FOREACH f IN sort_files]
-        <TR BGCOLOR="#ccccff"> 
+        <TR BGCOLOR="[light_color]"> 
         <TD>&nbsp;
         [IF f->html]
 	  <A HREF="[path_cgi]/d_read/[list]/[path][f->doc]" TARGET="html_window">

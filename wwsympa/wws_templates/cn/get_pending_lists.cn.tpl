@@ -8,9 +8,9 @@
 <P>
 <TABLE>
  <TR>
-   <TD Colspan=3 bgcolor="#ccccff"><B>待处理的邮递表</B></TD>
+   <TD Colspan=3 bgcolor="[light_color]"><B>待处理的邮递表</B></TD>
  </TR>
- <TR bgcolor="#ccccff">
+ <TR bgcolor="[light_color]">
    <TD><B>邮递表名</B></TD>
    <TD><B>邮递表主题</B></TD>
    <TD><B>请求者</B></TD>

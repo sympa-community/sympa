@@ -28,8 +28,8 @@ Zkontrolujte si Va¹i schránku a vlo¾te dole heslo, které je v dané zprávì.
 Tímto povrdíte Va¹e odhlá¹ení z konference [list].
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="#330099"><B>emailová adresa</B> </FONT>[email]<BR>
-            <FONT COLOR="#330099"><B>heslo</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>emailová adresa</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>heslo</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
@@ -54,8 +54,8 @@ Pro potvrzení va¹eho po¾adavku na odhlá¹ení z konference [list], vlo¾te Va¹e
 heslo :
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="#330099"><B>emailová adresa</B> </FONT>[email]<BR>
-            <FONT COLOR="#330099"><B>heslo</B> </FONT> 
+          <FONT COLOR="[dark_color]"><B>emailová adresa</B> </FONT>[email]<BR>
+            <FONT COLOR="[dark_color]"><B>heslo</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="email" VALUE="[email]">
