@@ -1,4 +1,42 @@
+<!-- ============================================================== -->
+<!--    Variable definitions                                        -->
+<!-- ============================================================== -->
 
+<!--
+User defined variables are defined by the DEFINEVAR element. The first
+line is the name of the variable and subsequent lines to the close tag
+are the value of the variable.
+
+User defined variables are extremely useful when the same layout
+information occurs in multiple places. It also help centralize
+information that maybe likely to change. User defined variables can
+reference other variables.
+-->
+
+<DefineVar>
+SELECTED_MONTH
+<P><FONT COLOR="($time$% dark_color %$time$)" SIZE="+1"><STRONG>
+($time$% IF lang == 'fr' %$time$)
+$mois$/$yyyy$
+($time$% ELSE %$time$)
+$yyyy$/$mois$
+($time$% END %$time$)
+</STRONG></FONT><BR>
+<HR width="30%">
+</P>
+</DefineVar>
+
+<DefineVar>
+POWERED_BY
+<HR SIZE="1" NOSHADE>
+<P><FONT SIZE="-1" COLOR="($time$% dark_color %$time$)">
+($time$%|loc%$time$)Archive powered by($time$%END%$time$) <A HREF="$DOCURL$">MhonArc $VERSION$</A>.
+</FONT></P>
+</DefineVar>
+
+<!-- ============================================================== -->
+<!--    MIME Resources                                              -->
+<!-- ============================================================== -->
 
 <DECODEHEADS>
 
@@ -7,16 +45,45 @@ text/plain; asis=us-ascii:iso-8859-1:iso-8859-2 nonfixed quote htmlcheck maxwidt
 text/html; asis=us-ascii:iso-8859-1:iso-8859-2
 </MIMEARGS>
 
+<CHARSETALIASES>
+big5; big5
+big5; big5-eten
+</CHARSETALIASES>
+
+<!--
+<TextEncode>
+utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
+</TextEncode>
+-->
+
+<-- With data translated to UTF-8, it simplifies CHARSETCONVERTERS -->
+<CharsetConverters override>
+default; mhonarc::htmlize
+</CharsetConverters>
+
+<-- Need to also register UTF-8-aware text clipping function -->
+<TextClipFunc>
+MHonArc::UTF8::clip; MHonArc/UTF8.pm
+</TextClipFunc>
+
+<!-- ============================================================== -->
+<!--    Options                                                     -->
+<!-- ============================================================== -->
+
+<!--
+It is good to be explicit when possible since a default resource file,
+and/or environment variables, may be in affect.
+-->
 
 <NOMAILTO>
 <MULTIPG>
+<NODOC>
+<SORT>
+<NOFOLREFS>
 
 <IDXSIZE>
 30
 </IDXSIZE>
-
-<NODOC>
-<Sort>
 
 <!-- should not be changed -->
 <IDXFNAME>
@@ -28,348 +95,336 @@ mail1.html
 thrd1.html
 </TIDXFNAME>
 
-<!-- =============== Index page description -->
+<!-- ============================================================== -->
+<!--    Main index resources                                        -->
+<!-- ============================================================== -->
+
+<!--
+IDXPGSSMARKUP
+IDXPGBEGIN
+    LISTBEGIN
+        (AUTHORBEGIN |
+         DAYBEGIN |
+         SUBJECTBEGIN)?
+        LITEMPLATE+
+        (AUTHOREND |
+         DAYEND |
+         SUBJECTEND)?
+     LISTEND
+    DOC?
+IDXPGEND
+-->
 
 <!--  mail1.html -->
 <IDXPGBEGIN>
 [%TAGS ($time$% %$time$) %]
 <CENTER>
-<P>
-<FONT COLOR="($time$% dark_color %$time$)" SIZE=+1><B>$mois$ $yyyy$</B></FONT>
-<HR WIDTH=30%>
-
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="($time$% dark_color %$time$)"><TD>
-  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
-<TR ALIGN=CENTER VALIGN=MIDDLE>
-
-$PREVPGLINK$
-<TD  NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="CENTER"><b>$NUMOFMSG$ 
-($time$%|loc($PAGENUM$,$NUMOFPAGES$)%$time$)mails, page # %1/%2($time$%END%$time$)
-</B></TD>
-$NEXTPGLINK$
-
+$SELECTED_MONTH$
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
+<TR ALIGN="CENTER" BGCOLOR="($time$% dark_color %$time$)">
+<TD>
+<!-- begin header -->
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
+<TR ALIGN="CENTER" VALIGN="MIDDLE">
+<TD NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="CENTER">
+$PREVPGLINK$&nbsp;&nbsp;
+<FONT SIZE="-1" FACE="Arial,Helvetica"><STRONG>$NUMOFMSG$ ($time$%|loc($PAGENUM$,$NUMOFPAGES$)%$time$)mails, page # %1/%2($time$%END%$time$)</STRONG></FONT>
+&nbsp;&nbsp;$NEXTPGLINK$
 </TD>
-
-<TD NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN=CENTER>
-
-<FONT COLOR="($time$% bg_color %$time$)" SIZE="-1"><b>
+<TD NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="CENTER">
+<FONT COLOR="($time$% bg_color %$time$)" SIZE="-1"><STRONG>
 ($time$%|loc%$time$)Chronological($time$%END%$time$)
-</b></FONT>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<A HREF="thrd$PAGENUM$.html" STYLE="TEXT-DECORATION: NONE"><FONT size=-1>
-<B>($time$%|loc%$time$)Thread($time$%END%$time$)</B>
-</FONT></A>
-</TD></TR></TABLE>
-</TD></TR></TABLE>
-
+</STRONG></FONT>
+&nbsp;&nbsp;
+<FONT SIZE="-1"><STRONG><A HREF="thrd$PAGENUM$.html" STYLE="text-decoration: none">
+($time$%|loc%$time$)Thread($time$%END%$time$)
+</A></STRONG></FONT>
+</TD>
+</TR>
+</TABLE>
+<!-- end header -->
+</TD>
+</TR>
+</TABLE>
 </CENTER>
-
 </IDXPGBEGIN>
 
-<!--  maillist.html bottom -->
-<IDXPGEND>
-<HR>
-<P>
-<font size=-1 color="($time$% dark_color %$time$)">
-($time$%|loc%$time$)Archive powered by($time$%END%$time$)
- <A HREF="$DOCURL$">MhonArc $VERSION$ </A>.
-($time$%TAGS [% %]%$time$)
-</IDXPGEND>
-
 <!-- top of message list -->
-<ListBegin>
-<ul>
+<LISTBEGIN>
+<UL>
 </LISTBEGIN>
-
-<!-- bottom of message list -->
-<LISTEND>
-</ul>
-</LISTEND>  
-
 
 <!-- item of maillist.html -->
 <LITEMPLATE>
-<LI><b> $SUBJECT$ </b> <code>$FROMNAME$</code>
+<LI><b>$SUBJECT$</b>, <EM>$FROMNAME$</EM></LI>
 </LITEMPLATE> 
 
+<!-- bottom of message list -->
+<LISTEND>
+</UL>
+</LISTEND>  
 
-<!--threads index -->
+<!--  maillist.html bottom -->
+<IDXPGEND>
+$POWERED_BY$
+($time$%TAGS [% %]%$time$)
+</IDXPGEND>
 
+<!-- links definition -->
+<PrevPgLink chop>
+<FONT SIZE="-1" FACE="Arial,Helvetica" COLOR="($time$% dark_color %$time$)"><A HREF="$FIRSTPG$"><IMG SRC="($time$% icons_url %$time$)/begin.png" ALT="First" HEIGHT="20" BORDER="0" ALIGN="middle"></A>&nbsp;&nbsp;<A HREF="$PREVPG$"><IMG SRC="($time$% icons_url %$time$)/left.png" ALT="Previous" HEIGHT="20" BORDER="0" ALIGN="middle"></A></FONT>
+</PrevPgLink>
+
+<PrevPgLinkIA chop>
+&nbsp;&nbsp;
+</PrevPgLinkIA>
+
+<NextPgLink chop>
+<FONT SIZE="-1" FACE="Arial,Helvetica" COLOR="($time$% dark_color %$time$)"><A HREF="$NEXTPG$"><IMG SRC="($time$% icons_url %$time$)/right.png" ALT="Next" HEIGHT="20" BORDER="0" ALIGN="center"></A>&nbsp;&nbsp;<A HREF="$LASTPG$"><IMG SRC="($time$% icons_url %$time$)/end.png" ALT="Last" HEIGHT="20" BORDER="0" ALIGN="middle"></A></FONT>
+</NextPgLink>
+
+<NextPgLinkIA chop>
+&nbsp;&nbsp;
+</NextPgLinkIA>
+
+<!-- ============================================================== -->
+<!--    Thread index resources                                      -->
+<!-- ============================================================== -->
+
+<!--
+TIDXPGSSMARKUP
+TIDXPGBEGIN
+    THEAD
+        ((TTOPBEGIN
+            TSUBLISTBEG
+                ((TLITXT
+                    [possible subthread listing]
+                  TLIEND)|
+                (TLINONE
+                    [possible subthread listing]
+                 TLINONEEND))+
+            (TSUBJECTBEG
+                ((TLITXT
+                    [possible subthread listing]
+                  TLIEND)|
+                (TLINONE
+                    [possible subthread listing]
+                 TLINONEEND))+
+             TSUBJECTEND)?
+            TSUBLISTEND
+          TTOPEND)
+         |
+         TSINGLETXT)* [message w/o references or follow-ups]
+    TFOOT
+    DOC?
+TIDXPGEND
+-->
 
 <!-- top of thread index -->
 <TIDXPGBEGIN>
 [%TAGS ($time$% %$time$) %]
 </TIDXPGBEGIN>
 
-<!-- bottom of threads index -->
-
-<TIDXPGEND>
-
-<font size=-1 color="($time$% dark_color %$time$)">
-($time$%|loc%$time$)Archive powered by($time$%END%$time$)
- <A HREF="$DOCURL$">MhonArc $VERSION$ </A>.
-($time$%TAGS [% %]%$time$)
-</TIDXPGEND>
-
 <THEAD>
-
-<center>
-
-<font color="($time$% dark_color %$time$)" size=+1><b>$mois$ $yyyy$</b></font>
-<HR width=30%>
-
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="($time$% dark_color %$time$)"><TD>
-  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
-<TR ALIGN=CENTER VALIGN=MIDDLE>
-
-$TPREVPGLINK$
-<TD  NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="CENTER">($time$%|loc('$PAGENUM$','$NUMOFPAGES$')%$time$)page n&#176; %1/%2($time$%END%$time$)</TD>
-$TNEXTPGLINK$
-
-<td NOWRAP BGCOLOR="($time$% light_color %$time$)" align="center">
-<A HREF="mail$PAGENUM$.html" STYLE="TEXT-DECORATION: NONE">
-<font size=-1><b>
+<CENTER>
+$SELECTED_MONTH$
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
+<TR ALIGN="center" BGCOLOR="($time$% dark_color %$time$)">
+<TD>
+<!-- begin header -->
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
+<TR ALIGN="center" VALIGN="middle">
+<TD NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">
+$TPREVPGLINK$&nbsp;&nbsp;
+<FONT SIZE="-1" FACE="Arial,Helvetica"><STRONG>$NUMOFMSG$ ($time$%|loc($PAGENUM$,$NUMOFPAGES$)%$time$)mails, page # %1/%2($time$%END%$time$)</STRONG></FONT>
+&nbsp;&nbsp;$TNEXTPGLINK$
+</TD>
+<td NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">
+<FONT SIZE="-1"><STRONG><A HREF="mail$PAGENUM$.html" STYLE="TEXT-DECORATION: NONE">
 ($time$%|loc%$time$)Chronological($time$%END%$time$)
-</B></FONT></A>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-<FONT COLOR="($time$% bg_color %$time$)" SIZE="-1">
-<b>
+</A></STRONG></FONT>
+&nbsp;&nbsp;
+<FONT COLOR="($time$% bg_color %$time$)" SIZE="-1"><STRONG>
 ($time$%|loc%$time$)Thread($time$%END%$time$)
-</b></FONT>
-
-</TD></TR></TABLE>
-</TD></TR></TABLE>
+</STRONG></FONT>
+</TD>
+</TR>
+</TABLE>
+<!-- end header -->
+</TD>
+</TR>
+</TABLE>
 </CENTER>
 
 <UL>
 </THEAD>
 
-<TFOOT>
-</UL>
-<HR>
-
-</TFOOT>
-
 <TTOPBEGIN>
-<LI><b> $SUBJECT$ </b> <code>$FROMNAME$</code><BR>
+<LI><b>$SUBJECT$</b>, <EM>$FROMNAME$</EM><BR>
 </TTOPBEGIN>
 
 <TTOPEND>
 </LI>
 </TTOPEND>
 
-
-<TCONTBEGIN>
-<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>
-($time$%|loc%$time$)next($time$%END%$time$)
-</em>
-</TCONTBEGIN>
-
-<TCONTEND>
-</LI>
-</TCONTEND>
-
-<TSUBLISTBEG>
-<UL>
-</TSUBLISTBEG>
-
-<TSUBLISTEND>
+<TFOOT>
 </UL>
-</TSUBLISTEND>
+</TFOOT>
 
-<TSUBJECTBEG>
-<!-- suite possible evaluee sur la base du sujet -->
-</TSUBJECTBEG>
-
-<TSINGLETXT>
-<LI><b> $SUBJECT$ </b><code>$FROMNAME$</code>
-</LI>
-</TSINGLETXT>
-
-<TLITXT>
-<LI><b> $SUBJECT$ </b><code>$FROMNAME$</code>
-</TLITXT>
-
-<TLIEND>
-</LI>
-</TLIEND>
-
-<TLiNone>
-<LI><EM>
-($time$%|loc%$time$)Message not available($time$%END%$time$)
-</EM>
-</TLiNone>
-<TLINoneEnd>
-</LI>
-</TLINoneEnd>
+<TIDXPGEND>
+$POWERED_BY$
+($time$%TAGS [% %]%$time$)
+</TIDXPGEND>
 
 <!-- links definition -->
-<PrevPgLink chop>
-<td NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">&nbsp;&nbsp;<A HREF="$FIRSTPG$" ><FONT FACE=Arial,Helvetica COLOR="($time$% dark_color %$time$)"><IMG SRC="($time$% icons_url %$time$)/begin.png" ALT="first" height=20 border=0 align=middle></font></A>&nbsp;<A HREF="$PREVPG$"><FONT FACE=Arial,Helvetica COLOR="($time$% dark_color %$time$)"><IMG SRC="($time$% icons_url %$time$)/left.png" ALT="previous" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
-</PrevPgLink>
-
-<PrevPgLinkIA chop>
-<td NOWRAP BGCOLOR="($time$% light_color %$time$)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-</PrevPgLinkIA>
-
-<NextPgLink chop>
-<td NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">&nbsp;&nbsp;<A HREF="$NEXTPG$"><FONT FACE=Arial,Helvetica COLOR="($time$% dark_color %$time$)"><IMG SRC="($time$% icons_url %$time$)/right.png" ALT="next" height=20 border=0 align=center></font></A>&nbsp;<A HREF="$LASTPG$"><FONT FACE=Arial,Helvetica COLOR="($time$% dark_color %$time$)"><IMG SRC="($time$% icons_url %$time$)/end.png" ALT="last" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
-</NextPgLink>
-
-<NextPgLinkIA chop>
-<td NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-</NextPgLinkIA>
-
 <TPrevPgLink chop>
-<td NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">&nbsp;&nbsp;<A HREF="$TFIRSTPG$" ><FONT FACE=Arial,Helvetica COLOR="($time$% dark_color %$time$)"><IMG SRC="($time$% icons_url %$time$)/begin.png" ALT="first" height=20 border=0 align=middle></font></A>&nbsp;<A HREF="$TPREVPG$"><FONT FACE=Arial,Helvetica COLOR="($time$% dark_color %$time$)"><IMG SRC="($time$% icons_url %$time$)/left.png" ALT="previous" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
+<FONT SIZE="-1" FACE="Arial,Helvetica" COLOR="($time$% dark_color %$time$)"><A HREF="$TFIRSTPG$"><IMG SRC="($time$% icons_url %$time$)/begin.png" ALT="First" HEIGHT="20" BORDER="0" ALIGN="middle"></A>&nbsp;<A HREF="$TPREVPG$"><IMG SRC="($time$% icons_url %$time$)/left.png" ALT="Previous" HEIGHT="20" BORDER="0" ALIGN="middle"></A></FONT>
 </TPrevPgLink>
 
 <TPrevPgLinkIA chop>
-<td NOWRAP BGCOLOR="($time$% light_color %$time$)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+&nbsp;&nbsp;
 </TPrevPgLinkIA>
 
 <TNextPgLink chop>
-<td NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center" >&nbsp;&nbsp;<A HREF="$TNEXTPG$"><FONT FACE=Arial,Helvetica COLOR="($time$% dark_color %$time$)"><IMG SRC="($time$% icons_url %$time$)/right.png" ALT="next" height=20 border=0 align=center></font></A>&nbsp;<A HREF="$TLASTPG$"><FONT FACE=Arial,Helvetica COLOR="($time$% dark_color %$time$)"><IMG SRC="($time$% icons_url %$time$)/end.png" ALT="last" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
+<FONT SIZE="-1" FACE="Arial,Helvetica" COLOR="($time$% dark_color %$time$)"><A HREF="$TNEXTPG$"><IMG SRC="($time$% icons_url %$time$)/right.png" ALT="Next" HEIGHT="20" BORDER="0" ALIGN="center"></A>&nbsp;&nbsp;<A HREF="$TLASTPG$"><IMG SRC="($time$% icons_url %$time$)/end.png" ALT="Last" HEIGHT="20" BORDER="0" ALIGN="middle"></A></FONT>
 </TNextPgLink>
 
 <TNextPgLinkIA chop>
-<td NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+&nbsp;&nbsp;
 </TNextPgLinkIA>
 
-<PREVBUTTON>
-<TD  NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">&nbsp;&nbsp;<A HREF="$PREVMSG$"><IMG SRC="($time$% icons_url %$time$)/left.png" HEIGHT=20 BORDER=0 ALIGN=MIDDLE ALT="previous"></A>&nbsp;&nbsp;</TD>
-</PREVBUTTON>
+<!-- ================================================================== -->
+<!--    Message Page Resources                                          -->
+<!-- ================================================================== -->
 
-<PREVBUTTONIA>
-<TD NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</PREVBUTTONIA>
-
-<!-- next message button -->
-
-<NEXTBUTTON>
-<TD NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">&nbsp;&nbsp<A HREF="$NEXTMSG$"><IMG SRC="($time$% icons_url %$time$)/right.png" height=20 border=0 align=middle ALT="next"></A>&nbsp;&nbsp</td>
-</NEXTBUTTON>
-
-<NEXTBUTTONIA>
-<TD NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</NEXTBUTTONIA>
-
-
-<TPREVBUTTON>
-<TD NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">&nbsp;&nbsp;<A HREF="$TPREVMSG$"><IMG SRC="($time$% icons_url %$time$)/left.png" height=20 border=0 align=middle ALT="previous"></A>&nbsp;&nbsp;</TD>
-</TPREVBUTTON>
-
-<TPREVBUTTONIA>
-<TD NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</TPREVBUTTONIA>
-
-<!-- prev message button in thread page -->
-
-<TNEXTBUTTON>
-<TD NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">&nbsp;&nbsp<A HREF="$TNEXTMSG$"><IMG SRC="($time$% icons_url %$time$)/right.png" height=20 border=0 align=middle ALT="next"></A>&nbsp;&nbsp</td>
-</TNEXTBUTTON>
-
-<TNEXTBUTTONIA>
-<TD NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-</TNEXTBUTTONIA>
-
-
-<!-- ==================================  Les messages -->
-
-<MSGPGSSMARKUP>
-</MSGPGSSMARKUP>
+<!--
+MSGPGSSMARKUP
+MSGPGBEGIN
+    MSGHEAD
+    TOPLINKS
+    SUBJECTHEADER
+    Converted message header
+    HEADBODYSEP
+    Converted message body
+    MSGBODYEND
+    (FOLUPBEGIN
+        FOLUPLITXT+
+     FOLUPEND)?
+    (REFSBEGIN
+        REFSLITXT+
+     REFSEND)?
+    BOTLINKS
+    MSGFOOT
+MSGPGEND
+-->
 
 <MSGPGBEGIN>
 [%TAGS ($time$% %$time$) %]
 </MSGPGBEGIN>
 
+<TOPLINKS>
+<CENTER>
+$SELECTED_MONTH$
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
+<TR ALIGN="center" BGCOLOR="($time$% dark_color %$time$)">
+<TD>
+<!-- begin header -->
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
+<TR ALIGN="CENTER" VALIGN="MIDDLE">
+<TD WIDTH="50%" BGCOLOR="($time$% light_color %$time$)" ALIGN="center" VALIGN="middle" NOWRAP>
+$PREVBUTTON$&nbsp;&nbsp;
+<FONT SIZE="-1"><STRONG><A HREF="$IDXFNAME$#$MSGNUM$" STYLE="text-decoration: none">
+($time$%|loc%$time$)Chronological($time$%END%$time$)
+</A></STRONG></FONT>
+&nbsp;&nbsp;$NEXTBUTTON$
+</TD>
+<TD WIDTH="50%" BGCOLOR="($time$% light_color %$time$)" ALIGN="center" VALIGN="middle" NOWRAP>
+$TPREVBUTTON$&nbsp;&nbsp;
+<FONT SIZE="-1"><STRONG><A HREF="$TIDXFNAME$#$MSGNUM$" STYLE="text-decoration: none">
+($time$%|loc%$time$)Thread($time$%END%$time$)
+</A></STRONG></FONT>
+&nbsp;&nbsp;$TNEXTBUTTON$
+</TD>
+</TR>
+</TABLE>
+<!-- end header -->
+</TD>
+</TR>
+</TABLE>
+</CENTER>
+</TOPLINKS>
+
+<HEADBODYSEP>
+</UL>
+<HR SIZE="1" NOSHADE>
+</HEADBODYSEP>
+
+<MSGBODYEND>
+<HR SIZE="1" NOSHADE>
+$TSLICE(10;10;1)$
+</MSGBODYEND>
+
+<BOTLINKS>
+
+</BOTLINKS>
+
 <MSGPGEND>
+$POWERED_BY$
 ($time$%TAGS [% %]%$time$)
 </MSGPGEND>
 
-<TOPLINKS>
-<center>
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="($time$% dark_color %$time$)"><TD>
-  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
-<TR ALIGN=CENTER VALIGN=MIDDLE>
- $PREVBUTTON$
- <TD NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="CENTER"><A HREF="$IDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
-($time$%|loc%$time$)Chronological($time$%END%$time$)
-</B></FONT></A></TD>
-$NEXTBUTTON$ 
-<TD WIDTH=40% BGCOLOR="($time$% light_color %$time$)">&nbsp;</TD>
-$TPREVBUTTON$ 
-<TD  NOWRAP BGCOLOR="($time$% light_color %$time$)" ALIGN="CENTER"><A HREF="$TIDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
-($time$%|loc%$time$)Thread($time$%END%$time$)
-</B></FONT></A></TD>
+<MSGPGSSMARKUP>
+</MSGPGSSMARKUP>
 
-$TNEXTBUTTON$ 
-
-</TR></TABLE>
-</TD></TR></TABLE>
-
-</center>
-<HR>
-
-</TOPLINKS>
-
-<BOTLINKS>
-<UL>
-</BOTLINKS>
-
-<SubjectHeader>
-<TABLE border=0 width=100%>
+<SUBJECTHEADER>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="2" CELLSPACING="2">
 <TR>
- <TD>
-  <FONT size=+1 COLOR="($time$% dark_color %$time$)">
-  <B> $SUBJECTNA$</B></FONT><FONT size=+1> $FROMNAME$ </FONT>
- </TD>
+<TD>
+<FONT SIZE="+1" COLOR="($time$% dark_color %$time$)"><STRONG>$SUBJECTNA$</STRONG></FONT>, &nbsp;<FONT SIZE="+1">$FROMNAME$</FONT>
+</TD>
 
-<TD ALIGN=RIGHT bgcolor="($time$% bg_color %$time$)">
-<FONT size="-1">
 ($time$% IF user.email && action == 'arc' %$time$)
+<TD ALIGN="right" BGCOLOR="($time$% bg_color %$time$)">
+<FONT SIZE="-1">
 <!-- reply to button -->
 <FORM ACTION="($time$% path_cgi %$time$)" METHOD=POST>
   <INPUT TYPE="hidden" NAME="in_reply_to" VALUE="$MSGID$">
   <INPUT TYPE="hidden" NAME="subject" VALUE="Re: $SUBJECTNA$">
   <INPUT TYPE="hidden" NAME="list" VALUE="($time$% list %$time$)">
-($time$%|loc%$time$)Reply to sender($time$%END%$time$)
-<INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
-($time$%|loc%$time$)to list($time$%END%$time$)
-<INPUT TYPE="radio" NAME="to" VALUE="($time$% list %$time$) ($time$% list_conf.host %$time$)">
-<INPUT TYPE="submit" NAME="action_compose_mail" VALUE="($time$%|loc%$time$)Reply($time$%END%$time$)">
-<INPUT TYPE="submit" NAME="action_send_me" VALUE="($time$%|loc(user.email)%$time$)send it back to %1($time$%END%$time$)">	
+  ($time$%|loc%$time$)Reply to sender($time$%END%$time$)
+  <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
+  ($time$%|loc%$time$)to list($time$%END%$time$)
+  <INPUT TYPE="radio" NAME="to" VALUE="($time$% list %$time$) ($time$% list_conf.host %$time$)">
+  <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="($time$%|loc%$time$)Reply($time$%END%$time$)">
+  <INPUT TYPE="submit" NAME="action_send_me" VALUE="($time$%|loc(user.email)%$time$)send it back to %1($time$%END%$time$)">	
+  ($time$% IF action != 'viewmod' %$time$)
+    ($time$% IF user.email == '$FROMADDR$' %$time$)
+    <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
+    <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
+    <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
+    <INPUT TYPE="hidden" NAME="action" VALUE="">
+    <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="($time$%|loc%$time$)tag this mail for deletion($time$%END%$time$)" onClick="return request_confirm('($time$%|loc%$time$)Do you really want to delete this message ?($time$%END%$time$)')">
 
-($time$% IF action != 'viewmod' %$time$)
-($time$% IF user.email == '$FROMADDR$' %$time$)
-  <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
-  <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
-  <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
-  <INPUT TYPE="hidden" NAME="action" VALUE="">
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="($time$%|loc%$time$)tag this mail for deletion($time$%END%$time$)" onClick="return request_confirm('($time$%|loc%$time$)Do you really want to delete this message ?($time$%END%$time$)')">
-
-($time$% ELSIF is_owner %$time$)
-  <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
-  <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
-  <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
-  <INPUT TYPE="hidden" NAME="action" VALUE="">
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="($time$%|loc%$time$)tag this mail for deletion($time$%END%$time$)" onClick="return request_confirm('($time$%|loc%$time$)Do you really want to delete this message ?($time$%END%$time$)')">
-($time$% END %$time$)
-($time$% END %$time$)
+    ($time$% ELSIF is_owner %$time$)
+    <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
+    <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
+    <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
+    <INPUT TYPE="hidden" NAME="action" VALUE="">
+    <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="($time$%|loc%$time$)tag this mail for deletion($time$%END%$time$)" onClick="return request_confirm('($time$%|loc%$time$)Do you really want to delete this message ?($time$%END%$time$)')">
+    ($time$% END %$time$)
+  ($time$% END %$time$)
 </FORM>
-
-($time$% END %$time$)
 </FONT>
- </TD>
- </TR>
+</TD>
+($time$% END %$time$)
+</TR>
 </TABLE>
+<UL>
+</SUBJECTHEADER>
 
-</SubjectHeader>
-
-<!-- Le message lui-même -->
-<!-- éléments d'entête qu'il ne faut pas afficher -->
-<EXCS>
+<!-- Message itself -->
+<!-- Do not display the following header -->
+<EXCS Override>
 content-
 errors-to
 forward
@@ -384,9 +439,9 @@ received
 replied
 return-path
 status
-sender
 via
-list-archive
+x-
+sender
 list-help
 list-owner
 list-post
@@ -394,9 +449,14 @@ list-subscribe
 list-unsubscribe
 in-reply-to
 delivered-to
+references
+reply-to
+thread-
+User-agent
+Mail-followup-to
 </EXCS>
 
-<!-- ordre d'affichage des éléments de l'entête -->
+<!-- Field order in message header -->
 <FIELDORDER>
 from
 to
@@ -413,14 +473,92 @@ Subject:strong
 -default-:em
 </LABELSTYLES>
 
-<!-- ====================================== DIVERS -->
+<TSLICELEVELS>
+7
+</TSLICELEVELS>
+
+<TSLICE>
+10:10
+</TSLICE>
+
+<TSLICEBEG>
+<UL>
+</TSLICEBEG>
+
+<TSLICETOPBEGINCUR>
+<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>$FROMNAME$</EM>
+</TSLICETOPBEGINCUR>
+
+<TSLICELITXTCUR>
+<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>$FROMNAME$</EM>
+</TSLICELITXTCUR>
+
+<TSLICESINGLETXTCUR>
+<LI><STRONG>$SUBJECTNA$</STRONG>, <EM>$FROMNAME$</EM>
+</TSLICESINGLETXTCUR>
+
+<TSLICEEND>
+</UL>
+</TSLICEEND>
+
+<!-- Buttons definition -->
+<PREVBUTTON>
+<FONT SIZE="-1" FACE="Arial,Helvetica">
+<A HREF="$PREVMSG$"><IMG SRC="($time$% icons_url %$time$)/left.png" ALT="Previous" HEIGHT="20" BORDER="0" ALIGN="middle"></A>
+</FONT>
+</PREVBUTTON>
+
+<PREVBUTTONIA>
+&nbsp;&nbsp;
+</PREVBUTTONIA>
+
+<NEXTBUTTON>
+<FONT SIZE="-1" FACE="Arial,Helvetica">
+<A HREF="$NEXTMSG$"><IMG SRC="($time$% icons_url %$time$)/right.png" ALT="Next" HEIGHT="20" BORDER="0" ALIGN="middle"></A>
+</FONT>
+</NEXTBUTTON>
+
+<NEXTBUTTONIA>
+&nbsp;&nbsp;
+</NEXTBUTTONIA>
+
+<TPREVBUTTON>
+<FONT SIZE="-1" FACE="Arial,Helvetica">
+<A HREF="$TPREVMSG$"><IMG SRC="($time$% icons_url %$time$)/left.png" height=20 border=0 ALIGN=middle ALT="Previous"></A>
+</FONT>
+</TPREVBUTTON>
+
+<TPREVBUTTONIA>
+&nbsp;&nbsp;
+</TPREVBUTTONIA>
+
+<TNEXTBUTTON>
+<FONT SIZE="-1" FACE="Arial,Helvetica">
+<A HREF="$TNEXTMSG$"><IMG SRC="($time$% icons_url %$time$)/right.png" HEIGHT="20" BORDER="0" ALIGN="middle" ALT="Next"></A>
+</FONT>
+</TNEXTBUTTON>
+
+<TNEXTBUTTONIA>
+&nbsp;&nbsp;
+</TNEXTBUTTONIA>
+
+<!-- ============================================================== -->
+<!--    Other Resources                                             -->
+<!-- ============================================================== -->
+
 <DAYBEGIN>
-<LI><strong>$DDMMYY$</strong><ul>
+($time$% IF lang == 'fr' %$time$)
+<LI><STRONG>$DDMMYY$</STRONG>
+($time$% ELSE %$time$)
+<LI><STRONG>$YYMMDD$</STRONG>
+($time$% END %$time$)
+<UL>
 </DAYBEGIN>
 
-<DayEnd>
-</li></ul>
-</DayEnd>
+<DAYEND>
+</UL>
+</LI>
+</DAYEND>
 
 <WEEKDAYS>
 ($time$%|loc%$time$)Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday($time$%END%$time$)
@@ -468,6 +606,7 @@ Jan:Veeb:Mär:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
 <LOCALDATEFMT>
 %d. %B. %Y %H:%M
 </LOCALDATEFMT>
+
 ($time$% ELSIF lang == 'hu' %$time$)
 <UseLocalTime>
  
@@ -494,32 +633,5 @@ Jan:Veeb:Mär:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
 <MsgLocalDateFmt>
 %A %d %B %Y
 </MsgLocalDateFmt>
+
 ($time$% END %$time$)
-
-<HEADBODYSEP>
-
-<BR><BR>
-</HEADBODYSEP>
-
-<MSGBODYEND>
-<BR>
-</MSGBODYEND>
-
-<CHARSETALIASES>
-big5; big5
-big5; big5-eten
-</CHARSETALIASES>
-
-<!-- <TextEncode>
-utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
-</TextEncode> -->
-
-<-- With data translated to UTF-8, it simplifies CHARSETCONVERTERS -->
-<CharsetConverters override>
-default; mhonarc::htmlize
-</CharsetConverters>
-
-<-- Need to also register UTF-8-aware text clipping function -->
-<TextClipFunc>
-MHonArc::UTF8::clip; MHonArc/UTF8.pm
-</TextClipFunc>
