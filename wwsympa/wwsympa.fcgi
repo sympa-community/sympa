@@ -1547,7 +1547,7 @@ sub do_record_email{
     }
     
     ## Alt email is the same as main email address
-    unless ($in{'new_alternative_email'} eq $param->{'user'}{'email'}) {
+    if ($in{'new_alternative_email'} eq $param->{'user'}{'email'}) {
 	&error_message('incorrect_email', {'email' => $in{'new_alternative_email'}});
 	&do_log('notice', "do_record_email:incorrect email %s",$in{'new_alternative_email'});
 	return 'pref';
