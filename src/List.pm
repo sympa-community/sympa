@@ -4133,6 +4133,7 @@ sub _load_scenario_file {
     my $structure;
     
     ## List scenario
+
    
     # sa tester le chargement de scenario spécifique à un répertoire du shared
     my $scenario_file = $directory.'/scenari/'.$function.'.'.$name ;
@@ -4173,6 +4174,11 @@ sub _load_scenario {
 
     ## Following lines are ordered
     push(@scenario, 'scenario');
+    unless ($function eq 'include') {
+	my $include = &_load_scenario_file ('include',$robot,"$function.header", $directory);
+	
+	push(@scenario,@{$include->{'rules'}}) if ($include);
+    }
     foreach (@rules) {
 	next if (/^\s*\w+\s*$/o); # skip paragraph name
 	my $rule = {};
@@ -4186,7 +4192,7 @@ sub _load_scenario {
         if (/^\s*include\s*(.*)\s*$/i) {
         ## introducing in few common rules using include
 	    my $include = &_load_scenario_file ('include',$robot,$1, $directory);
-            push(@scenario,@{$include->{'rules'}});
+            push(@scenario,@{$include->{'rules'}}) if ($include) ;
 	    next;
 	}
 
