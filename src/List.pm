@@ -997,7 +997,8 @@ my %alias = ('reply-to' => 'reply_to',
 				   'group' => 'data_source'
 				   },
 	    'visibility' => {'scenario' => 'visibility',
-			     'synonym' => {'public' => 'noconceal'},
+			     'synonym' => {'public' => 'noconceal',
+					   'private' => 'conceal'},
 			     'title_id' => 82,
 			     'group' => 'description'
 			     },
