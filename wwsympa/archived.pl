@@ -52,6 +52,8 @@ if ($main::options{'debug'}) {
     $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
 }
 
+$main::options{'foreground'} = 1 if ($main::options{'debug'});
+
 $Version = '0.1';
 
 $wwsympa_conf = "--WWSCONFIG--";

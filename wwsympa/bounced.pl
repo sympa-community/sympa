@@ -85,6 +85,9 @@ if ($main::options{'debug'}) {
     $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
 }
 
+$main::options{'foreground'} = 1 if ($main::options{'debug'});
+
+
 my $wwsympa_conf = "--WWSCONFIG--";
 my $sympa_conf_file = '--CONFIG--';
 
