@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {24 December 2002}
+    \date {21 January 2003}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -796,6 +796,7 @@ systems, therefore you should not have any special problems:
 \begin {itemize}
     \item Linux (various distributions)
     \item FreeBSD 2.2.x and 3.x
+    \item NetBSD
     \item Digital UNIX 4.x
     \item Solaris 2.5 and 2.6
     \item AIX 4.x
@@ -2698,8 +2699,8 @@ DROP TABLE subscriber_table;
 CREATE TABLE subscriber_table (
   	list_subscriber       	varchar (50) NOT NULL,
 	user_subscriber		varchar (100) NOT NULL,
-	date_subscriber		datetime NOT NULL,
-	update_subscriber 	datetime,
+	date_subscriber		timestamp with time zone NOT NULL,
+	update_subscriber 	timestamp with time zone,
 	visibility_subscriber	varchar (20),
 	reception_subscriber	varchar (20),
 	bounce_subscriber	varchar (35),
