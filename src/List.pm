@@ -7162,6 +7162,30 @@ sub search_datasource {
     return undef;
 }
 
+## Remove a task in the tasks spool
+sub remove_task {
+    my $self = shift;
+    my $task = shift;
+
+    unless (opendir(DIR, $Conf{'queuetask'})) {
+	&do_log ('err', "error : can't open dir %s: %s", $Conf{'queuetask'}, $!);
+	return undef;
+    }
+    my @tasks = grep !/^\.\.?$/, readdir DIR;
+    closedir DIR;
+
+    foreach my $task_file (@tasks) {
+	if ($task_file =~ /^(\d+)\.\w*\.$task\.$self->{'name'}$/) {
+	    unless (unlink("$Conf{'queuetask'}/$task_file")) {
+		&do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+		return undef;
+	    }
+	    &do_log('notice', 'Removing task file %s', $task_file);
+	}
+    }
+
+    return 1;
+}
 
 #################################################################
 
