@@ -4571,6 +4571,7 @@ It can be used, for example, to require editor validation for multipart messages
 [msg\_part-\texttt{>}type] and [msg\_part-\texttt{>}body] are the MIME parts content-types and bodies ; the body is available
 for MIME parts in text/xxx format only.
 
+The difference between \textindex {editor} and \textindex {editorkey} is, that with \textindex {editor} the message is simply forwarded to the moderaotr. He then can forward it to the list, if he wishes. \textindex {editorkey} assigns a key to the message and sends it to the moderator together with the message. So the moderator can just send back the key to distribute the message. Please note, that moderation from the webinterface is only possible when using \textindex {editorkey}, because otherwise there is no copy of the message saved on the server. 
 
 A bunch of authorization scenarios is provided with the \Sympa distribution ; they provide
 a large set of configuration that allow to create lists for most usage. But you will

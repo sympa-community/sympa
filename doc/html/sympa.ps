@@ -9,7 +9,7 @@
 %DVIPSWebPage: (www.radicaleye.com)
 %DVIPSCommandLine: dvips -f sympa.dvi
 %DVIPSParameters: dpi=600, compressed
-%DVIPSSource:  TeX output 2004.12.10:1153
+%DVIPSSource:  TeX output 2004.12.10:1420
 %%BeginProcSet: texc.pro
 %!
 /TeXDict 300 dict def TeXDict begin/N{def}def/B{bind def}N/S{exch}N/X{S
@@ -6127,169 +6127,179 @@ y(status)h(|)j(subject)c(|)j(account)e(|)i(total)440
 3421 y(<conf_key_word>)37 b(::=)43 b(domain)e(|)i(email)f(|)h
 (listmaster)c(|)k(default_list_prio)o(ri)o(ty)37 b(|)702
 3520 y(sympa_priority)g(|)43 b(request_priority)37 b(|)44
-b(lang)e(|)h(max_size)232 3764 y Ft(\(Refer)20 b(to)h(12.10,)d(page)h
-(117)h(for)f(date)h(format)f(de\002nition\))232 3981
-y(perl)p 367 3981 25 4 v 29 w(re)o(ge)o(xp)28 b(can)h(contain)f(the)h
+b(lang)e(|)h(max_size)232 3981 y Ft(\(Refer)20 b(to)h(12.10,)d(page)h
+(117)h(for)f(date)h(format)f(de\002nition\))232 4199
+y(perl)p 367 4199 25 4 v 29 w(re)o(ge)o(xp)28 b(can)h(contain)f(the)h
 (string)g([host])f(\(interpreted)f(at)j(run)e(time)h(as)h(the)f(list)i
-(or)d(robot)232 4081 y(domain\).)23 b(The)i(v)n(ariable)f(notation)g
-([msg)p 1471 4081 V 29 w(header)n(-)p Fp(><)p Ft(smtp)p
-1999 4081 V 26 w(k)o(e)o(y)p 2144 4081 V 29 w(w)o(ord)p
-Fp(>)p Ft(])g(is)h(interpreted)f(as)h(the)232 4181 y(SMTP)e(header)d(v)
+(or)d(robot)232 4299 y(domain\).)23 b(The)i(v)n(ariable)f(notation)g
+([msg)p 1471 4299 V 29 w(header)n(-)p Fp(><)p Ft(smtp)p
+1999 4299 V 26 w(k)o(e)o(y)p 2144 4299 V 29 w(w)o(ord)p
+Fp(>)p Ft(])g(is)h(interpreted)f(as)h(the)232 4398 y(SMTP)e(header)d(v)
 n(alue)i(only)f(when)g(e)n(v)n(aluating)f(the)i(authorization)d
-(scenario)i(for)h(sending)e(mes-)232 4280 y(sages.)i(It)g(can)g(be)g
+(scenario)i(for)h(sending)e(mes-)232 4498 y(sages.)i(It)g(can)g(be)g
 (used,)f(for)g(e)o(xample,)f(to)i(require)e(editor)h(v)n(alidation)g
-(for)g(multipart)f(messages.)232 4380 y([msg)p 404 4380
-V 29 w(part-)p Fp(>)p Ft(type])d(and)h([msg)p 1130 4380
+(for)g(multipart)f(messages.)232 4598 y([msg)p 404 4598
+V 29 w(part-)p Fp(>)p Ft(type])d(and)h([msg)p 1130 4598
 V 29 w(part-)p Fp(>)p Ft(body])e(are)j(the)g(MIME)g(parts)g
-(content-types)e(and)h(bodies)13 b(;)232 4479 y(the)21
+(content-types)e(and)h(bodies)13 b(;)232 4697 y(the)21
 b(body)d(is)k(a)n(v)n(ailable)d(for)h(MIME)g(parts)g(in)g(te)o(xt/xxx)f
-(format)g(only)-5 b(.)232 4697 y(A)23 b(b)n(unch)d(of)i(authorization)e
-(scenarios)h(is)i(pro)o(vided)c(with)j(the)g Fq(Sympa)f
-Ft(distrib)n(ution)12 b(;)22 b(the)o(y)f(pro-)232 4797
-y(vide)i(a)g(lar)o(ge)e(set)j(of)e(con\002guration)e(that)j(allo)n(w)f
-(to)h(create)f(lists)i(for)e(most)h(usage.)f(But)h(you)f(will)232
-4896 y(probably)c(create)i(authorization)e(scenarios)h(for)h(your)f(o)n
-(wn)g(need.)h(In)f(this)i(case,)f(don')o(t)f(for)o(get)f(to)232
-4996 y(restart)i Fq(Sympa)e Ft(and)h(wwsympa)f(because)h(authorization)
-e(scenarios)i(are)g(not)g(reloaded)f(dynami-)232 5096
-y(caly)-5 b(.)232 5313 y(These)161 b(standard)f(authorization)f
-(scenarios)h(are)h(located)f(in)h(the)232 5413 y Fp(/home/sympa/bin/e)o
-(tc/)o(sc)o(ena)o(ri)o(/)84 b Ft(directory)-5 b(.)87
-b(Def)o(ault)h(scenarios)h(are)g(named)p Black Black
-eop
+(format)g(only)-5 b(.)232 4915 y(The)22 b(dif)n(ference)e(between)h
+(editor)g(and)h(editork)o(e)o(y)e(is,)j(that)f(with)g(editor)f(the)h
+(message)g(is)h(simply)232 5015 y(forw)o(arded)f(to)i(the)f(moderaotr)
+-5 b(.)22 b(He)i(then)f(can)g(forw)o(ard)f(it)i(to)g(the)g(list,)g(if)g
+(he)f(wishes.)h(editork)o(e)o(y)232 5114 y(assigns)f(a)g(k)o(e)o(y)e
+(to)i(the)f(message)g(and)g(sends)g(it)h(to)f(the)g(moderator)e
+(together)h(with)h(the)h(message.)232 5214 y(So)30 b(the)f(moderator)e
+(can)i(just)g(send)g(back)f(the)h(k)o(e)o(y)g(to)g(distrib)n(ute)g(the)
+g(message.)f(Please)i(note,)232 5313 y(that)22 b(moderation)e(from)h
+(the)h(webinterf)o(ace)e(is)j(only)e(possible)g(when)g(using)h(editork)
+o(e)o(y)-5 b(,)19 b(because)232 5413 y(otherwise)h(there)g(is)h(no)f
+(cop)o(y)f(of)h(the)g(message)g(sa)n(v)o(ed)g(on)g(the)g(serv)o(er)-5
+b(.)p Black Black eop
 %%Page: 104 104
 104 103 bop Black 656 241 a Ft(104)1018 b Fo(CHAPITRE)21
 b(10.)40 b(A)-5 b(UTHORIZA)c(TION)20 b(SCEN)m(ARIOS)p
-Black 656 531 a Fp(<)p Ft(command)p Fp(>)p Ft(.def)o(ault.)656
-749 y(Y)-9 b(ou)49 b(may)f(also)i(de\002ne)f(and)g(name)f(your)h(o)n
-(wn)f(authorization)f(scenarios.)i(Store)g(them)656 849
-y(in)64 b(the)g Fp(/home/sympa/etc/s)o(ce)o(nar)o(i)58
-b Ft(directory)-5 b(.)62 b(The)o(y)h(will)i(not)f(be)g(o)o(v)o
-(erwritten)656 948 y(by)52 b(Sympa)g(release.)h(Scenarios)f(can)g(also)
-h(be)g(de\002ned)f(for)g(a)h(particular)e(virtual)h(ro-)656
-1048 y(bot)66 b(\(using)h(directory)e Fp(/home/sympa/etc/)o(<r)o(ob)o
+Black 656 531 a Ft(A)i(b)n(unch)f(of)g(authorization)f(scenarios)h(is)i
+(pro)o(vided)c(with)j(the)g Fq(Sympa)f Ft(distrib)n(ution)12
+b(;)23 b(the)o(y)e(pro-)656 631 y(vide)h(a)h(lar)o(ge)f(set)h(of)f
+(con\002guration)e(that)j(allo)n(w)g(to)f(create)h(lists)h(for)e(most)g
+(usage.)g(But)h(you)f(will)656 731 y(probably)c(create)i(authorization)
+d(scenarios)j(for)f(your)g(o)n(wn)h(need.)f(In)h(this)g(case,)h(don')o
+(t)d(for)o(get)h(to)656 830 y(restart)g Fq(Sympa)g Ft(and)f(wwsympa)h
+(because)g(authorization)e(scenarios)h(are)i(not)f(reloaded)e(dynami-)
+656 930 y(caly)-5 b(.)656 1148 y(These)161 b(standard)e(authorization)g
+(scenarios)h(are)h(located)g(in)g(the)656 1247 y Fp(/home/sympa/bin/)o
+(et)o(c/s)o(ce)o(nar)o(i/)83 b Ft(directory)-5 b(.)87
+b(Def)o(ault)i(scenarios)g(are)g(named)656 1347 y Fp(<)p
+Ft(command)p Fp(>)p Ft(.def)o(ault.)656 1565 y(Y)-9 b(ou)49
+b(may)f(also)i(de\002ne)f(and)g(name)f(your)h(o)n(wn)f(authorization)f
+(scenarios.)i(Store)g(them)656 1664 y(in)64 b(the)g Fp
+(/home/sympa/etc/s)o(ce)o(nar)o(i)58 b Ft(directory)-5
+b(.)62 b(The)o(y)h(will)i(not)f(be)g(o)o(v)o(erwritten)656
+1764 y(by)52 b(Sympa)g(release.)h(Scenarios)f(can)g(also)h(be)g
+(de\002ned)f(for)g(a)h(particular)e(virtual)h(ro-)656
+1863 y(bot)66 b(\(using)h(directory)e Fp(/home/sympa/etc/)o(<r)o(ob)o
 (ot>)o(/s)o(cen)o(ar)o(i)p Ft(\))c(or)67 b(for)f(a)h(list)h(\()656
-1148 y Fp(/home/sympa/expl)o(/<)o(rob)o(ot)o(>/<)o(li)o(st)o(>/s)o(ce)o
-(nar)o(i)14 b Ft(\).)656 1365 y(Example)19 b(:)656 1583
+1963 y Fp(/home/sympa/expl)o(/<)o(rob)o(ot)o(>/<)o(li)o(st)o(>/s)o(ce)o
+(nar)o(i)14 b Ft(\).)656 2181 y(Example)19 b(:)656 2399
 y(Cop)o(y)h(the)g(pre)n(vious)f(scenario)g(to)h Fp(scenari/subscribe)o
 (.r)o(enn)o(es)o(1)15 b Ft(:)p Black Black Black Black
-863 1840 a Fp(equal\([sender],)38 b('userxxx@univ-re)o(nn)o(es1)o(.f)o
-(r')o(\))g(smtp,smime)h(->)k(reject)863 1940 y(match\([sender],)38
+863 2673 a Fp(equal\([sender],)38 b('userxxx@univ-re)o(nn)o(es1)o(.f)o
+(r')o(\))g(smtp,smime)h(->)k(reject)863 2772 y(match\([sender],)38
 b(/univ-rennes1\\.f)o(r\\)o($/\))f(smtp,smime)i(->)k(do_it)863
-2039 y(true\(\))1349 b(smtp,smime)40 b(->)i(owner)656
-2297 y Ft(Y)-9 b(ou)33 b(may)f(no)n(w)h(refer)f(to)i(this)g
+2872 y(true\(\))1349 b(smtp,smime)40 b(->)i(owner)656
+3146 y Ft(Y)-9 b(ou)33 b(may)f(no)n(w)h(refer)f(to)i(this)g
 (authorization)d(scenario)h(in)h(an)o(y)g(list)h(con\002guration)d
-(\002le,)i(for)656 2396 y(e)o(xample)19 b(:)p Black Black
-Black Black 863 2653 a Fp(subscribe)40 b(rennes1)656
-3050 y Fn(10.2)119 b(LD)l(AP)30 b(Named)g(Filters)656
-3354 y Ft(At)21 b(the)f(moment)f(Named)h(Filters)h(are)f(only)g(used)g
+(\002le,)i(for)656 3245 y(e)o(xample)19 b(:)p Black Black
+Black Black 863 3519 a Fp(subscribe)40 b(rennes1)656
+3937 y Fn(10.2)119 b(LD)l(AP)30 b(Named)g(Filters)656
+4244 y Ft(At)21 b(the)f(moment)f(Named)h(Filters)h(are)f(only)g(used)g
 (in)g(authorization)e(scenarios.)i(The)o(y)f(enable)h(to)656
-3453 y(select)h(a)f(cate)o(gory)f(of)h(people)f(who)g(will)i(be)f
+4344 y(select)h(a)f(cate)o(gory)f(of)h(people)f(who)g(will)i(be)f
 (authorized)f(or)h(not)f(to)i(realise)f(some)g(actions.)656
-3671 y(As)25 b(a)g(consequence,)e(you)g(can)i(grant)f(pri)n(vile)o(ges)
+4561 y(As)25 b(a)g(consequence,)e(you)g(can)i(grant)f(pri)n(vile)o(ges)
 f(in)i(a)g(list)h(to)e(people)g(belonging)e(to)j(an)g(LD)m(AP)656
-3771 y(directory)18 b(thanks)i(to)g(an)g(authorization)e(scenario.)656
-4125 y Fh(10.2.1)99 b(De\002nition)656 4398 y Ft(People)29
+4661 y(directory)18 b(thanks)i(to)g(an)g(authorization)e(scenario.)656
+5036 y Fh(10.2.1)99 b(De\002nition)656 5313 y Ft(People)29
 b(are)h(selected)f(through)f(an)i(LD)m(AP)f(\002lter)h(de\002ned)f(in)h
-(a)g(con\002guration)d(\002le.)j(This)g(\002le)656 4498
+(a)g(con\002guration)d(\002le.)j(This)g(\002le)656 5413
 y(must)19 b(ha)n(v)o(e)g(the)g(e)o(xtension)e('.ldap'.It)h(is)i(stored)
-e(in)h Fp(/home/sympa/etc/s)o(ear)o(ch)p 3130 4498 27
-4 v 25 w(filters/)p Ft(.)656 4716 y(Y)-9 b(ou)19 b(must)i(gi)n(v)o(e)e
-(se)n(v)o(eral)h(informations)e(in)i(order)f(to)h(create)g(a)h(Named)e
-(Filter)i(:)p Black 656 4815 a(\226)p Black 41 w(host)739
-4915 y(A)g(list)g(of)f(host)g(:port)g(LD)m(AP)g(directories)f
-(\(replicates\))g(entries.)p Black 656 5015 a(\226)p
-Black 41 w(suf)n(\002x)739 5114 y(De\002nes)j(the)g(naming)f(space)h
-(co)o(v)o(ered)e(by)i(the)g(search)f(\(optional,)f(depending)g(on)i
-(the)g(LD)m(AP)739 5214 y(serv)o(er\).)p Black 656 5313
-a(\226)p Black 41 w(\002lter)739 5413 y(De\002nes)d(the)f(LD)m(AP)g
-(search)g(\002lter)h(\(RFC)h(2254)d(compliant\).)f(But)j(you)f(must)g
-(absolutely)g(tak)o(e)p Black Black eop
+e(in)h Fp(/home/sympa/etc/s)o(ear)o(ch)p 3130 5413 27
+4 v 25 w(filters/)p Ft(.)p Black Black eop
 %%Page: 105 105
 105 104 bop Black 232 241 a Fo(10.2.)40 b(LD)m(AP)20
-b(N)m(AMED)g(FIL)-8 b(TERS)1656 b Ft(105)p Black 315
-531 a(into)17 b(account)e(the)i(\002rst)h(part)e(of)h(the)f(\002lter)h
-(which)g(is)g(:)h(\('mail)p 2071 531 25 4 v 29 w(attrib)n(ute')e(=)h
-([sender]\))e(as)i(sho)n(wn)315 631 y(in)23 b(the)f(e)o(xample.)f(you)h
-(will)h(ha)n(v)o(e)f(to)g(replce)g('mail)p 1822 631 V
-29 w(attrib)n(ute')g(by)g(the)g(name)g(of)g(the)h(attrib)n(ute)315
-731 y(for)d(the)h(email.)f Fq(Sympa)f Ft(v)o(eri\002es)h(if)h(the)f
+b(N)m(AMED)g(FIL)-8 b(TERS)1656 b Ft(105)p Black 232
+531 a(Y)-9 b(ou)20 b(must)g(gi)n(v)o(e)g(se)n(v)o(eral)f(informations)f
+(in)j(order)e(to)h(create)g(a)g(Named)g(Filter)h(:)p
+Black 232 631 a(\226)p Black 41 w(host)315 731 y(A)g(list)g(of)f(host)h
+(:port)e(LD)m(AP)h(directories)g(\(replicates\))f(entries.)p
+Black 232 830 a(\226)p Black 41 w(suf)n(\002x)315 930
+y(De\002nes)k(the)f(naming)f(space)h(co)o(v)o(ered)d(by)j(the)g(search)
+g(\(optional,)e(depending)g(on)h(the)h(LD)m(AP)315 1029
+y(serv)o(er\).)p Black 232 1129 a(\226)p Black 41 w(\002lter)315
+1229 y(De\002nes)d(the)g(LD)m(AP)f(search)g(\002lter)h(\(RFC)g(2254)e
+(compliant\).)g(But)i(you)e(must)i(absolutely)e(tak)o(e)315
+1328 y(into)g(account)e(the)i(\002rst)h(part)e(of)h(the)f(\002lter)h
+(which)g(is)g(:)h(\('mail)p 2071 1328 25 4 v 29 w(attrib)n(ute')e(=)h
+([sender]\))e(as)i(sho)n(wn)315 1428 y(in)23 b(the)f(e)o(xample.)f(you)
+h(will)h(ha)n(v)o(e)f(to)g(replce)g('mail)p 1822 1428
+V 29 w(attrib)n(ute')g(by)g(the)g(name)g(of)g(the)h(attrib)n(ute)315
+1528 y(for)d(the)h(email.)f Fq(Sympa)f Ft(v)o(eri\002es)h(if)h(the)f
 (user)h(belongs)e(to)h(the)h(cate)o(gory)d(of)i(people)g(de\002ned)f
-(in)315 830 y(the)i(\002lter)-5 b(.)p Black 232 930 a(\226)p
-Black 41 w(scope)315 1029 y(By)19 b(def)o(ault)e(the)h(search)g(is)h
-(performed)c(on)j(the)g(whole)f(tree)h(belo)n(w)f(the)h(speci\002ed)g
-(base)g(object.)315 1129 y(This)j(may)f(be)g(changed)e(by)i(specifying)
-e(a)j(scope)f(:)p Black 315 1229 a(\226)p Black 42 w(base)g(:)h(Search)
-e(only)h(the)g(base)g(object.)p Black 315 1328 a(\226)p
-Black 42 w(one)399 1428 y(Search)f(the)h(entries)g(immediately)f(belo)n
-(w)h(the)g(base)g(object.)p Black 315 1528 a(\226)p Black
-42 w(sub)399 1627 y(Search)f(the)h(whole)g(tree)g(belo)n(w)g(the)g
-(base)g(object.)g(This)g(is)h(the)f(def)o(ault.)p Black
-232 1727 a(\226)p Black 41 w(bind)p 469 1727 V 29 w(dn)315
-1826 y(If)25 b(anon)o(ymous)c(bind)j(is)h(not)f(allo)n(wed)g(on)g(the)g
-(LD)m(AP)h(serv)o(er)m(,)e(a)i(DN)g(and)e(passw)o(ord)h(can)g(be)315
-1926 y(used.)p Black 232 2026 a(\226)p Black 41 w(bind)p
-469 2026 V 29 w(passw)o(ord)315 2125 y(This)d(passw)o(ord)e(is)i(used,)
-f(combined)e(with)j(the)f(bind)p 1880 2125 V 28 w(dn)g(abo)o(v)o(e.)232
-2225 y(e)o(xample.ldap)27 b(:)j(we)g(w)o(ant)g(to)g(select)g(the)f
-(professors)g(of)g(mathematics)g(in)g(the)h(uni)n(v)o(ersity)e(of)232
-2325 y(Rennes1)20 b(in)g(France)p Black Black Black Black
-440 2627 a Fp(host)42 b(ldap.univ-rennes)o(1.)o(fr:)o(38)o(9,l)o(da)o
-(p2.)o(un)o(iv)o(-re)o(nn)o(es1)o(.f)o(r:)o(390)440 2727
-y(suffix)f(dc=univ-rennes1.)o(fr,)o(dc)o(=fr)440 2826
-y(filter)g(\(&\(canonic_mail)c(=)44 b([sender]\)\(Emplo)o(yee)o(Ty)o
-(pe)37 b(=)43 b(prof\)\(subject)c(=)k(math\)\))440 2926
-y(scope)f(sub)232 3564 y Fh(10.2.2)99 b(Sear)n(ch)27
-b(Condition)232 3875 y Ft(The)17 b(search)f(condition)e(is)j(used)g(in)
-f(authorization)e(scenarios)i(which)g(are)g(de\002ned)g(and)g
-(described)232 3974 y(in)21 b(\(see)f(10\))232 4192 y(The)g(syntax)g
-(of)g(this)g(rule)g(is)h(:)p Black Black Black Black
-440 4395 a Fp(search\(example.l)o(dap)o(,[)o(se)o(nde)o(r])o(\))256
-b(smtp,smime,md5)168 b(->)43 b(do_it)232 4598 y Ft(The)20
-b(v)n(ariables)g(used)g(by)f(')-5 b(search')20 b(are)g(:)p
-Black 232 4697 a(\226)p Black 41 w(the)h(name)e(of)h(the)g(LD)m(AP)h
-(Con\002guration)d(\002le)p Black 232 4896 a(\226)p Black
-41 w(the)j([sender])315 4996 y(That)f(is)i(to)e(say)g(the)h(sender)e
-(email)h(address.)232 5096 y(Note)29 b(that)f Fq(Sympa)f
-Ft(processes)h(maintain)g(a)h(cache)e(of)h(processed)g(search)g
-(conditions)e(to)j(limit)232 5195 y(access)21 b(to)g(the)f(LD)m(AP)g
-(directory)12 b(;)20 b(each)g(entry)g(has)g(a)h(lifetime)f(of)g(1)g
-(hour)f(in)h(the)g(cache.)232 5413 y(The)g(method)f(of)h
-(authentication)e(does)i(not)g(change.)p Black Black
-eop
+(in)315 1627 y(the)i(\002lter)-5 b(.)p Black 232 1727
+a(\226)p Black 41 w(scope)315 1826 y(By)19 b(def)o(ault)e(the)h(search)
+g(is)h(performed)c(on)j(the)g(whole)f(tree)h(belo)n(w)f(the)h
+(speci\002ed)g(base)g(object.)315 1926 y(This)j(may)f(be)g(changed)e
+(by)i(specifying)e(a)j(scope)f(:)p Black 315 2026 a(\226)p
+Black 42 w(base)g(:)h(Search)e(only)h(the)g(base)g(object.)p
+Black 315 2125 a(\226)p Black 42 w(one)399 2225 y(Search)f(the)h
+(entries)g(immediately)f(belo)n(w)h(the)g(base)g(object.)p
+Black 315 2325 a(\226)p Black 42 w(sub)399 2424 y(Search)f(the)h(whole)
+g(tree)g(belo)n(w)g(the)g(base)g(object.)g(This)g(is)h(the)f(def)o
+(ault.)p Black 232 2524 a(\226)p Black 41 w(bind)p 469
+2524 V 29 w(dn)315 2623 y(If)25 b(anon)o(ymous)c(bind)j(is)h(not)f
+(allo)n(wed)g(on)g(the)g(LD)m(AP)h(serv)o(er)m(,)e(a)i(DN)g(and)e
+(passw)o(ord)h(can)g(be)315 2723 y(used.)p Black 232
+2823 a(\226)p Black 41 w(bind)p 469 2823 V 29 w(passw)o(ord)315
+2922 y(This)d(passw)o(ord)e(is)i(used,)f(combined)e(with)j(the)f(bind)p
+1880 2922 V 28 w(dn)g(abo)o(v)o(e.)232 3022 y(e)o(xample.ldap)27
+b(:)j(we)g(w)o(ant)g(to)g(select)g(the)f(professors)g(of)g(mathematics)
+g(in)g(the)h(uni)n(v)o(ersity)e(of)232 3122 y(Rennes1)20
+b(in)g(France)p Black Black Black Black 440 3361 a Fp(host)42
+b(ldap.univ-rennes)o(1.)o(fr:)o(38)o(9,l)o(da)o(p2.)o(un)o(iv)o(-re)o
+(nn)o(es1)o(.f)o(r:)o(390)440 3460 y(suffix)f(dc=univ-rennes1.)o(fr,)o
+(dc)o(=fr)440 3560 y(filter)g(\(&\(canonic_mail)c(=)44
+b([sender]\)\(Emplo)o(yee)o(Ty)o(pe)37 b(=)43 b(prof\)\(subject)c(=)k
+(math\)\))440 3660 y(scope)f(sub)232 4140 y Fh(10.2.2)99
+b(Sear)n(ch)27 b(Condition)232 4418 y Ft(The)17 b(search)f(condition)e
+(is)j(used)g(in)f(authorization)e(scenarios)i(which)g(are)g(de\002ned)g
+(and)g(described)232 4518 y(in)21 b(\(see)f(10\))232
+4736 y(The)g(syntax)g(of)g(this)g(rule)g(is)h(:)p Black
+Black Black Black 440 4875 a Fp(search\(example.l)o(dap)o(,[)o(se)o
+(nde)o(r])o(\))256 b(smtp,smime,md5)168 b(->)43 b(do_it)232
+5015 y Ft(The)20 b(v)n(ariables)g(used)g(by)f(')-5 b(search')20
+b(are)g(:)p Black 232 5114 a(\226)p Black 41 w(the)h(name)e(of)h(the)g
+(LD)m(AP)h(Con\002guration)d(\002le)p Black 232 5313
+a(\226)p Black 41 w(the)j([sender])315 5413 y(That)f(is)i(to)e(say)g
+(the)h(sender)e(email)h(address.)p Black Black eop
 %%Page: 106 106
 106 105 bop Black 656 241 a Ft(106)1018 b Fo(CHAPITRE)21
 b(10.)40 b(A)-5 b(UTHORIZA)c(TION)20 b(SCEN)m(ARIOS)p
-Black 656 531 a Fn(10.3)119 b(scenario)30 b(inclusion)656
-835 y Ft(Scenarios)19 b(can)h(also)h(contain)e(includes)h(:)p
-Black Black Black Black 1038 1098 a Fp(subscribe)1212
-1197 y(include)41 b(commonreject)1212 1297 y(match\(,)g
+Black 656 531 a Ft(Note)28 b(that)h Fq(Sympa)e Ft(processes)h(maintain)
+f(a)i(cache)f(of)g(processed)f(search)h(conditions)f(to)h(limit)656
+631 y(access)21 b(to)f(the)g(LD)m(AP)g(directory)12 b(;)21
+b(each)f(entry)f(has)h(a)h(lifetime)f(of)g(1)g(hour)f(in)i(the)f
+(cache.)656 849 y(The)g(method)f(of)g(authentication)g(does)h(not)f
+(change.)656 1247 y Fn(10.3)119 b(scenario)30 b(inclusion)656
+1551 y Ft(Scenarios)19 b(can)h(also)h(contain)e(includes)h(:)p
+Black Black Black Black 1038 1813 a Fp(subscribe)1212
+1913 y(include)41 b(commonreject)1212 2012 y(match\(,)g
 (/cru\\.fr\\$/\))431 b(smtp,smime)39 b(->)k(do_it)863
-1396 y(true\(\))1349 b(smtp,smime)40 b(->)i(owner)656
-1659 y Ft(In)26 b(this)h(case)g(sympa)f(applies)g(recursi)n(v)o(ely)f
+2112 y(true\(\))1349 b(smtp,smime)40 b(->)i(owner)656
+2375 y Ft(In)26 b(this)h(case)g(sympa)f(applies)g(recursi)n(v)o(ely)f
 (the)h(scenario)g(named)f Fp(include.commonrej)o(ect)656
-1759 y Ft(before)18 b(introducing)f(the)j(other)f(rules.)h(This)g
+2474 y Ft(before)18 b(introducing)f(the)j(other)f(rules.)h(This)g
 (possibility)f(w)o(as)i(introduced)c(in)j(order)f(to)g(f)o(acilitate)
-656 1858 y(the)h(administration)f(of)g(common)g(rules.)656
-2076 y(Y)-9 b(ou)68 b(can)g(de\002ne)g(a)i(set)f(of)f(common)f
+656 2574 y(the)h(administration)f(of)g(common)g(rules.)656
+2792 y(Y)-9 b(ou)68 b(can)g(de\002ne)g(a)i(set)f(of)f(common)f
 (scenario)h(rules,)g(used)h(by)f(all)h(lists.)h(in-)656
-2176 y(clude.)p Fp(<)p Ft(action)p Fp(>)p Ft(.header)15
+2891 y(clude.)p Fp(<)p Ft(action)p Fp(>)p Ft(.header)15
 b(is)21 b(automatically)e(added)g(to)h(e)n(v)n(aluated)f(scenarios.)656
-2574 y Fn(10.4)119 b(Hidding)31 b(scenario)f(\002les)656
-2878 y Ft(Because)21 b Fq(Sympa)g Ft(is)h(distrib)n(uted)e(with)i(man)o
+3290 y Fn(10.4)119 b(Hidding)31 b(scenario)f(\002les)656
+3593 y Ft(Because)21 b Fq(Sympa)g Ft(is)h(distrib)n(uted)e(with)i(man)o
 (y)e(def)o(ault)g(scenario)h(\002les,)h(you)e(may)h(w)o(ant)g(to)h
-(hidde)656 2977 y(some)d(of)h(them)f(to)h(list)g(o)n(wners)f(\(to)h
+(hidde)656 3693 y(some)d(of)h(them)f(to)h(list)g(o)n(wners)f(\(to)h
 (mak)o(e)f(list)i(admin)d(menus)h(shorter)g(and)g(readable\).)f(T)-7
-b(o)20 b(hidde)656 3077 y(a)28 b(scenario)f(\002le)h(you)f(should)g
+b(o)20 b(hidde)656 3793 y(a)28 b(scenario)f(\002le)h(you)f(should)g
 (create)g(an)h(empty)e(\002le)j(with)e(the)43 b Fp(:ignore)26
-b Ft(suf)n(\002x.)h(Depending)656 3176 y(on)21 b(where)g(this)h(\002le)
+b Ft(suf)n(\002x.)h(Depending)656 3892 y(on)21 b(where)g(this)h(\002le)
 h(has)e(been)g(created)g(will)i(mak)o(e)e(it)h(ignored)e(at)i(either)f
-(a)h(global,)f(robot)f(or)i(list)656 3276 y(le)n(v)o(el.)656
-3494 y Fq(Example)d(:)p Black Black 863 3623 a Ft(/home/sympa/etc/my)-5
+(a)h(global,)f(robot)f(or)i(list)656 3992 y(le)n(v)o(el.)656
+4210 y Fq(Example)d(:)p Black Black 863 4339 a Ft(/home/sympa/etc/my)-5
 b(.domain.or)n(g)o(/scenar)o(i/send.)o(intran)o(etor)o(pr)o(i)n(v)n
-(ate)14 b(:ignore)656 3753 y(The)k Fp(intranetorprivate)13
+(ate)14 b(:ignore)656 4469 y(The)k Fp(intranetorprivate)13
 b(send)18 b Ft(scenario)g(will)h(be)g(hidden)e(\(on)i(the)f(web)h
-(admin)f(interf)o(ace\),)656 3853 y(at)j(the)f(my)-5
+(admin)f(interf)o(ace\),)656 4568 y(at)j(the)f(my)-5
 b(.domain.or)o(gro)o(bo)o(t)15 b(le)n(v)o(el)20 b(only)-5
 b(.)p Black Black eop
 %%Page: 107 107
@@ -10497,7 +10507,7 @@ o(is)o(t)p 1713 3895 V 25 w(task)p 1914 3895 V 30 w(models/)988
 988 4602 y Ft(directory)-5 b(,)18 b(112)656 4705 y Fp(/home/sympa/bin/)
 o(et)o(c/s)o(ce)o(nar)o(i)11 b Ft(di-)988 4805 y(rectory)-5
 b(,)18 b(101)656 4908 y Fp(/home/sympa/bin/)o(et)o(c/s)o(ce)o(nar)o(i/)
-988 5008 y Ft(directory)-5 b(,)18 b(103)656 5111 y Fp(/home/sympa/bin/)
+988 5008 y Ft(directory)-5 b(,)18 b(104)656 5111 y Fp(/home/sympa/bin/)
 o(p1)o(2to)o(pe)o(m.p)o(l)988 5210 y Ft(UNIX)i(command,)e(195)656
 5313 y Fp(/home/sympa/bin/)o(p1)o(2to)o(pe)o(m.p)o(l)11
 b Ft(di-)988 5413 y(rectory)-5 b(,)18 b(194)p Black Black
@@ -10826,518 +10836,517 @@ y Fp(db)p 1903 5313 V 30 w(type)45 b Ft(con\002guration)e(k)o(e)o(yw)o
 %%Page: 208 208
 208 207 bop Black 656 241 a Ft(208)2480 b Fo(INDEX)p
 Black 656 531 a Fp(db)p 749 531 27 4 v 30 w(type)20 b
-Ft(list)h(parameter)m(,)d(153)656 633 y Fp(db)p 749 633
+Ft(list)h(parameter)m(,)d(153)656 631 y Fp(db)p 749 631
 V 30 w(user)45 b Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(54,)988
-733 y(66,)19 b(68)656 835 y Fp(DBD)g Ft(perl)h(module,)f(15,)g(26)656
-937 y Fp(DBI)g Ft(perl)h(module,)f(15,)g(26,)h(59,)f(60)656
-1039 y(def)o(ault-user)n(-options,)e(168)656 1141 y Fp(default)p
-969 1141 V 28 w(archive)p 1305 1141 V 29 w(quota)52 b
-Ft(con\002gura-)988 1240 y(tion)20 b(k)o(e)o(yw)o(ord,)e(46,)i(173)656
-1342 y Fp(default)p 969 1342 V 28 w(bounce)p 1261 1342
-V 29 w(level1)p 1554 1342 V 29 w(rate)988 1442 y Ft(con\002guration)d
-(k)o(e)o(yw)o(ord,)i(52)656 1544 y Fp(default)p 969 1544
-V 28 w(bounce)p 1261 1544 V 29 w(level2)p 1554 1544 V
-29 w(rate)988 1643 y Ft(con\002guration)e(k)o(e)o(yw)o(ord,)i(52)656
-1745 y Fp(default)p 969 1745 V 28 w(home)93 b Ft(con\002guration)d(k)o
-(e)o(y-)988 1845 y(w)o(ord,)19 b(108)656 1947 y Fp(default)p
-969 1947 V 28 w(list)p 1173 1947 V 30 w(priority)51 b
-Ft(con\002gura-)988 2046 y(tion)20 b(k)o(e)o(yw)o(ord,)e(53,)i(169)656
-2148 y Fp(default)p 969 2148 V 28 w(shared)p 1261 2148
-V 29 w(quota)96 b Ft(con\002gura-)988 2248 y(tion)20
-b(k)o(e)o(yw)o(ord,)e(46)656 2350 y Fp(default)p 969
-2350 V 28 w(user)p 1173 2350 V 30 w(options)30 b Ft(list)k(parame-)988
-2449 y(ter)m(,)20 b(168)656 2551 y Fp(DEL)f Ft(mail)i(command,)d(125,)h
-(160)656 2653 y Fp(del)g Ft(list)j(parameter)m(,)c(160,)h(161)656
-2755 y Fp(DELETE)24 b Ft(mail)j(command,)d(15,)i(127,)f(149,)988
-2855 y(169,)19 b(200)656 2957 y(digest,)h(47,)f(122,)g(167)656
-3059 y Fp(digest)f Ft(list)j(parameter)m(,)e(123,)g(167,)g(198)656
-3161 y Fp(Digest-MD5)d Ft(perl)k(module,)f(25)656 3263
-y Fp(DISTRIBUTE)d Ft(mail)21 b(command,)d(201)656 3364
-y(distrib)n(ution,)h(46)656 3466 y Fp(distribution)p
-1189 3466 V 26 w(mode)114 b Ft(con\002guration)988 3566
-y(k)o(e)o(yw)o(ord,)18 b(42)656 3668 y Fp(do)p 749 3668
+731 y(66,)19 b(68)656 831 y Fp(DBD)g Ft(perl)h(module,)f(15,)g(26)656
+931 y Fp(DBI)g Ft(perl)h(module,)f(15,)g(26,)h(59,)f(60)656
+1031 y(def)o(ault-user)n(-options,)e(168)656 1131 y Fp(default)p
+969 1131 V 28 w(archive)p 1305 1131 V 29 w(quota)52 b
+Ft(con\002gura-)988 1230 y(tion)20 b(k)o(e)o(yw)o(ord,)e(46,)i(173)656
+1330 y Fp(default)p 969 1330 V 28 w(bounce)p 1261 1330
+V 29 w(level1)p 1554 1330 V 29 w(rate)988 1430 y Ft(con\002guration)d
+(k)o(e)o(yw)o(ord,)i(52)656 1530 y Fp(default)p 969 1530
+V 28 w(bounce)p 1261 1530 V 29 w(level2)p 1554 1530 V
+29 w(rate)988 1629 y Ft(con\002guration)e(k)o(e)o(yw)o(ord,)i(52)656
+1729 y Fp(default)p 969 1729 V 28 w(home)93 b Ft(con\002guration)d(k)o
+(e)o(y-)988 1829 y(w)o(ord,)19 b(108)656 1929 y Fp(default)p
+969 1929 V 28 w(list)p 1173 1929 V 30 w(priority)51 b
+Ft(con\002gura-)988 2029 y(tion)20 b(k)o(e)o(yw)o(ord,)e(53,)i(169)656
+2129 y Fp(default)p 969 2129 V 28 w(shared)p 1261 2129
+V 29 w(quota)96 b Ft(con\002gura-)988 2228 y(tion)20
+b(k)o(e)o(yw)o(ord,)e(46)656 2328 y Fp(default)p 969
+2328 V 28 w(user)p 1173 2328 V 30 w(options)30 b Ft(list)k(parame-)988
+2428 y(ter)m(,)20 b(168)656 2528 y Fp(DEL)f Ft(mail)i(command,)d(125,)h
+(160)656 2628 y Fp(del)g Ft(list)j(parameter)m(,)c(160,)h(161)656
+2728 y Fp(DELETE)24 b Ft(mail)j(command,)d(15,)i(127,)f(149,)988
+2827 y(169,)19 b(200)656 2927 y(digest,)h(47,)f(122,)g(167)656
+3027 y Fp(digest)f Ft(list)j(parameter)m(,)e(123,)g(167,)g(198)656
+3127 y Fp(Digest-MD5)d Ft(perl)k(module,)f(25)656 3227
+y Fp(DISTRIBUTE)d Ft(mail)21 b(command,)d(201)656 3327
+y(distrib)n(ution,)h(46)656 3427 y Fp(distribution)p
+1189 3427 V 26 w(mode)114 b Ft(con\002guration)988 3527
+y(k)o(e)o(yw)o(ord,)18 b(42)656 3627 y Fp(do)p 749 3627
 V 30 w(it)i Ft(con\002guration)e(k)o(e)o(yw)o(ord,)g(136)656
-3770 y Fp(doc/)h Ft(directory)-5 b(,)18 b(27)656 3872
+3726 y Fp(doc/)h Ft(directory)-5 b(,)18 b(27)656 3826
 y Fp(domain)54 b Ft(con\002guration)g(k)o(e)o(yw)o(ord,)g(37,)988
-3971 y(148)656 4195 y Fp(edit)p 837 4195 V 30 w(list.conf)13
-b Ft(\002le,)k(21,)e(40,)h(140,)f(145)656 4296 y Fp(editor)j
-Ft(list)j(parameter)m(,)e(147,)g(148)656 4398 y Fp(editor)p
-925 4398 V 29 w(include)42 b Ft(list)j(parameter)m(,)d(20,)988
-4498 y(148)656 4600 y Fp(editor)p 925 4600 V 29 w(inlude)18
-b Ft(list)j(parameter)m(,)d(124)656 4702 y Fp(editorkey)f
-Ft(list)k(parameter)m(,)d(148)656 4804 y Fp(editorkeyonly)d
-Ft(list)22 b(parameter)m(,)c(148)656 4906 y Fp(email)h
+3926 y(148)656 4114 y Fp(edit)p 837 4114 V 30 w(list.conf)13
+b Ft(\002le,)k(21,)e(40,)h(140,)f(145)656 4214 y(editor)m(,)k(103)656
+4314 y Fp(editor)f Ft(list)j(parameter)m(,)e(147,)g(148)656
+4414 y Fp(editor)p 925 4414 V 29 w(include)42 b Ft(list)j(parameter)m
+(,)d(20,)988 4514 y(148)656 4614 y Fp(editor)p 925 4614
+V 29 w(inlude)18 b Ft(list)j(parameter)m(,)d(124)656
+4714 y(editork)o(e)o(y)-5 b(,)17 b(103)656 4814 y Fp(editorkey)g
+Ft(list)k(parameter)m(,)d(148)656 4914 y Fp(editorkeyonly)d
+Ft(list)22 b(parameter)m(,)c(148)656 5014 y Fp(email)h
 Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(38,)i(108)656
-5008 y Fp(email)f Ft(list)i(parameter)m(,)d(123,)h(149)656
-5110 y Fp(error)p 881 5110 V 29 w(color)32 b Ft(con\002guration)f(k)o
-(e)o(yw)o(ord,)988 5209 y(39,)19 b(109)656 5311 y Fp(error)p
-881 5311 V 29 w(config)f Ft(\002le,)j(143)656 5413 y
-Fp(etc)e Ft(con\002guration)f(k)o(e)o(yw)o(ord,)g(40)p
-Black Black 2233 531 a Fp(eval)p 2414 531 V 30 w(bouncer)91
-b Ft(con\002guration)g(k)o(e)o(y-)2565 631 y(w)o(ord,)20
-b(185)2233 731 y Fp(eval)p 2414 731 V 30 w(bouncers)p
-2796 731 V 28 w(task)82 b Ft(con\002guration)2565 831
-y(k)o(e)o(yw)o(ord,)18 b(51)2233 931 y(Exim,)i(44)2233
-1031 y Fp(exim)f Ft(UNIX)i(command,)d(33)2233 1131 y(e)o(xpiration,)g
-(200)2233 1232 y Fp(EXPIRE)h Ft(mail)h(command,)e(15,)h(200,)g(201)2233
-1332 y Fp(expire)p 2502 1332 V 29 w(bounce)p 2795 1332
-V 29 w(task)82 b Ft(con\002guration)2565 1431 y(k)o(e)o(yw)o(ord,)18
-b(50)2233 1532 y Fp(expire)p 2502 1532 V 29 w(bounce)p
-2795 1532 V 29 w(task)36 b Ft(list)j(parameter)m(,)2565
-1631 y(169)2233 1731 y Fp(EXPIREDEL)17 b Ft(mail)k(command,)d(201)2233
-1832 y Fp(EXPIREINDEX)e Ft(mail)21 b(command,)d(201)2233
-2024 y Fp(f)p 2282 2024 V 31 w(dir)i Ft(list)h(parameter)m(,)d(154)2233
-2125 y(f)o(amilies,)i(139)2233 2225 y Fp(families)e Ft(\002le,)i(140)
-2233 2325 y Fp(family)p 2502 2325 V 29 w(closed)e Ft(\002le,)j(143,)e
-(144)2233 2425 y(f)o(amily)p 2455 2425 25 4 v 29 w(name,)g(174)2233
-2525 y(F)o(astCGI,)i(26,)e(71)2233 2626 y Fp(FCGI)g Ft(perl)h(module,)f
-(26,)g(71)2233 2726 y Fp(File-Spec)e Ft(perl)j(module,)f(25)2233
-2826 y Fp(filter)g Ft(list)i(parameter)m(,)d(155)2233
-2926 y Fp(filter1)g Ft(list)j(parameter)m(,)e(156)2233
-3026 y Fp(filter2)f Ft(list)j(parameter)m(,)e(157)2233
-3127 y(footer)n(-type,)f(167)2233 3227 y Fp(footer)p
-2502 3227 27 4 v 29 w(type)g Ft(list)i(parameter)m(,)d(128,)h(129,)2565
-3326 y(167)2233 3427 y Fp(footer)p 2502 3427 V 29 w(type)42
-b(\(optional,)2565 3526 y(default)f(value)h(is)2565 3626
-y(mime\))141 b Ft(list)j(parameter)m(,)2565 3725 y(167)2233
-3826 y Fp(From)42 b(:)21 b Ft(header)m(,)d(37,)i(38,)f(89)2233
-3926 y Fp(from)42 b(:)21 b Ft(con\002guration)c(k)o(e)o(yw)o(ord,)h
-(101)2233 4119 y Fp(gcc)i Ft(UNIX)g(command,)e(24)2233
-4219 y Fp(gecos)h Ft(list)i(parameter)m(,)d(123,)h(149)2233
-4319 y Fp(GET)h Ft(mail)g(command,)e(172,)h(198)2233
-4419 y Fp(global)p 2502 4419 V 29 w(remind)70 b Ft(con\002guration)f(k)
-o(e)o(y-)2565 4519 y(w)o(ord,)20 b(40)2233 4619 y Fp(global)p
-2502 4619 V 29 w(task)p 2707 4619 V 30 w(models)e Ft(directory)-5
-b(,)18 b(40)2233 4812 y Fp(halt)p 2414 4812 V 30 w(rate)h
-Ft(list)i(parameter)m(,)e(169)2233 4912 y Fp(HELP)g Ft(mail)i(command,)
-d(112,)h(197)2233 5012 y Fp(helpfile.tt2)d Ft(\002le,)21
-b(197)2233 5112 y Fp(home)e Ft(con\002guration)f(k)o(e)o(yw)o(ord,)g
-(40)2233 5213 y(host,)i(148)2233 5313 y Fp(host)f Ft(con\002guration)f
-(k)o(e)o(yw)o(ord,)g(37,)i(109)2233 5413 y Fp(host)c
-Ft(list)h(parameter)m(,)d(148,)h(153,)g(155,)h(156)p
-Black Black eop
+5114 y Fp(email)f Ft(list)i(parameter)m(,)d(123,)h(149)656
+5213 y Fp(error)p 881 5213 V 29 w(color)32 b Ft(con\002guration)f(k)o
+(e)o(yw)o(ord,)988 5313 y(39,)19 b(109)656 5413 y Fp(error)p
+881 5413 V 29 w(config)f Ft(\002le,)j(143)p Black Black
+2233 531 a Fp(etc)f Ft(con\002guration)d(k)o(e)o(yw)o(ord,)h(40)2233
+632 y Fp(eval)p 2414 632 V 30 w(bouncer)91 b Ft(con\002guration)g(k)o
+(e)o(y-)2565 731 y(w)o(ord,)20 b(185)2233 831 y Fp(eval)p
+2414 831 V 30 w(bouncers)p 2796 831 V 28 w(task)82 b
+Ft(con\002guration)2565 931 y(k)o(e)o(yw)o(ord,)18 b(51)2233
+1031 y(Exim,)i(44)2233 1131 y Fp(exim)f Ft(UNIX)i(command,)d(33)2233
+1232 y(e)o(xpiration,)g(200)2233 1332 y Fp(EXPIRE)h Ft(mail)h(command,)
+e(15,)h(200,)g(201)2233 1432 y Fp(expire)p 2502 1432
+V 29 w(bounce)p 2795 1432 V 29 w(task)82 b Ft(con\002guration)2565
+1532 y(k)o(e)o(yw)o(ord,)18 b(50)2233 1632 y Fp(expire)p
+2502 1632 V 29 w(bounce)p 2795 1632 V 29 w(task)36 b
+Ft(list)j(parameter)m(,)2565 1731 y(169)2233 1832 y Fp(EXPIREDEL)17
+b Ft(mail)k(command,)d(201)2233 1932 y Fp(EXPIREINDEX)e
+Ft(mail)21 b(command,)d(201)2233 2125 y Fp(f)p 2282 2125
+V 31 w(dir)i Ft(list)h(parameter)m(,)d(154)2233 2225
+y(f)o(amilies,)i(139)2233 2325 y Fp(families)e Ft(\002le,)i(140)2233
+2425 y Fp(family)p 2502 2425 V 29 w(closed)e Ft(\002le,)j(143,)e(144)
+2233 2525 y(f)o(amily)p 2455 2525 25 4 v 29 w(name,)g(174)2233
+2626 y(F)o(astCGI,)i(26,)e(71)2233 2726 y Fp(FCGI)g Ft(perl)h(module,)f
+(26,)g(71)2233 2826 y Fp(File-Spec)e Ft(perl)j(module,)f(25)2233
+2926 y Fp(filter)g Ft(list)i(parameter)m(,)d(155)2233
+3026 y Fp(filter1)g Ft(list)j(parameter)m(,)e(156)2233
+3127 y Fp(filter2)f Ft(list)j(parameter)m(,)e(157)2233
+3227 y(footer)n(-type,)f(167)2233 3327 y Fp(footer)p
+2502 3327 27 4 v 29 w(type)g Ft(list)i(parameter)m(,)d(128,)h(129,)2565
+3427 y(167)2233 3527 y Fp(footer)p 2502 3527 V 29 w(type)42
+b(\(optional,)2565 3626 y(default)f(value)h(is)2565 3726
+y(mime\))141 b Ft(list)j(parameter)m(,)2565 3826 y(167)2233
+3926 y Fp(From)42 b(:)21 b Ft(header)m(,)d(37,)i(38,)f(89)2233
+4026 y Fp(from)42 b(:)21 b Ft(con\002guration)c(k)o(e)o(yw)o(ord,)h
+(101)2233 4219 y Fp(gcc)i Ft(UNIX)g(command,)e(24)2233
+4319 y Fp(gecos)h Ft(list)i(parameter)m(,)d(123,)h(149)2233
+4419 y Fp(GET)h Ft(mail)g(command,)e(172,)h(198)2233
+4519 y Fp(global)p 2502 4519 V 29 w(remind)70 b Ft(con\002guration)f(k)
+o(e)o(y-)2565 4619 y(w)o(ord,)20 b(40)2233 4719 y Fp(global)p
+2502 4719 V 29 w(task)p 2707 4719 V 30 w(models)e Ft(directory)-5
+b(,)18 b(40)2233 4912 y Fp(halt)p 2414 4912 V 30 w(rate)h
+Ft(list)i(parameter)m(,)e(169)2233 5012 y Fp(HELP)g Ft(mail)i(command,)
+d(112,)h(197)2233 5112 y Fp(helpfile.tt2)d Ft(\002le,)21
+b(197)2233 5213 y Fp(home)e Ft(con\002guration)f(k)o(e)o(yw)o(ord,)g
+(40)2233 5313 y(host,)i(148)2233 5413 y Fp(host)f Ft(con\002guration)f
+(k)o(e)o(yw)o(ord,)g(37,)i(109)p Black Black eop
 %%Page: 209 209
 209 208 bop Black 232 241 a Fo(INDEX)2481 b Ft(209)p
-Black 232 531 a Fp(http)p 413 531 27 4 v 30 w(host)76
-b Ft(con\002guration)f(k)o(e)o(yw)o(ord,)565 631 y(108,)19
-b(109)232 731 y Fp(httpd.conf)e Ft(\002le,)k(77)232 897
+Black 232 531 a Fp(host)16 b Ft(list)h(parameter)m(,)d(148,)h(153,)h
+(155,)f(156)232 632 y Fp(http)p 413 632 27 4 v 30 w(host)76
+b Ft(con\002guration)f(k)o(e)o(yw)o(ord,)565 731 y(108,)19
+b(109)232 831 y Fp(httpd.conf)e Ft(\002le,)k(77)232 1025
 y Fp(ignore)e Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(43)232
-996 y(include,)h(152)232 1096 y(include-list,)h(152)232
-1196 y(include-remote-sympa-list,)c(153)232 1295 y Fp(include)p
-545 1295 V 29 w(file)58 b Ft(list)j(parameter)m(,)c(124,)565
-1395 y(152,)19 b(158)232 1494 y Fp(include)p 545 1494
-V 29 w(ldap)p 750 1494 V 30 w(2level)p 1044 1494 V 29
-w(query)130 b Ft(list)565 1594 y(parameter)m(,)18 b(156)232
-1694 y Fp(include)p 545 1694 V 29 w(ldap)p 750 1694 V
-30 w(query)36 b Ft(list)i(parameter)m(,)565 1793 y(124,)19
-b(152,)g(155)232 1893 y Fp(include)p 545 1893 V 29 w(list)58
-b Ft(list)j(parameter)m(,)c(124,)565 1993 y(152)232 2092
-y Fp(include)p 545 2092 V 29 w(remote)p 838 2092 V 29
-w(file)14 b Ft(list)j(parameter)m(,)565 2192 y(158)232
-2291 y Fp(include)p 545 2291 V 29 w(remote)p 838 2291
-V 29 w(sympa)p 1087 2291 V 29 w(list)131 b Ft(list)565
-2391 y(parameter)m(,)18 b(124,)h(152,)g(153)232 2491
-y Fp(include)p 545 2491 V 29 w(sql)p 706 2491 V 30 w(query)58
-b Ft(list)i(parameter)m(,)565 2590 y(124,)19 b(152,)g(153)232
-2690 y Fp(INDEX)g Ft(mail)i(command,)c(172,)j(198)232
-2790 y Fp(index.htm)d Ft(\002le,)k(182)232 2889 y Fp(index.html)c
-Ft(\002le,)k(182)232 2989 y Fp(INFO)f Ft(mail)g(command,)e(124,)h(197)
-232 3088 y Fp(info)h Ft(\002le,)g(134)232 3188 y Fp(info)g
-Ft(list)h(parameter)m(,)d(149)232 3288 y(internationalization,)g(114)
-232 3387 y Fp(INVITE)h Ft(mail)h(command,)e(127,)h(198)232
-3487 y Fp(IO-stringy)e Ft(perl)j(module,)f(25)232 3653
-y Fp(key)p 369 3653 V 31 w(passwd)53 b Ft(con\002guration)g(k)o(e)o(yw)
-o(ord,)565 3753 y(57)232 3852 y Fp(key)p 369 3852 V 31
-w(password)90 b Ft(con\002guration)h(k)o(e)o(y-)565 3952
-y(w)o(ord,)19 b(193)232 4118 y Fp(lang)27 b Ft(con\002guration)e(k)o(e)
-o(yw)o(ord,)g(49,)i(109,)565 4218 y(115,)19 b(148)232
-4317 y Fp(lang)h Ft(list)h(parameter)m(,)d(114,)h(115)232
-4417 y Fp(LAST)h Ft(mail)g(command,)e(172,)h(198)232
-4516 y(latest)p 412 4516 25 4 v 31 w(instantiation,)g(174)232
-4616 y(LD)m(AP)-9 b(,)18 b(13,)f(15\22617,)e(26,)i(74,)g(90,)g(104,)g
-(124,)565 4716 y(151,)i(152,)g(155,)g(156,)g(189)232
-4815 y(LD)m(AP)i(authentication,)d(15,)h(16,)h(90)232
-4915 y(LD)m(AP)h(\002lter)m(,)f(104)232 5015 y(LD)m(AP-based)f
-(authentication,)f(21)232 5114 y(LD)m(AP-based)h(mailing)h(lists,)h(15)
-232 5214 y Fp(libintl-perl)16 b Ft(perl)k(module,)f(25)232
-5313 y Fp(light)p 457 5313 27 4 v 30 w(color)32 b Ft(con\002guration)f
-(k)o(e)o(yw)o(ord,)565 5413 y(39,)19 b(109)p Black Black
-1810 531 a Fp(list)p 1991 531 V 30 w(aliases)e Ft(\002le,)k(35)1810
-631 y Fp(list)p 1991 631 V 30 w(check)p 2241 631 V 29
-w(smtp)33 b Ft(con\002guration)e(k)o(e)o(y-)2142 731
-y(w)o(ord,)19 b(45)1810 831 y Fp(list)p 1991 831 V 30
-w(check)p 2241 831 V 29 w(suffixes)37 b Ft(con\002guration)2142
-930 y(k)o(e)o(yw)o(ord,)18 b(45)1810 1030 y Fp(list)p
-1991 1030 V 30 w(created.tt2)e Ft(\002le,)k(136)1810
-1130 y Fp(list)p 1991 1130 V 30 w(rejected.tt2)15 b Ft(\002le,)21
-b(136)1810 1230 y Fp(list)p 1991 1230 V 30 w(task)p 2197
-1230 V 29 w(models)e Ft(directory)-5 b(,)17 b(40)1810
-1330 y Fp(listmaster)46 b Ft(con\002guration)g(k)o(e)o(yw)o(ord,)2142
-1430 y(38,)20 b(76,)f(109,)g(136)1810 1530 y Fp(LISTS)25
-b Ft(mail)i(command,)e(112,)h(150,)f(151,)2142 1629 y(198)1810
-1729 y Fp(load)p 1991 1729 V 30 w(subscribers.pl)15 b
-Ft(\002le,)20 b(67)1810 1829 y Fp(locale)e Ft(con\002guration)g(k)o(e)o
-(yw)o(ord,)g(49)1810 1929 y Fp(locale/)g Ft(directory)-5
-b(,)18 b(27)1810 2029 y Fp(localedir)e Ft(con\002guration)h(k)o(e)o(yw)
-o(ord,)h(49)1810 2129 y(localization,)h(114)1810 2229
-y Fp(log)p 1947 2229 V 30 w(facility)e Ft(list)22 b(parameter)m(,)c(29)
-1810 2329 y Fp(log)p 1947 2329 V 30 w(level)h Ft(con\002guration)e(k)o
-(e)o(yw)o(ord,)h(41)1810 2429 y Fp(log)p 1947 2429 V
+1125 y(include,)h(152)232 1225 y(include-list,)h(152)232
+1325 y(include-remote-sympa-list,)c(153)232 1425 y Fp(include)p
+545 1425 V 29 w(file)58 b Ft(list)j(parameter)m(,)c(124,)565
+1525 y(152,)19 b(158)232 1625 y Fp(include)p 545 1625
+V 29 w(ldap)p 750 1625 V 30 w(2level)p 1044 1625 V 29
+w(query)130 b Ft(list)565 1725 y(parameter)m(,)18 b(156)232
+1825 y Fp(include)p 545 1825 V 29 w(ldap)p 750 1825 V
+30 w(query)36 b Ft(list)i(parameter)m(,)565 1925 y(124,)19
+b(152,)g(155)232 2025 y Fp(include)p 545 2025 V 29 w(list)58
+b Ft(list)j(parameter)m(,)c(124,)565 2125 y(152)232 2225
+y Fp(include)p 545 2225 V 29 w(remote)p 838 2225 V 29
+w(file)14 b Ft(list)j(parameter)m(,)565 2324 y(158)232
+2425 y Fp(include)p 545 2425 V 29 w(remote)p 838 2425
+V 29 w(sympa)p 1087 2425 V 29 w(list)131 b Ft(list)565
+2524 y(parameter)m(,)18 b(124,)h(152,)g(153)232 2624
+y Fp(include)p 545 2624 V 29 w(sql)p 706 2624 V 30 w(query)58
+b Ft(list)i(parameter)m(,)565 2724 y(124,)19 b(152,)g(153)232
+2824 y Fp(INDEX)g Ft(mail)i(command,)c(172,)j(198)232
+2925 y Fp(index.htm)d Ft(\002le,)k(182)232 3025 y Fp(index.html)c
+Ft(\002le,)k(182)232 3125 y Fp(INFO)f Ft(mail)g(command,)e(124,)h(197)
+232 3225 y Fp(info)h Ft(\002le,)g(134)232 3325 y Fp(info)g
+Ft(list)h(parameter)m(,)d(149)232 3426 y(internationalization,)g(114)
+232 3526 y Fp(INVITE)h Ft(mail)h(command,)e(127,)h(198)232
+3626 y Fp(IO-stringy)e Ft(perl)j(module,)f(25)232 3819
+y Fp(key)p 369 3819 V 31 w(passwd)53 b Ft(con\002guration)g(k)o(e)o(yw)
+o(ord,)565 3919 y(57)232 4019 y Fp(key)p 369 4019 V 31
+w(password)90 b Ft(con\002guration)h(k)o(e)o(y-)565 4119
+y(w)o(ord,)19 b(193)232 4312 y Fp(lang)27 b Ft(con\002guration)e(k)o(e)
+o(yw)o(ord,)g(49,)i(109,)565 4411 y(115,)19 b(148)232
+4512 y Fp(lang)h Ft(list)h(parameter)m(,)d(114,)h(115)232
+4612 y Fp(LAST)h Ft(mail)g(command,)e(172,)h(198)232
+4712 y(latest)p 412 4712 25 4 v 31 w(instantiation,)g(174)232
+4812 y(LD)m(AP)-9 b(,)18 b(13,)f(15\22617,)e(26,)i(74,)g(90,)g(104,)g
+(124,)565 4912 y(151,)i(152,)g(155,)g(156,)g(189)232
+5012 y(LD)m(AP)i(authentication,)d(15,)h(16,)h(90)232
+5112 y(LD)m(AP)h(\002lter)m(,)f(104)232 5213 y(LD)m(AP-based)f
+(authentication,)f(21)232 5313 y(LD)m(AP-based)h(mailing)h(lists,)h(15)
+232 5413 y Fp(libintl-perl)16 b Ft(perl)k(module,)f(25)p
+Black Black 1810 531 a Fp(light)p 2035 531 27 4 v 29
+w(color)32 b Ft(con\002guration)f(k)o(e)o(yw)o(ord,)2142
+631 y(39,)20 b(109)1810 731 y Fp(list)p 1991 731 V 30
+w(aliases)d Ft(\002le,)k(35)1810 831 y Fp(list)p 1991
+831 V 30 w(check)p 2241 831 V 29 w(smtp)33 b Ft(con\002guration)e(k)o
+(e)o(y-)2142 931 y(w)o(ord,)19 b(45)1810 1030 y Fp(list)p
+1991 1030 V 30 w(check)p 2241 1030 V 29 w(suffixes)37
+b Ft(con\002guration)2142 1130 y(k)o(e)o(yw)o(ord,)18
+b(45)1810 1230 y Fp(list)p 1991 1230 V 30 w(created.tt2)e
+Ft(\002le,)k(136)1810 1330 y Fp(list)p 1991 1330 V 30
+w(rejected.tt2)15 b Ft(\002le,)21 b(136)1810 1430 y Fp(list)p
+1991 1430 V 30 w(task)p 2197 1430 V 29 w(models)e Ft(directory)-5
+b(,)17 b(40)1810 1530 y Fp(listmaster)46 b Ft(con\002guration)g(k)o(e)o
+(yw)o(ord,)2142 1630 y(38,)20 b(76,)f(109,)g(136)1810
+1729 y Fp(LISTS)25 b Ft(mail)i(command,)e(112,)h(150,)f(151,)2142
+1829 y(198)1810 1929 y Fp(load)p 1991 1929 V 30 w(subscribers.pl)15
+b Ft(\002le,)20 b(67)1810 2029 y Fp(locale)e Ft(con\002guration)g(k)o
+(e)o(yw)o(ord,)g(49)1810 2129 y Fp(locale/)g Ft(directory)-5
+b(,)18 b(27)1810 2229 y Fp(localedir)e Ft(con\002guration)h(k)o(e)o(yw)
+o(ord,)h(49)1810 2329 y(localization,)h(114)1810 2429
+y Fp(log)p 1947 2429 V 30 w(facility)e Ft(list)22 b(parameter)m(,)c(29)
+1810 2529 y Fp(log)p 1947 2529 V 30 w(level)h Ft(con\002guration)e(k)o
+(e)o(yw)o(ord,)h(41)1810 2629 y Fp(log)p 1947 2629 V
 30 w(smtp)30 b Ft(con\002guration)f(k)o(e)o(yw)o(ord,)g(42,)2142
-2529 y(109)1810 2629 y Fp(log)p 1947 2629 V 30 w(socket)p
-2241 2629 V 29 w(type)k Ft(con\002guration)e(k)o(e)o(y-)2142
-2728 y(w)o(ord,)19 b(41)1810 2828 y Fp(log)p 1947 2828
-V 30 w(socket)p 2241 2828 V 29 w(type)g Ft(list)i(parameter)m(,)d(29)
-1810 2928 y(loop-detection,)f(116)1810 3028 y Fp(loop)p
-1991 3028 V 30 w(command)p 2329 3028 V 28 w(decrease)p
-2709 3028 V 28 w(factor)2142 3128 y Ft(con\002guration)47
-b(k)o(e)o(yw)o(ord,)g(56,)2142 3227 y(117)1810 3327 y
-Fp(loop)p 1991 3327 V 30 w(command)p 2329 3327 V 28 w(max)170
-b Ft(con\002guration)2142 3427 y(k)o(e)o(yw)o(ord,)18
-b(55,)i(117)1810 3527 y Fp(loop)p 1991 3527 V 30 w(command)p
-2329 3527 V 28 w(sampling)p 2709 3527 V 28 w(delay)2142
-3627 y Ft(con\002guration)47 b(k)o(e)o(yw)o(ord,)g(55,)2142
-3726 y(117)1810 3914 y(mail)20 b(aliases,)h(34,)f(121)1810
-4014 y Fp(MailTools)d Ft(perl)j(module,)e(25)1810 4114
-y Fp(make)h Ft(UNIX)h(command,)e(25,)i(28)1810 4214 y
+2728 y(109)1810 2828 y Fp(log)p 1947 2828 V 30 w(socket)p
+2241 2828 V 29 w(type)k Ft(con\002guration)e(k)o(e)o(y-)2142
+2928 y(w)o(ord,)19 b(41)1810 3028 y Fp(log)p 1947 3028
+V 30 w(socket)p 2241 3028 V 29 w(type)g Ft(list)i(parameter)m(,)d(29)
+1810 3128 y(loop-detection,)f(116)1810 3228 y Fp(loop)p
+1991 3228 V 30 w(command)p 2329 3228 V 28 w(decrease)p
+2709 3228 V 28 w(factor)2142 3327 y Ft(con\002guration)47
+b(k)o(e)o(yw)o(ord,)g(56,)2142 3427 y(117)1810 3527 y
+Fp(loop)p 1991 3527 V 30 w(command)p 2329 3527 V 28 w(max)170
+b Ft(con\002guration)2142 3627 y(k)o(e)o(yw)o(ord,)18
+b(55,)i(117)1810 3727 y Fp(loop)p 1991 3727 V 30 w(command)p
+2329 3727 V 28 w(sampling)p 2709 3727 V 28 w(delay)2142
+3826 y Ft(con\002guration)47 b(k)o(e)o(yw)o(ord,)g(55,)2142
+3926 y(117)1810 4114 y(mail)20 b(aliases,)h(34,)f(121)1810
+4214 y Fp(MailTools)d Ft(perl)j(module,)e(25)1810 4314
+y Fp(make)h Ft(UNIX)h(command,)e(25,)i(28)1810 4414 y
 Fp(make)42 b(install)32 b Ft(UNIX)i(command,)e(19,)2142
-4314 y(28,)20 b(30)1810 4414 y Fp(Makefile)d Ft(\002le,)k(27)1810
-4514 y(max-size,)e(165)1810 4614 y Fp(max)p 1947 4614
+4514 y(28,)20 b(30)1810 4614 y Fp(Makefile)d Ft(\002le,)k(27)1810
+4714 y(max-size,)e(165)1810 4814 y Fp(max)p 1947 4814
 V 30 w(size)30 b Ft(con\002guration)f(k)o(e)o(yw)o(ord,)g(43,)2142
-4713 y(109,)19 b(165)1810 4813 y Fp(max)p 1947 4813 V
+4913 y(109,)19 b(165)1810 5013 y Fp(max)p 1947 5013 V
 30 w(size)g Ft(list)i(parameter)m(,)e(43,)g(165)1810
-4913 y Fp(maxsmtp)f Ft(con\002guration)f(k)o(e)o(yw)o(ord,)h(42)1810
-5013 y Fp(md5)h Ft(con\002guration)f(k)o(e)o(yw)o(ord,)g(89,)i(101)1810
-5113 y Fp(message.footer.m)o(im)o(e)15 b Ft(\002le,)20
-b(128)1810 5213 y Fp(message.header.m)o(im)o(e)15 b Ft(\002le,)20
-b(128)1810 5313 y Fp(MhOnArc)e Ft(\002le,)i(21)1810 5413
-y Fp(mhonarc)e Ft(\002le,)i(75)p Black Black eop
+5113 y Fp(maxsmtp)f Ft(con\002guration)f(k)o(e)o(yw)o(ord,)h(42)1810
+5213 y Fp(md5)h Ft(con\002guration)f(k)o(e)o(yw)o(ord,)g(89,)i(101)1810
+5313 y Fp(message.footer.m)o(im)o(e)15 b Ft(\002le,)20
+b(128)1810 5413 y Fp(message.header.m)o(im)o(e)15 b Ft(\002le,)20
+b(128)p Black Black eop
 %%Page: 210 210
 210 209 bop Black 656 241 a Ft(210)2480 b Fo(INDEX)p
-Black 656 531 a Fp(mhonarc-ressourc)o(es)14 b Ft(\002le,)21
-b(75)656 631 y(MIME,)e(14)656 731 y Fp(MIME-Base64)d
-Ft(perl)k(module,)f(25)656 831 y Fp(MIME-tools)d Ft(perl)k(module,)f
-(25)656 931 y Fp(minimum)p 969 931 27 4 v 28 w(bouncing)p
-1349 931 V 28 w(count)157 b Ft(con\002-)988 1031 y(guration)131
-b(k)o(e)o(yw)o(ord,)f(51,)988 1130 y(186)656 1230 y Fp(minimum)p
-969 1230 V 28 w(bouncing)p 1349 1230 V 28 w(period)30
-b Ft(con\002gu-)988 1330 y(ration)19 b(k)o(e)o(yw)o(ord,)g(51,)g(186)
-656 1430 y Fp(misaddressed)p 1189 1430 V 26 w(commands)39
-b Ft(con\002gura-)988 1530 y(tion)20 b(k)o(e)o(yw)o(ord,)e(43)656
-1629 y Fp(misaddressed)p 1189 1629 V 26 w(commands)p
-1567 1629 V 28 w(regexp)988 1729 y Ft(con\002guration)f(k)o(e)o(yw)o
-(ord,)i(43)656 1829 y(mod)p 810 1829 25 4 v 28 w(f)o(astcgi,)h(71)656
-1929 y Fp(~model)41 b(type.model.task)15 b Ft(\002le,)20
-b(119)656 2029 y(moderation,)e(46,)h(48,)h(122,)f(147,)g(201)656
-2129 y(moderator)m(,)e(147,)i(201)656 2229 y Fp(MODINDEX)e
-Ft(mail)k(command,)d(48,)h(201)656 2329 y Fp(msg/)g Ft(directory)-5
-b(,)18 b(21)656 2429 y Fp(msg)p 793 2429 27 4 v 30 w(count)h
-Ft(\002le,)h(186)656 2529 y Fp(Msql-Mysql-modul)o(es)45
-b Ft(perl)51 b(module,)988 2628 y(60)656 2728 y Fp(multiple)17
-b Ft(\002le,)k(134)656 2828 y Fp(my)p 749 2828 V 30 w(family)e
-Ft(\002le,)h(143)656 2928 y Fp(my)p 749 2928 V 30 w(file.xml)e
-Ft(\002le,)i(135,)g(143)656 3028 y Fp(my)p 749 3028 V
-30 w(robot)f Ft(\002le,)i(135,)e(143)656 3128 y Fp(mydirectory)d
-Ft(directory)-5 b(,)18 b(181)656 3228 y Fp(mydirectory/mysu)o(bd)o(ire)
-o(ct)o(ory)54 b Ft(di-)988 3328 y(rectory)-5 b(,)18 b(178)656
-3428 y Fp(mydirectory/mysu)o(bd)o(ire)o(ct)o(ory)o(/.)o(de)o(sc)988
-3527 y Ft(directory)-5 b(,)18 b(178)656 3627 y Fp(mydirectory/mysu)o
+Black 656 531 a Fp(MhOnArc)18 b Ft(\002le,)i(21)656 631
+y Fp(mhonarc)e Ft(\002le,)i(75)656 731 y Fp(mhonarc-ressourc)o(es)14
+b Ft(\002le,)21 b(75)656 831 y(MIME,)e(14)656 931 y Fp(MIME-Base64)d
+Ft(perl)k(module,)f(25)656 1031 y Fp(MIME-tools)d Ft(perl)k(module,)f
+(25)656 1131 y Fp(minimum)p 969 1131 27 4 v 28 w(bouncing)p
+1349 1131 V 28 w(count)157 b Ft(con\002-)988 1231 y(guration)131
+b(k)o(e)o(yw)o(ord,)f(51,)988 1330 y(186)656 1430 y Fp(minimum)p
+969 1430 V 28 w(bouncing)p 1349 1430 V 28 w(period)30
+b Ft(con\002gu-)988 1530 y(ration)19 b(k)o(e)o(yw)o(ord,)g(51,)g(186)
+656 1630 y Fp(misaddressed)p 1189 1630 V 26 w(commands)39
+b Ft(con\002gura-)988 1729 y(tion)20 b(k)o(e)o(yw)o(ord,)e(43)656
+1829 y Fp(misaddressed)p 1189 1829 V 26 w(commands)p
+1567 1829 V 28 w(regexp)988 1929 y Ft(con\002guration)f(k)o(e)o(yw)o
+(ord,)i(43)656 2029 y(mod)p 810 2029 25 4 v 28 w(f)o(astcgi,)h(71)656
+2129 y Fp(~model)41 b(type.model.task)15 b Ft(\002le,)20
+b(119)656 2229 y(moderation,)e(46,)h(48,)h(122,)f(147,)g(201)656
+2329 y(moderator)m(,)e(147,)i(201)656 2429 y Fp(MODINDEX)e
+Ft(mail)k(command,)d(48,)h(201)656 2529 y Fp(msg/)g Ft(directory)-5
+b(,)18 b(21)656 2629 y Fp(msg)p 793 2629 27 4 v 30 w(count)h
+Ft(\002le,)h(186)656 2729 y Fp(Msql-Mysql-modul)o(es)45
+b Ft(perl)51 b(module,)988 2828 y(60)656 2928 y Fp(multiple)17
+b Ft(\002le,)k(134)656 3028 y Fp(my)p 749 3028 V 30 w(family)e
+Ft(\002le,)h(143)656 3128 y Fp(my)p 749 3128 V 30 w(file.xml)e
+Ft(\002le,)i(135,)g(143)656 3228 y Fp(my)p 749 3228 V
+30 w(robot)f Ft(\002le,)i(135,)e(143)656 3328 y Fp(mydirectory)d
+Ft(directory)-5 b(,)18 b(181)656 3428 y Fp(mydirectory/mysu)o(bd)o(ire)
+o(ct)o(ory)54 b Ft(di-)988 3528 y(rectory)-5 b(,)18 b(178)656
+3627 y Fp(mydirectory/mysu)o(bd)o(ire)o(ct)o(ory)o(/.)o(de)o(sc)988
+3727 y Ft(directory)-5 b(,)18 b(178)656 3827 y Fp(mydirectory/mysu)o
 (bd)o(ire)o(ct)o(ory)o(/.)o(de)o(sc.)o(my)o(fil)o(e.)o(my)o(ext)o(en)o
-(sio)o(n)988 3727 y Ft(directory)-5 b(,)18 b(178)656
-3827 y Fp(mydirectory/mysu)o(bd)o(ire)o(ct)o(ory)o(/m)o(yf)o(ile)988
-3926 y Ft(directory)-5 b(,)18 b(181)656 4026 y Fp(mydirectory/mysu)o
+(sio)o(n)988 3927 y Ft(directory)-5 b(,)18 b(178)656
+4027 y Fp(mydirectory/mysu)o(bd)o(ire)o(ct)o(ory)o(/m)o(yf)o(ile)988
+4126 y Ft(directory)-5 b(,)18 b(181)656 4226 y Fp(mydirectory/mysu)o
 (bd)o(ire)o(ct)o(ory)o(/m)o(yf)o(ile)o(.m)o(yex)o(te)o(ns)o(ion)988
-4126 y Ft(directory)-5 b(,)18 b(178)656 4226 y Fp(myfile)g
-Ft(directory)-5 b(,)18 b(181)656 4326 y(MySQL,)i(15,)f(24,)h(30,)f(66)
-656 4426 y Fp(mysubdirectory)c Ft(directory)-5 b(,)18
-b(181)656 4614 y Fp(name)h Ft(list)i(parameter)m(,)d(154)656
-4714 y Fp(negative)p 1013 4714 V 28 w(regexp)26 b Ft(con\002guration)f
-(k)o(e)o(y-)988 4814 y(w)o(ord,)19 b(92,)h(94)656 4914
+4326 y Ft(directory)-5 b(,)18 b(178)656 4426 y Fp(myfile)g
+Ft(directory)-5 b(,)18 b(181)656 4526 y(MySQL,)i(15,)f(24,)h(30,)f(66)
+656 4626 y Fp(mysubdirectory)c Ft(directory)-5 b(,)18
+b(181)656 4814 y Fp(name)h Ft(list)i(parameter)m(,)d(154)656
+4914 y Fp(negative)p 1013 4914 V 28 w(regexp)26 b Ft(con\002guration)f
+(k)o(e)o(y-)988 5014 y(w)o(ord,)19 b(92,)h(94)656 5114
 y Fp(Net)42 b(:)h(:LDAP)38 b Ft(perl)h(module,)f(26,)g(155,)988
-5013 y(156)656 5113 y(Net)21 b(:)f(:LD)m(APS,)h(96,)e(98,)h(99)656
-5213 y Fp(newaliases)c Ft(UNIX)21 b(command,)d(34,)h(35)656
-5313 y Fp(Notification)d Ft(list)21 b(parameter)m(,)d(170)656
-5413 y Fp(nrcpt)h Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(43)p
-Black Black 2233 531 a Fp(open)h Ft(con\002guration)f(k)o(e)o(yw)o
-(ord,)g(131)2233 631 y Fp(open)h Ft(\002le,)i(135)2233
-731 y Fp(openSSL)d Ft(UNIX)i(command,)e(193)2233 831
-y Fp(openSSL)g Ft(con\002guration)g(k)o(e)o(yw)o(ord,)g(193)2233
-931 y Fp(openssl)g Ft(con\002guration)g(k)o(e)o(yw)o(ord,)g(56)2233
-1031 y(Oracle,)i(15,)g(24)2233 1131 y Fp(other)p 2458
-1131 V 30 w(email)e Ft(list)k(parameter)m(,)c(165)2233
-1231 y Fp(outgoing/)f Ft(directory)-5 b(,)18 b(21)2233
-1331 y(o)n(wner)m(,)h(34)2233 1431 y Fp(owner)g Ft(\002le,)i(134)2233
-1531 y Fp(owner)e Ft(list)i(parameter)m(,)d(147\226149,)f(169)2233
-1631 y Fp(owner)p 2458 1631 V 30 w(include)56 b Ft(list)k(parameter)m
-(,)c(20,)2565 1730 y(124,)19 b(147,)g(148,)h(150)2233
-1830 y Fp(owner)p 2458 1830 V 30 w(priority)47 b Ft(con\002guration)g
-(k)o(e)o(y-)2565 1930 y(w)o(ord,)20 b(53)2233 2118 y
-Fp(p12topem.pl)39 b(-help)82 b Ft(UNIX)i(com-)2565 2218
-y(mand,)19 b(195)2233 2318 y Fp(param)g Ft(\002le,)i(124,)e(150)2233
-2418 y(param)p 2447 2418 25 4 v 29 w(constraint.conf,)e(142)2233
-2518 y Fp(param)p 2458 2518 27 4 v 30 w(constraint.conf)49
-b Ft(\002le,)56 b(140,)2565 2617 y(142)2233 2717 y Fp(passwd)19
-b Ft(list)i(parameter)m(,)d(154\226156,)f(158)2233 2817
+5213 y(156)656 5313 y(Net)21 b(:)f(:LD)m(APS,)h(96,)e(98,)h(99)656
+5413 y Fp(newaliases)c Ft(UNIX)21 b(command,)d(34,)h(35)p
+Black Black 2233 531 a Fp(Notification)d Ft(list)21 b(parameter)m(,)d
+(170)2233 633 y Fp(nrcpt)h Ft(con\002guration)e(k)o(e)o(yw)o(ord,)i(43)
+2233 849 y Fp(open)g Ft(con\002guration)f(k)o(e)o(yw)o(ord,)g(131)2233
+951 y Fp(open)h Ft(\002le,)i(135)2233 1052 y Fp(openSSL)d
+Ft(UNIX)i(command,)e(193)2233 1154 y Fp(openSSL)g Ft(con\002guration)g
+(k)o(e)o(yw)o(ord,)g(193)2233 1256 y Fp(openssl)g Ft(con\002guration)g
+(k)o(e)o(yw)o(ord,)g(56)2233 1357 y(Oracle,)i(15,)g(24)2233
+1459 y Fp(other)p 2458 1459 V 30 w(email)e Ft(list)k(parameter)m(,)c
+(165)2233 1560 y Fp(outgoing/)f Ft(directory)-5 b(,)18
+b(21)2233 1662 y(o)n(wner)m(,)h(34)2233 1763 y Fp(owner)g
+Ft(\002le,)i(134)2233 1865 y Fp(owner)e Ft(list)i(parameter)m(,)d
+(147\226149,)f(169)2233 1966 y Fp(owner)p 2458 1966 V
+30 w(include)56 b Ft(list)k(parameter)m(,)c(20,)2565
+2066 y(124,)19 b(147,)g(148,)h(150)2233 2168 y Fp(owner)p
+2458 2168 V 30 w(priority)47 b Ft(con\002guration)g(k)o(e)o(y-)2565
+2267 y(w)o(ord,)20 b(53)2233 2484 y Fp(p12topem.pl)39
+b(-help)82 b Ft(UNIX)i(com-)2565 2583 y(mand,)19 b(195)2233
+2685 y Fp(param)g Ft(\002le,)i(124,)e(150)2233 2786 y(param)p
+2447 2786 25 4 v 29 w(constraint.conf,)e(142)2233 2888
+y Fp(param)p 2458 2888 27 4 v 30 w(constraint.conf)49
+b Ft(\002le,)56 b(140,)2565 2988 y(142)2233 3089 y Fp(passwd)19
+b Ft(list)i(parameter)m(,)d(154\226156,)f(158)2233 3191
 y Fp(password)h Ft(con\002guration)f(k)o(e)o(yw)o(ord,)h(194)2233
-2917 y Fp(path)h Ft(list)j(parameter)m(,)c(153)2233 3017
+3292 y Fp(path)h Ft(list)j(parameter)m(,)c(153)2233 3394
 y Fp(pending)26 b Ft(con\002guration)f(k)o(e)o(yw)o(ord,)h(131,)2565
-3117 y(136)2233 3217 y Fp(period)19 b Ft(list)i(parameter)m(,)d(172)
-2233 3316 y Fp(pidfile)g Ft(con\002guration)g(k)o(e)o(yw)o(ord,)g(41)
-2233 3416 y Fp(port)h Ft(list)j(parameter)m(,)c(153,)h(155,)g(156)2233
-3516 y(post\002x,)h(44)2233 3616 y Fp(postfix)g Ft(UNIX)j(command,)d
-(14,)i(24,)f(33,)2565 3716 y(36)2233 3816 y Fp(postfix)p
-2546 3816 V 29 w(manager.pl)16 b Ft(\002le,)21 b(28)2233
-3916 y(PostgreSQL,)f(15,)f(24)2233 4016 y Fp(priority)f
-Ft(list)j(parameter)m(,)d(169)2233 4116 y Fp(private)g
-Ft(list)j(parameter)m(,)e(14)2233 4216 y Fp(private)p
-2546 4216 V 29 w(key)33 b Ft(con\002guration)e(k)o(e)o(yw)o(ord,)2565
-4315 y(195)2233 4415 y Fp(privateoreditorke)o(y)20 b
-Ft(list)26 b(parameter)m(,)2565 4515 y(14,)20 b(148)2233
-4615 y Fp(process)p 2546 4615 V 29 w(bouncers)155 b Ft(con\002guration)
-2565 4714 y(k)o(e)o(yw)o(ord,)18 b(186)2233 4814 y Fp(process)p
-2546 4814 V 29 w(bouncers)p 2927 4814 V 28 w(task)53
-b Ft(con\002gura-)2565 4914 y(tion)20 b(k)o(e)o(yw)o(ord,)e(51)2233
-5014 y Fp(profile)g Ft(list)j(parameter)m(,)e(149,)g(150)2233
-5114 y Fp(purge)p 2458 5114 V 30 w(orphan)p 2752 5114
-V 29 w(bounces)p 3089 5114 V 28 w(task)38 b Ft(con\002-)2565
-5213 y(guration)19 b(k)o(e)o(yw)o(ord,)f(51)2233 5313
-y Fp(purge)p 2458 5313 V 30 w(user)p 2664 5313 V 29 w(table)p
-2913 5313 V 30 w(task)65 b Ft(con\002gura-)2565 5413
-y(tion)20 b(k)o(e)o(yw)o(ord,)e(55)p Black Black eop
+3493 y(136)2233 3595 y Fp(period)19 b Ft(list)i(parameter)m(,)d(172)
+2233 3696 y Fp(pidfile)g Ft(con\002guration)g(k)o(e)o(yw)o(ord,)g(41)
+2233 3798 y Fp(port)h Ft(list)j(parameter)m(,)c(153,)h(155,)g(156)2233
+3899 y(post\002x,)h(44)2233 4001 y Fp(postfix)g Ft(UNIX)j(command,)d
+(14,)i(24,)f(33,)2565 4101 y(36)2233 4202 y Fp(postfix)p
+2546 4202 V 29 w(manager.pl)16 b Ft(\002le,)21 b(28)2233
+4304 y(PostgreSQL,)f(15,)f(24)2233 4405 y Fp(priority)f
+Ft(list)j(parameter)m(,)d(169)2233 4507 y Fp(private)g
+Ft(list)j(parameter)m(,)e(14)2233 4608 y Fp(private)p
+2546 4608 V 29 w(key)33 b Ft(con\002guration)e(k)o(e)o(yw)o(ord,)2565
+4708 y(195)2233 4810 y Fp(privateoreditorke)o(y)20 b
+Ft(list)26 b(parameter)m(,)2565 4909 y(14,)20 b(148)2233
+5011 y Fp(process)p 2546 5011 V 29 w(bouncers)155 b Ft(con\002guration)
+2565 5110 y(k)o(e)o(yw)o(ord,)18 b(186)2233 5212 y Fp(process)p
+2546 5212 V 29 w(bouncers)p 2927 5212 V 28 w(task)53
+b Ft(con\002gura-)2565 5311 y(tion)20 b(k)o(e)o(yw)o(ord,)e(51)2233
+5413 y Fp(profile)g Ft(list)j(parameter)m(,)e(149,)g(150)p
+Black Black eop
 %%Page: 211 211
 211 210 bop Black 232 241 a Fo(INDEX)2481 b Ft(211)p
-Black 232 531 a(Qmail,)21 b(44)232 631 y Fp(qmail)e Ft(UNIX)h(command,)
-e(14,)i(24,)f(33)232 731 y Fp(queue)g Ft(con\002guration)f(k)o(e)o(yw)o
-(ord,)g(46,)h(48)232 831 y Fp(queue)g Ft(\002le,)i(21,)e(27,)h(28,)f
-(33,)h(46)232 931 y Fp(queueauth)d Ft(con\002guration)g(k)o(e)o(yw)o
-(ord,)g(47)232 1031 y Fp(queuebounce)24 b Ft(con\002guration)h(k)o(e)o
-(yw)o(ord,)565 1131 y(47)232 1231 y Fp(queuebounce)17
-b Ft(directory)-5 b(,)17 b(35)232 1331 y Fp(queuedigest)24
-b Ft(con\002guration)h(k)o(e)o(yw)o(ord,)565 1430 y(47)232
-1530 y Fp(queuedistribute)17 b Ft(con\002guration)i(k)o(e)o(y-)565
-1630 y(w)o(ord,)g(46)232 1730 y Fp(queueexpire)24 b Ft(con\002guration)
-h(k)o(e)o(yw)o(ord,)565 1829 y(47)232 1929 y Fp(queuemod)g
-Ft(con\002guration)f(k)o(e)o(yw)o(ord,)i(46,)565 2029
-y(48)232 2129 y Fp(queueoutgoing)61 b Ft(con\002guration)i(k)o(e)o(y-)
-565 2228 y(w)o(ord,)19 b(47)232 2328 y Fp(queuetask)e
-Ft(con\002guration)g(k)o(e)o(yw)o(ord,)g(47)232 2428
-y Fp(QUIET)i Ft(mail)i(command,)c(200,)j(201)232 2528
-y Fp(QUIET)42 b(ADD)19 b Ft(mail)i(command,)d(200)232
-2628 y Fp(QUIET)42 b(DELETE)18 b Ft(mail)j(command,)d(200)232
-2728 y Fp(QUIT)i Ft(mail)g(command,)e(199,)h(201)232
-2828 y Fp(quota)g Ft(list)i(parameter)m(,)e(165,)g(173)232
-3016 y Fp(rate)h Ft(list)h(parameter)m(,)d(52,)h(170)232
-3116 y(RDBMS,)j(15,)d(24)232 3216 y Fp(reception)68 b
-Ft(con\002guration)h(k)o(e)o(yw)o(ord,)565 3316 y(168)232
-3416 y Fp(reception)35 b Ft(list)k(parameter)m(,)c(123,)i(168,)565
-3515 y(198,)19 b(199)232 3615 y Fp(reception)40 b(nomail)67
-b Ft(list)j(parameter)m(,)565 3715 y(149,)19 b(150)232
-3815 y Fp(regex1)g Ft(list)i(parameter)m(,)d(157)232
-3915 y Fp(regex2)h Ft(list)i(parameter)m(,)d(157)232
-4015 y Fp(regexp)h Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(92,)i(94)
-232 4114 y Fp(Regularity)40 b(rate)21 b Ft(con\002guration)e(k)o(e)o
-(y-)565 4214 y(w)o(ord,)g(186)232 4314 y Fp(REJECT)g
-Ft(mail)h(command,)e(125,)h(127,)g(201)232 4414 y Fp(reject)g
-Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(136)232 4514
-y Fp(RELEASE)p 545 4514 27 4 v 29 w(NOTES)h Ft(\002le,)h(17,)g(23)232
-4614 y Fp(REMIND)f Ft(mail)h(command,)e(127,)h(200)232
-4714 y Fp(remind)g Ft(list)i(parameter)m(,)d(161)232
-4814 y Fp(remind)h Ft(mail)h(command,)e(161)232 4914
-y Fp(REMIND)42 b(*)20 b Ft(mail)g(command,)e(112,)h(113)232
-5014 y Fp(remind.annual.tas)o(k)c Ft(\002le,)20 b(117)232
-5114 y Fp(remind.semestrial)o(.ta)o(sk)14 b Ft(\002le,)21
-b(117)232 5213 y Fp(remind.tt2)c Ft(\002le,)k(128)232
-5313 y Fp(remind)p 501 5313 V 29 w(return)p 794 5313
-V 29 w(path)83 b Ft(con\002guration)565 5413 y(k)o(e)o(yw)o(ord,)18
-b(50,)h(171)p Black Black 1810 531 a Fp(remind)p 2079
-531 V 29 w(return)p 2372 531 V 29 w(path)36 b Ft(list)i(parameter)m(,)
-2142 631 y(171)1810 731 y Fp(remote)p 2079 731 V 29 w(host)19
-b Ft(list)i(parameter)m(,)d(153)1810 831 y Fp(remove)p
-2079 831 V 29 w(headers)47 b Ft(con\002guration)g(k)o(e)o(y-)2142
-930 y(w)o(ord,)19 b(44)1810 1030 y Fp(Reply-To)40 b(:)20
-b Ft(header)m(,)f(165)1810 1130 y Fp(reply)p 2035 1130
-V 29 w(to)p 2152 1130 V 31 w(header)f Ft(list)j(parameter)m(,)d(165)
-1810 1230 y Fp(request)p 2123 1230 V 28 w(priority)156
-b Ft(con\002guration)2142 1330 y(k)o(e)o(yw)o(ord,)18
-b(52)1810 1430 y Fp(REVIEW)24 b Ft(mail)j(command,)d(15,)i(123,)f(163,)
-2142 1530 y(168,)19 b(197\226199)1810 1629 y Fp(review)f
-Ft(list)j(parameter)m(,)e(163,)g(198)1810 1729 y(rfc2369-header)n
-(-\002elds,)c(166)1810 1829 y Fp(rfc2369)p 2123 1829
-V 28 w(header)p 2415 1829 V 29 w(fields)53 b Ft(con\002gura-)2142
-1929 y(tion)20 b(k)o(e)o(yw)o(ord,)e(44,)i(166)1810 2029
-y Fp(rfc2369)p 2123 2029 V 28 w(header)p 2415 2029 V
-29 w(fields)60 b Ft(list)i(para-)2142 2129 y(meter)m(,)19
-b(166)1810 2229 y(robot)g(aliases,)i(33)1810 2328 y Fp(robot.conf)16
-b Ft(\002le,)21 b(21,)f(76,)f(78,)h(108,)f(148)1810 2517
+Black 232 531 a Fp(purge)p 457 531 27 4 v 30 w(orphan)p
+751 531 V 29 w(bounces)p 1088 531 V 28 w(task)39 b Ft(con\002-)565
+631 y(guration)18 b(k)o(e)o(yw)o(ord,)g(51)232 731 y
+Fp(purge)p 457 731 V 30 w(user)p 663 731 V 30 w(table)p
+913 731 V 29 w(task)65 b Ft(con\002gura-)565 831 y(tion)19
+b(k)o(e)o(yw)o(ord,)g(55)232 1022 y(Qmail,)i(44)232 1122
+y Fp(qmail)e Ft(UNIX)h(command,)e(14,)i(24,)f(33)232
+1222 y Fp(queue)g Ft(con\002guration)f(k)o(e)o(yw)o(ord,)g(46,)h(48)232
+1322 y Fp(queue)g Ft(\002le,)i(21,)e(27,)h(28,)f(33,)h(46)232
+1422 y Fp(queueauth)d Ft(con\002guration)g(k)o(e)o(yw)o(ord,)g(47)232
+1523 y Fp(queuebounce)24 b Ft(con\002guration)h(k)o(e)o(yw)o(ord,)565
+1622 y(47)232 1722 y Fp(queuebounce)17 b Ft(directory)-5
+b(,)17 b(35)232 1822 y Fp(queuedigest)24 b Ft(con\002guration)h(k)o(e)o
+(yw)o(ord,)565 1922 y(47)232 2022 y Fp(queuedistribute)17
+b Ft(con\002guration)i(k)o(e)o(y-)565 2122 y(w)o(ord,)g(46)232
+2222 y Fp(queueexpire)24 b Ft(con\002guration)h(k)o(e)o(yw)o(ord,)565
+2321 y(47)232 2422 y Fp(queuemod)g Ft(con\002guration)f(k)o(e)o(yw)o
+(ord,)i(46,)565 2521 y(48)232 2621 y Fp(queueoutgoing)61
+b Ft(con\002guration)i(k)o(e)o(y-)565 2721 y(w)o(ord,)19
+b(47)232 2821 y Fp(queuetask)e Ft(con\002guration)g(k)o(e)o(yw)o(ord,)g
+(47)232 2921 y Fp(QUIET)i Ft(mail)i(command,)c(200,)j(201)232
+3021 y Fp(QUIET)42 b(ADD)19 b Ft(mail)i(command,)d(200)232
+3121 y Fp(QUIET)42 b(DELETE)18 b Ft(mail)j(command,)d(200)232
+3221 y Fp(QUIT)i Ft(mail)g(command,)e(199,)h(201)232
+3322 y Fp(quota)g Ft(list)i(parameter)m(,)e(165,)g(173)232
+3513 y Fp(rate)h Ft(list)h(parameter)m(,)d(52,)h(170)232
+3613 y(RDBMS,)j(15,)d(24)232 3713 y Fp(reception)68 b
+Ft(con\002guration)h(k)o(e)o(yw)o(ord,)565 3813 y(168)232
+3913 y Fp(reception)35 b Ft(list)k(parameter)m(,)c(123,)i(168,)565
+4012 y(198,)19 b(199)232 4113 y Fp(reception)40 b(nomail)67
+b Ft(list)j(parameter)m(,)565 4212 y(149,)19 b(150)232
+4312 y Fp(regex1)g Ft(list)i(parameter)m(,)d(157)232
+4412 y Fp(regex2)h Ft(list)i(parameter)m(,)d(157)232
+4513 y Fp(regexp)h Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(92,)i(94)
+232 4613 y Fp(Regularity)40 b(rate)21 b Ft(con\002guration)e(k)o(e)o
+(y-)565 4712 y(w)o(ord,)g(186)232 4812 y Fp(REJECT)g
+Ft(mail)h(command,)e(125,)h(127,)g(201)232 4912 y Fp(reject)g
+Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(136)232 5013
+y Fp(RELEASE)p 545 5013 V 29 w(NOTES)h Ft(\002le,)h(17,)g(23)232
+5113 y Fp(REMIND)f Ft(mail)h(command,)e(127,)h(200)232
+5213 y Fp(remind)g Ft(list)i(parameter)m(,)d(161)232
+5313 y Fp(remind)h Ft(mail)h(command,)e(161)232 5413
+y Fp(REMIND)42 b(*)20 b Ft(mail)g(command,)e(112,)h(113)p
+Black Black 1810 531 a Fp(remind.annual.ta)o(sk)14 b
+Ft(\002le,)21 b(117)1810 633 y Fp(remind.semestria)o(l.)o(tas)o(k)15
+b Ft(\002le,)20 b(117)1810 735 y Fp(remind.tt2)c Ft(\002le,)21
+b(128)1810 837 y Fp(remind)p 2079 837 V 29 w(return)p
+2372 837 V 29 w(path)82 b Ft(con\002guration)2142 937
+y(k)o(e)o(yw)o(ord,)18 b(50,)i(171)1810 1038 y Fp(remind)p
+2079 1038 V 29 w(return)p 2372 1038 V 29 w(path)36 b
+Ft(list)i(parameter)m(,)2142 1138 y(171)1810 1240 y Fp(remote)p
+2079 1240 V 29 w(host)19 b Ft(list)i(parameter)m(,)d(153)1810
+1342 y Fp(remove)p 2079 1342 V 29 w(headers)47 b Ft(con\002guration)g
+(k)o(e)o(y-)2142 1441 y(w)o(ord,)19 b(44)1810 1543 y
+Fp(Reply-To)40 b(:)20 b Ft(header)m(,)f(165)1810 1645
+y Fp(reply)p 2035 1645 V 29 w(to)p 2152 1645 V 31 w(header)f
+Ft(list)j(parameter)m(,)d(165)1810 1747 y Fp(request)p
+2123 1747 V 28 w(priority)156 b Ft(con\002guration)2142
+1847 y(k)o(e)o(yw)o(ord,)18 b(52)1810 1949 y Fp(REVIEW)24
+b Ft(mail)j(command,)d(15,)i(123,)f(163,)2142 2048 y(168,)19
+b(197\226199)1810 2150 y Fp(review)f Ft(list)j(parameter)m(,)e(163,)g
+(198)1810 2252 y(rfc2369-header)n(-\002elds,)c(166)1810
+2354 y Fp(rfc2369)p 2123 2354 V 28 w(header)p 2415 2354
+V 29 w(fields)53 b Ft(con\002gura-)2142 2453 y(tion)20
+b(k)o(e)o(yw)o(ord,)e(44,)i(166)1810 2555 y Fp(rfc2369)p
+2123 2555 V 28 w(header)p 2415 2555 V 29 w(fields)60
+b Ft(list)i(para-)2142 2655 y(meter)m(,)19 b(166)1810
+2757 y(robot)g(aliases,)i(33)1810 2859 y Fp(robot.conf)16
+b Ft(\002le,)21 b(21,)f(76,)f(78,)h(108,)f(148)1810 3081
 y Fp(sample)f Ft(directory)-5 b(,)18 b(116,)h(121)1810
-2617 y Fp(sample/)f Ft(directory)-5 b(,)18 b(21,)h(27)1810
-2717 y Fp(scenari)f Ft(directory)-5 b(,)18 b(40)1810
-2817 y Fp(scenari/subscrib)o(e.)o(ren)o(ne)o(s1)64 b
-Ft(\002le,)2142 2916 y(104)1810 3016 y(scenario,)19 b(101)1810
-3116 y Fp(scope)g Ft(list)i(parameter)m(,)d(155)1810
-3216 y Fp(scope1)g Ft(list)j(parameter)m(,)e(157)1810
-3316 y Fp(scope2)f Ft(list)j(parameter)m(,)e(157)1810
-3416 y Fp(script)f Ft(directory)-5 b(,)18 b(76)1810 3516
-y Fp(script/)g Ft(directory)-5 b(,)18 b(60)1810 3616
-y Fp(select)g Ft(list)j(parameter)m(,)e(155)1810 3716
-y Fp(select1)f Ft(list)j(parameter)m(,)d(156)1810 3816
-y Fp(select2)g Ft(list)j(parameter)m(,)d(157)1810 3916
-y Fp(selected)p 2167 3916 V 28 w(color)48 b Ft(con\002guration)f(k)o(e)
-o(y-)2142 4015 y(w)o(ord,)19 b(39,)h(109)1810 4115 y
+3183 y Fp(sample/)f Ft(directory)-5 b(,)18 b(21,)h(27)1810
+3285 y Fp(scenari)f Ft(directory)-5 b(,)18 b(40)1810
+3387 y Fp(scenari/subscrib)o(e.)o(ren)o(ne)o(s1)64 b
+Ft(\002le,)2142 3486 y(104)1810 3588 y(scenario,)19 b(101)1810
+3690 y Fp(scope)g Ft(list)i(parameter)m(,)d(155)1810
+3792 y Fp(scope1)g Ft(list)j(parameter)m(,)e(157)1810
+3894 y Fp(scope2)f Ft(list)j(parameter)m(,)e(157)1810
+3996 y Fp(script)f Ft(directory)-5 b(,)18 b(76)1810 4098
+y Fp(script/)g Ft(directory)-5 b(,)18 b(60)1810 4200
+y Fp(select)g Ft(list)j(parameter)m(,)e(155)1810 4301
+y Fp(select1)f Ft(list)j(parameter)m(,)d(156)1810 4403
+y Fp(select2)g Ft(list)j(parameter)m(,)d(157)1810 4505
+y Fp(selected)p 2167 4505 V 28 w(color)48 b Ft(con\002guration)f(k)o(e)
+o(y-)2142 4605 y(w)o(ord,)19 b(39,)h(109)1810 4707 y
 Fp(send)f Ft(list)h(parameter)m(,)e(14,)h(148,)g(162,)f(163,)2142
-4215 y(200,)h(201)1810 4315 y Fp(send)42 b(private)85
-b Ft(con\002guration)f(k)o(e)o(y-)2142 4415 y(w)o(ord,)19
-b(101)1810 4514 y Fp(sendmail)40 b Ft(UNIX)j(command,)e(14,)i(24,)2142
-4614 y(33,)20 b(36,)f(43)1810 4714 y Fp(sendmail)e Ft(con\002guration)h
-(k)o(e)o(yw)o(ord,)g(44)1810 4814 y Fp(sendmail.mc)e
-Ft(\002le,)21 b(35,)e(44)1810 4914 y Fp(sendmail)p 2167
-4914 V 28 w(alias)48 b Ft(con\002guration)f(k)o(e)o(y-)2142
-5014 y(w)o(ord,)19 b(44)1810 5114 y(SENDMAIL)p 2245 5114
-25 4 v 29 w(ALIASES,)g(35)1810 5213 y Fp(sendmail)p 2167
-5213 27 4 v 28 w(args)70 b Ft(con\002guration)f(k)o(e)o(y-)2142
-5313 y(w)o(ord,)19 b(44)1810 5413 y Fp(SET)g Ft(mail)i(command,)d
-(198\226200)p Black Black eop
+4806 y(200,)h(201)1810 4908 y Fp(send)42 b(private)85
+b Ft(con\002guration)f(k)o(e)o(y-)2142 5008 y(w)o(ord,)19
+b(101)1810 5110 y Fp(sendmail)40 b Ft(UNIX)j(command,)e(14,)i(24,)2142
+5209 y(33,)20 b(36,)f(43)1810 5311 y Fp(sendmail)e Ft(con\002guration)h
+(k)o(e)o(yw)o(ord,)g(44)1810 5413 y Fp(sendmail.mc)e
+Ft(\002le,)21 b(35,)e(44)p Black Black eop
 %%Page: 212 212
 212 211 bop Black 656 241 a Ft(212)2480 b Fo(INDEX)p
-Black 656 531 a Ft(set-uid-on-e)o(x)o(ec)17 b(bit,)j(28)656
-634 y Fp(SET)42 b(LISTNAME)e(CONCEAL)46 b Ft(mail)i(com-)988
-733 y(mand,)19 b(199)656 836 y Fp(SET)42 b(LISTNAME)e(MAIL)24
-b Ft(mail)h(command,)988 935 y(123,)19 b(198,)g(199)656
-1038 y Fp(SET)42 b(LISTNAME)e(NOCONCEAL)177 b Ft(mail)988
-1137 y(command,)18 b(199)656 1240 y Fp(SET)42 b(LISTNAME)e(NOMAIL)68
-b Ft(mail)i(com-)988 1339 y(mand,)19 b(123,)g(199)656
-1442 y Fp(SET)42 b(LISTNAME)e(SUMMARY)46 b Ft(mail)i(com-)988
-1541 y(mand,)19 b(123)656 1644 y Fp(shaded)p 925 1644
-27 4 v 29 w(color)92 b Ft(con\002guration)e(k)o(e)o(y-)988
-1743 y(w)o(ord,)19 b(39,)h(109)656 1846 y(shared,)f(163,)g(177)656
-1948 y Fp(shared)f Ft(directory)-5 b(,)18 b(164,)h(179\226181)656
-2051 y Fp(SIG)g Ft(mail)i(command,)d(125)656 2153 y Fp(SIGNOFF)g
-Ft(mail)i(command,)e(198,)h(200)656 2255 y Fp(SIGNOFF)41
-b(*)20 b Ft(mail)g(command,)e(198)656 2358 y Fp(sleep)h
-Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(48)656 2460
+Black 656 531 a Fp(sendmail)p 1013 531 27 4 v 28 w(alias)48
+b Ft(con\002guration)f(k)o(e)o(y-)988 631 y(w)o(ord,)19
+b(44)656 733 y(SENDMAIL)p 1091 733 25 4 v 29 w(ALIASES,)g(35)656
+836 y Fp(sendmail)p 1013 836 27 4 v 28 w(args)70 b Ft(con\002guration)f
+(k)o(e)o(y-)988 935 y(w)o(ord,)19 b(44)656 1038 y Fp(SET)g
+Ft(mail)i(command,)d(198\226200)656 1140 y(set-uid-on-e)o(x)o(ec)f
+(bit,)j(28)656 1243 y Fp(SET)42 b(LISTNAME)e(CONCEAL)46
+b Ft(mail)i(com-)988 1342 y(mand,)19 b(199)656 1445 y
+Fp(SET)42 b(LISTNAME)e(MAIL)24 b Ft(mail)h(command,)988
+1544 y(123,)19 b(198,)g(199)656 1647 y Fp(SET)42 b(LISTNAME)e
+(NOCONCEAL)177 b Ft(mail)988 1746 y(command,)18 b(199)656
+1849 y Fp(SET)42 b(LISTNAME)e(NOMAIL)68 b Ft(mail)i(com-)988
+1948 y(mand,)19 b(123,)g(199)656 2051 y Fp(SET)42 b(LISTNAME)e(SUMMARY)
+46 b Ft(mail)i(com-)988 2150 y(mand,)19 b(123)656 2253
+y Fp(shaded)p 925 2253 V 29 w(color)92 b Ft(con\002guration)e(k)o(e)o
+(y-)988 2352 y(w)o(ord,)19 b(39,)h(109)656 2455 y(shared,)f(163,)g(177)
+656 2557 y Fp(shared)f Ft(directory)-5 b(,)18 b(164,)h(179\226181)656
+2659 y Fp(SIG)g Ft(mail)i(command,)d(125)656 2762 y Fp(SIGNOFF)g
+Ft(mail)i(command,)e(198,)h(200)656 2864 y Fp(SIGNOFF)41
+b(*)20 b Ft(mail)g(command,)e(198)656 2967 y Fp(sleep)h
+Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(48)656 3069
 y Fp(smime)h Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(89,)i(101)656
-2563 y Fp(smtp)f Ft(con\002guration)e(k)o(e)o(yw)o(ord,)i(89,)g(101)656
-2665 y Fp(soap)p 837 2665 V 30 w(url)30 b Ft(con\002guration)f(k)o(e)o
-(yw)o(ord,)g(38,)988 2765 y(78,)19 b(108)656 2867 y Fp(source)41
-b(myfile)18 b Ft(list)k(parameter)m(,)c(150)656 2969
-y Fp(source)p 925 2969 V 29 w(parameter)71 b Ft(list)76
-b(parameter)m(,)988 3069 y(124,)19 b(150)656 3171 y Fp(source)p
-925 3171 V 29 w(parameters)39 b(a,b,c)k Ft(list)i(pa-)988
-3271 y(rameter)m(,)19 b(150)656 3373 y(spam)p 837 3373
-25 4 v 29 w(protection,)f(38,)i(174)656 3476 y Fp(spam)p
-837 3476 27 4 v 30 w(protection)k Ft(con\002guration)h(k)o(e)o(y-)988
-3575 y(w)o(ord,)19 b(38,)h(39,)f(174)656 3678 y(spool,)g(46\22648,)f
-(201)656 3780 y Fp(spool)h Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(46)
-656 3883 y(SQL,)i(13,)g(15,)f(124,)g(151,)g(152)656 3985
-y Fp(sql)p 793 3985 V 30 w(query)g Ft(list)i(parameter)m(,)d(154)656
-4087 y Fp(src/)h Ft(directory)-5 b(,)18 b(27)656 4190
+3171 y Fp(smtp)f Ft(con\002guration)e(k)o(e)o(yw)o(ord,)i(89,)g(101)656
+3274 y Fp(soap)p 837 3274 V 30 w(url)30 b Ft(con\002guration)f(k)o(e)o
+(yw)o(ord,)g(38,)988 3373 y(78,)19 b(108)656 3476 y Fp(source)41
+b(myfile)18 b Ft(list)k(parameter)m(,)c(150)656 3578
+y Fp(source)p 925 3578 V 29 w(parameter)71 b Ft(list)76
+b(parameter)m(,)988 3678 y(124,)19 b(150)656 3780 y Fp(source)p
+925 3780 V 29 w(parameters)39 b(a,b,c)k Ft(list)i(pa-)988
+3880 y(rameter)m(,)19 b(150)656 3982 y(spam)p 837 3982
+25 4 v 29 w(protection,)f(38,)i(174)656 4085 y Fp(spam)p
+837 4085 27 4 v 30 w(protection)k Ft(con\002guration)h(k)o(e)o(y-)988
+4184 y(w)o(ord,)19 b(38,)h(39,)f(174)656 4287 y(spool,)g(46\22648,)f
+(201)656 4389 y Fp(spool)h Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(46)
+656 4491 y(SQL,)i(13,)g(15,)f(124,)g(151,)g(152)656 4594
+y Fp(sql)p 793 4594 V 30 w(query)g Ft(list)i(parameter)m(,)d(154)656
+4696 y Fp(src/)h Ft(directory)-5 b(,)18 b(27)656 4799
 y Fp(~src/locale/Make)o(fi)o(le)c Ft(\002le,)21 b(49)656
-4292 y(statistics,)g(128)656 4395 y Fp(STATS)e Ft(mail)h(command,)e
-(198)656 4497 y Fp(stats)h Ft(\002le,)h(198)656 4599
-y Fp(SUB)f Ft(mail)i(command,)d(125)656 4702 y Fp(subject)g
-Ft(list)j(parameter)m(,)d(147,)h(150)656 4804 y Fp(Subject)41
-b(:)20 b Ft(header)m(,)e(197)656 4907 y Fp(SUBSCRIBE)23
-b Ft(mail)k(command,)d(149,)h(198,)988 5006 y(200,)19
-b(201)656 5109 y Fp(subscribe)34 b Ft(list)39 b(parameter)m(,)d(149,)g
-(159,)988 5208 y(198)656 5311 y(subscriber)19 b(\002le,)h(123)656
-5413 y(subscriber)p 1004 5413 25 4 v 28 w(table,)g(55,)f(59)p
-Black Black 2233 531 a Fp(subscribers)24 b Ft(con\002guration)h(k)o(e)o
-(yw)o(ord,)2565 631 y(151)2233 731 y Fp(subscribers)16
-b Ft(\002le,)21 b(60,)f(67,)f(68)2233 831 y Fp(subscribers.db.du)o(mp)
-14 b Ft(\002le,)21 b(30,)e(68)2233 931 y Fp(suffix)g
-Ft(list)i(parameter)m(,)d(155)2233 1031 y Fp(suffix1)g
-Ft(list)j(parameter)m(,)e(156)2233 1131 y Fp(suffix2)f
-Ft(list)j(parameter)m(,)e(157)2233 1231 y Fp(supported)p
-2634 1231 27 4 v 28 w(lang)49 b Ft(con\002guration)e(k)o(e)o(y-)2565
-1330 y(w)o(ord,)20 b(49,)f(109)2233 1430 y Fp(suscriber)p
-2634 1430 V 28 w(table)26 b Ft(con\002guration)g(k)o(e)o(y-)2565
-1530 y(w)o(ord,)20 b(51)2233 1630 y(Sybase,)g(15,)g(24)2233
-1730 y Fp(sympa-5.0a/)c Ft(directory)-5 b(,)18 b(27)2233
-1829 y(sympa.conf,)g(37)2233 1929 y Fp(sympa.conf)46
-b Ft(con\002guration)h(k)o(e)o(yw)o(ord,)2565 2029 y(194)2233
-2129 y Fp(sympa.conf)33 b Ft(\002le,)k(21,)e(22,)h(27\22629,)e(35,)2565
-2229 y(39,)c(66,)g(68,)g(69,)g(76,)g(78,)g(109,)2565
-2328 y(115,)19 b(118,)g(135,)h(151,)f(171,)g(173)2233
-2428 y Fp(sympa.pl)24 b Ft(\002le,)j(20,)e(22,)h(30,)g(33,)g(41,)f(46,)
-2565 2528 y(70,)20 b(76,)f(107,)g(131,)h(135)2233 2628
-y Fp(~sympa/bin/)c Ft(directory)-5 b(,)18 b(28)2233 2728
+4901 y(statistics,)g(128)656 5003 y Fp(STATS)e Ft(mail)h(command,)e
+(198)656 5106 y Fp(stats)h Ft(\002le,)h(198)656 5208
+y Fp(SUB)f Ft(mail)i(command,)d(125)656 5311 y Fp(subject)g
+Ft(list)j(parameter)m(,)d(147,)h(150)656 5413 y Fp(Subject)41
+b(:)20 b Ft(header)m(,)e(197)p Black Black 2233 531 a
+Fp(SUBSCRIBE)24 b Ft(mail)i(command,)f(149,)g(198,)2565
+631 y(200,)19 b(201)2233 731 y Fp(subscribe)35 b Ft(list)k(parameter)m
+(,)c(149,)i(159,)2565 831 y(198)2233 930 y(subscriber)19
+b(\002le,)i(123)2233 1030 y(subscriber)p 2581 1030 25
+4 v 28 w(table,)f(55,)g(59)2233 1130 y Fp(subscribers)k
+Ft(con\002guration)h(k)o(e)o(yw)o(ord,)2565 1230 y(151)2233
+1330 y Fp(subscribers)16 b Ft(\002le,)21 b(60,)f(67,)f(68)2233
+1430 y Fp(subscribers.db.du)o(mp)14 b Ft(\002le,)21 b(30,)e(68)2233
+1530 y Fp(suffix)g Ft(list)i(parameter)m(,)d(155)2233
+1630 y Fp(suffix1)g Ft(list)j(parameter)m(,)e(156)2233
+1730 y Fp(suffix2)f Ft(list)j(parameter)m(,)e(157)2233
+1830 y Fp(supported)p 2634 1830 27 4 v 28 w(lang)49 b
+Ft(con\002guration)e(k)o(e)o(y-)2565 1929 y(w)o(ord,)20
+b(49,)f(109)2233 2029 y Fp(suscriber)p 2634 2029 V 28
+w(table)26 b Ft(con\002guration)g(k)o(e)o(y-)2565 2129
+y(w)o(ord,)20 b(51)2233 2229 y(Sybase,)g(15,)g(24)2233
+2329 y Fp(sympa-5.0a/)c Ft(directory)-5 b(,)18 b(27)2233
+2429 y(sympa.conf,)g(37)2233 2529 y Fp(sympa.conf)46
+b Ft(con\002guration)h(k)o(e)o(yw)o(ord,)2565 2628 y(194)2233
+2728 y Fp(sympa.conf)33 b Ft(\002le,)k(21,)e(22,)h(27\22629,)e(35,)2565
+2828 y(39,)c(66,)g(68,)g(69,)g(76,)g(78,)g(109,)2565
+2927 y(115,)19 b(118,)g(135,)h(151,)f(171,)g(173)2233
+3027 y Fp(sympa.pl)24 b Ft(\002le,)j(20,)e(22,)h(30,)g(33,)g(41,)f(46,)
+2565 3127 y(70,)20 b(76,)f(107,)g(131,)h(135)2233 3227
+y Fp(~sympa/bin/)c Ft(directory)-5 b(,)18 b(28)2233 3327
 y Fp(~sympa/locale)e Ft(directory)-5 b(,)17 b(30)2233
-2828 y Fp(~sympa/src/)f Ft(directory)-5 b(,)18 b(27)2233
-2927 y Fp(sympa)p 2458 2927 V 30 w(priority)47 b Ft(con\002guration)g
-(k)o(e)o(y-)2565 3027 y(w)o(ord,)20 b(52)2233 3127 y
-Fp(sympa)p 2458 3127 V 30 w(soap)p 2664 3127 V 29 w(server.fcgi)d
-Ft(\002le,)j(21)2233 3227 y Fp(sympa)p 2458 3227 V 30
-w(wizard.pl)d Ft(\002le,)j(21)2233 3327 y Fp(syslog)f
-Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(41)2233 3427
-y Fp(syslog)h Ft(list)i(parameter)m(,)d(29)2233 3527
-y Fp(syslogd)g Ft(UNIX)i(command,)e(29,)i(41)2233 3715
+3427 y Fp(~sympa/src/)f Ft(directory)-5 b(,)18 b(27)2233
+3527 y Fp(sympa)p 2458 3527 V 30 w(priority)47 b Ft(con\002guration)g
+(k)o(e)o(y-)2565 3626 y(w)o(ord,)20 b(52)2233 3726 y
+Fp(sympa)p 2458 3726 V 30 w(soap)p 2664 3726 V 29 w(server.fcgi)d
+Ft(\002le,)j(21)2233 3826 y Fp(sympa)p 2458 3826 V 30
+w(wizard.pl)d Ft(\002le,)j(21)2233 3926 y Fp(syslog)f
+Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(41)2233 4026
+y Fp(syslog)h Ft(list)i(parameter)m(,)d(29)2233 4126
+y Fp(syslogd)g Ft(UNIX)i(command,)e(29,)i(41)2233 4314
 y Fp(task/)f Ft(directory)-5 b(,)18 b(21,)h(119)2233
-3815 y Fp(task)p 2414 3815 V 30 w(manager.pl)e Ft(\002le,)j(21,)g(50,)f
-(51,)h(55)2233 3914 y(tasks,)h(117)2233 4014 y Fp(Template-Toolkit)14
-b Ft(perl)20 b(module,)f(25)2233 4114 y Fp(templates)e
-Ft(directory)-5 b(,)18 b(40)2233 4214 y(templates)i(format,)f(111)2233
-4314 y(templates,)h(list,)h(125)2233 4414 y(templates,)f(site,)h(112)
-2233 4514 y(templates,)f(web,)g(114)2233 4614 y Fp(testlogs.pl)c
-Ft(\002le,)21 b(29)2233 4714 y Fp(text)p 2414 4714 V
+4414 y Fp(task)p 2414 4414 V 30 w(manager.pl)e Ft(\002le,)j(21,)g(50,)f
+(51,)h(55)2233 4514 y(tasks,)h(117)2233 4614 y Fp(Template-Toolkit)14
+b Ft(perl)20 b(module,)f(25)2233 4714 y Fp(templates)e
+Ft(directory)-5 b(,)18 b(40)2233 4814 y(templates)i(format,)f(111)2233
+4914 y(templates,)h(list,)h(125)2233 5014 y(templates,)f(site,)h(112)
+2233 5114 y(templates,)f(web,)g(114)2233 5213 y Fp(testlogs.pl)c
+Ft(\002le,)21 b(29)2233 5313 y Fp(text)p 2414 5313 V
 30 w(color)54 b Ft(con\002guration)f(k)o(e)o(yw)o(ord,)2565
-4813 y(39,)20 b(109)2233 4913 y Fp(timeout)e Ft(list)j(parameter)m(,)e
-(155)2233 5013 y Fp(timeout1)f Ft(list)j(parameter)m(,)d(156)2233
-5113 y Fp(timeout2)g Ft(list)j(parameter)m(,)d(157)2233
-5213 y Fp(title)h Ft(con\002guration)e(k)o(e)o(yw)o(ord,)i(108)2233
-5313 y Fp(tmpdir)g Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(48)2233
-5413 y Fp(To)43 b(:)20 b Ft(header)m(,)f(197)p Black
-Black eop
+5413 y(39,)20 b(109)p Black Black eop
 %%Page: 213 213
 213 212 bop Black 232 241 a Fo(INDEX)2481 b Ft(213)p
-Black 232 531 a(topics,)20 b(115)232 632 y Fp(topics)f
-Ft(list)i(parameter)m(,)d(115,)h(151)232 732 y Fp(topics.conf)e
-Ft(\002le,)j(21,)g(115,)f(116)232 832 y(ttl,)i(152)232
-932 y Fp(ttl)f Ft(list)h(parameter)m(,)d(152)232 1032
-y(TULP)-9 b(,)20 b(16)232 1133 y Fp(Type)42 b(rate)70
-b Ft(con\002guration)f(k)o(e)o(yw)o(ord,)565 1232 y(186)232
-1426 y Fp(umask)19 b Ft(UNIX)h(command,)e(42)232 1526
+Black 232 531 a Fp(timeout)18 b Ft(list)k(parameter)m(,)c(155)232
+631 y Fp(timeout1)g Ft(list)j(parameter)m(,)d(156)232
+731 y Fp(timeout2)g Ft(list)j(parameter)m(,)d(157)232
+830 y Fp(title)h Ft(con\002guration)f(k)o(e)o(yw)o(ord,)g(108)232
+930 y Fp(tmpdir)h Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(48)232
+1029 y Fp(To)43 b(:)21 b Ft(header)m(,)d(197)232 1129
+y(topics,)i(115)232 1229 y Fp(topics)f Ft(list)i(parameter)m(,)d(115,)h
+(151)232 1328 y Fp(topics.conf)e Ft(\002le,)j(21,)g(115,)f(116)232
+1428 y(ttl,)i(152)232 1528 y Fp(ttl)f Ft(list)h(parameter)m(,)d(152)232
+1627 y(TULP)-9 b(,)20 b(16)232 1727 y Fp(Type)42 b(rate)70
+b Ft(con\002guration)f(k)o(e)o(yw)o(ord,)565 1826 y(186)232
+1993 y Fp(umask)19 b Ft(UNIX)h(command,)e(42)232 2092
 y Fp(umask)h Ft(con\002guration)f(k)o(e)o(yw)o(ord,)g(42)232
-1626 y Fp(unique)h Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(171)232
-1726 y Fp(unsubscribe)f Ft(list)k(parameter)m(,)d(160)232
-1826 y Fp(url)i Ft(list)h(parameter)m(,)d(158)232 1927
-y Fp(urlize)p 501 1927 27 4 v 29 w(min)p 662 1927 V 31
-w(size)32 b Ft(con\002guration)g(k)o(e)o(y-)565 2026
-y(w)o(ord,)19 b(45)232 2127 y Fp(user)h Ft(list)h(parameter)m(,)d
-(153\226156,)f(158)232 2227 y(user)n(-data-source,)h(151)232
-2327 y Fp(user)p 413 2327 V 30 w(data)p 619 2327 V 30
-w(source)f Ft(list)j(parameter)m(,)e(68,)565 2427 y(114,)67
-b(123,)g(124,)h(151\226153,)565 2526 y(155,)19 b(156,)g(158)232
-2626 y(user)p 376 2626 25 4 v 30 w(table,)h(55,)f(59)232
-2820 y Fp(value)g Ft(list)i(parameter)m(,)e(165)232 2920
+2192 y Fp(unique)h Ft(con\002guration)e(k)o(e)o(yw)o(ord,)h(171)232
+2291 y Fp(unsubscribe)f Ft(list)k(parameter)m(,)d(160)232
+2391 y Fp(url)i Ft(list)h(parameter)m(,)d(158)232 2491
+y Fp(urlize)p 501 2491 27 4 v 29 w(min)p 662 2491 V 31
+w(size)32 b Ft(con\002guration)g(k)o(e)o(y-)565 2590
+y(w)o(ord,)19 b(45)232 2690 y Fp(user)h Ft(list)h(parameter)m(,)d
+(153\226156,)f(158)232 2790 y(user)n(-data-source,)h(151)232
+2889 y Fp(user)p 413 2889 V 30 w(data)p 619 2889 V 30
+w(source)f Ft(list)j(parameter)m(,)e(68,)565 2989 y(114,)67
+b(123,)g(124,)h(151\226153,)565 3088 y(155,)19 b(156,)g(158)232
+3188 y(user)p 376 3188 25 4 v 30 w(table,)h(55,)f(59)232
+3354 y Fp(value)g Ft(list)i(parameter)m(,)e(165)232 3454
 y Fp(visibility)24 b Ft(list)k(parameter)m(,)c(113,)i(123,)565
-3020 y(151,)19 b(168,)g(198,)g(199)232 3213 y Fp(warn)p
-413 3213 27 4 v 30 w(rate)g Ft(list)j(parameter)m(,)c(169)232
-3313 y(web)p 376 3313 25 4 v 30 w(archi)n(v)o(e,)g(172)232
-3413 y Fp(web)p 369 3413 27 4 v 31 w(archive)f Ft(list)22
-b(parameter)m(,)c(172)232 3514 y Fp(web)p 369 3514 V
-31 w(archive)p 708 3514 V 28 w(spam)p 912 3514 V 30 w(protection)565
-3613 y Ft(con\002guration)46 b(k)o(e)o(yw)o(ord,)i(39,)565
-3713 y(174)232 3813 y Fp(welcome.tt2)17 b Ft(\002le,)j(20)232
-3913 y Fp(~welcome[.mime])15 b Ft(\002le,)21 b(198)232
-4013 y Fp(welcome)p 545 4013 V 29 w(return)p 838 4013
-V 29 w(path)39 b Ft(con\002guration)565 4113 y(k)o(e)o(yw)o(ord,)18
-b(50,)h(171)232 4213 y Fp(welcome)p 545 4213 V 29 w(return)p
-838 4213 V 29 w(path)14 b Ft(list)j(parameter)m(,)565
-4313 y(171)232 4413 y Fp(WHICH)i Ft(mail)i(command,)c(198)232
-4513 y Fp(wws)p 369 4513 V 31 w(templates)g Ft(directory)-5
-b(,)17 b(40)232 4614 y Fq(WWSympa)p Ft(,)25 b(15,)f(20,)h(21,)f(26,)h
-(35,)f(38,)h(67,)565 4713 y(69\22671,)33 b(73\22676,)h(89,)h(99,)g
-(100,)565 4813 y(111,)67 b(112,)g(114\226116,)f(124,)565
-4913 y(125,)19 b(151,)g(152,)g(177)232 5013 y Fp(wwsympa)f
-Ft(directory)-5 b(,)18 b(27)232 5113 y Fp(wwsympa.conf)32
-b Ft(\002le,)j(21,)g(27,)g(29,)g(109,)565 5213 y(171,)19
-b(185)232 5313 y Fp(WWSympa.fcgi)d Ft(\002le,)21 b(69)232
-5413 y Fp(wwsympa.fcgi)16 b Ft(\002le,)21 b(21,)e(30,)h(70,)f(71,)h(99)
-p Black Black 1810 531 a Fp(wwsympa)p 2123 531 V 28 w(url)33
-b Ft(con\002guration)e(k)o(e)o(yw)o(ord,)2142 631 y(38,)20
-b(108,)f(109)1810 814 y Fp(your)p 1991 814 V 30 w(infected)p
-2373 814 V 28 w(msg.tt2)f Ft(\002le,)i(187)p Black Black
-eop
+3553 y(151,)19 b(168,)g(198,)g(199)232 3719 y Fp(warn)p
+413 3719 27 4 v 30 w(rate)g Ft(list)j(parameter)m(,)c(169)232
+3819 y(web)p 376 3819 25 4 v 30 w(archi)n(v)o(e,)g(172)232
+3919 y Fp(web)p 369 3919 27 4 v 31 w(archive)f Ft(list)22
+b(parameter)m(,)c(172)232 4018 y Fp(web)p 369 4018 V
+31 w(archive)p 708 4018 V 28 w(spam)p 912 4018 V 30 w(protection)565
+4118 y Ft(con\002guration)46 b(k)o(e)o(yw)o(ord,)i(39,)565
+4218 y(174)232 4317 y Fp(welcome.tt2)17 b Ft(\002le,)j(20)232
+4417 y Fp(~welcome[.mime])15 b Ft(\002le,)21 b(198)232
+4516 y Fp(welcome)p 545 4516 V 29 w(return)p 838 4516
+V 29 w(path)39 b Ft(con\002guration)565 4616 y(k)o(e)o(yw)o(ord,)18
+b(50,)h(171)232 4716 y Fp(welcome)p 545 4716 V 29 w(return)p
+838 4716 V 29 w(path)14 b Ft(list)j(parameter)m(,)565
+4815 y(171)232 4915 y Fp(WHICH)i Ft(mail)i(command,)c(198)232
+5015 y Fp(wws)p 369 5015 V 31 w(templates)g Ft(directory)-5
+b(,)17 b(40)232 5114 y Fq(WWSympa)p Ft(,)25 b(15,)f(20,)h(21,)f(26,)h
+(35,)f(38,)h(67,)565 5214 y(69\22671,)33 b(73\22676,)h(89,)h(99,)g
+(100,)565 5313 y(111,)67 b(112,)g(114\226116,)f(124,)565
+5413 y(125,)19 b(151,)g(152,)g(177)p Black Black 1810
+531 a Fp(wwsympa)f Ft(directory)-5 b(,)18 b(27)1810 631
+y Fp(wwsympa.conf)31 b Ft(\002le,)36 b(21,)f(27,)g(29,)f(109,)2142
+731 y(171,)19 b(185)1810 830 y Fp(WWSympa.fcgi)d Ft(\002le,)k(69)1810
+930 y Fp(wwsympa.fcgi)c Ft(\002le,)k(21,)g(30,)f(70,)h(71,)f(99)1810
+1029 y Fp(wwsympa)p 2123 1029 V 28 w(url)33 b Ft(con\002guration)e(k)o
+(e)o(yw)o(ord,)2142 1129 y(38,)20 b(108,)f(109)1810 1312
+y Fp(your)p 1991 1312 V 30 w(infected)p 2373 1312 V 28
+w(msg.tt2)f Ft(\002le,)i(187)p Black Black eop
 %%Trailer
 end
 userdict /end-hook known{end-hook}if
