@@ -173,6 +173,10 @@ while (!$end) {
 	    next;
 	}
 	
+	if (-z "$queue/$file") {
+	    do_log ('notice',"Ignoring file $queue/$file because empty file");
+	    unlink("$queue/$file");
+	}
 	my $listname = $1;
 
 	if ($listname eq 'sympa') {
