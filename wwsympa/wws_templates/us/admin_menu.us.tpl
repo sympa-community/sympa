@@ -14,7 +14,7 @@
         [ELSE]
           <FONT size="-1" COLOR="[bg_color]"><b>Restore list</b></font>
         [ENDIF]
-       [ELSE]
+       [ELSIF is_listmaster]
         <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Are you sure you wish to close [list] list ?'); return false;"><FONT size=-1><b>Remove list</b></font></A>
        [ENDIF]
     </TD>
