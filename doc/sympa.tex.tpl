@@ -1939,7 +1939,7 @@ have names of the form: hash.0 or have symbolic links to
 them of this form ("hash" is the hashed certificate subject
 name: see the -hash option of the openssl x509 utility). This
 directory should be the same as the  directory
-SSLCACertificatePath specified for mod_ssl module for Apache.
+SSLCACertificatePath specified for mod\_ssl module for Apache.
 
 \subsection {\cfkeyword {cafile}} 
 This parameter sets the all-in-one file where you can assemble
@@ -6925,18 +6925,22 @@ Most user commands can have three-letter abbreviations (e.g. \texttt
 Some administrative requests are only available to list owner(s).
 They are indispensable for all procedures in limited access mode,
 and to perform requests in place of users.
-These requests are:
+These comands are:
 
 \begin {itemize}
     \item \mailcmd {ADD} \textit {listname user@host firstname name}
         \label {cmd-add}
 
-        Add command similar to \mailcmd {SUBSCRIBE}
+        Add command similar to \mailcmd {SUBSCRIBE}. 
+	You can avoid user notification by using the \mailcmd {QUIET}
+	prefix (ie: \mailcmd {QUIET ADD}).
 
     \item \mailcmd {DELETE} \textit {listname user@host}
         \label {cmd-delete}
 
-        Delete command similar to \mailcmd {SIGNOFF}
+        Delete command similar to \mailcmd {SIGNOFF}.
+	You can avoid user notification by using the \mailcmd {QUIET}
+	prefix (ie: \mailcmd {QUIET DELETE}).
 
     \item \mailcmd {REMIND} \textit {listname} or \mailcmd {REMIND} \textit {*}
 	\label {cmd-remind}
