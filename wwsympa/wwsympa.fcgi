@@ -3396,13 +3396,13 @@ sub do_redirect {
      unless( defined $total) {
 	 &error_message('failed_add');
 	 &wwslog('info','do_add: failed adding');
-	 ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$comma_emails,'failed',$total);
+	 # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$comma_emails,'failed',$total);
 	 return undef;
      }
 
      $list->save();
      &message('add_performed', {'total' => $total});
-     ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$comma_emails,'done',$total) if (@new_users);
+     # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$comma_emails,'done',$total) if (@new_users);
      
      $in{'list'} = $in{'previous_list'} if ($in{'previous_list'});
      return $in{'previous_action'} || 'review';
@@ -3442,7 +3442,7 @@ sub do_redirect {
 
      unless ( $del_is =~ /do_it/) {
 	 &error_message('may_not');
-	 ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$in{'email'},'may not');
+	 # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$in{'email'},'may not');
 	 &wwslog('info','do_del: %s may not del', $param->{'user'}{'email'});
 	 return undef;
      }
@@ -3459,7 +3459,7 @@ sub do_redirect {
 
 	 unless ( defined($user_entry) && ($user_entry->{'subscribed'} == 1) ) {
 	     &error_message('not_subscriber', {'email' => $email});
-	     ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'not subscriber');
+	     # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'not subscriber');
 	     &wwslog('info','do_del: %s not subscribed', $email);
 	     next;
 	 }
@@ -3469,7 +3469,7 @@ sub do_redirect {
 					{'subscribed' => 0,
 					 'update_date' => time})) {
 		 &error_message('failed');
-		 ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'failed subscriber included');
+		 # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'failed subscriber included');
 		 &wwslog('info', 'do_del: update failed');
 		 return undef;
 	     }
@@ -3503,10 +3503,10 @@ sub do_redirect {
      unless( defined $total) {
 	 &error_message('failed');
 	 &wwslog('info','do_del: failed');
-	 ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,join('.',@removed_users),'failed');
+	 # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,join('.',@removed_users),'failed');
 	 return undef;
      }
-     ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,join(',',@removed_users),'done',$total) if (@removed_users) ;
+     # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,join(',',@removed_users),'done',$total) if (@removed_users) ;
      $list->save();
 
      &message('performed');
