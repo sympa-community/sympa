@@ -1745,12 +1745,6 @@ sub send_to_editor {
 	   return undef;
        }
 
-       ## Always copy the original, not the MIME::Entity
-       ## This prevents from message alterations
-#       if ($encrypt eq 'smime_crypted') {
-#	   ## $file is a reference to a scalar containing the raw message
-#	   print MSG ${$file};
-#       }else {
        unless (open (MSG, $file)) {
 	   do_log('notice', 'Could not open %s', $file);
 	   return undef;   
@@ -1758,8 +1752,32 @@ sub send_to_editor {
 
        print OUT <MSG>;
        close MSG ;
-#       }
        close(OUT);
+
+       my $tmp_dir = "$modqueue\/.$name\_$modkey";
+       unless (-d $tmp_dir) {
+	   unless (mkdir ($tmp_dir, 0777)) {
+	       &error_message('may_not_create_dir');
+	       &wwslog('info','do_viewmod: unable to create %s', $tmp_dir);
+	       return undef;
+	   }
+	   my $mhonarc_ressources = &tools::get_filename('etc', 'mhonarc-ressources', $robot, $self);
+	   unless ($mhonarc_ressources) {
+	       do_log('notice',"Cannot find any MhOnArc ressource file");
+	       return undef;
+	   }
+
+	   ## generate HTML
+	   chdir $tmp_dir;
+	   my $mhonarc = &Conf::get_robot_conf($robot, 'mhonarc');
+	   open ARCMOD, "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $modqueue/$name\_$modkey|";
+	   open MSG, ">msg00000.html";
+	   &do_log('debug4', "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $modqueue/$name\_$modkey");
+	   print MSG <ARCMOD>;
+	   close MSG;
+	   close ARCMOD;
+	   chdir $Conf{'home'};
+       }
    }
    foreach $i (@{$admin->{'editor'}}) {
       next if ($i->{'reception'} eq 'nomail');

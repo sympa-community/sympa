@@ -3601,27 +3601,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
      my $tmp_dir = $Conf{'queuemod'}.'/.'.$list->{'name'}.'_'.$in{'id'};
 
      unless (-d $tmp_dir) {
-	 unless (mkdir ($tmp_dir, 0777)) {
-	     &error_message('may_not_create_dir');
-	     &wwslog('info','do_viewmod: unable to create %s', $tmp_dir);
-	     return undef;
-	 }
-	 my $mhonarc_ressources ;
-	 $mhonarc_ressources = &tools::get_filename('etc', 'mhonarc-ressources', $robot, $list);
-
-	 unless ($mhonarc_ressources) {
-	     do_log('notice',"Cannot find any MhOnArc ressource file");
-	 }
-
-	 ## generate HTML
-	 chdir $tmp_dir;
-	 open ARCMOD, "$wwsconf->{'mhonarc'}  -single -rcfile $mhonarc_ressources -definevars listname=$list->{'name'} -definevars hostname=$list->{'admin'}{'host'} $Conf{'queuemod'}/$list->{'name'}_$in{'id'}|";
-	 open MSG, ">msg00000.html";
-	 &do_log('debug4', "$wwsconf->{'mhonarc'}  -single -rcfile $mhonarc_ressources -definevars listname=$list->{'name'} -definevars hostname=$list->{'admin'}{'host'} $Conf{'queuemod'}/$list->{'name'}_$in{'id'}|");
-	 print MSG <ARCMOD>;
-	 close MSG;
-	 close ARCMOD;
-	 chdir $Conf{'home'};
+	 &error_message('no_html_message_available');
+	 &wwslog('info','do_viewmod: no HTML version of the message available in %s', $tmp_dir);
+	 return undef;
      }
 
      if ($in{'file'}) {
