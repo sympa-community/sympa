@@ -7826,6 +7826,14 @@ sub get_subscription_requests {
 	my $email = $1;
 	$subscriptions{$email} = {'gecos' => $3};
 	
+	unless($subscriptions{$email}{'gecos'}) {
+		my $user = get_user_db($email);
+		if ($user->{'gecos'}) {
+			$subscriptions{$email} = {'gecos' => $user->{'gecos'}};
+#			&do_log('info', 'get_user_db %s : no gecos',$email);
+		}
+	}
+
 	$filename =~ /^$self->{'name'}\.(\d+)\.\d+$/;
 	$subscriptions{$email}{'date'} = $1;
 	close REQUEST;
