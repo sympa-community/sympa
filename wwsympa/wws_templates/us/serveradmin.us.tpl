@@ -180,4 +180,8 @@
 	
     </TABLE>
 
+<BR><BR>
 
+[IF loop_count]
+This FastCGI process ([process_id]) has served [loop_count] since [start_date].
+[ENDIF]

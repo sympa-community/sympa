@@ -138,6 +138,11 @@ if ($Conf{'db_name'} and $Conf{'db_type'}) {
 
 &tools::ciphersaber_installed();
 
+if (&tools::cookie_changed($Conf{'cookie'}) {
+    &fatal_err('sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage');
+    exit;
+}
+
 ## Set locale configuration
 $main::options{'lang'} =~ s/\.cat$//; ## Compatibility with version < 2.3.3
 $Language::default_lang = $main::options{'lang'} || $Conf{'lang'};

@@ -358,6 +358,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
 }
 
 ## Main loop
+my $loop_count;
+my $start_time = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
 while ($query = &new_loop()) {
 
     undef $param;
@@ -867,6 +869,7 @@ sub new_loop {
 
     if ($wwsconf->{'use_fast_cgi'}) {
 	$query = new CGI::Fast;
+	$loop_count++;
     }else {	
 	return undef if ($loop > 1);
 
@@ -1109,6 +1112,10 @@ sub check_param_in {
 ## Prepare outgoing params
 sub check_param_out {
     &wwslog('debug2', 'check_param');
+
+    $param->{'loop_count'} = $loop_count;
+    $param->{'start_time'} = $start_time;
+    $param->{'process_id'} = $$;
 
     if ($list->{'name'}) {
 	## Owners
