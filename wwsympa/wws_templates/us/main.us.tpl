@@ -21,7 +21,13 @@
 
   // To confirm on a link (A HREF)
   function refresh_mom_and_die(){
-    window.opener.location = window.opener.location
+    url = window.opener.location.href
+
+    if (url.indexOf('logout') > -1 ) {
+      url = '[base_url][path_cgi]/'
+    }
+
+    window.opener.location = url
     self.close()
   }
 
