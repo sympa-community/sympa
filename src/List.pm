@@ -743,7 +743,10 @@ my %alias = ('reply-to' => 'reply_to',
 my %list_of_lists = ();
 my %list_of_robots = ();
 my %list_of_topics = ();
-my @mtime;
+my %edit_list_conf = ();
+
+## Last modification times
+my %mtime;
 
 use Fcntl;
 use DB_File;
@@ -3851,7 +3854,15 @@ sub may_edit {
 
     return undef unless ($self);
 
-    my $edit_conf = &tools::load_edit_list_conf($self->{'domain'});
+    my $edit_conf;
+    
+    if (! $edit_list_conf{$self->{'domain'}} || ((stat(&tools::get_filename('etc','edit_list.conf',$self->{'domain'})))[9] > $mtime{'edit_list_conf'}{$self->{'domain'}})) {
+
+        $edit_conf = &tools::load_edit_list_conf($self->{'domain'});
+
+    }else {
+        $edit_conf = $edit_list_conf{$self->{'domain'}};
+    }
 
     if ( &is_listmaster($who,$self->{'domain'})) {
 	## listmaster has read write acces on any parameter
@@ -5446,13 +5457,12 @@ sub load_topics {
     my $robot = shift ;
     do_log('debug2', 'List::load_topics(%s)',$robot);
 
-    my $conf_file = "$Conf{'etc'}/$robot/topics.conf";
-    $conf_file = "$Conf{'etc'}/topics.conf" unless (-r $conf_file);
+    my $conf_file = &tools::get_filename('etc','topics.conf',$robot);
 
     my $topics = {};
 
     ## Load if not loaded or changed on disk
-    if (! %list_of_topics || ((stat($conf_file))[9] > $mtime[0])) {
+    if (! $list_of_topics{$robot} || ((stat($conf_file))[9] > $mtime{'topics'}{$robot})) {
 
 	unless (-r $conf_file) {
 	    &do_log('err',"Unable to read $conf_file");
@@ -5492,7 +5502,7 @@ sub load_topics {
 	    $topic = {};
 	}
 
-	$mtime[0] = (stat($conf_file))[9];
+	$mtime{'topics'}{$robot} = (stat($conf_file))[9];
 
 	unless ($#raugh_data > -1) {
 	    &do_log('notice', 'No topic defined in %s/topics.conf', $Conf{'etc'});

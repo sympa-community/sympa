@@ -143,16 +143,8 @@ sub load_edit_list_conf {
     my $file;
     my $conf ;
     
-    if (-r "$Conf{'etc'}/$robot/edit_list.conf") {
-	$file = "$Conf{'etc'}/$robot/edit_list.conf";
-    }elsif (-r "$Conf{'etc'}/edit_list.conf") {
-	$file = "$Conf{'etc'}/edit_list.conf";
-    }elsif (-r "--ETCBINDIR--/edit_list.conf") {
-	$file = "--ETCBINDIR--/edit_list.conf";
-    }else {
-	&do_log('info','Cannot find edit_list.conf');
-	return undef;
-    }
+    return undef 
+	unless ($file = &tools::get_filename('etc','edit_list.conf',$robot));
 
     unless (open (FILE, $file)) {
 	&do_log('info','Unable to open config file %s', $file);
@@ -208,43 +200,6 @@ sub load_create_list_conf {
     
     close FILE;
     return $conf;
-}
-
-## Loads the list of topics
-sub load_topics_conf {
-    do_log('debug2', 'tools::load_topics_conf');
-
-    my $conf_file = "$Conf{'etc'}/topics.conf";
-    my $topics = {};
-
-    unless (-r $conf_file) {
-	&do_log('info',"Unable to read $conf_file");
-	return undef;
-    }
-    
-    unless (open (FILE, $conf_file)) {
-	&do_log('info',"Unable to open config file $conf_file");
-	return undef;
-    }
-
-    my $index;
-    while (<FILE>) {
-	if (/^([\w\/]+)\s+(.+)\s*$/) {
-	    my @tree = split '/', $1;
-	    $index++;
-	    
-	    if ($#tree == 0) {
-		$topics->{$tree[0]}{'title'} = $2;
-		$topics->{$tree[0]}{'order'} = $index;
-	    }else {
-		my $subtopic = join ('/', @tree[1..$#tree]);
-		$topics->{$tree[0]}{'sub'}{$subtopic} = &_add_topic($subtopic,$2);
-	    }
-	}
-    }
-    close FILE;
-
-    return $topics;
 }
 
 sub _add_topic {
@@ -1048,5 +1003,20 @@ sub duration_conv {
     return $duration;
 }
 
+## Look for a file in the list > robot > server > default locations
+sub get_filename {
+    my ($type, $name, $robot) = @_;
+
+    if ($type eq 'etc') {
+	foreach my $dir ("$Conf{'etc'}/$robot",$Conf{'etc'},'--ETCBINDIR--') {
+	    if (-r "$dir/$file") {
+		return "$dir/$name";
+	    }
+	}
+    }
+    
+    &do_log('info','Cannot find %s', $name);
+    return undef;
+}
 
 1;
