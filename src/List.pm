@@ -1236,7 +1236,7 @@ sub save_config {
 ## Loads the administrative data for a list
 sub load {
     my ($self, $name, $robot) = @_;
-    do_log('debug3', 'List::load(%s, %s)', $name, $robot);
+    do_log('debug2', 'List::load(%s, %s)', $name, $robot);
     
     my $users;
 
@@ -1363,17 +1363,21 @@ sub load {
     
 ## Load stats file if first new() or stats file changed
     my ($stats, $total);
-    ($stats, $total) = _load_stats_file("$self->{'dir'}/stats");
+
+    if ($m3 > $self->{'mtime'}[2]) {
+	($stats, $total) = _load_stats_file("$self->{'dir'}/stats");
+	
+	$self->{'stats'} = $stats if (defined $stats);	
+	$self->{'total'} = $total if (defined $total);	
+    }
     
-    $self->{'stats'} = $stats if ($stats);
     $self->{'users'} = $users->{'users'} if ($users);
     $self->{'ref'}   = $users->{'ref'} if ($users);
-        
+    
     if ($users && defined($users->{'total'})) {
 	$self->{'total'} = $users->{'total'};
-    }elsif ($total) {
-	$self->{'total'} = $total;
     }
+
 #    elsif ($self->{'admin'}{'user_data_source'} eq 'database'){
 #	## If no total found in 'stats' AND database mode
 #	$self->{'total'} = _load_total_db($name);
