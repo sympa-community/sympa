@@ -239,7 +239,7 @@ $set 12 MIME headers
 
 $set 14 Locale equivalent and language name
 1	"ro_RO"
-2	"Romanian"
+2	"Romana"
 
 $set 15 Templates files
 1	"mesaj de bun venit"
