@@ -18,7 +18,7 @@
          [ELSIF is_editor]
           Moderador
          [ELSIF is_subscriber]
-	  Subscriptor
+	  Suscriptor
 	 [ENDIF]
 	  </CENTER>
 	 [ENDIF]

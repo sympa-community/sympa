@@ -265,7 +265,7 @@
   </DL>
 
   [IF p->default=1]
-    <FONT COLOR="--BG_COLOR--"><B>por defecto</B></FONT>
+    <FONT COLOR="--BG_COLOR--"><B>por omisión</B></FONT>
   [ENDIF]
 
 

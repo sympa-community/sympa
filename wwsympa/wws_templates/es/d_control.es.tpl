@@ -1,10 +1,10 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-<H1>Derechos de acceso para el documento [path]</H1>
+<H1>Permisos de acceso para [path]</H1>
     Propietario : [owner] <BR>
     Ultima actualización : [doc_date] <BR>
     Descripción : [doc_title] <BR><BR>
-<H3><A HREF="[path_cgi]/d_read/[list]/[father]"> <IMG ALIGN="bottom"  src="[father_icon]"> Hasta el directorio de nivel superior</A></H3>
+<H3><A HREF="[path_cgi]/d_read/[list]/[father]"> <IMG ALIGN="bottom"  src="[father_icon]">.. subir un nivel</A></H3>
 
 <TABLE width=100%>
 

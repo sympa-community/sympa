@@ -12,40 +12,40 @@
 Vd. ya está autentificado en el sistema como [error->email]
 
 [ELSIF error->msg=no_email]
-Por favor indique su email
+Por favor indique su E-mail
 
 [ELSIF error->msg=incorrect_email]
-Dirección "[error->email]" es inválida
+La dirección "[error->email]" es inválida
 
 [ELSIF error->msg=incorrect_listname]
 "[error->listname]" : nombre de lista incorrecto
 
 [ELSIF error->msg=no_passwd]
-Por favor, entre su contraseña
+Por favor, introduzca su contraseña
 
 [ELSIF error->msg=user_not_found]
 "[error->email]" : usuario desconocido
 
 [ELSIF error->msg=user_not_found]
-"[error->email]" no es un subscriptor
+"[error->email]" no es un suscriptor
 
 [ELSIF error->msg=passwd_not_found]
-No hay contraseña del usuario "[error->email]"
+No hay contraseña para usuario "[error->email]"
 
 [ELSIF error->msg=incorrect_passwd]
-La contraseña entrada no es correcta
+La contraseña introducida no es correcta
 
 [ELSIF error->msg=no_user]
 Usted tiene que hacer un login
 
 [ELSIF error->msg=may_not]
-[error->action] : no está permitido a realizar esta operación
+[error->action] : no está autorizado para realizar esta operación
 
 [ELSIF error->msg=no_subscriber]
-La lista no tiene subscriptores
+La lista no tiene suscriptores
 
 [ELSIF error->msg=no_bounce]
-La lista no tiene subscriptores con errores
+La lista no tiene suscriptores con errores
 
 [ELSIF error->msg=no_page]
 No hay página [error->page]
@@ -57,16 +57,16 @@ Filtro no encontrado
 [error->file] : fichero no editable
 
 [ELSIF error->msg=already_subscriber]
-Usted ya es un subscriptor de la lista [error->list]
+Usted ya es un suscriptor de la lista [error->list]
 
 [ELSIF error->msg=user_already_subscriber]
-[error->email] ya es subscriptor de la lista [error->list] 
+[error->email] ya es suscriptor de la lista [error->list] 
 
 [ELSIF error->msg=failed]
 La operación ha fallado
 
 [ELSIF error->msg=not_subscriber]
-Usted no es un subscriptor de la lista [error->list]
+Usted no es un suscriptor de la lista [error->list]
 
 [ELSIF error->msg=diff_passwd]
 Las 2 contraseñas son diferentes
@@ -126,7 +126,7 @@ No puedo cargar el directorio [error->path] : [error->reason]
 Fallo : [error->directory] no está vacío
 
 [ELSIF error->msg=password_sent]
-Su contraseña le ha sido enviado por correo
+Su contraseña le ha sido enviada por correo
 
  
 

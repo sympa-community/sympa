@@ -8,9 +8,9 @@
   function delete_confirm(my_form,my_doc,my_size){
     var message;
     if (my_size==-1) {
-       message = "Quiere realmente borrar "+ my_doc +" ?";
+       message = "¿Confirma el borrado de "+ my_doc +" ?";
     } else {
-       message = "Quiere realmente borrar "+ my_doc +" ("+my_size +" Kb) ?";
+       message = "¿Confirma el borrado "+ my_doc +" ("+my_size +" Kb) ?";
     }
     if (window.confirm(message)) {
       my_form.submit();
@@ -19,16 +19,15 @@
   // end borwsers -->
   </SCRIPT>
 
-
   [IF path]  
-    <h2> <B> Listado de la carpeta [path] </B> </h2> 
+    <h2> <B> Contenido de la carpeta [path] </B> </h2> 
     Propietario : [doc_owner] <BR>
     Ultima actualización : [doc_date] <BR>
     Descripción : [doc_title] <BR><BR>
-    <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[father]"> <IMG ALIGN="bottom"  src="[father_icon]"> Hasta un nivel de directorio superior</A></font>
-    <BR>  
+    <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[father]"> <IMG ALIGN="bottom"  src="[father_icon]"> .. subir un nivel</A></font>
+     <BR>  
   [ELSE]
-    <h2> <B> Listado de la carpeta COMPARTIDA </B> </h2> 
+    <h2> <B> Contenido de la carpeta Web compartida </B> </h2> 
   [ENDIF]
    
   <TABLE width=100%>
@@ -239,13 +238,13 @@
       <TR>
       <form method="post" ACTION="[path_cgi]">
       <TD ALIGN="right" VALIGN="bottom">
-      <B> Describe the folder [path] </B> <BR>
+      <B> Describa la carpeta [path] </B> <BR>
             
       <input MAXLENGTH=100 type="text" name="content" value="[description]" SIZE=50>
       </TD>
       
       <TD ALIGN="left" VALIGN="bottom">
-      <input type="submit" value="Apply" name="action_d_describe">
+      <input type="submit" value="Cambiar" name="action_d_describe">
       <INPUT TYPE="hidden" NAME="serial" VALUE="[serial_desc]">
       <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
       <INPUT TYPE="hidden" NAME="path" VALUE="[path]">     
@@ -261,12 +260,11 @@
       <form method="post" ACTION="[path_cgi]">
            
       <TD ALIGN="right" VALIGN="center">
-      <B> Edit the access of the folder [path]</B> 
-
+      <B> Editar los permisos de la carpeta [path]</B> 
       </TD>
      
       <TD ALIGN="left" VALIGN="bottom">
-      <input type="submit" value="   Access   " name="action_d_control">
+      <input type="submit" value="Editar" name="action_d_control">
       <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
       <INPUT TYPE="hidden" NAME="path" VALUE="[path]">     
       </TD>
@@ -281,41 +279,41 @@
   [IF may_edit]
     <TR>
     <form method="post" ACTION="[path_cgi]">
-    <TD ALIGN="right" VALIGN="bottom">
-    [IF path]
-      <B> Crear una nueva carpeta dentro de la carpeta [path]</B> <BR>
-    [ELSE]
-      <B> Crear una nueva carpeta dentro de la carpeta COMPRATIDA </B> <BR>
-    [ENDIF]
-    <input MAXLENGTH=30 type="text" name="name_doc">
-    </TD>
-
-    <TD ALIGN="left" VALIGN="bottom">
-    <input type="submit" value="Crear un nuevo subdirectorio" name="action_d_create_dir">
     <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
     <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
     <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
+    <TD ALIGN="right" VALIGN="bottom"><b>
+    [IF path]
+      Crear una nueva carpeta dentro de la carpeta [path]
+    [ELSE]
+      Crear una nueva carpeta dentro del raiz de la Web compartida
+    [ENDIF]
+    <br>Nombre </b><input MAXLENGTH=30 type="text" name="name_doc">
+    </TD>
+        
+    <TD ALIGN="left" VALIGN="bottom">
+    <input type="submit" value="Crear" name="action_d_create_dir">
     </TD>
     </form>
-    </TR><BR>
+    </TR>
 
    <TR>
    <form method="post" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
-   <TD ALIGN="right" VALIGN="bottom">
+   <TD ALIGN="right" VALIGN="bottom"><b>
    [IF path]
-     <B> Descargar un fichero dentro de la carpeta [path]</B><BR>
+     Descargar un fichero dentro de la carpeta [path]
    [ELSE]
-     <B> Descargar un fichero dentro de la carpeta COMPARTIDA</B><BR>
+     Descargar un fichero dentro de la carpeta Web compartida
    [ENDIF]
-   <input type="file" name="uploaded_file">
+   </b><br><input type="file" name="uploaded_file">
    </TD>
 
    <TD ALIGN="left" VALIGN="bottom">
-   <input type="submit" value="Publish" name="action_d_upload">
+   <input type="submit" value="Publicar" name="action_d_upload">
    <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
    <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
-   <TD>
+   </TD>
    </form> 
    </TR>
    [ENDIF]

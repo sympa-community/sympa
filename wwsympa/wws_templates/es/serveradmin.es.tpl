@@ -4,7 +4,7 @@
       <TR VALIGN="top">
         <TD NOWRAP>
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
-	    <FONT COLOR="--DARK_COLOR--"><B>Activando valores por defecto en la lista</B></FONT><BR>
+	    <FONT COLOR="--DARK_COLOR--"><B>Editar los "temas" de las listas por omisión</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [FOREACH f IN lists_default_files]
 	        <OPTION VALUE='[f->NAME]' [f->selected]>[f->complete]
@@ -14,7 +14,7 @@
 	  </FORM>
 
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
-	    <FONT COLOR="--DARK_COLOR--"><B>Activando valores por defecto</B></FONT><BR>
+	    <FONT COLOR="--DARK_COLOR--"><B>Editar los "temas" por omisión del servidor</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [FOREACH f IN server_files]
 	        <OPTION VALUE='[f->NAME]' [f->selected]>[f->complete]
@@ -25,7 +25,7 @@
 	</TD>
       </TR>
       <TR><TD><A HREF="[path_cgi]/get_pending_lists"><B>Listas pendientes</B></A></TD></TR>
-      <TR><TD><A HREF="[path_cgi]/view_translations"><B>Personalizar plantillas</B></A></TD></TR>
+      <TR><TD><A HREF="[path_cgi]/view_translations"><B>Ver las traducciones de los "temas"</B></A></TD></TR>
       <TR>
         <TD>
 <FONT COLOR="--DARK_COLOR--"><B>Reconstruir archivos HTML </B> usando los directorios <CODE>arctxt</CODE> como entrada.
@@ -53,7 +53,7 @@
         <TD>
 	  <FONT COLOR="--DARK_COLOR--">
 	  <A HREF="[path_cgi]/scenario_test">
-	     <b>Módulo Scenari de test </b>
+	     <b>Módulo "Scenari" de test </b>
           </A>
           </FONT>
 	</TD>

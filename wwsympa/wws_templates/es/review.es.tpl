@@ -34,7 +34,7 @@
      <TR>
        <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="center" VALIGN="top">
          <FONT COLOR="--SELECTED_COLOR--" SIZE="-1">
-         <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Seguro que quiere enviar un recordatorio de subscripción a los [total] subscritos?'); return false;"><b>Recordatorio a todos los subscritos</b></A>
+         <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', '¿Seguro que quiere enviar un recordatorio de suscripción a los [total] suscritos?'); return false;"><b>Recordatorio a todos los suscritos</b></A>
          </FONT>
        </TD>
      </TR>
@@ -123,7 +123,7 @@ La selección es demasiado genérica, no se puede mostrar
 	  </TH>
 	  [IF sortby=date]
   	    <TH NOWRAP BGCOLOR="--SELECTED_COLOR--">
-	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Fecha subs.</b></FONT>
+	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Fecha sus.</b></FONT>
 	  [ELSE]
 	    <TH NOWRAP><FONT SIZE="-1">
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/date" >

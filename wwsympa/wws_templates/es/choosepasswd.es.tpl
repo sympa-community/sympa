@@ -1,7 +1,7 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 Usted necesita una contraseña para su entorno de WWSympa.
-Necesitará esta contraseña para acceder a funciones especiales.
+Esta contraseña le permitirá acceder a funciones especiales.
 
 <FORM ACTION="[path_cgi]" METHOD=POST>
 <INPUT TYPE="hidden" NAME="previous_action" VALUE="[previous_action]">

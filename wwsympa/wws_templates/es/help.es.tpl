@@ -5,7 +5,7 @@
 
 [ELSE]
 <BR>
-WWSympa le permite el acceso a su entorno en el servidor de listas de correo
+WWSympa le permite el acceso a su configuración en el servidor de listas de correo
 <B>[conf->email]@[conf->host]</B>.
 <BR><BR>
 Funciones, equivalentes a los comandos del robot Sympa, son accesibles desde la parte superior del interfaz de usario.
@@ -16,7 +16,7 @@ WWSympa le facilita un entorno personalizado con acceso a las siguientes funcion
 
 <LI><A HREF="[path_cgi]/lists">Listas Públicas </A> : directorio de las listas disponibles en este servidor
 
-<LI><A HREF="[path_cgi]/which">Sus subscripciones</A> : su entorno como subscriptor o propietario
+<LI><A HREF="[path_cgi]/which">Sus suscripciones</A> : su entorno como suscriptor o propietario
 
 <LI><A HREF="[path_cgi]/loginrequest">Login</A> / <A HREF="[path_cgi]/logout">Logout</A> : Entrar / Abandonar de WWSympa.
 </UL>
@@ -32,12 +32,12 @@ Puede abandonar (logout) en cualquier momento usando la función de <A HREF="[pat
 
 <H5>Problemas con Login issues</H5>
 
-<I>Yo no soy subscriptor de ninguna lista</I><BR>
+<I>Yo no soy suscriptor de ninguna lista</I><BR>
 Vd. no está registrado en la base de datos de Sympa y por tanto no puede hacer un login.
-Si se subscribe a una lista, WWSympa le asignará una contraseña inicial.
+Si se suscribe a una lista, WWSympa le asignará una contraseña inicial.
 <BR><BR>
 
-<I>Yo soy subscriptor de al menos una lista pero no tengo contraseña</I><BR>
+<I>Yo soy suscriptor de al menos una lista pero no tengo contraseña</I><BR>
 Para recibir su contraseña : 
 <A HREF="[path_cgi]/remindpasswd">[path_cgi]/remindpasswd</A>
 <BR><BR>
@@ -48,7 +48,7 @@ WWSympa le puede recordar su contraseña por correo :
 <A HREF="[path_cgi]/remindpasswd">[path_cgi]/remindpasswd</A>
 
 <P>
-To contact this service administrator : <A HREF="mailto:listmaster@[conf->host]">listmaster@[conf->host]</A>
+Para contactar con el administrador de este sistema : <A HREF="mailto:listmaster@[conf->host]">listmaster@[conf->host]</A>
 [ENDIF]
 
 

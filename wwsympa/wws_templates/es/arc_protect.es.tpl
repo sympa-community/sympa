@@ -6,7 +6,7 @@
 	  <INPUT TYPE="submit" NAME="action_arc" VALUE="No soy un spammer">
 	</FORM>
 	<BR>
-	<I>Este botón intenta proteger las listas de correo contra Spam Harvester.</I>
+	<I>Este botón pretende proteger las listas de correo contra el "Spam Harvester" (emisión indiscriminada de mensajes no solicitados).</I>
 
 
 	

@@ -3,7 +3,7 @@
 <FORM ACTION="[path_cgi]" METHOD=POST>
 <TABLE WIDTH="100%" BORDER=0>
 <TR><TH BGCOLOR="--DARK_COLOR--">
-<FONT COLOR="--BG_COLOR--">Información del Subscriptor</FONT>
+<FONT COLOR="--BG_COLOR--">Información del Suscriptor</FONT>
 </TH></TR><TR><TD>
 <INPUT TYPE="hidden" NAME="previous_action" VALUE=[previous_action]>
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
@@ -11,7 +11,7 @@
 <DL>
 <DD>Email : <A HREF="mailto:[subscriber->email]">[subscriber->email]</A>
 <DD>Nombre : <INPUT NAME="gecos" VALUE="[subscriber->gecos]" SIZE="25">
-<DD>Subscrito desde [subscriber->date]
+<DD>Suscrito desde [subscriber->date]
 <DD>Recepción : <SELECT NAME="reception">
 		  [FOREACH r IN reception]
 		    <OPTION VALUE="[r->NAME]" [r->selected]>[r->description]
@@ -21,7 +21,7 @@
 <DD>Visibilidad : [subscriber->visibility]
 <DD>Idioma : [subscriber->lang]
 <DD><INPUT TYPE="submit" NAME="action_set" VALUE="Actualizar">
-<INPUT TYPE="submit" NAME="action_del" VALUE="Anular su subscripción">
+<INPUT TYPE="submit" NAME="action_del" VALUE="Anular su suscripción">
 <INPUT TYPE="checkbox" NAME="quiet"> silencioso
 </DL>
 </TD></TR>

@@ -1,7 +1,8 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-Se le ha enviado un mensaje con una contraseña. <BR>
-Para confirmar su cambio de email, entre por favor su nueva contraseña en el siguiente formulario:
+Se le ha enviado un mensaje con una nueva contraseña. <BR>
+Para confirmar su cambio de E-mail, introduzca por favor su nueva contraseña 
+en el siguiente formulario:
 
 <FORM ACTION="[path_cgi]" METHOD=POST>
     <INPUT TYPE="hidden" NAME="email" VALUE="[email]">

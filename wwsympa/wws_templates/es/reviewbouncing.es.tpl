@@ -4,7 +4,7 @@
 <!-- for other browsers
   function remind_confirm(my_form, my_total){
     var message;
-    message = "Está seguro de querer enviar un mensaje recordatorio de subscripción a "+ my_total +" subscriptores";
+    message = "¿Confirma la emisión de un recordatorio de suscripción a "+ my_total +" suscriptores?";
     if (window.confirm(message)) {
       my_form.submit();
     }
@@ -25,7 +25,7 @@
 </TD>
 <TD>
   <FORM METHOD="post" ACTION="[path_cgi]">
-    <INPUT TYPE="button" VALUE="Recordatorio a los subscriptores" NAME="action_remind" onClick="remind_confirm(this.form,[total])">
+    <INPUT TYPE="button" VALUE="Recordatorio a los suscriptores" NAME="action_remind" onClick="remind_confirm(this.form,[total])">
     <INPUT TYPE="hidden" NAME="action" VALUE="remind">
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   </FORM>	
@@ -55,13 +55,13 @@
 
  <TD ALIGN="right">
         [IF prev_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Pag. previa"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Pág. previa"></A>
         [ENDIF]
         [IF page]
-  	  pag [page] / [total_page]
+  	  pág [page] / [total_page]
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0ALT="Pag. sig."></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0ALT="Pág. sig."></A>
         [ENDIF]
     </TD></TR>
     <TR><TD><INPUT TYPE="submit" NAME="action_resetbounce" VALUE="Inicializar errores de los usuarios seleccionados">
@@ -133,7 +133,7 @@
   	  page [page] / [total_page]
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0ALT="Pag. sig."></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0ALT="Pág. sig."></A>
         [ENDIF]
     </TD></TR>
     </TABLE>

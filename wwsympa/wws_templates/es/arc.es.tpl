@@ -16,7 +16,7 @@
 	<INPUT NAME=body  TYPE=hidden Value="True">
 	<INPUT NAME=key_word     TYPE=text   SIZE=17>
 	<INPUT NAME="action"  TYPE="hidden" Value="arcsearch">
-	<INPUT TYPE="submit" NAME="action_arcsearch" VALUE="Search"><BR>
+	<INPUT TYPE="submit" NAME="action_arcsearch" VALUE="Buscar"><BR>
 	<A HREF="[path_cgi]/arcsearch_form/[list]/[archive_name]">Búsqueda avanzada</A>
 
 	</FORM>
@@ -128,13 +128,11 @@
         [ENDIF]
 	</TD>
 
-
       </TR>
 
     [END]    
     </TABLE>
     </TD></TR>
     </TABLE>
-
 
     [PARSE file]

@@ -5,7 +5,7 @@ Subject: Your WWSympa environment
 
 [IF init_passwd]
   [IF action=subrequest]
-Usted solicitó subscribirse a la lista de correo [list].
+Usted solicitó suscribirse a la lista de correo [list].
 
 Para confirmar esta operación, siga este enlace:
 [base_url][path_cgi]/subscribe/[list]/[newuser->escaped_email]/[newuser->password]
@@ -15,7 +15,7 @@ o utilice esta contraseña :
 	Contraseña : [newuser->password]
 
   [ELSIF action=sigrequest]
-Usted solicitó anular su subscripción a la lista [list].
+Usted solicitó anular su suscripción a la lista [list].
 
 Para confirmar esta operación, siga este enlace:
 [base_url][path_cgi]/signoff/[list]/[newuser->escaped_email]/[newuser->password]

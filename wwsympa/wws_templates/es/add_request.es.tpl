@@ -9,7 +9,7 @@ email2@dom2 Name2
         </TEXTAREA>
 
 
-      <INPUT TYPE="submit" NAME="action_add" VALUE="Añadir subscriptores">
+      <INPUT TYPE="submit" NAME="action_add" VALUE="Añadir suscriptores">
       <INPUT TYPE="checkbox" NAME="quiet"> silencioso
 
     </FORM>
