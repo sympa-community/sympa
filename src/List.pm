@@ -3375,7 +3375,6 @@ sub request_action {
 	$name = $data_ref->{'name'};
 
     }elsif ($context->{'topicname'}) {
-	printf STDERR "1xxxxxxxxxx context->{'topicname'} : $context->{'topicname'}\n";
 	my $scenario = $list_of_topics{$robot}{$context->{'topicname'}}{'visibility'};
 	@rules = @{$scenario->{'rules'}};
 	$name = $scenario->{'name'};
@@ -5376,8 +5375,6 @@ sub load_topics {
 
     my $conf_file = "$Conf{'etc'}/$robot/topics.conf";
     $conf_file = "$Conf{'etc'}/topics.conf" unless (-r $conf_file);
-
-    printf STDERR "1xxxxxxx topics file : $conf_file\n";
 
     my $topics = {};
 
