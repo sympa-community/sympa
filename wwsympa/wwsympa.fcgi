@@ -355,12 +355,12 @@ while ($query = &new_loop()) {
     $param->{'wwsconf'} = $wwsconf;
 
     $param->{'dark_color'} = $Conf{'robots'}{$robot}{'dark_color'} || $Conf{'dark_color'};
-    $param->{'light_color'} = $Conf{'robots'}{$robot}{'light_color'} || $Conf{'light_color'} ;
-    $param->{'text_color'} = $Conf{'robots'}{$robot}{'text_color'} || $Conf{'text_color'}' ;
-    $param->{'bg_color'} = $Conf{'robots'}{$robot}{'bg_color'} || $Conf{'bg_color'}' ;
-    $param->{'error_color'} = $Conf{'robots'}{$robot}{'error_color'} || $Conf{'error_color'}' ;
-    $param->{'selected_color'} = $Conf{'robots'}{$robot}{'selected_color'} || $Conf{'selected_color'}' ;
-    $param->{'shaded_color'} = $Conf{'robots'}{$robot}{'shaded_color'} || $Conf{'shaded_color'} ;
+    $param->{'light_color'} = $Conf{'robots'}{$robot}{'light_color'} || $Conf{'light_color'};
+    $param->{'text_color'} = $Conf{'robots'}{$robot}{'text_color'} || $Conf{'text_color'};
+    $param->{'bg_color'} = $Conf{'robots'}{$robot}{'bg_color'} || $Conf{'bg_color'};
+    $param->{'error_color'} = $Conf{'robots'}{$robot}{'error_color'} || $Conf{'error_color'} ;
+    $param->{'selected_color'} = $Conf{'robots'}{$robot}{'selected_color'} || $Conf{'selected_color'};
+    $param->{'shaded_color'} = $Conf{'robots'}{$robot}{'shaded_color'} || $Conf{'shaded_color'};
     
     $param->{'path_cgi'} = $ENV{'SCRIPT_NAME'};
     $param->{'version'} = $Version::Version;
@@ -912,7 +912,11 @@ sub check_param_in {
 	    &wwslog('info','check_param: unknown list %s', $in{'list'});
 	    return undef;
 	}
-	
+	unless (($list->{'admin'}{'domain'} eq $robot) || ($robot = '*')) {
+	    &error_message('unknown_list', {'list' => $in{'list'}} );
+	    &wwslog('info','check_param: unknown list %s', $in{'list'});
+	    return undef;
+	}
     }
     
     ## listmaster has owner and editor privileges for the list
