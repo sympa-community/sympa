@@ -1,3 +1,444 @@
+2003-03-12 08:49  salaun
+
+	* src/etc/script/: Makefile, testlogs.pl: 
+	new script "testlogs.pl" that use sympa.conf file and just add a
+	line to logs.
+
+2003-03-12 08:46  salaun
+
+	* doc/sympa.tex.tpl: testlogs.pl
+
+2003-03-10 15:59  salaun
+
+	* src/Commands.pm: Reported by sympa_bug_report@nmhq.net , fixe bug
+	when validate a message for a empty list
+
+2003-03-07 17:05  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa/index.html,
+	sympa/node1.html, sympa/node10.html, sympa/node11.html,
+	sympa/node12.html, sympa/node13.html, sympa/node14.html,
+	sympa/node15.html, sympa/node16.html, sympa/node17.html,
+	sympa/node18.html, sympa/node19.html, sympa/node2.html,
+	sympa/node20.html, sympa/node3.html, sympa/node4.html,
+	sympa/node5.html, sympa/node6.html, sympa/node7.html,
+	sympa/node8.html, sympa/node9.html, sympa/sympa.html,
+	sympa/sympa.ps: Update doc
+
+2003-03-07 17:05  salaun
+
+	* doc/sympa.tex.tpl, wwsympa/wwsympa.fcgi: New feature: new
+	suported parameter 'failure_referer' for login action
+
+2003-03-07 16:54  salaun
+
+	* src/etc/mhonarc-ressources, wwsympa/wwsympa.fcgi: 
+	
+	Add a button in archive to send back a message to a user.  Feature
+	not complete :	 -encrypted message ?	-add some headers
+	"resent-from" resend-date ?
+
+2003-03-06 08:52  salaun
+
+	* src/tools.pl: Reported by Claude Gross X509 DN email field can be
+	email=xxx or emailaddress=xxx (openssl 0.9.7.a)
+
+2003-03-05 16:35  salaun
+
+	* src/tools.pl: Changes: Extend escaped chars
+
+2003-03-05 15:21  salaun
+
+	* src/: List.pm, List.pm: [BugID 121] [reported by G. Paressant]
+	Fix: import problems with include2.  Now set 'subscribed' DB field
+	in &user_add() if required
+
+2003-02-27 11:30  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: [reported by P. Maes] Fix
+	urlize-related problems: missing quotes around URL.  Escaped chars
+	in URL need to be re-escaped in wwsympa
+
+2003-02-27 09:07  salaun
+
+	* doc/sympa.tex.tpl: More comment about fastcgi and suexec
+
+2003-02-25 10:34  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: [reported by P. Maes] Fix
+	urlize-related problems: missing quotes around URL.  Escaped chars
+	in URL need to be re-escaped in wwsympa
+
+2003-02-24 17:44  salaun
+
+	* Makefile.in, doc/sympa.tex.tpl, src/List.pm, src/List.pm: [G.
+	Bittencourt] Fix: incorrect Sybase (DBD::Sybase 0.95) connect
+	string ; replaced dbname with database
+
+2003-02-24 17:32  salaun
+
+	* Makefile.am, Makefile.in: [reported by J. Douglas] Fix: make
+	install failed on Solaris : "sh: test: argument expected" Changed
+	test condition in Makefile
+
+2003-02-24 17:14  salaun
+
+	* Makefile.am, src/Makefile, Makefile.am, Makefile.in,
+	src/Makefile: Missing var NLSDIR while installing sbin_SRC
+
+2003-02-19 10:42  salaun
+
+	* wwsympa/wwsympa.fcgi: [from Guy Paressant] Remove in
+	ldap_authentication a unusefull anonymous bind
+
+2003-02-19 09:26  salaun
+
+	* check_perl_modules.pl: Net::LDAP 0.27 is required if using
+	multiple ldap host definition.
+
+2003-02-19 08:25  salaun
+
+	* src/List.pm: [From Vincent Mathieu]
+	
+	allow usage of multiple ldap host for include_ldap:
+	
+	ldap1.dom.net:port,ldap2.dom.net:port
+
+2003-02-19 08:23  salaun
+
+	* doc/sympa.tex.tpl: How to use multiple LDAP host (replication)
+
+2003-02-14 12:43  salaun
+
+	* src/: tools.pl, tools.pl: Fix: Sympa.pl could die with error
+	"Can't call method "decode" on an undefined value" while decoding
+	malformed multipart messages
+
+2003-02-13 11:45  salaun
+
+	* Makefile.in: Updated
+
+2003-02-13 11:44  salaun
+
+	* important_changes.pl, important_changes.pl: Fix it
+
+2003-02-13 11:33  salaun
+
+	* Makefile.am, src/etc/sample/Makefile: [G. Paressant] Fix: small
+	fixes, samplelist could not be installed
+
+2003-02-13 11:30  salaun
+
+	* Makefile.am, src/etc/sample/Makefile: [G. Paressant] Fix: small
+	fixes, samplelist could not be installed
+
+2003-02-12 10:30  salaun
+
+	* important_changes.pl: Change: use stable version of the script
+
+2003-02-12 10:26  salaun
+
+	* important_changes.pl: Replace buggy &higher subroutine
+
+2003-02-12 10:25  salaun
+
+	* NEWS: [reported by Fil] Fix
+
+2003-02-10 13:11  salaun
+
+	* src/: List.pm, etc/templates/fr/listmaster_notification.fr.tpl,
+	etc/templates/us/listmaster_notification.us.tpl: [BugID 108]
+	[reported by G. Paressant] Fix:  include2 lists subscribers are
+	deleted when a problem occur with the datasource LDAP server. Now
+	interrupt the database update if _load_users_include2() failed ;
+	also notify listmaster.
+
+2003-02-10 13:07  salaun
+
+	* src/: List.pm, etc/templates/fr/listmaster_notification.fr.tpl,
+	etc/templates/us/listmaster_notification.us.tpl: [BugID 108]
+	[reported by G. Paressant] Fix:  include2 lists subscribers are
+	deleted when a problem occur with the datasource LDAP server. Now
+	interrupt the database update if _load_users_include2() failed ;
+	also notify listmaster.
+
+2003-02-06 10:17  salaun
+
+	* src/: List.pm, List.pm: Fix: if a list param does not exist,
+	scenario verification failed.  Also fixed some 'return -1'
+
+2003-02-05 17:22  salaun
+
+	* .version, ChangeLog, NEWS: preparing 3.4.3.1
+
+2003-02-05 17:04  salaun
+
+	* src/: List.pm, List.pm: [galibert AT pobox.com] Fix:	The 28 jan.
+	patch lost the space between the tag and the subject when adding a
+	new tag. This puts it back.
+
+2003-02-05 16:56  salaun
+
+	* src/List.pm: Fix: scenarios using [previous_email] var could not
+	be evaluated.  Now allowing undef vars in scenarios. Notify
+	listmaster if a scenario could not be evaluated.
+
+2003-02-05 16:47  salaun
+
+	* src/List.pm: Fix: scenarios using [previous_email] var could not
+	be evaluated.  Now allowing undef vars in scenarios. Notify
+	listmaster if a scenario could not be evaluated.
+
+2003-02-05 08:47  salaun
+
+	* src/etc/: list_aliases.tpl, list_aliases.tpl: Fix: incorrect
+	parameter for bouncequeue (only for default domain)
+
+2003-01-29 12:14  salaun
+
+	* src/: List.pm, Log.pm, sympa.pl: New feature: use &fatal_error()
+	instead of exit. fatal_error() now notifies the listmaster
+
+2003-01-29 11:07  salaun
+
+	* src/: Log.pm, sympa.pl: Fix: Suppress debug info when running
+	sympa.pl in batch mode
+
+2003-01-28 16:22  salaun
+
+	* src/List.pm: [reported by C. Mock] Fix: possible values of
+	'archive_crypted_msg'
+
+2003-01-28 15:33  salaun
+
+	* ChangeLog, NEWS: Update
+
+2003-01-28 15:30  salaun
+
+	* src/: List.pm, List.pm: [BugID 99] Change: Pg 7.3 no longer
+	supports the LIMIT #,# syntax
+
+2003-01-28 15:08  salaun
+
+	* src/List.pm: [reported by G. Paressant] Fix: make [list->domain]
+	var available in list templates
+
+2003-01-28 14:29  salaun
+
+	* ChangeLog, NEWS: Update
+
+2003-01-28 14:24  salaun
+
+	* src/List.pm: Fix: If custom_subject is found in the subject,
+	don't move it at the beginning of the subject. This prevents Re:
+	Re: Re: subjects
+
+2003-01-28 14:18  salaun
+
+	* src/List.pm: Fix: If custom_subject is found in the subject,
+	don't move it at the beginning of the subject. This prevents Re:
+	Re: Re: subjects
+
+2003-01-28 11:28  salaun
+
+	* ChangeLog: Update
+
+2003-01-28 11:28  salaun
+
+	* NEWS: Upd
+
+2003-01-28 11:26  salaun
+
+	* src/sympa.pl: Fix: 'antivirus_notify' was only used in message
+	forarding context
+
+2003-01-28 10:35  salaun
+
+	* ChangeLog, NEWS: Update
+
+2003-01-28 10:34  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa/index.html,
+	sympa/node1.html, sympa/node10.html, sympa/node11.html,
+	sympa/node12.html, sympa/node13.html, sympa/node14.html,
+	sympa/node15.html, sympa/node16.html, sympa/node17.html,
+	sympa/node18.html, sympa/node19.html, sympa/node2.html,
+	sympa/node20.html, sympa/node3.html, sympa/node4.html,
+	sympa/node5.html, sympa/node6.html, sympa/node7.html,
+	sympa/node8.html, sympa/node9.html, sympa/sympa.html,
+	sympa/sympa.ps: Update doc
+
+2003-01-28 10:22  salaun
+
+	* src/List.pm: Fix: get_total() failed with lists in 'include' mode
+
+2003-01-28 10:21  salaun
+
+	* src/List.pm: Fix: get_total() with lists in 'include' mode
+
+2003-01-27 11:05  salaun
+
+	* ChangeLog, NEWS: [no log message]
+
+2003-01-27 10:52  salaun
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
+	doc/sympa/node11.html, doc/sympa/node12.html,
+	doc/sympa/node13.html, doc/sympa/node14.html,
+	doc/sympa/node15.html, doc/sympa/node16.html,
+	doc/sympa/node17.html, doc/sympa/node18.html,
+	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
+	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
+	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
+	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps,
+	src/etc/scenari/subscribe.auth_owner,
+	src/etc/scenari/subscribe.owner, wwsympa/wwsympa.fcgi: 
+	
+	Add a new variable [previous_email] for use in scenario subscribe
+	when changing email. It is needed in order to accept change email
+	from subscribers even if new subscribtion need owner control.
+
+2003-01-27 10:44  salaun
+
+	* doc/sympa.tex.tpl, src/etc/scenari/subscribe.auth_owner,
+	src/etc/scenari/subscribe.owner, wwsympa/wwsympa.fcgi: 
+	
+	add a new variable [previous_email] for scenario subscribe when
+	changing email in order to accept changing email without request to
+	list owner if needed.
+
+2003-01-24 15:57  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by G. Lau] Fix: After editing a
+	list's config, every topic had an empty subtopic. Now test if there
+	are any subtopic before going through them.
+
+2003-01-24 15:56  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by G. Lau] Fix: After editing a
+	list's config, every topic had an empty subtopic. Now test if there
+	are any subtopic before going through them.
+
+2003-01-24 12:49  salaun
+
+	* src/etc/scenari/: send.privateandeditorkey,
+	send.privateandnomultipartoreditorkey, send.publicnoattachment,
+	send.publicnomultipart: Fix some send scenarios
+
+2003-01-24 10:47  salaun
+
+	* ChangeLog: Update
+
+2003-01-24 10:45  salaun
+
+	* NEWS, wwsympa/wwsympa.fcgi: Fix: looking for
+	subscribers.closed.dump in the wrong directory. Could not restore
+	subscribers for lists in a Virtual Robot.
+
+2003-01-24 10:43  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: looking for subscribers.closed.dump in
+	the wrong directory. Could not restore subscribers for lists in a
+	Virtual Robot.
+
+2003-01-24 10:35  salaun
+
+	* src/List.pm: Fix previous changes
+
+2003-01-24 10:30  salaun
+
+	* NEWS, src/List.pm, wwsympa/wwsympa.fcgi: Change: Total
+	subscribers is updated more often, based on DB
+
+2003-01-24 09:57  salaun
+
+	* ChangeLog, NEWS: Re-preparing 3.4.3
+
+2003-01-24 09:48  salaun
+
+	* src/: Makefile, Makefile: Fix: Aliaswraper was installed with
+	wrong attributes (sympa instead of root). Could not run newaliases
+
+2003-01-23 17:40  salaun
+
+	* wwsympa/wwsympa.fcgi: 
+	after renaming a list redirect to the admin page of the new list
+
+2003-01-23 17:28  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: alias management error status were
+	badly used
+
+2003-01-23 17:24  salaun
+
+	* ChangeLog, wwsympa/wwsympa.fcgi: Fix: alias management error
+	status were badly used
+
+2003-01-23 16:30  salaun
+
+	* wwsympa/wwsympa.fcgi: log entry in debug
+
+2003-01-23 15:57  salaun
+
+	* src/List.pm: Fix: Query database for total subscribers before
+	send a message, in case new database entries have been added
+
+2003-01-22 17:29  salaun
+
+	* src/: List.pm, etc/script/create_db.Pg: [E. Dreyfus] [reported by
+	pamelant AT nerim.net] Change:	Postgresql 7.3 has no support for
+	not SQL standard type 'datetime'.  ***** If you are upgrading from
+	a previous Sympa version, you should update ***** your sympa DB as
+	follows : ***** ALTER TABLE subscriber_table CHANGE date_subscriber
+	timestamp with time zone NOT NULL; ***** ALTER TABLE
+	subscriber_table CHANGE update_subscriber timestamp with time zone;
+
+2003-01-22 17:29  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa/index.html,
+	sympa/node1.html, sympa/node10.html, sympa/node11.html,
+	sympa/node12.html, sympa/node13.html, sympa/node14.html,
+	sympa/node15.html, sympa/node16.html, sympa/node17.html,
+	sympa/node18.html, sympa/node19.html, sympa/node2.html,
+	sympa/node20.html, sympa/node3.html, sympa/node4.html,
+	sympa/node5.html, sympa/node6.html, sympa/node7.html,
+	sympa/node8.html, sympa/node9.html, sympa/sympa.html,
+	sympa/sympa.ps: Update doc
+
+2003-01-22 17:25  salaun
+
+	* src/: List.pm, etc/script/create_db.Pg: [E. Dreyfus] [reported by
+	pamelant AT nerim.net] Change:	Postgresql 7.3 has no support for
+	not SQL standard type 'datetime'.  ***** If you are upgrading from
+	a previous Sympa version, you should update ***** your sympa DB as
+	follows : ***** ALTER TABLE subscriber_table CHANGE date_subscriber
+	timestamp with time zone NOT NULL; ***** ALTER TABLE
+	subscriber_table CHANGE update_subscriber timestamp with time zone;
+
+2003-01-22 10:35  salaun
+
+	* src/task_manager.pl: Fix problems with REMIND task, it has been
+	reactivated
+
+2003-01-22 10:33  salaun
+
+	* src/: List.pm, List.pm: [reported by A. Delvaux] Fix: incorrect
+	format of List-ID header field
+
+2003-01-22 10:05  salaun
+
+	* src/task_manager.pl: Fix problems with REMIND task, it has been
+	reactivated
+
+2003-01-21 17:15  salaun
+
+	* src/task_manager.pl: Fix: task_manager died if incorrect listname
+
+2003-01-21 14:59  salaun
+
+	* doc/sympa.tex.tpl: [reported by E. Dreyfus] Fix: missing FreeBSD
+
 2003-01-17 17:37  salaun
 
 	* src/List.pm, wwsympa/wwsympa.fcgi: Fix: total subscribers is now

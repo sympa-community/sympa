@@ -426,9 +426,9 @@ while (!$signal) {
 	}
 
 	# (sa) le terme "(\@$Conf{'host'})?" est inutile
-	unless ($t_listname =~ /^(sympa|listmaster|$Conf{'email'})(\@$Conf{'host'})?$/i) {
-	    $list = new List ($t_listname);
-	}
+	#unless ($t_listname =~ /^(sympa|listmaster|$Conf{'email'})(\@$Conf{'host'})?$/i) {
+	#    $list = new List ($t_listname);
+	#}
 	
 	if ($t_listname eq 'listmaster') {
 	    ## highest priority
@@ -440,6 +440,7 @@ while (!$signal) {
 	}elsif ($t_listname =~ /^(sympa|$Conf{'email'})(\@$Conf{'host'})?$/i) {	
 	    $priority = $Conf{'sympa_priority'};
 	}else {
+	    my $list =  new List ($t_listname);
 	    if ($list) {
 		$priority = $list->{'admin'}{'priority'};
 	    }else {
@@ -575,6 +576,12 @@ sub DoFile {
     $listname = lc($listname);
     $robot ||= $Conf{'host'};
     
+    my $type;
+    my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
+    if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
+	($listname, $type) = ($1, $2);
+    }
+
     # setting log_level using conf unless it is set by calling option
     unless ($main::options{'log_level'}) {
 	$log_level = $Conf{'robots'}{$robot}{'log_level'};
@@ -674,11 +681,12 @@ sub DoFile {
 
 	## Mail adressed to the robot and mail 
 	## to <list>-subscribe or <list>-unsubscribe are commands
-    }elsif (($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) || ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o)) {
+    }elsif (($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) || ($type =~ /^(subscribe|unsubscribe)$/o)) {
 	$status = &DoCommand($rcpt, $robot, $msg, $file);
 	
 	## forward mails to <list>-request <list>-owner etc
-    }elsif ($rcpt =~ /^(\S+)-(request|owner|editor)(\@(\S+))?$/o) {
+#    }elsif ($rcpt =~ /^(\S+)-(request|owner|editor)(\@(\S+))?$/o) {
+    }elsif ($type =~ /^(request|owner|editor)$/o) {
 	my ($name, $function) = ($1, $2);
 	
 	## Simulate Smartlist behaviour with command in subject
