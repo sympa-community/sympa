@@ -1,4 +1,5 @@
-[IF domain_is_default_domain]
+#------------------------------ [listname]: list alias created [date]
+[IF is_default_domain]
 [listname]: "| [path_to_queue] [listname]@[domain]"
 [listname]-request: "| [path_to_queue] [listname]-request@[domain]"
 [listname]-editor: "| [path_to_queue] [listname]-editor@[domain]"

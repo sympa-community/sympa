@@ -22,8 +22,13 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 ## Load Sympa.conf
+use strict;
 use lib '--LIBDIR--';
 use Conf;
+use POSIX;
+require "tools.pl";
+require "parser.pl";
+
 
 unless (Conf::load('--CONFIG--')) {
    print Msg(1, 1, "Configuration file --CONFIG-- has errors.\n");
@@ -43,63 +48,61 @@ $ENV{'PATH'} = '';
 
 my ($operation, $listname, $domain) = @ARGV;
 
+
 if (($#ARGV != 2) 
     || ($operation !~ /^(add)|(del)$/)) {
     printf "Usage: $0 <add|del> <listname> <domain>\n";
-    exit(1);
+    exit(2);
 }
 
-## Get default domain from sympa.conf
-unless (open CONF, $sympa_conf_file) {
-    die "Could not read $sympa_conf_file";
-}
-while (<CONF>) {
-    if (/^\s*(host|domain)\s+(\S+)\s*$/) {
-	$default_domain = $2;
-	last;
-    }
-}
-close CONF;
-unless ($default_domain) {
-    print STDERR "Could not get default domain from $sympa_conf_file\n";
-}
+$default_domain = $Conf{'domain'};
 
 unless (-w "$alias_file") {
-    die "Unable to access $alias_file";
+    print STDERR "Unable to access $alias_file";
+    exit(5);
 }
+    
+my %data;
+$data{'date'} =  &POSIX::strftime("%d %b %Y", localtime($info[9]));
+$data{'path_to_queue'} = '--MAILERPROGDIR--/queue';
+$data{'path_to_bouncequeue'} = '--MAILERPROGDIR--/bouncequeue';
+$data{'domain'} = $data{'robot'} = $domain;
+$data{'listname'} = $listname;
+$data{'default_domain'} = $default_domain;
+$data{'is_default_domain'} = 1 if ($domain == $default_domain);
+my $template_file = &tools::get_filename('etc', 'alias.tpl', $domain);
+my @aliases ;
+&parse_tpl (\%data,$template_file,\@aliases);
+
 
 if ($operation eq 'add') {
     ## Create a lock
-    open(LF, ">>$lock_file") || die "Can't open lock file $lock_file";
+    unless (open(LF, ">>$lock_file")) { 
+	print STDERR "Can't open lock file $lock_file";
+	exit(14);
+    }
     flock LF, 2;
 
     ## Check existing aliases
-    exit(-1) if (&already_defined($listname.$suffix, $domain));
-	
-    unless (open  ALIAS, ">> $alias_file") {
-	die "Unable to append to $alias_file";
-    }
-    
-    ## Write aliases
-    # print ALIAS "# --- aliases for list $listname\n";
-    foreach my $suffix ('', '-request', '-editor', '-owner', '-unsubscribe') {
-	
-	my $alias = $listname . $suffix;
-	$alias .= '@'.$domain
-	    unless ($domain eq $default_domain);
-	
-	if ($suffix eq '-owner') {
-	    printf ALIAS "$alias: \"\|$path_to_bouncequeue $listname\@$domain\"\n";
-	}else {
-	    printf ALIAS "$alias: \"\|$path_to_queue $listname$suffix\@$domain\"\n";
-	}
+    if (&already_defined(@aliases)) {
+	printf STDERR "some alias already exist\n";
+	exit(13);
     }
 
+    unless (open  ALIAS, ">> $alias_file") {
+	print STDERR "Unable to append to $alias_file";
+	exit(5);
+    }
+
+    foreach (@aliases) {
+	print ALIAS "$_";
+    }
     close ALIAS;
 
     ## Newaliases
     unless (system($alias_wrapper) == 0) {
-	die "Failed to execute newaliases: $!";
+	print STDERR "Failed to execute newaliases: $!";
+	exit(6)
     }
 
     ## Unlock
@@ -113,46 +116,52 @@ if ($operation eq 'add') {
     flock LF, 2;
 
     unless (open  ALIAS, "$alias_file") {
-	die "Could not read $alias_file";
+	print STDERR "Could not read $alias_file";
+	exit(7);
     }
     
     unless (open NEWALIAS, ">$tmp_alias_file") {
-	die "Could not create $tmp_alias_file";
+	printf STDERR "Could not create $tmp_alias_file";
+	exit (8);
     }
 
-    my $deleted_lines;
-  FIC: while (<ALIAS>) {
-      if (/^\s*$listname/) {
-	  foreach my $suffix ('', '-request', '-editor', '-owner', '-unsubscribe') {
-	      my $local = $listname . $suffix;
-	      if (( /^\s*$local(\s*\:)/) ||
-		  ( ("$default_domain" eq "$domain") && (/^\s*$local\@/)) ||
-		  ( /^\s*$local\@$domain/)) {
-		  
-		  ## delete alias
-		  $deleted_lines++;
-		  next FIC;
-	      }
-	  }
-      }
-      
-      ## append to new aliases file
-      print NEWALIAS $_;
-  }
-    
+    my @deleted_lines;
+    while (my $alias = <ALIAS>) {
+	my $left_side = '';
+	$left_side = $1 if ($alias =~ /^([^:]+):/);
+
+	my $to_be_deleted = 0;
+	foreach my $new_alias (@aliases) {
+	    next unless ($new_alias =~ /^([^:]+):/);
+	    my $new_left_side = $1;
+	    
+	    if ($left_side eq  $new_left_side) {
+		push @deleted_lines, $alias;
+		$to_be_deleted = 1 ;
+		last;
+	    }
+	}
+	unless ($to_be_deleted)  {
+	    ## append to new aliases file
+	    print NEWALIAS $alias;
+	}
+    }
     close ALIAS ;
     close NEWALIAS;
     
-    print STDERR "No matching line in $alias_file\n"
-	unless $deleted_lines;
-    
+    if ($#deleted_lines == -1) {
+	print STDERR "No matching line in $alias_file\n" ;
+	exit(9);
+    }
     ## replace old aliases file
     unless (open  NEWALIAS, "$tmp_alias_file") {
-	die "Could not read $tmp_alias_file";
+	print STDERR "Could not read $tmp_alias_file";
+	exit(10);
     }
     
     unless (open OLDALIAS, ">$alias_file") {
-	die "Could not overwrite $alias_file";
+	print STDERR "Could not overwrite $alias_file";
+	exit (11);
     }
     print OLDALIAS <NEWALIAS>;
     close OLDALIAS ;
@@ -161,7 +170,8 @@ if ($operation eq 'add') {
 
     ## Newaliases
     unless (system($alias_wrapper) == 0) {
-	die "Failed to execute newaliases: $!";
+	print STDERR "Failed to execute newaliases: $!";
+	exit (6);
     }
 
     ## Unlock
@@ -169,32 +179,35 @@ if ($operation eq 'add') {
     close LF;
 
 }else {
-    die "Action $operation not implemented yet";
+    print STDERR "Action $operation not implemented yet";
+    exit(2);
 }
 
 exit 0;
 
 ## Check if an alias is already defined  
 sub already_defined {
-    my $listname = shift;
-    my $domain = shift;
+    my @aliases = @_;
     
     unless (open  ALIAS, "$alias_file") {
-	die "Could not read $alias_file";
+	printf STDERR "Could not read $alias_file";
+	exit (7);
     }
 
-    while (<ALIAS>) {
-	if (/^\s*$listname/) {
-	    foreach my $suffix ('', '-request', '-editor', '-owner', '-unsubscribe') {
-		my $local = $listname . $suffix;
-		if (( /^\s*$local(\s*\:)/) ||
-		    ( ("$default_domain" eq "$domain") && (/^\s*$local\@/)) ||
-		    ( /^\s*$local\@$domain/)) {
-		    print STDERR "Alias already defined : $local\n";
-		    return 1;
-		}
+    while (my $alias = <ALIAS>) {
+	# skip comment
+	next if $alias =~ /^#/ ; 
+	$alias =~ /^([^:]+):/;
+	my $left_side = $1;
+	next unless ($left_side);
+	foreach (@aliases) {
+	    next unless ($_ =~ /^([^:]+):/); 
+	    my $new_left_side = $1;
+	    if ($left_side eq  $new_left_side) {
+		print STDERR "Alias already defined : $left_side\n";
+		return 1;
 	    }
-	}
+	}	
     }
     
     close ALIAS ;
