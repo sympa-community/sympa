@@ -112,7 +112,7 @@ bouncequeue: bouncequeue.c Makefile ../Makefile
 
 aliaswrapper: aliaswrapper.c Makefile ../Makefile
 	$(CC) $(CFLAGS) $(CDEFS) -DNEWALIASES=\"${NEWALIASES}\" \
-		-o aliaswrapper aliaswrapper.c
+		-DNEWALIASES_ARG=\"${NEWALIASES_ARG}\" -o aliaswrapper aliaswrapper.c
 
 subst:
 	@echo "Doing multiple substitutions while installing ..."

@@ -68,6 +68,9 @@ ICONSDIR	=	/home/httpd/icons
 ## Mail aliases database)
 NEWALIASES    =       /usr/bin/newaliases
 
+## Argument to newaliases command
+# NEWALIASES_ARG	=	hash:/etc/mail/sympa_aliases
+
 ## The sendmail aliases file we use. Better use a seperate one for sympa.
 ## Of cause a extra alias file must be generated with proper permissions
 ## (owner sympa, write access for sympa, no write access for anyone else)
@@ -123,7 +126,7 @@ checkperl:
 	echo "#############################################################################"; \
 	fi
 
-sources: src/Makefile src/queue.c src/bouncequeue.c
+sources: src/Makefile src/queue.c src/bouncequeue.c src/aliaswrapper.c
 	@echo "Making src"
 	(cd src && echo "making in src..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
@@ -131,7 +134,8 @@ sources: src/Makefile src/queue.c src/bouncequeue.c
 	MAILERPROGDIR='${MAILERPROGDIR}' ETCBINDIR='${ETCBINDIR}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	USER='${USER}' GROUP='${GROUP}' \
-	SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' NEWALIASES='${NEWALIASES}');
+	SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' NEWALIASES='${NEWALIASES}' \
+	NEWALIASES_ARG='${NEWALIASES_ARG}');
 
 doc: doc/sympa.tex.tpl doc/Makefile 
 	@echo "Making doc"

@@ -839,6 +839,7 @@ the case if you are using redhat 6.X.
 \item SENDMAIL\_ALIASES, the sendmail aliases file. This is used by the alias\_manager
 script.
 \item NEWALIASES, the path to newaliases command.
+\item NEWALIASES\_ARG, arguments passed to newaliases command.
 \item INITDIR, the directory to contain a SYSV init script (typically /etc.rc.d/init.d/)
 \item DESTDIR, can be set in the main Makefile to install sympa in DESTDIR/DIR
 (instead of DIR). This is useful for building RPM and DEB packages.
