@@ -123,7 +123,8 @@ sub load_config {
 			wws_path => '--BINDIR--',
 			default_home => 'home',
 			log_facility => '',
-			alias_manager => ''
+			alias_manager => '',
+			robots => ''
 			);
 
     my $conf = \%default_conf;
@@ -162,6 +163,14 @@ sub load_config {
     if ($conf->{'mhonarc'} && (! -x $conf->{'mhonarc'})) {
 	printf STDERR "MHonArc is not installed or %s is not executable.\n", $conf->{'mhonarc'};
     }
+
+    # robots <robot_domain>,<http_host>,<robot title>(|<robot_domain>,<http_host>,<robot title>)+
+    foreach my $robot (split /|/, $conf->{'robots'}) {
+	my ($domain,host,$title) = split /,/;
+	$conf->{'robot_domain'}{$host} = $domain;
+	$conf->{'robot_title'}{$domain} = $title;
+    }
+    
 
     return $conf;
 }
