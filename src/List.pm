@@ -205,7 +205,7 @@ my %default = ('occurrence' => '0-1',
 
 my @param_order = qw (subject visibility info subscribe add unsubscribe del owner send editor 
 		      account topics 
-		      domain host lang web_archive archive digest available_user_options 
+		      host lang web_archive archive digest available_user_options 
 		      default_user_options reply_to_header reply_to forced_reply_to * 
 		      welcome_return_path remind_return_path user_data_source include_file 
 		      include_list include_ldap_query include_sql_query ttl creation update 
@@ -385,11 +385,6 @@ my %alias = ('reply-to' => 'reply_to',
 			 'title_id' => 22,
 			 'group' => 'tuning'
 		     },
-	    'domain' => {'format' => $regexp{'host'},
-		       'length' => 20,
-		       'title_id' => 33,
-		       'group' => 'description'
-		   },
 
 	    'editor' => {'format' => {'email' => {'format' => $regexp{'email'},
 						  'length' => 30,
@@ -792,7 +787,7 @@ sub db_connect {
     }
 
     unless ( $dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'}) ) {
-	do_log ('notice','Can\'t connect to Database %s as %s', $connect_string, $Conf{'db_user'});
+	do_log ('err','Can\'t connect to Database %s as %s', $connect_string, $Conf{'db_user'});
 
 	&send_notify_to_listmaster('no_db');
 	&fatal_err('Sympa cannot connect to database %s, dying', $Conf{'db_name'});
@@ -871,9 +866,10 @@ sub savestats {
    
     ## Be sure the list has been loaded.
     my $name = $self->{'name'};
+    my $dir = $self->{'dir'};
     return undef unless ($list_of_lists{$name});
     
-   _save_stats_file("$name/stats", $self->{'stats'}, $self->{'total'});
+   _save_stats_file("$dir/stats", $self->{'stats'}, $self->{'total'});
     
     ## Changed on disk
     $self->{'mtime'}[2] = time;
@@ -908,14 +904,14 @@ sub dump {
 
 	if ($list->{'admin'}{'user_data_source'} eq 'database') {
             do_log('debug', 'Dumping list %s',$l);
-	    $user_file_name = "$l/subscribers.db.dump";
+	    $user_file_name = "$list->{'dir'}/subscribers.db.dump";
 	    $list->_save_users_file($user_file_name);
-	    $list->{'mtime'} = [ (stat("$l/config"))[9], (stat("$l/subscribers"))[9], (stat("$l/stats"))[9] ];
+	    $list->{'mtime'} = [ (stat("$list->{'dir'}/config"))[9], (stat("$list->{'dir'}/subscribers"))[9], (stat("$list->{'dir'}/stats"))[9] ];
 	}elsif ($list->{'admin'}{'user_data_source'} eq 'include') {
             do_log('debug', 'Dumping list %s',$l);
-	    $user_file_name = "$l/subscribers.incl.dump";
+	    $user_file_name = "$list->{'dir'}/subscribers.incl.dump";
 	    $list->_save_users_file($user_file_name);
-	    $list->{'mtime'} = [ (stat("$l/config"))[9], (stat("$l/subscribers"))[9], (stat("$l/stats"))[9] ];
+	    $list->{'mtime'} = [ (stat("$list->{'dir'}/config"))[9], (stat("$list->{'dir'}/subscribers"))[9], (stat("$list->{'dir'}/stats"))[9] ];
 	} 
 
     }
@@ -936,13 +932,13 @@ sub save {
     my $user_file_name;
 
     if ($self->{'admin'}{'user_data_source'} eq 'file') {
-	$user_file_name = "$name/subscribers";
+	$user_file_name = "$list->{'dir'}/subscribers";
 
         unless ($self->_save_users_file($user_file_name)) {
 	    &do_log('info', 'unable to save user file %s', $user_file_name);
 	    return undef;
 	}
-        $self->{'mtime'} = [ (stat("$name/config"))[9], (stat("$name/subscribers"))[9], (stat("$name/stats"))[9] ];
+        $self->{'mtime'} = [ (stat("$list->{'dir'}/config"))[9], (stat("$list->{'dir'}/subscribers"))[9], (stat("$list->{'dir'}/stats"))[9] ];
     }
     
     return 1;
@@ -955,8 +951,8 @@ sub save_config {
 
     my $name = $self->{'name'};    
     my $old_serial = $self->{'admin'}{'serial'};
-    my $config_file_name = "$name/config";
-    my $old_config_file_name = "$name/config.$old_serial";
+    my $config_file_name = "$list->{'dir'}/config";
+    my $old_config_file_name = "$list->{'dir'}/config.$old_serial";
 
     return undef 
 	unless ($list_of_lists{$name});
@@ -974,7 +970,7 @@ sub save_config {
 	&do_log('info', 'unable to save config file %s', $config_file_name);
 	return undef;
     }
-#    $self->{'mtime'}[0] = (stat("$name/config"))[9];
+#    $self->{'mtime'}[0] = (stat("$list->{'dir'}/config"))[9];
     
     return 1;
 }
@@ -983,35 +979,38 @@ sub save_config {
 sub load {
     my ($self, $name) = @_;
     do_log('debug2', 'List::load(%s)', $name);
-
-    my $users;
-
-    ## Check if we have the directory
-    unless (-d "$name") {
-	&do_log('info', 'No directory for list %s', $name);
-	return undef ;
+    
+    my $users,$robot;
+    foreach my $r (&get_robot,'.') {
+	if ((-d "$robot/$name") && (-d "$robot/$name")) {
+	    $robot=$r;
+	    last;
+	}
     }
-
-    ## ...and the config file is readable
-    unless (-r "$name/config") {
-	&do_log('info', 'No config file for list %s', $name);
-	return undef;
+    $self->{'domain'} = $robot;
+    $self->{'domain'} = $Conf{'host'} if $robot eq '.' ;
+    $self->{'name'}  = $name ;
+    $self->{'dir'} = "$robot/$name";
+    
+    unless ($robot) {
+	&do_log('info', 'No such list %s', $name);
+	return undef ;
+    }    
+    
+    my $m1 = (stat("$self->{'dir'}/config"))[9];
+    my $m2; $m2 = (stat("$self->{'dir'}/subscribers"))[9] if (-f "$self->{'dir'}/subscribers");
+    my $m3 = (stat("$self->{'dir'}/stats"))[9];
+    
+    my $admin;
+    
+    if ($self->{'name'} ne $name || $m1 > $self->{'mtime'}->[0]) {
+	$admin = _load_admin_file($self->{'dir'}, $robot, 'config');
     }
     
-    my $m1 = (stat("$name/config"))[9];
-    my $m2; $m2 = (stat("$name/subscribers"))[9] if (-f "$name/subscribers");
-    my $m3 = (stat("$name/stats"))[9];
-
-    my $admin;
-
-    if ($self->{'name'} ne $name || $m1 > $self->{'mtime'}->[0]) {
-	$admin = _load_admin_file($name, 'config');
-    }
-
     $self->{'admin'} = $admin if ($admin);
 
-    $self->{'as_x509_cert'} = 1  if (-r "$name/cert.pem");
-
+    $self->{'as_x509_cert'} = 1  if (-r "$self->{'dir'}/cert.pem");
+    
 
     ## Only load total of users from a Database
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
@@ -1020,15 +1019,15 @@ sub load {
     }elsif($self->{'admin'}->{'user_data_source'} eq 'file') { 
 	
 	## Touch subscribers file if not exists
-	unless ( -r "$name/subscribers") {
-	    open L, ">$name/subscribers" or return undef;
+	unless ( -r "$self->{'dir'}/subscribers") {
+	    open L, ">$self->{'dir'}/subscribers" or return undef;
 	    close L;
-	    do_log('info','No subscribers file, creating %s',"$name/subscribers");
+	    do_log('info','No subscribers file, creating %s',"$self->{'dir'}/subscribers");
 	}
 
 	if ($self->{'name'} ne $name || $m2 > $self->{'mtime'}[1]) {
-	    $users = _load_users("$name/subscribers");
-	    $m2 = (stat("$name/subscribers"))[9];
+	    $users = _load_users("$self->{'dir'}/subscribers");
+	    $m2 = (stat("$self->{'dir'}/subscribers"))[9];
 	}
     }elsif($self->{'admin'}{'user_data_source'} eq 'include') {
 
@@ -1049,24 +1048,24 @@ sub load {
 	    $users = _load_users_include($name,$self->{'admin'});
 	    $m2 = time;
 	}
-
+	
     }else { 
 	do_log ('notice','Wrong value for user_data_source');
 	return undef;
     }
-
-    ## Load stats file if first new() or stats file changed
+    
+## Load stats file if first new() or stats file changed
     my ($stats, $total);
-    ($stats, $total) = _load_stats_file("$name/stats")
+    ($stats, $total) = _load_stats_file("$self->{'dir'}/stats")
 	if (!$m3 || ($m3 > $self->{'mtime'}->[2]));
-
-#    my $stats = _load_stats_file("$name/stats")  if ($self->{'name'} ne $name || $m3 > $self->{'mtime'}->[2]);
-
-    $self->{'name'}  = $name if (-d "$name");
+    
+#    my $stats = _load_stats_file("$self->{'dir'}/stats")  if ($self->{'name'} ne $name || $m3 > $self->{'mtime'}->[2]);
+    
+    
     $self->{'stats'} = $stats if ($stats);
     $self->{'users'} = $users->{'users'} if ($users);
     $self->{'ref'}   = $users->{'ref'} if ($users);
-
+    
     if ($users) {
 	$self->{'total'} = $users->{'total'}
     }elsif ($total && ($self->{'admin'}{'user_data_source'} eq 'database')) {
@@ -3208,9 +3207,13 @@ sub add_user {
 ## Is the user listmaster
 sub is_listmaster {
     my $who = shift;
-    
+    my $robot = shift;
+
     $who =~ y/A-Z/a-z/;
     foreach my $listmaster (@{$Conf{'listmasters'}}){
+	return 1 if ($listmaster =~ /^\s*$who\s*$/i);
+    }    
+    foreach my $listmaster (@{$Conf{'robots'}{$robot}{'listmasters'}}){
 	return 1 if ($listmaster =~ /^\s*$who\s*$/i);
     }    
     return 0;
@@ -3223,7 +3226,7 @@ sub am_i {
 
     my $u;
     
-    return undef unless ($self && $who);;
+    return undef unless ($self && $who);
     $function =~ y/A-Z/a-z/;
     $who =~ y/A-Z/a-z/;
     chomp($who);
@@ -3339,7 +3342,7 @@ sub request_action {
 	    # loading of the structure
 	    my $scenario;
 	    return undef
-		unless($scenario = &_load_scenario_file ($operations[$#operations], $s_name, $robot));
+		unless($scenario = &_load_scenario_file ($operations[$#operations], $robot, $s_name));
 	    @rules = @{$scenario->{'rules'}};
 	    $name = $scenario->{'name'}; 
 	    $data_ref = $scenario;
@@ -3349,7 +3352,6 @@ sub request_action {
 	$name = $data_ref->{'name'};
 
     }elsif ($context->{'topicname'}) {
-	# sa pourquoi on passe pas par load_scenario file ?
 	my $scenario = $list_of_topics{$context->{'topicname'}}{'visibility'};
 	@rules = @{$scenario->{'rules'}};
 	$name = $scenario->{'name'};
@@ -3357,7 +3359,7 @@ sub request_action {
     }else{	
 	my $scenario;
 	return undef 
-	    unless ($scenario = &_load_scenario_file ($operation, $Conf{$operation}),$robot);
+	    unless ($scenario = &_load_scenario_file ($operation, $robot, $Conf{$operation}));
         @rules = @{$scenario->{'rules'}};
 	$name = $scenario->{'name'};
     }
@@ -3879,7 +3881,7 @@ sub archive_exist {
    do_log('debug2', 'List::archive_exist(%s)', $file);
 
    return undef unless ($self->is_archived());
-   Archive::exist("$self->{'name'}/archives", $file);
+   Archive::exist("$self->{'dir'}/archives", $file);
 }
 
 ## Send an archive file to someone
@@ -3889,7 +3891,7 @@ sub archive_send {
 
    return unless ($self->is_archived());
    my $i;
-   if ($i = Archive::exist("$self->{'name'}/archives", $file)) {
+   if ($i = Archive::exist("$self->{'dir'}/archives", $file)) {
       mail::mailarc($i, Msg(8, 7, "File") . " $self->{'name'} $file",$who );
    }
 }
@@ -3899,7 +3901,7 @@ sub archive_ls {
    my $self = shift;
    do_log('debug2', 'List::archive_ls');
 
-   Archive::list("$self->{'name'}/archives") if ($self->is_archived());
+   Archive::list("$self->{'dir'}/archives") if ($self->is_archived());
 }
 
 ## Archive 
@@ -3908,7 +3910,7 @@ sub archive_msg {
     do_log('debug2', 'List::archive_msg for %s',$self->{'name'});
 
     my $is_archived = $self->is_archived();
-    Archive::store("$self->{'name'}/archives",$is_archived, $msg)  if ($is_archived);
+    Archive::store("$self->{'dir'}/archives",$is_archived, $msg)  if ($is_archived);
 
     Archive::outgoing("$Conf{'queueoutgoing'}","$self->{'name'}\@$self->{'admin'}{'host'}",$msg) 
       if ($self->is_web_archived());
@@ -3980,16 +3982,18 @@ sub get_nextdigest {
 
 ## load a scenario if not inline (in the list configuration file)
 sub _load_scenario_file {
-    my ($function, $name, $robot, $directory)= @_;
-    do_log('debug2', 'List::_load_scenario_file(%s, %s, %s, %s)', $function, $name, $robot, $directory);
+    my ($function, $robot, $name, $directory)= @_;
+    do_log('debug2', 'List::_load_scenario_file(%s, %s, %s, %s)', $function, $robot, $name, $directory);
 
     my $structure;
     
     ## List scenario
    
-    my $scenario_file = $directory.'/scenari/'.$function.'.'.$name ;
+    # sa tester le chargement de scenario spécifique à un répertoire du shared
+    my $scenario_file ;
+    $scenario_file = $directory.'/scenari/'.$function.'.'.$name ;
     unless (($directory) && (open SCENARI, $scenario_file)) {
-	
+	do_log('debug2', "xxxxxxxx -------------------------------------------------- $scenario_file");
 	## Robot scenario
 	$scenario_file = "$Conf{'etc'}/$robot/scenari/$function.$name";
 	unless (($robot) && (open SCENARI, $scenario_file)) {
@@ -4002,7 +4006,7 @@ sub _load_scenario_file {
 		$scenario_file = "--ETCBINDIR--/scenari/$function.$name";
 		unless (open SCENARI,$scenario_file) {
 		    do_log ('err',"Unable to open scenario file $function.$name, please report to listmaster");
-		    return &_load_scenario ($function,$name,'true() smtp -> reject', $directory);
+		    return &_load_scenario ($function,$robot,$name,'true() smtp -> reject', $directory);
 		}
 	    }
 	}
@@ -4010,7 +4014,7 @@ sub _load_scenario_file {
 
     my $paragraph= join '',<SCENARI>;
     close SCENARI;
-    unless ($structure = &_load_scenario ($function,$name,$paragraph, $directory)) { 
+    unless ($structure = &_load_scenario ($function,$robot,$name,$paragraph, $directory)) { 
 	do_log ('err',"error in $function scenario $scenario_file ");
     }
 
@@ -4018,8 +4022,8 @@ sub _load_scenario_file {
 }
 
 sub _load_scenario {
-    my ($function, $scenario_name, $paragraph, $directory ) = @_;
-    # do_log('debug2', 'List::_load_scenario(%s,%s)', $function,$scenario_name);
+    my ($function, $robot,$scenario_name, $paragraph, $directory ) = @_;
+    # do_log('debug2', 'List::_load_scenario(%s,%s,%s)', $function,$robot,$scenario_name);
 
     my $structure = {};
     $structure->{'name'} = $scenario_name ;
@@ -4040,7 +4044,7 @@ sub _load_scenario {
         
         if (/^\s*include\s*(.*)\s*$/i) {
         ## introducing in few common rules using include
-	    my $include = &_load_scenario_file ('include',$1, $directory);
+	    my $include = &_load_scenario_file ('include',$robot,$1, $directory);
             push(@scenario,@{$include->{'rules'}});
 	    next;
 	}
@@ -4085,13 +4089,13 @@ sub _load_scenario {
 
 ## Loads all scenari for an action
 sub load_scenario_list {
-    my ($self, $action) = @_;
-    do_log('debug2', 'List::_load_scenario_list(%s)', $action);
+    my ($self, $action,$robot) = @_;
+    do_log('debug2', 'List::_load_scenario_list(%s,%s)', $action,$robot);
 
-    my $directory = "$Conf{'home'}/$self->{'name'}";
+    my $directory = "$self->{'dir'}";
     my %list_of_scenario;
 
-    foreach my $dir ("$directory/scenari", "$Conf{'etc'}/scenari", "--ETCBINDIR--/scenari") {
+    foreach my $dir ("$directory/scenari", "$Conf{'etc'}/$robot/scenari", "$Conf{'etc'}/scenari", "--ETCBINDIR--/scenari") {
 
 	next unless (-d $dir);
 
@@ -4101,7 +4105,7 @@ sub load_scenario_list {
 	    
 	    next if (defined $list_of_scenario{$name});
 
-	    my $scenario = &List::_load_scenario_file ($action, $name, $directory);
+	    my $scenario = &List::_load_scenario_file ($action, $robot, $name, $directory);
 	    $list_of_scenario{$name} = $scenario;
 	}
     }
@@ -4248,6 +4252,8 @@ sub _include_users_admin {
     foreach my $listname (&List::get_lists('*') ) {
 
         if ($mother_list eq $listname) {
+	    # upfully this proc is not ready to use 
+            # sa ce truc ne peut pas marcher
 	    $admin = _load_admin_file($listname, 'config');
 
 	}else{
@@ -4727,8 +4733,36 @@ sub get_lists {
 
     my(@lists, $l);
     do_log('debug2', 'List::get_lists(%s)',$robot);
+
+
+    my $robot_dir =  $Conf{'home'}.'/'.$robot ;
+    $robot_dir = $Conf{'home'} if ($robot eq '*');
     
-    unless (-d $Conf{'home'}) {
+    unless (-d $robot_dir ) {
+	do_log('err',"unknown robot $robot, no such directory $robot_dir");
+	return undef ;
+    }
+    
+    unless (opendir(DIR, $robot_dir)) {
+	do_log('err',"Unable to open $robot_dir");
+	return undef;
+    }
+    foreach $l (sort readdir(DIR)) {
+	next unless (($l !~ /^\./o) and (-d $robot_dir/$l) and (-f "$robot_dir/$l/config"));
+	# push @lists, $l if (&list_by_robot ($l,$robot));*
+	push @lists ;
+
+    }
+    return @lists;
+}
+
+## List of lists hosted by Sympa
+sub get_robots {
+
+    my(@robots, $r);
+    do_log('debug2', 'List::get_robots(%s)');
+
+    unless (-d $Conf{'home'} ) {
 	do_log('err',"no such directory $Conf{'home'}");
 	return undef ;
     }
@@ -4737,12 +4771,12 @@ sub get_lists {
 	do_log('err',"Unable to open $Conf{'home'}");
 	return undef;
     }
-    foreach $l (sort readdir(DIR)) {
-	next unless (($l !~ /^\./o) and (-d $l) and (-f "$l/config"));
-	push @lists, $l if (&list_by_robot ($l,$robot));
+    foreach $r (sort readdir(DIR)) {
+	next unless (($r !~ /^\./o) and (-d $Conf{'home'}/$r) and (!(-f "$robot_dir/$r/config )));
+	push @robots ;
 
     }
-    return @lists;
+    return @robots;
 }
 
 # return true if the list is managed by the robot
@@ -4751,10 +4785,10 @@ sub list_by_robot {
     my($listname,$robot) = @_;
 
     my $list = new List ($listname);
-    return 1 if ($list->{'admin'}{'domain'} eq $robot) ;
+    return 1 if ($list->{'domain'} eq $robot) ;
     # for compatibility with previous versions :
     # if 'domain' is undefined for this list but if the current robot is the default one
-    return 1 if (($robot eq $Conf{'host'}) && (!$list->{'admin'}{'domain'}));
+    return 1 if (($robot eq $Conf{'host'}) && (!$list->{'domain'}));
     return 1 if ($robot eq '*');
     return undef;
 }
@@ -5240,7 +5274,7 @@ sub load_topics {
 	    
 	    if ($#tree == 0) {
 		$list_of_topics{$tree[0]}{'title'} = $topic->{'title'};
-		$list_of_topics{$tree[0]}{'visibility'} = &_load_scenario_file('topics_visibility', $topic->{'visibility'}||'default');
+		$list_of_topics{$tree[0]}{'visibility'} = &_load_scenario_file('topics_visibility', $robot,$topic->{'visibility'}||'default');
 		$list_of_topics{$tree[0]}{'order'} = $topic->{'order'};
 	    }else {
 		my $subtopic = join ('/', @tree[1..$#tree]);
@@ -5252,7 +5286,7 @@ sub load_topics {
     ## Set undefined Topic (defined via subtopic)
     foreach my $t (keys %list_of_topics) {
 	unless (defined $list_of_topics{$t}{'visibility'}) {
-	    $list_of_topics{$t}{'visibility'} = &_load_scenario_file('topics_visibility', 'default');
+	    $list_of_topics{$t}{'visibility'} = &_load_scenario_file('topics_visibility', $robot,'default');
 	}
 
 	unless (defined $list_of_topics{$t}{'title'}) {
@@ -5433,8 +5467,8 @@ sub _save_list_param {
 
 ## Load a single line
 sub _load_list_param {
-    my ($key, $value, $p, $directory) = @_;
-    # &do_log('debug2','_load_list_param(\'%s\',\'%s\')', $key, $value);
+    my ($robot,$key, $value, $p, $directory) = @_;
+    # &do_log('debug2','_load_list_param(%s,\'%s\',\'%s\')', $robot,$key, $value);
     
     ## Empty value
     if ($value =~ /^\s*$/) {
@@ -5459,7 +5493,7 @@ sub _load_list_param {
     ## Scenario
     if ($p->{'scenario'}) {
 	$value =~ y/,/_/;
-	$value = &List::_load_scenario_file ($p->{'scenario'}, $value, $directory);
+	$value = &List::_load_scenario_file ($p->{'scenario'},$robot, $value, $directory);
     }
 
     ## Do we need to split param
@@ -5501,8 +5535,8 @@ sub get_cert {
 
 ## Load a config file
 sub _load_admin_file {
-    my ($directory, $file) = @_;
-    do_log('debug2', 'List::_load_admin_file(%s, %s)', $directory, $file);
+    my ($directory,$robot, $file) = @_;
+    do_log('debug2', 'List::_load_admin_file(%s, %s)', $directory, $robot, $file);
 
     my $config_file = $directory.'/'.$file;
 
@@ -5616,7 +5650,7 @@ sub _load_admin_file {
 		    next;
 		}
 
-		$hash{$key} = &_load_list_param($key, $1, $::pinfo{$pname}{'file_format'}{$key}, $directory);
+		$hash{$key} = &_load_list_param($robot,$key, $1, $::pinfo{$pname}{'file_format'}{$key}, $directory);
 	    }
 
 	    ## Apply defaults & Check required keys
@@ -5626,7 +5660,7 @@ sub _load_admin_file {
 		## Default value
 		unless (defined $hash{$k}) {
 		    if (defined $::pinfo{$pname}{'file_format'}{$k}{'default'}) {
-			$hash{$k} = &_load_list_param($k, 'default', $::pinfo{$pname}{'file_format'}{$k}, $directory);
+			$hash{$k} = &_load_list_param($robot,$k, 'default', $::pinfo{$pname}{'file_format'}{$k}, $directory);
 		    }
 		}
 
@@ -5660,7 +5694,7 @@ sub _load_admin_file {
 		next;
 	    }
 
-	    my $value = &_load_list_param($pname, $1, $::pinfo{$pname}, $directory);
+	    my $value = &_load_list_param($robot,$pname, $1, $::pinfo{$pname}, $directory);
 
 	    delete $admin{'defaults'}{$pname};
 
@@ -5681,7 +5715,7 @@ sub _load_admin_file {
 	## Defaults
 	unless (defined $admin{$p}) {
 	    if (defined $::pinfo{$p}{'default'}) {
-		$admin{$p} = &_load_list_param($p, $::pinfo{$p}{'default'}, $::pinfo{$p}, $directory);
+		$admin{$p} = &_load_list_param($robot,$p, $::pinfo{$p}{'default'}, $::pinfo{$p}, $directory);
 
 	    }elsif ((ref $::pinfo{$p}{'format'} eq 'HASH')
 		    && ($::pinfo{$p}{'occurrence'} !~ /n$/)) {
@@ -5696,7 +5730,7 @@ sub _load_admin_file {
 			last;
 		    }
 		    
-		    $hash->{$key} = &_load_list_param($key, $::pinfo{$p}{'format'}{$key}{'default'}, $::pinfo{$p}{'format'}{$key}, $directory);
+		    $hash->{$key} = &_load_list_param($robot,$key, $::pinfo{$p}{'format'}{$key}{'default'}, $::pinfo{$p}{'format'}{$key}, $directory);
 		}
 
 		$admin{$p} = $hash if (defined $hash);
@@ -5726,13 +5760,10 @@ sub _load_admin_file {
 	    $admin{'digest'} = $digest;
 	}
     }
-    # 'domain' is very original as it overrights 'host' if defined.
-    # in addition $admin->{'host'} is widly used in Sympa so it will not
-    # change everywhere but only when it's needed to check if a list
-    # is related to the current robot. That's because if 'admin' is defined
-    # sympa use virtual robot concept. If 'host' is used, Sympa works as it
-    # did until version 3.2
-    $admin{'host'} = $admin{'domain'} if ($admin{'domain'}); 
+    # The 'host' parameter is ignored if the list is stored on a 
+    #  virtual robot directory
+   
+    # $admin{'host'} = $self{'domain'} if ($self{'dir'} ne '.'); 
 
 	
     if (defined ($admin{'custom_subject'})) {
@@ -5771,7 +5802,7 @@ sub _load_admin_file {
     ## (current version external method are SQL or LDAP query
     if ($admin{'user_data_source'} eq 'include') {
 	foreach my $p ('subscribe','add','invite','unsubscribe','del') {
-	    $admin{$p} = &_load_list_param($p, 'closed', $::pinfo{$p}, 'closed', $directory);
+	    $admin{$p} = &_load_list_param($robot,$p, 'closed', $::pinfo{$p}, 'closed', $directory);
 	}
 
     }
@@ -5788,8 +5819,8 @@ sub _load_admin_file {
     if ($admin{'status'} ne 'open') {
 	## requested and closed list are just list hidden using visibility parameter
 	## and with send parameter set to closed.
-	$admin{'send'} = &_load_list_param('send', 'closed', $::pinfo{'send'}, $directory);
-	$admin{'visibility'} = &_load_list_param('visibility', 'conceal', $::pinfo{'visibility'}, $directory);
+	$admin{'send'} = &_load_list_param('.','send', 'closed', $::pinfo{'send'}, $directory);
+	$admin{'visibility'} = &_load_list_param('.','visibility', 'conceal', $::pinfo{'visibility'}, $directory);
     }
 
     ## reception of default_user_options must be one of reception of
