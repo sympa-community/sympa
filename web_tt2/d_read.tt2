@@ -368,7 +368,7 @@
     [% ELSE %]
       <strong> [%|loc%]Create a new folder inside the folder SHARED[%END%]</strong> <br />
     [% END %]
-    <input maxlength="30" type="text" name="name_doc" /></label>
+    <input size="30" maxlength="100" type="text" name="name_doc" /></label>
     </div>
     <div style="float: right; width: 35%; text-align: left;">
     <input type="submit" value="[%|loc%]Create a new subdirectory[%END%]" name="action_d_create_dir" />
@@ -390,7 +390,7 @@
     <div style="float: left; width: 60%; text-align: right;">
     <label>
       <strong> [%|loc%]Create a new file[%END%]</strong> <br />
-    <input maxlength="30" type="text" name="name_doc" /></label>
+    <input size="30" maxlength="100" type="text" name="name_doc" /></label>
     </div>
 
     <div style="float: right; width: 35%; text-align: left;">
@@ -411,8 +411,8 @@
     <form method="post" action="[% path_cgi %]">
     <div style="float: left; width: 60%; text-align: right;">
     <strong>[%|loc%]Add a bookmark[%END%]</strong><br />
-    <label>[%|loc%]title[%END%] <input maxlength="100" size="20" type="text" name="name_doc" /></label><br />
-    <label>[%|loc%]URL[%END%] <input maxlength="100" size="25" type="text" name="url" /></label>
+    <label>[%|loc%]title[%END%] <input maxlength="100" size="30" type="text" name="name_doc" /></label><br />
+    <label>[%|loc%]URL[%END%] <input maxlength="200" size="30" type="text" name="url" /></label>
     </div>
     <div style="float: right; width: 35%; text-align: left;">
     <input type="submit" value="[%|loc%]Add[%END%]" name="action_d_savefile" />
