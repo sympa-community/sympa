@@ -374,7 +374,7 @@
      [% PROCESS 'list_button_header.tt2' %]
     [% IF action == 'd_read' %]
         <TD WIDTH="100%" BGCOLOR="[% selected_color %]" NOWRAP align=right><font color="[% bg_color %]" size=-1>
-         <b>Shared web</b></font>
+         <b>[%|loc%]Shared web[%END%]</b></font>
         </TD>
     [% ELSE %]
       [% IF may_d_read %]
