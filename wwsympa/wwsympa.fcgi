@@ -752,7 +752,7 @@ while ($query = &new_loop()) {
 
     # exit if wwsympa.fcgi itself has changed
     if ((stat($ENV{'SCRIPT_FILENAME'}))[9] gt $birthday ) {
-         do_log('notice',"Exiting because $ENV{'SCRIPT_FILENAME'} as changed since fastcgi server started");
+         do_log('notice',"Exiting because $ENV{'SCRIPT_FILENAME'} has changed since fastcgi server started");
          exit(0);
     }
 
