@@ -7333,7 +7333,7 @@ sub load_topics {
 		$topic = {'name' => $1,
 			  'order' => $index
 			  };
-	    }elsif (/^([\w]+)\s+(.+)\s*$/) {
+	    }elsif (/^([\w\.]+)\s+(.+)\s*$/) {
 		next unless (defined $topic->{'name'});
 		
 		$topic->{$1} = $2;
@@ -7364,12 +7364,14 @@ sub load_topics {
 	    my @tree = split '/', $topic->{'name'};
 	    
 	    if ($#tree == 0) {
-		$list_of_topics{$robot}{$tree[0]}{'title'} = $topic->{'title'};
+		my $title = _get_topic_titles($topic);
+		$list_of_topics{$robot}{$tree[0]}{'title'} = $title;
 		$list_of_topics{$robot}{$tree[0]}{'visibility'} = &_load_scenario_file('topics_visibility', $robot,$topic->{'visibility'}||'default');
 		$list_of_topics{$robot}{$tree[0]}{'order'} = $topic->{'order'};
 	    }else {
 		my $subtopic = join ('/', @tree[1..$#tree]);
-		$list_of_topics{$robot}{$tree[0]}{'sub'}{$subtopic} = &_add_topic($subtopic,$topic->{'title'},);
+		my $title = _get_topic_titles($topic);
+		$list_of_topics{$robot}{$tree[0]}{'sub'}{$subtopic} = &_add_topic($subtopic,$title);
 	    }
 	}
 
@@ -7380,12 +7382,37 @@ sub load_topics {
 	    }
 	    
 	    unless (defined $list_of_topics{$robot}{$t}{'title'}) {
-		$list_of_topics{$robot}{$t}{'title'} = $t;
+		$list_of_topics{$robot}{$t}{'title'} = {'default' => $t};
 	    }	
 	}
     }
 
+    ## Set the title in the current language
+    my $lang = &Language::GetLang();
+    foreach my $top (keys %{$list_of_topics{$robot}}) {
+	my $topic = $list_of_topics{$robot}{$top};
+	$topic->{'current_title'} = $topic->{'title'}{$lang} || $topic->{'title'}{'default'} || $top;
+
+	foreach my $subtop (keys %{$topic->{'sub'}}) {
+	$topic->{'sub'}{$subtop}{'current_title'} = $topic->{'sub'}{$subtop}{'title'}{$lang} || $topic->{'sub'}{$subtop}{'title'}{'default'} || $subtop;	    
+	}
+    }
+
     return %{$list_of_topics{$robot}};
+}
+
+sub _get_topic_titles {
+    my $topic = shift;
+
+    my $title;
+    foreach my $key (%{$topic}) {
+	if ($key =~ /^title(.(\w+))?$/) {
+	    my $lang = $2 || 'default';
+	    $title->{$lang} = $topic->{$key};
+	}
+    }
+    
+    return $title;
 }
 
 ## Inner sub used by load_topics()

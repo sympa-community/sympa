@@ -2132,10 +2132,10 @@ sub do_redirect {
 
      if ($in{'topic'}) {
 	 if ($in{'subtopic'}) {
-	     $param->{'subtitle'} = sprintf "%s / %s", $topics{$in{'topic'}}{'title'}, $topics{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'title'};
+	     $param->{'subtitle'} = sprintf "%s / %s", $topics{$in{'topic'}}{'current_title'}, $topics{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'current_title'};
 	     $param->{'subtitle'} ||= "$in{'topic'} / $in{'subtopic'}";
 	 }else {
-	     $param->{'subtitle'} = $topics{$in{'topic'}}{'title'} || $in{'topic'};
+	     $param->{'subtitle'} = $topics{$in{'topic'}}{'current_title'} || $in{'topic'};
 	 }
      }
 
@@ -6257,12 +6257,12 @@ sub do_edit_list {
 	     my %list_of_topics = &List::load_topics($robot);
 	     foreach my $topic (keys %list_of_topics) {
 		 $p->{'value'}{$topic}{'selected'} = 0;
-		 $p->{'value'}{$topic}{'title'} = $list_of_topics{$topic}{'title'};
+		 $p->{'value'}{$topic}{'title'} = $list_of_topics{$topic}{'current_title'};
 		 
 		 if ($list_of_topics{$topic}{'sub'}) {
 		     foreach my $subtopic (keys %{$list_of_topics{$topic}{'sub'}}) {
 			 $p->{'value'}{"$topic/$subtopic"}{'selected'} = 0;
-			 $p->{'value'}{"$topic/$subtopic"}{'title'} = "$list_of_topics{$topic}{'title'}/$list_of_topics{$topic}{'sub'}{$subtopic}{'title'}";
+			 $p->{'value'}{"$topic/$subtopic"}{'title'} = "$list_of_topics{$topic}{'current_title'}/$list_of_topics{$topic}{'sub'}{$subtopic}{'current_title'}";
 		     }
 		 }
 	     }

@@ -25,13 +25,13 @@ archives, list management and so on.[%END%]
       [% IF topic.id == 'topicsless' %]
        <A HREF="[% path_cgi %]/lists/[% topic.id %]"><B>[%|l%]Others[%END%]</B></A><BR>
       [% ELSE %]
-       <A HREF="[% path_cgi %]/lists/[% topic.id %]"><B>[% topic.title %]</B></A><BR>
+       <A HREF="[% path_cgi %]/lists/[% topic.id %]"><B>[% topic.current_title %]</B></A><BR>
       [% END %]
 
       [% IF topic.sub %]
       [% FOREACH subtopic = topic.sub %]
        <FONT SIZE="-1">
-	&nbsp;&nbsp;<A HREF="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]">[% subtopic.value.title %]</A><BR>
+	&nbsp;&nbsp;<A HREF="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]">[% subtopic.value.current_title %]</A><BR>
        </FONT>
       [% END %]
       [% END %]
