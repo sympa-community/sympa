@@ -68,7 +68,7 @@ encryption.
 
 ## Check --dump option
 my %options;
-&GetOptions(\%main::options, 'dump|s:s', 'debug|d', 'foreground', 'config|f=s', 
+&GetOptions(\%main::options, 'dump|s=s', 'debug|d', 'foreground', 'config|f=s', 
 	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s');
 
 ## Trace options
