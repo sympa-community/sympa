@@ -4476,32 +4476,33 @@ sub _install_aliases {
     &do_log('debug2',"$alias_manager add $list->{'name'} $list->{'admin'}{'host'}");
     if (-x $alias_manager) {
 	system ("$alias_manager add $list->{'name'} $list->{'admin'}{'host'}") ;
-	if ($? == '0') {
+	my $status = $? / 256;
+	if ($status == '0') {
 	    &wwslog('info','Aliases installed successfully') ;
 	    $param->{'auto_aliases'} = 1;
-	}elsif ($? == '1') {
+	}elsif ($status == '1') {
 	    &wwslog('info','Configuration file --CONFIG-- has errors');
-	}elsif ($? == '2')  {
+	}elsif ($status == '2')  {
 	    &wwslog('info','Internal error : Incorrect call to alias_manager');
-	}elsif ($? == '3')  {
+	}elsif ($status == '3')  {
 	    &wwslog('info','Could not read sympa config file, report to httpd error_log') ;
-	}elsif ($? == '4')  {
+	}elsif ($status == '4')  {
 	    &wwslog('info','Could not get default domain, report to httpd error_log') ;
-	}elsif ($? == '5')  {
+	}elsif ($status == '5')  {
 	    &wwslog('info','Unable to append to alias file') ;
-	}elsif ($? == '6')  {
+	}elsif ($status == '6')  {
 	    &wwslog('info','Unable run newaliases') ;
-	}elsif ($? == '7')  {
+	}elsif ($status == '7')  {
 	    &wwslog('info','Unable to read alias file, report to httpd error_log') ;
-	}elsif ($? == '8')  {
+	}elsif ($status == '8')  {
 	    &wwslog('info','Could not create temporay file, report to httpd error_log') ;
-	}elsif ($? == '13') {
+	}elsif ($status == '13') {
 	    &wwslog('info','Some of list aliases already exist') ;
-	}elsif ($? == '14') {
+	}elsif ($status == '14') {
 	    &wwslog('info','Can not open lock file, report to httpd error_log') ;
 	}else {
 	    &error_message('failed_to_install_aliases');
-	    &wwslog('info',"Unknown error $? while running alias manager $alias_manager");
+	    &wwslog('info',"Unknown error $status while running alias manager $alias_manager");
 	} 
     }else {
 	&wwslog('info','Failed to install aliases: %s', $!);
@@ -4529,12 +4530,19 @@ sub _remove_aliases {
     &wwslog('info', "_remove_aliases($list->{'name'},$list->{'admin'}{'host'})");
 
     my $alias_manager = '--SBINDIR--/alias_manager.pl';
-    if ((-x $alias_manager) 
-	&& (system ("$alias_manager del $list->{'name'} $list->{'admin'}{'host'}") == 0)) {
+
+    unless (-x $alias_manager) {
+	&wwslog('info','Cannot run alias_manager %s', $alias_manager);
+	&error_message('failed_to_remove_aliases');
+    }
+    
+    system ("$alias_manager del $list->{'name'} $list->{'admin'}{'host'}");
+    my $status = $? / 256;
+    if ($status == 0) {
 	&wwslog('info','Aliases removed successfully');
 	$param->{'auto_aliases'} = 1;
     }else {
-	&wwslog('info','Failed to remove aliases: %s', $!);
+	&wwslog('info','Failed to remove aliases ; status %d : %s', $status, $!);
 	&error_message('failed_to_remove_aliases');
     }
 
