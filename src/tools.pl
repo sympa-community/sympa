@@ -1086,7 +1086,7 @@ sub split_mail {
 
 	    ## Store body in file 
 	    unless (open OFILE, ">$dir/$pathname.$fileExt") {
-		&do_log('err', "Unable to create $dir/$pathname.$fileExt") ;
+		&do_log('err', "Unable to create $dir/$pathname.$fileExt : $!") ;
 		return undef ; 
 	    }
 	    
