@@ -112,7 +112,7 @@ my $current_lang;
 sub qencode {
     my $string = shift;
 
-    return MIME::Words::encode_mimewords($string, 'Q', gettext("us-ascii"));
+    return MIME::Words::encode_mimewords($string, 'Q', gettext("_charset_"));
 }
 
 sub maketext {

@@ -127,8 +127,8 @@ sub rejectMessage {
    print REJ "To: $sender\n";
    print REJ "Subject: [sympa] " . gettext("Routing error ?") . "\n";
    printf REJ "MIME-Version: 1.0\n";
-   printf REJ "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
-   printf REJ "Content-Transfer-Encoding: %s\n", gettext("7bit");
+   printf REJ "Content-Type: text/plain; charset=%s\n", gettext("_charset_");
+   printf REJ "Content-Transfer-Encoding: %s\n", gettext("_encoding_");
    print REJ "\n";
    printf REJ gettext("The following message was sent to a list while it seems to contain\ncommands like subscribe, unsubscribe, help, index, get, ...\n\nIf your message effectively contained a command, please notice that \ncommands should never ever be sent to lists. Commands must be sent\nto %s exclusively.\n\nIf your message was effectively addressed to the list, it has been\ninterpreted by the software as a command. Please contact the manager\nof the service : %s so that they can take care of your message.\n\nThank you for your attention.\n\n------ Beginning of suspected message ------\n"), &Conf::get_robot_conf($robot, 'sympa'), &Conf::get_robot_conf($robot, 'request');
    $msg->print(\*REJ);

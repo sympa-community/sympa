@@ -6,8 +6,8 @@ Mime-version: 1.0
 Content-Type: multipart/mixed; boundary="[% boundary1 %]"
 
 --[% boundary1 %]
-Content-Type: text/plain; charset=[%|l%]us-ascii[%END%];
-Content-transfer-encoding: [%|l%]7bit[%END%]
+Content-Type: text/plain; charset=[%|l%]_charset_[%END%];
+Content-transfer-encoding: [%|l%]_encoding_[%END%]
 
 [%|l%]Table of contents:[%END%]
 
@@ -31,7 +31,7 @@ Content-Disposition: inline
 [% END %]
 --[% boundary2 %]
 Content-Type: text/plain
-Content-transfer-encoding: [%|l%]7bit[%END%]
+Content-transfer-encoding: [%|l%]_encoding_[%END%]
 Content-Disposition: inline
 
 [%|l(list.name,date)%]End of digest for list %1 - %2[%END%]

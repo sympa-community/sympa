@@ -1748,8 +1748,8 @@ sub confirm {
 	    printf SIZ "To: %s\n", $sender;
 	    printf SIZ "Subject: " . gettext("Your message to %s has been rejected") . "\n", $name;
 	    printf SIZ "MIME-Version: 1.0\n";
-	    printf SIZ "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
-	    printf SIZ "Content-Transfer-Encoding: %s\n\n", gettext("7bit");
+	    printf SIZ "Content-Type: text/plain; charset=%s\n", gettext("_charset_");
+	    printf SIZ "Content-Transfer-Encoding: %s\n\n", gettext("_encoding_");
 	    printf SIZ gettext("Your message for list %s has been rejected.\nThe message is thus sent back to you.\n\nYour message :\n"), $name;
 	    $msg->print(\*SIZ);
 	    close(SIZ);

@@ -2,8 +2,8 @@ From: [% from %]
 To: [% to %]
 Reply-to: [% reply %]
 Subject: [% FILTER qencode %][%|l(list.name,date)%]%1 Digest %2[%END%][%END%]
-Content-Type: text/plain; charset=[%|l%]us-ascii[%END%];
-Content-transfer-encoding: [%|l%]7bit[%END%]
+Content-Type: text/plain; charset=[%|l%]_charset_[%END%];
+Content-transfer-encoding: [%|l%]_encoding_[%END%]
 
 [%|l(list.name,date)%]%1 Digest %2[%END%]
 

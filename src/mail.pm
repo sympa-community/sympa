@@ -74,7 +74,7 @@ sub mailback {
    }
    
    ## Charset for encoding
-   my $charset = sprintf (gettext("us-ascii"));
+   my $charset = sprintf (gettext("_charset_"));
 
    printf $fh "To:  %s\n", MIME::Words::encode_mimewords($to, 'Q', $charset);
    if ($from eq 'sympa') {
@@ -86,8 +86,8 @@ sub mailback {
        printf $fh "%s: %s\n", $field, MIME::Words::encode_mimewords($headers->{$field}, 'Q', $charset);
    }
    printf $fh "MIME-Version: 1.0\n";
-   printf $fh "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
-   printf $fh "Content-Transfer-Encoding: %s\n", gettext("7bit");
+   printf $fh "Content-Type: text/plain; charset=%s\n", gettext("_charset_");
+   printf $fh "Content-Transfer-Encoding: %s\n", gettext("_encoding_");
    print $fh "\n";
 
    if (ref($data) eq 'SCALAR') {
@@ -124,8 +124,8 @@ sub mailarc {
    printf $fh "To: %s\n", join(",\n   ", @rcpt);
    print $fh "Subject: $subject\n";
    printf $fh "MIME-Version: 1.0\n";
-   printf $fh "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
-   printf $fh "Content-Transfer-Encoding: %s\n", gettext("7bit");
+   printf $fh "Content-Type: text/plain; charset=%s\n", gettext("_charset_");
+   printf $fh "Content-Transfer-Encoding: %s\n", gettext("_encoding_");
    print $fh "\n";
    print $fh $i while ($i = <IN>);
    close($fh);
@@ -225,8 +225,8 @@ sub mailfile {
        print $fh "Subject: $data->{'subject'}\n";
        print $fh "Reply-to: $data->{'replyto'}\n" if ($data->{'replyto'}) ;
        printf $fh "MIME-Version: 1.0\n";
-       printf $fh "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
-       printf $fh "Content-Transfer-Encoding: %s\n", gettext("7bit");
+       printf $fh "Content-Type: text/plain; charset=%s\n", gettext("_charset_");
+       printf $fh "Content-Transfer-Encoding: %s\n", gettext("_encoding_");
        print $fh "\n";
    }
 

@@ -7,7 +7,7 @@ Content-Type: multipart/mixed; boundary="[% boundary %]"
 
 --[% boundary %]
 Content-Type: text/plain
-Content-transfer-encoding: [%|l%]7bit[%END%]
+Content-transfer-encoding: [%|l%]_encoding_[%END%]
 
 [% IF method == 'md5' %]
 [%|l(list.name)%]To distribute the attached message in list %1:[%END%]

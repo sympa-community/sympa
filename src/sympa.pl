@@ -774,8 +774,8 @@ sub DoFile {
 	$reply_hdr->add('X-Loop', &Conf::get_robot_conf($robot, 'sympa'));
 	$reply_hdr->add('MIME-Version', '1.0');
 	$reply_hdr->add('Content-type', sprintf 'text/plain; charset=%s', 
-			gettext("us-ascii"));
-	$reply_hdr->add('Content-Transfer-Encoding', gettext("7bit"));
+			gettext("_charset_"));
+	$reply_hdr->add('Content-Transfer-Encoding', gettext("_encoding_"));
 	
 	## Open the SMTP process for the response to the command.
 	*FH = &smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
@@ -985,8 +985,8 @@ sub DoMessage{
 	printf SIZ "To: %s\n", $sender;
 	printf SIZ "Subject: " . gettext("Your message to %s has been rejected") . "\n", $listname;
 	printf SIZ "MIME-Version: 1.0\n";
-	printf SIZ "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
-	printf SIZ "Content-Transfer-Encoding: %s\n\n", gettext("7bit");
+	printf SIZ "Content-Type: text/plain; charset=%s\n", gettext("_charset_");
+	printf SIZ "Content-Transfer-Encoding: %s\n\n", gettext("_encoding_");
 	print SIZ gettext("Your message could not be sent because its size \nwas over the maximum size allowed on this list.\n");
 	$message->{'msg'}->print(\*SIZ);
 	close(SIZ);
@@ -1058,8 +1058,8 @@ sub DoMessage{
 		printf SIZ "To: %s\n", $sender;
 		printf SIZ "Subject: " . gettext("Your message to %s has been rejected")."\n", $listname ;
 		printf SIZ "MIME-Version: 1.0\n";
-		printf SIZ "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
-		printf SIZ "Content-Transfer-Encoding: %s\n\n", gettext("7bit");
+		printf SIZ "Content-Type: text/plain; charset=%s\n", gettext("_charset_");
+		printf SIZ "Content-Transfer-Encoding: %s\n\n", gettext("_encoding_");
 		printf SIZ gettext("Your message for list %s has been rejected.\nThe message is thus sent back to you.\n\nYour message :\n"), $listname;
 		$message->{'msg'}->print(\*SIZ);
 		close(SIZ);
@@ -1308,9 +1308,9 @@ sub ProcessExpire{
  	    $reply_hdr->add('Subject',sprintf( gettext("End of your EXPIRE command on list %s"),$expire));
 
 	    $reply_hdr->add('MIME-Version', '1.0');
-	    my $content_type = 'text/plain; charset='.gettext("us-ascii");
+	    my $content_type = 'text/plain; charset='.gettext("_charset_");
 	    $reply_hdr->add('Content-type', $content_type);
-	    $reply_hdr->add('Content-Transfer-Encoding', gettext("7bit"));
+	    $reply_hdr->add('Content-Transfer-Encoding', gettext("_encoding_"));
 
 	    ## Open the SMTP process for the response to the command.
 	    *FH = &smtp::smtpto($Conf{'request'}, \$proprio);
