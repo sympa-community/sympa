@@ -34,8 +34,8 @@
 
 <P><TR VALIGN="TOP" NOWRAP>
 <TD><b>Majuscules/minuscules </b></TD>
-<TD><INPUT TYPE=RADIO NAME=case VALUE="off" CHECKED> <font color="--DARK_COLOR--"><B>indifférentiées</b></font></TD>
-<TD><INPUT TYPE=RADIO NAME=case VALUE="on"> <font color="--DARK_COLOR--"><B>différentiées</B></font></TD>
+<TD><INPUT TYPE=RADIO NAME=case VALUE="off" CHECKED> <font color="--DARK_COLOR--"><B>indifférenciées</b></font></TD>
+<TD><INPUT TYPE=RADIO NAME=case VALUE="on"> <font color="--DARK_COLOR--"><B>différenciées</B></font></TD>
 </TR>
 
 <P><TR VALIGN="TOP" NOWRAP>
