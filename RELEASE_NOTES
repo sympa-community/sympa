@@ -3,13 +3,80 @@
 
 (See Changelog file for the full changes log)
 
-3.3a    23 aout 2001
+3.3a-vhost.10   25 Sep 2001
 
+   New features : 
+   
+        Sympa at last implements virtual robot :
+
+	  Sympa virtual robots are likely Apache virtual hosting : a single
+          daemon sympa.pl and a single cgi server wwsympa.fcgi now
+          can serve multiple domains with their own set of list, templates
+          and scenarii.
+	
+	  All configuration parameters can be define for each robot except
+          Sympa installation parameters such as binary and spool location,
+          SMTP engine, antivirus plugging etc. 
+
+          A robot is named by its domain, and defined by a directory 
+          ~sympa/etc/somedomain.org. This directory must contain 
+          a robot.conf file that defines the virtual robot parameters
+          http_host  title  default_home lang listmaster max_size and colors.
+
+          ~sympa/etc/dom.org/ contains lists of dom.org robot
+
+          ~sympa/etc/dom.org/wws_templates/, ~sympa/etc/dom.org/templates/,
+          ~sympa/etc/dom.org/scenari/ directories are applied when loading
+          templates or scenarii before searching into ~sympa/etc and 
+          ~sympa/bin/etc. 
+       
+          Check sample dir.
+
+        [Florent Guilleux]: Task manager
+          wwsympa/wws_templates/fr/edit_list_request.fr.tpl
+          Various task automatic processing. List master may use predefined
+          task models to automate recurrent processings such as regurlaly
+          reminding subscribers their belonging to a list or updating
+          certificate revocation lists. It is also possible to write one's
+          own task models to  meet particular needs. Unique actions may also
+          be scheduled by this way.
+             
         Sympa.pl recognize SIGHUP to reload sympa.conf, all sympa.conf
         parameters are reloaded except those related to syslog. In addition
         each HUP received change the value of the -mail option. 
 
+        New variable 'is_bcc' available in scenario ; it is set to 1
+	if the list was NOT mentioned in To: or Cc:
+	This provides a usefull spam/viruses prevention
 
+        You can define a set of common scenario rules, used by ALL LISTS.
+	'include.<action>.header is automatically added to evaluated scenarios.
+
+  Changes :
+      
+        Web interface colors are now defined in sympa.conf
+      
+        'reject' scenario action now accepts a template name as parameter
+
+  Bug fixes :
+  
+        Forbid [] chars for shared documents
+
+        STATS command controlled by "review" scenario
+	
+	List-specific invite.tpl was not used 'dir'. 
+	List attribute is now an absolute path
+
+        List config file contained strange 'default_user_options' entries.  
+	&List::get_default_user_options() returns a reference ; 
+	the value was changed when adding a subscriber, and might be saved later.
+	
+	Did not apply default_user_options while importing
+
+        bouced.pl died if bounce file was empty
+
+        bounced now die if it can't create file to store bounces. 
+	This is needed to prevent the loop describe by Claus Atzenbeck.
 
 3.2.2a  03 August 2001
 
@@ -18,8 +85,6 @@
 	Sympa returns non-delivery reports as multipart/report
 
 	first version of subscription moderation
-
-	New action 'send_file()' avialable in send scenario
 
 	new message-related variables available in scenari : [msg_body], [msg_part->type] 
 	and [msg_part->body]
@@ -42,9 +107,6 @@
 	changes for 'urlize' (added size, name ; add header/footer afterward)
 
 	[requested by C. Atzenbeck] New 'anonymous_header_fields' sympa.conf parameter.
-
-	wwsympa/wwsympa.fcgi: two options available now for wwsympa.fcgi :
-	-debug and -robot_domain <domain>
 
 	[Nadia Euzen]: Add new user reception options "html","txt" and "urlize".
 

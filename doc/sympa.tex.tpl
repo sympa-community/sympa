@@ -64,7 +64,7 @@
 
     \newcommand {\samplelist} {mylist}
 
-    \newcommand {\samplerobot} {some\.domain\.org}
+    \newcommand {\samplerobot} {my\.domain\.org}
 
     % #1 = text to index and to display
     \newcommand {\textindex} [1] {\index{#1}#1}
@@ -882,9 +882,10 @@ script.
 \item DESTDIR, can be set in the main Makefile to install sympa in DESTDIR/DIR
 (instead of DIR). This is useful for building RPM and DEB packages.
 \item PERL, SH and CC and GENCAT, respectively perl, sh, cc and gencat locations. 
-\item DARK\_COLOR, LIGHT\_COLOR, TEXT\_COLOR, BG\_COLOR, ERROR\_COLOR to define wwsympa
-RGB colors
 \end {itemize}
+
+Since version 3.3 of Sympa colors are \file {sympa.conf} parameters (see
+\ref {colors},  page~\pageref {colors})
 
 Once this file has been configured, you need to run the \texttt {make;make~install} commands.
 This generates the binary for the \file {queue} program along with the nls, and inserts
@@ -1162,6 +1163,7 @@ be used as a synonim.
         \example {WWSympa\_url https://my.server/wws}
 
 \subsection {\cfkeyword {dark\_color} \cfkeyword {light\_color} \cfkeyword {text\_color} \cfkeyword {bg\_color} \cfkeyword {error\_color} \cfkeyword {selected\_color} \cfkeyword {shaded\_color}}
+\label {colors}
 
 	They are the color definition for web interface. Default are set in the main Makefile. Thoses parameters can be overwritten in each virtual robot definition.
 
@@ -3362,21 +3364,70 @@ title.es eliminación reservada sólo para el propietario, necesita autentificació
 \end{verbatim}
 \end {quote}
 
-Scenarii can also contain includes :
+\subsection {rules specifications}
 
+A scenario consists of rules, evaluated in order beginning with the first. 
+Rules are defined as follows :
 \begin {quote}
 \begin{verbatim}
-    subscribe
-        include commonreject
-        match([sender], /cru\.fr$/)          smtp,smime -> do_it
-	true()                               smtp,smime -> owner
+<rule> ::= <condition> <auth_list> -> <action>
+
+<condition> ::= [!] <condition
+                | true ()
+                | all ()
+                | equal (<var>, <var>)
+                | match (<var>, /perl_regexp/)
+                | is_subscriber (<listname>, <var>)
+                | is_owner (<listname>, <var>)
+                | is_editor (<listname>, <var>)
+                | is_listmaster (<var>)
+                | older (<date>, <date>)    # true if first date is anterior to the second date
+                | newer (<date>, <date>)    # true if first date is posterior to the second date
+<var> ::= [email] | [sender] | [user-><user_key_word>] 
+	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
+		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
+	 	  | [msg_part->type] | [msg_part->body] | [is_bcc] | <string>
+
+[is_bcc] ::= set to 1 if the list is neither in To: nor Cc:
+
+<date> ::= <epoch date> | <date format (see \ref {tasks}, page~\pageref {tasks})>
+
+<listname> ::= [listname] | <listname_string>
+
+<auth_list> ::= <auth>,<auth_list> | <auth>
+
+<auth> ::= smtp|md5|smime
+
+<action> ::=   do_it [,notify]
+             | do_it [,quiet]
+             | reject(<tpl_name>)
+             | request_auth
+             | owner
+
+<tpl_name> ::= corresponding template (<tpl_name>.tpl) is send to the sender
+
+<user_key_word> ::= email | gecos | lang | password | cookie_delay_user
+	            | <additional_user_fields>
+
+<subscriber_key_word> ::= email | gecos | bounce | reception 
+	                  | visibility | date | update_date
+			  | <additional_subscriber_fields>
+
+<list_key_word> ::= name | host | lang | max_size | priority | reply_to | 
+		    status | subject | account | 
+
+<conf_key_word> ::= host | email | listmaster | default_list_priority | 
+		      sympa_priority | request_priority | lang | max_size
+	 	      
 \end{verbatim}
 \end {quote}
-	    
 
-In this case sympa applies recursively the scenario named \texttt {include.commonreject}
-before introducing the other rules. This possibility was introduced in
-order to facilitate the administration of common rules.
+perl\_regexp can contain the string [host] (interpreted at run time as the list or robot domain).
+The variable notation [msg\_header-$>$<smtp\_key\_word>] is interpreted as the SMTP header value only when performing
+the sending message scenario. It can be used, for example, to require editor validation for multipart messages.
+[msg\_part-$>$type] and [msg\_part-$>$body] are the MIME parts content-types and bodies ; the body is available
+for MIME parts in text/xxx format only.
+
 
 A bunch of scenarii is provided with the \Sympa distribution ; they provide
 all possible configurations as defined in previous releases of \Sympa
@@ -3407,55 +3458,27 @@ subscribe rennes1
 \end{verbatim}
 \end {quote}
 
-A scenario consists of rules, evaluated in order beginning with the first. 
-Rules are defined as follows :
+\subsection {scenario inclusion}
+
+Scenarii can also contain includes :
+
 \begin {quote}
 \begin{verbatim}
-<rule> ::= <condition> <auth_list> -> <action>
-
-<condition> ::= [!] <condition
-                | true ()
-                | all ()
-                | equal (<var>, <var>)
-                | match (<var>, /perl_regexp/)
-                | is_subscriber (<listname>, <var>)
-                | is_owner (<listname>, <var>)
-                | is_editor (<listname>, <var>)
-                | is_listmaster (<var>)
-                | older (<date>, <date>)    # true if first date is anterior to the second date
-                | newer (<date>, <date>)    # true if first date is posterior to the second date
-<var> ::= [email] | [sender] | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] | [msg_part->type] | [msg_part->body] | <string>
-
-<date> ::= <epoch date> | <date format (see \ref {tasks}, page~\pageref {tasks})>
-
-<listname> ::= [listname] | <listname_string>
-
-<auth_list> ::= <auth>,<auth_list> | <auth>
-
-<auth> ::= smtp|md5|smime
-
-<action> ::=   do_it [,notify]
-             | do_it [,quiet]
-             | reject
-             | request_auth
-             | owner
-
-<subscriber_key_word> ::= email | gecos | bounce | reception | visibility | date <additional_subscriber_fields>
-
-<list_key_word> ::= name | host | lang | max_size | priority | reply_to | 
-		    status | subject | account | 
-
-<conf_key_word> ::= host | email | listmaster | default_list_priority | 
-		      sympa_priority | request_priority | lang | max_size
-	 	      
+    subscribe
+        include commonreject
+        match([sender], /cru\.fr$/)          smtp,smime -> do_it
+	true()                               smtp,smime -> owner
 \end{verbatim}
 \end {quote}
+	    
 
-perl\_regexp can contain the string [host] (interpreted at run time as the list or robot domain).
-The variable notation [msg\_header-$>$<smtp\_key\_word>] is interpreted as the SMTP header value only when performing
-the sending message scenario. It can be used, for example, to require editor validation for multipart messages.
-[msg\_part-$>$type] and [msg\_part-$>$body] are the MIME parts content-types and bodies ; the body is available
-for MIME parts in text/xxx format only.
+In this case sympa applies recursively the scenario named \texttt {include.commonreject}
+before introducing the other rules. This possibility was introduced in
+order to facilitate the administration of common rules.
+
+You can define a set of common scenario rules, used by all lists.
+include.<action>.header is automatically added to evaluated scenarios.
+
 
 %[idees de scenario]
 
@@ -4228,6 +4251,10 @@ define one listmaster per virtual robot. By default, newly created
 lists must be activated by the listmaster. List creation is possible for all intranet users 
 (i.e. : users with an e-mail address within the same domain as Sympa).
 This is controlled by the \cfkeyword {create\_list} scenario.
+
+List creation request message and list creation notifiaction message are both
+templates that you can customize (\file {create_list_request.tpl} and
+\file {list_created.tpl).
 
 \subsection {Who can create lists}
 
@@ -5980,6 +6007,8 @@ Most user commands can have three-letter abbreviations (e.g. \texttt
         number of messages received, number of messages sent,
         megabytes received, megabytes sent. This is the contents
         of the \tildefile {sympa/expl/stats} file.
+
+	Access to this command is controlled by \lparam {review} parameter.
 
     \item  \mailcmd {INDEX} \textit {listname}
         \label {cmd-index}
