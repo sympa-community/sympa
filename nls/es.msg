@@ -1,5 +1,6 @@
 $ RCS Identication ; $Revision$ ; $Date$
 
+$ 31 Mar 2001, Update of Josep Román <josep.roman@zuerich-see.ch>
 $ 16 Oct 2000, Add Web translations <os@cru.fr>
 $ 19 Jun 2000, Update of Josep Román <josep.roman@zuerich-see.ch>
 $ 26 Feb 2000, Update of Josep Román <josep.roman@zuerich-see.ch>
@@ -11,7 +12,7 @@ $quote "
 $set 1	Mensajes usados durante el proceso del archivo de configuración
 1	"El archivo de configuración contiene errores.\n"
 3	"Error en la línea %d: %s"
-102	"3.0"
+102	"3.1b.10"
 
 $set 2	Mensajes usados por Conf en la comprobación de archivos
 
@@ -22,7 +23,7 @@ $set 4	Mensajes usados en el bucle principal
 11	"Su mensaje para %s ha sido rechazado"
 12	"Su mensaje no puede ser envíado porque sobrepasa el tamaño máximo \n\
 permitido por esta lista.\n"
-15	"Usted intentó enviar un mensaje a una lista privada a la que no está subscrito.\n\nEl mensaje es por tanto, devuelto.\n\n\
+15	"Usted intentó enviar un mensaje a una lista privada a la que no está subscrito.\nEl mensaje es por tanto, devuelto.\n\n\
 Su mensaje era :\n"
 17	"Resultados de sus comandos"
 18	"Comando 'QUIT' encontrado: el resto del mensaje se ignora.\n"
@@ -46,7 +47,7 @@ en ningún caso deben ser dirigidos a las listas.\n\
 Deben ser enviados exclusivamente a la dirección %s.\n\n\
 Si su mensaje se destinara efectivamente a la lista, ha sido desgraciadamente\n\
 interpretado por el software como un comando.\n\
-Por favor contacte con el responsable del servicio : %s para que se ocupe de su mensaje.\n\
+Por favor contacte con el responsable del servicio : %s para que se ocupe de su mensaje.\n\n\
 Gracias por su atención. \n\n\
 ------Inicio del mensaje sospechoso------\n"
 4	"------Fin del mensaje sospechoso------\n"
@@ -64,7 +65,7 @@ $set 6	Mensajes del módulo de Commands.pm
 13	"Error de sintaxis.\n"
 15	"El proceso de autentificación ha fallado.\n\n"
 16	"Usted probablemente confirmó su subscripción con una dirección electrónica diferente.\n\
-Por favor subscribase usando su dirección oficial.\n"
+Por favor subscribase usando su dirección oficial."
 18	"Su subscripción a la lista %s ha sido suprimida."
 21	"Su subscripción a la lista %s ha sido renovada."
 24	"Las subscripciones a esta lista están por el momento suspendidas.\n"
@@ -83,15 +84,15 @@ Agradecemos su presencia en esta lista.\n"
 Usted no está autorizado a utilizar este comando o no facilitó la información\n\
 necesaria para su autentificación.\n"
 33	"La dirección electrónica %s no se encontró en la lista.\n"
-34	"Usted ha sido suprimido de la lista %s por %s, propietario de esta lista.\n\
+34	"Usted ha sido suprimido de la lista %s\n por %s, el propietario de esta lista.\n\n\
 Esta acción se realiza generalmente para eliminar direcciones que generan problemas\n\
-en el envío de mensajes. Sin embargo, puede ser que su problema haya sido sólo \n\
-temporal.\n Si es así, disculpe las molestias y renueve su subscripción."
+en el envío de mensajes.Sin embargo, puede ser que su problema haya sido sólo \n\
+temporal.\n Si es así, disculpe las molestias y renueve su subscripción.\n"
 35	"El archivo se le enviará en un mensaje separado.\n"
 36	"La información acerca del usuario %s fueron actualizadas para la lista %s.\n"
 37	"El usuario %s es ahora subscriptor de la lista %s.\n"
 38	"El usuario especificado se ha eliminado de la lista.\n"
-39	"Alguien (probablemente usted) solicitó añadir o suprimir un usuario de la lista %s.\n\n\
+39	"Alguien (probablemente usted) solicitó \n añadir o suprimir un usuario de la lista %s.\n\n\
 Si usted confirma esta acción, por favor envíe de nuevo un correo electrónico a la dirección %s \n\
 conteniendo :\n\n%s\n\n\
 Si usted no desea confirmar la acción, ignore este mensaje.\n"
@@ -139,7 +140,7 @@ Este texto debe:\n\n\
 67	"Estas son las listas a las cuales está usted subscrito :\n\n"
 68	"Imposible acceder al mensaje autentificado con la clave %s.\n"
 69	"%s mandó por correo su mensaje de expiración a las direcciones siguientes:\n"
-70	"\nServido por Sympa %s: http://lists.zuerich-see.ch/sympa/\n"
+70	"\nServido por Sympa %s: http://listes.cru.fr/sympa/\n"
 71	"Anular subscripción de la lista %s"
 72	"\n\nListas de las que usted es propietario :\n\n"
 73	"\n\nListas de las que usted es editor :\n\n"
@@ -161,13 +162,15 @@ Si no desea confirmar este comando, ignore este mensaje.\n"
 84	"El usuario %s ya es un subscriptor de la lista '%s'.\n"
 85	"El usuario %s ha sido invitado a subscribirse a la lista %s.\n"
 86	"El usuario %s no es aceptado en la lista %s.\n"
-260	"Alguien (probablemente usted) solicitó su subscribción a la lista '%s'.\n\
+90	"La lista %s sólo acepta los siguientes modos de recepción : %s\n\
+Su configuración no ha sido modificada.\n"
+260	"Alguien (probablemente usted) solicitó para su email \n la subscribción a la lista '%s'.\n\
 Para confirmar esta acción, por favor \n\n\
 - Conteste a este correo\nO\n\
 - Envie un mensaje a %s con el tema:\n %s\nO\n\
 - Envie un mensaje haciendo un click aquí: %s\n\n\
 Si usted no quiere confirmar este comando, ignore este mensaje.\n"
-261	"Alguien (probablemente usted) solicitó anular su subscripcion de la lista '%s'.\n\
+261	"Alguien (probablemente usted) solicitó para su email \n la anulación de su subscripcion a la lista '%s'.\n\
 Para confirmar esta acción, por favor \n\n\
 - Conteste a este correo \nO\n\
 - Envie un mensaje a %s con el tema \n%s\nO\n\
@@ -182,8 +185,10 @@ $set 8	Mensajes usado en List.pm
 1	"Propietarios de la lista %s"
 2	"Solicitud de subscripción a la lista %s"
 3	"Querido(s) propietario(s) de la lista %s,\n\n\
-Un usuario solicitó subscribirse a su lista. Si está(n) de acuerdo utilice(n) el comando\n\
-siguiente:\n\nADD %s %s %s\n"
+Un usuario solicitó subscribirse a su lista. Si está(n) de acuerdo \n haga un click en la siguiente URL : \n\n\
+mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n\n\
+or envie un mensaje a %s con el siguiente tema : \n\
+AUTH %s ADD %s %s %s\n"
 4	"Moderadores de la lista %s"
 5	"[%s] Artículo para ser aprobado"
 6	"Bienvenido a la lista %s"
@@ -217,9 +222,11 @@ debido a que la dirección no se encontró en la lista\n\
 (Quizás se debe ayudar a esta persona)\n"
 24	"Petición de anulación de subscripción a la lista %s"
 25	"Querido propietario(s) de la lista %s,\n\n\
-Un subscriptor ha solicitado su supresión en la lista.\n\
-Si usted está de acuerdo, envíe el siguiente comando:\n\
-DEL %s %s\n"
+Un subscriptor ha solicitado su supresión en la lista. \
+Si usted está de acuerdo, haga un click en la siguiente URL : \n\n\
+mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n\n\
+o envíe un mensaje a %s con el siguiente tema :\n\
+AUTH %s DEL %s %s\n"
 26	"Para su información: comando %s lista %s de %s %s validado por %s\n (no se requiere ninguna acción)\n"
 27	"El ratio de mensajes devueltos/erróneos en la lista %s es %d%%.\n\n\
 Si se desea suprimir los subscriptores con esos problemas:\n\
@@ -227,20 +234,22 @@ Si se desea suprimir los subscriptores con esos problemas:\n\
 28	"ATENCIÓN: El ratio de errores (bouncing) es demasiado alto en la lista %s.\n"
 29	"Invitación para unirse a la lista %s"
 30	"Usted está invitado a unirse a la lista %s"
+31	"Sumario de la lista %s"
 
 $set 9	Mensajes para la cabacera del comando 'review'
 1	"Propietario            : %s\n"
-2	"Moderador		: %s\n"
-3	"Subscripción	        : %s\n"
-4	"Supresión		: %s\n"
+2	"Moderador              : %s\n"
+3	"Subscripción           : %s\n"
+4	"Supresión              : %s\n"
 5	"Enviando mensajes      : %s\n"
 6	"Lista de subscriptores : %s\n"
 7	"Respuesta a            : %s\n"
 8	"Tamaño Máximo          : %d\n"
 9	"URL de la lista        : %s\n"
-10	"Resumen		: %s\n"
+10	"Resumen                : %s\n"
 11	"Tema personalizado     : %s\n"
 12	"Tema normal            : %s\n"
+13	"Modo de recepción      : %s\n"
 
 $set 11	Mensajes utilizados por el modulo smtp.
 1	"Su sistema no parece conformar el standard POSIX P1003.1, o bien\n\
@@ -261,7 +270,7 @@ $set 13 Mensajes para la cabecera del indice de moderación
 3	"\t 	Tamaño              : %s\n"
 4	"\t 	Clave de moderación : %s\n"
 
-$set 14 For the web
+$set 14 Para la web
 1	"es_ES"
 2	"español"
 
@@ -282,7 +291,7 @@ $set 15 Templates files
 14	"Principal de la lista"
 
 
-$set 16 Listm parameters titles
+$set 16 Titulos de los parámetros de Listm 
 1	"Cuenta"
 2	"Quién puede añadir subscriptores"
 3	"Remitente anónimo"
@@ -363,3 +372,6 @@ $set 16 Listm parameters titles
 85	"Dirección de retorno de la Bienvenida"
 86	"Quién puede visualizar"
 87	"Quién puede editar"
+88	"Opciones de subscripción disponibles"
+89 "Modo de recepción"
+
