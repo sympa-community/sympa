@@ -4553,8 +4553,10 @@ sub do_close_list {
     ## Change status & save config
     $list->{'admin'}{'status'} = 'closed';
     $list->{'admin'}{'defaults'}{'status'} = 0;
-    $list->save_config($param->{'user'}{'email'});
 
+    $list->save_config($param->{'user'}{'email'});
+    $list->savestats();
+    
     &message('list_closed');
 
     return 'admin';
@@ -4595,6 +4597,7 @@ sub do_restore_list {
 	}
     }
 
+    $list->savestats(); 
     &message('list_restored');
 
     return 'admin';
