@@ -5068,6 +5068,8 @@ sub do_edit_list {
 	if (($pname eq 'user_data_source') &&
 	    ($#users >= 0)) {
 
+	    $list->{'total'} = 0;
+	    
 	    ## Insert users in database
 	    foreach my $user (@users) {
 		$list->add_user($user);
