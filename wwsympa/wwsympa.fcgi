@@ -1137,9 +1137,6 @@ sub do_login {
 	}
     }
 
-    ## Make password case-insensitive !!
-    $in{'passwd'} =~ tr/A-Z/a-z/;
-
     ##authentication of the sender
     unless($param->{'user'} = &check_auth($in{'email'},$in{'passwd'})){
 	&error_message('failed');
@@ -1242,7 +1239,8 @@ sub authentication{
 	$user->{'password'} = &tools::tmp_passwd($email);
     }
     
-    if($pwd eq $user->{'password'}){
+    ## Password in DB is case-insensitive
+    if(lc($pwd) eq $user->{'password'}){
 	$param->{'auth'} = 'classic';
 	$param->{'alt_emails'}{$email} = 'classic' if($email);
 	return $user;
