@@ -27,7 +27,7 @@
     <TABLE WIDTH=100% BORDER=0>
     <TR><TD ALIGN="left" NOWRAP>
         <BR>
-        <INPUT TYPE="submit" NAME="action_del" VALUE="[%|l%]Delete selected users[%END%]">
+        <INPUT TYPE="submit" NAME="action_del" VALUE="[%|l%]Delete selected email addresses[%END%]">
         <INPUT TYPE="checkbox" NAME="quiet"> quiet
 
 	<INPUT TYPE="hidden" NAME="sortby" VALUE="[% sortby %]">
@@ -104,7 +104,7 @@
     <TR><TD ALIGN="left" NOWRAP>
       [% IF is_owner %]
         <BR>
-        <INPUT TYPE="submit" NAME="action_del" VALUE="[%|l%]Delete selected subscribers[%END%]">
+        <INPUT TYPE="submit" NAME="action_del" VALUE="[%|l%]Delete selected email addresses[%END%]">
         <INPUT TYPE="checkbox" NAME="quiet"> [%|l%]quiet[%END%]
 	<INPUT TYPE="submit" NAME="action_resetbounce" VALUE="[%|l%]Reset errors for selected users[%END%]">
       [% END %]

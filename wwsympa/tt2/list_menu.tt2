@@ -237,7 +237,7 @@
     [% IF may_subscribe == '1' %]
       [% IF user.email %]
         <font size=-1><b>
-     <A HREF="[% path_cgi %]/subscribe/[% list %]" onClick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[%|l(list)%]Do you really want to subscribe to list %1[%END%]?'); return false;">[%|l%]Subscribe[%END%]</A>
+     <A HREF="[% path_cgi %]/subscribe/[% list %]" onClick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[%|l(list)%]Do you really want to subscribe to list %1?[%END%]'); return false;">[%|l%]Subscribe[%END%]</A>
         </b></font>
       [% ELSE %]
          <font size=-1><b>
@@ -269,7 +269,7 @@
         <TD WIDTH="100%" BGCOLOR="[% light_color %]" NOWRAP align=right>
        [% IF user.email %]
         <font size=-1><b>
-         <A HREF="[% path_cgi %]/signoff/[% list %]" onClick="request_confirm_link('[% path_cgi %]/signoff/[% list %]', '[%|l(list)%]Do you really want to unsubscribe from list %1[%END%]?'); return false;">[%|l%]Unsubscribe[%END%]</A>
+         <A HREF="[% path_cgi %]/signoff/[% list %]" onClick="request_confirm_link('[% path_cgi %]/signoff/[% list %]', '[%|l(list)%]Do you really want to unsubscribe from list %1?[%END%]'); return false;">[%|l%]Unsubscribe[%END%]</A>
         </b></font>
        [% ELSE %]
        <font size=-1><b>

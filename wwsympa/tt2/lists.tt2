@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 
 [% IF action == 'search_list' %]
-  [%|l(occurrence)%]%1 occurrences found[%END%]<BR><BR>
+  [%|l(occurrence)%]%1 occurrence(s) found[%END%]<BR><BR>
 [% ELSIF action == 'search_user' %]
   [%|l(email)%]<B>%1</B> is subscribed to the following mailing lists[%END%]
 [% END %]

@@ -235,7 +235,7 @@
   );
   if ($charset) {
     unless ($ok_charset{lc($charset)}) {
-      $outstring .= sprintf (gettext("[** Warning: Message part originally used character set %s\n    Some characters may be lost or incorrect **]\n\n"), $charset);
+      $outstring .= sprintf (gettext("** Warning: Message part originally used character set %s\n    Some characters may be lost or incorrect **\n\n"), $charset);
       $thispart =~ tr/\x00-\x7F/\?/c;
     }
   }
@@ -320,18 +320,18 @@
     }
     
     else {
-      $outstring .= gettext ("\n[** Unable to process HTML message part **]\n");
+      $outstring .= gettext ("\n[ ** Unable to process HTML message part * *]\n");
       return 1;      
     }
     
-    $outstring .= sprintf(gettext ("[Text converted from HTML]\n"));
+    $outstring .= sprintf(gettext ("[ Text converted from HTML ]\n"));
     
     # deal with 30 hyphens (RFC 1153)
     $text =~ s/\n-{30}(\n|$)/\n -----------------------------\n/;
     $outstring .= $text;
   }
   else {
-    $outstring .= gettext("\n[** Unable to process HTML message part **]\n");   
+    $outstring .= gettext("\n[ ** Unable to process HTML message part ** ]\n");   
   }
   return 1;
  }
@@ -350,6 +350,6 @@
  sub img_start   {
   my($self,$node) = @_;
   my $alt = $node->attr('alt');
-  $self->out(  defined($alt) ? sprintf(gettext("[Image%s]"), ": " . $alt) : sprintf(Msg(6, 308, "[Image%s]"),""));
+  $self->out(  defined($alt) ? sprintf(gettext("[ Image%s ]"), ": " . $alt) : sprintf(Msg(6, 308, "[Image%s]"),""));
  }
 

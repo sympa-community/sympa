@@ -18,65 +18,64 @@ subject are recognized.[%END%]
 
 [%|l%]Available commands are:[%END%]
 
- HELp                        * [%|l%]This help file[%END%]
- INFO                        * [%|l%]Information about a list[%END%]
- LISts                       * [%|l%]Directory of lists managed on this node[%END%]
- REView [%|l%]<list>[%END%]               * [%|l%]Displays the subscribers to [%|l%]<list>[%END%][%END%]
- WHICH                       * [%|l%]Displays which lists you are subscribed to[%END%]
- SUBscribe [%|l%]<list>[%END%] <name>     * [%|l%]To subscribe or to confirm a subscription to
-                               [%|l%]<list>[%END%].[%END%]
+ [%|l%]HELp                        * This help file[%END%]
+ [%|l%]INFO                        * Information about a list[%END%]
+ [%|l%]LISts                       * Directory of lists managed on this node[%END%]
+ [%|l%]REView <list>               * Displays the subscribers to <list>[%END%]
+ [%|l%]WHICH                       * Displays which lists you are subscribed to[%END%]
+ [%|l%]SUBscribe <list> <name>     * To subscribe or to confirm a subscription to
+                               <list>.[%END%]
 
- UNSubscribe [%|l%]<list>[%END%] <EMAIL>  * [%|l%]To quit [%|l%]<list>[%END%]. <EMAIL> is an optional 
+ [%|l%]UNSubscribe <list> <EMAIL>  * To quit <list>. <EMAIL> is an optional 
                                email address, usefull if different from
                                your "From:" address.[%END%]
- UNSubscribe * <EMAIL>       * [%|l%]To quit all lists.[%END%]
+ [%|l%]UNSubscribe * <EMAIL>       * To quit all lists.[%END%]
 
- SET [%|l%]<list>[%END%]|* NOMAIL         * [%|l%]To suspend the message reception for [%|l%]<list>[%END%][%END%]
- SET [%|l%]<list>[%END%]|* DIGEST         * [%|l%]Message reception in compilation mode[%END%]
- SET <list|*> DIGESTPLAIN    		  * [%|l%]Message reception in compilation mode, sent as a plain text email with all attachments[%END%]
- SET [%|l%]<list>[%END%]|* SUMMARY        * [%|l%]Receiving the message index only[%END%]
- SET [%|l%]<list>[%END%]|* NOTICE         * [%|l%]Receiving message subject only[%END%]
+ [%|l%]SET <list>|* NOMAIL         * To suspend the message reception for <list>[%END%]
+ [%|l%]SET <list>|* DIGEST         * Message reception in compilation mode[%END%]
+ [%|l%]SET <list|*> DIGESTPLAIN    * Message reception in compilation mode, sent as a plain text email with all attachments[%END%]
+ [%|l%]SET <list>|* SUMMARY        * Receiving the message index only[%END%]
+ [%|l%]SET <list>|* NOTICE         * Receiving message subject only[%END%]
+ [%|l%]SET <list>|* MAIL           * <list> reception in normal mode[%END%]
+ [%|l%]SET <list>|* CONCEAL        * To become unlisted (hidden subscriber address)[%END%]
+ [%|l%]SET <list>|* NOCONCEAL      * Subscriber address visible via REView[%END%]
 
- SET [%|l%]<list>[%END%]|* MAIL           * [%|l%][%|l%]<list>[%END%] reception in normal mode[%END%]
- SET [%|l%]<list>[%END%]|* CONCEAL        * [%|l%]To become unlisted (hidden subscriber address)[%END%]
- SET [%|l%]<list>[%END%]|* NOCONCEAL      * [%|l%]Subscriber address visible via REView[%END%]
 
-
- INDex [%|l%]<list>[%END%]                * [%|l%][%|l%]<list>[%END%] archive file list[%END%]
- GET [%|l%]<list>[%END%] <file>           * [%|l%]To get <file> of [%|l%]<list>[%END%] archive[%END%]
- LAST [%|l%]<list>[%END%]                 * [%|l%]Used to received the last message from [%|l%]<list>[%END%][%END%]
- INVITE [%|l%]<list>[%END%] <email>       * [%|l%]Invite <email> for subscription in [%|l%]<list>[%END%][%END%]
- CONFIRM [%|l%]<key>[%END%]               * [%|l%]Confirmation for sending a message (depending
+ [%|l%]INDex <list>                * <list> archive file list[%END%]
+ [%|l%]GET <list> <file>           * To get <file> of <list> archive[%END%]
+ [%|l%]LAST <list>                 * Used to received the last message from <list>[%END%]
+ [%|l%]INVITE <list> <email>       * Invite <email> for subscription in <list>[%END%]
+ [%|l%]CONFIRM <key>               * Confirmation for sending a message (depending
                                on the list's configuration)[%END%]
- QUIT                        * [%|l%]Indicates the end of the commands (to ignore a
+ [%|l%]QUIT                        * Indicates the end of the commands (to ignore a
                                signature)[%END%]
 
 [% IF is_owner %]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 [%|l%]The following commands are available only for lists's owners or moderators:[%END%]
 
- ADD [%|l%]<list>[%END%] [%|l%]user@host[%END%] [%|l%]Full name[%END%]  * [%|l%]To add a user to a list[%END%]
- DEL [%|l%]<list>[%END%] [%|l%]user@host[%END%]            * [%|l%]To delete a user from a list[%END%]
- STATS [%|l%]<list>[%END%]                    * [%|l%]To consult the statistics for [%|l%]<list>[%END%][%END%]
- EXPire [%|l%]<list>[%END%] [%|l%]<old>[%END%] [%|l%]<delay>[%END%]     * [%|l%]To begin an expiration process for [%|l%]<list>[%END%]
+ [%|l%]ADD <list> user@host Full name  * To add a user to a list[%END%]
+ [%|l%]DEL <list> user@host            * To delete a user from a list[%END%]
+ [%|l%]STATS <list>                    * To consult the statistics for <list>[%END%]
+ [%|l%]EXPire <list> <old> <delay>     * To begin an expiration process for <list>
                                    subscribers who have not confirmed their
                                    subscription for <old> days. The
                                    subscribers have <delay> days to confirm[%END%]
- EXPireINDex [%|l%]<list>[%END%]              * [%|l%]Displays the current expiration process
-                                   state for [%|l%]<list>[%END%][%END%]
- EXPireDEL [%|l%]<list>[%END%]                * [%|l%]To de-activate the expiration process for
-                                   [%|l%]<list>[%END%][%END%]
+ [%|l%]EXPireINDex <list>              * Displays the current expiration process
+                                   state for <list>[%END%]
+ [%|l%]EXPireDEL <list>                * To de-activate the expiration process for
+                                   <list>[%END%]
 
- REMIND [%|l%]<list>[%END%]                   * [%|l%]Send a reminder message to each
+ [%|l%]REMIND <list>                   * Send a reminder message to each
                                    subscriber (this is a way to inform
                                    anyone what is his real subscribing
                                    email).[%END%]
 [% END %]
 [% IF is_editor %]
 
- DISTribute [%|l%]<list>[%END%] <clef>        * [%|l%]Moderation: to validate a message[%END%]
- REJect [%|l%]<list>[%END%] <clef>            * [%|l%]Moderation: to reject a message[%END%]
- MODINDEX [%|l%]<list>[%END%]                 * [%|l%]Moderation: to consult the message list to
+ [%|l%]DISTribute <list> <clef>        * Moderation: to validate a message[%END%]
+ [%|l%]REJect <list> <clef>            * Moderation: to reject a message[%END%]
+ [%|l%]MODINDEX <list>                 * Moderation: to consult the message list to
                                    moderate[%END%]
 [% END %]
 
