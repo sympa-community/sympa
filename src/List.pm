@@ -680,6 +680,14 @@ sub db_disconnect {
     return 1;
 }
 
+## Get database handler
+sub db_get_handler {
+    do_log('debug2', 'List::db_get_handler');
+
+
+    return $dbh;
+}
+
 ## Creates an object.
 sub new {
     my($pkg, $name) = @_;
