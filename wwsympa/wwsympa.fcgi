@@ -1323,6 +1323,11 @@ sub do_lists {
 	     $list->am_i('editor',$param->{'user'}{'email'})) ) {
 	    $list_info->{'admin'} = 1;
 	}
+	if ($param->{'user'}{'email'} &&
+	    $list->is_subscriber($param->{'user'}{'email'})) {
+	    $list_info->['is_subscriber'} = 1;
+	}
+	
 	    
 	if ($list->{'admin'}{'topics'}) {
 	    foreach my $topic (@{$list->{'admin'}{'topics'}}) {
