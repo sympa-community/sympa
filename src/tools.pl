@@ -263,8 +263,9 @@ sub smime_sign {
 
     do_log('debug2', 'tools::smime_sign (%s,%s)',$in_msg,$list);
 
-    my $cert = "$Conf{'home'}/$list/cert.pem";
-    my $key = "$Conf{'home'}/$list/private_key";
+    my $self = new List($list);
+    my $cert = $self->{'dir'}."/cert.pem";
+    my $key = $self->{'dir'}."/private_key";
     my $temporary_file = $Conf{'tmpdir'}."/".$list.".".$$ ;    
 
     my ($signed_msg,$pass_option );
@@ -424,7 +425,8 @@ sub smime_encrypt {
 
     &do_log('debug2', 'tools::smime_encrypt(%s, %s, %s, %s',$msg_header, $msg_body, $email, $list);
     if ($list eq 'list') {
-	$usercert = "$Conf{'home'}/$email/cert.pem";
+	my $self = new List($email);
+	$usercert = $self->{'dir'}."/cert.pem";
     }else{
 	$usercert = "$Conf{'ssl_cert_dir'}/".&tools::escape_chars($email);
     }
@@ -491,12 +493,13 @@ sub smime_decrypt {
     
     &do_log('debug2', 'tools::smime_decrypt message msg from %s,%s',$msg->head->get('from'),$list);
 
-    my $certfile = "$Conf{'home'}/$list/cert.pem" ;
+    my $self = new List($list);
+    my $certfile = $self->{'dir'}."/cert.pem" ;
     unless (-r $certfile){
 	do_log('err', "unable to decrypt message : cert missing  $certfile");
 	return undef;
     }
-    my $keyfile = "$Conf{'home'}/$list/private_key";
+    my $keyfile = $self->{'dir'}."/private_key";
 
     unless (open (MSGDUMP , "> $Conf{'tmpdir'}/MSG.$$")) {
 	&do_log('err', 'unable to open %s/MSG.%s',$Conf{'tmpdir'},$$);
