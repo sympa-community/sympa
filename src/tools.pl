@@ -490,7 +490,7 @@ sub smime_sign_check {
     my $signer = `cat $temporary_file | $Conf{'openssl'}  x509 -subject -noout`;
     chomp $signer;
 
-    unless ($signer =~ /(email=$sender|\+MAIL=$sender)/i) {
+    unless ($signer =~ /(email(address)?=$sender|\+MAIL=$sender)/i) {
 	unlink($temporary_file) unless ($main::options{'debug'}) ;	
 	do_log('notice', "S/MIME signed message, sender($sender) does NOT match signer($signer)",$sender,$signer);
 	return undef;
