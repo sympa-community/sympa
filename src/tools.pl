@@ -738,28 +738,27 @@ sub as_singlepart {
     my ($msg, $preferred_type) = @_;
     my $done = 0;
     
-    # First, if the message has a type of multipart/alternative
-    # make this the main message so we can get at the sub parts
-    my @parts = $msg->parts();
-    foreach my $index (0..$#parts) {
-        if ($parts[$index]->effective_type() =~ /^multipart\/alternative/) {
-            ## Only keep the multipart/alternative part
-            $msg->parts([$parts[$index]]);
-            $msg->make_singlepart();
-            last;
-        }
-    }
-
-    # Now look for the preferred_type and if found, make this the main message
-    @parts = $msg->parts();
-    foreach my $index (0..$#parts) {
-	if ($parts[$index]->effective_type() =~ /^$preferred_type$/) {
-	    ## Only keep the first matching part
-	    $msg->parts([$parts[$index]]);
-	    $msg->make_singlepart();
-	    $done = 1;
-	    last;
+    if ($msg->effective_type() =~ /^multipart\/alternative/) {
+	my @parts = $msg->parts();
+	foreach my $index (0..$#parts) {
+	    if (($parts[$index]->effective_type() =~ /^$preferred_type$/) ||
+		(
+		 ($parts[$index]->effective_type() =~ /^multipart\/related$/) &&
+		 ($parts[$index]->parts(0)->effective_type() =~ /^$preferred_type$/))) {
+		## Only keep the first matching part
+		$msg->parts([$parts[$index]]);
+		$msg->make_singlepart();
+		$done = 1;
+		last;
+	    }
 	}
+    }elsif ($msg->effective_type() =~ /^multipart/) {
+	my @parts = $msg->parts();
+	foreach my $index (0..$#parts) {
+	    if ($parts[$index]->effective_type() =~ /^multipart\/alternative/) {
+		$done ||= &as_singlepart($parts[$index], $preferred_type);
+	    }
+	}    
     }
 
     return $done;
