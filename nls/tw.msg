@@ -180,13 +180,10 @@ mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
    轉寄的郵寄 :  %9d\n\n\
    送出 (MB)  : %9.2f\n\
    轉寄 (MB)  : %9.2f\n"
-9	"郵寄清單 %s 的摘要(digest)"
 10	"如轉寄附上的郵寄到郵寄清單 %s : \n\
 mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\n"
 11	"如拒絕(它將會刪除) :\n\
 mailto:%s?subject=REJECT%%20%s%%20%s\n"
-13	"目錄" 
-14	"郵寄清單 %s 的結束"
 15	"%d 電郵受限制 (郵寄清單 %s)" 
 16	"需要核准"
 21	"FYI: %s 郵寄清單 %s 由 %s %s"

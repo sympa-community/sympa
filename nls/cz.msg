@@ -195,13 +195,10 @@ nebo odeslat zprávu na adresu %s s následující subjektem :\n\
 AUTH %s ADD %s %s %s\n"
 6	"Vítejte v konferenci %s"
 7	"Soubor"
-9	"Shrnutí konference %s"
 12	"Pro rozeslání pøipojené zprávy do konference %s :\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 Nebo po¹lete zprávu na adresu %s s nasledujícím subjektem :\n\
 CONFIRM %s\n"
-13	"Obsah" 
-14	"Konec shrnutí konference %s"
 15	"Na moderování èeká %d zpráv v konferenci %s" 
 16	"Po¾adováno ovìøení toto¾nosti"
 21	"FYI: Pøíkaz %s v konferenci %s od u¾ivatele %s %s"

@@ -203,13 +203,10 @@ of stuur een email naar %s met het volgende onderwerp :\n\
 AUTH %s ADD %s %s %s\n"
 6	"Welkom op de lijst %s"
 7	"Bestand"
-9	"Samenvatting voor de lijst %s"
 12	"Om het toegevoegde bericht te distribueren in de lijst %s :\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 Of zend een bericht naar %s met het volgende onderwerp :\n\
 CONFIRM %s\n"
-13	"Inhoudsopgave" 
-14	"Einde van de samenvatting van de lijst %s"
 16	"Authenticatie gevraagd"
 21	"Ter info: %s lijst %s van %s %s"
 22	"Ter info commando %s lijst %s van %s %s \n (geen actie benodigd)\n"
@@ -240,8 +237,8 @@ voor de variabele $max_arg.\n"
 
 $set 12 MIME headers
 1	"1.0"
-2	"us-ascii"
-3	"7bit"
+2	"iso-8859-1"
+3	"8bit"
 4	"SYMPA <%s>"
 
 $set 14 Locale equivalent and language name

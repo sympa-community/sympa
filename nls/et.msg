@@ -201,12 +201,10 @@ või saatke e-kiri aadressile %s ning kirja teemareale pange:\n\
 AUTH %s ADD %s %s %s\n"
 6	"Tere tulemast listi %s"
 7	"Fail"
-9	"Kokkuvõte listist %s"
 12	"Selleks, et saata kaasa pandud kiri listi %s:\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 või saatke kiri aadressile %s järgneva teemareaga:\n\
 CONFIRM %s\n"
-13	"Sisukord" 
 14	"Listi %s kokkvõtte lõpp"
 16	"Nõutakse identifitseerimist"
 21	"INFO: %s list %s aadressilt %s %s"
@@ -238,8 +236,8 @@ for variable $max_arg.\n"
 
 $set 12 MIME headers
 1	"1.0"
-2	"us-ascii"
-3	"7bit"
+2	"iso-8859-4"
+3	"8bit"
 4	"SYMPA <%s>"
 
 $set 14 Pour le web

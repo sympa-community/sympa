@@ -186,13 +186,10 @@ wydaj polecenie:\n\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
 6	"Witaj na li¶cie %s"
 7	"Plik"
-9	"Digest dla listy %s"
 12	"Aby rozes³aæ za³±czon± wiadomo¶æ na listê %s:\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 Lub wy¶lij wiadomo¶æ do %s z tematem :\n\
 CONFIRM %s\n"
-13	"Zawarto¶æ" 
-14	"Koniec digestu dla listy %s"
 16	"Pro¶ba autoryzacj"
 21	"FYI: %s lista %s od %s %s"
 22	"FYI polecenie %s lista %s od %s %s \n (nie wymaga dzia³ania)\n"

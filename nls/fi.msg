@@ -209,15 +209,12 @@ mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
    Forwardoituja viestejä      :  %9d\n\
    Megoja lähetetty            :  %9d\n\
    Megoja forwardoitu          :  %9d\n"
-9	"Listan %s digest"
 10	"Levittääksesi liitetetiedoston listalle %s:\n\
 mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\n"
 11	"Hylätäksesi sen (se poistetaan):\n\
 mailto:%s?subject=REJECT%%20%s%%20%s\n"
 12	"Levittääksesi liitetyn viestin listalla %s :\n\
 mailto:%s?subject=CONFIRM%%20%s\n\n"
-13	"Sisällysluettelo"
-14	"Listan %s digestin loppu"
 15	"%d moderoitavaa viestiä listalla %s"
 16	"Tarvitaan käyttöoikeuksien vahvistus"
 21	"FYI: %s listalla %s lähteestä %s %s"

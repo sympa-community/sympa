@@ -196,13 +196,10 @@ O envíe un mensaje a %s con el siguiente tema : \n\
 AUTH %s ADD %s %s %s\n"
 6	"Bienvenido a la lista %s"
 7	"Archivo"
-9	"Resumen de la lista %s"
 12	"Para distribuir el mensaje adjunto en la lista %s, haga click en:\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 O envíe un mensaje a %s con el siguiente tema :\n\
 CONFIRM %s\n\n"
-13	"Tabla de contenido"
-14	"Fin del Resumen de la lista %s"
 16	"Solicitud de autentificación"
 21	"Para su información: %s lista %s de %s %s"
 22	"Para su información: comando %s a la lista %s de %s %s \n(ninguna acción requerida).\n"

@@ -1,3 +1,268 @@
+2002-12-09 12:08  salaun
+
+	* Makefile.in: Updated
+
+2002-12-09 09:45  salaun
+
+	* Makefile.am: [reported by G. Paressant] Fix: DESTDIR env variable
+	was not set when running the wizard
+
+2002-12-06 16:57  salaun
+
+	* Makefile.am: [Guy Paressant] Fix: refered to SBINDIR instead of
+	LIBDIR
+
+2002-12-06 11:00  salaun
+
+	* wwsympa/wwsympa.fcgi: [Marco AT porciletto.org] Bug fix:
+	editsubscriber failed with some versions of web_templates
+	(including Italian) not recently updated.
+
+2002-12-06 10:54  salaun
+
+	* wwsympa/wwsympa.fcgi: [Marco AT porciletto.org] Bug fix:
+	editsubscriber failed with some versions of web_templates
+	(including Italian) not recently updated.
+
+2002-12-06 10:22  salaun
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
+	doc/sympa/node11.html, doc/sympa/node12.html,
+	doc/sympa/node13.html, doc/sympa/node14.html,
+	doc/sympa/node15.html, doc/sympa/node16.html,
+	doc/sympa/node17.html, doc/sympa/node18.html,
+	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
+	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
+	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
+	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps,
+	src/Conf.pm, wwsympa/wwsympa.fcgi: [proposed by J. Douglass] New
+	features: Add SSL support while authenticating to LDAP server New
+	'use_ssl', 'ssl_version' and 'ssl_ciphers' parameters in auth.conf
+
+2002-12-05 17:06  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	sympa/node10.html, sympa/node11.html, sympa/node12.html,
+	sympa/node13.html, sympa/node14.html, sympa/node15.html,
+	sympa/node16.html, sympa/node17.html, sympa/node18.html,
+	sympa/node19.html, sympa/node2.html, sympa/node20.html,
+	sympa/node3.html, sympa/node4.html, sympa/node5.html,
+	sympa/node6.html, sympa/node7.html, sympa/node8.html,
+	sympa/node9.html, sympa/sympa.ps: Detail header/footer algorythm
+
+2002-12-05 17:00  salaun
+
+	* src/parser.pl: Add check
+
+2002-12-05 12:01  salaun
+
+	* check_perl_modules.pl: Require recent LDAP modules with SSL
+	features
+
+2002-12-03 09:24  salaun
+
+	* src/: Conf.pm, Conf.pm: Fix: 'web_archive_spam_protection' not
+	recognized as robot.conf parameter
+
+2002-12-02 11:03  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: only rebuild archives of the current
+	VRobot
+
+2002-12-02 10:42  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: only rebuild archives of the current
+	VRobot
+
+2002-11-27 16:33  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	sympa/index.html, sympa/node1.html, sympa/node10.html,
+	sympa/node11.html, sympa/node12.html, sympa/node13.html,
+	sympa/node14.html, sympa/node15.html, sympa/node16.html,
+	sympa/node17.html, sympa/node18.html, sympa/node19.html,
+	sympa/node2.html, sympa/node20.html, sympa/node3.html,
+	sympa/node4.html, sympa/node5.html, sympa/node6.html,
+	sympa/node7.html, sympa/node8.html, sympa/node9.html,
+	sympa/sympa.html, sympa/sympa.ps: Document spam protection list
+	parameters
+
+2002-11-27 15:56  salaun
+
+	* src/tools.pl: Change: extend escaped characters in URLs.  JC
+	Delepine has reported a problem with 0xB0 char not escaped in
+	document repository
+
+2002-11-27 14:28  salaun
+
+	* src/tools.pl: Change: extend escaped characters in URLs.  JC
+	Delepine has reported a problem with 0xB0 char not escaped in
+	document repository
+
+2002-11-27 14:20  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: extend escaped characters in URLs.  A
+	problem was reported by JC Delepine with 0B0 character in the
+	document repository
+
+2002-11-26 13:08  salaun
+
+	* src/parser.pl, wwsympa/wws_templates/us/viewbounce.us.tpl:
+	[reported by G. Helou] New feature: Add escape_html option to the
+	parser.  This was required to escape <> chars in bounces
+
+2002-11-26 12:02  salaun
+
+	* wwsympa/wws_templates/: de/viewbounce.de.tpl,
+	fi/viewbounce.fi.tpl: Remove duplicate templates
+
+2002-11-26 11:08  salaun
+
+	* src/: List.pm, List.pm: Bug Fix: missing trailing boundary to the
+	confirm message
+
+2002-11-21 11:31  salaun
+
+	* src/: Makefile, etc/README: Change: add a README in bin/etc/
+
+2002-11-21 11:23  salaun
+
+	* src/List.pm: Change: ignore topics if no topics.conf was found
+
+2002-11-21 11:21  salaun
+
+	* src/List.pm, src/etc/topics.conf, src/etc/sample/Makefile,
+	wwsympa/wwsympa.fcgi: Change: ignore topics if no topics.conf was
+	found. Also install a default topics.conf
+
+2002-11-21 10:37  salaun
+
+	* src/List.pm, src/etc/script/create_db.mysql,
+	wwsympa/wwsympa.fcgi: New feature: (incomplete) new subroutine for
+	logs in DB. It could provide data for statistics
+
+2002-11-20 17:13  salaun
+
+	* wwsympa/wws_templates/us/main.us.tpl: [reported by Antoine AT
+	rezo.net] Update: complete cookies warning message, Javascript
+	might not have cookies read access
+
+2002-11-20 16:04  salaun
+
+	* src/task_manager.pl: [reported by O. Lacroix] Change: put log
+	entry about unused task label in debug3
+
+2002-11-20 14:43  salaun
+
+	* src/etc/scenari/: info.private, review.intranet,
+	visibility.intranet, info.private, review.intranet,
+	visibility.intranet: [O. Lacroix] Fix: Owners and editors were not
+	accepted
+
+2002-11-18 13:02  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: wrong test on
+	'db_additional_subscriber_fields' ; default in Conf.pm make it
+	always defined
+
+2002-11-18 12:57  salaun
+
+	* wwsympa/wws_templates/: fr/editsubscriber.fr.tpl,
+	us/editsubscriber.us.tpl: Fix: missing conditionnal use of
+	additional fields
+
+2002-11-18 12:56  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/cn/editsubscriber.cn.tpl,
+	wws_templates/cz/editsubscriber.cz.tpl,
+	wws_templates/de/editsubscriber.de.tpl,
+	wws_templates/es/editsubscriber.es.tpl,
+	wws_templates/et/editsubscriber.et.tpl,
+	wws_templates/fi/editsubscriber.fi.tpl,
+	wws_templates/fr/editsubscriber.fr.tpl,
+	wws_templates/hu/editsubscriber.hu.tpl,
+	wws_templates/it/editsubscriber.it.tpl,
+	wws_templates/nl/editsubscriber.nl.tpl,
+	wws_templates/ro/editsubscriber.ro.tpl,
+	wws_templates/us/editsubscriber.us.tpl: Bug fix: editsubscriber
+	failed if the owner was subscriber of the list. do_editsubscriber()
+	was using 'subscriber' variable already used.
+
+2002-11-18 12:25  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/cn/editsubscriber.cn.tpl,
+	wws_templates/cz/editsubscriber.cz.tpl,
+	wws_templates/de/editsubscriber.de.tpl,
+	wws_templates/es/editsubscriber.es.tpl,
+	wws_templates/et/editsubscriber.et.tpl,
+	wws_templates/fi/editsubscriber.fi.tpl,
+	wws_templates/fr/editsubscriber.fr.tpl,
+	wws_templates/hu/editsubscriber.hu.tpl,
+	wws_templates/it/editsubscriber.it.tpl,
+	wws_templates/nl/editsubscriber.nl.tpl,
+	wws_templates/ro/editsubscriber.ro.tpl,
+	wws_templates/us/editsubscriber.us.tpl: Bug fix: editsubscriber
+	failed if the owner was subscriber of the list. do_editsubscriber()
+	was using 'subscriber' variable already used.
+
+2002-11-18 12:22  salaun
+
+	* src/List.pm: Bug fix: include_file included only local parts of
+	email addresses
+
+2002-11-15 10:38  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/editsubscriber.fr.tpl,
+	wwsympa/wws_templates/us/editsubscriber.us.tpl: [requested by Eric
+	Sandquist] New feature: db_additional_subscriber_fields (declared
+	in sympa.conf) can now be edited in editsubscriber page (ENUM are
+	used)
+
+2002-11-15 09:05  salaun
+
+	* src/List.pm: Add comment
+
+2002-11-14 14:44  salaun
+
+	* ChangeLog, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	doc/sympa.tex.tpl, doc/sympa/index.html, doc/sympa/node1.html,
+	doc/sympa/node10.html, doc/sympa/node11.html,
+	doc/sympa/node12.html, doc/sympa/node13.html,
+	doc/sympa/node14.html, doc/sympa/node15.html,
+	doc/sympa/node16.html, doc/sympa/node17.html,
+	doc/sympa/node18.html, doc/sympa/node19.html, doc/sympa/node2.html,
+	doc/sympa/node20.html, doc/sympa/node3.html, doc/sympa/node4.html,
+	doc/sympa/node5.html, doc/sympa/node6.html, doc/sympa/node7.html,
+	doc/sympa/node8.html, doc/sympa/node9.html, doc/sympa/sympa.html,
+	doc/sympa/sympa.ps: complete mail aliases doc
+
+2002-11-14 14:40  salaun
+
+	* Makefile.in, important_changes.pl, doc/sympa.pdf, doc/sympa.ps,
+	doc/sympa.tex, doc/sympa.tex.tpl, doc/sympa/index.html,
+	doc/sympa/node1.html, doc/sympa/node10.html, doc/sympa/node11.html,
+	doc/sympa/node12.html, doc/sympa/node13.html,
+	doc/sympa/node14.html, doc/sympa/node15.html,
+	doc/sympa/node16.html, doc/sympa/node17.html,
+	doc/sympa/node18.html, doc/sympa/node19.html, doc/sympa/node2.html,
+	doc/sympa/node20.html, doc/sympa/node3.html, doc/sympa/node4.html,
+	doc/sympa/node5.html, doc/sympa/node6.html, doc/sympa/node7.html,
+	doc/sympa/node8.html, doc/sympa/node9.html, doc/sympa/sympa.html,
+	doc/sympa/sympa.ps: Complete documentation about mail aliases
+
+2002-11-14 10:59  salaun
+
+	* .version, ChangeLog, NEWS: preparing 4.0.a1 version
+
+2002-11-14 10:37  salaun
+
+	* src/etc/templates/fr/list_rejected.fr.tpl,
+	src/etc/templates/us/list_rejected.us.tpl, wwsympa/wwsympa.fcgi:
+	[reported by R. Salmon] Fix: rejection of pending lists was not
+	coded
+
 2002-11-14 10:26  salaun
 
 	* src/etc/templates/fr/list_rejected.fr.tpl,
@@ -18,8 +283,16 @@
 
 2002-11-13 11:12  salaun
 
-	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Missing
-	documentation for 'authentication_info_url' in auth.conf
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	sympa/index.html, sympa/node1.html, sympa/node10.html,
+	sympa/node11.html, sympa/node12.html, sympa/node13.html,
+	sympa/node14.html, sympa/node15.html, sympa/node16.html,
+	sympa/node17.html, sympa/node18.html, sympa/node19.html,
+	sympa/node2.html, sympa/node20.html, sympa/node3.html,
+	sympa/node4.html, sympa/node5.html, sympa/node6.html,
+	sympa/node7.html, sympa/node8.html, sympa/node9.html,
+	sympa/sympa.html, sympa/sympa.ps: Missing documentation for
+	'authentication_info_url' in auth.conf
 
 2002-11-13 11:06  salaun
 
@@ -242,9 +515,16 @@
 
 2002-10-21 11:29  salaun
 
-	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: [bugID 59]
-	[reported by xavier AT cs.gouv.qc.ca] Duplicates in manual ; fix
-	macros
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	sympa/index.html, sympa/node1.html, sympa/node10.html,
+	sympa/node11.html, sympa/node12.html, sympa/node13.html,
+	sympa/node14.html, sympa/node15.html, sympa/node16.html,
+	sympa/node17.html, sympa/node18.html, sympa/node19.html,
+	sympa/node2.html, sympa/node20.html, sympa/node3.html,
+	sympa/node4.html, sympa/node5.html, sympa/node6.html,
+	sympa/node7.html, sympa/node8.html, sympa/node9.html,
+	sympa/sympa.html, sympa/sympa.ps: [bugID 59] [reported by xavier AT
+	cs.gouv.qc.ca] Duplicates in manual ; fix macros
 
 2002-10-21 11:24  salaun
 
@@ -475,12 +755,27 @@
 2002-09-23 14:55  salaun
 
 	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
-	man8/sympa.8, man8/sympa.pod: Add documentation for
-	--make_alias_file option
+	man8/sympa.8, man8/sympa.pod, sympa/node10.html, sympa/node11.html,
+	sympa/node12.html, sympa/node13.html, sympa/node14.html,
+	sympa/node15.html, sympa/node16.html, sympa/node17.html,
+	sympa/node18.html, sympa/node19.html, sympa/node2.html,
+	sympa/node20.html, sympa/node3.html, sympa/node4.html,
+	sympa/node5.html, sympa/node6.html, sympa/node7.html,
+	sympa/node8.html, sympa/node9.html, sympa/sympa.ps: Add
+	documentation for --make_alias_file option
 
 2002-09-23 12:15  salaun
 
 	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
+	doc/sympa/node11.html, doc/sympa/node12.html,
+	doc/sympa/node13.html, doc/sympa/node14.html,
+	doc/sympa/node15.html, doc/sympa/node16.html,
+	doc/sympa/node17.html, doc/sympa/node18.html,
+	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
+	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
+	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
+	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps,
 	wwsympa/wwsympa.fcgi: Change: Allow non-anonymous bind in
 	auth.conf. New bind_dn and bind_pawword parameters
 
@@ -529,8 +824,16 @@
 
 2002-09-19 16:48  salaun
 
-	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Update
-	documentation regarding alias management
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	sympa/index.html, sympa/node1.html, sympa/node10.html,
+	sympa/node11.html, sympa/node12.html, sympa/node13.html,
+	sympa/node14.html, sympa/node15.html, sympa/node16.html,
+	sympa/node17.html, sympa/node18.html, sympa/node19.html,
+	sympa/node2.html, sympa/node20.html, sympa/node3.html,
+	sympa/node4.html, sympa/node5.html, sympa/node6.html,
+	sympa/node7.html, sympa/node8.html, sympa/node9.html,
+	sympa/sympa.html, sympa/sympa.ps: Update documentation regarding
+	alias management
 
 2002-09-19 15:45  salaun
 
@@ -591,9 +894,18 @@
 
 	* doc/sympa.pdf, src/sympa.pl, src/task_manager.pl,
 	wwsympa/archived.pl, wwsympa/bounced.pl, wwsympa/wwsympa.fcgi,
-	doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl: [reported by Sergiy
-	Zhuk] Fix: umask was considered a decimal number ; now taken as
-	octal
+	doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
+	doc/sympa/node11.html, doc/sympa/node12.html,
+	doc/sympa/node13.html, doc/sympa/node14.html,
+	doc/sympa/node15.html, doc/sympa/node16.html,
+	doc/sympa/node17.html, doc/sympa/node18.html,
+	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
+	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
+	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
+	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps:
+	[reported by Sergiy Zhuk] Fix: umask was considered a decimal
+	number ; now taken as octal
 
 2002-09-18 09:20  salaun
 
@@ -792,6 +1104,19 @@
 	wwsympa/wws_templates/nl/view_translations.nl.tpl,
 	wwsympa/wws_templates/nl/viewmod.nl.tpl: [Harry Westerman] Complete
 	translation to Dutch
+
+2002-09-16 10:52  salaun
+
+	* doc/sympa/: contents.png, crossref.png, img1.old, img1.png,
+	img2.old, img2.png, index.html, index.png, next.png, next_g.png,
+	node1.html, node10.html, node11.html, node12.html, node13.html,
+	node14.html, node15.html, node16.html, node17.html, node18.html,
+	node19.html, node2.html, node20.html, node3.html, node4.html,
+	node5.html, node6.html, node7.html, node8.html, node9.html,
+	prev.png, prev_g.png, sympa.css, sympa.html, sympa.ps, up.png,
+	up_g.png: 
+	
+	HTML doc is usefull in CVS TREE
 
 2002-09-13 12:10  salaun
 
@@ -9674,7 +9999,7 @@
 	src/etc/sample/config.moderation,
 	src/etc/sample/config.privateorpublickey,
 	src/etc/sample/config.public, src/etc/sample/sympa.conf,
-	src/etc/sample/topics.conf, src/etc/sample/wwsympa.conf,
+	src/etc/sample/topics.fr.conf, src/etc/sample/wwsympa.conf,
 	src/etc/sample/test/config, src/etc/sample/test/info,
 	src/etc/sample/test/message.footer,
 	src/etc/sample/test/welcome.tpl,
@@ -10021,7 +10346,7 @@
 	src/etc/sample/config.moderation,
 	src/etc/sample/config.privateorpublickey,
 	src/etc/sample/config.public, src/etc/sample/sympa.conf,
-	src/etc/sample/topics.conf, src/etc/sample/wwsympa.conf,
+	src/etc/sample/topics.fr.conf, src/etc/sample/wwsympa.conf,
 	src/etc/sample/test/config, src/etc/sample/test/info,
 	src/etc/sample/test/message.footer,
 	src/etc/sample/test/welcome.tpl,

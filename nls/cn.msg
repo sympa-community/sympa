@@ -191,7 +191,6 @@ AUTH %s ADD %s %s %s\n"
    转寄的邮件 :  %9d\n\n\
    送出 (MB)  : %9.2f\n\
    转发 (MB)  : %9.2f\n"
-9	"邮递表 %s 的摘要"
 10	"要分发附上的邮件到邮递表 %s:\n\
 mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\
 或发送邮件到 %s，标题为:\n\
@@ -204,8 +203,6 @@ REJECT %s %s\n"
 mailto:%s?subject=CONFIRM%%20%s\n\
 或发送邮件到 %s，标题为:\n\
 CONFIRM %s\n"
-13	"目录" 
-14	"邮递表 %s 的摘要结束"
 15	"有 %d 个邮件需要被处理(邮递表 %s)" 
 16	"需要身份验证"
 21	"FYI: %s 邮递表 %s 由 %s %s"

@@ -206,14 +206,11 @@ Ou alors envoyer un mail à %s avec comme objet :\n\
 AUTH %s ADD %s %s %s\n"
 6	"Bienvenue sur la liste %s"
 7	"Fichier"
-9	"Compilation de la liste %s"
 12	"Pour diffuser le message ci-joint dans la liste %s,\n\
 cliquez sur ce lien :\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 Ou alors envoyez un mail à %s avec comme sujet :\n\
 CONFIRM %s\n"
-13	"Sommaire"
-14	"Fin de compilation de la liste %s"
 16	"Authentification demandée"
 21	"Pour info %s liste %s de %s %s"
 22	"Pour Info, opération %s dans la liste %s de %s %s \n(aucune action requise)"

@@ -2291,6 +2291,7 @@ sub add_parts {
 ## Send a digest message to the subscribers with reception digest or summary
 sub send_msg_digest {
     my ($self) = @_;
+
     my $listname = $self->{'name'};
     my $robot = $self->{'domain'};
     do_log('debug2', 'List:send_msg_digest(%s)', $listname);
@@ -2302,9 +2303,10 @@ sub send_msg_digest {
 		 'return_path' => "$self->{'name'}-owner\@$self->{'admin'}{'host'}",
 		 'reply' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
 		 'to' => "$self->{'name'}\@$self->{'admin'}{'host'}",
-		 'table_of_content' => sprintf(Msg(8, 13, "Table of content"))
+		 'table_of_content' => sprintf(Msg(8, 13, "Table of content")),
+		 'boundary1' => '----------=_'.&tools::get_message_id($robot),
+		 'boundary2' => '----------=_'.&tools::get_message_id($robot),
 		 };
-    
     if ($self->get_reply_to() =~ /^list$/io) {
 	$param->{'reply'} = "$param->{'to'}";
     }
@@ -2314,9 +2316,6 @@ sub send_msg_digest {
     my $i;
     
     my ($mail, @list_of_mail);
-
-    ## Check the list
-    return undef unless ($listname eq $param->{'name'});
 
     ## Create the list of subscribers in digest mode
     for (my $user = $self->get_first_user(); $user; $user = $self->get_next_user()) {
@@ -2358,7 +2357,7 @@ sub send_msg_digest {
     ## Deletes the introduction part
     splice @list_of_mail, 0, 1;
 
-    ## Index construction
+    ## Headers cleanup
     foreach $i (0 .. $#list_of_mail){
 	my $mail = $list_of_mail[$i];
 	my ($subject, $from);
@@ -2380,11 +2379,15 @@ sub send_msg_digest {
 
     ## Digest index
     foreach $i (0 .. $#list_of_mail){
-	my $mail = $list_of_mail[$i];	
-	my $subject = $mail->head->get('Subject') || "\n";
+	my $mail = $list_of_mail[$i];
+	my $subject = $mail->head->get('Subject');
+	chomp $subject;
         my $msg = {};
+	$msg->{'id'} = $i+1;
         $msg->{'subject'} = $subject;	
         $msg->{'from'} = $mail->head->get('From');
+	$mail->tidy_body;
+	$mail->remove_sig;
 	$msg->{'full_msg'} = $mail->as_string;
 	$msg->{'body'} = $mail->body;
 	chomp $msg->{'from'};
@@ -2395,62 +2398,27 @@ sub send_msg_digest {
 	$msg->{'message_id'} =~ s/^\<(.+)\>$/$1/;
 	$msg->{'message_id'} = &tools::escape_chars($msg->{'message_id'});
 
-        push @{$param->{'msg'}}, $msg ;
+        push @{$param->{'msg_list'}}, $msg ;
 
 	push @topics, sprintf ' ' x (2 - length($i)) . "%d. %s", $i+1, $subject;
     }
     
     ## Prepare Digest
     if (@tabrcpt) {
-	my $msg = MIME::Entity->build (To         => $param->{'to'},
-				       From       => $param->{'from'},
-				       'Reply-to' => $param->{'reply'},
-				       Type       => 'multipart/mixed',
-				       Subject    => MIME::Words::encode_mimewords(sprintf(Msg(8, 9, "Digest of list %s"),$listname))
-				       );
-	
-	my $charset = sprintf Msg(12, 2, 'us-ascii');
-	my $table_of_content = MIME::Entity->build (Type        => "text/plain; charset=$charset",
-						    Description => sprintf(Msg(8, 13, 'Table of content')),
-						    Data        => \@topics
-						    );
-	
-	$msg->add_part($table_of_content);
-	
-	my $digest = MIME::Entity->build (Type     => 'multipart/digest',
-					  Boundary => '__--__--'
-					  );
-	## Digest messages
-	foreach $mail (@list_of_mail) {
-	    $mail->tidy_body;
-	    $mail->remove_sig;
-	    
-	    $digest->attach(Type     => 'message/rfc822',
-			    Disposition => 'inline',
-			    Data        => $mail->as_string
-			    );
-	}
 	
 	my @now  = localtime(time);
-	my $footer = sprintf Msg(8, 14, "End of %s Digest"), $listname;
-	$footer .= sprintf " - %s\n", POSIX::strftime("%a %b %e %H:%M:%S %Y", @now);
+	$param->{'date'} = sprintf "%s", POSIX::strftime("%a %b %e %H:%M:%S %Y", @now);
 	
-	$digest->attach(Type        => 'text/plain',
-			Disposition => 'inline',
-			Data        => $footer
-			);
-	$msg->add_part($digest); 
-	
-	## Add a footer
-	my $new_msg = $self->add_parts($msg);
-	if (defined $new_msg) {
-	    $msg = $new_msg;
-	}
-	
+#	## Add a footer
+#	my $new_msg = $self->add_parts($msg);
+#	if (defined $new_msg) {
+#	    $msg = $new_msg;
+#	}
+
 	## Send digest
-	&smtp::mailto($msg, $param->{'return_path'}, 'none', '_ALTERED_', @tabrcpt );
-    }
-    
+	$self->send_file('digest', \@tabrcpt, $robot, $param);
+    }    
+
     ## send summary
     if (@tabrcptsummary) {
 	$param->{'subject'} = sprintf Msg(8, 31, 'Summary of list %s'), $self->{'name'};

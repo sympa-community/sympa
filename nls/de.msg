@@ -235,13 +235,10 @@ folgenden Befehl zur Liste hinzufügen:\n\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
 6	"Willkommen bei %s!"
 7	"Datei"
-9	"Zusammenfassung für Liste %s"
 12	"Um die angehängte Nachricht über Liste %s zu verteilen:\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 Oder: Schicken Sie eine Nachricht an %s mit folgendem Subject:\n\
 CONFIRM %s\n"
-13	"Inhaltsverzeichnis" 
-14	"Ende der Zusammenfassung für Liste %s"
 15	"%d Nachrichten in Liste %s müssen überprüft werden" 
 16	"Authentifizierung erforderlich"
 21	"Zur Information: %s list %s von %s %s"

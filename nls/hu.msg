@@ -201,14 +201,11 @@ AUTH %s ADD %s %s %s\n\n\
 legyen, tudod engedélyezni.\n"
 6	"Üdvözlünk a(z) %s listán"
 7	"Állomány"
-9	"Digest a(z) %s listán"
 12	"A(z) %s listán a melléklet megjelenésének a következõt paranccsal\n\
 engedélyezheted:\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 vagy a(z) %s címre a következõ tárggyal küldj egy engedélyezõ levelet:\n\
 CONFIRM %s\n"
-13	"Tartalomjegyzék" 
-14	"Digest vége a(z) %s listán"
 16	"Azonosítás szükséges"
 21	"BIZ: %s lista %s feladó %s %s"
 22	"BIZ: %s parancs a(z) %s listán %s %s felhasználótól \n (nincs teendõ)\n"

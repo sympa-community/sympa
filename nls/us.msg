@@ -206,13 +206,10 @@ or send an email to %s with the following subject :\n\
 AUTH %s ADD %s %s %s\n"
 6	"Welcome on list %s"
 7	"File"
-9	"Digest for list %s"
 12	"To distribute the attached message in list %s :\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 Or send a message to %s with the following subject :\n\
 CONFIRM %s\n"
-13	"Table of content" 
-14	"End of digest for list %s"
 16	"Authentication requested"
 21	"FYI: %s list %s from %s %s"
 22	"FYI command %s list %s from %s %s \n (no action needed)\n"

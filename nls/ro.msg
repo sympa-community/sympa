@@ -196,13 +196,10 @@ sau trimite un mail %s cu urmatorul subiect:\n\
 AUTH %s ADD %s %s %s \n"
 6	"Bun venit pe lista %s"
 7	"Fisier"
-9	"Mesaje compilate pentru lista %s"
 12	"Pentru a trimite mesajul atasat din lista %s :\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 sau trimite un mesaj la %s cu urmatorul subiect:\n\
 CONFIRM %s \n"
-13	"Continut" 
-14	"Terminarea compilarii mesajelor pentru lista %s"
 16	"Cerere de autentificare"
 21	"FYI: %s lista %s de la %s %s"
 22	"FYI comanda %s lista %s  de la %s %s \n (nu necesita alte operatii)\n"
