@@ -14,7 +14,7 @@
        [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
              <FONT COLOR="[selected_color]" SIZE="-1">
-              <A HREF="[base_url][path_cgi]/admin/[l->NAME]" ><b>admin</b></A>
+              <A HREF="[path_cgi]/admin/[l->NAME]" ><b>admin</b></A>
          </FONT>
        </TD>
      [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']

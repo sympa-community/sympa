@@ -19,7 +19,7 @@
      [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
-         <A HREF="[base_url][path_cgi]/subindex/[list]" ><b>Pending subscriptions</b></A>
+         <A HREF="[path_cgi]/subindex/[list]" ><b>Pending subscriptions</b></A>
          </FONT>
        </TD>
      [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
@@ -28,7 +28,7 @@
      [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
-         <A HREF="[base_url][path_cgi]/add_request/[list]" ><b>Multiple add</b></A>
+         <A HREF="[path_cgi]/add_request/[list]" ><b>Multiple add</b></A>
          </FONT>
        </TD>
      [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
@@ -39,7 +39,7 @@
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
 
-         <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Do you really want to send a subscription remind message to the [total] subscribers ?'); return false;"><b>Remind all subscribers</b></A>
+         <A HREF="[path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Do you really want to send a subscription remind message to the [total] subscribers ?'); return false;"><b>Remind all subscribers</b></A>
 
          </FONT>
        </TD>

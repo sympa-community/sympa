@@ -19,7 +19,7 @@
      <TR>
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
-         <A HREF="[base_url][path_cgi]/add_request/[list]" ><b>Mehrfaches hinzuf&uuml;gen</b></A>
+         <A HREF="[path_cgi]/add_request/[list]" ><b>Mehrfaches hinzuf&uuml;gen</b></A>
          </FONT>
        </TD>
      </TR>
@@ -34,7 +34,7 @@
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
 
-         <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Wollen Sie wirklich Erinnerungs EMails an [total] Abonnenten schicken?'); return false;"><b>Alle Abonnenten an Passwort erinnern</b></A>
+         <A HREF="[path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Wollen Sie wirklich Erinnerungs EMails an [total] Abonnenten schicken?'); return false;"><b>Alle Abonnenten an Passwort erinnern</b></A>
 
          </FONT>
        </TD>

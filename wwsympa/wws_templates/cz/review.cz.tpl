@@ -20,7 +20,7 @@
      <TR>
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
-         <A HREF="[base_url][path_cgi]/add_request/[list]" ><b>Vícenásobné pøidání</b></A>
+         <A HREF="[path_cgi]/add_request/[list]" ><b>Vícenásobné pøidání</b></A>
          </FONT>
        </TD>
      </TR>
@@ -35,7 +35,7 @@
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
 
-         <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Chcete opravdu poslat pøipomínací zprávu k [total] èlenùm?'); return false;"><b>Upomenout èleny</b></A>
+         <A HREF="[path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Chcete opravdu poslat pøipomínací zprávu k [total] èlenùm?'); return false;"><b>Upomenout èleny</b></A>
 
          </FONT>
        </TD>

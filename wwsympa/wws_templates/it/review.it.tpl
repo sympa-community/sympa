@@ -19,7 +19,7 @@
      <TR>
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
-         <A HREF="[base_url][path_cgi]/add_request/[list]" STYLE="TEXT-DECORATION: NONE"><b>Aggiunta multipla</b></A>
+         <A HREF="[path_cgi]/add_request/[list]" STYLE="TEXT-DECORATION: NONE"><b>Aggiunta multipla</b></A>
          </FONT>
        </TD>
      </TR>
@@ -33,7 +33,7 @@
      <TR>
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
-         <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Vuoi veramente mandare un messaggio a [total] sottoscritti ?'); return false;"><b>Notifica tutti gli iscritti</b></A>
+         <A HREF="[path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Vuoi veramente mandare un messaggio a [total] sottoscritti ?'); return false;"><b>Notifica tutti gli iscritti</b></A>
          </FONT>
        </TD>
      </TR>

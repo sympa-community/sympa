@@ -2,13 +2,13 @@
 
 [IF !group]
 You can choose below a subset of parameters to edit : <UL>
-<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/description" >List definition</A>
-<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/sending" >Sending/reception setup</A>
-<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/command" >Privileges</A>
-<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/archives" >Archives</A>
-<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/bounces" >Bounces management</A>
-<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/data_source" >Data sources setup</A>
-<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/other" >Miscellaneous</A>
+<LI><A HREF="[path_cgi]/edit_list_request/[list]/description" >List definition</A>
+<LI><A HREF="[path_cgi]/edit_list_request/[list]/sending" >Sending/reception setup</A>
+<LI><A HREF="[path_cgi]/edit_list_request/[list]/command" >Privileges</A>
+<LI><A HREF="[path_cgi]/edit_list_request/[list]/archives" >Archives</A>
+<LI><A HREF="[path_cgi]/edit_list_request/[list]/bounces" >Bounces management</A>
+<LI><A HREF="[path_cgi]/edit_list_request/[list]/data_source" >Data sources setup</A>
+<LI><A HREF="[path_cgi]/edit_list_request/[list]/other" >Miscellaneous</A>
 </UL>
 [ELSE]
 <FORM ACTION="[path_cgi]" METHOD="POST">

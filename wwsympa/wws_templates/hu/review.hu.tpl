@@ -22,7 +22,7 @@
 <TR>
  <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
    <FONT COLOR="[selected_color]" SIZE="-1">
-    <A HREF="[base_url][path_cgi]/subindex/[list]" ><b>Jóváhagyásra váró feliratkozások</b></A>
+    <A HREF="[path_cgi]/subindex/[list]" ><b>Jóváhagyásra váró feliratkozások</b></A>
    </FONT>
 </TD> 
 </TR>
@@ -35,7 +35,7 @@
      <TR>
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
-         <A HREF="[base_url][path_cgi]/add_request/[list]" ><b>Tagok hozzáadása</b></A>
+         <A HREF="[path_cgi]/add_request/[list]" ><b>Tagok hozzáadása</b></A>
          </FONT>
        </TD>
      </TR>
@@ -50,7 +50,7 @@
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
 
-         <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Tényleg szeretnél a(z) [total] új tagnak üdvözlõ szöveget küldeni?'); return false;"><b>Újak értesítése</b></A>
+         <A HREF="[path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Tényleg szeretnél a(z) [total] új tagnak üdvözlõ szöveget küldeni?'); return false;"><b>Újak értesítése</b></A>
 
          </FONT>
        </TD>

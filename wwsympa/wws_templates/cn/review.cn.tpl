@@ -18,7 +18,7 @@
      <TR>
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
-         <A HREF="[base_url][path_cgi]/add_request/[list]" ><b>添加多个</b></A>
+         <A HREF="[path_cgi]/add_request/[list]" ><b>添加多个</b></A>
          </FONT>
        </TD>
      </TR>
@@ -33,7 +33,7 @@
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
 
-         <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', '您确定要给全部的[total]个订阅者发送订阅提醒邮件吗?'); return false;"><b>提醒全部订阅者</b></A>
+         <A HREF="[path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', '您确定要给全部的[total]个订阅者发送订阅提醒邮件吗?'); return false;"><b>提醒全部订阅者</b></A>
 
          </FONT>
        </TD>

@@ -18,7 +18,7 @@
      [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
-         <A HREF="[base_url][path_cgi]/subindex/[list]" ><b>Abonnements en attente</b></A>
+         <A HREF="[path_cgi]/subindex/[list]" ><b>Abonnements en attente</b></A>
          </FONT>
        </TD>
      [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
@@ -28,7 +28,7 @@
      [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
-         <A HREF="[base_url][path_cgi]/add_request/[list]" ><b>Ajout multiple</b></A>
+         <A HREF="[path_cgi]/add_request/[list]" ><b>Ajout multiple</b></A>
          </FONT>
        </TD>
      [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
@@ -37,7 +37,7 @@
      [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
-         <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Êtes-vous sûr de vouloir envoyer un rappel d\'abonnement à chacun des [total] abonnés ?'); return false;"><b>Rappel des abonnements</b></A>
+         <A HREF="[path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Êtes-vous sûr de vouloir envoyer un rappel d\'abonnement à chacun des [total] abonnés ?'); return false;"><b>Rappel des abonnements</b></A>
          </FONT>
        </TD>
      [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']

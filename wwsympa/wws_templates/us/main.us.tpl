@@ -28,7 +28,7 @@
     url = window.opener.location.href
 
     if (url.indexOf('logout') > -1 ) {
-      url = '[base_url][path_cgi]/'
+      url = '[path_cgi]/'
     }
 
     window.opener.location = url

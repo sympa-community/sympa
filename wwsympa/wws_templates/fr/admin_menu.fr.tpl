@@ -9,25 +9,25 @@
     <TD BGCOLOR="[light_color]" ALIGN="CENTER">
        [IF list_conf->status=closed]
 	[IF is_listmaster]
-        <A HREF="[base_url][path_cgi]/restore_list/[list]" >
+        <A HREF="[path_cgi]/restore_list/[list]" >
           <FONT size="-1"><b>Restaurer la liste</b></font></A>
         [ELSE]
           <FONT size="-1" COLOR="[bg_color]"><b>Restaurer la liste</b></font>
         [ENDIF]
        [ELSE]
-        <A HREF="[base_url][path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Êtes-vous sûr de vouloir fermer la liste [list] ?'); return false;"><FONT size=-1><b>Supprimer la liste</b></font></A>
+        <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Êtes-vous sûr de vouloir fermer la liste [list] ?'); return false;"><FONT size=-1><b>Supprimer la liste</b></font></A>
        [ENDIF]
     </TD>
 
     <TD BGCOLOR="[light_color]" ALIGN="CENTER">
 	[IF shared=none]
-          <A HREF="[base_url][path_cgi]/d_admin/[list]/create" >
+          <A HREF="[path_cgi]/d_admin/[list]/create" >
              <FONT size=-1><b>Créer un espace partagé</b></font></A>
 	[ELSIF shared=deleted]
-          <A HREF="[base_url][path_cgi]/d_admin/[list]/restore" >
+          <A HREF="[path_cgi]/d_admin/[list]/restore" >
              <FONT size=-1><b>Restaurer l'espace partagé</b></font></A>
 	[ELSIF shared=exist]
-          <A HREF="[base_url][path_cgi]/d_admin/[list]/delete" >
+          <A HREF="[path_cgi]/d_admin/[list]/delete" >
              <FONT size=-1><b>Supprimer l'espace partagé</b></font></A>
         [ELSE]
           <FONT size=1 color=red>
@@ -53,7 +53,7 @@
     [ELSE]
     <TD BGCOLOR=[light_color] ALIGN=CENTER>
        [IF is_owner]
-       <A HREF="[base_url][path_cgi]/review/[list]" >
+       <A HREF="[path_cgi]/review/[list]" >
        <FONT size="-1"><b>Abonnés</b></FONT></A>
        [ENDIF]
     </TD>
@@ -66,7 +66,7 @@
     [ELSE]
     <TD BGCOLOR="[light_color]" ALIGN="CENTER">
        [IF is_owner]
-       <A HREF="[base_url][path_cgi]/reviewbouncing/[list]" >
+       <A HREF="[path_cgi]/reviewbouncing/[list]" >
        <FONT size="-1"><b>Erreurs</b></FONT></A>
        [ENDIF]
     </TD>
@@ -79,7 +79,7 @@
     [ELSE]
        [IF is_editor]
        <TD BGCOLOR="[light_color]" ALIGN=CENTER>
-         <A HREF="[base_url][path_cgi]/modindex/[list]" >
+         <A HREF="[path_cgi]/modindex/[list]" >
          <FONT size="-1"><b>Modérer</b></FONT></A>
        </TD>
        [ELSE]
@@ -96,7 +96,7 @@
     [ELSE]
     <TD BGCOLOR="[light_color]" ALIGN="CENTER">
        [IF is_owner]
-       <A HREF="[base_url][path_cgi]/editfile/[list]" >
+       <A HREF="[path_cgi]/editfile/[list]" >
        <FONT size="-1"><b>Personnaliser</b></FONT></A>
        [ENDIF]
     </TD>

@@ -8,23 +8,23 @@
     <TD BGCOLOR="[light_color]" ALIGN="CENTER">
        [IF list_conf->status=closed]
 	[IF is_listmaster]
-        <A HREF="[base_url][path_cgi]/restore_list/[list]" >
+        <A HREF="[path_cgi]/restore_list/[list]" >
           <FONT size="-1"><b>恢复邮递表</b></font></A>
         [ELSE]
           <FONT size="-1" COLOR="[bg_color]"><b>恢复邮递表</b></font>
         [ENDIF]
        [ELSE]
-        <A HREF="[base_url][path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', '确定要关闭 [list] 邮递表?'); return false;"><FONT size=-1><b>移除邮递表</b></font></A>
+        <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', '确定要关闭 [list] 邮递表?'); return false;"><FONT size=-1><b>移除邮递表</b></font></A>
     </TD>
     <TD BGCOLOR="[light_color]" ALIGN="CENTER">
 	[IF shared=none]
-          <A HREF="[base_url][path_cgi]/d_admin/[list]/create" >
+          <A HREF="[path_cgi]/d_admin/[list]/create" >
              <FONT size=-1><b>建立共享</b></font></A>
 	[ELSIF shared=deleted]
-          <A HREF="[base_url][path_cgi]/d_admin/[list]/restore" >
+          <A HREF="[path_cgi]/d_admin/[list]/restore" >
              <FONT size=-1><b>恢复共享</b></font></A>
 	[ELSIF shared=exist]
-          <A HREF="[base_url][path_cgi]/d_admin/[list]/delete" >
+          <A HREF="[path_cgi]/d_admin/[list]/delete" >
              <FONT size=-1><b>删除共享</b></font></A>
         [ELSE]
           <FONT size=1 color=red>
@@ -50,7 +50,7 @@
     [ELSE]
     <TD BGCOLOR=[light_color] ALIGN=CENTER>
        [IF is_owner]
-       <A HREF="[base_url][path_cgi]/review/[list]" >
+       <A HREF="[path_cgi]/review/[list]" >
        <FONT size="-1"><b>订阅者</b></FONT></A>
        [ENDIF]
     </TD>
@@ -63,7 +63,7 @@
     [ELSE]
     <TD BGCOLOR="[light_color]" ALIGN="CENTER">
        [IF is_owner]
-       <A HREF="[base_url][path_cgi]/reviewbouncing/[list]" >
+       <A HREF="[path_cgi]/reviewbouncing/[list]" >
        <FONT size="-1"><b>退信</b></FONT></A>
        [ENDIF]
     </TD>
@@ -76,7 +76,7 @@
     [ELSE]
        [IF is_editor]
        <TD BGCOLOR="[light_color]" ALIGN=CENTER>
-         <A HREF="[base_url][path_cgi]/modindex/[list]" >
+         <A HREF="[path_cgi]/modindex/[list]" >
          <FONT size="-1"><b>监管</b></FONT></A>
        </TD>
        [ELSE]
@@ -93,7 +93,7 @@
     [ELSE]
     <TD BGCOLOR="[light_color]" ALIGN="CENTER">
        [IF is_owner]
-       <A HREF="[base_url][path_cgi]/editfile/[list]" >
+       <A HREF="[path_cgi]/editfile/[list]" >
        <FONT size="-1"><b>定制</b></FONT></A>
        [ENDIF]
     </TD>
