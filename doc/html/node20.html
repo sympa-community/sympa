@@ -9,8 +9,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Index</TITLE>
-<META NAME="description" CONTENT="Index">
+<TITLE>19. Sympa with S/MIME and HTTPS</TITLE>
+<META NAME="description" CONTENT="19. Sympa with S/MIME and HTTPS">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -29,1810 +29,423 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1131"
+<A NAME="tex2html1141"
   HREF="node21.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1127"
+<A NAME="tex2html1135"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1121"
+<A NAME="tex2html1129"
   HREF="node19.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1129"
+<A NAME="tex2html1137"
   HREF="node1.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html1139"
+  HREF="node22.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1132"
-  HREF="node21.html">About this document ...</A>
-<B> Up:</B> <A NAME="tex2html1128"
+<B> Next:</B> <A NAME="tex2html1142"
+  HREF="node21.html">20. Using Sympa commands</A>
+<B> Up:</B> <A NAME="tex2html1136"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1122"
-  HREF="node19.html">18. Using Sympa commands</A>
- &nbsp <B>  <A NAME="tex2html1130"
+<B> Previous:</B> <A NAME="tex2html1130"
+  HREF="node19.html">18. Using Sympa with LDAP</A>
+ &nbsp <B>  <A NAME="tex2html1138"
   HREF="node1.html">Contents</A></B> 
+ &nbsp <B>  <A NAME="tex2html1140"
+  HREF="node22.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html1143"
+  HREF="node20.html#SECTION002010000000000000000">19.1 Signed message distribution</A>
+<LI><A NAME="tex2html1144"
+  HREF="node20.html#SECTION002020000000000000000">19.2 Use of S/MIME signature by Sympa itself</A>
+<LI><A NAME="tex2html1145"
+  HREF="node20.html#SECTION002030000000000000000">19.3 Use of S/MIME encryption</A>
+<LI><A NAME="tex2html1146"
+  HREF="node20.html#SECTION002040000000000000000">19.4 S/Sympa configuration</A>
+<UL>
+<LI><A NAME="tex2html1147"
+  HREF="node20.html#SECTION002041000000000000000">19.4.1 Installation</A>
+<LI><A NAME="tex2html1148"
+  HREF="node20.html#SECTION002042000000000000000">19.4.2 configuration in sympa.conf</A>
+<LI><A NAME="tex2html1149"
+  HREF="node20.html#SECTION002043000000000000000">19.4.3 configuration to recognize S/MIME signatures</A>
+<LI><A NAME="tex2html1150"
+  HREF="node20.html#SECTION002044000000000000000">19.4.4 distributing encrypted messages</A>
+</UL>
 <BR>
+<LI><A NAME="tex2html1151"
+  HREF="node20.html#SECTION002050000000000000000">19.5 Managing certificates with tasks</A>
+<UL>
+<LI><A NAME="tex2html1152"
+  HREF="node20.html#SECTION002051000000000000000">19.5.1 chk_cert_expiration.daily.task model</A>
+<LI><A NAME="tex2html1153"
+  HREF="node20.html#SECTION002052000000000000000">19.5.2 crl_update.daily.task model</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
 
-<H2><A NAME="SECTION002000000000000000000">
-Index</A>
-</H2><DL COMPACT>
-<DT><STRONG><TT> List-admin menu-&gt; Archive Management</TT> configuration keyword</STRONG>
-<DD><A HREF="node7.html#5675">6.5</A>
-<DT><STRONG><TT>- -prefix=PREFIX</TT> option</STRONG>
-<DD><A HREF="node4.html#4439">3.3</A>
-<DT><STRONG>robot</I></STRONG>
-<DD><A HREF="node4.html#4754">3.6</A>
-<DT><STRONG><TT>-config <I>config_file</I></TT> option</STRONG>
-<DD><A HREF="node4.html#4650">3.6</A>
-<DT><STRONG><TT>-debug</TT> option</STRONG>
-<DD><A HREF="node4.html#4634">3.6</A>
-<DT><STRONG>-dump <I>listname <TT></STRONG>
-<DD></TT> ALL</I><TT>-dump <I>listname <TT></TT> ALL</I></TT> option
-<DT><STRONG><TT>-help</TT> option</STRONG>
-<DD><A HREF="node4.html#4802">3.6</A>
-<DT><STRONG><TT>-import <I>listname</I></TT> option</STRONG>
-<DD><A HREF="node4.html#4793">3.6</A>
-<DT><STRONG><TT>-keepcopy <I>recipient_directory</I></TT> option</STRONG>
-<DD><A HREF="node4.html#4724">3.6</A>
-<DT><STRONG><TT>-lang <I>catalog</I></TT> option</STRONG>
-<DD><A HREF="node4.html#4688">3.6</A>
-<DT><STRONG><TT>-lowercase</TT> option</STRONG>
-<DD><A HREF="node4.html#4799">3.6</A>
-<DT><STRONG><TT>-mail</TT> option</STRONG>
-<DD><A HREF="node4.html#4672">3.6</A>
-<DT><STRONG><TT>-make_alias_file</TT> option</STRONG>
-<DD><A HREF="node4.html#4808">3.6</A>
-<DT><STRONG><TT>-version</TT> option</STRONG>
-<DD><A HREF="node4.html#4811">3.6</A>
-<DT><STRONG><TT>-with-bindir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4443">3.3</A>
-<DT><STRONG><TT>-with-cgidir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4461">3.3</A>
-<DT><STRONG><TT>-with-confdir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4470">3.3</A>
-<DT><STRONG><TT>-with-datadir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4467">3.3</A>
-<DT><STRONG><TT>-with-docdir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4488">3.3</A>
-<DT><STRONG><TT>-with-etcdir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4497">3.3</A>
-<DT><STRONG><TT>-with-exlpdir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4479">3.3</A>
-<DT><STRONG><TT>-with-group=LOGIN</TT> option</STRONG>
-<DD><A HREF="node4.html#4522">3.3</A>
-<DT><STRONG><TT>-with-iconsdir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4464">3.3</A>
-<DT><STRONG><TT>-with-initdir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4491">3.3</A>
-<DT><STRONG><TT>-with-libdir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4482">3.3</A>
-<DT><STRONG><TT>-with-libexecdir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4458">3.3</A>
-<DT><STRONG><TT>-with-mandir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4485">3.3</A>
-<DT><STRONG><TT>-with-newaliases=FULLPATH</TT> option</STRONG>
-<DD><A HREF="node4.html#4535">3.3</A>
-<DT><STRONG><TT>-with-newaliases_arg=ARGS</TT> option</STRONG>
-<DD><A HREF="node4.html#4538">3.3</A>
-<DT><STRONG><TT>-with-nlsdir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4500">3.3</A>
-<DT><STRONG><TT>-with-openssl=FULLPATH</TT> option</STRONG>
-<DD><A HREF="node4.html#4515">3.3</A>
-<DT><STRONG><TT>-with-perl=FULLPATH</TT> option</STRONG>
-<DD><A HREF="node4.html#4512">3.3</A>
-<DT><STRONG><TT>-with-piddir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4494">3.3</A>
-<DT><STRONG><TT>-with-postmap=FULLPATH</TT> option</STRONG>
-<DD><A HREF="node4.html#4544">3.3</A>
-<DT><STRONG><TT>-with-postmap_arg=ARGS</TT> option</STRONG>
-<DD><A HREF="node4.html#4547">3.3</A>
-<DT><STRONG><TT>-with-sampledir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4506">3.3</A>
-<DT><STRONG><TT>-with-sbindir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4455">3.3</A>
-<DT><STRONG><TT>-with-scriptdir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4503">3.3</A>
-<DT><STRONG><TT>-with-sendmail_aliases=ALIASFILE</TT> option</STRONG>
-<DD><A HREF="node4.html#4526">3.3</A>
-<DT><STRONG><TT>-with-spooldir=DIR</TT> option</STRONG>
-<DD><A HREF="node4.html#4509">3.3</A>
-<DT><STRONG><TT>-with-user=LOGIN</TT> option</STRONG>
-<DD><A HREF="node4.html#4518">3.3</A>
-<DT><STRONG><TT>-with-virtual_aliases=ALIASFILE</TT> option</STRONG>
-<DD><A HREF="node4.html#4529">3.3</A>
-<DT><STRONG><TT>-d</TT> option</STRONG>
-<DD><A HREF="node4.html#4637">3.6</A>
-<DT><STRONG><TT>-f <I>config_file</I></TT> option</STRONG>
-<DD><A HREF="node4.html#4665">3.6</A>
-<DT><STRONG><TT>-h</TT> option</STRONG>
-<DD><A HREF="node4.html#4805">3.6</A>
-<DT><STRONG><TT>-idle-timeout</TT> option</STRONG>
-<DD><A HREF="node8.html#5741">7.5.2</A>
-<DT><STRONG><TT>-k <I>recipient_directory</I></TT> option</STRONG>
-<DD><A HREF="node4.html#4739">3.6</A>
-<DT><STRONG><TT>-l <I>catalog</I></TT> option</STRONG>
-<DD><A HREF="node4.html#4703">3.6</A>
-<DT><STRONG><TT>-m</TT> option</STRONG>
-<DD><A HREF="node4.html#4675">3.6</A>
-<DT><STRONG><TT>-v</TT> option</STRONG>
-<DD><A HREF="node4.html#4814">3.6</A>
-<DT><STRONG><TT>.desc</TT> file</STRONG>
-<DD><A HREF="node16.html#7888">15.2</A>
-<DT><STRONG><TT>/etc/aliases</TT> file</STRONG>
-<DD><A HREF="node5.html#4845">4.1</A>
- | <A HREF="node5.html#4860">4.1</A>
- | <A HREF="node5.html#4937">4.4</A>
-<DT><STRONG><TT>/etc/mail/sympa_aliases</TT> file</STRONG>
-<DD><A HREF="node5.html#4912">4.3</A>
-<DT><STRONG><TT>/etc/mail/virtusertable</TT> file</STRONG>
-<DD><A HREF="node5.html#4943">4.4</A>
-<DT><STRONG><TT>/etc/postfix/virtual.regexp</TT> file</STRONG>
-<DD><A HREF="node5.html#4940">4.4</A>
-<DT><STRONG><TT>/etc/rc.local</TT> file</STRONG>
-<DD><A HREF="node4.html#4628">3.6</A>
-<DT><STRONG><TT>/etc/smrsh</TT> directory</STRONG>
-<DD><A HREF="node4.html#4452">3.3</A>
-<DT><STRONG><TT>/etc/sympa.conf</TT> file</STRONG>
-<DD><A HREF="node2.html#4029">1.2</A>
- | <A HREF="node3.html#4254">2.3</A>
- | <A HREF="node4.html#4577">3.3.1</A>
- | <A HREF="node6.html#4946">5.</A>
- | <A HREF="node6.html#4951">5.</A>
- | <A HREF="node11.html#5951">10.2</A>
- | <A HREF="node11.html#6008">10.2</A>
- | <A HREF="node15.html#6968">14.1.2</A>
- | <A HREF="node15.html#7587">14.4.2</A>
-<DT><STRONG><TT>/etc/syslog.conf</TT> file</STRONG>
-<DD><A HREF="node4.html#4605">3.5</A>
-<DT><STRONG><TT>/etc/wwsympa.conf</TT> file</STRONG>
-<DD><A HREF="node3.html#4257">2.3</A>
-<DT><STRONG><TT>/home/sympa</TT> directory</STRONG>
-<DD><A HREF="node3.html#4097">2.1</A>
- | <A HREF="node4.html#4406">3.2.5</A>
-<DT><STRONG><TT>/home/sympa/bin</TT> directory</STRONG>
-<DD><A HREF="node3.html#4102">2.1</A>
- | <A HREF="node3.html#4105">2.1</A>
- | <A HREF="node3.html#4111">2.1</A>
-<DT><STRONG><TT>/home/sympa/bin/alias_manager.pl</TT> file</STRONG>
-<DD><A HREF="node5.html#4909">4.3</A>
- | <A HREF="node5.html#4918">4.3</A>
-<DT><STRONG><TT>/home/sympa/bin/alias_manager.pl add mylistcru.fr</TT> file</STRONG>
-<DD><A HREF="node5.html#4906">4.3</A>
-<DT><STRONG><TT>/home/sympa/bin/etc</TT> directory</STRONG>
-<DD><A HREF="node3.html#4114">2.1</A>
- | <A HREF="node3.html#4124">2.1</A>
- | <A HREF="node11.html#6026">10.2.1</A>
- | <A HREF="node14.html#6899">13.1.2</A>
-<DT><STRONG><TT>~/home/sympa/bin/etc/cabundle.crt</TT> file</STRONG>
-<DD><A HREF="node10.html#5872">9.4.2</A>
-<DT><STRONG><TT>/home/sympa/bin/etc/create_list_templates</TT> directory</STRONG>
-<DD><A HREF="node14.html#6884">13.1.2</A>
- | <A HREF="node14.html#6893">13.1.2</A>
-<DT><STRONG><TT>/home/sympa/bin/etc/edit_list.conf</TT> file</STRONG>
-<DD><A HREF="node14.html#6917">13.2</A>
-<DT><STRONG><TT>/home/sympa/bin/etc/global_task_models</TT> directory</STRONG>
-<DD><A HREF="node12.html#6543">11.11</A>
-<DT><STRONG><TT>/home/sympa/bin/etc/global_task_models/</TT> directory</STRONG>
-<DD><A HREF="node12.html#6583">11.11.2</A>
-<DT><STRONG><TT>/home/sympa/bin/etc/list_task_models</TT> directory</STRONG>
-<DD><A HREF="node12.html#6546">11.11</A>
-<DT><STRONG><TT>/home/sympa/bin/etc/list_task_models/</TT> directory</STRONG>
-<DD><A HREF="node12.html#6573">11.11.1</A>
-<DT><STRONG><TT>/home/sympa/bin/etc/scenari</TT> directory</STRONG>
-<DD><A HREF="node12.html#6395">11.8</A>
-<DT><STRONG><TT>/home/sympa/bin/etc/scenari/</TT> directory</STRONG>
-<DD><A HREF="node12.html#6425">11.8.1</A>
-<DT><STRONG><TT>/home/sympa/bin/etc/templates/<TT>&lt;</TT>action<TT>&gt;</TT>.<TT>&lt;</TT>lang<TT>&gt;</TT>.tpl</TT> directory</STRONG>
-<DD><A HREF="node12.html#6203">11.2</A>
-<DT><STRONG><TT>/home/sympa/bin/etc/templates/<TT>&lt;</TT>action<TT>&gt;</TT>.tpl</TT> directory</STRONG>
-<DD><A HREF="node12.html#6230">11.2</A>
-<DT><STRONG><TT>/home/sympa/bin/etc/templates/<TT>&lt;</TT>file<TT>&gt;</TT>.tpl</TT> directory</STRONG>
-<DD><A HREF="node13.html#6788">12.7</A>
-<DT><STRONG><TT>/home/sympa/bin/p12topem.pl</TT> UNIX command</STRONG>
-<DD><A HREF="node10.html#5888">9.4.4</A>
- | <A HREF="node10.html#5912">9.4.4.1</A>
-<DT><STRONG><TT>/home/sympa/etc</TT> directory</STRONG>
-<DD><A HREF="node3.html#4118">2.1</A>
- | <A HREF="node3.html#4121">2.1</A>
- | <A HREF="node3.html#4169">2.1</A>
- | <A HREF="node6.html#5060">5.2.2</A>
- | <A HREF="node11.html#6023">10.2.1</A>
- | <A HREF="node12.html#6354">11.7</A>
- | <A HREF="node14.html#6902">13.1.2</A>
- | <A HREF="node15.html#7137">14.2.4</A>
-<DT><STRONG><TT>/home/sympa/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT> directory</STRONG>
-<DD><A HREF="node12.html#6443">11.8.1</A>
-<DT><STRONG><TT>/home/sympa/etc/auth.conf</TT> file</STRONG>
-<DD><A HREF="node9.html#5797">8.1.1</A>
- | <A HREF="node9.html#5801">8.1.1</A>
- | <A HREF="node9.html#5823">8.1.1</A>
-<DT><STRONG><TT>/home/sympa/etc/create_list_templates</TT> directory</STRONG>
-<DD><A HREF="node14.html#6881">13.1.2</A>
- | <A HREF="node14.html#6887">13.1.2</A>
- | <A HREF="node14.html#6890">13.1.2</A>
-<DT><STRONG><TT>/home/sympa/etc/create_list_templates/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4127">2.1</A>
-<DT><STRONG><TT>/home/sympa/etc/edit_list.conf</TT> file</STRONG>
-<DD><A HREF="node14.html#6914">13.2</A>
-<DT><STRONG><TT>/home/sympa/etc/global_task_models/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4142">2.1</A>
- | <A HREF="node12.html#6580">11.11.2</A>
-<DT><STRONG><TT>/home/sympa/etc/list_task_models/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4139">2.1</A>
- | <A HREF="node12.html#6570">11.11.1</A>
-<DT><STRONG><TT>/home/sympa/etc/mhonarc-ressources</TT> directory</STRONG>
-<DD><A HREF="node7.html#5642">6.4</A>
-<DT><STRONG><TT>/home/sympa/etc/my.domain.org</TT> directory</STRONG>
-<DD><A HREF="node3.html#4163">2.1</A>
- | <A HREF="node11.html#5945">10.2</A>
-<DT><STRONG><TT>/home/sympa/etc/my.domain.org/scenari/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4133">2.1</A>
- | <A HREF="node11.html#6020">10.2.1</A>
-<DT><STRONG><TT>/home/sympa/etc/my.domain.org/templates/</TT> directory</STRONG>
-<DD><A HREF="node11.html#6017">10.2.1</A>
-<DT><STRONG><TT>/home/sympa/etc/my.domain.org/wws_templates/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4154">2.1</A>
- | <A HREF="node11.html#6014">10.2.1</A>
-<DT><STRONG><TT>/home/sympa/etc/scenari</TT> directory</STRONG>
-<DD><A HREF="node12.html#6392">11.8</A>
- | <A HREF="node12.html#6428">11.8.1</A>
-<DT><STRONG><TT>/home/sympa/etc/scenari/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4130">2.1</A>
-<DT><STRONG><TT>/home/sympa/etc/search_filters/</TT> directory</STRONG>
-<DD><A HREF="node9.html#5842">8.2.1</A>
-<DT><STRONG><TT>/home/sympa/etc/sympa.pid</TT> file</STRONG>
-<DD><A HREF="node6.html#5108">5.3.4</A>
-<DT><STRONG><TT>/home/sympa/etc/templates/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4157">2.1</A>
-<DT><STRONG><TT>/home/sympa/etc/templates/<TT>&lt;</TT>action<TT>&gt;</TT>.<TT>&lt;</TT>lang<TT>&gt;</TT>.tpl</TT> directory</STRONG>
-<DD><A HREF="node12.html#6149">11.2</A>
-<DT><STRONG><TT>/home/sympa/etc/templates/<TT>&lt;</TT>action<TT>&gt;</TT>.tpl</TT> directory</STRONG>
-<DD><A HREF="node12.html#6176">11.2</A>
-<DT><STRONG><TT>/home/sympa/etc/templates/<TT>&lt;</TT>file<TT>&gt;</TT>.tpl</TT> directory</STRONG>
-<DD><A HREF="node13.html#6767">12.7</A>
-<DT><STRONG><TT>/home/sympa/etc/wws_templates/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4145">2.1</A>
-<DT><STRONG><TT>/home/sympa/expl</TT> directory</STRONG>
-<DD><A HREF="node3.html#4172">2.1</A>
- | <A HREF="node6.html#5051">5.2.1</A>
-<DT><STRONG><TT>/home/sympa/expl/<TT>&lt;</TT>list name<TT>&gt;</TT>/</TT> directory</STRONG>
-<DD><A HREF="node12.html#6561">11.11.1</A>
-<DT><STRONG><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.<TT>&lt;</TT>lang<TT>&gt;</TT>.tpl</TT> directory</STRONG>
-<DD><A HREF="node12.html#6077">11.2</A>
-<DT><STRONG><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tpl</TT> directory</STRONG>
-<DD><A HREF="node12.html#6116">11.2</A>
-<DT><STRONG><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> directory</STRONG>
-<DD><A HREF="node12.html#6383">11.8</A>
-<DT><STRONG><TT>/home/sympa/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> directory</STRONG>
-<DD><A HREF="node12.html#6470">11.8.1</A>
-<DT><STRONG><TT>/home/sympa/expl/my.domain.org</TT> directory</STRONG>
-<DD><A HREF="node3.html#4166">2.1</A>
-<DT><STRONG><TT>/home/sympa/expl/my.domain.org/mylist</TT> directory</STRONG>
-<DD><A HREF="node3.html#4179">2.1</A>
-<DT><STRONG><TT>/home/sympa/expl/my.domain.org/mylist/config</TT> file</STRONG>
-<DD><A HREF="node13.html#6652">12.2</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist</TT> directory</STRONG>
-<DD><A HREF="node3.html#4176">2.1</A>
- | <A HREF="node7.html#5654">6.5</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/<TT>&lt;</TT>file<TT>&gt;</TT>.tpl</TT> directory</STRONG>
-<DD><A HREF="node13.html#6746">12.7</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/archives/</TT> directory</STRONG>
-<DD><A HREF="node13.html#6844">12.10.1</A>
- | <A HREF="node15.html#7778">14.6</A>
- | <A HREF="node15.html#7806">14.6.1</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/config</TT> file</STRONG>
-<DD><A HREF="node5.html#4881">4.2</A>
- | <A HREF="node5.html#4885">4.2</A>
- | <A HREF="node13.html#6655">12.2</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/homepage</TT> file</STRONG>
-<DD><A HREF="node13.html#6712">12.6</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/info</TT> file</STRONG>
-<DD><A HREF="node13.html#6706">12.5</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/message.footer</TT> file</STRONG>
-<DD><A HREF="node13.html#6829">12.10</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/message.footer.mime</TT> file</STRONG>
-<DD><A HREF="node15.html#7616">14.4.6</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/message.header</TT> file</STRONG>
-<DD><A HREF="node13.html#6826">12.10</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/mhonarc-ressources</TT> directory</STRONG>
-<DD><A HREF="node7.html#5639">6.4</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/private_key</TT> directory</STRONG>
-<DD><A HREF="node10.html#5897">9.4.4</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/scenari</TT> directory</STRONG>
-<DD><A HREF="node3.html#4136">2.1</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/shared</TT> directory</STRONG>
-<DD><A HREF="node16.html#7885">15.</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/stats</TT> file</STRONG>
-<DD><A HREF="node13.html#6817">12.8</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/subscribers</TT> file</STRONG>
-<DD><A HREF="node13.html#6670">12.4</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/wws_templates</TT> directory</STRONG>
-<DD><A HREF="node12.html#6257">11.3</A>
-<DT><STRONG><TT>/home/sympa/expl/mylist/wws_templates/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4151">2.1</A>
-<DT><STRONG><TT>~/home/sympa/expl/wws_templates</TT> directory</STRONG>
-<DD><A HREF="node12.html#6260">11.3</A>
-<DT><STRONG><TT>/home/sympa/expl/X509-user-certs</TT> directory</STRONG>
-<DD><A HREF="node3.html#4182">2.1</A>
-<DT><STRONG><TT>/home/sympa/expl/X509-user-certs/</TT> directory</STRONG>
-<DD><A HREF="node10.html#5929">9.5.1</A>
-<DT><STRONG><TT>/home/sympa/nls</TT> directory</STRONG>
-<DD><A HREF="node3.html#4185">2.1</A>
- | <A HREF="node6.html#5337">5.7.1</A>
- | <A HREF="node12.html#6319">11.6.1</A>
-<DT><STRONG><TT>/home/sympa/spool</TT> directory</STRONG>
-<DD><A HREF="node3.html#4189">2.1</A>
- | <A HREF="node6.html#5226">5.6.1</A>
-<DT><STRONG><TT>/home/sympa/spool/auth</TT> directory</STRONG>
-<DD><A HREF="node6.html#5263">5.6.6</A>
-<DT><STRONG><TT>/home/sympa/spool/auth/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4287">2.4</A>
-<DT><STRONG><TT>/home/sympa/spool/bounce</TT> directory</STRONG>
-<DD><A HREF="node6.html#5279">5.6.8</A>
-<DT><STRONG><TT>/home/sympa/spool/bounce/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4290">2.4</A>
- | <A HREF="node17.html#7958">16.</A>
-<DT><STRONG><TT>/home/sympa/spool/digest/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4293">2.4</A>
-<DT><STRONG><TT>/home/sympa/spool/expire</TT> directory</STRONG>
-<DD><A HREF="node6.html#5255">5.6.5</A>
-<DT><STRONG><TT>/home/sympa/spool/expire/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4296">2.4</A>
-<DT><STRONG><TT>/home/sympa/spool/mod/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4299">2.4</A>
-<DT><STRONG><TT>/home/sympa/spool/moderation</TT> directory</STRONG>
-<DD><A HREF="node6.html#5244">5.6.3</A>
-<DT><STRONG><TT>/home/sympa/spool/msg/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4302">2.4</A>
-<DT><STRONG><TT>/home/sympa/spool/msg/bad/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4305">2.4</A>
-<DT><STRONG><TT>/home/sympa/spool/outgoing</TT> directory</STRONG>
-<DD><A HREF="node6.html#5271">5.6.7</A>
- | <A HREF="node7.html#5671">6.5</A>
-<DT><STRONG><TT>/home/sympa/spool/outgoing/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4312">2.4</A>
- | <A HREF="node7.html#5658">6.5</A>
-<DT><STRONG><TT>/home/sympa/spool/task</TT> directory</STRONG>
-<DD><A HREF="node6.html#5290">5.6.9</A>
-<DT><STRONG><TT>/home/sympa/spool/task/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4309">2.4</A>
-<DT><STRONG><TT>/home/sympa/spool/tmp</TT> directory</STRONG>
-<DD><A HREF="node6.html#5298">5.6.10</A>
-<DT><STRONG><TT>/home/sympa/spool/tmp/antivirus</TT> directory</STRONG>
-<DD><A HREF="node18.html#8004">17.</A>
-<DT><STRONG><TT>/home/sympa/src/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4193">2.1</A>
-<DT><STRONG><TT>&lt;</TT>date<TT>&gt;</TT>.<TT>&lt;</TT>label<TT>&gt;</TT>.<TT>&lt;</TT>model name<TT>&gt;</TT>.<TT>&lt;</TT>list name </STRONG>
-<DD> global<TT>&gt;</TT><TT><TT>&lt;</TT>date<TT>&gt;</TT>.<TT>&lt;</TT>label<TT>&gt;</TT>.<TT>&lt;</TT>model name<TT>&gt;</TT>.<TT>&lt;</TT>list name  global<TT>&gt;</TT></TT> file
-<DT><STRONG><TT><TT>&lt;</TT>model name<TT>&gt;</TT>.<TT>&lt;</TT>model version<TT>&gt;</TT>.task</TT> file</STRONG>
-<DD><A HREF="node12.html#6521">11.11</A>
-<DT><STRONG><TT>access</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7809">14.6.1</A>
- | <A HREF="node15.html#7831">14.6.2.1</A>
- | <A HREF="node15.html#7834">14.6.2.1</A>
- | <A HREF="node15.html#7837">14.6.2.1</A>
- | <A HREF="node15.html#7840">14.6.2.1</A>
- | <A HREF="node15.html#7843">14.6.2.1</A>
- | <A HREF="node15.html#7846">14.6.2.1</A>
-<DT><STRONG><TT>action</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7711">14.5.2</A>
- | <A HREF="node15.html#7731">14.5.3</A>
-<DT><STRONG><TT>ADD</TT> mail command</STRONG>
-<DD><A HREF="node2.html#4032">1.2</A>
- | <A HREF="node13.html#6721">12.7</A>
- | <A HREF="node15.html#6983">14.1.4</A>
- | <A HREF="node15.html#7367">14.3.3</A>
- | <A HREF="node15.html#7370">14.3.3</A>
- | <A HREF="node15.html#7373">14.3.3</A>
- | <A HREF="node15.html#7376">14.3.3</A>
- | <A HREF="node15.html#7379">14.3.3</A>
- | <A HREF="node15.html#7661">14.4.10</A>
- | <A HREF="node19.html#8101">18.1</A>
- | <A HREF="node19.html#8214">18.2</A>
-<DT><STRONG>administrator</STRONG>
-<DD><A HREF="node2.html#4028">1.2</A>
- | <A HREF="node2.html#168">1.2</A>
- | <A HREF="node5.html#4851">4.1</A>
-<DT><STRONG><TT>alias_manager.pl</TT> file</STRONG>
-<DD><A HREF="node4.html#4532">3.3</A>
- | <A HREF="node5.html#4900">4.3</A>
-<DT><STRONG>aliases</STRONG>
-<DD><A HREF="node5.html#571">4.</A>
- | <A HREF="node5.html#609">4.2</A>
- | <A HREF="node13.html#1974">12.1</A>
-<DT><STRONG><TT>aliaswrapper</TT> file</STRONG>
-<DD><A HREF="node4.html#4559">3.3</A>
- | <A HREF="node5.html#4924">4.3</A>
-<DT><STRONG><TT>anonymous_headers_fields</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5197">no title</A>
-<DT><STRONG><TT>anonymous_sender</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#2983">14.4.3</A>
- | <A HREF="node15.html#7590">14.4.3</A>
- | <A HREF="node15.html#7593">14.4.3</A>
-<DT><STRONG><TT>antivirus_args</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5532">no title</A>
- | <A HREF="node18.html#7999">17.</A>
-<DT><STRONG><TT>antivirus_notify</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5535">no title</A>
-<DT><STRONG><TT>antivirus_path</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5529">no title</A>
- | <A HREF="node18.html#7996">17.</A>
-<DT><STRONG><TT>apply</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7569">14.4.1</A>
-<DT><STRONG><TT>archive</TT> list parameter</STRONG>
-<DD><A HREF="node13.html#6847">12.10.1</A>
- | <A HREF="node15.html#3168">14.6.1</A>
- | <A HREF="node15.html#7787">14.6.1</A>
- | <A HREF="node15.html#7791">14.6.1</A>
-<DT><STRONG><TT>Archive::Zip</TT> perl module</STRONG>
-<DD><A HREF="node4.html#4401">3.2.4</A>
-<DT><STRONG><TT>archive_crypted_msg</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7859">14.6.3</A>
-<DT><STRONG><TT>archived.pl</TT> file</STRONG>
-<DD><A HREF="node3.html#4224">2.2</A>
- | <A HREF="node3.html#4318">2.4</A>
- | <A HREF="node7.html#5571">6.2.1</A>
- | <A HREF="node7.html#5602">6.3.1</A>
- | <A HREF="node7.html#5607">6.3.3</A>
- | <A HREF="node7.html#5645">6.5</A>
- | <A HREF="node7.html#5661">6.5</A>
- | <A HREF="node7.html#5668">6.5</A>
-<DT><STRONG><TT>archives/last_message</TT> file</STRONG>
-<DD><A HREF="node12.html#6037">11.1.4</A>
-<DT><STRONG><TT>attrs</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7207">14.2.6</A>
-<DT><STRONG><TT>attrs1</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7252">14.2.7</A>
-<DT><STRONG><TT>attrs2</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7276">14.2.7</A>
-<DT><STRONG><TT>auth</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7667">14.4.10</A>
-<DT><STRONG><TT>auth.conf</TT> file</STRONG>
-<DD><A HREF="node3.html#4275">2.3</A>
-<DT><STRONG>authentication</STRONG>
-<DD><A HREF="node6.html#5331">5.6.14</A>
- | <A HREF="node13.html#1992">12.3</A>
- | <A HREF="node15.html#7660">14.4.10</A>
- | <A HREF="node19.html#8203">18.1</A>
- | <A HREF="node19.html#8277">18.2</A>
-<DT><STRONG>available-user-options</STRONG>
-<DD><A HREF="node15.html#3033">14.4.8</A>
-<DT><STRONG><TT>available_user_options</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7629">14.4.8</A>
-<DT><STRONG><TT>avg</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5167">no title</A>
-<DT><STRONG><TT>bg_color</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5012">no title</A>
- | <A HREF="node11.html#5996">10.2</A>
-<DT><STRONG><TT>bounce</TT> list parameter</STRONG>
-<DD><A HREF="node6.html#845">5.6.8</A>
- | <A HREF="node6.html#849">5.6.9</A>
- | <A HREF="node6.html#5357">5.8.1</A>
- | <A HREF="node6.html#5364">5.8.2</A>
-<DT><STRONG><TT>bounce/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4221">2.2</A>
- | <A HREF="node3.html#4251">2.2</A>
-<DT><STRONG><TT>bounce_delay</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5414">no title</A>
-<DT><STRONG><TT>bounce_halt_rate</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5360">no title</A>
- | <A HREF="node15.html#7696">14.5.1</A>
-<DT><STRONG><TT>bounce_path/mylist/email</TT> directory</STRONG>
-<DD><A HREF="node17.html#7965">16.</A>
-<DT><STRONG><TT>bounce_score_suscriber</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5396">5.8.7</A>
-<DT><STRONG><TT>bounce_warn_rate</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5353">no title</A>
- | <A HREF="node15.html#7688">14.5.1</A>
-<DT><STRONG><TT>bounced.pl</TT> file</STRONG>
-<DD><A HREF="node3.html#4215">2.2</A>
- | <A HREF="node7.html#5574">6.2.1</A>
- | <A HREF="node7.html#5611">6.3.4</A>
- | <A HREF="node7.html#5615">6.3.5</A>
- | <A HREF="node17.html#7961">16.</A>
-<DT><STRONG><TT>bouncequeue</TT> file</STRONG>
-<DD><A HREF="node3.html#4245">2.2</A>
- | <A HREF="node4.html#4449">3.3</A>
- | <A HREF="node4.html#4556">3.3</A>
- | <A HREF="node5.html#4889">4.2</A>
- | <A HREF="node6.html#5282">5.6.8</A>
- | <A HREF="node17.html#7952">16.</A>
- | <A HREF="node17.html#7955">16.</A>
-<DT><STRONG><TT>bouncers_level1_action</TT> configuration keyword</STRONG>
-<DD><A HREF="node15.html#7716">14.5.2</A>
- | <A HREF="node15.html#7736">14.5.3</A>
-<DT><STRONG><TT>bouncers_level1_rate</TT> configuration keyword</STRONG>
-<DD><A HREF="node15.html#7708">14.5.2</A>
-<DT><STRONG><TT>bouncers_level2_rate</TT> configuration keyword</STRONG>
-<DD><A HREF="node15.html#7728">14.5.3</A>
-<DT><STRONG><TT>bouncerslevel1</TT> list parameter</STRONG>
-<DD><A HREF="node6.html#5422">5.8.12</A>
-<DT><STRONG><TT>bouncerslevel2</TT> list parameter</STRONG>
-<DD><A HREF="node6.html#5432">5.8.13</A>
-<DT><STRONG><TT>Bounces count</TT> configuration keyword</STRONG>
-<DD><A HREF="node17.html#7977">16.</A>
-<DT><STRONG><TT>cafile</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5512">no title</A>
- | <A HREF="node10.html#5863">9.4.2</A>
- | <A HREF="node10.html#5869">9.4.2</A>
- | <A HREF="node10.html#5877">9.4.2</A>
- | <A HREF="node10.html#5891">9.4.4</A>
-<DT><STRONG><TT>capath</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5509">no title</A>
- | <A HREF="node6.html#5515">5.12.3</A>
- | <A HREF="node10.html#5860">9.4.2</A>
- | <A HREF="node10.html#5880">9.4.2</A>
- | <A HREF="node10.html#5894">9.4.4</A>
-<DT><STRONG>CAS-based authentication</STRONG>
-<DD><A HREF="node3.html#330">2.3</A>
-<DT><STRONG><TT>cert</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7131">14.2.4</A>
- | <A HREF="node15.html#7134">14.2.4</A>
-<DT><STRONG><TT>cert.pem</TT> configuration keyword</STRONG>
-<DD><A HREF="node10.html#5906">9.4.4.1</A>
- | <A HREF="node10.html#5918">9.4.4.1</A>
-<DT><STRONG><TT>CGI</TT> perl module</STRONG>
-<DD><A HREF="node4.html#4374">3.2.4</A>
-<DT><STRONG><TT>check_perl_modules.pl</TT> UNIX command</STRONG>
-<DD><A HREF="node4.html#4349">3.2.3</A>
- | <A HREF="node4.html#4353">3.2.4</A>
-<DT><STRONG><TT>chk_cert_expiration.daily.task</TT> file</STRONG>
-<DD><A HREF="node10.html#5926">9.5.1</A>
-<DT><STRONG><TT>chk_cert_expiration_task</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5522">no title</A>
-<DT><STRONG><TT>CipherSaber</TT> perl module</STRONG>
-<DD><A HREF="node4.html#4392">3.2.4</A>
-<DT><STRONG><TT>clean_delay_queue</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5305">no title</A>
-<DT><STRONG><TT>clean_delay_queueauth</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5327">no title</A>
-<DT><STRONG><TT>clean_delay_queuemod</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5315">no title</A>
-<DT><STRONG><TT>config</TT> file</STRONG>
-<DD><A HREF="node2.html#4025">1.2</A>
- | <A HREF="node8.html#5717">7.3.1</A>
- | <A HREF="node14.html#6911">13.1.2</A>
- | <A HREF="node14.html#6920">13.2</A>
- | <A HREF="node15.html#6929">14.1.1</A>
- | <A HREF="node15.html#6977">14.1.4</A>
- | <A HREF="node15.html#7784">14.6.1</A>
- | <A HREF="node15.html#7821">14.6.2</A>
-<DT><STRONG>configuration file</STRONG>
-<DD><A HREF="node6.html#682">5.</A>
-<DT><STRONG><TT>configure</TT> UNIX command</STRONG>
-<DD><A HREF="node4.html#4433">3.3</A>
-<DT><STRONG><TT>CONFIRM</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8197">18.1</A>
- | <A HREF="node19.html#8204">18.1</A>
-<DT><STRONG><TT>connect_options</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7156">14.2.5</A>
-<DT><STRONG><TT>cookie</TT> list parameter</STRONG>
-<DD><A HREF="node6.html#5024">no title</A>
- | <A HREF="node7.html#5688">6.6</A>
- | <A HREF="node12.html#6284">11.5</A>
- | <A HREF="node12.html#6287">11.5</A>
- | <A HREF="node12.html#6305">11.5</A>
- | <A HREF="node15.html#7654">14.4.10</A>
- | <A HREF="node15.html#3073">14.4.10</A>
- | <A HREF="node15.html#7657">14.4.10</A>
-<DT><STRONG><TT>cookie_cas_expire</TT> configuration keyword</STRONG>
-<DD><A HREF="node9.html#5805">8.1.1</A>
-<DT><STRONG><TT>cookie_domain</TT> configuration keyword</STRONG>
-<DD><A HREF="node11.html#5960">10.2</A>
-<DT><STRONG>CPAN</STRONG>
-<DD><A HREF="node4.html#370">3.2</A>
- | <A HREF="node4.html#395">3.2.3</A>
-<DT><STRONG><TT>create_db</TT> file</STRONG>
-<DD><A HREF="node8.html#5720">7.3.2</A>
-<DT><STRONG><TT>create_list</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5031">no title</A>
- | <A HREF="node11.html#5972">10.2</A>
- | <A HREF="node14.html#6853">13.1</A>
- | <A HREF="node14.html#6862">13.1.1</A>
-<DT><STRONG><TT>create_list.conf</TT> configuration keyword</STRONG>
-<DD><A HREF="node14.html#6896">13.1.2</A>
-<DT><STRONG><TT>create_list_request.tpl</TT> file</STRONG>
-<DD><A HREF="node14.html#6856">13.1</A>
-<DT><STRONG><TT>crl_update.daily.task</TT> file</STRONG>
-<DD><A HREF="node10.html#5935">9.5.2</A>
-<DT><STRONG><TT>crl_update_task</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5525">no title</A>
-<DT><STRONG><TT>Crypt::CipherSaber</TT> file</STRONG>
-<DD><A HREF="node7.html#5559">6.1</A>
-<DT><STRONG>custom-header</STRONG>
-<DD><A HREF="node15.html#2991">14.4.4</A>
-<DT><STRONG>custom-subject</STRONG>
-<DD><A HREF="node15.html#2999">14.4.5</A>
-<DT><STRONG><TT>custom_header</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7596">14.4.4</A>
-<DT><STRONG><TT>custom_subject</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7601">14.4.5</A>
-<DT><STRONG><TT>d_edit</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7534">14.3.10.2</A>
- | <A HREF="node15.html#7537">14.3.10.2</A>
- | <A HREF="node15.html#7540">14.3.10.2</A>
-<DT><STRONG><TT>d_read</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7518">14.3.10.1</A>
- | <A HREF="node15.html#7521">14.3.10.1</A>
- | <A HREF="node15.html#7524">14.3.10.1</A>
-<DT><STRONG><TT>daily_cert_expiration</TT> file</STRONG>
-<DD><A HREF="node10.html#5932">9.5.1</A>
-<DT><STRONG><TT>dark_color</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5003">no title</A>
- | <A HREF="node11.html#5987">10.2</A>
-<DT><STRONG>DB package</STRONG>
-<DD><A HREF="node4.html#4347">3.2.2</A>
-<DT><STRONG><TT>db_additional_subscriber_fields</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5483">no title</A>
-<DT><STRONG><TT>db_additional_user_fields</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5488">no title</A>
-<DT><STRONG><TT>db_env</TT> list parameter</STRONG>
-<DD><A HREF="node6.html#5480">no title</A>
- | <A HREF="node15.html#7159">14.2.5</A>
-<DT><STRONG><TT>DB_File</TT> perl module</STRONG>
-<DD><A HREF="node4.html#4356">3.2.4</A>
-<DT><STRONG><TT>db_host</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5462">no title</A>
- | <A HREF="node8.html#5766">7.7</A>
-<DT><STRONG><TT>db_name</TT> list parameter</STRONG>
-<DD><A HREF="node6.html#5458">no title</A>
- | <A HREF="node8.html#5763">7.7</A>
- | <A HREF="node8.html#5776">7.7</A>
- | <A HREF="node15.html#7153">14.2.5</A>
-<DT><STRONG><TT>db_options</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5477">no title</A>
-<DT><STRONG><TT>db_passwd</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5471">no title</A>
- | <A HREF="node8.html#5729">7.4</A>
- | <A HREF="node8.html#5772">7.7</A>
-<DT><STRONG><TT>db_port</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5465">no title</A>
-<DT><STRONG><TT>db_type</TT> list parameter</STRONG>
-<DD><A HREF="node6.html#5455">no title</A>
- | <A HREF="node8.html#5760">7.7</A>
- | <A HREF="node15.html#7146">14.2.5</A>
-<DT><STRONG><TT>db_user</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5468">no title</A>
- | <A HREF="node6.html#5474">5.10.6</A>
- | <A HREF="node8.html#5726">7.4</A>
- | <A HREF="node8.html#5769">7.7</A>
-<DT><STRONG><TT>DBD</TT> perl module</STRONG>
-<DD><A HREF="node2.html#4055">1.2</A>
- | <A HREF="node4.html#4385">3.2.4</A>
-<DT><STRONG><TT>DBI</TT> perl module</STRONG>
-<DD><A HREF="node2.html#4052">1.2</A>
- | <A HREF="node4.html#4382">3.2.4</A>
- | <A HREF="node8.html#5701">7.1</A>
- | <A HREF="node8.html#5705">7.2</A>
-<DT><STRONG>default-user-options</STRONG>
-<DD><A HREF="node15.html#3048">14.4.9</A>
-<DT><STRONG><TT>default_archive_quota</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5218">no title</A>
- | <A HREF="node15.html#7852">14.6.2.2</A>
-<DT><STRONG><TT>default_bounce_level1_rate</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5418">no title</A>
-<DT><STRONG><TT>default_bounce_level2_rate</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5428">no title</A>
-<DT><STRONG><TT>default_home</TT> configuration keyword</STRONG>
-<DD><A HREF="node11.html#5969">10.2</A>
-<DT><STRONG><TT>default_list_priority</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5451">no title</A>
- | <A HREF="node15.html#7676">14.4.11</A>
-<DT><STRONG><TT>default_shared_quota</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5215">no title</A>
-<DT><STRONG><TT>default_user_options</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7640">14.4.9</A>
-<DT><STRONG><TT>del</TT> list parameter</STRONG>
-<DD><A HREF="node13.html#6727">12.7</A>
- | <A HREF="node15.html#7386">14.3.4</A>
- | <A HREF="node15.html#7389">14.3.4</A>
- | <A HREF="node15.html#7392">14.3.4</A>
- | <A HREF="node15.html#7395">14.3.4</A>
- | <A HREF="node15.html#7398">14.3.4</A>
-<DT><STRONG><TT>DELETE</TT> mail command</STRONG>
-<DD><A HREF="node2.html#4035">1.2</A>
- | <A HREF="node13.html#6801">12.7.3</A>
- | <A HREF="node15.html#6986">14.1.4</A>
- | <A HREF="node15.html#7664">14.4.10</A>
- | <A HREF="node19.html#8226">18.2</A>
- | <A HREF="node19.html#8262">18.2</A>
-<DT><STRONG><TT>digest</TT> list parameter</STRONG>
-<DD><A HREF="node6.html#836">5.6.4</A>
- | <A HREF="node13.html#6664">12.3</A>
- | <A HREF="node13.html#6688">12.4</A>
- | <A HREF="node15.html#3021">14.4.7</A>
- | <A HREF="node15.html#7619">14.4.7</A>
- | <A HREF="node15.html#7622">14.4.7</A>
- | <A HREF="node19.html#8116">18.1</A>
-<DT><STRONG><TT>Digest-MD5</TT> perl module</STRONG>
-<DD><A HREF="node4.html#4359">3.2.4</A>
-<DT><STRONG><TT>DISTRIBUTE</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8303">18.3</A>
-<DT><STRONG><TT>do_it</TT> configuration keyword</STRONG>
-<DD><A HREF="node14.html#6868">13.1.1</A>
- | <A HREF="node14.html#6874">13.1.1</A>
-<DT><STRONG><TT>doc/</TT> directory</STRONG>
-<DD><A HREF="node4.html#4418">3.3</A>
-<DT><STRONG><TT>domain</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#4954">no title</A>
- | <A HREF="node15.html#6959">14.1.2</A>
-<DT><STRONG><TT>edit_list.conf</TT> file</STRONG>
-<DD><A HREF="node3.html#4263">2.3</A>
- | <A HREF="node6.html#5063">5.2.2</A>
-<DT><STRONG><TT>editor</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#6932">14.1.1</A>
- | <A HREF="node15.html#6939">14.1.1</A>
- | <A HREF="node15.html#6948">14.1.1</A>
-<DT><STRONG><TT>editorkey</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#6942">14.1.1</A>
-<DT><STRONG><TT>editorkeyonly</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#6945">14.1.1</A>
-<DT><STRONG><TT>email</TT> list parameter</STRONG>
-<DD><A HREF="node6.html#4964">no title</A>
- | <A HREF="node11.html#5963">10.2</A>
- | <A HREF="node13.html#6673">12.4</A>
- | <A HREF="node15.html#7001">14.1.4</A>
-<DT><STRONG><TT>error_color</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5015">no title</A>
- | <A HREF="node11.html#5999">10.2</A>
-<DT><STRONG><TT>etc</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5055">no title</A>
-<DT><STRONG><TT>eval_bouncer</TT> configuration keyword</STRONG>
-<DD><A HREF="node17.html#7971">16.</A>
-<DT><STRONG><TT>eval_bouncers_task</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5392">no title</A>
-<DT><STRONG><TT>exim</TT> UNIX command</STRONG>
-<DD><A HREF="node5.html#4830">4.</A>
-<DT><STRONG>expiration</STRONG>
-<DD><A HREF="node19.html#8254">18.2</A>
-<DT><STRONG><TT>EXPIRE</TT> mail command</STRONG>
-<DD><A HREF="node2.html#4041">1.2</A>
- | <A HREF="node19.html#8251">18.2</A>
- | <A HREF="node19.html#8255">18.2</A>
- | <A HREF="node19.html#8258">18.2</A>
- | <A HREF="node19.html#8274">18.2</A>
- | <A HREF="node19.html#8278">18.2</A>
- | <A HREF="node19.html#8284">18.2</A>
- | <A HREF="node19.html#8290">18.2</A>
-<DT><STRONG><TT>expire_bounce_task</TT> list parameter</STRONG>
-<DD><A HREF="node6.html#5378">no title</A>
- | <A HREF="node15.html#7699">14.5.1</A>
-<DT><STRONG><TT>EXPIREDEL</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8287">18.2</A>
- | <A HREF="node19.html#8293">18.2</A>
-<DT><STRONG><TT>EXPIREINDEX</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8281">18.2</A>
-<DT><STRONG>FastCGI</STRONG>
-<DD><A HREF="node4.html#423">3.2.4</A>
- | <A HREF="node7.html#1087">6.2.3</A>
-<DT><STRONG><TT>FCGI</TT> perl module</STRONG>
-<DD><A HREF="node4.html#4398">3.2.4</A>
- | <A HREF="node7.html#5595">6.2.3</A>
-<DT><STRONG><TT>File-Spec</TT> perl module</STRONG>
-<DD><A HREF="node4.html#4377">3.2.4</A>
-<DT><STRONG><TT>filter</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7204">14.2.6</A>
-<DT><STRONG><TT>filter1</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7249">14.2.7</A>
-<DT><STRONG><TT>filter2</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7273">14.2.7</A>
-<DT><STRONG>footer-type</STRONG>
-<DD><A HREF="node15.html#3006">14.4.6</A>
-<DT><STRONG><TT>footer_type</TT> list parameter</STRONG>
-<DD><A HREF="node13.html#6832">12.10</A>
- | <A HREF="node13.html#6841">12.10</A>
- | <A HREF="node15.html#7610">14.4.6</A>
- | <A HREF="node15.html#7613">14.4.6</A>
-<DT><STRONG><TT>footer_type (optional, default value is mime)</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7607">14.4.6</A>
-<DT><STRONG><TT>from:</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#4957">5.1.1</A>
- | <A HREF="node6.html#4968">5.1.2</A>
- | <A HREF="node12.html#6413">11.8</A>
-<DT><STRONG><TT>gcc</TT> UNIX command</STRONG>
-<DD><A HREF="node4.html#4334">3.2.1</A>
-<DT><STRONG><TT>gecos</TT> list parameter</STRONG>
-<DD><A HREF="node13.html#6676">12.4</A>
- | <A HREF="node15.html#7012">14.1.4</A>
-<DT><STRONG><TT>GET</TT> mail command</STRONG>
-<DD><A HREF="node15.html#7794">14.6.1</A>
- | <A HREF="node15.html#7812">14.6.1</A>
- | <A HREF="node19.html#8074">18.1</A>
- | <A HREF="node19.html#8077">18.1</A>
- | <A HREF="node19.html#8089">18.1</A>
-<DT><STRONG><TT>global_remind</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5039">no title</A>
-<DT><STRONG><TT>global_task_models</TT> directory</STRONG>
-<DD><A HREF="node6.html#5075">5.2.2</A>
-<DT><STRONG><TT>halt_rate</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7691">14.5.1</A>
-<DT><STRONG><TT>HELP</TT> mail command</STRONG>
-<DD><A HREF="node12.html#6043">11.2</A>
- | <A HREF="node12.html#6242">11.2.1</A>
- | <A HREF="node19.html#8028">18.1</A>
-<DT><STRONG><TT>helpfile.tpl</TT> file</STRONG>
-<DD><A HREF="node19.html#8032">18.1</A>
-<DT><STRONG><TT>home</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5046">no title</A>
-<DT><STRONG><TT>host</TT> list parameter</STRONG>
-<DD><A HREF="node6.html#4960">5.1.1</A>
- | <A HREF="node15.html#2239">14.1.2</A>
- | <A HREF="node15.html#6962">14.1.2</A>
- | <A HREF="node15.html#7149">14.2.5</A>
- | <A HREF="node15.html#7183">14.2.6</A>
- | <A HREF="node15.html#7228">14.2.7</A>
-<DT><STRONG><TT>http_host</TT> configuration keyword</STRONG>
-<DD><A HREF="node11.html#5954">10.2</A>
-<DT><STRONG><TT>ignore</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5147">5.4.4</A>
-<DT><STRONG>include-list</STRONG>
-<DD><A HREF="node15.html#2368">14.2.3</A>
-<DT><STRONG>include-remote-sympa-list</STRONG>
-<DD><A HREF="node15.html#2383">14.2.4</A>
-<DT><STRONG><TT>include_file</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7080">14.2.1</A>
- | <A HREF="node15.html#7292">14.2.8</A>
-<DT><STRONG><TT>include_ldap_2level_query</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7219">14.2.7</A>
-<DT><STRONG><TT>include_ldap_query</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7092">14.2.1</A>
- | <A HREF="node15.html#7174">14.2.6</A>
-<DT><STRONG><TT>include_list</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7083">14.2.1</A>
- | <A HREF="node15.html#7101">14.2.3</A>
- | <A HREF="node15.html#7107">14.2.3</A>
-<DT><STRONG><TT>include_remote_sympa_list</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7086">14.2.1</A>
- | <A HREF="node15.html#7113">14.2.4</A>
- | <A HREF="node15.html#7117">14.2.4</A>
-<DT><STRONG><TT>include_sql_query</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7089">14.2.1</A>
- | <A HREF="node15.html#7140">14.2.5</A>
-<DT><STRONG><TT>INDEX</TT> mail command</STRONG>
-<DD><A HREF="node15.html#7797">14.6.1</A>
- | <A HREF="node15.html#7818">14.6.1</A>
- | <A HREF="node19.html#8071">18.1</A>
-<DT><STRONG><TT>index.htm</TT> file</STRONG>
-<DD><A HREF="node16.html#7948">15.5</A>
-<DT><STRONG><TT>index.html</TT> file</STRONG>
-<DD><A HREF="node16.html#7945">15.5</A>
-<DT><STRONG><TT>INFO</TT> mail command</STRONG>
-<DD><A HREF="node13.html#6709">12.5</A>
- | <A HREF="node15.html#7015">14.1.4</A>
- | <A HREF="node19.html#8035">18.1</A>
-<DT><STRONG>internationalization</STRONG>
-<DD><A HREF="node12.html#1753">11.6</A>
-<DT><STRONG><TT>INVITE</TT> mail command</STRONG>
-<DD><A HREF="node13.html#6808">12.7.5</A>
- | <A HREF="node13.html#6811">12.7.5</A>
- | <A HREF="node19.html#8098">18.1</A>
-<DT><STRONG><TT>IO-stringy</TT> perl module</STRONG>
-<DD><A HREF="node4.html#4365">3.2.4</A>
-<DT><STRONG><TT>key_passwd</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5518">no title</A>
-<DT><STRONG><TT>key_password</TT> configuration keyword</STRONG>
-<DD><A HREF="node10.html#5883">9.4.2</A>
-<DT><STRONG><TT>lang</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5345">no title</A>
- | <A HREF="node11.html#5975">10.2</A>
- | <A HREF="node12.html#6313">11.6</A>
- | <A HREF="node12.html#6323">11.6.1</A>
- | <A HREF="node12.html#6332">11.6.2</A>
- | <A HREF="node15.html#6973">14.1.3</A>
-<DT><STRONG><TT>LAST</TT> mail command</STRONG>
-<DD><A HREF="node15.html#7800">14.6.1</A>
- | <A HREF="node15.html#7815">14.6.1</A>
- | <A HREF="node19.html#8086">18.1</A>
-<DT><STRONG>LDAP</STRONG>
-<DD><A HREF="node2.html#124">1.</A>
- | <A HREF="node2.html#187">1.2</A>
- | <A HREF="node2.html#205">1.4</A>
- | <A HREF="node2.html#215">1.5</A>
- | <A HREF="node4.html#416">3.2.4</A>
- | <A HREF="node7.html#1123">6.3.12</A>
- | <A HREF="node9.html#1268">8.</A>
- | <A HREF="node9.html#1277">8.1</A>
- | <A HREF="node9.html#1278">8.1</A>
- | <A HREF="node9.html#1393">8.2</A>
- | <A HREF="node15.html#2336">14.2.1</A>
- | <A HREF="node15.html#2353">14.2.1</A>
- | <A HREF="node15.html#2451">14.2.6</A>
- | <A HREF="node15.html#2508">14.2.7</A>
-<DT><STRONG>LDAP authentication</STRONG>
-<DD><A HREF="node2.html#190">1.2</A>
- | <A HREF="node2.html#206">1.4</A>
- | <A HREF="node9.html#1276">8.1</A>
-<DT><STRONG>LDAP filter</STRONG>
-<DD><A HREF="node9.html#1395">8.2.1</A>
-<DT><STRONG>LDAP-based authentication</STRONG>
-<DD><A HREF="node3.html#329">2.3</A>
-<DT><STRONG>LDAP-based mailing lists</STRONG>
-<DD><A HREF="node2.html#185">1.2</A>
-<DT><STRONG><TT>light_color</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5006">no title</A>
- | <A HREF="node11.html#5990">10.2</A>
-<DT><STRONG><TT>list_aliases</TT> file</STRONG>
-<DD><A HREF="node5.html#4927">4.3</A>
-<DT><STRONG><TT>list_check_smtp</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5201">no title</A>
- | <A HREF="node6.html#5212">5.4.14</A>
-<DT><STRONG><TT>list_check_suffixes</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5207">no title</A>
-<DT><STRONG><TT>list_created.tpl</TT> file</STRONG>
-<DD><A HREF="node14.html#6859">13.1</A>
-<DT><STRONG><TT>list_task_models</TT> directory</STRONG>
-<DD><A HREF="node6.html#5078">5.2.2</A>
-<DT><STRONG><TT>listmaster</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#4972">no title</A>
- | <A HREF="node11.html#5981">10.2</A>
- | <A HREF="node11.html#6011">10.2</A>
- | <A HREF="node14.html#6871">13.1.1</A>
-<DT><STRONG><TT>LISTS</TT> mail command</STRONG>
-<DD><A HREF="node12.html#6046">11.2</A>
- | <A HREF="node12.html#6245">11.2.2</A>
- | <A HREF="node15.html#7024">14.1.5</A>
- | <A HREF="node15.html#7037">14.1.7</A>
- | <A HREF="node19.html#8043">18.1</A>
- | <A HREF="node19.html#8050">18.1</A>
-<DT><STRONG><TT>load_subscribers.pl</TT> file</STRONG>
-<DD><A HREF="node8.html#5747">7.5.2</A>
-<DT><STRONG>localization</STRONG>
-<DD><A HREF="node12.html#1754">11.6</A>
-<DT><STRONG><TT>log_facility</TT> list parameter</STRONG>
-<DD><A HREF="node4.html#4595">3.5</A>
-<DT><STRONG><TT>log_level</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5087">no title</A>
-<DT><STRONG><TT>log_smtp</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5129">no title</A>
- | <A HREF="node11.html#5978">10.2</A>
-<DT><STRONG><TT>log_socket_type</TT> configuration keyword</STRONG>
-<DD><A HREF="node4.html#4615">3.5</A>
- | <A HREF="node6.html#5092">no title</A>
- | <A HREF="node6.html#5100">5.3.3</A>
-<DT><STRONG>loop-detection</STRONG>
-<DD><A HREF="node12.html#1857">11.10</A>
-<DT><STRONG><TT>loop_command_decrease_factor</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5501">no title</A>
- | <A HREF="node12.html#6500">11.10</A>
-<DT><STRONG><TT>loop_command_max</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5493">no title</A>
- | <A HREF="node12.html#6497">11.10</A>
-<DT><STRONG><TT>loop_command_sampling_delay</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5497">no title</A>
- | <A HREF="node12.html#6494">11.10</A>
-<DT><STRONG>mail aliases</STRONG>
-<DD><A HREF="node5.html#610">4.2</A>
- | <A HREF="node13.html#1975">12.1</A>
-<DT><STRONG><TT>MailTools</TT> perl module</STRONG>
-<DD><A HREF="node4.html#4362">3.2.4</A>
-<DT><STRONG><TT>make</TT> UNIX command</STRONG>
-<DD><A HREF="node4.html#4550">3.3</A>
-<DT><STRONG><TT>make install</TT> UNIX command</STRONG>
-<DD><A HREF="node3.html#4108">2.1</A>
- | <A HREF="node4.html#4562">3.3</A>
-<DT><STRONG><TT>Makefile</TT> file</STRONG>
-<DD><A HREF="node4.html#4436">3.3</A>
- | <A HREF="node4.html#4625">3.6</A>
-<DT><STRONG>max-size</STRONG>
-<DD><A HREF="node15.html#2976">14.4.2</A>
-<DT><STRONG><TT>max_size</TT> list parameter</STRONG>
-<DD><A HREF="node6.html#5134">no title</A>
- | <A HREF="node6.html#5139">5.4.3</A>
- | <A HREF="node11.html#5984">10.2</A>
- | <A HREF="node15.html#7581">14.4.2</A>
- | <A HREF="node15.html#7584">14.4.2</A>
-<DT><STRONG><TT>maxsmtp</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5123">no title</A>
-<DT><STRONG><TT>md5</TT> configuration keyword</STRONG>
-<DD><A HREF="node12.html#6402">11.8</A>
- | <A HREF="node12.html#6416">11.8</A>
-<DT><STRONG><TT>message.footer.mime</TT> file</STRONG>
-<DD><A HREF="node13.html#6838">12.10</A>
-<DT><STRONG><TT>message.header.mime</TT> file</STRONG>
-<DD><A HREF="node13.html#6835">12.10</A>
-<DT><STRONG><TT>mhonarc</TT> file</STRONG>
-<DD><A HREF="node3.html#4227">2.2</A>
- | <A HREF="node7.html#5649">6.5</A>
-<DT><STRONG><TT>mhonarc-ressources</TT> file</STRONG>
-<DD><A HREF="node7.html#5636">6.4</A>
-<DT><STRONG>MIME</STRONG>
-<DD><A HREF="node2.html#4013">1.2</A>
- | <A HREF="node2.html#4014">1.2</A>
-<DT><STRONG><TT>MIME-Base64</TT> perl module</STRONG>
-<DD><A HREF="node4.html#4371">3.2.4</A>
-<DT><STRONG><TT>MIME-tools</TT> perl module</STRONG>
-<DD><A HREF="node4.html#4368">3.2.4</A>
-<DT><STRONG><TT>minimum_bouncing_count</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5406">no title</A>
- | <A HREF="node17.html#7989">16.</A>
-<DT><STRONG><TT>minimum_bouncing_period</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5410">no title</A>
- | <A HREF="node17.html#7992">16.</A>
-<DT><STRONG><TT>misaddressed_commands</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5143">no title</A>
- | <A HREF="node6.html#5154">5.4.5</A>
-<DT><STRONG><TT>misaddressed_commands_regexp</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5150">no title</A>
-<DT><STRONG>mod_fastcgi</STRONG>
-<DD><A HREF="node7.html#1086">6.2.3</A>
-<DT><STRONG><TT>~model type.model.task</TT> file</STRONG>
-<DD><A HREF="node12.html#6586">11.11.3</A>
-<DT><STRONG>moderation</STRONG>
-<DD><A HREF="node6.html#833">5.6.3</A>
- | <A HREF="node6.html#5319">5.6.13</A>
- | <A HREF="node13.html#1991">12.3</A>
- | <A HREF="node15.html#2217">14.1.1</A>
- | <A HREF="node19.html#8309">18.3</A>
-<DT><STRONG>moderator</STRONG>
-<DD><A HREF="node15.html#6935">14.1.1</A>
- | <A HREF="node19.html#8310">18.3</A>
-<DT><STRONG><TT>MODINDEX</TT> mail command</STRONG>
-<DD><A HREF="node6.html#5324">5.6.13</A>
- | <A HREF="node19.html#8315">18.3</A>
-<DT><STRONG><TT>msg/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4200">2.2</A>
- | <A HREF="node3.html#4242">2.2</A>
-<DT><STRONG><TT>msg_count</TT> file</STRONG>
-<DD><A HREF="node17.html#7986">16.</A>
-<DT><STRONG><TT>msgcat</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5332">no title</A>
-<DT><STRONG><TT>Msql-Mysql-modules</TT> perl module</STRONG>
-<DD><A HREF="node8.html#5708">7.2</A>
-<DT><STRONG><TT>mydirectory</TT> directory</STRONG>
-<DD><A HREF="node16.html#7930">15.4.3</A>
- | <A HREF="node16.html#7942">15.4.3</A>
-<DT><STRONG><TT>mydirectory/mysubdirectory</TT> directory</STRONG>
-<DD><A HREF="node16.html#7891">15.2</A>
-<DT><STRONG><TT>mydirectory/mysubdirectory/.desc</TT> directory</STRONG>
-<DD><A HREF="node16.html#7894">15.2</A>
-<DT><STRONG><TT>mydirectory/mysubdirectory/.desc.myfile.myextension</TT> directory</STRONG>
-<DD><A HREF="node16.html#7900">15.2</A>
-<DT><STRONG><TT>mydirectory/mysubdirectory/myfile</TT> directory</STRONG>
-<DD><A HREF="node16.html#7915">15.4.3</A>
- | <A HREF="node16.html#7918">15.4.3</A>
- | <A HREF="node16.html#7933">15.4.3</A>
-<DT><STRONG><TT>mydirectory/mysubdirectory/myfile.myextension</TT> directory</STRONG>
-<DD><A HREF="node16.html#7897">15.2</A>
-<DT><STRONG><TT>myfile</TT> directory</STRONG>
-<DD><A HREF="node16.html#7921">15.4.3</A>
- | <A HREF="node16.html#7924">15.4.3</A>
- | <A HREF="node16.html#7936">15.4.3</A>
-<DT><STRONG>MySQL</STRONG>
-<DD><A HREF="node2.html#176">1.2</A>
- | <A HREF="node4.html#365">3.2</A>
- | <A HREF="node8.html#1221">7.4</A>
-<DT><STRONG><TT>mysubdirectory</TT> directory</STRONG>
-<DD><A HREF="node16.html#7927">15.4.3</A>
- | <A HREF="node16.html#7939">15.4.3</A>
-<DT><STRONG><TT>negative_regexp</TT> configuration keyword</STRONG>
-<DD><A HREF="node9.html#5811">8.1.1</A>
- | <A HREF="node9.html#5817">8.1.1</A>
- | <A HREF="node9.html#5829">8.1.1.1</A>
- | <A HREF="node9.html#5835">8.1.1.2</A>
-<DT><STRONG><TT>Net::LDAP</TT> perl module</STRONG>
-<DD><A HREF="node4.html#4389">3.2.4</A>
- | <A HREF="node15.html#7180">14.2.6</A>
- | <A HREF="node15.html#7225">14.2.7</A>
-<DT><STRONG>Net::LDAPS</STRONG>
-<DD><A HREF="node9.html#1350">8.1.1.2</A>
- | <A HREF="node9.html#1356">8.1.1.2</A>
- | <A HREF="node9.html#1383">8.1.1.3</A>
- | <A HREF="node9.html#1389">8.1.1.3</A>
-<DT><STRONG><TT>newaliases</TT> UNIX command</STRONG>
-<DD><A HREF="node5.html#4857">4.1</A>
- | <A HREF="node5.html#4921">4.3</A>
-<DT><STRONG><TT>nls</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5350">5.7.2</A>
-<DT><STRONG><TT>nls/</TT> directory</STRONG>
-<DD><A HREF="node4.html#4424">3.3</A>
-<DT><STRONG><TT>Notification</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7719">14.5.2</A>
- | <A HREF="node15.html#7739">14.5.3</A>
-<DT><STRONG><TT>nrcpt</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5157">no title</A>
-<DT><STRONG><TT>open</TT> configuration keyword</STRONG>
-<DD><A HREF="node14.html#6908">13.1.2</A>
-<DT><STRONG><TT>openSSL</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5506">no title</A>
- | <A HREF="node10.html#5857">9.4.2</A>
- | <A HREF="node10.html#5866">9.4.2</A>
-<DT><STRONG>Oracle</STRONG>
-<DD><A HREF="node2.html#178">1.2</A>
- | <A HREF="node4.html#364">3.2</A>
-<DT><STRONG><TT>other_email</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7560">14.4.1</A>
- | <A HREF="node15.html#7563">14.4.1</A>
-<DT><STRONG><TT>outgoing/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4230">2.2</A>
-<DT><STRONG><TT>owner</TT> list parameter</STRONG>
-<DD><A HREF="node5.html#4877">4.2</A>
- | <A HREF="node15.html#6923">14.</A>
- | <A HREF="node15.html#6954">14.1.1</A>
- | <A HREF="node15.html#6980">14.1.4</A>
- | <A HREF="node15.html#6995">14.1.4</A>
- | <A HREF="node15.html#6998">14.1.4</A>
- | <A HREF="node15.html#7670">14.4.10</A>
-<DT><STRONG><TT>owner_priority</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5447">no title</A>
-<DT><STRONG><TT>p12topem.pl -help</TT> UNIX command</STRONG>
-<DD><A HREF="node10.html#5915">9.4.4.1</A>
-<DT><STRONG><TT>passwd</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7165">14.2.5</A>
- | <A HREF="node15.html#7192">14.2.6</A>
- | <A HREF="node15.html#7237">14.2.7</A>
-<DT><STRONG><TT>password</TT> configuration keyword</STRONG>
-<DD><A HREF="node10.html#5900">9.4.4</A>
-<DT><STRONG><TT>path</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7128">14.2.4</A>
-<DT><STRONG><TT>pending</TT> configuration keyword</STRONG>
-<DD><A HREF="node14.html#6877">13.1.1</A>
- | <A HREF="node14.html#6905">13.1.2</A>
-<DT><STRONG><TT>period</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7803">14.6.1</A>
-<DT><STRONG><TT>pidfile</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5103">no title</A>
-<DT><STRONG><TT>port</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7125">14.2.4</A>
- | <A HREF="node15.html#7186">14.2.6</A>
- | <A HREF="node15.html#7231">14.2.7</A>
-<DT><STRONG><TT>postfix</TT> UNIX command</STRONG>
-<DD><A HREF="node2.html#4007">1.2</A>
- | <A HREF="node4.html#4340">3.2.1</A>
- | <A HREF="node5.html#4827">4.</A>
- | <A HREF="node5.html#4933">4.4</A>
-<DT><STRONG><TT>postfix_manager.pl</TT> file</STRONG>
-<DD><A HREF="node4.html#4541">3.3</A>
-<DT><STRONG>PostgreSQL</STRONG>
-<DD><A HREF="node2.html#177">1.2</A>
- | <A HREF="node4.html#367">3.2</A>
-<DT><STRONG><TT>priority</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7679">14.4.11</A>
-<DT><STRONG><TT>private</TT> list parameter</STRONG>
-<DD><A HREF="node2.html#4016">1.2</A>
-<DT><STRONG><TT>private_key</TT> configuration keyword</STRONG>
-<DD><A HREF="node10.html#5909">9.4.4.1</A>
- | <A HREF="node10.html#5921">9.4.4.1</A>
-<DT><STRONG><TT>privateoreditorkey</TT> list parameter</STRONG>
-<DD><A HREF="node2.html#4019">1.2</A>
- | <A HREF="node15.html#6951">14.1.1</A>
-<DT><STRONG><TT>process_bouncers</TT> configuration keyword</STRONG>
-<DD><A HREF="node17.html#7974">16.</A>
-<DT><STRONG><TT>process_bouncers_task</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5402">no title</A>
-<DT><STRONG><TT>profile</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7018">14.1.4</A>
-<DT><STRONG><TT>purge_orphan_bounces_task</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5385">no title</A>
-<DT><STRONG><TT>qmail</TT> UNIX command</STRONG>
-<DD><A HREF="node2.html#4004">1.2</A>
- | <A HREF="node4.html#4343">3.2.1</A>
- | <A HREF="node5.html#4824">4.</A>
-<DT><STRONG><TT>queue</TT> configuration keyword</STRONG>
-<DD><A HREF="node3.html#4239">2.2</A>
- | <A HREF="node3.html#4248">2.2</A>
- | <A HREF="node4.html#4446">3.3</A>
- | <A HREF="node4.html#4553">3.3</A>
- | <A HREF="node4.html#4573">3.3</A>
- | <A HREF="node5.html#4835">4.1</A>
- | <A HREF="node6.html#5229">no title</A>
- | <A HREF="node6.html#5232">5.6.2</A>
- | <A HREF="node6.html#5310">5.6.12</A>
-<DT><STRONG><TT>queueauth</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5258">no title</A>
-<DT><STRONG><TT>queuebounce</TT> configuration keyword</STRONG>
-<DD><A HREF="node5.html#4892">4.2</A>
- | <A HREF="node6.html#5274">no title</A>
-<DT><STRONG><TT>queuedigest</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5247">no title</A>
-<DT><STRONG><TT>queueexpire</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5250">no title</A>
-<DT><STRONG><TT>queuemod</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5239">no title</A>
- | <A HREF="node6.html#5321">5.6.13</A>
-<DT><STRONG><TT>queueoutgoing</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5266">no title</A>
-<DT><STRONG><TT>queuetask</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5285">no title</A>
-<DT><STRONG><TT>QUIET</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8208">18.1</A>
- | <A HREF="node19.html#8211">18.1</A>
- | <A HREF="node19.html#8220">18.2</A>
- | <A HREF="node19.html#8232">18.2</A>
- | <A HREF="node19.html#8296">18.2</A>
-<DT><STRONG><TT>QUIET ADD</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8223">18.2</A>
-<DT><STRONG><TT>QUIET DELETE</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8235">18.2</A>
-<DT><STRONG><TT>QUIT</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8194">18.1</A>
- | <A HREF="node19.html#8271">18.2</A>
-<DT><STRONG><TT>quota</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7543">14.3.10.3</A>
- | <A HREF="node15.html#7849">14.6.2.2</A>
-<DT><STRONG><TT>rate</TT> list parameter</STRONG>
-<DD><A HREF="node6.html#5425">5.8.12</A>
- | <A HREF="node6.html#5435">5.8.13</A>
- | <A HREF="node15.html#7703">14.5.2</A>
- | <A HREF="node15.html#7723">14.5.3</A>
-<DT><STRONG>RDBMS</STRONG>
-<DD><A HREF="node2.html#175">1.2</A>
- | <A HREF="node4.html#363">3.2</A>
-<DT><STRONG><TT>reception</TT> list parameter</STRONG>
-<DD><A HREF="node13.html#6679">12.4</A>
- | <A HREF="node15.html#7637">14.4.8</A>
- | <A HREF="node15.html#7632">14.4.8</A>
- | <A HREF="node15.html#7643">14.4.9</A>
- | <A HREF="node19.html#8122">18.1</A>
- | <A HREF="node19.html#8134">18.1</A>
- | <A HREF="node19.html#8140">18.1</A>
- | <A HREF="node19.html#8146">18.1</A>
- | <A HREF="node19.html#8152">18.1</A>
- | <A HREF="node19.html#8158">18.1</A>
- | <A HREF="node19.html#8167">18.1</A>
-<DT><STRONG><TT>reception nomail</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7004">14.1.4</A>
- | <A HREF="node15.html#7008">14.1.4</A>
-<DT><STRONG><TT>regex1</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7259">14.2.7</A>
-<DT><STRONG><TT>regex2</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7284">14.2.7</A>
-<DT><STRONG><TT>regexp</TT> configuration keyword</STRONG>
-<DD><A HREF="node9.html#5814">8.1.1</A>
- | <A HREF="node9.html#5820">8.1.1</A>
- | <A HREF="node9.html#5826">8.1.1.1</A>
- | <A HREF="node9.html#5832">8.1.1.2</A>
-<DT><STRONG><TT>Regularity rate</TT> configuration keyword</STRONG>
-<DD><A HREF="node17.html#7983">16.</A>
-<DT><STRONG><TT>REJECT</TT> mail command</STRONG>
-<DD><A HREF="node13.html#6730">12.7</A>
- | <A HREF="node13.html#6805">12.7.4</A>
- | <A HREF="node14.html#6865">13.1.1</A>
- | <A HREF="node19.html#8311">18.3</A>
-<DT><STRONG><TT>RELEASE_NOTES</TT> file</STRONG>
-<DD><A HREF="node2.html#4069">1.5</A>
- | <A HREF="node4.html#4325">3.1</A>
-<DT><STRONG><TT>REMIND</TT> mail command</STRONG>
-<DD><A HREF="node13.html#6814">12.7.6</A>
- | <A HREF="node15.html#7405">14.3.5</A>
- | <A HREF="node15.html#7408">14.3.5</A>
- | <A HREF="node15.html#7411">14.3.5</A>
- | <A HREF="node19.html#8238">18.2</A>
- | <A HREF="node19.html#8241">18.2</A>
- | <A HREF="node19.html#8244">18.2</A>
- | <A HREF="node19.html#8247">18.2</A>
-<DT><STRONG><TT>REMIND *</TT> mail command</STRONG>
-<DD><A HREF="node12.html#6049">11.2</A>
- | <A HREF="node12.html#6251">11.2.3</A>
-<DT><STRONG><TT>remind.annual.task</TT> file</STRONG>
-<DD><A HREF="node12.html#6536">11.11</A>
-<DT><STRONG><TT>remind.semestrial.task</TT> file</STRONG>
-<DD><A HREF="node12.html#6539">11.11</A>
-<DT><STRONG><TT>remind.tpl</TT> file</STRONG>
-<DD><A HREF="node13.html#6822">12.9.1</A>
-<DT><STRONG><TT>remind_return_path</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5371">no title</A>
- | <A HREF="node15.html#7762">14.5.5</A>
- | <A HREF="node15.html#7765">14.5.5</A>
- | <A HREF="node15.html#7771">14.5.5</A>
-<DT><STRONG><TT>remote_host</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7122">14.2.4</A>
-<DT><STRONG><TT>remove_headers</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5190">no title</A>
-<DT><STRONG><TT>Reply-To:</TT> header</STRONG>
-<DD><A HREF="node15.html#7550">14.4.1</A>
- | <A HREF="node15.html#7557">14.4.1</A>
- | <A HREF="node15.html#7573">14.4.1</A>
- | <A HREF="node15.html#7576">14.4.1</A>
-<DT><STRONG><TT>reply_to_header</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7546">14.4.1</A>
-<DT><STRONG><TT>request_priority</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5443">no title</A>
-<DT><STRONG><TT>REVIEW</TT> mail command</STRONG>
-<DD><A HREF="node2.html#4038">1.2</A>
- | <A HREF="node13.html#6694">12.4</A>
- | <A HREF="node13.html#6697">12.4</A>
- | <A HREF="node13.html#6700">12.4</A>
- | <A HREF="node15.html#7490">14.3.9</A>
- | <A HREF="node15.html#7493">14.3.9</A>
- | <A HREF="node15.html#7496">14.3.9</A>
- | <A HREF="node15.html#7499">14.3.9</A>
- | <A HREF="node15.html#7502">14.3.9</A>
- | <A HREF="node15.html#7505">14.3.9</A>
- | <A HREF="node15.html#7508">14.3.9</A>
- | <A HREF="node15.html#7649">14.4.9</A>
- | <A HREF="node19.html#8025">18.</A>
- | <A HREF="node19.html#8053">18.1</A>
- | <A HREF="node19.html#8056">18.1</A>
- | <A HREF="node19.html#8068">18.1</A>
- | <A HREF="node19.html#8080">18.1</A>
- | <A HREF="node19.html#8083">18.1</A>
- | <A HREF="node19.html#8173">18.1</A>
- | <A HREF="node19.html#8185">18.1</A>
-<DT><STRONG><TT>rfc2369_header_fields</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5186">no title</A>
-<DT><STRONG>robot aliases</STRONG>
-<DD><A HREF="node5.html#579">4.1</A>
-<DT><STRONG><TT>robot.conf</TT> file</STRONG>
-<DD><A HREF="node3.html#4278">2.3</A>
- | <A HREF="node11.html#5942">10.1</A>
- | <A HREF="node11.html#5948">10.2</A>
- | <A HREF="node15.html#6965">14.1.2</A>
-<DT><STRONG><TT>sample</TT> directory</STRONG>
-<DD><A HREF="node12.html#6363">11.7</A>
- | <A HREF="node13.html#6661">12.2</A>
-<DT><STRONG><TT>sample/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4272">2.3</A>
- | <A HREF="node4.html#4421">3.3</A>
-<DT><STRONG><TT>scenari</TT> directory</STRONG>
-<DD><A HREF="node6.html#5066">5.2.2</A>
-<DT><STRONG><TT>scenari/subscribe.rennes1</TT> file</STRONG>
-<DD><A HREF="node12.html#6485">11.8.1</A>
-<DT><STRONG>scenario</STRONG>
-<DD><A HREF="node12.html#1784">11.8</A>
-<DT><STRONG><TT>scope</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7215">14.2.6</A>
-<DT><STRONG><TT>scope1</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7263">14.2.7</A>
-<DT><STRONG><TT>scope2</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7288">14.2.7</A>
-<DT><STRONG><TT>script</TT> directory</STRONG>
-<DD><A HREF="node7.html#5685">6.6</A>
-<DT><STRONG><TT>script/</TT> directory</STRONG>
-<DD><A HREF="node8.html#5723">7.3.2</A>
-<DT><STRONG><TT>select</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7211">14.2.6</A>
-<DT><STRONG><TT>select1</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7255">14.2.7</A>
-<DT><STRONG><TT>select2</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7280">14.2.7</A>
-<DT><STRONG><TT>selected_color</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5018">no title</A>
- | <A HREF="node11.html#6002">10.2</A>
-<DT><STRONG><TT>send</TT> list parameter</STRONG>
-<DD><A HREF="node2.html#4022">1.2</A>
- | <A HREF="node15.html#6936">14.1.1</A>
- | <A HREF="node15.html#7420">14.3.8</A>
- | <A HREF="node15.html#7423">14.3.8</A>
- | <A HREF="node15.html#7426">14.3.8</A>
- | <A HREF="node15.html#7429">14.3.8</A>
- | <A HREF="node15.html#7432">14.3.8</A>
- | <A HREF="node15.html#7435">14.3.8</A>
- | <A HREF="node15.html#7438">14.3.8</A>
- | <A HREF="node15.html#7441">14.3.8</A>
- | <A HREF="node15.html#7444">14.3.8</A>
- | <A HREF="node15.html#7447">14.3.8</A>
- | <A HREF="node15.html#7450">14.3.8</A>
- | <A HREF="node15.html#7453">14.3.8</A>
- | <A HREF="node15.html#7456">14.3.8</A>
- | <A HREF="node15.html#7459">14.3.8</A>
- | <A HREF="node15.html#7462">14.3.8</A>
- | <A HREF="node15.html#7465">14.3.8</A>
- | <A HREF="node15.html#7468">14.3.8</A>
- | <A HREF="node15.html#7471">14.3.8</A>
- | <A HREF="node15.html#7474">14.3.8</A>
- | <A HREF="node15.html#7477">14.3.8</A>
- | <A HREF="node15.html#7480">14.3.8</A>
- | <A HREF="node15.html#7483">14.3.8</A>
- | <A HREF="node19.html#8200">18.1</A>
- | <A HREF="node19.html#8300">18.3</A>
- | <A HREF="node19.html#8306">18.3</A>
-<DT><STRONG><TT>send private</TT> configuration keyword</STRONG>
-<DD><A HREF="node12.html#6367">11.8</A>
-<DT><STRONG><TT>sendmail</TT> UNIX command</STRONG>
-<DD><A HREF="node2.html#4001">1.2</A>
- | <A HREF="node4.html#4337">3.2.1</A>
- | <A HREF="node5.html#4821">4.</A>
- | <A HREF="node5.html#4842">4.1</A>
- | <A HREF="node5.html#4930">4.4</A>
- | <A HREF="node6.html#5161">5.4.6</A>
- | <A HREF="node6.html#5164">5.4.6</A>
- | <A HREF="node6.html#5171">5.4.7</A>
- | <A HREF="node6.html#5174">no title</A>
- | <A HREF="node6.html#5178">5.4.8</A>
-<DT><STRONG><TT>sendmail.cf</TT> file</STRONG>
-<DD><A HREF="node5.html#4915">4.3</A>
-<DT><STRONG>SENDMAIL_ALIASES</STRONG>
-<DD><A HREF="node5.html#649">4.3</A>
-<DT><STRONG><TT>sendmail_args</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5182">no title</A>
-<DT><STRONG><TT>SET</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8113">18.1</A>
- | <A HREF="node19.html#8125">18.1</A>
- | <A HREF="node19.html#8128">18.1</A>
- | <A HREF="node19.html#8137">18.1</A>
- | <A HREF="node19.html#8143">18.1</A>
- | <A HREF="node19.html#8149">18.1</A>
- | <A HREF="node19.html#8155">18.1</A>
- | <A HREF="node19.html#8161">18.1</A>
- | <A HREF="node19.html#8170">18.1</A>
- | <A HREF="node19.html#8182">18.1</A>
- | <A HREF="node19.html#8265">18.2</A>
-<DT><STRONG>set-uid-on-exec bit</STRONG>
-<DD><A HREF="node4.html#498">3.3</A>
-<DT><STRONG><TT>SET&nbsp;LISTNAME&nbsp;CONCEAL</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8188">18.1</A>
-<DT><STRONG><TT>SET&nbsp;LISTNAME&nbsp;MAIL</TT> mail command</STRONG>
-<DD><A HREF="node13.html#6703">12.4</A>
- | <A HREF="node19.html#8119">18.1</A>
- | <A HREF="node19.html#8131">18.1</A>
-<DT><STRONG><TT>SET&nbsp;LISTNAME&nbsp;NOCONCEAL</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8176">18.1</A>
-<DT><STRONG><TT>SET&nbsp;LISTNAME&nbsp;NOMAIL</TT> mail command</STRONG>
-<DD><A HREF="node13.html#6685">12.4</A>
- | <A HREF="node19.html#8164">18.1</A>
-<DT><STRONG><TT>SET&nbsp;LISTNAME&nbsp;SUMMARY</TT> mail command</STRONG>
-<DD><A HREF="node13.html#6682">12.4</A>
-<DT><STRONG><TT>shaded_color</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5021">no title</A>
- | <A HREF="node11.html#6005">10.2</A>
-<DT><STRONG><TT>shared</TT> directory</STRONG>
-<DD><A HREF="node15.html#2892">14.3.10</A>
- | <A HREF="node15.html#7515">14.3.10.1</A>
- | <A HREF="node15.html#7531">14.3.10.2</A>
- | <A HREF="node16.html#3271">15.</A>
- | <A HREF="node16.html#7903">15.3.2</A>
- | <A HREF="node16.html#7906">no title</A>
- | <A HREF="node16.html#7909">15.4.2</A>
- | <A HREF="node16.html#7912">15.4.2</A>
-<DT><STRONG><TT>SIG</TT> mail command</STRONG>
-<DD><A HREF="node13.html#6724">12.7</A>
-<DT><STRONG><TT>SIGNOFF</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8107">18.1</A>
- | <A HREF="node19.html#8229">18.2</A>
-<DT><STRONG><TT>SIGNOFF *</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8110">18.1</A>
-<DT><STRONG><TT>sleep</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5301">no title</A>
-<DT><STRONG><TT>smime</TT> configuration keyword</STRONG>
-<DD><A HREF="node12.html#6405">11.8</A>
- | <A HREF="node12.html#6419">11.8</A>
-<DT><STRONG><TT>smtp</TT> configuration keyword</STRONG>
-<DD><A HREF="node12.html#6399">11.8</A>
- | <A HREF="node12.html#6409">11.8</A>
-<DT><STRONG><TT>spam_protection</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#4986">no title</A>
- | <A HREF="node6.html#707">5.1.5</A>
- | <A HREF="node6.html#4990">5.1.5</A>
- | <A HREF="node6.html#5000">5.1.6</A>
- | <A HREF="node15.html#7864">14.7.1</A>
- | <A HREF="node15.html#3260">14.7.1</A>
- | <A HREF="node15.html#7867">14.7.1</A>
- | <A HREF="node15.html#7878">14.7.2</A>
-<DT><STRONG><TT>spool</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5221">no title</A>
- | <A HREF="node6.html#837">5.6.4</A>
- | <A HREF="node6.html#5309">5.6.12</A>
- | <A HREF="node6.html#5320">5.6.13</A>
- | <A HREF="node19.html#8314">18.3</A>
-<DT><STRONG>SQL</STRONG>
-<DD><A HREF="node2.html#125">1.</A>
- | <A HREF="node2.html#186">1.2</A>
- | <A HREF="node15.html#2337">14.2.1</A>
- | <A HREF="node15.html#2352">14.2.1</A>
-<DT><STRONG><TT>sql_query</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7171">14.2.5</A>
-<DT><STRONG><TT>src/</TT> directory</STRONG>
-<DD><A HREF="node4.html#4427">3.3</A>
-<DT><STRONG><TT>~src/nls/Makefile</TT> file</STRONG>
-<DD><A HREF="node6.html#5340">5.7.1</A>
-<DT><STRONG>statistics</STRONG>
-<DD><A HREF="node13.html#2126">12.8</A>
-<DT><STRONG><TT>stats</TT> file</STRONG>
-<DD><A HREF="node19.html#8062">18.1</A>
- | <A HREF="node19.html#8065">18.1</A>
-<DT><STRONG><TT>SUB</TT> mail command</STRONG>
-<DD><A HREF="node13.html#6718">12.7</A>
-<DT><STRONG><TT>subject</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#6926">14.</A>
- | <A HREF="node15.html#7021">14.1.5</A>
-<DT><STRONG><TT>Subject:</TT> header</STRONG>
-<DD><A HREF="node19.html#8015">18.</A>
-<DT><STRONG><TT>SUBSCRIBE</TT> mail command</STRONG>
-<DD><A HREF="node15.html#6989">14.1.4</A>
- | <A HREF="node15.html#6992">14.1.4</A>
- | <A HREF="node15.html#7302">14.3.1</A>
- | <A HREF="node15.html#7305">14.3.1</A>
- | <A HREF="node15.html#7308">14.3.1</A>
- | <A HREF="node15.html#7311">14.3.1</A>
- | <A HREF="node15.html#7314">14.3.1</A>
- | <A HREF="node15.html#7317">14.3.1</A>
- | <A HREF="node15.html#7320">14.3.1</A>
- | <A HREF="node15.html#7323">14.3.1</A>
- | <A HREF="node15.html#7326">14.3.1</A>
- | <A HREF="node15.html#7329">14.3.1</A>
- | <A HREF="node15.html#7332">14.3.1</A>
- | <A HREF="node15.html#7335">14.3.1</A>
- | <A HREF="node15.html#7338">14.3.1</A>
- | <A HREF="node19.html#8092">18.1</A>
- | <A HREF="node19.html#8095">18.1</A>
- | <A HREF="node19.html#8104">18.1</A>
- | <A HREF="node19.html#8217">18.2</A>
- | <A HREF="node19.html#8268">18.2</A>
-<DT><STRONG>subscriber file</STRONG>
-<DD><A HREF="node13.html#2004">12.4</A>
-<DT><STRONG><TT>subscribers</TT> configuration keyword</STRONG>
-<DD><A HREF="node8.html#5711">7.3.1</A>
- | <A HREF="node8.html#5714">7.3.1</A>
- | <A HREF="node8.html#5735">7.5.2</A>
- | <A HREF="node8.html#5783">7.7</A>
- | <A HREF="node15.html#7063">14.2.1</A>
-<DT><STRONG><TT>subscribers.db.dump</TT> file</STRONG>
-<DD><A HREF="node4.html#4781">3.6</A>
- | <A HREF="node8.html#5786">7.7</A>
-<DT><STRONG><TT>suffix</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7198">14.2.6</A>
-<DT><STRONG><TT>suffix1</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7243">14.2.7</A>
-<DT><STRONG><TT>suffix2</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7267">14.2.7</A>
-<DT><STRONG><TT>suscriber_table</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5399">5.8.7</A>
-<DT><STRONG>Sybase</STRONG>
-<DD><A HREF="node2.html#179">1.2</A>
- | <A HREF="node4.html#366">3.2</A>
-<DT><STRONG><TT>sympa-4.0.a4/</TT> directory</STRONG>
-<DD><A HREF="node4.html#4415">3.3</A>
-<DT><STRONG><TT>sympa.conf</TT> file</STRONG>
-<DD><A HREF="node3.html#4206">2.2</A>
- | <A HREF="node3.html#4281">2.3</A>
- | <A HREF="node3.html#4284">2.4</A>
- | <A HREF="node4.html#4473">3.3</A>
- | <A HREF="node4.html#4565">3.3</A>
- | <A HREF="node4.html#4581">3.3.1</A>
- | <A HREF="node4.html#4592">3.5</A>
- | <A HREF="node4.html#4612">3.5</A>
- | <A HREF="node6.html#681">5.</A>
- | <A HREF="node6.html#5027">5.1.8</A>
- | <A HREF="node7.html#5545">6.1</A>
- | <A HREF="node8.html#5732">7.4</A>
- | <A HREF="node8.html#5752">7.6</A>
- | <A HREF="node8.html#5757">7.7</A>
- | <A HREF="node9.html#5808">8.1.1</A>
- | <A HREF="node10.html#5903">9.4.4</A>
- | <A HREF="node12.html#6326">11.6.1</A>
- | <A HREF="node12.html#6577">11.11.2</A>
- | <A HREF="node14.html#6850">13.1</A>
- | <A HREF="node15.html#7066">14.2.1</A>
- | <A HREF="node15.html#7757">14.5.4</A>
- | <A HREF="node15.html#7774">14.5.5</A>
- | <A HREF="node15.html#7855">14.6.2.2</A>
-<DT><STRONG><TT>sympa.pl</TT> file</STRONG>
-<DD><A HREF="node3.html#4197">2.2</A>
- | <A HREF="node3.html#4315">2.4</A>
- | <A HREF="node4.html#4622">3.6</A>
- | <A HREF="node4.html#4631">3.6</A>
- | <A HREF="node5.html#4818">4.</A>
- | <A HREF="node5.html#4838">4.1</A>
- | <A HREF="node6.html#5111">5.3.4</A>
- | <A HREF="node6.html#5235">5.6.2</A>
- | <A HREF="node7.html#5577">6.2.1</A>
- | <A HREF="node11.html#5939">10.1</A>
- | <A HREF="node12.html#6329">11.6.1</A>
-<DT><STRONG><TT>~sympa/bin/</TT> directory</STRONG>
-<DD><A HREF="node4.html#4568">3.3</A>
-<DT><STRONG><TT>~sympa/nls</TT> directory</STRONG>
-<DD><A HREF="node4.html#4710">3.6</A>
-<DT><STRONG><TT>~sympa/src/</TT> directory</STRONG>
-<DD><A HREF="node4.html#4410">3.3</A>
-<DT><STRONG><TT>sympa_priority</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5438">no title</A>
-<DT><STRONG><TT>sympa_wizard.pl</TT> file</STRONG>
-<DD><A HREF="node3.html#4203">2.2</A>
-<DT><STRONG><TT>syslog</TT> configuration keyword</STRONG>
-<DD><A HREF="node4.html#4589">3.5</A>
- | <A HREF="node6.html#5082">no title</A>
-<DT><STRONG><TT>syslogd</TT> UNIX command</STRONG>
-<DD><A HREF="node4.html#4585">3.5</A>
- | <A HREF="node4.html#4602">3.5</A>
- | <A HREF="node4.html#4608">3.5</A>
- | <A HREF="node6.html#5097">5.3.3</A>
-<DT><STRONG><TT>task/</TT> directory</STRONG>
-<DD><A HREF="node3.html#4236">2.2</A>
- | <A HREF="node12.html#6591">11.11.3</A>
-<DT><STRONG><TT>task_manager.pl</TT> file</STRONG>
-<DD><A HREF="node3.html#4233">2.2</A>
- | <A HREF="node6.html#5382">5.8.5</A>
- | <A HREF="node6.html#5389">5.8.6</A>
-<DT><STRONG>tasks</STRONG>
-<DD><A HREF="node12.html#1871">11.11</A>
-<DT><STRONG><TT>templates</TT> directory</STRONG>
-<DD><A HREF="node6.html#5069">5.2.2</A>
-<DT><STRONG>templates format</STRONG>
-<DD><A HREF="node12.html#1560">11.1</A>
-<DT><STRONG>templates, list</STRONG>
-<DD><A HREF="node13.html#2067">12.7</A>
-<DT><STRONG>templates, site</STRONG>
-<DD><A HREF="node12.html#1626">11.2</A>
-<DT><STRONG>templates, web</STRONG>
-<DD><A HREF="node12.html#1703">11.3</A>
-<DT><STRONG><TT>testlogs.pl</TT> file</STRONG>
-<DD><A HREF="node4.html#4618">3.5</A>
-<DT><STRONG><TT>text_color</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5009">no title</A>
- | <A HREF="node11.html#5993">10.2</A>
-<DT><STRONG><TT>timeout</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7201">14.2.6</A>
-<DT><STRONG><TT>timeout1</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7246">14.2.7</A>
-<DT><STRONG><TT>timeout2</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7270">14.2.7</A>
-<DT><STRONG><TT>title</TT> configuration keyword</STRONG>
-<DD><A HREF="node11.html#5966">10.2</A>
-<DT><STRONG><TT>tmpdir</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5293">no title</A>
-<DT><STRONG><TT>To:</TT> header</STRONG>
-<DD><A HREF="node19.html#8018">18.</A>
-<DT><STRONG><TT>topics</TT> list parameter</STRONG>
-<DD><A HREF="node12.html#1769">11.7</A>
- | <A HREF="node12.html#6348">11.7</A>
- | <A HREF="node15.html#7027">14.1.6</A>
-<DT><STRONG><TT>topics.conf</TT> file</STRONG>
-<DD><A HREF="node3.html#4266">2.3</A>
- | <A HREF="node12.html#6351">11.7</A>
- | <A HREF="node12.html#6360">11.7</A>
-<DT><STRONG><TT>ttl</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#2362">14.2.2</A>
- | <A HREF="node15.html#7096">14.2.2</A>
-<DT><STRONG>TULP</STRONG>
-<DD><A HREF="node2.html#4063">1.4</A>
-<DT><STRONG><TT>Type rate</TT> configuration keyword</STRONG>
-<DD><A HREF="node17.html#7980">16.</A>
-<DT><STRONG><TT>umask</TT> UNIX command</STRONG>
-<DD><A HREF="node6.html#5115">no title</A>
- | <A HREF="node6.html#5119">5.3.5</A>
-<DT><STRONG><TT>unique</TT> configuration keyword</STRONG>
-<DD><A HREF="node15.html#7751">14.5.4</A>
-<DT><STRONG><TT>unsubscribe</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7345">14.3.2</A>
- | <A HREF="node15.html#7348">14.3.2</A>
- | <A HREF="node15.html#7351">14.3.2</A>
- | <A HREF="node15.html#7354">14.3.2</A>
- | <A HREF="node15.html#7357">14.3.2</A>
- | <A HREF="node15.html#7360">14.3.2</A>
-<DT><STRONG><TT>user</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7162">14.2.5</A>
- | <A HREF="node15.html#7168">14.2.5</A>
- | <A HREF="node15.html#7189">14.2.6</A>
- | <A HREF="node15.html#7195">14.2.6</A>
- | <A HREF="node15.html#7234">14.2.7</A>
- | <A HREF="node15.html#7240">14.2.7</A>
-<DT><STRONG>user-data-source</STRONG>
-<DD><A HREF="node15.html#2328">14.2.1</A>
-<DT><STRONG><TT>user_data_source</TT> list parameter</STRONG>
-<DD><A HREF="node8.html#5779">7.7</A>
- | <A HREF="node13.html#6667">12.4</A>
- | <A HREF="node15.html#7056">14.2.1</A>
- | <A HREF="node15.html#7060">14.2.1</A>
- | <A HREF="node15.html#7069">14.2.1</A>
- | <A HREF="node15.html#7077">14.2.1</A>
- | <A HREF="node15.html#7104">14.2.3</A>
- | <A HREF="node15.html#7110">14.2.3</A>
- | <A HREF="node15.html#7143">14.2.5</A>
- | <A HREF="node15.html#7177">14.2.6</A>
- | <A HREF="node15.html#7222">14.2.7</A>
- | <A HREF="node15.html#7295">14.2.8</A>
-<DT><STRONG><TT>value</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7553">14.4.1</A>
- | <A HREF="node15.html#7566">14.4.1</A>
-<DT><STRONG><TT>visibility</TT> list parameter</STRONG>
-<DD><A HREF="node12.html#6248">11.2.2</A>
- | <A HREF="node13.html#6691">12.4</A>
- | <A HREF="node15.html#7040">14.1.7</A>
- | <A HREF="node15.html#7043">14.1.7</A>
- | <A HREF="node15.html#7046">14.1.7</A>
- | <A HREF="node15.html#7049">14.1.7</A>
- | <A HREF="node15.html#7052">14.1.7</A>
- | <A HREF="node15.html#7646">14.4.9</A>
- | <A HREF="node19.html#8047">18.1</A>
- | <A HREF="node19.html#8179">18.1</A>
- | <A HREF="node19.html#8191">18.1</A>
-<DT><STRONG><TT>warn_rate</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#7683">14.5.1</A>
-<DT><STRONG><TT>web_archive</TT> list parameter</STRONG>
-<DD><A HREF="node15.html#3210">14.6.2</A>
- | <A HREF="node15.html#7824">14.6.2</A>
-<DT><STRONG><TT>web_archive_spam_protection</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#4993">5.1.5</A>
- | <A HREF="node6.html#4996">no title</A>
- | <A HREF="node15.html#7870">14.7.1</A>
- | <A HREF="node15.html#7875">14.7.2</A>
-<DT><STRONG><TT>welcome.tpl</TT> file</STRONG>
-<DD><A HREF="node3.html#4160">2.1</A>
- | <A HREF="node12.html#6040">11.1.4</A>
-<DT><STRONG><TT>~welcome[.mime]</TT> file</STRONG>
-<DD><A HREF="node19.html#8038">18.1</A>
-<DT><STRONG><TT>welcome_return_path</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#5367">no title</A>
- | <A HREF="node6.html#5375">5.8.4</A>
- | <A HREF="node15.html#7745">14.5.4</A>
- | <A HREF="node15.html#7748">14.5.4</A>
- | <A HREF="node15.html#7754">14.5.4</A>
- | <A HREF="node15.html#7768">14.5.5</A>
-<DT><STRONG><TT>WHICH</TT> mail command</STRONG>
-<DD><A HREF="node19.html#8059">18.1</A>
-<DT><STRONG><TT>wws_templates</TT> directory</STRONG>
-<DD><A HREF="node6.html#5072">5.2.2</A>
-<DT><STRONG><I>WWSympa</I></STRONG>
-<DD><A HREF="node2.html#4045">1.2</A>
- | <A HREF="node2.html#4049">1.2</A>
- | <A HREF="node3.html#4148">2.1</A>
- | <A HREF="node3.html#4218">2.2</A>
- | <A HREF="node3.html#4260">2.3</A>
- | <A HREF="node3.html#4269">2.3</A>
- | <A HREF="node4.html#4395">3.2.4</A>
- | <A HREF="node4.html#4430">3.3</A>
- | <A HREF="node5.html#4895">4.2</A>
- | <A HREF="node5.html#4903">4.3</A>
- | <A HREF="node6.html#4982">5.1.4</A>
- | <A HREF="node7.html#5541">6.1</A>
- | <A HREF="node7.html#5550">6.1</A>
- | <A HREF="node7.html#5556">6.1</A>
- | <A HREF="node7.html#5562">6.1</A>
- | <A HREF="node7.html#5565">6.1</A>
- | <A HREF="node7.html#5586">6.2.3</A>
- | <A HREF="node7.html#5589">6.2.3</A>
- | <A HREF="node7.html#5592">6.2.3</A>
- | <A HREF="node7.html#5598">6.2.3</A>
- | <A HREF="node7.html#5620">6.3.7</A>
- | <A HREF="node7.html#5630">6.4</A>
- | <A HREF="node7.html#5633">6.4</A>
- | <A HREF="node7.html#5665">6.5</A>
- | <A HREF="node7.html#5678">6.6</A>
- | <A HREF="node7.html#5691">6.6</A>
- | <A HREF="node7.html#5694">6.6</A>
- | <A HREF="node8.html#5738">7.5.2</A>
- | <A HREF="node8.html#5744">7.5.2</A>
- | <A HREF="node12.html#6030">no title</A>
- | <A HREF="node12.html#6034">11.1</A>
- | <A HREF="node12.html#6239">11.2</A>
- | <A HREF="node12.html#6254">11.3</A>
- | <A HREF="node12.html#6271">no title</A>
- | <A HREF="node12.html#6277">11.5</A>
- | <A HREF="node12.html#6280">11.5</A>
- | <A HREF="node12.html#6290">11.5</A>
- | <A HREF="node12.html#6293">11.5</A>
- | <A HREF="node12.html#6299">11.5</A>
- | <A HREF="node12.html#6302">11.5</A>
- | <A HREF="node12.html#6308">11.5</A>
- | <A HREF="node12.html#6335">11.6.2</A>
- | <A HREF="node12.html#6339">11.6.3</A>
- | <A HREF="node12.html#6342">11.6.3</A>
- | <A HREF="node12.html#6345">11.7</A>
- | <A HREF="node12.html#6357">11.7</A>
- | <A HREF="node13.html#6715">12.6</A>
- | <A HREF="node13.html#6797">12.7</A>
- | <A HREF="node15.html#7030">14.1.6</A>
- | <A HREF="node15.html#7073">14.2.1</A>
- | <A HREF="node16.html#7882">15.</A>
-<DT><STRONG><TT>wwsympa.conf</TT> file</STRONG>
-<DD><A HREF="node3.html#4209">2.2</A>
- | <A HREF="node4.html#4476">3.3</A>
- | <A HREF="node4.html#4598">3.5</A>
- | <A HREF="node15.html#7781">14.6</A>
- | <A HREF="node17.html#7968">16.</A>
-<DT><STRONG><TT>wwsympa.fcgi</TT> file</STRONG>
-<DD><A HREF="node3.html#4212">2.2</A>
- | <A HREF="node7.html#5553">6.1</A>
- | <A HREF="node7.html#5568">6.2.1</A>
- | <A HREF="node7.html#5580">6.2.1</A>
- | <A HREF="node7.html#5583">6.2.2</A>
- | <A HREF="node12.html#6265">11.3</A>
- | <A HREF="node12.html#6296">11.5</A>
-<DT><STRONG><TT>wwsympa_url</TT> configuration keyword</STRONG>
-<DD><A HREF="node6.html#4976">no title</A>
- | <A HREF="node11.html#5957">10.2</A>
-<DT><STRONG><TT>your_infected_msg.tpl</TT> file</STRONG>
-<DD><A HREF="node18.html#8008">17.</A>
-
-</DL>
+<H1><A NAME="SECTION002000000000000000000"></A>
+    <A NAME="smime"></A>
+<BR>
+19. <I>Sympa</I> with S/MIME and HTTPS
+</H1>
 
 <P>
-<BR><HR>
+S/MIME is a cryptographic method for Mime messages based on X509 certificates.
+Before installing <I>Sympa</I> S/Mime features (which we call S/Sympa), you should be
+under no illusion about what the S stands for : ``S/MIME'' means ``Secure MIME''.
+That S certainly does not stand for ``Simple''.
+
+<P>
+The aim of this chapter is simply to describe what security level is provided
+by <I>Sympa</I> while
+using S/MIME messages, and how to configure <I>Sympa</I> for it. It is not intended
+to teach anyone what S/Mime is and why it is so complex ! RFCs numbers 2311,
+2312, 2632, 2633 and 2634, along with a lot of literature about S/MIME, PKCS#7
+and PKI is available on the Internet. <I>Sympa</I> 2.7 is the first version of
+<I>Sympa</I> to include S/MIME features as beta-testing features.
+
+<P>
+
+<H1><A NAME="SECTION002010000000000000000">
+19.1 Signed message distribution</A>
+</H1>
+
+<P>
+No action required.
+You probably imagine that any mailing list manager (or any mail forwarder)
+is compatible with S/MIME signatures, as long as it respects the MIME structure of
+incoming messages. You are right. Even Majordomo can distribute a signed message!
+As <I>Sympa</I> provides MIME compatibility, you don't need to do
+anything in order to allow subscribers to verify signed messages distributed
+through a list. This is not an issue at all, since any processe that
+distributes messages  is compatible with end user
+signing processes. Sympa simply skips the message footer attachment
+(ref <A HREF="node13.html#messagefooter">12.10</A>, page&nbsp;<A HREF="node13.html#messagefooter"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) to prevent any
+body corruption which would break the signature.
+
+<P>
+
+<H1><A NAME="SECTION002020000000000000000"></A>
+    <A NAME="smime-sig"></A>
+<BR>
+19.2 Use of S/MIME signature by Sympa itself
+</H1>
+
+<P>
+Sympa is able to verify S/MIME signatures in order to apply S/MIME
+authentication methods for message handling. 
+Currently, this feature is limited to the
+distribution process, and to any commands <I>Sympa</I> might find in the message
+body.  The reasons for this restriction are related to current S/MIME
+usage.
+S/MIME signature structure is based on the encryption of a digest of the
+message. Most S/MIME agents do not include any part of the
+message headers in the message digest, so anyone can modify the message
+header without signature corruption! This is easy to do : for example, anyone
+can edit a signed message with their preferred message agent, modify whatever
+header they want (for example <TT>Subject:</TT> , <TT>Date:</TT> and
+<TT>To:</TT>, and redistribute the message to a list or to the robot
+without breaking the signature.
+
+<P>
+So Sympa cannot apply the S/MIME
+authentication method to a command parsed in the <TT>Subject:</TT> field of a
+message or via the <TT>-subscribe</TT> or <TT>-unsubscribe</TT> e-mail
+address. 
+
+<P>
+
+<H1><A NAME="SECTION002030000000000000000">
+19.3 Use of S/MIME encryption</A>
+</H1> 
+
+<P>
+S/Sympa is not an implementation of the ``S/MIME Symmetric Key Distribution''
+internet draft. This sophisticated scheme is required for large lists
+with encryption. So, there is still some scope for future developments :) 
+
+<P>
+We assume that S/Sympa distributes message as received, i.e. unencrypted when the
+list receives an unencrypted message, but otherwise encrypted.
+
+<P>
+In order to be able to send encrypted messages to a list, the sender needs
+to use the X509 certificate of the list. Sympa will send an encrypted message
+to each subscriber using the subscriber's certificate. To provide this feature,
+<I>Sympa</I> needs to manage one certificate for each list and one for each
+subscriber. This is available in Sympa version 2.8 and above.
+
+<P>
+
+<H1><A NAME="SECTION002040000000000000000">
+19.4 S/Sympa configuration</A>
+</H1> 
+
+<P>
+
+<H2><A NAME="SECTION002041000000000000000"></A>
+<A NAME="smimeinstall"></A>
+<BR>
+19.4.1 Installation
+</H2>
+
+<P>
+The only requirement is OpenSSL (http://www.openssl.org) version 0.9.5a and above.
+OpenSSL is used by <I>Sympa</I> as an external plugin
+(like sendmail or postfix), so it must be installed with the appropriate access
+(x for sympa.sympa). 
+
+<P>
+
+<H2><A NAME="SECTION002042000000000000000"></A>
+<A NAME="smimeconf"></A>
+<BR>
+19.4.2 configuration in sympa.conf
+</H2>
+
+<P>
+S/Sympa configuration is very simple. If you are used to Apache SSL,
+you should not feel lost. If you are an OpenSSL guru, you will
+feel at home, and there may even be changes you will wish to suggest to us.
+
+<P>
+The basic requirement is to let <I>Sympa</I> know where to find the binary file for the OpenSSL program
+and the certificates of the trusted certificate authority. 
+This is done using the optional parameters <A NAME="8013"></A><TT>openSSL</TT> and
+<A NAME="8016"></A><TT>capath</TT> and / or <A NAME="8019"></A><TT>cafile</TT>.
+
+<P>
+
+<UL>
+<LI><A NAME="8022"></A><TT>openSSL</TT> : the path for the OpenSSL binary file,
+         usually <TT>/usr/local/ssl/bin/openSSL</TT>
+</LI>
+<LI><A NAME="8025"></A><TT>cafile</TT> : the path of a bundle of trusted ca certificates. 
+        The file <A NAME="8028"></A><TT>~/home/sympa/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
+
+<P>
+Both the <A NAME="8033"></A><TT>cafile</TT> file and the <A NAME="8036"></A><TT>capath</TT> directory
+        should be shared with your Apache+mod_ssl configuration. This is useful
+	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
+
+<P>
+</LI>
+<LI><A NAME="8039"></A><TT>key_password</TT> : the password used to protect all list private keys. xxxxxxx	
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION002043000000000000000"></A>
+<A NAME="smimeforsign"></A>
+<BR>
+19.4.3 configuration to recognize S/MIME signatures
+</H2>
+
+<P>
+Once  <TT>OpenSSL</TT> has been installed, and <TT>sympa.conf</TT> configured,
+your S/Sympa is ready to use S/Mime signatures for any authentication operation. You simply need
+to use the appropriate authorization scenario for the operation you want to secure. 
+(see <A HREF="node10.html#scenarios">9</A>, page&nbsp;<A HREF="node10.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+When receiving a message, <I>Sympa</I> applies
+the authorization scenario with the appropriate authentication method parameter.
+In most cases the authentication method is ``<TT>smtp</TT>'', but in cases
+where the message is signed and the signature has been checked and matches the
+sender e-mail, <I>Sympa</I> applies the ``<TT>smime</TT>'' authentication
+method.
+
+<P>
+It is vital to ensure that if the authorization scenario does not recognize this authentication method, the
+operation requested will be rejected. Consequently, authorization scenarios distributed
+prior to version 2.7 are not compatible with the OpenSSL configuration of Sympa. 
+All
+standard authorization scenarios (those distributed with sympa)
+now include the <TT>smime</TT> method. The following example is
+named <TT>send.private_smime</TT>, and restricts sends to subscribers using an S/mime signature :
+
+<P><PRE>
+title.us restricted to subscribers check smime signature
+title.fr limité aux abonnés, vérif de la signature smime
+
+is_subscriber([listname],[sender])             smime  -&gt; do_it
+is_editor([listname],[sender])                 smime  -&gt; do_it
+is_owner([listname],[sender])                  smime  -&gt; do_it
+</PRE>
+
+<P>
+It as also possible to mix various authentication methods in a single authorization scenario. The following
+example, <TT>send.private_key</TT>, requires either an md5 return key or an S/Mime signature :<PRE>
+title.us restricted to subscribers with previous md5 authentication
+title.fr réservé aux abonnés avec authentification MD5 préalable
+
+is_subscriber([listname],[sender]) smtp          -&gt; request_auth
+true()                             md5,smime     -&gt; do_it
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION002044000000000000000"></A>
+<A NAME="smimeforencrypt"></A>
+<BR>
+19.4.4 distributing encrypted messages
+</H2>
+
+<P>
+In this section we describe S/Sympa encryption features. The goal is to use
+S/MIME encryption for distribution of a message to subscribers whenever the message has been
+received encrypted from the sender. 
+
+<P>
+Why is S/Sympa concerned by the S/MIME encryption distribution process ?
+It is because encryption is performed using the <B>recipient</B> X509
+certificate, whereas the signature requires the sender's private key. Thus, an encrypted
+message can be read by the recipient only if he or she is the owner of the private
+key associated with the certificate.
+Consequently, the only way to encrypt a message for a list of recipients is
+to encrypt and send the message for each recipient. This is what S/Sympa
+does when distributing an encrypted message.
+
+<P>
+The S/Sympa encryption feature in the distribution process supposes that sympa
+has received an encrypted message for some list. To be able to encrypt a message
+for a list, the sender must have some access to an X509 certificate for the list.
+So the first requirement is to install a certificate and a private key for
+the list.
+The mechanism whereby certificates are obtained and managed is complex. Current versions
+of S/Sympa assume that list certificates and private keys are installed by
+the listmaster using <A NAME="8044"></A><TT>/home/sympa/bin/p12topem.pl</TT> script. This script allows
+you to install a PKCS#12 bundle file containing a private key and
+a certificate using the appropriate format.
+
+<P>
+It is a good idea to have a look at the OpenCA (http://www.openssl.org)
+documentation and/or PKI providers' web documentation.
+You can use commercial certificates or home-made ones. Of course, the
+certificate must be approved for e-mail applications, and issued by one of
+the trusted CA's described in the <A NAME="8047"></A><TT>cafile</TT> file or the
+<A NAME="8050"></A><TT>capath</TT> Sympa configuration parameter. 
+
+<P>
+The list private key must be installed in a file named
+<A NAME="8053"></A><TT>/home/sympa/expl/mylist/private_key</TT>. All the list private
+keys must be encrypted using a single password defined by the
+<A NAME="8056"></A><TT>password</TT> parameter in <A NAME="8059"></A><TT>sympa.conf</TT>.
+
+<P>
+
+<H3><A NAME="SECTION002044100000000000000">
+19.4.4.1 Use of Netscape navigator to obtain X509 list certificates</A>
+</H3>
+
+<P>
+In many cases e-mail X509 certificates are distributed via a web server and
+loaded into the browser using your mouse :) Netscape allows
+certificates to be exported to a file. So one way to get a list certificate is to obtain an e-mail
+certificate for the canonical list address in your browser, and then to export and install it for Sympa :
+
+<OL>
+<LI>browse the net and load a certificate for the list address on some
+PKI provider (your own OpenCa pki server , thawte, verisign, ...). Be
+careful :  the e-mail certificate must be correspond exactly to the canonical address of
+your  list, otherwise, the signature will be incorrect (sender e-mail will
+not match signer e-mail).
+</LI>
+<LI>in the security menu, select the intended certificate and export
+it. Netscape will prompt you for a password and a filename to encrypt
+the output file. The format used by Netscape is  ``pkcs#12''. 
+Copy this file to the list home directory.
+</LI>
+<LI>convert the pkcs#12 file into a pair of pem files :
+<A NAME="8062"></A><TT>cert.pem</TT> and <A NAME="8065"></A><TT>private_key</TT> using
+the <A NAME="8068"></A><TT>/home/sympa/bin/p12topem.pl</TT> script. Use <A NAME="8071"></A><TT>p12topem.pl -help</TT> for details.
+</LI>
+<LI>be sure that <A NAME="8074"></A><TT>cert.pem</TT> and <A NAME="8077"></A><TT>private_key</TT>
+are owned by sympa with ``r'' access.
+</LI>
+<LI>As soon as a certificate is installed for a list, the list  home page
+includes a new link to load the certificate to the user's browser, and the welcome
+message is signed by the list.
+</LI>
+</OL> 
+
+<P>
+
+<H1><A NAME="SECTION002050000000000000000">
+19.5 Managing certificates with tasks</A>
+</H1>
+
+<P>
+You may automate the management of certificates with two global task models provided with
+<I>Sympa</I>. See <A HREF="node12.html#tasks">11.10</A>, page&nbsp;<A HREF="node12.html#tasks"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> to know more about tasks.
+Report to <A HREF="node6.html#certificate-task-config">5.12.4</A>, page&nbsp;<A HREF="node6.html#certificate-task-config"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> to configure your <I>Sympa</I> to use these facilities.
+
+<P>
+
+<H2><A NAME="SECTION002051000000000000000">
+19.5.1 chk_cert_expiration.daily.task model</A>
+</H2>
+
+<P>
+A task created with the model <A NAME="8082"></A><TT>chk_cert_expiration.daily.task</TT> checks every day the expiration date of
+certificates stored in the <A NAME="8085"></A><TT>/home/sympa/expl/X509-user-certs/</TT> directory.
+The user is warned with the <A NAME="8088"></A><TT>daily_cert_expiration</TT> template when his certificate has expired
+or is going to expire within three days.
+
+<P>
+
+<H2><A NAME="SECTION002052000000000000000">
+19.5.2 crl_update.daily.task model</A>
+</H2>
+
+<P>
+You may use the model <A NAME="8091"></A><TT>crl_update.daily.task</TT> to create a task which daily updates the certificate revocation
+lists when needed.
+
+<P>
+
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html1141"
+  HREF="node21.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html1135"
+  HREF="sympa.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html1129"
+  HREF="node19.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html1137"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html1139"
+  HREF="node22.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html1142"
+  HREF="node21.html">20. Using Sympa commands</A>
+<B> Up:</B> <A NAME="tex2html1136"
+  HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
+<B> Previous:</B> <A NAME="tex2html1130"
+  HREF="node19.html">18. Using Sympa with LDAP</A>
+ &nbsp <B>  <A NAME="tex2html1138"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp <B>  <A NAME="tex2html1140"
+  HREF="node22.html">Index</A></B> 
+<!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-08-29
+2003-09-12
 </ADDRESS>
 </BODY>
 </HTML>

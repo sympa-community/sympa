@@ -100,7 +100,7 @@
 
     \newcommand {\default} [1]  {(Default value: \texttt {#1})}
 
-    \newcommand {\scenarized} [1] {\texttt {#1} parameter is defined by scenario (see~\ref {scenarii}, page~\pageref {scenarii})}
+    \newcommand {\scenarized} [1] {\texttt {#1} parameter is defined by an authorization scenario (see~\ref {scenarios}, page~\pageref {scenarios})}
 
     \newcommand {\lparam} [1] {\ttindex {#1} {#1} {list parameter}}
 
@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {29 August 2003}
+    \date {12 September 2003}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -256,8 +256,8 @@ in a single software package, including:
         For details about the different sending modes, refer to the
         \lparam {send} parameter (\ref {par-send}, page~\pageref
         {par-send}). The sending process configuration (as well as most other list
-	operations) is defined using  a \textbf {scenario}. Any listmaster
-        can define new scenarios (scenarii) in order to complement the 20
+	operations) is defined using  an \textbf {authorization scenario}. Any listmaster
+        can define new authorization scenarios in order to complement the 20
 	predefined configurations included in the distribution. \\
         Example : forward multipart messages to the list editor, while
 	distributing others without requiring any further authorization.
@@ -371,7 +371,7 @@ Other date :
 
 \begin {itemize}
    \item Mar 1999 Internal use of a database (Mysql), definition of list subscriber with external datasource (RDBMS or \index {LDAP}).
-   \item Oct 1999 Stable version of WWsympa, introduction of scenarios.
+   \item Oct 1999 Stable version of WWsympa, introduction of authorization scenarios.
    \item Feb 2000 Web bounces management
    \item Apr 2000 Archives search engine and message removal
    \item May 2000 List creation feature from the web
@@ -525,14 +525,14 @@ a virtual robot or for the whole site.
 	
 	\item \dir {/home/sympa/bin}\\
 	This directory contains the binaries, including the CGI. It
-	also contains the default scenarios, templates and configuration
+	also contains the default authorization scenarios, templates and configuration
 	files as in the distribution.  \dir {/home/sympa/bin} may be completely
         overwritten by the \unixcmd {make install} so you must not customize
-        templates and scenarii under  \dir {/home/sympa/bin}.
+        templates and authorization scenarios under  \dir {/home/sympa/bin}.
 
 	\item \dir {/home/sympa/bin/etc}\\
 	Here \Sympa stores the default versions of what it will otherwise find
-	in \dir {/home/sympa/etc} (task models, scenarios, templates and configuration
+	in \dir {/home/sympa/etc} (task models, authorization scenarios, templates and configuration
 	files, recognized S/Mime certificates).
 
 	\item \dir {/home/sympa/etc}\\
@@ -543,11 +543,11 @@ a virtual robot or for the whole site.
 	List templates (suggested at list creation time).
 
 	\item \dir {/home/sympa/etc/scenari/}\\
-	This directory will contain your scenarii (or scenarios, if you prefer).
-	If you don't know what the hell a scenario is, refer to \ref {scenarii}\ref {scenarii}, 
-	page~\pageref {scenarii}. Those scenarii are default scenarii but you may look at
-        \dir {/home/sympa/etc/\samplerobot/scenari/} for default scenarii of \samplerobot
-        virtual robot and \dir {/home/sympa/expl/\samplelist/scenari} for scenarii
+	This directory will contain your authorization scenarios.
+	If you don't know what the hell an authorization scenario is, refer to \ref {scenarios}\ref {scenarios}, 
+	page~\pageref {scenarios}. Those authorization scenarios are default scenarios but you may look at
+        \dir {/home/sympa/etc/\samplerobot/scenari/} for default scenarios of \samplerobot
+        virtual robot and \dir {/home/sympa/expl/\samplelist/scenari} for scenarios
         specific to a particular list 
 
 	\item \dir {/home/sympa/etc/list\_task\_models/}\\
@@ -1541,7 +1541,7 @@ see a  nice mailto adresses where others have nothing.
 	\scenarized {create\_list}
 
 	Defines who can create lists (or request list creations).
-	Sympa will use the corresponding scenario.
+	Sympa will use the corresponding authorization scenario.
 
         \example {create\_list intranet}
 
@@ -1571,7 +1571,7 @@ see a  nice mailto adresses where others have nothing.
 
         This is the local directory for configuration files (such as
 	\file {edit\_list.conf}. It contains 5 subdirectories:
-	\dir {scenari} for local scenarii; \dir {templates}
+	\dir {scenari} for local authorization scenarios; \dir {templates}
 	for the site's local templates and default list templates; \dir {wws\_templates}
         for the site's local html templates; \dir {global\_task\_models} for local
 	global task models; and \dir {list\_task\_models} for local list task models
@@ -2132,7 +2132,7 @@ db_env	ORACLE_TERM=vt100;ORACLE_HOME=/var/hote/oracle/7.3.4
 	If your \textbf {subscriber\_table} database table has more fields
 	than required by \Sympa (because other programs access this
 	table), you can make \Sympa load these fields. You will then be able to
-	use them from within mail/web templates and scenario (as [subscriber-\texttt{>}field]).
+	use them from within mail/web templates and authorization scenarios (as [subscriber-\texttt{>}field]).
 	This parameter is a comma-separated list.
 
 Example :
@@ -2300,352 +2300,6 @@ antivirus_args  --stdout
 
 This parameter tells if \Sympa should notify the email sender when a virus has been
 detected.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% WWSympa
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\cleardoublepage
-\chapter {WWSympa}
-
-
-WWSympa is \Sympa's web interface.
-
-\section {Organization}
-\label {WWSympa}
-
-\WWSympa is fully integrated with \Sympa. It uses \file {sympa.conf}
-and \Sympa's libraries. The default \Sympa installation will also
-install WWSympa.
-
-Every single piece of HTML in \WWSympa is generated by the CGI code
-using template files (See \ref {tpl-format}, page~\pageref {tpl-format}).
-This facilitates internationalization of pages, as well as per-site
-customization. 
-
-The code consists of one single PERL CGI script, \file {WWSympa.fcgi}.
-To enhance performance you can configure \WWSympa to use
-FastCGI ; the CGI will be persistent in memory.\\
-All data will be accessed through the CGI, including web archives.
-This is required to allow the authentication scheme to be applied
-systematically.
-
-Authentication is based on passwords stored in the database table
-user\_table ; if the appropriate \file {Crypt::CipherSaber} is
-installed, password are encrypted in the database using reversible
-encryption based on RC4. Otherwise they are stored in clear text.
-In both cases reminding of passwords is possible.
- To keep track of authentication information \WWSympa
-uses HTTP cookies stored on the client side. The HTTP cookie only 
-indicates that a specified e-mail address has been authenticated ;
-permissions are evaluated when an action is requested.
-
-The same web interface is used by the listmaster, list owners, subscribers and
-others. Depending on permissions, the same URL may generate a different view.
-
-\WWSympa's main loop algorithm is roughly the following : 
-\begin {enumerate}
-	\item Check authentication information returned by 
-	the HTTP cookie
-
-	\item Evaluate user's permissions for the
-        requested action 
-
-	\item Process the requested action 
-
-	\item Set up variables resulting from the action 
-
-	\item Parse the HTML template files
-\end {enumerate}
-
-\section {HTTPD setup}
-
-\subsection {wwsympa.fcgi access permissions}
- 
-      
-     Because Sympa and WWSympa share a lot of files, \file {wwsympa.fcgi},
-     must run with the same 
-     uid/gid as \file {archived.pl}, \file {bounced.pl} and \file {sympa.pl}.
-     There are different ways to organize this :
-\begin{itemize}
-\item With some operating systems no special setup is required because
-      wwsympa.fcgi is installed with suid and sgid bits, but this will not work
-      if suid scripts are refused by your system.
-
-\item Run a dedicated Apache server with sympa.sympa as uid.gid (The Apache default
-      is nobody.nobody)
-
-\item Use a Apache virtual host with sympa.sympa as uid.gid ; Apache
-      needs to be compiled with suexec. Be aware that the Apache suexec usually define a lowest
-      UID/GID allowed to be a target user for suEXEC. For most systems including binaries
-      distribution of Apache, the default value 100 is common.
-      So Sympa UID (and Sympa GID) must be higher then 100 or suexec must be tuned in order to allow
-      lower UID/GID. Check http://httpd.apache.org/docs/suexec.html\#install for details
-
-      The User and Group directive have to be set before the FastCgiServer directive
-      is encountered.
-
-\item Otherwise, you can overcome restrictions on the execution of suid scripts
-      by using a short C program, owned by sympa and with the suid bit set, to start
-      \file {wwsympa.fcgi}. Here is an example (with no guarantee attached) :
-\begin {quote}
-\begin{verbatim}
-
-#include <unistd.h>
-
-#define WWSYMPA "/home/sympa/bin/wwsympa.fcgi"
-
-int main(int argn, char **argv, char **envp) {
-    argv[0] = WWSYMPA;
-    execve(WWSYMPA,argv,envp);
-}
-
-\end{verbatim}
-\end {quote}
-\end{itemize}
-
-\subsection {Installing wwsympa.fcgi in your Apache server}
-     If you chose to run \file {wwsympa.fcgi} as a simple CGI, you simply need to
-     script alias it. 
-
-\begin {quote}
-\begin{verbatim}
-     Example :
-       	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
-\end{verbatim}
-\end {quote}
-
-     Running  FastCGI will provide much faster responses from your server and 
-     reduce load (to understand why, read 
-     \htmladdnormallink 
-     {http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm}
-     {http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm})
-     
-\begin {quote}
-\begin{verbatim}
-     Example :
-	FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 2
-	<Location /wws>
-   	  SetHandler fastcgi-script
-	</Location>
-
-	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
-
- \end{verbatim}
-\end {quote}
- 
-If you run Virtual robots, then the FastCgiServer(s) can serve multiple robots. 
-Therefore you need to define it in the common section of your Apache configuration
-file.
-
-\subsection {Using FastCGI}
-
-\htmladdnormallink {FastCGI} {http://www.fastcgi.com/} is an extention to CGI that provides persistency for CGI programs. It is extemely useful
-with \WWSympa since source code interpretation and all initialisation tasks are performed only once, at server startup ; then
-file {wwsympa.fcgi} instances are waiting for clients requests. 
-
-\WWSympa can also work without FastCGI, depending on the \textbf {use\_fast\_cgi} parameter 
-(see \ref {use-fastcgi}, page~\pageref {use-fastcgi}).
-
-To run \WWSympa with FastCGI, you need to install :
-\begin{itemize}
-
-\item \index {mod\_fastcgi} : the Apache module that provides \index {FastCGI} features
-
-\item \perlmodule {FCGI} : the Perl module used by \WWSympa
-
-\end{itemize}
-
-\section {wwsympa.conf parameters}
-
-
-	\subsection {arc\_path}
-
-	\default {/home/httpd/html/arc} \\
-	Where to store html archives. This parameter is used
-        by the \file {archived.pl} daemon. It is a good idea to install the archive
-        outside the web hierarchy to prevent possible back doors in the access control
-        powered by WWSympa. However, if Apache is configured with a chroot, you may
-	have to install the archive in the Apache directory tree.
-
-	\subsection {archive\_default\_index thrd | mail}
-
-	\default {thrd} \\
-	The default index organization when entering web archives : either threaded or	
-	chronological order.
-
-	\subsection {archived\_pidfile}
-	\default {archived.pid} \\
-	The file containing the PID of \file {archived.pl}.
-
-	\subsection {bounce\_path}
-	\default {/var/bounce} \\
-	Root directory for storing bounces (non-delivery reports). This parameter
-	is used mainly by the \file {bounced.pl} daemon.
-
-	\subsection {bounced\_pidfile}
-	\default {bounced.pid} \\
-	The file containing the PID of \file {bounced.pl}.
-
-	\subsection {cookie\_expire}
-	\default {0}
-	Lifetime (in minutes) of HTTP cookies. This is the default value
-	when not set explicitly by users.
-	
-	\subsection {cookie\_domain}
-	\default {localhost} \\
-	Domain for the HTTP cookies. If beginning with a dot ('.'),
-	the cookie is available within the specified internet domain.
-	Otherwise, for the specified host. Example : 
-		\begin {quote}
-		\begin{verbatim}
-		   cookie_domain cru.fr
-		   cookie is available for host 'cru.fr'
-
-		   cookie_domain .cru.fr
-		   cookie is available for any host within 'cru.fr' domain
-		\end{verbatim}
-		\end {quote}
-	The only reason for replacing the default value would be where
-	\WWSympa's authentication process is shared with an application
-	running on another host.
-	
-	\subsection {default\_home}
-	\default {home} \\
-        Organization of the WWSympa home page. If you have only a few lists,
-	the default value `home' (presenting a list of lists organized by topic)
-	should be replaced by `lists' (a simple alphabetical list of lists).
-
-	\subsection {icons\_url}
-	\default {/icons} \\
-	URL of WWSympa's icons directory.
-
-      	\subsection {log\_facility}
-
-	WWSympa will log using this facility. Defaults to \Sympa's syslog
-        facility.
-	Configure your syslog according to this parameter.
-
-	\subsection {mhonarc}
-	\default {/usr/bin/mhonarc} \\
-	Path to the (superb) MhOnArc program. Required for html archives
-	http://www.oac.uci.edu/indiv/ehood/mhonarc.html
-
-	\subsection {password\_case sensitive | insensitive}
-	\default {insensitive} \\
-	If set to \textbf {insensitive}, WWSympa's password check will be insensitive.
-	This only concerns passwords stored in Sympa database, not the ones in \index {LDAP}.
-	
-	\textbf {Be careful :} in previous 3.xx versions of Sympa, passwords were 
-	lowercased before database insertion. Therefore changing to case-sensitive 
-	password checking could bring you some password checking problems.
-
-	\subsection {title}
-	\default {Mailing List Service} \\
-	The name of your mailing list service. It will appear in
-	the Title section of WWSympa.
-
-	\subsection {use\_fast\_cgi   0 | 1}
-	\label{use-fastcgi}
-	\default {1} \\
-	Choice of whether or not to use FastCGI. On listes.cru.fr, using FastCGI 
-        increases WWSympa performance by as much as a factor of 10. Refer to 
-       	\htmladdnormallink {http://www.fastcgi.com/} {http://www.fastcgi.com/}
-	and the Apache config section of this document for details about 
-	FastCGI.
-
-
-\section {MhOnArc}
- 
-MhOnArc is a neat little converter from mime messages to html. Refer to
-\htmladdnormallink {http://www.oac.uci.edu/indiv/ehood/mhonarc.html}
-{http://www.oac.uci.edu/indiv/ehood/mhonarc.html}.
-
-The long mhonarc resource file is used by \WWSympa in a particular way.
-MhOnArc is called to produce not a complete html document, but only a part of it
-to be included in a complete document (starting with \texttt{<}HTML\texttt{>} and terminating
-with \texttt{<}/HTML\texttt{>} ;-) ).
-The best way is to use the MhOnArc resource file 
-provided in the \WWSympa distribution and to modify it for your needs.
-
-The mhonarc resource file is named \file {mhonarc-ressources}. 
-You may locate this file either in \begin{enumerate}
- 	\item \dir {/home/sympa/expl/\samplelist/mhonarc-ressources}
-	in order to create a specific archive look for a particular list
-
-	\item or \dir {/home/sympa/etc/mhonarc-ressources}
-
-\end{enumerate}
-
-\section {Archiving daemon}
-\file {archived.pl} converts messages from \Sympa's spools 
-and calls \file {mhonarc} to create html versions (whose location is defined by the 
-"arc\_path" WWSympa parameter). You should probably install these archives 
-outside the \Sympa home\_dir (\Sympa's initial choice for storing mail archives : 
-\dir {/home/sympa/expl/\samplelist}). Note that the html archive 
-contains a text version of each message and is totally separate from \Sympa's
-main archive.
-\begin{enumerate}
-
-\item create a directory according to the WWSympa "arc\_path" parameter
-    (must be owned by sympa, does not have to be in Apache space unless
-    your server uses chroot)
-
-\item for each list, if you need a web archive, create a new web archive paragraph
-    in the list configuration. Example :
-\begin {quote}
-\begin{verbatim}
-     web_archive
-     access public|private|owner|listmaster|closed
-\end{verbatim}
-\end {quote}
-
-     If web\_archive is defined for a list, every message distributed by this list is copied
-     to \dir {/home/sympa/spool/outgoing/}. (No need to create nonexistent subscribers to receive
-     copies of messages)
-
-\item start \file {archived.pl}.
-\Sympa and Apache
- 
-\item check \WWSympa logs, or alternatively, start \file {archived.pl} in debug mode (-d). 
-
-\item If you change mhonarc resources and wish to rebuild the entire archive 
-using the new look defined for mhonarc, simply create an empty file named
-".rebuild.\samplelist@myhost" in \dir {/home/sympa/spool/outgoing}, and make sure that
-the owner of this file is \Sympa. 
-
-\begin {quote}
-\begin{verbatim}
-     example : su sympa -c "touch /home/sympa/spool/outgoing/.rebuild.sympa-fr@cru.fr"
-\end{verbatim}
-\end {quote}
-You can also rebuild web archives from within the admin page of the list.
-
-Furthermore, if you want to get list's archives, you can do it via the \cfkeyword{ List-admin menu-> Archive Management}
-\end{enumerate}
- 
-
-\section {Database configuration}
-
-\WWSympa needs an RDBMS (Relational Database Management System) in order to
-run. All database access is performed via the \Sympa API. \Sympa
-currently interfaces with \htmladdnormallink {MySQL}
-{http://www.mysql.net/}, \htmladdnormallink {PostgreSQL}
-{http://www.postgresql.pyrenet.fr/}, \htmladdnormallink {Oracle}
-{http://www.oracle.com/database/} and \htmladdnormallink {Sybase}
-{http://www.sybase.com/index_sybase.html}.
-
-A database is needed to store user passwords and preferences.
-The database structure is documented in the \Sympa documentation ;
-scripts for creating it are also provided with the \Sympa distribution
-(in \dir {script}). 
-
-User information (password and preferences) are stored in the «User» table.
-User passwords stored in the database are encrypted using reversible
-RC4 encryption controlled with the \cfkeyword {cookie} parameter,
-since \WWSympa might need to remind users of their passwords. 
-The security of \WWSympa rests on the security of your database. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3015,29 +2669,413 @@ dumped to \file {subscribers.db.dump} at every shutdown,
 to allow a manual rescue restart (by renaming subscribers.db.dump to
 subscribers and changing the user\_data\_source parameter), if ever the
 database were to become inaccessible.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Using Sympa with LDAP
+% WWSympa
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter {Using \Sympa with LDAP}
-\label {ldap}
+\chapter {WWSympa, Sympa's web interface}
 
-\index {LDAP} is a client-server protocol for accessing a directory service. Sympa
-provide various features based on access to one or more LDAP directories :
 
+WWSympa is \Sympa's web interface.
+
+\section {Organization}
+\label {WWSympa}
+
+\WWSympa is fully integrated with \Sympa. It uses \file {sympa.conf}
+and \Sympa's libraries. The default \Sympa installation will also
+install WWSympa.
+
+Every single piece of HTML in \WWSympa is generated by the CGI code
+using template files (See \ref {tpl-format}, page~\pageref {tpl-format}).
+This facilitates internationalization of pages, as well as per-site
+customization. 
+
+The code consists of one single PERL CGI script, \file {WWSympa.fcgi}.
+To enhance performance you can configure \WWSympa to use
+FastCGI ; the CGI will be persistent in memory.\\
+All data will be accessed through the CGI, including web archives.
+This is required to allow the authentication scheme to be applied
+systematically.
+
+Authentication is based on passwords stored in the database table
+user\_table ; if the appropriate \file {Crypt::CipherSaber} is
+installed, password are encrypted in the database using reversible
+encryption based on RC4. Otherwise they are stored in clear text.
+In both cases reminding of passwords is possible.
+ To keep track of authentication information \WWSympa
+uses HTTP cookies stored on the client side. The HTTP cookie only 
+indicates that a specified e-mail address has been authenticated ;
+permissions are evaluated when an action is requested.
+
+The same web interface is used by the listmaster, list owners, subscribers and
+others. Depending on permissions, the same URL may generate a different view.
+
+\WWSympa's main loop algorithm is roughly the following : 
+\begin {enumerate}
+	\item Check authentication information returned by 
+	the HTTP cookie
+
+	\item Evaluate user's permissions for the
+        requested action 
+
+	\item Process the requested action 
+
+	\item Set up variables resulting from the action 
+
+	\item Parse the HTML template files
+\end {enumerate}
+
+\section {HTTPD setup}
+
+\subsection {wwsympa.fcgi access permissions}
+ 
+      
+     Because Sympa and WWSympa share a lot of files, \file {wwsympa.fcgi},
+     must run with the same 
+     uid/gid as \file {archived.pl}, \file {bounced.pl} and \file {sympa.pl}.
+     There are different ways to organize this :
 \begin{itemize}
+\item With some operating systems no special setup is required because
+      wwsympa.fcgi is installed with suid and sgid bits, but this will not work
+      if suid scripts are refused by your system.
 
-	\item{authentication using LDAP directory instead of sympa internal storage of password}\\
+\item Run a dedicated Apache server with sympa.sympa as uid.gid (The Apache default
+      is nobody.nobody)
 
-	\item{named filters used in scenario condition}\\ 
-	
- 	\item{LDAP extraction of list subscribers (see ~\ref {par-user-data-source})}\\         
-	
+\item Use a Apache virtual host with sympa.sympa as uid.gid ; Apache
+      needs to be compiled with suexec. Be aware that the Apache suexec usually define a lowest
+      UID/GID allowed to be a target user for suEXEC. For most systems including binaries
+      distribution of Apache, the default value 100 is common.
+      So Sympa UID (and Sympa GID) must be higher then 100 or suexec must be tuned in order to allow
+      lower UID/GID. Check http://httpd.apache.org/docs/suexec.html\#install for details
+
+      The User and Group directive have to be set before the FastCgiServer directive
+      is encountered.
+
+\item Otherwise, you can overcome restrictions on the execution of suid scripts
+      by using a short C program, owned by sympa and with the suid bit set, to start
+      \file {wwsympa.fcgi}. Here is an example (with no guarantee attached) :
+\begin {quote}
+\begin{verbatim}
+
+#include <unistd.h>
+
+#define WWSYMPA "/home/sympa/bin/wwsympa.fcgi"
+
+int main(int argn, char **argv, char **envp) {
+    argv[0] = WWSYMPA;
+    execve(WWSYMPA,argv,envp);
+}
+
+\end{verbatim}
+\end {quote}
 \end{itemize}
 
+\subsection {Installing wwsympa.fcgi in your Apache server}
+     If you chose to run \file {wwsympa.fcgi} as a simple CGI, you simply need to
+     script alias it. 
 
-\section {Authentication via uid or alternate email}
+\begin {quote}
+\begin{verbatim}
+     Example :
+       	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+\end{verbatim}
+\end {quote}
+
+     Running  FastCGI will provide much faster responses from your server and 
+     reduce load (to understand why, read 
+     \htmladdnormallink 
+     {http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm}
+     {http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm})
+     
+\begin {quote}
+\begin{verbatim}
+     Example :
+	FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 2
+	<Location /wws>
+   	  SetHandler fastcgi-script
+	</Location>
+
+	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+
+ \end{verbatim}
+\end {quote}
+ 
+If you run Virtual robots, then the FastCgiServer(s) can serve multiple robots. 
+Therefore you need to define it in the common section of your Apache configuration
+file.
+
+\subsection {Using FastCGI}
+
+\htmladdnormallink {FastCGI} {http://www.fastcgi.com/} is an extention to CGI that provides persistency for CGI programs. It is extemely useful
+with \WWSympa since source code interpretation and all initialisation tasks are performed only once, at server startup ; then
+file {wwsympa.fcgi} instances are waiting for clients requests. 
+
+\WWSympa can also work without FastCGI, depending on the \textbf {use\_fast\_cgi} parameter 
+(see \ref {use-fastcgi}, page~\pageref {use-fastcgi}).
+
+To run \WWSympa with FastCGI, you need to install :
+\begin{itemize}
+
+\item \index {mod\_fastcgi} : the Apache module that provides \index {FastCGI} features
+
+\item \perlmodule {FCGI} : the Perl module used by \WWSympa
+
+\end{itemize}
+
+\section {wwsympa.conf parameters}
+
+
+	\subsection {arc\_path}
+
+	\default {/home/httpd/html/arc} \\
+	Where to store html archives. This parameter is used
+        by the \file {archived.pl} daemon. It is a good idea to install the archive
+        outside the web hierarchy to prevent possible back doors in the access control
+        powered by WWSympa. However, if Apache is configured with a chroot, you may
+	have to install the archive in the Apache directory tree.
+
+	\subsection {archive\_default\_index thrd | mail}
+
+	\default {thrd} \\
+	The default index organization when entering web archives : either threaded or	
+	chronological order.
+
+	\subsection {archived\_pidfile}
+	\default {archived.pid} \\
+	The file containing the PID of \file {archived.pl}.
+
+	\subsection {bounce\_path}
+	\default {/var/bounce} \\
+	Root directory for storing bounces (non-delivery reports). This parameter
+	is used mainly by the \file {bounced.pl} daemon.
+
+	\subsection {bounced\_pidfile}
+	\default {bounced.pid} \\
+	The file containing the PID of \file {bounced.pl}.
+
+	\subsection {cookie\_expire}
+	\default {0}
+	Lifetime (in minutes) of HTTP cookies. This is the default value
+	when not set explicitly by users.
+	
+	\subsection {cookie\_domain}
+	\default {localhost} \\
+	Domain for the HTTP cookies. If beginning with a dot ('.'),
+	the cookie is available within the specified internet domain.
+	Otherwise, for the specified host. Example : 
+		\begin {quote}
+		\begin{verbatim}
+		   cookie_domain cru.fr
+		   cookie is available for host 'cru.fr'
+
+		   cookie_domain .cru.fr
+		   cookie is available for any host within 'cru.fr' domain
+		\end{verbatim}
+		\end {quote}
+	The only reason for replacing the default value would be where
+	\WWSympa's authentication process is shared with an application
+	running on another host.
+	
+	\subsection {default\_home}
+	\default {home} \\
+        Organization of the WWSympa home page. If you have only a few lists,
+	the default value `home' (presenting a list of lists organized by topic)
+	should be replaced by `lists' (a simple alphabetical list of lists).
+
+	\subsection {icons\_url}
+	\default {/icons} \\
+	URL of WWSympa's icons directory.
+
+      	\subsection {log\_facility}
+
+	WWSympa will log using this facility. Defaults to \Sympa's syslog
+        facility.
+	Configure your syslog according to this parameter.
+
+	\subsection {mhonarc}
+	\default {/usr/bin/mhonarc} \\
+	Path to the (superb) MhOnArc program. Required for html archives
+	http://www.oac.uci.edu/indiv/ehood/mhonarc.html
+
+	\subsection {password\_case sensitive | insensitive}
+	\default {insensitive} \\
+	If set to \textbf {insensitive}, WWSympa's password check will be insensitive.
+	This only concerns passwords stored in Sympa database, not the ones in \index {LDAP}.
+	
+	\textbf {Be careful :} in previous 3.xx versions of Sympa, passwords were 
+	lowercased before database insertion. Therefore changing to case-sensitive 
+	password checking could bring you some password checking problems.
+
+	\subsection {title}
+	\default {Mailing List Service} \\
+	The name of your mailing list service. It will appear in
+	the Title section of WWSympa.
+
+	\subsection {use\_fast\_cgi   0 | 1}
+	\label{use-fastcgi}
+	\default {1} \\
+	Choice of whether or not to use FastCGI. On listes.cru.fr, using FastCGI 
+        increases WWSympa performance by as much as a factor of 10. Refer to 
+       	\htmladdnormallink {http://www.fastcgi.com/} {http://www.fastcgi.com/}
+	and the Apache config section of this document for details about 
+	FastCGI.
+
+
+\section {MhOnArc}
+ 
+MhOnArc is a neat little converter from mime messages to html. Refer to
+\htmladdnormallink {http://www.oac.uci.edu/indiv/ehood/mhonarc.html}
+{http://www.oac.uci.edu/indiv/ehood/mhonarc.html}.
+
+The long mhonarc resource file is used by \WWSympa in a particular way.
+MhOnArc is called to produce not a complete html document, but only a part of it
+to be included in a complete document (starting with \texttt{<}HTML\texttt{>} and terminating
+with \texttt{<}/HTML\texttt{>} ;-) ).
+The best way is to use the MhOnArc resource file 
+provided in the \WWSympa distribution and to modify it for your needs.
+
+The mhonarc resource file is named \file {mhonarc-ressources}. 
+You may locate this file either in \begin{enumerate}
+ 	\item \dir {/home/sympa/expl/\samplelist/mhonarc-ressources}
+	in order to create a specific archive look for a particular list
+
+	\item or \dir {/home/sympa/etc/mhonarc-ressources}
+
+\end{enumerate}
+
+\section {Archiving daemon}
+\file {archived.pl} converts messages from \Sympa's spools 
+and calls \file {mhonarc} to create html versions (whose location is defined by the 
+"arc\_path" WWSympa parameter). You should probably install these archives 
+outside the \Sympa home\_dir (\Sympa's initial choice for storing mail archives : 
+\dir {/home/sympa/expl/\samplelist}). Note that the html archive 
+contains a text version of each message and is totally separate from \Sympa's
+main archive.
+\begin{enumerate}
+
+\item create a directory according to the WWSympa "arc\_path" parameter
+    (must be owned by sympa, does not have to be in Apache space unless
+    your server uses chroot)
+
+\item for each list, if you need a web archive, create a new web archive paragraph
+    in the list configuration. Example :
+\begin {quote}
+\begin{verbatim}
+     web_archive
+     access public|private|owner|listmaster|closed
+\end{verbatim}
+\end {quote}
+
+     If web\_archive is defined for a list, every message distributed by this list is copied
+     to \dir {/home/sympa/spool/outgoing/}. (No need to create nonexistent subscribers to receive
+     copies of messages)
+
+\item start \file {archived.pl}.
+\Sympa and Apache
+ 
+\item check \WWSympa logs, or alternatively, start \file {archived.pl} in debug mode (-d). 
+
+\item If you change mhonarc resources and wish to rebuild the entire archive 
+using the new look defined for mhonarc, simply create an empty file named
+".rebuild.\samplelist@myhost" in \dir {/home/sympa/spool/outgoing}, and make sure that
+the owner of this file is \Sympa. 
+
+\begin {quote}
+\begin{verbatim}
+     example : su sympa -c "touch /home/sympa/spool/outgoing/.rebuild.sympa-fr@cru.fr"
+\end{verbatim}
+\end {quote}
+You can also rebuild web archives from within the admin page of the list.
+
+Furthermore, if you want to get list's archives, you can do it via the \cfkeyword{ List-admin menu-> Archive Management}
+\end{enumerate}
+ 
+
+\section {Database configuration}
+
+\WWSympa needs an RDBMS (Relational Database Management System) in order to
+run. All database access is performed via the \Sympa API. \Sympa
+currently interfaces with \htmladdnormallink {MySQL}
+{http://www.mysql.net/}, \htmladdnormallink {PostgreSQL}
+{http://www.postgresql.pyrenet.fr/}, \htmladdnormallink {Oracle}
+{http://www.oracle.com/database/} and \htmladdnormallink {Sybase}
+{http://www.sybase.com/index_sybase.html}.
+
+A database is needed to store user passwords and preferences.
+The database structure is documented in the \Sympa documentation ;
+scripts for creating it are also provided with the \Sympa distribution
+(in \dir {script}). 
+
+User information (password and preferences) are stored in the «User» table.
+User passwords stored in the database are encrypted using reversible
+RC4 encryption controlled with the \cfkeyword {cookie} parameter,
+since \WWSympa might need to remind users of their passwords. 
+The security of \WWSympa rests on the security of your database. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Authentication
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\chapter {Authentication}
+\label {authn}
+
+\Sympa needs to authenticate users (subscribers, owners, moderators, listmaster) on both its
+mail and web interface to then apply appropriate privileges (authorization process) to subsequent 
+requested actions. \Sympa is able to cope with multiple authentication means on the client side and 
+when using user+password it can validate these credentials against LDAP authentication backends.
+
+When contacted on the mail interface \Sympa has 3 authentication levels. Lower level is to trust
+the \rfcheader {From} SMTP header field. A higher level of authentication will require that the 
+user confirms his/her message. The strongest supported authentication method is S/MIME (note that \Sympa 
+also deals with S/MIME encrypted messages).
+
+On the \Sympa web interface (\WWSympa) the user can authenticate in 4 different ways (if appropriate setup
+has been done on \Sympa serveur). Default authentication mean is via the user's email address and a password 
+managed by \Sympa itself. If an LDAP authentication backend (or multiple) has been defined, then the user 
+can authentication with his/her LDAP uid and password. \Sympa is also able to delegate the authentication
+job to a web Single SignOn system ; currently only \htmladdnormallink {CAS} {http://www.yale.edu/tp/auth/} 
+(the Yale University system) is supported. When contacted via HTTPS, \Sympa can make use of X509 client
+certificates to authenticate users.
+
+The authorization process in \Sympa (authorization scenarios) refers to authentication methods. The 
+same authorization scenarios are used for both mail and web accesss ; therefore some authentication 
+methods are considered as equivalent : mail confirmation (on the mail interface) is equivalent to
+password authentication (on the web interface) ; S/MIME authentication is equivalent to HTTPS with
+client certificate authentication. Each rule in authorization scenarios requires an authentication method 
+(\cfkeyword {smtp},\cfkeyword {md5} or \cfkeyword {smime}) ; if the required authentication method was 
+not used, a higher authentication mode can be requested.
+
+
+\section {S/MIME and HTTPS authentication}
+
+Chapter \ref {smime-sig} (page~\pageref {smime-sig}) deals with \Sympa and S/MIME signature.
+\Sympa uses \texttt {OpenSSL} library to work on S/MIME messages, you need to configure some
+related \Sympa parameters : \ref {smimeconf} (page~\pageref {smimeconf}).
+
+\Sympa HTTPS authentication is based on Apache+mod\_SSL that provide the required authentication
+information via CGI environment variables. You will need to edit Apache configuration to 
+allow HTTPS access and require X509 client certificate. Here is a sample Apache configuration
+
+\begin {quote}
+\begin{verbatim}
+SSLEngine on
+SSLVerifyClient optional
+SSLVerifyDepth  10
+...
+<Location /wws>
+   SSLOptions +StdEnvVars
+   SetHandler fastcgi-script
+</Location>
+
+ \end{verbatim}
+\end {quote}
+
+
+\section {Authentication with email address, uid or alternate email address}
 \label {ldap-auth}
 
 \Sympa stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of \index {LDAP authentication} allows to use \Sympa in an intranet without duplicating user passwords. 
@@ -3076,8 +3114,8 @@ After this operation, the address in the field FROM will be the Canonic email, i
 That means that \Sympa will get this email and use it during all the session until you clearly ask \Sympa to change your email address via the two pages : which and pref.
   
 
-
-\subsection {auth.conf}
+\section {auth.conf}
+\label {auth-conf}
 
 The \file {/home/sympa/etc/auth.conf} configuration file contains numerous
 parameters which are read on start-up of \Sympa. If you change this file, do not forget
@@ -3091,7 +3129,6 @@ Single Sign On service designed by Yale University  http://www.yale.edu/tp/cas/ 
 Sympa parse each authentication service and try to use it depending on input datas from cookies and form parameters. At the first
 stage Sympa always check its own authentication cookie comming from the client. If recognized and valid the user email is extracted
 and authentication is finished. 
-
 
 Next step is to try http redirection to each defined CAS server, if one CAS server redirect the user
 to Sympa with a valid ticket Sympa receive a user id from the CAS server and connect to the related LDAP directory to get the user
@@ -3182,14 +3219,14 @@ user_table
 \end{verbatim}
 \end {quote}
 
-\subsubsection {user\_table paragraph in auth.conf}
+\subsection {user\_table paragraph}
 
 The user\_table paragraph is related to sympa internal authentication by email and password. It is the simplest one the only parameters
 are \cfkeyword {regexp} and \cfkeyword {negative\_regexp} which are perl regexp use to select or block this authentication method for
 a class of email. 
 
 
-\subsubsection {ldap paragraph in auth.conf}
+\subsection {ldap paragraph}
 
 
 \begin{itemize}
@@ -3356,7 +3393,7 @@ a class of email.
 \end{itemize}
 
 
-\subsubsection {cas paragraph in auth.conf}
+\subsection {cas paragraph}
 
 
 \begin{itemize}
@@ -3419,15 +3456,227 @@ a class of email.
 
 \end{itemize}
 
-\section {Named Filters}
+\section {Sharing \WWSympa authentication with other applications}
+\label {sharing-auth}
 
-At the moment Named Filters are only used in scenarii. They enable to select a category of people who will be authorized or not to realise some actions.
+If your are not using a web Single SignOn system you might want to make other web applications collaborate with \Sympa,
+and share the same authentication system. \Sympa uses
+HTTP cookies to carry users' auth information from page to page.
+This cookie carries no information concerning privileges. To make your application
+work with \Sympa, you have two possibilities :
+
+\begin {itemize}
+
+\item Delegating authentication operations to \WWSympa \\
+If you want to avoid spending a lot of time programming a CGI to do Login, Logout
+and Remindpassword, you can copy \WWSympa's login page to your 
+application, and then make use of the cookie information within your application. 
+The cookie format is :
+\begin{verbatim}
+sympauser=<user_email>:<checksum>
+\end{verbatim}
+where \texttt{<}user\_email\texttt{>} is the user's complete e-mail address, and
+\texttt{<}checksum\texttt{>} are the 8 first bytes of the a MD5 checksum of the \texttt{<}user\_email\texttt{>}+\Sympa \cfkeyword {cookie}
+configuration parameter.
+Your application needs to know what the \cfkeyword {cookie} parameter
+is, so it can check the HTTP cookie validity ; this is a secret shared
+between \WWSympa and your application.
+\WWSympa's \textit {loginrequest} page can be called to return to the
+referer URL when an action is performed. Here is a sample HTML anchor :
+
+\begin{verbatim}
+<A HREF="/wws/loginrequest/referer">Login page</A>
+\end{verbatim}
+
+You can also have your own HTML page submitting data to \file {wwsympa.fcgi} CGI. If you're
+doing so, you can set the \texttt {referer} variable to another URI. You can also
+set the \texttt {failure\_referer} to make WWSympa redirect the client to a different
+URI if login fails.
+
+\item Using \WWSympa's HTTP cookie format within your auth module \\
+To cooperate with \WWSympa, you simply need to adopt its HTTP
+cookie format and share the secret it uses to generate MD5 checksums,
+i.e. the \cfkeyword {cookie} configuration parameter. In this way, \WWSympa
+will accept users authenticated through your application without
+further authentication.
+
+\end {itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Managing authorizations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\chapter {Authorization scenarios}
+\label {scenarios}
+\index{scenario}
+
+List parameters controlling the behavior of commands are linked to different authorization scenarios.
+For example : the \cfkeyword {send private} parameter is related to the send.private scenario.
+There are four possible locations for a authorization scenario. When \Sympa seeks to apply an authorization scenario, it
+looks first in the related list directory \dir {/home/sympa/expl/\texttt{<}list\texttt{>}/scenari}. If it
+does not find the file there, it scans the current robot configuration directory \dir {/home/sympa/etc/\samplerobot/scenari}, then the site's configuration directory \dir {/home/sympa/etc/scenari},
+and finally \dir {/home/sympa/bin/etc/scenari}, which is the directory installed by the Makefile.
+
+An authorization scenario is a small configuration language to describe who
+can perform an operation and which authentication method is requested for it.
+An authorization scenario is an ordered set of rules. The goal is to provide a simple and
+flexible way to configure authorization and required authentication method for each operation.
+
+
+Each authorization scenario rule contains :
+\begin{itemize}
+\item a condition : the condition is evaluated by \Sympa. It can use
+  variables such as $[$sender$]$ for the sender e-mail, $[$list$]$ for the listname etc.
+\item an authentication method. The authentication method can be \cfkeyword {smtp},
+\cfkeyword {md5} or \cfkeyword {smime}. The rule is applied by \Sympa if both condition
+and authentication method match the runtime context. \cfkeyword {smtp} is used if
+\Sympa use the SMTP \cfkeyword {from:} header , \cfkeyword {md5} is used if a unique
+md5 key as been returned by the requestor to validate her message, \cfkeyword {smime}
+is used for signed messages (see \ref {smimeforsign}, page~\pageref {smimeforsign}).
+\item a returned atomic action that will be executed by \Sympa if the rule matches
+
+\end{itemize}
+
+ 
+Example
+
+\begin {quote}
+del.auth
+\begin{verbatim}
+title.us deletion performed only by list owners, need authentication
+title.fr suppression réservée au propriétaire avec authentification
+title.es eliminación reservada sólo para el propietario, necesita autentificación
+
+
+  is_owner([listname],[sender])  smtp       -> request_auth
+  is_listmaster([sender])        smtp       -> request_auth
+  true()                         md5,smime  -> do_it
+\end{verbatim}
+\end {quote}
+
+\section {rules specifications}
+
+An authorization scenario consists of rules, evaluated in order beginning with the first. 
+Rules are defined as follows :
+\begin {quote}
+\begin{verbatim}
+<rule> ::= <condition> <auth_list> -> <action>
+
+<condition> ::= [!] <condition
+                | true ()
+                | all ()
+                | equal (<var>, <var>)
+                | match (<var>, /perl_regexp/)
+                | is_subscriber (<listname>, <var>)
+                | is_owner (<listname>, <var>)
+                | is_editor (<listname>, <var>)
+                | is_listmaster (<var>)
+                | older (<date>, <date>)    # true if first date is anterior to the second date
+                | newer (<date>, <date>)    # true if first date is posterior to the second date
+<var> ::= [email] | [sender] | [user-><user_key_word>] | [previous_email]
+                  | [remote_host] | [remote_addr]
+	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
+		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
+	 	  | [msg_part->type] | [msg_part->body] | [is_bcc] | [current_date] | <string>
+
+[is_bcc] ::= set to 1 if the list is neither in To: nor Cc:
+
+[sender] ::= email address of the current user (used on web or mail interface). Default value is 'nobody'
+
+[previous_email] ::= old email when changing subscribtion email in preference page. 
+
+<date> ::= '<date_element> [ +|- <date_element>]'
+
+<date_element> ::= <epoch_date> | <var> | <date_expr>
+
+<epoch_date> ::= <integer>
+
+<date_expr> ::= <integer>y<integer>m<integer>d<integer>h<integer>min<integer>sec
+
+<listname> ::= [listname] | <listname_string>
+
+<auth_list> ::= <auth>,<auth_list> | <auth>
+
+<auth> ::= smtp|md5|smime
+
+<action> ::=   do_it [,notify]
+             | do_it [,quiet]
+             | reject(<tpl_name>)
+             | request_auth
+             | owner
+	     | editor
+	     | editorkey
+
+<tpl_name> ::= corresponding template (<tpl_name>.tpl) is send to the sender
+
+<user_key_word> ::= email | gecos | lang | password | cookie_delay_user
+	            | <additional_user_fields>
+
+<subscriber_key_word> ::= email | gecos | bounce | reception 
+	                  | visibility | date | update_date
+			  | <additional_subscriber_fields>
+
+<list_key_word> ::= name | host | lang | max_size | priority | reply_to | 
+		    status | subject | account | total
+
+<conf_key_word> ::= domain | email | listmaster | default_list_priority | 
+		      sympa_priority | request_priority | lang | max_size
+	 	      
+\end{verbatim}
+\end {quote}
+
+(Refer to  \ref {tasks}, page~\pageref {tasks} for date format definition)
+
+perl\_regexp can contain the string [host] (interpreted at run time as the list or robot domain).
+The variable notation [msg\_header-\texttt{>}\texttt{<}smtp\_key\_word\texttt{>}] is interpreted as the 
+SMTP header value only when evaluating the authorization scenario for sending messages. 
+It can be used, for example, to require editor validation for multipart messages.
+[msg\_part-\texttt{>}type] and [msg\_part-\texttt{>}body] are the MIME parts content-types and bodies ; the body is available
+for MIME parts in text/xxx format only.
+
+
+A bunch of authorization scenarios is provided with the \Sympa distribution ; they provide
+a large set of configuration that allow to create lists for most usage. But you will
+probably create authorization scenarios for your own need. In this case, don't forget to restart \Sympa
+and wwsympa because authorization scenarios are not reloaded dynamicaly.
+
+These standard authorization scenarios are located in the \dir {/home/sympa/bin/etc/scenari/}
+directory. Default scenarios are named \texttt{<}command\texttt{>}.default.
+
+You may also define and name your own authorization scenarios. Store them in the
+\dir {/home/sympa/etc/scenari} directory. They will not be overwritten by Sympa release.
+Scenarios can also be defined for a particular virtual robot (using directory \dir {/home/sympa/etc/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {/home/sympa/expl/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ).
+
+Example:
+
+Copy the previous scenario to \file {scenari/subscribe.rennes1} :
+
+\begin {quote}
+\begin{verbatim}
+equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -> reject
+match([sender], /univ-rennes1\.fr\$/) smtp,smime -> do_it
+true()                               smtp,smime -> owner
+\end{verbatim}
+\end {quote}
+
+You may now refer to this authorization scenario in any list configuration file, for example :
+
+\begin {quote}
+\begin{verbatim}
+subscribe rennes1
+\end{verbatim}
+\end {quote}
+
+\section {LDAP Named Filters}
+\label {named-filters}
+
+At the moment Named Filters are only used in authorization scenarios. They enable to select a category of people who will be authorized or not to realise some actions.
 	
-As a consequence, you can grant privileges in a list to people belonging to an \index {LDAP} directory thanks to a scenario.
+As a consequence, you can grant privileges in a list to people belonging to an \index {LDAP} directory thanks to an authorization scenario.
 	
 \subsection {Definition}
 
-	People are selected through an \index {LDAP filter} defined in a configuration file. This file must have the extension '.ldap'.It is stored in \dir {/home/sympa/etc/search\_filters/}.
+	People are selected through an \index {LDAP filter} defined in a configuration file. This file must have the extension '.ldap'.It is stored in \dir {[ETCDIR]/search\_filters/}.
 	
 	You must give several informations in order to create a Named Filter:
 \begin{itemize}
@@ -3438,6 +3687,7 @@ As a consequence, you can grant privileges in a list to people belonging to an \
 	\item{suffix}\\
 	Defines the naming space covered by the search (optional, depending on the LDAP server).
 
+[STOPPARSE]
 	\item{filter}\\
 	Defines the LDAP search filter (RFC 2254 compliant). 
 	But you must absolutely take into account the first part of the filter which is:
@@ -3475,7 +3725,7 @@ example.ldap : we want to select the professors of mathematics in the university
 
 \subsection {Search Condition}
 	
-The search condition is used in scenarii which are defined and  decribed in (see~\ref {scenarii}) 
+The search condition is used in authorization scenarios which are defined and described in (see~\ref {scenarios}) 
 
 The syntax of this rule is:
 \begin {quote}
@@ -3493,247 +3743,50 @@ The variables used by 'search' are :
  
 The method of authentication does not change.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SMIME
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section {scenario inclusion}
 
-
-\cleardoublepage
-\chapter {\Sympa with S/MIME and HTTPS}
-    \label {smime}
-
-S/MIME is a cryptographic method for Mime messages based on X509 certificates.
-Before installing \Sympa S/Mime features (which we call S/Sympa), you should be
-under no illusion about what the S stands for : ``S/MIME'' means ``Secure MIME''.
-That S certainly does not stand for ``Simple''.
-
-The aim of this chapter is simply to describe what security level is provided
-by \Sympa while
-using S/MIME messages, and how to configure \Sympa for it. It is not intended
-to teach anyone what S/Mime is and why it is so complex ! RFCs numbers 2311,
-2312, 2632, 2633 and 2634, along with a lot of literature about S/MIME, PKCS\#7
-and PKI is available on the Internet. \Sympa 2.7 is the first version of
-\Sympa to include S/MIME features as beta-testing features.
-
-\section {Signed message distribution}
-
-No action required.
-You probably imagine that any mailing list manager (or any mail forwarder)
-is compatible with S/MIME signatures, as long as it respects the MIME structure of
-incoming messages. You are right. Even Majordomo can distribute a signed message!
-As \Sympa provides MIME compatibility, you don't need to do
-anything in order to allow subscribers to verify signed messages distributed
-through a list. This is not an issue at all, since any processe that
-distributes messages  is compatible with end user
-signing processes. Sympa simply skips the message footer attachment
-(ref \ref {messagefooter}, page~\pageref {messagefooter}) to prevent any
-body corruption which would break the signature.
-
-\section {Use of S/MIME signature by Sympa itself}
-
-Sympa is able to verify S/MIME signatures in order to apply S/MIME
-authentication methods for message handling. 
-Currently, this feature is limited to the
-distribution process, and to any commands \Sympa might find in the message
-body.  The reasons for this restriction are related to current S/MIME
-usage.
-S/MIME signature structure is based on the encryption of a digest of the
-message. Most S/MIME agents do not include any part of the
-message headers in the message digest, so anyone can modify the message
-header without signature corruption! This is easy to do : for example, anyone
-can edit a signed message with their preferred message agent, modify whatever
-header they want (for example \texttt {Subject:} , \texttt {Date:} and
-\texttt {To:}, and redistribute the message to a list or to the robot
-without breaking the signature.
-
-So Sympa cannot apply the S/MIME
-authentication method to a command parsed in the \texttt {Subject:} field of a
-message or via the \texttt {-subscribe} or \texttt {-unsubscribe} e-mail
-address. 
-
-\section {Use of S/MIME encryption} 
-
-S/Sympa is not an implementation of the ``S/MIME Symmetric Key Distribution''
-internet draft. This sophisticated scheme is required for large lists
-with encryption. So, there is still some scope for future developments :) 
-
-
-We assume that S/Sympa distributes message as received, i.e. unencrypted when the
-list receives an unencrypted message, but otherwise encrypted.
-
-In order to be able to send encrypted messages to a list, the sender needs
-to use the X509 certificate of the list. Sympa will send an encrypted message
-to each subscriber using the subscriber's certificate. To provide this feature,
-\Sympa needs to manage one certificate for each list and one for each
-subscriber. This is available in Sympa version 2.8 and above.
-
-\section {S/Sympa configuration} 
-
-\subsection {Installation}
-\label {smimeinstall}
-
-The only requirement is OpenSSL (http://www.openssl.org) version 0.9.5a and above.
-OpenSSL is used by \Sympa as an external plugin
-(like sendmail or postfix), so it must be installed with the appropriate access
-(x for sympa.sympa). 
-
-\subsection {configuration in sympa.conf}
-\label {smimeconf}
-
-S/Sympa configuration is very simple. If you are used to Apache SSL,
-you should not feel lost. If you are an OpenSSL guru, you will
-feel at home, and there may even be changes you will wish to suggest to us.
- 
-The basic requirement is to let \Sympa know where to find the binary file for the OpenSSL program
-and the certificates of the trusted certificate authority. 
-This is done using the optional parameters \unixcmd {openSSL} and
-\cfkeyword {capath} and / or \cfkeyword {cafile}.
-
-\begin{itemize}
-
-  \item \cfkeyword {openSSL} : the path for the OpenSSL binary file,
-         usually \texttt {/usr/local/ssl/bin/openSSL}
-  \item \cfkeyword {cafile} : the path of a bundle of trusted ca certificates. 
-        The file \tildefile {/home/sympa/bin/etc/ca\-bundle.crt} included in Sympa distribution can be used.
-
-	Both the \cfkeyword  {cafile} file and the \cfkeyword {capath} directory
-        should be shared with your Apache+mod\_ssl configuration. This is useful
-	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
-
-  \item \cfkeyword {key\_password} : the password used to protect all list private keys. xxxxxxx	
-\end{itemize}
-
-
-\subsection {configuration to recognize S/MIME signatures}
-\label {smimeforsign}
-
-Once  \texttt {OpenSSL} has been installed, and \texttt {sympa.conf} configured,
-your S/Sympa is ready to use S/Mime signatures for any authentication operation. You simply need
-to use the appropriate scenario for the operation you want to secure. 
-(see \ref {scenarii}, page~\pageref {scenarii}).
-
-When receiving a message, \Sympa applies
-the scenario with the appropriate authentication method parameter.
-In most cases the authentication method is ``\texttt {smtp}'', but in cases
-where the message is signed and the signature has been checked and matches the
-sender e-mail, \Sympa applies the ``\texttt {smime}'' authentication
-method.
-
-It is vital to ensure that if the scenario does not recognize this authentication method, the
-operation requested will be rejected. Consequently, scenarii distributed
-prior to version 2.7 are not compatible with the OpenSSL configuration of Sympa. 
-All
-standard scenarii (those distributed with sympa)
-now include the \texttt {smime} method. The following example is
-named \texttt {send.private\_smime}, and restricts sends to subscribers using an S/mime signature :
+Scenarios can also contain includes :
 
 \begin {quote}
 \begin{verbatim}
-title.us restricted to subscribers check smime signature
-title.fr limité aux abonnés, vérif de la signature smime
-
-is_subscriber([listname],[sender])             smime  -> do_it
-is_editor([listname],[sender])                 smime  -> do_it
-is_owner([listname],[sender])                  smime  -> do_it
+    subscribe
+        include commonreject
+        match(, /cru\.fr$/)          smtp,smime -> do_it
+	true()                               smtp,smime -> owner
 \end{verbatim}
 \end {quote}
+	    
 
-It as also possible to mix various authentication methods in a single scenario. The following
-example, \texttt {send.private\_key}, requires either an md5 return key or an S/Mime signature :
+In this case sympa applies recursively the scenario named \texttt {include.commonreject}
+before introducing the other rules. This possibility was introduced in
+order to facilitate the administration of common rules.
+
+You can define a set of common scenario rules, used by all lists.
+include.\texttt{<}action\texttt{>}.header is automatically added to evaluated scenarios.
+
+
+\section {Sample scenario rules}
+
 \begin {quote}
 \begin{verbatim}
-title.us restricted to subscribers with previous md5 authentication
-title.fr réservé aux abonnés avec authentification MD5 préalable
-
-is_subscriber([listname],[sender]) smtp          -> request_auth
-true()                             md5,smime     -> do_it
+newer(, '+2m')   smtp,md5,smime -> do_it
 \end{verbatim}
 \end {quote}
+Subscription date is less than 2 month old.
 
-\subsection {distributing encrypted messages}
-\label {smimeforencrypt}
-
-In this section we describe S/Sympa encryption features. The goal is to use
-S/MIME encryption for distribution of a message to subscribers whenever the message has been
-received encrypted from the sender. 
-
-Why is S/Sympa concerned by the S/MIME encryption distribution process ?
-It is because encryption is performed using the \textbf {recipient} X509
-certificate, whereas the signature requires the sender's private key. Thus, an encrypted
-message can be read by the recipient only if he or she is the owner of the private
-key associated with the certificate.
-Consequently, the only way to encrypt a message for a list of recipients is
-to encrypt and send the message for each recipient. This is what S/Sympa
-does when distributing an encrypted message.
-
-The S/Sympa encryption feature in the distribution process supposes that sympa
-has received an encrypted message for some list. To be able to encrypt a message
-for a list, the sender must have some access to an X509 certificate for the list.
-So the first requirement is to install a certificate and a private key for
-the list.
-The mechanism whereby certificates are obtained and managed is complex. Current versions
-of S/Sympa assume that list certificates and private keys are installed by
-the listmaster using \dir {/home/sympa/bin/p12topem.pl} script. This script allows
-you to install a PKCS\#12 bundle file containing a private key and
-a certificate using the appropriate format.
-
-It is a good idea to have a look at the OpenCA (http://www.openssl.org)
-documentation and/or PKI providers' web documentation.
-You can use commercial certificates or home-made ones. Of course, the
-certificate must be approved for e-mail applications, and issued by one of
-the trusted CA's described in the \cfkeyword{cafile} file or the
-\cfkeyword{capath} Sympa configuration parameter. 
-
-The list private key must be installed in a file named
-\dir {/home/sympa/expl/\samplelist/private\_key}. All the list private
-keys must be encrypted using a single password defined by the
-\cfkeyword {password} parameter in \cfkeyword {sympa.conf}.
-
-\subsubsection {Use of Netscape navigator to obtain X509 list certificates}
-
-In many cases e-mail X509 certificates are distributed via a web server and
-loaded into the browser using your mouse :) Netscape allows
-certificates to be exported to a file. So one way to get a list certificate is to obtain an e-mail
-certificate for the canonical list address in your browser, and then to export and install it for Sympa :
-\begin {enumerate}
-\item browse the net and load a certificate for the list address on some
-PKI provider (your own OpenCa pki server , thawte, verisign, ...). Be
-careful :  the e-mail certificate must be correspond exactly to the canonical address of
-your  list, otherwise, the signature will be incorrect (sender e-mail will
-not match signer e-mail).
-\item in the security menu, select the intended certificate and export
-it. Netscape will prompt you for a password and a filename to encrypt
-the output file. The format used by Netscape is  ``pkcs\#12''. 
-Copy this file to the list home directory.
-\item convert the pkcs\#12 file into a pair of pem files :
-\cfkeyword {cert.pem} and \cfkeyword {private\_key} using
-the \unixcmd {/home/sympa/bin/p12topem.pl} script. Use \unixcmd
-{p12topem.pl -help} for details.
-\item be sure that \cfkeyword {cert.pem} and \cfkeyword {private\_key}
-are owned by sympa with ``r'' access.
-\item As soon as a certificate is installed for a list, the list  home page
-includes a new link to load the certificate to the user's browser, and the welcome
-message is signed by the list.
-\end {enumerate} 
+\begin {quote}
+\begin{verbatim}
+older(, '')   smtp,md5,smime -> do_it
+\end{verbatim}
+\end {quote}
+Subscriber's expiration date is over.
+The subscriber's expiration date is an additional, site defined, data field ; it needs
+to be defined by the listmaster in the database an declared in sympa.conf 
+(see~\ref {db-additional-subscriber-fields}, page~\pageref {db-additional-subscriber-fields}).
+Note that expiration\_date database field should be an integer (epoch date format) not
+a complex date format.
 
 
-\section {Managing certificates with tasks}
-
-You may automate the management of certificates with two global task models provided with
-\Sympa. See \ref {tasks}, page~\pageref {tasks} to know more about tasks.
-Report to \ref {certificate-task-config}, page~\pageref {certificate-task-config} to configure your \Sympa to use these facilities.
-
-\subsection {chk\_cert\_expiration.daily.task model}
-
-A task created with the model \file {chk\_cert\_expiration.daily.task} checks every day the expiration date of
-certificates stored in the \dir {/home/sympa/expl/X509-user-certs/} directory.
-The user is warned with the \file {daily\_cert\_expiration} template when his certificate has expired
-or is going to expire within three days.
-
-\subsection {crl\_update.daily.task model}
-
-You may use the model \file {crl\_update.daily.task} to create a task which daily updates the certificate revocation
-lists when needed.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Virtual robot how to
@@ -3856,7 +3909,7 @@ environment variable to recognize which robot is in used.
 
 \subsection {Robot customization}
 
-If needed, you can customize each virtual robot using its set of templates and scenario.
+If needed, you can customize each virtual robot using its set of templates and authorization scenarios.
 
 \dir {/home/sympa/etc/\samplerobot/wws\_templates/},
 \dir {/home/sympa/etc/\samplerobot/templates/}, 
@@ -4225,54 +4278,13 @@ See lparam {user\_data\_source} liste parameter \ref {user-data-source}, page~\p
 
 The \textbf {subscriber\_table} and \textbf {user\_table} can have more fields than
 the one used by \Sympa. by defining these additional fields, they will be available
-from within \Sympa's scenario and templates (see \ref {db-additional-subscriber-fields}, 
+from within \Sympa's authorization scenarios and templates (see \ref {db-additional-subscriber-fields}, 
 page~\pageref {db-additional-subscriber-fields} and \ref {db-additional-user-fields}, page~\pageref {db-additional-user-fields}).
 
 
 \section {Sharing \WWSympa authentication with other applications}
 
-You might want to make other web applications collaborate with \Sympa,
-and share the same authentication system. \Sympa uses
-HTTP cookies to carry users' auth information from page to page.
-This cookie carries no information concerning privileges. To make your application
-work with \Sympa, you have two possibilities :
-
-\begin {itemize}
-
-\item Delegating authentication operations to \WWSympa \\
-If you want to avoid spending a lot of time programming a CGI to do Login, Logout
-and Remindpassword, you can copy \WWSympa's login page to your 
-application, and then make use of the cookie information within your application. 
-The cookie format is :
-\begin{verbatim}
-sympauser=<user_email>:<checksum>
-\end{verbatim}
-where \texttt{<}user\_email\texttt{>} is the user's complete e-mail address, and
-\texttt{<}checksum\texttt{>} are the 8 first bytes of the a MD5 checksum of the \texttt{<}user\_email\texttt{>}+\Sympa \cfkeyword {cookie}
-configuration parameter.
-Your application needs to know what the \cfkeyword {cookie} parameter
-is, so it can check the HTTP cookie validity ; this is a secret shared
-between \WWSympa and your application.
-\WWSympa's \textit {loginrequest} page can be called to return to the
-referer URL when an action is performed. Here is a sample HTML anchor :
-
-\begin{verbatim}
-<A HREF="/wws/loginrequest/referer">Login page</A>
-\end{verbatim}
-
-You can also have your own HTML page submitting data to \file {wwsympa.fcgi} CGI. If you're
-doing so, you can set the \texttt {referer} variable to another URI. You can also
-set the \texttt {failure\_referer} to make WWSympa redirect the client to a different
-URI if login fails.
-
-\item Using \WWSympa's HTTP cookie format within your auth module \\
-To cooperate with \WWSympa, you simply need to adopt its HTTP
-cookie format and share the secret it uses to generate MD5 checksums,
-i.e. the \cfkeyword {cookie} configuration parameter. In this way, \WWSympa
-will accept users authenticated through your application without
-further authentication.
-
-\end {itemize}
+See \ref {sharing-auth}, page~\pageref {sharing-auth}.
 
 
 \section {Internationalization}
@@ -4368,216 +4380,16 @@ You will notice that subtopics can be used, the separator being \textit {/}.
 The topic name is composed of alphanumerics (0-1a-zA-Z) or underscores (\_).
 The order in which the topics are listed is respected in \WWSympa's homepage.
 The \textbf {visibility} line defines who can view the topic (now available for subtopics).
-It refers to the associated topics\_visibility scenario.
+It refers to the associated topics\_visibility authorization scenario.
 You will find a sample \file {topics.conf} in the \dir {sample} 
 directory ; NONE is installed as the default. 
 
 A default topic is hard-coded in \Sympa : \textit {default}. This default topic
 contains all lists for which a topic has not been specified.
 
-\section {Scenarii}
-    \label {scenarii}
-    \index{scenario}
+\section {Authorization scenarios}
 
-List parameters controlling the behavior of commands are linked to different scenarii.
-For example : the \cfkeyword {send private} parameter is related to the send.private scenario.
-There are three possible locations for a scenario. When \Sympa seeks to apply a scenario, it
-looks first in the related list directory \dir {/home/sympa/expl/\texttt{<}list\texttt{>}/scenari}. If it
-does not find the file there, it scans \dir {/home/sympa/etc/scenari},
-and finally \dir {/home/sympa/bin/etc/scenari}, which is the directory installed by the Makefile.
-
-A scenario is a small configuration language to describe who
-can perform an operation and which authentication method is requested for it.
-A scenario is an ordered set of rules. The goal is to provide a simple and
-flexible way to configure authorization and authentication for each operation.
-
-
-Each scenario rule contains :
-\begin{itemize}
-\item a condition : the condition is evaluated by \Sympa. It can use
-  variables such as $[$sender$]$ for the sender e-mail, $[$list$]$ for the listname etc.
-\item an authentication method. The authentication method can be \cfkeyword {smtp},
-\cfkeyword {md5} or \cfkeyword {smime}. The rule is applied by \Sympa if both condition
-and authentication method match the runtime context. \cfkeyword {smtp} is used if
-\Sympa use the SMTP \cfkeyword {from:} header , \cfkeyword {md5} is used if a unique
-md5 key as been returned by the requestor to validate her message, \cfkeyword {smime}
-is used for signed messages (see \ref {smimeforsign}, page~\pageref {smimeforsign}).
-\item a returned atomic action that will be executed by \Sympa if the rule matches
-
-\end{itemize}
-
- 
-Example
-
-\begin {quote}
-del.auth
-\begin{verbatim}
-title.us deletion performed only by list owners, need authentication
-title.fr suppression réservée au propriétaire avec authentification
-title.es eliminación reservada sólo para el propietario, necesita autentificación
-
-
-  is_owner([listname],[sender])  smtp       -> request_auth
-  is_listmaster([sender])        smtp       -> request_auth
-  true()                         md5,smime  -> do_it
-\end{verbatim}
-\end {quote}
-
-\subsection {rules specifications}
-
-A scenario consists of rules, evaluated in order beginning with the first. 
-Rules are defined as follows :
-\begin {quote}
-\begin{verbatim}
-<rule> ::= <condition> <auth_list> -> <action>
-
-<condition> ::= [!] <condition
-                | true ()
-                | all ()
-                | equal (<var>, <var>)
-                | match (<var>, /perl_regexp/)
-                | is_subscriber (<listname>, <var>)
-                | is_owner (<listname>, <var>)
-                | is_editor (<listname>, <var>)
-                | is_listmaster (<var>)
-                | older (<date>, <date>)    # true if first date is anterior to the second date
-                | newer (<date>, <date>)    # true if first date is posterior to the second date
-<var> ::= [email] | [sender] | [user-><user_key_word>] | [previous_email]
-                  | [remote_host] | [remote_addr]
-	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
-		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
-	 	  | [msg_part->type] | [msg_part->body] | [is_bcc] | [current_date] | <string>
-
-[is_bcc] ::= set to 1 if the list is neither in To: nor Cc:
-
-[sender] ::= email address of the current user (used on web or mail interface). Default value is 'nobody'
-
-[previous_email] ::= old email when changing subscribtion email in preference page. 
-
-<date> ::= '<date_element> [ +|- <date_element>]'
-
-<date_element> ::= <epoch_date> | <var> | <date_expr>
-
-<epoch_date> ::= <integer>
-
-<date_expr> ::= <integer>y<integer>m<integer>d<integer>h<integer>min<integer>sec
-
-<listname> ::= [listname] | <listname_string>
-
-<auth_list> ::= <auth>,<auth_list> | <auth>
-
-<auth> ::= smtp|md5|smime
-
-<action> ::=   do_it [,notify]
-             | do_it [,quiet]
-             | reject(<tpl_name>)
-             | request_auth
-             | owner
-	     | editor
-	     | editorkey
-
-<tpl_name> ::= corresponding template (<tpl_name>.tpl) is send to the sender
-
-<user_key_word> ::= email | gecos | lang | password | cookie_delay_user
-	            | <additional_user_fields>
-
-<subscriber_key_word> ::= email | gecos | bounce | reception 
-	                  | visibility | date | update_date
-			  | <additional_subscriber_fields>
-
-<list_key_word> ::= name | host | lang | max_size | priority | reply_to | 
-		    status | subject | account | total
-
-<conf_key_word> ::= domain | email | listmaster | default_list_priority | 
-		      sympa_priority | request_priority | lang | max_size
-	 	      
-\end{verbatim}
-\end {quote}
-
-(Refer to  \ref {tasks}, page~\pageref {tasks} for date format definition)
-
-perl\_regexp can contain the string [host] (interpreted at run time as the list or robot domain).
-The variable notation [msg\_header-\texttt{>}\texttt{<}smtp\_key\_word\texttt{>}] is interpreted as the SMTP header value only when performing
-the sending message scenario. It can be used, for example, to require editor validation for multipart messages.
-[msg\_part-\texttt{>}type] and [msg\_part-\texttt{>}body] are the MIME parts content-types and bodies ; the body is available
-for MIME parts in text/xxx format only.
-
-
-A bunch of scenarii is provided with the \Sympa distribution ; they provide
-a large set of configuration that allow to create lists for most usage. But you will
-probably create scenarii for your own need. In this case, don't forget to restart \Sympa
-and wwsympa because scenarii are not reloaded dynamicaly.
-
-These standard scenarii are located in the \dir {/home/sympa/bin/etc/scenari/}
-directory. Default scenarii are named \texttt{<}command\texttt{>}.default.
-
-You may also define and name your own scenarii. Store them in the
-\dir {/home/sympa/etc/scenari} directory. They will not be overwritten by Sympa release.
-Scenarii can also be defined for a particular virtual robot (using directory \dir {/home/sympa/etc/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {/home/sympa/expl/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ).
-
-Example:
-
-Copy the previous scenario to \file {scenari/subscribe.rennes1} :
-
-\begin {quote}
-\begin{verbatim}
-equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -> reject
-match([sender], /univ-rennes1\.fr\$/) smtp,smime -> do_it
-true()                               smtp,smime -> owner
-\end{verbatim}
-\end {quote}
-
-You may now refer to this scenario in any list configuration file, for example :
-
-\begin {quote}
-\begin{verbatim}
-subscribe rennes1
-\end{verbatim}
-\end {quote}
-
-\subsection {scenario inclusion}
-
-Scenarii can also contain includes :
-
-\begin {quote}
-\begin{verbatim}
-    subscribe
-        include commonreject
-        match([sender], /cru\.fr$/)          smtp,smime -> do_it
-	true()                               smtp,smime -> owner
-\end{verbatim}
-\end {quote}
-	    
-
-In this case sympa applies recursively the scenario named \texttt {include.commonreject}
-before introducing the other rules. This possibility was introduced in
-order to facilitate the administration of common rules.
-
-You can define a set of common scenario rules, used by all lists.
-include.\texttt{<}action\texttt{>}.header is automatically added to evaluated scenarios.
-
-
-\section {Sample scenario rules}
-
-\begin {quote}
-\begin{verbatim}
-newer([current_date], '[subscriber->date]+2m')   smtp,md5,smime -> do_it
-\end{verbatim}
-\end {quote}
-Subscription date is less than 2 month old.
-
-\begin {quote}
-\begin{verbatim}
-older([current_date], '[subscriber->expiration_date]')   smtp,md5,smime -> do_it
-\end{verbatim}
-\end {quote}
-Subscriber's expiration date is over.
-The subscriber's expiration date is an additional, site defined, data field ; it needs
-to be defined by the listmaster in the database an declared in sympa.conf 
-(see~\ref {db-additional-subscriber-fields}, page~\pageref {db-additional-subscriber-fields}).
-Note that expiration\_date database field should be an integer (epoch date format) not
-a complex date format.
-
+See \ref {scenarios}, page~\pageref {scenarios}.
 
 \section {Loop detection}
     \label {loop-detection}
@@ -4728,7 +4540,7 @@ Here is the list of current avalable commands :
 	Send the template message to emails stored in @user\_selection.
 \item {\at}user\_selection = select\_subs (\texttt{<}condition\texttt{>})
 
-	Store emails which match the condition in @user\_selection. See 8.6 Scenarii section to know how to write conditions. Only available for list models.
+	Store emails which match the condition in @user\_selection. See 8.6 Authorization Scenarios section to know how to write conditions. Only available for list models.
 \item create (global | list (\texttt{<}list name\texttt{>}), \texttt{<}model type\texttt{>}, \texttt{<}model\texttt{>})
 
 	Create a task for object with model file \tildefile {model type.model.task}.
@@ -5218,7 +5030,7 @@ is defined in \file {sympa.conf} but in the future, it might be possible to
 define one listmaster per virtual robot. By default, newly created
 lists must be activated by the listmaster. List creation is possible for all intranet users 
 (i.e. : users with an e-mail address within the same domain as Sympa).
-This is controlled by the \cfkeyword {create\_list} scenario.
+This is controlled by the \cfkeyword {create\_list} authorization scenario.
 
 List creation request message and list creation notification message are both
 templates that you can customize (\file {create\_list\_request.tpl} and
@@ -5227,15 +5039,15 @@ templates that you can customize (\file {create\_list\_request.tpl} and
 \subsection {Who can create lists}
 
 This is defined by the \cfkeyword {create\_list} sympa.conf parameter (see \ref {create-list},  
-page~\pageref {create-list}). This parameter refers to a \textbf {create\_list} scenario.
+page~\pageref {create-list}). This parameter refers to a \textbf {create\_list} authorization scenario.
 It will determine if the \textit {create list} button is displayed and if it requires
 a listmaster confirmation.
 
-The scenario can accept any condition concerning the [sender]
+The authorization scenario can accept any condition concerning the [sender]
 (i.e. WWSympa user), and it returns \cfkeyword {reject}, \cfkeyword {do\_it}
 or \cfkeyword {listmaster} as an action.
 
-Only in cases where a user is authorized by the create\_list scenario
+Only in cases where a user is authorized by the create\_list authorization scenario
 will the "create" button be available in the main menu.
 If the scenario returns \cfkeyword {do\_it}, the list will be created and installed.
 If the scenario returns "listmaster", the user is allowed to create a list, but
@@ -5691,7 +5503,7 @@ list. Be careful, however, not to give rise an infinite loop making cross includ
 For this operation, one \Sympa site act as a server while the other one
 act as client. On the server side, the only  setting needed is to
 give permition to the remote \Sympa to review the list. This is controled
-by the review scenario. 
+by the review authorization scenario. 
 
 From the client side you must define the remote list dump URI.
 
@@ -6189,7 +6001,7 @@ The file should contain one e-mail address per line
 	\scenarized {subscribe}
 
 The \lparam {subscribe} parameter defines the rules for subscribing to the list. 
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 \begin {itemize}
 
@@ -6278,7 +6090,7 @@ requires S/MIME signed or owner approval
 This parameter specifies the unsubscription method for the list.
 Use \texttt {open\_notify} or \texttt {auth\_notify} to allow owner
 notification of each unsubscribe command. 
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 \begin {itemize}
      \item \lparam {unsubscribe} \texttt {auth} 
@@ -6327,7 +6139,7 @@ Predefined scenarii are :
 	\scenarized {add}
 
 This parameter specifies who is authorized to use the \mailcmd {ADD} command.
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 
 \begin {itemize}
@@ -6366,7 +6178,7 @@ Predefined scenarii are :
 	\scenarized {del}
 
 This parameter specifies who is authorized to use the \mailcmd {DEL} command.
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 
 \begin {itemize}
@@ -6405,7 +6217,7 @@ Predefined scenarii are :
 	\scenarized {remind}
 
 This parameter specifies who is authorized to use the \mailcmd {remind} command.
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 
 \begin {itemize}
@@ -6457,7 +6269,7 @@ expire annual
 	\scenarized {send}
 
 This parameter specifies who can send messages to the list. Valid values for this
-parameter are pointers to \emph {scenarii}.
+parameter are pointers to \emph {scenarios}.
 
 \begin {itemize}
      \item \lparam {send} \texttt {closed} 
@@ -6519,6 +6331,18 @@ parameter are pointers to \emph {scenarii}.
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.private})
 	\end {htmlonly}\\
 	restricted to subscribers
+
+     \item \lparam {send} \texttt {private\_or\_auth} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.private\_or\_auth})
+	\end {htmlonly}\\
+	Confirmation for non subscribers ; then moderation
+
+     \item \lparam {send} \texttt {private\_or\_auth\_and\_editorkey} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.private\_or\_auth\_and\_editorkey})
+	\end {htmlonly}\\
+	Confirmation for non subscribers ; then moderation
 
      \item \lparam {send} \texttt {private\_smime} 
 	\begin {htmlonly}
@@ -6606,7 +6430,7 @@ This parameter specifies who can use
 \mailcmd {REVIEW} (see~\ref {cmd-review}, page~\pageref {cmd-review}),
 administrative requests. 
 
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 \begin {itemize}
      \item \lparam {review} \texttt {closed} 
@@ -6664,7 +6488,7 @@ repository.
 This parameter specifies who can read shared documents
 (access the contents of a list's \dir {shared} directory).
 
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 \begin {itemize}
      \item \lparam {d\_read} \texttt {owner} 
@@ -6698,7 +6522,7 @@ This parameter specifies who can perform changes
 within a list's \dir {shared} directory (i.e. upload files
 and create subdirectories).
 
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 \begin {itemize}
      \item \lparam {d\_edit} \texttt {owner} 
@@ -7254,7 +7078,7 @@ quota 1000
 
     \scenarized {access\_web\_archive}
 
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 \begin {itemize}
      \item \lparam {access} \texttt {closed} 
@@ -7481,8 +7305,8 @@ access
 \end{verbatim}
 \end {quote}
 
-\section {The predefined scenarii}
-    \label {shared-scenarii}
+\section {The predefined authorization scenarios}
+    \label {shared-scenarios}
 
 \subsection {The public scenario}
 The \textbf {public} scenario is the most permissive scenario. It enables anyone (including
@@ -7535,7 +7359,7 @@ The access control will proceed as follows :
 	To be authorized to perform a read action on
 	\dir {mydirectory/mysubdirectory/myfile}, \textbf {X} must be
 	authorized to read every document making up the path; in other words, she
-	must be allowed to read \dir {myfile} (the scenario of the description file
+	must be allowed to read \dir {myfile} (the authorization scenario of the description file
 	of \dir {myfile} must return \textit {do\_it} for user \textbf {X}), and the
 	same goes for \dir {mysubdirectory} and \dir {mydirectory}).\\
 	In addition, given that the owner of a document or one of its parent directories
@@ -7785,6 +7609,273 @@ When a virus is detected, \Sympa looks for the virus name in the virus scanner S
 \file {your\_infected\_msg.tpl} warning to the sender of the mail.
 The mail is saved as 'bad' and the working directory is deleted (except if \Sympa is running in debug mode).
   
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Using Sympa with LDAP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Using \Sympa with LDAP}
+\label {ldap}
+
+\index {LDAP} is a client-server protocol for accessing a directory service. Sympa
+provide various features based on access to one or more LDAP directories :
+
+\begin{itemize}
+
+	\item{authentication using LDAP directory instead of sympa internal storage of password}\\
+	  see ~\ref {auth-conf}, page~\pageref {auth-conf}
+
+	\item{named filters used in authorization scenario condition}\\ 
+	  see ~\ref {named-filters}, page~\pageref {named-filters}
+	
+ 	\item{LDAP extraction of list subscribers (see ~\ref {par-user-data-source})}\\         
+	
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SMIME
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\cleardoublepage
+\chapter {\Sympa with S/MIME and HTTPS}
+    \label {smime}
+
+S/MIME is a cryptographic method for Mime messages based on X509 certificates.
+Before installing \Sympa S/Mime features (which we call S/Sympa), you should be
+under no illusion about what the S stands for : ``S/MIME'' means ``Secure MIME''.
+That S certainly does not stand for ``Simple''.
+
+The aim of this chapter is simply to describe what security level is provided
+by \Sympa while
+using S/MIME messages, and how to configure \Sympa for it. It is not intended
+to teach anyone what S/Mime is and why it is so complex ! RFCs numbers 2311,
+2312, 2632, 2633 and 2634, along with a lot of literature about S/MIME, PKCS\#7
+and PKI is available on the Internet. \Sympa 2.7 is the first version of
+\Sympa to include S/MIME features as beta-testing features.
+
+\section {Signed message distribution}
+
+No action required.
+You probably imagine that any mailing list manager (or any mail forwarder)
+is compatible with S/MIME signatures, as long as it respects the MIME structure of
+incoming messages. You are right. Even Majordomo can distribute a signed message!
+As \Sympa provides MIME compatibility, you don't need to do
+anything in order to allow subscribers to verify signed messages distributed
+through a list. This is not an issue at all, since any processe that
+distributes messages  is compatible with end user
+signing processes. Sympa simply skips the message footer attachment
+(ref \ref {messagefooter}, page~\pageref {messagefooter}) to prevent any
+body corruption which would break the signature.
+
+\section {Use of S/MIME signature by Sympa itself}
+    \label {smime-sig}
+
+Sympa is able to verify S/MIME signatures in order to apply S/MIME
+authentication methods for message handling. 
+Currently, this feature is limited to the
+distribution process, and to any commands \Sympa might find in the message
+body.  The reasons for this restriction are related to current S/MIME
+usage.
+S/MIME signature structure is based on the encryption of a digest of the
+message. Most S/MIME agents do not include any part of the
+message headers in the message digest, so anyone can modify the message
+header without signature corruption! This is easy to do : for example, anyone
+can edit a signed message with their preferred message agent, modify whatever
+header they want (for example \texttt {Subject:} , \texttt {Date:} and
+\texttt {To:}, and redistribute the message to a list or to the robot
+without breaking the signature.
+
+So Sympa cannot apply the S/MIME
+authentication method to a command parsed in the \texttt {Subject:} field of a
+message or via the \texttt {-subscribe} or \texttt {-unsubscribe} e-mail
+address. 
+
+\section {Use of S/MIME encryption} 
+
+S/Sympa is not an implementation of the ``S/MIME Symmetric Key Distribution''
+internet draft. This sophisticated scheme is required for large lists
+with encryption. So, there is still some scope for future developments :) 
+
+
+We assume that S/Sympa distributes message as received, i.e. unencrypted when the
+list receives an unencrypted message, but otherwise encrypted.
+
+In order to be able to send encrypted messages to a list, the sender needs
+to use the X509 certificate of the list. Sympa will send an encrypted message
+to each subscriber using the subscriber's certificate. To provide this feature,
+\Sympa needs to manage one certificate for each list and one for each
+subscriber. This is available in Sympa version 2.8 and above.
+
+\section {S/Sympa configuration} 
+
+\subsection {Installation}
+\label {smimeinstall}
+
+The only requirement is OpenSSL (http://www.openssl.org) version 0.9.5a and above.
+OpenSSL is used by \Sympa as an external plugin
+(like sendmail or postfix), so it must be installed with the appropriate access
+(x for sympa.sympa). 
+
+\subsection {configuration in sympa.conf}
+\label {smimeconf}
+
+S/Sympa configuration is very simple. If you are used to Apache SSL,
+you should not feel lost. If you are an OpenSSL guru, you will
+feel at home, and there may even be changes you will wish to suggest to us.
+ 
+The basic requirement is to let \Sympa know where to find the binary file for the OpenSSL program
+and the certificates of the trusted certificate authority. 
+This is done using the optional parameters \unixcmd {openSSL} and
+\cfkeyword {capath} and / or \cfkeyword {cafile}.
+
+\begin{itemize}
+
+  \item \cfkeyword {openSSL} : the path for the OpenSSL binary file,
+         usually \texttt {/usr/local/ssl/bin/openSSL}
+  \item \cfkeyword {cafile} : the path of a bundle of trusted ca certificates. 
+        The file \tildefile {/home/sympa/bin/etc/ca\-bundle.crt} included in Sympa distribution can be used.
+
+	Both the \cfkeyword  {cafile} file and the \cfkeyword {capath} directory
+        should be shared with your Apache+mod\_ssl configuration. This is useful
+	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
+
+  \item \cfkeyword {key\_password} : the password used to protect all list private keys. xxxxxxx	
+\end{itemize}
+
+
+\subsection {configuration to recognize S/MIME signatures}
+\label {smimeforsign}
+
+Once  \texttt {OpenSSL} has been installed, and \texttt {sympa.conf} configured,
+your S/Sympa is ready to use S/Mime signatures for any authentication operation. You simply need
+to use the appropriate authorization scenario for the operation you want to secure. 
+(see \ref {scenarios}, page~\pageref {scenarios}).
+
+When receiving a message, \Sympa applies
+the authorization scenario with the appropriate authentication method parameter.
+In most cases the authentication method is ``\texttt {smtp}'', but in cases
+where the message is signed and the signature has been checked and matches the
+sender e-mail, \Sympa applies the ``\texttt {smime}'' authentication
+method.
+
+It is vital to ensure that if the authorization scenario does not recognize this authentication method, the
+operation requested will be rejected. Consequently, authorization scenarios distributed
+prior to version 2.7 are not compatible with the OpenSSL configuration of Sympa. 
+All
+standard authorization scenarios (those distributed with sympa)
+now include the \texttt {smime} method. The following example is
+named \texttt {send.private\_smime}, and restricts sends to subscribers using an S/mime signature :
+
+\begin {quote}
+\begin{verbatim}
+title.us restricted to subscribers check smime signature
+title.fr limité aux abonnés, vérif de la signature smime
+
+is_subscriber([listname],[sender])             smime  -> do_it
+is_editor([listname],[sender])                 smime  -> do_it
+is_owner([listname],[sender])                  smime  -> do_it
+\end{verbatim}
+\end {quote}
+
+It as also possible to mix various authentication methods in a single authorization scenario. The following
+example, \texttt {send.private\_key}, requires either an md5 return key or an S/Mime signature :
+\begin {quote}
+\begin{verbatim}
+title.us restricted to subscribers with previous md5 authentication
+title.fr réservé aux abonnés avec authentification MD5 préalable
+
+is_subscriber([listname],[sender]) smtp          -> request_auth
+true()                             md5,smime     -> do_it
+\end{verbatim}
+\end {quote}
+
+\subsection {distributing encrypted messages}
+\label {smimeforencrypt}
+
+In this section we describe S/Sympa encryption features. The goal is to use
+S/MIME encryption for distribution of a message to subscribers whenever the message has been
+received encrypted from the sender. 
+
+Why is S/Sympa concerned by the S/MIME encryption distribution process ?
+It is because encryption is performed using the \textbf {recipient} X509
+certificate, whereas the signature requires the sender's private key. Thus, an encrypted
+message can be read by the recipient only if he or she is the owner of the private
+key associated with the certificate.
+Consequently, the only way to encrypt a message for a list of recipients is
+to encrypt and send the message for each recipient. This is what S/Sympa
+does when distributing an encrypted message.
+
+The S/Sympa encryption feature in the distribution process supposes that sympa
+has received an encrypted message for some list. To be able to encrypt a message
+for a list, the sender must have some access to an X509 certificate for the list.
+So the first requirement is to install a certificate and a private key for
+the list.
+The mechanism whereby certificates are obtained and managed is complex. Current versions
+of S/Sympa assume that list certificates and private keys are installed by
+the listmaster using \dir {/home/sympa/bin/p12topem.pl} script. This script allows
+you to install a PKCS\#12 bundle file containing a private key and
+a certificate using the appropriate format.
+
+It is a good idea to have a look at the OpenCA (http://www.openssl.org)
+documentation and/or PKI providers' web documentation.
+You can use commercial certificates or home-made ones. Of course, the
+certificate must be approved for e-mail applications, and issued by one of
+the trusted CA's described in the \cfkeyword{cafile} file or the
+\cfkeyword{capath} Sympa configuration parameter. 
+
+The list private key must be installed in a file named
+\dir {/home/sympa/expl/\samplelist/private\_key}. All the list private
+keys must be encrypted using a single password defined by the
+\cfkeyword {password} parameter in \cfkeyword {sympa.conf}.
+
+\subsubsection {Use of Netscape navigator to obtain X509 list certificates}
+
+In many cases e-mail X509 certificates are distributed via a web server and
+loaded into the browser using your mouse :) Netscape allows
+certificates to be exported to a file. So one way to get a list certificate is to obtain an e-mail
+certificate for the canonical list address in your browser, and then to export and install it for Sympa :
+\begin {enumerate}
+\item browse the net and load a certificate for the list address on some
+PKI provider (your own OpenCa pki server , thawte, verisign, ...). Be
+careful :  the e-mail certificate must be correspond exactly to the canonical address of
+your  list, otherwise, the signature will be incorrect (sender e-mail will
+not match signer e-mail).
+\item in the security menu, select the intended certificate and export
+it. Netscape will prompt you for a password and a filename to encrypt
+the output file. The format used by Netscape is  ``pkcs\#12''. 
+Copy this file to the list home directory.
+\item convert the pkcs\#12 file into a pair of pem files :
+\cfkeyword {cert.pem} and \cfkeyword {private\_key} using
+the \unixcmd {/home/sympa/bin/p12topem.pl} script. Use \unixcmd
+{p12topem.pl -help} for details.
+\item be sure that \cfkeyword {cert.pem} and \cfkeyword {private\_key}
+are owned by sympa with ``r'' access.
+\item As soon as a certificate is installed for a list, the list  home page
+includes a new link to load the certificate to the user's browser, and the welcome
+message is signed by the list.
+\end {enumerate} 
+
+
+\section {Managing certificates with tasks}
+
+You may automate the management of certificates with two global task models provided with
+\Sympa. See \ref {tasks}, page~\pageref {tasks} to know more about tasks.
+Report to \ref {certificate-task-config}, page~\pageref {certificate-task-config} to configure your \Sympa to use these facilities.
+
+\subsection {chk\_cert\_expiration.daily.task model}
+
+A task created with the model \file {chk\_cert\_expiration.daily.task} checks every day the expiration date of
+certificates stored in the \dir {/home/sympa/expl/X509-user-certs/} directory.
+The user is warned with the \file {daily\_cert\_expiration} template when his certificate has expired
+or is going to expire within three days.
+
+\subsection {crl\_update.daily.task model}
+
+You may use the model \file {crl\_update.daily.task} to create a task which daily updates the certificate revocation
+lists when needed.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Using Sympa commands

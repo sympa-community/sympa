@@ -9,8 +9,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>7. Sympa and its database</TITLE>
-<META NAME="description" CONTENT="7. Sympa and its database">
+<TITLE>7. WWSympa, Sympa's web interface</TITLE>
+<META NAME="description" CONTENT="7. WWSympa, Sympa's web interface">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -29,32 +29,32 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html808"
+<A NAME="tex2html813"
   HREF="node9.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html802"
+<A NAME="tex2html807"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html796"
+<A NAME="tex2html801"
   HREF="node7.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html804"
+<A NAME="tex2html809"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html806"
-  HREF="node20.html">
+<A NAME="tex2html811"
+  HREF="node22.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html809"
-  HREF="node9.html">8. Using Sympa with LDAP</A>
-<B> Up:</B> <A NAME="tex2html803"
+<B> Next:</B> <A NAME="tex2html814"
+  HREF="node9.html">8. Authentication</A>
+<B> Up:</B> <A NAME="tex2html808"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html797"
-  HREF="node7.html">6. WWSympa</A>
- &nbsp <B>  <A NAME="tex2html805"
+<B> Previous:</B> <A NAME="tex2html802"
+  HREF="node7.html">6. Sympa and its database</A>
+ &nbsp <B>  <A NAME="tex2html810"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html807"
-  HREF="node20.html">Index</A></B> 
+ &nbsp <B>  <A NAME="tex2html812"
+  HREF="node22.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -62,492 +62,588 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html810"
-  HREF="node8.html#SECTION00810000000000000000">7.1 Prerequisites</A>
-<LI><A NAME="tex2html811"
-  HREF="node8.html#SECTION00820000000000000000">7.2 Installing PERL modules</A>
-<LI><A NAME="tex2html812"
-  HREF="node8.html#SECTION00830000000000000000">7.3 Creating a sympa DataBase</A>
-<UL>
-<LI><A NAME="tex2html813"
-  HREF="node8.html#SECTION00831000000000000000">7.3.1 Database structure</A>
-<LI><A NAME="tex2html814"
-  HREF="node8.html#SECTION00832000000000000000">7.3.2 Database creation</A>
-</UL>
-<BR>
 <LI><A NAME="tex2html815"
-  HREF="node8.html#SECTION00840000000000000000">7.4 Setting database privileges</A>
+  HREF="node8.html#SECTION00810000000000000000">7.1 Organization</A>
 <LI><A NAME="tex2html816"
-  HREF="node8.html#SECTION00850000000000000000">7.5 Importing subscribers data</A>
+  HREF="node8.html#SECTION00820000000000000000">7.2 HTTPD setup</A>
 <UL>
 <LI><A NAME="tex2html817"
-  HREF="node8.html#SECTION00851000000000000000">7.5.1 Importing data from a text file</A>
+  HREF="node8.html#SECTION00821000000000000000">7.2.1 wwsympa.fcgi access permissions</A>
 <LI><A NAME="tex2html818"
-  HREF="node8.html#SECTION00852000000000000000">7.5.2 Importing data from subscribers files</A>
+  HREF="node8.html#SECTION00822000000000000000">7.2.2 Installing wwsympa.fcgi in your Apache server</A>
+<LI><A NAME="tex2html819"
+  HREF="node8.html#SECTION00823000000000000000">7.2.3 Using FastCGI</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html819"
-  HREF="node8.html#SECTION00860000000000000000">7.6 Extending database table format</A>
 <LI><A NAME="tex2html820"
-  HREF="node8.html#SECTION00870000000000000000">7.7 <I>Sympa</I> configuration</A>
+  HREF="node8.html#SECTION00830000000000000000">7.3 wwsympa.conf parameters</A>
+<UL>
+<LI><A NAME="tex2html821"
+  HREF="node8.html#SECTION00831000000000000000">7.3.1 arc_path</A>
+<LI><A NAME="tex2html822"
+  HREF="node8.html#SECTION00832000000000000000">7.3.2 archive_default_index thrd | mail</A>
+<LI><A NAME="tex2html823"
+  HREF="node8.html#SECTION00833000000000000000">7.3.3 archived_pidfile</A>
+<LI><A NAME="tex2html824"
+  HREF="node8.html#SECTION00834000000000000000">7.3.4 bounce_path</A>
+<LI><A NAME="tex2html825"
+  HREF="node8.html#SECTION00835000000000000000">7.3.5 bounced_pidfile</A>
+<LI><A NAME="tex2html826"
+  HREF="node8.html#SECTION00836000000000000000">7.3.6 cookie_expire</A>
+<LI><A NAME="tex2html827"
+  HREF="node8.html#SECTION00837000000000000000">7.3.7 cookie_domain</A>
+<LI><A NAME="tex2html828"
+  HREF="node8.html#SECTION00838000000000000000">7.3.8 default_home</A>
+<LI><A NAME="tex2html829"
+  HREF="node8.html#SECTION00839000000000000000">7.3.9 icons_url</A>
+<LI><A NAME="tex2html830"
+  HREF="node8.html#SECTION008310000000000000000">7.3.10 log_facility</A>
+<LI><A NAME="tex2html831"
+  HREF="node8.html#SECTION008311000000000000000">7.3.11 mhonarc</A>
+<LI><A NAME="tex2html832"
+  HREF="node8.html#SECTION008312000000000000000">7.3.12 password_case sensitive | insensitive</A>
+<LI><A NAME="tex2html833"
+  HREF="node8.html#SECTION008313000000000000000">7.3.13 title</A>
+<LI><A NAME="tex2html834"
+  HREF="node8.html#SECTION008314000000000000000">7.3.14 use_fast_cgi   0 | 1</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html835"
+  HREF="node8.html#SECTION00840000000000000000">7.4 MhOnArc</A>
+<LI><A NAME="tex2html836"
+  HREF="node8.html#SECTION00850000000000000000">7.5 Archiving daemon</A>
+<LI><A NAME="tex2html837"
+  HREF="node8.html#SECTION00860000000000000000">7.6 Database configuration</A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
 
-<H1><A NAME="SECTION00800000000000000000"></A>
-<A NAME="sec-rdbms"></A>
+<H1><A NAME="SECTION00800000000000000000">
+7. WWSympa, Sympa's web interface</A>
+</H1>
+
+<P>
+WWSympa is <I>Sympa</I>'s web interface.
+
+<P>
+
+<H1><A NAME="SECTION00810000000000000000"></A>
+<A NAME="WWSympa"></A>
 <BR>
-7. <I>Sympa</I> and its database
+7.1 Organization
 </H1>
 
 <P>
-Most basic feature of <I>Sympa</I> will work without a RDBMS, but
-WWSympa and bounced require a relational database. 
-Currently you can use one of the following
-RDBMS : MySQL, PostgreSQL, Oracle, Sybase. Interfacing with other RDBMS
-requires only a few changes in the code, since the API used, 
-<A NAME="tex2html26"
-  HREF="http://www.symbolstone.org/technology/perl/DBI/">DBI</A>
-(DataBase Interface), has DBD (DataBase Drivers) for many RDBMS.
+<A NAME="5674"></A><I>WWSympa</I> is fully integrated with <I>Sympa</I>. It uses <A NAME="5678"></A><TT>sympa.conf</TT>
+and <I>Sympa</I>'s libraries. The default <I>Sympa</I> installation will also
+install WWSympa.
 
 <P>
-
-<H1><A NAME="SECTION00810000000000000000">
-7.1 Prerequisites</A>
-</H1>
+Every single piece of HTML in <A NAME="5683"></A><I>WWSympa</I> is generated by the CGI code
+using template files (See <A HREF="node12.html#tpl-format">11.1</A>, page&nbsp;<A HREF="node12.html#tpl-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+This facilitates internationalization of pages, as well as per-site
+customization. 
 
 <P>
-You need to have a DataBase System installed (not necessarily 
-on the same host as <I>Sympa</I>), and the client libraries for that
-Database installed on the <I>Sympa</I> host ; provided, of course, that
-a PERL DBD (DataBase Driver) is available for your chosen RDBMS!
-Check the <A NAME="tex2html27"
-  HREF="http://www.symbolstone.org/technology/perl/DBI/"><TT>DBI</TT> Module Availability</A>.
+The code consists of one single PERL CGI script, <A NAME="5686"></A><TT>WWSympa.fcgi</TT>.
+To enhance performance you can configure <A NAME="5689"></A><I>WWSympa</I> to use
+FastCGI ; the CGI will be persistent in memory.
+<BR>
+All data will be accessed through the CGI, including web archives.
+This is required to allow the authentication scheme to be applied
+systematically.
+
+<P>
+Authentication is based on passwords stored in the database table
+user_table ; if the appropriate <A NAME="5692"></A><TT>Crypt::CipherSaber</TT> is
+installed, password are encrypted in the database using reversible
+encryption based on RC4. Otherwise they are stored in clear text.
+In both cases reminding of passwords is possible.
+ To keep track of authentication information <A NAME="5695"></A><I>WWSympa</I> 
+uses HTTP cookies stored on the client side. The HTTP cookie only 
+indicates that a specified e-mail address has been authenticated ;
+permissions are evaluated when an action is requested.
+
+<P>
+The same web interface is used by the listmaster, list owners, subscribers and
+others. Depending on permissions, the same URL may generate a different view.
+
+<P>
+<A NAME="5698"></A><I>WWSympa</I>'s main loop algorithm is roughly the following : 
+
+<OL>
+<LI>Check authentication information returned by 
+	the HTTP cookie
+
+<P>
+</LI>
+<LI>Evaluate user's permissions for the
+        requested action 
+
+<P>
+</LI>
+<LI>Process the requested action 
+
+<P>
+</LI>
+<LI>Set up variables resulting from the action 
+
+<P>
+</LI>
+<LI>Parse the HTML template files
+</LI>
+</OL>
 
 <P>
 
 <H1><A NAME="SECTION00820000000000000000">
-7.2 Installing PERL modules</A>
+7.2 HTTPD setup</A>
 </H1>
 
 <P>
-<I>Sympa</I> will use <A NAME="5705"></A><TT>DBI</TT> to communicate with the database system and
-therefore requires the DBD for your database system. DBI and 
-DBD::YourDB (<A NAME="5708"></A><TT>Msql-Mysql-modules</TT> for MySQL) are distributed as 
-CPAN modules. Refer to&nbsp;<A HREF="node4.html#Install_PERL_and_CPAN_modules">3.2.3</A>, 
-page&nbsp;<A HREF="node4.html#Install_PERL_and_CPAN_modules"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for installation
-details of these modules.
+
+<H2><A NAME="SECTION00821000000000000000">
+7.2.1 wwsympa.fcgi access permissions</A>
+</H2>
+
+<P>
+Because Sympa and WWSympa share a lot of files, <A NAME="5701"></A><TT>wwsympa.fcgi</TT>,
+     must run with the same 
+     uid/gid as <A NAME="5704"></A><TT>archived.pl</TT>, <A NAME="5707"></A><TT>bounced.pl</TT> and <A NAME="5710"></A><TT>sympa.pl</TT>.
+     There are different ways to organize this :
+
+<UL>
+<LI>With some operating systems no special setup is required because
+      wwsympa.fcgi is installed with suid and sgid bits, but this will not work
+      if suid scripts are refused by your system.
+
+<P>
+</LI>
+<LI>Run a dedicated Apache server with sympa.sympa as uid.gid (The Apache default
+      is nobody.nobody)
+
+<P>
+</LI>
+<LI>Use a Apache virtual host with sympa.sympa as uid.gid ; Apache
+      needs to be compiled with suexec. Be aware that the Apache suexec usually define a lowest
+      UID/GID allowed to be a target user for suEXEC. For most systems including binaries
+      distribution of Apache, the default value 100 is common.
+      So Sympa UID (and Sympa GID) must be higher then 100 or suexec must be tuned in order to allow
+      lower UID/GID. Check http://httpd.apache.org/docs/suexec.html#install for details
+
+<P>
+The User and Group directive have to be set before the FastCgiServer directive
+      is encountered.
+
+<P>
+</LI>
+<LI>Otherwise, you can overcome restrictions on the execution of suid scripts
+      by using a short C program, owned by sympa and with the suid bit set, to start
+      <A NAME="5713"></A><TT>wwsympa.fcgi</TT>. Here is an example (with no guarantee attached) :<PRE>
+#include &lt;unistd.h&gt;
+
+#define WWSYMPA "/home/sympa/bin/wwsympa.fcgi"
+
+int main(int argn, char **argv, char **envp) {
+    argv[0] = WWSYMPA;
+    execve(WWSYMPA,argv,envp);
+}
+</PRE>
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00822000000000000000">
+7.2.2 Installing wwsympa.fcgi in your Apache server</A>
+</H2>
+     If you chose to run <A NAME="5716"></A><TT>wwsympa.fcgi</TT> as a simple CGI, you simply need to
+     script alias it. 
+
+<P><PRE>
+     Example :
+       	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+</PRE>
+
+<P>
+Running  FastCGI will provide much faster responses from your server and 
+     reduce load (to understand why, read 
+     <A NAME="tex2html20"
+  HREF="http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm">http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm</A>)
+
+<P><PRE>
+     Example :
+	FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 2
+	&lt;Location /wws&gt;
+   	  SetHandler fastcgi-script
+	&lt;/Location&gt;
+
+	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+</PRE>
+
+<P>
+If you run Virtual robots, then the FastCgiServer(s) can serve multiple robots. 
+Therefore you need to define it in the common section of your Apache configuration
+file.
+
+<P>
+
+<H2><A NAME="SECTION00823000000000000000">
+7.2.3 Using FastCGI</A>
+</H2>
+
+<P>
+<A NAME="tex2html21"
+  HREF="http://www.fastcgi.com/">FastCGI</A>
+is an extention to CGI that provides persistency for CGI programs. It is extemely useful
+with <A NAME="5719"></A><I>WWSympa</I> since source code interpretation and all initialisation tasks are performed only once, at server startup ; then
+file wwsympa.fcgi instances are waiting for clients requests. 
+
+<P>
+<A NAME="5722"></A><I>WWSympa</I> can also work without FastCGI, depending on the <B>use_fast_cgi</B> parameter 
+(see <A HREF="node8.html#use-fastcgi">7.3.14</A>, page&nbsp;<A HREF="node8.html#use-fastcgi"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+To run <A NAME="5725"></A><I>WWSympa</I> with FastCGI, you need to install :
+
+<UL>
+<LI><A NAME="1178"></A> : the Apache module that provides <A NAME="1179"></A> features
+
+<P>
+</LI>
+<LI><A NAME="5728"></A><TT>FCGI</TT> : the Perl module used by <A NAME="5731"></A><I>WWSympa</I> 
+
+<P>
+</LI>
+</UL>
 
 <P>
 
 <H1><A NAME="SECTION00830000000000000000">
-7.3 Creating a sympa DataBase</A>
+7.3 wwsympa.conf parameters</A>
 </H1>
 
 <P>
 
 <H2><A NAME="SECTION00831000000000000000">
-7.3.1 Database structure</A>
+7.3.1 arc_path</A>
 </H2>
 
 <P>
-The sympa database structure is slightly different from the
-structure of a <A NAME="5711"></A><TT>subscribers</TT> file. A <A NAME="5714"></A><TT>subscribers</TT>
-file is a text file based on paragraphs (similar to 
-the <A NAME="5717"></A><TT>config</TT> file) ; each paragraph completely describes 
-a subscriber. If somebody is subscribed to two lists, he/she 
-will appear in both subscribers files.
-
-<P>
-The DataBase distinguishes information relative to a person (e-mail,
-real name, password) and his/her subscription options (list
-concerned, date of subscription, reception option, visibility 
-option). This results in a separation of the data into two tables :
-the user_table and the subscriber_table, linked by a user/subscriber e-mail.
+(Default value: <TT>/home/httpd/html/arc</TT>) 
+<BR>
+Where to store html archives. This parameter is used
+        by the <A NAME="5735"></A><TT>archived.pl</TT> daemon. It is a good idea to install the archive
+        outside the web hierarchy to prevent possible back doors in the access control
+        powered by WWSympa. However, if Apache is configured with a chroot, you may
+	have to install the archive in the Apache directory tree.
 
 <P>
 
 <H2><A NAME="SECTION00832000000000000000">
-7.3.2 Database creation</A>
+7.3.2 archive_default_index thrd | mail</A>
 </H2>
 
 <P>
-The <A NAME="5720"></A><TT>create_db</TT> script below will create the sympa database for 
-you. You can find it in the <A NAME="5723"></A><TT>script/</TT> directory of the 
-distribution (currently scripts are available for MySQL, PostgreSQL, Oracle and Sybase).
+(Default value: <TT>thrd</TT>) 
+<BR>
+The default index organization when entering web archives : either threaded or	
+	chronological order.
 
 <P>
 
-<UL>
-<LI>MySQL database creation script
-<BR>	<PRE>
-## MySQL Database creation script
+<H2><A NAME="SECTION00833000000000000000">
+7.3.3 archived_pidfile</A>
+</H2>
+	(Default value: <TT>archived.pid</TT>) 
+<BR>
+The file containing the PID of <A NAME="5740"></A><TT>archived.pl</TT>.
 
-CREATE DATABASE sympa;
+<P>
 
-## Connect to DB 
-\r sympa
+<H2><A NAME="SECTION00834000000000000000">
+7.3.4 bounce_path</A>
+</H2>
+	(Default value: <TT>/var/bounce</TT>) 
+<BR>
+Root directory for storing bounces (non-delivery reports). This parameter
+	is used mainly by the <A NAME="5744"></A><TT>bounced.pl</TT> daemon.
 
-CREATE TABLE user_table (
-  	email_user          	varchar (100) NOT NULL,
-  	gecos_user          	varchar (150),
-  	password_user		varchar (40),
-	cookie_delay_user	int,
-	lang_user		varchar (10),
-	PRIMARY KEY (email_user)
-);
+<P>
 
-CREATE TABLE subscriber_table (
-  	list_subscriber       	varchar (50) NOT NULL,
-	user_subscriber		varchar (100) NOT NULL,
-	date_subscriber		datetime NOT NULL,
-	update_subscriber	datetime,
-	visibility_subscriber	varchar (20),
-	reception_subscriber	varchar (20),
-	bounce_subscriber	varchar (35),
-	comment_subscriber	varchar (150),
-	subscribed_subscriber 	enum ('0','1'),
-	included_subscriber 	enum ('0','1'),
-	include_sources_subscriber varchar(50),
-	bounce_score_subscriber smallint (6),
-	PRIMARY KEY (list_subscriber, user_subscriber),
-	INDEX (user_subscriber,list_subscriber)
-);
+<H2><A NAME="SECTION00835000000000000000">
+7.3.5 bounced_pidfile</A>
+</H2>
+	(Default value: <TT>bounced.pid</TT>) 
+<BR>
+The file containing the PID of <A NAME="5748"></A><TT>bounced.pl</TT>.
 
-# CREATE TABLE log_table (
-# 	id			INT UNSIGNED DEFAULT 0 NOT NULL auto_increment,
-# 	date			int NOT NULL,
-# 	pid			int,
-# 	process			enum ('task','archived','sympa','wwsympa','bounced'),
-#   	email_user          	varchar (100),
-# 	auth			enum ('smtp','md5','smime','null'),	
-# 	ip			varchar (15),
-#   	operation		varchar (40),
-# 	list			varchar (50),
-# 	robot			varchar (60),
-# 	arg			varchar (100),
-# 	status			varchar (100),
-# 	subscriber_count	int,
-# 	PRIMARY KEY (id),
-# 	INDEX (date),	
-# 	INDEX (robot),
-# 	INDEX (list),
-# 	INDEX (email_user)
-# );
+<P>
+
+<H2><A NAME="SECTION00836000000000000000">
+7.3.6 cookie_expire</A>
+</H2>
+	(Default value: <TT>0</TT>)
+	Lifetime (in minutes) of HTTP cookies. This is the default value
+	when not set explicitly by users.
+
+<P>
+
+<H2><A NAME="SECTION00837000000000000000">
+7.3.7 cookie_domain</A>
+</H2>
+	(Default value: <TT>localhost</TT>) 
+<BR>
+Domain for the HTTP cookies. If beginning with a dot ('.'),
+	the cookie is available within the specified internet domain.
+	Otherwise, for the specified host. Example : 
+		<PRE>
+		   cookie_domain cru.fr
+		   cookie is available for host 'cru.fr'
+
+		   cookie_domain .cru.fr
+		   cookie is available for any host within 'cru.fr' domain
 </PRE>
+	The only reason for replacing the default value would be where
+	<A NAME="5753"></A><I>WWSympa</I>'s authentication process is shared with an application
+	running on another host.
 
 <P>
-</LI>
-<LI>PostgreSQL database creation script
-<BR>	<PRE>
--- PostgreSQL Database creation script
 
-CREATE DATABASE sympa;
-
--- Connect to DB 
-\connect sympa
-
-DROP TABLE user_table;
-CREATE TABLE user_table (
-  	email_user          	varchar (100) NOT NULL,
-  	gecos_user          	varchar (150),
-	cookie_delay_user       int4,
-        password_user		varchar (40),
-        lang_user               varchar (10),
-	CONSTRAINT ind_user PRIMARY KEY (email_user)
-);
-
-DROP TABLE subscriber_table;
-CREATE TABLE subscriber_table (
-  	list_subscriber       	varchar (50) NOT NULL,
-	user_subscriber		varchar (100) NOT NULL,
-	date_subscriber		timestamp with time zone NOT NULL,
-	update_subscriber 	timestamp with time zone,
-	visibility_subscriber	varchar (20),
-	reception_subscriber	varchar (20),
-	bounce_subscriber	varchar (35),
-	bounce_score_subscriber int4,
-	comment_subscriber	varchar (150),
-	subscribed_subscriber 	bit(1),
-	included_subscriber 	bit(1),
-	include_sources_subscriber varchar(50),
-	CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber, user_subscriber)
-);
-CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber);
-</PRE>
+<H2><A NAME="SECTION00838000000000000000">
+7.3.8 default_home</A>
+</H2>
+	(Default value: <TT>home</TT>) 
+<BR>
+Organization of the WWSympa home page. If you have only a few lists,
+	the default value `home' (presenting a list of lists organized by topic)
+	should be replaced by `lists' (a simple alphabetical list of lists).
 
 <P>
-</LI>
-<LI>Sybase database creation script
-<BR>	<PRE>
-/* Sybase Database creation script 2.5.2 */
-/* Thierry Charles &lt;tcharles@electron-libre.com&gt; */
-/* 15/06/01 : extend password_user */
 
-/* sympa database must have been created */
-/* eg: create database sympa on your_device_data=10 log on your_device_log=4 */
-use sympa
-go
-
-create table user_table
-(
-    email_user             varchar(100)           not null,
-    gecos_user             varchar(150)           null    ,
-    password_user          varchar(40)            null    ,
-    cookie_delay_user      numeric                null    ,
-    lang_user              varchar(10)            null    ,
-    constraint ind_user primary key (email_user)
-)
-go
-
-create index email_user_fk on user_table (email_user)
-go
-
-
-create table subscriber_table
-(
-    list_subscriber        varchar(50)            not null,
-    user_subscriber        varchar(100)           not null,
-    date_subscriber        datetime               not null,
-    update_subscriber      datetime               null,
-    visibility_subscriber  varchar(20)            null    ,
-    reception_subscriber   varchar(20)            null    ,
-    bounce_subscriber      varchar(35)            null    ,
-    bounce_score_subscriber numeric               null    ,
-    comment_subscriber     varchar(150)           null    ,
-    subscribed_subscriber  numeric		  null    ,
-    included_subscriber    numeric                null    ,
-    include_sources_subscriber varchar(50)        null    ,
-    constraint ind_subscriber primary key (list_subscriber, user_subscriber)
-)
-go
-
-create index list_subscriber_fk on subscriber_table (list_subscriber)
-go
-
-create index user_subscriber_fk on subscriber_table (user_subscriber)
-go
-</PRE>
+<H2><A NAME="SECTION00839000000000000000">
+7.3.9 icons_url</A>
+</H2>
+	(Default value: <TT>/icons</TT>) 
+<BR>
+URL of WWSympa's icons directory.
 
 <P>
-</LI>
-<LI>Oracle database creation script
-<BR>	<PRE>
-## Oracle Database creation script
-## Fabien Marquois &lt;fmarquoi@univ-lr.fr&gt;
 
-/Bases/oracle/product/7.3.4.1/bin/sqlplus loginsystem/passwdoracle &lt;&lt;-!
- create user SYMPA identified by SYMPA default tablespace TABLESP
-temporary tablespace TEMP;
- grant create session to SYMPA;
- grant create table to SYMPA;
- grant create synonym to SYMPA;
- grant create view to SYMPA;
- grant execute any procedure to SYMPA;
- grant select any table to SYMPA;
- grant select any sequence to SYMPA;
- grant resource to SYMPA;
-!
-
-/Bases/oracle/product/7.3.4.1/bin/sqlplus SYMPA/SYMPA &lt;&lt;-!
-CREATE TABLE user_table (
-        email_user              varchar2(100) NOT NULL,
-        gecos_user              varchar2(150),
-        password_user           varchar2(40),
-        cookie_delay_user       number,
-        lang_user               varchar2(10),
-        CONSTRAINT ind_user PRIMARY KEY (email_user)
-);
-CREATE TABLE subscriber_table (
-        list_subscriber         varchar2(50) NOT NULL,
-        user_subscriber         varchar2(100) NOT NULL,
-        date_subscriber         date NOT NULL,
-	update_subscriber	date,
-        visibility_subscriber   varchar2(20),
-        reception_subscriber    varchar2(20),
- 	bounce_subscriber       varchar2 (35),
-	bounce_score_subscriber number,
- 	comment_subscriber      varchar2 (150),
-	subscribed_subscriber 	number(1,0),
-	included_subscriber 	number(1,0),
-	include_sources_subscriber varchar2(50),
-        CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber,user_subscriber)
-);
-!
-</PRE>
+<H2><A NAME="SECTION008310000000000000000">
+7.3.10 log_facility</A>
+</H2>
 
 <P>
-</LI>
-</UL>
+WWSympa will log using this facility. Defaults to <I>Sympa</I>'s syslog
+        facility.
+	Configure your syslog according to this parameter.
 
 <P>
-You can execute the script using a simple SQL shell such as
-mysql, psql or sqlplus.
+
+<H2><A NAME="SECTION008311000000000000000">
+7.3.11 mhonarc</A>
+</H2>
+	(Default value: <TT>/usr/bin/mhonarc</TT>) 
+<BR>
+Path to the (superb) MhOnArc program. Required for html archives
+	http://www.oac.uci.edu/indiv/ehood/mhonarc.html
 
 <P>
-Example:
 
-<P><PRE>
-# mysql  &lt; create_db.mysql
-</PRE>
+<H2><A NAME="SECTION008312000000000000000">
+7.3.12 password_case sensitive | insensitive</A>
+</H2>
+	(Default value: <TT>insensitive</TT>) 
+<BR>
+If set to <B>insensitive</B>, WWSympa's password check will be insensitive.
+	This only concerns passwords stored in Sympa database, not the ones in <A NAME="1215"></A>.
+
+<P>
+<B>Be careful :</B> in previous 3.xx versions of Sympa, passwords were 
+	lowercased before database insertion. Therefore changing to case-sensitive 
+	password checking could bring you some password checking problems.
+
+<P>
+
+<H2><A NAME="SECTION008313000000000000000">
+7.3.13 title</A>
+</H2>
+	(Default value: <TT>Mailing List Service</TT>) 
+<BR>
+The name of your mailing list service. It will appear in
+	the Title section of WWSympa.
+
+<P>
+
+<H2><A NAME="SECTION008314000000000000000"></A>
+	<A NAME="use-fastcgi"></A>
+<BR>
+7.3.14 use_fast_cgi   0 | 1
+</H2>
+	(Default value: <TT>1</TT>) 
+<BR>
+Choice of whether or not to use FastCGI. On listes.cru.fr, using FastCGI 
+        increases WWSympa performance by as much as a factor of 10. Refer to 
+       	<A NAME="tex2html22"
+  HREF="http://www.fastcgi.com/">http://www.fastcgi.com/</A>
+and the Apache config section of this document for details about 
+	FastCGI.
 
 <P>
 
 <H1><A NAME="SECTION00840000000000000000">
-7.4 Setting database privileges</A>
+7.4 MhOnArc</A>
 </H1>
 
 <P>
-We strongly recommend you restrict access to <I>sympa</I> database. You will
-then set <A NAME="5726"></A><TT>db_user</TT> and <A NAME="5729"></A><TT>db_passwd</TT> in <A NAME="5732"></A><TT>sympa.conf</TT>.
+MhOnArc is a neat little converter from mime messages to html. Refer to
+<A NAME="tex2html23"
+  HREF="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">http://www.oac.uci.edu/indiv/ehood/mhonarc.html</A>.
 
 <P>
-With <A NAME="1221"></A> :<PRE>
-grant all on sympa.* to sympa@localhost identified by 'your_password';
-flush privileges;
-</PRE>
+The long mhonarc resource file is used by <A NAME="5763"></A><I>WWSympa</I> in a particular way.
+MhOnArc is called to produce not a complete html document, but only a part of it
+to be included in a complete document (starting with <TT>&lt;</TT>HTML<TT>&gt;</TT> and terminating
+with <TT>&lt;</TT>/HTML<TT>&gt;</TT> ;-) ).
+The best way is to use the MhOnArc resource file 
+provided in the <A NAME="5766"></A><I>WWSympa</I> distribution and to modify it for your needs.
+
+<P>
+The mhonarc resource file is named <A NAME="5769"></A><TT>mhonarc-ressources</TT>. 
+You may locate this file either in 
+<OL>
+<LI><A NAME="5772"></A><TT>/home/sympa/expl/mylist/mhonarc-ressources</TT>
+	in order to create a specific archive look for a particular list
+
+<P>
+</LI>
+<LI>or <A NAME="5775"></A><TT>/home/sympa/etc/mhonarc-ressources</TT>
+
+<P>
+</LI>
+</OL>
 
 <P>
 
 <H1><A NAME="SECTION00850000000000000000">
-7.5 Importing subscribers data</A>
+7.5 Archiving daemon</A>
 </H1>
+<A NAME="5778"></A><TT>archived.pl</TT> converts messages from <I>Sympa</I>'s spools 
+and calls <A NAME="5782"></A><TT>mhonarc</TT> to create html versions (whose location is defined by the 
+"arc_path" WWSympa parameter). You should probably install these archives 
+outside the <I>Sympa</I> home_dir (<I>Sympa</I>'s initial choice for storing mail archives : 
+<A NAME="5787"></A><TT>/home/sympa/expl/mylist</TT>). Note that the html archive 
+contains a text version of each message and is totally separate from <I>Sympa</I>'s
+main archive.
+
+<OL>
+<LI>create a directory according to the WWSympa "arc_path" parameter
+    (must be owned by sympa, does not have to be in Apache space unless
+    your server uses chroot)
 
 <P>
-
-<H2><A NAME="SECTION00851000000000000000">
-7.5.1 Importing data from a text file</A>
-</H2>
-
-<P>
-You can import subscribers data into the database from a text file having
-one entry per line : the first field is an e-mail address, the second (optional) 
-field is the free form name.  Fields are spaces-separated.
-
-<P>
-Example:<PRE>
-## Data to be imported
-## email        gecos
-john.steward@some.company.com           John - accountant
-mary.blacksmith@another.company.com     Mary - secretary
+</LI>
+<LI>for each list, if you need a web archive, create a new web archive paragraph
+    in the list configuration. Example :<PRE>
+     web_archive
+     access public|private|owner|listmaster|closed
 </PRE>
 
 <P>
-To import data into the database :
+If web_archive is defined for a list, every message distributed by this list is copied
+     to <A NAME="5791"></A><TT>/home/sympa/spool/outgoing/</TT>. (No need to create nonexistent subscribers to receive
+     copies of messages)
+
+<P>
+</LI>
+<LI>start <A NAME="5794"></A><TT>archived.pl</TT>.
+<I>Sympa</I> and Apache
+
+<P>
+</LI>
+<LI>check <A NAME="5798"></A><I>WWSympa</I> logs, or alternatively, start <A NAME="5801"></A><TT>archived.pl</TT> in debug mode (-d). 
+
+<P>
+</LI>
+<LI>If you change mhonarc resources and wish to rebuild the entire archive 
+using the new look defined for mhonarc, simply create an empty file named
+".rebuild.mylist@myhost" in <A NAME="5804"></A><TT>/home/sympa/spool/outgoing</TT>, and make sure that
+the owner of this file is <I>Sympa</I>. 
 
 <P><PRE>
-cat /tmp/my_import_file | sympa.pl --import=my_list
+     example : su sympa -c "touch /home/sympa/spool/outgoing/.rebuild.sympa-fr@cru.fr"
 </PRE>
+You can also rebuild web archives from within the admin page of the list.
 
 <P>
-(see <A HREF="node4.html#sympa.pl">3.6</A>, page&nbsp;<A HREF="node4.html#sympa.pl"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-
-<P>
-
-<H2><A NAME="SECTION00852000000000000000">
-7.5.2 Importing data from subscribers files</A>
-</H2>
-
-<P>
-If a mailing list was previously setup to store subscribers into 
-<A NAME="5735"></A><TT>subscribers</TT> file (the default mode in versions older then 2.2b) 
-you can load subscribers data into the sympa database. The easiest way
-is to edit the list configuration using <A NAME="5738"></A><I>WWSympa</I> (this requires listmaster 
-privileges) and change the data source from <B>file</B> to <B>database</B>
-; subscribers data will be loaded into the database at the same time.
-
-<P>
-If the subscribers file is big, a timeout may occur during the FastCGI execution
-(Note that you can set a longer timeout with the <A NAME="5741"></A><TT>-idle-timeout</TT> option of
-the <TT>FastCgiServer</TT> Apache configuration directive). In this case, or if you have not installed <A NAME="5744"></A><I>WWSympa</I>, you should use the <A NAME="5747"></A><TT>load_subscribers.pl</TT> script.
+Furthermore, if you want to get list's archives, you can do it via the <A NAME="5808"></A><TT> List-admin menu-&gt; Archive Management</TT>
+</LI>
+</OL>
 
 <P>
 
 <H1><A NAME="SECTION00860000000000000000">
-7.6 Extending database table format</A>
+7.6 Database configuration</A>
 </H1>
 
 <P>
-You can easily add other fields to <B>subscriber_table</B> and
-<B>user_table</B>, they will not disturb <I>Sympa</I> because it lists
-explicitely the field it expects in SELECT queries.
+<A NAME="5811"></A><I>WWSympa</I> needs an RDBMS (Relational Database Management System) in order to
+run. All database access is performed via the <I>Sympa</I> API. <I>Sympa</I> 
+currently interfaces with <A NAME="tex2html24"
+  HREF="http://www.mysql.net/">MySQL</A>, <A NAME="tex2html25"
+  HREF="http://www.postgresql.pyrenet.fr/">PostgreSQL</A>, <A NAME="tex2html26"
+  HREF="http://www.oracle.com/database/">Oracle</A>
+and <A NAME="tex2html27"
+  HREF="http://www.sybase.com/index_sybase.html">Sybase</A>.
 
 <P>
-Moreover you can access these database fields from within <I>Sympa</I> 
-(in templates), as far as you list these additional fields in
-<A NAME="5752"></A><TT>sympa.conf</TT> (See <A HREF="node6.html#db-additional-subscriber-fields">5.10.9</A>, page&nbsp;<A HREF="node6.html#db-additional-subscriber-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
-and <A HREF="node6.html#db-additional-user-fields">5.10.10</A>, page&nbsp;<A HREF="node6.html#db-additional-user-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+A database is needed to store user passwords and preferences.
+The database structure is documented in the <I>Sympa</I> documentation ;
+scripts for creating it are also provided with the <I>Sympa</I> distribution
+(in <A NAME="5818"></A><TT>script</TT>). 
 
 <P>
-
-<H1><A NAME="SECTION00870000000000000000">
-7.7 <I>Sympa</I> configuration</A>
-</H1>
-
-<P>
-To store subscriber information in your newly created
-database, you first need to tell <I>Sympa</I> what kind of
-database to work with, then you must configure
-your list to access the database.
-
-<P>
-You define the database source in <A NAME="5757"></A><TT>sympa.conf</TT> :
-<A NAME="5760"></A><TT>db_type</TT>, <A NAME="5763"></A><TT>db_name</TT>, 
-<A NAME="5766"></A><TT>db_host</TT>, <A NAME="5769"></A><TT>db_user</TT>, 
-<A NAME="5772"></A><TT>db_passwd</TT>.
-
-<P>
-If you are interfacing <I>Sympa</I> with an Oracle database, 
-<A NAME="5776"></A><TT>db_name</TT> is the SID.
-
-<P>
-All your lists are now configured to use the database,
-unless you set list parameter <A NAME="5779"></A><TT>user_data_source</TT> 
-to <B>file</B> or <B>include</B>. 
-
-<P>
-<I>Sympa</I> will now extract and store user
-information for this list using the database instead of the
-<A NAME="5783"></A><TT>subscribers</TT> file. Note however that subscriber information is 
-dumped to <A NAME="5786"></A><TT>subscribers.db.dump</TT> at every shutdown, 
-to allow a manual rescue restart (by renaming subscribers.db.dump to
-subscribers and changing the user_data_source parameter), if ever the
-database were to become inaccessible.
+User information (password and preferences) are stored in the &#171;User&#187; table.
+User passwords stored in the database are encrypted using reversible
+RC4 encryption controlled with the <A NAME="5821"></A><TT>cookie</TT> parameter,
+since <A NAME="5824"></A><I>WWSympa</I> might need to remind users of their passwords. 
+The security of <A NAME="5827"></A><I>WWSympa</I> rests on the security of your database. 
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html808"
+<A NAME="tex2html813"
   HREF="node9.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html802"
+<A NAME="tex2html807"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html796"
+<A NAME="tex2html801"
   HREF="node7.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html804"
+<A NAME="tex2html809"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html806"
-  HREF="node20.html">
+<A NAME="tex2html811"
+  HREF="node22.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html809"
-  HREF="node9.html">8. Using Sympa with LDAP</A>
-<B> Up:</B> <A NAME="tex2html803"
+<B> Next:</B> <A NAME="tex2html814"
+  HREF="node9.html">8. Authentication</A>
+<B> Up:</B> <A NAME="tex2html808"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html797"
-  HREF="node7.html">6. WWSympa</A>
- &nbsp <B>  <A NAME="tex2html805"
+<B> Previous:</B> <A NAME="tex2html802"
+  HREF="node7.html">6. Sympa and its database</A>
+ &nbsp <B>  <A NAME="tex2html810"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html807"
-  HREF="node20.html">Index</A></B> 
+ &nbsp <B>  <A NAME="tex2html812"
+  HREF="node22.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-08-29
+2003-09-12
 </ADDRESS>
 </BODY>
 </HTML>

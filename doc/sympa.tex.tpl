@@ -2311,11 +2311,206 @@ detected.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sympa and its RDBMS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {\Sympa and its database}
+\label {sec-rdbms}
+
+Most basic feature of \Sympa will work without a RDBMS, but
+WWSympa and bounced require a relational database. 
+Currently you can use one of the following
+RDBMS : MySQL, PostgreSQL, Oracle, Sybase. Interfacing with other RDBMS
+requires only a few changes in the code, since the API used, 
+\htmladdnormallinkfoot {DBI} {http://www.symbolstone.org/technology/perl/DBI/} 
+(DataBase Interface), has DBD (DataBase Drivers) for many RDBMS.
+
+\section {Prerequisites}
+
+You need to have a DataBase System installed (not necessarily 
+on the same host as \Sympa), and the client libraries for that
+Database installed on the \Sympa host ; provided, of course, that
+a PERL DBD (DataBase Driver) is available for your chosen RDBMS!
+Check the \htmladdnormallinkfoot
+{\perlmodule {DBI} Module Availability} {http://www.symbolstone.org/technology/perl/DBI/}.
+
+\section {Installing PERL modules}
+
+\Sympa will use \perlmodule {DBI} to communicate with the database system and
+therefore requires the DBD for your database system. DBI and 
+DBD::YourDB (\perlmodule {Msql-Mysql-modules} for MySQL) are distributed as 
+CPAN modules. Refer to ~\ref {Install PERL and CPAN modules}, 
+page~\pageref {Install PERL and CPAN modules} for installation
+details of these modules.
+
+\section {Creating a sympa DataBase}
+
+\subsection {Database structure}
+
+The sympa database structure is slightly different from the
+structure of a \file {subscribers} file. A \file {subscribers}
+file is a text file based on paragraphs (similar to 
+the \file {config} file) ; each paragraph completely describes 
+a subscriber. If somebody is subscribed to two lists, he/she 
+will appear in both subscribers files.
+
+The DataBase distinguishes information relative to a person (e-mail,
+real name, password) and his/her subscription options (list
+concerned, date of subscription, reception option, visibility 
+option). This results in a separation of the data into two tables :
+the user\_table and the subscriber\_table, linked by a user/subscriber e-mail.
+
+\subsection {Database creation}
+
+The \file {create\_db} script below will create the sympa database for 
+you. You can find it in the \dir {script/} directory of the 
+distribution (currently scripts are available for MySQL, PostgreSQL, Oracle and Sybase).
+
+\begin{itemize}
+
+  \item MySQL database creation script\\
+	\begin {quote}
+	\begin{verbatim}
+	[INCLUDE '../src/etc/script/create_db.mysql']
+	\end{verbatim}
+	\end {quote}
+
+  \item PostgreSQL database creation script\\
+	\begin {quote}
+	\begin{verbatim}
+	[INCLUDE '../src/etc/script/create_db.Pg']
+	\end{verbatim}
+	\end {quote}
+
+  \item Sybase database creation script\\
+	\begin {quote}
+	\begin{verbatim}
+	[INCLUDE '../src/etc/script/create_db.Sybase']
+	\end{verbatim}
+	\end {quote}
+
+  \item Oracle database creation script\\
+	\begin {quote}
+	\begin{verbatim}
+	[INCLUDE '../src/etc/script/create_db.Oracle']
+	\end{verbatim}
+	\end {quote}
+
+\end{itemize}
+
+You can execute the script using a simple SQL shell such as
+mysql, psql or sqlplus.
+
+Example:
+
+\begin {quote}
+\begin{verbatim}
+# mysql  < create_db.mysql
+\end{verbatim}  
+\end {quote}
+
+\section {Setting database privileges}
+
+We strongly recommend you restrict access to \textit {sympa} database. You will
+then set \cfkeyword {db\_user} and \cfkeyword {db\_passwd} in \file {sympa.conf}.
+
+With \index{MySQL} :
+\begin {quote}
+\begin{verbatim}
+grant all on sympa.* to sympa@localhost identified by 'your_password';
+flush privileges;
+\end{verbatim}
+\end {quote}
+
+\section {Importing subscribers data}
+
+\subsection {Importing data from a text file}
+
+You can import subscribers data into the database from a text file having
+one entry per line : the first field is an e-mail address, the second (optional) 
+field is the free form name.  Fields are spaces-separated.
+
+Example:
+\begin {quote}
+\begin{verbatim}
+## Data to be imported
+## email        gecos
+john.steward@some.company.com           John - accountant
+mary.blacksmith@another.company.com     Mary - secretary
+\end{verbatim}  
+\end {quote}
+
+To import data into the database :
+
+\begin {quote}
+\begin{verbatim}
+cat /tmp/my_import_file | sympa.pl --import=my_list
+\end{verbatim}  
+\end {quote}
+
+(see \ref {sympa.pl}, page~\pageref {sympa.pl}).
+
+
+\subsection {Importing data from subscribers files}
+
+If a mailing list was previously setup to store subscribers into 
+\file {subscribers} file (the default mode in versions older then 2.2b) 
+you can load subscribers data into the sympa database. The easiest way
+is to edit the list configuration using \WWSympa (this requires listmaster 
+privileges) and change the data source from \textbf {file} to \textbf {database}
+; subscribers data will be loaded into the database at the same time.
+ 
+If the subscribers file is big, a timeout may occur during the FastCGI execution
+(Note that you can set a longer timeout with the \option {-idle-timeout} option of
+the \texttt {FastCgiServer} Apache configuration directive). In this case, or if you have not installed \WWSympa, you should use the \file {load\_subscribers.pl} script.
+
+
+\section {Extending database table format}
+
+You can easily add other fields to \textbf {subscriber\_table} and
+\textbf {user\_table}, they will not disturb \Sympa because it lists
+explicitely the field it expects in SELECT queries.
+
+Moreover you can access these database fields from within \Sympa
+(in templates), as far as you list these additional fields in
+\file {sympa.conf} (See \ref {db-additional-subscriber-fields}, page~\pageref {db-additional-subscriber-fields}
+and \ref {db-additional-user-fields}, page~\pageref {db-additional-user-fields}).
+
+
+\section {\Sympa configuration}
+
+To store subscriber information in your newly created
+database, you first need to tell \Sympa what kind of
+database to work with, then you must configure
+your list to access the database.
+
+You define the database source in \file {sympa.conf} :
+\cfkeyword {db\_type}, \cfkeyword {db\_name}, 
+\cfkeyword {db\_host}, \cfkeyword {db\_user}, 
+\cfkeyword {db\_passwd}.
+
+If you are interfacing \Sympa with an Oracle database, 
+\cfkeyword {db\_name} is the SID.
+
+All your lists are now configured to use the database,
+unless you set list parameter \lparam {user\_data\_source} 
+to \textbf {file} or \textbf {include}. 
+
+\Sympa will now extract and store user
+information for this list using the database instead of the
+\file {subscribers} file. Note however that subscriber information is 
+dumped to \file {subscribers.db.dump} at every shutdown, 
+to allow a manual rescue restart (by renaming subscribers.db.dump to
+subscribers and changing the user\_data\_source parameter), if ever the
+database were to become inaccessible.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % WWSympa
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter {WWSympa}
+\chapter {WWSympa, Sympa's web interface}
 
 
 WWSympa is \Sympa's web interface.
@@ -2659,222 +2854,65 @@ The security of \WWSympa rests on the security of your database.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Sympa and its RDBMS
+% Authentication
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \cleardoublepage
-\chapter {\Sympa and its database}
-\label {sec-rdbms}
+\chapter {Authentication}
+\label {authn}
 
-Most basic feature of \Sympa will work without a RDBMS, but
-WWSympa and bounced require a relational database. 
-Currently you can use one of the following
-RDBMS : MySQL, PostgreSQL, Oracle, Sybase. Interfacing with other RDBMS
-requires only a few changes in the code, since the API used, 
-\htmladdnormallinkfoot {DBI} {http://www.symbolstone.org/technology/perl/DBI/} 
-(DataBase Interface), has DBD (DataBase Drivers) for many RDBMS.
+\Sympa needs to authenticate users (subscribers, owners, moderators, listmaster) on both its
+mail and web interface to then apply appropriate privileges (authorization process) to subsequent 
+requested actions. \Sympa is able to cope with multiple authentication means on the client side and 
+when using user+password it can validate these credentials against LDAP authentication backends.
 
-\section {Prerequisites}
+When contacted on the mail interface \Sympa has 3 authentication levels. Lower level is to trust
+the \rfcheader {From} SMTP header field. A higher level of authentication will require that the 
+user confirms his/her message. The strongest supported authentication method is S/MIME (note that \Sympa 
+also deals with S/MIME encrypted messages).
 
-You need to have a DataBase System installed (not necessarily 
-on the same host as \Sympa), and the client libraries for that
-Database installed on the \Sympa host ; provided, of course, that
-a PERL DBD (DataBase Driver) is available for your chosen RDBMS!
-Check the \htmladdnormallinkfoot
-{\perlmodule {DBI} Module Availability} {http://www.symbolstone.org/technology/perl/DBI/}.
+On the \Sympa web interface (\WWSympa) the user can authenticate in 4 different ways (if appropriate setup
+has been done on \Sympa serveur). Default authentication mean is via the user's email address and a password 
+managed by \Sympa itself. If an LDAP authentication backend (or multiple) has been defined, then the user 
+can authentication with his/her LDAP uid and password. \Sympa is also able to delegate the authentication
+job to a web Single SignOn system ; currently only \htmladdnormallink {CAS} {http://www.yale.edu/tp/auth/} 
+(the Yale University system) is supported. When contacted via HTTPS, \Sympa can make use of X509 client
+certificates to authenticate users.
 
-\section {Installing PERL modules}
+The authorization process in \Sympa (authorization scenarios) refers to authentication methods. The 
+same authorization scenarios are used for both mail and web accesss ; therefore some authentication 
+methods are considered as equivalent : mail confirmation (on the mail interface) is equivalent to
+password authentication (on the web interface) ; S/MIME authentication is equivalent to HTTPS with
+client certificate authentication. Each rule in authorization scenarios requires an authentication method 
+(\cfkeyword {smtp},\cfkeyword {md5} or \cfkeyword {smime}) ; if the required authentication method was 
+not used, a higher authentication mode can be requested.
 
-\Sympa will use \perlmodule {DBI} to communicate with the database system and
-therefore requires the DBD for your database system. DBI and 
-DBD::YourDB (\perlmodule {Msql-Mysql-modules} for MySQL) are distributed as 
-CPAN modules. Refer to ~\ref {Install PERL and CPAN modules}, 
-page~\pageref {Install PERL and CPAN modules} for installation
-details of these modules.
 
-\section {Creating a sympa DataBase}
+\section {S/MIME and HTTPS authentication}
 
-\subsection {Database structure}
+Chapter \ref {smime-sig} (page~\pageref {smime-sig}) deals with \Sympa and S/MIME signature.
+\Sympa uses \texttt {OpenSSL} library to work on S/MIME messages, you need to configure some
+related \Sympa parameters : \ref {smimeconf} (page~\pageref {smimeconf}).
 
-The sympa database structure is slightly different from the
-structure of a \file {subscribers} file. A \file {subscribers}
-file is a text file based on paragraphs (similar to 
-the \file {config} file) ; each paragraph completely describes 
-a subscriber. If somebody is subscribed to two lists, he/she 
-will appear in both subscribers files.
-
-The DataBase distinguishes information relative to a person (e-mail,
-real name, password) and his/her subscription options (list
-concerned, date of subscription, reception option, visibility 
-option). This results in a separation of the data into two tables :
-the user\_table and the subscriber\_table, linked by a user/subscriber e-mail.
-
-\subsection {Database creation}
-
-The \file {create\_db} script below will create the sympa database for 
-you. You can find it in the \dir {script/} directory of the 
-distribution (currently scripts are available for MySQL, PostgreSQL, Oracle and Sybase).
-
-\begin{itemize}
-
-  \item MySQL database creation script\\
-	\begin {quote}
-	\begin{verbatim}
-	[INCLUDE '../src/etc/script/create_db.mysql']
-	\end{verbatim}
-	\end {quote}
-
-  \item PostgreSQL database creation script\\
-	\begin {quote}
-	\begin{verbatim}
-	[INCLUDE '../src/etc/script/create_db.Pg']
-	\end{verbatim}
-	\end {quote}
-
-  \item Sybase database creation script\\
-	\begin {quote}
-	\begin{verbatim}
-	[INCLUDE '../src/etc/script/create_db.Sybase']
-	\end{verbatim}
-	\end {quote}
-
-  \item Oracle database creation script\\
-	\begin {quote}
-	\begin{verbatim}
-	[INCLUDE '../src/etc/script/create_db.Oracle']
-	\end{verbatim}
-	\end {quote}
-
-\end{itemize}
-
-You can execute the script using a simple SQL shell such as
-mysql, psql or sqlplus.
-
-Example:
+\Sympa HTTPS authentication is based on Apache+mod\_SSL that provide the required authentication
+information via CGI environment variables. You will need to edit Apache configuration to 
+allow HTTPS access and require X509 client certificate. Here is a sample Apache configuration
 
 \begin {quote}
 \begin{verbatim}
-# mysql  < create_db.mysql
-\end{verbatim}  
+SSLEngine on
+SSLVerifyClient optional
+SSLVerifyDepth  10
+...
+<Location /wws>
+   SSLOptions +StdEnvVars
+   SetHandler fastcgi-script
+</Location>
+
+ \end{verbatim}
 \end {quote}
 
-\section {Setting database privileges}
 
-We strongly recommend you restrict access to \textit {sympa} database. You will
-then set \cfkeyword {db\_user} and \cfkeyword {db\_passwd} in \file {sympa.conf}.
-
-With \index{MySQL} :
-\begin {quote}
-\begin{verbatim}
-grant all on sympa.* to sympa@localhost identified by 'your_password';
-flush privileges;
-\end{verbatim}
-\end {quote}
-
-\section {Importing subscribers data}
-
-\subsection {Importing data from a text file}
-
-You can import subscribers data into the database from a text file having
-one entry per line : the first field is an e-mail address, the second (optional) 
-field is the free form name.  Fields are spaces-separated.
-
-Example:
-\begin {quote}
-\begin{verbatim}
-## Data to be imported
-## email        gecos
-john.steward@some.company.com           John - accountant
-mary.blacksmith@another.company.com     Mary - secretary
-\end{verbatim}  
-\end {quote}
-
-To import data into the database :
-
-\begin {quote}
-\begin{verbatim}
-cat /tmp/my_import_file | sympa.pl --import=my_list
-\end{verbatim}  
-\end {quote}
-
-(see \ref {sympa.pl}, page~\pageref {sympa.pl}).
-
-
-\subsection {Importing data from subscribers files}
-
-If a mailing list was previously setup to store subscribers into 
-\file {subscribers} file (the default mode in versions older then 2.2b) 
-you can load subscribers data into the sympa database. The easiest way
-is to edit the list configuration using \WWSympa (this requires listmaster 
-privileges) and change the data source from \textbf {file} to \textbf {database}
-; subscribers data will be loaded into the database at the same time.
- 
-If the subscribers file is big, a timeout may occur during the FastCGI execution
-(Note that you can set a longer timeout with the \option {-idle-timeout} option of
-the \texttt {FastCgiServer} Apache configuration directive). In this case, or if you have not installed \WWSympa, you should use the \file {load\_subscribers.pl} script.
-
-
-\section {Extending database table format}
-
-You can easily add other fields to \textbf {subscriber\_table} and
-\textbf {user\_table}, they will not disturb \Sympa because it lists
-explicitely the field it expects in SELECT queries.
-
-Moreover you can access these database fields from within \Sympa
-(in templates), as far as you list these additional fields in
-\file {sympa.conf} (See \ref {db-additional-subscriber-fields}, page~\pageref {db-additional-subscriber-fields}
-and \ref {db-additional-user-fields}, page~\pageref {db-additional-user-fields}).
-
-
-\section {\Sympa configuration}
-
-To store subscriber information in your newly created
-database, you first need to tell \Sympa what kind of
-database to work with, then you must configure
-your list to access the database.
-
-You define the database source in \file {sympa.conf} :
-\cfkeyword {db\_type}, \cfkeyword {db\_name}, 
-\cfkeyword {db\_host}, \cfkeyword {db\_user}, 
-\cfkeyword {db\_passwd}.
-
-If you are interfacing \Sympa with an Oracle database, 
-\cfkeyword {db\_name} is the SID.
-
-All your lists are now configured to use the database,
-unless you set list parameter \lparam {user\_data\_source} 
-to \textbf {file} or \textbf {include}. 
-
-\Sympa will now extract and store user
-information for this list using the database instead of the
-\file {subscribers} file. Note however that subscriber information is 
-dumped to \file {subscribers.db.dump} at every shutdown, 
-to allow a manual rescue restart (by renaming subscribers.db.dump to
-subscribers and changing the user\_data\_source parameter), if ever the
-database were to become inaccessible.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Using Sympa with LDAP
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\cleardoublepage
-\chapter {Using \Sympa with LDAP}
-\label {ldap}
-
-\index {LDAP} is a client-server protocol for accessing a directory service. Sympa
-provide various features based on access to one or more LDAP directories :
-
-\begin{itemize}
-
-	\item{authentication using LDAP directory instead of sympa internal storage of password}\\
-
-	\item{named filters used in authorization scenario condition}\\ 
-	
- 	\item{LDAP extraction of list subscribers (see ~\ref {par-user-data-source})}\\         
-	
-\end{itemize}
-
-
-\section {Authentication via uid or alternate email}
+\section {Authentication with email address, uid or alternate email address}
 \label {ldap-auth}
 
 \Sympa stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of \index {LDAP authentication} allows to use \Sympa in an intranet without duplicating user passwords. 
@@ -2913,8 +2951,8 @@ After this operation, the address in the field FROM will be the Canonic email, i
 That means that \Sympa will get this email and use it during all the session until you clearly ask \Sympa to change your email address via the two pages : which and pref.
   
 
-
-\subsection {auth.conf}
+\section {auth.conf}
+\label {auth-conf}
 
 The \file {[ETCDIR]/auth.conf} configuration file contains numerous
 parameters which are read on start-up of \Sympa. If you change this file, do not forget
@@ -2928,7 +2966,6 @@ Single Sign On service designed by Yale University  http://www.yale.edu/tp/cas/ 
 Sympa parse each authentication service and try to use it depending on input datas from cookies and form parameters. At the first
 stage Sympa always check its own authentication cookie comming from the client. If recognized and valid the user email is extracted
 and authentication is finished. 
-
 
 Next step is to try http redirection to each defined CAS server, if one CAS server redirect the user
 to Sympa with a valid ticket Sympa receive a user id from the CAS server and connect to the related LDAP directory to get the user
@@ -3021,14 +3058,14 @@ user_table
 \end{verbatim}
 \end {quote}
 
-\subsubsection {user\_table paragraph in auth.conf}
+\subsection {user\_table paragraph}
 
 The user\_table paragraph is related to sympa internal authentication by email and password. It is the simplest one the only parameters
 are \cfkeyword {regexp} and \cfkeyword {negative\_regexp} which are perl regexp use to select or block this authentication method for
 a class of email. 
 
 
-\subsubsection {ldap paragraph in auth.conf}
+\subsection {ldap paragraph}
 
 
 \begin{itemize}
@@ -3197,7 +3234,7 @@ a class of email.
 \end{itemize}
 
 
-\subsubsection {cas paragraph in auth.conf}
+\subsection {cas paragraph}
 
 
 \begin{itemize}
@@ -3260,7 +3297,222 @@ a class of email.
 
 \end{itemize}
 
-\section {Named Filters}
+\section {Sharing \WWSympa authentication with other applications}
+\label {sharing-auth}
+
+If your are not using a web Single SignOn system you might want to make other web applications collaborate with \Sympa,
+and share the same authentication system. \Sympa uses
+HTTP cookies to carry users' auth information from page to page.
+This cookie carries no information concerning privileges. To make your application
+work with \Sympa, you have two possibilities :
+
+\begin {itemize}
+
+\item Delegating authentication operations to \WWSympa \\
+If you want to avoid spending a lot of time programming a CGI to do Login, Logout
+and Remindpassword, you can copy \WWSympa's login page to your 
+application, and then make use of the cookie information within your application. 
+The cookie format is :
+\begin{verbatim}
+sympauser=<user_email>:<checksum>
+\end{verbatim}
+where \texttt{<}user\_email\texttt{>} is the user's complete e-mail address, and
+\texttt{<}checksum\texttt{>} are the 8 first bytes of the a MD5 checksum of the \texttt{<}user\_email\texttt{>}+\Sympa \cfkeyword {cookie}
+configuration parameter.
+Your application needs to know what the \cfkeyword {cookie} parameter
+is, so it can check the HTTP cookie validity ; this is a secret shared
+between \WWSympa and your application.
+\WWSympa's \textit {loginrequest} page can be called to return to the
+referer URL when an action is performed. Here is a sample HTML anchor :
+
+\begin{verbatim}
+<A HREF="/wws/loginrequest/referer">Login page</A>
+\end{verbatim}
+
+You can also have your own HTML page submitting data to \file {wwsympa.fcgi} CGI. If you're
+doing so, you can set the \texttt {referer} variable to another URI. You can also
+set the \texttt {failure\_referer} to make WWSympa redirect the client to a different
+URI if login fails.
+
+\item Using \WWSympa's HTTP cookie format within your auth module \\
+To cooperate with \WWSympa, you simply need to adopt its HTTP
+cookie format and share the secret it uses to generate MD5 checksums,
+i.e. the \cfkeyword {cookie} configuration parameter. In this way, \WWSympa
+will accept users authenticated through your application without
+further authentication.
+
+\end {itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Managing authorizations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\chapter {Authorization scenarios}
+\label {scenarios}
+\index{scenario}
+
+List parameters controlling the behavior of commands are linked to different authorization scenarios.
+For example : the \cfkeyword {send private} parameter is related to the send.private scenario.
+There are four possible locations for a authorization scenario. When \Sympa seeks to apply an authorization scenario, it
+looks first in the related list directory \dir {[EXPL_DIR]/\texttt{<}list\texttt{>}/scenari}. If it
+does not find the file there, it scans the current robot configuration directory \dir {[ETCDIR]/\samplerobot/scenari}, then the site's configuration directory \dir {[ETCDIR]/scenari},
+and finally \dir {[ETCBINDIR]/scenari}, which is the directory installed by the Makefile.
+
+An authorization scenario is a small configuration language to describe who
+can perform an operation and which authentication method is requested for it.
+An authorization scenario is an ordered set of rules. The goal is to provide a simple and
+flexible way to configure authorization and required authentication method for each operation.
+
+
+Each authorization scenario rule contains :
+\begin{itemize}
+[STOPPARSE]
+\item a condition : the condition is evaluated by \Sympa. It can use
+  variables such as $[$sender$]$ for the sender e-mail, $[$list$]$ for the listname etc.
+\item an authentication method. The authentication method can be \cfkeyword {smtp},
+\cfkeyword {md5} or \cfkeyword {smime}. The rule is applied by \Sympa if both condition
+and authentication method match the runtime context. \cfkeyword {smtp} is used if
+\Sympa use the SMTP \cfkeyword {from:} header , \cfkeyword {md5} is used if a unique
+md5 key as been returned by the requestor to validate her message, \cfkeyword {smime}
+is used for signed messages (see \ref {smimeforsign}, page~\pageref {smimeforsign}).
+\item a returned atomic action that will be executed by \Sympa if the rule matches
+
+\end{itemize}
+
+ 
+Example
+
+\begin {quote}
+del.auth
+\begin{verbatim}
+title.us deletion performed only by list owners, need authentication
+title.fr suppression réservée au propriétaire avec authentification
+title.es eliminación reservada sólo para el propietario, necesita autentificación
+
+
+  is_owner([listname],[sender])  smtp       -> request_auth
+  is_listmaster([sender])        smtp       -> request_auth
+  true()                         md5,smime  -> do_it
+\end{verbatim}
+\end {quote}
+
+\section {rules specifications}
+
+An authorization scenario consists of rules, evaluated in order beginning with the first. 
+Rules are defined as follows :
+\begin {quote}
+\begin{verbatim}
+<rule> ::= <condition> <auth_list> -> <action>
+
+<condition> ::= [!] <condition
+                | true ()
+                | all ()
+                | equal (<var>, <var>)
+                | match (<var>, /perl_regexp/)
+                | is_subscriber (<listname>, <var>)
+                | is_owner (<listname>, <var>)
+                | is_editor (<listname>, <var>)
+                | is_listmaster (<var>)
+                | older (<date>, <date>)    # true if first date is anterior to the second date
+                | newer (<date>, <date>)    # true if first date is posterior to the second date
+<var> ::= [email] | [sender] | [user-><user_key_word>] | [previous_email]
+                  | [remote_host] | [remote_addr]
+	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
+		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
+	 	  | [msg_part->type] | [msg_part->body] | [is_bcc] | [current_date] | <string>
+
+[is_bcc] ::= set to 1 if the list is neither in To: nor Cc:
+
+[sender] ::= email address of the current user (used on web or mail interface). Default value is 'nobody'
+
+[previous_email] ::= old email when changing subscribtion email in preference page. 
+
+<date> ::= '<date_element> [ +|- <date_element>]'
+
+<date_element> ::= <epoch_date> | <var> | <date_expr>
+
+<epoch_date> ::= <integer>
+
+<date_expr> ::= <integer>y<integer>m<integer>d<integer>h<integer>min<integer>sec
+
+<listname> ::= [listname] | <listname_string>
+
+<auth_list> ::= <auth>,<auth_list> | <auth>
+
+<auth> ::= smtp|md5|smime
+
+<action> ::=   do_it [,notify]
+             | do_it [,quiet]
+             | reject(<tpl_name>)
+             | request_auth
+             | owner
+	     | editor
+	     | editorkey
+
+<tpl_name> ::= corresponding template (<tpl_name>.tpl) is send to the sender
+
+<user_key_word> ::= email | gecos | lang | password | cookie_delay_user
+	            | <additional_user_fields>
+
+<subscriber_key_word> ::= email | gecos | bounce | reception 
+	                  | visibility | date | update_date
+			  | <additional_subscriber_fields>
+
+<list_key_word> ::= name | host | lang | max_size | priority | reply_to | 
+		    status | subject | account | total
+
+<conf_key_word> ::= domain | email | listmaster | default_list_priority | 
+		      sympa_priority | request_priority | lang | max_size
+	 	      
+\end{verbatim}
+\end {quote}
+
+(Refer to  \ref {tasks}, page~\pageref {tasks} for date format definition)
+
+perl\_regexp can contain the string [host] (interpreted at run time as the list or robot domain).
+The variable notation [msg\_header-\texttt{>}\texttt{<}smtp\_key\_word\texttt{>}] is interpreted as the 
+SMTP header value only when evaluating the authorization scenario for sending messages. 
+It can be used, for example, to require editor validation for multipart messages.
+[msg\_part-\texttt{>}type] and [msg\_part-\texttt{>}body] are the MIME parts content-types and bodies ; the body is available
+for MIME parts in text/xxx format only.
+
+
+A bunch of authorization scenarios is provided with the \Sympa distribution ; they provide
+a large set of configuration that allow to create lists for most usage. But you will
+probably create authorization scenarios for your own need. In this case, don't forget to restart \Sympa
+and wwsympa because authorization scenarios are not reloaded dynamicaly.
+
+[STARTPARSE]
+These standard authorization scenarios are located in the \dir {[ETCBINDIR]/scenari/}
+directory. Default scenarios are named \texttt{<}command\texttt{>}.default.
+
+You may also define and name your own authorization scenarios. Store them in the
+\dir {[ETCDIR]/scenari} directory. They will not be overwritten by Sympa release.
+Scenarios can also be defined for a particular virtual robot (using directory \dir {[ETCDIR]/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {[EXPL_DIR]/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ).
+[STOPPARSE]
+
+Example:
+
+Copy the previous scenario to \file {scenari/subscribe.rennes1} :
+
+\begin {quote}
+\begin{verbatim}
+equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -> reject
+match([sender], /univ-rennes1\.fr\$/) smtp,smime -> do_it
+true()                               smtp,smime -> owner
+\end{verbatim}
+\end {quote}
+
+You may now refer to this authorization scenario in any list configuration file, for example :
+
+\begin {quote}
+\begin{verbatim}
+subscribe rennes1
+\end{verbatim}
+\end {quote}
+
+\section {LDAP Named Filters}
+\label {named-filters}
 
 At the moment Named Filters are only used in authorization scenarios. They enable to select a category of people who will be authorized or not to realise some actions.
 	
@@ -3338,251 +3590,50 @@ The variables used by 'search' are :
 The method of authentication does not change.
 [STARTPARSE]
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SMIME
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section {scenario inclusion}
 
-
-\cleardoublepage
-\chapter {\Sympa with S/MIME and HTTPS}
-    \label {smime}
-
-S/MIME is a cryptographic method for Mime messages based on X509 certificates.
-Before installing \Sympa S/Mime features (which we call S/Sympa), you should be
-under no illusion about what the S stands for : ``S/MIME'' means ``Secure MIME''.
-That S certainly does not stand for ``Simple''.
-
-The aim of this chapter is simply to describe what security level is provided
-by \Sympa while
-using S/MIME messages, and how to configure \Sympa for it. It is not intended
-to teach anyone what S/Mime is and why it is so complex ! RFCs numbers 2311,
-2312, 2632, 2633 and 2634, along with a lot of literature about S/MIME, PKCS\#7
-and PKI is available on the Internet. \Sympa 2.7 is the first version of
-\Sympa to include S/MIME features as beta-testing features.
-
-\section {Signed message distribution}
-
-No action required.
-You probably imagine that any mailing list manager (or any mail forwarder)
-is compatible with S/MIME signatures, as long as it respects the MIME structure of
-incoming messages. You are right. Even Majordomo can distribute a signed message!
-As \Sympa provides MIME compatibility, you don't need to do
-anything in order to allow subscribers to verify signed messages distributed
-through a list. This is not an issue at all, since any processe that
-distributes messages  is compatible with end user
-signing processes. Sympa simply skips the message footer attachment
-(ref \ref {messagefooter}, page~\pageref {messagefooter}) to prevent any
-body corruption which would break the signature.
-
-\section {Use of S/MIME signature by Sympa itself}
-
-Sympa is able to verify S/MIME signatures in order to apply S/MIME
-authentication methods for message handling. 
-Currently, this feature is limited to the
-distribution process, and to any commands \Sympa might find in the message
-body.  The reasons for this restriction are related to current S/MIME
-usage.
-S/MIME signature structure is based on the encryption of a digest of the
-message. Most S/MIME agents do not include any part of the
-message headers in the message digest, so anyone can modify the message
-header without signature corruption! This is easy to do : for example, anyone
-can edit a signed message with their preferred message agent, modify whatever
-header they want (for example \texttt {Subject:} , \texttt {Date:} and
-\texttt {To:}, and redistribute the message to a list or to the robot
-without breaking the signature.
-
-So Sympa cannot apply the S/MIME
-authentication method to a command parsed in the \texttt {Subject:} field of a
-message or via the \texttt {-subscribe} or \texttt {-unsubscribe} e-mail
-address. 
-
-\section {Use of S/MIME encryption} 
-
-S/Sympa is not an implementation of the ``S/MIME Symmetric Key Distribution''
-internet draft. This sophisticated scheme is required for large lists
-with encryption. So, there is still some scope for future developments :) 
-
-
-We assume that S/Sympa distributes message as received, i.e. unencrypted when the
-list receives an unencrypted message, but otherwise encrypted.
-
-In order to be able to send encrypted messages to a list, the sender needs
-to use the X509 certificate of the list. Sympa will send an encrypted message
-to each subscriber using the subscriber's certificate. To provide this feature,
-\Sympa needs to manage one certificate for each list and one for each
-subscriber. This is available in Sympa version 2.8 and above.
-
-\section {S/Sympa configuration} 
-
-\subsection {Installation}
-\label {smimeinstall}
-
-The only requirement is OpenSSL (http://www.openssl.org) version 0.9.5a and above.
-OpenSSL is used by \Sympa as an external plugin
-(like sendmail or postfix), so it must be installed with the appropriate access
-(x for sympa.sympa). 
-
-\subsection {configuration in sympa.conf}
-\label {smimeconf}
-
-S/Sympa configuration is very simple. If you are used to Apache SSL,
-you should not feel lost. If you are an OpenSSL guru, you will
-feel at home, and there may even be changes you will wish to suggest to us.
- 
-The basic requirement is to let \Sympa know where to find the binary file for the OpenSSL program
-and the certificates of the trusted certificate authority. 
-This is done using the optional parameters \unixcmd {openSSL} and
-\cfkeyword {capath} and / or \cfkeyword {cafile}.
-
-\begin{itemize}
-
-  \item \cfkeyword {openSSL} : the path for the OpenSSL binary file,
-         usually \texttt {/usr/local/ssl/bin/openSSL}
-  \item \cfkeyword {cafile} : the path of a bundle of trusted ca certificates. 
-        The file \tildefile {[ETCBINDIR]/ca\-bundle.crt} included in Sympa distribution can be used.
-
-	Both the \cfkeyword  {cafile} file and the \cfkeyword {capath} directory
-        should be shared with your Apache+mod\_ssl configuration. This is useful
-	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
-
-  \item \cfkeyword {key\_password} : the password used to protect all list private keys. xxxxxxx	
-\end{itemize}
-
-
-\subsection {configuration to recognize S/MIME signatures}
-\label {smimeforsign}
-
-Once  \texttt {OpenSSL} has been installed, and \texttt {sympa.conf} configured,
-your S/Sympa is ready to use S/Mime signatures for any authentication operation. You simply need
-to use the appropriate authorization scenario for the operation you want to secure. 
-(see \ref {scenarios}, page~\pageref {scenarios}).
-
-When receiving a message, \Sympa applies
-the authorization scenario with the appropriate authentication method parameter.
-In most cases the authentication method is ``\texttt {smtp}'', but in cases
-where the message is signed and the signature has been checked and matches the
-sender e-mail, \Sympa applies the ``\texttt {smime}'' authentication
-method.
-
-It is vital to ensure that if the authorization scenario does not recognize this authentication method, the
-operation requested will be rejected. Consequently, authorization scenarios distributed
-prior to version 2.7 are not compatible with the OpenSSL configuration of Sympa. 
-All
-standard authorization scenarios (those distributed with sympa)
-now include the \texttt {smime} method. The following example is
-named \texttt {send.private\_smime}, and restricts sends to subscribers using an S/mime signature :
+Scenarios can also contain includes :
 
 \begin {quote}
 \begin{verbatim}
-[STOPPARSE]
-title.us restricted to subscribers check smime signature
-title.fr limité aux abonnés, vérif de la signature smime
-
-is_subscriber([listname],[sender])             smime  -> do_it
-is_editor([listname],[sender])                 smime  -> do_it
-is_owner([listname],[sender])                  smime  -> do_it
-[STARTPARSE]
+    subscribe
+        include commonreject
+        match([sender], /cru\.fr$/)          smtp,smime -> do_it
+	true()                               smtp,smime -> owner
 \end{verbatim}
 \end {quote}
+	    
 
-It as also possible to mix various authentication methods in a single authorization scenario. The following
-example, \texttt {send.private\_key}, requires either an md5 return key or an S/Mime signature :
+In this case sympa applies recursively the scenario named \texttt {include.commonreject}
+before introducing the other rules. This possibility was introduced in
+order to facilitate the administration of common rules.
+
+You can define a set of common scenario rules, used by all lists.
+include.\texttt{<}action\texttt{>}.header is automatically added to evaluated scenarios.
+
+
+\section {Sample scenario rules}
+
 \begin {quote}
 \begin{verbatim}
-[STOPPARSE]
-title.us restricted to subscribers with previous md5 authentication
-title.fr réservé aux abonnés avec authentification MD5 préalable
-
-is_subscriber([listname],[sender]) smtp          -> request_auth
-true()                             md5,smime     -> do_it
-[STARTPARSE]
+newer([current_date], '[subscriber->date]+2m')   smtp,md5,smime -> do_it
 \end{verbatim}
 \end {quote}
+Subscription date is less than 2 month old.
 
-\subsection {distributing encrypted messages}
-\label {smimeforencrypt}
+\begin {quote}
+\begin{verbatim}
+older([current_date], '[subscriber->expiration_date]')   smtp,md5,smime -> do_it
+\end{verbatim}
+\end {quote}
+Subscriber's expiration date is over.
+The subscriber's expiration date is an additional, site defined, data field ; it needs
+to be defined by the listmaster in the database an declared in sympa.conf 
+(see~\ref {db-additional-subscriber-fields}, page~\pageref {db-additional-subscriber-fields}).
+Note that expiration\_date database field should be an integer (epoch date format) not
+a complex date format.
+[STARTPARSE]
 
-In this section we describe S/Sympa encryption features. The goal is to use
-S/MIME encryption for distribution of a message to subscribers whenever the message has been
-received encrypted from the sender. 
-
-Why is S/Sympa concerned by the S/MIME encryption distribution process ?
-It is because encryption is performed using the \textbf {recipient} X509
-certificate, whereas the signature requires the sender's private key. Thus, an encrypted
-message can be read by the recipient only if he or she is the owner of the private
-key associated with the certificate.
-Consequently, the only way to encrypt a message for a list of recipients is
-to encrypt and send the message for each recipient. This is what S/Sympa
-does when distributing an encrypted message.
-
-The S/Sympa encryption feature in the distribution process supposes that sympa
-has received an encrypted message for some list. To be able to encrypt a message
-for a list, the sender must have some access to an X509 certificate for the list.
-So the first requirement is to install a certificate and a private key for
-the list.
-The mechanism whereby certificates are obtained and managed is complex. Current versions
-of S/Sympa assume that list certificates and private keys are installed by
-the listmaster using \dir {[SCRIPTDIR]/p12topem.pl} script. This script allows
-you to install a PKCS\#12 bundle file containing a private key and
-a certificate using the appropriate format.
-
-It is a good idea to have a look at the OpenCA (http://www.openssl.org)
-documentation and/or PKI providers' web documentation.
-You can use commercial certificates or home-made ones. Of course, the
-certificate must be approved for e-mail applications, and issued by one of
-the trusted CA's described in the \cfkeyword{cafile} file or the
-\cfkeyword{capath} Sympa configuration parameter. 
-
-The list private key must be installed in a file named
-\dir {[EXPL_DIR]/\samplelist/private\_key}. All the list private
-keys must be encrypted using a single password defined by the
-\cfkeyword {password} parameter in \cfkeyword {sympa.conf}.
-
-\subsubsection {Use of Netscape navigator to obtain X509 list certificates}
-
-In many cases e-mail X509 certificates are distributed via a web server and
-loaded into the browser using your mouse :) Netscape allows
-certificates to be exported to a file. So one way to get a list certificate is to obtain an e-mail
-certificate for the canonical list address in your browser, and then to export and install it for Sympa :
-\begin {enumerate}
-\item browse the net and load a certificate for the list address on some
-PKI provider (your own OpenCa pki server , thawte, verisign, ...). Be
-careful :  the e-mail certificate must be correspond exactly to the canonical address of
-your  list, otherwise, the signature will be incorrect (sender e-mail will
-not match signer e-mail).
-\item in the security menu, select the intended certificate and export
-it. Netscape will prompt you for a password and a filename to encrypt
-the output file. The format used by Netscape is  ``pkcs\#12''. 
-Copy this file to the list home directory.
-\item convert the pkcs\#12 file into a pair of pem files :
-\cfkeyword {cert.pem} and \cfkeyword {private\_key} using
-the \unixcmd {[SCRIPTDIR]/p12topem.pl} script. Use \unixcmd
-{p12topem.pl -help} for details.
-\item be sure that \cfkeyword {cert.pem} and \cfkeyword {private\_key}
-are owned by sympa with ``r'' access.
-\item As soon as a certificate is installed for a list, the list  home page
-includes a new link to load the certificate to the user's browser, and the welcome
-message is signed by the list.
-\end {enumerate} 
-
-
-\section {Managing certificates with tasks}
-
-You may automate the management of certificates with two global task models provided with
-\Sympa. See \ref {tasks}, page~\pageref {tasks} to know more about tasks.
-Report to \ref {certificate-task-config}, page~\pageref {certificate-task-config} to configure your \Sympa to use these facilities.
-
-\subsection {chk\_cert\_expiration.daily.task model}
-
-A task created with the model \file {chk\_cert\_expiration.daily.task} checks every day the expiration date of
-certificates stored in the \dir {[EXPL_DIR]/X509-user-certs/} directory.
-The user is warned with the \file {daily\_cert\_expiration} template when his certificate has expired
-or is going to expire within three days.
-
-\subsection {crl\_update.daily.task model}
-
-You may use the model \file {crl\_update.daily.task} to create a task which daily updates the certificate revocation
-lists when needed.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Virtual robot how to
@@ -4086,48 +4137,7 @@ page~\pageref {db-additional-subscriber-fields} and \ref {db-additional-user-fie
 
 \section {Sharing \WWSympa authentication with other applications}
 
-You might want to make other web applications collaborate with \Sympa,
-and share the same authentication system. \Sympa uses
-HTTP cookies to carry users' auth information from page to page.
-This cookie carries no information concerning privileges. To make your application
-work with \Sympa, you have two possibilities :
-
-\begin {itemize}
-
-\item Delegating authentication operations to \WWSympa \\
-If you want to avoid spending a lot of time programming a CGI to do Login, Logout
-and Remindpassword, you can copy \WWSympa's login page to your 
-application, and then make use of the cookie information within your application. 
-The cookie format is :
-\begin{verbatim}
-sympauser=<user_email>:<checksum>
-\end{verbatim}
-where \texttt{<}user\_email\texttt{>} is the user's complete e-mail address, and
-\texttt{<}checksum\texttt{>} are the 8 first bytes of the a MD5 checksum of the \texttt{<}user\_email\texttt{>}+\Sympa \cfkeyword {cookie}
-configuration parameter.
-Your application needs to know what the \cfkeyword {cookie} parameter
-is, so it can check the HTTP cookie validity ; this is a secret shared
-between \WWSympa and your application.
-\WWSympa's \textit {loginrequest} page can be called to return to the
-referer URL when an action is performed. Here is a sample HTML anchor :
-
-\begin{verbatim}
-<A HREF="/wws/loginrequest/referer">Login page</A>
-\end{verbatim}
-
-You can also have your own HTML page submitting data to \file {wwsympa.fcgi} CGI. If you're
-doing so, you can set the \texttt {referer} variable to another URI. You can also
-set the \texttt {failure\_referer} to make WWSympa redirect the client to a different
-URI if login fails.
-
-\item Using \WWSympa's HTTP cookie format within your auth module \\
-To cooperate with \WWSympa, you simply need to adopt its HTTP
-cookie format and share the secret it uses to generate MD5 checksums,
-i.e. the \cfkeyword {cookie} configuration parameter. In this way, \WWSympa
-will accept users authenticated through your application without
-further authentication.
-
-\end {itemize}
+See \ref {sharing-auth}, page~\pageref {sharing-auth}.
 
 
 \section {Internationalization}
@@ -4231,213 +4241,8 @@ A default topic is hard-coded in \Sympa : \textit {default}. This default topic
 contains all lists for which a topic has not been specified.
 
 \section {Authorization scenarios}
-    \label {scenarios}
-    \index{scenario}
 
-List parameters controlling the behavior of commands are linked to different authorization scenarios.
-For example : the \cfkeyword {send private} parameter is related to the send.private scenario.
-There are four possible locations for a authorization scenario. When \Sympa seeks to apply an authorization scenario, it
-looks first in the related list directory \dir {[EXPL_DIR]/\texttt{<}list\texttt{>}/scenari}. If it
-does not find the file there, it scans the current robot configuration directory \dir {[ETCDIR]/\samplerobot/scenari}, then the site's configuration directory \dir {[ETCDIR]/scenari},
-and finally \dir {[ETCBINDIR]/scenari}, which is the directory installed by the Makefile.
-
-An authorization scenario is a small configuration language to describe who
-can perform an operation and which authentication method is requested for it.
-An authorization scenario is an ordered set of rules. The goal is to provide a simple and
-flexible way to configure authorization and required authentication method for each operation.
-
-
-Each authorization scenario rule contains :
-\begin{itemize}
-[STOPPARSE]
-\item a condition : the condition is evaluated by \Sympa. It can use
-  variables such as $[$sender$]$ for the sender e-mail, $[$list$]$ for the listname etc.
-\item an authentication method. The authentication method can be \cfkeyword {smtp},
-\cfkeyword {md5} or \cfkeyword {smime}. The rule is applied by \Sympa if both condition
-and authentication method match the runtime context. \cfkeyword {smtp} is used if
-\Sympa use the SMTP \cfkeyword {from:} header , \cfkeyword {md5} is used if a unique
-md5 key as been returned by the requestor to validate her message, \cfkeyword {smime}
-is used for signed messages (see \ref {smimeforsign}, page~\pageref {smimeforsign}).
-\item a returned atomic action that will be executed by \Sympa if the rule matches
-
-\end{itemize}
-
- 
-Example
-
-\begin {quote}
-del.auth
-\begin{verbatim}
-title.us deletion performed only by list owners, need authentication
-title.fr suppression réservée au propriétaire avec authentification
-title.es eliminación reservada sólo para el propietario, necesita autentificación
-
-
-  is_owner([listname],[sender])  smtp       -> request_auth
-  is_listmaster([sender])        smtp       -> request_auth
-  true()                         md5,smime  -> do_it
-\end{verbatim}
-\end {quote}
-
-\subsection {rules specifications}
-
-An authorization scenario consists of rules, evaluated in order beginning with the first. 
-Rules are defined as follows :
-\begin {quote}
-\begin{verbatim}
-<rule> ::= <condition> <auth_list> -> <action>
-
-<condition> ::= [!] <condition
-                | true ()
-                | all ()
-                | equal (<var>, <var>)
-                | match (<var>, /perl_regexp/)
-                | is_subscriber (<listname>, <var>)
-                | is_owner (<listname>, <var>)
-                | is_editor (<listname>, <var>)
-                | is_listmaster (<var>)
-                | older (<date>, <date>)    # true if first date is anterior to the second date
-                | newer (<date>, <date>)    # true if first date is posterior to the second date
-<var> ::= [email] | [sender] | [user-><user_key_word>] | [previous_email]
-                  | [remote_host] | [remote_addr]
-	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
-		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
-	 	  | [msg_part->type] | [msg_part->body] | [is_bcc] | [current_date] | <string>
-
-[is_bcc] ::= set to 1 if the list is neither in To: nor Cc:
-
-[sender] ::= email address of the current user (used on web or mail interface). Default value is 'nobody'
-
-[previous_email] ::= old email when changing subscribtion email in preference page. 
-
-<date> ::= '<date_element> [ +|- <date_element>]'
-
-<date_element> ::= <epoch_date> | <var> | <date_expr>
-
-<epoch_date> ::= <integer>
-
-<date_expr> ::= <integer>y<integer>m<integer>d<integer>h<integer>min<integer>sec
-
-<listname> ::= [listname] | <listname_string>
-
-<auth_list> ::= <auth>,<auth_list> | <auth>
-
-<auth> ::= smtp|md5|smime
-
-<action> ::=   do_it [,notify]
-             | do_it [,quiet]
-             | reject(<tpl_name>)
-             | request_auth
-             | owner
-	     | editor
-	     | editorkey
-
-<tpl_name> ::= corresponding template (<tpl_name>.tpl) is send to the sender
-
-<user_key_word> ::= email | gecos | lang | password | cookie_delay_user
-	            | <additional_user_fields>
-
-<subscriber_key_word> ::= email | gecos | bounce | reception 
-	                  | visibility | date | update_date
-			  | <additional_subscriber_fields>
-
-<list_key_word> ::= name | host | lang | max_size | priority | reply_to | 
-		    status | subject | account | total
-
-<conf_key_word> ::= domain | email | listmaster | default_list_priority | 
-		      sympa_priority | request_priority | lang | max_size
-	 	      
-\end{verbatim}
-\end {quote}
-
-(Refer to  \ref {tasks}, page~\pageref {tasks} for date format definition)
-
-perl\_regexp can contain the string [host] (interpreted at run time as the list or robot domain).
-The variable notation [msg\_header-\texttt{>}\texttt{<}smtp\_key\_word\texttt{>}] is interpreted as the 
-SMTP header value only when evaluating the authorization scenario for sending messages. 
-It can be used, for example, to require editor validation for multipart messages.
-[msg\_part-\texttt{>}type] and [msg\_part-\texttt{>}body] are the MIME parts content-types and bodies ; the body is available
-for MIME parts in text/xxx format only.
-
-
-A bunch of authorization scenarios is provided with the \Sympa distribution ; they provide
-a large set of configuration that allow to create lists for most usage. But you will
-probably create authorization scenarios for your own need. In this case, don't forget to restart \Sympa
-and wwsympa because authorization scenarios are not reloaded dynamicaly.
-
-[STARTPARSE]
-These standard authorization scenarios are located in the \dir {[ETCBINDIR]/scenari/}
-directory. Default scenarios are named \texttt{<}command\texttt{>}.default.
-
-You may also define and name your own authorization scenarios. Store them in the
-\dir {[ETCDIR]/scenari} directory. They will not be overwritten by Sympa release.
-Scenarios can also be defined for a particular virtual robot (using directory \dir {[ETCDIR]/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {[EXPL_DIR]/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ).
-[STOPPARSE]
-
-Example:
-
-Copy the previous scenario to \file {scenari/subscribe.rennes1} :
-
-\begin {quote}
-\begin{verbatim}
-equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -> reject
-match([sender], /univ-rennes1\.fr\$/) smtp,smime -> do_it
-true()                               smtp,smime -> owner
-\end{verbatim}
-\end {quote}
-
-You may now refer to this authorization scenario in any list configuration file, for example :
-
-\begin {quote}
-\begin{verbatim}
-subscribe rennes1
-\end{verbatim}
-\end {quote}
-
-\subsection {scenario inclusion}
-
-Scenarios can also contain includes :
-
-\begin {quote}
-\begin{verbatim}
-    subscribe
-        include commonreject
-        match([sender], /cru\.fr$/)          smtp,smime -> do_it
-	true()                               smtp,smime -> owner
-\end{verbatim}
-\end {quote}
-	    
-
-In this case sympa applies recursively the scenario named \texttt {include.commonreject}
-before introducing the other rules. This possibility was introduced in
-order to facilitate the administration of common rules.
-
-You can define a set of common scenario rules, used by all lists.
-include.\texttt{<}action\texttt{>}.header is automatically added to evaluated scenarios.
-
-
-\section {Sample scenario rules}
-
-\begin {quote}
-\begin{verbatim}
-newer([current_date], '[subscriber->date]+2m')   smtp,md5,smime -> do_it
-\end{verbatim}
-\end {quote}
-Subscription date is less than 2 month old.
-
-\begin {quote}
-\begin{verbatim}
-older([current_date], '[subscriber->expiration_date]')   smtp,md5,smime -> do_it
-\end{verbatim}
-\end {quote}
-Subscriber's expiration date is over.
-The subscriber's expiration date is an additional, site defined, data field ; it needs
-to be defined by the listmaster in the database an declared in sympa.conf 
-(see~\ref {db-additional-subscriber-fields}, page~\pageref {db-additional-subscriber-fields}).
-Note that expiration\_date database field should be an integer (epoch date format) not
-a complex date format.
-[STARTPARSE]
-
+See \ref {scenarios}, page~\pageref {scenarios}.
 
 \section {Loop detection}
     \label {loop-detection}
@@ -7302,6 +7107,277 @@ When a virus is detected, \Sympa looks for the virus name in the virus scanner S
 \file {your\_infected\_msg.tpl} warning to the sender of the mail.
 The mail is saved as 'bad' and the working directory is deleted (except if \Sympa is running in debug mode).
   
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Using Sympa with LDAP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Using \Sympa with LDAP}
+\label {ldap}
+
+\index {LDAP} is a client-server protocol for accessing a directory service. Sympa
+provide various features based on access to one or more LDAP directories :
+
+\begin{itemize}
+
+	\item{authentication using LDAP directory instead of sympa internal storage of password}\\
+	  see ~\ref {auth-conf}, page~\pageref {auth-conf}
+
+	\item{named filters used in authorization scenario condition}\\ 
+	  see ~\ref {named-filters}, page~\pageref {named-filters}
+	
+ 	\item{LDAP extraction of list subscribers (see ~\ref {par-user-data-source})}\\         
+	
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SMIME
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\cleardoublepage
+\chapter {\Sympa with S/MIME and HTTPS}
+    \label {smime}
+
+S/MIME is a cryptographic method for Mime messages based on X509 certificates.
+Before installing \Sympa S/Mime features (which we call S/Sympa), you should be
+under no illusion about what the S stands for : ``S/MIME'' means ``Secure MIME''.
+That S certainly does not stand for ``Simple''.
+
+The aim of this chapter is simply to describe what security level is provided
+by \Sympa while
+using S/MIME messages, and how to configure \Sympa for it. It is not intended
+to teach anyone what S/Mime is and why it is so complex ! RFCs numbers 2311,
+2312, 2632, 2633 and 2634, along with a lot of literature about S/MIME, PKCS\#7
+and PKI is available on the Internet. \Sympa 2.7 is the first version of
+\Sympa to include S/MIME features as beta-testing features.
+
+\section {Signed message distribution}
+
+No action required.
+You probably imagine that any mailing list manager (or any mail forwarder)
+is compatible with S/MIME signatures, as long as it respects the MIME structure of
+incoming messages. You are right. Even Majordomo can distribute a signed message!
+As \Sympa provides MIME compatibility, you don't need to do
+anything in order to allow subscribers to verify signed messages distributed
+through a list. This is not an issue at all, since any processe that
+distributes messages  is compatible with end user
+signing processes. Sympa simply skips the message footer attachment
+(ref \ref {messagefooter}, page~\pageref {messagefooter}) to prevent any
+body corruption which would break the signature.
+
+\section {Use of S/MIME signature by Sympa itself}
+    \label {smime-sig}
+
+Sympa is able to verify S/MIME signatures in order to apply S/MIME
+authentication methods for message handling. 
+Currently, this feature is limited to the
+distribution process, and to any commands \Sympa might find in the message
+body.  The reasons for this restriction are related to current S/MIME
+usage.
+S/MIME signature structure is based on the encryption of a digest of the
+message. Most S/MIME agents do not include any part of the
+message headers in the message digest, so anyone can modify the message
+header without signature corruption! This is easy to do : for example, anyone
+can edit a signed message with their preferred message agent, modify whatever
+header they want (for example \texttt {Subject:} , \texttt {Date:} and
+\texttt {To:}, and redistribute the message to a list or to the robot
+without breaking the signature.
+
+So Sympa cannot apply the S/MIME
+authentication method to a command parsed in the \texttt {Subject:} field of a
+message or via the \texttt {-subscribe} or \texttt {-unsubscribe} e-mail
+address. 
+
+\section {Use of S/MIME encryption} 
+
+S/Sympa is not an implementation of the ``S/MIME Symmetric Key Distribution''
+internet draft. This sophisticated scheme is required for large lists
+with encryption. So, there is still some scope for future developments :) 
+
+
+We assume that S/Sympa distributes message as received, i.e. unencrypted when the
+list receives an unencrypted message, but otherwise encrypted.
+
+In order to be able to send encrypted messages to a list, the sender needs
+to use the X509 certificate of the list. Sympa will send an encrypted message
+to each subscriber using the subscriber's certificate. To provide this feature,
+\Sympa needs to manage one certificate for each list and one for each
+subscriber. This is available in Sympa version 2.8 and above.
+
+\section {S/Sympa configuration} 
+
+\subsection {Installation}
+\label {smimeinstall}
+
+The only requirement is OpenSSL (http://www.openssl.org) version 0.9.5a and above.
+OpenSSL is used by \Sympa as an external plugin
+(like sendmail or postfix), so it must be installed with the appropriate access
+(x for sympa.sympa). 
+
+\subsection {configuration in sympa.conf}
+\label {smimeconf}
+
+S/Sympa configuration is very simple. If you are used to Apache SSL,
+you should not feel lost. If you are an OpenSSL guru, you will
+feel at home, and there may even be changes you will wish to suggest to us.
+ 
+The basic requirement is to let \Sympa know where to find the binary file for the OpenSSL program
+and the certificates of the trusted certificate authority. 
+This is done using the optional parameters \unixcmd {openSSL} and
+\cfkeyword {capath} and / or \cfkeyword {cafile}.
+
+\begin{itemize}
+
+  \item \cfkeyword {openSSL} : the path for the OpenSSL binary file,
+         usually \texttt {/usr/local/ssl/bin/openSSL}
+  \item \cfkeyword {cafile} : the path of a bundle of trusted ca certificates. 
+        The file \tildefile {[ETCBINDIR]/ca\-bundle.crt} included in Sympa distribution can be used.
+
+	Both the \cfkeyword  {cafile} file and the \cfkeyword {capath} directory
+        should be shared with your Apache+mod\_ssl configuration. This is useful
+	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
+
+  \item \cfkeyword {key\_password} : the password used to protect all list private keys. xxxxxxx	
+\end{itemize}
+
+
+\subsection {configuration to recognize S/MIME signatures}
+\label {smimeforsign}
+
+Once  \texttt {OpenSSL} has been installed, and \texttt {sympa.conf} configured,
+your S/Sympa is ready to use S/Mime signatures for any authentication operation. You simply need
+to use the appropriate authorization scenario for the operation you want to secure. 
+(see \ref {scenarios}, page~\pageref {scenarios}).
+
+When receiving a message, \Sympa applies
+the authorization scenario with the appropriate authentication method parameter.
+In most cases the authentication method is ``\texttt {smtp}'', but in cases
+where the message is signed and the signature has been checked and matches the
+sender e-mail, \Sympa applies the ``\texttt {smime}'' authentication
+method.
+
+It is vital to ensure that if the authorization scenario does not recognize this authentication method, the
+operation requested will be rejected. Consequently, authorization scenarios distributed
+prior to version 2.7 are not compatible with the OpenSSL configuration of Sympa. 
+All
+standard authorization scenarios (those distributed with sympa)
+now include the \texttt {smime} method. The following example is
+named \texttt {send.private\_smime}, and restricts sends to subscribers using an S/mime signature :
+
+\begin {quote}
+\begin{verbatim}
+[STOPPARSE]
+title.us restricted to subscribers check smime signature
+title.fr limité aux abonnés, vérif de la signature smime
+
+is_subscriber([listname],[sender])             smime  -> do_it
+is_editor([listname],[sender])                 smime  -> do_it
+is_owner([listname],[sender])                  smime  -> do_it
+[STARTPARSE]
+\end{verbatim}
+\end {quote}
+
+It as also possible to mix various authentication methods in a single authorization scenario. The following
+example, \texttt {send.private\_key}, requires either an md5 return key or an S/Mime signature :
+\begin {quote}
+\begin{verbatim}
+[STOPPARSE]
+title.us restricted to subscribers with previous md5 authentication
+title.fr réservé aux abonnés avec authentification MD5 préalable
+
+is_subscriber([listname],[sender]) smtp          -> request_auth
+true()                             md5,smime     -> do_it
+[STARTPARSE]
+\end{verbatim}
+\end {quote}
+
+\subsection {distributing encrypted messages}
+\label {smimeforencrypt}
+
+In this section we describe S/Sympa encryption features. The goal is to use
+S/MIME encryption for distribution of a message to subscribers whenever the message has been
+received encrypted from the sender. 
+
+Why is S/Sympa concerned by the S/MIME encryption distribution process ?
+It is because encryption is performed using the \textbf {recipient} X509
+certificate, whereas the signature requires the sender's private key. Thus, an encrypted
+message can be read by the recipient only if he or she is the owner of the private
+key associated with the certificate.
+Consequently, the only way to encrypt a message for a list of recipients is
+to encrypt and send the message for each recipient. This is what S/Sympa
+does when distributing an encrypted message.
+
+The S/Sympa encryption feature in the distribution process supposes that sympa
+has received an encrypted message for some list. To be able to encrypt a message
+for a list, the sender must have some access to an X509 certificate for the list.
+So the first requirement is to install a certificate and a private key for
+the list.
+The mechanism whereby certificates are obtained and managed is complex. Current versions
+of S/Sympa assume that list certificates and private keys are installed by
+the listmaster using \dir {[SCRIPTDIR]/p12topem.pl} script. This script allows
+you to install a PKCS\#12 bundle file containing a private key and
+a certificate using the appropriate format.
+
+It is a good idea to have a look at the OpenCA (http://www.openssl.org)
+documentation and/or PKI providers' web documentation.
+You can use commercial certificates or home-made ones. Of course, the
+certificate must be approved for e-mail applications, and issued by one of
+the trusted CA's described in the \cfkeyword{cafile} file or the
+\cfkeyword{capath} Sympa configuration parameter. 
+
+The list private key must be installed in a file named
+\dir {[EXPL_DIR]/\samplelist/private\_key}. All the list private
+keys must be encrypted using a single password defined by the
+\cfkeyword {password} parameter in \cfkeyword {sympa.conf}.
+
+\subsubsection {Use of Netscape navigator to obtain X509 list certificates}
+
+In many cases e-mail X509 certificates are distributed via a web server and
+loaded into the browser using your mouse :) Netscape allows
+certificates to be exported to a file. So one way to get a list certificate is to obtain an e-mail
+certificate for the canonical list address in your browser, and then to export and install it for Sympa :
+\begin {enumerate}
+\item browse the net and load a certificate for the list address on some
+PKI provider (your own OpenCa pki server , thawte, verisign, ...). Be
+careful :  the e-mail certificate must be correspond exactly to the canonical address of
+your  list, otherwise, the signature will be incorrect (sender e-mail will
+not match signer e-mail).
+\item in the security menu, select the intended certificate and export
+it. Netscape will prompt you for a password and a filename to encrypt
+the output file. The format used by Netscape is  ``pkcs\#12''. 
+Copy this file to the list home directory.
+\item convert the pkcs\#12 file into a pair of pem files :
+\cfkeyword {cert.pem} and \cfkeyword {private\_key} using
+the \unixcmd {[SCRIPTDIR]/p12topem.pl} script. Use \unixcmd
+{p12topem.pl -help} for details.
+\item be sure that \cfkeyword {cert.pem} and \cfkeyword {private\_key}
+are owned by sympa with ``r'' access.
+\item As soon as a certificate is installed for a list, the list  home page
+includes a new link to load the certificate to the user's browser, and the welcome
+message is signed by the list.
+\end {enumerate} 
+
+
+\section {Managing certificates with tasks}
+
+You may automate the management of certificates with two global task models provided with
+\Sympa. See \ref {tasks}, page~\pageref {tasks} to know more about tasks.
+Report to \ref {certificate-task-config}, page~\pageref {certificate-task-config} to configure your \Sympa to use these facilities.
+
+\subsection {chk\_cert\_expiration.daily.task model}
+
+A task created with the model \file {chk\_cert\_expiration.daily.task} checks every day the expiration date of
+certificates stored in the \dir {[EXPL_DIR]/X509-user-certs/} directory.
+The user is warned with the \file {daily\_cert\_expiration} template when his certificate has expired
+or is going to expire within three days.
+
+\subsection {crl\_update.daily.task model}
+
+You may use the model \file {crl\_update.daily.task} to create a task which daily updates the certificate revocation
+lists when needed.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Using Sympa commands
