@@ -1891,7 +1891,7 @@ sub send_msg {
    
     unless ($total > 0) {
 	&do_log('info', 'No subscriber in list %s', $name);
-	return undef;
+	return 0;
     }
 
     ## Bounce rate
