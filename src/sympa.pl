@@ -927,6 +927,8 @@ sub DoMessage{
 
     my $start_time = time;
     
+    &Language::SetLang($list->{'admin'}{'lang'});
+
     ## Now check if the sender is an authorized address.
 
     do_log('info', "Processing message for %s with priority %s, %s", $name,$list->{'admin'}{'priority'}, $messageid );
