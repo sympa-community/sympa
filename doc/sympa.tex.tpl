@@ -1768,6 +1768,13 @@ see a  nice mailto adresses where others have nothing.
 	This parameter is used with \cfkeyword {list\_check\_smtp} parameter.
 	It is also used to check list names at list creation time.
 
+\subsection {\cfkeyword {urlize\_min\_size}} 
+
+        \default {10240}
+
+        This parameter is related to the \texttt {URLIZE} subscriber reception mode ; it
+	defines the minimum size (in bytes) for MIME attachments to be urlized.
+
 
 \section {Quotas}
 \label {quotas}
@@ -1779,7 +1786,6 @@ see a  nice mailto adresses where others have nothing.
 \subsection {\cfkeyword {default\_archive\_quota}}
 
 	The default disk quota for lists' web archives.
-
 
 \section {Spool related}
 \label {spool-related}

@@ -1502,7 +1502,7 @@ sub get_filename {
 	    }
 	}	
 	foreach my $f (@try) {
-	    &do_log('debug3','get_filname : NAME: %s ; DIR %s', $name, $dir);
+	    &do_log('debug3','get_filname : NAME: %s ; DIR %s', $name, $f  );
 	    if (-r $f) {
 		return $f;
 	    }

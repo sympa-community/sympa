@@ -2313,9 +2313,18 @@ sub send_msg {
 	    return 0;
 	}
 	my $mime_types = &tools::load_mime_types();
-	for (my $i=0 ; $i < $url_msg->parts ; $i++) {
-	    &_urlize_part ($url_msg->parts ($i), $expl, $dir1, $i, $mime_types, $name, &Conf::get_robot_conf($robot, 'wwsympa_url')) ;
+	my @parts = $url_msg->parts();
+	
+	foreach my $i (0..$#parts) {
+	    my $entity = &_urlize_part ($url_msg->parts ($i), $self, $dir1, $i, $mime_types,  &Conf::get_robot_conf($robot, 'wwsympa_url')) ;
+	    if (defined $entity) {
+		$parts[$i] = $entity;
+	    }
 	}
+	
+	## Replace message parts
+	$url_msg->parts (\@parts);
+
         ## Add a footer
 	my $new_msg = $self->add_parts($url_msg);
 	if (defined $new_msg) {
@@ -7818,17 +7827,19 @@ sub available_reception_mode {
 
 sub _urlize_part {
     my $message = shift;
-    my $expl = shift;
+    my $list = shift;
+    my $expl = $list->{'dir'}.'/urlized';
+    my $robot = $list->{'domain'};
     my $dir = shift;
     my $i = shift;
     my $mime_types = shift;
-    my $list = shift;
+    my $listname = $list->{'name'};
     my $wwsympa_url = shift;
 
     my $head = $message->head ;
     my $encoding = $head->mime_encoding ;
 
-##  name of the linked file
+    ##  name of the linked file
     my $fileExt = $mime_types->{$head->mime_type};
     if ($fileExt) {
 	$fileExt = '.'.$fileExt;
@@ -7851,7 +7862,7 @@ sub _urlize_part {
 	&do_log('notice', "Unable to open $expl/$dir/$filename") ;
 	return undef ; 
     }
-	    
+    
     if ($encoding =~ /^binary|7bit|8bit|base64|quoted-printable|x-uu|x-uuencode|x-gzip64$/ ) {
 	open TMP, ">$expl/$dir/$filename.$encoding";
 	$message->print_body (\*TMP);
@@ -7867,30 +7878,31 @@ sub _urlize_part {
     close (OFILE);
     my $file = "$expl/$dir/$filename";
     my $size = (-s $file);
+
+    ## Only URLize files with a moderate size
+    if ($size < $Conf{'urlize_min_size'}) {
+	unlink "$expl/$dir/$filename";
+	return undef;
+    }
 	    
     ## Delete files created twice or more (with Content-Type.name and Content-Disposition.filename)
     $message->purge ;	
 
-    if ($i !=0) {
-	## add the content type /external body
-	## and the phantom body with content-type
-	## and delete the 'old' body
-	my $body = 'Content-type: '.$head->get('Content-type');
-	$head->delete('Content-type');
-	if ($head->get('Content-Transfer-Encoding')) {
-	    $body .= 'Content-Transfer-Encoding: '.$head->get('Content-Transfer-Encoding');
-	    $head->delete('Content-Transfer-Encoding');
-	}
-	$head->delete('Content-Disposition');
-	# it seems that the 'name=' option doesn't work 
-	# if the file name has got an extension like '.xxx'-> '.' is replaced with '_'
-	(my $file_name = $filename) =~ s/\./\_/g;
-	$head->add('Content-type', "message/external-body; access-type=URL; URL=\"$wwsympa_url/attach/$list$dir/$filename\"; name=\"$file_name\"; size=\"$size\"");
+    (my $file_name = $filename) =~ s/\./\_/g;
+    my $file_url = "$wwsympa_url/attach/$listname$dir/$filename";
 
-	$message->parts([]);
-	$message->bodyhandle (new MIME::Body::Scalar "$body" );
+    my $parser = new MIME::Parser;
+    $parser->output_to_core(1);
+    my @new_part;
+    &parser::parse_tpl({'file_name' => $file_name,
+			'file_url'  => $file_url,
+			'file_size' => $size },
+		       &tools::get_filename('etc', 'templates/urlized_part.'.$list->{'admin'}{'lang'}.'.tpl', $robot, $list),
+		       \@new_part);
 
-     }	
+    my $entity = $parser->parse_data(\@new_part);
+
+    return $entity;
 }
 
 sub store_subscription_request {

@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {05 March 2004}
+    \date {15 March 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -1764,6 +1764,13 @@ see a  nice mailto adresses where others have nothing.
 	This parameter is used with \cfkeyword {list\_check\_smtp} parameter.
 	It is also used to check list names at list creation time.
 
+\subsection {\cfkeyword {urlize\_min\_size}} 
+
+        \default {10240}
+
+        This parameter is related to the \texttt {URLIZE} subscriber reception mode ; it
+	defines the minimum size (in bytes) for MIME attachments to be urlized.
+
 
 \section {Quotas}
 \label {quotas}
@@ -1775,7 +1782,6 @@ see a  nice mailto adresses where others have nothing.
 \subsection {\cfkeyword {default\_archive\_quota}}
 
 	The default disk quota for lists' web archives.
-
 
 \section {Spool related}
 \label {spool-related}
@@ -6071,15 +6077,15 @@ output generated in response to a \mailcmd {LISTS} command.
 	\end {htmlonly}\\
 	no conceal
 
-     \item \lparam {visibility} \texttt {private}
-	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.private})
-	\end {htmlonly}\\
-	subscribers
-
      \item \lparam {visibility} \texttt {secret}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.secret})
+	\end {htmlonly}\\
+	conceal even for subscribers
+
+     \item \lparam {visibility} \texttt {s}
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.s})
 	\end {htmlonly}\\
 	conceal even for subscribers
 

@@ -29,31 +29,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html926"
+<A NAME="tex2html928"
   HREF="node12.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html920"
+<A NAME="tex2html922"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html914"
+<A NAME="tex2html916"
   HREF="node10.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html922"
+<A NAME="tex2html924"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html924"
+<A NAME="tex2html926"
   HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html927"
+<B> Next:</B> <A NAME="tex2html929"
   HREF="node12.html">11. Virtual robot</A>
-<B> Up:</B> <A NAME="tex2html921"
+<B> Up:</B> <A NAME="tex2html923"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html915"
+<B> Previous:</B> <A NAME="tex2html917"
   HREF="node10.html">9. Authentication</A>
- &nbsp <B>  <A NAME="tex2html923"
-  HREF="node1.html">Contents</A></B> 
  &nbsp <B>  <A NAME="tex2html925"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp <B>  <A NAME="tex2html927"
   HREF="node23.html">Index</A></B> 
 <BR>
 <BR>
@@ -62,38 +62,38 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html928"
+<LI><A NAME="tex2html930"
   HREF="node11.html#SECTION001110000000000000000">10.1 rules specifications</A>
-<LI><A NAME="tex2html929"
+<LI><A NAME="tex2html931"
   HREF="node11.html#SECTION001120000000000000000">10.2 LDAP Named Filters</A>
 <UL>
-<LI><A NAME="tex2html930"
+<LI><A NAME="tex2html932"
   HREF="node11.html#SECTION001121000000000000000">10.2.1 Definition</A>
-<LI><A NAME="tex2html931"
+<LI><A NAME="tex2html933"
   HREF="node11.html#SECTION001122000000000000000">10.2.2 Search Condition</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html932"
+<LI><A NAME="tex2html934"
   HREF="node11.html#SECTION001130000000000000000">10.3 scenario inclusion</A>
-<LI><A NAME="tex2html933"
+<LI><A NAME="tex2html935"
   HREF="node11.html#SECTION001140000000000000000">10.4 Hidding scenario files</A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
 
 <H1><A NAME="SECTION001100000000000000000"></A>
-<A NAME="scenarios"></A><A NAME="1534"></A>
+<A NAME="scenarios"></A><A NAME="1537"></A>
 <BR>
 10. Authorization scenarios
 </H1>
 
 <P>
 List parameters controlling the behavior of commands are linked to different authorization scenarios.
-For example : the <A NAME="6142"></A><TT>send private</TT> parameter is related to the send.private scenario.
+For example : the <A NAME="6150"></A><TT>send private</TT> parameter is related to the send.private scenario.
 There are four possible locations for a authorization scenario. When <I>Sympa</I> seeks to apply an authorization scenario, it
-looks first in the related list directory <A NAME="6158"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
-does not find the file there, it scans the current robot configuration directory <A NAME="6167"></A><TT>/home/sympa/etc/my.domain.org/scenari</TT>, then the site's configuration directory <A NAME="6170"></A><TT>/home/sympa/etc/scenari</TT>,
-and finally <A NAME="6173"></A><TT>/home/sympa/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
+looks first in the related list directory <A NAME="6166"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
+does not find the file there, it scans the current robot configuration directory <A NAME="6175"></A><TT>/home/sympa/etc/my.domain.org/scenari</TT>, then the site's configuration directory <A NAME="6178"></A><TT>/home/sympa/etc/scenari</TT>,
+and finally <A NAME="6181"></A><TT>/home/sympa/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
 
 <P>
 An authorization scenario is a small configuration language to describe who
@@ -120,11 +120,11 @@ Each authorization scenario rule contains :
  SRC="img2.png"
  ALT="$]$"> for the listname etc.
 </LI>
-<LI>an authentication method. The authentication method can be <A NAME="6177"></A><TT>smtp</TT>,
-<A NAME="6180"></A><TT>md5</TT> or <A NAME="6183"></A><TT>smime</TT>. The rule is applied by <I>Sympa</I> if both condition
-and authentication method match the runtime context. <A NAME="6187"></A><TT>smtp</TT> is used if
-<I>Sympa</I> use the SMTP <A NAME="6191"></A><TT>from:</TT> header , <A NAME="6194"></A><TT>md5</TT> is used if a unique
-md5 key as been returned by the requestor to validate her message, <A NAME="6197"></A><TT>smime</TT>
+<LI>an authentication method. The authentication method can be <A NAME="6185"></A><TT>smtp</TT>,
+<A NAME="6188"></A><TT>md5</TT> or <A NAME="6191"></A><TT>smime</TT>. The rule is applied by <I>Sympa</I> if both condition
+and authentication method match the runtime context. <A NAME="6195"></A><TT>smtp</TT> is used if
+<I>Sympa</I> use the SMTP <A NAME="6199"></A><TT>from:</TT> header , <A NAME="6202"></A><TT>md5</TT> is used if a unique
+md5 key as been returned by the requestor to validate her message, <A NAME="6205"></A><TT>smime</TT>
 is used for signed messages (see <A HREF="node21.html#smimeforsign">20.4.3</A>, page&nbsp;<A HREF="node21.html#smimeforsign"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 </LI>
 <LI>a returned atomic action that will be executed by <I>Sympa</I> if the rule matches
@@ -246,19 +246,19 @@ probably create authorization scenarios for your own need. In this case, don't f
 and wwsympa because authorization scenarios are not reloaded dynamicaly.
 
 <P>
-These standard authorization scenarios are located in the <A NAME="6203"></A><TT>/home/sympa/bin/etc/scenari/</TT>
+These standard authorization scenarios are located in the <A NAME="6211"></A><TT>/home/sympa/bin/etc/scenari/</TT>
 directory. Default scenarios are named <TT>&lt;</TT>command<TT>&gt;</TT>.default.
 
 <P>
 You may also define and name your own authorization scenarios. Store them in the
-<A NAME="6206"></A><TT>/home/sympa/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
-Scenarios can also be defined for a particular virtual robot (using directory <A NAME="6221"></A><TT>/home/sympa/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="6248"></A><TT>/home/sympa/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ).
+<A NAME="6214"></A><TT>/home/sympa/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
+Scenarios can also be defined for a particular virtual robot (using directory <A NAME="6229"></A><TT>/home/sympa/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="6256"></A><TT>/home/sympa/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ).
 
 <P>
 Example:
 
 <P>
-Copy the previous scenario to <A NAME="6263"></A><TT>scenari/subscribe.rennes1</TT> :
+Copy the previous scenario to <A NAME="6271"></A><TT>scenari/subscribe.rennes1</TT> :
 
 <P><PRE>
 equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -&gt; reject
@@ -285,7 +285,7 @@ subscribe rennes1
 At the moment Named Filters are only used in authorization scenarios. They enable to select a category of people who will be authorized or not to realise some actions.
 
 <P>
-As a consequence, you can grant privileges in a list to people belonging to an <A NAME="6266"></A>LDAP directory thanks to an authorization scenario.
+As a consequence, you can grant privileges in a list to people belonging to an <A NAME="6274"></A>LDAP directory thanks to an authorization scenario.
 
 <P>
 
@@ -294,7 +294,7 @@ As a consequence, you can grant privileges in a list to people belonging to an <
 </H2>
 
 <P>
-People are selected through an <A NAME="6267"></A>LDAP filter defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="6268"></A><TT>/home/sympa/etc/search_filters/</TT>.
+People are selected through an <A NAME="6275"></A>LDAP filter defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="6276"></A><TT>/home/sympa/etc/search_filters/</TT>.
 
 <P>
 You must give several informations in order to create a Named Filter:
@@ -436,36 +436,36 @@ at the my.domain.orgrobot level only.
 <P>
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html926"
+<A NAME="tex2html928"
   HREF="node12.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html920"
+<A NAME="tex2html922"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html914"
+<A NAME="tex2html916"
   HREF="node10.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html922"
+<A NAME="tex2html924"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html924"
+<A NAME="tex2html926"
   HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html927"
+<B> Next:</B> <A NAME="tex2html929"
   HREF="node12.html">11. Virtual robot</A>
-<B> Up:</B> <A NAME="tex2html921"
+<B> Up:</B> <A NAME="tex2html923"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html915"
+<B> Previous:</B> <A NAME="tex2html917"
   HREF="node10.html">9. Authentication</A>
- &nbsp <B>  <A NAME="tex2html923"
-  HREF="node1.html">Contents</A></B> 
  &nbsp <B>  <A NAME="tex2html925"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp <B>  <A NAME="tex2html927"
   HREF="node23.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2004-03-05
+2004-03-15
 </ADDRESS>
 </BODY>
 </HTML>
