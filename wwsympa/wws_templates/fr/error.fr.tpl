@@ -149,6 +149,9 @@ parce que le désabonnement n'est pas autorisé.
 [ELSIF error->msg=shared_full]
 Le quota d'espace disque est dépassé.
 
+[ELSIF error->msg=ldap_user]
+Votre mot de passe est défini dans un annuaire LDAP, Sympa ne peut donc pas vous le rapeller
+
 [ELSE]
 [error->msg]
 [ENDIF]

@@ -1782,9 +1782,16 @@ sub do_sendpasswd {
     
     my $url_redirect;
     if($url_redirect = &is_ldap_user($in{'email'})){
-	$param->{'redirect_to'} = $url_redirect
-	    if ($url_redirect && ($url_redirect != 1));
-	return 1;
+	## There might be no authentication_info_url URL defined in auth.conf
+	if ($url_redirect == 1) {
+	    &error_message('ldap_user');
+	    &wwslog('info','do_sendpasswd: LDAP user %s, cannot remind password', $in{'email'});
+	    return 'remindpasswd';
+	}else {
+	    $param->{'redirect_to'} = $url_redirect
+		if ($url_redirect && ($url_redirect != 1));
+	    return 1;
+	}
     }
 
     if ($param->{'newuser'} =  &List::get_user_db($in{'email'})) {

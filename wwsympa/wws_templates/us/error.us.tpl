@@ -152,6 +152,9 @@ because you are not allowed to unsubscribe.
 [ELSIF error->msg=shared_full]
 The document repository exceed disk quota.
 
+[ELSIF error->msg=ldap_user]
+Your password is stored in an LDAP directory, therefore Sympa cannot post you a reminder
+
 [ELSE]
 [error->msg]
 [ENDIF]
