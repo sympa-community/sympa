@@ -44,7 +44,7 @@ my %comms =  ('add' =>			   	     'add',
 	      'sub|subscribe' =>             	     'subscribe',
 	      'sig|signoff|uns|unsub|unsubscribe' => 'signoff',
 	      'sta|stats' =>		       	     'stats',
-	      'ver|verify' =>     	             'verify'
+	      'ver|verify' =>     	             'verify',
 	      'whi|which|status' =>     	     'which'
 	      );
 
@@ -489,6 +489,7 @@ sub review {
 
 ## Sends the list of subscribers to the requester.
 sub verify {
+    my $listname = shift ;
     my $sign_mod = shift ;
     do_log('debug2', 'Commands::verify(%s)', $sign_mod );
     
