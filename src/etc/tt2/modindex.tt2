@@ -18,7 +18,6 @@ MIME-Version: 1.0
 This is a multi-part message in MIME format...
 
 [% FOREACH msg = spool %]
-    [% SET tmp = msg.key msg = msg.value msg.NAME = tmp IF msg.key.defined %]
 --[% boundary2 %]
 Content-Type: message/rfc822
 Content-Transfer-Encoding: 8bit

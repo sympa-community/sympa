@@ -10,14 +10,12 @@ Content-transfer-encoding: [%|l%]7bit[%END%]
 [%|l%]Table of contents:[%END%]
 
 [% FOREACH m = msg_list %]
-    [% SET tmp = m.key m = m.value m.NAME = tmp IF m.key.defined %]
 [% m.id %]. [% m.subject %] - [% m.from %]
 [% END %]
 
 ----------------------------------------------------------------------
 
 [% FOREACH m = msg_list %]
-    [% SET tmp = m.key m = m.value m.NAME = tmp IF m.key.defined %]
 Date: [% m.date %]
 From: [% m.from %]
 Subject: [% m.subject %]

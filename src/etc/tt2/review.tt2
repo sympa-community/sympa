@@ -1,7 +1,6 @@
 [%|l(list.name,list.host)%]Here are the subscribers of %1@%2 mailing list:[%END%]
 
 [% FOREACH u = users %]
-    [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
 [% u.email %] - [% u.gecos %] - [% u.reception %]
 [% END %]
 

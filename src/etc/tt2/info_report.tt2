@@ -2,11 +2,9 @@
 
 [%|l(subject)%]Subject            : %1[%END%]
 [% FOREACH o = owner %]
-    [% SET tmp = o.key o = o.value o.NAME = tmp IF o.key.defined %]
 [%|l(o.gecos)%]Owner              : %1[%END%] <[% o.email %]>
 [% END %]
 [% FOREACH e = editor %]
-    [% SET tmp = e.key e = e.value e.NAME = tmp IF e.key.defined %]
 [%|l(e.gecos)%]Moderator          : %1[%END%] <[% e.email %]>
 [% END %]
 [%|l(subscribe)%]Subscription       : %1[%END%]

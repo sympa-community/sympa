@@ -6,7 +6,6 @@
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 [% FOREACH l = lists %]
-    [% SET tmp = l.key l = l.value l.NAME = tmp IF l.key.defined %]
 [% l %]	mailto:[% conf.sympa %]?subject=sig%20[% l %]%20[% user.email %]
 [% END %]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
