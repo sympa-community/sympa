@@ -153,6 +153,18 @@ a:visited {
   <title>
     [% main_title %]
   </title>
+   [% IF list -%] 
+     <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Latest messages"[%END%] href="[% base_url%][% path_cgi %]/rss/latest_arc/[%list%]?count=5">
+     <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Latest documents"[%END%] href="[% base_url%][% path_cgi %]/rss/latest_d_read/[%list%]?count=5">
+   [% ELSE -%]
+     [% IF (action == 'lists') && topic -%]
+       <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Latest lists"[%END%] href="[% base_url%][% path_cgi %]/rss/latest_lists/[%topic%]?count=5">
+       <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Active lists"[%END%] href="[% base_url%][% path_cgi %]/rss/active_lists/[%topic%]?count=5">
+     [% ELSE -%]
+     <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Latest lists"[%END%] href="[% base_url%][% path_cgi %]/rss/latest_lists?count=5">
+     <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Active lists"[%END%] href="[% base_url%][% path_cgi %]/rss/active_lists?count=5">
+     [% END -%]
+   [% END -%]
 </head>
 
 <body style="background-color: [% bg_color %]; color: [% text_color %];"

@@ -614,6 +614,14 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'version'} = $Version::Version;
      $param->{'date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
 
+     my $tmp_lang = &Language::GetLang();
+     &Language::SetLang('en_US');
+     $param->{'RFC822_date'} = &POSIX::strftime("%a, %d %b %Y %H:%M:%S %z", localtime(time));
+     &Language::SetLang($tmp_lang);
+     
+     my @tmp_split = split(/_/,$tmp_lang);
+     $param->{'ISO639_language'} = $tmp_split[0];
+     
      ## Change to list root
      unless (chdir($Conf{'home'})) {
          &error_message('chdir_error');
@@ -856,6 +864,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      }else {
 	 $param->{'main_title'} = $param->{'title'} = &Conf::get_robot_conf($robot,'title');
+	 $param->{'title_clear_txt'} = $param->{'title'};
      }
 
      ## Do not manage cookies at this level if content was already sent
@@ -956,7 +965,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
       }elsif ($rss) {
  	 ## Send RSS 
  	 print "Cache-control: no-cache\n";
- 	 print "Content-Type: application/rss+xml\n\n";
+ 	 my $charset = gettext("_charset_");
+ 	 print "Content-Type: application/rss+xml; charset=$charset\n\n";
  
  	 ## Icons
  	 $param->{'icons_url'} = $wwsconf->{'icons_url'};
@@ -995,7 +1005,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
  	     $param->{'tt2_error'} = $error;
  	     &List::send_notify_to_listmaster('web_tt2_error', $robot, $error);
  	 }
- 	 close FILE;
+# 	 close FILE;
      }else {
 	 &send_html('main.tt2');
      }    
@@ -2351,7 +2361,9 @@ sub do_remindpasswd {
      my %topics = &List::load_topics($robot);
 
      if ($in{'topic'}) {
+ 	 $param->{'topic'} = $in{'topic'};
 	 if ($in{'subtopic'}) {
+	     $param->{'subtopic'} = $in{'subtopic'};
 	     $param->{'subtitle'} = sprintf "%s / %s", $topics{$in{'topic'}}{'current_title'}, $topics{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'current_title'};
 	     $param->{'subtitle'} ||= "$in{'topic'} / $in{'subtopic'}";
 	 }else {
@@ -4884,6 +4896,10 @@ sub do_remindpasswd {
 		     last;
 		 }
 	
+ 		 foreach my $key (keys %msg_info) {
+ 		     chomp($msg_info{$key});
+ 		 }
+
 		 push @archives,\%msg_info;
 		 $nb_arc--;
 	     }
