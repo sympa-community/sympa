@@ -4701,7 +4701,7 @@ sub _load_scenario_file {
 
 	    ## Site scenario
 	    $scenario_file = "$Conf{'etc'}/scenari/$function.$name";
-	    unless (($robot) && (open SCENARI, $scenario_file)) {
+	    unless (open SCENARI, $scenario_file) {
 		
 		## Distrib scenario
 		$scenario_file = "--ETCBINDIR--/scenari/$function.$name";
