@@ -41,45 +41,47 @@ printf "%s\n", $cookies->as_string();
 #$service = SOAP::Lite->service('http://www.cru.fr/wws/wsdl');
 #$reponse = $service->login($ARGV[0],$ARGV[1]);
 
+#my $soap = SOAP::Lite->service('http://www.cru.fr/wws/wsdl');
+
 my $soap = new SOAP::Lite();
+#$soap->on_debug(sub{print@_});
 $soap->uri('urn:sympasoap');
 $soap->proxy('http://www.cru.fr/wwsoap',
 	     cookie_jar =>$cookies);
 
-#    ->outputxml(1);
-#    ->readable(1);
-
-#$reponse = $service->which($ARGV[0],$ARGV[1]);
 
 print "LOGIN....\n";
 
-$reponse = $soap->cas_login($ARGV[0]);
-#$reponse = $soap->login($ARGV[0],$ARGV[1]);
+#$reponse = $soap->cas_login($ARGV[0]);
+$reponse = $soap->login($ARGV[0],$ARGV[1]);
 $cookies->save;
 &print_result($reponse);
 
 #printf "%s\n", $cookies->as_string();
 
 print "\n\nWHICH....\n";
-$reponse = $soap->which();
+$reponse = $soap->simple_which();
 &print_result($reponse);
 
+#print "\n\nINFO....\n";
+#$reponse = $soap->info('aliba');
+#&print_result($reponse);
 
-print "\n\nSUB....\n";
-$reponse = $soap->subscribe('aliba', 'ALI');
-&print_result($reponse);
+#print "\n\nSUB....\n";
+#$reponse = $soap->subscribe('aliba', 'ALI');
+#&print_result($reponse);
 
-print "\n\nREVIEW....\n";
-$reponse = $soap->review('aliba');
-&print_result($reponse);
+#print "\n\nREVIEW....\n";
+#$reponse = $soap->review('aliba');
+#&print_result($reponse);
 
 
-print "\n\nSIG....\n";
-$reponse = $soap->signoff('aliba');
-&print_result($reponse);
+#print "\n\nSIG....\n";
+#$reponse = $soap->signoff('aliba');
+#&print_result($reponse);
 
 print "\n\nLIST....\n";
-$reponse = $soap->lists('actualite');
+$reponse = $soap->lists('Kulturelles');
 &print_result($reponse);
 
 print "\n\nCheck_cookie....\n";
@@ -90,15 +92,19 @@ sub print_result {
     my $r = shift;
 
 # If we get a fault
-    if ($r->fault) {
+    if (defined $r && $r->fault) {
 	print "Soap error :\n";
 	%fault = %{$r->fault};
 	foreach $val (keys %fault) {
 	    print "$val = $fault{$val}\n";
 	}
     }else {
-	if (ref( $r->result)) {
+	if (ref( $r->result) =~ /^ARRAY/) {
+	    #printf "R: $r->result\n";
 	    @ret = @{$r->result};
+	}elsif (ref $r->result) {
+	    printf "Pb $r->result\n";
+	    return undef;
 	}else {
 	    @ret = $r->result;
 	}

@@ -70,6 +70,17 @@ If the number of parameters is incorrect it generates a SOAP.Client Exception.
 
 =cut
 
+
+package SOAP::XMLSchema1999::Serializer;
+
+#sub as_List_type {
+#    my $self = shift;
+#    my($value, $name, $type, $attr) = @_;
+#    return [$name, $attr, $value];
+##    return [$name, {'xsi:type' => 'sympaType:List_type', %$attr}, $value];
+#}
+
+
 package sympasoap;
 
 use Exporter;
@@ -114,7 +125,7 @@ sub lists {
 
     my @result;  
     
-    &do_log('info', 'SOAP lists(%s,%s)', $robot, $topic);
+    &do_log('info', 'SOAP lists(%s,%s)', $topic, $subtopic);
    
     foreach my $listname ( &List::get_lists() ) {
 	
@@ -127,43 +138,36 @@ sub lists {
 					    );
 	next unless ($action eq 'do_it');
 	
-	## determine status of user 
-	if (($list->am_i('owner',$sender) || $list->am_i('owner',$sender))) {
-	    $result_item->{'is_owner'} = 1;
-	}
-	if (($list->am_i('editor',$sender) || $list->am_i('editor',$sender))) {
-	    $result_item->{'is_editor'} = 1;
-	}
-	if ($list->is_user($sender)) {
-	    $result_item->{'is_subscriber'} = 1;
-	}
-
 	##building result packet
 	$result_item->{'list_address'} = $listname.'@'.$list->{'domain'};
 	$result_item->{'subject'} = $list->{'admin'}{'subject'};
+	$result_item->{'subject'} =~ s/;/,/g;
 	$result_item->{'homepage'} = $Conf{'wwsympa_url'}.'/info/'.$listname; 
-		
-	my $list_homepage = $Conf{'wwsympa_url'}.'/info/'.$listname;
 	
+	my $listInfo = join (';', 
+			     'list_address='.$result_item->{'list_address'},
+			     'homepage='.$result_item->{'homepage'},
+			     'subject='.$result_item->{'subject'});
+
 	## no topic ; List all lists
 	if (!$topic) {
-	    push @result, SOAP::Data->name('result')->value($result_item);
+	    push @result, SOAP::Data->type('string')->value($listInfo);
 	    
 	}elsif ($list->{'admin'}{'topics'}) {
-	    foreach my $topic (@{$list->{'admin'}{'topics'}}) {
-		my @tree = split '/', $topic;
+	    foreach my $list_topic (@{$list->{'admin'}{'topics'}}) {
+		my @tree = split '/', $list_topic;
 		
 		next if (($topic) && ($tree[0] ne $topic));
 		next if (($subtopic) && ($tree[1] ne $subtopic));
 		
-		push @result, SOAP::Data->name('result')->value($result_item);
+		push @result, SOAP::Data->type('string')->value($listInfo);
 	    }
 	}elsif ($topic  eq 'topicsless') {
-	    	push @result, SOAP::Data->name('result')->value($result_item);
+	    	push @result, SOAP::Data->type('string')->value($listInfo);
 	}
     }
     
-    return SOAP::Data->name('return')->value(\@result);
+    return SOAP::Data->name('listInfo')->value(\@result);
 }
 
 sub login {
@@ -297,6 +301,86 @@ sub isSubscriber {
 	  ->faultdetail("List $listname unknown");
   }
 
+}
+
+sub info {
+    my $class = shift;
+    my $listname  = shift;
+    
+    my $sender = $ENV{'USER_EMAIL'};
+
+    unless ($sender) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('User not authentified')
+	    ->faultdetail('You should login first');
+    }    
+
+    my @resultSoap;
+
+    unless ($listname) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect number of parameters')
+	    ->faultdetail('Use : <list>');
+    }
+	
+    &Log::do_log('notice', 'SOAP info(%s)', $listname);
+
+    my $list = new List ($listname);
+    unless ($list) {
+	&Log::do_log('info', 'Info %s from %s refused, list unknown', $listname,$sender);
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Unknown list')
+	    ->faultdetail("List $listname unknown");
+    }
+
+    my $robot = $list->{'domain'};
+
+    my $sympa = &Conf::get_robot_conf($robot, 'sympa');
+
+    my $user;
+
+    # Part of the authorization code
+    $user = &List::get_user_db($sender);
+     
+    my $action = &List::request_action ('info','md5',$robot,
+                                     {'listname' => $listname,
+                                      'sender' => $sender});
+
+    die SOAP::Fault->faultcode('Server')
+	->faultstring('No action available')
+	unless (defined $action);
+
+    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
+	&Log::do_log('info', 'SOAP : info %s from %s refused (not allowed)', $listname,$sender);
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Not allowed')
+	    ->faultdetail("You don't have proper rights");
+    }
+    if ($action =~ /do_it/i) {
+	my $result_item;
+
+	$result_item->{'list_address'} = SOAP::Data->name('list_address')->type('string')->value($listname.'@'.$list->{'domain'});
+	$result_item->{'subject'} = SOAP::Data->name('subject')->type('string')->value($list->{'admin'}{'subject'});
+	$result_item->{'homepage'} = SOAP::Data->name('homepage')->type('string')->value($Conf{'wwsympa_url'}.'/info/'.$listname); 
+	
+	## determine status of user 
+	if (($list->am_i('owner',$sender) || $list->am_i('owner',$sender))) {
+	     $result_item->{'is_owner'} = SOAP::Data->name('is_owner')->type('boolean')->value(1);
+	 }
+	if (($list->am_i('editor',$sender) || $list->am_i('editor',$sender))) {
+	    $result_item->{'is_editor'} = SOAP::Data->name('is_editor')->type('boolean')->value(1);
+	}
+	if ($list->is_user($sender)) {
+	    $result_item->{'is_subscriber'} = SOAP::Data->name('is_subscriber')->type('boolean')->value(1);
+	}
+	
+	#push @result, SOAP::Data->type('List_type')->value($result_item);
+	return SOAP::Data->value($result_item);
+    }
+    &Log::do_log('info', 'SOAP : info %s from %s aborted, unknown requested action in scenario',$listname,$sender);
+    die SOAP::Fault->faultcode('Server')
+	->faultstring('Unknown requested action')
+	    ->faultdetail("SOAP info : %s from %s aborted because unknown requested action in scenario",$listname,$sender);
 }
 
 sub review {
@@ -654,29 +738,93 @@ sub subscribe {
 					     {'listname' =>  $listname,
 					      'sender' =>$sender}) =~ /do_it/);
 	 
-	 $result_item->{'list_address'} = $listname.'@'.$list->{'domain'};
-	 $result_item->{'subject'} = $list->{'admin'}{'subject'};
-	 $result_item->{'homepage'} = $Conf{'wwsympa_url'}.'/info/'.$listname; 
+	 $result_item->{'list_address'} = SOAP::Data->name('list_address')->type('string')->value($listname.'@'.$list->{'domain'});
+	 $result_item->{'subject'} = SOAP::Data->name('subject')->type('string')->value($list->{'admin'}{'subject'});
+	 $result_item->{'homepage'} = SOAP::Data->name('homepage')->type('string')->value($Conf{'wwsympa_url'}.'/info/'.$listname); 
 	 
 	 ## determine status of user 
 	 if (($list->am_i('owner',$sender) || $list->am_i('owner',$sender))) {
-	     $result_item->{'is_owner'} = 1;
+	     $result_item->{'is_owner'} = SOAP::Data->name('is_owner')->type('boolean')->value(1);
 	 }
 	 if (($list->am_i('editor',$sender) || $list->am_i('editor',$sender))) {
-	     $result_item->{'is_editor'} = 1;
+	     $result_item->{'is_editor'} = SOAP::Data->name('is_editor')->type('boolean')->value(1);
 	 }
 	 if ($list->is_user($sender)) {
-	     $result_item->{'is_subscriber'} = 1;
+	     $result_item->{'is_subscriber'} = SOAP::Data->name('is_subscriber')->type('boolean')->value(1);
 	 }
 	 
-	 push @result, SOAP::Data->name('result')->value($result_item);
+	 #push @result, SOAP::Data->type('List_type')->value($result_item);
+	 push @result, SOAP::Data->value($result_item);
 	
      }
 
      &do_log('notice','SOAP: ....which()');
 
+#     return SOAP::Data->attr({'xmlns:sympaType' => $Conf::Conf{'soap_url'}.'/wsdl'})->name('return')->value(\@result);
      return SOAP::Data->name('return')->value(\@result);
 
  }
+
+## Which list the user is subscribed to 
+## TODO (pour listmaster, toutes les listes)
+## Simplified return structure
+sub simple_which {
+    my $self = shift;
+    &do_log('debug', 'simple_which(%s)',$sender);
+    my @result;
+    my $sender = $ENV{'USER_EMAIL'};
+    
+    unless ($sender) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('User not authentified')
+	    ->faultdetail('You should login first');
+    }
+    
+    foreach my $listname( &List::get_which($sender,'*', 'member') ){ 	    
+	my $list = new List ($listname);
+	my $robot = $list->{'admin'}{'host'};
+	my $list_address;
+	my $result_item;
+
+	next unless (&List::request_action ('visibility', 'md5', $robot,
+					    {'listname' =>  $listname,
+					     'sender' =>$sender}) =~ /do_it/);
+	
+	$result_item->{'list_address'} = $listname.'@'.$list->{'domain'};
+	$result_item->{'subject'} = $list->{'admin'}{'subject'};
+	$result_item->{'subject'} =~ s/;/,/g;
+	$result_item->{'homepage'} = $Conf{'wwsympa_url'}.'/info/'.$listname;
+	 
+	## determine status of user 
+	$result_item->{'is_owner'} = 0;
+	if (($list->am_i('owner',$sender) || $list->am_i('owner',$sender))) {
+	    $result_item->{'is_owner'} = 1;
+	}
+	$result_item->{'is_editor'} = 0;
+	if (($list->am_i('editor',$sender) || $list->am_i('editor',$sender))) {
+	     $result_item->{'is_editor'} = 1;
+	 }
+	$result_item->{'is_subscriber'} = 0;
+	if ($list->is_user($sender)) {
+	    $result_item->{'is_subscriber'} = 1;
+	}
+	
+	my $listInfo = join (';', 
+			     'list_address='.$result_item->{'list_address'},
+			     'homepage='.$result_item->{'homepage'},
+			     'is_subscriber='.$result_item->{'is_subscriber'},
+			     'is_owner='.$result_item->{'is_owner'},
+			     'is_editor='.$result_item->{'is_editor'},
+			     'subject='.$result_item->{'subject'});
+
+	push @result, SOAP::Data->type('string')->value($listInfo);
+	
+    }
+    
+    &do_log('notice','SOAP: ....simple_which()');
+
+#    return SOAP::Data->name('return')->type->('ArrayOfString')->value(\@result);
+    return SOAP::Data->name('listInfo')->value(\@result);
+}
 
 1;

@@ -5,43 +5,22 @@
 	targetNamespace="[conf->wwsympa_url]/wsdl" 
 	xmlns:tns="[conf->wwsympa_url]/wsdl"
 	xmlns="http://schemas.xmlsoap.org/wsdl/" 
-	xmlns:xsdl="[conf->soap_url]/SympaFunctions.xsd">
+	xmlns:xsdl="[conf->soap_url]/wsdl">
 
 
 <!-- types part -->	
 
 
 <types>
-<schema targetNamespace="[conf->soap_url]/SympaFunctions.xsd" 
+<schema targetNamespace="[conf->wwsympa_url]/wsdl" 
 	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
 	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
 	xmlns="http://www.w3.org/2001/XMLSchema">
 	
-	<simpleType name="Reception_type">
-		     <restriction base="string"> 
-		              <enumeration value="digest"/>
-			      <enumeration value="html"/>
-			      <enumeration value="mail"/>
-			      <enumeration value="nomail"/>
-			      <enumeration value="not_me"/>
-			      <enumeration value="notice"/>
-			      <enumeration value="summary"/>      
-			      <enumeration value="txt"/>
-			      <enumeration value="urlize"/>
-		     </restriction> 
-        </simpleType>	
-		
-	<simpleType name="Visibility_type">
-		     <restriction base="string"> 
-		              <enumeration value="conceal"/>
-			      <enumeration value="public"/>
-		     </restriction> 
-        </simpleType>	
-
 	<complexType name="ArrayOfLists">
 		<complexContent>
 			<restriction base="SOAP-ENC:Array">
-				<attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="xsdl:List_type[]"/>
+				<attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="tns:List_type[]"/>
 			</restriction>
 		</complexContent>
 	</complexType>
@@ -55,20 +34,28 @@
 	</complexType>
 	
 	<complexType name="List_type">
+           <all>
 		<element name="list_address" minOccurs="1" type="string"/>
-		<element name="subject" minOccurs="0" type="string"/>
 		<element name="homepage" minOccurs="0" type="string"/>
 		<element name="is_subscriber" minOccurs="0" type="boolean"/>
 		<element name="is_owner" minOccurs="0" type="boolean"/>
 		<element name="is_editor" minOccurs="0" type="boolean"/>
-		<element name="reception" minOccurs="0" type="xsdl:Reception_type"/>
-		<element name="visibility"  minOccurs="0" type="xsdl:Visibility_type"/>
+		<element name="subject" minOccurs="0" type="string"/>
+           </all>
 	</complexType>
 </schema>
 </types>
 
 
 <!-- message part -->
+
+<message name="infoRequest">
+        <part name="listName" type="xsd:string"/>
+</message>
+
+<message name="infoResponse">
+	<part name="return" type="xsdl:List_type"/>
+</message>
 
 <message name="whichRequest">
 </message>
@@ -77,6 +64,12 @@
 	<part name="return" type="xsdl:ArrayOfLists"/>
 </message>
 
+<message name="simpleWhichRequest">
+</message>
+
+<message name="simpleWhichResponse">
+	<part name="listInfo" type="xsdl:ArrayOfString"/>
+</message>
 
 <message name="isSubscriberRequest">
 	<part name="list" type="xsd:string"/>
@@ -142,11 +135,11 @@
 
 <message name="listsRequest">
 	<part name="topic" type="xsd:string" xsd:minOccurs="0"/>
-	<part name="subtopic" type="xsd:string"/>
+	<part name="subtopic" type="xsd:string" xsd:minOccurs="0"/>
 </message>
 
 <message name="listsResponse">
-	<part name="return" type="xsdl:ArrayOfLists"/>	
+	<part name="listInfo" type="xsd:string"/>	
 </message>
 
 <message name="check_cookieRequest">
@@ -160,9 +153,17 @@
 <!-- portType part -->
 
 <portType name="SympaPort">
+	<operation name="info">
+		<input message="tns:infoRequest" />
+		<output message="tns:infoResponse" />
+	</operation>
 	<operation name="which">
 		<input message="tns:whichRequest" />
 		<output message="tns:whichResponse" />
+	</operation>
+	<operation name="simple_which">
+		<input message="tns:simpleWhichRequest" />
+		<output message="tns:simpleWhichResponse" />
 	</operation>
 	<operation name="isSubscriber">
 		<input message="tns:isSubscriberRequest" />
@@ -207,8 +208,34 @@
 
 <binding name="SOAP" type="tns:SympaPort">
 <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+	<operation name="info">
+		<soap:operation soapAction="urn:sympasoap#info"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
 	<operation name="which">
 		<soap:operation soapAction="urn:sympasoap#which"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="simple_which">
+		<soap:operation soapAction="urn:sympasoap#simple_which"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 

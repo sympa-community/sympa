@@ -86,7 +86,9 @@ Selection too wide, can not show selection
   [IF action<>search]
   <TD NOWRAP>
 	<INPUT TYPE="hidden" NAME="sortby" VALUE="[sortby]">
+
 	<INPUT TYPE="submit" NAME="action_review" VALUE="Page size">
+
 	        <SELECT NAME="size">
                   <OPTION VALUE="[size]" SELECTED>[size]
 		  <OPTION VALUE="25">25
