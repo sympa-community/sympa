@@ -29,7 +29,6 @@ use strict;
 use lib '--LIBDIR--';
 use Getopt::Long;
 
-use lib '--BINDIR--';
 my $sympa_conf_file = '--CONFIG--';
 use Conf;
 use List;
