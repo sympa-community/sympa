@@ -1,3 +1,93 @@
+2004-05-03 17:37  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: notify user that the config will be
+	updated soon when user_data_source changed from anything to
+	'include2'
+
+2004-05-03 15:31  salaun
+
+	* src/List.pm: Fix previous change
+
+2004-05-03 15:29  salaun
+
+	* src/List.pm: Complete previous change
+
+2004-05-03 15:27  salaun
+
+	* src/List.pm: ********* Changed default for 'user_data_source'
+	('file' => 'include2')
+
+2004-05-03 15:07  salaun
+
+	* ChangeLog, nls/fr.msg, nls/us.msg, src/Commands.pm,
+	src/Language.pm, src/List.pm, src/Makefile, src/PlainDigest.pm,
+	src/etc/templates/fr/digest_plain.fr.tpl,
+	src/etc/templates/fr/helpfile.fr.tpl,
+	src/etc/templates/us/digest_plain.us.tpl,
+	src/etc/templates/us/helpfile.us.tpl, wwsympa/wwslib.pm,
+	wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/help_editlist.fr.tpl,
+	wwsympa/wws_templates/fr/help_user_options.fr.tpl,
+	wwsympa/wws_templates/us/help_editlist.us.tpl,
+	wwsympa/wws_templates/us/help_user_options.us.tpl: [BugID 260]
+	[C.Hastie] New feature: add an extra reception option :
+	"digestplain".	The 'digestplain' reception option generates a
+	digest of messages in a plain text format.  All attachments are
+	stripped out.
+
+2004-05-03 11:35  salaun
+
+	* src/etc/templates/us/digest.us.tpl: [C.Hastie] Changed encoding
+	of the table of content part to 8bit
+
+2004-04-30 17:02  salaun
+
+	* src/sympa.pl: [bugID 115] Fix: missing newline after mail headers
+	in command reports
+
+2004-04-30 15:52  salaun
+
+	* wwsympa/wws_templates/us/remove_arc.us.tpl: Fixes
+
+2004-04-30 14:02  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: previously created ML directory
+	directly in expl/ directory if robot was also the default host.
+
+2004-04-30 12:00  salaun
+
+	* wwsympa/wwsympa.fcgi: [requested by O.LACROIX] Change: notify all
+	listowners, even if reception is nomail
+
+2004-04-30 11:51  salaun
+
+	* src/tools.pl: [O.Lacroix] Fix: failed to remove list directory
+	(while purging) becaude finddepth() used to chdir. rmdir() failed
+	with 'device busy' error
+
+2004-04-30 11:44  salaun
+
+	* wwsympa/wws_templates/fr/: admin_menu.fr.tpl, help_admin.fr.tpl:
+	[O.Lacroix] Fix: missing accented chars
+
+2004-04-30 09:07  salaun
+
+	* src/List.pm: Add list directory path to error log
+
+2004-04-28 17:14  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by mwk] Fix: escape single quotes
+	in archives search engine (could cause a 500 error)
+
+2004-04-28 10:41  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: Fix: an empty document to
+	moderate (sympauser) would appear if there was nor shared space
+
+2004-04-28 10:39  salaun
+
+	* wwsympa/wws_templates/fr/modindex.fr.tpl: Fix encoding
+
 2004-04-26 15:51  salaun
 
 	* wwsympa/wws_templates/us/d_read.us.tpl: Fix template structure

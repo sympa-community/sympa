@@ -3,6 +3,84 @@
 
 (See Changelog file for the full changes log)
 
+4.2b.1		04 May 2004
+
+   New features :
+
+	[BugID 260] [C.Hastie] Add an extra reception option :"digestplain".
+	The 'digestplain' reception option generates a digest of messages in a plain text format.
+	All attachments are stripped out.
+
+	[Gwenaelle Bouteille] added document moderation (in the document repository) and other shared-related work
+
+	[requested by C.hastie] per list rfc2369_header_fields parameter	
+
+   Changes :
+
+*****	src/List.pm: Changed default for 'user_data_source' ('file' => 'include2')	
+
+	src/etc/templates/us/digest.us.tpl: [C.Hastie] Changed encoding	of the table of content part to 8bit
+
+	wwsympa/wwsympa.fcgi: [requested by O.LACROIX] notify all listowners, even if reception is nomail
+
+	[Petr Prazak] Update Czech translations + some English typos fixed
+
+	src/etc/script/arcrepair.pl: This script will fix a bug of Sympa 4.1
+
+
+   Bug fixes :
+
+	wwsympa/wwsympa.fcgi: notify user that the config will be updated soon when user_data_source changed 
+	from anything to 'include2'
+
+	src/sympa.pl: [bugID 115] missing newline after mail headers in command reports
+
+	wwsympa/wwsympa.fcgi: previously created ML directory directly in expl/ directory if robot was also the default host.
+
+	src/tools.pl: [O.Lacroix] failed to remove list directory (while purging) becaude finddepth() used to chdir. 
+	rmdir() failed	with 'device busy' error
+
+	wwsympa/wwsympa.fcgi: [reported by mwk] escape single quotes in archives search engine (could cause a 500 error)
+
+	src/List.pm, wwsympa/wwsympa.fcgi: an empty document to	moderate (sympauser) would appear if there was nor shared space
+
+	wwsympa/Makefile: [BugID 152] UMASK was not set when installing web templates
+
+	wwsympa/Makefile: [BugID 205] wws_templates/ directory was installed with wrong permissions
+
+	src/task_manager.pl: Do not warn/remove boucing members that are included
+
+	doc/sympa.tex.tpl: [reported by V.Mathieu] Fix	include_ldap_2level example
+
+	src/task_manager.pl: removing task files for unknown/closed lists
+
+	src/List.pm: [reported by O.Thalmann] total of subscribers was not uptodate just after a DEL or ADD operation.
+	Added 'nocache' option to the call to _load_total_db() in get_first_user()
+
+	src/List.pm, src/sympa.pl, wwsympa/wwsympa.fcgi: [reported by V.Mathieu]  Ldap.pm was not loaded in sympa_soap_server.fcgi
+
+	check_perl_modules.pl: [reported by V.Mathieu] FCGI 0.67 is required for the SOAP server.
+	Corresponding error message : Can't locate object method "BINMODE" via package "FCGI::Stream"
+
+	src/sympa.pl:  --make_alias_file must not create alias for list where list status is not 'open'
+
+	src/tools.pl: [L. Labat] Antivirus check would fail under some circumstances (Unable to open xxx). 
+	BODY filehandle was never closed
+
+	wwsympa/wwsympa.fcgi: renaming a list if the list was moved to another robot with the same name
+
+	src/sympa.pl: remove call to deprecated MIME::Head::decode()
+
+	src/List.pm: [reported by V. Mathieu] removed 'visibility.private' scenario is considered the same as 
+	'visibility.conceal'
+
+	src/etc/scenari/send.editor, wwsympa/archived.pl: web archives were stored in the wrong directory
+
+	wwsympa/wwsympa.fcgi: [reported by V. Mathieu] list of inactive lists did not consider the msg_count file was not ordered
+
+	src/List.pm: sorting msg_count file when it is updated
+
+
 4.1		15 March 2004
 
    Changes :

@@ -70,7 +70,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {4.1}
+    \newcommand {\version} {4.2b.1}
 
     \newcommand {\samplelist} {mylist}
 
@@ -124,13 +124,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 4.1\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 4.2b.1\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {19 April 2004}
+    \date {21 April 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -6662,20 +6662,18 @@ Example : (cn=testgroup,dc=cru,dc=fr should be a groupOfUniqueNames here)
 \begin{verbatim}
 
     include_ldap_2level_query
-    host ldap.cru.fr
-    suffix1 cn=testgroup, dc=cru, dc=fr
-    timeout1 10
-    filter1 (objectClass=*)
-    attrs1 uniqueMember
+    host ldap.univ.fr
+    port 389
+    suffix1 ou=Groups,dc=univ,dc=fr
+    scope1 one
+    filter1 (&(objectClass=groupOfUniqueNames) (| (cn=cri)(cn=ufrmi)))
+    attrs1 uniquemember
     select1 all
-    scope1 base
-    suffix2 dc=cru, dc=fr
-    timeout2 10
-    filter2 (&(dn=[attrs1]) (c=fr))
+    suffix2 [attrs1]
+    scope2 base
+    filter2 (objectClass=n2pers)
     attrs2 mail
-    select2 regex
-    regex2 ^*@cru.fr$
-    scope2 one
+    select2 first
 
 \end{verbatim}
 \end {quote}
