@@ -808,6 +808,17 @@ my %alias = ('reply-to' => 'reply_to',
 			     'title_id' => 70,
 			     'group' => 'command'
 			 },
+	    'spam_protection' => {'format' => ['at','javascript','none'],
+			 'default' => 'javascript',
+			 'title_id' => 205,
+			 'group' => 'other'
+			  },
+	    'web_archive_spam_protection' => {'format' => ['cookie','javascript','at','none'],
+			 'default' => {'conf' => 'web_archive_spam_protection'},
+			 'title_id' => 205,
+			 'group' => 'other'
+			  },
+
 	    'status' => {'format' => ['open','closed','pending'],
 			 'default' => 'open',
 			 'title_id' => 71,

@@ -1,3 +1,116 @@
+2002-08-12 16:51  salaun
+
+	* Makefile.am: Fix: wizard was never started
+
+2002-08-12 14:12  salaun
+
+	* src/etc/script/sympa: Fix: ps -A|grep failed because of a space
+	char ; could not stop processes.  Also supress removal of .pid file
+	(sympa processes do it themselves)
+
+2002-08-12 13:18  salaun
+
+	* src/task_manager.pl: Fix: Use Digest::MD5 instead of MD5
+
+2002-08-12 11:35  salaun
+
+	* nls/de.msg: [Andreas Krueger] Changes: small improvements
+
+2002-08-12 10:08  salaun
+
+	* src/sympa.pl: Loop prevention based on X400-Content-Identifier
+	header field
+
+2002-08-09 13:57  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by S. Medard] do_arcsearch_id
+	failed if key_word (Message-ID) contained '$' character
+
+2002-08-09 11:19  salaun
+
+	* src/Makefile: Now, install src/etc/*.tpl in bin/etc/*.tpl
+
+2002-08-09 11:17  salaun
+
+	* src/etc/alias.tpl: A aliases file template for futur use. (not
+	used yet because not recognized when removing aliases)
+
+2002-08-08 10:37  salaun
+
+	* Makefile.am: Add information about wizard
+
+2002-08-08 09:41  salaun
+
+	* Makefile.am, src/Makefile, src/etc/script/Makefile: Fix: do not
+	install scripts and and aliaswrapper in bindir (install them in
+	sbindir and libexecdir instead)
+
+2002-08-08 09:18  salaun
+
+	* doc/sympa.tex.tpl: Correct
+
+2002-08-07 10:48  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Update doc
+	for using dates in scenarios
+
+2002-08-07 10:47  salaun
+
+	* src/: List.pm, tools.pl: New feature; add [current_date] in
+	scenarios
+
+2002-08-06 17:53  salaun
+
+	* wwsympa/wws_templates/us/list_menu.us.tpl: Use javascript to
+	hidde owner and moderator email
+
+2002-08-02 15:14  salaun
+
+	* src/List.pm: Change: if cannot connect to DB, keep trying, do not
+	die (this prevent from sending hundreds of worning mssages to
+	listmaster)
+
+2002-08-02 14:18  salaun
+
+	* doc/sympa.tex.tpl: Change: 'lists', 'lists.header' and
+	'lists.footer' files no more recognized
+
+2002-08-02 14:13  salaun
+
+	* src/Commands.pm: Change: ******* 'lists', 'lists.header' and
+	'lists.footer' file no more recognized by Sympa. 'lists.tpl'
+	template used instead
+
+2002-08-02 10:50  salaun
+
+	* wwsympa/wws_templates/de/compose_mail.de.tpl: [reported by Hanke
+	Penning] Fix: could not reply to the sender
+
+2002-08-01 14:27  salaun
+
+	* src/List.pm: Change: If no robot parameter is given to
+	List::get_lists(), then assume any
+
+2002-08-01 11:52  salaun
+
+	* src/sympa.pl: Fix: Sympa.pl would die if smime_decrypt() failed
+
+2002-08-01 11:46  salaun
+
+	* src/sympa.pl: Fix: Sympa would consider
+	application/pkcs7-mime;...; smime-type=signed-data as crypted
+	messages and would die while trying to decode them
+
+2002-07-31 16:54  salaun
+
+	* src/List.pm: Fix (related to include2 implementation):
+	_include_users_xxx() not properly working on tied hash. Failed
+	including duplicates in 'include' mode
+
+2002-07-31 11:06  salaun
+
+	* .version, ChangeLog, NEWS: preparing 3.3.6b.2
+
 2002-07-29 15:19  salaun
 
 	* src/tools.pl: [Robert Marcjand] Fix virus detection : With

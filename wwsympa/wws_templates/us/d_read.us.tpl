@@ -100,7 +100,7 @@
 	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]" ALT="[s->escaped_title]"> [s->doc]</A></TD>
 	<TD>
 	[IF s->author_known] 
-	  <A HREF="mailto:[s->author]">[s->author]</A>  
+	  [s->author_mailto]  
         [ELSE]
 	   Unknown 
 	[ENDIF]

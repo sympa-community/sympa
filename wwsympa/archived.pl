@@ -226,6 +226,7 @@ sub remove {
     my $adrlist = shift;
     my $msgid = shift;
 
+    do_log ('debug2',"remove ($adrlist $msgid)");
     my $arc ;
 
     if ($adrlist =~ /^(.*)\.(\d{4}-\d{2})$/) {
@@ -249,6 +250,8 @@ sub rebuild {
     my $adrlist = shift;
     my $arc ;
 
+    do_log ('debug2',"rebuild ($adrlist)");
+
     if ($adrlist =~ /^(.*)\.(\d{4}-\d{2})$/) {
 	$adrlist = $1;
         $arc = $2;
@@ -258,9 +261,32 @@ sub rebuild {
     my $listname = $1;
     my $hostname = $2;
 
+    my $list = new List($listname);
+
     do_log('debug',"Rebuilding $adrlist archive ($2)");
 
     my $mhonarc_ressources = &get_ressources ($adrlist) ; 
+
+    if (($list->{'admin'}{'web_archive_spam_protection'} ne 'none') && ($list->{'admin'}{'web_archive_spam_protection'} ne 'cookie')) {
+	$ENV{'M2H_ADDRESSMODIFYCODE'} = 's|([\!\%\w\.\-+=/]+)@([\w\.\-]+)|[hidden_head]'.$1.'[hidden_at]'.$2.'[hidden_end]|g';
+    }
+
+#    if ($list->{'admin'}{'web_archive_spam_protection'} eq 'at') {
+#	$ENV{'M2H_ADDRESSMODIFYCODE'} = 's|([\!\%\w\.\-+=/]+)@([\w\.\-]+)|$1.'."' AT '".'.$2|ge';
+#    }elsif ($list->{'admin'}{'web_archive_spam_protection'} eq 'javascript'){
+#	my $javascript = '
+#<SCRIPT language=JavaScript>
+#<!--
+#document.write("<A HREF=" + "mail" + "to:" + "$1" + "@" + "$2" + "$1" + "@" + "$2" +"</A>") 
+#// --> </SCRIPT>';
+#	$javascript =~ s/</\\\</g;
+#	$javascript =~ s/>//g;
+#	
+#	$ENV{'M2H_ADDRESSMODIFYCODE'} = 's|([\!\%\w\.\-+=/]+)@([\w\.\-]+)|'.$javascript.'|ge';
+#	$ENV{'M2H_ADDRESSMODIFYCODE'} = 's|([\!\%\w\.\-+=/]+)@([\w\.\-]+)|'.$javascript.'|g';
+#    }
+    do_log('notice','Rebuilding  $arc with M2H_ADDRESSMODIFYCODE : %s',$ENV{'M2H_ADDRESSMODIFYCODE'});
+
 
     if ($arc) {
         do_log('notice',"Rebuilding  $arc of $adrlist archive");
@@ -270,6 +296,7 @@ sub rebuild {
 
 	my $cmd = "$wwsconf->{'mhonarc'} -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc \" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
 
+	do_log('debug',"System call : $cmd");
 	my $exitcode = system($cmd);
 	if ($exitcode) {
 	    do_log('err',"Command $cmd failed with exit code $exitcode");
@@ -288,8 +315,14 @@ sub rebuild {
 	    $arc =~ /^(\d{4})-(\d{2})$/ ;
 	    my $yyyy = $1 ;
 	    my $mm = $2 ;
+	    do_log('notice',"xxxx  Rebuilding $adrlist archive completely");
+	    my $cmd = "$wwsconf->{'mhonarc'}  -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc \" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
+	    do_log('notice','xxxxxxxxxxxxxxx  %s',$cmd);
+	    my $exitcode = system($cmd);
+	    if ($exitcode) {
+		do_log('err',"Command $cmd failed with exit code $exitcode");
+	    }
 	    
-	    system "$wwsconf->{'mhonarc'}  -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc \" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
 	}
     }
 }
@@ -298,6 +331,9 @@ sub rebuild {
 sub mail2arc {
 
     my ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss) = @_;
+
+    do_log ('debug2',"mail2arc ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss)");
+
     my $arcpath = $wwsconf->{'arc_path'};
     
 

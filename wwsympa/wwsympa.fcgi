@@ -26,8 +26,8 @@
 ## Sympa: http://www.sympa.org/
 
 ## Authors :
-##           Serge Aumont <sa@cru.fr>
-##           Olivier Salaün <os@cru.fr>
+##           Serge Aumont <sa AT cru.fr>
+##           Olivier Salaün <os AT cru.fr>
 
 ## Change this to point to your Sympa bin directory
 use lib '--LIBDIR--';
@@ -1076,6 +1076,7 @@ sub check_param_out {
 	    next unless $o->{'email'};
 
 	    $param->{'owner'}{$o->{'email'}}{'gecos'} = $o->{'gecos'};
+	    $param->{'owner'}{$o->{'email'}}{mailto} = &mailto($list,$o->{'email'},$o->{'gecos'});
 	    ($param->{'owner'}{$o->{'email'}}{'local'},$param->{'owner'}{$o->{'email'}}{'domain'}) = split ('@',$o->{'email'});
 	    my $masked_email = $o->{'email'};
 	    $masked_email =~ s/\@/ AT /;
@@ -1086,6 +1087,7 @@ sub check_param_out {
 	foreach my $e (@{$list->{'admin'}{'editor'}}) {
 	    next unless $e->{'email'};
 	    $param->{'editor'}{$e->{'email'}}{'gecos'} = $e->{'gecos'};
+	    $param->{'editor'}{$e->{'email'}}{mailto} = &mailto($list,$e->{'email'},$e->{'gecos'});
 	    ($param->{'editor'}{$e->{'email'}}{'local'},$param->{'editor'}{$e->{'email'}}{'domain'}) = split ('@',$e->{'email'});
 	    my $masked_email = $e->{'email'};
 	    $masked_email =~ s/\@/ AT /;
@@ -1120,10 +1122,8 @@ sub check_param_out {
 	    }else{
 		undef ($param->{'arc_access'});
 	    }
-	}
-	
-    }
-    
+	}	
+    }    
 }
 
 ## Login WWSympa
@@ -3569,13 +3569,13 @@ sub do_arc {
     &wwslog('info', 'do_arc(%s, %s)', $in{'month'}, $in{'arc_file'});
     my $latest;
     my $index = $wwsconf->{'archive_default_index'};
-
+    
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
 	&wwslog('info','do_arc: no list');
 	return undef;
     }
-
+    
     ## Access control
     unless (&List::request_action ('web_archive.access',$param->{'auth_method'},$robot,
 				   {'listname' => $param->{'list'},
@@ -3585,15 +3585,29 @@ sub do_arc {
 	&error_message('may_not');
 	&wwslog('info','do_arc: access denied for %s', $param->{'user'}{'email'});
 	return undef;
-   }
-    
-    ## Reject Email Sniffers
-    unless (&cookielib::check_arc_cookie($ENV{'HTTP_COOKIE'})) {
-	if ($param->{'user'}{'email'} or $in{'not_a_sniffer'}) {
-	    &cookielib::set_arc_cookie($param->{'cookie_domain'});
-	}else {
-	    return 'arc_protect';
+    }
+
+    if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
+	## Reject Email Sniffers
+	unless (&cookielib::check_arc_cookie($ENV{'HTTP_COOKIE'})) {
+	    if ($param->{'user'}{'email'} or $in{'not_a_sniffer'}) {
+		&cookielib::set_arc_cookie($param->{'cookie_domain'});
+	    }else {
+		return 'arc_protect';
+	    }
 	}
+    }
+    if ($list->{'admin'}{'web_archive_spam_protection'} eq 'at') {
+	$param->{'hidden_head'} = '';	$param->{'hidden_at'} = ' AT ';	$param->{'hidden_end'} = '';
+    }elsif($list->{'admin'}{'web_archive_spam_protection'} eq 'javascript') {
+	$param->{'hidden_head'} = '
+<SCRIPT language="JavaScript">
+<!-- 
+document.write("';
+	$param->{'hidden_at'} ='" + "@" + "';
+	$param->{'hidden_end'} ='")
+// -->
+</SCRIPT>';
     }
 
     ## Calendar
@@ -3648,12 +3662,13 @@ sub do_arc {
 
     $param->{'file'} = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}";
    
-
     $param->{'base'} = sprintf "%s%s/arc/%s/%s/", $param->{'base_url'}, $param->{'path_cgi'}, $param->{'list'}, $in{'month'};
 
     $param->{'archive_name'} = $in{'month'};
 
-    &cookielib::set_arc_cookie($param->{'cookie_domain'});
+    if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
+	&cookielib::set_arc_cookie($param->{'cookie_domain'});
+    }
 
     return 1;
 }
@@ -6345,6 +6360,7 @@ sub do_d_read {
 			# Author
 			if ($desc_hash{'email'}) {
 			    $subdirs{$d}{'author'} = $desc_hash{'email'};
+			    $subdirs{$d}{'author_mailto'} = &mailto($list,$desc_hash{'email'});
 			    $subdirs{$d}{'author_known'} = 1;
 			}
 						
@@ -8317,12 +8333,16 @@ sub do_compose_mail {
 	return undef;
     }
     if ($in{'to'}) {
+	# In archive we hidde email replacing @ by ' '. Here we must do ther reverse transformation
+	$in{'to'} =~ s/ /\@/;
 	$param->{'to'} = $in{'to'};
     }else{
 	$param->{'to'} = $list->{'name'} . '@' . $list->{'admin'}{'host'};
     }
+    ($param->{'local_to'},$param->{'domain_to'}) = split ('@',$param->{'to'});
+    
+    $param->{'mailto'}= &mailto($list,$param->{'to'});
     $param->{'subject'}= &MIME::Words::encode_mimewords($in{'subject'});
-
     $param->{'in_reply_to'}= $in{'in_reply_to'};
     $param->{'message_id'} = &tools::get_message_id($robot);
     return 1;
@@ -8338,6 +8358,8 @@ sub do_send_mail {
 	return 'loginrequest';
     }
     
+    # In archive we hidde email replacing @ by ' '. Here we must do ther reverse transformation
+    $in{'to'} = s/ /\@/;
     my $to = $in{'to'};
     unless ($in{'to'}) {
 	unless ($param->{'list'}) {
@@ -8685,12 +8707,30 @@ sub export_topics {
     $param->{'topics'}[int($total / 2)]{'next'} = 1;
 }
 
+## retrurn a mailto according to spam protection parameter
+sub mailto {
 
-
-
-
-
-
-
-
-
+    my $list = shift;
+    my $email = shift;
+    my $gecos = shift;
+    
+    my $local; 
+    my $domain;
+    
+    ($local,$domain) = split ('@',$email);
+    
+    $gecos = $email unless ($gecos);
+    
+    if ($list->{'admin'}{'spam_protection'} eq 'none') {
+	return("<A HREF=\"mailto:$email\">$gecos</A>");
+    }elsif($list->{'admin'}{'spam_protection'} eq 'javascript') {
+	
+	my $return = "<SCRIPT language=JavaScript>
+<!--
+document.write(\"<A HREF=\" + \"mail\" + \"to:\" + \"$local\" + \"@\" + \"$domain\" + \">$gecos</A>\")
+// --></SCRIPT>";
+	return ($return);
+    }elsif($list->{'admin'}{'spam_protection'} eq 'at') {
+	return ("$local AT $domain");
+    }
+}

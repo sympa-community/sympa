@@ -1317,6 +1317,32 @@ is still recognized but should not be used anymore.
 
         \example {wwsympa\_url https://my.server/wws}
 
+\subsection {\cfkeyword {spam\_protection}}  
+
+    \index{spam\_protection}
+	There is a need to protection Sympa web site against spambot which collect
+        email adresse in public web site. Various method are availible into Sympa
+        and you can choose it with \cfkeyword {spam\_protection} and
+        \cfkeyword {web\_archive\_spam\_protection} parameters.
+        Possible value are :
+\begin {itemize}
+\item javascript : the adresse is hidden using a javascript. User who enable javascript can
+see a  nice mailto adresses where others have nothing.
+\item at : the @ char is replaced by the string " AT ".
+\item none : no protection against spammer.
+\end{itemize}
+
+	 \default {javascript}
+
+\subsection {\cfkeyword {web\_archive\_spam\_protection}}
+
+	Idem \cfkeyword {spam\_protection} but restricted to web archive.
+        A additional value is availible : cookie which mean that users
+        must submit a small form in order to receive a cookie before
+        browsing archives. This block all robot, even google and co.
+
+	  \default {cookie}
+
 \subsection {\cfkeyword {dark\_color} \cfkeyword {light\_color} \cfkeyword {text\_color} \cfkeyword {bg\_color} \cfkeyword {error\_color} \cfkeyword {selected\_color} \cfkeyword {shaded\_color}}
 \label {colors}
 

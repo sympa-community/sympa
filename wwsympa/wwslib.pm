@@ -148,7 +148,7 @@ sub load_config {
 			log_facility => '',
 			alias_manager => '',
 			robots => '',
-			password_case => 'insensitive'
+			password_case => 'insensitive',
 			);
 
     my $conf = \%default_conf;

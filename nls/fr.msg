@@ -398,6 +398,7 @@ $set 16 Titres des paramètres de config de listes
 202	"expression régulière (1nd niveau)"
 203	"quota"
 204	"quota"
+205	"methode de protection des adresses contre les robots spammeur"
 
 $set 17 Cookie expiration periods
 1	"la session"

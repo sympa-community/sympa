@@ -105,7 +105,7 @@ Up toNivelul precedent</A></font> <BR>
 	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]" ALT="[s->title]"> [s->doc]</A></TD>
 	<TD> 
       [IF s->author_known] 
-<A HREF="mailto:[s->author]">[s->author]</A> 
+        [s->author_mailto] 
       [ELSE] 
       Necunoscut 
       [ENDIF] 

@@ -51,7 +51,7 @@ my @valid_options = qw(
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
 		       ldap_export_dnmanager ldap_export_connection_timeout
-		       list_check_smtp list_check_suffixes 
+		       list_check_smtp list_check_suffixes  spam_protection web_archive_spam_protection
 );
 
 my %old_options = ('trusted_ca_options' => 'capath,cafile');
@@ -156,7 +156,9 @@ my %Default_Conf =
      'default_archive_quota' => '',
      'default_shared_quota' => '',
      'capath' => '',
-     'cafile' => ''
+     'cafile' => '',
+     'spam_protection' => 'javascript',
+     'web_archive_spam_protection' => 'cookie'
    );
    
 my $wwsconf;
@@ -354,7 +356,10 @@ sub load_robots {
 				  selected_color  => 1,
 				  shaded_color    => 1,
 				  list_check_smtp => 1,
-				  list_check_suffixes => 1 );
+				  list_check_suffixes => 1,
+				  spam_protection => 1,
+				  web_archive_spam_protection =>
+				  );
 
     ## Load wwsympa.conf
     unless ($wwsconf = &wwslib::load_config('--WWSCONFIG--')) {

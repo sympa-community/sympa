@@ -28,6 +28,8 @@ mail1.html
 thrd1.html
 </TIDXFNAME>
 
+
+
 <!-- =============== Index page description -->
 
 <!--  mail1.html -->
@@ -135,7 +137,7 @@ Archive powered by
 
 <!-- item of maillist.html -->
 <LITEMPLATE> 
-<LI><b> $SUBJECT$ </b> <code>$FROMADDR$</code>
+<LI><b> $SUBJECT$ </b> <code>$FROMNAME$</code>
 </LITEMPLATE> 
 
 
@@ -233,7 +235,7 @@ Chronological
 
 <TTOPBEGIN>
 [STOPPARSE]
-<LI><b> $SUBJECT$ </b> <code>$FROMADDR$</code><BR>
+<LI><b> $SUBJECT$ </b> <code>$FROMNAME$</code><BR>
 [STARTPARSE]
 </TTOPBEGIN>
 
@@ -278,14 +280,14 @@ next
 
 <TSINGLETXT>
 [STOPPARSE]
-<LI><b> $SUBJECT$ </b><code>$FROMADDR$</code>
+<LI><b> $SUBJECT$ </b><code>$FROMNAME$</code>
 </LI>
 [STARTPARSE]
 </TSINGLETXT>
 
 <TLITXT>
 [STOPPARSE]
-<LI><b> $SUBJECT$ </b><code>$FROMADDR$</code>
+<LI><b> $SUBJECT$ </b><code>$FROMNAME$</code>
 [STARTPARSE]
 </TLITXT>
 
@@ -447,15 +449,16 @@ $TNEXTBUTTON$
 
 <SubjectHeader>
 <TABLE border=0 width=100%>
-<TR bgcolor="[bg_color]">
- <TD Valign=top>
+<TR>
+ <TD>
   <FONT size=+1 COLOR="[dark_color]">
   [STOPPARSE]
   <B> $SUBJECTNA$</B></FONT><FONT size=+1> $FROMNAME$ </FONT>
   [STARTPARSE]
  </TD>
 
-<TD ALIGN=RIGHT NOWRAP>
+<TD ALIGN=RIGHT bgcolor="[bg_color]">
+<FONT size="-1">
 [IF user->email]
 <!-- reply to button -->
 <FORM ACTION="[path_cgi]" METHOD=POST>
@@ -466,28 +469,25 @@ $TNEXTBUTTON$
   <INPUT TYPE="hidden" NAME="action" VALUE="compose_mail">
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 [IF lang=fr]
-   répondre à l'auteur <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
-  à la liste <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list_conf->host]">
+   répondre à l'auteur <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
+  à la liste <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
  <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Répondre">
 [ELSIF lang=hu]
-  Válasz a feladónak <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
-  a listának <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list_conf->host]">
+  Válasz a feladónak <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
+  a listának <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
   <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Válasz">
 [ELSIF lang=et]
-  Vasta saatjale <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
-  listi <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list_conf->host]">
+  Vasta saatjale <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
+  listi <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
   <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Vasta">
 [ELSIF lang=de]
-  Antwort an Sender <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
-  an Liste <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list_conf->host]">
+  Antwort an Sender <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
+  an Liste <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
   <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Antworten">
 [ELSE] 
-  Reply to sender <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
-  to list <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list_conf->host]">
+  Reply to sender <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
+  to list <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
   <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Reply">
-
-[ENDIF]
-</FORM>
 [ENDIF]
 
 [IF action<>viewmod]
@@ -510,7 +510,7 @@ $TNEXTBUTTON$
 [ELSE]
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="tag this mail for deletion">
 [ENDIF]
-  </FORM>
+
 [ELSIF is_owner]
   <FORM ACTION="[path_cgi]" METHOD=POST>
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
@@ -532,10 +532,11 @@ $TNEXTBUTTON$
 [ELSE]
   <INPUT TYPE="button" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="request_confirm(this.form,'Do you really want to delete this message ?')">
 [ENDIF]
-  </FORM>
 [ENDIF]
-
 [ENDIF]
+</FORM>
+[ENDIF]
+</FONT>
  </TD>
  </TR>
 </TABLE>
@@ -582,11 +583,11 @@ date
 </FIELDORDER>
 
 <FIELDSBEG>
-[STOPPARSE]
+[SETOPTION ignore_undef]
 </FIELDSBEG>
 
 <FIELDSEND>
-[STARTPARSE]
+[UNSETOPTION ignore_undef]
 </FIELDSEND>
 
 <LABELSTYLES>
@@ -796,4 +797,3 @@ Jan:Veeb:Mär:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
 <BR>
 [STARTPARSE]
 </MSGBODYEND>
-
