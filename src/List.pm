@@ -4194,7 +4194,10 @@ sub _include_users_sql {
     if ($f_dir) {
 	$connect_string = "DBI:CSV:f_dir=$f_dir";
     }elsif ($db_type eq 'Oracle') {
-	$connect_string = "DBI:Oracle:host=$host;sid=$db_name";
+	$connect_string = "DBI:Oracle:";
+	if ($host && $db_name) {
+	    $connect_string .= "host=$host;sid=$db_name";
+	}
     }elsif ($db_type eq 'Pg') {
 	$connect_string = "DBI:Pg:dbname=$db_name\@$host";
     }elsif ($db_type eq 'Sybase') {
