@@ -3580,7 +3580,7 @@ sub add_user {
 	    
 	    my $statement;
 	    
-	    unless ($self->{'admin'}{'user_data_source'} eq 'include2') {
+	    unless ($new_user->{'included'}) {
 		## Is the email in user table ?
 		if (! is_user_db($who)) {
 		    ## Insert in User Table
