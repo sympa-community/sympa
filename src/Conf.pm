@@ -387,6 +387,11 @@ sub load_robots {
 	return undef;
     }
 
+    ## Set the defaults based on sympa.conf and wwsympa.conf first
+    foreach my $key (keys %valid_robot_key_words) {
+	$robot_conf->{$Conf{'domain'}}{$key} = $Conf{$key};
+    }
+
     foreach $robot (readdir(DIR)) {
 	next unless (-d "$Conf{'etc'}/$robot");
 	next unless (-r "$Conf{'etc'}/$robot/robot.conf");
@@ -449,16 +454,6 @@ sub load_robots {
 	close (ROBOT_CONF);
     }
     closedir(DIR);
-
-    ## Add default robot conf
-    ## Missing parameters from wwsympa.conf !!!
-    foreach my $key (keys %valid_robot_key_words) {
-	#if (! defined $Conf{$key}) {
-	#    printf STDERR "OOps: %s\n", $key;
-	#    next;
-	#}
-	$robot_conf->{$Conf{'domain'}}{$key} = $Conf{$key};
-    }
     
     ## Default SOAP URL corresponds to default robot
     if ($Conf{'soap_url'}) {
