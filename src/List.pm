@@ -1200,7 +1200,7 @@ sub load {
 	if ( ## 'config' is more recent than 'subscribers.db'
 	     ($m1 > $last_include) || 
 	     ## 'ttl'*2 is NOT over
-	     (time < ($last_include + $self->{'admin'}{'ttl'} * 2)) ||
+	     (time > ($last_include + $self->{'admin'}{'ttl'} * 2)) ||
 	     ## 'ttl' is over AND not Web context
 	     ((time > ($last_include + $self->{'admin'}{'ttl'})) &&
 	      !($ENV{'HTTP_HOST'} && (-f "$self->{'dir'}/subscribers.db")))) {
