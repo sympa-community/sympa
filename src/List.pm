@@ -206,7 +206,7 @@ my %default = ('occurrence' => '0-1',
 
 my @param_order = qw (subject visibility info subscribe add unsubscribe del owner send editor 
 		      account topics 
-		      host lang web_archive archive digest available_user_options 
+		      host domain lang web_archive archive digest available_user_options 
 		      default_user_options reply_to_header reply_to forced_reply_to * 
 		      welcome_return_path remind_return_path user_data_source include_file 
 		      include_list include_ldap_query include_sql_query ttl creation update 
@@ -386,6 +386,13 @@ my %alias = ('reply-to' => 'reply_to',
 			 'title_id' => 22,
 			 'group' => 'tuning'
 		     },
+	    'host' => {'format' => $regexp{'host'},
+		       'length' => 20,
+		       'default' => {'conf' => 'host'},
+		       'title_id' => 33,
+		       'group' => 'description'
+		   },
+
 	    'editor' => {'format' => {'email' => {'format' => $regexp{'email'},
 						  'length' => 30,
 						  'occurrence' => '1',
@@ -4363,9 +4370,9 @@ sub _include_users_ldap {
     do_log('debug', "Binded to LDAP server $host:$port ; user : '$user'") if ($main::option{'debug'});
     
     do_log('debug', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $host, $ldap_suffix, $ldap_filter, $ldap_attrs) if ($main::options{'debug'});
-    unless ($fetch = $ldaph->search ( base => $ldap_suffix,
-                                      filter => $ldap_filter,
-				      attrs => $ldap_attrs)) {
+    unless ($fetch = $ldaph->search ( base => "$ldap_suffix",
+                                      filter => "$ldap_filter",
+				      attrs => "$ldap_attrs")) {
         do_log('debug',"Unable to perform LDAP search in $ldap_suffix for $ldap_filter : $@");
         return undef;
     }
