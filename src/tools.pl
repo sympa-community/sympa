@@ -1227,10 +1227,10 @@ sub epoch_conv {
     my $duration;
     my $op;
 
-    if ($arg =~ /^(.+)\+|\-(.+)$/) {
+    if ($arg =~ /^(.+)(\+|\-)(.+)$/) {
 	$date = $1;
-	$duration = $2;
-	$op = $&;
+	$duration = $3;
+	$op = $2;
     } else {
 	$date = $arg;
 	$duration = '';
