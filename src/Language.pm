@@ -130,7 +130,12 @@ sub SetLang {
 ###########
     my $lang = shift;
     &do_log('debug3', 'Language::SetLang(%s)', $lang);
-   
+    
+    unless ($lang) {
+	&do_log('err','Language::SetLang(), missing locale parameter');
+	return undef;
+    }
+
     unless (defined ($msghash{$lang})) {
 	&do_log('err','unknown Locale %s, maybe sub LoadLang not Loaded before', $lang);
 	return undef;
