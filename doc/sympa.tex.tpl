@@ -10,7 +10,7 @@
 
     \usepackage {epsfig}
     \usepackage {xspace}
-    \usepackage {makeidx}
+    \usepackage {makeix}
     \usepackage {html}
     \usepackage[frenchb]{babel}
 
@@ -4111,6 +4111,7 @@ Rules are defined as follows :
                 | older (<date>, <date>)    # true if first date is anterior to the second date
                 | newer (<date>, <date>)    # true if first date is posterior to the second date
 <var> ::= [email] | [sender] | [user-><user_key_word>] | [previous_email]
+                  | [remote_host] | [remote_addr]
 	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
 		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
 	 	  | [msg_part->type] | [msg_part->body] | [is_bcc] | [current_date] | <string>
