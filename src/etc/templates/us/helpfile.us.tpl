@@ -37,9 +37,13 @@ Les commandes disponibles sont :
  SET <list|*> DIGEST         * Reception des message en mode compilation
  SET <list|*> SUMMARY        * Reception de la liste des messages uniquement
  SET <list|*> NOTICE         * Reception de l'objet des messages uniquement
- SET <list|*> TXT            * Reception uniquement au format texte pour les messages emis conjointement en HTML et en texte simple.
- SET <list|*> HTML           * Reception uniquement au format HTML pour les messages emis conjointement en HTML et en texte simple. 
+ SET <list|*> TXT            * Reception uniquement au format texte pour les messages émis 
+			       conjointement en HTML et en texte simple.
+ SET <list|*> HTML           * Reception uniquement au format HTML pour les messages émis 
+			       conjointement en HTML et en texte simple. 
  SET <list|*> URLIZE	     * Remplacement des attachements par une URL
+ SET <list|*> NOT_ME         * Ne pas recevoir les messages dont je suis l'auteur
+
 
 			     Mise à jour de la visibilite:	
  SET <list|*> CONCEAL        * Passage en liste rouge (adresse d'abonné cachée)
@@ -724,6 +728,13 @@ Available commands are:
  SET <list|*> DIGEST         * Message reception in compilation mode
  SET <list|*> SUMMARY        * Receiving the message index only
  SET <list|*> NOTICE         * Receiving message subject only
+ SET <list|*> TXT            * Receiving only text/plain part of messages send in both
+			       text/plain and in text/html format.
+ SET <list|*> HTML           * Receiving only text/html part of messages send in both
+			       text/plain and in text/html format.
+ SET <list|*> URLIZE         * Attachments are replaced by and URL.
+ SET <list|*> NOT_ME         * No copy is sent to the sender of the message
+
 
  SET <list|*> MAIL           * <list> reception in normal mode
  SET <list|*> CONCEAL        * To become unlisted (hidden subscriber address)
