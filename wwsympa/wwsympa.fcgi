@@ -2912,7 +2912,11 @@ sub do_savefile {
     ## Not empty
     if ($in{'content'} && ($in{'content'} !~ /^\s*$/)) {			
 	## Save new file
-	open FILE, ">$param->{'filepath'}";
+	unless (open FILE, ">$param->{'filepath'}") {
+	    &error_message('failed');
+	    &wwslog('info','do_savefile: failed to save file %s: %s', $param->{'filepath'},$!);
+	    return undef;
+	}
 	print FILE $in{'content'};
 	close FILE;
     }elsif (-f $param->{'filepath'}) {
