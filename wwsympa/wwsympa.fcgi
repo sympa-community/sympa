@@ -2492,7 +2492,8 @@ sub do_suboptions {
 	return undef;
     }
 
-    unless($list->is_user($param->{'user'}{'email'})) {
+    unless($param->{'is_subscriber'} && 
+	   ($param->{'subscriber'}{'subscribed'} == 1)) {
 	&error_message('not_subscriber', {'list' => $list->{'name'}});
 	&wwslog('info','do_suboptions: %s not subscribed to %s',$param->{'user'}{'email'}, $param->{'list'} );
 	return undef;
@@ -2984,8 +2985,7 @@ sub do_add {
 
 	my $user_entry = $list->get_subscriber($email);
 
-	if ( defined($user_entry) && $list->is_user($email) &&
-	     ($user_entry->{'subscribed'} == 1)) {
+	if ( defined($user_entry) && ($user_entry->{'subscribed'} == 1)) {
 	    &error_message('user_already_subscriber', {'email' => $email,
 						       'list' => $list->{'name'}});
 	    &wwslog('info','do_add: %s already subscriber', $email);
