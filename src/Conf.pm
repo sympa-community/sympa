@@ -202,9 +202,13 @@ sub load {
 sub checkfiles {
     my $config_err = 0;
     
-    unless (-x $Conf{'sendmail'}) {
-	do_log('err', "File %s does not exist or is not executable", $Conf{'sendmail'});
-	$config_err++;
+    foreach my $p ('sendmail','openssl','antivirus_path') {
+	next unless $Conf{$p};
+
+	unless (-x $Conf{$p}) {
+	    do_log('err', "File %s does not exist or is not executable", $Conf{$p});
+	    $config_err++;
+	}
     }
 
     foreach my $qdir ('spool','queue','queuedigest','queuemod','queueexpire','queueauth','queueoutgoing','queuebounce','tmpdir') {
