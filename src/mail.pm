@@ -44,6 +44,7 @@ sub mailback {
        }
        
        printf TMP "X-Sympa-To: %s\n", $rcpt;
+       printf TMP "X-Sympa-From: %s\n", $Conf{'sympa'};
        printf TMP "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($rcpt);
        
        $fh = \*TMP;
@@ -146,6 +147,7 @@ sub mailfile {
 	   }
 
 	   printf TMP "X-Sympa-To: %s\n", $rcpt;
+	   printf TMP "X-Sympa-From: %s\n", $data->{'return_path'};
 	   printf TMP "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($rcpt);
 	   
 	   $sendmail = \*TMP;

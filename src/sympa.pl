@@ -544,7 +544,7 @@ sub DoSendMessage {
 
     my $hdr = $msg->head;
     
-    my ($chksum, $rcpt, $from) = ($hdr->get('X-Sympa-Checksum'), $hdr->get('X-Sympa-To'), $hdr->get('From'));
+    my ($chksum, $rcpt, $from) = ($hdr->get('X-Sympa-Checksum'), $hdr->get('X-Sympa-To'), $hdr->get('X-Sympa-From'));
     chomp $rcpt; chomp $chksum; chomp $from;
 
     do_log('info', "Processing web message for %s", $rcpt);
