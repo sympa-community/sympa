@@ -227,7 +227,7 @@ installsrc:
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' SYMPA_VERSION='${SYMPA_VERSION}' \
 	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' \
 	DESTDIR='${DESTDIR}' MAILERPROGDIR='${MAILERPROGDIR}' EXPL_DIR='${EXPL_DIR}' \
-	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
+	PIDDIR='${PIDDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	ETCBINDIR='${ETCBINDIR}' SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' \
 	USER='${USER}' GROUP='${GROUP}' newinstall) || exit 1;
 
@@ -243,7 +243,7 @@ installwws:
 	(cd wwsympa && echo "making in wwsympa..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
 	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
-	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' \
+	PIDDIR='${PIDDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' \
 	DESTDIR='${DESTDIR}' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' newinstall) || exit 1;
 
 installsample:
@@ -377,6 +377,7 @@ build_rh_rpm: clean
 		APPGROUP='System Environment/Daemons'; export APPGROUP; \
 		HOMEDIR='/var/sympa'; export HOMEDIR; \
 		ICONSDIR='/var/www/icons'; export ICONSDIR; \
+		PIDDIR='/var/run/sympa'; export PIDDIR; \
 		VERSION=$(SYMPA_VERSION); export VERSION; \
 		$(PERL) ../../../subst.pl sympa.spec \
 	)
@@ -398,6 +399,7 @@ build_mdk_rpm: clean
 		ZIPEXT='bz2'; export ZIPEXT; \
 		APPGROUP='System/Servers'; export APPGROUP; \
 		HOMEDIR='/var/lib/sympa'; export HOMEDIR; \
+		PIDDIR='/var/run/sympa'; export PIDDIR; \
 		ICONSDIR='/var/www/icons'; export ICONSDIR; \
 		VERSION=$(SYMPA_VERSION); export VERSION; \
 		$(PERL) ../../../subst.pl sympa.spec \

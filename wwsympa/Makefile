@@ -122,6 +122,7 @@ substlib:
 		UMASK=0644; export UMASK; \
 		INSTALLDIR=$(LIBDIR); export INSTALLDIR; \
 		SBINDIR=$(SBINDIR); export SBINDIR; \
+		PIDDIR=$(PIDDIR); export PIDDIR;\
 		LIBDIR=$(LIBDIR); export LIBDIR; \
 		DESTDIR=$(DESTDIR); export DESDIR; \
 		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
@@ -139,6 +140,7 @@ substsbin:
 		UMASK=0755; export UMASK; \
 		INSTALLDIR=$(SBINDIR); export INSTALLDIR; \
 		SBINDIR=$(SBINDIR); export SBINDIR; \
+		PIDDIR=$(PIDDIR); export PIDDIR;\
 		LIBDIR=$(LIBDIR); export LIBDIR; \
 		DESTDIR=$(DESTDIR); export DESDIR; \
 		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \

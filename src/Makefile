@@ -176,6 +176,7 @@ subst:
 		UMASK=0755; export UMASK;\
 		DIR=$(DIR); export DIR;\
 		DESTDIR=$(DESTDIR); export DESTDIR;\
+		PIDDIR=$(PIDDIR); export PIDDIR;\
 		INSTALLDIR=$(SBINDIR); export INSTALLDIR;\
 		SBINDIR=$(SBINDIR); export SBINDIR;\
 		LIBDIR=$(LIBDIR); export LIBDIR;\
@@ -191,6 +192,7 @@ subst:
 		UMASK=0644; export UMASK;\
 		DIR=$(DIR); export DIR;\
 		DESTDIR=$(DESTDIR); export DESTDIR;\
+		PIDDIR=$(PIDDIR); export PIDDIR;\
 		INSTALLDIR=$(LIBDIR); export INSTALLDIR;\
 		SBINDIR=$(SBINDIR); export SBINDIR;\
 		LIBDIR=$(LIBDIR); export LIBDIR;\
