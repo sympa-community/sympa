@@ -17,7 +17,7 @@ my @valid_options = qw(
 		       cookie create_list db_host db_name db_options db_passwd db_type db_user 
 		       db_additional_subscriber_fields db_additional_user_fields
 		       default_list_priority edit_list email etc
-		       global_remind home host lang listmaster log_socket_type 
+		       global_remind home host domain lang listmaster log_socket_type 
 		       max_size maxsmtp msgcat nrcpt owner_priority pidfile spool queue 
 		       queueauth queuebounce queuedigest queueexpire queuemod queuesubscribe queueoutgoing tmpdir
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor
@@ -25,6 +25,7 @@ my @valid_options = qw(
 		       sort sympa_priority syslog umask welcome_return_path wwsympa_url
                        openssl trusted_ca_options key_passwd ssl_cert_dir remove_headers
 		       antivirus_path antivirus_args anonymous_header_fields
+		       dark_color light_color text_color bg_color error_color selected_color shaded_color
 );
 my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
@@ -43,6 +44,7 @@ my %Default_Conf =
      'sendmail'=> '/usr/sbin/sendmail',
      'openssl' => '',
      'host'    => undef,
+     'domain'  => undef,
      'email'   => 'sympa',
      'pidfile' => '--DIR--/sympa.pid',
      'msgcat'  => '--DIR--/nls',
@@ -93,7 +95,14 @@ my %Default_Conf =
      'remove_headers' => 'Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To',
      'antivirus_path' => '',
      'antivirus_args' => '',
-     'anonymous_header_fields' => 'Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender'
+     'anonymous_header_fields' => 'Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender',
+     'dark_color' => '--DARK_COLOR--',
+     'light_color' => '--LIGHT_COLOR--',
+     'text_color' => '--TEXT_COLOR--',
+     'bg_color' => '--BG_COLOR--',
+     'error_color' => '--ERROR_COLOR--',
+     'selected_color' => '--SELECTED_COLOR--',
+     'shaded_color' => '--SHARED_COLOR--'
    );
    
 %Conf = ();
@@ -119,6 +128,8 @@ sub load {
 	    $value =~ s/\s*$//;
 	    ##  'tri' is a synonime for 'sort' (for compatibily with old versions)
 	    $keyword = 'sort' if ($keyword eq 'tri');
+	    ##  'host' is a synonime for 'domain', host is allready used in $Conf however keyword domain is privileged in the documentation
+	    $keyword = 'host' if ($keyword eq 'domain');
 	    ## Special case: `command`
 	    if ($value =~ /^\`(.*)\`$/) {
 		$value = qx/$1/;
@@ -209,16 +220,26 @@ sub load {
     $Conf{'sympa'} = "$Conf{'email'}\@$Conf{'host'}";
     $Conf{'request'} = "$Conf{'email'}-request\@$Conf{'host'}";
     
-    $Conf{'robots'} = &load_robots ;
+    my $robots_conf = &load_robots ;
+    
+    $Conf{'robots'} = $robots_conf ;
     return 1;
 }
 
 ## load each virtual robots configuration files
 sub load_robots {
     
-    my %robot_conf ;
+    do_log('info', "load_robots"); 
 
-    my @valid_robot_key_words = ( 'http_host' => '', listmaster => '', 'title' => '');  
+    my %robot_conf ;
+    my %valid_robot_key_words = ( 'http_host' => ' ', listmaster => ' ', 'title' => ' ',
+				  dark_color      =>       ' ',
+				  light_color     =>       ' ',
+				  text_color      =>       ' ', 
+				  bg_color        =>       ' ',
+				  error_color     =>       ' ',
+				  selected_color  =>       ' ',
+				  shaded_color    =>       ' ' );  
 
     unless (opendir DIR,'--DIR--/etc' ) {
 	do_log('info','Unable to open directory --DIR--/etc for virtual robots config' );
@@ -229,27 +250,35 @@ sub load_robots {
 	next unless (-d "--DIR--/etc/$robot");
 	next unless (-r "--DIR--/etc/$robot/robot.conf");
 	unless (open (ROBOT_CONF,"--DIR--/etc/$robot/robot.conf")) {
-	  do_log('info', "load robots config: Unable to open --DIR--/etc/$robot/robot.conf"); 
-	  my %keys ;
-	  while (<ROBOT_CONF>) {
-	      next if (/^\s*$/o || /^[\#\;]/o);
-	      if (/^\s*(\S+)\s+(.+)\s*$/io) {
-		  my($keyword, $value) = ($1, $2);
-		  $keyword = lc($keyword);
-		  $value = lc($value) unless ($keyword eq 'title');
-		  if ($valid_robot_key_words->{'$keyword'}) {
-		      $robot_conf->{$robot}{'$keyword'} = $value;
-		  }else{
-		      do_log('info',"load robots config: unknown keyword $keyword");
-		  }
-	      }
-	  }
-	  @{$robot_conf->{$robot}{'listmasters'}} = split(/,/, $robot_conf->{$robot}{'listmasters'});
+	    do_log('info', "load robots config: Unable to open --DIR--/etc/$robot/robot.conf"); 
+	    next ;
+	}
+	do_log('info', "load robots config --DIR--/etc/$robot/robot.conf"); 
+	
+	while (<ROBOT_CONF>) {
+	    next if (/^\s*$/o || /^[\#\;]/o);
+	    if (/^\s*(\S+)\s+(.+)\s*$/io) {
+		my($keyword, $value) = ($1, $2);
+		
+		$keyword = lc($keyword);
+		$value = lc($value) unless ($keyword eq 'title');
+		if ($valid_robot_key_words{$keyword}) {
+		    $robot_conf->{$robot}{$keyword} = $value;
+		    printf STDERR "load robots config: $keyword = $value\n";
+		}else{
+		    do_log('info',"load robots config: unknown keyword $keyword");
+		    printf STDERR "load robots config: unknown keyword $keyword\n";
+		}
+	    }
+	}
+	# listmaster is a list of email separated by commas
+	@{$robot_conf->{$robot}{'listmasters'}} = split(/,/, $robot_conf->{$robot}{'listmaster'});
 
-	  $robot_conf->{'robot_by_http_host'}{$robot_conf->{$robot}{'http_host'}} = $robot ;
-	  close (ROBOT_CONF);
-      }
-    }	
+	$robot_conf->{'robot_by_http_host'}{$robot_conf->{$robot}{'http_host'}} = $robot ;
+
+
+	close (ROBOT_CONF);
+    }
     closedir(DIR);
     return ($robot_conf);
 }
