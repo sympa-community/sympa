@@ -32,10 +32,68 @@ msgstr ""
 msgid " %1 hits on message's From field"
 msgstr "%1 találat a levél Feladója mezõjében"
 
+#. (count)
+#: web_tt2/latest_lists.tt2:6
+#, fuzzy
+msgid " The %1 latest lists "
+msgstr "Legújabb listák"
+
+#. (count)
+#: web_tt2/latest_arc.tt2:6
+#, fuzzy
+msgid " The %1 latest messages "
+msgstr "Utolsó üzenet"
+
+# nlsref 16,70
+#. (count)
+#: web_tt2/latest_d_read.tt2:6
+#, fuzzy
+msgid " The %1 latest shared documents "
+msgstr "Megosztott dokumentumok"
+
+#. (count)
+#: web_tt2/active_lists.tt2:6
+#, fuzzy
+msgid " The %1 most active lists "
+msgstr "Inaktív listák"
+
+#: web_tt2/active_lists.tt2:8
+#, fuzzy
+msgid " The active lists "
+msgstr "Inaktív listák"
+
+#: web_tt2/latest_lists.tt2:8
+#, fuzzy
+msgid " The latest lists "
+msgstr "Legújabb listák"
+
+#: web_tt2/latest_arc.tt2:8
+#, fuzzy
+msgid " The latest messages "
+msgstr "Utolsó üzenet"
+
+# nlsref 16,70
+#: web_tt2/latest_d_read.tt2:8
+#, fuzzy
+msgid " The latest shared documents "
+msgstr "Megosztott dokumentumok"
+
+#. (loc)
+#. (for)
+#: web_tt2/active_lists.tt2:12 web_tt2/latest_arc.tt2:12
+#: web_tt2/latest_d_read.tt2:12 web_tt2/latest_lists.tt2:12
+msgid " for %1 days "
+msgstr ""
+
 #. (list_request_date)
 #: web_tt2/set_pending_list_request.tt2:17
 msgid " on %1"
 msgstr "dátum: %1"
+
+#. (d.name)
+#: web_tt2/rss.tt2:126
+msgid "%1"
+msgstr ""
 
 #. (conf.title,list)
 #: mail_tt2/sendpasswd.tt2:5
@@ -119,6 +177,13 @@ msgstr ""
 "A(z) %1@%2 archívumának összmérete: %3 bájt. A leveleket\n"
 "tovább már nem archiváljuk. Kérem forduljon az üzemeltetõhöz, lismaster@%4.\n"
 
+# nlsref 17,6
+#. (l.average)
+#: web_tt2/rss.tt2:102
+#, fuzzy
+msgid "%1 by day "
+msgstr "1 nap múlva"
+
 #. (body_count)
 #: web_tt2/arcsearch.tt2:56
 msgid "%1 hits on message's Body"
@@ -163,6 +228,16 @@ msgstr "%1 tag sikeresen felírva"
 #: web_tt2/error.tt2:72
 msgid "%1: action failed"
 msgstr "%1: hiba a mûvelet végrehajtásakor"
+
+#. (l.name,l.host,l.subject)
+#: web_tt2/rss.tt2:92
+msgid "%1@%2 - %3"
+msgstr ""
+
+#. (l.name,l.host,l.subject,l.msg_count)
+#: web_tt2/rss.tt2:101
+msgid "%1@%2 - %3 : %4 messages"
+msgstr ""
 
 #. (list.name,list.host,param0)
 #: mail_tt2/listowner_notification.tt2:22
@@ -553,6 +628,11 @@ msgstr "Archívum"
 msgid "Archives Selection:"
 msgstr "Archívumok kiválasztása:"
 
+#. (error.year_month)
+#: web_tt2/error.tt2:183
+msgid "Archives from %1 are not accessible"
+msgstr ""
+
 #. (list)
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
 msgid "Are you sure you wish to close %1 list ?"
@@ -577,7 +657,8 @@ msgstr "Azonosítási mód"
 msgid "Authentication requested"
 msgstr "Azonosítás szükséges"
 
-#: web_tt2/d_read.tt2:79 web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:70
+#: web_tt2/d_read.tt2:79 web_tt2/latest_d_read.tt2:21 web_tt2/modindex.tt2:18
+#: web_tt2/modindex.tt2:70
 msgid "Author"
 msgstr "Szerzõ"
 
@@ -589,6 +670,10 @@ msgstr "Az alkalmazható parancsok a következõk:"
 #: src/List.pm:346
 msgid "Available subscription options"
 msgstr "Felhasználható tagsági beállítások"
+
+#: web_tt2/active_lists.tt2:24
+msgid "Average by day"
+msgstr ""
 
 #: web_tt2/arcsearch.tt2:115
 msgid ""
@@ -634,6 +719,12 @@ msgstr ""
 #: web_tt2/arcsearch_form.tt2:64
 msgid "Body"
 msgstr "Törzs"
+
+#. (d.anchor)
+#: web_tt2/rss.tt2:121
+#, fuzzy
+msgid "Bookmark %1"
+msgstr "Webcím felvétele a könyvjelzõbe"
 
 #: web_tt2/d_editfile.tt2:30
 msgid "Bookmark URL"
@@ -894,7 +985,8 @@ msgstr "Új könyvtár létrehozása"
 msgid "Create list"
 msgstr "Lista létrehozása"
 
-#: web_tt2/get_inactive_lists.tt2:6 web_tt2/get_latest_lists.tt2:6
+#: web_tt2/active_lists.tt2:25 web_tt2/get_inactive_lists.tt2:6
+#: web_tt2/get_latest_lists.tt2:6 web_tt2/latest_lists.tt2:23
 msgid "Creation date"
 msgstr "Létrehozva"
 
@@ -944,8 +1036,8 @@ msgstr "Az adatok megváltoztak. Nem lehet módosításaidat elmenteni."
 msgid "Data sources setup"
 msgstr "Adat források beállítása"
 
-#: web_tt2/arcsearch_form.tt2:62 web_tt2/modindex.tt2:17
-#: web_tt2/modindex.tt2:69 web_tt2/subindex.tt2:11
+#: web_tt2/arcsearch_form.tt2:62 web_tt2/latest_arc.tt2:19
+#: web_tt2/modindex.tt2:17 web_tt2/modindex.tt2:69 web_tt2/subindex.tt2:11
 msgid "Date"
 msgstr "Dátum"
 
@@ -1077,6 +1169,10 @@ msgstr "Digest gyakoriság"
 #: web_tt2/help_user_options.tt2:14
 msgid "DigestPlain"
 msgstr "Sima kivonat"
+
+#: web_tt2/latest_d_read.tt2:22
+msgid "Directory"
+msgstr ""
 
 #. (error.name)
 #: web_tt2/error.tt2:154
@@ -1472,6 +1568,11 @@ msgstr "Itt az összes listához megtalálod a leiratkozási címet."
 msgid "Forwarded mega-bytes        :      %1"
 msgstr "Továbbküldött megabájtok   :      %1"
 
+#: web_tt2/latest_arc.tt2:21
+#, fuzzy
+msgid "From"
+msgstr "Feladó: %1"
+
 #. (user.email)
 #: web_tt2/compose_mail.tt2:4
 msgid "From: %1"
@@ -1773,7 +1874,7 @@ msgstr "Nyelv: %1"
 msgid "Language of the list"
 msgstr "A lista nyelve"
 
-#: web_tt2/d_read.tt2:109
+#: web_tt2/d_read.tt2:109 web_tt2/latest_d_read.tt2:19
 msgid "Last update"
 msgstr "Utolsó módosítás"
 
@@ -1811,6 +1912,12 @@ msgstr "Találatok felsorolása"
 #, fuzzy
 msgid "List %1 / %2"
 msgstr "%1 oldal / %2"
+
+#. (list.name)
+#: mail_tt2/listowner_notification.tt2:4
+#, fuzzy
+msgid "List %1 archive quota exceeded"
+msgstr "A(z) \"%1\" lista archívuma elérte a maximálisan engedélyezett méretet"
 
 # #-#-#-#-#  hu.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,7
@@ -1884,11 +1991,6 @@ msgstr "Lista adminisztrációs oldal"
 #: web_tt2/admin_menu.tt2:140
 msgid "List Definition"
 msgstr "Lista jellemzõk"
-
-#. (list.name)
-#: mail_tt2/listowner_notification.tt2:4
-msgid "List \"%1\" archive quota exceeded"
-msgstr "A(z) \"%1\" lista archívuma elérte a maximálisan engedélyezett méretet"
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:4
@@ -2008,7 +2110,8 @@ msgstr "Megosztott mappa tartalma"
 msgid "Listmaster"
 msgstr "Listmaster"
 
-#: web_tt2/get_inactive_lists.tt2:8 web_tt2/get_latest_lists.tt2:7
+#: web_tt2/active_lists.tt2:22 web_tt2/get_inactive_lists.tt2:8
+#: web_tt2/get_latest_lists.tt2:7 web_tt2/latest_lists.tt2:22
 #: web_tt2/review_family.tt2:7 web_tt2/scenario_test.tt2:24
 msgid "Listname"
 msgstr "Lista neve"
@@ -2137,6 +2240,12 @@ msgstr "A(z) %s levél megjelenhet a(z) %s listán.\n"
 #: src/Commands.pm:1857
 msgid "Message %s for list %s has been rejected.\n"
 msgstr "A(z) %s levelet a(z) %s listán visszautasították.\n"
+
+# nlsref 15,4
+#: web_tt2/active_lists.tt2:23
+#, fuzzy
+msgid "Message count"
+msgstr "üzenet lábléce"
 
 #: web_tt2/help_editfile.tt2:35
 msgid ""
@@ -2287,8 +2396,8 @@ msgstr ""
 "lesznek tartva késõbbi moderálásig. Ha a visszapattanások száma tullépi ezt "
 "az értéket, az erre a listára küldött üzenetek nem lesznek szétküldve.\n"
 
-#: web_tt2/pref.tt2:22 web_tt2/review.tt2:148 web_tt2/review.tt2:152
-#: web_tt2/subindex.tt2:9
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:22 web_tt2/review.tt2:148
+#: web_tt2/review.tt2:152 web_tt2/subindex.tt2:9
 msgid "Name"
 msgstr "Név:"
 
@@ -3164,6 +3273,11 @@ msgstr "Küldések/fogadások beállítása"
 msgid "Serial number of the config"
 msgstr "A beállítás sorozatszáma"
 
+#: web_tt2/rss.tt2:28 web_tt2/rss.tt2:7
+#, fuzzy
+msgid "Server error"
+msgstr "Hibák törlése"
+
 #: web_tt2/help_editfile.tt2:3
 msgid "Service messages description :"
 msgstr ""
@@ -3373,9 +3487,10 @@ msgstr "A lista állapota"
 msgid "Sub date"
 msgstr "Dátum szerint"
 
-#: web_tt2/arcsearch_form.tt2:58 web_tt2/get_inactive_lists.tt2:9
-#: web_tt2/get_latest_lists.tt2:8 web_tt2/modindex.tt2:19
-#: web_tt2/review_family.tt2:9
+#: web_tt2/active_lists.tt2:26 web_tt2/arcsearch_form.tt2:58
+#: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
+#: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:24
+#: web_tt2/modindex.tt2:19 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Tárgy"
 
@@ -3637,6 +3752,31 @@ msgstr ""
 "A %1 állomány, ami kezdetben ehhez az üzenethez volt csatolva, a levelezési "
 "lista szerveren lett eltárolva."
 
+#. (count)
+#: web_tt2/rss.tt2:31
+#, fuzzy
+msgid "The %1 latest created lists"
+msgstr "Kijelölt listák törlése"
+
+#. (count)
+#: web_tt2/rss.tt2:51
+#, fuzzy
+msgid "The %1 latest messages"
+msgstr "Utolsó üzenet"
+
+# nlsref 16,70
+#. (count)
+#: web_tt2/rss.tt2:60
+#, fuzzy
+msgid "The %1 latest shared documents"
+msgstr "Megosztott dokumentumok"
+
+#. (count)
+#: web_tt2/rss.tt2:41
+#, fuzzy
+msgid "The %1 most active lists"
+msgstr "Inaktív listák"
+
 #: web_tt2/help_editlist.tt2:38
 msgid ""
 "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
@@ -3788,6 +3928,22 @@ msgstr ""
 msgid "The following virtual robots are running on this server :"
 msgstr "A következõ virtuális robotok érhetõk el a szerveren:"
 
+#: web_tt2/rss.tt2:33
+#, fuzzy
+msgid "The latest created lists"
+msgstr "Kijelölt listák törlése"
+
+#: web_tt2/rss.tt2:53
+#, fuzzy
+msgid "The latest messages"
+msgstr "Utolsó üzenet"
+
+# nlsref 16,70
+#: web_tt2/rss.tt2:62
+#, fuzzy
+msgid "The latest shared documents"
+msgstr "Megosztott dokumentumok"
+
 #. (conf.wwsympa_url,list.name)
 #: mail_tt2/d_install_shared.tt2:7
 msgid "The list document repository : %1/d_read/%2"
@@ -3829,6 +3985,11 @@ msgstr ""
 #: web_tt2/create_list_request.tt2:43
 msgid "The list's subject"
 msgstr "Amirõl a lista szól"
+
+#: web_tt2/rss.tt2:43
+#, fuzzy
+msgid "The most active lists"
+msgstr "Inaktív listák"
 
 #: web_tt2/error.tt2:82
 msgid "The passwords you typed do not match"
@@ -4563,7 +4724,7 @@ msgstr "Nem olvasható a súgó állomány: %s\n"
 msgid "Unify your subscriptions with the email"
 msgstr "Állítsd át mindenhol a feliratkozási címedet"
 
-#: web_tt2/d_read.tt2:153 web_tt2/d_read.tt2:268
+#: web_tt2/d_read.tt2:153 web_tt2/d_read.tt2:268 web_tt2/latest_d_read.tt2:43
 msgid "Unknown"
 msgstr "Ismeretlen"
 
@@ -4575,7 +4736,7 @@ msgid "Unsubscribe"
 msgstr "Leiratkozás"
 
 # nlsref 6,71
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3013
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3271
 msgid "Unsubscribe from list %s"
 msgstr "Leiratkozás a(z) %s listáról"
 
@@ -4775,8 +4936,8 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:2784 wwsympa/wwsympa.fcgi:2785
-#: wwsympa/wwsympa.fcgi:3383 wwsympa/wwsympa.fcgi:3384
+#: wwsympa/wwsympa.fcgi:3042 wwsympa/wwsympa.fcgi:3043
+#: wwsympa/wwsympa.fcgi:3641 wwsympa/wwsympa.fcgi:3642
 msgid "Welcome on list %s"
 msgstr "Üdvözlünk a(z) %s listán"
 
@@ -4974,7 +5135,7 @@ msgstr ""
 "jelszavadat."
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3014 wwsympa/wwsympa.fcgi:3489
+#: wwsympa/wwsympa.fcgi:3272 wwsympa/wwsympa.fcgi:3747
 msgid "You have been removed from list %s.\n"
 msgstr "Törölve lettél a(z) %s listáról.\n"
 
@@ -5379,7 +5540,7 @@ msgid "Your subscription email is %1"
 msgstr "Feliratkozási e-mail címed: %1"
 
 # nlsref 6,18
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3488
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3746
 msgid "Your subscription to list %s has been removed."
 msgstr "A(z) %s listáról töröltek."
 
@@ -6542,6 +6703,10 @@ msgstr "e-mail címed: %1"
 #: mail_tt2/sendpasswd.tt2:30
 msgid "your password : %1"
 msgstr "jelszavad   : %1"
+
+#, fuzzy
+#~ msgid "The [% count %] latest messages"
+#~ msgstr "régebbiek elõl"
 
 #~ msgid "$PAGENUM$"
 #~ msgstr "$PAGENUM$"

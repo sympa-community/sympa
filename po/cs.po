@@ -21,11 +21,67 @@ msgstr ""
 msgid " %1 hits on message's From field"
 msgstr "shod v poli"
 
+#. (count)
+#: web_tt2/latest_lists.tt2:6
+#, fuzzy
+msgid " The %1 latest lists "
+msgstr "VytvoÃ¸enÃ­ konference"
+
+#. (count)
+#: web_tt2/latest_arc.tt2:6
+#, fuzzy
+msgid " The %1 latest messages "
+msgstr "ZaÃ¨Ã­t od nejnovÃ¬jÂ¹Ã­ch zprÃ¡v"
+
+#. (count)
+#: web_tt2/latest_d_read.tt2:6
+#, fuzzy
+msgid " The %1 latest shared documents "
+msgstr "SdÃ­lenÃ½ adresÃ¡Ã¸"
+
+#. (count)
+#: web_tt2/active_lists.tt2:6
+#, fuzzy
+msgid " The %1 most active lists "
+msgstr "VytvoÃ¸enÃ­ konference"
+
+#: web_tt2/active_lists.tt2:8
+#, fuzzy
+msgid " The active lists "
+msgstr "VytvoÃ¸enÃ­ konference"
+
+#: web_tt2/latest_lists.tt2:8
+#, fuzzy
+msgid " The latest lists "
+msgstr "VytvoÃ¸enÃ­ konference"
+
+#: web_tt2/latest_arc.tt2:8
+#, fuzzy
+msgid " The latest messages "
+msgstr "ZaÃ¨Ã­t od nejnovÃ¬jÂ¹Ã­ch zprÃ¡v"
+
+#: web_tt2/latest_d_read.tt2:8
+#, fuzzy
+msgid " The latest shared documents "
+msgstr "SdÃ­lenÃ½ adresÃ¡Ã¸"
+
+#. (loc)
+#. (for)
+#: web_tt2/active_lists.tt2:12 web_tt2/latest_arc.tt2:12
+#: web_tt2/latest_d_read.tt2:12 web_tt2/latest_lists.tt2:12
+msgid " for %1 days "
+msgstr ""
+
 #. (list_request_date)
 #: web_tt2/set_pending_list_request.tt2:17
 #, fuzzy
 msgid " on %1"
 msgstr "Pro: %1"
+
+#. (d.name)
+#: web_tt2/rss.tt2:126
+msgid "%1"
+msgstr ""
 
 #. (conf.title,list)
 #: mail_tt2/sendpasswd.tt2:5
@@ -105,6 +161,11 @@ msgid ""
 "are no more web-archived. Please contact %5@%4. \n"
 msgstr ""
 
+#. (l.average)
+#: web_tt2/rss.tt2:102
+msgid "%1 by day "
+msgstr ""
+
 #. (body_count)
 #: web_tt2/arcsearch.tt2:56
 #, fuzzy
@@ -152,6 +213,16 @@ msgstr "pÃ¸idÃ¡no %1 Ã¨lenÃ¹"
 #: web_tt2/error.tt2:72
 msgid "%1: action failed"
 msgstr "%1: akce selhala"
+
+#. (l.name,l.host,l.subject)
+#: web_tt2/rss.tt2:92
+msgid "%1@%2 - %3"
+msgstr ""
+
+#. (l.name,l.host,l.subject,l.msg_count)
+#: web_tt2/rss.tt2:101
+msgid "%1@%2 - %3 : %4 messages"
+msgstr ""
 
 #. (list.name,list.host,param0)
 #: mail_tt2/listowner_notification.tt2:22
@@ -499,6 +570,11 @@ msgstr "Archives setup"
 msgid "Archives Selection:"
 msgstr "ObrÃ¡tit vÃ½bÃ¬r"
 
+#. (error.year_month)
+#: web_tt2/error.tt2:183
+msgid "Archives from %1 are not accessible"
+msgstr ""
+
 #. (list)
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
 msgid "Are you sure you wish to close %1 list ?"
@@ -522,7 +598,8 @@ msgstr "Metoda pÃ¸ihlÃ¡Â¹enÃ­"
 msgid "Authentication requested"
 msgstr "Odeslat poÂ¾adavek na vytvoÃ¸enÃ­"
 
-#: web_tt2/d_read.tt2:79 web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:70
+#: web_tt2/d_read.tt2:79 web_tt2/latest_d_read.tt2:21 web_tt2/modindex.tt2:18
+#: web_tt2/modindex.tt2:70
 msgid "Author"
 msgstr "Autor"
 
@@ -532,6 +609,10 @@ msgstr "DostupnÃ© pÃ¸Ã­kazy jsou:"
 
 #: src/List.pm:346
 msgid "Available subscription options"
+msgstr ""
+
+#: web_tt2/active_lists.tt2:24
+msgid "Average by day"
 msgstr ""
 
 #: web_tt2/arcsearch.tt2:115
@@ -570,6 +651,12 @@ msgstr ""
 #: web_tt2/arcsearch_form.tt2:64
 msgid "Body"
 msgstr "TÃ¬lo zprÃ¡vy"
+
+#. (d.anchor)
+#: web_tt2/rss.tt2:121
+#, fuzzy
+msgid "Bookmark %1"
+msgstr "Nahradit soubor [% path %] VaÂ¹Ã­m souborem"
 
 #: web_tt2/d_editfile.tt2:30
 msgid "Bookmark URL"
@@ -810,7 +897,8 @@ msgstr "Apply"
 msgid "Create list"
 msgstr "VytvoÃ¸enÃ­ konference"
 
-#: web_tt2/get_inactive_lists.tt2:6 web_tt2/get_latest_lists.tt2:6
+#: web_tt2/active_lists.tt2:25 web_tt2/get_inactive_lists.tt2:6
+#: web_tt2/get_latest_lists.tt2:6 web_tt2/latest_lists.tt2:23
 msgid "Creation date"
 msgstr ""
 
@@ -862,8 +950,8 @@ msgstr "Data zmÃ¬nÃ¬na na disku. VaÂ¹e zmÃ¬ny nelze pouÂ¾Ã
 msgid "Data sources setup"
 msgstr "Data sources setup"
 
-#: web_tt2/arcsearch_form.tt2:62 web_tt2/modindex.tt2:17
-#: web_tt2/modindex.tt2:69 web_tt2/subindex.tt2:11
+#: web_tt2/arcsearch_form.tt2:62 web_tt2/latest_arc.tt2:19
+#: web_tt2/modindex.tt2:17 web_tt2/modindex.tt2:69 web_tt2/subindex.tt2:11
 msgid "Date"
 msgstr "Datum"
 
@@ -977,6 +1065,10 @@ msgstr "PoÂ¾adoval"
 
 #: web_tt2/help_user_options.tt2:14
 msgid "DigestPlain"
+msgstr ""
+
+#: web_tt2/latest_d_read.tt2:22
+msgid "Directory"
 msgstr ""
 
 #. (error.name)
@@ -1343,6 +1435,10 @@ msgstr "Pro kaÂ¾dou konferenci je zde odkaz, kterÃ½m se mÃ¹Â¾ete
 msgid "Forwarded mega-bytes        :      %1"
 msgstr "PÃ¸edÃ¡no"
 
+#: web_tt2/latest_arc.tt2:21
+msgid "From"
+msgstr "From"
+
 #. (user.email)
 #: web_tt2/compose_mail.tt2:4
 msgid "From: %1"
@@ -1614,7 +1710,7 @@ msgstr ""
 msgid "Language of the list"
 msgstr ""
 
-#: web_tt2/d_read.tt2:109
+#: web_tt2/d_read.tt2:109 web_tt2/latest_d_read.tt2:19
 msgid "Last update"
 msgstr "PoslednÃ­ zmÃ¬na"
 
@@ -1653,6 +1749,11 @@ msgstr "UspoÃ¸Ã¡dÃ¡nÃ­"
 #, fuzzy
 msgid "List %1 / %2"
 msgstr "strana %1 z %2"
+
+#. (list.name)
+#: mail_tt2/listowner_notification.tt2:4
+msgid "List %1 archive quota exceeded"
+msgstr ""
 
 #. (list.name)
 #: mail_tt2/listmaster_notification.tt2:108
@@ -1718,11 +1819,6 @@ msgstr "Panel sprÃ¡vy konference"
 
 #: web_tt2/admin_menu.tt2:140
 msgid "List Definition"
-msgstr ""
-
-#. (list.name)
-#: mail_tt2/listowner_notification.tt2:4
-msgid "List \"%1\" archive quota exceeded"
 msgstr ""
 
 #. (list.name)
@@ -1836,7 +1932,8 @@ msgstr "VÃ½pis sdÃ­lenÃ©ho adresÃ¡Ã¸e"
 msgid "Listmaster"
 msgstr "jmÃ©no"
 
-#: web_tt2/get_inactive_lists.tt2:8 web_tt2/get_latest_lists.tt2:7
+#: web_tt2/active_lists.tt2:22 web_tt2/get_inactive_lists.tt2:8
+#: web_tt2/get_latest_lists.tt2:7 web_tt2/latest_lists.tt2:22
 #: web_tt2/review_family.tt2:7 web_tt2/scenario_test.tt2:24
 msgid "Listname"
 msgstr "Konference"
@@ -1960,6 +2057,14 @@ msgstr ""
 #, fuzzy
 msgid "Message %s for list %s has been rejected.\n"
 msgstr "Vase zprava byla odmitnuta"
+
+#: web_tt2/active_lists.tt2:23
+#, fuzzy
+msgid "Message count"
+msgstr ""
+"ZprÃ¡va pro pozvÃ¡nÃ­ : je odeslÃ¡na osobÃ¬, pokud nÃ¬jakÃ½ uÂ¾ivatel "
+"pouÂ¾ije \n"
+"pÃ¸Ã­kaz INVITE aby vyzval nÃ¬koho k pÃ¸ihlÃ¡Â¹enÃ­."
 
 #: web_tt2/help_editfile.tt2:35
 msgid ""
@@ -2088,8 +2193,8 @@ msgid ""
 "              distributed.\n"
 msgstr ""
 
-#: web_tt2/pref.tt2:22 web_tt2/review.tt2:148 web_tt2/review.tt2:152
-#: web_tt2/subindex.tt2:9
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:22 web_tt2/review.tt2:148
+#: web_tt2/review.tt2:152 web_tt2/subindex.tt2:9
 msgid "Name"
 msgstr "JmÃ©no"
 
@@ -2915,6 +3020,11 @@ msgstr "Sending/reception setup"
 msgid "Serial number of the config"
 msgstr ""
 
+#: web_tt2/rss.tt2:28 web_tt2/rss.tt2:7
+#, fuzzy
+msgid "Server error"
+msgstr "Vynulovat chyby"
+
 #: web_tt2/help_editfile.tt2:3
 msgid "Service messages description :"
 msgstr ""
@@ -3075,9 +3185,10 @@ msgstr ""
 msgid "Sub date"
 msgstr "SetÃ¸Ã­dit podle data"
 
-#: web_tt2/arcsearch_form.tt2:58 web_tt2/get_inactive_lists.tt2:9
-#: web_tt2/get_latest_lists.tt2:8 web_tt2/modindex.tt2:19
-#: web_tt2/review_family.tt2:9
+#: web_tt2/active_lists.tt2:26 web_tt2/arcsearch_form.tt2:58
+#: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
+#: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:24
+#: web_tt2/modindex.tt2:19 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Subjekt"
 
@@ -3306,6 +3417,30 @@ msgid ""
 "the mailing lists server:"
 msgstr ""
 
+#. (count)
+#: web_tt2/rss.tt2:31
+#, fuzzy
+msgid "The %1 latest created lists"
+msgstr "VytvoÃ¸enÃ­ konference"
+
+#. (count)
+#: web_tt2/rss.tt2:51
+#, fuzzy
+msgid "The %1 latest messages"
+msgstr "ZaÃ¨Ã­t od nejnovÃ¬jÂ¹Ã­ch zprÃ¡v"
+
+#. (count)
+#: web_tt2/rss.tt2:60
+#, fuzzy
+msgid "The %1 latest shared documents"
+msgstr "SdÃ­lenÃ½ adresÃ¡Ã¸"
+
+#. (count)
+#: web_tt2/rss.tt2:41
+#, fuzzy
+msgid "The %1 most active lists"
+msgstr "VytvoÃ¸enÃ­ konference"
+
 #: web_tt2/help_editlist.tt2:38
 msgid ""
 "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
@@ -3417,6 +3552,20 @@ msgstr ""
 msgid "The following virtual robots are running on this server :"
 msgstr ""
 
+#: web_tt2/rss.tt2:33
+msgid "The latest created lists"
+msgstr ""
+
+#: web_tt2/rss.tt2:53
+#, fuzzy
+msgid "The latest messages"
+msgstr "ZaÃ¨Ã­t od nejnovÃ¬jÂ¹Ã­ch zprÃ¡v"
+
+#: web_tt2/rss.tt2:62
+#, fuzzy
+msgid "The latest shared documents"
+msgstr "SdÃ­lenÃ½ adresÃ¡Ã¸"
+
 #. (conf.wwsympa_url,list.name)
 #: mail_tt2/d_install_shared.tt2:7
 msgid "The list document repository : %1/d_read/%2"
@@ -3454,6 +3603,11 @@ msgstr ""
 #: web_tt2/create_list_request.tt2:43
 msgid "The list's subject"
 msgstr "TÃ©ma konference"
+
+#: web_tt2/rss.tt2:43
+#, fuzzy
+msgid "The most active lists"
+msgstr "VytvoÃ¸enÃ­ konference"
 
 #: web_tt2/error.tt2:82
 msgid "The passwords you typed do not match"
@@ -4017,7 +4171,7 @@ msgstr ""
 msgid "Unify your subscriptions with the email"
 msgstr ""
 
-#: web_tt2/d_read.tt2:153 web_tt2/d_read.tt2:268
+#: web_tt2/d_read.tt2:153 web_tt2/d_read.tt2:268 web_tt2/latest_d_read.tt2:43
 msgid "Unknown"
 msgstr "Unknown"
 
@@ -4028,7 +4182,7 @@ msgstr "Unknown"
 msgid "Unsubscribe"
 msgstr "OdhlÃ¡sit"
 
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3013
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3271
 #, fuzzy
 msgid "Unsubscribe from list %s"
 msgstr "OdhlaÂ¹uji se z konference %1"
@@ -4221,8 +4375,8 @@ msgstr ""
 
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:2784 wwsympa/wwsympa.fcgi:2785
-#: wwsympa/wwsympa.fcgi:3383 wwsympa/wwsympa.fcgi:3384
+#: wwsympa/wwsympa.fcgi:3042 wwsympa/wwsympa.fcgi:3043
+#: wwsympa/wwsympa.fcgi:3641 wwsympa/wwsympa.fcgi:3642
 #, fuzzy
 msgid "Welcome on list %s"
 msgstr "Vitejte v konferenci %1"
@@ -4402,7 +4556,7 @@ msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr ""
 
-#: wwsympa/wwsympa.fcgi:3014 wwsympa/wwsympa.fcgi:3489
+#: wwsympa/wwsympa.fcgi:3272 wwsympa/wwsympa.fcgi:3747
 #, fuzzy
 msgid "You have been removed from list %s.\n"
 msgstr "VaÂ¹e emailovÃ¡ adresa %1 byla odstranÃ¬na ze seznamu"
@@ -4739,7 +4893,7 @@ msgstr ""
 msgid "Your subscription email is %1"
 msgstr "Jste pÃ¸ihlÃ¡Â¹en z adresy %1"
 
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3488
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3746
 #, fuzzy
 msgid "Your subscription to list %s has been removed."
 msgstr "PoÂ¾adujete pÃ¸ihlÃ¡Â¹enÃ­ do konference %1."
@@ -5831,6 +5985,10 @@ msgid "your password : %1"
 msgstr "VaÂ¹e heslo   : %1"
 
 #, fuzzy
+#~ msgid "The [% count %] latest messages"
+#~ msgstr "ZaÃ¨it od nejstarÂ¹Ã­ch zprÃ¡v"
+
+#, fuzzy
 #~ msgid "Do you really want to delete this message ?"
 #~ msgstr "Opravdu chcete smazat %1%2 ?"
 
@@ -5967,9 +6125,6 @@ msgstr "VaÂ¹e heslo   : %1"
 
 #~ msgid "Edit list config"
 #~ msgstr "Ãšpravit konfiguraci konference"
-
-#~ msgid "From"
-#~ msgstr "From"
 
 #~ msgid "Rebuild HTML archives"
 #~ msgstr "Znovu sestavit HTML archÃ­vy"

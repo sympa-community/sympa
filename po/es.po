@@ -35,11 +35,69 @@ msgstr ""
 msgid " %1 hits on message's From field"
 msgstr "coincidencias en la"
 
+#. (count)
+#: web_tt2/latest_lists.tt2:6
+#, fuzzy
+msgid " The %1 latest lists "
+msgstr "Crear una lista"
+
+#. (count)
+#: web_tt2/latest_arc.tt2:6
+#, fuzzy
+msgid " The %1 latest messages "
+msgstr "Mensajes más nuevoe primero"
+
+# nlsref 16,70
+#. (count)
+#: web_tt2/latest_d_read.tt2:6
+#, fuzzy
+msgid " The %1 latest shared documents "
+msgstr "Documentos compartidos"
+
+#. (count)
+#: web_tt2/active_lists.tt2:6
+#, fuzzy
+msgid " The %1 most active lists "
+msgstr "Crear una lista"
+
+#: web_tt2/active_lists.tt2:8
+#, fuzzy
+msgid " The active lists "
+msgstr "Crear una lista"
+
+#: web_tt2/latest_lists.tt2:8
+#, fuzzy
+msgid " The latest lists "
+msgstr "Crear una lista"
+
+#: web_tt2/latest_arc.tt2:8
+#, fuzzy
+msgid " The latest messages "
+msgstr "Mensajes más nuevoe primero"
+
+# nlsref 16,70
+#: web_tt2/latest_d_read.tt2:8
+#, fuzzy
+msgid " The latest shared documents "
+msgstr "Documentos compartidos"
+
+#. (loc)
+#. (for)
+#: web_tt2/active_lists.tt2:12 web_tt2/latest_arc.tt2:12
+#: web_tt2/latest_d_read.tt2:12 web_tt2/latest_lists.tt2:12
+msgid " for %1 days "
+msgstr ""
+
 #. (list_request_date)
 #: web_tt2/set_pending_list_request.tt2:17
 #, fuzzy
 msgid " on %1"
 msgstr "Para: %1"
+
+#. (d.name)
+#: web_tt2/rss.tt2:126
+msgid "%1"
+msgstr ""
 
 #. (conf.title,list)
 #: mail_tt2/sendpasswd.tt2:5
@@ -120,6 +178,13 @@ msgid ""
 "are no more web-archived. Please contact %5@%4. \n"
 msgstr ""
 
+# nlsref 17,6
+#. (l.average)
+#: web_tt2/rss.tt2:102
+#, fuzzy
+msgid "%1 by day "
+msgstr "1 día"
+
 #. (body_count)
 #: web_tt2/arcsearch.tt2:56
 #, fuzzy
@@ -167,6 +232,16 @@ msgstr ""
 #: web_tt2/error.tt2:72
 msgid "%1: action failed"
 msgstr "La operación ha fallado"
+
+#. (l.name,l.host,l.subject)
+#: web_tt2/rss.tt2:92
+msgid "%1@%2 - %3"
+msgstr ""
+
+#. (l.name,l.host,l.subject,l.msg_count)
+#: web_tt2/rss.tt2:101
+msgid "%1@%2 - %3 : %4 messages"
+msgstr ""
 
 #. (list.name,list.host,param0)
 #: mail_tt2/listowner_notification.tt2:22
@@ -539,6 +614,11 @@ msgstr "Configuración de los Archivos"
 msgid "Archives Selection:"
 msgstr ""
 
+#. (error.year_month)
+#: web_tt2/error.tt2:183
+msgid "Archives from %1 are not accessible"
+msgstr ""
+
 #. (list)
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
 msgid "Are you sure you wish to close %1 list ?"
@@ -563,7 +643,8 @@ msgstr "Metodo de Autentificación"
 msgid "Authentication requested"
 msgstr "Solicitud de autentificación"
 
-#: web_tt2/d_read.tt2:79 web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:70
+#: web_tt2/d_read.tt2:79 web_tt2/latest_d_read.tt2:21 web_tt2/modindex.tt2:18
+#: web_tt2/modindex.tt2:70
 msgid "Author"
 msgstr "Author"
 
@@ -575,6 +656,10 @@ msgstr "Los comandos disponibles son:"
 #: src/List.pm:346
 msgid "Available subscription options"
 msgstr "Opciones de suscripción disponibles"
+
+#: web_tt2/active_lists.tt2:24
+msgid "Average by day"
+msgstr ""
 
 #: web_tt2/arcsearch.tt2:115
 msgid ""
@@ -612,6 +697,12 @@ msgstr ""
 #: web_tt2/arcsearch_form.tt2:64
 msgid "Body"
 msgstr "Cuerpo"
+
+#. (d.anchor)
+#: web_tt2/rss.tt2:121
+#, fuzzy
+msgid "Bookmark %1"
+msgstr "Sustituir el fichero [% path %] por su fichero"
 
 #: web_tt2/d_editfile.tt2:30
 msgid "Bookmark URL"
@@ -869,7 +960,8 @@ msgstr "Cambiar"
 msgid "Create list"
 msgstr "Crear una lista"
 
-#: web_tt2/get_inactive_lists.tt2:6 web_tt2/get_latest_lists.tt2:6
+#: web_tt2/active_lists.tt2:25 web_tt2/get_inactive_lists.tt2:6
+#: web_tt2/get_latest_lists.tt2:6 web_tt2/latest_lists.tt2:23
 msgid "Creation date"
 msgstr "Fecha de creación"
 
@@ -922,8 +1014,8 @@ msgstr "Los datos han sido cambiados en el disco. No puedo hacer sus cambios"
 msgid "Data sources setup"
 msgstr "Configurar la fuente de datos"
 
-#: web_tt2/arcsearch_form.tt2:62 web_tt2/modindex.tt2:17
-#: web_tt2/modindex.tt2:69 web_tt2/subindex.tt2:11
+#: web_tt2/arcsearch_form.tt2:62 web_tt2/latest_arc.tt2:19
+#: web_tt2/modindex.tt2:17 web_tt2/modindex.tt2:69 web_tt2/subindex.tt2:11
 msgid "Date"
 msgstr "Fecha"
 
@@ -1049,6 +1141,10 @@ msgstr "Frecuencia del Resumen"
 #, fuzzy
 msgid "DigestPlain"
 msgstr "Resumen"
+
+#: web_tt2/latest_d_read.tt2:22
+msgid "Directory"
+msgstr ""
 
 #. (error.name)
 #: web_tt2/error.tt2:154
@@ -1471,6 +1567,10 @@ msgstr "Por cada lista existe un método para anular la subscripción:"
 msgid "Forwarded mega-bytes        :      %1"
 msgstr "Megabytes transmitidos         :      %1"
 
+#: web_tt2/latest_arc.tt2:21
+msgid "From"
+msgstr "De:"
+
 #. (user.email)
 #: web_tt2/compose_mail.tt2:4
 msgid "From: %1"
@@ -1758,7 +1858,7 @@ msgstr ""
 msgid "Language of the list"
 msgstr "Idioma de la lista"
 
-#: web_tt2/d_read.tt2:109
+#: web_tt2/d_read.tt2:109 web_tt2/latest_d_read.tt2:19
 msgid "Last update"
 msgstr "Ult. actualización"
 
@@ -1797,6 +1897,11 @@ msgstr "Esquema"
 #, fuzzy
 msgid "List %1 / %2"
 msgstr "page %1 / %2"
+
+#. (list.name)
+#: mail_tt2/listowner_notification.tt2:4
+msgid "List %1 archive quota exceeded"
+msgstr ""
 
 # #-#-#-#-#  es.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,7
@@ -1877,11 +1982,6 @@ msgstr "Panel de administración"
 
 #: web_tt2/admin_menu.tt2:140
 msgid "List Definition"
-msgstr ""
-
-#. (list.name)
-#: mail_tt2/listowner_notification.tt2:4
-msgid "List \"%1\" archive quota exceeded"
 msgstr ""
 
 #. (list.name)
@@ -1999,7 +2099,8 @@ msgstr "Contenido de la carpeta Web compartida"
 msgid "Listmaster"
 msgstr "listmaster"
 
-#: web_tt2/get_inactive_lists.tt2:8 web_tt2/get_latest_lists.tt2:7
+#: web_tt2/active_lists.tt2:22 web_tt2/get_inactive_lists.tt2:8
+#: web_tt2/get_latest_lists.tt2:7 web_tt2/latest_lists.tt2:22
 #: web_tt2/review_family.tt2:7 web_tt2/scenario_test.tt2:24
 msgid "Listname"
 msgstr "Nombre de la Lista"
@@ -2124,6 +2225,12 @@ msgstr "El mensaje para la lista %s ha sido distribuido.\n"
 #: src/Commands.pm:1857
 msgid "Message %s for list %s has been rejected.\n"
 msgstr "El mensaje para la lista %s ha sido rechazado.\n"
+
+# nlsref 15,4
+#: web_tt2/active_lists.tt2:23
+#, fuzzy
+msgid "Message count"
+msgstr "Pie de mensaje"
 
 #: web_tt2/help_editfile.tt2:35
 msgid ""
@@ -2256,8 +2363,8 @@ msgid ""
 "              distributed.\n"
 msgstr ""
 
-#: web_tt2/pref.tt2:22 web_tt2/review.tt2:148 web_tt2/review.tt2:152
-#: web_tt2/subindex.tt2:9
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:22 web_tt2/review.tt2:148
+#: web_tt2/review.tt2:152 web_tt2/subindex.tt2:9
 msgid "Name"
 msgstr "Nombre"
 
@@ -3111,6 +3218,11 @@ msgstr "Configurar Envio/Recepción"
 msgid "Serial number of the config"
 msgstr "Número de serie de la configuración"
 
+#: web_tt2/rss.tt2:28 web_tt2/rss.tt2:7
+#, fuzzy
+msgid "Server error"
+msgstr "Inicializar errores"
+
 #: web_tt2/help_editfile.tt2:3
 msgid "Service messages description :"
 msgstr "Este formulario sirve para editar diferentes ficheros de su lista :"
@@ -3317,9 +3429,10 @@ msgstr "Estado de la lista"
 msgid "Sub date"
 msgstr "Ordenar por fecha"
 
-#: web_tt2/arcsearch_form.tt2:58 web_tt2/get_inactive_lists.tt2:9
-#: web_tt2/get_latest_lists.tt2:8 web_tt2/modindex.tt2:19
-#: web_tt2/review_family.tt2:9
+#: web_tt2/active_lists.tt2:26 web_tt2/arcsearch_form.tt2:58
+#: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
+#: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:24
+#: web_tt2/modindex.tt2:19 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Subject"
 
@@ -3550,6 +3663,31 @@ msgid ""
 "the mailing lists server:"
 msgstr ""
 
+#. (count)
+#: web_tt2/rss.tt2:31
+#, fuzzy
+msgid "The %1 latest created lists"
+msgstr "Borrar listas seleccionadas"
+
+#. (count)
+#: web_tt2/rss.tt2:51
+#, fuzzy
+msgid "The %1 latest messages"
+msgstr "Mensajes más nuevoe primero"
+
+# nlsref 16,70
+#. (count)
+#: web_tt2/rss.tt2:60
+#, fuzzy
+msgid "The %1 latest shared documents"
+msgstr "Documentos compartidos"
+
+#. (count)
+#: web_tt2/rss.tt2:41
+#, fuzzy
+msgid "The %1 most active lists"
+msgstr "Crear una lista"
+
 #: web_tt2/help_editlist.tt2:38
 msgid ""
 "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
@@ -3688,6 +3826,22 @@ msgstr ""
 msgid "The following virtual robots are running on this server :"
 msgstr ""
 
+#: web_tt2/rss.tt2:33
+#, fuzzy
+msgid "The latest created lists"
+msgstr "Borrar listas seleccionadas"
+
+#: web_tt2/rss.tt2:53
+#, fuzzy
+msgid "The latest messages"
+msgstr "Mensajes más nuevoe primero"
+
+# nlsref 16,70
+#: web_tt2/rss.tt2:62
+#, fuzzy
+msgid "The latest shared documents"
+msgstr "Documentos compartidos"
+
 #. (conf.wwsympa_url,list.name)
 #: mail_tt2/d_install_shared.tt2:7
 msgid "The list document repository : %1/d_read/%2"
@@ -3725,6 +3879,11 @@ msgstr ""
 #: web_tt2/create_list_request.tt2:43
 msgid "The list's subject"
 msgstr "El tema de la lista"
+
+#: web_tt2/rss.tt2:43
+#, fuzzy
+msgid "The most active lists"
+msgstr "Crear una lista"
 
 #: web_tt2/error.tt2:82
 msgid "The passwords you typed do not match"
@@ -4314,7 +4473,7 @@ msgstr "Imposible leer el archivo de ayuda: %s\n"
 msgid "Unify your subscriptions with the email"
 msgstr ""
 
-#: web_tt2/d_read.tt2:153 web_tt2/d_read.tt2:268
+#: web_tt2/d_read.tt2:153 web_tt2/d_read.tt2:268 web_tt2/latest_d_read.tt2:43
 msgid "Unknown"
 msgstr "Unknown"
 
@@ -4326,7 +4485,7 @@ msgid "Unsubscribe"
 msgstr "Anula suscripción"
 
 # nlsref 6,71
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3013
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3271
 msgid "Unsubscribe from list %s"
 msgstr "Anular suscripción de la lista %s"
 
@@ -4527,8 +4686,8 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:2784 wwsympa/wwsympa.fcgi:2785
-#: wwsympa/wwsympa.fcgi:3383 wwsympa/wwsympa.fcgi:3384
+#: wwsympa/wwsympa.fcgi:3042 wwsympa/wwsympa.fcgi:3043
+#: wwsympa/wwsympa.fcgi:3641 wwsympa/wwsympa.fcgi:3642
 msgid "Welcome on list %s"
 msgstr "Bienvenido a la lista %s"
 
@@ -4721,7 +4880,7 @@ msgid ""
 msgstr ""
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3014 wwsympa/wwsympa.fcgi:3489
+#: wwsympa/wwsympa.fcgi:3272 wwsympa/wwsympa.fcgi:3747
 #, fuzzy
 msgid "You have been removed from list %s.\n"
 msgstr "El usuario especificado se ha eliminado de la lista.\n"
@@ -5122,7 +5281,7 @@ msgid "Your subscription email is %1"
 msgstr "Usted ha sido subscrito con el e-mail %1"
 
 # nlsref 6,18
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3488
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3746
 msgid "Your subscription to list %s has been removed."
 msgstr "Su suscripción a la lista %s ha sido suprimida."
 
@@ -6291,6 +6450,10 @@ msgid "your password : %1"
 msgstr "Escoja su contraseña :"
 
 #, fuzzy
+#~ msgid "The [% count %] latest messages"
+#~ msgstr "Mensajes más viejo primero"
+
+#, fuzzy
 #~ msgid "Do you really want to delete this message ?"
 #~ msgstr ""
 #~ "message = \"¿Confirma el borrado \"+ my_doc +\" (\"+my_size +\" Kb) ?\";\n"
@@ -6559,9 +6722,6 @@ msgstr "Escoja su contraseña :"
 
 #~ msgid "Edit list config"
 #~ msgstr "Configurar Lista"
-
-#~ msgid "From"
-#~ msgstr "De:"
 
 #~ msgid "Message footer : same as"
 #~ msgstr ""
