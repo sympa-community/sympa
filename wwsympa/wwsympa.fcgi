@@ -5731,10 +5731,12 @@ sub _prepare_edit_form {
 		foreach my $topic (keys %list_of_topics) {
 		    $menu->{'value'}{$topic}{'selected'} = 0;
 		    $menu->{'value'}{$topic}{'title'} = $list_of_topics{$topic}{'title'};
-
-		    foreach my $subtopic (keys %{$list_of_topics{$topic}{'sub'}}) {
-			$menu->{'value'}{"$topic/$subtopic"}{'selected'} = 0;
-			$menu->{'value'}{"$topic/$subtopic"}{'title'} = "$list_of_topics{$topic}{'title'}/$list_of_topics{$topic}{'sub'}{$subtopic}{'title'}";
+		    
+		    if ($list_of_topics{$topic}{'sub'}) {
+			foreach my $subtopic (keys %{$list_of_topics{$topic}{'sub'}}) {
+			    $menu->{'value'}{"$topic/$subtopic"}{'selected'} = 0;
+			    $menu->{'value'}{"$topic/$subtopic"}{'title'} = "$list_of_topics{$topic}{'title'}/$list_of_topics{$topic}{'sub'}{$subtopic}{'title'}";
+			}
 		    }
 		}
 		$menu->{'value'}{$selected_topic}{'selected'} = 1;
