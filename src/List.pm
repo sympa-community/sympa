@@ -3567,7 +3567,8 @@ sub verify {
 
     if (defined ($context->{'msg'})) {
 	my $header = $context->{'msg'}->head;
-	unless ($header->get('to') || $header->get('cc')) {
+	unless (($header->get('to') && ($header->get('to') =~ /$context->{'listname'}/)) || 
+		($header->get('cc') && ($header->get('cc') =~ /$context->{'listname'}/))) {
 	    $context->{'is_bcc'} = 1;
 	}else{
 	    $context->{'is_bcc'} = 0;
