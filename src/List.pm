@@ -2675,7 +2675,7 @@ sub update_user {
     my ($field, $value);
     
     ## Subscribers extracted from external data source
-    if ($self->{'admin'}{'user_data_source'} eq 'file') {
+    if ($self->{'admin'}{'user_data_source'} eq 'include') {
 	&do_log('notice', 'Cannot update userin list %s, user_data_source include', $self->{'admin'}{'user_data_source'});
 	return undef;
 
