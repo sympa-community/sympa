@@ -1013,7 +1013,7 @@ sub DoCommand {
     $success ||= &Commands::parse($sender, $robot, $subject_field, $is_signed->{'subject'}) ;
 
     ## Make multipart singlepart
-    if ($msg->is_multipart()) {
+    while ($msg->is_multipart()) {
 	if (&tools::as_singlepart($msg, 'text/plain')) {
 	    do_log('notice', 'Multipart message changed to singlepart');
 	}
@@ -1038,7 +1038,8 @@ sub DoCommand {
     my $size;
 
     ## Process the body of the message
-    unless ($success == 1) { ## unless subject contained commands
+    ## unless subject contained commands or message has no body
+    unless (($success == 1) || (! defined $msg->bodyhandle)) { 
 #	foreach $i (@{$msg->body}) {
 	my @body = $msg->bodyhandle->as_lines();
 	foreach $i (@body) {
