@@ -6182,7 +6182,9 @@ sub probe_db {
 		      'visibility_subscriber' => 'varchar(20)',
 		      'reception_subscriber' => 'varchar(20)',
 		      'bounce_subscriber' => 'varchar(35)',
-		      'comment_subscriber' => 'varchar(150)'}
+		      'comment_subscriber' => 'varchar(150)',
+		      'subscribed_subscriber' => "enum('0','1')",
+		      'include_sources_subscriber' => 'varchar(50)'}
 		     );
 
     ## Is the Database defined

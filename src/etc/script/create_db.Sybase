@@ -31,7 +31,10 @@ create table subscriber_table
     visibility_subscriber  varchar(20)            null    ,
     reception_subscriber   varchar(20)            null    ,
     bounce_subscriber      varchar(35)            null    ,
-    comment_subscriber      varchar(150)            null    ,
+    comment_subscriber     varchar(150)           null    ,
+    subscribed_subscriber  numeric		  null    ,
+    included_subscriber    numeric                null    ,
+    include_sources_subscriber varchar(50)        null    ,
     constraint ind_subscriber primary key (list_subscriber, user_subscriber)
 )
 go

@@ -1,3 +1,111 @@
+2002-07-10 17:10  salaun
+
+	* src/: Conf.pm, List.pm, task_manager.pl,
+	etc/global_task_models/purge_user_table.monthly.task: New feature:
+	new global task 'purge_user_table' cleaning up the user_table in
+	DB. This saves expensive cleanup job at subscriber removal time. 
+	List::delete_user_db() now taking an array of emails as parameter.
+
+2002-07-10 14:27  salaun
+
+	* src/List.pm, src/task_manager.pl, wwsympa/wwsympa.fcgi: Change:
+	When changing from 'include2' user_data_source to 'database', purge
+	the database to delete included users
+
+2002-07-10 14:09  salaun
+
+	* src/etc/script/sympa: Starting the task_manager ; now used to
+	update include cache in DB
+
+2002-07-10 12:14  salaun
+
+	* src/List.pm: New feature: add locking while updating include
+	caches. Exclusive lock is set in sync_include() ; shared lock is
+	set in get_first_user() and get_first_bouncing_user()
+
+2002-07-10 10:52  salaun
+
+	* src/etc/script/sympa: [Pierre MÅÈtras] Changes: adapt statup
+	script for Solaris (second episod)	 * comparison operator with
+	SH is '=' ('==' is Bash-specific)    * use PIDDIR    * check if
+	process is running before stopping   *
+
+2002-07-09 17:59  salaun
+
+	* src/task_manager.pl: Change: create missing task before exuting
+	existing ones.	It allows faster excution of newly created tasks
+
+2002-07-09 17:48  salaun
+
+	* wwsympa/wwsympa.fcgi: Change: existing sync_include task is
+	removed if data_sources changed, so that a new task will be created
+	soon
+
+2002-07-09 17:47  salaun
+
+	* src/List.pm: New remove_task() subroutine
+
+2002-07-09 17:00  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: Fixes: Suppress
+	update/data_source_update list parameter Fix last_sync update in
+	'stats' file
+
+2002-07-09 16:58  salaun
+
+	* ChangeLog: Update
+
+2002-07-09 16:34  salaun
+
+	* wwsympa/wwsympa.fcgi: Change: call List::add_user() and
+	List::del_user() with multiple emails as parameters
+
+2002-07-09 16:26  salaun
+
+	* src/List.pm: Change: use value returned by del_user() and
+	add_user()
+
+2002-07-09 16:24  salaun
+
+	* src/List.pm: Change: add_user and delete_user return the number
+	of subscribers added/removed
+
+2002-07-09 16:20  salaun
+
+	* src/List.pm: Change: don't create entry in user_table is user is
+	included
+
+2002-07-09 15:58  salaun
+
+	* src/List.pm: Change: allow multiple add with &add_user() ; this
+	is used by sync_include()
+
+2002-07-09 14:52  salaun
+
+	* src/List.pm: Change: move foreach loop in &delete_user() to a
+	lower level
+
+2002-07-09 14:18  salaun
+
+	* src/List.pm: Fix: make sql_query regexp case-insensitive
+
+2002-07-09 11:57  salaun
+
+	* wwsympa/wws_templates/us/review.us.tpl: Changes: Provide data
+	sources (if 'include2' user_data_source) on REVIEW page
+
+2002-07-09 11:38  salaun
+
+	* src/Commands.pm: Changes: subscribe(), add(), signoff() and del()
+	made include2-compatible
+
+2002-07-09 11:00  salaun
+
+	* src/etc/script/sympa: [BugID 0000023] Adapt startup script to run
+	on Solaris. There were problems with :	    +"echo -n" is not
+	supported under sh.   + status would not test if the processes are
+	actually running
+
 2002-07-09 09:30  salaun
 
 	* src/tools.pl: [Thibaut Dabonneville] Fix AVP virus detection

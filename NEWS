@@ -3,6 +3,14 @@
 
 (See Changelog file for the full changes log)
 
+
+*****	New database fields added to subscriber_table
+*****	With MySQL :
+*****		ALTER TABLE subscriber_table ADD subscribed_subscriber enum ('0','1');
+*****		ALTER TABLE subscriber_table ADD included_subscriber enum ('0','1');
+*****		ALTER TABLE subscriber_table ADD include_sources_subscriber varchar(50);
+*****	If you are using another RDBMS, please check create_db.xxx scripts
+
 3.3.6b.1	26 June 2002
 
    New features :
