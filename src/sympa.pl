@@ -469,7 +469,7 @@ sub DoFile {
     ## S/MIME signed messages
     undef $is_signed;
     if ($Conf{'openssl'} && $hdr->get('Content-Type') =~ /multipart\/signed/i) {
-	$is_signed = &tools::smime_sign_check ($msg,$sender);
+	$is_signed = &tools::smime_sign_check ($msg, $sender, $file);
 	do_log('debug2', "message is signed, signature is checked");
     }
 

@@ -296,7 +296,7 @@ sub smime_sign {
         
     ## dump the incomming message.
     if (!open(MSGDUMP,"> $temporary_file")) {
-	&do_log('info', 'Can\'t store message in file %s',$temporary_file);
+	&do_log('info', 'Can\'t store message in file %s', $temporary_file);
 	return undef;
     }
     $in_msg->print(\*MSGDUMP);
@@ -346,9 +346,10 @@ sub smime_sign_check {
 
     my $msg = shift;
     my $sender = shift;
+    my $file = shift;
     $sender= lc($sender);
 
-    do_log('debug2', 'tools::smime_sign_check (message, %s)', $sender);
+    do_log('debug2', 'tools::smime_sign_check (message, %s, %s)', $sender, $file);
 
     my $is_signed = {};
     $is_signed->{'body'} = undef;   
@@ -368,12 +369,18 @@ sub smime_sign_check {
 	do_log('err', "unable to verify smime signature from $sender $verify");
 	return undef ;
     }
-    $msg->print(\*MSGDUMP);
-    close(MSGDUMP);
+
+    unless (open MSG, $file) {
+	do_log('err', 'Unable to open file %s: %s', $file, $!);
+	return undef;
+    }
+
+    print MSGDUMP <MSG>;
+    close MSGDUMP; close MSG;
     
     ## second step is the message signer match the sender
     ## a better analyse should be performed to extract the signer email. 
-    my $signer = `cat /tmp/smime-sender.$$ | $Conf{'openssl'}  x509 -subject -noout`;
+    my $signer = `cat $temporary_file | $Conf{'openssl'}  x509 -subject -noout`;
 
 
     if ($signer =~ /email=$sender/i) {
