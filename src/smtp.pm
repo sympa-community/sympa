@@ -122,9 +122,9 @@ sub smtpto {
        open(STDIN, "<&IN");
 
        if (ref($rcpt) eq 'SCALAR') {
-	   exec $Conf{'sendmail'}, split(/ /,$Conf{'sendmail_args'}), '-f', $from, $$rcpt;
+	   exec $Conf{'sendmail'}, split(/\s+/,$Conf{'sendmail_args'}), '-f', $from, $$rcpt;
        }else{
-	   exec $Conf{'sendmail'}, split(/ /,$Conf{'sendmail_args'}), '-f', $from, @$rcpt;
+	   exec $Conf{'sendmail'}, split(/\s+/,$Conf{'sendmail_args'}), '-f', $from, @$rcpt;
        }
        exit 1; ## Should never get there.
    }
