@@ -123,6 +123,8 @@ $icon_table{'video'} = $wwsconf->{'icons_url'}.'/movie.png';
 $icon_table{'father'} = $wwsconf->{'icons_url'}.'/back.png';
 $icon_table{'sort'} = $wwsconf->{'icons_url'}.'/down.png';
 $icon_table{'url'} = $wwsconf->{'icons_url'}.'/link.png';
+$icon_table{'left'} = $wwsconf->{'icons_url'}.'/left.png';
+$icon_table{'right'} = $wwsconf->{'icons_url'}.'/right.png';
 ## Shared directory and description file
 
 #$shared = 'shared';
