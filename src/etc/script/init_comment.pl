@@ -1,7 +1,7 @@
 #! --PERL--
 
 use lib '--BINDIR--';
-require 'wwslib.pl';
+use wwslib;
 
 use List;
 use Log;
