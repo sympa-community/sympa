@@ -1,3 +1,344 @@
+2002-06-26 09:40  salaun
+
+	* doc/sympa.tex.tpl, src/Conf.pm, src/List.pm, src/sympa.pl,
+	wwsympa/wwsympa.fcgi: Changes: extend 'list_check_suffixes' ; also
+	use it when receiving messages
+
+2002-06-25 14:21  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: [Sergiy Zhuk] Fix: check
+	listname for '-request' '-unsubscribe'... in List::new() and
+	wwsympa::create_list()
+
+2002-06-25 10:51  salaun
+
+	* doc/sympa.tex.tpl, src/Conf.pm, src/sympa.pl: Add
+	'antivirus_notify' sympa.conf parameter to disable antivirus
+	notification
+
+2002-06-25 10:49  salaun
+
+	* ChangeLog: update
+
+2002-06-25 09:26  salaun
+
+	* doc/sympa.tex.tpl, src/tools.pl: New feature: Sympa working with
+	Clam antivirus (http://clamav.elektrapro.com/)
+
+2002-06-21 14:53  salaun
+
+	* doc/sympa.pdf, src/List.pm, doc/sympa.ps, doc/sympa.tex,
+	doc/sympa.tex.tpl: [list->total] variable made available in
+	scenarios
+
+2002-06-20 10:25  salaun
+
+	* src/etc/script/sympa.spec: Change: refer to www.sympa.org
+
+2002-06-19 12:47  salaun
+
+	* src/Commands.pm, wwsympa/wwsympa.fcgi: Fix Gecos management with
+	subrequest
+
+2002-06-19 12:25  salaun
+
+	* src/Commands.pm, src/List.pm, wwsympa/wwsympa.fcgi: Move
+	send_sub_to_owner() and send_sig_to_owner features in
+	send_notify_to_owner()
+
+2002-06-19 11:56  salaun
+
+	* src/etc/templates/fr/listowner_notification.fr.tpl: Translated to
+	french
+
+2002-06-19 11:46  salaun
+
+	* src/List.pm: delete unused function
+
+2002-06-19 11:38  salaun
+
+	* src/: Ldap.pm, List.pm, sympa.pl: Clean up owner-related code
+
+2002-06-19 11:23  salaun
+
+	* wwsympa/wws_templates/fr/list_menu.fr.tpl: Missing <BR>
+
+2002-06-18 17:53  salaun
+
+	* src/Commands.pm: [reported by Philippe Allart] Fix: Bad report
+	when 'REMIND *' is not allowed
+
+2002-06-18 15:56  salaun
+
+	* src/List.pm: [reported by Fabien Salvi] Bug fix: made Sympa die
+	if sender address contained '*'
+
+2002-06-18 14:19  salaun
+
+	* doc/sympa.tex.tpl: Document QUIET prefix
+
+2002-06-13 16:06  salaun
+
+	* src/sympa.pl: [reported by Christophe Ruhlmann] Fix: do not
+	reject mails from sender starting with 'sympa' ; perform exact
+	match on the local part
+
+2002-06-12 16:51  salaun
+
+	* src/etc/script/sympa: [reported by J.P. Dalbec] Fix 'status'
+	action
+
+2002-06-12 15:21  salaun
+
+	* wwsympa/wwsympa.fcgi: Fixes: write cookie even if empty
+	(otherwise previous one was used) Set 'which_info' once only,
+	before template parsing
+
+2002-06-12 09:18  salaun
+
+	* wwsympa/wwsympa.fcgi: [Adam Bernstein] Remove DOS linefeeds (^M)
+	that cause problems with Outlook 98, AOL, and EIMS
+
+2002-06-11 18:12  salaun
+
+	* src/List.pm: 
+	reported by gilles.tellier AT umontreal.ca
+	
+	Add a Fileneme message-header.txt or message-footer.txt name for
+	compatibility with outlook.
+
+2002-06-11 18:05  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Andrea Prunic] WWSympa should
+	never try to use sendpasswd wws_template
+
+2002-06-11 10:26  salaun
+
+	* src/List.pm: [reported by Adam Bernstein] Fix: 'not_me' reception
+	option did not have the expected behavior
+
+2002-06-11 09:41  salaun
+
+	* src/Conf.pm: Fix: set default for cafile and capath ; also tell
+	trusted_ca_options parameter is no more used
+
+2002-06-10 17:11  salaun
+
+	* src/Conf.pm: ******* replace trusted_ca_option with cafilme and
+	capath
+
+2002-06-10 17:09  salaun
+
+	* src/tools.pl: replace trusted_ca_option with cafile and capath in
+	sympa.conf
+
+2002-06-10 17:08  salaun
+
+	* doc/sympa.tex.tpl: sympa.conf : replace trusted-ca_options with
+	cafile and capath
+
+2002-06-10 15:38  salaun
+
+	* src/List.pm: [John Dalbec] Fix: get_value() required asref
+	option, in case we get a list of entries
+
+2002-05-31 14:16  salaun
+
+	* src/sympa_wizard.pl: [reported by H. Ulliac] Fix: missing
+	task_manager_pidfile 'expire_bounce' => 'expire_bounce_task'
+
+2002-05-31 12:10  salaun
+
+	* src/task_manager.pl, wwsympa/archived.pl, wwsympa/bounced.pl:
+	Fixes: $log_level not properly set
+
+2002-05-31 11:41  salaun
+
+	* wwsympa/archived.pl: [reported by H. Ulliac] Fix log levels
+
+2002-05-30 12:10  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Jeg] Fix: file renaming failed
+	in shared root directory
+
+2002-05-30 11:43  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Jeg] Fix: desc files were not
+	renamed
+
+2002-05-30 11:25  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Jeg] Fix: check URL renaming
+
+2002-05-30 11:12  salaun
+
+	* wwsympa/wws_templates/: us/editsubscriber.us.tpl,
+	fr/editsubscriber.fr.tpl: Fix: use escaped email instead
+
+2002-05-30 11:11  salaun
+
+	* wwsympa/wws_templates/fr/d_read.fr.tpl: Change: ask for bookmark
+	title first
+
+2002-05-30 11:10  salaun
+
+	* wwsympa/wws_templates/us/d_read.us.tpl: Change: Ask for bookmark
+	title first
+
+2002-05-30 11:02  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Jeg] Fix: filename containing
+	%xx chars could not be accessed/edited/deleted.  Supress the global
+	unescape_chars() call in get_parameters() Also fix escaping in
+	do_editsubscriber()
+
+2002-05-30 10:16  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Jeg] Fix: '/' not allowed in
+	filenames
+
+2002-05-29 10:36  salaun
+
+	* src/etc/mhonarc-ressources: [Georg Bauer] German translation of
+	Mhonarc ressources
+
+2002-05-29 09:41  salaun
+
+	* src/tools.pl: Fix: suppress '2>&1' when calling openssl ; this
+	syntax is shell-dependant
+
+2002-05-28 17:54  salaun
+
+	* src/etc/scenari/send.public_nobcc: [reported by Laurent
+	Le-Prieur] Fix : the scenario would always return reject
+
+2002-05-28 14:35  salaun
+
+	* src/List.pm: [reported by Marty Pauley] Fix: Email comparison
+	performed with a regexp. This could leed to incorrect comparison if
+	email contained '+' chars
+
+2002-05-28 13:48  salaun
+
+	* src/Conf.pm: manage key_password as a synonim of key_passwd.
+
+2002-05-28 12:03  salaun
+
+	* src/List.pm: [proposed by Guy Paressant] Change: make LDAP
+	queries asynchronous. Entries are fetched on the fly.  This saves
+	lots of memory while building big inlude type of lists
+
+2002-05-27 15:53  salaun
+
+	* wwsympa/wwslib.pm: Add Finnish to available languages
+
+2002-05-27 15:51  salaun
+
+	* src/etc/templates/fi/: bye.fi.tpl, certif_warning.fi.tpl,
+	expire_deletion.fi.tpl, expire_warning1.fi.tpl,
+	expire_warning2.fi.tpl, global_remind.fi.tpl, helpfile.fi.tpl,
+	info_report.fi.tpl, invite.fi.tpl, list_created.fi.tpl,
+	list_unknown.fi.tpl, listmaster_notification.fi.tpl,
+	listowner_notification.fi.tpl, lists.fi.tpl, moderate.fi.tpl,
+	modindex.fi.tpl, reject.fi.tpl, remind.fi.tpl, removed.fi.tpl,
+	review.fi.tpl, sendpasswd.fi.tpl, stats_report.fi.tpl,
+	summary.fi.tpl, welcome.fi.tpl, x509-user-cert-missing.fi.tpl,
+	your_infected_msg.fi.tpl: [Vesa Alho] Finnish translations
+
+2002-05-27 15:51  salaun
+
+	* nls/fi.msg: [Vesa Alho] Finnish updates
+
+2002-05-27 15:50  salaun
+
+	* wwsympa/wws_templates/fi/: add_request.fi.tpl, admin.fi.tpl,
+	admin_menu.fi.tpl, arc.fi.tpl, arc_protect.fi.tpl,
+	arcsearch.fi.tpl, arcsearch_form.fi.tpl, button_footer.fi.tpl,
+	button_header.fi.tpl, change_email.fi.tpl, choosepasswd.fi.tpl,
+	close_list.fi.tpl, compose_mail.fi.tpl, create_list.fi.tpl,
+	create_list_request.fi.tpl, d_control.fi.tpl, d_editfile.fi.tpl,
+	d_read.fi.tpl, edit_list_request.fi.tpl, editfile.fi.tpl,
+	editsubscriber.fi.tpl, error.fi.tpl, get_closed_lists.fi.tpl,
+	get_latest_lists.fi.tpl, get_pending_lists.fi.tpl, help.fi.tpl,
+	help_admin.fi.tpl, help_editfile.fi.tpl, help_editlist.fi.tpl,
+	help_user_options.fi.tpl, home.fi.tpl, info.fi.tpl,
+	install_pending_list.fi.tpl, list_button_footer.fi.tpl,
+	list_button_header.fi.tpl, list_menu.fi.tpl, lists.fi.tpl,
+	login.fi.tpl, loginbanner.fi.tpl, loginrequest.fi.tpl, main.fi.tpl,
+	menu.fi.tpl, modindex.fi.tpl, notice.fi.tpl, pref.fi.tpl,
+	remindpasswd.fi.tpl, remove_arc.fi.tpl, review.fi.tpl,
+	reviewbouncing.fi.tpl, scenario_test.fi.tpl, search_list.fi.tpl,
+	search_user.fi.tpl, serveradmin.fi.tpl,
+	set_pending_list_request.fi.tpl, show_cert.fi.tpl,
+	sigrequest.fi.tpl, stats.fi.tpl, subindex.fi.tpl,
+	suboptions.fi.tpl, subrequest.fi.tpl, title.fi.tpl,
+	view_translations.fi.tpl, viewbounce.fi.tpl, viewmod.fi.tpl,
+	which.fi.tpl: [Vesa Alho] Finnish translation
+
+2002-05-27 15:10  salaun
+
+	* src/etc/templates/: fr/moderate.fr.tpl, us/moderate.us.tpl:
+	[reported by Erich Schubert] fix Reply-to address
+
+2002-05-27 14:54  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/d_read.fr.tpl,
+	wws_templates/us/d_read.us.tpl: [Patrick] Fix: dirs/files titles
+	not escaped in ALT HTML tags
+
+2002-05-23 09:14  salaun
+
+	* wwsympa/wwsympa.fcgi: Reported by patrick AT patoche.org :
+	
+	For a list of files/dirs wwsympa (in the shared section) list the
+	"last update time". However it is wrong, since it is based on the
+	ctime instead of the mtime.
+
+2002-05-22 14:12  salaun
+
+	* wwsympa/wwsympa.fcgi: two new variables availible now for each
+	owner and editor email : [FOREACH o IN owner] [o->local]    : the
+	local part of owner email [o->domain]	: the domain part of the
+	owner email [END]
+
+2002-05-22 12:28  salaun
+
+	* wwsympa/wws_templates/fr/list_menu.fr.tpl: Hide owners/editors
+	email addresses
+
+2002-05-22 11:57  salaun
+
+	* src/task_manager.pl, wwsympa/bounced.pl: [reported by Hanke
+	Penning] Fix: Zombie sendmail processes were not made free
+
+2002-05-21 11:49  salaun
+
+	* src/List.pm: [reported by Sergiy Zhuk] Bug fix: if a list was in
+	'user_data_source include' and add no include source, the List
+	object could not be created.
+
+2002-05-17 11:58  salaun
+
+	* src/parser.pl: Add use Log
+
+2002-05-17 11:58  salaun
+
+	* Makefile.am, Makefile.in: no echo
+
+2002-05-17 11:55  salaun
+
+	* wwsympa/wws_templates/us/main.us.tpl: Language menu now available
+	in login page
+
+2002-05-15 15:50  salaun
+
+	* wwsympa/wws_templates/us/remove_arc.us.tpl: Ajust unapropriate
+	text
+
+2002-05-15 15:40  salaun
+
+	* src/Commands.pm: log Typo
+
 2002-05-15 11:10  salaun
 
 	* doc/: sympa.pdf, sympa.ps, sympa.tex: Update doc

@@ -3,6 +3,108 @@
 
 (See Changelog file for the full changes log)
 
+3.3.6b.1	26 June 2002
+
+   New features :
+
+	src/tools.pl: Sympa working with Clam antivirus (http://clamav.elektrapro.com/)
+
+	src/Conf.pm, src/sympa.pl: Add 'antivirus_notify' sympa.conf parameter to 
+	disable antivirus notification
+
+	src/List.pm: [list->total] variable made available in scenarios
+
+	[Vesa Alho] Finnish translations of templates
+
+	src/etc/mhonarc-ressources: [Georg Bauer] German translation of	Mhonarc ressources
+
+   Changes :
+
+	src/List.pm: [proposed by Guy Paressant]  make LDAP queries asynchronous. 
+	Entries are fetched on the fly.  This saves lots of memory while building big 
+	inlude type of lists
+
+	wwsympa/wws_templates/fr/list_menu.fr.tpl: Hide owners/editors email addresses
+
+	wwsympa/wws_templates/us/main.us.tpl: Language menu now available in login page
+
+	src/List.pm: [reported by gilles tellier] Add a Fileneme 
+	message-header.txt or message-footer.txt name for compatibility with outlook.
+
+	src/etc/templates/us/your_infected_msg.us.tpl: Adapt virus alert
+	message for spoofing virus
+
+*****	src/tools.pl: replace trusted_ca_option with cafile and capath in
+*****	sympa.conf
+
+	src/etc/script/sympa.spec: [Zenon Panoussis] Added check
+	and aliases file and link for Courier.	Changed "Requires: apache"
+	to "Requires: webserver" for compatibility with apache2
+
+
+   Bug fixes :
+
+	src/List.pm: [reported by Fabien Salvi] made Sympa die if sender 
+	address contained '*'
+
+	src/List.pm: [reported by Marty Pauley] Email comparison
+	performed with a regexp. This could leed to incorrect comparison if
+	email contained '+' chars
+
+	src/task_manager.pl, wwsympa/bounced.pl: [reported by Hanke
+	Penning] Fix: Zombie sendmail processes were not made free
+
+	src/List.pm: [reported by Sergiy Zhuk] if a list was in
+	'user_data_source include' and had no include source, the List
+	object could not be created.
+
+
+	src/List.pm: [reported by Adam Bernstein] 'not_me' reception
+	option did not have the expected behavior
+
+	src/etc/script/sympa: [reported by J.P. Dalbec] 'status' action
+
+	src/sympa.pl: [reported by Christophe Ruhlmann] do not
+	reject mails from sender starting with 'sympa' ; perform exact
+	match on the local part
+
+	src/tools.pl:  suppress '2>&1' when calling openssl ; this syntax 
+	is shell-dependant
+
+	wwsympa/wwsympa.fcgi: write cookie even if empty (otherwise previous 
+	one was used) Set 'which_info' once only, before template parsing
+
+	wwsympa/wwsympa.fcgi: [reported by Jeg] file renaming failed
+	in shared root directory
+
+	wwsympa/wwsympa.fcgi: [reported by Jeg] desc files were not renamed
+
+	wwsympa/wwsympa.fcgi: [reported by Jeg] check URL renaming
+
+	wwsympa/wwsympa.fcgi: [reported by Jeg] filename containing %xx chars 
+	could not be accessed/edited/deleted.  Supress the global unescape_chars() 
+	call in get_parameters() Also fix escaping in do_editsubscriber()
+
+	wwsympa/wwsympa.fcgi: [reported by Jeg] '/' not allowed in filenames
+
+	wwsympa/wwsympa.fcgi: [reported by patrick]: For a list of files/dirs wwsympa 
+	(in the shared section) list the "last update time". However it is wrong, 
+	since it is based on the ctime instead of the mtime.
+
+	wwsympa/wwsympa.fcgi: [Adam Bernstein] Remove DOS linefeeds (^M)
+	that cause problems with Outlook 98, AOL, and EIMS
+
+	src/sympa_wizard.pl: [reported by H. Ulliac] missing task_manager_pidfile 
+	'expire_bounce' => 'expire_bounce_task'
+
+	src/Commands.pm: [reported by Philippe Allart] Bad report when 'REMIND *' 
+	is not allowed
+
+	src/Commands.pm, wwsympa/wwsympa.fcgi: Fix Gecos management with subrequest
+
+	src/List.pm, wwsympa/wwsympa.fcgi: [Sergiy Zhuk] check listname for '-request' 
+	'-unsubscribe'... in List::new() and wwsympa::create_list()
+
 3.3.5		14 May 2002
 
    New features :
