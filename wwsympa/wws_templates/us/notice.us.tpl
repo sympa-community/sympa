@@ -24,6 +24,9 @@ Your password has been emailed to you
 [ELSIF notice->msg=you_should_choose_a_password]
 To choose your password go to 'preferences', from the upper menu.
 
+[ELSIF notice->msg=no_msg] 
+No message to moderate for list [notice->list]
+
 [ELSE]
 [notice->msg]
 

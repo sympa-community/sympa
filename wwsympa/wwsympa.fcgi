@@ -3097,7 +3097,7 @@ sub do_modindex {
     }
 
     unless ($param->{'spool'}) {
-	&error_message('no_msg');
+	&message('no_msg', {'list' => $in{'list'}});
 	&wwslog('info','do_modindex: no message');
 	return 'admin';
     }

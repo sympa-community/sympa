@@ -18,6 +18,9 @@ Fichier [notice->path] sauvegardé
 [ELSIF notice->msg=you_should_choose_a_password]
 Pour choisir votre mot de passe, allez dans vos 'Préférences', depuis le menu supérieur
 
+[ELSIF notice->msg=no_msg] 
+Aucun message à modérer pour la liste [notice->list]
+
 [ELSE]
 [notice->msg]
 
