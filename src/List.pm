@@ -217,16 +217,6 @@ my %date_format = (
 		       }
 	       );
 
-## Regexps for list params
-my %regexp = ('email' => '([\w\-\_\.\/\+\=\']+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
-	      'host' => '[\w\.\-]+',
-	      'multiple_host_with_port' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
-	      'listname' => '[a-z0-9][a-z0-9\-\._]+',
-	      'sql_query' => '(SELECT|select).*',
-	      'scenario' => '[\w,\.\-]+',
-	      'task' => '\w+'
-	      );
-
 ## List parameters defaults
 my %default = ('occurrence' => '0-1',
 	       'length' => 25
@@ -401,7 +391,7 @@ my %alias = ('reply-to' => 'reply_to',
 						   'title_id' => 14,
 						   'order' => 2
 						   },
-					'email' => {'format' => $regexp{'email'},
+					'email' => {'format' => $tools::regexp{'email'},
 						    'occurrence' => '1',
 						    'title_id' => 15,
 						    'order' => 1
@@ -464,7 +454,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 'group' => 'sending'
 		     },
 
-	    'editor' => {'format' => {'email' => {'format' => $regexp{'email'},
+	    'editor' => {'format' => {'email' => {'format' => $tools::regexp{'email'},
 						  'length' => 30,
 						  'occurrence' => '1',
 						  'title_id' => 27,
@@ -503,7 +493,7 @@ my %alias = ('reply-to' => 'reply_to',
 				  'title_id' => 32,
 				  'obsolete' => 1
 			 },
-	    'host' => {'format' => $regexp{'host'},
+	    'host' => {'format' => $tools::regexp{'host'},
 		       'length' => 20,
 		       'title_id' => 33,
 		       'group' => 'description'
@@ -538,7 +528,7 @@ my %alias = ('reply-to' => 'reply_to',
 				 },
 
 
-	    'include_ldap_query' => {'format' => {'host' => {'format' => $regexp{'multiple_host_with_port'},
+	    'include_ldap_query' => {'format' => {'host' => {'format' => $tools::regexp{'multiple_host_with_port'},
 							     'occurrence' => '1',
 							     'title_id' => 36,
 							     'order' => 2
@@ -601,7 +591,7 @@ my %alias = ('reply-to' => 'reply_to',
 				     'title_id' => 35,
 				     'group' => 'data_source'
 				     },
-	    'include_ldap_2level_query' => {'format' => {'host' => {'format' => $regexp{'multiple_host_with_port'},
+	    'include_ldap_2level_query' => {'format' => {'host' => {'format' => $tools::regexp{'multiple_host_with_port'},
 							     'occurrence' => '1',
 							     'title_id' => 136,
 							     'order' => 1
@@ -708,12 +698,12 @@ my %alias = ('reply-to' => 'reply_to',
 				     'title_id' => 135,
 				     'group' => 'data_source'
 				     },
-	    'include_list' => {'format' => $regexp{'listname'},
+	    'include_list' => {'format' => $tools::regexp{'listname'},
 			       'occurrence' => '0-n',
 			       'title_id' => 44,
 			       'group' => 'data_source'
 			       },
-	    'include_remote_sympa_list' => {'format' => {'host' => {'format' => $regexp{'host'},
+	    'include_remote_sympa_list' => {'format' => {'host' => {'format' => $tools::regexp{'host'},
 							    'occurrence' => '1',
 							    'title_id' => 136,
 							    'order' => 1
@@ -752,7 +742,7 @@ my %alias = ('reply-to' => 'reply_to',
 							       'title_id' => 46,
 							       'order' => 1
 							       },
-						 'host' => {'format' => $regexp{'host'},
+						 'host' => {'format' => $tools::regexp{'host'},
 							    'occurrence' => '1',
 							    'title_id' => 47,
 							    'order' => 2
@@ -779,7 +769,7 @@ my %alias = ('reply-to' => 'reply_to',
 							      'title_id' => 50,
 							      'order' => 7
 							      },
-						 'sql_query' => {'format' => $regexp{'sql_query'},
+						 'sql_query' => {'format' => $tools::regexp{'sql_query'},
 								 'length' => 50,
 								 'occurrence' => '1',
 								 'title_id' => 51,
@@ -820,7 +810,7 @@ my %alias = ('reply-to' => 'reply_to',
 			   'title_id' => 56,
 			   'group' => 'sending'
 		       },
-	    'owner' => {'format' => {'email' => {'format' => $regexp{'email'},
+	    'owner' => {'format' => {'email' => {'format' => $tools::regexp{'email'},
 						 'length' =>30,
 						 'occurrence' => '1',
 						 'title_id' => 58,
@@ -882,7 +872,7 @@ my %alias = ('reply-to' => 'reply_to',
 							   'occurrence' => '1',
 							   'order' => 1
 							   },
-					       'other_email' => {'format' => $regexp{'email'},
+					       'other_email' => {'format' => $tools::regexp{'email'},
 								 'title_id' => 92,
 								 'order' => 2
 								 },
@@ -984,7 +974,7 @@ my %alias = ('reply-to' => 'reply_to',
 						 'title_id' => 79,
 						 'order' => 2
 						 },
-				      'email' => {'format' => $regexp{'email'},
+				      'email' => {'format' => $tools::regexp{'email'},
 						  'length' => 30,
 						  'occurrence' => '1',
 						  'title_id' => 80,
@@ -1178,7 +1168,7 @@ sub new {
     }
 
     ## Only process the list if the name is valid.
-    unless ($name and ($name =~ /^[a-z0-9][a-z0-9\-\+\._]*$/io) ) {
+    unless ($name and ($name =~ /^$tools::regexp{'listname'}$/io) ) {
 	&do_log('err', 'Incorrect listname "%s"',  $name);
 	return undef;
     }
@@ -5075,7 +5065,7 @@ sub load_scenario_list {
 	next unless (-d $dir);
 
 	while (<$dir/$action.*>) {
-	    next unless (/$action\.($regexp{'scenario'})$/);
+	    next unless (/$action\.($tools::regexp{'scenario'})$/);
 	    my $name = $1;
 	    
 	    next if (defined $list_of_scenario{$name});
@@ -5433,7 +5423,7 @@ sub _include_users_file {
 	next if /^\s*$/;
 	next if /^\s*\#/;
 
-	unless (/^\s*($regexp{'email'})(\s*(\S.*))?\s*$/) {
+	unless (/^\s*($tools::regexp{'email'})(\s*(\S.*))?\s*$/) {
 	    &do_log('notice', 'Not an email address: %s', $_);
 	}
 
@@ -7112,13 +7102,13 @@ sub _apply_defaults {
 
 	## Scenario format
 	if ($::pinfo{$p}{'scenario'}) {
-	    $::pinfo{$p}{'format'} = $regexp{'scenario'};
+	    $::pinfo{$p}{'format'} = $tools::regexp{'scenario'};
 	    $::pinfo{$p}{'default'} = 'default';
 	}
 
 	## Task format
 	if ($::pinfo{$p}{'task'}) {
-	    $::pinfo{$p}{'format'} = $regexp{'task'};
+	    $::pinfo{$p}{'format'} = $tools::regexp{'task'};
 	}
 
 	## Enumeration
@@ -7152,13 +7142,13 @@ sub _apply_defaults {
 	    
 	    ## Scenario format
 	    if (ref($::pinfo{$p}{'format'}{$k}) && $::pinfo{$p}{'format'}{$k}{'scenario'}) {
-		$::pinfo{$p}{'format'}{$k}{'format'} = $regexp{'scenario'};
+		$::pinfo{$p}{'format'}{$k}{'format'} = $tools::regexp{'scenario'};
 		$::pinfo{$p}{'format'}{$k}{'default'} = 'default' unless (($p eq 'web_archive') && ($k eq 'access'));
 	    }
 
 	    ## Task format
 	    if (ref($::pinfo{$p}{'format'}{$k}) && $::pinfo{$p}{'format'}{$k}{'task'}) {
-		$::pinfo{$p}{'format'}{$k}{'format'} = $regexp{'task'};
+		$::pinfo{$p}{'format'}{$k}{'format'} = $tools::regexp{'task'};
 	    }
 
 	    ## Enumeration

@@ -68,16 +68,6 @@ my $sympa_conf_file = '--CONFIG--';
 my $wwsconf = {};
 my $adrlist = {};
 
-# some regexp that all modules should use and share
-my %regexp = ('email' => '(\S+|\".*\")(@\S+)',
-            'host' => '[\w\.\-]+',
-            'listname' => '[a-z0-9][a-z0-9\-\._]+',
-            'sql_query' => 'SELECT.*',
-            'scenario' => '[\w,\.\-]+',
-            'task' => '\w+'
-            );
-
-
 # Load WWSympa configuration
 unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
     &fatal_err('error : unable to load config file');
@@ -733,11 +723,11 @@ sub cmd_process {
      # building of %context
     my %context; # datas necessary to command processing
     $context{'task_file'} = $task_file; # long task file name
-    $task_file =~ /\/($regexp{'listname'})$/i;
+    $task_file =~ /\/($tools::regexp{'listname'})$/i;
     $context{'task_name'} = $1; # task file name
     $context{'task_name'} =~ /^(\d+)\..+/;
     $context{'execution_date'} = $1; # task execution date
-    $context{'task_name'} =~ /^\w+\.\w*\.\w+\.($regexp{'listname'})$/;
+    $context{'task_name'} =~ /^\w+\.\w*\.\w+\.($tools::regexp{'listname'})$/;
     $context{'object_name'} = $1; # object of the task
     $context{'line_number'} = $lnb;
 
@@ -1664,7 +1654,7 @@ sub sync_include {
 sub match_task {
     my $filename = shift;
 
-    if ($filename =~ /^(\d+)\.(\w*)\.(\w+)\.($regexp{'listname'}|_global)$/) {
+    if ($filename =~ /^(\d+)\.(\w*)\.(\w+)\.($tools::regexp{'listname'}|_global)$/) {
 	my $task = {'date' => $1,
 		    'label' => $2,
 		    'model' => $3,

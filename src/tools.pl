@@ -29,12 +29,24 @@ use Language;
 use Log;
 use Time::Local;
 use File::Find;
+use Digest::MD5;
 
 ## RCS identification.
 #my $id = '@(#)$Id$';
 
 ## global var to store a CipherSaber object 
 my $cipher;
+
+## Regexps for list params
+my %regexp = ('email' => '([\w\-\_\.\/\+\=\']+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
+	      'host' => '[\w\.\-]+',
+	      'multiple_host_with_port' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
+	      'listname' => '[a-z0-9][a-z0-9\-\.\+_]*',
+	      'sql_query' => '(SELECT|select).*',
+	      'scenario' => '[\w,\.\-]+',
+	      'task' => '\w+'
+	      );
+
 
 my %openssl_errors = (1 => 'an error occurred parsing the command options',
 		      2 => 'one of the input files could not be read',
