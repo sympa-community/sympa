@@ -68,7 +68,13 @@ my %lang2locale = ('cz' => 'cs_CZ',
 		   'tw' => 'zh_TW');
 
 sub GetSupportedLanguages {
-    return @supported_languages;
+    my $robot = shift;
+    my @lang_list;
+    
+    foreach my $l (split /,/,&Conf::get_robot_conf($robot, 'supported_lang')) {
+	push @lang_list, $lang2locale{$l}||$l;
+    }
+    return @lang_list;
 }
 
 sub SetLang {

@@ -2312,7 +2312,7 @@ sub send_msg {
    ##Prepare and send message for html reception mode
     if (@tabrcpt_html) {
 	my $html_msg = $saved_msg->dup;
-	if (&tools::as_singlepart($html_msg, 'text/html|multipart/related')) {
+	if (&tools::as_singlepart($html_msg, 'text/html')) {
 	    do_log('notice', 'Multipart message changed to singlepart');
 	}
         ## Add a footer

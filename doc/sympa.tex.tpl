@@ -1907,6 +1907,11 @@ see a  nice mailto adresses where others have nothing.
 
         The location of multilingual catalog files. Must correspond to	\tildefile {src/locale/Makefile}.
 
+\subsection {\cfkeyword {supported\_lang}}   
+
+        This parameter lists all supported languages for the user interface. The default value will include
+	all message catalogues but it can be narrowed by the listmaster.
+
 \subsection {\cfkeyword {lang}}   
 
 	\default {us}
@@ -4048,6 +4053,8 @@ Only the following parameters can be redefined for a particular robot :
 	\item \cfkeyword {create\_list}
 
 	\item \cfkeyword {lang}
+	 
+	\item \cfkeyword {supported\_lang}
 
 	\item \cfkeyword {log\_smtp}
 

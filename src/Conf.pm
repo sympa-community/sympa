@@ -49,7 +49,7 @@ my @valid_options = qw(
 		       minimum_bouncing_count minimum_bouncing_period bounce_delay 
 		       default_bounce_level1_rate default_bounce_level2_rate 
 		       remind_return_path request_priority rfc2369_header_fields sendmail sendmail_args sleep 
-		       sort sympa_priority syslog log_smtp umask welcome_return_path wwsympa_url
+		       sort sympa_priority supported_lang syslog log_smtp umask welcome_return_path wwsympa_url
                        openssl capath cafile  key_passwd ssl_cert_dir remove_headers
 		       antivirus_path antivirus_args antivirus_notify anonymous_header_fields
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
@@ -174,7 +174,8 @@ my %Default_Conf =
      'default_bounce_level1_rate' => 45,
      'default_bounce_level2_rate' => 75,
      'soap_url' => '',
-     'urlize_min_size' => 10240 ## 10Kb
+     'urlize_min_size' => 10240, ## 10Kb
+     'supported_lang' => 'fr,en_US,hu'
      );
    
 my $wwsconf;
@@ -332,7 +333,7 @@ sub load {
     }
 
     @{$Conf{'listmasters'}} = split(/,/, $Conf{'listmaster'});
-
+    
     ## Set Regexp for accepted list suffixes
     if (defined ($Conf{'list_check_suffixes'})) {
 	$Conf{'list_check_regexp'} = $Conf{'list_check_suffixes'};
@@ -378,6 +379,7 @@ sub load_robots {
 				  bounce_level1_rate => 1,
 				  bounce_level2_rate => 1,
 				  soap_url => 1,
+				  supported_lang => 1,
 				  );
 
     ## Load wwsympa.conf
