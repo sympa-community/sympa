@@ -21,10 +21,10 @@
       <A HREF="mailto:[list]-request@[conf->host]">[list]-request@[conf->host]</A>
       
   [ELSIF init_passwd]
-    	Sie w&uuml;schen die Liste [list] abzubestellen. 
+    	Sie w&uuml;nschen die Liste [list] abzubestellen. 
 	<BR><BR>
 	Um Sie zu identifizieren und zu verhindern, da&szlig; jemand anders
-        die Liste gegen Ihren Willen f&uer Sie abbestellt, wird Ihnen  nun
+        die Liste gegen Ihren Willen f&uuml;r Sie abbestellt, wird Ihnen  nun
 	eine EMail mit einer URL zugesendet. <BR><BR>
 
 	Bitte warten Sie die Nachricht ab und geben Sie das Passwort aus dieser
@@ -44,7 +44,7 @@
 	Zugriff auf Ihre pers&ouml;nlichen  Einstellungen.
 
   [ELSIF ! email]
-      Bitte geben Sie die EMail-Adresse an, f&uer welche Sie Liste [list] abbestellen wollen.
+      Bitte geben Sie die EMail-Adresse an, f&uuml;r welche Sie Liste [list] abbestellen wollen.
 
       <FORM ACTION="[path_cgi]" METHOD=POST>
           <B>Ihre EMail-Adresse:</B> 

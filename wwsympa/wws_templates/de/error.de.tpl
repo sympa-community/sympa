@@ -44,7 +44,7 @@ Sie m&uuml;ssen sich anmelden
 [ELSIF error->msg=may_not]
 [error->action] : Ihnen ist diese Operation nicht erlaubt.
 [IF ! user->email]
-<BR>Sie m&uml;ssen sich anmelden.
+<BR>Sie m&uuml;ssen sich anmelden.
 [ENDIF]
 
 [ELSIF error->msg=no_subscriber]

@@ -8,11 +8,11 @@
 [ENDIF]
 
 [IF action=loginrequest]
- Sie m&uuml;ssen sich anmelden um Operationen durch zuf&uuml;hren, welche
+ Sie m&uuml;ssen sich anmelden um Operationen durchzuf&uuml;hren, welche
  Ihre EMail-Adresse ben&ouml;tigen.
 [ELSE]
  Die meisten Mailing-Listen-Operationen ben&ouml;tigen Ihre EMail-Adresse.
- Mache Mailing-Listen sind f&uuml;r unidentifierte Personen unzug&auml;nglich.
+ Manche Mailing-Listen sind f&uuml;r unidentifizierte Personen unzug&auml;nglich.
  <BR>
  Um Zugang zu den vollen M&ouml;glichkeiten dieses Servers zu erhalten,
  ist es erforderlich, da&szlig; Sie sich identifizieren.

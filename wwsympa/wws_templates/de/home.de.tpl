@@ -3,11 +3,11 @@
     <BR><P> 
 <TABLE BORDER=0 BGCOLOR="--LIGHT_COLOR--"><TR><TD>
 <P align=justify>
-Diese Seiten erm&ouml;glicht Ihnen den Zugang zu Ihren Mailing-List-Einstellungen
-f&uuml;r [conf->email]@[conf->host]. Ausgehend von dieser URL, k&ouml;nnen Sie 
-verschiedene Operationen durchf&uuml;hren: Abonnieren/abbestellen einer
+Diese Seiten erm&ouml;glichen Ihnen den Zugang zu Ihren Mailing-List-Einstellungen
+f&uuml;r [conf->email]@[conf->host]. Ausgehend von dieser URL k&ouml;nnen Sie 
+verschiedene Operationen durchf&uuml;hren: Abonnieren/Abbestellen einer
 Mailing-Liste, Zugriff auf die Archive der Mailing-Listen,
-Mailing-Listen-Management, u.s.w.
+Mailing-Listen-Management, usw.
 </P>
 </TD></TR></TABLE>
 <BR><BR>
