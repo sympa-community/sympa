@@ -3345,6 +3345,12 @@ sub get_next_user {
 
     if (($self->{'admin'}{'user_data_source'} eq 'database') ||
 	($self->{'admin'}{'user_data_source'} eq 'include2')){
+
+	unless (defined $sth) {
+	    &do_log('err', 'No handle defined, get_first_user(%s) was not run', $self->{'name'});
+	    return undef;
+	}
+	
 	my $user = $sth->fetchrow_hashref;
 
 	if (defined $user) {
@@ -3508,9 +3514,22 @@ sub get_next_bouncing_user {
 	return undef;
     }
 
+    unless (defined $sth) {
+	&do_log('err', 'No handle defined, get_first_bouncing_user(%s) was not run', $self->{'name'});
+	return undef;
+    }
+    
     my $user = $sth->fetchrow_hashref;
     
-    unless (defined $user) {
+    if (defined $user) {
+	&do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
+	    if (! $user->{'email'});
+	
+	## In case it was not set in the database
+	$user->{'subscribed'} = 1
+	    if (defined ($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
+
+    }else {
 	$sth->finish;
 	$sth = pop @sth_stack;
 	
@@ -3527,13 +3546,6 @@ sub get_next_bouncing_user {
 	    }
 	}
     }
-
-    &do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
-	if (! $user->{'email'});
-
-    ## In case it was not set in the database
-    $user->{'subscribed'} = 1
-	if (defined ($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
 
     return $user;
 }
