@@ -4432,10 +4432,11 @@ sub verify {
 
 	    ## SMTP Header field
 	}elsif ($value =~ /\[(msg_header|header)\-\>([\w\-]+)\]/i) {
+	    my $field_name = $2;
 	    if (defined ($context->{'msg'})) {
 		my $header = $context->{'msg'}->head;
-		my $field = $header->get($2);
-		$value =~ s/\[header\-\>([\w\-]+)\]/$field/;
+		my $field = $header->get($field_name);
+		$value =~ s/\[(msg_header|header)\-\>$field_name/$field/;
 	    }else {
 		return -1 * $negation;
 	    }
