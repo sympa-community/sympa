@@ -81,6 +81,31 @@ unless (Conf::load($sympa_conf_file)) {
 ## Check databse connectivity
 $List::use_db = &List::probe_db();
 
+## Check for several files.
+unless (&Conf::checkfiles()) {
+    fatal_err("Missing files. Aborting.");
+    ## No return.                                         
+}
+
+## Put ourselves in background if not in debug mode. 
+                                             
+unless ($main::options{'debug'} || $main::options{'foreground'}) {
+     open(STDERR, ">> /dev/null");
+     open(STDOUT, ">> /dev/null");
+     if (open(TTY, "/dev/tty")) {
+         ioctl(TTY, 0x20007471, 0);         # XXX s/b
+	 &TIOCNOTTY;
+#       ioctl(TTY, &TIOCNOTTY, 0);                                             
+         close(TTY);
+     }
+                                       
+     setpgrp(0, 0);
+     if ((my $child_pid = fork) != 0) {                                        
+         &do_log('debug', "Starting task_manager daemon, pid $_");	 
+         exit(0);
+     }     
+ }
+
 &tools::write_pid($wwsconf->{'task_manager_pidfile'}, $$);
 
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
@@ -124,6 +149,7 @@ my @list_models = ('expire', 'remind');
 ## hash of the global task models
 my %global_models = ('crl_update_task' => 'crl_update', 
 		     'chk_cert_expiration_task' => 'chk_cert_expiration',
+		     'expire_bounce' => 'expire_bounce',
 		     'global_remind' => 'global_remind');
 
 ## month hash used by epoch conversion routines
@@ -148,9 +174,11 @@ my %commands = ('next'                  => ['date', '\w*'],
 		'exec'                  => ['.+'],
 		                           #script
 		'update_crl'            => ['\w+', 'date'], 
-					   #file    #delay
+		                           #file    #delay
+		'expire_bounce'         => ['\d+'],
+		                           #Number of days (delay)
 		'chk_cert_expiration'   => ['\w+', 'date'],
-		                         #template  date
+		                           #template  date
 		);
 
 # commands which use a variable. If you add such a command, the first parameter must be the variable
@@ -655,6 +683,7 @@ sub cmd_process {
     return create_cmd ($Rarguments, \%context) if ($command eq 'create');
     return exec_cmd ($Rarguments) if ($command eq 'exec');
     return update_crl ($Rarguments, \%context) if ($command eq 'update_crl');
+    return expire_bounce ($Rarguments, \%context) if ($command eq 'expire_bounce');
 
      # commands which use a variable
     return send_msg ($Rarguments, $Rvars, \%context) if ($command eq 'send_msg');       
@@ -899,6 +928,18 @@ sub exec_cmd {
     
     return 1;
 }
+sub expire_bounce {
+    # If a bounce is older then $list->{get_latest_distribution_date}-$delai expire the bounce
+    # Is this variable my be set in to task modele ?
+    my $Rarguments = $_[0];
+    my $context = $_[1];
+    
+    my $execution_date = $context->{'execution_date'};
+    my @tab = @{$Rarguments};
+    my $delai = $tab[0];
+    do_log('notice',"yeeeeeeh $delai");
+    return 1;
+}
 
 sub chk_cert_expiration {
 
@@ -1111,7 +1152,6 @@ sub in {
 sub change_label {
     my $task_file = $_[0];
     my $new_label = $_[1];
-
     
     my $new_task_file = $task_file;
     $new_task_file =~ s/(.+\.)(\w*)(\.\w+\.\w+$)/$1$new_label$3/;
