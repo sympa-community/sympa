@@ -4157,6 +4157,17 @@ sub do_redirect {
 	 ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
 	 $in{'content'} =~ s/\015//g;
 
+	 ## Create directory if required
+	 my $dir = $param->{'filepath'};
+	 $dir =~ s/\/[^\/]+$//;
+	 unless (-d $dir) {
+	     unless (mkdir $dir, 0777) {
+		 &error_message('failed');
+		 &wwslog('err','do_savefile: failed to create directory %s: %s', $dir,$!);
+		 return undef;	 
+	     }
+	 }
+     
 	 ## Save new file
 	 unless (open FILE, ">$param->{'filepath'}") {
 	     &error_message('failed');
