@@ -1171,7 +1171,7 @@ messages distribution.
   information. Each function call is traced. Useful while reporting
   a bug.
 
-\item \option {--service}  
+\item \option {\-\-service}  \textit {process\_command} | \textit {process\_message}
   
   Sets \Sympa daemon in way it process only message distribution (process\_message) or in way it process only command (process\_command).
   

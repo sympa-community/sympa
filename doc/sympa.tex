@@ -72,7 +72,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {5.0b}
+    \newcommand {\version} {5.0b.1}
 
     \newcommand {\samplelist} {mylist}
 
@@ -126,13 +126,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.0b\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.0b.1\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {05 January 2005}
+    \date {31 January 2005}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -1167,7 +1167,7 @@ messages distribution.
   information. Each function call is traced. Useful while reporting
   a bug.
 
-\item \option {--service}  
+\item \option {\-\-service}  \textit {process\_command} | \textit {process\_message}
   
   Sets \Sympa daemon in way it process only message distribution (process\_message) or in way it process only command (process\_command).
   
@@ -2342,6 +2342,14 @@ bounce-test+*: 	"| /home/sympa/bin/queuebounce sympa@\samplerobot"
 \end {quote}
 
  	See \ref {robot-aliases},page~\pageref {robot-aliases} for all aliases.
+
+\subsection {\cfkeyword {default\_remind\_task}}
+        \label {kw-default-remind-task}
+         
+        \default {2month}
+	
+	This parameter defines the default \lparam {remind\_task} list parameter.
+
 
 \section {Priority related}
 
