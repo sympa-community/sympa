@@ -3,6 +3,28 @@
 
 (See Changelog file for the full changes log)
 
+3.3.4b.7	22 Apr 2002
+
+   New features :
+	
+	[Valics Lehel] NLS and Mail templates translation to Romanian
+
+   Bug Fixes :
+
+	src/List.pm: did not load 'stats' file when creating List object
+
+	wwsympa/wwsympa.fcgi: [reported by Virginie Perrot]  Could not set 
+	file description in shared Error message : Synchronization failed for...
+
+	[reported by Frederic Connes] main title used in sendpassword template 
+	instead of robot title.	Fix: Load wwsympa.conf in Conf.pm ; use [conf->title]
+	instead of [wwsconf->title]
+
+	[Frederic Connes] Fix boundary in welcome messages
+
+	src/List.pm: messages Header/footer addition did not work for VRobots
+	
+
 3.3.4b.6	10 Apr 2002
 
    New features :
