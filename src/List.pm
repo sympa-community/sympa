@@ -4905,7 +4905,7 @@ sub _load_users_file {
 
 ## include a list as subscribers.
 sub _include_users_list {
-    my ($users, $includelistname, $default_user_options) = @_;
+    my ($users, $includelistname, $default_user_options, $tied) = @_;
     do_log('debug2', 'List::_include_users_list');
 
     my $total = 0;
@@ -4923,7 +4923,11 @@ sub _include_users_list {
 
 	## Check if user has already been included
 	if ($users->{$user->{'email'}}) {
-	    %u = %{$users->{$user->{'email'}}};
+	    if ($tied) {
+		%u = split "\n",$users->{$user->{'email'}};
+	    }else {
+		%u = %{$users->{$user->{'email'}}};
+	    }
 	}else {
 	    %u = %{$default_user_options};
 	    $total++;
@@ -4937,7 +4941,11 @@ sub _include_users_list {
  	$u{'reception'} = $user->{'reception'};
  	$u{'visibility'} = $user->{'visibility'};
 
-	$users->{$email} = \%u;
+	if ($tied) {
+	    $users->{$email} = join("\n", %u);
+	}else {
+	    $users->{$email} = \%u;
+	}
     }
     do_log('info',"Include %d subscribers from list %s",$total,$includelistname);
     return $total ;
@@ -4945,7 +4953,7 @@ sub _include_users_list {
 
 ## include a lists owners lists privileged_owners or lists_editors.
 sub _include_users_admin {
-    my ($users, $admin_function,$mother_list) = @_;
+    my ($users, $admin_function,$mother_list,$tied) = @_;
     do_log('debug2', 'List::_include_users_list (users,%s,%s)',$admin_function,$mother_list);
 
     my $total = 0;
@@ -4998,7 +5006,7 @@ sub _include_users_admin {
 }
     
 sub _include_users_file {
-    my ($users, $filename, $default_user_options) = @_;
+    my ($users, $filename, $default_user_options,$tied) = @_;
     do_log('debug2', 'List::_include_users_file');
 
     my $total = 0;
@@ -5027,7 +5035,11 @@ sub _include_users_file {
 	my %u;
 	## Check if user has already been included
 	if ($users->{$email}) {
-	    %u = %{$users->{$email}};
+	    if ($tied) {
+		%u = split "\n",$users->{$email};
+	    }else {
+		%u = %{$users->{$email}};
+	    }
 	}else {
 	    %u = %{$default_user_options};
 	    $total++;
@@ -5036,7 +5048,11 @@ sub _include_users_file {
 	$u{'gecos'} = $gecos;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
-	$users->{$email} = \%u;
+	if ($tied) {
+	    $users->{$email} = join("\n", %u);
+	}else {
+	    $users->{$email} = \%u;
+	}
     }
     close INCLUDE ;
     
@@ -5047,7 +5063,7 @@ sub _include_users_file {
 
 ## Returns a list of subscribers extracted from a remote LDAP Directory
 sub _include_users_ldap {
-    my ($users, $param, $default_user_options) = @_;
+    my ($users, $param, $default_user_options, $tied) = @_;
     do_log('debug2', 'List::_include_users_ldap');
     
     unless (require Net::LDAP) {
@@ -5136,7 +5152,11 @@ sub _include_users_ldap {
 	my %u;
 	## Check if user has already been included
 	if ($users->{$email}) {
-	    %u = %{$users->{$email}};
+	    if ($tied) {
+		%u = split "\n",$users->{$user->{'email'}};
+	    }else {
+		%u = %{$users->{$user->{'email'}}};
+	    }
 	}else {
 	    %u = %{$default_user_options};
 	    $total++;
@@ -5148,7 +5168,11 @@ sub _include_users_ldap {
 	$u{'update_date'} = time;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
-	$users->{$email} = \%u;
+	if ($tied) {
+	    $users->{$email} = join("\n", %u);
+	}else {
+	    $users->{$email} = \%u;
+	}
     }
 
     do_log('debug2',"unbinded from LDAP server %s:%s ",$host,$port);
@@ -5160,7 +5184,7 @@ sub _include_users_ldap {
 ## Returns a list of subscribers extracted indirectly from a remote LDAP
 ## Directory using a two-level query
 sub _include_users_ldap_2level {
-    my ($users, $param, $default_user_options) = @_;
+    my ($users, $param, $default_user_options,$tied) = @_;
     do_log('debug2', 'List::_include_users_ldap_2level');
     
     unless (require Net::LDAP) {
@@ -5297,7 +5321,11 @@ sub _include_users_ldap_2level {
 	my %u;
 	## Check if user has already been included
 	if ($users->{$email}) {
-	    %u = %{$users->{$email}};
+	    if ($tied) {
+		%u = split "\n",$users->{$user->{'email'}};
+	    }else {
+		%u = %{$users->{$user->{'email'}}};
+	    }
 	}else {
 	    %u = %{$default_user_options};
 	    $total++;
@@ -5308,7 +5336,11 @@ sub _include_users_ldap_2level {
 	$u{'update_date'} = time;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
-	$users->{$email} = \%u;
+	if ($tied) {
+	    $users->{$email} = join("\n", %u);
+	}else {
+	    $users->{$email} = \%u;
+	}
     }
 
     do_log('debug2',"unbinded from LDAP server %s:%s ",$host,$port) ;
@@ -5319,7 +5351,7 @@ sub _include_users_ldap_2level {
 
 ## Returns a list of subscribers extracted from an remote Database
 sub _include_users_sql {
-    my ($users, $param, $default_user_options) = @_;
+    my ($users, $param, $default_user_options, $tied) = @_;
 
     &do_log('debug2','List::_include_users_sql()');
 
@@ -5399,7 +5431,11 @@ sub _include_users_sql {
 	my %u;
 	## Check if user has already been included
 	if ($users->{lc($email)}) {
-	    %u = %{$users->{lc($email)}};
+	    if ($tied) {
+		%u = split "\n",$users->{$user->{'email'}};
+	    }else {
+		%u = %{$users->{$user->{'email'}}};
+	    }
 	}else {
 	    %u = %{$default_user_options};
 	    $total++;
@@ -5410,7 +5446,11 @@ sub _include_users_sql {
 	$u{'update_date'} = time;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
-	$users->{$email} = \%u;
+	if ($tied) {
+	    $users->{$email} = join("\n", %u);
+	}else {
+	    $users->{$email} = \%u;
+	}
     }
     $sth->finish ;
     $dbh->disconnect();
@@ -5468,21 +5508,22 @@ sub _load_users_include {
 		
 		## get the list of users
 		if ($type eq 'include_sql_query') {
-		    $included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'});
+		    $included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'}, 'tied');
 		}elsif ($type eq 'include_ldap_query') {
-		    $included = _include_users_ldap(\%users, $incl, $admin->{'default_user_options'});
+		    $included = _include_users_ldap(\%users, $incl, $admin->{'default_user_options'}, 'tied');
 		}elsif ($type eq 'include_ldap_2level_query') {
-		    $included = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'});
+		    $included = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'}, 'tied');
 		}elsif ($type eq 'include_list') {
 		    $depend_on->{$name} = 1 ;
 		    if (&_inclusion_loop ($name,$incl,$depend_on)) {
 			do_log('notice','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
 		    }else{
 			$depend_on->{$incl};
-			$included = _include_users_list (\%users, $incl, $admin->{'default_user_options'});
+			$included = _include_users_list (\%users, $incl, $admin->{'default_user_options'}, 'tied');
+
 		    }
 		}elsif ($type eq 'include_file') {
-		    $included = _include_users_file (\%users, $incl, $admin->{'default_user_options'});
+		    $included = _include_users_file (\%users, $incl, $admin->{'default_user_options'}, 'tied');
 		}
 		unless (defined $included) {
 		    &do_log('err', 'Inclusion %s failed in list %s', $type, $name);
