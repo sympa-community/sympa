@@ -78,14 +78,16 @@ my %options;
 
 $main::options{'debug2'} = 1 if ($main::options{'debug'});
 
-# this loop is run foreach HUP signal received
-my $signal = 0;
 
-while (1) {
 
 my @parser_param = ($*, $/);
 my %loop_info;
 my %msgid_table;
+
+# this loop is run foreach HUP signal received
+my $signal = 0;
+
+while (1) {
 
 my $config_file = $main::options{'config'} || '--CONFIG--';
 ## Load configuration file
@@ -225,58 +227,59 @@ if ($main::options{'keepcopy'}) {
     }
 }
 
-## Put ourselves in background if we're not in debug mode. That method
-## works on many systems, although, it seems that Unix conceptors have
-## decided that there won't be a single and easy way to detach a process
-## from its controlling tty.
-unless ($main::options{'debug'} || $main::options{'foreground'}) {
-   if (open(TTY, "/dev/tty")) {
-       ioctl(TTY, 0x20007471, 0);         # XXX s/b &TIOCNOTTY
-#       ioctl(TTY, &TIOCNOTTY, 0);
-       close(TTY);
-   }
-   open(STDERR, ">> /dev/null");
-   open(STDOUT, ">> /dev/null");
-   setpgrp(0, 0);
-   if (($_ = fork) != 0) {
-      do_log('debug', "Starting server, pid $_");
-      exit(0);
-   }
-   do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
-}
 
-## Create and write the pidfile
-unless (open(LOCK, "+>> $Conf{'pidfile'}")) {
-   fatal_err("Could not open %s, exiting", $Conf{'pidfile'});
-   ## No return.
-}
-unless (flock(LOCK, 6)) {
-   fatal_err("Could not lock %s: Sympa is probably already running.", $Conf{'pidfile'});
-   ## No return.
-}
+unless ($signal = 'hup' ) {
+    ## Put ourselves in background if we're not in debug mode. That method
+    ## works on many systems, although, it seems that Unix conceptors have
+    ## decided that there won't be a single and easy way to detach a process
+    ## from its controlling tty.
+    unless ($main::options{'debug'} || $main::options{'foreground'}) {
+	if (open(TTY, "/dev/tty")) {
+	    ioctl(TTY, 0x20007471, 0);         # XXX s/b &TIOCNOTTY
+	    #       ioctl(TTY, &TIOCNOTTY, 0);
+	    close(TTY);
+	}
+	open(STDERR, ">> /dev/null");
+	open(STDOUT, ">> /dev/null");
+	setpgrp(0, 0);
+	if (($_ = fork) != 0) {
+	    do_log('debug', "Starting server, pid $_");
+	    exit(0);
+	}
+	do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
+    }
+    
+    ## Create and write the pidfile
+    unless (open(LOCK, "+>> $Conf{'pidfile'}")) {
+	fatal_err("Could not open %s, exiting", $Conf{'pidfile'});
+	## No return.
+    }
+    unless (flock(LOCK, 6)) {
+	fatal_err("Could not lock %s: Sympa is probably already running.", $Conf{'pidfile'});
+	## No return.
+    }
 
-unless (open(LCK, "> $Conf{'pidfile'}")) {
-   fatal_err("Could not open %s, exiting", $Conf{'pidfile'});
-   ## No return.
-}
+    unless (open(LCK, "> $Conf{'pidfile'}")) {
+	fatal_err("Could not open %s, exiting", $Conf{'pidfile'});
+	## No return.
+    }
+    
+    unless (truncate(LCK, 0)) {
+	fatal_err("Could not truncate %s, exiting.", $Conf{'pidfile'});
+	## No return.
+    }
+    print LCK "$$\n";
+    close(LCK);
+    
 
-unless (truncate(LCK, 0)) {
-   fatal_err("Could not truncate %s, exiting.", $Conf{'pidfile'});
-   ## No return.
-}
-print LCK "$$\n";
-close(LCK);
-
-## Most initializations have now been done.
-if ($signal = 'hup' ) {
+ ## Most initializations have now been done.
+    do_log('notice', "Sympa $Version started");
+    printf "Sympa $Version started\n";
+}else{
     do_log('notice', "Sympa $Version reload config");
     printf "Sympa $Version reload config\n";
     $signal = '0';
-}else{
-    do_log('notice', "Sympa $Version started");
-    printf "Sympa $Version started\n";
 }
-
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
 $SIG{'HUP'} = 'sighup';
@@ -439,7 +442,6 @@ exit(0);
 ## variable.
 sub sigterm {
     do_log('notice', 'signal TERM received, still processing current task');
-
     $signal = 'term';
 }
 
@@ -447,7 +449,13 @@ sub sigterm {
 ## variable.
 sub sighup {
     do_log('notice', 'signal HUP received, still processing current task');
-
+    if ($main::options{'mail'}) {
+	do_log('notice', 'signal HUP received, switch of -mail logging option and continue current task');
+	undef $main::options{'mail'};
+    }else{
+	do_log('notice', 'signal HUP received, switch on -mail logging option and continue current task');
+	$main::options{'mail'} = 1;
+    }
     $signal = 'hup';
 }
 
