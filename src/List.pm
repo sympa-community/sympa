@@ -4968,7 +4968,7 @@ sub _include_users_ldap {
 
     while (my $e = $fetch->shift_entry) {
 
-	my $entry = $e->get_value($ldap_attrs);
+	my $entry = $e->get_value($ldap_attrs, asref => 1);
 	
 	## Multiple values
 	if (ref($entry) eq 'ARRAY') {
@@ -5082,7 +5082,7 @@ sub _include_users_ldap_2level {
     my (@attrs, @emails);
  
     while (my $e = $fetch->shift_entry) {
-	my $entry = $e->get_value($ldap_attrs1);
+	my $entry = $e->get_value($ldap_attrs1, asref => 1);
 	
 	## Multiple values
 	if (ref($entry) eq 'ARRAY') {
@@ -5115,7 +5115,7 @@ sub _include_users_ldap_2level {
 	##  the second level hash's hold the attributes
 
 	while (my $e = $fetch->shift_entry) {
-	    my $entry = $e->get_value($ldap_attrs2);
+	    my $entry = $e->get_value($ldap_attrs2, asref => 1);
 
 	    ## Multiple values
 	    if (ref($entry) eq 'ARRAY') {
