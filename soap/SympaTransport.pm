@@ -42,6 +42,15 @@ sub request {
 	}
     }
 
+    ## Select appropriate robot
+    if (defined $Conf::Conf{'robot_by_soap_url'}{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}}) {
+	$ENV{'SYMPA_ROBOT'} = $Conf::Conf{'robot_by_soap_url'}{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}};
+	&Log::do_log('debug2', 'Robot : %s', $ENV{'SYMPA_ROBOT'});
+    }else {
+	&Log::do_log('debug2', 'URL : %s', $ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'});
+	delete $ENV{'SYMPA_ROBOT'};
+    }
+
     $self->SUPER::request(@_);
 }
 

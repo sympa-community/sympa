@@ -429,7 +429,7 @@ sub load_robots {
 	$robot_conf->{$robot}{'sympa'} = $robot_conf->{$robot}{'email'}.'@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'request'} = $robot_conf->{$robot}{'email'}.'-request@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'cookie_domain'} ||= 'localhost';
-	$robot_conf->{$robot}{'soap_url'} ||= $Conf{'soap_url'};
+	#$robot_conf->{$robot}{'soap_url'} ||= $Conf{'soap_url'};
 
 	my ($host, $path);
 	if ($robot_conf->{$robot}{'http_host'} =~ /^([^\/]+)(\/.*)$/) {
@@ -439,6 +439,12 @@ sub load_robots {
 	}
 	$Conf{'robot_by_http_host'}{$host}{$path} = $robot ;
 	
+	## Create a hash to deduce robot from SOAP url
+	if ($robot_conf->{$robot}{'soap_url'}) {
+	    my $url = $robot_conf->{$robot}{'soap_url'};
+	    $url =~ s/^http(s)?:\/\/(.+)$/$2/;
+	    $Conf{'robot_by_soap_url'}{$url} = $robot;
+	}
 
 	close (ROBOT_CONF);
     }
@@ -452,6 +458,13 @@ sub load_robots {
 	#    next;
 	#}
 	$robot_conf->{$Conf{'domain'}}{$key} = $Conf{$key};
+    }
+    
+    ## Default SOAP URL corresponds to default robot
+    if ($Conf{'soap_url'}) {
+	my $url = $Conf{'soap_url'};
+	$url =~ s/^http(s)?:\/\/(.+)$/$2/;
+	$Conf{'robot_by_soap_url'}{$url} = $Conf{'domain'};
     }
 
     return ($robot_conf);
