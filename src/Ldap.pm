@@ -28,17 +28,23 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw(%Ldap);
 
-my @valid_options = qw(host port suffix filter scope);
+my @valid_options = qw(host port suffix filter scope bind_dn bind_password);
+my  @required_options = qw(host port suffix filter scope);
 
 my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
+
+my %required_options = ();
+map { $required_options{$_}++; } @required_options;
 
 my %Default_Conf =
     ( 	'host'=> undef,
     	'port' => undef,
     	'suffix' => undef,
     	'filter' => undef,
-    	'scope' => undef
+    	'scope' => undef,
+	'bind_dn' => undef,
+	'bind_password' => undef
    );
 
 %Ldap = ();
@@ -77,19 +83,20 @@ sub load {
 
     ## Check if we have unknown values.
     foreach $i (sort keys %o) {
-	next if ($valid_options{$i});
-	&Log::do_log('err',"Line %d, unknown field: %s \n", $o{$i}[1], $i);
-	$config_err++;
+	$Ldap{$i} = $o{$i}[0] || $Default_Conf{$i};
+	
+	unless ($valid_options{$i}) {
+	    &Log::do_log('err',"Line %d, unknown field: %s \n", $o{$i}[1], $i);
+	    $config_err++;
+	}
     }
     ## Do we have all required values ?
-    foreach $i (keys %valid_options) {
+    foreach $i (keys %required_options) {
 	unless (defined $o{$i} or defined $Default_Conf{$i}) {
 	    &Log::do_log('err',"Required field not found : %s\n", $i);
 	    $config_err++;
 	    next;
 	}
-	$Ldap{$i} = $o{$i}[0] || $Default_Conf{$i};
-	
     }
  return %Ldap;
 }
