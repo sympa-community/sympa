@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+
+<HEAD>
+<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=[%|loc%]_charset_[%END%]">
+
+
+<STYLE type="text/css" title="style sympa">
+<!--
+A {
+	text-decoration: none;
+}
+-->
+</STYLE>
+
+  <TITLE>[%|loc%]Sympa error - could not display web page[%END%]</TITLE>
+</HEAD>
+
+<BODY bgcolor="[% bg_color %]" text="[% text_color %]" link="[% selected_color %]" vlink="[% selected_color %]">
+
+<H2>[%|loc(tt2_error)%]Sympa could not deliver the requested page for the following reason : %1. Please contact the listmaster.[%END%]</H2>
+
+ <TABLE BORDER="0" ALIGN="right">
+  <TR>
+   <TD WIDTH="100%">&nbsp;</TD>
+    <TD NOWRAP><I>Powered by</I></TD>
+    <TD><A HREF="http://www.sympa.org/">
+           <IMG SRC="[% icons_url %]/logo-s.png" ALT="Sympa [% version %]" BORDER="0" >
+         </A></TD>
+   </TR>
+  </TABLE>
+
+</BODY>
+</HTML>
+

@@ -109,6 +109,7 @@ use Log;
 use Language;
 
 my $current_lang;
+my $last_error;
 
 sub qencode {
     my $string = shift;
@@ -142,6 +143,12 @@ sub get_include_path {
 ## Allow inclusion/insertion of file with absolute path
 sub allow_absolute_path {
     $allow_absolute = 1;
+}
+
+## Return the last error message
+sub get_error {
+
+    return $last_error;
 }
 
 ## The main parsing sub
@@ -193,6 +200,7 @@ sub parse_tt2 {
     my $tt2 = Template->new($config) or die $!;
 
     unless ($tt2->process($template, $data, $output)) {
+	$last_error = $tt2->error();
 	&do_log('err', 'Failed to parse %s : %s', $template, $tt2->error());
 	return undef;
     } 

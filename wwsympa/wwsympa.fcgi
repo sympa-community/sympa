@@ -872,7 +872,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2/'.$param->{'lang'};
 	 }
 
-	 &tt2::parse_tt2($param,'main.tt2' , \*STDOUT, $tt2_include_path);
+	 unless (&tt2::parse_tt2($param,'main.tt2' , \*STDOUT, $tt2_include_path)) {
+	     my $error = &tt2::get_error();
+	     $param->{'tt2_error'} = $error;
+	     &List::send_notify_to_listmaster('web_tt2_error', $robot, $error);
+	     &tt2::parse_tt2($param,'tt2_error.tt2' , \*STDOUT, $tt2_include_path);
+	 }
      }    
 
      # exit if wwsympa.fcgi itself has changed
