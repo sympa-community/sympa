@@ -287,6 +287,7 @@ sub load_robots {
 				  wwsympa_url     => 1,
 				  'title'         => 1,
 				  default_home    => 1,
+				  create_list     => 1,
 				  dark_color      => 1,
 				  light_color     => 1,
 				  text_color      => 1, 

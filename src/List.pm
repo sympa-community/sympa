@@ -3451,7 +3451,7 @@ sub request_action {
     }else{	
 	my $scenario;
 	return undef 
-	    unless ($scenario = &_load_scenario_file ($operation, $robot, $Conf{$operation}));
+	    unless ($scenario = &_load_scenario_file ($operation, $robot, $Conf{'robots'}{$robot}{$operation} || $Conf{$operation}));
         @rules = @{$scenario->{'rules'}};
 	$name = $scenario->{'name'};
     }
