@@ -90,10 +90,15 @@ all:	checkcpan sources languages checkperl
 rpm: build_rh_rpm build_mdk_rpm
 
 checkperl:
+	@echo "#######################################"
+	@echo "## Database structure has been extended"
+	@echo "## You need to run the following command on your database :"
+	@echo "## ALTER TABLE subscriber_table ADD comment_subscriber varchar (150);"
+	@echo "## ";
+	@echo "## Then run $(BINDIR)/init_comment.pl"
 	@if [ $(PERL_VERSION) = '5.006' ]; then \
-	echo "Perl: $(PERL_VERSION)"; \
 	echo "##################################"; \
-	echo "## You are using Perl version 5.6.0 :"; \
+	echo "## You are using Perl version $(PERL_VERSION) :"; \
 	echo "## You need to patch your syslog.pm "; \
 	echo "## See http://bugs.perl.org/perlbug.cgi?req=bidmids&bidmids=20000712.003"; \
 	echo "##"; \
