@@ -38,12 +38,13 @@ my %comms =  ('add' =>			   	     'add',
 	      'mod|modindex|modind' =>		     'modindex',
 	      'qui|quit|end|stop|-' =>		     'finished',
 	      'rej|reject' =>			     'reject',
-	      'rem|remind' =>                       'remind',
+	      'rem|remind' =>                        'remind',
 	      'rev|review|who' =>		     'review',
 	      'set' =>				     'set',
 	      'sub|subscribe' =>             	     'subscribe',
 	      'sig|signoff|uns|unsub|unsubscribe' => 'signoff',
 	      'sta|stats' =>		       	     'stats',
+	      'ver|verify' =>     	             'verify'
 	      'whi|which|status' =>     	     'which'
 	      );
 
@@ -484,6 +485,27 @@ sub review {
     do_log('info', 'REVIEW %s from %s aborted, unknown requested action in scenario',$listname,$sender);
     push @msg::report, sprintf("Internal configuration error, please report to listmaster\nreview %s aborted because unknown requested action in scenario\n",$listname);
     return undef;
+}
+
+## Sends the list of subscribers to the requester.
+sub verify {
+    my $sign_mod = shift ;
+    do_log('debug2', 'Commands::verify(%s)', $sign_mod );
+    
+    my $user;
+    
+    &Language::SetLang($list->{'admin'}{'lang'});
+    
+    if ($sign_mod eq 'smime') {
+	$auth_method='smime';
+	do_log('info', 'VERIFY succefull from %s', $sender,time-$time_command);
+	push @msg::report, sprintf Msg(6, 262, "Your message signature as been succesfully verified using smime.\n");
+    }else{
+	do_log('info', 'VERIFY from %s : could not find correct s/mime signature', $sender,time-$time_command);
+	push @msg::report, sprintf Msg(6, 263, "Could not find signature or could not verify it using smime.\n");
+	
+    }
+    return 1;
 }
 
 ## Test mailto
