@@ -661,7 +661,7 @@ sub cmd_process {
      # building of %context
     my %context; # datas necessary to command processing
     $context{'task_file'} = $task_file; # long task file name
-    $task_file =~ /.+\/($regexp{'listname'})$/;
+    $task_file =~ /\/($regexp{'listname'})$/i;
     $context{'task_name'} = $1; # task file name
     $context{'task_name'} =~ /^(\d+)\..+/;
     $context{'execution_date'} = $1; # task execution date
