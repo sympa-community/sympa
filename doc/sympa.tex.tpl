@@ -6821,7 +6821,8 @@ Most user commands have three-letter abbreviations (e.g. \texttt
 
     \item  \mailcmd {INFO} \textit {listname}
 
-        Provides the welcome message for the specified list. The
+        Provides the parameters of the specified list (owner,
+        subscription mode, etc.) and its description. The
         result is the content of \tildefile {welcome[.mime]}.
 
     \item  \mailcmd {LISTS}
@@ -6836,10 +6837,8 @@ Most user commands have three-letter abbreviations (e.g. \texttt
     \item  \mailcmd {REVIEW} \textit {listname}
         \label {cmd-review}
 
-        Provides the parameters of the specified list (owner,
-        subscription mode, etc.), as well as the addresses of
-        subscribers if the run mode authorizes it. See the \lparam
-        {review} parameter (\ref {par-review}, page~\pageref
+        Provides the addresses of subscribers if the run mode authorizes it. 
+	See the \lparam {review} parameter (\ref {par-review}, page~\pageref
         {par-review}) for the configuration file of each list,
         which controls consultation authorizations for the subscriber
         list. Since subscriber addresses can be abused by spammers,
