@@ -334,7 +334,7 @@ done
 #%{data_s}/create_list.conf
 #%{data_s}/edit_list.conf
 #%{data_s}/mhonarc-ressources
-#%{data_s}/list_aliases.tpl
+#%{data_s}/list_aliases.tt2
 #%dir %{data_s}/create_list_templates
 #%{data_s}/create_list_templates/*
 #%dir %{data_s}/scenari
