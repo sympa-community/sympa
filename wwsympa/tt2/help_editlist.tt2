@@ -144,31 +144,7 @@
       [% ELSIF p.NAME == 'review' %]
         [%|l%]This parameter specifies who can use read addresses of subscribers. Since subscriber addresses can be abused by spammers, it is strongly recommended that you only authorize owners or subscribers to access the subscriber list. [%END%]
       [% ELSIF p.NAME == 'send' %]
-        [%|l%]This parameter specifies who can send messages to the list. Valid values for this parameter are pointers to scenarii.[%END%]<BR><BR>
-        <UL>
-          <LI>send closed<BR>[%|l%]closed[%END%]<BR><BR></LI>
-          <LI>send editor<BR>[%|l%]Moderated, old style[%END%]<BR><BR></LI>
-          <LI>send editorkey<BR>[%|l%]Moderated[%END%]<BR><BR></LI>
-          <LI>send editorkeyonly<BR>[%|l%]Moderated, even for moderators[%END%]<BR><BR></LI>
-          <LI>send editorkeyonlyauth<BR>[%|l%]Moderated, with editor confirmation[%END%]<BR><BR></LI>
-          <LI>send intranet<BR>[%|l%]restricted to local domain[%END%]<BR><BR></LI>
-          <LI>send intranetorprivate<BR>[%|l%]restricted to local domain and subscribers[%END%]<BR><BR></LI>
-          <LI>send newsletter<BR>[%|l%]Newsletter, restricted to moderators[%END%]<BR><BR></LI>
-          <LI>send newsletterkeyonly<BR>[%|l%]Newsletter, restricted to moderators after confirmation[%END%]<BR><BR></LI>
-          <LI>send private<BR>[%|l%]restricted to subscribers[%END%]<BR><BR></LI>
-          <LI>send private_smime<BR>[%|l%]restricted to subscribers check smime signature[%END%]<BR><BR></LI>
-          <LI>send privateandeditorkey<BR>[%|l%]Moderated, restricted to subscribers[%END%]<BR><BR></LI>
-          <LI>send privateandnomultipartoreditorkey<BR>[%|l%]Moderated, for non subscribers sending multipart messages[%END%]<BR><BR></LI>
-          <LI>send privatekey<BR>[%|l%]restricted to subscribers with previous md5 authentication[%END%]<BR><BR></LI>
-          <LI>send privatekeyandeditorkeyonly<BR>[%|l%]Moderated, for subscribers and moderators[%END%]<BR><BR></LI>
-          <LI>send privateoreditorkey<BR>[%|l%]Private, moderated for non subscribers[%END%]<BR><BR></LI>
-          <LI>send privateorpublickey<BR>[%|l%]Private, confirmation for non subscribers[%END%]<BR><BR></LI>
-          <LI>send public<BR>[%|l%]public list[%END%]<BR><BR></LI>
-          <LI>send public_nobcc<BR>[%|l%]public list, Bcc rejected (anti-spam)[%END%]<BR><BR></LI>
-          <LI>send publickey<BR>[%|l%]anyone with previous md5 authentication[%END%]<BR><BR></LI>
-          <LI>send publicnoattachment<BR>[%|l%]public list multipart/mixed messages are forwarded to moderator[%END%]<BR><BR></LI>
-          <LI>send publicnomultipart<BR>[%|l%]public list multipart messages are rejected[%END%]<BR><BR></LI>
-        </UL>
+        [%|l%]This parameter specifies who can send messages to the list.[%END%]<BR><BR>
       [% ELSIF p.NAME == 'shared_doc' %]
         [%|l%]This paragraph defines read and edit access to the shared document repository.[%END%]
       [% ELSIF p.NAME == 'spam_protection' %]
@@ -181,51 +157,19 @@
       [% ELSIF p.NAME == 'subject' %]
         [%|l%]This parameter indicates the subject of the list, which is sent in response to the LISTS mail command. The subject is a free form text limited to one line.[%END%]
       [% ELSIF p.NAME == 'subscribe' %]
-        [%|l%]The subscribe parameter defines the rules for subscribing to the list.
-        Predefined scenarii are:[%END%]<BR><BR>
-        <UL>
-          <LI>subscribe auth<BR>[%|l%]subscription request confirmed[%END%]<BR><BR></LI>
-          <LI>ubscribe auth_notify<BR>[%|l%]need authentication (notification is sent to owners)[%END%]<BR><BR></LI>
-          <LI>subscribe auth_owner<BR>[%|l%]requires authentication then owner approval[%END%]<BR><BR></LI>
-          <LI>subscribe closed<BR>[%|l%]subscribe is impossible[%END%]<BR><BR></LI>
-          <LI>subscribe intranet<BR>[%|l%]restricted to local domain users[%END%]<BR><BR></LI>
-          <LI>subscribe intranetorowner<BR>[%|l%]local domain users or owner approval[%END%]<BR><BR></LI>
-          <LI>subscribe open<BR>[%|l%]for anyone without authentication[%END%]<BR><BR></LI>
-          <LI>subscribe open_notify<BR>[%|l%]anyone, notification is sent to list owner[%END%]<BR><BR></LI>
-          <LI>subscribe open_quiet<BR>[%|l%]anyone, no welcome message[%END%]<BR><BR></LI>
-          <LI>subscribe owner<BR>[%|l%]owners approval[%END%]<BR><BR></LI>
-          <LI>subscribe smime<BR>[%|l%]requires S/MIME signed[%END%]<BR><BR></LI>
-          <LI>subscribe smimeorowner<BR>[%|l%]requires S/MIME signed or owner approval[%END%]<BR><BR></LI>
-        </UL>
+        [%|l%]The subscribe parameter defines the rules for subscribing to the list.[%END%]
       [% ELSIF p.NAME == 'topics' %]
         [%|l%]This parameter allows the classification of lists. You may define multiple topics as well as hierarchical ones. WWSympa's list of public lists uses this parameter.[%END%]
       [% ELSIF p.NAME == 'ttl' %]
         [%|l%]Sympa caches user data extracted using the include parameter. Their TTL (time-to-live) within Sympa can be controlled using this parameter. The default value is 3600[%END%]
       [% ELSIF p.NAME == 'unsubscribe' %]
-        [%|l%]This parameter specifies the unsubscription method for the list. Use open_notify or auth_notify to allow owner notification of each unsubscribe command. Predefined
-        scenarii are:[%END%]<BR><BR>
-        <UL>
-          <LI>unsubscribe auth<BR>[%|l%]need authentication[%END%]<BR><BR></LI>
-          <LI>unsubscribe auth_notify<BR>[%|l%]authentication requested, notification sent to owner[%END%]<BR><BR></LI>
-          <LI>unsubscribe closed<BR>[%|l%]impossible[%END%]<BR><BR></LI>
-          <LI>unsubscribe open<BR>[%|l%]anyone without authentication[%END%]<BR><BR></LI>
-          <LI>unsubscribe open_notify<BR>[%|l%]without authentication, notification is sent to owners[%END%]<BR><BR></LI>
-          <LI>unsubscribe owner<BR>[%|l%]owner approval[%END%]<BR><BR></LI>
-        </UL>
+        [%|l%]This parameter specifies the unsubscription method for the list. Use open_notify or auth_notify to allow owner notification of each unsubscribe command.[%END%]
       [% ELSIF p.NAME == 'user_data_source' %]
         [%|l%]Sympa allows the list owner to choose how Sympa loads list member data. Subscriber information can be stored in a text file or relational database, or included from various external sources (list, flat file, result of or query).[%END%]
       [% ELSIF p.NAME == 'visibility' %]
         [%|l%]This parameter indicates whether the list should feature in the output generated in response to a LISTS command or should be shown in the list overview of the web-interface.[%END%]
       [% ELSIF p.NAME == 'web_archive' %]
-        [%|l%]Defines who can access the web archive for the list. Predefined scenarii are:[%END%]<BR><BR>
-        <UL>
-          <LI>access closed<BR>[%|l%]closed[%END%]<BR><BR></LI>
-          <LI>access intranet<BR>[%|l%]restricted to local domain users[%END%]<BR><BR></LI>
-          <LI>access listmaster<BR>[%|l%]listmaster[%END%]<BR><BR></LI>
-          <LI>access owner<BR>[%|l%]by owner[%END%]<BR><BR></LI>
-          <LI>access private<BR>[%|l%]subscribers only[%END%]<BR><BR></LI>
-          <LI>access public<BR>[%|l%]public[%END%]<BR><BR></LI>
-        </UL>
+        [%|l%]Defines who can access the web archive for the list.[%END%]
       [% ELSIF p.NAME == 'web_archive_spam_protection' %]
         [%|l%]Idem spam_protection but restricted to web archive. A additional value is available: cookie which mean that users must submit a small form in order to receive a cookie before browsing archives. This block all robot, even google and co.[%END%]
       [% ELSIF p.NAME == 'welcome_return_path' %]
