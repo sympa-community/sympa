@@ -459,7 +459,7 @@ sub DoFile {
 	## Mail adressed to the robot and mail 
 	## to <list>-subscribe or <list>-unsubscribe are commands
     }elsif (($rcpt =~ /^(sympa|$Conf{'email'})(\@$Conf{'host'})?$/i) || ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o)) {
-	$status = &DoCommand($rcpt, $msg);
+	$status = &DoCommand($rcpt, $msg, $file);
 	
 	## forward mails to <list>-request <list>-owner etc
     }elsif ($rcpt =~ /^(\S+)-(request|owner|editor)(\@(\S+))?$/o) {
@@ -471,7 +471,7 @@ sub DoFile {
 	if (($function eq 'request') and ($subject_field =~ /^\s*(subscribe|unsubscribe)(\s*$name)?\s*$/i) ) {
 	    my $command = $1;
 	    
-	    $status = &DoCommand("$name-$command", $msg);
+	    $status = &DoCommand("$name-$command", $msg, $file);
 	}else {
 	    $status = &DoForward($name, $function, $msg);
 	}       
@@ -778,7 +778,7 @@ sub DoMessage{
 
 ## Handles a command sent to the list manager.
 sub DoCommand {
-    my($rcpt, $msg) = @_;
+    my($rcpt, $msg, $file) = @_;
     &do_log('debug2', 'DoCommand(%s)', $rcpt);
 
     ## Now check if the sender is an authorized address.
@@ -799,7 +799,7 @@ sub DoCommand {
     ## If X-Sympa-To = <listname>-<subscribe|unsubscribe> parse as a unique command
     if ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o) {
 	do_log('debug',"processing message for $1-$2");
-	&Commands::parse($sender,"$2 $1");
+	&Commands::parse($sender,"$2 $1", $file);
 	return 1; 
     }
     
@@ -810,7 +810,7 @@ sub DoCommand {
     $subject_field =~ s/\n//mg; ## multiline subjects
     $subject_field =~ s/^\s*(Re:)?\s*(.*)\s*$/$2/i;
 
-    $success ||= &Commands::parse($sender, $subject_field, $is_signed->{'subject'}) ;
+    $success ||= &Commands::parse($sender, $subject_field, $file, $is_signed->{'subject'}) ;
 
     ## Make multipart singlepart
     if ($msg->is_multipart()) {
@@ -872,7 +872,7 @@ sub DoCommand {
 	    }
 	    &do_log('debug2',"is_signed->body $is_signed->{'body'}");
 
-	    unless ($status = Commands::parse($sender, $i,$is_signed->{'body'})) {
+	    unless ($status = Commands::parse($sender, $i, $file, $is_signed->{'body'})) {
 		push @msg::report, sprintf Msg(4, 19, "Command not understood: ignoring end of message.\n");
 		last;
 	    }
@@ -899,7 +899,7 @@ sub DoCommand {
     # processing the expire function
     if ($expire){
 	print STDERR "expire\n";
-	unless (&Commands::parse($sender, $expire, @msgexpire)) {
+	unless (&Commands::parse($sender, $expire, $file, @msgexpire)) {
 	    print Msg(4, 19, "Command not understood: ignoring end of message.\n");
 	}
     }

@@ -49,6 +49,7 @@ my %comms =  ('add' =>			   	     'add',
 
 my $sender = '';
 my $time_command;
+my $msg_file;
 
 #my $email_regexp = '(\S+|\".*\")(@\S+)';
 my $email_regexp = '\S+|\".*\"@\S+';
@@ -58,6 +59,7 @@ my $email_regexp = '\S+|\".*\"@\S+';
 sub parse {
    $sender = lc(shift);
    my $i = shift;
+   $msg_file = shift;
    my $sign_mod = shift;
 
    do_log('debug2', 'Commands::parse(%s, %s, %s)', $sender, $i,$sign_mod );
@@ -1433,8 +1435,8 @@ sub set {
 
 ## distribute the broadcast of a moderated message
 sub distribute {
-    my ($what, $msg_file) = @_;
-    do_log('debug2', 'Commands::distribute(%s, %s)', $what, $msg_file);
+    my ($what) = @_;
+    do_log('debug2', 'Commands::distribute(%s)', $what);
 
     $what =~ /^\s*(\S+)\s+(.+)\s*$/;
     my($which, $key) = ($1, $2);
