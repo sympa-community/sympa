@@ -1797,6 +1797,7 @@ others. Depending on permissions, the same URL may generate a different view.
 	the Title section of WWSympa.
 
 	\subsection {use\_fast\_cgi   0 | 1}
+	\label {use-fastcgi}
 	\default {1} \\
 	Choice of whether or not to use FastCGI. On listes.cru.fr, using FastCGI 
         increases WWSympa performance by as much as a factor of 10. Refer to 
@@ -1942,7 +1943,24 @@ int main(int argn, char **argv, char **envp) {
 
  \end{verbatim}
 \end{quote}
-    
+ 
+\subsection {Using FastCGI}
+
+\htmladdnormallink {FastCGI} {http://www.fastcgi.com/} is an extention to CGI that provides persistency for CGI programs. It is extemely usefull
+with \WWSympa because it all the intialisations are only performed once, at server startup ; then
+file {wwsympa.fcgi} instances are awaiting clients requests. 
+
+\WWSympa can also work without FastCGI, depending on \textbf {use\_fast\_cgi} parameter 
+(see \ref {use-fastcgi}, page~\pageref {use-fastcgi}).
+
+To run \WWSympa with FastCGI, you need to install :
+\begin{itemize}
+
+\item mod_fastcgi : the Apache module that provides FastCGI features
+
+\item FCGI : the Perl module used by \WWSympa
+
+\end{itemize}
 
 \section {Database configuration}
 
