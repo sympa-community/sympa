@@ -1104,6 +1104,15 @@ the file is of no importance.
 
         \example {cookie gh869jku5}
 
+\subsection {\cfkeyword {create\_list}}  
+
+	 \default {listmaster}
+
+	It defines who can create a list (or request a list creation).
+	Sympa will use the corresponding scenario.
+
+        \example {create\_list intranet}
+
 \section {Directories}
 
 \subsection {\cfkeyword {home}}
@@ -1504,16 +1513,18 @@ required otherwise:
 In this case, two optionel parameters must be assigned by the listmaster,
 see \ref {smimeconf},  page~\pageref {smimeconf}.
 
-\begin{itemize}
+\subsection {\cfkeyword {openssl}}
 
-  \item \cfkeyword {openssl} : the path for the openssl binary file,
+ : the path for the openssl binary file,
          
-  \item \cfkeyword {trusted\_ca\_options} : the option used by openssl
+\subsection {\cfkeyword {trusted\_ca\_options}} 
+: the option used by openssl
         for trusted CA certificates. Required if cfkeyword {openssl} is defined.
 	
-  \item \cfkeyword {password} : the password for list's private key encryption. If not
+\subsection {\cfkeyword {key\_passwd}} 
+
+: the password for list's private key encryption. If not
 	define \Sympa assume that list private key are not crypted.
-\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % WWSympa
