@@ -22,6 +22,7 @@
 package List;
 
 use strict;
+require X509;
 require Exporter;
 require 'tools.pl';
 my @ISA = qw(Exporter);
@@ -233,7 +234,8 @@ my @param_order = qw (subject visibility info subscribe add unsubscribe del owne
 		      host lang web_archive archive digest available_user_options 
 		      default_user_options reply_to_header reply_to forced_reply_to * 
 		      welcome_return_path remind_return_path user_data_source include_file 
-		      include_list include_ldap_query include_ldap_2level_query include_sql_query ttl creation update 
+		      include_list include_remote_sympa_list include_ldap_query
+                      include_ldap_2level_query include_sql_query ttl creation update 
 		      status serial);
 
 ## List parameters aliases
@@ -627,6 +629,35 @@ my %alias = ('reply-to' => 'reply_to',
 	    'include_list' => {'format' => $regexp{'listname'},
 			       'occurrence' => '0-n',
 			       'title_id' => 44,
+			       'group' => 'data_source'
+			       },
+	    'include_remote_sympa_list' => {'format' => {'host' => {'format' => $regexp{'host'},
+							    'occurrence' => '1',
+							    'title_id' => 136,
+							    'order' => 1
+							    },
+							 'port' => {'format' => '\d+',
+							     'default' => 443,
+							     'length' => 4,
+							     'title_id' => 137,
+							     'order' => 2
+							     },
+							 'path' => {'format' => '\S+',
+			                                     'length' => 20,
+			                                     'occurrence' => '1',
+			                                     'title_id' => 207,
+							     'order' => 3 
+
+			                                     },
+                                                         'cert' => {'format' => ['robot','list'],
+							           'title_id' => 208,
+								   'default' => 'list',
+							           'order' => 4
+							           },
+							},
+
+			       'occurrence' => '0-n',
+			       'title_id' => 206,
 			       'group' => 'data_source'
 			       },
 	    'include_sql_query' => {'format' => {'db_type' => {'format' => '\S+',
@@ -1316,6 +1347,7 @@ sub load {
     # $self->{'admin'}{'host'} = $self->{'domain'} if ($self->{'domain'} ne $Conf{'host'});
 
 
+    $self->{'admin'}{'dir'} ||= $self->{'dir'};
     $self->{'as_x509_cert'} = 1  if (-r "$self->{'dir'}/cert.pem");
     
 
@@ -1346,6 +1378,7 @@ sub load {
     ## include other subscribers as defined in include directives (list|ldap|sql|file|owners|editors)
 	unless ( defined $self->{'admin'}{'include_file'}
 		 || defined $self->{'admin'}{'include_list'}
+		 || defined $self->{'admin'}{'include_remote_sympa_list'}
 		 || defined $self->{'admin'}{'include_sql_query'}
 		 || defined $self->{'admin'}{'include_ldap_query'}
 		 || defined $self->{'admin'}{'include_ldap_2level_query'}
@@ -1361,6 +1394,7 @@ sub load {
     ## include other subscribers as defined in include directives (list|ldap|sql|file|owners|editors)
 	unless ( defined $self->{'admin'}{'include_file'}
 		 || defined $self->{'admin'}{'include_list'}
+		 || defined $self->{'admin'}{'include_remote_sympa_list'}
 		 || defined $self->{'admin'}{'include_sql_query'}
 		 || defined $self->{'admin'}{'include_ldap_query'}
 		 || defined $self->{'admin'}{'include_ldap_2level_query'}
@@ -4923,6 +4957,109 @@ sub _load_users_file {
     return @users;
 }
 
+## include a remote sympa list as subscribers.
+sub _include_users_remote_sympa_list {
+    my ($users, $param, $dir, $robot, $default_user_options , $tied) = @_;
+
+    my $host = $param->{'host'};
+    my $port = $param->{'port'} || '443';
+    my $path = $param->{'path'};
+    my $cert = $param->{'cert'} || 'list';
+
+    my $id = _get_datasource_id($param);
+
+    do_log('debug', 'List::_include_users_remote_sympa_list https://%s:%s/%s using cert %s,', $host, $port, $path, $cert);
+    
+    my $total = 0; 
+    my $get_total = 0;
+
+    my $cert_file ; my $key_file ;
+
+    if ($cert == 'list') {
+	$cert_file = $dir.'/cert.pem';
+	$key_file = $dir.'/private_key';
+    }elsif($cert == 'robot') {
+	$cert_file = &tools::get_filename('etc','cert.pem',$robot);
+	$key_file =  &tools::get_filename('etc','private_key',$robot);
+    }
+    unless ((-r $cert_file) && ( -r $key_file)) {
+	do_log('err', 'Include remote list https://%s:%s/%s using cert %s, unable to open %s or %s', $host, $port, $path, $cert,$cert_file,$key_file);
+	return undef;
+    }
+
+    my $getting_headers = 1;
+
+    my %user ;
+    my $email ;
+
+
+    foreach my $line ( &X509::get_https($host,$port,$path,$cert_file,$key_file,{'key_passwd' => $Conf{'key_passwd'},
+                                                                               'cafile'    => $Conf{'cafile'},
+                                                                               'capath' => $Conf{'capath'}})
+		){	
+	chomp $line;
+
+	if ($getting_headers) { # ignore http headers
+	    next unless ($line =~ /^(date|update_date|email|reception|visibility)/);
+	}
+	undef $getting_headers;
+
+	if ($line =~ /^\s*email\s+(.+)\s*$/o) {
+	    $user{'email'} = $email = $1;
+	    do_log('debug',"email found $email");
+	    $get_total++;
+	}
+	$user{'gecos'} = $1 if ($line =~ /^\s*gecos\s+(.+)\s*$/o);
+#	$user{'options'} = $1 if ($line =~ /^\s*options\s+(.+)\s*$/o);
+#	$user{'auth'} = $1 if ($line =~ /^\s*auth\s+(\S+)\s*$/o);
+#	$user{'password'} = $1 if ($line =~ /^\s*password\s+(.+)\s*$/o);
+#	$user{'stats'} = "$1 $2 $3" if ($line =~ /^\s*stats\s+(\d+)\s+(\d+)\s+(\d+)\s*$/o);
+#	$user{'firstbounce'} = $1 if ($line =~ /^\s*firstbounce\s+(\d+)\s*$/o);
+	$user{'date'} = $1 if ($line =~ /^\s*date\s+(\d+)\s*$/o);
+	$user{'update_date'} = $1 if ($line =~ /^\s*update_date\s+(\d+)\s*$/o);
+	$user{'reception'} = $1 if ($line =~ /^\s*reception\s+(digest|nomail|summary|notice|txt|html|urlize|not_me)\s*$/o);
+	$user{'visibility'} = $1 if ($line =~ /^\s*visibility\s+(conceal|noconceal)\s*$/o);
+        
+  	next unless ($line =~ /^$/) ;
+	
+	unless ($user{'email'}) {
+	    do_log('debug','ignoring block without email definition');
+	    next;
+	}
+	my %u;
+	## Check if user has already been included
+	if ($users->{$email}) {
+	    do_log('debug',"ignore $email because allready member");
+	    if ($tied) {
+		%u = split "\n",$users->{$email};
+	    }else {
+		%u = %{$users->{$email}};
+	    }
+	}else{
+	    do_log('debug',"add new subscriber $email");
+	    %u = %{$default_user_options};
+	    $total++;
+	}	    
+	$u{'email'} = $user{'email'};
+	$u{'id'} = join (',', split(',', $u{'id'}), $id);
+	$u{'gecos'} = $user{'gecos'};delete $user{'gecos'};
+ 	$u{'date'} = $user{'date'};delete$user{'date'};
+	$u{'update_date'} = $user{'update_date'};delete $user{'update_date'};
+ 	$u{'reception'} = $user{'reception'};delete $user{'reception'};
+ 	$u{'visibility'} = $user{'visibility'};delete $user{'visibility'};
+	
+	if ($tied) {
+	    $users->{$email} = join("\n", %u);
+	}else{
+	    $users->{$email} = \%u;
+	}
+	delete $user{$email};undef $email;
+    }
+    do_log('info','Include %d subscribers from list (%d subscribers) https://%s:%s%s',$total,$get_total,$host,$port,$path);
+    return $total ;    
+}
+
+
 
 ## include a list as subscribers.
 sub _include_users_list {
@@ -5521,7 +5658,7 @@ sub _load_users_include {
 	}
 	&do_log('debug3', 'Got lock for writing on %s', $db_file);
 
-	foreach my $type ('include_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
+	foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
 	    last unless (defined $total);
 	    
 	    foreach my $incl (@{$admin->{$type}}) {
@@ -5543,6 +5680,8 @@ sub _load_users_include {
 			$included = _include_users_list (\%users, $incl, $admin->{'default_user_options'}, 'tied');
 
 		    }
+		}elsif ($type eq 'include_remote_sympa_list') {
+		    $included = _include_users_remote_sympa_list(\%users, $incl, $admin->{'dir'},$admin->{'domain'},$admin->{'default_user_options'}, 'tied');
 		}elsif ($type eq 'include_file') {
 		    $included = _include_users_file (\%users, $incl, $admin->{'default_user_options'}, 'tied');
 		}
@@ -5627,7 +5766,7 @@ sub _load_users_include2 {
     my (%users, $depend_on, $ref);
     my $total = 0;
 
-    foreach my $type ('include_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
+    foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
 	last unless (defined $total);
 	    
 	foreach my $incl (@{$admin->{$type}}) {
@@ -5640,6 +5779,8 @@ sub _load_users_include2 {
 		$included = _include_users_ldap(\%users, $incl, $admin->{'default_user_options'});
 	    }elsif ($type eq 'include_ldap_2level_query') {
 		$included = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'});
+	    }elsif ($type eq 'include_remote_include_list') {
+		$included = _include_users_remote_sympa_list(\%users, $incl, $admin->{'dir'},$admin->{'domain'},$admin->{'default_user_options'});
 	    }elsif ($type eq 'include_list') {
 		$depend_on->{$name} = 1 ;
 		if (&_inclusion_loop ($name,$incl,$depend_on)) {

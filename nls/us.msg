@@ -383,6 +383,9 @@ $set 16 Listm parameters titles
 203	"quota"
 204	"quota"
 205	"email adress protection method"
+206	"remote list inclusion"
+207	"remote path of sympa list dump"
+208	"certificat for authentication by remote Sympa"
 
 $set 17 Cookie expiration periods
 1	"session"

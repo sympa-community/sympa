@@ -399,6 +399,9 @@ $set 16 Titres des paramètres de config de listes
 203	"quota"
 204	"quota"
 205	"methode de protection des adresses contre les robots spammeur"
+206	"inclusion de liste distante"
+207	"path du dump de la liste distante"
+208	"Certificat pour authentification de la connection"
 
 $set 17 Cookie expiration periods
 1	"la session"

@@ -38,7 +38,10 @@ use CPAN;
              'Crypt::CipherSaber' => '0.50',
 	     'CGI' => '2.52',
 	     'Digest::MD5' => '2.00',
-	     'DB_File' => '1.75');
+	     'DB_File' => '1.75',
+	     'IO::Socket::SSL' => '0.90',
+	     'Net::SSLeay' => '1.16',
+	     'Bundle::LWP' => '1.09');
 
 ### key:left "module" used by SYMPA, 
 ### right CPAN module.		     
@@ -61,7 +64,10 @@ use CPAN;
 	     'CGI::Fast' => 'CGI',
              'Crypt::CipherSaber' => 'CipherSaber',
 	     'FCGI' => 'FCGI',
-	     'Net::SMTP' => 'libnet');
+	     'Net::SMTP' => 'libnet',
+	     'IO::Socket::SSL' => 'IO-Socket-SSL',
+	     'Net::SSLeay' => 'NET-SSLeay',
+	     'Bundle::LWP' => 'LWP');
 
 ### main:
 print "******* Check perl for SYMPA ********\n";

@@ -25,7 +25,7 @@ sbin_SRC	=	sympa.pl alias_manager.pl postfix_manager.pl task_manager.pl sympa_wi
 
 lib_SRC		=	Archive.pm Commands.pm Conf.pm \
 			Language.pm List.pm Log.pm mail.pm msg.pl Ldap.pm \
-			smtp.pm tools.pl Version.pm parser.pl
+			smtp.pm tools.pl Version.pm parser.pl X509.pm
 
 all:	queue bouncequeue aliaswrapper virtualwrapper
 
