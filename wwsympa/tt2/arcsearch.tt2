@@ -44,7 +44,7 @@
 
 <dl>
 [% FOREACH u = res %]
-	<dt><a href=[% u.value.file %]>[% u.value.subj %]</a> -- <em>[% u.value.date %]</em><dd>[% u..value.from %]<pre>[% u.value.body_string %]</pre></dd>
+	<dt><a href=[% u.value.file %]>[% u.value.subj %]</a> -- <em>[% u.value.date %]</em><dd>[% u.value.from %]<pre>[% u.value.body_string %]</pre></dd>
 [% END %]
 </dl>
 
