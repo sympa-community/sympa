@@ -254,7 +254,7 @@ my %action_args = ('default' => ['list'],
 		'reviewbouncing' => ['list','page','size'],
 		'arc' => ['list','month','arc_file'],
 		'arcsearch_form' => ['list','archive_name'],
-		 'arcsearch_id' => ['list','archive_name','key_word'],
+		'arcsearch_id' => ['list','archive_name','key_word'],
 		'rebuildarc' => ['list','month'],
 		'rebuildallarc' => [],
 		'home' => [],
@@ -3899,7 +3899,21 @@ sub do_arcsearch_id {
 
     $search->archive_name ($in{'archive_name'});
 
-    $search->directories ($search->archive_name);
+    # search in current mounth and in the previous none empty one 
+    my $search_base = $search->search_base; 
+    my $previous_active_dir ; 
+    opendir ARC, "$search_base"; 
+    foreach my $dir (sort {$b cmp $a} grep(!/^\./,readdir ARC)) { 
+	if (($dir =~ /^(\d{4})-(\d{2})$/) && ($dir lt $search->archive_name)) { 
+	    $previous_active_dir = $dir; 
+	    last; 
+	} 
+    } 
+    closedir ARC; 
+    $in{'archive_name'} = $search->archive_name."\0".$previous_active_dir ; 
+    
+    $search->directories ($in{'archive_name'});
+#    $search->directories ($search->archive_name);
 
     ## User didn't enter any search terms
     if ($in{'key_word'} =~ /^\s*$/) {
