@@ -348,7 +348,7 @@ $set 16 Titres des paramètres de config de listes
 46	"type de la base"
 47	"serveur distant"
 48	"nom de la base"
-49	"utilisater"
+49	"utilisateur"
 50	"mot de passe"
 51	"requête SQL"
 53	"Qui a accès aux informations sur la liste"
