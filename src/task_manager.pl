@@ -212,11 +212,6 @@ my %var_commands = ('delete_subs'      => ['var'],
 		    'rm_file'          => ['var'],
 		                          # variable
 		    );
-my @var_commands;
-foreach (keys %var_commands) {
-    $commands{$_} = $var_commands{$_};
-    push (@var_commands, $_);
-}
 
 # commands which are used for assignments
 my %asgn_commands = ('select_subs'      => ['subarg'],
@@ -224,14 +219,6 @@ my %asgn_commands = ('select_subs'      => ['subarg'],
 		     'delete_subs'      => ['var'],
 		                            # variable
 		     );
-my @asgn_commands;
-foreach (keys %asgn_commands) {
-    $commands{$_} = $asgn_commands{$_};
-    push (@asgn_commands, $_);
-}
-
-# list of all commands
-my @commands = keys %commands;
 
 ###### INFINITE LOOP SCANING THE QUEUE (unless a sig TERM is received) ######
 while (!$end) {
@@ -247,10 +234,10 @@ while (!$end) {
     @tasks = sort epoch_sort (grep !/^\.\.?$/, readdir DIR); # @tasks updating
     closedir DIR;
 
-    my @used_models; # models for which a task exists
+    my %used_models; # models for which a task exists
     foreach (@tasks) {
 	/.*\..*\.(.*)\..*/;
-	push (@used_models, $1) unless (in (\@used_models, $1));
+	$used_models{$1} = 1;
     }
 
     ### creation of required tasks 
@@ -260,12 +247,12 @@ while (!$end) {
     ## global tasks
 
     foreach my $key (keys %global_models) {
-	if (!in (\@used_models, $global_models{$key})) {
+	unless ($used_models{$global_models{$key}}) {
 	    if ($Conf{$key}) { 
 		my %data = %default_data; # hash of datas necessary to the creation of tasks
 		#printf "xxxxxxxxxxxxx appel 1\n";
 		create ($current_date, '', $global_models{$key}, $Conf{$key}, '_global', \%data);
-		push (@used_models, $1);
+		$used_models{$1} = 1;
 	    }
 	}
     }    
@@ -388,13 +375,8 @@ sub create {
 
 	$Rdata->{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
 
-	if (open (MODEL, "$list->{'dir'}/list_task_models/$model_name")) {
-	    $model_file = "$Conf{'home'}/$list_name/list_task_models/$model_name";
-	} elsif (open (MODEL, "$Conf{'etc'}/list_task_models/$model_name")) {
-	    $model_file = "$Conf{'etc'}/list_task_models/$model_name";
-	} elsif (open (MODEL, "--ETCBINDIR--/list_task_models/$model_name")) {
-	    $model_file = "--ETCBINDIR--/list_task_models/$model_name";
-	} else { 
+	unless ($model_file = &tools::get_filename('etc', "list_task_models/$model_name", 
+						   $list->{'domain'}, $list)) {
 	    &do_log ('err', "error : unable to find $model_name, for list $list_name creation aborted");
 	    return undef;
 	}
@@ -454,10 +436,10 @@ sub check {
     &do_log ('debug2', "check($task_file)" );
     my %result; # stores the result of the chk_line subroutine
     my $lnb = 0; # line number
-    my @used_labels; # list of labels used as parameter in commands
-    my @labels; # list of declared labels
-    my @used_vars; # list of vars used as parameter in commands
-    my @vars; # list of declared vars
+    my %used_labels; # list of labels used as parameter in commands
+    my %labels; # list of declared labels
+    my %used_vars; # list of vars used as parameter in commands
+    my %vars; # list of declared vars
 
     unless ( open (TASK, $task_file) ) {
 	&do_log ('err', "error : unable to read $task_file, checking is impossible");
@@ -479,40 +461,41 @@ sub check {
 	}
 	
 	if ( $result{'nature'} eq 'assignment' ) {
-	    if (chk_cmd ($result{'command'}, $lnb, $result{'Rarguments'}, \@used_labels, \@used_vars)) {
-		push (@vars, $result{'var'});
-	    } else {return undef;}
+	    if (chk_cmd ($result{'command'}, $lnb, $result{'Rarguments'}, \%used_labels, \%used_vars)) {
+		$vars{$result{'var'}} = 1;
+	    } else {
+		return undef;}
 	}
 	
 	if ( $result{'nature'} eq 'command' ) {
-	    return undef unless (chk_cmd ($result{'command'}, $lnb, $result{'Rarguments'}, \@used_labels, \@used_vars));
+	    return undef unless (chk_cmd ($result{'command'}, $lnb, $result{'Rarguments'}, \%used_labels, \%used_vars));
 	} 
 			 
-	push (@labels, $result{'label'}) if ( $result{'nature'} eq 'label' );
+	$labels{$result{'label'}} = 1 if ( $result{'nature'} eq 'label' );
 	
     }
 
     # are all labels used ?
-    foreach my $label (@labels) {
-	&do_log ('notice', "warning : label $label exists but is not used") unless (in (\@used_labels, $label));
+    foreach my $label (keys %labels) {
+	&do_log ('notice', "warning : label $label exists but is not used") unless ($used_labels{$label});
     }
 
     # do all used labels exist ?
-    foreach my $label (@used_labels) {
-	unless (in (\@labels, $label)) {
+    foreach my $label (keys %used_labels) {
+	unless ($labels{$label}) {
 	    &do_log ('err', "error : label $label is used but does not exist");
 	    return undef;
 	}
     }
     
     # are all variables used ?
-    foreach my $var (@vars) {
-	&do_log ('notice', "warning : var $var exists but is not used") unless (in (\@used_vars, $var));
+    foreach my $var (keys %vars) {
+	&do_log ('notice', "warning : var $var exists but is not used") unless ($used_vars{$var});
     }
 
     # do all used variables exist ?
-    foreach my $var (@used_vars) {
-	unless (in (\@vars, $var)) {
+    foreach my $var (keys %used_vars) {
+	unless ($vars{$var}) {
 	    &do_log ('err', "error : var $var is used but does not exist");
 	    return undef;
 	}
@@ -564,7 +547,7 @@ sub chk_line {
 	my @args = split (/,/, $2);
 	foreach (@args) { s/\s//g;}
 
-	unless (in (\@commands, $command)) { 
+	unless ($commands{$command}) { 
 	    $Rhash->{'nature'} = 'error';
 	    $Rhash->{'error'} = 'unknown command';
 	    return 0;
@@ -583,7 +566,7 @@ sub chk_line {
 
 	my %hash2;
 	chk_line ($2, \%hash2);
-	unless ( in (\@asgn_commands, $hash2{'command'}) ) { 
+	unless ( $asgn_commands{$hash2{'command'}} ) { 
 	    $Rhash->{'nature'} = 'error';
 	    $Rhash->{'error'} = 'non valid assignment';
 	    return 0;
@@ -649,8 +632,8 @@ sub chk_cmd {
 		return undef;
 	    }
 	    
-	    push (@{$Rused_labels}, $args[1]) if ($cmd eq 'next' && ($args[1]));   
-	    push (@{$Rused_vars}, $args[0]) if (in (\@var_commands, $cmd));
+	    $Rused_labels->{$args[1]} if ($cmd eq 'next' && ($args[1]));   
+	    $Rused_vars->{$args[0]} = 1 if ($var_commands{$cmd});
 	}
     }
     return 1;
@@ -1102,7 +1085,7 @@ sub purge_user_table {
 	    return undef;
 	}
     }
-
+    
     return $#purged_users + 1;
 }
 
@@ -1358,17 +1341,6 @@ sub epoch_sort {
     my $date2 = $1;
     
     $date1 <=> $date2;
-}
-
-## return true if $element is in @tab
-sub in {
-    my $Rtab = $_[0];
-    my $element = $_[1];
-
-    foreach (@$Rtab) {
-	return 1 if ($element eq $_);
-    }
-    return undef;
 }
 
 ## change the label of a task file
