@@ -131,7 +131,8 @@ sub load_config {
     my $file = pop;
 
     ## Old params
-    my %old_param = ('alias_manager' => 'No more used, using --SBINDIR--/alias_manager.pl');
+    my %old_param = ('alias_manager' => 'No more used, using --SBINDIR--/alias_manager.pl',
+		     'wws_path' => 'No more used');
 
     ## Valid params
     my %default_conf = (arc_path => '/home/httpd/html/arc',
@@ -147,7 +148,6 @@ sub load_config {
 			task_manager_pidfile => '--PIDDIR--/task_manager.pid',
 			title => 'Mailing Lists Service',
 			use_fast_cgi => 1,
-			wws_path => '--BINDIR--',
 			default_home => 'home',
 			log_facility => '',
 			robots => '',
