@@ -5783,6 +5783,7 @@ sub get_lists {
 	    push @lists, $l;
 	    
 	}
+	closedir DIR;
     }
     return @lists;
 }
@@ -5804,6 +5805,8 @@ sub get_robots {
 	push @robots, $r;
 	undef $use_default_robot if ($r eq $Conf{'host'});
     }
+    closedir DIR;
+
     push @robots, $Conf{'host'} if ($use_default_robot);
     return @robots ;
 }
@@ -6011,6 +6014,7 @@ sub get_mod_spool_size {
 
     @msg = sort grep(/^$self->{'name'}\_\w+$/, readdir SPOOL);
 
+    closedir SPOOL;
     return ($#msg + 1);
 }
 
@@ -7046,6 +7050,7 @@ sub get_subscription_requests {
     foreach my $filename (sort grep(/^$self->{'name'}\.\d+\.\d+$/, readdir SPOOL)) {
 	unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
 	    do_log('notice', 'Could not open %s', $filename);
+	    closedir SPOOL;
 	    return undef;
 	}
 	my $line = <REQUEST>;
@@ -7074,6 +7079,7 @@ sub delete_subscription_request {
     foreach my $filename (sort grep(/^$self->{'name'}\.\d+\.\d+$/, readdir SPOOL)) {
 	unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
 	    do_log('notice', 'Could not open %s', $filename);
+	    closedir SPOOL;
 	    return undef;
 	}
 	my $line = <REQUEST>;
