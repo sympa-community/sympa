@@ -4253,7 +4253,11 @@ sub do_edit_list {
 
 				## If empty and is primary key => delete entry
 				if ((! $new_p->[$i]{$key}) && ($pinfo->{$pname}{'format'}{$key}{'occurrence'} eq '1')) {
-				    splice @{$new_p}, $i, 1;
+				    $new_p->[$i] = undef;
+				    #splice @{$new_p}, $i, 1;
+
+				    ## Skip the rest of the paragraph
+				    $changed{$pname} = 1; last;
 				}elsif ($new_p->[$i]{$key} !~ /^$format$/) {
 				    push @syntax_error, $pname;
 				}

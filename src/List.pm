@@ -5212,6 +5212,8 @@ sub _save_list_param {
     ## Ignore default value
     next if ($defaults == 1);
 
+    next unless (defined ($p));
+
     if (defined ($::pinfo{$key}{'scenario'})) {
 	next if ($p->{'name'} eq 'default');
 
