@@ -1,3 +1,89 @@
+2002-12-20 13:26  salaun
+
+	* src/List.pm, wwsympa/wws_templates/fr/review.fr.tpl,
+	wwsympa/wws_templates/us/review.us.tpl: [glenn AT elaw.org]New
+	feature: add sort by name on REVIEW page
+
+2002-12-20 11:57  salaun
+
+	* Makefile.am, src/Makefile: Fix: missing variable ETCDIR
+
+2002-12-20 11:54  salaun
+
+	* Makefile.am, Makefile.in, src/Makefile: Fix: missing vars ETCDIR
+	for src/Makefile
+
+2002-12-20 11:15  salaun
+
+	* ChangeLog, nls/us.msg, src/List.pm: New feature: first version of
+	include_admin, not finished yet
+
+2002-12-19 18:02  salaun
+
+	* src/tools.pl: Fix: epoch_conf failed analysing dates. As a
+	consequence, most tasks were planned for now. This could make the
+	task_manager busy.
+
+2002-12-19 11:09  salaun
+
+	* src/List.pm, src/etc/script/create_db.mysql,
+	wwsympa/wwsympa.fcgi: New feature: Adding logs to DB to provide
+	stats.	Log collecting calls have been commented, untill the
+	task_manager is able to clean up logs.
+
+2002-12-19 10:18  salaun
+
+	* Makefile.am, Makefile.in, wwsympa/archived.pl: Change: Create
+	'arc_path' directory if not created ; also check access
+
+2002-12-19 10:02  salaun
+
+	* Makefile.am, Makefile.in, wwsympa/Makefile, wwsympa/archived.pl:
+	Change: Create 'arc_path' directory if not created ; also check
+	access
+
+2002-12-17 15:55  salaun
+
+	* src/: sympa_wizard.pl, sympa_wizard.pl: [reported by cm AT
+	coretec.at] Fix: sympa_wizard created sympa.conf with old parameter
+	'trusted_ca_options'
+
+2002-12-17 12:53  salaun
+
+	* src/etc/script/create_db.mysql: more simple feld name in
+	log_table
+
+2002-12-17 09:49  salaun
+
+	* Makefile.am, Makefile.in, doc/sympa.pdf, doc/sympa.ps,
+	doc/sympa.tex, doc/sympa.tex.tpl, doc/sympa/index.html,
+	doc/sympa/node1.html, doc/sympa/node10.html, doc/sympa/node11.html,
+	doc/sympa/node12.html, doc/sympa/node13.html,
+	doc/sympa/node14.html, doc/sympa/node15.html,
+	doc/sympa/node16.html, doc/sympa/node17.html,
+	doc/sympa/node18.html, doc/sympa/node19.html, doc/sympa/node2.html,
+	doc/sympa/node20.html, doc/sympa/node3.html, doc/sympa/node4.html,
+	doc/sympa/node5.html, doc/sympa/node6.html, doc/sympa/node7.html,
+	doc/sympa/node8.html, doc/sympa/node9.html, doc/sympa/sympa.html,
+	doc/sympa/sympa.ps: Changes: Now all path in documentation use
+	XXXDIR variables.  This should be used by packagers to do a "make
+	documentation" so the documentation refer to correct path.
+
+2002-12-17 09:44  salaun
+
+	* src/etc/sample/Makefile: Change: install sample liste in     
+	sampledir instead of expldir
+
+2002-12-17 09:41  salaun
+
+	* Makefile.am, Makefile.in, configure, configure.in, doc/Makefile,
+	doc/sympa.tex.tpl, src/Conf.pm, src/sympa_wizard.pl,
+	src/etc/script/sympa.spec, wwsympa/wwsympa.fcgi: [G. Paressant]
+	Changes: New sympa.spec and build procedure for Mandrake.  New
+	parameters are available in configure : with-etcdir, with-nlsdir,
+	with-scriptdir, with-sampledir,with-spooldir,with-docdir.
+	Documentation is now installed.
+
 2002-12-16 17:44  salaun
 
 	* Makefile.am, Makefile.in, doc/Makefile, doc/parse_tex.pl,
