@@ -3,6 +3,43 @@
 
 (See Changelog file for the full changes log)
 
+3.3.6b.5	02 October 2002
+
+   New features :
+	
+	check_perl_modules.pl: provide further information about required Perl modules
+
+	wwsympa/wwsympa.fcgi:  Allow non-anonymous bind in auth.conf. 
+	New bind_dn and bind_pawword parameters
+
+
+   Changes :
+
+	Makefile.in, configure, configure.in: [Julien Wajsberg] Use virtual_aliases as 
+	default postmap_arg
+
+   Bug Fixes :
+
+	src/List.pm: [reported by A. Bernstein] [BugID 45] robot-related variable 
+	used in summary.tpl were not available. List::send_msg_digest() was expecting 
+	an additional $robot parameter
+
+	src/List.pm: don't add a 'dir' entry in 'admin' ; it was considered a list parameter
+
+	wwsympa/wwslib.pm: Reported by J. Andre better checking of email syntaxe
+
+	src/List.pm: [Paul Marquess] [reported by Jean-Claude Ben, Harri Czesla, Glenn Gillis]  
+	with DB_File (Perl module) 1.805, Sympa processes died with the following error message :    
+	Key 'compare' not associated with a code reference at /var/sympa/bin/List.pm line 918 
+	Compare callback had to be changed to DB_BTREE->{compare} = \&_compare_addresses
+
+	src/sympa.pl: Use list domains instead of list host for making 	aliases
+
+	src/: task_manager.pl: task manager error management
+
+	[Harry Westerman] Fix web templates, were based on release 3.3.3
+
+
 3.3.6b.4	19 September 2002
 
    New features :

@@ -1,3 +1,109 @@
+2002-10-01 17:53  salaun
+
+	* src/List.pm: [reported by A. Bernstein] [BugID 45] Fix:
+	robot-related variable used in summary.tpl were not available. 
+	List::send_msg_digest() was expecting an additional $robot
+	parameter
+
+2002-10-01 16:46  salaun
+
+	* src/List.pm: Fix: don't add a 'dir' entry in 'admin' ; it was
+	considered a list parameter
+
+2002-10-01 11:28  salaun
+
+	* check_perl_modules.pl: New feature: provide further information
+	about required Perl modules
+
+2002-09-30 09:45  salaun
+
+	* Makefile.in, configure, configure.in: [Julien Wajsberg] Use
+	virtual_aliases as default postmap_arg
+
+2002-09-27 17:06  salaun
+
+	* wwsympa/wwslib.pm: Reported by J. Andre better checking of email
+	syntaxe
+
+2002-09-27 17:05  salaun
+
+	* src/List.pm: Reported by J.Andre : better checking of emails
+
+2002-09-27 16:54  salaun
+
+	* src/List.pm: [Paul Marquess] [reported by Jean-Claude Ben, Harri
+	Czesla, Glenn Gillis] Fix: with DB_File (Perl module) 1.805, Sympa
+	processes died with the following error message :    Key 'compare'
+	not associated with a code reference at /var/sympa/bin/List.pm line
+	918 Compare callback had to be changed to DB_BTREE->{compare} =
+	\&_compare_addresses
+
+2002-09-23 15:13  salaun
+
+	* src/sympa.pl: Use list domains instead of list host for making
+	aliases
+
+2002-09-23 14:55  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	man8/sympa.8, man8/sympa.pod, sympa/node10.html, sympa/node11.html,
+	sympa/node12.html, sympa/node13.html, sympa/node14.html,
+	sympa/node15.html, sympa/node16.html, sympa/node17.html,
+	sympa/node18.html, sympa/node19.html, sympa/node2.html,
+	sympa/node20.html, sympa/node3.html, sympa/node4.html,
+	sympa/node5.html, sympa/node6.html, sympa/node7.html,
+	sympa/node8.html, sympa/node9.html, sympa/sympa.ps: Add
+	documentation for --make_alias_file option
+
+2002-09-23 12:15  salaun
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
+	doc/sympa/node11.html, doc/sympa/node12.html,
+	doc/sympa/node13.html, doc/sympa/node14.html,
+	doc/sympa/node15.html, doc/sympa/node16.html,
+	doc/sympa/node17.html, doc/sympa/node18.html,
+	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
+	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
+	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
+	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps,
+	wwsympa/wwsympa.fcgi: Change: Allow non-anonymous bind in
+	auth.conf. New bind_dn and bind_pawword parameters
+
+2002-09-20 15:40  salaun
+
+	* src/: task_manager.pl,
+	etc/templates/fr/listmaster_notification.fr.tpl,
+	etc/templates/us/listmaster_notification.us.tpl: Fix: task manager
+	error management
+
+2002-09-20 13:53  salaun
+
+	* wwsympa/wws_templates/nl/: create_list_request.nl.tpl,
+	d_read.nl.tpl, editsubscriber.nl.tpl, help_editlist.nl.tpl,
+	home.nl.tpl, list_menu.nl.tpl, menu.nl.tpl, review.nl.tpl,
+	suboptions.nl.tpl, title.nl.tpl: [Harry Westerman] Fix web
+	templates, were based on release 3.3.3
+
+2002-09-20 13:52  salaun
+
+	* src/Message.pm: Fix: Do not delete X-Sympa-To if processing web
+	messages
+
+2002-09-20 09:19  salaun
+
+	* src/Commands.pm: Fix: Error if Message object could not be
+	created
+
+2002-09-19 17:43  salaun
+
+	* src/Message.pm: X-Sympa-to header removed too early ; it is used
+	to check checksum
+
+2002-09-19 17:21  salaun
+
+	* ChangeLog, NEWS: Changes to latest release
+
 2002-09-19 17:20  salaun
 
 	* ChangeLog, src/X509.pm: Fix: SSL and LWP were required ; made
