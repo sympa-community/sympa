@@ -15,7 +15,12 @@ sub request {
     if (my $request = $_[0]) {	
 	
 	my %sympa_cookies;
-	my @cookies = $request->headers->header('cookie');
+
+	## Accept cookies V1 and V2
+	my @cookies1 = $request->headers->header('cookie');
+	my @cookies2 = $request->headers->header('cookie2');
+	my @cookies = (@cookies1,@cookies2);
+
 	foreach my $cookie ( @cookies) {
 	    foreach my $token (split /;/,$cookie) {
 		$token =~ s/^\s+//;
