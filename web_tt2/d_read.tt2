@@ -184,7 +184,7 @@
 	<a href="[% path_cgi %]/d_editfile/[% list %]/[% escaped_path %][% f.escaped_doc %]">[%|loc%]edit[%END%]</a>
 	</td>
 	<td style="text-align: center; font-size: smaller;">
-	<a href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% f.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% f.escaped_doc %]', '[%|loc(visible_path,s.doc,f.size)%]Do you really want to delete %1%2 (%3 Kb) ?[%END%]'); return false;">[%|loc%]delete[%END%]</a>
+	<a href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% f.escaped_doc %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% f.escaped_doc %]', '[%|loc(visible_path,f.doc,f.size)%]Do you really want to delete %1%2 (%3 Kb) ?[%END%]'); return false;">[%|loc%]delete[%END%]</a>
 	</td>
 	[% ELSE %]
 	  <td>&nbsp; </td> <td>&nbsp; </td>
