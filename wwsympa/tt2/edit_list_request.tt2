@@ -159,7 +159,7 @@
       [% IF p.may_edit == 'write' %]
 	<SELECT NAME="single_param.[% p.name %].name">
 	  [% FOREACH scenario = p.value %]
-	  <OPTION VALUE="[% scenario.name %]"
+	  <OPTION VALUE="[% scenario.value.name %]"
 	     [% IF scenario.value.selected == '1' %]
 		SELECTED
 	     [% END %]
