@@ -1,5 +1,9 @@
 #! --PERL--
 
+
+## global tasks are automatically created when a model file exists
+## list tasks are created when it is stated in the list config file
+
 ## Worl Wide Sympa is a front-end to Sympa Mailing Lists Manager
 ## Copyright Comite Reseau des Universites
 
@@ -20,7 +24,7 @@ use MD5;
 use smtp;
 use wwslib;
 
-#AF : change_label ERROR pour toutes les cdmes qd elles merdent ?
+
 require 'parser.pl';
 require 'tools.pl';
 
@@ -95,7 +99,7 @@ umask($Conf{'umask'});
 ## Change to list root
 unless (chdir($Conf{'home'})) {
     &message('chdir_error');
-    &do_log('err','error : unable to change directory');
+    &do_log('err',"error : unable to change to directory $Conf{'home'}");
     exit (-1);
 }
 
@@ -126,9 +130,9 @@ my $end = 0;
 ###### VARIABLES DECLARATION ######
 
 my $spool_task = $Conf{'queuetask'};
-my $std_general_task_model_dir = "--ETCBINDIR--/global_task_models";
-my $user_general_task_model_dir = "--DIR--/etc/global_task_models";
-my $certif_dir = $Conf{'ssl_cert_dir'};
+my $std_global_task_model_dir = "--ETCBINDIR--/global_task_models";
+my $user_global_task_model_dir = "--DIR--/etc/global_task_models";
+my $cert_dir = $Conf{'ssl_cert_dir'};
 my @tasks; # list of tasks in the spool
 
 undef my $log; # won't execute send_msg and delete commands if true, only log
@@ -148,7 +152,7 @@ my $date_arg_regexp2 = '(\d\d\d\dy)(\d+m)?(\d+d)?(\d+h)?(\d+min)?';
 my $date_arg_regexp3 = '(\d+|execution_date)(\+|\-)(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?';
 my $delay_regexp = '(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?';
 my $var_regexp ='@\w+'; 
-my $subarg_regexp = '(\w+)\((.*)\)'; # for argument with sub argument (ie arg(sub_arg))
+my $subarg_regexp = '(\w+)(|\((.*)\))'; # for argument with sub argument (ie arg(sub_arg))
                  
 # regular commands
 my %commands = ('next'                  => ['date', '\w*'],
@@ -158,7 +162,7 @@ my %commands = ('next'                  => ['date', '\w*'],
 		                           #object    model  model choice
 		'exec'                  => ['.+'],
 		                           #script
-		'chk_certif_expiration' => ['\w+',   'delay'],
+		'chk_cert_expiration' => ['\w+',   'delay'],
 		                           #template  delay
 		'update_CRL'            => ['\w+', 'delay'], 
 					   #file    #delay
@@ -208,8 +212,12 @@ while (!$end) {
     ## processing of tasks anterior to the current date
     &do_log ('notice', 'processing of tasks anterior to the current date');
     foreach my $task (@tasks) {
-	$task =~ /(\d+)\..+/;
+	$task =~ /(\d+)\.\w+\.\w+\.(\w+)/;
 	last unless ($1 < $current_date);
+	if ($2 ne 'global') { # list task
+	    my $list = new List ($2);
+	    next unless ($list->{'admin'}{'status'} eq 'open');
+	}
 	execute ("$spool_task/$task");
     }
     &do_log ('notice', 'done');
@@ -231,10 +239,10 @@ while (!$end) {
     my %default_data = ('creation_date' => $current_date, # hash of datas necessary to the creation of tasks
 			'execution_date' => 'execution_date');
 
-    ## general tasks
+    ## global tasks
     
-     # user general task models
-    if (opendir(DIR, $user_general_task_model_dir)) {
+     # user global task models
+    if (opendir(DIR, $user_global_task_model_dir)) {
 	my @files = grep !/^\.\.?$/, readdir DIR;
 	foreach (@files) {
 	    /(\w+)\.(\w+)\.task/;
@@ -246,8 +254,8 @@ while (!$end) {
 	}
     }
 
-     # standart general task models
-    if  (opendir(DIR, $std_general_task_model_dir)) {
+     # standart global task models
+    if  (opendir(DIR, $std_global_task_model_dir)) {
 	my @files = grep !/^\.\.?$/, readdir DIR;
 	foreach (@files) {
 	    /(\w+)\.(\w+)\.task/;
@@ -259,7 +267,7 @@ while (!$end) {
 	    create ($current_date, '', $1, $2, 'global_task', \%data) if (! in (\@used_models, $1));
 	}
     } else {
-	&do_log ('err', "error : can't open dir %s: %m", $std_general_task_model_dir);
+	&do_log ('err', "error : can't open dir %s: %m", $std_global_task_model_dir);
     }
     
     
@@ -287,7 +295,6 @@ while (!$end) {
 		if ( $list->{'admin'}{$model.'_task'} ) {
 		    create ($current_date, '', $model, $list->{'admin'}{$model.'_task'}, 'list', \%data);
 		}
-#       elsif {} creation d'un modele par defaut si ce type de tache l'exige
 	    }
 	}
     }
@@ -324,12 +331,12 @@ sub create {
  
     &do_log ('notice', "creation of $task_file");
 
-     # for general model
+     # for global model
     if ($object eq 'global_task') {
-	if (open (MODEL, "$user_general_task_model_dir/$model_name")) {
-	    $model_file = "$user_general_task_model_dir/$model_name";
-	} elsif (open (MODEL, "$std_general_task_model_dir/$model_name")) {
-	    $model_file = "$std_general_task_model_dir/$model_name";
+	if (open (MODEL, "$user_global_task_model_dir/$model_name")) {
+	    $model_file = "$user_global_task_model_dir/$model_name";
+	} elsif (open (MODEL, "$std_global_task_model_dir/$model_name")) {
+	    $model_file = "$std_global_task_model_dir/$model_name";
 	} else { 
 	    &do_log ('err', "error : unable to find $model_name, creation aborted");
 	    return undef;
@@ -373,7 +380,7 @@ sub create {
 		    close (TASK);
 		    undef $ok;
 		    &do_log ('err', "error : you are not allowed to use the delete command on a list whose subscribers are included, creation aborted");
-		    last;
+		    return undef;
 		}
 	    }
 	    close (TASK);
@@ -484,7 +491,7 @@ sub chk_line {
     } 
 
     # title
-    if ($line =~ /^\s*title\...\s*(.*)\s*/) {
+    if ($line =~ /^\s*title\...\s*(.*)\s*/i) {
 	$Rhash->{'nature'} = 'title';
 	$Rhash->{'title'} = $1;
 	return 1;
@@ -500,10 +507,9 @@ sub chk_line {
     # command
     if ($line =~ /^\s*(\w+)\s*\((.*)\)\s*/i ) { 
     
-	my $command = $1;
+	my $command = lc ($1);
 	my @args = split (/,/, $2);
 	foreach (@args) { s/\s//g;}
-	my $is_cmd = undef;
 
 	unless (in (\@commands, $command)) { 
 	    $Rhash->{'nature'} = 'error';
@@ -613,11 +619,13 @@ sub execute {
 	&do_log ('err', "error : can't read the task $task_file");
 	return undef;
     }
-    &do_log ('notice', "* execution of the task $task_file");
 
     # positioning at the right label
     $_[0] =~ /\w*\.(\w*)\..*/;
     my $label = $1;
+    return undef if ($label eq 'ERROR');
+
+    &do_log ('notice', "* execution of the task $task_file");
     unless ($label eq '') {
 	while ( <TASK> ) {
 	    $lnb++;
@@ -633,7 +641,7 @@ sub execute {
 	$lnb++;
 
 	unless ( chk_line ($_, \%result) ) {
-	    &do_log ('err',"error : $result{'error'}");
+	    &do_log ('err', "error : $result{'error'}");
 	    return undef;
 	}
 		
@@ -680,7 +688,7 @@ sub cmd_process {
     return delete_cmd ($Rarguments, $Rvars, \%context) if ($command eq 'delete');
     return create_cmd ($Rarguments, \%context) if ($command eq 'create');
     return exec_cmd ($Rarguments) if ($command eq 'exec');
-    return chk_certif_expiration ($Rarguments, \%context) if ($command eq 'chk_certif_expiration');
+    return chk_cert_expiration ($Rarguments, \%context) if ($command eq 'chk_cert_expiration');
     return update_CRL ($Rarguments, \%context) if ($command eq 'update_CRL');
 }
 
@@ -694,9 +702,10 @@ sub stop {
 
     &do_log ('notice', "$context->{'line_number'} : stop $task_file");
     
-    unlink ($task_file) ? 
-	&do_log ('notice', "$task_file deleted") 
-	    : &do_log ('err', "error : unable to delete $task_file");
+    unlink ($task_file) ?  
+	&do_log ('notice', "--> $task_file deleted")
+	    : error ($task_file, "error in stop command : unable to delete task file");
+
     return undef;
 }
 
@@ -739,7 +748,8 @@ sub next_cmd {
     my $human_date = &tools::adate ($date);
     my $new_task_file = "$spool_task/$new_task";
     unless (rename ($context->{'task_file'}, $new_task_file)) {
-	&do_log ('err', "error : unable to rename $context->{'task_file'} en $new_task");
+	error ("$context->{'task_file'}", "error in next command : unable to rename task file into $new_task");
+	return undef;
     }
     &do_log ('notice', "--> new task $new_task ($human_date)");
     
@@ -818,7 +828,7 @@ sub delete_cmd {
 					     'email'    => $email,
 					 });
 	if ($action =~ /reject/i) {
-	    &do_log('err', "error : deletion of $email not allowed");
+	    error ("$context->{'task_file'}", "error in delete command : deletion of $email not allowed");
 	}
 	### AF : voir le cas $action eq 'request_auth'
 	
@@ -852,8 +862,7 @@ sub create_cmd {
 	$type = $1;
 	$object = $2;
     } else {
-	&do_log ('notice', "error : don't know how to create $arg, task interrupted");
-        change_label ($context->{'task_file'}, 'ERROR');
+	error ($context->{'task_file'}, "error in create command : don't know how to create $arg");
 	return undef;
     }
 
@@ -893,7 +902,7 @@ sub exec_cmd {
     return 1;
 }
 
-sub chk_certif_expiration {
+sub chk_cert_expiration {
 
     my $Rarguments = $_[0];
     my $context = $_[1];
@@ -903,16 +912,17 @@ sub chk_certif_expiration {
     my $template = $tab[0];
     my $delay = &tools::duration_conv ($tab[1], $execution_date);
 
-    &do_log ('notice', "line $context->{'line_number'} : chk_certif_expiration (@{$Rarguments})");
+    &do_log ('notice', "line $context->{'line_number'} : chk_cert_expiration (@{$Rarguments})");
  
     ## building of certificate list
-    unless (opendir(DIR, $certif_dir)) {
-	&do_log ('err', "error : can't open dir %s: %m", $certif_dir);
+    unless (opendir(DIR, $cert_dir)) {
+	error ($context->{'task_file'}, "error in chk_cert_expiration command : can't open dir $cert_dir");
+	return undef;
     }
     my @certificates = grep !/^(\.\.?)|(.+expired)$/, readdir DIR;
     close (DIR);
  
-    chdir($certif_dir);
+    chdir($cert_dir);
 
     foreach (@certificates) {
 
@@ -952,8 +962,10 @@ sub chk_certif_expiration {
 	     ($expiration_date < $execution_date + $delay) &&
 	     !(-e $soon_expired_file) ) {
 
-	    open (FILE, ">$soon_expired_file") || &do_log ('error', "error : can't create $soon_expired_file");
-	    close (FILE);
+	    unless (open (FILE, ">$soon_expired_file")) {
+		error ($context->{'task_file'}, "error in chk_cert_expiration : can't create $soon_expired_file");
+		next;
+	    } else {close (FILE);}
 	    
 	    my %tpl_context; # datas necessary to the template
 
@@ -988,8 +1000,7 @@ sub update_CRL {
     # building of CA list
     my @CA;
     unless (open (FILE, $CA_file)) {
-	&do_log ('err', "error : can't open $CA_file file");
-        change_label ($context->{'task_file'}, 'ERROR');
+	error ($context->{'task_file'}, "error in update_CRL command : can't open $CA_file file");
 	return undef;
     }
     while (<FILE>) {
@@ -1030,10 +1041,6 @@ sub update_CRL {
 	my $verify_context;
 	$verify_context->{'sender'} = 'nobody';
 
-	my $rep1 = &tools::adate ($file_date);
-	my $rep2 = &tools::adate ($limit);
-	do_log ('notice', "date dernier acces fichier $rep1");
-	do_log ('notice', "date limite $rep2");
 	if (&List::verify ($verify_context, $condition) == 1) {
 	    unlink ($file);
 	    my $cmd = "wget -F -O \'$file\' \'$url\'";
@@ -1088,4 +1095,17 @@ sub change_label {
     } else {
 	&do_log ('err', "error ; can't rename $task_file in $new_task_file");
     }
+}
+
+## send a error message to list-master, log it, and change the label task into 'ERROR' 
+sub error {
+    my $task_file = $_[0];
+    my $message = $_[1];
+
+    my @param;
+    $param[0] = "An error has occured during the execution of the task $task_file :
+                 $message";
+    do_log ('err', "$message");
+    change_label ($task_file, 'ERROR') unless ($task_file eq '');
+    &List::send_notify_to_listmaster ('error in task', @param);
 }
