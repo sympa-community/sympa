@@ -25,6 +25,56 @@ text/plain; asis=us-ascii:iso-8859-2 nonfixed quote htmlcheck maxwidth=78
 text/html; asis=us-ascii:iso-8859-2
 </MIMEARGS>
 
+[ELSIF lang=fr]
+
+<DECODEHEADS>
+<CharsetConverters>
+plain;          mhonarc::htmlize;
+us-ascii;       mhonarc::htmlize;
+iso-8859-1;     -decode-
+iso-8859-2;	iso_8859::str2sgml;     iso8859.pl
+windows-1250;   win1250::cnv;		win1250.pl
+iso-8859-3;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-4;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-5;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-6;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-7;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-8;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-9;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-10;    iso_8859::str2sgml;     iso8859.pl
+default;        -ignore-
+</CharsetConverters>
+
+<MIMEARGS>
+text/plain; asis=us-ascii:iso-8859-1 nonfixed quote htmlcheck maxwidth=78
+text/html; asis=us-ascii:iso-8859-1
+</MIMEARGS>
+
+[ELSE]
+
+<DECODEHEADS>
+<CharsetConverters>
+plain;          mhonarc::htmlize;
+us-ascii;       mhonarc::htmlize;
+iso-8859-1;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-2;	iso_8859::str2sgml;     iso8859.pl
+windows-1250;   win1250::cnv;		win1250.pl
+iso-8859-3;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-4;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-5;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-6;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-7;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-8;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-9;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-10;    iso_8859::str2sgml;     iso8859.pl
+default;        -ignore-
+</CharsetConverters>
+
+<MIMEARGS>
+text/plain; asis=us-ascii:iso-8859-1 nonfixed quote htmlcheck maxwidth=78
+text/html; asis=us-ascii:iso-8859-1
+</MIMEARGS>
+
 [ENDIF]
 
 <NOMAILTO>
