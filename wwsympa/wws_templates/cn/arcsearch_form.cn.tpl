@@ -70,7 +70,6 @@
 <DL>
 <DT><b>Extend search field</b>
 <SELECT NAME="directories" MULTIPLE SIZE=4>    
-<DD>
 
 [FOREACH u IN yyyymm]
 

@@ -6,6 +6,9 @@
       <FORM ACTION="[path_cgi]" METHOD=POST>
 	  <INPUT TYPE="hidden" NAME="referer" VALUE="[referer]">
         <B>您的电子邮件地址</B>: <BR>
+	  <INPUT TYPE="hidden" NAME="action" VALUE="sendpasswd">
+	  <INPUT TYPE="hidden" NAME="nomenu" VALUE="[nomenu]">
+
         [IF email]
 	  [email]
           <INPUT TYPE="hidden" NAME="email" VALUE="[email]">

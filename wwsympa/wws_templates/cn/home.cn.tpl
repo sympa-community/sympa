@@ -1,4 +1,5 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
+
     <BR><P> 
 <TABLE BORDER=0 BGCOLOR="[light_color]"><TR><TD>
 <P align=justify>
@@ -41,20 +42,12 @@
    </TR>
    <TR>
 <TD>
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="[dark_color]">
-  <TD>
-  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
-     <TR> 
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
       <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
       <A HREF="[path_cgi]/lists" >
-     <FONT SIZE=-1><B>查看所有邮递表</B></FONT></A>
+     <FONT SIZE=-1><B>检视所有邮递表</B></FONT></A>
      </TD>
-    </TR>
-  </TABLE>
-  </TD>
-  </TR>
-</TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
 </TD>
 <TD width=100%></TD>
 <TD NOWRAP>
@@ -62,6 +55,10 @@
          <INPUT SIZE=25 NAME=filter VALUE=[filter]>
          <INPUT TYPE="hidden" NAME="action" VALUE="search_list">
          <INPUT TYPE="submit" NAME="action_search_list" VALUE="查找邮递表">
+	  <BR>
+	 <INPUT TYPE="radio" NAME="extended" VALUE="0" checked>本地
+         <INPUT TYPE="radio" NAME="extended" VALUE="1">进阶查找
+	 
         </FORM>
    </TD>
         

@@ -14,8 +14,7 @@
           <FONT size="-1" COLOR="[bg_color]"><b>恢复邮递表</b></font>
         [ENDIF]
        [ELSE]
-        <A HREF="[base_url][path_cgi]/close_list_request/[list]" ><FONT size=-1><b>删除邮递表</b></font></A>
-       [ENDIF]
+        <A HREF="[base_url][path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', '确定要关闭 [list] 邮递表?'); return false;"><FONT size=-1><b>移除邮递表</b></font></A>
     </TD>
     <TD BGCOLOR="[light_color]" ALIGN="CENTER">
 	[IF shared=none]

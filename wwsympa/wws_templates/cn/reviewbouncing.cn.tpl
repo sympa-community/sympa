@@ -20,7 +20,7 @@
 </TD>
 
 </TR></TABLE>
-    <FORM ACTION="[path_cgi]" METHOD=POST>
+    <FORM NAME="myform" ACTION="[path_cgi]" METHOD=POST>
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
     <INPUT TYPE="hidden" NAME="previous_action" VALUE="reviewbouncing">
 
@@ -66,7 +66,12 @@
       </TR>
       
       [FOREACH u IN members]
-         <TR>
+       [IF dark=1]
+          <TR BGCOLOR="[shaded_color]">
+       [ELSE]
+           <TR BGCOLOR="[bg_color]">
+       [ENDIF]
+
 	  <TD>
 	    <INPUT TYPE=checkbox name="email" value="[u->escaped_email]">
 	  </TD>
@@ -90,6 +95,12 @@
 	    [ENDIF]
 	  </FONT></TD>
         </TR>
+        [IF dark=1]
+         [SET dark=0]
+       [ELSE]
+         [SET dark=1]
+       [ENDIF]
+
         [END]
 
 
@@ -112,6 +123,8 @@
         [IF next_page]
 	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0 ALT="后一页"></A>
         [ENDIF]
+    </TD></TR>
+    <TR><TD><input type=button value="切换选取" onClick="toggle_selection(document.myform.email)">
     </TD></TR>
     </TABLE>
 

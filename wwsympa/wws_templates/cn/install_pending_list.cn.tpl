@@ -23,6 +23,9 @@
 <BR><BR>
 [IF is_listmaster]
 
+[IF auto_aliases]
+别名已成功设定。
+[ELSE]
 <TABLE BORDER=1>
 <TR BGCOLOR="[light_color]"><TD align=center>您应该安装到邮件服务中的别名</TD></TR>
 <TR>
@@ -33,3 +36,4 @@
 </TD>
 </TR>
 </TABLE>
+[ENDIF]

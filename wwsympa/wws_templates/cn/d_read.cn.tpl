@@ -1,13 +1,20 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF file]
   [INCLUDE file]
 [ELSE]
 
   [IF path]  
-    <h2> <B> 文件夹 [path] 内容 </B> </h2> 
+    <h2><B><IMG SRC="/icons/folder.open.png"> [path] </B> </h2> 
+    <A HREF="[path_cgi]/d_editfile/[list]/[escaped_path]">修改</A> | 
+    <A HREF="[path_cgi]/d_delete/[list]/[escaped_path]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path]', '确定要删除 [path] ?'); return false;">删除</A> |
+    <A HREF="[path_cgi]/d_control/[list]/[escaped_path]">存取</A><BR>
+
     所有者: [doc_owner] <BR>
     最后更新: [doc_date] <BR>
+    [IF doc_title]
     描述: [doc_title] <BR><BR>
+    [ENDIF]
     <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[father]"> <IMG ALIGN="bottom"  src="[father_icon]"> 转到上一级目录</A></font>
     <BR>  
   [ELSE]
@@ -90,8 +97,8 @@
     [IF sort_subdirs]
       [FOREACH s IN sort_subdirs] 
         <TR BGCOLOR="[light_color]">        
-	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[path][s->doc]/"> 
-	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]"> [s->doc]</A></TD>
+	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[escaped_path][s->escaped_doc]/"> 
+	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]" ALT="[s->title]"> [s->doc]</A></TD>
 	<TD>
 	[IF s->author_known] 
 	  <A HREF="mailto:[s->author]">[s->author]</A>  
@@ -101,36 +108,31 @@
 	</TD>	    
 	<TD>&nbsp;</TD>
 	<TD NOWRAP> [s->date] </TD>
-	<TD NOWRAP>&nbsp; [s->title]</TD>
 		
-	<TD>&nbsp; </TD>
-	
 	[IF s->edit]
+
+	<TD><center>
+	<font size=-1>
+	<A HREF="[path_cgi]/d_editfile/[list]/[escaped_path][s->escaped_doc]">修改</A>
+	</font>
+	</center></TD>
+
 	  <TD><center>
-	  <form method="post" ACTION="[path_cgi]">
-	  <FONT size=-2>
-	  <input type="button" value="    " name="action_d_delete" onClick="request_confirm(this.form,
-'您确定要删除 [path][s->doc] 吗 ?')">
+          <FONT size=-1>
+          <A HREF="[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]', '您确定要删除 [path][s->doc] 吗 ?'); return false;">删除</A>
 	  </FONT>
-	  <INPUT TYPE="hidden" NAME="action" VALUE="d_delete">
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	  <INPUT TYPE="hidden" NAME="path" VALUE="[path][s->doc]">
-	  </form>	 
 	  </center></TD>
 	[ELSE]
+	  <TD>&nbsp; </TD>
 	  <TD>&nbsp; </TD>
 	[ENDIF]
 	
 	[IF s->control]
 	  <TD>
 	  <center>
-	  <form method="post" ACTION="[path_cgi]">
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	  <INPUT TYPE="hidden" NAME="path" VALUE="[path][s->doc]">
-	  <FONT size=-2>     
-	  <input type="submit" value="    " name="action_d_control">
+	  <FONT size=-1>
+	  <A HREF="[path_cgi]/d_control/[list]/[escaped_path][s->escaped_doc]">存取</A>
 	  </font>
-	  </form>
 	  </center>
 	  </TD>	 
 	[ELSE]
@@ -145,11 +147,14 @@
         <TR BGCOLOR="[light_color]"> 
         <TD>&nbsp;
         [IF f->html]
-	  <A HREF="[path_cgi]/d_read/[list]/[path][f->doc]" TARGET="html_window">
-	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]"> [f->doc] </A>
+	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]" TARGET="html_window">
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->doc] </A>
+	[ELSIF f->url]
+	  <A HREF="[f->url]" TARGET="html_window">
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->anchor] </A>
 	[ELSE]
-	  <A HREF="[path_cgi]/d_read/[list]/[path][f->doc]">
-	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]"> [f->doc] </A>
+	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]">
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->doc] </A>
         [ENDIF] 
 	</TD>  
 	 
@@ -161,33 +166,27 @@
         [ENDIF]
 	</TD>
 	 
-	<TD NOWRAP> [f->size] </TD>
+	<TD NOWRAP>&nbsp;
+	[IF !f->url]
+	[f->size] 
+	[ENDIF]
+	</TD>
 	<TD NOWRAP> [f->date] </TD>
-	<TD NOWRAP>&nbsp; [f->title]</TD>
 	 
 	[IF f->edit]
 	<TD>
 	<center>
-	<form method="post" ACTION="[path_cgi]">
-	<font size=-2>
-        <input type="submit" value="    " name="action_d_editfile">
+	<font size=-1>
+	<A HREF="[path_cgi]/d_editfile/[list]/[escaped_path][f->escaped_doc]">edit</A>
 	</font>
-	<INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	<INPUT TYPE="hidden" NAME="path" VALUE="[path][f->doc]">
-	</form>
 	</center>
 
 	</TD>
 	<TD>
 	<center>
-	<form method="post" ACTION="[path_cgi]">
-	<FONT size=-2>
-	<input type="button" value="    " name="action_d_delete" 
-	onClick="request_confirm(this.form,'您确定要删除 [path][s->doc] ([f->size] Kb) ?')">
+	<FONT size=-1>
+	<A HREF="[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]', '您确定要删除 [path][s->doc] ([f->size] Kb) 吗?'); return false;">删除</A>
 	</FONT>
-	<INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	<INPUT TYPE="hidden" NAME="path" VALUE="[path][f->doc]">
-	</form>
 	</center>
 	</TD>
 	[ELSE]
@@ -197,17 +196,13 @@
 	[IF f->control]
 	  <TD> <center>
 	  <form method="post" ACTION="[path_cgi]">
-	  <font size=-2>
-	  <input type="submit" value="    " name="action_d_control">
+	  <font size=-1>
+	  <A HREF="[path_cgi]/d_control/[list]/[escaped_path][f->escaped_doc]">存取</A>
 	  </font>
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	  <INPUT TYPE="hidden" NAME="path" VALUE="[path][f->doc]">     
-	  </form>
 	  </center></TD>
 	[ELSE]
 	<TD>&nbsp; </TD>
 	[ENDIF]
-	</TD>
 	</TR>
       [END] 
     [ENDIF]
@@ -217,51 +212,6 @@
   <HR> 
 <TABLE CELLSPACING=20>
    
-   [IF path]
-         
-      [IF may_edit]
-      <TR>
-      <form method="post" ACTION="[path_cgi]">
-      <TD ALIGN="right" VALIGN="bottom">
-      <B> 对文件夹 [path] 进行描述 </B> <BR>
-            
-      <input MAXLENGTH=100 type="text" name="content" value="[description]" SIZE=50>
-      </TD>
-      
-      <TD ALIGN="left" VALIGN="bottom">
-      <input type="submit" value="应用" name="action_d_describe">
-      <INPUT TYPE="hidden" NAME="serial" VALUE="[serial_desc]">
-      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-      <INPUT TYPE="hidden" NAME="path" VALUE="[path]">     
-      <INPUT TYPE="hidden" NAME="action" VALUE="d_describe">
-      </TD>
-
-      </form>
-      </TR>
-      [ENDIF]
-   
-      [IF may_control]
-      <TR>   
-      <form method="post" ACTION="[path_cgi]">
-           
-      <TD ALIGN="right" VALIGN="center">
-      <B> 编辑文件夹 [path] 的存取权限</B> 
-
-      </TD>
-     
-      <TD ALIGN="left" VALIGN="bottom">
-      <input type="submit" value="   权限   " name="action_d_control">
-      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-      <INPUT TYPE="hidden" NAME="path" VALUE="[path]">     
-      </TD>
-
-      </form>
-      </TR><BR>
-      [ENDIF]
-  
-   [ENDIF] 
-
-
   [IF may_edit]
     <TR>
     <form method="post" ACTION="[path_cgi]">
@@ -279,10 +229,48 @@
     <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
     <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
+    <INPUT TYPE="hidden" NAME="type" VALUE="directory">
     <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
     </TD>
     </form>
-    </TR><BR>
+    </TR>
+
+    <TR>
+    <form method="post" ACTION="[path_cgi]">
+    <TD ALIGN="right" VALIGN="bottom">
+      <B> 建立新的文件</B> <BR>
+    <input MAXLENGTH=30 type="text" name="name_doc">
+    </TD>
+
+    <TD ALIGN="left" VALIGN="bottom">
+    <input type="submit" value="建立新的文件" name="action_d_create_dir">
+    <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
+    <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+    <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
+    <INPUT TYPE="hidden" NAME="type" VALUE="file">
+    <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
+    </TD>
+    </form>
+    </TR>
+
+    <TR>
+    <FORM METHOD="POST" ACTION="[path_cgi]">
+    <TD ALIGN="right" VALIGN="center">
+    <B>建立新的书签</B><BR>
+    URL <input MAXLENGTH=100 SIZE="25" type="text" name="url"><BR>
+    title <input MAXLENGTH=100 SIZE="20" type="text" name="name_doc">
+    </TD>
+
+    <TD ALIGN="left" VALIGN="bottom">
+    <input type="submit" value="新增" name="action_d_savefile">
+    <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
+    <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+    <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
+    <INPUT TYPE="hidden" NAME="action" VALUE="d_savefile">
+    </TD>
+    </FORM>
+    </TR>
+
 
    <TR>
    <form method="post" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">

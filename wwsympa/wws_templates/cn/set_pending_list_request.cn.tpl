@@ -34,9 +34,10 @@
 <INPUT TYPE="radio" NAME="status" VALUE="closed">关闭它 &nbsp;&nbsp;
 <INPUT TYPE="radio" NAME="status" VALUE="open">安装它 &nbsp;&nbsp;
 </MENU>
-</TD><TD>
-<TD BGCOLOR="[light_color]">
+</TD>
+<TD>
 <INPUT TYPE="submit" NAME="action_install_pending_list" VALUE="提交">
+<INPUT TYPE="checkbox" NAME="notify" CHECKED>告知拥有者
 </FORM>
 </TD>
 </TR>

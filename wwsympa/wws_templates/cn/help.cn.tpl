@@ -22,12 +22,15 @@ WWSympa 提供可定制的环境，可使用以下功能:
 
 <H2>登录</H2>
 
+[IF auth=classic]
 在验证身份(<A HREF="[path_cgi]/loginrequest">登录</A>)时，请提供您的 Email 地址和相应的口令。
 <BR><BR>
 一旦通过验证，一个包含您登录信息的 <I>cookie</I> 使您能够持续访问 WWSympa。
 这个 <I>cookie</I> 的生存期可以在您的<A HREF="[path_cgi]/pref">首选项</A>中指定。
 
 <BR><BR>
+[ENDIF]
+
 您可以在任何时候使用<A HREF="[path_cgi]/logout">注销</A>功能来注销(删除
 <I>cookie</I>)。
 

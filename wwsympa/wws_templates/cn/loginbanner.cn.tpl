@@ -47,8 +47,12 @@
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
       <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
+      [IF escaped_init_email]
+         <A HREF="[path_cgi]/nomenu/sendpasswd/[escaped_init_email]"
+      [ELSE]
          <A HREF="[path_cgi]/nomenu/remindpasswd/referer/[referer]"
-       onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no')" TARGET="wws_login">
+      [ENDIF]
+       onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=300')" TARGET="wws_login">
      <FONT SIZE=-1><B>给我发送口令</B></FONT></A>
      </TD>
     </TR>

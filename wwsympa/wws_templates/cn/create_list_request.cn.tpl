@@ -27,7 +27,9 @@
        CHECKED
      [ENDIF]
      > [template->NAME]<BR>
+     <BLOCKQUOTE>
      [PARSE template->comment]
+     </BLOCKQUOTE>
      <BR>
   [END]
      </MENU>
@@ -55,6 +57,7 @@
 	  [END]
 	  [ENDIF]
 	[END]
+	<OPTION VALUE="other">其它
      </SELECT>
    </TD>
    <TD valign=top><img src="[icons_url]/unknown.png" alt="目录中的邮递表分类"></TD>

@@ -24,8 +24,32 @@
 	  </FORM>
 	</TD>
       </TR>
-      <TR><TD><A HREF="[path_cgi]/get_pending_lists"><B>待处理邮递表</B></A></TD></TR>
-      <TR><TD><A HREF="[path_cgi]/view_translations"><B>定制模板</B></A></TD></TR>
+
+      <TR><TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+      <A HREF="[path_cgi]/get_pending_lists">伫列中的邮递表</A>
+       </TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+
+    </TD></TR>
+
+      <TR><TD NOWRAP>
+        <FORM ACTION="[path_cgi]" METHOD="POST">
+	  <INPUT NAME="email" SIZE="30" VALUE="[email]">
+	  <INPUT TYPE="hidden" NAME="action" VALUE="search_user">
+	  <INPUT TYPE="submit" NAME="action_search_user" VALUE="查找使用者">
+	</FORM>     
+      </TD></TR>
+
+      <TR><TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+        <A HREF="[path_cgi]/view_translations">自订模块</A>
+       </TD>
+      [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+      </TD></TR>
+
       <TR>
         <TD>
 <FONT COLOR="[dark_color]">使用<CODE>arctxt</CODE>目录作为输入<B>重建 HTML 归档</B>。
