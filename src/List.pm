@@ -4715,10 +4715,22 @@ sub probe_db {
     do_log('debug2', 'List::probe_db()');    
     my (%checked, $table);
 
-    my %db_struct = ('user_table' => ['email_user','gecos_user','password_user','cookie_delay_user','lang_user'],
-		     'subscriber_table' => ['list_subscriber','user_subscriber','date_subscriber',
-					    'update_subscriber','visibility_subscriber','reception_subscriber',
-					    'comment_subscriber']
+    ## Database structure
+    my %db_struct = ('user_table' => 
+		     {'email_user' => 'varchar(100)',
+		      'gecos_user' => 'varchar(150)',
+		      'password_user' => 'varchar(40)',
+		      'cookie_delay_user' => 'int(11)',
+		      'lang_user' => 'varchar(10)'},
+		     'subscriber_table' => 
+		     {'list_subscriber' => 'varchar(50)',
+		      'user_subscriber' => 'varchar(100)',
+		      'date_subscriber' => 'datetime',
+		      'update_subscriber' => 'datetime',
+		      'visibility_subscriber' => 'varchar(20)',
+		      'reception_subscriber' => 'varchar(20)',
+		      'bounce_subscriber' => 'varchar(30)',
+		      'comment_subscriber' => 'varchar(150)'}
 		     );
 
     ## Is the Database defined
@@ -4736,35 +4748,31 @@ sub probe_db {
 	
 	## Get tables
 	unless (@tables = $dbh->func( '_ListTables' )) {
+#	unless ($dbh->tables) {
 	    &do_log('info', 'Can\'t load tables list from database %s : %s', $Conf{'db_name'}, $dbh->errstr);
 	    return undef;
 	}
 
 	## Get fields
-#	foreach my $t (@tables) {
-#	    &do_log('debug', 'Table %s', $t);
+	foreach my $t (@tables) {
+	    &do_log('debug', 'Table %s', $t);
 
+#	    unless ($sth = $dbh->table_info) {
 #	    unless ($sth = $dbh->prepare("LISTFIELDS $t")) {
-#		do_log('debug','Unable to prepare SQL query : %s', $dbh->errstr);
-#		return undef;
-#	    }
+	    unless ($sth = $dbh->prepare("SHOW FIELDS FROM $t")) {
+		do_log('debug','Unable to prepare SQL query : %s', $dbh->errstr);
+		return undef;
+	    }
 
-#	    unless ($sth->execute) {
-#		do_log('debug','Unable to execute SQL query : %s', $dbh->errstr);
-#		return undef;
-#	    }
+	    unless ($sth->execute) {
+		do_log('debug','Unable to execute SQL query : %s', $dbh->errstr);
+		return undef;
+	    }
 	    
-#	    unless ($sth->rows) {
-#		&do_log('info', 'Can\'t load fields list from database %s, table %s : %s', 
-#			$Conf{'db_name'}, $t, $dbh->errstr);
-#		return undef;
-#	    }
-	    
-#	    while (my $f = $sth->fetchrow()) {
-#		&do_log('debug', 'Field %s', $f);
-#		$real_struct{$t}{$f} = 1;
-#	    }
-#	}
+	    while (my $ref = $sth->fetchrow_hashref()) {
+		$real_struct{$t}{$ref->{'Field'}} = $ref->{'Type'};
+	    }
+	}
 	
     }elsif ($Conf{'db_type'} eq 'Pg') {
 	
@@ -4833,16 +4841,24 @@ sub probe_db {
 	}
     }
 
+    ## Check tables structure if we could get it
     if (%real_struct) {
 	foreach my $t (keys %db_struct) {
 	    unless ($real_struct{$t}) {
-		&do_log('info', 'Table %s not found in database %s', $t, $Conf{'db_name'});
+		&do_log('info', 'Table \'%s\' not found in database \'%s\' ; you should create it with create_db.%s script', $t, $Conf{'db_name'}, $Conf{'db_type'});
 		return undef;
 	    }
 	    
-	    foreach my $f (@{$db_struct{$t}}) {
+	    foreach my $f (keys %{$db_struct{$t}}) {
 		unless ($real_struct{$t}{$f}) {
-		    &do_log('info', 'Field %s not found in database %s, table %s', $f, $Conf{'db_name'}, $t);
+		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. It should have the following type: \'%s\'', $f, $t, $Conf{'db_name'}, $db_struct{$t}{$f});
+		    &do_log('info', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
+		    return undef;
+		}
+		
+		unless ($real_struct{$t}{$f} eq $db_struct{$t}{$f}) {
+		     &do_log('info', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT has awaited type. It should have the following type: \'%s\'', $f, $t, $Conf{'db_name'}, $db_struct{$t}{$f});
+		     &do_log('info', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 		    return undef;
 		}
 	    }
