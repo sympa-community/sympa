@@ -1270,7 +1270,7 @@ sub write_pid {
     my ($pidfile, $pid) = @_;
 
     my $uid = (getpwnam('--USER--'))[2];
-    my $gid = (getpwnam('--GROUP--'))[2];
+    my $gid = (getgrnam('--GROUP--'))[2];
 
     my $piddir = $pidfile;
     $piddir =~ s/\/[^\/]+$//;

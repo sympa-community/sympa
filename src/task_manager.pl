@@ -132,7 +132,7 @@ if ($main::options{'log_level'}) {
 
 ## Set the UserID & GroupID for the process
 $( = $) = (getpwnam('--USER--'))[2];
-$< = $> = (getpwnam('--GROUP--'))[2];
+$< = $> = (getgrnam('--GROUP--'))[2];
 
 
 ## Sets the UMASK

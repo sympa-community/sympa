@@ -99,7 +99,7 @@ $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'archived');
 
 ## Set the UserID & GroupID for the process
-$( = $) = (getpwnam('--GROUP--'))[2];
+$( = $) = (getgrnam('--GROUP--'))[2];
 $< = $> = (getpwnam('--USER--'))[2];
 
 
