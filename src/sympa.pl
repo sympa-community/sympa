@@ -45,9 +45,12 @@ require 'tools.pl';
 require 'msg.pl';
 require 'parser.pl';
 
+
 # durty global variables
 my $is_signed = {}; 
 my $is_crypted ;
+# log_level is a global var, can be set by sympa.conf, robot.conf, list/config, --log_level or $PATHINFO  
+
 
 ## Internal tuning
 # delay between each read of the expirequeue
@@ -88,12 +91,12 @@ encryption.
 
 ## Check --dump option
 my %options;
-&GetOptions(\%main::options, 'dump=s', 'debug|d', 'foreground', 'config|f=s', 
+&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'config|f=s', 
 	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s', 'lowercase');
 
 
 $main::options{'debug2'} = 1 if ($main::options{'debug'});
-
+$log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
 my @parser_param = ($*, $/);
 my %loop_info;
@@ -113,7 +116,15 @@ unless (Conf::load($config_file)) {
 
 ## Open the syslog and say we're read out stuff.
 do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
-do_log('info', 'Configuration file read'); 
+
+# setting log_level using conf unless it is set by calling option
+if ($main::options{'log_level'}) {
+    do_log('info', "Configuration file read, log level set using options : $log_level"); 
+}else{
+    $log_level = $Conf{'log_level'};
+    do_log('info', "Configuration file read, default log level  $log_level"); 
+}
+
 
 ## Probe Db if defined
 if ($Conf{'db_name'} and $Conf{'db_type'}) {
@@ -281,7 +292,7 @@ if ($main::options{'keepcopy'}) {
 	&do_log('notice', 'Cannot keep a copy of incoming messages : %s is not a directory', $main::options{'keepcopy'});
 	delete $main::options{'keepcopy'};
     }elsif (! -w $main::options{'keepcopy'}) {
-	&do_log('notice', 'Cannot keep a copy of incoming messages : no write access to %s', $main::options{'keepcopy'});
+	&do_log('notice','Cannot keep a copy of incoming messages : no write access to %s', $main::options{'keepcopy'});
 	delete $main::options{'keepcopy'};
     }
 }
@@ -298,6 +309,13 @@ my @qfile;
 ## This is the main loop : look after files in the directory, handles
 ## them, sleeps a while and continues the good job.
 while (!$signal) {
+
+    # setting log_level using conf unless it is set by calling option
+    unless ($main::options{'log_level'}) {
+	$log_level = $Conf{'log_level'};
+	do_log('notice', "Reset default log level  $log_level"); 
+    }
+    
 
     &Language::SetLang($Language::default_lang);
 
@@ -347,7 +365,7 @@ while (!$signal) {
 	if ($t_filename =~ /^BAD\-/i){
 	    if ((stat "$Conf{'queue'}/$t_filename")[9] < (time - $Conf{'clean_delay_queue'}*86400) ){
 		unlink ("$Conf{'queue'}/$t_filename") ;
-		do_log('notice', "Deleting bad message %s because too old", $t_filename);
+		do_log('notice',"Deleting bad message %s because too old", $t_filename);
 	    };
 	    next;
 	}
@@ -367,7 +385,7 @@ while (!$signal) {
 	}else{
 	    $t_robot = lc($Conf{'host'});
 	}
-	# do_log('debug', "listname %s    robot  %s", $t_listname,$t_robot);
+	# do_log('debug2', "listname %s    robot  %s", $t_listname,$t_robot);
 
 	if ($t_listname =~ /^(\S+)-(request|owner|editor|subscribe|unsubscribe)$/) {
 	    ($t_listname, $type) = ($1, $2);
@@ -408,16 +426,16 @@ while (!$signal) {
 	next;
     }
 
-    do_log('debug', "Processing %s with priority %s", "$Conf{'queue'}/$filename", $highest_priority) if ($main::options{'debug'});
+    do_log('debug', "Processing %s with priority %s", "$Conf{'queue'}/$filename", $highest_priority) ;
     
     if ($main::options{'mail'} != 1) {
-		$main::options{'mail'} = $robot if ($Conf{'robots'}{$robot}{'log_smtp'});
+	$main::options{'mail'} = $robot if ($Conf{'robots'}{$robot}{'log_smtp'});
 	$main::options{'mail'} = $robot if ($Conf{'log_smtp'});
     }
     my $status = &DoFile("$Conf{'queue'}/$filename");
     
     if (defined($status)) {
-	do_log('debug', "Finished %s", "$Conf{'queue'}/$filename") if ($main::options{'debug'});
+	do_log('debug', "Finished %s", "$Conf{'queue'}/$filename") ;
 
 	if ($main::options{'keepcopy'}) {
 	    unless (rename "$Conf{'queue'}/$filename", $main::options{'keepcopy'}."/$filename") {
@@ -429,14 +447,22 @@ while (!$signal) {
 	}
     }else {
 	my $bad_dir = "$Conf{'queue'}/bad";
-	unless (-d $bad_dir) {
-	    do_log('err', "Missing directory '%s'", $bad_dir);
-	    rename("$Conf{'queue'}/$filename", "$Conf{'queue'}/BAD-$filename");
+
+	if (-d $bad_dir) {
+	    unless (rename("$Conf{'queue'}/$filename", "$bad_dir/$filename")){
+		do_log('err', "Exiting, unable to rename bad file %s to %s (check directory permission)", $filename, "$bad_dir/$filename");
+		exit;
+	    }
+	    do_log('notice', "Moving bad file %s to bad/", $filename);
+	}else{
+	    do_log('notice', "Missing directory '%s'", $bad_dir);
+	    unless (rename("$Conf{'queue'}/$filename", "$Conf{'queue'}/BAD-$filename")) {
+		do_log('err', "Exiting, unable to rename bad file %s to BAD-%s", $filename, $filename);
+		exit;		
+	    }
 	    do_log('notice', "Renaming bad file %s to BAD-%s", $filename, $filename);
 	}
-
-	rename("$Conf{'queue'}/$filename", "$bad_dir/$filename");
-	do_log('notice', "Moving bad file %s to bad/", $filename);
+	
     }
 
 } ## END of infinite loop
@@ -508,12 +534,6 @@ sub DoFile {
 	return (&DoSendMessage ($msg)) ;
     }
 
-    ## Ignoring messages without From: field
-    unless ($hdr->get('From')) {
-	do_log('notice', 'No From found in message, skipping.');
-	return undef;
-    }    
-
     ## Search the X-Sympa-To header.
     my $rcpt = $hdr->get('X-Sympa-To');
     unless ($rcpt) {
@@ -528,6 +548,18 @@ sub DoFile {
     $robot = lc($robot);
     $listname = lc($listname);
     $robot ||= $Conf{'host'};
+    
+    # setting log_level using conf unless it is set by calling option
+    unless ($main::options{'log_level'}) {
+	$log_level = $Conf{'robots'}{$robot}{'log_level'};
+	do_log('debug', "Setting log level with $robot configuration (or sympa.conf) : $log_level"); 
+    }
+
+    ## Ignoring messages without From: field
+    unless ($hdr->get('From')) {
+	do_log('notice', 'No From found in message, skipping.');
+	return undef;
+    }   
 
     ## Strip of the initial X-Sympa-To field
     $hdr->delete('X-Sympa-To');
@@ -567,6 +599,11 @@ sub DoFile {
 	$list = new List ($listname);
 	$host = $list->{'admin'}{'host'};
 	$name = $list->{'name'};
+	# setting log_level using list config unless it is set by calling option
+	unless ($main::options{'log_level'}) {
+	    $log_level = $list->{'log_level'};
+	    do_log('debug', "Setting log level with list configuration : $log_level"); 
+	}
     }
     
     ## Loop prevention
@@ -592,7 +629,7 @@ sub DoFile {
     ## encrypted message
     $is_crypted = 'not_crypted';
     if ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) {
-	do_log('debug2', "message is crypted");
+	do_log('debug', "message is crypted");
 
 	if ($Conf{'openssl'}) {
 	    $is_crypted = 'smime_crypted';
@@ -616,7 +653,7 @@ sub DoFile {
     undef $is_signed;
     if ($Conf{'openssl'} && $hdr->get('Content-Type') =~ /multipart\/signed|application\/(x-)?pkcs7-mime/i) {
 	$is_signed = &tools::smime_sign_check ($msg, $sender, $file);
-	do_log('debug2', "message is signed, signature is checked");
+	do_log('debug', "message is signed, signature is checked");
     }
 
     if ($rcpt =~ /^listmaster(\@(\S+))?$/) {
@@ -708,7 +745,7 @@ sub DoFile {
 ## send a message as prepared by wwsympa
 sub DoSendMessage {
     my $msg = shift;
-    &do_log('debug2', 'DoSendMessage()');
+    &do_log('debug', 'DoSendMessage()');
 
     my $hdr = $msg->head;
     
@@ -740,7 +777,7 @@ sub DoSendMessage {
 ## Handles a message sent to [list]-editor, [list]-owner or [list]-request
 sub DoForward {
     my($name, $function, $robot, $msg, $file, $sender) = @_;
-    &do_log('debug2', 'DoForward(%s, %s, %s, %s)', $name, $function, $file, $sender);
+    &do_log('debug', 'DoForward(%s, %s, %s, %s)', $name, $function, $file, $sender);
 
     my $hdr = $msg->head;
     my $messageid = $hdr->get('Message-Id');
@@ -839,7 +876,7 @@ sub DoForward {
 ## Handles a message sent to a list.
 sub DoMessage{
     my($which, $msg, $robot, $bytes, $file, $encrypt ) = @_;
-    &do_log('debug2', 'DoMessage(%s, %s, %s, msg from %s, %s, %s,%s)', $which, $msg, $robot, $msg->head->get('From'), $bytes, $file, $encrypt);
+    &do_log('debug', 'DoMessage(%s, %s, %s, msg from %s, %s, %s,%s)', $which, $msg, $robot, $msg->head->get('From'), $bytes, $file, $encrypt);
     
     ## List and host.
     my($listname, $host) = split(/[@\s]+/, $which);
@@ -1155,7 +1192,7 @@ sub DoCommand {
 
 ## Read the queue and send old digests to the subscribers with the digest option.
 sub SendDigest{
-    &do_log('debug2', 'SendDigest()');
+    &do_log('debug', 'SendDigest()');
 
     if (!opendir(DIR, $Conf{'queuedigest'})) {
 	fatal_err(Msg(3, 1, "Can't open dir %s: %m"), $Conf{'queuedigest'}); ## No return.
@@ -1194,7 +1231,7 @@ sub SendDigest{
 
 ## Read the EXPIRE queue and check if a process has ended
 sub ProcessExpire{
-    &do_log('debug2', 'ProcessExpire()');
+    &do_log('debug', 'ProcessExpire()');
 
     my $edir = $Conf{'queueexpire'};
     if (!opendir(DIR, $edir)) {
@@ -1301,7 +1338,7 @@ sub ProcessExpire{
 ## Clean old files from spool
 sub CleanSpool {
     my ($spool_dir, $clean_delay) = @_;
-    &do_log('debug2', 'CleanSpool(%s,%s)', $spool_dir, $clean_delay);
+    &do_log('debug', 'CleanSpool(%s,%s)', $spool_dir, $clean_delay);
 
     unless (opendir(DIR, $spool_dir)) {
 	do_log('err', "Unable to open '%s' spool : %s", $spool_dir, $!);
