@@ -194,7 +194,7 @@ sub load_create_list_conf {
 	next if /^\s*(\#.*|\s*)$/;
 
 	if (/^\s*(\S+)\s+(read|hidden)\s*$/i) {
-	    $conf->{$1} = $2;
+	    $conf->{$1} = lc($2);
 	}else{
 	    &do_log ('info', 'unknown parameter in %s  (Ignored) %s', "$Conf{'etc'}/create_list.conf",$_ );
 	    next;
@@ -266,8 +266,9 @@ sub get_list_list_tpl {
 	if (opendir(DIR, $dir)) {
 	    foreach my $template ( sort grep (!/^\./,readdir(DIR))) {
 
-		next if ($list_conf->{$template} eq 'hidden') ;
-		next if ($list_conf->{'default'} eq 'hidden') ;
+		my $status = $list_conf->{$template} || $list_conf->{'default'};
+
+		next if ($status eq 'hidden') ;
 
 		$list_templates->{$template}{'path'} = $dir;
 
