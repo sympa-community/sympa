@@ -794,7 +794,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 
      ## Available languages
      my $saved_lang = &Language::GetLang();
-     foreach my $l (&Language::GetSupportedLanguages($robot)) {
+     foreach my $l (@{&Language::GetSupportedLanguages($robot)}) {
 	 &Language::SetLang($l) || next;
 	 $param->{'languages'}{$l}{'complete'} = gettext("_language_");
 
@@ -6265,7 +6265,9 @@ sub do_edit_list {
 	     }
 	 }elsif ($pname eq 'lang') {
 	     my $saved_lang = &Language::GetLang();
+	     
 	     foreach my $lang (keys %{$p->{'value'}}) {
+		 &do_log('notice','LANG: %s', $lang);
 		 &Language::SetLang($lang);
 		 $p->{'value'}{$lang}{'title'} = gettext('_language_');
 	     }

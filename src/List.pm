@@ -778,7 +778,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 'gettext_id' => "Who can invite people",
 			 'group' => 'command'
 			 },
-	    'lang' => {'format' => ['fr','us','de','it','fi','es','tw','cn','pl','cz','hu','ro','et','nl'],
+	    'lang' => {'format' => [], ## &Language::GetSupportedLanguages() called later
 		       'default' => {'conf' => 'lang'},
 		       'gettext_id' => "Language of the list",
 		       'group' => 'description'
@@ -7462,6 +7462,9 @@ sub by_order {
 ## Apply defaults to parameters definition (%::pinfo)
 sub _apply_defaults {
     do_log('debug3', 'List::_apply_defaults()');
+
+    ## List of available languages
+    $::pinfo{'lang'}{'format'} = &Language::GetSupportedLanguages();
 
     ## Parameter order
     foreach my $index (0..$#param_order) {

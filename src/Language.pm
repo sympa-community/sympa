@@ -74,7 +74,7 @@ sub GetSupportedLanguages {
     foreach my $l (split /,/,&Conf::get_robot_conf($robot, 'supported_lang')) {
 	push @lang_list, $lang2locale{$l}||$l;
     }
-    return @lang_list;
+    return \@lang_list;
 }
 
 sub SetLang {
