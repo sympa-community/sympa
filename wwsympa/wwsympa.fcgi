@@ -46,7 +46,6 @@ use Commands;
 use Language;
 use Log;
 use Auth;
-use Survey;
 
 use Mail::Header;
 use Mail::Address;
@@ -238,9 +237,7 @@ my %comm = ('home' => 'do_home',
 	 'change_identity' => 'do_change_identity',
 	 'stats' => 'do_stats',
 	 'viewlogs'=> 'do_viewlogs',
-	 'wsdl'=> 'do_wsdl',
-	 'edit_survey' => 'do_edit_survey',
-	 'create_survey' => 'do_create_survey'
+	 'wsdl'=> 'do_wsdl'
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -320,9 +317,7 @@ my %action_args = ('default' => ['list'],
 		'rename_list' => ['list','new_list','new_robot'],
 		'redirect' => [],
 #		'viewlogs' => ['list'],
-		'wsdl' => [],
-		'create_survey' => ['list'],
-		'edit_survey' => ['list','survey_id'],
+		'wsdl' => []
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -654,7 +649,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
          unless (defined $param->{'get_which'}) {
              @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
          }
+
      }else{
+
          ## Get lang from cookie
          $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'});
      }
@@ -10536,141 +10533,5 @@ sub do_wsdl {
     return 1;
 }
 		
-sub survey_access_control {
 
-    # should eval scenario
-    return 1;    
-}
-
-sub do_edit_survey {    
-    &do_log('info', "do_edit_survey()");
-    unless ($param->{'list'}) {
-	&error_message('missing_arg', {'argument' => 'list'});
-	&wwslog('info','do_edit_survey: no list');
-	return undef;
-    }
-    
-    unless ($param->{'user'}{'email'}) {
-	&error_message('no_user');
-	&wwslog('info','do_edit_survey:  no user');
-	$param->{'previous_list'} = $in{'list'};
-	return 'loginrequest';
-    }
-    
-    my %survey;
-    unless(%survey = &Survey::load_xml_survey ($list->{'dir'},$in{'survey_id'})) {
-	&error_message('could_not_load_survey');
-	&wwslog('info','do_edit_survey:  Could not load survey');
-    }
-    
-    $survey{'s_title'} = $in{'s_title'}; 
-    $survey{'s_type'} = $in{'s_type'}; 
-    $survey{'header_text'} = $in{'header_text'}; 
-    $survey{'footer_text'} = $in{'footer_text'}; 
-    if ($in{'s_answer'}) {
-	$survey{'s_answer'} = $in{'s_answer'}; 
-    }else{
-	$survey{'s_answer'} = 'private'; # default should be defined elsewhere
-    }
-    if($survey{'status'} eq 'empty') {
-	$survey{'author'} = $param->{'user'}{'email'};
-	$survey{'creation_date'} = time;
-	$survey{'s_edit'} = $list->{'admin'}{'s_edit'} ;
-	$survey{'status'} = 'pending';
-    }else{
-	$survey{'last_update'} = time ;
-    }
-
-    if ($ENV{'REQUEST_METHOD'} eq 'POST') {
-	&Survey::dump_xml_survey(\%survey,"$list->{'dir'}",$in{'survey_id'});
-    }
-
-    foreach my $key (keys %survey){
-	&do_log('info',"xxxxxxxxxxx do_edit_survey: $key $survey{$key}");
-	$param->{$key} = $survey{$key};
-    }
-
-}
-
-# create a empty survey
-sub do_create_survey {
-    
-    &do_log('info', "do_create_survey");
-
-     unless ($param->{'list'}) {
-	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_create_survey: no list');
-	 return undef;
-     }
-
-    unless ($param->{'user'}{'email'}) {
-	&error_message('no_user');
-	&wwslog('info','do_create_survey:  no user');
-	$param->{'previous_list'} = $in{'list'};
-	return 'loginrequest';
-    }
-
-    # should eval authaurization here
-
-    my $seq = &Survey::init_survey($list->{'dir'});
-
-    my %survey;
-
-    $survey{'author'} = $param->{'user'}{'email'};
-    $survey{'creation_date'} = time;
-#     # il faudrait le nom du scenario, pas le scenario lui même. 
-#     $survey{'s_edit'} = $list->{'admin'}{'s_edit'} ;
-    $survey{'status'} = 'pending';
-
-    &Survey::dump_xml_survey(\%survey,"$list->{'dir'}",$in{'survey_id'});
-
-    foreach my $key (keys %survey){
-	$param->{$key} = $survey{$key};
-    }
-    $param->{'creation_date'} = &tools::adate(time);
-    $param->{'survey_id'} = $seq;
-    return edit_survey;
-}
-
-
-sub do_edit_survey_request {
-    
-    &do_log('info', "do_edit_survey_request");
-
-     unless ($param->{'list'}) {
-	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_edit_survey: no list');
-	 return undef;
-     }
-
-    unless ($param->{'user'}{'email'}) {
-	&error_message('no_user');
-	&wwslog('info','do_edit_survey:  no user');
-	$param->{'previous_list'} = $in{'list'};
-	return 'loginrequest';
-    }
-    unless ($in{'survey_id'}) {
-	$in{'survey_id'} =  &get_survey_id($list->{'dir'});
-    }
-
-    #my $survey = &Survey::load_xml_survey ($list->{'dir'},$in{'survey_id'});
-    my $survey = &Survey::load_xml_survey (&get_survey_file ($list->{'dir'},$in{'survey_id'}));
-    if($survey->{'status'} eq 'empty') {
-
-	$survey->{'author'} = $param->{'user'}{'email'};
-	my $current_date = time; # current epoch date
-	$survey->{'creation_date'} = &tools::adate($current_date);
-	$survey->{'s_edit'} = $list->{'admin'}{'s_edit'} ;
-    }
-    &do_log('info',"xxxxxxxxxxx do_edit_survey_request survey status: $survey->{'status'}  ");
-    
-
-    # should eval authaurization here
-
-    foreach my $key (keys %$survey){
-	&do_log('info',"xxxxxxxxxxx do_edit_survey_request: $key $survey->{$key}");
-	$param->{$key} = $survey->{$key};
-    }
-    return 1;
-}
 
