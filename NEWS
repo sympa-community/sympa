@@ -3,7 +3,140 @@
 
 (See Changelog file for the full changes log)
 
-4.2b.2		09 July 2004
+4.2b.3		13 August 2004
+
+   New features :
+
+*****	We have both changed Sympa's template format and catalogue format
+*****	
+*****	Template file format is now TT2 (hhtp://www.tt2.org). Its format is similar
+*****	to the old template format. Sympa.pl should detect that you are upgrading
+*****	from an old version and will run the tpl2tt2.pl script to migrate your
+*****	existing .tpl files to .tt2 format.
+*****	
+*****	We now use PO format for Sympa internationalization. This is a much more
+*****	standard format which make it easier for translators to update catalogues.
+*****	Because we could not automatically extract translatable strings from templates
+*****	most of the translation job is to be done again and only 3 languages are supported 
+*****	with this release (the one that have uptodate PO files)
+*****	If you are concerned about translating Sympa, please read this document :
+*****	http://www.sympa.org/howtotranslate.html
+
+	po/Makefile: add stats on translation progress (cd po ; make stats)
+
+	doc/sympa.tex.tpl, src/Conf.pm, src/Language.pm, src/List.pm, wwsympa/wwsympa.fcgi: 
+	added 'supported_lang' parameter to restrict supported languages on the user interface
+
+	src/List.pm: [requested by P.Garnier] allow non-anonymous bind in LDAP filters
+
+	src/mail.pm, wwsympa/wwsympa.fcgi: [requested by L.Kirsher] add user gecos to From: field when 
+	for messages composed on the web interface
+
+   Changes :
+
+	wwsympa/tt2/: [P.Levesque] Making the web interface XHTML
+
+	src/sympa.pl: Change: sympa.pl dies if it was given unknown options
+
+	src/Conf.pm: check that queuebounce and bounce_path parameters are not the same
+
+	src/: tools.pl: [reported by O. Lacroix] previously made too many trials for safefork()
+
+	wwsympa/tt2/: arc.tt2, arcsearch_form.tt2: default behavior of search engine will search in messages subjects
+
+
+	src/sympa.pl: notify listmaster if antivirus check failed ; keep message as BAD
+
+	src/: Conf.pm, tools.pl: check Sympa access to capath and cafile if defined
+
+	po/hu.po: [S. Vizi] Update of Hungarian translations
+
+	check_perl_modules.pl: Checking for Locale::TextDomain version instead of Locale::Messages because $VERSION 
+	was not defined
+
+*****	The 'msgcat' sympa.conf parameter is now obsolete. You should set the 'locaeldir'
+*****	parameter instead.
+
+
+   Bug fixes :
+
+	src/tt2.pl: Fix problem with spaces between encoded words (bug 5462 of MIME::Words)
+
+	src/: sympa.pl, tools.pl: as_singlepart() ; would fail on signed messages
+
+	src/tools.pl: Default for $virusfound was 'undef' (generating errors) ; changed default to '0'
+
+	src/Conf.pm, wwsympa/Auth.pm: [reported by D.Lamballais 'password_case' wwsympa.conf parameter was not used
+
+	src/etc/mhonarc-ressources.tt2: [reported by Jeg] the viewmod page would propose a "reply to" and 
+	"send it back to..." buttons
+
+	wwsympa/wwsympa.fcgi: [reported by Chaosmedia] while editing a template, the template name could be altered 
+	(lang element lost)
+
+	wwsympa/: wwsympa.fcgi: [reported by J.Koret] Fix an XSS vulnerability
+
+	src/tools.pl: [L.Veillon] incorrectly handled Uvscan code 12
+
+	src/: tools.pl: [reported by J.Beretta] sympa would incorrectly change the MIME structure of multipart/alternative
+	messages composed with Outlook.
+
+	src/: tools.pl: [BugID 305] Missing <> around Message-id when messages are posted from the web
+
+	src/: List.pm: rfc2369_header_fields parameter edition incorrectly handled
+
+	wwsympa/wwsympa.fcgi: could not restore a list in include2 mode
+
+	src/List.pm, wwsympa/wwsympa.fcgi: load-cert() failed with Mozilla because the content-type was forced to
+	application/pkix-cert and the certificate was in PEM format. Now convert it to DER
+
+	src/task_manager.pl: do not create 'sync_include' tasks if lists status is not 'open'.
+
+	src/: List.pm, tools.pl: task_manager could previously be stuck on an include.lock file (when list had no subscriber).
+  	Changes :	   - lock is release in List::get_first_user() if list has zero subscriber	   
+		- move lock/unlock code to tools.pl     
+		- no more perform a blocking lock ; iterate 10 times (with increasing delay) instead
+
+	wwsympa/: wwsympa.fcgi: [BugID 301] Fix: do_arc_delete() subroutine was inadvertently removed 
+	(while introducing SOAP features)
+
+	soap/sympa_soap_server.fcgi, src/List.pm: Using error_message() subroutine where it is not defined
+
+	wwsympa/: wwsympa.fcgi: [reported by Y.Edelist] wwsympa would log a warning if Net::LDAP was not installed, 
+	even though it was not used : "Unable to use LDAP library, Net::LDAP required,install perl-ldap (CPAN) first"
+
+	wwsympa/wwsympa.fcgi: restore d_edit privilege to document authors in the shared
+
+	src/List.pm, wwsympa/wwsympa.fcgi: [BugID 295] "Internal Server Error" while accessing to modindex
+
+	src/List.pm, wwsympa/wwsympa.fcgi: security issue : close a pending list then restore it make the
+	list open even if the list owner is not authorized. Fixed.
+
+	src/etc/: edit_list.conf: new include_xxx parameters should be hidden for owners
+
+	configure.in: [reported by L.Veillon] [O.Lacroix] incorrect AC_ARG_WITH
+
+	src/List.pm: [BugID 294] replacing [msg_header] in scenario files
+
+	wwsympa/: archived.pl, bounced.pl: when in debug mode, log entries were not printed
+
+	src/: List.pm: [reported by P.Maes] list creation request message could not be sent 
+	(foo-owner User Unknown) because Return-path address was not yet created
+
+	wwsympa/Marc/Search.pm: [requested by R.Marchand] decode Subject and From while searching in archives
+
+
+	wwsympa/wwsympa.fcgi: [reported by V. Mathieu] incorrectly handled multiple enum parameters in edit_list
+
+	src/List.pm: [reported by O.Lacroix &  C.Nahaboo] Move subject tagging upward to have homogenous tagging in web archives
+
+	src/Commands.pm, src/List.pm, src/sympa.pl, src/tools.pl,  wwsympa/wwsympa.fcgi: 
+	Now always set 'subscribed' DB field, whatever the user_data_source is.  New feature: Store a
+  	data_structure_version file in etc/ to determine what changes need to be done to the DB.  
+	Set 'subscribed' DB field if version < 4.2a
+
+
+	src/: List.pm: set 'subscribed' to 1 if neither subscribed  nor included is set
 
 4.2b.1		04 May 2004
 

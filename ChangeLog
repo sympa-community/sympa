@@ -1,3 +1,121 @@
+2004-08-13 11:12  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Allow aboslute path for d_editfile
+
+2004-08-13 10:35  sympa-authors
+
+	* po/: cs.po, de.po, en_US.po, es.po, et.po, fi.po, fr.po, hu.po,
+	  it.po, nl.po, pl.po, pt.po, ro.po, sympa.pot, zh_CN.po, zh_TW.po:
+	  Updates
+
+2004-08-13 10:32  sympa-authors
+
+	* web_tt2/review.tt2: string not localized
+
+2004-08-13 10:04  sympa-authors
+
+	* src/Language.pm, src/List.pm, src/tools.pl, src/tt2.pl,
+	  src/etc/script/tpl2tt2.pl, wwsympa/wwsympa.fcgi: New feature:
+	  allow localized templates. Now require a subdirecty in tt2 dir
+	  (Ex: mail_tt2/fr_FR/welcome.tt2)
+
+2004-08-12 17:03  sympa-authors
+
+	* src/tt2.pl: Fix: did not translate [INCLUDE 'fff'] directives
+
+2004-08-12 15:49  sympa-authors
+
+	* src/etc/script/tpl2tt2.pl: Change: also migrate localized
+	  templates
+
+2004-08-12 15:48  sympa-authors
+
+	* web_tt2/main.tt2.~1.7.~: Remove old file
+
+2004-08-12 11:43  sympa-authors
+
+	* src/etc/script/tpl2tt2.pl: Fix: would not consider lists in
+	  include2 mode
+
+2004-08-12 11:22  sympa-authors
+
+	* po/fr.po: Fix
+
+2004-08-12 11:15  sympa-authors
+
+	* src/tt2.pl: Fix problem with spaces between encoded words (bug
+	  5462 of MIME::Words)
+
+2004-08-12 11:00  sympa-authors
+
+	* po/: cs.po, de.po, en_US.po, es.po, et.po, fi.po, fr.po, hu.po,
+	  it.po, nl.po, pl.po, pt.po, ro.po, sympa.pot, zh_CN.po, zh_TW.po:
+	  update
+
+2004-08-12 10:59  sympa-authors
+
+	* po/Makefile: Templates location changed
+
+2004-08-12 09:14  sympa-authors
+
+	* mail_tt2/listmaster_notification.tt2: Fix: missing requester
+	  email address in list creation request
+
+2004-08-11 11:22  sympa-authors
+
+	* src/: Commands.pm, Language.pm, PlainDigest.pm: Fix: remaining
+	  Msg() calls
+
+2004-08-11 10:50  sympa-authors
+
+	* src/tools.pl: Fix: $separator could not be accessed outside
+	  tools.pl module
+
+2004-08-10 16:30  sympa-authors
+
+	* src/Language.pm: Skip translator email address
+
+2004-08-10 16:20  sympa-authors
+
+	* web_tt2/d_read.tt2: [reported by JEG] incorrect filename in
+	  removal warning
+
+2004-08-10 16:06  sympa-authors
+
+	* src/tt2.pl: Fix: remove path in inclusion directives ; rename
+	  .tpl to .tt2
+
+2004-08-10 15:07  sympa-authors
+
+	* src/List.pm: Fix: extend the 'lang' parameter format
+
+2004-08-10 14:54  sympa-authors
+
+	* src/List.pm: Complete previous fix
+
+2004-08-10 14:40  sympa-authors
+
+	* mail_tt2/welcome.tt2, src/List.pm: Fix preoblem with absolute
+	  path ref in templates
+
+2004-08-10 14:20  sympa-authors
+
+	* src/: sympa.pl, tools.pl: Fix as_singlepart() ; would fail on
+	  signed messages
+
+2004-08-10 14:20  sympa-authors
+
+	* check_perl_modules.pl: Remove AppConfig
+
+2004-08-10 14:19  sympa-authors
+
+	* ChangeLog: Update
+
+2004-08-10 12:15  sympa-authors
+
+	* src/tools.pl: Fix: Default for $virusfound was 'undef'
+	  (generating errors) ; changed default to '0'
+
 2004-08-10 09:36  sympa-authors
 
 	* .version: preparing 4.2b.3
