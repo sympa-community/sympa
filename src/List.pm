@@ -5826,7 +5826,7 @@ sub probe_db {
     if ($Conf{'db_type'} eq 'mysql') {
 	
 	## Get tables
-	unless (@tables = $dbh->func( '_ListTables' )) {
+	unless (@tables = $dbh->tables()) {
 #	unless ($dbh->tables) {
 	    &do_log('info', 'Can\'t load tables list from database %s : %s', $Conf{'db_name'}, $dbh->errstr);
 	    return undef;

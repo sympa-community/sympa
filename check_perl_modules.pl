@@ -31,6 +31,7 @@ use CPAN;
 	     'DBI' => '1.06',
 	     'DBD::Pg' => '0.90',
 	     'DBD::Sybase' => '0.90',
+	     'DBD::mysql' => '2.0407',
 	     'FCGI' => '0.48',
 	     'MIME::Tools' => '5.209',
 	     'File::Spec' => '0.8',
