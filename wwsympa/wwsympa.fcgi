@@ -3200,9 +3200,9 @@ sub do_distribute {
 	return undef;
     }
     my $extention = time.".".int(rand 9999) ;
-    open DISTRIBUTE, ">$Conf{'queue'}/T.$Conf{'sympa'}.$extention" ;
+    open DISTRIBUTE, ">$Conf{'queue'}/T.$Conf{'sympa'}\@$robot.$extention" ;
 
-    printf DISTRIBUTE ("X-Sympa-To: %s\n",$Conf{'sympa'});
+    printf DISTRIBUTE ("X-Sympa-To: %s\n",$Conf{'sympa'}.'@'.$robot);
     printf DISTRIBUTE ("Message-Id: <%s\@wwsympa>\n", time);
     printf DISTRIBUTE ("From: %s\n\n", $param->{'user'}{'email'});
 
@@ -3219,7 +3219,7 @@ sub do_distribute {
 
     }
     close DISTRIBUTE;
-    rename("$Conf{'queue'}/T.$Conf{'sympa'}.$extention","$Conf{'queue'}/$Conf{'sympa'}.$extention");
+    rename("$Conf{'queue'}/T.$Conf{'sympa'}\@$robot.$extention","$Conf{'queue'}/$Conf{'sympa'}\@$robot.$extention");
 
     &message('performed_soon');
     
@@ -3393,7 +3393,7 @@ sub do_savefile {
 	}
 
 	if ($robot ne $Conf{'domain'}) {
-	    $param->{'filepath'} = "$Conf{'etc'}/templates/$robot/$in{'file'}";
+	    $param->{'filepath'} = "$Conf{'etc'}/$robot/templates/$in{'file'}";
 	}else {
 	    $param->{'filepath'} = "$Conf{'etc'}/templates/$in{'file'}";
 	}

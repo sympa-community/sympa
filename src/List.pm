@@ -2142,7 +2142,7 @@ sub send_global_file {
     $data->{'robot_domain'} = $robot;
     $data->{'return_path'} = $Conf{'request'};
 
-    mail::mailfile($filename, $who, $data);
+    mail::mailfile($filename, $who, $data, $robot);
 
     return 1;
 }
@@ -2251,7 +2251,7 @@ sub send_file {
 
     ## 2.7b
     if ($filename) {
-        mail::mailfile($filename, $who, $data, $sign_mode);
+        mail::mailfile($filename, $who, $data, $robot, $sign_mode);
     }
     chdir $Conf{'home'};
 

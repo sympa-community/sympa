@@ -190,7 +190,8 @@ sub sendto {
 	    return undef;
 	}
     
-	&mail::mailfile ($filename, $rcpt, $param, 'none');
+	## Should provide the $robot ; too many changes
+	&mail::mailfile ($filename, $rcpt, $param, '', 'none');
 
 	return undef;
     }
