@@ -3,13 +3,190 @@
 
 (See Changelog file for the full changes log)
 
+3.3.6b.2	31 July 2002
 
+   New features :
+
+	###############################################################
+	New 'include2' user_data_source ; should replace 'include'.
+	Users cache is stored in the main database instead of using a 
+	DB_File. Updates of the cache are performed by the task_manager
+
+	* Advantages
+
+        	+ lower memory usage :
+        	Sympa processes used to use lots of memory when managing
+        	big (>200 000) 'include' types of lists. The list of 
+        	subscribers is now stored in the database.
+
+        	+ updating the cache :
+        	Cache update is now performed by the task manager. It used to
+        	be performed by sympa.pl and wwsympa.fcgi.
+
+        	+ bounces management : 
+        	Because included users now have an entry in subscriber_table,
+        	their bounces are managed like any other subscribed users
+
+        	+ user reception options :
+        	Included users can set their reception mode
+
+	* Subscriber_table changes
+
+		The subscriber_table Db table has 3 new fields :
+
+        	  	* included_subscriber
+        		This boolean value tells if the user has been included into
+        		the list
+
+        		* subscribed_subscriber
+        		This boolean value tells if the user has subscribed to the
+        		list
+
+        		* include_sources_subscriber
+        		Comma-separated list of include source IDs. It is not 
+        		exploited yet, but could be used to :
+                	  - set different TTL for each include data_sources
+                	  - show include sources in the REVIEW pages
+                	  - tell the user he/she has been included as part
+                	  of X,Y external datasources
+
+	* Task manager 
+
+	New 'sync_include' list task : 
+	Only one model (ttl) is available. TM checks if the list is
+	in 'include2' mode and runs the sync_include. The syn_include()
+	does an in-memory comparison of already cache users list and
+	included users list ; subscriber_table is then updated. 	
+	List::delete_user() and List::add_user() have been optimized
+	to make sync_include() faster.
+	A new task is created based on 'ttl' list parameter.
+
+	New 'purge_user-table' global task :
+	Each time a user unsubscribes the user_table had to be cleaned ;
+	this was time-consuming. This is now performed periodically
+	by the 'purge_user-table' task. 
+
+
+	* Changes of commands behavior
+
+	Reception options 
+	Included users can now set their reception mode
+
+	Subscription
+	Included users can moreover subscribe to the list (if allowed by scenario).
+	It allows them to remain in the list though they might no more be included.
+
+	Review (web only)
+	Foreach user, tell if he/she is included or subscribed
+
+
+	* Locking while updating cache
+
+	An exclusive lock is performed by sync_include() to prevent other processes
+	from accessing an uncomplete list of users. A shared lock is set in 
+	List::get_first_user(), then released for the last List::get_next_user().
+	File locking is performed on ~sympa/expl/<list>/include.lock file
+
+	* Stats file 
+
+	A new value has been added to lists 'stats' file : last_sync
+	I is the date (epoch format) of the last include cache update.
+
+	* List configuration edition
+
+	When the list configuration has been changed (from the web), then :
+	        * if we changed a datasource-related parameter
+        	=> the current 'sync_include' task is removed from the task
+        	spool, to make cache update happen as soon as possible.
+
+        	* if user_data_source changed from 'database' to 'include2'
+        	=> existing subscribers have their 'subscribed_subscriber' DB
+        	field set to '1'
+
+        	* if user_data_source changed from 'include2' to 'database'
+        	=> existing included users are purged from subscriber_table
+
+	* TODO
+
+        + sending messages when users are included/decluded (should be an option)
+        + migrating from 'include' to 'include2'
+        + showing user datasources within REVIEW page
+        + adding "sort by datasource" in REVIEW page
+	#####################################################################
+
+
+   Changes :
+
+	database structure has	been extended for 'include2' user_data_source
 *****	New database fields added to subscriber_table
 *****	With MySQL :
 *****		ALTER TABLE subscriber_table ADD subscribed_subscriber enum ('0','1');
 *****		ALTER TABLE subscriber_table ADD included_subscriber enum ('0','1');
 *****		ALTER TABLE subscriber_table ADD include_sources_subscriber varchar(50);
 *****	If you are using another RDBMS, please check create_db.xxx scripts
+
+	src/etc/script/sympa: [Pierre MÅÈtras] Changes: adapt statup
+	script for Solaris (second episod)	 
+		* comparison operator with SH is '=' ('==' is Bash-specific)    
+		* use PIDDIR    
+		* check if process is running before stopping 
+
+	src/task_manager.pl:  create missing task before exuting
+	existing ones.	It allows faster excution of newly created tasks
+
+	src/task_manager.pl: use the task model to create a new
+	task, not a simple copy of previous task. This was required for
+	sync_include()
+
+	wwsympa/wwsympa.fcgi: call List::add_user() and
+	List::del_user() with multiple emails as parameters
+
+    Bug fixes :
+
+	wwsympa/wwsympa.fcgi: Fix: prevent document edition/deletion by
+	anonymous users in the shared
+
+	src/tools.pl: [Robert Marcjand] Fix virus detection : With
+	McAffee, MIME Exploit gen virus are found, but are not detected by
+	the Sympa Software because the report is "Found application"
+	instead of "Found the .... virus"
+
+	src/tools.pl: [Thibaut Dabonneville] Fix AVP virus detection
+
+	src/tools.pl: Fix duration_conv()
+
+	src/List.pm: make sql_query regexp case-insensitive
+
+	wwsympa/wwsympa.fcgi: [reported by Robert Marchand] When
+	closing a list the subscribers.db.closed was not created (wrong
+	path)
+
+	Makefile.am, Makefile.in, src/etc/sample/Makefile: [BugID
+	0000019] Fix: EXPLDIR (set by configure --with-expldir) was not
+	used at directory creation time
+
+	src/List.pm: [BugID 0000024] When URLIZINg attachments which
+	contain a single Content-Type header without attributes, the
+	attachment saved contains an additional newline after the
+	Content-Type header on disk.
+
+	wwsympa/wwsympa.fcgi: [reported by Denis Creusot] missing
+	closedir() could leed to a 'too many open files' problem
+
+	wwsympa/wwsympa.fcgi: [Laurent.Aublet-Cuvelier] Fix scenario_test
+	action : authentication's methods do not appear
+
+	src/sympa.pl: [reported by Robert Marchand]  message confirmations 
+	request was not sent in the proper language (robot lang instead of list lang)
+
+	nls/: et.msg, ro.msg: [Olivier LACROIX] Fix: NLS compilation
+	(with gencat) failed with HP-UX
+
+
+	src/task_manager.pl: [BugID 0000026][Stephen Braswell] Fix:
+	task_manager.pl now removing its PIDfile
+
+
 
 3.3.6b.1	26 June 2002
 

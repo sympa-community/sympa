@@ -1,3 +1,63 @@
+2002-07-29 15:19  salaun
+
+	* src/tools.pl: [Robert Marcjand] Fix virus detection : With
+	McAffee, MIME Exploit gen virus are found, but are not detected by
+	the Sympa Software because the report is
+	
+	Found application ....
+	
+	instead of Found the .... virus
+
+2002-07-12 14:29  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: prevent document edition/deletion by
+	anonymous users in the shared
+
+2002-07-12 13:50  salaun
+
+	* src/List.pm: Fix: lowercase included email addresses
+
+2002-07-12 11:43  salaun
+
+	* wwsympa/wwsympa.fcgi: [Laurent.Aublet-Cuvelier] Fix scenario_test
+	action : authentication's methods do not appear
+
+2002-07-12 11:21  salaun
+
+	* src/task_manager.pl: [BugID 0000026][Stephen Braswell] Fix:
+	task_manager.pl now removing its PIDfile
+
+2002-07-11 15:55  salaun
+
+	* ChangeLog, NEWS, src/List.pm, src/etc/script/create_db.Oracle,
+	src/etc/script/create_db.Pg, src/etc/script/create_db.Sybase,
+	src/etc/script/create_db.mysql: Changes: database structure has
+	been extended for 'include2'
+
+2002-07-11 15:01  salaun
+
+	* src/task_manager.pl: Fixes ; 'remind' and 'expire' list tasks
+	commented
+
+2002-07-11 14:04  salaun
+
+	* src/task_manager.pl: New match_task() subroutine
+
+2002-07-11 12:30  salaun
+
+	* src/task_manager.pl: Change: use hashes where in() was used
+
+2002-07-11 11:44  salaun
+
+	* src/List.pm: [BugID 0000024] Fix: When URLIZINg attachments which
+	contain a single Content-Type header without attributes, the
+	attachment saved contains an additional newline after the
+	Content-Type header on disk.
+
+2002-07-11 11:15  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: allow suboptions for included users
+
 2002-07-10 17:10  salaun
 
 	* src/: Conf.pm, List.pm, task_manager.pl,
