@@ -96,8 +96,7 @@ my %options;
 
 
 if ($main::options{'debug'}) {
-    $main::options{'debug2'} = 1;
-    $main::options{'log_level'} = 2;
+    $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
 }
 # Some option force foreground mode
 $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
