@@ -224,10 +224,6 @@ my %comm = ('home' => 'do_home',
 	 'd_admin' => 'do_d_admin',
 	 'dump' => 'do_dump',
 	 'arc_protect' => 'do_arc_protect',
-	 'view_translations' => 'do_view_translations',
-	 'translate' => 'do_translate',
-	 'view_template' => 'do_view_template',
-	 'update_translation' => 'do_update_translation',
 	 'remind' => 'do_remind',
 	 'change_email' => 'do_change_email',
 	 'load_cert' => 'do_load_cert',
@@ -312,10 +308,6 @@ my %action_args = ('default' => ['list'],
 		'd_change_access' =>  ['list','@path'],
 		'd_set_owner' =>  ['list','@path'],
 		'dump' => ['list'],
-		'view_translations' => [],
-		'translate' => ['template','lang'],
-		'view_template' => ['template','lang'],
-		'update_translation' => ['template','lang'],
 		'search' => ['list','filter'],
 		'search_user' => ['email'],
 		'set_lang' => ['lang'],
@@ -10332,55 +10324,6 @@ sub get_protected_email_address {
 	 push @lines, sprintf ('%s %8s %15s@%20s %20s %25s %5s %s %s %s',$line->{'date'},$line->{'process'},$line->{'list'},$line->{'robot'},$line->{'ip'},$line->{'email'},$line->{'auth'},$line->{'operation'}, $line->{'operation_arg'}, $line->{'status'}); 
      }
      $param->{'log_entries'} = \@lines;
-
-     return 1;
- }
-
- ## Update translation for a template
- sub do_update_translation {
-     &do_log('info', "do_update_translation($in{'template'}, $in{'lang'})");
-
-     unless ($in{'template'}) {
-	 &error_message('missing_arg', {'argument' => 'template'});
-	 &wwslog('info','do_update_translation: no template');
-	 return undef;
-     }
-
-     unless ($in{'lang'}) {
-	 &error_message('missing_arg', {'argument' => 'lang'});
-	 &wwslog('info','do_update_translation: no lang');
-	 return undef;
-     }
-
-     ## Load full index
-     my $index_file =  &tools::get_filename('etc', "web_tt2/index.$in{'lang'}", $robot);
-     my $index;
-     unless ($index = &tools::load_index($in{'lang'}, $index_file)) {
-	 &error_message('failed');
-	 &wwslog('info','do_update_translation: failed to load full index');
-	 return undef;		
-     }
-
-     ## Update index with incoming values
-     foreach my $var (keys %in) {
-	 if ($var =~ /^trans(\d+)$/) {
-	     $index->{$in{'template'}}{$1} = $in{$var};
-	 }
-     }
-
-     ## Save updated index
-     my $index_file;
-     if ($robot ne $Conf{'domain'}) {
-	 $index_file = "$Conf{'etc'}/$robot/web_tt2/index.$in{'lang'}";
-     }else {
-	 $index_file = "$Conf{'etc'}/web_tt2/index.$in{'lang'}";
-     }
-
-     unless (&tools::save_index($in{'lang'}, $index_file, $index)) {
-	 &error_message('failed');
-	 &wwslog('info','do_update_translation: failed to save index');
-	 return undef;	
-     }
 
      return 1;
  }
