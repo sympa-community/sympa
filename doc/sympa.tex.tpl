@@ -5117,6 +5117,8 @@ by white space within a single line :
 
 	\item Number of subscribers
 
+	\item Last update date (epoch format) of the subscribers cache in DB, used by lists in \textbf {include2} mode only
+
 \end {itemize}
 
 \section {List model files}
