@@ -622,8 +622,13 @@ sub DoForward {
 	    next if ($i->{'reception'} eq 'nomail');
 	    push(@rcpt, $i->{'email'}) if ($i->{'email'});
 	}
-	do_log('notice', 'Warning : no editor defined or  all of them use nomail option in list %s', $name ) unless (@rcpt);
-
+	unless (@rcpt) {
+	    do_log('notice', 'No editor defined in list %s (unless they use NOMAIL), use owners', $name ) ;
+	    foreach my $i (@{$admin->{'owner'}}) {
+		next if ($i->{'reception'} eq 'nomail');
+		push(@rcpt, $i->{'email'}) if ($i->{'email'});
+	    }
+	}
     }
     
     if ($#rcpt < 0) {
