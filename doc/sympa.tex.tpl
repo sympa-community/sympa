@@ -4229,7 +4229,7 @@ Only the following parameters can be redefined for a particular robot :
 \begin {itemize}
 
 	\item \cfkeyword {http\_host} \\
-	This hostname will be compared with 'SERVER_NAME' ENV var in wwsympa.fcgi
+	This hostname will be compared with 'SERVER\_NAME' ENV var in wwsympa.fcgi
 	to deduce the current Virtual Robot
 
 	\item \cfkeyword {host}\\
@@ -4247,7 +4247,7 @@ Only the following parameters can be redefined for a particular robot :
 
 	\item \cfkeyword {listmaster}
 
-	\item \cfkeyword {max\_size]
+	\item \cfkeyword {max\_size}
 
 	\item \cfkeyword {dark\_color}, \cfkeyword {light\_color}, \cfkeyword {text\_color}, \cfkeyword {bg\_color}, \cfkeyword {error\_color}, \cfkeyword {selected\_color}, \cfkeyword {shaded\_color} 
 \end {itemize}
