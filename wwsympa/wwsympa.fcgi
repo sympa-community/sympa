@@ -1270,6 +1270,12 @@ sub ldap_authentication {
 	return undef;
     }
 
+    ## No LDAP entry is defined in auth.conf
+    if ($#{$Conf{'ldap_array'}} < 0) {
+	&do_log('notice', 'Skipping empty auth.conf');
+	return undef;
+    }
+
     unless (require Net::LDAP) {
 	do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
 	return undef;
