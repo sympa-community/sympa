@@ -60,9 +60,9 @@ sub set_cookie {
     }
     my ($expiration,$domain);
     if ($expires =~ /now/i) {
-	$expiration = '0';
-    }elsif ($expires =~ /session/i) {
-	$expiration = '';
+
+	## 10 years ago
+	$expiration = '-10y';
     }else{
 	$expiration = '+'.$expires.'m';
     }
@@ -74,13 +74,21 @@ sub set_cookie {
     }
 
     my $value = sprintf '%s:%s', $email, &get_mac($email,$secret);
-
-    my $cookie = new CGI::Cookie (-name    => 'sympauser',
-				  -value   => $value,
-				  -expires => $expiration,
-				  -domain  => $domain,
-				  -path    => '/'
-				  );
+    my $cookie;
+    if ($expires =~ /session/i) {
+	$cookie = new CGI::Cookie (-name    => 'sympauser',
+				   -value   => $value,
+				   -domain  => $domain,
+				   -path    => '/'
+				   );
+    }else {
+	$cookie = new CGI::Cookie (-name    => 'sympauser',
+				   -value   => $value,
+				   -expires => $expiration,
+				   -domain  => $domain,
+				   -path    => '/'
+				   );
+    }
 
     ## Send cookie to the client
     printf "Set-Cookie: %s\n", $cookie->as_string;
