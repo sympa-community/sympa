@@ -661,8 +661,7 @@ sub subscribe {
 	return 'not_allowed';
     }
     if ($action =~ /owner/i) {
-	push @msg::report, sprintf Msg(6, 25, $msg::subscription_forwarded)
-	    unless ($action =~ /quiet/i);
+	push @msg::report, sprintf Msg(6, 25, $msg::subscription_forwarded);
 	## Send a notice to the owners.
         my $keyauth = $list->compute_auth($sender,'add');
 	$list->send_sub_to_owner($sender, $keyauth, &Conf::get_robot_conf($robot, 'sympa'), $comment);
