@@ -8,6 +8,8 @@
 
 ## Change this to point to your Sympa bin directory
 use lib '--BINDIR--';
+use strict;
+
 use FileHandle;
 
 use List;
@@ -47,10 +49,10 @@ use wwslib;
 
 getopts('dF');
 
-$wwsympa_conf = "--WWSCONFIG--";
-$sympa_conf_file = '--CONFIG--';
+my $wwsympa_conf = "--WWSCONFIG--";
+my $sympa_conf_file = '--CONFIG--';
 
-$wwsconf = {};
+my $wwsconf = {};
 
 # Load WWSympa configuration
 unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
@@ -79,11 +81,12 @@ $< = $> = (getpwnam('--USER--'))[2];
 $( = $) = (getpwnam('--GROUP--'))[2];
 
 ## Put ourselves in background if not in debug mode. 
-unless ($opt_d || $opt_F) {
+unless ($Getopt::Std::opt_d || $Getopt::Std::opt_F) {
     open(STDERR, ">> /dev/null");
     open(STDOUT, ">> /dev/null");
     if (open(TTY, "/dev/tty")) {
-	ioctl(TTY, $TIOCNOTTY, 0);
+       ioctl(TTY, 0x20007471, 0);         # XXX s/b &TIOCNOTTY
+#	ioctl(TTY, &TIOCNOTTY, 0);
 	close(TTY);
     }
     setpgrp(0, 0);
@@ -128,17 +131,17 @@ do_log('notice', "bounced Started");
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
-$end = 0;
+my $end = 0;
 
 
-$queue = $Conf{'queuebounce'};
+my $queue = $Conf{'queuebounce'};
 
 ## infinite loop scanning the queue (unless a sig TERM is received
 while (!$end) {
     ## this sleep is important to be raisonably sure that sympa is not currently
     ## writting the file this deamon is openning. 
     
-    sleep 2;
+    sleep $Conf{'sleep'};
     
     &List::init_list_cache();
 
@@ -166,8 +169,12 @@ while (!$end) {
 	if ($listname eq 'sympa') {
 	    ## In this case return-path should has been set by sympa
             ## in order to recognize a welcome message bounce
-	    open BOUNCE, "$queue/$file";
-#            my $parser = new MIME::Parser output_dir     => '/tmp', output_to_core => 'ALL';
+	    unless (open BOUNCE, "$queue/$file") {
+		&do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
+		rename "$queue/$file", "$queue/BAD-$file";
+		next;
+		}
+
 	    my $parser = new MIME::Parser;
 	    $parser->output_to_core(1);
 	    my $entity = $parser->read(\*BOUNCE);
@@ -207,9 +214,14 @@ while (!$end) {
 	if ($list) {
 
 	    do_log('debug',"Processing bouncefile $file for list $listname");      
-	    open BOUNCE, "$queue/$file";
 
-	    my %hash;
+	    unless (open BOUNCE, "$queue/$file") {
+		&do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
+		rename "$queue/$file", "$queue/BAD-$file";
+		next;
+	    }
+
+	    my (%hash, $from);
 	    my $bounce_dir = "$wwsconf->{'bounce_path'}/$list->{'name'}";
 
 	    ## RFC1891 compliance check
@@ -217,17 +229,25 @@ while (!$end) {
 
 	    unless ($bounce_count) {
 		close BOUNCE;
-		open BOUNCE, "$queue/$file";
+
+		unless (open BOUNCE, "$queue/$file") {
+		    &do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
+		    rename "$queue/$file", "$queue/BAD-$file";
+		    next;
+		    }
 		
 		## Analysis of bounced message
-		&anabounce(BOUNCE, \%hash, \$from);
+		&anabounce(\*BOUNCE, \%hash, \$from);
 	    }
 
 	    close BOUNCE;
 	    
 	    ## Bounce directory
 	    if (! -d $bounce_dir) {
-		mkdir $bounce_dir, 0777 or die "Cannot create $bounce_dir";
+		unless (mkdir $bounce_dir, 0777) {
+		    &do_log('notice', 'Could not create %s: %s', $bounce_dir, $!);
+		    next;
+		} 
 		chmod 0777, $bounce_dir;
 	    }
  
@@ -252,7 +272,11 @@ while (!$end) {
 			, $list->{'name'}, $status);
 
 		## Original message
-		open BOUNCE, "$queue/$file";
+		unless (open BOUNCE, "$queue/$file") {
+		    &do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
+		    rename "$queue/$file", "$queue/BAD-$file";
+		    next;
+		}
 		
 		open ARC, ">$bounce_dir/$escaped_rcpt" or &leave("archiving bounce");
 		print ARC <BOUNCE>;
@@ -282,18 +306,26 @@ while (!$end) {
 	    ## No address found
 	    unless ($adr_count) {
 		
-		$escaped_from = &tools::escape_chars($from);
+		my $escaped_from = &tools::escape_chars($from);
 		&do_log('info', 'error: no address found in message from %s for list %s',$from, $list->{'name'});
 		
 		## We keep bounce msg
 		if (! -d "$bounce_dir/OTHER") {
-		    mkdir  "$bounce_dir/OTHER",0777 or &leave("creating $bounce_dir/OTHER");
+		    unless (mkdir  "$bounce_dir/OTHER",0777) {
+			&do_log('notice', 'Could not create %s: %s', "$bounce_dir/OTHER", $!);
+			next;
+		    }
 		    chmod 0777,"$bounce_dir/OTHER";
 		}
 		
 		## Original msg
 		if (-w "$bounce_dir/OTHER") {
-		    open BOUNCE, "$queue/$file";
+		    unless (open BOUNCE, "$queue/$file") {
+			&do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
+			rename "$queue/$file", "$queue/BAD-$file";
+			next;
+			}
+		    
 		    open ARC, ">$bounce_dir/OTHER/$escaped_from" or &leave("creating $bounce_dir/OTHER/$escaped_from");
 		    print ARC <BOUNCE>;
 		    close BOUNCE;
@@ -309,8 +341,8 @@ while (!$end) {
 	}
 	
 	unless (unlink("$queue/$file")) {
-	    do_log ('notice',"Ignoring file $queue/$file because couldn't remove it, bounced.pl must use the same uid as sympa");
-	    do_log ('notice',"exiting because I don't want to loop until file system is full");
+	    do_log ('notice',"Could not remove $queue/$file ; $0 might NOT be running with the right UID\nRenaming file to $queue/BAD-$file.");
+	    rename "$queue/$file", "$queue/BAD-$file";
 	    last;
 	}
     }
