@@ -361,6 +361,7 @@ installconfig:
 	@for cfile in sympa.conf wwsympa.conf ; do \
 	if [ ! -f $(DESTDIR)$(CONFDIR)/$$cfile ] ; then \
 	echo "Installing sample config file $$cfile..."; \
+	DESTDIR=$(DESTDIR); export DESTDIR; \
 	$(PERL) -I $(DESTDIR)$(LIBDIR) $(DESTDIR)$(SBINDIR)/sympa_wizard.pl -c $$cfile; \
 	chown $(USER) $(DESTDIR)$(CONFDIR)/$$cfile; \
 	chgrp $(GROUP) $(DESTDIR)$(CONFDIR)/$$cfile; \
@@ -371,6 +372,7 @@ installconfig:
 	echo "###############################################"; \
 	echo "It seems to be your first installation of Sympa"; \
 	echo "The following wizard will help you create your $(CONFDIR)/sympa.conf and $(CONFDIR)/wwsympa.conf :"; \
+	DESTDIR=$(DESTDIR); export DESTDIR; \
 	$(PERL) -I $(DESTDIR)$(LIBDIR) $(DESTDIR)$(SBINDIR)/sympa_wizard.pl; \
 	fi
 
