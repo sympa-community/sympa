@@ -213,7 +213,7 @@ CONFIRM %s\n"
 21	"INFO: %s list %s aadressilt %s %s"
 22	"INFO: käsk %s listis %s aadressilt %s %s \n (midagi ei pea tegema)\n"
 23	"HOIATUS: %s %s ei saanud lahkuda listist %s kuna tema aadressi ei \n\
-leitud sellest listist\n ( Te võite aidata seda inimest )\n"
+leitud sellest listist\n ( Te võite seda inimest aidata )\n"
 24	"Lahkumissoov listist %s"
 25	"Listi %s omanik,\n\n\
 Teie listist paluti kustutada üks kasutaja. Kui te nõustute\n\
@@ -270,7 +270,7 @@ $set 16 Listm parameters titles
 1	"Konto"
 2	"Kes saab listi liikmeid lisada"
 3	"Anonüümne saatja"
-4	"Textipõhised arhiivid"
+4	"Tekstipõhised arhiivid"
 5	"sagedus"
 6	"juurdepääsuõigus"
 7	"Veateadete haldamine"
