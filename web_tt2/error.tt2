@@ -1,190 +1,77 @@
 <!-- $Id$ -->
-
+<!-- begin error.tt2 -->
+<div class="ContentBlock"> <strong>
 [% FOREACH error = errors %]
-
-[% IF error.msg == 'unknown_action' %]
-[%|loc(error.action)%]%1 : unknown action[%END%]
-
-[% ELSIF error.msg == 'unknown_list' %]
-[%|loc(error.list)%]%1 : unknown list[%END%]
-
-[% ELSIF error.msg == 'already_login' %]
-[%|loc(error.email)%]You are already logged in as %1[%END%]
-
-[% ELSIF error.msg == 'no_email' %]
-[%|loc%]Please provide your email address[%END%]
-
-[% ELSIF error.msg == 'incorrect_email' %]
-[%|loc(error.email)%]Address "%1" is incorrect[%END%]
-
-[% ELSIF error.msg == 'incorrect_listname' %]
-"[% error.listname %]" [%|loc%]: bad listname[%END%]
-
-[% ELSIF error.msg == 'no_passwd' %]
-[%|loc%]Please provide your password[%END%]
-
-[% ELSIF error.msg == 'user_not_found' %]
-"[% error.email %]" [%|loc%]: user unknown[%END%]
-
-[% ELSIF error.msg == 'passwd_not_found' %]
-[%|loc%]No password for user[%END%] "[% error.email %]"
-
-[% ELSIF error.msg == 'incorrect_passwd' %]
-[%|loc%]Provided password is incorrect[%END%]
-
-[% ELSIF error.msg == 'incomplete_passwd' %]
-[%|loc%]Provided password is incomplete[%END%]
-
-[% ELSIF error.msg == 'no_user' %]
-[%|loc%]You need to login[%END%]
-
-[% ELSIF error.msg == 'may_not' %]
-[%|loc(error.action)%]%1 : you are not allowed to perform this action[%END%]
-[% IF ! user.email %]
-<br />[%|loc%]you need to login[%END%]
-[% END %]
-
-[% ELSIF error.msg == 'no_subscriber' %]
-[%|loc%]List has no subscribers[%END%]
-
-[% ELSIF error.msg == 'no_bounce' %]
-[%|loc%]List has no bouncing subscribers[%END%]
-
-[% ELSIF error.msg == 'no_page' %]
-[%|loc(error.page)%]No page %1[%END%]
-
-[% ELSIF error.msg == 'no_filter' %]
-[%|loc%]Missing filter[%END%]
-
-[% ELSIF error.msg == 'file_not_editable' %]
-[%|loc(error.file)%]%1 : file not editable[%END%]
-
-[% ELSIF error.msg == 'already_subscriber' %]
-[%|loc(error.list)%]You are already subscribed to the list %1[%END%]
-
-[% ELSIF error.msg == 'user_already_subscriber' %]
-[%|loc(error.email,error.list)%]%1 is already subscribed to the list %2[%END%] 
-
-[% ELSIF error.msg == 'failed_add' %]
-[%|loc(error.user)%]Failed to add user %1[%END%]
-
-[% ELSIF error.msg == 'failed' %]
-[%|loc(error.action)%]%1: action failed[%END%]
-
-[% ELSIF error.msg == 'not_subscriber' %]
-[% IF error.email %]
-  [%|loc(error.email)%]Not subscribed: %1[%END%]
-[% ELSE %]
-[%|loc(error.list)%]You are not subscribed to list %1[%END%]
-[% END %]
-
-[% ELSIF error.msg == 'diff_passwd' %]
-[%|loc%]The passwords you typed do not match[%END%]
-
-[% ELSIF error.msg == 'missing_arg' %]
-[%|loc(error.argument)%]Missing argument %1[%END%]
-
-[% ELSIF error.msg == 'no_bounce' %]
-[%|loc(error.email)%]No bounces for user  %1[%END%]
-
-[% ELSIF error.msg == 'update_privilege_bypassed' %]
-[%|loc(error.pname)%]You have changed a parameter without permissions: %1[%END%]
-
-[% ELSIF error.msg == 'config_changed' %]
-[%|loc(error.email)%]Config file has been modified by %1. Cannot apply your changes[%END%]
-
-[% ELSIF error.msg == 'syntax_errors' %]
-[%|loc(error.params)%]Syntax errors with the following parameters : %1[%END%]
-
-[% ELSIF error.msg == 'no_such_document' %]
-[%|loc(error.path)%]%1 : No such file or directory[%END%] 
-
-[% ELSIF error.msg == 'no_such_file' %]
-[%|loc(error.path)%]%1 : No such file[%END%]  
-
-[% ELSIF error.msg == 'empty_document' %] 
-[%|loc(error.path)%]Unable to read %1 : empty document[%END%]
-
-[% ELSIF error.msg == 'no_description' %] 
-[%|loc%]No description specified[%END%]
-
-[% ELSIF error.msg == 'no_content' %]
-[%|loc%]Failed : your content is empty[%END%]  
-
-[% ELSIF error.msg == 'no_name' %]
-[%|loc%]No name specified[%END%]  
-
-[% ELSIF error.msg == 'incorrect_name' %]
-[%|loc(error.name)%]%1 : incorrect name[%END%] 
-
-[% ELSIF error.msg == 'index_html' %]
-[%|loc(error.dir)%]You're not authorized to upload an INDEX.HTML in %1[%END%] 
-
-[% ELSIF error.msg == 'synchro_failed' %]
-[%|loc%]Data have changed on disk. Cannot apply your changes[%END%] 
-
-[% ELSIF error.msg == 'sync_include_admin_failed' %]
-[%|loc%]Loading admins failed[%END%] 
-
-[% ELSIF error.msg == 'no_owner_defined' %]
-[%|loc%]There is not any owner defined for the list[%END%] 
-
-[% ELSIF error.msg == 'cannot_overwrite' %] 
-[%|loc(error.path)%]Cannot overwrite file %1[%END%] : [% error.reason %]
-
-[% ELSIF error.msg == 'cannot_upload' %] 
-[%|loc(error.path)%]Cannot upload file %1[%END%] : [% error.reason %]
-
-[% ELSIF error.msg == 'cannot_create' %]
-[%|loc(error.path)%]Cannot create %1[%END%] : [% error.reason %]
-
-[% ELSIF error.msg == 'cannot_create_dir' %] 
-[%|loc(error.path)%]Cannot create directory %1[%END%] : [% error.reason %]
-
-[% ELSIF error.msg == 'cannot_unzip' %]
-[%|loc(error.name)%]Cannot unzip file %1[%END%] : [% error.reason %]
-
-[% ELSIF error.msg == 'error_during_unzip' %]
-[%|loc(error.name)%]Errors while unzipping file %1[%END%] : [% error.reason %]
-
-[% ELSIF error.msg == 'file_no_copied' %]
-[%|loc(error.name)%]File %1 is not copied[%END%] : [% error.reason %]
-
-[%ELSIF error.msg == 'directory_no_copied' %]
-[%|loc(error.name)%]Directory %1 and its contents are not copied[%END%] : [% error.reason %]
-
-[% ELSIF error.msg == 'full_directory' %]
-[%|loc(error.directory)%]Failed : %1 not empty[%END%] 
-
-[% ELSIF error.msg == 'init_passwd' %]
-[%|loc%]You did not choose a password, request a reminder of the initial password[%END%]
-
-[% ELSIF error.msg == 'change_email_failed' %]
-[%|loc(error.list)%]Could not change email for list %1[%END%]
-
+  [% IF error.msg == 'unknown_action' %][%|loc(error.action)%]%1 : unknown action[%END%]
+  [% ELSIF error.msg == 'unknown_list' %][%|loc(error.list)%]%1 : unknown list[%END%]
+  [% ELSIF error.msg == 'already_login' %][%|loc(error.email)%]You are already logged in as %1[%END%]
+  [% ELSIF error.msg == 'no_email' %][%|loc%]Please provide your email address[%END%]
+  [% ELSIF error.msg == 'incorrect_email' %][%|loc(error.email)%]Address "%1" is incorrect[%END%] -%1-
+  [% ELSIF error.msg == 'incorrect_listname' %]"[% error.listname %]" [%|loc%]: bad listname[%END%]
+  [% ELSIF error.msg == 'no_passwd' %][%|loc%]Please provide your password[%END%]
+  [% ELSIF error.msg == 'user_not_found' %]"[% error.email %]" [%|loc%]: user unknown[%END%]
+  [% ELSIF error.msg == 'passwd_not_found' %][%|loc%]No password for user[%END%] "[% error.email %]"
+  [% ELSIF error.msg == 'incorrect_passwd' %][%|loc%]Provided password is incorrect[%END%]
+  [% ELSIF error.msg == 'incomplete_passwd' %][%|loc%]Provided password is incomplete[%END%]
+  [% ELSIF error.msg == 'no_user' %][%|loc%]You need to login[%END%]
+  [% ELSIF error.msg == 'may_not' %][%|loc(error.action)%]%1 : you are not allowed to perform this action[%END%]
+     [% IF ! user.email %]<br />[%|loc%]you need to login[%END%][% END %]
+  [% ELSIF error.msg == 'no_subscriber' %][%|loc%]List has no subscribers[%END%]
+  [% ELSIF error.msg == 'no_bounce' %][%|loc%]List has no bouncing subscribers[%END%]
+  [% ELSIF error.msg == 'no_page' %][%|loc(error.page)%]No page %1[%END%]
+  [% ELSIF error.msg == 'no_filter' %][%|loc%]Missing filter[%END%]
+  [% ELSIF error.msg == 'file_not_editable' %][%|loc(error.file)%]%1 : file not editable[%END%]
+  [% ELSIF error.msg == 'already_subscriber' %][%|loc(error.list)%]You are already subscribed to the list %1[%END%]
+  [% ELSIF error.msg == 'user_already_subscriber' %][%|loc(error.email,error.list)%]%1 is already subscribed to the list %2[%END%] 
+  [% ELSIF error.msg == 'failed_add' %][%|loc(error.user)%]Failed to add user %1[%END%]
+  [% ELSIF error.msg == 'failed' %][%|loc(error.action)%]%1: action failed[%END%]
+  [% ELSIF error.msg == 'not_subscriber' %]
+    [% IF error.email %]  [%|loc(error.email)%]Not subscribed: %1[%END%]
+    [% ELSE %][%|loc(error.list)%]You are not subscribed to list %1[%END%]
+    [% END %]
+  [% ELSIF error.msg == 'diff_passwd' %][%|loc%]The passwords you typed do not match[%END%]
+[% ELSIF error.msg == 'missing_arg' %][%|loc(error.argument)%]Missing argument %1[%END%]
+[% ELSIF error.msg == 'no_bounce' %][%|loc(error.email)%]No bounces for user  %1[%END%]
+[% ELSIF error.msg == 'update_privilege_bypassed' %][%|loc(error.pname)%]You have changed a parameter without permissions: %1[%END%]
+[% ELSIF error.msg == 'config_changed' %][%|loc(error.email)%]Config file has been modified by %1. Cannot apply your changes[%END%]
+[% ELSIF error.msg == 'syntax_errors' %][%|loc(error.params)%]Syntax errors with the following parameters : %1[%END%]
+[% ELSIF error.msg == 'no_such_document' %][%|loc(error.path)%]%1 : No such file or directory[%END%] 
+[% ELSIF error.msg == 'no_such_file' %][%|loc(error.path)%]%1 : No such file[%END%]  
+[% ELSIF error.msg == 'empty_document' %] [%|loc(error.path)%]Unable to read %1 : empty document[%END%]
+[% ELSIF error.msg == 'no_description' %] [%|loc%]No description specified[%END%]
+[% ELSIF error.msg == 'no_content' %][%|loc%]Failed : your content is empty[%END%]  
+[% ELSIF error.msg == 'no_name' %][%|loc%]No name specified[%END%]  
+[% ELSIF error.msg == 'incorrect_name' %][%|loc(error.name)%]%1 : incorrect name[%END%] 
+[% ELSIF error.msg == 'index_html' %][%|loc(error.dir)%]You're not authorized to upload an INDEX.HTML in %1[%END%] 
+[% ELSIF error.msg == 'synchro_failed' %][%|loc%]Data have changed on disk. Cannot apply your changes[%END%] 
+[% ELSIF error.msg == 'sync_include_admin_failed' %][%|loc%]Loading admins failed[%END%] 
+[% ELSIF error.msg == 'no_owner_defined' %][%|loc%]There is not any owner defined for the list[%END%] 
+[% ELSIF error.msg == 'cannot_overwrite' %] [%|loc(error.path)%]Cannot overwrite file %1[%END%] : [% error.reason %]
+[% ELSIF error.msg == 'cannot_upload' %] [%|loc(error.path)%]Cannot upload file %1[%END%] : [% error.reason %]
+[% ELSIF error.msg == 'cannot_create' %][%|loc(error.path)%]Cannot create %1[%END%] : [% error.reason %]
+[% ELSIF error.msg == 'cannot_create_dir' %] [%|loc(error.path)%]Cannot create directory %1[%END%] : [% error.reason %]
+[% ELSIF error.msg == 'cannot_unzip' %][%|loc(error.name)%]Cannot unzip file %1[%END%] : [% error.reason %]
+[% ELSIF error.msg == 'error_during_unzip' %][%|loc(error.name)%]Errors while unzipping file %1[%END%] : [% error.reason %]
+[% ELSIF error.msg == 'file_no_copied' %][%|loc(error.name)%]File %1 is not copied[%END%] : [% error.reason %]
+[% ELSIF error.msg == 'directory_no_copied' %][%|loc(error.name)%]Directory %1 and its contents are not copied[%END%] : [% error.reason %]
+[% ELSIF error.msg == 'full_directory' %][%|loc(error.directory)%]Failed : %1 not empty[%END%] 
+[% ELSIF error.msg == 'init_passwd' %][%|loc%]You did not choose a password, request a reminder of the initial password[%END%]
+[% ELSIF error.msg == 'change_email_failed' %][%|loc(error.list)%]Could not change email for list %1[%END%]
 [% ELSIF error.msg == 'change_email_failed_because_subscribe_not_allowed' %]
-[%|loc(error.list)%]Could not change your subscription address for the list '%1'
-because your new address is not allowed to subscribe.[%END%]
-
+     [%|loc(error.list)%]Could not change your subscription address for the list '%1'
+     because your new address is not allowed to subscribe.[%END%]
 [% ELSIF error.msg == 'change_email_failed_because_unsubscribe_not_allowed' %]
-[%|loc(error.list)%]Could not change your subscription address for the list '%1%'
-because you are not allowed to unsubscribe.[%END%]
-
-[% ELSIF error.msg == 'shared_full' %]
-[%|loc%]The document repository exceed disk quota.[%END%]
-
-[% ELSIF error.msg == 'ldap_user' %]
-[%|loc%]Your password is stored in an LDAP directory, therefore Sympa cannot post you a reminder[%END%]
-
-[% ELSIF error.msg == 'select_month' %]
-[%|loc%]Please select archive months[%END%]
-
-[% ELSIF error.msg == 'inaccessible_archive' %]
-[%|loc(error.year_month)%]Archives from %1 are not accessible[%END%]
-
+     [%|loc(error.list)%]Could not change your subscription address for the list '%1%'
+     because you are not allowed to unsubscribe.[%END%]
+[% ELSIF error.msg == 'shared_full' %][%|loc%]The document repository exceed disk quota.[%END%]
+[% ELSIF error.msg == 'ldap_user' %][%|loc%]Your password is stored in an LDAP directory, therefore Sympa cannot post you a reminder[%END%]
+[% ELSIF error.msg == 'select_month' %][%|loc%]Please select archive months[%END%]
+[% ELSIF error.msg == 'inaccessible_archive' %][%|loc(error.year_month)%]Archives from %1 are not accessible[%END%]
 [% ELSE %]
 [% error.msg %]
 [% END %]
-
-<br />
 [% END %]
+</strong>
+</div>
+<br />
+<!-- end error.tt2 -->
