@@ -75,7 +75,11 @@ Failed adding user [error->user]
 [error->action]: action failed
 
 [ELSIF error->msg=not_subscriber]
+[IF error->email]
+  Not subscriber: [error->email]
+[ELSE]
 You are not subscriber in list [error->list]
+[ENDIF]
 
 [ELSIF error->msg=diff_passwd]
 The 2 passwords differ

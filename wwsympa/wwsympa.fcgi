@@ -2497,9 +2497,8 @@ sub do_del {
 	my $escaped_email = &tools::escape_chars($email);
 	
 	unless ( $list->is_user($email) ) {
-	    &error_message('not_subscriber');
+	    &error_message('not_subscriber', {'email' => $email});
 	    &wwslog('info','do_del: %s not subscribed', $email);
-	    return undef;
 	}
 	
 	unless( $list->delete_user($email)) {

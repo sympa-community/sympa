@@ -69,7 +69,11 @@ Vous êtes déjà abonné à la liste [error->list]
 [error->action] : l'opération a échoué
 
 [ELSIF error->msg=not_subscriber]
+[IF error->email]
+  Pas abonné: [error->email]
+[ELSE]
 Vous n'êtes pas abonné à la liste [error->list]
+[ENDIF]
 
 [ELSIF error->msg=diff_passwd]
 Les 2 mots de passe sont différents
