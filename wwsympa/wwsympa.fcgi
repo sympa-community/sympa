@@ -352,8 +352,11 @@ my $pinfo = &List::_apply_defaults();
 
 my (%in, $query);
 
+my $birthday = time ;
+
 ## If using fast_cgi, it is usefull to initialize all list context
 if ($wwsconf->{'use_fast_cgi'}) {
+
     foreach my $l ( &List::get_lists('*') ) {
 	my $list = new List ($l);
     }
@@ -746,6 +749,13 @@ while ($query = &new_loop()) {
 
 	&parse_tpl($param,$main , STDOUT);
     }    
+
+    do_log('notice',"Exiting because $ENV{'SCRIPT_FILENAME'} as changed since fastcgi server started");
+    # exit if wwsympa.fcgi itself has changed
+    if ((stat($ENV{'SCRIPT_FILENAME'}))[9] gt $birthday ) {
+         do_log('notice',"Exiting because $ENV{'SCRIPT_FILENAME'} as changed since fastcgi server started");
+         exit(0);
+    }
 
     # At the end of this loop reset variables is important to use this cgi as a CGI::fast 
     undef $param ; 
@@ -4236,10 +4246,20 @@ sub _install_aliases {
     &wwslog('info', '_install_aliases()');
 
     if ($wwsconf->{'alias_manager'}) {
-	&do_log('debug',"$wwsconf->{'alias_manager'} add $list->{'name'} $list->{'admin'}{'host'}");
-	if ((-x $wwsconf->{'alias_manager'}) 
-	    && (system ("$wwsconf->{'alias_manager'} add $list->{'name'} $list->{'admin'}{'host'}") == 0)) {
-	    &wwslog('info','Aliases installed successfully');
+	&do_log('notice',"$wwsconf->{'alias_manager'} add $list->{'name'} $list->{'admin'}{'host'}");
+	if (-x $wwsconf->{'alias_manager'}) {
+	    system ("$wwsconf->{'alias_manager'} add $list->{'name'} $list->{'admin'}{'host'}") ;
+	    &wwslog('info','Configuration file --CONFIG-- has errors') if ($? == '1') ;
+	    &wwslog('info','Internal error : Incorrect call to alias_manager') if ($? == '2') ;
+	    &wwslog('info','Could not read sympa config file, report to httpd error_log') if ($? == '3') ;
+	    &wwslog('info','Could not get default domain, report to httpd error_log') if ($? == '4') ;
+	    &wwslog('info','Unable to append to alias file') if ($? == '5') ;
+	    &wwslog('info','Unable run newaliases') if ($? == '6') ;
+	    &wwslog('info','Unable to read alias file, report to httpd error_log') if ($? == '7') ;
+	    &wwslog('info','Could not create temporay file, report to httpd error_log') if ($? == '8') ;
+	    &wwslog('info','Some of list aliases already exist') if ($? == '13') ;
+	    &wwslog('info','Can not open lock file, report to httpd error_log') if ($? == '14') ;
+	    &wwslog('info','Aliases installed successfully') if ($? == '0') ;
 	    $param->{'auto_aliases'} = 1;
 	}else {
 	    &wwslog('info','Failed to install aliases: %s', $!);
@@ -4248,12 +4268,18 @@ sub _install_aliases {
     }
 
     unless ($param->{'auto_aliases'}) {
-	$param->{'aliases'}  = "#----------------- $in{'list'}\@$robot\n";
-	$param->{'aliases'} .= "$in{'list'}\@$robot: \"| --MAILERPROGDIR--/queue $in{'list'}\@$robot\"\n";
-	$param->{'aliases'} .= "$in{'list'}-request\@$robot: \"| --MAILERPROGDIR--/queue $in{'list'}-request\@$robot\"\n";
-	$param->{'aliases'} .= "$in{'list'}-owner\@$robot: \"| --MAILERPROGDIR--/bouncequeue $in{'list'}\"\n";
-	$param->{'aliases'} .= "$in{'list'}-unsubscribe\@$robot: \"| --MAILERPROGDIR--/queue $in{'list'}-unsubscribe\@$robot\"\n";
-	$param->{'aliases'} .= "# $in{'list'}-subscribe\@$robot: \"| --MAILERPROGDIR--/queue $in{'list'}-subscribe\@$robot\"\n";
+	my $template_file = &tools::get_filename('etc', 'alias.tpl', $robot);
+	my @aliases ;
+	my %data;
+	$data{'path_to_queue'} = '--MAILERPROGDIR--/queue';
+	$data{'path_to_bouncequeue'} = '--MAILERPROGDIR--/bouncequeue';
+	$data{'domain'} = $data{'robot'} = $robot;
+	$data{'listname'} = $list->{'name'};
+	$data{'default_domain'} = $Conf{'domain'};
+	$data{'is_default_domain'} = 1 if ($robot == $Conf{'domain'});
+	&parse_tpl (\%data,$template_file,\@aliases);
+	$param->{'aliases'}  = '';
+	while (@aliases) {$param->{'aliases'} .= $_; }
     }
 
     return 1;
@@ -8370,7 +8396,7 @@ sub do_send_mail {
     }
     
     # In archive we hidde email replacing @ by ' '. Here we must do ther reverse transformation
-    $in{'to'} = s/ /\@/;
+    $in{'to'} =~ s/ /\@/;
     my $to = $in{'to'};
     unless ($in{'to'}) {
 	unless ($param->{'list'}) {
