@@ -214,7 +214,7 @@ sub sendto {
 
 sub mailto {
    my($msg, $from, $encrypt, $originalfile , @rcpt) = @_;
-   do_log('debug2', 'smtp::mailto(from: %s, %s, %d rcpt)', $from, $encrypt, $#rcpt);
+   do_log('debug2', 'smtp::mailto(from: %s, %s, %d rcpt)', $from, $encrypt, $#rcpt+1);
 
    my($i, $j, $nrcpt, $size, @sendto);
    my $numsmtp = 0;
