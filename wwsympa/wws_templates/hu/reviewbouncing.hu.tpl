@@ -13,7 +13,7 @@
 </TD>
 <TD>
   <FORM METHOD="post" ACTION="[path_cgi]">
-    <INPUT TYPE="button" VALUE="Remind all subscribers" NAME="action_remind" onClick="request_confirm(this.form,'Tényleg szeretnél mind a(z) [total] tagnak emlékeztetõt küldeni levelezõlista tagságukról?')">
+    <INPUT TYPE="button" VALUE="Emlékeztetõ elküldése az összes listatagnak" NAME="action_remind" onClick="request_confirm(this.form,'Tényleg szeretnél mind a(z) [total] tagnak emlékeztetõt küldeni levelezõlista tagságukról?')">
     <INPUT TYPE="hidden" NAME="action" VALUE="remind">
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   </FORM>	

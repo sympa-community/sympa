@@ -57,7 +57,8 @@
 	  [END]
 	  [ENDIF]
 	[END]
-     </SELECT>
+        <OPTION VALUE="other">Egyéb 
+    </SELECT>
    </TD>
    <TD valign=top><img src="/icons/unknown.gif" alt="A lista besorolása"></TD>
  </TR>

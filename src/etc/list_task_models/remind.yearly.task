@@ -1,8 +1,8 @@
 title.fr envoi d'un message de rappel tous les ans aux abonnés de la liste
 title.us remind message sending to the list subscribers every year
+title.hu emlékeztetõ üzenet küldése évente a listatagoknak
 
 /INIT
 @selection = select_subs (older([execution_date]))
 send_msg (@selection, remind)
 next([execution_date]+1y,INIT)
-

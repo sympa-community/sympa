@@ -2,14 +2,14 @@
 
 
       Ha elfelejtetted a jelszavadat, vagy ezen a gépen még nincsen,<br>
-      akkor most emailben lekérheted:
+      akkor most e-mailben lekérheted:
 
       <FORM ACTION="[path_cgi]" METHOD=POST>
 	  <INPUT TYPE="hidden" NAME="referer" VALUE="[referer]">
 	  <INPUT TYPE="hidden" NAME="action" VALUE="sendpasswd">
   	  <INPUT TYPE="hidden" NAME="nomenu" VALUE="[nomenu]">
 
-        <B>Email címed</B>:<BR>
+        <B>E-mail címed</B>:<BR>
         [IF email]
 	  [email]
           <INPUT TYPE="hidden" NAME="email" VALUE="[email]">

@@ -10,7 +10,7 @@ Content-transfer-encoding: 8bit
 <BODY  BGCOLOR=#ffffff>
 
 <B>Üdvözlünk a(z) [list->name]@[list->host] levelezõlistán. </B><BR>
-Feliratkozási email címed: [user->email] 
+Feliratkozási e-mail címed: [user->email] 
 [IF user->password] 
 <BR>
 Jelszavad: [user->password]. 
@@ -27,4 +27,3 @@ A listáról bõvebben itt olvashatsz:
 
 </body></html>
 
---===Sympa===--

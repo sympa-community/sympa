@@ -32,7 +32,7 @@
         </TD>
     </TR>
     <TR>
-        <TD>Küldõ email cím/TD>
+        <TD>Küldõ e-mail cím</TD>
         <TD>
           <INPUT TYPE="text" NAME="sender" SIZE="20" value="[sender]">
         </TD>

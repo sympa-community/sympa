@@ -2,16 +2,16 @@
 
 <BR>
 [IF password_sent]
-  Jelszavadat a(z) [init_email] email címre elküldtük.<BR>
+  Jelszavadat a(z) [init_email] e-mail címre elküldtük.<BR>
   A levél megérkezése után add meg lent a jelszavadat.
   <BR><BR>
 [ENDIF]
 
 [IF action=loginrequest]
- Be kell jelentkezned, hogy módosítani tudd a beállításaidat vagy kiemelt
- mûveleteket (amelyekhez meg kell adnod az email címedet) tudj végezni.
+ Be kell jelentkezned (meg kell adnod az e-mail címedet) ahhoz, hogy módosítani
+ tudd a beállításaidat, vagy kiemelt mûveleteket tudj végezni.
 [ELSE]
- A legtöbb módosításhoz meg kell adnod az email címedet. Néhány beállítás csak
+ A legtöbb módosításhoz meg kell adnod az e-mail címedet. Néhány beállítás csak
  bizonyos személyeknek érhetõ el.<BR>
  A szerveren történõ módosításokhoz valószínûleg elõbb azonosítanod kell magadat.<BR>
 [ENDIF]
@@ -27,7 +27,7 @@
          <TR BGCOLOR="[light_color]">
           <TD NOWRAP align=center>
      	      <INPUT TYPE=hidden NAME=list VALUE="[list]">
-     	      <FONT SIZE=-1 COLOR="[selected_color]"><b>Email cím:<INPUT TYPE=text NAME=email SIZE=20 VALUE="[init_email]">
+     	      <FONT SIZE=-1 COLOR="[selected_color]"><b>E-mail cím:<INPUT TYPE=text NAME=email SIZE=20 VALUE="[init_email]">
       	      Jelszó: </b>
               <INPUT TYPE=password NAME=passwd SIZE=8>&nbsp;&nbsp;
               <INPUT TYPE="submit" NAME="action_login" VALUE="Belépés" SELECTED>
@@ -38,12 +38,12 @@
 
 <CENTER>
 
-    <B>email cím</B>, a nyilvántartott email címed<BR>
+    <B>e-mail cím</B>, a nyilvántartott e-mail címed<BR>
     <B>jelszó</B>, a jelszavad.<BR><BR>
 
 <TABLE border=0><TR>
 <TD>
-<I>Ha a szerverhezen nincsen jelszavad, vagy elfelejtetted, akkor:</I>
+<I>Ha ezen a szerveren nincsen jelszavad, vagy elfelejtetted, akkor:</I>
 </TD><TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
   <TR ALIGN=center BGCOLOR="[dark_color]">

@@ -14,7 +14,7 @@
   [ELSIF not_subscriber]
 
       Nem vagy a(z) [list] listán nyilvántartva [email] 
-      email címmel.
+      e-mail címmel.
       <BR><BR>
       Lehet, hogy a listára másik címmel iratkoztál fel.
       Kérlek ez esetben keresd fel a lista tulajdonosát leiratkozásodhoz:
@@ -30,7 +30,7 @@
 	a(z) [list] listáról való leiratkozásodhoz.
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="[dark_color]"><B>Email cím</B> </FONT>[email]<BR>
+          <FONT COLOR="[dark_color]"><B>E-mail cím</B> </FONT>[email]<BR>
             <FONT COLOR="[dark_color]"><B>Jelszó</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
@@ -39,14 +39,14 @@
         </FORM>
 
 
-	A jelszavaddal és email címeddel az egyéni beállításaidat
+	A jelszavaddal és e-mail címeddel az egyéni beállításaidat
 	tudod késöbb megváltoztatni.
 
    [ELSIF ! email]
-        Kérlek add meg az email címedet a(z) [list] listáról való leiratkozási kérelemhez.
+        Kérlek add meg az e-mail címedet a(z) [list] listáról való leiratkozási kérelemhez.
 
       <FORM ACTION="[path_cgi]" METHOD=POST>
-          <B>Email címed:</B> 
+          <B>E-mail címed:</B> 
           <INPUT NAME="email"><BR>
           <INPUT TYPE="hidden" NAME="action" VALUE="sigrequest">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
@@ -59,7 +59,7 @@
 	lent a jelszavadat:
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="[dark_color]"><B>Email cím</B> </FONT>[email]<BR>
+          <FONT COLOR="[dark_color]"><B>E-mail cím</B> </FONT>[email]<BR>
             <FONT COLOR="[dark_color]"><B>Jelszó</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
@@ -72,16 +72,6 @@
          </FORM>
 
   [ENDIF]      
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -4,7 +4,7 @@
 <TABLE width=100% border="0" VALIGN="top">
 <TR>
 [IF is_owner]
-<TD VALIGN="top" NOWRAP>
+<TD VALIGN="top" NOWRAP COLSPAN="3">
     <FORM ACTION="[path_cgi]" METHOD="POST">
       <INPUT TYPE="hidden" NAME="previous_action" VALUE="review">
       <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
@@ -12,6 +12,22 @@
       <INPUT TYPE="text" NAME="email" SIZE="18">
       <INPUT TYPE="submit" NAME="action_add" VALUE="Hozzáad"> nincs értesítés<INPUT TYPE="checkbox" NAME="quiet">
     </FORM>
+</TD>
+</TR>
+</TR>
+<TR>
+ <TD ALIGN="right">
+   <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
+   <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
+<TR>
+ <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+   <FONT COLOR="[selected_color]" SIZE="-1">
+    <A HREF="[base_url][path_cgi]/subindex/[list]" ><b>Jóváhagyásra váró feliratkozások</b></A>
+   </FONT>
+</TD> 
+</TR>
+ </TABLE></TD></TR>
+</TABLE>
 </TD>
 <TD>
  <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
@@ -72,7 +88,7 @@ Túl sokat jelöltél ki, nem tudom megjeleníteni.
   <TR><TD ALIGN="left" NOWRAP>
   [IF is_owner]
 
-    <!--INPUT TYPE="button" NAME="action_del" VALUE="Delete selected email addresses" onClick="request_confirm(this.form,'Tényleg szeretnéd az ÖSSZES kijelölt tagot törölni?')"-->
+    <!--INPUT TYPE="button" NAME="action_del" VALUE="Töröld a kijelölt e-mail címeket" onClick="request_confirm(this.form,'Tényleg szeretnéd az ÖSSZES kijelölt tagot törölni?')"-->
 
     <INPUT TYPE="submit" NAME="action_del" VALUE="Kijelöltek törlése">
 
@@ -134,6 +150,10 @@ Túl sokat jelöltél ki, nem tudom megjeleníteni.
 	    <b>Feliratkozott</b></A></FONT>
 	  [ENDIF]
           </TH>
+	  <TH><FONT SIZE="-1"><B>Utolsó módosítás</B></FONT></TH>
+	[IF additional_fields]
+	<TH><FONT SIZE="-1"><B>[additional_fields]</B></FONT></TH>
+	[ENDIF]
         [ENDIF]
       </TR>
       
@@ -184,6 +204,15 @@ Túl sokat jelöltél ki, nem tudom megjeleníteni.
 	    <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
 	      [u->date]
 	    </FONT></TD>
+	    <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
+	      [u->update_date]
+	    </FONT></TD>
+	  [IF additional_fields]
+	    <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
+	      [u->additional]
+	    </FONT></TD>
+	  [ENDIF]
+
        	  [ENDIF]
         </TR>
 
@@ -201,7 +230,7 @@ Túl sokat jelöltél ki, nem tudom megjeleníteni.
     <TR><TD ALIGN="left">
       [IF is_owner]
 
-        <!--INPUT TYPE="button" NAME="action_del" VALUE="Delete selected email addresses" onClick="request_confirm(this.form,'Tényleg szeretnéd az ÖSSZES kiejölt tagot törölni?')"-->
+        <!--INPUT TYPE="button" NAME="action_del" VALUE="Töröld a kijelölt e-mail címeket" onClick="request_confirm(this.form,'Tényleg szeretnéd az ÖSSZES kiejölt tagot törölni?')"-->
 
 	<INPUT TYPE="submit" NAME="action_del" VALUE="Kijelöltek törlése">
 

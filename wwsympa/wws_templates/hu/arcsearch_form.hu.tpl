@@ -71,7 +71,6 @@
 <DL>
 <DT><b>Bõvített keresési tartomány</b>
 <SELECT NAME="directories" MULTIPLE SIZE=4>    
-<DD>
 
 [FOREACH u IN yyyymm]
 

@@ -8,28 +8,29 @@ Subject: [wwsconf->title] / leiratkozás a(z) [list] listáról
 [ELSE]
 Subject: [wwsconf->title] / beállításaid
 [ENDIF]
+Mime-version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-transfer-encoding: 8bit
 
 [IF action=subrequest]
-Feliratkozásodat kérted a(z) [list] levelezõlistára.
-
-Feliratkozásodat a következõ jelszóval erõsítheted meg.
+Ha tényleg fel szeretnél iratkozni a(z) [list] levelezõlistára,
+akkor a kérelmedet a következõ jelszóval meg kell erõsítened:
 
 	jelszó: [newuser->password]
 
 [ELSIF action=sigrequest]
-Leiratkozásodat kérted a(z) [list] levelezõlistáról.
-
-Leiratkozásodat a következõ jelszóval erõsítheted meg.
+Ha tényleg törölni szeretnéd magadat a(z) [list] levelezõlistáról,
+akkor azt a következõ jelszóval meg kell erõsítened:
 
 	jelszó: [newuser->password]
 
 [ELSE]
-Egyéni beállításaid megtekintéséhez be kell jelentkezned
+Beállításaid megtekintéséhez elõször is be kell lépned
 
-     email címed  : [newuser->email]
-     jelszavad    : [newuser->password]
+     e-mail címed: [newuser->email]
+     jelszavad   : [newuser->password]
 
-Jelszavadat itt változtathatod meg
+A jelszavadat az alábbi címen tudod megváltoztatni 
 [base_url][path_cgi]/choosepasswd/[newuser->escaped_email]/[newuser->password]
 [ENDIF]
 
@@ -37,4 +38,3 @@ Jelszavadat itt változtathatod meg
 [wwsconf->title]: [base_url][path_cgi] 
 
 Súgó a Sympa használatához: [base_url][path_cgi]/help
-

@@ -5,11 +5,17 @@
 [ELSE]
 
   [IF path]  
-    <h2> <B> [path] könyvtár tartalma</B> </h2> 
+    <h2> <B><IMG SRC="/icons/folder.open.gif">[path]</B> </h2> 
+   <A HREF="[path_cgi]/d_editfile/[list]/[escaped_path]">szerkeszt</A>
+   <A HREF="[path_cgi]/d_delete/[list]/[escaped_path]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path]', 'Tényleg akarod törölni a(z) [path] könyvtárat?'); return false;">töröl</A>
+   <A HREF="[path_cgi]/d_control/[list]/[escaped_path]">hozzáférés</A><BR>
     Tulajdonos: [doc_owner] <BR>
     Utolsó frissítés: [doc_date] <BR>
+  [IF doc_title]
     Leírás: [doc_title] <BR><BR>
-    <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[father]"> <IMG ALIGN="bottom"  src="[father_icon]">Egy könyvtárral feljebb</A></font>
+  [ENDIF]
+  
+    <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[escaped_father]"> <IMG ALIGN="bottom"  src="[father_icon]">Egy könyvtárral feljebb</A></font>
     <BR>  
   [ELSE]
     <h2> <B>Megosztott könyvtár tartalma</B> </h2> 
@@ -78,7 +84,6 @@
   </TR></TABLE>  
   </th> 
 
-  <TD ALIGN="left"><font color="[bg_color]">Leírás</font></TD> 
   <TD ALIGN="center"><font color="[bg_color]">Szerkeszt</font></TD> 
   <TD ALIGN="center"><font color="[bg_color]">Töröl</font></TD>
   <TD ALIGN="center"><font color="[bg_color]">Hozzáférés</font></TD></TR>
@@ -91,7 +96,7 @@
     [IF sort_subdirs]
       [FOREACH s IN sort_subdirs] 
         <TR BGCOLOR="[light_color]">        
-	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[path][s->doc]/"> 
+	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[escaped_path][s->escaped_doc]/"> 
 	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]"> [s->doc]</A></TD>
 	<TD>
 	[IF s->author_known] 
@@ -102,17 +107,20 @@
 	</TD>	    
 	<TD>&nbsp;</TD>
 	<TD NOWRAP> [s->date] </TD>
-	<TD NOWRAP>&nbsp; [s->title]</TD>
-		
-	<TD>&nbsp; </TD>
 	
 	[IF s->edit]
 	  <TD><center>
 	  <FONT size=-1>
-	  <A HREF="[path_cgi]/d_delete/[list]/[path][s->doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[path][s->doc]', 'Tényleg szeretnéd törölni a következõt: [path][s->doc] ?'); return false;">töröl</A>
+	  <A HREF="[path_cgi]/d_editfile/[list]/[escaped_path][s->escaped_doc]">szerkeszt</A>
+          </font>
+
+          </center></TD>
+	  <TD><center>
+	  <A HREF="[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]', 'Tényleg szeretnéd törölni a következõt: [path][s->doc] ?'); return false;">töröl</A>
 	  </FONT>
 	  </center></TD>
 	[ELSE]
+	  <TD>&nbsp; </TD>
 	  <TD>&nbsp; </TD>
 	[ENDIF]
 	
@@ -120,7 +128,7 @@
 	  <TD>
 	  <center>
 	  <FONT size=-1>
-	  <A HREF="[path_cgi]/d_control/[list]/[path][s->doc]">megnyit</A>
+	  <A HREF="[path_cgi]/d_control/[list]/[escaped_path][s->escaped_doc]">megnyit</A>
 	  </font>
 	  </center>
 	  </TD>	 
@@ -136,11 +144,14 @@
         <TR BGCOLOR="[light_color]"> 
         <TD>&nbsp;
         [IF f->html]
-	  <A HREF="[path_cgi]/d_read/[list]/[path][f->doc]" TARGET="html_window">
-	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]"> [f->doc] </A>
+	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]" TARGET="html_window">
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->doc] </A>
+	[ELSIF f->url]
+	  <A HREF="[f->url]" TARGET="html_window">
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->anchor] </A>
 	[ELSE]
-	  <A HREF="[path_cgi]/d_read/[list]/[path][f->doc]">
-	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]"> [f->doc] </A>
+	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]">
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->doc] </A>
         [ENDIF] 
 	</TD>  
 	 
@@ -152,15 +163,18 @@
         [ENDIF]
 	</TD>
 	 
-	<TD NOWRAP> [f->size] </TD>
+	<TD NOWRAP>&nbsp;
+        [IF !f->url]
+	[f->size]
+	[ENDIF]
+	 </TD>
 	<TD NOWRAP> [f->date] </TD>
-	<TD NOWRAP>&nbsp; [f->title]</TD>
 	 
 	[IF f->edit]
 	<TD>
 	<center>
 	<font size=-1>
-	<A HREF="[path_cgi]/d_editfile/[list]/[path][f->doc]">szerkeszt</A>
+	<A HREF="[path_cgi]/d_editfile/[list]/[escaped_path][f->escaped_doc]">szerkeszt</A>
 	</font>
 	</center>
 
@@ -168,7 +182,7 @@
 	<TD>
 	<center>
 	<FONT size=-1>
-	<A HREF="[path_cgi]/d_delete/[list]/[path][f->doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[path][f->doc]', 'Tényleg szeretnéd törölni a következõt [path][s->doc] ([f->size] Kb) ?'); return false;">töröl</A>
+	<A HREF="[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]', 'Tényleg szeretnéd törölni a következõt [path][s->doc] ([f->size] Kb) ?'); return false;">töröl</A>
 	</FONT>
 	</center>
 	</TD>
@@ -179,7 +193,7 @@
 	[IF f->control]
 	  <TD> <center>
 	  <font size=-1>
-	  <A HREF="[path_cgi]/d_control/[list]/[path][f->doc]">megnyit</A>
+	  <A HREF="[path_cgi]/d_control/[list]/[escaped_path][f->escaped_doc]">megnyit</A>
 	  </font>
 	  </center></TD>
 	[ELSE]
@@ -201,36 +215,43 @@
       <TR>
       <form method="post" ACTION="[path_cgi]">
       <TD ALIGN="right" VALIGN="bottom">
-      <B> [path] könyvtár tulajdonságai</B> <BR>
-            
-      <input MAXLENGTH=100 type="text" name="content" value="[description]" SIZE=50>
+      [IF path]
+      <B> Hozzon létre egy új könyvtárat a(z) [path] könyvtáron belül</B> <BR>
+       
+      [ELSE]
+
+      <B> Új könyvtár létrehozása a MEGOSZTOTT KÖNYVTÁRON belül </B><BR>
+      [ENDIF]
+      <input MAXLENGTH=30 type="text" name="name_doc">
       </TD>
       
       <TD ALIGN="left" VALIGN="bottom">
-      <input type="submit" value="Alkalmaz" name="action_d_describe">
-      <INPUT TYPE="hidden" NAME="serial" VALUE="[serial_desc]">
+      <input type="submit" value="Új könyvtár létrehozása" name="action_d_create_dir">
+      <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
       <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
       <INPUT TYPE="hidden" NAME="path" VALUE="[path]">     
-      <INPUT TYPE="hidden" NAME="action" VALUE="d_describe">
+      <INPUT TYPE="hidden" NAME="type" VALUE="directory">
+      <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
       </TD>
 
       </form>
       </TR>
-      [ENDIF]
    
-      [IF may_control]
       <TR>   
       <form method="post" ACTION="[path_cgi]">
-           
-      <TD ALIGN="right" VALIGN="center">
-      <B> [path] könyvtár hozzáférésének módosítása</B> 
+      <TD ALIGN="right" VALIGN="bottom">
+	<B>Új állomány létrehozása</B> <BR>
+        <input MAXLENGTH=30 type="text" name="name_doc">
 
       </TD>
      
       <TD ALIGN="left" VALIGN="bottom">
-      <input type="submit" value="   Hozzáférés   " name="action_d_control">
+      <input type="submit" value="Új állomány létrehozása" name="action_d_create_dir">
+      <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
       <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
       <INPUT TYPE="hidden" NAME="path" VALUE="[path]">     
+      <INPUT TYPE="hidden" NAME="type" VALUE="file">
+      <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
       </TD>
 
       </form>
@@ -239,42 +260,37 @@
   
    [ENDIF] 
 
-
-  [IF may_edit]
     <TR>
     <form method="post" ACTION="[path_cgi]">
-    <TD ALIGN="right" VALIGN="bottom">
-    [IF path]
-      <B> Hozz létre egy új könyvtárat a(z) [path]-on belül</B> <BR>
-    [ELSE]
-      <B> Hozz létre egy új könyvtárat a KÖZÖS OLDALakon belül</B> <BR>
-    [ENDIF]
-    <input MAXLENGTH=30 type="text" name="name_doc">
+    <TD ALIGN="right" VALIGN="center">
+    <B>Könyvjelzõ hozzáadása</B><BR>    
+     URL <input MAXLENGTH=100 SIZE="25" type="text" name="url"><BR>
+     megnevezés <input MAXLENGTH=100 SIZE="20" type="text" name="name_doc">
     </TD>
 
     <TD ALIGN="left" VALIGN="bottom">
-    <input type="submit" value="Új alkönyvtár" name="action_d_create_dir">
+    <input type="submit" value="Hozzáad" name="action_d_savefile">
     <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
     <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
-    <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
+    <INPUT TYPE="hidden" NAME="action" VALUE="d_savefile">
     </TD>
-    </form>
-    </TR><BR>
+    </FORM>
+    </TR>
 
    <TR>
    <form method="post" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
    <TD ALIGN="right" VALIGN="bottom">
    [IF path]
-     <B> Tölts fel egy új állományt a(z) [path]-ba</B><BR>
+     <B> Új állomány feltöltése a(z) [path] könyvtárba</B><BR>
    [ELSE]
-     <B> Tölts fel egy új állományt a KÖZÖS KÖNYVTÁRba </B><BR>
+     <B> Új állomány feltöltése a MEGOSZTOTT KÖNYVTÁRba </B><BR>
    [ENDIF]
    <input type="file" name="uploaded_file">
    </TD>
 
    <TD ALIGN="left" VALIGN="bottom">
-   <input type="submit" value="Elküld" name="action_d_upload">
+   <input type="submit" value="Feltölt" name="action_d_upload">
    <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
    <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
    <TD>

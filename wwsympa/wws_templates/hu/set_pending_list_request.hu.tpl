@@ -35,8 +35,9 @@
 <INPUT TYPE="radio" NAME="status" VALUE="open">Létrehoz &nbsp;&nbsp;
 </MENU>
 </TD><TD>
-<TD BGCOLOR="[light_color]">
+<TD>
 <INPUT TYPE="submit" NAME="action_install_pending_list" VALUE="Mentés">
+<INPUT TYPE="chechkbox" NAME="notify" CHECKED>listagazda értesítése
 </FORM>
 </TD>
 </TR>

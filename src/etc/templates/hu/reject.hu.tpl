@@ -9,6 +9,5 @@ leveled megjelenését [rejected_by] moderátor elutasította.
 
 (Eredeti levél tárgya: [subject])
 
-[list->name] lista használatáról bõvebben itt olvashatsz:
+[list->name] lista használatáról bõvebben itt:
 [conf->wwsympa_url]/info/[list->name]
-

@@ -12,10 +12,10 @@
 [error->email] címmel már beléptél.
 
 [ELSIF error->msg=no_email]
-Kérlek add meg az email címedet.
+Kérlek add meg az e-mail címedet.
 
 [ELSIF error->msg=incorrect_email]
-Nem megfelelõ email cím: "[error->email]" 
+Nem megfelelõ eimail cím: "[error->email]" 
 
 [ELSIF error->msg=incorrect_listname]
 "[error->listname]": hibásan megadott listanév
@@ -136,6 +136,15 @@ Hiba: [error->directory] könyvtár nem üres.
 
 [ELSIF error->msg=init_passwd]
 Nem adtál meg jelszót, az emlékeztetõ lekérdezésével kikérheted a jelenlegi jelszavadat.
+
+[ELSIF error->msg=change_email_failed]
+A(z) [error->list] listán nem sikerült megváltoztatni az e-mail címedet.
+
+[ELSIF error->msg=change_email_failed_because_subscribe_not_allowed]
+A(z) '[error->list]' listán az e-mail címedet nem sikerült megváltoztatni, mert az új címeddel a listán nem lehetnél tag.
+
+[ELSIF error->msg=change_email_failed_because_unsubscribe_not_allowed] 
+A(z) '[error->list]' listán az e-mail címedet nem sikerült megváltoztatni, mert a listáról nem lehet leiratkozni.
 
 [ELSE]
 [error->msg]

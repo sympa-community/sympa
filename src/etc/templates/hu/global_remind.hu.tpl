@@ -1,8 +1,8 @@
 
 Értesítés a feliratkozásaidról ([user->email] címmel).
-Ha valamelyik listáról le akarsz iratkozni, akkor mentsd ezt a levelet.
+Ha valamelyik listáról le akarsz iratkozni, akkor mentsd el ezt a levelet.
 
-Minden egyes listához itt megtalálod a leiratkozási címet.
+Itt az összes listához megtalálod a leiratkozási címet.
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 [FOREACH l IN lists]
@@ -13,7 +13,6 @@ Minden egyes listához itt megtalálod a leiratkozási címet.
 [IF user->password]
 
 A wwsympa [conf->wwsympa_url] belépésnél a(z) [user->email]
-email címet es [user->passwd] jelszót használd.
+e-mail címet és [user->passwd] jelszót használd.
 
 [ENDIF]
-

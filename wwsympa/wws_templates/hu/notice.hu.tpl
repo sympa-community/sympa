@@ -19,7 +19,7 @@ A beállításokat tartalmazó állomány frissítve.
 [notice->path] állomány elmentve.
 
 [ELSIF notice->msg=password_sent]
-Jelszavad emailben el lett küldve.
+Jelszavad e-mailben el lett küldve.
 
 [ELSIF notice->msg=you_should_choose_a_password]
 Jelszavad módosításához válaszd a felsõ menü 'Beállításaim' részét.
@@ -31,7 +31,6 @@ Jelszavad módosításához válaszd a felsõ menü 'Beállításaim' részét.
 
 <BR>
 [END]
-
 
 
 

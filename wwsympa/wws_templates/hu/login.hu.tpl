@@ -1,3 +1,3 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-[user->email] emailcímmel jelentkeztél be.<BR>
+[user->email] e-mailcímmel jelentkeztél be.<BR>

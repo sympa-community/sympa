@@ -9,9 +9,10 @@
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 <INPUT TYPE="hidden" NAME="email" VALUE="[subscriber->escaped_email]">
 <DL>
-<DD>Email: <INPUT NAME="new_email" VALUE="[subscriber->email]" SIZE="25">
+<DD>E-mail: <INPUT NAME="new_email" VALUE="[subscriber->email]" SIZE="25">
 <DD>Név: <INPUT NAME="gecos" VALUE="[subscriber->gecos]" SIZE="25">
 <DD>[subscriber->date] óta listatag
+<DD>Utolsó módosítás: [subscriber->update_date]
 <DD>Küldési mód: <SELECT NAME="reception">
 		  [FOREACH r IN reception]
 		    <OPTION VALUE="[r->NAME]" [r->selected]>[r->description]
@@ -40,6 +41,3 @@
 [ENDIF]
 </TABLE>
 </FORM>
-
-
-

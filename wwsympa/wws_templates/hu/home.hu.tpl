@@ -64,6 +64,8 @@ Ezen az Internet címen a feliratkozásodat, leiratkozásodat, beállításaid módosít
          <INPUT SIZE=25 NAME=filter VALUE=[filter]>
          <INPUT TYPE="hidden" NAME="action" VALUE="search_list">
          <INPUT TYPE="submit" NAME="action_search_list" VALUE="Lista keresés">
+	 <INPUT TYPE="radio" NAME="extended" VALUE="0" checked>Helyben
+	 <INPUT TYPE="radio" NAME="extended" VALUE="1">Külsõ gépeken
         </FORM>
    </TD>
         

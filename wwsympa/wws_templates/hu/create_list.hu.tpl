@@ -2,7 +2,7 @@
 
 [IF status=open]
 A lista mûködik.<BR> 
-Az <B>admin</B> gombra kattintva állíthatod be a paramétereit.
+A <B>lista adminisztráció</B> gombra kattintva a lista tulajdonságait, paramétereit állíthatod be.
 <BR>
 [IF auto_aliases]
 A lista bejegyzések (aliases) elmentve.
