@@ -4361,7 +4361,7 @@ ones. \WWSympa first looks for list specific web templates, then for
 site web templates, before falling back on its defaults. 
 
 Your list web template files should be placed in the \dir {[EXPL_DIR]/\samplelist/wws\_templates} 
-directory ; your site web templates in \tildedir {[EXPL_DIR]/wws\_templates} directory.
+directory ; your site web templates in \tildedir {[ETCDIR]/wws\_templates} directory.
 
 [STOPPARSE]
 There are actually 2 ways a template can include another template :
