@@ -666,12 +666,14 @@ if ($wwsconf->{'use_fast_cgi'}) {
              last;
          }
 
-         $param->{'host'} = $list->{'admin'}{'host'} || $robot;
+	 $param->{'host'} = $list->{'admin'}{'host'} if (ref($list) eq 'List');
+         $param->{'host'} ||= $robot;
          $param->{'domain'} = $param->{'host'};
 
          ## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
-
-         $param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
+	 
+         $param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || 
+	     $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
          &Language::SetLang($param->{'lang'});
          &POSIX::setlocale(&POSIX::LC_ALL, Msg(14, 1, 'en_US'));
 
@@ -719,6 +721,10 @@ if ($wwsconf->{'use_fast_cgi'}) {
      ## Params 
      $param->{'action_type'} = $action_type{$param->{'action'}};
      $param->{'action_type'} = 'none' unless ($param->{'is_priv'});
+
+     $param->{'lang'} ||= $param->{'cookie_lang'};
+     $param->{'lang'} ||= $param->{'user'}{'lang'} if (defined $param->{'user'});
+     $param->{'lang'} ||= &Conf::get_robot_conf($robot, 'lang');
 
      if ($param->{'list'}) {
 	 $param->{'main_title'} = "$param->{'list'} - $list->{'admin'}{'subject'}";
@@ -890,7 +896,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 $param->{'help_template'} = &tools::get_filename('etc', "wws_templates/help_$param->{'help_topic'}.$param->{'lang'}.tpl", $robot,$list);
 
 	 ## main template
-	 my $main = &tools::get_filename('etc', "wws_templates/main.$param->{'lang'}.tpl", $robot,$list);;
+	 my $main = &tools::get_filename('etc', "wws_templates/main.$param->{'lang'}.tpl", $robot,$list);
 
 	 unless ($main)  {
 	     &error_message('template_error');
