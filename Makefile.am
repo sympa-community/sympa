@@ -332,25 +332,16 @@ installscript:
 
 
 installdir:
-	echo "Setting $(USER) owner of $(DESTDIR)$(DIR)"
-	chown $(USER) $(DESTDIR)$(DIR)
-	chgrp $(GROUP) $(DESTDIR)$(DIR)
-	@if [ ! -f $(DESTDIR)$(CONFDIR)/sympa.conf ] ; then \
-	echo "First installation : installing directories..."; \
-	echo "Creating $(DESTDIR)$(DIR)/"; \
-	mkdir -p $(DESTDIR)$(DIR); \
-	chmod 755 $(DESTDIR)$(DIR); \
-	chown $(USER) $(DESTDIR)$(DIR); \
-	chgrp $(GROUP) $(DESTDIR)$(DIR); \
-	for dir in $(EXPL_DIR) $(CONFDIR) $(SAMPLEDIR) ; do \
+	@echo "Creating required directories"
+	@for dir in $(DIR) $(EXPL_DIR) $(CONFDIR) $(SAMPLEDIR) ; do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
 			mkdir -p $(DESTDIR)$$dir; \
 			chown $(USER) $(DESTDIR)$$dir; \
 			chgrp $(GROUP) $(DESTDIR)$$dir; \
+			chmod 755 $(DESTDIR)$$dir; \
 		fi \
-	done \
-	fi
+	done
 	@if [ ! -f $(DESTDIR)$(CONFDIR)/sympa.conf ] ; then \
 	echo "First installation : installing conf directories..."; \
 	for dir in create_list_templates templates wws_templates scenari \
@@ -439,6 +430,7 @@ build_mdk_rpm: clean
                 SENDMAIL_ALIASES=$(SENDMAIL_ALIASES); export SENDMAIL_ALIASES; \
                 MAILERPROGDIR=$(MAILERPROGDIR); export MAILERPROGDIR; \
                 PIDDIR=$(PIDDIR); export PIDDIR; \
+		INITDIR=$(INITDIR);  export INITDIR; \
                 SPOOLDIR=$(SPOOLDIR); export SPOOLDIR; \
 		ICONSDIR=$(ICONSDIR); export ICONSDIR; \
                 BINDIR=$(BINDIR); export BINDIR; \
