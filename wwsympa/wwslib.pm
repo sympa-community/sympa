@@ -154,7 +154,7 @@ sub load_config {
     my $conf = \%default_conf;
 
     unless (open (FILE, $file)) {
-	printf STDERR "load_config: unable to open $file\n";
+	&Log::do_log('err',"load_config: unable to open $file");
 	return undef;
     }
     
@@ -167,7 +167,7 @@ sub load_config {
 	    if (defined ($conf->{$k})) {
 		$conf->{$k} = $v;
 	    }else {
-		printf STDERR "Unknown parameter %s in %s\n", $k, $file;
+		&Log::do_log('err',"Unknown parameter %s in %s", $k, $file);
 	    }
 	}
 	next;
@@ -177,15 +177,15 @@ sub load_config {
 
     ## Check binaries and directories
     if ($conf->{'arc_path'} && (! -d $conf->{'arc_path'})) {
-	printf STDERR "No web archives directory: %s\n", $conf->{'arc_path'};
+	&Log::do_log('err',"No web archives directory: %s\n", $conf->{'arc_path'});
     }
 
     if ($conf->{'bounce_path'} && (! -d $conf->{'bounce_path'})) {
-	printf STDERR "No bounces directory: %s\n", $conf->{'bounce_path'};
+	&Log::do_log('err',"No bounces directory: %s", $conf->{'bounce_path'});
     }
 
     if ($conf->{'mhonarc'} && (! -x $conf->{'mhonarc'})) {
-	printf STDERR "MHonArc is not installed or %s is not executable.\n", $conf->{'mhonarc'};
+	&Log::do_log('err',"MHonArc is not installed or %s is not executable.", $conf->{'mhonarc'});
     }
 
     # robots <robot_domain>,<http_host>,<robot title>(|<robot_domain>,<http_host>,<robot title>)+
@@ -210,7 +210,7 @@ sub load_mime_types {
 	next unless (-r $loc);
 
 	unless(open (CONF, $loc)) {
-	    printf STDERR "load_mime_types: unable to open $loc\n";
+	    &Log::do_log('err',"load_mime_types: unable to open $loc");
 	    return undef;
 	}
     }
