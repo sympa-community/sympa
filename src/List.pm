@@ -5249,6 +5249,14 @@ sub _load_users_include {
 	undef $ref;
 	untie %users;
 	close DB_FH;
+	
+	unless (defined $total) {
+	    if (-f $db_file.'old') {
+	        unlink $db_file;
+		rename $db_file.'old', $db_file;
+		$total = 0;
+	    }
+	}
     }
 
     unless ($ref = tie %users, 'DB_File', $db_file, O_CREAT|O_RDWR, 0600, $btree) {
