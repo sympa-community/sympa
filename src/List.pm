@@ -2713,7 +2713,7 @@ sub add_user {
 	}
 
 	## Update Subscriber Table
-	$statement = sprintf "INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, date_subscriber, reception_subscriber, visibility_subscriber) VALUES (%s, %s, %s, %s, %s)", $dbh->quote($who), $dbh->quote($values->{'gecos'}), $dbh->quote($name), $date_field, $dbh->quote($values->{'reception'}), $dbh->quote($values->{'visibility'});
+	$statement = sprintf "INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, date_subscriber, reception_subscriber, visibility_subscriber) VALUES (%s, %s, %s, %s, %s, %s)", $dbh->quote($who), $dbh->quote($values->{'gecos'}), $dbh->quote($name), $date_field, $dbh->quote($values->{'reception'}), $dbh->quote($values->{'visibility'});
        
 	unless ($dbh->do($statement)) {
 	    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
