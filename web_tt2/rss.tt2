@@ -89,7 +89,7 @@
  [% FOREACH l = latest_lists -%]
   <item>
     <title>
-      [%|loc(l.name,l.host,l.subject)%]%1@%2 - %3[%END%]
+      [% l.name %]@[% l.host %] - [% l.subject %]
     </title>
     <link>[% base_url %][% path_cgi %]/info/[% l.name %]</link>
   </item>
