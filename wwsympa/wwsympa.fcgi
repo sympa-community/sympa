@@ -3418,9 +3418,9 @@ sub do_viewmod {
 
 	## generate HTML
 	chdir $tmp_dir;
-	open ARCMOD, "$wwsconf->{'mhonarc'}  -single -rcfile $mhonarc_ressources -definevars \"listname=$list->{'name'} hostname=$list->{'admin'}{'host'} \" $Conf{'queuemod'}/$list->{'name'}_$in{'id'}|";
+	open ARCMOD, "$wwsconf->{'mhonarc'}  -single -rcfile $mhonarc_ressources -definevars listname=$list->{'name'} -definevars hostname=$list->{'admin'}{'host'} $Conf{'queuemod'}/$list->{'name'}_$in{'id'}|";
 	open MSG, ">msg00000.html";
-	&do_log('debug4', "$wwsconf->{'mhonarc'}  -single -rcfile $mhonarc_ressources -definevars \"listname=$list->{'name'} hostname=$list->{'admin'}{'host'} \" $Conf{'queuemod'}/$list->{'name'}_$in{'id'}|");
+	&do_log('debug4', "$wwsconf->{'mhonarc'}  -single -rcfile $mhonarc_ressources -definevars listname=$list->{'name'} -definevars hostname=$list->{'admin'}{'host'} $Conf{'queuemod'}/$list->{'name'}_$in{'id'}|");
 	print MSG <ARCMOD>;
 	close MSG;
 	close ARCMOD;
