@@ -1270,6 +1270,13 @@ the file is of no importance.
 
 \example {remove\_headers      Resent-Date,Resent-From,Resent-To,Resent-Message-Id,Sender,Delivered-To,Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To}
 
+\subsection {\cfkeyword {anonymous\_headers\_fields}} 
+
+        \default {Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender}
+
+	This parameter defines the list of SMTP header fields that should be
+	removed when a mailing list is setup in anonymous mode (see 
+	\ref {par-anonymous-sender},  page~\pageref {par-anonymous-sender}).
 
 \section {Spool related}
 \label {spool-related}

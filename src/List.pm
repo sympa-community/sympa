@@ -1451,8 +1451,7 @@ sub distribute_msg {
     
     ## Hide the sender if the list is anonymoused
     if ( $self->{'admin'}{'anonymous_sender'} ) {
-	foreach my $field ('Sender','X-Sender','Received','Message-id','From','X-Envelope-To',
-			   'Resent-From','Reply-To','Organization', 'Disposition-Notification-To') {
+	foreach my $field (@{$Conf{'anonymous_header_fields'}}) {
 	    $hdr->delete($field);
 	}
 	

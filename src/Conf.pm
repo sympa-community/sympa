@@ -23,7 +23,7 @@ my @valid_options = qw(
 		       remind_return_path request_priority rfc2369_header_fields sendmail sleep 
 		       sort sympa_priority syslog umask welcome_return_path wwsympa_url
                        openssl trusted_ca_options key_passwd ssl_cert_dir remove_headers
-		       antivirus_path antivirus_args
+		       antivirus_path antivirus_args anonymous_header_fields
 );
 my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
@@ -88,7 +88,7 @@ my %Default_Conf =
      'remove_headers' => 'Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To',
      'antivirus_path' => '',
      'antivirus_args' => '',
-     
+     'anonymous_header_fields' => 'Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender'
    );
    
 %Conf = ();
@@ -182,6 +182,12 @@ sub load {
 	delete $Conf{'rfc2369_header_fields'};
     }else {
 	$Conf{'rfc2369_header_fields'} = [split(/,/, $Conf{'rfc2369_header_fields'})];
+    }
+
+    if ($Conf{'anonymous_header_fields'} eq 'none') {
+	delete $Conf{'anonymous_header_fields'};
+    }else {
+	$Conf{'anonymous_header_fields'} = [split(/,/, $Conf{'anonymous_header_fields'})];
     }
 
     if ($Conf{'remove_headers'} eq 'none') {
