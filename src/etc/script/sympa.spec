@@ -109,6 +109,7 @@ for a_file in /etc/aliases /etc/postfix/aliases; do
       echo "# sympa: \"|%{home_s}/bin/queue sympa\"" >> ${a_file}
       echo "# sympa-request:  listmaster@${HOSTNAME}" >> ${a_file}
       echo "# sympa-owner:    listmaster@${HOSTNAME}" >> ${a_file}
+      echo "# bounce+*:          \"| %{home_s}/bin/bouncequeue sympa\"" >> ${a_file}
       echo "" >> ${a_file}
 #     /usr/bin/newaliases
     fi  
