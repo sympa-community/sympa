@@ -194,8 +194,10 @@ $set 8	Messages used in List.pm
 2	"Subscription request to list %s"
 3	"Dear owner of list %s,\n\n\
 A user asked to be added as a subscriber to your list. Shall this be fine\n\
-with you, you should consider using the following command:\n\n\
-mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
+with you, you should click the following URL :\n\n\
+mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n\n\
+or send an email to %s with the following subject :\n\
+AUTH %s ADD %s %s %s\n"
 4	"Moderators of list %s"
 5	"[%s] Article to be approved"
 6	"Welcome on list %s"

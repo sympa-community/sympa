@@ -237,7 +237,7 @@ my %alias = ('reply-to' => 'reply_to',
 ## unit :        Unit of the parameter ; this is used in web forms
 ## occurrence :  Occurerence of the parameter in the config file
 ##               possible values: 0-1 | 1 | 0-n | 1-n
-##               example : a list may have multiple owners 
+##               example : a list may have multiple owner 
 ## title_id :    Title reference in NLS catalogues
 ###############################################################
 %::pinfo = ('account' => {'format' => '\S+',
@@ -1067,7 +1067,7 @@ sub send_sub_to_owner {
 
    my $subject = sprintf(Msg(8, 2, "%s subscription request"), $name);
    my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
-   my $body = sprintf Msg(8, 3, $msg::sub_owner), $name, $replyto, $keyauth, $name, $who, $gecos;
+   my $body = sprintf Msg(8, 3, $msg::sub_owner), $name, $replyto, $keyauth, $name, $who, $gecos, $replyto, $keyauth, $name, $who, $gecos;
    &mail::mailback (\$body, $subject, $to, @rcpt);
 
 }
