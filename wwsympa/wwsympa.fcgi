@@ -909,7 +909,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 ## Help template
-	 $param->{'help_template'} = &tools::get_filename('etc', "wws_templates/help_$param->{'help_topic'}.$param->{'lang'}.tpl", $robot,$list);
+	 $param->{'help_template'} = &tools::get_filename('etc', "web_tt2/help_$param->{'help_topic'}.$param->{'lang'}.tpl", $robot,$list);
 
 	 ## main template
 	 my $main = &tools::get_filename('etc', "web_tt2/main.$param->{'lang'}.tt2", $robot,$list);
@@ -3176,7 +3176,11 @@ sub do_redirect {
      ## Messages edition
      foreach my $f ('info','homepage','welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl') {
 	 next unless ($list->may_edit($f, $param->{'user'}{'email'}) eq 'write');
-	 $param->{'files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
+	 if ($wwslib::filenames{$f}{'gettext_id'}) {
+	     $param->{'files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
+	 }else {
+	     $param->{'files'}{$f}{'complete'} = $f;
+	 }
 	 $param->{'files'}{$f}{'selected'} = '';
      }
      $param->{'files'}{'info'}{'selected'} = 'SELECTED';
@@ -3210,7 +3214,11 @@ sub do_redirect {
 
      ## Lists Default files
      foreach my $f ('welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl','your_infected_msg.tpl') {
-	 $param->{'lists_default_files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
+	 if ($wwslib::filenames{$f}{'gettext_id'}){
+	     $param->{'lists_default_files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
+	 }else {
+	     $param->{'lists_default_files'}{$f}{'complete'} = $f;
+	 }
 	 $param->{'lists_default_files'}{$f}{'selected'} = '';
      }
 
@@ -4015,7 +4023,11 @@ sub do_redirect {
 	 ## Messages edition
 	 foreach my $f ('info','homepage','welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl','your_infected_msg.tpl') {
 	     next unless ($list->may_edit($f, $param->{'user'}{'email'}) eq 'write');
-	     $param->{'files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
+	     if ($wwslib::filenames{$f}{'gettext_id'}) {
+		 $param->{'files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
+	     }else {
+		 $param->{'files'}{$f}{'complete'} = $f;
+	     }
 	     $param->{'files'}{$f}{'selected'} = '';
 	 }
 	 return 1;
@@ -4047,12 +4059,12 @@ sub do_redirect {
 	 $file =~ s/\.tpl$/\.$list->{'admin'}{'lang'}\.tpl/;
 
 	 ## Look for the template
-	 $param->{'filepath'} = &tools::get_filename('etc','templates/'.$file,$robot, $list);
+	 $param->{'filepath'} = &tools::get_filename('etc','tt2/'.$file,$robot, $list);
 
 	 ## Default for 'homepage' is 'info'
 	 if (($in{'file'} eq 'homepage') &&
 	     ! $param->{'filepath'}) {
-	     $param->{'filepath'} = &tools::get_filename('etc','templates/'.'info',$robot, $list);
+	     $param->{'filepath'} = &tools::get_filename('etc','tt2/'.'info',$robot, $list);
 	 }
      }else {
 	 unless (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
@@ -4070,7 +4082,7 @@ sub do_redirect {
 	     my $lang = &Conf::get_robot_conf($robot, 'lang');
 	     $file =~ s/\.tpl$/\.$lang\.tpl/;
 
-	     $param->{'filepath'} = &tools::get_filename('etc','templates/'.$file,$robot);
+	     $param->{'filepath'} = &tools::get_filename('etc','tt2/'.$file,$robot);
 	 }
      }
 
@@ -4120,13 +4132,13 @@ sub do_redirect {
 	     if ($in{'file'} eq 'list_aliases.tpl') {
 		 $param->{'filepath'} = "$Conf{'etc'}/$robot/$in{'file'}";
 	     }else {
-		 $param->{'filepath'} = "$Conf{'etc'}/$robot/templates/$in{'file'}";
+		 $param->{'filepath'} = "$Conf{'etc'}/$robot/tt2/$in{'file'}";
 	     }
 	 }else {
 	      if ($in{'file'} eq 'list_aliases.tpl') {
 		  $param->{'filepath'} = "$Conf{'etc'}/$in{'file'}";
 	      }else {
-		  $param->{'filepath'} = "$Conf{'etc'}/templates/$in{'file'}";
+		  $param->{'filepath'} = "$Conf{'etc'}/tt2/$in{'file'}";
 	      }
 	 }
      }
@@ -9579,9 +9591,9 @@ sub creation_desc_file {
       &wwslog('info', 'do_view_translations()');
       my %lang = ('default' => 1);
 
-      unless (opendir TPL, "--ETCBINDIR--/wws_templates/") {
+      unless (opendir TPL, "--ETCBINDIR--/web_tt2/") {
 	  &error_message('error');
-	  &wwslog('info','do_view_translations: unable to read --ETCBINDIR--/wws_templates/');
+	  &wwslog('info','do_view_translations: unable to read --ETCBINDIR--/web_tt2/');
 	  return undef;
       }
 
@@ -10352,7 +10364,7 @@ sub get_protected_email_address {
 	 return undef;
      }
 
-     my $src_file =  &tools::get_filename('etc', 'wws_templates/'.$in{template}.'.src', $robot);
+     my $src_file =  &tools::get_filename('etc', 'web_tt2/'.$in{template}.'.src', $robot);
      unless (open TPL, $src_file) {
 	 do_log('err', 'Unable to open file %s: %s', $src_file, $!);
 	 return undef;
@@ -10414,7 +10426,7 @@ sub get_protected_email_address {
      }
 
      ## Load full index
-     my $index_file =  &tools::get_filename('etc', "wws_templates/index.$in{'lang'}", $robot);
+     my $index_file =  &tools::get_filename('etc', "web_tt2/index.$in{'lang'}", $robot);
      my $index;
      unless ($index = &tools::load_index($in{'lang'}, $index_file)) {
 	 &error_message('failed');
@@ -10432,9 +10444,9 @@ sub get_protected_email_address {
      ## Save updated index
      my $index_file;
      if ($robot ne $Conf{'domain'}) {
-	 $index_file = "$Conf{'etc'}/$robot/wws_templates/index.$in{'lang'}";
+	 $index_file = "$Conf{'etc'}/$robot/web_tt2/index.$in{'lang'}";
      }else {
-	 $index_file = "$Conf{'etc'}/wws_templates/index.$in{'lang'}";
+	 $index_file = "$Conf{'etc'}/web_tt2/index.$in{'lang'}";
      }
 
      unless (&tools::save_index($in{'lang'}, $index_file, $index)) {
