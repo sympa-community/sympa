@@ -1,6 +1,80 @@
 *****    Changes which are not compatible with previous versions are
 *****    listed using "*****"in the margin. Please check this at least.
 
+3.1b.12 4 Mar 2001
+
+  New features :
+	
+	propose	pre-defined cookie expiration periods in WWSympa
+
+	src/sympa.pl: Add --keepcopy option to keep a copy of 
+	incoming messages
+
+	Notices are different from errors. Create new templates
+
+	Add X-No-Archive header field to distributed messages
+
+	src/Log.pm: Attempt to restore lost connexion to syslogd
+
+  Changes :
+
+	Add creation date and email in list templates config
+
+	src/Conf.pm: Change default create_list for reverse compatibility
+
+	wwsympa/wws_templates/: error.fr.tpl, error.us.tpl: Add action
+	name when failed
+
+	src/List.pm: look for global header/footer in ~sympa/etc/templates/
+
+	src/List.pm: if user_data_source is 'database', check if
+	we have a database up
+
+	wwsympa/wwslib.pm: provides file extention, given the
+	content-type
+
+  Bug fixes :
+
+	src/: sympa.pl, tools.pl: Use original msg file for
+	S/MIME signature checking
+
+	src/: List.pm, sympa.pl: Use original message for confirmation, 
+	not MIME::Entity object This prevents signature	breaking
+
+	src/sympa.pl, src/tools.pl, wwsympa/wwsympa.fcgi: [reported by D.
+	Lamballais] Make Cipher::Saber really optional Check in @INC first
+
+	src/List.pm: bad condition, never alert owners about bounce rate
+
+	src/etc/script/load_subscribers.pl: [Gérard Gachelin]
+	insert comment
+
+	src/tools.pl, wwsympa/wwsympa.fcgi: [reported by Anne Durand]
+	escape quotes in edit_list_request
+
+	src/sympa.pl, src/Commands.pm: Bug Fix: Messages to be approved 
+	were not sent to editor (unless editorkey)
+
+	src/tools.pl: [reported by Michael Brennen]
+	fix a bug in encryption module introduce in 3.1b5
+
+	src/: List.pm, sympa.pl: [reported by Philippe Leca] 
+	signed multipart messages were altered by moderating process
+
+	doc/sympa.tex: [David Lewis] Lots of corrections for "good
+	english" compliance
+
+	wwsympa/wwsympa.fcgi: could not delete owners/editors. 
+	Format check was performed even on empty entries
+
+	wwsympa/bounced.pl: [proposed by D. Lalot] use strict,
+	basic check while opening files, daemon no more dying
+
+	wwsympa/cookielib.pm: [reported by Fiona Dix] 
+	Logged in as unknown, because of wrong date format in cookie.  
+	Now use	CGI::Cookie for cookie read/write
+
+
 3.1b.10 15 Mar 2001
 
   Changes :
