@@ -810,7 +810,7 @@ sub virus_infected {
     my @name = split(/\//,$file);
     my $work_dir = "${Conf{'tmpdir'}}/antivirus";
     
-    unless ((-d $work_dir) ||( mkdir $work_dir)) {
+    unless ((-d $work_dir) ||( mkdir $work_dir. 0755)) {
 	do_log('err', "Unable to create tmp antivirus directory $work_dir");
 	printf "Unable to create tmp antivirus directory $work_dir";
 	return 0;
@@ -818,7 +818,7 @@ sub virus_infected {
 
     $work_dir = "${Conf{'tmpdir'}}/antivirus/${name[$#name]}";
     
-    unless ( mkdir ($work_dir)) {
+    unless ( mkdir ($work_dir, 0755)) {
 	do_log('err', "Unable to create tmp antivirus directory $work_dir");
 	printf "Unable to create tmp antivirus directory $work_dir";
 	return 0;
