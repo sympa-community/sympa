@@ -133,7 +133,7 @@ sources: src/Makefile src/queue.c src/bouncequeue.c
 	USER='${USER}' GROUP='${GROUP}' \
 	SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' NEWALIASES='${NEWALIASES}');
 
-doc:	doc/sympa.tex 
+doc: doc/sympa.tex.tpl doc/Makefile 
 	@echo "Making doc"
 	(cd doc && echo "making in doc..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \

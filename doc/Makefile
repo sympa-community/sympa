@@ -45,7 +45,7 @@ MAKEINDEX = makeindex
 	fig2dev -Lps $*.fig > $*.eps
 
 
-all:	ps html
+all:	ps html parse_tex.pl
 
 #
 # PS generation

@@ -119,7 +119,9 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {September 2000}
+[STARTPARSE]
+    \date {[date]}
+[STOPPARSE]
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -4609,6 +4611,14 @@ halt_rate	20
 
 
 \section {Archive related}
+
+\Sympa maintains 2 kinds of archives: mail archives and web archives.
+
+Mail archives can be retreived via a mail command send to the robot,
+they are stored in \tildedir {sympa/expl/\samplelist/archives/} directory.
+
+Web archives are accessed via the web interface (with access control), they
+are stored in a directory defined in \file {wwsympa.conf}.
 
 \subsection {archive}
     \label {par-archive}

@@ -1,13 +1,18 @@
 use lib "../src/";
 use Conf;
+use POSIX;
 require "parser.pl";
 
 my $in_file = $ARGV[0];
 my $out_file = $ARGV[1];
 
-## Init struct
-my %data = ('escaped_start' => '[STARTPARSE]');
+$ENV{'LC_ALL'} = 'C';
 
+my $date = (stat($in_file))[9];
+
+## Init struct
+my %data = ('escaped_start' => '[STARTPARSE]',
+	    'date' => &POSIX::strftime("%d %B %Y", localtime((stat($in_file))[9])));
 ## scenari
 foreach my $file (<../src/etc/scenari/*.*>) {
     $file =~ /\/(\w+)\.(\w+)$/;
