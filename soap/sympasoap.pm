@@ -81,7 +81,7 @@ use HTTP::Cookies;
 use Conf;
 use Log;
 use Auth;
-
+use CAS;
 
 sub check_cookie {
     my $class = shift;
@@ -196,6 +196,71 @@ sub login {
 	    ->faultstring('Authentification failed')
 	    ->faultdetail("Incorrect password for user $email or bad login");
     } 
+
+    my $expire = $param->{'user'}{'cookie_delay'} || $wwsconf->{'cookie_expire'};
+
+    unless(&cookielib::set_cookie_soap($email,$Conf::Conf{'cookie'},$http_host,$expire)) {
+	&Log::do_log('notice', 'SOAP : could not set HTTP cookie for external_auth');
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Cookie not set')
+	    ->faultdetail('Could not set HTTP cookie for external_auth');
+    }
+
+    return SOAP::Data->name('result')->type('boolean')->value(1);
+}
+
+sub cas_login {
+    my $class = shift;
+    my $proxyTicket = shift;
+
+    my $http_host = $ENV{'SERVER_NAME'};
+    &Log::do_log('notice', 'cas_login(%s)', $proxyTicket);
+    
+    unless ($http_host and $proxyTicket) {
+	&do_log('err', 'cas_login(): incorrect number of parameters');
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect number of parameters')
+	    ->faultdetail('Use : <HTTP host> <proxyTicket>');
+    }
+    
+    ## Validate the CAS ST against all known CAS servers defined in auth.conf
+    ## CAS server response will include the user's NetID
+    my ($user, @proxies, $email, $cas_id);
+    foreach my $service_id (0..$#{$Conf{'auth_services'}}){
+	my $auth_service = $Conf{'auth_services'}[$service_id];
+	next unless ($auth_service->{'auth_type'} eq 'cas'); ## skip non CAS entries
+	
+	my $cas = new CAS(casUrl => $auth_service->{'base_url'}, 
+			  #CAFile => '/usr/local/apache/conf/ssl.crt/ca-bundle.crt',
+			  );
+	
+	($user, @proxies) = $cas->validatePT($Conf::Conf{'soap_url'}, $proxyTicket);
+	unless (defined $user) {
+	    &do_log('err', 'CAS ticket %s not validated by server %s : %s', $proxyTicket, $auth_service->{'base_url'}, &CAS::get_errors());
+	    next;
+	}
+
+	&do_log('notice', 'User %s authenticated against server %s', $user, $auth_service->{'base_url'});
+	
+	## User was authenticated
+	$cas_id = $service_id;
+	last;	
+    }
+    
+    unless($user){
+	&do_log('notice', "SOAP : login authentication failed");
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Authentification failed')
+	    ->faultdetail("Proxy ticket could not be validated");
+    } 
+
+    ## Now fetch email attribute from LDAP
+    unless ($email = &Auth::cas_get_email_by_net_id($user, $cas_id)) {
+	&do_log('err','Could not get email address from LDAP for user %s', $user);
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Authentification failed')
+	    ->faultdetail("Could not get email address from LDAP directory");
+    }
 
     my $expire = $param->{'user'}{'cookie_delay'} || $wwsconf->{'cookie_expire'};
 

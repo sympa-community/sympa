@@ -52,7 +52,9 @@ $soap->proxy('http://www.cru.fr/wwsoap',
 #$reponse = $service->which($ARGV[0],$ARGV[1]);
 
 print "LOGIN....\n";
-$reponse = $soap->login($ARGV[0],$ARGV[1]);
+
+$reponse = $soap->cas_login($ARGV[0]);
+#$reponse = $soap->login($ARGV[0],$ARGV[1]);
 $cookies->save;
 &print_result($reponse);
 

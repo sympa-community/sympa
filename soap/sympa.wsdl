@@ -132,6 +132,14 @@
 	<part name="return" type="xsd:boolean"/>	
 </message>
 
+<message name="cas_loginRequest">
+	<part name="proxyTicket" type="xsd:string"/>
+</message>
+
+<message name="cas_loginResponse">
+	<part name="return" type="xsd:boolean"/>	
+</message>
+
 <message name="listsRequest">
 	<part name="topic" type="xsd:string" xsd:minOccurs="0"/>
 	<part name="subtopic" type="xsd:string"/>
@@ -179,6 +187,10 @@
 	<operation name="login">
 		<input message="tns:loginRequest" />
 		<output message="tns:loginResponse" />
+	</operation>
+	<operation name="cas_login">
+		<input message="tns:cas_loginRequest" />
+		<output message="tns:cas_loginResponse" />
 	</operation>
 	<operation name="lists">
 		<input message="tns:listsRequest" />
@@ -275,6 +287,19 @@
 	</operation>
 	<operation name="login">
 		<soap:operation soapAction="urn:sympasoap#login"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="cas_login">
+		<soap:operation soapAction="urn:sympasoap#cas_login"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
