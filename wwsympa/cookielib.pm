@@ -158,6 +158,10 @@ sub set_arc_cookie {
 sub set_lang_cookie {
     my ($lang,$domain) = @_;
 
+    if ($domain eq 'localhost') {
+	$domain="";
+    }
+
     my $cookie = new CGI::Cookie (-name    => 'sympalang',
 				  -value   => $lang,
 				  -expires => '+1M',
