@@ -657,7 +657,6 @@ my %alias = ('reply-to' => 'reply_to',
 	    'serial' => {'format' => '\d+',
 			 'default' => 0,
 			 'length' => 3,
-			 'default' => 0,
 			 'title_id' => 69,
 			 'group' => 'other'
 			 },
@@ -1165,7 +1164,7 @@ sub send_alert_to_owner {
     my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
 
     if ($alert eq 'bounce_rate') {
-	my $rate = $self->get_total_bouncing() * 100 / $self->{'total'};
+	my $rate = $self->get_total_bouncing() * 100 / $self->get_total();
 	$rate = int ($rate * 10) / 10;
 
 	my $subject = sprintf(Msg(8, 28, "WARNING: bounce rate too high in list %s"), $name);
