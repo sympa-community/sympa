@@ -1627,7 +1627,7 @@ sub distribute {
     my $host = $list->{'admin'}{'host'};
     my $file = "$modqueue\/$name\_$key";
     
-    ## if the file as been accepted by WWSympa, it's name is different.
+    ## if the file has been accepted by WWSympa, it's name is different.
     unless (-r $file) {
         $file= "$modqueue\/$name\_$key.distribute";
     }
@@ -1636,7 +1636,7 @@ sub distribute {
     my $message = new Message($file);
     unless (defined $message) {
 	do_log('err', 'Unable to create Message object %s', $file);
-	push @msg::report, sprintf Msg(6, 41, "Unable to find the message of the list %s locked by the key %s.\nWarning : this message could have ever been send by another editor"),$name,$key ;
+	push @msg::report, sprintf gettext("Unable to find the message of the list %s locked by the key %s.\nWarning : this message could have ever been send by another editor"),$name,$key ;
 	return 'msg_not_found';
     }
 

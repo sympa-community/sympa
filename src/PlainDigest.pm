@@ -350,6 +350,6 @@
  sub img_start   {
   my($self,$node) = @_;
   my $alt = $node->attr('alt');
-  $self->out(  defined($alt) ? sprintf(gettext("[ Image%s ]"), ": " . $alt) : sprintf(Msg(6, 308, "[Image%s]"),""));
+  $self->out(  defined($alt) ? sprintf(gettext("[ Image%s ]"), ": " . $alt) : sprintf(gettext("[Image%s]"),""));
  }
 
