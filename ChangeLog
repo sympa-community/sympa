@@ -1,3 +1,86 @@
+2001-08-03 13:35  salaun
+
+	* src/: sympa.pl, etc/templates/us/list_unknown.us.tpl: Sympa
+	returns non-delivery reports as multipart/report
+
+2001-08-03 12:11  salaun
+
+	* src/sympa.pl: Report error for message sent to unknon list
+
+2001-08-03 11:40  salaun
+
+	* wwsympa/wws_templates/us/subindex.us.tpl: Subscription spool
+
+2001-08-02 17:21  salaun
+
+	* src/Commands.pm, src/Conf.pm, src/List.pm, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/subindex.fr.tpl: New feature: first
+	version of subscription moderation
+
+2001-08-02 09:34  salaun
+
+	* src/List.pm: supress List::get_action()
+
+2001-08-01 16:20  salaun
+
+	* src/sympa.pl: New action 'send_file()' avialable in send scenario
+
+2001-08-01 16:15  salaun
+
+	* src/List.pm: Fix
+
+2001-08-01 15:59  salaun
+
+	* src/List.pm: Canceled returning an array of actions
+
+2001-08-01 12:25  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: Change: request_action returns
+	a single scalar, unless in debug mode (used by scenario_test
+
+2001-08-01 11:31  salaun
+
+	* doc/sympa.tex.tpl, src/List.pm: New feature: new message-related
+	variables available in scenari : [msg_body] [msg_part->type] and
+	[msg_part->body]
+
+2001-08-01 11:30  salaun
+
+	* src/: Commands.pm, sympa.pl: Replace remaining get_action() with
+	request_action()
+
+2001-07-31 12:25  salaun
+
+	* wwsympa/bounced.pl: Fix: Better log messages ; daemon does not
+	die anymore
+
+2001-07-31 12:00  salaun
+
+	* src/tools.pl: Bug fix: escape '/'
+
+2001-07-27 17:08  salaun
+
+	* wwsympa/: archived.pl, bounced.pl: [nablaphi] Bug fixes: Fix
+	logging for archived & bounced ; use Getopt::Long
+
+2001-07-27 16:57  salaun
+
+	* src/sympa.pl: X-loop trace
+
+2001-07-27 16:15  salaun
+
+	* ChangeLog, nls/cz.msg, nls/de.msg, nls/es.msg, nls/fr.msg,
+	nls/hu.msg, nls/it.msg, nls/pl.msg, nls/us.msg, src/Commands.pm,
+	src/etc/templates/cz/modindex.cz.tpl,
+	src/etc/templates/de/modindex.de.tpl,
+	src/etc/templates/es/modindex.es.tpl,
+	src/etc/templates/fr/modindex.fr.tpl,
+	src/etc/templates/hu/modindex.hu.tpl,
+	src/etc/templates/it/modindex.it.tpl,
+	src/etc/templates/pl/modindex.pl.tpl,
+	src/etc/templates/us/modindex.us.tpl: Change: MODINDEX report
+	becomes a template
+
 2001-07-26 15:43  salaun
 
 	* nls/cz.msg, nls/de.msg, nls/es.msg, nls/hu.msg, nls/pl.msg,

@@ -1,6 +1,127 @@
 *****    Changes which are not compatible with previous versions are
 *****    listed using "*****"in the margin. Please check this at least.
 
+(See Changelog file for the full changes log)
+
+3.2.2a  03 August 2001
+
+  New features :
+
+	Sympa returns non-delivery reports as multipart/report
+
+	first version of subscription moderation
+
+	New action 'send_file()' avialable in send scenario
+
+	new message-related variables available in scenari : [msg_body], [msg_part->type] 
+	and [msg_part->body]
+
+	rename file/directory in 'web repository'
+
+	Add bookmarks management to the document repository (shared)
+
+	New 'db_additional_user_fields' AND 'db_additional_subscriber_fields' in sympa.conf. 
+	These fields are accessible from within templates and scenario.
+
+	List creation request is a template. Add list creation	notification (using a template)
+
+	[requested by C. Turbout] New feature: add 'connect_options' to 
+	include_sql_query list param. Add 'db_options' to sympa.conf
+
+	[Didier Lamballais] Change: add NEWALIASES_ARG var to Makefile
+
+	[N. Euzen] new 'not_me' user reception option 
+	changes for 'urlize' (added size, name ; add header/footer afterward)
+
+	[requested by C. Atzenbeck] New 'anonymous_header_fields' sympa.conf parameter.
+
+	wwsympa/wwsympa.fcgi: two options available now for wwsympa.fcgi :
+	-debug and -robot_domain <domain>
+
+	[Nadia Euzen]: Add new user reception options "html","txt" and "urlize".
+
+	Sympa recognises Trend Micro virusWall API
+
+	non-identified users can change the language of WWSympa.  
+	The preferred lang is stored in a cookie.
+
+	src/Commands.pm: New 'verify' command (for s/mime checking)
+
+  Changes :
+
+	Replace remaining get_action() with request_action()
+
+	Turn command (review,stats,info,modindex) reports into templates
+
+	Split templates ; one per lang This makes translation easier 
+	(charset problems, patches appliance)
+
+	Now fully uses the update_subscriber DB field
+
+	src/List.pm: 'update' changed to 'update_date' ; 'update' is a MySQL keyword
+
+	use internal session cache for List::get_subscriber()
+
+	src/List.pm: no more SQL join in List::get_subscriber()
+	This should fasten list-related web actions (such as INFO, ARC,	ADMIN,...)
+
+	[proposed by Josep Roman] Use Digest::MD5 instead of MD5 module
+
+	doc/sympa.tex.tpl: Latex file is now parsed, to include sample files
+
+	check_perl_modules.pl: Set inactivity timeout to 4 sec
+
+	src/etc/ca-bundle.crt: Add Ca-CRU to bundle
+
+  Bug fixes :
+	
+	wwsympa/bounced.pl: daemon would die on a strange bouncing address
+	Better log messages
+
+	[nablaphi] Fix logging for archived & bounced ; use Getopt::Long
+
+	src/List.pm: Ignore empty email addresses, from LDAP
+
+	doc/sympa.tex.tpl: [reported by M. Leclair] Fix 'host' list param
+	documentation
+
+	srand() is done	once to avoid multiple moderated messages to have the same ID
+
+	src/etc/script/sympa.spec: [reported by S. AZRIEL] aliaswrapper was not installed
+
+	[Vizi Szilard] cancel translation of From/Subject/To headers
+
+	src/etc/mhonarc-ressources: fix the reply feature (when replying
+	to list the adresse was not qualified)
+
+	[reported by Foudil BRETEL] create_list.conf was not properly parsed Make it case-insensitive
+
+	src/tools.pl: Sympa was bloquing in tools::smime_decrypt() on big encrypted messages. 
+	=> now creates the FIFO before OpenSSL is called.
+
+	Fix re-encryption of signed base64 messages
+
+	[reported by Christian Mock] Bug fix: S/MIME encryption
+	fixed signed AND crypted messages are recognized as signed
+
+	wwsympa/wws_templates/us/create_list.us.tpl: [R. Manfredi] makes
+	the message clearer
+
+	wwsympa/wwsympa.fcgi: change_email fixed
+
+	doc/sympa.tex.tpl: [Vizi Szilard] Hungarian NOT hungrian
+
+	src/etc/script/create_db.Pg: [Jerome Marant] 
+	CREATE INDEX ends with 2 parentheses instead of one
+
+	src/mail.pm: Also encode $to, From and all $headers entries
+
+	src/mail.pm: [reported by Straub Herbert] 
+	owner notification messages subject was not encoded
+
+	src/etc/script/create_db.Sybase: [reported by Guenter Lau] Update database structure, 
+	make password longer
+
 3.2.1	05 June 2001
 
   Bug Fix :
