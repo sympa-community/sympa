@@ -3611,7 +3611,7 @@ sub is_listmaster {
     }
 	
     foreach my $listmaster (@{$Conf{'listmasters'}}){
-	    return 1 if ($listmaster =~ /^\s*$who\s*$/i);
+	    return 1 if (lc($listmaster) eq lc($who));
 	}    
 
     return 0;
