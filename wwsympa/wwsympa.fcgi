@@ -4078,11 +4078,19 @@ sub do_install_pending_list {
 
     $list->{'admin'}{'status'} = $in{'status'};
 
+#    open TMP, ">/tmp/dump1";
+#    dump_var ($list->{'admin'}, 0, \*TMP);
+#    close TMP;
+
     unless ($list->save_config($param->{'user'}{'email'})) {
 	&error_message('cannot_save_config');
 	&wwslog('info','_create_list: Cannot save config file');
 	return undef;
     }
+
+#    open TMP, ">/tmp/dump2";
+#    dump_var ($list->{'admin'}, 0, \*TMP);
+#    close TMP;
 
     ## create the list
     &_install_aliases();
@@ -5406,25 +5414,25 @@ sub _prepare_data {
 
 ## Dump a variable's content
 sub dump_var {
-    my ($var, $level) = @_;
+    my ($var, $level, $fd) = @_;
 
     if (ref($var)) {
 	if (ref($var) eq 'ARRAY') {
 	    foreach my $index (0..$#{$var}) {
-		print STDOUT "\t"x$level.$index."\n";
-		&dump_var($var->[$index], $level+1);
+		print $fd "\t"x$level.$index."\n";
+		&dump_var($var->[$index], $level+1, $fd);
 	    }
 	}elsif (ref($var) eq 'HASH') {
 	    foreach my $key (sort keys %{$var}) {
-		print STDOUT "\t"x$level.'_'.$key.'_'."\n";
-		&dump_var($var->{$key}, $level+1);
+		print $fd "\t"x$level.'_'.$key.'_'."\n";
+		&dump_var($var->{$key}, $level+1, $fd);
 	    }    
 	}
     }else {
 	if (defined $var) {
-	    print STDOUT "\t"x$level."'$var'"."\n";
+	    print $fd "\t"x$level."'$var'"."\n";
 	}else {
-	    print STDOUT "\t"x$level."UNDEF\n";
+	    print $fd "\t"x$level."UNDEF\n";
 	}
     }
 }
