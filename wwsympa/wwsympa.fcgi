@@ -407,7 +407,7 @@ while ($query = &new_loop()) {
     }
 
    
-    ##Cookie extern : sympa_alt_email
+    ##Cookie extern : sympa_altemails
     ## !!
     $param->{'alt_emails'} = &cookielib::check_cookie_extern($ENV{'HTTP_COOKIE'},$Conf{'cookie'},$param->{'user'}{'email'});
     
@@ -514,7 +514,7 @@ while ($query = &new_loop()) {
 	    }
 	    $param->{'cookie_set'} = 1;
 	    
-	    ##Cookie extern : sympa_alt_email
+	    ##Cookie extern : sympa_altemails
 	    my $number = 0;
 	    foreach my $element (keys %{$param->{'alt_emails'}}){
 		 $number ++ if ($element);
@@ -756,6 +756,19 @@ sub wwslog {
 
     $msg = "[list $param->{'list'}] " . $msg
 	if $param->{'list'};
+
+    if ($param->{'alt_emails'}) {
+	my @alts;
+	foreach my $alt (keys %{$param->{'alt_emails'}}) {
+	    push @alts, $alt
+		unless ($alt eq $param->{'user'}{'email'});
+	}
+	
+	if ($#alts >= 0) {
+	    my $alt_list = join ',', @alts;
+	    $msg = "[alt $alt_list] " . $msg;
+	}
+    }
 
     $msg = "[user $param->{'user'}{'email'}] " . $msg
 	if $param->{'user'}{'email'};
@@ -1466,7 +1479,7 @@ sub do_record_email{
        return 'pref';
    }  
     
-    ##To add this alternate email in the cookie sympa_alt_email   
+    ##To add this alternate email in the cookie sympa_altemails   
     $param->{'alt_emails'}{$in{'new_alternative_email'}} = 'classic';
     return 'pref';
     

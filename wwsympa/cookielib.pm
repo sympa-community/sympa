@@ -185,7 +185,7 @@ sub check_cookie_extern {
     foreach (sort keys %cookies) {
 	my $cookie = $cookies{$_};
 	
-	next unless ($cookie->name =~ /sympa_alt_emails/);
+	next unless ($cookie->name =~ /sympa_altemails/);
 	
 	if ($cookie->value =~ /^(\S+)&(\w+)$/) {
 	    return undef unless (&get_mac($1,$secret) eq $2) ;
@@ -226,7 +226,7 @@ sub set_cookie_extern {
 	$http_domain="";
     }
 
-	$cookie = new CGI::Cookie (-name    => 'sympa_alt_emails',
+	$cookie = new CGI::Cookie (-name    => 'sympa_altemails',
 	                           -value   => $value,
 				   -expires => '+1y',
 				   -domain  => $http_domain,
