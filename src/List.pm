@@ -2893,7 +2893,7 @@ sub get_total {
     if (($self->{'admin'}{'user_data_source'} eq 'database') ||
 	($self->{'admin'}{'user_data_source'} eq 'include2')) {
 	if ($option eq 'nocache') {
-	    $self->{'total'} = _load_total_db($self->{'name'});
+	    $self->{'total'} = _load_total_db($self->{'name'}, $option);
 	}
     }
 #    if ($self->{'admin'}{'user_data_source'} eq 'database') {
