@@ -3,7 +3,7 @@
     <BR><P> 
 <TABLE BORDER=0 BGCOLOR="--LIGHT_COLOR--"><TR><TD>
 <P align=justify>
-This server provides you access to your environment on mailing list server [conf->email]@[conf->host]. Starting from this URL, you can perform subscribtion options, unsubscribtion,
+This server provides you access to your environment on mailing list server [conf->email]@[conf->host]. Starting from this URL, you can perform subscription options, unsubscription,
 archives, list management and so on.
 </P>
 </TD></TR></TABLE>

@@ -162,7 +162,7 @@
   <TD WIDTH=70 COLSPAN=2><BR></TD>
  </TR>
    [IF may_subscribe<>1]
-        <!-- Should we print something in case subscribtion is closed ?? ->
+        <!-- Should we print something in case subscription is closed ?? ->
         <!-- END may subscribe -->     
    [ENDIF] 
    [IF may_signoff=1] 

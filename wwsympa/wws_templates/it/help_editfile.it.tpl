@@ -14,7 +14,7 @@ INFO. Pu&ograve; anche essere incluso nel <i>Messaggio di benvenuto (Welcome mes
 
 <LI>Welcome message: Questo messaggio viene spedito ai nuovi utenti. Pu&ograve; essere strutturato come messaggio MIME (solo per esperti).
 
-<LI>Unsubscribtion message (messaggio di annullamento dell'iscrizione): viene mandato quando un utente lascia la lista tramite il comando via email UNSUBSCRIBE.
+<LI>Unsubscription message (messaggio di annullamento dell'iscrizione): viene mandato quando un utente lascia la lista tramite il comando via email UNSUBSCRIBE.
 
 <LI>Deletion message (messaggio di cancellazione dell'iscrizione):Questo messaggio viene spedito agli utenti vittime del comando DEL del moderatore o proprietario della lista (se non viene specificato il flag <i>silenzioso</i>)
 

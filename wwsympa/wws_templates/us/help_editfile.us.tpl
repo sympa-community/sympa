@@ -17,7 +17,7 @@ right hand side of the main list page.
 <LI>Welcome message: This message is sent to new subscribers. It can be
 a full mime structured message (only for Mime gurus).
 
-<LI>Unsubscribtion message : it is sent when users leave the list
+<LI>Unsubscription message : it is sent when users leave the list
 using the UNSUBSCRIBE command.
 
 <LI>Deletion message : This message is sent to users when you
@@ -26,11 +26,11 @@ remove them from the list using the DEL command (unless you hit the
 
 <LI>Remind message : This message is sent to each subscriber
 when using the command  REMIND. It's very usefull to help person
-confused with their own subscribtion email or person who are not able to
+confused with their own subscription email or person who are not able to
 un subscribe themself.
 
 <LI>Subscribing invitation message : it is sent to a person if some user  
-use the INVITE command to invite someone for subscribtion.
+use the INVITE command to invite someone for subscription.
 
 </UL>
 

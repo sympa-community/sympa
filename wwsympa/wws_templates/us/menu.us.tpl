@@ -88,11 +88,11 @@
 
   [IF action=which]
   <TD NOWRAP BGCOLOR="--SELECTED_COLOR--" ALIGN="center">
-      <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Your subscribtions</B></FONT>
+      <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Your subscriptions</B></FONT>
   </TD>
   [ELSE]
   <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">
-      <A HREF="[path_cgi]/which" ><FONT SIZE=-1><B>Your subscribtions</B></FONT></A>
+      <A HREF="[path_cgi]/which" ><FONT SIZE=-1><B>Your subscriptions</B></FONT></A>
    </TD>
    [ENDIF]
   
@@ -101,7 +101,7 @@
       <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Pref</B></FONT>
   </TD>
   <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">
-      <FONT SIZE=-1 COLOR="--BG_COLOR--"><B>Your subscribtions</B></FONT>
+      <FONT SIZE=-1 COLOR="--BG_COLOR--"><B>Your subscriptions</B></FONT>
   </TD>
   [ENDIF]
 
