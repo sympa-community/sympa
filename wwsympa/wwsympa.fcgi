@@ -161,6 +161,7 @@ my %comm = ('home' => 'do_home',
 	 'resetbounce' => 'do_resetbounce',
 	 'scenario_test' => 'do_scenario_test',
 	 'search_list' => 'do_search_list',
+	 'show_cert' => 'show_cert',
 	 'close_list_request' => 'do_close_list_request',
 	 'close_list' => 'do_close_list',
 	 'restore_list' => 'do_restore_list',
@@ -216,6 +217,7 @@ my %action_args = ('default' => ['list'],
 		'rebuildallarc' => [],
 		'home' => [],
 		'help' => ['help_topic'],
+		'show_cert' => [],
 		'subscribe' => ['list','email','passwd'],
 		'subrequest' => ['list','email'],
 		'subrequest' => ['list'],
@@ -336,6 +338,13 @@ while ($query = &new_loop()) {
     if (($ENV{'SSL_CLIENT_S_DN_Email'}) && ($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS')) {
 	$param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_DN_Email'});
 	$param->{'auth_method'} = 'smime';
+        $param->{'ssl_client_s_dn'} = $ENV{'SSL_CLIENT_S_DN'};
+        $param->{'ssl_client_v_end'} = $ENV{'SSL_CLIENT_V_END'};
+        $param->{'ssl_client_i_dn'} =  $ENV{'SSL_CLIENT_I_DN'};
+        $param->{'ssl_cipher_usekeysize'} =  $ENV{'SSL_CIPHER_USEKEYSIZE'};
+
+
+
     }elsif ($ENV{'HTTP_COOKIE'} =~ /user\=/) {
 	$param->{'user'}{'email'} = &wwslib::get_email_from_cookie($Conf{'cookie'});
 	$param->{'auth_method'} = 'md5';
@@ -4715,6 +4724,11 @@ sub get_desc_file {
 
     return %hash;
 
+}
+
+
+sub show_cert {
+    return 1;
 }
 
 ## Function synchronize
