@@ -6730,7 +6730,7 @@ sub do_edit_list {
      if ($list->{'admin'}{'user_data_source'} eq 'file') {
 	 $list->{'users'} = &List::_load_users_file("$list->{'dir'}/subscribers.closed.dump");
 	 $list->save();
-     }elsif ($list->{'admin'}{'user_data_source'} eq 'database') {
+     }elsif ($list->{'admin'}{'user_data_source'} =~ /^database|include2$/) {
 	 unless (-f "$list->{'dir'}/subscribers.closed.dump") {
 	     &wwslog('notice', 'No subscribers to restore');
 	 }
