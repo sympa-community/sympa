@@ -367,6 +367,22 @@ sub init_passwd {
     return 1;
 }
 
+sub get_my_url {
+    
+		 
+    my $return_url;
+    
+    if ($ENV{SSL_PROTOCOL}) {
+	$return_url = 'https';
+    }else{
+	$return_url = 'http';	
+    }	     
+
+    $return_url .= '://'.$ENV{'HTTP_HOST'};
+    $return_url .= ':'.$ENV{'SERVER_PORT'} unless (($ENV{'SERVER_PORT'} eq '80')||($ENV{'SERVER_PORT'} eq '443'));
+    $return_url .= $ENV{'REQUEST_URI'};
+    return ($return_url);
+}
 
 1;
 
