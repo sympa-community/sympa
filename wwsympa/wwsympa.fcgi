@@ -7365,6 +7365,12 @@ sub do_d_rename {
 	return undef;
     }
 
+    if (($document =~ /\.url$/) && ($in{'new_name'} !~ /\.url$/)) {
+	&error_message('incorrect_name', {'name' => $in{'new_name'}});
+	&wwslog('info',"do_d_rename : New file name $in{'new_name'} does not match URL filenames");
+	return undef;
+    }
+
     my $doc = "$shareddir/$path";
 	
     # Access control
