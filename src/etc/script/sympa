@@ -14,7 +14,12 @@
 # chkconfig: 345 95 05
 # description: sympa is a powerfull mailing lists management system.
 
-if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "solaris" ]; then
+# OSTYPE is not defined on Solaris
+if [ ! ${OSTYPE} ]; then
+    OSTYPE=`uname -s`
+fi
+
+if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" ]; then
     # Source function library.
     . --INITDIR--/functions
 
@@ -31,7 +36,7 @@ sympaconf="--CONFIG--"
 wwsympaconf="--WWSCONFIG--"
 
 ##'echo -n' not supported with SH on Solaris
-if [ ${OSTYPE} = "solaris" ]; then
+if [ ${OSTYPE} = "SunOS" ]; then
   echo_opt=""
 else
   echo_opt="-n"
@@ -47,7 +52,7 @@ sympa_status() {
         return 1
     fi
  
-    if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "solaris" ]; then
+    if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" ]; then
       status $1.pl
 
     else
@@ -83,7 +88,7 @@ sympa_module_start() {
 #		startparam=""
 #	fi
  
-	if [ ${OSTYPE} = "IRIX" ]; then
+	if [ ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" ]; then
 		$sympadir/$1.pl $startparam && echo "success" || echo "failure"
 	else
 		$sympadir/$1.pl $startparam && success || failure
@@ -103,7 +108,7 @@ sympa_start() {
 		3)
 			echo $echo_opt "Starting module $1.pl: "
 			sympa_module_start $1
-			if [ ${OSTYPE} = "solaris" ]; then
+			if [ ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" ]; then
 				if [ $? -eq 0 ]; then
         	                       	echo "$1.pl started: success"
 	                       	else
@@ -114,7 +119,7 @@ sympa_start() {
 		1) 
 			echo $echo_opt "Starting $1, overwritting old pid file."
 			sympa_module_start $1
-			if [ ${OSTYPE} = "solaris" ]; then
+			if [ ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" ]; then
 				if [ $? -eq 0 ]; then
         	                       	echo "$1.pl started: success"
 	                       	else
@@ -143,7 +148,7 @@ sympa_stop() {
 		if [ "$running" != "" ]; then
 		    if [ ${OSTYPE} = "IRIX" ]; then
 			kill -TERM $pid && echo "success" || echo "failure"
-		    elif [ ${OSTYPE} = "solaris" ]; then
+		    elif [ ${OSTYPE} = "SunOS" ]; then
 			echo "Stopping module $1.pl: terminated"
 			kill -TERM $pid
 		    else
@@ -160,7 +165,7 @@ sympa_stop() {
 
 
 # Check that networking is up.
-if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "solaris" ]; then
+if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" ]; then
     if [ ${NETWORKING} = "no" ]
     then
 	    exit 0
