@@ -24,6 +24,8 @@ use CPAN;
 	     'perl-ldap' => '0.10',
 	     'Mail::Internet' => '1.32', 
 	     'DBI' => '1.06',
+	     'DBD::Pg' => '0.90',
+	     'DBD::Sybase' => '0.90',
 	     'FCGI' => '0.48',
 	     'MIME::Tools' => '5.209',
 	     'File::Spec' => '0.8',
@@ -43,6 +45,10 @@ use CPAN;
 	     'File::Spec' => 'File-Spec');
 
 %opt_CPAN = ('DBI' => 'DBI',
+	     'DBD::mysql' => 'Msql-Mysql-modules',
+	     'DBD::Pg' => ' DBD-Pg',
+	     'DBD::Oracle' => 'DBD-Oracle',
+	     'DBD::Sybase' => 'DBD-Sybase',
 	     'Net::LDAP' =>   'perl-ldap',
 	     'CGI::Fast' => 'CGI',
              'Crypt::CipherSaber' => 'CipherSaber',
