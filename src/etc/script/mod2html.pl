@@ -65,7 +65,7 @@ foreach $msg ( sort grep(!/^\./, readdir SPOOL )) {
 	unless (mkdir ($tmp_dir, 0777)) {
 	    die "May not create $tmp_dir";
 	}
-	my $mhonarc_ressources = &tools::get_filename('etc', 'mhonarc-ressources', $robot, $self);
+	my $mhonarc_ressources = &tools::get_filename('etc', 'mhonarc-ressources.tt2', $robot, $self);
 	unless ($mhonarc_ressources) {
 	    die "Cannot find any MhOnArc ressource file";
 	}

@@ -287,7 +287,7 @@ sub rebuild {
 
     do_log('debug',"Rebuilding $adrlist archive ($2)");
 
-    my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources',$list->{'domain'}, $list);
+    my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources.tt2',$list->{'domain'}, $list);
 
     if (($list->{'admin'}{'web_archive_spam_protection'} ne 'none') && ($list->{'admin'}{'web_archive_spam_protection'} ne 'cookie')) {
 	&set_hidden_mode();
@@ -420,7 +420,7 @@ sub mail2arc {
 	$newfile = $files[$#files];
      }
     
-    my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources',$list->{'domain'}, $list);
+    my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources.tt2',$list->{'domain'}, $list);
     
     do_log ('debug',"calling $wwsconf->{'mhonarc'} for list $listname\@$hostname" ) ;
     my $cmd = "$wwsconf->{'mhonarc'} -add -rcfile $mhonarc_ressources -outdir $arcpath/$listname\@$hostname/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc \" -umask $Conf{'umask'} < $queue/$file";

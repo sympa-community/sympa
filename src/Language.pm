@@ -121,12 +121,6 @@ sub maketext {
 
 #    &do_log('notice','Maketext: %s', $msg);
 
-    #$msg =~ s/%(\d)/[_$1]/g;
-    setlocale(LC_MESSAGES, $current_locale);
-    textdomain "sympa";
-    bindtextdomain sympa => '--DIR--/locale';
-    bind_textdomain_codeset sympa => 'iso-8859-1';
-
     ## xgettext.pl bug adds a \n to multi-lined strings
     if ($msg =~ /\n.+/m) {
 	$msg .= "\n";

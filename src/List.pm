@@ -1910,7 +1910,7 @@ sub send_to_editor {
 	       &do_log('err','Unable to create %s', $tmp_dir);
 	       return undef;
 	   }
-	   my $mhonarc_ressources = &tools::get_filename('etc', 'mhonarc-ressources', $robot, $self);
+	   my $mhonarc_ressources = &tools::get_filename('etc', 'mhonarc-ressources.tt2', $robot, $self);
 	   unless ($mhonarc_ressources) {
 	       do_log('notice',"Cannot find any MhOnArc ressource file");
 	       return undef;

@@ -56,7 +56,23 @@ unless (&Conf::load($sympa_conf_file)) {
     die 'config_error';
 }
 
-@directories;
+## We have a parameter that should be a template to convert
+## Output is sent to stdout
+if ($#ARGV >=0) {
+    my $f = $ARGV[0];
+    unless (-f $f) {
+	die "unable to find file $f";
+    }
+    
+    &convert($f);
+
+    exit 0;
+}
+
+## Default is to migrate every template to the new TT2 format
+
+my @directories;
+my @templates;
 
 ## Search in main robot
 if (-d "$Conf::Conf{'etc'}/templates") {
@@ -64,6 +80,9 @@ if (-d "$Conf::Conf{'etc'}/templates") {
 }
 if (-d "$Conf::Conf{'etc'}/wws_templates") {
     push @directories, "$Conf::Conf{'etc'}/wws_templates";
+}
+if (-f "$Conf::Conf{'etc'}/mhonarc-ressources") {
+    push @templates, "$Conf::Conf{'etc'}/mhonarc-ressources";
 }
 
 ## Go through Virtual Robots
@@ -74,6 +93,9 @@ foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
     }
     if (-d "$Conf::Conf{'etc'}/$vr/wws_templates") {
 	push @directories, "$Conf::Conf{'etc'}/$vr/wws_templates";
+    }
+    if (-f "$Conf::Conf{'etc'}/$vr/mhonarc-ressources") {
+	push @templates, "$Conf::Conf{'etc'}/$vr/mhonarc-ressources";
     }
 
     ## Search in V. Robot Lists
@@ -91,8 +113,6 @@ foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
 	}
     }
 }
-
-my @templates;
 
 ## List .tpl files
 foreach my $d (@directories) {
@@ -128,17 +148,24 @@ foreach my $tpl (@templates) {
     $dest_path = $path;
     if ($path =~ /\/wws_templates$/) {
 	$dest_path =~ s/wws_templates/web_tt2/;
-    }else {
+    }elsif ($path =~ /\/templates$/) {) {
 	if ($path =~ /\/templates$/) {
 	    $dest_path =~ s/templates/tt2/;
 	}else {
 	    $dest_path .= '/tt2';
 	}
+    }else {
+	$dest_path = $path;
     }
 
     ## Destination filename
     $dest_file = $file;
     $dest_file =~ s/\.tpl$/\.tt2/;
+
+    ## If file has no extension
+    unless ($dest_file =~ /\./) {
+	$dest_file = $file.'.tt2';
+    }
 
     ## Create directory if required
     unless (-d $dest_path) {
@@ -152,26 +179,9 @@ foreach my $tpl (@templates) {
 
     my $tt2 = "$dest_path/$dest_file";
 
-    ## Convert tpl file
-    unless (open TPL, $tpl) {
-	print STDERR "Cannot open $tpl : $!\n";
-	next;
-    }
-    unless (open TT2, ">$tt2") {
-	print STDERR "Cannot create $tt2 : $!\n";
-	next;
-    }
-    while (<TPL>) {
-	print TT2 Sympa::Template::Compat::_translate($_);
-    }
-    close TT2;
-    close TPL;
-    
-    chown '--USER--', '--GROUP--', $tt2;
+    &convert($tpl, $tt2);
     $total++;
     
-    printf "Template file $tpl has been converted to $tt2\n";
-
     ## Rename old files to .converted
     unless (rename $tpl, "$tpl.converted") {
 	print STDERR "Error : failed to rename $tpl to $tpl.converted : $!\n";
@@ -180,3 +190,35 @@ foreach my $tpl (@templates) {
 }
 
 print "\n$total template files have been converted\n";
+
+## Convert a template file to tt2
+sub convert {
+    my ($in_file, $out_file) = @_;
+
+    my $out;
+
+    ## Convert tpl file
+    unless (open TPL, $in_file) {
+	print STDERR "Cannot open $in_filel : $!\n";
+	next;
+    }
+    if ($out_file) {
+	unless (open TT2, ">$out_file") {
+	    print STDERR "Cannot create $out_file : $!\n";
+	    next;
+	}
+	$out = *TT2;
+    }else {
+	$out = *STDOUT;
+    }
+
+    while (<TPL>) {
+	print $out Sympa::Template::Compat::_translate($_);
+    }
+    close TT2 if ($out_file);
+    close TPL;
+
+    printf "Template file $in_file has been converted to $$out_file\n";
+    
+    chown '--USER--', '--GROUP--', $out_file;    
+}

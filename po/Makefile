@@ -3,7 +3,7 @@
 LINGUAS = cs de en_US es et fi fr hu it nl pl pt ro zh_CN zh_TW
 MOFILES = $(addsuffix .mo, $(LINGUAS))
 
-DEPENDON = $(shell cd .. ; ls src/*.p? wwsympa/wwsympa.fcgi wwsympa/*.p? wwsympa/tt2/*.tt2 src/etc/tt2/*.tt2 src/etc/mhonarc-ressources src/etc/scenari/*)
+DEPENDON = $(shell cd .. ; ls src/*.p? wwsympa/wwsympa.fcgi wwsympa/*.p? wwsympa/tt2/*.tt2 src/etc/tt2/*.tt2 src/etc/mhonarc-ressources.tt2 src/etc/scenari/*)
 
 MSGMERGE = msgmerge
 MSGFMT   = msgfmt
@@ -24,7 +24,7 @@ pot: sympa.pot
 sympa.pot:
 	echo "Updating sympa.pot template file..."
 	cd .. ;\
-	$(XGETTEXT) -o po/sympa.pot src/*.p? wwsympa/wwsympa.fcgi wwsympa/*.p? wwsympa/tt2/*.tt2 src/etc/tt2/*.tt2 src/etc/mhonarc-ressources src/etc/scenari/*
+	$(XGETTEXT) -o po/sympa.pot src/*.p? wwsympa/wwsympa.fcgi wwsympa/*.p? wwsympa/tt2/*.tt2 src/etc/tt2/*.tt2 src/etc/mhonarc-ressources.tt2 src/etc/scenari/*
 
 install: $(MOFILES)
 	targetdir='$(DESTDIR)$(LOCALEDIR)'; \
