@@ -885,8 +885,10 @@ sub get_parameters {
     ## CGI URL
     if ($ENV{'HTTPS'} eq 'on') {
 	$param->{'base_url'} = sprintf 'https://%s', $ENV{'SERVER_NAME'};
+	$param->{'use_ssl'} = 1;
     }else {
 	$param->{'base_url'} = sprintf 'http://%s', $ENV{'SERVER_NAME'};
+	$param->{'use_ssl'} = 0;
     }
 
     $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{$ENV{'SERVER_NAME'}};
@@ -1365,7 +1367,6 @@ sub ldap_authentication {
 	  
 	    unless ($ldap_anonymous ){
 		do_log ('err','Unable to connect to the LDAP server %s',$host);
-		do_log ('err','Ldap Error : %s, Ldap server error : %s',$ldap_anonymous->error,$ldap_anonymous->server_error);
 		next;
 	    }
 	    
