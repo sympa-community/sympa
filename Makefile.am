@@ -164,7 +164,7 @@ main_SRC	=	AUTHORS COPYING ChangeLog INSTALL KNOWNBUGS NEWS README
 LOG_SOCKET_TYPE	=	unix
 #endif
 
-all:	checkcpan sources checkperl checkmhonarc man locale
+all:	checkperl checkcpan sources checkmhonarc man locale
 
 rpm: build_rh_rpm build_mdk_rpm
 
