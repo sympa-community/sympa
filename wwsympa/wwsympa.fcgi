@@ -7202,7 +7202,13 @@ sub do_d_overwrite {
 #******************************************
 
 sub do_d_upload {
-    &wwslog('info', 'do_d_upload(%s)', $in{'path'});
+    # Parameters of the uploaded file
+    my $fn = $query->param('uploaded_file');
+
+    $fn =~ /([^\/\\]+)$/;
+    my $fname = $1;
+
+    &wwslog('info', 'do_d_upload(%s%s)', $in{'path'},$fname);
   
     # Variables 
     my $path = $in{'path'};
@@ -7215,11 +7221,6 @@ sub do_d_upload {
     # path of the shared directory
     my $shareddir =  $list->{'dir'}.'/shared';
 
-    # Parameters of the uploaded file
-    my $fn = $query->param('uploaded_file');
-
-    $fn =~ /([^\/\\]+)$/;
-    my $fname = $1;
 
 # Controls
     ### action relative to a list ?
