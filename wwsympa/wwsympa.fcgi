@@ -4549,6 +4549,7 @@ sub do_redirect {
      $in{'key_word'} =~ s/\(/\\\(/g;
      $in{'key_word'} =~ s/\)/\\\)/g;
      $in{'key_word'} =~ s/\$/\\\$/g;
+     $in{'key_word'} =~ s/\'/\\\'/g;
 
      $search->limit ($in{'limit'});
 
