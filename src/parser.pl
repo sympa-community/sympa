@@ -306,35 +306,28 @@ sub do_parse {
     print STDERR "\t$t[$index]" if $opt_p;
 
     $_ = $t[$index];
-
     
-    while (/\[(\w+)\-\>(INDEX|NAME)\]/g) {
-	my ($v1, $v2) = ($1, $2);
-	
-        if (ref($internal->{$v1}) eq 'HASH') {
-	    s/\[($v1)\-\>($v2)\]/$internal->{$v1}{$v2}/;
-	}else {
-	    s/\[($v1)\-\>($v2)\]//;
-	}
-    }
-
-    while (/\[(\w+)\-\>(\w+)\]/g) {
-	my ($v1, $v2) = ($1, $2);
-	
-        if (ref($data->{$v1}) eq 'HASH') {
-	    s/\[($v1)\-\>($v2)\]/$data->{$v1}{$v2}/;
-	}else {
-	    s/\[($v1)\-\>($v2)\]//;
-	}
-    }
-
-    while (/\[(\w+)\]/g) {
-	my $v = $1;
-
-	s/\[$v\]/$data->{$v}/;
-    }
-
-    return;
+    s/\[(\w+\-\>\w+|\w+)\]/&do_eval($1)/eg;
+    
+    return $_;
 }
 
+sub do_eval {
+    my $var = shift;
 
+    if ($var =~ /^(\w+)\-\>(INDEX|NAME)$/) {
+	if (ref($internal->{$1}) eq 'HASH') {
+	    return internal->{$1}{$2};
+	}
+    }elsif ($var =~ /^(\w+)\-\>(\w+)$/) {
+	if (ref($data->{$1}) eq 'HASH') {
+	    return $data->{$1}{$2};
+	}
+    }elsif ($var =~ /^(\w+)$/) {
+	return $data->{$1};
+    }else {
+	print STDERR "Unable to parse '$var'\n" if $opt_p;
+    }
+
+    return '';
+}
