@@ -468,15 +468,20 @@ if ($wwsconf->{'use_fast_cgi'}) {
          $param->{'conf'} = {'email' => $Conf{'robots'}{$robot}{'email'},
                              'host' =>  $Conf{'robots'}{$robot}{'host'},
                              'sympa' => $Conf{'robots'}{$robot}{'sympa'},
-                             'request' => $Conf{'robots'}{$robot}{'request'}
+                             'request' => $Conf{'robots'}{$robot}{'request'},
+                             'soap_url' => $Conf{'robots'}{$robot}{'soap_url'},
+                             'wwsympa_url' => $Conf{'robots'}{$robot}{'wwsympa_url'}
                          };
      }else {
          $param->{'conf'} = {'email' => $Conf{'email'},
                              'host' =>  $Conf{'host'},
                              'sympa' => $Conf{'sympa'},
-                             'request' => $Conf{'request'}
+                             'request' => $Conf{'request'},
+                             'soap_url' => $Conf{'soap_url'},
+                             'wwsympa_url' => $Conf{'wwsympa_url'}
                          };
      }
+
      foreach my $auth (keys  %{$Conf{'cas_id'}}) {
 	 &do_log('debug2', "cas authentication service name $auth");
 	 $param->{'sso'}{$auth} = $auth;
@@ -508,6 +513,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
      ## Authentication 
      ## use https client certificat information if define.  
 
+     ## Default auth method (for scenarios)
+     $param->{'auth_method'} = 'md5';
+
      ## Compatibility issue with old a-sign.at certs
      if (!$ENV{'SSL_CLIENT_S_DN_Email'} && 
          $ENV{'SSL_CLIENT_S_DN'} =~ /\+MAIL=([^\+\/]+)$/) {
@@ -524,7 +532,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      }elsif ($ENV{'HTTP_COOKIE'} =~ /(user|sympauser)\=/) {
          $param->{'user'}{'email'} = &wwslib::get_email_from_cookie($Conf{'cookie'});
-         $param->{'auth_method'} = 'md5';
+	 
      }elsif($in{'ticket'}=~/(S|P)T\-/){ # the request contain a vas named ticket that use CAS ticket format
 	 &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},0,'now'); #reset the cookie do_not_use_cas because this client probably use CAS
 	 # select the cas server that redirect the user to sympa and check the ticket
@@ -539,9 +547,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     my $port = ':'.$ENV{'SERVER_PORT'}; 
 	     if ($ENV{SSL_PROTOCOL}) {
 		 $https = 's';
-		 $port = '' if ($ENV{'SERVER_PORT'} = '443');
+		 $port = '' if ($ENV{'SERVER_PORT'} eq '443');
 	     }else{
-		 $port = '' if ($ENV{'SERVER_PORT'} = '80');
+		 $port = '' if ($ENV{'SERVER_PORT'} eq '80');
 	     }
 	     my $return_url = 'http'.$https.'://'.$ENV{'SERVER_NAME'}.$port.$ENV{'REQUEST_URI'} ;
 
@@ -554,18 +562,16 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		 $param->{'user'}{'email'} = lc(&Auth::cas_get_email_by_net_id($net_id,$cas_id));
 
 		 &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id);
-		 $param->{'auth_method'} = 'md5';
 	     }else{
-		 do_log('notice',"bas answser from cas auth service net_id = -1"); 
-		 $param->{'auth_method'} = 'md5';
+		 do_log('notice',"bad answser from cas auth service net_id = -1"); 
 	     }
 	 }else{
 	      do_log ('notice',"Internal error while receiving a CAS ticket $in{'checked_cas'} ");
 	 }
-     }elsif($Conf{'cas_number'} > 0) { # some cas server are defined but no CAS ticket detected
+     }elsif(($Conf{'cas_number'} > 0) &&
+	    ($in{'action'} !~ /^login|sso_login$/)) { # some cas server are defined but no CAS ticket detected
 	 if (&cookielib::get_do_not_use_cas($ENV{'HTTP_COOKIE'})) {
 	     &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},1,$Conf{'cookie_cas_expire'}); # refresh CAS cookie;
-	     $param->{'auth_method'} = 'md5';
 	 }else{
 	     # user not taggued as not using cas
 	     do_log ('debug',"no cas ticket detected");
@@ -582,9 +588,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		 my $port = ':'.$ENV{'SERVER_PORT'}; 
 		 if ($ENV{SSL_PROTOCOL}) {
 		     $https = 's';
-		     $port = '' if ($ENV{'SERVER_PORT'} = '443');
+		     $port = '' if ($ENV{'SERVER_PORT'} eq '443');
 		 }else{
-		     $port = '' if ($ENV{'SERVER_PORT'} = '80');
+		     $port = '' if ($ENV{'SERVER_PORT'} eq '80');
 		 }
 	     
 		 my $return_url = 'http'.$https.'://'.$ENV{'SERVER_NAME'}.$port.$ENV{'REQUEST_URI'} ;
@@ -608,12 +614,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
 			 do_log('notice',"Strange CAS ticket detected and validated check sympa code !" );
 		     }
 	     }
-	     $param->{'auth_method'} = 'md5';
 	     &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},1,$Conf{'cookie_cas_expire'}) unless ($param->{'redirect_to'} =~ /http(s)+\:\//i) ; #set the cookie do_not_use_cas because all cas server as been checked without success
 	 }
-     }else{
-         ## request action need a auth_method even if the user is not authenticated ...
-	 $param->{'auth_method'} = 'md5';
      }
 
      ##Cookie extern : sympa_altemails
@@ -702,7 +704,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
          delete($param->{'action'}) if (! defined $action);
 	 
-	 do_log ('debug',"xxxxxxxxxxxxxxxxx acxtion $action old_action = $old_action");
 	 last if ($action =~ /redirect/) ; # after redirect do not send anything, it will crash fcgi lib
 
 
@@ -1478,8 +1479,6 @@ sub do_sso_login {
     my $host = $Conf{'auth_services'}[$cas_id]{'host'};
     my $login_uri = $Conf{'auth_services'}[$cas_id]{'login_uri'};
     
-    do_log('info',"xxxxxxxxxxxxxxxxxxxyy  auth_service_name : $in{'auth_service_name'} cas_id : $cas_id ");
-
     my $path = '';
     if ($in{'previous_action'}) {
  	$path = "/$in{'previous_action'}";
@@ -1493,7 +1492,6 @@ sub do_sso_login {
     &do_log('info', 'do_sso_login: redirect_url(%s)', $redirect_url);
     if ($redirect_url =~ /http(s)+\:\//i) {
 	$in{'action'} = 'redirect';
-	&do_log('info', 'xxxxxxxxxxxxxxxx go for do_redirect_url(%s)', $redirect_url);
 	$param->{'redirect_to'} = $redirect_url;
 	$param->{'bypass'} = 'extreme';
 	print "Location: $param->{'redirect_to'}\n\n";
@@ -2039,6 +2037,7 @@ sub do_redirect {
 	 $in{'action'} = 'redirect';
 	 $param->{'redirect_to'} = 'https://'.$host.$logout_uri.'?service='.$return_url.'&gateway=1';
 	 &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
+	 &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id, 'now');
 	 return 'redirect';
      }
      &wwslog('info','do_logout: logout performed');
@@ -9751,14 +9750,18 @@ sub do_wsdl {
     }
     $param->{'bypass'} = 'extreme';
     printf "Content-type: text/xml\n\n";
+
+   $param->{'conf'}{'soap_url'}  = $Conf{'soap_url'};
+
+    &parser::parse_tpl($param,$sympawsdl , \*STDOUT);
     
-    unless (open (WSDL,$sympawsdl)) {
-	&error_message('404');
-	&wwslog('info','could not open $sympawsdl');
-	return undef;	
-    }
-    print <WSDL>;
-    close WSDL;
+#    unless (open (WSDL,$sympawsdl)) {
+# 	&error_message('404');
+# 	&wwslog('info','could not open $sympawsdl');
+# 	return undef;	
+#     }
+#    print <WSDL>;
+#     close WSDL;
     return 1;
 }
 		

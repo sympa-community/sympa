@@ -368,6 +368,11 @@ sub set_do_not_use_cas {
 sub set_cas_server {
     my $domain = shift;
     my $value = shift ;    
+    my $expires=shift;
+
+    if ($expires =~ /now/i) {
+	$expires = "-10y";
+    }
 
     if ($domain eq 'localhost') {
 	$domain="";
@@ -378,6 +383,7 @@ sub set_cas_server {
     my $cookie = new CGI::Cookie (-name    => 'cas_server',
 				  -value   => $value ,
 				  -domain  => $domain,
+				  -expires => $expires,
 				  -path    => '/'
 				  );
     
