@@ -47,6 +47,7 @@ use smtp;
 use Getopt::Long;
 use POSIX;
 
+require 'tt2.pl';
 require 'tools.pl';
 
 ## Equivalents relative to RFC 1893

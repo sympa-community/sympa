@@ -42,7 +42,7 @@ use List;
 use Message;
 
 require 'tools.pl';
-require 'tt2native.pl';
+require 'tt2.pl';
 
 
 # durty global variables

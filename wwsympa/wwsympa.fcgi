@@ -35,7 +35,7 @@ use Getopt::Long;
 use strict vars;
 
 ## Template parser
-require "--LIBDIR--/tt2native.pl";
+require "--LIBDIR--/tt2.pl";
 
 ## Sympa API
 use List;
@@ -919,7 +919,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 #&parser::parse_tpl($param,'main.tt2' , \*STDOUT);
-	 &parser::parse_tpl($param,$main , \*STDOUT);
+	 &tt2::parse_tt2($param,$main , \*STDOUT);
      }    
 
      # exit if wwsympa.fcgi itself has changed
@@ -5043,7 +5043,7 @@ sub do_set_pending_list_request {
 	 $data{'list'}{'name'} = $list->{'name'};
 	 $data{'default_domain'} = $Conf{'domain'};
 	 $data{'is_default_domain'} = 1 if ($robot == $Conf{'domain'});
-	 &parser::parse_tpl (\%data,$template_file,\@aliases);
+	 &tt2::parse_tt2 (\%data,$template_file,\@aliases);
 	 $param->{'aliases'}  = '';
 	 foreach (@aliases) {$param->{'aliases'} .= $_; }
      }
@@ -5237,7 +5237,7 @@ sub do_set_pending_list_request {
      $parameters->{'topics'} = $in{'topics'};
 
      open CONFIG, ">$list_dir/config";
-     &parser::parse_tpl($parameters, $template_file, \*CONFIG);
+     &tt2::parse_tt2($parameters, $template_file, \*CONFIG);
      close CONFIG;
 
      ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
@@ -10507,7 +10507,7 @@ sub do_wsdl {
     
    $param->{'conf'}{'soap_url'}  = $soap_url;
 
-    &parser::parse_tpl($param,$sympawsdl , \*STDOUT);
+    &tt2::parse_tt2($param,$sympawsdl , \*STDOUT);
     
 #    unless (open (WSDL,$sympawsdl)) {
 # 	&error_message('404');

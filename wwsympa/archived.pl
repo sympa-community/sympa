@@ -39,7 +39,7 @@ use Language;
 use wwslib;
 use smtp;
 
-require 'tt2native.pl';
+require 'tt2.pl';
 require 'tools.pl';
 
 #getopts('dF');

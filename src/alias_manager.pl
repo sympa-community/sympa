@@ -33,7 +33,7 @@ use lib '--LIBDIR--';
 use Conf;
 use POSIX;
 require "tools.pl";
-require "tt2native.pl";
+require "tt2.pl";
 
 
 unless (Conf::load('--CONFIG--')) {
@@ -78,7 +78,7 @@ $data{'default_domain'} = $default_domain;
 $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
 my $template_file = &tools::get_filename('etc', 'list_aliases.tt2', $domain);
 my @aliases ;
-&parser::parse_tpl (\%data,$template_file,\@aliases);
+&tt2::parse_tt2 (\%data,$template_file,\@aliases);
 
 
 if ($operation eq 'add') {

@@ -37,7 +37,8 @@ use Digest::MD5;
 use smtp;
 use wwslib;
  
-require 'tt2native.pl';
+require 'tt2.pl';
+require 'parser.pl';
 require 'tools.pl';
 
 my $opt_d;

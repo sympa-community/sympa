@@ -8086,7 +8086,7 @@ sub _urlize_part {
     my $parser = new MIME::Parser;
     $parser->output_to_core(1);
     my @new_part;
-    &parser::parse_tpl({'file_name' => $file_name,
+    &tt2::parse_tt2({'file_name' => $file_name,
 			'file_url'  => $file_url,
 			'file_size' => $size },
 		       &tools::get_filename('etc', 'tt2/urlized_part.'.'.tt2', $robot, $list),
