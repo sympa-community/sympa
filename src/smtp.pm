@@ -218,7 +218,7 @@ sub mailto {
        ## Get body from original file
        unless (open MSG, $message->{'filename'}) {
 	   do_log ('notice',"Unable to open %s:%s",$message->{'filename'},$!);
-	   last;
+	   return undef;
        }
        my $in_header = 1 ;
        while (<MSG>) {
