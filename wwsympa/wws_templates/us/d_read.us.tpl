@@ -241,8 +241,6 @@
   <HR> 
 <TABLE CELLSPACING=20>
    
-   [IF path]
-         
   [IF may_edit]
     <TR>
     <form method="post" ACTION="[path_cgi]">
@@ -320,10 +318,10 @@
    <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
    <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
    <TD>
-   </form> 
    </TR>
    [ENDIF]
 </TABLE>
+</FORM>
 [ENDIF]
    
 
