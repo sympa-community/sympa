@@ -1,0 +1,18 @@
+title.fr procedure d'expiration : envoi de 2 messages d'avertissement avant suppression
+title.us expiration routine : sending of 2 warning mails before deletion
+
+/STEP1
+@selection = select_subs (older ([creation_date]-1y))
+send_msg (@selection, expire_warning1)
+next ([execution_date]+3w, STEP2)
+
+/STEP2
+@selection = select_subs (older ([creation_date]-1y))
+send_msg (@selection, expire_warning2)
+next ([execution_date]+1w, STEP3)
+
+/STEP3
+@selection = select_subs (older ([creation_date]-1y))
+@deleted = delete (@selection)
+send_msg (@deleted, expire_deletion)
+stop ()

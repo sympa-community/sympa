@@ -1,0 +1,8 @@
+title.fr mise a jour horaire des listes de révocation
+title.us hourly CRL update
+
+next ([execution_date], INIT)
+
+/INIT
+update_CRL (CA_list, 2d)
+next ([execution_date] + 1h, INIT)
