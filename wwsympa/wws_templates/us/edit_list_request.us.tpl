@@ -7,8 +7,7 @@ You can choose below a subset of parameters to edit : <UL>
 <LI><A HREF="[path_cgi]/edit_list_request/[list]/command" >Privileges</A>
 <LI><A HREF="[path_cgi]/edit_list_request/[list]/archives" >Archives</A>
 <LI><A HREF="[path_cgi]/edit_list_request/[list]/bounces" >Bounces management</A>
-<LI><A HREF="[path_cgi]/edit_list_request/[list]/data_source" >Data sources setup</A>
-<LI><A HREF="[path_cgi]/rename_list_request/[list]" >Rename list</A>	
+<LI><A HREF="[path_cgi]/edit_list_request/[list]/data_source" >Data sources setup</A>	
 <LI><A HREF="[path_cgi]/edit_list_request/[list]/other" >Miscellaneous</A>
 </UL>
 [ELSE]

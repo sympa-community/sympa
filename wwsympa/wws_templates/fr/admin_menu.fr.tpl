@@ -1,7 +1,7 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 <!-- begin admin_menu.fr.tpl -->
-    <TD BGCOLOR="[selected_color]" ALIGN="CENTER" COLSPAN="8">
+    <TD BGCOLOR="[selected_color]" ALIGN="CENTER" COLSPAN="9">
 	<FONT COLOR="[bg_color]"><b>Administration de liste</b></font>
     </TD>
     </TR>
@@ -124,6 +124,13 @@
        <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Vous êtes sur le point de suppimer la liste [list]. Confirmer ?'); return false;"><FONT size=-1><b>Supprimer la liste</b></font></A>
        [ENDIF]                               
     </TD>       
+   <TD BGCOLOR="[light_color]" ALIGN="CENTER">
+        [IF may_create_list]  
+	  <A HREF="[path_cgi]/rename_list_request/[list]"><FONT size=-1><b>Renommer la liste</b></font></A>
+        [ELSE]                 
+          <FONT size="-1" COLOR="[bg_color]"><b>Renomer la liste</b></font>
+        [ENDIF]
+   </TD>       
     [IF action=edit_list_request]
     </TR>
     <TR>
