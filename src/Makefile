@@ -186,6 +186,7 @@ subst:
 	@( \
 		PERL=$(PERL); export PERL;\
 		UMASK=0755; export UMASK;\
+		HOST=$(HOST); export HOST;\
 		DIR=$(DIR); export DIR;\
 		DESTDIR=$(DESTDIR); export DESTDIR;\
 		PIDDIR=$(PIDDIR); export PIDDIR;\
@@ -197,6 +198,8 @@ subst:
 		SYMPA_VERSION=$(SYMPA_VERSION); export SYMPA_VERSION;\
 		SENDMAIL_ALIASES=$(SENDMAIL_ALIASES); export SENDMAIL_ALIASES;\
 		VIRTUAL_ALIASES=$(VIRTUAL_ALIASES); export VIRTUAL_ALIASES;\
+		SPOOLDIR=$(SPOOLDIR); export SPOOLDIR;\
+		COOKIE=$(COOKIE); export COOKIE;\
 		$(PERL) ../subst.pl $(sbin_SRC) \
 	)
 	@echo "Doing multiple substitutions while installing libraries ..."

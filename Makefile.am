@@ -154,7 +154,7 @@ NLSDIR		=	$(DIR)/nls
 #ifeq ($(shell uname), Linux)
 #	LOG_SOCKET_TYPE="inet"
 #else
-LOG_SOCKET_TYPE	=	"unix"
+LOG_SOCKET_TYPE	=	unix
 #endif
 
 all:	checkcpan sources languages checkperl man
@@ -162,12 +162,6 @@ all:	checkcpan sources languages checkperl man
 rpm: build_rh_rpm build_mdk_rpm
 
 checkperl:
-	@echo "#######################################"
-	@echo "## Database structure has been extended"
-	@echo "## You need to run the following command on your database :"
-	@echo "## ALTER TABLE subscriber_table ADD comment_subscriber varchar (150);"
-	@echo "## ";
-	@echo "## Then run $(SBINDIR)/init_comment.pl"
 	@if [ $(PERL_VERSION) = '5.006' ]; then \
 	echo "##################################"; \
 	echo "## You are using Perl version $(PERL_VERSION) :"; \
@@ -181,7 +175,7 @@ checkperl:
 
 sources: src/Makefile src/queue.c src/bouncequeue.c src/aliaswrapper.c
 	@echo "Making src"
-	(cd src && echo "making in src..." && \
+	@(cd src && echo "making in src..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
 	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' \
 	MAILERPROGDIR='${MAILERPROGDIR}' ETCBINDIR='${ETCBINDIR}' \
@@ -195,7 +189,7 @@ sources: src/Makefile src/queue.c src/bouncequeue.c src/aliaswrapper.c
 
 doc: doc/sympa.tex.tpl doc/Makefile 
 	@echo "Making doc"
-	(cd doc && echo "making in doc..." && \
+	@(cd doc && echo "making in doc..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
 	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' \
 	MAILERPROGDIR='${MAILERPROGDIR}' ETCBINDIR='${ETCBINDIR}' \
@@ -204,7 +198,7 @@ doc: doc/sympa.tex.tpl doc/Makefile
 
 man: doc/man8/Makefile
 	@echo "Making man"
-	(cd doc/man8 && echo "making in doc/man8/..." && \
+	@(cd doc/man8 && echo "making in doc/man8/..." && \
 	$(MAKE) SYMPA_VERSION='$(SYMPA_VERSION)');
 
 languages:
@@ -229,7 +223,7 @@ clean:
 install: importantchanges installsrc installnls installwws installman installscript installsample installdir installconfig
 
 importantchanges:
-	( 	PERL=$(PERL); export PERL; \
+	@( 	PERL=$(PERL); export PERL; \
 		UMASK=0600; export UMASK; \
 		BINDIR=$(SBINDIR); export BINDIR; \
 		SBINDIR=$(SBINDIR); export SBINDIR; \
@@ -240,17 +234,19 @@ importantchanges:
 
 
 installsrc:
-	(cd src && echo "making in src..." && \
+	@(cd src && echo "making in src..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' SYMPA_VERSION='${SYMPA_VERSION}' \
 	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' \
 	DESTDIR='${DESTDIR}' MAILERPROGDIR='${MAILERPROGDIR}' EXPL_DIR='${EXPL_DIR}' \
 	PIDDIR='${PIDDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	ETCBINDIR='${ETCBINDIR}' SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' \
-	VIRTUAL_ALIASES='${VIRTUAL_ALIASES}' \
+	VIRTUAL_ALIASES='${VIRTUAL_ALIASES}'  HOST='${HOST}' COOKIE='${COOKIE}' \
+	SPOOLDIR='${SPOOLDIR}' LOG_SOCKET_TYPE='${LOG_SOCKET_TYPE}' \
+	SSLCERTDIR='${SSLCERTDIR}' \
 	USER='${USER}' GROUP='${GROUP}' newinstall) || exit 1;
 
 installnls:
-	(cd nls && echo "making in nls..." && \
+	@(cd nls && echo "making in nls..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
 	DIR='${DIR}' NLSDIR='${NLSDIR}' ETCBINDIR='${ETCBINDIR}' \
 	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
@@ -259,7 +255,7 @@ installnls:
 	USER='${USER}' GROUP='${GROUP}' GENCAT='${GENCAT}' newinstall) || exit 1;
 
 installwws:
-	(cd wwsympa && echo "making in wwsympa..." && \
+	@(cd wwsympa && echo "making in wwsympa..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
 	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' \
 	CGIDIR='${CGIDIR}' WWSBINDIR='${WWSBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
@@ -267,7 +263,7 @@ installwws:
 	DESTDIR='${DESTDIR}' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' newinstall) || exit 1;
 
 installsample:
-	(cd src/etc/sample && echo "making in src/etc/sample..." && \
+	@(cd src/etc/sample && echo "making in src/etc/sample..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' LOG_SOCKET_TYPE='${LOG_SOCKET_TYPE}' \
 	DESTDIR='${DESTDIR}' DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' HOST='${HOST}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
@@ -278,7 +274,7 @@ installman:
 	mkdir -p $(DESTDIR)$(MANDIR)
 	mkdir -p $(DESTDIR)$(MANDIR)/man8
 	@for manfile in sympa.8 archived.8 bounced.8 alias_manager.8; do \
-	echo "Installing man file man8/$$manfile..."; \
+	@echo "Installing man file man8/$$manfile..."; \
 	( \
 		cd doc/man8 ; \
 		PERL=$(PERL); export PERL; \
@@ -302,7 +298,7 @@ installman:
 
 
 installscript:
-	(cd src/etc/script && echo "making in src/etc/script..." && \
+	@(cd src/etc/script && echo "making in src/etc/script..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
 	DIR='${DIR}' DESTDIR='${DESTDIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' HOST='${HOST}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' \
@@ -361,36 +357,19 @@ installdir:
 
 installconfig:
 	mkdir -p $(DESTDIR)$(CONFDIR)
-	@for cfile in sympa.conf wwsympa.conf ; do \
+	for cfile in sympa.conf wwsympa.conf ; do \
 	if [ ! -f $(DESTDIR)$(CONFDIR)/$$cfile ] ; then \
 	echo "Installing sample config file $$cfile..."; \
-	( \
-		cd src/etc/sample/ ; \
-		PERL=$(PERL); export PERL; \
-		UMASK=0600; export UMASK; \
-		DIR=$(DIR); export DIR; \
-		EXPL_DIR=$(EXPL_DIR); export EXPL_DIR; \
-		INSTALLDIR=$(CONFDIR); export INSTALLDIR; \
-		DESTDIR=$(DESTDIR); export DESTDIR; \
-		BINDIR=$(BINDIR); export BINDIR; \
-		SBINDIR=$(SBINDIR); export SBINDIR; \
-		LIBDIR=$(LIBDIR); export LIBDIR; \
-		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
-		CONFIG=$(CONFIG); export CONFIG; \
-		LOG_SOCKET_TYPE=$(LOG_SOCKET_TYPE); export LOG_SOCKET_TYPE; \
-		COOKIE=$(COOKIE); export COOKIE; \
-		HOST=$(HOST); export HOST; \
-		OPENSSL=@OPENSSL@; export OPENSSL ; \
-		SSLCERTDIR=$(SSLCERTDIR); export SSLCERTDIR ; \
-		PIDDIR=$(PIDDIR); export PIDDIR; \
-		SPOOLDIR=$(SPOOLDIR); export SPOOLDIR; \
-		$(PERL) ../../../subst.pl $$cfile \
-	) ;\
+	$(PERL)  $(DESTDIR)$(SBINDIR)/sympa_wizard.pl -c $$cfile; \
 	chown $(USER) $(DESTDIR)$(CONFDIR)/$$cfile; \
 	chgrp $(GROUP) $(DESTDIR)$(CONFDIR)/$$cfile; \
-	$(PERL)  $(DESTDIR)/$(SBINDIR)/sympa_wizard.pl; \
+	INITCONF=1; \
+	$(PERL)  $(DESTDIR)$(SBINDIR)/sympa_wizard.pl; \
 	fi \
-	done
+	done; \
+	if [ $(INITCONF) = 1 ] ; then \
+	$(PERL)  $(DESTDIR)$(SBINDIR)/sympa_wizard.pl; \
+	fi
 
 build_rh_rpm: clean
 	@echo "Building RedHat RPM in $(RPMTOPDIR) ..."
