@@ -80,7 +80,7 @@ sub mailback {
    if ($from eq 'sympa') {
        printf $fh "From: %s\n", MIME::Words::encode_mimewords((sprintf (gettext("SYMPA <%s>"), $sympa_email)), 'Q', $charset);
    }else {
-       printf $fh "From: %s\n", $from;
+       printf $fh "From: %s\n", MIME::Words::encode_mimewords($from, 'Q', $charset);
    }
    foreach my $field (keys %{$headers}) {
        printf $fh "%s: %s\n", $field, MIME::Words::encode_mimewords($headers->{$field}, 'Q', $charset);

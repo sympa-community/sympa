@@ -9904,11 +9904,16 @@ sub creation_desc_file {
 
      my @body = split /\0/, $in{'body'};
 
+     my $from = $param->{'user'}{'email'};
+     if ($param->{'user'}{'gecos'}) {
+	 $from = $param->{'user'}{'gecos'}.'<'.$from.'>';
+     }
+
      &mail::mailback(\@body, 
 		     {'Subject' => $in{'subject'}, 
 		      'In-Reply-To' => $in{'in_reply_to'},
 		      'Message-ID' => $in{'message_id'}}, 
-		     $param->{'user'}{'email'}, $to, $robot, $to);
+		     $from, $to, $robot, $to);
 
      &message('performed');
      return 'info';
