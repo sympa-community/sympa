@@ -207,7 +207,7 @@ my %default = ('occurrence' => '0-1',
 my @param_order = qw (subject visibility info subscribe add unsubscribe del owner send editor 
 		      account topics 
 		      host lang web_archive archive digest available_user_options 
-		      default_user_options reply_to forced_reply_to * 
+		      default_user_options reply_to_header reply_to forced_reply_to * 
 		      welcome_return_path remind_return_path user_data_source include_file 
 		      include_list include_ldap_query include_sql_query ttl creation update 
 		      status serial);
@@ -401,7 +401,8 @@ my %alias = ('reply-to' => 'reply_to',
 			      },
 	    'forced_reply_to' => {'format' => '\S+',
 				  'title_id' => 32,
-				 'group' => 'tuning'
+				  'group' => 'tuning',
+				  'obsolete' => 1
 			 },
 	    'host' => {'format' => $regexp{'host'},
 		       'length' => 20,
@@ -559,8 +560,25 @@ my %alias = ('reply-to' => 'reply_to',
 	    'reply_to' => {'format' => '\S+',
 			   'default' => 'sender',
 			   'title_id' => 66,
-			   'group' => 'tuning'
+			   'group' => 'tuning',
+			   'obsolete' => 1
 			   },
+	    'reply_to_header' => {'format' => {'value' => {'format' => ['sender','list','other_email'],
+							   'default' => 'sender',
+							   'title_id' => 91,
+							   'occurrence' => '1'
+							   },
+					       'other_email' => {'format' => $regexp{'email'},
+								 'title_id' => 92
+								 },
+					       'apply' => {'format' => ['forced','respect'],
+							   'default' => 'respect',
+							   'title_id' => 93
+							   }
+					   },
+				  'title_id' => 90,
+				  'group' => 'tuning'
+				  },		
 	    'review' => {'scenario' => 'review',
 			 'synonym' => {'open' => 'public'},
 			 'title_id' => 67,
@@ -1414,22 +1432,21 @@ sub distribute_msg {
     }
 
     ## Change the reply-to header if necessary. 
-    my $reply = $self->{'admin'}{'forced_reply_to'} ;
-    if ($self->{'admin'}{'forced_reply_to'}) {
-	$hdr->delete('Reply-To');
-	if ($self->{'admin'}{'forced_reply_to'} =~ /^list$/io) {
-	    $reply = "$name\@$host";
-	}
-	if ($self->{'admin'}{'forced_reply_to'} !~ /^sender$/io) {
-	    $hdr->add('Reply-To',$reply);
-	}
-    }else{
-	$reply = $self->get_reply_to();	
-	if ($reply && !$hdr->get('Reply-To') && $reply !~ /^sender$/io) {
-	    if ($reply =~ /^list$/io) {
+    if ($self->{'admin'}{'reply_to_header'}) {
+	unless ($hdr->get('Reply-To') && ($self->{'admin'}{'reply_to_header'}{'apply'} ne 'forced')) {
+	    my $reply;
+
+	    $hdr->delete('Reply-To');
+
+	    if ($self->{'admin'}{'reply_to_header'}{'value'} eq 'list') {
 		$reply = "$name\@$host";
+	    }elsif ($self->{'admin'}{'reply_to_header'}{'value'} eq 'sender') {
+		$reply = undef;
+	    }elsif ($self->{'admin'}{'reply_to_header'}{'value'} eq 'other_email') {
+		$reply = $self->{'admin'}{'reply_to_header'}{'other_email'};
 	    }
-	    $hdr->add('Reply-To', $reply);
+
+	    $hdr->add('Reply-To',$reply) if $reply;
 	}
     }
     
@@ -2119,7 +2136,11 @@ sub get_max_size {
 
 ## Returns an array with the Reply-To data
 sub get_reply_to {
-   return (shift->{'admin'}{'reply_to'});
+    my $value = shift->{'admin'}{'reply_to_header'}{'value'};
+
+    $value = shift->{'admin'}{'reply_to_header'}{'other_email'} if ($value = 'other_email');
+
+    return $value
 }
 
 ## Returns a default user option
@@ -3472,7 +3493,9 @@ sub may_edit {
     }
 
     ## What privilege ?
-    if ( $self->am_i('privileged_owner',$who) ) {
+    if (&is_listmaster($who)) {
+	$role = 'listmaster';
+    }elsif ( $self->am_i('privileged_owner',$who) ) {
 	$role = 'privileged_owner';
 	
     }elsif ( $self->am_i('owner',$who) ) {
@@ -3805,10 +3828,8 @@ sub print_info {
     push @result, sprintf Msg(9, 6, "Review is          : %s\n")
 	, $admin->{'review'}{'title'}{$lang};
     
-    if ($admin->{'forced_reply_to'}) {
-	push @result, sprintf Msg(9, 7, "Reply-to           : %s\n"), $admin->{'forced_reply_to'} 
-    }else{
-	push @result, sprintf Msg(9, 7, "Reply-to           : %s\n"), $admin->{'reply_to'} if ($admin->{'reply_to'});
+    if ($admin->{'reply_to_header'}) {
+	push @result, sprintf Msg(9, 7, "Reply-to           : %s\n"), &get_reply_to();
     }
     
     push @result, sprintf Msg(9, 8, "Maximum size       : %d\n"), $admin->{'max_size'} 
@@ -5537,18 +5558,31 @@ sub _load_admin_file {
 	}
     }
 	
-#    if (defined ($admin{'topics'})) {
-#	if ($admin{'topics'}[0] =~ /^(.+)\s*$/o) {
-#	    my $topics = $1;
-#	    $topics =~ s/\s//g;
-#	    @{$admin{'topics'}} = split /,/, $topics;
-#	}
-#    }
-
     if (defined ($admin{'custom_subject'})) {
 	if ($admin{'custom_subject'} =~ /^\s*\[\s*(.+)\s*\]\s*$/) {
 	    $admin{'custom_subject'} = $1;
 	}
+    }
+
+    ## Format changed for reply_to parameter
+    ## New reply_to_header parameter
+    if (($admin{'forced_reply_to'} && ! $admin{'defaults'}{'forced_reply_to'}) ||
+	($admin{'reply_to'} && ! $admin{'defaults'}{'reply_to'})) {
+	my ($value, $apply, $other_email);
+	$value = $admin{'forced_reply_to'} || $admin{'reply_to'};
+	$apply = 'forced' if ($admin{'forced_reply_to'});
+	if ($value =~ /\@/) {
+	    $other_email = $value;
+	    $value = 'other_email';
+	}
+
+	$admin{'reply_to_header'} = {'value' => $value,
+				     'other_email' => $other_email,
+				     'apply' => $apply};
+
+	## delete old entries
+	$admin{'reply_to'} = undef;
+	$admin{'forced_reply_to'} = undef;
     }
 
     ############################################

@@ -17,8 +17,6 @@ archive
 
 clean_delay_queuemod 15
 
-reply_to sender
-
 subscribe open
 
 unsubscribe open,notify

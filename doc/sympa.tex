@@ -3106,7 +3106,8 @@ subscribe auth
 
 review owner
 
-reply_to list
+reply_to_header
+value list
 
 cookie 142cleliste
 \end{verbatim}
@@ -3131,7 +3132,8 @@ subscribe owner
 
 review owner
 
-reply\_to list
+reply_to_header
+value list
 
 digest 1,4 12:00
 \end{verbatim}
@@ -4420,20 +4422,24 @@ d_edit		private
 
 \section {List tuning}
 
-\subsection {reply\_to}
-    \label {par-reply-to}
+\subsection {reply\_to\_header}
+    \label {par-reply-to-header}
 
+\lparam {reply\_to} parameter starts a paragraph to
+	define how \Sympa manages the \rfcheader {Reply-To} SMTP header field of
+	distributed messages.
+
+\begin {itemize}
+
+\item \lparam {value}   \texttt {sender} $|$
+    			\texttt {list}   $|$
+    			\texttt {other\_email}
 	\default {sender}
 
-\lparam {reply\_to}
-    \texttt {sender} $|$
-    \texttt {list}   $|$
-    \texttt {email}
-
-This parameter indicates whether the \rfcheader {Reply-To} field
-should point to the sender of the message (\texttt {sender}) or to
-the list itself (\texttt {list}), to anyother e-mail. If \rfcheader {Reply-To} SMTP header field is set in incoming message, \Sympa will not modify it.
-If \lparam {forced\_reply\_to} is set, \lparam {reply\_to} is ignored by \Sympa.
+	This parameter indicates whether the \rfcheader {Reply-To} field
+	should point to the sender of the message (\texttt {sender}), to
+	the list itself (\texttt {list}) or to anyother e-mail (defined by
+	\lparam {other\_email} parameter).
 
 Note: it is unadvisable to change this field, especially to point
 to the list. Experience demonstrates that numerous users, thinking
@@ -4441,18 +4447,20 @@ they are responding to the sender, send private messages to a list.
 This can lead to an embarrassing situation.
 
 
-\subsection {forced\_reply\_to}
-    \label {par-forced-reply-to}
+\item \lparam {other\_email} \textit {an\_email\_address}
 
-\lparam {forced\_reply\_to}
-    \texttt {sender} $|$
-    \texttt {list}   $|$
-    \texttt {email}
+	If \lparam {value} was set to \texttt {other\_email}, this parameter
+	defines the email address used.
 
-This parameter is like the  \lparam {reply\_to} parameter but using 
-this parameter \Sympa overrights any existing rfcheader {Reply-To} SMTP
-header.
+\item \lparam {apply}   \texttt {respect} $|$
+    			\texttt {forced}  
+	\default {respect}
 
+	Default is to respect existing \rfcheader {Reply-To} SMTP header field.
+	If set to \texttt {forced}, \rfcheader {Reply-To} SMTP header field will
+	be overwritten.
+
+\end {itemize}
 
 \subsection {max\_size}
  \label {par-max-size}
@@ -4571,7 +4579,7 @@ digest and 12:00~PM. Usually do not use digest time later than
     	\label {par-available-user-options}
 	\index{available-user-options}
 
-	\lparam {available\_user\_options} parameter start a paragraph to
+	\lparam {available\_user\_options} parameter starts a paragraph to
 	define available options for the subscribers of the list.
 
 \begin {itemize}

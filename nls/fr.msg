@@ -387,6 +387,10 @@ $set 16 Titres des paramètres de config de listes
 87	"droit d'édition"
 88	"Options d'abonné disponibles"
 89	"mode de réception"
+90	"Adresse de réponse"
+91	"valeur"
+92	"autre adresse email"
+93	"respect du champ existant"
 
 $set 17 Cookie expiration periods
 1	"la session"

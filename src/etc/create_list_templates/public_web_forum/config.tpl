@@ -17,7 +17,8 @@ archive
 
 clean_delay_queuemod 15
 
-reply_to list
+reply_to_header
+value list
 
 subscribe open
 

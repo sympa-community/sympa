@@ -4183,6 +4183,8 @@ sub do_edit_list {
 	## Check privileges first
 	next unless ($list->may_edit($pname,$param->{'user'}{'email'}) eq 'write');
 
+	next if $pinfo->{$pname}{'obsolete'};
+
 	## Single vs multiple parameter
 	if ($pinfo->{$pname}{'occurrence'} =~ /n$/) {
 
@@ -4437,6 +4439,9 @@ sub _prepare_edit_form {
 
     foreach my $pname (sort List::by_order keys %{$pinfo}) {
 	next if ($pname =~ /^comment|defaults$/);
+
+	## Skip obsolete parameters
+	next if $pinfo->{$pname}{'obsolete'};
 
 	my $p = &_prepare_data($pname, $pinfo->{$pname}, $list_config->{$pname});
 
