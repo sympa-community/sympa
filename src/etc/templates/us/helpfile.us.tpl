@@ -22,8 +22,8 @@ du messages sont reconnues.
 
 Les commandes disponibles sont :
 
- HELp                        * Ce fichier d'aide
- LISts                       * Annuaire des listes geres sur ce noeud
+ HELp	                     * Ce fichier d'aide
+ LISts	                     * Annuaire des listes geres sur ce noeud
  REView <list>               * Connaitre la liste des abonnes de <list>
  WHICH                       * Savoir à quelles listes on est abonné
  SUBscribe <list> Prenom Nom * S'abonner ou confirmer son abonnement a la 
@@ -31,12 +31,17 @@ Les commandes disponibles sont :
  SIGnoff <list|*> [user->email]    * Quitter la liste <list>, ou toutes les listes.
                                Où [user->email] est facultatif
 
+			     Mise à jour du mode de reception:	
+ SET <list|*> MAIL           * Reception de la liste <list> en mode normal
  SET <list|*> NOMAIL         * Suspendre la reception des messages de <list>
  SET <list|*> DIGEST         * Reception des message en mode compilation
  SET <list|*> SUMMARY        * Reception de la liste des messages uniquement
- SET <list|*> NOTICE         * Reception de l'objet des message uniquement
+ SET <list|*> NOTICE         * Reception de l'objet des messages uniquement
+ SET <list|*> TXT            * Reception uniquement au format texte pour les messages emis conjointement en HTML et en texte simple.
+ SET <list|*> HTML           * Reception uniquement au format HTML pour les messages emis conjointement en HTML et en texte simple. 
+ SET <list|*> URLIZE	     * Remplacement des attachements par une URL
 
- SET <list|*> MAIL           * Reception de la liste <list> en mode normal
+			     Mise à jour de la visibilite:	
  SET <list|*> CONCEAL        * Passage en liste rouge (adresse d'abonné cachée)
  SET <list|*> NOCONCEAL      * Adresse d'abonné visible via REView
 

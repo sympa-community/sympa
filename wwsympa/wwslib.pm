@@ -11,6 +11,9 @@ use Exporter;
 		   'digest' => 'digest',
 		   'summary' => 'summary',
 		   'notice' => 'notice',
+		   'txt' => 'txt',
+		   'html'=> 'html',
+		   'urlize' => 'urlize',
 		   'nomail' => 'no mail');
 
 ## Cookie expiration periods with corresponding entry in NLS

@@ -183,7 +183,8 @@ my %comm = ('home' => 'do_home',
 	 'compose_mail' => 'do_compose_mail',
 	 'send_mail' => 'do_send_mail',
 	 'search_user' => 'do_search_user',
-	 'set_lang' => 'do_set_lang'
+	 'set_lang' => 'do_set_lang',
+	 'attach' => 'do_attach'
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -243,7 +244,8 @@ my %action_args = ('default' => ['list'],
 		'view_translations' => [],
 		'search' => ['list','filter'],
 		'search_user' => ['email'],
-		'set_lang' => ['lang']
+		'set_lang' => ['lang'],
+		'attach' => ['list','@path']
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -475,15 +477,15 @@ while ($query = &new_loop()) {
     # if bypass defined use file extention
     if ($param->{'bypass'}) {
 
-	## if bypass = 'extreme' leave the action send the content-type
-	unless ($param->{'bypass'} eq 'extreme') {
+       ## if bypass = 'extreme' leave the action send the content-type
+       unless ($param->{'bypass'} eq 'extreme') {
 
-	    ## if bypass = 'asis', file content-type is in the file itself
-	    unless ($param->{'bypass'} eq 'asis') {
-		$mime_types->{$param->{'file_extension'}} ||= 'application/octet-stream';
-		
-		printf "Content-Type: %s\n\n", $mime_types->{$param->{'file_extension'}};
-	    }
+            ## if bypass = 'asis', file content-type is in the file itself
+            unless ($param->{'bypass'} eq 'asis') {
+               $mime_types->{$param->{'file_extension'}} ||= 'application/octet-stream';
+ 
+               printf "Content-Type: %s\n\n", $mime_types->{$param->{'file_extension'}};
+            }
 
 	    open (FILE, $param->{'file'});
 	    print <FILE>;
@@ -3071,6 +3073,20 @@ sub do_remove_arc {
     my $arcpath = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'yyyy'}-$in{'month'}";
     &wwslog('info','remove_arc: looking for %s in %s',$in{'msgid'},"$arcpath/arctxt");
 
+    ## remove url directory if exists
+    my $url_dir = $Conf{'home'}.'/'.$in{'list'}.'/urlized/'.$in{'msgid'};
+    if (-d $url_dir) {
+ 	opendir DIR, "$url_dir";
+    	my @list = readdir(DIR);
+    	close (DIR);
+    	foreach (@list) {
+            unlink ("$url_dir/$_")  ;
+    	}
+    	unless (rmdir $url_dir) {
+		&wwslog('info',"remove_arc: unable to remove $url_dir");
+    	}
+    } 
+
     opendir ARC, "$arcpath/arctxt";
     my $message;
     foreach my $file (grep (!/\./,readdir ARC)) {
@@ -5157,8 +5173,7 @@ sub do_d_admin {
 }
 
 #*******************************************
-# Function : do_d_read
-# Description : reads a file or a directory
+# Function : do_d_read# Description : reads a file or a directory
 #******************************************
 
 # Function which sorts a hash of documents
@@ -7330,3 +7345,79 @@ sub do_set_lang {
 
     return 'home';
 }
+## Function do_attach
+sub do_attach {
+    #action_args == ['list','@path']
+    
+    &wwslog('debug', 'do_attach(%s)', $in{'path'});
+   
+
+    ### action relative to a list ?
+    unless ($param->{'list'}) {
+	&error_message('missing_arg', {'argument' => 'list'});
+	&wwslog('info','attach: no list');
+	return undef;
+    }
+
+    ### Useful variables
+        
+    # current list / current shared directory
+    my $list_name = $list->{'name'};
+
+    # relative path / directory shared of the document 
+    my $path = $in{'path'};
+    my $path_orig = $path;
+  
+    my $expl = $Conf{'home'};
+    
+    # path of the urlized directory
+    my $urlizeddir =  $expl.'/'.$list_name.'/urlized';
+
+    # document to read
+    my $doc;
+    if ($path) {
+	# the path must have no slash a its end
+	$path =~ /^(.*[^\/])?(\/*)$/;
+	$path = $1;
+	$doc = $urlizeddir.'/'.$path;
+    } else {
+	$doc = $urlizeddir;
+    }
+
+    ### Document exist ? 
+    unless (-e "$doc") {
+	&wwslog('info',"do_attach : unable to read $urlizeddir/$path : no such file or directory");
+	&error_message('no_such_document', {'path' => $path});
+	return undef;
+    }
+
+    ### Document has non-size zero?
+    unless (-s "$doc") {
+	&wwslog('info',"do_attach : unable to read $urlizeddir/$path : empty document");
+	&error_message('empty_document', {'path' => $path});
+	return undef;
+    }
+
+    ### Access control    
+    unless (&List::request_action ('web_archive.access',$param->{'auth_method'},
+				   {'listname' => $param->{'list'},
+				    'sender' => $param->{'user'}{'email'},
+				    'remote_host' => $param->{'remote_host'},
+				    'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i) {
+	&error_message('may_not');
+	&wwslog('info','do_attach: access denied for %s', $param->{'user'}{'email'});
+	return undef;
+    }
+ 
+    # parameters for the template file
+    # view a file 
+    $param->{'file'} = $doc;
+	    
+    ## File type
+    $path =~ /^([^\/]*\/)*([^\/]+)\.([^\/]+)$/; 
+
+    $param->{'file_extension'} = $3;
+    $param->{'bypass'} = 'asis';
+}
+
+    

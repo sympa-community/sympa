@@ -1381,7 +1381,7 @@ sub set {
     my ($which, $mode) = ($1, $2);
 
     ## Unknown command (should be checked....)
-    unless ($mode =~ /^(digest|nomail|each|mail|conceal|noconceal|summary|notice)$/i) {
+    unless ($mode =~ /^(digest|nomail|each|mail|conceal|noconceal|summary|notice|txt|html|urlize)$/i) {
 	push @msg::report, sprintf "Unknown command.\n";
 	return 'syntax_error';
     }
@@ -1436,7 +1436,7 @@ sub set {
 	return 'not_allowed';
     }
     
-    if ($mode =~ /^(mail|nomail|digest|summary|notice)/){
+    if ($mode =~ /^(mail|nomail|digest|summary|notice|txt|html|urlize)/){
         # Verify that the mode is allowed
         if (! $list->is_available_reception_mode($mode)) {
 	  push @msg::report, sprintf Msg(6, 90, "List %s allows only these reception modes : %s\nYour configuration hasn't been modified.\n"), $which, $list->available_reception_mode;

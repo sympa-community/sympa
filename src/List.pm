@@ -1,3 +1,4 @@
+
 # This module is part of ML and does all list processing functions
 
 package List;
@@ -273,10 +274,10 @@ my %alias = ('reply-to' => 'reply_to',
 			  'title_id' => 4,
 			  'group' => 'archives'
 		      },
-	    'available_user_options' => {'format' => {'reception' => {'format' => ['mail','notice','digest','summary','nomail'],
+	    'available_user_options' => {'format' => {'reception' => {'format' => ['mail','notice','digest','summary','nomail','txt','html','urlize'],
 								      'occurrence' => '1-n',
 								      'split_char' => ',',
-								      'default' => 'mail,notice,digest,summary,nomail',
+								      'default' => 'mail,notice,digest,summary,nomail,txt,html,urlize',
 								      'title_id' => 89
 								      }
 						  },
@@ -344,8 +345,7 @@ my %alias = ('reply-to' => 'reply_to',
 				 'title_id' => 17,
 				 'group' => 'tuning'
 				 },
-	    'default_user_options' => {'format' => {'reception' => {'format' => ['digest','mail','nomail',
-										 'summary','notice'],
+	    'default_user_options' => {'format' => {'reception' => {'format' => ['digest','mail','nomail','summary','notice','txt','html','urlize'],
 								    'default' => 'mail',
 								    'title_id' => 19,
 								    'order' => 1
@@ -1555,7 +1555,7 @@ sub send_msg {
     my $name = $self->{'name'};
     my $admin = $self->{'admin'};
     my $total = $self->{'total'};
-
+   
     unless ($total > 0) {
 	&do_log('info', 'No subscriber in list %s', $name);
 	return undef;
@@ -1579,51 +1579,130 @@ sub send_msg {
 	    $msg->head->add('Subject', $tag." ".$subject_field);
 	}
     }
-    
-    ## Add a footer
-    unless ($msg->head->get('Content-Type') =~ /multipart\/signed/i) {
-	my $new_msg = _add_parts($msg,  $name, $self->{'admin'}{'footer_type'});
-
-	if (defined $new_msg) {
-	    $msg = $new_msg;
-	    $msg_file = '_ALTERED_';
-	}
-    }
-
+ 
     ## Who is the enveloppe sender ?
     my $host = $self->{'admin'}{'host'};
     my $from = "$name-owner\@$host";
     
-    my @tabrcpt;
-    my @tabrcpt_notice;
-
+    my (@tabrcpt, @tabrcpt_notice, @tabrcpt_txt, @tabrcpt_html, @tabrcpt_url);
+    my $mixed = ($msg->head->get('Content-Type') =~ /multipart\/mixed/i);
+    my $alternative = ($msg->head->get('Content-Type') =~ /multipart\/alternative/i);
+ 
     for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
-	push @tabrcpt, $user->{'email'} unless 
-	    (    ($user->{'reception'} eq 'digest') 
-	      or ($user->{'reception'} eq 'nomail')
-	      or ($user->{'reception'} eq 'summary')
-	      or ($user->{'reception'} eq 'notice'));
-	push @tabrcpt_notice, $user->{'email'} if ($user->{'reception'} eq 'notice');
-    }
+       if ($user->{'reception'} =~ /^digest|summary|nomail$/i) {
+	   next;
+       } elsif ($user->{'reception'} eq 'notice') {
+           push @tabrcpt_notice, $user->{'email'}; 
+       } elsif ($alternative and ($user->{'reception'} eq 'txt')) {
+           push @tabrcpt_txt, $user->{'email'};
+       } elsif ($alternative and ($user->{'reception'} eq 'html')) {
+           push @tabrcpt_html, $user->{'email'};
+       } elsif ($mixed and ($user->{'reception'} eq 'urlize')) {
+           push @tabrcpt_url, $user->{'email'};
+       } else {
+	   push @tabrcpt, $user->{'email'};
+       }
+   }    
 
     ## xxxx   ce return 0 est un Pb isn't it ?
-    unless (@tabrcpt || @tabrcpt_notice) {
+    unless (@tabrcpt || @tabrcpt_notice || @tabrcpt_txt || @tabrcpt_html || @tabrcpt_url) {
 	&do_log('info', 'No subscriber for sending msg in list %s', $name);
 	return 0;
     }
+    #save the message before modifying it
+    my $saved_msg = $msg->dup;
+    my $nbr_smtp;
 
-    
     ##Send message for normal reception mode
-    my $total = smtp::mailto($msg, $from, $encrypt, $msg_file, @tabrcpt);
+    if (@tabrcpt) {
+	## Add a footer
+	unless ($msg->head->get('Content-Type') =~ /multipart\/signed/i) {
+	    my $new_msg = _add_parts($msg,  $name, $self->{'admin'}{'footer_type'});
+	    if (defined $new_msg) {
+		$msg = $new_msg;
+		$msg_file = '_ALTERED_';
+	    }
+	}
+	 $nbr_smtp = &smtp::mailto($msg, $from, $encrypt, $msg_file, @tabrcpt);
+    }
 
     ##Prepare and send message for notice reception mode
-#    my $notice_msg = $msg;
-    $msg->parts([]);
-    $msg->make_singlepart();
-    $total += &smtp::mailto($msg, $from, $encrypt, '_ALTERED_', @tabrcpt_notice);
-    return $total;
+    if (@tabrcpt_notice) {
+	my $notice_msg = $saved_msg->dup;
+        $notice_msg->bodyhandle(undef);    
+	$notice_msg->parts([]);
+	$nbr_smtp += &smtp::mailto($notice_msg, $from, $encrypt, '_ALTERED_', @tabrcpt_notice);
+    }
+
+    ##Prepare and send message for txt reception mode
+    if (@tabrcpt_txt) {
+	my $txt_msg = $saved_msg->dup;
+	if (&tools::as_singlepart($txt_msg, 'text/plain')) {
+	    do_log('notice', 'Multipart message changed to singlepart');
+	}
+	
+	## Add a footer
+	my $new_msg = _add_parts($txt_msg,  $name, $self->{'admin'}{'footer_type'});
+	if (defined $new_msg) {
+	    $txt_msg = $new_msg;
+        }
+	$nbr_smtp += &smtp::mailto($txt_msg, $from, $encrypt, '_ALTERED_', @tabrcpt_txt);
+    }
+
+   ##Prepare and send message for html reception mode
+    if (@tabrcpt_html) {
+	my $html_msg = $saved_msg->dup;
+	if (&tools::as_singlepart($html_msg, 'text/html')) {
+	    do_log('notice', 'Multipart message changed to singlepart');
+	}
+        ## Add a footer
+	my $new_msg = _add_parts($html_msg,  $name, $self->{'admin'}{'footer_type'});
+	if (defined $new_msg) {
+	    $html_msg = $new_msg;
+        }
+	$nbr_smtp += &smtp::mailto($html_msg, $from, $encrypt, '_ALTERED_', @tabrcpt_html);
+    }
+
+   ##Prepare and send message for urlize reception mode
+    if (@tabrcpt_url) {
+	my $url_msg = $saved_msg->dup;
+	## Add a footer
+	my $new_msg = _add_parts($url_msg,  $name, $self->{'admin'}{'footer_type'});
+	if (defined $new_msg) {
+	    $url_msg = $new_msg;
+	}    
+
+	my $expl = $Conf{'home'}.'/'.$name.'/urlized';
     
-}
+	unless ((-d $expl) ||( mkdir $expl)) {
+	    do_log('err', "Unable to create urlize directory $expl");
+	    printf "Unable to create urlized directory $expl";
+	    return 0;
+	}
+
+	my $dir1 = $url_msg->head->get('Message-ID');
+	chomp($dir1);
+
+	## Clean up Message-ID
+	$dir1 =~ s/^\<(.+)\>$/$1/;
+	$dir1 = &tools::escape_chars($dir1);
+	$dir1 = '/'.$dir1;
+
+	unless ( mkdir ("$expl/$dir1")) {
+	    do_log('err', "Unable to create urlize directory $expl/$dir1");
+	    printf "Unable to create urlized directory $expl/$dir1";
+	    return 0;
+	}
+	my $mime_types = &tools::load_mime_types();
+	for (my $i=0 ; $i < $url_msg->parts ; $i++) {
+	    &_urlize_part ($url_msg->parts ($i), $expl, $dir1, $i, $mime_types, $name) ;
+	}
+	$nbr_smtp += &smtp::mailto($url_msg, $from, $encrypt, '_ALTERED_', @tabrcpt_url);
+    }
+
+    return $nbr_smtp;
+    
+   }
 
 ## Add footer/header to a message
 sub _add_parts {
@@ -1662,7 +1741,7 @@ sub _add_parts {
     
     ## No footer/header
     unless (-f $footer or -f $header) {
-	return undef;
+ 	return undef;
     }
     
     my $parser = new MIME::Parser;
@@ -4104,7 +4183,7 @@ sub _load_users_file {
 #	$user{'stats'} = "$1 $2 $3" if (/^\s*stats\s+(\d+)\s+(\d+)\s+(\d+)\s*$/o);
 #	$user{'firstbounce'} = $1 if (/^\s*firstbounce\s+(\d+)\s*$/o);
 	$user{'date'} = $1 if (/^\s*date\s+(\d+)\s*$/o);
-	$user{'reception'} = $1 if (/^\s*reception\s+(digest|nomail|summary|notice)\s*$/o);
+	$user{'reception'} = $1 if (/^\s*reception\s+(digest|nomail|summary|notice|txt|html|urlize)\s*$/o);
 	$user{'visibility'} = $1 if (/^\s*visibility\s+(conceal|noconceal)\s*$/o);
 
 	push @users, \%user;
@@ -5042,7 +5121,6 @@ sub lowercase_field {
 	next if ($lower_cased eq $user->{$field});
 
 	$total++;
-	printf STDERR "%s\t=>\t%s\n", $user->{$field}, $lower_cased;
 
 	## Updating Db
 	my $statement = sprintf "UPDATE $table SET $field=%s WHERE ($field=%s)", $dbh->quote($lower_cased), $dbh->quote($user->{$field});
@@ -5764,6 +5842,77 @@ sub available_reception_mode {
   
   return join (' ',@{$self->{'admin'}{'available_user_options'}{'reception'}});
 }
+
+sub _urlize_part {
+    my $message = shift;
+    my $expl = shift;
+    my $dir = shift;
+    my $i = shift;
+    my $mime_types = shift;
+    my $list = shift;
+      
+    my $head = $message->head ;
+    my $encoding = $head->mime_encoding ;
+
+##  name of the linked file
+    my $fileExt = $mime_types->{$head->mime_type};
+    if ($fileExt) {
+	$fileExt = '.'.$fileExt;
+    }
+    my $filename;
+
+    if ($head->recommended_filename) {
+	$filename = $head->recommended_filename;
+    } else {
+        $filename ="msg.$i".$fileExt;
+    }
+  
+    ##create the linked file 	
+    ## Store body in file 
+    if (open OFILE, ">$expl/$dir/$filename") {
+	my @ct = split(/;/,$head->get('Content-type'));
+   	printf OFILE "Content-type: %s\n\n", $ct[0];
+    } else {
+	&do_log('notice', "Unable to open $expl/$dir/$filename") ;
+	return undef ; 
+    }
+	    
+    if ($encoding =~ /^binary|7bit|8bit|base64|quoted-printable|x-uu|x-uuencode|x-gzip64$/ ) {
+	open TMP, ">$expl/$dir/$filename.$encoding";
+	$message->print_body (\*TMP);
+	close TMP;
+
+	open BODY, "$expl/$dir/$filename.$encoding";
+	my $decoder = new MIME::Decoder $encoding;
+	$decoder->decode(\*BODY, \*OFILE);
+	unlink "$expl/$dir/$filename.$encoding";
+    }else {
+	$message->print_body (\*OFILE) ;
+    }
+    close (OFILE);
+	    
+    ## Delete files created twice or more (with Content-Type.name and Content-Disposition.filename)
+    $message->purge ;	
+
+    if ($i !=0) {
+	## add the content type /external body
+	## and the phantom body with content-type
+	## and delete the 'old' body
+	my $body = 'Content-type: '.$head->get('Content-type');
+	$head->delete('Content-type');
+	if ($head->get('Content-Transfer-Encoding')) {
+	    $body .= 'Content-Transfer-Encoding: '.$head->get('Content-Transfer-Encoding');
+	    $head->delete('Content-Transfer-Encoding');
+	}
+	$head->delete('Content-Disposition');
+	$head->add('Content-type', "message/external-body; access-type=URL; URL=$Conf{'wwsympa_url'}/attach/$list$dir/$filename");
+	$message->parts([]);
+	$message->bodyhandle (new MIME::Body::Scalar "$body" );
+
+     }	
+}
+
+ 
 
 #################################################################
 
