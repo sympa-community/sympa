@@ -154,8 +154,6 @@ my $end = 0;
 ###### VARIABLES DECLARATION ######
 
 my $spool_task = $Conf{'queuetask'};
-my $std_global_task_model_dir = "--ETCBINDIR--/global_task_models";
-my $user_global_task_model_dir = "$Conf{'etc'}/global_task_models";
 my $cert_dir = $Conf{'ssl_cert_dir'};
 my @tasks; # list of tasks in the spool
 
@@ -236,8 +234,9 @@ while (!$end) {
 
     my %used_models; # models for which a task exists
     foreach (@tasks) {
-	/.*\..*\.(.*)\..*/;
-	$used_models{$1} = 1;
+	if (my $task = &match_task($_)) {
+	    $used_models{$task->{'model'}} = 1;
+	}
     }
 
     ### creation of required tasks 
@@ -245,7 +244,6 @@ while (!$end) {
 			'execution_date' => 'execution_date');
 
     ## global tasks
-
     foreach my $key (keys %global_models) {
 	unless ($used_models{$global_models{$key}}) {
 	    if ($Conf{$key}) { 
@@ -258,7 +256,6 @@ while (!$end) {
     }    
     
     ## list tasks
-
     foreach ( &List::get_lists() ) {
 	
 	my %data = %default_data;
@@ -270,10 +267,11 @@ while (!$end) {
 	foreach (@list_models) { $used_list_models{$_} = undef; }
 	
 	foreach $_ (@tasks) {
-	   /(.*)\.(.*)\.(.*)\.(.*)/;
-	   my $model = $3;
-	   my $object = $4;
-	   if ($object eq $list->{'name'}) { $used_list_models {$model} = 1; }
+	    if (my $task = &match_task($_)) {
+		my $model = $task->{'model'};
+		my $object = $task->{'list'};
+		if ($object eq $list->{'name'}) { $used_list_models{$model} = 1; }
+	    }
        }
         
 	foreach my $model (keys %used_list_models) {
@@ -286,12 +284,8 @@ while (!$end) {
 		    create ($current_date, 'INIT', $model, 'ttl', 'list', \%data);
 
 		}elsif ($list->{'admin'}{$model_task_parameter} ) {
-
-		    #printf "xxxxxxxxxxxxx appel 2 : model_task_parameter $model_task_parameter $list->{'admin'}{$model_task_parameter}\n";
-		    #printf "%s\n", join("|",%{$list->{'admin'}{$model_task_parameter}});
-
-#		    create ($current_date, '', $model, $list->{'admin'}{$model.'_task'}, 'list', \%data);
-		    create ($current_date, '', $model, $list->{'admin'}{$model_task_parameter}{'name'}, 'list', \%data);
+		    create ($current_date, '', $model, $list->{'admin'}{$model_task_parameter}{'name'}, 
+			    'list', \%data);
 		}
 	    }
 	}
@@ -308,15 +302,16 @@ while (!$end) {
 
     ## processing of tasks anterior to the current date
     &do_log ('debug3', 'processing of tasks anterior to the current date');
-    foreach my $task (@tasks) {
-	$task =~ /^(\d+)\.\w*\.\w+\.($regexp{'listname'}|_global)$/;
-	# &do_log ('debug3', "procesing %s/%s", $spool_task,$task);
-	last unless ($1 < $current_date);
-	if ($2 ne '_global') { # list task
-	    my $list = new List ($2);
-	    next unless ($list->{'admin'}{'status'} eq 'open');
+    foreach (@tasks) {
+	if (my $task = &match_task($_)) {
+	    &do_log ('debug3', "procesing %s/%s", $spool_task,$_);
+	    last unless ($task->{'date'} < $current_date);
+	    if ($task->{'list'} ne '_global') { # list task
+		my $list = new List ($task->{'list'});
+		next unless ($list->{'admin'}{'status'} eq 'open');
+	    }
+	    execute ("$spool_task/$_");
 	}
-	execute ("$spool_task/$task");
     }
 
     sleep 60;
@@ -359,11 +354,7 @@ sub create {
 
      # for global model
     if ($object eq '_global') {
-	if (open (MODEL, "$user_global_task_model_dir/$model_name")) {
-	    $model_file = "$user_global_task_model_dir/$model_name";
-	} elsif (open (MODEL, "$std_global_task_model_dir/$model_name")) {
-	    $model_file = "$std_global_task_model_dir/$model_name";
-	} else { 
+	unless ($model_file = &tools::get_filename('etc', "global_task_models/$model_name", $Conf{'host'})) {
 	    &do_log ('err', "error : unable to find $model_name, creation aborted");
 	    return undef;
 	}
@@ -1390,5 +1381,22 @@ sub sync_include {
  
 
     $list->sync_include();
+}
+
+## Check if the provided filename matches a task
+## Returns an array of its parts
+sub match_task {
+    my $filename = shift;
+
+    if ($filename =~ /^(\d+)\.(\w*)\.(\w+)\.($regexp{'listname'}|_global)$/) {
+	my $task = {'date' => $1,
+		    'label' => $2,
+		    'model' => $3,
+		    'list' => $4
+		};
+	return $task;
+    }
+    
+    return undef;
 }
 
