@@ -1,4 +1,3 @@
-
 # This module is part of ML and does all list processing functions
 
 package List;
@@ -386,9 +385,8 @@ my %alias = ('reply-to' => 'reply_to',
 			 'title_id' => 22,
 			 'group' => 'tuning'
 		     },
-	    'host' => {'format' => $regexp{'host'},
+	    'domain' => {'format' => $regexp{'host'},
 		       'length' => 20,
-		       'default' => {'conf' => 'host'},
 		       'title_id' => 33,
 		       'group' => 'description'
 		   },
