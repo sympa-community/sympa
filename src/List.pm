@@ -1998,6 +1998,7 @@ sub send_msg {
 
 	## Search previous subject tagging in Subject
 	my $tag_regexp = $admin->{'custom_subject'};
+	$tag_regexp =~ s/[\[\]\*\{\}\?]//g;  ## cleanup, just in case dangerous chars were left
 	$tag_regexp =~ s/\[\S+\]/\.\+/g;
 	$subject_field =~ s/\[$tag_regexp\]//;
 
