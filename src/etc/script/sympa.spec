@@ -308,8 +308,8 @@ done
 # Config directories populated by the user
 %dir %{etc_s}/create_list_templates
 %dir %{etc_s}/scenari
-%dir %{etc_s}/templates
-%dir %{etc_s}/wws_templates
+%dir %{etc_s}/tt2
+%dir %{etc_s}/web_tt2
 %dir %{etc_s}/general_task_models
 %dir %{etc_s}/task_models
  
@@ -339,10 +339,10 @@ done
 #%{data_s}/create_list_templates/*
 #%dir %{data_s}/scenari
 #%{data_s}/scenari/*
-#%dir %{data_s}/templates
-#%{data_s}/templates/*
-#%dir %{data_s}/wws_templates
-#%{data_s}/wws_templates/*
+#%dir %{data_s}/tt2s
+#%{data_s}/tt2/*
+#%dir %{data_s}/web_tt2
+#%{data_s}/web_tt2/*
 #%dir %{data_s}/list_task_models
 #%{data_s}/list_task_models/*
 #%dir %{data_s}/global_task_models
