@@ -496,7 +496,12 @@ sub checkfiles {
 
 sub _load_auth {
     
-    my $config = $Conf{'etc'}.'/auth.conf';
+    my $config;
+    unless ($config = &tools::get_filename('etc', 'auth.conf', $Conf{'domain'})) {
+	do_log('err',"_load_auth: Unable to find auth.conf");
+	return undef;
+    }
+
     my $line_num = 0;
     my $config_err = 0;
     my @paragraphs;
@@ -553,7 +558,7 @@ sub _load_auth {
 
     ## Open the configuration file or return and read the lines.
     unless (open(IN, $config)) {
-	do_log('notice',"_load_auth: Unable to open %s: %s\n", $config, $!);
+	do_log('notice',"_load_auth: Unable to open %s: %s", $config, $!);
 	return undef;
     }
     
