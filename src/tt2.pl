@@ -111,8 +111,11 @@ my $current_lang;
 
 sub qencode {
     my $string = shift;
+    
+    my $encoded_string = MIME::Words::encode_mimewords($string, 'Q', gettext("_charset_"));
+    $encoded_string =~ s/\?=\s+=\?/_\?= =?/g; ## Fix bug 5462 of MIME::Words
 
-    return MIME::Words::encode_mimewords($string, 'Q', gettext("_charset_"));
+    return $encoded_string;
 }
 
 sub maketext {
