@@ -24,9 +24,13 @@
 use FileHandle;
 use Log;
 
-my ($index, @t, $data, $internal, $previous_file, %option);
+my ($index, @t, $data, $internal, $previous_file, %option, $current_output);
 
 ## The main parsing sub
+## Parameters are   
+## data: a HASH ref containing the data   
+## template : a filename or a ARRAY ref that contains the template   
+## output : a Filedescriptor or a SCALAR ref for the output
 sub parse_tpl {
     my ($template, $output);
     ($data, $template, $output, $recurse) = @_;
@@ -52,8 +56,13 @@ sub parse_tpl {
     my @old_mode = ($*, $/);
     ($*, $/) = (0, "\n");
 
-    my $old_desc = select;
-    select $output;
+    my $old_desc;
+    if (ref($output) eq 'ARRAY') {           
+	$current_output = $output;       
+    }else {           
+	$old_desc = select;      
+	select $output;       
+    }
      
     ## Parses the HTML template
     ## Possible syntax of templates are 
@@ -67,16 +76,26 @@ sub parse_tpl {
     ## [SET var=value]
     ## [SETOPTION opt]...[UNSETOPTION opt]
 
-    my $fh = new FileHandle $template;
+    my $fh;
 
-    $index = -1;
-    @t = <$fh>;
-    close $fh;
+    ## An array can be used as a template (instead of a filename)
+    if (ref($template) eq 'ARRAY') {           
+	@t = @$template;           
+	$index = -1;       
+    }else {
+	$fh = new FileHandle $template;
+	
+	$index = -1;
+	@t = <$fh>;
+	close $fh;
+    }
 
     &process(1);
 
-    select $old_desc;
-
+    unless (ref($output) eq 'ARRAY') {
+	select $old_desc;
+    }
+    
     ($*, $/) = @old_mode;
 
     ($index, $data) = ($old_index, $old_data);
@@ -133,7 +152,12 @@ sub do_include {
 
     my $fh = new FileHandle $file;
 
-    print <$fh>;
+    if (ref($current_output) eq 'ARRAY') {
+	push @{$current_output}, sprintf <$fh>;
+    }else {
+	print <$fh>;
+    }
+
     close $fh;
 }
 
@@ -288,7 +312,12 @@ sub do_stopparse {
 
     while ($_ = $t[$index]) {
 	return if /\[\s*STARTPARSE\s*\]/i;
-	print;
+	
+	if (ref($current_output) eq 'ARRAY') {
+	    push @{$current_output}, sprintf $_;
+	}else {
+	    print;
+	}
 	$index++;
     }
     return;
@@ -337,7 +366,11 @@ sub process {
 	    $status = &do_unsetoption();
 	}elsif ($echo == 1) {
 	    $status = &do_parse();
-	    print;
+	    if (ref($current_output) eq 'ARRAY') {
+		push @{$current_output}, sprintf $_;
+	    }else {
+		print;
+	    }
 	}
 	if ($status == -1) {
 	    return -1;
