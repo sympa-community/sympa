@@ -348,14 +348,14 @@ while ($query = &new_loop()) {
     ## Get PATH_INFO parameters
     &get_parameters();
 
-    $robot = $Conf{'robots'}{'robot_by_http_host'}{$ENV{'HTTP_HOST'}};
+    $robot = $Conf{'robots'}{'robot_by_http_host'}{$ENV{'SERVER_NAME'}};
     $robot = $Conf{'host'} unless $robot;
 
 
 
-   # printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot,  Conf{'robots'}{$robot}: $Conf{'robots'}{$robot}\n";
-   #  printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, title :  $Conf{'robots'}{$robot}->{'title'}\n";
-   #  printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, listmaster :  $Conf{'robots'}{$robot}->{'listmasters'}\n";
+   # printf STDERR "host : $ENV{'SERVER_NAME'}, robot : $robot,  Conf{'robots'}{$robot}: $Conf{'robots'}{$robot}\n";
+   #  printf STDERR "host : $ENV{'SERVER_NAME'}, robot : $robot, title :  $Conf{'robots'}{$robot}->{'title'}\n";
+   #  printf STDERR "host : $ENV{'SERVER_NAME'}, robot : $robot, listmaster :  $Conf{'robots'}{$robot}->{'listmasters'}\n";
 
 
 
@@ -828,12 +828,12 @@ sub get_parameters {
 
     ## CGI URL
     if ($ENV{'HTTPS'} eq 'on') {
-	$param->{'base_url'} = sprintf 'https://%s', $ENV{'HTTP_HOST'};
+	$param->{'base_url'} = sprintf 'https://%s', $ENV{'SERVER_NAME'};
     }else {
-	$param->{'base_url'} = sprintf 'http://%s', $ENV{'HTTP_HOST'};
+	$param->{'base_url'} = sprintf 'http://%s', $ENV{'SERVER_NAME'};
     }
 
-    $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{$ENV{'HTTP_HOST'}};
+    $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{$ENV{'SERVER_NAME'}};
 
 
     if ($ENV{'REQUEST_METHOD'} eq 'GET') {
