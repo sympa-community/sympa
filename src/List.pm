@@ -5480,7 +5480,7 @@ sub _save_stats_file {
     do_log('debug2', 'List::_save_stats_file(%s, %d)', $file, $total);
     
     open(L, "> $file") || return undef;
-    printf L "%d %d %d %d %d\n", @{$stats}, $total;
+    printf L "%d %.0f %.0f %.0f %d\n", @{$stats}, $total;
     close(L);
 }
 
