@@ -1246,7 +1246,7 @@ sub load {
 
 ## Alert owners
 sub send_alert_to_owner {
-    my($self, $alert) = @_;
+    my($self, $alert, $data) = @_;
     do_log('debug2', 'List::send_alert_to_owner(%s)', $alert);
  
     my ($i, @rcpt);
@@ -1269,8 +1269,7 @@ sub send_alert_to_owner {
     my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
 
     if ($alert eq 'bounce_rate') {
-	my $rate = $self->get_total_bouncing() * 100 / $self->get_total();
-	$rate = int ($rate * 10) / 10;
+	my $rate = int ($data->{'rate'} * 10) / 10;
 
 	my $subject = sprintf(Msg(8, 28, "WARNING: bounce rate too high in list %s"), $name);
 	my $body = sprintf Msg(8, 27, "Bounce rate in list %s is %d%%.\nYou should delete bouncing subscribers : %s/reviewbouncing/%s"), $name, $rate, $Conf{'wwsympa_url'}, $name ;
@@ -1759,8 +1758,9 @@ sub send_msg {
     ## Bounce rate
     ## Available in database mode only
     if ($admin->{'user_data_source'} eq 'database') {
-	if (($self->get_total_bouncing() * 100 / $total) > $self->{'admin'}{'bounce'}{'warn_rate'}) {
-	    $self->send_alert_to_owner('bounce_rate');
+	my $rate = $self->get_total_bouncing() * 100 / $total;
+	if ($rate > $self->{'admin'}{'bounce'}{'warn_rate'}) {
+	    $self->send_alert_to_owner('bounce_rate', {'rate' => $rate});
 	}
     }
 
