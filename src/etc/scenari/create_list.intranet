@@ -5,6 +5,6 @@ title.es cualquier miembro del dominio local
 title.cz kdokoli z lokální domìny
 title.hu bárki a helyi tartományból
 
-is_listmaster([ sender])     md5,smime -> do_it
+is_listmaster([sender])     md5,smime -> do_it
 match([sender],/[conf->host]$/)    md5,smime -> listmaster,notify
 
