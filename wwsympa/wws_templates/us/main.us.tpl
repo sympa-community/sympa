@@ -197,7 +197,21 @@ setTimeout('refresh_mom_and_die()',1000);
   </TABLE>
   <TABLE BORDER="0" ALIGN="right">
    <TR>
-    <TD><I>Powered by</I></TD>
+    <TD ALIGN="left">
+      <FORM ACTION="[path_cgi]" METHOD="POST">
+        <INPUT TYPE="hidden" NAME="action" VALUE="set_lang">
+	<INPUT TYPE="hidden" NAME="previous_action" VALUE="[action]">
+	<INPUT TYPE="hidden" NAME="previous_list" VALUE="[list]">
+        <SELECT NAME="lang" onchange="this.form.submit();">
+
+        [FOREACH lang IN  languages]
+          <OPTION VALUE="[lang->NAME]" [lang->selected]>[lang->complete]
+        [END]
+        </SELECT>
+      </FORM>
+    </TD> 
+    <TD WIDTH="100%">&nbsp;</TD>
+    <TD NOWRAP><I>Powered by</I></TD>
     <TD><A HREF="http://listes.cru.fr/sympa/">
             [IF auth_method=smime]
             <IMG SRC="[icons_url]/logo-s-lock.gif" ALT="Sympa [version]" BORDER="0" >

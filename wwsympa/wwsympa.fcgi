@@ -183,8 +183,8 @@ my %comm = ('home' => 'do_home',
 	 'load_cert' => 'do_load_cert',
 	 'compose_mail' => 'do_compose_mail',
 	 'send_mail' => 'do_send_mail',
-	    'search_user' => 'do_search_user'
-
+	 'search_user' => 'do_search_user',
+	 'set_lang' => 'do_set_lang'
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -243,7 +243,8 @@ my %action_args = ('default' => ['list'],
 		'd_set_owner' =>  ['list','@path'],
 		'view_translations' => [],
 		'search' => ['list','filter'],
-		   'search_user' => ['email']
+		'search_user' => ['email'],
+		'set_lang' => ['lang']
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -323,9 +324,6 @@ while ($query = &new_loop()) {
     ## Get PATH_INFO parameters
     &get_parameters();
 
-    ## Get lang from cookie
-    $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'});
-
     ## Sympa parameters in $param->{'conf'}
     $param->{'conf'} = \%Conf;
     $param->{'wwsconf'} = $wwsconf;
@@ -371,6 +369,10 @@ while ($query = &new_loop()) {
 	}
 #	$param->{'user'}{'cookie_delay'} ||= $wwsconf->{'cookie_expire'};
 #	$param->{'user'}{'init_passwd'} = 1 if ($param->{'user'}{'password'} =~ /^INIT/);
+    } else {
+
+	## Get lang from cookie
+	$param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'});
     }
     
     ## Action
@@ -394,8 +396,7 @@ while ($query = &new_loop()) {
 	
 	## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
 	    
-	$param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || $list->{'admin'}{'lang'} 
-	|| $Conf{'lang'};
+	$param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || $list->{'admin'}{'lang'} || $Conf{'lang'};
 	&Language::SetLang($param->{'lang'});
 	&POSIX::setlocale(&POSIX::LC_ALL, Msg(14, 1, 'en_US'));
 
@@ -797,11 +798,9 @@ sub get_parameters {
     }elsif ($ENV{'REQUEST_METHOD'} eq 'POST') {
 	## POST
 	foreach my $p (keys %in) {
-    &wwslog('info', "xxxxxxxxxx parametre  $p");
 	    if ($p =~ /^action_(\w+)((\.\w+)*)$/) {
 		
 		$in{'action'} = $1;
-    &wwslog('info', "xxxxxxxxxx $1");
 		if ($2) {
 		    foreach my $v (split /\./, $2) {
 			$v =~ s/^\.?(\w+)\.?/$1/;
@@ -1066,6 +1065,9 @@ sub do_login {
     
     $param->{'user'} = $user;
 
+    $param->{'lang'} = $user->{'lang'} || $list->{'admin'}{'lang'} || $Conf{'lang'};
+    $param->{'cookie_lang'} = undef;
+
     if ($param->{'user'}{'password'} =~ /^init/) {
 	&message('you_should_choose_a_password');
     }
@@ -1155,7 +1157,9 @@ sub do_logout {
     }
     
     delete $param->{'user'};
-    
+
+    $param->{'lang'} = $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'}) || $list->{'admin'}{'lang'} || $Conf{'lang'};
+
     &wwslog('info','do_logout: logout performed');
     
     if ($in{'previous_action'} eq 'referer') {
@@ -1773,7 +1777,7 @@ sub do_setpref {
     }
 
     foreach my $p ('gecos','lang','cookie_delay') {
-	$changes->{$p} = $in{$p};
+	$changes->{$p} = $in{$p} if (defined($in{$p}));
     }
 
     if (&List::is_user_db($param->{'user'}{'email'})) {
@@ -7297,5 +7301,35 @@ sub do_search_user {
     }
 
     return 1;
+}
 
+## Set language
+sub do_set_lang {
+    &wwslog('debug', 'do_set_lang(%s)', $in{'lang'});
+
+    $param->{'lang'} = $param->{'cookie_lang'} = $in{'lang'};
+    &cookielib::set_lang_cookie($in{'lang'});
+
+    if ($param->{'user'}{'email'}) {
+	if (&List::is_user_db($param->{'user'}{'email'})) {
+	    unless (&List::update_user_db($param->{'user'}{'email'}, {'lang' => $in{'lang'}})) {
+		&error_message('update_failed');
+		&wwslog('info','do_set_lang: update failed');
+		return undef;
+	    }
+	}else {
+	    unless (&List::add_user_db({'email' => $param->{'user'}{'email'}, 'lang' => $in{'lang'}})) {
+		&error_message('update_failed');
+		&wwslog('info','do_set_lang: update failed');
+		return undef;
+	    }
+	}
+    }
+
+    if ($in{'previous_action'}) {
+	$in{'list'} = $in{'previous_list'};
+	return $in{'previous_action'};
+    }
+
+    return 'home';
 }

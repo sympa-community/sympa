@@ -138,7 +138,7 @@ sub set_lang_cookie {
 
     my $cookie = new CGI::Cookie (-name    => 'sympalang',
 				  -value   => $lang,
-				  -expires => '+1m',
+				  -expires => '+1M',
 				  -domain  => $domain,
 				  -path    => '/'
 				  );
