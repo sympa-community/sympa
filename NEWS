@@ -3,6 +3,35 @@
 
 (See Changelog file for the full changes log)
 
+3.3.4b.8	25 Apr 2002
+
+   New features :
+	
+	[Lauri Jesmin] Complete	translation to Estonian
+
+	[Valics Lehel] Web templates translation to Romanian
+
+	src/List.pm: [proposed by Lauri Jesmin] Add Erros-to: header
+	field to messages
+
+   Bug Fixes :
+
+	src/List.pm: "Can't use string ("monthly") as a HASH
+	ref" _load_list_param() did not match task structure in memory
+	(scalar vs hash)
+
+	src/List.pm: 'urlize' reception option failed with lists in
+	a Virtual Robot Did not work on the proper directory
+
+	wwsympa/wwsympa.fcgi: closed lists are no more seen from
+	other Virtual robots
+
+	wwsympa/wwsympa.fcgi: editfile did not work on the correct
+	language Now uses list's lang or robot's lang to find apropriate
+	template
+
+	[Valics Lehel] HTML fixes in web templates
+
 3.3.4b.7	22 Apr 2002
 
    New features :

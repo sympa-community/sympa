@@ -1,3 +1,119 @@
+2002-04-25 12:01  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: closed lists are no more seen from
+	other Virtual robots
+
+2002-04-25 11:43  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: editfile did not work on the correct
+	language Now uses list's lang or robot's lang to find apropriate
+	template
+
+2002-04-25 11:41  salaun
+
+	* src/tools.pl: New feature: get_filename() now searches default
+	templates (no lang defined)
+
+2002-04-25 10:02  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: Task name accessed through
+	$d->{'name'}
+
+2002-04-25 10:00  salaun
+
+	* src/List.pm: Bug fix for: "Can't use string ("monthly") as a HASH
+	ref" _load_list_param() did not match task structure in memory
+	(scalar vs hash)
+
+2002-04-24 17:40  salaun
+
+	* src/List.pm: Fix: 'urlize' reception option failed with lists in
+	a Virtual Robot Did not work on the proper directory
+
+2002-04-24 16:21  salaun
+
+	* wwsympa/wws_templates/: fr/d_editfile.fr.tpl,
+	fr/editsubscriber.fr.tpl, fr/get_pending_lists.fr.tpl,
+	fr/pref.fr.tpl, fr/remove_arc.fr.tpl, fr/review.fr.tpl,
+	fr/serveradmin.fr.tpl, fr/show_cert.fr.tpl, fr/subrequest.fr.tpl,
+	fr/view_translations.fr.tpl, us/d_editfile.us.tpl,
+	us/editsubscriber.us.tpl, us/get_pending_lists.us.tpl,
+	us/pref.us.tpl, us/remove_arc.us.tpl, us/review.us.tpl,
+	us/scenario_test.us.tpl, us/serveradmin.us.tpl,
+	us/show_cert.us.tpl, us/subrequest.us.tpl,
+	us/view_translations.us.tpl: [Valics Lehel] HTML fixes
+
+2002-04-24 15:09  salaun
+
+	* src/List.pm: [proposed by Lauri Jesmin] Add Erros-to: header
+	field to messages
+
+2002-04-24 12:32  salaun
+
+	* wwsympa/wws_templates/: cn/admin.cn.tpl, cz/admin.cz.tpl,
+	de/admin.de.tpl, es/admin.es.tpl, es/loginrequest.es.tpl,
+	et/admin.et.tpl, et/loginrequest.et.tpl, fr/admin.fr.tpl,
+	hu/admin.hu.tpl, hu/loginrequest.hu.tpl, it/admin.it.tpl,
+	ro/admin.ro.tpl: Restore usefull templates
+
+2002-04-24 12:20  salaun
+
+	* ChangeLog, wwsympa/wwslib.pm,
+	wwsympa/wws_templates/ro/add_request.ro.tpl,
+	wwsympa/wws_templates/ro/admin_menu.ro.tpl,
+	wwsympa/wws_templates/ro/arc.ro.tpl,
+	wwsympa/wws_templates/ro/arc_protect.ro.tpl,
+	wwsympa/wws_templates/ro/arcsearch.ro.tpl,
+	wwsympa/wws_templates/ro/arcsearch_form.ro.tpl,
+	wwsympa/wws_templates/ro/change_email.ro.tpl,
+	wwsympa/wws_templates/ro/choosepasswd.ro.tpl,
+	wwsympa/wws_templates/ro/close_list.ro.tpl,
+	wwsympa/wws_templates/ro/compose_mail.ro.tpl,
+	wwsympa/wws_templates/ro/create_list.ro.tpl,
+	wwsympa/wws_templates/ro/create_list_request.ro.tpl,
+	wwsympa/wws_templates/ro/d_control.ro.tpl,
+	wwsympa/wws_templates/ro/d_editfile.ro.tpl,
+	wwsympa/wws_templates/ro/d_read.ro.tpl,
+	wwsympa/wws_templates/ro/edit_list_request.ro.tpl,
+	wwsympa/wws_templates/ro/editfile.ro.tpl,
+	wwsympa/wws_templates/ro/editsubscriber.ro.tpl,
+	wwsympa/wws_templates/ro/error.ro.tpl,
+	wwsympa/wws_templates/ro/get_closed_lists.ro.tpl,
+	wwsympa/wws_templates/ro/get_latest_lists.ro.tpl,
+	wwsympa/wws_templates/ro/get_pending_lists.ro.tpl,
+	wwsympa/wws_templates/ro/help.ro.tpl,
+	wwsympa/wws_templates/ro/help_admin.ro.tpl,
+	wwsympa/wws_templates/ro/help_editfile.ro.tpl,
+	wwsympa/wws_templates/ro/help_editlist.ro.tpl,
+	wwsympa/wws_templates/ro/help_user_options.ro.tpl,
+	wwsympa/wws_templates/ro/home.ro.tpl,
+	wwsympa/wws_templates/ro/install_pending_list.ro.tpl,
+	wwsympa/wws_templates/ro/list_menu.ro.tpl,
+	wwsympa/wws_templates/ro/lists.ro.tpl,
+	wwsympa/wws_templates/ro/login.ro.tpl,
+	wwsympa/wws_templates/ro/loginbanner.ro.tpl,
+	wwsympa/wws_templates/ro/loginrequest.ro.tpl,
+	wwsympa/wws_templates/ro/menu.ro.tpl,
+	wwsympa/wws_templates/ro/modindex.ro.tpl,
+	wwsympa/wws_templates/ro/notice.ro.tpl,
+	wwsympa/wws_templates/ro/pref.ro.tpl,
+	wwsympa/wws_templates/ro/remindpasswd.ro.tpl,
+	wwsympa/wws_templates/ro/remove_arc.ro.tpl,
+	wwsympa/wws_templates/ro/review.ro.tpl,
+	wwsympa/wws_templates/ro/reviewbouncing.ro.tpl,
+	wwsympa/wws_templates/ro/scenario_test.ro.tpl,
+	wwsympa/wws_templates/ro/serveradmin.ro.tpl,
+	wwsympa/wws_templates/ro/set_pending_list_request.ro.tpl,
+	wwsympa/wws_templates/ro/show_cert.ro.tpl,
+	wwsympa/wws_templates/ro/sigrequest.ro.tpl,
+	wwsympa/wws_templates/ro/subindex.ro.tpl,
+	wwsympa/wws_templates/ro/suboptions.ro.tpl,
+	wwsympa/wws_templates/ro/subrequest.ro.tpl,
+	wwsympa/wws_templates/ro/title.ro.tpl,
+	wwsympa/wws_templates/ro/view_translations.ro.tpl,
+	wwsympa/wws_templates/ro/viewmod.ro.tpl: [Valics Lehel] Web
+	templates translation to Romanian
+
 2002-04-24 12:06  salaun
 
 	* wwsympa/wws_templates/: es/loginrequest.es.tpl,
