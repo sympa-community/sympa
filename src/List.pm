@@ -627,7 +627,7 @@ my %alias = ('reply-to' => 'reply_to',
 			   'group' => 'tuning',
 			   'obsolete' => 1
 			   },
-	    'reply_to_header' => {'format' => {'value' => {'format' => ['sender','list','other_email'],
+	    'reply_to_header' => {'format' => {'value' => {'format' => ['sender','list','all','other_email'],
 							   'default' => 'sender',
 							   'title_id' => 91,
 							   'occurrence' => '1',
@@ -1558,6 +1558,8 @@ sub distribute_msg {
 		$reply = "$name\@$host";
 	    }elsif ($self->{'admin'}{'reply_to_header'}{'value'} eq 'sender') {
 		$reply = undef;
+	    }elsif ($self->{'admin'}{'reply_to_header'}{'value'} eq 'all') {
+		$reply = "$name\@$host,$hdr->get('From')";
 	    }elsif ($self->{'admin'}{'reply_to_header'}{'value'} eq 'other_email') {
 		$reply = $self->{'admin'}{'reply_to_header'}{'other_email'};
 	    }
