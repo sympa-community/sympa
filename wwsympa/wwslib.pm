@@ -120,7 +120,7 @@ sub load_config {
 	    if (defined ($conf->{$k})) {
 		$conf->{$k} = $v;
 	    }else {
-		&main::wwslog ('info', 'unknown parameter %s', $k);
+		&Log::do_log ('info', 'unknown parameter %s', $k);
 	    }
 	}
 	next;
@@ -172,13 +172,13 @@ sub check_pwd {
     my $real_pwd = $user->{'password'};
 
     unless ($real_pwd) {
-	&main::wwslog('info', 'password not found or user %s unknown', $email);
+	&Log::do_log('info', 'password not found or user %s unknown', $email);
 	&main::message('pwd_not_found');
 	return undef;
     }
 
     unless ($pwd eq $real_pwd) {
-        &main::wwslog('info', 'check_pwd: incorrect password');
+        &Log::do_log('info', 'check_pwd: incorrect password');
 	&main::message('incorrect_password');
         return undef;
     } 
@@ -188,23 +188,23 @@ sub check_pwd {
 
 ## Returns user information extracted from the cookie
 sub get_email_from_cookie {
-#    &wwslog('debug', 'get_email_from_cookie');
+#    &Log::do_log('debug', 'get_email_from_cookie');
     my $secret = shift;
     my $email ;
 
     unless ($secret) {
 	&main::message('error in sympa configuration');
-	&main::wwslog('info', 'parameter cookie undefine, authentication failure');
+	&Log::do_log('info', 'parameter cookie undefine, authentication failure');
     }
 
     unless ($ENV{'HTTP_COOKIE'}) {
 	&main::message('error in sympa missing cookie');
-	&main::wwslog('info', ' ENV{HTTP_COOKIE} undefined, authentication failure');
+	&Log::do_log('info', ' ENV{HTTP_COOKIE} undefined, authentication failure');
     }
 
     unless ( $email = &cookielib::check_cookie ($ENV{'HTTP_COOKIE'}, $secret)) {
 	&main::message('auth failed');
-	&main::wwslog('info', 'get_email_from_cookie: auth failed for user %s', $email);
+	&Log::do_log('info', 'get_email_from_cookie: auth failed for user %s', $email);
 	return undef;
     }    
 
@@ -247,7 +247,7 @@ sub init_passwd {
 					   {'password' => $passwd,
 					    'lang' => $user->{'lang'} || $data->{'lang'}} )) {
 		&main::message('update_failed');
-		&main::wwslog('info','init_passwd: update failed');
+		&Log::do_log('info','init_passwd: update failed');
 		return undef;
 	    }
 	}
@@ -258,7 +258,7 @@ sub init_passwd {
 				     'lang' => $data->{'lang'},
 				     'gecos' => $data->{'gecos'}})) {
 	    &main::message('add_failed');
-	    &main::wwslog('info','init_passwd: add failed');
+	    &Log::do_log('info','init_passwd: add failed');
 	    return undef;
 	}
     }
