@@ -315,9 +315,7 @@ sub rebuild {
 	    $arc =~ /^(\d{4})-(\d{2})$/ ;
 	    my $yyyy = $1 ;
 	    my $mm = $2 ;
-	    do_log('notice',"xxxx  Rebuilding $adrlist archive completely");
 	    my $cmd = "$wwsconf->{'mhonarc'}  -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc \" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
-	    do_log('notice','xxxxxxxxxxxxxxx  %s',$cmd);
 	    my $exitcode = system($cmd);
 	    if ($exitcode) {
 		do_log('err',"Command $cmd failed with exit code $exitcode");
