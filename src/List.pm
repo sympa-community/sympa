@@ -680,10 +680,8 @@ my %alias = ('reply-to' => 'reply_to',
 								       'title_id' => 94,
 								       'order' => 4
 								       },
-						 'db_env' => {'format' => '\w+\=\S+',
-							      'occurrence' => '0-n',
+						 'db_env' => {'format' => '\w+\=\S+(;\w+\=\S+)*',
 							      'order' => 5,
-							      'split_char' => ';',
 							      'title_id' => 148
 							      },
 						 'user' => {'format' => '\S+',
