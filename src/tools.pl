@@ -1816,6 +1816,30 @@ sub smime_extract_certs {
     }
 }
 
+## Dump a variable's content
+sub dump_var {
+    my ($var, $level, $fd) = @_;
+    
+    if (ref($var)) {
+	if (ref($var) eq 'ARRAY') {
+	    foreach my $index (0..$#{$var}) {
+		print $fd "\t"x$level.$index."\n";
+		&dump_var($var->[$index], $level+1, $fd);
+	    }
+	}elsif (ref($var) eq 'HASH') {
+	    foreach my $key (sort keys %{$var}) {
+		print $fd "\t"x$level.'_'.$key.'_'."\n";
+		&dump_var($var->{$key}, $level+1, $fd);
+	    }    
+	}
+    }else {
+	if (defined $var) {
+	    print $fd "\t"x$level."'$var'"."\n";
+	}else {
+	    print $fd "\t"x$level."UNDEF\n";
+	}
+    }
+}
 
 1;
 

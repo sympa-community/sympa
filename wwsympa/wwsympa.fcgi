@@ -4566,7 +4566,7 @@ sub do_redirect {
      $list->{'admin'}{'status'} = $in{'status'};
 
  #    open TMP, ">/tmp/dump1";
- #    dump_var ($list->{'admin'}, 0, \*TMP);
+ #    &tools::dump_var ($list->{'admin'}, 0, \*TMP);
  #    close TMP;
 
      unless ($list->save_config($param->{'user'}{'email'})) {
@@ -4576,7 +4576,7 @@ sub do_redirect {
      }
 
  #    open TMP, ">/tmp/dump2";
- #    dump_var ($list->{'admin'}, 0, \*TMP);
+ #    &tools::dump_var ($list->{'admin'}, 0, \*TMP);
  #    close TMP;
 
      ## create the aliases
@@ -5470,7 +5470,7 @@ sub do_redirect {
      } 
 
  #    print "Content-type: text/plain\n\n";
- #    &dump_var($new_admin,0);
+ #    &tools::dump_var($new_admin,0);
 
      ## Did the config changed ?
      unless ($list->{'admin'}{'serial'} == $in{'serial'}) {
@@ -5747,9 +5747,9 @@ sub do_redirect {
      $list->savestats();
 
  #    print "Content-type: text/plain\n\n";
- #    &dump_var(\%pinfo,0);
- #    &dump_var($list->{'admin'},0);
- #    &dump_var($param->{'param'},0);
+ #    &tools::dump_var(\%pinfo,0);
+ #    &tools::dump_var($list->{'admin'},0);
+ #    &tools::dump_var($param->{'param'},0);
 
      &message('list_config_updated');
 
@@ -5829,9 +5829,9 @@ sub do_redirect {
      }
 
  #    print "Content-type: text/plain\n\n";
- #    &dump_var(\%pinfo,0);
- #    &dump_var($list->{'admin'},0);
- #    &dump_var($param->{'param'},0);
+ #    &tools::dump_var(\%pinfo,0);
+ #    &tools::dump_var($list->{'admin'},0);
+ #    &tools::dump_var($param->{'param'},0);
 
      $param->{'serial'} = $list->{'admin'}{'serial'};
 
@@ -6014,31 +6014,6 @@ sub do_redirect {
      }
 
      return $p_glob;
- }
-
- ## Dump a variable's content
- sub dump_var {
-     my ($var, $level, $fd) = @_;
-
-     if (ref($var)) {
-	 if (ref($var) eq 'ARRAY') {
-	     foreach my $index (0..$#{$var}) {
-		 print $fd "\t"x$level.$index."\n";
-		 &dump_var($var->[$index], $level+1, $fd);
-	     }
-	 }elsif (ref($var) eq 'HASH') {
-	     foreach my $key (sort keys %{$var}) {
-		 print $fd "\t"x$level.'_'.$key.'_'."\n";
-		 &dump_var($var->{$key}, $level+1, $fd);
-	     }    
-	 }
-     }else {
-	 if (defined $var) {
-	     print $fd "\t"x$level."'$var'"."\n";
-	 }else {
-	     print $fd "\t"x$level."UNDEF\n";
-	 }
-     }
  }
 
  ## NOT USED anymore (expect chinese)
@@ -9618,12 +9593,19 @@ sub do_wsdl {
 
     unless (-r $sympawsdl){
       	&error_message('404');
-	&wwslog('info','could not find $sympawsdl');
+	&wwslog('err','could not find $sympawsdl');
 	return undef;
     }
+
+    unless (defined $Conf{'soap_url'}) {
+	&error_message('no_soap_service');
+	&wwslog('err','No SOAP service was defined in sympa.conf (soap_url parameter)');
+	return undef;
+    }
+
     $param->{'bypass'} = 'extreme';
     printf "Content-type: text/xml\n\n";
-
+    
    $param->{'conf'}{'soap_url'}  = $Conf{'soap_url'};
 
     &parser::parse_tpl($param,$sympawsdl , \*STDOUT);
