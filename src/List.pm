@@ -753,25 +753,24 @@ sub update_stats {
 
 ## Dumps a copy of lists to disk, in text format
 sub dump {
-    do_log('debug2', 'List::dump');
+    my @listnames = @_;
+    do_log('debug2', 'List::dump(%s)', @listnames);
 
-    my $listname;
-
-    foreach $listname (keys %list_of_lists) {
+    foreach my $l (@listnames) {
 	
-	my $list = new List($listname);
+	my $list = new List($l);
 	my $user_file_name;
 
 	if ($list->{'admin'}{'user_data_source'} eq 'database') {
-            do_log('debug', 'Dumping list %s',$listname);
-	    $user_file_name = "$listname/subscribers.db.dump";
+            do_log('debug', 'Dumping list %s',$l);
+	    $user_file_name = "$l/subscribers.db.dump";
 	    $list->_save_users_file($user_file_name);
-	    $list->{'mtime'} = [ (stat("$listname/config"))[9], (stat("$listname/subscribers"))[9], (stat("$listname/stats"))[9] ];
+	    $list->{'mtime'} = [ (stat("$l/config"))[9], (stat("$l/subscribers"))[9], (stat("$l/stats"))[9] ];
 	}elsif ($list->{'admin'}{'user_data_source'} eq 'include') {
-            do_log('debug', 'Dumping list %s',$listname);
-	    $user_file_name = "$listname/subscribers.incl.dump";
+            do_log('debug', 'Dumping list %s',$l);
+	    $user_file_name = "$l/subscribers.incl.dump";
 	    $list->_save_users_file($user_file_name);
-	    $list->{'mtime'} = [ (stat("$listname/config"))[9], (stat("$listname/subscribers"))[9], (stat("$listname/stats"))[9] ];
+	    $list->{'mtime'} = [ (stat("$l/config"))[9], (stat("$l/subscribers"))[9], (stat("$l/stats"))[9] ];
 	} 
 
     }

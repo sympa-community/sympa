@@ -7,6 +7,7 @@ use strict;
 
 use lib '--DIR--/bin';
 use Getopt::Std;
+use Getopt::Long;
 
 use Mail::Address;
 use Mail::Internet;
@@ -46,8 +47,10 @@ my $digestsleep = 5;
 ##            m		-> log invocations to sendmail.
 ##            l		-> language
 ##            F		-> Foreground and log to stderr also.
+##            s         -> Dump subscribers list (listname or 'ALL' required)
 
-Getopt::Std::getopts('DdFf:ml:');
+Getopt::Std::getopts('DdFf:ml:s:');
+
 $Getopt::Std::opt_d = 1 if ($Getopt::Std::opt_D);
 
 my @parser_param = ($*, $/);
@@ -99,9 +102,24 @@ $< = $> = (getpwnam('--USER--'))[2];
 $( = $) = (getpwnam('--GROUP--'))[2];
 
 ## Check for several files.
-unless (Conf::checkfiles()) {
+unless (&Conf::checkfiles()) {
    fatal_err("Missing files. Aborting.");
    ## No return.
+}
+
+## Daemon called for dumping subscribers list
+if ($Getopt::Std::opt_s) {
+    
+    my @listnames;
+    if ($Getopt::Std::opt_s eq 'ALL') {
+	@listnames = &List::get_lists();
+    }else {
+	@listnames = ($Getopt::Std::opt_s);
+    }
+
+    &List::dump(@listnames);
+
+    exit 0;
 }
 
 ## Put ourselves in background if we're not in debug mode. That method
@@ -271,7 +289,7 @@ while (!$end) {
 } ## END of infinite loop
 
 ## Dump of User files in DB
-List::dump();
+#List::dump();
 
 ## Disconnect from Database
 List::db_disconnect if ($List::dbh);
