@@ -164,7 +164,7 @@ main_SRC	=	AUTHORS COPYING ChangeLog INSTALL KNOWNBUGS NEWS README
 LOG_SOCKET_TYPE	=	unix
 #endif
 
-all:	checkcpan sources checkperl checkmhonarc man
+all:	checkcpan sources checkperl checkmhonarc man locale
 
 rpm: build_rh_rpm build_mdk_rpm
 
@@ -235,7 +235,7 @@ clean:
 	$(MAKE) PERL='${PERL}' clean) || exit 1; \
 	done;
 
-install: importantchanges installsrc installnls installwws installman installscript installsample installdir installconfig installdoc installsoap
+install: importantchanges installsrc installwws installlocale installman installscript installsample installdir installconfig installdoc installsoap
 
 importantchanges:
 	@( 	PERL=$(PERL); export PERL; \
@@ -247,6 +247,29 @@ importantchanges:
 		$(PERL) ./important_changes.pl \
 	) ;
 
+locale:
+	@(cd po && echo "making in po/...." && \
+	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
+	DIR='${DIR}' NLSDIR='${NLSDIR}' ETCBINDIR='${ETCBINDIR}' \
+	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
+	LOCALEDIR='${prefix}/locale' SCRIPTDIR='${SCRIPTDIR}' \
+	USER='${USER}' GROUP='${GROUP}') || exit 1;
+
+installlocale:
+	@(cd po && echo "making install in po/...." && \
+	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
+	DIR='${DIR}' NLSDIR='${NLSDIR}' ETCBINDIR='${ETCBINDIR}' \
+	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
+	LOCALEDIR='${prefix}/locale' \
+	USER='${USER}' GROUP='${GROUP}' install) || exit 1;
+
+updatelocale:
+	@(cd po && echo "make update-po in po/...." && \
+	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
+	DIR='${DIR}' NLSDIR='${NLSDIR}' ETCBINDIR='${ETCBINDIR}' \
+	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
+	LOCALEDIR='${prefix}/locale' SCRIPTDIR='${SCRIPTDIR}' \
+	USER='${USER}' GROUP='${GROUP}' update-po) || exit 1;
 
 installsrc:
 	@(cd src && echo "making in src..." && \
@@ -258,6 +281,7 @@ installsrc:
 	VIRTUAL_ALIASES='${VIRTUAL_ALIASES}'  HOST='${HOST}' COOKIE='${COOKIE}' \
 	SPOOLDIR='${SPOOLDIR}' LOG_SOCKET_TYPE='${LOG_SOCKET_TYPE}' \
 	SSLCERTDIR='${SSLCERTDIR}' \
+	PODIR='${prefix}/po' \
 	USER='${USER}' GROUP='${GROUP}' newinstall) || exit 1;
 
 installdoc:
@@ -268,15 +292,6 @@ installdoc:
 	SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' \
 	VIRTUAL_ALIASES='${VIRTUAL_ALIASES}' \
 	USER='${USER}' GROUP='${GROUP}' install) || exit 1;
-
-installnls:
-	@(cd nls && echo "making in nls..." && \
-	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
-	DIR='${DIR}' NLSDIR='${NLSDIR}' ETCBINDIR='${ETCBINDIR}' \
-	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
-	SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' \
-	VIRTUAL_ALIASES='${VIRTUAL_ALIASES}' \
-	USER='${USER}' GROUP='${GROUP}' newinstall) || exit 1;
 
 installwws:
 	@(cd wwsympa && echo "making in wwsympa..." && \
@@ -305,6 +320,7 @@ installsample:
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
 	COOKIE='${COOKIE}' OPENSSL='@OPENSSL@' SSLCERTDIR='${SSLCERTDIR}' \
 	SPOOLDIR='${SPOOLDIR}' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' PIDDIR='${PIDDIR}' install) || exit 1;
+
 
 installman:
 	mkdir -p $(DESTDIR)$(MANDIR)
