@@ -287,7 +287,10 @@ while (!$end) {
 		    next;
 		}
 		
-		open ARC, ">$bounce_dir/$escaped_rcpt" or &leave("archiving bounce");
+		unless (open ARC, ">$bounce_dir/$escaped_rcpt") {
+		    &do_log('notice', "Unable to write $bounce_dir/$escaped_rcpt");
+		    next;
+		}
 		print ARC <BOUNCE>;
 		close BOUNCE;
 		close ARC;
@@ -335,7 +338,10 @@ while (!$end) {
 			next;
 			}
 		    
-		    open ARC, ">$bounce_dir/OTHER/$escaped_from" or &leave("creating $bounce_dir/OTHER/$escaped_from");
+		    unless (open ARC, ">$bounce_dir/OTHER/$escaped_from") {
+			&do_log('notice', "Cannot create $bounce_dir/OTHER/$escaped_from");
+			next;
+		    }
 		    print ARC <BOUNCE>;
 		    close BOUNCE;
 		    close ARC;
@@ -368,15 +374,6 @@ sub sigterm {
     $end = 1;
 }
 
-sub process_bounce {
-
-}
-
-sub leave() {
-    my $msg = shift(@_);
-
-    die "Error : $msg";
-}
 
 
 
