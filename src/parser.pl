@@ -23,7 +23,7 @@
 
 use FileHandle;
 
-my ($index, @t, $data, $internal);
+my ($index, @t, $data, $internal, %known_files);
 
 ## The main parsing sub
 sub parse_tpl {
@@ -31,6 +31,12 @@ sub parse_tpl {
     ($data, $template, $output) = @_;
 
     &do_log('debug2','Parser [%d] parse_tpl(%s)', $index, $template);
+
+    $known_files{$template}++;
+    if ($known_files{$template} > 3) {
+	&do_log('err','Parser [%d] stopping loop with file %s', $index, $template);
+	return -1;
+    }
 
     my ($hash, $foreach);
     
@@ -90,6 +96,12 @@ sub do_include {
     my $file = pop;
 
     &do_log('debug2','Parser [%d] do_include(%s)', $index, $file);
+
+    $known_files{$file}++;
+    if ($known_files{$file} > 3) {
+	&do_log('err','Parser [%d] stopping loop with file %s', $index, $file);
+	return -1;
+    }
 
     my $fh = new FileHandle $file;
 
@@ -263,8 +275,10 @@ sub process {
     $echo = 0 if ($echo == -1);
 
     while ($_ = $t[++$index]) {
+	my $status;
+
 	if (/\[\s*IF.*\]/i) {
-	    &do_if($echo);
+	    $status = &do_if($echo);
 	}elsif (/\[\s*ENDIF\s*\]/i) {
 	    return;
 	}elsif (/\[\s*ELSE\s*\]/i) {
@@ -272,26 +286,29 @@ sub process {
 	}elsif (/\[\s*ELSIF\s*.*\]/i) {
 	    return;
 	}elsif (/\[\s*INCLUDE\s+(\w+)\s*\]/i) {
-	    &do_include($data->{$1}) if ($echo == 1);
+	    $status = &do_include($data->{$1}) if ($echo == 1);
 	}elsif (/\[\s*INCLUDE\s+\'(\S+)\'\s*\]/i) {
 	    &do_include($1) if ($echo == 1);
 	}elsif (/\[\s*PARSE\s+(\w+)\s*\]/i) {
-	    parse_tpl($data, $data->{$1}, select()) if ($echo == 1);
+	    $status = parse_tpl($data, $data->{$1}, select()) if ($echo == 1);
 	}elsif (/\[\s*PARSE\s+(\w+)\->(\w+)\s*\]/i) {
-	    parse_tpl($data, $data->{$1}{$2}, select()) if (defined $data->{$1} && $echo == 1);
+	    $status = parse_tpl($data, $data->{$1}{$2}, select()) if (defined $data->{$1} && $echo == 1);
 	}elsif (/\[\s*PARSE\s+\'(\S+)\'\s*\]/i) {
-	    parse_tpl($data, $1, select())  if ($echo == 1);
+	    $status = parse_tpl($data, $1, select())  if ($echo == 1);
 	}elsif (/\[\s*FOREACH\s+(\w+)\s+IN\s+(\w+(\->\w+)?)\s*\]/i) {
-	    &do_foreach($echo);
+	    $status = &do_foreach($echo);
 	}elsif (/\[\s*END\s*\]/i) {
 	    return;
 	}elsif (/\[\s*STOPPARSE\s*\]/i) {
-	    &do_stopparse();
+	    $status = &do_stopparse();
 	}elsif (/\[\s*SET\s+(\w+)\s*\=\s*(\w+\->\w+|\d+)\s*\]/i) {
-	    &do_setvar($echo);
+	    $status = &do_setvar($echo);
 	}elsif ($echo == 1) {
-	    &do_parse();
+	    $status = &do_parse();
 	    print;
+	}
+	if ($status == -1) {
+	    return -1;
 	}
     }
     return;
@@ -323,7 +340,7 @@ sub do_eval {
     }elsif ($var =~ /^(\w+)$/) {
 	return $data->{$1};
     }else {
-	&do_log('err','Parser [%d] unable to parse %s', $index, $var;
+	&do_log('err','Parser [%d] unable to parse %s', $index, $var);
     }
 
     return '';
