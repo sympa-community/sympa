@@ -839,7 +839,7 @@ sub send_msg {
         
 	foreach my $email (keys %{$Rvars->{$var}}) {
 	    &do_log ('notice', "--> message sent to $email");
-	    $list->send_file ($template, $email, $Rvars->{$var}{$email}) if (!$log);
+	    $list->send_file ($template, $email, $list->{'domain'}, $Rvars->{$var}{$email}) if (!$log);
 	}
     }
     return 1;
