@@ -17,7 +17,7 @@
     \renewcommand {\ttdefault} {cmtt}
 
     \setlength {\parskip} {5mm}
-    \setlength {\parindent} {0mm}
+    \setlength {\parindent} {0mm} 
 
     \pagestyle {headings}
     \makeindex
@@ -64,7 +64,7 @@
 
     \newcommand {\samplelist} {mylist}
 
-    \newcommand {\samplerobot} {some.domain.org}
+    \newcommand {\samplerobot} {some\.domain\.org}
 
     % #1 = text to index and to display
     \newcommand {\textindex} [1] {\index{#1}#1}
@@ -287,6 +287,12 @@ in a single software package, including:
         interoperability with various RDBMS (MySQL, PostgreSQL,
         Oracle, Sybase).
 
+    \item Various task automatic processing. List master may use predefined 
+	task models to automate recurrent processings such as regurlaly 
+	reminding subscribers their belonging to a list or updating certificate
+	revocation lists. It is also possible to write one's own task models to meet 
+	particular needs. Unique actions may also be scheduled by this way.
+
     \label {wwsympa} 
     \item {\WWSympa} is a global Web interface to all \Sympa functions
     	(including administration). It provides :
@@ -468,7 +474,7 @@ a virtual robot or for the whole site.
 
 	\item \tildedir {sympa/bin/etc/}\\
 	Here \Sympa stores the default versions of what it will otherwise find
-	in \tildedir {sympa/etc/} (scenarios, templates and configuration
+	in \tildedir {sympa/etc/} (task models, scenarios, templates and configuration
 	files, recognized S/Mime certificates).
 
 	\item \tildedir {sympa/etc/}\\
@@ -480,11 +486,17 @@ a virtual robot or for the whole site.
 
 	\item \tildedir {sympa/etc/scenari/}\\
 	This directory will contain your scenarii (or scenarios, if you prefer).
-	If you don't know what the hell a scenario is, refer to \ref {scenarii}, 
+	If you don't know what the hell a scenario is, refer to \ref {scenarii}\ref {scenarii}, 
 	page~\pageref {scenarii}. Thoses scenarii are default scenarii but you may
         \tildedir {sympa/etc/\samplerobot/scenari/} for default scenarii of \samplerobot
         virtual robot and \tildedir {sympa/expl/\samplelist/scenari} for scenarii
         specific to a particular list 
+
+	\item \tildedir {sympa/etc/list\_task\_models/}\\
+	This directory will store your own list task models (see \ref {tasks}, page~\pageref {tasks}).	
+
+	\item \tildedir {sympa/etc/global\_task\_models/}\\
+	Contains global task models of yours (see \ref {tasks}, page~\pageref {tasks}).		
 	
 	\item \tildedir {sympa/etc/wws\_templates/}\\
 	The web interface (\WWSympa) is composed of template HTML
@@ -559,6 +571,10 @@ a virtual robot or for the whole site.
 	\file {MhOnArc}. Continuously scans the \dir {outgoing/} 
 	spool.
 
+	\item \file {task\_manager.pl}\\
+	The daemon which manages the tasks : creation, checking, execution. 
+	It regurlaly scans the \dir {task/} spool.
+
 	\item \file {queue}\\
 	This small program gets the incoming messages from the aliases
 	and stores them in \dir {msg/} spool.
@@ -619,6 +635,9 @@ in \file {sympa.conf}.
 
 	\item \tildedir {sympa/spool/msg/}\\
 	For storing incoming messages (including commands).
+	
+	\item \tildedir {sympa/spool/task/}\\
+	For storing all created tasks.
 
 	\item \tildedir {sympa/spool/outgoing/}\\
 	\file {sympa.pl} dumps messages in this spool to await archiving
@@ -1003,6 +1022,7 @@ To do this, add the following sequence or its equivalent in your
 ~sympa/bin/sympa.pl
 ~sympa/bin/archived.pl
 ~sympa/bin/bounced.pl
+~sympa/bin/task_manager.pl
 
 \end{verbatim}
 \end {quote}
@@ -1093,7 +1113,7 @@ format:
 
 \begin {quote}
     \textit {keyword    value}
-\end{quote}
+\end {quote}
 
 Comments start with the \texttt {\#} character at the beginning of
 a line.  Empty lines are also considered as comments and are ignored.
@@ -1183,10 +1203,11 @@ be used as a synonim.
 	 \default {\tildedir {sympa/etc}}
 
         This is the local directory for configuration files (such as
-	\file {edit\_list.conf}. It contains 3 subdirectories:
+	\file {edit\_list.conf}. It contains 5 subdirectories:
 	\dir {scenari} for local scenarii; \dir {templates}
-	for the site's local templates and default list templates; and \dir {wws\_templates}
-        for the site's local html templates.
+	for the site's local templates and default list templates; \dir {wws\_templates}
+        for the site's local html templates; \dir {global\_task\_models} for local
+	global task models; and \dir {list\_task\_models} for local list task models
 
         \example {home          /home/sympa/etc}
 
@@ -1369,6 +1390,13 @@ be used as a synonim.
 	program via the \samplelist-owner or bounce+* addresses . This parameter is mandatory
         and must be an absolute path.
 
+\subsection {\cfkeyword {queuetask}} 
+    \index{bounce}
+
+	\default {\tildedir {sympa/spool/task}}
+
+        Spool to store task files created by the task manager. This parameter is mandatory
+        and must be an absolute path.
 
 \subsection {\cfkeyword {tmpdir}}
 
@@ -1625,8 +1653,8 @@ db_additional_user_fields 	address,gender
 \section {S/MIME configuration}
 
 \Sympa can optionally verify and use S/MIME signatures for security purposes.
-In this case, three optional parameters must be assigned by the listmaster
-(see \ref {smimeconf},  page~\pageref {smimeconf}).
+In this case, the three first following parameters must be assigned by the listmaster
+(see \ref {smimeconf},  page~\pageref {smimeconf}). The two others are optionnals.
 
 \subsection {\cfkeyword {openSSL}}
 
@@ -1641,6 +1669,17 @@ The option used by OpenSSL
 The password for list private key encryption. If not
 	defined, \Sympa assumes that list private keys are not encrypted.
 
+\label {certificate-task-config}
+\subsection {\cfkeyword {chk\_cert\_expiration\_task}}
+
+States the model version used to create the task which regurlaly checks the certificate
+expiration dates and warns users whose certificate have expired or are going to.
+To know more about tasks, see \ref {tasks}, page~\pageref {tasks}.
+
+\subsection {\cfkeyword {CRL\_update\_task}}
+
+Specifies the model version used to create the task which regurlaly updates the certificate
+revocation lists. 
 
 \section {Antivirus plug-in}
 \label {Antivirus plug-in}
@@ -1971,7 +2010,7 @@ int main(int argn, char **argv, char **envp) {
 }
 
 \end{verbatim}
-\end{quote}
+\end {quote}
 \end{itemize}
 
 \subsection {Installing wwsympa.fcgi in your Apache server}
@@ -1983,7 +2022,7 @@ int main(int argn, char **argv, char **envp) {
      Example :
        	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
 \end{verbatim}
-\end{quote}
+\end {quote}
 
      Running  FastCGI will provide much faster responses from your server and 
      reduce load (to understand why, read 
@@ -2002,7 +2041,7 @@ int main(int argn, char **argv, char **envp) {
 	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
 
  \end{verbatim}
-\end{quote}
+\end {quote}
  
 \subsection {Using FastCGI}
 
@@ -2314,7 +2353,7 @@ The \file {/etc/auth.conf} file contains directives in the following format:
  \textit {paragraphs}\\
     \textit {keyword    value} 
 
-\end{quote}
+\end {quote}
 
 Comments start with the \texttt {\#} character at the beginning of a line.
   
@@ -2795,6 +2834,25 @@ includes a new link to load the certificate to the user's browser, and the welco
 message is signed by the list.
 \end {enumerate} 
 
+
+\section {Managing certificates with tasks}
+
+You may automate the management of certificates with two global task models provided with
+\Sympa. See \ref {tasks}, page~\pageref {tasks} to know more about tasks.
+Report to \ref {certificate-task-config}, page~\pageref {certificate-task-config} to configure your \Sympa to use these facilities.
+
+\subsection {chk\_cert\_expiration.daily.task model}
+
+A task created with the model \file {chk\_cert\_expiration.daily.task} checks every day the expiration date of
+certificates stored in the \tildedir {sympa/expl/X509-user-certs/} directory.
+The user is warned with the \file {daily\_cert\_expiration} template when his certificate has expired
+or is going to expire within three days.
+
+\subsection {CRL\_update.hourly.task model}
+
+You may use the model \file {CRL\_update.daily.task} to create a task which daily updates the certificate revocation
+lists when needed.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Customization
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3230,7 +3288,7 @@ in multiple categories.
 The list of topics is defined in the \file {topics.conf} configuration
 file, located in the \tildedir {sympa/etc} directory. The format of this file is 
 as follows :
-\begin{quote}
+\begin {quote}
 \begin{verbatim}
 <topic1_name>
 title	<topic1 title>
@@ -3239,7 +3297,7 @@ visibility <topic1 visibility>
 <topicn_name/subtopic_name>
 title	<topicn title>
 \end{verbatim}
-\end{quote}
+\end {quote}
 
 You will notice that subtopics can be used, the separator being \textit {/}.
 The topic name is composed of alphanumerics (0-1a-zA-Z) or underscores (\_).
@@ -3286,7 +3344,7 @@ is used for signed messages (see \ref {smimeforsign}, page~\pageref {smimeforsig
  
 Example
 
-\begin{quote}
+\begin {quote}
 del.auth
 \begin{verbatim}
 title.us deletion performed only by list owners, need authentication
@@ -3298,18 +3356,18 @@ title.es eliminación reservada sólo para el propietario, necesita autentificació
   is_listmaster([sender])        smtp       -> request_auth
   true()                         md5,smime  -> do_it
 \end{verbatim}
-\end{quote}
+\end {quote}
 
 Scenarii can also contain includes :
 
-\begin{quote}
+\begin {quote}
 \begin{verbatim}
     subscribe
         include commonreject
         match([sender], /cru\.fr$/)          smtp,smime -> do_it
 	true()                               smtp,smime -> owner
 \end{verbatim}
-\end{quote}
+\end {quote}
 	    
 
 In this case sympa applies recursively the scenario named \texttt {include.commonreject}
@@ -3335,7 +3393,7 @@ equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -> reject
 match([sender], /univ-rennes1\.fr$/) smtp,smime -> do_it
 true()                               smtp,smime -> owner
 \end{verbatim}
-\end{quote}
+\end {quote}
 
 You may now refer to this scenario in any list configuration file, for example :
 
@@ -3343,7 +3401,7 @@ You may now refer to this scenario in any list configuration file, for example :
 \begin{verbatim}
 subscribe rennes1
 \end{verbatim}
-\end{quote}
+\end {quote}
 
 A scenario consists of rules, evaluated in order beginning with the first. 
 Rules are defined as follows :
@@ -3352,14 +3410,19 @@ Rules are defined as follows :
 <rule> ::= <condition> <auth_list> -> <action>
 
 <condition> ::= [!] <condition
-		| true ()
+                | true ()
+                | all ()
                 | equal (<var>, <var>)
                 | match (<var>, /perl_regexp/)
                 | is_subscriber (<listname>, <var>)
                 | is_owner (<listname>, <var>)
                 | is_editor (<listname>, <var>)
                 | is_listmaster (<var>)
+                | older (<date>, <date>)    # true if first date is anterior to the second date
+                | newer (<date>, <date>)    # true if first date is posterior to the second date
 <var> ::= [email] | [sender] | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] | [msg_part->type] | [msg_part->body] | <string>
+
+<date> ::= <epoch date> | <date format (see \ref {tasks}, page~\pageref {tasks})>
 
 <listname> ::= [listname] | <listname_string>
 
@@ -3382,7 +3445,7 @@ Rules are defined as follows :
 		      sympa_priority | request_priority | lang | max_size
 	 	      
 \end{verbatim}
-\end{quote}
+\end {quote}
 
 perl\_regexp can contain the string [host] (interpreted at run time as the list or robot domain).
 The variable notation [msg\_header-$>$<smtp\_key\_word>] is interpreted as the SMTP header value only when performing
@@ -3444,6 +3507,164 @@ The loop detection algorithm is :
 
 
 \end {itemize}
+
+\section {Tasks}
+    \label {tasks}
+    \index{tasks}
+
+A task is a sequence of simple actions which realize a complex routine. It is executed in background 
+by the task manager daemon and allow the list master to automate the processing of recurrent tasks. 
+For example a task sends every year the subscribers of a list a message to remind their subscription. 
+
+A task is created with a task model. It is a text file which describes a sequence of simple actions. 
+It may have different versions (for instance reminding subscribers every year or semester).
+A task model file name has the following format :	\file {<model name>.<model version>.task}.
+For instance \file {remind.annual.task}  or \file {remind.semestrial.task}.
+
+\Sympa provides several task models stored in \tildedir {sympa/bin/etc/global\_task\_models} 
+  and \tildedir {sympa/bin/etc/list\_task\_models} dirextories.
+Others can be designed by the list master. 
+
+A task is global or related to a list.
+
+\subsection {List task creation}
+
+You define in the list config file which model with which version you want to use (see 
+\ref {list-task-parameters}, page~\pageref {list-task-parameters}). Then the task manager daemon will automatically 
+create the task by looking for the appropriate model in differents directories in the
+following order :
+
+\begin {enumerate}
+	\item \tildedir {sympa/expl/$<$list name$>$/}
+	\item \tildedir {sympa/etc/list\_task\_models/}
+	\item \tildedir {sympa/bin/etc/list\_task\_models/}
+\end {enumerate}
+  
+See also \ref {Listmodelfiles}, page~\pageref {Listmodelfiles}, to know more about standard list models provided with \Sympa.
+
+\subsection {Global task creation}
+
+The task manager daemon checks if a version of a global task model is specified in \file {sympa.conf} 
+and then creates a task as soon as it finds the model file by looking in different directories
+in the following order :
+
+\begin {enumerate}
+	\item \tildedir {sympa/etc/global\_task\_models/}
+	\item \tildedir {sympa/bin/etc/global\_task\_models/}
+\end {enumerate}
+
+\subsection {Model file format}
+
+Model files are composed of comments, labels, references, variables, date values
+and commands. All those syntactical elements are composed of alphanumerics (0-9a-zA-Z) and underscores (\_).
+
+\begin {itemize}
+\item Comment lines begin by '\#' and are not interpreted by the task manager.
+\item Label lines begin by '/' and are used by the next command (see below).
+\item References are enclosed between brackets '[]'. They refer to a value 
+depending on the object of the task (for instance [list$->$name]). Those variables
+are instantiated when a task file is created from a model. The list of available 
+variables is the same as for templates (see \ref {list-tpl}, see 
+page~\pageref {list-tpl}) plus [creation\_date] and [execution\_date] (see below).
+\item Variables store results of some commands and are paramaters for some others.
+Their name begins with '@'.
+\item A date value may be written in two ways :
+
+
+	\begin {itemize}
+		\item absolute dates follow the format : xxxxYxxMxxDxxHxxMin. Y is the year, 
+		M the month (1-12), D the day (1-28|30|31, 'bissextile' years are not managed),
+		H the hour (0-23), Min the minute (0-59). H and Min are optionnals.
+		For instance, 2001y12m4d44min is the 4st of December 2001 at 00h44.
+ 
+		\item relative dates use the [creation\_date] or [execution\_date] references. 
+		[creation\_date] is the date when the task file is created, [execution\_date] 
+		when the command line is executed.
+		A duration may follow with '+' or '-' operators. The duration is expressed 
+		like an absolute date whose all parameters are optionnals. 	
+		examples : [creation\_date]+6m, [execution\_date], [execution\_date]-4d
+	\end {itemize}
+
+
+\item Command arguments are separated by commas and enclosed between parenthesis '()'.
+\end {itemize}
+
+Here is the list of current avalaible commands :
+\begin {itemize}
+\item stop ()
+
+	Stops the execution of the task and delete the task file
+\item next ($<date value>, <label>$)
+
+	Stop the execution. The task will go on at the date value and begin at the label line.
+\item $<@deleted\_users>$ = delete ($<@user\_selection>$)
+
+	Delete @user\_selection email list and stores user emails successfully deleted in @deleted\_users.
+\item send\_msg ($<@user\_selection>, <template>$)
+
+	Send the template message to emails stored in @user\_selection.
+\item $@$user\_selection = select\_subs ($<condition>$)
+
+	Stores emails which match the condition in @user\_selection. See 8.6 Scenarii section to know how to write conditions. Only available for list model task.
+\item create ($<global | list (<list name>), <model type>, <model>$)
+
+	Create a task for object with model file \tildefile {model type.model.task}.
+\item chk\_cert\_expiration ($<template>, <delay>$)
+
+	Send the template message to emails whose certificate has expired or will expire within the delay.
+\item update\_CRL ($<file name>, <delay>$)
+
+	Update CRLs which are expired or will expire within the delay. The file stores the CRL's URLs.
+\end {itemize}
+
+Model files may have a scenario-like title line at the beginning.
+ 
+When you change a configuration file by hand, and a task parameter is created or modified, it is up to you
+to remove existing task files in the \dir {task/} spool if needed. Task file names have the following format : 
+
+\file {<date>.<label>.<model name>.<list name | global>} where :
+
+\begin {itemize}
+	\item date is when the task is executed, it is an epoch date
+	\item label states where in the task file the execution begins. If empty, starts at the beginning 
+\end {itemize}
+
+ 
+\subsection {Model file examples}
+
+\begin {itemize}
+\item remind.annual.task
+	\label {remind-annual-task}
+	\begin {quote}
+	\begin{verbatim}
+	[STARTPARSE]
+	[INCLUDE '../src/etc/list_task_models/remind.annual.task']
+	[STOPPARSE]
+	\end{verbatim}
+	\end {quote}
+
+
+\item expire.annual.task
+	\label {expire-annual-task}
+	\begin {quote}
+	\begin{verbatim}
+	[STARTPARSE]
+	[INCLUDE '../src/etc/list_task_models/expire.annual.task']
+	[STOPPARSE]
+	\end{verbatim}
+	\end {quote}
+
+
+\item CRL\_update.hourly.task\\
+	\begin {quote}
+	\begin{verbatim}
+	[STARTPARSE]
+	[INCLUDE '../src/etc/global_task_models/CRL_update.hourly.task']
+	[STOPPARSE]
+	\end{verbatim}
+	\end {quote}
+
+\end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mailing list definition
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3559,7 +3780,7 @@ which you might have defined in the\file {/etc/sympa.conf} file).
 Here is a list of files/directories you may find in the list directory :
 
 \begin {quote}
-\begin{verbatim}
+\begin {verbatim}
 archives/
 bye.tpl
 config
@@ -3574,7 +3795,7 @@ removed.tpl
 stats
 subscribers
 welcome.tpl
-\end{verbatim}
+\end {verbatim}
 \end {quote}
 
 \section {List configuration file}
@@ -3790,7 +4011,8 @@ The following variables may be used in list template files :
 	\item[-] [user-$>$password] : user password
 
 	\item[-] [user-$>$lang] : user language
-	
+
+	\item[-] [execution\_date] : the date when the scenario is executed	
 
 \end {itemize}
 
@@ -3888,6 +4110,21 @@ by white space within a single line :
 	\item Number of subscribers
 
 \end {itemize}
+
+\section {List model files}
+\label {Listmodelfiles}
+
+These files are used by \Sympa to create task files. They are interpreted (parsed) 
+by the task manager and respect the task format. See \ref {tasks}, page~\pageref {tasks}.
+
+\subsection {remind.annual.task}
+
+Every year \Sympa will send a message (the template \file {remind.tpl}) 
+to all subscribers of the list to remind them their subscription.
+
+\subsection {expire.annual.task}
+
+Every month \Sympa will delete subscribers older than one year who haven't answered two warning messages.
 
 \section {Message header and footer} 
 \label {messagefooter}
@@ -4047,7 +4284,7 @@ This file controls which of the available list templates are to be displayed. Ex
 public_anonymous hidden
 * read
 \end{verbatim}
-\end{quote}
+\end {quote}
 
 
 When a list is created, whatever its status (\cfkeyword {pending} or
@@ -4497,7 +4734,7 @@ include_sql_query
       sql_query SELECT DISTINCT email FROM student
 
 \end{verbatim}
-\end{quote}
+\end {quote}
 
 \subsection {include\_ldap\_query}
     \label {include-ldap-query}
@@ -4568,7 +4805,7 @@ cases where multiple values are returned.
 
 Example :
 
-\begin{quote}
+\begin {quote}
 \begin{verbatim}
 
     include_ldap_query
@@ -4579,7 +4816,7 @@ Example :
     select first
 
 \end{verbatim}
-\end{quote}
+\end {quote}
 
 
 \subsection {include\_file}
@@ -4716,6 +4953,22 @@ Predefined scenarii are :
 [STOPPARSE]
 \end {itemize}
 
+\label {list-task-parameters}
+\subsection {remind\_task}
+
+	\default {no default value}
+
+This parameter states which model is used to create a \texttt {remind} task. 
+A \texttt {remind} task regurlaly sends to the subscribers a message which reminds them
+their subscription to list.
+
+\subsection {expire\_task}
+
+	\default {no default value}
+
+This parameter states which model is used to create a \texttt {remind} task.
+A \texttt {expire} task regurlaly checks the inscription or reinscription date of subscribers
+and asks them to renew their subscription. If they don't they are deleted.
 
 \subsection {send}
     \label {par-send}
@@ -5241,6 +5494,7 @@ The value of the \lparam {web\_archive} access parameter must be one of the foll
     \texttt {owner} $|$
     \texttt {closed} $|$
     \texttt {listmaster} 
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Shared documents
