@@ -963,7 +963,6 @@ sub DoMessage{
 	    do_log('info','Unable to send message to list %s', $name);
 	    return undef;
 	}
-	# $list->increment_msg_count ;
 
 	do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions), size=%d', $name, $sender, time - $start_time, $numsmtp, $bytes);
 	

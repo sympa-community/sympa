@@ -1043,6 +1043,50 @@ sub savestats {
     return 1;
 }
 
+## msg count.
+sub increment_msg_count {
+    my $self = shift;
+    do_log('notice', "List::increment_msg_count list : $self->{'name'}");
+   
+    ## Be sure the list has been loaded.
+    my $name = $self->{'name'};
+    my $file = "$self->{'dir'}/msg_count";
+    
+    my %count ; 
+    if (open(MSG_COUNT, $file)) {	
+    do_log('notice', 'List::increment_msg_count file openned');
+	while (<MSG_COUNT>){
+	    if ($_ =~ /^(\d+)\s(\d+)$/) {
+		$count{$1} = $2;	
+	    }
+	}
+	close MSG_COUNT ;
+    }
+    my $today = int(time / 86400);
+    if ($count{$today}) {
+	$count{$today}++;
+    }else{
+	$count{$today} = 1;
+    }
+    
+    unless (open(MSG_COUNT, ">$file.$$")) {
+	do_log('err', "Unable to create '%s.%s' : %s", $file,$$, $!);
+	return undef;
+    }
+    do_log('notice', 'List::increment_msg_count writing $file.$$');
+    foreach my $key (keys %count) {
+	printf MSG_COUNT "%d\t%d\n",$key,$count{$key} ;
+    }
+    close MSG_COUNT ;
+    
+    unless (rename("$file.$$", $file)) {
+	do_log('err', "Unable to write '%s' : %s", $file, $!);
+	return undef;
+    }
+    do_log('notice', 'List::increment_msg_count renamed');
+    return 1;
+}
+
 ## Update the stats struct 
 ## Input  : num of bytes of msg
 ## Output : num of msgs sent
@@ -1055,6 +1099,10 @@ sub update_stats {
     $stats->[1] += $self->{'total'};
     $stats->[2] += $bytes;
     $stats->[3] += $bytes * $self->{'total'};
+
+    ## Update 'msg_count' file, used for bounces management
+    $self->increment_msg_count();
+
     return $stats->[0];
 }
 
@@ -5144,7 +5192,7 @@ sub _load_users_include {
 
     unless ($use_cache) {
 	unless ($ref = tie %users, 'DB_File', $db_file, O_CREAT|O_RDWR, 0600, $btree) {
-	    &do_log('err', 'Could not tie to DB_File');
+	    &do_log('err', '(no cache) Could not tie to DB_File %s',$db_file);
 	    return undef;
 	}
 
@@ -5198,15 +5246,16 @@ sub _load_users_include {
 	}
   
 	## Unlock
+	$ref->sync;
 	flock(DB_FH,LOCK_UN);
 	&do_log('debug2', 'Release lock on %s', $db_file);
-	close DB_FH;
-	
+	undef $ref;
 	untie %users;
+	close DB_FH;
     }
 
     unless ($ref = tie %users, 'DB_File', $db_file, O_CREAT|O_RDWR, 0600, $btree) {
-	&do_log('err', 'Could not tie to DB_File');
+	&do_log('err', '(use cache) Could not tie to DB_File %s',$db_file);
 	return undef;
     }
 
@@ -5228,10 +5277,12 @@ sub _load_users_include {
     ## Unlock DB_file
     flock(DB_FH,LOCK_UN);
     &do_log('debug2', 'Release lock on %s', $db_file);
-    close DB_FH;
     
     ## Inclusion failed, clear cache
     unless (defined $total) {
+	undef $ref;
+	untie %users;
+	close DB_FH;
 	unlink $db_file;
 	return undef;
     }
@@ -5242,6 +5293,9 @@ sub _load_users_include {
     $l->{'total'} = $total
 	if $total;
 
+    undef $ref;
+    untie %users;
+    close DB_FH;
     $l;
 }
 
