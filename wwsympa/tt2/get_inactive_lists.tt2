@@ -10,7 +10,6 @@
  </TR>
 
 [% FOREACH list = inactive_lists %]
-    [% SET tmp = list.key list = list.value list.NAME = tmp IF list.key.defined %]
 <TR>
 <TD>[% list.creation_date %]</TD>
 <TD>[% list.last_message_date %]</TD>

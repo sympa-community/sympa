@@ -16,7 +16,6 @@
  </TABLE>
  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
 [% FOREACH elt = id %]
-    [% SET tmp = elt.key elt = elt.value elt.NAME = tmp IF elt.key.defined %]
  <INPUT TYPE="hidden" NAME="id" VALUE="[% elt %]">
 [% END %]
  <INPUT TYPE="hidden" NAME="action_d_install_shared" VALUE="1"> 

@@ -20,27 +20,26 @@
 	<TH><FONT COLOR="[% bg_color %]">[%|l%]Size[%END%]</FONT></TH>
       </TR>	 
       [% FOREACH msg = spool %]
-    [% SET tmp = msg.key msg = msg.value msg.NAME = tmp IF msg.key.defined %]
         <TR>
          <TD>
-            <INPUT TYPE=checkbox name="id" value="[% msg.NAME %]">
+            <INPUT TYPE=checkbox name="id" value="[% msg.key %]">
 	 </TD>
 	  <TD>
-	    [% IF msg.date %]
-	      <FONT SIZE=-1>[% msg.date %]</FONT>
+	    [% IF msg.value.date %]
+	      <FONT SIZE=-1>[% msg.value.date %]</FONT>
 	    [% ELSE %]
 	      &nbsp;
 	    [% END %]
 	  </TD>
-	  <TD><FONT SIZE=-1>[% msg.from %]</FONT></TD>
+	  <TD><FONT SIZE=-1>[% msg.value.from %]</FONT></TD>
 	  <TD>
-	    [% IF msg.subject == 'no_subject' %]
-	      <A HREF="[% path_cgi %]/viewmod/[% list %]/[% msg.NAME %]"><FONT SIZE=-1>[%|l%]No subject[%END%]</FONT></A>
+	    [% IF msg.value.subject == 'no_subject' %]
+	      <A HREF="[% path_cgi %]/viewmod/[% list %]/[% msg.key %]"><FONT SIZE=-1>[%|l%]No subject[%END%]</FONT></A>
 	    [% ELSE %]
-	      <A HREF="[% path_cgi %]/viewmod/[% list %]/[% msg.NAME %]"><FONT SIZE=-1>[% msg.subject %]</FONT></A>
+	      <A HREF="[% path_cgi %]/viewmod/[% list %]/[% msg.key %]"><FONT SIZE=-1>[% msg.value.subject %]</FONT></A>
 	    [% END %]
 	  </TD>
-	  <TD><FONT SIZE=-1>[% msg.size %] kb</FONT></TD>
+	  <TD><FONT SIZE=-1>[% msg.value.size %] kb</FONT></TD>
 	</TR>
       [% END %] 
     </TABLE>
@@ -73,7 +72,6 @@
 	<TH><FONT COLOR="[% bg_color %]">[%|l%]Size[%END%]</FONT></TH>
       </TR>	 
       [% FOREACH f = info_doc_mod %]
-    [% SET tmp = f.key f = f.value f.NAME = tmp IF f.key.defined %]
         <TR>
          <TD>
             <INPUT TYPE=checkbox name="id" value="[% f.visible_path %][% f.fname %]">

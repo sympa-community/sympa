@@ -21,7 +21,6 @@ archives, list management and so on.[%END%]
    <TABLE BORDER=0 CELLPADDING=3><TR VALIGN="top">
     <TD WIDTH=33% NOWRAP>
      [% FOREACH topic = topics %]
-    [% SET tmp = topic.key topic = topic.value topic.NAME = tmp IF topic.key.defined %]
       o
       [% IF topic.id == 'topicsless' %]
        <A HREF="[% path_cgi %]/lists/[% topic.id %]"><B>[%|l%]Others[%END%]</B></A><BR>
@@ -31,9 +30,8 @@ archives, list management and so on.[%END%]
 
       [% IF topic.sub %]
       [% FOREACH subtopic = topic.sub %]
-    [% SET tmp = subtopic.key subtopic = subtopic.value subtopic.NAME = tmp IF subtopic.key.defined %]
        <FONT SIZE="-1">
-	&nbsp;&nbsp;<A HREF="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.NAME %]">[% subtopic.title %]</A><BR>
+	&nbsp;&nbsp;<A HREF="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]">[% subtopic.value.title %]</A><BR>
        </FONT>
       [% END %]
       [% END %]

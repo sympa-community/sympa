@@ -4,8 +4,7 @@
 	[% IF robots %]
            <SELECT NAME="new_robot">
            [% FOREACH vr = robots %]
-    [% SET tmp = vr.key vr = vr.value vr.NAME = tmp IF vr.key.defined %]
-             <OPTION VALUE="[% vr.NAME %]" [% vr %]>[% vr.NAME %]
+             <OPTION VALUE="[% vr.key %]" [% vr.value %]>[% vr.key %]
            [% END %]
 	   </SELECT>
 	[% ELSE %]

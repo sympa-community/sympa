@@ -8,14 +8,13 @@
 
 <TABLE BORDER="0" WIDTH="100%">
    [% FOREACH l = which %]
-    [% SET tmp = l.key l = l.value l.NAME = tmp IF l.key.defined %]
      <TR>
-      [% IF l.admin %]
+      [% IF l.value.admin %]
        <TD>
        [% PROCESS 'button_header.tt2' %]
        <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
              <FONT COLOR="[% selected_color %]" SIZE="-1">
-              <A HREF="[% path_cgi %]/admin/[% l.NAME %]" ><b>[%|l%]admin[%END%]</b></A>
+              <A HREF="[% path_cgi %]/admin/[% l.key %]" ><b>[%|l%]admin[%END%]</b></A>
          </FONT>
        </TD>
      [% PROCESS 'button_footer.tt2' %]
@@ -25,9 +24,9 @@
        <TD>&nbsp;</TD>
      [% END %]
      <TD WIDTH="100%" ROWSPAN="2">
-     <A HREF="[% path_cgi %]/info/[% l.NAME %]" ><B>[% hidden_head %][% l.NAME %][% hidden_at %][% l.host %][% hidden_end %]</B></A>
+     <A HREF="[% path_cgi %]/info/[% l.key %]" ><B>[% hidden_head %][% l.key %][% hidden_at %][% l.value.host %][% hidden_end %]</B></A>
      <BR>
-     [% l.subject %]
+     [% l.value.subject %]
      </TD></TR> 
      <TR><TD>&nbsp;</TD></TR>
      [% END %] 
@@ -50,11 +49,10 @@
     <FORM METHOD=POST ACTION="[% path_cgi %]">
      
 [% FOREACH email = alt_emails %]
-    [% SET tmp = email.key email = email.value email.NAME = tmp IF email.key.defined %]
-   <INPUT NAME="email"  TYPE=hidden VALUE="[% email.NAME %]">
-   &nbsp;&nbsp;<A HREF="[% path_cgi %]/change_identity/[% email.NAME %]/which">[% email.NAME %]</A> 
+   <INPUT NAME="email"  TYPE=hidden VALUE="[% email.key %]">
+   &nbsp;&nbsp;<A HREF="[% path_cgi %]/change_identity/[% email.key %]/which">[% email.key %]</A> 
     <BR>
-    [% END %]  
+[% END %]  
     </FORM>
   </TR>
 </TABLE>

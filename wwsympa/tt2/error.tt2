@@ -1,7 +1,6 @@
 <!-- $Id$ -->
 
 [% FOREACH error = errors %]
-    [% SET tmp = error.key error = error.value error.NAME = tmp IF error.key.defined %]
 
 [% IF error.msg == 'unknown_action' %]
 [%|l(error.action)%]%1 : unknown action[%END%]

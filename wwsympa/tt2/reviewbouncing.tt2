@@ -64,7 +64,6 @@
       </TR>
       
       [% FOREACH u = members %]
-    [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
       
 	[% IF dark == '1' %]
 	  <TR BGCOLOR="[% shaded_color %]">

@@ -48,8 +48,7 @@ If it is not listed or if you don't have any, login using your email and passwor
      	      <FONT SIZE=-1 COLOR="[% selected_color %]"><b>[%|l%]Magic authentification[%END%]
 
                 [% FOREACH server = sso %]
-    [% SET tmp = server.key server = server.value server.NAME = tmp IF server.key.defined %]
-                   <INPUT TYPE="hidden" NAME="auth_service_name" VALUE="[% server.NAME %]">
+                   <INPUT TYPE="hidden" NAME="auth_service_name" VALUE="[% server.key %]">
                 [% END %]
               </SELECT>
               <INPUT TYPE="submit" NAME="action_sso_login" VALUE="[%|l%]Go[%END%]" SELECTED>
@@ -75,8 +74,7 @@ If it is not listed or if you don't have any, login using your email and passwor
 
               <SELECT NAME="auth_service_name" onchange="this.form.submit();">
                 [% FOREACH server = sso %]
-    [% SET tmp = server.key server = server.value server.NAME = tmp IF server.key.defined %]
-                   <OPTION VALUE="[% server.NAME %]">[% server %]
+                   <OPTION VALUE="[% server.key %]">[% server.value %]
                 [% END %]
               </SELECT>
               <INPUT TYPE="submit" NAME="action_sso_login" VALUE="[%|l%]Go[%END%]" SELECTED>

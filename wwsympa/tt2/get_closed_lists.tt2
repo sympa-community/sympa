@@ -14,12 +14,11 @@
  </TR>
 
 [% FOREACH list = closed %]
-    [% SET tmp = list.key list = list.value list.NAME = tmp IF list.key.defined %]
 <TR>
-<TD><INPUT TYPE=checkbox name="selected_lists" value="[% list.NAME %]"></TD>
-<TD><A HREF="[% path_cgi %]/admin/[% list.NAME %]">[% list.NAME %]</A></TD>
-<TD>[% list.subject %]</TD>
-<TD>[% list.by %]</TD>
+<TD><INPUT TYPE=checkbox name="selected_lists" value="[% list.key %]"></TD>
+<TD><A HREF="[% path_cgi %]/admin/[% list.key %]">[% list.key %]</A></TD>
+<TD>[% list.value.subject %]</TD>
+<TD>[% list.value.by %]</TD>
 </TR>
 [% END %]
 </TABLE>

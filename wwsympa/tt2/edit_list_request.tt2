@@ -16,7 +16,6 @@
 <INPUT TYPE="hidden" NAME="serial" VALUE="[% serial %]">
 <TABLE WIDTH="100%" BORDER=0 CELLPADDING="0" CELLSPACING="0">
 [% FOREACH p = param %]
-    [% SET tmp = p.key p = p.value p.NAME = tmp IF p.key.defined %]
  [% IF p.may_edit != 'hidden' %]
   <TR VALIGN="top">
 
@@ -61,40 +60,37 @@
             [% IF p.may_edit == 'write' %]
                <SELECT NAME="multiple_param.[% p.name %]" MULTIPLE>
               [% FOREACH enum = p.value %]
-    [% SET tmp = enum.key enum = enum.value enum.NAME = tmp IF enum.key.defined %]
-                <OPTION VALUE="[% enum.NAME %]"
-                [% IF enum.selected == '1' %]
+                <OPTION VALUE="[% enum.key %]"
+                [% IF enum.value.selected == '1' %]
                   SELECTED
                 [% END %]
-                [% IF enum.title %]
-                  >[% enum.title %]
+                [% IF enum.value.title %]
+                  >[% enum.value.title %]
                 [% ELSE %]
-                  >[% enum.NAME %]
+                  >[% enum.key %]
                 [% END %]
               [% END %]
               </SELECT>
             [% ELSIF p.may_edit == 'read' %]
               [% FOREACH enum = p.value %]
-    [% SET tmp = enum.key enum = enum.value enum.NAME = tmp IF enum.key.defined %]
-                [% IF enum.selected == '1' %]
-                  [% IF enum.title %]
-                    [% enum.title %]
+                [% IF enum.value.selected == '1' %]
+                  [% IF enum.value.title %]
+                    [% enum.value.title %]
                   [% ELSE %]
-                    [% enum.NAME %]
+                    [% enum.key %]
                   [% END %]
                 [% END %]
               [% END %]
             [% END %]
    [% ELSE %]
+     [% o_INDEX = 0 %]
      [% FOREACH o = p.value %]
-    [% SET tmp = o.key o = o.value o.NAME = tmp IF o.key.defined %]
      <!-- Foreach occurrence -->
 	<DD>
 
 	[% IF p.type == 'paragraph' %]
 	<!-- Paragraph -->
       	  [% FOREACH key = o.value %]
-    [% SET tmp = key.key key = key.value key.NAME = tmp IF key.key.defined %]
 	    [% IF key.may_edit != 'hidden' %]
  	      [% IF key.title %]
 	        <B>[% key.title %] :</B>
@@ -105,22 +101,20 @@
 	      [% IF key.type == 'enum' %]
 	      <!-- Enum -->
                 [% IF key.may_edit == 'write' %]
-		  <SELECT NAME="single_param.[% p.name %].[% o.INDEX %].[% key.name %]">
+		  <SELECT NAME="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
 	            [% FOREACH enum = key.value %]
-    [% SET tmp = enum.key enum = enum.value enum.NAME = tmp IF enum.key.defined %]
-	             <OPTION VALUE="[% enum.NAME %]"
-	             [% IF enum.selected == '1' %]
+	             <OPTION VALUE="[% enum.key %]"
+	             [% IF enum.value.selected == '1' %]
 		       SELECTED
 	             [% END %]
-	             >[% enum.NAME %]
+	             >[% enum.key %]
 	            [% END %]
 	          </SELECT>
 	        [% ELSIF key.may_edit == 'read' %]
 	          [% FOREACH enum = key.value %]
-    [% SET tmp = enum.key enum = enum.value enum.NAME = tmp IF enum.key.defined %]
-	            [% IF enum.selected == '1' %]
-	              [% enum.NAME %]
-		      <INPUT TYPE="hidden" NAME="single_param.[% p.name %].[% o.INDEX %].[% key.name %]" VALUE="[% enum.NAME %]">
+	            [% IF enum.value.selected == '1' %]
+	              [% enum.key %]
+		      <INPUT TYPE="hidden" NAME="single_param.[% p.name %].[% o_INDEX %].[% key.value.name %]" VALUE="[% enum.key %]">
 	            [% END %]
 	          [% END %]
 	        [% END %]
@@ -128,10 +122,10 @@
 	      [% ELSE %]
 	      <!-- Scalar -->
                 [% IF key.may_edit == 'write' %]
-	          <INPUT NAME="single_param.[% p.name %].[% o.INDEX %].[% key.name %]" VALUE="[% key.value %]" SIZE="[% key.length %]">
+	          <INPUT NAME="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" VALUE="[% key.value %]" SIZE="[% key.length %]">
 	        [% ELSIF key.may_edit == 'read' %]
 	          [% key.value %]
-		  <INPUT TYPE="hidden" NAME="single_param.[% p.name %].[% o.INDEX %].[% key.name %]" VALUE="[% key.value %]">
+		  <INPUT TYPE="hidden" NAME="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" VALUE="[% key.value %]">
 	        [% END %]
 	        [% key.unit %]
 	      [% END %]
@@ -144,13 +138,14 @@
 	<!-- Scalar -->
 
 	  [% IF p.may_edit == 'write' %]
-	    <INPUT NAME="single_param.[% p.name %].[% o.INDEX %]" VALUE="[% o.value %]" size="[% o.length %]">
+	    <INPUT NAME="single_param.[% p.name %].[% o_INDEX %]" VALUE="[% o.value %]" size="[% o.length %]">
 	  [% ELSIF p.may_edit == 'read' %]
 	    [% o.value %]
 	  [% END %]
 	  [% o.unit %]
 	[% END %]
         <BR>
+     [% o_INDEX = o_INDEX + 1 %]
      [% END %]
      <!-- END Foreach occurrence -->
    [%END%]
@@ -164,19 +159,17 @@
       [% IF p.may_edit == 'write' %]
 	<SELECT NAME="single_param.[% p.name %].name">
 	  [% FOREACH scenario = p.value %]
-    [% SET tmp = scenario.key scenario = scenario.value scenario.NAME = tmp IF scenario.key.defined %]
 	  <OPTION VALUE="[% scenario.name %]"
-	     [% IF scenario.selected == '1' %]
+	     [% IF scenario.value.selected == '1' %]
 		SELECTED
 	     [% END %]
-	  >[% scenario.title %] ([% scenario.name %])
+	  >[% scenario.value.title %] ([% scenario.value.name %])
 	  [% END %]
 	</SELECT>
       [% ELSIF p.may_edit == 'read' %]
 	[% FOREACH scenario = p.value %]
-    [% SET tmp = scenario.key scenario = scenario.value scenario.NAME = tmp IF scenario.key.defined %]
-	  [% IF scenario.selected == '1' %]
-	    [% scenario.title %] ([% scenario.name %])
+	  [% IF scenario.value.selected == '1' %]
+	    [% scenario.value.title %] ([% scenario.value.name %])
 	  [% END %]
 	[% END %]
       [% END %]
@@ -186,19 +179,17 @@
       [% IF p.may_edit == 'write' %]
 	<SELECT NAME="single_param.[% p.name %].name">
 	  [% FOREACH task = p.value %]
-    [% SET tmp = task.key task = task.value task.NAME = tmp IF task.key.defined %]
-	  <OPTION VALUE="[% task.name %]"
-	     [% IF task.selected == '1' %]
+	  <OPTION VALUE="[% task.value.name %]"
+	     [% IF task.value.selected == '1' %]
 		SELECTED
 	     [% END %]
-	  >[% task.title %] ([% task.name %])
+	  >[% task.value.title %] ([% task.value.name %])
 	  [% END %]
 	</SELECT>
       [% ELSIF p.may_edit == 'read' %]
 	[% FOREACH task = p.value %]
-    [% SET tmp = task.key task = task.value task.NAME = tmp IF task.key.defined %]
-	  [% IF task.selected == '1' %]
-	    [% task.title %] ([% task.name %])
+	  [% IF task.value.selected == '1' %]
+	    [% task.value.title %] ([% task.value.name %])
 	  [% END %]
 	[% END %]
       [% END %]
@@ -206,7 +197,6 @@
     [% ELSIF p.type == 'paragraph' %]
     <!-- Paragraph -->
       [% FOREACH key = p.value %]
-    [% SET tmp = key.key key = key.value key.NAME = tmp IF key.key.defined %]
         [% IF key.may_edit != 'hidden' %]
 	  [% IF key.title %]
 	    <DD><B>[% key.title %] :</B> 
@@ -219,19 +209,17 @@
 	    [% IF key.may_edit == 'write' %]
 	      <SELECT NAME="single_param.[% p.name %].[% key.name %].name">
 	        [% FOREACH scenario = key.value %]
-    [% SET tmp = scenario.key scenario = scenario.value scenario.NAME = tmp IF scenario.key.defined %]
-	          <OPTION VALUE="[% scenario.name %]"
-	          [% IF scenario.selected == '1' %]
+	          <OPTION VALUE="[% scenario.value.name %]"
+	          [% IF scenario.value.selected == '1' %]
 		    SELECTED
 	          [% END %]
-	          >[% scenario.title %] ([% scenario.name %])
+	          >[% scenario.value.title %] ([% scenario.value.name %])
 	        [% END %]
 	      </SELECT>
 	    [% ELSIF key.may_edit == 'read' %]
 	      [% FOREACH scenario = key.value %]
-    [% SET tmp = scenario.key scenario = scenario.value scenario.NAME = tmp IF scenario.key.defined %]
-	        [% IF scenario.selected == '1' %]
-		  [% scenario.title %] ([% scenario.name %])
+	        [% IF scenario.value.selected == '1' %]
+		  [% scenario.value.title %] ([% scenario.value.name %])
 	        [% END %]
 	      [% END %]
 	    [% END %]
@@ -241,19 +229,17 @@
 	    [% IF key.may_edit == 'write' %]
 	      <SELECT NAME="single_param.[% p.name %].[% key.name %].name">
 	        [% FOREACH task = key.value %]
-    [% SET tmp = task.key task = task.value task.NAME = tmp IF task.key.defined %]
 	          <OPTION VALUE="[% task.name %]"
-	          [% IF task.selected == '1' %]
+	          [% IF task.value.selected == '1' %]
 		    SELECTED
 	          [% END %]
-	          >[% task.title %] ([% task.name %])
+	          >[% task.value.title %] ([% task.value.name %])
 	        [% END %]
 	      </SELECT>
 	    [% ELSIF key.may_edit == 'read' %]
 	      [% FOREACH task = key.value %]
-    [% SET tmp = task.key task = task.value task.NAME = tmp IF task.key.defined %]
-	        [% IF task.selected == '1' %]
-		  [% task.title %] ([% task.name %])
+	        [% IF task.value.selected == '1' %]
+		  [% task.value.title %] ([% task.value.name %])
 	        [% END %]
 	      [% END %]
 	    [% END %]
@@ -267,26 +253,24 @@
 	        <SELECT NAME="single_param.[% p.name %].[% key.name %]">
 	      [% END %]
 	      [% FOREACH enum = key.value %]
-    [% SET tmp = enum.key enum = enum.value enum.NAME = tmp IF enum.key.defined %]
-	        <OPTION VALUE="[% enum.NAME %]"
-	        [% IF enum.selected == '1' %]
+	        <OPTION VALUE="[% enum.key %]"
+	        [% IF enum.value.selected == '1' %]
 	  	  SELECTED
 	        [% END %]
-	        [% IF enum.title %]
-	          >[% enum.title %]
+	        [% IF enum.value.title %]
+	          >[% enum.value.title %]
 	        [% ELSE %]
-	          >[% enum.NAME %]
+	          >[% enum.key %]
 	        [% END %]
 	      [% END %]
 	      </SELECT>
 	    [% ELSIF key.may_edit == 'read' %]
 	      [% FOREACH enum = key.value %]
-    [% SET tmp = enum.key enum = enum.value enum.NAME = tmp IF enum.key.defined %]
-	        [% IF enum.selected == '1' %]
-		  [% IF enum.title %]
-		    [% enum.title %] 
+	        [% IF enum.value.selected == '1' %]
+		  [% IF enum.value.title %]
+		    [% enum.value.title %] 
 	  	  [% ELSE %]
-		    [% enum.NAME %]
+		    [% enum.key %]
 		  [% END %]
 	        [% END %]
 	      [% END %]
@@ -310,23 +294,21 @@
         [% IF p.may_edit == 'write' %]
 	  <SELECT NAME="single_param.[% p.name %]">
 	   [% FOREACH enum = p.value %]
-    [% SET tmp = enum.key enum = enum.value enum.NAME = tmp IF enum.key.defined %]
-	   <OPTION VALUE="[% enum.NAME %]"
-	      [% IF enum.selected == '1' %]
+	   <OPTION VALUE="[% enum.key %]"
+	      [% IF enum.value.selected == '1' %]
 		 SELECTED
 	      [% END %]
-             [% IF enum.title %]
-	       >[% enum.title %]
+             [% IF enum.value.title %]
+	       >[% enum.value.title %]
 	     [% ELSE %]
-	       >[% enum.NAME %]
+	       >[% enum.key %]
 	     [% END %]
 	   [% END %]
 	   </SELECT>
 	[% ELSIF p.may_edit == 'read' %]
 	  [% FOREACH enum = p.value %]
-    [% SET tmp = enum.key enum = enum.value enum.NAME = tmp IF enum.key.defined %]
-	    [% IF enum.selected == '1' %]
-	      [% enum.NAME %]
+	    [% IF enum.value.selected == '1' %]
+	      [% enum.key %]
 	    [% END %]
 	  [% END %]
 	[% END %]

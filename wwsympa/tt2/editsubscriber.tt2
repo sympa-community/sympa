@@ -15,8 +15,7 @@
 <DD>[%|l(current_subscriber.update_date)%]Last update : %1[%END%]
 <DD>[%|l%]Reception :[%END%] <SELECT NAME="reception">
 		  [% FOREACH r = reception %]
-    [% SET tmp = r.key r = r.value r.NAME = tmp IF r.key.defined %]
-		    <OPTION VALUE="[% r.NAME %]" [% r.selected %]>[% r.description %]
+		    <OPTION VALUE="[% r.key %]" [% r.value.selected %]>[% r.value.description %]
 		  [% END %]
 	        </SELECT>
 
@@ -24,17 +23,15 @@
 <DD>[%|l(current_subscriber.lang)%]Language : %1[%END%]
 [% IF additional_fields %]
 [% FOREACH field = additional_fields %]
-    [% SET tmp = field.key field = field.value field.NAME = tmp IF field.key.defined %]
- [% IF field.type == 'enum' %]
-    <DD>[% field.NAME %] :  <SELECT NAME="additional_field_[% field.NAME %]">
+ [% IF field.value.type == 'enum' %]
+    <DD>[% field.key %] :  <SELECT NAME="additional_field_[% field.key %]">
 	                  <OPTION VALUE="">
-	[% FOREACH e = field.enum %]
-    [% SET tmp = e.key e = e.value e.NAME = tmp IF e.key.defined %]
-		          <OPTION VALUE="[% e.NAME %]" [% e %]>[% e.NAME %]
+	[% FOREACH e = field.value.enum %]
+		          <OPTION VALUE="[% e.key %]" [% e.value %]>[% e.key %]
         [% END %]
 	                 </SELECT>
  [% ELSE %]
-    <DD>[% field.NAME %] : <INPUT NAME="additional_field_[% field.NAME %]" VALUE="[% field.value %]" SIZE="25">
+    <DD>[% field.key %] : <INPUT NAME="additional_field_[% field.key %]" VALUE="[% field.value.value %]" SIZE="25">
  [% END %]
 [% END %]
 [% END %]

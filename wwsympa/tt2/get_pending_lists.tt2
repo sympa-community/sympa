@@ -17,11 +17,10 @@
  </TR>
 
 [% FOREACH list = pending %]
-    [% SET tmp = list.key list = list.value list.NAME = tmp IF list.key.defined %]
 <TR>
-<TD><A HREF="[% path_cgi %]/set_pending_list_request/[% list.NAME %]">[% list.NAME %]</A></TD>
-<TD>[% list.subject %]</TD>
-<TD>[% list.by %]</TD>
+<TD><A HREF="[% path_cgi %]/set_pending_list_request/[% list.key %]">[% list.key %]</A></TD>
+<TD>[% list.value.subject %]</TD>
+<TD>[% list.value.by %]</TD>
 </TR>
 [% END %]
 </TABLE>

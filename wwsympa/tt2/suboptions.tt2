@@ -8,8 +8,7 @@
      [%|l%]Reception mode :[%END%] 
      <SELECT NAME="reception">
         [% FOREACH r = reception %]
-    [% SET tmp = r.key r = r.value r.NAME = tmp IF r.key.defined %]
-          <OPTION VALUE="[% r.NAME %]" [% r.selected %]>[% r.description %]
+          <OPTION VALUE="[% r.key %]" [% r.value.selected %]>[% r.value.description %]
         [% END %]
      </SELECT>
 
@@ -24,8 +23,7 @@
      [%|l%]Visibility :[%END%]
      <SELECT NAME="visibility">
         [% FOREACH r = visibility %]
-    [% SET tmp = r.key r = r.value r.NAME = tmp IF r.key.defined %]
-          <OPTION VALUE="[% r.NAME %]" [% r.selected %]>[% r.description %]
+          <OPTION VALUE="[% r.key %]" [% r.value.selected %]>[% r.value.description %]
         [% END %]
      </SELECT>
 

@@ -169,8 +169,7 @@ setTimeout('refresh_mom_and_die()',1000);
      <SELECT NAME="lang" onchange="this.form.submit();">
 
      [% FOREACH lang = languages %]
-    [% SET tmp = lang.key lang = lang.value lang.NAME = tmp IF lang.key.defined %]
-     <OPTION VALUE="[% lang.NAME %]" [% lang.selected %]>[% lang.complete %]
+     <OPTION VALUE="[% lang.key %]" [% lang.value.selected %]>[% lang.value.complete %]
      [% END %]
      </SELECT>
      </FORM>
@@ -246,8 +245,7 @@ setTimeout('refresh_mom_and_die()',1000);
      <SELECT NAME="lang" onchange="this.form.submit();">
 
      [% FOREACH lang = languages %]
-    [% SET tmp = lang.key lang = lang.value lang.NAME = tmp IF lang.key.defined %]
-     <OPTION VALUE="[% lang.NAME %]" [% lang.selected %]>[% lang.complete %]
+     <OPTION VALUE="[% lang.key %]" [% lang.value.selected %]>[% lang.value.complete %]
      [% END %]
      </SELECT>
      </FORM>

@@ -22,14 +22,13 @@
    <TD>
      <MENU>
   [% FOREACH template = list_list_tpl %]
-    [% SET tmp = template.key template = template.value template.NAME = tmp IF template.key.defined %]
-     <INPUT TYPE="radio" NAME="template" Value="[% template.NAME %]"
-     [% IF template.selected %]
+     <INPUT TYPE="radio" NAME="template" Value="[% template.key %]"
+     [% IF template.valuye.selected %]
        CHECKED
      [% END %]
-     > [% template.NAME %]<BR>
+     > [% template.key %]<BR>
      <BLOCKQUOTE>
-     [% PROCESS $template.comment IF template.comment %]
+     [% PROCESS $template.value.comment IF template.value.comment %]
      </BLOCKQUOTE>
      <BR>
   [% END %]
@@ -47,16 +46,14 @@
    <TD><SELECT NAME="topics">
 	<OPTION VALUE="">[%|l%]--Select a topic--[%END%]
 	[% FOREACH topic = list_of_topics %]
-    [% SET tmp = topic.key topic = topic.value topic.NAME = tmp IF topic.key.defined %]
-	  <OPTION VALUE="[% topic.NAME %]"
-	  [% IF topic.selected %]
+	  <OPTION VALUE="[% topic.key %]"
+	  [% IF topic.value.selected %]
 	    SELECTED
 	  [% END %]
-	  >[% topic.title %]
-	  [% IF topic.sub %]
-	  [% FOREACH subtopic = topic.sub %]
-    [% SET tmp = subtopic.key subtopic = subtopic.value subtopic.NAME = tmp IF subtopic.key.defined %]
-	     <OPTION VALUE="[% topic.NAME %]/[% subtopic.NAME %]">[% topic.title %] / [% subtopic.title %]
+	  >[% topic.value.title %]
+	  [% IF topic.value.sub %]
+	  [% FOREACH subtopic = topic.value.sub %]
+	     <OPTION VALUE="[% topic.key %]/[% subtopic.key %]">[% topic.value.title %] / [% subtopic.value.title %]
 	  [% END %]
 	  [% END %]
 	[% END %]

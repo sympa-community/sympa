@@ -15,8 +15,7 @@
         <TD>
 	  <SELECT NAME="scenario">
 	      [% FOREACH sc = scenario %]
-    [% SET tmp = sc.key sc = sc.value sc.NAME = tmp IF sc.key.defined %]
-	        <OPTION VALUE="[% sc.NAME %]" [% sc.selected %]>[% sc.NAME %]
+	        <OPTION VALUE="[% sc.key %]" [% sc.value.selected %]>[% sc.key %]
 	      [% END %]
 	  </SELECT>
         </TD>
@@ -27,8 +26,7 @@
         <TD>
 	  <SELECT NAME="listname">
 	      [% FOREACH l = listname %]
-    [% SET tmp = l.key l = l.value l.NAME = tmp IF l.key.defined %]
-	        <OPTION VALUE="[% l.NAME %]"[% l.selected %] >[% l.NAME %]
+	        <OPTION VALUE="[% l.key %]"[% l.value.selected %] >[% l.key %]
 	      [% END %]
 	  </SELECT>
         </TD>
@@ -62,8 +60,7 @@
         <TD>
           <SELECT NAME="auth_method">
               [% FOREACH a = auth_method %]
-    [% SET tmp = a.key a = a.value a.NAME = tmp IF a.key.defined %]
-	        <OPTION VALUE="[% a.NAME %]"[% a.selected %] >[% a.NAME %]
+	        <OPTION VALUE="[% a.key %]"[% a.value.selected %] >[% a.key %]
 	      [% END %] 
 	  </SELECT>
         </TD>

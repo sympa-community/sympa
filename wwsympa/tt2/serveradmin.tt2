@@ -21,8 +21,7 @@
     [% IF robots %]
       [%|l%]The following virtual robots are running on this server :[%END%]<UL>
          [% FOREACH vr = robots %]
-    [% SET tmp = vr.key vr = vr.value vr.NAME = tmp IF vr.key.defined %]
-	    <LI><A HREF="[% vr.wwsympa_url %]/serveradmin">[% vr.NAME %]</A>
+	    <LI><A HREF="[% vr.value.wwsympa_url %]/serveradmin">[% vr.key %]</A>
 	 [% END %]
       </UL>
     [% ELSE %]
@@ -113,8 +112,7 @@
 	    <FONT COLOR="[% dark_color %]"><B>[%|l%]Setting defaults list templates[%END%]</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [% FOREACH f = lists_default_files %]
-    [% SET tmp = f.key f = f.value f.NAME = tmp IF f.key.defined %]
-	        <OPTION VALUE='[% f.NAME %]' [% f.selected %]>[% f.complete %]
+	        <OPTION VALUE='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]
 	      [% END %]
 	    </SELECT>
 	    <INPUT TYPE="submit" NAME="action_editfile" VALUE="[%|l%]Edit[%END%]">
@@ -124,8 +122,7 @@
 	    <FONT COLOR="[% dark_color %]"><B>[%|l%]Setting site templates[%END%]</B></FONT><BR>
 	     <SELECT NAME="file">
 	      [% FOREACH f = server_files %]
-    [% SET tmp = f.key f = f.value f.NAME = tmp IF f.key.defined %]
-	        <OPTION VALUE='[% f.NAME %]' [% f.selected %]>[% f.complete %]
+	        <OPTION VALUE='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]
 	      [% END %]
 	    </SELECT>
 	    <INPUT TYPE="submit" NAME="action_editfile" VALUE="[%|l%]Edit[%END%]">

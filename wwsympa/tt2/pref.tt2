@@ -24,15 +24,13 @@
             <FONT COLOR="[% dark_color %]">[%|l%]Language[%END%] </FONT>
             <SELECT NAME="lang">
               [% FOREACH l = languages %]
-    [% SET tmp = l.key l = l.value l.NAME = tmp IF l.key.defined %]
-                <OPTION VALUE='[% l.NAME %]' [% l.selected %]>[% l.complete %]
+                <OPTION VALUE='[% l.key %]' [% l.value.selected %]>[% l.value.complete %]
               [% END %]
             </SELECT>
             <BR><BR>
             <FONT COLOR="[% dark_color %]">[%|l%]Connexion expiration period[%END%] </FONT>
             <SELECT NAME="cookie_delay">
               [% FOREACH period = cookie_periods %]
-    [% SET tmp = period.key period = period.value period.NAME = tmp IF period.key.defined %]
                 <OPTION VALUE="[% period.value %]" [% period.selected %]>[% period.desc %]
               [% END %]
             </SELECT>
@@ -100,9 +98,8 @@
       <TD>  
             <FORM ACTION="[% path_cgi %]" METHOD=POST> 
    	    [% FOREACH email = alt_emails %]
-    [% SET tmp = email.key email = email.value email.NAME = tmp IF email.key.defined %]
-	    <A HREF="[% path_cgi %]/change_identity/[% email.NAME %]/pref">[% email.NAME %]</A>
-	    <INPUT NAME="email" TYPE=hidden VALUE="[% email.NAME %]">
+	    <A HREF="[% path_cgi %]/change_identity/[% email.key %]/pref">[% email.key %]</A>
+	    <INPUT NAME="email" TYPE=hidden VALUE="[% email.key %]">
 	    <BR>
 	    [% END %]
 	    </FORM>

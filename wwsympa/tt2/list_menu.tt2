@@ -45,15 +45,13 @@
 	  <BR>
 	  [%|l%]Owners[%END%]
 	  [% FOREACH o = owner %]
-    [% SET tmp = o.key o = o.value o.NAME = tmp IF o.key.defined %]
-	    [% o.mailto %]
+	    [% o.value.mailto %]
 	  [% END %]
 	  <BR>
 	  [% IF is_moderated %]
 	    [%|l%]Moderators[%END%]
 	    [% FOREACH e = editor %]
-    [% SET tmp = e.key e = e.value e.NAME = tmp IF e.key.defined %]
-		[% e.mailto %]
+		[% e.value.mailto %]
 	    [% END %]
 	  [% END %]
           <BR>

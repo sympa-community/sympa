@@ -14,7 +14,6 @@
       [% IF subscriptions %]
 
       [% FOREACH sub = subscriptions %]
-    [% SET tmp = sub.key sub = sub.value sub.NAME = tmp IF sub.key.defined %]
 
 	[% IF dark == '1' %]
 	  <TR BGCOLOR="[% shaded_color %]">
@@ -22,18 +21,18 @@
           <TR>
 	[% END %]
 	    <TD>
-           <INPUT TYPE=checkbox name="pending_email" value="[% sub.NAME %],[% sub.gecos %]">
+           <INPUT TYPE=checkbox name="pending_email" value="[% sub.key %],[% sub.value.gecos %]">
 	    </TD>
 	  <TD COLSPAN=2 NOWRAP><FONT SIZE=-1>
-	        [% sub.NAME %]
+	        [% sub.key %]
 	  </FONT></TD>
 	  <TD>
              <FONT SIZE=-1>
-	        [% sub.gecos %]&nbsp;
+	        [% sub.value.gecos %]&nbsp;
 	     </FONT>
           </TD>
 	    <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
-	      [% sub.date %]
+	      [% sub.value.date %]
 	    </FONT></TD>
         </TR>
 

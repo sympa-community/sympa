@@ -16,8 +16,7 @@
 <DD><INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
 	     <SELECT NAME="file">
 	      [% FOREACH f = files %]
-    [% SET tmp = f.key f = f.value f.NAME = tmp IF f.key.defined %]
-	        <OPTION VALUE="[% f.NAME %]" [% f.selected %]>[% f.complete %]
+	        <OPTION VALUE="[% f.key %]" [% f.value.selected %]>[% f.value.complete %]
 	      [% END %]
 	    </SELECT>
 	    <INPUT TYPE="submit" NAME="action_editfile" VALUE="[%|l%]Edit[%END%]">

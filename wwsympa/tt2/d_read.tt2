@@ -99,7 +99,6 @@
   [% ELSE %]   
     [% IF sort_subdirs %]
       [% FOREACH s = sort_subdirs %]
-    [% SET tmp = s.key s = s.value s.NAME = tmp IF s.key.defined %] 
         <TR BGCOLOR="[% light_color %]">        
 	<TD NOWRAP> <A HREF="[% path_cgi %]/d_read/[% list %]/[% escaped_path %][% s.escaped_doc %]/"> 
 	<IMG ALIGN=bottom BORDER=0 SRC="[% s.icon %]" ALT="[% s.escaped_title %]"> [% s.doc %]</A></TD>
@@ -151,7 +150,6 @@
 
     [% IF sort_files %]
       [% FOREACH f = sort_files %]
-    [% SET tmp = f.key f = f.value f.NAME = tmp IF f.key.defined %]
 	[% IF f.moderate %]
          <TR BGCOLOR= "[% bg_color %]">
 	[% ELSE %]

@@ -5,8 +5,7 @@
 
 <P>[%|l%]Search field :[%END%] 
 [% FOREACH u = directories %]
-    [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
-<A HREF="[% path_cgi %]/arc/[% list %]/[% u %]"><FONT COLOR="[% dark_color %]">[% u %]</font></a> - 
+ <A HREF="[% path_cgi %]/arc/[% list %]/[% u %]"><FONT COLOR="[% dark_color %]">[% u %]</font></a> - 
 [% END %]
 </P>
 
@@ -45,8 +44,7 @@
 [% END %]
 
 [% FOREACH u = res %]
-    [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
-	<DT><A HREF=[% u.file %]>[% u.subj %]</A> -- <EM>[% u.date %]</EM><DD>[% u.from %]<PRE>[% u.body_string %]</PRE>
+	<DT><A HREF=[% u.value.file %]>[% u.value.subj %]</A> -- <EM>[% u.value.date %]</EM><DD>[% u..value.from %]<PRE>[% u.value.body_string %]</PRE>
 [% END %]
 
 <DL>
@@ -103,7 +101,6 @@
 [% END %]
 
 [% FOREACH u = directories %]
-    [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
 	<INPUT TYPE=hidden NAME=directories Value="[% u %]">
 [% END %]
 

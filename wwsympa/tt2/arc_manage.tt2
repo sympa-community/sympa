@@ -9,8 +9,6 @@
 <SELECT NAME="directories" MULTIPLE SIZE=4>    
 
 	[% FOREACH u = yyyymm %]
-    [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
-
 	<OPTION	VALUE="[% u %]">[% u %]
 
 	[% END %] 
