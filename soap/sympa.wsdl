@@ -68,7 +68,7 @@
 </message>
 
 <message name="whichResponse">
-	<part name="listInfo" type="tns:ArrayOfString"/>
+	<part name="return" type="tns:ArrayOfString"/>
 </message>
 
 <message name="amIRequest">
@@ -144,6 +144,13 @@
 	<part name="listInfo" type="xsd:string"/>	
 </message>
 
+<message name="complexListsRequest">
+</message>
+
+<message name="complexListsResponse">
+	<part name="return" type="tns:ArrayOfLists"/>
+</message>
+
 <message name="checkCookieRequest">
 </message>
 
@@ -198,6 +205,10 @@
 	<operation name="lists">
 		<input message="tns:listsRequest" />
 		<output message="tns:listsResponse" />
+	</operation>
+	<operation name="complexLists">
+		<input message="tns:complexListsRequest" />
+		<output message="tns:complexListsResponse" />
 	</operation>
 	<operation name="checkCookie">
 		<input message="tns:checkCookieRequest" />
@@ -342,6 +353,19 @@
 	</operation>
 	<operation name="lists">
 		<soap:operation soapAction="urn:sympasoap#lists"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="complexLists">
+		<soap:operation soapAction="urn:sympasoap#complexLists"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 

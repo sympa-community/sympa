@@ -65,7 +65,7 @@ $reponse = $soap->authenticateAndRun($ARGV[0],$md5,'which');
 #printf "%s\n", $cookies->as_string();
 
 print "\n\nWHICH....\n";
-$reponse = $soap->which();
+$reponse = $soap->complexWhich();
 &print_result($reponse);
 
 #print "\n\nINFO....\n";
@@ -87,6 +87,10 @@ $reponse = $soap->which();
 
 print "\n\nLIST....\n";
 $reponse = $soap->lists('Kulturelles');
+&print_result($reponse);
+
+print "\n\nComplex LIST....\n";
+$reponse = $soap->complexLists('Kulturelles');
 &print_result($reponse);
 
 print "\n\nAM I....\n";

@@ -35,6 +35,15 @@ use Log;
 use Auth;
 use CAS;
 
+## Define types of SOAP type listType
+my %types = ('listType' => {'listAddress' => 'string',
+			    'homepage' => 'string',
+			    'isSubscriber' => 'boolean',
+			    'isOwner' => 'boolean',
+			    'isEditor' => 'boolean',
+			    'subject' => 'string'}
+	     );
+
 sub checkCookie {
     my $class = shift;
 
@@ -52,11 +61,12 @@ sub checkCookie {
 }
 
 sub lists {
-
     my $self = shift; #$self is a service object
     my $topic = shift;
     my $subtopic = shift;
+    my $mode = shift;
     my $sender = $ENV{'USER_EMAIL'};
+    &Log::do_log('notice', 'lists(%s,%s,%s)', $topic, $subtopic,$sender);
 
     unless ($sender) {
 	die SOAP::Fault->faultcode('Client')
@@ -85,14 +95,16 @@ sub lists {
 	$result_item->{'subject'} =~ s/;/,/g;
 	$result_item->{'homepage'} = $Conf{'wwsympa_url'}.'/info/'.$listname; 
 	
-	my $listInfo = join (';', 
-			     'listAddress='.$result_item->{'listAddress'},
-			     'homepage='.$result_item->{'homepage'},
-			     'subject='.$result_item->{'subject'});
-
+	my $listInfo;
+	if ($mode eq 'complex') {
+	    $listInfo = struct_to_soap($result_item);
+	}else {
+	    $listInfo = struct_to_soap($result_item, 'as_string');
+	}
+	
 	## no topic ; List all lists
 	if (!$topic) {
-	    push @result, SOAP::Data->type('string')->value($listInfo);
+	    push @result, $listInfo;
 	    
 	}elsif ($list->{'admin'}{'topics'}) {
 	    foreach my $list_topic (@{$list->{'admin'}{'topics'}}) {
@@ -101,10 +113,10 @@ sub lists {
 		next if (($topic) && ($tree[0] ne $topic));
 		next if (($subtopic) && ($tree[1] ne $subtopic));
 		
-		push @result, SOAP::Data->type('string')->value($listInfo);
+		push @result, $listInfo;
 	    }
 	}elsif ($topic  eq 'topicsless') {
-	    	push @result, SOAP::Data->type('string')->value($listInfo);
+	    	push @result, $listInfo;
 	}
     }
     
@@ -700,46 +712,20 @@ sub subscribe {
      my $self = shift;
      my @result;
      my $sender = $ENV{'USER_EMAIL'};
-     &do_log('debug', 'complexWhich(%s)',$sender);
+     &do_log('notice', 'complexWhich(%s)',$sender);
 
-     unless ($sender) {
-	 die SOAP::Fault->faultcode('Client')
-	     ->faultstring('User not authentified')
-	     ->faultdetail('You should login first');
-     }
+     $self->which('complex');
+ }
 
-     foreach my $listname( &List::get_which($sender,'*', 'member') ){ 	    
-	 my $list = new List ($listname);
-	 my $robot = $list->{'admin'}{'host'};
-	 my $result_item = {};
-	 
-	 next unless (&List::request_action ('visibility', 'md5', $robot,
-					     {'listname' =>  $listname,
-					      'sender' =>$sender}) =~ /do_it/);
-	 
-	 $result_item->{'listAddress'} = SOAP::Data->name('listAddress')->type('string')->value($listname.'@'.$list->{'domain'});
-	 $result_item->{'subject'} = SOAP::Data->name('subject')->type('string')->value($list->{'admin'}{'subject'});
-	 $result_item->{'homepage'} = SOAP::Data->name('homepage')->type('string')->value($Conf{'wwsympa_url'}.'/info/'.$listname); 
-	 
-	 ## determine status of user 
-	 if (($list->am_i('owner',$sender) || $list->am_i('owner',$sender))) {
-	     $result_item->{'isOwner'} = SOAP::Data->name('isOwner')->type('boolean')->value(1);
-	 }
-	 if (($list->am_i('editor',$sender) || $list->am_i('editor',$sender))) {
-	     $result_item->{'isEditor'} = SOAP::Data->name('isEditor')->type('boolean')->value(1);
-	 }
-	 if ($list->is_user($sender)) {
-	     $result_item->{'isSubscriber'} = SOAP::Data->name('isSubscriber')->type('boolean')->value(1);
-	 }
-	 
-	 #push @result, SOAP::Data->type('listType')->value($result_item);
-	 push @result, SOAP::Data->value($result_item);
-	
-     }
+ sub complexLists {
+     my $self = shift;
+     my $topic = shift || '';
+     my $subtopic = shift || '';
+     my @result;
+     my $sender = $ENV{'USER_EMAIL'};
+     &do_log('notice', 'complexLists(%s)',$sender);
 
-#     return SOAP::Data->attr({'xmlns:sympaType' => $Conf::Conf{'soap_url'}.'/wsdl'})->name('return')->value(\@result);
-     return SOAP::Data->name('return')->value(\@result);
-
+     $self->lists($topic, $subtopic, 'complex');
  }
 
 ## Which list the user is subscribed to 
@@ -747,9 +733,10 @@ sub subscribe {
 ## Simplified return structure
 sub which {
     my $self = shift;
+    my $mode = shift;
     my @result;
     my $sender = $ENV{'USER_EMAIL'};
-    &do_log('debug', 'which(%s)',$sender);
+    &do_log('notice', 'which(%s,%s)',$sender,$mode);
 
     unless ($sender) {
 	die SOAP::Fault->faultcode('Client')
@@ -786,20 +773,50 @@ sub which {
 	    $result_item->{'isSubscriber'} = 1;
 	}
 	
-	my $listInfo = join (';', 
-			     'listAddress='.$result_item->{'listAddress'},
-			     'homepage='.$result_item->{'homepage'},
-			     'isSubscriber='.$result_item->{'isSubscriber'},
-			     'isOwner='.$result_item->{'isOwner'},
-			     'isEditor='.$result_item->{'isEditor'},
-			     'subject='.$result_item->{'subject'});
+	my $listInfo;
+	if ($mode eq 'complex') {
+	    $listInfo = struct_to_soap($result_item);
+	}else {
+	    $listInfo = struct_to_soap($result_item, 'as_string');
+	}
 
-	push @result, SOAP::Data->type('string')->value($listInfo);
+	push @result, $listInfo;
 	
     }
     
 #    return SOAP::Data->name('return')->type->('ArrayOfString')->value(\@result);
-    return SOAP::Data->name('listInfo')->value(\@result);
+    return SOAP::Data->name('return')->value(\@result);
+}
+
+## Return a structure in SOAP data format
+## either flat (string) or structured (complexType)
+sub struct_to_soap {
+    my ($data, $format) = @_;
+    my $soap_data;
+    
+    unless (ref($data) eq 'HASH') {
+	return undef;
+    }
+
+    if ($format eq 'as_string') {
+	my @all;
+	my $formated_data;
+	foreach my $k (keys %$data) {
+	    push @all, $k.'='.$data->{$k};
+	}
+
+	$formated_data = join ';', @all;
+	$soap_data = SOAP::Data->type('string')->value($formated_data);
+    }else {	
+	my $formated_data;
+	foreach my $k (keys %$data) {
+	    $formated_data->{$k} = SOAP::Data->name($k)->type($types{'listType'}{$k})->value($data->{$k});
+	}
+
+	$soap_data = SOAP::Data->value($formated_data);
+    }
+
+    return $soap_data;
 }
 
 1;
