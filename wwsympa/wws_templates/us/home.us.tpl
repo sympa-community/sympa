@@ -64,6 +64,10 @@ archives, list management and so on.
          <INPUT SIZE=25 NAME=filter VALUE=[filter]>
          <INPUT TYPE="hidden" NAME="action" VALUE="search_list">
          <INPUT TYPE="submit" NAME="action_search_list" VALUE="Search lists">
+	  <BR>
+	 <INPUT TYPE="radio" NAME="extended" VALUE="0" checked>Local
+         <INPUT TYPE="radio" NAME="extended" VALUE="1">Extended search
+	 
         </FORM>
    </TD>
         

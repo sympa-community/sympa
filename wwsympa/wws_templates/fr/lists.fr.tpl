@@ -6,12 +6,6 @@
   <B>[email]</B> est abonné aux listes suivantes
 [ENDIF]
 
-[IF ! which]
-&nbsp;&nbsp;<FONT COLOR="[dark_color]">Pas d'abonnements avec l'adresse <B>[user->email]</B> !</FONT>
-<BR>
-
-[ELSE]
-
 <TABLE BORDER="0" WIDTH="100%">
    [FOREACH l IN which]
      <TR>
@@ -29,19 +23,33 @@
      [ELSE]
        <TD>&nbsp;</TD>
      [ENDIF]
-     <TD WIDTH="100%" ROWSPAN="2">
+
+
+    <TD WIDTH="100%" ROWSPAN="2">
+     [IF l->export=yes] 
+       <A HREF="[l->urlinfo]" >[l->list_address]</A>
+       <BR>
+       [l->subject]         
+     [ELSE]  
      <A HREF="[path_cgi]/info/[l->NAME]" ><B>[l->NAME]@[l->host]</B></A>
      <BR>
      [l->subject]
+     [ENDIF]
      </TD></TR> 
      <TR><TD>&nbsp;</TD></TR>
+    
      [END] 
 </TABLE>
-[ENDIF]
 <BR>
 
+[IF action = which]
 
-[IF action=which]
+[IF ! which]
+&nbsp;&nbsp;<FONT COLOR="[dark_color]">Pas d'abonnements avec l'adresse
+<B>[user->email]</B> !</FONT>
+<BR>
+[ENDIF]
+
 [IF unique <> 1]
 
 <TABLE>
@@ -52,9 +60,9 @@
  <TR> 
     <FORM METHOD=POST ACTION="[path_cgi]">
      
-[FOREACH email IN alt_emails]
-   <INPUT NAME="email"  TYPE=hidden VALUE="[email->NAME]">
-   &nbsp;&nbsp;<A HREF="[path_cgi]/change_identity/[email->NAME]/which">[email->NAME]</A> 
+    [FOREACH email IN alt_emails]
+    <INPUT NAME="email"  TYPE=hidden VALUE="[email->NAME]">
+    &nbsp;&nbsp;<A HREF="[path_cgi]/change_identity/[email->NAME]/which">[email->NAME]</A> 
   <BR>
     [END]  
     </FORM>
@@ -77,8 +85,7 @@
 </TD>
 </TR>
 <BR>
-
 </TABLE>
-[ENDIF]
-[ENDIF]
 
+[ENDIF]
+[ENDIF]

@@ -401,7 +401,17 @@ while ($query = &new_loop()) {
 	$param->{'auth_method'} = 'md5';
     }
 
+   
+    ##Cookie extern : sympa_alt_email
+    %{$param->{'alt_emails'}} 
+    my %emails = &cookielib::check_cookie_extern($ENV{'HTTP_COOKIE'},$Conf{'cookie'});
+    my $user_email = lc($param->{'user'}{'email'});
+    
+    %{$param->{'alt_emails'}} = %emails if($emails{$user_email});
+   
     if ($param->{'user'}{'email'}) {
+	$param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}};
+
 	if (&List::is_user_db($param->{'user'}{'email'})) {
 	    $param->{'user'} = &List::get_user_db($param->{'user'}{'email'});
 	}
@@ -414,13 +424,9 @@ while ($query = &new_loop()) {
 #	$param->{'user'}{'cookie_delay'} ||= $wwsconf->{'cookie_expire'};
 #	$param->{'user'}{'init_passwd'} = 1 if ($param->{'user'}{'password'} =~ /^INIT/);
 
-        ##Cookie extern : sympa_alt_email
-        $param->{'alt_emails'} = &cookielib::check_cookie_extern($ENV{'HTTP_COOKIE'},$Conf{'cookie'}, $param->{'user'}{'email'});
-	$param->{'alt_emails'}{$param->{'user'}{'email'}} ||= 'classic';
-        $param->{'ldap_auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}};
+       
+    }else {
 	
-    } else {
-
 	## Get lang from cookie
 	$param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'});
     }
@@ -508,9 +514,8 @@ while ($query = &new_loop()) {
 	    
 	    ##Cookie extern : sympa_alt_email
 	    my $number = 0;
-	  
 	    foreach my $element (keys %{$param->{'alt_emails'}}){
-		 $number ++;
+		 $number ++ if ($element);
 	    }  
 	    $param->{'unique'} = 1 if($number == 1);
 
@@ -518,7 +523,7 @@ while ($query = &new_loop()) {
 	         &wwslog('notice', 'Could not set HTTP cookie for external_auth');
 	         exit -1;
 	    }
-
+	  
 	}elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/){
 	    &cookielib::set_cookie('unknown', $Conf{'cookie'}, $wwsconf->{'cookie_domain'}, 'now');
 	}
@@ -1144,13 +1149,24 @@ sub do_login {
 	return 'home';
     } 
 
+    ##lyly
+    my $email = lc($param->{'user'}{'email'});
+    unless($param->{'alt_emails'}{$email}){
+	unless(&cookielib::set_cookie_extern($Conf{'cookie'},$wwsconf->{'cookie_domain'},%{$param->{'alt_emails'}})){
+	    &wwslog('notice', 'Could not set HTTP cookie for external_auth');
+	    exit -1;
+	}
+    }
+    
+    ##
+
     ## Current authentication mode
-    $param->{'ldap_auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}};
+    $param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}};
 
     $param->{'lang'} = $user->{'lang'} || $list->{'admin'}{'lang'} || $Conf{'lang'};
     $param->{'cookie_lang'} = undef;    
 
-    if (($param->{'ldap_auth'} == 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
+    if (($param->{'auth'} == 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
 	&message('you_should_choose_a_password');
     }
     
@@ -1192,8 +1208,9 @@ sub check_auth{
 	## This is an UID
 	
 	if ($canonic = &ldap_authentication($auth,$pwd,'uid_filter')){
-	    $param->{'ldap_auth'} = 'ldap';
-	    
+	    $param->{'auth'} = 'ldap';   
+	    $param->{'alt_emails'}{$canonic} = 'ldap' if($canonic);
+
 	    unless($user = &List::get_user_db($canonic)){
 		$user = {'email' => $canonic};
 	    }
@@ -1224,15 +1241,17 @@ sub authentication{
     }
     
     if($pwd eq $user->{'password'}){
-	$param->{'ldap_auth'} = 'classic';
+	$param->{'auth'} = 'classic';
+	$param->{'alt_emails'}{$email} = 'classic' if($email);
 	return $user;
 	
     }elsif($canonic = &ldap_authentication($email,$pwd,'email_filter')){
 	
-	$param->{'ldap_auth'} = 'ldap';
+	$param->{'auth'} = 'ldap';
 	unless($user = &List::get_user_db($canonic)){
 	    $user = {'email' => $canonic};
 	}
+	$param->{'alt_emails'}{$canonic} = 'ldap';
 	return $user;
     }else{
 	
@@ -1273,53 +1292,34 @@ sub ldap_authentication {
 	return undef;
     }
 
-    unless (require Net::LDAP::Constant) {
+    unless (require Net::LDAP::Message) {
 	do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
 	return undef;
-    }else{
-        use Net::LDAP qw(:all); 
     }
     
     foreach my $ldap (@{$Conf{'ldap_array'}}){
 	foreach $host (split(/,/,$ldap->{'host'})){
 	
 	    my @alternative_conf = split(/,/,$ldap->{'alternative_email_attribute'});
-
-	    ## !!
-	    my $suffix = $ldap->{'suffix'};
 	    my $attrs = $ldap->{'email_attribute'};
-	    my $scope = $ldap->{'scope'};
-	    my $timelimit = $ldap->{'timeout'};
-
 	    my $filter = $ldap->{'get_dn_by_uid_filter'} if($whichfilter eq 'uid_filter');
 	    $filter = $ldap->{'get_dn_by_email_filter'} if($whichfilter eq 'email_filter');
 	    $filter =~ s/\[sender\]/$auth/ig;
 
 	    ##anonymous bind in order to have the user's DN
-	    $ldap_anonymous = Net::LDAP->new($host,timeout => "$timelimit");
-
-	    do_log ('err','LDAP server %s undefined error',$host) unless ($ldap_anonymous );
-	    do_log ('err','LDAP server %s UNAVAILABLE',$host) if($ldap_anonymous == LDAP_UNAVAILABLE);    
-            do_log ('err','LDAP server %s BUSY',$host) if($ldap_anonymous == LDAP_BUSY);
-            do_log ('err','LDAP server %s SERVER_DOWN',$host) if($ldap_anonymous == LDAP_SERVER_DOWN);
-            do_log ('err','LDAP server %s CONNECT ERROR',$host) if($ldap_anonymous == LDAP_CONNECT_ERROR);
-            do_log ('err','LDAP server %s TIMEOUT',$host) if($ldap_anonymous == LDAP_TIMEOUT);
-            do_log ('err','LDAP server %s DOWN',$host) if($ldap_anonymous == LDAP_SERVER_DOWN);
-            do_log ('err','LDAP server %s internal loop detected',$host) if($ldap_anonymous == LDAP_LOOP_DETECT);
-            do_log ('err','LDAP server %s unknown error',$host) if($ldap_anonymous == LDAP_OTHER);
-            do_log ('err','net::ldap local error while binding to host %s',$host) if($ldap_anonymous == LDAP_LOCAL_ERROR);
-
+	    $ldap_anonymous = Net::LDAP->new($host,timeout => $ldap->{'timeout'});
+	  
 	    unless ($ldap_anonymous ){
 		do_log ('err','Unable to connect to the LDAP server %s',$host);
+		do_log ('err','Ldap Error : %s, Ldap server error : %s',$ldap_anonymous->error,$ldap_anonymous->server_error);
 		next;
 	    }
 	    
 	    $ldap_anonymous->bind;
-	    ## !!
-	    $mesg = $ldap_anonymous->search(base => "$suffix",
+	    $mesg = $ldap_anonymous->search(base => $ldap->{'suffix'},
 					    filter => "$filter",
-					    scope => "$scope",
-					    timeout => "$timelimit");
+					    scope => $ldap->{'scope'} ,
+					    timeout => $ldap->{'timeout'});
 	    
 	    if ($mesg->count() == 0) {
 		do_log('notice','No entry in the Ldap Directory Tree of %s for %s',$host,$auth);
@@ -1336,20 +1336,23 @@ sub ldap_authentication {
 
 	    unless ($ldap_passwd) {
 		do_log('err','Unable to (re) connect to the LDAP server %s', $host);
+		do_log ('err','Ldap Error : %s, Ldap server error : %s',$ldap_passwd->error,$ldap_passwd->server_error);
 		next;
 	    }
 
-	    $cnx = $ldap_passwd->bind($DN[0], password => $pwd);
-	    unless($cnx->code() == 0){
-		do_log('notice', 'Incorrect password for user %s ; host: %s',$auth, $host);
-		$ldap_passwd->unbind;
-		last;
-	    }
+	    #$cnx = $ldap_passwd->bind($DN[0], password => $pwd);
+	    #unless($cnx->code() == 0){
+		#do_log('notice', 'Incorrect password for user %s ; host: %s',$auth, $host);
+	        #do_log ('err','Ldap Error : %s, Ldap server error : %s',$cnx->error,$cnx->server_error);
+		#$ldap_passwd->unbind;
+		#last;
+	    #}
 	    $ldap_passwd->bind($DN[0]);
-	    $mesg= $ldap_passwd->search ( base => "$suffix",
+	    $mesg= $ldap_passwd->search ( base => $ldap->{'suffix'},
 					  filter => "$filter",
-					  scope => "$scope",
-					  timeout =>"$timelimit");
+					  scope => $ldap->{'scope'},
+					  timeout => $ldap->{'timeout'}
+					  );
 
 	    if ($mesg->count() == 0) {
 		do_log('notice',"No entry in the Ldap Directory Tree of %s,$host");
@@ -1358,33 +1361,37 @@ sub ldap_authentication {
 	    }
 
 	    ## To get the value of the canonic email and the alternative email
-	    my ($canonic_email, $alternative);
+	    my (@canonic_email, @alternative);
 
             ## Keep previous alt emails not from LDAP source
             my $previous = {};
 	    foreach my $alt (keys %{$param->{'alt_emails'}}) {
-	         $previous->{$alt} = $param->{'alt_emails'}{$alt}
-		   if ($param->{'alt_emails'}{$alt} ne 'ldap');
+		$previous->{$alt} = $param->{'alt_emails'}{$alt} if ($param->{'alt_emails'}{$alt} ne 'ldap');
 	    }
             $param->{'alt_emails'} = {};
 
-	    foreach my $entry ($mesg->all_entries){
-		$canonic_email = lc($entry->get_value($attrs));
-		$param->{'alt_emails'}{$canonic_email} = 'ldap' if ($canonic_email) ;
-		
-		foreach my $attribute_value (@alternative_conf){
-		    $alternative = lc($entry->get_value($attribute_value));
-		    $param->{'alt_emails'}{$alternative} = 'ldap' if($alternative) ;
-		}
+	    my $entry = $mesg->entry(0);
+	    @canonic_email = $entry->get_value($attrs,alloptions);
+	    foreach my $email (@canonic_email){
+		my $e = lc($email);
+		$param->{'alt_emails'}{$e} = 'ldap' if ($e);
 	    }
 	    
+	    foreach my $attribute_value (@alternative_conf){
+		@alternative = $entry->get_value($attribute_value,alloptions);
+		foreach my $alter (@alternative){
+		    my $a = lc($alter); 
+		    $param->{'alt_emails'}{$a} = 'ldap' if($a) ;
+		}
+	    }
+	   
 	    ## Restore previous emails
 	    foreach my $alt (keys %{$previous}) {
 	        $param->{'alt_emails'}{$alt} = $previous->{$alt};
 	    }
 	    
 	    $ldap_passwd->unbind or do_log('notice', "unable to unbind");
-	    return lc($canonic_email);
+	    return lc($canonic_email[0]);
 	}
 	
 	next unless ($ldap_anonymous);
@@ -1464,56 +1471,45 @@ sub do_record_email{
        &error_message('incorrect_passwd');
        &wwslog('info','do_record_email: incorrect password for user %s', $in{'new_alternative_email'});
        return 'pref';
-   }
-   
-
-   
+   }  
     
     ##To add this alternate email in the cookie sympa_alt_email   
-    if($param->{'alt_emails'}{$param->{'user'}{'email'}}){
-	$param->{'alt_emails'}{$in{'new_alternative_email'}} = 'classic';
-    }
+    $param->{'alt_emails'}{$in{'new_alternative_email'}} = 'classic';
     return 'pref';
-
+    
 }
 
 sub is_ldap_user {
-     
+
+    unless (&tools::get_filename('etc', 'auth.conf', $robot)) {
+	return undef;
+    }
     unless (require Net::LDAP) {
         do_log ('err',"Unable to use LDAP library, Net::LDAP required,install perl-ldap (CPAN) first");
         return undef;
-	}
-	    
-
+    }
+    
     my $auth = shift; ## User email or UID
-
     my ($ldap_anonymous,$host,$filter);
-   
+    
     foreach my $ldap (@{$Conf{'ldap_array'}}){
 	foreach $host (split(/,/,$ldap->{'host'})){
 	    unless($host){
 		last;
 	    }
 	    my @alternative_conf = split(/,/,$ldap->{'alternative_email_attribute'});
-
-	    my $suffix = $ldap->{'suffix'};
 	    my $attrs = $ldap->{'email_attribute'};
-	    my $scope = $ldap->{'scope'};
-	    my $timelimit = $ldap->{'timeout'};
-	   
+	    
 	    if (&wwslib::valid_email($auth)){
 		$filter = $ldap->{'get_dn_by_email_filter'};
 	    }else{
 		$filter = $ldap->{'get_dn_by_uid_filter'};
 	    }
-
-
 	    $filter =~ s/\[sender\]/$auth/ig;
 
 	    ## !! une fonction get_dn_by_email/uid
 
-	    ##anonymous bind in order to have the user's DN
-	    $ldap_anonymous = Net::LDAP->new($host,timeout => "$timelimit");
+	    $ldap_anonymous = Net::LDAP->new($host,timeout => $ldap->{'timeout'} );
 	    
 	    unless ($ldap_anonymous ){
 		do_log ('err','Unable to connect to the LDAP server %s',$host);
@@ -1521,11 +1517,11 @@ sub is_ldap_user {
 	    }
 	    
 	    $ldap_anonymous->bind;
-	    my $mesg = $ldap_anonymous->search(base => "$suffix",
-					    filter => "$filter",
-					    scope => "$scope",
-					    timeout => "$timelimit");
-   
+	    my $mesg = $ldap_anonymous->search(base => $ldap->{'suffix'} ,
+					       filter => "$filter",
+					       scope => $ldap->{'scope'}, 
+					       timeout => $ldap->{'timeout'} );
+	    
 	    unless($mesg->count() != 0) {
 		do_log('notice','No entry in the Ldap Directory Tree of %s for %s',$host,$auth);
 		$ldap_anonymous->unbind;
@@ -2145,7 +2141,7 @@ sub do_pref {
 sub do_choosepasswd {
     &wwslog('debug', 'do_choosepasswd');
 
-    if($param->{'ldap_auth'}=='ldap'){
+    if($param->{'auth'}=='ldap'){
     	&error_message('may_not');
     	&wwslog('notice', "do_choosepasswd : user not authorized\n");
      }
@@ -4240,7 +4236,7 @@ sub do_home {
     
     $param->{'topics'}[int($total / 2)]{'next'} = 1;
 
-    if (($param->{'user'}{'email'} && ! $param->{'user'}{'password'} && ($param->{'ldap_auth'} eq 'classic') ) || 
+    if (($param->{'user'}{'email'} && ! $param->{'user'}{'password'} && ($param->{'auth'} eq 'classic') ) || 
 	($param->{'user'}{'password'} =~ /^init/)) {
 	&message('you_should_choose_a_password');
     }
@@ -4660,11 +4656,30 @@ sub do_search_list {
 	$record++;
 	$param->{'which'}{$list->{'name'}} = {'host' => $list->{'admin'}{'host'},
 					      'subject' => $list->{'admin'}{'subject'},
-					      'admin' => $is_admin};
+					      'admin' => $is_admin,
+					      'export' => 'no'};
     }
-
     $param->{'occurrence'} = $record;
 
+    ##Lists stored in ldap directories
+    my %lists;
+    if($in{'extended'}){
+        foreach my $directory (keys %{$Conf{'ldap_export'}}){
+	    next unless(%lists = &Ldap::get_exported_lists($param->{'regexp'},$directory));
+		
+	    foreach my $list_name (keys %lists) {
+		$param->{'occurrence'}++ unless($param->{'which'}{$list_name});
+		next if($param->{'which'}{$list_name});
+		$param->{'which'}{$list_name} = {'host' => "$lists{$list_name}{'host'}",
+						 'subject' => "$lists{$list_name}{'subject'}",
+						 'urlinfo' => "$lists{$list_name}{'urlinfo'}",
+						 'list_address' => "$lists{$list_name}{'list_address'}",
+						 'export' => 'yes',
+					     };
+	    } 
+	}
+    }
+    
     return 1;
 }
 
@@ -4870,13 +4885,28 @@ sub do_edit_list {
 	    }	    
 	}
 
+        #If no directory, delete the entry
+	if($pname eq 'export'){
+	    foreach my $old_directory (@{$list->{'admin'}{'export'}}){
+		my $var = 0;
+		foreach my $new_directory (@{$new_admin->{'export'}}){
+		    next unless($new_directory eq $old_directory);
+		    $var = 1;
+		}
+		
+		if(!$var || $new_admin->{'status'} ne 'open'){
+		    &Ldap::delete_list($old_directory,$list);
+		}
+	    }
+	}
+	
 	$list->{'admin'}{$pname} = $new_admin->{$pname};
 	if (defined $new_admin->{$pname}) {
 	    delete $list->{'admin'}{'defaults'}{$pname};
 	}else {
 	    $list->{'admin'}{'defaults'}{$pname} = 1;
 	}
-
+	
 	if (($pname eq 'user_data_source') &&
 	    ($#users >= 0)) {
 
@@ -4899,6 +4929,20 @@ sub do_edit_list {
 
     ## Reload config
     $list = new List $list->{'name'};
+
+    ##Exportation to an Ldap directory
+    if(($list->{'admin'}{'status'} eq 'open')){
+	if($list->{'admin'}{'export'}){
+	    foreach my $directory (@{$list->{'admin'}{'export'}}){
+		if($directory){
+		    unless(&Ldap::export_list($directory,$list)){
+			&error_message('exportation_failed');
+			&wwslog('info','do_edit_list: The exportation failed');
+		    }
+		}
+	    }
+	}
+    }
 
     ## Tag changed parameters
     foreach my $pname (keys %changed) {
@@ -8162,6 +8206,7 @@ sub do_change_identity {
     }
     
     $param->{'user'}{'email'} = $in{'email'};
-    
+    $param->{'auth'} = $param->{'alt_emails'}{$in{'email'}};
+
     return $in{'previous_action'};
 }

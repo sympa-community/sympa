@@ -178,6 +178,7 @@ use MIME::Parser;
 my ($dbh, $sth, @sth_stack, $use_db);
 
 my %list_cache;
+my %persistent_cache;
 
 my %date_format = (
 		   'read' => {
@@ -747,7 +748,14 @@ my %alias = ('reply-to' => 'reply_to',
 				      'default' => {'conf' => 'welcome_return_path'},
 				      'title_id' => 85,
 				      'group' => 'bounces'
-				  }
+				  },
+	    
+	    'export' => {'format' => '\w+',
+			 'split_char' => ',',
+			 'occurrence' => '0-n',
+			 'default' =>'',
+		     }
+	    
 	    );
 
 ## This is the generic hash which keeps all lists in memory.
@@ -2292,7 +2300,7 @@ sub delete_user {
 	    my $statement;
 	    
 	    $list_cache{'is_user'}{$name}{$who} = undef;    
-
+	    
 	    ## Check database connection
 	    unless ($dbh and $dbh->ping) {
 		return undef unless &db_connect();
@@ -2810,6 +2818,24 @@ sub get_next_bouncing_user {
     }
 
     return $user;
+}
+
+sub get_info {
+    my $self = shift;
+
+    my $info;
+    
+    unless (open INFO, "$self->{'dir'}/info") {
+	&do_log('err', 'Could not open %s : %s', $self->{'dir'}.'/info', $!);
+	return undef;
+    }
+    
+    while (<INFO>) {
+	$info .= $_;
+    }
+    close INFO;
+
+    return $info;
 }
 
 ## Total bouncing subscribers
@@ -3626,7 +3652,7 @@ sub verify {
 	$context->{'host'} = $list->{'admin'}{'host'};
     }
 
-    unless ($condition =~ /(\!)?\s*(true|is_listmaster|is_editor|is_owner|is_subscriber|match|equal|message|older|newer|all)\s*\(\s*(.*)\s*\)\s*/i) {
+    unless ($condition =~ /(\!)?\s*(true|is_listmaster|is_editor|is_owner|is_subscriber|match|equal|message|older|newer|all|search)\s*\(\s*(.*)\s*\)\s*/i) {
 	&do_log('err', "error rule syntaxe: unknown condition $condition");
 	return undef;
     }
@@ -3649,10 +3675,10 @@ sub verify {
 				"[^,)]*"
 				|
 				\/([^\/\\]+|\\\/|\\)+[^\\]+\/
+				|(\w+)\.ldap
 				)\s*,?//x) {
 	my $value=$1;
 
-	## Variable
 	## Config param
 	if ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
 	    if ($Conf{$1}) {
@@ -3748,7 +3774,7 @@ sub verify {
 	}
 	# condition that require 2 args
 #
-    }elsif ($condition_key =~ /^is_owner|is_editor|is_subscriber|match|equal|message|newer|older$/i) {
+    }elsif ($condition_key =~ /^is_owner|is_editor|is_subscriber|match|equal|message|newer|older|search$/i) {
 	unless ($#args == 1) {
 	    do_log ('err',"error rule syntaxe : incorrect argument number for condition $condition_key") ; 
 	    return undef ;
@@ -3857,6 +3883,16 @@ sub verify {
 	return -1 * $negation ;
 
     }
+    
+    ##search
+    if ($condition_key eq 'search') {
+	my $val_search = &search($args[0],$args[1],$context->{'robot_domain'});
+	if($val_search == 1) { 
+	    return $negation;
+	}else {
+	    return -1 * $negation;
+    	}
+    }
 
     ## equal
     if ($condition_key eq 'equal') {
@@ -3877,7 +3913,71 @@ sub verify {
     return undef;
 }
 
+## Verify if a given user is part of an LDAP search filter
+sub search{
+    my $ldap_file = shift;
+    my $sender = shift;
+    my $robot = shift;
 
+    &do_log('debug2', 'List::search(%s,%s,%s)', $ldap_file, $sender, $robot);
+
+    my $file;
+
+    unless ($file = &tools::get_filename('etc',"search_filters/$ldap_file", $robot)) {
+	&do_log('err', 'Could not find LDAP filter %s', $ldap_file);
+	return undef;
+    }   
+
+    my $timeout = 3600;
+
+    my $var;
+    my $time = time;
+    my $value;
+
+    my %ldap_conf;
+
+    return undef unless (%ldap_conf = &Ldap::load($file));
+
+ 
+    my $filter = $ldap_conf{'filter'};	
+    $filter =~ s/\[sender\]/$sender/;
+    
+    if (defined ($persistent_cache{'named_filter'}{$ldap_file}{$filter}) &&
+	(time <= $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'update'} + $timeout)){ ## Cache has 1hour lifetime
+        &do_log('notice', 'Using previous LDAP named filter cache');
+        return $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'};
+    }
+
+    unless (require Net::LDAP) {
+	do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
+	return undef;
+    }
+    
+    my $ldap = Net::LDAP->new($ldap_conf{'host'},port => $ldap_conf{'port'} );
+    
+    unless ($ldap) {	
+    	do_log('notice','Unable to connect to the LDAP server %s',$ldap_conf{'host'});
+	return undef;
+    }
+    
+    $ldap->bind();
+    my $mesg = $ldap->search(base => $ldap_conf{'suffix'} ,
+			     filter => "$filter",
+			     scope => $ldap_conf{'scope'});
+    	
+
+    if ($mesg->count() == 0){
+   	$persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'} = 0;
+	
+    }else {
+   	$persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'} = 1;
+    }
+      	
+    $ldap->unbind or do_log('notice','List::search_ldap.Unbind impossible');
+    $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'update'} = time;
+
+    return $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'};
+}
 
 ## May the indicated user edit the indicated list parameter or not ?
 sub may_edit {
@@ -4698,6 +4798,8 @@ sub _include_users_ldap {
 sub _include_users_sql {
     my ($users, $param, $default_user_options) = @_;
 
+    &do_log('debug2','List::_include_users_sql()');
+
     unless ( require DBI ){
 	do_log('notice',"Intall module DBI (CPAN) before using include_sql_query");
 	return undef ;
@@ -4792,6 +4894,11 @@ sub _load_users_include {
     my $btree = new DB_File::BTREEINFO;
     return undef unless ($btree);
     $btree->{'compare'} = '_compare_addresses';
+
+    if (!$use_cache && (-f $db_file)) {
+        rename $db_file, $db_file.'old';
+    }
+
     my $ref = tie %users, 'DB_File', $db_file, O_CREAT|O_RDWR, 0600, $btree;
     return undef unless ($ref);
 
@@ -4799,32 +4906,34 @@ sub _load_users_include {
 	## Lock DB_File
 	my $fd = $ref->fd;
 	unless (open DB_FH, "+<&$fd") {
-	    &do_log('err', 'Cannot open DB_File: %s', $!);
+	    &do_log('err', 'Cannot open %s: %s', $db_file, $!);
 	    return undef;
 	}
 	unless (flock (DB_FH, LOCK_SH | LOCK_NB)) {
-	    &do_log('notice','Waiting for reading lock on DB_File');
+	    &do_log('notice','Waiting for reading lock on %s', $db_file);
 	    unless (flock (DB_FH, LOCK_SH)) {
-		&do_log('err', 'Failed locking DB_File: %s', $!);
+		&do_log('err', 'Failed locking %s: %s', $db_file, $!);
 		return undef;
 	    }
 	}
+	&do_log('debug', 'Got lock for reading on %s', $db_file);
     }
 
     unless ($use_cache) {
 	## Lock DB_File
 	my $fd = $ref->fd;
 	unless (open DB_FH, "+<&$fd") {
-	    &do_log('err', 'Cannot open DB_File: %s', $!);
+	    &do_log('err', 'Cannot open %s: %s', $db_file, $!);
 	    return undef;
 	}
 	unless (flock (DB_FH, LOCK_EX | LOCK_NB)) {
-	    &do_log('notice','Waiting for writing lock on DB_File');
+	    &do_log('notice','Waiting for writing lock on %s', $db_file);
 	    unless (flock (DB_FH, LOCK_EX)) {
-		&do_log('err', 'Failed locking DB_File: %s', $!);
+		&do_log('err', 'Failed locking %s: %s', $db_file, $!);
 		return undef;
 	    }
 	}
+	&do_log('debug', 'Got lock for writing on %s', $db_file);
 
     foreach my $type ('include_list','include_file','include_ldap_query','include_sql_query') {
 	foreach my $incl (@{$admin->{$type}}) {
@@ -4856,6 +4965,7 @@ sub _load_users_include {
 
     ## Unlock DB_file
     flock(DB_FH,LOCK_UN);
+    &do_log('debug', 'Release lock on %s', $db_file);
     close DB_FH;
 
     my $l = {	 'ref'    => $ref,

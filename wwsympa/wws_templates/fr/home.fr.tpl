@@ -59,6 +59,11 @@ les listes dont vous êtes propriétaire , etc.
          <INPUT SIZE=25 NAME=filter VALUE=[filter]>
          <INPUT TYPE="hidden" NAME="action" VALUE="search_list">
          <INPUT TYPE="submit" NAME="action_search_list" VALUE="Chercher une liste">
+
+        <BR>
+        <INPUT TYPE="radio" NAME="extended" VALUE="0" checked>Localement
+        <INPUT TYPE="radio" NAME="extended" VALUE="1">Recherche etendue
+
         </FORM>
    </TD>
         

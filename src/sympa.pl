@@ -20,6 +20,7 @@ use Version;
 use smtp;
 use MIME::QuotedPrint;
 use List;
+use Ldap;
 
 require 'tools.pl';
 require 'msg.pl';

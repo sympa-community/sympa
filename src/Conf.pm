@@ -26,6 +26,8 @@ my @valid_options = qw(
                        openssl trusted_ca_options key_passwd ssl_cert_dir remove_headers
 		       antivirus_path antivirus_args anonymous_header_fields
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
+		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
+		       ldap_export_dnmanager ldap_export_connection_timeout
 );
 my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
@@ -108,7 +110,12 @@ my %Default_Conf =
      'selected_color' => '#3366cc',
      'shaded_color' => '#eeeeee',
      'chk_cert_expiration_task' => '',
-     'crl_update_task' => ''
+     'crl_update_task' => '',
+     'ldap_export_name' => '',
+     'ldap_export_host' => '',
+     'ldap_export_suffix' => '',
+     'ldap_export_password' => '',
+     'ldap_export_dnmanager' => ''
    );
    
 %Conf = ();
@@ -203,6 +210,17 @@ sub load {
 
     my @array = &_load_auth();
     $Conf{'ldap_array'} = [@array];
+    
+    
+    ##Export
+    $Conf{'ldap_export'} = {$Conf{'ldap_export_name'} => { 'host' => $Conf{'ldap_export_host'},
+							   'suffix' => $Conf{'ldap_export_suffix'},
+							   'password' => $Conf{'ldap_export_password'},
+							   'DnManager' => $Conf{'ldap_export_dnmanager'},
+                                                           'connection_timeout' => $Conf{'ldap_export_connection_timeout'}
+						       }
+			};
+   
     
     my $p = 1;
     foreach (split(/,/, $Conf{'sort'})) {

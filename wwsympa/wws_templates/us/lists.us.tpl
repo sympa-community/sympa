@@ -6,12 +6,6 @@
   <B>[email]</B> is subscribed to the following mailing lists
 [ENDIF]
 
-[IF ! which]
-&nbsp;&nbsp;<FONT COLOR="[dark_color]">No subscriptions with address <B>[user->email]</B>!</FONT>
-<BR>
-
-[ELSE]
-
 <TABLE BORDER="0" WIDTH="100%">
    [FOREACH l IN which]
      <TR>
@@ -37,10 +31,15 @@
      <TR><TD>&nbsp;</TD></TR>
      [END] 
 </TABLE>
-[ENDIF]
+
 <BR>
 
 [IF action=which]
+[IF ! which]
+&nbsp;&nbsp;<FONT COLOR="[dark_color]">No subscriptions with address <B>[user->email]</B>!</FONT>
+<BR>
+[ENDIF]
+
 [IF unique <> 1]
 <TABLE>
 &nbsp;&nbsp;<FONT COLOR="[dark_color]">See your subscriptions with the following email addresses</FONT><BR>

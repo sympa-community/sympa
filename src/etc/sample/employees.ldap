@@ -1,0 +1,8 @@
+##Ldap filter : to verify that the user are employees 'IATOSS' or 'ENS' 
+#####
+ 
+host            ldap.univ-rennes1.fr
+port            389
+suffix          dc=univ-rennes1,dc=fr
+filter          ( &(mail=[sender])(employeetype=IATOSS))
+scope           sub
