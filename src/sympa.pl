@@ -1320,7 +1320,7 @@ sub ProcessExpire{
 }
 
 	    while ($user = $list->get_next_user()) {
-		$cpt_badboys++ if ($user->{'date'} < $limitday);
+		$cpt_badboys++ if ($user->{'update_date'} < $limitday);
 	    }
 
 	    ## Message to the owner who launched the expire command
@@ -1335,8 +1335,10 @@ sub ProcessExpire{
 		return undef;
 	    }
 
+	    if ($user->{'update_date'} < $limitday){print " $user->{'email'} ";$temp=1;}
+
 	    while ($user = $list->get_next_user()) {
-		next unless ($user->{'date'} < $limitday);
+		next unless ($user->{'update_date'} < $limitday);
 		print "," if ($temp == 1);
 		print " $user->{'email'} ";
 		$temp=1 if ($temp == 0);
@@ -1348,8 +1350,11 @@ sub ProcessExpire{
 	    unless ($user = $list->get_first_user()) {
 		return undef;
 	    }
+
+	    if ($user->{'update_date'} < $limitday){print "DEL $listname $user->{'email'}\n";}
+	    
 	    while ($user = $list->get_next_user()) {
-		next unless ($user->{'date'} < $limitday);
+		next unless ($user->{'update_date'} < $limitday);
 		print "DEL   $listname   $user->{'email'}\n";
 	    }
 	    ## Mail back the result.
