@@ -182,15 +182,13 @@ sub load_edit_list_conf {
 
 ## return a hash from the edit_list_conf file
 sub load_create_list_conf {
+    my $robot = shift;
 
     my $file;
     my $conf ;
     
-    if (-r "$Conf{'etc'}/create_list.conf") {
-	$file = "$Conf{'etc'}/create_list.conf";
-    }elsif (-r "--ETCBINDIR--/create_list.conf") {
-	$file = "--ETCBINDIR--/create_list.conf";
-    }else {
+    $file = &tools::get_filename('etc', 'create_list.conf', $robot);
+    unless ($file) {
 	&do_log('info','unable to read --ETCBINDIR--/create_list.conf');
 	return undef;
     }
@@ -229,9 +227,11 @@ sub _add_topic {
 }
 
 sub get_list_list_tpl {
+    my $robot = shift;
+
     my $list_conf;
     my $list_templates ;
-    unless ($list_conf = &load_create_list_conf()) {
+    unless ($list_conf = &load_create_list_conf($robot)) {
 	return undef;
     }
 
@@ -260,6 +260,7 @@ sub get_list_list_tpl {
 sub smime_sign {
     my $in_msg = shift;
     my $list = shift;
+    my $dir = shift;
 
     do_log('debug2', 'tools::smime_sign (%s,%s)',$in_msg,$list);
 
@@ -1029,10 +1030,20 @@ sub duration_conv {
 
 ## Look for a file in the list > robot > server > default locations
 sub get_filename {
-    my ($type, $name, $robot) = @_;
-
+    my ($type, $name, $robot, $list) = @_;
+    
     if ($type eq 'etc') {
-	foreach my $dir ("$Conf{'etc'}/$robot",$Conf{'etc'},'--ETCBINDIR--') {
+	my @dirs = ("$Conf{'etc'}/$robot",$Conf{'etc'},'--ETCBINDIR--');
+	if ($list) {
+	    ## No 'templates' subdir in list directory
+	    if ($name =~ /^templates\/(.*)$/) {
+		unshift @dirs, $list->{'dir'}.'/'.$1;
+	    }else {
+		unshift @dirs, $list->{'dir'}.'/'.$name;
+	    }
+	}	
+	foreach my $dir (@dirs) {
+#	    &do_log('debug','NAME: %s ; DIR %s', $name, $dir);
 	    if (-r "$dir/$name") {
 		return "$dir/$name";
 	    }

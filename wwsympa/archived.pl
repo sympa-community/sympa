@@ -352,8 +352,9 @@ sub get_ressources {
 	do_log('notice',"get_ressources : unable to load list $1, continue anyway");
     }  
     
-    if (-r "$Conf{'home'}/$list->{'name'}/mhonarc-ressources") {
-	$mhonarc_ressources =  "$Conf{'home'}/$list->{'name'}/mhonarc-ressources" ;
+    #$mhonarc_ressources = &tools::get_filename('etc', 'mhonarc-ressources', $robot, $list);
+    if (-r "$list->{'dir'}/mhonarc-ressources") {
+	$mhonarc_ressources =  "$list->{'dir'}/mhonarc-ressources" ;
     }elsif (-r "$Conf{'etc'}/mhonarc-ressources"){
         $mhonarc_ressources =  "$Conf{'etc'}/mhonarc-ressources" ;
     }elsif (-r "--ETCBINDIR--/mhonarc-ressources"){

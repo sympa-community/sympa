@@ -657,6 +657,7 @@ my %alias = ('reply-to' => 'reply_to',
 	    'serial' => {'format' => '\d+',
 			 'default' => 0,
 			 'length' => 3,
+			 'default' => 0,
 			 'title_id' => 69,
 			 'group' => 'other'
 			 },
@@ -2131,13 +2132,13 @@ sub send_global_file {
 	do_log ('err',"Unable to open file $Conf{'etc'}/$robot/templates/$action.tpl NOR  $Conf{'etc'}/templates/$action.tpl NOR --ETCBINDIR--/templates/$action.tpl");
     }
 
-    $data->{'conf'}{'email'} = $Conf{'email'};
-    $data->{'conf'}{'host'} = $Conf{'host'};
+    $data->{'conf'}{'email'} = $Conf{'robots'}{$robot}{'email'} || $Conf{'email'};
+    $data->{'conf'}{'host'} = $Conf{'robots'}{$robot}{'host'} || $Conf{'host'};
     $data->{'conf'}{'sympa'} = "$Conf{'email'}\@$robot";
-    $data->{'conf'}{'listmaster'} = $Conf{'listmaster'};
-    $data->{'conf'}{'wwsympa_url'} = $Conf{'wwsympa_url'};
+    $data->{'conf'}{'listmaster'} = $Conf{'robots'}{$robot}{'listmaster'} || $Conf{'listmaster'};
+    $data->{'conf'}{'wwsympa_url'} = $Conf{'robots'}{$robot}{'wwsympa_url'} || $Conf{'wwsympa_url'};
     $data->{'conf'}{'version'} = $main::Version;
-    $data->{'from'} = $Conf{'request'};
+    $data->{'from'} = $Conf{'robots'}{$robot}{'request'} || $Conf{'request'};
     $data->{'robot_domain'} = $robot;
     $data->{'return_path'} = $Conf{'request'};
 
@@ -2156,11 +2157,6 @@ sub send_file {
     my $sign_mode;
 
     my $data = $context;
-
-    ## Change to list directory
-    unless (chdir $name) {
-	&do_log('info', 'Cannot chdir to %s', $name); 
-    }
 
     ## Unless multiple recepients
     unless (ref ($who)) {
@@ -2218,17 +2214,18 @@ sub send_file {
 	do_log ('err',"Unable to find '$action' template in list directory NOR $Conf{'etc'}/templates/ NOR --ETCBINDIR--/templates/");
     }
     
-    $data->{'conf'}{'email'} = $Conf{'email'};
-    $data->{'conf'}{'host'} = $Conf{'host'};
+    $data->{'conf'}{'email'} = $Conf{'robots'}{$robot}{'email'} || $Conf{'email'};
+    $data->{'conf'}{'host'} = $Conf{'robots'}{$robot}{'host'} || $Conf{'host'};
     $data->{'conf'}{'sympa'} = "$Conf{'email'}\@$robot";
-    $data->{'conf'}{'listmaster'} = $Conf{'listmaster'};
-    $data->{'conf'}{'wwsympa_url'} = $Conf{'wwsympa_url'};
+    $data->{'conf'}{'listmaster'} = $Conf{'robots'}{$robot}{'listmaster'} || $Conf{'listmaster'};
+    $data->{'conf'}{'wwsympa_url'} = $Conf{'robots'}{$robot}{'wwsympa_url'} || $Conf{'wwsympa_url'};
     $data->{'list'}{'lang'} = $self->{'admin'}{'lang'};
     $data->{'list'}{'name'} = $name;
     $data->{'robot_domain'} = $robot;
     $data->{'list'}{'host'} = $self->{'admin'}{'host'};
     $data->{'list'}{'subject'} = $self->{'admin'}{'subject'};
     $data->{'list'}{'owner'} = $self->{'admin'}{'owner'};
+    $data->{'list'}{'dir'} = $self->{'dir'};
 
     ## Sign mode
     if ($Conf{'openssl'} &&

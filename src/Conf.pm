@@ -281,7 +281,10 @@ sub load_robots {
 
     my %robot_conf ;
     my %valid_robot_key_words = ( 'http_host'     => 1, 
-				  listmaster      => 1, 
+				  listmaster      => 1,
+				  email           => 1,
+				  host            => 1,
+				  wwsympa_url     => 1,
 				  'title'         => 1,
 				  default_home    => 1,
 				  dark_color      => 1,
@@ -325,6 +328,15 @@ sub load_robots {
 	# listmaster is a list of email separated by commas
 	@{$robot_conf->{$robot}{'listmasters'}} = split(/,/, $robot_conf->{$robot}{'listmaster'})
 	    if $robot_conf->{$robot}{'listmaster'};
+
+	## Default for 'host' is the domain
+	$robot_conf->{$robot}{'host'} ||= $robot;
+
+	$robot_conf->{$robot}{'email'} ||= $Conf{'email'};
+
+	$robot_conf->{$robot}{'wwsympa_url'} ||= 'http://'.$robot_conf->{$robot}{'http_host'}.'/wws';
+
+	$robot_conf->{$robot}{'request'} = $robot_conf->{$robot}{'email'}.'-request@'.$robot_conf->{$robot}{'host'};
 
 	$robot_conf->{'robot_by_http_host'}{$robot_conf->{$robot}{'http_host'}} = $robot ;
 

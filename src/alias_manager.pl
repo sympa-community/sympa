@@ -70,9 +70,9 @@ if ($operation eq 'add') {
 	    unless ($domain eq $default_domain);
 	
 	if ($suffix eq '-owner') {
-	    printf ALIAS "$address: \"\|$path_to_bouncequeue $listname\"\n";
+	    printf ALIAS "$address: \"\|$path_to_bouncequeue $address\"\n";
 	}else {
-	    printf ALIAS "$address: \"\|$path_to_queue $listname$suffix\"\n";
+	    printf ALIAS "$address: \"\|$path_to_queue $address\"\n";
 	}
     }
 

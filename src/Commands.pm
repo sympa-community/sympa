@@ -784,8 +784,9 @@ sub info {
 	$data{'digest'} = join (',', @days).' '.$list->{'admin'}{'digest'}{'hour'}.':'.$list->{'admin'}{'digest'}{'minute'};
 
 	$data{'available_reception_mode'} = $list->available_reception_mode();
-	# sa Conf{'wwsympa_url'} devrait être remplacé par http://$Conf{'robots'}{$list->{'domain'}}/...
-	$data{'url'} = $Conf{'wwsympa_url'}.'/info/'.$list->{'name'};
+
+	my $wwsympa_url = $Conf{'robots'}{$robot}{'wwsympa_url'} || $Conf{'wwsympa_url'};
+	$data{'url'} = $wwsympa_url.'/info/'.$list->{'name'};
 
 	$list->send_file('info_report', $sender, $robot, \%data);
 

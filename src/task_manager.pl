@@ -317,9 +317,11 @@ sub create {
 	}
     }
 
-     # for a list
+    # for a list
     if ($object  eq 'list') {
-	if (open (MODEL, "$Conf{'home'}/$list_name/list_task_models/$model_name")) {
+	my $list = new List($list_name);
+
+	if (open (MODEL, "$list->{'dir'}/list_task_models/$model_name")) {
 	    $model_file = "$Conf{'home'}/$list_name/list_task_models/$model_name";
 	} elsif (open (MODEL, "$Conf{'etc'}/list_task_models/$model_name")) {
 	    $model_file = "$Conf{'etc'}/list_task_models/$model_name";

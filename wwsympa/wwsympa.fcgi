@@ -571,12 +571,19 @@ while ($query = &new_loop()) {
 	## Retro compatibility concerns
 	$param->{'active'} = 1;
 
+	## Directories to search templates
+	my @search_path;
+
+	push @search_path, $list->{'dir'}.'/wws_templates'
+	    if ($list);
+
+	push @search_path, "$Conf{'etc'}/$robot/wws_templates"
+	    ,"$Conf{'etc'}/wws_templates"
+		, "--ETCBINDIR--/wws_templates";
+
 	## Action template
 	if (defined $param->{'action'}) {
-	    foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
-				"$Conf{'etc'}/$robot/wws_templates",
-				"$Conf{'etc'}/wws_templates",
-				"--ETCBINDIR--/wws_templates") {
+	    foreach my $tpldir (@search_path) {
 		if (-f "$tpldir/$param->{'action'}.$param->{'lang'}.tpl") {
 		    $param->{'action_template'} = "$tpldir/$param->{'action'}.$param->{'lang'}.tpl";
 		    last;
@@ -593,10 +600,7 @@ while ($query = &new_loop()) {
 	}
 
 	## Menu template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
-			    "$Conf{'etc'}/$robot/wws_templates",
-			    "$Conf{'etc'}/wws_templates",
-			    "--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir (@search_path) {
 	    if (-f "$tpldir/menu.$param->{'lang'}.tpl"){
 		$param->{'menu_template'} = "$tpldir/menu.$param->{'lang'}.tpl";
 		last;
@@ -612,10 +616,7 @@ while ($query = &new_loop()) {
 	}
 
 	## List_menu template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
-			    "$Conf{'etc'}/$robot/wws_templates",
-			    "$Conf{'etc'}/wws_templates",
-			    "--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir (@search_path) {
 	    if (-f "$tpldir/list_menu.$param->{'lang'}.tpl"){
 		$param->{'list_menu_template'} = "$tpldir/list_menu.$param->{'lang'}.tpl";
 		last;
@@ -631,10 +632,7 @@ while ($query = &new_loop()) {
 	}
 
 	## admin_menu template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
-			    "$Conf{'etc'}/$robot/wws_templates",
-			    "$Conf{'etc'}/wws_templates",
-			    "--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir (@search_path) {
 	    if (-f "$tpldir/admin_menu.$param->{'lang'}.tpl"){
 		$param->{'admin_menu_template'} = "$tpldir/admin_menu.$param->{'lang'}.tpl";
 		last;
@@ -650,10 +648,7 @@ while ($query = &new_loop()) {
 	}
 
 	## Title template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
-			    "$Conf{'etc'}/$robot/wws_templates",
-			    "$Conf{'etc'}/wws_templates",
-			    "--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir (@search_path) {
 	    if (-f "$tpldir/title.$param->{'lang'}.tpl"){
 		$param->{'title_template'} = "$tpldir/title.$param->{'lang'}.tpl";
 		last;
@@ -669,10 +664,7 @@ while ($query = &new_loop()) {
 	}
 
 	## Error template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
-			    "$Conf{'etc'}/$robot/wws_templates",
-			    "$Conf{'etc'}/wws_templates",
-			    "--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir (@search_path) {
 	    if (-f "$tpldir/error.$param->{'lang'}.tpl"){
 		$param->{'error_template'} = "$tpldir/error.$param->{'lang'}.tpl";
 		last;
@@ -688,10 +680,7 @@ while ($query = &new_loop()) {
 	}
 
 	## Notice template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
-			    "$Conf{'etc'}/wws_templates",
-			    "$Conf{'etc'}/$robot/wws_templates",
-			    "--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir (@search_path) {
 	    if (-f "$tpldir/notice.$param->{'lang'}.tpl"){
 		$param->{'notice_template'} = "$tpldir/notice.$param->{'lang'}.tpl";
 		last;
@@ -707,10 +696,7 @@ while ($query = &new_loop()) {
 	}
 
 	## Help template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
-			    "$Conf{'etc'}/$robot/wws_templates",
-			    "$Conf{'etc'}/wws_templates",
-			    "--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir (@search_path) {
 	    if (-f "$tpldir/help_$param->{'help_topic'}.$param->{'lang'}.tpl"){
 		$param->{'help_template'} = "$tpldir/help_$param->{'help_topic'}.$param->{'lang'}.tpl";
 		last;
@@ -723,10 +709,7 @@ while ($query = &new_loop()) {
 
 	## main template
 	my $main ;
-        foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
-			    "$Conf{'etc'}/wws_templates",
-			    "$Conf{'etc'}/$robot/wws_templates",
-			    "--ETCBINDIR--/wws_templates") {
+        foreach my $tpldir (@search_path) {
 	    if (-f "$tpldir/main.$param->{'lang'}.tpl"){
 		$main = "$tpldir/main.$param->{'lang'}.tpl";
 		last;
@@ -1031,9 +1014,9 @@ sub check_param_in {
        my %access = &d_access_control(\%mode,"");
        $param->{'may_d_read'} = $access{'may'}{'read'};
        
-       if (-e "$Conf{'home'}/$param->{'list'}/shared") {
+       if (-e $list->{'dir'}.'/shared') {
 	   $param->{'shared'}='exist';
-       }elsif (-e "$Conf{'home'}/$param->{'list'}/pending.shared") {
+       }elsif (-e $list->{'dir'}.'/pending.shared') {
 	   $param->{'shared'}='deleted';
        }else{
 	   $param->{'shared'}='none';
@@ -1691,9 +1674,8 @@ sub do_sendpasswd {
     }    
 
     my $tpl_file;
-        
-    foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
-			"$Conf{'etc'}/$robot/wws_templates",
+    
+    foreach my $tpldir ("$Conf{'etc'}/$robot/wws_templates",
 			"$Conf{'etc'}/wws_templates",
 			"--ETCBINDIR--/wws_templates") {
 	if (-f "$tpldir/msg_sendpasswd.$param->{'lang'}.tpl") {
@@ -1898,10 +1880,10 @@ sub do_info {
     }
 
     ## Get List Description
-    if (-r "$Conf{'home'}/$param->{'list'}/homepage") {
-	$param->{'homepage_file'} = "$Conf{'home'}/$param->{'list'}/homepage";
+    if (-r $list->{'dir'}.'/homepage') {
+	$param->{'homepage_file'} = $list->{'dir'}.'/homepage';
     }else {
-	$param->{'info_file'} = "$Conf{'home'}/$param->{'list'}/info";
+	$param->{'info_file'} = $list->{'dir'}.'/info';
     }
 
 
@@ -2143,7 +2125,7 @@ sub do_pref {
 sub do_choosepasswd {
     &wwslog('debug', 'do_choosepasswd');
 
-    if($param->{'auth'}=='ldap'){
+    if($param->{'auth'} eq 'ldap'){
     	&error_message('may_not');
     	&wwslog('notice', "do_choosepasswd : user not authorized\n");
      }
@@ -2316,7 +2298,7 @@ sub do_viewfile {
 
     $param->{'file'} = $in{'file'};
 
-    $param->{'filepath'} = "$Conf{'home'}/$list->{'name'}/$in{'file'}";
+    $param->{'filepath'} = $list->{'dir'}.'/'.$in{'file'};
 
     if ((-e $param->{'filepath'}) and (! -r $param->{'filepath'})) {
 	&error_message('read_error');
@@ -3281,13 +3263,9 @@ sub do_viewmod {
 	    return undef;
 	}
 	my $mhonarc_ressources ;
-	if (-r "$Conf{'home'}/$list->{'name'}/mhonarc-ressources") {
-	    $mhonarc_ressources =  "$Conf{'home'}/$list->{'name'}/mhonarc-ressources" ;
-	}elsif (-r "$Conf{'etc'}/mhonarc-ressources"){
-	    $mhonarc_ressources =  "$Conf{'etc'}/mhonarc-ressources" ;
-	}elsif (-r "--ETCBINDIR--/mhonarc-ressources"){
-	    $mhonarc_ressources =  "--ETCBINDIR--/mhonarc-ressources" ;
-	}else {
+	$mhonarc_ressources = &tools::get_filename('etc', 'mhonarc-ressources', $robot, $list);
+	
+	unless ($mhonarc_ressources) {
 	    do_log('notice',"Cannot find any MhOnArc ressource file");
 	}
 
@@ -3360,12 +3338,7 @@ sub do_editfile {
 	}
 
 	## Look for the template
-	foreach my $dir ("$Conf{'home'}/$param->{'list'}","$Conf{'etc'}/templates","--ETCBINDIR--/templates") {
-	    if (-f "$dir/$in{'file'}") {
-		$param->{'filepath'} = "$dir/$in{'file'}";
-		last;
-	    }
-	}
+	$param->{'filepath'} = &tools::get_filename('etc','templates/'.$in{'file'},$robot, $list);
     }else {
 	unless (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
 	    &error_message('missing_arg', {'argument' => 'list'});
@@ -3374,12 +3347,7 @@ sub do_editfile {
 	}
 
 	## Look for the template
-	foreach my $dir ("$Conf{'etc'}/templates","--ETCBINDIR--/templates") {
-	    if (-f "$dir/$in{'file'}") {
-		$param->{'filepath'} = "$dir/$in{'file'}";
-		last;
-	    }
-	}
+	$param->{'filepath'} = &tools::get_filename('etc','templates/'.$in{'file'},$robot);
     }
 
     if ($param->{'filepath'} && (! -r $param->{'filepath'})) {
@@ -3416,7 +3384,7 @@ sub do_savefile {
 	    return undef;
 	}
 
-	$param->{'filepath'} = "$Conf{'home'}/$list->{'name'}/$in{'file'}";
+	$param->{'filepath'} = $list->{'dir'}.'/'.$in{'file'};
     }else {
 	unless (&List::is_listmaster($param->{'user'}{'email'}),$robot) {
 	    &error_message('missing_arg', {'argument' => 'list'});
@@ -3424,7 +3392,11 @@ sub do_savefile {
 	    return undef;
 	}
 
-	$param->{'filepath'} = "$Conf{'etc'}/templates/$in{'file'}";
+	if ($robot ne $Conf{'domain'}) {
+	    $param->{'filepath'} = "$Conf{'etc'}/templates/$robot/$in{'file'}";
+	}else {
+	    $param->{'filepath'} = "$Conf{'etc'}/templates/$in{'file'}";
+	}
     }
 
     unless ((! -e $param->{'filepath'}) or (-w $param->{'filepath'})) {
@@ -3576,7 +3548,7 @@ sub do_remove_arc {
     &wwslog('info','remove_arc: looking for %s in %s',$in{'msgid'},"$arcpath/arctxt");
 
     ## remove url directory if exists
-    my $url_dir = $Conf{'home'}.'/'.$in{'list'}.'/urlized/'.$in{'msgid'};
+    my $url_dir = $list->{'dir'}.'/urlized/'.$in{'msgid'};
     if (-d $url_dir) {
  	opendir DIR, "$url_dir";
     	my @list = readdir(DIR);
@@ -3708,7 +3680,7 @@ sub do_arcsearch {
         &wwslog('info','do_arcsearch: access denied for %s', $param->{'user'}{'email'});
         return undef;
     }
-
+    
     use Marc::Search;
 
     my $search = new Marc::Search;
@@ -3939,8 +3911,14 @@ sub do_set_pending_list_request {
 	return undef;
     } 
 
-    $param->{'list_config'} = "$Conf{'home'}/$in{'list'}/config";
-    $param->{'list_info'} = "$Conf{'home'}/$in{'list'}/info";
+    my $list_dir;
+    if ($robot ne $Conf{'domain'}) {
+	$list_dir = $Conf{'home'}.'/'.$robot.'/'.$in{'list'};
+    }else {
+	$list_dir = $Conf{'home'}.'/'.$in{'list'};
+    }
+    $param->{'list_config'} = $list_dir.'/config';
+    $param->{'list_info'} = $list_dir.'/info';
     $param->{'list_subject'} = $list->{'admin'}{'subject'};
     $param->{'list_request_by'} = $list->{'admin'}{'creation'}{'email'};
     $param->{'list_request_date'} = $list->{'admin'}{'creation'}{'date'};
@@ -3996,6 +3974,7 @@ sub _install_aliases {
     &wwslog('debug', '_install_aliases()');
 
     if ($wwsconf->{'alias_manager'}) {
+	&do_log('debug',"$wwsconf->{'alias_manager'} add $list->{'name'} $list->{'admin'}{'host'}");
 	if ((-x $wwsconf->{'alias_manager'}) 
 	    && (system ("$wwsconf->{'alias_manager'} add $list->{'name'} $list->{'admin'}{'host'}") == 0)) {
 	    &wwslog('info','Aliases installed successfully');
@@ -4096,23 +4075,34 @@ sub do_create_list {
 	return undef;
     }
 	     
-    my $template_file ;
-    if (-r "$Conf{'etc'}/$robot/create_list_templates/$in{'template'}/config.tpl") {
-	$template_file = "$Conf{'etc'}/$robot/create_list_templates/$in{'template'}/config.tpl" ;
-    }elsif(-r "$Conf{'etc'}/create_list_templates/$in{'template'}/config.tpl") {
-	$template_file = "$Conf{'etc'}/create_list_templates/$in{'template'}/config.tpl" ;
-    }elsif(-r "--ETCBINDIR--/create_list_templates/$in{'template'}/config.tpl") {
-	$template_file = "--ETCBINDIR--/create_list_templates/$in{'template'}/config.tpl";
-    }else{
+    my $template_file = &tools::get_filename('etc', 'create_list_templates/'.$in{'template'}.'/config.tpl', $robot);
+    unless ($template_file) {
 	&error_message('unable_to_open_template');
 	&do_log('info', 'no template %s in %s NOR %s',$in{'template'},"$Conf{'etc'}/$robot/create_list_templates/$in{'template'}","$Conf{'etc'}/create_list_templates/$in{'template'}","--ETCBINDIR--/create_list_templates/$in{'template'}");
 	
 	return undef;
     }
-    
-    unless (mkdir ("$Conf{'home'}/$in{'listname'}",0777)) {
+
+    my $list_dir;
+
+    ## A virtual robot
+    if ($robot ne $Conf{'domain'}) {
+	unless (-d $Conf{'home'}.'/'.$robot) {
+	    unless (mkdir ($Conf{'home'}.'/'.$robot,0777)) {
+		&error_message('unable_to_create_dir');
+		&do_log('info', 'unable to create %s/%s : %s',$Conf{'home'},$robot,$?);
+		return undef;
+	    }    
+	}
+
+	$list_dir = $Conf{'home'}.'/'.$robot.'/'.$in{'listname'};
+    }else {
+	$list_dir = $Conf{'home'}.'/'.$in{'listname'};
+    }
+
+    unless (mkdir ($list_dir,0777)) {
 	&error_message('unable_to_create_dir');
-	&do_log('info', 'unable to create %s/%s : %s',$Conf{'home'},$in{'listname'},$?);
+	&do_log('info', 'unable to create %s : %s',$list_dir,$?);
 	return undef;
     }    
     
@@ -4128,11 +4118,11 @@ sub do_create_list {
     $parameters->{'status'} = $param->{'status'};
     $parameters->{'topics'} = $in{'topics'};
 
-    open CONFIG, ">$Conf{'home'}/$in{'listname'}/config";
+    open CONFIG, ">$list_dir/config";
     &parse_tpl($parameters, $template_file, CONFIG);
     close CONFIG;
     
-    open INFO, ">$Conf{'home'}/$in{'listname'}/info" ;
+    open INFO, ">$list_dir/info" ;
     print INFO $in{'info'};
     close INFO;
 
@@ -4189,7 +4179,7 @@ sub do_create_list_request {
     $param->{'list_of_topics'}{$in{'topics'}}{'selected'} = 1
 	if ($in{'topics'});
 
-    unless ($param->{'list_list_tpl'} = &tools::get_list_list_tpl()) {
+    unless ($param->{'list_list_tpl'} = &tools::get_list_list_tpl($robot)) {
 	&error_message('unable_to_load_create_list_templates');
     }	
     
@@ -5476,7 +5466,7 @@ sub d_access_control {
 
     # Useful parameters
     my $list_name = $list->{'name'};
-    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
+    my $shareddir =  $list->{'dir'}.'/shared';
     
 
     # document to read
@@ -5707,7 +5697,7 @@ sub do_d_admin {
 	return undef;
     }
     
-    my $dir = "$Conf{'home'}/$param->{'list'}";
+    my $dir = $list->{'dir'};
     
     if ($in{'d_admin'} eq 'create') {
 	
@@ -5817,7 +5807,7 @@ sub do_d_read {
     my $path_orig = $path;
       
     # path of the shared directory
-    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
+    my $shareddir =  $list->{'dir'}.'/shared';
 
     # document to read
     my $doc;
@@ -6228,7 +6218,7 @@ sub do_d_editfile {
     my $list_name = $list->{'name'};
    
     # path of the shared directory
-    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
+    my $shareddir =  $list->{'dir'}.'/shared';
 
     $param->{'directory'} = -d "$shareddir/$path";
 
@@ -6346,7 +6336,7 @@ sub do_d_describe {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
+    my $shareddir =  $list->{'dir'}.'/shared';
 
     my $action_return;
 
@@ -6505,7 +6495,7 @@ sub do_d_savefile {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
+    my $shareddir =  $list->{'dir'}.'/shared';
 
 ####  Controls
     ### action relative to a list ?
@@ -6647,7 +6637,7 @@ sub do_d_overwrite {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
+    my $shareddir =  $list->{'dir'}.'/shared';
 
     # Parameters of the uploaded file
     my $fh = $query->upload('uploaded_file');
@@ -6801,7 +6791,7 @@ sub do_d_upload {
     my $list_name = $list->{'name'};
    
     # path of the shared directory
-    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
+    my $shareddir =  $list->{'dir'}.'/shared';
 
     # Parameters of the uploaded file
     my $fn = $query->param('uploaded_file');
@@ -6935,7 +6925,7 @@ sub do_d_delete {
      # path of the shared directory
     #my $list_name = $in{'list'};
     my $list_name = $list->{'name'};
-    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
+    my $shareddir =  $list->{'dir'}.'/shared';
 
 #### Controls
     ### action relative to a list ?
@@ -7053,7 +7043,7 @@ sub do_d_rename {
     
     # path of the shared directory
     my $list_name = $list->{'name'};
-    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
+    my $shareddir =  $list->{'dir'}.'/shared';
     
 #### Controls
     ### action relative to a list ?
@@ -7199,7 +7189,7 @@ sub do_d_create_dir {
     ### End of controls
     
     # path of the shared directory
-    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
+    my $shareddir =  $list->{'dir'}.'/shared';
     
     my $document = "$shareddir/$path$name_doc";
     
@@ -7270,7 +7260,7 @@ sub do_d_control {
     my $list_name = $list->{'name'};
        
     # path of the shared directory
-    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
+    my $shareddir =  $list->{'dir'}.'/shared';
     ## $path must have no slash at its end
     $path = &format_path('without_slash',$path);
 
@@ -7416,7 +7406,7 @@ sub do_d_change_access {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
+    my $shareddir =  $list->{'dir'}.'/shared';
 
 ####  Controls
     ### action relative to a list ?
@@ -7537,7 +7527,7 @@ sub do_d_set_owner {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
+    my $shareddir =  $list->{'dir'}.'/shared';
 
 ####  Controls
     ### action relative to a list ?
@@ -7885,8 +7875,7 @@ sub do_change_email {
 	
 	my $tpl_file;
         
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
-			    "$Conf{'etc'}/$robot/wws_templates",
+	foreach my $tpldir ("$Conf{'etc'}/$robot/wws_templates",
 			    "$Conf{'etc'}/wws_templates",
 			    "--ETCBINDIR--/wws_templates") {
 	    if (-f "$tpldir/msg_sendpasswd.$param->{'lang'}.tpl") {
@@ -8084,7 +8073,7 @@ sub do_attach {
     my $path_orig = $path;
   
     # path of the urlized directory
-    my $urlizeddir =  $Conf{'home'}.'/'.$list_name.'/urlized';
+    my $urlizeddir =  $list->{'dir'}.'/urlized';
 
     # document to read
     my $doc;
