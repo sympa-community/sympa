@@ -201,6 +201,10 @@ sub anabounce {
 		$info{$2}{error} = $1;
 		$type = 27;
 
+	    }elsif ($champ{subject} =~ /^Returned mail: (message not deliverable): \<(\S+)\>$/) {
+		
+		$info{$2}{error} = $1;
+		$type = 34;
 	    }
 
 	    if ($champ{'x-failed-recipients'} =~ /^\s*(\S+)$/) {
