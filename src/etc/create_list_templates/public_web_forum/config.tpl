@@ -45,8 +45,8 @@ editor
   email [owner->email]
 
 creation
-  date [date]
-  date_epoch [date_epoch]
-  email [owner->email]
+  date [creation->date]
+  date_epoch [creation->date_epoch]
+  email [creation->email]
 
 serial 0

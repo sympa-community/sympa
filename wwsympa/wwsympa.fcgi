@@ -3582,8 +3582,9 @@ sub do_create_list {
     $parameters->{'owner'}{'gecos'} = $param->{'user'}{'gcos'};
     $parameters->{'listname'} = $in{'listname'};
     $parameters->{'subject'} = $in{'subject'};
-    $parameters->{'date'} = $param->{'date'};
-    $parameters->{'date_epoch'} = time;
+    $parameters->{'creation'}{'date'} = $param->{'date'};
+    $parameters->{'creation'}{'date_epoch'} = time;
+    $parameters->{'creation'}{'email'} = $param->{'user'}{'email'};
     $parameters->{'lang'} = $lang;
     $parameters->{'status'} = $param->{'status'};
     $parameters->{'topics'} = $in{'topics'};
