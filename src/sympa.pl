@@ -76,6 +76,7 @@ Options:
    -l, --lang=LANG                       : use a language catalog for Sympa
    -m, --mail                            : log calls to sendmail
    --dump=list|ALL                       : dumps subscribers 
+   --make_alias_file                     : create file in /tmp with all aliases (usefull when aliases.tpl is changed)
    --lowercase                           : lowercase email addresses in database
    --close_list=LISTNAME[\@ROBOT]         : close a list
    --log_level=LEVEL                     : sets Sympa log level
@@ -257,12 +258,12 @@ if ($main::options{'dump'}) {
 	printf STDERR "Unable to create tmp/sympa_aliases.$$, exiting\n";
 	exit;
     }
-    printf TMP "#\n#\tAliases for all Sympa lists (but not for robots)\n#\n";
+    printf TMP "#\n#\tAliases for all Sympa lists open (but not for robots)\n#\n";
     close TMP;
     foreach my $listname (@listnames) {
 	if (my $list = new List ($listname)) {
 
-	    system ("--SBINDIR--/alias_manager.pl add $list->{'name'} $list->{'domain'} /tmp/sympa_aliases.$$") ;
+	    system ("--SBINDIR--/alias_manager.pl add $list->{'name'} $list->{'domain'} /tmp/sympa_aliases.$$") if ($list->{'admin'}{'status'} eq 'open');
 	}	
     }
     printf ("Sympa aliases file is /tmp/sympa_aliases.$$ file made, you probably need to installed it in your SMTP engine\n");
