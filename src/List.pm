@@ -4315,8 +4315,12 @@ sub _include_users_sql {
     my $total = 0;
     
     ## Process the SQL results
-    while (my $email = $sth->fetchrow) {
+    my $email;
+    while (defined ($email = $sth->fetchrow)) {
 	my %u = %{$default_user_options};
+
+	## Empty value
+	next if ($email =~ /^\s*$/);
 
 	$u{'email'} = $email;
 
