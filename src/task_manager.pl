@@ -474,13 +474,13 @@ sub check {
 	}
 	
 	if ( $result{'nature'} eq 'assignment' ) {
-	    if (chk_cmd ($result{'command'}, $lnb, \@{$result{'Rarguments'}}, \@used_labels, \@used_vars)) {
+	    if (chk_cmd ($result{'command'}, $lnb, $result{'Rarguments'}, \@used_labels, \@used_vars)) {
 		push (@vars, $result{'var'});
 	    } else {return undef;}
 	}
-
+	
 	if ( $result{'nature'} eq 'command' ) {
-	    return undef unless (chk_cmd ($result{'command'}, $lnb, \@{$result{'Rarguments'}}, \@used_labels, \@used_vars));
+	    return undef unless (chk_cmd ($result{'command'}, $lnb, $result{'Rarguments'}, \@used_labels, \@used_vars));
 	} 
 			 
 	push (@labels, $result{'label'}) if ( $result{'nature'} eq 'label' );
@@ -521,6 +521,8 @@ sub chk_line {
 
     my $line = $_[0];
     my $Rhash = $_[1]; # will contain nature of line (label, command, error...)
+
+    &do_log('debug2', 'chk_line(%s, %s)', $line, $Rhash->{'nature'});
         
     $Rhash->{'nature'} = undef;
   
@@ -601,50 +603,49 @@ sub chk_cmd {
     my $Rargs = $_[2]; # argument list
     my $Rused_labels = $_[3];
     my $Rused_vars = $_[4];
+
+    &do_log('debug2', 'chk_cmd(%s, %d, %s)', $cmd, $lnb, join(',',@{$Rargs}));
     
-    foreach my $command (@commands) { 
+    if (defined $commands{$cmd}) {
 	
-	if ($cmd eq $command) {
-
-	    my @expected_args = @{$commands{$command}};
-	    my @args = @{$Rargs};
-
-	    unless ($#expected_args == $#args) {
-		&do_log ('err', "error at line $lnb : wrong number of arguments for $command");
-		&do_log ('err', "args = @args ; expected_args = @expected_args");
+	my @expected_args = @{$commands{$cmd}};
+	my @args = @{$Rargs};
+	
+	unless ($#expected_args == $#args) {
+	    &do_log ('err', "error at line $lnb : wrong number of arguments for $cmd");
+	    &do_log ('err', "args = @args ; expected_args = @expected_args");
+	    return undef;
+	}
+	
+	foreach (@args) {
+	    
+	    undef my $error;
+	    my $regexp = $expected_args[0];
+	    shift (@expected_args);
+	    
+	    if ($regexp eq 'date') {
+		$error = 1 unless ( (/^$date_arg_regexp1$/i) or (/^$date_arg_regexp2$/i) or (/^$date_arg_regexp3$/i) );
+	    }
+	    elsif ($regexp eq 'delay') {
+		$error = 1 unless (/^$delay_regexp$/i);
+	    }
+	    elsif ($regexp eq 'var') {
+		$error = 1 unless (/^$var_regexp$/i);
+	    }
+	    elsif ($regexp eq 'subarg') {
+		$error = 1 unless (/^$subarg_regexp$/i);
+	    }
+	    else {
+		$error = 1 unless (/^$regexp$/i);
+	    }
+	    
+	    if ($error) {
+		&do_log ('err', "error at line $lnb : argument $_ is not valid");
 		return undef;
 	    }
-
-	    foreach (@args) {
-
-		undef my $error;
-		my $regexp = $expected_args[0];
-		shift (@expected_args);
-
-		if ($regexp eq 'date') {
-		    $error = 1 unless ( (/^$date_arg_regexp1$/i) or (/^$date_arg_regexp2$/i) or (/^$date_arg_regexp3$/i) );
-		}
-		elsif ($regexp eq 'delay') {
-		    $error = 1 unless (/^$delay_regexp$/i);
-		}
-		elsif ($regexp eq 'var') {
-		    $error = 1 unless (/^$var_regexp$/i);
-		}
-		elsif ($regexp eq 'subarg') {
-		    $error = 1 unless (/^$subarg_regexp$/i);
-		}
-		else {
-		    $error = 1 unless (/^$regexp$/i);
-		}
-
-		if ($error) {
-		    &do_log ('err', "error at line $lnb : argument $_ is not valid");
-		    return undef;
-		}
-
-		push (@{$Rused_labels}, $args[1]) if ($command eq 'next' && ($args[1]));   
-		push (@{$Rused_vars}, $args[0]) if (in (\@var_commands, $command));
-      	    }
+	    
+	    push (@{$Rused_labels}, $args[1]) if ($cmd eq 'next' && ($args[1]));   
+	    push (@{$Rused_vars}, $args[0]) if (in (\@var_commands, $cmd));
 	}
     }
     return 1;
@@ -659,6 +660,8 @@ sub execute {
     my %result; # stores the result of the chk_line subroutine
     my %vars; # list of task vars
     my $lnb = 0; # line number
+
+    &do_log('debug2', 'execute(%s, %d, %s)', $task_file, $lnb, join('/',  %vars));
     
     unless ( open (TASK, $task_file) ) {
 	&do_log ('err', "error : can't read the task $task_file");
@@ -824,19 +827,64 @@ sub next_cmd {
     my @tab = @{$Rarguments};
     my $date = &tools::epoch_conv ($tab[0], $context->{'execution_date'}); # conversion of the date argument into epoch format
     my $label = $tab[1];
-    
+
     &do_log ('notice', "line $context->{'line_number'} of $context->{'task_name'} : next ($date, $label)");
 
-    $context->{'task_name'} =~ /\w*\.\w*\.(\w*)\.(($regexp{'listname'})|_global)/;
+    my @name = split /\./, $context->{'task_name'};
+    my $model = $name[2];
 
-    my $new_task = "$date.$label.$1.$2";
-    my $human_date = &tools::adate ($date);
-    my $new_task_file = "$spool_task/$new_task";
-    unless (rename ($context->{'task_file'}, $new_task_file)) {
-	error ("$context->{'task_file'}", "error in next command : unable to rename task file into $new_task");
+    ## Determine type
+    my ($type, $model_choice);
+    my %data = ('creation_date'  => $context->{'execution_date'},
+		'execution_date' => 'execution_date');
+    if ($name[3] eq '_global') {
+	$type = 'global';
+	foreach my $key (keys %global_models) {
+	    if ($global_models{$key} eq $model) {
+		$model_choice = $Conf{$key};
+		last;
+	    }
+	}
+    }else {
+	$type = 'list';
+	my $list = new List($name[3]);
+	$data{'list'}{'name'} = $list->{'name'};
+	
+	if ( $model eq 'sync_include') {
+	    unless ($list->{'admin'}{'user_data_source'} eq 'include2') {
+		error ($context->{'task_file'}, "List $list->{'name'} no more require sync_include task");
+		return undef;
+	    }
+	    $data{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
+	    $model_choice = 'ttl';
+	}else {
+	    unless (defined $list->{'admin'}{"$model\_task"}) {
+		error ($context->{'task_file'}, "List $list->{'name'} no more require $model task");
+		return undef;
+	    }
+
+	    $model_choice = $list->{'admin'}{"$model\_task"};
+	}
+    }
+
+    unless (create ($date, $tab[1], $name[2], $model_choice, $type, \%data)) {
+	error ($context->{'task_file'}, "error in create command : creation subroutine failure");
 	return undef;
     }
-    &do_log ('notice', "--> new task $new_task ($human_date)");
+
+#    my $new_task = "$date.$label.$name[2].$name[3]";
+    my $human_date = &tools::adate ($date);
+#    my $new_task_file = "$spool_task/$new_task";
+#    unless (rename ($context->{'task_file'}, $new_task_file)) {
+#	error ("$context->{'task_file'}", "error in next command : unable to rename task file into $new_task");
+#	return undef;
+#    }
+    unless (unlink ($context->{'task_file'})) {
+	error ("$context->{'task_file'}", "error in next command : unable to remove task file $context->{'task_file'}");
+	return undef;
+    }
+
+    &do_log ('notice', "--> new task $model ($human_date)");
     
     return undef;
 }
