@@ -2882,9 +2882,9 @@ sub do_serveradmin {
 	$param->{'lists_default_files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
 	$param->{'lists_default_files'}{$f}{'selected'} = '';
     }
-
-    ## Robots
-    if ($robot eq $Conf{'domain'}) {
+    
+    ## All Robots are shown to super listmaster
+    if (&List::is_listmaster($param->{'user'}{'email'})) {
 	$param->{'main_robot'} = 1;
 	$param->{'robots'} = $Conf{'robots'};
     }
