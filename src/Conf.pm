@@ -176,6 +176,8 @@ sub load {
 	    $value =~ s/\s*$//;
 	    ##  'tri' is a synonime for 'sort' (for compatibily with old versions)
 	    $keyword = 'sort' if ($keyword eq 'tri');
+	    ##  'key_password' is a synonime for 'key_passwd' (for compatibily with old versions)
+	    $keyword = 'key_passwd' if ($keyword eq 'key_password');
 	    ## Special case: `command`
 	    if ($value =~ /^\`(.*)\`$/) {
 		$value = qx/$1/;
