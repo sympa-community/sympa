@@ -36,7 +36,11 @@ install:
 newinstall: makedir $(sbin_SUBST) $(lib_SUBST) substsbin substlib installtemplates installicons installsrc installmod
 
 installmod:
-	@for i in $(SRC) wwsympa.fcgi $(sbin_SUBST) ; do \
+	@for i in $(SRC) ; do \
+	chown $(USER) $(DESTDIR)$(ETCBINDIR)/$$i; \
+	chgrp $(GROUP) $(DESTDIR)$(ETCBINDIR)/$$i; \
+	done
+	@for i in wwsympa.fcgi $(sbin_SUBST) ; do \
 	chown $(USER) $(DESTDIR)$(SBINDIR)/$$i; \
 	chgrp $(GROUP) $(DESTDIR)$(SBINDIR)/$$i; \
 	done
