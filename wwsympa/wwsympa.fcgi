@@ -4707,7 +4707,7 @@ sub do_remindpasswd {
 		 $msg_info{'message_id'} = &tools::escape_chars($msg_info{'message_id'});
 	
 		 $msg_info{'year_month'} = $year_month;
-		 $msg_info{'subject'} =  $hdr->get('Subject'); 
+		 $msg_info{'subject'} =   &MIME::Words::decode_mimewords($hdr->get('Subject')); 
 		 $msg_info{'from'} =  $hdr->get('From'); 
 		 
 		 my $date = $hdr->get('Date'); 
