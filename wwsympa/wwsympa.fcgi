@@ -1784,6 +1784,19 @@ sub do_sso_login_succeeded {
      unless (&tools::get_filename('etc', 'auth.conf', $robot)) {
 	 return undef;
      }
+
+     ## List all LDAP servers first
+     my @ldap_servers;
+     foreach my $ldap (@{$Conf{'auth_services'}}){
+	 next unless ($ldap->{'auth_type'} eq 'ldap');
+	 
+	 push @ldap_servers, $ldap;
+     }    
+     
+     unless ($#ldap_servers >= 0) {
+	 return undef;
+     }
+
      unless (eval "require Net::LDAP") {
 	 do_log ('err',"Unable to use LDAP library, Net::LDAP required,install perl-ldap (CPAN) first");
 	 return undef;
@@ -1792,9 +1805,7 @@ sub do_sso_login_succeeded {
 
      my ($ldap_anonymous,$host,$filter);
 
-     foreach my $ldap (@{$Conf{'auth_services'}}){
-	 # only ldap service are to be applied here
-	 next unless ($ldap->{'auth_type'} eq 'ldap');
+     foreach my $ldap (@ldap_servers){
 
 	 # skip ldap auth service if the user id or email do not match regexp auth service parameter
 	 next unless ($auth =~ /$ldap->{'regexp'}/i);
