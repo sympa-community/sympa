@@ -108,6 +108,7 @@ $icon_table{'text'} = '/icons/text.gif';
 $icon_table{'video'} = '/icons/movie.gif';
 $icon_table{'father'} = '/icons/folder.open.gif';
 $icon_table{'sort'} = '/icons/down.gif';
+$icon_table{'url'} = '/icons/link.gif';
 ## Shared directory and description file
 
 #$shared = 'shared';
@@ -5333,22 +5334,31 @@ sub do_d_read {
     ### File or directory ?
   
     if (!(-d $doc)) {
-	# parameters for the template file
- 	# view a file 
-	$param->{'file'} = $doc;
+	## Jump to the URL
+	if ($doc =~ /\.url$/) {
+	    open DOC, $doc;
+	    my $url = <DOC>;
+	    close DOC;
+	    chomp $url;
+	    $param->{'redirect_to'} = $url;
+	    return 1;
+	}else {
+	    # parameters for the template file
+	    # view a file 
+	    $param->{'file'} = $doc;
 	    
-	## File type
-	$path =~ /^([^\/]*\/)*([^\/]+)\.([^\/]+)$/; 
-
-	$param->{'file_extension'} = $3;
-	$param->{'bypass'} = 1;
+	    ## File type
+	    $path =~ /^([^\/]*\/)*([^\/]+)\.([^\/]+)$/; 
 	    
+	    $param->{'file_extension'} = $3;
+	    $param->{'bypass'} = 1;
+	}
     }else {
 	# verification of the URL (the path must have a slash at its end)
-	if ($ENV{'PATH_INFO'} !~ /\/$/) { 
-	    $param->{'redirect_to'} = "$param->{'base_url'}$param->{'path_cgi'}/d_read/$list_name/";
-	    return 1;
-	}
+#	if ($ENV{'PATH_INFO'} !~ /\/$/) { 
+#	    $param->{'redirect_to'} = "$param->{'base_url'}$param->{'path_cgi'}/d_read/$list_name/";
+#	    return 1;
+#	}
 
 	## parameters of the current directory
 	if ($path && (-e "$doc/.desc")) {
@@ -5454,7 +5464,7 @@ sub do_d_read {
 		} else {
 		    # no description file = no need to check access for read
 
-		      # access for edit and control
+		    # access for edit and control
 		    if ($may_edit || $may_control) {
 			$subdirs{$d}{'edit'} = 1;
 			$normal_mode = 1;
@@ -5489,8 +5499,19 @@ sub do_d_read {
 		if ($may) {
 		    $path_doc =~ /^([^\/]*\/)*([^\/]+)\.([^\/]+)$/; 
 		    
+		    ## Bookmark
+		    if ($path_doc =~ /\.url$/) {
+			open DOC, $path_doc;
+			my $url = <DOC>;
+			close DOC;
+			chomp $url;
+			$files{$d}{'url'} = $url;
+			$files{$d}{'anchor'} = $d;
+			$files{$d}{'anchor'} =~ s/\.url$//;
+			$files{$d}{'icon'} = $icon_table{'url'};			
+
 		    ## MIME - TYPES : icons for template
-		    if (my $type = $mime_types->{$3}) {
+		    }elsif (my $type = $mime_types->{$3}) {
 			# type of the file and apache icon
 			$type =~ /^([\w\-]+)\/([\w\-]+)$/;
 			my $mimet = $1;
@@ -5703,6 +5724,16 @@ sub do_d_editfile {
 	return undef;
     }
     
+    if ($path =~ /\.url$/) {
+	## Get URL of bookmark
+	open URL, "$shareddir/$path";
+	my $url = <URL>;
+	close URL;
+	chomp $url;
+	
+	$param->{'url'} = $url;
+    }
+
     # Access control
     my %mode;
     $mode{'edit'} = 1;
@@ -5752,7 +5783,6 @@ sub do_d_editfile {
     $param->{'father_icon'} = $icon_table{'father'};
     return 1;
 }
-
 
 #*******************************************
 # Function : do_d_describe
@@ -5901,7 +5931,7 @@ sub do_d_describe {
 	    
 	}
     }
-    
+
     return $action_return;
     
 }
@@ -5920,6 +5950,11 @@ sub do_d_savefile {
     my $expl = $Conf{'home'};
 
     my $path = $in{'path'};
+
+    if ($in{'url'}) {
+	$path .= $in{'name_doc'} . '.url';
+    }
+
     ## $path must have no slash at its end
     $path = &format_path('without_slash',$path);
     
@@ -5936,28 +5971,16 @@ sub do_d_savefile {
 	&wwslog('info','do_d_savefile : no list');
 	return undef;
     }
-
   
     ## must be existing a content to replace the file
-    unless ($in{'content'}) {
+    unless ($in{'content'} || $in{'url'}) {
 	&error_message('no_content');
 	&wwslog('info',"do_d_savefile : Cannot save file $shareddir/$path : no content");
 	return undef;
     }
 
-    # the path to replace must already exist
-    unless (-e "$shareddir/$path") {
-	&error_message('failed');
-	&wwslog('info',"do_d_savefile : Unable to save $shareddir/$path : not an existing file");
-	return undef;
-    }
-
-    # the path must represent a file
-    if (-d "$shareddir/$path") {
-	&error_message('failed');
-	&wwslog('info',"do_d_savefile : Unable to save $shareddir/$path : is a directory");
-	return undef;
-    }
+    my $creation;
+    $creation = 1 unless (-f "$shareddir/$path");
 
     ### Document isn't a description file
     unless ($path !~ /\.desc/) {
@@ -5979,82 +6002,85 @@ sub do_d_savefile {
 
 #### End of controls
     
-    if ($in{'content'} !~ /^\s*$/) {			
-	
-	# Synchronization
-	unless (&synchronize("$shareddir/$path",$in{'serial'})){
-	    &error_message('synchro_failed');
-	    &wwslog('info',"do_d_savefile : Synchronization failed for $shareddir/$path");
-	    return undef;
-	}
+    if (($in{'content'} =~ /^\s*$/) && ($in{'url'} =~ /^\s*$/)) {
+	&error_message('no_content');
+	&wwslog('info',"do_d_savefile : Cannot save file $shareddir/$path : no content");
+	return undef;
+    }
 
-	# Renaming of the old file 
-	rename ("$shareddir/$path","$shareddir/$path.old");
+    # Synchronization
+    unless (&synchronize("$shareddir/$path",$in{'serial'})){
+	&error_message('synchro_failed');
+	&wwslog('info',"do_d_savefile : Synchronization failed for $shareddir/$path");
+	return undef;
+    }
     
+    # Renaming of the old file 
+    rename ("$shareddir/$path","$shareddir/$path.old")
+	unless ($creation);
+    
+    if ($in{'url'}) {
+	open URL, ">$shareddir/$path";
+	print URL "$in{'url'}\n";
+	close URL;
+    }else {
 	# Creation of the shared file
-
 	unless (open FILE, ">$shareddir/$path") {
-
 	    rename("$shareddir/$path.old","$shareddir/$path");
-
 	    &error_message('cannot_overwrite', {'reason' => $1,
-					  'path' => $path});
+						'path' => $path});
 	    &wwslog('info',"do_d_savefile : Cannot open for replace $shareddir/$path : $!");
 	    return undef;
 	}
 	print FILE $in{'content'};
 	close FILE;
-
-	# Description file
-	$path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-	my $dir = $1;
-	my $file = $3;
-	if (-e "$shareddir/$dir.desc.$file"){
-
-	    # if description file already exists : open it and modify it
-	    my %desc_hash = &get_desc_file ("$shareddir/$dir.desc.$file");
-	    
-	    open DESC,">$shareddir/$dir.desc.$file"; 
-
-	    # information not modified
-	    print DESC "title\n  $desc_hash{'title'}\n\n"; 
-	    print DESC "access\n  read $desc_hash{'read'}\n  edit $desc_hash{'edit'}\n\n";
-	    print DESC "creation\n";
-	    # date
-	    print DESC '  date_epoch '.$desc_hash{'date'}."\n";
-	     
-	    # information modified
-	    # author
-	    print DESC "  email $param->{'user'}{'email'}\n\n";
-
-	    close DESC;
-
-	} else {
-	    # Creation of a description file if author is known
-		
-	    unless (open (DESC,">$shareddir/$dir.desc.$file")) {
-		&wwslog('info',"do_d_savefile: cannot create description file $shareddir/$dir.desc.$file");
-	    }
-	    # description
-	    print DESC "title\n \n\n";
-	    # date of creation and author
-	    my @info = stat "$shareddir/$path";
-	    print DESC "creation\n  date_epoch ".$info[10]."\n  email $param->{'user'}{'email'}\n\n"; 
-	    # Access
-	    print DESC "access\n";
-	    print DESC "  read $access{'scenario'}{'read'}\n";
-	    print DESC "  edit $access{'scenario'}{'edit'}\n\n";  
-	   	    
-	    close DESC;
-	}
-    
-	# Removing of the old file
-	unlink "$shareddir/$path.old";
-
     }
 
+    # Description file
+    $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+    my $dir = $1;
+    my $file = $3;
+    if (-e "$shareddir/$dir.desc.$file"){
+	
+	# if description file already exists : open it and modify it
+	my %desc_hash = &get_desc_file ("$shareddir/$dir.desc.$file");
+	
+	open DESC,">$shareddir/$dir.desc.$file"; 
+	
+	# information not modified
+	print DESC "title\n  $desc_hash{'title'}\n\n"; 
+	print DESC "access\n  read $desc_hash{'read'}\n  edit $desc_hash{'edit'}\n\n";
+	print DESC "creation\n";
+	# date
+	print DESC '  date_epoch '.$desc_hash{'date'}."\n";
+	
+	# information modified
+	# author
+	print DESC "  email $param->{'user'}{'email'}\n\n";
+	
+	close DESC;
+	
+    } else {
+	# Creation of a description file if author is known
+	
+	unless (open (DESC,">$shareddir/$dir.desc.$file")) {
+	    &wwslog('info',"do_d_savefile: cannot create description file $shareddir/$dir.desc.$file");
+	}
+	# description
+	print DESC "title\n \n\n";
+	# date of creation and author
+	my @info = stat "$shareddir/$path";
+	print DESC "creation\n  date_epoch ".$info[10]."\n  email $param->{'user'}{'email'}\n\n"; 
+	# Access
+	print DESC "access\n";
+	print DESC "  read $access{'scenario'}{'read'}\n";
+	print DESC "  edit $access{'scenario'}{'edit'}\n\n";  
+	
+	close DESC;
+    }
+    
     &message('save_success', {'path' => $path});
-    return 'd_editfile';
+    return $in{'previous_action'} || 'd_editfile';
 }
 
 #*******************************************
@@ -6501,9 +6527,6 @@ sub do_d_create_dir {
     #my $list_name = $in{'list'};
     my $list_name = $list->{'name'};
     my $name_doc = $in{'name_doc'};
-    
-    # Lowercase for directory name
-    $name_doc = $name_doc;
 
     $param->{'list'} = $list_name;
     $param->{'path'} = $path;
@@ -6580,8 +6603,6 @@ sub do_d_create_dir {
 
     return 'd_read';
 }
-
-
 
 ############## Control
 

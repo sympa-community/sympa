@@ -8,7 +8,9 @@
     <h2> <B> Listing of folder [path] </B> </h2> 
     Owner : [doc_owner] <BR>
     Last update : [doc_date] <BR>
+    [IF doc_title]
     Description : [doc_title] <BR><BR>
+    [ENDIF]
     <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[escaped_father]"> <IMG ALIGN="bottom"  src="[father_icon]" BORDER="0"> Up to higher level directory</A></font>
     <BR>  
   [ELSE]
@@ -78,7 +80,6 @@
   </TR></TABLE>  
   </th> 
 
-  <TD ALIGN="left"><font color="--BG_COLOR--">Description</font></TD> 
   <TD ALIGN="center"><font color="--BG_COLOR--">Edit</font></TD> 
   <TD ALIGN="center"><font color="--BG_COLOR--">Delete</font></TD>
   <TD ALIGN="center"><font color="--BG_COLOR--">Access</font></TD></TR>
@@ -92,7 +93,7 @@
       [FOREACH s IN sort_subdirs] 
         <TR BGCOLOR="--LIGHT_COLOR--">        
 	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[escaped_path][s->escaped_doc]/"> 
-	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]"> [s->doc]</A></TD>
+	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]" ALT="[s->title]"> [s->doc]</A></TD>
 	<TD>
 	[IF s->author_known] 
 	  <A HREF="mailto:[s->author]">[s->author]</A>  
@@ -102,7 +103,6 @@
 	</TD>	    
 	<TD>&nbsp;</TD>
 	<TD NOWRAP> [s->date] </TD>
-	<TD NOWRAP>&nbsp; [s->title]</TD>
 		
 	<TD>&nbsp; </TD>
 	
@@ -137,10 +137,13 @@
         <TD>&nbsp;
         [IF f->html]
 	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]" TARGET="html_window">
-	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]"> [f->doc] </A>
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->doc] </A>
+	[ELSIF f->url]
+	  <A HREF="[f->url]" TARGET="html_window">
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->anchor] </A>
 	[ELSE]
 	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]">
-	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]"> [f->doc] </A>
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->doc] </A>
         [ENDIF] 
 	</TD>  
 	 
@@ -152,9 +155,12 @@
         [ENDIF]
 	</TD>
 	 
-	<TD NOWRAP> [f->size] </TD>
+	<TD NOWRAP>&nbsp;
+	[IF !f->url]
+	[f->size] 
+	[ENDIF]
+	</TD>
 	<TD NOWRAP> [f->date] </TD>
-	<TD NOWRAP>&nbsp; [f->title]</TD>
 	 
 	[IF f->edit]
 	<TD>
@@ -260,7 +266,26 @@
     <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
     </TD>
     </form>
-    </TR><BR>
+    </TR>
+
+    <TR>
+    <FORM METHOD="POST" ACTION="[path_cgi]">
+    <TD ALIGN="right" VALIGN="center">
+    <B>Add a bookmark</B><BR>
+    URL <input MAXLENGTH=100 SIZE="25" type="text" name="url"><BR>
+    title <input MAXLENGTH=100 SIZE="20" type="text" name="name_doc">
+    </TD>
+
+    <TD ALIGN="left" VALIGN="bottom">
+    <input type="submit" value="Add" name="action_d_savefile">
+    <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
+    <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+    <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
+    <INPUT TYPE="hidden" NAME="action" VALUE="d_savefile">
+    </TD>
+    </FORM>
+    </TR>
+
 
    <TR>
    <form method="post" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">

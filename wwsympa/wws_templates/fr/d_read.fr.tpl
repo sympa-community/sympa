@@ -6,9 +6,11 @@
 
   [IF path]  
     <h2> <B> Contenu du dossier [path] </B> </h2> 
-    Owner : [doc_owner] <BR>
+    Priétaire : [doc_owner] <BR>
     Mise à jour : [doc_date] <BR>
+    [IF doc_title]
     Description : [doc_title] <BR><BR>
+    [ENDIF]
     <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[escaped_father]"> <IMG ALIGN="bottom"  src="[father_icon]" BORDER="0"> Dossier parent</A></font>
     <BR>  
   [ELSE]
@@ -48,7 +50,7 @@
   </TR></TABLE>
   </th> 
 
-  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="--BG_COLOR--">Taille (Kb)</font></TD>
+  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="--BG_COLOR--">Taille (Ko)</font></TD>
   [IF order_by<>order_by_size] 
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -78,7 +80,6 @@
   </TR></TABLE>  
   </th> 
 
-  <TD ALIGN="left"><font color="--BG_COLOR--">Description</font></TD> 
   <TD ALIGN="center"><font color="--BG_COLOR--">Editer</font></TD> 
   <TD ALIGN="center"><font color="--BG_COLOR--">Supprimer</font></TD>
   <TD ALIGN="center"><font color="--BG_COLOR--">Accès</font></TD></TR>
@@ -92,7 +93,7 @@
       [FOREACH s IN sort_subdirs] 
         <TR BGCOLOR="--LIGHT_COLOR--">        
 	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[escaped_path][s->escaped_doc]/"> 
-	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]"> [s->doc]</A></TD>
+	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]" ALT="[s->title]"> [s->doc]</A></TD>
 	<TD>
 	[IF s->author_known] 
 	  <A HREF="mailto:[s->author]">[s->author]</A>  
@@ -102,7 +103,6 @@
 	</TD>	    
 	<TD>&nbsp;</TD>
 	<TD> [s->date] </TD>
-	<TD>&nbsp; [s->title]</TD>
 		
 	<TD>&nbsp; </TD>
 	
@@ -137,10 +137,13 @@
         <TD NOWRAP>
         [IF f->html]
 	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]" TARGET="html_window">
-	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]"> [f->doc] </A>
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->doc] </A>
+	[ELSIF f->url]
+	  <A HREF="[f->url]" TARGET="html_window">
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->anchor] </A>
 	[ELSE]
 	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]">
-	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]"> [f->doc] </A>
+	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->title]"> [f->doc] </A>
         [ENDIF] 
 	</TD>  
 	 
@@ -148,13 +151,16 @@
 	[IF f->author_known]
 	  <A HREF="mailto:[f->author]">[f->author]</A>  
 	[ELSE]
-          Unknown  
+          inconnu  
         [ENDIF]
 	</TD>
 	 
-	<TD> [f->size] </TD>
+	<TD NOWRAP>&nbsp;
+	[IF !f->url]
+	[f->size] 
+	[ENDIF]
+	</TD>
 	<TD> [f->date] </TD>
-	<TD>&nbsp; [f->title]</TD>
 	 
 	[IF f->edit]
 	<TD>
@@ -168,7 +174,7 @@
 	<TD>
 	<center>
 	<FONT size=-1>
-	<A HREF="[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]', 'Voulez-vous vraiment supprimer [path][f->doc] ([f->size] Kb) ?'); return false;">supprimer</A>
+	<A HREF="[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]', 'Voulez-vous vraiment supprimer [path][f->doc] ([f->size] Ko) ?'); return false;">supprimer</A>
 	</FONT>
 	</center>
 	</TD>
@@ -251,14 +257,32 @@
     </TD>
 
     <TD ALIGN="left" VALIGN="bottom">
-    <input type="submit" value=Créer un nouveau sous dossier"" name="action_d_create_dir">
+    <input type="submit" value="Créer" name="action_d_create_dir">
     <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
     <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
     <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
     </TD>
     </FORM>
-    </TR><BR>
+    </TR>
+
+    <TR>
+    <FORM METHOD="POST" ACTION="[path_cgi]">
+    <TD ALIGN="right" VALIGN="center">
+    <B>Ajouter un signet</B><BR>
+    URL <input MAXLENGTH=100 SIZE="25" type="text" name="url"><BR>
+    intitulé <input MAXLENGTH=100 SIZE="20" type="text" name="name_doc">
+    </TD>
+
+    <TD ALIGN="left" VALIGN="bottom">
+    <input type="submit" value="Ajouter" name="action_d_savefile">
+    <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
+    <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+    <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
+    <INPUT TYPE="hidden" NAME="action" VALUE="d_savefile">
+    </TD>
+    </FORM>
+    </TR>
 
    <TR>
    <FORM METHOD="POST" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
