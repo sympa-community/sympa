@@ -78,15 +78,12 @@ my $robot ;
 
 ## Load config 
 unless ($wwsconf = &wwslib::load_config($conf_file)) {
-    &error_message('unable to load config file');
-    return undef;
+    &fatal_err('Unable to load config file %s', $conf_file);
 }
 
 ## Load sympa config
 unless (&Conf::load( $sympa_conf_file )) {
-    &error_message('config_error');
-    &do_log('info','unable to load sympa config file');
-    exit (-1);
+    &fatal_err('Unable to load sympa config file %s', $sympa_conf_file);
 }
 
 $log_level = $Conf{'log_level'} if ($Conf{'log_level'}); 
