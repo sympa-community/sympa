@@ -2382,7 +2382,7 @@ sub get_default_user_options {
 sub get_total {
     my $self = shift;
     my $name = $self->{'name'};
-    &do_log('debug','List::get_total(%s)', $name);
+    &do_log('debug2','List::get_total(%s)', $name);
 
 #    if ($self->{'admin'}{'user_data_source'} eq 'database') {
 	## If stats file was updated
