@@ -741,8 +741,8 @@ sub smime_decrypt {
 	$dir = $Conf{home} . '/sympa';
     }
     my ($certs,$keys) = smime_find_keys($dir, 'decrypt');
-    unless (defined $certs) {
-	do_log('err', "Unable to decrypt message : cert missing  $certfile");
+    unless (defined $certs && @$certs) {
+	do_log('err', "Unable to decrypt message : missing certificate file");
 	return undef;
     }
 
