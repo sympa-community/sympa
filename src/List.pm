@@ -1488,48 +1488,49 @@ sub send_notify_to_listmaster {
 
 ## Send a sub/sig notice to the owners.
 sub send_notify_to_owner {
-    my($self, $who, $gecos, $operation, $by, $param) = @_;
-    do_log('debug3', 'List::send_notify_to_owner(%s, %s, %s, %s)', $who, $gecos, $operation, $by);
+    my ($self, $param) = @_;
+    do_log('debug3', 'List::send_notify_to_owner(%s, %s, %s, %s)', $self->{'name'}, $param->{'type'});
     
     my ($i, @rcpt);
     my $admin = $self->{'admin'}; 
     my $name = $self->{'name'};
     my $host = $admin->{'host'};
 
-    return unless ($name && $admin && $who);
+    return undef unless ($name && $admin);
     
     foreach $i (@{$admin->{'owner'}}) {
 	next if ($i->{'reception'} eq 'nomail');
 	push(@rcpt, $i->{'email'}) if ($i->{'email'});
     }
 
-    ## Use list lang
-    &Language::SetLang($self->{'admin'}{'lang'});
-
     unless (@rcpt) {
 	do_log('notice', 'Warning : no owner defined or  all of them use nomail option in list %s', $name );
 	return undef;
     }
 
+    ## Use list lang
+    &Language::SetLang($self->{'admin'}{'lang'});
+
     my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
 
-    if ($operation eq 'warn-signoff') {
+    if ($param->{'type'} eq 'warn-signoff') {
 	my ($body, $subject);
-	$subject = sprintf (Msg(8, 21, "WARNING: %s list %s from %s %s"), $operation, $name, $who, $gecos);
-	$body = sprintf (Msg(8, 23, "WARNING : %s %s failed to signoff from %s\nbecause his address was not found in the list\n (You may help this person)\n"),$who, $gecos, $name);
+	$subject = sprintf (Msg(8, 21, "WARNING: %s list %s from %s %s"), $param->{'type'}, $name, $param->{'who'}, $param->{'gecos'});
+	$body = sprintf (Msg(8, 23, "WARNING : %s %s failed to signoff from %s\nbecause his address was not found in the list\n (You may help this person)\n"),$param->{'who'}, $param->{'gecos'}, $name);
 	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
-    }elsif (defined $param) {
-	$self->send_file('listowner_notification', join(',', @rcpt), $param->{'robot'}, $param);
-	
-    }else {
+    }elsif ($param->{'who'}) {
 	my ($body, $subject);
-	$subject = sprintf(Msg(8, 21, "FYI: %s list %s from %s %s"), $operation, $name, $who, $gecos);
-	if ($by) {
-	    $body = sprintf Msg(8, 26, "FYI command %s list %s from %s %s validated by %s\n (no action needed)\n"),$operation, $name, $who, $gecos, $by;
+	$subject = sprintf(Msg(8, 21, "FYI: %s list %s from %s %s"), $param->{'type'}, $name, $param->{'who'}, $param->{'gecos'});
+	if ($param->{'by'}) {
+	    $body = sprintf Msg(8, 26, "FYI command %s list %s from %s %s validated by %s\n (no action needed)\n"),$param->{'type'}, $name, $param->{'who'}, $param->{'gecos'}, $param->{'by'};
 	}else {
-	    $body = sprintf Msg(8, 22, "FYI command %s list %s from %s %s \n (no action needed)\n"),$operation, $name, $who, $gecos ;
+	    $body = sprintf Msg(8, 22, "FYI command %s list %s from %s %s \n (no action needed)\n"),$param->{'type'}, $name, $param->{'who'}, $param->{'gecos'} ;
 	}
 	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to,$self->{'domain'}, @rcpt);
+
+    }else {
+	$self->send_file('listowner_notification', join(',', @rcpt), $param->{'robot'}, $param);
+	
     }
     
 }

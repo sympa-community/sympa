@@ -2495,7 +2495,9 @@ sub do_subscribe {
 	}
 
 	if ($sub_is =~ /notify/) {
-	    $list->send_notify_to_owner($param->{'user'}{'email'}, $param->{'user'}{'gecos'}, 'subscribe');
+	    $list->send_notify_to_owner({'who' => $param->{'user'}{'email'}, 
+					 'gecos' => $param->{'user'}{'gecos'}, 
+					 'type' => 'subscribe'});
 	}
 	&message('performed');
     }
@@ -2697,7 +2699,9 @@ sub do_signoff {
 	$list->save();
 
 	if ($sig_is =~ /notify/) {
-	    $list->send_notify_to_owner($param->{'user'}{'email'}, '', 'signoff');
+	    $list->send_notify_to_owner({'who' => $param->{'user'}{'email'},
+					 'gecos' => '', 
+					 'type' => 'signoff'});
 	}
 	
 	my %context;

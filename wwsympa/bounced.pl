@@ -227,7 +227,10 @@ while (!$end) {
 			$list->save();
 			do_log ('notice',"$who has been removed from $listname because welcome message bounced");
 			
-			$list->send_notify_to_owner($who, "", 'automatic_del', 'listmaster');
+			$list->send_notify_to_owner({'who' => $who, 
+						     'gecos' => "", 
+						     'type' => 'automatic_del', 
+						     'by' => 'listmaster'});
 		    }
 		}else {
 		    do_log ('notice',"Unable to remove $who from $listname (welcome message bounced but del is closed)");

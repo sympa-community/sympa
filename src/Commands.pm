@@ -727,7 +727,9 @@ sub subscribe {
 
 	## If requested send notification to owners
 	if ($action =~ /notify/i) {
-	    $list->send_notify_to_owner($sender, $comment, 'subscribe');
+	    $list->send_notify_to_owner({'who' => $sender, 
+					 'gecos' =>$comment, 
+					 'type' => 'subscribe'});
 	}
 	do_log('info', 'SUB %s from %s accepted (%d seconds, %d subscribers)', $which, $sender, time-$time_command, $list->get_total());
 	
@@ -935,7 +937,9 @@ sub signoff {
 	    
 	    ## Tell the owner somebody tried to unsubscribe
 	    if ($action =~ /notify/i) {
-		$list->send_notify_to_owner($email, $comment, 'warn-signoff');
+		$list->send_notify_to_owner({'who' => $email, 
+					     'gecos' => $comment, 
+					     'type' => 'warn-signoff'});
 	    }
 	    return 'not_allowed';
 	}
@@ -945,7 +949,9 @@ sub signoff {
 	
 	## Notify the owner
 	if ($action =~ /notify/i) {
-	    $list->send_notify_to_owner($email, $comment, 'signoff');
+	    $list->send_notify_to_owner({'who' => $email, 
+					 'gecos' => $comment, 
+					 'type' => 'signoff'});
 	}
 	
 	$list->save();
@@ -1075,7 +1081,10 @@ sub add {
 
 	do_log('info', 'ADD %s %s from %s accepted (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
 	if ($action =~ /notify/i) {
-	    $list->send_notify_to_owner($email, $comment,'add',$sender);
+	    $list->send_notify_to_owner({'who' => $email, 
+					 'gecos' => $comment,
+					 'type' => 'add',
+					 'by' => $sender});
 	}
 	return 1;
     }
@@ -1490,7 +1499,10 @@ sub del {
 	push @msg::report, sprintf Msg(6, 38, $msg::user_removed_from_list), $who, $which;
 	do_log('info', 'DEL %s %s from %s accepted (%d seconds, %d subscribers)', $which, $who, $sender, time-$time_command, $list->get_total() );
 	if ($action =~ /notify/i) {
-	    $list->send_notify_to_owner($who, "", 'del',$sender);
+	    $list->send_notify_to_owner({'who' => $who, 
+					 'gecos' => "", 
+					 'type' => 'del',
+					 'by' => $sender});
 	}
 	return 1;
     }
