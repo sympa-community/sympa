@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {08 April 2003}
+    \date {14 May 2003}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -914,6 +914,16 @@ using \index {FastCGI}. Therefore you need to install the following Perl module 
 
 \end {itemize}
 
+If you want to Download Zip files of list's Archives, you'll need to install
+perl Module for Archive Management : 
+
+\begin {itemize}
+
+    \item \perlmodule {Archive::Zip}
+
+\end {itemize}
+
+
 \subsection {Create a UNIX user}
 
 The final step prior to installing \Sympa: create a UNIX user (and
@@ -1384,9 +1394,7 @@ You can also add a unique entry, with a regular expression, for your domain.
 
 With Postfix, you should edit the \file {/etc/postfix/virtual.regexp} file as follows :
 \begin {quote}
-\begin{verbatim}
-/^(.*)samplerobot\$/	 samplerobot-\${1}
-\end{verbatim}
+/\verb+^+(.*)\samplerobot\$/	 \samplerobot-\${1}
 \end {quote}
  Entries in the 'aliases' file will look like this :
 \begin {quote}
@@ -1397,7 +1405,7 @@ With Postfix, you should edit the \file {/etc/postfix/virtual.regexp} file as fo
 
 With Sendmail, add the following entry to \file {/etc/mail/virtusertable} file :
 \begin {quote}
-@\samplerobot       \samplerobot-%1%3
+@\samplerobot  \ \      \samplerobot-\%1\%3
 \end {quote}
 
 
@@ -2526,6 +2534,7 @@ the owner of this file is \Sympa.
 \end {quote}
 You can also rebuild web archives from within the admin page of the list.
 
+Furthermore, if you want to get list's archives, you can do it via the \cfkeyword{ List-admin menu-> Archive Management}
 \end{enumerate}
  
 

@@ -122,7 +122,7 @@ All important resources are referenced there:
 <UL>
 <LI>sources
 </LI>
-<LI><A NAME="4144"></A><TT>RELEASE_NOTES</TT>
+<LI><A NAME="4147"></A><TT>RELEASE_NOTES</TT>
 </LI>
 <LI>.rpm and .deb packages for Linux
 </LI>
@@ -224,18 +224,18 @@ Anyone willing to port it to NT ? ;-)
 
 <P>
 Finally, most UNIX systems are now supplied with an ANSI C compiler;
-if this is not the case, you can install the <A NAME="4153"></A><TT>gcc</TT> compiler,
+if this is not the case, you can install the <A NAME="4156"></A><TT>gcc</TT> compiler,
 which you will find on the nearest GNU site, for example
 <A NAME="tex2html13"
   HREF="ftp://ftp.oleane.net/pub/mirrors/gnu/">in France</A>.
 
 <P>
 To complete the installation, you should make sure that you have a
-sufficiently recent release of the <A NAME="4156"></A><TT>sendmail</TT> MTA, i.e. release
+sufficiently recent release of the <A NAME="4159"></A><TT>sendmail</TT> MTA, i.e. release
 <A NAME="tex2html14"
   HREF="ftp://ftp.oleane.net/pub/mirrors/sendmail-ucb/">8.9.x</A>
-or a more recent release. You may also use <A NAME="4159"></A><TT>postfix</TT> or
-<A NAME="4162"></A><TT>qmail</TT>.
+or a more recent release. You may also use <A NAME="4162"></A><TT>postfix</TT> or
+<A NAME="4165"></A><TT>qmail</TT>.
 
 <P>
 
@@ -247,7 +247,7 @@ or a more recent release. You may also use <A NAME="4159"></A><TT>postfix</TT> o
 UNIX systems often include a particularly unsophisticated mechanism to
 manage indexed files.  This consists of extensions known as <TT>dbm</TT>
 and <TT>ndbm</TT>, which are unable to meet the needs of many more recent
-programs, including <I>Sympa</I>, which uses the <A NAME="4166"></A>DB package
+programs, including <I>Sympa</I>, which uses the <A NAME="4169"></A>DB package
 initially developed at the University of California in Berkeley,
 and which is now maintained by the company <A NAME="tex2html15"
   HREF="http://www.sleepycat.com">Sleepycat software</A>.  Many UNIX  systems
@@ -274,7 +274,7 @@ To be able to use <I>Sympa</I> you must have release 5.004_03 or later of the
 PERL language, as well as several CPAN modules.
 
 <P>
-At <TT>make</TT> time, the <A NAME="4168"></A><TT>check_perl_modules.pl</TT> script is run to
+At <TT>make</TT> time, the <A NAME="4171"></A><TT>check_perl_modules.pl</TT> script is run to
 check for installed versions of required PERL and CPAN modules. If a CPAN module is
 missing or out of date, this script will install it for you. 
 
@@ -295,26 +295,26 @@ it will find one for you.
 <P>
 The following CPAN modules required by <I>Sympa</I> are not included in the standard
 PERL distribution. We try to keep this list up to date ; if you have any doubts
-run the <A NAME="4172"></A><TT>check_perl_modules.pl</TT> script.
+run the <A NAME="4175"></A><TT>check_perl_modules.pl</TT> script.
 
 <P>
 
 <UL>
-<LI><A NAME="4175"></A><TT>DB_File</TT> (v. 1.50 or later)
+<LI><A NAME="4178"></A><TT>DB_File</TT> (v. 1.50 or later)
 </LI>
-<LI><A NAME="4178"></A><TT>Digest-MD5</TT>
+<LI><A NAME="4181"></A><TT>Digest-MD5</TT>
 </LI>
-<LI><A NAME="4181"></A><TT>MailTools</TT> (version 1.13 o later)
+<LI><A NAME="4184"></A><TT>MailTools</TT> (version 1.13 o later)
 </LI>
-<LI><A NAME="4184"></A><TT>IO-stringy</TT>
+<LI><A NAME="4187"></A><TT>IO-stringy</TT>
 </LI>
-<LI><A NAME="4187"></A><TT>MIME-tools</TT> (may require IO/Stringy)
+<LI><A NAME="4190"></A><TT>MIME-tools</TT> (may require IO/Stringy)
 </LI>
-<LI><A NAME="4190"></A><TT>MIME-Base64</TT>
+<LI><A NAME="4193"></A><TT>MIME-Base64</TT>
 </LI>
-<LI><A NAME="4193"></A><TT>CGI</TT>
+<LI><A NAME="4196"></A><TT>CGI</TT>
 </LI>
-<LI><A NAME="4196"></A><TT>File-Spec</TT>
+<LI><A NAME="4199"></A><TT>File-Spec</TT>
 </LI>
 </UL>
 
@@ -329,11 +329,11 @@ for your RDBMS (DBD) :
 <P>
 
 <UL>
-<LI><A NAME="4201"></A><TT>DBI</TT> (DataBase Interface)
+<LI><A NAME="4204"></A><TT>DBI</TT> (DataBase Interface)
 
 <P>
 </LI>
-<LI><A NAME="4204"></A><TT>DBD</TT> (DataBase Driver) related to your RDBMS (e.g.
+<LI><A NAME="4207"></A><TT>DBD</TT> (DataBase Driver) related to your RDBMS (e.g.
        Msql-Mysql-modules for MySQL)
 
 <P>
@@ -347,7 +347,7 @@ dynamical mailing lists, you need to install PERL LDAP libraries :
 <P>
 
 <UL>
-<LI><A NAME="4208"></A><TT>Net::LDAP</TT> (perlldap).
+<LI><A NAME="4211"></A><TT>Net::LDAP</TT> (perlldap).
 
 <P>
 </LI>
@@ -360,20 +360,33 @@ install the following reversible cryptography library :
 <P>
 
 <UL>
-<LI><A NAME="4211"></A><TT>CipherSaber</TT>
+<LI><A NAME="4214"></A><TT>CipherSaber</TT>
 
 <P>
 </LI>
 </UL>
 
 <P>
-For performence concerns, we recommend using <A NAME="4214"></A><I>WWSympa</I> as a persistent CGI,
+For performence concerns, we recommend using <A NAME="4217"></A><I>WWSympa</I> as a persistent CGI,
 using <A NAME="422"></A>. Therefore you need to install the following Perl module :
 
 <P>
 
 <UL>
-<LI><A NAME="4217"></A><TT>FCGI</TT>
+<LI><A NAME="4220"></A><TT>FCGI</TT>
+
+<P>
+</LI>
+</UL>
+
+<P>
+If you want to Download Zip files of list's Archives, you'll need to install
+perl Module for Archive Management : 
+
+<P>
+
+<UL>
+<LI><A NAME="4223"></A><TT>Archive::Zip</TT>
 
 <P>
 </LI>
@@ -394,7 +407,7 @@ name <TT>sympa</TT> for both user and group.
 <P>
 Numerous files will be located in the <I>Sympa</I> user's login directory.
 Throughout the remainder of this documentation we shall refer to this
-login directory as <A NAME="4222"></A><TT>/home/sympa</TT>.
+login directory as <A NAME="4228"></A><TT>/home/sympa</TT>.
 
 <P>
 
@@ -408,14 +421,14 @@ specify a small number of parameters specific to your installation.
 
 <P>
 First, extract the sources from the archive file, for example
-in the <A NAME="4226"></A><TT>~sympa/src/</TT> directory: the archive will create a
-directory named <A NAME="4231"></A><TT>sympa-4.0.a1/</TT> where all the useful files
+in the <A NAME="4232"></A><TT>~sympa/src/</TT> directory: the archive will create a
+directory named <A NAME="4237"></A><TT>sympa-4.0.a1/</TT> where all the useful files
 and directories will be located. In particular, you will have a
-<A NAME="4234"></A><TT>doc/</TT> directory containing this documentation in various
-formats; a <A NAME="4237"></A><TT>sample/</TT> directory containing a few examples of
-configuration files; an <A NAME="4240"></A><TT>nls/</TT> directory where multi-lingual
-messages are stored; and, of course, the <A NAME="4243"></A><TT>src/</TT> directory for the
-mail robot and <A NAME="4246"></A><TT>wwsympa</TT> for the web interface.
+<A NAME="4240"></A><TT>doc/</TT> directory containing this documentation in various
+formats; a <A NAME="4243"></A><TT>sample/</TT> directory containing a few examples of
+configuration files; an <A NAME="4246"></A><TT>nls/</TT> directory where multi-lingual
+messages are stored; and, of course, the <A NAME="4249"></A><TT>src/</TT> directory for the
+mail robot and <A NAME="4252"></A><TT>wwsympa</TT> for the web interface.
 
 <P>
 Example:
@@ -441,148 +454,148 @@ Now you can run the installation process :
 </TT></BLOCKQUOTE>
 
 <P>
-<A NAME="4249"></A><TT>configure</TT> will build the <A NAME="4252"></A><TT>Makefile</TT> ; it recognizes the following 
+<A NAME="4255"></A><TT>configure</TT> will build the <A NAME="4258"></A><TT>Makefile</TT> ; it recognizes the following 
 command-line arguments :
 
 <P>
 
 <UL>
-<LI><A NAME="4255"></A><TT>- -prefix=PREFIX</TT>, the <I>Sympa</I> homedirectory (default /home/sympa/)
+<LI><A NAME="4261"></A><TT>- -prefix=PREFIX</TT>, the <I>Sympa</I> homedirectory (default /home/sympa/)
 
 <P>
 </LI>
-<LI><A NAME="4259"></A><TT>-with-bindir=DIR</TT>, user executables in DIR (default /home/sympa/bin/)
-<BR><A NAME="4262"></A><TT>queue</TT> and <A NAME="4265"></A><TT>bouncequeue</TT> programs will be installed in this directory.
+<LI><A NAME="4265"></A><TT>-with-bindir=DIR</TT>, user executables in DIR (default /home/sympa/bin/)
+<BR><A NAME="4268"></A><TT>queue</TT> and <A NAME="4271"></A><TT>bouncequeue</TT> programs will be installed in this directory.
 If sendmail is configured to use smrsh (check the mailer prog definition in your sendmail.cf),
-this should point to <A NAME="4268"></A><TT>/etc/smrsh</TT>.  This is probably the case if you are using Linux RedHat.
+this should point to <A NAME="4274"></A><TT>/etc/smrsh</TT>.  This is probably the case if you are using Linux RedHat.
 
 <P>
 </LI>
-<LI><A NAME="4271"></A><TT>-with-sbindir=DIR</TT>, system admin executables in DIR (default /home/sympa/bin)
+<LI><A NAME="4277"></A><TT>-with-sbindir=DIR</TT>, system admin executables in DIR (default /home/sympa/bin)
 
 <P>
 </LI>
-<LI><A NAME="4274"></A><TT>-with-libexecdir=DIR</TT>, program executables in DIR (default /home/sympa/bin)
+<LI><A NAME="4280"></A><TT>-with-libexecdir=DIR</TT>, program executables in DIR (default /home/sympa/bin)
 
 <P>
 </LI>
-<LI><A NAME="4277"></A><TT>-with-cgidir=DIR</TT>, CGI programs in DIR (default /home/sympa/bin)
+<LI><A NAME="4283"></A><TT>-with-cgidir=DIR</TT>, CGI programs in DIR (default /home/sympa/bin)
 
 <P>
 </LI>
-<LI><A NAME="4280"></A><TT>-with-iconsdir=DIR</TT>, web interface icons in DIR (default /home/httpd/icons)
+<LI><A NAME="4286"></A><TT>-with-iconsdir=DIR</TT>, web interface icons in DIR (default /home/httpd/icons)
 
 <P>
 </LI>
-<LI><A NAME="4283"></A><TT>-with-datadir=DIR</TT>, default configuration data in DIR (default /home/sympa/bin/etc)
+<LI><A NAME="4289"></A><TT>-with-datadir=DIR</TT>, default configuration data in DIR (default /home/sympa/bin/etc)
 
 <P>
 </LI>
-<LI><A NAME="4286"></A><TT>-with-confdir=DIR</TT>, Sympa main configuration files in DIR (default /etc)
-<BR><A NAME="4289"></A><TT>sympa.conf</TT> and <A NAME="4292"></A><TT>wwsympa.conf</TT> will be installed there.
+<LI><A NAME="4292"></A><TT>-with-confdir=DIR</TT>, Sympa main configuration files in DIR (default /etc)
+<BR><A NAME="4295"></A><TT>sympa.conf</TT> and <A NAME="4298"></A><TT>wwsympa.conf</TT> will be installed there.
 
 <P>
 </LI>
-<LI><A NAME="4295"></A><TT>-with-exlpdir=DIR</TT>, modifiable data in DIR (default /home/sympa/expl/)
+<LI><A NAME="4301"></A><TT>-with-exlpdir=DIR</TT>, modifiable data in DIR (default /home/sympa/expl/)
 
 <P>
 </LI>
-<LI><A NAME="4298"></A><TT>-with-libdir=DIR</TT>,  code libraries in DIR (default /home/sympa/bin/)
+<LI><A NAME="4304"></A><TT>-with-libdir=DIR</TT>,  code libraries in DIR (default /home/sympa/bin/)
 
 <P>
 </LI>
-<LI><A NAME="4301"></A><TT>-with-mandir=DIR</TT>, man documentation in DIR (default /usr/local/man/)
+<LI><A NAME="4307"></A><TT>-with-mandir=DIR</TT>, man documentation in DIR (default /usr/local/man/)
 
 <P>
 </LI>
-<LI><A NAME="4304"></A><TT>-with-docdir=DIR</TT>, man files in DIR (default /home/sympa/doc/)
+<LI><A NAME="4310"></A><TT>-with-docdir=DIR</TT>, man files in DIR (default /home/sympa/doc/)
 
 <P>
 </LI>
-<LI><A NAME="4307"></A><TT>-with-initdir=DIR</TT>, install System V init script in DIR  (default /etc/rc.d/init.d)
+<LI><A NAME="4313"></A><TT>-with-initdir=DIR</TT>, install System V init script in DIR  (default /etc/rc.d/init.d)
 
 <P>
 </LI>
-<LI><A NAME="4310"></A><TT>-with-piddir=DIR</TT>, create .pid files in DIR  (default /home/sympa/)
+<LI><A NAME="4316"></A><TT>-with-piddir=DIR</TT>, create .pid files in DIR  (default /home/sympa/)
 
 <P>
 </LI>
-<LI><A NAME="4313"></A><TT>-with-etcdir=DIR</TT>, Config directories populated by the user are in DIR (default /home/sympa/etc)
+<LI><A NAME="4319"></A><TT>-with-etcdir=DIR</TT>, Config directories populated by the user are in DIR (default /home/sympa/etc)
 
 <P>
 </LI>
-<LI><A NAME="4316"></A><TT>-with-nlsdir=DIR</TT>, create language files in DIR (default /home/sympa/nls)
+<LI><A NAME="4322"></A><TT>-with-nlsdir=DIR</TT>, create language files in DIR (default /home/sympa/nls)
 
 <P>
 </LI>
-<LI><A NAME="4319"></A><TT>-with-scriptdir=DIR</TT>, create script files in DIR (default /home/sympa/script)
+<LI><A NAME="4325"></A><TT>-with-scriptdir=DIR</TT>, create script files in DIR (default /home/sympa/script)
 
 <P>
 </LI>
-<LI><A NAME="4322"></A><TT>-with-sampledir=DIR</TT>, create sample files in DIR (default /home/sympa/sample)
+<LI><A NAME="4328"></A><TT>-with-sampledir=DIR</TT>, create sample files in DIR (default /home/sympa/sample)
 
 <P>
 </LI>
-<LI><A NAME="4325"></A><TT>-with-spooldir=DIR</TT>, create directory in DIR (default /home/sympa/spool)
+<LI><A NAME="4331"></A><TT>-with-spooldir=DIR</TT>, create directory in DIR (default /home/sympa/spool)
 
 <P>
 </LI>
-<LI><A NAME="4328"></A><TT>-with-perl=FULLPATH</TT>, set full path to Perl interpreter (default /usr/bin/perl)
+<LI><A NAME="4334"></A><TT>-with-perl=FULLPATH</TT>, set full path to Perl interpreter (default /usr/bin/perl)
 
 <P>
 </LI>
-<LI><A NAME="4331"></A><TT>-with-openssl=FULLPATH</TT>, set path to OpenSSL (default /usr/local/ssl/bin/openssl)
+<LI><A NAME="4337"></A><TT>-with-openssl=FULLPATH</TT>, set path to OpenSSL (default /usr/local/ssl/bin/openssl)
 
 <P>
 </LI>
-<LI><A NAME="4334"></A><TT>-with-user=LOGIN</TT>, set sympa user name (default sympa)
+<LI><A NAME="4340"></A><TT>-with-user=LOGIN</TT>, set sympa user name (default sympa)
 <BR><I>Sympa</I> daemons are running under this UID.
 
 <P>
 </LI>
-<LI><A NAME="4338"></A><TT>-with-group=LOGIN</TT>, set sympa group name (default sympa)
+<LI><A NAME="4344"></A><TT>-with-group=LOGIN</TT>, set sympa group name (default sympa)
 <BR><I>Sympa</I> daemons are running under this UID.
 
 <P>
 </LI>
-<LI><A NAME="4342"></A><TT>-with-sendmail_aliases=ALIASFILE</TT>, set aliases file to be used by Sympa (default /etc/mail/sympa_aliases)
+<LI><A NAME="4348"></A><TT>-with-sendmail_aliases=ALIASFILE</TT>, set aliases file to be used by Sympa (default /etc/mail/sympa_aliases)
 <BR>
 <P>
 </LI>
-<LI><A NAME="4345"></A><TT>-with-virtual_aliases=ALIASFILE</TT>, set postfix virtual file to be used by Sympa (default /etc/mail/sympa_virtual)
+<LI><A NAME="4351"></A><TT>-with-virtual_aliases=ALIASFILE</TT>, set postfix virtual file to be used by Sympa (default /etc/mail/sympa_virtual)
 <BR>
 <P>
-This is used by the <A NAME="4348"></A><TT>alias_manager.pl</TT> script :
+This is used by the <A NAME="4354"></A><TT>alias_manager.pl</TT> script :
 
 <P>
 </LI>
-<LI><A NAME="4351"></A><TT>-with-newaliases=FULLPATH</TT>, set path to sendmail newaliases command (default /usr/bin/newaliases)
+<LI><A NAME="4357"></A><TT>-with-newaliases=FULLPATH</TT>, set path to sendmail newaliases command (default /usr/bin/newaliases)
 
 <P>
 </LI>
-<LI><A NAME="4354"></A><TT>-with-newaliases_arg=ARGS</TT>, set arguments to newaliases command (default NONE)
+<LI><A NAME="4360"></A><TT>-with-newaliases_arg=ARGS</TT>, set arguments to newaliases command (default NONE)
 
 <P>
-This is used by the <A NAME="4357"></A><TT>postfix_manager.pl</TT> script :
-
-<P>
-</LI>
-<LI><A NAME="4360"></A><TT>-with-postmap=FULLPATH</TT>, set path to postfix postmap command (default /usr/sbin/postmap)
+This is used by the <A NAME="4363"></A><TT>postfix_manager.pl</TT> script :
 
 <P>
 </LI>
-<LI><A NAME="4363"></A><TT>-with-postmap_arg=ARGS</TT>, set arguments to postfix postmap command (default NONE)
+<LI><A NAME="4366"></A><TT>-with-postmap=FULLPATH</TT>, set path to postfix postmap command (default /usr/sbin/postmap)
+
+<P>
+</LI>
+<LI><A NAME="4369"></A><TT>-with-postmap_arg=ARGS</TT>, set arguments to postfix postmap command (default NONE)
 
 <P>
 </LI>
 </UL>
 
 <P>
-<A NAME="4366"></A><TT>make</TT> will build a few binaries (<A NAME="4369"></A><TT>queue</TT>, <A NAME="4372"></A><TT>bouncequeue</TT> and <A NAME="4375"></A><TT>aliaswrapper</TT>)
+<A NAME="4372"></A><TT>make</TT> will build a few binaries (<A NAME="4375"></A><TT>queue</TT>, <A NAME="4378"></A><TT>bouncequeue</TT> and <A NAME="4381"></A><TT>aliaswrapper</TT>)
 and help you install required CPAN modules.
 
 <P>
-<A NAME="4378"></A><TT>make install</TT> does the installation job. It it recognizes the following option :
+<A NAME="4384"></A><TT>make install</TT> does the installation job. It it recognizes the following option :
 
 <P>
 
@@ -595,13 +608,13 @@ and help you install required CPAN modules.
 </UL>
 
 <P>
-Since version 3.3 of Sympa colors are <A NAME="4381"></A><TT>sympa.conf</TT> parameters (see
+Since version 3.3 of Sympa colors are <A NAME="4387"></A><TT>sympa.conf</TT> parameters (see
 <A HREF="node6.html#colors">5.1.7</A>,  page&nbsp;<A HREF="node6.html#colors"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
-If everything goes smoothly, the <A NAME="4384"></A><TT>~sympa/bin/</TT> directory
-will contain various PERL programs as well as the <A NAME="4389"></A><TT>queue</TT>
-binary.  You will remark that this binary has the <A NAME="494"></A> <I>set-uid-on-exec</I> bit set (owner is the <TT>sympa</TT>
+If everything goes smoothly, the <A NAME="4390"></A><TT>~sympa/bin/</TT> directory
+will contain various PERL programs as well as the <A NAME="4395"></A><TT>queue</TT>
+binary.  You will remark that this binary has the <A NAME="497"></A> <I>set-uid-on-exec</I> bit set (owner is the <TT>sympa</TT>
 user): this is deliberate, and indispensable if <I>Sympa</I> is to run correctly.
 
 <P>
@@ -611,8 +624,8 @@ user): this is deliberate, and indispensable if <I>Sympa</I> is to run correctly
 </H2>
 
 <P>
-All directories are defined in the <A NAME="4393"></A><TT>/etc/sympa.conf</TT> file, which
-is read by <I>Sympa</I> at runtime. If no <A NAME="4397"></A><TT>sympa.conf</TT> file
+All directories are defined in the <A NAME="4399"></A><TT>/etc/sympa.conf</TT> file, which
+is read by <I>Sympa</I> at runtime. If no <A NAME="4403"></A><TT>sympa.conf</TT> file
 was found during installation, a sample one will be created.
 For the default organization of directories, please refer to <A HREF="node3.html#organization">2.1</A>, 
 page&nbsp;<A HREF="node3.html#organization"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
@@ -645,28 +658,28 @@ page&nbsp;<A HREF="node5.html#robot-aliases"><IMG  ALIGN="BOTTOM" BORDER="1" ALT
 
 <P>
 <I>Sympa</I> keeps a trace of each of its procedures in its log file.
-However, this requires configuration of the <A NAME="4401"></A><TT>syslogd</TT>
+However, this requires configuration of the <A NAME="4407"></A><TT>syslogd</TT>
 daemon.  By default <I>Sympa</I> will use the <TT>local1</TT> facility
-(<A NAME="4405"></A><TT>syslog</TT> parameter in <A NAME="4408"></A><TT>sympa.conf</TT>).
-WWSympa's logging behaviour is defined by the <A NAME="4411"></A><TT>log_facility</TT>
-parameter in <A NAME="4414"></A><TT>wwsympa.conf</TT> (by default the same facility as <I>Sympa</I>).
+(<A NAME="4411"></A><TT>syslog</TT> parameter in <A NAME="4414"></A><TT>sympa.conf</TT>).
+WWSympa's logging behaviour is defined by the <A NAME="4417"></A><TT>log_facility</TT>
+parameter in <A NAME="4420"></A><TT>wwsympa.conf</TT> (by default the same facility as <I>Sympa</I>).
 <BR>
-To this end, a line must be added in the <A NAME="4418"></A><TT>syslogd</TT> configuration file (<A NAME="4421"></A><TT>/etc/syslog.conf</TT>). For example:
+To this end, a line must be added in the <A NAME="4424"></A><TT>syslogd</TT> configuration file (<A NAME="4427"></A><TT>/etc/syslog.conf</TT>). For example:
 
 <P><PRE>
 local1.*       /var/log/sympa
 </PRE>
 
 <P>
-Then reload <A NAME="4424"></A><TT>syslogd</TT>.
+Then reload <A NAME="4430"></A><TT>syslogd</TT>.
 
 <P>
 Depending on your platform, your syslog daemon may use either
 a UDP or a UNIX socket. <I>Sympa</I>'s default is to use a UNIX socket;
-you may change this behavior by editing <A NAME="4428"></A><TT>sympa.conf</TT>'s
-<A NAME="4431"></A><TT>log_socket_type</TT> parameter (<A HREF="node6.html#par-log-socket-type">5.3.3</A>,
+you may change this behavior by editing <A NAME="4434"></A><TT>sympa.conf</TT>'s
+<A NAME="4437"></A><TT>log_socket_type</TT> parameter (<A HREF="node6.html#par-log-socket-type">5.3.3</A>,
 page&nbsp;<A HREF="node6.html#par-log-socket-type"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). You can test log feature by
-using  <A NAME="4434"></A><TT>testlogs.pl</TT>.
+using  <A NAME="4440"></A><TT>testlogs.pl</TT>.
 
 <P>
 
@@ -678,9 +691,9 @@ using  <A NAME="4434"></A><TT>testlogs.pl</TT>.
 
 <P>
 Once the files are configured, all that remains is to start <I>Sympa</I>.
-At startup, <A NAME="4438"></A><TT>sympa.pl</TT> will change its UID to sympa (as defined in <A NAME="4441"></A><TT>Makefile</TT>).
+At startup, <A NAME="4444"></A><TT>sympa.pl</TT> will change its UID to sympa (as defined in <A NAME="4447"></A><TT>Makefile</TT>).
 To do this, add the following sequence or its equivalent in your
-<A NAME="4444"></A><TT>/etc/rc.local</TT>:
+<A NAME="4450"></A><TT>/etc/rc.local</TT>:
 
 <P><PRE>
 ~sympa/bin/sympa.pl
@@ -690,12 +703,12 @@ To do this, add the following sequence or its equivalent in your
 </PRE>
 
 <P>
-<A NAME="4447"></A><TT>sympa.pl</TT> recognizes the following command line arguments:
+<A NAME="4453"></A><TT>sympa.pl</TT> recognizes the following command line arguments:
 
 <P>
 
 <UL>
-<LI><A NAME="4450"></A><TT>-debug</TT> | <A NAME="4453"></A><TT>-d</TT> 
+<LI><A NAME="4456"></A><TT>-debug</TT> | <A NAME="4459"></A><TT>-d</TT> 
 
 <P>
 Sets <I>Sympa</I> in debug mode and keeps it attached to the terminal. 
@@ -705,7 +718,7 @@ Sets <I>Sympa</I> in debug mode and keeps it attached to the terminal.
 
 <P>
 </LI>
-<LI><A NAME="4466"></A><TT>-config <I>config_file</I></TT> | <A NAME="4481"></A><TT>-f <I>config_file</I></TT>
+<LI><A NAME="4472"></A><TT>-config <I>config_file</I></TT> | <A NAME="4487"></A><TT>-f <I>config_file</I></TT>
 
 <P>
 Forces <I>Sympa</I> to use an alternative configuration file. Default behavior is
@@ -713,7 +726,7 @@ Forces <I>Sympa</I> to use an alternative configuration file. Default behavior i
 
 <P>
 </LI>
-<LI><A NAME="4488"></A><TT>-mail</TT> | <A NAME="4491"></A><TT>-m</TT> 
+<LI><A NAME="4494"></A><TT>-mail</TT> | <A NAME="4497"></A><TT>-m</TT> 
 
 <P>
 <I>Sympa</I> will log calls to sendmail, including recipients. Useful for
@@ -721,16 +734,16 @@ Forces <I>Sympa</I> to use an alternative configuration file. Default behavior i
 
 <P>
 </LI>
-<LI><A NAME="4504"></A><TT>-lang <I>catalog</I></TT> | <A NAME="4519"></A><TT>-l <I>catalog</I></TT>
+<LI><A NAME="4510"></A><TT>-lang <I>catalog</I></TT> | <A NAME="4525"></A><TT>-l <I>catalog</I></TT>
 
 <P>
 Set this option to use a language catalog for <I>Sympa</I>. 
-  The corresponding catalog file must be located in <A NAME="4526"></A><TT>~sympa/nls</TT>
+  The corresponding catalog file must be located in <A NAME="4532"></A><TT>~sympa/nls</TT>
   directory. 
 
 <P>
 </LI>
-<LI><A NAME="4540"></A><TT>-keepcopy <I>recipient_directory</I></TT> | <A NAME="4555"></A><TT>-k <I>recipient_directory</I></TT>
+<LI><A NAME="4546"></A><TT>-keepcopy <I>recipient_directory</I></TT> | <A NAME="4561"></A><TT>-k <I>recipient_directory</I></TT>
 
 <P>
 This option tells Sympa to keep a copy of every incoming message,
@@ -743,36 +756,36 @@ This option tells Sympa to keep a copy of every incoming message,
 
 <P>
 </LI>
-<LI><A NAME="4573"></A><TT>-dump <I>listname <TT>|</TT> ALL</I></TT>
+<LI><A NAME="4579"></A><TT>-dump <I>listname <TT>|</TT> ALL</I></TT>
 
 <P>
 Dumps subscribers of a list or all lists. Subscribers are dumped
-  in <A NAME="4582"></A><TT>subscribers.db.dump</TT>.
+  in <A NAME="4588"></A><TT>subscribers.db.dump</TT>.
 
 <P>
 </LI>
-<LI><A NAME="4594"></A><TT>-import <I>listname</I></TT>
+<LI><A NAME="4600"></A><TT>-import <I>listname</I></TT>
 
 <P>
 Import subscribers in the <I>listname</I> list. Data are read from STDIN.
 
 <P>
 </LI>
-<LI><A NAME="4600"></A><TT>-lowercase</TT>
+<LI><A NAME="4606"></A><TT>-lowercase</TT>
 
 <P>
 Lowercases e-mail addresses in database.
 
 <P>
 </LI>
-<LI><A NAME="4603"></A><TT>-help</TT> | <A NAME="4606"></A><TT>-h</TT>
+<LI><A NAME="4609"></A><TT>-help</TT> | <A NAME="4612"></A><TT>-h</TT>
 
 <P>
 Print usage of sympa.pl.
 
 <P>
 </LI>
-<LI><A NAME="4609"></A><TT>-make_alias_file</TT>
+<LI><A NAME="4615"></A><TT>-make_alias_file</TT>
 
 <P>
 Create an aliases file in /tmp/ with all list aliases. It uses the list_aliases.tpl
@@ -780,7 +793,7 @@ template.
 
 <P>
 </LI>
-<LI><A NAME="4612"></A><TT>-version</TT> | <A NAME="4615"></A><TT>-v</TT>
+<LI><A NAME="4618"></A><TT>-version</TT> | <A NAME="4621"></A><TT>-v</TT>
 
 <P>
 Print current version of <I>Sympa</I>.
@@ -822,7 +835,7 @@ Print current version of <I>Sympa</I>.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-04-08
+2003-05-14
 </ADDRESS>
 </BODY>
 </HTML>

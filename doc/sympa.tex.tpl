@@ -1398,9 +1398,7 @@ You can also add a unique entry, with a regular expression, for your domain.
 
 With Postfix, you should edit the \file {/etc/postfix/virtual.regexp} file as follows :
 \begin {quote}
-\begin{verbatim}
-/^(.*)samplerobot\$/	 samplerobot-\${1}
-\end{verbatim}
+/\verb+^+(.*)\samplerobot\$/	 \samplerobot-\${1}
 \end {quote}
  Entries in the 'aliases' file will look like this :
 \begin {quote}
@@ -1411,7 +1409,7 @@ With Postfix, you should edit the \file {/etc/postfix/virtual.regexp} file as fo
 
 With Sendmail, add the following entry to \file {/etc/mail/virtusertable} file :
 \begin {quote}
-@\samplerobot       \samplerobot-%1%3
+@\samplerobot  \ \      \samplerobot-\%1\%3
 \end {quote}
 
 
