@@ -5151,7 +5151,7 @@ sub add_user {
 		    
 		    unless ($dbh->do($statement)) {
 			do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-			return undef;
+			next;
 		    }
 		}
 	    }	    
@@ -5161,7 +5161,7 @@ sub add_user {
 	    
 	    unless ($dbh->do($statement)) {
 		do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-		return undef;
+		next;
 	    }
 	    $total++;
 	}
