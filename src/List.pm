@@ -958,7 +958,7 @@ my %mtime;
 use Fcntl;
 use DB_File;
 
-$DB_BTREE->{compare} = '_compare_addresses';
+$DB_BTREE->{compare} = \&_compare_addresses;
 
 sub LOCK_SH {1};
 sub LOCK_EX {2};
@@ -4906,7 +4906,7 @@ sub _load_users {
     my @users_list = (&_load_users_file($file)) ;     
     my $btree = new DB_File::BTREEINFO;
     return undef unless ($btree);
-    $btree->{'compare'} = '_compare_addresses';
+    $btree->{'compare'} = \&_compare_addresses;
     $btree->{'cachesize'} = 200 * ( $#users_list + 1 ) ;
     my $ref = tie %users, 'DB_File', undef, O_CREAT|O_RDWR, 0600, $btree;
     return undef unless ($ref);
@@ -5645,7 +5645,7 @@ sub _load_users_include {
     ## Create in memory btree using DB_File.
     my $btree = new DB_File::BTREEINFO;
     return undef unless ($btree);
-    $btree->{'compare'} = '_compare_addresses';
+    $btree->{'compare'} = \&_compare_addresses;
 
     if (!$use_cache && (-f $db_file)) {
         rename $db_file, $db_file.'old';
