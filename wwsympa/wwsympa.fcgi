@@ -5871,7 +5871,7 @@ sub do_set_pending_list_request {
      &check_param_in();
 
      $param->{'listname'} = $resul->{'list'}{'name'};
-     return 1;
+     return 'get_pending_lists';
  }
 
  ## Return the creation form
