@@ -220,6 +220,7 @@ my %date_format = (
 ## Regexps for list params
 my %regexp = ('email' => '([\w\-\_\.\/\+\=]+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 	      'host' => '[\w\.\-]+',
+	      'host_ldap' => '[\w\.\-:,]+',
 	      'listname' => '[a-z0-9][a-z0-9\-\._]+',
 	      'sql_query' => '(SELECT|select).*',
 	      'scenario' => '[\w,\.\-]+',
@@ -495,7 +496,7 @@ my %alias = ('reply-to' => 'reply_to',
 				 },
 
 
-	    'include_ldap_query' => {'format' => {'host' => {'format' => $regexp{'host'},
+	    'include_ldap_query' => {'format' => {'host' => {'format' => $regexp{'host_ldap'},
 							     'occurrence' => '1',
 							     'title_id' => 36,
 							     'order' => 2
@@ -557,7 +558,7 @@ my %alias = ('reply-to' => 'reply_to',
 				     'title_id' => 35,
 				     'group' => 'data_source'
 				     },
-	    'include_ldap_2level_query' => {'format' => {'host' => {'format' => $regexp{'host'},
+	    'include_ldap_2level_query' => {'format' => {'host' => {'format' => $regexp{'host_ldap'},
 							     'occurrence' => '1',
 							     'title_id' => 136,
 							     'order' => 1
@@ -5341,7 +5342,10 @@ sub _include_users_ldap {
     ## Connection timeout (default is 120)
     #my $timeout = 30; 
     
-    unless ($ldaph = Net::LDAP->new($host, port => "$port", timeout => $param->{'timeout'}, async => 1)) {
+    my (@hostlist) = split(/,/, $host);
+    my $h = $hostlist[1] ? \@hostlist : $host;    # pointeur de tableau, ou chaine
+    unless ($ldaph = Net::LDAP->new($h, port => "$port", timeout => $param->{'timeout'}, async => 1)) {
+
 	do_log('notice',"Can\'t connect to LDAP server '$host' '$port' : $@");
 	return undef;
     }
