@@ -892,11 +892,7 @@ sub get_parameters {
 	$param->{'base_url'} = sprintf 'http://%s', $ENV{'HTTP_HOST'};
 	$param->{'use_ssl'} = 0;
     }
-
-    if ($ENV{'SERVER_PORT'} != 80) {
-	$param->{'base_url'} .= ':'.$ENV{'SERVER_PORT'};
-    }
-
+    
     $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{$ENV{'SERVER_NAME'}};
 
 
