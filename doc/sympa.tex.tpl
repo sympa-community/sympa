@@ -1,8 +1,5 @@
 %
-% Copyright (C) 1999, Institut Pasteur & Christophe Wolfhugel
-% Copyright (C) 1999, Comité Réseau des Universités & Serge Aumont, Olivier Salaün
-% Copyright (C) 1999, UVSQ & Pierre David
-% 
+% Copyright (C) 1999, 2000, 2001 Comité Réseau des Universités & Serge Aumont, Olivier Salaün
 %
 % Historique
 %   1999/04/12 : pda@prism.uvsq.fr : conversion to latex2e
@@ -66,6 +63,8 @@
     \newcommand {\version} {2.7}
 
     \newcommand {\samplelist} {mylist}
+
+    \newcommand {\samplerobot} {some.domain.org}
 
     % #1 = text to index and to display
     \newcommand {\textindex} [1] {\index{#1}#1}
@@ -257,7 +256,8 @@ in a single software package, including:
         list owners (or any other user category), as defined in the list
         \file {config} file or by
         the robot \textindex {administrator}, the listmaster, defined
-        in the \file {/etc/sympa.conf} global configuration file.
+        in the \file {/etc/sympa.conf}  global configuration file (listmaster
+        can also be defined for a particular virtual robot).
         Privileged operations include the usual \mailcmd {ADD}, \mailcmd
         {DELETE} or \mailcmd {REVIEW} commands, which can be
         authenticated via a one-time password or an S/MIME signature.
@@ -266,6 +266,9 @@ in a single software package, including:
         possible by the presence of a subscription date stored in the
         \Sympa database.
 
+    \item full virtual robot definition : one real \Sympa installation
+        can provide multiple virtual robots with both email and web interface
+        customization.
 
     \item E-mail addresses can be retrieved dynamically from a database
     	accepting SQL queries, or from an LDAP directory. In the interest
@@ -315,24 +318,14 @@ in a single software package, including:
 
 \end {itemize}
 
-
 \section {Project directions}
 
-Future developments should include:
-
-\begin {itemize}
-
-    \item Virtual robot definition. ISPs would appreciate the
-        equivalent of \htmladdnormallinkfoot {Apache} {http://www.apache.org}
-        virtual server features applied to mailing lists.
-
-    \item Additional groupware features such as a calendar, a scenario editor, etc
-
-    \item Subscriber preference for multipart/alternative message reception.
-          Some newspapers publish both text/plain and text/html version of
-          their mails. It would be nice to provide a single list for both formats.
-
-\end {itemize}
+\Sympa is a very activ project : check the release note 
+\htmladdnormallinkfoot {release note} {http://listes.cru.fr/sympa/release.shtml}.
+So it is no longer possible to
+maintain multiple document about Sympa project direction.
+Please refer to \htmladdnormallinkfoot {in-the-futur document} {http://www.sympa.org/sympa/direct/in-the-future.html}
+for information about project direction.
 
 \section {History}
 
@@ -456,6 +449,8 @@ you will find the latest version, \htmladdnormallink {FAQ} {http://listes.cru.fr
 
 Here is a snapshot of what \Sympa looks like once it has settled down
 on your system. This also illustrates the \Sympa philosophy, I guess.
+Almost all configuration files can be defined for a particular list, for
+a virtual robot or for the whole site.  
 
 \begin {itemize}
 
@@ -467,7 +462,9 @@ on your system. This also illustrates the \Sympa philosophy, I guess.
 	\item \tildedir {sympa/bin/}\\
 	This directory contains the binaries, including CGI. It
 	also contains the default scenarios, templates and configuration
-	files.
+	files as in the distribution.  \tildedir {sympa/bin/} may be completly
+        overwritten by the \unixcmd {make install} So you must not customize
+        templates and scenarii under  \tildedir {sympa/bin/}.
 
 	\item \tildedir {sympa/bin/etc/}\\
 	Here \Sympa stores the default versions of what it will otherwise find
@@ -484,24 +481,43 @@ on your system. This also illustrates the \Sympa philosophy, I guess.
 	\item \tildedir {sympa/etc/scenari/}\\
 	This directory will contain your scenarii (or scenarios, if you prefer).
 	If you don't know what the hell a scenario is, refer to \ref {scenarii}, 
-	page~\pageref {scenarii}.
+	page~\pageref {scenarii}. Thoses scenarii are default scenarii but you may
+        \tildedir {sympa/etc/\samplerobot/scenari/} for default scenarii of \samplerobot
+        virtual robot and \tildedir {sympa/expl/\samplelist/scenari} for scenarii
+        specific to a particular list 
 	
 	\item \tildedir {sympa/etc/wws\_templates/}\\
 	The web interface (\WWSympa) is composed of template HTML
-	files parsed by the CGI program.
+	files parsed by the CGI program. Templates can also 
+        be defined for a particular list in \tildedir {sympa/expl/\samplelist/wws\_templates/}
+        or in \tildedir {sympa/etc/\samplerobot/wws\_templates/}
 
 	\item \tildedir {sympa/etc/templates/}\\
 	Some of the mail robot's replies are defined by templates
 	(\file{welcome.tpl} for SUBSCRIBE). You can overload
-	these template files in the individual list directories, but these
-	are the defaults.
+	these template files in the individual list directories or
+        for each virtual robot, but these are the defaults.
+
+
+	\item \tildedir {sympa/etc/\samplerobot}\\
+        The directory to define the virtual robot \samplerobot dedicated to
+        managment of all lists of this domain (list describtion of \samplerobot are stored
+        in \tildedir {sympa/expl/\samplerobot}).
+        Thoses directories for virtual robots has the same structure as  \tildedir {sympa/etc} which is
+        configuration dir of the default robot. 
 
 	\item \tildedir {sympa/expl/}\\
 	\Sympa's working directory.
 
 	\item \tildedir {sympa/expl/\samplelist}\\
 	The list directory (refer to \ref {list-directory}, 
-	page~\pageref {list-directory}).
+	page~\pageref {list-directory}). Lists stored in this directory are
+        belong the default robot as defined in sympa.conf file, but a list
+        can be stored in \tildedir {sympa/expl/\samplerobot/\samplelist} directory and it
+        is managed by \samplerobot virtual robot.
+
+	\item \tildedir {sympa/expl/X509-user-certs}\\
+	The directory where Sympa store all user's certificat
 
 	\item \tildedir {sympa/nls/}\\
 	Internationalization directory. It contains XPG4-compatible
@@ -1086,12 +1102,17 @@ the file is of no importance.
 
 \section {Site customization}
 
-\subsection {\cfkeyword {host}}
+\subsection {\cfkeyword {domain}}
 
         This keyword is \textbf {mandatory}. It is the domain name
-	used in the \rfcheader {From} header in replies to administrative requests.
+used in the \rfcheader {From} header in replies to administrative
+requests. So the smtp engine (qmail, sendmail, postfix or whatever) must
+recognize this domain as a local adress. This parameter name replace
+the previous parameter name {\cfkeyword {host}} which can always
+be used as a synonim. 
 
-        \example {host listhost.cru.fr}
+
+        \example {domain cru.fr}
 
 \subsection {\cfkeyword {email}} 
 	
@@ -1105,9 +1126,9 @@ the file is of no importance.
 \subsection {\cfkeyword {listmaster}} 
 
         The list of e-mail addresses  of listmasters (users authorized to perform
-        global  server commands).
+        global  server commands). Listmaster can be defined for each virtual robot.
 
-        \example {listmaster postmaster@cru.fr,root@home.cru.fr}
+        \example {listmaster postmaster@cru.fr,root@cru.fr}
 
 \subsection {\cfkeyword {WWSympa\_url}}  
 
@@ -1116,6 +1137,10 @@ the file is of no importance.
 	This is the root URL of \WWSympa.
 
         \example {WWSympa\_url https://my.server/wws}
+
+\subsection {\cfkeyword {dark\_color} \cfkeyword {light\_color} \cfkeyword {text\_color} \cfkeyword {bg\_color} \cfkeyword {error\_color} \cfkeyword {selected\_color} \cfkeyword {shaded\_color}}
+
+	They are the color definition for web interface. Default are set in the main Makefile. Thoses parameters can be overwritten in each virtual robot definition.
 
 \subsection {\cfkeyword {cookie}} 
 
@@ -1221,8 +1246,8 @@ the file is of no importance.
 	\default {5 Mb}
 
 	Maximum size allowed for messages distributed by \Sympa.
-	This may be customized per list by setting the \lparam {max\_size} 
-	list parameter.
+	This may be customized per virtual robot or per list by setting the \lparam {max\_size} 
+	robot or list parameter.
 
         \example {max\_size           2097152}
 
@@ -2263,7 +2288,7 @@ header they want (for example \texttt {Subject:} , \texttt {Date:} and
 \texttt {To:}, and redistribute the message to a list or to the robot
 without breaking the signature.
 
-So we cannot apply the S/MIME
+So Sympa cannot apply the S/MIME
 authentication method to a command parsed in the \texttt {Subject:} field of a
 message or via the \texttt {-subscribe} or \texttt {-unsubscribe} e-mail
 address. 
@@ -3549,6 +3574,54 @@ The \tildedir {sympa/expl/\samplelist/archives/} directory contains the
 archived messages for lists which are archived; see \ref {par-archive}, 
 page~\pageref {par-archive}. The files are named in accordance with the 
 archiving frequency defined by the \lparam {archive} parameter.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Virtual robot how to
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\Chapter {Virtual robot}
+    \label {virtual-robot}
+
+Sympa is designed to manage multiple distinct mailing list servers on
+a single host with a single Sympa installation. Sympa virtual robots
+are likely Apache virtual hosting. Sympa virtual robot definition include
+a specific email adress for the robot itself and its lists and also a virtual
+http server. Each robot provide access to a set of lists, each list are
+related to only one robot.
+
+All configuration parameters can be define for each robot except Sympa
+installation parameters such as binary and spool location, smtp engine,
+antivirus plugging etc.
+
+\Section {Robot definition}
+
+A robot is named by its domain, let's say \samplerobot and and defined by a directory 
+\tildedir {sympa/etc/\samplerobot}. This directory must contain at least a 
+\file {robot.conf} file. This files as the same format as  \file {/etc/sympa.conf}
+(have a look at robot.conf in the sample dir).
+Only the following parameters can be redefined for a particular robot :
+
+\begin {itemize}
+\item http\_host
+\item title
+\item default\_home
+\item lang
+\item listmaster
+\item max\_size
+\item dark\_color, light\_color, text\_color, bg\_color, error\_color, selected\_color, shaded\_color 
+\end {itemize}
+
+Thoses settings overwrite the equivalent global parameter as defined in \file {/etc/sympa.conf}
+for \samplerobot robot. The http\_host parameter is compared by wwsympa with the HTTP\_HOST
+envirronement variable to recognize which robot is in used. 
+
+\subsection {Robot customization}
+
+If exists \tildedir {sympa/etc/\samplerobot/wws\_templates/},
+\tildedir {sympa/etc/\samplerobot/templates/}, 
+\tildedir {sympa/etc/\samplerobot/scenari/} directries are applied when
+loading templates or scenarii before searching into \tildedir {sympa/etc} and  \tildedir {sympa/bin/etc}. this allow to define specific access and specific look for a particular robot.
 
 
 
