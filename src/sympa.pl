@@ -968,7 +968,7 @@ sub DoMessage{
     ## Check if the message is too large
     my $max_size = $list->get_max_size() || $Conf{'max_size'};
     if ($max_size && $bytes > $max_size) {
-	do_log('notice', 'Message for %s from %s too large (%d > %d)', $name, $sender, $bytes, $max_size);
+	do_log('notice', 'Message for %s from %s rejected because too large (%d > %d)', $name, $sender, $bytes, $max_size);
 	*SIZ  = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
 	print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), &Conf::get_robot_conf($robot, 'request')) . "\n";
 	printf SIZ "To: %s\n", $sender;
