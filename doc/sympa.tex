@@ -4600,7 +4600,13 @@ one more sophisticated tool for web publishing, as web dav or such
 product like \textit {Rearsite} provide.
 Anyhow, it is very useful to be able to define privilege on
 web documents in relation with list attributes, like \textit {subscribers},
-\textit {list owners}, or \textit {list editors}.
+\textit {list owners}, or \textit {list editors}. 
+
+All files and directories name are converted by Sympa into lower case. The consequence
+is that it is impossible to create two deferent document which name differ only
+by char case. This has been introduced in Sympa in order to allow correct URL links
+even when using some HTML document generator (typically power point) that use 
+random case for file name !
 
 In order to have a better control on the documents of
 the shared space, each document is linked with specific information : 
@@ -4705,7 +4711,7 @@ title
   module C++ which uses the class List
 
 creation
-  email Bill.Gates@Cplusplus.com
+  email foo@some.domain.com
   date_epoch 998698638
 
 access
