@@ -9,7 +9,8 @@
 ***** 	'sympa' database. This fasten the queries based on the subscriber email :
 *****	With MySQL :
 *****	ALTER TABLE subscriber_table ADD INDEX (user_subscriber,list_subscriber);
-
+*****	With PostgreSQL :
+*****	CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber));
 
 3.1.1	Wed 25 Apr 2001
 
