@@ -21,7 +21,7 @@
   }	
 
   // To confirm a form submition
-  function request_confirm(my_form, my_message, my_action) {
+  function request_confirm(my_message) {
     if (confirm(my_message)) {
       return true;
     }else {

@@ -1841,5 +1841,32 @@ sub dump_var {
     }
 }
 
+## Change X-Sympa-To: header field in the message
+sub change_x_sympa_to {
+    my ($file, $value) = @_;
+    
+    ## Change X-Sympa-To
+    unless (open FILE, $file) {
+	&wwslog('err', "Unable to open '%s' : %s", $file, $!);
+	next;
+    }	 
+    my @content = <FILE>;
+    close FILE;
+    
+    unless (open FILE, ">$file") {
+	&wwslog('err', "Unable to open '%s' : %s", "$file", $!);
+	next;
+    }	 
+    foreach (@content) {
+	if (/^X-Sympa-To:/i) {
+	    $_ = "X-Sympa-To: $value\n";
+	}
+	print FILE;
+    }
+    close FILE;
+    
+    return 1;
+}
+
 1;
 

@@ -1403,6 +1403,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     }
 	 }	
      }
+
+     $param->{'robot'} = $robot;
+
  }
 
  ## Login WWSympa
@@ -6065,6 +6068,17 @@ sub do_redirect {
 	 return undef;
      }
 
+     ## Super listmaster can move a list to another robot
+     if (&List::is_listmaster($param->{'user'}{'email'})) {
+	 foreach (keys %{$Conf{'robots'}}) {
+	     if ($_ eq $robot) {
+		 $param->{'robots'}{$_} = 'SELECTED';
+	     }else {
+		 $param->{'robots'}{$_} = '';
+	     }	  
+	 }
+     }
+
      return '1';
  }
 
@@ -6084,21 +6098,28 @@ sub do_redirect {
 	 return undef;
      }  
 
-     unless ($param->{'user'}{'email'} &&  (&List::request_action ('create_list',$param->{'auth_method'},$robot,
+     # check new listname syntax
+     $in{'new_listname'} = lc ($in{'new_listname'});
+     unless ($in{'new_listname'} =~ /^$tools::regexp{'listname'}$/i) {
+	 &error_message('incorrect_listname', {'listname' => $in{'new_listname'}});
+	 &wwslog('info','do_rename_list: incorrect listname %s', $in{'new_listname'});
+	 return 'rename_list_request';
+     }
+
+     # check new listname syntax
+     unless ($in{'new_robot'}) {
+	 &error_message('missing_arg', {'argument' => 'robot'});
+	 &wwslog('info','do_rename_list: missing new_robot parameter');
+	 return 'rename_list_request';
+     }
+
+     unless ($param->{'user'}{'email'} &&  (&List::request_action ('create_list',$param->{'auth_method'},$in{'new_robot'},
 							    {'sender' => $param->{'user'}{'email'},
 							     'remote_host' => $param->{'remote_host'},
 							     'remote_addr' => $param->{'remote_addr'}}) =~ /do_it|listmaster/)) {
 	 &error_message('may_not');
 	 &wwslog('info','do_rename_list: not owner');
 	 return undef;
-     }
-
-     # check new listname syntax
-     $in{'new_listname'} = lc ($in{'new_listname'});
-     unless ($in{'new_listname'} =~ /^[a-z0-9][a-z0-9\-\+\._]*$/i) {
-	 &error_message('incorrect_listname', {'listname' => $in{'new_listname'}});
-	 &wwslog('info','do_rename_list: incorrect listname %s', $in{'new_listname'});
-	 return 'rename_list_request';
      }
 
      ## Check listname on SMTP server
@@ -6110,23 +6131,23 @@ sub do_redirect {
 		 $wwsconf->{'list_check_smtp'});
 	 return undef;
      }
-     if( $res || new List ($in{'new_listname'})) {
+     if( $res || new List ($in{'new_listname'}, $in{'new_robot'})) {
 	 &error_message('list_already_exists');
-	 &do_log('info', 'could not rename list %s for %s: new list %s already existing list', 
+	 &do_log('info', 'Could not rename list %s for %s: new list %s already existing list', 
 		 $in{'listname'},$param->{'user'}{'email'},$in{'new_listname'});
-
 	 return undef;
      }
 
-     my $regx = Conf::get_robot_conf($robot,'list_check_regexp');
+     my $regx = Conf::get_robot_conf($in{'new_robot'},'list_check_regexp');
      if( $regx ) {
 	 if ($in{'new_listname'} =~ /^(\S+)-($regx)$/) {
-	     &error_message("Incorrect listname \"$in{'new_listname'}\" matches one of service aliases",{'listname' => $in{'new_listname'}});
+	     &error_message("Incorrect listname \"$in{'new_listname'}\" matches one of service aliases",
+			    {'listname' => $in{'new_listname'}});
 	     &wwslog('info','do_create_list: incorrect listname %s matches one of service aliases', $in{'new_listname'});
 	     return 'rename_list_request';
 	 }
      }
-
+     
      $list->savestats();
 
      ## Dump subscribers
@@ -6135,46 +6156,106 @@ sub do_redirect {
      &_remove_aliases();
 
      ## Rename this list it self
-     unless (rename ("$list->{'dir'}", "$list->{'dir'}/../$in{'new_listname'}" )){
-	 &wwslog('info',"do_rename_list : unable to rename $list->{'dir'} to $list->{'dir'}/../$in{'new_listname'}");
+     my $new_dir;
+     ## Default robot
+     if ($in{'new_robot'} eq $Conf{'host'}) {
+	 $new_dir = $Conf{'home'}.'/'.$in{'new_listname'};
+     }else {
+	 $new_dir = $Conf{'home'}.'/'.$in{'new_robot'}.'/'.$in{'new_listname'};
+     }
+     unless (rename ($list->{'dir'}, $new_dir )){
+	 &wwslog('info',"do_rename_list : unable to rename $list->{'dir'} to $new_dir");
 	 &error_message('failed');
 	 return undef;
      }
      ## Rename archive
-     if (-d "$wwsconf->{'arc_path'}/$in{'listname'}/\@$robot") {
-	 unless (rename ("$wwsconf->{'arc_path'}/$in{'listname'}/\@$robot","$wwsconf->{'arc_path'}/$in{'new_listname'}/\@$robot")) {
-	     &wwslog('info',"do_rename_list : unable to rename archive $wwsconf->{'arc_path'}/$in{'listname'}/\@$robot $wwsconf->{'arc_path'}/$in{'new_listname'}/\@$robot");
+     if (-d "$wwsconf->{'arc_path'}/$list->{'name'}\@$robot") {
+	 unless (rename ("$wwsconf->{'arc_path'}/$list->{'name'}\@$robot","$wwsconf->{'arc_path'}/$in{'new_listname'}\@$in{'new_robot'}")) {
+	     &wwslog('info',"do_rename_list : unable to rename archive $wwsconf->{'arc_path'}/$list->{'name'}\@$robot");
 	     &error_message('renamming_archive_failed');
 	     # continue even if there is some troubles with archives
 	     # return undef;
 	 }
      }
      ## Rename bounces
-     if (-d "$wwsconf->{'bounce_path'}/$param->{'list'}") {
-	 unless (rename ("wwsconf->{'bounce_path'}/$param->{'list'}","wwsconf->{'bounce_path'}/$in{'new_listname'}")) {
+     if (-d "$wwsconf->{'bounce_path'}/$list->{'name'}") {
+	 unless (rename ("wwsconf->{'bounce_path'}/$list->{'name'}","wwsconf->{'bounce_path'}/$in{'new_listname'}")) {
 	      &error_message('unable_to_rename_bounces');
-	      &wwslog('info',"do_rename_list unable to rename bounces from wwsconf->{'bounce_path'}/$param->{'list'} to sconf->{'bounce_path'}/$in{'new_listname'}");
+	      &wwslog('info',"do_rename_list unable to rename bounces from wwsconf->{'bounce_path'}/$list->{'name'} to sconf->{'bounce_path'}/$in{'new_listname'}");
 	 }
      }
 
 
      # if subscribtion are stored in database rewrite the database
      if ($list->{'admin'}{'user_data_source'} =~ /^database|include2$/) {
-	 &List::update_subscribers_db ($in{'list'},$in{'new_listname'});
-	 &wwslog('debug',"do_rename_list :List::update_subscribers_db ($in{'list'},$in{'new_listname'} ");
+	 &List::rename_list_db ($in{'list'},$in{'new_listname'});
+	 &wwslog('debug',"do_rename_list :List::rename_list_db ($in{'list'},$in{'new_listname'} ");
      }
 
      ## Install new aliases
      $in{'listname'} = $in{'new_listname'};
-     $param->{'list'} = $in{'new_listname'};
-     unless ($list = new List ($in{'new_listname'})) {
+     unless ($list = new List ($in{'new_listname'}, $in{'new_robot'})) {
 	 &wwslog('info',"do_rename_list : unable to load $in{'new_listname'} while renamming");
 	 &error_message('failed');
 	 return undef;
      }
      &_install_aliases() if ($list->{'admin'}{'status'} eq 'open');
 
-     $param->{'redirect_to'} = "$param->{'base_url'}$param->{'path_cgi'}/admin/$in{'new_listname'}";
+     ## Rename files in spools
+     ## Auth & Mod  spools
+     foreach my $spool ('queueauth','queuemod','queuetask','queuebounce',
+			'queue','queueoutgoing','queuesubscribe') {
+	 unless (opendir(DIR, $Conf{$spool})) {
+	     &wwslog('err', "Unable to open '%s' spool : %s", $Conf{$spool}, $!);
+	 }
+	 
+	 foreach my $file (sort grep (!/^\.+$/,readdir(DIR))) {
+	     next unless ($file =~ /^$param->{'list'}\_/ ||
+			  $file =~ /^$param->{'list'}\./ ||
+			  $file =~ /^$param->{'list'}\@$robot\./ ||
+			  $file =~ /\.$param->{'list'}$/);
+	     
+	     my $newfile = $file;
+	     if ($file =~ /^$param->{'list'}\_/) {
+		 $newfile =~ s/^$param->{'list'}\_/$in{'new_listname'}\_/;
+	     }elsif ($file =~ /^$param->{'list'}\./) {
+		 $newfile =~ s/^$param->{'list'}\./$in{'new_listname'}\./;
+	     }elsif ($file =~ /^$param->{'list'}\@$robot\./) {
+		 $newfile =~ s/^$param->{'list'}\@$robot\./$in{'new_listname'}\@$in{'new_robot'}\./;
+	     }elsif ($file =~ /\.$param->{'list'}$/) {
+		 $newfile =~ s/\.$param->{'list'}$/\.$in{'new_listname'}/;
+	     }
+ 
+	     ## Rename file
+	     unless (rename "$Conf{$spool}/$file", "$Conf{$spool}/$newfile") {
+		 &wwslog('err', "Unable to rename %s to %s : %s", "$Conf{$spool}/$newfile", "$Conf{$spool}/$newfile", $!);
+		 next;
+	     }
+	     
+	     ## Change X-Sympa-To
+	     &tools::change_x_sympa_to("$Conf{$spool}/$newfile", "$in{'new_listname'}\@$in{'new_robot'}");
+	 }
+	 
+	 close DIR;
+     }
+
+     ## Digest spool
+     if (-f "$Conf{'queuedigest'}/$param->{'list'}") {
+	 unless (rename "$Conf{'queuedigest'}/$param->{'list'}", "$Conf{'queuedigest'}/$in{'new_listname'}") {
+	     &wwslog('err', "Unable to rename %s to %s : %s", "$Conf{'queuedigest'}/$param->{'list'}", "$Conf{'queuedigest'}/$in{'new_listname'}", $!);
+	     next;
+	 }
+     }
+
+
+     if ($in{'new_robot'} eq '$robot') {
+	 $param->{'redirect_to'} = "$param->{'base_url'}$param->{'path_cgi'}/admin/$in{'new_listname'}";
+     }else {
+	 $param->{'redirect_to'} = &Conf::get_robot_conf($in{'new_robot'}, 'wwsympa_url')."/admin/$in{'new_listname'}";
+     }
+
+     $param->{'list'} = $in{'new_listname'};
+
      return 1;
 
  }

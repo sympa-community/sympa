@@ -4018,9 +4018,9 @@ sub add_user {
 
 
 ## Update subscribers (used while renaming a list)
-sub update_subscribers_db {
+sub rename_list_db {
     my($listname, $new_listname) = @_;
-    do_log('debug', 'List::update_subscriber_db(%s,%s)', $listname,$new_listname);
+    do_log('debug', 'List::rename_list_db(%s,%s)', $listname,$new_listname);
 
     unless ($List::use_db) {
 	&do_log('info', 'Sympa not setup to use DBI');
@@ -4036,7 +4036,7 @@ sub update_subscribers_db {
     
     $statement =  sprintf "UPDATE subscriber_table SET list_subscriber=%s WHERE list_subscriber=%s", $dbh->quote($new_listname), $dbh->quote($listname) ; 
 
-    do_log('debug', 'List::update_subscriber_db statement : %s',  $statement );
+    do_log('debug', 'List::rename_list_db statement : %s',  $statement );
 
     unless ($dbh->do($statement)) {
 	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
