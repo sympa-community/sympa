@@ -61,6 +61,7 @@ use CPAN;
 	     'Template' => 'Template-Toolkit',
 	     'Archive::Zip' => 'Archive-Zip',
 	     'LWP' => 'libwww-perl',
+             'XML::LibXML' => 'XML-LibXML'
 	     );
 
 %opt_CPAN = ('DBI' => 'DBI',
