@@ -44,7 +44,7 @@ sub fatal_err {
     my $full_msg = sprintf $m,@_;
 
     ## Notify listmaster
-    &List::send_notify_to_listmaster('sympa_died', $Conf{'domain'}, $m);
+    &List::send_notify_to_listmaster('sympa_died', $Conf{'domain'}, $full_msg);
 
     printf STDERR "$m\n", @_;
     exit(1);   
