@@ -629,10 +629,6 @@ sub crypt_password {
 	$cipher = ciphersaber_installed();
     }
     return $inpasswd if ($cipher eq 'no_cipher') ;
-
-    my $xx = &MIME::Base64::encode($cipher->decrypt ($inpasswd));
-    do_log('info',"xxxxxx crypt_passwd :-crypt.$xx-");
-
     return ("crypt.".&MIME::Base64::encode($cipher->encrypt ($inpasswd))) ;
 }
 
@@ -650,8 +646,6 @@ sub decrypt_password {
 	do_log('info','password seems crypted while CipherSaber is not installed !');
 	return $inpasswd ;
     }
-    my $xx = $cipher->decrypt (&MIME::Base64::decode($inpasswd));
-    do_log('info',"xxxxxx decrypt : password -$xx-");
     return ($cipher->decrypt(&MIME::Base64::decode($inpasswd)));
 }
 

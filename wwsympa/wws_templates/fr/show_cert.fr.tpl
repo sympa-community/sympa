@@ -1,12 +1,11 @@
 
 <BR>
-Authentification HTTPS :<br>
 <table border=1>
-<tr><td><b>HTTPS authentication information</b></td></TR>
+<tr><td><b>Information d'authentification HTTPS</b></td></TR>
 <table>
-<tr><td>User certificate belong to </td><td>[ssl_client_s_dn]</td></tr>
-<tr><td>Certificate expiration date </td><td>[ssl_client_v_end]</td></tr>
-<tr><td>Certificate issuer </td><td>[ssl_client_i_dn]</td></tr>
-<tr><td>Cipher key size used </td><td>[ssl_cipher_usekeysize]</td></tr>
+<tr><td>Certificat pour </td><td>[ssl_client_s_dn]</td></tr>
+<tr><td>Date d'expiration </td><td>[ssl_client_v_end]</td></tr>
+<tr><td>Certificat émis par </td><td>[ssl_client_i_dn]</td></tr>
+<tr><td>Taille de clef utilisée </td><td>[ssl_cipher_usekeysize]</td></tr>
 </table>
 </table>
