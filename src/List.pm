@@ -4916,7 +4916,7 @@ sub _load_users_include {
 		return undef;
 	    }
 	}
-	&do_log('debug', 'Got lock for reading on %s', $db_file);
+	&do_log('debug2', 'Got lock for reading on %s', $db_file);
     }
 
     unless ($use_cache) {
@@ -4933,7 +4933,7 @@ sub _load_users_include {
 		return undef;
 	    }
 	}
-	&do_log('debug', 'Got lock for writing on %s', $db_file);
+	&do_log('debug2', 'Got lock for writing on %s', $db_file);
 
     foreach my $type ('include_list','include_file','include_ldap_query','include_sql_query') {
 	foreach my $incl (@{$admin->{$type}}) {
@@ -4965,7 +4965,7 @@ sub _load_users_include {
 
     ## Unlock DB_file
     flock(DB_FH,LOCK_UN);
-    &do_log('debug', 'Release lock on %s', $db_file);
+    &do_log('debug2', 'Release lock on %s', $db_file);
     close DB_FH;
 
     my $l = {	 'ref'    => $ref,
