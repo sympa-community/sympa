@@ -251,6 +251,8 @@ installconfig:
 		HOST=$(HOST); export HOST; \
 		OPENSSL=$(OPENSSL); export OPENSSL ; \
 		SSLCERTDIR=$(SSLCERTDIR); export SSLCERTDIR ; \
+		PIDDIR=$(PIDDIR); export PIDDIR; \
+		SPOOLDIR=$(SPOOLDIR); export SPOOLDIR; \
 		$(PERL) ../../../subst.pl $$cfile \
 	) ;\
 	chown $(USER) $(DESTDIR)$(CONFDIR)/$$cfile; \
