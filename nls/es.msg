@@ -193,11 +193,6 @@ AUTH %s ADD %s %s %s\n"
 5	"[%s] Artículo para ser aprobado"
 6	"Bienvenido a la lista %s"
 7	"Archivo"
-8	"\
-   Número de mensajes recibidos     :  %9d\n\
-   Número de mensajes transmitidos  :  %9d\n\n\
-   Megabytes enviados               : %9.2f\n\
-   Megabytes transmitidos           : %9.2f\n"
 9	"Resumen de la lista %s"
 10	"Para distribuir el mensaje adjunto en la lista %s, haga click en:\n\
 mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\

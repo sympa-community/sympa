@@ -257,14 +257,6 @@ $no_archives_available =
 'No files are available for this list.
 ';
 
-$stats_detail = '
-   Number of received messages:  %9d
-   Number of relayed messages:   %9d
-
-   Megabytes received:          %9.2f
-   Megabytes sent:              %9.2f
-';
-
 $sub_owner =
 'Dear owner of list %s,
 

@@ -188,11 +188,6 @@ mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
 5	"[%s] Listów do potwierdzenia"
 6	"Witaj na li¶cie %s"
 7	"Plik"
-8	"\
-   Liczba otrzymanych wiadomo¶ci         : %9d\n\
-   Liczba przekazanych dalej wiadomo¶ci  : %9d\n\n\
-   Przes³anych mega-bajtów               : %9.2f\n\
-   Przekazanych dalej mega-bajtów        : %9.2f\n"
 9	"Digest dla listy %s"
 10	"Aby rozes³aæ za³±czon± wiadomo¶æ na listê %s:\n\
 mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\

@@ -3960,18 +3960,6 @@ sub is_web_archived {
    
 }
 
-## Returns statistics about a given list
-sub get_stats {
-   my @st = @{shift->{'stats'}};
-   my $type = shift;
-   do_log('debug2', 'List::get_stats(%s)', $type);
-
-   if ($type eq 'text') {
-      return sprintf(Msg(8, 8, $msg::stats_detail), @st[0..1], $st[2] / 1024 / 1024, $st[3] / 1024 / 1024);
-   }
-   return @st;
-}
-
 ## Returns 1 if the  digest  must be send 
 sub get_nextdigest {
     my $self = shift;

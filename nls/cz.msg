@@ -196,11 +196,6 @@ AUTH %s ADD %s %s %s\n"
 5	"[%s] Pøíspìvek ke schválení"
 6	"Vítejte v konferenci %s"
 7	"Soubor"
-8	"\
-   Poèet pøijatých zpráv : %9d\n\
-   Poèet pøedaných zpráv : %9d\n\n\
-   Odesláno [MB]         : %9.2f\n\
-   Pøedáno [MB]          : %9.2f\n"
 9	"Shrnutí konference %s"
 10	"Pro rozeslání pøipojené zprávy do konference %s:\n\
 mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\

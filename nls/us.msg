@@ -207,11 +207,6 @@ AUTH %s ADD %s %s %s\n"
 5	"[%s] Article to be approved"
 6	"Welcome on list %s"
 7	"File"
-8	"\
-   Number of received messages :  %9d\n\
-   Number of forwarded messages:  %9d\n\n\
-   Sent mega-bytes             : %9.2f\n\
-   Forwarded mega-bytes        : %9.2f\n"
 9	"Digest for list %s"
 10	"To distribute the attached message in list %s:\n\
 mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\

@@ -183,11 +183,6 @@ mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
 5	"[%s] Messaggio da approvare"
 6	"Benvenuto nella lista '%s'"
 7	"File"
-8	"\
-   Numero dei messaggi ricevuti :  %9d\n\
-   Numero dei messaggi inviati  :  %9d\n\n\
-   MegaByte ricevuti            : %9.2f\n\
-   MegaByte inviati             : %9.2f\n"
 9	"Riassunto della lista '%s'"
 10	"Per inoltrare il messaggio allegato alla lista '%s' :\n\
 mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\n"

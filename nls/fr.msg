@@ -206,11 +206,6 @@ AUTH %s ADD %s %s %s\n"
 5	"[%s] Article a approuver"
 6	"Bienvenue sur la liste %s"
 7	"Fichier"
-8	"\
-   Nombre de messages reçus    :  %9d\n\
-   Nombre de messages transmis :  %9d\n\n\
-   Méga-octets reçus           : %9.2f\n\
-   Méga-octets transmis        : %9.2f\n"
 9	"Compilation de la liste %s"
 10	"Pour diffuser le message ci-joint dans la liste %s, \n\
 cliquez sur ce lien :\n\

@@ -201,11 +201,6 @@ mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
 5	"[%s] Levél engedélyezésre vár"
 6	"Üdvözlünk a(z) %s listán"
 7	"Állomány"
-8	"\
-   Fogadott levelek száma     :  %9d\n\
-   Továbbküldött levelek száma:  %9d\n\n\
-   Elküldött megabájtok       : %9.2f\n\
-   Továbbküldött megabájtok   : %9.2f\n"
 9	"Digest a(z) %s listán"
 10	"A(z) %s listán a melléklet megjelenésének jóváhagyásához használd a következõt:\n\
 mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\

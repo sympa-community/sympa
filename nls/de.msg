@@ -234,12 +234,6 @@ mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
 5	"[%s] Freigabe einer Nachricht"
 6	"Willkommen bei %s!"
 7	"Datei"
-8	"\
-   Zahl der empfangenen Nachrichten      :  %9d\n\
-   Zahl der weitergeleiteten Nachrichten :  %9d\n\
-\n\
-   Verschickte MByte                     : %9.2f\n\
-   Weitergeleitete MByte                 : %9.2f\n"
 9	"Zusammenfaßung für Liste %s"
 10	"Um die angehängte Nachricht an die Liste %s weiterzuleiten :\n\
 mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\n"

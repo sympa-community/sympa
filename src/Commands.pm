@@ -272,11 +272,20 @@ sub stats {
     my $list = new List ($which);
     if (! $list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-      do_log('info', 'STATS %s from %s refused, unknown list', $which, $sender);
+	do_log('info', 'STATS %s from %s refused, unknown list', $which, $sender);
 	return 'unknown_list';
     }
-    push @msg::report, sprintf Msg(6, 6, "Informations for list %s:\n\n"), $which;
-    push @msg::report, $list->get_stats('text');
+
+    my %stats = ('msg_rcv' => $list->{'stats'}[0],
+		 'msg_sent' => $list->{'stats'}[1],
+		 'byte_rcv' => sprintf ('%9.2f', ($list->{'stats'}[2] / 1024 / 1024)),
+		 'byte_sent' => sprintf ('%9.2f', ($list->{'stats'}[3] / 1024 / 1024))
+		 );
+
+    $list->send_file('stats_report', $sender, {'stats' => \%stats, 
+					'from' => "SYMPA <$Conf{'sympa'}>",
+					'subject' => "STATS $list->{'name'}"});
+    
     do_log('info', 'STATS %s from %s accepted (%d seconds)', $which, sender, time-$time_command);
 
     return 1;
