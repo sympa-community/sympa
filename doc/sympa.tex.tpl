@@ -1073,76 +1073,10 @@ authorizations if you like, since only programs running with the
 
 
 \section {Robot aliases}
-    \index{aliases}
-    \index{mail aliases}
 
-An electronic list manager such as \Sympa is built around two processing steps:
-
-\begin {itemize}
-    \item a message sent to a list or to \Sympa itself
-        (for subscribe, unsubscribe, help messages, etc.) is received
-        by the SMTP server (\unixcmd {sendmail} or \unixcmd {qmail}).
-        The SMTP server, on reception of this message, runs the
-        \file {queue} program (supplied in this package) to store
-        the message in a queue, i.e. in a special directory.
-
-    \item the \file {sympa.pl} daemon, set in motion at
-        system startup, scans the queue. As soon as it
-        detects a new message, it processes it and performs the
-        requested action (distribution or processing of an
-        administrative request).
-
-\end {itemize}
-
-To separate the processing of administrative requests (subscription,
-unsubscription, help requests, etc.) from the processing of messages destined for mailing
-lists, a special mail alias is reserved for administrative requests, so
-that \Sympa can be permanently accessible to users. The following
-lines must therefore be added to the \unixcmd {sendmail} alias file
-(often \file {/etc/aliases}):
-
-\begin {quote}
-\begin{verbatim}
-sympa:             "| /home/sympa/bin/queue sympa"
-listmaster: 	   "| /home/sympa/bin/queue listmaster"
-bounce+*:          "| /home/sympa/bin/bouncequeue sympa"
-sympa-request:     postmaster
-sympa-owner:       postmaster
-\end{verbatim}
-\end {quote}
-
-\mailaddr {sympa-request} should be the address of the robot
-\textindex {administrator}, i.e. a person who looks after
-\Sympa (here \mailaddr {postmaster{\at}cru.fr}).
-
-\mailaddr {sympa-owner} is the return address for \Sympa error
-messages.
-
-The alias bounce+* is dedicated to collect bounces. It is useful
-only if at least one list uses \texttt { welcome\_return\_path unique } or
-\texttt { remind\_return\_path unique}.
-Don't forget to run \unixcmd {newaliases} after any change to
-the \file {/etc/aliases} file!
-
-Note: aliases based on \mailaddr {listserv} (in addition to those
-based on \mailaddr {sympa}) can be added for the benefit of users
-accustomed to the \mailaddr {listserv} and \mailaddr {majordomo} names.
-For example:
-
-\begin {quote}
-\begin{verbatim}
-listserv:          sympa
-listserv-request:  sympa-request
-majordomo:         sympa
-listserv-owner:    sympa-owner
-\end{verbatim}
-\end {quote}
-
-Note: it will also be necessary to add entries in this alias file
-when lists are created (see list creation section, \ref {list-aliases},
-page~\pageref {list-aliases}).
-
-
+See Robot aliases , \ref {robot-aliases},
+page~\pageref {robot-aliases})
+ 
 \section {Logs}
 
 \Sympa keeps a trace of each of its procedures in its log file.
@@ -1253,6 +1187,184 @@ Lowercases e-mail addresses in database.
  
   
 \end {itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mail aliases 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\chapter {Mail aliases}
+    \label {aliases}
+    \index{aliases}
+
+Mail aliases are required in Sympa for \file {sympa.pl} to receive mail commands and 
+list messages. These aliases management will depend on the MTA (\unixcmd {sendmail}, \unixcmd {qmail},
+\unixcmd {postfix}, \unixcmd {exim}) you're using, where you store aliases and whether
+you are managing virtual domains or not.
+
+\section {Robot aliases}
+   \index{robot-aliases}
+    \index{robot aliases}
+
+An electronic list manager such as \Sympa is built around two processing steps:
+
+\begin {itemize}
+    \item a message sent to a list or to \Sympa itself
+        (for subscribe, unsubscribe, help messages, etc.) is received
+        by the SMTP server (\unixcmd {sendmail} or \unixcmd {qmail}).
+        The SMTP server, on reception of this message, runs the
+        \file {queue} program (supplied in this package) to store
+        the message in a queue, i.e. in a special directory.
+
+    \item the \file {sympa.pl} daemon, set in motion at
+        system startup, scans the queue. As soon as it
+        detects a new message, it processes it and performs the
+        requested action (distribution or processing of an
+        administrative request).
+
+\end {itemize}
+
+To separate the processing of administrative requests (subscription,
+unsubscription, help requests, etc.) from the processing of messages destined for mailing
+lists, a special mail alias is reserved for administrative requests, so
+that \Sympa can be permanently accessible to users. The following
+lines must therefore be added to the \unixcmd {sendmail} alias file
+(often \file {/etc/aliases}):
+
+\begin {quote}
+\begin{verbatim}
+sympa:             "| /home/sympa/bin/queue sympa"
+listmaster: 	   "| /home/sympa/bin/queue listmaster"
+bounce+*:          "| /home/sympa/bin/bouncequeue sympa"
+sympa-request:     postmaster
+sympa-owner:       postmaster
+\end{verbatim}
+\end {quote}
+
+\mailaddr {sympa-request} should be the address of the robot
+\textindex {administrator}, i.e. a person who looks after
+\Sympa (here \mailaddr {postmaster{\at}cru.fr}).
+
+\mailaddr {sympa-owner} is the return address for \Sympa error
+messages.
+
+The alias bounce+* is dedicated to collect bounces. It is useful
+only if at least one list uses \texttt { welcome\_return\_path unique } or
+\texttt { remind\_return\_path unique}.
+Don't forget to run \unixcmd {newaliases} after any change to
+the \file {/etc/aliases} file!
+
+Note: aliases based on \mailaddr {listserv} (in addition to those
+based on \mailaddr {sympa}) can be added for the benefit of users
+accustomed to the \mailaddr {listserv} and \mailaddr {majordomo} names.
+For example:
+
+\begin {quote}
+\begin{verbatim}
+listserv:          sympa
+listserv-request:  sympa-request
+majordomo:         sympa
+listserv-owner:    sympa-owner
+\end{verbatim}
+\end {quote}
+
+Note: it will also be necessary to add entries in this alias file
+when lists are created (see list creation section, \ref {list-aliases},
+page~\pageref {list-aliases}).
+
+
+\section {List aliases}
+\label {list-aliases}
+    \index{aliases}
+    \index{mail aliases}
+
+For each new list, it is necessary to create up to six mail aliases (at least three).
+
+For example, to create the \mailaddr {\samplelist} list, the following
+aliases must be added:
+
+\begin {quote}
+    \tt
+    \begin {tabular} {ll}
+        \mailaddr {\samplelist}:         &
+            "|/home/sympa/bin/queue \samplelist"
+            \\
+        \mailaddr {\samplelist-request}: &
+            "|/home/sympa/bin/queue \samplelist-request"
+            \\
+        \mailaddr {\samplelist-editor}:  &
+            "|/home/sympa/bin/queue \samplelist-editor"
+            \\
+        \mailaddr {\samplelist-owner}:   &
+            "|/home/sympa/bin/bouncequeue \samplelist
+            \\
+        \mailaddr {\samplelist-subscribe}:   &
+            "|/home/sympa/bin/queue \samplelist-subscribe"
+            \\
+        \mailaddr {\samplelist-unsubscribe}: &
+            "|/home/sympa/bin/queue \samplelist-unsubscribe"
+            \\
+
+    \end {tabular}
+\end {quote}
+
+%This example demonstrates how to define a list with the low priority
+%level 2. Messages for editor and owner will be processed by \Sympa
+%with greater priority (level 1) than messages to the list itself.
+
+The address \mailaddr {\samplelist-request} should correspond
+to the person responsible for managing \mailaddr {\samplelist}
+(the \textindex {owner}).  \Sympa will forward messages for
+\mailaddr {\samplelist-request} to the owner of \mailaddr {\samplelist},
+as defined in the \tildefile {sympa/expl/\samplelist/config}
+file.  Using this feature means you would not need to modify the
+alias file if the owner of the list were to change.
+
+Similarly, the address \mailaddr {\samplelist-editor} can be used
+to contact the list editors if any are defined in
+\tildefile {sympa/expl/\samplelist/config}.  This address definition
+is not compulsory.
+
+The address \mailaddr {\samplelist-owner} is the address receiving
+non-delivery reports. The \file {bouncequeue} program stores these messages 
+in the \dir {queuebounce} directory. \WWSympa ((see~\ref {wwsympa}, page~\pageref {wwsympa})
+may then analyze them and provide a web access to them.
+
+The address \mailaddr {\samplelist-subscribe} is an address enabling
+users to subscribe in a manner which can easily be explained to them.
+Beware: subscribing this way is so straightforward that you may find spammers
+subscribing to your list by accident.
+
+The address \mailaddr {\samplelist-unsubscribe} is the equivalent for
+unsubscribing. By the way, the easier it is for users to unsubscribe, the easier it will
+be for you to manage your list!
+
+\section {Alias manager}
+\label {alias-manager}	
+
+The \file {alias\_manager.pl} script does aliases management :cript that will install aliases for a new list
+and delete aliases for closed lists. You can use the one of the following scripts distributed with 
+\Sympa: \tildefile {sympa/bin/alias\_manager.pl} for sendmail-style aliases with a single
+aliases file or \tildefile {sympa/bin/postfix\_manager.pl} for postfix-like aliases using
+an additional \index{virtusertable}.
+
+
+Theses expect the following arguments :
+\begin{enumerate}
+  \item add | del
+  \item \texttt{<}list name\texttt{>}
+  \item \texttt{<}list domain\texttt{>}
+\end{enumerate}
+Example : \tildefile {sympa/bin/alias\_manager.pl} add \samplelist cru.fr
+
+\tildefile {sympa/bin/alias\_manager.pl} works on the alias file as defined
+by the \index{SENDMAIL\_ALIASES} variable in the main Makefile (see \ref {makefile},  
+page~\pageref {makefile}). It runs a \unixcmd{newaliases} command (via
+\file {aliaswrapper}), after any changes to aliases file.
+
+\tildefile {sympa/bin/postfix\_manager.pl} also requires \index{VIRTUAL\_ALIASES}
+variable to be defined in the Makefile. It runs a \unixcmd{postmap} command (via
+\file {virtualwrapper}), after any changes to virtualtable file.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2217,34 +2329,6 @@ To run \WWSympa with FastCGI, you need to install :
 
 \section {wwsympa.conf parameters}
 
-	\subsection {alias\_manager}
-	\label {alias-manager}	
-
-	If this parameter is undefined, then you will have to manage your
-	aliases manually.
-	Provide the path to a script that will install aliases for a new list
-	and delete aliases for closed lists. You can use the one of the following scripts distributed with 
-	\Sympa: \tildefile {sympa/bin/alias\_manager.pl} for sendmail-style aliases with a single
-	aliases file or \tildefile {sympa/bin/postfix\_manager.pl} for postfix-like aliases using
-	an additional \index{virtusertable}.
-
-
-	Theses expect the following arguments :
-	\begin{enumerate}
-		\item add | del
-		\item \texttt{<}list name\texttt{>}
-		\item \texttt{<}list domain\texttt{>}
-	\end{enumerate}
-	Example : \tildefile {sympa/bin/alias\_manager.pl} add \samplelist cru.fr
-
-	\tildefile {sympa/bin/alias\_manager.pl} works on the alias file as defined
-	by the \index{SENDMAIL\_ALIASES} variable in the main Makefile (see \ref {makefile},  
-	page~\pageref {makefile}). It runs a \unixcmd{newaliases} command (via
-	\file {aliaswrapper}), after any changes to aliases file.
-
-	\tildefile {sympa/bin/postfix\_manager.pl} also requires \index{VIRTUAL\_ALIASES}
-	variable to be defined in the Makefile. It runs a \unixcmd{postmap} command (via
-	\file {virtualwrapper}), after any changes to virtualtable file.
 
 	\subsection {arc\_path}
 
@@ -4229,145 +4313,29 @@ to remove existing task files in the \dir {task/} spool if needed. Task file nam
 \chapter {Mailing list definition}
     \label {ml-creation}
 
-The mailing list creation tool is Sympa's web interface. However, this
-web feature has only been available from version 2.7 onwards. Users of previous versions
-will need to create new lists using their favorite text file editor.  
-
-This chapter describe how to create a mailing list without using
-web tools. See~\ref {web-ml-creation}, page~\pageref {web-ml-creation} for
-instructions on the use of WWSympa, which is no doubt the easiest method.
-
-The only part of list creation requiring system privileges is the declaration of new
-system-wide mail aliases. All the other steps should be performed by the \texttt {sympa} user,
-which will ensure that the files created have the correct access permissions.
-
-
-\begin {itemize}
-        \item add aliases in the alias file
-
-        \item create the list directory \tildedir {sympa/expl/\samplelist}
-
-        \item create the configuration file in the \tildedir
-            {sympa/expl/\samplelist} directory
-
-        \item create customized message files (welcome, bye, removed
-          remind, message.header, message.footer) if needed ; in most cases you will have to create at least the welcome message.
-
-\end {itemize}
-
+This chapter describes what a mailing list is made of within Sympa environment.
 
 \section {Mail aliases}
     \label {list-aliases}
     \index{aliases}
     \index{mail aliases}
 
-For each new list, it is necessary to create three mail aliases
-(the location of the \unixcmd {sendmail} alias file varies from
-one system to another).
-
-For example, to create the \mailaddr {\samplelist} list, the following
-aliases must be added:
-
-\begin {quote}
-    \tt
-    \begin {tabular} {ll}
-        \mailaddr {\samplelist}:         &
-            "|/home/sympa/bin/queue \samplelist"
-            \\
-        \mailaddr {\samplelist-request}: &
-            "|/home/sympa/bin/queue \samplelist-request"
-            \\
-        \mailaddr {\samplelist-editor}:  &
-            "|/home/sympa/bin/queue \samplelist-editor"
-            \\
-        \mailaddr {\samplelist-owner}:   &
-            "|/home/sympa/bin/bouncequeue \samplelist
-            \\
-        \mailaddr {\samplelist-subscribe}:   &
-            "|/home/sympa/bin/queue \samplelist-subscribe"
-            \\
-        \mailaddr {\samplelist-unsubscribe}: &
-            "|/home/sympa/bin/queue \samplelist-unsubscribe"
-            \\
-
-    \end {tabular}
-\end {quote}
-
-%This example demonstrates how to define a list with the low priority
-%level 2. Messages for editor and owner will be processed by \Sympa
-%with greater priority (level 1) than messages to the list itself.
-
-The address \mailaddr {\samplelist-request} should correspond
-to the person responsible for managing \mailaddr {\samplelist}
-(the \textindex {owner}).  \Sympa will forward messages for
-\mailaddr {\samplelist-request} to the owner of \mailaddr {\samplelist},
-as defined in the \tildefile {sympa/expl/\samplelist/config}
-file.  Using this feature means you would not need to modify the
-alias file if the owner of the list were to change.
-
-Similarly, the address \mailaddr {\samplelist-editor} can be used
-to contact the list editors if any are defined in
-\tildefile {sympa/expl/\samplelist/config}.  This address definition
-is not compulsory.
-
-The address \mailaddr {\samplelist-owner} is the address receiving
-non-delivery reports. The \file {bouncequeue} program stores these messages 
-in the \dir {queuebounce} directory. \WWSympa ((see~\ref {wwsympa}, page~\pageref {wwsympa})
-may then analyze them and provide a web access to them.
-
-The address \mailaddr {\samplelist-subscribe} is an address enabling
-users to subscribe in a manner which can easily be explained to them.
-Beware: subscribing this way is so straightforward that you may find spammers
-subscribing to your list by accident.
-
-The address \mailaddr {\samplelist-unsubscribe} is the equivalent for
-unsubscribing. By the way, the easier it is for users to unsubscribe, the easier it will
-be for you to manage your list!
-
-
-\section {List directory}
-\label {list-directory}
-
-Each list has its own directory whose name defines the list name. We
-recommend creating it with the same name as the alias. This directory is
-located in \tildedir {sympa/expl} (or any other \cfkeyword{home}
-which you might have defined in the\file {/etc/sympa.conf} file).
-
-Here is a list of files/directories you may find in the list directory :
-
-\begin {quote}
-\begin{verbatim}
-archives/
-bye.tpl
-config
-info
-invite.tpl
-homepage
-message.header
-message.footer
-reject.tpl
-remind.tpl
-removed.tpl
-stats
-subscribers
-welcome.tpl
-\end{verbatim}
-\end {quote}
+See list aliases section, \ref {list-aliases},
+page~\pageref {list-aliases})
 
 \section {List configuration file}
     \label {exp-config}
 
-
 The configuration file for the \mailaddr {\samplelist} list is named
-\tildefile {sympa/expl/\samplelist/config}. \Sympa reads it into memory
-the first time the list is referred to. This file is not rewritten by 
+\tildefile {sympa/expl/\samplerobot/\samplelist/config} 
+(or \tildefile {sympa/expl/\samplelist/config} if no virtual robot is defined). 
+\Sympa reads it into memory the first time the list is referred to. This file is not rewritten by 
 \Sympa, so you may put comment lines in it. 
 It is possible to change this file when the program is running. 
 Changes are taken into account the next time the list is
-accessed. Be careful to provide read access for \Sympa to this file !
+accessed. Be careful to provide read access for \Sympa user to this file !
 
-You will find a few configuration files in the \dir {sample} directory. Copy
-one of them to \tildefile {sympa/expl/\samplelist/config} and customize it.
+You will find a few configuration files in the \dir {sample} directory. 
 
 List configuration parameters are described in the list creation section, \ref {list-configuration-param}, page~\pageref {list-configuration-param}.
 
@@ -4807,13 +4775,6 @@ parameters, or to edit the welcome message, and so on.
 WWSympa logs the creation and all modifications to a list as part of the list's
 \file {config} file (and old configuration files are saved).
 
-\subsection {creating list alias}
-
-If you defined an alias\_manager in \file {wwsympa.conf} 
-(see \ref {alias-manager}, page~\pageref {alias-manager}), \WWSympa
-will run this script for installing aliases. You can write your
-own alias\_manager script, adapted to your MTA or mail configuration,
-provided that it recognizes the same set of parameters.
 
 \section {List edition}
 \label {list-edition}
