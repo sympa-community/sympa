@@ -40,10 +40,7 @@ my $fh = 'fh0000000000';	## File handle for the stream.
 my $max_arg = eval { &POSIX::_SC_ARG_MAX; };
 if ($@) {
     $max_arg = 4096;
-    print STDERR Msg(11, 1,'Your system is not POSIX P1003.1 compliant, or it does not define
-the _SC_ARG_MAX constant in its POSIX library. You will need to manually edit
-smtp.pm and configure $max_arg
-');
+    printf STDERR gettext("Your system does not conform to the POSIX P1003.1 standard, or\nyour Perl system does not define the _SC_ARG_MAX constant in its POSIX\nlibrary. You must modify the smtp.pm module in order to set a value\nfor variable $max_arg.\n");
 } else {
     $max_arg = POSIX::sysconf($max_arg);
 }
@@ -114,7 +111,7 @@ sub smtpto {
    
 
    if (!pipe(IN, OUT)) {
-       fatal_err(Msg(11, 2, "Can't create a pipe in smtpto: %m")); ## No return
+       fatal_err(sprintf gettext("Unable to create a channel in smtpto: %m"), $!); ## No return
    }
    $pid = &tools::safefork();
    $pid{$pid} = 0;
