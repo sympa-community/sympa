@@ -9600,40 +9600,6 @@ sub creation_desc_file {
      return 1;
  } 
 
- ## Show a state of template translations
- sub do_view_translations {
-      &wwslog('info', 'do_view_translations()');
-      my %lang = ('default' => 1);
-
-      unless (opendir TPL, "--ETCBINDIR--/web_tt2/") {
-	  &error_message('error');
-	  &wwslog('info','do_view_translations: unable to read --ETCBINDIR--/web_tt2/');
-	  return undef;
-      }
-
-      foreach my $tpl (sort grep(/\.tt2$/, readdir TPL)) {
-	  my @token = split /\./, $tpl;
-	  if ($#token == 2) {
-	      $param->{'tpl'}{$token[0]}{$token[1]} = 'bin';
-	      $lang{$token[1]} = 1;
-	  }else {
-	      $param->{'tpl'}{$token[0]}{'default'} = 'bin';
-	  }
-      }
-
-      closedir TPL;
-
-      foreach my $l (keys %lang) {
-	  foreach my $t (keys %{$param->{'tpl'}}) {
-	      $param->{'tpl'}{$t}{$l} ||= 'none';
-	  }
-      }
-
-      $param->{'tpl_lang'} = \%lang;
-
-      return 1;
- }
-
  ## REMIND
  sub do_remind {
      &wwslog('info', 'do_remind()');
@@ -10341,64 +10307,6 @@ sub get_protected_email_address {
      }
     
 }
-
- ## View translation for a template
- sub do_translate {
-     &do_log('info', "do_translate($in{'template'}, $in{'lang'})");
-
-     my ($template, $lang) = ($in{'template'}, $in{'lang'});
-
-     unless ($in{'template'}) {
-	 &error_message('missing_arg', {'argument' => 'template'});
-	 &wwslog('info','do_translate: no template');
-	 return undef;
-     }
-
-     unless ($in{'lang'}) {
-	 &error_message('missing_arg', {'argument' => 'lang'});
-	 &wwslog('info','do_translate: no lang');
-	 return undef;
-     }
-
-     $param->{'trans'} = &tools::load_translation($template, $lang, $robot);
-     $param->{'lang'} = $lang;
-     $param->{'template'} = $template;
-
-     return 1; 
- }
-
- ## View a template for translation
- sub do_view_template {
-     &do_log('info', "do_view_template($in{'template'}, $in{'lang'})");
-
-     unless ($in{'template'}) {
-	 &error_message('missing_arg', {'argument' => 'template'});
-	 &wwslog('info','do_view_template: no template');
-	 return undef;
-     }
-
-     unless ($in{'lang'}) {
-	 &error_message('missing_arg', {'argument' => 'lang'});
-	 &wwslog('info','do_view_template: no lang');
-	 return undef;
-     }
-
-     my $src_file =  &tools::get_filename('etc', 'web_tt2/'.$in{template}.'.src', $robot);
-     unless (open TPL, $src_file) {
-	 do_log('err', 'Unable to open file %s: %s', $src_file, $!);
-	 return undef;
-     }
-
-     my @tpl;
-     while (<TPL>) {
-	 push @tpl, &tools::escape_html($_);
-     }
-     close TPL;
-
-     $param->{'tpl'} = \@tpl;
-
-     return 1;
- }
 
  ## view logs stored in RDBMS
  ## this function as been writen in order to allow list owner and listmater to views logs
