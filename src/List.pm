@@ -1095,8 +1095,7 @@ sub send_notify_to_owner {
 
     my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
 
-    if ($operation e
-q 'warn-signoff') {
+    if ($operation eq 'warn-signoff') {
 	my ($body, $subject);
 	$subject = sprintf (Msg(8, 21, "WARNING: %s list %s from %s %s"), $operation, $name, $who, $gecos);
 	$body = sprintf (Msg(8, 23, "WARNING : %s %s failed to signoff from %s\nbecause his address was not found in the list\n (You may help this person)\n"),$who, $gecos, $name);
