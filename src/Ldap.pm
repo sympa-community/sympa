@@ -134,7 +134,7 @@ sub export_list{
     ##Bind:To verify the password
     my $cnx = $ldap->bind(dn => "$Conf{'ldap_export'}{$directory}{'DnManager'}" , password => "$Conf{'ldap_export'}{$directory}{'password'}");
 
-    unless($cnx->code == 0){
+    unless(defined($cnx) && ($cnx->code == 0)){
 	&Log::do_log('notice', 'Ldap::export_list:Incorrect password for binding with dn: %s',$Conf{'ldap_export'}{$directory}{'DnManager'});
 	$ldap->unbind;
 	return undef;
@@ -177,7 +177,7 @@ sub export_list{
                                 );
     #&Log::do_log('notice',"xxxadd ok") if($result_add->code == 0);
 
-    if($result_add->code != 0){
+    unless (defined($result_add) && ($result_add->code == 0)){
         #my $error = $result_add->error;
 	&Log::do_log('err'," Ldap::export_list: Adding Error ");
 #	my $server_error = $result_add->server_error;
@@ -217,7 +217,7 @@ sub delete_list{
       ##To verify the password
       my $cnx = $ldap->bind(dn => "$Conf{'ldap_export'}{$directory}{'DnManager'}" , password => "$Conf{'ldap_export'}{$directory}{'password'}");
     
-      unless($cnx->code == 0){
+      unless(defined($cnx) && ($cnx->code == 0)){
 	  &Log::do_log('notice', 'Ldap::delete_list:Incorrect dn %s for binding',$Conf{'ldap_export'}{$directory}{'DnManager'});
 	  $ldap->unbind;
 	  return undef;
@@ -238,7 +238,7 @@ sub delete_list{
     if($result_search->count > 0){
         my $result_delete = $ldap->delete("$dn");
 	
-	unless($result_delete->code == 0){
+	unless(defined($result_delete) && ($result_delete->code == 0)){
 	    my $error = $result_delete->error;
 	    &Log::do_log('err',"Ldap::export_list: Delete Error=$error");
 	    return undef;
@@ -279,7 +279,7 @@ sub get_exported_lists{
 				       scope => 'sub',
 				       );
 
-    if($result_search->code != 0){
+    unless (defined($result_search) && ($result_search->code == 0)){
 	&Log::do_log('notice',"No result for directory '%s' : %s",$directory, $result_search->error );
     }else{
 	foreach my $entry ($result_search->all_entries){
@@ -331,11 +331,12 @@ sub get_dn_anonymous{
 				       scope => $datas->{'scope'},
 				       timeout => $datas->{'timeout'},
 				       );
-    if($result_search->code != 0){
+    unless (defined($result_search) && ($result_search->code == 0)){
 	&Log::do_log('notice',"Ldap::get_dn_anonymous :No result for directory %s",$directory );
+	return undef;
     }
     
-    if ($result_search->count() == 0) {
+    if (defined($result_search) && ($result_search->count() == 0)) {
 	do_log('notice','Ldap::get_dn_anonymous : No entry in the Ldap Directory of %s',$datas->{'host'});
 	$ldap->unbind;
     }
