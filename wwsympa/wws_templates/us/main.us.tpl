@@ -48,7 +48,6 @@
          return getCookieVal (j);
          i = document.cookie.indexOf(" ", i) + 1;
          if (i == 0) break; 
-       }
      }
      return null;
   }  
