@@ -3716,6 +3716,7 @@ Rules are defined as follows :
                 | all ()
                 | equal (<var>, <var>)
                 | match (<var>, /perl_regexp/)
+		| search (<filter.ldap>,<var>)
                 | is_subscriber (<listname>, <var>)
                 | is_owner (<listname>, <var>)
                 | is_editor (<listname>, <var>)
@@ -3757,6 +3758,7 @@ Rules are defined as follows :
              | owner
 	     | editor
 	     | editorkey
+	     | listmaster
 
 <tpl_name> ::= corresponding template (<tpl_name>.tt2) is send to the sender
 
@@ -6012,12 +6014,66 @@ Example : (cn=testgroup,dc=cru,dc=fr should be a groupOfUniqueNames here)
 \subsection {include\_file}
     \label {include-file}
 
-\lparam {include\_file} \texttt {path to file} 
+\lparam {include\_file}    \texttt {path\_to\_file} 
 
 This parameter will be interpreted only if the
 \lparam {user\_data\_source} value is set to  \texttt {include}.
-The file should contain one e-mail address per line
-(lines beginning with a "\#" are ignored).
+The file should contain one e-mail address per line with an optional user description, separated from the email address by spaces (lines beginning with a "\#" are ignored).
+
+\textit {Sample included file:} 
+
+\begin {quote}
+\begin{verbatim}
+## Data for Sympa member import
+john.smith@sample.edu  John Smith - math department
+sarah.hanrahan@sample.edu  Sarah Hanrahan - physics department
+\end{verbatim}
+\end {quote}
+
+
+\subsection {include\_remote\_file}
+    \label {include-remote-file}
+
+\lparam {include\_remote\_file}
+
+This parameter (organized as a paragraph) does the same as the \lparam {include\_file} parameter, except that
+it gets a remote file. This paragraph is used only if \lparam {user\_data\_source} is set to \texttt {include}. 
+Using this method you should be able to include any \textit {exotic} data source that is not supported by Sympa.
+The paragraph is made of the following entries :
+
+\begin{itemize}
+
+\item
+\label {url}
+\lparam {url} \textit {url\_of\_remote\_file} 
+
+This is the URL of the remote file to include.
+
+\item
+\label {user}
+\lparam {user} \textit {user\_name} 
+
+This entry is optional, only used if HTTP basic authentication is required to access the remote file.
+
+\item
+\label {passwd}
+\lparam {passwd} \textit {user\_passwd} 
+
+This entry is optional, only used if HTTP basic authentication is required to access the remote file.
+
+\end {itemize}
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+include_remote_file
+url     http://www.myserver.edu/myfile
+user    john_netid
+passwd  john_passwd
+\end{verbatim}
+\end {quote}
+
 
 \section {Command related}
 

@@ -22,6 +22,25 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+package WebAgent;
+
+use LWP::UserAgent;
+## Good documentation : http://articles.mongueurs.net/magazines/linuxmag57.html
+
+@ISA = qw (LWP::UserAgent);
+
+my ($web_user, $web_passwd);
+
+sub get_basic_credentials {
+    my ( $self, $realm, $uri ) = @_;
+
+    return ( $web_user, $web_passwd );
+}
+
+sub set_basic_credentials {
+    ($web_user, $web_passwd ) = @_;
+}
+
 package AuthN;
 
 require Exporter;
@@ -189,6 +208,7 @@ sub get_https2{
 
 	return (@result);	
 }
+
 
 
 #################################################################

@@ -22,7 +22,7 @@
 package List;
 
 use strict;
-require X509;
+require AuthN;
 require Exporter;
 #require Encode;
 require 'tools.pl';
@@ -229,7 +229,7 @@ my @param_order = qw (subject visibility info subscribe add unsubscribe del owne
 		      account topics 
 		      host lang web_archive archive digest available_user_options 
 		      default_user_options reply_to_header reply_to forced_reply_to * 
-		      welcome_return_path remind_return_path user_data_source include_file 
+		      welcome_return_path remind_return_path user_data_source include_file include_remote_file 
 		      include_list include_remote_sympa_list include_ldap_query
                       include_ldap_2level_query include_sql_query include_admin ttl creation update 
 		      status serial);
@@ -507,7 +507,33 @@ my %alias = ('reply-to' => 'reply_to',
 			       'gettext_id' => "File inclusion",
 			       'group' => 'data_source'
 			       },
-
+	    'include_remote_file' => {'format' => {'url' => {'format' => '.+',
+							     'gettext_id' => "data location URL",
+							     'occurrence' => '1',
+							     'length' => 50,
+							     'order' => 2
+							     },					       
+						   'user' => {'format' => '.+',
+							      'gettext_id' => "remote user",
+							      'order' => 3,
+							      'occurrence' => '0-1'
+							      },
+						   'passwd' => {'format' => '.+',
+								'length' => 10,
+								'gettext_id' => "remote password",
+								'order' => 4,
+								'occurrence' => '0-1'
+								},							      
+						    'name' => {'format' => '.+',
+							       'gettext_id' => "short name for this source",
+							       'length' => 15,
+							       'order' => 1
+							       }
+						     },
+				      'gettext_id' => "Remote file inclusion",
+				      'occurrence' => '0-n',
+				      'group' => 'data_source'
+				      },				  
 	    'include_ldap_query' => {'format' => {'host' => {'format' => $tools::regexp{'multiple_host_with_port'},
 							     'occurrence' => '1',
 							     'gettext_id' => "remote host",
@@ -5453,7 +5479,7 @@ sub _include_users_remote_sympa_list {
     my $email ;
 
 
-    foreach my $line ( &X509::get_https($host,$port,$path,$cert_file,$key_file,{'key_passwd' => $Conf{'key_passwd'},
+    foreach my $line ( &AuthN::get_https($host,$port,$path,$cert_file,$key_file,{'key_passwd' => $Conf{'key_passwd'},
                                                                                'cafile'    => $Conf{'cafile'},
                                                                                'capath' => $Conf{'capath'}})
 		){	
@@ -5644,6 +5670,81 @@ sub _include_users_file {
     close INCLUDE ;
     
     do_log('info',"include %d new subscribers from file %s",$total,$filename);
+    return $total ;
+}
+    
+sub _include_users_remote_file {
+    my ($users, $param, $default_user_options,$tied) = @_;
+
+    my $url = $param->{'url'};
+    
+    do_log('debug', "List::_include_users_remote_file($url)");
+
+    my $total = 0;
+    my $id = _get_datasource_id($param);
+
+    ## WebAgent package is part of AuthN.pm and inherites from LWP::UserAgent
+
+    my $fetch = WebAgent->new (agent => 'Sympa/'.$Version::Version);
+
+    my $req = HTTP::Request->new(GET => $url);
+    
+    if (defined $param->{'user'} && defined $param->{'passwd'}) {
+	&WebAgent::set_basic_credentials($param->{'user'},$param->{'passwd'});
+    }
+
+    my $res = $fetch->request($req);  
+
+    # check the outcome
+    if ($res->is_success) {
+	my @remote_file = split(/\n/,$res->content);
+
+	# forgot headers (all line before one that contain a email
+	foreach my $line (@remote_file) {
+	    next if ($line =~ /^\s*$/);
+	    next if ($line =~ /^\s*\#/);
+
+	    unless ( $line =~ /^\s*($tools::regexp{'email'})(\s*(\S.*))?\s*$/) {
+		&do_log('err', 'Not an email address: %s', $_);
+	    }     
+	    my $email = &tools::clean_email($1);
+	    next unless $email;
+	    my $gecos = $5;		
+
+	    my %u;
+	    ## Check if user has already been included
+	    if ($users->{$email}) {
+		if ($tied) {
+		    %u = split "\n",$users->{$email};
+		}else{
+		    %u = %{$users->{$email}};
+		    foreach my $k (keys %u) {
+		    }
+		}
+	    }else {
+		%u = %{$default_user_options};
+		$total++;
+	    }
+	    $u{'email'} = $email;
+	    $u{'gecos'} = $gecos;
+	    $u{'id'} = join (',', split(',', $u{'id'}), $id);
+	    
+	    if ($tied) {
+		$users->{$email} = join("\n", %u);
+	    }else {
+		$users->{$email} = \%u;
+	    }
+	}
+    }
+    else {
+	do_log ('err',"List::include_users_remote_file: Unable to fetch remote file $url");
+	return undef; 
+    }
+
+    ## Reset http credentials
+    &WebAgent::set_basic_credentials('','');
+
+    do_log('info',"include %d new subscribers from remote file %s",$total,$url);
     return $total ;
 }
 
@@ -6095,7 +6196,7 @@ sub _load_users_include {
 	}
 	&do_log('debug3', 'Got lock for writing on %s', $db_file);
 
-	foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
+	foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query','include_remote_file') {
 	    last unless (defined $total);
 	    
 	    foreach my $incl (@{$admin->{$type}}) {
@@ -6121,6 +6222,8 @@ sub _load_users_include {
 		    $included = _include_users_remote_sympa_list(\%users, $incl, $dir,$admin->{'domain'},$admin->{'default_user_options'}, 'tied');
 		}elsif ($type eq 'include_file') {
 		    $included = _include_users_file (\%users, $incl, $admin->{'default_user_options'}, 'tied');
+		}elsif ($type eq 'include_remote_file') {
+		    $included = _include_users_remote_file (\%users, $incl, $admin->{'default_user_options'}, 'tied');
 		}
 		unless (defined $included) {
 		    &do_log('err', 'Inclusion %s failed in list %s', $type, $name);
@@ -6201,10 +6304,10 @@ sub _load_users_include2 {
     my $dir = shift;
     do_log('debug2', 'List::_load_users_include for list %s',$name);
 
-    my (%users, $depend_on, $ref);
+    my (%users, $depend_on, $ref, $error);
     my $total = 0;
 
-    foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
+    foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query','include_remote_file') {
 	last unless (defined $total);
 	    
 	foreach my $incl (@{$admin->{$type}}) {
@@ -6231,11 +6334,14 @@ sub _load_users_include2 {
 		$included = _include_users_file (\%users, $incl, $admin->{'default_user_options'});
 #	    }elsif ($type eq 'include_admin') {
 #		$included = _include_users_admin (\\%users, $incl, $admin->{'default_user_options'});
+#	    }
+	    }elsif ($type eq 'include_remote_file') {
+		$included = _include_users_remote_file (\%users, $incl, $admin->{'default_user_options'});
 	    }
 	    unless (defined $included) {
 		&do_log('err', 'Inclusion %s failed in list %s', $type, $name);
-		$total = undef;
-		last;
+		$error = 1;
+		next;
 	    }
 	    
 	    $total += $included;
@@ -6243,7 +6349,7 @@ sub _load_users_include2 {
     }
 
     ## If an error occured, return an undef value
-    unless (defined $total) {
+    if ($error) {
 	return undef;
     }
     return \%users;
@@ -8649,7 +8755,7 @@ sub create_shared {
 sub has_include_data_sources {
     my $self = shift;
 
-    foreach my $type ('include_file','include_list','include_remote_sympa_list','include_sql_query',
+    foreach my $type ('include_file','include_list','include_remote_sympa_list','include_sql_query','include_remote_file',
 		      'include_ldap_query','include_ldap_2level_query','include_admin') {
 	return 1 if (defined $self->{'admin'}{$type});
     }
