@@ -2110,7 +2110,7 @@ others. Depending on permissions, the same URL may generate a different view.
 \item Run a dedicated Apache server with sympa.sympa as uid.gid (The Apache default
       is nobody.nobody)
 
-\item Use a virtual Apache server with sympa.sympa as uid.gid ; Apache
+\item Use a Apache virtual host with sympa.sympa as uid.gid ; Apache
       needs to be compiled with suexec. Be aware that the Apache suexec usually define a lowest
       UID/GID allowed to be a target user for suEXEC. For most systems including binaries
       distribution of Apache, the default value 100 is common.
@@ -3227,7 +3227,7 @@ listmaster@your.virtual.domain: "| /home/sympa/bin/queue listmaster@your.virtual
 \end {quote}
 
 \item Define a \textbf {virtual host in your HTTPD server}. The fastcgi servers defined 
-in the common section of you httpd server can be used by each virtual server. You don't 
+in the common section of you httpd server can be used by each virtual host. You don't 
 need to run dedicated fascgi server for each virtual robot.
 
 \textit {Examples:} 
