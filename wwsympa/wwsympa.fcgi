@@ -4250,7 +4250,7 @@ sub do_remindpasswd {
 ### moderation of messages
 
  sub do_reject {
-     &wwslog('info', 'do_reject()');
+     &wwslog('info', 'do_reject(%s)', join(',', split(/\0/, $in{'id'})));
      my ($msg, $file);
 
      unless ($param->{'list'}) {
@@ -4322,7 +4322,7 @@ sub do_remindpasswd {
 
  ## TODO: supprimer le msg
  sub do_distribute {
-     &wwslog('info', 'do_distribute()');
+     &wwslog('info', 'do_distribute(%s)', join(',', split(/\0/, $in{'id'})) );
      my ($msg, $file);
 
      unless ($param->{'list'}) {
