@@ -397,7 +397,7 @@ my %in_regexp = (
 				 
 		 ## List config parameters
 		 'single_param' => '.+',
-		 'multiple*_param' => '.+',
+		 'multiple_param' => '.+',
 
 		 ## Textarea content
 		 'content' => '.+',
