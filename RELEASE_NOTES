@@ -1,6 +1,16 @@
 *****    Changes which are not compatible with previous versions are
 *****    listed using "*****"in the margin. Please check this at least.
 
+3.2     xx xx xx xx
+
+  Changes :
+
+*****	For enhanced performences, we recommend you add an INDEX to your
+***** 	'sympa' database. This fasten the queries based on the subscriber email :
+*****	With MySQL :
+*****	ALTER TABLE subscriber_table ADD INDEX (user_subscriber,list_subscriber);
+
+
 3.1.1	Wed 25 Apr 2001
 
   Bug fixes :
