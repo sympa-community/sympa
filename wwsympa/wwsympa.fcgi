@@ -34,8 +34,8 @@ require "--BINDIR--/msg.pl";
 require "--BINDIR--/tools.pl";
 
 ## WWSympa librairies
-require "--BINDIR--/wwslib.pl";
-require "--BINDIR--/cookie-lib.pl";
+use wwslib;
+use cookielib;
 
 ## Configuration
 my $wwsconf = {};
@@ -45,7 +45,7 @@ my $conf_file = '--WWSCONFIG--';
 my $sympa_conf_file = '--CONFIG--';
 
 ## Load config 
-unless ($wwsconf = &load_config($conf_file)) {
+unless ($wwsconf = &wwslib::load_config($conf_file)) {
     &message('unable to load config file');
     return undef;
 }
@@ -59,7 +59,7 @@ unless (&Conf::load( $sympa_conf_file )) {
 
 &mail::set_send_spool($Conf{'queue'});
 
-my $mime_types = &load_mime_types();
+my $mime_types = &wwslib::load_mime_types();
 
 if ($wwsconf->{'use_fast_cgi'}) {
     require CGI::Fast;
@@ -334,7 +334,7 @@ while ($query = &new_loop()) {
 	$param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_DN_Email'});
 	$param->{'auth_method'} = 'smime';
     }elsif ($ENV{'HTTP_COOKIE'} =~ /user\=/) {
-	$param->{'user'}{'email'} = &get_email_from_cookie($Conf{'cookie'});
+	$param->{'user'}{'email'} = &wwslib::get_email_from_cookie($Conf{'cookie'});
 	$param->{'auth_method'} = 'md5';
     }else{
 	## request action need a auth_method even if the user is not authenticated ...
@@ -427,7 +427,7 @@ while ($query = &new_loop()) {
 		$delay = 'session';
 	    }
 
-	    &set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $wwsconf->{'cookie_domain'},$delay ) || exit;
+	    &cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $wwsconf->{'cookie_domain'},$delay ) || exit;
 	}elsif ($ENV{'HTTP_COOKIE'} =~ /user\=/){
 	    &set_cookie('unknown',$Conf{'cookie'}, $wwsconf->{'cookie_domain'}, 'now');
 	}
@@ -891,7 +891,7 @@ sub do_login {
 	return undef;
     }
     
-    unless (&valid_email($in{'email'})) {
+    unless (&wwslib::valid_email($in{'email'})) {
 	$param->{'error'}{'email'} = $in{'email'};
 	&message('incorrect_email');
 	&wwslog('info','do_login: incorrect email %s', $in{'email'});
