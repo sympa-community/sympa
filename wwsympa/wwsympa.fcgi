@@ -46,6 +46,7 @@ use Commands;
 use Language;
 use Log;
 use Ldap;
+use Auth;
 
 use Mail::Header;
 use Mail::Address;
@@ -56,7 +57,6 @@ require "--LIBDIR--/tools.pl";
 ## WWSympa librairies
 use wwslib;
 use cookielib;
-
 my %options;
 
 ## Configuration
@@ -134,6 +134,7 @@ my %comm = ('home' => 'do_home',
 	 'logout' => 'do_logout',
 	 'loginrequest' => 'do_loginrequest',
 	 'login' => 'do_login',
+	 'sso_login' => 'do_sso_login',
 	 'subscribe' => 'do_subscribe',
 	 'subrequest' => 'do_subrequest',
 	 'subindex' => 'do_subindex',
@@ -190,6 +191,7 @@ my %comm = ('home' => 'do_home',
 	 'submit_list' => 'do_submit_list',
 	 'editsubscriber' => 'do_editsubscriber',
 	 'viewbounce' => 'do_viewbounce',
+	 'redirect' => 'do_redirect',
 	 'rename_list_request' => 'do_rename_list_request',
 	 'rename_list' => 'do_rename_list',
 	 'reviewbouncing' => 'do_reviewbouncing',
@@ -243,6 +245,7 @@ my %action_args = ('default' => ['list'],
 		'choosepasswd' => ['email','passwd'],
 		'lists' => ['topic','subtopic'],
 		'login' => ['email','passwd','previous_action','previous_list'],
+		'sso_login' => ['auth_service_name','previous_action','previous_list'],
 		'loginrequest' => ['previous_action','previous_list'],
 		'logout' => ['previous_action','previous_list'],
 		'remindpasswd' => ['previous_action','previous_list'],
@@ -309,6 +312,7 @@ my %action_args = ('default' => ['list'],
 		'change_identity' => ['email','previous_action','previous_list'],
 		'edit_list_request' => ['list','group'],
 		'rename_list' => ['list','new_list','new_robot'],
+		'redirect' => [],
 #		'viewlogs' => ['list']
 		);
 
@@ -394,6 +398,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
  my $start_time = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
  while ($query = &new_loop()) {
 
+
      undef $param;
      undef $list;
      undef $robot;
@@ -470,6 +475,13 @@ if ($wwsconf->{'use_fast_cgi'}) {
                              'request' => $Conf{'request'}
                          };
      }
+     foreach my $auth (keys  %{$Conf{'cas_id'}}) {
+	 &do_log('debug2', "cas authentication service name $auth");
+	 $param->{'sso'}{$auth} = $auth;
+     }
+     $param->{'sso_number'} = $Conf{'cas_number'};
+     $param->{'use_passwd'} = $Conf{'use_passwd'};
+     $param->{'use_sso'} = 1 if ($param->{'sso_number'});
      $param->{'wwsconf'} = $wwsconf;
 
      foreach my $p ('dark_color','light_color','text_color','bg_color','error_color',
@@ -511,11 +523,80 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }elsif ($ENV{'HTTP_COOKIE'} =~ /(user|sympauser)\=/) {
          $param->{'user'}{'email'} = &wwslib::get_email_from_cookie($Conf{'cookie'});
          $param->{'auth_method'} = 'md5';
+     }elsif($in{'ticket'}=~/(S|P)T\-/){ # the request contain a vas named ticket that use CAS ticket format
+	 &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},0,'now'); #reset the cookie do_not_use_cas because this client probably use CAS
+	 # select the cas server that redirect the user to sympa and check the ticket
+	 do_log ('debug',"CAS ticket is detected. in{'ticket'}=$in{'ticket'} in{'checked_cas'}=$in{'checked_cas'}");
+	 if ($in{'checked_cas'} =~ /^(\d+)\,?/) {
+	     my $cas_id = $1;    
+	     my $host = $Conf{'auth_services'}[$cas_id]{'host'};
+	     my $login_uri = $Conf{'auth_services'}[$cas_id]{'login_uri'};
+	     my $check_uri = $Conf{'auth_services'}[$cas_id]{'check_uri'};
+
+	     my $https = 's' if ($ENV{SSL_PROTOCOL});
+	     my $return_url = 'http'.$https.'://'.$ENV{'SERVER_NAME'}.':'.$ENV{'SERVER_PORT'}.$ENV{'REQUEST_URI'} ;
+
+
+	     my $net_id = &Auth::check_cas_login($host,$check_uri,$return_url,'no_blocking');
+	     
+	     &do_log('debug',"Requesting CAS ticket validation to through Auth::check_cas_login($host,$check_uri,$return_url,'no_blocking') return $net_id");
+	     if($net_id != -1) { # the ticket is valid net-id
+		 do_log('notice',"login CAS OK server = $host,netid=$net_id,cas_id=$cas_id" );
+		 $param->{'user'}{'email'} = lc(&Auth::cas_get_email_by_net_id($net_id,$cas_id));
+
+		 &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id);
+		 $param->{'auth_method'} = 'md5';
+	     }else{
+		 do_log('notice',"bas answser from cas auth service net_id = -1"); 
+		 $param->{'auth_method'} = 'md5';
+	     }
+	 }else{
+	      do_log ('notice',"Internal error while receiving a CAS ticket $in{'checked_cas'} ");
+	 }
+     }elsif($Conf{'cas_number'} >> 0) { # some cas server are defined but no CAS ticket detected
+	 if (&cookielib::get_do_not_use_cas($ENV{'HTTP_COOKIE'})) {
+	     &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},1,$Conf{'cookie_cas_expire'}); # refresh CAS cookie;
+	     $param->{'auth_method'} = 'md5';
+	 }else{
+	     # user not taggued as not using cas
+	     do_log ('debug',"no cas ticket detected");
+	     foreach my $auth_service (@{$Conf{'auth_services'}}){
+		 # skip auth services not related to cas
+		 next unless ($auth_service->{'auth_type'} eq 'cas');
+		 
+		 # skip cas server where client as been allready redirect to (redirection carry the list of cas servers allready checked
+		 do_log ('debug',"check_cas checker_cas : $in{'checked_cas'} current cas_id $Conf{'cas_id'}{$auth_service->{'auth_service_name'}}");
+		 next if ($in{'checked_cas'} =~  /$Conf{'cas_id'}{$auth_service->{'auth_service_name'}}/) ;
+		 
+		 my $https = 's' if ($ENV{SSL_PROTOCOL});
+		 my $return_url = 'http'.$https.'://'.$ENV{'SERVER_NAME'}.':'.$ENV{'SERVER_PORT'}.$ENV{'REQUEST_URI'} ;
+		 
+		 # before redirect update the list of allready checked cas server to prevent loop
+		 if ($ENV{'REQUEST_URI'} =~ /checked_cas\=/) {
+		     $return_url =~ s/checked_cas\=/checked_cas\=$Conf{'cas_id'}{$auth_service->{'auth_service_name'}},/;
+		 }else{		 
+		     $return_url .= '?checked_cas='.$Conf{'cas_id'}{$auth_service->{'auth_service_name'}};
+		 }
+		 my $redirect_url = &Auth::check_cas_login($auth_service->{'host'},$auth_service->{'login_uri'},$return_url,'no_blocking');
+		 
+		 
+		 if ($redirect_url =~ /http(s)+\:\//i) {
+		     $in{'action'} = 'redirect';
+		     $param->{'redirect_to'} = $redirect_url;
+		     last
+		     }elsif($redirect_url == -1) { # CAS server auth error
+			 do_log('notice',"CAS server auth error $auth_service->{'auth_service_name'}" );
+		     }else{
+			 do_log('notice',"Strange CAS ticket detected and validated check sympa code !" );
+		     }
+	     }
+	     $param->{'auth_method'} = 'md5';
+	     &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},1,$Conf{'cookie_cas_expire'}) unless ($param->{'redirect_to'} =~ /http(s)+\:\//i) ; #set the cookie do_not_use_cas because all cas server as been checked without success
+	 }
      }else{
          ## request action need a auth_method even if the user is not authenticated ...
-         $param->{'auth_method'} = 'md5';
+	 $param->{'auth_method'} = 'md5';
      }
-
 
      ##Cookie extern : sympa_altemails
      ## !!
@@ -1007,7 +1088,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
  ## Analysis of incoming parameters
  sub check_param_in {
-     &wwslog('debug2', 'check_param');
+     &wwslog('debug2', 'check_param_in');
 
      ## Lowercase list name
      $in{'list'} =~ tr/A-Z/a-z/;
@@ -1018,7 +1099,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	 unless ($list = new List ($in{'list'}, $robot)) {
 	     &error_message('unknown_list', {'list' => $in{'list'}} );
-	     &wwslog('info','check_param: unknown list %s', $in{'list'});
+	     &wwslog('info','check_param_in: unknown list %s', $in{'list'});
 	     return undef;
 	 }
      }
@@ -1031,7 +1112,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
     if ($in{'list'}) {
 	unless ($list = new List ($in{'list'}, $robot)) {
 	    &error_message('unknown_list', {'list' => $in{'list'}} );
-	    &wwslog('info','check_param: unknown list %s', $in{'list'});
+	    &wwslog('info','check_param_in: unknown list %s', $in{'list'});
 	    return undef;
 	}
 
@@ -1136,13 +1217,15 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
  ## Prepare outgoing params
  sub check_param_out {
-     &wwslog('debug2', 'check_param');
+     &wwslog('debug2', 'check_param_out');
 
      $param->{'loop_count'} = $loop_count;
      $param->{'start_time'} = $start_time;
      $param->{'process_id'} = $$;
 
      if ($list->{'name'}) {
+	 &wwslog('debug2', "list-name $list->{'name'}");
+
 	 ## Owners
 	 foreach my $o (@{$list->{'admin'}{'owner'}}) {
 	     next unless $o->{'email'};
@@ -1243,14 +1326,14 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		 undef ($param->{'arc_access'});
 	     }
 	 }	
-     }    
+     }
  }
 
  ## Login WWSympa
  sub do_login {
      &wwslog('info', 'do_login(%s)', $in{'email'});
      my $user;
-     my $next_action;
+     my $next_action;     
 
      if ($param->{'user'}{'email'}) {
 	 &error_message('already_login', {'email' => $param->{'user'}{'email'}});
@@ -1258,6 +1341,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'login','',$robot,'','already logged');
 	 return 'home';
      }
+     
 
      unless ($in{'email'}) {
 	 &error_message('no_email');
@@ -1283,7 +1367,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }
 
      ##authentication of the sender
-     unless($param->{'user'} = &check_auth($in{'email'},$in{'passwd'})){
+     unless($param->{'user'} = &Auth::check_auth($in{'email'},$in{'passwd'})){
 	 &error_message('failed');
 	 # &List::db_log('wwsympa',$in{'email'},'null',$ip,'login','',$robot,'','failed');
 	 do_log('notice', "Authentication failed\n");
@@ -1345,18 +1429,67 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
  }
 
+
+ ## Login WWSympa
+sub do_sso_login {
+    &wwslog('info', 'do_sso_login(%s)', $in{'auth_service_name'});
+    
+    &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},0,'now'); #when user require CAS login, reset do_not_use_cas cookie
+    my $next_action;     
+    
+    if ($param->{'user'}{'email'}) {
+	&error_message('already_login', {'email' => $param->{'user'}{'email'}});
+	&wwslog('info','do_login: user %s already logged in', $param->{'user'}{'email'});
+	# &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'login','',$robot,'','already logged');
+	return 'home';
+    }
+    
+    
+    unless ($in{'auth_service_name'}) {
+	&error_message('no_authentication_service_name');
+	&wwslog('info','do_sso_login: no auth_service_name');
+	return 'home';
+    }
+
+    my $cas_id = $Conf{'cas_id'}{$in{'auth_service_name'}};
+    my $host = $Conf{'auth_services'}[$cas_id]{'host'};
+    my $login_uri = $Conf{'auth_services'}[$cas_id]{'login_uri'};
+    
+
+    my $path = '';
+    if ($in{'previous_action'}) {
+ 	$path = "/$in{'previous_action'}";
+    }
+    if ($in{'previous_list'}) {
+ 	$path .= "/$in{'previous_list'}";
+    }
+    my $service = "$param->{'base_url'}$param->{'path_cgi'}".$path."?checked_cas=".$cas_id;
+    
+    my $redirect_url = &Auth::check_cas_login($host,$login_uri,$service); 
+    if ($redirect_url =~ /http(s)+\:\//i) {
+	$in{'action'} = 'redirect';
+	$param->{'redirect_to'} = $redirect_url;
+	return('redirect');	
+    }
+    
+}
+
+
  ## authentication : via email or uid
- sub check_auth{
-     my ($canonic, $user);
+ sub check_auth_old{
+
      my $auth = shift; ## User email or UID
      my $pwd = shift; ## Password
 
+
+     my ($canonic, $user);
+
      if( &tools::valid_email($auth)) {
-	 return &authentication($auth,$pwd);
+	 return &Auth::authentication($auth,$pwd);
 
      }else{
 	 ## This is an UID
-	 if ($canonic = &ldap_authentication($auth,$pwd,'uid_filter')){
+	 if ($canonic = &Auth::ldap_authentication($auth,$pwd,'uid_filter')){
 	     $param->{'auth'} = 'ldap';   
 	     $param->{'alt_emails'}{$canonic} = 'ldap' if($canonic);
 
@@ -1373,53 +1506,64 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }
  }
 
- ## Email authentication:unless you are in User_table,you may belong to the ldap directory
 
- sub authentication{
+sub authentication_old {
+    
+    my ($email,$pwd) = @_;
+    my ($user,$canonic);
 
-     my ($email,$pwd) = @_;
-     my ($user,$canonic);
+    unless ($user = &List::get_user_db($email)) {
+	$user = {'email' => $email,
+		 'password' => &tools::tmp_passwd($email)
+		 };
+    }    
+    unless ($user->{'password'}) {
+	$user->{'password'} = &tools::tmp_passwd($email);
+    }
+    
+    &wwslog('info',"auth_services : $#{$Conf{'auth_services'}}") ;
 
-     unless ($user = &List::get_user_db($email)) {
-	 $user = {'email' => $email,
-		  'password' => &tools::tmp_passwd($email)
-		  };
-     }    
-     unless ($user->{'password'}) {
-	 $user->{'password'} = &tools::tmp_passwd($email);
-     }
+    foreach my $auth_service (@{$Conf{'auth_services'}}){
+	next if ($email !~ /$auth_service->{'regexp'}/i);
+	next if (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
+	if ($auth_service->{'auth_type'} eq 'user_table') {
+     
+	    if((($wwsconf->{'password_case'} eq 'insensitive') && (lc($pwd) eq lc($user->{'password'}))) || ($pwd eq $user->{'password'})) {
+		$param->{'auth'} = 'classic';
+		$param->{'alt_emails'}{$email} = 'classic' if($email);
+		return $user;
+	    }
+	}elsif($auth_service->{'auth_type'} eq 'ldap') {
+	    if ($canonic = &Auth::ldap_authentication($email,$pwd,'email_filter')){
+		$param->{'auth'} = 'ldap';
+		unless($user = &List::get_user_db($canonic)){
+		    $user = {'email' => $canonic};
+		}
+		$param->{'alt_emails'}{$canonic} = 'ldap';
+		return $user;
+	    }
+	}
+    }
+    foreach my $auth_service (@{$Conf{'auth_services'}}){
+	next unless ($email !~ /$auth_service->{'regexp'}/i);
+	next unless (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
+	if ($auth_service->{'auth_type'} eq 'user_table') {
+	    if ($user->{'password'} =~ /^init/i) {
+		&error_message('init_passwd');
+		last;
+	    }
+	}
+    }
+    &error_message('incorrect_passwd');
+    &wwslog('info','authentication: incorrect password for user %s', $email);
 
-     ## Password in DB is case-insensitive
-     if((($wwsconf->{'password_case'} eq 'insensitive') && (lc($pwd) eq lc($user->{'password'})))
-	|| ($pwd eq $user->{'password'})) {
-	 $param->{'auth'} = 'classic';
-	 $param->{'alt_emails'}{$email} = 'classic' if($email);
-	 return $user;
+    $param->{'init_email'} = $email;
+    $param->{'escaped_init_email'} = &tools::escape_chars($email);
+    return undef;
+}
 
-     }elsif($canonic = &ldap_authentication($email,$pwd,'email_filter')){
 
-	 $param->{'auth'} = 'ldap';
-	 unless($user = &List::get_user_db($canonic)){
-	     $user = {'email' => $canonic};
-	 }
-	 $param->{'alt_emails'}{$canonic} = 'ldap';
-	 return $user;
-     }else{
-
-	 if ($user->{'password'} =~ /^init/i) {
-	     &error_message('init_passwd');
-	 }
-	 &error_message('incorrect_passwd');
-	 &wwslog('info','authentication: incorrect password for user %s', $email);
-
-	 $param->{'init_email'} = $email;
-	 $param->{'escaped_init_email'} = &tools::escape_chars($email);
-	 return undef;
-     }
-
- }
-
- sub ldap_authentication {
+sub ldap_authentication_old {
 
      my ($auth,$pwd,$whichfilter) = @_;
      my ($cnx, $mesg, $host,$ldap_passwd,$ldap_anonymous);
@@ -1429,7 +1573,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }
 
      ## No LDAP entry is defined in auth.conf
-     if ($#{$Conf{'ldap_array'}} < 0) {
+     if ($#{$Conf{'auth_services'}} < 0) {
 	 &do_log('notice', 'Skipping empty auth.conf');
 	 return undef;
      }
@@ -1447,8 +1591,14 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
 	 return undef;
      }
+     
+     foreach my $ldap (@{$Conf{'auth_services'}}){
+	 # only ldap service are to be applied here
+	 next unless ($ldap->{'auth_type'} eq 'ldap');
 
-     foreach my $ldap (@{$Conf{'ldap_array'}}){
+	 # skip ldap auth service if the user id or email do not match regexp auth service parameter
+	 next unless ($auth =~ /$ldap->{'regexp'}/i);
+  
 	 foreach $host (split(/,/,$ldap->{'host'})){
 
 	     my @alternative_conf = split(/,/,$ldap->{'alternative_email_attribute'});
@@ -1599,6 +1749,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }
  }
 
+
+
  sub do_unify_email {
 
      &wwslog('info', 'do_unify_email');
@@ -1636,7 +1788,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		     $newlist->delete_user($email);
 		 }
 	     }
-
+	     
 	 }
      }
 
@@ -1693,6 +1845,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
  }
 
  sub is_ldap_user {
+     my $auth = shift; ## User email or UID
+     &do_log('debug2',"is_ldap_user ($auth)");
+
      unless (&tools::get_filename('etc', 'auth.conf', $robot)) {
 	 return undef;
      }
@@ -1701,10 +1856,15 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 return undef;
      }
 
-     my $auth = shift; ## User email or UID
      my ($ldap_anonymous,$host,$filter);
 
-     foreach my $ldap (@{$Conf{'ldap_array'}}){
+     foreach my $ldap (@{$Conf{'auth_services'}}){
+	 # only ldap service are to be applied here
+	 next unless ($ldap->{'auth_type'} eq 'ldap');
+
+	 # skip ldap auth service if the user id or email do not match regexp auth service parameter
+	 next unless ($auth =~ /$ldap->{'regexp'}/i);
+
 	 foreach $host (split(/,/,$ldap->{'host'})){
 	     unless($host){
 		 last;
@@ -1818,6 +1978,13 @@ if ($wwsconf->{'use_fast_cgi'}) {
      return 1;
  }
 
+sub do_redirect {
+     &wwslog('info','do_redirect(%s)', $param->{'redirect_to'});
+     print "Location: $param->{'redirect_to'}\n\n";
+     $param->{'bypass'} = 'extreme';
+     return 1;
+}
+
  ## Logout from WWSympa
  sub do_logout {
      &wwslog('info','do_logout(%s)', $param->{'user'}{'email'});
@@ -1833,6 +2000,18 @@ if ($wwsconf->{'use_fast_cgi'}) {
      delete $param->{'user'};
      $param->{'lang'} = $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'}) || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
+     my $cas_id = &cookielib::get_cas_server($ENV{'HTTP_COOKIE'});
+     if (defined $cas_id) {
+	 # this user was logged using CAS
+	 my $host = $Conf{'auth_services'}[$cas_id]{'host'};
+	 my $logout_uri = $Conf{'auth_services'}[$cas_id]{'logout_uri'};
+	 my $https = 's' if ($ENV{SSL_PROTOCOL});
+	 my $return_url = 'http'.$https.'://'.$ENV{'SERVER_NAME'}.':'.$ENV{'SERVER_PORT'}.$param->{'path_cgi'}."/home" ;
+	 $in{'action'} = 'redirect';
+	 $param->{'redirect_to'} = 'https://'.$host.$logout_uri.'?service='.$return_url.'&gateway=1';
+	 &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
+	 return 'redirect';
+     }
      &wwslog('info','do_logout: logout performed');
 
      if ($in{'previous_action'} eq 'referer') {
@@ -6351,7 +6530,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      # $result{'scenario'}{'edit'} = scenario name for the document
 
      &wwslog('info', "d_access_control");
-
+     
      # Result
       my %result;
 

@@ -23,7 +23,7 @@ sbin_SUBST	=	bounced.pl archived.pl
 
 cgi_SUBST	=	wwsympa.fcgi
 
-lib_SUBST	=	wwslib.pm cookielib.pm bounce-lib.pl Marc.pm
+lib_SUBST	=	wwslib.pm cookielib.pm bounce-lib.pl Marc.pm Auth.pm
 
 SRC		=	mime.types 
 

@@ -36,7 +36,7 @@ use Carp;
 my @valid_options = qw(
 		       avg bounce_warn_rate bounce_halt_rate chk_cert_expiration_task expire_bounce_task
 		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod 
-		       cookie create_list crl_dir crl_update_task db_host db_env db_name db_options db_passwd db_type db_user 
+		       cookie cookie_cas_expire create_list crl_dir crl_update_task db_host db_env db_name db_options db_passwd db_type db_user 
 		       db_port db_additional_subscriber_fields db_additional_user_fields
 		       default_shared_quota default_archive_quota default_list_priority edit_list email etc
 		       global_remind home host domain lang listmaster log_socket_type log_level 
@@ -126,6 +126,7 @@ my %Default_Conf =
      'bounce_warn_rate' => '30',
      'bounce_halt_rate' => '50',
      'cookie' => undef,
+     'cookie_cas_expire' => '6',
      'loop_command_max' => 200,
      'loop_command_sampling_delay' => 3600,
      'loop_command_decrease_factor' => 0.5,
@@ -270,10 +271,10 @@ sub load {
 	$Conf{$i} = $o{$i}[0] || $Default_Conf{$i};
     }
 
-    ## LDAP directories for exportation
-	my @array = &_load_auth();
-	$Conf{'ldap_array'} = [@array];
-	
+    
+    my @array = &_load_auth();
+    $Conf{'auth_services'} = [@array];
+
     if ($Conf{'ldap_export_name'}) {    
 	##Export
 	$Conf{'ldap_export'} = {$Conf{'ldap_export_name'} => { 'host' => $Conf{'ldap_export_host'},
@@ -284,8 +285,7 @@ sub load {
 							   }
 			    };
     }
-    
-    
+        
     my $p = 1;
     foreach (split(/,/, $Conf{'sort'})) {
 	$Conf{'poids'}{$_} = $p++;
@@ -492,27 +492,55 @@ sub checkfiles {
 ##########################################
 
 sub _load_auth {
+    
     my $config = $Conf{'etc'}.'/auth.conf';
     my $line_num = 0;
     my $config_err = 0;
     my @paragraphs;
-    my $current_paragraph = {};
+    my %result;
+    my $current_paragraph ;
 
-    my %valid_keywords = ('host' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
-			  'timeout' => '\d+',
-			  'suffix' => '.+',
-			  'bind_dn' => '.+',
-			  'bind_password' => '.+',
-			  'get_dn_by_uid_filter' => '.+',
-			  'get_dn_by_email_filter' => '.+',
-			  'email_attribute' => '\w+',
-			  'alternative_email_attribute' => '(\w+)(,\w+)*',
-			  'scope' => 'base|one|sub',
-			  'authentication_info_url' => 'http(s)?:/.*',
-			  'use_ssl' => '1',
-			  'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1',
-			  'ssl_ciphers' => '[\w:]+');
+    my %valid_keywords = ('ldap' => {'regexp' => '.*',
+				     'negative_regexp' => '.*',
+				     'host' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
+				     'timeout' => '\d+',
+				     'suffix' => '.+',
+				     'bind_dn' => '.+',
+				     'bind_password' => '.+',
+				     'get_dn_by_uid_filter' => '.+',
+				     'get_dn_by_email_filter' => '.+',
+				     'email_attribute' => '\w+',
+				     'alternative_email_attribute' => '(\w+)(,\w+)*',
+				     'scope' => 'base|one|sub',
+				     'authentication_info_url' => 'http(s)?:/.*',
+				     'use_ssl' => '1',
+				     'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1',
+				     'ssl_ciphers' => '[\w:]+' },
 			  
+			  'user_table' => {'regexp' => '.*',
+					   'negative_regexp' => '.*'},
+			  
+			  'cas' => {'host' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
+				    'login_uri' => '.*',
+				    'logout_uri' => '.*',
+				    'check_uri' => '.*',
+				    'auth_service_name' => '.*',
+				    'authentication_info_url' => 'http(s)?:/.*',
+				    'ldap_host' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
+				    'ldap_bind_dn' => '.+',
+				    'ldap_bind_password' => '.+',
+				    'ldap_timeout'=> '\d+',
+				    'ldap_suffix'=> '.+',
+				    'ldap_scope' => 'base|one|sub',
+				    'ldap_get_email_by_uid_filter' => '.+',
+				    'ldap_email_attribute' => '\w+',
+				    'ldap_use_ssl' => '1',
+				    'ldap_ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1',
+				    'ldap_ssl_ciphers' => '[\w:]+'
+				}
+			  );
+    
+
 
     ## Open the configuration file or return and read the lines.
     unless (open(IN, $config)) {
@@ -520,55 +548,67 @@ sub _load_auth {
 	return undef;
     }
     
+    $Conf{'cas_number'} = 0;
+    $Conf{'ldap_number'} = 0;
+    $Conf{'use_passwd'} = 0;
+    
     ## Parsing  auth.conf
     while (<IN>) {
- 	
+
 	$line_num++;
-	next if (/^\s*[\#\;]/o);	
-	
-      	if (/^\s*(\S+)\s*$/o) {$parag_name = $1;}
-	
-	if (/^\s*(\S+)\s+(.*\S)\s*$/o){
-	    
+	next if (/^\s*[\#\;]/o);		
+	if (/^\s+$/o) {
+	    if (defined($current_paragraph)) {
+
+		if ($current_paragraph->{'auth_type'} eq 'cas') {
+		    $Conf{'cas_number'}  ++ ;
+		    $Conf{'cas_id'}{$current_paragraph->{'auth_service_name'}} =  $#paragraphs+1 ; 
+		}elsif($current_paragraph->{'auth_type'} eq 'ldap') {
+		    $Conf{'ldap'}  ++ ;
+		    $Conf{'use_passwd'} = 1;
+		}elsif($current_paragraph->{'auth_type'} eq 'user_table') {
+		    $Conf{'use_passwd'} = 1;
+		}
+		$current_paragraph->{'regexp'} = '.*' unless (defined($current_paragraph->{'regexp'})) ;
+		push(@paragraphs,$current_paragraph);
+		
+		undef $current_paragraph;
+	    } 
+	    next ;
+	}elsif (/^\s*(ldap|cas|user_table)\s*$/io) {
+	    $current_paragraph->{'auth_type'} = lc($1);
+	}elsif (/^\s*(\S+)\s+(.*\S)\s*$/o){
 	    my ($keyword,$value) = ($1,$2);
-
-	    unless (defined $valid_keywords{$keyword}) {
-		do_log('notice',"_load_auth: unknown keyword '%s' in %s", $keyword, $config);
+	    unless (defined $valid_keywords{$current_paragraph->{'auth_type'}}{$keyword}) {
+		do_log('notice',"_load_auth: unknown keyword '%s' in %s line %d", $keyword, $config, $line_num);
 		next;
 	    }
-	    unless ($value =~ /^$valid_keywords{$keyword}$/) {
-		do_log('notice',"_load_auth: unknown format '%s' for keyword '%s' in %s", $value, $keyword, $config);
+	    unless ($value =~ /^$valid_keywords{$current_paragraph->{'auth_type'}}{$keyword}$/) {
+		do_log('notice',"_load_auth: unknown format '%s' for keyword '%s' in %s line %d", $value, $keyword, $config,$line_num);
 		next;
 	    }
-
+	    
 	    $current_paragraph->{$keyword} = $value;
 	}
-	
-	if (defined($current_paragraph) && (/^\s+$/o)) {
-	    push(@paragraphs,$current_paragraph);
-	    undef $current_paragraph;
-	}
-    }
-
-    if (defined($current_paragraph)) {
-	push(@paragraphs,$current_paragraph);
-	undef $current_paragraph;
     }
     
-  		   	
-    close(IN);
-
-    my @auth;
-    ## Do we have all required values ?
-    for $i ( 0 .. $#paragraphs ) {
-	for $key (sort keys %{ $paragraphs[$i] }) {
-	    $auth[$i]{$key} = $paragraphs[$i]{$key};
+    if (defined($current_paragraph)) {
+	if ($current_paragraph->{'auth_type'} eq 'cas') {
+	    $Conf{'cas_number'} ++ ;
+	    # $Conf{'cas_list'}{$current_paragraph->{'auth_service_name'}} = 1;
+	    $Conf{'cas'}{$current_paragraph->{'auth_service_name'}}{'login_url'} =  $current_paragraph->{'login_url'} ;
+	    $Conf{'cas'}{$current_paragraph->{'auth_service_name'}}{'logout_url'} =  $current_paragraph->{'logout_url'} ;
+	    $Conf{'cas'}{$current_paragraph->{'auth_service_name'}}{'check_url'} =  $current_paragraph->{'check_url'} ;
 	}
-    }
-
-return @auth;
-
-
+	$current_paragraph->{'regexp'} = '.*' unless (defined($current_paragraph->{'regexp'})) ;
+	push(@paragraphs,$current_paragraph);
+	undef $current_paragraph;	
+    }    
+    close (LOG);
+    
+    close(IN); 
+    return @paragraphs;
+    
 }
 
 ## returns a robot conf parameter

@@ -15,11 +15,73 @@ Identifiez-vous pour : <UL>
 
 [ELSE]
  La plupart des services nécessitent votre adresse e-mail. Certaines listes sont
-cachées aux personnes non identifées.<BR>
+cachées aux personnes non identifées.
 Pour bénéficier de l'accès intégral à ce serveur de listes, vous
 devez probablement vous identifier préalablement.<BR>
+[IF use_sso=0]
+[IF use_passwd=1]
+A cet effet, identifiez-vous en utilisant votre adresse messagerie et votre mot de passe. Au besoin faîtes vous allouer un mot de passe initial. 
+[ENDIF]
+[ELSE]
+[IF use_passwd=1]
+
+A cet effet, identifiez-vous de préférence en sélectionnant le serveur d'authentification de votre établissement ou à défault utilisez l'identification avec adresse et mot de passe
+
+[ENDIF]
 [ENDIF]
 
+[ENDIF]
+
+<TABLE BORDER=1 width=100% CELLSPACING=0 CELLPADDING=0>
+<TR>
+
+[IF use_sso]
+[IF sso_number = 1]
+
+[ELSE]
+<TD valign='top'>
+    <FORM ACTION="[path_cgi]" METHOD=POST> 
+        <INPUT TYPE="hidden" NAME="previous_action" VALUE="[previous_action]">
+        <INPUT TYPE="hidden" NAME="previous_list" VALUE="[previous_list]">
+	<INPUT TYPE="hidden" NAME="referer" VALUE="[referer]">
+	<INPUT TYPE="hidden" NAME="action" VALUE="sso_login">
+	<INPUT TYPE="hidden" NAME="nomenu" VALUE="[nomenu]">
+	
+
+        <TABLE BORDER=0 width=100% CELLSPACING=0 CELLPADDING=0>
+         <TR BGCOLOR="[light_color]">
+          <TD NOWRAP align=center>
+     	      <INPUT TYPE=hidden NAME=list VALUE="[list]">
+     	      <FONT SIZE=-1 COLOR="[selected_color]"><b>Choississez le serveur CAS dont vous dépendez
+
+	[IF sso_number = 1]
+                [FOREACH server IN sso]
+			<INPUT TYPE="hidden" NAME="auth_service_name" VALUE="[server->NAME]">
+                [END]
+              <INPUT TYPE="submit" NAME="action_sso_login" VALUE="Authentification unique" SELECTED>
+	[ELSE]
+              <SELECT NAME="auth_service_name" onchange="this.form.submit();">
+                [FOREACH server IN sso]
+                   <OPTION VALUE="[server->NAME]" [server->selected]>[server->NAME]
+                [END]
+              </SELECT>
+              <INPUT TYPE="submit" NAME="action_sso_login" VALUE="Go" SELECTED>
+	[END]
+
+
+   	    </TD>
+     	  </TR>
+       </TABLE>
+ </FORM> 
+</TD>
+[ENDIF]
+[ENDIF]
+
+<TD valign='top'>
+
+
+<TABLE BORDER=0  width=100% CELLSPACING=0 CELLPADDING=0>
+<tr><td>
     <FORM ACTION="[path_cgi]" METHOD=POST> 
         <INPUT TYPE="hidden" NAME="previous_action" VALUE="[previous_action]">
         <INPUT TYPE="hidden" NAME="previous_list" VALUE="[previous_list]">
@@ -40,11 +102,10 @@ devez probablement vous identifier préalablement.<BR>
      	  </TR>
        </TABLE>
  </FORM> 
+</td></tr>
+<TR><TD>
 
-<CENTER>
-
-<TABLE border=0><TR>
-<TD>
+<TABLE BORDER=0><TR><TD>
 <I>Si vous n'avez jamais eu de mot de passe sur ce serveur ou si vous l'avez oublié :</I>
 </TD><TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
@@ -66,7 +127,18 @@ devez probablement vous identifier préalablement.<BR>
   </TABLE>
 </TR>
 </TABLE>
+
 </TD></TR></TABLE>
+
+</TD></TR></TABLE>
+
+</TD>
+
+</TR>
+</TABLE>
+
+<CENTER>
+
 </CENTER>
 
 

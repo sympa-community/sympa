@@ -21,10 +21,16 @@
 
 
 package wwslib;
+use lib '--LIBDIR--';
 
 use Exporter;
 @ISA = ('Exporter');
 @EXPORT = ();
+
+use Log;
+use Conf;
+# use Net::SSLeay qw(&get_https);
+# use Net::SSLeay;
 
 ## Supported web languages
 @languages = ('fr','us','es','it','nl','cn','cz','de','hu','et','ro','fi');

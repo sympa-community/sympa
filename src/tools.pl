@@ -548,7 +548,7 @@ sub smime_encrypt {
 	my $temporary_file = $Conf{'tmpdir'}."/".$email.".".$$ ;
 
 	## encrypt the incomming message parse it.
-        do_log ('debug3', "xxxx $Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert");
+        do_log ('debug3', "tools::smime_encrypt : $Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert");
 
 	if (!open(MSGDUMP, "| $Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert")) {
 	    &do_log('info', 'Can\'t encrypt message for recipient %s', $email);

@@ -46,7 +46,7 @@ sub get_https{
 	do_log ('debug','get_https (%s,%s,%s,%s,%s,%s,%s,%s)',$host,$port,$path,$client_cert,$client_key,$key_passwd,$trusted_ca_file,$trusted_ca_path );
 
 	unless ( -r ($trusted_ca_file) ||  (-d $trusted_ca_path )) {
-	    do_log ('err','error : incorrect access to both cafile and capath');
+	    do_log ('err',"error : incorrect access to cafile $trusted_ca_file bor capath $trusted_ca_path");
 	    return undef;
 	}
 
@@ -96,7 +96,7 @@ sub get_https{
 	#do_log ('debug',"return");
 	#return ;
 
-	do_log ('debug',"read answer");
+	do_log ('debug',"get_https reading answer");
 	my @result;
 	while (my $line = $ssl_socket->getline) {
 	    push  @result, $line;
@@ -108,23 +108,24 @@ sub get_https{
 	return (@result);	
 }
 
+
 # request a document using https, return status and content
-sub get_http2s{
+sub get_https2{
 	my $host = shift;
 	my $port = shift;
 	my $path = shift;
-    	my $client_cert = shift;
-	my $client_key = shift;
+
 	my $ssl_data= shift;
 
-	my $key_passwd = $ssl_data->{'key_passwd'};
 	my $trusted_ca_file = $ssl_data->{'cafile'};
+	$trusted_ca_file ||= $Conf{'cafile'};
 	my $trusted_ca_path = $ssl_data->{'capath'};
+	$trusted_ca_path ||= $Conf{'capath'};
 
-	do_log ('debug','get_https (%s,%s,%s,%s,%s,%s,%s,%s)',$host,$port,$path,$client_cert,$client_key,$key_passwd,$trusted_ca_file,$trusted_ca_path );
+	do_log ('info','X509::get_https2 (%s,%s,%s,%s,%s)',$host,$port,$path,$trusted_ca_file,$trusted_ca_path );
 
 	unless ( -r ($trusted_ca_file) ||  (-d $trusted_ca_path )) {
-	    do_log ('err','error : incorrect access to both cafile and capath');
+	    do_log ('err',"error : incorrect access to cafile $trusted_ca_file bor capath $trusted_ca_path");
 	    return undef;
 	}
 
@@ -140,46 +141,49 @@ sub get_http2s{
 
 	my $ssl_socket;
 
-	$ssl_socket = new IO::Socket::SSL::context_init({SSL_use_cert => 1,
-					  SSL_verify_mode => 0x01,
-					  SSL_cert_file => $client_cert,
-					  SSL_key_file => $client_key,
-					  SSL_passwd_cb => sub { return ($key_passwd)},
+	$ssl_socket = new IO::Socket::SSL(SSL_use_cert => 0,
+					  SSL_verify_mode => 0x00,
 					  SSL_ca_file => $trusted_ca_file,
 					  SSL_ca_path => $trusted_ca_path,
-					  });
+					  PeerAddr => $host,
+					  PeerPort => $port,
+					  Proto => 'tcp',
+					  Timeout => '5'
+					  );
 	
-#	unless ($ssl_socket) {
-#	    do_log ('err','error %s unable to connect https://%s:%s/',&IO::Socket::SSL::errstr,$host,$port);
-#	    return undef;
+	unless ($ssl_socket) {
+	    do_log ('err','error %s unable to connect https://%s:%s/',&IO::Socket::SSL::errstr,$host,$port);
+	    return undef;
+	}
+	do_log ('debug',"connected to https://$host:$port/");
+
+#	if( ref($ssl_socket) eq "IO::Socket::SSL") {
+#	   my $subject_name = $ssl_socket->peer_certificate("subject");
+#	   my $issuer_name = $ssl_socket->peer_certificate("issuer");
+#	   my $cipher = $ssl_socket->get_cipher();
+#	   do_log ('debug','ssl peer certificat %s issued by %s. Cipher used %s',$subject_name,$issuer_name,$cipher);
 #	}
 
+	my $request = "GET $path HTTP/1.0\n\n";
+	print $ssl_socket "$request\n\n";
 
-	my $ua = LWP::UserAgent->new;
-	my $request = GET => 'https://'.$host.':'.$port.'/'.$path;
+	do_log ('debug',"requesting  $request");
+	#my ($buffer) = $ssl_socket->getlines;
+	# print STDERR $buffer;
+	#do_log ('debug',"return");
+	#return ;
 
-	my $ret;
-	my $res;		
-	$res = $ua->request($request);   
-	
-       	if($res->is_success) {
-		if($res->content =~ /^CODERETOK/m) {
-			$ret =  { 	STATUS => '1',
-					CONTENT => $res->content,
-                             		ERROR => '' };
-		}
-		else {
-			$ret =  { 	STATUS => '0',
-                             		ERROR => 'Problème sur RA' };
-		}
-			
+	do_log ('debug',"get_https reading answer returns :");
+	my @result;
+	while (my $line = $ssl_socket->getline) {
+	    do_log ('debug',"$line");
+	    push  @result, $line;
 	} 
-	else {
-		$ret =  { 	STATUS => '0',
-				ERROR => $res->status_line };
-	}
 	
-	return $ret;
+	$ssl_socket->close(SSL_no_shutdown => 1);	
+	do_log ('debug',"disconnected");
+
+	return (@result);	
 }
 
 

@@ -87,7 +87,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 </H1>
 
 <P>
-<A NAME="1267"></A> is a client-server protocol for accessing a directory service. Sympa
+<A NAME="1268"></A> is a client-server protocol for accessing a directory service. Sympa
 provide various features based on access to one or more LDAP directories :
 
 <P>
@@ -116,13 +116,13 @@ provide various features based on access to one or more LDAP directories :
 </H1>
 
 <P>
-<I>Sympa</I> stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of <A NAME="1275"></A> allows to use <I>Sympa</I> in an intranet without duplicating user passwords. 
+<I>Sympa</I> stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of <A NAME="1276"></A> allows to use <I>Sympa</I> in an intranet without duplicating user passwords. 
 
 <P>
-This way users can indifferently authenticate with their ldap_uid, their alternate_email or their canonic email stored in the <A NAME="1276"></A> directory.
+This way users can indifferently authenticate with their ldap_uid, their alternate_email or their canonic email stored in the <A NAME="1277"></A> directory.
 
 <P>
-<I>Sympa</I> gets the canonic email in the <A NAME="1277"></A> directory with the ldap_uid or the alternate_email.  
+<I>Sympa</I> gets the canonic email in the <A NAME="1278"></A> directory with the ldap_uid or the alternate_email.  
 <I>Sympa</I> will first attempt an anonymous bind to the directory to get the user's DN, then <I>Sympa</I> will bind with the DN and the user's ldap_password in order to perform an efficient authentication. This last bind will work only if the good ldap_password is provided. Indeed the value returned by the bind(DN,ldap_password) is tested.
 
 <P>
@@ -158,16 +158,42 @@ That means that <I>Sympa</I> will get this email and use it during all the sessi
 </H2>
 
 <P>
-The <A NAME="5750"></A><TT>/home/sympa/etc/auth.conf</TT> configuration file contains numerous
+The <A NAME="5797"></A><TT>/home/sympa/etc/auth.conf</TT> configuration file contains numerous
 parameters which are read on start-up of <I>Sympa</I>. If you change this file, do not forget
-that you will need to restart <I>Sympa</I> afterwards. 
+that you will need to restart wwsympa.fcgi afterwards. 
 
 <P>
-The <A NAME="5755"></A><TT>/home/sympa/etc/auth.conf</TT> is organised in paragraphs. Each paragraph coincides with the configuration of 
-an ldap directory.
+The <A NAME="5801"></A><TT>/home/sympa/etc/auth.conf</TT> is organised in paragraphs. Each paragraph describe a authentication 
+service with all needed parameter to perform a authentication using this service. Current version of
+<I>Sympa</I> can perform  authentication though ldap directory, Central Authentication Service (CAS is a
+Single Sign On service designed by Yale University  http://www.yale.edu/tp/cas/ ) or using internal user_table.
 
 <P>
-The <A NAME="5758"></A><TT>/home/sympa/etc/auth.conf</TT> file contains directives in the following format:
+Sympa parse each authentication service and try to use it depending on input datas from cookies and form parameters. At the first
+stage Sympa always check its own authentication cookie comming from the client. If recognized and valid the user email is extracted
+and authentication is finished. 
+
+<P>
+Next step is to try http redirection to each defined CAS server, if one CAS server redirect the user
+to Sympa with a valid ticket Sympa receive a user id from the CAS server and connect to the related LDAP directory to get the user
+email. If no CAS server return a ticket, inorder to continue without this redirection stage for each page, Sympa store this
+information to user browser using a cookie name "do_not_use_cas" (the delay this cookie is valid is controled by
+(<A NAME="5805"></A><TT>cookie_cas_expire</TT> parameter in file <A NAME="5808"></A><TT>sympa.conf</TT>).
+
+<P>
+The login page contains 2 forms : the login form and the SSO. When users hit the login form, each ldap or user_table authentication
+paragraph is applied unless email adress input from form match the <A NAME="5811"></A><TT>negative_regexp</TT> or do not match <A NAME="5814"></A><TT>regexp</TT>. 
+ <A NAME="5817"></A><TT>negative_regexp</TT> and <A NAME="5820"></A><TT>regexp</TT> can be defined for earch ldap or user_table authentication service so
+administrator can block some authentication methode for class of users.
+
+<P>
+The segond form in login page contain the list of CAS server so user can choose explicitely his CAS service.
+
+<P>
+Each paragraph start with one of the keyword cas, ldap or user_table  
+
+<P>
+The <A NAME="5823"></A><TT>/home/sympa/etc/auth.conf</TT> file contains directives in the following format:
 
 <P>
 <P>
@@ -185,12 +211,7 @@ Comments start with the <TT>#</TT> character at the beginning of a line.
 
 <P>
 Empty lines are also considered as comments and are ignored at the beginning. After the first paragraph they are considered as paragraphs separators.
-
-<P>
-There should only be one directive per line, but their order in the file is of no importance.
-
-<P>
-Thanks to this type of configuration <I>Sympa</I> is able to consult various directories. So, users who come from different directories will be authenticated through their ldap_password. Indeed, <I>Sympa</I> will try to bind on the first directory with the given ldap_password. If it does not work,  <I>Sympa</I> will try to bind on the second with the same ldap_password, etc. This mechanism is useful in the case of homonyms.
+There should only be one directive per line, but their order in the paragraph is of no importance.
 
 <P>
 Example :
@@ -200,8 +221,22 @@ Example :
 #Description of parameters for each directory
 
 
+cas
+	host				sso-cas.cru.fr:443
+	login_uri			/login
+	check_uri			/validate
+	logout_uri			/logout
+	auth_service_name		cas-cru
+	ldap_host			ldap.cru.fr:389
+        ldap_get_email_by_uid_filter          (uid=[uid])
+	ldap_timeout			7
+	ldap_suffix			dc=cru,dc=fr
+	ldap_scope			sub
+	ldap_email_attribute		mail
+
 
 ldap
+	regexp				univ-rennes1\.fr
 	host				ldap.univ-rennes1.fr:389
 	timeout				30
 	suffix				dc=univ-rennes1,dc=fr
@@ -215,6 +250,7 @@ ldap
 	ssl_ciphers                     MEDIUM:HIGH
 
 ldap
+	
 	host				ldap.univ-nancy2.fr:392,ldap1.univ-nancy2.fr:392,ldap2.univ-nancy2.fr:392
 	timeout				20
 	bind_dn                         cn=sympa,ou=people,dc=cru,dc=fr
@@ -226,11 +262,37 @@ ldap
 	email_attribute			mail
 	scope				sub
         authentication_info_url         http://sso.univ-nancy2.fr/
+	
+
+user_table
+	negative_regexp 		((univ-rennes1)|(univ-nancy2))\.fr
 </PRE>
 
 <P>
 
+<H3><A NAME="SECTION00911100000000000000">
+8.1.1.1 user_table paragraph in auth.conf</A>
+</H3>
+
+<P>
+The user_table paragraph is related to sympa internal authentication by email and password. It is the simplest one the only parameters
+are <A NAME="5826"></A><TT>regexp</TT> and <A NAME="5829"></A><TT>negative_regexp</TT> which are perl regexp use to select or block this authentication method for
+a class of email. 
+
+<P>
+
+<H3><A NAME="SECTION00911200000000000000">
+8.1.1.2 ldap paragraph in auth.conf</A>
+</H3>
+
+<P>
+
 <UL>
+<LI><A NAME="5832"></A><TT>regexp</TT> and <A NAME="5835"></A><TT>negative_regexp</TT>
+	Same as in user_table paragraph.
+
+<P>
+</LI>
 <LI>host
 <BR>
 <P>
@@ -410,7 +472,7 @@ If set to <TT>1</TT>, connection to the LDAP server will use SSL (LDAPS).
 <LI>ssl_version
 
 <P>
-This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="1337"></A> to <TT>sslv2/3</TT>, 
+This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="1350"></A> to <TT>sslv2/3</TT>, 
 	other possible values are <TT>sslv2</TT>, <TT>sslv3</TT>, and <TT>tlsv1</TT>.
 
 <P>
@@ -419,7 +481,121 @@ This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="13
 
 <P>
 Specify which subset of cipher suites are permissible for this connection, using the standard 
-	OpenSSL string format. The default value of <A NAME="1343"></A> for ciphers is <TT>ALL</TT>, 
+	OpenSSL string format. The default value of <A NAME="1356"></A> for ciphers is <TT>ALL</TT>, 
+	which permits all ciphers, even those that don't encrypt!
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H3><A NAME="SECTION00911300000000000000">
+8.1.1.3 cas paragraph in auth.conf</A>
+</H3>
+
+<P>
+
+<UL>
+<LI>auth_service_name
+<BR>
+The friendly user service name as shown by <I>Sympa</I> in the login page.
+
+<P>
+</LI>
+<LI>host
+<BR>
+The host name of the CAS server including the port number.
+
+<P>
+</LI>
+<LI>login_uri
+<BR>
+The login service URI, usually  <B>/cas/login</B>
+
+<P>
+</LI>
+<LI>check_uri
+<BR>
+The ticket validation service URI, usually  <B>/cas/validate</B>
+
+<P>
+</LI>
+<LI>logout_uri
+<BR>
+The logout service URI, usually  <B>/cas/logout</B>
+
+<P>
+</LI>
+<LI>ldap_host
+<BR>
+The LDAP host Sympa will connect to fetch user email when user uid is return by CAS service. The ldap_host include the
+        port number and it may be a comma separated list of redondant host.   
+
+<P>
+</LI>
+<LI>ldap_bind_dn
+<BR>
+The DN used to bind to this server. Anonymous bind is used if this parameter is not defined.
+
+<P>
+</LI>
+<LI>ldap_bind_password
+<BR>
+The password used unless anonymous bind is used.
+
+<P>
+</LI>
+<LI>ldap_suffix
+<BR>
+The LDAP suffix use when seraching user email
+
+<P>
+</LI>
+<LI>ldap_scope
+<BR>
+The scope use when seraching user email, possible values are <TT>sub</TT>, <TT>base</TT>, and <TT>one</TT>.
+
+<P>
+</LI>
+<LI>ldap_get_email_by_uid_filter
+<BR>
+The filter to perform the email search.
+
+<P>
+</LI>
+<LI>ldap_email_attribute
+<BR>
+The attribut name to be use as user canonical email. In the current version of sympa only the first value returned by the LDAP server is used.
+
+<P>
+</LI>
+<LI>ldap_timeout
+<BR>
+The time out for the search.
+
+<P>
+</LI>
+<LI>ldap_use_ssl
+
+<P>
+If set to <TT>1</TT>, connection to the LDAP server will use SSL (LDAPS).
+
+<P>
+</LI>
+<LI>ldap_ssl_version
+
+<P>
+This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="1383"></A> to <TT>sslv2/3</TT>, 
+	other possible values are <TT>sslv2</TT>, <TT>sslv3</TT>, and <TT>tlsv1</TT>.
+
+<P>
+</LI>
+<LI>ldap_ssl_ciphers
+
+<P>
+Specify which subset of cipher suites are permissible for this connection, using the  
+	OpenSSL string format. The default value of <A NAME="1389"></A> for ciphers is <TT>ALL</TT>, 
 	which permits all ciphers, even those that don't encrypt!
 
 <P>
@@ -436,7 +612,7 @@ Specify which subset of cipher suites are permissible for this connection, using
 At the moment Named Filters are only used in scenarii. They enable to select a category of people who will be authorized or not to realise some actions.
 
 <P>
-As a consequence, you can grant privileges in a list to people belonging to an <A NAME="1347"></A> directory thanks to a scenario.
+As a consequence, you can grant privileges in a list to people belonging to an <A NAME="1393"></A> directory thanks to a scenario.
 
 <P>
 
@@ -445,7 +621,7 @@ As a consequence, you can grant privileges in a list to people belonging to an <
 </H2>
 
 <P>
-People are selected through an <A NAME="1349"></A> defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="5767"></A><TT>/home/sympa/etc/search_filters/</TT>.
+People are selected through an <A NAME="1395"></A> defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="5842"></A><TT>/home/sympa/etc/search_filters/</TT>.
 
 <P>
 You must give several informations in order to create a Named Filter:
@@ -568,7 +744,7 @@ The method of authentication does not change.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-08-12
+2003-08-29
 </ADDRESS>
 </BODY>
 </HTML>

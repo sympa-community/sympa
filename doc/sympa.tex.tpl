@@ -676,7 +676,7 @@ a virtual robot or for the whole site.
 	See \ref{topics}, page~\pageref{topics}.
 
 	\item \file {auth.conf}\\
-	Defines sources for \index {LDAP-based authentication}.
+	Defines authentication backend organisation ( \index {LDAP-based authentication},  \index {CAS-based authentication} and sympa internal )
 
 	\item \file {robot.conf}\\
 	It is a subset of \file {sympa.conf} defining a Virtual robot 
@@ -2918,10 +2918,32 @@ That means that \Sympa will get this email and use it during all the session unt
 
 The \file {[ETCDIR]/auth.conf} configuration file contains numerous
 parameters which are read on start-up of \Sympa. If you change this file, do not forget
-that you will need to restart \Sympa afterwards. 
+that you will need to restart wwsympa.fcgi afterwards. 
 
-The \file {[ETCDIR]/auth.conf} is organised in paragraphs. Each paragraph coincides with the configuration of 
-an ldap directory.
+The \file {[ETCDIR]/auth.conf} is organised in paragraphs. Each paragraph describe a authentication 
+service with all needed parameter to perform a authentication using this service. Current version of
+\Sympa can perform  authentication though ldap directory, Central Authentication Service (CAS is a
+Single Sign On service designed by Yale University  http://www.yale.edu/tp/cas/ ) or using internal user\_table.
+
+Sympa parse each authentication service and try to use it depending on input datas from cookies and form parameters. At the first
+stage Sympa always check its own authentication cookie comming from the client. If recognized and valid the user email is extracted
+and authentication is finished. 
+
+
+Next step is to try http redirection to each defined CAS server, if one CAS server redirect the user
+to Sympa with a valid ticket Sympa receive a user id from the CAS server and connect to the related LDAP directory to get the user
+email. If no CAS server return a ticket, inorder to continue without this redirection stage for each page, Sympa store this
+information to user browser using a cookie name "do\_not\_use\_cas" (the delay this cookie is valid is controled by
+(\cfkeyword {cookie\_cas\_expire} parameter in file \file {sympa.conf}).
+
+The login page contains 2 forms : the login form and the SSO. When users hit the login form, each ldap or user\_table authentication
+paragraph is applied unless email adress input from form match the \cfkeyword {negative\_regexp} or do not match \cfkeyword {regexp}. 
+ \cfkeyword {negative\_regexp} and \cfkeyword {regexp} can be defined for earch ldap or user\_table authentication service so
+administrator can block some authentication methode for class of users.
+
+The segond form in login page contain the list of CAS server so user can choose explicitely his CAS service.
+
+Each paragraph start with one of the keyword cas, ldap or user\_table  
 
 The \file {[ETCDIR]/auth.conf} file contains directives in the following format:
 
@@ -2938,11 +2960,7 @@ The \file {[ETCDIR]/auth.conf} file contains directives in the following format:
 Comments start with the \texttt {\#} character at the beginning of a line.
   
 Empty lines are also considered as comments and are ignored at the beginning. After the first paragraph they are considered as paragraphs separators.
-
-There should only be one directive per line, but their order in the file is of no importance.
-
-Thanks to this type of configuration \Sympa is able to consult various directories. So, users who come from different directories will be authenticated through their ldap\_password. Indeed, \Sympa will try to bind on the first directory with the given ldap\_password. If it does not work,  \Sympa will try to bind on the second with the same ldap\_password, etc. This mechanism is useful in the case of homonyms.
-
+There should only be one directive per line, but their order in the paragraph is of no importance.
 
 Example :
 
@@ -2953,8 +2971,22 @@ Example :
 #Description of parameters for each directory
 
 
+cas
+	host				sso-cas.cru.fr:443
+	login_uri			/login
+	check_uri			/validate
+	logout_uri			/logout
+	auth_service_name		cas-cru
+	ldap_host			ldap.cru.fr:389
+        ldap_get_email_by_uid_filter          (uid=[uid])
+	ldap_timeout			7
+	ldap_suffix			dc=cru,dc=fr
+	ldap_scope			sub
+	ldap_email_attribute		mail
+
 
 ldap
+	regexp				univ-rennes1\.fr
 	host				ldap.univ-rennes1.fr:389
 	timeout				30
 	suffix				dc=univ-rennes1,dc=fr
@@ -2968,6 +3000,7 @@ ldap
 	ssl_ciphers                     MEDIUM:HIGH
 
 ldap
+	
 	host				ldap.univ-nancy2.fr:392,ldap1.univ-nancy2.fr:392,ldap2.univ-nancy2.fr:392
 	timeout				20
 	bind_dn                         cn=sympa,ou=people,dc=cru,dc=fr
@@ -2980,11 +3013,28 @@ ldap
 	scope				sub
         authentication_info_url         http://sso.univ-nancy2.fr/
 	
+
+user_table
+	negative_regexp 		((univ-rennes1)|(univ-nancy2))\.fr
+
 [STARTPARSE]
 \end{verbatim}
 \end {quote}
 
+\subsubsection {user\_table paragraph in auth.conf}
+
+The user\_table paragraph is related to sympa internal authentication by email and password. It is the simplest one the only parameters
+are \cfkeyword {regexp} and \cfkeyword {negative\_regexp} which are perl regexp use to select or block this authentication method for
+a class of email. 
+
+
+\subsubsection {ldap paragraph in auth.conf}
+
+
 \begin{itemize}
+\item {\cfkeyword {regexp} and \cfkeyword {negative\_regexp}}
+	Same as in user\_table paragraph.
+
 \item{host}\\
 
         This keyword is \textbf {mandatory}. It is the domain name
@@ -3146,6 +3196,69 @@ ldap
 
 \end{itemize}
 
+
+\subsubsection {cas paragraph in auth.conf}
+
+
+\begin{itemize}
+
+\item{auth\_service\_name}\\
+	The friendly user service name as shown by \Sympa in the login page.
+
+\item{host}\\
+	The host name of the CAS server including the port number.
+
+\item{login\_uri}\\
+	The login service URI, usually  \textbf {/cas/login}
+
+\item{check\_uri}\\
+	The ticket validation service URI, usually  \textbf {/cas/validate}
+
+\item{logout\_uri}\\
+	The logout service URI, usually  \textbf {/cas/logout}
+
+\item{ldap\_host}\\
+	The LDAP host Sympa will connect to fetch user email when user uid is return by CAS service. The ldap\_host include the
+        port number and it may be a comma separated list of redondant host.   
+
+\item{ldap\_bind\_dn}\\
+	The DN used to bind to this server. Anonymous bind is used if this parameter is not defined.
+				    
+\item{ldap\_bind\_password}\\
+	The password used unless anonymous bind is used.
+
+\item{ldap\_suffix}\\
+	The LDAP suffix use when seraching user email
+
+\item{ldap\_scope}\\
+	The scope use when seraching user email, possible values are \texttt {sub}, \texttt {base}, and \texttt {one}.
+
+\item{ldap\_get\_email\_by\_uid\_filter}\\
+	The filter to perform the email search.
+
+\item{ldap\_email\_attribute}\\
+	The attribut name to be use as user canonical email. In the current version of sympa only the first value returned by the LDAP server is used.
+
+\item{ldap\_timeout}\\
+	The time out for the search.
+
+
+\item{ldap\_use\_ssl}
+   
+        If set to \texttt {1}, connection to the LDAP server will use SSL (LDAPS).
+
+\item{ldap\_ssl\_version}
+
+        This defines the version of the SSL/TLS protocol to use. Defaults of \index {Net::LDAPS} to \texttt {sslv2/3}, 
+	other possible values are \texttt {sslv2}, \texttt {sslv3}, and \texttt {tlsv1}.
+
+\item{ldap\_ssl\_ciphers}
+  
+        Specify which subset of cipher suites are permissible for this connection, using the  
+	OpenSSL string format. The default value of \index {Net::LDAPS} for ciphers is \texttt {ALL}, 
+	which permits all ciphers, even those that don't encrypt!
+
+\end{itemize}
 
 \section {Named Filters}
 

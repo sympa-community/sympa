@@ -154,6 +154,7 @@ sub set_arc_cookie {
     return 1;
 }
     
+    
 ## Set cookie with lang pref
 sub set_lang_cookie {
     my ($lang,$domain) = @_;
@@ -307,6 +308,102 @@ sub set_which_cookie {
     return 1;
 }
 
+## get unappropriate_cas_server
+sub get_do_not_use_cas {
+    
+    my $http_cookie = shift;
+
+    my %cookies = parse CGI::Cookie($http_cookie);
+        
+    foreach (keys %cookies) {
+	my $cookie = $cookies{$_};
+	
+	next unless ($cookie->name eq 'do_not_use_cas');
+	my $val = $cookie->value;
+	return ($cookie->value);
+    }
+
+    return (undef);
+}
+
+## Set cookie for accessing web archives
+sub set_do_not_use_cas {
+    my $domain = shift;
+    my $value = shift ;    
+    my $expires=shift;
+    
+    my $expiration;
+
+    if ($expires =~ /now/i) {
+	$expiration = "-10y";
+    }else{
+	$expiration = '+'.$expires.'m';
+    }
+
+    if ($domain eq 'localhost') {
+	$domain="";
+    }
+
+    do_log('debug',"cookielib::set_do_not_use_cas($domain,$value,$expiration) ");
+
+    unless (($value == 0) || ($value == 1)) {
+	do_log('err',"cookielib::set_do_not_use_cas($value) incorrect parameter");
+	return undef;
+    }
+    
+    my $cookie = new CGI::Cookie (-name    => 'do_not_use_cas',
+				  -value   => $value ,
+				  -domain  => $domain,
+				  -expires => $expiration,
+				  -path    => '/'
+				  );
+    
+    ## Send cookie to the client
+    printf "Set-Cookie:  %s\n", $cookie->as_string;
+    return 1;
+}
+
+
+## Set cookie for accessing web archives
+sub set_cas_server {
+    my $domain = shift;
+    my $value = shift ;    
+
+    if ($domain eq 'localhost') {
+	$domain="";
+    }
+
+    do_log('debug',"cookielib::set_cas_server($domain,$value) ");
+    
+    my $cookie = new CGI::Cookie (-name    => 'cas_server',
+				  -value   => $value ,
+				  -domain  => $domain,
+				  -path    => '/'
+				  );
+    
+    ## Send cookie to the client
+    printf "Set-Cookie:  %s\n", $cookie->as_string;
+    return 1;
+}
+
+
+## get unappropriate_cas_server
+sub get_cas_server {
+    
+    my $http_cookie = shift;
+
+    my %cookies = parse CGI::Cookie($http_cookie);
+        
+    foreach (keys %cookies) {
+	my $cookie = $cookies{$_};
+	
+	next unless ($cookie->name eq 'cas_server');
+	my $val = $cookie->value;
+	return ($cookie->value);
+    }
+
+    return (undef);
+}
 
 1;
 
