@@ -394,11 +394,30 @@ $TNEXTBUTTON$
 <SubjectHeader>
 <TABLE border=0 width=100%>
 <TR bgcolor="--BG_COLOR--">
- <TD>
+ <TD Valign=top>
   <FONT size=+1 COLOR="--DARK_COLOR--"><B> $SUBJECTNA$</B></FONT><FONT size=+1> $FROMNAME$ </FONT>
  </TD>
 
- <TD ALIGN=RIGHT NOWRAP>
+<TD ALIGN=RIGHT NOWRAP>
+[IF user->email]
+<!-- reply to button -->
+<FORM ACTION="[path_cgi]" METHOD=POST>
+  <INPUT TYPE="hidden" NAME="in_reply_to" VALUE="$MSGID$">
+  <INPUT TYPE="hidden" NAME="subject" VALUE="Re: $SUBJECTNA$">
+  <INPUT TYPE="hidden" NAME="action" VALUE="compose_mail">
+  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+[IF lang=fr]
+   répondre à l'auteur <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
+  à la liste <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list->host]">
+ <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Répondre">
+[ELSE] 
+  Reply to sender <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
+  to list <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list->host]">
+  <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Reply">
+
+[ENDIF]
+</FORM>
+[ENDIF]
 
 [IF action<>viewmod]
 [IF user->email=$FROMADDR$]
@@ -414,7 +433,6 @@ $TNEXTBUTTON$
 [ELSE]
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="tag this mail for deletion">
 [ENDIF]
-</br>
   </FORM>
 [ELSIF is_owner]
   <FORM ACTION="[path_cgi]" METHOD=POST>
@@ -431,7 +449,6 @@ $TNEXTBUTTON$
 [ELSE]
   <INPUT TYPE="button" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="request_confirm(this.form,'Do you really want to delete this message ?')">
 [ENDIF]
-</br>
   </FORM>
 [ENDIF]
 

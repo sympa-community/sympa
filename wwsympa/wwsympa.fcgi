@@ -780,9 +780,11 @@ sub get_parameters {
     }elsif ($ENV{'REQUEST_METHOD'} eq 'POST') {
 	## POST
 	foreach my $p (keys %in) {
+    &wwslog('info', "xxxxxxxxxx parametre  $p");
 	    if ($p =~ /^action_(\w+)((\.\w+)*)$/) {
 		
 		$in{'action'} = $1;
+    &wwslog('info', "xxxxxxxxxx $1");
 		if ($2) {
 		    foreach my $v (split /\./, $2) {
 			$v =~ s/^\.?(\w+)\.?/$1/;
@@ -7199,13 +7201,13 @@ sub do_compose_mail {
 	&wwslog('info','do_compose_mail: may not send message');
 	return undef;
     }
-    if ($in{'rcpt'}) {
-	$param->{'to'} = $in{'rcpt'};
+    if ($in{'to'}) {
+	$param->{'to'} = $in{'to'};
     }else{
 	$param->{'to'} = $list->{'name'} . '@' . $list->{'admin'}{'host'};
     }
-    $param->{'subject'}= $in{'subject'}; 
-    $param->{'in_reply_to'}= $in{'in_reply-to'}; 
+    $param->{'subject'}= $in{'subject'} ;
+    $param->{'in_reply_to'}= $in{'in_reply_to'};
     return 1;
 }
 
@@ -7219,22 +7221,25 @@ sub do_send_mail {
 	return 'loginrequest';
     }
     
-    unless ($param->{'list'}) {
-	&error_message('missing_arg', {'argument' => 'list'});
-	&wwslog('info','do_send_mail: no list');
-	return undef;
+    my $to = $in{'to'};
+    unless ($in{'to'}) {
+	unless ($param->{'list'}) {
+	    &error_message('missing_arg', {'argument' => 'list'});
+	    &wwslog('info','do_send_mail: no list');
+	    return undef;		
+	}
+	unless ($param->{'may_post'}) {
+	    &error_message('may_not');
+	    &wwslog('info','do_send_mail: may not send message');
+	    return undef;
+	}
+	$to = $list->{'name'}.'@'.$list->{'admin'}{'host'};
     }
-    
-    unless ($param->{'may_post'}) {
-	&error_message('may_not');
-	&wwslog('info','do_send_mail: may not send message');
-	return undef;
-    }
-
     my @body = split /\0/, $in{'body'};
-    my $to = $list->{'name'}.'@'.$list->{'admin'}{'host'};
 
-    &mail::mailback(\@body, $in{'subject'}, $param->{'user'}{'email'}, $to, $to);
+    &mail::mailback(\@body, 
+                    {'Subject' => $in{'subject'}, 'In-Reply-To' => $in{'in_reply_to'}}, 
+		    $param->{'user'}{'email'}, $to, $to);
 
     &message('performed');
     return 'info';

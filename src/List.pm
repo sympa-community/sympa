@@ -1084,7 +1084,7 @@ sub send_alert_to_owner {
 
 	my $subject = sprintf(Msg(8, 28, "WARNING: bounce rate too high in list %s"), $name);
 	my $body = sprintf Msg(8, 27, "Bounce rate in list %s is %d%%.\nYou should delete bouncing subscribers : %s/reviewbouncing/%s"), $name, $rate, $Conf{'wwsympa_url'}, $name ;
-	&mail::mailback (\$body, $subject, 'sympa', $to, @rcpt);
+	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, @rcpt);
     }else {
 	do_log('info', 'Unknown alert %s', $alert);
     }
@@ -1101,13 +1101,13 @@ sub send_notify_to_listmaster {
     if ($operation eq 'no_db') {
         my $body = "Cannot connect to database $Conf{'db_name'}, Sympa dying." ; 
 	my $to = sprintf "Listmaster <%s>", $Conf{'listmaster'};
-	mail::mailback (\$body, 'No DataBase', 'sympa', $to, $Conf{'listmaster'});
+	mail::mailback (\$body, {'Subject' => 'No DataBase'}, 'sympa', $to, $Conf{'listmaster'});
 
     ## creation list requested
     }elsif ($operation eq 'request_list_creation') {
         my $body = "list ($param[0]) creation is requested by $param[1]" ; 
 	my $to = sprintf "Listmaster <%s>", $Conf{'listmaster'};
-	&mail::mailback (\$body, "list ($param[0]) creation is requested by $param[1]", 'sympa', $to, $Conf{'listmaster'});
+	&mail::mailback (\$body, {'Subject' => "list ($param[0]) creation is requested by $param[1]"}, 'sympa', $to, $Conf{'listmaster'});
 
     ## Loop detected in Sympa
     }elsif ($operation eq 'loop_command') {
@@ -1162,7 +1162,7 @@ sub send_notify_to_owner {
 	my ($body, $subject);
 	$subject = sprintf (Msg(8, 21, "WARNING: %s list %s from %s %s"), $operation, $name, $who, $gecos);
 	$body = sprintf (Msg(8, 23, "WARNING : %s %s failed to signoff from %s\nbecause his address was not found in the list\n (You may help this person)\n"),$who, $gecos, $name);
-	&mail::mailback (\$body, $subject, 'sympa', $to, @rcpt);
+	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, @rcpt);
     }else {
 	my ($body, $subject);
 	$subject = sprintf(Msg(8, 21, "FYI: %s list %s from %s %s"), $operation, $name, $who, $gecos);
@@ -1171,7 +1171,7 @@ sub send_notify_to_owner {
 	}else {
 	    $body = sprintf Msg(8, 22, "FYI command %s list %s from %s %s \n (no action needed)\n"),$operation, $name, $who, $gecos ;
 	}
-	&mail::mailback (\$body, $subject, 'sympa', $to, @rcpt);
+	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, @rcpt);
     }
     
 }
@@ -1207,7 +1207,7 @@ sub send_sub_to_owner {
    my $subject = sprintf(Msg(8, 2, "%s subscription request"), $name);
    my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
    my $body = sprintf Msg(8, 3, $msg::sub_owner), $name, $replyto, $keyauth, $name, $escaped_who, $escaped_gecos, $replyto, $keyauth, $name, $who, $gecos;
-   &mail::mailback (\$body, $subject, 'sympa', $to, @rcpt);
+   &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, @rcpt);
 
 }
 
@@ -1222,7 +1222,7 @@ sub notify_sender{
 
    my $subject = sprintf Msg(4, 40, 'Moderating your message');
    my $body = sprintf Msg(4, 38, "Your message for list %s has been forwarded to editor(s)\n"), $name;
-   &mail::mailback (\$body, $subject, 'sympa', $sender, $sender);
+   &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $sender, $sender);
 }
 
 ## Send a Unsubscription request to the owners.
@@ -1253,7 +1253,7 @@ sub send_sig_to_owner {
     my $subject = sprintf(Msg(8, 24, "%s UNsubscription request"), $name);
     my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
     my $body = sprintf Msg(8, 25, $msg::sig_owner), $name, $Conf{'sympa'}, $keyauth, $name, $escaped_who, $Conf{'sympa'}, $keyauth, $name, $who;
-    &mail::mailback (\$body, $subject, 'sympa', $to, @rcpt);
+    &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, @rcpt);
 }
 
 ## Send a message to the editor
@@ -4788,7 +4788,7 @@ sub request_auth {
 	}
     }
 
-    &mail::mailback (\$body, $command, 'sympa', $email, $email);
+    &mail::mailback (\$body, {'Subject' => $command}, 'sympa', $email, $email);
 
     return 1;
 }
