@@ -98,16 +98,16 @@ sub SetLang {
 	$lang = &Locale2Lang($lang);
     }
    
-    ## Set Locale::Messages context
-    unless (setlocale(&POSIX::LC_ALL, $locale)) {
-	&do_log('err','Failed to setlocale(%s)', $locale);
-	return undef;
-    }
     &Locale::Messages::textdomain("sympa");
     &Locale::Messages::bindtextdomain('sympa','--DIR--/locale');
     &Locale::Messages::bind_textdomain_codeset('sympa',$recode) if $recode;
     #bind_textdomain_codeset sympa => 'iso-8859-1';
 
+    ## Set Locale::Messages context
+    unless (setlocale(&POSIX::LC_ALL, $locale)) {
+	&do_log('err','Failed to setlocale(%s)', $locale);
+	return undef;
+    }
     $current_lang = $lang;
     $current_locale = $locale;
 
