@@ -2666,7 +2666,7 @@ sub delete_user {
 	}
     }
 
-    $self->{'total'} -= $total;
+    $self->{'total'} += $total;
     $self->savestats();
     return $total;
 }
