@@ -70,7 +70,6 @@ my $sender = '';
 my $time_command;
 my $msg_file;
 
-#my $email_regexp = '(\S+|\".*\")(@\S+)';
 my $email_regexp = '\S+|\".*\"@\S+';
 
 ## Parse the command and call the adequate subroutine with
@@ -643,7 +642,6 @@ sub subscribe {
     my $action = &List::request_action('subscribe',$auth_method,$robot,
 				       {'listname' => $which, 
 					'sender' => $sender });
-#    my $action = &List::get_action ('subscribe',$which,$sender,$auth_method);
     
     return undef
 	unless (defined $action);
@@ -780,7 +778,6 @@ sub info {
 	$auth_method='smtp';
     }
 
-    #my $action = &List::get_action('info',$listname,$sender,$auth_method);
     my $action = &List::request_action('info',$auth_method,$robot,
 				       {'listname' => $listname, 
 					'sender' => $sender });
@@ -894,7 +891,6 @@ sub signoff {
 	$auth_method='smtp';
     }  
     
-    #my $action = &List::get_action('unsubscribe',$which,$sender,$email,$auth_method);
     my $action = &List::request_action('unsubscribe',$auth_method,$robot,
 				       {'listname' => $which, 
 					'email' => $email,
@@ -1016,7 +1012,6 @@ sub add {
 	$auth_method='smtp';
     }
     
-    #my $action = &List::get_action ('add',$which,$sender,$email,$auth_method);
     my $action = &List::request_action('add',$auth_method,$robot,
 				       {'listname' => $which, 
 					'email' => $email,
@@ -1271,7 +1266,6 @@ sub remind {
     my $action;
 
     if ($listname eq '*') {
-	#$action = &List::get_action ('global_remind',$sender,$auth_method);
 	$action = &List::request_action('global_remind',$auth_method,$robot,
 					   {'sender' => $sender });
 	
@@ -1281,7 +1275,6 @@ sub remind {
 
 	$host = $list->{'admin'}{'host'};
 
-	#$action = &List::get_action ('remind',$listname,$sender,$auth_method);
 	$action = &List::request_action('remind',$auth_method,$robot,
 					   {'listname' => $listname, 
 					    'sender' => $sender });
@@ -1450,9 +1443,6 @@ sub del {
 
     return undef
 	unless (defined $action);
-
-
-#    my $action = &List::get_action ('del', $which, $sender, $who, $auth_method);
 
     if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
 	my $tpl = $2;
@@ -1784,7 +1774,6 @@ sub confirm {
     my $bytes = -s $file;
     my $hdr= $msg->head;
 
-    #my $action = &List::get_action ('send',$name,$sender,'md5',$hdr);
     my $action = &List::request_action('send','md5',$robot,
 				       {'listname' => $name, 
 					'sender' => $sender ,
@@ -1873,7 +1862,6 @@ sub reject {
 	return undef;
     }
 
-    # my $msg = new Mail::Internet [<IN>];
     close(IN);
     
     my $bytes = -s $file;
@@ -1885,7 +1873,6 @@ sub reject {
     
     ## Open the file
     if (!open(IN, $file)) {
-#    if (!-e $file) {
 	push @msg::report, sprintf Msg(6, 41, "Unable to find the message of the list %s locked by the key %s.\nWarning : this message could have ever been send by another editor"),$name,$key ;
 	do_log('info', 'REJECT %s %s from %s refused, auth failed', $which, $key, $sender);
 	return 'wrong_auth';
@@ -1902,7 +1889,6 @@ sub reject {
 	    return undef;
 	}
 
-#	my $message = new Mail::Internet [<IN>];
 	my @sender_hdr = Mail::Address->parse($message->head->get('From'));
         unless  ($#sender_hdr == -1) {
 	    my $rejected_sender = $sender_hdr[0]->address;
