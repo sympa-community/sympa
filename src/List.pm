@@ -1523,7 +1523,7 @@ sub save {
 ## Saves the configuration file to disk
 sub save_config {
     my ($self, $email) = @_;
-    do_log('debug3', 'List::save_config()');
+    do_log('debug3', 'List::save_config(%s,%s)', $self->{'name'}, $email);
 
     my $name = $self->{'name'};    
     my $old_serial = $self->{'admin'}{'serial'};
@@ -1531,8 +1531,8 @@ sub save_config {
     my $old_config_file_name = "$self->{'dir'}/config.$old_serial";
 
     return undef 
-	unless ($list_of_lists{$name});
- 
+	unless ($self);
+
     ## Update management info
     $self->{'admin'}{'serial'}++;
     $self->{'admin'}{'update'} = {'email' => $email,
