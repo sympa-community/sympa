@@ -1,7 +1,20 @@
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+glob failed, line 32
+[3.0]
+   
+        wwsympa die with "glob failed, line 32 of langage.pm under some
+        perl configuration. Solved in [3.0.1]
 
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Scenario name
+[3.0]
+
+        char "-" and "." were previously allowed in a scenario name and
+        rejected in 3.0, solved in [3.0.1]        
+    
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 Broken S/MIME signature
-[2.x -> 3.0] 
+[2.x -> ??? ] 
 
         S/MIME signature is altered by Sympa distribution processus
         if original message contains base64 attachement. This bug cames
@@ -16,25 +29,22 @@ Broken S/MIME signature
         header/footer attachement.
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
 Can't delete owner
-[3.0a.x ->3.0]
+[3.0a.x -> ??? ]
 
         When deleting owner or editor, wwsympa return a syntaxe error
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
 Owners can change their email
-[3.0a.x -> 3.0]
+[3.0a.x -> ??? ]
 
        	Privileged owners can edit their own email address. This is
         should be impossible because listmaster must be able to control
         who own lists.
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
 Improper lang when notify
-[3.0a.x -> 3.0]
+[3.0a.x -> ??? ]
 
         Notificatication of messages to moderate sent to list editor
         use the lang preference of the message Sender. Of course it should
