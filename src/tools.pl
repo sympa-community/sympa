@@ -594,7 +594,7 @@ sub as_singlepart {
     
     my @parts = $msg->parts();
     foreach my $index (0..$#parts) {
-	if ($parts[$index]->effective_type() eq $preferred_type) {
+	if ($parts[$index]->effective_type() =~ /^$preferred_type$/) {
 	    ## Only keep the first matching part
 	    $msg->parts([$parts[$index]]);
 	    $msg->make_singlepart();
