@@ -6046,7 +6046,9 @@ sub do_rename_list {
     }
     &_install_aliases() if ($list->{'admin'}{'status'} eq 'open');
 
-    return 'admin';
+    $param->{'redirect_to'} = "$param->{'base_url'}$param->{'path_cgi'}/admin/$in{'new_listname'}";
+    return 1;
+
 }
 
 
