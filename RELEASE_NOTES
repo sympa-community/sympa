@@ -29,7 +29,7 @@
 *****	src/tools.pl: Add reversible encryption for password (rc4)
 *****	&crypt_passwd ; &decrypt_passwd ; &ciphersaber_installed
 *****	You need to change your database structure :
-*****	ALTER TABLE user_table CHANGE password_user varchar (40);
+*****	ALTER TABLE user_table CHANGE password_user password_user varchar (40);
 *****
 *****	crypt_passwd.pl: Script for password encryption in database
 
