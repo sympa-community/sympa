@@ -60,6 +60,25 @@
   </FORM>
   </TR>
 
+  <TR>
+  <FORM ACTION="[path_cgi]" METHOD="POST">
+  <TD ALIGN="right" VALIGN="bottom">
+  [IF directory]
+  <B> Rename directory [path]</B><BR>
+  [ELSE]
+  <B> Rename file [path]</B><BR>
+  [ENDIF]
+  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+  <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
+  <INPUT TYPE="hidden" NAME="serial" VALUE="[serial_desc]">
+  <INPUT TYPE="hidden" NAME="action" VALUE="d_rename">
+  <INPUT SIZE=50 MAXLENGTH=100 NAME="new_name"></TD>
+  <TD ALIGN="left" VALIGN="bottom">
+  <INPUT SIZE=20 MAXLENGTH=50 TYPE="submit" NAME="action_d_rename" VALUE="Rename">
+  </TD>
+  </FORM>
+  </TR>
+
 </TABLE>
 <BR>
 <BR>

@@ -72,7 +72,7 @@
   <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
   <INPUT TYPE="hidden" NAME="serial" VALUE="[serial_desc]">
   <INPUT TYPE="hidden" NAME="action" VALUE="d_rename">
-  <INPUT SIZE=50 MAXLENGTH=100 NAME="new_name" VALUE="[desc]"></TD>
+  <INPUT SIZE=50 MAXLENGTH=100 NAME="new_name"></TD>
   <TD ALIGN="left" VALIGN="bottom">
   <INPUT SIZE=20 MAXLENGTH=50 TYPE="submit" NAME="action_d_rename" VALUE="Renommer">
   </TD>
