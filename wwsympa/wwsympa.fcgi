@@ -4592,6 +4592,12 @@ sub do_redirect {
 	 return undef;
      } 
 
+     unless ($in{'status'} && (($in{'status'} eq 'open') || ($in{'status'} eq 'closed'))) {
+	 &error_message('missing_arg', {'argument' => 'status'});
+	 &do_log('info', 'Missing status parameter',);
+	 return undef;
+     }
+     
      if ($list->{'admin'}{'status'} eq $in{'status'}) {
 	 &error_message('huummm_didnt_change_anything');
 	 &wwslog('info','view_pending_list: didn t change really the status, nothing to do');
@@ -9274,7 +9280,11 @@ sub do_redirect {
      }
 
      foreach my $u (@users) {
-	 $list->delete_subscription_request($u);
+	 unless ($list->delete_subscription_request($u)) {
+	     &error_message('failed');
+	     &wwslog('info','do_ignoresub: delete_subscription_request(%s) failed', $u);
+	     return 'subindex';
+	 }
      }
 
      return 'subindex';

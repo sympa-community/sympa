@@ -1,4 +1,4 @@
-# List.pm - This module includes all list processing functions
+# list.pm - This module includes all list processing functions
 # RCS Identication ; $Revision$ ; $Date$ 
 #
 # Sympa - SYsteme de Multi-Postage Automatique
@@ -7906,6 +7906,7 @@ sub delete_subscription_request {
 	return undef;
     }
 
+    my $removed_file = 0;
     foreach my $filename (sort grep(/^$self->{'name'}\.\d+\.\d+$/, readdir SPOOL)) {
 	unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
 	    do_log('notice', 'Could not open %s', $filename);
@@ -7913,15 +7914,25 @@ sub delete_subscription_request {
 	    return undef;
 	}
 	my $line = <REQUEST>;
-	close REQUEST;
-	if ($line =~ /^$email\s/) {
-	    unless (unlink "$Conf{'queuesubscribe'}/$filename") {
-		do_log('err', 'Could not delete file %s', $filename);
-		next;
-	    }
+	unless ($line =~ /^($tools::regexp{'email'})\s*/ &&
+		($1 eq $email)) {
+	    next;
 	}
+	    
+	close REQUEST;
+
+	unless (unlink "$Conf{'queuesubscribe'}/$filename") {
+	    do_log('err', 'Could not delete file %s', $filename);
+	    next;
+	}
+	$removed_file++;
     }
     closedir SPOOL;
+    
+    unless ($removed_file > 0) {
+	do_log('err', 'No pending subscription was found for user %s', $email);
+	return undef;
+    }
 
     return 1;
 } 
