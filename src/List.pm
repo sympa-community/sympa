@@ -779,6 +779,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 'group' => 'command'
 			 },
 	    'lang' => {'format' => [], ## &Language::GetSupportedLanguages() called later
+		       'file_format' => '\w+',
 		       'default' => {'conf' => 'lang'},
 		       'gettext_id' => "Language of the list",
 		       'group' => 'description'
