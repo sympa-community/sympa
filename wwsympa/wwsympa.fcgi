@@ -6384,8 +6384,15 @@ sub do_edit_list {
 		     $p_glob->{'value'}{$elt}{'selected'} = 0;
 		 }
 	     }
-	     $p_glob->{'value'}{$d}{'selected'} = 1 if (defined $d);
-
+	     if (ref ($d)) {
+		 next unless (ref ($d) eq 'ARRAY');
+		 foreach my $v (@{$d}) {
+		     $p_glob->{'value'}{$v}{'selected'} = 1;
+		 }
+	     }else {
+		 $p_glob->{'value'}{$d}{'selected'} = 1 if (defined $d);
+	     }
+	     
 	 }else {
 	     $p_glob->{'type'} = 'scalar';
 	     $p->{'value'} = &tools::escape_html($d);
