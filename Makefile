@@ -195,8 +195,11 @@ installscript:
 
 
 installdir:
+	echo "Setting $(USER) owner of $(DESTDIR)$(DIR)"
+	chown $(USER) $(DESTDIR)$(DIR)
+	chgrp $(GROUP) $(DESTDIR)$(DIR)
 	@if [ ! -f $(DESTDIR)$(CONFDIR)/sympa.conf ] ; then \
-	echo "Installing directories..."; \
+	echo "First installation : installing directories..."; \
 	for dir in expl etc sample ; do \
 		if [ ! -d $(DESTDIR)$(DIR)/$$dir ] ; then \
 			echo "Creating $(DESTDIR)$(DIR)/$$dir"; \
@@ -207,7 +210,7 @@ installdir:
 	done \
 	fi
 	@if [ ! -f $(DESTDIR)$(CONFDIR)/sympa.conf ] ; then \
-	echo "Installing conf directories..."; \
+	echo "First installation : installing conf directories..."; \
 	for dir in etc/create_list_templates etc/templates etc/wws_templates etc/scenari ; do \
 		if [ ! -d $(DESTDIR)$(DIR)/$$dir ] ; then \
 			echo "Creating $(DESTDIR)$(DIR)/$$dir"; \
@@ -218,7 +221,7 @@ installdir:
 	done \
 	fi
 	@if [ ! -f $(DESTDIR)$(CONFDIR)/sympa.conf ] ; then \
-	echo "Installing spool directories..."; \
+	echo "First installation : installing spool directories..."; \
 	for dir in $(SPOOLDIR) $(SPOOLDIR)/msg $(SPOOLDIR)/digest $(SPOOLDIR)/moderation \
 	$(SPOOLDIR)/expire $(SPOOLDIR)/auth $(SPOOLDIR)/outgoing $(SPOOLDIR)/tmp ; do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
