@@ -1,3 +1,135 @@
+2005-01-27 09:54  sympa-authors
+
+	* ChangeLog, src/bouncequeue.c, src/queue.c: Fix: Apply fixes to
+	  queue and bouncequeue
+
+2005-01-26 17:13  sympa-authors
+
+	* src/etc/create_list_templates/discussion_list/comment.tt2,
+	  src/etc/create_list_templates/hotline/comment.tt2,
+	  src/etc/create_list_templates/html-news-letter/comment.tt2,
+	  src/etc/create_list_templates/intranet_list/comment.tt2,
+	  src/etc/create_list_templates/news-letter/comment.tt2,
+	  src/etc/create_list_templates/private_working_group/comment.tt2,
+	  src/etc/create_list_templates/public_web_forum/comment.tt2,
+	  web_tt2/arc_manage.tt2, web_tt2/arcsearch_form.tt2,
+	  web_tt2/create_list_request.tt2, web_tt2/d_properties.tt2,
+	  web_tt2/d_read.tt2, web_tt2/d_upload.tt2, web_tt2/editfile.tt2,
+	  web_tt2/editsubscriber.tt2, web_tt2/get_closed_lists.tt2,
+	  web_tt2/get_pending_lists.tt2, web_tt2/help_admin.tt2,
+	  web_tt2/home.tt2, web_tt2/list_button_header.tt2,
+	  web_tt2/lists.tt2, web_tt2/loginbanner.tt2, web_tt2/main.tt2,
+	  web_tt2/pref.tt2, web_tt2/review.tt2, web_tt2/reviewbouncing.tt2,
+	  web_tt2/serveradmin.tt2, web_tt2/set_pending_list_request.tt2,
+	  web_tt2/title.tt2, web_tt2/tt2_error.tt2, wwsympa/wwsympa.fcgi:
+	  [P.Levesque]Changes: finish the xhtml compliance work
+
+2005-01-26 15:50  sympa-authors
+
+	* check_perl_modules.pl: Fix: changes to get mhonarc version
+
+2005-01-26 15:09  sympa-authors
+
+	* src/Log.pm: Fix: vars in notification from fatal_err() were not
+	  instanciated
+
+2005-01-26 14:59  sympa-authors
+
+	* src/tools.pl: Fix: Could not create tmp directory for antivirus
+	  if already exists
+
+2005-01-26 11:28  sympa-authors
+
+	* src/etc/edit_list.conf: [P.Haldane] Fix: typo for
+	  shared_doc.quota and web_archive.quota
+
+2005-01-24 09:42  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [BugID 369] [A.Bernstein]: Change: check
+	  'send' scenario to determine if 'Post' button is shown
+
+2005-01-24 09:09  sympa-authors
+
+	* src/Conf.pm: Change default remind behavior because the remind
+	  task should be fixed
+
+2005-01-21 17:35  sympa-authors
+
+	* check_perl_modules.pl: Fix: problem with RedHat ES and
+	  Archive:Zip
+
+2005-01-21 14:50  sympa-authors
+
+	* src/Language.pm: Fix previous changes
+
+2005-01-21 13:49  sympa-authors
+
+	* src/Language.pm: Fix previous changes
+
+2005-01-21 13:30  sympa-authors
+
+	* src/bouncequeue.c: [M.Schulze] Fix: fix vulnerability to a buffer
+	  overflow. This could potentially lead to the execution of
+	  arbitrary code under the sympa user id.
+
+2005-01-21 13:25  sympa-authors
+
+	* src/queue.c: [M.Schulze] Fix: fix vulnerability to a buffer
+	  overflow. This could potentially lead to the execution of
+	  arbitrary code under the sympa user id.
+
+2005-01-21 12:14  sympa-authors
+
+	* src/Language.pm: Change: Allow '%' chars to be escaped in
+	  templates : %%
+
+2005-01-21 11:21  sympa-authors
+
+	* src/task_manager.pl: Fix: remind messages (automatically sent by
+	  the task_manager) did not use appropriate variables (because
+	  current robot was not given)
+
+2005-01-19 14:42  sympa-authors
+
+	* doc/sympa.tex.tpl: New default_remin_task parameter
+
+2005-01-19 14:34  sympa-authors
+
+	* src/: Conf.pm, List.pm: Change: ste a default value for the
+	  remind_task list parameter
+
+2005-01-19 09:19  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: incorrect syntax parameter for
+	  edit_list multiple parameters
+
+2005-01-17 12:13  sympa-authors
+
+	* wwsympa/archived.pl: Change: Remove all previously generated
+	  files when rebuilding web archives. Attachments used to be
+	  duplicated...
+
+2005-01-14 15:04  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix previous changes
+
+2005-01-14 14:56  sympa-authors
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: Fix: urlize and attach
+	  function were not fully working
+
+2005-01-12 13:10  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Allow '/' for topics
+
+2005-01-12 10:27  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Reactivate syntaxic checks
+
+2005-01-12 09:36  sympa-authors
+
+	* ChangeLog: Update
+
 2005-01-12 09:35  sympa-authors
 
 	* wwsympa/wwsympa.fcgi: Change: comment syntaxic checks
