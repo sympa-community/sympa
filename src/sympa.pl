@@ -771,30 +771,39 @@ sub DoMessage{
     ## List and host.
     my($listname, $host) = split(/[@\s]+/, $which);
 
-    ## Search for the list
-    my $list = new List ($listname);
-
-    unless ($list) {
-	&do_log('notice', 'Unknown list %s', $listname);
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
-	return undef;
-    }
- 
-    my ($name, $host) = ($list->{'name'}, $list->{'admin'}{'host'});
-
-    my $start_time = time;
-    
-    ## Now check if the sender is an authorized address.
     my $hdr = $msg->head;
     
     my $from_field = $hdr->get('From');
     my $messageid = $hdr->get('Message-Id');
 
-    do_log('info', "Processing message for %s with priority %s, %s", $name,$list->{'admin'}{'priority'}, $messageid );
-    
     my @sender_hdr = Mail::Address->parse($from_field);
 
     my $sender = $sender_hdr[0]->address || '';
+
+    ## Search for the list
+    my $list = new List ($listname);
+ 
+    ## List unknown
+    unless ($list) {
+	&do_log('notice', 'Unknown list %s', $listname);
+	&List::send_global_file('list_unknown', $sender, 
+				{'list' => $which,
+				 'date' => &POSIX::strftime("%d %b %Y  %H:%M", localtime(time)),
+				 'boundary' => $Conf{'sympa'}.time,
+				 'header' => $hdr->as_string()
+				});
+	return undef;
+    }
+    
+    my ($name, $host) = ($list->{'name'}, $list->{'admin'}{'host'});
+
+    my $start_time = time;
+    
+    ## Now check if the sender is an authorized address.
+
+    do_log('info', "Processing message for %s with priority %s, %s", $name,$list->{'admin'}{'priority'}, $messageid );
+    
+
     if ($sender =~ /^(mailer-daemon|sympa|listserv|majordomo|smartlist|mailman|$Conf{'email'})/mio) {
 	do_log('notice', 'Ignoring message which would cause a loop');
 	return undef;
