@@ -60,10 +60,16 @@ my $wait = <STDIN>;
 open NOTES, 'NEWS';
 my ($current, $ok);
 while (<NOTES>) {
-    if (/^$previous_version\s/) {
-	last;
-    }elsif (/^$current_version\s/) {
-	$ok = 1;
+    
+    if (/^([\w_.]+)\s/) {
+	my $v = $1;
+	if ($v eq $previous_version  || 
+	    &higher($previous_version,$v)
+	    ) {
+	    last;
+	}elsif ($v eq $current_version) {
+	    $ok = 1;
+	}
     }
 
     next unless $ok;
