@@ -43,20 +43,12 @@ archives, list management and so on.
    </TR>
    <TR>
 <TD>
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="[dark_color]">
-  <TD>
-  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
-     <TR> 
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
       <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
       <A HREF="[path_cgi]/lists" >
      <FONT SIZE=-1><B>view all lists</B></FONT></A>
      </TD>
-    </TR>
-  </TABLE>
-  </TD>
-  </TR>
-</TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
 </TD>
 <TD width=100%></TD>
 <TD NOWRAP>

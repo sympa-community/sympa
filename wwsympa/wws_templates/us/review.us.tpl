@@ -16,36 +16,26 @@
 </TR>
 <TR>
 <TD ALIGN="right">
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
-   <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-     <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
          <A HREF="[base_url][path_cgi]/subindex/[list]" ><b>Pending subscriptions</b></A>
          </FONT>
        </TD>
-     </TR>
-   </TABLE></TD></TR>
- </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
 </TD>
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
-   <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-     <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
          <A HREF="[base_url][path_cgi]/add_request/[list]" ><b>Multiple add</b></A>
          </FONT>
        </TD>
-     </TR>
-   </TABLE></TD></TR>
- </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
 </TD>
 
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
-   <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-     <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
 
@@ -53,9 +43,7 @@
 
          </FONT>
        </TD>
-     </TR>
-   </TABLE></TD></TR>
- </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
 </TD>
 
 [ENDIF]
@@ -160,7 +148,7 @@ Selection too wide, can not show selection
 	[IF dark=1]
 	  <TR BGCOLOR="[shaded_color]">
 	[ELSE]
-          <TR>
+          <TR BGCOLOR="[bg_color]">
 	[ENDIF]
 
 	 [IF is_owner]

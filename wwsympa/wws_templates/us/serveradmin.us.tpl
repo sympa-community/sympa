@@ -24,7 +24,15 @@
 	  </FORM>
 	</TD>
       </TR>
-      <TR><TD><A HREF="[path_cgi]/get_pending_lists"><B>Pending lists</B></A></TD></TR>
+
+      <TR><TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+      <A HREF="[path_cgi]/get_pending_lists">Pending lists</A>
+       </TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+
+    </TD></TR>
 
       <TR><TD NOWRAP>
         <FORM ACTION="[path_cgi]" METHOD="POST">
@@ -34,7 +42,14 @@
 	</FORM>     
       </TD></TR>
 
-      <TR><TD><A HREF="[path_cgi]/view_translations"><B>Customize templates</B></A></TD></TR>
+      <TR><TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+        <A HREF="[path_cgi]/view_translations">Customize templates</A>
+       </TD>
+      [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+      </TD></TR>
+
       <TR>
         <TD>
 <FONT COLOR="[dark_color]"><B>Rebuild HTML archives</B> using <CODE>arctxt</CODE> directories as input.

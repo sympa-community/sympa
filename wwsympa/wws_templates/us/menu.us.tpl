@@ -2,7 +2,7 @@
 
 <!-- begin menu.tpl -->
 <TABLE CELLPADDING="0" CELLSPACING="0" WIDTH="100%" BORDER="0"><TR><TD>
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
+<TABLE CELLPADDING="1" CELLSPACING="2" WIDTH="100%" BORDER="0">
   <TR ALIGN=center BGCOLOR="[dark_color]">
   [IF auth_method=smime]
   <TD bgcolor="[bg_color]">
@@ -49,7 +49,7 @@
 
 <TABLE CELLPADDING=0 CELLSPACING=0 WIDTH="100%" BORDER=0>
   <TR ALIGN=center BGCOLOR="[dark_color]"><TD>
-  <TABLE WIDTH="100%" BORDER=0 CELLSPACING=2 CELLPADDING=2>
+  <TABLE WIDTH="100%" BORDER=0 CELLSPACING=1 CELLPADDING=2>
      <TR> 
   [IF may_create_list]
    [IF action=create_list_request]
