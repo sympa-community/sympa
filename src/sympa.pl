@@ -694,7 +694,8 @@ sub DoFile {
     }
 
    #  anti-virus
-    if (my $rc= &tools::virus_infected($message->{'msg'}, $message->{'filename'})) {
+	my $rc= &tools::virus_infected($message->{'msg'}, $message->{'filename'});
+    if ($rc) {
 	if ($Conf{'antivirus_notify'} eq 'sender') {
 	    #printf "do message, virus= $rc \n";
 	    &List::send_global_file('your_infected_msg', $sender, $robot, {'virus_name' => $rc,
@@ -702,6 +703,9 @@ sub DoFile {
 									   'lang' => $Language::default_lang});
 	}
 	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $name, $host, $sender, $rc);
+	return undef;
+    }elsif (! defined($rc)) {
+	&List::send_notify_to_listmaster('antivirus_failed',$robot,"Could not scan $file; The message has been saved as BAD."); 
 	return undef;
     }
    #  
