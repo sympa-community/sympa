@@ -1646,7 +1646,7 @@ sub do_sso_login {
     }else {
 	## Unknown SSO service
 	&error_message('unknown_authentication_service');
-	&do_log('err','do_sso_login: unknow authentication service %s', $in{'auth_service_name'});
+	&do_log('err','do_sso_login: unknown authentication service %s', $in{'auth_service_name'});
 	return 'home';	
     }    
 
