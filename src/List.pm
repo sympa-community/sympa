@@ -549,6 +549,7 @@ my %alias = ('reply-to' => 'reply_to',
 			   'group' => 'tuning'
 			   },
 	    'review' => {'scenario' => 'review',
+			 'synonym' => {'open' => 'public'},
 			 'title_id' => 67,
 			 'group' => 'command'
 			 },
@@ -628,6 +629,7 @@ my %alias = ('reply-to' => 'reply_to',
 				   'group' => 'data_source'
 				   },
 	    'visibility' => {'scenario' => 'visibility',
+			     'synonym' => {'public' => 'noconceal'},
 			     'title_id' => 82,
 			     'group' => 'description'
 			     },
