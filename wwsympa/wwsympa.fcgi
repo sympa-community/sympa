@@ -642,28 +642,9 @@ while ($query = &new_loop()) {
 	## Retro compatibility concerns
 	$param->{'active'} = 1;
 
-	## Directories to search templates
-	my @search_path;
-
-	push @search_path, $list->{'dir'}.'/wws_templates'
-	    if ($list);
-
-	push @search_path, "$Conf{'etc'}/$robot/wws_templates"
-	    ,"$Conf{'etc'}/wws_templates"
-		, "--ETCBINDIR--/wws_templates";
-
 	## Action template
 	if (defined $param->{'action'}) {
-	    foreach my $tpldir (@search_path) {
-		if (-f "$tpldir/$param->{'action'}.$param->{'lang'}.tpl") {
-		    $param->{'action_template'} = "$tpldir/$param->{'action'}.$param->{'lang'}.tpl";
-		    last;
-		}
-		if (-f "$tpldir/$param->{'action'}.tpl") {
-		    $param->{'action_template'} = "$tpldir/$param->{'action'}.tpl";
-		    last;
-		}
-	    }
+	    $param->{'action_template'} = &tools::get_filename('etc', "wws_templates/$param->{'action'}.$param->{'lang'}.tpl", $robot,$list);
 	    unless ($param->{'action_template'})  {
 		&error_message('template_error');
 		&do_log('info',"unable to find template for $param->{'action'}");
@@ -671,125 +652,58 @@ while ($query = &new_loop()) {
 	}
 
 	## Menu template
-	foreach my $tpldir (@search_path) {
-	    if (-f "$tpldir/menu.$param->{'lang'}.tpl"){
-		$param->{'menu_template'} = "$tpldir/menu.$param->{'lang'}.tpl";
-		last;
-	    }
-	    if (-f "$tpldir/menu.tpl"){
-		$param->{'menu_template'} = "$tpldir/menu.tpl";
-		last;
-	    }
-	}
+	$param->{'menu_template'} = &tools::get_filename('etc', "wws_templates/menu.$param->{'lang'}.tpl", $robot,$list);
 	unless ($param->{'menu_template'})  {
 	    &error_message('template_error');
 	    &do_log('info','unable to find menu template');
 	}
-
+	
 	## List_menu template
-	foreach my $tpldir (@search_path) {
-	    if (-f "$tpldir/list_menu.$param->{'lang'}.tpl"){
-		$param->{'list_menu_template'} = "$tpldir/list_menu.$param->{'lang'}.tpl";
-		last;
-	    }
-	    if (-f "$tpldir/list_menu.tpl"){
-		$param->{'list_menu_template'} = "$tpldir/list_menu.tpl";
-		last;
-	    }
-	}
+	$param->{'list_menu_template'} = &tools::get_filename('etc', "wws_templates/list_menu.$param->{'lang'}.tpl", $robot,$list);
+
 	unless ($param->{'list_menu_template'})  {
 	    &error_message('template_error');
 	    &do_log('info','unable to find list_menu template');
 	}
 
 	## admin_menu template
-	foreach my $tpldir (@search_path) {
-	    if (-f "$tpldir/admin_menu.$param->{'lang'}.tpl"){
-		$param->{'admin_menu_template'} = "$tpldir/admin_menu.$param->{'lang'}.tpl";
-		last;
-	    }
-	    if (-f "$tpldir/admin_menu.tpl"){
-		$param->{'admin_menu_template'} = "$tpldir/admin_menu.tpl";
-		last;
-	    }
-	}
+	$param->{'admin_menu_template'} = &tools::get_filename('etc', "wws_templates/admin_menu.$param->{'lang'}.tpl", $robot,$list);
+	
 	unless ($param->{'admin_menu_template'})  {
 	    &error_message('template_error');
 	    &do_log('info','unable to find admin_menu template');
 	}
 
 	## Title template
-	foreach my $tpldir (@search_path) {
-	    if (-f "$tpldir/title.$param->{'lang'}.tpl"){
-		$param->{'title_template'} = "$tpldir/title.$param->{'lang'}.tpl";
-		last;
-	    }
-	    if (-f "$tpldir/title.tpl"){
-		$param->{'title_template'} = "$tpldir/title.tpl";
-		last;
-	    }
-	}
+	$param->{'title_template'} = &tools::get_filename('etc', "wws_templates/title.$param->{'lang'}.tpl", $robot,$list);
+	
 	unless ($param->{'title_template'})  {
 	    &error_message('template_error');
 	    &do_log('info','unable to find title template');
 	}
 
 	## Error template
-	foreach my $tpldir (@search_path) {
-	    if (-f "$tpldir/error.$param->{'lang'}.tpl"){
-		$param->{'error_template'} = "$tpldir/error.$param->{'lang'}.tpl";
-		last;
-	    }
-	    if (-f "$tpldir/error.tpl"){
-		$param->{'error_template'} = "$tpldir/error.tpl";
-		last;
-	    }
-	}
+	$param->{'error_template'} = &tools::get_filename('etc', "wws_templates/error.$param->{'lang'}.tpl", $robot,$list);
+
 	unless ($param->{'error_template'})  {
 	    &error_message('template_error');
 	    &do_log('info','unable to find error template');
 	}
 
 	## Notice template
-	foreach my $tpldir (@search_path) {
-	    if (-f "$tpldir/notice.$param->{'lang'}.tpl"){
-		$param->{'notice_template'} = "$tpldir/notice.$param->{'lang'}.tpl";
-		last;
-	    }
-	    if (-f "$tpldir/notice.tpl"){
-		$param->{'notice_template'} = "$tpldir/notice.tpl";
-		last;
-	    }
-	}
+	$param->{'notice_template'} = &tools::get_filename('etc', "wws_templates/notice.$param->{'lang'}.tpl", $robot,$list);
+
 	unless ($param->{'notice_template'})  {
 	    &error_message('template_error');
 	    &do_log('info','unable to find notice template');
 	}
 
 	## Help template
-	foreach my $tpldir (@search_path) {
-	    if (-f "$tpldir/help_$param->{'help_topic'}.$param->{'lang'}.tpl"){
-		$param->{'help_template'} = "$tpldir/help_$param->{'help_topic'}.$param->{'lang'}.tpl";
-		last;
-	    }
-	    if (-f "$tpldir/help_$param->{'help_topic'}.tpl"){
-		$param->{'help_template'} = "$tpldir/help_$param->{'help_topic'}.tpl";
-		last;
-	    }
-	}
+	$param->{'help_template'} = &tools::get_filename('etc', "wws_templates/help.$param->{'lang'}.tpl", $robot,$list);
 
 	## main template
-	my $main ;
-        foreach my $tpldir (@search_path) {
-	    if (-f "$tpldir/main.$param->{'lang'}.tpl"){
-		$main = "$tpldir/main.$param->{'lang'}.tpl";
-		last;
-	    }
-	    if (-f "$tpldir/main.tpl"){
-		$main = "$tpldir/main.tpl";
-		last;
-	    }
-	}
+	my $main = &tools::get_filename('etc', "wws_templates/main.$param->{'lang'}.tpl", $robot,$list);;
+
 	unless ($main)  {
 	    &error_message('template_error');
 	    &do_log('info','unable to find main template');
@@ -3436,9 +3350,13 @@ sub do_editfile {
 	    &wwslog('info','do_editfile: not allowed');
 	    return undef;
 	}
+	
+	## Add list lang to tpl filename
+	my $file = $in{'file'};
+	$file =~ s/\.tpl$/\.$list->{'admin'}{'lang'}\.tpl/;
 
 	## Look for the template
-	$param->{'filepath'} = &tools::get_filename('etc','templates/'.$in{'file'},$robot, $list);
+	$param->{'filepath'} = &tools::get_filename('etc','templates/'.$file,$robot, $list);
     }else {
 	unless (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
 	    &error_message('missing_arg', {'argument' => 'list'});
@@ -3446,8 +3364,13 @@ sub do_editfile {
 	    return undef;
 	}
 
+	## Add robot lang to tpl filename
+	my $file = $in{'file'};
+	my $lang = &Conf::get_robot_conf($robot, 'lang');
+	$file =~ s/\.tpl$/\.$lang\.tpl/;
+
 	## Look for the template
-	$param->{'filepath'} = &tools::get_filename('etc','templates/'.$in{'file'},$robot);
+	$param->{'filepath'} = &tools::get_filename('etc','templates/'.$file,$robot);
     }
 
     if ($param->{'filepath'} && (! -r $param->{'filepath'})) {
