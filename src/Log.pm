@@ -63,7 +63,7 @@ sub do_log {
     }    
  
     # do not log if log level if too high regarding the log requested by user 
-    return if ($level gt $log_level);
+    return if ($level > $log_level);
 
     unless (syslog($fac, $m, @_)) {
 	&do_connect();
@@ -75,48 +75,6 @@ sub do_log {
     }    
 }
 
-
-sub do_oldlog {
-    my $fac = shift;
-    my $m = shift;
-    my $errno = $!;
-    my $debug = 0;
-
-    if ($fac eq 'debug2') {
-	$fac = 'debug';
-	$debug = 1;
-	
-    }else {
-	unless (syslog($fac, $m, @_)) {
-	    &do_connect();
-	    syslog($fac, $m, @_);
-	}
-    }
-
-    $m =~ s/%m/$errno/g;
-
-    if ($main::options{'debug2'}) {
-	printf STDERR "%s\t$m\n", time, @_;
-    }elsif($debug){
-	return ;
-    }elsif ($main::options{'debug'} || $main::options{'foreground'})   {
-#    }elsif ($main::options{'debug'} || $main::options{'foreground'} || $ENV{'HTTP_HOST'})   {
-	printf STDERR "$m\n", @_;
-	
-    }
-}
-
-
-sub do_list_log {
-   my $list = shift;
-   my $message = shift;
-
-   syslog($fac, $m, @_);
-   if ($main::options{'debug'} || $main::options{'foreground'}) {
-      $m =~ s/%m/$errno/g;
-      printf STDERR "$m\n", @_;
-   }
-}
 
 sub do_openlog {
    my ($fac, $socket_type, $service) = @_;
