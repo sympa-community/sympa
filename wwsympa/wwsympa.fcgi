@@ -1325,7 +1325,7 @@ sub do_lists {
 	}
 	if ($param->{'user'}{'email'} &&
 	    $list->is_subscriber($param->{'user'}{'email'})) {
-	    $list_info->['is_subscriber'} = 1;
+	    $list_info->{'is_subscriber'} = 1;
 	}
 	
 	    
