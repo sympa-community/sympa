@@ -920,10 +920,10 @@ sub check_param_in {
    }
     
     if ($param->{'user'}{'email'} && 
-	(&List::request_action ('create_list',$param->{'auth_method'},
-				{'sender' => $param->{'user'}{'email'},
-				 'remote_host' => $param->{'remote_host'},
-				 'remote_addr' => $param->{'remote_addr'}}) =~ /do_it|listmaster/)) {
+	(($param->{'create_list'} = &List::request_action ('create_list',$param->{'auth_method'},
+							   {'sender' => $param->{'user'}{'email'},
+							    'remote_host' => $param->{'remote_host'},
+							    'remote_addr' => $param->{'remote_addr'}})) =~ /do_it|listmaster/)) {
 	$param->{'may_create_list'} = 1;
     }else{
 	undef ($param->{'may_create_list'});
@@ -3440,69 +3440,22 @@ sub do_install_pending_list {
 	return undef ;
     }    
 
+    $list->{'admin'}{'status'} = $in{'status'};
+    
+    unless ($list->save_config($param->{'user'}{'email'})) {
+	&error_message('cannot_save_config');
+	&wwslog('info','_create_list: Cannot save config file');
+	return undef;
+    }
+
     ## create the list
-    &_create_list();
+    &_install_aliases();
 }
 
-## Does the list creation job (status, aliases,...)    
-sub _create_list {
-    &wwslog('debug', '_create_list(%s,%s,%s)',$in{'list'},$in{'status'},$in{'notify'});
+## Install sendmail aliases
+sub _install_aliases {
+    &wwslog('debug', '_install_aliases()');
 
-    ## Should use $list->save()
-    $param->{'list_config'} = "$Conf{'home'}/$in{'list'}/config";
-    if ($in{'serial'} ne $list->{'admin'}{'serial'}) {
-	&error_message('unable_to_write_config_some_one_else_is_editing_it');
-	&wwslog('info','serial number has changed Sympa:%s Browser: %s',$in{'serial'},$list->{'admin'}{'serial'});
-        return undef;
-    }
-    unless (open CONFIG, "$Conf{'home'}/$in{'list'}/config") {
-	&error_message('unable_to_read_config');
-	&wwslog('info','unable to read configuration file for list %s',$in{'list'});
-	return undef;
-    }
-    unless (open CONFIGOLD, ">$Conf{'home'}/$in{'list'}/config.$in{'serial'}"){
-	&error_message('unable_to_save_config');
-	&wwslog('info','unable to write config.%s file for list %s',$in{'serial'},$in{'list'});
-	return undef;
-    }
-    my $serial = $in{'serial'} + 1 ;
-    
-    unless (open CONFIGNEW, ">$Conf{'home'}/$in{'list'}/config.$serial"){
-	&error_message('unable_to_save_config');
-	&wwslog('info','unable to write config.%s file for list %s',$in{'serial'},$in{'list'});
-	return undef;
-    }
-    
-    while (<CONFIG>) {
-	print CONFIGOLD $_ ;
-	if (/^\s*status\s*(open|closed|pending)\s*$/i) {
-	    print CONFIGNEW "status $in{'status'}\n";
-	    $in{'status'} = 'setting' ;
-	}elsif (/^\s*serial\s*(\d*)\s*$/i) {
-	    print CONFIGNEW "serial $serial\n";
-	    $in{'serial'} = 'setting' ;
-	}else{
-	    print CONFIGNEW $_ ;
-	}
-    }
-    unless ($in{'status'}) {
-	print CONFIGNEW "\nstatus $in{'status'}\n";
-    }
-    unless ($in{'serial'}) {
-	print CONFIGNEW "\nstatus $in{'serial'}\n";
-    }
-    
-    close CONFIG;
-    close CONFIGOLD;
-    close CONFIGNEW;
-    &wwslog('info','new serial %d for list %s',$serial,$in{'list'});
-    unless (rename ("$Conf{'home'}/$in{'list'}/config.$serial","$Conf{'home'}/$in{'list'}/config")){
-	&error_message('unable_to_rename_config');
-	&wwslog('info','unable to rename %s in %s (status %d)',"$Conf{'home'}/$in{'list'}/config.$serial","$Conf{'home'}/$in{'list'}/config,$!");
-	return undef;
-    }
-    
-    ## Alias installation
     if ($wwsconf->{'alias_manager'}) {
 	if ((-x $wwsconf->{'alias_manager'}) 
 	    && (system ("$wwsconf->{'alias_manager'} add $list->{'name'} $list->{'admin'}{'host'}") == 0)) {
@@ -3530,10 +3483,15 @@ sub _create_list {
 ## create a liste using a list template. 
 sub do_create_list {
     &wwslog('debug', 'do_create_list(%s,%s,%s)',$in{'listname'},$in{'subject'},$in{'template'});
-    unless ($in{'listname'}) {
-	&error_message('list_name_is_required');
-	return undef;
+
+    foreach my $arg ('listname','subject','template','info','topics') {
+	unless ($in{$arg}) {
+	    &error_message('missing_arg', {'argument' => $arg});
+	    &wwslog('info','do_create_list: missing param %s', $arg);
+	    return undef;
+	}
     }
+
     $in{'listname'} = lc ($in{'listname'});
 
     unless ($in{'listname'} =~ /^[a-z0-9][a-z0-9\-\+\._]*$/i) {
@@ -3541,24 +3499,6 @@ sub do_create_list {
 	return 'create_list_request';
     }
    
-    unless ($in{'subject'}) {
-	&error_message('subject_is_required');
-	return undef;
-    }
-    unless ($in{'template'}) {
-	&error_message('type_is_required');
-	return undef;
-    }
-    unless ($in{'info'}) {
-	&error_message('description_is_required');
-	return undef;
-    }
-
-    unless ($in{'topics'}) {
-	&error_message('topics_is_required');
-	return undef;
-    }
-
     if ( new List ($in{'listname'})) {
 	&error_message('list_already_exists');
 	&do_log('info', 'could not create already existing list %s for %s', $in{'listname'},$param->{'user'}{'email'});
@@ -3572,10 +3512,7 @@ sub do_create_list {
     }
     my $lang = $param->{'lang'};
     
-    $param->{'create_action'} = &List::request_action('create_list',$param->{'auth_method'},
-						      {'sender' => $param->{'user'}{'email'},
-						      'remote_host' => $param->{'remote_host'},
-						      'remote_addr' => $param->{'remote_addr'}});
+    $param->{'create_action'} = $param->{'create_list'};
 
     &wwslog('info',"do_create_list, get action : $param->{'create_action'} ");
     
@@ -3630,6 +3567,14 @@ sub do_create_list {
     open INFO, ">$Conf{'home'}/$in{'listname'}/info" ;
     print INFO $in{'info'};
     close INFO;
+
+    ## Create list object
+    $in{'list'} = $in{'listname'};
+    &check_param_in();
+
+    if  ($param->{'create_action'} =~ /do_it/i) {
+	&_install_aliases();
+    }
     
     ## notify postmaster
     if ($param->{'create_action'} =~ /notify/) {
