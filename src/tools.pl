@@ -151,11 +151,24 @@ sub load_edit_list_conf {
 	return undef;
     }
 
+    $roles_regexp = 'listmaster|privileged_owner|owner|editor|subscriber|default';
     while (<FILE>) {
 	next if /^\s*(\#.*|\s*)$/;
 
-	if (/^\s*(\S+)\s+(listmaster|privileged_owner|owner|editor|subscriber|default)\s+(read|write|hidden)\s*$/i) {
-	    $conf->{$1}{$2} = $3;
+	if (/^\s*(\S+)\s+(($roles_regexp)\s*(,\s*($roles_regexp))*)\s+(read|write|hidden)\s*$/i) {
+	    my ($param, $role, $priv) = ($1, $2, $6);
+	    my @roles = split /,/, $role;
+	    foreach my $r (@roles) {
+		$r =~ s/^\s*(\S+)\s*$/$1/;
+		if ($r eq 'default') {
+		    &do_log('notice', '"default" is no more recognised');
+		    foreach my $set ('owner','privileged_owner','listmaster') {
+			$conf->{$param}{$set} = $priv;
+		    }
+		    next;
+		}
+		$conf->{$param}{$r} = $priv;
+	    }
 	}else{
 	    &do_log ('info', 'unknown parameter in %s  (Ignored) %s', "$Conf{'etc'}/edit_list.conf",$_ );
 	    next;
@@ -1010,7 +1023,7 @@ sub get_filename {
 
     if ($type eq 'etc') {
 	foreach my $dir ("$Conf{'etc'}/$robot",$Conf{'etc'},'--ETCBINDIR--') {
-	    if (-r "$dir/$file") {
+	    if (-r "$dir/$name") {
 		return "$dir/$name";
 	    }
 	}

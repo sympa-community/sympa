@@ -3893,14 +3893,7 @@ sub may_edit {
         $edit_conf = $edit_list_conf{$self->{'domain'}};
     }
 
-    if ( &is_listmaster($who,$self->{'domain'})) {
-	## listmaster has read write acces on any parameter
-	return 'write';
-
-    }
-
     ## What privilege ?
-    # sa on ne peut jamais satisfaire ce test
     if (&is_listmaster($who,$self->{'domain'})) {
 	$role = 'listmaster';
     }elsif ( $self->am_i('privileged_owner',$who) ) {
@@ -3924,15 +3917,12 @@ sub may_edit {
 
     if ($parameter =~ /^(\w+)\.(\w+)$/) {
 	my $main_parameter = $1;
-	@order = ($edit_conf->{$parameter}{$role}, 
-		  $edit_conf->{$parameter}{'default'},
+	@order = ($edit_conf->{$parameter}{$role},
 		  $edit_conf->{$main_parameter}{$role}, 
-		  $edit_conf->{$main_parameter}{'default'},
 		  $edit_conf->{'default'}{$role}, 
 		  $edit_conf->{'default'}{'default'})
     }else {
 	@order = ($edit_conf->{$parameter}{$role}, 
-		  $edit_conf->{$parameter}{'default'},
 		  $edit_conf->{'default'}{$role}, 
 		  $edit_conf->{'default'}{'default'})
     }

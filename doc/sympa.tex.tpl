@@ -4359,22 +4359,37 @@ For each parameter, you may specify (via the \tildefile {sympa/etc/edit\_list.co
 configuration file) who has the right to edit the parameter concerned ; the default 
 \tildefile {sympa/bin/etc/edit\_list.conf} is reasonably safe.
 
+\begin{verbatim}
+Each line is a set of 3 field
+<Parameter> <Population> <Privilege>
+<Population> : <listmaster|privileged_owner|owner> 
+<Privilege> : <write|read|hidden>
+parameter named "default" means any other parameter
+\end{verbatim}
+
+There is no hierarchical relation between  populations in this
+configuration file. You need to explicitely list populations.
+
+Eg: listmaster will not match rules refering to owner or privileged\_owner
+
 \begin {quote}
 \begin{verbatim}
      examples :
 
-         \# only listmaster can edit user\_data\_source, priority, ...
-         user\_data\_source listmaster  
+         # only listmaster can edit user_data_source, priority, ...
+         user_data_source listmaster write  
 
-         priority listmaster
+	 priority 	owner,privileged_owner 		read
+         priority 	listmaster 			write
       
-         \# only privileged owner can modify  editor parameter, send, ...
-         editor privileged\_owner
+         # only privileged owner can modify  editor parameter, send, ...
+         editor privileged_owner write
 
-         send privileged\_owner
+	 send 		owner 				read
+         send 		privileged_owner,listmaster 	write
 
-         \# other parameters can be changed by simple owners
-         default owner
+         # other parameters can be changed by simple owners
+         default 	owner 				write
 \end{verbatim}
 \end {quote}
 
@@ -4389,8 +4404,6 @@ configuration file) who has the right to edit the parameter concerned ; the defa
 
       The following rules are hard coded in WWSympa :
 \begin {itemize}
-
-\item listmaster is privileged owner of any list 
 
 \item only listmaster can edit the "profile privileged"
       owner attribute 
