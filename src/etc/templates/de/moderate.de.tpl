@@ -2,6 +2,7 @@ From: [from]
 To: Moderatoren der Liste [list->name] <[list->name]-editor@[list->host]>
 Subject: Freigabe einer Nachricht
 Mime-version: 1.0
+Reply-To: [conf->email]@[conf->host]
 Content-Type: multipart/mixed; boundary="[boundary]"
 
 --[boundary]

@@ -1,6 +1,7 @@
 From: [from]
 To: Moderadores de la lista [list->name] <[list->name]-editor@[list->host]>
 Subject: Artículo para ser aprobado
+Reply-To: [conf->email]@[conf->host]
 Mime-version: 1.0
 Content-Type: multipart/mixed; boundary="[boundary]"
 

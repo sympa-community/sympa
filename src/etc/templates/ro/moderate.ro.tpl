@@ -1,6 +1,7 @@
 From: [from]
 To: Moderatorul listei [list->name] <[list->name]-editor@[list->host]>
 Subject: Articol pentru aprobat [list->name]
+Reply-To: [conf->email]@[conf->host]
 Mime-version: 1.0
 Content-Type: multipart/mixed; boundary="[boundary]"
 

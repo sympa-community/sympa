@@ -1,6 +1,7 @@
-From: [conf->email]@[conf->host]
+From: [from]
 To: Moderateurs de la liste [list->name] <[list->name]-editor@[list->host]>
 Subject: Message à modérer pour [list->name]
+Reply-To: [conf->email]@[conf->host]
 Mime-version: 1.0
 Content-Type: multipart/mixed; boundary="[boundary]"
 

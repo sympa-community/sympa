@@ -1,6 +1,7 @@
-From: [conf->email]@[conf->host]
+From: [from]
 To: Moderators of list [list->name] <[list->name]-editor@[list->host]>
 Subject: Article to be approved for [list->name]
+Reply-To: [conf->email]@[conf->host]
 Mime-version: 1.0
 Content-Type: multipart/mixed; boundary="[boundary]"
 
