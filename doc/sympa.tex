@@ -1371,9 +1371,15 @@ The script expects the following arguments :
 Example : \file {/home/sympa/bin/alias\_manager.pl add \samplelist cru.fr}
 
 \file {/home/sympa/bin/alias\_manager.pl} works on the alias file as defined
-by the \index{SENDMAIL\_ALIASES} variable in the main Makefile (see \ref {makefile},  
-page~\pageref {makefile}). It runs a \unixcmd{newaliases} command (via
-\file {aliaswrapper}), after any changes to aliases file.
+by the \index{SENDMAIL\_ALIASES} variable (default is \file {/etc/mail/sympa\_aliases}) in the main Makefile (see \ref {makefile},  page~\pageref {makefile}). You must refer to this aliases file in your \file {sendmail.cf} (if using sendmail) :
+\begin {quote}
+\begin{verbatim}
+define(`ALIAS_FILE', `/etc/aliases,/etc/mail/sympa_aliases')dnl
+\end{verbatim}
+\end {quote}
+
+
+\file {/home/sympa/bin/alias\_manager.pl} runs a \unixcmd{newaliases} command (via \file {aliaswrapper}), after any changes to aliases file.
 
 If you manage virtual domains with your mail server, then you might want to change
 the form of aliases used by the alias\_manager. You can customize the \file {list\_aliases}
