@@ -1824,7 +1824,8 @@ sub send_msg_digest {
 				   Subject    => MIME::Words::encode_mimewords(sprintf(Msg(8, 9, "Digest of list %s"),$listname))
 				   );
     
-    my $table_of_content = MIME::Entity->build (Type        => 'text/plain; charset=iso-8859-1',
+    my $charset = sprintf Msg(12, 2, 'us-ascii');
+    my $table_of_content = MIME::Entity->build (Type        => "text/plain; charset=$charset",
 						Description => sprintf(Msg(8, 13, 'Table of content')),
 						Data        => \@topics
 						);
