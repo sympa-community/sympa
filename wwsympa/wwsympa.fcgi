@@ -6347,9 +6347,16 @@ sub do_edit_list {
 	     $list_of_scenario->{$d->{'name'}}{'selected'} = 1;
 
 	     foreach my $key (keys %{$list_of_scenario}) {
-		 $list_of_scenario->{$key}{'title'} = gettext($list_of_scenario->{$key}{'title'}) || $key;
+		 if (defined  $list_of_scenario->{$key}{'title'}{&Language::GetLang()}) {
+		     $list_of_scenario->{$key}{'title'} = $list_of_scenario->{$key}{'title'}{&Language::GetLang()};
+		 }elsif (defined $list_of_scenario->{$key}{'title'}{'gettext'}) {
+		     $list_of_scenario->{$key}{'title'} =gettext($list_of_scenario->{$key}{'title'}{'gettext'});
+		 }else {
+		     $list_of_scenario->{$key}{'title'} = $key;
+		     
+		 }	     
 	     }
-
+	     
 	     $p->{'value'} = $list_of_scenario;
 
 	 }elsif ($struct->{'task'}) {

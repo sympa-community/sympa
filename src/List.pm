@@ -5153,11 +5153,12 @@ sub _load_scenario {
 	my $rule = {};
 	s/\#.*$//;         # remove comments
         next if (/^\s*$/); # reject empty lines
-	if (/^\s*title\.(gettext|us)\s+(.*)\s*$/i) {
-	    $structure->{'title'} = $2;
+	if (/^\s*title\.gettext\s+(.*)\s*$/i) {
+	    $structure->{'title'}{'gettext'} = $1;
 	    next;
-	}elsif (/^\s*title\./) {
-	    next; ## Skip old-style scenario titles
+	}elsif (/^\s*title\.(\w+)\s+(.*)\s*$/i) {
+	    $structure->{'title'}{$1} = $2;
+	    next;
 	}
         
         if (/^\s*include\s*(.*)\s*$/i) {
