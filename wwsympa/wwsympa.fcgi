@@ -1271,6 +1271,12 @@ sub do_which {
 	foreach my $l ( &List::get_which($param->{'user'}{'email'}, $role) ) {
 	    my $list = new List ($l);
 	    
+	    next unless (&List::request_action ('visibility', $param->{'auth_method'},
+						{'listname' =>  $l,
+						 'sender' => $param->{'user'}{'email'}, 
+						 'remote_host' => $param->{'remote_host'},
+						 'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/);
+	    
 	    $param->{'which'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 	    $param->{'which'}{$l}{'host'} = $list->{'admin'}{'host'};
 	    if ($role eq 'member') {

@@ -2269,6 +2269,10 @@ sub which {
     ## Subscriptions
     push @msg::report, sprintf  Msg(6, 67, "List of your current subscriptions : \n\n");    
     foreach $listname (List::get_which ($sender,'member')){
+	next unless (&List::request_action ('visibility', 'smtp',
+					    {'listname' =>  $listname,
+					     'sender' => $sender}) =~ /do_it/);
+
 	push @msg::report, sprintf "\t%s\n",$listname;
     }
 
