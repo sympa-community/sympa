@@ -83,6 +83,9 @@ my @directories;
 my @templates;
 
 ## Search in main robot
+if (-d $Conf::Conf{'etc'}) {
+    push @directories, $Conf::Conf{'etc'};
+}
 if (-d "$Conf::Conf{'etc'}/templates") {
     push @directories, "$Conf::Conf{'etc'}/templates";
 }
@@ -93,9 +96,19 @@ if (-f "$Conf::Conf{'etc'}/mhonarc-ressources") {
     push @templates, "$Conf::Conf{'etc'}/mhonarc-ressources";
 }
 
+## Create_list_templates
+if (-d $Conf::Conf{'etc'}.'/create_list_templates') {
+    foreach my $dir (<$Conf::Conf{'etc'}/create_list_templates/*>) {
+	next unless (-d $dir);
+	push @directories, $dir;       
+    }
+}
+
 ## Go through Virtual Robots
 foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
     ## Search in etc/
+    push @directories, "$Conf::Conf{'etc'}/$vr";
+
     if (-d "$Conf::Conf{'etc'}/$vr/templates") {
 	push @directories, "$Conf::Conf{'etc'}/$vr/templates";
     }
@@ -104,6 +117,14 @@ foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
     }
     if (-f "$Conf::Conf{'etc'}/$vr/mhonarc-ressources") {
 	push @templates, "$Conf::Conf{'etc'}/$vr/mhonarc-ressources";
+    }
+
+    ## Create_list_templates
+    if (-d $Conf::Conf{'etc'}.'/'.$vr.'/create_list_templates') {
+	foreach my $dir (<$Conf::Conf{'etc'}/$vr/create_list_templates/*>) {
+	    next unless (-d $dir);
+	    push @directories, $dir;       
+	}
     }
 
     ## Search in V. Robot Lists
