@@ -750,7 +750,6 @@ while ($query = &new_loop()) {
 	&parse_tpl($param,$main , STDOUT);
     }    
 
-    do_log('notice',"Exiting because $ENV{'SCRIPT_FILENAME'} as changed since fastcgi server started");
     # exit if wwsympa.fcgi itself has changed
     if ((stat($ENV{'SCRIPT_FILENAME'}))[9] gt $birthday ) {
          do_log('notice',"Exiting because $ENV{'SCRIPT_FILENAME'} as changed since fastcgi server started");
@@ -5748,19 +5747,6 @@ sub do_restore_list {
 }
 
 
-####{lefloch/modif/begin : for the sharing of documents}
-
-## Function load_desc_file
-## Rename with get_desc_file!
-# returns the description file in a hash
-# {'title'} -> string = the title of the file
-# {'date'} -> int = the date of creation
-# {'email'} -> the last author
-# {'read'} -> string = scenario 
-# {'edit'} -> string = scenario 
-
-
-#sub load_desc_file {
 sub get_desc_file {
     my $file = shift;
     my $ligne;
