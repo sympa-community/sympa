@@ -2095,7 +2095,7 @@ sub send_msg_digest {
 	## Send digest
 	&smtp::mailto($msg, $param->{'return_path'}, 'none', '_ALTERED_', @tabrcpt );
     }
-
+    
     ## send summary
     if (@tabrcptsummary) {
 	$param->{'subject'} = sprintf Msg(8, 31, 'Summary of list %s'), $self->{'name'};
@@ -3313,11 +3313,11 @@ sub is_listmaster {
 	foreach my $listmaster (@{$Conf{'robots'}{$robot}{'listmasters'}}){
 	    return 1 if ($listmaster =~ /^\s*$who\s*$/i);
 	} 
-    }else {
-	foreach my $listmaster (@{$Conf{'listmasters'}}){
+    }
+	
+    foreach my $listmaster (@{$Conf{'listmasters'}}){
 	    return 1 if ($listmaster =~ /^\s*$who\s*$/i);
 	}    
-    }
 
     return 0;
 }
