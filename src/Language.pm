@@ -96,7 +96,7 @@ sub SetLang {
     }
    
     ## Set Locale::Messages context
-    unless (setlocale(LC_MESSAGES, $locale)) {
+    unless (setlocale(&POSIX::LC_ALL, $locale)) {
 	&do_log('err','Failed to setlocale(%s)', $locale);
 	return undef;
     }
