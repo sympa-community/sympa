@@ -63,7 +63,8 @@ use CPAN;
 	     'Archive::Zip' => 'Archive-Zip',
 	     'LWP' => 'libwww-perl',
              'XML::LibXML' => 'XML-LibXML',
-	     'MHonArc::UTF8' => 'MHonArc'
+	     'MHonArc::UTF8' => 'MHonArc',
+	     'FCGI' => 'FCGI',
 	     );
 
 %opt_CPAN = ('DBI' => 'DBI',
@@ -74,7 +75,6 @@ use CPAN;
 	     'Net::LDAP' =>   'perl-ldap',
 	     'CGI::Fast' => 'CGI',
              'Crypt::CipherSaber' => 'CipherSaber',
-	     'FCGI' => 'FCGI',
 	     'Net::SMTP' => 'libnet',
 	     'IO::Socket::SSL' => 'IO-Socket-SSL',
 	     'Net::SSLeay' => 'NET-SSLeay',

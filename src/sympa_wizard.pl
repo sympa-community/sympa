@@ -404,7 +404,7 @@ my @params = ({'title' => 'Directories and file location'},
 	       'advice' =>'This module provide much faster web interface'},
 
 	      {'name' => 'wwsympa_url',
-	       'default' => 'http://--HOST--/wws',
+	       'default' => 'http://--HOST--/sympa',
 	       'query' => "Sympa\'s main page URL",
 	       'file' => 'sympa.conf','edit' => '1',
 	       'advice' =>''},

@@ -1562,7 +1562,7 @@ listmaster-test: 	"| /home/sympa/bin/queue listmaster@\samplerobot"
 
 	This is the root URL of \WWSympa.
 
-        \example {wwsympa\_url https://my.server/wws}
+        \example {wwsympa\_url https://my.server/sympa}
 
 \subsection {\cfkeyword {soap\_url}}  
 
@@ -2807,7 +2807,7 @@ int main(int argn, char **argv, char **envp) {
 \begin {quote}
 \begin{verbatim}
      Example :
-       	ScriptAlias /wws [CGIDIR]/wwsympa.fcgi
+       	ScriptAlias /sympa [CGIDIR]/wwsympa.fcgi
 \end{verbatim}
 \end {quote}
 
@@ -2821,11 +2821,11 @@ int main(int argn, char **argv, char **envp) {
 \begin{verbatim}
      Example :
 	FastCgiServer [CGIDIR]/wwsympa.fcgi -processes 2
-	<Location /wws>
+	<Location /sympa>
    	  SetHandler fastcgi-script
 	</Location>
 
-	ScriptAlias /wws [CGIDIR]/wwsympa.fcgi
+	ScriptAlias /sympa [CGIDIR]/wwsympa.fcgi
 
  \end{verbatim}
 \end {quote}
@@ -3142,7 +3142,7 @@ contact the SOAP service (as with Perl SOAP::Lite library) or first load the WSD
 the service (as with PHP nusoap or Java Axis). Axis is able to create a stub from the WSDL document.
 
 The WSDL document describing the service should be fetch through WWSympa's dedicated URL :
-\textbf {http://your.server/wws/wsdl}.
+\textbf {http://your.server/sympa/wsdl}.
 
 Note : the \textbf {login()} function maintains a login session using HTTP cookies. If you are not able
 to maintain this session by analysing and sending appropriate cookies under SOAP, then you
@@ -3173,17 +3173,17 @@ Next, you have to generate client java classes files from the sympa WSDL url. Us
 
 For example :
 \begin{verbatim}
-java org.apache.axis.wsdl.WSDL2Java -av  http://demo.sympa.org/wws/wsdl
+java org.apache.axis.wsdl.WSDL2Java -av  http://demo.sympa.org/sympa/wsdl
 \end{verbatim}
 
 Exemple of screen output during generation of java files :\\
  \begin{verbatim}
-Parsing XML file:  http://demo.sympa.org/wws/wsdl
-Generating org/sympa/demo/wws/msdl/ListType.java
-Generating org/sympa/demo/wws/msdl/SympaPort.java
-Generating org/sympa/demo/wws/msdl/SOAPStub.java
-Generating org/sympa/demo/wws/msdl/SympaSOAP.java
-Generating org/sympa/demo/wws/msdl/SympaSOAPLocator.java
+Parsing XML file:  http://demo.sympa.org/sympa/wsdl
+Generating org/sympa/demo/sympa/msdl/ListType.java
+Generating org/sympa/demo/sympa/msdl/SympaPort.java
+Generating org/sympa/demo/sympa/msdl/SOAPStub.java
+Generating org/sympa/demo/sympa/msdl/SympaSOAP.java
+Generating org/sympa/demo/sympa/msdl/SympaSOAPLocator.java
 \end{verbatim}
 
 If you need  more information or more generated classes (to have the server-side classes or junit testcase classes for example), you can get a list of switches :\\
@@ -3257,7 +3257,7 @@ SSLEngine on
 SSLVerifyClient optional
 SSLVerifyDepth  10
 ...
-<Location /wws>
+<Location /sympa>
    SSLOptions +StdEnvVars
    SetHandler fastcgi-script
 </Location>
@@ -3312,7 +3312,7 @@ The authentication method has first been introduced to allow interraction with \
 \begin {quote}
 \begin{verbatim}
 ...
-<Location /wws/sso_login/inqueue>
+<Location /sympa/sso_login/inqueue>
   AuthType shibboleth
   require affiliation ~ ^member@.+
 </Location>
@@ -3395,7 +3395,7 @@ cas
 	ldap_email_attribute		mail
 
 ## The URL corresponding to the service_id should be protected by the SSO (Shibboleth in the exampl)
-## The URL would look like http://yourhost.yourdomain/wws/sso_login/inqueue in the following example
+## The URL would look like http://yourhost.yourdomain/sympa/sso_login/inqueue in the following example
 generic_sso
         service_name       InQueue Federation
         service_id         inqueue
@@ -3626,7 +3626,7 @@ This is the SSO service name that will be proposed to the user in the login bann
 \item{service\_id} \\
 This service ID is used as a parameter by sympa to refer to the SSO service (instead of the service name). 
 
-A corresponding URL on the local web server should be protected by the SSO system ; this URL would look like textbf {http://yourhost.yourdomain/wws/sso\_login/inqueue} if the service\_id is \textbf {inqueue}.
+A corresponding URL on the local web server should be protected by the SSO system ; this URL would look like textbf {http://yourhost.yourdomain/sympa/sso\_login/inqueue} if the service\_id is \textbf {inqueue}.
 
 \item{http\_header\_prefix} \\
 Sympa gets user attributes from environment variables comming from the web server. These variables are then stored in the user\_table DB table for later use in authorization scenarios (in [user_attributes] structure). Only environment variables starting with the defined prefix will kept.
@@ -3814,7 +3814,7 @@ between \WWSympa and your application.
 referer URL when an action is performed. Here is a sample HTML anchor :
 
 \begin{verbatim}
-<A HREF="/wws/loginrequest/referer">Login page</A>
+<A HREF="/sympa/loginrequest/referer">Login page</A>
 \end{verbatim}
 
 You can also have your own HTML page submitting data to \file {wwsympa.fcgi} CGI. If you're
@@ -4190,11 +4190,11 @@ FastCgiServer [CGIDIR]/wwsympa.fcgi -processes 3 -idle-timeout 120
   DocumentRoot /var/www/your.virtual.domain
   ServerName your.virtual.domain
 
-  <Location /wws>
+  <Location /sympa>
      SetHandler fastcgi-script
   </Location>
 
-  ScriptAlias /wws [CGIDIR]/wwsympa.fcgi
+  ScriptAlias /sympa [CGIDIR]/wwsympa.fcgi
 
 </VirtualHost>
 \end{verbatim}
@@ -6369,7 +6369,7 @@ From the client side you must define the remote list dump URI.
 
 \item
 \label {path}
-\lparam {path} \textit {absolute path} (In most cases, for a list name foo /wws/dump/foo ) 
+\lparam {path} \textit {absolute path} (In most cases, for a list name foo /sympa/dump/foo ) 
 
 \end{itemize}
 
