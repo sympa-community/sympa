@@ -487,12 +487,12 @@ sub smime_sign_check {
     
     ## second step is the message signer match the sender
     ## a better analyse should be performed to extract the signer email. 
-    my $signer = `cat $temporary_file | $Conf{'openssl'}  x509 -subject -noout`;
+    my $signer = `cat $temporary_file | $Conf{'openssl'}  x509 -email -noout`;
     chomp $signer;
 
-    unless ($signer =~ /email=$sender/i) {
+    unless (lc($signer) eq lc(sender)) {
 	unlink($temporary_file) unless ($main::options{'debug'}) ;	
-	do_log('notice', "S/MIME signed message, sender($sender) do NOT match signer($signer)",$sender,$signer);
+	do_log('notice', "S/MIME signed message, sender($sender) does NOT match signer($signer)",$sender,$signer);
 	return undef;
     }
 

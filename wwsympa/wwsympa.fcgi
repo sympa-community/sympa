@@ -461,6 +461,13 @@ while ($query = &new_loop()) {
 
     ## Authentication 
     ## use https client certificat information if define.  
+
+    ## Compatibility issue with old a-sign.at certs
+    if (!$ENV{'SSL_CLIENT_S_DN_Email'} && 
+	$ENV{'SSL_CLIENT_S_DN'} =~ /\+MAIL=([^\+\/]+)$/) {
+	$ENV{'SSL_CLIENT_S_DN_Email'} = $1;
+     }
+
     if (($ENV{'SSL_CLIENT_S_DN_Email'}) && ($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS')) {
 	$param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_DN_Email'});
 	$param->{'auth_method'} = 'smime';
