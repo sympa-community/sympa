@@ -202,19 +202,9 @@ with you, you should click the following URL :\n\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n\n\
 or send an email to %s with the following subject :\n\
 AUTH %s ADD %s %s %s\n"
-4	"Moderators of list %s"
-5	"[%s] Article to be approved"
 6	"Welcome on list %s"
 7	"File"
 9	"Digest for list %s"
-10	"To distribute the attached message in list %s:\n\
-mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\
-Or send a message to %s with the following subject :\n\
-DISTRIBUTE %s %s\n\n"
-11	"To reject it (it will be removed):\n\
-mailto:%s?subject=REJECT%%20%s%%20%s\n\
-Or send a message to %s with the following subject :\n\
-REJECT %s %s\n"
 12	"To distribute the attached message in list %s :\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 Or send a message to %s with the following subject :\n\

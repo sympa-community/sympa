@@ -1,0 +1,29 @@
+From: [from]
+To: A(z) [list->name] lista moderátorai <[list->name]-editor@[list->host]>
+Subject: Levél engedélyezésre vár
+Mime-version: 1.0
+Content-Type: multipart/mixed; boundary="[boundary]"
+
+--[boundary]
+Content-Type: text/plain; charset=iso-8859-2
+Content-transfer-encoding: 8bit
+
+A(z) [list->name] listán a melléklet megjelenésének jóváhagyásához használd a következõt:
+mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%%20[list->name]%%20[modkey]
+Vagy [conf->email]@[conf->host] címre küldj egy levelet a következõ tárggyal:
+DISTRIBUTE [list->name] [modkey]
+
+Visszautasításhoz (ez törlést jelent) használd a következõt:
+mailto:[conf->email]@[conf->host]?subject=REJECT%%20[list->name]%%20[modkey]
+Vagy [conf->email]@[conf->host] címre küldj egy levelet a következõ tárggyal:
+REJECT [list->name] [modkey]
+
+--[boundary]
+Content-Type: message/rfc822
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+
+[INCLUDE msg]
+
+--[boundary]--
+

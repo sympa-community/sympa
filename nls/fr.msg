@@ -202,21 +202,9 @@ demande, vous voudrez bien cliquer sur ce lien :\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n\n\
 Ou alors envoyer un mail à %s avec comme objet :\n\
 AUTH %s ADD %s %s %s\n"
-4	"Moderateurs de la liste %s"
-5	"[%s] Article a approuver"
 6	"Bienvenue sur la liste %s"
 7	"Fichier"
 9	"Compilation de la liste %s"
-10	"Pour diffuser le message ci-joint dans la liste %s, \n\
-cliquez sur ce lien :\n\
-mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\
-Ou alors envoyez un mail à %s avec comme sujet :\n\
-DISTRIBUTE %s %s\n\n"
-11	"Pour refuser sa diffusion (il sera effacé),\n\
-cliquez sur ce lien :\n\
-mailto:%s?subject=REJECT%%20%s%%20%s\n\
-Ou alors envoyez un mail à %s avec comme sujet :\n\
-REJECT %s %s\n"
 12	"Pour diffuser le message ci-joint dans la liste %s,\n\
 cliquez sur ce lien :\n\
 mailto:%s?subject=CONFIRM%%20%s\n\

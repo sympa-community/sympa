@@ -232,19 +232,9 @@ $set 8	Messages used in List.pm
 aufgenommen zu werden. Wenn das in Ordnung ist, können Sie ihn mit dem\n\
 folgenden Befehl zur Liste hinzufügen:\n\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
-4	"Moderatoren der Liste %s"
-5	"[%s] Freigabe einer Nachricht"
 6	"Willkommen bei %s!"
 7	"Datei"
 9	"Zusammenfaßung für Liste %s"
-10	"Um die angehängte Nachricht an die Liste %s weiterzuleiten :\n\
-mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\
-Oder: Schicken Sie eine Nachricht an %s mit folgendem Subject:\n\
-DISTRIBUTE %s %s \n\n"
-11	"Um sie abzulehnen (sie wird gelöscht):\n\
-mailto:%s?subject=REJECT%%20%s%%20%s\n\
-Oder: Schicken Sie eine Nachricht an %s mit folgendem Subject:\n\
-REJECT %s %s\n\n"
 12	"Um die angeh"angte Nachricht über Liste %s zu verteilen:\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 Oder: Schicken Sie eine Nachricht an %s mit folgendem Subject:\n\

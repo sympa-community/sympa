@@ -188,8 +188,6 @@ Un usuario solicitó suscribirse a su lista. Si está(n) de acuerdo \n haga(n) un 
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n\n\
 O envíe un mensaje a %s con el siguiente tema : \n\
 AUTH %s ADD %s %s %s\n"
-4	"Moderadores de la lista %s"
-5	"[%s] Artículo para ser aprobado"
 6	"Bienvenido a la lista %s"
 7	"Archivo"
 9	"Resumen de la lista %s"

@@ -267,15 +267,24 @@ sub smime_sign {
     my $key = "$Conf{'home'}/$list/private_key";
     my $temporary_file = $Conf{'tmpdir'}."/".$list.".".$$ ;    
 
-    my $signed_msg,$pass_option ;
+    my ($signed_msg,$pass_option );
     $pass_option = "-passin file:$Conf{'tmpdir'}/pass.$$" if ($Conf{'key_passwd'} ne '') ;
-        
+
+    ## Keep a set of header fields ONLY
+    ## OpenSSL only needs content type & encoding to generate a multipart/signed msg
+    my $dup_msg = $in_msg->dup;
+    foreach my $field ($dup_msg->head->tags) {
+         next if ($field =~ /^content-type|content-transfer-encoding$/i);
+         $dup_msg->head->delete($field);
+    }
+	    
+
     ## dump the incomming message.
     if (!open(MSGDUMP,"> $temporary_file")) {
 	&do_log('info', 'Can\'t store message in file %s', $temporary_file);
 	return undef;
     }
-    $in_msg->print(\*MSGDUMP);
+    $dup_msg->print(\*MSGDUMP);
     close(MSGDUMP);
 
     if ($Conf{'key_passwd'} ne '') {
@@ -284,6 +293,7 @@ sub smime_sign {
 	}
     }
 
+     &do_log('debug2', "$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file");
      unless (open (NEWMSG,"$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file 2>&1 |")) {
     	&do_log('notice', 'Cannot sign message');
     }
@@ -410,7 +420,7 @@ sub smime_encrypt {
     my $cryptedmsg;
     my $encrypted_body;    
 
-    &do_log('debug2', 'tools::smime_encrypt message msg for %s %s',$list, $email);
+    &do_log('debug2', 'tools::smime_encrypt(%s, %s, %s, %s',$msg_header, $msg_body, $email, $list);
     if ($list eq 'list') {
 	$usercert = "$Conf{'home'}/$email/cert.pem";
     }else{

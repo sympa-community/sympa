@@ -125,10 +125,10 @@ sub mailfile {
 	   return undef;
        }
 
-       if ($sign_mode eq 'smime') {
-	   &do_log('notice', 'Cannot sign a message with multiple recepients');
-	   return undef;
-       }
+#       if ($sign_mode eq 'smime') {
+#	   &do_log('notice', 'Cannot sign a message with multiple recepients');
+#	   return undef;
+#       }
 
        if ($data->{'to'}) {
 	   $to = $data->{'to'};

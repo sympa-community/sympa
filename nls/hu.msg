@@ -196,19 +196,9 @@ $set 8	Messages used in List.pm
 Egy felhasználó a lista tagja szeretne lenne. A feliratkozás\n\
 engedélyezéséhez használd a következõ parancsot:\n\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
-4	"A(z) %s lista moderátorai"
-5	"[%s] Levél engedélyezésre vár"
 6	"Üdvözlünk a(z) %s listán"
 7	"Állomány"
 9	"Digest a(z) %s listán"
-10	"A(z) %s listán a melléklet megjelenésének jóváhagyásához használd a következõt:\n\
-mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\
-Vagy %s címre küldj egy levelet a következõ tárggyal:\n\
-DISTRIBUTE %s %s\n\n"
-11	"Visszautasításhoz (ez törlést jelent) használd a következõt:\n\
-mailto:%s?subject=REJECT%%20%s%%20%s\n\
-Vagy %s címre küldj egy levelet a következõ tárggyal:\n\
-REJECT %s %s\n"
 12	"A(z) %s listán a melléklet megjelenésének jóváhagyásához használd a következõt:\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 Vagy %s címre küldj egy levelet a következõ tárggyal:\n\

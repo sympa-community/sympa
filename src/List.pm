@@ -1321,38 +1321,44 @@ sub send_sig_to_owner {
 ## Send a message to the editor
 sub send_to_editor {
    my($self, $method, $msg, $file, $encrypt) = @_;
-   do_log('debug2', "List::send_to_editor, file: $file method : $method, encrypt : $encrypt");
+   do_log('debug2', "List::send_to_editor, msg: $msg, file: $file method : $method, encrypt : $encrypt");
 
    my($i, @rcpt);
    my $admin = $self->{'admin'};
    my $name = $self->{'name'};
    my $host = $admin->{'host'};
-   my $modqueue= $Conf{'queuemod'};
+   my $modqueue = $Conf{'queuemod'};
    return unless ($name && $admin);
   
-   my @now=localtime(time);
+   my @now = localtime(time);
    my $messageid=$now[6].$now[5].$now[4].$now[3].$now[2].$now[1]."."
                  .int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6))."\@".$host;
    my $modkey=Digest::MD5->md5_hex(join('/', $self->get_cookie(),$messageid));
-   my $boundary ="----------------- Message-Id: \<$messageid\>" 
+   my $boundary ="__ \<$messageid\>" 
        if ($method eq 'md5');
    
-   if($method eq 'md5'){  
+   ## Keeps a copy of the message
+   if ($method eq 'md5'){  
        unless (open(OUT, ">$modqueue\/$name\_$modkey")) {
-	   do_log('notice', 'Could not open %s', "$modqueue\/$name\_$modkey");
+	   do_log('notice', 'Could Not open %s', "$modqueue\/$name\_$modkey");
 	   return undef;
        }
 
        ## Always copy the original, not the MIME::Entity
        ## This prevents from message alterations
-       unless (open (MSG, $file)) {
-	   do_log('notice', 'Could not open %s', $file);
-	   return undef;   
+       if ($encrypt eq 'smime_crypted') {
+	   ## $file is a reference to a scalar containing the raw message
+	   print MSG ${$file};
+       }else {
+	   unless (open (MSG, $file)) {
+	       do_log('notice', 'Could not open %s', $file);
+	       return undef;   
+	   }
+	   while (<MSG>) {
+	       print OUT ;
+	   }
+	   close MSG ;
        }
-       while (<MSG>) {
-	   print OUT ;
-       }
-       close MSG ;
 
        close(OUT);
    }
@@ -1368,64 +1374,40 @@ sub send_to_editor {
 
        do_log('notice','Warning : no editor defined for list %s, contacting owners', $name );
    }
-   my $hdr = new Mail::Header;
-   $hdr->add('From', sprintf Msg(12, 4, 'SYMPA <%s>'), $Conf{'sympa'});
-   $hdr->add('To', "\"".sprintf(Msg(8, 4, "Editors of list %s :"), $name)."\" <$name-editor\@$host>");
-   $hdr->add('Subject', sprintf Msg(8, 5, '[%s] Article to approve'), $name);
 
-   if ($method eq 'md5') {
-      $hdr->add('MIME-Version', "1.0");
-      $hdr->add('Content-Type',"multipart/mixed; boundary=\"$boundary\"");
-   }
    if ($encrypt eq 'smime_crypted') {
+
+       ## Send a different crypted message to each moderator
        foreach my $recipient (@rcpt) {
-	   *DESC = smtp::smtpto($Conf{'request'}, [$recipient]);
-	   $hdr->print(\*DESC);
-	   print DESC "\n";
-	   if($method eq 'md5'){
-	       print DESC "--$boundary\n";
-	       print DESC "Content-type: text/plain\n";
-	       print DESC "Content-Transfert-Encoding: 8bit\n\n";
-	       
-	       printf DESC Msg(8, 10, "To distribute the following message into list %s, either click on this link :\nmailto:%s?subject=DISTRIBUTE%%20%s%%20%s\nOr send a mail to %s with this subject :\nDISTRIBUTE %s %s\n\n"), $name, $Conf{'sympa'}, $name, $modkey, $Conf{'sympa'}, $name, $modkey;
-	       printf DESC Msg(8, 11, "To refuse it (delete it), either click on this link :\nmailto:%s?subject=REJECT%%20%s%%20%s\nOr send a mail to %s with this subject :\nREJECT %s %s\n"), $Conf{'sympa'}, $name, $modkey, $Conf{'sympa'}, $name, $modkey;
-	   }   
-	   print DESC "\n";
-	   print DESC "--$boundary\n" if ($method eq 'md5');
-	   print DESC "Content-Type: message/rfc822\n\n" if ($method eq 'md5');
-	   
-	   my $cryptedmsg = &tools::smime_encrypt($msg,$recipient); 
-	   if ($cryptedmsg) {
-	       $cryptedmsg->print(\*DESC);
-	   }else{
+
+	   my $cryptedmsg = &tools::smime_encrypt($msg->head, $msg->body_as_string, $recipient); 
+	   unless ($cryptedmsg) {
+	       &do_log('notice', 'Failed encrypted message for moderator');
 	       # xxxx send a generic error message : X509 cert missing
+	       return undef;
 	   }
+
+	   my $crypted_file = "$Conf{'tmpdir'}/$name.moderate.$$";
+	   unless (open CRYPTED, ">$crypted_file") {
+	       &do_log('notice', 'Could not create file %s', $crypted_file);
+	       return undef;
+	   }
+	   print CRYPTED $cryptedmsg;
+	   close CRYPTED;
 	   
-	   close(DESC);
+	   $self->send_file('moderate', $recipient, $self->{'domain'}, {'modkey' => $modkey,
+									'boundary' => $boundary,
+									'msg' => $crypted_file,
+									## From the list because it is signed
+									'from' => $self->{'name'}.'@'.$self->{'domain'}
+									});
        }
    }else{
-       
-       *DESC = smtp::smtpto($Conf{'request'}, \@rcpt);
-       $hdr->print(\*DESC);
-       print DESC "\n";
-       if($method eq 'md5'){
-	   print DESC "--$boundary\n";
-	   print DESC "Content-type: text/plain\n";
-	   print DESC "Content-Transfert-Encoding: 8bit\n\n";
-	   
-	   printf DESC Msg(8, 10, "To distribute the following message into list %s, either click on this link :\nmailto:%s?subject=DISTRIBUTE%%20%s%%20%s\nOr send a mail to %s with this subject :\nDISTRIBUTE %s %s\n\n"), $name, $Conf{'sympa'}, $name, $modkey, $Conf{'sympa'}, $name, $modkey;
-	   printf DESC Msg(8, 11, "To refuse it (delete it), either click on this link :\nmailto:%s?subject=REJECT%%20%s%%20%s\nOr send a mail to %s with this subject :\nREJECT %s %s\n"), $Conf{'sympa'}, $name, $modkey, $Conf{'sympa'}, $name, $modkey;
-       }   
-       print DESC "\n";
-       print DESC "--$boundary\n" if ($method eq 'md5');
-       print DESC "Content-Type: message/rfc822\n\n" if ($method eq 'md5');
-       
-       unless (open (MSG, $file)) {
-	   do_log('notice', 'Could not open %s', $file);
-	   return undef;   
-       }
-       print DESC <MSG>;
-       close(DESC);
+       $self->send_file('moderate', \@rcpt, $self->{'domain'}, {'modkey' => $modkey,
+								'boundary' => $boundary,
+								'msg' => $file,
+								'from' => $Conf{'email'}.'@'.$Conf{'host'}
+								});
    }
    return $modkey;
 }
@@ -2188,7 +2170,9 @@ sub send_file {
     my $lang = $data->{'user'}{'lang'} || $self->{'lang'} || $Conf{'lang'};
 
     ## What file   
-    foreach my $f ("$self->{'dir'}/$action.$lang.tpl","$self->{'dir'}/$action.tpl","$self->{'dir'}/$action.mime","$self->{'dir'}/$action",
+    foreach my $f ("$self->{'dir'}/$action.$lang.tpl",
+		   "$self->{'dir'}/$action.tpl",
+		   "$self->{'dir'}/$action.mime","$self->{'dir'}/$action",
 		   "$Conf{'etc'}/$robot/templates/$action.$lang.tpl",
 		   "$Conf{'etc'}/$robot/templates/$action.tpl",
 		   "$Conf{'etc'}/templates/$action.$lang.tpl",
@@ -2204,7 +2188,7 @@ sub send_file {
     }
 
     unless ($filename) {
-	do_log ('err',"Unable to open file $action.tpl in list directory NOR $Conf{'etc'}/templates/$action.tpl NOR --ETCBINDIR--/templates/$action.tpl");
+	do_log ('err',"Unable to find '$action' template in list directory NOR $Conf{'etc'}/templates/ NOR --ETCBINDIR--/templates/");
     }
     
     $data->{'conf'}{'email'} = $Conf{'email'};

@@ -178,15 +178,9 @@ $set 8	Messages used in List.pm
 Un utente ha chiesto di essere iscritto alla vostra lista.\n\
 Per acconsentire, inviare il comando:\n\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
-4	"Moderatori della lista '%s'"
-5	"[%s] Messaggio da approvare"
 6	"Benvenuto nella lista '%s'"
 7	"File"
 9	"Riassunto della lista '%s'"
-10	"Per inoltrare il messaggio allegato alla lista '%s' :\n\
-mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\n"
-11	"Per respingerlo (sara' cancellato) :\n\
-mailto:%s?subject=REJECT%%20%s%%20%s\n"
 13	"Sommario"
 14	"Fine del riassunto della lista '%s'"
 16	"Autenticazione richiesta"

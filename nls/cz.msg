@@ -191,19 +191,9 @@ mìl byste otevøít následujcí odkaz :\n\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n\n\
 nebo odeslat zprávu na adresu %s s následující subjektem :\n\
 AUTH %s ADD %s %s %s\n"
-4	"Moderátoøi konference %s"
-5	"[%s] Pøíspìvek ke schválení"
 6	"Vítejte v konferenci %s"
 7	"Soubor"
 9	"Shrnutí konference %s"
-10	"Pro rozeslání pøipojené zprávy do konference %s:\n\
-mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\
-Nebo po¹lete zprávu na adresu %s s nasledujícím subjektem :\n\
-DISTRIBUTE %s %s\n\n"
-11	"Pro její odmítnutí (bude odstranìna):\n\
-mailto:%s?subject=REJECT%%20%s%%20%s\n\
-Nebo po¹lete zprávu na adresu %s s nasledujícím subjektem :\n\
-REJECT %s %s\n"
 12	"Pro rozeslání pøipojené zprávy do konference %s :\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 Nebo po¹lete zprávu na adresu %s s nasledujícím subjektem :\n\

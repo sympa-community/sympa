@@ -183,19 +183,9 @@ $set 8	Messages used in List.pm
 U¿ytkownik poprosi³ o zapisanie na listê. Je¿eli wyra¿asz na to zgodê\n\
 wydaj polecenie:\n\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
-4	"Moderatorzy listy %s"
-5	"[%s] Listów do potwierdzenia"
 6	"Witaj na li¶cie %s"
 7	"Plik"
 9	"Digest dla listy %s"
-10	"Aby rozes³aæ za³±czon± wiadomo¶æ na listê %s:\n\
-mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\
-Lub wy¶lij wiadomo¶æ do %s z tematem :\n\
-DISTRIBUTE %s %s\n\n"
-11	"Aby odrzuciæ j± (zostanie usuniêta):\n\
-mailto:%s?subject=REJECT%%20%s%%20%s\n\
-Lub wy¶lij wiadomo¶æ do %s z tematem :\n\
-REJECT %s %s\n"
 12	"Aby rozes³aæ za³±czon± wiadomo¶æ na listê %s:\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 Lub wy¶lij wiadomo¶æ do %s z tematem :\n\
