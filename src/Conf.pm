@@ -694,8 +694,10 @@ sub _load_auth {
 sub get_robot_conf {
     my ($robot, $param) = @_;
 
-    if (defined $Conf{'robots'}{$robot} && defined $Conf{'robots'}{$robot}{$param}) {
-	return $Conf{'robots'}{$robot}{$param};
+    if ($robot ne '*') {
+	if (defined $Conf{'robots'}{$robot} && defined $Conf{'robots'}{$robot}{$param}) {
+	    return $Conf{'robots'}{$robot}{$param};
+	}
     }
     
     ## default

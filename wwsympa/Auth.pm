@@ -89,8 +89,8 @@ sub authentication {
 	next if ($email !~ /$auth_service->{'regexp'}/i);
 	next if (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
 	if ($auth_service->{'auth_type'} eq 'user_table') {
-     
-	    if((($wwsconf->{'password_case'} eq 'insensitive') && (lc($pwd) eq lc($user->{'password'}))) || 
+	    
+	    if(((&Conf::get_robot_conf('*','password_case') eq 'insensitive') && (lc($pwd) eq lc($user->{'password'}))) || 
 	       ($pwd eq $user->{'password'})) {
 		return {'user' => $user,
 			'auth' => 'classic',
