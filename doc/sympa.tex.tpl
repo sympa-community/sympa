@@ -2848,7 +2848,7 @@ certificates stored in the \tildedir {sympa/expl/X509-user-certs/} directory.
 The user is warned with the \file {daily\_cert\_expiration} template when his certificate has expired
 or is going to expire within three days.
 
-\subsection {crl\_update.hourly.task model}
+\subsection {crl\_update.daily.task model}
 
 You may use the model \file {crl\_update.daily.task} to create a task which daily updates the certificate revocation
 lists when needed.
@@ -3522,7 +3522,7 @@ A task model file name has the following format :	\file {<model name>.<model ver
 For instance \file {remind.annual.task}  or \file {remind.semestrial.task}.
 
 \Sympa provides several task models stored in \tildedir {sympa/bin/etc/global\_task\_models} 
-  and \tildedir {sympa/bin/etc/list\_task\_models} dirextories.
+  and \tildedir {sympa/bin/etc/list\_task\_models} directories.
 Others can be designed by the list master. 
 
 A task is global or related to a list.
@@ -3531,7 +3531,7 @@ A task is global or related to a list.
 
 You define in the list config file which model with which version you want to use (see 
 \ref {list-task-parameters}, page~\pageref {list-task-parameters}). Then the task manager daemon will automatically 
-create the task by looking for the appropriate model in differents directories in the
+create the task by looking for the appropriate model file in differents directories in the
 following order :
 
 \begin {enumerate}
@@ -3563,26 +3563,26 @@ and commands. All those syntactical elements are composed of alphanumerics (0-9a
 \item Label lines begin by '/' and are used by the next command (see below).
 \item References are enclosed between brackets '[]'. They refer to a value 
 depending on the object of the task (for instance [list$->$name]). Those variables
-are instantiated when a task file is created from a model. The list of available 
+are instantiated when a task file is created from a model file. The list of available 
 variables is the same as for templates (see \ref {list-tpl}, see 
-page~\pageref {list-tpl}) plus [creation\_date] and [execution\_date] (see below).
-\item Variables store results of some commands and are paramaters for some others.
+page~\pageref {list-tpl}) plus [creation\_date] (see below).
+\item Variables store results of some commands and are paramaters for others.
 Their name begins with '@'.
 \item A date value may be written in two ways :
 
 
 	\begin {itemize}
 		\item absolute dates follow the format : xxxxYxxMxxDxxHxxMin. Y is the year, 
-		M the month (1-12), D the day (1-28|30|31, 'bissextile' years are not managed),
+		M the month (1-12), D the day (1-28$|$30$|$31, leap-years are not managed),
 		H the hour (0-23), Min the minute (0-59). H and Min are optionnals.
-		For instance, 2001y12m4d44min is the 4st of December 2001 at 00h44.
+		For instance, 2001y12m4d44min is the 4th of December 2001 at 00h44.
  
 		\item relative dates use the [creation\_date] or [execution\_date] references. 
 		[creation\_date] is the date when the task file is created, [execution\_date] 
 		when the command line is executed.
 		A duration may follow with '+' or '-' operators. The duration is expressed 
 		like an absolute date whose all parameters are optionnals. 	
-		examples : [creation\_date]+6m, [execution\_date], [execution\_date]-4d
+		Examples : [creation\_date], [execution\_date]+1y, [execution\_date]-6m4d
 	\end {itemize}
 
 
@@ -3597,7 +3597,7 @@ Here is the list of current avalaible commands :
 \item next ($<date value>, <label>$)
 
 	Stop the execution. The task will go on at the date value and begin at the label line.
-\item $<@deleted\_users>$ = delete ($<@user\_selection>$)
+\item $<@deleted\_users>$ = delete\_subs ($<@user\_selection>$)
 
 	Delete @user\_selection email list and stores user emails successfully deleted in @deleted\_users.
 \item send\_msg ($<@user\_selection>, <template>$)
@@ -3605,16 +3605,16 @@ Here is the list of current avalaible commands :
 	Send the template message to emails stored in @user\_selection.
 \item $@$user\_selection = select\_subs ($<condition>$)
 
-	Stores emails which match the condition in @user\_selection. See 8.6 Scenarii section to know how to write conditions. Only available for list model task.
+	Store emails which match the condition in @user\_selection. See 8.6 Scenarii section to know how to write conditions. Only available for list models.
 \item create ($<global | list (<list name>), <model type>, <model>$)
 
 	Create a task for object with model file \tildefile {model type.model.task}.
-\item chk\_cert\_expiration ($<template>, <delay>$)
+\item chk\_cert\_expiration ($<template>, <date value>$)
 
-	Send the template message to emails whose certificate has expired or will expire within the delay.
-\item update\_crl ($<file name>, <delay>$)
+	Send the template message to emails whose certificate has expired or will expire before the date value.
+\item update\_crl ($<file name>, <date value>$)
 
-	Update crls which are expired or will expire within the delay. The file stores the crl's URLs.
+	Update certificate revocation lists (CRL) which are expired or will expire before the date value. The file stores the CRL's URLs.
 \end {itemize}
 
 Model files may have a scenario-like title line at the beginning.
@@ -3655,11 +3655,11 @@ to remove existing task files in the \dir {task/} spool if needed. Task file nam
 	\end {quote}
 
 
-\item crl\_update.hourly.task\\
+\item crl\_update.daily.task\\
 	\begin {quote}
 	\begin{verbatim}
 	[STARTPARSE]
-	[INCLUDE '../src/etc/global_task_models/crl_update.hourly.task']
+	[INCLUDE '../src/etc/global_task_models/crl_update.daily.task']
 	[STOPPARSE]
 	\end{verbatim}
 	\end {quote}
@@ -4962,6 +4962,10 @@ This parameter states which model is used to create a \texttt {remind} task.
 A \texttt {remind} task regurlaly sends to the subscribers a message which reminds them
 their subscription to list.
 
+example :
+
+remind annual
+
 \subsection {expire\_task}
 
 	\default {no default value}
@@ -4969,6 +4973,11 @@ their subscription to list.
 This parameter states which model is used to create a \texttt {remind} task.
 A \texttt {expire} task regurlaly checks the inscription or reinscription date of subscribers
 and asks them to renew their subscription. If they don't they are deleted.
+
+
+example :
+
+expire annual
 
 \subsection {send}
     \label {par-send}

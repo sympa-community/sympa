@@ -1,8 +1,6 @@
-title.fr mise a jour horaire des listes de révocation
-title.us hourly CRL update
+title.fr mise a jour quotidienne des listes de révocation
+title.us daily certificate revocation list update
 
-next ([execution_date], INIT)
-
-/INIT
-update_crl (CA_list, 2d)
-next ([execution_date] + 1h, INIT)
+/ACTION
+update_crl (CA_list, [execution_date]+1d)
+next ([execution_date] + 1d, ACTION)

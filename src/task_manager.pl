@@ -1,9 +1,5 @@
 #! --PERL--
 
-
-## global tasks are automatically created when a model file exists
-## list tasks are created when it is stated in the list config file
-
 ## Worl Wide Sympa is a front-end to Sympa Mailing Lists Manager
 ## Copyright Comite Reseau des Universites
 
@@ -23,13 +19,9 @@ use Time::Local;
 use MD5;
 use smtp;
 use wwslib;
-
-
+ 
 require 'parser.pl';
 require 'tools.pl';
-
-
-my $sender;
 
 my $opt_d;
 my $opt_F;
@@ -59,10 +51,8 @@ unless (Conf::load($sympa_conf_file)) {
     exit(1);
 }
 
-
 ## Check databse connectivity
 $List::use_db = &List::probe_db();
-
 
 ## Set the UserID & GroupID for the process
 $< = $> = (getpwnam('sympa'))[2];
@@ -91,7 +81,6 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
     $wwsconf->{'log_facility'}||= $Conf{'syslog'};
     do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'task_manager');
 }
-
 
 ## Sets the UMASK
 umask($Conf{'umask'});
@@ -135,13 +124,13 @@ my $user_global_task_model_dir = "--DIR--/etc/global_task_models";
 my $cert_dir = $Conf{'ssl_cert_dir'};
 my @tasks; # list of tasks in the spool
 
-undef my $log; # won't execute send_msg and delete commands if true, only log
+undef my $log; # won't execute send_msg and delete_subs commands if true, only log
 #$log = 1;
 
 ## list of list task models
-my @list_models = ('expire','remind');
+my @list_models = ('expire', 'remind');
 
-## list of the global task models
+## hash of the global task models
 my %global_models = ('crl_update_task' => 'crl_update', 
 		     'chk_cert_expiration_task' => 'chk_cert_expiration');
 
@@ -166,17 +155,19 @@ my %commands = ('next'                  => ['date', '\w*'],
 		                           #object    model  model choice
 		'exec'                  => ['.+'],
 		                           #script
-		'chk_cert_expiration' => ['\w+',   'delay'],
-		                           #template  delay
-		'update_crl'            => ['\w+', 'delay'], 
+		'update_crl'            => ['\w+', 'date'], 
 					   #file    #delay
+		'chk_cert_expiration'   => ['\w+', 'date'],
+		                         #template  date
 		);
 
 # commands which use a variable. If you add such a command, the first parameter must be the variable
-my %var_commands = ('delete'      => ['var'],
-		                     # variable 
-		    'send_msg'    => ['var',  '\w+' ],
-		                     #variable template
+my %var_commands = ('delete_subs'      => ['var'],
+		                          # variable 
+		    'send_msg'         => ['var',  '\w+' ],
+		                          #variable template
+		    'rm_file'          => ['var'],
+		                          # variable
 		    );
 my @var_commands;
 foreach (keys %var_commands) {
@@ -185,10 +176,10 @@ foreach (keys %var_commands) {
 }
 
 # commands which are used for assignments
-my %asgn_commands = ('select_subs' => ['subarg'],
-		                      # condition
-		     'delete'      => ['var'],
-		                      # variable
+my %asgn_commands = ('select_subs'      => ['subarg'],
+		                            # condition
+		     'delete_subs'      => ['var'],
+		                            # variable
 		     );
 my @asgn_commands;
 foreach (keys %asgn_commands) {
@@ -201,7 +192,6 @@ my @commands = keys %commands;
 
 ###### INFINITE LOOP SCANING THE QUEUE (unless a sig TERM is received) ######
 while (!$end) {
-
     
     my $current_date = time; # current epoch date
     my $rep = &tools::adate ($current_date);
@@ -216,7 +206,7 @@ while (!$end) {
     ## processing of tasks anterior to the current date
     &do_log ('notice', 'processing of tasks anterior to the current date');
     foreach my $task (@tasks) {
-	$task =~ /(\d+)\.\w+\.\w+\.(\w+)/;
+	$task =~ /^(\d+)\.\w*\.\w+\.(\w+)$/;
 	last unless ($1 < $current_date);
 	if ($2 ne '_global') { # list task
 	    my $list = new List ($2);
@@ -282,8 +272,8 @@ while (!$end) {
 	    }
 	}
     }
-   
     sleep 60;
+    #$end = 1;
 }
 
 &do_log ('notice', 'task_manager exited normally due to signal');
@@ -349,7 +339,7 @@ sub create {
     parse_tpl ($Rdata, $model_file, TASK);
     close (TASK);
     
-    # special checking for list whose user_data_source config parmater is include. The task won't be created if there is a delete command
+    # special checking for list whose user_data_source config parmater is include. The task won't be created if there is a delete_subs command
     my $ok = 1;
     if ($object eq 'list') {
 	my $list = new List("$list_name");
@@ -360,10 +350,10 @@ sub create {
 	    }
 	    while (<TASK>) {
 		chomp;
-		if (/.*delete.*/) {
+		if (/.*delete_subs.*/) {
 		    close (TASK);
 		    undef $ok;
-		    &do_log ('err', "error : you are not allowed to use the delete command on a list whose subscribers are included, creation aborted");
+		    &do_log ('err', "error : you are not allowed to use the delete_subs command on a list whose subscribers are included, creation aborted");
 		    return undef;
 		}
 	    }
@@ -517,7 +507,6 @@ sub chk_line {
 	unless ( in (\@asgn_commands, $hash2{'command'}) ) { 
 	    $Rhash->{'nature'} = 'error';
 	    $Rhash->{'error'} = 'non valid assignment';
-	    &do_log ('notice', "$hash2{'command'}");
 	    return 0;
 	}
 	$Rhash->{'nature'} = 'assignment';
@@ -535,7 +524,6 @@ sub chk_line {
 ## check the arguments of a command 
 sub chk_cmd {
     
-    
     my $cmd = $_[0]; # command name
     my $lnb = $_[1]; # line number
     my $Rargs = $_[2]; # argument list
@@ -550,7 +538,8 @@ sub chk_cmd {
 	    my @args = @{$Rargs};
 
 	    unless ($#expected_args == $#args) {
-		&do_log ('err',"error at line $lnb : wrong number of arguments for $command");
+		&do_log ('err', "error at line $lnb : wrong number of arguments for $command");
+		&do_log ('err', "args = @args ; expected_args = @expected_args");
 		return undef;
 	    }
 
@@ -664,20 +653,48 @@ sub cmd_process {
     $context{'task_name'} =~ /^\w+\.\w*\.\w+\.(\w+)$/;
     $context{'object_name'} = $1; # object of the task
     $context{'line_number'} = $lnb;
-    
+
+     # regular commands
     return stop (\%context) if ($command eq 'stop');
-    return send_msg ($Rarguments, $Rvars, \%context) if ($command eq 'send_msg');       
     return next_cmd ($Rarguments, \%context) if ($command eq 'next');
-    return select_subs ($Rarguments, \%context) if ($command eq 'select_subs');
-    return delete_cmd ($Rarguments, $Rvars, \%context) if ($command eq 'delete');
     return create_cmd ($Rarguments, \%context) if ($command eq 'create');
     return exec_cmd ($Rarguments) if ($command eq 'exec');
-    return chk_cert_expiration ($Rarguments, \%context) if ($command eq 'chk_cert_expiration');
     return update_crl ($Rarguments, \%context) if ($command eq 'update_crl');
+
+     # commands which use a variable
+    return send_msg ($Rarguments, $Rvars, \%context) if ($command eq 'send_msg');       
+    return rm_file ($Rarguments, $Rvars, \%context) if ($command eq 'rm_file');
+
+     # commands which return a variable
+    return select_subs ($Rarguments, \%context) if ($command eq 'select_subs');
+    return chk_cert_expiration ($Rarguments, \%context) if ($command eq 'chk_cert_expiration');
+
+     # commands which return and use a variable
+    return delete_subs_cmd ($Rarguments, $Rvars, \%context) if ($command eq 'delete_subs');  
 }
 
 
 ### command subroutines ###
+ 
+ # remove files whose name is given in the key 'file' of the hash
+sub rm_file {
+        
+    my $Rarguments = $_[0];
+    my $Rvars = $_[1];
+    my $context = $_[2];
+    
+    my @tab = @{$Rarguments};
+    my $var = $tab[0];
+
+    foreach my $key (keys %{$Rvars->{$var}}) {
+	my $file = $Rvars->{$var}{$key}{'file'};
+	next unless ($file);
+	unless (unlink ($file)) {
+	    error ("$context->{'task_file'}", "error in rm_file command : unable to remove $file");
+	    return undef;
+	}
+    }
+}
 
 sub stop {
 
@@ -705,14 +722,21 @@ sub send_msg {
     
     &do_log ('notice', "line $context->{'line_number'} : send_msg (@{$Rarguments})");
 
-    my $list = new List ($context->{'object_name'});
+
+    if ($context->{'object_name'} eq '_global') {
+
+	foreach my $email (keys %{$Rvars->{$var}}) {
+	    &do_log ('notice', "--> message sent to $email");
+	    &List::send_global_file ($template, $email, $Rvars->{$var}{$email}) if (!$log);
+	}
+    } else {
+	my $list = new List ($context->{'object_name'});
         
-    foreach my $email (@{$Rvars->{$var}}) {
-	&do_log ('notice', "--> message sent to $email");
-	my %msg_context;
-	&List::send_file ($list, $template, $email, \%msg_context) if (!$log);
+	foreach my $email (keys %{$Rvars->{$var}}) {
+	    &do_log ('notice', "--> message sent to $email");
+	    $list->send_file ($template, $email, $Rvars->{$var}{$email}) if (!$log);
+	}
     }
-    
     return 1;
 }
 
@@ -756,7 +780,7 @@ sub select_subs {
     }  
  
     my @users; # the subscribers of the list      
-    my @selection; # list of subscribers who match the condition
+    my %selection; # hash of subscribers who match the condition
     my $list = new List ($context->{'object_name'});
     
     if ( $list->{'admin'}{'user_data_source'} =~ /database|file/) {
@@ -780,15 +804,15 @@ sub select_subs {
 	$new_condition = "$1($user->{'update_date'}, $2)" if ($condition =~ /(older|newer)\((\d+)\)/ );
 	
 	if (&List::verify ($verify_context, $new_condition) == 1) {
-	    push (@selection, $user->{'email'});
+	    $selection{$user->{'email'}} = undef;
 	    &do_log ('notice', "--> user $user->{'email'} has been selected");
 	}
     }
     
-    return \@selection;
+    return \%selection;
 }
 
-sub delete_cmd {
+sub delete_subs_cmd {
 
     my $Rarguments = $_[0];
     my $Rvars = $_[1];
@@ -797,13 +821,13 @@ sub delete_cmd {
     my @tab = @{$Rarguments};
     my $var = $tab[0];
 
-    &do_log ('notice', "line $context->{'line_number'} : delete ($var)");
+    &do_log ('notice', "line $context->{'line_number'} : delete_subs ($var)");
 
     
     my $list = new List ($context->{'list_name'});
-    my @selection; # list of subscriber emails who are successfully deleted
+    my %selection; # hash of subscriber emails who are successfully deleted
 
-    foreach my $email (@{$Rvars->{$var}}) {
+    foreach my $email (keys %{$Rvars->{$var}}) {
 
 	&do_log ('notice', "email : $email");
 	my $action = &List::request_action ('del', 'smime',
@@ -812,19 +836,16 @@ sub delete_cmd {
 					     'email'    => $email,
 					 });
 	if ($action =~ /reject/i) {
-	    error ("$context->{'task_file'}", "error in delete command : deletion of $email not allowed");
-	}
-	### AF : voir le cas $action eq 'request_auth'
-	
-	if ($action =~ /do_it/i) {
+	    error ("$context->{'task_file'}", "error in delete_subs command : deletion of $email not allowed");
+	} else {
 	    my $u = $list->delete_user ($email) if (!$log);
 	    $list->save() if (!$log);;
 	    &do_log ('notice', "--> $email deleted");
-	    push (@selection, $email);
+	    $selection{$email} = {};
 	}
     }
 
-    return \@selection;
+    return \%selection;
 }
 
 sub create_cmd {
@@ -888,11 +909,11 @@ sub chk_cert_expiration {
 
     my $Rarguments = $_[0];
     my $context = $_[1];
-
+        
     my $execution_date = $context->{'execution_date'};
     my @tab = @{$Rarguments};
     my $template = $tab[0];
-    my $delay = &tools::duration_conv ($tab[1], $execution_date);
+    my $limit = &tools::duration_conv ($tab[1], $execution_date);
 
     &do_log ('notice', "line $context->{'line_number'} : chk_cert_expiration (@{$Rarguments})");
  
@@ -903,29 +924,33 @@ sub chk_cert_expiration {
     }
     my @certificates = grep !/^(\.\.?)|(.+expired)$/, readdir DIR;
     close (DIR);
- 
-    chdir($cert_dir);
 
     foreach (@certificates) {
 
-	my $soon_expired_file = $_.'.soon_expired'; # an empty .soon_expired file is created when a user iw warned his certificate is soon expired
+	my $soon_expired_file = $_.'.soon_expired'; # an empty .soon_expired file is created when a user is warned that his certificate is soon expired
 
 	# recovery of the certificate expiration date 
-	open (ENDDATE, "openssl x509 -enddate -in $_ -noout |");
+	open (ENDDATE, "openssl x509 -enddate -in $cert_dir/$_ -noout |");
 	my $date = <ENDDATE>; # expiration date
 	close (ENDDATE);
 	chomp ($date);
-	next unless ($date);
+	
+	unless ($date) {
+	    &do_log ('err', "error in chk_cert_expiration command : can't get expiration date for $_ by using the x509 openssl command");
+	    next;
+	}
+	
 	$date =~ /notAfter=(\w+)\s*(\d+)\s[\d\:]+\s(\d+).+/;
 	my @date = (0, 0, 0, $2, $months{$1}, $3 - 1900);
 	$date =~ s/notAfter=//;
 	my $expiration_date = timegm (@date); # epoch expiration date
+	my $rep = &tools::adate ($expiration_date);
 
 	# no near expiration nor expiration processing
-	if ($expiration_date > $execution_date + $delay) { 
+	if ($expiration_date > $limit) { 
 	    # deletion of unuseful soon_expired file if it is existing
 	    if (-e $soon_expired_file) {
-		unlink ($_) || &do_log ('err', "error : can't delete $soon_expired_file");
+		unlink ($soon_expired_file) || &do_log ('err', "error : can't delete $soon_expired_file");
 	    }
 	    next;
 	}
@@ -935,26 +960,36 @@ sub chk_cert_expiration {
 	    
 	    &do_log ('notice', "--> $_ certificate expired ($date), certificate file deleted");
 	    if (!$log) {
-		unlink ($_) || &do_log ('notice', "error : can't delete certificate file $_");
+		unlink ("$cert_dir/$_") || &do_log ('notice', "error : can't delete certificate file $_");
 	    }
+	    if (-e $soon_expired_file) {
+		unlink ("$cert_dir/$soon_expired_file") || &do_log ('err', "error : can't delete $soon_expired_file");
+	    }
+	    next;
 	}
 
 	# soon expired certificate processing
 	if ( ($expiration_date > $execution_date) && 
-	     ($expiration_date < $execution_date + $delay) &&
+	     ($expiration_date < $limit) &&
 	     !(-e $soon_expired_file) ) {
 
-	    unless (open (FILE, ">$soon_expired_file")) {
-		error ($context->{'task_file'}, "error in chk_cert_expiration : can't create $soon_expired_file");
+	    unless (open (FILE, ">$cert_dir/$soon_expired_file")) {
+		&do_log ('err', "error in chk_cert_expiration : can't create $soon_expired_file");
 		next;
 	    } else {close (FILE);}
 	    
 	    my %tpl_context; # datas necessary to the template
 
-	    open (ID, "openssl x509 -subject -in $_ -noout |");
+	    open (ID, "openssl x509 -subject -in $cert_dir/$_ -noout |");
 	    my $id = <ID>; # expiration date
 	    close (ID);
 	    chomp ($id);
+	    
+	    unless ($id) {
+		&do_log ('err', "error in chk_cert_expiration command : can't get expiration date for $_ by using the x509 openssl command");
+		next;
+	    }
+
 	    $id =~ s/subject= //;
 	    do_log ('notice', "id : $id");
 	    $tpl_context{'expiration_date'} = &tools::adate ($expiration_date);
@@ -964,19 +999,19 @@ sub chk_cert_expiration {
 	    &do_log ('notice', "--> $_ certificate soon expired ($date), user warned");
 	}
     }
-    chdir ($Conf{'home'});
     return 1;
 }
 
+
+## attention, j'ai n'ai pas pu comprendre les retours d'erreurs des commandes wget donc pas de verif sur le bon fonctionnement de cette commande
 sub update_crl {
 
     my $Rarguments = $_[0];
     my $context = $_[1];
 
     my @tab = @{$Rarguments};
-    my $delay = $tab[1];
-    my $CA_file = "/usr/local/sympb/expl/$tab[0]"; # file where CA urls are stored ; AF completer avec un DIR std defini dans %conf
-   
+    my $limit = &tools::epoch_conv ($tab[1], $context->{'execution_date'});
+    my $CA_file = "$Conf{'home'}/$tab[0]"; # file where CA urls are stored ;
     &do_log ('notice', "line $context->{'line_number'} : update_crl (@tab)");
 
     # building of CA list
@@ -992,7 +1027,16 @@ sub update_crl {
     close (FILE);
 
     # updating of crl files
-    my $crl_dir = '/usr/local/sympb/expl/crl'; # AF : sera defini dans la conf
+    my $crl_dir = "$Conf{'crl_dir'}";
+    unless (-d $Conf{'crl_dir'}) {
+	if ( mkdir ($Conf{'crl_dir'}, 0775)) {
+	    do_log('notice', "creating spool $Conf{'crl_dir'}");
+	}else{
+	    do_log('err', "Unable to create CRLs directory $Conf{'crl_dir'}");
+	    return undef;
+	}
+    }
+
     foreach my $url (@CA) {
 	
 	my $crl_file = &tools::escape_chars ($url); # convert an URL into a file name
@@ -1000,32 +1044,37 @@ sub update_crl {
 	
 	## create $file if it doesn't exist
 	unless (-e $file) {
-	    my $cmd = "wget -F -O \'$file\' \'$url\'";
+	    my $cmd = "wget -O \'$file\' \'$url\'";
 	    open CMD, "| $cmd";
 	    close CMD;
-	    next;
 	}
 
-	 # building of the crl expiration date
+	 # recovery of the crl expiration date
 	open (ID, "openssl crl -nextupdate -in \'$file\' -noout -inform der|");
 	my $date = <ID>; # expiration date
 	close (ID);
 	chomp ($date);
-	next unless ($date);
+
+	unless ($date) {
+	    &do_log ('err', "error in update_crl command : can't get expiration date for $file crl file by using the crl openssl command");
+	    next;
+	}
+
 	$date =~ /nextUpdate=(\w+)\s*(\d+)\s(\d\d)\:(\d\d)\:\d\d\s(\d+).+/;
 	my @date = (0, $4, $3 - 1, $2, $months{$1}, $5 - 1900);
 	my $expiration_date = timegm (@date); # epoch expiration date
+	my $rep = &tools::adate ($expiration_date);
 
 	## check if the crl is soon expired or expired
-	my $file_date = $context->{'execution_date'} - (-M $file) * 24 * 60 * 60; # last modification date
-	my $limit = &tools::epoch_conv ("$expiration_date-$delay", $context->{'execution_date'});
-	my $condition = "older($file_date, $limit)";
+	#my $file_date = $context->{'execution_date'} - (-M $file) * 24 * 60 * 60; # last modification date
+	my $condition = "newer($limit, $expiration_date)";
 	my $verify_context;
 	$verify_context->{'sender'} = 'nobody';
 
 	if (&List::verify ($verify_context, $condition) == 1) {
 	    unlink ($file);
-	    my $cmd = "wget -F -O \'$file\' \'$url\'";
+	    &do_log ('notice', "--> updating of the $file crl file");
+	    my $cmd = "wget -O \'$file\' \'$url\'";
 	    open CMD, "| $cmd";
 	    close CMD;
 	    next;

@@ -14,7 +14,7 @@ use Carp;
 my @valid_options = qw(
 		       avg bounce_warn_rate bounce_halt_rate chk_cert_expiration_task 
 		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod 
-		       cookie create_list crl_update_task db_host db_name db_options db_passwd db_type db_user 
+		       cookie create_list crl_dir crl_update_task db_host db_name db_options db_passwd db_type db_user 
 		       db_additional_subscriber_fields db_additional_user_fields
 		       default_list_priority edit_list email etc
 		       global_remind home host domain lang listmaster log_socket_type 
@@ -36,6 +36,7 @@ my %Default_Conf =
      'trusted_ca_options' => '-CAfile --ETCBINDIR--/ca-bundle.crt',
      'key_passwd' => '',
      'ssl_cert_dir' => '--DIR--/expl/X509-user-certs',
+     'crl_dir' => '--DIR--/expl/crl',
      'umask'   => '027',
      'syslog'  => 'LOCAL1',
      'nrcpt'   => 25,
