@@ -133,6 +133,19 @@ setTimeout('refresh_mom_and_die()',1000);
   [PARSE title_template]
   <BR>
   [PARSE action_template]
+
+     <FORM ACTION="[path_cgi]" METHOD="POST">
+     <INPUT TYPE="hidden" NAME="action" VALUE="set_lang">
+     <INPUT TYPE="hidden" NAME="previous_action" VALUE="[action]">
+     <INPUT TYPE="hidden" NAME="previous_list" VALUE="[list]">
+     <SELECT NAME="lang" onchange="this.form.submit();">
+
+     [FOREACH lang IN  languages]
+     <OPTION VALUE="[lang->NAME]" [lang->selected]>[lang->complete]
+     [END]
+     </SELECT>
+     </FORM>
+
 [ELSE]
   [PARSE menu_template]
   [PARSE title_template]
