@@ -21,6 +21,7 @@
 
 use lib "../src/";
 use lib "../wwsympa/";
+use Log;
 use Conf;
 use POSIX;
 require "parser.pl";
