@@ -849,7 +849,7 @@ my %alias = ('reply-to' => 'reply_to',
 								 'order' => 8
 								 },
 						  'f_dir' => {'format' => '.+',
-							     'gettext_id' => "",
+							     'gettext_id' => "Directory where the database is stored (used for DBD::CSV only)",
 							     'order' => 9
 							     },
 						  'name' => {'format' => '.+',
