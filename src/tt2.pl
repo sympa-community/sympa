@@ -73,6 +73,7 @@ sub _translate {
     s/\[\s*END\s*\]/[% END %]/ig;
 
     # sanity check before including file
+    s/\[\s*INCLUDE\s*('.*?')\s*\]/[% INSERT $1 %]/ig;
     s/\[\s*INCLUDE\s*(\w+?)\s*\]/[% INSERT \$$1 IF $1 %]/ig;
 
     ## Be careful to absolute path
