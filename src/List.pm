@@ -560,7 +560,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 'title_id' => 54,
 			 'group' => 'command'
 			 },
-	    'lang' => {'format' => ['fr','us','de','it','fi','es','cn-big5','cn-gb','pl','cz','hu'],
+	    'lang' => {'format' => ['fr','us','de','it','fi','es','tw','cn','pl','cz','hu'],
 		       'default' => {'conf' => 'lang'},
 		       'title_id' => 55,
 		       'group' => 'description'
@@ -937,7 +937,7 @@ sub dump {
 	
 	my $list = new List($l);
 	my $user_file_name;
-
+	
 	if ($list->{'admin'}{'user_data_source'} eq 'database') {
             do_log('debug', 'Dumping list %s',$l);
 	    $user_file_name = "$list->{'dir'}/subscribers.db.dump";
