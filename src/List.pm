@@ -4739,12 +4739,11 @@ sub get_lists {
     }
     foreach $l (sort readdir(DIR)) {
 	next unless (($l !~ /^\./o) and (-d $l) and (-f "$l/config"));
-	printf STDERR "xxxxxxxx test $l (robot = $robot) \n" ;
 	my $list = new List ($l);
-	printf STDERR "xxxxxxxx test $l (robot = $robot) (listhost $list->{'admin'}{'host'})\n" ;
-	next unless (($list->{'admin'}{'host'} eq $robot) || ($robot eq '*')) ;
+	# printf STDERR "xxxxxxxx debug test $l (robot = $robot) (listhost $list->{'admin'}{'domain'})\n" ;
+	next unless (($list->{'admin'}{'domain'} eq $robot) || ($robot eq '*')) ;
 	push @lists, $l ;
-	printf STDERR "xxxxxxxx add $l\n" ;
+
     }
     return @lists;
 }
@@ -5716,6 +5715,14 @@ sub _load_admin_file {
 	    $admin{'digest'} = $digest;
 	}
     }
+    # 'domain' is very original as it overrights 'host' if defined.
+    # in addition $admin->{'host'} is widly used in Sympa so it will not
+    # change everywhere but only when it's needed to check if a list
+    # is related to the current robot. That's because if 'admin' is defined
+    # sympa use virtual robot concept. If 'host' is used, Sympa works as it
+    # did until version 3.2
+    $admin{'host'} = $admin{'domain'} if ($admin{'domain'}); 
+
 	
     if (defined ($admin{'custom_subject'})) {
 	if ($admin{'custom_subject'} =~ /^\s*\[\s*(.+)\s*\]\s*$/) {
