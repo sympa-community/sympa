@@ -59,6 +59,12 @@
 
      [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+      <A HREF="[path_cgi]/get_inactive_lists">Listes inactives</A>
+       </TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
       <A HREF="[path_cgi]/get_closed_lists">Listes fermées</A>
        </TD>
      [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']

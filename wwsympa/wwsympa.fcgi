@@ -187,6 +187,7 @@ my %comm = ('home' => 'do_home',
 	 'get_pending_lists' => 'do_get_pending_lists', 
 	 'get_closed_lists' => 'do_get_closed_lists', 
 	 'get_latest_lists' => 'do_get_latest_lists', 
+	 'get_inactive_lists' => 'do_get_inactive_lists', 
 	 'set_pending_list_request' => 'do_set_pending_list_request', 
 	 'install_pending_list' => 'do_install_pending_list', 
 	 'submit_list' => 'do_submit_list',
@@ -289,6 +290,7 @@ my %action_args = ('default' => ['list'],
 		'get_pending_lists' => [],
 		'get_closed_lists' => [],
 		'get_latest_lists' => [],
+		'get_inactive_lists' => [],
 		'search_list' => ['filter'],
 		'shared' => ['list','@path'],
 		'd_read' => ['list','@path'],
@@ -4564,8 +4566,63 @@ sub do_redirect {
  }
 
 
- ## show a list parameters
- sub do_set_pending_list_request {
+# get inactive lists
+sub do_get_inactive_lists {
+
+     &wwslog('info', 'get_inactive_lists');
+
+     unless ($param->{'user'}{'email'}) {
+	 &error_message('no_user');
+	 &wwslog('info','get_inactive_lists :  no user');
+	 $param->{'previous_action'} = 'get_inactive_lists';
+	 return 'loginrequest';
+     }
+
+     unless ( $param->{'is_listmaster'}) {
+	 &error_message('may_not');
+	 &do_log('info', 'Incorrect_privilege');
+	 return undef;
+     } 
+
+     my @unordered_lists;
+     foreach my $l ( &List::get_lists($robot) ) {
+	 my $list = new List ($l,$robot);
+	 unless ($list) {
+	     next;
+	 }
+
+	 my $last_message;
+
+	 if (open COUNT, $list->{'dir'}.'/msg_count') {
+	     while (<COUNT>) {
+		 $last_message = $1 if (/^(\d+)\s/);
+	     }
+	     close COUNT;
+
+	 }else {
+	     &wwslog('err', 'Could not open file %s', $list->{'dir'}.'/msg_count');	     
+	 }
+
+
+	 push @unordered_lists, {'name' => $list->{'name'},
+				 'subject' => $list->{'admin'}{'subject'},
+				 'last_message_epoch' => $last_message,
+				 'last_message_date' => &POSIX::strftime("%d %b %Y", localtime($last_message*86400)),
+				 'creation_date_epoch' => $list->{'admin'}{'creation'}{'date_epoch'},
+				 'creation_date' => &POSIX::strftime("%d %b %Y", localtime($list->{'admin'}{'creation'}{'date_epoch'}))
+
+				 };
+     }
+
+     foreach my $l (sort {$a->{'last_message_epoch'} <=> $b->{'last_message_epoch'}} @unordered_lists) {
+	 push @{$param->{'inactive_lists'}}, $l;
+     }
+
+     return 1;
+ }
+
+## show a list parameters
+sub do_set_pending_list_request {
      &wwslog('info', 'set_pending_list(%s)',$in{'list'});
 
      unless ($param->{'user'}{'email'}) {
