@@ -6777,6 +6777,11 @@ sub probe_db {
 		      'bounce_score_subscriber' => 'smallint(6)'}
 		     );
 
+    my %not_null = ('email_user' => 1,
+		    'list_subscriber' => 1,
+		    'user_subscriber' => 1,
+		    'date_subscriber' => 1);
+
     ## Is the Database defined
     unless ($Conf{'db_name'}) {
 	&do_log('info', 'No db_name defined in configuration file');
@@ -6920,14 +6925,39 @@ sub probe_db {
 		return undef;
 	    }
 	    
-	    foreach my $f (keys %{$db_struct{$t}}) {
+	    foreach my $f (sort keys %{$db_struct{$t}}) {
 		unless ($real_struct{$t}{$f}) {
 		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, $Conf{'db_name'});
+
+		    my $options;
+		    if ($not_null{$f}) {
+			$options .= 'NOT NULL';
+		    }
 		    
-		    unless ($dbh->do("ALTER TABLE $t ADD $f $db_struct{$t}{$f}")) {
+		    unless ($dbh->do("ALTER TABLE $t ADD $f $db_struct{$t}{$f} $options")) {
 			&do_log('err', 'Could not add field \'%s\' to table\'%s\'.', $f, $t);
 			&do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			return undef;
+		    }
+
+		    if ($f eq 'email_user') {
+			&do_log('info', 'Setting %s field as PRIMARY', $f);
+			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY ($f)")) {
+			    &do_log('err', 'Could not set field \'%s\' as PRIMARY KEY, table \'%s\'.', $f, $t);
+			    return undef;
+			}
+		    }
+
+		    if ($f eq 'user_subscriber') {
+			&do_log('info', 'Setting list_subscriber,user_subscriber fields as PRIMARY');
+			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY (list_subscriber,user_subscriber)")) {
+			    &do_log('err', 'Could not set field field \'list_subscriber,user_subscriber\' as PRIMARY KEY, table\'%s\'.', $t);
+			    return undef;
+			}
+			unless ($dbh->do("ALTER TABLE $t ADD INDEX (user_subscriber,list_subscriber)")) {
+			    &do_log('err', 'Could not set INDEX on field \'user_subscriber,list_subscriber\', table\'%s\'.', $t);
+			    return undef;
+			}
 		    }
 
 		    &do_log('info', 'Field %s added to table %s', $f, $t);
