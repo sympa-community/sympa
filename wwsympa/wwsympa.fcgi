@@ -323,6 +323,9 @@ while ($query = &new_loop()) {
     ## Get PATH_INFO parameters
     &get_parameters();
 
+    ## Get lang from cookie
+    $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'});
+
     ## Sympa parameters in $param->{'conf'}
     $param->{'conf'} = \%Conf;
     $param->{'wwsconf'} = $wwsconf;
@@ -347,8 +350,6 @@ while ($query = &new_loop()) {
         $param->{'ssl_client_v_end'} = $ENV{'SSL_CLIENT_V_END'};
         $param->{'ssl_client_i_dn'} =  $ENV{'SSL_CLIENT_I_DN'};
         $param->{'ssl_cipher_usekeysize'} =  $ENV{'SSL_CIPHER_USEKEYSIZE'};
-
-
 
     }elsif ($ENV{'HTTP_COOKIE'} =~ /(user|sympauser)\=/) {
 	$param->{'user'}{'email'} = &wwslib::get_email_from_cookie($Conf{'cookie'});
@@ -393,7 +394,7 @@ while ($query = &new_loop()) {
 	
 	## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
 	    
-	$param->{'lang'} = $param->{'user'}{'lang'} || $list->{'admin'}{'lang'} 
+	$param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || $list->{'admin'}{'lang'} 
 	|| $Conf{'lang'};
 	&Language::SetLang($param->{'lang'});
 	&POSIX::setlocale(&POSIX::LC_ALL, Msg(14, 1, 'en_US'));
@@ -457,6 +458,19 @@ while ($query = &new_loop()) {
 	    &cookielib::set_cookie('unknown', $Conf{'cookie'}, $wwsconf->{'cookie_domain'}, 'now');
 	}
     }
+
+    ## Available languages
+    my $saved_lang = &Language::GetLang();
+    foreach my $l (@wwslib::languages) {
+	&Language::SetLang($l);
+	$param->{'languages'}{$l}{'complete'} = sprintf Msg(14, 2, $l);
+	if ($param->{'lang'} eq $l) {
+	    $param->{'languages'}{$l}{'selected'} = 'SELECTED';
+	}else {
+	    $param->{'languages'}{$l}{'selected'} = '';
+	}
+    }
+    &Language::SetLang($saved_lang);
 
     # if bypass defined use file extention
     if ($param->{'bypass'}) {
@@ -1620,21 +1634,6 @@ sub do_pref {
 	$param->{'previous_action'} = 'pref';
 	return 'loginrequest';
     }
-
-    ## Available languages
-#    foreach $l (keys %languages) {
-    my $saved_lang = &Language::GetLang();
-    foreach my $l (@wwslib::languages) {
-#	$param->{'languages'}{$l}{'complete'} = $languages{$l};
-	&Language::SetLang($l);
-	$param->{'languages'}{$l}{'complete'} = sprintf Msg(14, 2, $l);
-	if ($param->{'lang'} eq $l) {
-	    $param->{'languages'}{$l}{'selected'} = 'SELECTED';
-	}else {
-	    $param->{'languages'}{$l}{'selected'} = '';
-	}
-    }
-    &Language::SetLang($saved_lang);
 
     ## Find nearest expiration period
     my $selected = 0;

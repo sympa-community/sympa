@@ -51,6 +51,25 @@ sub check_arc_cookie {
     return undef;
 }
 
+## Check cookie for lang pref
+sub check_lang_cookie {
+    my $http_cookie = shift;
+    
+    my %cookies = parse CGI::Cookie($http_cookie);
+    
+    ## Scan parameters
+    ## With Sort, priority is given to newly 'sympauser'
+    foreach (sort keys %cookies) {
+	my $cookie = $cookies{$_};
+	
+	next unless ($cookie->name eq 'sympalang');
+
+	return $cookie->value;
+    }
+
+    return undef;
+}
+
 ## Set user $email cookie, ckecksum use $secret, expire=(now|session|#sec) domain=(localhost|<a domain>)
 sub set_cookie {
     my ($email, $secret, $http_domain, $expires) = @_ ;
@@ -101,6 +120,25 @@ sub set_arc_cookie {
     my $cookie = new CGI::Cookie (-name    => 'I_Am_Not_An_Email_Sniffer',
 				  -value   => 'Let_Me_In',
 				  -expires => '+1y',
+				  -domain  => $domain,
+				  -path    => '/'
+				  );
+    
+    ## Send cookie to the client
+    printf "Set-Cookie:  %s\n", $cookie->as_string;
+   
+    return 1;
+}
+    
+## Set cookie with lang pref
+sub set_lang_cookie {
+    my $lang = shift;
+
+    my ($date, $expiration, $domain);
+
+    my $cookie = new CGI::Cookie (-name    => 'sympalang',
+				  -value   => $lang,
+				  -expires => '+1m',
 				  -domain  => $domain,
 				  -path    => '/'
 				  );
