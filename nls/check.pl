@@ -2,7 +2,7 @@
 
 
 # checking nls, add a new langage : just next line
-my @langages = ("us.msg","fr.msg","es.msg","de.msg","it.msg");
+my @langages = ("us.msg","fr.msg","es.msg","de.msg","it.msg","et.msg");
 
 # fr.msg is used as the reference nls
 my $reference = "fr.msg";

@@ -20,7 +20,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 ## Available catalogues (languages)
-CAT	=	fr.cat us.cat es.cat de.cat it.cat cn.cat tw.cat fi.cat pl.cat cz.cat hu.cat ro.cat
+CAT	=	fr.cat us.cat es.cat de.cat it.cat cn.cat tw.cat fi.cat pl.cat cz.cat hu.cat ro.cat et.cat
 
 .SUFFIXES:	.cat .msg
 
