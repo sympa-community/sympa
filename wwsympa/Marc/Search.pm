@@ -221,7 +221,7 @@ sub search
 	foreach my $dir (@directories)
 	{
 		my $directory = ($self->search_base . '/' . $dir . '/');
-		find(\&_get_file_list,$directory);      
+		find({ wanted => \&_get_file_list, untaint => 1, untaint_pattern => qr|^([-@\w./]+)$| },$directory);      
 	}
 	# File::Find returns these in somewhat haphazard order.
 	@MSGFILES = sort @MSGFILES;
