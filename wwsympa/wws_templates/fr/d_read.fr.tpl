@@ -194,13 +194,13 @@
   </TABLE>	        
  
   <HR> 
-   <FORM METHOD="POST" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
 <TABLE CELLSPACING=20>
    
    [IF path]
          
       [IF may_edit]
       <TR>
+      <FORM METHOD="POST" ACTION="[path_cgi]">
       <TD ALIGN="right" VALIGN="bottom">
       <B> Décrire le dossier [path] </B> <BR>
             
@@ -214,13 +214,14 @@
       <INPUT TYPE="hidden" NAME="path" VALUE="[path]">     
       <INPUT TYPE="hidden" NAME="action" VALUE="d_describe">
       </TD>
+      </FORM>
 
       </TR>
       [ENDIF]
    
       [IF may_control]
       <TR>   
-           
+      <FORM METHOD="POST" ACTION="[path_cgi]">           
       <TD ALIGN="right" VALIGN="center">
       <B> Editer les droits d'accès du dossier [path]</B> 
 
@@ -231,7 +232,7 @@
       <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
       <INPUT TYPE="hidden" NAME="path" VALUE="[path]">     
       </TD>
-
+      </FORM>
       </TR><BR>
       [ENDIF]
   
@@ -240,6 +241,7 @@
 
   [IF may_edit]
     <TR>
+    <FORM METHOD="POST" ACTION="[path_cgi]">
     <TD ALIGN="right" VALIGN="bottom">
     [IF path]
       <B> Créer un sous dossier dans [path]</B> <BR>
@@ -256,9 +258,11 @@
     <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
     <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
     </TD>
+    </FORM>
     </TR><BR>
 
    <TR>
+   <FORM METHOD="POST" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
    <TD ALIGN="right" VALIGN="bottom">
    [IF path]
      <B> Télécharger un fichier dans le dossier [path]</B><BR>
@@ -273,6 +277,7 @@
    <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
    <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
    <TD>
+   </FORM>
    </TR>
    [ENDIF]
 </TABLE>
