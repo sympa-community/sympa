@@ -357,8 +357,7 @@ user_table
 
 <P>
 The user_table paragraph is related to sympa internal authentication by email and password. It is the simplest one the only parameters
-are <A NAME="6011"></A><TT>regexp</TT> and <A NAME="6014"></A><TT>negative_regexp</TT> which are perl regexp use to select or block this authentication method for
-a class of email. 
+are <A NAME="6011"></A><TT>regexp</TT> or <A NAME="6014"></A><TT>negative_regexp</TT> which are perl regular expressions applied on a provided email address to select or block this authentication method for a subset of email addresses. 
 
 <P>
 
@@ -370,7 +369,9 @@ a class of email.
 
 <UL>
 <LI><A NAME="6017"></A><TT>regexp</TT> and <A NAME="6020"></A><TT>negative_regexp</TT>
-	Same as in user_table paragraph.
+	Same as in user_table paragraph : if a provided email address (does not apply to an uid), then the
+	regular expression will be applied to find out if this LDAP directory can be used to authenticate a
+	subset of users.
 
 <P>
 </LI>
@@ -864,7 +865,7 @@ further authentication.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-12-22
+2004-01-08
 </ADDRESS>
 </BODY>
 </HTML>

@@ -3173,8 +3173,7 @@ user_table
 \subsection {user\_table paragraph}
 
 The user\_table paragraph is related to sympa internal authentication by email and password. It is the simplest one the only parameters
-are \cfkeyword {regexp} and \cfkeyword {negative\_regexp} which are perl regexp use to select or block this authentication method for
-a class of email. 
+are \cfkeyword {regexp} or \cfkeyword {negative\_regexp} which are perl regular expressions applied on a provided email address to select or block this authentication method for a subset of email addresses. 
 
 
 \subsection {ldap paragraph}
@@ -3182,7 +3181,9 @@ a class of email.
 
 \begin{itemize}
 \item {\cfkeyword {regexp} and \cfkeyword {negative\_regexp}}
-	Same as in user\_table paragraph.
+	Same as in user\_table paragraph : if a provided email address (does not apply to an uid), then the
+	regular expression will be applied to find out if this LDAP directory can be used to authenticate a
+	subset of users.
 
 \item{host}\\
 

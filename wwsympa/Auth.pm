@@ -58,7 +58,7 @@ use List;
 		     'auth' => 'ldap',
 		     'alt_emails' => {$canonic => 'ldap'}
 		 };
-
+	     
 	 }else{
 	     &main::error_message('incorrect_passwd') unless ($ENV{'SYMPA_SOAP'});
 	     &do_log('err', "Incorrect Ldap password");
@@ -135,9 +135,9 @@ sub authentication {
 
 
 sub ldap_authentication {
-
      my ($auth,$pwd,$whichfilter) = @_;
      my ($cnx, $mesg, $host,$ldap_passwd,$ldap_anonymous);
+     &do_log('debug2','Auth::ldap_authentication(%s,%s,%s)', $auth,$pwd,$whichfilter);
 
      unless (&tools::get_filename('etc', 'auth.conf', $robot)) {
 	 return undef;
@@ -167,8 +167,9 @@ sub ldap_authentication {
 	 # only ldap service are to be applied here
 	 next unless ($ldap->{'auth_type'} eq 'ldap');
 
-	 # skip ldap auth service if the user id or email do not match regexp auth service parameter
-	 next unless ($auth =~ /$ldap->{'regexp'}/i);
+	 # skip ldap auth service if the an email address was provided
+	 # and this email address does not match the corresponding regexp 
+	 next if ($auth =~ /@/ && $auth !~ /$ldap->{'regexp'}/i);
   
 	 foreach $host (split(/,/,$ldap->{'host'})){
 

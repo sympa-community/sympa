@@ -70,7 +70,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {4.0.a8}
+    \newcommand {\version} {4.0.a9}
 
     \newcommand {\samplelist} {mylist}
 
@@ -124,13 +124,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 4.0.a8\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 4.0.a9\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {22 December 2003}
+    \date {08 January 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -3744,8 +3744,7 @@ user_table
 \subsection {user\_table paragraph}
 
 The user\_table paragraph is related to sympa internal authentication by email and password. It is the simplest one the only parameters
-are \cfkeyword {regexp} and \cfkeyword {negative\_regexp} which are perl regexp use to select or block this authentication method for
-a class of email. 
+are \cfkeyword {regexp} or \cfkeyword {negative\_regexp} which are perl regular expressions applied on a provided email address to select or block this authentication method for a subset of email addresses. 
 
 
 \subsection {ldap paragraph}
@@ -3753,7 +3752,9 @@ a class of email.
 
 \begin{itemize}
 \item {\cfkeyword {regexp} and \cfkeyword {negative\_regexp}}
-	Same as in user\_table paragraph.
+	Same as in user\_table paragraph : if a provided email address (does not apply to an uid), then the
+	regular expression will be applied to find out if this LDAP directory can be used to authenticate a
+	subset of users.
 
 \item{host}\\
 
