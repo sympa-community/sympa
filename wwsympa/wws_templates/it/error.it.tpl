@@ -62,14 +62,8 @@ Sei gi&agrave; iscritto alla lista [error->list]
 [ELSIF error->msg=user_already_subscriber]
 [error->email] &egrave; gi&agrave; iscritto alla lista [error->list] 
 
-[ELSIF error->msg=sent_to_owner]
-La tua richiesta &egrave; stata mandata all'editore
-
 [ELSIF error->msg=failed]
 Azione fallita
-
-[ELSIF error->msg=performed]
-[error->action] : azione eseguita
 
 [ELSIF error->msg=not_subscriber]
 Non sei sottoscritto alla lista [error->list]
@@ -86,15 +80,11 @@ Nessuna mail errata per l'utente  [error->email]
 [ELSIF error->msg=update_privilege_bypassed]
 Hai cambiato il valore del parametro senza averne i permessi: [error->pname]
 
-[ELSIF error->msg=list_config_updated]
-Il file di configurazione &egrave; stato aggiornato.
-
 [ELSIF error->msg=config_changed]
 Il file di configurazione &egrave; stato modificato da [error->email]. Non posso applicare i tuoi cambiamenti
 
 [ELSIF error->msg=syntax_errors]
 Errore nella sintassi del parametro : [error->params]
-
 
 [ELSIF error->msg=no_such_document]
 [error->path] : Non esiste tale file o directory
@@ -132,12 +122,6 @@ Non posso inserire il file [error->path] : [error->reason]
 
 [ELSIF error->msg=cannot_create_dir] 
 Non posso creare la directory [error->path] : [error->reason]
-
-[ELSIF error->msg=upload_success] 
-File [error->path] inserito con successo!
-
-[ELSIF error->msg=save_success] 
-File [error->path] salvato
 
 [ELSIF error->msg=full_directory]
 Errore : [error->directory] non vuoto

@@ -65,14 +65,8 @@ Vous êtes déjà abonné à la liste [error->list]
 [ELSIF error->msg=user_already_subscriber]
 [error->email] est déjà abonné à la liste [error->list] 
 
-[ELSIF error->msg=sent_to_owner]
-La demande a été soumise au gestionnaire de la liste
-
 [ELSIF error->msg=failed]
 L'opération a échoué
-
-[ELSIF error->msg=performed]
-[error->action] : l'opération a été effectuée
 
 [ELSIF error->msg=not_subscriber]
 Vous n'êtes pas abonné à la liste [error->list]
@@ -88,9 +82,6 @@ Aucun bounce pour l'utilisateur [error->email]
 
 [ELSIF error->msg=update_privilege_bypassed]
 Vous avez édité un paramètre interdit: [error->pname]
-
-[ELSIF error->msg=list_config_updated]
-La configuration de la liste a été mise à jour
 
 [ELSIF error->msg=config_changed]
 Le fichier de configuration a été modifié par [error->email]. Impossible d'appliquer vos modifications
@@ -133,12 +124,6 @@ Impossible de déposer le  fichier [error->path] : [error->reason]
 
 [ELSIF error->msg=cannot_create_dir] 
 Impossible de créer le répertoire [error->path] : [error->reason]
-
-[ELSIF error->msg=upload_success] 
-Le fichier [error->path] a été déposé
-
-[ELSIF error->msg=save_success] 
-Fichier [error->path] sauvegardé
 
 [ELSIF error->msg=full_directory]
 Echec : le répertoire [error->directory] n'est pas vide  

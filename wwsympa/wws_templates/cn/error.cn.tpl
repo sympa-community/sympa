@@ -63,14 +63,8 @@
 [ELSIF error_msg=user_already_subscriber]
 [error->email] 已经订阅了邮递表 [error->list] 
 
-[ELSIF error_msg=sent_to_owner]
-您的请求已经被转发给邮递表所有者
-
 [ELSIF error_msg=failed]
 操作失败
-
-[ELSIF error_msg=performed]
-[error->action]: 操作成功
 
 [ELSIF error_msg=not_subscriber]
 您不是邮递表 [error->list] 的订阅者
@@ -87,16 +81,11 @@
 [ELSIF error_msg=update_privilege_bypassed]
 您在没有权限的情况下修改了一个参数: [error->pname]
 
-[ELSIF error_msg=list_config_updated]
-配置文件已经被更新
-
 [ELSIF error_msg=config_changed]
 配置文件已经被 [error->email] 修改。无法应用您的修改
 
 [ELSIF error_msg=syntax_errors]
 下列参数语法错误: [error->params]
-
-
 
 [ELSIF error_msg=no_such_document]
 [error->path]: 没有此文件或目录
@@ -133,12 +122,6 @@
 
 [ELSIF error_msg=cannot_create_dir] 
 无法建立目录 [error->path] : [error->reason]
-
-[ELSIF error_msg=upload_success] 
-成功上传文件 [error->path] !
-
-[ELSIF error_msg=save_success] 
-文件 [error->path] 已保存
 
 [ELSIF error_msg=full_directory]
 失败: [error->directory] 不为空

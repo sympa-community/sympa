@@ -62,14 +62,8 @@ Usted ya es un subscriptor de la lista [error->list]
 [ELSIF error->msg=user_already_subscriber]
 [error->email] ya es subscriptor de la lista [error->list] 
 
-[ELSIF error->msg=sent_to_owner]
-Su petición ha sido enviada al propietario de la lista
-
 [ELSIF error->msg=failed]
 La operación ha fallado
-
-[ELSIF error->msg=performed]
-[error->action] : La operación ha sido realizada con exito
 
 [ELSIF error->msg=not_subscriber]
 Usted no es un subscriptor de la lista [error->list]
@@ -85,9 +79,6 @@ No hay errores del usuario [error->email]
 
 [ELSIF error->msg=update_privilege_bypassed]
 Ha cambiado un parámetro sin permisos : [error->pname]
-
-[ELSIF error->msg=list_config_updated]
-El fichero de configuración ha sido actualizado
 
 [ELSIF error->msg=config_changed]
 El fichero de configuración ha sido modificado por [error->email]. No se pueden hacer sus cambios
@@ -130,12 +121,6 @@ No puedo cargar el fichero [error->path] : [error->reason]
 
 [ELSIF error->msg=cannot_create_dir] 
 No puedo cargar el directorio [error->path] : [error->reason]
-
-[ELSIF error->msg=upload_success] 
-Fichero [error->path] ha sido cargado con exito!
-
-[ELSIF error->msg=save_success] 
-Fichero [error->path] guardado
 
 [ELSIF error->msg=full_directory]
 Fallo : [error->directory] no está vacío

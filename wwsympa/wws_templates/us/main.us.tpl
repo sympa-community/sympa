@@ -72,10 +72,10 @@ onLoad="setTimeout('refresh_mom_and_die()',1000);"
 >
 
 [IF nomenu]
-    [IF error_msg]
-          <TABLE WIDTH="100%">
+    [IF errors]
+          <TABLE>
           <TR BGCOLOR="--ERROR_COLOR--">
-            <TD ALIGN="center">
+            <TD>
               <FONT COLOR="--BG_COLOR--">
        [PARSE error_template]
        </FONT>
@@ -83,6 +83,18 @@ onLoad="setTimeout('refresh_mom_and_die()',1000);"
           </TR>
           </TABLE>
     [ENDIF]
+    [IF notices]
+          <TABLE>
+          <TR BGCOLOR="--SHADED_COLOR--">
+            <TD>
+              <FONT COLOR="--TEXT_COLOR--">
+       [PARSE notice_template]
+       </FONT>
+            </TD>
+          </TR>
+          </TABLE>
+    [ENDIF]
+
   [PARSE title_template]
   <BR>
   [PARSE action_template]
@@ -97,10 +109,10 @@ onLoad="setTimeout('refresh_mom_and_die()',1000);"
         </TD>
       [ENDIF]
         <TD WIDTH="100%">
-      [IF error_msg]
-            <TABLE WIDTH="100%">
+      [IF errors]
+            <TABLE>
             <TR BGCOLOR="--ERROR_COLOR--">
-              <TD ALIGN="center">
+              <TD>
                 <FONT COLOR="--BG_COLOR--">
 	        [PARSE error_template]
 	        </FONT>
@@ -108,6 +120,18 @@ onLoad="setTimeout('refresh_mom_and_die()',1000);"
             </TR>
             </TABLE>
       [ENDIF]
+      [IF notices]
+            <TABLE>
+            <TR BGCOLOR="--SHADED_COLOR--">
+              <TD>
+                <FONT COLOR="--TEXT_COLOR--">
+	        [PARSE notice_template]
+	        </FONT>
+              </TD>
+            </TR>
+            </TABLE>
+      [ENDIF]
+
             <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="0" VALIGN="top"><TR><TD BGCOLOR="--DARK_COLOR--">
             <TABLE BORDER="0" WIDTH="100%"  VALIGN="top">
 
