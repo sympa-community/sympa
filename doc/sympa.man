@@ -1,0 +1,97 @@
+.TH SYMPA 8 "--SYMPA_VERSION--" "$Date$" "Sympa --SYMPA_VERSION--" Comité Réseaux des Universités
+.SH NAME
+Sympa \- a modern mailinglists manager
+.SH SYNOPSIS
+.B sympa.pl
+[\fIOPTIONS\fR]\fR
+.SH DESCRIPTION
+\fBSympa\fR is scalable and highly customizable mailing list manager. 
+It can cope with big lists (200,000 subscribers) and comes with 
+a complete (user and admin) Web interface. It is 
+internationalized, and supports the us, fr, de, es, it, fi, and 
+chinese locales. A scripting language allows you to extend the 
+behavior of commands. \fBSympa\fR can be linked to an LDAP directory 
+or an RDBMS to create dynamic mailing lists. \fBSympa\fR provides S/MIME 
+and HTTPS based authentication and encryption. 
+.TP
+\fB\-d\fR, \fB\-\-debug\fR
+Sets \fBSympa\fR in debug mode and keeps it attached to the terminal. 
+Debugging information is output to STDERR, along with standard 
+log information. Each function call is traced. Usefull while 
+reporting a bug. 
+.TP
+\fB\-f\fR, \fB\-\-config\fR=\fIfile\fR
+Forces \fBSympa\fR to use an alternative configuration file. 
+Default behavior is to use the configuration file as defined in the 
+Makefile. 
+.TP
+\fB\-l\fR, \fB\-\-lang\fR=\fIcatalogue\fR
+Set this option to use a language catalog for \fBSympa\fR. The corresponding 
+catalog file `catalogue'.cat must be located in ~sympa/nls directory. 
+.TP
+\fB\-m\fR, \fB\-\-mail\fR
+\fBSympa\fR will log calls to sendmail, including recipients. Useful 
+for keeping track of each mail sent (log files may grow faster though). 
+.TP
+\fB\-k\fR, \fB\-\-keepcopy\fR=\fIdirectory\fR
+This option tells \fBSympa\fR to keep a copy of every incoming message, 
+instead of deleting them. `directory' is the directory to 
+store messages. 
+.TP
+\fB\-s\fR, \fB\-\-dump\fR=\fIlistname\fR | ALL
+Dumps subscribers of for `listname' list or all lists. Subscribers are 
+dumped in \fIsubscribers.db.dump\fR.
+.TP
+\fB-h\fR, \fB\-\-help\fR
+Print this help
+.TP
+\fB-v\fR, \fB\-\-version\fR
+Print version number
+.PP
+.SH "FILES"
+.TP
+.I \fI--CONFDIR--/sympa.conf\fR main configuration file
+.TP
+.I \fI--PIDDIR--/sympa.pid\fR   this file contains the process ID of \fIsympa.pl\fR
+.SH AVAILABILITY
+Latest version of \fBSympa\fR is available from
+http://www.sympa.org
+.SH AUTHORS
+.TP
+Christophe Wolfhugel
+Original author of \fBSympa\fR 
+.TP
+Serge Aumont
+Comité Réseau des Universités
+.TP
+Olivier Salaün
+Comité Réseau des Universités
+.TP
+Contact authors at <sympa-authors@cru.fr>
+.SH "REPORTING BUGS"
+Report bugs to <sympa-dev@cru.fr>
+.SH COPYRIGHT
+Copyright \(co 1997,1998,1999,2000,2001 Comité Réseau des Universités
+
+Copyright \(co 1997,1998,1999 Institut Pasteur & Christophe Wolfhugel
+
+You may distribute this software under the terms of the GNU General
+Public License Version 2 ( http://www.gnu.org/copyleft/gpl.html)
+.SH "SEE ALSO"
+.SP
+The full documentation is avalable in HTML and PostScript formats
+.in +1i
+.B http://listes.cru.fr/sympa/direct/doc.html
+.in -1i
+.SP
+The mailing lists (with web archives)
+.in +1i
+.B http://listes.cru.fr/wws/lists/informatique/sympa
+.in -1i
+
+.SP
+.BR sympa.conf ( 5 ), 
+.BR wwsympa.conf ( 5 ), 
+.BR archived.pl ( 8 ),
+.BR bounced.pl ( 8 )
+
