@@ -541,7 +541,7 @@ my %alias = ('reply-to' => 'reply_to',
 				  'group' => 'description',
 			      },
 	    'expire_task' => {'task' => 'expire',
-			      'gettext_id' => "",
+			      'gettext_id' => "Periodical subscription expiration task",
 			      'group' => 'other'
 			 },
  	    'family_name' => {'format' => $tools::regexp{'family_name'},
@@ -976,7 +976,7 @@ my %alias = ('reply-to' => 'reply_to',
 				     'group' => 'bounces'
 				 },
 	    'remind_task' => {'task' => 'remind',
-			      'gettext-id' => 'remind pediodical task',
+			      'gettext-id' => 'Periodical subscription reminder task',
 			      'default' => {'conf' => 'default_remind_task'},
 			      'group' => 'other'
 			      },
