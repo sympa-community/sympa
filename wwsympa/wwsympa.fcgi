@@ -547,7 +547,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }elsif ($ENV{'HTTP_COOKIE'} =~ /(user|sympauser)\=/) {
          ($param->{'user'}{'email'}, $param->{'auth'}) = &wwslib::get_email_from_cookie($Conf{'cookie'});
 	 
-     }elsif($in{'ticket'}=~/(S|P)T\-/){ # the request contain a vas named ticket that use CAS ticket format
+     }elsif($in{'ticket'}=~/(S|P)T\-/){ # the request contain a CAS named ticket that use CAS ticket format
 	 &cookielib::set_do_not_use_cas($wwsconf->{'cookie_domain'},0,'now'); #reset the cookie do_not_use_cas because this client probably use CAS
 	 # select the cas server that redirect the user to sympa and check the ticket
 	 do_log ('debug',"CAS ticket is detected. in{'ticket'}=$in{'ticket'} in{'checked_cas'}=$in{'checked_cas'}");
@@ -1142,7 +1142,11 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	$param->{'subtitle'} = $list->{'admin'}{'subject'};
 	$param->{'subscribe'} = $list->{'admin'}{'subscribe'}{'name'};
 	$param->{'send'} = $list->{'admin'}{'send'}{'title'}{$param->{'lang'}};
-	$param->{'total'} = $list->get_total('nocache');
+	if (defined $param->{'total'}) {
+	    $param->{'total'} = $list->get_total();
+	}else {
+	    $param->{'total'} = $list->get_total('nocache');
+	}
 	$param->{'list_as_x509_cert'} = $list->{'as_x509_cert'};
 	$param->{'listconf'} = $list->{'admin'};
 
