@@ -992,28 +992,24 @@ To do this, add the following sequence or its equivalent in your
 
 \begin {itemize}
 
-\item -d 
+\item --debug | -d 
   
   Sets \Sympa in debug mode and keeps it attached to the terminal. 
   Debug information are printed to STDERR as well as standard log
-  information.
+  information. Each function call is traced. Usefull while reporting
+  a bug.
   
-\item -dD 
-
-  Sets debug mode in maximum verbosity, tracing each subroutine calls. Usefull for
-  contributor.
-  
-\item -f \textit {config\_file}
+\item --config | -f \textit {config\_file}
   
   Forces \Sympa to use an alternate configuration file. Default behaviour is
   to use configuration file as defined in the Makefile (\$CONFIG).
   
-\item -m 
+\item --mail | -m 
   
   \Sympa will log calls to sendmail, including recipients. Usefull to
   keep track of each mail sent (log files may grow faster though).
   
-\item -l \textit {catalog}
+\item --lang | -l \textit {catalog}
   
   Set this option to use a language catalog for \Sympa. 
   The corresponding catalog file must be located in \tildedir {sympa/nls}
@@ -1026,6 +1022,12 @@ To do this, add the following sequence or its equivalent in your
 /home/sympa/bin/sympa.pl
 \end{verbatim}
   \end {quote}
+
+\item --dump | -s \textit {listname | ALL}
+  
+  Dumps subscribers of a list or all lists. Subscribers are dumped
+  in \file {subscribers.db.dump}.
+ 
   
 \end {itemize}
 
