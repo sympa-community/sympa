@@ -1353,6 +1353,16 @@ is still recognized but should not be used anymore.
 
         \example {syslog          LOCAL2}
 
+\subsection {\cfkeyword {log\_level}} 
+
+	\default {0}
+
+        This parameter sets the verbosity of Sympa processes (including) in log files.
+	With level 0 only main operations are logged, in level 3 almost everything is
+	logged.
+
+        \example {log\_level          2}
+
 \subsection {\cfkeyword {log\_socket\_type}} 
     \label {par-log-socket-type}
 
