@@ -4126,7 +4126,7 @@ sub _load_scenario {
 	}
 	$rule->{condition}=$1;
 	$rule->{auth_method}=$2 || 'smtp';
-	$rule->{'action'} = $8;
+	$rule->{'action'} = $6;
 
 	
 #	## Make action an ARRAY
