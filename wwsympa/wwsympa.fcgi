@@ -8065,29 +8065,7 @@ sub do_change_email {
 	$param->{'newuser'} = {'email' => $in{'email'},
 			       'password' => $password };
 
-	unless (open MAIL, "|$Conf{'sendmail'} $in{'email'}") {
-	    &error_message('mail_error');
-	    &wwslog('info','do_change_email: mail error');
-	    return undef;
-	}    
-	
-	my $tpl_file;
-        
-	foreach my $tpldir ("$Conf{'etc'}/$robot/wws_templates",
-			    "$Conf{'etc'}/wws_templates",
-			    "--ETCBINDIR--/wws_templates") {
-	    if (-f "$tpldir/msg_sendpasswd.$param->{'lang'}.tpl") {
-		$tpl_file = "$tpldir/msg_sendpasswd.$param->{'lang'}.tpl";
-		last;
-	    }
-	    if (-f "$tpldir/msg_sendpasswd.tpl") {
-		$tpl_file = "$tpldir/msg_sendpasswd.tpl";
-		last;
-	    }
-	}
-	
-	&parse_tpl ($param, $tpl_file, MAIL);
-	close MAIL;
+	&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param);
 
 	$param->{'email'} = $in{'email'};
 
