@@ -3276,7 +3276,7 @@ sub verify {
 	    if (defined ($context->{$1})) {
 		$value =~ s/\[(\w+)\]/$context->{$1}/i;
 	    }else{
-		do_log('notice',"unkown variable context $value in rule $condition");
+		do_log('notice',"unknown variable context $value in rule $condition");
 		return undef;
 	    }
 	    
@@ -3285,7 +3285,7 @@ sub verify {
 	    if ($Conf{$1}) {
 		$value =~ s/\[conf\-\>([\w\-]+)\]/$Conf{$1}/;
 	    }else{
-		do_log('notice',"unkown variable context $value in rule $condition");
+		do_log('notice',"unknown variable context $value in rule $condition");
 		return undef;
 	    }
 
@@ -3296,7 +3296,7 @@ sub verify {
 	    }elsif ($list->{'admin'}{$1} and (!ref($list->{'admin'}{$1})) ) {
 		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{'admin'}{$1}/;
 	    }else{
-		do_log('notice','Unkown list parameter %s in rule %s', $value, $condition);
+		do_log('notice','Unknown list parameter %s in rule %s', $value, $condition);
 		return undef;
 	    }
 
@@ -3307,7 +3307,7 @@ sub verify {
 		my $field = $header->get($1);
 		$value =~ s/\[header\-\>([\w\-]+)\]/$field/;
 	    }else {
-		do_log('notice',"unkown variable context $value in rule $condition");
+		do_log('notice',"unknown variable context $value in rule $condition");
 		return undef;
 	    }
 
