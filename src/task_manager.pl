@@ -1111,6 +1111,8 @@ sub purge_orphan_bounces {
     foreach my $listname (@listes) {
 	 my $list = new List ($listname);	
 
+	 next unless (defined $list);
+
 	 ## first time: loading DB entries into %bounced_users
 	 for (my $user_ref = $list->get_first_bouncing_user(); $user_ref; $user_ref = $list->get_next_bouncing_user()){
 	     my $user_id = $user_ref->{'email'};
@@ -1564,6 +1566,7 @@ sub get_score {
     }
     
     ## Regularity rate tells how much user has bounced compared to list traffic
+    $msg_count ||= 1; ## Prevents "Illegal division by zero" error
     my $regularity_rate = $tmp_bounce_count / $msg_count;
 
     ## type rate depends on bounce type (5 = permanent ; 4 =tewmporary)
