@@ -364,20 +364,20 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 
-* Mon Feb 17 2003 Guy Paressant - Academie de Nantes - <net@ac-nantes.fr> 3.4.3.1-8
+* Mon Feb 17 2003 Guy Paressant - Academie de Nantes - <rpm-sympa@ac-nantes.fr> 3.4.3.1-8
 - Rebuilt for 3.4.3.1
 - Adding doc and sample
 - Fix spool directories and create bounce and archive
 
-* Fri Jan 31 2003 Guy Paressant - Academie de Nantes - <net@ac-nantes.fr> 3.4.2-7.3
+* Fri Jan 31 2003 Guy Paressant - Academie de Nantes - <rpm-sympa@ac-nantes.fr> 3.4.2-7.3
 - reset of the default cookie in sympa_wizard.pl
 - keep owner for binaries (user root for aliaswrapper)
 - set /bin/bash as shell for user sympa
 
-* Tue Dec 31 2002 Guy PARESSANT - Academie de Nantes - <net@ac-nantes.fr> 3.4.2-7.2
+* Tue Dec 31 2002 Guy PARESSANT - Academie de Nantes - <rpm-sympa@ac-nantes.fr> 3.4.2-7.2
 - corrections for runlevels + remove in %postun
 
-* Tue Dec 24 2002 Guy PARESSANT - Academie de Nantes - <net@ac-nantes.fr> 3.4.2-7.1
+* Tue Dec 24 2002 Guy PARESSANT - Academie de Nantes - <rpm-sympa@ac-nantes.fr> 3.4.2-7.1
 - Rebuild for sympa 3.4.2
 - cleaning
 - store the files on directories choosed by Mandrake
