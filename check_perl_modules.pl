@@ -153,6 +153,11 @@ sub check_modules {
 sub install_module {
     my ($module, $default) = @_;
 
+    unless ($ENV{'FTP_PASSIVE'} eq 1) {
+	$ENV{'FTP_PASSIVE'} = 1;
+	print "Setting FTP Passive mode\n";
+    }
+
     unless ($> == 0) {
 	print "\#\# You need root privileges to install $module module. \#\#\n";
 	print "\#\# Press the Enter key to continue checking modules. \#\#\n";
