@@ -1,11 +1,19 @@
 #!--PERL--
-
 # this script is intended to create automatically list aliases
 # when using sympa. Aliases can be added or removed in file --SENDMAIL_ALIASES--
 
+## Load Sympa.conf
+use lib '--DIR--/bin';
+use Conf;
+
+unless (Conf::load('--CONFIG--')) {
+   print Msg(1, 1, "Configuration file --CONFIG-- has errors.\n");
+   exit(1);
+}
+my $tmp_alias_file = $Conf{'tmpdir'}.'/sympa_aliases.'.time;
+
 my $alias_file = '--SENDMAIL_ALIASES--';
 my $alias_wrapper = '--MAILERPROGDIR--/aliaswrapper';
-my $tmp_alias_file = '/tmp/sympa_aliases.new';
 my $lock_file = '--DIR--/alias_manager.lock';
 my $default_domain;
 my $path_to_queue = '--MAILERPROGDIR--/queue';

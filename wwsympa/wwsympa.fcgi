@@ -3480,6 +3480,33 @@ sub _install_aliases {
     return 1;
 }
 
+## Remove sendmail aliases
+sub _remove_aliases {
+    &wwslog('debug', '_remove_aliases()');
+
+    if ($wwsconf->{'alias_manager'}) {
+	if ((-x $wwsconf->{'alias_manager'}) 
+	    && (system ("$wwsconf->{'alias_manager'} del $list->{'name'} $list->{'admin'}{'host'}") == 0)) {
+	    &wwslog('info','Aliases removed successfully');
+	    $param->{'auto_aliases'} = 1;
+	}else {
+	    &wwslog('info','Failed to remove aliases: %s', $!);
+	    &error_message('failed_to_remove_aliases');
+	}
+    }
+
+    unless ($param->{'auto_aliases'}) {
+	$param->{'aliases'}  = "#----------------- $in{'list'}\n";
+	$param->{'aliases'} .= "$in{'list'}: \"| --MAILERPROGDIR--/queue $in{'list'}\"\n";
+	$param->{'aliases'} .= "$in{'list'}-request: \"| --MAILERPROGDIR--/queue $in{'list'}-request\"\n";
+	$param->{'aliases'} .= "$in{'list'}-owner: \"| --MAILERPROGDIR--/bouncequeue $in{'list'}\"\n";
+	$param->{'aliases'} .= "$in{'list'}-unsubscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-unsubscribe\"\n";
+	$param->{'aliases'} .= "# $in{'list'}-subscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-subscribe\"\n";
+    }
+
+    return 1;
+}
+
 
 ## create a liste using a list template. 
 sub do_create_list {
@@ -4620,6 +4647,8 @@ sub do_close_list {
 
     $list->save_config($param->{'user'}{'email'});
     $list->savestats();
+
+    &_remove_aliases();
     
     &message('list_closed');
 
@@ -4662,6 +4691,9 @@ sub do_restore_list {
     }
 
     $list->savestats(); 
+
+    &_install_aliases();
+
     &message('list_restored');
 
     return 'admin';
