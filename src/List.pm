@@ -6536,7 +6536,7 @@ sub _load_admin_file {
 	    }
 
 	    unless ($paragraph[0] =~ /^\s*$pname\s+($::pinfo{$pname}{'file_format'})\s*$/i) {
-		&do_log('info', 'Bad entry "%s" in %s', $paragraph[0], $pname, $config_file);
+		&do_log('info', 'Bad entry "%s" in %s', $paragraph[0], $config_file);
 		next;
 	    }
 
