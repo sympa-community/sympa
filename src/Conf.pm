@@ -397,15 +397,15 @@ sub checkfiles {
     
     foreach my $p ('sendmail','openssl','antivirus_path') {
 	next unless $Conf{$p};
-
+	
 	unless (-x $Conf{$p}) {
 	    do_log('err', "File %s does not exist or is not executable", $Conf{$p});
 	    $config_err++;
 	}
     }
-
+    
     foreach my $qdir ('spool','queue','queuedigest','queuemod','queueexpire','queueauth','queueoutgoing','queuebounce','queuesubscribe','queuetask','tmpdir')
-{
+    {
 	unless (-d $Conf{$qdir}) {
 	    do_log('info', "creating spool $Conf{$qdir}");
 	    unless ( mkdir ($Conf{$qdir}, 0775)) {
@@ -414,6 +414,15 @@ sub checkfiles {
 	    }
 	}
     }
+
+    ## Also create msg/bad/
+    unless (-d $Conf{'queue'}.'/bad') {
+	    do_log('info', "creating spool $Conf{'queue'}/bad");
+	    unless ( mkdir ($Conf{'queue'}.'/bad', 0775)) {
+		do_log('err', 'Unable to create spool %s', $Conf{'queue'}.'/bad');
+		$config_err++;
+	    }
+	}
 
     return undef if ($config_err);
     return 1;

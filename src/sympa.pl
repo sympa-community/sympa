@@ -429,8 +429,8 @@ while (!$signal) {
 	}
     }else {
 	my $bad_dir = "$Conf{'queue'}/bad";
-	unless ((-d $bad_dir) || (mkdir $bad_dir, 0775)) {
-	    do_log('err', "Unable to create '%s' directory", $bad_dir);
+	unless (-d $bad_dir) {
+	    do_log('err', "Missing directory '%s'", $bad_dir);
 	    rename("$Conf{'queue'}/$filename", "$Conf{'queue'}/BAD-$filename");
 	    do_log('notice', "Renaming bad file %s to BAD-%s", $filename, $filename);
 	}
@@ -1304,7 +1304,7 @@ sub CleanSpool {
     &do_log('debug2', 'CleanSpool(%s,%s)', $spool_dir, $clean_delay);
 
     unless (opendir(DIR, $spool_dir)) {
-	do_log('err', "Unable to open '%s'spool : %s", $spool_dir, $!);
+	do_log('err', "Unable to open '%s' spool : %s", $spool_dir, $!);
 	return undef;
     }
 
