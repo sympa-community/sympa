@@ -5030,7 +5030,7 @@ those values matching a regular expression.
 
 \item
 \label {regex1}
-\lparam {regex1} \textit {regular_expression}
+\lparam {regex1} \textit {regular\_expression}
 \default {}
 
 The Perl regular expression to use if ``select1'' is set to ``regex''.
@@ -5081,7 +5081,7 @@ substitute data from the first-level query into this parameter.
 
 \item
 \label {attrs2}
-\lparam {attrs2} \textit {mail_attribute} 
+\lparam {attrs2} \textit {mail\_attribute} 
 \default {mail}
 
 The attribute containing the e-mail address(es) in the returned objects from the
@@ -5097,7 +5097,7 @@ those addresses matching a regular expression in the second-level queries.
 
 \item
 \label {regex2}
-\lparam {regex2} \textit {regular_expression}
+\lparam {regex2} \textit {regular\_expression}
 \default {}
 
 The Perl regular expression to use if ``select2'' is set to ``regex''.
