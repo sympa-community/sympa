@@ -670,8 +670,8 @@ sub cookie_changed {
     my $current=shift;
     my $changed = 1 ;
     if (-f "$Conf{'etc'}/cookies.history") {
-	unless (open COOK, "$Conf{'etc'}/cookies.hystory") {
-	    do_log('err', "Unable to read $Conf{'etc'}/cookies.hystory") ;
+	unless (open COOK, "$Conf{'etc'}/cookies.history") {
+	    do_log('err', "Unable to read $Conf{'etc'}/cookies.history") ;
 	    return undef ; 
 	}
 	my $oldcook = <COOK>;
@@ -685,8 +685,8 @@ sub cookie_changed {
 	    $changed = 0;
 #	}else{
 #	    push @cookies, $current ;
-#	    unless (open COOK, ">$Conf{'etc'}/cookies.hystory") {
-#		do_log('err', "Unable to create $Conf{'etc'}/cookies.hystory") ;
+#	    unless (open COOK, ">$Conf{'etc'}/cookies.history") {
+#		do_log('err', "Unable to create $Conf{'etc'}/cookies.history") ;
 #		return undef ; 
 #	    }
 #	    printf COOK "%s",join(" ",@cookies) ;
@@ -696,7 +696,7 @@ sub cookie_changed {
 	return $changed ;
     }else{
 	unless (open COOK, ">$Conf{'etc'}/cookies.history") {
-	    do_log('err', "Unable to create $Conf{'etc'}/cookies.hystory") ;
+	    do_log('err', "Unable to create $Conf{'etc'}/cookies.history") ;
 	    return undef ; 
 	}
 	printf COOK "$current ";
