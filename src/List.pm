@@ -2045,59 +2045,64 @@ sub send_msg_digest {
 	push @topics, sprintf ' ' x (2 - length($i)) . "%d. %s", $i+1, $subject;
     }
     
-    my $msg = MIME::Entity->build (To         => $param->{'to'},
-				   From       => $param->{'from'},
-				   'Reply-to' => $param->{'reply'},
-				   Type       => 'multipart/mixed',
-				   Subject    => MIME::Words::encode_mimewords(sprintf(Msg(8, 9, "Digest of list %s"),$listname))
-				   );
-    
-    my $charset = sprintf Msg(12, 2, 'us-ascii');
-    my $table_of_content = MIME::Entity->build (Type        => "text/plain; charset=$charset",
-						Description => sprintf(Msg(8, 13, 'Table of content')),
-						Data        => \@topics
-						);
-    
-    $msg->add_part($table_of_content);
-    
-    my $digest = MIME::Entity->build (Type     => 'multipart/digest',
-				      Boundary => '__--__--'
-				      );
-    ## Digest messages
-    foreach $mail (@list_of_mail) {
-	$mail->tidy_body;
-	$mail->remove_sig;
+    ## Prepare Digest
+    if (@tabrcpt) {
+	my $msg = MIME::Entity->build (To         => $param->{'to'},
+				       From       => $param->{'from'},
+				       'Reply-to' => $param->{'reply'},
+				       Type       => 'multipart/mixed',
+				       Subject    => MIME::Words::encode_mimewords(sprintf(Msg(8, 9, "Digest of list %s"),$listname))
+				       );
 	
-	$digest->attach(Type     => 'message/rfc822',
+	my $charset = sprintf Msg(12, 2, 'us-ascii');
+	my $table_of_content = MIME::Entity->build (Type        => "text/plain; charset=$charset",
+						    Description => sprintf(Msg(8, 13, 'Table of content')),
+						    Data        => \@topics
+						    );
+	
+	$msg->add_part($table_of_content);
+	
+	my $digest = MIME::Entity->build (Type     => 'multipart/digest',
+					  Boundary => '__--__--'
+					  );
+	## Digest messages
+	foreach $mail (@list_of_mail) {
+	    $mail->tidy_body;
+	    $mail->remove_sig;
+	    
+	    $digest->attach(Type     => 'message/rfc822',
+			    Disposition => 'inline',
+			    Data        => $mail->as_string
+			    );
+	}
+	
+	my @now  = localtime(time);
+	my $footer = sprintf Msg(8, 14, "End of %s Digest"), $listname;
+	$footer .= sprintf " - %s\n", POSIX::strftime("%a %b %e %H:%M:%S %Y", @now);
+	
+	$digest->attach(Type        => 'text/plain',
 			Disposition => 'inline',
-			Data        => $mail->as_string
+			Data        => $footer
 			);
-    }
-    
-    my @now  = localtime(time);
-    my $footer = sprintf Msg(8, 14, "End of %s Digest"), $listname;
-    $footer .= sprintf " - %s\n", POSIX::strftime("%a %b %e %H:%M:%S %Y", @now);
-
-    $digest->attach(Type        => 'text/plain',
-		    Disposition => 'inline',
-		    Data        => $footer
-		    );
-    $msg->add_part($digest); 
-
-    ## Add a footer
-    my $new_msg = _add_parts($msg, $param->{'name'}, $self->{'admin'}{'footer_type'});
-    if (defined $new_msg) {
-	$msg = $new_msg;
+	$msg->add_part($digest); 
+	
+	## Add a footer
+	my $new_msg = _add_parts($msg, $param->{'name'}, $self->{'admin'}{'footer_type'});
+	if (defined $new_msg) {
+	    $msg = $new_msg;
+	}
+	
+	## Send digest
+	&smtp::mailto($msg, $param->{'return_path'}, 'none', '_ALTERED_', @tabrcpt );
     }
 
-    ## Send digest
-    &smtp::mailto($msg, $param->{'return_path'}, 'none', '_ALTERED_', @tabrcpt );
-
-    ## Prepare parameters for parsing
-    $param->{'subject'} = sprintf Msg(8, 31, 'Summary of list %s'), $self->{'name'};
-
-    $self->send_file('summary', \@tabrcptsummary, $robot, $param);
-
+    ## send summary
+    if (@tabrcptsummary) {
+	$param->{'subject'} = sprintf Msg(8, 31, 'Summary of list %s'), $self->{'name'};
+	
+	$self->send_file('summary', \@tabrcptsummary, $robot, $param);
+    }
+    return 1;
 }
 
 ## Send a global (not relative to a list) file to a user
@@ -2164,6 +2169,13 @@ sub send_file {
     my $sign_mode;
 
     my $data = $context;
+
+    ## Any recepients
+    if ((ref ($who) && ($#{$who} < 0)) ||
+	(!ref ($who) && ($who eq ''))) {
+	&do_log('debug', 'No recipient for sending %s', $action);
+	return undef;
+    }
 
     ## Unless multiple recepients
     unless (ref ($who)) {
