@@ -2099,6 +2099,33 @@ sub distribute_msg {
 	## xxxxxx Virer eventuelle signature S/MIME
     }
 
+    ## Add Custom Subject
+    if ($self->{'admin'}{'custom_subject'}) {
+	my $subject_field = &MIME::Words::decode_mimewords($message->{'msg'}->head->get('Subject'));
+	$subject_field =~ s/^\s*(.*)\s*$/$1/; ## Remove leading and trailing blanks
+
+	## Search previous subject tagging in Subject
+	my $tag_regexp = $self->{'admin'}{'custom_subject'};
+	$tag_regexp =~ s/([\[\]\*\-\(\)\+\{\}\?])/\\$1/g;  ## cleanup, just in case dangerous chars were left
+	$tag_regexp =~ s/\[\S+\]/\.\+/g;
+
+	## Add subject tag
+	$message->{'msg'}->head->delete('Subject');
+	my @parsed_tag;
+	&parser::parse_tpl({'list' => {'name' => $self->{'name'},
+			       'sequence' => $self->{'stats'}->[0]
+			       }},
+		   [$self->{'admin'}{'custom_subject'}], \@parsed_tag);
+
+	## If subject is tagged, replace it with new tag
+	if ($subject_field =~ /\[$tag_regexp\]/) {
+	    $subject_field =~ s/\[$tag_regexp\]/\[$parsed_tag[0]\]/;
+	}else {
+	    $subject_field = '['.$parsed_tag[0].'] '.$subject_field
+	}
+	$message->{'msg'}->head->add('Subject', $subject_field);
+    }
+
     ## Archives
     my $msgtostore = $message->{'msg'};
     if (($message->{'smime_crypted'} eq 'smime_crypted') &&
@@ -2218,33 +2245,6 @@ sub send_msg {
 	    $self->send_notify_to_owner({'type' => 'bounce_rate',
 					 'rate' => $rate});
 	}
-    }
-
-    ## Add Custom Subject
-    if ($admin->{'custom_subject'}) {
-	my $subject_field = &MIME::Words::decode_mimewords($message->{'msg'}->head->get('Subject'));
-	$subject_field =~ s/^\s*(.*)\s*$/$1/; ## Remove leading and trailing blanks
-
-	## Search previous subject tagging in Subject
-	my $tag_regexp = $admin->{'custom_subject'};
-	$tag_regexp =~ s/([\[\]\*\-\(\)\+\{\}\?])/\\$1/g;  ## cleanup, just in case dangerous chars were left
-	$tag_regexp =~ s/\[\S+\]/\.\+/g;
-
-	## Add subject tag
-	$message->{'msg'}->head->delete('Subject');
-	my @parsed_tag;
-	&parser::parse_tpl({'list' => {'name' => $self->{'name'},
-			       'sequence' => $self->{'stats'}->[0]
-			       }},
-		   [$admin->{'custom_subject'}], \@parsed_tag);
-
-	## If subject is tagged, replace it with new tag
-	if ($subject_field =~ /\[$tag_regexp\]/) {
-	    $subject_field =~ s/\[$tag_regexp\]/\[$parsed_tag[0]\]/;
-	}else {
-	    $subject_field = '['.$parsed_tag[0].'] '.$subject_field
-	}
-	$message->{'msg'}->head->add('Subject', $subject_field);
     }
  
     ## Who is the enveloppe sender ?
