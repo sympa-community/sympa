@@ -1,3 +1,156 @@
+2002-07-09 09:30  salaun
+
+	* src/tools.pl: [Thibaut Dabonneville] Fix AVP virus detection
+
+2002-07-08 16:07  salaun
+
+	* wwsympa/wwsympa.fcgi: do_suboptions() made include2-compatible
+
+2002-07-08 15:52  salaun
+
+	* src/Commands.pm: Supress old comments
+
+2002-07-08 15:47  salaun
+
+	* wwsympa/wwsympa.fcgi: do_add() and do_del() include2-compatible
+
+2002-07-08 15:21  salaun
+
+	* src/List.pm: Fix get_subscriber()
+
+2002-07-08 12:18  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/notice.fr.tpl,
+	wws_templates/us/notice.us.tpl: Add a warning about members update
+	delay
+
+2002-07-08 11:56  salaun
+
+	* src/task_manager.pl: Fix: better error management while executing
+	tasks
+
+2002-07-08 11:55  salaun
+
+	* src/List.pm: Allow 'nocache' for &_load_total_db()
+
+2002-07-08 11:18  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: missing ';' (recent changes)
+
+2002-07-08 11:05  salaun
+
+	* src/task_manager.pl: Change: use the task model to create a new
+	task, not a simple copy of previous task. This was required for
+	sync_include()
+
+2002-07-05 15:39  salaun
+
+	* src/: task_manager.pl,
+	etc/list_task_models/sync_include.ttl.task: New sync_include task
+
+2002-07-05 15:38  salaun
+
+	* src/tools.pl: Fix duration_conv()
+
+2002-07-05 14:39  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Robert Marchand] Fix: When
+	closing a list the subscribers.db.closed was not created (wrong
+	path)
+
+2002-07-04 15:27  salaun
+
+	* src/tools.pl: Extend date format to support seconds (needed for
+	ttl)
+
+2002-07-04 15:13  salaun
+
+	* src/List.pm: Fix previous changes: set 'subscribed' entry only if
+	user was found
+
+2002-07-04 14:33  salaun
+
+	* Makefile.am, Makefile.in: Fix previous change
+
+2002-07-04 11:32  salaun
+
+	* Makefile.am, Makefile.in, src/etc/sample/Makefile: [BugID
+	0000019] Fix: EXPLDIR (set by configure --with-expldir) was not
+	used at directory creation time
+
+2002-07-04 09:40  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Denis Creusot] Fix: missing
+	closedir() could leed to a 'too many open files' problem
+
+2002-07-04 09:36  salaun
+
+	* src/tools.pl: Fix: Typo (close instead of closedir)
+
+2002-07-04 09:35  salaun
+
+	* src/sympa.pl: Fix: missing closedir()
+
+2002-07-04 09:34  salaun
+
+	* src/List.pm: [reported by Denis Creusot] Fix: missing closedir()
+	could leed to a 'too many open files' problem
+
+2002-07-04 09:27  salaun
+
+	* src/sympa.pl: [reported by Robert Marchand] Fix: message
+	confirmations request was not sent in the proper language (robot
+	lang instead of list lang)
+
+2002-07-03 16:33  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/review.fr.tpl: Changes (related to cache
+	in DB):  No more User_table cleanup in delete_user() ; this should
+	be performed  by the task_manager     Now update_user() can have
+	'*' as first argument (will work on all subscribers)	    
+	Provide data sources (if 'include2' user_data_source) on REVIEW
+	page	Migration from 'database' to 'include2'
+
+2002-07-03 14:14  salaun
+
+	* src/Commands.pm, src/List.pm, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/list_menu.fr.tpl: New feature: first step
+	to make cache for 'include' lists in Database.	       New
+	sync_include() subroutine based on H. Wilelmi's work	    New
+	'include2' data_source	    New 'data_source_update' list conf
+	parameter    Add 'last_sync' to stats file   New database fields
+	'included_subscriber', 'subscribed_subscriber',
+	'include_sources_subscriber'	    Extend add_user(),
+	delete_user(), get_first_user(), get_next_user(), get_subscriber(),
+	update_user()	 to read/write these fields	 New
+	_load_users_include2(), _get_datasource_id(), search_datasource()
+	
+	Fix subroutine names store_susbscription_request(),
+	delete_susbscription_request(),
+
+2002-07-02 11:17  salaun
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	src/etc/scenari/add.owner, src/etc/scenari/send.public_nobcc,
+	src/etc/scenari/visibility.conceal,
+	src/etc/scenari/visibility.secret: [Olivier Gerard] Typographical
+	fixes
+
+2002-06-27 16:23  salaun
+
+	* nls/: et.msg, ro.msg: [Olivier LACROIX] Fix: NLS compilation
+	(with gencat) failed with HP-UX
+
+2002-06-26 14:28  salaun
+
+	* wwsympa/cookielib.pm: Change: no more print to STDERR
+
+2002-06-26 14:07  salaun
+
+	* .version, ChangeLog, NEWS, doc/sympa.pdf, doc/sympa.ps,
+	doc/sympa.tex: preparing 3.3.6b.1
+
 2002-06-26 09:40  salaun
 
 	* doc/sympa.tex.tpl, src/Conf.pm, src/List.pm, src/sympa.pl,
