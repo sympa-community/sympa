@@ -168,7 +168,7 @@ La sélection est trop large, impossible d'afficher la sélection
 	   [ENDIF]
 	 [ENDIF]
 	 [IF u->bounce]
-	  <TD NOWRAP><FONT SIZE=-1>
+	  <TD COLSPAN=2 NOWRAP><FONT SIZE=-1>
 	 
 	      [IF is_owner]
 		<A HREF="[path_cgi]/editsubscriber/[list]/[u->escaped_email]/review">[u->email]</A>
@@ -180,7 +180,7 @@ La sélection est trop large, impossible d'afficher la sélection
 	    </TD>
 
 	 [ELSE]
-	  <TD COLSPAN=2 NOWRAP><FONT SIZE=-1>
+	  <TD COLSPAN=3 NOWRAP><FONT SIZE=-1>
 	      [IF is_owner]
 		<A HREF="[path_cgi]/editsubscriber/[list]/[u->escaped_email]/review">[u->email]</A>
 	      [ELSE]
@@ -188,16 +188,6 @@ La sélection est trop large, impossible d'afficher la sélection
 	      [ENDIF]
 	  </FONT></TD>
 	 [ENDIF]
-
-	  <TD>
-	    <FONT SIZE=-1>
-	      [IF u->domain]
-	        [u->domain]
-	      [ELSE]
-	        &nbsp;
-	      [ENDIF]
-	    </FONT>
-	  </TD>
 
 	  <TD>
              <FONT SIZE=-1>
