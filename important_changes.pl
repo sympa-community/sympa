@@ -106,7 +106,7 @@ sub higher {
         }
 
         if ($tab1[0] eq $tab2[0]) {
-            printf "\t%s = %s\n",$tab1[0],$tab2[0];
+            #printf "\t%s = %s\n",$tab1[0],$tab2[0];
             shift @tab1;
             shift @tab2;
             next;
