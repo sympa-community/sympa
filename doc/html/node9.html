@@ -9,8 +9,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>8. Authentication</TITLE>
-<META NAME="description" CONTENT="8. Authentication">
+<TITLE>8. Sympa SOAP server</TITLE>
+<META NAME="description" CONTENT="8. Sympa SOAP server">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -29,32 +29,32 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html859"
+<A NAME="tex2html878"
   HREF="node10.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html853"
+<A NAME="tex2html872"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html847"
+<A NAME="tex2html866"
   HREF="node8.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html855"
+<A NAME="tex2html874"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html857"
-  HREF="node22.html">
+<A NAME="tex2html876"
+  HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html860"
-  HREF="node10.html">9. Authorization scenarios</A>
-<B> Up:</B> <A NAME="tex2html854"
+<B> Next:</B> <A NAME="tex2html879"
+  HREF="node10.html">9. Authentication</A>
+<B> Up:</B> <A NAME="tex2html873"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html848"
+<B> Previous:</B> <A NAME="tex2html867"
   HREF="node8.html">7. WWSympa, Sympa's web interface</A>
- &nbsp <B>  <A NAME="tex2html856"
+ &nbsp <B>  <A NAME="tex2html875"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html858"
-  HREF="node22.html">Index</A></B> 
+ &nbsp <B>  <A NAME="tex2html877"
+  HREF="node23.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -62,809 +62,563 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html861"
-  HREF="node9.html#SECTION00910000000000000000">8.1 S/MIME and HTTPS authentication</A>
-<LI><A NAME="tex2html862"
-  HREF="node9.html#SECTION00920000000000000000">8.2 Authentication with email address, uid or alternate email address</A>
-<LI><A NAME="tex2html863"
-  HREF="node9.html#SECTION00930000000000000000">8.3 Generis SSO authentication</A>
-<LI><A NAME="tex2html864"
-  HREF="node9.html#SECTION00940000000000000000">8.4 CAS-based authentication</A>
-<LI><A NAME="tex2html865"
-  HREF="node9.html#SECTION00950000000000000000">8.5 auth.conf</A>
-<UL>
-<LI><A NAME="tex2html866"
-  HREF="node9.html#SECTION00951000000000000000">8.5.1 user_table paragraph</A>
-<LI><A NAME="tex2html867"
-  HREF="node9.html#SECTION00952000000000000000">8.5.2 ldap paragraph</A>
-<LI><A NAME="tex2html868"
-  HREF="node9.html#SECTION00953000000000000000">8.5.3 generic_sso paragraph</A>
-<LI><A NAME="tex2html869"
-  HREF="node9.html#SECTION00954000000000000000">8.5.4 cas paragraph</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html870"
-  HREF="node9.html#SECTION00960000000000000000">8.6 Sharing <I>WWSympa</I> authentication with other applications</A>
+<LI><A NAME="tex2html880"
+  HREF="node9.html#SECTION00910000000000000000">8.1 Introduction</A>
+<LI><A NAME="tex2html881"
+  HREF="node9.html#SECTION00920000000000000000">8.2 Web server setup</A>
+<LI><A NAME="tex2html882"
+  HREF="node9.html#SECTION00930000000000000000">8.3 Sympa setup</A>
+<LI><A NAME="tex2html883"
+  HREF="node9.html#SECTION00940000000000000000">8.4 The WSDL service description</A>
+<LI><A NAME="tex2html884"
+  HREF="node9.html#SECTION00950000000000000000">8.5 Client-side programming</A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
 
 <H1><A NAME="SECTION00900000000000000000"></A>
-<A NAME="authn"></A>
+<A NAME="soap"></A>
 <BR>
-8. Authentication
+8. Sympa SOAP server
 </H1>
-
-<P>
-<I>Sympa</I> needs to authenticate users (subscribers, owners, moderators, listmaster) on both its
-mail and web interface to then apply appropriate privileges (authorization process) to subsequent 
-requested actions. <I>Sympa</I> is able to cope with multiple authentication means on the client side and 
-when using user+password it can validate these credentials against LDAP authentication backends.
-
-<P>
-When contacted on the mail interface <I>Sympa</I> has 3 authentication levels. Lower level is to trust
-the <A NAME="5878"></A><TT>From:</TT> SMTP header field. A higher level of authentication will require that the 
-user confirms his/her message. The strongest supported authentication method is S/MIME (note that <I>Sympa</I> 
-also deals with S/MIME encrypted messages).
-
-<P>
-On the <I>Sympa</I> web interface (<A NAME="5883"></A><I>WWSympa</I>) the user can authenticate in 4 different ways (if appropriate setup
-has been done on <I>Sympa</I> serveur). Default authentication mean is via the user's email address and a password 
-managed by <I>Sympa</I> itself. If an LDAP authentication backend (or multiple) has been defined, then the user 
-can authentication with his/her LDAP uid and password. <I>Sympa</I> is also able to delegate the authentication
-job to a web Single SignOn system ; currently <A NAME="tex2html28"
-  HREF="http://www.yale.edu/tp/auth/">CAS</A>
-(the Yale University system) or a generic SSO setup, adapted to SSO products providing an Apache module. 
-When contacted via HTTPS, <I>Sympa</I> can make use of X509 client certificates to authenticate users.
-
-<P>
-The authorization process in <I>Sympa</I> (authorization scenarios) refers to authentication methods. The 
-same authorization scenarios are used for both mail and web accesss ; therefore some authentication 
-methods are considered as equivalent : mail confirmation (on the mail interface) is equivalent to
-password authentication (on the web interface) ; S/MIME authentication is equivalent to HTTPS with
-client certificate authentication. Each rule in authorization scenarios requires an authentication method 
-(<A NAME="5891"></A><TT>smtp</TT>,<A NAME="5894"></A><TT>md5</TT> or <A NAME="5897"></A><TT>smime</TT>) ; if the required authentication method was 
-not used, a higher authentication mode can be requested.
 
 <P>
 
 <H1><A NAME="SECTION00910000000000000000">
-8.1 S/MIME and HTTPS authentication</A>
+8.1 Introduction</A>
 </H1>
 
 <P>
-Chapter <A HREF="node20.html#smime-sig">19.2</A> (page&nbsp;<A HREF="node20.html#smime-sig"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) deals with <I>Sympa</I> and S/MIME signature.
-<I>Sympa</I> uses <TT>OpenSSL</TT> library to work on S/MIME messages, you need to configure some
-related <I>Sympa</I> parameters : <A HREF="node20.html#smimeconf">19.4.2</A> (page&nbsp;<A HREF="node20.html#smimeconf"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+<A NAME="tex2html28"
+  HREF="http://www.w3.org/2002/ws/">SOAP</A>
+is one protocol (generally over HTTP) that 
+can be used to provide <B>web services</B>. Sympa SOAP server allows to access a Sympa service 
+from within another program, written in any programming language and on any computer. SOAP encapsulates 
+procedure calls, input parameters and resulting data in an XML data structure. The Sympa SOAP server's
+API is published in a <B>WSDL </B> document, retreived via Sympa's web interface.
 
 <P>
-<I>Sympa</I> HTTPS authentication is based on Apache+mod_SSL that provide the required authentication
-information via CGI environment variables. You will need to edit Apache configuration to 
-allow HTTPS access and require X509 client certificate. Here is a sample Apache configuration
+The SOAP server provides a limited set of high level functions including <TT>login</TT>, <TT>which</TT>,
+<TT>lists</TT>,<TT>subscribe</TT>,<TT>signoff</TT>. Other functions might be implemented in the future.
+
+<P>
+The SOAP server uses <A NAME="tex2html29"
+  HREF="http://www.soaplite.com/">SOAP::Lite</A>
+Perl library. The server 
+is running as a daemon (thanks to FastCGI), receiving the client SOAP requests via a web server (Apache 
+for example).
+
+<P>
+
+<H1><A NAME="SECTION00920000000000000000">
+8.2 Web server setup</A>
+</H1>
+
+<P>
+You <B>NEED TO</B> install FastCGI for the SOAP server to work properly because it will run as a daemon.
+
+<P>
+Here is a sample piece of your Apache <A NAME="5933"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
+	FastCgiServer /sympa_soap_server.pl -processes 1
+	ScriptAlias /sympasoap /sympa_soap_server.pl
+
+	&lt;Location /sympasoap&gt;
+   	  SetHandler fastcgi-script
+	&lt;/Location&gt;
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00930000000000000000">
+8.3 Sympa setup</A>
+</H1>
+
+<P>
+The only parameters that you need to set in <A NAME="5936"></A><TT>sympa.conf</TT>/<A NAME="5939"></A><TT>robot.conf</TT> files is
+the <A NAME="5942"></A><TT>soap_url</TT> parameter that defines the URL of the SOAP service corresponding
+to the ScriptAlias you've previously setup in Apache config. 
+
+<P>
+This parameter is used to publish the SOAP service URL in the WSDL file (defining the API) but
+also for the SOAP server to deduce what Virtual Robot is concerned by the current SOAP request 
+(a single SOAP server will serve all Sympa Virtual robots).
+
+<P>
+
+<H1><A NAME="SECTION00940000000000000000">
+8.4 The WSDL service description</A>
+</H1>
+
+<P>
+Here is what the WSDL file looks like before it is parsed by WWSympa :
 
 <P><PRE>
-SSLEngine on
-SSLVerifyClient optional
-SSLVerifyDepth  10
-...
-&lt;Location /wws&gt;
-   SSLOptions +StdEnvVars
-   SetHandler fastcgi-script
-&lt;/Location&gt;
-</PRE>
-
-<P>
-
-<H1><A NAME="SECTION00920000000000000000"></A>
-<A NAME="ldap-auth"></A>
-<BR>
-8.2 Authentication with email address, uid or alternate email address
-</H1>
-
-<P>
-<I>Sympa</I> stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of <A NAME="1290"></A> allows to use <I>Sympa</I> in an intranet without duplicating user passwords. 
-
-<P>
-This way users can indifferently authenticate with their ldap_uid, their alternate_email or their canonic email stored in the <A NAME="1291"></A> directory.
-
-<P>
-<I>Sympa</I> gets the canonic email in the <A NAME="1292"></A> directory with the ldap_uid or the alternate_email.  
-<I>Sympa</I> will first attempt an anonymous bind to the directory to get the user's DN, then <I>Sympa</I> will bind with the DN and the user's ldap_password in order to perform an efficient authentication. This last bind will work only if the good ldap_password is provided. Indeed the value returned by the bind(DN,ldap_password) is tested.
-
-<P>
-Example: a person is described by<PRE>
-                 Dn:cn=Fabrice Rafart,
-                 ou=Siege ,
-                 o=MaSociete ,
-                 c=FR Objectclass:
-                 person Cn: Fabrice Rafart
-                 Title: Network Responsible
-                 O: Siege
-                 Or: Data processing
-                 Telephonenumber: 01-00-00-00-00
-                 Facsimiletelephonenumber:01-00-00-00-00
-                 L:Paris
-                 Country: France
-
-		 uid: frafart
- 		 mail: Fabrice.Rafart@MaSociete.fr
-                 alternate_email: frafart@MaSociete.fr
-                 alternate:rafart@MaSociete.fr
-</PRE>
-
-<P>
-So Fabrice Rafart can be authenticated with: frafart, Fabrice.Rafart@MaSociete.fr, frafart@MaSociete.fr,Rafart@MaSociete.fr.
-After this operation, the address in the field FROM will be the Canonic email, in this case  Fabrice.Rafart@MaSociete.fr. 
-That means that <I>Sympa</I> will get this email and use it during all the session until you clearly ask <I>Sympa</I> to change your email address via the two pages : which and pref.
-
-<P>
-
-<H1><A NAME="SECTION00930000000000000000"></A>
-<A NAME="generic-sso"></A>
-<BR>
-8.3 Generis SSO authentication
-</H1>
-
-<P>
-The authentication method has first been introduced to allow interraction with <A NAME="tex2html29"
-  HREF="http://shibboleth.internet2.edu/">Shibboleth</A>, Internet2's inter-institutional authentication system. But it should be usable with any SSO system that provides an Apache authentication module being able to protect a specified URL on the site (not the whole site). Here is a sample httpd.conf that shib-protects the associated Sympa URL :<PRE>
-...
-&lt;Location /wws/sso_login/inqueue&gt;
-  AuthType shibboleth
-  require affiliation ~ ^member@.+$
-&lt;/Location&gt;
-...
-</PRE>
-
-<P>
-The SSO is also expected to provide user attributes including the user email address as environment variables. To make the SSO appear in the login menu, a textbf generic_sso paragraph describing the SSO service should be added to  <A NAME="5911"></A><TT>auth.conf</TT>. The format of this paragraph is described in the following section.
-
-<P>
-Apart from the user email address, the SSO can provide other user attributes that <I>Sympa</I> will store in the user_table DB table (for persistancy) and make them available in the [user_attributes] structure that you can use within authorization scenarios (see&nbsp;<A HREF="node10.html#rules">9.1</A>, page&nbsp;<A HREF="node10.html#rules"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-
-<P>
-
-<H1><A NAME="SECTION00940000000000000000"></A>
-<A NAME="cas"></A>
-<BR>
-8.4 CAS-based authentication
-</H1>
-
-<P>
-CAS is Yale university SSO software. Sympa can use CAS authentication service.
-
-<P>
-The listmaster should define at least one or more CAS servers (<B>cas</B> paragraph) in <A NAME="5915"></A><TT>auth.conf</TT>. If <B>non_blocking_redirection</B> parameter was set for a CAS server then Sympa will try a transparent login on this server
-when the user accesses the web interface. If one CAS server redirect the user to Sympa with a valid ticket Sympa receives a user ID from the CAS server. It then connects to the related LDAP directory to get the user email address. If no CAS server returns a valid user ID, Sympa will let the user either select a CAS server to login or perform a Sympa login.
-
-<P>
-
-<H1><A NAME="SECTION00950000000000000000"></A>
-<A NAME="auth-conf"></A>
-<BR>
-8.5 auth.conf
-</H1>
-
-<P>
-The <A NAME="5918"></A><TT>/home/sympa/etc/auth.conf</TT> configuration file contains numerous
-parameters which are read on start-up of <I>Sympa</I>. If you change this file, do not forget
-that you will need to restart wwsympa.fcgi afterwards. 
-
-<P>
-The <A NAME="5922"></A><TT>/home/sympa/etc/auth.conf</TT> is organised in paragraphs. Each paragraph describes an authentication 
-service with all required parameters to perform an authentication using this service. Current version of
-<I>Sympa</I> can perform authentication through LDAP directories, using an external Single Sign-On Service (like CAS 
-or Shibboleth), or using internal user_table.
-
-<P>
-The login page contains 2 forms : the login form and the SSO. When users hit the login form, each ldap or user_table authentication
-paragraph is applied unless email adress input from form match the <A NAME="5926"></A><TT>negative_regexp</TT> or do not match <A NAME="5929"></A><TT>regexp</TT>. 
- <A NAME="5932"></A><TT>negative_regexp</TT> and <A NAME="5935"></A><TT>regexp</TT> can be defined for earch ldap or user_table authentication service so
-administrator can block some authentication methode for class of users.
-
-<P>
-The segond form in login page contain the list of CAS server so user can choose explicitely his CAS service.
-
-<P>
-Each paragraph start with one of the keyword cas, ldap or user_table  
-
-<P>
-The <A NAME="5938"></A><TT>/home/sympa/etc/auth.conf</TT> file contains directives in the following format:
-
-<P>
-<P>
-<BLOCKQUOTE><I>paragraphs</I>
-<BR>    <I>keyword    value</I>
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE><I>paragraphs</I>
-<BR>    <I>keyword    value</I> 
-</BLOCKQUOTE>
-<P>
-
-<P>
-Comments start with the <TT>#</TT> character at the beginning of a line.
-
-<P>
-Empty lines are also considered as comments and are ignored at the beginning. After the first paragraph they are considered as paragraphs separators.
-There should only be one directive per line, but their order in the paragraph is of no importance.
-
-<P>
-Example :
-
-<P><PRE>
-#Configuration file auth.conf for the LDAP authentification
-#Description of parameters for each directory
+&lt;?xml version="1.0"?&gt;
+&lt;definitions name="Sympa" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	targetNamespace="[conf-&gt;wwsympa_url]/wsdl" 
+	xmlns:tns="[conf-&gt;wwsympa_url]/wsdl"
+	xmlns="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsdl="[conf-&gt;soap_url]/wsdl"&gt;
 
 
-cas
-	base_url			https://sso-cas.cru.fr
-	non_blocking_redirection        on
-	auth_service_name		cas-cru
-	ldap_host			ldap.cru.fr:389
-        ldap_get_email_by_uid_filter    (uid=[uid])
-	ldap_timeout			7
-	ldap_suffix			dc=cru,dc=fr
-	ldap_scope			sub
-	ldap_email_attribute		mail
+&lt;!-- types part --&gt;	
 
-## The URL corresponding to the service_id should be protected by the SSO (Shibboleth in the exampl)
-## The URL would look like http://yourhost.yourdomain/wws/sso_login/inqueue in the following example
-generic_sso
-        service_name       InQueue Federation
-        service_id         inqueue
-        http_header_prefix HTTP_SHIB
-        email_http_header  HTTP_SHIB_EP_AFFILIATION
 
-ldap
-	regexp				univ-rennes1\.fr
-	host				ldap.univ-rennes1.fr:389
-	timeout				30
-	suffix				dc=univ-rennes1,dc=fr
-	get_dn_by_uid_filter		(uid=[sender])
-	get_dn_by_email_filter		(|(mail=[sender])(mailalternateaddress=[sender]))
-	email_attribute			mail
-	alternative_email_attribute	mailalternateaddress,ur1mail
-	scope				sub
-	use_ssl                         1
-	ssl_version                     sslv3
-	ssl_ciphers                     MEDIUM:HIGH
-
-ldap
+&lt;types&gt;
+&lt;schema targetNamespace="[conf-&gt;wwsympa_url]/wsdl" 
+	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns="http://www.w3.org/2001/XMLSchema"&gt;
 	
-	host				ldap.univ-nancy2.fr:392,ldap1.univ-nancy2.fr:392,ldap2.univ-nancy2.fr:392
-	timeout				20
-	bind_dn                         cn=sympa,ou=people,dc=cru,dc=fr
-	bind_password                   sympaPASSWD
-	suffix				dc=univ-nancy2,dc=fr
-	get_dn_by_uid_filter		(uid=[sender])
-	get_dn_by_email_filter			(|(mail=[sender])(n2atraliasmail=[sender]))
-	alternative_email_attribute	n2atrmaildrop
-	email_attribute			mail
-	scope				sub
-        authentication_info_url         http://sso.univ-nancy2.fr/
+	&lt;complexType name="ArrayOfLists"&gt;
+		&lt;complexContent&gt;
+			&lt;restriction base="SOAP-ENC:Array"&gt;
+				&lt;attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="tns:listType[]"/&gt;
+			&lt;/restriction&gt;
+		&lt;/complexContent&gt;
+	&lt;/complexType&gt;
+
+	&lt;complexType name="ArrayOfString"&gt;
+		&lt;complexContent&gt;
+			&lt;restriction base="SOAP-ENC:Array"&gt;
+				&lt;attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="string[]"/&gt;
+			&lt;/restriction&gt;
+		&lt;/complexContent&gt;
+	&lt;/complexType&gt;
 	
+	&lt;complexType name="listType"&gt;
+           &lt;all&gt;
+		&lt;element name="listAddress" minOccurs="1" type="string"/&gt;
+		&lt;element name="homepage" minOccurs="0" type="string"/&gt;
+		&lt;element name="isSubscriber" minOccurs="0" type="boolean"/&gt;
+		&lt;element name="isOwner" minOccurs="0" type="boolean"/&gt;
+		&lt;element name="isEditor" minOccurs="0" type="boolean"/&gt;
+		&lt;element name="subject" minOccurs="0" type="string"/&gt;
+           &lt;/all&gt;
+	&lt;/complexType&gt;
+&lt;/schema&gt;
+&lt;/types&gt;
 
-user_table
-	negative_regexp 		((univ-rennes1)|(univ-nancy2))\.fr
+
+&lt;!-- message part --&gt;
+
+&lt;message name="infoRequest"&gt;
+        &lt;part name="listName" type="xsd:string"/&gt;
+&lt;/message&gt;
+
+&lt;message name="infoResponse"&gt;
+	&lt;part name="return" type="tns:listType"/&gt;
+&lt;/message&gt;
+
+&lt;message name="complexWhichRequest"&gt;
+&lt;/message&gt;
+
+&lt;message name="complexWhichResponse"&gt;
+	&lt;part name="return" type="tns:ArrayOfLists"/&gt;
+&lt;/message&gt;
+
+&lt;message name="whichRequest"&gt;
+&lt;/message&gt;
+
+&lt;message name="whichResponse"&gt;
+	&lt;part name="return" type="tns:ArrayOfString"/&gt;
+&lt;/message&gt;
+
+&lt;message name="amIRequest"&gt;
+	&lt;part name="list" type="xsd:string"/&gt;
+	&lt;part name="function" type="xsd:string"/&gt;
+	&lt;part name="user" type="xsd:string"/&gt;
+&lt;/message&gt;
+
+&lt;message name="amIResponse"&gt;
+	&lt;part name="return" type="xsd:boolean"/&gt;
+&lt;/message&gt;
+
+&lt;message name="reviewRequest"&gt;
+	&lt;part name="list" type="xsd:string"/&gt;
+&lt;/message&gt;
+
+&lt;message name="reviewResponse"&gt;
+	&lt;part name="return" type="tns:ArrayOfString"/&gt;
+&lt;/message&gt;
+
+&lt;message name="signoffRequest"&gt;
+	&lt;part name="list" type="xsd:string"/&gt;
+	&lt;part name="email" type="xsd:string" xsd:minOccurs="0"/&gt;	
+&lt;/message&gt;
+
+&lt;message name="signoffResponse"&gt;
+	&lt;part name="return" type="xsd:boolean"/&gt;
+&lt;/message&gt;
+
+&lt;message name="subscribeRequest"&gt;
+	&lt;part name="list" type="xsd:string"/&gt;
+	&lt;part name="gecos" type="xsd:string" xsd:minOccurs="0"/&gt;	
+&lt;/message&gt;
+
+&lt;message name="subscribeResponse"&gt;
+	&lt;part name="return" type="xsd:boolean"/&gt;
+&lt;/message&gt;
+
+&lt;message name="loginRequest"&gt;
+	&lt;part name="email" type="xsd:string"/&gt;
+	&lt;part name="password" type="xsd:string"/&gt;
+&lt;/message&gt;
+
+&lt;message name="loginResponse"&gt;
+	&lt;part name="return" type="xsd:string"/&gt;	
+&lt;/message&gt;
+
+&lt;message name="authenticateAndRunRequest"&gt;
+	&lt;part name="email" type="xsd:string"/&gt;
+	&lt;part name="cookie" type="xsd:string"/&gt;
+	&lt;part name="service" type="xsd:string"/&gt;
+	&lt;part name="parameters" type="tns:ArrayOfString" xsd:minOccurs="0"/&gt;
+&lt;/message&gt;
+
+&lt;message name="authenticateAndRunResponse"&gt;
+	&lt;part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/&gt;	
+&lt;/message&gt;
+
+&lt;message name="casLoginRequest"&gt;
+	&lt;part name="proxyTicket" type="xsd:string"/&gt;
+&lt;/message&gt;
+
+&lt;message name="casLoginResponse"&gt;
+	&lt;part name="return" type="xsd:string"/&gt;	
+&lt;/message&gt;
+
+&lt;message name="listsRequest"&gt;
+	&lt;part name="topic" type="xsd:string" xsd:minOccurs="0"/&gt;
+	&lt;part name="subtopic" type="xsd:string" xsd:minOccurs="0"/&gt;
+&lt;/message&gt;
+
+&lt;message name="listsResponse"&gt;
+	&lt;part name="listInfo" type="xsd:string"/&gt;	
+&lt;/message&gt;
+
+&lt;message name="complexListsRequest"&gt;
+&lt;/message&gt;
+
+&lt;message name="complexListsResponse"&gt;
+	&lt;part name="return" type="tns:ArrayOfLists"/&gt;
+&lt;/message&gt;
+
+&lt;message name="checkCookieRequest"&gt;
+&lt;/message&gt;
+
+&lt;message name="checkCookieResponse"&gt;
+	&lt;part name="email" type="xsd:string"/&gt;
+&lt;/message&gt;
+
+
+&lt;!-- portType part --&gt;
+
+&lt;portType name="SympaPort"&gt;
+	&lt;operation name="info"&gt;
+		&lt;input message="tns:infoRequest" /&gt;
+		&lt;output message="tns:infoResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="complexWhich"&gt;
+		&lt;input message="tns:complexWhichRequest" /&gt;
+		&lt;output message="tns:complexWhichResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="which"&gt;
+		&lt;input message="tns:whichRequest" /&gt;
+		&lt;output message="tns:whichResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="amI"&gt;
+		&lt;input message="tns:amIRequest" /&gt;
+		&lt;output message="tns:amIResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="review"&gt;
+		&lt;input message="tns:reviewRequest" /&gt;
+		&lt;output message="tns:reviewResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="subscribe"&gt;
+		&lt;input message="tns:subscribeRequest" /&gt;
+		&lt;output message="tns:subscribeResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="signoff"&gt;
+		&lt;input message="tns:signoffRequest" /&gt;
+		&lt;output message="tns:signoffResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="login"&gt;
+		&lt;input message="tns:loginRequest" /&gt;
+		&lt;output message="tns:loginResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="casLogin"&gt;
+		&lt;input message="tns:casLoginRequest" /&gt;
+		&lt;output message="tns:casLoginResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="authenticateAndRun"&gt;
+		&lt;input message="tns:authenticateAndRunRequest" /&gt;
+		&lt;output message="tns:authenticateAndRunResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="lists"&gt;
+		&lt;input message="tns:listsRequest" /&gt;
+		&lt;output message="tns:listsResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="complexLists"&gt;
+		&lt;input message="tns:complexListsRequest" /&gt;
+		&lt;output message="tns:complexListsResponse" /&gt;
+	&lt;/operation&gt;
+	&lt;operation name="checkCookie"&gt;
+		&lt;input message="tns:checkCookieRequest" /&gt;
+		&lt;output message="tns:checkCookieResponse" /&gt;
+	&lt;/operation&gt;
+&lt;/portType&gt;
+
+
+&lt;!-- Binding part --&gt;
+
+&lt;binding name="SOAP" type="tns:SympaPort"&gt;
+&lt;soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/&gt;
+	&lt;operation name="info"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#info"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="complexWhich"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#complexWhich"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="which"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#which"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="amI"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#amI"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="review"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#review"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="subscribe"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#subscribe"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="signoff"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#signoff"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="login"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#login"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="casLogin"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#casLogin"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="authenticateAndRun"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#authenticateAndRun"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="lists"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#lists"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="complexLists"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#complexLists"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+	&lt;operation name="checkCookie"&gt;
+		&lt;soap:operation soapAction="urn:sympasoap#checkCookie"/&gt;
+			&lt;input&gt;
+				&lt;soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/input&gt;
+			&lt;output&gt;
+				&lt;soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
+			&lt;/output&gt;
+	&lt;/operation&gt;
+&lt;/binding&gt;
+
+&lt;!-- service part --&gt;
+
+
+&lt;service name="SympaSOAP"&gt;
+	&lt;port name="SympaPort" binding="tns:SOAP"&gt;
+		&lt;soap:address location="[conf-&gt;soap_url]"/&gt;
+	&lt;/port&gt;
+&lt;/service&gt;
+
+&lt;/definitions&gt;
 </PRE>
 
 <P>
 
-<H2><A NAME="SECTION00951000000000000000">
-8.5.1 user_table paragraph</A>
-</H2>
-
-<P>
-The user_table paragraph is related to sympa internal authentication by email and password. It is the simplest one the only parameters
-are <A NAME="5941"></A><TT>regexp</TT> and <A NAME="5944"></A><TT>negative_regexp</TT> which are perl regexp use to select or block this authentication method for
-a class of email. 
-
-<P>
-
-<H2><A NAME="SECTION00952000000000000000">
-8.5.2 ldap paragraph</A>
-</H2>
-
-<P>
-
-<UL>
-<LI><A NAME="5947"></A><TT>regexp</TT> and <A NAME="5950"></A><TT>negative_regexp</TT>
-	Same as in user_table paragraph.
-
-<P>
-</LI>
-<LI>host
-<BR>
-<P>
-This keyword is <B>mandatory</B>. It is the domain name
-	used in order to bind to the directory and then to extract informations.
-	You must mention the port number after the server name.
-	Server replication is supported by listing several servers separated by commas.
-
-<P>
-Example :
-	<PRE>
-	host ldap.univ-rennes1.fr:389
-	host ldap0.university.com:389,ldap1.university.com:389,ldap2.university.com:389
-</PRE>
-
-<P>
-</LI>
-<LI>timeout
-<BR>
-<P>
-It corresponds to the timelimit in the Search fonction. A timelimit that restricts the maximum 
-	time (in seconds) allowed for a search. A value of 0 (the default), means that no timelimit
-        will be requested.
-
-<P>
-</LI>
-<LI>suffix
-<BR>
-<P>
-The root of the DIT (Directory Information Tree). The DN that is the base object entry relative 
-	to which the search is to be performed. 
-
-<P>
-Example: <TT>dc=university,dc=fr</TT>
-
-<P>
-</LI>
-<LI>bind_dn
-<BR>
-<P>
-If anonymous bind is not allowed on the LDAP server, a DN and password can be used.
-
-<P>
-</LI>
-<LI>bind_password
-<BR>
-<P>
-This password is used, combined with the bind_dn above.
-
-<P>
-</LI>
-<LI>get_dn_by_uid_filter
-<BR>
-<P>
-Defines the search filter corresponding to the ldap_uid. (RFC 2254 compliant).
-	If you want to apply the filter on the user, use the variable ' [sender] '. It will work with every
-	type of authentication (uid, alternate_email..). 
-
-<P>
-Example :
-	<PRE>
-	(Login = [sender])
-	(|(ID = [sender])(UID = [sender]))
-</PRE>
-
-<P>
-</LI>
-<LI>get_dn_by_email_filter
-<BR>
-<P>
-Defines the search filter corresponding to the email addresses (canonic and alternative).(RFC 2254 compliant). 
-	If you want to apply the filter on the user, use the variable ' [sender] '. It will work with every
-	type of authentication (uid, alternate_email..). 
-
-<P>
-Example: a person is described by
-
-<P><PRE>
-                 Dn:cn=Fabrice Rafart,
-                 ou=Siege ,
-                 o=MaSociete ,
-                 c=FR Objectclass:
-                 person Cn: Fabrice Rafart
-                 Title: Network Responsible
-                 O: Siege
-                 Or: Data processing
-                 Telephonenumber: 01-00-00-00-00
-                 Facsimiletelephonenumber:01-00-00-00-00
-                 L:Paris
-                 Country: France
-
-		 uid: frafart
- 		 mail: Fabrice.Rafart@MaSociete.fr
-                 alternate_email: frafart@MaSociete.fr
-                 alternate:rafart@MaSociete.fr
-</PRE>
-
-<P>
-The filters can be :
-
-<P><PRE>
-	
-	(mail = [sender])
-	(| (mail = [sender])(alternate_email = [sender]) )
-	(| (mail = [sender])(alternate_email = [sender])(alternate  = [sender]) )
-</PRE>
-
-<P>
-</LI>
-<LI>email_attribute
-<BR>
-<P>
-The name of the attribute for the canonic email in your directory : for instance mail, canonic_email, canonic_address ...
-	In the previous example the canonic email is 'mail'.
-
-<P>
-</LI>
-<LI>alternate_email_attribute
-<BR>
-<P>
-The name of the attribute for the alternate email in your directory : for instance alternate_email, mailalternateaddress, ...
-	You make a list of these attributes separated by commas.
-
-<P>
-With this list <I>Sympa</I> creates a cookie which contains various information : the user is authenticated via Ldap or not, his alternate email. To store the alternate email is interesting when you want to canonify your preferences and subscriptions. 
-	That is to say you want to use a unique address in User_table and Subscriber_table which is the canonic email.
-
-<P>
-</LI>
-<LI>scope
-<BR>
-<P>
-(Default value: <TT>sub</TT>)
-	By default the search is performed on the whole tree below the specified base object. This may be changed by 
-	specifying a scope :
-
-<P>
-
-<UL>
-<LI>base
-<BR>
-Search only the base object.
-
-<P>
-</LI>
-<LI>one
-<BR>
-Search the entries immediately below the base object. 
-
-<P>
-</LI>
-<LI>sub
-<BR>
-Search the whole tree below the base object. This is the default. 
-
-<P>
-</LI>
-</UL>
-
-<P>
-</LI>
-<LI>authentication_info_url
-<BR>
-<P>
-Defines the URL of a document describing LDAP password management. When hitting Sympa's 
-	<I>Send me a password</I> button, LDAP users will be redirected to this URL.
-
-<P>
-</LI>
-<LI>use_ssl
-
-<P>
-If set to <TT>1</TT>, connection to the LDAP server will use SSL (LDAPS).
-
-<P>
-</LI>
-<LI>ssl_version
-
-<P>
-This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="1380"></A> to <TT>sslv2/3</TT>, 
-	other possible values are <TT>sslv2</TT>, <TT>sslv3</TT>, and <TT>tlsv1</TT>.
-
-<P>
-</LI>
-<LI>ssl_ciphers
-
-<P>
-Specify which subset of cipher suites are permissible for this connection, using the standard 
-	OpenSSL string format. The default value of <A NAME="1386"></A> for ciphers is <TT>ALL</TT>, 
-	which permits all ciphers, even those that don't encrypt!
-
-<P>
-</LI>
-</UL>
-
-<P>
-
-<H2><A NAME="SECTION00953000000000000000">
-8.5.3 generic_sso paragraph</A>
-</H2>
-
-<P>
-
-<UL>
-<LI>service_name 
-<BR>
-This is the SSO service name that will be proposed to the user in the login banner menu.
-
-<P>
-</LI>
-<LI>service_id 
-<BR>
-This service ID is used as a parameter by sympa to refer to the SSO service (instead of the service name). 
-
-<P>
-A corresponding URL on the local web server should be protected by the SSO system ; this URL would look like textbf http://yourhost.yourdomain/wws/sso_login/inqueue if the service_id is <B>inqueue</B>.
-
-<P>
-</LI>
-<LI>http_header_prefix 
-<BR>
-Sympa gets user attributes from environment variables comming from the web server. These variables are then stored in the user_table DB table for later use in authorization scenarios (in  structure). Only environment variables starting with the defined prefix will kept.
-
-<P>
-</LI>
-<LI>email_http_header 
-<BR>
-This parameter defines the environment variable that will contain the authenticated user's email address.
-
-<P>
-</LI>
-</UL>
-
-<P>
-
-<H2><A NAME="SECTION00954000000000000000">
-8.5.4 cas paragraph</A>
-</H2>
-
-<P>
-
-<UL>
-<LI>auth_service_name
-<BR>
-The friendly user service name as shown by <I>Sympa</I> in the login page.
-
-<P>
-</LI>
-<LI>host (OBSOLETE) 
-<BR>
-This parameter has been replaced by <B>base_url</B> parameter
-
-<P>
-</LI>
-<LI>base_url 
-<BR>
-<P>
-The base URL of the CAS server.
-
-<P>
-</LI>
-<LI>non_blocking_redirection
-<BR>
-<P>
-This parameter concern only the first access to Sympa services by a user, it activate or not the non blocking
-redirection to the related cas server to check automatically if the user as been previously authenticated with  this CAS server.
-Possible values are <B>on</B>  <B>off</B>, default is  <B>on</B>. The redirection to CAS is use with
-the cgi parameter <B>gateway=1</B> that specify to CAS server to always redirect the user to the origine
-URL but just check if the user is logged. If active, the SSO service is effective and transparent, but in case
-the CAS server is out of order the access to Sympa services is impossible.
-
-<P>
-</LI>
-<LI>login_uri (OBSOLETE) 
-<BR>
-This parameter has been replaced by <B>login_path</B> parameter.
-
-<P>
-</LI>
-<LI>login_path (OPTIONAL)
-<BR>
-The login service path
-
-<P>
-</LI>
-<LI>check_uri (OBSOLETE) 
-<BR>
-This parameter has been replaced by <B>service_validate_path</B> parameter
-
-<P>
-</LI>
-<LI>service_validate_path (OPTIONAL)
-<BR>
-The ticket validation service path
-
-<P>
-</LI>
-<LI>logout_uri (OBSOLETE) 
-<BR>
-This parameter has been replaced by <B>logout_path</B> parameter
-
-<P>
-</LI>
-<LI>logout_path (OPTIONAL)
-<BR>
-The logout service path
-
-<P>
-</LI>
-<LI>proxy_path (OPTIONAL)
-<BR>
-The proxy service path, used by Sympa SOAP server only.
-
-<P>
-</LI>
-<LI>proxy_validate_path (OPTIONAL)
-<BR>
-The proxy validate service path, used by Sympa SOAP server only.
-
-<P>
-</LI>
-<LI>ldap_host
-<BR>
-The LDAP host Sympa will connect to fetch user email when user uid is return by CAS service. The ldap_host include the
-        port number and it may be a comma separated list of redondant host.   
-
-<P>
-</LI>
-<LI>ldap_bind_dn
-<BR>
-The DN used to bind to this server. Anonymous bind is used if this parameter is not defined.
-
-<P>
-</LI>
-<LI>ldap_bind_password
-<BR>
-The password used unless anonymous bind is used.
-
-<P>
-</LI>
-<LI>ldap_suffix
-<BR>
-The LDAP suffix use when seraching user email
-
-<P>
-</LI>
-<LI>ldap_scope
-<BR>
-The scope use when seraching user email, possible values are <TT>sub</TT>, <TT>base</TT>, and <TT>one</TT>.
-
-<P>
-</LI>
-<LI>ldap_get_email_by_uid_filter
-<BR>
-The filter to perform the email search.
-
-<P>
-</LI>
-<LI>ldap_email_attribute
-<BR>
-The attribut name to be use as user canonical email. In the current version of sympa only the first value returned by the LDAP server is used.
-
-<P>
-</LI>
-<LI>ldap_timeout
-<BR>
-The time out for the search.
-
-<P>
-</LI>
-<LI>ldap_use_ssl
-
-<P>
-If set to <TT>1</TT>, connection to the LDAP server will use SSL (LDAPS).
-
-<P>
-</LI>
-<LI>ldap_ssl_version
-
-<P>
-This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="1434"></A> to <TT>sslv2/3</TT>, 
-	other possible values are <TT>sslv2</TT>, <TT>sslv3</TT>, and <TT>tlsv1</TT>.
-
-<P>
-</LI>
-<LI>ldap_ssl_ciphers
-
-<P>
-Specify which subset of cipher suites are permissible for this connection, using the  
-	OpenSSL string format. The default value of <A NAME="1440"></A> for ciphers is <TT>ALL</TT>, 
-	which permits all ciphers, even those that don't encrypt!
-
-<P>
-</LI>
-</UL>
-
-<P>
-
-<H1><A NAME="SECTION00960000000000000000"></A><A NAME="5957"></A>
-<A NAME="sharing-auth"></A>
-<BR>
-8.6 Sharing <I>WWSympa</I> authentication with other applications
+<H1><A NAME="SECTION00950000000000000000">
+8.5 Client-side programming</A>
 </H1>
 
 <P>
-If your are not using a web Single SignOn system you might want to make other web applications collaborate with <I>Sympa</I>,
-and share the same authentication system. <I>Sympa</I> uses
-HTTP cookies to carry users' auth information from page to page.
-This cookie carries no information concerning privileges. To make your application
-work with <I>Sympa</I>, you have two possibilities :
+Sympa is distributed with 2 sample clients written in Perl and in PHP. Sympa SOAP server has also
+been successfully tested with a UPortal Chanel as a Java client (using Axis). The sample PHP SOAP
+client has been installed on our demo server :  <A NAME="tex2html30"
+  HREF="http://demo.sympa.org/sampleClient.php">http://demo.sympa.org/sampleClient.php</A>.
 
 <P>
-
-<UL>
-<LI>Delegating authentication operations to <A NAME="5963"></A><I>WWSympa</I> 
-<BR>
-If you want to avoid spending a lot of time programming a CGI to do Login, Logout
-and Remindpassword, you can copy <A NAME="5966"></A><I>WWSympa</I>'s login page to your 
-application, and then make use of the cookie information within your application. 
-The cookie format is :
-<PRE>
-sympauser=&lt;user_email&gt;:&lt;checksum&gt;
-</PRE>
-where <TT>&lt;</TT>user_email<TT>&gt;</TT> is the user's complete e-mail address, and
-<TT>&lt;</TT>checksum<TT>&gt;</TT> are the 8 first bytes of the a MD5 checksum of the <TT>&lt;</TT>user_email<TT>&gt;</TT>+<I>Sympa</I> <A NAME="5970"></A><TT>cookie</TT>
-configuration parameter.
-Your application needs to know what the <A NAME="5973"></A><TT>cookie</TT> parameter
-is, so it can check the HTTP cookie validity ; this is a secret shared
-between <A NAME="5976"></A><I>WWSympa</I> and your application.
-<A NAME="5979"></A><I>WWSympa</I>'s <I>loginrequest</I> page can be called to return to the
-referer URL when an action is performed. Here is a sample HTML anchor :
+Depending on your programming language and the SOAP library you're using, you will either directly 
+contact the SOAP service (as with Perl SOAP::Lite library) or first load the WSDL description of
+the service (as with PHP nusoap or Java Axis). Axis is able to create a stub from the WSDL document.
 
 <P>
-<PRE>
-&lt;A HREF="/wws/loginrequest/referer"&gt;Login page&lt;/A&gt;
-</PRE>
+The WSDL document describing the service should be fetch through WWSympa's dedicated URL :
+<B>http://your.server/wws/wsdl</B>.
 
 <P>
-You can also have your own HTML page submitting data to <A NAME="5982"></A><TT>wwsympa.fcgi</TT> CGI. If you're
-doing so, you can set the <TT>referer</TT> variable to another URI. You can also
-set the <TT>failure_referer</TT> to make WWSympa redirect the client to a different
-URI if login fails.
-
-<P>
-</LI>
-<LI>Using <A NAME="5985"></A><I>WWSympa</I>'s HTTP cookie format within your auth module 
-<BR>
-To cooperate with <A NAME="5988"></A><I>WWSympa</I>, you simply need to adopt its HTTP
-cookie format and share the secret it uses to generate MD5 checksums,
-i.e. the <A NAME="5991"></A><TT>cookie</TT> configuration parameter. In this way, <A NAME="5994"></A><I>WWSympa</I> 
-will accept users authenticated through your application without
-further authentication.
-
-<P>
-</LI>
-</UL>
+Note : the <B>login()</B> function maintains a login session using HTTP cookies. If you are not able
+to maintain this session by analysing and sending appropriate cookies under SOAP, then you
+should use the <B>authenticateAndRun()</B> function that does not require cookies to authenticate.
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html859"
+<A NAME="tex2html878"
   HREF="node10.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html853"
+<A NAME="tex2html872"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html847"
+<A NAME="tex2html866"
   HREF="node8.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html855"
+<A NAME="tex2html874"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html857"
-  HREF="node22.html">
+<A NAME="tex2html876"
+  HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html860"
-  HREF="node10.html">9. Authorization scenarios</A>
-<B> Up:</B> <A NAME="tex2html854"
+<B> Next:</B> <A NAME="tex2html879"
+  HREF="node10.html">9. Authentication</A>
+<B> Up:</B> <A NAME="tex2html873"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html848"
+<B> Previous:</B> <A NAME="tex2html867"
   HREF="node8.html">7. WWSympa, Sympa's web interface</A>
- &nbsp <B>  <A NAME="tex2html856"
+ &nbsp <B>  <A NAME="tex2html875"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html858"
-  HREF="node22.html">Index</A></B> 
+ &nbsp <B>  <A NAME="tex2html877"
+  HREF="node23.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-12-02
+2003-12-22
 </ADDRESS>
 </BODY>
 </HTML>

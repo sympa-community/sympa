@@ -40,6 +40,7 @@ close VERSION;
 
 ## Init struct
 my %data = ('escaped_start' => '[STARTPARSE]',
+	    'escaped_stop' => '[STOPPARSE]',
 	    'date' => &POSIX::strftime("%d %B %Y", localtime((stat($in_file))[9])),
 	    'version' => $version
 	    );

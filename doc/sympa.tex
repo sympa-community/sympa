@@ -2,7 +2,7 @@
 % Copyright (C) 1999, 2000, 2001 Comité Réseau des Universités & Serge Aumont, Olivier Salaün
 %
 % Historique
-%   1999/04/12 : pda@prism.uvsq.fr : conversion to latex2e
+%   1999/04/12 : pda .AT. prism.uvsq.fr : conversion to latex2e
 %
 
 \documentclass [twoside,a4paper] {report}
@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {27 November 2003}
+    \date {22 December 2003}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -638,6 +638,10 @@ a virtual robot or for the whole site.
 	The daemon which manages the tasks : creation, checking, execution. 
 	It regularly scans the \dir {task/} spool.
 
+	\item \file {sympa\_soap\_server.pl}\\
+	The server will process SOAP (web services) request. This server requires FastCGI ;
+	it should be referenced from within your HTTPS config.
+
 	\item \file {queue}\\
 	This small program gets the incoming messages from the aliases
 	and stores them in \dir {msg/} spool.
@@ -859,8 +863,12 @@ it will find one for you.
 \subsection {Required CPAN modules}
 
 The following CPAN modules required by \Sympa are not included in the standard
-PERL distribution. We try to keep this list up to date ; if you have any doubts
-run the \unixcmd {check\_perl\_modules.pl} script.
+PERL distribution. At \unixcmd {make} time, Sympa will prompt you for missing
+Perl modules and will attempt to install the missing ones automatically ; this 
+operation requires root privileges.
+
+Because Sympa features evolve from one relaease to another, the following list 
+of modules might not be up to date :
 
 \begin {itemize}
    \item \perlmodule {DB\_File} (v. 1.50 or later)
@@ -1122,11 +1130,14 @@ using  \file {testlogs.pl}.
 The \unixcmd {make install} step should have installed a sysV init script in
 your \dir {/etc/rc.d/init.d/} directory (you can change this at \unixcmd {configure}
 time with the \option {--with-initdir} option). You should edit your runlevels to make
-sure \Sympa starts after \index{Apache} and \index{MySQL}. Note that \index{MySQL} should
+sure \Sympa starts after Apache and MySQL. Note that \index{MySQL} should
 also start before \index{Apache} because of \file {wwsympa.fcgi}.
 
 \section {sympa.pl}
 \label{sympa.pl}
+
+\file {sympa.pl} is the main daemon ; it processes mail commands and is in charge of
+messages distribution.
 
 \file {sympa.pl} recognizes the following command line arguments:
 
@@ -1477,6 +1488,12 @@ is still recognized but should not be used anymore.
 	This is the root URL of \WWSympa.
 
         \example {wwsympa\_url https://my.server/wws}
+
+\subsection {\cfkeyword {soap\_url}}  
+
+	This is the root URL of Sympa's SOAP server. Sympa's WSDL document refer to this URL in its \texttt {service} section.
+
+        \example {wwsympa\_url http://my.server/sympasoap}
 
 \subsection {\cfkeyword {spam\_protection}}  
 
@@ -2724,7 +2741,7 @@ others. Depending on permissions, the same URL may generate a different view.
 	\item Parse the HTML template files
 \end {enumerate}
 
-\section {HTTPD setup}
+\section {Web server setup}
 
 \subsection {wwsympa.fcgi access permissions}
  
@@ -2963,12 +2980,13 @@ main archive.
 \begin{verbatim}
      web_archive
      access public|private|owner|listmaster|closed
+     quota 10000
 \end{verbatim}
 \end {quote}
 
      If web\_archive is defined for a list, every message distributed by this list is copied
      to \dir {/home/sympa/spool/outgoing/}. (No need to create nonexistent subscribers to receive
-     copies of messages)
+     copies of messages). In this example disk quota for the archive is limited to 10 Mo.
 
 \item start \file {archived.pl}.
 \Sympa and Apache
@@ -3012,6 +3030,489 @@ RC4 encryption controlled with the \cfkeyword {cookie} parameter,
 since \WWSympa might need to remind users of their passwords. 
 The security of \WWSympa rests on the security of your database. 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sympa SOAP Server
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Sympa SOAP server}
+\label {soap}
+
+\section {Introduction}
+
+\htmladdnormallink {SOAP} {http://www.w3.org/2002/ws/} is one protocol (generally over HTTP) that 
+can be used to provide \textbf {web services}. Sympa SOAP server allows to access a Sympa service 
+from within another program, written in any programming language and on any computer. SOAP encapsulates 
+procedure calls, input parameters and resulting data in an XML data structure. The Sympa SOAP server's
+API is published in a \textbf {WSDL } document, retreived via Sympa's web interface.
+
+The SOAP server provides a limited set of high level functions including \texttt{login}, \texttt{which},
+\texttt{lists},\texttt{subscribe},\texttt{signoff}. Other functions might be implemented in the future.
+
+The SOAP server uses \htmladdnormallink {SOAP::Lite} {http://www.soaplite.com/} Perl library. The server 
+is running as a daemon (thanks to FastCGI), receiving the client SOAP requests via a web server (Apache 
+for example).
+
+\section {Web server setup}
+
+You \textbf {NEED TO} install FastCGI for the SOAP server to work properly because it will run as a daemon.
+
+Here is a sample piece of your Apache \file {httpd.conf} with a SOAP server configured :
+\begin {quote}
+\begin{verbatim}
+	FastCgiServer /sympa_soap_server.pl -processes 1
+	ScriptAlias /sympasoap /sympa_soap_server.pl
+
+	<Location /sympasoap>
+   	  SetHandler fastcgi-script
+	</Location>
+
+\end{verbatim}
+\end {quote}
+
+\section {Sympa setup}
+
+The only parameters that you need to set in \file {sympa.conf}/\file {robot.conf} files is
+the \cfkeyword {soap\_url} parameter that defines the URL of the SOAP service corresponding
+to the ScriptAlias you've previously setup in Apache config. 
+
+This parameter is used to publish the SOAP service URL in the WSDL file (defining the API) but
+also for the SOAP server to deduce what Virtual Robot is concerned by the current SOAP request 
+(a single SOAP server will serve all Sympa Virtual robots).
+
+\section {The WSDL service description}
+
+Here is what the WSDL file looks like before it is parsed by WWSympa :
+
+\begin {quote}
+\begin{verbatim}
+<?xml version="1.0"?>
+<definitions name="Sympa" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	targetNamespace="[conf->wwsympa_url]/wsdl" 
+	xmlns:tns="[conf->wwsympa_url]/wsdl"
+	xmlns="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsdl="[conf->soap_url]/wsdl">
+
+
+<!-- types part -->	
+
+
+<types>
+<schema targetNamespace="[conf->wwsympa_url]/wsdl" 
+	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns="http://www.w3.org/2001/XMLSchema">
+	
+	<complexType name="ArrayOfLists">
+		<complexContent>
+			<restriction base="SOAP-ENC:Array">
+				<attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="tns:listType[]"/>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ArrayOfString">
+		<complexContent>
+			<restriction base="SOAP-ENC:Array">
+				<attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="string[]"/>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="listType">
+           <all>
+		<element name="listAddress" minOccurs="1" type="string"/>
+		<element name="homepage" minOccurs="0" type="string"/>
+		<element name="isSubscriber" minOccurs="0" type="boolean"/>
+		<element name="isOwner" minOccurs="0" type="boolean"/>
+		<element name="isEditor" minOccurs="0" type="boolean"/>
+		<element name="subject" minOccurs="0" type="string"/>
+           </all>
+	</complexType>
+</schema>
+</types>
+
+
+<!-- message part -->
+
+<message name="infoRequest">
+        <part name="listName" type="xsd:string"/>
+</message>
+
+<message name="infoResponse">
+	<part name="return" type="tns:listType"/>
+</message>
+
+<message name="complexWhichRequest">
+</message>
+
+<message name="complexWhichResponse">
+	<part name="return" type="tns:ArrayOfLists"/>
+</message>
+
+<message name="whichRequest">
+</message>
+
+<message name="whichResponse">
+	<part name="return" type="tns:ArrayOfString"/>
+</message>
+
+<message name="amIRequest">
+	<part name="list" type="xsd:string"/>
+	<part name="function" type="xsd:string"/>
+	<part name="user" type="xsd:string"/>
+</message>
+
+<message name="amIResponse">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
+<message name="reviewRequest">
+	<part name="list" type="xsd:string"/>
+</message>
+
+<message name="reviewResponse">
+	<part name="return" type="tns:ArrayOfString"/>
+</message>
+
+<message name="signoffRequest">
+	<part name="list" type="xsd:string"/>
+	<part name="email" type="xsd:string" xsd:minOccurs="0"/>	
+</message>
+
+<message name="signoffResponse">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
+<message name="subscribeRequest">
+	<part name="list" type="xsd:string"/>
+	<part name="gecos" type="xsd:string" xsd:minOccurs="0"/>	
+</message>
+
+<message name="subscribeResponse">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
+<message name="loginRequest">
+	<part name="email" type="xsd:string"/>
+	<part name="password" type="xsd:string"/>
+</message>
+
+<message name="loginResponse">
+	<part name="return" type="xsd:string"/>	
+</message>
+
+<message name="authenticateAndRunRequest">
+	<part name="email" type="xsd:string"/>
+	<part name="cookie" type="xsd:string"/>
+	<part name="service" type="xsd:string"/>
+	<part name="parameters" type="tns:ArrayOfString" xsd:minOccurs="0"/>
+</message>
+
+<message name="authenticateAndRunResponse">
+	<part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/>	
+</message>
+
+<message name="casLoginRequest">
+	<part name="proxyTicket" type="xsd:string"/>
+</message>
+
+<message name="casLoginResponse">
+	<part name="return" type="xsd:string"/>	
+</message>
+
+<message name="listsRequest">
+	<part name="topic" type="xsd:string" xsd:minOccurs="0"/>
+	<part name="subtopic" type="xsd:string" xsd:minOccurs="0"/>
+</message>
+
+<message name="listsResponse">
+	<part name="listInfo" type="xsd:string"/>	
+</message>
+
+<message name="complexListsRequest">
+</message>
+
+<message name="complexListsResponse">
+	<part name="return" type="tns:ArrayOfLists"/>
+</message>
+
+<message name="checkCookieRequest">
+</message>
+
+<message name="checkCookieResponse">
+	<part name="email" type="xsd:string"/>
+</message>
+
+
+<!-- portType part -->
+
+<portType name="SympaPort">
+	<operation name="info">
+		<input message="tns:infoRequest" />
+		<output message="tns:infoResponse" />
+	</operation>
+	<operation name="complexWhich">
+		<input message="tns:complexWhichRequest" />
+		<output message="tns:complexWhichResponse" />
+	</operation>
+	<operation name="which">
+		<input message="tns:whichRequest" />
+		<output message="tns:whichResponse" />
+	</operation>
+	<operation name="amI">
+		<input message="tns:amIRequest" />
+		<output message="tns:amIResponse" />
+	</operation>
+	<operation name="review">
+		<input message="tns:reviewRequest" />
+		<output message="tns:reviewResponse" />
+	</operation>
+	<operation name="subscribe">
+		<input message="tns:subscribeRequest" />
+		<output message="tns:subscribeResponse" />
+	</operation>
+	<operation name="signoff">
+		<input message="tns:signoffRequest" />
+		<output message="tns:signoffResponse" />
+	</operation>
+	<operation name="login">
+		<input message="tns:loginRequest" />
+		<output message="tns:loginResponse" />
+	</operation>
+	<operation name="casLogin">
+		<input message="tns:casLoginRequest" />
+		<output message="tns:casLoginResponse" />
+	</operation>
+	<operation name="authenticateAndRun">
+		<input message="tns:authenticateAndRunRequest" />
+		<output message="tns:authenticateAndRunResponse" />
+	</operation>
+	<operation name="lists">
+		<input message="tns:listsRequest" />
+		<output message="tns:listsResponse" />
+	</operation>
+	<operation name="complexLists">
+		<input message="tns:complexListsRequest" />
+		<output message="tns:complexListsResponse" />
+	</operation>
+	<operation name="checkCookie">
+		<input message="tns:checkCookieRequest" />
+		<output message="tns:checkCookieResponse" />
+	</operation>
+</portType>
+
+
+<!-- Binding part -->
+
+<binding name="SOAP" type="tns:SympaPort">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+	<operation name="info">
+		<soap:operation soapAction="urn:sympasoap#info"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="complexWhich">
+		<soap:operation soapAction="urn:sympasoap#complexWhich"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="which">
+		<soap:operation soapAction="urn:sympasoap#which"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="amI">
+		<soap:operation soapAction="urn:sympasoap#amI"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="review">
+		<soap:operation soapAction="urn:sympasoap#review"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="subscribe">
+		<soap:operation soapAction="urn:sympasoap#subscribe"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="signoff">
+		<soap:operation soapAction="urn:sympasoap#signoff"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="login">
+		<soap:operation soapAction="urn:sympasoap#login"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="casLogin">
+		<soap:operation soapAction="urn:sympasoap#casLogin"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="authenticateAndRun">
+		<soap:operation soapAction="urn:sympasoap#authenticateAndRun"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="lists">
+		<soap:operation soapAction="urn:sympasoap#lists"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="complexLists">
+		<soap:operation soapAction="urn:sympasoap#complexLists"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="checkCookie">
+		<soap:operation soapAction="urn:sympasoap#checkCookie"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+</binding>
+
+<!-- service part -->
+
+
+<service name="SympaSOAP">
+	<port name="SympaPort" binding="tns:SOAP">
+		<soap:address location="[conf->soap_url]"/>
+	</port>
+</service>
+
+</definitions>
+
+
+
+\end{verbatim}
+\end {quote}
+
+\section {Client-side programming}
+
+Sympa is distributed with 2 sample clients written in Perl and in PHP. Sympa SOAP server has also
+been successfully tested with a UPortal Chanel as a Java client (using Axis). The sample PHP SOAP
+client has been installed on our demo server :  \htmladdnormallink {http://demo.sympa.org/sampleClient.php} {http://demo.sympa.org/sampleClient.php}.
+
+Depending on your programming language and the SOAP library you're using, you will either directly 
+contact the SOAP service (as with Perl SOAP::Lite library) or first load the WSDL description of
+the service (as with PHP nusoap or Java Axis). Axis is able to create a stub from the WSDL document.
+
+The WSDL document describing the service should be fetch through WWSympa's dedicated URL :
+\textbf {http://your.server/wws/wsdl}.
+
+Note : the \textbf {login()} function maintains a login session using HTTP cookies. If you are not able
+to maintain this session by analysing and sending appropriate cookies under SOAP, then you
+should use the \textbf {authenticateAndRun()} function that does not require cookies to authenticate.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Authentication
@@ -6428,9 +6929,21 @@ parameter are pointers to \emph {scenarios}.
 	\end {htmlonly}\\
 	Moderated, restricted to subscribers
 
+     \item \lparam {send} \texttt {p} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.p})
+	\end {htmlonly}\\
+	Moderated, restricted to subscribers
+
      \item \lparam {send} \texttt {privateandnomultipartoreditorkey} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.privateandnomultipartoreditorkey})
+	\end {htmlonly}\\
+	Moderated, for non subscribers sending multipart messages
+
+     \item \lparam {send} \texttt {p} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.p})
 	\end {htmlonly}\\
 	Moderated, for non subscribers sending multipart messages
 
@@ -7142,7 +7655,7 @@ parameter to control who can browse the web archive.
 \begin{verbatim}
 web_archive
 access private
-quota 1000
+quota 10000
 \end{verbatim}
 \end {quote}
 

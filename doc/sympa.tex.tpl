@@ -642,6 +642,10 @@ a virtual robot or for the whole site.
 	The daemon which manages the tasks : creation, checking, execution. 
 	It regularly scans the \dir {task/} spool.
 
+	\item \file {sympa\_soap\_server.pl}\\
+	The server will process SOAP (web services) request. This server requires FastCGI ;
+	it should be referenced from within your HTTPS config.
+
 	\item \file {queue}\\
 	This small program gets the incoming messages from the aliases
 	and stores them in \dir {msg/} spool.
@@ -863,8 +867,12 @@ it will find one for you.
 \subsection {Required CPAN modules}
 
 The following CPAN modules required by \Sympa are not included in the standard
-PERL distribution. We try to keep this list up to date ; if you have any doubts
-run the \unixcmd {check\_perl\_modules.pl} script.
+PERL distribution. At \unixcmd {make} time, Sympa will prompt you for missing
+Perl modules and will attempt to install the missing ones automatically ; this 
+operation requires root privileges.
+
+Because Sympa features evolve from one relaease to another, the following list 
+of modules might not be up to date :
 
 \begin {itemize}
    \item \perlmodule {DB\_File} (v. 1.50 or later)
@@ -1126,11 +1134,14 @@ using  \file {testlogs.pl}.
 The \unixcmd {make install} step should have installed a sysV init script in
 your \dir {/etc/rc.d/init.d/} directory (you can change this at \unixcmd {configure}
 time with the \option {--with-initdir} option). You should edit your runlevels to make
-sure \Sympa starts after \index{Apache} and \index{MySQL}. Note that \index{MySQL} should
+sure \Sympa starts after Apache and MySQL. Note that \index{MySQL} should
 also start before \index{Apache} because of \file {wwsympa.fcgi}.
 
 \section {sympa.pl}
 \label{sympa.pl}
+
+\file {sympa.pl} is the main daemon ; it processes mail commands and is in charge of
+messages distribution.
 
 \file {sympa.pl} recognizes the following command line arguments:
 
@@ -1481,6 +1492,12 @@ is still recognized but should not be used anymore.
 	This is the root URL of \WWSympa.
 
         \example {wwsympa\_url https://my.server/wws}
+
+\subsection {\cfkeyword {soap\_url}}  
+
+	This is the root URL of Sympa's SOAP server. Sympa's WSDL document refer to this URL in its \texttt {service} section.
+
+        \example {wwsympa\_url http://my.server/sympasoap}
 
 \subsection {\cfkeyword {spam\_protection}}  
 
@@ -2555,7 +2572,7 @@ others. Depending on permissions, the same URL may generate a different view.
 	\item Parse the HTML template files
 \end {enumerate}
 
-\section {HTTPD setup}
+\section {Web server setup}
 
 \subsection {wwsympa.fcgi access permissions}
  
@@ -2846,6 +2863,83 @@ RC4 encryption controlled with the \cfkeyword {cookie} parameter,
 since \WWSympa might need to remind users of their passwords. 
 The security of \WWSympa rests on the security of your database. 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sympa SOAP Server
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Sympa SOAP server}
+\label {soap}
+
+\section {Introduction}
+
+\htmladdnormallink {SOAP} {http://www.w3.org/2002/ws/} is one protocol (generally over HTTP) that 
+can be used to provide \textbf {web services}. Sympa SOAP server allows to access a Sympa service 
+from within another program, written in any programming language and on any computer. SOAP encapsulates 
+procedure calls, input parameters and resulting data in an XML data structure. The Sympa SOAP server's
+API is published in a \textbf {WSDL } document, retreived via Sympa's web interface.
+
+The SOAP server provides a limited set of high level functions including \texttt{login}, \texttt{which},
+\texttt{lists},\texttt{subscribe},\texttt{signoff}. Other functions might be implemented in the future.
+
+The SOAP server uses \htmladdnormallink {SOAP::Lite} {http://www.soaplite.com/} Perl library. The server 
+is running as a daemon (thanks to FastCGI), receiving the client SOAP requests via a web server (Apache 
+for example).
+
+\section {Web server setup}
+
+You \textbf {NEED TO} install FastCGI for the SOAP server to work properly because it will run as a daemon.
+
+Here is a sample piece of your Apache \file {httpd.conf} with a SOAP server configured :
+\begin {quote}
+\begin{verbatim}
+	FastCgiServer [CGIDIR]/sympa_soap_server.pl -processes 1
+	ScriptAlias /sympasoap [CGIDIR]/sympa_soap_server.pl
+
+	<Location /sympasoap>
+   	  SetHandler fastcgi-script
+	</Location>
+
+\end{verbatim}
+\end {quote}
+
+\section {Sympa setup}
+
+The only parameters that you need to set in \file {sympa.conf}/\file {robot.conf} files is
+the \cfkeyword {soap\_url} parameter that defines the URL of the SOAP service corresponding
+to the ScriptAlias you've previously setup in Apache config. 
+
+This parameter is used to publish the SOAP service URL in the WSDL file (defining the API) but
+also for the SOAP server to deduce what Virtual Robot is concerned by the current SOAP request 
+(a single SOAP server will serve all Sympa Virtual robots).
+
+\section {The WSDL service description}
+
+Here is what the WSDL file looks like before it is parsed by WWSympa :
+
+\begin {quote}
+\begin{verbatim}
+[INCLUDE '../soap/sympa.wsdl']
+\end{verbatim}
+\end {quote}
+
+\section {Client-side programming}
+
+Sympa is distributed with 2 sample clients written in Perl and in PHP. Sympa SOAP server has also
+been successfully tested with a UPortal Chanel as a Java client (using Axis). The sample PHP SOAP
+client has been installed on our demo server :  \htmladdnormallink {http://demo.sympa.org/sampleClient.php} {http://demo.sympa.org/sampleClient.php}.
+
+Depending on your programming language and the SOAP library you're using, you will either directly 
+contact the SOAP service (as with Perl SOAP::Lite library) or first load the WSDL description of
+the service (as with PHP nusoap or Java Axis). Axis is able to create a stub from the WSDL document.
+
+The WSDL document describing the service should be fetch through WWSympa's dedicated URL :
+\textbf {http://your.server/wws/wsdl}.
+
+Note : the \textbf {login()} function maintains a login session using HTTP cookies. If you are not able
+to maintain this session by analysing and sending appropriate cookies under SOAP, then you
+should use the \textbf {authenticateAndRun()} function that does not require cookies to authenticate.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Authentication

@@ -9,8 +9,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>20. Using Sympa commands</TITLE>
-<META NAME="description" CONTENT="20. Using Sympa commands">
+<TITLE>20. Sympa with S/MIME and HTTPS</TITLE>
+<META NAME="description" CONTENT="20. Sympa with S/MIME and HTTPS">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -29,32 +29,32 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1178"
+<A NAME="tex2html1191"
   HREF="node22.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1172"
+<A NAME="tex2html1185"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1166"
+<A NAME="tex2html1179"
   HREF="node20.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1174"
+<A NAME="tex2html1187"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1176"
-  HREF="node22.html">
+<A NAME="tex2html1189"
+  HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1179"
-  HREF="node22.html">Index</A>
-<B> Up:</B> <A NAME="tex2html1173"
+<B> Next:</B> <A NAME="tex2html1192"
+  HREF="node22.html">21. Using Sympa commands</A>
+<B> Up:</B> <A NAME="tex2html1186"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1167"
-  HREF="node20.html">19. Sympa with S/MIME and HTTPS</A>
- &nbsp <B>  <A NAME="tex2html1175"
+<B> Previous:</B> <A NAME="tex2html1180"
+  HREF="node20.html">19. Using Sympa with LDAP</A>
+ &nbsp <B>  <A NAME="tex2html1188"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1177"
-  HREF="node22.html">Index</A></B> 
+ &nbsp <B>  <A NAME="tex2html1190"
+  HREF="node23.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -62,559 +62,390 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1180"
-  HREF="node21.html#SECTION002110000000000000000">20.1 User commands</A>
-<LI><A NAME="tex2html1181"
-  HREF="node21.html#SECTION002120000000000000000">20.2 Owner commands</A>
-<LI><A NAME="tex2html1182"
-  HREF="node21.html#SECTION002130000000000000000">20.3 Moderator commands</A>
+<LI><A NAME="tex2html1193"
+  HREF="node21.html#SECTION002110000000000000000">20.1 Signed message distribution</A>
+<LI><A NAME="tex2html1194"
+  HREF="node21.html#SECTION002120000000000000000">20.2 Use of S/MIME signature by Sympa itself</A>
+<LI><A NAME="tex2html1195"
+  HREF="node21.html#SECTION002130000000000000000">20.3 Use of S/MIME encryption</A>
+<LI><A NAME="tex2html1196"
+  HREF="node21.html#SECTION002140000000000000000">20.4 S/Sympa configuration</A>
+<UL>
+<LI><A NAME="tex2html1197"
+  HREF="node21.html#SECTION002141000000000000000">20.4.1 Installation</A>
+<LI><A NAME="tex2html1198"
+  HREF="node21.html#SECTION002142000000000000000">20.4.2 configuration in sympa.conf</A>
+<LI><A NAME="tex2html1199"
+  HREF="node21.html#SECTION002143000000000000000">20.4.3 configuration to recognize S/MIME signatures</A>
+<LI><A NAME="tex2html1200"
+  HREF="node21.html#SECTION002144000000000000000">20.4.4 distributing encrypted messages</A>
 </UL>
+<BR>
+<LI><A NAME="tex2html1201"
+  HREF="node21.html#SECTION002150000000000000000">20.5 Managing certificates with tasks</A>
+<UL>
+<LI><A NAME="tex2html1202"
+  HREF="node21.html#SECTION002151000000000000000">20.5.1 chk_cert_expiration.daily.task model</A>
+<LI><A NAME="tex2html1203"
+  HREF="node21.html#SECTION002152000000000000000">20.5.2 crl_update.daily.task model</A>
+</UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
 
-<H1><A NAME="SECTION002100000000000000000">
-20. Using <I>Sympa</I> commands</A>
+<H1><A NAME="SECTION002100000000000000000"></A>
+    <A NAME="smime"></A>
+<BR>
+20. <I>Sympa</I> with S/MIME and HTTPS
 </H1>
 
 <P>
-Users interact with <I>Sympa</I>, of course, when they send messages to
-one of the lists, but also indirectly through administrative requests
-(subscription, list of users, etc.).
+S/MIME is a cryptographic method for Mime messages based on X509 certificates.
+Before installing <I>Sympa</I> S/Mime features (which we call S/Sympa), you should be
+under no illusion about what the S stands for : ``S/MIME'' means ``Secure MIME''.
+That S certainly does not stand for ``Simple''.
 
 <P>
-This section describes administrative requests, as well as interaction
-modes in the case of private and moderated lists.  Administrative
-requests are messages whose body contains commands understood by
-<I>Sympa</I>, one per line. These commands can be indiscriminately placed
-in the <A NAME="8145"></A><TT>Subject:</TT> or in the body of the message. The
-<A NAME="8148"></A><TT>To:</TT> address is generally the <TT>sympadomain</TT>
-alias, although it is also advisable to recognize the <TT>listservdomain</TT> address.
-
-<P>
-Example:
-
-<P><PRE>
-From: pda@prism.uvsq.fr
-To: sympa@cru.fr
-
-LISTS
-INFO sympa-users
-REVIEW sympa-users
-QUIT
-</PRE>
-
-<P>
-Most user commands have three-letter abbreviations (e.g. <TT>REV</TT> instead of <A NAME="8155"></A><TT>REVIEW</TT>).
+The aim of this chapter is simply to describe what security level is provided
+by <I>Sympa</I> while
+using S/MIME messages, and how to configure <I>Sympa</I> for it. It is not intended
+to teach anyone what S/Mime is and why it is so complex ! RFCs numbers 2311,
+2312, 2632, 2633 and 2634, along with a lot of literature about S/MIME, PKCS#7
+and PKI is available on the Internet. <I>Sympa</I> 2.7 is the first version of
+<I>Sympa</I> to include S/MIME features as beta-testing features.
 
 <P>
 
 <H1><A NAME="SECTION002110000000000000000">
-20.1 User commands</A>
+20.1 Signed message distribution</A>
 </H1>
 
 <P>
-
-<UL>
-<LI><A NAME="8158"></A><TT>HELP</TT>
-
-<P>
-Provides instructions for the use of <I>Sympa</I> commands.  The
-        result is the content of the <A NAME="8162"></A><TT>helpfile.tpl</TT> template
-        file. 
-
-<P>
-</LI>
-<LI><A NAME="8165"></A><TT>INFO</TT> <I>listname</I>
-
-<P>
-Provides the parameters of the specified list (owner,
-        subscription mode, etc.) and its description. The
-        result is the content of <A NAME="8168"></A><TT>~welcome[.mime]</TT>.
-
-<P>
-</LI>
-<LI><A NAME="8173"></A><TT>LISTS</TT>
-        <A NAME="cmd-lists"></A>
-<P>
-Provides the names of lists managed by <I>Sympa</I>.  This list
-        is generated dynamically, using the <A NAME="8177"></A><TT>visibility</TT>
-        (see <A HREF="node15.html#par-visibility">14.1.7</A>, page&nbsp;<A HREF="node15.html#par-visibility"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-	The <TT>lists.tpl</TT> template defines the message return
-	by the <A NAME="8180"></A><TT>LISTS</TT> command.
-
-<P>
-</LI>
-<LI><A NAME="8183"></A><TT>REVIEW</TT> <I>listname</I>
-        <A NAME="cmd-review"></A>
-<P>
-Provides the addresses of subscribers if the run mode authorizes it. 
-	See the <A NAME="8186"></A><TT>review</TT> parameter (<A HREF="node15.html#par-review">14.3.9</A>, page&nbsp;<A HREF="node15.html#par-review"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) for the configuration file of each list,
-        which controls consultation authorizations for the subscriber
-        list. Since subscriber addresses can be abused by spammers,
-        it is strongly recommended that you <B>only authorize owners
-        to access the subscriber list</B>.
-
-<P>
-</LI>
-<LI><A NAME="8189"></A><TT>WHICH</TT>
-         <A NAME="cmd-which"></A>
-<P>
-Returns the list of lists to which one is subscribed,
-        as well as the configuration of his or her subscription to
-        each of the lists (DIGEST, NOMAIL, SUMMARY, CONCEAL).
-
-<P>
-</LI>
-<LI><A NAME="8192"></A><TT>STATS</TT> <I>listname</I>
-        <A NAME="cmd-stats"></A>
-<P>
-Provides statistics for the specified list:
-        number of messages received, number of messages sent,
-        megabytes received, megabytes sent. This is the contents
-        of the <A NAME="8195"></A><TT>stats</TT> file.
-
-<P>
-Access to this command is controlled by the <A NAME="8198"></A><TT>review</TT> parameter.
-
-<P>
-</LI>
-<LI><A NAME="8201"></A><TT>INDEX</TT> <I>listname</I>
-        <A NAME="cmd-index"></A>
-<P>
-Provides index of archives for specified list. Access rights
-        to this function are the same as for the <A NAME="8204"></A><TT>GET</TT>
-        command. 
-
-<P>
-</LI>
-<LI><A NAME="8207"></A><TT>GET</TT> <I>listname</I> <I>archive</I>
-        <A NAME="cmd-get"></A>
-<P>
-To retrieve archives for list (see above).  Access
-        rights are the same as for the <A NAME="8210"></A><TT>REVIEW</TT> command.
-        See <A NAME="8213"></A><TT>review</TT> parameter (<A HREF="node15.html#par-review">14.3.9</A>,
-        page&nbsp;<A HREF="node15.html#par-review"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-
-<P>
-</LI>
-<LI><A NAME="8216"></A><TT>LAST</TT> <I>listname</I>
-        <A NAME="cmd-last"></A>
-<P>
-To receive the last message distributed in a list (see above).  Access
-        rights are the same as for the <A NAME="8219"></A><TT>GET</TT> command.
-
-<P>
-</LI>
-<LI><A NAME="8222"></A><TT>SUBSCRIBE</TT> <I>listname firstname name</I>
-        <A NAME="cmd-subscribe"></A>
-<P>
-Requests sign-up to the specified list. The <I>firstname</I> and <I>name</I> are optional. If the
-        list is parameterized with a restricted subscription (see
-        <A NAME="8225"></A><TT>subscribe</TT> parameter, <A HREF="node15.html#par-subscribe">14.3.1</A>,
-        page&nbsp;<A HREF="node15.html#par-subscribe"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), this command is sent to the
-        list owner for approval.
-
-<P>
-</LI>
-<LI><A NAME="8228"></A><TT>INVITE</TT> <I>listname user@host name</I>
-        <A NAME="cmd-invite"></A>
-<P>
-Invite someone to subscribe to the specified list. The 
-        <I>name</I> is optional. The command is similar to the
-        <A NAME="8231"></A><TT>ADD</TT> but the specified person is not added to the
-        list but invited to subscribe to it in accordance with the 
-        <A NAME="8234"></A><TT>subscribe</TT> parameter, <A HREF="node15.html#par-subscribe">14.3.1</A>,
-        page&nbsp;<A HREF="node15.html#par-subscribe"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-
-<P>
-</LI>
-<LI><A NAME="8237"></A><TT>SIGNOFF</TT> <I>listname</I> [ <I>user@host</I> ]
-        <A NAME="cmd-signoff"></A>
-<P>
-Requests unsubscription from the specified list.
-        <A NAME="8240"></A><TT>SIGNOFF *</TT> means unsubscription from all lists.
-
-<P>
-</LI>
-<LI><A NAME="8243"></A><TT>SET</TT> <I>listname</I> <TT>DIGEST</TT>
-        <A NAME="cmd-setdigest"></A>
-<P>
-Puts the subscriber in <I>digest</I> mode for the <I>listname</I> list.  Instead of receiving mail from the list
-        in a normal manner, the subscriber will periodically receive
-        it in a DIGEST. This DIGEST compiles a group of messages
-        from the list, using multipart/digest mime format.
-
-<P>
-The sending period for these DIGESTs is regulated by the
-        list owner using the <A NAME="8246"></A><TT>digest</TT> parameter (see&nbsp;<A HREF="node15.html#par-digest">14.4.7</A>, page&nbsp;<A HREF="node15.html#par-digest"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).  See the <A NAME="8249"></A><TT>SET&nbsp;LISTNAME&nbsp;MAIL</TT> command (<A HREF="node21.html#cmd-setmail">20.1</A>, page&nbsp;<A HREF="node21.html#cmd-setmail"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and the <A NAME="8252"></A><TT>reception</TT> parameter (<A HREF="node13.html#par-reception">12.4</A>, page&nbsp;<A HREF="node13.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-
-<P>
-</LI>
-<LI><A NAME="8255"></A><TT>SET</TT> <I>listname</I> <TT>SUMMARY</TT>
-        <A NAME="cmd-setsummary"></A>
-<P>
-Puts the subscriber in <I>summary</I> mode for the <I>listname</I> list.  Instead of receiving mail from the list
-        in a normal manner, the subscriber will periodically receive
-        the list of messages. This mode is very close to the DIGEST
-        reception mode but the subscriber receives only the list of messages.
-
-<P>
-This option is available only if the digest mode is set.
-
-<P>
-</LI>
-<LI><A NAME="8258"></A><TT>SET</TT> <I>listname</I> <TT>NOMAIL</TT>
-        <A NAME="cmd-setnomail"></A>
-<P>
-Puts subscriber in <I>nomail</I> mode for the <I>listname</I> list.  This mode is used when a subscriber no longer wishes
-        to receive mail from the list, but nevertheless wishes to retain
-        the possibility of posting to the list.
-        This mode therefore prevents the subscriber from unsubscribing
-        and subscribing later on.  See the <A NAME="8261"></A><TT>SET&nbsp;LISTNAME&nbsp;MAIL</TT>
-        command (<A HREF="node21.html#cmd-setmail">20.1</A>, page&nbsp;<A HREF="node21.html#cmd-setmail"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and
-        the <A NAME="8264"></A><TT>reception</TT> (<A HREF="node13.html#par-reception">12.4</A>, page&nbsp;<A HREF="node13.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
-
-<P>
-</LI>
-<LI><A NAME="8267"></A><TT>SET</TT> <I>listname</I> <TT>TXT</TT>
-        <A NAME="cmd-settxt"></A>
-<P>
-Puts subscriber in <I>txt</I> mode for the <I>listname</I> list.  This mode is used when a subscriber wishes
-        to receive mails sent in both format txt/html and txt/plain 
-        only in txt/plain format.
-        See the <A NAME="8270"></A><TT>reception</TT> (<A HREF="node13.html#par-reception">12.4</A>, page&nbsp;<A HREF="node13.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
-
-<P>
-</LI>
-<LI><A NAME="8273"></A><TT>SET</TT> <I>listname</I> <TT>HTML</TT>
-        <A NAME="cmd-sethtml"></A>
-<P>
-Puts subscriber in <I>html</I> mode for the <I>listname</I> list.  This mode is used when a subscriber wishes
-        to receive mails sent in both format txt/html and txt/plain 
-        only in txt/html format.
-        See the <A NAME="8276"></A><TT>reception</TT> (<A HREF="node13.html#par-reception">12.4</A>, page&nbsp;<A HREF="node13.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
-
-<P>
-</LI>
-<LI><A NAME="8279"></A><TT>SET</TT> <I>listname</I> <TT>URLIZE</TT>
-        <A NAME="cmd-seturlize"></A>
-<P>
-Puts subscriber in <I>urlize</I> mode for the <I>listname</I> list.  This mode is used when a subscriber wishes
-        not to receive attached files. The attached files are replaced by
-        an URL leading to the file stored on the list site. 
-
-<P>
-See the <A NAME="8282"></A><TT>reception</TT> (<A HREF="node13.html#par-reception">12.4</A>, page&nbsp;<A HREF="node13.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
-
-<P>
-</LI>
-<LI><A NAME="8285"></A><TT>SET</TT> <I>listname</I> <TT>NOT_ME</TT>
-        <A NAME="cmd-not-me"></A>
-<P>
-Puts subscriber in <I>not_me</I> mode for the <I>listname</I> list.  This mode is used when a subscriber wishes
-        not to receive back the message that he has sent to the list. 
-
-<P>
-See the <A NAME="8288"></A><TT>reception</TT> (<A HREF="node13.html#par-reception">12.4</A>, page&nbsp;<A HREF="node13.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
-
-<P>
-</LI>
-<LI><A NAME="8291"></A><TT>SET</TT> <I>listname</I> <TT>MAIL</TT>
-        <A NAME="cmd-setmail"></A>
-<P>
-Puts the subscriber in normal mode (default) for the <I>listname</I> list.  This option is mainly used to cancel the
-        <I>nomail</I>, <I>summary</I> or <I>digest</I> modes. If the subscriber
-        was in <I>nomail</I> mode, he or she will again receive
-        mail from the list in a normal manner.  See the <A NAME="8294"></A><TT>SET&nbsp;LISTNAME&nbsp;NOMAIL</TT> command (<A HREF="node21.html#cmd-setnomail">20.1</A>,
-        page&nbsp;<A HREF="node21.html#cmd-setnomail"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and the <A NAME="8297"></A><TT>reception</TT>
-        parameter (<A HREF="node13.html#par-reception">12.4</A>, page&nbsp;<A HREF="node13.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-
-<P>
-</LI>
-<LI><A NAME="8300"></A><TT>SET</TT> <I>listname</I> <TT>CONCEAL</TT>
-        <A NAME="cmd-setconceal"></A>
-<P>
-Puts the subscriber in <I>conceal</I> mode for the
-        <I>listname</I> list.  The subscriber will then become
-        invisible during <A NAME="8303"></A><TT>REVIEW</TT> on this list. Only owners
-        will see the whole subscriber list.
-
-<P>
-See the <A NAME="8306"></A><TT>SET&nbsp;LISTNAME&nbsp;NOCONCEAL</TT> command (<A HREF="node21.html#cmd-setnoconceal">20.1</A>, page&nbsp;<A HREF="node21.html#cmd-setnoconceal"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and
-        the <A NAME="8309"></A><TT>visibility</TT> parameter (<A HREF="node15.html#par-visibility">14.1.7</A>,
-        page&nbsp;<A HREF="node15.html#par-visibility"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-
-<P>
-</LI>
-<LI><A NAME="8312"></A><TT>SET</TT> <I>listname</I> <TT>NOCONCEAL</TT>
-        <A NAME="cmd-setnoconceal"></A>
-<P>
-Puts the subscriber in <I>noconceal</I> mode (default)
-        for <I>listname</I> list. The subscriber will then
-        become visible during <A NAME="8315"></A><TT>REVIEW</TT> of this list. The
-        <I>conceal</I> mode is then cancelled.
-
-<P>
-See <A NAME="8318"></A><TT>SET&nbsp;LISTNAME&nbsp;CONCEAL</TT> command (<A HREF="node21.html#cmd-setconceal">20.1</A>, page&nbsp;<A HREF="node21.html#cmd-setconceal"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and
-        <A NAME="8321"></A><TT>visibility</TT> parameter (<A HREF="node15.html#par-visibility">14.1.7</A>,
-        page&nbsp;<A HREF="node15.html#par-visibility"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-
-<P>
-</LI>
-<LI><A NAME="8324"></A><TT>QUIT</TT>
-        <A NAME="cmd-quit"></A>
-<P>
-Ends acceptance of commands. This can prove useful when
-        the message contains additional lines, as for example in
-        the case where a signature is automatically added by the
-        user's mail program (MUA).
-
-<P>
-</LI>
-<LI><A NAME="8327"></A><TT>CONFIRM</TT> <I>key</I>
-        <A NAME="cmd-confirm"></A>
-<P>
-If the <A NAME="8330"></A><TT>send</TT> parameter of a list is set to <TT>privatekey, publickey</TT> or <TT>privateorpublickey</TT>,
-        messages are only distributed in the list after an
-        <A NAME="8333"></A>authentication phase by return mail, using a
-        one-time password (numeric key). For this authentication,
-        the sender of the message is requested to post the ``<A NAME="8334"></A><TT>CONFIRM</TT>&nbsp;<I>key</I>'' command to <I>Sympa</I>.
-
-<P>
-</LI>
-<LI><A NAME="8338"></A><TT>QUIET</TT>
-
-<P>
-This command is used for silent (mute) processing: no
-        performance report is returned for commands prefixed with
-        <A NAME="8341"></A><TT>QUIET</TT>.
-
-<P>
-</LI>
-</UL>
+No action required.
+You probably imagine that any mailing list manager (or any mail forwarder)
+is compatible with S/MIME signatures, as long as it respects the MIME structure of
+incoming messages. You are right. Even Majordomo can distribute a signed message!
+As <I>Sympa</I> provides MIME compatibility, you don't need to do
+anything in order to allow subscribers to verify signed messages distributed
+through a list. This is not an issue at all, since any processe that
+distributes messages  is compatible with end user
+signing processes. Sympa simply skips the message footer attachment
+(ref <A HREF="node14.html#messagefooter">13.10</A>, page&nbsp;<A HREF="node14.html#messagefooter"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) to prevent any
+body corruption which would break the signature.
 
 <P>
 
-<H1><A NAME="SECTION002120000000000000000">
-20.2 Owner commands</A>
-</H1>
-
-<P>
-Some administrative requests are only available to list owner(s).
-They are indispensable for all procedures in limited access mode,
-and to perform requests in place of users.
-These comands are:
-
-<P>
-
-<UL>
-<LI><A NAME="8344"></A><TT>ADD</TT> <I>listname user@host firstname name</I>
-        <A NAME="cmd-add"></A>
-<P>
-Add command similar to <A NAME="8347"></A><TT>SUBSCRIBE</TT>. 
-	You can avoid user notification by using the <A NAME="8350"></A><TT>QUIET</TT>
-	prefix (ie: <A NAME="8353"></A><TT>QUIET ADD</TT>).
-
-<P>
-</LI>
-<LI><A NAME="8356"></A><TT>DELETE</TT> <I>listname user@host</I>
-        <A NAME="cmd-delete"></A>
-<P>
-Delete command similar to <A NAME="8359"></A><TT>SIGNOFF</TT>.
-	You can avoid user notification by using the <A NAME="8362"></A><TT>QUIET</TT>
-	prefix (ie: <A NAME="8365"></A><TT>QUIET DELETE</TT>).
-
-<P>
-</LI>
-<LI><A NAME="8368"></A><TT>REMIND</TT> <I>listname</I>
-	<A NAME="cmd-remind"></A>
-<P>
-<A NAME="8371"></A><TT>REMIND</TT> is used by list owners in order to send
-        an individual service reminder message to each subscriber. This
-        message is made by parsing the remind.tpl file.
-
-<P>
-</LI>
-<LI><A NAME="8374"></A><TT>REMIND</TT> <I>*</I>
-
-<P>
-<A NAME="8377"></A><TT>REMIND</TT> is used by the listmaster to send to each subscriber of any list a single
-        message with a summary of his/her subscriptions. In this case the 
-        message sent is constructed by parsing the global_remind.tpl file.
-        For each list, <I>Sympa</I> tests whether the list is configured as hidden 
-	to each subscriber (parameter lparam visibility). By default the use 
-	of this command is restricted to listmasters. 
-	Processing may take a lot of time !
-
-<P>
-</LI>
-<LI><A NAME="8381"></A><TT>EXPIRE</TT>
-        <A NAME="cmd-expire"></A>
-<P>
-<I>listname</I>
-        <I>age (in days)</I>
-        <I>deadline (in days)</I>
-        (listname) (age (in days)) (deadline (in days))
-        <I>explanatory text to be sent to the subscribers concerned</I>
-
-<P>
-This command activates an <A NAME="8384"></A>expiration process
-        for former subscribers of the designated list. Subscribers
-        for which no procedures have been enabled for more than
-        <I>age</I> days receive the explanatory text appended
-        to the <A NAME="8385"></A><TT>EXPIRE</TT> command. This text, which must be
-        adapted by the list owner for each subscriber population,
-        should explain to the people receiving this message that
-        they can update their subscription date so as to not be
-        deleted from the subscriber list, within a deadline of
-        <I>deadline</I> days.
-
-<P>
-Past this deadline, the initiator of the <A NAME="8388"></A><TT>EXPIRE</TT>
-        command receives the list of persons who have not confirmed
-        their subscription.  It is up to the initiator to send
-        <I>Sympa</I> the corresponding <A NAME="8392"></A><TT>DELETE</TT> commands.
-
-<P>
-Any operation updating the subscription date of an address
-        serves as confirmation of subscription. This is also the
-        case for <A NAME="8395"></A><TT>SET</TT> option selecting commands and for
-        the <A NAME="8398"></A><TT>SUBSCRIBE</TT> subscription command itself. The fact
-        of sending a message to the list also updates the subscription
-        date.
-
-<P>
-The explanatory message should contain at least 20 words;
-        it is possible to delimit it by the word <A NAME="8401"></A><TT>QUIT</TT>,
-        in particular in order not to include a signature, which
-        would systematically end the command message.
-
-<P>
-A single expiration process can be activated at any given
-        time for a given list. The <A NAME="8404"></A><TT>EXPIRE</TT> command
-        systematically gives rise to <A NAME="8407"></A>authentication
-        by return mail.  The <A NAME="8408"></A><TT>EXPIRE</TT> command has <B>no effect on the subscriber list</B>.
-
-<P>
-</LI>
-<LI><A NAME="8411"></A><TT>EXPIREINDEX</TT> <I>listname</I>
-       <A NAME="cmd-expireindex"></A>
-<P>
-Makes it possible, at any time, for an expiration process
-       activated using an <A NAME="8414"></A><TT>EXPIRE</TT> command to receive the
-       list of addresses for which no enabling has been received.
-
-<P>
-</LI>
-<LI><A NAME="8417"></A><TT>EXPIREDEL</TT> <I>listname</I>
-       <A NAME="cmd-expiredel"></A>
-<P>
-Deletion of a process activated using the <A NAME="8420"></A><TT>EXPIRE</TT>
-       command.  The <A NAME="8423"></A><TT>EXPIREDEL</TT> command has no effect on
-       subscribers, but it possible to activate a new expiration
-       process with new deadlines.
-
-<P>
-</LI>
-</UL>
-
-<P>
-As above, these commands can be prefixed with <A NAME="8426"></A><TT>QUIET</TT> to
-indicate processing without acknowledgment of receipt.
-
-<P>
-
-<H1><A NAME="SECTION002130000000000000000"></A>
-    <A NAME="moderation"></A>
+<H1><A NAME="SECTION002120000000000000000"></A>
+    <A NAME="smime-sig"></A>
 <BR>
-20.3 Moderator commands
+20.2 Use of S/MIME signature by Sympa itself
 </H1>
 
 <P>
-If a list is moderated, <I>Sympa</I> only distributes messages enabled by one of
-its moderators (editors). Moderators have several
-methods for enabling message distribution, depending on the <A NAME="8430"></A><TT>send</TT> list parameter (<A HREF="node15.html#par-send">14.3.8</A>, page&nbsp;<A HREF="node15.html#par-send"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+Sympa is able to verify S/MIME signatures in order to apply S/MIME
+authentication methods for message handling. 
+Currently, this feature is limited to the
+distribution process, and to any commands <I>Sympa</I> might find in the message
+body.  The reasons for this restriction are related to current S/MIME
+usage.
+S/MIME signature structure is based on the encryption of a digest of the
+message. Most S/MIME agents do not include any part of the
+message headers in the message digest, so anyone can modify the message
+header without signature corruption! This is easy to do : for example, anyone
+can edit a signed message with their preferred message agent, modify whatever
+header they want (for example <TT>Subject:</TT> , <TT>Date:</TT> and
+<TT>To:</TT>, and redistribute the message to a list or to the robot
+without breaking the signature.
+
+<P>
+So Sympa cannot apply the S/MIME
+authentication method to a command parsed in the <TT>Subject:</TT> field of a
+message or via the <TT>-subscribe</TT> or <TT>-unsubscribe</TT> e-mail
+address. 
+
+<P>
+
+<H1><A NAME="SECTION002130000000000000000">
+20.3 Use of S/MIME encryption</A>
+</H1> 
+
+<P>
+S/Sympa is not an implementation of the ``S/MIME Symmetric Key Distribution''
+internet draft. This sophisticated scheme is required for large lists
+with encryption. So, there is still some scope for future developments :) 
+
+<P>
+We assume that S/Sympa distributes message as received, i.e. unencrypted when the
+list receives an unencrypted message, but otherwise encrypted.
+
+<P>
+In order to be able to send encrypted messages to a list, the sender needs
+to use the X509 certificate of the list. Sympa will send an encrypted message
+to each subscriber using the subscriber's certificate. To provide this feature,
+<I>Sympa</I> needs to manage one certificate for each list and one for each
+subscriber. This is available in Sympa version 2.8 and above.
+
+<P>
+
+<H1><A NAME="SECTION002140000000000000000">
+20.4 S/Sympa configuration</A>
+</H1> 
+
+<P>
+
+<H2><A NAME="SECTION002141000000000000000"></A>
+<A NAME="smimeinstall"></A>
+<BR>
+20.4.1 Installation
+</H2>
+
+<P>
+The only requirement is OpenSSL (http://www.openssl.org) version 0.9.5a and above.
+OpenSSL is used by <I>Sympa</I> as an external plugin
+(like sendmail or postfix), so it must be installed with the appropriate access
+(x for sympa.sympa). 
+
+<P>
+
+<H2><A NAME="SECTION002142000000000000000"></A>
+<A NAME="smimeconf"></A>
+<BR>
+20.4.2 configuration in sympa.conf
+</H2>
+
+<P>
+S/Sympa configuration is very simple. If you are used to Apache SSL,
+you should not feel lost. If you are an OpenSSL guru, you will
+feel at home, and there may even be changes you will wish to suggest to us.
+
+<P>
+The basic requirement is to let <I>Sympa</I> know where to find the binary file for the OpenSSL program
+and the certificates of the trusted certificate authority. 
+This is done using the optional parameters <A NAME="8137"></A><TT>openSSL</TT> and
+<A NAME="8140"></A><TT>capath</TT> and / or <A NAME="8143"></A><TT>cafile</TT>.
 
 <P>
 
 <UL>
-<LI><A NAME="8433"></A><TT>DISTRIBUTE</TT> <I>listname</I> <I>key</I>
-        <A NAME="cmd-distribute"></A>
-<P>
-If the <A NAME="8436"></A><TT>send</TT> parameter of a list is set to <TT>editorkey</TT> or <TT>editorkeyonly</TT>, each message queued
-        for <A NAME="8439"></A>moderation is stored in a spool (see&nbsp;<A HREF="node6.html#cf:queuemod">5.6.3</A>, page&nbsp;<A HREF="node6.html#cf:queuemod"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), and linked
-        to a key.
+<LI><A NAME="8146"></A><TT>openSSL</TT> : the path for the OpenSSL binary file,
+         usually <TT>/usr/local/ssl/bin/openSSL</TT>
+</LI>
+<LI><A NAME="8149"></A><TT>cafile</TT> : the path of a bundle of trusted ca certificates. 
+        The file <A NAME="8152"></A><TT>~/home/sympa/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
 
 <P>
-The <A NAME="8440"></A>moderator must use this command to enable
-        message distribution.
+Both the <A NAME="8157"></A><TT>cafile</TT> file and the <A NAME="8160"></A><TT>capath</TT> directory
+        should be shared with your Apache+mod_ssl configuration. This is useful
+	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
 
 <P>
 </LI>
-<LI><A NAME="8441"></A><TT>REJECT</TT> <I>listname</I> <I>key</I>
-        <A NAME="cmd-reject"></A>
-<P>
-The message with the <I>key</I> key is deleted from the
-        moderation <A NAME="8444"></A>spool of the <I>listname</I>
-        list.
-
-<P>
-</LI>
-<LI><A NAME="8445"></A><TT>MODINDEX</TT> <I>listname</I>
-        <A NAME="cmd-modindex"></A>
-<P>
-This command returns the list of messages queued for
-        moderation for the <I>listname</I> list.
-
-<P>
-The result is presented in the form of an index, which
-        supplies, for each message, its sending date, its sender,
-        its size, and its associated key, as well as all
-        messages in the form of a digest.
-
-<P>
+<LI><A NAME="8163"></A><TT>key_password</TT> : the password used to protect all list private keys. xxxxxxx	
 </LI>
 </UL>
 
 <P>
-See also the
-<A NAME="tex2html105"
-  HREF="http://listes.cru.fr/admin/moderation.html">recommendations for moderators</A>.
+
+<H2><A NAME="SECTION002143000000000000000"></A>
+<A NAME="smimeforsign"></A>
+<BR>
+20.4.3 configuration to recognize S/MIME signatures
+</H2>
+
+<P>
+Once  <TT>OpenSSL</TT> has been installed, and <TT>sympa.conf</TT> configured,
+your S/Sympa is ready to use S/Mime signatures for any authentication operation. You simply need
+to use the appropriate authorization scenario for the operation you want to secure. 
+(see <A HREF="node11.html#scenarios">10</A>, page&nbsp;<A HREF="node11.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+When receiving a message, <I>Sympa</I> applies
+the authorization scenario with the appropriate authentication method parameter.
+In most cases the authentication method is ``<TT>smtp</TT>'', but in cases
+where the message is signed and the signature has been checked and matches the
+sender e-mail, <I>Sympa</I> applies the ``<TT>smime</TT>'' authentication
+method.
+
+<P>
+It is vital to ensure that if the authorization scenario does not recognize this authentication method, the
+operation requested will be rejected. Consequently, authorization scenarios distributed
+prior to version 2.7 are not compatible with the OpenSSL configuration of Sympa. 
+All
+standard authorization scenarios (those distributed with sympa)
+now include the <TT>smime</TT> method. The following example is
+named <TT>send.private_smime</TT>, and restricts sends to subscribers using an S/mime signature :
+
+<P><PRE>
+title.us restricted to subscribers check smime signature
+title.fr limité aux abonnés, vérif de la signature smime
+
+is_subscriber([listname],[sender])             smime  -&gt; do_it
+is_editor([listname],[sender])                 smime  -&gt; do_it
+is_owner([listname],[sender])                  smime  -&gt; do_it
+</PRE>
+
+<P>
+It as also possible to mix various authentication methods in a single authorization scenario. The following
+example, <TT>send.private_key</TT>, requires either an md5 return key or an S/Mime signature :<PRE>
+title.us restricted to subscribers with previous md5 authentication
+title.fr réservé aux abonnés avec authentification MD5 préalable
+
+is_subscriber([listname],[sender]) smtp          -&gt; request_auth
+true()                             md5,smime     -&gt; do_it
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION002144000000000000000"></A>
+<A NAME="smimeforencrypt"></A>
+<BR>
+20.4.4 distributing encrypted messages
+</H2>
+
+<P>
+In this section we describe S/Sympa encryption features. The goal is to use
+S/MIME encryption for distribution of a message to subscribers whenever the message has been
+received encrypted from the sender. 
+
+<P>
+Why is S/Sympa concerned by the S/MIME encryption distribution process ?
+It is because encryption is performed using the <B>recipient</B> X509
+certificate, whereas the signature requires the sender's private key. Thus, an encrypted
+message can be read by the recipient only if he or she is the owner of the private
+key associated with the certificate.
+Consequently, the only way to encrypt a message for a list of recipients is
+to encrypt and send the message for each recipient. This is what S/Sympa
+does when distributing an encrypted message.
+
+<P>
+The S/Sympa encryption feature in the distribution process supposes that sympa
+has received an encrypted message for some list. To be able to encrypt a message
+for a list, the sender must have some access to an X509 certificate for the list.
+So the first requirement is to install a certificate and a private key for
+the list.
+The mechanism whereby certificates are obtained and managed is complex. Current versions
+of S/Sympa assume that list certificates and private keys are installed by
+the listmaster using <A NAME="8168"></A><TT>/home/sympa/bin/p12topem.pl</TT> script. This script allows
+you to install a PKCS#12 bundle file containing a private key and
+a certificate using the appropriate format.
+
+<P>
+It is a good idea to have a look at the OpenCA (http://www.openssl.org)
+documentation and/or PKI providers' web documentation.
+You can use commercial certificates or home-made ones. Of course, the
+certificate must be approved for e-mail applications, and issued by one of
+the trusted CA's described in the <A NAME="8171"></A><TT>cafile</TT> file or the
+<A NAME="8174"></A><TT>capath</TT> Sympa configuration parameter. 
+
+<P>
+The list private key must be installed in a file named
+<A NAME="8177"></A><TT>/home/sympa/expl/mylist/private_key</TT>. All the list private
+keys must be encrypted using a single password defined by the
+<A NAME="8180"></A><TT>password</TT> parameter in <A NAME="8183"></A><TT>sympa.conf</TT>.
+
+<P>
+
+<H3><A NAME="SECTION002144100000000000000">
+20.4.4.1 Use of Netscape navigator to obtain X509 list certificates</A>
+</H3>
+
+<P>
+In many cases e-mail X509 certificates are distributed via a web server and
+loaded into the browser using your mouse :) Netscape allows
+certificates to be exported to a file. So one way to get a list certificate is to obtain an e-mail
+certificate for the canonical list address in your browser, and then to export and install it for Sympa :
+
+<OL>
+<LI>browse the net and load a certificate for the list address on some
+PKI provider (your own OpenCa pki server , thawte, verisign, ...). Be
+careful :  the e-mail certificate must be correspond exactly to the canonical address of
+your  list, otherwise, the signature will be incorrect (sender e-mail will
+not match signer e-mail).
+</LI>
+<LI>in the security menu, select the intended certificate and export
+it. Netscape will prompt you for a password and a filename to encrypt
+the output file. The format used by Netscape is  ``pkcs#12''. 
+Copy this file to the list home directory.
+</LI>
+<LI>convert the pkcs#12 file into a pair of pem files :
+<A NAME="8186"></A><TT>cert.pem</TT> and <A NAME="8189"></A><TT>private_key</TT> using
+the <A NAME="8192"></A><TT>/home/sympa/bin/p12topem.pl</TT> script. Use <A NAME="8195"></A><TT>p12topem.pl -help</TT> for details.
+</LI>
+<LI>be sure that <A NAME="8198"></A><TT>cert.pem</TT> and <A NAME="8201"></A><TT>private_key</TT>
+are owned by sympa with ``r'' access.
+</LI>
+<LI>As soon as a certificate is installed for a list, the list  home page
+includes a new link to load the certificate to the user's browser, and the welcome
+message is signed by the list.
+</LI>
+</OL> 
+
+<P>
+
+<H1><A NAME="SECTION002150000000000000000">
+20.5 Managing certificates with tasks</A>
+</H1>
+
+<P>
+You may automate the management of certificates with two global task models provided with
+<I>Sympa</I>. See <A HREF="node13.html#tasks">12.10</A>, page&nbsp;<A HREF="node13.html#tasks"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> to know more about tasks.
+Report to <A HREF="node6.html#certificate-task-config">5.12.4</A>, page&nbsp;<A HREF="node6.html#certificate-task-config"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> to configure your <I>Sympa</I> to use these facilities.
+
+<P>
+
+<H2><A NAME="SECTION002151000000000000000">
+20.5.1 chk_cert_expiration.daily.task model</A>
+</H2>
+
+<P>
+A task created with the model <A NAME="8206"></A><TT>chk_cert_expiration.daily.task</TT> checks every day the expiration date of
+certificates stored in the <A NAME="8209"></A><TT>/home/sympa/expl/X509-user-certs/</TT> directory.
+The user is warned with the <A NAME="8212"></A><TT>daily_cert_expiration</TT> template when his certificate has expired
+or is going to expire within three days.
+
+<P>
+
+<H2><A NAME="SECTION002152000000000000000">
+20.5.2 crl_update.daily.task model</A>
+</H2>
+
+<P>
+You may use the model <A NAME="8215"></A><TT>crl_update.daily.task</TT> to create a task which daily updates the certificate revocation
+lists when needed.
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1178"
+<A NAME="tex2html1191"
   HREF="node22.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1172"
+<A NAME="tex2html1185"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1166"
+<A NAME="tex2html1179"
   HREF="node20.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1174"
+<A NAME="tex2html1187"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1176"
-  HREF="node22.html">
+<A NAME="tex2html1189"
+  HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1179"
-  HREF="node22.html">Index</A>
-<B> Up:</B> <A NAME="tex2html1173"
+<B> Next:</B> <A NAME="tex2html1192"
+  HREF="node22.html">21. Using Sympa commands</A>
+<B> Up:</B> <A NAME="tex2html1186"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1167"
-  HREF="node20.html">19. Sympa with S/MIME and HTTPS</A>
- &nbsp <B>  <A NAME="tex2html1175"
+<B> Previous:</B> <A NAME="tex2html1180"
+  HREF="node20.html">19. Using Sympa with LDAP</A>
+ &nbsp <B>  <A NAME="tex2html1188"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1177"
-  HREF="node22.html">Index</A></B> 
+ &nbsp <B>  <A NAME="tex2html1190"
+  HREF="node23.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-12-02
+2003-12-22
 </ADDRESS>
 </BODY>
 </HTML>

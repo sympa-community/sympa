@@ -1,3 +1,202 @@
+2003-12-19 11:05  salaun
+
+	* src/etc/mhonarc-ressources,
+	wwsympa/wws_templates/cn/review.cn.tpl,
+	wwsympa/wws_templates/cn/reviewbouncing.cn.tpl,
+	wwsympa/wws_templates/cz/reviewbouncing.cz.tpl,
+	wwsympa/wws_templates/de/reviewbouncing.de.tpl,
+	wwsympa/wws_templates/et/reviewbouncing.et.tpl,
+	wwsympa/wws_templates/fi/reviewbouncing.fi.tpl,
+	wwsympa/wws_templates/fr/reviewbouncing.fr.tpl,
+	wwsympa/wws_templates/hu/reviewbouncing.hu.tpl,
+	wwsympa/wws_templates/it/d_read.it.tpl,
+	wwsympa/wws_templates/it/reviewbouncing.it.tpl,
+	wwsympa/wws_templates/nl/reviewbouncing.nl.tpl,
+	wwsympa/wws_templates/ro/reviewbouncing.ro.tpl,
+	wwsympa/wws_templates/us/reviewbouncing.us.tpl: Fix:
+	request_confirm() calls should be used with submit
+
+2003-12-19 09:16  salaun
+
+	* soap/sampleClient.php: [no log message]
+
+2003-12-19 09:15  salaun
+
+	* soap/sampleClient.php: Add an introduction
+
+2003-12-19 08:43  salaun
+
+	* src/etc/mhonarc-ressources: Fix: request_confirm() parameters
+	changed
+
+2003-12-18 17:12  salaun
+
+	* soap/sampleClient.php: Point to demo.sympa.org SOAP service
+
+2003-12-18 17:03  salaun
+
+	* soap/sampleClient.php: Add list subjects
+
+2003-12-18 16:51  salaun
+
+	* soap/sympa_soap_client.pl: Fix: replace hard-coded URLs by
+	ARGV[0]
+
+2003-12-18 16:30  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: [conf->soap_url] was not parsed for
+	Virtual robots
+
+2003-12-18 15:30  salaun
+
+	* soap/sampleClient.php: New feature: Add access to PHP source
+
+2003-12-18 15:30  salaun
+
+	* soap/sympasoap.pm: Fix: respect Virtual robots organization
+
+2003-12-18 11:53  salaun
+
+	* soap/SympaTransport.pm, src/Conf.pm: Change: set SYMPA_ROBOT for
+	SOAP server
+
+2003-12-18 10:19  salaun
+
+	* src/Conf.pm: Cosmetic change
+
+2003-12-18 10:16  salaun
+
+	* soap/sampleClient.php: New: sample PHP SOAP client
+
+2003-12-18 10:14  salaun
+
+	* src/Language.pm: Additionnal checks
+
+2003-12-17 16:31  salaun
+
+	* src/sympa.pl: Fix: messages sent from the web interface could not
+	be confirmed (internal error : configuration for operation send is
+	not yet performed by scenario)
+
+2003-12-17 16:14  salaun
+
+	* src/Message.pm: Add check on List object
+
+2003-12-17 10:51  salaun
+
+	* wwsympa/wws_templates/: fr/subindex.fr.tpl, us/subindex.us.tpl:
+	Fix subindex
+
+2003-12-17 10:49  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: subscription rejection failed
+
+2003-12-12 15:08  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: could not validate pending
+	subscriptions
+
+2003-12-12 14:46  salaun
+
+	* wwsympa/wws_templates/: fr/notice.fr.tpl, us/notice.us.tpl:
+	Display total of subscribed users
+
+2003-12-12 14:34  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/subindex.fr.tpl,
+	wwsympa/wws_templates/us/subindex.us.tpl: Change: Bring the owner
+	bask to the subindex page
+
+2003-12-12 11:45  salaun
+
+	* wwsympa/wwsympa.fcgi: Purge list now remove archive directory
+
+2003-12-12 11:44  salaun
+
+	* src/tools.pl: More carefull controls in remove_dir subroutine
+
+2003-12-12 11:12  salaun
+
+	* soap/: sympa.wsdl, sympa_soap_client.pl, sympasoap.pm: Change:
+	complexWhich() and complexLists() now using the same piece of code
+
+2003-12-12 09:11  salaun
+
+	* soap/: sympa.wsdl, sympa_soap_client.pl, sympasoap.pm: Changes:
+	Rename functions and variables in WSDL
+
+2003-12-12 09:11  salaun
+
+	* check_perl_modules.pl: Add optional module SOAP::Lite
+
+2003-12-11 15:11  salaun
+
+	* src/sympa_wizard.pl: default_shared_quota parameter have to be
+	set in sympa.conf, not in wwsympa.conf
+
+2003-12-11 10:35  salaun
+
+	* src/: List.pm, Log.pm, sympa.pl: [BugID 238] Fix: Error
+	processing with --dump batch mode
+
+2003-12-10 11:05  salaun
+
+	* soap/sympa.wsdl, soap/sympa_soap_client.pl, soap/sympasoap.pm,
+	wwsympa/wws_templates/us/review.us.tpl: Change: new simple_which()
+	function that gather list information in a simple String. Usefull
+	to interoperate with Axis clients (Sympa does not return data
+	compliant with WSDL)
+
+2003-12-10 11:01  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	html/index.html, html/node1.html, html/node10.html,
+	html/node11.html, html/node12.html, html/node13.html,
+	html/node14.html, html/node15.html, html/node16.html,
+	html/node17.html, html/node18.html, html/node19.html,
+	html/node2.html, html/node20.html, html/node21.html,
+	html/node3.html, html/node4.html, html/node5.html, html/node6.html,
+	html/node7.html, html/node8.html, html/node9.html, html/sympa.html,
+	html/sympa.ps: Changes
+
+2003-12-08 12:19  salaun
+
+	* src/sympa.pl: [BugID 234] Fix: $host was declared twice ; now use
+	$listname instead of $name
+
+2003-12-08 12:09  salaun
+
+	* src/List.pm: [BugID 235] Fix: the predefined variable $* is
+	obsolete in the recent perl releases
+
+2003-12-03 16:25  salaun
+
+	* src/List.pm: Fix: 'listmaster' was not an accepted action
+	("Matched unknown action 'listmaster')
+
+2003-12-03 15:55  salaun
+
+	* check_perl_modules.pl: Change: Make Archive::Zip a required
+	module
+
+2003-12-03 15:34  salaun
+
+	* src/List.pm: Fix: need to reconnect to DB to grant privileges
+
+2003-12-03 15:07  salaun
+
+	* check_perl_modules.pl: Add warnings about DBD::mysql install
+
+2003-12-03 14:38  salaun
+
+	* src/sympa_wizard.pl: Fix: sympa_wizard would die with "undefined
+	tolls::xx subroutine"
+
+2003-12-02 15:20  salaun
+
+	* .version, ChangeLog, NEWS: Preparing 4.0.a8
+
 2003-12-01 16:15  salaun
 
 	* wwsympa/Auth.pm: Fix: contact LDAP directory in asynchronous mode
@@ -682,12 +881,12 @@
 
 2003-08-08 14:12  salaun
 
-	* po/cs.po: file cs.po was initially added on branch sympa-tt2.
+	* po/en_US.po: file en_US.po was initially added on branch
+	sympa-tt2.
 
 2003-08-08 14:12  salaun
 
-	* po/zh_TW.po: file zh_TW.po was initially added on branch
-	sympa-tt2.
+	* po/cs.po: file cs.po was initially added on branch sympa-tt2.
 
 2003-08-08 14:12  salaun
 
@@ -696,7 +895,7 @@
 
 2003-08-08 14:12  salaun
 
-	* po/en_US.po: file en_US.po was initially added on branch
+	* po/zh_TW.po: file zh_TW.po was initially added on branch
 	sympa-tt2.
 
 2003-08-06 10:38  salaun
@@ -830,423 +1029,8 @@
 
 2003-06-12 11:45  salaun
 
-	* wwsympa/tt2/create_list.tt2: file create_list.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/get_latest_lists.tt2: file get_latest_lists.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/listowner_notification.tt2: file
-	listowner_notification.tt2 was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/add_request.tt2: file add_request.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/list_button_footer.tt2: file list_button_footer.tt2
-	was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/loginrequest.tt2: file loginrequest.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/x509-user-cert-missing.tt2: file
-	x509-user-cert-missing.tt2 was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/help_admin.tt2: file help_admin.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/cn.po: file cn.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/listmaster_notification.tt2: file
-	listmaster_notification.tt2 was initially added on branch
-	sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/close_list.tt2: file close_list.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
 	* wwsympa/tt2/help_editfile.tt2: file help_editfile.tt2 was
 	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/view_template.tt2: file view_template.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/compose_mail.tt2: file compose_mail.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/viewmod.tt2: file viewmod.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/subindex.tt2: file subindex.tt2 was initially added
-	on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/reviewbouncing.tt2: file reviewbouncing.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/help.tt2: file help.tt2 was initially added on branch
-	sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/moderate.tt2: file moderate.tt2 was initially added
-	on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/button_footer.tt2: file button_footer.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/serveradmin.tt2: file serveradmin.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/arcsearch.tt2: file arcsearch.tt2 was initially added
-	on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/get_pending_lists.tt2: file get_pending_lists.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/menu.tt2: file menu.tt2 was initially added on branch
-	sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/certif_warning.tt2: file certif_warning.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/loginbanner.tt2: file loginbanner.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/admin.tt2: file admin.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/d_editfile.tt2: file d_editfile.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/list_button_header.tt2: file list_button_header.tt2
-	was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/suboptions.tt2: file suboptions.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/admin_menu.tt2: file admin_menu.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/welcome.tt2: file welcome.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/create_list_request.tt2: file create_list_request.tt2
-	was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/expire_deletion.tt2: file expire_deletion.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/fr.po: file fr.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/install_pending_list.tt2: file
-	install_pending_list.tt2 was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/fi.po: file fi.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/viewbounce.tt2: file viewbounce.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/cz.po: file cz.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/view_translations.tt2: file view_translations.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/info.tt2: file info.tt2 was initially added on branch
-	sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/editsubscriber.tt2: file editsubscriber.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/it.po: file it.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/invite.tt2: file invite.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/ro.po: file ro.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/button_header.tt2: file button_header.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/choosepasswd.tt2: file choosepasswd.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/helpfile.tt2: file helpfile.tt2 was initially added
-	on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/your_infected_msg.tt2: file your_infected_msg.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/error.tt2: file error.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/notice.tt2: file notice.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/modindex.tt2, wwsympa/tt2/modindex.tt2: file
-	modindex.tt2 was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/pref.tt2: file pref.tt2 was initially added on branch
-	sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/edit_list_request.tt2: file edit_list_request.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/main.tt2: file main.tt2 was initially added on branch
-	sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/arc_protect.tt2: file arc_protect.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/expire_warning2.tt2: file expire_warning2.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/title.tt2: file title.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/list_rejected.tt2: file list_rejected.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/tw.po: file tw.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/summary.tt2: file summary.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/Makefile: file Makefile was initially added on branch
-	sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/global_remind.tt2: file global_remind.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/list_created.tt2: file list_created.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/lists.tt2, wwsympa/tt2/lists.tt2: file lists.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/home.tt2: file home.tt2 was initially added on branch
-	sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/set_pending_list_request.tt2: file
-	set_pending_list_request.tt2 was initially added on branch
-	sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/remind.tt2: file remind.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/help_user_options.tt2: file help_user_options.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/removed.tt2: file removed.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/nl.po: file nl.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/login.tt2: file login.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/sendpasswd.tt2: file sendpasswd.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/list_menu.tt2: file list_menu.tt2 was initially added
-	on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/list_unknown.tt2: file list_unknown.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/sigrequest.tt2: file sigrequest.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/change_email.tt2: file change_email.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/de.po: file de.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/arc.tt2: file arc.tt2 was initially added on branch
-	sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/us.po: file us.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/review.tt2, wwsympa/tt2/review.tt2: file review.tt2
-	was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/pt.po: file pt.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/tt2.pl: file tt2.pl was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/tt2native.pl: file tt2native.pl was initially added on branch
-	sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/arcsearch_form.tt2: file arcsearch_form.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/stats_report.tt2: file stats_report.tt2 was initially
-	added on branch sympa-tt2.
 
 2003-06-12 11:45  salaun
 
@@ -1255,32 +1039,7 @@
 
 2003-06-12 11:45  salaun
 
-	* wwsympa/tt2/stats.tt2: file stats.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/list_aliases.tt2: file list_aliases.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/d_read.tt2: file d_read.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/d_control.tt2: file d_control.tt2 was initially added
-	on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/es.po: file es.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/get_closed_lists.tt2: file get_closed_lists.tt2 was
-	initially added on branch sympa-tt2.
+	* po/fi.po: file fi.po was initially added on branch sympa-tt2.
 
 2003-06-12 11:45  salaun
 
@@ -1289,70 +1048,8 @@
 
 2003-06-12 11:45  salaun
 
-	* wwsympa/tt2/scenario_test.tt2: file scenario_test.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/pl.po: file pl.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/editfile.tt2: file editfile.tt2 was initially added
-	on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/digest.tt2: file digest.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/expire_warning1.tt2: file expire_warning1.tt2 was
-	initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/reject.tt2: file reject.tt2 was initially added on
-	branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/hu.po: file hu.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/remindpasswd.tt2: file remindpasswd.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/remove_arc.tt2: file remove_arc.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
 	* wwsympa/tt2/translate.tt2: file translate.tt2 was initially added
 	on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/arc_manage.tt2: file arc_manage.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* po/et.po: file et.po was initially added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* wwsympa/tt2/subrequest.tt2: file subrequest.tt2 was initially
-	added on branch sympa-tt2.
-
-2003-06-12 11:45  salaun
-
-	* src/etc/tt2/bye.tt2: file bye.tt2 was initially added on branch
-	sympa-tt2.
 
 2003-06-12 11:45  salaun
 
@@ -1364,8 +1061,510 @@
 
 2003-06-12 11:45  salaun
 
+	* po/pl.po: file pl.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/help_user_options.tt2: file help_user_options.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/reject.tt2: file reject.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/summary.tt2: file summary.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/list_menu.tt2: file list_menu.tt2 was initially added
+	on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
 	* src/etc/tt2/info_report.tt2: file info_report.tt2 was initially
 	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/lists.tt2, wwsympa/tt2/lists.tt2: file lists.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/install_pending_list.tt2: file
+	install_pending_list.tt2 was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/certif_warning.tt2: file certif_warning.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/tt2native.pl: file tt2native.pl was initially added on branch
+	sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/review.tt2, wwsympa/tt2/review.tt2: file review.tt2
+	was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/arcsearch.tt2: file arcsearch.tt2 was initially added
+	on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/it.po: file it.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/listowner_notification.tt2: file
+	listowner_notification.tt2 was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/invite.tt2: file invite.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/fr.po: file fr.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/digest.tt2: file digest.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/stats.tt2: file stats.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/tt2.pl: file tt2.pl was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/pref.tt2: file pref.tt2 was initially added on branch
+	sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/viewbounce.tt2: file viewbounce.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/expire_deletion.tt2: file expire_deletion.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/editsubscriber.tt2: file editsubscriber.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/global_remind.tt2: file global_remind.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/modindex.tt2, wwsympa/tt2/modindex.tt2: file
+	modindex.tt2 was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/list_created.tt2: file list_created.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/list_rejected.tt2: file list_rejected.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/cz.po: file cz.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/editfile.tt2: file editfile.tt2 was initially added
+	on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/remove_arc.tt2: file remove_arc.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/expire_warning2.tt2: file expire_warning2.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/remindpasswd.tt2: file remindpasswd.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/list_button_footer.tt2: file list_button_footer.tt2
+	was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/scenario_test.tt2: file scenario_test.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/remind.tt2: file remind.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/arc.tt2: file arc.tt2 was initially added on branch
+	sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/d_control.tt2: file d_control.tt2 was initially added
+	on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/list_aliases.tt2: file list_aliases.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/us.po: file us.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/home.tt2: file home.tt2 was initially added on branch
+	sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/add_request.tt2: file add_request.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/view_translations.tt2: file view_translations.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/helpfile.tt2: file helpfile.tt2 was initially added
+	on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/loginrequest.tt2: file loginrequest.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/subindex.tt2: file subindex.tt2 was initially added
+	on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/stats_report.tt2: file stats_report.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/subrequest.tt2: file subrequest.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/expire_warning1.tt2: file expire_warning1.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/reviewbouncing.tt2: file reviewbouncing.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/arc_protect.tt2: file arc_protect.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/arcsearch_form.tt2: file arcsearch_form.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/button_header.tt2: file button_header.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/notice.tt2: file notice.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/bye.tt2: file bye.tt2 was initially added on branch
+	sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/edit_list_request.tt2: file edit_list_request.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/d_editfile.tt2: file d_editfile.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/et.po: file et.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/your_infected_msg.tt2: file your_infected_msg.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/d_read.tt2: file d_read.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/es.po: file es.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/compose_mail.tt2: file compose_mail.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/help.tt2: file help.tt2 was initially added on branch
+	sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/loginbanner.tt2: file loginbanner.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/create_list_request.tt2: file create_list_request.tt2
+	was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/sendpasswd.tt2: file sendpasswd.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/close_list.tt2: file close_list.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/error.tt2: file error.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/welcome.tt2: file welcome.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/tw.po: file tw.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/de.po: file de.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/ro.po: file ro.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/login.tt2: file login.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/info.tt2: file info.tt2 was initially added on branch
+	sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/hu.po: file hu.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/sigrequest.tt2: file sigrequest.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/nl.po: file nl.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/title.tt2: file title.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/help_admin.tt2: file help_admin.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/suboptions.tt2: file suboptions.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/create_list.tt2: file create_list.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/button_footer.tt2: file button_footer.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/listmaster_notification.tt2: file
+	listmaster_notification.tt2 was initially added on branch
+	sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/admin_menu.tt2: file admin_menu.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/get_pending_lists.tt2: file get_pending_lists.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/view_template.tt2: file view_template.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/list_unknown.tt2: file list_unknown.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/set_pending_list_request.tt2: file
+	set_pending_list_request.tt2 was initially added on branch
+	sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/change_email.tt2: file change_email.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/arc_manage.tt2: file arc_manage.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/Makefile: file Makefile was initially added on branch
+	sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/choosepasswd.tt2: file choosepasswd.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/list_button_header.tt2: file list_button_header.tt2
+	was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/removed.tt2: file removed.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/serveradmin.tt2: file serveradmin.tt2 was initially
+	added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/get_closed_lists.tt2: file get_closed_lists.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/main.tt2: file main.tt2 was initially added on branch
+	sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/pt.po: file pt.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/get_latest_lists.tt2: file get_latest_lists.tt2 was
+	initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/admin.tt2: file admin.tt2 was initially added on
+	branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/x509-user-cert-missing.tt2: file
+	x509-user-cert-missing.tt2 was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/menu.tt2: file menu.tt2 was initially added on branch
+	sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* po/cn.po: file cn.po was initially added on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* src/etc/tt2/moderate.tt2: file moderate.tt2 was initially added
+	on branch sympa-tt2.
+
+2003-06-12 11:45  salaun
+
+	* wwsympa/tt2/viewmod.tt2: file viewmod.tt2 was initially added on
+	branch sympa-tt2.
 
 2003-06-10 16:10  salaun
 
@@ -1599,7 +1798,42 @@
 
 2003-04-16 13:52  salaun
 
+	* doc/html/node13.html: file node13.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
 	* doc/html/node9.html: file node9.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node5.html: file node5.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node19.html: file node19.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node18.html: file node18.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/next_g.png: file next_g.png was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/prev.png: file prev.png was initially added on branch
+	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node10.html: file node10.html was initially added on
 	branch sympa-3_4-branch.
 
 2003-04-16 13:52  salaun
@@ -1609,18 +1843,113 @@
 
 2003-04-16 13:52  salaun
 
+	* doc/html/node6.html: file node6.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/sympa.ps: file sympa.ps was initially added on branch
+	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
 	* doc/html/index.png: file index.png was initially added on branch
 	sympa-3_4-branch.
 
 2003-04-16 13:52  salaun
 
-	* doc/html/node15.html: file node15.html was initially added on
+	* doc/html/node4.html: file node4.html was initially added on
 	branch sympa-3_4-branch.
 
 2003-04-16 13:52  salaun
 
-	* doc/html/up_g.png: file up_g.png was initially added on branch
+	* doc/html/prev_g.png: file prev_g.png was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/crossref.png: file crossref.png was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node12.html: file node12.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node8.html: file node8.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/contents.png: file contents.png was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/up.png: file up.png was initially added on branch
 	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node2.html: file node2.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/index.html: file index.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node11.html: file node11.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node17.html: file node17.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node7.html: file node7.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/sympa.html: file sympa.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/img2.png: file img2.png was initially added on branch
+	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node21.html: file node21.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/next.png: file next.png was initially added on branch
+	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node3.html: file node3.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node16.html: file node16.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node15.html: file node15.html was initially added on
+	branch sympa-3_4-branch.
 
 2003-04-16 13:52  salaun
 
@@ -1634,147 +1963,17 @@
 
 2003-04-16 13:52  salaun
 
-	* doc/html/node18.html: file node18.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node1.html: file node1.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/index.html: file index.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node4.html: file node4.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/sympa.html: file sympa.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node10.html: file node10.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node7.html: file node7.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node13.html: file node13.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/img2.png: file img2.png was initially added on branch
-	sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node16.html: file node16.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node19.html: file node19.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node2.html: file node2.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node21.html: file node21.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node5.html: file node5.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node11.html: file node11.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/next.png: file next.png was initially added on branch
-	sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node8.html: file node8.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/prev.png: file prev.png was initially added on branch
-	sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
 	* doc/html/node14.html: file node14.html was initially added on
 	branch sympa-3_4-branch.
 
 2003-04-16 13:52  salaun
 
-	* doc/html/prev_g.png: file prev_g.png was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/up.png: file up.png was initially added on branch
+	* doc/html/up_g.png: file up_g.png was initially added on branch
 	sympa-3_4-branch.
 
 2003-04-16 13:52  salaun
 
-	* doc/html/next_g.png: file next_g.png was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node17.html: file node17.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/crossref.png: file crossref.png was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node3.html: file node3.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/sympa.ps: file sympa.ps was initially added on branch
-	sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/contents.png: file contents.png was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node6.html: file node6.html was initially added on
-	branch sympa-3_4-branch.
-
-2003-04-16 13:52  salaun
-
-	* doc/html/node12.html: file node12.html was initially added on
+	* doc/html/node1.html: file node1.html was initially added on
 	branch sympa-3_4-branch.
 
 2003-04-16 13:30  salaun
@@ -12092,6 +12291,40 @@
 
 2001-01-04 13:58  root
 
+	* README, doc/.latex2html-init, doc/html.sty, doc/pocket.tex,
+	doc/treesed, doc/auto/pocket.el, doc/auto/sympa.el,
+	doc/latex2htmlicons/blueball.png,
+	doc/latex2htmlicons/change_begin.png,
+	doc/latex2htmlicons/change_delete.png,
+	doc/latex2htmlicons/change_end.png,
+	doc/latex2htmlicons/contents_motif.png,
+	doc/latex2htmlicons/cross_ref_motif.png,
+	doc/latex2htmlicons/foot_motif.png,
+	doc/latex2htmlicons/greenball.png, doc/latex2htmlicons/image.png,
+	doc/latex2htmlicons/index_motif.png,
+	doc/latex2htmlicons/next_group_motif.png,
+	doc/latex2htmlicons/next_group_motif_gr.png,
+	doc/latex2htmlicons/next_motif.png,
+	doc/latex2htmlicons/next_motif_gr.png,
+	doc/latex2htmlicons/orangeball.png,
+	doc/latex2htmlicons/pinkball.png,
+	doc/latex2htmlicons/previous_group_motif.png,
+	doc/latex2htmlicons/previous_group_motif_gr.png,
+	doc/latex2htmlicons/previous_motif.png,
+	doc/latex2htmlicons/previous_motif_gr.png,
+	doc/latex2htmlicons/purpleball.png,
+	doc/latex2htmlicons/redball.png, doc/latex2htmlicons/up_motif.png,
+	doc/latex2htmlicons/up_motif_gr.png,
+	doc/latex2htmlicons/whiteball.png,
+	doc/latex2htmlicons/yellowball.png, nls/README, src/.core.swp,
+	src/etc/create_list.conf, src/etc/sample/config.include,
+	src/etc/sample/topics.fr.conf, src/etc/sample/test/info,
+	src/etc/sample/test/message.footer,
+	src/etc/sample/test/welcome.tpl, wwsympa/INSTALL, wwsympa/Marc.pm,
+	wwsympa/mime.types: [no log message]
+
+2001-01-04 13:58  root
+
 	* INSTALL, KNOWNBUGS, LICENSE, Makefile, RELEASE_NOTES,
 	check_perl_modules.pl, subst.pl, doc/Makefile, doc/sympa.aux,
 	doc/sympa.cb, doc/sympa.dvi, doc/sympa.idx, doc/sympa.ilg,
@@ -12405,38 +12638,4 @@
 	wwsympa/wws_templates/us/viewbounce.us.tpl,
 	wwsympa/wws_templates/us/viewconfig.us.tpl,
 	wwsympa/wws_templates/us/viewmod.us.tpl: Initial revision
-
-2001-01-04 13:58  root
-
-	* README, doc/.latex2html-init, doc/html.sty, doc/pocket.tex,
-	doc/treesed, doc/auto/pocket.el, doc/auto/sympa.el,
-	doc/latex2htmlicons/blueball.png,
-	doc/latex2htmlicons/change_begin.png,
-	doc/latex2htmlicons/change_delete.png,
-	doc/latex2htmlicons/change_end.png,
-	doc/latex2htmlicons/contents_motif.png,
-	doc/latex2htmlicons/cross_ref_motif.png,
-	doc/latex2htmlicons/foot_motif.png,
-	doc/latex2htmlicons/greenball.png, doc/latex2htmlicons/image.png,
-	doc/latex2htmlicons/index_motif.png,
-	doc/latex2htmlicons/next_group_motif.png,
-	doc/latex2htmlicons/next_group_motif_gr.png,
-	doc/latex2htmlicons/next_motif.png,
-	doc/latex2htmlicons/next_motif_gr.png,
-	doc/latex2htmlicons/orangeball.png,
-	doc/latex2htmlicons/pinkball.png,
-	doc/latex2htmlicons/previous_group_motif.png,
-	doc/latex2htmlicons/previous_group_motif_gr.png,
-	doc/latex2htmlicons/previous_motif.png,
-	doc/latex2htmlicons/previous_motif_gr.png,
-	doc/latex2htmlicons/purpleball.png,
-	doc/latex2htmlicons/redball.png, doc/latex2htmlicons/up_motif.png,
-	doc/latex2htmlicons/up_motif_gr.png,
-	doc/latex2htmlicons/whiteball.png,
-	doc/latex2htmlicons/yellowball.png, nls/README, src/.core.swp,
-	src/etc/create_list.conf, src/etc/sample/config.include,
-	src/etc/sample/topics.fr.conf, src/etc/sample/test/info,
-	src/etc/sample/test/message.footer,
-	src/etc/sample/test/welcome.tpl, wwsympa/INSTALL, wwsympa/Marc.pm,
-	wwsympa/mime.types: [no log message]
 
