@@ -739,57 +739,59 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 $param->{'main_title'} = $param->{'title'} = &Conf::get_robot_conf($robot,'title');
      }
 
-     ## Set cookies "your_subscribtions"
-     if ($param->{'user'}{'email'}) {
-	 # if at least one element defined in get_which tab
-	 &cookielib::set_which_cookie ($wwsconf->{'cookie_domain'},@{$param->{'get_which'}});
-
-	 ## Add lists information to 'which_info'
-	 foreach my $l (@{$param->{'get_which'}}) {
-	     my $list = new List ($l);
-	     $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
-	     $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
-	     $param->{'which_info'}{$l}{'info'} = 1;
+     ## Do not manage cookies at this level if content was already sent
+     unless ($param->{'bypass'} eq 'extreme') {
+	 ## Set cookies "your_subscribtions"
+	 if ($param->{'user'}{'email'}) {
+	     # if at least one element defined in get_which tab
+	     &cookielib::set_which_cookie ($wwsconf->{'cookie_domain'},@{$param->{'get_which'}});
+	     
+	     ## Add lists information to 'which_info'
+	     foreach my $l (@{$param->{'get_which'}}) {
+		 my $list = new List ($l);
+		 $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
+		 $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
+		 $param->{'which_info'}{$l}{'info'} = 1;
+	     }
 	 }
-     }
-     ## Set cookies unless client use https authentication
-     if ($param->{'user'}{'email'}) {
-	 if ($param->{'user'}{'email'} ne 'x509') {
-	     my $delay = $param->{'user'}{'cookie_delay'};
-	     unless (defined $delay) {
-		 $delay = $wwsconf->{'cookie_expire'};
-	     }
-	     
-	     if ($delay == 0) {
-		 $delay = 'session';
-	     }
-	     
-	     $param->{'auth'} ||= 'classic';
-	     
-	     unless (&cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $param->{'cookie_domain'},$delay, $param->{'auth'} )) {
-		 &wwslog('notice', 'Could not set HTTP cookie');
-		 exit -1;
-	     }
-	     $param->{'cookie_set'} = 1;
-	     
-	     ##Cookie extern : sympa_altemails
-	     my $number = 0;
-	     foreach my $element (keys %{$param->{'alt_emails'}}){
-		  $number ++ if ($element);
-	     }  
-	     $param->{'unique'} = 1 if($number <= 1);
-	     
-	     unless ($number == 0) {
-		 unless(&cookielib::set_cookie_extern($Conf{'cookie'},$param->{'cookie_domain'},%{$param->{'alt_emails'}})){
-		     &wwslog('notice', 'Could not set HTTP cookie for external_auth');
+	 ## Set cookies unless client use https authentication
+	 if ($param->{'user'}{'email'}) {
+	     if ($param->{'user'}{'email'} ne 'x509') {
+		 my $delay = $param->{'user'}{'cookie_delay'};
+		 unless (defined $delay) {
+		     $delay = $wwsconf->{'cookie_expire'};
+		 }
+		 
+		 if ($delay == 0) {
+		     $delay = 'session';
+		 }
+		 
+		 $param->{'auth'} ||= 'classic';
+		 
+		 unless (&cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $param->{'cookie_domain'},$delay, $param->{'auth'} )) {
+		     &wwslog('notice', 'Could not set HTTP cookie');
+		     exit -1;
+		 }
+		 $param->{'cookie_set'} = 1;
+		 
+		 ##Cookie extern : sympa_altemails
+		 my $number = 0;
+		 foreach my $element (keys %{$param->{'alt_emails'}}){
+		     $number ++ if ($element);
+		 }  
+		 $param->{'unique'} = 1 if($number <= 1);
+		 
+		 unless ($number == 0) {
+		     unless(&cookielib::set_cookie_extern($Conf{'cookie'},$param->{'cookie_domain'},%{$param->{'alt_emails'}})){
+			 &wwslog('notice', 'Could not set HTTP cookie for external_auth');
+		     }
 		 }
 	     }
+	 }elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/){
+	     &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
 	 }
-     }elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/){
-	 &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
      }
-
-
+	 
      ## Available languages
      my $saved_lang = &Language::GetLang();
      foreach my $l (&Language::GetSupportedLanguages()) {
@@ -809,7 +811,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      # if bypass is defined select the content-type from various vars
      if ($param->{'bypass'}) {
 
-	## if bypass = 'extreme' leave the action send the content-type
+	## if bypass = 'extreme' leave the action send the content-type and the content itself
 	unless ($param->{'bypass'} eq 'extreme') {
 
 	     ## if bypass = 'asis', file content-type is in the file itself as is define by the action in $param->{'content_type'};
@@ -9686,7 +9688,8 @@ sub creation_desc_file {
      if ($ua =~ /MSIE/) {
 	 $ct = 'application/pkix-cert';
      }
-      $ct = 'application/pkix-cert';
+     $ct = 'application/pkix-cert';
+     $param->{'bypass'} = 'extreme';
      printf "Content-type: $ct\n\n";
      foreach my $l (@cert) {
 	 printf "$l";

@@ -7636,6 +7636,7 @@ sub get_cert {
 	    # convert to CRLF for windows clients
 	    push(@cert, "$_\r\n");
 	    if(/^-+END/) {
+		pop @cert;
 		last;
 	    }
 	}elsif (/^-+BEGIN/) {
