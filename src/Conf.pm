@@ -191,7 +191,7 @@ sub load {
 
     ## Defaults
     unless (defined $o{'wwsympa_url'}) {
-	$o{'wwsympa_url'}[0] = "http://$o{'host'}[0]/sympa";
+	$o{'wwsympa_url'}[0] = "http://$o{'host'}[0]/wws";
     }
 
     # 'host' and 'domain' are mandatory and synonime.$Conf{'host'} is
@@ -382,7 +382,7 @@ sub load_robots {
 	$robot_conf->{$robot}{'email'} ||= $Conf{'email'};
 	$robot_conf->{$robot}{'log_smtp'} ||= $Conf{'log_smtp'};
 	$robot_conf->{$robot}{'log_level'} ||= $Conf{'log_level'};
-	$robot_conf->{$robot}{'wwsympa_url'} ||= 'http://'.$robot_conf->{$robot}{'http_host'}.'/sympa';
+	$robot_conf->{$robot}{'wwsympa_url'} ||= 'http://'.$robot_conf->{$robot}{'http_host'}.'/wws';
 	$robot_conf->{$robot}{'sympa'} = $robot_conf->{$robot}{'email'}.'@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'request'} = $robot_conf->{$robot}{'email'}.'-request@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'cookie_domain'} ||= 'localhost';
