@@ -4116,30 +4116,46 @@ sub search{
 	return undef;
     }
     
-    my $ldap = Net::LDAP->new($ldap_conf{'host'},port => $ldap_conf{'port'} );
-    
-    unless ($ldap) {	
-    	do_log('notice','Unable to connect to the LDAP server %s',$ldap_conf{'host'});
-	return undef;
-    }
-    
-    $ldap->bind();
-    my $mesg = $ldap->search(base => "$ldap_conf{'suffix'}" ,
-			     filter => "$filter",
-			     scope => "$ldap_conf{'scope'}");
-    	
+    ## There can be replicates
+    foreach my $host_entry (split(/,/,$ldap_conf{'host'})) {
 
-    if ($mesg->count() == 0){
-   	$persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'} = 0;
+	$host_entry =~ s/^\s*(\S.*\S)\s*$/$1/;
+	my ($host,$port) = split(/:/,$host_entry);
 	
-    }else {
-   	$persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'} = 1;
-    }
+	## If port a 'port' entry was defined, use it as default
+	$port = $port || $ldap_conf{'port'} || 389;
+	
+	my $ldap = Net::LDAP->new($host, port => $port );
+	
+	unless ($ldap) {	
+	    do_log('notice','Unable to connect to the LDAP server %s:%d',$host, $port);
+	    next;
+	}
+	
+	unless ($ldap->bind()) {
+	    do_log('notice','Unable to bind to the LDAP server %s:%d',$host, $port);
+	    next;
+	}
+	
+	my $mesg = $ldap->search(base => "$ldap_conf{'suffix'}" ,
+				 filter => "$filter",
+				 scope => "$ldap_conf{'scope'}");
+    	
+	
+	if ($mesg->count() == 0){
+	    $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'} = 0;
+	    
+	}else {
+	    $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'} = 1;
+	}
       	
-    $ldap->unbind or do_log('notice','List::search_ldap.Unbind impossible');
-    $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'update'} = time;
-
-    return $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'};
+	$ldap->unbind or do_log('notice','List::search_ldap.Unbind impossible');
+	$persistent_cache{'named_filter'}{$ldap_file}{$filter}{'update'} = time;
+	
+	return $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'};
+    }
+    
+    return undef;
 }
 
 ## May the indicated user edit the indicated list parameter or not ?

@@ -2735,10 +2735,7 @@ As a consequence, you can grant privileges in a list to people belonging to an L
 \begin{itemize}
 
 	\item{host}\\
-	Name of the LDAP directory host.
-
-	\item{port}\\
-	port ldap\_directory\_port (Default 389)	
+	A list of host:port LDAP directories (replicates) entries.
 
 	\item{suffix}\\
 	Defines the naming space covered by the search (optional, depending on the LDAP server).
@@ -2769,8 +2766,7 @@ example.ldap : we want to select the professors of mathematics in the university
 \begin {quote}
 \begin{verbatim}
 	
-	host		ldap.univ-rennes1.fr
-	port		389
+	host		ldap.univ-rennes1.fr:389,ldap2.univ-rennes1.fr:390
 	suffix		dc=univ-rennes1.fr,dc=fr
 	filter		(&(canonic_mail = [sender])(EmployeeType = prof)(subject = math))
 	scope		sub
