@@ -36,7 +36,7 @@
       <TR><TD><A HREF="[path_cgi]/view_translations"><B>Voir les traductions des "templates"</B></A></TD></TR>
       <TR>
         <TD>
-<FONT COLOR="--DARK_COLOR--"><B>>Reconstruire les archives HTML</B> en utilisant les répertoires  <CODE>arctxt</CODE>.
+<FONT COLOR="--DARK_COLOR--"><B>Reconstruire les archives HTML</B> en utilisant les répertoires  <CODE>arctxt</CODE>.
         </TD>
       </TR>
       <TR>
