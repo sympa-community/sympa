@@ -1200,14 +1200,8 @@ sub remind {
 					      'sender' => $email}) eq 'do_it') {
 			push @{$global_subscription{$email}},$listname;
 			
-			unless  ($user->{'lang'}) {
-			    if ($List::use_db) {
-				&List::update_user_db($user->{'email'}
-						      , {'lang' => $list->{'admin'}{'lang'}});
-			    }
-			    $user->{'lang'} = $list->{'admin'}{'lang'};
-			}
-
+			$user->{'lang'} ||= $list->{'admin'}{'lang'};
+			
 			$global_info{$email} = $user;
 
 			do_log('debug','remind * : %s subscriber of %s', $email,$listname);
@@ -1218,6 +1212,12 @@ sub remind {
 	    do_log('debug','Sending REMIND * to %d users', $count);
 
 	    foreach my $email (keys %global_subscription) {
+		my $user = &List::get_user_db($email);
+		foreach my $key (keys %{$user}) {
+		    $global_info{$email}{$key} = $user->{$key}
+		    if ($user->{$key});
+		}
+		
                 $context{'user'}{'email'} = $email;
 		$context{'user'}{'lang'} = $global_info{$email}{'lang'};
 		$context{'user'}{'password'} = $global_info{$email}{'password'};
