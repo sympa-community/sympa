@@ -1657,11 +1657,13 @@ sub distribute {
     $hdr->add('X-Validation-by', $sender);
 
     ## Distribute the message
-    my $numsmtp;
-    unless ($numsmtp = $list->distribute_msg($message)) {
+    my $numsmtp =$list->distribute_msg($message);
+    unless (defined $numsmtp) {
 	return undef;
     }
-
+    unless ($numsmtp) {
+	do_log('info', 'Message for %s from %s accepted but all subscribers use digest,nomail or summary',$which, $sender);
+    } 
     do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions), size=%d',
 	   $which, $sender, time - $start_time, $numsmtp, $bytes);
 
