@@ -825,7 +825,7 @@ sub db_connect {
     unless ( $dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'}) ) {
 	do_log ('err','Can\'t connect to Database %s as %s', $connect_string, $Conf{'db_user'});
 
-	&send_notify_to_listmaster('no_db');
+	&send_notify_to_listmaster('no_db', $Conf{'domain'});
 	&fatal_err('Sympa cannot connect to database %s, dying', $Conf{'db_name'});
 
 #	return undef;
@@ -1181,7 +1181,7 @@ sub send_alert_to_owner {
 ## Send a sub/sig notice to the owners.
 sub send_notify_to_listmaster {
     my ($operation, $robot, @param) = @_;
-    do_log('info', 'List::send_notify_to_listmaster(%s,%s )', $operation, @param );
+    do_log('info', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
 
     ## No DataBase
     if ($operation eq 'no_db') {

@@ -1140,5 +1140,5 @@ sub error {
                  $message";
     do_log ('err', "$message");
     change_label ($task_file, 'ERROR') unless ($task_file eq '');
-    &List::send_notify_to_listmaster ('error in task', @param);
+    &List::send_notify_to_listmaster ('error in task', $Conf{'domain'}, @param);
 }

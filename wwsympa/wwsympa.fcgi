@@ -4142,7 +4142,7 @@ sub do_create_list {
     ## notify listmaster
     if ($param->{'create_action'} =~ /notify/) {
 	&do_log('info','notify listmaster');
-  	&List::send_notify_to_listmaster('request_list_creation',$in{'listname'},$parameters->{'owner'}{'email'});
+  	&List::send_notify_to_listmaster('request_list_creation',$robot, $in{'listname'},$parameters->{'owner'}{'email'});
     }
     return 1;
 }

@@ -636,7 +636,7 @@ sub DoFile {
 	    ## Notify listmaster of first rejection
 	    if ($loop_info{$sender}{'count'} == $Conf{'loop_command_max'}) {
 		## Notify listmaster
-		&List::send_notify_to_listmaster('loop_command', $file);
+		&List::send_notify_to_listmaster('loop_command', $robot, $file);
 	    }
 	    
 	    ## Too many reports sent => message skipped !!
