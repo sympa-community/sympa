@@ -4294,10 +4294,8 @@ sub _install_aliases {
 	my $template_file = &tools::get_filename('etc', 'list_aliases.tpl', $robot);
 	my @aliases ;
 	my %data;
-	$data{'path_to_queue'} = '--MAILERPROGDIR--/queue';
-	$data{'path_to_bouncequeue'} = '--MAILERPROGDIR--/bouncequeue';
-	$data{'domain'} = $data{'robot'} = $robot;
-	$data{'listname'} = $list->{'name'};
+	$data{'list'}{'domain'} = $data{'robot'} = $robot;
+	$data{'list'}{'name'} = $list->{'name'};
 	$data{'default_domain'} = $Conf{'domain'};
 	$data{'is_default_domain'} = 1 if ($robot == $Conf{'domain'});
 	&parser::parse_tpl (\%data,$template_file,\@aliases);
