@@ -43,7 +43,8 @@ use CPAN;
 	     'Net::SSLeay' => '1.16',
 	     'Archive::Zip' => '1.05',
 	     'Bundle::LWP' => '1.09',
-	     'SOAP::Lite' => '0.60'
+	     'SOAP::Lite' => '0.60',
+	     'MHonArc::UTF8' => '2.4.6'
 	     );
 
 ### key:left "module" used by SYMPA, 
@@ -61,7 +62,8 @@ use CPAN;
 	     'Template' => 'Template-Toolkit',
 	     'Archive::Zip' => 'Archive-Zip',
 	     'LWP' => 'libwww-perl',
-             'XML::LibXML' => 'XML-LibXML'
+             'XML::LibXML' => 'XML-LibXML',
+	     'MHonArc::UTF8' => 'MHonArc'
 	     );
 
 %opt_CPAN = ('DBI' => 'DBI',
