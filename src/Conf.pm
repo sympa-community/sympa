@@ -52,13 +52,15 @@ my @valid_options = qw(
 		       ldap_export_dnmanager ldap_export_connection_timeout
 		       list_check_smtp list_check_suffixes
 );
+
+my %old_options = ('trusted_ca_options' => 'capath,cafile');
+
 my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
 
 my %Default_Conf = 
     ('home'    => '--EXPL_DIR--',
      'etc'     => '--DIR--/etc',
-#     'trusted_ca_options' => '-CAfile --ETCBINDIR--/ca-bundle.crt',
      'key_passwd' => '',
      'ssl_cert_dir' => '--EXPL_DIR--/X509-user-certs',
      'crl_dir' => '--EXPL_DIR--/crl',
@@ -150,6 +152,8 @@ my %Default_Conf =
      'expire_bounce_task' => 'daily',
      'default_archive_quota' => '',
      'default_shared_quota' => '',
+     'capath' => '',
+     'cafile' => ''
    );
    
 my $wwsconf;
@@ -235,7 +239,11 @@ sub load {
     ## Check if we have unknown values.
     foreach $i (sort keys %o) {
 	next if ($valid_options{$i});
-	printf STDERR  "Line %d, unknown field: %s in sympa.conf\n", $o{$i}[1], $i;
+	if ($old_options{$i}) {
+	    printf STDERR  "Line %d of sympa.conf, parameter %s is no more available, read documentation for new parameter(s) %s\n", $o{$i}[1], $i, $old_options{$i};
+	}else {
+	    printf STDERR  "Line %d, unknown field: %s in sympa.conf\n", $o{$i}[1], $i;
+	}
 	$config_err++;
     }
     ## Do we have all required values ?
