@@ -1377,7 +1377,7 @@ sub load {
 ## Load stats file if first new() or stats file changed
     my ($stats, $total);
 
-    if ($time_stats > $self->{'mtime'}[2]) {
+    if (! $self->{'mtime'}[2] || ($time_stats > $self->{'mtime'}[2])) {
 	($stats, $total) = _load_stats_file("$self->{'dir'}/stats");
 	$m3 = $time_stats;
 
