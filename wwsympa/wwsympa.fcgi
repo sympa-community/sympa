@@ -388,6 +388,9 @@ while ($query = &new_loop()) {
 	exit (-1);
     }
 
+    ## Sets the UMASK
+    umask($Conf{'umask'});
+
     ## Authentication 
     ## use https client certificat information if define.  
     if (($ENV{'SSL_CLIENT_S_DN_Email'}) && ($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS')) {
