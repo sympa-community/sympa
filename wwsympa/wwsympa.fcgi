@@ -3168,17 +3168,17 @@ if ($wwsconf->{'use_fast_cgi'}) {
      if ($in{'dump'}) {
 	 foreach (split /\n/, $in{'dump'}) {
 	     if (/^(\S+|\".*\"@\S+)(\s+(.*))?\s*$/) {
-		 $user{$1} = $3;
+		 $user{&tools::get_canonical_email($1)} = $3;
 	     }
 	 }
      }elsif ($in{'email'} =~ /,/) {
 	 foreach my $pair (split /\0/, $in{'email'}) {
 	     if ($pair =~ /^(.+),(.+)$/) {
-		 $user{$1} = $2;
+		 $user{&tools::get_canonical_email($1)} = $2;
 	     }
 	 }
      }elsif ($in{'email'}) {
-	 $user{$in{'email'}} = $in{'gecos'};
+	 $user{&tools::get_canonical_email($in{'email'})} = $in{'gecos'};
      }else {
 	 &error_message('no_email');
 	 &wwslog('info','do_add: no email');
@@ -3188,10 +3188,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
      my ($total, @new_users );
      my $comma_emails ;
      foreach my $email (keys %user) {
-
-	 ## Clean email
-	 $email =~ s/^\s*(\S.*\S)\s*$/$1/;
-	 $email = lc($email);
 
 	 unless (&tools::valid_email($email)) {
 	     &error_message('incorrect_email', {'email' => $email});
