@@ -4563,7 +4563,7 @@ sub _prepare_data {
 
 	}else {
 	    $p_glob->{'type'} = 'scalar';
-	    $p->{'value'} = $d;
+	    $p->{'value'} = &tools::escape_html($d);
 	    $p->{'length'} = $struct->{'length'};
 	    $p->{'unit'} = $struct->{'unit'};
 	}

@@ -618,6 +618,13 @@ sub unescape_chars {
     return $s;
 }
 
+sub escape_html {
+    my $s = shift;
+
+    $s =~ s/\"/\&quot\;/g;
+
+    return $s;
+}
 
 sub tmp_passwd {
     my $email = shift;
