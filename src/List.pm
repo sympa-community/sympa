@@ -7615,6 +7615,10 @@ sub _load_list_param {
 sub get_cert {
 
     my $self = shift;
+    my $format = shift;
+
+    ## Default format is PEM (can be DER)
+    $format ||= 'pem';
 
     do_log('debug2', 'List::load_cert(%s)',$self->{'name'});
 
@@ -7624,26 +7628,41 @@ sub get_cert {
     # (the problem is that netscape, opera and IE can't only
     # read the first cert in a file)
     my($certs,$keys) = tools::smime_find_keys($self->{dir},'encrypt');
-    unless(open(CERT, $certs)) {
-	do_log('err', "List::get_cert(): Unable to open $certs: $!");
+
+    my @cert;
+    if ($format eq 'pem') {
+	unless(open(CERT, $certs)) {
+	    do_log('err', "List::get_cert(): Unable to open $certs: $!");
+	    return undef;
+	}
+	
+	my $state;
+	while(<CERT>) {
+	    chomp;
+	    if($state == 1) {
+		# convert to CRLF for windows clients
+		push(@cert, "$_\r\n");
+		if(/^-+END/) {
+		    pop @cert;
+		    last;
+		}
+	    }elsif (/^-+BEGIN/) {
+		$state = 1;
+	    }
+	}
+	close CERT ;
+    }elsif ($format eq 'der') {
+	unless (open CERT, "$Conf{'openssl'} x509 -in $certs -outform DER|") {
+	    do_log('err', "List::get_cert(): Unable to open get $certs in DER format: $!");
+	    return undef;
+	}
+
+	@cert = <CERT>;
+	close CERT;
+    }else {
+	do_log('err', "List::get_cert(): unknown '$format' certificate format");
 	return undef;
     }
-
-    my(@cert, $state);
-    while(<CERT>) {
-	chomp;
-	if($state == 1) {
-	    # convert to CRLF for windows clients
-	    push(@cert, "$_\r\n");
-	    if(/^-+END/) {
-		pop @cert;
-		last;
-	    }
-	}elsif (/^-+BEGIN/) {
-	    $state = 1;
-	}
-    }
-    close CERT ;
     
     return @cert;
 }

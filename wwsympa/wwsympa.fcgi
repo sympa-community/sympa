@@ -9673,7 +9673,7 @@ sub creation_desc_file {
 	 &wwslog('info','do_load_cert: no list');
 	 return undef;
      }
-     my @cert = $list->get_cert();
+     my @cert = $list->get_cert('der');
      unless (@cert) {
 	 &error_message('missing_cert');
 	 &wwslog('info','do_load_cert: no cert for this list');
@@ -9688,7 +9688,6 @@ sub creation_desc_file {
      if ($ua =~ /MSIE/) {
 	 $ct = 'application/pkix-cert';
      }
-     $ct = 'application/pkix-cert';
      $param->{'bypass'} = 'extreme';
      printf "Content-type: $ct\n\n";
      foreach my $l (@cert) {
