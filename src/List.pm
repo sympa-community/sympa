@@ -6703,7 +6703,7 @@ sub probe_db {
 		      'subscribed_subscriber' => "enum('0','1')",
 		      'included_subscriber' => "enum('0','1')",
 		      'include_sources_subscriber' => 'varchar(50)',
-		      'bounce_score_subscriber' => 'smallint (3)'}
+		      'bounce_score_subscriber' => 'smallint (6)'}
 		     );
 
     ## Is the Database defined
