@@ -25,6 +25,14 @@ Forces \fBSympa\fR to use an alternative configuration file.
 Default behavior is to use the configuration file as defined in the 
 Makefile. 
 .TP
+\fB\-\--import\fR=\fIlist\fR
+Import subscribers in the list. Data are read from STDIN.
+.TP
+\fB\-k\fR, \fB\-\-keepcopy\fR=\fIdirectory\fR
+This option tells \fBSympa\fR to keep a copy of every incoming message, 
+instead of deleting them. `directory' is the directory to 
+store messages. 
+.TP
 \fB\-l\fR, \fB\-\-lang\fR=\fIcatalogue\fR
 Set this option to use a language catalog for \fBSympa\fR. The corresponding 
 catalog file `catalogue'.cat must be located in ~sympa/nls directory. 
@@ -32,11 +40,6 @@ catalog file `catalogue'.cat must be located in ~sympa/nls directory.
 \fB\-m\fR, \fB\-\-mail\fR
 \fBSympa\fR will log calls to sendmail, including recipients. Useful 
 for keeping track of each mail sent (log files may grow faster though). 
-.TP
-\fB\-k\fR, \fB\-\-keepcopy\fR=\fIdirectory\fR
-This option tells \fBSympa\fR to keep a copy of every incoming message, 
-instead of deleting them. `directory' is the directory to 
-store messages. 
 .TP
 \fB\-s\fR, \fB\-\-dump\fR=\fIlistname\fR | ALL
 Dumps subscribers of for `listname' list or all lists. Subscribers are 

@@ -51,9 +51,10 @@ my $usage_string = "Usage:
 Options:
    -d, --debug         : sets Sympa in debug mode 
    -f, --config=FILE   : uses an alternative configuration file
+   --import=list       : import subscribers (read from STDIN)
+   -k, --keepcopy=dir  : keep a copy of incoming message
    -l, --lang=LANG     : use a language catalog for Sympa
    -m, --mail          : log calls to sendmail
-   -k, --keepcopy=dir  : keep a copy of incoming message
    -s, --dump=list|ALL : dumps subscribers 
 
    -h, --help          : print this help
@@ -68,7 +69,7 @@ encryption.
 ## Check --dump option
 my %options;
 &GetOptions(\%main::options, 'dump|s:s', 'debug|d', 'foreground', 'config|f=s', 
-	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version');
+	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s');
 
 ## Trace options
 #foreach my $k (keys %main::options) {
@@ -153,6 +154,39 @@ if ($main::options{'dump'}) {
 }elsif ($main::options{'version'}) {
     print $version_string;
     
+    exit 0;
+}elsif ($main::options{'import'}) {
+    my ($list, $total);
+    unless ($list = new List ($main::options{'import'})) {
+	fatal_err('Unknown list name %s', $main::options{'import'});
+    }
+
+    ## Read imported data from STDIN
+    while (<STDIN>) {
+	next if /^\s*$/;
+	next if /^\s*\#/;
+
+	unless (/^\s*((\S+|\".*\")@\S+)(\s*(\S.*))?\s*$/) {
+	    printf STDERR "Not an email address: %s\n", $_;
+	}
+
+	my $email = lc($1);
+	my $gecos = $4;
+	my %u = $list->{'admin'}{'default_user_options'};
+	$u{'email'} = $email;
+	$u{'gecos'} = $gecos;
+
+	unless ($list->add_user(\%u)) {
+	    printf STDERR "\nCould not add %s\n", $email;
+	    next;
+	}
+	print STDERR '+';
+	
+	$total++;	
+    }
+    
+    printf STDERR "Total imported subscribers: %d\n", $total;
+
     exit 0;
 }
 
