@@ -180,6 +180,7 @@ my %comm = ('home' => 'do_home',
 	 'create_list' => 'do_create_list',
 	 'get_pending_lists' => 'do_get_pending_lists', 
 	 'get_closed_lists' => 'do_get_closed_lists', 
+	 'get_latest_lists' => 'do_get_latest_lists', 
 	 'set_pending_list_request' => 'do_set_pending_list_request', 
 	 'install_pending_list' => 'do_install_pending_list', 
 	 'submit_list' => 'do_submit_list',
@@ -266,6 +267,7 @@ my %action_args = ('default' => ['list'],
 		'serveradmin' => [],
 		'get_pending_lists' => [],
 		'get_closed_lists' => [],
+		'get_latest_lists' => [],
 		'search_list' => ['filter'],
 		'shared' => ['list','@path'],
 		'd_read' => ['list','@path'],
@@ -3942,13 +3944,13 @@ sub do_get_closed_lists {
 
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
-	&wwslog('info','get_pending_lists :  no user');
-	$param->{'previous_action'} = 'get_pending_lists';
+	&wwslog('info','get_closed_lists :  no user');
+	$param->{'previous_action'} = 'get_closed_lists';
 	return 'loginrequest';
     }
     unless ( $param->{'is_listmaster'}) {
 	&error_message('may_not');
-	&do_log('info', 'Incorrect_privilege to get pending');
+	&do_log('info', 'Incorrect_privilege');
 	return undef;
     } 
 
@@ -3962,6 +3964,47 @@ sub do_get_closed_lists {
 
     return 1;
 }
+
+# get latest lists
+sub do_get_latest_lists {
+
+    &wwslog('debug', 'get_latest_lists');
+
+    unless ($param->{'user'}{'email'}) {
+	&error_message('no_user');
+	&wwslog('info','get_latest_lists :  no user');
+	$param->{'previous_action'} = 'get_latest_lists';
+	return 'loginrequest';
+    }
+
+    unless ( $param->{'is_listmaster'}) {
+	&error_message('may_not');
+	&do_log('info', 'Incorrect_privilege');
+	return undef;
+    } 
+
+    my @unordered_lists;
+    foreach my $l ( &List::get_lists('*') ) {
+	my $list = new List ($l,$robot);
+	unless ($list) {
+	    next;
+	}
+	
+	&do_log('debug','List %s / %s', $l, $list->{'name'});
+	
+	push @unordered_lists, {'name' => $list->{'name'},
+				'subject' => $list->{'admin'}{'subject'},
+				'creation_date' => $list->{'admin'}{'creation'}{'date_epoch'}};
+    }
+
+    foreach my $l (sort {$a->{'creation_date'} <=> $b->{'creation_date'}} @unordered_lists) {
+	push @{$param->{'latest_lists'}}, $l;
+	$l->{'creation_date'} = &POSIX::strftime("%d %b %Y", localtime($l->{'creation_date'}));
+    }
+
+    return 1;
+}
+
 
 ## show a list parameters
 sub do_set_pending_list_request {
