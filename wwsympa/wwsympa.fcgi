@@ -5855,6 +5855,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
      my ($name, $struct, $data) = @_;
  #    &do_log('debug2', '_prepare_data(%s, %s)', $name, $data);
 
+     next if ($struct->{'obsolete'});
+
      ## Prepare data structure for the parser
      my $p_glob = {'name' => $name,
 		   'title' => Msg(16, $struct->{'title_id'}, $name),

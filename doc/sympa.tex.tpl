@@ -5492,11 +5492,22 @@ requires the \perlmodule {Net::LDAP} (perlldap) PERL module.
 \label {host}
 \lparam {host} \textit {ldap\_directory\_hostname} 
 
-Name of the LDAP directory host.
+Name of the LDAP directory host or a comma separated list of host:port. The
+second form is usefull if you are using some replication ldap host. 
+
+Example :
+
+\begin {quote}
+\begin{verbatim}
+    host ldap.cru.fr:389,backup-ldap.cru.fr:389
+
+\end{verbatim}
+\end {quote}
+
 
 \item
 \label {port}
-\lparam {port} \textit {ldap\_directory\_port} (Default 389) 
+\lparam {port} \textit {ldap\_directory\_port} (OBSOLETE) 
 
 Port on which the Directory accepts connections.
 
@@ -5622,7 +5633,7 @@ Example :
 
 \item
 \label {port}
-\lparam {port} \textit {ldap\_directory\_port} (Default 389) 
+\lparam {port} \textit {ldap\_directory\_port} (OBSOLETE) 
 
 Port on which the Directory accepts connections (this parameter is ignored if host definition include port specification).
 

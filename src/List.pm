@@ -220,7 +220,7 @@ my %date_format = (
 ## Regexps for list params
 my %regexp = ('email' => '([\w\-\_\.\/\+\=]+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 	      'host' => '[\w\.\-]+',
-	      'host_ldap' => '[\w\.\-:,]+',
+	      'multiple_host_with_port' => '[\w\.\-]+(:\d+)?,([\w\.\-]+(:\d+)?)*',
 	      'listname' => '[a-z0-9][a-z0-9\-\._]+',
 	      'sql_query' => '(SELECT|select).*',
 	      'scenario' => '[\w,\.\-]+',
@@ -496,7 +496,7 @@ my %alias = ('reply-to' => 'reply_to',
 				 },
 
 
-	    'include_ldap_query' => {'format' => {'host' => {'format' => $regexp{'host_ldap'},
+	    'include_ldap_query' => {'format' => {'host' => {'format' => $regexp{'multiple_host_with_port'},
 							     'occurrence' => '1',
 							     'title_id' => 36,
 							     'order' => 2
@@ -505,6 +505,7 @@ my %alias = ('reply-to' => 'reply_to',
 							     'default' => 389,
 							     'length' => 4,
 							     'title_id' => 37,
+							     'obsolete' => 1,
 							     'order' => 2
 							     },
 						  'user' => {'format' => '.+',
@@ -558,7 +559,7 @@ my %alias = ('reply-to' => 'reply_to',
 				     'title_id' => 35,
 				     'group' => 'data_source'
 				     },
-	    'include_ldap_2level_query' => {'format' => {'host' => {'format' => $regexp{'host_ldap'},
+	    'include_ldap_2level_query' => {'format' => {'host' => {'format' => $regexp{'multiple_host_with_port'},
 							     'occurrence' => '1',
 							     'title_id' => 136,
 							     'order' => 1
@@ -567,6 +568,7 @@ my %alias = ('reply-to' => 'reply_to',
 							     'default' => 389,
 							     'length' => 4,
 							     'title_id' => 137,
+							     'obsolete' => 1,
 							     'order' => 2
 							     },
 						  'user' => {'format' => '.+',
@@ -5364,7 +5366,8 @@ sub _include_users_ldap {
     
     my $id = _get_datasource_id($param);
 
-    my $host = $param->{'host'};
+    my $host;
+    @{$host} = split(/,/, $param->{'host'});
     my $port = $param->{'port'} || '389';
     my $user = $param->{'user'};
     my $passwd = $param->{'passwd'};
@@ -5382,31 +5385,29 @@ sub _include_users_ldap {
     ## Connection timeout (default is 120)
     #my $timeout = 30; 
     
-    my (@hostlist) = split(/,/, $host);
-    my $h = $hostlist[1] ? \@hostlist : $host;    # pointeur de tableau, ou chaine
-    unless ($ldaph = Net::LDAP->new($h, port => "$port", timeout => $param->{'timeout'}, async => 1)) {
+    unless ($ldaph = Net::LDAP->new($host, timeout => $param->{'timeout'}, async => 1)) {
 
-	do_log('notice',"Can\'t connect to LDAP server '$host' '$port' : $@");
+	do_log('notice',"Can\'t connect to LDAP server '%s' : $@", join(',',@{$host}));
 	return undef;
     }
     
-    do_log('debug2', "Connected to LDAP server $host:$port");
+    do_log('debug2', "Connected to LDAP server %s", join(',',@{$host}));
     
     if ( defined $user ) {
 	unless ($ldaph->bind ($user, password => "$passwd")) {
-	    do_log('notice',"Can\'t bind with server $host:$port as user '$user' : $@");
+	    do_log('notice',"Can\'t bind with server %s as user '$user' : $@", join(',',@{$host}));
 	    return undef;
 	}
     }else {
 	unless ($ldaph->bind ) {
-	    do_log('notice',"Can\'t do anonymous bind with server $host:$port : $@");
+	    do_log('notice',"Can\'t do anonymous bind with server %s : $@", join(',',@{$host}));
 	    return undef;
 	}
     }
 
-    do_log('debug2', "Binded to LDAP server $host:$port ; user : '$user'") ;
+    do_log('debug2', "Binded to LDAP server %s ; user : '$user'", join(',',@{$host})) ;
     
-    do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $host, $ldap_suffix, $ldap_filter, $ldap_attrs);
+    do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', join(',',@{$host}), $ldap_suffix, $ldap_filter, $ldap_attrs);
     unless ($fetch = $ldaph->search ( base => "$ldap_suffix",
                                       filter => "$ldap_filter",
 				      attrs => "$ldap_attrs",
@@ -5436,7 +5437,7 @@ sub _include_users_ldap {
     }
     
     unless ($ldaph->unbind) {
-	do_log('notice','Can\'t unbind from  LDAP server %s:%s',$host,$port);
+	do_log('notice','Can\'t unbind from  LDAP server %s', join(',',@{$host}));
 	return undef;
     }
     
@@ -5470,7 +5471,7 @@ sub _include_users_ldap {
 	}
     }
 
-    do_log('debug2',"unbinded from LDAP server %s:%s ",$host,$port);
+    do_log('debug2',"unbinded from LDAP server %s ", join(',',@{$host}));
     do_log('debug2','%d new subscribers included from LDAP query',$total);
 
     return $total;
@@ -5489,7 +5490,8 @@ sub _include_users_ldap_2level {
 
     my $id = _get_datasource_id($param);
 
-    my $host = $param->{'host'};
+    my $host;
+    @{$host} = split(/,/, $param->{'host'});
     my $port = $param->{'port'} || '389';
     my $user = $param->{'user'};
     my $passwd = $param->{'passwd'};
@@ -5515,28 +5517,28 @@ sub _include_users_ldap_2level {
     ## Connection timeout (default is 120)
     #my $timeout = 30; 
     
-    unless ($ldaph = Net::LDAP->new($host, port => "$port", timeout => $param->{'timeout'}, async => 1)) {
-	do_log('notice',"Can\'t connect to LDAP server '$host' '$port' : $@");
+    unless ($ldaph = Net::LDAP->new($host, timeout => $param->{'timeout'}, async => 1)) {
+	do_log('notice',"Can\'t connect to LDAP server '%s' : $@",join(',',@{$host}) );
 	return undef;
     }
     
-    do_log('debug2', "Connected to LDAP server $host:$port");
+    do_log('debug2', "Connected to LDAP server %s", join(',',@{$host}));
     
     if ( defined $user ) {
 	unless ($ldaph->bind ($user, password => "$passwd")) {
-	    do_log('err',"Can\'t bind with server $host:$port as user '$user' : $@");
+	    do_log('err',"Can\'t bind with server %s as user '$user' : $@", join(',',@{$host}));
 	    return undef;
 	}
     }else {
 	unless ($ldaph->bind ) {
-	    do_log('err',"Can\'t do anonymous bind with server $host:$port : $@");
+	    do_log('err',"Can\'t do anonymous bind with server %s : $@", join(',',@{$host}));
 	    return undef;
 	}
     }
 
-    do_log('debug2', "Binded to LDAP server $host:$port ; user : '$user'") ;
+    do_log('debug2', "Binded to LDAP server %s ; user : '$user'", join(',',@{$host})) ;
     
-    do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $host, $ldap_suffix1, $ldap_filter1, $ldap_attrs1) ;
+    do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', join(',',@{$host}), $ldap_suffix1, $ldap_filter1, $ldap_attrs1) ;
     unless ($fetch = $ldaph->search ( base => "$ldap_suffix1",
                                       filter => "$ldap_filter1",
 				      attrs => "$ldap_attrs1",
@@ -5575,7 +5577,7 @@ sub _include_users_ldap_2level {
 	($suffix2 = $ldap_suffix2) =~ s/\[attrs1\]/$attr/g;
 	($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$attr/g;
 
-	do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $host, $suffix2, $filter2, $ldap_attrs2);
+	do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', join(',',@{$host}), $suffix2, $filter2, $ldap_attrs2);
 	unless ($fetch = $ldaph->search ( base => "$suffix2",
 					filter => "$filter2",
 					attrs => "$ldap_attrs2",
@@ -5605,7 +5607,7 @@ sub _include_users_ldap_2level {
     }
     
     unless ($ldaph->unbind) {
-	do_log('err','Can\'t unbind from  LDAP server %s:%s',$host,$port);
+	do_log('err','Can\'t unbind from  LDAP server %s',join(',',@{$host}));
 	return undef;
     }
     
@@ -5638,7 +5640,7 @@ sub _include_users_ldap_2level {
 	}
     }
 
-    do_log('debug2',"unbinded from LDAP server %s:%s ",$host,$port) ;
+    do_log('debug2',"unbinded from LDAP server %s ",join(',',@{$host})) ;
     do_log('debug2','%d new subscribers included from LDAP query',$total);
 
     return $total;
