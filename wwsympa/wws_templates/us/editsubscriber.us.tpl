@@ -9,9 +9,9 @@
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 <INPUT TYPE="hidden" NAME="email" VALUE="[subscriber->escaped_email]">
 <DL>
-<DD>Email : <INPUT NAME="new_email" VALUE="[subscriber->email]" SIZE="25">
+<DD>Email : <INPUT NAME="new_email" VALUE="[subscriber->escaped_email]" SIZE="25">
 <DD>Name : <INPUT NAME="gecos" VALUE="[subscriber->gecos]" SIZE="25">
-<DD>Subscribed since [subscriber->date]
+<DD>Subscribed since [subscriber->date]	
 <DD>Last update : [subscriber->update_date]
 <DD>Reception : <SELECT NAME="reception">
 		  [FOREACH r IN reception]
