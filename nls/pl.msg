@@ -98,7 +98,7 @@ Ta wiadomo¶æ mog³a zostaæ ju¿ wys³ana przez jednego z moderatorów listy\n.\n"
 Nie jeste¶ moderatorem listy %s.\n"
 47	"Polecenia EXPIRE, EXPIREINDEX i EXPIREDEL s± zarezerwowane dla w³a¶cicieli listy.\n\
 Nie jeste¶ w³a¶cicielem listy %s.\n"
-48      "\
+48	"\
 Kto¶ (miejmy nadziejê, ¿e ty) wyda³ polecenie potwierdzenia zapisania na listê\n\
 '%s' osobom bêd±cym na niej d³u¿ej ni¿ %d.\n\
 Je¿eli nie chcesz potwierdziæ tego polecenia zignoruj t± wiadomo¶æ.\n\
@@ -216,7 +216,7 @@ CONFIRM %s\n"
 23	"UWAGA : %s %s nie powiod³o siê wypisanie z %s poniewa¿ jego adres nie zosta³\n\
 znaleziony na li¶cie\n (Mo¿esz pomóc tej osobie)\n"
 24	"Polecenie wypisania z listy %s"
-25      "Drogi administratorze listy %s,\n\n\
+25	"Drogi administratorze listy %s,\n\n\
 U¿ytkownik poprosi³ o wypisanie z listy. Je¿eli wyra¿asz na to zgodê\n\
 wydaj polecenie:\n\n\
 DEL %s %s\n"
