@@ -4610,7 +4610,6 @@ sub do_get_inactive_lists {
 				 'last_message_date' => &POSIX::strftime("%d %b %Y", localtime($last_message*86400)),
 				 'creation_date_epoch' => $list->{'admin'}{'creation'}{'date_epoch'},
 				 'creation_date' => &POSIX::strftime("%d %b %Y", localtime($list->{'admin'}{'creation'}{'date_epoch'}))
-
 				 };
      }
 
@@ -6386,6 +6385,7 @@ sub do_set_pending_list_request {
 	&tools::remove_dir($list->{'dir'});
 	if ($list->{'name'}) {
 		&tools::remove_dir("$wwsconf->{'arc_path'}/$list->{'name'}\@$list->{'domain'}");
+		&tools::remove_dir("$wwsconf->{'bounce_path'}/$list->{'name'}");
 	}
      }    
 
