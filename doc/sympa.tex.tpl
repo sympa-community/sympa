@@ -423,7 +423,9 @@ There are also a few \htmladdnormallinkfoot {mailing-lists about \Sympa} {http:/
 	   \item   \mailaddr {sympa-announce{\at}cru.fr}, \Sympa announcements
 			  
 	   \item   \mailaddr {sympa-dev{\at}cru.fr}, \Sympa developers
-			  
+			
+	   \item   \mailaddr {sympa-translation{\at}cru.fr}, \Sympa translators
+  
 	\end {itemize}
 
 To join, send the following message to \mailaddr {sympa{\at}cru.fr}:
@@ -2038,39 +2040,45 @@ The \file {create\_db} script below will create the sympa database for
 you. You can find it in the \dir {script/} directory of the 
 distribution (currently scripts are available for MySQL, PostgreSQL, Oracle and Sybase).
 
-\begin {quote}
-\begin{verbatim}
+\begin{itemize}
 
-## MySQL Database creation script
-CREATE DATABASE sympa;
+  \item MySQL database creation script\\
+	\begin {quote}
+	\begin{verbatim}
+	[STARTPARSE]
+	[INCLUDE '../src/etc/script/create_db.mysql']
+	[STOPPARSE]
+	\end{verbatim}
+	\end {quote}
 
-## Connect to DB 
-\r sympa
+  \item PostgreSQL database creation script\\
+	\begin {quote}
+	\begin{verbatim}
+	[STARTPARSE]
+	[INCLUDE '../src/etc/script/create_db.Pg']
+	[STOPPARSE]
+	\end{verbatim}
+	\end {quote}
 
-CREATE TABLE user_table (
-  	email_user          	varchar (100) NOT NULL,
-  	gecos_user          	varchar (150),
-  	password_user		varchar (40),
-	cookie_delay_user	int,
-	lang_user		varchar (10),
-	PRIMARY KEY (email_user)
-);
+  \item Sybase database creation script\\
+	\begin {quote}
+	\begin{verbatim}
+	[STARTPARSE]
+	[INCLUDE '../src/etc/script/create_db.Sybase']
+	[STOPPARSE]
+	\end{verbatim}
+	\end {quote}
 
-CREATE TABLE subscriber_table (
-  	list_subscriber       	varchar (50) NOT NULL,
-	user_subscriber		varchar (100) NOT NULL,
-	date_subscriber		datetime NOT NULL,
-	update_subscriber	datetime,
-	visibility_subscriber	varchar (20),
-	reception_subscriber	varchar (20),
-	bounce_subscriber	varchar (30),
-	comment_subscriber	varchar (150),
-	PRIMARY KEY (list_subscriber, user_subscriber),
-	INDEX (user_subscriber,list_subscriber)
-);
+  \item Oracle database creation script\\
+	\begin {quote}
+	\begin{verbatim}
+	[STARTPARSE]
+	[INCLUDE '../src/etc/script/create_db.Oracle']
+	[STOPPARSE]
+	\end{verbatim}
+	\end {quote}
 
-\end{verbatim}
-\end {quote}
+\end{itemize}
 
 You can execute the script using a simple SQL shell such as
 mysql or psql.
