@@ -1,0 +1,465 @@
+<?xml version="1.0"?>
+<definitions name="Sympa" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	targetNamespace="[conf->wwsympa_url]/wsdl" 
+	xmlns:tns="[conf->wwsympa_url]/wsdl"
+	xmlns="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsdl="[conf->soap_url]/SympaFunctions.xsd">
+
+
+<!-- types part -->	
+
+
+<types>
+<schema targetNamespace="[conf->soap_url]/SympaFunctions.xsd" 
+	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns="http://www.w3.org/2001/XMLSchema">
+	
+	<simpleType name="Status_type">
+		     <restriction base="string"> 
+			     <enumeration value="admin"/>
+			     <enumeration value="listmaster"/>
+			     <enumeration value="owner"/>
+			     <enumeration value="member"/>
+		     </restriction> 
+        </simpleType>	
+
+	<simpleType name="Reception_type">
+		     <restriction base="string"> 
+		              <enumeration value="digest"/>
+			      <enumeration value="html"/>
+			      <enumeration value="mail"/>
+			      <enumeration value="nomail"/>
+			      <enumeration value="not_me"/>
+			      <enumeration value="notice"/>
+			      <enumeration value="summary"/>      
+			      <enumeration value="txt"/>
+			      <enumeration value="urlize"/>
+		     </restriction> 
+        </simpleType>	
+		
+	<simpleType name="Visibility_type">
+		     <restriction base="string"> 
+		              <enumeration value="conceal"/>
+			      <enumeration value="public"/>
+		     </restriction> 
+        </simpleType>	
+
+	<complexType name="ArrayOfLists">
+		<complexContent>
+			<restriction base="SOAP-ENC:Array">
+				<attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="xsdl:List_type[]"/>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ArrayOfString">
+		<complexContent>
+			<restriction base="SOAP-ENC:Array">
+				<attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="string[]"/>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="List_type">
+		<element name="listname" minOccurs="1" type="string"/>
+		<element name="infos" minOccurs="0" type="string"/>
+		<element name="url" minOccurs="0" type="string"/>
+		<element name="sender" minOccurs="0" type="xsdl:Sender_type"/>
+	</complexType>
+
+	<complexType name="Sender_type">
+	        <element name="email" minOccurs="1" type="string"/>
+		<element name="status" minOccurs="0" type="xsdl:Status_type"/>
+		<element name="reception" minOccurs="0" type="xsdl:Reception_type"/>
+		<element name="visibility"  minOccurs="0" type="xsdl:Visibility_type"/>
+	</complexType>
+
+</schema>
+</types>
+
+
+<!-- message part -->
+
+<message name="do_whichRequest">
+	<part name="email" type="xsd:string"/>
+	<part name="password" type="xsd:string"/>
+</message>
+
+<message name="do_whichResponse">
+	<part name="return" type="xsdl:ArrayOfLists"/>
+</message>
+
+
+<message name="isSubscriberRequest">
+	<part name="list" type="xsd:string"/>
+	<part name="user" type="xsd:string"/>
+</message>
+
+<message name="isSubscriberResponse">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
+<message name="amIRequest">
+	<part name="list" type="xsd:string"/>
+	<part name="function" type="xsd:string"/>
+	<part name="user" type="xsd:string"/>
+</message>
+
+<message name="amIResponse">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
+<message name="reviewRequest">
+	<part name="list" type="xsd:string"/>
+	<part name="robot" type="xsd:string"/>
+	<part name="sender" type="xsd:string"/>
+	<part name="password" type="xsd:string"/>
+</message>
+
+<message name="reviewResponse">
+	<part name="return" type="xsdl:ArrayOfString"/>
+</message>
+
+<message name="signoffRequest">
+	<part name="list" type="xsd:string"/>
+	<part name="robot" type="xsd:string"/>
+	<part name="sender" type="xsd:string"/>
+	<part name="password" type="xsd:string"/>
+	<part name="email" type="xsd:string" minOccurs="0"/>	
+</message>
+
+<message name="signoffResponse">
+	<part name="return" type="xsdl:boolean"/>
+</message>
+
+<message name="subscribeRequest">
+	<part name="list" type="xsd:string"/>
+	<part name="robot" type="xsd:string"/>
+	<part name="sender" type="xsd:string"/>
+	<part name="password" type="xsd:string"/>
+	<part name="gecos" type="xsd:string" minOccurs="0"/>	
+</message>
+
+<message name="subscribeResponse">
+	<part name="return" type="xsdl:boolean"/>
+</message>
+
+<message name="do_loginRequest">
+	<part name="host" type="xsd:string"/>
+	<part name="email" type="xsd:string"/>
+	<part name="password" type="xsd:string"/>
+</message>
+
+<message name="do_loginResponse">
+	<part name="return" type="xsd:string"/>	
+</message>
+
+<message name="do_listsRequest">
+	<part name="robot" type="xsd:string"/>
+	<part name="email" type="xsd:string"/>
+	<part name="password" type="xsd:string"/>
+	<part name="topic" type="xsd:string"/>
+	<part name="subtopic" type="xsd:string"/>
+</message>
+
+<message name="do_listsResponse">
+	<part name="return" type="xsdl:ArrayOfLists"/>	
+</message>
+
+<message name="check_cookieRequest">
+	<part name="cookie" type="xsd:string"/>
+</message>
+
+<message name="check_cookieResponse">
+	<part name="email" type="xsd:string"/>
+</message>
+
+
+<!-- portType part -->
+
+<portType name="do_whichPortType">
+	<operation name="do_which">
+		<input message="tns:do_whichRequest" />
+		<output message="tns:do_whichResponse" />
+	</operation>
+</portType>
+
+<portType name="isSubscriberPortType">
+	<operation name="isSubscriber">
+		<input message="tns:isSubscriberRequest" />
+		<output message="tns:isSubscriberResponse" />
+	</operation>
+</portType>
+
+<portType name="amIPortType">
+	<operation name="amI">
+		<input message="tns:amIRequest" />
+		<output message="tns:amIResponse" />
+	</operation>
+</portType>
+
+<portType name="reviewPortType">
+	<operation name="review">
+		<input message="tns:reviewRequest" />
+		<output message="tns:reviewResponse" />
+	</operation>
+</portType>
+
+<portType name="subscribePortType">
+	<operation name="subscribe">
+		<input message="tns:subscribeRequest" />
+		<output message="tns:subscribeResponse" />
+	</operation>
+</portType>
+
+<portType name="signoffPortType">
+	<operation name="signoff">
+		<input message="tns:signoffRequest" />
+		<output message="tns:signoffResponse" />
+	</operation>
+</portType>
+
+<portType name="do_loginPortType">
+	<operation name="do_login">
+		<input message="tns:do_loginRequest" />
+		<output message="tns:do_loginResponse" />
+	</operation>
+</portType>
+
+<portType name="do_listsPortType">
+	<operation name="do_lists">
+		<input message="tns:do_listsRequest" />
+		<output message="tns:do_listsResponse" />
+	</operation>
+</portType>
+
+<portType name="check_cookiePortType">
+	<operation name="check_cookie">
+		<input message="tns:check_cookieRequest" />
+		<output message="tns:check_cookieResponse" />
+	</operation>
+</portType>
+
+
+<!-- Binding part -->
+
+<binding name="do_whichBinding" type="tns:do_whichPortType">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+	<operation name="do_which">
+		<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:do_which" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:do_which" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+</binding>
+
+<binding name="isSubscriberBinding" type="tns:isSubscriberPortType">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+	<operation name="isSubscriber">
+		<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:isSubscriber" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:isSubscriber" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+</binding>
+
+<binding name="amIBinding" type="tns:amIPortType">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+	<operation name="amI">
+		<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:amI" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:amI" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+</binding>
+
+<binding name="reviewBinding" type="tns:reviewPortType">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+	<operation name="review">
+		<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:review" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:review" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+</binding>
+
+<binding name="subscribeBinding" type="tns:subscribePortType">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+	<operation name="subscribe">
+		<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:subscribe" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:subscribe" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+</binding>
+
+<binding name="signoffBinding" type="tns:signoffPortType">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+	<operation name="signoff">
+		<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:signoff" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:signoff" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+</binding>
+
+<binding name="do_loginBinding" type="tns:do_loginPortType">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+	<operation name="do_login">
+		<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:do_login" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:do_login" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+</binding>
+
+<binding name="do_listsBinding" type="tns:do_listsPortType">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+	<operation name="do_lists">
+		<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:do_lists" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:do_lists" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+</binding>
+
+<binding name="check_cookieBinding" type="tns:check_cookiePortType">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+	<operation name="check_cookie">
+		<soap:operation soapAction=""/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:check_cookie" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:check_cookie" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+</binding>
+
+<!-- service part -->
+
+
+<service name="SympaSOAP">
+        <documentation> 
+		Sympa do_which SOAP Service.
+	</documentation>
+	<port name="do_whichPort" binding="tns:do_whichBinding">
+		<soap:address location="[conf->soap_url]/do_which"/>
+	</port>
+	<documentation> 
+		Sympa isSubscriber SOAP Service.
+	</documentation>
+	<port name="isSubscriberPort" binding="tns:isSubscriberBinding">
+		<soap:address location="[conf->soap_url]/isSubscriber"/>
+	</port>
+	<documentation> 
+		Sympa amI SOAP Service.
+	</documentation>
+	<port name="amIPort" binding="tns:amIBinding">
+		<soap:address location="[conf->soap_url]/amI"/>
+	</port>
+	<documentation> 
+		Sympa review SOAP Service.
+	</documentation>
+	<port name="reviewPort" binding="tns:reviewBinding">
+		<soap:address location="[conf->soap_url]/review"/>
+	</port>
+	<documentation> 
+		Sympa subscribe SOAP Service.
+	</documentation>
+	<port name="subscribePort" binding="tns:subscribeBinding">
+		<soap:address location="[conf->soap_url]/subscribe"/>
+	</port>
+	<documentation> 
+		Sympa sign off SOAP Service.
+	</documentation>
+	<port name="signoffPort" binding="tns:signoffBinding">
+		<soap:address location="[conf->soap_url]/signoff"/>
+	</port>
+	<documentation> 
+		Sympa login SOAP Service.
+	</documentation>
+	<port name="do_loginPort" binding="tns:do_loginBinding">
+		<soap:address location="[conf->soap_url]/do_login"/>
+	</port>
+	<documentation> 
+		Sympa do_lists SOAP Service.
+	</documentation>
+	<port name="do_listsPort" binding="tns:do_listsBinding">
+		<soap:address location="[conf->soap_url]/do_lists"/>
+	</port>
+	<documentation> 
+		Sympa check cookie SOAP Service.
+	</documentation>
+	<port name="check_cookiePort" binding="tns:check_cookieBinding">
+		<soap:address location="[conf->soap_url]/check_cookie"/>
+	</port>
+</service>
+
+</definitions>
+
+
+

@@ -235,7 +235,7 @@ clean:
 	$(MAKE) PERL='${PERL}' clean) || exit 1; \
 	done;
 
-install: importantchanges installsrc installnls installwws installman installscript installsample installdir installconfig installdoc
+install: importantchanges installsrc installnls installwws installman installscript installsample installdir installconfig installdoc installsoap
 
 importantchanges:
 	@( 	PERL=$(PERL); export PERL; \
@@ -280,6 +280,15 @@ installnls:
 
 installwws:
 	@(cd wwsympa && echo "making in wwsympa..." && \
+	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
+	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' \
+	USER='${USER}' GROUP='${GROUP}' \
+	CGIDIR='${CGIDIR}' WWSBINDIR='${WWSBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
+	PIDDIR='${PIDDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' \
+	DESTDIR='${DESTDIR}' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' newinstall) || exit 1;
+
+installsoap:
+	@(cd soap && echo "making in soap/..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
 	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' \
 	USER='${USER}' GROUP='${GROUP}' \
