@@ -547,8 +547,8 @@ sub signoff {
 
 	## Send bye.tpl to sender
 	my %context;
-	$context{'subject'} = sprintf(&Language::Msg(6 , 71, 'Signoff from list %s'), $list->{'name'});
-	$context{'body'} = sprintf(&Language::Msg(6 , 31, "You have been removed from list %s.\n Thanks for being with us.\n"), $list->{'name'});
+	$context{'subject'} = sprintf(gettext("Unsubscribe from list %s"), $list->{'name'});
+	$context{'body'} = sprintf(gettext("You have been removed from list %s.\nThank you for using this list.\n"), $list->{'name'});
 	$list->send_file('bye', $sender, $robot, \%context);
 	
 	$list->save();
@@ -558,7 +558,7 @@ sub signoff {
 	return SOAP::Data->name('result')->type('boolean')->value(1);
     }
 
-  &Log::do_log('info', 'SOAP : sign off %s from %s aborted, unknown requested action in scenario',$listname,$sender);
+    &Log::do_log('info', 'SOAP : sign off %s from %s aborted, unknown requested action in scenario',$listname,$sender);
   die SOAP::Fault->faultcode('Server')
       ->faultstring('Undef')
 	  ->faultdetail("Sign off %s from %s aborted because unknown requested action in scenario",$listname,$sender);
@@ -619,7 +619,9 @@ sub subscribe {
 	  ->faultdetail("You don't have proper rights");
   }
   if ($action =~ /owner/i) {
-      push @msg::report, sprintf Msg(6, 25, $msg::subscription_forwarded);
+      push @msg::report, sprintf gettext("Your request of subscription/unssubscribtion has been forwarded to the list's
+owners for approval. You will receive a notification when you will have
+been subscribed (or unsubscribed) to the list.\n");
       ## Send a notice to the owners.
       my $keyauth = $list->compute_auth($sender,'add');
       $list->send_sub_to_owner($sender, $keyauth, &Conf::get_robot_conf($robot, 'sympa'), $gecos);
@@ -688,8 +690,8 @@ sub subscribe {
       ## Now send the welcome file to the user
       unless ($quiet || ($action =~ /quiet/i )) {
 	  my %context;
-	  $context{'subject'} = sprintf(&Language::Msg(8, 6, "Welcome to list %s"), $list->{'name'});
-	  $context{'body'} = sprintf(&Language::Msg(8, 6, "You are now subscriber of list %s"), $list->{'name'});
+	  $context{'subject'} = sprintf(gettext("Welcome on list %s"), $list->{'name'});
+	  $context{'body'} = sprintf(gettext("Welcome on list %s"), $list->{'name'});
 	  $list->send_file('welcome', $sender, $robot, \%context);
       }
       
