@@ -169,6 +169,17 @@ foreach my $file (@ARGV) {
 	push @{$file{$str}}, [ $filename, $line, $vars ];
     }
 	    
+    # Template Toolkit with (-%|l%-)...(-%END%-) in archives
+    $line = 1; pos($_) = 0;
+    while (m!\G.*?\(-%\s*\|l(?:oc)?(.*?)\s*%-\)(.*?)\(-%\s*END\s*%-\)!sg) {
+	my ($vars, $str) = ($1, $2);
+	$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
+	$str =~ s/\\'/\'/g; 
+	$vars =~ s/^\s*\(//;
+	$vars =~ s/\)\s*$//;
+	push @{$file{$str}}, [ $filename, $line, $vars ];
+    }	    
+
 	    # Sympa variables (gettext_id)
 	    $line = 1; pos($_) = 0;
 	    while (/\G.*?\'gettext_id\'\s*=>\s*\"([^\"]+)\"/sg) {
