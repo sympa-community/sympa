@@ -93,7 +93,6 @@ sub store {
 	print OUT "------- THIS IS A RFC934 COMPLIANT DIGEST, YOU CAN BURST IT -------\n\n";
     }
     #   xxxxx we should leave the Received headers isn't ?
-    $msg->head->delete('Received') if ($msg->head->get('Received'));
     $msg->print(\*OUT);
     print OUT "\n$separator\n\n";
     close(OUT);
