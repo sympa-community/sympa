@@ -1153,6 +1153,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     &wwslog('info','check_param_in: unknown list %s', $in{'list'});
 	     return undef;
 	 }
+
+	 ## Set lang to list lang
+	 &Language::SetLang($list->{'admin'}{'lang'});
      }
 
      ## listmaster has owner and editor privileges for the list
@@ -2206,6 +2209,7 @@ sub do_redirect {
 	 my $hour = $2;
 	 foreach $d (split /\,/, $1) {
  #	    push @days, $week{$param->{'lang'}}[$d];
+	     &Language::SetLang($list->{'admin'}{'lang'});
 	     push @days, &POSIX::strftime("%A", localtime(0 + ($d +3) * (3600 * 24)));
 	 }
 	 $param->{'digest'} = sprintf '%s - %s', (join ', ', @days), $hour;
@@ -6380,7 +6384,7 @@ sub do_edit_list {
 		     $p_glob->{'value'}{$elt}{'selected'} = 0;
 		 }
 	     }
-	     $p_glob->{'value'}{$d}{'selected'} = 1;
+	     $p_glob->{'value'}{$d}{'selected'} = 1 if (defined $d);
 
 	 }else {
 	     $p_glob->{'type'} = 'scalar';
