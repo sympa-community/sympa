@@ -4240,7 +4240,7 @@ sub _include_users_admin {
 
     my @depend
 ; 
-    foreach my $listname (&List::get_lists() ) {
+    foreach my $listname (&List::get_lists('*') ) {
 
         if ($mother_list eq $listname) {
 	    $admin = _load_admin_file($listname, 'config');
@@ -4715,23 +4715,33 @@ sub store_digest {
 
 ## List of lists hosted by Sympa
 sub get_lists {
-   my(@lists, $l);
-   do_log('debug2', 'List::get_lists()');
+    my $robot = shift;
 
-   unless (-d $Conf{'home'}) {
-       do_log('debug',"no such directory $Conf{'home'}");
-       return undef ;
-   }
-   
-   unless (opendir(DIR, $Conf{'home'})) {
-       do_log('debug',"unable to open $Conf{'home'}");
-       return undef;
-   }
-   foreach $l (sort readdir(DIR)) {
-      next unless (($l !~ /^\./o) and (-d $l) and (-f "$l/config"));
-      push @lists, $l ;
-   }
-   return @lists;
+    # by default return all lists
+    $robot = '*' unless $robot ; 
+
+    my(@lists, $l);
+    do_log('debug2', 'List::get_lists(%s)',$robot);
+    
+    unless (-d $Conf{'home'}) {
+	do_log('debug',"no such directory $Conf{'home'}");
+	return undef ;
+    }
+    
+    unless (opendir(DIR, $Conf{'home'})) {
+	do_log('debug',"unable to open $Conf{'home'}");
+	return undef;
+    }
+    foreach $l (sort readdir(DIR)) {
+	next unless (($l !~ /^\./o) and (-d $l) and (-f "$l/config"));
+	printf STDERR "xxxxxxxx test $l (robot = $robot) \n" ;
+	my $list = new List ($l);
+	printf STDERR "xxxxxxxx test $l (robot = $robot) (listhost $list->{'admin'}{'host'})\n" ;
+	next unless (($list->{'admin'}{'host'} eq $robot) || ($robot eq '*')) ;
+	push @lists, $l ;
+	printf STDERR "xxxxxxxx add $l\n" ;
+    }
+    return @lists;
 }
 
 ## List of lists in database mode which e-mail parameter is member of
@@ -4795,11 +4805,11 @@ sub get_which {
 	}
     }
 
-    foreach $l (get_lists()){
+    foreach $l (get_lists($robot)){
  
 	my $list = new List ($l);
 	next unless ($list);
-	next unless (($list->{'admin'}{'host'} eq $robot) || ($robot eq '*')) ;
+	# next unless (($list->{'admin'}{'host'} eq $robot) || ($robot eq '*')) ;
 
         if ($function eq 'member') {
 	    if ($list->{'admin'}{'user_data_source'} eq 'database') {
