@@ -2513,7 +2513,7 @@ sub send_msg_digest {
     }
     
     if (($#tabrcptsummary == -1) and ($#tabrcpt == -1)) {
-	&do_log('info', 'No subscriber for sending digest in list %s', $name);
+	&do_log('info', 'No subscriber for sending digest in list %s', $listname);
 	return 0;
     }
 
@@ -2559,7 +2559,8 @@ sub send_msg_digest {
 	$mail->tidy_body;
 	$mail->remove_sig;
 	$msg->{'full_msg'} = $mail->as_string;
-	$msg->{'body'} = $mail->body;
+	#$msg->{'body'} = $mail->body_as_string;
+	$msg->{'body'} = $mail->bodyhandle->as_string();
 	chomp $msg->{'from'};
 	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
 	$msg->{'message_id'} = $mail->head->get('Message-Id');
