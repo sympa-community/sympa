@@ -1152,7 +1152,7 @@ sub send_notify_to_listmaster {
     }elsif ($operation eq 'request_list_creation') {
 	my $list = new List $param[0];
 
-	$list->send_file('create_list_request', $Conf{'listmaster'}, $Conf{'host'}
+	$list->send_file('create_list_request', $Conf{'listmaster'}, $Conf{'host'},
 			 {'to' => "listmaster\@$Conf{'host'}",
 			  'email' => $param[1]});
 
