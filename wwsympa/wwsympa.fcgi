@@ -4598,7 +4598,7 @@ sub do_get_inactive_lists {
 
 	 if (open COUNT, $list->{'dir'}.'/msg_count') {
 	     while (<COUNT>) {
-		 $last_message = $1 if (/^(\d+)\s/);
+		 $last_message = $1 if (/^(\d+)\s/ && ($1 > $last_message));
 	     }
 	     close COUNT;
 
