@@ -1504,7 +1504,7 @@ sub get_owners_email {
 ## Send a sub/sig notice to listmasters.
 sub send_notify_to_listmaster {
     my ($operation, $robot, @param) = @_;
-    do_log('debug3', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
+    do_log('debug2', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
 
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
 
