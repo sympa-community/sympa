@@ -3675,10 +3675,6 @@ sub request_action {
 	    return undef ;
 	}
 
-	## provide subscriber information
-	$context->{'subscriber'} = $list->get_subscriber($context->{'sender'})
-	    unless ($context->{'sender'} eq 'nobody');
-
 	my @operations = split /\./, $operation;
 	my $data_ref;
 	if ($#operations == 0) {
@@ -3865,9 +3861,14 @@ sub verify {
 	    }
 
 	    ## Sender's user/subscriber attributes (if subscriber)
-	}elsif (($value =~ /\[(user|subscriber)\-\>([\w\-]+)\]/i) && defined ($context->{$1})) {
+	}elsif (($value =~ /\[user\-\>([\w\-]+)\]/i) && defined ($context->{'user'})) {
 
-	    $value =~ s/\[(user|subscriber)\-\>([\w\-]+)\]/$context->{$1}{$2}/;
+	    $value =~ s/\[user\-\>([\w\-]+)\]/$context->{'user'}{$1}/;
+
+	}elsif (($value =~ /\[subscriber\-\>([\w\-]+)\]/i) && defined ($context->{'sender'} ne 'nobody')) {
+	    
+	    $context->{'subscriber'} = $list->get_subscriber($context->{'sender'});
+	    $value =~ s/\[subscriber\-\>([\w\-]+)\]/$context->{'subscriber'}{$1}/;
 
 	    ## SMTP Header field
 	}elsif ($value =~ /\[(msg_header|header)\-\>([\w\-]+)\]/i) {
