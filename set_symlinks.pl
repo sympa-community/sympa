@@ -21,7 +21,6 @@
 ## Set symbolic links at installation time
 
 my @scenario_defaults = ('add.owner',
-			 'create_list.intranet',
 			 'd_edit.owner',
 			 'd_read.private',
 			 'del.owner',
