@@ -13,5 +13,5 @@ suivant : [virus_name].
 Nous avons interrompu le transfert de ce message avant
 sa diffusion.
 
-Il peut être prudent de passez votre poste de travail à
+Il peut être prudent de passer votre poste de travail à
 l'anti-virus.
