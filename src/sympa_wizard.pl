@@ -40,7 +40,7 @@ my $conf_file = '--WWSCONFIG--';
 my $sympa_conf_file = '--CONFIG--';
 my $somechange = 0;
 
-## paraméters that can be edited with this script
+## parameters that can be edited with this script
 my @params = ({'title' => 'Directories and file location'},
 	      {'name' => 'home',
 	       'query' => 'The home directory for sympa',
@@ -344,7 +344,7 @@ my @params = ({'title' => 'Directories and file location'},
 
 	      {'name' => 'wwsympa_url',
 	       'query' => 'Sympa main page URL',
-	       'file' => 'wwsympa.conf','edit' => '1',
+	       'file' => 'sympa.conf','edit' => '1',
 	       'advice' =>''},
 
 	      {'name' => 'title',
