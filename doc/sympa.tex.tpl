@@ -1792,7 +1792,7 @@ db_env	ORACLE_TERM=vt100;ORACLE_HOME=/var/hote/oracle/7.3.4
 	If your \textbf {subscriber\_table} database table has more fields
 	than required by \Sympa (because other softwares work this set of
 	data), you can make \Sympa load these fields. Therefore, you can
-	use them from within mail/web templates (as [subscriber-\texttt{>}field]).
+	use them from within mail/web templates and scenario (as [subscriber-\texttt{>}field]).
 
 	This parameter is a comma-separated list.
 
@@ -3772,14 +3772,17 @@ for MIME parts in text/xxx format only.
 
 
 A bunch of scenarii is provided with the \Sympa distribution ; they provide
-all possible configurations as defined in previous releases of \Sympa
-(\texttt{<}= 2.3) without any change in your list configuration files. 
+a large set of configuration that allow to create lists for most usage. But you will
+probably create scenarii for your own need. In this case, don't forget to restart \Sympa
+and wwsympa because scenarii are not reloaded dynamicaly.
 
 These standard scenarii are located in the \tildedir {sympa/bin/scenari/}
 directory. Default scenarii are named \texttt{<}command\texttt{>}.default.
 
 You may also define and name your own scenarii. Store them in the
-\tildedir {sympa/etc/scenari} directory. 
+\tildedir {sympa/etc/scenari} directory. They will not be overwritten by Sympa release.
+Scenarii can also be defined for a particular virtual robot (using directory \tildedir {sympa/etc/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \tildedir {sympa/expl/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ).
+
 Example:
 
 Copy the previous scenario to \file {scenari/subscribe.rennes1} :
