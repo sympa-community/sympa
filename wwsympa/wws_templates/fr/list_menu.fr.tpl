@@ -368,6 +368,47 @@
       <!-- END is_archived -->
     [ENDIF]
 
+ <!-- Post -->
+ <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp; </TD>   
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
+    <TR>
+     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
+       <TR>
+    [IF action=compose_mail]
+        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1>
+         <b>Poster</b></font>
+        </TD>
+    [ELSE]
+      [IF may_post]
+        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+         <font size=-1><b>
+         <A HREF="[path_cgi]/compose_mail/[list]/" >Poster</A>
+         </b></font>
+        </TD>
+      [ELSE]
+        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+         <font size=-1 COLOR="--BG_COLOR--"><b>Poster</b></font>
+        </TD>
+      [ENDIF]
+     [ENDIF]
+       </TR>
+      </TABLE>
+     </TD>
+    </TR>
+   </TABLE>
+  </TD>
+  <TD WIDTH=--COL4--></TD>
+ </TR> 
+ <!-- END post --> 
+
+ <TR>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
+ </TR>
+
     [IF shared=exist]
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp; </TD>   
@@ -401,10 +442,10 @@
     </TR>
    </TABLE>
   </TD>
-
-       <!-- END shared --> 
   <TD WIDTH=--COL4--></TD>
  </TR> 
+ <!-- END shared --> 
+
  <TR>
   <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>

@@ -181,7 +181,9 @@ my %comm = ('home' => 'do_home',
 	 'view_translations' => 'do_view_translations',
 	 'remind' => 'do_remind',
 	 'change_email' => 'do_change_email',
-	 'load_cert' => 'do_load_cert'
+	 'load_cert' => 'do_load_cert',
+	 'compose_mail' => 'do_compose_mail',
+	 'send_mail' => 'do_send_mail'
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -802,6 +804,15 @@ sub check_param_in {
 	   $param->{'is_owner'} = $param->{'is_privileged_owner'} || $list->am_i('owner', $param->{'user'}{'email'});
 	   $param->{'is_editor'} = $list->am_i('editor', $param->{'user'}{'email'});
 	   $param->{'is_priv'} = $param->{'is_owner'} || $param->{'is_editor'};
+
+	   my $may_post = &List::request_action ('send',$param->{'auth_method'},
+						 {'listname' => $param->{'list'}, 
+						  'sender' => $param->{'user'}{'email'},
+						  'remote_host' => $param->{'remote_host'},
+						  'remote_addr' => $param->{'remote_addr'}});
+	   &do_log('debug', "May Post: $may_post");
+	   $param->{'may_post'} = 1 
+	       unless ($may_post =~ /reject/);
        }
 	
        $param->{'is_moderated'} = $list->is_moderated();
@@ -7056,4 +7067,62 @@ sub do_change_email {
 	return 'pref';
     }
 
+}
+
+sub do_compose_mail {
+    &wwslog('debug', 'do_compose_mail');
+
+    unless ($param->{'user'}{'email'}) {
+	&message('no_user');
+	&wwslog('info','do_compose_mail: no user');
+	$param->{'previous_action'} = 'compose_mail';
+	return 'loginrequest';
+    }
+
+    unless ($param->{'list'}) {
+	&message('missing_arg', {'argument' => 'list'});
+	&wwslog('info','do_compose_mail: no list');
+	return undef;
+    }
+
+    unless ($param->{'may_post'}) {
+	&message('may_not');
+	&wwslog('info','do_compose_mail: may not send message');
+	return undef;
+    }
+
+    $param->{'to'} = $list->{'name'} . '@' . $list->{'admin'}{'host'};
+    
+    return 1;
+}
+
+sub do_send_mail {
+    &wwslog('debug', 'do_send_mail');
+    
+    unless ($param->{'user'}{'email'}) {
+	&message('no_user');
+	&wwslog('info','do_send_mail: no user');
+	$param->{'previous_action'} = 'send_mail';
+	return 'loginrequest';
+    }
+    
+    unless ($param->{'list'}) {
+	&message('missing_arg', {'argument' => 'list'});
+	&wwslog('info','do_send_mail: no list');
+	return undef;
+    }
+    
+    unless ($param->{'may_post'}) {
+	&message('may_not');
+	&wwslog('info','do_send_mail: may not send message');
+	return undef;
+    }
+
+    my @body = split /\0/, $in{'body'};
+    my $to = $list->{'name'}.'@'.$list->{'admin'}{'host'};
+
+    &mail::mailback(\@body, $in{'subject'}, $param->{'user'}{'email'}, $to, $to);
+
+    &message('performed');
+    return 'info';
 }
