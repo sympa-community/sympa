@@ -14,7 +14,7 @@ use Carp;
 my @valid_options = qw(
 		       avg bounce_warn_rate bounce_halt_rate chk_cert_expiration_task 
 		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod 
-		       cookie create_list crl_dir crl_update_task db_host db_name db_options db_passwd db_type db_user 
+		       cookie create_list crl_dir crl_update_task db_host db_env db_name db_options db_passwd db_type db_user 
 		       db_additional_subscriber_fields db_additional_user_fields
 		       default_list_priority edit_list email etc
 		       global_remind home host domain lang listmaster log_socket_type 
@@ -74,6 +74,7 @@ my %Default_Conf =
      'db_user' => '', 
      'db_passwd'  => '',
      'db_options' => '',
+     'db_env' => '',
      'db_additional_subscriber_fields' => '',
      'db_additional_user_fields' => '',
      'listmaster' => undef,
@@ -225,6 +226,16 @@ sub load {
 	delete $Conf{'remove_headers'};
     }else {
 	$Conf{'remove_headers'} = [split(/,/, $Conf{'remove_headers'})];
+    }
+
+    if ($Conf{'db_env'}) {
+	my @raw = split /;/, $Conf{'db_env'};
+	my %cooked;
+	foreach my $env (@raw) {
+	    next unless ($env =~ /^\s*(\w+)\s*\=\s*(\S+)\s*$/);
+	    $cooked{$1} = $2;
+	}
+	$Conf{'db_env'} = \%cooked;
     }
 
     @{$Conf{'listmasters'}} = split(/,/, $Conf{'listmaster'});

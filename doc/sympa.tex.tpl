@@ -1592,6 +1592,19 @@ db_options	mysql_read_default_file=/home/joe/my.cnf
 \end{verbatim}
 \end {quote}
    
+\subsection {\cfkeyword {db\_env}}
+
+	Sets a list of environment variables to set before database connexion.
+	This is a ';'separated list of variable assignment.
+
+Example for Oracle:
+\begin {quote}
+\begin{verbatim}
+db_env	ORACLE_TERM=vt100;ORACLE_HOME=/var/hote/oracle/7.3.4
+\end{verbatim}
+\end {quote}
+
+
 \subsection {\cfkeyword {db\_additional\_subscriber\_fields}}
 \label{db-additional-subscriber-fields}
 

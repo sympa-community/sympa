@@ -772,6 +772,13 @@ sub db_connect {
 	}
     }
 
+    ## Used by Oracle (ORACLE_HOME)
+    if ($Conf{'db_env'}) {
+	foreach my $env (keys %{$Conf{'db_env'}}) {
+	    $ENV{$env} = $Conf{'db_env'}{$env};
+	}
+    }
+
     if ($Conf{'db_type'} eq 'Oracle') {
 	## Oracle uses sids instead of dbnames
 	$connect_string = sprintf 'DBI:%s:sid=%s;host=%s', $Conf{'db_type'}, $Conf{'db_name'}, $Conf{'db_host'};
