@@ -6319,6 +6319,8 @@ sub _load_list_param {
     if ($p->{'scenario'}) {
 	$value =~ y/,/_/;
 	$value = &List::_load_scenario_file ($p->{'scenario'},$robot, $value, $directory);
+    }elsif ($p->{'task'}) {
+	$value = {'name' => $value};
     }
 
     ## Do we need to split param
