@@ -378,11 +378,17 @@
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
      [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
+      [IF action=review]
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right>
+          <font size=-1 COLOR="[bg_color]"><b>Les abonnés</b></font>
+	</TD>
+      [ELSE]
         <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
          <font size=-1><b>
          <A HREF="[path_cgi]/review/[list]" >Les abonnés</A>
          </b></font>
 	</TD>
+      [ENDIF]
      [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
   <TD WIDTH=--COL4--></TD>
