@@ -622,7 +622,7 @@ sub ciphersaber_installed {
 }
 
 ## encrypt a password
-sub crypt_passwd {
+sub crypt_password {
     my $inpasswd = shift ;
 
     unless (define($cipher)){
@@ -633,7 +633,7 @@ sub crypt_passwd {
 }
 
 ## decrypt a password
-sub decrypt_passwd {
+sub decrypt_password {
     my $inpasswd = shift ;
 
     return $inpasswd unless ($inpasswd =~ /^crypt\.(.*)$/) ;
