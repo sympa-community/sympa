@@ -81,6 +81,7 @@ installinit:
 		DESTDIR=$(DESTDIR); export DESTDIR; \
 		INSTALLDIR=$(INITDIR); export INSTALLDIR; \
 		BINDIR=$(BINDIR); export BINDIR; \
+		PIDDIR=$(PIDDIR); export PIDDIR; \
 		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
 		CONFIG=$(CONFIG); export CONFIG; \
 		WWSCONFIG=$(WWSCONFIG); export WWSCONFIG; \

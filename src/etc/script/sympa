@@ -47,9 +47,9 @@ sympa_status() {
             return 0
     fi
  
-    # Next try "/var/run/*.pid" files
-    if [ -f /var/run/$1.pl.pid ] ; then
-            pid=`head -1 /var/run/$1.pl.pid`
+    # Next try "--PIDDIR--/*.pid" files
+    if [ -f --PIDDIR--/$1.pid ] ; then
+            pid=`head -1 --PIDDIR--/$1.pid`
             if [ "$pid" != "" ] ; then
                     echo "$1 died, pid file remains."
                     return 1
@@ -76,7 +76,7 @@ sympa_module_start() {
 	sleep 1
 	pid=`--PIDPRE-- $sympadir/$1.pl --PIDPOST--`
 	if [ $pid ]; then
-		echo $pid > /var/run/$1.pl.pid
+		echo $pid > --PIDDIR--/$1.pid
 	fi
 	echo
 }
@@ -112,11 +112,11 @@ sympa_stop() {
         return 1
     fi
  
-	if [ -f /var/run/$1.pl.pid ]; then
+	if [ -f --PIDDIR--/$1.pid ]; then
 		echo -n "Stopping module $1.pl: "
 		killproc $1.pl
 		# kill `--PIDPRE-- $1.pl --PIDPOST--`
-		rm -f /var/run/$1.pl.pid
+		rm -f --PIDDIR--/$1.pid
 		echo
 	fi
 }
