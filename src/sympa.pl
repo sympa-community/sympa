@@ -596,7 +596,7 @@ sub DoFile {
     ## Loop prevention
     my $conf_email = &Conf::get_robot_conf($robot, 'email');
     my $conf_host = &Conf::get_robot_conf($robot, 'host');
-    if ($sender =~ /^(mailer-daemon|sympa|listserv|mailman|majordomo|smartlist|$conf_email)/mio) {
+    if ($sender =~ /^(mailer-daemon|sympa|listserv|mailman|majordomo|smartlist|$conf_email)(\@|$)/mio) {
 	do_log('notice','Ignoring message which would cause a loop, sent by %s', $sender);
 	return undef;
     }
@@ -934,7 +934,7 @@ sub DoMessage{
     do_log('info', "Processing message for %s with priority %s, %s", $name,$list->{'admin'}{'priority'}, $messageid );
     
     my $conf_email = &Conf::get_robot_conf($robot, 'sympa');
-    if ($sender =~ /^(mailer-daemon|sympa|listserv|majordomo|smartlist|mailman|$conf_email)/mio) {
+    if ($sender =~ /^(mailer-daemon|sympa|listserv|majordomo|smartlist|mailman|$conf_email)(\@|$)/mio) {
 	do_log('notice', 'Ignoring message which would cause a loop');
 	return undef;
     }
