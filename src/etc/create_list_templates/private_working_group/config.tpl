@@ -44,6 +44,10 @@ owner
 editor
   email [owner->email]
 
+shared_doc
+  d_edit private
+  d_read private
+
 creation
   date [creation->date]
   date_epoch [creation->date_epoch]
