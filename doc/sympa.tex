@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {10 November 2004}
+    \date {26 November 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -1040,7 +1040,7 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 \item \option {--with-group=LOGIN}, set sympa group name (default sympa)\\
 \Sympa daemons are running under this UID.
 
-\item \option {--with-sendmail\_aliases=ALIASFILE}, set aliases file to be used by Sympa (default /etc/mail/sympa\_aliases)\\
+\item \option {--with-sendmail\_aliases=ALIASFILE}, set aliases file to be used by Sympa (default /etc/mail/sympa\_aliases). (You can overright this value at runtime giving its value in \file {sympa.conf})\\
 
 \item \option {--with-virtual\_aliases=ALIASFILE}, set postfix virtual file to be used by Sympa (default /etc/mail/sympa\_virtual)\\
 
@@ -1395,8 +1395,8 @@ The script expects the following arguments :
 \end{enumerate}
 Example : \file {/home/sympa/bin/alias\_manager.pl add \samplelist cru.fr}
 
-\file {/home/sympa/bin/alias\_manager.pl} works on the alias file as defined
-by the \textindex{SENDMAIL\_ALIASES} variable (default is \file {/etc/mail/sympa\_aliases}) in the main Makefile (see \ref {makefile},  page~\pageref {makefile}). You must refer to this aliases file in your \file {sendmail.cf} (if using sendmail) :
+\file {/home/sympa/bin/alias\_manager.pl} works on the alias file as defined in \file {sympa.conf})
+by the \textindex{SENDMAIL\_ALIASES} variable (default is \file {/etc/mail/sympa\_aliases}) in the main Makefile (see \ref {makefile},  page~\pageref {makefile}). You must refer to this aliases file in your \file {sendmail.mc} (if using sendmail) :
 \begin {quote}
 \begin{verbatim}
 define(`ALIAS_FILE', `/etc/aliases,/etc/mail/sympa_aliases')dnl
@@ -1731,6 +1731,12 @@ see a  nice mailto adresses where others have nothing.
 	\default {-oi -odi -oem}
 
         Arguments passed to SMTP message transfer agent
+
+\subsection {\cfkeyword {sendmail\_alias}} 
+
+	\default {defined by makefile, sendmail\_aliases}
+
+        Path of the alias file that contain all lists related aliases. It is recommended to create a spécific alias file so Sympa never overright the standard alias file but only a dedicated file.You must refer to this aliases file in your \file {sendmail.mc} :
 
 \subsection {\cfkeyword {rfc2369\_header\_fields}} 
 
@@ -3953,7 +3959,7 @@ generic_sso
         service_name       InQueue Federation
         service_id         inqueue
         http_header_prefix HTTP_SHIB
-        email_http_header  HTTP_SHIB_EP_AFFILIATION
+        email_http_header  HTTP_SHIB_EMAIL_ADDRESS
 
 ldap
 	regexp				univ-rennes1\.fr
@@ -4422,7 +4428,7 @@ del.auth
 \begin{verbatim}
 title.us deletion performed only by list owners, need authentication
 title.fr suppression réservée au propriétaire avec authentification
-title.es eliminación reservada sólo para el propietario, necesita autentificación
+title.es eliminacin reservada slo para el propietario, necesita autentificacin
 
 
   is_owner([listname],[sender])  smtp       -> request_auth
@@ -5531,6 +5537,7 @@ Sympa will use these files only if the list is configured in \texttt {include2} 
 Every file has the .incl extension. 
 More over, these files must be declared in paragraphs \lparam {owner\_include} or \lparam {editor\_inlude} in the list configuration file 
 without the .incl extension (see \ref {list-configuration-param}, page~\pageref {list-configuration-param}).
+This files can be template file.
 
 Sympa looks for them in the following order :
 \begin {enumerate}
@@ -5544,9 +5551,57 @@ Owners or editors are defined \emph {intensively} (definition of criteria owners
 Includes can be performed by extracting e-mail addresses using an \textindex {SQL} or \textindex {LDAP} query, or 
 by including other mailing lists.
 
-A data inclusion file is composed of pararaphs separated by blank lines and introduced by a keyword.
+A data inclusion file is composed of paragraphs separated by blank lines and introduced by a keyword.
 Valid paragraphs are \lparam {include\_file}, \lparam {include\_list}, \lparam {include\_remote\_sympa\_list}, 
 \lparam {include\_sql\_query} and \lparam {include\_ldap\_query}. They are described in the list configuration parameters chapitre, \ref {list-configuration-param}, page~\pageref {list-configuration-param}.
+
+When this file is a template, used variables are array elements (\file {param} array). This array is instantiated by values contained in the subparameter 
+\lparam {source\_parameter} of \lparam {owner\_include} or \lparam {editor\_inlude}.
+
+\textit {Example :} 
+
+\begin{itemize}
+  \item in the list configuration file :
+
+    \begin {quote}
+      \begin{verbatim}
+	owner_include
+	source myfile
+	source_parameters mysql,rennes1,stduser,mysecret,studentbody,student
+      \end{verbatim}
+    \end {quote}
+    
+  \item in myfile.incl :
+    
+    \begin {quote}
+      \begin{verbatim}
+	include_sql_query
+	db_type [% param.0 %]
+	host sqlserv.admin.univ-[% param.1 %].fr
+	user [% param.2 %]
+	passwd [% param.3 %]
+        db_name [% param.4 %]
+	sql_query SELECT DISTINCT email FROM [% param.5 %]
+      \end{verbatim}
+    \end {quote}
+    
+  \item resulting data inclusion file :
+    
+    \begin {quote}
+      \begin{verbatim}
+	include_sql_query
+	db_type mysql
+	host sqlserv.admin.univ-rennes1.fr
+        user stduser
+        passwd mysecret
+        db_name studentbody
+        sql_query SELECT DISTINCT email FROM student
+     \end{verbatim}
+    \end {quote}
+
+\end{itemize}          
+
+
 
 \section {List template files}
 \label{list-tpl}
@@ -5778,7 +5833,7 @@ needs :
 interface according to privileges defined by listmasters. Here lists are free from 
 their model creation.
 \end{itemize} 
-Management of mailing lists by list owners is usually done via the web interface : 
+Management of mailing lists by list owners is usually done via the Web interface : 
 when a list is created, whatever its status (\cfkeyword {pending} or \cfkeyword {open}), the owner 
 can use WWSympa admin features to modify list parameters, or to edit the welcome 
 message, and so on.
@@ -5788,62 +5843,49 @@ WWSympa keeps logs of the creation and all modifications to a list as part of th
 A complete installation requires some careful planning, although default
 values should be acceptable for most sites.
 
-\section {List families}
+\section {List creation}
+    \label{list-creation}
 
-See chapter \ref{lists-families}, page~\pageref{lists-families}
-
-\section {List creation on command line with \file {sympa.pl}}
-    \label {list-creation-sympa}
-
-This way to create lists is independent of family. 
-To create a list, some data are required : 
-the list name, the subject of the list, the list owner(s), 
-the name of the typical list profile (the list creation template),
-and a text describing the use of the list.
-
-Here is a sample command to create one list :.
-\begin {quote}
-\begin{verbatim}
-sympa.pl --create_list --robot \samplerobot --input_file my_file.xml
-\end{verbatim}   
-\end {quote}
-
-The list is created under the \file{\samplerobot} robot and the list 
-is described in the file \file{my\_file.xml}. The list description is a XML file
-described below, see \ref{xml-file-format}, page~\pageref{xml-file-format}.
-Moreover required data, the list description, provides values to assign to 
-vars being in the list profile. Then the result is the list configuration file :\\
-
-schémas\\
-
-By default, the status of the created list is \file{open}.
-
-\subsection {typical list profile (list template creation)}
-    \label{typical-list-profile}
 Mailing lists can have many different uses. \Sympa offers a
 wide choice of parameters to adapt a list behavior
 to different situations. Users might have difficulty selecting all the
-correct parameters, so instead the create list form asks
-the list creator simply to choose a profile for the list, and to fill in
-the owner's e-mail and the list subject together with a short description.
-
-List profiles are stored in \dir {/home/sympa/etc/create\_list\_templates} or in
-\dir {/home/sympa/bin/etc/create\_list\_templates} (default of distrib).
-
-A list profile is an almost complete list configuration, but with a number of unspecified fields
-(such as owner e-mail)
-to be replaced by WWSympa at list creation time. It is easy to create new list 
+correct parameters to make the list configuration, so instead of selecting each 
+parameters, list configuration is made with a list profile. This is an 
+almost complete list configuration, but with a number of unspecified fields
+(such as owner e-mail) to be replaced by \Sympa at list creation time. It is easy to create new list 
 templates by modifying existing ones. (Contributions to the distribution are welcome...)
 
-You might want to hide or modify profiles (not useful, or dangerous 
-for your site). If a profile exists both in the local site directory
-\dir {/home/sympa/etc/create\_list\_templates} and
-\dir {/home/sympa/bin/etc/create\_list\_templates} directory, then the local profile 
-will be used by WWSympa. 
+\subsection {Data for list creation}
 
+To create a list, some data concerning list parameters are required : 
+\begin{itemize}
+  \item \textbf{listname } : name of the list,
+  \item \textbf{subject} : subject of the list (a short description),
+  \item \textbf{owner(s)} : by static definition and/or dynamic definition.
+    In case of static definition, the parameter \textbf{owner} and its subparameter \textbf{email} are required.
+    For dynamic definition, the parameter  \textbf{owner\_include} and its subparameter \textbf{source} are required, 
+    indicating source file of data inclusion.
+  \item \textbf{list creation template} : the typical list profile.
+\end{itemize}
+
+Moreover of these required data, provided values are assigned to vars being in the list creation template. 
+Then the result is the list configuration file :\\
+
+schémas\\
+
+On the Web interface, these data are given by the list creator in the web form. On command line these 
+data are given by an xml file.
 
 \subsection {XML file format}
 \label{xml-file-format}
+
+The xml file provides information on :\\
+\begin{itemize}
+  \item the list name,
+  \item values to assign vars in the list creation template
+  \item the list description in order to be written in the list file info
+  \item the name of the list creation template (not in a family context)
+\end{itemize}
 
 Here is an example of XML document that you can map with the following example of list creation template.:
 
@@ -5852,7 +5894,7 @@ Here is an example of XML document that you can map with the following example o
 <?xml version="1.0" ?>
 <list>
 	<listname>example</listname>
-  	<family>my_profile</family>
+  	<type>my_profile</type>
   	<subject>a list example</subject>
   	<description/>
   	<status>open</status>
@@ -5939,15 +5981,13 @@ ttl 360
 The XML file format should comply with the following rules : 
 \begin{itemize}
   \item The root element is \file{<list>}
-  \item Four elements are mandatory : 
-    \begin{itemize}
-      \item \file{<listname>} : contains the name of the list
-      \item \file{<subject>} : contains the subject of the list
-      \item \file{<family>} : contains the name of the list creation template
-      \item \file{<description>} : contains a text describing the use of the list
-	     (it can be a CDATA section). This text will be put in the \file{info} file.
-    \end{itemize}
-  \item For other elements, their name are the name of vars to assign in the list creation template. 
+  \item One XML element is mandatory : \file{<listname>} contains the name of the list.
+        That not excludes mandatory parameters for list creation (listname, subject,owner.email and/or 
+	owner\_include.source).
+  \item \file{<type>} : without family context, this element contains the name of template list creation.
+        In a family context, this element is no used.
+  \item \file{<description>} : the text contained in this element is written in list \file{info} file(it can be a CDATA section).
+  \item For other elements, its name is the name of the var to assign in the list creation template. 
   \item Each element concerning multiple parameters must have the \file{multiple} attribute set 
     to ``1'', example : \file{<owner multiple=''1''>}. 
   \item For composed and multiple parameters, sub-elements are used. Example for \file{owner} parameter :
@@ -5956,10 +5996,48 @@ The XML file format should comply with the following rules :
   \item A list requires at least one owner, defined in the XML input file with one of the following elements :
     \begin{itemize}
       \item \file{<owner multiple=''1''> <email> ... </email> </owner>}
-      \item \file{<owner\_include> <source> ... </source> </owner\_include>}
+      \item \file{<owner\_include multiple=''1''> <source> ... </source> </owner\_include>}
     \end{itemize}
 \end{itemize}
    
+
+\section {List families}
+
+See chapter \ref{lists-families}, page~\pageref{lists-families}
+
+\section {List creation on command line with \file {sympa.pl}}
+    \label {list-creation-sympa}
+
+This way to create lists is independent of family. 
+
+Here is a sample command to create one list :.
+\begin {quote}
+\begin{verbatim}
+sympa.pl --create_list --robot my_robot --input_file my_file.xml
+\end{verbatim}   
+\end {quote}
+
+The list is created under the \file{my\_robot} robot and the list 
+is described in the file \file{my\_file.xml}. The XML file is 
+described before, see \ref{xml-file-format}, page~\pageref{xml-file-format}.
+
+By default, the status of the created list is \file{open}.
+
+\subsubsection {typical list profile (list template creation)}
+    \label{typical-list-profile}
+
+The list creator has to choose a profile
+for the list and put its name in the XML element \file{<type>}.
+
+List profiles are stored in \dir {/home/sympa/etc/create\_list\_templates} or in
+\dir {/home/sympa/bin/etc/create\_list\_templates} (default of distrib).
+
+You might want to hide or modify profiles (not useful, or dangerous 
+for your site). If a profile exists both in the local site directory
+\dir {/home/sympa/etc/create\_list\_templates} and
+\dir {/home/sympa/bin/etc/create\_list\_templates} directory, then the local profile 
+will be used by WWSympa. 
+
 
 \section {Creating and editing mailing using the web}
     \label {web-ml-creation}
@@ -6002,9 +6080,10 @@ The listmaster will need to open the list of pending lists
 using the "pending list" button in the "server admin"
 menu in order to install or refuse a pending list.
 
-\subsubsection {typical list profile and Web interface}
-
-Typical list profile are described before, see \ref{typical-list-profile}, page~\pageref{typical-list-profile}. 
+\subsection {typical list profile and Web interface}
+As on command line creation, the list creator has to choose a list profile and to fill in the owner's e-mail 
+and the list subject together with a short description. But in this case, you don't need any XML file. Concerning
+these typical list profiles, they are described before, see \ref{typical-list-profile}, page~\pageref{typical-list-profile}. 
 You can check available profile. On the Web interface, another way 
 to control publicly available profiles is to
 edit the \cfkeyword {create\_list.conf} file (the default for this file is in
@@ -6173,7 +6252,7 @@ In this directory you must provide these files :
 
    \subsubsection {config.tt2}
    \label{using-family-config-tpl}
-      This is a list creation template, this file is mandatory.It provides default values for parameters. 
+      This is a list creation template, this file is mandatory. It provides default values for parameters. 
       This file is an almost complete list configuration, with a number of missing fields 
       (such as owner e-mail) to be replaced by data obtained at the time of family instantiation.
       It is easy to create new list templates by modifying existing ones. See \ref{list-tpl}, page~\pageref{list-tpl}
@@ -6379,7 +6458,7 @@ array\\
 
 
 
-Note : In order to preserve list customization for instanciation, every modified parameter (via the Web interface) is noted in the \file{config\_changes} file. 
+Note : In order to preserve list customization for instantiation, every modified parameter (via the Web interface) is noted in the \file{config\_changes} file. 
 
 
 
@@ -6454,6 +6533,7 @@ It concerns dynamic editor definition : inclusion of external data. For static e
 editor_include
 reception mail
 source myfile 
+source_parameters a,b,c
 \end{verbatim}
 \end {quote}
 
@@ -6577,6 +6657,7 @@ about owners see~\ref {par-owner}, page~\pageref {par-owner}.
 \begin{verbatim}
 owner_include
 source myfile
+source_parameters a,b,c
 reception nomail
 profile normal
 \end{verbatim}
@@ -6590,7 +6671,12 @@ giving details regarding the owner(s) included characteristics:
     \item  \lparam {source myfile}
       
         This is an mandatory field : it indicates the data inclusion file 
-	myfile.incl (but declared myfile).
+	myfile.incl (but declared myfile). This file can be a template. In this case, it will be interpreted
+	with values given by subparameter \lparam {source\_parameter}.
+
+    \item \lparam {source\_parameters a,b,c}
+
+        It contains values enumeration that will be affected to the \file {param} array used in the template file (see~\ref {data-inclusion-file}, page~\pageref {data-inclusion-file}).
 
     \item  \lparam {reception nomail}
 

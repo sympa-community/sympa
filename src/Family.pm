@@ -179,14 +179,8 @@ sub add_list {
 
     my $hash_list = $config->getHash();
 
-    #check family_name
-    unless ($hash_list->{'family'} eq $self->{'name'}) {
-	$return->{'string_error'} = "\nError family name in the list xml file : $hash_list->{'family'} instead of $self->{'name'}\n";
-	return $return;
-    }
-    
     #list creation
-    my $result = &admin::create_list($hash_list->{'config'},$self,$hash_list->{'description'},$self->{'robot'});
+    my $result = &admin::create_list($hash_list->{'config'},$self,,$self->{'robot'});
     unless (defined $result) {
 	$return->{'string_error'} = "\nError during list creation, see logs for more informations\n";
 	return $return;
@@ -211,11 +205,13 @@ sub add_list {
     }
     close FILE;
  
+    my $host = &Conf::get_robot_conf($self->{'robot'}, 'host');
+
     # info parameters
-    $list->{'admin'}{'latest_instantiation'}{'email'} =  $Conf{'listmaster'};
+    $list->{'admin'}{'latest_instantiation'}{'email'} = "listmaster\@$host";
     $list->{'admin'}{'latest_instantiation'}{'date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
     $list->{'admin'}{'latest_instantiation'}{'date_epoch'} = time;
-    $list->save_config($Conf{'listmaster'});
+    $list->save_config("listmaster\@$host");
     $list->{'family'} = $self;
     
     ## check param_constraint.conf 
@@ -291,16 +287,10 @@ sub modify_list {
 
     my $hash_list = $config->getHash();
 
-    #check family_name
-    unless ($hash_list->{'family'} eq $self->{'name'}) {
-	$return->{'string_error'} = "\nError family name in the list xml file : $hash_list->{'family'} instead of $self->{'name'}\n";
-	return $return;
-    }
-
     #getting list
     my $list;
     unless ($list = new List($hash_list->{'config'}{'listname'},$self->{'robot'})) {
-	$return->{'string_error'} = "\nThe list $hash_list->{'listname'} does not exist.\n";
+	$return->{'string_error'} = "\nThe list $hash_list->{'config'}{'listname'} does not exist.\n";
 	return $return;
     }
     
@@ -345,12 +335,12 @@ sub modify_list {
 
     ## info file
     unless ($config_changes->{'file'}{'info'}) {
-	$hash_list->{'description'} =~ s/\015//g;
+	$hash_list->{'config'}{'description'} =~ s/\015//g;
 	
 	unless (open INFO, ">$list->{'dir'}/info") {
 	    $return->{'string_info'} .= "Impossible to create new $list->{'dir'}/info file : $!";
 	}
-	print INFO $hash_list->{'description'};
+	print INFO $hash_list->{'config'}{'description'};
 	close INFO; 
     }
 
@@ -364,11 +354,11 @@ sub modify_list {
 	    ################
 #	}
 #	if ($f eq 'info') {
-#	    $hash_list->{'description'} =~ s/\015//g;
+#	    $hash_list->{'config'}{'description'} =~ s/\015//g;
 #	    unless (open INFO, ">$list_dir/info") {
 		################
 #	    }
-#	    print INFO $hash_list->{'description'};
+#	    print INFO $hash_list->{'config'}{'description'};
 #	    close INFO; 
 #	}
 #    }
@@ -418,10 +408,14 @@ sub modify_list {
     $list->update_config_changes('param',\@kept_param);
     my @kept_files = keys %{$config_changes->{'file'}};
     $list->update_config_changes('file',\@kept_files);
-    $list->{'admin'}{'latest_instantiation'}{'email'} =  $Conf{'listmaster'};
+
+
+    my $host = &Conf::get_robot_conf($self->{'robot'}, 'host');
+
+    $list->{'admin'}{'latest_instantiation'}{'email'} = "listmaster\@$host";
     $list->{'admin'}{'latest_instantiation'}{'date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
     $list->{'admin'}{'latest_instantiation'}{'date_epoch'} = time;
-    $list->save_config($Conf{'listmaster'});
+    $list->save_config("listmaster\@$host");
     $list->{'family'} = $self;
     
     ## check param_constraint.conf 
@@ -555,16 +549,6 @@ sub instantiate {
 	} 
 	my $hash_list = $config->getHash();
 
-	unless ($hash_list->{'family'} eq $self->{'name'}) {
-	    &do_log('err','Error family name in the list xml file : %s instead of %s',$hash_list->{'family'},$self->{'name'});
-	    push (@{$self->{'errors'}{'create_hash'}},"$self->{'dir'}/$listname.xml");
-	    if ($list) {
-		$list->set_status_error_config('instantiation_family',$list->{'name'},$self->{'name'});
-		delete $previous_family_lists->{$list->{'name'}};
-	    }
-	    next;
-	}
-
 	## LIST ALREADY EXISTING
 	if ($list) {
 
@@ -594,7 +578,7 @@ sub instantiate {
 	## FIRST LIST CREATION    
 	} else{
 
-	    my $result = &admin::create_list($hash_list->{'config'},$self,$hash_list->{'description'},$self->{'robot'});
+	    my $result = &admin::create_list($hash_list->{'config'},$self,$self->{'robot'});
 	    unless (defined $result) {
 		push (@{$self->{'errors'}{'create_list'}},$hash_list->{'config'}{'listname'});
 		next;
@@ -665,12 +649,6 @@ sub instantiate {
 		next;
 	    } 
 	    my $hash_list = $config->getHash();
-	    unless ($hash_list->{'family'} eq $self->{'name'}) {
-		&do_log('err','Error family name in the list xml file : %s instead of %s',$hash_list->{'family'},$self->{'name'});
-		push (@{$self->{'errors'}{'create_hash'}},"$list->{'dir'}/instance.xml");
-		$list->set_status_error_config('instantiation_family',$list->{'name'},$self->{'name'});
-		next;
-	    }
 	    
 	    my $result = $self->_update_existing_list($list,$hash_list);
 	    unless (defined $result) {
@@ -1291,12 +1269,12 @@ sub _update_existing_list {
 
     ## info file
     unless ($config_changes->{'file'}{'info'}) {
-	$hash_list->{'description'} =~ s/\015//g;
+	$hash_list->{'config'}{'description'} =~ s/\015//g;
 	
 	unless (open INFO, ">$list->{'dir'}/info") {
 	    &do_log('err','Impossible to open %s/info : %s',$list->{'dir'},$!);
 	}
-	print INFO $hash_list->{'description'};
+	print INFO $hash_list->{'config'}{'description'};
 	close INFO; 
     }
     
@@ -1310,11 +1288,11 @@ sub _update_existing_list {
 	    ################
 #	}
 #	if ($f eq 'info') {
-#	    $hash_list->{'description'} =~ s/\015//g;
+#	    $hash_list->{'config'}{'description'} =~ s/\015//g;
 #	    unless (open INFO, ">$list_dir/info") {
 		################
 #	    }
-#	    print INFO $hash_list->{'description'};
+#	    print INFO $hash_list->{'config'}{'description'};
 #	    close INFO; 
 #	}
 #    }
@@ -1544,11 +1522,11 @@ sub _end_update_list {
     my ($self,$list,$xml_file) = @_;
     &do_log('debug3','Family::_end_update_list(%s,%s)',$self->{'name'},$list->{'name'});
     
-
-#    $list->{'admin'}{'latest_instantiation'}{'email'} =  $Conf{'listmaster'};
+    my $host = &Conf::get_robot_conf($self->{'robot'}, 'host');
+    $list->{'admin'}{'latest_instantiation'}{'email'} = "listmaster\@$host";
     $list->{'admin'}{'latest_instantiation'}{'date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
     $list->{'admin'}{'latest_instantiation'}{'date_epoch'} = time;
-    $list->save_config($Conf{'listmaster'});
+    $list->save_config("listmaster\@$host");
     $list->{'family'} = $self;
     
     ## check param_constraint.conf 

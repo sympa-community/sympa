@@ -5213,10 +5213,11 @@ sub do_set_pending_list_request {
      $parameters->{'lang'} = $param->{'lang'};
      $parameters->{'status'} = $param->{'status'};
      $parameters->{'topics'} = $in{'topics'};
+     $parameters->{'description'} = $in{'info'};
 
 
      ## create liste
-     my $resul = &admin::create_list_old($parameters,$in{'template'},$in{'info'},$robot);
+     my $resul = &admin::create_list_old($parameters,$in{'template'},$robot);
      unless(defined $resul) {
 	 &error_message('failed');
 	 &wwslog('info','do_create_list: unable to create list %s for %s',$in{'listname'},$param->{'user'}{'email'});
@@ -5239,7 +5240,7 @@ sub do_set_pending_list_request {
      ## notify listmaster
      if ($param->{'create_action'} =~ /notify/) {
 	 &do_log('info','notify listmaster');
-	 &List::send_notify_to_listmaster('request_list_creation',$robot, $in{'listname'},$parameters->{'owner'}{'email'});
+	 &List::send_notify_to_listmaster('request_list_creation',$robot, $in{'listname'},$param->{'user'}{'email'});
      }
      
      $in{'list'} = $resul->{'list'}{'name'};
@@ -5940,7 +5941,8 @@ sub do_edit_list {
 
 	     ## Scenario
 	     ## Eg: 'subscribe'
-	     if ($pinfo->{$pname}{'scenario'} || $pinfo->{$pname}{'task'} || $pinfo->{$pname}{'datasource'} ) {
+	     if ($pinfo->{$pname}{'scenario'} || 
+		 $pinfo->{$pname}{'task'} ) {
 		 if ($p->[$i]{'name'} ne $new_p->[$i]{'name'}) {
 		     $changed{$pname} = 1; next;
 		 }
@@ -5968,7 +5970,8 @@ sub do_edit_list {
 		     }		     
 		     
 		     ## Ex: 'shared_doc->d_read'
-		     if ($pinfo->{$pname}{'format'}{$key}{'scenario'} || $pinfo->{$pname}{'format'}{$key}{'task'}) {
+		     if ($pinfo->{$pname}{'format'}{$key}{'scenario'} || 
+			 $pinfo->{$pname}{'format'}{$key}{'task'} ) {
 			 if ($p->[$i]{$key}{'name'} ne $new_p->[$i]{$key}{'name'}) {
 			     $changed{$pname} = 1; next;
 			 }
@@ -6104,6 +6107,7 @@ sub do_edit_list {
       ## Update config in memory
       my $data_source_updated;
       foreach my $parameter (keys %changed) {
+	  
 	  my $pname;
 	  if ($parameter =~ /^([\w-]+)\.([\w-]+)$/) {
 	      $pname = $1;
@@ -6193,7 +6197,7 @@ sub do_edit_list {
 	      my @array_changed = keys %changed;
 	      unless ($list->update_config_changes('param',\@array_changed)) {
 		  &error_message('failed');
-		  &wwslog('info','do_savefile: cannot write in config_changes for changed parameters from list %s', $list->{'name'});
+		  &wwslog('info','do_edit_file: cannot write in config_changes for changed parameters from list %s', $list->{'name'});
 		  return undef;
 	      }
 	  }
@@ -6532,7 +6536,6 @@ sub _prepare_data {
  	    $restrict = 1;
  	} else {                               # fixed parameter
  	    $p_glob->{'may_edit'} = 'read';
- 	    
  	}
 	
     } else {
@@ -6599,9 +6602,13 @@ sub _prepare_data {
 	     $p_glob->{'type'} = 'datasource';
 	     my $list_of_data_sources = $list->load_data_sources_list($robot);
 
-	     $list_of_data_sources->{$d->{'name'}}{'selected'} = 1;
+	     $list_of_data_sources->{$d}{'selected'} = 1;
 
 	     $p->{'value'} = $list_of_data_sources;
+
+	     if ($restrict) {
+		 &_restrict_values($p->{'value'},$constraint);
+	     }
 
 	 }elsif (ref ($struct->{'format'}) eq 'HASH') {
 	     $p_glob->{'type'} = 'paragraph';
@@ -6614,7 +6621,6 @@ sub _prepare_data {
 		 ## Prepare data recursively
 		 my $m_e = $list->may_edit("$name.$k",$param->{'user'}{'email'});
 		 my $v = &_prepare_data($k, $struct->{'format'}{$k}, $d->{$k},$m_e,$family,$name);
-		 $v->{'may_edit'} = $list->may_edit("$name.$k",$param->{'user'}{'email'});
 
 		 push @{$p->{'value'}}, $v;
 	     }

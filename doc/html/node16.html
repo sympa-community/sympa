@@ -29,31 +29,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1092"
+<A NAME="tex2html1099"
   HREF="node17.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1086"
+<A NAME="tex2html1093"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1080"
+<A NAME="tex2html1087"
   HREF="node15.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1088"
+<A NAME="tex2html1095"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1090"
+<A NAME="tex2html1097"
   HREF="node24.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1093"
+<B> Next:</B> <A NAME="tex2html1100"
   HREF="node17.html">16. List configuration parameters</A>
-<B> Up:</B> <A NAME="tex2html1087"
+<B> Up:</B> <A NAME="tex2html1094"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1081"
+<B> Previous:</B> <A NAME="tex2html1088"
   HREF="node15.html">14. List creation, families and list</A>
- &nbsp <B>  <A NAME="tex2html1089"
+ &nbsp <B>  <A NAME="tex2html1096"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1091"
+ &nbsp <B>  <A NAME="tex2html1098"
   HREF="node24.html">Index</A></B> 
 <BR>
 <BR>
@@ -62,31 +62,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1094"
+<LI><A NAME="tex2html1101"
   HREF="node16.html#SECTION001610000000000000000">15.1 Family concept</A>
-<LI><A NAME="tex2html1095"
+<LI><A NAME="tex2html1102"
   HREF="node16.html#SECTION001620000000000000000">15.2 Using family</A>
 <UL>
-<LI><A NAME="tex2html1096"
+<LI><A NAME="tex2html1103"
   HREF="node16.html#SECTION001621000000000000000">15.2.1 Definition</A>
-<LI><A NAME="tex2html1097"
+<LI><A NAME="tex2html1104"
   HREF="node16.html#SECTION001622000000000000000">15.2.2 Instantiation</A>
-<LI><A NAME="tex2html1098"
+<LI><A NAME="tex2html1105"
   HREF="node16.html#SECTION001623000000000000000">15.2.3 Modification</A>
-<LI><A NAME="tex2html1099"
+<LI><A NAME="tex2html1106"
   HREF="node16.html#SECTION001624000000000000000">15.2.4 Closure</A>
-<LI><A NAME="tex2html1100"
+<LI><A NAME="tex2html1107"
   HREF="node16.html#SECTION001625000000000000000">15.2.5 Adding one list</A>
-<LI><A NAME="tex2html1101"
+<LI><A NAME="tex2html1108"
   HREF="node16.html#SECTION001626000000000000000">15.2.6 Removing one list</A>
-<LI><A NAME="tex2html1102"
+<LI><A NAME="tex2html1109"
   HREF="node16.html#SECTION001627000000000000000">15.2.7 List parameters edition in a family context</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
 
 <H1><A NAME="SECTION001600000000000000000"></A>
-    <A NAME="lists-families"></A>    <A NAME="2352"></A>
+    <A NAME="lists-families"></A>    <A NAME="2389"></A>
 <BR>
 15. Lists Families
 </H1>
@@ -168,7 +168,7 @@ Here is a list of operation performed on a family :
 </H2>
 Families can be defined at the robot level, at  the site level or on the distribution level
  (where default families are provided).
-So, you have to create a sub directory named after the family's name in a <A NAME="7753"></A><TT>families</TT> directory  : 
+So, you have to create a sub directory named after the family's name in a <A NAME="7822"></A><TT>families</TT> directory  : 
 
 <P>
 <I>Examples:</I> <PRE>
@@ -178,11 +178,11 @@ So, you have to create a sub directory named after the family's name in a <A NAM
 In this directory you must provide these files :
 
 <UL>
-<LI><A NAME="7756"></A><TT>config.tt2</TT> (mandatory)
+<LI><A NAME="7825"></A><TT>config.tt2</TT> (mandatory)
 </LI>
-<LI><A NAME="7759"></A><TT>param_constraint.conf</TT> (mandatory)
+<LI><A NAME="7828"></A><TT>param_constraint.conf</TT> (mandatory)
 </LI>
-<LI><A NAME="7762"></A><TT>edit_list.conf</TT>
+<LI><A NAME="7831"></A><TT>edit_list.conf</TT>
 </LI>
 <LI>customizable files
 </LI>
@@ -195,7 +195,7 @@ In this directory you must provide these files :
 <BR>
 15.2.1.1 config.tt2
 </H3>
-      This is a list creation template, this file is mandatory.It provides default values for parameters. 
+      This is a list creation template, this file is mandatory. It provides default values for parameters. 
       This file is an almost complete list configuration, with a number of missing fields 
       (such as owner e-mail) to be replaced by data obtained at the time of family instantiation.
       It is easy to create new list templates by modifying existing ones. See <A HREF="node14.html#list-tpl">13.8</A>, page&nbsp;<A HREF="node14.html#list-tpl"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
@@ -259,7 +259,7 @@ ttl 360
 <P>
 
 <H3><A NAME="SECTION001621200000000000000"></A>
-     <A NAME="2388"></A>
+     <A NAME="2425"></A>
 <BR>
 15.2.1.2 param_constraint.conf
 </H3>
@@ -267,13 +267,13 @@ ttl 360
 	 
 <UL>
 <LI><I>free</I> parameters : no constraint on these parameters, 
-                  they are not written in the <A NAME="7765"></A><TT>param_constraint.conf</TT> file.
+                  they are not written in the <A NAME="7834"></A><TT>param_constraint.conf</TT> file.
 </LI>
 <LI><I>controlled</I> parameters : these parameters must select their values 
-                  in a set of available values indicated in the <A NAME="7768"></A><TT>param_constraint.conf</TT> file.
+                  in a set of available values indicated in the <A NAME="7837"></A><TT>param_constraint.conf</TT> file.
 </LI>
 <LI><I>fixed</I> parameters : these parameters must have the imposed value indicated
-	          in the <A NAME="7771"></A><TT>param_constraint.conf</TT> file.
+	          in the <A NAME="7840"></A><TT>param_constraint.conf</TT> file.
 
 <P>
 </LI>
@@ -295,7 +295,7 @@ shared_doc.d_edit   editor
 15.2.1.3 edit_list.conf</A>
 </H3>
         This is an optional file. It defines which parameters/files are editable by
-	owners. See <A HREF="node15.html#list-edition">14.3.3</A>, page&nbsp;<A HREF="node15.html#list-edition"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+	owners. See <A HREF="node15.html#list-edition">14.4.4</A>, page&nbsp;<A HREF="node15.html#list-edition"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 	If the family does not have this file, <I>Sympa</I> will look for 
 	the one defined on robot level, server site level or distribution level. 
 	(This file already exists without family context)
@@ -324,15 +324,15 @@ Notes that by default parameter family_name is not writable, you should not chan
 Instantiation permits to generate lists.You must provide an XML file that is 
 composed of lists description, the root element is <I>family</I> and is only 
 composed of <I>list</I> elements. List elements are described in section 
-<A HREF="node15.html#list-creation-sympa">14.2</A>, page&nbsp;<A HREF="node15.html#list-creation-sympa"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. Each list is described 
+<A HREF="node15.html#list-creation-sympa">14.3</A>, page&nbsp;<A HREF="node15.html#list-creation-sympa"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. Each list is described 
 by the set of values for affectation list parameters.
 
 <P>
 Here is an exemple line command to instantiate a family :<PRE>
 sympa.pl --instantiate_family my_family --robot my_robot --input_file my_file.xml
 </PRE>
-This means lists that belong to family <A NAME="7774"></A><TT>my_family</TT> will be created under the robot 
-<A NAME="7777"></A><TT>my_robot</TT> and these lists are described in the file <A NAME="7780"></A><TT>my_file.xml</TT>. Sympa will split this file 
+This means lists that belong to family <A NAME="7843"></A><TT>my_family</TT> will be created under the robot 
+<A NAME="7846"></A><TT>my_robot</TT> and these lists are described in the file <A NAME="7849"></A><TT>my_file.xml</TT>. Sympa will split this file 
 into several xml files describing lists. Each list XML file is put in each list directory.
 <BR>
 <P>
@@ -355,7 +355,7 @@ Each instantiation describes lists. Compared to the previous instantiation, ther
         the XML file or because of changed family's properties.
 </LI>
 <LI>lists removal : lists nomore described by the new instantiation. In this case, the listmaster must 
-        valid his choice on command line. If the list is removed, it is set in status <A NAME="7783"></A><TT>family_closed</TT>, or if the 
+        valid his choice on command line. If the list is removed, it is set in status <A NAME="7852"></A><TT>family_closed</TT>, or if the 
 	list is recovered, the list XML file from the previous instantiation is got back to go on as a list modification then.
 
 <P>
@@ -383,7 +383,7 @@ diagram
 In case of modification (see diagram), allowed customizations can be preserved :
 
 <UL>
-<LI>(1) : for every modified parameters (via Web interface), noted in the <A NAME="7786"></A><TT>config_changes</TT> 
+<LI>(1) : for every modified parameters (via Web interface), noted in the <A NAME="7855"></A><TT>config_changes</TT> 
     file, values can be collected in the old list configuration file, according to new family properties :
     
 <UL>
@@ -409,9 +409,9 @@ Notes :
 
 <UL>
 <LI>For each list problem (as family file error, error parameter constraint, error instanciation ...),
-    the list is set in status <A NAME="7789"></A><TT>error_config</TT> and the listmaster is notified. He will have to do necessary to put list in use.
+    the list is set in status <A NAME="7858"></A><TT>error_config</TT> and the listmaster is notified. He will have to do necessary to put list in use.
 </LI>
-<LI>For each list closing in family context, the list is set in status <A NAME="7792"></A><TT>family_closed</TT> and the owner is notified.
+<LI>For each list closing in family context, the list is set in status <A NAME="7861"></A><TT>family_closed</TT> and the owner is notified.
 </LI>
 <LI>For each overwritten list customization, the owner is notified. 
 </LI>
@@ -454,50 +454,50 @@ Not already done.
 <BR>
 15.2.7 List parameters edition in a family context
 </H2>
-According to file <A NAME="7795"></A><TT>edit_list.conf</TT>, edition rights are controlled.  
-See <A HREF="node15.html#list-edition">14.3.3</A>, page&nbsp;<A HREF="node15.html#list-edition"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. But in a family context, constraints parameters are 
+According to file <A NAME="7864"></A><TT>edit_list.conf</TT>, edition rights are controlled.  
+See <A HREF="node15.html#list-edition">14.4.4</A>, page&nbsp;<A HREF="node15.html#list-edition"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. But in a family context, constraints parameters are 
 added to edition right as it is summarized in this array :
 <BR>
 <P>
 array
 <BR>
 <P>
-Note : In order to preserve list customization for instanciation, every modified parameter (via the Web interface) is noted in the <A NAME="7798"></A><TT>config_changes</TT> file. 
+Note : In order to preserve list customization for instantiation, every modified parameter (via the Web interface) is noted in the <A NAME="7867"></A><TT>config_changes</TT> file. 
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1092"
+<A NAME="tex2html1099"
   HREF="node17.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1086"
+<A NAME="tex2html1093"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1080"
+<A NAME="tex2html1087"
   HREF="node15.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1088"
+<A NAME="tex2html1095"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1090"
+<A NAME="tex2html1097"
   HREF="node24.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1093"
+<B> Next:</B> <A NAME="tex2html1100"
   HREF="node17.html">16. List configuration parameters</A>
-<B> Up:</B> <A NAME="tex2html1087"
+<B> Up:</B> <A NAME="tex2html1094"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1081"
+<B> Previous:</B> <A NAME="tex2html1088"
   HREF="node15.html">14. List creation, families and list</A>
- &nbsp <B>  <A NAME="tex2html1089"
+ &nbsp <B>  <A NAME="tex2html1096"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1091"
+ &nbsp <B>  <A NAME="tex2html1098"
   HREF="node24.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2004-11-10
+2004-11-26
 </ADDRESS>
 </BODY>
 </HTML>

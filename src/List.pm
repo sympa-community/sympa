@@ -26,6 +26,7 @@ require Fetch;
 require Exporter;
 #require Encode;
 require 'tools.pl';
+require "--LIBDIR--/tt2.pl";
 
 my @ISA = qw(Exporter);
 my @EXPORT = qw(%list_of_lists);
@@ -521,11 +522,18 @@ my %alias = ('reply-to' => 'reply_to',
 							   'occurrence' => '1',
 							   'gettext_id' => 'the datasource',
 							   },
+					      'source_parameters' => {'format' => '.*',
+								      'occurrence' => '0-1',
+								      'gettext_id' => 'datasource parameters',
+								      'order' => 2
+									  #this param cannot be set in param_constraint.conf because of values syntaxe
+								      },
 					      'reception' => {'format' => ['mail','nomail'],
 							      'default' => 'mail',
 							      'gettext_id' => 'reception mode',
-							      'order' => 4,
-							      },
+							       'order' => 3
+							      }
+					      
 					      },
 				  'occurrence' => '0-n',
 				  'gettext_id' => 'Moderators defined in an external datasource',
@@ -924,16 +932,23 @@ my %alias = ('reply-to' => 'reply_to',
 	    'owner_include' => {'format' => {'source' => {'datasource' => 1,
 							  'occurrence' => '1',
 							  'gettext_id' => 'the datasource',
+							  'order' => 1
+							  },
+					     'source_parameters' => {'format' => '.*',
+								     'occurrence' => '0-1',
+								     'gettext_id' => 'datasource parameters',
+								     'order' => 2
+								 #this param cannot be set in param_constraint.conf because of values syntaxe	 
 						      },
 					     'reception' => {'format' => ['mail','nomail'],
 							     'default' => 'mail',
 							     'gettext_id' => 'reception mode',
-							     'order' =>5,
+							     'order' => 4
 							 },
 					     'profile' => {'format' => ['privileged','normal'],
 							   'default' => 'normal',
 							   'gettext_id' => 'profile',
-							   'order' => 4,
+							    'order' => 3
 						       }
 					 },
 				'occurrence' => '0-n',
@@ -1334,7 +1349,9 @@ sub set_status_error_config {
 
     unless ($self->{'admin'}{'status'} eq 'error_config'){
 	$self->{'admin'}{'status'} = 'error_config';
-	$self->save_config($Conf{'listmaster'});
+
+	my $host = &Conf::get_robot_conf($self->{'robot'}, 'host');
+	$self->save_config("listmaster\@$host");
 	$self->savestats();
 	&do_log('err', 'The list "%s" is set in status error_config',$self->{'name'});
 	&List::send_notify_to_listmaster($message, $self->{'domain'},@param);
@@ -1345,9 +1362,12 @@ sub set_status_error_config {
 sub set_status_family_closed {
     my ($self, $message, @param) = @_;
     &do_log('debug2', 'List::set_status_family_closed');
-
+    
     unless ($self->{'admin'}{'status'} eq 'family_closed'){
-	unless ($self->close($Conf{'listmaster'},'family_closed')) {
+	
+	my $host = &Conf::get_robot_conf($self->{'robot'}, 'host');	
+	
+	unless ($self->close("listmaster\@$host")) {
 	    &do_log('err','Impossible to set the list %s in status family_closed');
 	    return undef;
 	}
@@ -6474,14 +6494,15 @@ sub load_data_sources_list {
     foreach my $dir ("$directory/data_sources", "$Conf{'etc'}/$robot/data_sources", "$Conf{'etc'}/data_sources", "--ETCBINDIR--/data_sources") {
 
 	next unless (-d $dir);
-
-	while (<$dir/*.incl>) {
-	    next unless (/([\w\-]+)\.incl$/);
-      
+	
+	while  (my $f = <$dir/*.incl>) {
+	    
+	    next unless ($f =~ /([\w\-]+)\.incl$/);
+	    
 	    my $name = $1;
 	    
 	    next if (defined $list_of_data_sources{$name});
-
+	    
 	    $list_of_data_sources{$name}{'title'} = $name;
 	    $list_of_data_sources{$name}{'name'} = $name;
 	}
@@ -6784,7 +6805,7 @@ sub _include_users_admin {
     
 sub _include_users_file {
     my ($users, $filename, $default_user_options,$tied) = @_;
-    do_log('debug2', 'List::_include_users_file');
+    do_log('debug2', 'List::_include_users_file(%s)', $filename);
 
     my $total = 0;
     
@@ -7581,15 +7602,35 @@ sub _load_admin_users_include {
 	$option{'profile'} = $entry->{'profile'} if (defined $entry->{'profile'} && ($role eq 'owner'));
 	
 
-      	my $include_file = &tools::get_filename('etc',"data_sources/$entry->{'source'}{'name'}\.incl",$self->{'domain'},$self);
+      	my $include_file = &tools::get_filename('etc',"data_sources/$entry->{'source'}\.incl",$self->{'domain'},$self);
 
         unless (defined $include_file){
-	    &do_log('err', '_load_admin_users_include : the file %s.incl doesn\'t exist',$entry->{'source'}{'name'});
+	    &do_log('err', '_load_admin_users_include : the file %s.incl doesn\'t exist',$entry->{'source'});
 	    return undef;
 	}
-	
-	my $include_admin_user = &_load_include_admin_user_file($self->{'domain'},$include_file);
 
+	my $include_admin_user;
+	## the file has parameters
+	if (defined $entry->{'source_parameters'}) {
+	    my %parsing;
+	    
+	    $parsing{'data'} = $entry->{'source_parameters'};
+	    $parsing{'template'} = "$entry->{'source'}\.incl";
+	    
+	    my $name = "$entry->{'source'}\.incl";
+	    
+	    if ($include_file =~ s/$name$//) {
+		$parsing{'include_path'} = $include_file;
+		$include_admin_user = &_load_include_admin_user_file($self->{'domain'},$include_file,\%parsing);	
+	    } else {
+		&do_log('err', '_load_admin_users_include : errors to get path of the the file %s.incl',$entry->{'source'});
+		return undef;
+	    }
+	    
+	    
+	} else {
+	    $include_admin_user = &_load_include_admin_user_file($self->{'domain'},$include_file);
+	}
 	foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
 	    last unless (defined $total);
 	    
@@ -7638,26 +7679,51 @@ sub _load_admin_users_include {
 
 # Load an include admin user file (xx.incl)
 sub _load_include_admin_user_file {
-    my ($robot, $file) = @_;
-     &do_log('debug2', 'List::_load_include_admin_user_file(%s,%s)',$robot, $file); 
-   
-    unless (open INCLUDE, $file) {
-	&do_log('info', 'Cannot open %s', $file);
-    }
+    my ($robot, $file, $parsing) = @_;
+    &do_log('debug2', 'List::_load_include_admin_user_file(%s,%s)',$robot, $file); 
+    
     my %include;
     my (@paragraphs);
-
-    ## Just in case...
-    $/ = "\n";
-
-    ## Split in paragraphs
-    my $i = 0;
-    while (<INCLUDE>) {
-	if (/^\s*$/) {
-	    $i++ if $paragraphs[$i];
-	}else {
-	    push @{$paragraphs[$i]}, $_;
+    
+    # the file has parmeters
+    if (defined $parsing) {
+	my @data = split(',',$parsing->{'data'});
+        my $vars = {'param' => \@data};
+	my $output = '';
+	
+	unless (&tt2::parse_tt2($vars,$parsing->{'template'},\$output,[$parsing->{'include_path'}])) {
+	    &do_log('err', 'Failed to parse %s', $parsing->{'template'});
+	    return undef;
 	}
+	
+	my @lines = split('\n',$output);
+	
+	my $i = 0;
+	foreach my $line (@lines) {
+	    if ($line =~ /^\s*$/) {
+		$i++ if $paragraphs[$i];
+	    }else {
+		push @{$paragraphs[$i]}, $line;
+	    }
+	}
+    } else {
+	unless (open INCLUDE, $file) {
+	    &do_log('info', 'Cannot open %s', $file);
+	}
+	
+	## Just in case...
+	$/ = "\n";
+	
+	## Split in paragraphs
+	my $i = 0;
+	while (<INCLUDE>) {
+	    if (/^\s*$/) {
+		$i++ if $paragraphs[$i];
+	    }else {
+		push @{$paragraphs[$i]}, $_;
+	    }
+	}
+	close INCLUDE;
     }
     
     for my $index (0..$#paragraphs) {
@@ -7791,10 +7857,8 @@ sub _load_include_admin_user_file {
 	    }
 	}
     }
- 
-    close INCLUDE;
-
-   return \%include;
+    
+    return \%include;
 }
 
 sub sync_include {
@@ -9502,8 +9566,7 @@ sub _save_list_param {
 #    next  unless (defined ($p));
 
     if (defined ($::pinfo{$key}{'scenario'}) ||
-        defined ($::pinfo{$key}{'task'}) ||
-	defined ($::pinfo{$key}{'datasource'})) {
+        defined ($::pinfo{$key}{'task'}) ) {
 	return 1 if ($p->{'name'} eq 'default');
 
 	printf $fd "%s %s\n", $key, $p->{'name'};
@@ -9513,11 +9576,12 @@ sub _save_list_param {
 	printf $fd "%s\n", $key;
 	foreach my $k (keys %{$p}) {
 
-	    if (defined ($::pinfo{$key}{'file_format'}{$k}{'scenario'})) {
+	    if (defined ($::pinfo{$key}{'file_format'}{$k}{'scenario'}) ) {
 		## Skip if empty value
 		next if ($p->{$k}{'name'} =~ /^\s*$/);
 
 		printf $fd "%s %s\n", $k, $p->{$k}{'name'};
+
 	    }elsif (($::pinfo{$key}{'file_format'}{$k}{'occurrence'} =~ /n$/)
 		    && $::pinfo{$key}{'file_format'}{$k}{'split_char'}) {
 		
@@ -9583,8 +9647,6 @@ sub _load_list_param {
 	$value =~ y/,/_/;
 	$value = &List::_load_scenario_file ($p->{'scenario'},$robot, $value, $directory);
     }elsif ($p->{'task'}) {
-	$value = {'name' => $value};
-    }elsif ($p->{'datasource'}) {
 	$value = {'name' => $value};
     }
 

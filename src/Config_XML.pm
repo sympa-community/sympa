@@ -85,7 +85,11 @@ sub createHash {
 	}
 	if (ref($hash) eq "HASH") {
 	    foreach my $k (keys %$hash) {
-		$self->{'config'}{$k} = $hash->{$k};
+		if ($k eq "type") { ## the list template creation without family context
+		    $self->{'type'} = $hash->{'type'};  
+		}else {
+		    $self->{'config'}{$k} = $hash->{$k};
+		}
 	    }
 	}elsif ($hash ne "") { # a string
 	    &do_log('err','Config_XML::createHash() : the list\'s children are not homogeneous');
@@ -100,7 +104,7 @@ sub createHash {
 # getHash                                 
 #########################################
 # return the hash structure containing :
-#   family, description, config
+#   type, config
 #
 # IN  : -$self
 # OUT : -$hash
@@ -111,8 +115,7 @@ sub getHash {
 
     my $hash = {};
 
-    $hash->{'family'} = $self->{'family'};
-    $hash->{'description'} = $self->{'description'};
+    $hash->{'type'} = $self->{'type'} if (defined $self->{'type'}); ## the list template creation without family context
     $hash->{'config'} = $self->{'config'}; 
   
     return $hash;
@@ -126,9 +129,8 @@ sub getHash {
 # _getRequiredElements                                 
 #################################################################
 # get all obligatory elements and store them :
-#   -multiple : owner(with email) or owner_include(with source), 
-#   -single : description, listname, family, subject
-# remove them in order to the later recursive call
+#  single : listname 
+# remove it in order to the later recursive call
 #
 # IN : -$self
 # OUT : -1 or undef
@@ -138,27 +140,8 @@ sub _getRequiredElements {
     &do_log('debug3','Config_XML::_getRequiredElements()');
     my $error = 0;
 
-    # element owner(with email) or owner_include(with source) obligatory
-    my $nb_owner = $self->_getMultipleAndRequiredChild('owner','email');
-    my $nb_owner_include = $self->_getMultipleAndRequiredChild('owner_include','source');
-
-    unless ((defined $nb_owner) && (defined $nb_owner_include)) {
-	$error = 1;
-    }
-    unless ($nb_owner || $nb_owner_include){
-	&do_log('err',"Owner required for the list (neither element owner nor element owner_include)");
-	$error = 1;
-    }	
-
-    # element family, listname, description are obligatory
-    foreach my $n ('family','listname','description','subject') {
-	unless ($self->_getRequiredSingle($n)){
-	    $error = 1;
-	    last;
-	}
-    }
-
-    if ($error) {
+    # listname element is obligatory
+    unless ($self->_getRequiredSingle('listname')){
 	return undef;
     }
     return 1;
@@ -166,7 +149,7 @@ sub _getRequiredElements {
 
 
 ####################################################
-# _getMultipleAndRequiredChild                                
+# _getMultipleAndRequiredChild  : no used anymore                          
 ####################################################
 # get all nodes with name $nodeName and check if
 #  they contain the child $childName and store them
@@ -250,8 +233,7 @@ sub _getRequiredSingle {
 	return undef;
     }
     
-    if (($nodeName eq "description") ||
-	($nodeName eq "family")) {
+    if ($nodeName eq "type") {## the list template creation without family context
 
 	my $value = $node->textContent;
 	$value =~ s/^\s*//;
