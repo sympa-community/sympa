@@ -157,7 +157,7 @@ checkcpan:
 
 clean:
 	find . \( -name ".#*" -o -name "*~" -o -name ".*~" -o -name "#*#" \) -exec  rm -f {} \;
-	@for i in src nls wwsympa src/etc/sample ;\
+	@for i in src nls wwsympa src/etc/sample;\
 	do \
 	(cd $$i && echo "making clean in $$i..." && \
 	$(MAKE) PERL='${PERL}' clean) || exit 1; \
@@ -217,6 +217,10 @@ installman:
 		DESTDIR=$(DESTDIR); export DESTDIR; \
 		SYMPA_VERSION=$(SYMPA_VERSION); export SYMPA_VERSION; \
 		CONFDIR=$(CONFDIR); export CONFDIR; \
+		SENDMAIL_ALIASES=$(SENDMAIL_ALIASES); export SENDMAIL_ALIASES; \
+		MAILERPROGDIR=$(MAILERPROGDIR); export MAILERPROGDIR; \
+		PIDDIR=$(PIDDIR); export PIDDIR; \
+		SPOOLDIR=$(SPOOLDIR); export SPOOLDIR; \
 		PIDDIR=$(PIDDIR); export PIDDIR; \
 		$(PERL) ../../subst.pl $$manfile \
 	) ;\

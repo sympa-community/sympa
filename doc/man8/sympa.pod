@@ -1,0 +1,137 @@
+=head1 NAME
+
+sympa (or sympa.pl) - A Modern Mailing List Manager
+
+=head1 SYNOPSIS
+
+S<B<sympa> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
+      S<[ B<--import>=I<listname> ] [ B<-k, --keepcopy>=I<directory> ]>
+      S<[ B<-l, --lang>=I<catalog> ] [ B<--lowercase> ] [ B<-m, --mail> ]>
+      S<[ B<--dump>=I<listname> | ALL] [ B<-h, --help> ]>
+      S<[ B<-v, --version> ]>
+
+=head1 DESCRIPTION
+
+B<Sympa> is scalable and highly customizable mailing list manager. 
+It can cope with big lists (200,000 subscribers) and comes with 
+a complete (user and admin) Web interface. It is 
+internationalized, and supports the us, fr, de, es, it, fi, and 
+chinese locales. A scripting language allows you to extend the 
+behavior of commands. B<Sympa> can be linked to an LDAP directory 
+or an RDBMS to create dynamic mailing lists. B<Sympa> provides S/MIME 
+and HTTPS based authentication and encryption.
+Sympa is a modern mailing-list manager. It supports a lot of useful
+features.
+
+=head1 OPTIONS
+
+=over 5
+
+=item B<-d, --debug>
+
+Enable debug mode.
+
+=item B<-f, --file=>F<another.sympa.conf>
+
+Force Sympa to use an alternative configuration file instead
+of F</etc/sympa/sympa.conf>.
+
+=item B<--import=>I<list>
+
+Import subscribers in the list. Data are read from STDIN.
+The imported data should contain one entry per line : the first field
+is an email address, the second (optional) field is the free form name.
+Fields are spaces-separated.
+
+Sample :
+
+    ## Data to be imported
+    ## email        gecos
+    john.steward@some.company.com           John - accountant
+    mary.blacksmith@another.company.com     Mary - secretary
+
+=item B<-k, --keepcopy=>F<directory>
+
+This option tells Sympa to keep a copy of every incoming message, 
+instead of deleting them. `directory' is the directory to 
+store messages.
+
+=item B<-l, --lang=>I<catalog>
+
+Set this option to use a language catalog for Sympa. The corresponding
+catalog file `catalogue'.cat must be located in F</usr/lib/sympa/nls>
+directory.
+
+=item B<--lowercase>
+
+Lowercases email addresses in database.
+
+=item B<-m, --mail>
+
+Sympa will log calls to sendmail, including recipients. This option is
+useful for keeping track of each mail sent (log files may grow faster
+though).
+
+=item B<--dump=>I<listname> | ALL
+
+Dumps subscribers of for `listname' list or all lists. Subscribers are 
+dumped in subscribers.db.dump.
+
+=item B<-h, --help>
+
+Print this help message.
+
+=item B<-v, --version>
+
+Print the version number.
+
+=back
+
+=head1 FILES
+
+F</etc/sympa/sympa.conf> main configuration file.
+
+F</var/spool/sympa/sympa.pid> this file contains the process ID
+of F<sympa.pl>.
+
+=head1 AVAILABILITY
+
+Latest version of B<Sympa> is available from http://www.sympa.org.
+
+=head1 MORE DOCUMENTATION
+
+The full documentation in HTML and PostScript formats can be
+found in F</usr/share/doc/sympa/html/>. 
+
+The mailing lists (with web archives) can be accessed at
+http://listes.cru.fr/wws/lists/informatique/sympa.
+
+=head1 AUTHORS
+
+Serge Aumont
+ 	Comité Réseau des Universités
+
+Olivier Salaün
+ 	Comité Réseau des Universités
+
+Contact authors at <sympa-authors@cru.fr>
+
+=head1 COPYRIGHT
+
+Copyright E<169> 1997,1998,1999,2000,2001 Comité Réseau des Universités
+
+Copyright E<169> 1997,1998,1999 Institut Pasteur & Christophe Wolfhugel
+
+You may distribute this software under the terms of the GNU General
+Public License Version 2 (L<http://www.gnu.org/copyleft/gpl.html>)
+
+=head1 BUGS
+
+Report bugs to <sympa-dev@cru.fr>.
+
+=head1 SEE ALSO
+
+L<sympa.conf(5)>, L<archived(8)>, L<bounced(8)>, L<sendmail(8)>, L<alias_manager(8)>
+
+
+

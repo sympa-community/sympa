@@ -4,18 +4,17 @@ alias_manager (or alias_manager.pl) - manage Sympa aliases
 
 =head1 SYNOPSYS
 
-S<B<alias_manager> B<add> I<listname> I<domain>>
-S<B<alias_manager> B<del> I<listname> I<domain>>
+S<B<alias_manager> B<add> | B<del> I<listname> I<domain>>
 
 =head1 DESCRIPTION
 
-This manual page documents briefly the bounced command.
-
-This manual page was written for the Debian GNU/Linux distribution
-because the original program does not have a manual page.
-
 Alias_manager is a program that helps in installing aliases for newly
-created lists and deleting aliases for closed lists.
+created lists and deleting aliases for closed lists. 
+
+Is is called by
+I<wwsympa.fcgi> via the I<aliaswrapper>. Alias management is performed
+by I<wwsympa.fcgi> only if it was setup in I<--CONFDIR--/wwsympa.conf>
+(I<alias_manager> configuration parameter).
 
 =head1 OPTIONS
 
@@ -35,7 +34,7 @@ domain I<domain>.
 
 =head1 FILES
 
-F</etc/aliases> sendmail aliases file.
+F<--SENDMAIL_ALIASES--> sendmail aliases file.
 
 =head1 MORE DOCUMENTATION
 
@@ -55,8 +54,8 @@ Olivier Salaün
 
 Contact authors at <sympa-authors@cru.fr>
 
-This manual page was written by Jérôme Marant <jerome.marant@IDEALX.org>
-for the Debian GNU/Linux system (but may be used by others).
+This manual page was initially written by Jérôme Marant <jerome.marant@IDEALX.org>
+for the Debian GNU/Linux system.
 
 =head1 COPYRIGHT
 
@@ -81,3 +80,6 @@ Report bugs to <sympa-dev@cru.fr>.
 =head1 SEE ALSO
 
 L<sympa(1)>, L<sendmail(8)>.
+
+
+

@@ -8,15 +8,12 @@ S<B<bounced> [ B<-F> ] [ B<-d, -dF> ]>
 
 =head1 DESCRIPTION
 
-This manual page documents briefly the bounced command.
-
-This manual page was written for the Debian GNU/Linux distribution
-because the original program does not have a manual page.
-
-Bounced is a program which scans permanently the bounce queue and
+Bounced is a program which scans permanently the bounce spool and
 processes bounces (non-delivery messages), looking or bad addresses.
+Bouncing addresses are tagged in database ; last bounce is kept for
+each bvouncing address.
 
-List owners will latter access bouces information via WWSympa.
+List owners will latter access bounces information via WWSympa.
 
 =head1 OPTIONS
 
@@ -38,9 +35,13 @@ Run the program in a debug mode.
 
 =head1 FILES
 
-F</etc/sympa/wwsympa.conf> WWSympa configuration file.
+F<--CONFDIR--/wwsympa.conf> WWSympa configuration file.
 
-F</var/spool/sympa/bounced.pid> this file contains the process ID
+F<--MAILERPROGDIR--/bouncequeue> bounce spooler, referenced from sendmail alias file
+
+F<--SPOOLDIR--/bounce> incoming bounces directory
+
+F<--PIDDIR--/bounced.pid> this file contains the process ID
 of F<bounced.pl>.
 
 =head1 MORE DOCUMENTATION
@@ -61,8 +62,8 @@ Olivier Salaün
 
 Contact authors at <sympa-authors@cru.fr>
 
-This manual page was written by Jérôme Marant <jerome.marant@IDEALX.org>
-for the Debian GNU/Linux system (but may be used by others).
+This manual page was initially written by Jérôme Marant <jerome.marant@IDEALX.org>
+for the Debian GNU/Linux system.
 
 =head1 COPYRIGHT
 
@@ -86,4 +87,6 @@ Report bugs to <sympa-dev@cru.fr>.
 
 =head1 SEE ALSO
 
-L<sympa(1)>, L<archived(1)>, L<mhonarc(1)>, L<wwsympa.conf(5)>.
+L<sympa(8)>, L<archived(8)>, L<mhonarc(1)>, L<wwsympa.conf(5)>.
+
+

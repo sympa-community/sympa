@@ -8,16 +8,15 @@ S<B<archived> [ B<-F> ] [ B<-d, -dF> ]>
 
 =head1 DESCRIPTION
 
-This manual page documents briefly the archived command.
-
-This manual page was written for the Debian GNU/Linux distribution
-because the original program does not have a manual page.
-
-Archived is a program which scan permanently the outgoing queue and
+B<Archived> is a program which scan permanently the outgoing B<Sympa> spool and
 feeds the web archives, converting messages to the HTML format and
-linking them.
+linking them. Original mails are also kept (in I<arctxt/> directory> for later rebuilding of
+archives.
 
-The HTML conversion is achieved by the means of the MhOnArc program.
+The HTML conversion is achieved by the means of the B<MhOnArc> program.
+
+Archives are accessed via B<wwsympa.fcgi>, which proposes access control ;
+therefore archives should not be located in a public web directory.
 
 =head1 OPTIONS
 
@@ -39,9 +38,13 @@ Run the program in a debug mode.
 
 =head1 FILES
 
-F</etc/sympa/wwsympa.conf> WWSympa configuration file.
+F<--SPOOLDIR--/outgoing/> outgoing Sympa directory.
 
-F</var/spool/sympa/archived.pid> this file contains the process ID
+F<--ETCBINDIR--/mhonarc-ressources> mhonarc ressource file
+
+F<--CONFDIR--/wwsympa.conf> WWSympa configuration file.
+
+F<--PIDDIR--/archived.pid> this file contains the process ID
 of F<archived.pl>.
 
 =head1 MORE DOCUMENTATION
@@ -62,8 +65,8 @@ Olivier Salaün
 
 Contact authors at <sympa-authors@cru.fr>
 
-This manual page was written by Jérôme Marant <jerome.marant@IDEALX.org>
-for the Debian GNU/Linux system (but may be used by others).
+This manual page was initially written by Jérôme Marant <jerome.marant@IDEALX.org>
+for the Debian GNU/Linux system.
 
 =head1 COPYRIGHT
 
@@ -87,4 +90,8 @@ Report bugs to <sympa-dev@cru.fr>.
 
 =head1 SEE ALSO
 
-L<sympa(1)>, L<bounced(1)>, L<mhonarc(1)>, L<wwsympa.conf(5)>.
+L<sympa(8)>, L<bounced(8)>, L<mhonarc(1)>, L<wwsympa.conf(5)>.
+
+
+
+
