@@ -69,7 +69,7 @@ installgeneral_task_models:
 
 installetc:
 	@echo "Installing default configuration ..."
-	cp etc/*.conf etc/*.crt $(DESTDIR)$(ETCBINDIR)/
+	cp etc/*.conf etc/*.crt etc/*.tpl $(DESTDIR)$(ETCBINDIR)/
 	@( \
 		UMASK=0664; export UMASK;\
 		INSTALLDIR=$(ETCBINDIR); export INSTALLDIR;\
