@@ -3913,7 +3913,7 @@ archiving frequency defined by the \lparam {archive} parameter.
 % Virtual robot how to
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\Chapter {Virtual robot}
+\chapter {Virtual robot}
     \label {virtual-robot}
 
 Sympa is designed to manage multiple distinct mailing list servers on
@@ -3927,7 +3927,7 @@ All configuration parameters can be define for each robot except Sympa
 installation parameters such as binary and spool location, smtp engine,
 antivirus plugging etc.
 
-\Section {Robot definition}
+\section {Robot definition}
 
 A robot is named by its domain, let's say \samplerobot and and defined by a directory 
 \tildedir {sympa/etc/\samplerobot}. This directory must contain at least a 
