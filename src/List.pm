@@ -6313,7 +6313,7 @@ sub _load_admin_file {
 		}
 		
 		unless ($paragraph[$i] =~ /^\s*$key\s+($::pinfo{$pname}{'file_format'}{$key}{'file_format'})\s*$/i) {
-		    &do_log('info', 'Bad value "%s" for parameter "%s" in paragraph "%s" in %s', $paragraph[$i], $key, $pname, $config_file);
+		    &do_log('info', 'Bad entry "%s" in paragraph "%s" in %s', $paragraph[$i], $key, $pname, $config_file);
 		    next;
 		}
 
@@ -6357,7 +6357,7 @@ sub _load_admin_file {
 	    }
 
 	    unless ($paragraph[0] =~ /^\s*$pname\s+($::pinfo{$pname}{'file_format'})\s*$/i) {
-		&do_log('info', 'Bad value "%s" for parameter "%s" in %s', $paragraph[0], $pname, $config_file);
+		&do_log('info', 'Bad entry "%s" in %s', $paragraph[0], $pname, $config_file);
 		next;
 	    }
 
