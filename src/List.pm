@@ -3781,6 +3781,7 @@ sub request_action {
     }
     foreach my $rule (@rules) {
 	next if ($rule eq 'scenario');
+	);
 	if ($auth_method eq $rule->{'auth_method'}) {
 	    my $result =  &verify ($context,$rule->{'condition'});
 
@@ -5525,26 +5526,6 @@ sub _compare_addresses {
 
    $ra = reverse $a;
    $rb = reverse $b;
-
-   return ($ra cmp $rb);
-}
-
-sub _compare_addresses_old {
-   my ($a, $b) = @_;
-   my ($pa,$pb); 
-   $a =~ tr/A-Z/a-z/;
-   $b =~ tr/A-Z/a-z/;
-   $a =~ /\.(\w*)$/;
-   my $ra = $1;
-   $b =~ /\.(\w*)$/;
-   my $rb = $1;
-   ($Conf{'poids'}{$ra} and $pa=$Conf{'poids'}{$ra}) or  $pa=$Conf{'poids'}{'*'};
-   ($Conf{'poids'}{$rb} and $pb=$Conf{'poids'}{$rb}) or  $pb=$Conf{'poids'}{'*'};
-
-   $pa != $pb and return ($pa cmp $pb);
-
-   $ra = join('.', reverse(split(/[@\.]/, $a)));
-   $rb = join('.', reverse(split(/[@\.]/, $b)));
 
    return ($ra cmp $rb);
 }
