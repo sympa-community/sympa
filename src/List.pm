@@ -1755,7 +1755,7 @@ sub send_msg {
  
 	my $expl = $Conf{'home'}.'/'.$name.'/urlized';
     
-	unless ((-d $expl) ||( mkdir $expl)) {
+	unless ((-d $expl) ||( mkdir $expl, 0775)) {
 	    do_log('err', "Unable to create urlize directory $expl");
 	    printf "Unable to create urlized directory $expl";
 	    return 0;
@@ -1769,7 +1769,7 @@ sub send_msg {
 	$dir1 = &tools::escape_chars($dir1);
 	$dir1 = '/'.$dir1;
 
-	unless ( mkdir ("$expl/$dir1")) {
+	unless ( mkdir ("$expl/$dir1", 0775)) {
 	    do_log('err', "Unable to create urlize directory $expl/$dir1");
 	    printf "Unable to create urlized directory $expl/$dir1";
 	    return 0;
