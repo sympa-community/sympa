@@ -599,6 +599,7 @@ sub escape_chars {
     $s =~ s/\xa5/\%a5/g;
     $s =~ s/\//\%a5/g; ## Special traetment for '/'
     $s =~ s/\:/\%3a/g;
+    $s =~ s/\#/\%23/g;
     
     return $s;
 }
@@ -612,6 +613,7 @@ sub unescape_chars {
     $s =~ s/\%20/ /g;
     $s =~ s/\%a5/\//g;  ## Special traetment for '/'
     $s =~ s/\%3a/\:/g;
+    $s =~ s/\%23/\#/g;
     
     return $s;
 }
