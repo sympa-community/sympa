@@ -104,8 +104,6 @@ $icon_table{'url'} = '/icons/link.gif';
 #$shared = 'shared';
 #$desc = '.desc';
 
-####{lefloch/modif/end}
-
 
 ## subroutines
 my %comm = ('home' => 'do_home',
@@ -532,6 +530,7 @@ while ($query = &new_loop()) {
 	## Action template
 	if (defined $param->{'action'}) {
 	    foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
+				"$Conf{'etc'}/$robot/wws_templates",
 				"$Conf{'etc'}/wws_templates",
 				"--ETCBINDIR--/wws_templates") {
 		if (-f "$tpldir/$param->{'action'}.$param->{'lang'}.tpl") {
@@ -550,7 +549,10 @@ while ($query = &new_loop()) {
 	}
 
 	## Menu template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates","$Conf{'etc'}/wws_templates","--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
+			    "$Conf{'etc'}/$robot/wws_templates",
+			    "$Conf{'etc'}/wws_templates",
+			    "--ETCBINDIR--/wws_templates") {
 	    if (-f "$tpldir/menu.$param->{'lang'}.tpl"){
 		$param->{'menu_template'} = "$tpldir/menu.$param->{'lang'}.tpl";
 		last;
@@ -566,7 +568,10 @@ while ($query = &new_loop()) {
 	}
 
 	## List_menu template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates","$Conf{'etc'}/wws_templates","--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
+			    "$Conf{'etc'}/$robot/wws_templates",
+			    "$Conf{'etc'}/wws_templates",
+			    "--ETCBINDIR--/wws_templates") {
 	    if (-f "$tpldir/list_menu.$param->{'lang'}.tpl"){
 		$param->{'list_menu_template'} = "$tpldir/list_menu.$param->{'lang'}.tpl";
 		last;
@@ -582,7 +587,10 @@ while ($query = &new_loop()) {
 	}
 
 	## admin_menu template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates","$Conf{'etc'}/wws_templates","--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
+			    "$Conf{'etc'}/$robot/wws_templates",
+			    "$Conf{'etc'}/wws_templates",
+			    "--ETCBINDIR--/wws_templates") {
 	    if (-f "$tpldir/admin_menu.$param->{'lang'}.tpl"){
 		$param->{'admin_menu_template'} = "$tpldir/admin_menu.$param->{'lang'}.tpl";
 		last;
@@ -598,7 +606,10 @@ while ($query = &new_loop()) {
 	}
 
 	## Title template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates","$Conf{'etc'}/wws_templates","--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
+			    "$Conf{'etc'}/$robot/wws_templates",
+			    "$Conf{'etc'}/wws_templates",
+			    "--ETCBINDIR--/wws_templates") {
 	    if (-f "$tpldir/title.$param->{'lang'}.tpl"){
 		$param->{'title_template'} = "$tpldir/title.$param->{'lang'}.tpl";
 		last;
@@ -614,7 +625,10 @@ while ($query = &new_loop()) {
 	}
 
 	## Error template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates","$Conf{'etc'}/wws_templates","--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
+			    "$Conf{'etc'}/$robot/wws_templates",
+			    "$Conf{'etc'}/wws_templates",
+			    "--ETCBINDIR--/wws_templates") {
 	    if (-f "$tpldir/error.$param->{'lang'}.tpl"){
 		$param->{'error_template'} = "$tpldir/error.$param->{'lang'}.tpl";
 		last;
@@ -630,7 +644,10 @@ while ($query = &new_loop()) {
 	}
 
 	## Notice template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates","$Conf{'etc'}/wws_templates","--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
+			    "$Conf{'etc'}/wws_templates",
+			    "$Conf{'etc'}/$robot/wws_templates",
+			    "--ETCBINDIR--/wws_templates") {
 	    if (-f "$tpldir/notice.$param->{'lang'}.tpl"){
 		$param->{'notice_template'} = "$tpldir/notice.$param->{'lang'}.tpl";
 		last;
@@ -646,7 +663,10 @@ while ($query = &new_loop()) {
 	}
 
 	## Help template
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates","$Conf{'etc'}/wws_templates","--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
+			    "$Conf{'etc'}/$robot/wws_templates",
+			    "$Conf{'etc'}/wws_templates",
+			    "--ETCBINDIR--/wws_templates") {
 	    if (-f "$tpldir/help_$param->{'help_topic'}.$param->{'lang'}.tpl"){
 		$param->{'help_template'} = "$tpldir/help_$param->{'help_topic'}.$param->{'lang'}.tpl";
 		last;
@@ -659,7 +679,10 @@ while ($query = &new_loop()) {
 
 	## main template
 	my $main ;
-        foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates","$Conf{'etc'}/wws_templates","--ETCBINDIR--/wws_templates") {
+        foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
+			    "$Conf{'etc'}/wws_templates",
+			    "$Conf{'etc'}/$robot/wws_templates",
+			    "--ETCBINDIR--/wws_templates") {
 	    if (-f "$tpldir/main.$param->{'lang'}.tpl"){
 		$main = "$tpldir/main.$param->{'lang'}.tpl";
 		last;
@@ -1271,7 +1294,10 @@ sub do_sendpasswd {
 
     my $tpl_file;
         
-    foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates","$Conf{'etc'}/wws_templates","--ETCBINDIR--/wws_templates") {
+    foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
+			"$Conf{'etc'}/$robot/wws_templates",
+			"$Conf{'etc'}/wws_templates",
+			"--ETCBINDIR--/wws_templates") {
 	if (-f "$tpldir/msg_sendpasswd.$param->{'lang'}.tpl") {
 	    $tpl_file = "$tpldir/msg_sendpasswd.$param->{'lang'}.tpl";
 	    last;
@@ -1365,7 +1391,7 @@ sub do_lists {
 	}
     }
 
-    foreach my $l ( &List::get_lists() ) {
+    foreach my $l ( &List::get_lists($robot) ) {
 	my $list = new List ($l);
 
 	my $sender = $param->{'user'}{'email'} || 'nobody';
@@ -3470,7 +3496,7 @@ sub do_get_pending_lists {
 	return undef;
     } 
 
-    foreach my $l ( &List::get_lists() ) {
+    foreach my $l ( &List::get_lists('*') ) {
 	my $list = new List ($l);
 	if ($list->{'admin'}{'status'} eq 'pending') {
 	    $param->{'pending'}{$l}{'subject'} = $list->{'admin'}{'subject'};
@@ -3654,13 +3680,15 @@ sub do_create_list {
     }
 	     
     my $template_file ;
-    if (-r "$Conf{'etc'}/create_list_templates/$in{'template'}/config.tpl") {
+    if (-r "$Conf{'etc'}/$robot/create_list_templates/$in{'template'}/config.tpl") {
+	$template_file = "$Conf{'etc'}/$robot/create_list_templates/$in{'template'}/config.tpl" ;
+    }elsif(-r "$Conf{'etc'}/create_list_templates/$in{'template'}/config.tpl") {
 	$template_file = "$Conf{'etc'}/create_list_templates/$in{'template'}/config.tpl" ;
     }elsif(-r "--ETCBINDIR--/create_list_templates/$in{'template'}/config.tpl") {
 	$template_file = "--ETCBINDIR--/create_list_templates/$in{'template'}/config.tpl";
     }else{
 	&error_message('unable_to_open_template');
-	&do_log('info', 'no template %s in %s NOR %s',$in{'template'},"$Conf{'etc'}/create_list_templates/$in{'template'}","--ETCBINDIR--/create_list_templates/$in{'template'}");
+	&do_log('info', 'no template %s in %s NOR %s',$in{'template'},"$Conf{'etc'}/$robot/create_list_templates/$in{'template'}","$Conf{'etc'}/create_list_templates/$in{'template'}","--ETCBINDIR--/create_list_templates/$in{'template'}");
 	
 	return undef;
     }
@@ -3919,7 +3947,7 @@ sub do_scenario_test {
 	}
     }
     closedir SCENARI;
-    foreach my $l ( &List::get_lists() ) {
+    foreach my $l ( &List::get_lists('*') ) {
 	$param->{'listname'}{$l}{'defined'}=1 ;
     }
     foreach my $a ('smtp','md5','smime') {
@@ -4145,7 +4173,7 @@ sub do_rebuildallarc {
 	&wwslog('info','do_rebuildallarc: not listmaster');
 	return undef;
     }
-    foreach my $l ( &List::get_lists() ) {
+    foreach my $l ( &List::get_lists('*') ) {
 	my $list = new List ($l); 
 	next unless (defined $list->{'admin'}{'web_archive'});
         my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'admin'}{'host'}";
@@ -4188,7 +4216,7 @@ sub do_search_list {
 
     ## Members list
     my $record = 0;
-    foreach my $l ( &List::get_lists() ) {
+    foreach my $l ( &List::get_lists($robot) ) {
 	my $is_admin;
 	my $list = new List ($l);
 
@@ -7330,7 +7358,10 @@ sub do_change_email {
 	
 	my $tpl_file;
         
-	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates","$Conf{'etc'}/wws_templates","--ETCBINDIR--/wws_templates") {
+	foreach my $tpldir ("$Conf{'home'}/$param->{'list'}/wws_templates",
+			    "$Conf{'etc'}/$robot/wws_templates",
+			    "$Conf{'etc'}/wws_templates",
+			    "--ETCBINDIR--/wws_templates") {
 	    if (-f "$tpldir/msg_sendpasswd.$param->{'lang'}.tpl") {
 		$tpl_file = "$tpldir/msg_sendpasswd.$param->{'lang'}.tpl";
 		last;
