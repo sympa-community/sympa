@@ -60,7 +60,7 @@ my $alias_file = '--SENDMAIL_ALIASES--';
 $alias_file = $file if ($file);
 
 unless (-w "$alias_file") {
-    print STDERR "Unable to access $alias_file";
+    print STDERR "Unable to access $alias_file\n";
     exit(5);
 }
     
@@ -80,7 +80,7 @@ my @aliases ;
 if ($operation eq 'add') {
     ## Create a lock
     unless (open(LF, ">>$lock_file")) { 
-	print STDERR "Can't open lock file $lock_file";
+	print STDERR "Can't open lock file $lock_file\n";
 	exit(14);
     }
     flock LF, 2;
@@ -92,7 +92,7 @@ if ($operation eq 'add') {
     }
 
     unless (open  ALIAS, ">> $alias_file") {
-	print STDERR "Unable to append to $alias_file";
+	print STDERR "Unable to append to $alias_file\n";
 	exit(5);
     }
 
@@ -104,7 +104,7 @@ if ($operation eq 'add') {
     ## Newaliases
     if ($alias_file eq '--SENDMAIL_ALIASES--') {
 	unless (system($alias_wrapper) == 0) {
-	    print STDERR "Failed to execute newaliases: $!";
+	    print STDERR "Failed to execute newaliases: $!\n";
 	    exit(6)
 	    }
     }
@@ -120,12 +120,12 @@ if ($operation eq 'add') {
     flock LF, 2;
 
     unless (open  ALIAS, "$alias_file") {
-	print STDERR "Could not read $alias_file";
+	print STDERR "Could not read $alias_file\n";
 	exit(7);
     }
     
     unless (open NEWALIAS, ">$tmp_alias_file") {
-	printf STDERR "Could not create $tmp_alias_file";
+	printf STDERR "Could not create $tmp_alias_file\n";
 	exit (8);
     }
 
@@ -159,12 +159,12 @@ if ($operation eq 'add') {
     }
     ## replace old aliases file
     unless (open  NEWALIAS, "$tmp_alias_file") {
-	print STDERR "Could not read $tmp_alias_file";
+	print STDERR "Could not read $tmp_alias_file\n";
 	exit(10);
     }
     
     unless (open OLDALIAS, ">$alias_file") {
-	print STDERR "Could not overwrite $alias_file";
+	print STDERR "Could not overwrite $alias_file\n";
 	exit (11);
     }
     print OLDALIAS <NEWALIAS>;
@@ -175,7 +175,7 @@ if ($operation eq 'add') {
     ## Newaliases
     if ($alias_file eq '--SENDMAIL_ALIASES--') {
 	unless (system($alias_wrapper) == 0) {
-	    print STDERR "Failed to execute newaliases: $!";
+	    print STDERR "Failed to execute newaliases: $!\n";
 	exit (6);
 	}
     }
@@ -184,7 +184,7 @@ if ($operation eq 'add') {
     close LF;
 
 }else {
-    print STDERR "Action $operation not implemented yet";
+    print STDERR "Action $operation not implemented yet\n";
     exit(2);
 }
 
@@ -195,7 +195,7 @@ sub already_defined {
     my @aliases = @_;
     
     unless (open  ALIAS, "$alias_file") {
-	printf STDERR "Could not read $alias_file";
+	printf STDERR "Could not read $alias_file\n";
 	exit (7);
     }
 
