@@ -1489,7 +1489,11 @@ sub process_bouncers {
 	}
 	
 	##  first, bouncing email are sorted in @bouncer 
-	for (my $user_ref = $list->get_first_bouncing_user(); $user_ref; $user_ref = $list->get_next_bouncing_user()) {	    
+	for (my $user_ref = $list->get_first_bouncing_user(); $user_ref; $user_ref = $list->get_next_bouncing_user()) {	   
+
+	    ## Skip included users (cannot be removed)
+	    next if ($user_ref->{'is_included'});
+ 
 	    for ( my $level = $max_level;($level >= 1) ;$level--) {
 
 		if ($user_ref->{'bounce_score'} >= $list->{'admin'}{'bouncers_level'.$level}{'rate'}){
