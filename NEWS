@@ -3,6 +3,38 @@
 
 (See Changelog file for the full changes log)
 
+4.1		05 March 2004
+
+   Changes :
+
+	src/Message.pm: previously only messages that included SMIME checked signature were preserved,  
+	now protect them even though signature might not be checked
+
+	check_perl_modules.pl: IO::Socket::SSL is also used by CAS
+
+	src/List.pm: List::load() should not return undef if user data sources were unreachable. 
+	Otherwise List object cannot be	created
+
+   Bug fixes :
+
+	src/sympa.pl, src/task_manager.pl, wwsympa/archived.pl,	wwsympa/bounced.pl: [BugID 262] 
+	getpwnam instead of getgrnam used for setting a group id
+
+	wwsympa/bounced.pl: [reported by H. Penning] bounced would process BAD files, ending with BAD-BAD-BAD...files created
+
+	src/CAS.pm, src/Ldap.pm, src/List.pm, src/X509.pm, src/tools.pl, wwsympa/Auth.pm, wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi: Change:
+	now use eval() to check if perl modules are available ; this is
+	required by recent Perl interpreters
+
+	src/List.pm: [reported by C.Hastie]  [msg_header->xxx] variables were not parsed in scenario files
+
+	src/sympa.pl: [D.Young] Ignore messages without MessageID in loop detection process
+
+	src/task_manager.pl: [reported by O.Thalmann] regular expression was applied on full task file path. 
+	Could leed to incorrect task files created (1077886032..expire_bounce._global) if path include dots ('.')
+
+	src/etc/templates/us/welcome.us.tpl: [H. Gabor] Remove trailing '.'near password
+
 4.0.b3		17 February 2004
 
    New features :

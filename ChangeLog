@@ -1,3 +1,119 @@
+2004-03-05 10:25  salaun
+
+	* wwsympa/: Auth.pm, wwslib.pm, wwsympa.fcgi: Fix previous changes:
+	still requires "require xxx"
+
+2004-03-05 10:25  salaun
+
+	* src/Message.pm: Fix comment
+
+2004-03-05 09:36  salaun
+
+	* src/etc/templates/us/welcome.us.tpl: [H. Gabor] Fix: Remove
+	trailing '.'near password
+
+2004-03-04 09:45  salaun
+
+	* NEWS: Fix beta version number
+
+2004-03-03 17:00  salaun
+
+	* src/task_manager.pl: [reported by O.Thalmann] Fix: regular
+	expression was applied on full task file path. Could leed to
+	incorrect task files created (1077886032..expire_bounce._global) if
+	path include dots ('.')
+
+2004-03-03 16:16  salaun
+
+	* src/List.pm: Change: List::load() should not return undef if user
+	data sources were unreachable. Otherwise List object cannot be
+	created
+
+2004-03-03 16:06  salaun
+
+	* src/: CAS.pm, Ldap.pm, List.pm, X509.pm: Fix previous changes:
+	still requires "require xxx"
+
+2004-03-01 16:42  salaun
+
+	* src/sympa.pl: [D.Young] Fix: Ignore messages without MessageID in
+	loop detection process
+
+2004-03-01 16:23  salaun
+
+	* src/List.pm: [reported by C.Hastie] Fix: [msg_header->xxx]
+	variables were not parsed in scenario files
+
+2004-02-27 15:56  salaun
+
+	* check_perl_modules.pl: Fix: missing \n
+
+2004-02-25 12:22  salaun
+
+	* src/CAS.pm, src/Ldap.pm, src/List.pm, src/X509.pm, src/tools.pl,
+	wwsympa/Auth.pm, wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi: Change:
+	now use eval() to check if perl modules are available ; this is
+	required by recent Perl interpreters
+
+2004-02-25 11:08  salaun
+
+	* check_perl_modules.pl: Change: IO::Socket::SSL is also used by
+	CAS
+
+2004-02-24 11:53  salaun
+
+	* src/Message.pm: Change: previously only messages that included
+	SMIME checked signature were preserved,  now protect them even
+	though signature might not be checked
+
+2004-02-20 10:53  salaun
+
+	* src/Log.pm: Fix: send a parsed message to
+	send_notify_to_listmaster()
+
+2004-02-20 10:34  salaun
+
+	* wwsympa/bounced.pl: [reported by H. Penning] Fix: bounced would
+	process BAD files, ending with BAD-BAD-BAD...files created
+
+2004-02-20 09:40  salaun
+
+	* wwsympa/archived.pl: Fix previous changes
+
+2004-02-19 15:07  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	html/index.html, html/node1.html, html/node10.html,
+	html/node11.html, html/node12.html, html/node13.html,
+	html/node14.html, html/node15.html, html/node16.html,
+	html/node17.html, html/node18.html, html/node19.html,
+	html/node2.html, html/node20.html, html/node21.html,
+	html/node22.html, html/node23.html, html/node24.html,
+	html/node3.html, html/node4.html, html/node5.html, html/node6.html,
+	html/node7.html, html/node8.html, html/node9.html, html/sympa.html,
+	html/sympa.ps: Update HTML Area related documentation
+
+2004-02-19 15:02  salaun
+
+	* wwsympa/wws_templates/us/main.us.tpl: Fix: Changed inclusion of
+	HTML Area
+
+2004-02-19 12:11  salaun
+
+	* src/List.pm: Fix: previous changes (1.411) broke reviewbouncing.
+	WWsympa would die with error "Can't call method "fetchrow_hashref"
+	on an undefined value"
+
+2004-02-18 11:11  salaun
+
+	* src/sympa.pl, src/task_manager.pl, wwsympa/archived.pl,
+	wwsympa/bounced.pl: [BugID 262] Fix:  getpwnam instead of getgrnam
+	used for setting a group id
+
+2004-02-17 15:27  salaun
+
+	* .version, ChangeLog, NEWS: Preparing 4.0.b3
+
 2004-02-17 13:56  salaun
 
 	* src/etc/script/sympa: [L. Veillon] Fix: sh does not accept
