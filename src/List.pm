@@ -1431,41 +1431,6 @@ sub get_owners_email {
     return @rcpt;
 }
 
-## Alert owners
-sub send_alert_to_owner {
-    my($self, $alert, $data) = @_;
-    do_log('debug3', 'List::send_alert_to_owner(%s)', $alert);
- 
-    my ($i, @rcpt);
-    my $admin = $self->{'admin'}; 
-    my $name = $self->{'name'};
-    my $host = $admin->{'host'};
-    my $robot = $self->{'domain'};
-
-    return unless ($name && $admin);
-
-    @rcpt = $self->get_owners_email();
-
-    unless (@rcpt) {
-	do_log('notice', 'Warning : no owner defined or  all of them use nomail option in list %s', $name );
-	return undef;
-    }
-
-    my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
-
-    if ($alert eq 'bounce_rate') {
-	my $rate = int ($data->{'rate'} * 10) / 10;
-
-	my $subject = sprintf(Msg(8, 28, "WARNING: bounce rate too high in list %s"), $name);
-	my $body = sprintf Msg(8, 27, "Bounce rate in list %s is %d%%.\nYou should delete bouncing subscribers : %s/reviewbouncing/%s"), $name, $rate, &Conf::get_robot_conf($robot, 'wwsympa_url'), $name ;
-	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
-    }else {
-	do_log('info', 'Unknown alert %s', $alert);
-    }
-    
-    return 1;
-}
-
 ## Send a sub/sig notice to listmasters.
 sub send_notify_to_listmaster {
     my ($operation, $robot, @param) = @_;
