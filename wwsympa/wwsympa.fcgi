@@ -4878,11 +4878,18 @@ sub do_edit_list {
 
     my $new_admin = {};
 
+    ## List the parameters editable sent in the form
+    my $edited_param = {};
+
     foreach my $key (sort keys %in) {
 	next unless ($key =~ /^(single_param|multiple_param)\.(\S+)$/);
 	
 	$key =~ /^(single_param|multiple_param)\.(\S+)$/;
 	my ($type, $name) = ($1, $2);
+
+	## Tag parameter as present in the form
+	$name =~ /^([^\.]+)(\.|$)/;
+	$edited_param->{$1} = 1;
 
 	## Parameter value
 	my $value = $in{$key};
@@ -4913,11 +4920,12 @@ sub do_edit_list {
     ## Check changes & check syntax
     my (%changed, %delete);
     my @syntax_error;
-    foreach my $pname (sort List::by_order keys %{$pinfo}) {
+    foreach my $pname (sort List::by_order keys %{$edited_param}) {
+
 	my ($p, $new_p);
 	## Check privileges first
 	next unless ($list->may_edit($pname,$param->{'user'}{'email'}) eq 'write');
-	next unless (defined $new_admin->{$pname});
+	#next unless (defined $new_admin->{$pname});
 	next if $pinfo->{$pname}{'obsolete'};
 
 	my $to_index;
@@ -4947,7 +4955,7 @@ sub do_edit_list {
 	## Check changed parameters
 	## Also check syntax
 	foreach my $i (0..$to_index) {
-
+	    
 	    ## Scenario
 	    ## Eg: 'subscribe'
 	    if ($pinfo->{$pname}{'scenario'} || $pinfo->{$pname}{'task'}) {
@@ -5049,6 +5057,7 @@ sub do_edit_list {
 
     ## Delete selected params
     foreach my $p (keys %delete) {
+
 	## Delete ALL entries
 	unless (ref ($delete{$p})) {
 	    undef $new_admin->{$p};
