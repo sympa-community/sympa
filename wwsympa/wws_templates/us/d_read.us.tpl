@@ -5,7 +5,7 @@
 [ELSE]
 
   [IF path]  
-    <h2><B><IMG SRC="/icons/folder.open.png"> [path] </B> </h2> 
+    <h2><B><IMG SRC="[icons_url]/folder.open.png"> [path] </B> </h2> 
     <A HREF="[path_cgi]/d_editfile/[list]/[escaped_path]">edit</A> | 
     <A HREF="[path_cgi]/d_delete/[list]/[escaped_path]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path]', 'Do you really want to delete [path] ?'); return false;">delete</A> |
     <A HREF="[path_cgi]/d_control/[list]/[escaped_path]">access</A><BR>

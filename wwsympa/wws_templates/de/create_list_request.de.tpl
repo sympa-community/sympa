@@ -8,13 +8,13 @@
  <TR>
    <TD NOWRAP><B>Listenname:</B></TD>
    <TD><INPUT TYPE="text" NAME="listname" SIZE=30 VALUE="[saved->listname]"></TD>
-   <TD><img src="/icons/unknown.png" alt="Der Listenname - Achtung! Nicht die Adresse!"></TD>
+   <TD><img src="[icons_url]/unknown.png" alt="Der Listenname - Achtung! Nicht die Adresse!"></TD>
  </TR>
  
  <TR>
    <TD NOWRAP><B>Besitzer:</B></TD>
    <TD><I>[user->email]</I></TD>
-   <TD><img src="/icons/unknown.png" alt="Der privilegierte Besitzer der Liste"></TD>
+   <TD><img src="[icons_url]/unknown.png" alt="Der privilegierte Besitzer der Liste"></TD>
  </TR>
 
  <TR>
@@ -34,12 +34,12 @@
   [END]
      </MENU>
     </TD>
-    <TD valign=top><img src="/icons/unknown.png" alt="Der Listentyp legt einige Parameter fest. Diese k&ouml;nnen nach der Erzeugung der Liste einzeln ge&auml;ndert werden"></TD>
+    <TD valign=top><img src="[icons_url]/unknown.png" alt="Der Listentyp legt einige Parameter fest. Diese k&ouml;nnen nach der Erzeugung der Liste einzeln ge&auml;ndert werden"></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>Titel:</B></TD>
    <TD><INPUT TYPE="text" NAME="subject" SIZE=60 VALUE="[saved->subject]"></TD>
-   <TD><img src="/icons/unknown.png" alt="Der Titel der Liste"></TD>
+   <TD><img src="[icons_url]/unknown.png" alt="Der Titel der Liste"></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>Themengebiet:</B></TD>
@@ -59,13 +59,13 @@
 	[END]
      </SELECT>
    </TD>
-   <TD valign=top><img src="/icons/unknown.png" alt="Listenklassifikation"></TD>
+   <TD valign=top><img src="[icons_url]/unknown.png" alt="Listenklassifikation"></TD>
  </TR>
 
  <TR>
    <TD valign=top NOWRAP><B>Beschreibung:</B></TD>
    <TD><TEXTAREA COLS=60 ROWS=10 NAME="info">[saved->info]</TEXTAREA></TD>
-   <TD valign=top><img src="/icons/unknown.png" alt="Ein paar Zeilen &uuml;ber Sinn und Zweck der Mailing-Liste"></TD>
+   <TD valign=top><img src="[icons_url]/unknown.png" alt="Ein paar Zeilen &uuml;ber Sinn und Zweck der Mailing-Liste"></TD>
  </TR>
 
  <TR>

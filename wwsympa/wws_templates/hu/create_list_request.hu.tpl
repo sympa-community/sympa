@@ -8,13 +8,13 @@
  <TR>
    <TD NOWRAP><B>Lista neve:</B></TD>
    <TD><INPUT TYPE="text" NAME="listname" SIZE=30 VALUE="[saved->listname]"></TD>
-   <TD><img src="/icons/unknown.png" alt="A lista neve; nem a címe!"></TD>
+   <TD><img src="[icons_url]/unknown.png" alt="A lista neve; nem a címe!"></TD>
  </TR>
  
  <TR>
    <TD NOWRAP><B>Tulajdonos:</B></TD>
    <TD><I>[user->email]</I></TD>
-   <TD><img src="/icons/unknown.png" alt="A lista kiemelt gazdája leszel!"></TD>
+   <TD><img src="[icons_url]/unknown.png" alt="A lista kiemelt gazdája leszel!"></TD>
  </TR>
 
  <TR>
@@ -34,12 +34,12 @@
   [END]
      </MENU>
     </TD>
-    <TD valign=top><img src="/icons/unknown.png" alt="A lista típusát annak beállítása adja meg. A beállításokat a lista létrehozása után lehet elvégezni."></TD>
+    <TD valign=top><img src="[icons_url]/unknown.png" alt="A lista típusát annak beállítása adja meg. A beállításokat a lista létrehozása után lehet elvégezni."></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>Tárgy:</B></TD>
    <TD><INPUT TYPE="text" NAME="subject" SIZE=60 VALUE="[saved->subject]"></TD>
-   <TD><img src="/icons/unknown.png" alt="Amirõl a lista szól"></TD>
+   <TD><img src="[icons_url]/unknown.png" alt="Amirõl a lista szól"></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>Témakörök:</B></TD>
@@ -60,13 +60,13 @@
         <OPTION VALUE="other">Egyéb 
     </SELECT>
    </TD>
-   <TD valign=top><img src="/icons/unknown.png" alt="A lista besorolása"></TD>
+   <TD valign=top><img src="[icons_url]/unknown.png" alt="A lista besorolása"></TD>
  </TR>
 
  <TR>
    <TD valign=top NOWRAP><B>Leírás:</B></TD>
    <TD><TEXTAREA COLS=60 ROWS=10 NAME="info">[saved->info]</TEXTAREA></TD>
-   <TD valign=top><img src="/icons/unknown.png" alt="A listáról pár szó"></TD>
+   <TD valign=top><img src="[icons_url]/unknown.png" alt="A listáról pár szó"></TD>
  </TR>
 
  <TR>

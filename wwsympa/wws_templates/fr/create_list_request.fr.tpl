@@ -8,13 +8,13 @@
  <TR>
    <TD NOWRAP><B>Nom de liste :</B></TD>
    <TD><INPUT TYPE="text" NAME="listname" SIZE=30 VALUE="[saved->listname]"></TD>
-   <TD><img src="/icons/unknown.png" alt="Attention, le nom pas l'adresse !"></TD>
+   <TD><img src="[icons_url]/unknown.png" alt="Attention, le nom pas l'adresse !"></TD>
  </TR>
  
  <TR>
    <TD NOWRAP><B>Propriétaire:</B></TD>
    <TD><I>[user->email]</I></TD>
-   <TD><img src="/icons/unknown.png" alt="Vous êtes le propriétaire de cette liste"></TD>
+   <TD><img src="[icons_url]/unknown.png" alt="Vous êtes le propriétaire de cette liste"></TD>
  </TR>
 
  <TR>
@@ -34,12 +34,12 @@
 [END]
      </MENU>
     </TD>
-    <TD valign=top><img src="/icons/unknown.png" alt="Le type de liste est un ensemble de paramètres regroupé dans un profile. s paramètres sont ré-éditable un à un une fois la liste créée"></TD>
+    <TD valign=top><img src="[icons_url]/unknown.png" alt="Le type de liste est un ensemble de paramètres regroupé dans un profile. s paramètres sont ré-éditable un à un une fois la liste créée"></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>Object:</B></TD>
    <TD><INPUT TYPE="text" NAME="subject" SIZE=60 VALUE="[saved->subject]"></TD>
-   <TD><img src="/icons/unknown.png" alt="L'object de la liste"></TD>
+   <TD><img src="[icons_url]/unknown.png" alt="L'object de la liste"></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>Catégories:</B></TD>
@@ -60,12 +60,12 @@
         <OPTION VALUE="other">Autre
      </SELECT>
    </TD>
-   <TD valign=top><img src="/icons/unknown.png" alt="Classement de liste dans l'annuaire"></TD>
+   <TD valign=top><img src="[icons_url]/unknown.png" alt="Classement de liste dans l'annuaire"></TD>
  </TR>
  <TR>
    <TD valign=top NOWRAP><B>Description:</B></TD>
    <TD><TEXTAREA COLS=60 ROWS=10 NAME="info">[saved->info]</TEXTAREA></TD>
-   <TD valign=top><img src="/icons/unknown.png" alt="La liste en quelques lignes"></TD>
+   <TD valign=top><img src="[icons_url]/unknown.png" alt="La liste en quelques lignes"></TD>
  </TR>
 
  <TR>

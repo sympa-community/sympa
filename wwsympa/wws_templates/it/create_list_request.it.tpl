@@ -8,13 +8,13 @@
  <TR>
    <TD NOWRAP><B>Nome della lista:</B></TD>
    <TD><INPUT TYPE="text" NAME="listname" SIZE=30 VALUE="[saved->listname]"></TD>
-   <TD><img src="/icons/unknown.png" alt="il nome della lista, non il suo indirizzo"></TD>
+   <TD><img src="[icons_url]/unknown.png" alt="il nome della lista, non il suo indirizzo"></TD>
  </TR>
  
  <TR>
    <TD NOWRAP><B>Proprietario:</B></TD>
    <TD><I>[user->email]</I></TD>
-   <TD><img src="/icons/unknown.png" alt="non sei utente privilegiato di questa lista"></TD>
+   <TD><img src="[icons_url]/unknown.png" alt="non sei utente privilegiato di questa lista"></TD>
  </TR>
 
  <TR>
@@ -32,12 +32,12 @@
 [END]
      </MENU>
     </TD>
-    <TD valign=top><img src="/icons/unknown.png" alt="Il tipo di lista consiste in un profilo. I parametri saranno modificabili successivamente"></TD>
+    <TD valign=top><img src="[icons_url]/unknown.png" alt="Il tipo di lista consiste in un profilo. I parametri saranno modificabili successivamente"></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>Soggetto:</B></TD>
    <TD><INPUT TYPE="text" NAME="subject" SIZE=60 VALUE="[saved->subject]"></TD>
-   <TD><img src="/icons/unknown.png" alt="Soggetto della lista"></TD>
+   <TD><img src="[icons_url]/unknown.png" alt="Soggetto della lista"></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>Argomenti:</B></TD>
@@ -57,12 +57,12 @@
 	[END]
      </SELECT>
    </TD>
-  <TD valign=top><img src="/icons/unknown.png" alt="List classification in the directory"></TD>
+  <TD valign=top><img src="[icons_url]/unknown.png" alt="List classification in the directory"></TD>
  </TR>
  <TR>
    <TD valign=top NOWRAP><B>Descrizione:</B></TD>
    <TD><TEXTAREA COLS=60 ROWS=10 NAME="info">[saved->info]</TEXTAREA></TD>
-   <TD valign=top><img src="/icons/unknown.png" alt="Un po' di linee di descrizione"></TD>
+   <TD valign=top><img src="[icons_url]/unknown.png" alt="Un po' di linee di descrizione"></TD>
  </TR>
 
 <TR><TD COLSPAN=2 ALIGN="center">

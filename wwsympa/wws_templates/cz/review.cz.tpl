@@ -95,13 +95,13 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
    </TD>
    <TD>
    [IF prev_page]
-    <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Pøedchozí strana"></A>
+    <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="[icons_url]/left.png" BORDER=0 ALT="Pøedchozí strana"></A>
    [ENDIF]
    [IF page]
      strana [page] z [total_page]
    [ENDIF]
    [IF next_page]
-     <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.png" BORDER="0" ALT="Dal¹í strana"></A>
+     <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="[icons_url]/right.png" BORDER="0" ALT="Dal¹í strana"></A>
    [ENDIF]
   [ENDIF]
   </TD></TR>
@@ -213,13 +213,13 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
    [IF action<>search]
     <TD ALIGN="right">
        [IF prev_page]
-	 <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Pøedchozí strana"></A>
+	 <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="[icons_url]/left.png" BORDER=0 ALT="Pøedchozí strana"></A>
        [ENDIF]
        [IF page]
      strana [page] z [total_page] 
        [ENDIF]
        [IF next_page]
-	  <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.png" BORDER=0 ALT="Dal¹í strana"></A>
+	  <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="[icons_url]/right.png" BORDER=0 ALT="Dal¹í strana"></A>
        [ENDIF]
     </TD>
    [ENDIF]

@@ -83,13 +83,13 @@
    </TD>
    <TD>
    [IF prev_page]
-    <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Pagina precedente"></A>
+    <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="[icons_url]/left.png" BORDER=0 ALT="Pagina precedente"></A>
    [ENDIF]
    [IF page]
      page [page] / [total_page]
    [ENDIF]
    [IF next_page]
-     <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.png" BORDER="0" ALT="Prossima pagina"></A>
+     <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="[icons_url]/right.png" BORDER="0" ALT="Prossima pagina"></A>
    [ENDIF]
   [ENDIF]
   </TD></TR>
@@ -198,13 +198,13 @@
    [IF action<>search]
     <TD ALIGN="right">
        [IF prev_page]
-	 <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Pagina precedente"></A>
+	 <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="[icons_url]/left.png" BORDER=0 ALT="Pagina precedente"></A>
        [ENDIF]
        [IF page]
   	  page [page] / [total_page]
        [ENDIF]
        [IF next_page]
-	  <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.png" BORDER=0 ALT="Prossima pagina"></A>
+	  <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="[icons_url]/right.png" BORDER=0 ALT="Prossima pagina"></A>
        [ENDIF]
     </TD>
    [ENDIF]

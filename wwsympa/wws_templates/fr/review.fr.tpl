@@ -91,13 +91,13 @@ La sélection est trop large, impossible d'afficher la sélection
    </TD>
    <TD>
    [IF prev_page]
-    <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Page précédente"></A>
+    <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="[icons_url]/left.png" BORDER=0 ALT="Page précédente"></A>
    [ENDIF]
    [IF page]
      page [page] / [total_page]
    [ENDIF]
    [IF next_page]
-     <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.png" BORDER="0" ALT="Page suivante"></A>
+     <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="[icons_url]/right.png" BORDER="0" ALT="Page suivante"></A>
    [ENDIF]
   [ENDIF]
   </TD></TR>
@@ -217,13 +217,13 @@ La sélection est trop large, impossible d'afficher la sélection
    [IF action<>search]
     <TD ALIGN="right">
        [IF prev_page]
-	 <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Page précédente"></A>
+	 <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="[icons_url]/left.png" BORDER=0 ALT="Page précédente"></A>
        [ENDIF]
        [IF page]
   	  page [page] / [total_page]
        [ENDIF]
        [IF next_page]
-	  <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.png" BORDER=0 ALT="Page suivante"></A>
+	  <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="[icons_url]/right.png" BORDER=0 ALT="Page suivante"></A>
        [ENDIF]
     </TD>
    [ENDIF]
