@@ -12,7 +12,7 @@
 ## Now, it is impossible to use -dF but you have to write it -d -F
 
 ## Change this to point to your Sympa bin directory
-use lib '--BINDIR--';
+use lib '--LIBDIR--';
 
 use List;
 use Conf;

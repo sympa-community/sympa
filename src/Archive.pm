@@ -1,10 +1,8 @@
-#! --PERL--
 ##
 ## This module does the archiving job for a mailing lists.
 
 package Archive;
 
-use lib '--DIR--/bin';
 use Mail::Internet;
 use POSIX;
 use Log;

@@ -8,7 +8,7 @@
 ##         :  d		-> debug -d is equiv to -dF
 
 ## Change this to point to your Sympa bin directory
-use lib '--DIR--/bin';
+use lib '--LIBDIR--';
 use strict vars;
 
 use List;

@@ -9,13 +9,13 @@
 ##           Olivier Salaün <os@cru.fr>
 
 ## Change this to point to your Sympa bin directory
-use lib '--BINDIR--';
+use lib '--LIBDIR--';
 use Getopt::Long;
 
 use strict vars;
 
 ## Template parser
-require "--BINDIR--/parser.pl";
+require "--LIBDIR--/parser.pl";
 
 ## Sympa API
 use List;
@@ -30,9 +30,8 @@ use Ldap;
 use Mail::Header;
 use Mail::Address;
 
-#require "--BINDIR--/mail.pl";
-require "--BINDIR--/msg.pl";
-require "--BINDIR--/tools.pl";
+require "--LIBDIR--/msg.pl";
+require "--LIBDIR--/tools.pl";
 
 ## WWSympa librairies
 use wwslib;

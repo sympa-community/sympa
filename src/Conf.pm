@@ -31,12 +31,12 @@ my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
 
 my %Default_Conf = 
-    ('home'    => '--DIR--/expl',
+    ('home'    => '--EXPL_DIR--',
      'etc'     => '--DIR--/etc',
      'trusted_ca_options' => '-CAfile --ETCBINDIR--/ca-bundle.crt',
      'key_passwd' => '',
-     'ssl_cert_dir' => '--DIR--/expl/X509-user-certs',
-     'crl_dir' => '--DIR--/expl/crl',
+     'ssl_cert_dir' => '--EXPL_DIR--/X509-user-certs',
+     'crl_dir' => '--EXPL_DIR--/crl',
      'umask'   => '027',
      'syslog'  => 'LOCAL1',
      'nrcpt'   => 25,

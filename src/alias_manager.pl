@@ -3,7 +3,7 @@
 # when using sympa. Aliases can be added or removed in file --SENDMAIL_ALIASES--
 
 ## Load Sympa.conf
-use lib '--DIR--/bin';
+use lib '--LIBDIR--';
 use Conf;
 
 unless (Conf::load('--CONFIG--')) {

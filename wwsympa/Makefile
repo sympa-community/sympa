@@ -1,41 +1,44 @@
-SUBSTSRC	=	bounced.pl archived.pl wwslib.pm cookielib.pm bounce-lib.pl Marc.pm
+sbin_SUBST	=	bounced.pl archived.pl wwsympa.fcgi
+
+lib_SUBST	=	wwslib.pm cookielib.pm bounce-lib.pl Marc.pm
 
 SRC		=	mime.types 
 
 default: none
 
 clean: 
-	rm -rf $(DESTDIR)$(WWSBINDIR)
+	rm -rf $(DESTDIR)$(SBINDIR)
 
 install: 
 	echo "Please use the main Makefile for installing WWSympa."
 
-newinstall: makedir $(SUBSTSRC) substcgi subst installtemplates installicons installsrc installmod
+newinstall: makedir $(sbin_SUBST) $(lib_SUBST) substsbin substlib installtemplates installicons installsrc installmod
 
 installmod:
-	@for i in $(SRC) wwsympa.fcgi; do \
-	chown $(USER) $(DESTDIR)$(WWSBINDIR)/$$i; \
-	chgrp $(GROUP) $(DESTDIR)$(WWSBINDIR)/$$i; \
+	@for i in $(SRC) wwsympa.fcgi $(sbin_SUBST) ; do \
+	chown $(USER) $(DESTDIR)$(SBINDIR)/$$i; \
+	chgrp $(GROUP) $(DESTDIR)$(SBINDIR)/$$i; \
 	done
 	@echo "Setting SetUID bit on wwsympa.fcgi..."
-	chmod u+s $(DESTDIR)$(WWSBINDIR)/wwsympa.fcgi
-	chmod g+s $(DESTDIR)$(WWSBINDIR)/wwsympa.fcgi
+	chmod u+s $(DESTDIR)$(SBINDIR)/wwsympa.fcgi
+	chmod g+s $(DESTDIR)$(SBINDIR)/wwsympa.fcgi
 	chmod 755 $(DESTDIR)$(ETCBINDIR)/wws_templates
 	chmod 755 $(DESTDIR)$(ICONSDIR)
-	chmod 755 $(DESTDIR)$(BINDIR)/Marc
-	@for i in $(SUBSTSRC) Marc; do \
-	chown $(USER) $(DESTDIR)$(BINDIR)/$$i; \
-	chgrp $(GROUP) $(DESTDIR)$(BINDIR)/$$i; \
+	chmod 755 $(DESTDIR)$(LIBDIR)/Marc
+	@for i in $(lib_SUBST) Marc/Search.pm; do \
+	chown $(USER) $(DESTDIR)$(LIBDIR)/$$i; \
+	chgrp $(GROUP) $(DESTDIR)$(LIBDIR)/$$i; \
+	chmod 644 $(DESTDIR)$(LIBDIR)/$$i; \
 	done
 
 makedir:
-	@if [ ! -d $(DESTDIR)$(BINDIR) ]; then \
-		echo "Creating required directory $(DESTDIR)$(BINDIR)"; \
-		mkdir -p $(DESTDIR)$(BINDIR); \
+	@if [ ! -d $(DESTDIR)$(SBINDIR) ]; then \
+		echo "Creating required directory $(DESTDIR)$(SBINDIR)"; \
+		mkdir -p $(DESTDIR)$(SBINDIR); \
 	fi
-	@if [ ! -d $(DESTDIR)$(WWSBINDIR) ]; then \
-		echo "Creating required directory $(DESTDIR)$(WWSBINDIR)"; \
-		mkdir -p $(DESTDIR)$(WWSBINDIR); \
+	@if [ ! -d $(DESTDIR)$(LIBDIR) ]; then \
+		echo "Creating required directory $(DESTDIR)$(LIBDIR)"; \
+		mkdir -p $(DESTDIR)$(LIBDIR); \
 	fi
 	@if [ ! -d $(DESTDIR)$(ETCBINDIR) ]; then \
 		echo "Creating required directory $(DESTDIR)$(ETCBINDIR)"; \
@@ -49,16 +52,16 @@ makedir:
 		echo "Creating required directory $(DESTDIR)$(ICONSDIR)"; \
 		mkdir -p $(DESTDIR)$(ICONSDIR); \
 	fi
-	@if [ ! -d $(DESTDIR)$(BINDIR)/Marc ]; then \
-		echo "Creating required directory $(DESTDIR)$(BINDIR)/Marc"; \
-		mkdir $(DESTDIR)$(BINDIR)/Marc; \
+	@if [ ! -d $(DESTDIR)$(LIBDIR)/Marc ]; then \
+		echo "Creating required directory $(DESTDIR)$(LIBDIR)/Marc"; \
+		mkdir $(DESTDIR)$(LIBDIR)/Marc; \
 	fi
 
 installsrc:
 	@echo
 	@echo "Installing sources..."
-	cp $(SRC) $(DESTDIR)$(WWSBINDIR)
-	cp Marc/Search.pm $(DESTDIR)$(BINDIR)/Marc
+	cp $(SRC) $(DESTDIR)$(ETCBINDIR)
+	cp Marc/Search.pm $(DESTDIR)$(LIBDIR)/Marc
 
 installtemplates:
 	@echo
@@ -69,16 +72,10 @@ installtemplates:
 		cd $$lang; \
 		PERL=$(PERL); export PERL; \
 		INSTALLDIR=$(ETCBINDIR)/wws_templates; export INSTALLDIR; \
-		BINDIR=$(BINDIR); export BINDIR; \
+		SBINDIR=$(SBINDIR); export SBINDIR; \
+		LIBDIR=$(LIBDIR); export LIBDIR; \
 		DESTDIR=$(DESTDIR); export DESTDIR; \
 		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
-		DARK_COLOR=$(DARK_COLOR); export DARK_COLOR; \
-		LIGHT_COLOR=$(LIGHT_COLOR); export LIGHT_COLOR; \
-		SELECTED_COLOR=$(SELECTED_COLOR); export SELECTED_COLOR; \
-		TEXT_COLOR=$(TEXT_COLOR); export TEXT_COLOR; \
-		BG_COLOR=$(BG_COLOR); export BG_COLOR; \
-		ERROR_COLOR=$(ERROR_COLOR); export ERROR_COLOR; \
-		SHADED_COLOR=$(SHADED_COLOR); export SHADED_COLOR; \
 		COL1=5; export COL1; \
 		COL2=40; export COL2; \
 		COL3=30; export COL3; \
@@ -97,56 +94,37 @@ installicons:
 	@echo "Installing icons..."
 	cp icons/*.gif $(DESTDIR)$(ICONSDIR)
 
-subst:
-	@echo "Doing multiple substitutions while installing ..."
+substlib:
+	@echo "Doing multiple substitutions while installing librairies..."
 	@( \
 		PERL=$(PERL); export PERL; \
-		UMASK=0755; export UMASK; \
-		INSTALLDIR=$(BINDIR); export INSTALLDIR; \
-		BINDIR=$(BINDIR); export BINDIR; \
+		UMASK=0644; export UMASK; \
+		INSTALLDIR=$(LIBDIR); export INSTALLDIR; \
+		SBINDIR=$(SBINDIR); export SBINDIR; \
+		LIBDIR=$(LIBDIR); export LIBDIR; \
 		DESTDIR=$(DESTDIR); export DESDIR; \
 		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
-		BINDIR=$(BINDIR); export BINDIR; \
 		MAILERPROGDIR=$(MAILERPROGDIR); export MAILERPROGDIR; \
 		ICONSDIR=$(ICONSDIR); export ICONSDIR; \
 		WWSCONFIG=$(WWSCONFIG); export WWSCONFIG; \
 		CONFIG=$(CONFIG); export CONFIG; \
-		$(PERL) ../subst.pl $(SUBSTSRC) \
+		$(PERL) ../subst.pl $(lib_SUBST) \
 	)
 
-substcgi:
-	@echo "Doing multiple substitutions while installing CGI..."
+substsbin:
+	@echo "Doing multiple substitutions while installing binaries..."
 	@( \
 		PERL=$(PERL); export PERL; \
 		UMASK=0755; export UMASK; \
-		INSTALLDIR=$(WWSBINDIR); export INSTALLDIR; \
-		BINDIR=$(BINDIR); export BINDIR; \
+		INSTALLDIR=$(SBINDIR); export INSTALLDIR; \
+		SBINDIR=$(SBINDIR); export SBINDIR; \
+		LIBDIR=$(LIBDIR); export LIBDIR; \
 		DESTDIR=$(DESTDIR); export DESDIR; \
 		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
-		BINDIR=$(BINDIR); export BINDIR; \
 		MAILERPROGDIR=$(MAILERPROGDIR); export MAILERPROGDIR; \
 		ICONSDIR=$(ICONSDIR); export ICONSDIR; \
 		WWSCONFIG=$(WWSCONFIG); export WWSCONFIG; \
 		CONFIG=$(CONFIG); export CONFIG; \
-		$(PERL) ../subst.pl wwsympa.fcgi \
+		$(PERL) ../subst.pl $(sbin_SUBST) \
 	)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

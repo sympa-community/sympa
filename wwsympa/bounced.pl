@@ -11,7 +11,7 @@
 ## Now, it is impossible to use -dF but you have to write it -d -F
 
 ## Change this to point to your Sympa bin directory
-use lib '--BINDIR--';
+use lib '--LIBDIR--';
 use strict;
 
 use FileHandle;
@@ -49,7 +49,7 @@ my %equiv = ( "user unknown" => '5.1.1',
 	      "User's Disk Quota Exceeded:" => '4.2.2');
 
 
-require "--BINDIR--/bounce-lib.pl";
+require "--LIBDIR--/bounce-lib.pl";
 use wwslib;
 
 #getopts('dF');

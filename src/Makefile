@@ -1,8 +1,10 @@
 CDEFS	=	-DCONFIG=\"$(CONFIG)\"
 
-SRC	=	sympa.pl Archive.pm Commands.pm Conf.pm \
-		Language.pm List.pm Log.pm mail.pm msg.pl Ldap.pm \
-		smtp.pm tools.pl Version.pm parser.pl alias_manager.pl task_manager.pl
+sbin_SRC	=	sympa.pl alias_manager.pl task_manager.pl
+
+lib_SRC		=	Archive.pm Commands.pm Conf.pm \
+			Language.pm List.pm Log.pm mail.pm msg.pl Ldap.pm \
+			smtp.pm tools.pl Version.pm parser.pl 
 
 all:	queue bouncequeue aliaswrapper
 
@@ -20,7 +22,7 @@ clean:
 install: 
 	echo "Please use the main Makefile for installing sources."
 
-newinstall: makedir subst $(SRC) installqueue installwrapper installscenari installtask_models installtemplates installetc installlisttemplates installmod installgeneral_task_models info
+newinstall: makedir subst $(sbin_SRC) $(lib_SRC) installqueue installwrapper installscenari installtask_models installtemplates installetc installlisttemplates installmod installgeneral_task_models info
 
 
 installtemplates:
@@ -86,6 +88,14 @@ makedir:
 		echo "Creating required directory $(DESTDIR)$(BINDIR)"; \
 		mkdir -p $(DESTDIR)$(BINDIR); \
 	fi
+	@if [ ! -d $(DESTDIR)$(SBINDIR) ]; then \
+		echo "Creating required directory $(DESTDIR)$(SBINDIR)"; \
+		mkdir -p $(DESTDIR)$(SBINDIR); \
+	fi
+	@if [ ! -d $(DESTDIR)$(LIBDIR) ]; then \
+		echo "Creating required directory $(DESTDIR)$(LIBDIR)"; \
+		mkdir -p $(DESTDIR)$(LIBDIR); \
+	fi
 	@if [ ! -d $(DESTDIR)$(ETCBINDIR) ]; then \
 		echo "Creating required directory $(DESTDIR)$(ETCBINDIR)/etc"; \
 		mkdir -p $(DESTDIR)$(ETCBINDIR); \
@@ -112,13 +122,15 @@ makedir:
 	fi
 
 installmod:
-	@echo "Setting group and owner for $(DESTDIR)$(BINDIR)..."
-	chown -R $(USER) $(DESTDIR)$(BINDIR)
-	chgrp -R $(GROUP) $(DESTDIR)$(BINDIR)
+	@echo "Setting group and owner for $(DESTDIR)$(SBINDIR)..."
+	chown -R $(USER) $(DESTDIR)$(SBINDIR)
+	chgrp -R $(GROUP) $(DESTDIR)$(SBINDIR)
+	chown -R $(USER) $(DESTDIR)$(LIBDIR)
+	chgrp -R $(GROUP) $(DESTDIR)$(LIBDIR)
 	chown root $(DESTDIR)$(MAILERPROGDIR)/aliaswrapper
 	chgrp $(GROUP) $(DESTDIR)$(MAILERPROGDIR)/aliaswrapper
 	@echo "Setting privileges..."
-	chmod 755 $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCBINDIR) 
+	chmod 755 $(DESTDIR)$(SBINDIR) $(DESTDIR)$(ETCBINDIR) 
 	chmod 755 $(DESTDIR)$(ETCBINDIR)/scenari $(DESTDIR)$(ETCBINDIR)/templates $(DESTDIR)$(ETCBINDIR)/list_task_models $(DESTDIR)$(ETCBINDIR)/global_task_models
 	chmod 755 $(DESTDIR)$(ETCBINDIR)/create_list_templates
 	chmod 644 $(DESTDIR)$(ETCBINDIR)/*.conf $(DESTDIR)$(ETCBINDIR)/*.crt 
@@ -137,19 +149,35 @@ aliaswrapper: aliaswrapper.c Makefile ../Makefile
 		-DNEWALIASES_ARG=\"${NEWALIASES_ARG}\" -o aliaswrapper aliaswrapper.c
 
 subst:
-	@echo "Doing multiple substitutions while installing ..."
+	@echo "Doing multiple substitutions while installing binaries..."
 	@( \
 		PERL=$(PERL); export PERL;\
 		UMASK=0755; export UMASK;\
 		DIR=$(DIR); export DIR;\
 		DESTDIR=$(DESTDIR); export DESTDIR;\
-		INSTALLDIR=$(BINDIR); export INSTALLDIR;\
-		BINDIR=$(BINDIR); export BINDIR;\
+		INSTALLDIR=$(SBINDIR); export INSTALLDIR;\
+		SBINDIR=$(SBINDIR); export SBINDIR;\
+		LIBDIR=$(LIBDIR); export LIBDIR;\
 		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR;\
 		CONFIG=$(CONFIG); export CONFIG;\
 		SYMPA_VERSION=$(SYMPA_VERSION); export SYMPA_VERSION;\
 		SENDMAIL_ALIASES=$(SENDMAIL_ALIASES); export SENDMAIL_ALIASES;\
-		$(PERL) ../subst.pl $(SRC) \
+		$(PERL) ../subst.pl $(sbin_SRC) \
+	)
+	@echo "Doing multiple substitutions while installing libraries ..."
+	@( \
+		PERL=$(PERL); export PERL;\
+		UMASK=0644; export UMASK;\
+		DIR=$(DIR); export DIR;\
+		DESTDIR=$(DESTDIR); export DESTDIR;\
+		INSTALLDIR=$(LIBDIR); export INSTALLDIR;\
+		SBINDIR=$(SBINDIR); export SBINDIR;\
+		LIBDIR=$(LIBDIR); export LIBDIR;\
+		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR;\
+		CONFIG=$(CONFIG); export CONFIG;\
+		SYMPA_VERSION=$(SYMPA_VERSION); export SYMPA_VERSION;\
+		SENDMAIL_ALIASES=$(SENDMAIL_ALIASES); export SENDMAIL_ALIASES;\
+		$(PERL) ../subst.pl $(lib_SRC) \
 	)
 
 ## Dépendances

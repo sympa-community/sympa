@@ -5,7 +5,7 @@
 ## Load the modules and whatever we need.
 use strict;
 
-use lib '--DIR--/bin';
+use lib '--LIBDIR--';
 #use Getopt::Std;
 use Getopt::Long;
 
