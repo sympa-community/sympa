@@ -468,6 +468,8 @@ if ($ARGV[0] eq '-c') {
     }elsif ($file eq 'wwsympa.conf') {
 	$conf = $wwsympa_conf;
     }else {
+	print STDERR "$file is not a valid argument\n";
+	print STDERR "Usage: $0 -c sympa.conf | wwsympa.conf\n";
 	exit 1;
     }
 
@@ -476,7 +478,10 @@ if ($ARGV[0] eq '-c') {
 	$conf = $ENV{'DESTDIR'}.$conf;
     }
     
-    exit 1 if (-f $conf);
+    if (-f $conf) {
+	print STDERR "$conf file already exists, exiting\n";
+	exit 1;
+    }
     
     unless (open (NEWF,"> $conf")){
 	die "Unable to open $conf : $!";
@@ -512,6 +517,9 @@ if ($ARGV[0] eq '-c') {
 	printf NEWF "#%s\t%s\n\n", $params[$i]->{'name'}, $params[$i]->{'sample'}
 	if (defined $params[$i]->{'sample'});
     }
+
+    close NEWF;
+    print STDERR "$conf file has been created\n";
 
     exit 0;
 }
