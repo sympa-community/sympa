@@ -1,5 +1,4 @@
-# AuthN.pm - This module includes authentication related functions (except some
-# that use openssl command line.
+# Fetch.pm - This module includes functions to fetch remote files
 #
 #<!-- RCS Identication ; $Revision$ ; $Date$ -->
 #
@@ -41,7 +40,7 @@ sub set_basic_credentials {
     ($web_user, $web_passwd ) = @_;
 }
 
-package AuthN;
+package Fetch;
 
 require Exporter;
 @ISA = qw(Exporter);
@@ -143,7 +142,7 @@ sub get_https2{
 	my $trusted_ca_path = $ssl_data->{'capath'};
 	$trusted_ca_path ||= $Conf{'capath'};
 
-	do_log ('debug','AuthN::get_https2 (%s,%s,%s,%s,%s)',$host,$port,$path,$trusted_ca_file,$trusted_ca_path );
+	do_log ('debug','Fetch::get_https2 (%s,%s,%s,%s,%s)',$host,$port,$path,$trusted_ca_file,$trusted_ca_path );
 
 	unless ( -r ($trusted_ca_file) ||  (-d $trusted_ca_path )) {
 	    do_log ('err',"error : incorrect access to cafile $trusted_ca_file bor capath $trusted_ca_path");

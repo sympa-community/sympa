@@ -22,7 +22,7 @@
 package List;
 
 use strict;
-require AuthN;
+require Fetch;
 require Exporter;
 #require Encode;
 require 'tools.pl';
@@ -5479,7 +5479,7 @@ sub _include_users_remote_sympa_list {
     my $email ;
 
 
-    foreach my $line ( &AuthN::get_https($host,$port,$path,$cert_file,$key_file,{'key_passwd' => $Conf{'key_passwd'},
+    foreach my $line ( &Fetch::get_https($host,$port,$path,$cert_file,$key_file,{'key_passwd' => $Conf{'key_passwd'},
                                                                                'cafile'    => $Conf{'cafile'},
                                                                                'capath' => $Conf{'capath'}})
 		){	
@@ -5683,7 +5683,7 @@ sub _include_users_remote_file {
     my $total = 0;
     my $id = _get_datasource_id($param);
 
-    ## WebAgent package is part of AuthN.pm and inherites from LWP::UserAgent
+    ## WebAgent package is part of Fetch.pm and inherites from LWP::UserAgent
 
     my $fetch = WebAgent->new (agent => 'Sympa/'.$Version::Version);
 
