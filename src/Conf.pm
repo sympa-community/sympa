@@ -42,7 +42,7 @@ my @valid_options = qw(
 		       misaddressed_commands max_size maxsmtp msgcat nrcpt owner_priority pidfile spool queue 
 		       queueauth queuetask queuebounce queuedigest queueexpire queuemod queuesubscribe queueoutgoing tmpdir
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor
-		       remind_return_path request_priority rfc2369_header_fields sendmail sleep 
+		       remind_return_path request_priority rfc2369_header_fields sendmail sendmail_args sleep 
 		       sort sympa_priority syslog log_smtp umask welcome_return_path wwsympa_url
                        openssl trusted_ca_options key_passwd ssl_cert_dir remove_headers
 		       antivirus_path antivirus_args anonymous_header_fields
@@ -67,6 +67,7 @@ my %Default_Conf =
      'avg'     => 10,
      'maxsmtp' => 20,
      'sendmail'=> '/usr/sbin/sendmail',
+     'sendmail_args' => '-oi -odi -oem',
      'openssl' => '',
      'host'    => undef,
      'domain'  => undef,

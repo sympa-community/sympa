@@ -129,15 +129,15 @@ sub smtpto {
 #       }
        if (ref($rcpt) eq 'SCALAR') {
 #	   exec "$filter $Conf{'sendmail'} -oi -odi -oem -f $from $$rcpt";
-	   exec $Conf{'sendmail'}, '-oi', '-odi', '-oem', '-f', $from, $$rcpt;
+	   exec $Conf{'sendmail'}, $Conf{'sendmail_args'}, '-f', $from, $$rcpt;
        }else{
 #	   exec "$filter $Conf{'sendmail'} -oi -odi -oem -f $from @$rcpt";
-	   exec $Conf{'sendmail'}, '-oi', '-odi', '-oem', '-f', $from, @$rcpt;
+	   exec $Conf{'sendmail'}, $Conf{'sendmail_args'}, '-f', $from, @$rcpt;
        }
        exit 1; ## Should never get there.
    }
    if ($main::options{'mail'}) {
-       $str = "safefork: $Conf{'sendmail'} -oi -odi -oem -f $from ";
+       $str = "safefork: $Conf{'sendmail'} $Conf{'sendmail_args'} -f $from ";
        if (ref($rcpt) eq 'SCALAR') {
 	   $str .= $$rcpt;
        } else {

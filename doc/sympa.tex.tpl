@@ -1318,6 +1318,13 @@ be used as a synonim.
 
         \example {sendmail        /usr/sbin/sendmail}
 
+\subsection {\cfkeyword {sendmail\_args}} 
+
+	\default {-oi -odi -oem}
+
+        Arguments passed to SMTP message transfer agent
+
+        \example {sendmail        /usr/sbin/sendmail}
 
 \subsection {\cfkeyword {rfc2369\_header\_fields}} 
 
