@@ -9267,7 +9267,7 @@ sub do_redirect {
 	 return 'admin';
      }
 
-     foreach my $pair (split /\0/, $in{'email'}) {
+     foreach my $pair (split /\0/, $in{'pending_email'}) {
 	 if ($pair =~ /,/) {
 	     push @users, $`;
 	 }
