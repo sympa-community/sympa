@@ -5322,25 +5322,25 @@ sub do_d_read {
 
 	    # current document
 	    my $path_doc = "$doc/$d";
-	
-	    # last update
-	    my @info = stat $path_doc;
-	    $subdirs{$d}{'date_epoch'} = $info[10];
-	    $subdirs{$d}{'date'} = &POSIX::strftime("%d %b %y  %H:%M", localtime($info[10]));
-
-	    # Case read authorized : fill the hash 
-	    $subdirs{$d}{'icon'} = $icon_table{'folder'};
-
-	    # name of the doc
-	    $subdirs{$d}{'doc'} = $d;
 	    
-	    $subdirs{$d}{'escaped_doc'} =  &tools::escape_chars($d);
-	    
-	    # size of the doc
-	    $subdirs{$d}{'size'} = (-s $path_doc)/1000;
-
 	    #case subdirectory
 	    if (-d $path_doc) {
+		
+		# last update
+		my @info = stat $path_doc;
+		$subdirs{$d}{'date_epoch'} = $info[10];
+		$subdirs{$d}{'date'} = &POSIX::strftime("%d %b %y  %H:%M", localtime($info[10]));
+		
+		# Case read authorized : fill the hash 
+		$subdirs{$d}{'icon'} = $icon_table{'folder'};
+		
+		# name of the doc
+		$subdirs{$d}{'doc'} = $d;
+		
+		$subdirs{$d}{'escaped_doc'} =  &tools::escape_chars($d);
+		
+		# size of the doc
+		$subdirs{$d}{'size'} = (-s $path_doc)/1000;
 		
 		if (-e "$path_doc/.desc") {
 		    # check access permission for reading
