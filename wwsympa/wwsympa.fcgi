@@ -399,7 +399,7 @@ while ($query = &new_loop()) {
     ## In case HTTP_HOST does not match cookie_domain
     my $http_host = $ENV{'HTTP_HOST'};
     $http_host =~ s/:\d+$//; ## suppress port
-    unless ($param->{'cookie_domain'} =~ /$http_host$/) {
+    unless ($http_host =~ /$param->{'cookie_domain'}$/) {
 	&wwslog('notice', 'Cookie_domain(%s) does NOT match HTTP_HOST; setting cookie_domain to %s', $param->{'cookie_domain'}, $http_host);
 	$param->{'cookie_domain'} = $http_host;
     }
