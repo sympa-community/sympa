@@ -2511,6 +2511,7 @@ sub send_to_editor {
 									'boundary' => $boundary,
 									'msg' => $crypted_file,
 									'msg_from' => $message->{'sender'},
+									'mod_spool_size' => $self->get_mod_spool_size(),
 									'method' => $method,
 									## From the list because it is signed
 									'from' => $self->{'name'}.'@'.$self->{'domain'}
@@ -2522,6 +2523,7 @@ sub send_to_editor {
 								'boundary' => $boundary,
 								'msg' => $file,
 								'msg_from' => $message->{'sender'},
+								'mod_spool_size' => $self->get_mod_spool_size(),
 								'method' => $method,
 								'from' => &Conf::get_robot_conf($robot, 'sympa')
 								});

@@ -21,6 +21,7 @@ mailto:[% conf.email %]@[% conf.host %]?subject=REJECT%20[% list.name %]%20[% mo
 REJECT [% list.name %] [% modkey %]
 [% END %]
 
+[%|loc(mod_spool_size)%]Number of messages awaiting moderation for this list : %1[%END%]
 --[% boundary %]
 Content-Type: message/rfc822
 Content-Transfer-Encoding: 8bit
