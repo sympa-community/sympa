@@ -402,9 +402,14 @@ while (!$signal) {
 	next;
     }
 
-    do_log('debug', "Processing %s with priority %s", "$Conf{'queue'}/$filename", $highest_priority) 
-	if ($main::options{'debug'});
-
+    do_log('debug', "Processing %s with priority %s", "$Conf{'queue'}/$filename", $highest_priority) if ($main::options{'debug'});
+    
+    do_log('debug', "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx option mail $main::options{'mail'} ");
+    if ($main::options{'mail'} != 1) {
+	do_log('debug', "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy option mail $main::options{'mail'} ");
+	$main::options{'mail'} = $robot if ($Conf{'robots'}{$robot}{'log_smtp'});
+	do_log('debug', "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz  option mail $main::options{'mail'} ");
+    }
     my $status = &DoFile($listname, $robot, "$Conf{'queue'}/$filename");
     
     if (defined($status)) {
