@@ -968,10 +968,20 @@ sub db_connect {
     }
 
     unless ( $dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'}) ) {
-	do_log('err','Can\'t connect to Database %s as %s', $connect_string, $Conf{'db_user'});
+	do_log('err','Can\'t connect to Database %s as %s, still trying...', $connect_string, $Conf{'db_user'});
 
 	&send_notify_to_listmaster('no_db', $Conf{'domain'});
-	&fatal_err('Sympa cannot connect to database %s, dying', $Conf{'db_name'});
+	#&fatal_err('Sympa cannot connect to database %s, dying', $Conf{'db_name'});
+
+	## Loop until connect works
+	my $sleep_delay = 60;
+	do {
+	    sleep $sleep_delay;
+	    $sleep_delay += 10;
+	} until ($dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'}) );
+	
+	do_log('notice','Connection to Database %s restored.', $connect_string);
+	&send_notify_to_listmaster('db_restored', $Conf{'domain'});
 
 #	return undef;
     }
@@ -1465,9 +1475,15 @@ sub send_notify_to_listmaster {
 
     ## No DataBase
     if ($operation eq 'no_db') {
-        my $body = "Cannot connect to database $Conf{'db_name'}, Sympa dying." ; 
+        my $body = "Cannot connect to database $Conf{'db_name'}, still trying..." ; 
 	my $to = sprintf "Listmaster <%s>", $Conf{'listmaster'};
 	mail::mailback (\$body, {'Subject' => 'No DataBase'}, 'sympa', $to, $robot, $Conf{'listmaster'});
+
+    ## No DataBase
+    }elsif ($operation eq 'db_restored') {
+        my $body = "Connection to database $Conf{'db_name'} restored." ; 
+	my $to = sprintf "Listmaster <%s>", $Conf{'listmaster'};
+	mail::mailback (\$body, {'Subject' => 'DataBase connection restored'}, 'sympa', $to, $robot, $Conf{'listmaster'});
 
     ## creation list requested
     }elsif ($operation eq 'request_list_creation') {
