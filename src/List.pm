@@ -2590,8 +2590,6 @@ sub delete_user {
 		return undef;
 	    }   
 
-	    $self->{'total'}--;
-
 	    ## Is it his/her last subscription
 	    my @which;
 	    foreach my $role ('member','editor','owner') {
@@ -2607,16 +2605,17 @@ sub delete_user {
 		    return undef;
 		}   
 	    }
-	    
+
+	    $self->{'total'}--;
+	    $self->savestats();
 	}else {
 	    my $users = $self->{'users'};
 
 	    delete $self->{'users'}{$who};
 	    $self->{'total'}-- unless (exists $users->{$who});
+	    $self->savestats();
 	}
     }
-
-    $self->savestats();
 
     return 1;
 }
@@ -2815,15 +2814,14 @@ sub get_first_user {
 
     my ($sortby, $offset, $rows, $sql_regexp);
     $sortby = $data->{'sortby'};
+    ## Sort may be domain, email, date
+    $sortby ||= 'domain';
     $offset = $data->{'offset'};
     $rows = $data->{'rows'};
     $sql_regexp = $data->{'sql_regexp'};
 
-    do_log('debug2', 'List::get_first_user(%s,%d,%d)', $sortby, $offset, $rows);
-    
-    ## Sort may be domain, email, date
-    $sortby ||= 'domain';
-    
+    do_log('debug2', 'List::get_first_user(%s,%s,%d,%d)', $self->{'name'},$sortby, $offset, $rows);
+        
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
 
 	my $name = $self->{'name'};
@@ -2953,10 +2951,13 @@ sub get_first_user {
 	}
 
 	## If no LIMIT was used, update total of subscribers
-#	unless ($offset || $rows) {
-	    $self->{'total'} = &_load_total_db($self->{'name'});
-	    $self->savestats();
-#	}
+	unless ($offset || $rows) {
+	    my $total = &_load_total_db($self->{'name'});
+	    if ($total != $self->{'total'}) {
+		$self->{'total'} = $total;
+		$self->savestats();
+	    }
+	}
 	
 	return $user;
     }else {
@@ -5439,7 +5440,7 @@ sub _save_stats_file {
     my $file = shift;
     my $stats = shift;
     my $total = shift;
-    do_log('debug3', 'List::_save_stats_file(%s, %d)', $file, $total);
+    do_log('debug2', 'List::_save_stats_file(%s, %d)', $file, $total);
     
     open(L, "> $file") || return undef;
     printf L "%d %d %d %d %d\n", @{$stats}, $total;
