@@ -671,7 +671,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'remote_host'} = $ENV{'REMOTE_HOST'};
      $param->{'http_user_agent'} = $ENV{'HTTP_USER_AGENT'};
      $param->{'htmlarea_url'} = $wwsconf->{'htmlarea_url'} ;
-     &export_topics ($robot);
      # if ($wwsconf->{'export_topics'} =~ /all/i);
 
      &List::init_list_cache();
@@ -693,6 +692,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
          $param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || 
 	     $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
          $param->{'locale'} = &Language::SetLang($param->{'lang'});
+
+	 &export_topics ($robot);
 
          ## use default_home parameter
          if ($action eq 'home') {
