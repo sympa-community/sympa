@@ -39,9 +39,9 @@ use List;
 
  ## authentication : via email or uid
  sub check_auth{
-
      my $auth = shift; ## User email or UID
      my $pwd = shift; ## Password
+     &do_log('debug', 'Auth::check_auth(%s)', $auth);
 
      my ($canonic, $user);
 
@@ -61,8 +61,8 @@ use List;
 		 };
 
 	 }else{
-	     &main::error_message('incorrect_passwd');
-	     &do_log('notice', "Incorrect Ldap password");
+	     &main::error_message('incorrect_passwd') unless ($ENV{'SYMPA_SOAP'});
+	     &do_log('err', "Incorrect Ldap password");
 	     return undef;
 	 }
      }
@@ -70,9 +70,10 @@ use List;
 
 
 sub authentication {
-    
     my ($email,$pwd) = @_;
     my ($user,$canonic);
+    &do_log('debug', 'Auth::authentication(%s)', $auth);
+
 
     unless ($user = &List::get_user_db($email)) {
 	$user = {'email' => $email,
@@ -90,7 +91,8 @@ sub authentication {
 	next if (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
 	if ($auth_service->{'auth_type'} eq 'user_table') {
      
-	    if((($wwsconf->{'password_case'} eq 'insensitive') && (lc($pwd) eq lc($user->{'password'}))) || ($pwd eq $user->{'password'})) {
+	    if((($wwsconf->{'password_case'} eq 'insensitive') && (lc($pwd) eq lc($user->{'password'}))) || 
+	       ($pwd eq $user->{'password'})) {
 		return {'user' => $user,
 			'auth' => 'classic',
 			'alt_emails' => {$email => 'classic'}
@@ -108,18 +110,24 @@ sub authentication {
 	    }
 	}
     }
-    foreach my $auth_service (@{$Conf{'auth_services'}}){
-	next unless ($email !~ /$auth_service->{'regexp'}/i);
-	next unless (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
-	if ($auth_service->{'auth_type'} eq 'user_table') {
-	    if ($user->{'password'} =~ /^init/i) {
-		&main::error_message('init_passwd');
-		last;
+
+    ## If web context and password has never been changed
+    ## Then prompt user
+    unless ($ENV{'SYMPA_SOAP'}) {
+	foreach my $auth_service (@{$Conf{'auth_services'}}){
+	    next unless ($email !~ /$auth_service->{'regexp'}/i);
+	    next unless (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
+	    if ($auth_service->{'auth_type'} eq 'user_table') {
+		if ($user->{'password'} =~ /^init/i) {
+		    &main::error_message('init_passwd');
+		    last;
+		}
 	    }
 	}
     }
-    &main::error_message('incorrect_passwd');
-    &do_log('info','authentication: incorrect password for user %s', $email);
+    
+    &main::error_message('incorrect_passwd') unless ($ENV{'SYMPA_SOAP'});
+    &do_log('err','authentication: incorrect password for user %s', $email);
 
     $param->{'init_email'} = $email;
     $param->{'escaped_init_email'} = &tools::escape_chars($email);
@@ -316,15 +324,10 @@ sub ldap_authentication {
 
 
 sub check_cas_login {
-
-
-#   CAS serveur parameter
     my $host = shift;  #may include :port extention
     my $uri = shift;
-#   Application return URL
-    my $service = shift;
-#   Option to be used for non blocking redirect
-    my $blocking_check = shift;
+    my $service = shift; #   Application return URL
+    my $blocking_check = shift; #   Option to be used for non blocking redirect
 
     do_log ('debug',"Auth::check_login($host,$port,$uri,backurl=$service,blocking=$blocking_check)");
     my ($hostname,$port) = split(/:/,$host);
@@ -366,12 +369,11 @@ sub check_cas_login {
     }
     
     # Validate through CAS
-    do_log ('notice', "CAS validation $host - $uri?service=$service&ticket=$ticket");
+    do_log ('debug', "CAS validation $host - $uri?service=$service&ticket=$ticket");
     $service =~ s/\%26ticket\=.*$// ;
     my $path = $uri . "?service=$service&ticket=$ticket";
 
-
-    do_log ('notice', "X509::get_https2($hostname, $port, $path)");
+    do_log ('debug', "X509::get_https2($hostname, $port, $path)");
 
 
     # scan output to find a line with "yes" and the netid on the next line.
@@ -387,12 +389,12 @@ sub check_cas_login {
 	    next;
 	}
 	if ($valid) {
+	    $line =~ s/\x0D//;
 	    return ($line);
 	}
     }
     
     return (-1);
-
 }
 
 

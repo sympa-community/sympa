@@ -21,7 +21,7 @@ if the cookie is not a fake one. A Server fault is given back if the cookie
 is a fake one. If the cookie has been given by Sympa the email of the personn
 authenticated is given back
  
-=item do_lists(I<ROBOT>,I<SENDER>,I<TOPIC>,I<SUBTOPIC>)
+=item lists(I<ROBOT>,I<SENDER>,I<TOPIC>,I<SUBTOPIC>)
 
 Return the list of lists for a topic/subtopic
 I<TOPIC> and I<SUBTOPIC> are optional parameters: if none specified, the list of all lists
@@ -30,7 +30,7 @@ I<SENDER> authentification is checked to know which lists can be see by the user
 If the authorization failed it return only list of public lists
 If the number of parameters is incorrect it generates a SOAP.Client Exception.
 
-=item do_login( <HTTP_HOST> <EMAIL> <PASSWORD> )
+=item login( <HTTP_HOST> <EMAIL> <PASSWORD> )
 
 This web service gives back a cookie from Sympa (the one called sympauser) only
 if the user I<EMAIL> gives his password (I<PASSWORD>). The parameter I<HTTP_HOST> is 
@@ -73,72 +73,53 @@ If the number of parameters is incorrect it generates a SOAP.Client Exception.
 package sympasoap;
 
 use Exporter;
+use HTTP::Cookies;
 
 @ISA = ('Exporter');
 @EXPORT = ();
 
 use Conf;
 use Log;
+use Auth;
 
 
 sub check_cookie {
     my $class = shift;
-    my $http_cookie = shift;
 
-    unless ($http_cookie) {
-      die SOAP::Fault->faultcode('Client')
-	  ->faultstring('Incorrect number of parameters')
-	      ->faultdetail('Use : <value of the cookie>');
+    my $sender = $ENV{'USER_EMAIL'};
+
+    unless ($sender) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('User not authentified')
+	    ->faultdetail('You should login first');
     }
 
     &Log::do_log('debug', 'SOAP check_cookie');
     
-    my $secret = $Conf::Conf{'cookie'};    
-    
-    if ($http_cookie =~ /^(.*):(\S+)\s*$/) {
-	my ($email, $mac) = ($1, $2);
-	
-	## Check the MAC
-	if (&cookielib::get_mac($email,$secret) eq $mac) {
-	    return SOAP::Data->name('email')->type('string')->value($email);
-	}
-    }	
-    
-    die SOAP::Fault->faultcode('Server')
-	->faultstring('undef')
-	    ->faultdetail("Check cookie failed !");
+    return SOAP::Data->name('result')->type('string')->value($sender);
 }
 
-sub do_lists {
+sub lists {
 
     my $self = shift; #$self is a service object
-    my $robot =shift;
-    my $sender = shift;
-    my $password = shift;
     my $topic = shift;
     my $subtopic = shift;
+    my $sender = $ENV{'USER_EMAIL'};
+
+    unless ($sender) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('User not authentified')
+	    ->faultdetail('You should login first');
+    }
 
     my @result;  
     
-   unless ($robot and $sender) {
-      die SOAP::Fault->faultcode('Client')
-	  ->faultstring('Incorrect number of parameters')
-	      ->faultdetail('Use : <virtual robot> <sender> [<topic> <subtopic>]');
-    }
-    
-    ### TO REMOVE LATER (when CAS authentification 'll be implemented)
-    my $user = &List::get_user_db($sender);
-    unless ($user->{'password'} eq $password) {
-	die SOAP::Fault->faultcode('Server')
-	    ->faultstring('Authorization failed.')
-		->faultdetail("Incorrect password for user $sender");
-    }
-
-    &do_log('info', 'SOAP do_list(%s,%s)', $robot, $topic);
+    &do_log('info', 'SOAP lists(%s,%s)', $robot, $topic);
    
-    foreach my $listname ( &List::get_lists($robot) ) {
+    foreach my $listname ( &List::get_lists() ) {
 	
-	my $list = new List ($listname, $robot);
+	my $list = new List ($listname);
+	my $robot = $list->{'domain'};
 	my $result_item = {};
 	my $action = &List::request_action ('visibility','md5',$robot,
 					    {'listname' =>  $listname,
@@ -183,59 +164,49 @@ sub do_lists {
     }
     
     return SOAP::Data->name('return')->value(\@result);
-    return 1;
 }
 
-sub do_login {
+sub login {
     my $class = shift;
     my $email = shift;
     my $passwd = shift;
 
     my $http_host = $ENV{'SERVER_NAME'};
-
-    unless ($http_host and $email and $passwd) {
-      die SOAP::Fault->faultcode('Client')
-	  ->faultstring('Incorrect number of parameters')
-	      ->faultdetail('Use : <HTTP host> <email> <password>');
-    }
-
-    return SOAP::Data->name('result')->type('boolean')->value(0);
-}
-
-sub do_llogin {
-    my $class = shift;
-    my $email = shift;
-    my $passwd = shift;
-
-    my $http_host = $ENV{'SERVER_NAME'};
-
-    unless ($http_host and $email and $passwd) {
-      die SOAP::Fault->faultcode('Client')
-	  ->faultstring('Incorrect number of parameters')
-	      ->faultdetail('Use : <HTTP host> <email> <password>');
-    }
-
-    &Log::do_log('debug', 'SOAP do_login(%s,%s)', $http_host, $email);
+    &Log::do_log('notice', 'login(%s)', $email);
     
-    my $user;
+    #foreach my  $k (keys %ENV) {
+    #&Log::do_log('notice', 'ENV %s = %s', $k, $ENV{$k});
+    #}
 
-    ##authentication of the sender
-    unless($user = &wwslib::check_auth($email,$passwd)){
-	&Log::do_log('notice', "SOAP : do_login authentication failed\n");
+    unless ($http_host and $email and $passwd) {
+	&do_log('err', 'login(): incorrect number of parameters');
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect number of parameters')
+	    ->faultdetail('Use : <HTTP host> <email> <password>');
+    }
+    
+    ## Authentication of the sender
+    ## Set an env var to find out if in a SOAP context
+    $ENV{'SYMPA_SOAP'} = 1;
+    my $user = &Auth::check_auth($email,$passwd);
+
+    unless($user){
+	&do_log('notice', "SOAP : login authentication failed");
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authentification failed')
-		->faultdetail("Incorrect password for user $email or bad login");
+	    ->faultdetail("Incorrect password for user $email or bad login");
     } 
 
-    my $cookie;
-    unless($cookie = &cookielib::set_cookie_soap($Conf::Conf{'cookie'},$http_host,$email)) {
+    my $expire = $param->{'user'}{'cookie_delay'} || $wwsconf->{'cookie_expire'};
+
+    unless(&cookielib::set_cookie_soap($email,$Conf::Conf{'cookie'},$http_host,$expire)) {
 	&Log::do_log('notice', 'SOAP : could not set HTTP cookie for external_auth');
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Cookie not set')
-		->faultdetail('Could not set HTTP cookie for external_auth');
+	    ->faultdetail('Could not set HTTP cookie for external_auth');
     }
 
-    return SOAP::Data->name('result')->value($cookie);
+    return SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub isSubscriber {
@@ -244,7 +215,7 @@ sub isSubscriber {
   unless ($listname and $user) {
       die SOAP::Fault->faultcode('Client')
 	  ->faultstring('Incorrect number of parameters')
-	      ->faultdetail('Use : <list> <user email>');
+	  ->faultdetail('Use : <list> <user email>');
   }
 
   $listname = lc($listname);  
@@ -258,7 +229,7 @@ sub isSubscriber {
   else {
       die SOAP::Fault->faultcode('Server')
 	  ->faultstring('Unknown list.')
-	      ->faultdetail("List $listname unknown");
+	  ->faultdetail("List $listname unknown");
   }
 
 }
@@ -266,53 +237,56 @@ sub isSubscriber {
 sub review {
     my $class = shift;
     my $listname  = shift;
-    my $robot = shift;
-    my $sender = shift;
-    my $password = shift;
+    
+    my $sender = $ENV{'USER_EMAIL'};
+
+    unless ($sender) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('User not authentified')
+	    ->faultdetail('You should login first');
+    }
+    
 
     my @resultSoap;
 
-    unless ($listname and $robot and $sender and $password) {
-      die SOAP::Fault->faultcode('Client')
-	  ->faultstring('Incorrect number of parameters')
-	      ->faultdetail('Use : <list> <virtual robot> <email> <password>');
+    unless ($listname) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect number of parameters')
+	    ->faultdetail('Use : <list>');
     }
 	
     &Log::do_log('debug', 'SOAP review(%s,%s)', $listname,$robot);
 
-    my $sympa = &Conf::get_robot_conf($robot, 'sympa');
-
-    my $user;
-    my $list = new List ($listname, $robot);
-
-    # Part of the authorization code
-    $user = &List::get_user_db($sender);
-    unless ($user->{'password'} eq $password) {
-	die SOAP::Fault->faultcode('Server')
-	    ->faultstring('Authorization failed.')
-		->faultdetail("Incorrect password for user $sender");
-    }
-     
+    my $list = new List ($listname);
     unless ($list) {
 	&Log::do_log('info', 'Review %s from %s refused, list unknown to robot %s', $listname,$sender,$robot);
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Unknown list')
-		->faultdetail("List $listname unknown");
+	    ->faultdetail("List $listname unknown");
     }
 
+    my $robot = $list->{'domain'};
+
+    my $sympa = &Conf::get_robot_conf($robot, 'sympa');
+
+    my $user;
+
+    # Part of the authorization code
+    $user = &List::get_user_db($sender);
+     
     my $action = &List::request_action ('review','md5',$robot,
                                      {'listname' => $listname,
                                       'sender' => $sender});
 
     die SOAP::Fault->faultcode('Server')
 	->faultstring('No action available')
-		unless (defined $action);
+	unless (defined $action);
 
     if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
 	&Log::do_log('info', 'SOAP : review %s from %s refused (not allowed)', $listname,$sender);
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Not allowed')
-		->faultdetail("You dont't have proper rights");
+		->faultdetail("You don't have proper rights");
     }
     if ($action =~ /do_it/i) {
 	my $is_owner = $list->am_i('owner', $sender);
@@ -331,7 +305,7 @@ sub review {
 		push @resultSoap, SOAP::Data->name('item')->type('string')->value($user->{'email'});
 	    }
 	} while ($user = $list->get_next_user());
-	&Log::do_log('info', 'SOAP : review %s from %s accepted (%d seconds)', $listname, $sender,time-$time_command);
+	&Log::do_log('info', 'SOAP : review %s from %s accepted', $listname, $sender);
 	return SOAP::Data->name('return')->value(\@resultSoap);
     }
     &Log::do_log('info', 'SOAP : review %s from %s aborted, unknown requested action in scenario',$listname,$sender);
@@ -341,129 +315,142 @@ sub review {
 }
 
 sub signoff {
-  my ($class,$listname,$robot,$sender,$password,$email)=@_;
-
-  unless ($listname and $robot and $sender and $password) {
-      die SOAP::Fault->faultcode('Client')
-	  ->faultstring('Incorrect number of parameters.')
-	      ->faultdetail('Use : <list> <virtual robot> <sender email> <user password> [mail to sign off]');
-  }
-
-  &Log::do_log('debug', 'SOAP signoff(%s,%s)', $listname,$sender);
-
-  my ($l,$list);
-  my $host = &Conf::get_robot_conf($robot, 'host');
-  
-  if (!$email) { $email = $sender; }
-
-  if ($listname eq '*') {
-      my $success;
-      foreach $l ( List::get_which ($email,$robot,'member') ){
-	  $success ||= &signoff($l,$email);
-      }
-      return SOAP::Data->name('result')->value($success);
-  } 
- 
-  $list = new List ($listname, $robot);
-
-  # Part of the authorization code
-  my $user = &List::get_user_db($sender);
-  unless ($user->{'password'} eq $password) {
-      die SOAP::Fault->faultcode('Server')
-	  ->faultstring('Authorization failed.')
-	      ->faultdetail("Incorrect password for user $sender or bad login");
-  }
-
-  ## Is this list defined
-  unless ($list) {
-      &Log::do_log('info', 'SOAP : sign off from %s for %s refused, list unknown to robot %s', $listname,$sender,$robot);
-      die SOAP::Fault->faultcode('Server')
-	  ->faultstring('Unknown list.')
-	      ->faultdetail("List $listname unknown");	
-  }
-  
-  my $action = &List::request_action('unsubscribe','md5',$robot,
-				     {'listname' => $listname,
-				      'email' => $email,
-				      'sender' => $sender });
-
-  die SOAP::Fault->faultcode('Server')
-      ->faultstring('No action available.')
-	  unless (defined $action);   
-  
-  if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
-      &Log::do_log('info', 'SOAP : sign off from %s for the email %s of the user %s refused (not allowed)', $listname,$email,$sender);
-      die SOAP::Fault->faultcode('Server')
-	  ->faultstring('Not allowed.')
-	      ->faultdetail("You dont't have proper rights");
+    my ($class,$listname)=@_;
+    my $sender = $ENV{'USER_EMAIL'};
+    &Log::do_log('notice', 'SOAP signoff(%s,%s)', $listname,$sender);
+    
+    unless ($sender) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('User not authentified')
+	    ->faultdetail('You should login first');
+    }
+    
+    unless ($listname) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect number of parameters.')
+	    ->faultdetail('Use : <list> ');
+    }
+    
+    
+    my $l;
+    my $list = new List ($listname);
+    
+    ## Is this list defined
+    unless ($list) {
+	&Log::do_log('info', 'SOAP : sign off from %s for %s refused, list unknown', $listname,$sender);
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Unknown list.')
+	    ->faultdetail("List $listname unknown");	
+    }
+    
+    my $robot = $list->{'domain'};
+    
+    my $host = &Conf::get_robot_conf($robot, 'host');
+    
+    if ($listname eq '*') {
+	my $success;
+	foreach $l ( List::get_which ($sender,$robot,'member') ){
+	    $success ||= &signoff($l,$sender);
+	}
+	return SOAP::Data->name('result')->value($success);
+    } 
+    
+    $list = new List ($listname, $robot);
+    
+    # Part of the authorization code
+    my $user = &List::get_user_db($sender);
+    
+    my $action = &List::request_action('unsubscribe','md5',$robot,
+				       {'listname' => $listname,
+					'email' => $sender,
+					'sender' => $sender });
+    
+    die SOAP::Fault->faultcode('Server')
+	->faultstring('No action available.')
+	unless (defined $action);   
+    
+    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
+	&Log::do_log('info', 'SOAP : sign off from %s for the email %s of the user %s refused (not allowed)', 
+		     $listname,$sender,$sender);
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Not allowed.')
+	    ->faultdetail("You don't have proper rights");
     }
     if ($action =~ /do_it/i) {
 	## Now check if we know this email on the list and
 	## remove it if found, otherwise just reject the
 	## command.
-	unless ($list->is_user($email)) {
-	    &Log::do_log('info', 'SOAP : sign off %s from %s refused, not on list', $listname, $email);
-
+	unless ($list->is_user($sender)) {
+	    &Log::do_log('info', 'SOAP : sign off %s from %s refused, not on list', $listname, $sender);
+	    
 	    ## Tell the owner somebody tried to unsubscribe
 	    if ($action =~ /notify/i) {
-		$list->send_notify_to_owner({'who' => $email, 
+		$list->send_notify_to_owner({'who' => $sender, 
 					     'type' => 'warn-signoff'});
 	    }
 	    die SOAP::Fault->faultcode('Server')
 		->faultstring('Not allowed.')
-		    ->faultdetail("Email address $email has not been found on the list $list{'name'}. You did perhaps subscribe using a different address ?");
+		->faultdetail("Email address $email has not been found on the list $list{'name'}. You did perhaps subscribe using a different address ?");
 	}
 	
 	## Really delete and rewrite to disk.
-	$list->delete_user($email);
+	$list->delete_user($sender);
 
 	## Notify the owner
 	if ($action =~ /notify/i) {
-	    $list->send_notify_to_owner({'who' => $email,
+	    $list->send_notify_to_owner({'who' => $sender,
 					 'type' => 'signoff'});
 	}
 
+	## Send bye.tpl to sender
+	my %context;
+	$context{'subject'} = sprintf(&Language::Msg(6 , 71, 'Signoff from list %s'), $list->{'name'});
+	$context{'body'} = sprintf(&Language::Msg(6 , 31, "You have been removed from list %s.\n Thanks for being with us.\n"), $list->{'name'});
+	$list->send_file('bye', $sender, $robot, \%context);
+	
 	$list->save();
 
-	unless ($quiet || ($action =~ /quiet/i)) {
-	    ## Send bye file to subscriber
-	    my %context;
-	    $context{'subject'} = sprintf(&Language::Msg(6 , 71, 'Signoff from list %s'), $list->{'name'});
-	    $context{'body'} = sprintf(&Language::Msg(6 , 31, "You have been removed from list %s.\n Thanks for being with us.\n"), $list->{'name'});
-	    $list->send_file('bye', $email, $robot, \%context);
-	}
-
-	&Log::do_log('info', 'SOAP : sign off %s from %s accepted (%d seconds, %d subscribers)', $listname, $email, time-$time_command, $list->get_total() );
+	&Log::do_log('info', 'SOAP : sign off %s from %s accepted', $listname, $sender);
 	
 	return SOAP::Data->name('result')->type('boolean')->value(1);
     }
 
   &Log::do_log('info', 'SOAP : sign off %s from %s aborted, unknown requested action in scenario',$listname,$sender);
-  return SOAP::Fault->faultcode('Server')
+  die SOAP::Fault->faultcode('Server')
       ->faultstring('Undef')
 	  ->faultdetail("Sign off %s from %s aborted because unknown requested action in scenario",$listname,$sender);
 }
 
 sub subscribe {
-  my ($class,$listname,$robot,$sender,$password,$gecos)=@_;
+  my ($class,$listname,$gecos)=@_;
+  my $sender = $ENV{'USER_EMAIL'};
+  &Log::do_log('info', 'subscribe(%s,%s, %s)', $listname,$sender, $gecos);
 
-  unless ($listname and $robot and $sender and $password) {
+  unless ($sender) {
+      die SOAP::Fault->faultcode('Client')
+	  ->faultstring('User not authentified')
+	  ->faultdetail('You should login first');
+  }
+
+  unless ($listname) {
       die SOAP::Fault->faultcode('Client')
 	  ->faultstring('Incorrect number of parameters')
-	      ->faultdetail('Use : <list> <virtual robot> <user email> <user password> [user gecos]');
+	      ->faultdetail('Use : <list> [user gecos]');
   } 
 
-  &Log::do_log('debug', 'SOAP subscribe(%s,%s,%s)', $listname, $robot,$sender);
+  &Log::do_log('notice', 'SOAP subscribe(%s,%s)', $listname, $sender);
   
   ## Load the list if not already done, and reject the
   ## subscription if this list is unknown to us.
-  my $list = new List ($listname, $robot);
+  my $list = new List ($listname);
   unless ($list) {
       &Log::do_log('info', 'Subscribe to %s from %s refused, list unknown to robot %s', $listname,$sender,$robot);
       die SOAP::Fault->faultcode('Server')
 	  ->faultstring('Unknown list')
-	      ->faultdetail("List $listname unknown");	  
-    }
+	  ->faultdetail("List $listname unknown");	  
+  }
+
+  my $robot = $list->{'domain'};
 
   ## This is a really minimalistic handling of the comments,
   ## it is far away from RFC-822 completeness.
@@ -485,7 +472,7 @@ sub subscribe {
       &Log::do_log('info', 'SOAP subscribe to %s from %s refused (not allowed)', $listname,$sender);
       die SOAP::Fault->faultcode('Server')
 	  ->faultstring('Not allowed.')
-	      ->faultdetail("You dont't have proper rights");
+	  ->faultdetail("You don't have proper rights");
   }
   if ($action =~ /owner/i) {
       push @msg::report, sprintf Msg(6, 25, $msg::subscription_forwarded);
@@ -508,10 +495,10 @@ sub subscribe {
       my $is_sub = $list->is_user($sender);
       
       unless (defined($is_sub)) {
-	  &Log::do_log('info','SOAP subscribe : user lookup failed');
+	  &Log::do_log('err','SOAP subscribe : user lookup failed');
 	  die SOAP::Fault->faultcode('Server')
 	      ->faultstring('Undef')
-		  ->faultdetail("SOAP subscribe : user lookup failed");
+	      ->faultdetail("SOAP subscribe : user lookup failed");
       }
       
       if ($is_sub) {
@@ -521,8 +508,10 @@ sub subscribe {
 	  my $user = {};
 	  $user->{'update_date'} = time;
 	  $user->{'gecos'} = $gecos if $gecos;
-	  
-	  return SOAP::Fault->faultcode('Server')
+
+	  &Log::do_log('err','Subscribe : user already subscribed');
+
+	  die SOAP::Fault->faultcode('Server')
 	      ->faultstring('Undef.')
 		  ->faultdetail("SOAP subscribe : update user failed")
 		      unless $list->update_user($sender, $user);
@@ -536,7 +525,7 @@ sub subscribe {
 	  $u->{'password'} = &tools::crypt_password($password);
 	  $u->{'date'} = $u->{'update_date'} = time;
 	  
-	  return SOAP::Fault->faultcode('Server')
+	  die SOAP::Fault->faultcode('Server')
 	      ->faultstring('Undef')
 		  ->faultdetail("SOAP subscribe : add user failed")
 		      unless $list->add_user($u);
@@ -566,48 +555,31 @@ sub subscribe {
 				       'gecos' => $gecos,
 				       'type' => 'subscribe'});
       }
-      &Log::do_log('info', 'SOAP subcribe : %s from %s accepted (%d seconds, %d subscribers)', $listname, $sender, time-$time_command, $list->get_total());
+      &Log::do_log('info', 'SOAP subcribe : %s from %s accepted', $listname, $sender);
       
       return SOAP::Data->name('result')->type('boolean')->value(1);
   }
   
   &Log::do_log('info', 'SOAP subscribe : %s from %s aborted, unknown requested action in scenario',$listname,$sender);
-  return SOAP::Fault->faultcode('Server')
+  die SOAP::Fault->faultcode('Server')
       ->faultstring('Undef')
-	  ->faultdetail("SOAP subscribe : %s from %s aborted because unknown requested action in scenario",$listname,$sender);
+      ->faultdetail("SOAP subscribe : %s from %s aborted because unknown requested action in scenario",$listname,$sender);
 }
 
  ## Which list the user is subscribed to 
  ## TODO (pour listmaster, toutes les listes)
- sub do_which {
-     
+ sub which {
      my $self = shift;
-     my $sender = shift;
-     my $passwd = shift;
-
-     &do_log('notice','SOAP: do_which()');
-          
+     &do_log('debug', 'which(%s)',$sender);
      my @result;
+     my $sender = $ENV{'USER_EMAIL'};
 
-
-#     return SOAP::Data->name('return')->value(\@result);
-
-     unless ($sender and $passwd) {
+     unless ($sender) {
 	 die SOAP::Fault->faultcode('Client')
-	     ->faultstring('Incorrect number of parameters')
-	     ->faultdetail('Use :<email> <password>');
+	     ->faultstring('User not authentified')
+	     ->faultdetail('You should login first');
      }
 
-     &do_log('notice', 'SOAP server : do_which(%s)',$sender);
-
-     ##authentication of the sender
-     my $user = &List::get_user_db($sender);
-     unless ($user->{'password'} eq $passwd) {
-	 die SOAP::Fault->faultcode('Server')
-	     ->faultstring('Authorization failed.')
-	     ->faultdetail("Incorrect password for user $sender");
-     }
-          
      foreach my $listname( &List::get_which($sender,'*', 'member') ){ 	    
 	 my $list = new List ($listname);
 	 my $robot = $list->{'admin'}{'host'};
@@ -636,7 +608,7 @@ sub subscribe {
 	
      }
 
-     &do_log('notice','SOAP: ....do_which()');
+     &do_log('notice','SOAP: ....which()');
 
      return SOAP::Data->name('return')->value(\@result);
 

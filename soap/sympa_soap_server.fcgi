@@ -61,6 +61,10 @@ unless ($List::use_db = &List::probe_db()) {
 
 my $pinfo = &List::_apply_defaults();
 
+## The process should not fork for sending mail
+## Messages will be spooled instead
+&mail::set_send_spool($Conf{'queue'});
+
 ## Loading all Lists at startup, in order to increase execution speed
 foreach my $listname (&List::get_lists('*')){
      my $list = new List ($listname);
@@ -73,15 +77,8 @@ foreach my $listname (&List::get_lists('*')){
 
 my $server = SOAP::Transport::HTTP::FCGI::Sympa->new(); 
 
-$server->dispatch_with({'urn:do_lists' => 'sympasoap',
-			'urn:do_login' => 'sympasoap',
-			'urn:review' => 'sympasoap',
-			'urn:signoff' => 'sympasoap',
-			'urn:subscribe' => 'sympasoap',
-			'urn:which' => 'sympasoap',
-			'urn:amI' => 'sympasoap',
-			'urn:do_which' => 'sympasoap',
-			'urn:check_cookie' => 'sympasoap'
-		    });
+#$server->dispatch_with({'urn:Sympa' => 'sympasoap'});
+$server->dispatch_to('/home/sympa/bin','sympasoap');
+
 $server->handle($birthday);
 
