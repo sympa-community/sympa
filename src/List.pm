@@ -4126,7 +4126,17 @@ sub _load_scenario {
 	}
 	$rule->{condition}=$1;
 	$rule->{auth_method}=$2 || 'smtp';
-	$rule->{action}=$6 ;
+	$rule->{'action'} = $8;
+
+	
+#	## Make action an ARRAY
+#	my $action = $6;
+#	my @actions;
+#	while ($action =~ s/^\s*((\w+)(\s?\([^\)]*\))?)(\s|\,|$)//) {
+#	    push @actions, $1;
+#	}
+#	$rule->{action} = \@actions;
+	       
 	push(@scenario,$rule);
 #	do_log ('debug2', "load rule 1: $rule->{'condition'} $rule->{'auth_method'} ->$rule->{'action'}");
 
