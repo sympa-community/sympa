@@ -11,7 +11,7 @@
 ## Change this to point to your Sympa bin directory
 use lib '--BINDIR--';
 
-#use strict vars;
+use strict vars;
 
 ## Template parser
 require "--BINDIR--/parser.pl";
@@ -38,11 +38,11 @@ require "--BINDIR--/wws-lib.pl";
 require "--BINDIR--/cookie-lib.pl";
 
 ## Configuration
-$wwsconf = {};
+my $wwsconf = {};
 
 ## Change to your wwsympa.conf location
-$conf_file = '--WWSCONFIG--';
-$sympa_conf_file = '--CONFIG--';
+my $conf_file = '--WWSCONFIG--';
+my $sympa_conf_file = '--CONFIG--';
 
 ## Load config 
 unless ($wwsconf = &load_config($conf_file)) {
@@ -59,7 +59,7 @@ unless (&Conf::load( $sympa_conf_file )) {
 
 &mail::set_send_spool($Conf{'queue'});
 
-$mime_types = &load_mime_types();
+my $mime_types = &load_mime_types();
 
 if ($wwsconf->{'use_fast_cgi'}) {
     require CGI::Fast;
@@ -68,9 +68,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
 }
 
 
-$loop = 0;
-$list;
-$param = {};
+my $loop = 0;
+my $list;
+my $param = {};
 
 
 # hash of all the description files already loaded
@@ -82,7 +82,7 @@ $param = {};
 #%desc_files_map; NOT USED ANYMORE
 
 # hash of the icons linked with a type of file
-%icon_table;
+my %icon_table;
 
   # application file
 $icon_table{'unknown'} = '/icons/unknown.gif';
@@ -97,14 +97,14 @@ $icon_table{'father'} = '/icons/small/back.gif';
 $icon_table{'sort'} = '/icons/down.gif';
 ## Shared directory and description file
 
-$shared = 'shared';
-$desc = '.desc';
+#$shared = 'shared';
+#$desc = '.desc';
 
 ####{lefloch/modif/end}
 
 
 ## subroutines
-%comm = ('home' => 'do_home',
+my %comm = ('home' => 'do_home',
 	 'logout' => 'do_logout',
 	 'loginrequest' => 'do_loginrequest',
 	 'login' => 'do_login',
@@ -186,7 +186,7 @@ $desc = '.desc';
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
-%action_args = ('default' => ['list'],
+my %action_args = ('default' => ['list'],
 		'editfile' => ['list','file'],
 		'viewfile' => ['list','file'],
 		'sendpasswd' => ['email'],
@@ -242,7 +242,7 @@ $desc = '.desc';
 		'view_translations' => []
 		);
 
-%action_type = ('editfile' => 'admin',
+my %action_type = ('editfile' => 'admin',
 		'review' => 'admin',
 		'search' => 'admin',
 		'viewfile' => 'admin',
@@ -304,6 +304,10 @@ while ($query = &new_loop()) {
     %in = $query->Vars;
     
     my %changed_params;
+
+    foreach my $k (keys %changed_params) {
+	&do_log('debug', 'Changed Param: %s', $k);
+    }
 
     ## Free terminated sendmail processes
 #    &smtp::reaper;
@@ -777,24 +781,24 @@ sub check_param {
 	   }else {
 	       if ($param->{'is_subscriber'}) {
 		   ## May signoff
-		   $action = &List::request_action ('unsubscribe',$param->{'auth_method'},
+		   $main::action = &List::request_action ('unsubscribe',$param->{'auth_method'},
 						    {'listname' =>$param->{'list'}, 
 						     'sender' =>$param->{'user'}{'email'},
 						     'remote_host' => $param->{'remote_host'},
 						     'remote_addr' => $param->{'remote_addr'}});
 		   
-		   $param->{'may_signoff'} = 1 if ($action =~ /do_it|owner/);
+		   $param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner/);
 		   $param->{'may_suboptions'} = 1;
 	       }else {
 		   
 		   ## May Subscribe
-		   $action = &List::request_action ('subscribe',$param->{'auth_method'},
+		   $main::action = &List::request_action ('subscribe',$param->{'auth_method'},
 						    {'listname' => $param->{'list'}, 
 						     'sender' => $param->{'user'}{'email'},
 						     'remote_host' => $param->{'remote_host'},
 						     'remote_addr' => $param->{'remote_addr'}});
 		   
-		   $param->{'may_subscribe'} = 1 if ($action =~ /do_it|owner/);
+		   $param->{'may_subscribe'} = 1 if ($main::action =~ /do_it|owner/);
 	       }
 	   }
        }
@@ -803,12 +807,12 @@ sub check_param {
 	    if ($param->{'may_signoff'} || $param->{'may_subscribe'});
        
        ## Owners
-       foreach $o (@{$list->{'admin'}{'owner'}}) {
+       foreach my $o (@{$list->{'admin'}{'owner'}}) {
 	   $param->{'owner'}{$o->{'email'}}{'gecos'} = $o->{'gecos'} || $o->{'email'};
        }
        
        ## Editors
-       foreach $e (@{$list->{'admin'}{'editor'}}) {
+       foreach my $e (@{$list->{'admin'}{'editor'}}) {
 	   $param->{'editor'}{$e->{'email'}}{'gecos'} = $e->{'gecos'} || $e->{'email'};
        }  
        $param->{'is_moderated'} = $list->is_moderated();
@@ -843,9 +847,9 @@ sub check_param {
        my %access = &d_access_control(\%mode,"");
        $param->{'may_d_read'} = $access{'may'}{'read'};
        
-       if (-e "$Conf{'home'}/$param->{'list'}/$shared") {
+       if (-e "$Conf{'home'}/$param->{'list'}/shared") {
 	   $param->{'shared'}='exist';
-       }elsif (-e "$Conf{'home'}/$param->{'list'}/pending.$shared") {
+       }elsif (-e "$Conf{'home'}/$param->{'list'}/pending.shared") {
 	   $param->{'shared'}='deleted';
        }else{
 	   $param->{'shared'}='none';
@@ -1137,8 +1141,8 @@ sub do_which {
 	return 'loginrequest';
     }
 
-    foreach $role ('member','owner','editor') {
-	foreach $l ( &List::get_which($param->{'user'}{'email'}, $role) ) {
+    foreach my$role ('member','owner','editor') {
+	foreach my $l ( &List::get_which($param->{'user'}{'email'}, $role) ) {
 	    my $list = new List ($l);
 	    
 	    $param->{'which'}{$l}{'subject'} = $list->{'admin'}{'subject'};
@@ -1175,7 +1179,7 @@ sub do_lists {
 	}
     }
 
-    foreach $l ( &List::get_lists() ) {
+    foreach my $l ( &List::get_lists() ) {
 	my $list = new List ($l);
 
 	my $sender = $param->{'user'}{'email'} || 'nobody';
@@ -1475,7 +1479,7 @@ sub do_pref {
     ## Available languages
 #    foreach $l (keys %languages) {
     my $saved_lang = &Language::GetLang();
-    foreach $l (@languages) {
+    foreach my $l (@languages) {
 #	$param->{'languages'}{$l}{'complete'} = $languages{$l};
 	&Language::SetLang($l);
 	$param->{'languages'}{$l}{'complete'} = Msg(14, 2, $l);
@@ -1602,7 +1606,7 @@ sub do_setpref {
 	return 'loginrequest';
     }
 
-    foreach $p ('gecos','lang','cookie_delay') {
+    foreach my $p ('gecos','lang','cookie_delay') {
 	$changes->{$p} = $in{$p};
     }
 
@@ -1622,7 +1626,7 @@ sub do_setpref {
 	}
     }
 
-    foreach $p ('gecos','lang','cookie_delay') {
+    foreach my $p ('gecos','lang','cookie_delay') {
 	$param->{'user'}{$p} = $in{$p};
     }
 
@@ -4017,7 +4021,6 @@ sub do_edit_list {
     my %changed;
     my @syntax_error;
     foreach my $pname (sort List::by_order keys %{$pinfo}) {
-	my $changed;
 	my ($p, $new_p);
 	## Check privileges first
 	next unless ($list->may_edit($pname,$param->{'user'}{'email'}) eq 'write');
@@ -4257,6 +4260,10 @@ sub _prepare_edit_form {
 	$p->{'default'} = $list_config->{'defaults'}{$pname};
 	$p->{'may_edit'} = $list->may_edit($pname,$param->{'user'}{'email'});
 	$p->{'changed'} = $changed_params{$pname};
+
+	if ($changed_params{$pname}) {
+	    &do_log('debug', 'CHANGED: %s', $pname);
+	}
 
 	## Exceptions...too many
 	if ($pname eq 'topics') {
@@ -4718,7 +4725,7 @@ sub d_access_control {
     my $expl = $Conf{'home'};
 
     my $list_name = $list->{'name'};
-    my $shareddir =  $expl.'/'.$list_name.'/'.$shared;
+    my $shareddir =  $expl.'/'.$list_name.'/shared';
     
 
     # document to read
@@ -4807,15 +4814,15 @@ sub d_access_control {
 		    $current_path = $current_path.'/';
 		}
 		
-		if (-e "$shareddir/$current_path$desc"){
-		    $desc_file = $shareddir.'/'.$current_path."$desc";
+		if (-e "$shareddir/$current_path.desc"){
+		    $desc_file = $shareddir.'/'.$current_path.".desc";
 		    $def_desc_file = 1;
 		}
 
 	    } else {
 		# case file
-		if (-e "$shareddir/$1$desc.$3"){
-		    $desc_file = $shareddir.'/'.$1."$desc.".$3;
+		if (-e "$shareddir/$1.desc.$3"){
+		    $desc_file = $shareddir.'/'.$1.".desc.".$3;
 		    $def_desc_file = 1;
 		} 
 		    
@@ -4946,49 +4953,49 @@ sub do_d_admin {
 
 	if ($in{'d_admin'} eq 'create') {
 
-	    if (-e "$dir/$shared") {
-		&wwslog('info',"do_d_admin :  create; $dir/$shared allready exist");
+	    if (-e "$dir/shared") {
+		&wwslog('info',"do_d_admin :  create; $dir/shared allready exist");
 		&message('failed');
 		return undef;
 	    }
-	    unless (mkdir ("$dir/$shared",0777)) {
-		&wwslog('info',"do_d_admin : create; unable to create $dir/$shared : $! ");
+	    unless (mkdir ("$dir/shared",0777)) {
+		&wwslog('info',"do_d_admin : create; unable to create $dir/shared : $! ");
 		&message('failed');
 		return undef;
 	    }
 
 	    return 'd_read';
 	}elsif($in{'d_admin'} eq 'restore') {
-	    unless (-e "$dir/pending.$shared") {
-		&wwslog('info',"do_d_admin : restore; $dir/pending.$shared not found");
+	    unless (-e "$dir/pending.shared") {
+		&wwslog('info',"do_d_admin : restore; $dir/pending.shared not found");
 		&message('failed');
 		return undef;
 	    }
-	    if (-e "$dir/$shared") {
-		&wwslog('info',"do_d_admin : restore; $dir/$shared allready exist");
+	    if (-e "$dir/shared") {
+		&wwslog('info',"do_d_admin : restore; $dir/shared allready exist");
 		&message('failed');
 		return undef;
 	    }
-	    unless (rename ("$dir/pending.$shared", "$dir/$shared")){
-		&wwslog('info',"do_d_admin : restore; unable to rename $dir/pending.$shared");
+	    unless (rename ("$dir/pending.shared", "$dir/shared")){
+		&wwslog('info',"do_d_admin : restore; unable to rename $dir/pending.shared");
 		&message('failed');
 		return undef;
 	    }
 
 	    return 'd_read';
         }elsif($in{'d_admin'} eq 'delete') {
-	    unless (-e "$dir/$shared") {
-		&wwslog('info',"do_d_admin : restore; $dir/$shared not found");
+	    unless (-e "$dir/shared") {
+		&wwslog('info',"do_d_admin : restore; $dir/shared not found");
 		&message('failed');
 		return undef;
 	    }
-	    if (-e "$dir/pending.$shared") {
-		&wwslog('info',"do_d_admin : delete ; $dir/pending.$shared allready exist");
+	    if (-e "$dir/pending.shared") {
+		&wwslog('info',"do_d_admin : delete ; $dir/pending.shared allready exist");
 		&message('failed');
 		return undef;
 	    }
-	    unless (rename ("$dir/$shared", "$dir/pending.$shared")){
-		&wwslog('info',"do_d_admin : restore; unable to rename $dir/$shared");
+	    unless (rename ("$dir/shared", "$dir/pending.shared")){
+		&wwslog('info',"do_d_admin : restore; unable to rename $dir/shared");
 		&message('failed');
 		return undef;
 	    }
@@ -5064,7 +5071,7 @@ sub do_d_read {
     my $expl = $Conf{'home'};
     
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/'.$shared;
+    my $shareddir =  $expl.'/'.$list_name.'/shared';
 
     # document to read
     my $doc;
@@ -5094,7 +5101,7 @@ sub do_d_read {
     }
 
     ### Document isn't a description file
-    unless ($path !~ /$desc/) {
+    unless ($path !~ /\.desc/) {
 	$param->{'error'}{'path'} = $path;
 	&wwslog('info',"do_d_read : $shareddir/$path : description file");
 	&message('no_such_document');
@@ -5148,8 +5155,8 @@ sub do_d_read {
 	}
 
 	## parameters of the current directory
-	if ($path && (-e "$doc/$desc")) {
-	    %desc_hash = &get_desc_file("$doc/$desc");
+	if ($path && (-e "$doc/.desc")) {
+	    %desc_hash = &get_desc_file("$doc/.desc");
 	    $param->{'doc_owner'} = $desc_hash{'email'};
 	    $param->{'doc_title'} = $desc_hash{'title'};
 	}
@@ -5194,9 +5201,9 @@ sub do_d_read {
 	    #case subdirectory
 	    if (-d $path_doc) {
 		
-		if (-e "$path_doc/$desc") {
+		if (-e "$path_doc/.desc") {
 		    # check access permission for reading
-		    %desc_hash = &get_desc_file("$path_doc/$desc");
+		    %desc_hash = &get_desc_file("$path_doc/.desc");
 		    
 		    if  (($user eq $desc_hash{'email'}) || ($may_control) ||
 			 (&List::request_action ('shared_doc.d_read',$param->{'auth_method'},
@@ -5270,12 +5277,12 @@ sub do_d_read {
 		$may = 1;
 		$def_desc = 0;
 		
-		if (-e "$doc/$desc.$d") {
+		if (-e "$doc/.desc.$d") {
 		    # a desc file was found
 		    $def_desc = 1;
 		    
 		    # check access permission		
-		    %desc_hash = &get_desc_file("$doc/$desc.$d");
+		    %desc_hash = &get_desc_file("$doc/.desc.$d");
 		    
 		    unless (($user eq $desc_hash{'email'}) || ($may_control) ||
 			    (&List::request_action ('shared_doc.d_read',$param->{'auth_method'},
@@ -5409,10 +5416,10 @@ sub do_d_read {
 	    
 	    
 	    # Parameters for the description
-	    if (-e "$doc/$desc") {
-		my @info = stat "$doc/$desc";
+	    if (-e "$doc/.desc") {
+		my @info = stat "$doc/.desc";
 		$param->{'serial_desc'} = $info[10];
-		my %desc_hash = &get_desc_file("$doc/$desc");
+		my %desc_hash = &get_desc_file("$doc/.desc");
 		$param->{'description'} = $desc_hash{'title'};
 	    }
 	    
@@ -5481,7 +5488,7 @@ sub do_d_editfile {
     my $list_name = $list->{'name'};
    
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/'.$shared;
+    my $shareddir =  $expl.'/'.$list_name.'/shared';
 
     # Control
         
@@ -5510,7 +5517,7 @@ sub do_d_editfile {
 
        
     ### Document isn't a description file?
-    unless ($path !~ /$desc/) {
+    unless ($path !~ /\.desc/) {
 	$param->{'error'}{'path'} = $path;
 	&wwslog('info',"do_editdile : $shareddir/$path : description file");
 	&message('no_such_document');
@@ -5549,12 +5556,12 @@ sub do_d_editfile {
 
 
     # Description of the file
-    if (-e "$shareddir/$1$desc.$3") {
-	my %desc_hash = &get_desc_file("$shareddir/$1$desc.$3");
+    if (-e "$shareddir/$1.desc.$3") {
+	my %desc_hash = &get_desc_file("$shareddir/$1.desc.$3");
 	$param->{'desc'} = $desc_hash{'title'};
 	$param->{'doc_owner'} = $desc_hash{'email'};   
 	## Synchronization
-	my @info = stat "$shareddir/$1$desc.$3";
+	my @info = stat "$shareddir/$1.desc.$3";
 	$param->{'serial_desc'} = $info[10];
     }
 
@@ -5591,7 +5598,7 @@ sub do_d_describe {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/'.$shared;
+    my $shareddir =  $expl.'/'.$list_name.'/shared';
 
     my $action_return;
 
@@ -5661,10 +5668,10 @@ sub do_d_describe {
 	my $desc_file;
 	if (-d "$shareddir/$path") {
 	    $action_return = 'd_read';
-	    $desc_file = "$shareddir/$dir$file/$desc";
+	    $desc_file = "$shareddir/$dir$file/.desc";
 	} else {
 	    $action_return = 'd_editfile';
-	    $desc_file = "$shareddir/$dir$desc.$file";
+	    $desc_file = "$shareddir/$dir.desc.$file";
 	}
 
 	if (-e "$desc_file"){
@@ -5745,7 +5752,7 @@ sub do_d_savefile {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/'.$shared;
+    my $shareddir =  $expl.'/'.$list_name.'/shared';
 
 ####  Controls
     ### action relative to a list ?
@@ -5779,7 +5786,7 @@ sub do_d_savefile {
     }
 
     ### Document isn't a description file
-    unless ($path !~ /$desc/) {
+    unless ($path !~ /\.desc/) {
 	&wwslog('info',"do_d_savefile : $shareddir/$path : description file");
 	$param->{'error'}{'path'} = $path;
 	&message('no_such_document');
@@ -5831,12 +5838,12 @@ sub do_d_savefile {
 	$path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
 	$dir = $1;
 	$file = $3;
-	if (-e "$shareddir/$dir$desc.$file"){
+	if (-e "$shareddir/$dir.desc.$file"){
 
 	    # if description file already exists : open it and modify it
-	    %desc_hash = &get_desc_file ("$shareddir/$dir$desc.$file");
+	    %desc_hash = &get_desc_file ("$shareddir/$dir.desc.$file");
 	    
-	    open DESC,">$shareddir/$dir$desc.$file"; 
+	    open DESC,">$shareddir/$dir.desc.$file"; 
 
 	    # information not modified
 	    print DESC "title\n  $desc_hash{'title'}\n\n"; 
@@ -5854,8 +5861,8 @@ sub do_d_savefile {
 	} else {
 	    # Creation of a description file if author is known
 		
-	    unless (open (DESC,">$shareddir/$dir$desc.$file")) {
-		&wwslog('info',"do_d_savefile: cannot create description file $shareddir/$dir$desc.$file");
+	    unless (open (DESC,">$shareddir/$dir.desc.$file")) {
+		&wwslog('info',"do_d_savefile: cannot create description file $shareddir/$dir.desc.$file");
 	    }
 	    # description
 	    print DESC "title\n \n\n";
@@ -5901,7 +5908,7 @@ sub do_d_overwrite {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/'.$shared;
+    my $shareddir =  $expl.'/'.$list_name.'/shared';
 
     # Parameters of the uploaded file
     my $fh = $query->upload('uploaded_file');
@@ -5929,7 +5936,7 @@ sub do_d_overwrite {
     }
 
     ### Document isn't a description file?
-    unless ($path !~ /$desc/) {
+    unless ($path !~ /\.desc/) {
 	$param->{'error'}{'path'} = $path;
 	&wwslog('info',"do_d_overwrite : $shareddir/$path : description file");
 	&message('no_such_document');
@@ -5993,11 +6000,11 @@ sub do_d_overwrite {
     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
     $dir = $1;
     $file = $3;
-    if (-e "$shareddir/$dir$desc.$file"){
+    if (-e "$shareddir/$dir.desc.$file"){
 	# if description file already exists : open it and modify it
-	%desc_hash = &get_desc_file ("$shareddir/$dir$desc.$file");
+	%desc_hash = &get_desc_file ("$shareddir/$dir.desc.$file");
 	
-	open DESC,">$shareddir/$dir$desc.$file"; 
+	open DESC,">$shareddir/$dir.desc.$file"; 
 	
 	# information not modified
 	print DESC "title\n  $desc_hash{'title'}\n\n"; 
@@ -6012,8 +6019,8 @@ sub do_d_overwrite {
 	close DESC;
     } else {
 	# Creation of a description file
-	unless (open (DESC,">$shareddir/$dir$desc.$file")) {
-	    &wwslog('info',"do_d_overwrite : Cannot create description file $shareddir/$dir$desc.$file");
+	unless (open (DESC,">$shareddir/$dir.desc.$file")) {
+	    &wwslog('info',"do_d_overwrite : Cannot create description file $shareddir/$dir.desc.$file");
 	    return undef;
 	}
 	# description
@@ -6062,7 +6069,7 @@ sub do_d_upload {
     my $list_name = $list->{'name'};
    
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/'.$shared;
+    my $shareddir =  $expl.'/'.$list_name.'/shared';
 
     # Parameters of the uploaded file
     my $fn = $query->param('uploaded_file');
@@ -6091,7 +6098,7 @@ sub do_d_upload {
     unless ($fname =~ /^\w/ and 
 	    $fname =~ /\w$/ and 
 	    $fname =~ /^[\w\-\.]+$/ and
-	    $fname !~ /$desc/) {
+	    $fname !~ /\.desc/) {
 	$param->{'error'}{'name'}=$fname;
 	&message('incorrect_name');
 	&wwslog('info',"do_d_upload : Unable to create file $fname : incorrect name");
@@ -6158,7 +6165,7 @@ sub do_d_upload {
 
 # Creation of the description file
     unless (open (DESC,">$shareddir/$path.desc.$fname")) {
-	&wwslog('info',"do_d_upload: cannot create description file $shareddir/$desc.$path$fname");
+	&wwslog('info',"do_d_upload: cannot create description file $shareddir/.desc.$path$fname");
     }
     
     print DESC "title\n \n\n"; 
@@ -6204,7 +6211,7 @@ sub do_d_delete {
      # path of the shared directory
     #my $list_name = $in{'list'};
     my $list_name = $list->{'name'};
-    my $shareddir =  $expl.'/'.$list_name.'/'.$shared;
+    my $shareddir =  $expl.'/'.$list_name.'/shared';
 
 #### Controls
     ### action relative to a list ?
@@ -6224,7 +6231,7 @@ sub do_d_delete {
     }
 
     ### Document isn't a description file?
-    unless ($document !~ /^$desc/) {
+    unless ($document !~ /^\.desc/) {
 	$param->{'error'}{'path'} = $path;
 	&wwslog('info',"do_d_delete : $shareddir/$path : description file");
 	&message('no_such_document');
@@ -6281,10 +6288,10 @@ sub do_d_delete {
 
 
 	# removing of the description file if exists
-	if (-e "$doc/$desc") {
-	    unless (unlink("$doc/$desc")) {
+	if (-e "$doc/\.desc") {
+	    unless (unlink("$doc/.desc")) {
 		&message('failed');
-		&wwslog('info',"do_d_delete : Failed to erase $doc/$desc : $!");
+		&wwslog('info',"do_d_delete : Failed to erase $doc/.desc : $!");
 		return undef;
 	    }
 	}   
@@ -6313,9 +6320,9 @@ sub do_d_delete {
 	    return undef;
 	}
 	# removing of the description file if exists
-	if (-e "$shareddir/$current_directory$desc.$document") {
-	    unless (unlink("$shareddir/$current_directory$desc.$document")) {
-		&wwslog('info',"do_d_delete: failed to erase $shareddir/$current_directory$desc.$document");
+	if (-e "$shareddir/$current_directory.desc.$document") {
+	    unless (unlink("$shareddir/$current_directory.desc.$document")) {
+		&wwslog('info',"do_d_delete: failed to erase $shareddir/$current_directory.desc.$document");
 	    }
 	}   
     }
@@ -6370,7 +6377,7 @@ sub do_d_create_dir {
     unless ($name_doc =~ /^\w/ and 
 	    $name_doc =~ /\w$/ and 
 	    $name_doc =~ /^[\w\-\.]+$/ and
-	    $name_doc !~ /$desc/) {
+	    $name_doc !~ /\.desc/) {
 	$param->{'error'}{'name'} = $name_doc;
 	&message('incorrect_name');
 	&wwslog('info',"do_d_create_dir : Unable to create directory $name_doc : incorrect name");
@@ -6395,7 +6402,7 @@ sub do_d_create_dir {
 ### End of controls
     
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/'.$shared;
+    my $shareddir =  $expl.'/'.$list_name.'/shared';
     
     my $document = "$shareddir/$path$name_doc";
     
@@ -6411,9 +6418,9 @@ sub do_d_create_dir {
     }
 
     # Creation of a default description file 
-    unless (open (DESC,">$document/$desc")) {
+    unless (open (DESC,">$document/.desc")) {
 	&message('failed');
-	&wwslog('info','do_d_create_dir : annot create description file %s', $document.'/'.$desc);
+	&wwslog('info','do_d_create_dir : annot create description file %s', $document.'/.desc');
     }
 
     print DESC "title\n \n\n"; 
@@ -6449,7 +6456,7 @@ sub do_d_control {
     my $list_name = $list->{'name'};
        
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/'.$shared;
+    my $shareddir =  $expl.'/'.$list_name.'/shared';
     ## $path must have no slash at its end
     $path = &format_path('without_slash',$path);
 
@@ -6478,7 +6485,7 @@ sub do_d_control {
     }
 
     ### Document isn't a description file?
-    unless ($path !~ /$desc/) {
+    unless ($path !~ /\.desc/) {
 	$param->{'error'}{'path'} = $path;
 	&wwslog('info',"do_d_control : $shareddir/$path : description file");
 	&message('no_such_document');
@@ -6506,9 +6513,9 @@ sub do_d_control {
     
     # path of the description file
     if (-d "$shareddir/$path") {
-	$desc_file = "$shareddir/$1$3/$desc";
+	$desc_file = "$shareddir/$1$3/.desc";
     } else {
-	$desc_file = "$shareddir/$1$desc.$3";
+	$desc_file = "$shareddir/$1.desc.$3";
     }
 
     # Description of the file
@@ -6602,7 +6609,7 @@ sub do_d_change_access {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/'.$shared;
+    my $shareddir =  $expl.'/'.$list_name.'/shared';
 
 ####  Controls
     ### action relative to a list ?
@@ -6652,9 +6659,9 @@ sub do_d_change_access {
 
     my $desc_file;
     if (-d "$shareddir/$path") {
-	$desc_file = "$shareddir/$1$3/$desc";
+	$desc_file = "$shareddir/$1$3/.desc";
     } else {
-	$desc_file = "$shareddir/$1$desc.$3";
+	$desc_file = "$shareddir/$1.desc.$3";
     }
 
     if (-e "$desc_file"){
@@ -6727,7 +6734,7 @@ sub do_d_set_owner {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/'.$shared;
+    my $shareddir =  $expl.'/'.$list_name.'/shared';
 
 ####  Controls
     ### action relative to a list ?
@@ -6761,9 +6768,9 @@ sub do_d_set_owner {
     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
     $dir = $1; $file = $3;
     if (-d "$shareddir/$path") {
-	$desc_file = "$shareddir/$dir$file/$desc"; 
+	$desc_file = "$shareddir/$dir$file/.desc"; 
     }else {
-	$desc_file = "$shareddir/$dir$desc.$file";
+	$desc_file = "$shareddir/$dir.desc.$file";
     }       
 
     my %mode;
