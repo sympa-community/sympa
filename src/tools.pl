@@ -614,7 +614,7 @@ sub sympa_checksum {
 
 # create a cipher
 sub ciphersaber_installed {
-    if (require (Crypt::CipherSaber)) {
+    if (require Crypt::CipherSaber) {
 	return &Crypt::CipherSaber->new($Conf{'cookie'});
     }else{
 	return ('no_cipher');
@@ -639,7 +639,7 @@ sub decrypt_password {
     return $inpasswd unless ($inpasswd =~ /^crypt\.(.*)$/) ;
     $inpasswd = $1;
 
-    unless (define($cipher)){
+    unless (defined($cipher)){
 	$cipher = ciphersaber_installed();
     }
     if ($cipher eq 'no_cipher') {
