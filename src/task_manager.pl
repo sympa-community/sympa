@@ -1106,6 +1106,9 @@ sub expire_bounce {
     do_log('debug2','expire_bounce(%d)',$delay);
     foreach my $listname (&List::get_lists('*') ) {
 	my $list = new List ($listname);
+
+	next unless $list;
+
 	# the reference date is the date until which we expire bounces in second
         # the latest_distribution_date is the date of last distribution #days from 01 01 1970
 	if ( ($list->{'admin'}{'user_data_source'} eq 'include' )||( $list->{'admin'}{'user_data_source'} eq 'file' )) {
