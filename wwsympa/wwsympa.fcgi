@@ -3357,6 +3357,12 @@ sub do_editfile {
 
 	## Look for the template
 	$param->{'filepath'} = &tools::get_filename('etc','templates/'.$file,$robot, $list);
+
+	## Default for 'homepage' is 'info'
+	if (($in{'file'} eq 'homepage') &&
+	    ! $param->{'filepath'}) {
+	    $param->{'filepath'} = &tools::get_filename('etc','templates/'.'info',$robot, $list);
+	}
     }else {
 	unless (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
 	    &error_message('missing_arg', {'argument' => 'list'});
@@ -3371,6 +3377,7 @@ sub do_editfile {
 
 	## Look for the template
 	$param->{'filepath'} = &tools::get_filename('etc','templates/'.$file,$robot);
+
     }
 
     if ($param->{'filepath'} && (! -r $param->{'filepath'})) {

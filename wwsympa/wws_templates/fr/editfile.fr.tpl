@@ -11,6 +11,9 @@
   <INPUT TYPE="submit" NAME="action_savefile" VALUE="Sauvegarder">
 
 [ELSE]
+Vous pouvez éditer ci-dessous les messages de services et d'autres fichiers associés
+à votre liste :<BR><BR>
+
 <DD><INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	     <SELECT NAME="file">
 	      [FOREACH f IN files]
