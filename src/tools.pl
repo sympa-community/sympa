@@ -1033,12 +1033,8 @@ sub virus_infected {
         # impossible to look for viruses with no option set
         return 0 unless ($Conf{'antivirus_args'});
     
-        #do_log('err',"Running: $Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ;
-
         open (ANTIVIR,"$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ;
 	
-	#do_log('err', "Ok, entering virus_infected(), sweep part... ($work_dir) --liuk");
-        
 	while (<ANTIVIR>) {
 	    if (/Virus\s+(.*)/) {
 		$virusfound = $1;
@@ -1052,7 +1048,26 @@ sub virus_infected {
 	if (( $status == 3) and not($virusfound)) {
 	    $virusfound = "unknown";
 	}
-    }        
+
+	## Clam antivirus
+    }elsif ("${Conf{'antivirus_path'}}" =~ /\/clamscan$/) {
+	
+        open (ANTIVIR,"$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ;
+	
+	while (<ANTIVIR>) {
+	    if (/^\S+:\s(.*)\sFOUND$/) {
+		$virusfound = $1;
+	    }
+	}       
+	close ANTIVIR;
+        
+	my $status = $?/256 ;
+        
+	## Clamscan status =1 (*256) => virus
+	if (( $status == 1) and not($virusfound)) {
+	    $virusfound = "unknown";
+	}
+    }         
 
     ## Error while running antivir, notify listmaster
     if ($error_msg) {

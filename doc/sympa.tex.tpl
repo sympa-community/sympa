@@ -338,7 +338,7 @@ in a single software package, including:
 
     \item \textbf {Antivirus scanner} : \Sympa extracts attachements from incoming
 	messages and run a virus scanner on them. Curently working with McAfee/uvscan,
-	Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall.
+	Fsecure/fsav, Sophos, AVP, Trend Micro/VirusWall and Clam Antivirus.
 	(See ref {antivirus}, page~\pageref {antivirus})
 
     \item Inclusion of the subscribers of one list among the subscribers of
@@ -2019,7 +2019,15 @@ antivirus_args  -nc -nb -ss -archive
 \end{verbatim}
 \end {quote}
 
-       	
+Exemple with Clam :
+\begin {quote}
+\begin{verbatim}
+antivirus_path  /usr/local/bin/clamscan
+antivirus_args  --stdout
+\end{verbatim}
+\end {quote}
+      	
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % WWSympa
@@ -6622,7 +6630,7 @@ of bouncing addresses.
 In this case you must set the \cfkeyword {antivirus\_path} and 
 \cfkeyword {antivirus\_args} configuration parameters
  (see \ref {Antivirus plug-in}, page~\pageref {Antivirus plug-in}.
-\Sympa is already compatible with McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall.
+\Sympa is already compatible with McAfee/uvscan, Fsecure/fsav, Sophos, AVP, Trend Micro/VirusWall and Clam Antivirus.
 For each mail received, \Sympa extracts its MIME parts in the \tildedir {sympa/spool/tmp/antivirus} directory and
 then calls the antivirus software to check them.
 When a virus is detected, \Sympa looks for the virus name in the virus scanner STDOUT and sends a
