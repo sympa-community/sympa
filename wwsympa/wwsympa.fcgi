@@ -346,8 +346,14 @@ my $pinfo = &List::_apply_defaults();
 
 my (%in, $query);
 
-## Main loop
+## If using fast_cgi, it is usefull to initialize all list context
+if ($wwsconf->{'use_fast_cgi'}) {
+    foreach my $l ( &List::get_lists('*') ) {
+	my $list = new List ($l);
+    }
+}
 
+## Main loop
 while ($query = &new_loop()) {
 
     undef $param;
