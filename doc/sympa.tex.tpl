@@ -1003,12 +1003,22 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 \item \option {--with-group=LOGIN}, set sympa group name (default sympa)\\
 \Sympa daemons are running under this UID.
 
-\item \option {--with-sendmail\_aliases=ALIASFILE}, set sendmail aliases file (default /etc/mail/sympa\_aliases)\\
-This is used by the alias\_manager script.
+\item \option {--with-sendmail\_aliases=ALIASFILE}, set aliases file to be used by Sympa (default /etc/mail/sympa\_aliases)\\
+
+\item \option {--with-virtual_aliases=ALIASFILE}, set postfix virtual file to be used by Sympa (default /etc/mail/sympa_virtual)\\
+
+This is used by the \file {alias\_manager.pl} script :
 
 \item \option {--with-newaliases=FULLPATH}, set path to sendmail newaliases command (default /usr/bin/newaliases)
 
 \item \option {--with-newaliases\_arg=ARGS}, set arguments to newaliases command (default NONE)
+
+This is used by the \file {postfix\_manager.pl} script :
+
+\item \option {--with-postmap=FULLPATH}, set path to postfix postmap command (default /usr/sbin/postmap)
+
+\item \option {--with-postmap_arg=ARGS}, set arguments to postfix postmap command (default NONE)
+
 
 \end {itemize}
 
@@ -2133,8 +2143,13 @@ To run \WWSympa with FastCGI, you need to install :
 	If this parameter is undefined, then you will have to manage your
 	aliases manually.
 	Provide the path to a script that will install aliases for a new list
-	and delete aliases for closed lists. You can use the \tildefile {sympa/bin/alias\_manager.pl}
-	script distributed with \Sympa. The script will receive the following arguments :
+	and delete aliases for closed lists. You can use the one of the following scripts distributed with 
+	\Sympa: \tildefile {sympa/bin/alias\_manager.pl} for sendmail-style aliases with a single
+	aliases file or \tildefile {sympa/bin/postfix\_manager.pl} for postfix-like aliases using
+	an additional \index{virtusertable}.
+
+
+	Theses expect the following arguments :
 	\begin{enumerate}
 		\item add | del
 		\item \texttt{<}list name\texttt{>}
@@ -2146,6 +2161,10 @@ To run \WWSympa with FastCGI, you need to install :
 	by the \index{SENDMAIL\_ALIASES} variable in the main Makefile (see \ref {makefile},  
 	page~\pageref {makefile}). It runs a \unixcmd{newaliases} command (via
 	\file {aliaswrapper}), after any changes to aliases file.
+
+	\tildefile {sympa/bin/postfix\_manager.pl} also requires \index{VIRTUAL_ALIASES}
+	variable to be defined in the Makefile. It runs a \unixcmd{postmap} command (via
+	\file {virtualwrapper}), after any changes to virtualtable file.
 
 	\subsection {arc\_path}
 

@@ -253,10 +253,10 @@ my @params = ({'title' => 'Directories and file location'},
 	       'advice' =>'Proposed value is quite low, you can rise it up to 100, 200 or even 300 with powerfull systems.'},
 
 	       {'name' => 'alias_manager',
-	       'query' => 'path to program managing alias',
-	       'file' => 'sympa.conf','edit' => '0',
-		'comment' => 'alias_manager /home/sympa/bin/alias_manager.pl',
-	       'advice' =>'May be you have to look at the one proposed by Sympa authors and adapt it to your system'},
+		'query' => 'path to program managing alias (--SBINDIR--/alias_manager.pl | --SBINDIR--/postfix_manager.pl) ',
+		'file' => 'wwsympa.conf','edit' => '1',
+		'comment' => 'alias_manager --SBINDIR--/alias_manager.pl'
+		},
 
 	       {'title' => 'pluging'},
 
