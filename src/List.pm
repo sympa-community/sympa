@@ -3729,7 +3729,7 @@ sub verify {
 	    return -1 * $negation ;
 	}
 
-	if ( &is_listmaster($args[0]),$context->{'robot_domain'}) {
+	if ( &is_listmaster($args[0])) {
 	    return $negation;
 	}else{
 	    return -1 * $negation;
