@@ -4667,7 +4667,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      for(@suf) {
 	 push @addresses, $list."-$_\@".$domain;
      }
-     push @adresses,"$list\@" . $domain;
+     push @addresses,"$list\@" . $domain;
 
      unless (require Net::SMTP) {
 	 do_log ('err',"Unable to use Net library, Net::SMTP required, install it (CPAN) first");
