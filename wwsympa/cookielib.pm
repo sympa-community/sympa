@@ -58,7 +58,7 @@ sub set_cookie {
     unless ($email) {
 	return undef;
     }
-    my ($expiration,$domain);
+    my $expiration;
     if ($expires =~ /now/i) {
 
 	## 10 years ago
@@ -68,9 +68,7 @@ sub set_cookie {
     }
 
     if ($http_domain eq 'localhost') {
-	$domain="";
-    }else{
-	$domain='domain='.$http_domain.'; ';
+	$http_domain="";
     }
 
     my $value = sprintf '%s:%s', $email, &get_mac($email,$secret);
@@ -78,14 +76,14 @@ sub set_cookie {
     if ($expires =~ /session/i) {
 	$cookie = new CGI::Cookie (-name    => 'sympauser',
 				   -value   => $value,
-				   -domain  => $domain,
+				   -domain  => $http_domain,
 				   -path    => '/'
 				   );
     }else {
 	$cookie = new CGI::Cookie (-name    => 'sympauser',
 				   -value   => $value,
 				   -expires => $expiration,
-				   -domain  => $domain,
+				   -domain  => $http_domain,
 				   -path    => '/'
 				   );
     }
