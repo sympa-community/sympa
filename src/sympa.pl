@@ -78,6 +78,11 @@ my %options;
 
 $main::options{'debug2'} = 1 if ($main::options{'debug'});
 
+# this loop is run foreach HUP signal received
+my $signal = 0;
+
+while (1) {
+
 my @parser_param = ($*, $/);
 my %loop_info;
 my %msgid_table;
@@ -263,20 +268,26 @@ print LCK "$$\n";
 close(LCK);
 
 ## Most initializations have now been done.
-do_log('notice', "Sympa $Version Started");
-printf "Sympa $Version Started\n";
+if ($signal = 'hup' ) {
+    do_log('notice', "Sympa $Version reload config");
+    printf "Sympa $Version reload config\n";
+    $signal = '0';
+}else{
+    do_log('notice', "Sympa $Version started");
+    printf "Sympa $Version started\n";
+}
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
+$SIG{'HUP'} = 'sighup';
 
-my $end = 0;
 my $index_queuedigest = 0; # verify the digest queue
 my $index_queueexpire = 0; # verify the expire queue
 my @qfile;
 
 ## This is the main loop : look after files in the directory, handles
 ## them, sleeps a while and continues the good job.
-while (!$end) {
+while (!$signal) {
 
     &Language::SetLang($Language::default_lang);
 
@@ -414,6 +425,9 @@ while (!$end) {
 ## Disconnect from Database
 List::db_disconnect if ($List::dbh);
 
+last if ($signal = 'term'); 
+}
+
 do_log('notice', 'Sympa exited normally due to signal');
 unless (unlink $Conf{'pidfile'}) {
     fatal_err("Could not delete %s, exiting", $Conf{'pidfile'});
@@ -426,7 +440,15 @@ exit(0);
 sub sigterm {
     do_log('notice', 'signal TERM received, still processing current task');
 
-    $end = 1;
+    $signal = 'term';
+}
+
+## When we catch SIGHUP, just change the value of the loop
+## variable.
+sub sighup {
+    do_log('notice', 'signal HUP received, still processing current task');
+
+    $signal = 'hup';
 }
 
 ## Handles a file received and files in the queue directory. This will
