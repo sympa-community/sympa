@@ -2,17 +2,27 @@
 
 [IF status=open]
 
-Votre liste est enregistrée. Vous pouvez l'essayer et la modifier
-en utilisant le bouton <b>admin</b>
+Votre liste est créée.<BR> 
+Vous pouvez la configurer via le bouton <b>admin</b> ci-contre.
 
-L'installation effective des alias de messagerie permettant
-d'écrire dans la liste dépend du listmaster, il est donc possible
-l'adresse de votre liste ne soit pas encore reconnue.
-
+[IF auto_aliases]
+Les alias ont été installés.
+[ELSE]
+ <TABLE BORDER=1>
+ <TR BGCOLOR="--LIGHT_COLOR--"><TD align=center>Les alias à installer </TD></TR>
+ <TR>
+ <TD>
+ <pre><code>
+ [aliases]
+ </code></pre>
+ </TD>
+ </TR>
+ </TABLE>
+[ENDIF]
 [ELSE]
 
-Votre demande de crétion de liste est enregistrée. Vous pouvez 
+Votre demande de création de liste est enregistrée. Vous pouvez 
 la modifier en utilisant le bouton <b>admin</b>. Mais cette liste
-sera effectivement installée et rendue visible sur ce serveur
-quand le listmaster validera sa création.
+ne sera effectivement installée et rendue visible sur ce serveur
+que quand le listmaster validera sa création.
 [ENDIF]
