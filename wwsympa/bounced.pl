@@ -181,7 +181,7 @@ while (!$end) {
 	fatal_err("Can't open dir %s: %m", $queue); ## No return.
     }
 
-    my @files =  (sort grep(!/^(\.{1,2}|T\..*)$/, readdir DIR ));
+    my @files =  (sort grep(!/^(\.{1,2}|T\..*|BAD\-.*)$/, readdir DIR ));
     closedir DIR;
     foreach my $file (@files) {
 
@@ -383,7 +383,8 @@ while (!$end) {
 	}
 	
 	unless (unlink("$queue/$file")) {
-	    do_log ('notice',"Could not remove $queue/$file ; $0 might NOT be running with the right UID\nRenaming file to $queue/BAD-$file.");
+	    do_log ('err',"Could not remove $queue/$file ; $0 might NOT be running with the right UID or file was not created with the right UID");
+	    &do_log('err',"Renaming file to $queue/BAD-$file.");
 	    rename "$queue/$file", "$queue/BAD-$file";
 	    last;
 	}
