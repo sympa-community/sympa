@@ -118,7 +118,9 @@
             </FORM>
       </TD>
       <TD VALIGN="middle">
-      This other email address should be known by Sympa.  
+      This other email address, that should be known by Sympa, will be recognized by Sympa as 
+	an alternate email address. You will also be able to unify your subscriptions with
+	your main email address.  
       </TD>
       </TR>
       </TABLE>

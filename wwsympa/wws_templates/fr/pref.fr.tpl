@@ -121,6 +121,7 @@
             </FORM>
       </TD>
       <TD VALIGN="middle">
-       Cette autre adresse email doit être connue de Sympa.      </TD>
+       Cette autre adresse email, qui doit être connue de Sympa, sera reconnue comme une adresse
+	alternative. Vous pourrez unifier vos abonnement avec votre adresse principale.      </TD>
       </TR>
     </TABLE>

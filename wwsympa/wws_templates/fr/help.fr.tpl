@@ -49,7 +49,7 @@ si vous êtes identifiés préalablement (via le bouton login). Exemple :
 </TR>
 </TABLE>
 </TD><TD> : certaines listes sont
-accéssibles à certaines catégories de personnes. Si vous n'êtes pas identfié,
+accessibles à certaines catégories de personnes. Si vous n'êtes pas identfié,
 cette page ne délivre que la liste des listes publiques. 
 </TD></TR></TABLE>
 
