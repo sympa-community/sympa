@@ -2554,7 +2554,7 @@ sub send_msg_digest {
 		 'return_path' => "$self->{'name'}-owner\@$self->{'admin'}{'host'}",
 		 'reply' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
 		 'to' => "$self->{'name'}\@$self->{'admin'}{'host'}",
-		 'table_of_content' => sprintf(gettext("Table of content")),
+		 'table_of_content' => sprintf(gettext("Table of contents:")),
 		 'boundary1' => '----------=_'.&tools::get_message_id($robot),
 		 'boundary2' => '----------=_'.&tools::get_message_id($robot),
 		 };
@@ -4774,7 +4774,15 @@ sub search{
 	    next;
 	}
 	
-	unless ($ldap->bind()) {
+	my $status; 
+
+	if (defined $ldap_conf{'bind_dn'} && defined $ldap_conf{'bind_password'}) {
+	    $status = $ldap->bind($ldap_conf{'bind_dn'}, password =>$ldap_conf{'bind_password'});
+	}else {
+	    $status = $ldap->bind();
+	}
+
+	unless ($status) {
 	    do_log('notice','Unable to bind to the LDAP server %s:%d',$host, $port);
 	    next;
 	}
@@ -6717,7 +6725,7 @@ sub request_auth {
 	    $command = "auth $keyauth $cmd $listname $email";
 	    my $url = "mailto:$robot_email?subject=$command";
 	    $url =~ s/\s/%20/g;
-	    $body = sprintf gettext("Someone (hopefully you) asked for your e-mail address\nto be removed from list '%s'.\nIf you want this action to be taken, please \n\n- reply to this mail\nOR\n- send a message to '%s' with subject\n %s\nOR\n- hit the following mailto %s\n\nThis can be done via the URL %s\nIf you do not want this action to be taken, you can safely ignore\nthis message"), $listname, $robot_email ,$command, $url;
+	    $body = sprintf gettext("Someone (hopefully you) asked for your e-mail address\nto be removed from list '%s'.\nIf you want this action to be taken, please \n\n- reply to this mail\nOR\n- send a message to '%s' with subject\n %s\nOR\n- hit the following mailto %s\n\nIf you do not want this action to be taken, you can safely ignore\nthis message"), $listname, $robot_email ,$command, $url;
 	    
 	}elsif ($cmd =~ /subscribe$/){
 	    $keyauth = $self->compute_auth ($email, 'subscribe');
