@@ -414,6 +414,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      &Language::SetLang($Language::default_lang);
 
+     ## Check effective ID
+     unless ($> eq (getpwnam('--USER--'))[2]) {
+	 &error_message('incorrect_server_config');
+	 &wwslog('err','Config error: wwsympa should with UID %s (instead of %s)', (getpwnam('--USER--'))[2], $>);
+     }
+
      ## Get params in a hash
  #    foreach ($query->param) {
  #      $in{$_} = $query->param($_);
