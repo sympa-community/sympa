@@ -2434,6 +2434,7 @@ sub do_subscribe {
     if ($sub_is =~ /owner/) {
 	my $keyauth = $list->compute_auth($param->{'user'}{'email'}, 'add');
 	$list->send_sub_to_owner($param->{'user'}{'email'}, $keyauth, &Conf::get_robot_conf($robot, 'sympa'), $param->{'user'}{'gecos'});
+	$list->store_susbscription_request($param->{'user'}{'email'});
 	&message('sent_to_owner');
 	&wwslog('info', 'do_subscribe: subscribe sent to owner');
 
