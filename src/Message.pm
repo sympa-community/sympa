@@ -132,15 +132,20 @@ sub new {
 	if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
 	    ($hdr->get('Content-Type') !~ /signed-data/)){
 	    my ($dec, $dec_as_string) = &tools::smime_decrypt ($message->{'msg'}, $message->{'list'});
-	    if ($dec) {
-		$message->{'smime_crypted'} = 'smime_crypted';
-		$message->{'orig_msg'} = $message->{'msg'};
-		$message->{'msg'} = $dec;
-		$message->{'msg_as_string'} = $dec_as_string;
-		$hdr = $dec->head;
-		do_log('debug', "message %s has been decrypted", $file);
+	    
+	    unless (defined $dec) {
+		do_log('debug', "Message %s could not be decrypted", $file);
+		return undef;
+		## We should the sender and/or the listmaster
 	    }
-	    ## We should process errors here (0 != undef)
+
+	    $message->{'smime_crypted'} = 'smime_crypted';
+	    $message->{'orig_msg'} = $message->{'msg'};
+	    $message->{'msg'} = $dec;
+	    $message->{'msg_as_string'} = $dec_as_string;
+	    $hdr = $dec->head;
+	    do_log('debug', "message %s has been decrypted", $file);
+
 	}
 	
 	## Check S/MIME signatures
