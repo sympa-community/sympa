@@ -1849,9 +1849,9 @@ fi;
 ## Lock directory
 LOCKDIR=/var/lock/subsys
 
-# Check whether --with-initdir or --without-initdir was given.
-if test "${with_initdir+set}" = set; then
-  withval="$with_initdir"
+# Check whether --with-lockdir or --without-lockdir was given.
+if test "${with_lockdir+set}" = set; then
+  withval="$with_lockdir"
   LOCKDIR="$withval"
 fi;
 
