@@ -122,6 +122,11 @@ sub new {
 		}
 	    
 	    $message->{'list'} = new List ($listname, $robot);
+	    unless ($message->{'rcpt'}) {
+		do_log('err', 'Could not create List object for list %s in robot %s', $listname, $robot);
+		return undef;
+	    }
+
 	}
     }
 
