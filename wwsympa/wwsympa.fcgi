@@ -89,6 +89,8 @@ unless (&Conf::load( $sympa_conf_file )) {
     exit (-1);
 }
 
+$log_level = $Conf{'log_level'} if ($Conf{'log_level'}); 
+
 &mail::set_send_spool($Conf{'queue'});
 
 if ($wwsconf->{'use_fast_cgi'}) {
@@ -361,7 +363,11 @@ while ($query = &new_loop()) {
     undef $param;
     undef $list;
     undef $robot;
-    
+
+    undef $log_level;
+    $log_level = $Conf{'log_level'} if ($Conf{'log_level'}); 
+    $log_level |= 0;
+
     &Language::SetLang($Language::default_lang);
 
     ## Get params in a hash
@@ -371,7 +377,7 @@ while ($query = &new_loop()) {
     %in = $query->Vars;
 
     foreach my $k (keys %::changed_params) {
-	&do_log('debug', 'Changed Param: %s', $k);
+	&do_log('debug3', 'Changed Param: %s', $k);
     }
 
     ## Free terminated sendmail processes
@@ -385,6 +391,7 @@ while ($query = &new_loop()) {
 
     $robot = $Conf{'robot_by_http_host'}{$ENV{'SERVER_NAME'}};
     $robot = $Conf{'host'} unless $robot;
+    $log_level = $Conf{'robots'}{$robot}{'log_level'};
 
     ## Sympa parameters in $param->{'conf'}
     if (defined $Conf{'robots'}{$robot}) {
@@ -870,7 +877,7 @@ sub new_loop {
 }
 
 sub get_parameters {
-#    &wwslog('debug', 'get_parameters');
+#    &wwslog('debug4', 'get_parameters');
 
     ## CGI URL
     if ($ENV{'HTTPS'} eq 'on') {
@@ -904,15 +911,18 @@ sub get_parameters {
 	}
 	
 	## debug mode
-#	if ($params[0] eq 'debug') {
-#	    shift @params;
-#	    $Getopt::Std::opt_d = 1;
-#	}elsif ($params[0] eq 'debug2') {
-#	    shift @params;
-#	    $Getopt::Std::opt_d = 1;
-#	    $Getopt::Std::opt_D = 1;
-#	}
-	 
+	if ($params[0] =~ /debug(\d)?/) {
+	    shift @params;
+	    if ($1) { 
+		$main::options{'debug_level'} = $1 if ($1);
+	    }else{
+		$main::options{'debug_level'} = 1 ;
+	    }
+	}else{
+	    $main::options{'debug_level'} = 0 ;
+	} 
+	do_log ('debug2', "xxxxxxxxxxxxxxxx  debug level $main::options{'debug_level'}");
+	
 	if ($#params >= 0) {
 	    $in{'action'} = $params[0];
 	    
@@ -1552,7 +1562,7 @@ sub is_ldap_user {
 		last;
 	    }
 
-	    &do_log('debug','Host: %s', $host);
+	    &do_log('debug4','Host: %s', $host);
 	    
 	    my @alternative_conf = split(/,/,$ldap->{'alternative_email_attribute'});
 	    my $attrs = $ldap->{'email_attribute'};
@@ -3328,7 +3338,7 @@ sub do_viewmod {
 	chdir $tmp_dir;
 	open ARCMOD, "$wwsconf->{'mhonarc'}  -single -rcfile $mhonarc_ressources -definevars \"listname=$list->{'name'} hostname=$list->{'admin'}{'host'} \" $Conf{'queuemod'}/$list->{'name'}_$in{'id'}|";
 	open MSG, ">msg00000.html";
-	&do_log('debug', "$wwsconf->{'mhonarc'}  -single -rcfile $mhonarc_ressources -definevars \"listname=$list->{'name'} hostname=$list->{'admin'}{'host'} \" $Conf{'queuemod'}/$list->{'name'}_$in{'id'}|");
+	&do_log('debug4', "$wwsconf->{'mhonarc'}  -single -rcfile $mhonarc_ressources -definevars \"listname=$list->{'name'} hostname=$list->{'admin'}{'host'} \" $Conf{'queuemod'}/$list->{'name'}_$in{'id'}|");
 	print MSG <ARCMOD>;
 	close MSG;
 	close ARCMOD;
@@ -4171,7 +4181,7 @@ sub list_check_smtp {
     return 0 
 	unless ($smtp_relay && $suffixes);
     my $domain = &Conf::get_robot_conf($robot, 'host');
-    &wwslog('debug', 'list_check_smtp(%s)',$in{'listname'});
+    &wwslog('debug2', 'list_check_smtp(%s)',$in{'listname'});
     @suf = split(/,/,$suffixes);
     return 0 if ! @suf;
     for(@suf) {
@@ -4556,7 +4566,7 @@ sub do_scenario_test {
 
     if ($in{'scenario'}) {
         my $operation = $in{'scenario'};
-	&wwslog('debug', 'do_scenario_test: perform scenario_test');
+	&wwslog('debug4', 'do_scenario_test: perform scenario_test');
 	($param->{'scenario_condition'},$param->{'scenario_auth_method'},$param->{'scenario_action'}) = 
 	    &List::request_action ($operation,$in{'auth_method'},$robot,
 				   {'listname' => $in{'listname'},
@@ -5165,7 +5175,7 @@ sub do_edit_list {
 ## entry in $var (recursive)
 sub _shift_var {
     my ($i, $var, @tokens) = @_;
-#    &do_log('debug','shift_var(%s,%s,%s)',$i, $var, join('.',@tokens));
+#    &do_log('debug2','shift_var(%s,%s,%s)',$i, $var, join('.',@tokens));
     my $newvar;
 
     my $token = shift @tokens;
@@ -5311,7 +5321,7 @@ sub _prepare_edit_form {
 
 sub _prepare_data {
     my ($name, $struct, $data) = @_;
-#    &do_log('debug', '_prepare_data(%s, %s)', $name, $data);
+#    &do_log('debug2', '_prepare_data(%s, %s)', $name, $data);
 
     ## Prepare data structure for the parser
     my $p_glob = {'name' => $name,
@@ -5329,7 +5339,7 @@ sub _prepare_data {
 	    ## Add an empty entry
 	    unless (($name eq 'days') || ($name eq 'reception')) {
 		push @{$data2}, undef;
-		## &do_log('debug', 'xxx Add 1 %s', $name);
+		## &do_log('debug2', 'xxx Add 1 %s', $name);
 	    }
 	}else {
 	    $data2 = [undef];
@@ -8153,7 +8163,8 @@ sub do_compose_mail {
     }else{
 	$param->{'to'} = $list->{'name'} . '@' . $list->{'admin'}{'host'};
     }
-    $param->{'subject'}= $in{'subject'} ;
+    $param->{'subject'}= &MIME::Words::encode_mimewords($in{'subject'});
+
     $param->{'in_reply_to'}= $in{'in_reply_to'};
     return 1;
 }
