@@ -3762,8 +3762,8 @@ uses this parameter.
 	\scenarized {visibility}
 
 \lparam {visibility}
-    \texttt {conceal} $|$
-    \texttt {noconceal}
+%PARSE (scenario,visibility,'\texttt {[name]} $|$')
+
 
 This parameter indicates whether the list should feature in the
 output generated in response to a \mailcmd {LISTS} command. This
@@ -4032,11 +4032,7 @@ The \lparam {subscribe} parameter defines the rules for subscribing to the list.
 Predefined scenarii are :
 
 \lparam {subscribe}
-    \texttt {open} $|$
-    \texttt {owner} $|$
-    \texttt {closed} $|$
-    \texttt {auth} $|$
-
+%PARSE (scenario,subscribe,'\texttt {[name]} $|$')
 
 \begin {itemize}
     \item \lparam {subscribe} \texttt {open}[\texttt {\_notify}]
@@ -4095,10 +4091,7 @@ Predefined scenarii are :
 
 
 \lparam {unsubscribe}
-    \texttt {open}[\texttt {\_notify}] $|$
-    \texttt {auth}[\texttt {\_notify}]
-    \texttt {owner}
-    \texttt {closed}
+%PARSE (scenario,unsubscribe,'\texttt {[name]} $|$')
 
 \begin {itemize}
     \item \lparam {unsubscribe} \texttt {open}
@@ -4135,9 +4128,7 @@ Predefined scenarii are :
 
 
 \lparam {add}
-    \texttt {auth} $|$
-    \texttt {owner}  $|$
-    \texttt {closed}
+%PARSE (scenario,add,'\texttt {[name]} $|$')
 
 \begin {itemize}
     \item \lparam {add} \texttt {owner}
@@ -4172,9 +4163,7 @@ Predefined scenarii are :
 
 
 \lparam {del}
-    \texttt {auth} $|$
-    \texttt {owner}  $|$
-    \texttt {closed}
+%PARSE (scenario,del,'\texttt {[name]} $|$')
 
 \begin {itemize}
     \item \lparam {del} \texttt {owner}
@@ -4210,8 +4199,7 @@ Predefined scenarii are :
 
 
 \lparam {remind}
-    \texttt {owner}  $|$
-    \texttt {listmaster}
+%PARSE (scenario,remind,'\texttt {[name]} $|$')
 
 \begin {itemize}
     \item \lparam {remind} \texttt {owner}
@@ -4234,13 +4222,7 @@ Predefined scenarii are :
 
 Predefined scenarii are :
 
-    \texttt {public} $|$
-    \texttt {private} $|$
-    \texttt {privateoreditorkey} $|$
-    \texttt {privateorpublickey} $|$
-    \texttt {editor} $|$
-    \texttt {editorkey} $|$
-    \texttt {editorkeyonly}
+%PARSE (scenario,send,'\texttt {[name]} $|$')
 
 This parameter specifies who can send messages to the list. Valid values for this
 parameter are pointers to \emph {scenarii}.
@@ -4357,9 +4339,8 @@ administrative requests.
 Predefined scenarii are :
 
 \lparam {review}
-    \texttt {public} $|$
-    \texttt {private} $|$
-    \texttt {owner} $|$
+
+%PARSE (scenario,review,'\texttt {[name]} $|$')
 
 
 \begin {itemize}
