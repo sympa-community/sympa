@@ -103,28 +103,28 @@ sub _find_match
   # Check for a match in subject
   if (($self->subj) && ($_ = $subj) && (&{$self->{function2}}))  
     {
-      $subj =~ s,($self->{key_word}),<B>$1</B>,go; # Bold any matches
+      $subj =~ s,($self->{key_word}),<B>$1</B>,g; # Bold any matches
       $self->subj_count(1);	# Keeping count
       $match = 1;		# We'll be printing this one
     }
   # Check for a match in from
   if (($self->from) && ($_ = $from) && (&{$self->{function2}}))
     {
-      $from =~ s,($self->{key_word}),<B>$1</B>,go;
+      $from =~ s,($self->{key_word}),<B>$1</B>,g;
       $self->from_count(1);
       $match = 1;
     }
   # Check for a match in date
   if (($self->date) && ($_ = $date) && (&{$self->{function2}}))
     {
-      $date =~ s,($self->{key_word}),<B>$1</B>,go;
+      $date =~ s,($self->{key_word}),<B>$1</B>,g;
       $self->date_count(1);
       $match = 1;
     }
   # Check for a match in id
   if (($self->id) && ($_ = $id) && (&{$self->{function2}}))
     {
-      $id =~ s,($self->{key_word}),<B>$1</B>,go;
+      $id =~ s,($self->{key_word}),<B>$1</B>,g;
       $self->id_count(1);
       $match = 1;
     }
@@ -164,7 +164,7 @@ sub _find_match
 		      $line = $matches{$hit} + 1; 
 		      $body_string .= "line $line: $body[$matches{$hit}]";
 		    }
-		$body_string =~ s,($self->{key_word}),<B>$1</B>,go;
+		$body_string =~ s,($self->{key_word}),<B>$1</B>,g;
 		last BODY;
 	      }
 	  }
@@ -178,7 +178,7 @@ sub _find_match
 	    if (($_ = $body[$i]) && (&{$self->{function2}})) 
 	      {
 		($body_string = $body[($i - 1)] . $body[$i] . 
-		 $body[($i + 1)]) =~ s,($self->{key_word}),<B>$1</B>,go;
+		 $body[($i + 1)]) =~ s,($self->{key_word}),<B>$1</B>,g;
 		$self->body_count(1);
 		$match = 1;
 		last BODY;
