@@ -55,6 +55,11 @@ localstatedir='${prefix}/expl'
 ## documentation
 mandir='usr/local/man'
 
+## SYS V init scripts directory
+INITDIR=/etc/rc.d/init.d
+AC_ARG_WITH(initdir, [  --with-initdir=DIR     install System V init script in DIR  (default etc/rc.d/init.d)], [INITDIR="$withval"])
+AC_SUBST(INITDIR)
+
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_MAKE_SET

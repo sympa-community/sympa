@@ -67,7 +67,7 @@ RPMTOPDIR	=	/usr/src/redhat
 MANDIR		=	${mandir}
 
 ## SYSV init scripts directory
-INITDIR		=	$(DIR)/bin
+INITDIR		=	@INITDIR@
 
 ## no more used ##
 BINDIR		=	${bindir}
