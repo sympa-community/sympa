@@ -1866,7 +1866,7 @@ sub expire {
 		next unless ($user->{'date'} < $limitday);
 		push @msg::report, "   $user->{'email'}\n";      
 		&mail::mailback(\@msgexp, sprintf(Msg(6, 21, "Renewal of your subscription to %s"), $name)
-			     , $user->{'email'}, $user->{'email'});
+			     , 'sympa', $user->{'email'}, $user->{'email'});
 	    } while ($user = $list->get_next_user());
 
 	    push @msg::report, "\n";

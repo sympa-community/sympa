@@ -28,8 +28,8 @@ sub set_send_spool {
 ## Mail back a response to the given address.
 ## Data is a reference to an array or a scalar.
 sub mailback {
-   my($data, $subject, $to, @rcpt) = @_;
-   do_log('debug2', 'mail::mailback(%s, %s)', $subject, join(',', @rcpt));
+   my($data, $subject, $from, $to, @rcpt) = @_;
+   do_log('debug2', 'mail::mailback(%s, %s, %s)', $subject, $from, join(',', @rcpt));
 
    my ($fh, $sympa_file);
    
@@ -52,7 +52,11 @@ sub mailback {
    }
    
    printf $fh "To:  %s\n", $to;
-   printf $fh "From: %s\n", sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'sympa'});
+   if ($from eq 'sympa') {
+       printf $fh "From: %s\n", sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'sympa'});
+   }else {
+       printf $fh "From: %s\n", $from;
+   }
    printf $fh "Subject: $subject\n";
    printf $fh "MIME-Version: %s\n", Msg(12, 1, '1.0');
    printf $fh "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
