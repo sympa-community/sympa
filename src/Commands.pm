@@ -622,7 +622,7 @@ email address. Please try subscribing using your canonical address.");
 	return 'not_allowed';
     }
     if ($action =~ /owner/i) {
-	push @msg::report, sprintf gettext("Your request of subscription/unssubscribtion has been forwarded to the list's
+	push @msg::report, sprintf gettext("Your request to subscribe/unsubscribe has been forwarded to the list's
 owners for approval. You will receive a notification when you will have
 been subscribed (or unsubscribed) to the list.\n");
 	## Send a notice to the owners.
@@ -880,7 +880,7 @@ email address. Please try subscribing using your canonical address.");
     }
 
     if ($action =~ /owner/i) {
-	push @msg::report, sprintf gettext("Your request of subscription/unssubscribtion has been forwarded to the list's
+	push @msg::report, sprintf gettext("Your request to subscribe/unsubscribe has been forwarded to the list's
 owners for approval. You will receive a notification when you will have
 been subscribed (or unsubscribed) to the list.\n")
 	    unless ($action =~ /quiet/i);
@@ -2027,7 +2027,7 @@ subscription : EXPIREINDEX %s\n"), $name;
     }else { 
         ## Ask the requestor for an authentication
 	$key=substr(Digest::MD5::md5_hex(join('/', $list->get_cookie(), $name, $sender, $d1, $d2, 'expire', time)), -8);
-	push @msg::report, sprintf gettext("Someone (hopefully you) resquested that the subscribers to the list\n'%s' for more than %d days have to confirm their subscription.\nIf you do not want this action to be taken, simply ignore this message.\nTo confirm this action, please send an e-mail to '%s', with the following command:\n\nAUTH %s EXPIRE %s %d %d\n"), $name, $d1, &Conf::get_robot_conf($robot, 'sympa'),$key,$name, $d1, $d2;
+	push @msg::report, sprintf gettext("Someone (hopefully you) requested that the subscribers to the list\n'%s' for more than %d days have to confirm their subscription.\nIf you do not want this action to be taken, simply ignore this message.\nTo confirm this action, please send an e-mail to '%s', with the following command:\n\nAUTH %s EXPIRE %s %d %d\n"), $name, $d1, &Conf::get_robot_conf($robot, 'sympa'),$key,$name, $d1, $d2;
 
 	$limitday= time - 86400* $d1;
 	$confirmday= time + 86400* $d2;

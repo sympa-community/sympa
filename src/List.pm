@@ -933,12 +933,12 @@ my %alias = ('reply-to' => 'reply_to',
 			 },
 	    'spam_protection' => {'format' => ['at','javascript','none'],
 			 'default' => 'javascript',
-			 'gettext_id' => "email adress protection method",
+			 'gettext_id' => "email address protection method",
 			 'group' => 'other'
 			  },
 	    'web_archive_spam_protection' => {'format' => ['cookie','javascript','at','none'],
 			 'default' => {'conf' => 'web_archive_spam_protection'},
-			 'gettext_id' => "email adress protection method",
+			 'gettext_id' => "email address protection method",
 			 'group' => 'other'
 			  },
 
@@ -6717,7 +6717,7 @@ sub request_auth {
 	    $command = "auth $keyauth $cmd $listname $email";
 	    my $url = "mailto:$robot_email?subject=$command";
 	    $url =~ s/\s/%20/g;
-	    $body = sprintf gettext("Someone (hopefully you) asked for you e-mail address\nto be removed from list '%s'.\nIf you want this action to be taken, please \n\n- reply to this mail\nOR\n- send a message to '%s' with subject\n %s\nOR\n- hit the following mailto %s\n\nThis can be done via the URL %s\nIf you do not want this action to be taken, you can safely ignore\nthis message"), $listname, $robot_email ,$command, $url;
+	    $body = sprintf gettext("Someone (hopefully you) asked for your e-mail address\nto be removed from list '%s'.\nIf you want this action to be taken, please \n\n- reply to this mail\nOR\n- send a message to '%s' with subject\n %s\nOR\n- hit the following mailto %s\n\nThis can be done via the URL %s\nIf you do not want this action to be taken, you can safely ignore\nthis message"), $listname, $robot_email ,$command, $url;
 	    
 	}elsif ($cmd =~ /subscribe$/){
 	    $keyauth = $self->compute_auth ($email, 'subscribe');
