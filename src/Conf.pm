@@ -28,6 +28,7 @@ my @valid_options = qw(
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
 		       ldap_export_dnmanager ldap_export_connection_timeout
+		       list_check_smtp list_check_suffixes
 );
 my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
@@ -118,7 +119,9 @@ my %Default_Conf =
      'ldap_export_suffix' => '',
      'ldap_export_password' => '',
      'ldap_export_dnmanager' => '',
-     'ldap_export_connection_timeout' => ''
+     'ldap_export_connection_timeout' => '',
+     'list_check_smtp' => '',
+     'list_check_suffixes' => 'request,owner,unsubscribe'
    );
    
 %Conf = ();
@@ -297,7 +300,9 @@ sub load_robots {
 				  bg_color        => 1,
 				  error_color     => 1,
 				  selected_color  => 1,
-				  shaded_color    => 1 );  
+				  shaded_color    => 1,
+				  list_check_smtp => 1,
+				  list_check_suffixes => 1 );
 
     unless (opendir DIR,'--DIR--/etc' ) {
 	do_log('info','Unable to open directory --DIR--/etc for virtual robots config' );

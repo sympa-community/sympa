@@ -3,6 +3,7 @@
 # Laurent Ghys (Laurent.Ghys@ircam.fr)
 #
 # Changes
+# 18/11/2001 [OS] Add Net::SMTP
 # 04/03/2001 [OS] Add DBD drivers
 #                 Perl 5.005 is required because of CipherSaber
 # 03/02/2001 [SA] Add Cipher:Saber as a optional module
@@ -55,7 +56,8 @@ use CPAN;
 	     'Net::LDAP' =>   'perl-ldap',
 	     'CGI::Fast' => 'CGI',
              'Crypt::CipherSaber' => 'CipherSaber',
-	     'FCGI' => 'FCGI');
+	     'FCGI' => 'FCGI',
+	     'Net::SMTP' => 'libnet');
 
 ### main:
 print "******* Check perl for SYMPA ********\n";

@@ -2711,7 +2711,7 @@ sub do_setpasswd {
     }
 
     ## Make password case-insensitive
-    $in{'newpasswd1'} =~ tr/A-Z/a-z/;
+#    $in{'newpasswd1'} =~ tr/A-Z/a-z/;
   
     if (&List::is_user_db($param->{'user'}{'email'})) {
 	unless ( &List::update_user_db($param->{'user'}{'email'}, {'password' => $in{'newpasswd1'}} )) {
@@ -4039,11 +4039,49 @@ sub _remove_aliases {
     return 1;
 }
 
+## check if the requested list exists already using smtp 'rcpt to'
+sub list_check_smtp {
+    my $list = shift;
+    my $conf = '';
+    my $smtp;
+    my @suf;
+
+    my $smtp_relay = $Conf{'robots'}{$robot}{'list_check_smtp'} || $Conf{'list_check_smtp'};
+    my $suffixes = $Conf{'robots'}{$robot}{'list_check_suffixes'} || $Conf{'list_check_suffixes'};
+    return 0 
+	unless ($smtp_relay && $suffixes);
+    my $domain = $Conf{'robots'}{$robot}{'host'} || $Conf{'host'};
+    &wwslog('debug', 'list_check_smtp(%s)',$in{'listname'});
+    @suf = split(/,/,$suffixes);
+    return 0 if ! @suf;
+    for(@suf) {
+   	$_ = $list . "-$_\@" . $domain;
+    }
+    push @suf,"$list\@" . $domain;
+    
+    unless (require Net::SMTP) {
+	do_log ('err',"Unable to use Net library, Net::SMTP required, install it (CPAN) first");
+	return undef;
+    }
+    if( $smtp = Net::SMTP->new($smtp_relay,
+			       Hello => $smtp_relay,
+			       Timeout => 30) ) {
+	$smtp->mail('<>');
+	for(@suf) {
+		$conf = $smtp->to($_);
+		last if $conf;
+	}
+	$smtp->quit();
+	return $conf;
+   }
+   return undef;
+}
 
 ## create a liste using a list template. 
 sub do_create_list {
-    &wwslog('debug', 'do_create_list(%s,%s,%s)',$in{'listname'},$in{'subject'},$in{'template'});
 
+    &wwslog('debug', 'do_create_list(%s,%s,%s)',$in{'listname'},$in{'subject'},$in{'template'});
+    
     foreach my $arg ('listname','subject','template','info','topics') {
 	unless ($in{$arg}) {
 	    &error_message('missing_arg', {'argument' => $arg});
@@ -4051,19 +4089,31 @@ sub do_create_list {
 	    return undef;
 	}
     }
-
+    
     $in{'listname'} = lc ($in{'listname'});
-
+    
     unless ($in{'listname'} =~ /^[a-z0-9][a-z0-9\-\+\._]*$/i) {
 	&error_message('incorrect_listname', {'listname' => $in{'listname'}});
 	return 'create_list_request';
     }
-   
-    if ( new List ($in{'listname'})) {
-	&error_message('list_already_exists');
-	&do_log('info', 'could not create already existing list %s for %s', $in{'listname'},$param->{'user'}{'email'});
+    
+    ## Check listname on SMTP server
+    my $res = list_check_smtp($in{'listname'});
+    unless ( defined($res) ) {
+	&error_message('unable_to_check_list_using_smtp');
+	&do_log('err', "can't check list %.128s on %.128s",
+		$in{'listname'},
+		$wwsconf->{'list_check_smtp'});
 	return undef;
     }
+    if( $res || new List ($in{'listname'})) {
+	&error_message('list_already_exists');
+	&do_log('info', 'could not create already existing list %s for %s', 
+		$in{'listname'},
+		$param->{'user'}{'email'});
+	return undef;
+    }
+
     
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -4073,7 +4123,7 @@ sub do_create_list {
     my $lang = $param->{'lang'};
     
     $param->{'create_action'} = $param->{'create_list'};
-
+    
     &wwslog('info',"do_create_list, get action : $param->{'create_action'} ");
     
     if ($param->{'create_action'} =~ /reject/) {
@@ -4089,7 +4139,7 @@ sub do_create_list {
 	&wwslog('info','do_create_list: internal error in scenario create_list');
 	return undef;
     }
-	     
+    
     my $template_file = &tools::get_filename('etc', 'create_list_templates/'.$in{'template'}.'/config.tpl', $robot);
     unless ($template_file) {
 	&error_message('unable_to_open_template');
@@ -4097,9 +4147,9 @@ sub do_create_list {
 	
 	return undef;
     }
-
+    
     my $list_dir;
-
+    
     ## A virtual robot
     if ($robot ne $Conf{'domain'}) {
 	unless (-d $Conf{'home'}.'/'.$robot) {
@@ -4109,7 +4159,7 @@ sub do_create_list {
 		return undef;
 	    }    
 	}
-
+	
 	$list_dir = $Conf{'home'}.'/'.$robot.'/'.$in{'listname'};
     }else {
 	$list_dir = $Conf{'home'}.'/'.$in{'listname'};
@@ -4140,11 +4190,11 @@ sub do_create_list {
     open INFO, ">$list_dir/info" ;
     print INFO $in{'info'};
     close INFO;
-
+    
     ## Create list object
     $in{'list'} = $in{'listname'};
     &check_param_in();
-
+    
     if  ($param->{'create_action'} =~ /do_it/i) {
 	&_install_aliases();
     }
