@@ -1,3 +1,5 @@
+$ RCS Identication ; $Revision$ ; $Date$
+
 $ 16 Oct 2000, Add Web translations <os@cru.fr>
 $ 19 Jun 2000, Update of Josep Román <josep.roman@zuerich-see.ch>
 $ 26 Feb 2000, Update of Josep Román <josep.roman@zuerich-see.ch>
