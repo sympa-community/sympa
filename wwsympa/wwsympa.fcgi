@@ -4331,16 +4331,31 @@ sub do_install_pending_list {
 #    dump_var ($list->{'admin'}, 0, \*TMP);
 #    close TMP;
 
-    ## create the list
-    &_install_aliases();
+    ## create the aliases
+    if ($in{'status'} eq 'open') {
+	&_install_aliases();
+    }
 
     if ($in{'notify'}) {
 	foreach my $i (@{$list->{'admin'}{'owner'}}) {
 	    next if ($i->{'reception'} eq 'nomail');
-	    $list->send_file('list_created', $i->{'email'}, $robot,{})
-		if ($i->{'email'});
+	    next unless ($i->{'email'});
+	    if ($in{'status'} eq 'open') {
+		$list->send_file('list_created', $i->{'email'}, $robot,{});
+	    }elsif ($in{'status'} eq 'closed') {
+		$list->send_file('list_rejected', $i->{'email'}, $robot,{});
+	    }
 	}
     }
+
+    $param->{'status'} = $in{'status'};
+
+    if ($in{'status'} ne 'open') {
+	$list = $param->{'list'} = $in{'list'} = undef;
+	return 'get_pending_lists';
+    }
+
+    return 1;
 }
 
 ## Install sendmail aliases
