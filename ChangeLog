@@ -1,3 +1,242 @@
+2002-05-07 16:18  salaun
+
+	* Makefile.am, Makefile.in, src/Makefile, src/sympa_wizard.pl,
+	src/etc/sample/sympa.conf, src/etc/sample/wwsympa.conf: Changes:
+	sympa_wizard now creating initial configuration files
+
+2002-05-07 15:05  salaun
+
+	* src/Conf.pm: Fix log
+
+2002-05-07 12:00  salaun
+
+	* wwsympa/cookielib.pm: 2 new subroutine in order to get or write
+	"your_subscribtions" cookie
+
+2002-05-07 11:58  salaun
+
+	* wwsympa/wwsympa.fcgi: requested by FTPRESS
+	
+	-New cookie "your_subscribtions" is used in  order to carry in all
+	templates subscribtions.     [get_which] a table with one  entry
+	per list		 with just the listname     [which] a hash
+	using listname	keys and	     SUBJECT and HOST as value.
+	
+	  Current version do not manage subscribtion
+	  related to alternative email
+	
+	-topics are availible in all templates
+	
+	Default distribution templates are not yet modified in order to use
+	both those new variables
+
+2002-05-06 13:24  salaun
+
+	* wwsympa/wws_templates/us/main.us.tpl: Adjust indentation
+
+2002-05-03 16:52  salaun
+
+	* src/sympa_wizard.pl: Fix: change &fatal_err to die()
+
+2002-05-03 16:14  salaun
+
+	* src/sympa_wizard.pl: Fix: wwsympa_url defined in sympa.conf
+
+2002-05-03 16:09  salaun
+
+	* src/etc/sample/wwsympa.conf: Change: uncomment alias_manager
+
+2002-05-03 16:07  salaun
+
+	* src/etc/sample/sympa.conf: Change: suggest a better choice for
+	listmaster
+
+2002-05-03 15:36  salaun
+
+	* src/task_manager.pl: Fix: list object did not have the expected
+	structure (hash/scalar)
+
+2002-05-03 10:30  salaun
+
+	* src/sympa.pl: Patch error message when cookie is modified
+
+2002-05-02 17:48  salaun
+
+	* wwsympa/wws_templates/: cn/admin.cn.tpl, cz/admin.cz.tpl,
+	de/admin.de.tpl, es/admin.es.tpl, et/admin.et.tpl, fr/admin.fr.tpl,
+	hu/admin.hu.tpl, it/admin.it.tpl, ro/admin.ro.tpl: [reported by
+	Frederic Connes] Fix: admin page help always appeared in its US
+	english version
+
+2002-05-02 17:42  salaun
+
+	* src/etc/templates/fr/bye.fr.tpl,
+	src/etc/templates/fr/certif_warning.fr.tpl,
+	src/etc/templates/fr/expire_deletion.fr.tpl,
+	src/etc/templates/fr/expire_warning1.fr.tpl,
+	src/etc/templates/fr/expire_warning2.fr.tpl,
+	src/etc/templates/fr/global_remind.fr.tpl,
+	src/etc/templates/fr/helpfile.fr.tpl,
+	src/etc/templates/fr/invite.fr.tpl,
+	src/etc/templates/fr/list_created.fr.tpl,
+	src/etc/templates/fr/listmaster_notification.fr.tpl,
+	src/etc/templates/fr/lists.fr.tpl,
+	src/etc/templates/fr/moderate.fr.tpl,
+	src/etc/templates/fr/modindex.fr.tpl,
+	src/etc/templates/fr/reject.fr.tpl,
+	src/etc/templates/fr/remind.fr.tpl,
+	src/etc/templates/fr/removed.fr.tpl,
+	src/etc/templates/fr/review.fr.tpl,
+	src/etc/templates/fr/sendpasswd.fr.tpl,
+	src/etc/templates/fr/stats_report.fr.tpl,
+	src/etc/templates/fr/welcome.fr.tpl,
+	src/etc/templates/fr/x509-user-cert-missing.fr.tpl,
+	src/etc/templates/fr/your_infected_msg.fr.tpl,
+	wwsympa/wws_templates/fr/list_menu.fr.tpl,
+	wwsympa/wws_templates/fr/reviewbouncing.fr.tpl: [Frederic Connes]
+	Typography fixes in French mail and web templates
+
+2002-05-02 17:36  salaun
+
+	* wwsympa/wwsympa.fcgi: [Frederic Connes] Fix: set default value
+	for bounce rate
+
+2002-05-02 16:41  salaun
+
+	* src/sympa_wizard.pl: Changes
+
+2002-05-02 16:28  salaun
+
+	* src/sympa_wizard.pl: Fixes
+
+2002-05-02 16:01  salaun
+
+	* doc/sympa.tex.tpl, src/sympa_wizard.pl: Add documentation for
+	postfix_manager.pl
+
+2002-05-02 15:40  salaun
+
+	* Makefile.am, Makefile.in, configure, configure.in, src/Makefile,
+	src/postfix_manager.pl, src/virtualwrapper.c: [Frederic Connes] New
+	feature: add postfix-style alias management in Sympa New Makefile
+	parameters POSTMAP, POSTMAP_ARG and VIRTUAL_ALIASES New script
+	postfix_manager.pl. New C wrapper virtualwrapper.c
+
+2002-05-02 15:17  salaun
+
+	* Makefile.am, Makefile.in, src/Makefile: Add wizard to Makefile
+
+2002-04-30 16:37  salaun
+
+	* src/sympa_wizard.pl: 
+	
+	sympa_wizard.pl is a tool for first sympa.conf and wwsympa.conf
+	editing
+
+2002-04-30 15:13  salaun
+
+	* doc/sympa.tex.tpl: [Frederic Connes] Fix create_list default
+
+2002-04-30 14:17  salaun
+
+	* wwsympa/wws_templates/fr/: add_request.fr.tpl,
+	change_email.fr.tpl, choosepasswd.fr.tpl, compose_mail.fr.tpl,
+	create_list.fr.tpl, create_list_request.fr.tpl, d_control.fr.tpl,
+	editsubscriber.fr.tpl, error.fr.tpl, get_pending_lists.fr.tpl,
+	help.fr.tpl, help_admin.fr.tpl, help_editfile.fr.tpl,
+	help_editlist.fr.tpl, help_user_options.fr.tpl, home.fr.tpl,
+	list_menu.fr.tpl, lists.fr.tpl, loginbanner.fr.tpl, menu.fr.tpl,
+	pref.fr.tpl, remindpasswd.fr.tpl, remove_arc.fr.tpl, review.fr.tpl,
+	reviewbouncing.fr.tpl, sigrequest.fr.tpl, subindex.fr.tpl,
+	subrequest.fr.tpl, title.fr.tpl: [Frederic Connes] Typographic
+	fixes (e-mail, :, case, sans prévenir, ...)
+
+2002-04-30 12:14  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Frederic Connes] Bug fix:
+	could not empty parameters such as web_archive quota.
+
+2002-04-30 11:49  salaun
+
+	* src/etc/templates/: cn/sendpasswd.cn.tpl, cz/sendpasswd.cz.tpl,
+	de/sendpasswd.de.tpl, et/sendpasswd.et.tpl, fr/sendpasswd.fr.tpl,
+	hu/sendpasswd.hu.tpl, it/sendpasswd.it.tpl, ro/sendpasswd.ro.tpl,
+	us/sendpasswd.us.tpl: [Frederic Connes] FIx: using wwsconf->title
+	instead of conf->title
+
+2002-04-30 11:16  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by O. Lonni] Bug fix: Scalar list
+	parameters could not be reset Because of the split config edition
+	form, empty parameters were skipped.  All parameters editable in
+	the form are now processed
+
+2002-04-30 09:50  salaun
+
+	* wwsympa/wwsympa.fcgi: Dump list config (commented)
+
+2002-04-30 09:44  salaun
+
+	* src/List.pm: Bug fix: Can't use string ("mail") as an ARRAY ref
+	while "strict refs" in use at /home/sympa/bin/List.pm line 6735
+	while installing pending lists _save_admin_file() would modify the
+	List object (change array references to scalar)
+
+2002-04-29 16:29  salaun
+
+	* wwsympa/wwsympa.fcgi: Use $list->{'dir'} instead
+
+2002-04-29 11:57  salaun
+
+	* wwsympa/wwsympa.fcgi: Bug fix: skip auth.conf if empty This
+	prevents 'require Net::LDAP' to be run, only because auth.conf
+	exists
+
+2002-04-29 11:56  salaun
+
+	* src/Conf.pm: Fix: also skip lines beginning with '\s+#'  in
+	auth.conf
+
+2002-04-29 11:27  salaun
+
+	* src/parser.pl: Fix loop prevention (with buttons)
+
+2002-04-29 11:18  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: set correct help_template (would cause
+	a loop)
+
+2002-04-29 11:07  salaun
+
+	* src/parser.pl: Fix loop prevention
+
+2002-04-29 10:59  salaun
+
+	* src/parser.pl: Prevent loops when parsing/including files
+
+2002-04-29 10:42  salaun
+
+	* src/parser.pl: Use syslog instead of STDERR
+
+2002-04-26 13:37  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/editfile.fr.tpl,
+	wws_templates/fr/help_editfile.fr.tpl,
+	wws_templates/us/editfile.us.tpl,
+	wws_templates/us/help_editfile.us.tpl: Fix: get 'info' as default
+	for 'homepage' in editfile ; also detail documentation
+
+2002-04-26 11:57  salaun
+
+	* src/mail.pm: [reported by Anas Agoumi] Bug fix: S/MIME signed
+	templates sent from the web (welcome/bye) where empty messages.
+	This was due to same file descriptor used in different contexts and
+	rename() performed too early
+
+2002-04-25 14:11  salaun
+
+	* .version, ChangeLog, NEWS: preparing 3.3.4b.8
+
 2002-04-25 12:01  salaun
 
 	* wwsympa/wwsympa.fcgi: Fix: closed lists are no more seen from

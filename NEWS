@@ -3,6 +3,64 @@
 
 (See Changelog file for the full changes log)
 
+3.3.4b.9	07 May 2002
+
+   New features :
+
+	New "your_subscribtions" HTTP cookie to carry subscriptions in
+	all templates. [get_which] is a table with one  entry per list
+	[which_info] is a hash using listname keys and SUBJECT and HOST as value
+
+	Topics are now available in all templates
+
+	[Frederic Connes] add postfix-style alias management in Sympa New Makefile
+	parameters POSTMAP, POSTMAP_ARG and VIRTUAL_ALIASES New script
+	postfix_manager.pl. New C wrapper virtualwrapper.c
+
+	sympa_wizard.pl: new script to help filling sympa.conf & wwsympa.conf
+	at first installation
+
+   Bug fixes :
+
+	src/mail.pm: [reported by Anas Agoumi] S/MIME signed
+	templates sent from the web (welcome/bye) where empty messages.
+	This was due to same file descriptor used in different contexts and
+	rename() performed too early
+
+	src/List.pm: Can't use string ("mail") as an ARRAY ref
+	while "strict refs" in use at /home/sympa/bin/List.pm line 6735
+	while installing pending lists _save_admin_file() would modify the
+	List object (change array references to scalar)
+
+	wwsympa/wwsympa.fcgi: skip auth.conf if empty This prevents 
+	'require Net::LDAP' to be run, only because auth.conf exists
+
+	wwsympa/wwsympa.fcgi: [reported by O. Lonni] Scalar list
+	parameters could not be reset Because of the split config edition
+	form, empty parameters were skipped.  All parameters editable in
+	the form are now processed
+	
+	wwsympa/wwsympa.fcgi: [reported by Frederic Connes] 
+	could not empty parameters such as web_archive quota.
+
+	[reported by Frederic Connes] admin page help always appeared in its US
+	english version
+
+	[Frederic Connes] Typography fixes in French mail and web templates
+
+	wwsympa/wwsympa.fcgi: [Frederic Connes] set default value for bounce rate
+
+	src/Conf.pm: also skip lines beginning with '\s+#'  in auth.conf
+
+	get 'info' as default for 'homepage' in editfile ; also detail documentation
+
+
+   Changes :
+
+	src/parser.pl: Use syslog instead of STDERR
+
+	src/parser.pl: Prevent loops when parsing/including files
+
 3.3.4b.8	25 Apr 2002
 
    New features :

@@ -545,11 +545,11 @@ installconfig:
 	$(PERL)  $(DESTDIR)$(SBINDIR)/sympa_wizard.pl -c $$cfile; \
 	chown $(USER) $(DESTDIR)$(CONFDIR)/$$cfile; \
 	chgrp $(GROUP) $(DESTDIR)$(CONFDIR)/$$cfile; \
-	INITCONF=1; \
+	INITCONF='1'; \
 	$(PERL)  $(DESTDIR)$(SBINDIR)/sympa_wizard.pl; \
 	fi \
 	done; \
-	if [ $(INITCONF) = 1 ] ; then \
+	if [ $(INITCONF) ] ; then \
 	$(PERL)  $(DESTDIR)$(SBINDIR)/sympa_wizard.pl; \
 	fi
 
