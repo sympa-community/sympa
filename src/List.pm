@@ -6249,8 +6249,14 @@ sub _save_list_param {
 #	    next if ($defaults->{$key}{$k} == 1);
 
 	    if (defined ($::pinfo{$key}{'file_format'}{$k}{'scenario'})) {
+		## Skip if empty value
+		next if ($p->{$k}{'name'} =~ /^\s*$/);
+
 		printf $fd "%s %s\n", $k, $p->{$k}{'name'};
 	    }else {
+		## Skip if empty value
+		next if ($p->{$k} =~ /^\s*$/);
+
 		printf $fd "%s %s\n", $k, $p->{$k};
 	    }
 	}
