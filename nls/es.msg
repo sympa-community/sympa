@@ -14,29 +14,29 @@ $set 1	Mensajes usados durante el proceso del archivo de configuración
 $set 2	Mensajes usados por Conf en la comprobación de archivos
 
 $set 3	Mensajes varios del programa principal
-1	"Imposible acceder al directorio %s: %m\n"
+1	"Imposible acceder al directorio %s: %m"
 
 $set 4	Mensajes usados en el bucle principal
-11	"Su mensaje para %s ha sido rechazado\n"
+11	"Su mensaje para %s ha sido rechazado"
 12	"Su mensaje no puede ser envíado porque sobrepasa el tamaño máximo \n\
 permitido por esta lista.\n"
 15	"Usted intentó enviar un mensaje a una lista privada a la que no está subscrito.\n\nEl mensaje es por tanto, devuelto.\n\n\
 Su mensaje era :\n"
-17	"Resultados de sus comandos\n"
+17	"Resultados de sus comandos"
 18	"Comando 'QUIT' encontrado: el resto del mensaje se ignora.\n"
 19	"Comando no entendido: el resto del mensaje se ignora.\n"
-24	"Fin de su orden EXPIRE en la lista %s\n"
+24	"Fin de su orden EXPIRE en la lista %s"
 26	"Los subscriptores son:\n"
 27	"Si usted quiere borrar a estos subscriptores de la lista utilice los siguientes comandos:\n"
 28	"Entre los subscriptores de la lista %s desde hace %d días, %d no confirmaron su subscripción.\n"
 37	"El texto del mensaje ha sido ignorado, utilice unicamente formato de texto normal (no HTML)\n(o ponga los comandos en el tema del mensaje).\n"
 38	"Su mensaje para la lista %s ha sido dirigido a los editores\n"
-39 "No se encontró ninguna orden en el mensaje"
-40 "Moderando su mensaje"
+39	"No se encontró ninguna orden en el mensaje"
+40	"Moderando su mensaje"
 
 $set 5	Mensajes usados en el módulo de herramientas
-1	"Safefork no puede crear un nuevo proceso: %m\n"
-2	"Error de encaminamiento?\n"
+1	"Safefork no puede crear un nuevo proceso: %m"
+2	"Error de encaminamiento?"
 3	"El mensaje siguiente se ha dirigido a una lista aunque parece \n\
 que contiene comandos como SUBSCRIBE, SIGNOFF, HELP, INDEX, GET,... \n\n\
 Si de hecho su mensaje contuviera un comando, sepa que estos \n\
@@ -63,8 +63,8 @@ $set 6	Mensajes del módulo de Commands.pm
 15	"El proceso de autentificación ha fallado.\n\n"
 16	"Usted probablemente confirmó su subscripción con una dirección electrónica diferente.\n\
 Por favor subscribase usando su dirección oficial.\n"
-18	"Su subscripción a la lista %s ha sido suprimida.\n"
-21	"Su subscripción a la lista %s ha sido renovada.\n"
+18	"Su subscripción a la lista %s ha sido suprimida."
+21	"Su subscripción a la lista %s ha sido renovada."
 24	"Las subscripciones a esta lista están por el momento suspendidas.\n"
 25	"Su petición de subscripción (o anulación) se ha enviado a los propietarios de la lista\n\
 para su aprobación. Usted recibirá una notificación cuando usted haya sido\n\
@@ -143,7 +143,7 @@ Este texto debe:\n\n\
 73	"\n\nListas de las que usted es editor :\n\n"
 74	"Autentificación solicitada %s para el comando %s\n"
 75	"La anulación de %s es posible en cualquier lista.\n"
-76	"Recordatorio de su subscripción a la lista %s.\n"
+76	"Recordatorio de su subscripción a la lista %s."
 77	"Usted es un subscriptor de la lista %s con dirección %s.\n"
 78	"Recordatorio de subscripción enviado a los %d subscriptores.\n"
 79	"Alguien (posiblemente usted) solicitó a Sympa enviar una confirmación\n\
@@ -153,9 +153,9 @@ Si usted confirma el comando, envie un e-mail a\n\
    %s\n\n\
 Si no desea confirmar este comando, ignore este mensaje.\n"
 80	"Usted no está autorizado a utilizar el comando %s en la lista %s.\n"
-81	"Guía de usuario\n"
-82	"Listas públicas\n"
-83	"Sumario de subscripción\n"
+81	"Guía de usuario"
+82	"Listas públicas"
+83	"Sumario de subscripción"
 84	"El usuario %s ya es un subscriptor de la lista '%s'.\n"
 85	"El usuario %s ha sido invitado a subscribirse a la lista %s.\n"
 86	"El usuario %s no es aceptado en la lista %s.\n"
