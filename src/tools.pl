@@ -295,7 +295,7 @@ sub smime_sign {
     }
 
      &do_log('debug3', "$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file");
-     unless (open (NEWMSG,"$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file 2>&1 |")) {
+     unless (open (NEWMSG,"$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file |")) {
     	&do_log('notice', 'Cannot sign message');
     }
 
@@ -528,7 +528,7 @@ sub smime_decrypt {
 	}
     }
 
-    open (NEWMSG, "$Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option 2>&1 |");
+    open (NEWMSG, "$Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option |");
 
     if ($Conf{'key_passwd'} ne '') {
 	unless (open (FIFO,"> $Conf{'tmpdir'}/pass.$$")) {
