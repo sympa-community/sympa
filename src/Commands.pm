@@ -297,8 +297,8 @@ sub stats {
 
     do_log('debug2', 'Commands::stats(%s)', $listname);
 
-    my $list = new List ($listname);
-    unless (($list) && (&List::list_by_robot ($listname,$robot))) {
+    my $list = new List ($listname, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
 	do_log('info', 'STATS %s from %s refused, unknown list for robot %s', $listname, $sender,$robot);
 	return 'unknown_list';
@@ -353,8 +353,8 @@ sub getfile {
 
     do_log('debug2', 'Commands::getfile(%s, %s)', $which, $file);
 
-    my $list = new List ($which);
-    unless (($list)&&(&List::list_by_robot($which,$robot))) {
+    my $list = new List ($which, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'GET %s %s from %s refused, list unknown for robot %s', $which, $file, $sender, $robot);
 	return 'unknownlist';
@@ -398,8 +398,8 @@ sub last {
 
     do_log('debug2', 'Commands::last(%s, %s)', $which);
 
-    my $list = new List ($which);
-    unless (($list)&&(&List::list_by_robot($which,$robot)))  {
+    my $list = new List ($which,$robot);
+    unless ($list)  {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'LAST %s from %s refused, list unknown for robot %s', $which, $sender, $robot);
 	return 'unknownlist';
@@ -444,8 +444,8 @@ sub index {
 
     do_log('debug2', 'Commands::index(%s) robot (%s)',$which,$robot);
 
-    my $list = new List ($which);
-    unless (($list)&&(&List::list_by_robot($which,$robot))) {
+    my $list = new List ($which, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'INDEX %s from %s refused, list unknown for robot %s', $which, $sender,$robot);
 	return 'unknown_list';
@@ -484,9 +484,9 @@ sub review {
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
 
     my $user;
-    my $list = new List ($listname);
+    my $list = new List ($listname, $robot);
 
-    unless (($list)&&(&List::list_by_robot($listname,$robot))) {
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
 	do_log('info', 'REVIEW %s from %s refused, list unknown to robot %s', $listname,$sender,$robot);
 	return 'unknown_list';
@@ -607,8 +607,8 @@ sub subscribe {
     
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($which);
-    unless (($list)&&(&List::list_by_robot($which,$robot))) {
+    my $list = new List ($which, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'SUB %s from %s refused, unknown list for robot %s', $which,$sender,$robot);
 	return 'unknown_list';
@@ -750,8 +750,8 @@ sub info {
 
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
 
-    my $list = new List ($listname);
-    unless (($list)&&(&List::list_by_robot($listname,$robot))) {
+    my $list = new List ($listname, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
 	do_log('info', 'INFO %s from %s refused, unknown list for robot %s', $listname,$sender,$robot);
 	return 'unknown_list';
@@ -863,10 +863,10 @@ sub signoff {
 	return ($success);
     }
 
-    $list = new List ($which);
+    $list = new List ($which, $robot);
     
     ## Is this list defined
-    unless (($list)&&(&List::list_by_robot($which,$robot))) {
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'SIG %s %s from %s, unknown list for robot %s', $which,$email,$sender,$robot);
 	return 'unknown_list';
@@ -983,8 +983,8 @@ sub add {
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($which);
-    unless (($list)&&(&List::list_by_robot($which,$robot))) {
+    my $list = new List ($which, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'ADD %s %s from %s refused, unknown list for robot %s', $which, $email,$sender,$robot);
 	return 'unknown_list';
@@ -1099,8 +1099,8 @@ sub invite {
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($which);
-    unless (($list)&&(&List::list_by_robot($which,$robot))) {
+    my $list = new List ($which, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'INVITE %s %s from %s refused, unknown list for robot', $which, $email,$sender,$robot);
 	return 'unknown_list';
@@ -1224,8 +1224,8 @@ sub remind {
     my $list;
 
     unless ($listname eq '*') {
-	$list = new List ($listname);
-	unless (($list)&&(&List::list_by_robot($listname,$robot))) {
+	$list = new List ($listname, $robot);
+	unless ($list) {
 	    push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
 	    do_log('info', 'REMIND %s from %s refused, unknown list for robot %s', $which, $sender,$robot);
 	    return 'unknown_list';
@@ -1300,7 +1300,7 @@ sub remind {
 
 	if ($listname ne '*') {
 
-	    unless (($list)&&(&List::list_by_robot($listname,$robot))) {
+	    unless ($list) {
 		push @msg::report, sprintf Msg(6, 5, "List '%s' not found.\n"), $which;
 		do_log('info', 'REMIND %s from %s refused, unknown list for robot %s', $listname,$sender,$robot);
 		return 'unknown_list';
@@ -1338,7 +1338,7 @@ sub remind {
 	    # this remind is a global remind.
 	    foreach my $listname (List::get_lists($robot)){
 
-		my $list = new List ($listname);
+		my $list = new List ($listname, $robot);
 		next unless $list;
 
 		next unless ($user = $list->get_first_user()) ;
@@ -1403,8 +1403,8 @@ sub del {
     
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($which);
-    unless (($list)&&(&List::list_by_robot($which,$robot))) {
+    my $list = new List ($which, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'DEL %s %s from %s refused, unknown list for robot %s', $which, $who,$sender,$robot);
 	return 'unknown_list';
@@ -1534,9 +1534,9 @@ sub set {
 
     ## Load the list if not already done, and reject
     ## if this list is unknown to us.
-    my $list = new List ($which);
+    my $list = new List ($which, $robot);
 
-    unless (($list)&&(&List::list_by_robot($which,$robot))) {
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'SET %s %s from %s refused, unknown list for robot %s', $which, $mode, $sender,$robot);
 	return 'unknown_list';
@@ -1618,8 +1618,8 @@ sub distribute {
     my $start_time=time; # get the time at the beginning
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($which);
-    unless (($list)&&(&List::list_by_robot($which,$robot))) {
+    my $list = new List ($which, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'DISTRIBUTE %s %s from %s refused, unknown list for robot %s', $which, $key, $sender,$robot);
 	return 'unknown_list';
@@ -1755,8 +1755,8 @@ sub confirm {
  
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($which);
-    unless (($list)&&(&List::list_by_robot($which,$robot)))  {
+    my $list = new List ($which, $robot);
+    unless ($list)  {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'CONFIRM %s from %s refused, unknown list for robot %s', $which,$sender,$robot);
 	return 'unknown_list';
@@ -1837,8 +1837,8 @@ sub reject {
     my $modqueue = $Conf{'queuemod'};
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($which);
-    unless (($list)&&(&List::list_by_robot($which,$robot))) {
+    my $list = new List ($which, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
 	do_log('info', 'REJECT %s %s from %s refused, unknown list for robot %s', $which, $key, $sender,$robot);
 	return 'unknown_list';
@@ -1929,8 +1929,8 @@ sub expire {
     my $key;
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($name);
-    unless (($list)&&(&List::list_by_robot($name,$robot))) {
+    my $list = new List ($name, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $name;
 	do_log('info', 'EXPIRE %s %d %d from %s refused, unknown list for robot %s', $name, $d1 , $d2, $sender,$robot);
 	return 'unknown_list';
@@ -2108,8 +2108,8 @@ sub _expirecheck {
 
     my $list,$user,$count;
 
-    my $list = new List ($name);
-    unless (($list)&&(&List::list_by_robot($name,$robot))) {
+    my $list = new List ($name, $robot);
+    unless ($list) {
 	do_log ('info',"unable to create list for expire $name");
 	return 'unknown_list';
     }
@@ -2138,8 +2138,8 @@ sub expireindex {
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($name);
-    unless (($list)&&(&List::list_by_robot($name,$robot))) {
+    my $list = new List ($name, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $name;
 	do_log('info', 'EXPIREINDEX %s from %s refused, unknown list for list %s', $name, $sender,$robot);
 	return 'unknown_list';
@@ -2234,8 +2234,8 @@ sub expiredel {
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($name);
-    unless (($list)&&(&List::list_by_robot($name,$robot))) {
+    my $list = new List ($name, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $name;
  	do_log('info', 'EXPIREDEL %s from %s refused, unknown list for robot', $name, $sender, $robot);
  	return 'unknown_list';
@@ -2278,8 +2278,8 @@ sub modindex {
     
     $name =~ y/A-Z/a-z/;
 
-    my $list = new List ($name);
-    unless (($list)&&(&List::list_by_robot($name,$robot))) {
+    my $list = new List ($name, $robot);
+    unless ($list) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $name;
 	do_log('info', 'MODINDEX %s from %s refused, unknown list for robot %s', $name, $sender, $robot);
 	return 'unknown_list';

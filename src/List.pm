@@ -1237,7 +1237,7 @@ sub load {
 	}
     }
 
-    if ($robot eq $Conf{'host'}) {
+    if (lc($robot) eq lc($Conf{'host'})) {
  	$self->{'dir'} = "$Conf{'home'}/$name";
     }elsif ($robot) {
 	$self->{'dir'} = "$Conf{'home'}/$robot/$name";
@@ -5569,21 +5569,6 @@ sub get_robots {
     }
     push @robots, $Conf{'host'} if ($use_default_robot);
     return @robots ;
-}
-
-# return true if the list is managed by the robot
-sub list_by_robot {
-
-    my($listname,$robot) = @_;
-
-    my $list ;
-    return undef unless ($list = new List ($listname));
-    return 1 if ($list->{'domain'} eq $robot) ;
-    # for compatibility with previous versions :
-    # if 'domain' is undefined for this list but if the current robot is the default one
-    return 1 if (($robot eq $Conf{'host'}) && (!$list->{'domain'}));
-    return 1 if ($robot eq '*');
-    return undef;
 }
 
 ## List of lists in database mode which e-mail parameter is member of
