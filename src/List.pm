@@ -1412,10 +1412,10 @@ sub load {
 	}
     }
 
-    if (lc($robot) eq lc($Conf{'host'})) {
- 	$self->{'dir'} = "$Conf{'home'}/$name";
-    }elsif ($robot) {
+    if ($robot && (-d "$Conf{'home'}/$robot")) {
 	$self->{'dir'} = "$Conf{'home'}/$robot/$name";
+    }elsif (lc($robot) eq lc($Conf{'host'})) {
+ 	$self->{'dir'} = "$Conf{'home'}/$name";
     }else {
 	&do_log('err', 'No such list %s', $name);
 	return undef ;
