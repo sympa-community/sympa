@@ -390,5 +390,5 @@ build_mdk_rpm: clean
 tag:	ChangeLog
 	@if [ ! $(NEW_VERSION) ]; then \
 	echo "You need to define NEW_VERSION"; \
-	else echo "NEW_VERSION: $(NEW_VERSION)"; \
+	else echo $(NEW_VERSION) > .version; cvs tag -F `echo $(NEW_VERSION)|sed 's/\./_/g'`; \
 	fi
