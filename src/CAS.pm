@@ -18,6 +18,12 @@ sub new {
     $cas_server->{'CAFile'} = $param{'CAFile'};
     $cas_server->{'CAPath'} = $param{'CAPath'};
 
+    $cas_server->{'loginPath'} = $param{'loginPath'} || '/login';
+    $cas_server->{'logoutPath'} = $param{'logoutPath'} || '/logout';
+    $cas_server->{'serviceValidatePath'} = $param{'serviceValidatePath'} || '/serviceValidate';
+    $cas_server->{'proxyPath'} = $param{'proxyPath'} || '/proxy';
+    $cas_server->{'proxyValidatePath'} = $param{'proxyValidatePath'} || '/proxyValidate';
+
     bless $cas_server, $pkg;
 
     return $cas_server;
@@ -135,7 +141,7 @@ sub getServerLoginURL {
     my $self = shift;
     my $service = shift;
     
-    return $self->{'url'}.'/login'.'?service='.&_escape_chars($service);
+    return $self->{'url'}.$self->{'loginPath'}.'?service='.&_escape_chars($service);
 }
 
 ## Returns non-blocking login URL
@@ -144,7 +150,16 @@ sub getServerGatewayURL {
     my $self = shift;
     my $service = shift;
     
-    return $self->{'url'}.'/login'.'?service='.&_escape_chars($service).'&gateway=1';
+    return $self->{'url'}.$self->{'loginPath'}.'?service='.&_escape_chars($service).'&gateway=1';
+}
+
+## Return logout URL
+## After logout user is redirected back to the application
+sub getServerLogoutURL {
+    my $self = shift;
+    my $service = shift;
+    
+    return $self->{'url'}.$self->{'logoutPath'}.'?service='.&_escape_chars($service).'&gateway=1';
 }
 
 sub getServerServiceValidateURL {
@@ -159,7 +174,7 @@ sub getServerServiceValidateURL {
     }
 
     ## URL was /validate with CAS 1.0
-    return $self->{'url'}.'/serviceValidate'.'?'.$query_string;
+    return $self->{'url'}.$self->{'serviceValidatePath'}.'?'.$query_string;
 }
 
 sub getServerProxyURL {
@@ -167,7 +182,7 @@ sub getServerProxyURL {
     my $targetService = shift;
     my $pgt = shift;
 
-    return $self->{'url'}.'/proxy'.'?targetService='.&_escape_chars($targetService).'&pgt='.&_escape_chars($pgt);
+    return $self->{'url'}.$self->{'proxyPath'}.'?targetService='.&_escape_chars($targetService).'&pgt='.&_escape_chars($pgt);
 }
 
 sub getServerProxyValidateURL {
@@ -175,7 +190,7 @@ sub getServerProxyValidateURL {
     my $service = shift;
     my $ticket = shift;
 
-    return $self->{'url'}.'/proxyValidate'.'?service='.&_escape_chars($service).'&ticket='.&_escape_chars($ticket);
+    return $self->{'url'}.$self->{'proxyValidatePath'}.'?service='.&_escape_chars($service).'&ticket='.&_escape_chars($ticket);
      
 }
 
