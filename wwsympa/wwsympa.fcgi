@@ -340,8 +340,9 @@ while ($query = &new_loop()) {
     ## Get PATH_INFO parameters
     &get_parameters();
 
-    $robot = $wwsconf->{'robot_domain'}{$ENV{'HTTP_HOST'}};
-    # printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, title :  $wwsconf->{'robot_title'}{$robot}}\n";
+    #$robot = $wwsconf->{'robot_domain'}{$ENV{'HTTP_HOST'}};
+    $robot = $Conf{'robots'}{'robot_by_http_host'}{$ENV{'HTTP_HOST'}};		
+    # printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, title :  $Conf{'robots'}{$robot}{'title'}}\n";
 
     $robot = $Conf{'host'} unless $robot;
 
@@ -455,8 +456,8 @@ while ($query = &new_loop()) {
     if ($param->{'list'}) {
 	$param->{'title'} = "$param->{'list'}\@$param->{'host'}";
     }else {
-	$param->{'title'} = $wwsconf->{'robot_title'}{$robot};
-	$param->{'title'} |= $wwsconf->{'title'} unless $param->{'title'};
+	$param->{'title'} = $Conf{'robots'}{$robot}{'title'};
+	$param->{'title'} = $wwsconf->{'title'} unless $param->{'title'};
     }
 
     ## Set cookies unless client use https authentication
