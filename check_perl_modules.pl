@@ -114,9 +114,10 @@ sub install_module {
     my ($module, $default) = @_;
 
     unless ($> == 0) {
-	print "## You need root privileges to install $module module ##\n";
-	    my $t = <STDIN>;
-	    return undef;
+	print "\#\# You need root privileges to install $module module. \#\#\n";
+	print "\#\# Press the Enter key to continue checking modules. \#\#\n";
+	my $t = <STDIN>;
+	return undef;
     }
 
     print "Install module $module ? [$default]";
