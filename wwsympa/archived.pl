@@ -126,6 +126,9 @@ while (!$end) {
    sleep 2;
 
    foreach my $file (@files) {
+
+       last if $end;
+
        if ($file  =~ /^\.remove\.(.*)\.\d+$/ ) {
 	   do_log('debug',"remove found : $file for list $1");
 
