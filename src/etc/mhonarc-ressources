@@ -127,10 +127,12 @@ Archive powered by
 <!-- top of message list -->
 <ListBegin>
 <ul>
+[STOPPARSE]
 </LISTBEGIN>
 
 <!-- bottom of message list -->
 <LISTEND>
+[STARTPARSE]
 </ul>
 </LISTEND>  
 
@@ -222,7 +224,9 @@ Chronological
 </TFOOT>
 
 <TTOPBEGIN>
+[STOPPARSE]
 <LI><b> $SUBJECT$ </b> <code>$FROMADDR$</code><BR>
+[STARTPARSE]
 </TTOPBEGIN>
 
 <TTOPEND>
@@ -261,12 +265,16 @@ next
 </TSUBJECTBEG>
 
 <TSINGLETXT>
+[STOPPARSE]
 <LI><b> $SUBJECT$ </b><code>$FROMADDR$</code>
 </LI>
+[STARTPARSE]
 </TSINGLETXT>
 
 <TLITXT>
+[STOPPARSE]
 <LI><b> $SUBJECT$ </b><code>$FROMADDR$</code>
+[STARTPARSE]
 </TLITXT>
 
 <TLIEND>
@@ -417,15 +425,19 @@ $TNEXTBUTTON$
 <TABLE border=0 width=100%>
 <TR bgcolor="[bg_color]">
  <TD Valign=top>
+  [STOPPARSE]
   <FONT size=+1 COLOR="[dark_color]"><B> $SUBJECTNA$</B></FONT><FONT size=+1> $FROMNAME$ </FONT>
+  [STARTPARSE]
  </TD>
 
 <TD ALIGN=RIGHT NOWRAP>
 [IF user->email]
 <!-- reply to button -->
 <FORM ACTION="[path_cgi]" METHOD=POST>
+  [STOPPARSE]
   <INPUT TYPE="hidden" NAME="in_reply_to" VALUE="$MSGID$">
   <INPUT TYPE="hidden" NAME="subject" VALUE="Re: $SUBJECTNA$">
+  [STARTPARSE]
   <INPUT TYPE="hidden" NAME="action" VALUE="compose_mail">
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 [IF lang=fr]
@@ -527,6 +539,14 @@ subject
 date
 -extra-
 </FIELDORDER>
+
+<FIELDSBEG>
+[STOPPARSE]
+</FIELDSBEG>
+
+<FIELDSEND>
+[STARTPARSE]
+</FIELDSEND>
 
 <LABELSTYLES>
 From:strong
