@@ -179,6 +179,9 @@ because you are not allowed to unsubscribe.[%END%]
 [% ELSIF error.msg == 'select_month' %]
 [%|loc%]Please select archive months[%END%]
 
+[% ELSIF error.msg == 'inaccessible_archive' %]
+[%|loc(error.year_month)%]Archives from %1 are not accessible[%END%]
+
 [% ELSE %]
 [% error.msg %]
 [% END %]

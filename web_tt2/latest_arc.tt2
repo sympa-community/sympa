@@ -1,0 +1,33 @@
+<!-- $Id$ -->
+
+
+<h2> <strong>
+ [% IF count %]
+   [%|loc%] The [% count %] latest messages [%END%] 
+ [% ELSE %]
+   [%|loc%] The latest messages [%END%] 
+ [% END %]
+
+ [% IF for %]
+   [%|loc%] for [% for %] days [%END%] 	
+ [% END %]
+</strong> </h2> 	
+<BR> 
+ 
+<TABLE STYLE="WIDTH: 100%;">
+ <tr style="background: [% light_color %]">
+   <th><strong>[%|loc%]Date[%END%]</strong></th>
+   <th><strong>[%|loc%]Subject[%END%]</strong></th>
+   <th><strong>[%|loc%]From[%END%]</strong></th>
+ </tr>
+
+ [% FOREACH a = archives %] 
+ <TR>
+   <TD> [% a.date %] </TD>
+   <TD> <A HREF="[% conf.wwsympa_url %]/arcsearch_id/[% list %]/[% a.year_month %]/[% a.message_id %]" >[% a.subject %] </TD>
+   <TD> [% a.from %] </TD>
+ </TR>
+ 
+ [% END %]  
+
+</TABLE>

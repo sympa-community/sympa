@@ -34,6 +34,7 @@ use Getopt::Long;
 use Archive::Zip;
 
 use strict vars;
+use Time::Local;
 
 ## Template parser
 require "--LIBDIR--/tt2.pl";
@@ -53,6 +54,7 @@ use Mail::Header;
 use Mail::Address;
 
 require "--LIBDIR--/tools.pl";
+require "--LIBDIR--/time_utils.pl";
 
 ## WWSympa librairies
 use wwslib;
@@ -73,6 +75,7 @@ my $list;
 my $param = {};
 my $robot ;
 my $ip ; 
+my $rss ;
 
 
 ## Load config 
@@ -145,7 +148,10 @@ my %comm = ('home' => 'do_home',
 	 'ignoresub' => 'do_ignoresub',
 	 'which' => 'do_which',
 	 'lists' => 'do_lists',
+	 'latest_lists' => 'do_latest_lists',   
+	 'active_lists' => 'do_active_lists',
 	 'info' => 'do_info',
+	 'subscriber_count' => 'do_subscriber_count',   
 	 'review' => 'do_review',
 	 'search' => 'do_search',
 	 'pref', => 'do_pref',
@@ -180,6 +186,8 @@ my %comm = ('home' => 'do_home',
 	 'editfile' => 'do_editfile',
 	 'savefile' => 'do_savefile',
 	 'arc' => 'do_arc',
+         'latest_arc' => 'do_latest_arc',
+	 'latest_d_read' => 'do_latest_d_read',
 	 'arc_manage' => 'do_arc_manage',                             
 	 'remove_arc' => 'do_remove_arc',
 	 'send_me' => 'do_send_me',
@@ -249,7 +257,7 @@ my %comm = ('home' => 'do_home',
 	 'viewlogs'=> 'do_viewlogs',
 	 'wsdl'=> 'do_wsdl',
 	 'sync_include' => 'do_sync_include',
-	    'review_family' => 'do_review_family',
+	 'review_family' => 'do_review_family',
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -259,6 +267,8 @@ my %action_args = ('default' => ['list'],
 		'sendpasswd' => ['email'],
 		'choosepasswd' => ['email','passwd'],
 		'lists' => ['topic','subtopic'],
+		'latest_lists' => ['topic','subtopic'],   
+		'active_lists' => ['topic','subtopic'],  
 		'login' => ['email','passwd','previous_action','previous_list'],
 		'sso_login' => ['auth_service_name','previous_action','previous_list'],
 		'sso_login_succeeded' => ['auth_service_name','previous_action','previous_list'],
@@ -282,6 +292,7 @@ my %action_args = ('default' => ['list'],
 		'review' => ['list','page','size','sortby'],
 		'reviewbouncing' => ['list','page','size'],
 		'arc' => ['list','month','arc_file'],
+		'latest_arc' => ['list'],
 		'arc_manage' => ['list'],                                          
 		'arcsearch_form' => ['list','archive_name'],
 		'arcsearch_id' => ['list','archive_name','key_word'],
@@ -308,6 +319,7 @@ my %action_args = ('default' => ['list'],
 		'search_list' => ['filter'],
 		'shared' => ['list','@path'],
 		'd_read' => ['list','@path'],
+		'latest_d_read' => ['list'],
 		'd_admin' => ['list','d_admin'],
 		'd_delete' => ['list','@path'],
 		'd_rename' => ['list','@path'],
@@ -740,9 +752,11 @@ if ($wwsconf->{'use_fast_cgi'}) {
      if ($param->{'list'}) {
 	 $param->{'main_title'} = "$param->{'list'} - $list->{'admin'}{'subject'}";
 	 $param->{'title'} = &get_protected_email_address($param->{'list'}, $list->{'admin'}{'host'});
-	 
+	 $param->{'title_clear_txt'} = "$param->{'list'}\@$list->{'admin'}{'host'}";
+
 	 if ($param->{'subtitle'}) {
 	     $param->{'main_title'} = "$param->{'list'} - $param->{'subtitle'}";
+	     $param->{'title_clear_txt'} = $param->{'title'};
 	 }
 
      }else {
@@ -844,6 +858,49 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }elsif ($param->{'redirect_to'}) {
 	 do_log ('debug',"Redirecting to $param->{'redirect_to'}");
 	 print "Location: $param->{'redirect_to'}\n\n";
+      }elsif ($rss) {
+ 	 ## Send RSS 
+ 	 print "Cache-control: no-cache\n";
+ 	 print "Content-Type: application/rss+xml\n\n";
+ 
+ 	 ## Icons
+ 	 $param->{'icons_url'} = $wwsconf->{'icons_url'};
+ 
+ 	 ## Retro compatibility concerns
+ 	 $param->{'active'} = 1;
+ 
+ 	 if (defined $list) {
+ 	     $param->{'list_conf'} = $list->{'admin'};
+ 	 }
+ 
+ 	 my $tt2_include_path = [$Conf{'etc'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'}),
+ 				 $Conf{'etc'}.'/web_tt2',
+ 				 '--ETCBINDIR--'.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'}),
+ 				 '--ETCBINDIR--'.'/web_tt2'];
+ 	 ## not the default robot
+ 	 if (lc($robot) ne lc($Conf{'host'})) {
+ 	     unshift @{$tt2_include_path}, $Conf{'etc'}.'/'.$robot.'/web_tt2';
+ 	     unshift @{$tt2_include_path}, $Conf{'etc'}.'/'.$robot.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
+ 	 }
+ 
+ 	 ## If in list context
+ 	 if (defined $list) {
+ 	     if (defined $list->{'admin'}{'family_name'}) {
+ 		 my $family = $list->get_family();
+ 		 unshift @{$tt2_include_path}, $family->{'dir'}.'/web_tt2';
+ 		 unshift @{$tt2_include_path}, $family->{'dir'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
+ 	     }
+	     
+ 	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2';
+ 	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
+ 	 }
+ 	    
+ 	 unless (&tt2::parse_tt2($param,'rss.tt2' ,\*STDOUT, $tt2_include_path)) {
+ 	     my $error = &tt2::get_error();
+ 	     $param->{'tt2_error'} = $error;
+ 	     &List::send_notify_to_listmaster('web_tt2_error', $robot, $error);
+ 	 }
+ 	 close FILE;
      }else {
 	 ## Send HTML
 	 if ($param->{'date'}) {
@@ -1040,6 +1097,17 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     $main::options{'debug_level'} = 0 ;
 	 } 
 	 do_log ('debug2', "debug level $main::options{'debug_level'}");
+
+
+
+	 ## rss mode
+########### /^rss$/ ???
+	 if ($params[0] =~ /rss/) {
+	     shift @params;
+	     $rss = 1;
+	 }else{
+	     $rss = 0;
+	 } 
 
 	 if ($#params >= 0) {
 	     $in{'action'} = $params[0];
@@ -2157,6 +2225,8 @@ sub do_remindpasswd {
 	 my $list_info = {};
 	 $list_info->{'subject'} = $list->{'admin'}{'subject'};
 	 $list_info->{'host'} = $list->{'admin'}{'host'};
+	 $list_info->{'date_epoch'} = $list->{'admin'}{'creation'}{'date_epoch'};
+	 $list_info->{'date'} = $list->{'admin'}{'creation'}{'date'};
 	 if ($param->{'user'}{'email'} &&
 	     ($list->am_i('owner',$param->{'user'}{'email'}) ||
 	      $list->am_i('editor',$param->{'user'}{'email'})) ) {
@@ -2184,6 +2254,168 @@ sub do_remindpasswd {
 	 }
      }
      return 1;
+ }
+
+ ## The list of latest created lists
+ sub do_latest_lists {
+     &wwslog('info', "do_latest_lists($in{'for'}, $in{'count'},$in{'topic'}, $in{'subtopic'})");
+
+     unless ($in{'for'} || $in{'count'}) {
+	 &error_message('missing_arg', {'argument' => '"for" or "count"'});
+	 &wwslog('err','do_latest_lists: missing parameter "count" or "for"');
+	 return undef;
+     }
+
+     unless (&do_lists()) {
+	 &wwslog('err','do_latest_lists: error while calling do_lists');
+	 return undef;
+     }
+
+     my $today  = time;
+
+     my $oldest_day;
+     if (defined $in{'for'}) {
+ 	 $oldest_day = $today - (3600 * 24 * ($in{'for'}));
+	 $param->{'for'} = $in{'for'};
+	 unless ($oldest_day >= 0){
+	     &error_message('failed');
+	     &wwslog('err','do_latest_lists: parameter "for" is too big"');
+	 }
+     }
+
+     my $nb_lists = 0;
+     my @date_lists;
+     foreach my $listname (keys (%{$param->{'which'}})) {
+	 if ($param->{'which'}{$listname}{'date_epoch'} < $oldest_day) { 
+	     delete $param->{'which'}{$listname};
+	     next;
+	 }
+	 $nb_lists++;
+	 push (@date_lists,$param->{'which'}{$listname}{'date_epoch'}); 
+     }
+
+     if (defined $in{'count'}) {
+	 $param->{'count'} = $in{'count'};
+	
+	 if ($in{'count'}) {
+	
+	     if ($nb_lists > $in{'count'}) {
+		 @date_lists = sort @date_lists;
+		 @date_lists = reverse @date_lists;
+		 
+		 my $latest_day = $date_lists[$in{'count'}-1];
+				 
+		 foreach my $listname (keys (%{$param->{'which'}})) {
+		     if ($param->{'which'}{$listname}{'date_epoch'} < $latest_day) { 
+			 delete $param->{'which'}{$listname};
+			 next;
+		     }
+		 }
+	     } 
+	 }else {     
+	     $param->{'which'} = undef;
+	 }
+     }
+     foreach my $l ( sort {$param->{'which'}{$b}{'date_epoch'} <=> $param->{'which'}{$a}{'date_epoch'}} (keys (%{$param->{'which'}}))) {
+	 $param->{'which'}{$l}{'name'} = $l;
+	 push @{$param->{'latest_lists'}} , $param->{'which'}{$l};
+     }
+
+     $param->{'which'} = undef;
+     
+     return 1;
+ }
+
+
+ ## The list of the most active lists
+ sub do_active_lists {
+     &wwslog('info', "do_active_lists($in{'for'}, $in{'count'},$in{'topic'}, $in{'subtopic'})");
+
+     unless ($in{'for'} || $in{'count'}) {
+	 &error_message('missing_arg', {'argument' => '"for" or "count"'});
+	 &wwslog('err','do_active_lists: missing parameter "count" or "for"');
+	 return undef;
+     }
+
+     unless (&do_lists()) {
+	 &wwslog('err','do_active_lists: error while calling do_lists');
+	 return undef;
+     }
+     
+     my $oldest_day = 0;
+     
+     if (defined $in{'for'}) {
+	 $oldest_day = int(time/86400) - $in{'for'};
+	 unless ($oldest_day >= 0){
+	     &error_message('failed');
+	     &wwslog('err','do_latest_lists: parameter "for" is too big"');
+	     return undef;
+	 }
+     } 
+
+     foreach my $l (keys (%{$param->{'which'}})) {
+	 my $list = new List ($l, $robot);
+	 my $file = "$list->{'dir'}/msg_count";
+   
+	 my %count ; 
+
+	 if (open(MSG_COUNT, $file)) {	
+	     while (<MSG_COUNT>){
+		 if ($_ =~ /^(\d+)\s(\d+)$/) {
+		     $count{$1} = $2;	
+		 }
+	     }
+	     close MSG_COUNT ;
+	     $param->{'which'}{$l}{'msg_count'}	= &count_total_msg_since($oldest_day,\%count);
+	     if ($in{'for'}) {
+		 my $average = $param->{'which'}{$l}{'msg_count'} / $in{'for'}; ## nb msg by day  
+		 $average = int($average * 10);
+		 $param->{'which'}{$l}{'average'} = $average /10; ## one digit
+	     }
+	 } else {
+	     $param->{'which'}{$l}{'msg_count'}	= 0;
+	 }
+     }
+	
+     my $nb_lists = 0;
+     foreach my $l ( sort {$param->{'which'}{$b}{'msg_count'} <=> $param->{'which'}{$a}{'msg_count'}} (keys (%{$param->{'which'}}))) {
+	 if (defined $in{'count'}) {
+	     $nb_lists++;
+	     if ($nb_lists >= $in{'count'}) {
+		 last;
+	     }
+	 }
+
+	 $param->{'which'}{$l}{'name'} = $l;
+	 push @{$param->{'active_lists'}} , $param->{'which'}{$l};
+
+     }
+     
+     if (defined $in{'count'}) {
+	 $param->{'count'} = $in{'count'};
+     }
+     if (defined $in{'for'}) {
+	 $param->{'for'} = $in{'for'};
+     }
+     
+     $param->{'which'} = undef;
+
+
+     return 1;
+ }
+
+ sub count_total_msg_since {
+     my $oldest_day = shift;
+     my $count = shift;
+
+     my $total = 0;
+     foreach my $d (sort {$count->{$b} <=> $count->{$a}} keys %$count) {
+	 if ($d < $oldest_day) {
+	     last;
+	 }
+	 $total = $total + $count->{$d};
+     }
+     return $total;
  }
 
  ## List information page
@@ -2255,6 +2487,32 @@ sub do_remindpasswd {
 
      return 1;
  }
+
+
+ ## List subcriber count page
+ sub do_subscriber_count {
+     &wwslog('info', 'do_subscriber_count');
+
+     unless (&do_info()) {
+	 &wwslog('info','do_subscriber_count: error while calling do_info');
+	 return undef;
+     }
+
+     my $list;
+     unless ($list = new List($param->{'list'},$robot)) {
+	 &error_message('failed');
+	 &do_log('info', 'do_subscriber_coount : impossible to load list %s',$param->{'list'});
+	 return undef;
+     }
+
+     print "Content-type: text/plain\n\n";
+     print $list->get_total()."\n";
+
+     $param->{'bypass'} = 'extreme';
+
+     return 1;
+ }
+
 
  ## Subscribers' list
  sub do_review {
@@ -4318,6 +4576,186 @@ sub do_remindpasswd {
      return 1;
  }
 
+ ## Access to latest web archives
+ sub do_latest_arc {
+     &wwslog('info', 'do_latest_arc(%s,%s,%s)', $in{'list'}, $in{'for'}, $in{'count'});
+
+     unless ($param->{'list'}) {
+	 &error_message('missing_arg', {'argument' => 'list'});
+	 &wwslog('err','do_latest_arc: no list');
+	 return undef;
+     }
+
+     unless ($in{'for'} || $in{'count'}) {
+	 &error_message('missing_arg', {'argument' => '"for" or "count"'});
+	 &wwslog('err','do_latest_arc: missing parameter "count" or "for"');
+	 return undef;
+     }
+
+     ## Access control
+     unless (&List::request_action ('web_archive.access',$param->{'auth_method'},$robot,
+				    {'listname' => $param->{'list'},
+				     'sender' => $param->{'user'}{'email'},
+				     'remote_host' => $param->{'remote_host'},
+				     'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i) {
+	 &error_message('may_not');
+	 &wwslog('err','do_arc: access denied for %s', $param->{'user'}{'email'});
+	 return undef;
+     }
+
+     if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
+	 ## Reject Email Sniffers
+	 unless (&cookielib::check_arc_cookie($ENV{'HTTP_COOKIE'})) {
+	     if ($param->{'user'}{'email'} or $in{'not_a_sniffer'}) {
+		 &cookielib::set_arc_cookie($param->{'cookie_domain'});
+	     }else {
+		 return 'arc_protect';
+	     }
+	 }
+     }
+
+     ## parameters of the query
+     my $today  = time;
+     
+     my $oldest_day;
+     if (defined $in{'for'}) {
+ 	 $oldest_day = $today - (86400 * ($in{'for'}));
+	 $param->{'for'} = $in{'for'};
+	 unless ($oldest_day >= 0){
+	     &error_message('failed');
+	     &wwslog('err','do_latest_lists: parameter "for" is too big"');
+	 }
+     }
+
+     my $nb_arc;
+     my $NB_ARC_MAX = 100;
+     if (defined $in{'count'}) {
+	 if ($in{'count'} > $NB_ARC_MAX) {
+	     $in{'count'} = $NB_ARC_MAX;
+	 }
+	 $param->{'count'} = $in{'count'};
+         $nb_arc = $in{'count'};
+     } else {
+	 $nb_arc = $NB_ARC_MAX;
+     }       
+
+     unless (opendir ARC_DIR, "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/") {
+	 &error_message('empty_archives');
+	 &wwslog('err','do_latest_arc: no directory %s', "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}");
+	 return undef;
+     }
+
+     my @months;
+     my $latest;
+     foreach my $dir (sort grep(!/^\./,readdir ARC_DIR)) {
+	 if ($dir =~ /^(\d{4})-(\d{2})$/) {
+	     push @months, $dir;
+	     $latest = $dir;
+	 }
+     }
+     closedir ARC_DIR;
+
+     @months = reverse @months;
+     my $stop_search;
+     
+     my @archives;
+
+     ## year-month directory 
+     foreach my $year_month (@months) {
+	 if ($nb_arc <= 0) {
+	     last;
+	 }
+	  
+	 last if $stop_search;
+	 
+	 unless (opendir MONTH, "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$year_month/arctxt") {
+	     &error_message('inaccessible_archive',{'year_month' => $year_month});
+	     &wwslog('err','do_latest_arc: unable to open directory %s', "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$year_month/arctxt");
+	     next;
+	 }
+
+	 ## mails in the year-month directory
+	 foreach my $arc (sort {$b <=> $a} grep(!/^\./,readdir MONTH)) {
+	     last if ($nb_arc <= 0);
+	    
+	     if ($arc =~ /^(\d)+$/) {
+		 my %msg_info;
+
+                 use MIME::Parser;
+		 my $parser = new MIME::Parser;
+		 $parser->output_to_core(1);
+		 
+		 unless (open (FILE,"$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$year_month/arctxt/$arc")) {
+		     &wwslog('err', 'Unable to open file %s', $arc);
+		 }
+		 
+		 my $message;
+		 unless ($message = $parser->read(\*FILE)) {
+		     &wwslog('err', 'Unable to parse message %s', $arc);
+		     next;
+		 }
+
+		 use Mail::Header;
+		 my $hdr = $message->head;
+
+		 $msg_info{'message_id'} = $hdr->get('Message-Id');
+		 if ( $msg_info{'message_id'} =~ /^\<(.+)\>$/) {
+		     $msg_info{'message_id'}  =~ s/^\<(.+)\>$/$1/;
+		 } else {
+		     $msg_info{'message_id'}  =~ s/^\<(.+)\>(.+)/$1/;
+		 }
+		 $msg_info{'message_id'} = &tools::escape_chars($msg_info{'message_id'});
+	
+		 $msg_info{'year_month'} = $year_month;
+		 $msg_info{'subject'} =  $hdr->get('Subject'); 
+		 $msg_info{'from'} =  $hdr->get('From'); 
+		 
+		 my $date = $hdr->get('Date'); 
+		 my @array_date = &time_utils::parse_date($date);
+
+		 $msg_info{'date_epoch'} = &get_timelocal_from_date(@array_date[1..$#array_date]);
+
+		 $msg_info{'date'} = &POSIX::strftime("%d %b %Y",localtime($msg_info{'date_epoch'}) );
+		 if ($msg_info{'date_epoch'} < $oldest_day) {
+		     $stop_search = 1;
+		     last;
+		 }
+	
+		 push @archives,\%msg_info;
+		 $nb_arc--;
+	     }
+	 }
+	 closedir MONTH;
+	 
+	
+     }
+
+     @{$param->{'archives'}} = sort ({$a->{'date_epoch'} <=> $b->{'date_epoch'}} @archives);
+
+     if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
+	 &cookielib::set_arc_cookie($param->{'cookie_domain'});
+     }
+
+     return 1;
+ }
+
+
+sub get_timelocal_from_date {
+    my($mday, $mon, $yr, $hr, $min, $sec, $zone) = @_;
+    my($time) = 0;
+
+    $yr -= 1900  if $yr >= 1900;  # if given full 4 digit year
+    $yr += 100   if $yr <= 37;    # in case of 2 digit years
+    if (($yr < 70) || ($yr > 137)) {
+	warn "Warning: Bad year (", $yr+1900, ") using current\n";
+	$yr = (localtime(time))[5];
+    }    
+    $time = &timelocal($sec,$min,$hr,$mday,$mon,$yr);
+    return $time
+
+}
+
+
  ## Access to web archives
  sub do_remove_arc {
      &wwslog('info', 'do_remove_arc : list %s, yyyy %s, mm %s, msgid %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
@@ -4688,7 +5126,7 @@ sub do_remindpasswd {
 
  ## Search message-id in web archives
  sub do_arcsearch_id {
-     &wwslog('info', 'do_arcsearch_id(%s)', $param->{'list'});
+     &wwslog('info', 'do_arcsearch_id(%s,%s)', $param->{'list'},$in{'key_word'});
 
      unless ($param->{'list'}) {
 	 &error_message('missing_argument', {'argument' => 'list'});
@@ -4745,6 +5183,7 @@ sub do_remindpasswd {
      $in{'key_word'} =~ s/\(/\\\(/g;
      $in{'key_word'} =~ s/\)/\\\)/g;
      $in{'key_word'} =~ s/\$/\\\$/g;
+     $in{'key_word'} =~ s/\*/\\\*/g;
 
      ## Mhonarc escapes '-' characters (&#45;)
      $in{'key_word'} =~ s/\-/\&\#45\;/g;
@@ -4771,6 +5210,8 @@ sub do_remindpasswd {
      $search->searched($searched);
 
      $param->{'res'} = $search->res;
+
+     wwslog('notice','MESS_ID : %s',$in{'key_word'});
 
      unless ($#{$param->{'res'}} >= 0) {
 	 &error_message('msg_not_found');
@@ -4840,7 +5281,7 @@ sub do_remindpasswd {
      return 1;
  }
 
- # get latest lists
+ # get ordered latest lists
  sub do_get_latest_lists {
 
      &wwslog('info', 'get_latest_lists');
@@ -8018,6 +8459,33 @@ sub get_directory_content {
 
     return \@dir;
 }
+
+## return a ref on an array of file (or subdirecties) to show to user
+sub get_directory_content {
+    my $tmpdir = shift; 
+    my $user = shift;
+    my $list = shift;
+    my $doc = shift;
+    
+    # array of file not hidden
+    my @dir = grep !/^\./, @$tmpdir;
+    
+    # array with documents not yet moderated
+    my @moderate_dir = grep (/(\.moderate)$/, @$tmpdir);
+    @moderate_dir = grep (!/^\.desc\./, @moderate_dir);
+    
+    # the editor can see file not yet moderated
+    # a user can see file not yet moderated if he is th owner of these files
+    if ($list->am_i('editor',$user)) {
+ 	push(@dir,@moderate_dir);
+    }else {
+ 	my @privatedir = &select_my_files($user,$doc,\@moderate_dir);
+ 	push(@dir,@privatedir);
+    }
+ 	
+    return \@dir;
+}
+
 ## return an array that contains only file from @$refdir that belongs to $user
 sub select_my_files {
     my ($user,$path,$refdir)=@_;
@@ -8060,6 +8528,254 @@ sub make_visible_path {
     }
 }
 
+
+ ## Access to latest shared documents
+ sub do_latest_d_read {
+     &wwslog('info', 'do_latest_d_read(%s,%s,%s)', $in{'list'}, $in{'for'}, $in{'count'});
+
+     unless ($param->{'list'}) {
+	 &error_message('missing_arg', {'argument' => 'list'});
+	 &wwslog('err','do_latest_d_read: no list');
+	 return undef;
+     }
+
+     unless ($in{'for'} || $in{'count'}) {
+	 &error_message('missing_arg', {'argument' => '"for" or "count"'});
+	 &wwslog('err','do_latest_d_read: missing parameter "count" or "for"');
+	 return undef;
+     }
+
+     ### shared exist ? 
+     my $shareddir =  $list->{'dir'}.'/shared';
+     unless (-r "$shareddir") {
+	 &wwslog('err',"do_latest_d_read : unable to read $shareddir : no such file or directory");
+	 &error_message('no_such_document');
+	 return undef;
+     }
+     
+     ### Document has non-size zero?
+     unless (-s "$shareddir") {
+	 &wwslog('err',"do_latest_d_read : unable to read $shareddir : empty document");
+	 &error_message('empty_document');
+	 return undef;
+     }
+
+     ### Access control    
+     my %mode;
+     $mode{'read'} = 1;
+     $mode{'control'} = 1;
+
+     my %access = &d_access_control(\%mode,$shareddir);
+     unless ($access{'may'}{'read'}) {
+	 &error_message('may_not');
+	 &wwslog('err','latest_d_read : access denied for %s', $param->{'user'}{'email'});
+	 return undef;
+     }
+
+     ## parameters of the query
+     my $today  = time;
+     
+     my $oldest_day;
+     if (defined $in{'for'}) {
+ 	 $oldest_day = $today - (86400 * ($in{'for'}));
+	 $param->{'for'} = $in{'for'};
+	 unless ($oldest_day >= 0){
+	     &error_message('failed');
+	     &wwslog('err','do_latest_d_read: parameter "for" is too big"');
+	 }
+     }
+
+     my $nb_doc;
+     my $NB_DOC_MAX = 100;
+     if (defined $in{'count'}) {
+	 if ($in{'count'} > $NB_DOC_MAX) {
+	     $in{'count'} = $NB_DOC_MAX;
+	 }
+	 $param->{'count'} = $in{'count'};
+         $nb_doc = $in{'count'};
+     } else {
+	 $nb_doc = $NB_DOC_MAX;
+     }       
+
+     my $documents;
+     unless ($documents = &directory_browsing('',$oldest_day,$access{'may'}{'control'})) {
+         &wwslog('err',"do_d_latest_d_read($list) : impossible to browse shared");
+	 &error_message('failed');
+	 return undef;
+     }
+
+     @$documents = sort ({$b->{'date_epoch'} <=> $a->{'date_epoch'}} @$documents);
+     
+     @{$param->{'documents'}} = splice(@$documents,0,$nb_doc);
+
+     return 1;
+ }
+
+##  browse a directory recursively and return documents younger than $oldest_day
+ sub directory_browsing {
+     my ($dir,$oldest_day,$may_control) = @_;
+     &wwslog('debug2',"directory_browsing($dir,$oldest_day)");
+     
+     my @result;
+     my $shareddir =  $list->{'dir'}.'/shared';
+     my $path_dir = "$shareddir/$dir";
+
+     ## listing of all the shared documents of the directory
+     unless (opendir DIR, "$path_dir") {
+	 &wwslog('err',"directory_browsing($dir) : cannot open the directory : $!");
+	 return undef;
+     }
+
+     my @tmpdir = readdir DIR;
+     closedir DIR;
+     
+     # array of file not hidden
+     my @directory = grep !/^\./, @tmpdir;
+     
+     my $user = $param->{'user'}{'email'} || 'nobody';
+
+     ## browsing
+     foreach my $d (@directory) {
+	 my $path_d = "$path_dir/$d";
+	 
+	 #case subdirectory
+	 if (-d $path_d) {
+	     if (-e "$path_d/.desc") {
+		 # check access permission for reading
+		 my %desc_hash = &get_desc_file("$path_d/.desc");
+		 
+		 if  (($user eq $desc_hash{'email'}) || ($may_control) ||
+		      (&List::request_action ('shared_doc.d_read',$param->{'auth_method'},$robot,
+					      {'listname' => $param->{'list'},
+					       'sender' => $param->{'user'}{'email'},
+					       'remote_host' => $param->{'remote_host'},
+					       'remote_addr' => $param->{'remote_addr'},
+					       'scenario' => $desc_hash{'read'}}) =~ /do_it/i)) {
+		     my $content_d;
+		     unless($content_d = &directory_browsing("$dir/$d",$oldest_day)) {
+			 &wwslog('err',"directory_browsing($dir) : impossible to browse subdirectory $d");
+			 next;
+ 		     }	
+		     if (ref($content_d) eq "ARRAY") {
+			 push @result,@$content_d;
+		     }
+		 }	     
+	     }	     
+	     
+	 #case file    
+	 } else {
+	     
+	     my %file_info;
+	     
+             ## last update
+	     my @info = stat $path_d;
+	     $file_info{'date_epoch'} = $info[9];
+
+	     if ($file_info{'date_epoch'} < $oldest_day) {
+		 next;
+	     }
+
+	     $file_info{'last_update'} = POSIX::strftime("%d %b %Y", localtime($info[9]));
+	     
+             ## exception of index.html
+	     if ($d =~ /^(index\.html?)$/i) {
+		 next;
+	     }
+	     
+	     my $may = 1;
+	     my $def_desc = 0;
+	     my %desc_hash;
+	     
+	     if (-e "$path_dir/.desc.$d") {
+		 # a desc file was found
+		 $def_desc = 1;
+		 
+		 # check access permission		
+		 %desc_hash = &get_desc_file("$path_dir/.desc.$d");
+		 
+		 unless (($user eq $desc_hash{'email'}) || ($may_control) ||
+			 (&List::request_action ('shared_doc.d_read',$param->{'auth_method'},$robot,
+						 {'listname' => $param->{'list'},
+						  'sender' => $param->{'user'}{'email'},
+						  'remote_host' => $param->{'remote_host'},
+						  'remote_addr' => $param->{'remote_addr'},
+						  'scenario' => $desc_hash{'read'}}) =~ /do_it/i)) {
+		     $may = 0;
+		 } 
+	     } 
+	     
+	     # if permission or no description file
+	     if ($may) {
+		 $path_d =~ /^([^\/]*\/)*([^\/]+)\.([^\/]+)$/; 
+
+		 ## Bookmark
+		 if ($path_d =~ /\.url$/) {
+		     open DOC, $path_d;
+		     my $url = <DOC>;
+		     close DOC;
+		     chomp $url;
+		     $file_info{'url'} = $url;
+		     $file_info{'anchor'} = $d;
+		     $file_info{'anchor'} =~ s/\.url$//;
+		     $file_info{'icon'} = $icon_table{'url'};			
+		     
+		 ## MIME - TYPES : icons for template
+		 }elsif (my $type = $mime_types->{$3}) {
+		     # type of the file and apache icon
+		     $type =~ /^([\w\-]+)\/([\w\-]+)$/;
+		     my $mimet = $1;
+		     my $subt = $2;
+		     if ($subt) {
+			 if ($subt =~  /^octet-stream$/) {
+			     $mimet = 'octet-stream';
+			     $subt = 'binary';
+			 }
+		     }
+		     $file_info{'icon'} = $icon_table{$mimet} || $icon_table{'unknown'};
+
+		 ## UNKNOWN FILE TYPE
+		 } else {
+		     $file_info{'icon'} = $icon_table{'unknown'}; 
+		 }
+
+		 ## case html
+		 if ($3 =~ /^html?$/i) { 
+		     $file_info{'html'} = 1;
+		     $file_info{'icon'} = $icon_table{'text'};
+		 }
+	
+		 ## name of the file
+		 $file_info{'name'} = $d;
+		 $file_info{'escaped_name'} =  &tools::escape_chars($d);
+		 
+		 ## content_directory
+		 if ($dir) {
+		     $file_info{'content_dir'} = $dir;
+		 } else {
+		     $file_info{'content_dir'} = "/"; 
+		 }
+		 $file_info{'escaped_content_dir'} = &tools::escape_chars($dir,'/');
+		 
+		 if ($def_desc) {
+		     ## description
+		     $file_info{'title'} = $desc_hash{'title'};
+		     $file_info{'escaped_title'}=&tools::escape_html($desc_hash{'title'});
+		  
+		     ## author
+		     if ($desc_hash{'email'}) {
+			 $file_info{'author'} = $desc_hash{'email'};
+		     }
+		 }
+
+	     push @result,\%file_info;
+	     }
+	 } # else (file)
+	     
+     } # foreach
+
+     return \@result;
+
+ }
 
  #*******************************************
  # Function : do_d_editfile
