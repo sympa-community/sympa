@@ -851,6 +851,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 print "Location: $param->{'redirect_to'}\n\n";
      }else {
 	 ## Send HTML
+	 if ($param->{'date'}) {
+	     printf "Date: %s\n", &POSIX::strftime('%a, %d %b %Y %R %z',localtime($param->{'date'}));
+	 }
 	 print "Cache-control: no-cache\n";
 	 print "Content-Type: text/html\n\n";
 
@@ -4298,6 +4301,9 @@ sub do_redirect {
 	 &tt2::add_include_path("$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}");
 	 $param->{'file'} = "$in{'arc_file'}";
      }
+
+     my @stat = stat ("$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}");
+     $param->{'date'} = $stat[9];
 
      $param->{'base'} = sprintf "%s%s/arc/%s/%s/", $param->{'base_url'}, $param->{'path_cgi'}, $param->{'list'}, $in{'month'};
 
