@@ -835,10 +835,8 @@ sub DoForward {
 	    unless (@rcpt);
 	
     }elsif ($function eq "request") {
-	foreach my $i (@{$admin->{'owner'}}) {
-	    next if ($i->{'reception'} eq 'nomail');
-	    push(@rcpt, $i->{'email'}) if ($i->{'email'});
-	}
+	@rcpt = $list->get_owners_email();
+
 	do_log('notice', 'Warning : no owner defined or all of them use nomail option in list %s', $name ) 
 	    unless (@rcpt);
 
@@ -849,10 +847,7 @@ sub DoForward {
 	}
 	unless (@rcpt) {
 	    do_log('notice', 'No editor defined in list %s (unless they use NOMAIL), use owners', $name ) ;
-	    foreach my $i (@{$admin->{'owner'}}) {
-		next if ($i->{'reception'} eq 'nomail');
-		push(@rcpt, $i->{'email'}) if ($i->{'email'});
-	    }
+	    @rcpt = $list->get_owners_email();
 	}
     }
     

@@ -1410,6 +1410,27 @@ sub load {
     return $self;
 }
 
+## Returns an array of owners' email addresses (unless reception nomail)
+sub get_owners_email {
+    my($self) = @_;
+    do_log('debug3', 'List::get_owners_email(%s)', $self->{'name'});
+    
+    my ($i, @rcpt);
+    my $admin = $self->{'admin'}; 
+    my $name = $self->{'name'};
+
+    foreach $i (@{$admin->{'owner'}}) {
+	next if ($i->{'reception'} eq 'nomail');
+	if (ref($i->{'email'})) {
+	    push(@rcpt, @{$i->{'email'}});
+	}elsif ($i->{'email'}) {
+	    push(@rcpt, $i->{'email'});
+	}
+    }
+
+    return @rcpt;
+}
+
 ## Alert owners
 sub send_alert_to_owner {
     my($self, $alert, $data) = @_;
@@ -1422,11 +1443,8 @@ sub send_alert_to_owner {
     my $robot = $self->{'domain'};
 
     return unless ($name && $admin);
-    
-    foreach $i (@{$admin->{'owner'}}) {
-	next if ($i->{'reception'} eq 'nomail');
-	push(@rcpt, $i->{'email'}) if ($i->{'email'});
-    }
+
+    @rcpt = $self->get_owners_email();
 
     unless (@rcpt) {
 	do_log('notice', 'Warning : no owner defined or  all of them use nomail option in list %s', $name );
@@ -1448,7 +1466,7 @@ sub send_alert_to_owner {
     return 1;
 }
 
-## Send a sub/sig notice to the owners.
+## Send a sub/sig notice to listmasters.
 sub send_notify_to_listmaster {
     my ($operation, $robot, @param) = @_;
     do_log('debug3', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
@@ -1521,10 +1539,7 @@ sub send_notify_to_owner {
 
     return undef unless ($name && $admin);
     
-    foreach $i (@{$admin->{'owner'}}) {
-	next if ($i->{'reception'} eq 'nomail');
-	push(@rcpt, $i->{'email'}) if ($i->{'email'});
-    }
+    @rcpt = $self->get_owners_email();
 
     unless (@rcpt) {
 	do_log('notice', 'Warning : no owner defined or  all of them use nomail option in list %s', $name );
@@ -1570,10 +1585,7 @@ sub send_sub_to_owner {
 
    return unless ($name && $admin && $who);
 
-   foreach $i (@{$admin->{'owner'}}) {
-        next if ($i->{'reception'} eq 'nomail');
-        push(@rcpt, $i->{'email'}) if ($i->{'email'});
-   }
+   @rcpt = $self->get_owners_email();
 
    unless (@rcpt) {
        do_log('notice', 'Warning : no owner defined or  all of them use nomail option in list %s', $name );
@@ -1621,10 +1633,7 @@ sub send_sig_to_owner {
 
     return unless ($name && $admin && $who);
     
-    foreach $i (@{$admin->{'owner'}}) {
-        next if ($i->{'reception'} eq 'nomail');
-        push(@rcpt, $i->{'email'}) if ($i->{'email'});
-    }
+    @rcpt = $self->get_owners_email();
 
     unless (@rcpt) {
 	do_log('notice', 'Warning : no owner defined or  all of them use nomail option in list %s', $name );
@@ -1689,10 +1698,7 @@ sub send_to_editor {
       push(@rcpt, $i->{'email'}) if ($i->{'email'});
    }
    unless (@rcpt) {
-       foreach $i (@{$admin->{'owner'}}) {
-	   next if ($i->{'reception'} eq 'nomail');
-	   push(@rcpt, $i->{'email'}) if ($i->{'email'});
-       }
+       @rcpt = $self->get_owners_email();
 
        do_log('notice','Warning : no editor defined for list %s, contacting owners', $name );
    }
@@ -3641,7 +3647,13 @@ sub am_i {
 	    ## if no editor defined, owners has editor privilege
 	}else{
 	    foreach $u (@{$self->{'admin'}{'owner'}}) {
-		return 1 if (lc($u->{'email'}) eq lc($who));
+		if (ref($u->{'email'})) {
+		    foreach my $o (@{$u->{'email'}}) {
+			return 1 if (lc($o) eq lc($who));
+		    }
+		}else {
+		    return 1 if (lc($u->{'email'}) eq lc($who));
+		}
 	    } 
 	}
 	return undef;
@@ -3651,44 +3663,29 @@ sub am_i {
 	return undef unless ($self->{'admin'} && $self->{'admin'}{'owner'});
 	
 	foreach $u (@{$self->{'admin'}{'owner'}}) {
-	    return 1 if (lc($u->{'email'}) eq lc($who));
+	    if (ref($u->{'email'})) {
+		foreach my $o (@{$u->{'email'}}) {
+		    return 1 if (lc($o) eq lc($who));
+		}
+	    }else {
+		return 1 if (lc($u->{'email'}) eq lc($who));
+	    }
 	}
     }
     elsif ($function =~ /^privileged_owner$/i) {
 	foreach $u (@{$self->{'admin'}{'owner'}}) {
-	    return 1 if ((lc($u->{'email'}) eq lc($who)) && ($u->{'profile'} =~ 'privileged'));
+	    next unless ($u->{'profile'} =~ 'privileged');
+	    if (ref($u->{'email'})) {
+		foreach my $o (@{$u->{'email'}}) {
+		    return 1 if (lc($o) eq lc($who));
+		}
+	    }else {
+		return 1 if (lc($u->{'email'}) eq lc($who));
+	    }
 	}
     }
     return undef;
 }
-
-## Return the state for simple functions
-sub get_state {
-    my($self, $action) = @_;
-    do_log('debug3', 'List::get_state(%s)', $action);
-    
-    my $i;
-    
-    my $admin = $self->{'admin'};
-    if ($action =~ /^sig$/io) {
-	$i = $admin->{'unsubscribe'}{'name'};
-	return 'open' if ($i =~ /^(open|public)$/io);
-	return 'closed' if ($i =~ /^closed$/io);
-	return 'auth' if ($i =~ /^auth$/io);
-	return 'owner' if ($i =~ /^owner$/io);
-	
-    }elsif ($action =~ /^sub$/io) {
-	$i = $admin->{'subscribe'}{'name'};
-	return 'open' if ($i =~ /^(open|public)$/io);
-	return 'auth' if ($i =~ /^auth$/io);
-	return 'owner' if ($i =~ /^owner$/io);
-	return 'closed' if ($i =~ /^closed$/io);
-    }
-    
-    return undef;
-}
-
-
 
 ## Return the action to perform for 1 sender using 1 auth method to perform 1 operation
 sub request_action {
