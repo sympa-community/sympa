@@ -68,6 +68,17 @@ otevøete následující odkaz:
 
 Nemáte-li zájem, ignorujte prosím tuto zpravu.
 
+[ELSIF list->lang=de]
+
+Guten Tag,
+
+Diese Mailing-Liste handelt von [list->subject]. Falls Sie intressiert
+sind, antworten Sie einfach auf diese EMail oder benutzen Sie die
+folgende URL:
+[url]
+
+Falls nicht, ignorieren Sie diese Nachricht am besten.
+
 [ELSE]
 Hi,
 

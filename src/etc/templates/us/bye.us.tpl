@@ -46,6 +46,16 @@ Content-transfer-encoding: 8bit
  konference [list->name]@[list->host].
  Na shledanou!
 
+[ELSIF list->lang=de]
+Subject: Abmeldung von der Mailing-Liste [list->name]
+Mime-version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-transfer-encoding: 8bit
+
+ Ihr Abonnement für die Mailing-Liste [list->name]@[list->host] unter der
+ Adresse [user->email] wurde beendet.
+ Auf Wiedersehen!
+
 [ELSE]
 Subject: Unsubscription from [list->name]
 

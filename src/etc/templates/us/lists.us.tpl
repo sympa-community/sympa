@@ -13,6 +13,9 @@ Oto lista list od [conf->email]@[conf->host]
 [ELSIF user->lang=cz]
 Zde je seznam konferencí [conf->email]@[conf->host]
 
+[ELSIF user->lang=de]
+Hier ist eine Übersicht der Mailing-Listen von [conf->email]@[conf->host]
+
 [ELSE]
 Here is the list of list from [conf->email]@[conf->host]
 

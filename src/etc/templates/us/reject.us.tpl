@@ -56,6 +56,21 @@ Subjekt Va¹í zprávy: [subject]
 Zkontrolujte podmínky pro u¾ívání konference:
 [conf->wwsympa_url]/info/[list->name]
 
+[ELSIF list->lang=de]
+Subject: Ihr Beitrag wurde abgelehnt.
+Mime-version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-transfer-encoding: 8bit
+
+Ihr Beitrag zur Mailing-Liste [list->name]@[list->host]
+wurde von [rejected_by] (Moderator) abgelehnt.
+
+(Titel Ihrer EMail: [subject])
+
+
+Sie können genaueres über die Liste erfahren unter:
+[conf->wwsympa_url]/info/[list->name]
+
 [ELSE]
 Subject: Your message has been rejected.
 
