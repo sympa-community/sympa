@@ -96,6 +96,8 @@
 
     \newcommand {\lparam} [1] {\ttindex {#1} {#1} {list parameter}}
 
+    \newcommand {\perlmodule} [1] {\ttindex {#1} {#1} {perl module}}
+
     \newcommand {\file} [1] {\ttindex {#1} {#1} {file}}
 
     \newcommand {\dir} [1]  {\ttindex {#1} {#1} {directory}}
@@ -168,7 +170,7 @@ exactly who is authorized to perform the relevant operations, along with the
 authentication method to be used. Currently, authentication can be based
 on either an SMTP From header, a password, or an S/MIME signature.\\
 \Sympa is also able to extract electronic
-addresses from an LDAP directory or SQL server, and include them
+addresses from an \index {LDAP} directory or \index {SQL} server, and include them
 dynamically in a list.
 
 \Sympa manages the dispatching of messages, and makes it possible to
@@ -301,22 +303,22 @@ in a single software package, including:
         database or, for compatibility with versions 1.x, in text
         files. The introduction of databases came out of the
         \WWSympa project.  The database ensures a secure access to
-        shared data. The PERL database API \textit {dbi/dbd} enables
-        interoperability with various RDBMS (MySQL, PostgreSQL,
-        Oracle, Sybase).
+        shared data. The PERL database API \perlmodule {DBI}/\perlmodule {DBD} enables
+        interoperability with various \index{RDBMS} (\index{MySQL}, \index{PostgreSQL},
+        \index{Oracle}, \index{Sybase}).
 	(See ref {sec-rdbms}, page~\pageref {sec-rdbms})
 
     \item \textbf {Virtual robots} : a single \Sympa installation
         can provide multiple virtual robots with both email and web interface
         customization (See \ref {virtual-robot}, page~\pageref {virtual-robot}).
 
-    \item \textbf {LDAP-based mailing lists} : e-mail addresses can be retrieved dynamically from a database
-    	accepting SQL queries, or from an LDAP directory. In the interest
+    \item \textbf {\index {LDAP-based mailing lists}} : e-mail addresses can be retrieved dynamically from a database
+    	accepting \index {SQL} queries, or from an \index {LDAP} directory. In the interest
 	of reasonable response times, \Sympa retains the data source in an
 	internal cache controlled by a TTL (Time To Live) parameter.
 	(See ref {include-ldap-query}, page~\pageref {include-ldap-query})
 
-    \item \textbf {LDAP authentication}:  via uid and emails stored 
+    \item \textbf {\index {LDAP authentication}}:  via uid and emails stored 
       	in LDAP Directories.  Alternative email addresses, extracted from LDAP 
         directory, may be used to "unify" subscriptions.
 	(See ref {ldap-auth}, page~\pageref {ldap-auth})
@@ -324,7 +326,7 @@ in a single software package, including:
     \item \textbf {Antivirus scanner} : \Sympa extracts attachements from incoming
 	messages and run a virus scanner on them. Curently working with McAfee/uvscan,
 	Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall.
-	(See ref {Antivirus}, page~\pageref {Antivirus})
+	(See ref {antivirus}, page~\pageref {antivirus})
 
     \item Inclusion of the subscribers of one list among the subscribers of
     	another. This is real inclusion, not the dirty, multi-level cascading
@@ -363,14 +365,14 @@ It took nearly two years to produce the first market releases.
 Other date :
 
 \begin {itemize}
-   \item Mar 1999 Internal use of a database (Mysql), definition of list subscriber with external datasource (RDBMS or LDAP).
+   \item Mar 1999 Internal use of a database (Mysql), definition of list subscriber with external datasource (RDBMS or \index {LDAP}).
    \item Oct 1999 Stable version of WWsympa, introduction of scenarios.
    \item Feb 2000 Web bounces management
    \item Apr 2000 Archives search engine and message removal
    \item May 2000 List creation feature from the web
    \item Jan 2001 Support for S/MIME (signing and encryption), list setup through the web interface, Shared document repository for each list. Full rewrite of HTML look and feel
    \item Jun 2001 Auto-install of aliases at list creation time, antivirus scanner plugging
-   \item Jan 2002 Virtual robot, LDAP authentication
+   \item Jan 2002 Virtual robot, \index {LDAP authentication}
 \end {itemize} 
 	  
 
@@ -403,7 +405,7 @@ Our thanks to all contributors, including:
   \item Loic Dachary for guiding us through the \textit {GNU Coding Standards}
 
   \item Vincent Mathieu, Lynda amadouche, John Dalbec for there integration
-	of LDAP features in \Sympa.
+	of \index {LDAP} features in \Sympa.
 
   \item Olivier Lacroix, for all his perseverance in bug fixing.
 
@@ -658,7 +660,7 @@ a virtual robot or for the whole site.
 	See \ref{topics}, page~\pageref{topics}.
 
 	\item \file {auth.conf}\\
-	Defines sources for LDAP-based authentication.
+	Defines sources for \index {LDAP-based authentication}.
 
 	\item \file {robot.conf}\\
 	It is a subset of \file {sympa.conf} defining a Virtual robot 
@@ -756,7 +758,7 @@ detail in later sections.
     \item installation of DB Berkeley module (already installed on
       most UNIX systems)
 
-    \item installing a RDBMS (Oracle, MySQL, Sybase or PostgreSQL) and creating \Sympa's Database. This is required for using the web interface for \Sympa. Please refers to \"\Sympa and its database\" section (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
+    \item installing a \index{RDBMS} (\index{Oracle}, \index{MySQL}, \index{Sybase} or \index{PostgreSQL}) and creating \Sympa's Database. This is required for using the web interface for \Sympa. Please refers to \"\Sympa and its database\" section (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
 
     \item installation of
 	\index{CPAN}
@@ -847,15 +849,15 @@ PERL distribution. We try to keep this list up to date ; if you have any doubts
 run the \unixcmd {check\_perl\_modules.pl} script.
 
 \begin {itemize}
-   \item DB\_File (v. 1.50 or later)
-   \item Msgcat
-   \item Digest-MD5
-   \item MailTools (version 1.13 o later)
-   \item IO-stringy
-   \item MIME-tools (may require IO/Stringy)
-   \item MIME-Base64
-   \item CGI
-   \item File-Spec
+   \item \perlmodule {DB\_File} (v. 1.50 or later)
+   \item \perlmodule {Msgcat}
+   \item \perlmodule {Digest-MD5}
+   \item \perlmodule {MailTools} (version 1.13 o later)
+   \item \perlmodule {IO-stringy}
+   \item \perlmodule {MIME-tools} (may require IO/Stringy)
+   \item \perlmodule {MIME-Base64}
+   \item \perlmodule {CGI}
+   \item \perlmodule {File-Spec}
 \end {itemize}
 
 Since release 2, \Sympa requires an RDBMS to work properly. It stores 
@@ -866,18 +868,18 @@ This includes the generic Database interface (DBI) and a Database Driver
 for your RDBMS (DBD) :
 
 \begin {itemize}
-   \item \textbf {DBI} (DataBase Interface)
+   \item \perlmodule {DBI} (DataBase Interface)
 
-   \item \textbf {DBD} (DataBase Driver) related to your RDBMS (e.g.
+   \item \perlmodule {DBD} (DataBase Driver) related to your RDBMS (e.g.
        Msql-Mysql-modules for MySQL)
 
 \end {itemize}
 
-If you plan to interface \Sympa with an LDAP directory to build
+If you plan to interface \Sympa with an \index {LDAP} directory to build
 dynamical mailing lists, you need to install PERL LDAP libraries :
 
 \begin {itemize}
-    \item \textbf {Net::LDAP} (perlldap).
+    \item \perlmodule {Net::LDAP} (perlldap).
 
 \end {itemize}
 
@@ -886,16 +888,16 @@ install the following reversible cryptography library :
 
 \begin {itemize}
 
-    \item \textbf {CipherSaber}
+    \item \perlmodule {CipherSaber}
 
 \end {itemize}
 
 For performence concerns, we recommend using \WWSympa as a persistent CGI,
-using FastCGI. Therefore you need to install the following Perl module :
+using \index {FastCGI}. Therefore you need to install the following Perl module :
 
 \begin {itemize}
 
-    \item \textbf {FCGI}
+    \item \perlmodule {FCGI}
 
 \end {itemize}
 
@@ -2071,9 +2073,9 @@ file {wwsympa.fcgi} instances are awaiting clients requests.
 To run \WWSympa with FastCGI, you need to install :
 \begin{itemize}
 
-\item mod\_fastcgi : the Apache module that provides FastCGI features
+\item \index {mod\_fastcgi} : the Apache module that provides \index {FastCGI} features
 
-\item FCGI : the Perl module used by \WWSympa
+\item \perlmodule {FCGI} : the Perl module used by \WWSympa
 
 \end{itemize}
 
@@ -2174,7 +2176,7 @@ To run \WWSympa with FastCGI, you need to install :
 	\subsection {password\_case sensitive | insensitive}
 	\default {insensitive} \\
 	If set to \textbf {insensitive}, WWSympa's password check will be insensitive.
-	This only concerns passwords stored in Sympa database, not the ones in LDAP.
+	This only concerns passwords stored in Sympa database, not the ones in \index {LDAP}.
 	
 	\textbf {Be carefull :} in previous 3.xx versions of Sympa, passworsd were 
 	lowercased before database insertion. Therefore changing to case-sensitive 
@@ -2311,13 +2313,13 @@ on the same host as \Sympa), and the client libraries for that
 Database installed on the \Sympa host ; provided, of course, that
 a PERL DBD (DataBase Driver) is available for your chosen RDBMS!
 Check the \htmladdnormallinkfoot
-{DBI Module Availability} {http://www.symbolstone.org/technology/perl/DBI/}.
+{\perlmodule {DBI} Module Availability} {http://www.symbolstone.org/technology/perl/DBI/}.
 
 \section {Installing PERL modules}
 
-\Sympa will use DBI to communicate with the database system and
+\Sympa will use \perlmodule {DBI} to communicate with the database system and
 therefore requires the DBD for your database system. DBI and 
-DBD::YourDB (Msql-Mysql-modules for MySQL) are distributed as 
+DBD::YourDB (\perlmodule {Msql-Mysql-modules} for MySQL) are distributed as 
 CPAN modules. Refer to ~\ref {Install PERL and CPAN modules}, 
 page~\pageref {Install PERL and CPAN modules} for installation
 details of these modules.
@@ -2483,7 +2485,7 @@ database were to become inaccessible.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter {Using \Sympa with LDAP}
+\chapter {Using \Sympa with \index {LDAP}}
 \label {ldap}
 
 LDAP is a client-server protocol for accessing a directory service. Sympa
@@ -2503,11 +2505,11 @@ provide various features based on access to one or more LDAP directories :
 \section {Authentication via uid or alternate email}
 \label {ldap-auth}
 
-\Sympa stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication . The  module of LDAP authentication allows to use \Sympa in intranet without duplicating the user's passwords. 
+\Sympa stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication . The  module of \index {LDAP authentication} allows to use \Sympa in intranet without duplicating the user's passwords. 
 
-Then, users can indiferently authenticate with their ldap\_uid, their alternate\_email or their canonic email stored in the LDAP directory.
+Then, users can indiferently authenticate with their ldap\_uid, their alternate\_email or their canonic email stored in the \index {LDAP} directory.
 
-\Sympa gets the canonic email in the LDAP directory with the ldap\_uid or the alternate\_email.  
+\Sympa gets the canonic email in the \index {LDAP} directory with the ldap\_uid or the alternate\_email.  
 \Sympa will first intend an anonymous bind to the directory to get the user's DN, and then \Sympa will bind with the DN and the user's ldap\_password in order to realise an efficient authentication. This last bind will work only if the good ldap\_password is provided. Indeed the value returned by the bind(DN,ldap\_password) is tested.
 
 
@@ -2738,11 +2740,11 @@ ldap
 
 At the moment Named Filters are only used in scenarii. They enable to select a category of people who will be authorized or not to realise some actions.
 	
-As a consequence, you can grant privileges in a list to people belonging to an LDAP directory thanks to a scenario.
+As a consequence, you can grant privileges in a list to people belonging to an \index {LDAP} directory thanks to a scenario.
 	
 \subsection {Definition}
 
-	People are selected thanks to an Ldap filter defined in a configuration file. This file must have the extension '.ldap'.It is stored in \tildedir {sympa/etc/search\_filters/}.
+	People are selected thanks to an \index {LDAP filter} defined in a configuration file. This file must have the extension '.ldap'.It is stored in \tildedir {sympa/etc/search\_filters/}.
 	
 	You must mention many informations in order to create a Named Filter:
 
@@ -2910,12 +2912,12 @@ This is done using the optional parameters \unixcmd {openSSL} and
          usually \texttt {/usr/local/ssl/bin/openSSL}
   \item \cfkeyword {trusted\_ca\_options} : the option used by OpenSSL
         for trusted CA certificates. 
-        The file \cfkeyword {\tildefile {sympa/bin/etc/ca-bundle.crt}} is distributed
+        The file \tildefile {sympa/bin/etc/ca\-bundle.crt} is distributed
         with Sympa and describes a well known set of CA's, such as the default Netscape
         navigator configuration. You can declare this set of certificates as trusted
-        by setting \texttt {trusted\_ca\_options -CAfile \tildefile {sympa/bin/etc/ca-bundle.crt}}.
-        You can also use the \cfkeyword {-CApath} \unixcmd {openSSL} option, or both 
-        \cfkeyword {-CApath} and \cfkeyword {-CAfile}. Example :       
+        by setting \cfkeyword {trusted\_ca\_options} \texttt {-CAfile \tildefile {sympa/bin/etc/ca\-bundle.crt}}.
+        You can also use the \texttt {-CApath} \unixcmd {openssl} option, or both 
+        \texttt {-CApath} and \texttt {-CAfile}. Example :       
         \texttt {trusted\_ca\_options -CApath \tildefile {sympa/etc/ssl.crt} -CAfile \tildefile {sympa/bin/etc/ca-bundle.crt}}.
 
 	Both the \cfkeyword {-CAfile} file and the \cfkeyword {-CApath} directory
@@ -3479,7 +3481,7 @@ You may extract subscribers for a list from any of :
 
 \item a Relational database
 
-\item a n LDAP directory
+\item a LDAP directory
 
 \end{itemize}
 
@@ -4904,7 +4906,7 @@ parameter is \emph {not} used by \Sympa if the \tildefile
 Sympa allows the mailing list manager to choose how \Sympa loads
 subscriber data. Subscriber information can be stored in a text 
 file or relational database, or included from various external
-sources (list, flat file, result of LDAP or SQL query).
+sources (list, flat file, result of \index {LDAP} or \index {SQL} query).
 
 \begin {itemize}
 \item  \lparam {user\_data\_source} \texttt {file}
@@ -4933,7 +4935,7 @@ sources (list, flat file, result of LDAP or SQL query).
        Here, subscribers are not defined \emph {extensively} (enumeration
        of their e-mail addresses) but \emph {intensively} (definition of criteria
        subscribers must satisfy). Includes can be performed 
-       by extracting e-mail addresses using an SQL or LDAP query, or 
+       by extracting e-mail addresses using an \index {SQL} or \index {LDAP} query, or 
        by including other mailing lists. At least one include 
        paragraph, defining a data source, is needed. Valid include paragraphs (see
        below) are \lparam {include\_file}, \lparam {include\_list}, 
@@ -5090,10 +5092,10 @@ include_sql_query
 
 \lparam {include\_ldap\_query}
 
-This paragraph defines parameters for a LDAP query returning a
+This paragraph defines parameters for a \index {LDAP} query returning a
 list of subscribers. This paragraph is used only if \lparam
 {user\_data\_source} is set to \texttt {include}. This feature
-requires the Net::LDAP (perlldap) PERL module.
+requires the \perlmodule {Net::LDAP} (perlldap) PERL module.
 
 \begin{itemize}
 
@@ -5202,12 +5204,12 @@ Example :
 
 \lparam {include\_ldap\_2level\_query}
 
-This paragraph defines parameters for a two-level LDAP query returning a
+This paragraph defines parameters for a two-level \index {LDAP} query returning a
 list of subscribers. Usually the first-level query returns a list of DNs
 and the second-level queries convert the DNs into e-mail addresses.
 This paragraph is used only if \lparam
 {user\_data\_source} is set to \texttt {include}. This feature
-requires the Net::LDAP (perlldap) PERL module.
+requires the \perlmodule {Net::LDAP} (perlldap) PERL module.
 
 \begin{itemize}
 
@@ -6466,14 +6468,14 @@ of bouncing addresses.
 
 \cleardoublepage
 \chapter {Antivirus}
-\label {Antivirus}
+\label {antivirus}
 
 \Sympa lets you use an external antivirus solution to check incoming mails.
 In this case you must set the \cfkeyword {antivirus\_path} and 
 \cfkeyword {antivirus\_args} configuration parameters
  (see \ref {Antivirus plug-in}, page~\pageref {Antivirus plug-in}.
 \Sympa is already compatible with McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall.
-For each mail received, \Sympa deposits its component parts in the \tildedir {sympa/spool/tmp/antivirus} directory and
+For each mail received, \Sympa extracts its MIME parts in the \tildedir {sympa/spool/tmp/antivirus} directory and
 then calls the antivirus software to check them.
 When a virus is detected, \Sympa looks for the virus name in the virus scanner STDOUT and sends a
 \file {your\_infected\_msg.tpl} warning to the sender of the mail.
