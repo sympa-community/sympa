@@ -13,7 +13,7 @@ $quote "
 $set 1	Mensajes usados durante el proceso del archivo de configuración
 1	"El archivo de configuración contiene errores.\n"
 3	"Error en la línea %d: %s"
-102	"3.1b.10"
+102	"3.1.1"
 
 $set 2	Mensajes usados por Conf en la comprobación de archivos
 
@@ -38,13 +38,13 @@ Su mensaje era :\n"
 39	"No se encontró ninguna orden en el mensaje"
 40	"Moderando su mensaje"
 
-$set 5	Mensajes usados en el módulo de herramientas
+$set 5  Mensajes usados en el módulo de herramientas
 1	"Safefork no puede crear un nuevo proceso: %m"
 2	"Error de encaminamiento?"
 3	"El mensaje siguiente se ha dirigido a una lista aunque parece \n\
 que contiene comandos como SUBSCRIBE, SIGNOFF, HELP, INDEX, GET,... \n\n\
 Si de hecho su mensaje contuviera un comando, sepa que estos \n\
-en ningún caso deben ser dirigidos a las listas.\n\
+en ningún caso deben ser enviados a las listas.\n\
 Deben ser enviados exclusivamente a la dirección %s.\n\n\
 Si su mensaje se destinara efectivamente a la lista, ha sido desgraciadamente\n\
 interpretado por el software como un comando.\n\
@@ -53,7 +53,7 @@ Gracias por su atención. \n\n\
 ------Inicio del mensaje sospechoso------\n"
 4	"------Fin del mensaje sospechoso------\n"
 
-$set 6	Mensajes del módulo de Commands.pm
+$set 6  Mensajes del módulo de Commands.pm
 2	"Imposible leer el archivo de ayuda: %s\n"
 5	"La lista '%s' no existe.\n"
 6	"Información acerca de la lista %s :\n\n"
@@ -90,7 +90,7 @@ Esta acción se realiza generalmente para eliminar direcciones que generan proble
 en el envío de mensajes. Sin embargo, puede ser que su problema haya sido sólo \n\
 temporal.\n Si es así, disculpe las molestias y renueve su suscripción.\n"
 35	"El archivo se le enviará en un mensaje separado.\n"
-36	"La información acerca del usuario %s fueron actualizadas para la lista %s.\n"
+36	"La información acerca del usuario %s ha sido actualizada para la lista %s.\n"
 37	"El usuario %s es ahora suscriptor de la lista %s.\n"
 38	"El usuario especificado se ha eliminado de la lista.\n"
 39	"Alguien (probablemente usted) solicitó \n añadir o suprimir un usuario de la lista %s.\n\n\
@@ -103,14 +103,14 @@ Puede ser que este mensaje ya ha sido distribuido por algún moderador de la list
 43	"El mensaje para la lista %s ha sido rechazado.\n"
 44	"El mensaje para la lista %s ha sido distribuido.\n"
 45	"La lista %s no acepta el modo resumen (DIGEST). Su configuración en esta lista no se ha modificado.\n"
-46	"El comando MODINDEX se reserva a moderadores.\n\
+46	"El comando MODINDEX se reserva a los moderadores.\n\
 Usted no es moderador de la lista %s.\n"
-47	"Las ordenes EXPIRE, EXPIREINDEX y EXPIREDEL se reservan a los propietarios.\n\
+47	"Los comandos EXPIRE, EXPIREINDEX y EXPIREDEL se reservan a los propietarios.\n\
 Usted no es propietario de la lista %s.\n"
 48	"\
 Alguien (probablemente usted) solicitó que los suscriptores a la\n\
 lista '%s' desde hace  más de %d días reconfirmen su suscripción.\n\
-Si usted no desea que la acción se emprende, ignore este mensaje.\n\
+Si usted no desea que la acción se ejecute, ignore este mensaje.\n\
 Para confirmar, por favor envíe un mensaje a la dirección '%s' con el siguiente comando:\n\n\
 AUTH %s EXPIRE %s %d %d\n"
 49	"\
@@ -121,8 +121,8 @@ La expiración es para los suscriptores desde más de %d días\ny que no confirmaro
 La expiración terminará dentro de %d días (%s).\n"
 52	"%s no recibió confirmación de las siguientes direcciones:\n"
 53	"Para interrumpir el proceso de expiración: EXPIREDEL %s\n"
-54	"La lista %s no está efectuando una expiración.\n"
-55	"Usted ha detenido el comando de expiración para la lista %s\n."
+54	"La lista %s no está efectuando un proceso de expiración.\n"
+55	"Usted ha detenido el proceso de expiración para la lista %s\n."
 56	"\
 Un proceso de expiración comenzó para la lista %s.\n\
 Este proceso acabará dentro de %d días. Usted recibirá entonces la lista de los suscriptores \n\
@@ -180,13 +180,13 @@ Esto puede ser validado también mediante la URL: %s\n\
 Si usted no quiere confirmar la anulación de la suscripción, ignore este mensaje.\n"
 
 
-$set 7	Mensajes de Syslog (Commands.pm)
+$set 7  Mensajes de Syslog (Commands.pm)
 
-$set 8	Mensajes usado en List.pm
+$set 8  Mensajes usado en List.pm
 1	"Propietarios de la lista %s"
 2	"Solicitud de suscripción a la lista %s"
 3	"Querido(s) propietario(s) de la lista %s,\n\n\
-Un usuario solicitó suscribirse a su lista. Si está(n) de acuerdo \n haga un click en la siguiente URL : \n\n\
+Un usuario solicitó suscribirse a su lista. Si está(n) de acuerdo \n haga(n) un click en la siguiente URL : \n\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n\n\
 O envíe un mensaje a %s con el siguiente tema : \n\
 AUTH %s ADD %s %s %s\n"
@@ -222,7 +222,7 @@ CONFIRM %s %s\n"
 debido a que la dirección no se encontró en la lista\n\
 (Quizás se debe ayudar a esta persona)\n"
 24	"Petición de anulación de suscripción a la lista %s"
-25	"Querido propietario(s) de la lista %s,\n\n\
+25	"Querido(s) propietario(s) de la lista %s,\n\n\
 Un suscriptor ha solicitado su supresión en la lista. \
 Si usted está de acuerdo, haga un clic en la siguiente URL : \n\n\
 mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n\n\
@@ -237,13 +237,13 @@ Si se desea suprimir los suscriptores con esos problemas:\n\
 30	"Usted está invitado a unirse a la lista %s"
 31	"Sumario de la lista %s"
 
-$set 9	Mensajes para la cabecera del comando 'review'
+$set 9  Mensajes para la cabecera del comando 'review'
 1	"Propietario            : %s\n"
 2	"Moderador              : %s\n"
-3	"Suscripción           : %s\n"
+3	"Suscripción            : %s\n"
 4	"Supresión              : %s\n"
 5	"Enviando mensajes      : %s\n"
-6	"Lista de suscriptores : %s\n"
+6	"Lista de suscriptores  : %s\n"
 7	"Respuesta a            : %s\n"
 8	"Tamaño Máximo          : %d\n"
 9	"URL de la lista        : %s\n"
@@ -252,7 +252,7 @@ $set 9	Mensajes para la cabecera del comando 'review'
 12	"Tema normal            : %s\n"
 13	"Modo de recepción      : %s\n"
 
-$set 11	Mensajes utilizados por el modulo smtp.
+$set 11 Mensajes utilizados por el modulo smtp.
 1	"Su sistema no parece conformar el estándar POSIX P1003.1, o bien\n\
 su sistema Perl no define _SC_ARG_MAX en su biblioteca POSIX.\n\
 Es necesario que usted modifique el módulo smtp.pm para fijar un\n\
@@ -266,10 +266,10 @@ $set 12 Cabecera MIME
 4	"SYMPA <%s>"
 
 $set 13 Mensajes para la cabecera del índice de moderación
-1	"\t	Fecha               : %s"
-2	"\t	Remitente           : %s"
-3	"\t 	Tamaño              : %s\n"
-4	"\t 	Clave de moderación : %s\n"
+1	"\t        Fecha               : %s"
+2 	"\t        Remitente           : %s"
+3 	"\t        Tamaño              : %s\n"
+4	"\t        Clave de moderación : %s\n"
 
 $set 14 Para la web
 1	"es_ES"
@@ -277,19 +277,19 @@ $set 14 Para la web
 
 $set 15 Templates files
 1	"Mensaje de Bienvenida"
-2	"Anulación suscripción"
+2 	"Anulación suscripción"
 3	"Mensaje de supresión"
 4	"Pie de mensaje"
-5	"Cabecera de mensaje"
-6	"Mensaje de recordatorio"
-7	"Mensaje de rechazo del editor de la lista"
+5 	"Cabecera de mensaje"
+6 	"Mensaje de recordatorio"
+7 	"Mensaje de rechazo del editor de la lista"
 8	"Mensaje de invitación a suscribirse"
 9	"Fichero de ayuda"
 10	"Directorio de listas"
 11	"Mensaje de recordatorio global"
 12	"Sumario de mensajes"
 13	"Descripción de la lista"
-14	"Principal de la lista"
+14	"Página principal de la lista"
 
 
 $set 16 Títulos de los parámetros de Listm 
@@ -321,8 +321,8 @@ $set 16 Títulos de los parámetros de Listm
 29	"nombre"
 30	"información privada"
 31	"Tipo de Anexo"
-32	"Dirección de respuesta forzada"
-33	"Domino de Internet"
+32	"Dirección forzada de respuesta"
+33	"Dominio de Internet"
 34	"Inclusión de fichero"
 35	"Inclusión de petición LDAP"
 36	"host remoto"
@@ -357,7 +357,7 @@ $set 16 Títulos de los parámetros de Listm
 66	"Dirección de respuesta"
 67	"Quién puede ver los suscriptores"
 68	"Quién puede enviar mensajes"
-69	"Número de serial de la configuración"
+69	"Número de serie de la configuración"
 70	"Documentos compartidos"
 71	"Estado de la lista"
 72	"Tema de la lista"
@@ -374,13 +374,17 @@ $set 16 Títulos de los parámetros de Listm
 86	"Quién puede visualizar"
 87	"Quién puede editar"
 88	"Opciones de suscripción disponibles"
-89  "Modo de recepción"
+89	"Modo de recepción"
+90	"Dirección de respuesta"
+91	"valor"
+92	"otra dirección electrónica"
+93	"respetar el campo de cabecera existente"
 
 $set 17 Cookie expiration periods
 1	"sesión"
 2	"10 minutos"
-3	"30 minutos"
-4	"1 hora"
-5	"6 horas"
-6	"1 día"
-7	"1 semana"
+3 	"30 minutos"
+4 	"1 hora"
+5 	"6 horas"
+6 	"1 día"
+7 	"1 semana"
