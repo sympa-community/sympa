@@ -110,7 +110,7 @@ sub checkcommand {
    return 0 if ($#{$msg->body} >= 5);  ## More than 5 lines in the text.
 
    foreach $i (@{$msg->body}) {
-       if ($Conf{'misaddressed_commands_regexp'} && ($i =~ /^$Conf{'misaddressed_commands_regexp'}$/im)) {
+       if ($Conf{'misaddressed_commands_regexp'} && ($i =~ /^$Conf{'misaddressed_commands_regexp'}\b/im)) {
 	   &rejectMessage($msg, $sender, $robot);
 	   return 1;
        }
