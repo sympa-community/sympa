@@ -4,6 +4,7 @@
 # when using sympa. Aliases can be added or removed in file --SENDMAIL_ALIASES--
 
 my $alias_file = '--SENDMAIL_ALIASES--';
+my $alias_wrapper = '--MAILERPROGDIR--/aliaswrapper';
 my $tmp_alias_file = '/tmp/sympa_aliases.new';
 my $lock_file = '--DIR--/alias_manager.lock';
 my $default_domain;
@@ -67,6 +68,11 @@ if ($operation eq 'add') {
 
     close ALIAS;
 
+    ## Newaliases
+    unless (system($alias_wrapper) == 0) {
+	die "Failed to execute newaliases: $!";
+    }
+
     ## Unlock
     flock LF, 8;
     close LF;
@@ -122,6 +128,11 @@ if ($operation eq 'add') {
     print OLDALIAS <NEWALIAS>;
     close OLDALIAS ;
     close NEWALIAS;
+
+    ## Newaliases
+    unless (system($alias_wrapper) == 0) {
+	die "Failed to execute newaliases: $!";
+    }
 
     ## Unlock
     flock LF, 8;

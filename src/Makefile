@@ -4,7 +4,7 @@ SRC	=	sympa.pl Archive.pm Commands.pm Conf.pm \
 		Language.pm List.pm Log.pm mail.pm msg.pl \
 		smtp.pm tools.pl Version.pm parser.pl alias_manager.pl
 
-all:	queue bouncequeue
+all:	queue bouncequeue aliaswrapper
 
 clean:
 	@if [ -f ./queue ]; then \
@@ -17,7 +17,7 @@ clean:
 install: 
 	echo "Please use the main Makefile for installing sources."
 
-newinstall: makedir subst $(SRC) installqueue installscenari installtemplates installetc installlisttemplates installmod info
+newinstall: makedir subst $(SRC) installqueue installwrapper installscenari installtemplates installetc installlisttemplates installmod info
 
 
 installtemplates:
@@ -56,6 +56,10 @@ installqueue:
 	@echo "Installing BounceQueue binary..."
 	cp bouncequeue $(DESTDIR)$(MAILERPROGDIR)/
 
+installwrapper:
+	@echo "Installing AliasWrapper binary..."
+	cp aliaswrapper $(DESTDIR)$(MAILERPROGDIR)/
+
 makedir:
 	@if [ ! -d $(DESTDIR)$(MAILERPROGDIR) ]; then \
 		echo "Creating required directory $(DESTDIR)$(MAILERPROGDIR)"; \
@@ -86,6 +90,8 @@ installmod:
 	@echo "Setting group and owner for $(DESTDIR)$(BINDIR)..."
 	chown -R $(USER) $(DESTDIR)$(BINDIR)
 	chgrp -R $(GROUP) $(DESTDIR)$(BINDIR)
+	chown root $(DESTDIR)$(MAILERPROGDIR)/aliaswrapper
+	chgrp $(GROUP) $(DESTDIR)$(MAILERPROGDIR)/aliaswrapper
 	@echo "Setting privileges..."
 	chmod 755 $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCBINDIR) 
 	chmod 755 $(DESTDIR)$(ETCBINDIR)/scenari $(DESTDIR)$(ETCBINDIR)/templates
@@ -93,12 +99,17 @@ installmod:
 	chmod 644 $(DESTDIR)$(ETCBINDIR)/*.conf $(DESTDIR)$(ETCBINDIR)/*.crt 
 	chmod 400 $(DESTDIR)$(ETCBINDIR)/ca-bundle.crt
 	chmod 4755 $(DESTDIR)$(MAILERPROGDIR)/queue $(DESTDIR)$(MAILERPROGDIR)/bouncequeue
+	chmod 4750 $(DESTDIR)$(MAILERPROGDIR)/aliaswrapper
 
 queue: queue.c Makefile ../Makefile
 	$(CC) $(CFLAGS) $(CDEFS) -o queue queue.c
 
 bouncequeue: bouncequeue.c Makefile ../Makefile
 	$(CC) $(CFLAGS) $(CDEFS) -o bouncequeue bouncequeue.c
+
+aliaswrapper: aliaswrapper.c Makefile ../Makefile
+	$(CC) $(CFLAGS) $(CDEFS) -DNEWALIASES=\"${NEWALIASES}\" \
+		-o aliaswrapper aliaswrapper.c
 
 subst:
 	@echo "Doing multiple substitutions while installing ..."
