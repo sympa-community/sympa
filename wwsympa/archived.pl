@@ -38,7 +38,7 @@ use Getopt::Long;
 use wwslib;
 use smtp;
 
-require 'parser.pl';
+require 'tt2native.pl';
 require 'tools.pl';
 
 #getopts('dF');
@@ -440,7 +440,7 @@ sub mail2arc {
 }
 
 sub set_hidden_mode {
-    ## $ENV{'M2H_MODIFYBODYADDRESSES'} à positionner si le corps du message est parsé
+    ## $ENV{'M2H_MODIFYBODYADDRESSES'} à positionner si le corps du message est parse
     $ENV{'M2H_ADDRESSMODIFYCODE'} = 's|^([^@]+)@([^@]+)$|\[hidden_head\]$1\[hidden_at\]$2\[hidden_end\]|g';	
 }
 
