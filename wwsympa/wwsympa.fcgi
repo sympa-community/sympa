@@ -7793,7 +7793,7 @@ sub do_d_control {
     my $lang = $param->{'lang'};
 
     ## Scenario list for READ
-    my $read_scenario_list = $list->load_scenario_list('d_read');
+    my $read_scenario_list = $list->load_scenario_list('d_read', $robot);
     $param->{'read'}{'scenario_name'} = $read;
     $param->{'read'}{'label'} = $read_scenario_list->{$read}{'title'}{$lang};
     
@@ -7806,7 +7806,7 @@ sub do_d_control {
     }
 
     ## Scenario list for EDIT
-    my $edit_scenario_list = $list->load_scenario_list('d_edit');
+    my $edit_scenario_list = $list->load_scenario_list('d_edit', $robot);
     $param->{'edit'}{'scenario_name'} = $edit;
     $param->{'edit'}{'label'} = $edit_scenario_list->{$edit}{'title'}{$lang};
  
