@@ -32,11 +32,6 @@ use Conf;
 # use Net::SSLeay qw(&get_https);
 # use Net::SSLeay;
 
-## Supported web languages
-@languages = ('cs_CZ','de_DE','en_US','es_ES','et_EE',
-	      'fi_FI','fr_FR','hu_HU','it_IT','nl_NL',
-	      'pl_PL','pt_PT','ro_RO','zh_CN','zh_TW');
-
 %reception_mode = ('mail' => 'normal',
 		   'digest' => 'digest',
 		   'digestplain' => 'digestplain',
