@@ -39,7 +39,7 @@ use Conf;
 
 %reception_mode = ('mail' => 'normal',
 		   'digest' => 'digest',
-           'digestplain' => 'digestplain',
+		   'digestplain' => 'digestplain',
 		   'summary' => 'summary',
 		   'notice' => 'notice',
 		   'txt' => 'txt',
@@ -61,24 +61,24 @@ use Conf;
 		    'conceal' => 'conceal');
 
 ## Filenames with corresponding entry in NLS set 15
-%filenames = ('welcome.tpl'             => {'gettext_id' => "welcome message"},
-	      'bye.tpl'                 => {'gettext_id' => "unsubscription message"},
-	      'removed.tpl'             => {'gettext_id' => "deletion message"},
+%filenames = ('welcome.tt2'             => {'gettext_id' => "welcome message"},
+	      'bye.tt2'                 => {'gettext_id' => "unsubscription message"},
+	      'removed.tt2'             => {'gettext_id' => "deletion message"},
 	      'message.footer'          => {'gettext_id' => "message footer"},
 	      'message.header'          => {'gettext_id' => "message header"},
-	      'remind.tpl'              => {'gettext_id' => "remind message"},
-	      'reject.tpl'              => {'gettext_id' => "editor rejection message"},
-	      'invite.tpl'              => {'gettext_id' => "subscribing invitation message"},
-	      'helpfile.tpl'            => {'gettext_id' => "help file"},
-	      'lists.tpl'               => {'gettext_id' => "directory of lists"},
-	      'global_remind.tpl'       => {'gettext_id' => "global remind message"},
-	      'summary.tpl'             => {'gettext_id' => "summary message"},
+	      'remind.tt2'              => {'gettext_id' => "remind message"},
+	      'reject.tt2'              => {'gettext_id' => "editor rejection message"},
+	      'invite.tt2'              => {'gettext_id' => "subscribing invitation message"},
+	      'helpfile.tt2'            => {'gettext_id' => "help file"},
+	      'lists.tt2'               => {'gettext_id' => "directory of lists"},
+	      'global_remind.tt2'       => {'gettext_id' => "global remind message"},
+	      'summary.tt2'             => {'gettext_id' => "summary message"},
 	      'info'                    => {'gettext_id' => "list description"},
 	      'homepage'                => {'gettext_id' => "list homepage"},
-	      'create_list_request.tpl' => {'gettext_id' => "list creation request message"},
-	      'list_created.tpl'        => {'gettext_id' => "list creation notification message"},
-	      'your_infected_msg.tpl'   => {'gettext_id' => "virus infection message"},
-	      'list_aliases.tpl'        => {'gettext_id' => "list aliases template"}
+	      'create_list_request.tt2' => {'gettext_id' => "list creation request message"},
+	      'list_created.tt2'        => {'gettext_id' => "list creation notification message"},
+	      'your_infected_msg.tt2'   => {'gettext_id' => "virus infection message"},
+	      'list_aliases.tt2'        => {'gettext_id' => "list aliases template"}
 	      );
 
 ## Defined in RFC 1893

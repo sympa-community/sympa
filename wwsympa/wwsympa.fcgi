@@ -373,6 +373,9 @@ $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 &Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'wwsympa');
 &do_log('info', 'WWSympa started');
 
+## Set locale configuration	 
+$Language::default_lang = $Conf{'lang'};	 
+
 unless ($List::use_db = &List::probe_db()) {
     &error_message('no_database');
     &do_log('info','WWSympa requires a RDBMS to run');
