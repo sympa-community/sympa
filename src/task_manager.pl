@@ -131,9 +131,8 @@ if ($main::options{'log_level'}) {
 }
 
 ## Set the UserID & GroupID for the process
-$( = $) = (getpwnam('--USER--'))[2];
-$< = $> = (getgrnam('--GROUP--'))[2];
-
+$( = $) = (getgrnam('--GROUP--'))[2];
+$< = $> = (getpwnam('--USER--'))[2];
 
 ## Sets the UMASK
 umask($Conf{'umask'});
@@ -1105,7 +1104,7 @@ sub expire_bounce {
 	my $list = new List ($listname);
 	# the reference date is the date until which we expire bounces in second
         # the latest_distribution_date is the date of last distribution #days from 01 01 1970
-	unless ( $list->{'admin'}{'user_data_source'} eq 'database' ) {
+	if ( ($list->{'admin'}{'user_data_source'} eq 'include' )||( $list->{'admin'}{'user_data_source'} eq 'file' )) {
 	    # do_log('notice','bounce expiration : skipping list %s because not using database',$listname);
 	    next;
 	}
