@@ -272,7 +272,7 @@ sub search
 				# Messages are contained between Body-of-Message tags
 				next unless (/^<!--X-Body-of-Message-->/); 
 				$_ = <FH>;		
-				while (! eof() && ($_ !~ /^<!--X-MsgBody-End-->/)) 
+				while (! eof && ($_ !~ /^<!--X-MsgBody-End-->/)) 
 				{	
 					push(@$body_ref,$_);
 					$_ = <FH>;
