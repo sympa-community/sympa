@@ -91,18 +91,21 @@ sub new {
     ## Strip of the initial X-Sympa-To field
     # Used by checksum later
     #$hdr->delete('X-Sympa-To');
-    
-    ## get listname & robot
-    my ($listname, $robot) = split(/\@/,$message->{'rcpt'});
 
-    $robot = lc($robot);
-    $listname = lc($listname);
-    $robot ||= $Conf{'host'};
-    
-    my $conf_email = &Conf::get_robot_conf($robot, 'email');
-    my $conf_host = &Conf::get_robot_conf($robot, 'host');
-    unless ($listname =~ /^(sympa|listmaster|$conf_email)(\@$conf_host)?$/i) {
-	$message->{'list'} = new List ($listname, $robot);
+    ## Do not check listname if processing a web message
+    unless ($hdr->get('X-Sympa-From')) {
+	## get listname & robot
+	my ($listname, $robot) = split(/\@/,$message->{'rcpt'});
+	
+	$robot = lc($robot);
+	$listname = lc($listname);
+	$robot ||= $Conf{'host'};
+	
+	my $conf_email = &Conf::get_robot_conf($robot, 'email');
+	my $conf_host = &Conf::get_robot_conf($robot, 'host');
+	unless ($listname =~ /^(sympa|listmaster|$conf_email)(\@$conf_host)?$/i) {
+	    $message->{'list'} = new List ($listname, $robot);
+	}
     }
 
     ## S/MIME
