@@ -50,7 +50,7 @@ selected by Sympa as severe bouncing addresses:[%END%]
 [% user %]
 [%END%]
 
-[%|loc%]Managing bouncing subscribers:[%END%] [conf->wwsympa_url]/reviewbouncing/[list->name]
+[%|loc%]Managing bouncing subscribers:[%END%] [% conf.wwsympa_url %]/reviewbouncing/[% list.name %]
 [% ELSE -%]
 Subject: [% FILTER qencode %][% type %][%END%]
 

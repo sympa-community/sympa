@@ -201,7 +201,7 @@
         [% IF is_editor %]
           [% IF f.moderate %]
           <td style="text-align: center; font-size: smaller;">
-          <a href="[path_cgi]/modindex/[list]"> [%|loc%]moderate[%END%]</a>
+          <a href="[% path_cgi %]/modindex/[% list %]"> [%|loc%]moderate[%END%]</a>
           </td>
           [% ELSE %]
           <td>&nbsp; </td>
