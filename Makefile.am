@@ -164,7 +164,7 @@ main_SRC	=	AUTHORS COPYING ChangeLog INSTALL KNOWNBUGS NEWS README
 LOG_SOCKET_TYPE	=	unix
 #endif
 
-all:	checkcpan sources languages checkperl man
+all:	checkcpan sources languages checkperl checkmhonarc man
 
 rpm: build_rh_rpm build_mdk_rpm
 
@@ -178,6 +178,20 @@ checkperl:
 	echo "## If your Perl version is 5.6.0 AND if your system is Solaris :"; \
 	echo "## See also http://bugs.perl.org/perlbug.cgi?req=bidmids&bidmids=20000522.003"; \
 	echo "#############################################################################"; \
+	fi
+	@if [ ! -f $(SUIDPERL) ]; then \
+		echo "##################################"; \
+		echo "## You don't have suidperl installed."; \
+		echo "## Suidperl is required to run WWSympa with SetUID."; \
+		echo "#####################################################"; \
+	fi
+
+checkmhonarc:
+	@if [ ! -f $(MHONARC) ]; then \
+		echo "##################################"; \
+		echo "## You don't have mhonarc installed."; \
+		echo "## Mhonarc is required to manage web archives."; \
+		echo "#####################################################"; \
 	fi
 
 sources: src/Makefile src/queue.c src/bouncequeue.c src/aliaswrapper.c

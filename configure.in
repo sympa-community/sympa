@@ -138,6 +138,13 @@ AC_PATH_PROG(PERL, perl, /usr/bin/perl)
 AC_ARG_WITH(perl, [  --with-perl=FULLPATH       set full path to Perl interpreter (default /usr/bin/perl)], [PERL="$withval"])
 AC_SUBST(PERL)
 
+AC_PATH_PROG(SUIDPERL, suidperl, /usr/bin/suidperl)
+AC_SUBST(SUIDPERL)
+
+AC_PATH_PROG(MHONARC, mhonarc, /usr/bin/mhonarc)
+AC_ARG_WITH(mhonarc, [  --with-mhonarc=FULLPATH       set full path to MhOnArc mail archiving system (default /usr/bin/mhonarc)], [MHONARC="$withval"])
+AC_SUBST(MHONARC)
+
 AC_PATH_PROG(OPENSSL, openssl, /usr/local/ssl/bin)
 AC_ARG_WITH(openssl, [  --with-openssl=FULLPATH       set path to OpenSSL (default /usr/local/ssl/bin/openssl)], [OPENSSL="$withval"])
 AC_SUBST(OPENSSL)
