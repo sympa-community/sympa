@@ -144,6 +144,14 @@ You did not choose a password, request a reminder of the initial password
 [ELSIF error->msg=change_email_failed]
 Could not change email for liste [error->list]
 
+[ELSIF error->msg=change_email_failed_because_subscribe_not_allowed]
+Could not change subscription address for list '[error->list]'
+because subscription with new address is not allowed.
+
+[ELSIF error->msg=change_email_failed_because_unsubscribe_not_allowed]
+Could not change subscription address for list '[error->list]'
+because unsubscription is not allowed.
+
 [ELSE]
 [error->msg]
 [ENDIF]

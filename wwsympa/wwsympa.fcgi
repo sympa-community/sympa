@@ -7825,6 +7825,31 @@ sub do_change_email {
 	foreach my $l ( &List::get_which($param->{'user'}{'email'},$robot, 'member') ) {
 	    my $list = new List ($l);
 	    
+	    my $sub_is = &List::request_action('subscribe',$param->{'auth_method'},$robot,
+					       {'listname' => $l,
+						'sender' => $in{'email'}, 
+						'remote_host' => $param->{'remote_host'},
+						'remote_addr' => $param->{'remote_addr'}});
+
+	    my $unsub_is = &List::request_action('unsubscribe',$param->{'auth_method'},$robot,
+						 {'listname' => $l,
+						  'sender' => $param->{'user'}{'email'}, 
+						  'remote_host' => $param->{'remote_host'},
+						  'remote_addr' => $param->{'remote_addr'}});
+	    
+
+	    if ($sub_is !~ /do_it/) {	
+	        &error_message('change_email_failed_because_subscribe_not_allowed',{'list' => $l}) ;
+		&wwslog('info', "do_change_email: could not change email for list %s because subscribe not allowed");
+		next;
+	    }elsif($unsub_is !~ /do_it/) {	
+	        &error_message('change_email_failed_because_unsubscribe_not_allowed',{'list' => $l});
+		&wwslog('info', "do_change_email : could not change email for list %s because unsubscribe not allowed");
+		next;
+	    }
+	    #elsif(($sub_is =~ /owner/) || ($unsub_is =~ /owner/)) {
+            #    next;
+	    #}
 	    unless ($list->update_user($param->{'user'}{'email'}, {'email' => $in{'email'}, 'update_date' => time}) ) {
 		&error_message('change_email_failed', {'list' => $l});
 		&wwslog('info', 'do_change_email: could not change email for list %s', $l);

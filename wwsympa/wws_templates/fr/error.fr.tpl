@@ -138,6 +138,14 @@ Vous n'avez pas défini de mot de passe, demandez un rappel du mot de passe initi
 [ELSIF error->msg=change_email_failed]
 Changement d'adresse email impossible dans la liste [error->list]
 
+[ELSIF error->msg=change_email_failed_because_subscribe_not_allowed]
+Changement d'adresse email impossible dans la liste [error->list]
+parce que l'abonnement avec la nouvelle adresse n'est pas autorisé.
+
+[ELSIF error->msg=change_email_failed_because_unsubscribe_not_allowed]
+Changement d'adresse email impossible dans la liste [error->list]
+parce que le désabonnement n'est pas autorisé.
+
 [ELSE]
 [error->msg]
 [ENDIF]
