@@ -4847,7 +4847,6 @@ sub d_access_control {
     # Arguments
     my $mode = shift;
     my $path = shift;
-    $path = lc($path);
 
     my $mode_read = $mode->{'read'};
     my $mode_edit = $mode->{'edit'};
@@ -5198,7 +5197,7 @@ sub do_d_read {
     my $list_host = $list->{'name'}.'@'.$list->{'admin'}{'host'}; 
 
     # relative path / directory shared of the document 
-    my $path = lc($in{'path'});
+    my $path = $in{'path'};
     my $path_orig = $path;
   
     my $expl = $Conf{'home'};
@@ -5609,7 +5608,7 @@ sub do_d_editfile {
 
     # Variables
     my $expl = $Conf{'home'};
-    my $path = lc($in{'path'});
+    my $path = $in{'path'};
     # $path must have no slash at its end
     $path = &format_path('without_slash',$path);
 
@@ -5713,7 +5712,7 @@ sub do_d_describe {
     # Variables
     my $expl = $Conf{'home'};
 
-    my $path = lc($in{'path'});
+    my $path = $in{'path'};
     ## $path must have no slash at its end
     $path = &format_path('without_slash',$path);
 
@@ -5865,7 +5864,7 @@ sub do_d_savefile {
     # Variables
     my $expl = $Conf{'home'};
 
-    my $path = lc($in{'path'});
+    my $path = $in{'path'};
     ## $path must have no slash at its end
     $path = &format_path('without_slash',$path);
     
@@ -6016,7 +6015,7 @@ sub do_d_overwrite {
     # Variables
     my $expl = $Conf{'home'};
     
-    my $path = lc($in{'path'});
+    my $path = $in{'path'};
     ##### $path must have no slash at its end!
     $path = &format_path('without_slash',$path);
 
@@ -6171,7 +6170,7 @@ sub do_d_upload {
   
     # Variables 
     my $expl = $Conf{'home'};
-    my $path = lc($in{'path'});
+    my $path = $in{'path'};
     ## $path must have a slash at its end
     $path = &format_path('with_slash',$path);
 
@@ -6221,7 +6220,7 @@ sub do_d_upload {
     }
 
     # Lowercase for file name
-    $fname = lc($fname);
+    $fname = $fname;
     
     # the file mustn't already exist
     if (-e "$shareddir/$path$fname") {
@@ -6299,7 +6298,7 @@ sub do_d_delete {
         #useful variables
     my $expl = $Conf{'home'};
 
-    my $path = lc($in{'path'});
+    my $path = $in{'path'};
     ## $path must have no slash at its end!
     $path = &format_path('without_slash',$path);
     
@@ -6436,7 +6435,7 @@ sub do_d_create_dir {
   
       #useful variables
     my $expl = $Conf{'home'};
-    my $path = lc($in{'path'});
+    my $path = $in{'path'};
     ## $path must have a slash at its end
     $path = &format_path('with_slash',$path);
 
@@ -6445,7 +6444,7 @@ sub do_d_create_dir {
     my $name_doc = $in{'name_doc'};
     
     # Lowercase for directory name
-    $name_doc = lc($name_doc);
+    $name_doc = $name_doc;
 
     $param->{'list'} = $list_name;
     $param->{'path'} = $path;
@@ -6540,7 +6539,7 @@ sub do_d_control {
 
     # Variables
     my $expl = $Conf{'home'};
-    my $path = lc($in{'path'});
+    my $path = $in{'path'};
     #my $list_name = $in{'list'};
     my $list_name = $list->{'name'};
        
@@ -6686,7 +6685,7 @@ sub do_d_change_access {
     # Variables
     my $expl = $Conf{'home'};
 
-    my $path = lc($in{'path'});
+    my $path = $in{'path'};
     ## $path must have no slash at its end
     $path = &format_path('without_slash',$path);
 
@@ -6810,7 +6809,7 @@ sub do_d_set_owner {
     my $desc_file;
     my $expl = $Conf{'home'};
 
-    my $path = lc($in{'path'});
+    my $path = $in{'path'};
     ## $path must have no slash at its end
     $path = &format_path('without_slash',$path);
 
