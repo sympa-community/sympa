@@ -142,7 +142,7 @@ sub get_https2{
 	my $ssl_socket;
 
 	$ssl_socket = new IO::Socket::SSL(SSL_use_cert => 0,
-					  SSL_verify_mode => 0x00,
+					  SSL_verify_mode => 0x01,
 					  SSL_ca_file => $trusted_ca_file,
 					  SSL_ca_path => $trusted_ca_path,
 					  PeerAddr => $host,
