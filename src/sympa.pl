@@ -727,7 +727,7 @@ sub DoMessage{
 
     if ($action =~ /^do_it/) {
 	
-	my $numsmtp = $list->distribute_msg($msg, $bytes, $encrypt);
+	my $numsmtp = $list->distribute_msg($msg, $bytes, $file, $encrypt);
 
 	$msgid_table{$listname}{$messageid}++;
 	
@@ -918,26 +918,27 @@ sub SendDigest{
     closedir(DIR);
 
 
-    foreach my $digest (@dfile){
+    foreach my $listname (@dfile){
 
-	my @timedigest= (stat "$Conf{'queuedigest'}/$digest")[9];
-        my $listname = $digest;
+	my $filename = $Conf{'queuedigest'}.'/'.$listname;
+
+	my @timedigest= (stat $filename)[9];
 
 	my $list = new List ($listname);
 	unless ($list) {
-	    &do_log('info', 'Unknown list, deleting digest file %s', $digest);
-	    unlink "$Conf{'queuedigest'}/$digest";
+	    &do_log('info', 'Unknown list, deleting digest file %s', $filename);
+	    unlink $filename;
 	    return undef;
 	}
 
 	if ($list->get_nextdigest()){
 	    ## Blindly send the message to all users.
-	    do_log('info', "Sending digest to list %s", $digest);
+	    do_log('info', "Sending digest to list %s", $listname);
 	    my $start_time = time;
-	    $list->send_msg_digest($digest);
+	    $list->send_msg_digest();
 
-	    unlink("$Conf{'queuedigest'}/$digest");
-	    do_log('info', 'Digest of the list %s sent (%d seconds)', $digest,time - $start_time);
+	    unlink($filename);
+	    do_log('info', 'Digest of the list %s sent (%d seconds)', $listname,time - $start_time);
 	}
     }
 }

@@ -1433,8 +1433,8 @@ sub set {
 
 ## distribute the broadcast of a moderated message
 sub distribute {
-    my $what = shift;
-    do_log('debug2', 'Commands::distribute(%s)', $what);
+    my ($what, $msg_file) = @_;
+    do_log('debug2', 'Commands::distribute(%s, %s)', $what, $msg_file);
 
     $what =~ /^\s*(\S+)\s+(.+)\s*$/;
     my($which, $key) = ($1, $2);
@@ -1501,7 +1501,7 @@ sub distribute {
 
     ## Distribute the message
     my $numsmtp;
-    unless ($numsmtp = $list->distribute_msg($msg, $bytes, $is_crypted)) {
+    unless ($numsmtp = $list->distribute_msg($msg, $bytes, $msg_file, $is_crypted)) {
 	return undef;
     }
 

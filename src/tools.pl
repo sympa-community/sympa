@@ -413,8 +413,8 @@ sub smime_sign_check {
 
 # input : msg object, return a new message object encrypted
 sub smime_encrypt {
-
-    my $msg = shift;
+    my $msg_header = shift;
+    my $msg_body = shift;
     my $email = shift ;
     my $list = shift ;
 
@@ -443,7 +443,8 @@ sub smime_encrypt {
 	close(MSGDUMP);
 
 	my $cryptedmsg;
-	
+
+        ## Get as MIME object
 	open (NEWMSG, $temporary_file);
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
@@ -452,28 +453,44 @@ sub smime_encrypt {
 	    return undef;
 	}
 	close NEWMSG ;
-	unlink ($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;
+
+        ## Get body
+	open (NEWMSG, $temporary_file);
+	my $encypted_body;
+        my $in_header = 1 ;
+	while (<MSG>) {
+	   if ( !$in_header)  { 
+	     $encrypted_body .= $_;       
+	   }else {
+	     $in_header = 0 if (/^$/); 
+	   }
+	}						    
+	close NEWMSG;
+
+unlink ($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;
 
 	## foreach header defined in  the incomming message but undefined in the
         ## crypted message, add this header in the crypted form.
 	my $predefined_headers ;
 	foreach my $header ($cryptedmsg->head->tags) {
-	    $predefined_headers->{$header} = 1 if ($cryptedmsg->head->get($header)) ;
+	    $predefined_headers->{$header} = 1 
+	        if ($cryptedmsg->head->get($header)) ;
 	}
-	foreach my $header ($msg->head->tags) {
-	    $cryptedmsg->head->add($header,$msg->head->get($header)) unless $predefined_headers->{$header} ;
+	foreach my $header ($msg_header->tags) {
+	    $cryptedmsg->head->add($header,$msg_header->get($header)) 
+	        unless $predefined_headers->{$header} ;
 	}
-	return $cryptedmsg;
+
     }else{
 	do_log ('notice','unable to encrypt message to %s (missing certificat %s)',$email,$usercert);
 	return undef;
     }
-    
+        
+    return $cryptedmsg->head->as_string . "\n" . $encrypted_body;
 }
 
 # input : msg object for a list, return a new message object decrypted
 sub smime_decrypt {
-
     my $msg = shift;
     my $list = shift ; ## the recipient of the msg
     

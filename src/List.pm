@@ -1335,8 +1335,8 @@ sub send_auth {
 
 ## Distribute a message to the list
 sub distribute_msg {
-    my($self, $msg, $bytes, $encrypt) = @_;
-    do_log('debug2', 'List::distribute_msg(%s, %s, %s, %s)', $self->{'name'}, $msg, $bytes, $encrypt);
+    my($self, $msg, $bytes, $msg_file, $encrypt) = @_;
+    do_log('debug2', 'List::distribute_msg(%s, %s, %s, %s, %s)', $self->{'name'}, $msg, $bytes, $msg_file, $encrypt);
 
     my $hdr = $msg->head;
     my ($name, $host) = ($self->{'name'}, $self->{'admin'}{'host'});
@@ -1424,7 +1424,7 @@ sub distribute_msg {
     }
     
     ## Blindly send the message to all users.
-    my $numsmtp = $self->send_msg($msg,$encrypt);
+    my $numsmtp = $self->send_msg($msg, $msg_file, $encrypt);
     unless (defined ($numsmtp)) {
 	return $numsmtp;
     }
@@ -1436,8 +1436,8 @@ sub distribute_msg {
 
 ## Send a message to the list
 sub send_msg {
-    my($self, $msg, $encrypt) = @_;
-    do_log('debug2', 'List::send_msg');
+    my($self, $msg, $msg_file, $encrypt) = @_;
+    do_log('debug2', 'List::send_msg(%s, %s)', $msg_file, $encrypt);
     
     my $hdr = $msg->head;
     my $name = $self->{'name'};
@@ -1470,7 +1470,12 @@ sub send_msg {
     
     ## Add a footer
     unless ($msg->head->get('Content-Type') =~ /multipart\/signed/i) {
-	$msg = _add_parts($msg,  $name, $self->{'admin'}{'footer_type'});
+	my $new_msg = _add_parts($msg,  $name, $self->{'admin'}{'footer_type'});
+	if (defined $new_msg) {
+	    $msg = $new_msg;
+	}else {
+	    $msg_file = '_ALTERED';
+	}
     }
     ## Who is the enveloppe sender ?
     my $host = $self->{'admin'}{'host'};
@@ -1496,13 +1501,13 @@ sub send_msg {
 
     
     ##Send message for normal reception mode
-    my $total = smtp::mailto($msg, $from, $encrypt, @tabrcpt);
+    my $total = smtp::mailto($msg, $from, $encrypt, $msg_file, @tabrcpt);
 
     ##Prepare and send message for notice reception mode
 #    my $notice_msg = $msg;
     $msg->parts([]);
     $msg->make_singlepart();
-    $total += smtp::mailto($msg, $from, $encrypt, @tabrcpt_notice);
+    $total += &smtp::mailto($msg, $from, $encrypt, '_ALTERED_', @tabrcpt_notice);
     return $total;
     
 }
@@ -1521,7 +1526,7 @@ sub _add_parts {
 
     ## No footer/header
     unless (-f $footermime or -f $footer or -f $headermime or -f $header) {
-	return $msg;
+	return undef;
     }
     
     my $parser = new MIME::Parser;
@@ -1622,7 +1627,8 @@ sub _add_parts {
 
 ## Send a digest message to the subscribers with reception digest or summary
 sub send_msg_digest {
-    my($self, $listname) = @_;
+    my($self) = @_;
+    my $listname = $self->{'name'};
     do_log('debug2', 'List:send_msg_digest(%s)', $listname);
     
     my $filename = "$Conf{'queuedigest'}/$listname";
@@ -1763,7 +1769,7 @@ sub send_msg_digest {
     $msg = _add_parts($msg, $param->{'name'}, $self->{'admin'}{'footer_type'});
 
     ## Send digest
-    &smtp::mailto($msg, $param->{'return_path'}, 'none', @tabrcpt );
+    &smtp::mailto($msg, $param->{'return_path'}, 'none', '_ALTERED_', @tabrcpt );
 
     ## Send summary
     ## What file   

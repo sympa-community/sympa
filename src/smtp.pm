@@ -145,8 +145,10 @@ sub smime_sign {
 
 
 sub sendto {
-    my($msg, $from, $rcpt, $encrypt) = @_;
-    do_log('debug2', 'smtp::sendto(%s, %s, %s)', $from, $rcpt,$encrypt);
+    my($msg_header, $msg_body, $from, $rcpt, $encrypt) = @_;
+    do_log('debug2', 'smtp::sendto(%s, %s, %s)', $from, $rcpt, $encrypt);
+
+    my $msg;
 
     if ($encrypt eq 'smime_crypted') {
 	my $email ;
@@ -160,13 +162,20 @@ sub sendto {
 	    }
 	    $email = lc ($rcpt->[0]); 
 	}
-	$msg = &tools::smime_encrypt ($msg,$email);
+	$msg = &tools::smime_encrypt ($msg_header, $msg_body, ,$email);
+    }else {
+        $msg = $msg_header->as_string . "\n" . $msg_body;
     }
+    
+    ## Trace
+    open TRACE, ">/tmp/trace";
+    print TRACE $msg;
+    close TRACE;
     
     if ($msg) {
 	*SMTP = &smtpto($from, $rcpt);
-	$msg->print(\*SMTP);
-	close(SMTP);
+        print SMTP $msg;
+	close SMTP;
 	return 1;
     }else{    
 	my $param = {'from' => "$from",
@@ -193,17 +202,42 @@ sub sendto {
 }
 
 sub mailto {
-   my($msg, $from, $encrypt, @rcpt) = @_;
+   my($msg, $from, $encrypt, $originalfile , @rcpt) = @_;
    do_log('debug2', 'smtp::mailto(from: %s, %s, %d rcpt)', $from, $encrypt, $#rcpt);
 
    my($i, $j, $nrcpt, $size, @sendto);
    my $numsmtp = 0;
    
+   ## If message contain a footer or header added by Sympa  use the object message else
+   ## Extract body from original file to preserve signature
+   my ($msg_body, $msg_header);
+
+   $msg_header = $msg->head;
+
+   if ($originalfile eq '_ALTERED_') {
+       $msg_body = $msg->body_as_string;
+   }else {
+   ## Get body from original file
+       unless (open MSG, $originalfile) {
+	   do_log ('notice',"unable to open %s:%s",$originalfile,$!);
+	   last;
+       }
+       my $in_header = 1 ;
+       while (<MSG>) {
+	   if ( !$in_header)  { 
+	       $msg_body .= $_;       
+	   }else {
+	       $in_header = 0 if (/^$/); 
+	   }
+       }
+       close (MSG);
+   }
+   
    ## if the message must be crypted,  we need to send it using one smtp session for each rcpt
    if ($encrypt eq 'smime_crypted'){
        $numsmtp = 0;
        while ($i = shift(@rcpt)) {
-	   &sendto($msg, $from, [$i], $encrypt);
+	   &sendto($msg_header, $msg_body, $from, [$i], $encrypt);
 	   $numsmtp++
 	   }
        
@@ -214,13 +248,13 @@ sub mailto {
        my @k = reverse(split(/[\.@]/, $i));
        my @l = reverse(split(/[\.@]/, $j));
        if ($j && $#sendto >= $Conf{'avg'} && lc("$k[0] $k[1]") ne lc("$l[0] $l[1]")) {
-           &sendto($msg, $from, \@sendto);
+           &sendto($msg_header, $msg_body, $from, \@sendto);
            $numsmtp++;
            $nrcpt = $size = 0;
            @sendto = ();
        }
        if ($#sendto >= 0 && (($size + length($i)) > $max_arg || $nrcpt >= $Conf{'nrcpt'})) {
-           &sendto($msg, $from, \@sendto);
+           &sendto($msg_header, $msg_body, $from, \@sendto);
            $numsmtp++;
            $nrcpt = $size = 0;
            @sendto = ();
@@ -230,65 +264,12 @@ sub mailto {
        $j = $i;
    }
    if ($#sendto >= 0) {
-       &sendto($msg, $from, \@sendto) if ($#sendto >= 0);
+       &sendto($msg_header, $msg_body, $from, \@sendto) if ($#sendto >= 0);
        $numsmtp++;
    }
    
    return $numsmtp;
 }
-
-sub NEWmailto {
-   my($msg, $from, $encrypt, @rcpt) = @_;
-   do_log('debug2', 'smtp::mailto(from: %s,%s,%d rcpt)', $from,$encrypt,$#rcpt);
-
-   my($current, $previous, $nrcpt, $size, @sendto, $numsmtp);
-   
-   ## Path to sendmail + options 
-   my $init_size = length($Conf{'sendmail'}) + 20;
-
-   ## if the message must be crypted,  we need to send it using one smtp session for each rcpt
-   if ($encrypt eq 'smime_crypted'){
-       $numsmtp = 0;
-       while ($current = shift(@rcpt)) {
-	   &sendto($msg, $from, [$current]);
-	   $numsmtp++
-       }
-
-       return ($numsmtp);
-   }
-
-   $size = $init_size; $numsmtp = 0;
-   $previous = $rcpt[0];
-   
-   while ($current = shift(@rcpt)) {
-       my @k = reverse(split(/[\.@]/, $current));
-       my @l = reverse(split(/[\.@]/, $previous));
-
-       if ( ($nrcpt >= $Conf{'nrcpt'}) || ## Maximum rcpts
-	    ($#sendto >= $Conf{'avg'} && lc("$k[0] $k[1]") ne lc("$l[0] $l[1]")) || ## Maximum rcpts in same domain
-	    (($size + length($current)) > $max_arg) ) { ## Maximum arg size
-	   
-	   &sendto($msg, $from, \@sendto);
-	   $numsmtp++;
-	   $size = $init_size;
-	   @sendto = (); $nrcpt++; 
-       }
-
-       $size += length($current) + 1;
-       push(@sendto, $current); $nrcpt++; 
-
-       $previous = $current;
-   }
-
-   if ($#sendto >= 0) {
-       &sendto($msg, $from, \@sendto) if ($#sendto >= 0);
-       $numsmtp++;
-   }
-   
-   return $numsmtp;
-}
-
-
 
 1;
 
