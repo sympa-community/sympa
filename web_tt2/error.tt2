@@ -327,7 +327,7 @@ because you are not allowed to unsubscribe.[%END%]
 [%|loc%]No SOAP service available on this server[%END%]
 
 [% ELSIF error.msg == 'subscriber_not_found' %]
-[%|loc(error.email)%]Subscriber %s not found[%END%]
+[%|loc(error.email)%]Subscriber %1 not found[%END%]
 
 [% ELSIF error.msg == 'no_identified_user' %]
 [%|loc%]The authentication process failed[%END%]
