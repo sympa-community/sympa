@@ -30,8 +30,8 @@ use Carp;
 @ISA = qw(Exporter);
 @EXPORT = qw(fatal_err do_log do_openlog $log_level);
 
-my ($log_facility, $log_socket_type, $log_service, $log_level);
-
+my ($log_facility, $log_socket_type, $log_service);
+local $log_level |= 0;
 
 sub fatal_err {
     my $m  = shift;
@@ -60,7 +60,7 @@ sub do_log {
     if ($fac =~ /debug(\d)/ ) {
 	$level = $1;
 	$fac = 'debug';
-    }    
+    }
  
     # do not log if log level if too high regarding the log requested by user 
     return if ($level > $log_level);
@@ -95,9 +95,6 @@ sub do_connect {
     }
     openlog("$log_service\[$$\]", 'ndelay', $log_facility);
 }
-
-
-$log_level |= 0;
 
 1;
 
