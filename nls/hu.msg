@@ -2,6 +2,7 @@ $ April 2001, Initial Hungarian translation by Szilard Vizi <vizisz@freemail.hu>
 $ June 2001, Updating with the help of Attila Szabo <szabo.a@oep.hu>
 $ October 2001 Changes and updates with the help of <nug@sch.bme.hu>
 
+$ codeset=iso-8859-2
 $quote "
 
 $set 1	Messages used while processing the configuration file

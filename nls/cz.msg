@@ -1,5 +1,6 @@
 $ Apr 2001, Initial version by Petr Prazak <prazak@grisoft.cz>
 
+$ codeset=iso-8859-2
 $quote "
 
 $set 1	Messages used while processing the configuration file

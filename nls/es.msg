@@ -8,6 +8,7 @@ $ 26 Feb 2000, Update of Josep Román <josep.roman@zuerich-see.ch>
 $ 16 Feb 2000, Update of Josep Román <josep.roman@zuerich-see.ch>
 $ 29 april 1999, Initial version by Alex Nappa <alex.nappa@imag.fr>
 
+$ codeset=iso-8859-1
 $quote "
 
 $set 1	Mensajes usados durante el proceso del archivo de configuración

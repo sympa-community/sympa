@@ -1,6 +1,7 @@
 $ 16 Oct 2000, Add Web specific translations <os@cru.fr>
 $ 14 Apr 2000, Changes for moderation Raphael Hertzog <rhertzog@hrnet.fr>
 
+$ codeset=iso-8859-1
 $quote "
 
 $set 1	Messages utilisés pour l'analyse du fichier de configuration

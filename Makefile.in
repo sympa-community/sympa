@@ -94,8 +94,6 @@ GROUP = @GROUP@
 
 CONFDIR = ${sysconfdir}
 
-LANG = fr_FR
-
 PERL = @PERL@
 
 HOST = `$(PERL) -MSys::Hostname -e "printf '%s', Sys::Hostname::hostname();"`
@@ -378,7 +376,7 @@ man: doc/man8/Makefile
 
 languages:
 	@echo "Making nls"
-	(LC_ALL=$(LANG); export LC_ALL; cd nls && echo "making in nls..." && \
+	(cd nls && echo "making in nls..." && \
 	$(MAKE) SH='${SH}' PERL='${PERL}' ETCBINDIR='${ETCBINDIR}' \
 	DIR='${DIR}' NLSDIR='${NLSDIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' \
 	USER='${USER}' GROUP='${GROUP}' GENCAT='${GENCAT}');

@@ -1,6 +1,7 @@
 $ 20 Mar 2000, improvements by Alberto Pasquale <techlist@pianeta.it>
 $ 16 Feb 2000, Initial version by Marco Ferrante <ferrante@unige.it>
 
+$ codeset=iso-8859-1
 $quote "
 
 $set 1	Messages used while processing the configuration file

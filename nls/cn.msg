@@ -1,6 +1,7 @@
 $ 01 Feb 2001, Totally rewritten to 'true' China mainland terminology and update by Wang Jian <lark@linux.net.cn>
 $ 16 Feb 2000, Initial version by Tung Siu Fai <sftung@hongkong.com>
 
+$ codeset=gb2312
 $quote "
 
 $set 1	Messages used while processing the configuration file

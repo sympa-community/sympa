@@ -31,9 +31,6 @@ GROUP	=	@GROUP@
 ## configuration file
 CONFDIR	=	${sysconfdir}
 
-## LC_ALL is set to this ; required to compile NLS
-LANG	=	fr_FR
-
 ##  Perl path
 PERL	=	@PERL@
 
@@ -196,7 +193,7 @@ man: doc/man8/Makefile
 
 languages:
 	@echo "Making nls"
-	(LC_ALL=$(LANG); export LC_ALL; cd nls && echo "making in nls..." && \
+	(cd nls && echo "making in nls..." && \
 	$(MAKE) SH='${SH}' PERL='${PERL}' ETCBINDIR='${ETCBINDIR}' \
 	DIR='${DIR}' NLSDIR='${NLSDIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' \
 	USER='${USER}' GROUP='${GROUP}' GENCAT='${GENCAT}');

@@ -1,5 +1,6 @@
 $ April 2000, Initial version by Mikko "Bemmu" Sepponen
 
+$ codeset=iso-8859-1
 $quote "
 
 $set 1	Messages used while processing the configuration file
@@ -252,8 +253,8 @@ muuttujalle $max_arg.\n"
 
 $set 12 MIME headers
 1	"1.0"
-2	"us-ascii"
-3	"7bit"
+2	"iso-8859-1"
+3	"8bit"
 4	"SYMPA <%s>"
 
 $set 13	Messages for the header of moderation index

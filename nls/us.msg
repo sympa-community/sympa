@@ -3,6 +3,7 @@ $ 16 Oct 2000, Add web translations <os@cru.fr>
 $ 14 Apr 2000, Changes in moderation
 $ Jan 1999, Initial version by Stephane Alnet
 
+$ codeset=us-ascii
 $quote "
 
 $set 1	Messages used while processing the configuration file

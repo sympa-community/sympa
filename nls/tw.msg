@@ -1,5 +1,6 @@
 $ 16 Feb 2000, Initial version by Tung Siu Fai <sftung@hongkong.com>
 
+$ codeset=iso-8859-1
 $quote "
 
 $set 1	Messages used while processing the configuration file

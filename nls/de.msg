@@ -3,6 +3,7 @@ $ 26 Apr 2001, Updated by H. Wilhelmi, TNG Tech. <harald.wilhelmi@tngtech.com>
 $ 26 Feb 2000, Update by Carsten Clasohm <cc@clasohm.com>
 $ 16 Sept 1999, Initial version by Carsten Clasohm <cc@clasohm.com>
 
+$ codeset=iso-8859-1
 $quote "
 
 $set 1	Messages used while processing the configuration file
