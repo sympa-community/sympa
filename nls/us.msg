@@ -385,6 +385,9 @@ $set 16 Listm parameters titles
 207	"remote path of sympa list dump"
 208	"certificate for authentication by remote Sympa"
 209	"short name for this source"
+210	"a listname or list address or *@<domain> or *@*"
+211	"admin role selection"
+
 
 $set 17 Cookie expiration periods
 1	"session"

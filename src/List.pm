@@ -236,7 +236,7 @@ my @param_order = qw (subject visibility info subscribe add unsubscribe del owne
 		      default_user_options reply_to_header reply_to forced_reply_to * 
 		      welcome_return_path remind_return_path user_data_source include_file 
 		      include_list include_remote_sympa_list include_ldap_query
-                      include_ldap_2level_query include_sql_query ttl creation update 
+                      include_ldap_2level_query include_sql_query include_admin ttl creation update 
 		      status serial);
 
 ## List parameters aliases
@@ -466,9 +466,28 @@ my %alias = ('reply-to' => 'reply_to',
 			       'group' => 'data_source'
 			       },
 
-#	    'include_admin' => {'format' => ['owners','editors','privileged_owners'],
-#				 'occurrence' => '0-n'
-#				 },
+	    'include_admin' => {'format' => {'list' => {'format' => '\S+',
+						        'occurrence' => '1',
+							'title_id' => 210,
+							'order' => 1
+							},
+					     'role' => {'format' => ['owners','editors','privileged_owners','listmaster'],
+					                'occurrence' => '0-n',
+					                'split_char' => ',',
+					                'title_id' => 211,
+					               }
+					 },
+				 'occurrence' => '0-n',
+
+				 'name' => {'format' => '.+',
+					    'title_id' => 209,
+					    'length' => 15,
+					    'order' => 1
+					   },
+
+				 'group' => 'data_source'
+				 },
+
 
 	    'include_ldap_query' => {'format' => {'host' => {'format' => $regexp{'host'},
 							     'occurrence' => '1',
@@ -1404,7 +1423,7 @@ sub load {
 		 || defined $self->{'admin'}{'include_sql_query'}
 		 || defined $self->{'admin'}{'include_ldap_query'}
 		 || defined $self->{'admin'}{'include_ldap_2level_query'}
-#		 || defined $self->{'admin'}{'include_admin'}
+		 || defined $self->{'admin'}{'include_admin'}
 		 ) {
 	    &do_log('err', 'Include paragraph missing in configuration file %s', "$self->{'dir'}/config");
 #	    return undef;
@@ -1420,7 +1439,7 @@ sub load {
 		 || defined $self->{'admin'}{'include_sql_query'}
 		 || defined $self->{'admin'}{'include_ldap_query'}
 		 || defined $self->{'admin'}{'include_ldap_2level_query'}
-#		 || defined $self->{'admin'}{'include_admin'}
+		 || defined $self->{'admin'}{'include_admin'}
 		 ) {
 	    &do_log('err', 'Include paragraph missing in configuration file %s', "$self->{'dir'}/config");
 #	    return undef;
@@ -5150,56 +5169,25 @@ sub _include_users_list {
 
 ## include a lists owners lists privileged_owners or lists_editors.
 sub _include_users_admin {
-    my ($users, $admin_function,$mother_list,$tied) = @_;
-    do_log('debug2', 'List::_include_users_list (users,%s,%s)',$admin_function,$mother_list);
-
-    my $total = 0;
-    my $admin;
-
-    my @depend
-; 
-    foreach my $listname (&List::get_lists('*') ) {
-
-        if ($mother_list eq $listname) {
-	    # upfully this proc is not ready to use 
-            # sa ce truc ne peut pas marcher
-	    $admin = _load_admin_file($listname, 'config');
-
-	}else{
-	    my $list = new List ($listname);
-	    $admin = $list->{'admin'};
-	}
-	push @depend, $admin->{'name'};
+    my ($users, $selection, $role, $default_user_options,$tied) = @_;
+#   il fautr préparer une liste de hash avec le nom de liste, le nom de robot, le répertoire de la liset pour appeler
+#    load_admin_file décommanter le include_admin
+    my @lists;
+    
+    unless ($role eq 'listmaster') {
 	
-	if ($admin_function =~ /owners/i) {
-	    foreach my $owner (@{$admin->{'owner'}}) {
-		if (($admin !~ /privileged/i) || ( $owner->{'profile'} eq 'privileged')) {
-		    my %u;
-		    my $email =  $u{'email'} = $owner->{'email'};
-		    $u{'gecos'} = $owner->{'gecos'};
-		    unless ($users->{$email}) {
-			$total++;
-			$users->{$email} = join("\n", %u);
-		    }
-		}
-	    }
-	}elsif ($admin =~ /editor/i) {
-	    foreach my $editor (@{$admin->{'editor'}}) {
-		my %u;
-		my $email =  $u{'email'} = $editor->{'email'};
-		$u{'gecos'} = $editor->{'gecos'};
-		unless ($users->{$email}) {
-		    $total++;
-		    $users->{$email} = join("\n", %u);
-		}
-	    }
+	if ($selection =~ /^\*\@(\S+)$/) {
+	    @lists = get_lists($1);
+	    my $robot = $1;
+	}else{
+	    $selection =~ /^(\S+)@(\S+)$/ ;
+	    $lists[0] = $1;
+	}
+	
+	foreach my $list (@lists) {
+	    #my $admin = _load_admin_file($dir, $domain, 'config');
 	}
     }
-    my $result = {
-	'total' => $total,
-        'depend_on' => @depend
-    };
-    return $result ;
 }
     
 sub _include_users_file {
@@ -5834,6 +5822,8 @@ sub _load_users_include2 {
 		}
 	    }elsif ($type eq 'include_file') {
 		$included = _include_users_file (\%users, $incl, $admin->{'default_user_options'});
+#	    }elsif ($type eq 'include_admin') {
+#		$included = _include_users_admin (\\%users, $incl, $admin->{'default_user_options'});
 	    }
 	    unless (defined $included) {
 		&do_log('err', 'Inclusion %s failed in list %s', $type, $name);

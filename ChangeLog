@@ -1,3 +1,150 @@
+2002-12-16 17:44  salaun
+
+	* Makefile.am, Makefile.in, doc/Makefile, doc/parse_tex.pl,
+	doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/sympa/node10.html, doc/sympa/node11.html,
+	doc/sympa/node12.html, doc/sympa/node13.html,
+	doc/sympa/node14.html, doc/sympa/node15.html,
+	doc/sympa/node16.html, doc/sympa/node17.html,
+	doc/sympa/node18.html, doc/sympa/node19.html, doc/sympa/node2.html,
+	doc/sympa/node20.html, doc/sympa/node3.html, doc/sympa/node4.html,
+	doc/sympa/node5.html, doc/sympa/node6.html, doc/sympa/node7.html,
+	doc/sympa/node8.html, doc/sympa/node9.html, doc/sympa/sympa.ps:
+	Changes: Now all path in documentation use XXXDIR variables.  This
+	should be used by packagers to do a "make documentation" so the
+	documentation refer to correct path.
+
+2002-12-16 17:43  salaun
+
+	* src/etc/sample/Makefile: Change: install sample liste in
+	sampledir instead of expldir
+
+2002-12-16 15:03  salaun
+
+	* Makefile.am, Makefile.in, configure, configure.in, doc/Makefile,
+	doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
+	doc/sympa/node11.html, doc/sympa/node12.html,
+	doc/sympa/node13.html, doc/sympa/node14.html,
+	doc/sympa/node15.html, doc/sympa/node16.html,
+	doc/sympa/node17.html, doc/sympa/node18.html,
+	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
+	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
+	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
+	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps,
+	src/Conf.pm, src/sympa_wizard.pl, src/etc/README,
+	src/etc/script/sympa.spec: [G. Paressant] Changes: New sympa.spec
+	and build procedure for Mandrake.  New parameters are available in
+	configure : with-etcdir, with-nlsdir, with-scriptdir,
+	with-sampledir,with-spooldir,with-docdir. Documentation is now
+	installed.
+
+2002-12-16 12:02  salaun
+
+	* wwsympa/wwslib.pm: Change: wws_path no more used ; make it an
+	old_param
+
+2002-12-13 17:34  salaun
+
+	* wwsympa/wwsympa.fcgi: Change: reverse sort order for latest lists
+
+2002-12-13 10:56  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by O. Germes] Bug fix: missing
+	$robot parameters. It was leadding to "Missing directory or config
+	file for <list>" error log entries
+
+2002-12-12 17:39  salaun
+
+	* wwsympa/wws_templates/: cn/editfile.cn.tpl, cz/editfile.cz.tpl,
+	de/editfile.de.tpl, es/editfile.es.tpl, et/editfile.et.tpl,
+	fi/editfile.fi.tpl, fr/editfile.fr.tpl, hu/editfile.hu.tpl,
+	it/editfile.it.tpl, nl/editfile.nl.tpl, ro/editfile.ro.tpl,
+	us/editfile.us.tpl: [Reported by glenn AT elaw.org] FIx: Orphan tag
+	in editfile.tpl causes problem in Mozilla 1.01
+
+2002-12-12 17:33  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by H. S. Rai] Links in summaries
+	failed if message-id contained a dash ('-'). Mhonarc escapes these
+	chars in HTML messages.
+
+2002-12-12 17:33  salaun
+
+	* wwsympa/wwsympa.fcgi: Bug fix: also escape () in arcsearch_id.
+	Also escape these chars in arcsearch
+
+2002-12-12 17:29  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by H. S. Rai] Links in summaries
+	failed if message-id contained a dash ('-'). Mhonarc escapes these
+	chars in HTML messages.
+
+2002-12-12 16:22  salaun
+
+	* wwsympa/wwsympa.fcgi: Bug fix: also escape () in arcsearch_id.
+	Also escape these chars in arcsearch
+
+2002-12-11 14:24  salaun
+
+	* src/: sympa_wizard.pl, sympa_wizard.pl: [reported by G.
+	Paressant] Fix: when building RPMs conf files were not searched at
+	the right place
+
+2002-12-11 11:42  salaun
+
+	* src/etc/templates/us/summary.us.tpl: Fix: variable name has
+	changed since latest changes to send_digest
+
+2002-12-10 17:52  salaun
+
+	* src/etc/script/: arc2webarc.pl, arc2webarc.pl: [proposed by A.
+	Bernstein] Fix: make the script VRobot-compatible
+
+2002-12-10 17:44  salaun
+
+	* Makefile.in, src/Makefile: [reported by Oracle AT
+	provocation.net] [BugID 79] Fix: 'make install' was doing a
+	non-selective chown/chgrp -R on sbin/ directory. Now only installed
+	files are concerned.
+
+2002-12-10 17:39  salaun
+
+	* src/Makefile: [reported by Oracle AT provocation.net] [BugID 79]
+	Fix: 'make install' was doing a non-selective chown/chgrp -R on
+	sbin/ directory. Now only installed files are concerned.
+
+2002-12-10 15:05  salaun
+
+	* ChangeLog, nls/cn.msg, nls/cz.msg, nls/de.msg, nls/es.msg,
+	nls/et.msg, nls/fi.msg, nls/fr.msg, nls/hu.msg, nls/it.msg,
+	nls/nl.msg, nls/pl.msg, nls/ro.msg, nls/tw.msg, nls/us.msg,
+	src/List.pm, src/tools.pl, src/etc/templates/cn/digest.cn.tpl,
+	src/etc/templates/cz/digest.cz.tpl,
+	src/etc/templates/de/digest.de.tpl,
+	src/etc/templates/es/digest.es.tpl,
+	src/etc/templates/et/digest.et.tpl,
+	src/etc/templates/fi/digest.fi.tpl,
+	src/etc/templates/fr/digest.fr.tpl,
+	src/etc/templates/hu/digest.hu.tpl,
+	src/etc/templates/it/digest.it.tpl,
+	src/etc/templates/nl/digest.nl.tpl,
+	src/etc/templates/pl/digest.pl.tpl,
+	src/etc/templates/ro/digest.ro.tpl,
+	src/etc/templates/tw/digest.tw.tpl,
+	src/etc/templates/us/digest.us.tpl: Change: Digest is now defined
+	in a template
+
+2002-12-10 09:31  salaun
+
+	* Makefile.am, Makefile.in: [reported by G. Paressant] Fix: DESTDIR
+	env variable was not set when running the wizard
+
+2002-12-10 09:31  salaun
+
+	* ChangeLog, Makefile.am: [Guy Paressant] Fix: refered to SBINDIR
+	instead of LIBDIR
+
 2002-12-09 12:08  salaun
 
 	* Makefile.in: Updated
