@@ -153,9 +153,12 @@
 	separated list of recipient.  (exim). Reported by Stefan Hornburg
 	<racke AT linuxia.de>
   
-	Introduce a 2 new parameters in sympa;conf : spam_protection and
-	web_archive_spam_protection. They are use to define the way that 
-	sympa protect email adrersses from spambot. "cookie" "at" "javascript" "none"
+*****	Introduce a 2 new parameters in sympa;conf : spam_protection and
+*****	web_archive_spam_protection. They are use to define the way that 
+*****	sympa protect email adrersses from spambot. "cookie" "at" "javascript" "none"
+*****	Because mhonarc ressources as changed, you MUST rebuild all archives
+*****   otherwise old archive are unprotected. (Use rebuild button in sympa
+*****   admin page).
 
 	New [SETOPTION ignore_undef] in parser
 
