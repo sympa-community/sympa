@@ -21,7 +21,7 @@
 
 SRC	=	create_db.Pg create_db.mysql create_db.Oracle create_db.Sybase
 
-SUBSTSRC	=	load_subscribers.pl arc2webarc.pl testldap.pl p12topem.pl init_comment.pl crypt_passwd.pl testlogs.pl
+SUBSTSRC	=	load_subscribers.pl arc2webarc.pl testldap.pl p12topem.pl init_comment.pl crypt_passwd.pl testlogs.pl mod2html.pl
 
 INITSRC		=	sympa
 
