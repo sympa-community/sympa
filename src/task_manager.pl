@@ -111,8 +111,9 @@ $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'task_manager');
 
 ## Set the UserID & GroupID for the process
-$< = $> = (getpwnam('sympa'))[2];
-$( = $) = (getpwnam('sympa'))[2];
+$( = $) = (getpwnam('--USER--'))[2];
+$< = $> = (getpwnam('--GROUP--'))[2];
+
 
 ## Sets the UMASK
 umask($Conf{'umask'});

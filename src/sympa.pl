@@ -177,8 +177,8 @@ if ($signal ne 'hup' ) {
     do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
 
     # Set the UserID & GroupID for the process
-    $< = $> = (getpwnam('--USER--'))[2];
     $( = $) = (getpwnam('--GROUP--'))[2];
+    $< = $> = (getpwnam('--USER--'))[2];
 
     # Sets the UMASK
     umask($Conf{'umask'});
