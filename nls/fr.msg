@@ -396,6 +396,8 @@ $set 16 Titres des paramètres de config de listes
 200	"élai de connexion (2nd niveau)"
 201	"expression régulière (1er niveau)"
 202	"expression régulière (1nd niveau)"
+203	"quota"
+204	"quota"
 
 $set 17 Cookie expiration periods
 1	"la session"

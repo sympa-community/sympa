@@ -146,6 +146,9 @@ parce que l'abonnement avec la nouvelle adresse n'est pas autorisé.
 Changement d'adresse email impossible dans la liste [error->list]
 parce que le désabonnement n'est pas autorisé.
 
+[ELSIF error->msg=shared_full]
+Le quota d'espace disque est dépassé.
+
 [ELSE]
 [error->msg]
 [ENDIF]

@@ -796,7 +796,14 @@ my %alias = ('reply-to' => 'reply_to',
 					  'd_edit' => {'scenario' => 'd_edit',
 						       'title_id' => 87,
 						       'order' => 2
-						       }
+						       },
+					  'quota' => {'format' => '\d+',
+						      'default' => {'conf' => 'default_shared_quota'},
+						      'length' => 8,
+						      'unit' => 'Kbytes',
+						      'title_id' => 203,
+						      'order' => 3
+						      }
 				      },
 			     'title_id' => 70,
 			     'group' => 'command'
@@ -865,9 +872,18 @@ my %alias = ('reply-to' => 'reply_to',
 			     'group' => 'description'
 			     },
 	    'web_archive'  => {'format' => {'access' => {'scenario' => 'access_web_archive',
-							 'title_id' => 84
-							 }
+							 'title_id' => 84,
+							 'order' => 1
+							 },
+					    'quota' => {'format' => '\d+',
+							'default' => {'conf' => 'default_archive_quota'},
+							'length' => 8,
+							'unit' => 'Kbytes',
+							'title_id' => 204,
+							'order' => 2
+							}
 					},
+			       
 			       'title_id' => 83,
 			       'group' => 'archives'
 
@@ -1472,7 +1488,7 @@ sub send_notify_to_listmaster {
 
 ## Send a sub/sig notice to the owners.
 sub send_notify_to_owner {
-    my($self, $who, $gecos, $operation, $by) = @_;
+    my($self, $who, $gecos, $operation, $by, $param) = @_;
     do_log('debug3', 'List::send_notify_to_owner(%s, %s, %s, %s)', $who, $gecos, $operation, $by);
     
     my ($i, @rcpt);
@@ -1502,6 +1518,9 @@ sub send_notify_to_owner {
 	$subject = sprintf (Msg(8, 21, "WARNING: %s list %s from %s %s"), $operation, $name, $who, $gecos);
 	$body = sprintf (Msg(8, 23, "WARNING : %s %s failed to signoff from %s\nbecause his address was not found in the list\n (You may help this person)\n"),$who, $gecos, $name);
 	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
+    }elsif (defined $param) {
+	$self->send_file('listowner_notification', join(',', @rcpt), $param->{'robot'}, $param);
+	
     }else {
 	my ($body, $subject);
 	$subject = sprintf(Msg(8, 21, "FYI: %s list %s from %s %s"), $operation, $name, $who, $gecos);
@@ -6895,6 +6914,22 @@ sub delete_susbscription_request {
 
     return 1;
 } 
+
+
+sub get_shared_size {
+    my $self = shift;
+
+    return tools::get_dir_size("$self->{'dir'}/shared");
+}
+
+sub get_arc_size {
+    my $self = shift;
+    my $dir = shift;
+
+    # do_log('notice',"$dir/$self->{'name'}\@$self->{'domain'}");
+    return tools::get_dir_size("$dir/$self->{'name'}\@$self->{'domain'}");
+}
+
 
 #################################################################
 

@@ -380,6 +380,8 @@ $set 16 Listm parameters titles
 200	"second-level connection timeout"
 201	"first-level regular expression"
 202	"second-level regular expression"
+203	"quota"
+204	"quota"
 
 $set 17 Cookie expiration periods
 1	"session"

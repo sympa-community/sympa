@@ -37,7 +37,7 @@ my @valid_options = qw(
 		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod 
 		       cookie create_list crl_dir crl_update_task db_host db_env db_name db_options db_passwd db_type db_user 
 		       db_port db_additional_subscriber_fields db_additional_user_fields
-		       default_list_priority edit_list email etc
+		       default_shared_quota default_archive_quota default_list_priority edit_list email etc
 		       global_remind home host domain lang listmaster log_socket_type log_level 
 		       misaddressed_commands misaddressed_commands_regexp max_size maxsmtp msgcat nrcpt owner_priority pidfile spool queue 
 		       queueauth queuetask queuebounce queuedigest queueexpire queuemod queuesubscribe queueoutgoing tmpdir
@@ -146,7 +146,9 @@ my %Default_Conf =
      'ldap_export_connection_timeout' => '',
      'list_check_smtp' => '',
      'list_check_suffixes' => 'request,owner,unsubscribe',
-     'expire_bounce' => 'daily'
+     'expire_bounce' => 'daily',
+     'default_archive_quota' => '',
+     'default_shared_quota' => '',
    );
    
 %Conf = ();

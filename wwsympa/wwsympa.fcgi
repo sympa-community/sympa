@@ -224,7 +224,8 @@ my %comm = ('home' => 'do_home',
 	    'record_email' => 'do_record_email',	    
 	 'set_lang' => 'do_set_lang',
 	 'attach' => 'do_attach',
-	 'change_identity' => 'do_change_identity'
+	 'change_identity' => 'do_change_identity',
+	 'stats' => 'do_stats'
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -325,6 +326,7 @@ my %action_type = ('editfile' => 'admin',
 		'd_admin' => 'admin',
 		'remind' => 'admin',
 		'subindex' => 'admin',
+		'stats' => 'admin',
 		'ignoresub' => 'admin');
 
 ## Open log
@@ -7110,6 +7112,13 @@ sub do_d_upload {
 	return undef;
     }
 
+    ## Check quota
+    if ($list->get_shared_size() >= $list->{'admin'}{'shared_doc'}{'quota'} * 1024){
+	&error_message('shared_full');
+	&wwslog('info',"do_d_upload : Shared Quota exceeded for list $list->{'name'}");
+	return undef;
+    }
+
     # The name of the file must be correct and musn't not be a description file
     if ($fname =~ /^\./
 	|| $fname =~ /\.desc/ 
@@ -8509,3 +8518,43 @@ sub do_change_identity {
 
     return $in{'previous_action'};
 }
+
+sub do_stats {
+    &wwslog('debug', 'do_stats');
+
+    unless ($param->{'list'}) {
+	&error_message('missing_arg', {'argument' => 'list'});
+	&wwslog('info','do_stats: no list');
+	return undef;
+    }
+    
+    unless ($param->{'user'}{'email'}) {
+	&error_message('missing_arg', {'argument' => 'list'});
+	&wwslog('info','do_stats: no user');
+	$param->{'previous_action'} = 'stats';
+	$param->{'previous_list'} = $in{'list'};
+	return 'loginrequest';
+    }
+ 
+    unless ($list->am_i('owner', $param->{'user'}{'email'})) {
+	&error_message('may_not');
+	&wwslog('info','do_stats: %s not owner', $param->{'user'}{'email'});
+	return 'admin';
+    }
+
+    $param->{'shared_size'} = int (($list->get_shared_size + 512)/1024);
+    $param->{'arc_size'} = int (($list->get_arc_size($wwsconf->{'arc_path'}) + 512)/1024);
+
+    return 1;
+}
+
+
+
+
+
+
+
+
+
+
+

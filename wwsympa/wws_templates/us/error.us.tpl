@@ -152,6 +152,9 @@ because subscription with new address is not allowed.
 Could not change subscription address for list '[error->list]'
 because unsubscription is not allowed.
 
+[ELSIF error->msg=shared_full]
+The document repository exceed disk quota.
+
 [ELSE]
 [error->msg]
 [ENDIF]

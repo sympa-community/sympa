@@ -1246,4 +1246,27 @@ sub get_message_id {
     return $id;
 }
 
+
+sub get_dir_size {
+    my $dir =shift;
+    
+    my $size=0;
+
+    if (opendir(DIR, $dir)) {
+	foreach my $file ( sort grep (!/^\./,readdir(DIR))) {
+	    if (-d "$dir/$file") {
+		$size += get_dir_size("$dir/$file");
+	    }
+	    else{
+		my @info = stat "$dir/$file" ;
+		$size += $info[7];
+	    }
+	}
+        closedir DIR;
+    }
+
+    return $size;
+}
+
 1;
+

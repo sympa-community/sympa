@@ -31,10 +31,16 @@ use lib '--LIBDIR--';
 use List;
 use Conf;
 use Log;
+use Commands;
 #use Getopt::Std;
 use Getopt::Long;
 
 use wwslib;
+use smtp;
+
+require 'parser.pl';
+require 'msg.pl';
+require 'tools.pl';
 
 #getopts('dF');
 
@@ -191,7 +197,7 @@ while (!$end) {
 	   my $hostname = $2;
 
 	   do_log('debug',"Archiving $file for list $adrlist");      
-	   mail2arc ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss);
+	   mail2arc ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss) ;
 	   unless (unlink("$queue/$file")) {
 	       do_log ('notice',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
 	       do_log ('notice',"exiting because I don't want to loop until file system is full");
@@ -290,6 +296,9 @@ sub mail2arc {
     my ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss) = @_;
     my $arcpath = $wwsconf->{'arc_path'};
     
+
+    my $list = new List($listname);
+
     do_log('debug',"mail2arc $file for $listname\@$hostname yyyy:$yyyy, mm:$mm dd:$dd hh:$hh min$min ss:$ss");
     #    chdir($wwsconf->{'arc_path'});
     
@@ -300,6 +309,32 @@ sub mail2arc {
 	}
 	do_log('debug',"mkdir $arcpath/$listname\@$hostname");
     }
+
+    ## Check quota
+    my $used = $list->get_arc_size("$arcpath") ;
+
+    if ($used >= $list->{'admin'}{'web_archive'}{'quota'} * 1024){
+	&do_log('err',"archived::mail2arc : web_arc Quota exceeded for list $list->{'name'}");
+	$list->send_notify_to_owner('bidon','bidon','bidon','bidon',
+			 { 'type' => 'arc_quota_exceeded',
+			   'robot'=>$hostname,
+			   'size' => $used,
+			   'email' => $param[1]});
+
+	return undef;
+    }
+    if ($used >= ($list->{'admin'}{'web_archive'}{'quota'} * 1024 * 0.95)){
+	&do_log('err',"archived::mail2arc : web_arc Quota exceeded for list $list->{'name'}");
+	$list->send_notify_to_owner('bidon','bidon','bidon','bidon',
+			 { 'type' => 'arc_quota_95',
+			   'robot'=>$hostname,
+			   'size' => $used,
+			   'rate' => int($used / $list->{'admin'}{'web_archive'}{'quota'} * 1024 * 100) ,
+			   'email' => $param[1]});
+    }
+
+
+
     if (! -d "$arcpath/$listname\@$hostname/$yyyy-$mm") {
 	unless (mkdir ("$arcpath/$listname\@$hostname/$yyyy-$mm", 0775)) {
 	    &do_log('notice', 'Cannot create directory %s', "$arcpath/$listname\@$hostname/$yyyy-$mm");

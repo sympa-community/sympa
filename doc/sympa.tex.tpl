@@ -1516,6 +1516,18 @@ is still recognized but should not be used anymore.
 	This parameter is used with \cfkeyword {list\_check\_smtp} parameter.
 
 
+\section {Quotas}
+\label {quotas}
+
+\subsection {\cfkeyword {default\_shared\_quota}}
+
+	The default disk quota for lists' document repository.
+ 
+\subsection {\cfkeyword {default\_archive\_quota}}
+
+	The default disk quota for lists' web archives.
+
+
 \section {Spool related}
 \label {spool-related}
 
@@ -5653,7 +5665,7 @@ Predefined scenarii are :
 This paragraph defines read and edit access to the shared document 
 repository.
 
-\subsubsection {Read access}
+\subsubsection {d\_read}
 
 	\default {private}
 
@@ -5678,7 +5690,7 @@ Predefined scenarii are :
 \end {itemize}
 
 
-\subsubsection {Edit access}
+\subsubsection {d\_edit}
 
 	\default {owner}
 
@@ -5712,6 +5724,13 @@ d_read		public
 d_edit		private
 \end{verbatim}
 \end {quote}
+
+\subsubsection {quota}
+
+\lparam {quota} \textit {number-of-Kbytes}
+
+This parameter specifies the disk quota for the document repository, in kilobytes.
+If quota is exceeded, file uploads fail.
 
 \section {List tuning}
 
@@ -6107,11 +6126,9 @@ the creation of an archive directory at the root of the list directory (\tildedi
 This parameter specifies who is authorized to use the \mailcmd {GET}, \mailcmd {LAST} and \mailcmd {INDEX} commands.
 
 
-
 \subsection {web\_archive}
     \label {par-web-archive}
     \index{web\_archive}
-    \scenarized {access\_web\_archive}
 
 If the \file {config} file contains a \lparam {web\_archive} paragraph
 \Sympa will copy all messages distributed via the list to the
@@ -6125,8 +6142,13 @@ parameter to control who can browse the web archive.
 \begin{verbatim}
 web_archive
 access private
+quota 1000
 \end{verbatim}
 \end {quote}
+
+\subsubsection {access}
+
+    \scenarized {access\_web\_archive}
 
 Predefined scenarii are :
 
@@ -6142,6 +6164,15 @@ Predefined scenarii are :
 [END]
 [STOPPARSE]
 \end {itemize}
+
+\subsubsection {quota}
+
+\lparam {quota} \textit {number-of-Kbytes}
+
+This parameter specifies the disk quota for the list's web archives, in kilobytes. This parameter's default is
+\cfkeyword {default\_archive\_quota} \file {sympa.conf} parameter. If quota is exceeded, messages are no more 
+archived, list owner is notified. When archives are 95\% full, the list owner is warned.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Shared documents
