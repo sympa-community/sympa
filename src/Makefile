@@ -47,6 +47,7 @@ installlisttemplates:
 installscenari:
 	@echo "Installing default scenari..."
 	cp etc/scenari/*.* $(DESTDIR)$(ETCBINDIR)/scenari
+	$(PERL) ../set_symlinks.pl scenari $(DESTDIR)$(ETCBINDIR)/scenari
 
 installqueue:
 	@echo "Installing Queue binary..."

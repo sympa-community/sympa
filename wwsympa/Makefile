@@ -81,6 +81,7 @@ installtemplates:
 	COL34=70; export COL34; \
 	COL234=110; export COL234; \
 	$(PERL) ../subst.pl wws_templates/* 
+	$(PERL) ../set_symlinks.pl wws_templates $(DESTDIR)$(ETCBINDIR)/wws_templates
 	chmod -R 644 $(DESTDIR)$(ETCBINDIR)/wws_templates
 
 installicons:
