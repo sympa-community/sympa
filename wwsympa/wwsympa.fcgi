@@ -5884,6 +5884,10 @@ sub d_access_control {
 							       'remote_host' => $param->{'remote_host'},
 							       'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i);
 	}
+
+	## Only authenticated users can edit files
+	$result{'may'}{'edit'} = 0 unless ($param->{'user'}{'email'});
+
 	if ($mode_control) {
 	    $result{'may'}{'control'} = 0;
 	}
@@ -5978,6 +5982,8 @@ sub d_access_control {
 		    
 		}
 		
+		## Only authenticated users can edit files
+		$may_edit = 0 unless ($param->{'user'}{'email'});
 
 		$is_author = $is_author || ($user eq $desc_hash{'email'});
 	
@@ -6026,6 +6032,9 @@ sub d_access_control {
 								   'remote_host' => $param->{'remote_host'},
 								   'remote_addr' => $param->{'remote_addr'},
 								   'scenario'=>$result{'scenario'}{'edit'}}) =~ /do_it/i);
+		## Only authenticated users can edit files
+		$result{'may'}{'edit'} = 0 unless ($param->{'user'}{'email'});
+
 		$result{'may'}{'control'} = 0;
 		return %result;
 	    }
@@ -6340,13 +6349,15 @@ sub do_d_read {
 			}
 						
 			# if the file can be read, check for edit access & edit description files access
-			if ($may_control || ($user eq $desc_hash{'email'}) ||
+			## only authentified users can edit a file
+			if ($param->{'user'}{'email'} &&
+			    ($may_control || ($user eq $desc_hash{'email'}) ||
 			    ($may_edit && (&List::request_action ('shared_doc.d_edit',$param->{'auth_method'},$robot,
 								  {'listname' => $param->{'list'},
 								   'sender' => $param->{'user'}{'email'},
 								   'remote_host' => $param->{'remote_host'},
 								   'remote_addr' => $param->{'remote_addr'},
-								   'scenario' => $desc_hash{'edit'}}) =~ /do_it/i))) {
+								   'scenario' => $desc_hash{'edit'}}) =~ /do_it/i)))) {
 			    $subdirs{$d}{'edit'} = 1;
 			    # if index.html, must know if something can be edit in the dir
 			    $normal_mode = 1;
@@ -6438,13 +6449,15 @@ sub do_d_read {
 		    ## Access control for edit and control
 		    if ($def_desc) {
 			# check access for edit and control the file
-			if (($user eq $desc_hash{'email'}) || $may_control ||
+			## Only authenticated users can edit files
+			if ($param->{'user'}{'email'} &&
+			    (($user eq $desc_hash{'email'}) || $may_control ||
 			    ($may_edit && (&List::request_action ('shared_doc.d_edit',$param->{'auth_method'},$robot,
 								  {'listname' => $param->{'list'},
 								   'sender' => $param->{'user'}{'email'},
 								   'remote_host' => $param->{'remote_host'},
 								   'remote_addr' => $param->{'remote_addr'},
-								   'scenario' => $desc_hash{'edit'}}) =~ /do_it/i))) {
+								   'scenario' => $desc_hash{'edit'}}) =~ /do_it/i)))) {
 			    
 			    $normal_mode = 1;
 			    $files{$d}{'edit'} = 1;    
