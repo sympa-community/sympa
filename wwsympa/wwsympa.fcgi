@@ -6500,7 +6500,7 @@ sub do_edit_list {
 	 
 	 ## Parameter value
 	 my $value = $in{$key};
-	 next if ($value eq '');
+	 next if ($value =~ /^\s*$/);
 
 	 if ($type eq 'multiple_param') {
 	     my @values = split /\0/, $value;
