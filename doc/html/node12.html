@@ -137,7 +137,7 @@ need to run dedicated fascgi server for each virtual robot.
 
 <P>
 <I>Examples:</I> <PRE>
-FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 3 -idle-timeout 120
+FastCgiServer /wwsympa.fcgi -processes 3 -idle-timeout 120
 .....
 &lt;VirtualHost 195.215.92.16&gt;
   ServerAdmin webmaster@your.virtual.domain
@@ -148,7 +148,7 @@ FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 3 -idle-timeout 120
      SetHandler fastcgi-script
   &lt;/Location&gt;
 
-  ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+  ScriptAlias /wws /wwsympa.fcgi
 
 &lt;/VirtualHost&gt;
 </PRE>
@@ -315,7 +315,7 @@ with the same values as the default robot (as defined in <A NAME="6821"></A><TT>
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2004-10-26
+2004-11-10
 </ADDRESS>
 </BODY>
 </HTML>

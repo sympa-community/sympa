@@ -246,7 +246,7 @@ The User and Group directive have to be set before the FastCgiServer directive
       <A NAME="6289"></A><TT>wwsympa.fcgi</TT>. Here is an example (with no guarantee attached) :<PRE>
 #include &lt;unistd.h&gt;
 
-#define WWSYMPA "/home/sympa/bin/wwsympa.fcgi"
+#define WWSYMPA "/wwsympa.fcgi"
 
 int main(int argn, char **argv, char **envp) {
     argv[0] = WWSYMPA;
@@ -266,7 +266,7 @@ int main(int argn, char **argv, char **envp) {
 
 <P><PRE>
      Example :
-       	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+       	ScriptAlias /wws /wwsympa.fcgi
 </PRE>
 
 <P>
@@ -277,12 +277,12 @@ Running  FastCGI will provide much faster responses from your server and
 
 <P><PRE>
      Example :
-	FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 2
+	FastCgiServer /wwsympa.fcgi -processes 2
 	&lt;Location /wws&gt;
    	  SetHandler fastcgi-script
 	&lt;/Location&gt;
 
-	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+	ScriptAlias /wws /wwsympa.fcgi
 </PRE>
 
 <P>
@@ -687,7 +687,7 @@ mail messages including password reminders.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2004-10-26
+2004-11-10
 </ADDRESS>
 </BODY>
 </HTML>

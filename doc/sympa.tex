@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {26 October 2004}
+    \date {10 November 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -2439,7 +2439,7 @@ CREATE TABLE user_table (
   	password_user		varchar (40),
 	cookie_delay_user	int,
 	lang_user		varchar (10),
-	attributes_user		text,
+	attributes_user		varchar(255),
 	PRIMARY KEY (email_user)
 );
 
@@ -2460,22 +2460,22 @@ CREATE TABLE subscriber_table (
 	INDEX (user_subscriber,list_subscriber)
 );
 
-#CREATE TABLE admin_table (
-#	list_admin 		varchar(50) NOT NULL,
-# 	user_admin 		varchar(100) NOT NULL,
-#	role_admin 		enum('listmaster','owner','editor') NOT NULL,
-#	date_admin 		datetime NOT NULL,
-#	update_admin 		datetime,
-#	reception_admin 	varchar(20),
-#	comment_admin 		varchar(150),
-#	subscribed_admin  	enum('0','1'),
-#	included_admin  	enum('0','1'),
-#	include_sources_admin  	varchar(50),
-#	info_admin   		varchar(150),
-#	profile_admin  		enum('privileged','normal'),
-#	PRIMARY KEY (list_admin, user_admin,role_admin),
-#	INDEX (list_admin, user_admin,role_admin)
-#);
+CREATE TABLE admin_table (
+	list_admin 		varchar(50) NOT NULL,
+ 	user_admin 		varchar(100) NOT NULL,
+	role_admin 		enum('listmaster','owner','editor') NOT NULL,
+	date_admin 		datetime NOT NULL,
+	update_admin 		datetime,
+	reception_admin 	varchar(20),
+	comment_admin 		varchar(150),
+	subscribed_admin  	enum('0','1'),
+	included_admin  	enum('0','1'),
+	include_sources_admin  	varchar(50),
+	info_admin   		varchar(150),
+	profile_admin  		enum('privileged','normal'),
+	PRIMARY KEY (list_admin, user_admin,role_admin),
+	INDEX (list_admin, user_admin,role_admin)
+);
  
 
 
@@ -2520,7 +2520,7 @@ CREATE TABLE user_table (
 	cookie_delay_user       int4,
         password_user		varchar (40),
         lang_user               varchar (10),
-	attributes_user		text,
+	attributes_user		varchar (255),
 	CONSTRAINT ind_user PRIMARY KEY (email_user)
 );
 
@@ -2542,23 +2542,23 @@ CREATE TABLE subscriber_table (
 );
 CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber);
 
-#DROP TABLE admin_table;
-#CREATE TABLE admin_table (
-#	list_admin 		varchar(50) NOT NULL,
-# 	user_admin 		varchar(100) NOT NULL,
-###	role_admin 		enum('listmaster','owner','editor') NOT NULL,
-#	date_admin 		timestamp with time zone NOT NULL,
-#	update_admin 		timestamp with time zone,
-#	reception_admin 	varchar(20),
-#	comment_admin 		varchar(150),
-#	subscribed_admin  	bit(1),
-#	included_admin  	bit(1),
-#	include_sources_admin  	varchar(50),
-#	info_admin   		varchar(150),
-###	profile_admin  		enum('privileged','normal'),
-#       CONSTRAINT ind_admin PRIMARY KEY (list_admin, user_admin,role_admin)
-#);
-#CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin,role_admin);
+DROP TABLE admin_table;
+CREATE TABLE admin_table (
+	list_admin 		varchar(50) NOT NULL,
+ 	user_admin 		varchar(100) NOT NULL,
+	role_admin 		varchar(15) NOT NULL,
+	date_admin 		timestamp with time zone NOT NULL,
+	update_admin 		timestamp with time zone,
+	reception_admin 	varchar(20),
+	comment_admin 		varchar(150),
+	subscribed_admin  	bit(1),
+	included_admin  	bit(1),
+	include_sources_admin  	varchar(50),
+	info_admin   		varchar(150),
+	profile_admin  		varchar(15),
+        CONSTRAINT ind_admin PRIMARY KEY (list_admin, user_admin,role_admin)
+);
+CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin,role_admin);
  
 	\end{verbatim}
 	\end {quote}
@@ -2582,7 +2582,7 @@ create table user_table
     password_user          varchar(40)            null    ,
     cookie_delay_user      numeric                null    ,
     lang_user              varchar(10)            null    ,
-    attributes_user	   text                   null    ,
+    attributes_user	   varchar(255)           null    ,
     constraint ind_user primary key (email_user)
 )
 go
@@ -2615,22 +2615,22 @@ go
 create index user_subscriber_fk on subscriber_table (user_subscriber)
 go
 
-#create table admin_table 
-#(
-#	list_admin 		varchar(50)       not null,
-# 	user_admin 		varchar(100) 	  not null,
-###	role_admin 		enum('listmaster','owner','editor') not null,
-#	date_admin 		datetime 	  not null,
-#	update_admin 		datetime          null,
-#	reception_admin 	varchar(20)       null,
-#	comment_admin 		varchar(150)	  null,
-#	subscribed_admin  	numeric           null,
-#	included_admin  	numeric           null,
-#	include_sources_admin  	varchar(50)       null,
-#	info_admin   		varchar(150)      null,
-###	profile_admin  		enum('privileged','normal') null,
-#       constraint ind_admin primary key (list_admin, user_admin,role_admin)
-#)
+create table admin_table 
+(
+	list_admin 		varchar(50)       not null,
+ 	user_admin 		varchar(100) 	  not null,
+	role_admin 		varchar(15)       not null,
+	date_admin 		datetime 	  not null,
+	update_admin 		datetime          null,
+	reception_admin 	varchar(20)       null,
+	comment_admin 		varchar(150)	  null,
+	subscribed_admin  	numeric           null,
+	included_admin  	numeric           null,
+	include_sources_admin  	varchar(50)       null,
+	info_admin   		varchar(150)      null,
+	profile_admin  		varchar(15)       null,
+       constraint ind_admin primary key (list_admin, user_admin,role_admin)
+)
 go
 
 create index list_admin_fk on admin_table (list_admin)
@@ -2691,21 +2691,21 @@ CREATE TABLE subscriber_table (
 	include_sources_subscriber varchar2(50),
         CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber,user_subscriber)
 );
-#CREATE TABLE admin_table (
-#	list_admin 		varchar2(50) NOT NULL,
-# 	user_admin 		varchar2(100) NOT NULL,
-#	role_admin 		number('listmaster','owner','editor') NOT NULL,
-#	date_admin 		date NOT NULL,
-#	update_admin 		date,
-#	reception_admin 	varchar2(20),
-#	comment_admin 		varchar2(150),
-#	subscribed_admin  	number('0','1'),
-#	included_admin  	number('0','1'),
-#	include_sources_admin  	varchar2(50),
-#	info_admin   		varchar2(150),
-#	profile_admin  		number('privileged','normal'),
-#       CONSTRAINT ind_admin PRIMARY KEY (list_admin,user_admin,role_admin),
-#);
+CREATE TABLE admin_table (
+	list_admin 		varchar2(50) NOT NULL,
+ 	user_admin 		varchar2(100) NOT NULL,
+	role_admin 		number('listmaster','owner','editor') NOT NULL,
+	date_admin 		date NOT NULL,
+	update_admin 		date,
+	reception_admin 	varchar2(20),
+	comment_admin 		varchar2(150),
+	subscribed_admin  	number('0','1'),
+	included_admin  	number('0','1'),
+	include_sources_admin  	varchar2(50),
+	info_admin   		varchar2(150),
+	profile_admin  		number('privileged','normal'),
+       CONSTRAINT ind_admin PRIMARY KEY (list_admin,user_admin,role_admin),
+);
 
 !
 	\end{verbatim}
@@ -2937,7 +2937,7 @@ others. Depending on permissions, the same URL may generate a different view.
 
 #include <unistd.h>
 
-#define WWSYMPA "/home/sympa/bin/wwsympa.fcgi"
+#define WWSYMPA "/wwsympa.fcgi"
 
 int main(int argn, char **argv, char **envp) {
     argv[0] = WWSYMPA;
@@ -2955,7 +2955,7 @@ int main(int argn, char **argv, char **envp) {
 \begin {quote}
 \begin{verbatim}
      Example :
-       	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+       	ScriptAlias /wws /wwsympa.fcgi
 \end{verbatim}
 \end {quote}
 
@@ -2968,12 +2968,12 @@ int main(int argn, char **argv, char **envp) {
 \begin {quote}
 \begin{verbatim}
      Example :
-	FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 2
+	FastCgiServer /wwsympa.fcgi -processes 2
 	<Location /wws>
    	  SetHandler fastcgi-script
 	</Location>
 
-	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+	ScriptAlias /wws /wwsympa.fcgi
 
  \end{verbatim}
 \end {quote}
@@ -4724,7 +4724,7 @@ need to run dedicated fascgi server for each virtual robot.
 \textit {Examples:} 
 \begin {quote}
 \begin{verbatim}
-FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 3 -idle-timeout 120
+FastCgiServer /wwsympa.fcgi -processes 3 -idle-timeout 120
 .....
 <VirtualHost 195.215.92.16>
   ServerAdmin webmaster@your.virtual.domain
@@ -4735,7 +4735,7 @@ FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 3 -idle-timeout 120
      SetHandler fastcgi-script
   </Location>
 
-  ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+  ScriptAlias /wws /wwsympa.fcgi
 
 </VirtualHost>
 \end{verbatim}

@@ -9,7 +9,7 @@
 %DVIPSWebPage: (www.radicaleye.com)
 %DVIPSCommandLine: dvips -f sympa.dvi
 %DVIPSParameters: dpi=600, compressed
-%DVIPSSource:  TeX output 2004.10.26:1652
+%DVIPSSource:  TeX output 2004.11.10:1215
 %%BeginProcSet: texc.pro
 %!
 /TeXDict 300 dict def TeXDict begin/N{def}def/B{bind def}N/S{exch}N/X{S
@@ -862,8 +862,8 @@ rf /Fs 133[37 42 42 60 42 46 28 32 37 46 46 42 46 69
 42 42 42 42 23 21 28 21 47 42 28 28 28 1[69 42 42 1[28
 2[28 26[46 46 2[{TeXBase1Encoding ReEncodeFont}93 83.022
 /Times-Roman rf /Fu 87[33 49[50 50 28 39 33 1[50 50 50
-78 28 2[28 50 50 33 44 1[44 50 44 9[94 3[55 3[72 11[66
-1[72 10[50 1[50 1[50 1[50 3[25 44[{TeXBase1Encoding ReEncodeFont}29
+78 28 2[28 50 50 33 44 2[50 44 9[94 3[55 3[72 72 10[66
+1[72 12[50 1[50 50 50 3[25 44[{TeXBase1Encoding ReEncodeFont}29
 99.6264 /Times-Roman rf /Fv 136[124 86 1[57 67 76 1[96
 86 96 143 48 2[48 96 86 57 76 2[96 86 13[96 5[163 115
 8[124 9[86 86 86 86 86 86 86 86 86 86 1[43 46[{
@@ -886,8 +886,8 @@ TeXDict begin
 2424 y Fv(Mailing)42 b(Lists)h(Management)h(Softwar)m(e)1159
 2631 y(v)n(ersion)g(4.2b)-7 b(.5)586 2996 y Fu(Ser)n(ge)26
 b(Aumont,)d(Oli)n(vier)h(Sala)8 b(\250)-41 b(un,)25 b(Christophe)f(W)-8
-b(olfhugel,)1330 3355 y(26)24 b(October)h(2004)p Black
-Black eop
+b(olfhugel,)1281 3355 y(10)25 b(No)o(v)o(ember)e(2004)p
+Black Black eop
 %%Page: 2 2
 2 1 bop Black 656 241 a Ft(2)p Black Black Black eop
 %%Page: 3 3
@@ -4057,40 +4057,37 @@ Ft(61)p Black 629 531 a Fp(email_user)475 b(varchar)41
 b(\(100\))g(NOT)i(NULL,)629 631 y(gecos_user)475 b(varchar)41
 b(\(150\),)629 731 y(password_user)d(varchar)j(\(40\),)498
 830 y(cookie_delay_user)c(int,)498 930 y(lang_user)j(varchar)h(\(10\),)
-498 1029 y(attributes_user)d(text,)498 1129 y(PRIMARY)j(KEY)h
-(\(email_user\))498 1229 y(\);)498 1428 y(CREATE)f(TABLE)h
-(subscriber_table)37 b(\()629 1528 y(list_subscriber)342
-b(varchar)41 b(\(50\))h(NOT)g(NULL,)498 1627 y(user_subscriber)c
-(varchar)i(\(100\))i(NOT)g(NULL,)498 1727 y(date_subscriber)c(datetime)
-i(NOT)i(NULL,)498 1826 y(update_subscriber)37 b(datetime,)498
-1926 y(visibility_subscr)o(ib)o(er)g(varchar)k(\(20\),)498
-2026 y(reception_subscri)o(be)o(r)c(varchar)k(\(20\),)498
-2125 y(bounce_subscriber)c(varchar)j(\(35\),)498 2225
-y(comment_subscribe)o(r)d(varchar)k(\(150\),)498 2325
-y(subscribed_subscr)o(ib)o(er)81 b(enum)42 b(\('0','1'\),)498
+498 1029 y(attributes_user)d(varchar\(255\),)498 1129
+y(PRIMARY)j(KEY)h(\(email_user\))498 1229 y(\);)498 1428
+y(CREATE)f(TABLE)h(subscriber_table)37 b(\()629 1528
+y(list_subscriber)342 b(varchar)41 b(\(50\))h(NOT)g(NULL,)498
+1627 y(user_subscriber)c(varchar)i(\(100\))i(NOT)g(NULL,)498
+1727 y(date_subscriber)c(datetime)i(NOT)i(NULL,)498 1826
+y(update_subscriber)37 b(datetime,)498 1926 y(visibility_subscr)o(ib)o
+(er)g(varchar)k(\(20\),)498 2026 y(reception_subscri)o(be)o(r)c
+(varchar)k(\(20\),)498 2125 y(bounce_subscriber)c(varchar)j(\(35\),)498
+2225 y(comment_subscribe)o(r)d(varchar)k(\(150\),)498
+2325 y(subscribed_subscr)o(ib)o(er)81 b(enum)42 b(\('0','1'\),)498
 2424 y(included_subscrib)o(er)80 b(enum)42 b(\('0','1'\),)498
 2524 y(include_sources_s)o(ub)o(sc)o(rib)o(er)37 b(varchar\(50\),)498
 2623 y(bounce_score_subs)o(cr)o(ib)o(er)g(smallint)j(\(6\),)498
 2723 y(PRIMARY)h(KEY)h(\(list_subscriber,)37 b(user_subscriber\))o(,)
 498 2823 y(INDEX)42 b(\(user_subscribe)o(r,l)o(is)o(t_s)o(ub)o(sc)o
-(rib)o(er)o(\))498 2922 y(\);)498 3122 y(#CREATE)f(TABLE)g(admin_table)
-e(\()498 3221 y(#)k(list_admin)83 b(varchar\(50\))39
-b(NOT)k(NULL,)498 3321 y(#)87 b(user_admin)c(varchar\(100\))39
-b(NOT)j(NULL,)498 3421 y(#)h(role_admin)83 b(enum\('listmaster')o(,')o
-(own)o(er)o(',')o(ed)o(ito)o(r')o(\))37 b(NOT)43 b(NULL,)498
-3520 y(#)g(date_admin)83 b(datetime)41 b(NOT)h(NULL,)498
-3620 y(#)h(update_admin)83 b(datetime,)498 3719 y(#)43
-b(reception_admin)81 b(varchar\(20\),)498 3819 y(#)43
-b(comment_admin)82 b(varchar\(150\),)498 3919 y(#)43
-b(subscribed_admin)124 b(enum\('0','1'\),)498 4018 y(#)43
-b(included_admin)125 b(enum\('0','1'\),)498 4118 y(#)43
-b(include_sources_a)o(dm)o(in)124 b(varchar\(50\),)498
-4218 y(#)43 b(info_admin)171 b(varchar\(150\),)498 4317
-y(#)43 b(profile_admin)126 b(enum\('privilege)o(d',)o('n)o(orm)o(al)o
-('\),)498 4417 y(#)43 b(PRIMARY)e(KEY)h(\(list_admin,)d
-(user_admin,role_)o(adm)o(in)o(\),)498 4516 y(#)k(INDEX)f
-(\(list_admin,)c(user_admin,role_a)o(dmi)o(n\))498 4616
-y(#\);)498 5015 y(#)43 b(CREATE)e(TABLE)h(log_table)e(\()498
+(rib)o(er)o(\))498 2922 y(\);)498 3122 y(CREATE)f(TABLE)h(admin_table)d
+(\()498 3221 y(list_admin)83 b(varchar\(50\))39 b(NOT)k(NULL,)585
+3321 y(user_admin)83 b(varchar\(100\))39 b(NOT)j(NULL,)498
+3421 y(role_admin)83 b(enum\('listmaster')o(,')o(ow)o(ner)o(',)o('ed)o
+(it)o(or')o(\))37 b(NOT)43 b(NULL,)498 3520 y(date_admin)83
+b(datetime)40 b(NOT)j(NULL,)498 3620 y(update_admin)82
+b(datetime,)498 3719 y(reception_admin)f(varchar\(20\),)498
+3819 y(comment_admin)h(varchar\(150\),)498 3919 y(subscribed_admin)124
+b(enum\('0','1'\),)498 4018 y(included_admin)h(enum\('0','1'\),)498
+4118 y(include_sources_a)o(dm)o(in)f(varchar\(50\),)498
+4218 y(info_admin)170 b(varchar\(150\),)498 4317 y(profile_admin)126
+b(enum\('privilege)o(d')o(,'n)o(or)o(mal)o('\))o(,)498
+4417 y(PRIMARY)41 b(KEY)h(\(list_admin,)d(user_admin,role_)o(ad)o(min)o
+(\),)498 4516 y(INDEX)j(\(list_admin,)c(user_admin,role_a)o(dm)o(in\))
+498 4616 y(\);)498 5015 y(#)43 b(CREATE)e(TABLE)h(log_table)e(\()498
 5114 y(#)87 b(id)43 b(INT)f(UNSIGNED)e(DEFAULT)h(0)i(NOT)f(NULL)g
 (auto_increment,)498 5214 y(#)87 b(date)42 b(int)g(NOT)h(NULL,)498
 5313 y(#)87 b(pid)42 b(int,)498 5413 y(#)87 b(process)41
@@ -4121,21 +4118,22 @@ b(varchar)40 b(\(100\))i(NOT)g(NULL,)1052 3421 y(gecos_user)476
 b(varchar)40 b(\(150\),)922 3520 y(cookie_delay_us)o(er)299
 b(int4,)1270 3620 y(password_user)38 b(varchar)j(\(40\),)1270
 3719 y(lang_user)650 b(varchar)41 b(\(10\),)922 3819
-y(attributes_user)c(text,)922 3919 y(CONSTRAINT)i(ind_user)h(PRIMARY)h
-(KEY)h(\(email_user\))922 4018 y(\);)922 4218 y(DROP)f(TABLE)h
-(subscriber_table)o(;)922 4317 y(CREATE)f(TABLE)g(subscriber_table)c
-(\()1052 4417 y(list_subscriber)343 b(varchar)40 b(\(50\))i(NOT)h
-(NULL,)922 4516 y(user_subscriber)37 b(varchar)k(\(100\))g(NOT)h(NULL,)
-922 4616 y(date_subscriber)37 b(timestamp)j(with)i(time)g(zone)g(NOT)g
-(NULL,)922 4716 y(update_subscrib)o(er)81 b(timestamp)40
-b(with)h(time)h(zone,)922 4815 y(visibility_subs)o(cri)o(be)o(r)37
-b(varchar)k(\(20\),)922 4915 y(reception_subsc)o(rib)o(er)c(varchar)k
-(\(20\),)922 5015 y(bounce_subscrib)o(er)c(varchar)k(\(35\),)922
-5114 y(bounce_score_su)o(bsc)o(ri)o(be)o(r)d(int4,)922
-5214 y(comment_subscri)o(ber)f(varchar)j(\(150\),)922
-5313 y(subscribed_subs)o(cri)o(be)o(r)81 b(bit\(1\),)922
-5413 y(included_subscr)o(ibe)o(r)g(bit\(1\),)p Black
-Black eop
+y(attributes_user)c(varchar)k(\(255\),)922 3919 y(CONSTRAINT)e
+(ind_user)h(PRIMARY)h(KEY)h(\(email_user\))922 4018 y(\);)922
+4218 y(DROP)f(TABLE)h(subscriber_table)o(;)922 4317 y(CREATE)f(TABLE)g
+(subscriber_table)c(\()1052 4417 y(list_subscriber)343
+b(varchar)40 b(\(50\))i(NOT)h(NULL,)922 4516 y(user_subscriber)37
+b(varchar)k(\(100\))g(NOT)h(NULL,)922 4616 y(date_subscriber)37
+b(timestamp)j(with)i(time)g(zone)g(NOT)g(NULL,)922 4716
+y(update_subscrib)o(er)81 b(timestamp)40 b(with)h(time)h(zone,)922
+4815 y(visibility_subs)o(cri)o(be)o(r)37 b(varchar)k(\(20\),)922
+4915 y(reception_subsc)o(rib)o(er)c(varchar)k(\(20\),)922
+5015 y(bounce_subscrib)o(er)c(varchar)k(\(35\),)922 5114
+y(bounce_score_su)o(bsc)o(ri)o(be)o(r)d(int4,)922 5214
+y(comment_subscri)o(ber)f(varchar)j(\(150\),)922 5313
+y(subscribed_subs)o(cri)o(be)o(r)81 b(bit\(1\),)922 5413
+y(included_subscr)o(ibe)o(r)g(bit\(1\),)p Black Black
+eop
 %%Page: 63 63
 63 62 bop Black 232 241 a Fo(6.3.)41 b(CREA)-9 b(TING)20
 b(A)g(SYMP)-8 b(A)22 b(D)m(A)-9 b(T)h(AB)m(ASE)1384 b
@@ -4144,25 +4142,22 @@ b(varchar\(50\),)498 631 y(CONSTRAINT)j(ind_subscriber)d(PRIMARY)k(KEY)
 h(\(list_subscriber,)37 b(user_subscriber\))498 731 y(\);)498
 830 y(CREATE)k(INDEX)h(subscriber_idx)c(ON)k(subscriber_table)37
 b(\(user_subscriber,)o(li)o(st_)o(su)o(bsc)o(ri)o(be)o(r\);)498
-1029 y(#DROP)42 b(TABLE)f(admin_table;)498 1129 y(#CREATE)g(TABLE)g
-(admin_table)e(\()498 1229 y(#)k(list_admin)83 b(varchar\(50\))39
-b(NOT)k(NULL,)498 1328 y(#)87 b(user_admin)c(varchar\(100\))39
-b(NOT)j(NULL,)498 1428 y(###)g(role_admin)84 b(enum\('listmaste)o(r')o
-(,'o)o(wn)o(er')o(,')o(edi)o(to)o(r')o(\))38 b(NOT)k(NULL,)498
-1528 y(#)h(date_admin)83 b(timestamp)40 b(with)i(time)g(zone)g(NOT)g
-(NULL,)498 1627 y(#)h(update_admin)83 b(timestamp)39
-b(with)j(time)g(zone,)498 1727 y(#)h(reception_admin)81
-b(varchar\(20\),)498 1826 y(#)43 b(comment_admin)82 b(varchar\(150\),)
-498 1926 y(#)43 b(subscribed_admin)124 b(bit\(1\),)498
-2026 y(#)43 b(included_admin)125 b(bit\(1\),)498 2125
-y(#)43 b(include_sources_a)o(dm)o(in)124 b(varchar\(50\),)498
-2225 y(#)43 b(info_admin)171 b(varchar\(150\),)498 2325
-y(###)42 b(profile_admin)126 b(enum\('privileged)o(',)o('no)o(rm)o(al')
-o(\),)498 2424 y(#)305 b(CONSTRAINT)39 b(ind_admin)h(PRIMARY)h(KEY)h
+1029 y(DROP)42 b(TABLE)g(admin_table;)498 1129 y(CREATE)f(TABLE)h
+(admin_table)d(\()498 1229 y(list_admin)83 b(varchar\(50\))39
+b(NOT)k(NULL,)585 1328 y(user_admin)83 b(varchar\(100\))39
+b(NOT)j(NULL,)498 1428 y(role_admin)83 b(varchar\(15\))39
+b(NOT)k(NULL,)498 1528 y(date_admin)83 b(timestamp)40
+b(with)i(time)g(zone)g(NOT)g(NULL,)498 1627 y(update_admin)82
+b(timestamp)40 b(with)i(time)g(zone,)498 1727 y(reception_admin)81
+b(varchar\(20\),)498 1826 y(comment_admin)h(varchar\(150\),)498
+1926 y(subscribed_admin)124 b(bit\(1\),)498 2026 y(included_admin)h
+(bit\(1\),)498 2125 y(include_sources_a)o(dm)o(in)f(varchar\(50\),)498
+2225 y(info_admin)170 b(varchar\(150\),)498 2325 y(profile_admin)126
+b(varchar\(15\),)847 2424 y(CONSTRAINT)39 b(ind_admin)h(PRIMARY)h(KEY)h
 (\(list_admin,)d(user_admin,role_)o(ad)o(min)o(\))498
-2524 y(#\);)498 2623 y(#CREATE)i(INDEX)g(admin_idx)f(ON)j
-(admin_table\(list)o(_ad)o(mi)o(n,)37 b(user_admin,role_)o(adm)o(in)o
-(\);)p Black 232 2873 a Ft(\226)p Black 41 w(Sybase)20
+2524 y(\);)498 2623 y(CREATE)i(INDEX)h(admin_idx)e(ON)i
+(admin_table\(list_)o(adm)o(in)o(,)37 b(user_admin,role_a)o(dmi)o(n\))o
+(;)p Black 232 2873 a Ft(\226)p Black 41 w(Sybase)20
 b(database)g(creation)f(script)p Black Black Black Black
 498 3122 a Fp(/*)43 b(Sybase)e(Database)f(creation)h(script)g(2.5.2)g
 (*/)498 3221 y(/*)i(Thierry)e(Charles)f(<tcharles@electro)o(n-)o(lib)o
@@ -4177,7 +4172,7 @@ y(email_user)563 b(varchar\(100\))474 b(not)43 b(null,)672
 b(,)672 4417 y(password_user)431 b(varchar\(40\))518
 b(null)173 b(,)672 4516 y(cookie_delay_user)255 b(numeric)694
 b(null)173 b(,)672 4616 y(lang_user)607 b(varchar\(10\))518
-b(null)173 b(,)672 4716 y(attributes_user)c(text)826
+b(null)173 b(,)672 4716 y(attributes_user)c(varchar\(255\))474
 b(null)173 b(,)672 4815 y(constraint)40 b(ind_user)g(primary)h(key)h
 (\(email_user\))498 4915 y(\))498 5015 y(go)498 5214
 y(create)f(index)h(email_user_fk)c(on)43 b(user_table)c(\(email_user\))
@@ -4206,26 +4201,24 @@ o(bsc)o(ri)o(ber)37 b(varchar\(50\))344 b(null)173 b(,)1096
 b(subscriber_table)37 b(\(list_subscriber)o(\))922 2524
 y(go)922 2723 y(create)k(index)g(user_subscriber_f)o(k)c(on)43
 b(subscriber_table)37 b(\(user_subscriber)o(\))922 2823
-y(go)922 3022 y(#create)j(table)i(admin_table)922 3122
-y(#\()922 3221 y(#)h(list_admin)83 b(varchar\(50\))300
-b(not)43 b(null,)922 3321 y(#)86 b(user_admin)d(varchar\(100\))170
-b(not)42 b(null,)922 3421 y(###)g(role_admin)83 b(enum\('listmaster)o
-(',)o('ow)o(ne)o(r',)o('e)o(dit)o(or)o('\))37 b(not)42
-b(null,)922 3520 y(#)h(date_admin)83 b(datetime)171 b(not)42
-b(null,)922 3620 y(#)h(update_admin)82 b(datetime)432
-b(null,)922 3719 y(#)43 b(reception_admin)81 b(varchar\(20\))300
-b(null,)922 3819 y(#)43 b(comment_admin)82 b(varchar\(150\))125
-b(null,)922 3919 y(#)43 b(subscribed_admin)124 b(numeric)476
-b(null,)922 4018 y(#)43 b(included_admin)125 b(numeric)476
-b(null,)922 4118 y(#)43 b(include_sources_)o(ad)o(mi)o(n)125
-b(varchar\(50\))300 b(null,)922 4218 y(#)43 b(info_admin)170
-b(varchar\(150\))256 b(null,)922 4317 y(###)42 b(profile_admin)125
-b(enum\('privileged')o(,')o(nor)o(ma)o(l'\))37 b(null,)922
-4417 y(#)304 b(constraint)40 b(ind_admin)g(primary)g(key)j
-(\(list_admin,)38 b(user_admin,role_a)o(dm)o(in\))922
-4516 y(#\))922 4616 y(go)922 4815 y(create)j(index)g(list_admin_fk)d
-(on)43 b(admin_table)c(\(list_admin\))922 4915 y(go)922
-5114 y(create)i(index)g(user_admin_fk)d(on)43 b(admin_table)c
+y(go)922 3022 y(create)k(table)g(admin_table)922 3122
+y(\()922 3221 y(list_admin)83 b(varchar\(50\))300 b(not)42
+b(null,)1009 3321 y(user_admin)83 b(varchar\(100\))169
+b(not)42 b(null,)922 3421 y(role_admin)83 b(varchar\(15\))300
+b(not)42 b(null,)922 3520 y(date_admin)83 b(datetime)171
+b(not)42 b(null,)922 3620 y(update_admin)82 b(datetime)432
+b(null,)922 3719 y(reception_admin)81 b(varchar\(20\))300
+b(null,)922 3819 y(comment_admin)81 b(varchar\(150\))126
+b(null,)922 3919 y(subscribed_admi)o(n)f(numeric)476
+b(null,)922 4018 y(included_admin)125 b(numeric)476 b(null,)922
+4118 y(include_sources)o(_ad)o(mi)o(n)125 b(varchar\(50\))300
+b(null,)922 4218 y(info_admin)170 b(varchar\(150\))256
+b(null,)922 4317 y(profile_admin)125 b(varchar\(15\))300
+b(null,)1227 4417 y(constraint)39 b(ind_admin)h(primary)h(key)h
+(\(list_admin,)d(user_admin,role)o(_ad)o(mi)o(n\))922
+4516 y(\))922 4616 y(go)922 4815 y(create)i(index)g(list_admin_fk)d(on)
+43 b(admin_table)c(\(list_admin\))922 4915 y(go)922 5114
+y(create)i(index)g(user_admin_fk)d(on)43 b(admin_table)c
 (\(user_admin\))922 5214 y(go)922 5413 y(create)i(index)g
 (role_admin_fk)d(on)43 b(admin_table)c(\(role_admin\))p
 Black Black eop
@@ -4270,26 +4263,24 @@ b(NOT)g(NULL,)498 4218 y(update_subscriber)37 b(date,)847
 y(include_sources_s)o(ub)o(sc)o(rib)o(er)37 b(varchar2\(50\),)847
 5114 y(CONSTRAINT)i(ind_subscriber)f(PRIMARY)j(KEY)h(\(list_subscriber)
 o(,us)o(er)o(_su)o(bs)o(cri)o(be)o(r\))498 5214 y(\);)498
-5313 y(#CREATE)f(TABLE)g(admin_table)e(\()498 5413 y(#)k(list_admin)83
+5313 y(CREATE)f(TABLE)h(admin_table)d(\()498 5413 y(list_admin)83
 b(varchar2\(50\))39 b(NOT)j(NULL,)p Black Black eop
 %%Page: 66 66
 66 65 bop Black 656 241 a Ft(66)1213 b Fo(CHAPITRE)20
 b(6.)41 b Fq(SYMP)-7 b(A)20 b Fo(AND)g(ITS)h(D)m(A)-9
-b(T)h(AB)m(ASE)p Black 922 531 a Fp(#)86 b(user_admin)d
-(varchar2\(100\))39 b(NOT)j(NULL,)922 631 y(#)h(role_admin)83
-b(number\('listmast)o(er)o(',)o('ow)o(ne)o(r',)o('e)o(dit)o(or)o('\))37
-b(NOT)42 b(NULL,)922 731 y(#)h(date_admin)83 b(date)42
-b(NOT)g(NULL,)922 830 y(#)h(update_admin)82 b(date,)922
-930 y(#)43 b(reception_admin)81 b(varchar2\(20\),)922
-1029 y(#)43 b(comment_admin)82 b(varchar2\(150\),)922
-1129 y(#)43 b(subscribed_admin)124 b(number\('0','1'\),)922
-1229 y(#)43 b(included_admin)125 b(number\('0','1'\))o(,)922
-1328 y(#)43 b(include_sources_)o(ad)o(mi)o(n)125 b(varchar2\(50\),)922
-1428 y(#)43 b(info_admin)170 b(varchar2\(150\),)922 1528
-y(#)43 b(profile_admin)125 b(number\('privileg)o(ed')o(,')o(nor)o(ma)o
-(l'\))o(,)922 1627 y(#)304 b(CONSTRAINT)40 b(ind_admin)g(PRIMARY)g(KEY)
-j(\(list_admin,use)o(r_a)o(dm)o(in)o(,ro)o(le)o(_ad)o(mi)o(n\),)922
-1727 y(#\);)922 1926 y(!)656 2144 y Ft(Y)-9 b(ou)19 b(can)h(e)o(x)o
+b(T)h(AB)m(ASE)p Black 1009 531 a Fp(user_admin)83 b(varchar2\(100\))38
+b(NOT)k(NULL,)922 631 y(role_admin)83 b(number\('listmas)o(ter)o(',)o
+('o)o(wne)o(r')o(,'e)o(di)o(tor)o('\))37 b(NOT)42 b(NULL,)922
+731 y(date_admin)83 b(date)42 b(NOT)g(NULL,)922 830 y(update_admin)82
+b(date,)922 930 y(reception_admin)f(varchar2\(20\),)922
+1029 y(comment_admin)g(varchar2\(150\),)922 1129 y(subscribed_admi)o(n)
+125 b(number\('0','1'\))o(,)922 1229 y(included_admin)g
+(number\('0','1'\))o(,)922 1328 y(include_sources)o(_ad)o(mi)o(n)g
+(varchar2\(50\),)922 1428 y(info_admin)170 b(varchar2\(150\),)922
+1528 y(profile_admin)125 b(number\('privileg)o(ed)o(',')o(no)o(rma)o
+(l')o(\),)1227 1627 y(CONSTRAINT)39 b(ind_admin)h(PRIMARY)h(KEY)h
+(\(list_admin,user)o(_ad)o(mi)o(n,)o(rol)o(e_)o(adm)o(in)o(\),)922
+1727 y(\);)922 1926 y(!)656 2144 y Ft(Y)-9 b(ou)19 b(can)h(e)o(x)o
 (ecute)f(the)h(script)h(using)e(a)i(simple)f(SQL)h(shell)f(such)g(as)h
 (mysql,)f(psql)g(or)g(sqlplus.)656 2362 y(Example)f(:)p
 Black Black Black Black 863 2624 a Fp(#)44 b(mysql)85
@@ -4505,10 +4496,10 @@ f(suid)g(bit)h(set,)g(to)f(start)h Fp(wwsympa.fcgi)p
 Ft(.)739 4376 y(Here)g(is)h(an)f(e)o(xample)f(\(with)h(no)g(guarantee)e
 (attached\))h(:)p Black Black Black Black 922 4616 a
 Fp(#include)40 b(<unistd.h>)922 4815 y(#define)g(WWSYMPA)h
-("/home/sympa/bin)o(/w)o(wsy)o(mp)o(a.f)o(cg)o(i")922
-5015 y(int)h(main\(int)e(argn,)i(char)g(**argv,)e(char)i(**envp\))f({)
-1096 5114 y(argv[0])g(=)i(WWSYMPA;)1096 5214 y(execve\(WWSYMPA,a)o(rg)o
-(v,e)o(nv)o(p\);)922 5313 y(})p Black Black eop
+("/wwsympa.fcgi")922 5015 y(int)h(main\(int)e(argn,)i(char)g(**argv,)e
+(char)i(**envp\))f({)1096 5114 y(argv[0])g(=)i(WWSYMPA;)1096
+5214 y(execve\(WWSYMPA,a)o(rg)o(v,e)o(nv)o(p\);)922 5313
+y(})p Black Black eop
 %%Page: 71 71
 71 70 bop Black 232 241 a Fo(7.2.)41 b(WEB)21 b(SER)-7
 b(VER)21 b(SETUP)1824 b Ft(71)p Black 232 531 a Fh(7.2.2)99
@@ -4516,29 +4507,28 @@ b(Installing)24 b(wwsympa.fcgi)h(in)g(y)n(our)f(A)n(pache)i(ser)o(v)o
 (er)232 846 y Ft(If)20 b(you)g(chose)f(to)i(run)e Fp(wwsympa.fcgi)d
 Ft(as)k(a)h(simple)f(CGI,)g(you)f(simply)h(need)g(to)g(script)g(alias)h
 (it.)p Black Black Black Black 658 1232 a Fp(Example)41
-b(:)789 1332 y(ScriptAlias)e(/wws)j(/home/sympa/bin)o(/ww)o(sy)o(mpa)o
-(.f)o(cg)o(i)232 1718 y Ft(Running)17 b(F)o(astCGI)i(will)g(pro)o(vide)
-e(much)g(f)o(aster)h(responses)g(from)f(your)g(serv)o(er)h(and)g
-(reduce)f(load)232 1817 y(\(to)j(understand)f(why)-5
-b(,)18 b(read)i(http)g(://www)-5 b(.f)o(astcgi.com/fcgi-de)n(vkit-2.1)o
-(/do)o(c/fcg)o(i-p)o(erf.)o(htm)o(\))p Black Black Black
-Black 658 2203 a Fp(Example)41 b(:)440 2303 y(FastCgiServer)d
-(/home/sympa/bin/w)o(ws)o(ymp)o(a.)o(fc)o(gi)f(-processes)j(2)440
+b(:)789 1332 y(ScriptAlias)e(/wws)j(/wwsympa.fcgi)232
+1718 y Ft(Running)17 b(F)o(astCGI)i(will)g(pro)o(vide)e(much)g(f)o
+(aster)h(responses)g(from)f(your)g(serv)o(er)h(and)g(reduce)f(load)232
+1817 y(\(to)j(understand)f(why)-5 b(,)18 b(read)i(http)g(://www)-5
+b(.f)o(astcgi.com/fcgi-de)n(vkit-2.1)o(/do)o(c/fcg)o(i-p)o(erf.)o(htm)o
+(\))p Black Black Black Black 658 2203 a Fp(Example)41
+b(:)440 2303 y(FastCgiServer)d(/wwsympa.fcgi)g(-processes)i(2)440
 2402 y(<Location)g(/wws>)702 2502 y(SetHandler)f(fastcgi-script)440
-2602 y(</Location>)440 2801 y(ScriptAlias)g(/wws)j(/home/sympa/bin/)o
-(wws)o(ym)o(pa)o(.fc)o(gi)232 3386 y Ft(If)24 b(you)f(run)h(V)-5
-b(irtual)24 b(robots,)e(then)i(the)g(F)o(astCgiServ)o(er\(s\))f(can)h
-(serv)o(e)f(multiple)h(robots.)e(There-)232 3486 y(fore)e(you)f(need)h
-(to)g(de\002ne)g(it)h(in)f(the)g(common)e(section)i(of)g(your)f(Apache)
-h(con\002guration)d(\002le.)232 4047 y Fh(7.2.3)99 b(Using)25
-b(F)n(astCGI)232 4362 y Ft(F)o(astCGI)i(is)g(an)e(e)o(xtention)f(to)i
-(CGI)h(that)e(pro)o(vides)f(persistenc)o(y)h(for)g(CGI)i(programs.)c
-(It)j(is)h(e)o(x-)232 4461 y(temely)k(useful)g(with)h
-Fq(WWSympa)e Ft(since)i(source)e(code)h(interpretation)e(and)i(all)h
-(initialisation)232 4561 y(tasks)22 b(are)f(performed)e(only)h(once,)g
-(at)i(serv)o(er)e(startup)13 b(;)22 b(then)e(\002le)i(wwsympa.fcgi)d
-(instances)i(are)232 4661 y(w)o(aiting)f(for)g(clients)h(requests.)232
-4878 y Fq(WWSympa)k Ft(can)h(also)g(w)o(ork)f(without)g(F)o(astCGI,)h
+2602 y(</Location>)440 2801 y(ScriptAlias)g(/wws)j(/wwsympa.fcgi)232
+3386 y Ft(If)24 b(you)f(run)h(V)-5 b(irtual)24 b(robots,)e(then)i(the)g
+(F)o(astCgiServ)o(er\(s\))f(can)h(serv)o(e)f(multiple)h(robots.)e
+(There-)232 3486 y(fore)e(you)f(need)h(to)g(de\002ne)g(it)h(in)f(the)g
+(common)e(section)i(of)g(your)f(Apache)h(con\002guration)d(\002le.)232
+4047 y Fh(7.2.3)99 b(Using)25 b(F)n(astCGI)232 4362 y
+Ft(F)o(astCGI)i(is)g(an)e(e)o(xtention)f(to)i(CGI)h(that)e(pro)o(vides)
+f(persistenc)o(y)h(for)g(CGI)i(programs.)c(It)j(is)h(e)o(x-)232
+4461 y(temely)k(useful)g(with)h Fq(WWSympa)e Ft(since)i(source)e(code)h
+(interpretation)e(and)i(all)h(initialisation)232 4561
+y(tasks)22 b(are)f(performed)e(only)h(once,)g(at)i(serv)o(er)e(startup)
+13 b(;)22 b(then)e(\002le)i(wwsympa.fcgi)d(instances)i(are)232
+4661 y(w)o(aiting)f(for)g(clients)h(requests.)232 4878
+y Fq(WWSympa)k Ft(can)h(also)g(w)o(ork)f(without)g(F)o(astCGI,)h
 (depending)e(on)h(the)h Fs(use)p 2453 4878 25 4 v 30
 w(fast)p 2613 4878 V 29 w(cgi)g Ft(parameter)232 4978
 y(\(see)21 b(7.3.15,)d(page)h(74\).)232 5196 y(T)-7 b(o)21
@@ -6275,16 +6265,15 @@ Ft(.)e(The)h(f)o(astcgi)g(serv)o(ers)f(de\002ned)g(in)h(the)739
 731 y(need)19 b(to)i(run)e(dedicated)g(f)o(ascgi)h(serv)o(er)g(for)f
 (each)h(virtual)f(robot.)739 830 y Fq(Examples)g(:)p
 Black Black Black Black 922 968 a Fp(FastCgiServer)38
-b(/home/sympa/bin/)o(ww)o(sy)o(mpa)o(.f)o(cgi)f(-processes)i(3)k
-(-idle-timeout)c(120)922 1067 y(.....)922 1167 y(<VirtualHost)f
-(195.215.92.16>)1009 1267 y(ServerAdmin)h(webmaster@your.v)o(ir)o(tu)o
-(al.)o(do)o(mai)o(n)1009 1366 y(DocumentRoot)f(/var/www/your.vir)o(tu)o
-(al.)o(do)o(mai)o(n)1009 1466 y(ServerName)h(your.virtual.doma)o(in)
-1009 1665 y(<Location)h(/wws>)1139 1765 y(SetHandler)g(fastcgi-script)
-1009 1864 y(</Location>)1009 2064 y(ScriptAlias)f(/wws)j
-(/home/sympa/bin)o(/ww)o(sy)o(mpa)o(.f)o(cgi)922 2263
-y(</VirtualHost>)p Black 656 2401 a Ft(\226)p Black 41
-w(Create)25 b(a)f Fp(robot.conf)d Ft(for)j(the)h(virtual)e(robot)h
+b(/wwsympa.fcgi)g(-processes)h(3)44 b(-idle-timeout)38
+b(120)922 1067 y(.....)922 1167 y(<VirtualHost)g(195.215.92.16>)1009
+1267 y(ServerAdmin)h(webmaster@your.v)o(ir)o(tu)o(al.)o(do)o(mai)o(n)
+1009 1366 y(DocumentRoot)f(/var/www/your.vir)o(tu)o(al.)o(do)o(mai)o(n)
+1009 1466 y(ServerName)h(your.virtual.doma)o(in)1009
+1665 y(<Location)h(/wws>)1139 1765 y(SetHandler)g(fastcgi-script)1009
+1864 y(</Location>)1009 2064 y(ScriptAlias)f(/wws)j(/wwsympa.fcgi)922
+2263 y(</VirtualHost>)p Black 656 2401 a Ft(\226)p Black
+41 w(Create)25 b(a)f Fp(robot.conf)d Ft(for)j(the)h(virtual)e(robot)h
 (\(current)e(web)j(interf)o(ace)e(does)i(not)f(pro)o(vide)739
 2500 y(V)-5 b(irtual)20 b(robot)f(creation)g(yet\).)656
 2919 y Fn(11.2)119 b(r)n(obot.conf)656 3226 y Ft(A)38

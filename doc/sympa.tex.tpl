@@ -2685,7 +2685,7 @@ others. Depending on permissions, the same URL may generate a different view.
 
 #include <unistd.h>
 
-#define WWSYMPA "[WWSBINDIR]/wwsympa.fcgi"
+#define WWSYMPA "[CGIDIR]/wwsympa.fcgi"
 [STOPPARSE]
 
 int main(int argn, char **argv, char **envp) {
@@ -2705,7 +2705,7 @@ int main(int argn, char **argv, char **envp) {
 \begin {quote}
 \begin{verbatim}
      Example :
-       	ScriptAlias /wws [WWSBINDIR]/wwsympa.fcgi
+       	ScriptAlias /wws [CGIDIR]/wwsympa.fcgi
 \end{verbatim}
 \end {quote}
 
@@ -2718,12 +2718,12 @@ int main(int argn, char **argv, char **envp) {
 \begin {quote}
 \begin{verbatim}
      Example :
-	FastCgiServer [WWSBINDIR]/wwsympa.fcgi -processes 2
+	FastCgiServer [CGIDIR]/wwsympa.fcgi -processes 2
 	<Location /wws>
    	  SetHandler fastcgi-script
 	</Location>
 
-	ScriptAlias /wws [WWSBINDIR]/wwsympa.fcgi
+	ScriptAlias /wws [CGIDIR]/wwsympa.fcgi
 
  \end{verbatim}
 \end {quote}
@@ -3298,7 +3298,7 @@ generic_sso
         service_name       InQueue Federation
         service_id         inqueue
         http_header_prefix HTTP_SHIB
-        email_http_header  HTTP_SHIB_EP_AFFILIATION
+        email_http_header  HTTP_SHIB_EMAIL_ADDRESS
 
 ldap
 	regexp				univ-rennes1\.fr
@@ -4082,7 +4082,7 @@ need to run dedicated fascgi server for each virtual robot.
 \textit {Examples:} 
 \begin {quote}
 \begin{verbatim}
-FastCgiServer [WWSBINDIR]/wwsympa.fcgi -processes 3 -idle-timeout 120
+FastCgiServer [CGIDIR]/wwsympa.fcgi -processes 3 -idle-timeout 120
 .....
 <VirtualHost 195.215.92.16>
   ServerAdmin webmaster@your.virtual.domain
@@ -4093,7 +4093,7 @@ FastCgiServer [WWSBINDIR]/wwsympa.fcgi -processes 3 -idle-timeout 120
      SetHandler fastcgi-script
   </Location>
 
-  ScriptAlias /wws [WWSBINDIR]/wwsympa.fcgi
+  ScriptAlias /wws [CGIDIR]/wwsympa.fcgi
 
 </VirtualHost>
 \end{verbatim}
