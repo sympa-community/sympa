@@ -5,8 +5,11 @@
 [ELSE]
 
   [IF path]  
-    <h2> <B> Contenu du dossier [path] </B> </h2> 
-    Priétaire : [doc_owner] <BR>
+    <h2><B><IMG SRC="/icons/folder.open.gif"> [path] </B> </h2> 
+    <A HREF="[path_cgi]/d_editfile/[list]/[escaped_path]">éditer</A> |
+    <A HREF="[path_cgi]/d_delete/[list]/[escaped_path]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path]', 'Voulez-vous vraiment supprimer [path] ?'); return false;">supprimer</A> |
+<A HREF="[path_cgi]/d_control/[list]/[escaped_path]">accès</A><BR>
+    Propriétaire : [doc_owner] <BR>
     Mise à jour : [doc_date] <BR>
     [IF doc_title]
     Description : [doc_title] <BR><BR>
@@ -104,15 +107,20 @@
 	<TD>&nbsp;</TD>
 	<TD> [s->date] </TD>
 		
-	<TD>&nbsp; </TD>
-	
 	[IF s->edit]
+	<TD><center>
+	<font size=-1>
+	<A HREF="[path_cgi]/d_editfile/[list]/[escaped_path][s->escaped_doc]">éditer</A>
+	</font>
+	</center></TD>
+	
 	  <TD><center>
 	  <FONT size=-1>
 	  <A HREF="[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]', 'Voulez-vous vraiment supprimer [path][s->doc] ?'); return false;">supprimer</A>
 	  </FONT>
 	  </center></TD>
 	[ELSE]
+	  <TD>&nbsp; </TD>
 	  <TD>&nbsp; </TD>
 	[ENDIF]
 	
@@ -201,49 +209,6 @@
   <HR> 
 <TABLE CELLSPACING=20>
    
-   [IF path]
-         
-      [IF may_edit]
-      <TR>
-      <FORM METHOD="POST" ACTION="[path_cgi]">
-      <TD ALIGN="right" VALIGN="bottom">
-      <B> Décrire le dossier [path] </B> <BR>
-            
-      <input MAXLENGTH=100 type="text" name="content" value="[description]" SIZE=50>
-      </TD>
-      
-      <TD ALIGN="left" VALIGN="bottom">
-      <input type="submit" value="Valider" name="action_d_describe">
-      <INPUT TYPE="hidden" NAME="serial" VALUE="[serial_desc]">
-      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-      <INPUT TYPE="hidden" NAME="path" VALUE="[path]">     
-      <INPUT TYPE="hidden" NAME="action" VALUE="d_describe">
-      </TD>
-      </FORM>
-
-      </TR>
-      [ENDIF]
-   
-      [IF may_control]
-      <TR>   
-      <FORM METHOD="POST" ACTION="[path_cgi]">           
-      <TD ALIGN="right" VALIGN="center">
-      <B> Editer les droits d'accès du dossier [path]</B> 
-
-      </TD>
-     
-      <TD ALIGN="left" VALIGN="bottom">
-      <input type="submit" value="   Accès   " name="action_d_control">
-      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-      <INPUT TYPE="hidden" NAME="path" VALUE="[path]">     
-      </TD>
-      </FORM>
-      </TR><BR>
-      [ENDIF]
-  
-   [ENDIF] 
-
-
   [IF may_edit]
     <TR>
     <FORM METHOD="POST" ACTION="[path_cgi]">

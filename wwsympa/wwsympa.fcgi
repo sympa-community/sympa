@@ -100,13 +100,14 @@ my %icon_table;
   # application file
 $icon_table{'unknown'} = '/icons/unknown.gif';
 $icon_table{'folder'} = '/icons/folder.gif';
+$icon_table{'current_folder'} = '/icons/folder.open.gif';
 $icon_table{'application'} = '/icons/unknown.gif';
 $icon_table{'octet-stream'} = '/icons/binary.gif';
 $icon_table{'audio'} = '/icons/sound1.gif';
 $icon_table{'image'} = '/icons/image2.gif';
 $icon_table{'text'} = '/icons/text.gif';
 $icon_table{'video'} = '/icons/movie.gif';
-$icon_table{'father'} = '/icons/folder.open.gif';
+$icon_table{'father'} = '/icons/back.gif';
 $icon_table{'sort'} = '/icons/down.gif';
 $icon_table{'url'} = '/icons/link.gif';
 ## Shared directory and description file
@@ -5367,7 +5368,7 @@ sub do_d_read {
 	    $param->{'doc_title'} = $desc_hash{'title'};
 	}
 	my @info = stat $doc;
-	$param->{'doc_date'} =  &POSIX::strftime("%d %b %y  %H:%M", localtime($info[10]));
+	$param->{'doc_date'} =  &POSIX::strftime("%d %b %Y", localtime($info[10]));
 
 
 	# listing of all the shared documents of the directory
@@ -5410,7 +5411,7 @@ sub do_d_read {
 		# last update
 		my @info = stat $path_doc;
 		$subdirs{$d}{'date_epoch'} = $info[10];
-		$subdirs{$d}{'date'} = &POSIX::strftime("%d %b %y  %H:%M", localtime($info[10]));
+		$subdirs{$d}{'date'} = &POSIX::strftime("%d %b %Y", localtime($info[10]));
 		
 		# Case read authorized : fill the hash 
 		$subdirs{$d}{'icon'} = $icon_table{'folder'};
@@ -5582,7 +5583,7 @@ sub do_d_read {
 		      # last update
 		    my @info = stat $path_doc;
 		    $files{$d}{'date_epoch'} = $info[10];
-		    $files{$d}{'date'} = POSIX::strftime("%d %b %y  %H:%M", localtime($info[10]));
+		    $files{$d}{'date'} = POSIX::strftime("%d %b %Y", localtime($info[10]));
 		      # size
 		    $files{$d}{'size'} = (-s $path_doc)/1000; 
 		}
@@ -5694,6 +5695,8 @@ sub do_d_editfile {
     # path of the shared directory
     my $shareddir =  $expl.'/'.$list_name.'/shared';
 
+    $param->{'directory'} = -d "$shareddir/$path";
+
     # Control
         
     ### action relative to a list ?
@@ -5710,12 +5713,11 @@ sub do_d_editfile {
     }   
 
     # Existing document? File?
-    unless (-f "$shareddir/$path") {
+    unless (-r "$shareddir/$path") {
 	&error_message('no_such_file', {'path' => $path});
 	&wwslog('info',"d_editfile : Cannot edit $shareddir/$path : not an existing file");
 	return undef;
     }
-
        
     ### Document isn't a description file?
     unless ($path !~ /\.desc/) {
@@ -5760,17 +5762,24 @@ sub do_d_editfile {
     }
 
     #Current directory
-    $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+    $path =~ /^(.*)\/([^\/]+)$/; 
     $param->{'father'} = $1;    
     $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
 
     # Description of the file
-    if (-e "$shareddir/$1.desc.$3") {
-	my %desc_hash = &get_desc_file("$shareddir/$1.desc.$3");
+    my $descfile;
+    if (-d "$shareddir/$path") {
+	$descfile = $shareddir.'/'.$path.'/.desc';
+    }else {
+	$descfile = $shareddir.'/'.$1.'/.desc.'.$2;
+    }
+    
+    if (-e $descfile) {
+	my %desc_hash = &get_desc_file($descfile);
 	$param->{'desc'} = $desc_hash{'title'};
 	$param->{'doc_owner'} = $desc_hash{'email'};   
 	## Synchronization
-	my @info = stat "$shareddir/$1.desc.$3";
+	my @info = stat $descfile;
 	$param->{'serial_desc'} = $info[10];
     }
 

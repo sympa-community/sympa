@@ -2,6 +2,8 @@
 
 [IF url]
 <H1>Edition du signet [path]</H1>
+[ELSIF directory]
+<H1>Edition du répertoire [path]</H1>
 [ELSE]
 <H1>Edition du fichier [path]</H1>
 [ENDIF]
@@ -12,6 +14,7 @@
 
 <TABLE CELLSPACING=15>
 
+  [IF !directory]
   <TR>
   <form method="post" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
   <TD ALIGN="right" VALIGN="bottom">
@@ -35,11 +38,16 @@
   </TD>
   </form>
   </TR>
+  [ENDIF]
 
   <TR>
   <FORM ACTION="[path_cgi]" METHOD="POST">
   <TD ALIGN="right" VALIGN="bottom">
+  [IF directory]
+  <B> Décrire le répertoire [path]</B></BR>
+  [ELSE]
   <B> Décrire le fichier [path]</B></BR>
+  [ENDIF]
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
   <INPUT TYPE="hidden" NAME="serial" VALUE="[serial_desc]">

@@ -2,6 +2,8 @@
 
 [IF url]
 <H1>Edition of the bookmark [path]</H1>
+[ELSIF directory]
+<H1>Edition of the directory [path]</H1>
 [ELSE]
 <H1>Edition of the file [path]</H1>
 [ENDIF]
@@ -12,6 +14,7 @@
 
 <TABLE CELLSPACING=15>
 
+  [IF !directory]
   <TR>
   <form method="post" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
   <TD ALIGN="right" VALIGN="bottom">
@@ -35,11 +38,16 @@
   </TD>
   </form>
   </TR>
+  [ENDIF]
 
   <TR>
   <FORM ACTION="[path_cgi]" METHOD="POST">
   <TD ALIGN="right" VALIGN="bottom">
+  [IF directory]
+  <B> Describe the directory [path]</B></BR>
+  [ELSE]
   <B> Describe the file [path]</B></BR>
+  [ENDIF]
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
   <INPUT TYPE="hidden" NAME="serial" VALUE="[serial_desc]">

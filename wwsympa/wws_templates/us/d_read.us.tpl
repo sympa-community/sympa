@@ -5,7 +5,11 @@
 [ELSE]
 
   [IF path]  
-    <h2> <B> Listing of folder [path] </B> </h2> 
+    <h2><B><IMG SRC="/icons/folder.open.gif"> [path] </B> </h2> 
+    <A HREF="[path_cgi]/d_editfile/[list]/[escaped_path]">edit</A> | 
+    <A HREF="[path_cgi]/d_delete/[list]/[escaped_path]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path]', 'Do you really want to delete [path] ?'); return false;">delete</A> |
+    <A HREF="[path_cgi]/d_control/[list]/[escaped_path]">access</A><BR>
+
     Owner : [doc_owner] <BR>
     Last update : [doc_date] <BR>
     [IF doc_title]
@@ -104,15 +108,21 @@
 	<TD>&nbsp;</TD>
 	<TD NOWRAP> [s->date] </TD>
 		
-	<TD>&nbsp; </TD>
-	
 	[IF s->edit]
+
+	<TD><center>
+	<font size=-1>
+	<A HREF="[path_cgi]/d_editfile/[list]/[escaped_path][s->escaped_doc]">edit</A>
+	</font>
+	</center></TD>
+
 	  <TD><center>
 	  <FONT size=-1>
 	  <A HREF="[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]', 'Do you really want to delete [path][s->doc] ?'); return false;">delete</A>
 	  </FONT>
 	  </center></TD>
 	[ELSE]
+	  <TD>&nbsp; </TD>
 	  <TD>&nbsp; </TD>
 	[ENDIF]
 	
@@ -201,51 +211,6 @@
   <HR> 
 <TABLE CELLSPACING=20>
    
-   [IF path]
-         
-      [IF may_edit]
-      <TR>
-      <form method="post" ACTION="[path_cgi]">
-      <TD ALIGN="right" VALIGN="bottom">
-      <B> Describe the folder [path] </B> <BR>
-            
-      <input MAXLENGTH=100 type="text" name="content" value="[description]" SIZE=50>
-      </TD>
-      
-      <TD ALIGN="left" VALIGN="bottom">
-      <input type="submit" value="Apply" name="action_d_describe">
-      <INPUT TYPE="hidden" NAME="serial" VALUE="[serial_desc]">
-      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-      <INPUT TYPE="hidden" NAME="path" VALUE="[path]">     
-      <INPUT TYPE="hidden" NAME="action" VALUE="d_describe">
-      </TD>
-
-      </form>
-      </TR>
-      [ENDIF]
-   
-      [IF may_control]
-      <TR>   
-      <form method="post" ACTION="[path_cgi]">
-           
-      <TD ALIGN="right" VALIGN="center">
-      <B> Edit the access of the folder [path]</B> 
-
-      </TD>
-     
-      <TD ALIGN="left" VALIGN="bottom">
-      <input type="submit" value="   Access   " name="action_d_control">
-      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-      <INPUT TYPE="hidden" NAME="path" VALUE="[path]">     
-      </TD>
-
-      </form>
-      </TR><BR>
-      [ENDIF]
-  
-   [ENDIF] 
-
-
   [IF may_edit]
     <TR>
     <form method="post" ACTION="[path_cgi]">
