@@ -172,7 +172,7 @@
       [% ELSIF p.NAME == 'shared_doc' %]
         [%|l%]This paragraph defines read and edit access to the shared document repository.[%END%]
       [% ELSIF p.NAME == 'spam_protection' %]
-        [%|l%]There is a need to protection Sympa web site against spambot which collect email address in public web site. Various method are availible into Sympa and you can choose it with spam_protection and web_archive_spam_protection parameters. Possible value are:[%END%]<BR><BR>
+        [%|l%]There is a need to protect Sympa web site against spambot which collect email address in public web site. Various method are availible into Sympa and you can choose it with spam_protection and web_archive_spam_protection parameters. Possible value are:[%END%]<BR><BR>
         <UL>
           <LI>javascript: [%|l%]the address is hidden using a javascript. User who enable javascript can see a nice mailto address where others have nothing.[%END%]</LI>
           <LI>at: [%|l%]the @ char is replaced by the string " AT ".[%END%]</LI>
