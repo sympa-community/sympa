@@ -1473,7 +1473,7 @@ sub load {
 	    $users = _load_users("$self->{'dir'}/subscribers");
 	    unless (defined $users) {
 		do_log('err', 'Could not load subscribers for list %s', $self->{'name'});
-		return undef;
+		#return undef;
 	    }
 	    $m2 = $time_subscribers;
 	}
@@ -1523,7 +1523,7 @@ sub load {
 	    $users = _load_users_include($name, $self->{'admin'}, $self->{'dir'}, "$self->{'dir'}/subscribers.db", 0);
 	    unless (defined $users) {
 		do_log('err', 'Could not load subscribers for list %s', $self->{'name'});
-		return undef;
+		#return undef;
 	    }
 
 	    $m2 = time;
