@@ -7238,6 +7238,31 @@ sub maintenance {
 	}
 	&do_log('notice','%d rows have been updated', $rows);
     }    
+
+    ## Migration to tt2
+    unless (&tools::higher_version($previous_version, '4.2b')) {
+	&do_log('notice','Migrating templates to TT2 format...');
+	
+	unless (open EXEC, '--SCRIPTDIR--/tpl2tt2.pl|') {
+	    &do_log('err','Unable to run --SCRIPTDIR--/tpl2tt2.pl');
+	    return undef;
+	}
+	close EXEC;
+	
+	&do_log('notice','Rebuilding web archives...');
+	foreach my $l ( &List::get_lists('*') ) {
+	    my $list = new List ($l); 
+	    next unless (defined $list->{'admin'}{'web_archive'});
+	    my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'admin'}{'host'}";
+	    
+	    unless (open REBUILD, ">$file") {
+		&do_log('err','Cannot create %s', $file);
+		next;
+	    }
+	    print REBUILD ' ';
+	    close REBUILD;
+	}	
+    }
     
     ## Saving current version
     unless (open VFILE, ">$version_file") {

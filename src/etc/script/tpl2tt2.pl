@@ -38,11 +38,11 @@ my $pinfo = &List::_apply_defaults();
 $| = 1;
 
 ## Check UID
-unless (getlogin() eq '--USER--') {
-    print "You should run this script as user \"sympa\", ignore ? (y/CR)";
-    my $s = <STDIN>;
-    die unless ($s =~ /^y$/i);
-}
+#unless (getlogin() eq '--USER--') {
+#    print "You should run this script as user \"sympa\", ignore ? (y/CR)";
+#    my $s = <STDIN>;
+#    die unless ($s =~ /^y$/i);
+#}
 
 my $wwsconf = {};
 
@@ -122,7 +122,11 @@ foreach my $d (@directories) {
     }
     
     foreach my $tpl (sort grep(/\.tpl$/,readdir DIR)) {
-	push @templates, "$d/$tpl";
+	if ($tpl =~ /^([\w\-]+)\.(\w+)\.tpl$/) {
+	    printf "Skipping localized template %s\n", "$d/$tpl";
+	}else {
+	    push @templates, "$d/$tpl";
+	}
     }
     
     closedir DIR;
