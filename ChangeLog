@@ -1,3 +1,35 @@
+2004-03-17 15:09  salaun
+
+	* wwsympa/archived.pl: Fix: archived.pl could not process old files
+	in outgoing spool
+
+2004-03-17 11:53  salaun
+
+	* src/Archive.pm, wwsympa/archived.pl: [C.Nahaboo] Fix: using an
+	additional incremental number to files in outgoing spool instead of
+	a random number.
+
+2004-03-17 11:33  salaun
+
+	* src/Archive.pm: [BugID 273] Fix: filenames in archived spool
+	(outgoing) were using current time and PID which is not enough when
+	2 messages for the same list are sent within the same second. Now
+	using a random number instead of the PID.
+
+2004-03-17 11:18  salaun
+
+	* src/etc/scenari/: d_edit.owner, d_read.owner: [reported by
+	D.Masset] Fix: scenario titles did not match the behavior
+
+2004-03-15 16:29  salaun
+
+	* NEWS, src/List.pm: [K.Marrocco] Fix: incorrectly refers to column
+	"attributes" instead of "attributes_user".
+
+2004-03-15 14:52  salaun
+
+	* ChangeLog, NEWS: Re-preparing 4.1
+
 2004-03-15 14:47  salaun
 
 	* src/List.pm: Fix: prevent multiple custom_subject in message

@@ -257,7 +257,7 @@
 
 	wwsympa/Auth.pm: contact LDAP directory in asynchronous mode
 
-4.0.a7		16 October 2003
+4.0.a7		18 October 2003
 
    New features :
 
@@ -285,6 +285,12 @@
 	Incorrect listname regexp in task_manager (ingnored lists with '+').  Now centralized regexps in tools.pl
 
    Bug fixes :
+
+	src/List.pm: [K.Marrocco] incorrectly refers to column "attributes" instead of "attributes_user" (for Oracle)
+
+	src/Archive.pm, wwsympa/archived.pl: [BugID 273] [C.Nahaboo]  filenames in archived spool
+	(outgoing) were using current time and PID which is not enough when 2 messages for the same list are sent 
+	within the same second. Now adding incremental number to filenames in outgoing spool.
 
 	src/tools.pl: S/MIME related ; Sympa would die if it could	not find user certificate
 
