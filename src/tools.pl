@@ -810,19 +810,17 @@ sub virus_infected {
     return 0 unless ($Conf{'antivirus_path'} );
     
     my @name = split(/\//,$file);
-    my $work_dir = "${Conf{'tmpdir'}}/antivirus";
+    my $work_dir = $Conf{'tmpdir'}.'/antivirus';
     
     unless ((-d $work_dir) ||( mkdir $work_dir, 0755)) {
 	do_log('err', "Unable to create tmp antivirus directory $work_dir");
-	printf "Unable to create tmp antivirus directory $work_dir";
 	return 0;
     }
 
-    $work_dir = "${Conf{'tmpdir'}}/antivirus/${name[$#name]}";
+    $work_dir = $Conf{'tmpdir'}.'/antivirus/'.$name[$#name];
     
     unless ( mkdir ($work_dir, 0755)) {
 	do_log('err', "Unable to create tmp antivirus directory $work_dir");
-	printf "Unable to create tmp antivirus directory $work_dir";
 	return 0;
     }
 
@@ -833,7 +831,10 @@ sub virus_infected {
 
     my $virusfound; 
 
-    if ("${Conf{'antivirus_path'}}" =~ /uvscan$/) {
+    print STDERR "$Conf{'antivirus_path'}\n";
+
+    ## McAfee
+    if ($name[$#name] eq 'uvscan') {
 
 	# impossible to look for viruses with no option set
 	return 0 unless ($Conf{'antivirus_args'});
@@ -853,8 +854,29 @@ sub virus_infected {
         if (( $status == 13) and not($virusfound)) { 
 	    $virusfound = "unknown";
 	}
-    }    
-    elsif("${Conf{'antivirus_path'}}" =~ /fsav$/) {
+
+    ## Trend Micro
+    }elsif ($name[$#name] eq 'vscan') {
+
+	print STDERR "$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir\n";
+	open (ANTIVIR,"$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ; 
+		
+	while (<ANTIVIR>) {
+	    if (/Found virus (\S+) /i){
+		$virusfound = $1;
+	    }
+	}
+	close ANTIVIR;
+    
+	my $status = $?/256 ;
+
+        ## uvscan status = 1 | 2 (*256) => virus
+        if ((( $status == 1) or ( $status == 2)) and not($virusfound)) { 
+	    $virusfound = "unknown";
+	}
+
+    ## F-Secure
+    } elsif($name[$#name] eq 'fsav') {
 	$dbdir=$` ;
 
 	# impossible to look for viruses with no option set

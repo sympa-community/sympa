@@ -5057,7 +5057,7 @@ of bouncing addresses.
 In this case you must set the \cfkeyword {antivirus\_path} and 
 \cfkeyword {antivirus\_args} configuration parameters
  (see \ref {Antivirus plug-in}, page~\pageref {Antivirus plug-in}.
-\Sympa is already compatible with McAfee/uvscan and Fsecure/fsav.
+\Sympa is already compatible with McAfee/uvscan, Fsecure/fsav and Trend Micro/VirusWall.
 For each mail received, \Sympa deposits its component parts in the \tildedir {sympa/spool/tmp/antivirus} directory and
 then calls the antivirus software to check them.
 When a virus is detected, \Sympa looks for the virus name in the virus scanner STDOUT and sends a
