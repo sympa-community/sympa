@@ -5,9 +5,12 @@
 <HEAD>
 
 [IF use_htmlarea]
-<script type="text/javascript" src="[htmlarea_url]/htmlarea.js"></script>
+<script type="text/javascript">
+  _editor_url = "[htmlarea_url]/";
+  _editor_lang = "en";
+</script>
 
-<script type="text/javascript" src="[htmlarea_url]/lang/en.js"></script>
+<script type="text/javascript" src="[htmlarea_url]/htmlarea.js"></script>
 [ENDIF]
 
 <SCRIPT LANGUAGE="JavaScript">
