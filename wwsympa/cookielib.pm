@@ -46,7 +46,7 @@ sub check_cookie {
     foreach (sort keys %cookies) {
 	my $cookie = $cookies{$_};
 	
-	next unless ($cookie->name =~ /^sympauser|user$/);
+	next unless ($cookie->name =~ /^(sympauser|user)$/);
 
 	if ($cookie->value =~ /^(.*):(\S+)\s*$/) {
 	    my ($email, $mac) = ($1, $2);
