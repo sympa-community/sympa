@@ -205,7 +205,8 @@ my %default = ('occurrence' => '0-1',
 
 my @param_order = qw (subject visibility info subscribe add unsubscribe del owner send editor 
 		      account topics 
-		      host lang web_archive archive digest reply_to forced_reply_to * 
+		      host lang web_archive archive digest available_user_options 
+		      default_user_options reply_to forced_reply_to * 
 		      welcome_return_path remind_return_path user_data_source include_file 
 		      include_list include_ldap_query include_sql_query ttl creation update 
 		      status serial);
@@ -230,6 +231,7 @@ my %alias = ('reply-to' => 'reply_to',
 ##               some common regexps are defined in %regexp
 ## file_format : Config file format of the parameter might not be
 ##               the same in memory
+## split_char:   Character used to separate multiple parameters 
 ## length :      Length of a scalar variable ; used in web forms
 ## scenario :    tells that the parameter is a scenario, providing its name
 ## default :     Default value for the param ; may be a configuration parameter (conf)
@@ -266,6 +268,13 @@ my %alias = ('reply-to' => 'reply_to',
 			  'title_id' => 4,
 			  'group' => 'archives'
 		      },
+	    'available_user_options' => {'format' => {'reception' => {'format' => ['mail','notice','digest','summary','nomail'],
+								      'occurrence' => '1-n',
+								      'split_char' => ',',
+								      'default' => 'mail,notice,digest,summary,nomail'
+								      }
+						  },
+				     },
 
 	    'bounce' => {'format' => {'warn_rate' => {'format' => '\d+',
 						      'length' => 3,
@@ -588,8 +597,9 @@ my %alias = ('reply-to' => 'reply_to',
 			    'title_id' => 73,
 			    'group' => 'command'
 			    },
-	    'topics' => {'file_format' => '\w+(\/\w+)*(,\w+(\/\w+)*)*',
+	    'topics' => {#'file_format' => '\w+(\/\w+)*(,\w+(\/\w+)*)*',
 			 'format' => '\w+(\/\w+)?',
+			 'split_char' => ',',
 			 'occurrence' => '0-n',
 			 'title_id' => 74,
 			 'group' => 'description'
@@ -4838,9 +4848,11 @@ sub _apply_defaults {
     ## Parameters
     foreach my $p (keys %::pinfo) {
 
-	## Enumeration
-	if (ref ($::pinfo{$p}{'format'}) eq 'ARRAY') {
-	    $::pinfo{$p}{'file_format'} = join '|', @{$::pinfo{$p}{'format'}};
+	## Apply defaults to %pinfo
+	foreach my $d (keys %default) {
+	    unless (defined $::pinfo{$p}{$d}) {
+		$::pinfo{$p}{$d} = $default{$d};
+	    }
 	}
 
 	## Scenario format
@@ -4849,39 +4861,54 @@ sub _apply_defaults {
 	    $::pinfo{$p}{'default'} = 'default';
 	}
 
+	## Enumeration
+	if (ref ($::pinfo{$p}{'format'}) eq 'ARRAY') {
+	    $::pinfo{$p}{'file_format'} ||= join '|', @{$::pinfo{$p}{'format'}};
+	}
+	&do_log('debug', 'xxx Format(%s): %s', $p, $::pinfo{$p}{'file_format'});
+
+	if (($::pinfo{$p}{'occurrence'} =~ /n$/) 
+	    && $::pinfo{$p}{'split_char'}) {
+	    my $format = $::pinfo{$p}{'file_format'};
+	    my $char = $::pinfo{$p}{'split_char'};
+	    $::pinfo{$p}{'file_format'} = "($format)*(\\s*$char\\s*($format))*";
+	}
+	&do_log('debug', 'xxx Format(%s): %s', $p, $::pinfo{$p}{'file_format'});
+
 	## Set 'format' as default for 'file_format'
 	$::pinfo{$p}{'file_format'} ||= $::pinfo{$p}{'format'};
-
-	## Apply defaults to %pinfo
-	foreach my $d (keys %default) {
-	    unless (defined $::pinfo{$p}{$d}) {
-		$::pinfo{$p}{$d} = $default{$d};
-	    }
-	}
 	
 	next unless ((ref $::pinfo{$p}{'format'} eq 'HASH')
 		     && (ref $::pinfo{$p}{'file_format'} eq 'HASH'));
 	
 	## Parameter is a Paragraph)
 	foreach my $k (keys %{$::pinfo{$p}{'format'}}) {
-	    ## Enumeration
-	    if (ref ($::pinfo{$p}{'format'}{$k}{'format'}) eq 'ARRAY') {
-		$::pinfo{$p}{'file_format'}{$k}{'file_format'} = join '|', @{$::pinfo{$p}{'format'}{$k}{'format'}};
-	    }
-
-	    ## Scenario format
-	    if (ref($::pinfo{$p}{'format'}{$k}) && $::pinfo{$p}{'format'}{$k}{'scenario'}) {
-		$::pinfo{$p}{'format'}{$k}{'format'} = $regexp{'scenario'};
-		$::pinfo{$p}{'format'}{$k}{'default'} = 'default' unless (($p eq 'web_archive') && ($k eq 'access'));
-	    }
-
-
 	    ## Defaults
 	    foreach my $d (keys %default) {
 		unless (defined $::pinfo{$p}{'format'}{$k}{$d}) {
 		    $::pinfo{$p}{'format'}{$k}{$d} = $default{$d};
 		}
 	    }
+	    
+	    ## Scenario format
+	    if (ref($::pinfo{$p}{'format'}{$k}) && $::pinfo{$p}{'format'}{$k}{'scenario'}) {
+		$::pinfo{$p}{'format'}{$k}{'format'} = $regexp{'scenario'};
+		$::pinfo{$p}{'format'}{$k}{'default'} = 'default' unless (($p eq 'web_archive') && ($k eq 'access'));
+	    }
+
+	    ## Enumeration
+	    if (ref ($::pinfo{$p}{'format'}{$k}{'format'}) eq 'ARRAY') {
+		$::pinfo{$p}{'file_format'}{$k}{'file_format'} ||= join '|', @{$::pinfo{$p}{'format'}{$k}{'format'}};
+	    }
+	    &do_log('debug', 'xxx Format(%s/%s): %s', $p, $k, $::pinfo{$p}{'file_format'}{$k}{'file_format'});
+	    
+	    if (($::pinfo{$p}{'file_format'}{$k}{'occurrence'} =~ /n$/) 
+		&& $::pinfo{$p}{'file_format'}{$k}{'split_char'}) {
+		my $format = $::pinfo{$p}{'file_format'}{$k}{'file_format'};
+		my $char = $::pinfo{$p}{'file_format'}{$k}{'split_char'};
+		$::pinfo{$p}{'file_format'}{$k}{'file_format'} = "($format)*(\\s*$char\\s*($format))*";
+	    }
+	    &do_log('debug', 'xxx Format(%s/%s): %s', $p, $k, $::pinfo{$p}{'file_format'}{$k}{'file_format'});
 	}
 
 	next unless (ref $::pinfo{$p}{'file_format'} eq 'HASH');
@@ -4969,8 +4996,19 @@ sub _load_list_param {
 	$value =~ y/,/_/;
 	$value = &List::_load_scenario_file ($p->{'scenario'}, $value, $directory);
     }
-    
-    return $value;
+
+    ## Do we need to split param
+    if (($p->{'occurrence'} =~ /n$/)
+	&& $p->{'split_char'}) {
+	my @array = split /,/, $value;
+	foreach my $v (@array) {
+	    $v =~ s/^\s*(.+)\s*$/$1/g;
+	}
+	
+	return \@array;
+    }else {
+	return $value;
+    }
 }
 
 
@@ -5222,19 +5260,23 @@ sub _load_admin_file {
 	}
     }
 	
-    if (defined ($admin{'topics'})) {
-	if ($admin{'topics'}[0] =~ /^(.+)\s*$/o) {
-	    my $topics = $1;
-	    $topics =~ s/\s//g;
-	    @{$admin{'topics'}} = split /,/, $topics;
-	}
-    }
+#    if (defined ($admin{'topics'})) {
+#	if ($admin{'topics'}[0] =~ /^(.+)\s*$/o) {
+#	    my $topics = $1;
+#	    $topics =~ s/\s//g;
+#	    @{$admin{'topics'}} = split /,/, $topics;
+#	}
+#    }
 
     if (defined ($admin{'custom_subject'})) {
 	if ($admin{'custom_subject'} =~ /^\s*\[\s*(.+)\s*\]\s*$/) {
 	    $admin{'custom_subject'} = $1;
 	}
     }
+
+    ############################################
+    ## Bellow are constraints between parameters
+    ############################################
 
     ## Subscription and unsubscribe add and del are closed 
     ## if subscribers are extracted via external include method
