@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <BR>
 <table border=1>
 <tr><td><b>HTTPS authentication information</b></td></TR>

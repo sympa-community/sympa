@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 This form is made for editing several files of your list :
 <UL>
 <LI>Message header: if not empty, this file is added as an Mime

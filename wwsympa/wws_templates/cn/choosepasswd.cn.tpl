@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 您需要为您的 WWSympa 环境选择一个口令。
 您需要用这个口令来使用特权特性。
 

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
   [IF status=auth]
       You requested unsubscription from list [list]. <BR>To confirm
       your request, please click the button bellow :<BR>

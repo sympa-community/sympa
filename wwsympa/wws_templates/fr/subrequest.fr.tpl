@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
   [IF status=auth]
 
         Vous avez demandé un abonnement à la liste  [list], merci de confirmer

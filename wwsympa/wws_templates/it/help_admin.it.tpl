@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <!-- begin help_admin.it.tpl -->
 
           <LI><FONT COLOR="--DARK_COLOR--"><b>Rimuovi la lista</b></FONT> toglie completamente la lista da quelle presenti. &Egrave; richiesto il privilegio di ListMaster per <FONT COLOR="--DARK_COLOR--"><b>Ripristinare la lista</b></FONT>.

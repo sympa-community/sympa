@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF status = done]
 <b>Opération réussie</b>. Le message sera détruit rapidement (quelques
 minutes). N'oubliez pas de rafraichir la page concernée pour le vérifier.

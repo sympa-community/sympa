@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <H1>Edition of the file [path]</H1>
     所有者: [doc_owner] <BR>
     最后更新: [doc_date] <BR>

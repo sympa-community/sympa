@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF help_topic]
  [PARSE help_template]
 

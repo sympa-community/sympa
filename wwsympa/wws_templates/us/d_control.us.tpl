@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <H1>Access rights for the document [path]</H1>
     Owner : [owner] <BR>
     Last update : [doc_date] <BR>

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <!-- begin admin_menu.es.tpl -->
     <TD BGCOLOR="--SELECTED_COLOR--" ALIGN="CENTER" COLSPAN="7">
 	<FONT COLOR="--BG_COLOR--"><b>Lista panel de administración</b></font>

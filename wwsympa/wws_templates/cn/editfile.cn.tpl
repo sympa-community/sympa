@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <FORM ACTION="[path_cgi]" METHOD="POST">
 
 [IF file]

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF action=search_list]
   [occurrence] risultati trovati<BR><BR>
 [ENDIF]

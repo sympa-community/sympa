@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <!-- begin list_menu.it.tpl -->
 <TABLE border="0"  CELLPADDING="0" CELLSPACING="0">
  <TR VALIGN="top"><!-- empty line in the left menu panel -->

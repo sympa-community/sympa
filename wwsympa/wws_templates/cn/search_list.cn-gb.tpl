@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF action=search_list]
   找到 [occurrence] 个相关邮递表<BR><BR>
 [ENDIF]

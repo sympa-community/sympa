@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
   [IF status=auth]
 
 	Usted solicitó una subscripción a la lista [list]. <BR>

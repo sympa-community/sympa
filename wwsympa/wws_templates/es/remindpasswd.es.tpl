@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 
       Usted no tiene una contraseña en este servidor o se le ha olvidado<br>
       Se le será enviada por email :

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [FOREACH p IN param]
 <A NAME="[p->NAME]">
 <B>[p->title]</B> ([p->NAME]):

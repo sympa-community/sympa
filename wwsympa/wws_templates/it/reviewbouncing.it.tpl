@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <TABLE width=100% border="0" VALIGN="top">
 <TR><TD>
     <FORM ACTION="[path_cgi]" METHOD=POST> 

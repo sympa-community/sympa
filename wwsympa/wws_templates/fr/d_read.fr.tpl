@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF file]
   [INCLUDE file]
 [ELSE]

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF status = done]
 <b>Operation succefull</b>. The message is going to be deleted as soon
 as possible. This task may be down in a few minutes, don't forget to

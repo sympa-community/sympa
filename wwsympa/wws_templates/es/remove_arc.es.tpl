@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF status = done]
 <b>Operación realizada con éxito</b>. El mensaje será borrado tan pronto como sea posible.
 Esta tarea puede permanecer inactiva durante unos minutos, no olvide de hacer un "reload" de la página en cuestión.

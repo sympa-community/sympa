@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <H1>文档 [path] 的访问权限</H1>
     所有者: [owner] <BR>
     最后更新: [doc_date] <BR>

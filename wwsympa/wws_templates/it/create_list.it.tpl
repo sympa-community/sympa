@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF status=open]
 La tua lista &egrave; stata creata. Puoi provarla o modificare la sua configurazione
 usando il tasto di amministrazione.

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 You need to choose a password for your WWSympa environment.
 You will need this password to access privileged features.
 

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <H1>Droit d'accès au document [path]</H1>
 
     propriétaire : [owner] <BR>

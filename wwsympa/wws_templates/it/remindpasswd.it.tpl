@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 
 	Se hai dimenticato la password o non ne hai mai ricevuta una relativa a questo servizio<BR>
 	ti verr&agrave; recapitata per email:

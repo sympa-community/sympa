@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 
 Ce formulaire permet de modifier différents fichiers associés
 à votre liste :

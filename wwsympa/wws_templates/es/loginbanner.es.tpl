@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <BR>
 [IF password_sent]
   Your password has been sent to your email address [init_email].<BR>

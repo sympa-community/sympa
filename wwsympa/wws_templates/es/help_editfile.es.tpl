@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 Este formulario sirve para editar diferentes ficheros de su lista :
 <UL>
 <LI>Mensaje de cabecera: si no está vacío, este fichero se añade como un anexo de tipo MIME en

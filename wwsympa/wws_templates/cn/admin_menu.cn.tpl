@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <!-- begin admin_menu.us.tpl -->
     <TD BGCOLOR="#3366cc" ALIGN="CENTER" COLSPAN="7">
 	<FONT COLOR="#ffffff"><b>邮递表管理面板</b></font>

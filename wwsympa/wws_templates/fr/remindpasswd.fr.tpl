@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 
       Vous avez oublié votre mot de passe ou vous n'avez pas encore de mot de
       passe sur ce serveur<BR>

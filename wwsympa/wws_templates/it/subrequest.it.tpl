@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
   [IF status=auth]
 
 	Hai richiesto la sottoscrizione a [list]. <BR>Per confermare

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <H1>Edition du fichier [path]</H1>
     Propriétaire : [doc_owner] <BR>
     Dernière mise à jour : [doc_date] <BR>

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <!-- begin help_admin.tpl -->
           <LI><FONT COLOR="--DARK_COLOR--"><b>Borrar lista</b></FONT> elimina completamente la lista activa. Se requieren privilegio de Listmaster para <FONT COLOR="--DARK_COLOR--"><b>Restaurar la lista</b></FONT>.
           <LI><FONT COLOR="--DARK_COLOR--"><b>Crear compartida</b></FONT> inicializa espacio web para el documento compartido.

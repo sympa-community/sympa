@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF status = done]
 <b>操作成功</b>。
 邮件将尽快被删除。这个任务可能在几分钟内完成，不要忘记重新载入涉及到的页面。

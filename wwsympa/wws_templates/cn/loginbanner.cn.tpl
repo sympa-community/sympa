@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <BR>
 [IF password_sent]
   您的口令已经被发送到您的 Email 地址 [init_email]。<BR>

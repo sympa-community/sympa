@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <FORM ACTION="[path_cgi]" METHOD="POST">
 <INPUT TYPE="hidden" NAME="serial" VALUE="[serial]">
 <TABLE WIDTH="100%" BORDER=0 CELLPADDING="0" CELLSPACING="0">

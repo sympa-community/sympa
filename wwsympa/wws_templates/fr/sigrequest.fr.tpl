@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
   [IF status=auth]
 
         Vous avez demandé à vous désabonner de la liste  [list], merci de confirmer

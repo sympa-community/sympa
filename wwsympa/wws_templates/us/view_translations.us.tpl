@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <TABLE BGCOLOR="--DARK_COLOR--" CELLPADDING="0" CELLSPACING="0">
 <TR><TD>
 

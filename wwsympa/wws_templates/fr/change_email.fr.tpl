@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 Vous allez recevoir un e-mail de rappel de votre mot de passe.<BR>
 Pour confirmer votre changement d'adresse, veuillez saisir ci-dessous
 le mot de passe reçu par mail :

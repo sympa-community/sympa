@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <H2>在存档中搜索的结果
 <A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="#330099">[list]</font></a>: </H2>
 

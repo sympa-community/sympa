@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF error_msg=unknown_action]
 [error->action] : unknown action
 

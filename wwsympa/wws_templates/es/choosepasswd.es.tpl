@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 Usted necesita una contraseña para su entorno de WWSympa.
 Necesitará esta contraseña para acceder a funciones especiales.
 

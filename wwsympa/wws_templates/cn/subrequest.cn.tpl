@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
   [IF status=auth]
 
 	您请求订阅邮递表 [list]。<BR>要确认您的请求，请点击下面的按钮: <BR>

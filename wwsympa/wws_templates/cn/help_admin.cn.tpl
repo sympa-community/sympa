@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <!-- begin help_admin.tpl -->
           <LI><FONT COLOR="#330099"><b>删除邮递表</b></FONT> 完全删除当前邮递表。需要邮递表管理员特权来<FONT COLOR="#330099"><b>恢复</b></FONT>。
           <LI><FONT COLOR="#330099"><b>建立共享</b></FONT> 初始化共享文档的网页空间。

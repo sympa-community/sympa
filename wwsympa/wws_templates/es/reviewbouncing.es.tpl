@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <SCRIPT LANGUAGE="JavaScript">
 <!-- for other browsers
   function remind_confirm(my_form, my_total){

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
     <BR><P> 
 <TABLE BORDER=0 BGCOLOR="--LIGHT_COLOR--"><TR><TD>
 <P align=justify>

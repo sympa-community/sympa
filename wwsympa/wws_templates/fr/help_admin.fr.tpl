@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <!-- begin help_admin.fr.tpl -->
           <LI><FONT COLOR="--DARK_COLOR--"><b>Supprimer la liste</b></FONT> : Supprimer entièrement la liste actuelle. Les privilèges Listmaster sont requis pour <FONT COLOR="--DARK_COLOR--"><b>Restaurer la liste</b></FONT>.
           <LI><FONT COLOR="--DARK_COLOR--"><b>Créer un espace partagé</b></FONT> : Créer un espace partagé de documents sur le Web.

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF status=open]
 Your list is created. You can try it now or modify its configuration
 using the admin button.

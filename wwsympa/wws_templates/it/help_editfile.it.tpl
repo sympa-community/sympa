@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 Questo form serve a modificare alcuni dei template della tua lista:
 
 <UL>

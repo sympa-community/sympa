@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <FORM METHOD=POST ACTION="[path_cgi]">
 
 <INPUT NAME=list TYPE=hidden VALUE="[list]">

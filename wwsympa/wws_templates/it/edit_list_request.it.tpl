@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <!-- edit_list_request.it.tpl -->
 <FORM ACTION="[path_cgi]" METHOD="POST">
 <INPUT TYPE="hidden" NAME="serial" VALUE="[serial]">

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF status=open]
 您的邮递表已经创建。您可以试用它或者用管理按钮修改它的配置。
 

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF status = done]
 <b>Operazione eseguita</b>. Il messaggio verr&agrave; cancellato il pi&ugrave; presto possibile.<br>
 Questa operazione potrebbe essere eseguita nell'arco di qualche minuto, non dimenticare di ricaricare la pagina incriminata.

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 Está Vd. seguro que quiere cerrar la lista <B>[list]</B>?<BR><BR>
 <FORM ACTION="[path_cgi]" METHOD="POST">
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">

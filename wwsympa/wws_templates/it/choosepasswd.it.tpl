@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 Devi scegliere una password per le tue pagine di WWSympa.
 Dovrai utilizzare questa password per accedere alle funzioni privilegiate.
 

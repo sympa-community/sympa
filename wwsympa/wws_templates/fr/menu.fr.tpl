@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <!-- begin menu.tpl -->
 <TABLE CELLPADDING="0" CELLSPACING="0" WIDTH="100%" BORDER="0"><TR><TD>
 <TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">

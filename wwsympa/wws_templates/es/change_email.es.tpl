@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 Se le ha enviado un mensaje con una contraseña. <BR>
 Para confirmar su cambio de email, entre por favor su nueva contraseña en el siguiente formulario:
 

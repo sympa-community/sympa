@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 Etes-vous certain de vouloir supprimer la liste <B>[list]</B> list ?<BR><BR>
 
 <FORM ACTION="[path_cgi]" METHOD="POST">

@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 [IF status=open]
 
 Votre liste est enregistrée. Vous pouvez l'essayer et la modifier

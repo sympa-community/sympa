@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 
       You have forgotten your password, or you never had any password related to this server<BR>
       it will be sent to you by email :

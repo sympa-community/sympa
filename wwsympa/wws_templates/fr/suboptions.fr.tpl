@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
   <FORM ACTION="[path_cgi]" METHOD=POST>
 
   Vous êtes inscrit(e) depuis <FONT COLOR="--DARK_COLOR--">[subscriber->date]</FONT>  <BR><BR>

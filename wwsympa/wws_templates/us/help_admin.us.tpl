@@ -1,3 +1,5 @@
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
+
 <!-- begin help_admin.tpl -->
           <LI><FONT COLOR="--DARK_COLOR--"><b>Remove list</b></FONT> completly remove the current list. Listmaster privilege are requiered to <FONT COLOR="--DARK_COLOR--"><b>Restore list</b></FONT>.
           <LI><FONT COLOR="--DARK_COLOR--"><b>Create shared</b></FONT> initialize the shared document web space.
