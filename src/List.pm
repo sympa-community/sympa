@@ -5433,10 +5433,12 @@ sub _include_users_remote_sympa_list {
 
     my $cert_file ; my $key_file ;
 
-    if ($cert == 'list') {
+    $cert_file = $dir.'/cert.pem';
+    $key_file = $dir.'/private_key';
+    if ($cert eq 'list') {
 	$cert_file = $dir.'/cert.pem';
 	$key_file = $dir.'/private_key';
-    }elsif($cert == 'robot') {
+    }elsif($cert eq 'robot') {
 	$cert_file = &tools::get_filename('etc','cert.pem',$robot);
 	$key_file =  &tools::get_filename('etc','private_key',$robot);
     }
@@ -6278,7 +6280,7 @@ sub sync_include {
     ## Load a hash with the new subscriber list
     my $new_subscribers;
     unless ($option eq 'purge') {
-	$new_subscribers = _load_users_include2($name, $self->{'admin'}, $self-{'dir'});
+	$new_subscribers = _load_users_include2($name, $self->{'admin'}, $self->{'dir'});
 
 	## If include sources were not available, do not update subscribers
 	## Use DB cache instead
