@@ -332,16 +332,6 @@ sub load {
 	$Conf{'remove_headers'} = [split(/,/, $Conf{'remove_headers'})];
     }
 
-    if ($Conf{'db_env'}) {
-	my @raw = split /;/, $Conf{'db_env'};
-	my %cooked;
-	foreach my $env (@raw) {
-	    next unless ($env =~ /^\s*(\w+)\s*\=\s*(\S+)\s*$/);
-	    $cooked{$1} = $2;
-	}
-	$Conf{'db_env'} = \%cooked;
-    }
-
     @{$Conf{'listmasters'}} = split(/,/, $Conf{'listmaster'});
     
     ## Set Regexp for accepted list suffixes
