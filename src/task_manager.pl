@@ -88,7 +88,9 @@ unless (&Conf::checkfiles()) {
 }
 
 ## Put ourselves in background if not in debug mode. 
-unless ($main::options{'debug'} || $main::options{'foreground'}) {
+if ($main::options{'debug'} || $main::options{'foreground'}) {
+    &tools::write_pid($wwsconf->{'task_manager_pidfile'}, $$);
+}else {
     open(STDERR, ">> /dev/null");
     open(STDOUT, ">> /dev/null");
     if (open(TTY, "/dev/tty")) {
@@ -104,9 +106,10 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 
 	exit(0);
     }
-    $wwsconf->{'log_facility'}||= $Conf{'syslog'};
-    do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'task_manager');
 }
+
+$wwsconf->{'log_facility'}||= $Conf{'syslog'};
+do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'task_manager');
 
 ## Set the UserID & GroupID for the process
 $< = $> = (getpwnam('sympa'))[2];

@@ -1165,7 +1165,6 @@ sub write_pid {
 	 fatal_err("Could not open %s, exiting", $pidfile);
     } 
     unless (flock(LOCK, 6)) {
-	&do_log ('err', "Could not lock $pidfile : task_manager is probably already running");
 	fatal_err("Could not lock %s: task_manager is probably already running.", $pidfile);
     }
     unless (open(LCK, "> $pidfile")) {

@@ -99,8 +99,6 @@ unless (Conf::load($sympa_conf_file)) {
 }
 
 unshift @INC, $wwsconf->{'wws_path'};
-$wwsconf->{'log_facility'}||= $Conf{'syslog'};
-do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'bounced');
 
 ## Check databse connectivity
 unless ($List::use_db = &List::probe_db()) {
@@ -109,7 +107,9 @@ unless ($List::use_db = &List::probe_db()) {
 }
 
 ## Put ourselves in background if not in debug mode. 
-unless ($main::options{'debug'} || $main::options{'foreground'}) {
+if ($main::options{'debug'} || $main::options{'foreground'}) {
+    &tools::write_pid($wwsconf->{'bounced_pidfile'}, $$);
+}else {
     open(STDERR, ">> /dev/null");
     open(STDOUT, ">> /dev/null");
     if (open(TTY, "/dev/tty")) {
@@ -127,6 +127,9 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 	exit(0);
     }
 }
+
+$wwsconf->{'log_facility'}||= $Conf{'syslog'};
+do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'bounced');
 
 ## Set the UserID & GroupID for the process
 $< = $> = (getpwnam('--USER--'))[2];

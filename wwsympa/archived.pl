@@ -67,7 +67,9 @@ unless (Conf::load($sympa_conf_file)) {
 $List::use_db = &List::probe_db();
 
 ## Put ourselves in background if not in debug mode. 
-unless ($main::options{'debug'} || $main::options{'foreground'}) {
+if ($main::options{'debug'} || $main::options{'foreground'}) {
+    &tools::write_pid($wwsconf->{'archived_pidfile'}, $$);
+}else {
    open(STDERR, ">> /dev/null");
    open(STDOUT, ">> /dev/null");
    if (open(TTY, "/dev/tty")) {
@@ -83,9 +85,10 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 
       exit(0);
    }
-   $wwsconf->{'log_facility'}||= $Conf{'syslog'};
-   do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'archived');
 }
+
+$wwsconf->{'log_facility'}||= $Conf{'syslog'};
+do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'archived');
 
 ## Set the UserID & GroupID for the process
 $< = $> = (getpwnam('--USER--'))[2];

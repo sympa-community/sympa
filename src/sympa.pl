@@ -148,10 +148,14 @@ if ($signal ne 'hup' ) {
     ## works on many systems, although, it seems that Unix conceptors have
     ## decided that there won't be a single and easy way to detach a process
     ## from its controlling tty.
-    unless ($main::options{'debug'} || $main::options{'foreground'} ||
-	    $main::options{'dump'} || $main::options{'help'} ||
+    if ($main::options{'debug'} || $main::options{'foreground'}) {
+	&tools::write_pid($Conf{'pidfile'}, $$);
+    }elsif ($main::options{'dump'} || $main::options{'help'} ||
 	    $main::options{'version'} || $main::options{'import'} ||
 	    $main::options{'lowercase'} ) {
+    
+	## No fork, no PID written
+    }else {
 	if (open(TTY, "/dev/tty")) {
 	    ioctl(TTY, 0x20007471, 0);         # XXX s/b &TIOCNOTTY
 	    #       ioctl(TTY, &TIOCNOTTY, 0);
@@ -168,9 +172,10 @@ if ($signal ne 'hup' ) {
 
 	    exit(0);
 	}
-	do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
     }
     
+    do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
+
  ## Most initializations have now been done.
     do_log('notice', "Sympa $Version started");
     printf "Sympa $Version started\n";
