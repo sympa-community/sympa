@@ -233,7 +233,7 @@ sub get_list_list_tpl {
     unless ($list_conf = &load_create_list_conf($robot)) {
 	return undef;
     }
-
+    
     foreach my $dir ('--ETCBINDIR--/create_list_templates', "$Conf{'etc'}/create_list_templates") {
 	if (opendir(DIR, $dir)) {
 	    foreach my $template ( sort grep (!/^\./,readdir(DIR))) {
@@ -1177,10 +1177,35 @@ sub get_filename {
     &do_log('debug3','tools::get_filename(%s,%s,%s,%s)', $type, $name, $robot, $list->{'name'});
 
     if ($type eq 'etc') {
-	my @try = ("$Conf{'etc'}/$robot".'/'.$name,
-		   $Conf{'etc'}.'/'.$name,
-		   '--ETCBINDIR--'.'/'.$name);
+	my (@try, $default_name);
+	
+	## template refers to a language
+	## => extend search to default tpls
+	if ($name =~ /^(\S+)\.(\S+)\.tpl$/) {
+	    $default_name = $1.'.tpl';
+	    
+	    @try = ("$Conf{'etc'}/$robot".'/'.$name,
+		    "$Conf{'etc'}/$robot".'/'.$default_name,
+		    $Conf{'etc'}.'/'.$name,
+		    $Conf{'etc'}.'/'.$default_name,
+		    '--ETCBINDIR--'.'/'.$name,
+		    '--ETCBINDIR--'.'/'.$default_name);
+	}else {
+	    @try = ("$Conf{'etc'}/$robot".'/'.$name,
+		    $Conf{'etc'}.'/'.$name,
+		    '--ETCBINDIR--'.'/'.$name);
+	}
 	if ($list) {
+	    ## Default tpl
+	    if ($default_name) {
+		## No 'templates' subdir in list directory
+		if ($default_name =~ /^templates\/(.*)$/) {
+		    unshift @try, $list->{'dir'}.'/'.$1;
+		}else {
+		    unshift @try, $list->{'dir'}.'/'.$default_name;
+		}
+	    }
+
 	    ## No 'templates' subdir in list directory
 	    if ($name =~ /^templates\/(.*)$/) {
 		unshift @try, $list->{'dir'}.'/'.$1;
