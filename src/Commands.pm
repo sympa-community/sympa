@@ -1357,7 +1357,7 @@ sub set {
     ## SET EACH is a synonim for SET MAIL
     $mode = 'mail' 
 	if ($mode =~ /^each|eachmail|nodigest$/i);
-    $mode =~ y/[a-z]/[A-Z]/;
+    $mode =~ y/[A-Z]/[a-z]/;
     
     ## Recursive call to subroutine
     if ($which eq "*"){
@@ -1413,7 +1413,7 @@ sub set {
 	}
 
 	my $update_mode = $mode;
-	$update_mode if ($update_mode eq 'mail');
+	$update_mode = '' if ($update_mode eq 'mail');
 	unless ($list->update_user($sender,{'reception'=> $update_mode})) {
 	    push @msg::report, sprintf Msg(6, 92, 'Failed to change your subscriber options for list %s.\n'), $list->{'name'};
 	    do_log('info', 'SET %s %s from %s refused, update failed',  $which, $mode, $sender);
