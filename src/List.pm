@@ -3452,12 +3452,12 @@ sub request_action {
 	### the following lines are used by the document sharing action 
 	if (defined $context->{'scenario'}) { 
 	    # information about the  scenario to load
-	    my $s_name = $context ->{'scenario'}; 
+	    my $s_name = $context->{'scenario'}; 
 	    
 	    # loading of the structure
 	    my $scenario;
 	    return undef
-		unless($scenario = &_load_scenario_file ($operations[$#operations], $robot, $s_name));
+		unless($scenario = &_load_scenario_file ($operations[$#operations], $robot, $s_name,$list->{'dir'}));
 	    @rules = @{$scenario->{'rules'}};
 	    $name = $scenario->{'name'}; 
 	    $data_ref = $scenario;

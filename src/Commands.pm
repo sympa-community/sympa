@@ -1231,7 +1231,7 @@ sub remind {
 
     if ($listname eq '*') {
 	#$action = &List::get_action ('global_remind',$sender,$auth_method);
-	my $action = &List::request_action('global_remind',$auth_method,$robot,
+	$action = &List::request_action('global_remind',$auth_method,$robot,
 					   {'sender' => $sender });
 	
     }else{
@@ -1241,8 +1241,8 @@ sub remind {
 	$host = $list->{'admin'}{'host'};
 
 	#$action = &List::get_action ('remind',$listname,$sender,$auth_method);
-	my $action = &List::request_action('remind',$auth_method,$robot,
-					   {'listname' => $listename, 
+	$action = &List::request_action('remind',$auth_method,$robot,
+					   {'listname' => $listname, 
 					    'sender' => $sender });
     }
 
