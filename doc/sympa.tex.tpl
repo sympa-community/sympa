@@ -2187,6 +2187,14 @@ db_additional_user_fields 	address,gender
 \end {quote}
 
 
+\subsection {\cfkeyword {purge\_user\_table\_task}}
+
+\label{purge-user-table-task}
+
+This parameter refers to the name of the task (\example {monthly}) that will be regularly run
+by the \file {task\_manager.pl} to remove entries in the \textindex {user\_table} table that
+have no corresponding entries in the \textindex {subscriber\_table} table.
+
 \section {Loop prevention}
 
    The following define your loop prevention policy for commands.
@@ -2250,7 +2258,7 @@ The password for list private key encryption. If not
 \label {certificate-task-config}
 \subsection {\cfkeyword {chk\_cert\_expiration\_task}}
 
-States the model version used to create the task which regurlaly checks the certificate
+States the model version used to create the task which regularly checks the certificate
 expiration dates and warns users whose certificate have expired or are going to.
 To know more about tasks, see \ref {tasks}, page~\pageref {tasks}.
 
