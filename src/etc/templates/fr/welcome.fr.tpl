@@ -8,9 +8,10 @@ Content-Type: text/plain; charset=iso-8859-1
 Content-transfer-encoding: 8bit
 
 Bienvenue dans la liste [list->name]@[list->host].
-Votre adresse d'abonnement est [user->email]
+
+Votre adresse d'abonnement est : [user->email]
 [IF user->password]
-Votre mot de passe : [user->password]
+Votre mot de passe est : [user->password]
 [ENDIF]
 
 [PARSE 'info']
@@ -27,11 +28,11 @@ Content-transfer-encoding: 8bit
 <TITLE>Bienvenue dans la liste [list->name]@[list->host]</title>
 <BODY  BGCOLOR=#ffffff>
 
-<B>Bienvenue dans la liste [list->name]@[list->host].</B><BR> 
-Votre adresse d'abonnement est  [user->email] 
+<B>Bienvenue dans la liste [list->name]@[list->host].</B><BR>
+Votre adresse d'abonnement est : [user->email] 
 [IF user->password] 
 <BR>
-Votre mot de passe : [user->password]
+Votre mot de passe est : [user->password]
 [ENDIF]
 <BR><BR>
 <PRE>

@@ -4,15 +4,16 @@ Mime-version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-transfer-encoding: 8bit
 
- Vous êtes abonné dans la liste  [list->name]@[list->host] avec l'adresse
-[user->email] depuis 11 mois et 3 semaines ou plus;
- Pour confirmer votre abonnement, cliquez ici :
-mailto:[conf->email]@[conf->host]?subject=sub%20[list->name]
- Sinon vous serez supprimé de la liste d'ici 1 semaine.
+Vous êtes abonné à la liste [list->name]@[list->host] avec l'adresse
+[user->email] depuis au moins 11 mois et 3 semaines.
 
-votre mot de passe: [user->password]. 
+Pour confirmer votre abonnement, cliquez ici :
+mailto:[conf->email]@[conf->host]?subject=sub%20[list->name]
+
+Sinon, vous serez supprimé de la liste d'ici une semaine.
+
+Votre mot de passe est : [user->password]
 
 Pour tout savoir sur cette liste : [conf->wwsympa_url]/info/[list->name]
-Pour un désabonnement :
+Pour vous désabonner :
 mailto:[conf->email]@[conf->host]?subject=sig%20[list->name]%20[user->email]
-

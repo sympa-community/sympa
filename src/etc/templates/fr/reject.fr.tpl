@@ -5,11 +5,9 @@ Content-Type: text/plain; charset=iso-8859-1
 Content-transfer-encoding: 8bit
 
 Votre message pour la liste [list->name]@[list->host]
-a été rejeté par [rejected_by], moderateur de la liste.
+a été rejeté par [rejected_by], modérateur de la liste.
 
 L'objet de votre message : [subject]
 
-
-Vérifiez les conditions d'utilisation de cette liste :
+Vérifiez les conditions d'utilisation de cette liste en cliquant ici :
 [conf->wwsympa_url]/info/[list->name]
-

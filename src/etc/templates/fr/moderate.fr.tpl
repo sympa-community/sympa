@@ -10,15 +10,16 @@ Content-transfer-encoding: 8bit
 
 [IF method=md5]
 Pour diffuser le message ci-joint dans la liste [list->name], 
-cliquez sur ce lien :
+cliquez ici :
 mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%20[list->name]%20[modkey]
-Ou alors envoyez un mail à [conf->email]@[conf->host] avec comme sujet :
+ou
+envoyez un e-mail à [conf->email]@[conf->host] avec comme sujet :
 DISTRIBUTE [list->name] [modkey]
 
-Pour refuser sa diffusion (il sera effacé),
-cliquez sur ce lien :
+Pour refuser sa diffusion (il sera effacé), cliquez ici :
 mailto:[conf->email]@[conf->host]?subject=REJECT%20[list->name]%20[modkey]
-Ou alors envoyez un mail à [conf->email]@[conf->host] avec comme sujet :
+ou
+envoyez un e-mail à [conf->email]@[conf->host] avec comme sujet :
 REJECT [list->name] [modkey]
 [ENDIF]
 
@@ -30,4 +31,3 @@ Content-Disposition: inline
 [INCLUDE msg]
 
 --[boundary]--
-

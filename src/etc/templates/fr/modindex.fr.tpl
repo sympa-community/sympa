@@ -7,7 +7,7 @@ Content-Type: multipart/mixed; boundary="[boundary1]"
 Content-Type: text/plain; charset=iso-8859-1
 Content-transfer-encoding: 8bit
 
-Il y a [total] messages à modérer pour la liste [list->name]@[list->host]
+Il y a [total] messages à modérer pour la liste [list->name]@[list->host].
 
 [IF spool]
 --[boundary1]
@@ -29,4 +29,3 @@ Content-Disposition: inline
 --[boundary2]--
 
 --[boundary1]--
-

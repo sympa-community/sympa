@@ -7,11 +7,10 @@ Content-transfer-encoding: 8bit
 
 Bonjour,
 
-Je vous invite à vous abonner à la liste  [list->name]@[list->host], cette
-liste traite de [list->subject], vous êtes donc surement concerné.
+Je vous invite à vous abonner à la liste [list->name]@[list->host].
+Cette liste traite de [list->subject], vous êtes donc sûrement concerné.
 
-Pour vous abonner répondez simplement à ce message ou cliquez l'url
-mailto suivante : [url]
+Pour vous abonner, répondez simplement à ce message ou cliquez ici :
+[url]
 
-Si vous ne voulez pas vous abonner ignorez ce message.
-
+Si vous ne voulez pas vous abonner, ignorez ce message.

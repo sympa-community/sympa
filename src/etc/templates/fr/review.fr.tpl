@@ -1,4 +1,4 @@
-Les abonnés à la liste [list->name]@[list->host] :
+Les abonnés à la liste [list->name]@[list->host] sont :
 
 [FOREACH u in users]
 [u->email] - [u->gecos] - [u->reception]

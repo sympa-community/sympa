@@ -6,8 +6,7 @@ vos abonnements vous n'avez rien à faire, mais si vous souhaitez
 vous désabonner de certaines listes, appliquez les instructions qui
 suivent et conservez ce message.
 
-Voici pour chaque liste  une méthode de désabonnement :
-
+Voici pour chaque liste une méthode de désabonnement :
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 [FOREACH l IN lists]
@@ -17,8 +16,9 @@ Voici pour chaque liste  une méthode de désabonnement :
 
 [IF user->password]
 
-Pour vous identifier sous  [conf->wwsympa_url] , votre adresse
-de login est [user->email], votre mot de passe [user->password]
+Pour vous identifier sous [conf->wwsympa_url] :
+
+     votre adresse électronique : [user->email]
+     votre mot de passe         : [user->password]
 
 [ENDIF]
-

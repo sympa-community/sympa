@@ -5,4 +5,3 @@ Informations concernant la liste [list->name] :
 
    Méga-octets reçus           :      [stats->byte_rcv]
    Méga-octets transmis        :      [stats->byte_sent]
-

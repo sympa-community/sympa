@@ -9,10 +9,8 @@ Objet du message : [mail->subject]
 
 Il n'a pas été possible de vous remettre ce message car le serveur
 de liste ne dispose pas de votre certificat X509 (pour l'adresse
-[user->email]). Pour remédier à l'avenir à ce problème, envoyez un
-message signé à l'adresse
-[conf->email]@[conf->host] .
+[user->email]). Pour remédier à ce problème, envoyez un e-mail signé
+à l'adresse [conf->email]@[conf->host].
 
-Pour toutes informations sur cette liste  :
+Pour toute information sur cette liste :
 [conf->wwsympa_url]/info/[list->name]
-

@@ -1,73 +1,75 @@
 
-              SYMPA -- Systeme de Multi-Postage Automatique
+              SYMPA -- Système de Multi-Postage Automatique
  
                        Guide de l'utilisateur
 
 
-SYMPA est un gestionnaire de listes electroniques. Il permet d'automatiser
-les fonctions de gestion des listes telles les abonnements, la moderation
+SYMPA est un gestionnaire de listes électroniques. Il permet d'automatiser
+les fonctions de gestion des listes telles que les abonnements, la modération
 et la gestion des archives.
 
-Toutes les commandes doivent etre adressees a l'adresse electronique
-[conf->sympa]
+Toutes les commandes doivent être adressées à l'adresse électronique
+[conf->sympa].
 
-Il est possible de mettre plusieurs commandes dans chaque message : les
-commandes doivent apparaitre dans le corps du message et chaque ligne ne
+Il est possible de mettre plusieurs commandes dans chaque message :
+les commandes doivent apparaître dans le corps du message et chaque ligne ne
 doit contenir qu'une seule commande. Sympa ignore le corps du message
-si celui-ci n'est de type "Content-type: text/plain", mais même si vous
-etes fanatique d'un agent de messagerie qui fabrique systematiquement des
-messages "multipart" ou "text/html", les commandes placees dans le sujet
+si celui-ci n'est pas de type "Content-type: text/plain", mais même si vous
+êtes fanatique d'un agent de messagerie qui fabrique systématiquement des
+messages "multipart" ou "text/html", les commandes placées dans le sujet
 du messages sont reconnues.
 
 Les commandes disponibles sont :
 
- HELp                        * Ce fichier d'aide
- LISts                       * Annuaire des listes geres sur ce noeud
- REView <list>               * Connaitre la liste des abonnes de <list>
- WHICH                       * Savoir à quelles listes on est abonné
- SUBscribe <list> Prenom Nom * S'abonner ou confirmer son abonnement a la 
-			       liste <list>
- SIGnoff <list|*> [user->email]    * Quitter la liste <list>, ou toutes les listes.
-                               Où [user->email] est facultatif
+ HELp                        * Recevoir ce fichier d'aide
+ LISts                       * Recevoir l'annuaire des listes gérées sur ce
+                               noeud
+ REView <list>               * Recevoir la liste des abonnés à <list>
+ WHICH                       * Recevoir la liste des listes auxquelles
+                               on est abonné
+ SUBscribe <list> Prénom Nom * S'abonner ou confirmer son abonnement à <list>
+ SIGnoff <list|*> [user->email]    * Quitter <list>, ou toutes les listes
+                               ([user->email] est facultatif)
 
- SET <list|*> NOMAIL         * Suspendre la reception des messages de <list>
- SET <list|*> DIGEST         * Reception des message en mode compilation
- SET <list|*> SUMMARY        * Reception de la liste des messages uniquement
- SET <list|*> NOTICE         * Reception de l'objet des message uniquement
+ SET <list|*> NOMAIL         * Suspendre la réception des messages de <list>
+ SET <list|*> MAIL           * Recevoir les messages en mode normal
+ SET <list|*> DIGEST         * Recevoir les messages en mode compilation
+ SET <list|*> SUMMARY        * Recevoir la liste des messages uniquement
+ SET <list|*> NOTICE         * Recevoir l'objet des message uniquement
 
- SET <list|*> MAIL           * Reception de la liste <list> en mode normal
  SET <list|*> CONCEAL        * Passage en liste rouge (adresse d'abonné cachée)
  SET <list|*> NOCONCEAL      * Adresse d'abonné visible via REView
 
- INFO <list>                 * Informations sur une liste
- INDex <list>                * Liste des fichiers de l'archive de <list>
- GET <list> <fichier>        * Obtenir <fichier> de l'archive de <list>
- LAST <list>		     * Obtenir le dernier message de <list>
- INVITE <list> <email>       * Inviter <email> a s'abonner à <list>
- CONFIRM <clef>	 	     * Confirmation pour l'envoi d'un message
-			       (selon config de la liste)
- QUIT                        * Indique la fin des commandes (pour ignorer 
-                               une signature
+ INFO <list>                 * Recevoir les informations sur <list>
+ INDex <list>                * Recevoir la liste des fichiers de l'archive
+                               de <list>
+ GET <list> <fichier>        * Recevoir <fichier> de l'archive de <list>
+ LAST <list>                 * Recevoir le dernier message de <list>
+ INVITE <list> <e-mail>      * Inviter <e-mail> à s'abonner à <list>
+ CONFIRM <clef>              * Confirmer l'envoi d'un message
+                               (selon la configuration de la liste)
+ QUIT                        * Indiquer la fin des commandes
+                               (pour ignorer une signature)
 
 [IF is_owner]
-Commandes réservées aux propriétaires de listes:
+Commandes réservées aux propriétaires de listes :
  
- ADD <list> user@host Prenom Nom * Ajouter un utilisateur a une liste
- DEL <list> user@host            * Supprimer un utilisateur d'une liste
+ ADD <list> user@host Prenom Nom * Ajouter un utilisateur à <list>
+ DEL <list> user@host            * Supprimer un utilisateur de <list>
  STATS <list>                    * Consulter les statistiques de <list>
- EXPire <list> <ancien> <delai>  * Déclanche un processus d'expiration pour
-                                   les abonnés à la liste <list> n'ayant pas
-				   confirmé leur abonnement depuis <ancien>
-				   jours. Les abonnés ont <delai> jours pour
-				   confirmer
- EXPireINDex <list>              * Connaitre l'état du processus d'expiration
+ EXPire <list> <ancien> <delai>  * Déclancher un processus d'expiration pour
+                                   les abonnés à <list> n'ayant pas confirmé
+                                   leur abonnement depuis <ancien> jours.
+                                   Les abonnés ont <delai> jours pour
+                                   confirmer
+ EXPireINDex <list>              * Connaître l'état du processus d'expiration
                                    en cours pour la liste <list>
- EXPireDEL <list>                * Désactive le processus d'espiration de la
-                                   liste <list>
+ EXPireDEL <list>                * Désactiver le processus d'expiration de
+                                   <list>
 
- REMind <list>                   * Envoi à chaque abonné un message
-                                   personnalisé lui rappelant
-                                   l'adresse avec laquelle il est abonné.
+ REMind <list>                   * Envoyer à chaque abonné un message
+                                   personnalisé lui rappelant l'adresse
+                                   avec laquelle il est abonné
 [ENDIF]
 
 [IF is_editor]
@@ -77,7 +79,7 @@ Commandes réservées aux modérateurs de listes :
  DISTribute <list> <clef>        * Modération : valider un message
  REJect <list> <clef>            * Modération : invalider un message
  MODINDEX <list>                 * Modération : consulter la liste des messages
-                                   à modérer
+                                                à modérer
 [ENDIF]
 
 Powered by Sympa [conf->version] : http://listes.cru.fr/sympa/
