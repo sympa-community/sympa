@@ -1471,12 +1471,13 @@ sub send_msg {
     ## Add a footer
     unless ($msg->head->get('Content-Type') =~ /multipart\/signed/i) {
 	my $new_msg = _add_parts($msg,  $name, $self->{'admin'}{'footer_type'});
+
 	if (defined $new_msg) {
 	    $msg = $new_msg;
-	}else {
-	    $msg_file = '_ALTERED';
+	    $msg_file = '_ALTERED_';
 	}
     }
+
     ## Who is the enveloppe sender ?
     my $host = $self->{'admin'}{'host'};
     my $from = "$name-owner\@$host";
