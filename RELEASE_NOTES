@@ -1,6 +1,27 @@
 *****    Changes which are not compatible with previous versions are
 *****    listed using "*****"in the margin. Please check this at least.
 
+3.2.1	05 June 2001
+
+  Bug Fix :
+
+	src/tools.pl: [Renato Bonomini] typo
+	Not enough arguments for mkdir at tools.pl line 815
+
+	src/List.pm: sympa.pl would die with error message
+	"Can't use an undefined value as a HASH reference" 
+	It could not access reply-to value when defining an email as the reply-to
+
+  Changes :
+
+	src/etc/script/sympa.spec: [reported by Claus Atzenbeck]
+	perl-CGI.pm has been renamed perl-CGI
+
+  New features :
+
+	Makefile, important_changes.pl: Print important changes extracted
+	from RELEASE_NOTES (*****)
+
 3.2     01 june 2001
 
   New features :
