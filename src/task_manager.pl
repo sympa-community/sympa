@@ -1600,6 +1600,9 @@ sub get_score {
     }
 
     my $note = $bounce_count * $regularity_rate * $type_rate;
+
+    ## Note should be an integer
+    $note = int($note + 0.5);
 	
 #    $note = 100 if ($note > 100); # shift between message ditrib & bounces => note > 100     
     
