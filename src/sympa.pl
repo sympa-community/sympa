@@ -656,7 +656,8 @@ sub DoFile {
 	if ($Conf{'openssl'}) {
 	    $is_crypted = 'smime_crypted';
 	    $file = '_ALTERED_';
-	    unless (($msg, $file) = &tools::smime_decrypt ($msg,$name)) {
+	    ($msg, $file) = &tools::smime_decrypt ($msg,$name);
+	    unless (defined($msg)) {
 		do_log('debug','unable to decrypt message');
 		## xxxxx traitement d'erreur ?
 		return undef;
