@@ -148,8 +148,9 @@ my @list_models = ('expire', 'remind');
 ## hash of the global task models
 my %global_models = ('crl_update_task' => 'crl_update', 
 		     'chk_cert_expiration_task' => 'chk_cert_expiration',
-		     'expire_bounce' => 'expire_bounce',
-		     'global_remind' => 'global_remind');
+		     'expire_bounce' => 'expire_bounce'
+		     #,'global_remind' => 'global_remind'
+		     );
 
 ## month hash used by epoch conversion routines
 my %months = ('Jan', 0, 'Feb', 1, 'Mar', 2, 'Apr', 3, 'May', 4,  'Jun', 5, 
