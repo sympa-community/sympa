@@ -800,6 +800,7 @@ systems, therefore you should not have any special problems:
 \begin {itemize}
     \item Linux (various distributions)
     \item FreeBSD 2.2.x and 3.x
+    \item NetBSD
     \item Digital UNIX 4.x
     \item Solaris 2.5 and 2.6
     \item AIX 4.x
