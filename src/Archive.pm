@@ -56,7 +56,7 @@ sub outgoing {
     my @now  = localtime(time);
 #    my $prefix= sprintf("%04d-%02d-%02d-%02d-%02d-%02d",1900+$now[5],$now[4]+1,$now[3],$now[2],$now[1],$now[0]);
 #    my $filename = "$dir"."/"."$prefix-$listname";
-    my $filename = sprintf '%s/%s.%d.%d', $dir, $listname, time, $$;
+    my $filename = sprintf '%s/%s.%d.%d', $dir, $listname, time, int(rand(1000000));
     unless ( open(OUT, "> $filename")) {
 	do_log('info',"error unable open outgoing dir $dir for list $listname");
 	return undef;
