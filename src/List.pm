@@ -1120,9 +1120,15 @@ sub send_sub_to_owner {
        return undef;
    }
 
+   ## Replace \s by %20 in gecos and email
+   my $escaped_gecos = $gecos;
+   $escaped_gecos =~ s/\s/\%20/g;
+   my $escaped_who = $who;
+   $escaped_who =~ s/\s/\%20/g;
+
    my $subject = sprintf(Msg(8, 2, "%s subscription request"), $name);
    my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
-   my $body = sprintf Msg(8, 3, $msg::sub_owner), $name, $replyto, $keyauth, $name, $who, $gecos, $replyto, $keyauth, $name, $who, $gecos;
+   my $body = sprintf Msg(8, 3, $msg::sub_owner), $name, $replyto, $keyauth, $name, $escaped_who, $escaped_gecos, $replyto, $keyauth, $name, $who, $gecos;
    &mail::mailback (\$body, $subject, $to, @rcpt);
 
 }
@@ -1162,9 +1168,13 @@ sub send_sig_to_owner {
 	do_log('notice', 'Warning : no owner defined or  all of them use nomail option in list %s', $name );
     }
 
+   ## Replace \s by %20 in email
+   my $escaped_who = $who;
+   $escaped_who =~ s/\s/\%20/g;
+
     my $subject = sprintf(Msg(8, 24, "%s UNsubscription request"), $name);
     my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
-    my $body = sprintf Msg(8, 25, $msg::sig_owner), $name, $Conf{'sympa'}, $keyauth, $name, $who, $Conf{'sympa'}, $keyauth, $name, $who;
+    my $body = sprintf Msg(8, 25, $msg::sig_owner), $name, $Conf{'sympa'}, $keyauth, $name, $escaped_who, $Conf{'sympa'}, $keyauth, $name, $who;
     &mail::mailback (\$body, $subject, $to, @rcpt);
 }
 
