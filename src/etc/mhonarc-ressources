@@ -430,15 +430,15 @@ $TNEXTBUTTON$
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 [IF lang=fr]
    répondre à l'auteur <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
-  à la liste <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list->host]">
+  à la liste <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list_conf->host]">
  <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Répondre">
 [ELSIF lang=hu]
   Válasz a feladónak <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
-  a listának <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list->host]">
+  a listának <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list_conf->host]">
   <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Válasz">
 [ELSE] 
   Reply to sender <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
-  to list <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list->host]">
+  to list <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list_conf->host]">
   <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Reply">
 
 [ENDIF]
