@@ -15,7 +15,7 @@
      [% PROCESS 'button_header.tt2' %]
      <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;"> 
       <a href="[% path_cgi %]/nomenu/help/user_options" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">
-     <span style="font-size: smaller;"><strong>Help</strong></span></a>
+     <span style="font-size: smaller;"><strong>[%|loc%]Help[%END%]</strong></span></a>
      </td>
      [% PROCESS 'button_footer.tt2' %]
 
