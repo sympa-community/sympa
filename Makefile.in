@@ -458,7 +458,7 @@ installman:
 	mkdir -p $(DESTDIR)$(MANDIR)
 	mkdir -p $(DESTDIR)$(MANDIR)/man8
 	@for manfile in sympa.8 archived.8 bounced.8 alias_manager.8; do \
-	@echo "Installing man file man8/$$manfile..."; \
+	echo "Installing man file man8/$$manfile..."; \
 	( \
 		cd doc/man8 ; \
 		PERL=$(PERL); export PERL; \
@@ -539,7 +539,7 @@ installdir:
 
 installconfig:
 	mkdir -p $(DESTDIR)$(CONFDIR)
-	for cfile in sympa.conf wwsympa.conf ; do \
+	@for cfile in sympa.conf wwsympa.conf ; do \
 	if [ ! -f $(DESTDIR)$(CONFDIR)/$$cfile ] ; then \
 	echo "Installing sample config file $$cfile..."; \
 	$(PERL)  $(DESTDIR)$(SBINDIR)/sympa_wizard.pl -c $$cfile; \

@@ -274,7 +274,7 @@ installman:
 	mkdir -p $(DESTDIR)$(MANDIR)
 	mkdir -p $(DESTDIR)$(MANDIR)/man8
 	@for manfile in sympa.8 archived.8 bounced.8 alias_manager.8; do \
-	@echo "Installing man file man8/$$manfile..."; \
+	echo "Installing man file man8/$$manfile..."; \
 	( \
 		cd doc/man8 ; \
 		PERL=$(PERL); export PERL; \
