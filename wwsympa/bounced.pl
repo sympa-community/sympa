@@ -254,8 +254,8 @@ while (!$end) {
 	    ## Bounce directory
 	    if (! -d $bounce_dir) {
 		unless (mkdir $bounce_dir, 0777) {
-		    &do_log('notice', 'Could not create %s: %s', $bounce_dir, $!);
-		    next;
+		    &do_log('notice', 'Could not create %s: %s bounced die', $bounce_dir, $!);
+		    exit;
 		} 
 		chmod 0777, $bounce_dir;
 	    }
