@@ -90,18 +90,18 @@ my $mime_types = &wwslib::load_mime_types();
 my %icon_table;
 
   # application file
-$icon_table{'unknown'} = '/icons/unknown.png';
-$icon_table{'folder'} = '/icons/folder.png';
-$icon_table{'current_folder'} = '/icons/folder.open.png';
-$icon_table{'application'} = '/icons/unknown.png';
-$icon_table{'octet-stream'} = '/icons/binary.png';
-$icon_table{'audio'} = '/icons/sound1.png';
-$icon_table{'image'} = '/icons/image2.png';
-$icon_table{'text'} = '/icons/text.png';
-$icon_table{'video'} = '/icons/movie.png';
-$icon_table{'father'} = '/icons/back.png';
-$icon_table{'sort'} = '/icons/down.png';
-$icon_table{'url'} = '/icons/link.png';
+$icon_table{'unknown'} = $wwsconf->{'icons_url'}.'/unknown.png';
+$icon_table{'folder'} = $wwsconf->{'icons_url'}.'/folder.png';
+$icon_table{'current_folder'} = $wwsconf->{'icons_url'}.'/folder.open.png';
+$icon_table{'application'} = $wwsconf->{'icons_url'}.'/unknown.png';
+$icon_table{'octet-stream'} = $wwsconf->{'icons_url'}.'/binary.png';
+$icon_table{'audio'} = $wwsconf->{'icons_url'}.'/sound1.png';
+$icon_table{'image'} = $wwsconf->{'icons_url'}.'/image2.png';
+$icon_table{'text'} = $wwsconf->{'icons_url'}.'/text.png';
+$icon_table{'video'} = $wwsconf->{'icons_url'}.'/movie.png';
+$icon_table{'father'} = $wwsconf->{'icons_url'}.'/back.png';
+$icon_table{'sort'} = $wwsconf->{'icons_url'}.'/down.png';
+$icon_table{'url'} = $wwsconf->{'icons_url'}.'/link.png';
 ## Shared directory and description file
 
 #$shared = 'shared';
