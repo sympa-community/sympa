@@ -1103,6 +1103,7 @@ sub split_mail {
 		    return undef;
 		}
 		$decoder->decode(\*BODY, \*OFILE);
+		close BODY;
 		unlink "$dir/$pathname.$fileExt.$encoding";
 	    }else {
 		$message->print_body (\*OFILE) ;
