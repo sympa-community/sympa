@@ -45,7 +45,7 @@ my @valid_options = qw(
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor
 		       remind_return_path request_priority rfc2369_header_fields sendmail sendmail_args sleep 
 		       sort sympa_priority syslog log_smtp umask welcome_return_path wwsympa_url
-                       openssl trusted_ca_options key_passwd ssl_cert_dir remove_headers
+                       openssl capath cafile  key_passwd ssl_cert_dir remove_headers
 		       antivirus_path antivirus_args anonymous_header_fields
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
@@ -58,7 +58,7 @@ map { $valid_options{$_}++; } @valid_options;
 my %Default_Conf = 
     ('home'    => '--EXPL_DIR--',
      'etc'     => '--DIR--/etc',
-     'trusted_ca_options' => '-CAfile --ETCBINDIR--/ca-bundle.crt',
+#     'trusted_ca_options' => '-CAfile --ETCBINDIR--/ca-bundle.crt',
      'key_passwd' => '',
      'ssl_cert_dir' => '--EXPL_DIR--/X509-user-certs',
      'crl_dir' => '--EXPL_DIR--/crl',
@@ -202,6 +202,9 @@ sub load {
     $o{'host'} = $o{'domain'} if (defined $o{'domain'}) ;
     $o{'domain'} = $o{'host'} if (defined $o{'host'}) ;
     
+    unless ( (defined $o{'cafile'}) || (defined $o{'capath'} )) {
+	$o{'cafile'} = '--ETCBINDIR--/ca-bundle.crt';
+    }   
     my $spool = $o{'spool'}[0] || $Default_Conf{'spool'};
 
     unless (defined $o{'queuedigest'}) {
