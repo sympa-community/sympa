@@ -896,16 +896,22 @@ sub DoMessage{
     
 	do_log('notice', 'Message for %s from %s rejected because sender not allowed', $name, $sender);
 	unless ($2 eq 'quiet') {
-	    *SIZ  = smtp::smtpto($Conf{'request'}, \$sender);
-	    print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'request'}) . "\n";
-	    printf SIZ "To: %s\n", $sender;
-	    printf SIZ "Subject: " . Msg(4, 11, "Your message for list %s has been rejected")."\n", $name ;
-	    printf SIZ "MIME-Version: %s\n", Msg(12, 1, '1.0');
-	    printf SIZ "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
-	    printf SIZ "Content-Transfer-Encoding: %s\n\n", Msg(12, 3, '7bit');
-	    printf SIZ Msg(4, 15, $msg::list_is_private), $name;
-	    $msg->print(\*SIZ);
-	    close(SIZ);
+	    if ($action =~ /send_file\s?\(\[sender\],\'?([^\'\)]+)\'?\)/) {
+		my $file = $1;
+		$file =~ s/\.tpl$//;
+		$list->send_file($file, $sender, {});
+	    }else {
+		*SIZ  = smtp::smtpto($Conf{'request'}, \$sender);
+		print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'request'}) . "\n";
+		printf SIZ "To: %s\n", $sender;
+		printf SIZ "Subject: " . Msg(4, 11, "Your message for list %s has been rejected")."\n", $name ;
+		printf SIZ "MIME-Version: %s\n", Msg(12, 1, '1.0');
+		printf SIZ "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
+		printf SIZ "Content-Transfer-Encoding: %s\n\n", Msg(12, 3, '7bit');
+		printf SIZ Msg(4, 15, $msg::list_is_private), $name;
+		$msg->print(\*SIZ);
+		close(SIZ);
+	    }
 	}
 	return undef;
     }
