@@ -1042,7 +1042,7 @@ sub db_connect {
 	$connect_string = sprintf 'DBI:%s:sid=%s;host=%s', $Conf{'db_type'}, $Conf{'db_name'}, $Conf{'db_host'};
 
     }elsif ($Conf{'db_type'} eq 'Sybase') {
-	$connect_string = sprintf 'DBI:%s:dbname=%s;server=%s', $Conf{'db_type'}, $Conf{'db_name'}, $Conf{'db_host'};
+	$connect_string = sprintf 'DBI:%s:database=%s;server=%s', $Conf{'db_type'}, $Conf{'db_name'}, $Conf{'db_host'};
 
     }else {
 	$connect_string = sprintf 'DBI:%s:dbname=%s;host=%s', $Conf{'db_type'}, $Conf{'db_name'}, $Conf{'db_host'};
@@ -5640,7 +5640,7 @@ sub _include_users_sql {
     }elsif ($db_type eq 'Pg') {
 	$connect_string = "DBI:Pg:dbname=$db_name;host=$host";
     }elsif ($db_type eq 'Sybase') {
-	$connect_string = "DBI:Sybase:dbname=$db_name;server=$host";
+	$connect_string = "DBI:Sybase:database=$db_name;server=$host";
     }else {
 	$connect_string = "DBI:$db_type:$db_name:$host";
     }

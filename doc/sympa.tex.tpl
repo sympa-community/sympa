@@ -5561,7 +5561,7 @@ Example :
 
 \begin {quote}
 \begin{verbatim}
-    host ldap.cru.fr:398,backup-ldap.cru.fr:389
+    host ldap.cru.fr:389,backup-ldap.cru.fr:389
 
 \end{verbatim}
 \end {quote}
@@ -5572,7 +5572,7 @@ Example :
 \label {port}
 \lparam {port} \textit {ldap\_directory\_port} (Default 389) 
 
-Port on which the Directory accepts connections (should not be used if multiple host is specified for host parameter).
+Port on which the Directory accepts connections (this parameter is ignored if host definition include port specification).
 
 \item
 \label {user}
