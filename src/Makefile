@@ -24,6 +24,8 @@ newinstall: makedir subst $(SRC) installqueue installwrapper installscenari inst
 
 
 installtemplates:
+	@echo "Deleting current templates..."
+	rm -f $(DESTDIR)$(ETCBINDIR)/templates/*.tpl
 	@echo "Installing default templates..."
 	@for lang in etc/templates/* ; do \
 		echo $$lang; \
