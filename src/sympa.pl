@@ -148,14 +148,10 @@ if ($signal ne 'hup' ) {
     ## works on many systems, although, it seems that Unix conceptors have
     ## decided that there won't be a single and easy way to detach a process
     ## from its controlling tty.
-    if ($main::options{'debug'} || $main::options{'foreground'}) {
-	&tools::write_pid($Conf{'pidfile'}, $$);
-    }elsif ($main::options{'dump'} || $main::options{'help'} ||
+    unless ($main::options{'debug'} || $main::options{'foreground'} ||
+	    $main::options{'dump'} || $main::options{'help'} ||
 	    $main::options{'version'} || $main::options{'import'} ||
 	    $main::options{'lowercase'} ) {
-    
-	## No fork, no PID written
-    }else {
 	if (open(TTY, "/dev/tty")) {
 	    ioctl(TTY, 0x20007471, 0);         # XXX s/b &TIOCNOTTY
 	    #       ioctl(TTY, &TIOCNOTTY, 0);
@@ -167,14 +163,25 @@ if ($signal ne 'hup' ) {
 	if ((my $child_pid = fork) != 0) {
 	    do_log('debug', "Starting server, pid $_");
 
-	    ## Create and write the child's pidfile
-	    &tools::write_pid($Conf{'pidfile'}, $child_pid);
-
 	    exit(0);
 	}
     }
     
+    unless ($main::options{'dump'} || $main::options{'help'} ||
+	    $main::options{'version'} || $main::options{'import'} ||
+	    $main::options{'lowercase'} ) {
+	## Create and write the pidfile
+	&tools::write_pid($Conf{'pidfile'}, $$);
+    }	
+
     do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
+
+    # Set the UserID & GroupID for the process
+    $< = $> = (getpwnam('--USER--'))[2];
+    $( = $) = (getpwnam('--GROUP--'))[2];
+
+    # Sets the UMASK
+    umask($Conf{'umask'});
 
  ## Most initializations have now been done.
     do_log('notice', "Sympa $Version started");
@@ -184,13 +191,6 @@ if ($signal ne 'hup' ) {
     printf "Sympa $Version reload config\n";
     $signal = '0';
 }
-
-## Set the UserID & GroupID for the process
-$< = $> = (getpwnam('--USER--'))[2];
-$( = $) = (getpwnam('--GROUP--'))[2];
-
-## Sets the UMASK
-umask($Conf{'umask'});
 
 ## Check for several files.
 unless (&Conf::checkfiles()) {
@@ -630,7 +630,7 @@ sub DoFile {
 	my ($name, $function) = ($1, $2);
 	
 	## Simulate Smartlist behaviour with command in subject
-        ## xxxxxxxxxxx  Ètendre le jeu de command reconnue sous cette forme ?
+        ## xxxxxxxxxxx  ÅÈtendre le jeu de command reconnue sous cette forme ?
         ## 
 	if (($function eq 'request') and ($subject_field =~ /^\s*(subscribe|unsubscribe)(\s*$name)?\s*$/i) ) {
 	    my $command = $1;

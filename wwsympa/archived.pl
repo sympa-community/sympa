@@ -67,9 +67,7 @@ unless (Conf::load($sympa_conf_file)) {
 $List::use_db = &List::probe_db();
 
 ## Put ourselves in background if not in debug mode. 
-if ($main::options{'debug'} || $main::options{'foreground'}) {
-    &tools::write_pid($wwsconf->{'archived_pidfile'}, $$);
-}else {
+unless ($main::options{'debug'} || $main::options{'foreground'}) {
    open(STDERR, ">> /dev/null");
    open(STDOUT, ">> /dev/null");
    if (open(TTY, "/dev/tty")) {
@@ -80,12 +78,12 @@ if ($main::options{'debug'} || $main::options{'foreground'}) {
    if ((my $child_pid = fork) != 0) {
       do_log('debug', "Starting archive daemon, pid $_");
 
-      ## Create and write the pidfile
-      &tools::write_pid($wwsconf->{'archived_pidfile'}, $child_pid);
-
       exit(0);
    }
 }
+
+## Create and write the pidfile
+&tools::write_pid($wwsconf->{'archived_pidfile'}, $$);
 
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'archived');

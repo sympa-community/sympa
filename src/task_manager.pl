@@ -88,9 +88,8 @@ unless (&Conf::checkfiles()) {
 }
 
 ## Put ourselves in background if not in debug mode. 
-if ($main::options{'debug'} || $main::options{'foreground'}) {
-    &tools::write_pid($wwsconf->{'task_manager_pidfile'}, $$);
-}else {
+unless ($main::options{'debug'} || $main::options{'foreground'}) {
+
     open(STDERR, ">> /dev/null");
     open(STDOUT, ">> /dev/null");
     if (open(TTY, "/dev/tty")) {
@@ -102,11 +101,11 @@ if ($main::options{'debug'} || $main::options{'foreground'}) {
     if ((my $child_pid = fork) != 0) {
 	&do_log('debug', "Starting task_manager daemon, pid $_");
 
-	&tools::write_pid($wwsconf->{'task_manager_pidfile'}, $child_pid);
-
 	exit(0);
     }
 }
+
+&tools::write_pid($wwsconf->{'task_manager_pidfile'}, $$);
 
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'task_manager');
