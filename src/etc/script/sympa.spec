@@ -57,7 +57,7 @@ make DIR=%{home_s} sources languages
 %install
 rm -rf $RPM_BUILD_ROOT
 
-make INITDIR=/etc/rc.d/init.d HOST=MYHOST DIR=%{home_s} DESTDIR=$RPM_BUILD_ROOT MANDIR=%{man_dir} install
+make INITDIR=/etc/rc.d/init.d HOST=MYHOST DIR=%{home_s} DESTDIR=$RPM_BUILD_ROOT MANDIR=%{man_dir} ICONSDIR=--ICONSDIR-- install
 
 ## Setting Runlevels
 for I in 0 1 2 6; do
@@ -167,8 +167,8 @@ fi
 %{home_s}/bin/etc/*
 %{home_s}/expl/*
 
-%attr(0755,root,root)%dir /home/httpd/icons
-%attr(0644,root,root) /home/httpd/icons/*
+%attr(0755,root,root)%dir --ICONSDIR--
+%attr(0644,root,root)--ICONSDIR--/*
 
 %defattr(-,sympa,sympa)
 %{home_s}/bin/*.pm
