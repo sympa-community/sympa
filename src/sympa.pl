@@ -504,7 +504,7 @@ sub DoFile {
     my $loop;
     foreach $loop ($hdr->get('X-Loop')) {
 	chomp $loop;
-	&do_log('debug','X-Loop: %s', $loop);
+	&do_log('debug2','X-Loop: %s', $loop);
 	#foreach my $l (split(/[\s,]+/, lc($loop))) {
 	    if ($loop eq lc("$name\@$host")) {
 		do_log('notice', "Ignoring message which would cause a loop (X-Loop: $loop)");
