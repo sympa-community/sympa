@@ -11939,7 +11939,7 @@ sub d_test_existing_and_rights {
      ### Document exist ? 
      unless (-e "$doc") {
 	 &wwslog('info',"do_attach : unable to read $doc : no such file or directory");
-	 &error_message('no_such_document', {'path' => .$in{'dir'}.'/'.$in{'file'}});
+	 &error_message('no_such_document', {'path' => $in{'dir'}.'/'.$in{'file'}});
 	 return undef;
      }
 
