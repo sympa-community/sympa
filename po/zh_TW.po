@@ -104,11 +104,6 @@ msgstr ""
 msgid " on %1"
 msgstr "收件者: %1"
 
-#. (d.name)
-#: web_tt2/rss.tt2:126
-msgid "%1"
-msgstr ""
-
 #. (conf.title,list)
 #: mail_tt2/sendpasswd.tt2:5
 msgid "%1 / subscribing to %2"
@@ -236,11 +231,6 @@ msgstr "[% notice.action %]: 操作成功"
 #: web_tt2/error.tt2:72
 msgid "%1: action failed"
 msgstr "%1: 操作失敗"
-
-#. (l.name,l.host,l.subject)
-#: web_tt2/rss.tt2:92
-msgid "%1@%2 - %3"
-msgstr ""
 
 #. (l.name,l.host,l.subject,l.msg_count)
 #: web_tt2/rss.tt2:101
@@ -595,6 +585,10 @@ msgstr "Bounces management"
 msgid "Archive encrypted mails as cleartext"
 msgstr ""
 
+#: src/etc/mhonarc-ressources.tt2:33
+msgid "Archive powered by"
+msgstr ""
+
 #: web_tt2/admin_menu.tt2:152 web_tt2/edit_list_request.tt2:8
 #: web_tt2/serveradmin.tt2:173
 msgid "Archives"
@@ -844,6 +838,11 @@ msgstr ""
 #, fuzzy
 msgid "Choose your authentication server"
 msgstr "在驗証身份("
+
+#: src/etc/mhonarc-ressources.tt2:136 src/etc/mhonarc-ressources.tt2:244
+#: src/etc/mhonarc-ressources.tt2:337
+msgid "Chronological"
+msgstr ""
 
 #: web_tt2/show_cert.tt2:11
 msgid "Cipher key size used"
@@ -1149,6 +1148,11 @@ msgstr "您確定要刪除 %1%2 嗎 ?"
 #: web_tt2/arc_manage.tt2:21
 #, fuzzy
 msgid "Do you really want to delete Selected Archives?"
+msgstr "確定要刪除 %1 ?"
+
+#: src/etc/mhonarc-ressources.tt2:406 src/etc/mhonarc-ressources.tt2:413
+#, fuzzy
+msgid "Do you really want to delete this message ?"
 msgstr "確定要刪除 %1 ?"
 
 #: web_tt2/rename_list_request.tt2:14
@@ -1741,6 +1745,12 @@ msgstr ""
 msgid ""
 "It was not possible to send it to you because the mailing list manager\n"
 "was unable to access to your personal certificat (email %1).\n"
+msgstr ""
+
+#: src/etc/mhonarc-ressources.tt2:582
+msgid ""
+"January:February:March:April:May:June:July:August:September:October:November:"
+"December"
 msgstr ""
 
 #: mail_tt2/helpfile.tt2:38
@@ -2865,6 +2875,10 @@ msgstr "§ó·s§Aªº­q¾\\¦b '%s'"
 msgid "Replace the file %1 with your file"
 msgstr "用您的文件取代文件 %1"
 
+#: src/etc/mhonarc-ressources.tt2:398
+msgid "Reply"
+msgstr ""
+
 # nlsref 16,66
 #: src/List.pm:1004 src/List.pm:984
 msgid "Reply address"
@@ -2873,6 +2887,10 @@ msgstr ""
 #. (reply_to)
 #: mail_tt2/info_report.tt2:14
 msgid "Reply to           : %1"
+msgstr ""
+
+#: src/etc/mhonarc-ressources.tt2:394
+msgid "Reply to sender"
 msgstr ""
 
 #: web_tt2/get_closed_lists.tt2:13 web_tt2/get_pending_lists.tt2:16
@@ -3411,6 +3429,10 @@ msgstr ""
 #. (user.email)
 #: mail_tt2/global_remind.tt2:2
 msgid "Summary of your subscription (using the e-mail %1)."
+msgstr ""
+
+#: src/etc/mhonarc-ressources.tt2:564
+msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
 #: web_tt2/menu.tt2:69 web_tt2/menu.tt2:73
@@ -4086,6 +4108,11 @@ msgid ""
 "1@%2. Starting from this URL, you can perform subscription options, "
 "unsubscription,\n"
 "archives, list management and so on.\n"
+msgstr ""
+
+#: src/etc/mhonarc-ressources.tt2:140 src/etc/mhonarc-ressources.tt2:248
+#: src/etc/mhonarc-ressources.tt2:344
+msgid "Thread"
 msgstr ""
 
 # nlsref 6,61
@@ -5752,6 +5779,12 @@ msgstr ""
 msgid "local domain users or owner approval"
 msgstr ""
 
+#. ($PAGENUM$,$NUMOFPAGES$)
+#: src/etc/mhonarc-ressources.tt2:131 src/etc/mhonarc-ressources.tt2:239
+#, fuzzy
+msgid "mails, page # %1/%2"
+msgstr "第%1頁，共%2頁"
+
 # nlsref 15,4
 #: wwsympa/wwslib.pm:62
 msgid "message footer"
@@ -6119,6 +6152,11 @@ msgstr "郵遞論壇信息"
 msgid "selection (if multiple)"
 msgstr ""
 
+#. (user.email)
+#: src/etc/mhonarc-ressources.tt2:399
+msgid "send it back to %1"
+msgstr ""
+
 #: web_tt2/scenario_test.tt2:35
 msgid "sender email"
 msgstr "發件人郵件"
@@ -6177,6 +6215,10 @@ msgstr ""
 msgid "summary message"
 msgstr ""
 
+#: src/etc/mhonarc-ressources.tt2:406 src/etc/mhonarc-ressources.tt2:413
+msgid "tag this mail for deletion"
+msgstr ""
+
 #: web_tt2/help_editlist.tt2:152
 msgid "the @ char is replaced by the string \" AT \"."
 msgstr ""
@@ -6208,6 +6250,11 @@ msgstr ""
 #: web_tt2/d_read.tt2:406
 msgid "title"
 msgstr "URL"
+
+#: src/etc/mhonarc-ressources.tt2:396
+#, fuzzy
+msgid "to list"
+msgstr "恢複"
 
 #: web_tt2/d_read.tt2:261
 #, fuzzy
@@ -6272,24 +6319,12 @@ msgstr ""
 #~ msgid "The [% count %] latest messages"
 #~ msgstr "最舊郵件優先"
 
-#, fuzzy
-#~ msgid "Do you really want to delete this message ?"
-#~ msgstr "確定要刪除 %1 ?"
-
 #~ msgid "Modifier"
 #~ msgstr "修改"
 
 #, fuzzy
-#~ msgid "mails, page # %1/%2"
-#~ msgstr "第%1頁，共%2頁"
-
-#, fuzzy
 #~ msgid "page n&#176; %1/%2"
 #~ msgstr "第%1頁，共%2頁"
-
-#, fuzzy
-#~ msgid "to list"
-#~ msgstr "恢複"
 
 # nlsref 12,3
 #~ msgid "7bit"

@@ -169,9 +169,9 @@ foreach my $file (@ARGV) {
 	push @{$file{$str}}, [ $filename, $line, $vars ];
     }
 	    
-    # Template Toolkit with ($time$%|loc%$time$)...($time$%END%$time$) in archives
+    # Template Toolkit with ($tag$%|loc%$tag$)...($tag$%END%$tag$) in archives
     $line = 1; pos($_) = 0;
-    while (m!\G.*?\(\$time\$%\s*\|l(?:oc)?(.*?)\s*%\$time\$\)(.*?)\(\$time\$%\s*END\s*%\$time\$\)!sg) {
+    while (m!\G.*?\(\$tag\$%\s*\|l(?:oc)?(.*?)\s*%\$tag\$\)(.*?)\(\$tag\$%\s*END\s*%\$tag\$\)!sg) {
 	my ($vars, $str) = ($1, $2);
 	$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
 	$str =~ s/\\'/\'/g; 
