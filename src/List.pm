@@ -3586,7 +3586,8 @@ sub request_action {
 	}
 
 	## provide subscriber information
-	$context->{'subscriber'} = $list->get_subscriber($context->{'sender'});
+	$context->{'subscriber'} = $list->get_subscriber($context->{'sender'})
+	    unless ($context->{'sender'} eq 'nobody');
 
 	my @operations = split /\./, $operation;
 	my $data_ref;
