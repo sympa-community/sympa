@@ -1284,6 +1284,8 @@ sub load {
     }elsif ($self->{'admin'}{'user_data_source'} eq 'database'){
 	## If no total found in 'stats' AND database mode
 	$self->{'total'} = _load_total_db($name);
+    }elsif ($self->{'admin'}{'user_data_source'} eq 'file'){
+	$self->{'total'} = $users->{'total'};
     }
 
     $self->{'mtime'} = [ $m1, $m2, $m3 ];
