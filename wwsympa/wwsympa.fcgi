@@ -6045,9 +6045,9 @@ sub do_rename_list {
 sub do_purge_list {
     &wwslog('info', 'do_purge_list()');
     
-    unless ($param->{'is_listmaster'}) {
+    unless (($param->{'is_listmaster'}) || ($param->{'is_privileged_owner'})) {
 	&error_message('may_not');
-	&wwslog('info','do_purge_list: not listmaster');
+	&wwslog('info','do_purge_list: not privileged_owner');
 	return undef;
     }  
     
