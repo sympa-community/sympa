@@ -1,0 +1,642 @@
+[% IF css == 'style.css' %]
+@media screen {
+* {
+	background-color: [% color_0 %];
+	border: 0px solid [% color_1 %];
+	color: [% color_2 %];
+	font-size: 12px; font-family: "Trebuchet MS", "Bitstream Vera Sans", verdana, lucida, arial, helvetica, sans-serif;
+	padding: 0px;
+	margin: 0px;
+}
+body {
+	background: [% color_4 %];
+	text-align: center;
+}
+
+/* ########## Blocks, id and class ########## */
+
+#Canvas {margin: 10px 20px 0px 20px;}
+#Stretcher {margin: 0px 0px 0px 190px; text-align: left;}
+#Paint {
+	vertical-align:top;
+	text-align: center;
+}
+#Header {
+	background: [% color_3 %];
+	border: 1px solid [% color_2 %];
+	font-size: 10px;
+	text-align: left;
+	vertical-align: top;
+}
+#Clock {float: right; padding-right: 3px; vertical-align:top; font-family: Arial, sans-serif;}
+#Login {text-align: left; padding-left: 5px; vertical-align:top; font-family: Arial, sans-serif;}
+#Search input.textbox {width: 90%;}
+#Logo {text-align: left; padding-top: 5px; padding-left: 5px;}
+#Logo a {font-size: 72px;}
+#Title {}
+#menuInactive {padding-left: 20px}
+#menuInactive2 {font-size: 14px; text-decoration: none;}
+
+/* #SITELINKS {position: relative; text-align: center;} */
+ul#MainMenuLinks li {list-style: none; display: inline;}
+
+
+/* #top {height:1px;width:1px;display: none;} */
+#toggleMenu {float: right; padding-right: 3px;}
+#Menus {
+	float: left;
+	width: 180px; /* width: 25%; nogo w/ ie yet */
+	border: 0px solid [% color_1 %];
+	padding-top: 10px;
+	text-align: left;
+}
+#Footer {
+	background: [% color_3 %];
+	border: 1px solid [% color_2 %];
+	clear: both;
+	font-size: 10px;
+	padding: 2px;
+	padding-left: 8px;
+	padding-right: 8px;
+	text-align: center;
+}
+.MenuBlock {
+	background: [% color_5 %];
+	padding: 10px;
+	border: 1px solid [% color_2 %];
+	text-align: left;
+	margin-bottom: 10px;
+}
+.MenuBlock h1 {text-indent: 0px; font-size: 16px; padding-bottom:10px;}
+.MenuBlock strong {text-indent: 0px; font-size: 16px; padding-bottom:10px;}
+.ContentBlock {
+	margin: -3px 0px 0px 0px;
+	background: [% color_5 %];
+	border: 1px solid [% color_2 %];
+	padding: 10px;
+	text-align: left;
+}
+.ContentBlock p {padding: 10px;}
+.ContentBlock > * {
+	padding: 0px;
+	border-bottom: 0px dotted [% color_1 %];
+	text-align: left;
+}
+.ContentBlock * a {
+	border-bottom: 1px dotted [% color_8 %];
+	text-align: left;
+}
+.ContentBlock * a:hover {text-decoration:none;}
+.ContentBlock * a img {border: 0px;}
+
+.navBar {margin: 0px 0px 0px 190px;}
+
+.displayNone {display: none;height:0px;width:0px;}
+.printNone {}
+.title {position: absolute; top: 60px; font-size: 16px; text-indent: 30px;}
+.title:first-letter {font-size: 20px; text-indent:30px; font-weight: bold;}
+.customMenu {text-indent: 0px; }
+a.dingbat {text-align: center;}
+.dingbat {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
+.dingbat:first-letter {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
+
+.button { background:[% color_0 %] !important; border: 1px solid; cursor: pointer; padding: 0px  2px  0px 2px; margin:2px; border-top-color: [% color_7 %]; border-right-color: [% color_1 %];border-bottom-color: [% color_1 %]; border-left-color: [% color_7 %];}
+.button:hover {background: [% color_0 %]; border-top-color: [% color_1 %]; border-right-color: [% color_7 %]; border-bottom-color: [% color_7 %]; border-left-color: [% color_1 %];}
+
+.smalltext {font-size: 10px;}
+.smalltext a {font-size: 10px;}
+.smallblacktext {color: [% color_12 %]; font-size: 12px;}
+.mediumtext {font-size: 12px;}
+.largetext {font-size: 16px;}
+
+/* ########## Elements ########## */
+
+img {}
+
+a.MainMenuLinks {border: 1px solid [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.MainMenuLinks:link {border: 1px solid [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.MainMenuLinks:visited {border: 1px solid [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.MainMenuLinks:hover {border: 1px solid [% color_2 %]; background: [% color_7 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.MainMenuLinks:active {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.MainMenuLinksCurrentPage {border: 1px solid [% color_2 %]; background: [% color_4 %]; border-bottom: 1px solid [% color_4 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.MainMenuLinksCurrentPage:hover {border: 1px solid [% color_2 %]; background: [% color_4 %]; border-bottom: 1px solid [% color_4 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+
+a.menuLinks {padding: 0px 10px 0px 0px; text-decoration: none;}
+a.menuLinks:link {text-decoration: none;}
+a.menuLinks:visited {text-decoration: none;}
+a.menuLinks:hover {border: 1px solid [% color_9 %]; background: [% color_6 %]; text-decoration: none;}
+a.menuLinks:active {border: 1px solid [% color_6 %]; background: [% color_9 %]; text-decoration: none;}
+a.menuLinksCurrentPage {border: 1px solid [% color_9 %]; background: [% color_6 %]; padding: 0px 10px 0px 20px; text-decoration: none;}
+a.menuLinksCurrentPage:hover  {border: 1px solid [% color_9 %]; background: [% color_6 %]; padding: 0px 10px 0px 20px; text-decoration: none;}
+
+strong a.menuLinks {font-size: 14px;}
+strong a.menuLinksCurrentPage {font-size: 14px; border: 1px solid [% color_9 %]; background: [% color_6 %];}
+strong a.menuLinksCurrentPage:hover  {font-size: 14px; border: 1px solid [% color_9 %]; background: [% color_6 %]; text-decoration: none;}
+strong a.menuLinks:first-letter {font-size: 16px; font-weight: bold;}
+strong a.menuLinksCurrentPage:first-letter {font-size: 16px; font-weight: bold;}
+ul a.menuLinks {padding: 0px 10px 0px 20px;}
+ul a.menuLinksCurrentPage {padding: 0px 10px 0px 40px; font-weight: bold;}
+ul a.menuLinksCurrentPage:hover {padding: 0px 10px 0px 40px; font-weight: bold; text-decoration: none;}
+
+a img {border: 0px;}
+a {text-decoration: none;}
+a:link {text-decoration: none;}
+a:visited {text-decoration: none;}
+a:hover {color: [% color_11 %]; text-decoration:underline overline;}
+abbr, acronym, .info {
+	border-bottom: 1px dotted [% color_8 %];
+	cursor: help;
+}
+h1 a:hover {text-indent: 30px; font-size: 16px; padding-bottom:10px;}
+h1 a:first-letter {color: [% color_2 %]; font-size: 20px; font-weight: bold;}
+p a:hover {text-indent: 30px;}
+p a:first-letter {font-size: 16px; font-weight: bold;}
+
+p {text-indent: 30px;}
+p:first-letter {font-size: 16px; font-weight: bold;}
+h1 {text-indent: 30px; font-size: 20px;}
+h1:first-letter {font-size: 20px; font-weight: bold;}
+h2 {text-indent: 30px; font-size: 16px;}
+h2:first-letter {font-size: 20px; font-weight: bold;}
+h3 {text-indent: 30px; font-size: 16px;}
+h3:first-letter {font-size: 20px; font-weight: bold;}
+h4 {text-indent: 30px; font-size: 16px;}
+h4:first-letter {font-size: 20px; font-weight: bold;}
+h5 {text-indent: 30px; font-size: 16px;}
+h5:first-letter {font-size: 20px; font-weight: bold;}
+h6 {text-indent: 30px; font-size: 16px;}
+h6:first-letter {font-size: 20px; font-weight: bold;}
+/* strong {text-indent: 30px; font-size: 16px; padding-bottom:10px;} */
+strong {text-indent: 30px; font-size: 16px;}
+strong:first-letter {font-size: 20px; font-weight: bold;}
+
+ul {list-style-type: none;}
+
+input {background: [% color_13 %]; border: 1px solid [% color_2 %]; padding: 3px; cursor: text;}
+input:hover {background: [% color_13 %]; cursor: text;}
+textarea {background: [% color_13 %]; border: 1px solid [% color_2 %]; padding: 3px; cursor: text;}
+textarea:hover {background: [% color_13 %]; cursor: text;}
+
+textarea.textbox {background: [% color_7 %]; border: 1px solid [% color_2 %]; padding: 3px; cursor: text;}
+textarea.textbox:hover {background: [% color_7 %]; cursor: text;}
+input.textbox {background: [% color_7 %]; border: 1px solid [% color_2 %]; padding: 3px; cursor: text;}
+input.textbox:hover {background: [% color_7 %]; cursor: text;}
+input.button { background:[% color_0 %] !important; border: 1px solid; cursor: pointer; padding: 0px  2px  0px 2px; margin:2px; border-top-color: [% color_7 %]; border-right-color: [% color_1 %];border-bottom-color: [% color_1 %]; border-left-color: [% color_7 %];}
+input.button:hover {background: [% color_0 %]; border-top-color: [% color_1 %]; border-right-color: [% color_7 %]; border-bottom-color: [% color_7 %]; border-left-color: [% color_1 %];}
+
+} /* EOF */
+[% ELSIF css == 'print.css' %] 
+
+@media print {
+* {
+	background-color: [% color_0 %];
+	border: 0px solid [% color_1 %];
+	color: [% color_2 %];
+	font-size: 12pt; font-family: "Trebuchet MS", "Bitstream Vera Sans", verdana, lucida, arial, helvetica, sans-serif;
+	padding: 0px;
+	margin: 0px;
+}
+body {
+	background: [% color_4 %];
+	text-align: center;
+}
+
+/* ########## Blocks, id and class ########## */
+
+#Canvas {background-color: [% color_5 %];}
+#Stretcher {text-align: left;}
+#Paint {
+	padding: 10px;
+	padding-top: 0px;
+	vertical-align:top;
+	text-align: center;
+}
+#Header {
+	border-bottom: 1px solid [% color_12 %];
+	font-size: 10pt;
+	text-align: left;
+	vertical-align: top;
+}
+/* #Search {position: absolute; top: 0px; left: 0px;} */
+#Logo {display: none !important;}
+#Title {text-indent: 30px;}
+#Banner {display: none !important;}
+#Banner img {padding-top: 20px;}
+/* #SITELINKS {position: relative; text-align: center;} */
+#MainMenuLinks {display: none !important;}
+/* #top {height:1px;width:1px;display: none;} */
+#toggleMenu {display: none;}
+#Menus {display: none !important;}
+#Menus  input.textbox {width: 43%;}
+#Footer {display: none !important;}
+.MenuBlock {
+	padding: 10px;
+	border-right: 0px dotted [% color_1 %];
+	border-bottom: 1px dotted [% color_1 %];
+	text-align: left;
+}
+.MenuBlock h1 {text-indent: 0px; font-size: 16pt; padding-bottom:10px;}
+.ContentBlock {
+	border-bottom: 1px dotted [% color_1 %];
+	text-align: left;
+}
+.ContentBlock p {padding: 10px;}
+.ContentBlock > * {
+	padding: 0px;
+	border-bottom: 0px dotted [% color_1 %];
+	text-align: left;
+}
+.ContentBlock * a {
+	border-bottom: 1px dotted [% color_8 %];
+	text-align: left;
+}
+.ContentBlock * a:hover {text-decoration:none;}
+.ContentBlock * a img {border: 0px;}
+
+.displayNone {display: none;height:0px;width:0px;}
+.printNone {display: none !important;}
+.title {position: absolute; top: 60px; font-size: 16pt; text-indent: 30px;}
+.title:first-letter {font-size: 20pt; text-indent:30px; font-weight: bold;}
+.customMenu {text-indent: 0px; }
+.batdingbat {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
+.batdingbat:first-letter {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
+a.dingbat {text-align: center;}
+.dingbat {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
+.dingbat:first-letter {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
+
+/* ########## Elements ########## */
+
+img {}
+a img {border: 0px;}
+a {text-decoration: none;}
+a:after {  /* Prints the links' URIs after the links' texts. Doesn't work in MSIE */
+  content: "<" attr(href) ">";
+  padding-left: 1ex;
+}
+a:link {}
+a:visited {}
+a:hover {color: [% color_11 %]; text-decoration:underline;}
+abbr:after, acronym:after {
+	content:" [" attr(title) "] ";
+	font-variant:small-caps;
+}
+h1 a:hover {text-indent: 30px; font-size: 16pt; padding-bottom:10px;}
+h1 a:first-letter {color: [% color_2 %]; font-size: 20pt; font-weight: bold;}
+p a:hover {text-indent: 30px;}
+p a:first-letter {font-size: 16pt; font-weight: bold;}
+
+p {text-indent: 30px;}
+p:first-letter {font-size: 16pt; font-weight: bold;}
+h1 {text-indent: 30px; font-size: 16pt;}
+h1:first-letter {font-size: 20pt; font-weight: bold;}
+h2 {text-indent: 30px; font-size: 16pt;}
+h2:first-letter {font-size: 20pt; font-weight: bold;}
+h3 {text-indent: 30px; font-size: 16pt;}
+h3:first-letter {font-size: 20pt; font-weight: bold;}
+h4 {text-indent: 30px; font-size: 16pt;}
+h4:first-letter {font-size: 20pt; font-weight: bold;}
+h5 {text-indent: 30px; font-size: 16pt;}
+h5:first-letter {font-size: 20pt; font-weight: bold;}
+h6 {text-indent: 30px; font-size: 16pt;}
+h6:first-letter {font-size: 20pt; font-weight: bold;}
+/* strong {text-indent: 30px; font-size: 16pt; padding-bottom:10px;} */
+strong {text-indent: 30px; font-size: 14pt; font-weight: bold;}
+strong:first-letter {font-size: 20pt; font-weight: bold;}
+
+ul {
+	list-style-type: none;
+	/* text-transform: lowercase; not for production */
+	text-indent: 30px;
+}
+
+textarea.textbox {display: none !important;}
+textarea.textbox:hover {display: none !important;}
+input.textbox {display: none !important;}
+input.textbox:hover {display: none !important;}
+input.button {display: none !important;}
+input.button:hover {display: none !important;}
+
+/* ########## Inclusion of core ########## */
+
+#Clock {text-align:right;}
+#dataform {display: none !important;}
+
+} /* EOF */
+[% ELSIF css == 'print-preview.css' %]
+@media screen {
+* {
+	background-color: [% color_0 %];
+	border: 0px solid [% color_1 %];
+	color: [% color_2 %];
+	font-size: 12px; font-family: "Trebuchet MS", "Bitstream Vera Sans", verdana, lucida, arial, helvetica, sans-serif;
+	padding: 0px;
+	margin: 0px;
+}
+body {
+	background: [% color_4 %];
+	text-align: center;
+}
+
+/* ########## Blocks, id and class ########## */
+
+#Canvas {
+	background-color: [% color_5 %];
+	margin: 10px 20px 0px 20px;
+	border: 1px solid [% color_12 %];
+}
+#Stretcher {text-align: left;}
+#Paint {
+	padding: 10px;
+	padding-top: 0px;
+	vertical-align:top;
+	text-align: center;
+}
+#Header {
+	border-bottom: 1px solid [% color_12 %];
+	font-size: 10px;
+	text-align: left;
+	vertical-align: top;
+}
+#Search input.textbox {width: 90%;}
+#Logo {display: none !important;}
+#Title {text-indent: 30px;}
+#Banner {display: none !important;}
+#Banner img {padding-top: 20px;}
+/* #SITELINKS {position: relative; text-align: center;} */
+#MainMenuLinks {display: none !important;}
+/* #top {height:1px;width:1px;display: none;} */
+#toggleMenu {display: none;}
+#Menus {display: none !important;}
+#Footer {display: none !important;}
+.MenuBlock {
+	padding: 10px;
+	border-right: 0px dotted [% color_1 %];
+	border-bottom: 1px dotted [% color_1 %];
+	text-align: left;
+}
+.MenuBlock h1 {text-indent: 0px; font-size: 16px; padding-bottom:10px;}
+.ContentBlock {
+	border-bottom: 1px dotted [% color_1 %];
+	text-align: left;
+}
+.ContentBlock p {padding: 10px;}
+.ContentBlock > * {
+	padding: 0px;
+	border-bottom: 0px dotted [% color_1 %];
+	text-align: left;
+}
+.ContentBlock * a {
+	border-bottom: 1px dotted [% color_8 %];
+	text-align: left;
+}
+.ContentBlock * a:hover {text-decoration:none;}
+.ContentBlock * a img {border: 0px;}
+
+.displayNone {display: none;height:0px;width:0px;}
+.printNone {display: none !important;}
+.title {position: absolute; top: 60px; font-size: 16px; text-indent: 30px;}
+.title:first-letter {font-size: 20px; text-indent:30px; font-weight: bold;}
+.customMenu {text-indent: 0px; }
+.batdingbat {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
+.batdingbat:first-letter {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
+a.dingbat {text-align: center;}
+.dingbat {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
+.dingbat:first-letter {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
+
+/* ########## Elements ########## */
+
+img {}
+a img {border: 0px;}
+a {text-decoration: none;}
+a:after {  /* Prints the links' URIs after the links' texts. Doesn't work in MSIE */
+  content: "<" attr(href) ">";
+  padding-left: 1ex;
+}
+a:link {}
+a:visited {}
+a:hover {color: [% color_11 %]; text-decoration:underline;}
+abbr:after, acronym:after {
+	content:" [" attr(title) "] ";
+	font-variant:small-caps;
+}
+h1 a:hover {text-indent: 30px; font-size: 16px; padding-bottom:10px;}
+h1 a:first-letter {color: [% color_2 %]; font-size: 20px; font-weight: bold;}
+p a:hover {text-indent: 30px;}
+p a:first-letter {font-size: 16px; font-weight: bold;}
+
+p {text-indent: 30px;}
+p:first-letter {font-size: 16px; font-weight: bold;}
+h1 {text-indent: 30px; font-size: 16px;}
+h1:first-letter {font-size: 20px; font-weight: bold;}
+h2 {text-indent: 30px; font-size: 16px;}
+h2:first-letter {font-size: 20px; font-weight: bold;}
+h3 {text-indent: 30px; font-size: 16px;}
+h3:first-letter {font-size: 20px; font-weight: bold;}
+h4 {text-indent: 30px; font-size: 16px;}
+h4:first-letter {font-size: 20px; font-weight: bold;}
+h5 {text-indent: 30px; font-size: 16px;}
+h5:first-letter {font-size: 20px; font-weight: bold;}
+h6 {text-indent: 30px; font-size: 16px;}
+h6:first-letter {font-size: 20px; font-weight: bold;}
+/* strong {text-indent: 30px; font-size: 16px; padding-bottom:10px;}*/
+strong {text-indent: 30px; font-size: 14pt; font-weight: bold;}
+strong:first-letter {font-size: 20px; font-weight: bold;}
+
+ul {
+	list-style-type: none;
+	/* text-transform: lowercase; not for production */
+	text-indent: 30px;
+}
+
+textarea.textbox {display: none !important;}
+textarea.textbox:hover {display: none !important;}
+input.textbox {display: none !important;}
+input.textbox:hover {display: none !important;}
+input.button {display: none !important;}
+input.button:hover {display: none !important;}
+
+/* ########## Inclusion of core ########## */
+
+#Clock {text-align:right;}
+#dataform {display: none !important;}
+
+} /* EOF */
+[% ELSIF css == 'fullPage.css' %]
+@media screen {
+* {
+	background-color: [% color_0 %];
+	border: 0px solid [% color_1 %];
+	color: [% color_2 %];
+	font-size: 12px; font-family: "Trebuchet MS", "Bitstream Vera Sans", verdana, lucida, arial, helvetica, sans-serif;
+	padding: 0px;
+	margin: 0px;
+}
+body {
+	background: [% color_4 %];
+	text-align: center;
+}
+
+/* ########## Blocks, id and class ########## */
+
+#Canvas {margin: 10px 20px 0px 20px;}
+#Stretcher {margin: 0px 0px 0px 0px; text-align: left;}
+#Paint {
+	vertical-align:top;
+	text-align: center;
+}
+#Header {
+	background: [% color_3 %];
+	border: 1px solid [% color_2 %];
+	font-size: 10px;
+	text-align: left;
+	vertical-align: top;
+}
+#Clock {float: right; padding-right: 3px; vertical-align:top; font-family: Arial, sans-serif;}
+#Search input.textbox {width: 90%;}
+#Logo {text-align: left; padding-top: 5px; padding-left: 5px;}
+#Logo a {font-size: 72px;}
+#Title {margin-left: -15px;}
+/* #SITELINKS {position: relative; text-align: center;} */
+ul#MainMenuLinks li {list-style: none; display: inline;
+}
+/* #top {height:1px;width:1px;display: none;} */
+#toggleMenu {float: right; padding-right: 3px;}
+#Menus {display: none !important;}
+#Footer {
+	background: [% color_3 %];
+	border: 1px solid [% color_2 %];
+	clear: both;
+	font-size: 10px;
+	padding: 2px;
+	padding-left: 8px;
+	padding-right: 8px;
+	text-align: center;
+}
+.MenuBlock {
+	background: [% color_5 %];
+	padding: 10px;
+	border: 1px solid [% color_2 %];
+	text-align: left;
+	margin-bottom: 10px;
+}
+.MenuBlock h1 {text-indent: 0px; font-size: 16px; padding-bottom:10px;}
+.MenuBlock strong {text-indent: 0px; font-size: 16px; padding-bottom:10px;}
+.ContentBlock {
+	margin: -3px 0px 0px 0px;
+	background: [% color_5 %];
+	border: 1px solid [% color_2 %];
+	padding: 10px;
+	text-align: left;
+}
+.ContentBlock p {padding: 10px;}
+.ContentBlock > * {
+	padding: 0px;
+	border-bottom: 0px dotted [% color_1 %];
+	text-align: left;
+}
+.ContentBlock * a {
+	border-bottom: 1px dotted [% color_8 %];
+	text-align: left;
+}
+.ContentBlock * a:hover {text-decoration:none;}
+.ContentBlock * a img {border: 0px;}
+
+.navBar {margin: 0px 0px 0px 10px;}
+
+.displayNone {display: none;height:0px;width:0px;}
+.printNone {}
+.title {position: absolute; top: 60px; font-size: 16px; text-indent: 30px;}
+.title:first-letter {font-size: 20px; text-indent:30px; font-weight: bold;}
+.customMenu {text-indent: 0px; }
+a.dingbat {text-align: center;}
+.dingbat {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
+.dingbat:first-letter {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
+
+.button { background:[% color_0 %] !important; border: 1px solid; cursor: pointer; padding: 0px  2px  0px 2px; margin:2px; border-top-color: [% color_7 %]; border-right-color: [% color_1 %];border-bottom-color: [% color_1 %]; border-left-color: [% color_7 %];}
+.button:hover {background: [% color_0 %]; border-top-color: [% color_1 %]; border-right-color: [% color_7 %]; border-bottom-color: [% color_7 %]; border-left-color: [% color_1 %];}
+
+.smalltext {font-size: 10px;}
+.smalltext a {font-size: 10px;}
+.smallblacktext {color: [% color_12 %]; font-size: 12px;}
+.mediumtext {font-size: 12px;}
+.largetext {font-size: 16px;}
+
+/* ########## Elements ########## */
+
+img {}
+a.MainMenuLinks {border: 1px solid [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.MainMenuLinks:link {border: 1px solid [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.MainMenuLinks:visited {border: 1px solid [% color_2 %]; background: [% color_1 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.MainMenuLinks:hover {border: 1px solid [% color_2 %]; background: [% color_7 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.MainMenuLinks:active {border: 1px solid [% color_2 %]; background: [% color_6 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.MainMenuLinksCurrentPage {border: 1px solid [% color_2 %]; background: [% color_4 %]; border-bottom: 1px solid [% color_4 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+a.MainMenuLinksCurrentPage:hover {border: 1px solid [% color_2 %]; background: [% color_4 %]; border-bottom: 1px solid [% color_4 %]; color: [% color_11 %]; text-decoration: none; padding: 0px 10px 0px 10px;}
+
+a.menuLinks {padding: 0px 10px 0px 0px; text-decoration: none;}
+a.menuLinks:link {text-decoration: none;}
+a.menuLinks:visited  {text-decoration: none;}
+a.menuLinks:hover {border: 1px solid [% color_9 %]; background: [% color_10 %]; text-decoration: none;}
+a.menuLinks:active {border: 1px solid [% color_6 %]; background: [% color_9 %]; text-decoration: none;}
+a.menuLinksCurrentPage {border: 1px solid [% color_9 %]; background: [% color_6 %]; padding: 0px 10px 0px 20px; text-decoration: none;}
+a.menuLinksCurrentPage:hover  {border: 1px solid [% color_9 %]; background: [% color_6 %]; padding: 0px 10px 0px 20px; text-decoration: none;}
+
+strong a.menuLinks {font-size: 16px;}
+strong a.menuLinksCurrentPage {font-size: 16px; border: 1px solid [% color_9 %]; background: [% color_6 %];}
+strong a.menuLinksCurrentPage:hover  {font-size: 16px; border: 1px solid [% color_9 %]; background: [% color_6 %]; text-decoration: none;}
+strong a.menuLinks:first-letter {font-size: 20px; font-weight: bold;}
+strong a.menuLinksCurrentPage:first-letter {font-size: 20px; font-weight: bold;}
+ul a.menuLinks {padding: 0px 10px 0px 20px;}
+ul a.menuLinksCurrentPage {padding: 0px 10px 0px 40px; font-weight: bold;}
+ul a.menuLinksCurrentPage:hover {padding: 0px 10px 0px 40px; font-weight: bold; text-decoration: none;}
+
+a img {border: 0px;}
+a {text-decoration: none;}
+a:link {}
+a:visited {}
+a:hover {color: [% color_11 %]; text-decoration:underline;}
+abbr, acronym, .info {
+	border-bottom: 1px dotted [% color_8 %];
+	cursor: help;
+}
+h1 a:hover {text-indent: 30px; font-size: 16px; padding-bottom:10px;}
+h1 a:first-letter {color: [% color_2 %]; font-size: 20px; font-weight: bold;}
+p a:hover {text-indent: 30px;}
+p a:first-letter {font-size: 16px; font-weight: bold;}
+
+p {text-indent: 30px;}
+p:first-letter {font-size: 16px; font-weight: bold;}
+h1 {text-indent: 30px; font-size: 16px;}
+h1:first-letter {font-size: 20px; font-weight: bold;}
+h2 {text-indent: 30px; font-size: 16px;}
+h2:first-letter {font-size: 20px; font-weight: bold;}
+h3 {text-indent: 30px; font-size: 16px;}
+h3:first-letter {font-size: 20px; font-weight: bold;}
+h4 {text-indent: 30px; font-size: 16px;}
+h4:first-letter {font-size: 20px; font-weight: bold;}
+h5 {text-indent: 30px; font-size: 16px;}
+h5:first-letter {font-size: 20px; font-weight: bold;}
+h6 {text-indent: 30px; font-size: 16px;}
+h6:first-letter {font-size: 20px; font-weight: bold;}
+/* strong {text-indent: 30px; font-size: 16px; padding-bottom:10px;} */
+strong {text-indent: 30px; font-size: 14pt; font-weight: bold;}
+strong:first-letter {font-size: 20px; font-weight: bold;}
+
+ul {list-style-type: none;}
+
+input {background: [% color_13 %]; border: 1px solid [% color_2 %]; padding: 3px; cursor: text;}
+input:hover {background: [% color_13 %]; cursor: text;}
+textarea {background: #999999; border: 1px solid [% color_2 %]; padding: 3px; cursor: text;}
+textarea:hover {background: #999999; cursor: text;}
+textarea.textbox {background: #999999; border: 1px solid [% color_2 %]; padding: 3px; cursor: text;}
+textarea.textbox:hover {background: #999999; cursor: text;}
+input.textbox {background: [% color_7 %]; border: 1px solid [% color_2 %]; padding: 3px; cursor: text;}
+input.textbox:hover {background: [% color_7 %]; cursor: text;}
+
+input.button { background:[% color_0 %] !important; border: 1px solid; cursor: pointer; padding: 0px  2px  0px 2px; margin:2px; border-top-color: [% color_7 %]; border-right-color: [% color_1 %];border-bottom-color: [% color_1 %]; border-left-color: [% color_7 %];}
+input.button:hover {background: [% color_0 %]; border-top-color: [% color_1 %]; border-right-color: [% color_7 %]; border-bottom-color: [% color_7 %]; border-left-color: [% color_1 %];}
+
+} /* EOF */
+[% ELSE %]
+
+requested [% css %]
+[% END %]
