@@ -85,6 +85,11 @@ my @params = ({'title' => 'Directories and file location'},
 	       'file' => 'wwsympa.conf',
                'advice' =>''},
 	      
+	      {'name' => 'task_manager_pidfile',
+	       'query' => 'File containing task_manager PID while running.',
+	       'file' => 'wwsympa.conf',
+               'advice' =>''},
+
 	      {'name' => 'arc_path',
 	       'default' => '--DIR--/arc',
 	       'query' => 'Where to store HTML archives',
@@ -242,7 +247,7 @@ my @params = ({'title' => 'Directories and file location'},
 	       'advice' => 'Not yet used in current version, Default is 50' },
 
 
-	      {'name'  => 'expire_bounce',
+	      {'name'  => 'expire_bounce_task',
 	       'sample' => 'daily',
 	       'query' => 'Task name for expiration of old bounces',
 	       'file' => 'sympa.conf',
