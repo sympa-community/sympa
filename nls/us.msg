@@ -383,3 +383,13 @@ $set 16 Listm parameters titles
 87	"Who can edit"
 88	"Available subscription options"
 89	"reception mode"
+
+$set 17 Cookie expiration periods
+1	"session"
+2	"10 minutes"
+3	"30 minutes"
+4	"1 hour"
+5	"6 hours"
+6	"1 day"
+7	"1 week"
+

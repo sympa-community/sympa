@@ -12,6 +12,15 @@ use Exporter;
 		   'notice' => 'notice',
 		   'nomail' => 'no mail');
 
+## Cookie expiration periods with corresponding entry in NLS
+%cookie_period = (0     => 1,
+		  10    => 2,
+		  30    => 3, 
+		  60    => 4,
+		  360   => 5,
+		  1440  => 6, 
+		  43200 => 7);
+
 %visibility_mode = ('noconceal' => 'public',
 		    'conceal' => 'conceal');
 

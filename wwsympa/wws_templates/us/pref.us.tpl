@@ -26,12 +26,17 @@
 	    <FONT COLOR="--DARK_COLOR--">Language </FONT>
 	    <SELECT NAME="lang">
 	      [FOREACH l IN languages]
-	        <OPTION VALUE='[l->NAME]' [l->selected]>[l->complete]
+	        <OPTION VALUE="[l->NAME]" [l->selected]>[l->complete]
 	      [END]
 	    </SELECT>
 	    <BR><BR>
 	    <FONT COLOR="--DARK_COLOR--">Expiration of the connexion </FONT>
-	    <INPUT TYPE="text" NAME="cookie_delay" SIZE=3 VALUE="[user->cookie_delay]"> min<BR><BR>
+	    <SELECT NAME="cookie_delay">
+	      [FOREACH period IN cookie_periods]
+	        <OPTION VALUE="[period->value]" [period->selected]>[period->desc]
+	      [END]
+	    </SELECT>
+	    <BR><BR>
 	    <INPUT TYPE="submit" NAME="action_setpref" VALUE="Submit"></FONT>
 	  </FORM>
 	</TD>

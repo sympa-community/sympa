@@ -385,3 +385,12 @@ $set 16 Titres des paramètres de config de listes
 87	"droit d'édition"
 88	"Options d'abonné disponibles"
 89	"mode de réception"
+
+$set 17 Cookie expiration periods
+1	"la session"
+2	"10 minutes"
+3	"30 minutes"
+4	"1 heure"
+5	"6 heures"
+6	"1 jour"
+7	"1 semaine"

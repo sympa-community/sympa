@@ -1605,7 +1605,7 @@ sub do_pref {
     foreach my $l (@wwslib::languages) {
 #	$param->{'languages'}{$l}{'complete'} = $languages{$l};
 	&Language::SetLang($l);
-	$param->{'languages'}{$l}{'complete'} = Msg(14, 2, $l);
+	$param->{'languages'}{$l}{'complete'} = sprintf Msg(14, 2, $l);
 	if ($param->{'lang'} eq $l) {
 	    $param->{'languages'}{$l}{'selected'} = 'SELECTED';
 	}else {
@@ -1613,6 +1613,23 @@ sub do_pref {
 	}
     }
     &Language::SetLang($saved_lang);
+
+    ## Find nearest expiration period
+    my $selected = 0;
+    foreach my $p (sort {$b <=> $a} keys %wwslib::cookie_period) {
+	my $entry = {'value' => $p};
+
+	## Set description from NLS
+	$entry->{'desc'} = sprintf Msg(17, $wwslib::cookie_period{$p}, $p);
+
+	## Choose nearest delay
+	if ((! $selected) && $param->{'user'}{'cookie_delay'} >= $p) {
+	    $entry->{'selected'} = 'SELECTED';
+	    $selected = 1;
+	}
+	
+	unshift @{$param->{'cookie_periods'}}, $entry;
+    }
     
     $param->{'previous_list'} = $in{'previous_list'};
     $param->{'previous_action'} = $in{'previous_action'};

@@ -31,7 +31,12 @@
 	    </SELECT>
 	    <BR><BR>
 	    <FONT COLOR="--DARK_COLOR--">Expiration de la connexion </FONT>
-	    <INPUT TYPE="text" NAME="cookie_delay" SIZE=3 VALUE="[user->cookie_delay]"> min<BR><BR>
+	    <SELECT NAME="cookie_delay">
+	      [FOREACH period IN cookie_periods]
+	        <OPTION VALUE="[period->value]" [period->selected]>[period->desc]
+	      [END]
+	    </SELECT>
+	    <BR><BR>
 	    <INPUT TYPE="submit" NAME="action_setpref" VALUE="Valider"></FONT>
 	  </FORM>
 	</TD>
