@@ -377,3 +377,5 @@ $set 16 Listm parameters titles
 85	"Welcome return-path"
 86	"Who can view"
 87	"Who can edit"
+88	"Available subscription options"
+89	"reception mode"

@@ -271,9 +271,11 @@ my %alias = ('reply-to' => 'reply_to',
 	    'available_user_options' => {'format' => {'reception' => {'format' => ['mail','notice','digest','summary','nomail'],
 								      'occurrence' => '1-n',
 								      'split_char' => ',',
-								      'default' => 'mail,notice,digest,summary,nomail'
+								      'default' => 'mail,notice,digest,summary,nomail',
+								      'title_id' => 89
 								      }
 						  },
+					 'title_id' => 88
 				     },
 
 	    'bounce' => {'format' => {'warn_rate' => {'format' => '\d+',
@@ -597,8 +599,7 @@ my %alias = ('reply-to' => 'reply_to',
 			    'title_id' => 73,
 			    'group' => 'command'
 			    },
-	    'topics' => {#'file_format' => '\w+(\/\w+)*(,\w+(\/\w+)*)*',
-			 'format' => '\w+(\/\w+)?',
+	    'topics' => {'format' => '\w+(\/\w+)?',
 			 'split_char' => ',',
 			 'occurrence' => '0-n',
 			 'title_id' => 74,
@@ -4865,19 +4866,19 @@ sub _apply_defaults {
 	if (ref ($::pinfo{$p}{'format'}) eq 'ARRAY') {
 	    $::pinfo{$p}{'file_format'} ||= join '|', @{$::pinfo{$p}{'format'}};
 	}
-	&do_log('debug', 'xxx Format(%s): %s', $p, $::pinfo{$p}{'file_format'});
 
+
+	## Set 'format' as default for 'file_format'
+	$::pinfo{$p}{'file_format'} ||= $::pinfo{$p}{'format'};
+	
 	if (($::pinfo{$p}{'occurrence'} =~ /n$/) 
 	    && $::pinfo{$p}{'split_char'}) {
 	    my $format = $::pinfo{$p}{'file_format'};
 	    my $char = $::pinfo{$p}{'split_char'};
 	    $::pinfo{$p}{'file_format'} = "($format)*(\\s*$char\\s*($format))*";
 	}
-	&do_log('debug', 'xxx Format(%s): %s', $p, $::pinfo{$p}{'file_format'});
 
-	## Set 'format' as default for 'file_format'
-	$::pinfo{$p}{'file_format'} ||= $::pinfo{$p}{'format'};
-	
+
 	next unless ((ref $::pinfo{$p}{'format'} eq 'HASH')
 		     && (ref $::pinfo{$p}{'file_format'} eq 'HASH'));
 	
@@ -4900,7 +4901,7 @@ sub _apply_defaults {
 	    if (ref ($::pinfo{$p}{'format'}{$k}{'format'}) eq 'ARRAY') {
 		$::pinfo{$p}{'file_format'}{$k}{'file_format'} ||= join '|', @{$::pinfo{$p}{'format'}{$k}{'format'}};
 	    }
-	    &do_log('debug', 'xxx Format(%s/%s): %s', $p, $k, $::pinfo{$p}{'file_format'}{$k}{'file_format'});
+
 	    
 	    if (($::pinfo{$p}{'file_format'}{$k}{'occurrence'} =~ /n$/) 
 		&& $::pinfo{$p}{'file_format'}{$k}{'split_char'}) {
@@ -4908,7 +4909,7 @@ sub _apply_defaults {
 		my $char = $::pinfo{$p}{'file_format'}{$k}{'split_char'};
 		$::pinfo{$p}{'file_format'}{$k}{'file_format'} = "($format)*(\\s*$char\\s*($format))*";
 	    }
-	    &do_log('debug', 'xxx Format(%s/%s): %s', $p, $k, $::pinfo{$p}{'file_format'}{$k}{'file_format'});
+
 	}
 
 	next unless (ref $::pinfo{$p}{'file_format'} eq 'HASH');
@@ -4950,6 +4951,12 @@ sub _save_list_param {
     }elsif (ref($::pinfo{$key}{'file_format'})) {
 	printf $fd "%s\n", $key;
 	foreach my $k (keys %{$p}) {
+
+	    ## Multiple param in a single line
+	    if (($::pinfo{$key}{'file_format'}{$k}{'occurrence'} =~ /n$/)
+		&& $::pinfo{$key}{'file_format'}{$k}{'split_char'}) {
+		$p->{$k} = join($::pinfo{$key}{'file_format'}{$k}{'split_char'}, @{$p->{$k}});
+	    }
 
 	    ## Ignore default value
 #	    next if ($defaults->{$key}{$k} == 1);
@@ -5000,7 +5007,7 @@ sub _load_list_param {
     ## Do we need to split param
     if (($p->{'occurrence'} =~ /n$/)
 	&& $p->{'split_char'}) {
-	my @array = split /,/, $value;
+	my @array = split /$p->{'split_char'}/, $value;
 	foreach my $v (@array) {
 	    $v =~ s/^\s*(.+)\s*$/$1/g;
 	}
@@ -5173,14 +5180,13 @@ sub _load_admin_file {
 
 	    next if $missing_required_field;
 
+	    delete $admin{'defaults'}{$pname};
+
 	    ## Should we store it in an array
-	    if (($::pinfo{$pname}{'occurrence'} eq '0-n') or
-		($::pinfo{$pname}{'occurrence'} eq '1-n')) {
+	    if (($::pinfo{$pname}{'occurrence'} =~ /n$/)) {
 		push @{$admin{$pname}}, \%hash;
-		delete $admin{'defaults'}{$pname};
 	    }else {
 		$admin{$pname} = \%hash;
-		delete $admin{'defaults'}{$pname};
 	    }
 	}else {
 	    ## This should be a single line
@@ -5195,13 +5201,13 @@ sub _load_admin_file {
 
 	    my $value = &_load_list_param($pname, $1, $::pinfo{$pname}, $directory);
 
-	    if (($::pinfo{$pname}{'occurrence'} eq '0-n') or
-		($::pinfo{$pname}{'occurrence'} eq '1-n')) {
+	    delete $admin{'defaults'}{$pname};
+
+	    if (($::pinfo{$pname}{'occurrence'} =~ /n$/)
+		&& ! (ref ($value) =~ /^ARRAY/)) {
 		push @{$admin{$pname}}, $value;
-		delete $admin{'defaults'}{$pname};
 	    }else {
 		$admin{$pname} = $value;
-		delete $admin{'defaults'}{$pname};
 	    }
 	}
     }
@@ -5326,12 +5332,18 @@ sub _save_admin_file {
 	## Original parameters
 	my @orig = ($admin->{'digest'}, $admin->{'topics'});
 
+	## Multiple param in a single line
+	if (($::pinfo{$key}{'occurrence'} =~ /n$/)
+	    && $::pinfo{$key}{'split_char'}) {
+	    $admin->{$key} = join($::pinfo{$key}{'split_char'}, @{$admin->{$key}});
+	}
+
 	if ($key eq 'digest') {
 	    $admin->{'digest'} = sprintf '%s %d:%d', join(',', @{$admin->{'digest'}{'days'}})
 		,$admin->{'digest'}{'hour'}, $admin->{'digest'}{'minute'};
 
-	}elsif ($key eq 'topics') {
-	    $admin->{'topics'} = sprintf '%s', join(',', @{$admin->{'topics'}});
+#	}elsif ($key eq 'topics') {
+#	    $admin->{'topics'} = sprintf '%s', join(',', @{$admin->{'topics'}});
 	}elsif (($key eq 'user_data_source') && $admin->{'defaults'}{'user_data_source'}) {
 	    $admin->{'user_data_source'} = 'database' if $List::use_db;
 	}

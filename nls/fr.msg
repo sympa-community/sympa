@@ -379,3 +379,5 @@ $set 16 Titres des paramètres de config de listes
 85	"Return-path d'abonnement"
 86	"droit de consultation"
 87	"droit d'édition"
+88	"Options d'abonné disponibles"
+89	"mode de réception"

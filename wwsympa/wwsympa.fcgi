@@ -4278,7 +4278,7 @@ sub do_edit_list_request {
 	&wwslog('info','do_edit_list: not allowed');
 	return undef;
     }
-    
+
     &_prepare_edit_form ($list->{'admin'});
 
 #    print "Content-type: text/plain\n\n";
@@ -4371,7 +4371,7 @@ sub _prepare_data {
 	    $data2 = $data;
 
 	    ## Add an empty entry
-	    unless ($name eq 'days') {
+	    unless (($name eq 'days') || ($name eq 'reception')) {
 		push @{$data2}, undef;
 		## &do_log('debug', 'xxx Add 1 %s', $name);
 	    }
@@ -4460,7 +4460,7 @@ sub dump_var {
 	    }
 	}elsif (ref($var) eq 'HASH') {
 	    foreach my $key (sort keys %{$var}) {
-		print STDOUT "\t"x$level.$key."\n";
+		print STDOUT "\t"x$level.'_'.$key.'_'."\n";
 		&dump_var($var->{$key}, $level+1);
 	    }    
 	}
