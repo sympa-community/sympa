@@ -63,7 +63,7 @@ Proszê u¿yæ swojego kanonicznego adresu."
 21	"Odnowi³em zapisanie na listê '%s'"
 24	"Zapisanie na listê jest obecnie zawieszone.\n"
 25	"Twoja pro¶ba o zapisanie/wypisanie z listy zosta³a przes³ana do osoby administruj±cej\n\
-w celu zatwierdzenia. Zapisanie/wypisanie zostanie potwierdzone oddzielnym listem.\n\"
+w celu zatwierdzenia. Zapisanie/wypisanie zostanie potwierdzone oddzielnym listem.\n"
 26	"Wypisanie z listy %s jest nie mo¿liwe.\n"
 27	"Informacje dotycz±ce twojego zapisania zosta³y uaktualnione.\n"
 28	"Jeste¶ obecnie zapisany na listê %s.\n"
