@@ -78,10 +78,10 @@
   </TR></TABLE>  
   </th> 
 
-  <th ALIGN="left"><font color="--BG_COLOR--">Description</font></th> 
-  <th ALIGN="center"><font color="--BG_COLOR--">Edit</font></th> 
-  <th ALIGN="center"><font color="--BG_COLOR--">Delete</font></th>
-  <th ALIGN="center"><font color="--BG_COLOR--">Access</font></th></TR>
+  <TD ALIGN="left"><font color="--BG_COLOR--">Description</font></TD> 
+  <TD ALIGN="center"><font color="--BG_COLOR--">Edit</font></TD> 
+  <TD ALIGN="center"><font color="--BG_COLOR--">Delete</font></D>
+  <TD ALIGN="center"><font color="--BG_COLOR--">Access</font></TD></TR>
       
   [IF empty]
     <TR BGCOLOR="--LIGHT_COLOR--" VALIGN="top">
