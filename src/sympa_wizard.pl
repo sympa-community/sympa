@@ -479,7 +479,7 @@ if ($ARGV[0] eq '-c') {
     exit 1 if (-f $conf);
     
     unless (open (NEWF,"> $conf")){
-	die "Unable to open $conf, exiting";
+	die "Unable to open $conf : $!";
     };
     
     if ($file eq 'sympa.conf') {
@@ -529,13 +529,7 @@ unless (&Conf::load( $sympa_conf )) {
     die('Unable to load sympa config file %s', $sympa_conf);
 }
 
-unless (open (WWSYMPA,"> $new_wwsympa_conf")){
-    die "unable to open $new_wwsympa_conf, exiting";
-};
-
-unless (open (SYMPA,"> $new_sympa_conf")){
-    die "unable to open $new_sympa_conf, exiting";
-};
+my (@new_wwsympa_conf, @new_sympa_conf);
 
 ## Edition mode
 foreach my $i (0..$#params) {
@@ -546,10 +540,8 @@ foreach my $i (0..$#params) {
 	printf "\n\n** $title **\n";
 
 	## write to conf file
-	$desc = \*WWSYMPA;
-	printf $desc "###\\\\\\\\ %s ////###\n\n", $params[$i]->{'title'};
-	$desc = \*SYMPA;
-	printf $desc "###\\\\\\\\ %s ////###\n\n", $params[$i]->{'title'};
+	push @new_wwsympa_conf, sprintf "###\\\\\\\\ %s ////###\n\n", $params[$i]->{'title'};
+	push @new_sympa_conf, sprintf "###\\\\\\\\ %s ////###\n\n", $params[$i]->{'title'};
 
 	next;
     }    
@@ -588,9 +580,9 @@ foreach my $i (0..$#params) {
     }
 
     if ($file eq 'wwsympa.conf') {
-	$desc = \*WWSYMPA;
+	$desc = \@new_wwsympa_conf;
     }elsif ($file eq 'sympa.conf') {
-	$desc = \*SYMPA;
+	$desc = \@new_sympa_conf;
     }else{
 	printf STDERR "incorrect parameter $name definition \n";
     }
@@ -598,51 +590,55 @@ foreach my $i (0..$#params) {
     if ($new_value eq '') {
 	next unless $sample;
 	
-	printf $desc "## $query\n";
+	push @{$desc}, sprintf "## $query\n";
 	
 	unless ($advice eq '') {
-	    printf $desc "## $advice\n";
+	    push @{$desc}, sprintf "## $advice\n";
 	}
 	
-	printf $desc "# $name\t$sample\n\n";
+	push @{$desc}, sprintf "# $name\t$sample\n\n";
     }else {
-	printf $desc "## $query\n";
+	push @{$desc}, sprintf "## $query\n";
 	unless ($advice eq '') {
-	    printf $desc "## $advice\n";
+	    push @{$desc}, sprintf "## $advice\n";
 	}
 	
 	if ($current_value ne $new_value) {
-	    printf $desc "# was $name $current_value\n";
+	    push @{$desc}, sprintf "# was $name $current_value\n";
 	    $somechange = 1;
 	}
     
-	printf $desc "$name\t$new_value\n\n";
+	push @{$desc}, sprintf "$name\t$new_value\n\n";
     }
 }
 
-close SYMPA;
-close WWSYMPA;
-
-if ($somechange ne '0') {
+if ($somechange) {
 
     my $date = &POSIX::strftime("%d.%b.%Y-%H.%M.%S", localtime(time));
 
+    ## Keep old config files
     unless (rename $wwsympa_conf, $wwsympa_conf.'.'.$date) {
-	die "Unable to rename $wwsympa_conf : $!\n";
+	warn "Unable to rename $wwsympa_conf : $!";
     }
 
     unless (rename $sympa_conf, $sympa_conf.'.'.$date) {
-	die "Unable to rename $sympa_conf : $!\n";
+	warn "Unable to rename $sympa_conf : $!";
     }
 
-    unless (rename $new_wwsympa_conf, $wwsympa_conf) {
-	die "Unable to rename $new_wwsympa_conf : $!\n";
-    }
-    
-    unless (rename $new_sympa_conf, $sympa_conf) {
-	die "Unable to rename $new_sympa_conf : $!\n";
-    }
+    ## Write new config files
+    unless (open (WWSYMPA,"> $wwsympa_conf")){
+	die "unable to open $new_wwsympa_conf : $!";
+    };
 
+    unless (open (SYMPA,"> $sympa_conf")){
+	die "unable to open $new_sympa_conf : $!";
+    };
+
+    print SYMPA @new_sympa_conf;
+    print WWSYMPA @new_wwsympa_conf;
+
+    close SYMPA;
+    close WWSYMPA;
 
     printf "$sympa_conf and $wwsympa_conf have been updated.\nPrevious versions have been saved as $sympa_conf.$date and $wwsympa_conf.$date\n";
 }
