@@ -254,7 +254,7 @@ while (!$end) {
 	    ## Bounce directory
 	    if (! -d $bounce_dir) {
 		unless (mkdir $bounce_dir, 0777) {
-		    &do_log('notice', 'Could not create %s: %s bounced die', $bounce_dir, $!);
+		    &do_log('notice', 'Could not create %s: %s bounced die, check bounce-path in wwsympa.conf', $bounce_dir, $!);
 		    exit;
 		} 
 		chmod 0777, $bounce_dir;
