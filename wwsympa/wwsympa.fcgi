@@ -972,6 +972,8 @@ sub check_param_in {
 	       $param->{'bounce_total'} = $list->get_total_bouncing();
 	       $param->{'bounce_rate'} = $param->{'bounce_total'} * 100 / $param->{'total'};
 	       $param->{'bounce_rate'} = int ($param->{'bounce_rate'} * 10) / 10;
+	   }else {
+	       $param->{'bounce_rate'} = 0;
 	   }
        }
        
