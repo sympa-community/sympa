@@ -129,11 +129,7 @@ foreach my $d (@directories) {
     }
     
     foreach my $tpl (sort grep(/\.tpl$/,readdir DIR)) {
-	if ($tpl =~ /^([\w\-]+)\.(\w+)\.tpl$/) {
-	    printf "Skipping localized template %s\n", "$d/$tpl";
-	}else {
-	    push @templates, "$d/$tpl";
-	}
+	push @templates, "$d/$tpl";
     }
     
     closedir DIR;
@@ -178,6 +174,13 @@ foreach my $tpl (@templates) {
     $dest_file = $file;
     $dest_file =~ s/\.tpl$/\.tt2/;
 
+    ## Localized template
+    if ($dest_file =~ /^([\w\-]+)\.(\w+)\.tt2$/) {
+	my $lang = $2;
+	$dest_file =~ s/^([\w\-]+)\.(\w+)\.tt2$/$1\.tt2/;
+	$dest_path .= '/'.$lang;
+    }
+
     ## If file has no extension
     unless ($dest_file =~ /\./) {
 	$dest_file = $file.'.tt2';
@@ -186,7 +189,7 @@ foreach my $tpl (@templates) {
     ## Create directory if required
     unless (-d $dest_path) {
 	printf "Creating $dest_path directory\n";
-	unless (mkdir ($dest_path, 0777)) {
+	unless (&my_mkdir ($dest_path)) {
 	    printf STDERR "Error : Cannot create $dest_path directory : $!\n";
 	    next;
 	}
@@ -236,4 +239,34 @@ sub convert {
     printf "Template file $in_file has been converted to $out_file\n";
     
     chown '--USER--', '--GROUP--', $out_file;    
+}
+
+## Create root folders if required
+sub my_mkdir {
+    my $path = shift;
+    $path =~ s/\/$//;
+
+    unless ($path) {
+	return undef;
+    }
+
+    if ($path =~ /^(.*)\/[^\/]+$/) {
+	my $root_path = $1;
+
+	unless (-d $root_path) {
+	    unless (mkdir ($root_path, 0777)) {
+		printf STDERR "Error : Cannot create $root_path directory : $!\n";
+		return undef;
+	    }
+	}
+	
+	unless (mkdir ($path, 0777)) {
+	    printf STDERR "Error : Cannot create $path directory : $!\n";
+	    return undef;
+	}
+    }else {
+	return undef;
+    }    
+    
+    return 1;
 }
