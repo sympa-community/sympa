@@ -361,7 +361,12 @@ while ($query = &new_loop()) {
 
 
     ## Sympa parameters in $param->{'conf'}
-    $param->{'conf'} = \%Conf;
+    $param->{'conf'} = {'email' => $Conf{'robots'}{$robot}{'email'} || $Conf{'email'},
+			'host' =>  $Conf{'robots'}{$robot}{'host'} || $Conf{'host'},
+			'sympa' => $Conf{'robots'}{$robot}{'sympa'} || $Conf{'sympa'},
+			'request' => $Conf{'robots'}{$robot}{'request'} || $Conf{'request'}
+		    };
+			
     $param->{'wwsconf'} = $wwsconf;
 
     $param->{'dark_color'} = $Conf{'robots'}{$robot}{'dark_color'} || $Conf{'dark_color'};
