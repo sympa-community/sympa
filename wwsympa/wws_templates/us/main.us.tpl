@@ -137,88 +137,87 @@ setTimeout('refresh_mom_and_die()',1000);
   [PARSE menu_template]
   [PARSE title_template]
   <TABLE CELLSPACING=0 CELLPADDING=0 WIDTH="100%">
-    <TR VALIGN="top">
-      [IF list]
-        <TD>
-          [PARSE list_menu_template]
+   <TR VALIGN="top">
+     [IF list]
+       <TD>
+         [PARSE list_menu_template]
+       </TD>
+     [ENDIF]
+   <TD WIDTH="100%">
+     [IF errors]
+       <TABLE>
+        <TR BGCOLOR="[error_color]">
+          <TD>
+            <FONT COLOR="[bg_color]">
+	    [PARSE error_template]
+	    </FONT>
+          </TD>
+        </TR>
+       </TABLE>
+     [ENDIF]
+     [IF notices]
+       <TABLE>
+        <TR BGCOLOR="[shaded_color]">
+          <TD>
+           <FONT COLOR="[text_color]">
+	   [PARSE notice_template]
+	   </FONT>
+          </TD>
+        </TR>
+       </TABLE>
+     [ENDIF]
+
+   <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="0" CELLSPACING="1" VALIGN="top"><TR><TD BGCOLOR="[dark_color]"><TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="1" VALIGN="top">
+
+    [IF action_type=admin]
+      <TR VALIGN="top">
+       [PARSE admin_menu_template]
+      </TR>
+      <TR VALIGN="top">
+        <TD colspan="7" BGCOLOR="[shaded_color]" >
+         [IF active]
+          [PARSE action_template]
+         [ENDIF]
         </TD>
-      [ENDIF]
-        <TD WIDTH="100%">
-      [IF errors]
-            <TABLE>
-            <TR BGCOLOR="[error_color]">
-              <TD>
-                <FONT COLOR="[bg_color]">
-	        [PARSE error_template]
-	        </FONT>
-              </TD>
-            </TR>
-            </TABLE>
-      [ENDIF]
-      [IF notices]
-            <TABLE>
-            <TR BGCOLOR="[shaded_color]">
-              <TD>
-                <FONT COLOR="[text_color]">
-	        [PARSE notice_template]
-	        </FONT>
-              </TD>
-            </TR>
-            </TABLE>
-      [ENDIF]
-
-            <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="0" CELLSPACING="1" VALIGN="top"><TR><TD BGCOLOR="[dark_color]">
-            <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="1" VALIGN="top">
-
-      [IF action_type=admin]
-            <TR VALIGN="top">
-                [PARSE admin_menu_template]
-            </TR>
-            <TR VALIGN="top">
-               <TD colspan="7" BGCOLOR="[shaded_color]" >
-                 [IF active]
-                   [PARSE action_template]
-                 [ENDIF]
-               </TD>
-            </TR>
+      </TR>
 	  
-          [ELSE]
-            <TR VALIGN="top"><TD BGCOLOR="[shaded_color]">
-            [IF active]
-              [PARSE action_template]
-            [ENDIF]
-            </TD></TR>
-          [ENDIF]
-            </TABLE>
-            </TD></TR></TABLE>
+    [ELSE]
+      <TR VALIGN="top"><TD BGCOLOR="[shaded_color]">
+        [IF active]
+         [PARSE action_template]
+        [ENDIF]
+      </TD>
+      </TR>
+    [ENDIF]
+   </TABLE></TD></TR></TABLE>
 
-        </TD>
-    </TR>
-  </TABLE>
-  <TABLE BORDER="0" ALIGN="right">
-   <TR>
-    <TD ALIGN="left">
-      <FORM ACTION="[path_cgi]" METHOD="POST">
-        <INPUT TYPE="hidden" NAME="action" VALUE="set_lang">
-	<INPUT TYPE="hidden" NAME="previous_action" VALUE="[action]">
-	<INPUT TYPE="hidden" NAME="previous_list" VALUE="[list]">
-        <SELECT NAME="lang" onchange="this.form.submit();">
+  </TD>
+  </TR>
+ </TABLE>
+ <TABLE BORDER="0" ALIGN="right">
+  <TR>
+   <TD ALIGN="left">
+     <FORM ACTION="[path_cgi]" METHOD="POST">
+     <INPUT TYPE="hidden" NAME="action" VALUE="set_lang">
+     <INPUT TYPE="hidden" NAME="previous_action" VALUE="[action]">
+     <INPUT TYPE="hidden" NAME="previous_list" VALUE="[list]">
+     <SELECT NAME="lang" onchange="this.form.submit();">
 
-        [FOREACH lang IN  languages]
-          <OPTION VALUE="[lang->NAME]" [lang->selected]>[lang->complete]
-        [END]
-        </SELECT>
-      </FORM>
-    </TD> 
-    <TD WIDTH="100%">&nbsp;</TD>
+     [FOREACH lang IN  languages]
+     <OPTION VALUE="[lang->NAME]" [lang->selected]>[lang->complete]
+     [END]
+     </SELECT>
+     </FORM>
+   </TD> 
+   <TD WIDTH="100%">&nbsp;</TD>
     <TD NOWRAP><I>Powered by</I></TD>
     <TD><A HREF="http://listes.cru.fr/sympa/">
-            [IF auth_method=smime]
-            <IMG SRC="[icons_url]/logo-s-lock.png" ALT="Sympa [version]" BORDER="0" >
-            [ELSE]
-            <IMG SRC="[icons_url]/logo-s.png" ALT="Sympa [version]" BORDER="0" >
-            [ENDIF]
-            </A></TD>
+         [IF auth_method=smime]
+           <IMG SRC="[icons_url]/logo-s-lock.png" ALT="Sympa [version]" BORDER="0" >
+         [ELSE]
+           <IMG SRC="[icons_url]/logo-s.png" ALT="Sympa [version]" BORDER="0" >
+         [ENDIF]
+         </A></TD>
    </TR>
   </TABLE>
 [ENDIF]
