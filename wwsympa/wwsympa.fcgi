@@ -5580,7 +5580,7 @@ sub do_close_list {
     }      
     
     ## Dump subscribers
-    $list->_save_users_file("$list->{'dir'}/$list->{'name'}/subscribers.closed.dump");
+    $list->_save_users_file("$list->{'dir'}/subscribers.closed.dump");
     
     ## Delete users
     my @users;
