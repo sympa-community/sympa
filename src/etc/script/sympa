@@ -138,6 +138,7 @@ case "$1" in
 		sympa_start sympa
 		sympa_start archived
 		sympa_start bounced
+		sympa_start task_manager
 		touch /var/lock/subsys/sympa
 		echo
 	else
@@ -152,6 +153,7 @@ case "$1" in
 	sympa_stop bounced
 	sympa_stop archived
 	sympa_stop sympa
+	sympa_stop task_manager
 	if [ -f /var/lock/subsys/sympa ]; then
 		rm -f /var/lock/subsys/sympa
 	fi
@@ -167,6 +169,7 @@ case "$1" in
 	sympa_status sympa
 	sympa_status archived
 	sympa_status bounced
+	sympa_status task_manager
 	;;
   restart)
 	echo "Restarting Sympa subsystem: "

@@ -1,6 +1,6 @@
 %define name sympa
 %define version --VERSION--
-%define release 5--SUFFIX--
+%define release --SUFFIX--
 %define home_s --HOMEDIR--
 
 Summary:  Sympa is a powerful multilingual List Manager - LDAP and SQL features.
@@ -12,7 +12,7 @@ Copyright:  GPL
 Group: --APPGROUP--
 Source:  http://listes.cru.fr/sympa/distribution/%{name}-%{version}.tar.--ZIPEXT--
 URL: http://listes.cru.fr/sympa/
-Requires: perl >= 5.00403
+Requires: perl >= 5.005
 Requires: perl-MailTools >= 1.14
 Requires: perl-MIME-Base64   >= 1.0
 Requires: perl-IO-stringy    >= 1.0
@@ -22,6 +22,7 @@ Requires: perl-CGI    >= 2.52
 Requires: perl-DBI    >= 1.06
 Requires: perl-DB_File    >= 1.0
 Requires: perl-perl-ldap >= 0.10
+Requires: perl-CipherSaber >= 0.50
 ## Also requires a DBD for the DBMS 
 ## (perl-DBD-Pg or Perl- Msql-Mysql-modules)
 Requires: perl-FCGI    >= 0.48
@@ -35,7 +36,7 @@ Prefix: %{_prefix}
 
 %description
 Sympa is scalable and highly customizable mailing list manager. It can cope with big lists
-(100,000 subscribers) and comes with a complete (user and admin) Web interface. It is
+(200,000 subscribers) and comes with a complete (user and admin) Web interface. It is
 internationalized, and supports the us, fr, de, es, it, fi, and chinese locales. A scripting
 language allows you to extend the behavior of commands. Sympa can be linked to an
 LDAP directory or an RDBMS to create dynamic mailing lists. Sympa provides
@@ -114,10 +115,14 @@ for a_file in /etc/aliases /etc/postfix/aliases; do
   fi
 done  
 
-# eventually, add queue to sendmail security shell
+# eventually, add queue and bouncequeue to sendmail security shell
 if [ -d /etc/smrsh ]; then
   if [ ! -e /etc/smrsh/queue ]; then
     ln -s %{home_s}/bin/queue /etc/smrsh/queue
+  fi
+
+  if [ ! -e /etc/smrsh/bouncequeue ]; then
+    ln -s %{home_s}/bin/bouncequeue /etc/smrsh/bouncequeue
   fi
 fi
 
@@ -133,6 +138,10 @@ if [ $1 = 0 -a -d /etc/smrsh ]; then
   if [ -L /etc/smrsh/queue ]; then
     rm -f /etc/smrsh/queue
   fi
+  if [ -L /etc/smrsh/bouncequeue ]; then
+    rm -f /etc/smrsh/bouncequeue
+  fi
+
 fi
 
 
@@ -189,6 +198,10 @@ fi
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Sep 26 2001 Olivier Salaun <olivier.salaun@cru.fr> 3.3a.vhost
+- add bouncequeue-related
+- add perl-Cipher-saber
+
 * Thu Jun  5 2001 Olivier Salaun <olivier.salaun@cru.fr> 3.2
 - perl-CGI.pm becomes perl-CGI
 
