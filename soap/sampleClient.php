@@ -3,7 +3,7 @@
 // of Sympa without difficulty (look at the API of nusoap if you want to learn more).
 //
 // This need the SOAP library for PHP located at : http://dietrich.ganx4.com/nusoap
-// You also need to customize the $soapServer variable
+// You also need to customize the path to nusoap.php and the $soapServer variable
 
 include('/home/httpd/test/nusoap.php');
 
@@ -105,7 +105,7 @@ if ($_GET['viewSource']) {
 	list ($list['listName'],$list['listDomain']) = explode("@",$list['listAddress']);
 	$subscribed[$list['listAddress']] = True;
 	
-      echo $list['listAddress']." [<A HREF=\"".$_SERVER['PHP_SELF']."?signoff=1&list=".$list['listName']."\">signoff</A>] [<A HREF=\"".$list['homepage']."\">info</A>] \n";
+      echo "<P>".$list['listAddress']." [<A HREF=\"".$_SERVER['PHP_SELF']."?signoff=1&list=".$list['listName']."\">signoff</A>] [<A HREF=\"".$list['homepage']."\">info</A>]<BR>".$list['subject']."</P>\n";
       }
       echo "</DL>\n";
     }else {
@@ -123,7 +123,7 @@ if ($_GET['viewSource']) {
 	if (isset($subscribed[$list['listAddress']])) {
 	  next;
 	}else {
-	  echo $list['listAddress']." [<A HREF=\"".$_SERVER['PHP_SELF']."?subscribe=1&list=".$list['listName']."\">subscribe</A>] [<A HREF=\"".$list['homepage']."\">info</A>] \n";
+	  echo "<P>".$list['listAddress']." [<A HREF=\"".$_SERVER['PHP_SELF']."?subscribe=1&list=".$list['listName']."\">subscribe</A>] [<A HREF=\"".$list['homepage']."\">info</A>]<BR>".$list['subject']." \n</P>";
 	}
       }
       echo "</DL>\n";
