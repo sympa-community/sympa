@@ -82,7 +82,7 @@ GENCAT	= 	/usr/bin/gencat
 
 ## Path to OpenSSL
 OPENSSL	=	/usr/local/ssl/bin/openssl
-SSLCERTDIR =	--DIR--/expl/X509-user-certs
+SSLCERTDIR =	$(DIR)--/expl/X509-user-certs
 
 SH	=	/bin/sh
 CC	=	gcc
