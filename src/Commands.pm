@@ -1642,15 +1642,6 @@ sub distribute {
     ## encrypted message
     if ($message->{'smime_crypted'}) {
 	$is_crypted = 'smime_crypted';
-	$file = '_ALTERED_';
-	($msg, $file) = ($message->{'msg'}, $message->{'msg_as_string'});
-	unless (defined($msg)) {
-	    do_log('debug','unable to decrypt message');
-	    ## xxxxx traitement d'erreur ?
-	    return undef;
-	};
-	$hdr = $msg->head;
-	do_log('debug2', "message successfully decrypted");
     }else {
 	$is_crypted = 'not_crypted';
     }
