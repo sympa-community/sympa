@@ -1975,6 +1975,8 @@ sub delete_user {
     my $who;
     my $name = $self->{'name'};
 
+    delete $::list_cache{'is_user'}{$name}{$who};    
+
     foreach $who (@u) {
         $who = lc($who);
 	if ($self->{'admin'}{'user_data_source'} eq 'database') {
@@ -2756,11 +2758,14 @@ sub add_user_db {
 sub add_user {
     my($self, $values) = @_;
     do_log('debug2', 'List::add_user');
+    my $who;
 
     my $date_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $values->{'date'}, $values->{'date'};
     
     return undef
-	unless (my $who = lc($values->{'email'}));
+	unless ($who = lc($values->{'email'}));
+
+    delete $::list_cache{'is_user'}{$self->{'name'}}{$who};
     
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
 	
