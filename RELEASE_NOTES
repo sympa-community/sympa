@@ -2,16 +2,220 @@
 *****    listed using "*****"in the margin. Please check this at least.
 
 
-3.0.1
+3.1b.7	9 Mar 2001
 
   New features:
 
+	'post' action available on list info page
+
+	[requested by Fil] Add an SQL clause while searching among subscribers 
+	(used to fetch all subscribers and select afterward)
+
+	[Lukasz Zalubski] Translation to polish
+
+	src/List.pm: [reported by Ronan Salmon] bug fix : Can't call
+	method "compute_auth" on unblessed reference
+
+	[Olivier LACROIX] New list
+	parameter 'available_user_options' Only available reception modes
+	are listed on the web interface.  If a user sets a forbidden mode
+	(not listed), he is asigned the mode in 'default_user_options'.  If
+	default_user_option reception mode is not listed in
+	'available_user_options' it is appended to it.
+
+	wwsympa/wwsympa.fcgi: New action "show_cert" to print SSL
+	information.
+
+*****	src/tools.pl: Add reversible encryption for password (rc4)
+*****	&crypt_passwd ; &decrypt_passwd ; &ciphersaber_installed
+*****	You need to change your database structure :
+*****	ALTER TABLE user_table CHANGE password_user varchar (40);
+*****
+*****	crypt_passwd.pl: Script for password encryption in database
+
+	[Wang Jian ] Web templates translated to  zh_CN.GB2312
+	encoding, Simplified Chinese
+
+	Add links to archives in summary
+
+	Makefile: Added SHADED_COLOR
+
+	src/parser.pl: Allow SET var=number
+
+	Add 'toggle selection' in review page
+
+	[requested by Beatrice Gatto Charton]
+	Provide mailto: URL for confirming a subscriber deletion
+
+	src/etc/script/list_alias.pl
+
+*****	New field in table subscriber_table : comment_subscriber
+***** 	You **MUST** change your database sctructure:
+*****	ALTER TABLE subscriber_table ADD comment_subscriber varchar (150);
+*****
+*****	src/etc/script/init_comment.pl: Script to initialize newly
+*****	introduced comment_subscriber data row
+
+	owners can edit subscribers email address
 
   Bug fixes :
 
+	[reported by Fil] When sympa.pl	send a message for wwsympa.fcgi, 
+	it uses From: header field for the Return-Path: Now uses additional 
+	X-Sympa-From header field
+
+	src/tools.pl: [reported by Fil]  '#' chars were not
+	escaped in editsubscriber
+
+	src/etc/script/Makefile: [reported by Jerome Dubois] 
+	wrong 'wwsympaconf'
+
+	[Harald Wilhelmi] Bug fix : Subscribers count was going mad 
+	when closing/restoring a list
+
+	Makefile: installconfig failed parsing PIDDIR and SPOOLDIR
+
+	Sympa would break S/MIME signatures if message contained encoded
+	parts.	This is due to MIME::Entity library use. It would not
+	always encode the msg exactly the original way (Ex : number of
+	columns for Base64) ; S/MIME signature is broken.  Correction :
+	Unless message body was altered (header/footer added), Sympa uses
+	the original message's body, bypassing MIME::Parser
+
+	src/Archive.pm, wwsympa/archived.pl: [reported by Hubert Ulliac ]
+	Bug fix : if 2 mails for the same list at same time, first was
+	erased in outgoing/ Changed file format to
+	<list_address>.<epoch_time>.<process_id>
+
+	wwsympa/bounced.pl: check if SIGTERM was received
+	before processing each file
+
+	src/List.pm: decode subject while searching custom_subject
+	avoids multiple custom_subjects
+
+	src/tools.pl: [reported by Odile Germes] comment in
+	list_templates were not seen by wwsympa
+
+	[reported by Wang Jian] Bug fix :
+	multiple add failed if one failed.  Display ALL error messages
+
+	src/etc/templates/helpfile.tpl: [Lukasz Zalubski] : wrong var
+
+	nls/es.msg: [reported by X-Term] Bug fixes: unwanted \n at the
+	end of some messages Bug report: Helpfile contained MIME-Version,
+	Content-Type & Content-Transfer-Encoding: 8bit in its body
+
+	src/List.pm: used an obsolet var $Language::sympa_lang
+	Bug description: If user had no lang pref, helpfile body was not in
+	the correct lang
+
+	src/tools.pl: Bug fix: could not create user cert dirs
+
+	src/etc/scenari/visibility.conceal: show list for owners
+	and editors
+
+	src/etc/script/load_subscribers.pl: [Anton Slabbinck] 
+	use db_xxx conf parameter
+
+	src/List.pm: Escape \s chars in gecos and email
+
+	wwsympa/wwsympa.fcgi: Escape weird chars in email Don't stop
+	resetbounce processing if lastbounce not found
+
+	wwsympa/bounced.pl: [reported by Philippe Riviere] : Escape weird 
+	chars in from before creating directories
+
+	When logged in, if main	window's URL is wws/logout, then 
+	change it to wws/ before refresh
+
+	src/List.pm: [reported by Fil] : truncated email
+	address last char while including file
+
+	src/List.pm: [reported by Dominique Marant] Failed to open 
+	list local scenario
+
+	src/List.pm: For compatibility concerns, [host] var is now
+	available in scenari.
+
+	check_perl_modules.pl: Fix typos. reported by Michael
+	Yount <csf@moscow.com>
+
+	src/List.pm: Bug fix: last topic not loaded if no ending blank
+	line. Reported by ronan.salmon@staff.ittralee.ie
+
+	wwsympa/wwsympa.fcgi: Wrong parameters to
+	&List::send_sub_to_owner()
+
+	src/List.pm: Set undefined Topic (defined via subtopic) Bug
+	reported by thomas.morin@webmotion.com
+
+	wwsympa/wwsympa.fcgi: Fixed "syntax errors, param xxx" while
+	editing list config
+
+	wwsympa/wwsympa.fcgi: Make %changed_params a global var Fix
+	problem in edit_list
+	
+	wwsympa/wwsympa.fcgi: Lower case path for each do_d_XXX proc. The
+	goal is to support random case in URL generated by some microsoft
+	products.
+
+	src/List.pm: Allow . and - in scenario file names. (reported by
+	Odile Germès)
+
+ 	Hard-coded colors in wws_templates
+
+	src/Language.pm: Bug fix (reported by Odile Germes) : Glob failed
+	in language.pm
+
+	src/Makefile: Install scenari/*.* and templates/*.tpl (not CVS/)
+
+	wwsympa/Makefile: Install *.gif only (not CVS/)
+
   Changes :
 
-*****	ALTER TABLE subscriber_table ADD comment_subscriber varchar (150);
+	src/List.pm: Change: Don't query database for subscribers # ;
+	read stats file instead
+
+	Use mailto URLs instead of FORMs Did not work with Netscape 6
+
+	Makefile: Setting sympa owner of installation directory
+
+	src/Archive.pm: don't delete Received: header fields
+
+	src/List.pm: Accept more characters for db_name and user
+	Accept connect_string without db_name and host
+
+	Make user password case-insensitive
+
+	Add RCS Identification tags to templates
+
+	Require MhOnArc 2.4.6
+
+	set_symlinks.pl: Symlinks are set at installation
+	time for templates and scenari 
+
+	src/List.pm: [requested by Dominique Marant & Odile Germes]
+	provide current config files when reporting errors
+
+	rename wws-lib.pl to wwslib.pl
+
+	wwsympa/wwsympa.fcgi: using "use strict vars"
+
+	src/sympa.pl: when sending mail to <list>-editor, use
+	<list>-owner if no editor are defined
+
+	src/etc/scenari/create_list.listmaster: listmaster is listmaster 
+	public_listmaster is anyone with validation
+
+	Allow longer options (--debug for -d, --lang for -l) in sympa.pl
+
+	sympa.pl has a new option for dumping
+	subscribers list. sympa.pl -s <listname>|ALL
+
+	Using a memory cache for is_user() in List.pm
+
+	src/List.pm: Change : get_first_user() and
+	get_first_bouncing_user() don't do JOIN with user_table anymore
 
 
 3.0   4 Jan 2001
