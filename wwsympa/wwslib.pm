@@ -130,6 +130,9 @@ my $cipher;
 sub load_config {
     my $file = pop;
 
+    ## Old params
+    my %old_param = ('alias_manager' => 'No more used, using --SBINDIR--/alias_manager.pl');
+
     ## Valid params
     my %default_conf = (arc_path => '/home/httpd/html/arc',
 			archive_default_index => 'thrd',
@@ -147,7 +150,6 @@ sub load_config {
 			wws_path => '--BINDIR--',
 			default_home => 'home',
 			log_facility => '',
-			alias_manager => '',
 			robots => '',
 			password_case => 'insensitive',
 			);
@@ -167,6 +169,8 @@ sub load_config {
 	    $v =~ s/\s*$//;
 	    if (defined ($conf->{$k})) {
 		$conf->{$k} = $v;
+	    }elsif (defined $old_param{$k}) {
+		&Log::do_log('err',"Parameter %s in %s no more supported : %s", $k, $file, $old_param{$k});
 	    }else {
 		&Log::do_log('err',"Unknown parameter %s in %s", $k, $file);
 	    }

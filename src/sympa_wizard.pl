@@ -291,12 +291,6 @@ my @params = ({'title' => 'Directories and file location'},
 	       'file' => 'sympa.conf',
 	       'advice' =>'Proposed value is quite low, you can rise it up to 100, 200 or even 300 with powerfull systems.'},
 
-	       {'name' => 'alias_manager',
-		'default' => '--SBINDIR--/alias_manager.pl',
-		'query' => 'Full path to program managing alias (alias_manager.pl | postfix_manager.pl) ',
-		'file' => 'wwsympa.conf','edit' => '1',
-		},
-
 	      {'title' => 'Pluggin'},
 
 	      {'name' => 'antivirus_path',
