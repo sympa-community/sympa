@@ -1679,6 +1679,15 @@ is still recognized but should not be used anymore.
 
         Like \cfkeyword {welcome\_return\_path}, but relates to the remind message.
 	Also requires the bounce+* alias to be installed.
+
+\subsection {\cfkeyword {expire\_bounce}}
+        \label {kw-expire-bounce}
+         
+        \default {daily}
+
+	This parameter tells what task will be used by \file {task\_manager.pl}
+	to perform bounces expiration. This task resets bouncing information for
+	addresses not bouncing in the last 10 days after the latest message distribution.
 	
 \section {Priority related}
 
