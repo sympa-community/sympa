@@ -32,6 +32,7 @@ my @scenario_defaults = ('add.owner',
 			 'subscribe.open',
 			 'topics_visibility.noconceal',
 			 'unsubscribe.open',
+			 'edit_survey.owner',
 			 'visibility.conceal'
 			 );
 

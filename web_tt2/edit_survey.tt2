@@ -1,0 +1,29 @@
+<!-- $Id$ -->
+
+
+
+<form action="[% path_cgi %]" method="post">
+<input type="hidden" name="list" value="[% list %]" />
+<input type="hidden" name="survey_id" value="[% survey_id %]" />
+<input type="hidden" name="serial" value="[% serial %]" />
+<table style="width: 100%;" border="0" cellpadding="0" cellspacing="0">
+<tr valign="top"><td>Survey's title</td><td><input TYPE="text" NAME="s_title" SIZE="50" VALUE="[% s_title %]"></td></tr>
+<tr valign="top"><td>type</td><td>
+<INPUT TYPE="radio" NAME="s_type" VALUE="anonymous" 
+ [% IF s_type == 'anonymous' %]
+   CHECKED
+ [% END %]
+/>anonymous
+ <INPUT TYPE="radio" NAME="s_type" VALUE="include_email" 
+ [% IF s_type == 'include_email' %]
+   CHECKED
+ [% END %]
+/>Include user email in all answers</td></tr>
+<tr valign="top"><td>text header</td><td><TEXTAREA NAME="header_text" ROWS=3 COLS=60 VALUE="[% text_header %]"></TEXTAREA></td></tr>
+<tr valign="top"><td>text footer</td><td><TEXTAREA NAME="footer_text" ROWS=3 COLS=60 VALUE="[% text_footer %]"></TEXTAREA></td></tr>
+</table>
+<input type="hidden" name="action_edit_survey" value="edit_survey"/>
+<INPUT TYPE="submit" VALUE="save" />
+</form>
+<HR width="50%" />
+<font size="-1">survey #[% survey_id %] created [% creation_date %] by [% author %] current status is <i>[% status %]</i></font>

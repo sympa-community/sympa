@@ -908,6 +908,11 @@ my %alias = ('reply-to' => 'reply_to',
 			     'gettext_id' => "Shared documents",
 			     'group' => 'command'
 			 },
+	    's_edit' => {'scenario' => 's_edit',
+			      'default' => 'owner',
+			      'gettext_id' => "Who can create surveys",
+			      'group' => 'command'
+			 },
 	    'spam_protection' => {'format' => ['at','javascript','none'],
 			 'default' => 'javascript',
 			 'gettext_id' => "email address protection method",
