@@ -7178,7 +7178,8 @@ sub do_change_email {
 }
 
 sub do_compose_mail {
-    &wwslog('debug', 'do_compose_mail');
+
+    &wwslog('info', 'do_compose_mail');
 
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -7198,9 +7199,13 @@ sub do_compose_mail {
 	&wwslog('info','do_compose_mail: may not send message');
 	return undef;
     }
-
-    $param->{'to'} = $list->{'name'} . '@' . $list->{'admin'}{'host'};
-    
+    if ($in{'rcpt'}) {
+	$param->{'to'} = $in{'rcpt'};
+    }else{
+	$param->{'to'} = $list->{'name'} . '@' . $list->{'admin'}{'host'};
+    }
+    $param->{'subject'}= $in{'subject'}; 
+    $param->{'in_reply_to'}= $in{'in_reply-to'}; 
     return 1;
 }
 
