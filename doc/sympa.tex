@@ -132,7 +132,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {31 January 2005}
+    \date {16 février 2005}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -267,7 +267,7 @@ in a single software package, including:
         list owners (or any other user category), as defined in the list
         \file {config} file or by
         the robot \textindex {administrator}, the listmaster, defined
-        in the \file {/etc/sympa.conf}  global configuration file (listmaster
+        in the \file {/usr/local/sympa-os/etc/sympa.conf}  global configuration file (listmaster
         can also be defined for a particular virtual robot).
         Privileged operations include the usual \mailcmd {ADD}, \mailcmd
         {DELETE} or \mailcmd {REVIEW} commands, which can be
@@ -527,91 +527,91 @@ a virtual robot or for the whole site.
  
 \begin {itemize}
 
-	\item \dir {/home/sympa}\\
+	\item \dir {/usr/local/sympa-os}\\
 	The root directory of \Sympa. You will find almost everything
 	related to \Sympa under this directory, except logs and main
 	configuration files.
 	
-	\item \dir {/home/sympa/bin}\\
+	\item \dir {/usr/local/sympa-os/bin}\\
 	This directory contains the binaries, including the CGI. It
 	also contains the default authorization scenarios, templates and configuration
-	files as in the distribution.  \dir {/home/sympa/bin} may be completely
+	files as in the distribution.  \dir {/usr/local/sympa-os/bin} may be completely
         overwritten by the \unixcmd {make install} so you must not customize
-        templates and authorization scenarios under  \dir {/home/sympa/bin}.
+        templates and authorization scenarios under  \dir {/usr/local/sympa-os/bin}.
 
-	\item \dir {/home/sympa/bin/etc}\\
+	\item \dir {/usr/local/sympa-os/bin/etc}\\
 	Here \Sympa stores the default versions of what it will otherwise find
-	in \dir {/home/sympa/etc} (task models, authorization scenarios, templates and configuration
+	in \dir {/usr/local/sympa-os/etc} (task models, authorization scenarios, templates and configuration
 	files, recognized S/Mime certificates, families).
 
-	\item \dir {/home/sympa/etc}\\
+	\item \dir {/usr/local/sympa-os/etc}\\
 	This is your site's configuration directory. Consult
-	\dir {/home/sympa/bin/etc} when drawing up your own.
+	\dir {/usr/local/sympa-os/bin/etc} when drawing up your own.
 
-	\item \dir {/home/sympa/etc/create\_list\_templates/}\\
+	\item \dir {/usr/local/sympa-os/etc/create\_list\_templates/}\\
 	List templates (suggested at list creation time).
 
-	\item \dir {/home/sympa/etc/scenari/}\\
+	\item \dir {/usr/local/sympa-os/etc/scenari/}\\
 	This directory will contain your authorization scenarios.
 	If you don't know what the hell an authorization scenario is, refer to \ref {scenarios},page~\pageref {scenarios}. Those authorization scenarios are default scenarios but you may look at
-        \dir {/home/sympa/etc/\samplerobot/scenari/} for default scenarios of \samplerobot
-        virtual robot and \dir {/home/sympa/expl/\samplelist/scenari} for scenarios
+        \dir {/usr/local/sympa-os/etc/\samplerobot/scenari/} for default scenarios of \samplerobot
+        virtual robot and \dir {/usr/local/sympa-os/expl/\samplelist/scenari} for scenarios
         specific to a particular list 
 
-	\item \dir {/home/sympa/etc/data\_sources/}\\
+	\item \dir {/usr/local/sympa-os/etc/data\_sources/}\\
 	This directory will contain your .incl files (see \ref {data-inclusion-file}, page~\pageref {data-inclusion-file}). 
 	For the moment it only deals with files requiered by paragraphs \lparam {owner\_include} and \lparam {editor\_include} in the config file.
 
-	\item \dir {/home/sympa/etc/list\_task\_models/}\\
+	\item \dir {/usr/local/sympa-os/etc/list\_task\_models/}\\
 	This directory will store your own list task models (see \ref {tasks}, page~\pageref {tasks}).	
 
-	\item \dir {/home/sympa/etc/global\_task\_models/}\\
+	\item \dir {/usr/local/sympa-os/etc/global\_task\_models/}\\
 	Contains global task models of yours (see \ref {tasks}, page~\pageref {tasks}).		
 	
-	\item \dir {/home/sympa/etc/web\_tt2/} (used to be \dir {/home/sympa/etc/wws\_templates/})\\
+	\item \dir {/usr/local/sympa-os/etc/web\_tt2/} (used to be \dir {/usr/local/sympa-os/etc/wws\_templates/})\\
 	The web interface (\WWSympa) is composed of template HTML
 	files parsed by the CGI program. Templates can also 
-        be defined for a particular list in \dir {/home/sympa/expl/\samplelist/web\_tt2/}
-        or in \dir {/home/sympa/etc/\samplerobot/web\_tt2/}
+        be defined for a particular list in \dir {/usr/local/sympa-os/expl/\samplelist/web\_tt2/}
+        or in \dir {/usr/local/sympa-os/etc/\samplerobot/web\_tt2/}
 
-	\item \dir {/home/sympa/etc/mail\_tt2/} (used to be \dir {/home/sympa/etc/templates/})\\
+	\item \dir {/usr/local/sympa-os/etc/mail\_tt2/} (used to be \dir {/usr/local/sympa-os/etc/templates/})\\
 	Some of the mail robot's replies are defined by templates
 	(\file{welcome.tt2} for SUBSCRIBE). You can overload
 	these template files in the individual list directories or
         for each virtual robot, but these are the defaults.
 
-	\item \dir {/home/sympa/etc/families/}\\
+	\item \dir {/usr/local/sympa-os/etc/families/}\\
 	Contains family directories of yours (see \ref {ml-creation}, page~\pageref {ml-creation}).
-	Families directories can also be created in \dir {/home/sympa/etc/\samplerobot/families/}
+	Families directories can also be created in \dir {/usr/local/sympa-os/etc/\samplerobot/families/}
 
-	\item \dir {/home/sympa/etc/\samplerobot}\\
+	\item \dir {/usr/local/sympa-os/etc/\samplerobot}\\
         The directory to define the virtual robot \samplerobot dedicated to
         managment of all lists of this domain (list description of \samplerobot are stored
-        in \dir {/home/sympa/expl/\samplerobot}).
-        Those directories for virtual robots have the same structure as  \dir {/home/sympa/etc} which is
+        in \dir {/usr/local/sympa-os/expl/\samplerobot}).
+        Those directories for virtual robots have the same structure as  \dir {/usr/local/sympa-os/etc} which is
         the configuration dir of the default robot. 
 
-	\item \dir {/home/sympa/expl}\\
+	\item \dir {/usr/local/sympa-os/expl}\\
 	\Sympa's working directory.
 
-	\item \dir {/home/sympa/expl/\samplelist}\\
+	\item \dir {/usr/local/sympa-os/expl/\samplelist}\\
 	The list directory (refer to \ref {list-directory}, 
 	page~\pageref {list-directory}). Lists stored in this directory
         belong to the default robot as defined in sympa.conf file, but a list
-        can be stored in \dir {/home/sympa/expl/\samplerobot/\samplelist} directory and it
+        can be stored in \dir {/usr/local/sympa-os/expl/\samplerobot/\samplelist} directory and it
         is managed by \samplerobot virtual robot.
 
-	\item \dir {/home/sympa/expl/X509-user-certs}\\
+	\item \dir {/usr/local/sympa-os/expl/X509-user-certs}\\
 	The directory where Sympa stores all user's certificates
 
-	\item \dir {/home/sympa/locale}\\
+	\item \dir {/usr/local/sympa-os/locale}\\
 	Internationalization directory. It contains message catalogues in the GNU .po format. 
 %\Sympa has currently been translatedinto 14 different languages.
 
-	\item \dir {/home/sympa/spool}\\
+	\item \dir {/usr/local/sympa-os/spool}\\
 	\Sympa uses 8 different spools (see \ref{spools}, page~\pageref{spools}).
 
-	\item \dir {/home/sympa/src/}\\
+	\item \dir {/usr/local/sympa-os/src/}\\
 	\Sympa sources.
 
 \end {itemize}
@@ -670,12 +670,12 @@ a virtual robot or for the whole site.
 
 \begin {itemize}
 
-	\item \file {/etc/sympa.conf}\\
+	\item \file {/usr/local/sympa-os/etc/sympa.conf}\\
 	The main configuration file.
 	See \ref{exp-admin}, page~\pageref{exp-admin}.
 	
 
-	\item \file {/etc/wwsympa.conf}\\
+	\item \file {/usr/local/sympa-os/etc/wwsympa.conf}\\
 	\WWSympa configuration file.
 	See \ref{wwsympa}, page~\pageref{wwsympa}.
 	
@@ -706,37 +706,37 @@ in \file {sympa.conf}.
 
 \begin {itemize}
 
-	\item \dir {/home/sympa/spool/auth/}\\
+	\item \dir {/usr/local/sympa-os/spool/auth/}\\
 	For storing messages until they have been confirmed.
 
-	\item \dir {/home/sympa/spool/bounce/}\\
+	\item \dir {/usr/local/sympa-os/spool/bounce/}\\
 	For storing incoming bouncing messages.
 
-	\item \dir {/home/sympa/spool/digest/}\\
+	\item \dir {/usr/local/sympa-os/spool/digest/}\\
 	For storing lists' digests before they are sent.
 
-	\item \dir {/home/sympa/spool/expire/}\\
+	\item \dir {/usr/local/sympa-os/spool/expire/}\\
 	Used by the expire process.
 
-	\item \dir {/home/sympa/spool/mod/}\\
+	\item \dir {/usr/local/sympa-os/spool/mod/}\\
 	For storing unmoderated messages.
 
-	\item \dir {/home/sympa/spool/msg/}\\
+	\item \dir {/usr/local/sympa-os/spool/msg/}\\
 	For storing incoming messages (including commands).
 
-	\item \dir {/home/sympa/spool/msg/bad/}\\
+	\item \dir {/usr/local/sympa-os/spool/msg/bad/}\\
 	\Sympa stores rejected messages in this directory
 
-	\item \dir {/home/sympa/spool/distribute/}\\
+	\item \dir {/usr/local/sympa-os/spool/distribute/}\\
 	For storing message ready for distribution. This spool is used only if the installation run 2 sympa.pl daemon, one for commands, one for messages. 
 
-	\item \dir {/home/sympa/spool/distribute/bad/}\\
+	\item \dir {/usr/local/sympa-os/spool/distribute/bad/}\\
 	\Sympa stores rejected messages in this directory
 	
-	\item \dir {/home/sympa/spool/task/}\\
+	\item \dir {/usr/local/sympa-os/spool/task/}\\
 	For storing all created tasks.
 
-	\item \dir {/home/sympa/spool/outgoing/}\\
+	\item \dir {/usr/local/sympa-os/spool/outgoing/}\\
 	\file {sympa.pl} dumps messages in this spool to await archiving
 	by \file {archived.pl}.
 
@@ -956,7 +956,7 @@ name \texttt {sympa} for both user and group.
 
 Numerous files will be located in the \Sympa user's login directory.
 Throughout the remainder of this documentation we shall refer to this
-login directory as \dir {/home/sympa}.
+login directory as \dir {/usr/local/sympa-os}.
 
 \section {Compilation and installation }
 
@@ -998,75 +998,75 @@ command-line arguments :
 
 \begin {itemize}
 
-\item \option {- -prefix=PREFIX}, the \Sympa homedirectory (default /home/sympa/)
+\item \option {- - prefix=PREFIX}, the \Sympa homedirectory (default /home/sympa/)
 
-\item \option {--with-bindir=DIR}, user executables in DIR (default /home/sympa/bin/)\\
+\item \option {- - with-bindir=DIR}, user executables in DIR (default /home/sympa/bin/)\\
 \file {queue} and \file {bouncequeue} programs will be installed in this directory.
 If sendmail is configured to use smrsh (check the mailer prog definition in your sendmail.cf),
 this should point to \dir {/etc/smrsh}.  This is probably the case if you are using Linux RedHat.
 
-\item \option {--with-sbindir=DIR}, system admin executables in DIR (default /home/sympa/bin)
+\item \option {- - with-sbindir=DIR}, system admin executables in DIR (default /home/sympa/bin)
 
-\item \option {--with-libexecdir=DIR}, program executables in DIR (default /home/sympa/bin)
+\item \option {- - with-libexecdir=DIR}, program executables in DIR (default /home/sympa/bin)
 
-\item \option {--with-cgidir=DIR}, CGI programs in DIR (default /home/sympa/bin)
+\item \option {- - with-cgidir=DIR}, CGI programs in DIR (default /home/sympa/bin)
 
-\item \option {--with-iconsdir=DIR}, web interface icons in DIR (default /home/httpd/icons)
+\item \option {- - with-iconsdir=DIR}, web interface icons in DIR (default /home/httpd/icons)
 
-\item \option {--with-datadir=DIR}, default configuration data in DIR (default /home/sympa/bin/etc)
+\item \option {- - with-datadir=DIR}, default configuration data in DIR (default /home/sympa/bin/etc)
 
-\item \option {--with-confdir=DIR}, Sympa main configuration files in DIR (default /etc)\\
+\item \option {- - with-confdir=DIR}, Sympa main configuration files in DIR (default /etc)\\
 \file {sympa.conf} and \file {wwsympa.conf} will be installed there.
 
-\item \option {--with-exlpdir=DIR}, modifiable data in DIR (default /home/sympa/expl/)
+\item \option {- - with-exlpdir=DIR}, modifiable data in DIR (default /home/sympa/expl/)
 
-\item \option {--with-libdir=DIR},  code libraries in DIR (default /home/sympa/bin/)
+\item \option {- - with-libdir=DIR},  code libraries in DIR (default /home/sympa/bin/)
 
-\item \option {--with-mandir=DIR}, man documentation in DIR (default /usr/local/man/)
+\item \option {- - with-mandir=DIR}, man documentation in DIR (default /usr/local/man/)
 
-\item \option {--with-docdir=DIR}, man files in DIR (default /home/sympa/doc/)
+\item \option {- - with-docdir=DIR}, man files in DIR (default /home/sympa/doc/)
 
-\item \option {--with-initdir=DIR}, install System V init script in DIR  (default /etc/rc.d/init.d)
+\item \option {- - with-initdir=DIR}, install System V init script in DIR  (default /etc/rc.d/init.d)
 
-\item \option {--with-lockdir=DIR}, create lock files in DIR  (default /var/lock/subsys)
+\item \option {- - with-lockdir=DIR}, create lock files in DIR  (default /var/lock/subsys)
 
-\item \option {--with-piddir=DIR}, create .pid files in DIR  (default /home/sympa/)
+\item \option {- - with-piddir=DIR}, create .pid files in DIR  (default /home/sympa/)
 
-\item \option {--with-etcdir=DIR}, Config directories populated by the user are in DIR (default /home/sympa/etc)
+\item \option {- - with-etcdir=DIR}, Config directories populated by the user are in DIR (default /home/sympa/etc)
 
-\item \option {--with-localedir=DIR}, create language files in DIR (default /home/sympa/locale)
+\item \option {- - with-localedir=DIR}, create language files in DIR (default /home/sympa/locale)
 
-\item \option {--with-scriptdir=DIR}, create script files in DIR (default /home/sympa/script)
+\item \option {- - with-scriptdir=DIR}, create script files in DIR (default /home/sympa/script)
 
-\item \option {--with-sampledir=DIR}, create sample files in DIR (default /home/sympa/sample)
+\item \option {- - with-sampledir=DIR}, create sample files in DIR (default /home/sympa/sample)
 
-\item \option {--with-spooldir=DIR}, create directory in DIR (default /home/sympa/spool)
+\item \option {- - with-spooldir=DIR}, create directory in DIR (default /home/sympa/spool)
 
-\item \option {--with-perl=FULLPATH}, set full path to Perl interpreter (default /usr/bin/perl)
+\item \option {- - with-perl=FULLPATH}, set full path to Perl interpreter (default /usr/bin/perl)
 
-\item \option {--with-openssl=FULLPATH}, set path to OpenSSL (default /usr/local/ssl/bin/openssl)
+\item \option {- - with-openssl=FULLPATH}, set path to OpenSSL (default /usr/local/ssl/bin/openssl)
 
-\item \option {--with-user=LOGIN}, set sympa user name (default sympa)\\
+\item \option {- - with-user=LOGIN}, set sympa user name (default sympa)\\
 \Sympa daemons are running under this UID.
 
-\item \option {--with-group=LOGIN}, set sympa group name (default sympa)\\
+\item \option {- - with-group=LOGIN}, set sympa group name (default sympa)\\
 \Sympa daemons are running under this UID.
 
-\item \option {--with-sendmail\_aliases=ALIASFILE}, set aliases file to be used by Sympa (default /etc/mail/sympa\_aliases). (You can overright this value at runtime giving its value in \file {sympa.conf})\\
+\item \option {- - with-sendmail\_aliases=ALIASFILE}, set aliases file to be used by Sympa (default /etc/mail/sympa\_aliases). (You can overright this value at runtime giving its value in \file {sympa.conf})\\
 
-\item \option {--with-virtual\_aliases=ALIASFILE}, set postfix virtual file to be used by Sympa (default /etc/mail/sympa\_virtual)\\
+\item \option {- - with-virtual\_aliases=ALIASFILE}, set postfix virtual file to be used by Sympa (default /etc/mail/sympa\_virtual)\\
 
 This is used by the \file {alias\_manager.pl} script :
 
-\item \option {--with-newaliases=FULLPATH}, set path to sendmail newaliases command (default /usr/bin/newaliases)
+\item \option {- - with-newaliases=FULLPATH}, set path to sendmail newaliases command (default /usr/bin/newaliases)
 
-\item \option {--with-newaliases\_arg=ARGS}, set arguments to newaliases command (default NONE)
+\item \option {- - with-newaliases\_arg=ARGS}, set arguments to newaliases command (default NONE)
 
 This is used by the \file {postfix\_manager.pl} script :
 
-\item \option {--with-postmap=FULLPATH}, set path to postfix postmap command (default /usr/sbin/postmap)
+\item \option {- - with-postmap=FULLPATH}, set path to postfix postmap command (default /usr/sbin/postmap)
 
-\item \option {--with-postmap\_arg=ARGS}, set arguments to postfix postmap command (default NONE)
+\item \option {- - with-postmap\_arg=ARGS}, set arguments to postfix postmap command (default NONE)
 
 
 \end {itemize}
@@ -1146,7 +1146,7 @@ using  \file {testlogs.pl}.
 
 The \unixcmd {make install} step should have installed a \unixcmd {sympa} init script in
 your \dir {/etc/rc.d/init.d/} directory (you can change this at \unixcmd {configure}
-time with the \option {--with-initdir} option). You should edit your runlevels to make
+time with the \option {- - with-initdir} option). You should edit your runlevels to make
 sure \Sympa starts after Apache and MySQL. Note that \textindex{MySQL} should
 also start before \textindex{Apache} because of \file {wwsympa.fcgi}.
 
@@ -1160,7 +1160,7 @@ messages distribution.
 
 \begin {itemize}
 
-\item \option {--debug} | \option {-d} 
+\item \option {- - debug} | \option {-d} 
   
   Sets \Sympa in debug mode and keeps it attached to the terminal. 
   Debugging information is output to STDERR, along with standard log
@@ -1171,23 +1171,23 @@ messages distribution.
   
   Sets \Sympa daemon in way it process only message distribution (process\_message) or in way it process only command (process\_command).
   
-\item \option {--config \textit {config\_file}} | \option {-f \textit {config\_file}}
+\item \option {- - config \textit {config\_file}} | \option {-f \textit {config\_file}}
   
   Forces \Sympa to use an alternative configuration file. Default behavior is
   to use the configuration file as defined in the Makefile (\$CONFIG).
   
-\item \option {--mail} | \option {-m} 
+\item \option {- - mail} | \option {-m} 
   
   \Sympa will log calls to sendmail, including recipients. Useful for
   keeping track of each mail sent (log files may grow faster though).
   
-\item \option {--lang \textit {catalog}} | \option {-l \textit {catalog}}
+\item \option {- - lang \textit {catalog}} | \option {-l \textit {catalog}}
   
   Set this option to use a language catalog for \Sympa. 
   The corresponding catalog file must be located in \tildedir {sympa/locale}
   directory. 
   
-\item \option {--keepcopy \textit {recipient\_directory}} | \option {-k \textit {recipient\_directory}}
+\item \option {- - keepcopy \textit {recipient\_directory}} | \option {-k \textit {recipient\_directory}}
 
   This option tells Sympa to keep a copy of every incoming message,
   instead of deleting them. \textit {recipient\_directory} is the directory
@@ -1200,60 +1200,60 @@ messages distribution.
 \end{verbatim}
   \end {quote}
 
-\item \option {--create\_list --robot \textit {robotname} --input\_file \textit {list\_file.xml}}
+\item \option {- - create\_list - - robot \textit {robotname} - - input\_file \textit {list\_file.xml}}
 
 Create the list described by the xml file, see \ref{list-creation-sympa}, 
 page~\pageref{list-creation-sympa}.
 
-\item \option {--close\_list \textit {listname@robot}}
+\item \option {- - close\_list \textit {listname@robot}}
 
 Close the list (changing its status to closed), remove aliases and remove
 subscribers from DB (a dump is created in the list directory to allow restoring
 the list). See \ref{family-close-list}, page~\pageref{family-close-list} when you
 are in a family context.
 
-\item \option {--dump \textit {listname \texttt {|} ALL}}
+\item \option {- - dump \textit {listname \texttt {|} ALL}}
   
   Dumps subscribers of a list or all lists. Subscribers are dumped
   in \file {subscribers.db.dump}.
  
-\item \option {--import \textit {listname}}
+\item \option {- - import \textit {listname}}
   
 Import subscribers in the \textit {listname} list. Data are read from STDIN.
   
-\item \option {--lowercase}
+\item \option {- - lowercase}
   
 Lowercases e-mail addresses in database.
 
-\item \option {--help} | \option {-h}
+\item \option {- - help} | \option {-h}
   
   Print usage of sympa.pl.
    
-\item \option {--make\_alias\_file}
+\item \option {- - make\_alias\_file}
   
 Create an aliases file in /tmp/ with all list aliases (only list which status is 'open'). It uses the list\_aliases.tt2
 template.
 
-\item \option {--version} | \option {-v}
+\item \option {- - version} | \option {-v}
   
   Print current version of \Sympa.
 
-\item \option {--instanciate\_family \textit {familyname} \textit {robotname} --input\_file \textit {family\_file.xml}}
+\item \option {- - instanciate\_family \textit {familyname} \textit {robotname} - - input\_file \textit {family\_file.xml}}
 
 Instantiate the family \textit {familyname}. See \ref{lists-families}, 
 page~\pageref{lists-families}.
 
-\item \option {--close\_family \textit {familyname} --robot \textit {robotname}}
+\item \option {- - close\_family \textit {familyname} - - robot \textit {robotname}}
    
    Close the \textit {familyname} family. See \ref{family-closure}, 
    page~\pageref{family-closure}.
  
- \item \option {--add\_list \textit {familyname} --robot \textit {robotname} --input\_file \textit {list\_file.xml}}
+ \item \option {- - add\_list \textit {familyname} - - robot \textit {robotname} - - input\_file \textit {list\_file.xml}}
  
    Add the list described in the XML file to the \textit{familyname} family. See \ref{family-add-list}, 
    page~\pageref{family-add-list}.
  
- \item \option {--modify\_list \textit {familyname} --robot \textit {robotname} --input\_file \textit {list\_file.xml}}
+ \item \option {- - modify\_list \textit {familyname} - - robot \textit {robotname} - - input\_file \textit {list\_file.xml}}
  
    Modify the existing family list, with description contained in the XML file. See \ref{family-modify-list}, 
    page~\pageref{family-modify-list}.
@@ -1404,8 +1404,8 @@ Field user_admin added to table admin_table
 \section {Preserving your customizations}
     \index{preserve customizations}
 
-Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the \dir {/home/sympa/bin} directory. 
-If you need to customize some of them, you should copy the file first in a safe place, ie in the \dir {/home/sympa/etc} directory.
+Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the \dir {/usr/local/sympa-os/bin} directory. 
+If you need to customize some of them, you should copy the file first in a safe place, ie in the \dir {/usr/local/sympa-os/etc} directory.
 If you do so, the Sympa upgrade process will preserve your site customizations.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1449,9 +1449,9 @@ lines must therefore be added to the \unixcmd {sendmail} alias file
 (often \file {/etc/aliases}):
 
 \begin {quote}
-sympa:             "| /home/sympa/bin/queue sympa@\samplerobot"\\
-listmaster: 	   "| /home/sympa/bin/queue listmaster@\samplerobot"\\
-bounce+*:          "| /home/sympa/bin/bouncequeue sympa@\samplerobot"\\
+sympa:             "| /usr/local/sympa-os/bin/queue sympa@\samplerobot"\\
+listmaster: 	   "| /usr/local/sympa-os/bin/queue listmaster@\samplerobot"\\
+bounce+*:          "| /usr/local/sympa-os/bin/bouncequeue sympa@\samplerobot"\\
 sympa-request:     postmaster\\
 sympa-owner:       postmaster\\
 \end {quote}
@@ -1503,22 +1503,22 @@ aliases must be added:
     \tt
     \begin {tabular} {ll}
         \mailaddr {\samplelist}:         &
-            "|/home/sympa/bin/queue \samplelist@\samplerobot"
+            "|/usr/local/sympa-os/bin/queue \samplelist@\samplerobot"
             \\
         \mailaddr {\samplelist-request}: &
-            "|/home/sympa/bin/queue \samplelist-request@\samplerobot"
+            "|/usr/local/sympa-os/bin/queue \samplelist-request@\samplerobot"
             \\
         \mailaddr {\samplelist-editor}:  &
-            "|/home/sympa/bin/queue \samplelist-editor@\samplerobot"
+            "|/usr/local/sympa-os/bin/queue \samplelist-editor@\samplerobot"
             \\
         \mailaddr {\samplelist-owner}:   &
-            "|/home/sympa/bin/bouncequeue \samplelist@\samplerobot
+            "|/usr/local/sympa-os/bin/bouncequeue \samplelist@\samplerobot
             \\
         \mailaddr {\samplelist-subscribe}:   &
-            "|/home/sympa/bin/queue \samplelist-subscribe@\samplerobot@\samplerobot"
+            "|/usr/local/sympa-os/bin/queue \samplelist-subscribe@\samplerobot@\samplerobot"
             \\
         \mailaddr {\samplelist-unsubscribe}: &
-            "|/home/sympa/bin/queue \samplelist-unsubscribe@\samplerobot"
+            "|/usr/local/sympa-os/bin/queue \samplelist-unsubscribe@\samplerobot"
             \\
 
     \end {tabular}
@@ -1532,13 +1532,13 @@ The address \mailaddr {\samplelist-request} should correspond
 to the person responsible for managing \mailaddr {\samplelist}
 (the \textindex {owner}).  \Sympa will forward messages for
 \mailaddr {\samplelist-request} to the owner of \mailaddr {\samplelist},
-as defined in the \file {/home/sympa/expl/\samplelist/config}
+as defined in the \file {/usr/local/sympa-os/expl/\samplelist/config}
 file.  Using this feature means you would not need to modify the
 alias file if the owner of the list were to change.
 
 Similarly, the address \mailaddr {\samplelist-editor} can be used
 to contact the list editors if any are defined in
-\file {/home/sympa/expl/\samplelist/config}.  This address definition
+\file {/usr/local/sympa-os/expl/\samplelist/config}.  This address definition
 is not compulsory.
 
 The address \mailaddr {\samplelist-owner} is the address receiving
@@ -1571,9 +1571,9 @@ The script expects the following arguments :
   \item \texttt{<}list name\texttt{>}
   \item \texttt{<}list domain\texttt{>}
 \end{enumerate}
-Example : \file {/home/sympa/bin/alias\_manager.pl add \samplelist cru.fr}
+Example : \file {/usr/local/sympa-os/bin/alias\_manager.pl add \samplelist cru.fr}
 
-\file {/home/sympa/bin/alias\_manager.pl} works on the alias file as defined in \file {sympa.conf})
+\file {/usr/local/sympa-os/bin/alias\_manager.pl} works on the alias file as defined in \file {sympa.conf})
 by the \textindex{SENDMAIL\_ALIASES} variable (default is \file {/etc/mail/sympa\_aliases}) in the main Makefile (see \ref {makefile},  page~\pageref {makefile}). You must refer to this aliases file in your \file {sendmail.mc} (if using sendmail) :
 \begin {quote}
 \begin{verbatim}
@@ -1582,7 +1582,7 @@ define(`ALIAS_FILE', `/etc/aliases,/etc/mail/sympa_aliases')dnl
 \end {quote}
 
 
-\file {/home/sympa/bin/alias\_manager.pl} runs a \unixcmd{newaliases} command (via \file {aliaswrapper}), after any changes to aliases file.
+\file {/usr/local/sympa-os/bin/alias\_manager.pl} runs a \unixcmd{newaliases} command (via \file {aliaswrapper}), after any changes to aliases file.
 
 If you manage virtual domains with your mail server, then you might want to change
 the form of aliases used by the alias\_manager. You can customize the \file {list\_aliases}
@@ -1611,9 +1611,9 @@ With Postfix, you should edit the \file {/etc/postfix/virtual.regexp} file as fo
 \end {quote}
  Entries in the 'aliases' file will look like this :
 \begin {quote}
-    \samplerobot-sympa:   "|/home/sympa/bin/sympa.pl sympa@\samplerobot"
+    \samplerobot-sympa:   "|/usr/local/sympa-os/bin/sympa.pl sympa@\samplerobot"
     .....
-    \samplerobot-listA:   "|/home/sympa/bin/sympa.pl listA@\samplerobot"
+    \samplerobot-listA:   "|/usr/local/sympa-os/bin/sympa.pl listA@\samplerobot"
 \end {quote}
 
 With Sendmail, add the following entry to \file {/etc/mail/virtusertable} file :
@@ -1632,11 +1632,11 @@ With Sendmail, add the following entry to \file {/etc/mail/virtusertable} file :
     \index{sympa.conf}
     \index{configuration file}
 
-The \file {/etc/sympa.conf} configuration file contains numerous
+The \file {/usr/local/sympa-os/etc/sympa.conf} configuration file contains numerous
 parameters which are read on start-up of \Sympa. If you change this file, do not forget
 that you will need to restart \Sympa afterwards. 
 
-The \file {/etc/sympa.conf} file contains directives in the following
+The \file {/usr/local/sympa-os/etc/sympa.conf} file contains directives in the following
 format:
 
 \begin {quote}
@@ -1797,7 +1797,7 @@ see a  nice mailto adresses where others have nothing.
 \section {Directories}
 \subsection {\cfkeyword {home}}
 
-	 \default {\dir {/home/sympa/expl}}
+	 \default {\dir {/usr/local/sympa-os/expl}}
 
         The directory whose subdirectories correspond to the different lists.
 
@@ -1805,7 +1805,7 @@ see a  nice mailto adresses where others have nothing.
 
 \subsection {\cfkeyword {etc}}
 
-	 \default {\dir {/home/sympa/etc}}
+	 \default {\dir {/usr/local/sympa-os/etc}}
 
         This is the local directory for configuration files (such as
 	\file {edit\_list.conf}. It contains 5 subdirectories:
@@ -1848,7 +1848,7 @@ see a  nice mailto adresses where others have nothing.
 
 \subsection {\cfkeyword {pidfile}} 
 
-	\default {\file {/home/sympa/etc/sympa.pid}}
+	\default {\file {/usr/local/sympa-os/etc/sympa.pid}}
 
         The file where the \file {sympa.pl} daemon stores its
         process number. Warning: the \texttt {sympa} user must be
@@ -2030,7 +2030,7 @@ see a  nice mailto adresses where others have nothing.
 \label {spool-related}
 \subsection {\cfkeyword {spool}}
 
-        \default {\dir {/home/sympa/spool}}
+        \default {\dir {/usr/local/sympa-os/spool}}
 
 	The parent directory which contains all the other spools.  
         
@@ -2041,13 +2041,13 @@ see a  nice mailto adresses where others have nothing.
         \file {queue} program and the \file {sympa.pl} daemon. This
         parameter is mandatory.
 
-	\example {\dir {/home/sympa/spool/msg}}
+	\example {\dir {/usr/local/sympa-os/spool/msg}}
 
 \subsection {\cfkeyword {queuedistribute}} 
 	\index{spool}
 	\index{distribution}
 	
-	\default {\dir {/home/sympa/spool/distribute}}
+	\default {\dir {/usr/local/sympa-os/spool/distribute}}
 
         This parameter is optional and retained solely for backward compatibility.
 
@@ -2056,7 +2056,7 @@ see a  nice mailto adresses where others have nothing.
         \label {cf:queuemod}
         \index{moderation}
 
-	\default {\dir {/home/sympa/spool/moderation}}
+	\default {\dir {/usr/local/sympa-os/spool/moderation}}
 
         This parameter is optional and retained solely for backward compatibility.
 
@@ -2069,26 +2069,26 @@ see a  nice mailto adresses where others have nothing.
 
 \subsection {\cfkeyword {queueexpire}}  
 
-	\default {\dir {/home/sympa/spool/expire}}
+	\default {\dir {/usr/local/sympa-os/spool/expire}}
 
         This parameter is optional and retained solely for backward compatibility.
 
 \subsection {\cfkeyword {queueauth}} 
 
-	\default {\dir {/home/sympa/spool/auth}}
+	\default {\dir {/usr/local/sympa-os/spool/auth}}
 
         This parameter is optional and retained solely for backward compatibility.
 
 \subsection {\cfkeyword {queueoutgoing}} 
 
-	\default {\dir {/home/sympa/spool/outgoing}}
+	\default {\dir {/usr/local/sympa-os/spool/outgoing}}
 
 	This parameter is optional and retained solely for backward compatibility.
 
 \subsection {\cfkeyword {queuebounce}} 
     \index{bounce}
 
-	\default {\dir {/home/sympa/spool/bounce}}
+	\default {\dir {/usr/local/sympa-os/spool/bounce}}
 
         Spool to store bounces (non-delivery reports) received by the \file {bouncequeue}
 	program via the \samplelist-owner or bounce+* addresses . This parameter is mandatory
@@ -2097,14 +2097,14 @@ see a  nice mailto adresses where others have nothing.
 \subsection {\cfkeyword {queuetask}} 
     \index{bounce}
 
-	\default {\dir {/home/sympa/spool/task}}
+	\default {\dir {/usr/local/sympa-os/spool/task}}
 
         Spool to store task files created by the task manager. This parameter is mandatory
         and must be an absolute path.
 
 \subsection {\cfkeyword {tmpdir}}
 
-        \default {\dir {/home/sympa/spool/tmp}}
+        \default {\dir {/usr/local/sympa-os/spool/tmp}}
 
 	Temporary directory used by OpenSSL and antiviruses.
 
@@ -2153,7 +2153,7 @@ see a  nice mailto adresses where others have nothing.
 
 \subsection {\cfkeyword {localedir}}   
 
-	\default{\dir {/home/sympa/locale}}
+	\default{\dir {/usr/local/sympa-os/locale}}
 
         The location of multilingual catalog files. Must correspond to	\tildefile {src/locale/Makefile}.
 
@@ -3412,10 +3412,10 @@ provided in the \WWSympa distribution and to modify it for your needs.
 
 The mhonarc resource file is named \file {mhonarc-ressources}. 
 You may locate this file either in \begin{enumerate}
- 	\item \dir {/home/sympa/expl/\samplelist/mhonarc-ressources}
+ 	\item \dir {/usr/local/sympa-os/expl/\samplelist/mhonarc-ressources}
 	in order to create a specific archive look for a particular list
 
-	\item or \dir {/home/sympa/etc/mhonarc-ressources}
+	\item or \dir {/usr/local/sympa-os/etc/mhonarc-ressources}
 
 \end{enumerate}
 
@@ -3424,7 +3424,7 @@ You may locate this file either in \begin{enumerate}
 and calls \file {mhonarc} to create html versions (whose location is defined by the 
 "arc\_path" WWSympa parameter). You should probably install these archives 
 outside the \Sympa home\_dir (\Sympa's initial choice for storing mail archives : 
-\dir {/home/sympa/expl/\samplelist}). Note that the html archive 
+\dir {/usr/local/sympa-os/expl/\samplelist}). Note that the html archive 
 contains a text version of each message and is totally separate from \Sympa's
 main archive.
 \begin{enumerate}
@@ -3444,7 +3444,7 @@ main archive.
 \end {quote}
 
      If web\_archive is defined for a list, every message distributed by this list is copied
-     to \dir {/home/sympa/spool/outgoing/}. (No need to create nonexistent subscribers to receive
+     to \dir {/usr/local/sympa-os/spool/outgoing/}. (No need to create nonexistent subscribers to receive
      copies of messages). In this example disk quota for the archive is limited to 10 Mo.
 
 \item start \file {archived.pl}.
@@ -3454,12 +3454,12 @@ main archive.
 
 \item If you change mhonarc resources and wish to rebuild the entire archive 
 using the new look defined for mhonarc, simply create an empty file named
-".rebuild.\samplelist@myhost" in \dir {/home/sympa/spool/outgoing}, and make sure that
+".rebuild.\samplelist@myhost" in \dir {/usr/local/sympa-os/spool/outgoing}, and make sure that
 the owner of this file is \Sympa. 
 
 \begin {quote}
 \begin{verbatim}
-     example : su sympa -c "touch /home/sympa/spool/outgoing/.rebuild.sympa-fr@cru.fr"
+     example : su sympa -c "touch /usr/local/sympa-os/spool/outgoing/.rebuild.sympa-fr@cru.fr"
 \end{verbatim}
 \end {quote}
 You can also rebuild web archives from within the admin page of the list.
@@ -4292,11 +4292,11 @@ when the user accesses the web interface. If one CAS server redirect the user to
 \section {auth.conf}
 \label {auth-conf}
 
-The \file {/home/sympa/etc/auth.conf} configuration file contains numerous
+The \file {/usr/local/sympa-os/etc/auth.conf} configuration file contains numerous
 parameters which are read on start-up of \Sympa. If you change this file, do not forget
 that you will need to restart wwsympa.fcgi afterwards. 
 
-The \file {/home/sympa/etc/auth.conf} is organised in paragraphs. Each paragraph describes an authentication 
+The \file {/usr/local/sympa-os/etc/auth.conf} is organised in paragraphs. Each paragraph describes an authentication 
 service with all required parameters to perform an authentication using this service. Current version of
 \Sympa can perform authentication through LDAP directories, using an external Single Sign-On Service (like CAS 
 or Shibboleth), or using internal user\_table.
@@ -4310,7 +4310,7 @@ The segond form in login page contain the list of CAS server so user can choose 
 
 Each paragraph start with one of the keyword cas, ldap or user\_table  
 
-The \file {/home/sympa/etc/auth.conf} file contains directives in the following format:
+The \file {/usr/local/sympa-os/etc/auth.conf} file contains directives in the following format:
 
 \begin {quote}
 
@@ -4789,9 +4789,9 @@ further authentication.
 List parameters controlling the behavior of commands are linked to different authorization scenarios.
 For example : the \cfkeyword {send private} parameter is related to the send.private scenario.
 There are four possible locations for a authorization scenario. When \Sympa seeks to apply an authorization scenario, it
-looks first in the related list directory \dir {/home/sympa/expl/\texttt{<}list\texttt{>}/scenari}. If it
-does not find the file there, it scans the current robot configuration directory \dir {/home/sympa/etc/\samplerobot/scenari}, then the site's configuration directory \dir {/home/sympa/etc/scenari},
-and finally \dir {/home/sympa/bin/etc/scenari}, which is the directory installed by the Makefile.
+looks first in the related list directory \dir {/usr/local/sympa-os/expl/\texttt{<}list\texttt{>}/scenari}. If it
+does not find the file there, it scans the current robot configuration directory \dir {/usr/local/sympa-os/etc/\samplerobot/scenari}, then the site's configuration directory \dir {/usr/local/sympa-os/etc/scenari},
+and finally \dir {/usr/local/sympa-os/bin/etc/scenari}, which is the directory installed by the Makefile.
 
 An authorization scenario is a small configuration language to describe who
 can perform an operation and which authentication method is requested for it.
@@ -4924,12 +4924,12 @@ a large set of configuration that allow to create lists for most usage. But you 
 probably create authorization scenarios for your own need. In this case, don't forget to restart \Sympa
 and wwsympa because authorization scenarios are not reloaded dynamicaly.
 
-These standard authorization scenarios are located in the \dir {/home/sympa/bin/etc/scenari/}
+These standard authorization scenarios are located in the \dir {/usr/local/sympa-os/bin/etc/scenari/}
 directory. Default scenarios are named \texttt{<}command\texttt{>}.default.
 
 You may also define and name your own authorization scenarios. Store them in the
-\dir {/home/sympa/etc/scenari} directory. They will not be overwritten by Sympa release.
-Scenarios can also be defined for a particular virtual robot (using directory \dir {/home/sympa/etc/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {/home/sympa/expl/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ).
+\dir {/usr/local/sympa-os/etc/scenari} directory. They will not be overwritten by Sympa release.
+Scenarios can also be defined for a particular virtual robot (using directory \dir {/usr/local/sympa-os/etc/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {/usr/local/sympa-os/expl/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ).
 
 Example:
 
@@ -4960,7 +4960,7 @@ As a consequence, you can grant privileges in a list to people belonging to an \
 	
 \subsection {Definition}
 
-	People are selected through an \textindex {LDAP filter} defined in a configuration file. This file must have the extension '.ldap'.It is stored in \dir {/home/sympa/etc/search\_filters/}.
+	People are selected through an \textindex {LDAP filter} defined in a configuration file. This file must have the extension '.ldap'.It is stored in \dir {/usr/local/sympa-os/etc/search\_filters/}.
 	
 	You must give several informations in order to create a Named Filter:
 \begin{itemize}
@@ -5065,7 +5065,7 @@ will make it ignored at either a global, robot or list level.
 
 \textit {Example :} 
 \begin {quote}
-/home/sympa/etc/\samplerobot/scenari/send.intranetorprivate:ignore
+/usr/local/sympa-os/etc/\samplerobot/scenari/send.intranetorprivate:ignore
 \end {quote}
 
 The \texttt{intranetorprivate} \texttt{send} scenario will be hidden (on the web admin interface),
@@ -5110,8 +5110,8 @@ messages for the new robot domain. Add mail aliases for the robot :
 \textit {Examples (with sendmail):} 
 \begin {quote}
 \begin{verbatim}
-sympa@your.virtual.domain:      "| /home/sympa/bin/queue sympa@your.virtual.domain"
-listmaster@your.virtual.domain: "| /home/sympa/bin/queue listmaster@your.virtual.domain"
+sympa@your.virtual.domain:      "| /usr/local/sympa-os/bin/queue sympa@your.virtual.domain"
+listmaster@your.virtual.domain: "| /usr/local/sympa-os/bin/queue listmaster@your.virtual.domain"
 \end{verbatim}
 \end {quote}
 
@@ -5146,8 +5146,8 @@ not provide Virtual robot creation yet).
 
 \section {robot.conf}
 A robot is named by its domain, let's say \samplerobot and defined by a directory 
-\dir {/home/sympa/etc/\samplerobot}. This directory must contain at least a 
-\file {robot.conf} file. This files has the same format as  \file {/etc/sympa.conf}
+\dir {/usr/local/sympa-os/etc/\samplerobot}. This directory must contain at least a 
+\file {robot.conf} file. This files has the same format as  \file {/usr/local/sympa-os/etc/sympa.conf}
 (have a look at robot.conf in the sample dir).
 Only the following parameters can be redefined for a particular robot :
 
@@ -5193,7 +5193,7 @@ Only the following parameters can be redefined for a particular robot :
 	\item \cfkeyword {dark\_color}, \cfkeyword {light\_color}, \cfkeyword {text\_color}, \cfkeyword {bg\_color}, \cfkeyword {error\_color}, \cfkeyword {selected\_color}, \cfkeyword {shaded\_color} 
 \end {itemize}
 
-These settings overwrite the equivalent global parameter defined in \file {/etc/sympa.conf}
+These settings overwrite the equivalent global parameter defined in \file {/usr/local/sympa-os/etc/sympa.conf}
 for \samplerobot robot ; the main \cfkeyword {listmaster} still has privileges on Virtual
 Robots though. The http\_host parameter is compared by wwsympa with the SERVER\_NAME
 environment variable to recognize which robot is in used. 
@@ -5202,20 +5202,20 @@ environment variable to recognize which robot is in used.
 
 If needed, you can customize each virtual robot using its set of templates and authorization scenarios.
 
-\dir {/home/sympa/etc/\samplerobot/wws\_templates/},
-\dir {/home/sympa/etc/\samplerobot/templates/}, 
-\dir {/home/sympa/etc/\samplerobot/scenari/} directories are searched when
-loading templates or scenari before searching into \dir {/home/sympa/etc} and  \dir {/home/sympa/bin/etc}. This allows to define different privileges and a different GUI for a Virtual Robot.
+\dir {/usr/local/sympa-os/etc/\samplerobot/wws\_templates/},
+\dir {/usr/local/sympa-os/etc/\samplerobot/templates/}, 
+\dir {/usr/local/sympa-os/etc/\samplerobot/scenari/} directories are searched when
+loading templates or scenari before searching into \dir {/usr/local/sympa-os/etc} and  \dir {/usr/local/sympa-os/bin/etc}. This allows to define different privileges and a different GUI for a Virtual Robot.
 
 \section {Managing multiple virtual robots}
 
 If you are managing more than 2 virtual robots, then you might cinsider moving all the mailing lists in the default
-robot to a dedicated virtual robot located in the \dir {/home/sympa/expl/\samplerobot/} directory. The main benefit of 
+robot to a dedicated virtual robot located in the \dir {/usr/local/sympa-os/expl/\samplerobot/} directory. The main benefit of 
 this organisation is the ability to define default configuration elements (templates or authorization scenarios) 
 for this robot without inheriting them within other virtual robots.
 
-To create such a virtual robot, you need to create \dir {/home/sympa/expl/\samplerobot/} and \file {/home/sympa/etc/\samplerobot/} directories ; 
-customize \cfkeyword {host}, \cfkeyword {http\_host} and \cfkeyword {wwsympa\_url} parameters in the \file {/home/sympa/etc/\samplerobot/robot.conf} 
+To create such a virtual robot, you need to create \dir {/usr/local/sympa-os/expl/\samplerobot/} and \file {/usr/local/sympa-os/etc/\samplerobot/} directories ; 
+customize \cfkeyword {host}, \cfkeyword {http\_host} and \cfkeyword {wwsympa\_url} parameters in the \file {/usr/local/sympa-os/etc/\samplerobot/robot.conf} 
 with the same values as the default robot (as defined in \file {sympa.conf} and \file {wwsympa.conf} files).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -5267,14 +5267,14 @@ Sympa looks for these files in the following order (where \texttt{<}list\texttt{
 listname if defined, \texttt{<}action\texttt{>} is the name of the command, and \texttt{<}lang\texttt{>} is
 the preferred language of the user) :
 \begin {enumerate}
-	\item \dir {/home/sympa/expl/\texttt{<}list\texttt{>}/mail\_tt2/\texttt{<}lang\texttt{>}/\texttt{<}action\texttt{>}.tt2}. 
-	\item \dir {/home/sympa/expl/\texttt{<}list\texttt{>}/mail\_tt2/\texttt{<}action\texttt{>}.tt2}. 
-	\item \dir {/home/sympa/etc/\samplerobot/mail\_tt2/\texttt{<}lang\texttt{>}/\texttt{<}action\texttt{>}.tt2}. 
-	\item \dir {/home/sympa/etc/\samplerobot/mail\_tt2/\texttt{<}action\texttt{>}.tt2}. 
-	\item \dir {/home/sympa/etc/mail\_tt2/\texttt{<}lang\texttt{>}/\texttt{<}action\texttt{>}.tt2}. 
-	\item \dir {/home/sympa/etc/mail\_tt2/\texttt{<}action\texttt{>}.tt2}. 
-	\item \dir {/home/sympa/bin/etc/mail\_tt2/\texttt{<}lang\texttt{>}/\texttt{<}action\texttt{>}.tt2}.
-	\item \dir {/home/sympa/bin/etc/mail\_tt2/\texttt{<}action\texttt{>}.tt2}.
+	\item \dir {/usr/local/sympa-os/expl/\texttt{<}list\texttt{>}/mail\_tt2/\texttt{<}lang\texttt{>}/\texttt{<}action\texttt{>}.tt2}. 
+	\item \dir {/usr/local/sympa-os/expl/\texttt{<}list\texttt{>}/mail\_tt2/\texttt{<}action\texttt{>}.tt2}. 
+	\item \dir {/usr/local/sympa-os/etc/\samplerobot/mail\_tt2/\texttt{<}lang\texttt{>}/\texttt{<}action\texttt{>}.tt2}. 
+	\item \dir {/usr/local/sympa-os/etc/\samplerobot/mail\_tt2/\texttt{<}action\texttt{>}.tt2}. 
+	\item \dir {/usr/local/sympa-os/etc/mail\_tt2/\texttt{<}lang\texttt{>}/\texttt{<}action\texttt{>}.tt2}. 
+	\item \dir {/usr/local/sympa-os/etc/mail\_tt2/\texttt{<}action\texttt{>}.tt2}. 
+	\item \dir {/usr/local/sympa-os/bin/etc/mail\_tt2/\texttt{<}lang\texttt{>}/\texttt{<}action\texttt{>}.tt2}.
+	\item \dir {/usr/local/sympa-os/bin/etc/mail\_tt2/\texttt{<}action\texttt{>}.tt2}.
 \end {enumerate}
 
 If the file starts with a From: line, it is considered as
@@ -5387,8 +5387,8 @@ You may define your own web template files, different from the standard
 ones. \WWSympa first looks for list specific web templates, then for
 site web templates, before falling back on its defaults. 
 
-Your list web template files should be placed in the \dir {/home/sympa/expl/\samplelist/web\_tt2} 
-directory ; your site web templates in \tildedir {/home/sympa/etc/web\_tt2} directory.
+Your list web template files should be placed in the \dir {/usr/local/sympa-os/expl/\samplelist/web\_tt2} 
+directory ; your site web templates in \tildedir {/usr/local/sympa-os/etc/web\_tt2} directory.
 
 Note that web colors are defined in \Sympa's main Makefile (see \ref {makefile},
 page~\pageref {makefile}).
@@ -5435,7 +5435,7 @@ If you are willing to provide Sympa into your native language, please check the 
 
 Every message sent by \Sympa to users, owners and editors is outside
 the code, in a message catalog. These catalogs are located in the
-\dir {/home/sympa/locale} directory. 
+\dir {/usr/local/sympa-os/locale} directory. 
 %Messages have currently been translated into 14 different languages : 
 %
 %\begin{itemize}
@@ -5494,7 +5494,7 @@ mailing lists. This is dynamically generated using the different lists'
 in multiple categories.
 
 The list of topics is defined in the \file {topics.conf} configuration
-file, located in the \dir {/home/sympa/etc} directory. The format of this file is 
+file, located in the \dir {/usr/local/sympa-os/etc} directory. The format of this file is 
 as follows :
 \begin {quote}
 \begin{verbatim}
@@ -5590,8 +5590,8 @@ It may have different versions (for instance reminding subscribers every year or
 A task model file name has the following format : \file {\texttt{<}model name\texttt{>}.\texttt{<}model version\texttt{>}.task}.
 For instance \file {remind.annual.task}  or \file {remind.semestrial.task}.
 
-\Sympa provides several task models stored in \dir {/home/sympa/bin/etc/global\_task\_models} 
-  and \dir {/home/sympa/bin/etc/list\_task\_models} directories.
+\Sympa provides several task models stored in \dir {/usr/local/sympa-os/bin/etc/global\_task\_models} 
+  and \dir {/usr/local/sympa-os/bin/etc/list\_task\_models} directories.
 Others can be designed by the listmaster. 
 
 A task is global or related to a list.
@@ -5604,9 +5604,9 @@ create the task by looking for the appropriate model file in different directori
 following order :
 
 \begin {enumerate}
-	\item \dir {/home/sympa/expl/\texttt{<}list name\texttt{>}/}
-	\item \dir {/home/sympa/etc/list\_task\_models/}
-	\item \dir {/home/sympa/bin/etc/list\_task\_models/}
+	\item \dir {/usr/local/sympa-os/expl/\texttt{<}list name\texttt{>}/}
+	\item \dir {/usr/local/sympa-os/etc/list\_task\_models/}
+	\item \dir {/usr/local/sympa-os/bin/etc/list\_task\_models/}
 \end {enumerate}
   
 See also \ref {Listmodelfiles}, page~\pageref {Listmodelfiles}, to know more about standard list models provided with \Sympa.
@@ -5618,8 +5618,8 @@ and then creates a task as soon as it finds the model file by looking in differe
 in the following order :
 
 \begin {enumerate}
-	\item \dir {/home/sympa/etc/global\_task\_models/}
-	\item \dir {/home/sympa/bin/etc/global\_task\_models/}
+	\item \dir {/usr/local/sympa-os/etc/global\_task\_models/}
+	\item \dir {/usr/local/sympa-os/bin/etc/global\_task\_models/}
 \end {enumerate}
 
 \subsection {Model file format}
@@ -5765,8 +5765,8 @@ page~\pageref {list-aliases})
     \label {exp-config}
 
 The configuration file for the \mailaddr {\samplelist} list is named
-\file {/home/sympa/expl/\samplerobot/\samplelist/config} 
-(or \file {/home/sympa/expl/\samplelist/config} if no virtual robot is defined). 
+\file {/usr/local/sympa-os/expl/\samplerobot/\samplelist/config} 
+(or \file {/usr/local/sympa-os/expl/\samplelist/config} if no virtual robot is defined). 
 \Sympa reads it into memory the first time the list is refered to. This file is not rewritten by 
 \Sympa, so you may put comment lines in it. 
 It is possible to change this file when the program is running. 
@@ -5859,7 +5859,7 @@ digest 1,4 12:00
 not be use anymore except for testing purpose. \Sympa will not use this file if the list is configured
 with \texttt {include} or \texttt {database} \lparam{user\_data\_source}.
 
-The \file {/home/sympa/expl/\samplelist/subscribers} file is automatically created and
+The \file {/usr/local/sympa-os/expl/\samplelist/subscribers} file is automatically created and
 populated. It contains information about list
 subscribers.  It is not advisable to edit this file.  Main parameters
 are:
@@ -5914,13 +5914,13 @@ are:
 
 \section {Info file}
 
-\file {/home/sympa/expl/\samplelist/info} should contain a detailed text
+\file {/usr/local/sympa-os/expl/\samplelist/info} should contain a detailed text
 description of the list, to be displayed by the \mailcmd {INFO} command. 
 It can also be referenced from template files for service messages.
 
 \section {Homepage file}
 
-\file {/home/sympa/expl/\samplelist/homepage} is the HTML text 
+\file {/usr/local/sympa-os/expl/\samplelist/homepage} is the HTML text 
 on the \WWSympa info page for the list.
 
 \section {Data inclusion file}
@@ -5935,9 +5935,9 @@ This files can be template file.
 
 Sympa looks for them in the following order :
 \begin {enumerate}
- 	\item \dir {/home/sympa/expl/\samplelist/data\_sources/\texttt{<}file\texttt{>}.incl}. 
-	\item \dir {/home/sympa/etc/data\_sources/\texttt{<}file\texttt{>}.incl}. 
-	\item \dir {/home/sympa/etc/\samplerobot/data\_sources/\texttt{<}file\texttt{>}.incl}.
+ 	\item \dir {/usr/local/sympa-os/expl/\samplelist/data\_sources/\texttt{<}file\texttt{>}.incl}. 
+	\item \dir {/usr/local/sympa-os/etc/data\_sources/\texttt{<}file\texttt{>}.incl}. 
+	\item \dir {/usr/local/sympa-os/etc/\samplerobot/data\_sources/\texttt{<}file\texttt{>}.incl}.
 \end {enumerate} 
 
 These files are used by Sympa to load administrative data in a relational database :
@@ -6009,9 +6009,9 @@ page~\pageref {tpl-format}.
 
 Sympa looks for these files in the following order :
 \begin {enumerate}
- 	\item \dir {/home/sympa/expl/\samplelist/mail\_tt2/\texttt{<}file\texttt{>}.tt2} 
-	\item \dir {/home/sympa/etc/mail\_tt2/\texttt{<}file\texttt{>}.tt2}. 
-	\item \dir {/home/sympa/bin/etc/mail\_tt2/\texttt{<}file\texttt{>}.tt2}.
+ 	\item \dir {/usr/local/sympa-os/expl/\samplelist/mail\_tt2/\texttt{<}file\texttt{>}.tt2} 
+	\item \dir {/usr/local/sympa-os/etc/mail\_tt2/\texttt{<}file\texttt{>}.tt2}. 
+	\item \dir {/usr/local/sympa-os/bin/etc/mail\_tt2/\texttt{<}file\texttt{>}.tt2}.
 \end {enumerate}
 
 If the file starts with a From: line, it is taken to be
@@ -6135,7 +6135,7 @@ Template that defines list mail alises. It is used by the alias\_manager script.
     \label {stats-file}
     \index{statistics}
 
-\file {/home/sympa/expl/\samplelist/stats} is a text file containing 
+\file {/usr/local/sympa-os/expl/\samplelist/stats} is a text file containing 
 statistics about the list. Data are numerics separated
 by white space within a single line :
 
@@ -6173,8 +6173,8 @@ Every month \Sympa will delete subscribers older than one year who haven't answe
 \section {Message header and footer} 
 \label {messagefooter}
 
-You may create \file {/home/sympa/expl/\samplelist/message.header} and
-\file {/home/sympa/expl/\samplelist/message.footer} files. Their content
+You may create \file {/usr/local/sympa-os/expl/\samplelist/message.header} and
+\file {/usr/local/sympa-os/expl/\samplelist/message.footer} files. Their content
 is added, respectively at the beginning and at the end of each message 
 before the distribution process. You may also include the content-type
 of the appended part (when \lparam {footer\_type} list parameter s set 
@@ -6204,7 +6204,7 @@ if message is not multipart/signed
 
 \subsection {Archive directory} 
 
-The \dir {/home/sympa/expl/\samplelist/archives/} directory contains the 
+The \dir {/usr/local/sympa-os/expl/\samplelist/archives/} directory contains the 
 archived messages for lists which are archived; see \ref {par-archive}, 
 page~\pageref {par-archive}. The files are named in accordance with the 
 archiving frequency defined by the \lparam {archive} parameter.
@@ -6406,7 +6406,7 @@ This way to create lists is independent of family.
 
 Here is a sample command to create one list :.
 \begin {quote}
-sympa.pl --create\_list --robot \samplerobot --input\_file my\_file.xml
+sympa.pl - - create\_list - - robot \samplerobot - - input\_file my\_file.xml
 \end {quote}
 
 The list is created under the \file{my\_robot} robot and the list 
@@ -6421,13 +6421,13 @@ By default, the status of the created list is \file{open}.
 The list creator has to choose a profile
 for the list and put its name in the XML element \file{<type>}.
 
-List profiles are stored in \dir {/home/sympa/etc/create\_list\_templates} or in
-\dir {/home/sympa/bin/etc/create\_list\_templates} (default of distrib).
+List profiles are stored in \dir {/usr/local/sympa-os/etc/create\_list\_templates} or in
+\dir {/usr/local/sympa-os/bin/etc/create\_list\_templates} (default of distrib).
 
 You might want to hide or modify profiles (not useful, or dangerous 
 for your site). If a profile exists both in the local site directory
-\dir {/home/sympa/etc/create\_list\_templates} and
-\dir {/home/sympa/bin/etc/create\_list\_templates} directory, then the local profile 
+\dir {/usr/local/sympa-os/etc/create\_list\_templates} and
+\dir {/usr/local/sympa-os/bin/etc/create\_list\_templates} directory, then the local profile 
 will be used by WWSympa. 
 
 
@@ -6479,8 +6479,8 @@ these typical list profiles, they are described before, see \ref{typical-list-pr
 You can check available profile. On the Web interface, another way 
 to control publicly available profiles is to
 edit the \cfkeyword {create\_list.conf} file (the default for this file is in
-the \dir {/home/sympa/bin/etc} directory, and you may create your own customized
-version in \dir {/home/sympa/etc}).
+the \dir {/usr/local/sympa-os/bin/etc} directory, and you may create your own customized
+version in \dir {/usr/local/sympa-os/etc}).
 This file controls which of the available list templates are to be displayed. Example :
 \begin {quote}
 \begin{verbatim}
@@ -6494,9 +6494,9 @@ public_anonymous hidden
 \subsection {List edition}
 \label {list-edition}
 
-For each parameter, you may specify (via the \file {/home/sympa/etc/edit\_list.conf}
+For each parameter, you may specify (via the \file {/usr/local/sympa-os/etc/edit\_list.conf}
 configuration file) who has the right to edit the parameter concerned ; the default 
-\file {/home/sympa/bin/etc/edit\_list.conf} is reasonably safe.
+\file {/usr/local/sympa-os/bin/etc/edit\_list.conf} is reasonably safe.
 
 \begin{verbatim}
 Each line is a set of 3 field
@@ -6987,7 +6987,7 @@ even when several moderators are defined.
 
 \lparam {host} \textit {fully-qualified-domain-name}
 
-Domain name of the list, default is the robot domain name set in the related \file {robot.conf} file or in file \file {/etc/sympa.conf}.
+Domain name of the list, default is the robot domain name set in the related \file {robot.conf} file or in file \file {/usr/local/sympa-os/etc/sympa.conf}.
 
 \subsection {lang}
     \label {par-lang}
@@ -7332,7 +7332,7 @@ Certificate and private key are located in the list directory.
  \item  \lparam {cert} \texttt {robot} the certificate used is then related to
 sympa itself : the certificate subject distinguished name email look like
 sympa@my.domain and files are located in virtual robot etc dir if virtual robot
-is used otherwise in \dir {/home/sympa/etc}.
+is used otherwise in \dir {/usr/local/sympa-os/etc}.
 \end{itemize}
 
 
@@ -8360,12 +8360,6 @@ Predefined authorization scenarios are :
 	\end {htmlonly}\\
 	
 
-     \item \lparam {d\_read} \texttt {p} 
-	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_read.p})
-	\end {htmlonly}\\
-	
-
      \item \lparam {d\_read} \texttt {public} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_read.public})
@@ -8403,12 +8397,6 @@ Predefined authorization scenarios are :
      \item \lparam {d\_edit} \texttt {private} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.private})
-	\end {htmlonly}\\
-	
-
-     \item \lparam {d\_edit} \texttt {p} 
-	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.p})
 	\end {htmlonly}\\
 	
 
@@ -8506,7 +8494,7 @@ apply forced
 \lparam {max\_size} \textit {number-of-bytes}
 
 Maximum size of a message in 8-bit bytes. The default value is set in
- the \file {/etc/sympa.conf} file.
+ the \file {/usr/local/sympa-os/etc/sympa.conf} file.
 
 
 \subsection {anonymous\_sender}
@@ -8591,7 +8579,7 @@ added to a message.
 
         Sympa will not create new MIME parts, but
         will try to append the header/footer to the body of the
-        message. \file {/home/sympa/expl/\samplelist/message.footer.mime} will be
+        message. \file {/usr/local/sympa-os/expl/\samplelist/message.footer.mime} will be
         ignored. Headers/footers may be appended to text/plain
         messages only.
 
@@ -8895,7 +8883,7 @@ halt_rate	20
 \Sympa maintains 2 kinds of archives: mail archives and web archives.
 
 Mail archives can be retrieved via a mail command send to the robot,
-they are stored in \dir {/home/sympa/expl/\samplelist/archives/} directory.
+they are stored in \dir {/usr/local/sympa-os/expl/\samplelist/archives/} directory.
 
 Web archives are accessed via the web interface (with access control), they
 are stored in a directory defined in \file {wwsympa.conf}.
@@ -8935,7 +8923,7 @@ This parameter specifies how archiving is organized: by \texttt
 {day}, \texttt {week}, \texttt {month}, \texttt {quarter},
 or \texttt {year}.  Generation of automatic list archives requires
 the creation of an archive directory at the root of the list directory 
-(\dir {/home/sympa/expl/\samplelist/archives/}), used to store these documents.
+(\dir {/usr/local/sympa-os/expl/\samplelist/archives/}), used to store these documents.
 
 \lparam {access}
     \texttt {private} \texttt{|}
@@ -9128,7 +9116,7 @@ In order to have better control over the documents and to enforce security in
 the shared space, each document is linked to a set of specific control information : 
 its access rights.
 
-A list's shared documents are stored in the \dir {/home/sympa/expl/\samplelist/shared}
+A list's shared documents are stored in the \dir {/usr/local/sympa-os/expl/\samplelist/shared}
 directory. 
 
 This chapter describes how the shared documents are managed, 
@@ -9452,12 +9440,12 @@ be sent to the \file {bouncequeue} program via aliases :
 
 \begin {quote}
 \begin{verbatim}
-	\samplelist-owner: "|/home/sympa/bin/bouncequeue \samplelist"
+	\samplelist-owner: "|/usr/local/sympa-os/bin/bouncequeue \samplelist"
 \end{verbatim}
 \end {quote}
 
 \file {bouncequeue} (see \ref{binaries}, page~\pageref{binaries}) stores bounces in a
-\dir {/home/sympa/spool/bounce/} spool.
+\dir {/usr/local/sympa-os/spool/bounce/} spool.
 
 Bounces are then processed by the \file {bounced.pl} daemon.
 This daemon analyses bounces to find out which
@@ -9551,7 +9539,7 @@ In this case you must set the \cfkeyword {antivirus\_path} and
 \cfkeyword {antivirus\_args} configuration parameters
  (see \ref {Antivirus plug-in}, page~\pageref {Antivirus plug-in}.
 \Sympa is already compatible with McAfee/uvscan, Fsecure/fsav, Sophos, AVP, Trend Micro/VirusWall and Clam Antivirus.
-For each mail received, \Sympa extracts its MIME parts in the \dir {/home/sympa/spool/tmp/antivirus} directory and
+For each mail received, \Sympa extracts its MIME parts in the \dir {/usr/local/sympa-os/spool/tmp/antivirus} directory and
 then calls the antivirus software to check them.
 When a virus is detected, \Sympa looks for the virus name in the virus scanner STDOUT and sends a
 \file {your\_infected\_msg.tt2} warning to the sender of the mail.
@@ -9690,7 +9678,7 @@ This is done using the optional parameters \unixcmd {openSSL} and
   \item \cfkeyword {openSSL} : the path for the OpenSSL binary file,
          usually \texttt {/usr/local/ssl/bin/openSSL}
   \item \cfkeyword {cafile} : the path of a bundle of trusted ca certificates. 
-        The file \tildefile {/home/sympa/bin/etc/ca\-bundle.crt} included in Sympa distribution can be used.
+        The file \tildefile {/usr/local/sympa-os/bin/etc/ca\-bundle.crt} included in Sympa distribution can be used.
 
 	Both the \cfkeyword  {cafile} file and the \cfkeyword {capath} directory
         should be shared with your Apache+mod\_ssl configuration. This is useful
@@ -9769,7 +9757,7 @@ So the first requirement is to install a certificate and a private key for
 the list.
 The mechanism whereby certificates are obtained and managed is complex. Current versions
 of S/Sympa assume that list certificates and private keys are installed by
-the listmaster using \dir {/home/sympa/bin/p12topem.pl} script. This script allows
+the listmaster using \dir {/usr/local/sympa-os/bin/p12topem.pl} script. This script allows
 you to install a PKCS\#12 bundle file containing a private key and
 a certificate using the appropriate format.
 
@@ -9781,7 +9769,7 @@ the trusted CA's described in the \cfkeyword{cafile} file or the
 \cfkeyword{capath} Sympa configuration parameter. 
 
 The list private key must be installed in a file named
-\dir {/home/sympa/expl/\samplelist/private\_key}. All the list private
+\dir {/usr/local/sympa-os/expl/\samplelist/private\_key}. All the list private
 keys must be encrypted using a single password defined by the
 \cfkeyword {password} parameter in \cfkeyword {sympa.conf}.
 
@@ -9802,7 +9790,7 @@ it. The format used by Netscape is  ``pkcs\#12''.
 Copy this file to the list home directory.
 \item convert the pkcs\#12 file into a pair of pem files :
 \cfkeyword {cert.pem} and \cfkeyword {private\_key} using
-the \unixcmd {/home/sympa/bin/p12topem.pl} script. Use \unixcmd
+the \unixcmd {/usr/local/sympa-os/bin/p12topem.pl} script. Use \unixcmd
 {p12topem.pl -help} for details.
 \item be sure that \cfkeyword {cert.pem} and \cfkeyword {private\_key}
 are owned by sympa with ``r'' access.
@@ -9821,7 +9809,7 @@ Report to \ref {certificate-task-config}, page~\pageref {certificate-task-config
 \subsection {chk\_cert\_expiration.daily.task model}
 
 A task created with the model \file {chk\_cert\_expiration.daily.task} checks every day the expiration date of
-certificates stored in the \dir {/home/sympa/expl/X509-user-certs/} directory.
+certificates stored in the \dir {/usr/local/sympa-os/expl/X509-user-certs/} directory.
 The user is warned with the \file {daily\_cert\_expiration} template when his certificate has expired
 or is going to expire within three days.
 
