@@ -22,7 +22,9 @@
 </TABLE>
 <BR><BR>
 [IF is_listmaster]
-
+[IF auto_aliases]
+Les alias ont été installés.
+[ELSE]
 <TABLE BORDER=1>
 <TR BGCOLOR="--LIGHT_COLOR--"><TD align=center>Les alias à installer </TD></TR>
 <TR>
@@ -33,3 +35,4 @@
 </TD>
 </TR>
 </TABLE>
+[ENDIF]

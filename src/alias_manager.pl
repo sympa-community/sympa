@@ -12,6 +12,8 @@ my $path_to_queue = '--MAILERPROGDIR--/queue';
 my $path_to_bouncequeue = '--MAILERPROGDIR--/bouncequeue';
 my $sympa_conf_file = '--CONFIG--';
 
+$ENV{'PATH'} = '';
+
 my ($operation, $listname, $domain) = @ARGV;
 
 if (($#ARGV != 2) 

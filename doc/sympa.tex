@@ -813,6 +813,8 @@ Example:
 \$ gzip -dc sympa-\version.tar.gz | tar xf -
 \end {quote}
 
+\label {makefile}
+
 Before running \unixcmd {make} in the main
 directory, you should edit and configure \file {Makefile},
 the first part of which requires customization.
@@ -829,6 +831,9 @@ which you may have to change. They main ones are :
 is configured to use smrsh (check the mailer prog definition in your sendmail.cf),
 queue and bouncequeue need to be installed in /etc/smrsh.  This is probably
 the case if you are using redhat 6.X.
+\item SENDMAIL\_ALIASES, the sendmail aliases file. This is used by the alias\_manager
+script.
+\item NEWALIASES, the path to newaliases command.
 \item INITDIR, the directory to contain a SYSV init script (typically /etc.rc.d/init.d/)
 \item DESTDIR, can be set in the main Makefile to install sympa in DESTDIR/DIR
 (instead of DIR). This is usefull for building RPM and DEB packages.
@@ -1607,17 +1612,37 @@ others. They may access the same URLs with a different view of it, depending of 
 
 \item \%make installwws
 
-\item edit your \file {/etc/wwsympa.conf} ; here are the recognized parameters :
+\item cutomize your \file {/etc/wwsympa.conf}
 
- 	\begin{itemize}
+\item set \file {sympa.conf} parameter \cfkeyword {wwsympa\_url}
+	to the base URL of your \WWSympa
 
-	\item default\_home \\
-	\default {home} \\
-        What action perform for WWSympa home page. If you have just a few list
-	the default 'home' that present the list of lists organised by topics
-        should be change for 'lists' a alphabetical list of lists.
+\end{enumerate} 
 
-	\item arc\_path \\
+\section {wwsympa.conf parameters}
+
+	\subsection {alias\_manager}
+	\label {alias-manager}	
+
+	If this parameter is undefined, then you will have to manage your
+	aliases manually.
+	Provide the path to a script that will install aliases for a new list
+	and delete aliases for closed lists. You can use the \tildefile {sympa/bin/alias\_manager.pl}
+	script distributed with \Sympa. The script will receive the following arguments :
+	\begin{enumerate}
+		\item add | del
+		\item <list name>
+		\item <list domain>
+	\end{enumerate}
+	Example : \tildefile {sympa/bin/alias\_manager.pl} add \samplelist cru.fr
+
+	\tildefile {sympa/bin/alias\_manager.pl} works on the alias file defined
+	by SENDMAIL\_ALIASES variable in the main Makefile (see \ref {makefile},  
+	page~\pageref {makefile}). It runs a \unixcmd{newaliases} command (via
+	\file {aliaswrapper}), after any changes to aliases file.
+
+	\subsection {arc\_path}
+
 	\default {/home/httpd/html/arc} \\
 	Where to store html archives. This parameter is used
         by \file {archived.pl} daemon. It is a good idea to install archive
@@ -1625,30 +1650,31 @@ others. They may access the same URLs with a different view of it, depending of 
         powered by WWSympa. Never mind you may have to install those archives
         under apache tree if it's configured with a chroot.
 
-	\item archive\_default\_index thrd | mail \\
+	\subsection {archive\_default\_index thrd | mail}
+
 	\default {thrd} \\
 	The default index when enterring web archives ; for either threaded or
 	chronological order.
 
-	\item archived\_pidfile  \\
+	\subsection {archived\_pidfile}
 	\default {archived.pid} \\
 	The file containing the PID of \file {archived.pl}.
 
-	\item bounce\_path \\
+	\subsection {bounce\_path}
 	\default {/var/bounce} \\
 	Root directory for storing bounces (non-delivery reports). This parameter
 	is mainly used by \file {bounced.pl} daemon.
 
-	\item bounced\_pidfile  \\
+	\subsection {bounced\_pidfile}
 	\default {bounced.pid} \\
 	The file containing the PID of \file {bounced.pl}.
 
-	\item cookie\_expire \\
+	\subsection {cookie\_expire}
 	\default {30}
 	HTTP cookies lifetime (in minutes). This is the default value
 	used when users didn't set it.
 
-	\item cookie\_domain \\
+	\subsection {cookie\_domain}
 	\default {localhost} \\
 	Domain for the HTTP cookies. If beginning with a dot ('.'),
 	cookie is available within the specified internet domain,
@@ -1665,27 +1691,33 @@ others. They may access the same URLs with a different view of it, depending of 
 	Default is nice unless \WWSympa's authentication process
         is shared with some other application on some others host.  
 
-	\item icons\_url \\
+	\subsection {default\_home}
+	\default {home} \\
+        What action perform for WWSympa home page. If you have just a few list
+	the default 'home' that present the list of lists organised by topics
+        should be change for 'lists' a alphabetical list of lists.
+
+	\subsection {icons\_url}
 	\default {/icons} \\
 	URL of WWSympa's icons directory.
 
-      	\item log\_facility \\
+      	\subsection {log\_facility}
 
 	WWSympa will log using this facility, default is \Sympa's syslog
         facility.
 	Configure your syslog according to this parameter
 
-	\item mhonarc \\
+	\subsection {mhonarc}
 	\default {/usr/bin/mhonarc} \\
 	Path to the wonderfull MHonArc program. Required for html archives
 	http://www.oac.uci.edu/indiv/ehood/mhonarc.html
 
-	\item title \\
+	\subsection {title}
 	\default {Mailing Lists Service} \\
 	The name of your mailing lists service. It will appear in
 	the Title section of WWSympa.
 
-      	\item use\_fast\_cgi   0 | 1 \\
+	\subsection {use\_fast\_cgi   0 | 1}
 	\default {1} \\
 	Choose to use or not FastCGI. On listes.cru.fr using FastCGI 
 	with WWSympa fasten up to 10 times. Refer to 
@@ -1693,12 +1725,6 @@ others. They may access the same URLs with a different view of it, depending of 
 	and the apache config section of this document for details about 
 	FastCGI.
 
-	\end{itemize}
-
-\item set \file {sympa.conf} parameter \cfkeyword {wwsympa\_url}
-	to the base URL of your \WWSympa
-
-\end{enumerate} 
 
 \section {MhOnArc}
  
@@ -3365,10 +3391,12 @@ WSYympa keeps creation and modification authors and date in the list's
 \file {config} file (previous configuration file are saved).
 
 \subsection {creating list alias}
- Managing alias need root access and is depending on the local mail organization.
-So it'is not for sympa application tomodify and install aliases. We plans to
-introduce a plugin solution so anyone can write its own alias generation. Not
-yet available.
+
+If you defined an alias\_manager in \file {wwsympa.conf} 
+(see \ref {alias-manager}, page~\pageref {alias-manager}), \WWSympa
+will run this script for installing aliases. You can write your
+own alias\_manager script, adapted to your MTA or mail configuration,
+as far as it recognises the same set of parameters.
 
 \section {List edition}
 \label {list-edition}

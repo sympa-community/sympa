@@ -114,7 +114,8 @@ sub load_config {
 			use_fast_cgi => 1,
 			wws_path => '--BINDIR--',
 			default_home => 'home',
-			log_facility => ''
+			log_facility => '',
+			alias_manager => ''
 			);
 
     my $conf = \%default_conf;

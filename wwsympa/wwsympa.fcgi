@@ -3438,12 +3438,21 @@ sub do_install_pending_list {
 	&error_message('huummm_didnt_change_anything');
 	&wwslog('info','view_pending_list: didn t change really the status, nothing to do');
 	return undef ;
-    }
-    
+    }    
+
+    ## create the list
+    &_create_list();
+}
+
+## Does the list creation job (status, aliases,...)    
+sub _create_list {
+    &wwslog('debug', '_create_list(%s,%s,%s)',$in{'list'},$in{'status'},$in{'notify'});
+
+    ## Should use $list->save()
     $param->{'list_config'} = "$Conf{'home'}/$in{'list'}/config";
     if ($in{'serial'} ne $list->{'admin'}{'serial'}) {
 	&error_message('unable_to_write_config_some_one_else_is_editing_it');
-	&wwslog('info','serial number as changed Sympa:%s Browser: %s',$in{'serial'},$list->{'admin'}{'serial'});
+	&wwslog('info','serial number has changed Sympa:%s Browser: %s',$in{'serial'},$list->{'admin'}{'serial'});
         return undef;
     }
     unless (open CONFIG, "$Conf{'home'}/$in{'list'}/config") {
@@ -3493,17 +3502,30 @@ sub do_install_pending_list {
 	return undef;
     }
     
+    ## Alias installation
+    if ($wwsconf->{'alias_manager'}) {
+	if ((-x $wwsconf->{'alias_manager'}) 
+	    && (system ("$wwsconf->{'alias_manager'} add $list->{'name'} $list->{'admin'}{'host'}") == 0)) {
+	    &wwslog('info','Aliases installed successfully');
+	    $param->{'auto_aliases'} = 1;
+	}else {
+	    &wwslog('info','Failed to install aliases: %s', $!);
+	    &error_message('failed_to_install_aliases');
+	}
+    }
 
-    $param->{'aliases'}  = "#----------------- $in{'list'}\n";
-    $param->{'aliases'} .= "$in{'list'}: \"| --MAILERPROGDIR--/queue $in{'list'}\"\n";
-    $param->{'aliases'} .= "$in{'list'}-request: \"| --MAILERPROGDIR--/queue $in{'list'}-request\"\n";
-    $param->{'aliases'} .= "$in{'list'}-owner: \"| --MAILERPROGDIR--/bouncequeue $in{'list'}\"\n";
-    $param->{'aliases'} .= "$in{'list'}-unsubscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-unsubscribe\"\n";
-    $param->{'aliases'} .= "# $in{'list'}-subscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-subscribe\"\n";
+    unless ($param->{'auto_aliases'}) {
+	$param->{'aliases'}  = "#----------------- $in{'list'}\n";
+	$param->{'aliases'} .= "$in{'list'}: \"| --MAILERPROGDIR--/queue $in{'list'}\"\n";
+	$param->{'aliases'} .= "$in{'list'}-request: \"| --MAILERPROGDIR--/queue $in{'list'}-request\"\n";
+	$param->{'aliases'} .= "$in{'list'}-owner: \"| --MAILERPROGDIR--/bouncequeue $in{'list'}\"\n";
+	$param->{'aliases'} .= "$in{'list'}-unsubscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-unsubscribe\"\n";
+	$param->{'aliases'} .= "# $in{'list'}-subscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-subscribe\"\n";
+    }
 
     return 1;
 }
-    
+
 
 ## create a liste using a list template. 
 sub do_create_list {
