@@ -1931,9 +1931,23 @@ In this case, the three first following parameters must be assigned by the listm
 
 The path for the openSSL binary file.
          
-\subsection {\cfkeyword {trusted\_ca\_options}} 
-The option used by OpenSSL
-        for trusted CA certificates. Required if cfkeyword {openSSL} is defined.
+\subsection {\cfkeyword {capath}} 
+The directory path use by openssl for trusted CA certificates.
+
+A directory of trusted certificates. The certificates should
+have names of the form: hash.0 or have symbolic links to
+them of this form ("hash" is the hashed certificate subject
+name: see the -hash option of the openssl x509 utility). This
+directory should be the same as the  directory
+SSLCACertificatePath specified for mod_ssl module for Apache.
+
+\subsection {\cfkeyword {cafile}} 
+This parameter sets the all-in-one file where you can assemble
+the Certificates of Certification Authorities (CA) whose clients
+you deal with. These are used for Client Authentication. Such a
+file is simply the concatenation of the various PEM-encoded
+Certificate files, in order of preference. This can be used
+alternatively and/or additionally to \cfkeyword {capath}. 
 	
 \subsection {\cfkeyword {key\_passwd}} 
 
@@ -3007,24 +3021,19 @@ feel at home, and there may even be changes you will wish to suggest to us.
 The basic requirement is to let \Sympa know where to find the binary file for the OpenSSL program
 and the certificates of the trusted certificate authority. 
 This is done using the optional parameters \unixcmd {openSSL} and
-\cfkeyword {trusted\_ca\_options}.
+\cfkeyword {capath} and / or \cfkeyword {cafile}.
+
 \begin{itemize}
 
   \item \cfkeyword {openSSL} : the path for the OpenSSL binary file,
          usually \texttt {/usr/local/ssl/bin/openSSL}
-  \item \cfkeyword {trusted\_ca\_options} : the option used by OpenSSL
-        for trusted CA certificates. 
-        The file \tildefile {sympa/bin/etc/ca\-bundle.crt} is distributed
-        with Sympa and describes a well known set of CA's, such as the default Netscape
-        navigator configuration. You can declare this set of certificates as trusted
-        by setting \cfkeyword {trusted\_ca\_options} \option {-CAfile \textit {/home/sympa/bin/etc/ca-bundle.crt}}.
-        You can also use the \option {-CApath} \unixcmd {openssl} option, or both 
-        \texttt {-CApath} and \texttt {-CAfile}. Example :       
-        \texttt {trusted\_ca\_options -CApath \tildefile {sympa/etc/ssl.crt} -CAfile \tildefile {sympa/bin/etc/ca-bundle.crt}}.
+  \item \cfkeyword {cafile} : the path of a bundle of trusted ca certificates. 
+        The file \tildefile {sympa/bin/etc/ca\-bundle.crt} included in Sympa distribution can be used.
 
-	Both the \option {-CAfile} file and the \option {-CApath} directory
+	Both the \cfkeyword  {cafile} file and the \cfkeyword {capath} directory
         should be shared with your Apache+mod\_ssl configuration. This is useful
 	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
+
   \item \cfkeyword {key\_password} : the password used to protect all list private keys. xxxxxxx	
 \end{itemize}
 
@@ -3098,13 +3107,16 @@ So the first requirement is to install a certificate and a private key for
 the list.
 The mechanism whereby certificates are obtained and managed is complex. Current versions
 of S/Sympa assume that list certificates and private keys are installed by
-the listmaster.
-It is a good idea to have a look at the OpenCA (http://www.openca.org)
+the listmaster using \tildedir {sympa/bin/p12topem.pl} script. This script allows
+you to install a PKCS\#12 bundle file containing a private key and
+a certificate using the appropriate format.
+
+It is a good idea to have a look at the OpenCA (http://www.openssl.org)
 documentation and/or PKI providers' web documentation.
 You can use commercial certificates or home-made ones. Of course, the
 certificate must be approved for e-mail applications, and issued by one of
-the trusted CA's described in the \option {-CAfile} file or the
-\option {-CApath} OpenSSL option. 
+the trusted CA's described in the \cfkeyword{cafile} file or the
+\cfkeyword{capath} Sympa configuration parameter. 
 
 
 The list private key must be installed in a file named
