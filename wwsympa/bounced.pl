@@ -149,6 +149,8 @@ while (!$end) {
     my @files =  (sort grep(!/^(\.{1,2}|T\..*)$/, readdir DIR ));
     closedir DIR;
     foreach my $file (@files) {
+
+	last if $end;
 	
 	unless ($file =~ /^(\S+)\.\d+\.\d+$/) {
 	    my @s = stat("$queue/$file");
