@@ -6276,7 +6276,7 @@ sub do_edit_list {
 
  sub _prepare_data {
      my ($name, $struct, $data) = @_;
- #    &do_log('debug2', '_prepare_data(%s, %s)', $name, $data);
+     &do_log('debug3', '_prepare_data(%s, %s)', $name, $data);
 
      next if ($struct->{'obsolete'});
 
@@ -6285,7 +6285,7 @@ sub do_edit_list {
 		   'comment' => $struct->{'comment'}{$param->{'lang'}}
 	       };
 
-     if (defined $struct->{'gettext_id'}) {
+     if ($struct->{'gettext_id'}) {
 	 $p_glob->{'title'} = gettext($struct->{'gettext_id'});
      }else {
 	 $p_glob->{'title'} = $name;
