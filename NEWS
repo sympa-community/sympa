@@ -3,6 +3,71 @@
 
 (See Changelog file for the full changes log)
 
+5.0a.1		13 December 2004
+
+   New features :
+
+	[O.Lacroix] New 'listmaster_email' and 'bounce_email_prefix' parameters in sympa.conf
+
+	wwsympa/wwsympa.fcgi:[G.Bouteille] 
+		+ New expert/user modes in the document repository
+		+ Allow upload and unzipping of a ZIP file in the document repository
+
+	src/Commands.pm, src/Conf.pm, src/Log.pm, src/sympa.pl, src/tools.pl:
+	New mode with two processus one dedicated for messages one dedicated for commands  
+		At start : use --service process_message to process only distribution
+			       --service process_command to process only command
+
+		In sympa.conf : distribution_mode fork to make symap.pl fork and run two daemon.
+		distribution_mode single (default) to run as previous version.
+
+		This mode requiert more computer ressources but provide better priority handling 
+		and faster answer to commands.
+
+		Internal : new spool distribute where sympa distribute message with asking for 
+		more auth nor editor validation.
+
+
+   Changes :
+
+	src/etc/script/sympa: Add a sleep between stop and start
+
+	src/sympa_wizard.pl default wwsympa_url is set to /sympa (instead of /wws)
+
+	check_perl_modules.pl: auto-install mhonarc
+
+	wwsympa/wwsympa.fcgi: Allow caching for archives (should prevent gfoogle looping in archives)
+
+	wwsympa/wwsympa.fcgi: Add a Date: HTTP header field telling the mast update time of the HTML 
+	archive file (should prevent google looping in web archives)
+
+	web_tt2/main.tt2, wwsympa/wwsympa.fcgi: [M.PELTIER][BugID354]: 
+	Added a noparse html tag ; page substitle is the archive message subject
+
+	src/etc/mhonarc-ressources.tt2: [M.Peltier] [BugID 353]  mhonarc resources improvement 
+	(used TSLICE instead of Ref and Followup, HTML 4 conformance, ...)
+
+   Bug fixes :
+
+	src/List.pm: mysqld needed to be reloaded after GRANT was run
+
+	src/List.pm, web_tt2/edit_list_request.tt2, wwsympa/wwsympa.fcgi: [BugID 346]
+	hide passwords in the edit_list web form
+
+	src/: bouncequeue.c, queue.c: [BugID 347] queue.c and bouncequeue.c did not compile on HP-UX
+
+	src/Conf.pm: [BugID 351]'db_env' was stored internally in the wrong format
+
+	src/task_manager.pl: [reported by S.Balmos] 'purge_orphan_bounces' task failed (and was reprogrammed) 
+	when no list exist
+
+	src/admin.pm: failed to create lists with topic/subtopic
+
+	wwsympa/archived.pl: addressmodify code passed as an argument because $AddressModify 
+	.mhonarc.db var was used inbstead of M2H_ADDRESSMODIFYCODE env var
+
+
+
 5.0a		06 December 2004
 
    New features :
