@@ -578,6 +578,19 @@ sub as_singlepart {
     my ($msg, $preferred_type) = @_;
     my $done = 0;
     
+    # First, if the message has a type of multipart/alternative
+    # make this the main message so we can get at the sub parts
+    my @parts = $msg->parts();
+    foreach my $index (0..$#parts) {
+        if ($parts[$index]->effective_type() =~ /^multipart\/alternative/) {
+            ## Only keep the multipart/alternative part
+            $msg->parts([$parts[$index]]);
+            $msg->make_singlepart();
+            last;
+        }
+    }
+
+    # Now look for the preferred_type and if found, make this the main message
     my @parts = $msg->parts();
     foreach my $index (0..$#parts) {
 	if ($parts[$index]->effective_type() =~ /^$preferred_type$/) {
