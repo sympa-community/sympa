@@ -15,7 +15,7 @@ Vous êtes déjà connecté avec l'adresse [error->email]
 Vous devez fournir votre adresse e-mail
 
 [ELSIF error->msg=incorrect_email]
-L'adresse "[error->listname]" est incorrecte
+L'adresse "[error->email]" est incorrecte
 
 [ELSIF error->msg=incorrect_listname]
 "[error->listname]" : nom de liste incorrect
