@@ -160,16 +160,10 @@
        <a href="[% path_cgi %]/edit_list_request/[% list %]/other">
        <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Miscellaneous[%END%]</strong></span></a>
     </td>
-    [% IF is_listmaster %]
     <td style="background: [% selected_color %]; text-align: center;">
        <a href="[% path_cgi %]/edit_list_request/[% list %]/data_source">
        <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Data Source[%END%]</strong></span></a>
     </td>                             
-    [% ELSE %]
-    <td style="background: [% selected_color %]; text-align: center;">
-    &nbsp;
-    </td>
-    [% END %]
     [% END %] 
 <!-- end menu_admin.tt2 -->
 
