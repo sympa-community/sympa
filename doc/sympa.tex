@@ -70,7 +70,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {4.0.b2}
+    \newcommand {\version} {4.0.b3}
 
     \newcommand {\samplelist} {mylist}
 
@@ -124,13 +124,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 4.0.b2\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 4.0.b3\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {02 February 2004}
+    \date {19 February 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -1012,6 +1012,8 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 \item \option {--with-docdir=DIR}, man files in DIR (default /home/sympa/doc/)
 
 \item \option {--with-initdir=DIR}, install System V init script in DIR  (default /etc/rc.d/init.d)
+
+\item \option {--with-lockdir=DIR}, create lock files in DIR  (default /var/lock/subsys)
 
 \item \option {--with-piddir=DIR}, create .pid files in DIR  (default /home/sympa/)
 
@@ -2950,10 +2952,10 @@ To run \WWSympa with FastCGI, you need to install :
 
 	\subsection {htmlarea\_url}
 	\default {undefined} \\
-	URL to the (superb) on line html editor named HTMLarea. If you have installed javascript application you can use it
-        when editing html document in teh shared document repository. In order to activate this plugging the value of this
-        parameter must be the root directory where HTMLarea is installed.  HTMLarea is a free opensource software you can download
-        to the following server http://sf.net/projects/itools-htmlarea/
+	Relative URL to the (superb) online html editor HTMLarea. If you have installed javascript application you can use it
+        when editing html document in the shared document repository. In order to activate this pluggin the value of this
+        parameter should point to the root directory where HTMLarea is installed.  HTMLarea is a free opensource software you can download
+        here : http://sf.net/projects/itools-htmlarea/
 
 	\subsection {password\_case sensitive | insensitive}
 	\default {insensitive} \\
@@ -4916,7 +4918,7 @@ ones. \WWSympa first looks for list specific web templates, then for
 site web templates, before falling back on its defaults. 
 
 Your list web template files should be placed in the \dir {/home/sympa/expl/\samplelist/wws\_templates} 
-directory ; your site web templates in \tildedir {/home/sympa/expl/wws\_templates} directory.
+directory ; your site web templates in \tildedir {/home/sympa/etc/wws\_templates} directory.
 
 There are actually 2 ways a template can include another template :
 

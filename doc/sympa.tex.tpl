@@ -2785,10 +2785,10 @@ To run \WWSympa with FastCGI, you need to install :
 
 	\subsection {htmlarea\_url}
 	\default {undefined} \\
-	URL to the (superb) on line html editor named HTMLarea. If you have installed javascript application you can use it
-        when editing html document in teh shared document repository. In order to activate this plugging the value of this
-        parameter must be the root directory where HTMLarea is installed.  HTMLarea is a free opensource software you can download
-        to the following server http://sf.net/projects/itools-htmlarea/
+	Relative URL to the (superb) online html editor HTMLarea. If you have installed javascript application you can use it
+        when editing html document in the shared document repository. In order to activate this pluggin the value of this
+        parameter should point to the root directory where HTMLarea is installed.  HTMLarea is a free opensource software you can download
+        here : http://sf.net/projects/itools-htmlarea/
 
 	\subsection {password\_case sensitive | insensitive}
 	\default {insensitive} \\
