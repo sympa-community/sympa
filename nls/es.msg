@@ -13,7 +13,7 @@ $quote "
 $set 1	Mensajes usados durante el proceso del archivo de configuración
 1	"El archivo de configuración contiene errores.\n"
 3	"Error en la línea %d: %s"
-102	"3.1.1"
+102	"3.3.3"
 
 $set 2	Mensajes usados por Conf en la comprobación de archivos
 
@@ -55,6 +55,7 @@ Gracias por su atención. \n\n\
 
 $set 6  Mensajes del módulo de Commands.pm
 2	"Imposible leer el archivo de ayuda: %s\n"
+3	"La lista '%s' no tiene ningún suscriptor.\n"
 5	"La lista '%s' no existe.\n"
 7	"No hay ningún archivo en el histórico de esta lista.\n"
 8	"El archivo solicitado no existe.\n"
@@ -163,6 +164,8 @@ Si no desea confirmar este comando, ignore este mensaje.\n"
 86	"El usuario %s no es aceptado en la lista %s.\n"
 90	"La lista %s sólo acepta los siguientes modos de recepción : %s\n\
 Su configuración no ha sido modificada.\n"
+91	"La lista %s no facilita preferencias de los suscriptores.\n"
+92	"Se produjo un error al cambiar sus opciones de suscripción de la lista %s.\n"
 260	"Alguien (probablemente usted) solicitó para su E-mail \n la suscripción a la lista '%s'.\n\
 Para confirmar esta acción, por favor \n\n\
 - Conteste a este correo\nO\n\
@@ -176,6 +179,8 @@ Para confirmar esta acción, por favor \n\n\
 - Envie un mensaje haciendo un click aquí: %s\n\n\
 Esto puede ser validado también mediante la URL: %s\n\
 Si usted no quiere confirmar la anulación de la suscripción, ignore este mensaje.\n"
+262	"La firma de su mensaje ha sido verificada con éxito usando S/MIME.\n"
+263	"Su mensaje no era un mensaje firmado de tipo multiparte o Sympa no pudo\nverificar la firma (tenga en cuenta que Sympa no puede verificar la firma si usted usa el campo de tema para escribir un mensaje)."
 
 
 $set 7  Mensajes de Syslog (Commands.pm)
@@ -191,21 +196,12 @@ AUTH %s ADD %s %s %s\n"
 6	"Bienvenido a la lista %s"
 7	"Archivo"
 9	"Resumen de la lista %s"
-10	"Para distribuir el mensaje adjunto en la lista %s, haga click en:\n\
-mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\
-O envíe un mensaje a %s con el siguiente tema :\n\
-DISTRIBUTE %s %s\n\n"
-11	"Para negar la difusión (el mensaje será borrado) :\n\
-mailto:%s?subject=REJECT%%20%s%%20%s\n\
-O envíe un mensaje a %s con el siguiente tema :\n\
-REJECT %s %s\n"
 12	"Para distribuir el mensaje adjunto en la lista %s, haga click en:\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 O envíe un mensaje a %s con el siguiente tema :\n\
-CONFIRM %s %s\n"
+CONFIRM %s\n\n"
 13	"Tabla de contenido"
 14	"Fin del Resumen de la lista %s"
-15	"Hay %d mensajes para ser moderados para la lista %s"
 16	"Solicitud de autentificación"
 21	"Para su información: %s lista %s de %s %s"
 22	"Para su información: comando %s a la lista %s de %s %s \n(ninguna acción requerida).\n"
@@ -260,6 +256,9 @@ $set 15 Templates files
 12	"Sumario de mensajes"
 13	"Descripción de la lista"
 14	"Página principal de la lista"
+15	"Mensaje para solicitar la creación de una lista"
+16	"Mensaje para notificar la creación de una lista"
+17	"Mensaje de infección de virus"
 
 
 $set 16 Títulos de los parámetros de Listm 
@@ -349,6 +348,28 @@ $set 16 Títulos de los parámetros de Listm
 91	"valor"
 92	"otra dirección electrónica"
 93	"respetar el campo de cabecera existente"
+94	"opciones de conexión"
+97	"ambito de búsqueda"
+98	"timeout de conexión"
+135	"inclusión de petición de LDAP nivel-2"
+136	"host remoto"
+137	"puerto remoto"
+138	"usuario remoto"
+139	"contraseña remota"
+140	"sufijo de primer nivel"
+141	"filtro de primer nivel"
+142	"atributo extraído de primer nivel"
+143	"selección de primer nivel"
+144	"plantilla de sufijo de segundo nivel"
+145	"plantilla de filtro de segundo nivel"
+146	"atributo extraído de segundo nivel"
+147	"selección de segundo nivel"
+197	"ambito de búsqueda de primer nivel"
+198	"timeout de conexión de primer nivel"
+199	"ambito de búsqueda de segundo nivel"
+200	"timeout de conexión de segundo nivel"
+201	"expresión regular de primer nivel"
+202	"expresión regular de segundo nivel"
 
 $set 17 Cookie expiration periods
 1	"sesión"

@@ -683,7 +683,7 @@ sub cookie_changed {
 	if ($cookies[$#cookies] eq $current) {
 	    $changed = 0;
 	}else{
-	    push @cookies $current ;
+	    push @cookies, $current ;
 	    unless (open COOK, ">$Conf{'etc'}/cookies") {
 		do_log('err', "Unable to create $Conf{'etc'}/cookies \n") ;
 		return undef ; 
