@@ -479,7 +479,7 @@ sub check {
 
     # are all labels used ?
     foreach my $label (keys %labels) {
-	&do_log ('notice', "warning : label $label exists but is not used") unless ($used_labels{$label});
+	&do_log ('debug3', "warning : label $label exists but is not used") unless ($used_labels{$label});
     }
 
     # do all used labels exist ?
