@@ -10319,6 +10319,9 @@ sub creation_desc_file {
 	 return undef;
      }
 
+     ## Remove existing topics
+     $param->{'topics'} = undef;
+
      my $total = 0;
      foreach my $t (sort {$topics{$a}{'order'} <=> $topics{$b}{'order'}} keys %topics) {
 	 next unless (&List::request_action ('topics_visibility', $param->{'auth_method'},$robot,
