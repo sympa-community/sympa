@@ -19,8 +19,8 @@ DROP TABLE subscriber_table;
 CREATE TABLE subscriber_table (
   	list_subscriber       	varchar (50) NOT NULL,
 	user_subscriber		varchar (100) NOT NULL,
-	date_subscriber		datetime NOT NULL,
-	update_subscriber 	datetime,
+	date_subscriber		timestamp with time zone NOT NULL,
+	update_subscriber 	timestamp with time zone,
 	visibility_subscriber	varchar (20),
 	reception_subscriber	varchar (20),
 	bounce_subscriber	varchar (35),
