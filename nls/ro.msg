@@ -15,7 +15,7 @@ $set 3	Misc. messages in the main program
 
 $set 4	Messages used in the main loop
 11	"Mesajul trimis catre %s a fost respinsa"
-12	"Mesajul tau nu a fost trimis, ai depasit marimea admisa\n\
+12	"Mesajul tau nu a fost trimis, ai depasit marimea admisa\n"
 15	"Mesajul tau trimis la lista %s a fost respins.\n\
 Mesajul tau a fost returnat.\n\n\
 Mesajul:\n"
@@ -25,22 +25,21 @@ Mesajul:\n"
 24	"Comanda EXPIRE executat pe lista %s."
 26	"Lista membrilor:\n"
 27	"Lista enumerata o poti sterge cu urmatoarea comanda:\n"
-28	"De pe lista %s de %d zile %d nu au confirmat înscrierea.\n"
+28	"De pe lista %s de %d zile %d nu au confirmat inscrierea.\n"
 37 	"Mesaj ignorat pentru ca nu este in format text, Scrie doar mesaje in format text \n(sau pune comanda in subiect).\n"
 38	"%s mesajul trimis pe lista a fost trimisa si la administrator(i)\n"
 39	"Aceasta comanda nu este prezenta in mesaj."
 40	"Aparitia mesajului va fi decisa de moderator."
 
 $set 5	Messages used in the tools module
-1 	"Safefork nu poate incepe alt proces : %m"
-2	"Eroare routing?"
-3	"Urmatoarea scrisoare a fost trimisa pe list, deoarece contine \n\
+1 	"Comanda safefork nu poate incepe alt proces : %m"
+2	"Eroare rutare?"
+3	"Urmatoarea scrisoare a fost trimisa pe lista, dar acesta contine \n\
 comenzi, ca de exemplu,subscribe, unsubscribe, help, index, get.\n\n\
 Daca scrisoarea contine intr-adevar comenzi, atunci trebuie sa stii ca \n\
 acest tip de scrisori nu se trimit pe lista ci doar pe anumite %s adrese email\n\
 .\n\n\
 Daca mesajul a fost trimis pe lista atunci administratorul listei va\n\
-atunci administratorul listei va\n\
 rula comenzile. Contacteaza administratorul sistemului\n\
 : %s pentru a se ocupa de mesaj.\n\n\
 Multumim pentru intelegere.\n\n\
@@ -67,8 +66,8 @@ $set 6 Messages du module Commands.pm
 27	"Informatiile privind inscrierea ta au fost actualizate.\n"
 28	"Ai acces la lista %s.\n"
 29	"Informatii privind aceasta lista vor fi trimise intr-un mesaj separat.\n"
-30	"Adresa ta email nu exista in lista %s. Te-ai \n\
-inscris de pe o alta adresa?\n"
+30	"Adresa ta email nu exista in lista %s. \n\
+Te-ai inscris de pe o alta adresa?\n"
 31	"Ai fost sters de pe lista %s.\n\
 Multumim ca ai utilizat aceasta lista.\n"
 32	"Doar proprietarii liste %s pot sa adauge sau sa starga utilizatori.\n\
@@ -76,13 +75,13 @@ Nu ai acces de utilizare a acestei comenzi sau nu ai furnizat datele necesare pe
 33	"Adresa email%s nu exista in aceasta lista.\n"
 34	"Ai fost sters de pe lista\n\ de %s, proprietarul acestei liste.\n\n\
 Acest fapt survine pentru a sterge adresele care genereaza \n\
-rapoarte de netrimitere. Adresa poate fi totusi buna.\n\
+rapoarte de netrimitere/eroare. Adresa poate fi totusi buna.\n\
 Daca e asa, ne cerem scuze si reinoiesteti subsrierea\n"
 35	"Arhiva va fi trimisa intr-un mesaj separat.\n"
 36	"Informatiile privind utilizatorul %s au fost actualizate pe lista %s.\n"
 37	"Utilizatorul %s este inscris pe lista %s.\n"
 38	"Utilizatorul %s a fost sters de pe lista %s/\n"
-39	"Cineva(sa speram ca chiar tu) a cerut ca un utilzator sa fie adaugat sau sters de pe lista %s \n\
+39	"Cineva (sa speram ca chiar tu) a cerut ca un utilzator sa fie adaugat sau sters de pe lista %s \n\
 .\n\n\
 Daca vrei ca aceasta actiune sa aiba loc, trimite un mail la \n\
 %s cu continutul \n\n\
@@ -99,7 +98,7 @@ Nu esti unul dintre moderatorii listei %s.\n"
 47	"Comenzile EXPIRE, EXPIREINDEX si EXPIREDEL sunt exclusiv pentru proprietarii listei.\n\
 Nu esti unul dintre proprietarii listei %s.\n"
 48	"\
-Cineva (sper ca tu) a cerut ca cei inscrisi pe lista\n\
+Cineva (sa speram ca chiar tu) a cerut ca cei inscrisi pe lista\n\
 '%s' pentru mai mult de %d zile trebuie confirme inscrierea.\n\
 Daca aceasta actiune vrei sa nu fie pusa in aplicare, ignora mesajul.\n\
 Pentru a confirma actiunea, trimite un mail la '%s', cu urmatoarea comnada:\n\
@@ -109,7 +108,7 @@ AUTH %s EXPIRE %s %d %d\n"
 O comanda EXPIRE ruleaza pentru lista %s.\n\
 A fost rulata de catre proprietarul %s (%s)\n\
 Nu pot fi rulate mai multe procese 'expire' in acelasi timp pentru aceasta lista.\n\
-Procesul “expire” curent ruleaza pentru oamenii care s-au inscris de mai mul \n\
+Procesul “expire” curent ruleaza pentru oamenii care s-au inscris de mai mult \n\
 de %d zile si care nu si-au confirmat inscrierea. Procesul de expirare\n\
 se va incheia in %d zile(s) (%s).\n"
 52	"%s Nu s-a primit confirmarea pentru urmatoarele adrese:\n"
@@ -130,15 +129,15 @@ care sa se adreseze direct celor care trebuie sa confirme inscrierea.\n\
 Acest text trebuie \n\n\
  - sa inceapa pe prima linie dupa comanda EXPIRE,\n\
  - sa contina cel putin 20 de cuvinte,\n\
- - iar incheierea cu cavantul QUIT.\n"
+ - iar incheierea sa aiba cuvantul QUIT.\n"
 61	"Astfel, mesajul tau e trimis inapoi la tine:\n"
 67	"Acestea sunt listele la care esti in prezent inscris:\n\n"
 68	"Accesul la mesajul autentificat cu tasta %s invalid.\n"
 69	"%s a afisat mesajul expirat la urmatoarea adresa:\n"
 70	"\nPowered de Sympa %s : http://listes.cru.fr/sympa/\n"
 71	"Renunta la lista %s"
-72	"\n\nLists esti proprietar al:\n\n"
-73	"\n\nLists esti editor al:\n\n"
+72	"\n\nListe a caror proprietar esti:\n\n"
+73	"\n\nListe a caror editor esti:\n\n"
 74	"Autentificare ceruta pentru %s pentru comanda %s\n"
 75	"Permite renuntarea utilizatorului %s din orice lista\n"
 76	"Iti reaminteste %s subscriere"
@@ -150,7 +149,7 @@ Daca aceasta actiune vrei sa nu fie pusa in aplicare, ignora mesajul.\n\
 Pentru a confirma actiunea, trimite un mail la \n\
 %s cu continutul\n\n\
    %s\n\n\
-If you do not want this action to be taken, simply ignore this message.\n"
+Daca nu doresti sa confirm actiunea, ignora mesajul.\n"
 80	"Comanda %s nu este permisa in lista %s\n"
 81	"Ghidul utilizatorului"
 82	"Liste publice"
@@ -161,15 +160,15 @@ If you do not want this action to be taken, simply ignore this message.\n"
 90	"Lista %s permite doar aceste metode de primire a mesajelor: %s\n\
 Configuratia contului tau nu a fost modificata.\n"
 91	"Lista %s nu ofera utilizatorilor optiuni.\n"
-92	"Operatia de modificare a preferintelor la lista%s au esuat.\n"
+92	"Operatia de modificare a preferintelor la lista %s au esuat.\n"
 260	"Cineva a cerut ca adresa email \n\ sa fie adaugata la lista '%s'.\n\
 Daca vrei ca actiunea sa fie rulata \n\
 \n\
 - raspunde la acest mail\nOR\n\
 - trimite un mail la %s cu subiectul\n %s\nOR\n\
-- click pe mailto %s\n\
+- apasa pe mailto %s\n\
 \n\
-Daca nu vrei ca actiunea sa fie rulaat, poti sa ignori\n\
+Daca nu vrei ca actiunea sa fie rulat, poti sa ignori\n\
 acest mesaj."
 261	"Cineva a cerut ca adresa email \n\
 sa fie stearsa din lista '%s'.\n\
@@ -182,7 +181,7 @@ Daca vrei ca actiunea sa fie rulata \n\
 Acest lucru poate fi facut prin URL %s\n\
 Daca nu vrei ca aceasta nu fie rulata, ignora acest mesaj\n\."
 262	"Semnatura mesajului a fost verificata cu succes utilizand S/MIME"
-263	"Mesajul tau nu a fost multipart/semnat sau Sympa nu a putut\n verifica semnatura(Sympa nu poate verifica semnatura daca utilizezi headerul subiectului pentru a scrie o comnada)."
+263	"Mesajul tau nu a fost multipart/semnat sau Sympa nu a putut\n verifica semnatura (Sympa nu poate verifica semnatura daca utilizezi headerul subiectului pentru a scrie o comnada)."
 
 $set 7 Commands syslog messages (Commands.pm)
 
@@ -190,37 +189,37 @@ $set 8 Messages used in List.pm
 1	"Proprietarii listei %s"
 2	"Cerere de abonare la lista %s"
 3	"Draga proprietar al listei %s,\n\n\
-Un utilizator a cerut sa fie sters din lista ta. Daca esti de acord \n\
-, da click pe urmatorul URL :\n\n\
+Un utilizator a cerut sa fie sters din lista ta. Daca esti de acord, \n\
+apasa pe urmatorul URL :\n\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n\n\
 sau trimite un mail %s cu urmatorul subiect:\n\
-AUTH %s ADD %s %s %s\n"
-6	"Bun venit pe lista%s"
+AUTH %s ADD %s %s %s \n"
+6	"Bun venit pe lista %s"
 7	"Fisier"
 9	"Mesaje compilate pentru lista %s"
 12	"Pentru a trimite mesajul atasat din lista %s :\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 sau trimite un mesaj la %s cu urmatorul subiect:\n\
-CONFIRM %s\n"
+CONFIRM %s \n"
 13	"Continut" 
-14	"Terminarea compilatiei mesajelor pentru lista %s"
+14	"Terminarea compilarii mesajelor pentru lista %s"
 16	"Cerere de autentificare"
 21	"FYI: %s lista %s de la %s %s"
 22	"FYI comanda %s lista %s  de la %s %s \n (nu necesita alte operatii)\n"
-23	"Avertisment : %s %s nu a putut fi sters din %s pentru ca adresa lui\n\
+23	"Avertisment: %s %s nu a putut fi sters din %s pentru ca adresa lui\n\
 nu a fost gasita in lista\n (Ajuta aceasta persoana)\n"
 24	"Cerere de dezabonare din lista %s"
 25	"Draga proprietar al listei %s,\n\n\
-Un utilizator a cerut sa fie sters din lista ta. Daca esti de acord \n\
-, da click pe urmatorul url:\n\n\
+Un utilizator a cerut sa fie sters din lista ta. Daca esti de acord, \n\
+apasa pe urmatorul URL:\n\n\
 mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n\n\
 sau trimite un email la %s cu urmatorul subiect:\n\
-AUTH %s DEL %s %s\n"
-26	"FYI comanda %s lista %s din %s %s validata de %s\n (nu este necesara nici o actiune)\n"
-27	"Rata de retrimitere in lista %s este%d%%.\n\n\
+AUTH %s DEL %s %s \n"
+26	"FYI comanda %s lista %s din %s %s validata de %s \n (nu este necesara nici o actiune)\n"
+27	"Rata de retrimitere (bounced) in lista %s este%d%%.\n\n\
 E indicat sa stergi abonatii care sunt retrimisi: \n\
 %s/vezi retrimiterile/%s"
-28	"Avertizare:rata de retrimitere in lista %s este prea mare"
+28	"Avertizare:rata de retrimitere (bounced) in lista %s este prea mare"
 29	"Invitatie pentru abonare la lista%s"
 30	"Esti invitat sa te abonezi la lista %s"
 31 ”Rezumat al listei %s"
@@ -230,7 +229,7 @@ $set 11 Messages used by the smtp module.
 sistemul tau Perl nu defineste constanta _SC_ARG_MAX din clasa POSIX\n\
 . Trebuie sa modifici modulul smtp.pm pentru a putea atribui o valoare\n\
 pentru variabila $max_arg.\n"
-2	"Nu poate crea un canal in smtpto: %m"
+2	"Nu se poate crea un canal in smtpto: %m"
 
 $set 12 MIME headers
 1	"1.0"
@@ -262,71 +261,71 @@ $set 15 Templates files
 17	"mesaj de infectare cu virus"
 
 $set 16 Listm parameters titles
-1	"cont"
+1	"Cont"
 2	"Cine poate adauga abonati"
-3	"expeditor anonim"
-4	"arhive text"
-5	"frecventa"
-6	"drept de accesare"
-7	"management-ul mesajelor bumerang"
-8	"rata de avertizare"
-9	"rata de orpire"
+3	"Expeditor anonim"
+4	"Arhive text"
+5	"Frecventa"
+6	"Drept de accesare"
+7	"Management-ul mesajelor eronate (bounced)"
+8	"Rata de avertizare"
+9	"Rata de orpire"
 10	"Expirarea mesajelor nemoderate"
 11	"Sir secret pentru generarea de chei unice"
 12	"Crearea listei"
 16	"Camp header"
 17	"Subiect afisat"
 18	"Profil de abonare"
-19	"modalitate de primire"
-20	"visibilitate"
+19	"Modalitate de primire"
+20	"Visibilitate"
 21	"Cine poate sterge abonatii"
-22	"frecventa de compilare a mesajelor"
-23	"zile"
-24	"ore"
-25	"minute"
+22	"Frecventa de compilare a mesajelor"
+23	"Zile"
+24	"Ore"
+25	"Minute"
 26	"Moderatori"
-27	"adresa email"
-28	"modalitate de primire"
-29	"nume"
-30	"informatii private"
+27	"Adresa email"
+28	"Modalitate de primire"
+29	"Nume"
+30	"Informatii private"
 31	"Tipul atasamentului"
 32	"Adresa fortata de raspuns"
 33	"Domeniu internet"
-34	"Includer fisier"
-35	"Includere LDAP query"
-36	"remote host"
-37	"remote port"
-38	"remote user"
-39	"remote password"
-40	"sufix"
-41	"filter"
-42	"atribut extras"
-43	"selectie (daca e multipla)"
-44	"includere lista"
-45	"SQL query inclusion"
-46	"tipul bazei de date"
-47	"remote host"
-48	"numele bazei de date"
-49	"remote user"
-50	"remote password"
-51	"SQL query"
+34	"Includere fisier"
+35	"Includere cerere LDAP"
+36	"Remote host"
+37	"Remote port"
+38	"Remote user"
+39	"Remote password"
+40	"Sufix"
+41	"Filter"
+42	"Atribut extras"
+43	"Selectie (daca e multipla)"
+44	"Includere lista"
+45	"Cerere includere SQL"
+46	"Tipul bazei de date"
+47	"Remote host"
+48	"Numele bazei de date"
+49	"Remote user"
+50	"Remote password"
+51	"Cerere SQL"
 53	"Cine poate vizualiza informatiile despre lisat"
 54	"Cine poate invita pe altii"
 55	"Limba pentru lista"
 56	"Marimea maxima a mesajului"
 57	"Proprietar"
-58	"adresa email"
-59	"modalitate de primire"
-60	"nume"
-61	"informatii confidentiale"
-62	"profil"
+58	"Adresa email"
+59	"Modalitate de primire"
+60	"Nume"
+61	"Informatii confidentiale"
+62	"Profil"
 63	"Prioritate"
-64	"CIne poate porni un proces de trimitere de mesaje de atentionare"
+64	"Cine poate porni un proces de trimitere de mesaje de atentionare"
 65	"Atentionare return-path"
 66	"Adresa de raspuns"
 67	"Cine poate verifica abonatii"
 68	"Cine poate trimite mesaje"
-69	"numar de serie pentru config"
+69	"Numar de serie pentru config"
 70	"Fisiere shared"
 71	"Statutul listei"
 72	"Subiectul listei"
@@ -338,42 +337,42 @@ $set 16 Listm parameters titles
 81	"Data sursa pentru utilizator"
 82	"Vizibilitatea listei"
 83	"Arhive WEB"
-84	"drept de acces"
+84	"Drept de acces"
 85	"Bun venit prin calea de returnare"
 86	"Cine poate vizualiza"
-87	"Who poate edita"
+87	"Cine poate edita"
 88	"Preferinte disponibile"
-89	"tip de receptare"
+89	"Tip de receptare"
 90	"Adresa de raspuns"
-91	"valoare"
-92	"alte adrese email"
-93	"respecta headerul campului existent"
-94	"optiuni de conectare"
-97	"scopul cautarii"
-98	"timeout conectare"
-135	"LDAP includere query de nivel 2"
-136	"remote host"
-137	"remote port"
-138	"remote user"
-139	"remote password"
-140	"sufix la primul nivel"
-141	"filtru la primul nivel"
-142	"atribut extras la primul nivel"
-143	"selectie la primul nivel"
-144	"suffix template la al doilea nivel"
-145	"filter template la al doilea nivel"
-146	"atribut extras la al doilea nivel"
-147	"selectie la al doilea nivel"
-148	"variabile de mediu pentru conectarea cu baza de date"
-197	"scopul cautarii la primul nivel"
-198	"timeout conectare la primul nivel"
-199	"scopul cautarii la al doilea nivel"
-200	"timeout conectare la al doilea nivel"
-201	"primul nivel al unei expresii obisnuite"
-202	"al doilea nivel al unei expresii obisnuite"
+91	"Valoare"
+92	"Alte adrese email"
+93	"Respecta headerul campului existent"
+94	"Optiuni de conectare"
+97	"Scopul cautarii"
+98	"Timeout conectare"
+135	"Includere cerere LDAP de nivel 2"
+136	"Remote host"
+137	"Remote port"
+138	"Remote user"
+139	"Remote password"
+140	"Sufix la primul nivel"
+141	"Filtru la primul nivel"
+142	"Atribut extras la primul nivel"
+143	"Selectie la primul nivel"
+144	"Suffix template la al doilea nivel"
+145	"Filter template la al doilea nivel"
+146	"Atribut extras la al doilea nivel"
+147	"Selectie la al doilea nivel"
+148	"Variabile de mediu pentru conectarea cu baza de date"
+197	"Scopul cautarii la primul nivel"
+198	"Timeout conectare la primul nivel"
+199	"Scopul cautarii la al doilea nivel"
+200	"Timeout conectare la al doilea nivel"
+201	"Primul nivel al unei expresii obisnuite"
+202	"Al doilea nivel al unei expresii obisnuite"
 
 $set 17 Cookie expiration periods
-1	"sesiune"
+1	"Sesiune"
 2	"10 minute"
 3	"30 minute"
 4	"1 ora"
