@@ -20,17 +20,20 @@ Este servidor le proporciona acceso a su entorno de las listas de correo del ser
    <TABLE BORDER=0 CELLPADDING=3><TR VALIGN="top">
     <TD WIDTH=33% NOWRAP>
      [FOREACH topic IN topics]
+      o
       [IF topic->id=topicsless]
        <A HREF="[path_cgi]/lists/[topic->id]"><B>Otros</B></A><BR>
       [ELSE]
        <A HREF="[path_cgi]/lists/[topic->id]"><B>[topic->title]</B></A><BR>
       [ENDIF]
 
+      [IF topic->sub]
       [FOREACH subtopic IN topic->sub]
        <FONT SIZE="-1">
 	&nbsp;&nbsp;<A HREF="[path_cgi]/lists/[topic->id]/[subtopic->NAME]">[subtopic->title]</A><BR>
        </FONT>
       [END]
+      [ENDIF]
       [IF topic->next]
 	</TD><TD></TD><TD WIDTH=33% NOWRAP>
       [ENDIF]
@@ -46,7 +49,7 @@ Este servidor le proporciona acceso a su entorno de las listas de correo del ser
      <TR> 
       <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
       <A HREF="[path_cgi]/lists" >
-     <FONT SIZE=-1><B>view all lists</B></FONT></A>
+     <FONT SIZE=-1><B>ver todas las listas</B></FONT></A>
      </TD>
     </TR>
   </TABLE>
@@ -59,7 +62,7 @@ Este servidor le proporciona acceso a su entorno de las listas de correo del ser
         <FORM ACTION="[path_cgi]" METHOD=POST> 
          <INPUT SIZE=25 NAME=filter VALUE=[filter]>
          <INPUT TYPE="hidden" NAME="action" VALUE="search_list">
-         <INPUT TYPE="submit" NAME="action_search_list" VALUE="Buscar listas">
+         <INPUT TYPE="submit" NAME="action_search_list" VALUE="Search lists">
         </FORM>
    </TD>
         
@@ -82,6 +85,4 @@ Este servidor le proporciona acceso a su entorno de las listas de correo del ser
 [ENDIF]
 <BR><BR>
 
-
-
-
+<!-- end home.es.tpl -->
