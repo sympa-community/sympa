@@ -1980,7 +1980,7 @@ sub do_redirect {
 
      $param->{'email'} = $in{'email'};
 
-     ('wwsympa',$in{'email'},'null',$ip,'remindpasswd','',$robot,'','done');
+     # &List::db_log('wwsympa',$in{'email'},'null',$ip,'remindpasswd','',$robot,'','done');
 
      if ($in{'previous_action'} eq 'referer') {
 	 $param->{'referer'} = &tools::escape_chars($in{'previous_list'});
@@ -2047,7 +2047,7 @@ sub do_redirect {
 	 if ($param->{'user'}{'password'} =~ /^init/);
 
      &List::send_global_file('sendpasswd', $in{'email'}, $robot, $param);
-     ('wwsympa',$in{'email'},'null',$ip,'sendpasswd','',$robot,'','done');
+     # &List::db_log('wwsympa',$in{'email'},'null',$ip,'sendpasswd','',$robot,'','done');
 
 
      $param->{'email'} = $in{'email'};
@@ -2113,7 +2113,7 @@ sub do_redirect {
 	 }
 
      }
-     ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'which','',$robot,'','done');
+     # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'which','',$robot,'','done');
      return 1;
  }
 
@@ -2273,14 +2273,14 @@ sub do_redirect {
      unless ($action =~ /do_it/) {
 	 &error_message('may_not');
 	 &wwslog('info','do_review: may not review');
-	 ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','may not');
+	 # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','may not');
 	 return undef;
      }
 
      unless ($param->{'total'}) {
 	 &error_message('no_subscriber');
 	 &wwslog('info','do_review: no subscriber');
-	 ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','no subscriber');
+	 # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','no subscriber');
 	 return 1;
      }
 
