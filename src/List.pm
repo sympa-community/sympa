@@ -3121,10 +3121,22 @@ sub get_first_user {
 	    ## first lock
 	    if ($include_lock_count == 1) {
 		my $lock_file = $self->{'dir'}.'/include.lock';
-		unless (open FH, ">>$lock_file") {
+		
+		## Create include.lock if needed
+		unless (-f $lock_file) {
+		    unless (open FH, ">>$lock_file") {
+			&do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+			return undef;
+		    }
+		}
+		close $lock_file;
+
+		## Read access to prevent "Bad file number" error on Solaris
+		unless (open FH, "$lock_file") {
 		    &do_log('err', 'Cannot open %s: %s', $lock_file, $!);
 		    return undef;
 		}
+		
 		unless (flock (FH, LOCK_SH | LOCK_NB)) {
 		    &do_log('notice','Waiting for reading lock on %s', $lock_file);
 		    unless (flock (FH, LOCK_SH)) {
@@ -3399,10 +3411,22 @@ sub get_first_bouncing_user {
 	## first lock
 	if ($include_lock_count == 1) {
 	    my $lock_file = $self->{'dir'}.'/include.lock';
-	    unless (open FH, ">>$lock_file") {
+
+	    ## Create include.lock if needed
+	    unless (-f $lock_file) {
+		unless (open FH, ">>$lock_file") {
+		    &do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+		    return undef;
+		}
+	    }
+	    close $lock_file;
+	    
+	    ## Read access to prevent "Bad file number" error on Solaris
+	    unless (open FH, "$lock_file") {
 		&do_log('err', 'Cannot open %s: %s', $lock_file, $!);
 		return undef;
 	    }
+
 	    unless (flock (FH, LOCK_SH | LOCK_NB)) {
 		&do_log('notice','Waiting for reading lock on %s', $lock_file);
 		unless (flock (FH, LOCK_SH)) {
