@@ -139,7 +139,7 @@ if ($main::options{'dump'}) {
     
     my @listnames;
     if ($main::options{'dump'} eq 'ALL') {
-	@listnames = &List::get_lists();
+	@listnames = &List::get_lists('*');
     }else {
 	@listnames = ($main::options{'dump'});
     }
