@@ -1027,12 +1027,23 @@ sub new {
 
     ## Only process the list if the name is valid.
     unless ($name and ($name =~ /^[a-z0-9][a-z0-9\-\+\._]*$/io) ) {
-	&do_log('info', 'Incorrect listname "%s"',  $name);
+	&do_log('err', 'Incorrect listname "%s"',  $name);
 	return undef;
     }
     ## Lowercase the list name.
     $name =~ tr/A-Z/a-z/;
     
+    my $regx = $Conf{'robots'}{$robot}{'list_check_suffixes'} || $Conf{'list_check_suffixes'};
+    if( defined ($regx) && $regx )
+    {
+	$regx =~ s/,/\|/g;
+	if ($name =~ /^(\S+)-(${regx})$/)
+	{
+		&do_log('err', 'Incorrect name: listname "%s" matches one of service aliases',  $name);
+		return undef;
+	}
+    }
+
     if ($list_of_lists{$name}){
 	# use the current list in memory and update it
 	$liste=$list_of_lists{$name};

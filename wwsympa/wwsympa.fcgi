@@ -4254,9 +4254,21 @@ sub do_create_list {
     
     unless ($in{'listname'} =~ /^[a-z0-9][a-z0-9\-\+\._]*$/i) {
 	&error_message('incorrect_listname', {'listname' => $in{'listname'}});
+	&wwslog('info','do_create_list: incorrect listname %s', $in{'listname'});
 	return 'create_list_request';
     }
     
+    my $regx = $Conf{'robots'}{$robot}{'list_check_suffixes'} || $Conf{'list_check_suffixes'};
+    if( defined ($regx) && $regx )
+    {
+	$regx =~ s/,/\|/g;
+	if ($in{'listname'} =~ /^(\S+)-(${regx})$/)
+	{
+		&error_message("Incorrect listname \"$in{'listname'}\" matches one of service aliases",{'listname' => $in{'listname'}});
+		&wwslog('info','do_create_list: incorrect listname %s matches one of service aliases', $in{'listname'});
+		return 'create_list_request';
+	}
+    }
     ## 'other' topic means no topic
     $in{'topics'} = undef if ($in{'topics'} eq 'other');
 
