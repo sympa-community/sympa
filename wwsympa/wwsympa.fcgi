@@ -4451,7 +4451,7 @@ sub do_edit_list {
 	    ## Scalar
 	    ## Ex: 'max_size'
 	    }else {
-		if (!$new_p->[$i]) {
+		if (! defined($new_p->[$i])) {
 		    splice @{$new_p}, $i, 1;
 		}
 
