@@ -970,6 +970,7 @@ sub do_login {
     unless ($in{'passwd'}) {
 	$in{'init_email'} = $in{'email'};
 	$param->{'init_email'} = $in{'email'};
+	$param->{'escaped_init_email'} = &tools::escape_chars($in{'email'});
 	return 'loginrequest';
     }
 
@@ -987,6 +988,7 @@ sub do_login {
 	&message('passwd_not_found', {'email' => $in{'email'}});
 	&wwslog('info','do_login: password for user %s not found', $in{'email'});
 	$param->{'init_email'} = $in{'email'};
+	$param->{'escaped_init_email'} = &tools::escape_chars($in{'email'});
 	return 'loginrequest';
     }
     
@@ -1002,6 +1004,7 @@ sub do_login {
 	}
 
 	$param->{'init_email'} = $in{'email'};
+	$param->{'escaped_init_email'} = &tools::escape_chars($in{'email'});
 	return 'loginrequest';
     }
     

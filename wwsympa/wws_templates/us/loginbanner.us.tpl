@@ -52,7 +52,11 @@ privileged operation (one that requires your email address).
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
      <TR> 
       <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center"> 
+      [IF escaped_init_email]
+         <A HREF="[path_cgi]/nomenu/sendpasswd/[escaped_init_email]"
+      [ELSE]
          <A HREF="[path_cgi]/nomenu/remindpasswd/referer/[referer]"
+      [ENDIF]
        onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=300')" TARGET="wws_login">
      <FONT SIZE=-1><B>Send me a password</B></FONT></A>
      </TD>
