@@ -15,7 +15,7 @@ use Conf;
 use Log;
 use Getopt::Std;
 
-require "--BINDIR--/wwslib.pl";
+use wwslib;
 
 getopts('dF');
 
@@ -28,7 +28,7 @@ $wwsconf = {};
 $adrlist = {};
 
 # Load WWSympa configuration
-unless ($wwsconf = &load_config($wwsympa_conf)) {
+unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
     print STDERR 'unable to load config file';
     exit;
 }

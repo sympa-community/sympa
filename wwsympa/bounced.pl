@@ -43,7 +43,7 @@ my %equiv = ( "user unknown" => '5.1.1',
 
 
 require "--BINDIR--/bounce-lib.pl";
-require "--BINDIR--/wwslib.pl";
+use wwslib;
 
 getopts('dF');
 
@@ -53,7 +53,7 @@ $sympa_conf_file = '--CONFIG--';
 $wwsconf = {};
 
 # Load WWSympa configuration
-unless ($wwsconf = &load_config($wwsympa_conf)) {
+unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
     print STDERR 'unable to load config file';
     exit;
 }
