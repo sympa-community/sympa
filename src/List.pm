@@ -302,7 +302,7 @@ my %alias = ('reply-to' => 'reply_to',
 			  'title_id' => 4,
 			  'group' => 'archives'
 		      },
-	    'archive_crypted_msg' => {'format' => ['cleartext','decrypted'],
+	    'archive_crypted_msg' => {'format' => ['original','decrypted'],
 				    'default' => 'cleartext',
 				    'title_id' => 212,
 				    'group' => 'archives'
@@ -1902,7 +1902,7 @@ sub distribute_msg {
     ## Archives
     my $msgtostore = $message->{'msg'};
     if (($message->{'smime_crypted'} eq 'smime_crypted') &&
-	($self->{admin}{archive_crypted_msg} eq 'cleartext')) {
+	($self->{admin}{archive_crypted_msg} eq 'original')) {
 	$msgtostore = $message->{'orig_msg'};
     }
     $self->archive_msg($msgtostore);
