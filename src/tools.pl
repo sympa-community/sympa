@@ -452,12 +452,10 @@ sub smime_sign_check {
     ## first step is the msg signing OK ; /tmp/sympa-smime.$$ is created
     ## to store the signer certificat for step two. I known, that's durty.
 
-
-
     my $temporary_file = "/tmp/smime-sender.".$$ ;
     my $trusted_ca_options = '';
-    $trusted_ca_options = "-CAfile $Conf{'cafile'}" if ($Conf{'cafile'});
-    $trusted_ca_options = "-CApath $Conf{'capath'}" if ($Conf{'capath'});
+    $trusted_ca_options = "-CAfile $Conf{'cafile'} " if ($Conf{'cafile'});
+    $trusted_ca_options .= "-CApath $Conf{'capath'} " if ($Conf{'capath'});
     do_log('debug3', "$Conf{'openssl'} smime -verify  $trusted_ca_options -signer  $temporary_file");
 
     unless (open (MSGDUMP, "| $Conf{'openssl'} smime -verify  $trusted_ca_options -signer $temporary_file > /dev/null")) {
