@@ -976,7 +976,8 @@ my %alias = ('reply-to' => 'reply_to',
 				     'group' => 'bounces'
 				 },
 	    'remind_task' => {'task' => 'remind',
-			      'tilte-id' => 96,
+			      'gettext-id' => 'remind pediodical task',
+			      'default' => {'conf' => 'default_remind_task'},
 			      'group' => 'other'
 			      },
 	    'reply_to' => {'format' => '\S+',

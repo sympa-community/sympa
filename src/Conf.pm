@@ -36,7 +36,7 @@ use Carp;
 
 my @valid_options = qw(
 		       avg bounce_warn_rate bounce_halt_rate bounce_email_prefix chk_cert_expiration_task expire_bounce_task
-		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod 
+		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod default_remind_task
 		       cookie cookie_cas_expire create_list crl_dir crl_update_task db_host db_env db_name 
 		       db_options db_passwd db_type db_user db_port db_additional_subscriber_fields db_additional_user_fields
 		       default_shared_quota default_archive_quota default_list_priority distribution_mode edit_list email etc
@@ -184,7 +184,8 @@ my %Default_Conf =
      'soap_url' => '',
      'urlize_min_size' => 10240, ## 10Kb
      'supported_lang' => 'fr,en_US,hu,it',
-     'web_recode_to' => ''
+     'web_recode_to' => '',
+     'default_remind_task' => '2month',
      );
    
 my $wwsconf;
