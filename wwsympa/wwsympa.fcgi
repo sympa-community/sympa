@@ -3997,7 +3997,7 @@ sub do_arcsearch_id {
     $in{'key_word'} =~ s/\@/\\\@/g;
     $in{'key_word'} =~ s/\[/\\\[/g;
     $in{'key_word'} =~ s/\]/\\\]/g;
-   
+    $in{'key_word'} =~ s/\$/\\\$/g;
 
     $search->limit (1);
 
