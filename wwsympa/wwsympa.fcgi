@@ -167,6 +167,7 @@ my %comm = ('home' => 'do_home',
 	 'savefile' => 'do_savefile',
 	 'arc' => 'do_arc',
 	 'remove_arc' => 'do_remove_arc',
+	 'send_me' => 'do_send_me',
 	 'arcsearch_form' => 'do_arcsearch_form',
 	 'arcsearch_id' => 'do_arcsearch_id',
 	 'arcsearch' => 'do_arcsearch',
@@ -3997,6 +3998,82 @@ sub do_remove_arc {
     }
 
     closedir ARC;
+    return 1;
+}
+
+## Access to web archives
+sub do_send_me {
+    &wwslog('info', 'do_send_me : list %s, yyyy %s, mm %s, msgid %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
+
+    if ($in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
+	&error_message('may_not_send_me');
+	&wwslog('info','send_me: no message id found');
+	$param->{'status'} = 'no_msgid';
+	return undef;
+    } 
+    ## 
+    my $arcpath = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'yyyy'}-$in{'month'}";
+    &wwslog('info','send_me: looking for %s in %s',$in{'msgid'},"$arcpath/arctxt");
+
+    opendir ARC, "$arcpath/arctxt";
+    my $msgfile;
+    foreach my $file (grep (!/\./,readdir ARC)) {
+	&wwslog('debug','send_me: scanning %s', $file);
+	next unless (open MAIL,"$arcpath/arctxt/$file") ;
+	while (<MAIL>) {
+	    last if /^$/ ;
+	    if (/^Message-id:\s?<?([^>\s]+)>?\s?/i ) {
+		my $id = $1;
+		if ($id eq $in{'msgid'}) {
+		    $msgfile = $file ;
+		}
+		last ;
+	    }
+	}
+	close MAIL ;
+    }
+    if ($msgfile) {
+	my $message;
+	unless ($message = new Message("$arcpath/arctxt/$msgfile")) {
+	    &wwslog('info', 'do_send_me : could not create object message for file %s',"$arcpath/arctxt/$msgfile");
+	    $param->{'status'} = 'message_err';
+	}
+	
+	my $tempfile =  $Conf{'queue'}."/T.".&Conf::get_robot_conf($robot, 'sympa').".".time.'.'.int(rand(10000)) ;
+	unless (open TMP, ">$tempfile") {
+	    &do_log('notice', 'Cannot create %s : %s', $tempfile, $!);
+	    return undef;
+	}
+	
+	printf TMP "X-Sympa-To: %s\n", $param->{'user'}{'email'};
+	printf TMP "X-Sympa-From: %s\n", &Conf::get_robot_conf($robot, 'sympa');
+	printf TMP "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($param->{'user'}{'email'});
+	unless (open MSG, "$arcpath/arctxt/$msgfile") {
+	    $param->{'status'} = 'message_err';
+	    &wwslog('info', 'do_send_me : could not read file %s',"$arcpath/arctxt/$msgfile");
+	}
+	while (<MSG>){print TMP;}
+	close MSG;
+	close TMP;
+	
+	my $new_file = $tempfile;
+	$new_file =~ s/T\.//g;
+	
+	unless (rename $tempfile, $new_file) {
+	    &do_log('notice', 'Cannot rename %s to %s : %s', $tempfile, $new_file, $!);
+	    return undef;
+	}
+	&wwslog('info', 'do_send_me message %s spooled for %s', "$arcpath/arctxt/$msgfile", $param->{'user'}{'email'} );
+	&message('performed');	
+	$in{'month'} = $in{'yyyy'}."-".$in{'month'};
+	return 'arc';
+
+    }else{
+	&wwslog('info', 'do_send_me : no file match msgid');
+	$param->{'status'} = 'not_found';
+	return undef;
+    }
+    
     return 1;
 }
 

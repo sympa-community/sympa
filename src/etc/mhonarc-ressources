@@ -471,22 +471,27 @@ $TNEXTBUTTON$
    répondre à l'auteur <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
   à la liste <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
  <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Répondre">
+  <INPUT TYPE="submit" NAME="action_send_me" VALUE="revoyer à [user->email]">
 [ELSIF lang=hu]
   Válasz a feladónak <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
   a listának <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
   <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Válasz">
+  <INPUT TYPE="submit" NAME="action_send_me" VALUE="send it back to [user->email]">
 [ELSIF lang=et]
   Vasta saatjale <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
   listi <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
   <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Vasta">
+  <INPUT TYPE="submit" NAME="action_send_me" VALUE="send it back to [user->email]">
 [ELSIF lang=de]
   Antwort an Sender <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
   an Liste <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
   <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Antworten">
+  <INPUT TYPE="submit" NAME="action_send_me" VALUE="send it back to [user->email]">
 [ELSE] 
   Reply to sender <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
   to list <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
   <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Reply">
+  <INPUT TYPE="submit" NAME="action_send_me" VALUE="send it back to [user->email]">	
 [ENDIF]
 
 [IF action<>viewmod]
@@ -531,6 +536,7 @@ $TNEXTBUTTON$
 [ENDIF]
 [ENDIF]
 </FORM>
+
 [ENDIF]
 </FONT>
  </TD>
