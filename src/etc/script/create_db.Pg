@@ -27,4 +27,4 @@ CREATE TABLE subscriber_table (
 	comment_subscriber	varchar (150),
 	CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber, user_subscriber)
 );
-
+CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber));
