@@ -15,6 +15,17 @@
     \usepackage[frenchb]{babel}
 
     \usepackage {palatino}
+    \usepackage{graphics}
+    \usepackage{float}
+    \usepackage{fancyvrb}
+    \usepackage{calc}
+    \usepackage{latexsym}
+    \usepackage{color}
+    \usepackage{times}
+    \usepackage[latin1]{inputenc}
+    \usepackage{hyperref}
+%    \hypersetup{pdfauthor={},%
+%            pdftitle={},pdftex}
     \renewcommand {\ttdefault} {cmtt}
 
     \setlength {\parskip} {5mm}
