@@ -6237,10 +6237,7 @@ sub _apply_defaults {
 ## Save a parameter
 sub _save_list_param {
     my ($key, $p, $defaults, $fd) = @_;
-    &do_log('debug2', '_save_list_param(%s)', $key);
-
-#    my $old_fd = select;
-#    select $fd; $| = 1;
+    &do_log('debug4', '_save_list_param(%s)', $key);
 
     ## Ignore default value
     next if ($defaults == 1);
@@ -6258,20 +6255,15 @@ sub _save_list_param {
 	printf $fd "%s\n", $key;
 	foreach my $k (keys %{$p}) {
 
-	    ## Multiple param in a single line
-	    if (($::pinfo{$key}{'file_format'}{$k}{'occurrence'} =~ /n$/)
-		&& $::pinfo{$key}{'file_format'}{$k}{'split_char'}) {
-		$p->{$k} = join($::pinfo{$key}{'file_format'}{$k}{'split_char'}, @{$p->{$k}});
-	    }
-
-	    ## Ignore default value
-#	    next if ($defaults->{$key}{$k} == 1);
-
 	    if (defined ($::pinfo{$key}{'file_format'}{$k}{'scenario'})) {
 		## Skip if empty value
 		next if ($p->{$k}{'name'} =~ /^\s*$/);
 
 		printf $fd "%s %s\n", $k, $p->{$k}{'name'};
+	    }elsif (($::pinfo{$key}{'file_format'}{$k}{'occurrence'} =~ /n$/)
+		    && $::pinfo{$key}{'file_format'}{$k}{'split_char'}) {
+		
+		printf $fd "%s %s\n", $k, join($::pinfo{$key}{'file_format'}{$k}{'split_char'}, @{$p->{$k}});
 	    }else {
 		## Skip if empty value
 		next if ($p->{$k} =~ /^\s*$/);
@@ -6280,20 +6272,29 @@ sub _save_list_param {
 	    }
 	}
 	print $fd "\n";
+
     }else {
-	printf $fd "%s %s\n", $key, $p;
-	print $fd "\n";
+	if (($::pinfo{$key}{'occurrence'} =~ /n$/)
+	    && $::pinfo{$key}{'split_char'}) {
+	    printf $fd "%s %s\n\n", $key, join($::pinfo{$key}{'split_char'}, @{$p});
+	}elsif ($key eq 'digest') {
+	    my $value = sprintf '%s %d:%d', join(',', @{$p->{'days'}})
+		,$p->{'hour'}, $p->{'minute'};
+	    printf $fd "%s %s\n\n", $key, $value;
+	}elsif (($key eq 'user_data_source') && $defaults && $List::use_db) {
+	    printf $fd "%s %s\n\n", $key,  'database';
+	}else {
+	    printf $fd "%s %s\n\n", $key, $p;
+	}
     }
     
-#    select $old_fd;
-
     return 1;
 }
 
 ## Load a single line
 sub _load_list_param {
     my ($robot,$key, $value, $p, $directory) = @_;
-    # &do_log('debug3','_load_list_param(%s,\'%s\',\'%s\')', $robot,$key, $value);
+    &do_log('debug4','_load_list_param(%s,\'%s\',\'%s\')', $robot,$key, $value);
     
     ## Empty value
     if ($value =~ /^\s*$/) {
@@ -6687,36 +6688,15 @@ sub _save_admin_file {
 	next if ($key =~ /^comment|defaults$/);
 	next unless (defined $admin->{$key});
 
-	## Original parameters
-	my @orig = ($admin->{'digest'}, $admin->{'topics'});
-
-	## Multiple param in a single line
-	if (($::pinfo{$key}{'occurrence'} =~ /n$/)
-	    && $::pinfo{$key}{'split_char'}) {
-	    $admin->{$key} = join($::pinfo{$key}{'split_char'}, @{$admin->{$key}});
-	}
-
-	if ($key eq 'digest') {
-	    $admin->{'digest'} = sprintf '%s %d:%d', join(',', @{$admin->{'digest'}{'days'}})
-		,$admin->{'digest'}{'hour'}, $admin->{'digest'}{'minute'};
-
-#	}elsif ($key eq 'topics') {
-#	    $admin->{'topics'} = sprintf '%s', join(',', @{$admin->{'topics'}});
-	}elsif (($key eq 'user_data_source') && $admin->{'defaults'}{'user_data_source'}) {
-	    $admin->{'user_data_source'} = 'database' if $List::use_db;
-	}
-
 	## Multiple parameter (owner, custom_header,...)
-	if (ref ($admin->{$key}) eq 'ARRAY') {
+	if ((ref ($admin->{$key}) eq 'ARRAY') &&
+	    ! $::pinfo{$key}{'split_char'}) {
 	    foreach my $elt (@{$admin->{$key}}) {
 		&_save_list_param($key, $elt, $admin->{'defaults'}{$key}, \*CONFIG);
 	    }
 	}else {
 	    &_save_list_param($key, $admin->{$key}, $admin->{'defaults'}{$key}, \*CONFIG);
 	}
-
-	## Restore original parameters
-	($admin->{'digest'}, $admin->{'topics'}) = @orig;
 
     }
     close CONFIG;
