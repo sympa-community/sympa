@@ -3922,7 +3922,8 @@ sub _load_scenario_file {
 	unless (open SCENARI, $scenario_file) {
 
 	    ## Distrib scenario
-	    unless (open SCENARI,"--ETCBINDIR--/scenari/$function.$name") {
+	    $scenario_file = "--ETCBINDIR--/scenari/$function.$name";
+	    unless (open SCENARI,$scenario_file) {
 		do_log ('info',"Unable to open scenario $scenario_file, please report to listmaster");
 		return &_load_scenario ($function,$name,'true() smtp -> reject', $directory);
 	    }
