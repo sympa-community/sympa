@@ -94,7 +94,7 @@ encryption.
 ## Check --dump option
 my %options;
 &GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'config|f=s', 
-	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s', 'lowercase');
+	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase');
 
 
 if ($main::options{'debug'}) {
@@ -104,7 +104,8 @@ if ($main::options{'debug'}) {
 $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
                                      $main::options{'version'} || 
 				     $main::options{'import'} ||
-				     $main::options{'help'} ||
+				     $main::options{'help'} || 
+				     $main::options{'make_alias_file'} || 
 				     $main::options{'lowercase'} || 
 				     $main::options{'dump'});
 
@@ -194,7 +195,7 @@ if ($signal ne 'hup' ) {
     }
     
     unless ($main::options{'dump'} || $main::options{'help'} ||
-	    $main::options{'version'} || $main::options{'import'} ||
+	    $main::options{'version'} || $main::options{'import'} || $main::options{'make_alias_file'} ||
 	    $main::options{'lowercase'} ) {
 	## Create and write the pidfile
 	&tools::write_pid($Conf{'pidfile'}, $$);
@@ -239,6 +240,22 @@ if ($main::options{'dump'}) {
     exit 0;
 }elsif ($main::options{'help'}) {
     print $usage_string;
+    exit 0;
+}elsif ($main::options{'make_alias_file'}) {
+    my @listnames = &List::get_lists('*');
+    unless (open TMP, ">/tmp/sympa_aliases.$$") {
+	printf STDERR "Unable to create tmp/sympa_aliases.$$, exiting\n";
+	exit;
+    }
+    printf TMP "#\n#\tAliases for all Sympa lists (but not for robots)\n#\n";
+    close TMP;
+    foreach my $listname (@listnames) {
+	if (my $list = new List ($listname)) {
+
+	    system ("--SBINDIR--/alias_manager.pl add $list->{'name'} $list->{'admin'}{'host'} /tmp/sympa_aliases.$$") ;
+	}	
+    }
+    printf ("Sympa aliases file is /tmp/sympa_aliases.$$ file made, you probably need to installed it in your SMTP engine\n");
     
     exit 0;
 }elsif ($main::options{'version'}) {
