@@ -351,9 +351,7 @@ while ($query = &new_loop()) {
     $robot = $Conf{'robots'}{'robot_by_http_host'}{$ENV{'SERVER_NAME'}};
     $robot = $Conf{'host'} unless $robot;
 
-
-
-   # printf STDERR "host : $ENV{'SERVER_NAME'}, robot : $robot,  Conf{'robots'}{$robot}: $Conf{'robots'}{$robot}\n";
+  # printf STDERR "host : $ENV{'SERVER_NAME'}, robot : $robot,  Conf{'robots'}{$robot}: $Conf{'robots'}{$robot}\n";
    #  printf STDERR "host : $ENV{'SERVER_NAME'}, robot : $robot, title :  $Conf{'robots'}{$robot}->{'title'}\n";
    #  printf STDERR "host : $ENV{'SERVER_NAME'}, robot : $robot, listmaster :  $Conf{'robots'}{$robot}->{'listmasters'}\n";
 
@@ -950,7 +948,7 @@ sub check_param_in {
     if ($in{'list'} =~ /^(\S+)\0/) {
 	$in{'list'} = $1;
 
-	unless ($list = new List ($in{'list'})) {
+	unless ($list = new List ($in{'list'}, $robot)) {
 	    &error_message('unknown_list', {'list' => $in{'list'}} );
 	    &wwslog('info','check_param: unknown list %s', $in{'list'});
 	    return undef;
@@ -968,7 +966,7 @@ sub check_param_in {
     }
 
    if ($in{'list'}) {
-       unless ($list = new List ($in{'list'})) {
+       unless ($list = new List ($in{'list'}, $robot)) {
 	   &error_message('unknown_list', {'list' => $in{'list'}} );
 	   &wwslog('info','check_param: unknown list %s', $in{'list'});
 	   return undef;

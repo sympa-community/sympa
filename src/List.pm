@@ -970,9 +970,16 @@ sub db_get_handler {
 
 ## Creates an object.
 sub new {
-    my($pkg, $name) = @_;
+    my($pkg, $name, $robot) = @_;
     my $liste={};
-    do_log('debug2', 'List::new(%s)', $name);
+    do_log('debug2', 'List::new(%s,%s)', $name, $robot);
+    
+    ## Allow robot in the name
+    if ($name =~ /\@/) {
+	my @parts = split /\@/, $name;
+	$robot ||= $parts[1];
+	$name = $parts[0];
+    }
 
     ## Only process the list if the name is valid.
     unless ($name and ($name =~ /^[a-z0-9][a-z0-9\-\+\._]*$/io) ) {
@@ -991,7 +998,7 @@ sub new {
 	# create a new object list
 	bless $liste, $pkg;
     }
-    return undef unless ($liste->load($name));
+    return undef unless ($liste->load($name, $robot));
 
     return $liste;
 }
@@ -1114,28 +1121,42 @@ sub save_config {
 
 ## Loads the administrative data for a list
 sub load {
-    my ($self, $name) = @_;
-    do_log('debug2', 'List::load(%s)', $name);
+    my ($self, $name, $robot) = @_;
+    do_log('debug2', 'List::load(%s, %s)', $name, $robot);
     
     my $users;
-    my $robot;
-#    foreach my $r (&get_robots) {
-    foreach my $r (keys %{$Conf{'robots'}}) {
-	if ((-d "$Conf{'home'}/$r/$name") && (-f "$Conf{'home'}/$r/$name/config")) {
-	    $robot=$r;
-	    last;
+
+    ## Search robot if none was provided
+    unless ($robot) {
+	foreach my $r (keys %{$Conf{'robots'}}) {
+	    if (-d "$Conf{'home'}/$r/$name") {
+		$robot=$r;
+		last;
+	    }
+	}
+	
+	## Try default robot
+	unless ($robot) {
+	    if (-d "$Conf{'home'}/$name") {
+		$robot = $Conf{'host'};
+	    }
 	}
     }
-    if ($robot) {
-	$self->{'domain'} = $robot ;
+
+    if ($robot eq $Conf{'host'}) {
+ 	$self->{'dir'} = "$Conf{'home'}/$name";
+    }elsif ($robot) {
 	$self->{'dir'} = "$Conf{'home'}/$robot/$name";
-    }elsif((!($robot)) && (-d "$Conf{'home'}/$name") && (-f "$Conf{'home'}/$name/config")) {
-	$self->{'domain'} = $Conf{'host'};
-	$self->{'dir'} = "$Conf{'home'}/$name";
-    }else{
+    }else {
 	&do_log('info', 'No such list %s', $name);
 	return undef ;
-    }    
+    }
+
+    $self->{'domain'} = $robot ;
+    unless ((-d $self->{'dir'}) && (-f "$self->{'dir'}/config")) {
+	&do_log('info', 'Missing directory or config file for %s', $name);
+	return undef ;
+    }
 
     $self->{'name'}  = $name ;
 
