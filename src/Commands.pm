@@ -1670,7 +1670,7 @@ sub distribute {
     $hdr->add('X-Validation-by', $sender);
 
     ## Distribute the message
-    if (($daemon_usage eq  'message') || ($daemon_usage eq  'command_and_message')) {
+    if (($main::daemon_usage eq  'message') || ($main::daemon_usage eq  'command_and_message')) {
 
 	my $numsmtp =$list->distribute_msg($message);
 	unless (defined $numsmtp) {
@@ -1783,7 +1783,7 @@ sub confirm {
 	$hdr->add('X-Validation-by', $sender);
 	
 	## Distribute the message
-	if (($daemon_usage eq  'message') || ($daemon_usage eq  'command_and_message')) {
+	if (($main::daemon_usage eq  'message') || ($main::daemon_usage eq  'command_and_message')) {
 	    my $numsmtp = $list->distribute_msg($message);
 	    unless (defined $numsmtp) {
 		do_log('info','Unable to send message to list %s', $list->{'name'});
