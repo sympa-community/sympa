@@ -4956,7 +4956,7 @@ sub do_set_pending_list_request {
 
      if ($in{'notify'}) {
 	 foreach my $i (@{$list->{'admin'}{'owner'}}) {
-	     next if ($i->{'reception'} eq 'nomail');
+	     ## Notify all listowners, even if reception is nomail
 	     next unless ($i->{'email'});
 	     if ($in{'status'} eq 'open') {
 		 $list->send_file('list_created', $i->{'email'}, $robot,{});
