@@ -380,6 +380,7 @@ sub load_robots {
 				  bounce_level2_rate => 1,
 				  soap_url => 1,
 				  supported_lang => 1,
+				  default_shared_quota => 1,
 				  );
 
     ## Load wwsympa.conf
