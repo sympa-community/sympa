@@ -122,6 +122,7 @@ sub export_list{
        &Log::do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
        return undef;
     }
+    require Net::LDAP;
     
     ##Connexion
     my $ldap = Net::LDAP->new($Conf{'ldap_export'}{$directory}{'host'});
@@ -202,7 +203,8 @@ sub delete_list{
         &Log::do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
         return undef;
     }
-    
+    require Net::LDAP;
+
     ## We may used delete_list independently OR from export_list()
     unless (defined $ldap) {
       $already_binded = 0;
@@ -263,6 +265,7 @@ sub get_exported_lists{
 	&Log::do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
         return undef;
     }
+    require Net::LDAP;
     
     my $ldap = Net::LDAP->new($Conf{'ldap_export'}{$directory}{'host'}, timeout => $Conf{'ldap_export'}{$directory}{'connection_timeout'});
     unless ($ldap) {
@@ -313,6 +316,7 @@ sub get_dn_anonymous{
         &Log::do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
         return undef;
     }
+    require Net::LDAP;
 
     ##New
     my $ldap = Net::LDAP->new($datas->{'host'},timeout => $datas->{'timeout'});

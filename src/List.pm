@@ -1056,6 +1056,7 @@ sub db_connect {
 	do_log('info',"Unable to use DBI library, install DBI (CPAN) first");
 	return undef;
     }
+    require DBI;
 
     ## Do we have db_xxx required parameters
     foreach my $db_param ('db_type','db_name','db_host','db_user') {
@@ -4686,6 +4687,7 @@ sub search{
 	do_log('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
 	return undef;
     }
+    require Net::LDAP;
     
     ## There can be replicates
     foreach my $host_entry (split(/,/,$ldap_conf{'host'})) {
@@ -5548,6 +5550,7 @@ sub _include_users_ldap {
 	do_log('err',"Unable to use LDAP library, install perl-ldap (CPAN) first");
 	return undef;
     }
+    require Net::LDAP;
     
     my $id = _get_datasource_id($param);
 
@@ -5672,6 +5675,7 @@ sub _include_users_ldap_2level {
 	do_log('err',"Unable to use LDAP library, install perl-ldap (CPAN) first");
 	return undef;
     }
+    require Net::LDAP;
 
     my $id = _get_datasource_id($param);
 
@@ -5841,6 +5845,7 @@ sub _include_users_sql {
 	do_log('err',"Intall module DBI (CPAN) before using include_sql_query");
 	return undef ;
     }
+    require DBI;
 
     my $id = _get_datasource_id($param);
 

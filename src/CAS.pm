@@ -340,11 +340,13 @@ sub get_https2{
 	    $errors = sprintf "Unable to use SSL library, IO::Socket::SSL required, install IO-Socket-SSL (CPAN) first\n";
 	    return undef;
 	}
-	
+	require IO::Socket::SSL;
+
 	unless (eval "require LWP::UserAgent") {
 	    $errors = sprintf "Unable to use LWP library, LWP::UserAgent required, install LWP (CPAN) first\n";
 	    return undef;
 	}
+	require  LWP::UserAgent;
 
 	my $ssl_socket;
 
