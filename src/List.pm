@@ -3945,6 +3945,9 @@ sub load_scenario_list {
     my %list_of_scenario;
 
     foreach my $dir ("$directory/scenari", "$Conf{'etc'}/scenari", "--ETCBINDIR--/scenari") {
+
+	next unless (-d $dir);
+
 	while (<$dir/$action.*>) {
 	    next unless (/$action\.(\w+)$/);
 	    my $name = $1;
