@@ -2371,7 +2371,8 @@ sub send_notify_to_editor {
 			 {'type' => 'shared_moderated',
 			  'filename' => $param[0],
 			  'who' => $param[1],
-			  'address_interface' => $param[2]});
+			  'address_interface' => $param[2],
+		          'many_files' => $param[3]});
     }
     return 1;
 }

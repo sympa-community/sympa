@@ -1304,11 +1304,11 @@ lines must therefore be added to the \unixcmd {sendmail} alias file
 (often \file {/etc/aliases}):
 
 \begin {quote}
-sympa:             "| [MAILERPROGDIR]/queue sympa@\samplerobot"
-listmaster: 	   "| [MAILERPROGDIR]/queue listmaster@\samplerobot"
-bounce+*:          "| [MAILERPROGDIR]/bouncequeue sympa@\samplerobot"
-sympa-request:     postmaster
-sympa-owner:       postmaster
+sympa:             "| [MAILERPROGDIR]/queue sympa@\samplerobot"\\
+listmaster: 	   "| [MAILERPROGDIR]/queue listmaster@\samplerobot"\\
+bounce+*:          "| [MAILERPROGDIR]/bouncequeue sympa@\samplerobot"\\
+sympa-request:     postmaster\\
+sympa-owner:       postmaster\\
 \end {quote}
 
 Note: if you run \Sympa virtual robots, you will need one \mailaddr {sympa}
@@ -7820,6 +7820,7 @@ have the same constraints relating to access control :
 		\begin{itemize}
 		\item Subdirectory creation
 		\item File uploading
+		\item File unzipping
 		\item Description of a document (title and basic information)
 		\item On-line editing of a text file
 		\item Document (file or directory) removal. If on a directory, it must be empty.
@@ -8035,7 +8036,7 @@ The shared web feature has called for some new actions.
 	consist in displaying the index.
 	The d\_read action is accessible from a list's \textbf {info} page.
 	\item action D\_CREATE\_DIR\\
-	Creates a new subdirectory in a directory that can be edited. 
+	Creates a new subdirectory in a directory that can be edited without moderation. 
 	The creator is the owner of the directory. The access rights are
 	those of the parent directory.
 	\item action D\_DESCRIBE\\
@@ -8044,6 +8045,9 @@ The shared web feature has called for some new actions.
 	Deletes a document after edit access control. If applied to a folder, it has to be empty.
 	\item action D\_UPLOAD\\
 	Uploads a file into a directory that can be edited.  
+	\item action D\_UNZIP\\
+	Unzip a file into a directory that can be edited without moderation. The whole file hierarchy contained in the zip file
+	is installed into the directory.
 	\item action D\_OVERWRITE\\
 	Overwrites a file if it can be edited. The new owner of the file is the one who has done
 	the overwriting operation.
@@ -8068,20 +8072,24 @@ The default page for reading a document. If for a file, displays it (if
 viewable) or downloads it. If for a directory, displays all readable
 subdocuments, each of which will feature buttons corresponding
 to the different actions this subdocument allows. If the directory is
-editable, displays buttons to describe it, upload a file to it
-or create a new subdirectory. If access to the document is editable,
+editable, displays buttons to describe it or upload a file to it. If the
+directory is editable without moderation, it displays button to
+create a new subdirector or to upload a zip file in order to install a file hierarchy. 
+If access to the document is editable,
 displays a button to edit the access to it. 
 
 \subsection {d\_editfile.tt2} 
 The page used to edit a file. If for a text file, allows it to be edited on-line.
-This page also enables the description of the file to be edited, or another file
-to be substituted in its place.
+This page also enables another file to be substituted in its place.
 
 \subsection {d\_control.tt2}
 The page to edit the access rights and the owner of a document. 
 
 \subsection {d\_upload.tt2}
 This page to upload a file is only used when the name of the file already exists.
+
+\subsection {d\_properties.tt2}
+This page is used to edit description file and to rename it.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Using Sympa commands

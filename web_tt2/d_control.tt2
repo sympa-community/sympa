@@ -1,10 +1,14 @@
 <!-- $Id$ -->
 
-<h1>[%|loc(visible_path)%]Access rights for the document %1[%END%]</h1>
+<table width="100%"><tr>
+ <td><h2>[%|loc(visible_path)%]Access rights for the document %1[%END%]</h2></td>
+ <td align="right"><h2><a href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <img style="vertical-align: bottom;" src="[% father_icon %]" /> [%|loc%]Up to higher level directory[%END%] </a></h2></td>
+</tr></table>
+<br /> 
+
     [%|loc(owner)%]Owner : %1[%END%] <br />
     [%|loc(doc_date)%]Last update : %1[%END%] <br />
     [%|loc(doc_title)%]Description : %1[%END%] <br /><br />
-<h3><a href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <img style="vertical-align: bottom;" src="[% father_icon %]" /> [%|loc%]Up to higher level directory[%END%] </a></h3>
 
 <table style="width: 100%;">
 

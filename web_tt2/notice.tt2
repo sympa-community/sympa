@@ -15,6 +15,12 @@
 [% ELSIF notice.msg == 'upload_success' %] 
 [%|loc(notice.path)%]File %1 successfully uploaded![%END%]
 
+[% ELSIF notice.msg == 'unzip_success' %] 
+[%|loc(notice.path)%]File %1 unziped![%END%]
+
+[% ELSIF notice.msg == 'file_erased' %] 
+[%|loc(notice.path)%]Old file %1 has been erased[%END%]
+
 [% ELSIF notice.msg == to_moderate %]
 [%|loc(notice.path)%]File %1 waiting for moderation[%END%]
 

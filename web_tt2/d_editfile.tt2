@@ -1,16 +1,24 @@
 <!-- $Id$ -->
 
-[% IF url %]
-<h1>[%|loc(visible_path)%]Edition of the bookmark %1[%END%]</h1>
-[% ELSIF directory %]
-<h1>[%|loc(visible_path)%]Edition of the directory %1[%END%]</h1>
-[% ELSE %]
-<h1>[%|loc(visible_path)%]Edition of the file %1[%END%]</h1>
-[% END %]
+
+
+<table width="100%"><tr>
+ <td>
+  [% IF url %]
+  <h1>[%|loc(visible_path)%]Edition of the bookmark %1[%END%]</h1>
+  [% ELSE %]
+  <h1>[%|loc(visible_path)%]Edition of the file %1[%END%]</h1>
+  [% END %]
+ </td>
+ <td align="right">
+  <h3><a href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <img style="border: 0px; vertical-align: bottom;" src="[% father_icon %]"> [%|loc%]Up to higher level directory[%END%] </a></h3>
+ </td>      
+</tr></table>
+<br/>
+
     [%|loc(doc_owner)%]Owner : %1[%END%] <br />
     [%|loc(doc_date)%]Last update : %1[%END%] <br />
     [%|loc(desc)%]Description : %1[%END%] <br /><br />
-<h3><a href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <img style="border: 0px; vertical-align: bottom;" src="[% father_icon %]"> [%|loc%]Up to higher level directory[%END%] </a></h3>
 
 <table cellspacing="15">
 
@@ -40,49 +48,6 @@
   </tr>
   [% END %]
 
-  <tr>
-  <form action="[% path_cgi %]" method="post">
-  <td style="text-align: right;" valign="bottom">
-  <label>
-  [% IF directory %]
-  <strong> [%|loc(visible_path)%]Describe the directory %1[%END%]</strong><br />
-  [% ELSE %]
-  <strong> [%|loc(visible_path)%]Describe the file %1[%END%]</strong><br />
-  [% END %]
-  <input size="50" maxlength="100" name="content" value="[% desc %]" />
-  </label>
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="path" value="[% path %]" />
-  <input type="hidden" name="serial" value="[% serial_desc %]" />
-  <input type="hidden" name="action" value="d_describe" />
-  </td>
-  <td style="text-align: left;" valign="bottom">
-  <input size="50" maxlength="100" type="submit" name="action_d_describe" value="[%|loc%]Apply[%END%]" />
-  </td>
-  </form>
-  </tr>
-
-  <tr>
-  <form action="[% path_cgi %]" method="post">
-  <td style="text-align: right;" valign="bottom">
-  <label>
-  [% IF directory %]
-  <strong> [%|loc(visible_path)%]Rename directory %1[%END%]</strong><br />
-  [% ELSE %]
-  <strong> [%|loc(visible_path)%]Rename file %1[%END%]</strong><br />
-  [% END %]
-  <input size="50" maxlength="100" name="new_name" />
-  </label>
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="path" value="[% path %]" />
-  <input type="hidden" name="serial" value="[% serial_desc %]" />
-  <input type="hidden" name="action" value="d_rename" />
-  </td>
-  <td style="text-align: left;" valign="bottom">
-  <input size="20" maxlength="50" type="submit" name="action_d_rename" value="[%|loc%]Rename[%END%]" />
-  </td>
-  </form>
-  </tr>
 
 </table>
 <br />

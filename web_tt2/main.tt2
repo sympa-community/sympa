@@ -93,15 +93,37 @@
 
   function toggle_selection(myfield) {
     for (i = 0; i < myfield.length; i++) {
-    [% STOPPARSE %]
        if (myfield[i].checked) {
             myfield[i].checked = false;
        }else {
 	    myfield[i].checked = true;
        }
-    [% STARTPARSE %]
     }
   }
+
+  //If the motif is found in the string, my_question is asked
+  // if the answer == yes than action is d_unzip else d_upload 
+
+  function requestBasedOnRegExp(my_question,my_form) {
+    expr = /^.+\.zip$/i;
+
+    found = expr.exec(document.getElementById("uploaded_file").value);
+
+    if (found) {
+      if (confirm(my_question)) {
+        document.getElementById("javascript_action").value = "d_unzip";
+
+      } else {
+        document.getElementById("javascript_action").value = "d_upload";
+      }
+    }else {
+      document.getElementById("javascript_action").value = "d_upload";
+    }
+    return true;
+  }   
+
+
+
 // end browsers -->
 </SCRIPT>
 

@@ -141,6 +141,18 @@
 [% ELSIF error.msg == 'cannot_create_dir' %] 
 [%|loc(error.path)%]Cannot create directory %1[%END%] : [% error.reason %]
 
+[% ELSIF error.msg == 'cannot_unzip' %]
+[%|loc(error.name)%]Cannot unzip file %1[%END%] : [% error.reason %]
+
+[% ELSIF error.msg == 'error_during_unzip' %]
+[%|loc(error.name)%]Errors while unzipping file %1[%END%] : [% error.reason %]
+
+[% ELSIF error.msg == 'file_no_copied' %]
+[%|loc(error.name)%]File %1 is not copied[%END%] : [% error.reason %]
+
+[%ELSIF error.msg == 'directory_no_copied' %]
+[%|loc(error.name)%]Directory %1 and its contents are not copied[%END%] : [% error.reason %]
+
 [% ELSIF error.msg == 'full_directory' %]
 [%|loc(error.directory)%]Failed : %1 not empty[%END%] 
 

@@ -96,6 +96,24 @@ sub check_lang_cookie {
     return undef;
 }
 
+## Check cookie for expert_page mode in the shared
+sub check_expertpage_cookie {
+    my $http_cookie = shift;
+    
+    my %cookies = parse CGI::Cookie($http_cookie);
+    
+    ## Scan parameters
+    foreach (sort keys %cookies) {
+	my $cookie = $cookies{$_};
+	
+	next unless ($cookie->name eq 'sympaexpertpage');
+
+	return $cookie->value;
+    }
+
+    return undef;
+}
+
 ## Set user $email cookie, ckecksum use $secret, expire=(now|session|#sec) domain=(localhost|<a domain>)
 sub set_cookie {
     my ($email, $secret, $http_domain, $expires, $auth) = @_ ;
@@ -315,6 +333,34 @@ sub get_which_cookie {
 	return (@which);
     }
     return undef;
+}
+
+## Set cookie for expert_page mode in the shared
+sub set_expertpage_cookie {
+    my ($put,$domain) = @_;
+    
+    if ($domain eq 'localhost') {
+	$domain="";
+    }
+    
+    my $expire;
+    if ($put == 1) {
+	$expire = '+1y';
+    } else {
+	$expire = '-10y';
+    }
+    
+    my $cookie = new CGI::Cookie (-name    => 'sympaexpertpage',
+				  -value   => '1',
+				  -expires => $expire,
+				  -domain  => $domain,
+				  -path    => '/'
+				  );
+    
+    ## Send cookie to the client
+    printf "Set-Cookie:  %s\n", $cookie->as_string;
+    
+    return 1;
 }
 
 ## Set cookie for accessing web archives
