@@ -43,10 +43,11 @@ require 'tools.pl';
 my $opt_d;
 my $opt_F;
 my %options;
-&GetOptions(\%main::options, 'dump=s', 'debug|d', 'foreground', 'config|f=s', 
+&GetOptions(\%main::options, 'dump=s', 'debug|d', 'log_level=s', 'foreground', 'config|f=s', 
 	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s', 'lowercase');
 
-$main::options{'debug2'} = 1 if ($main::options{'debug'});
+# $main::options{'debug2'} = 1 if ($main::options{'debug'});
+$log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
 my $Version = '0.1';
 
@@ -109,6 +110,14 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'task_manager');
+
+# setting log_level using conf unless it is set by calling option
+if ($main::options{'log_level'}) {
+    do_log('info', "Configuration file read, log level set using options : $log_level"); 
+}else{
+    $log_level = $Conf{'log_level'};
+    do_log('info', "Configuration file read, default log level  $log_level"); 
+}
 
 ## Set the UserID & GroupID for the process
 $( = $) = (getpwnam('--USER--'))[2];
@@ -224,10 +233,10 @@ while (!$end) {
     my @tasks = sort epoch_sort (grep !/^\.\.?$/, readdir DIR);
 
     ## processing of tasks anterior to the current date
-    # &do_log ('debug2', 'processing of tasks anterior to the current date');
+    &do_log ('debuug3', 'processing of tasks anterior to the current date');
     foreach my $task (@tasks) {
 	$task =~ /^(\d+)\.\w*\.\w+\.($regexp{'listname'}|_global)$/;
-	# &do_log ('debug2', "procesing %s/%s", $spool_task,$task);
+	# &do_log ('debuug3', "procesing %s/%s", $spool_task,$task);
 	last unless ($1 < $current_date);
 	if ($2 ne '_global') { # list task
 	    my $list = new List ($2);
@@ -797,7 +806,7 @@ sub select_subs {
     my @tab = @{$Rarguments};
     my $condition = $tab[0];
  
-    &do_log ('debug', "line $context->{'line_number'} : select_subs ($condition)");
+    &do_log ('debug2', "line $context->{'line_number'} : select_subs ($condition)");
     $condition =~ /(\w+)\(([^\)]*)\)/;
     if ($2) { # conversion of the date argument into epoch format
 	my $date = &tools::epoch_conv ($2, $context->{'execution_date'});
