@@ -41,6 +41,7 @@ use CPAN;
 	     'DB_File' => '1.75',
 	     'IO::Socket::SSL' => '0.90',
 	     'Net::SSLeay' => '1.16',
+	     'Archive::Zip' => '1.05',
 	     'Bundle::LWP' => '1.09'
 	     );
 
@@ -69,6 +70,7 @@ use CPAN;
 	     'Net::SMTP' => 'libnet',
 	     'IO::Socket::SSL' => 'IO-Socket-SSL',
 	     'Net::SSLeay' => 'NET-SSLeay',
+	     'Archive::Zip' => 'Archive-Zip',
 	     'Bundle::LWP' => 'LWP');
 
 %opt_features = ('DBI' => 'a generic Database Driver, required by Sympa to access Subscriber information and User preferences. An additional Database Driver is required for each database type you wish to connect to.',
@@ -79,6 +81,7 @@ use CPAN;
 		 'Net::LDAP' =>   'required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.',
 		 'CGI::Fast' => 'WWSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
 		 'Crypt::CipherSaber' => 'this module provides reversible encryption of user passwords in the database.',
+		 'Archive::Zip ' => 'this module provides zip/unzip for archive and shared document download/upload',
 		 'FCGI' => 'WSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
 		 'Net::SMTP' => 'this is required if you set \'list_check_smtp\' sympa.conf parameter, used to check existing aliases before mailing list creation.',
 		 'IO::Socket::SSL' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
