@@ -995,7 +995,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 'group' => 'other'
 		     },
 	    'user_data_source' => {'format' => ['database','file','include','include2'],
-				   'default' => 'file',
+				   'default' => 'include2',
 				   'title_id' => 81,
 				   'group' => 'data_source'
 				   },
@@ -1490,17 +1490,8 @@ sub load {
 	}
 
     }elsif ($self->{'admin'}{'user_data_source'} eq 'include2') {
-    ## include other subscribers as defined in include directives (list|ldap|sql|file|owners|editors)
-	unless ( defined $self->{'admin'}{'include_file'}
-		 || defined $self->{'admin'}{'include_list'}
-		 || defined $self->{'admin'}{'include_remote_sympa_list'}
-		 || defined $self->{'admin'}{'include_sql_query'}
-		 || defined $self->{'admin'}{'include_ldap_query'}
-		 || defined $self->{'admin'}{'include_ldap_2level_query'}
-		 || defined $self->{'admin'}{'include_admin'}
-		 ) {
-	    &do_log('err', 'Include paragraph missing in configuration file %s', "$self->{'dir'}/config");
-#	    return undef;
+	## currently no check
+
 	}
 
 
