@@ -142,13 +142,27 @@ sub load_config {
 	    if (defined ($conf->{$k})) {
 		$conf->{$k} = $v;
 	    }else {
-		&Log::do_log ('info', 'unknown parameter %s', $k);
+		printf STDERR "Unknown parameter %s in %s\n", $k, $file;
 	    }
 	}
 	next;
     }
     
     close FILE;
+
+    ## Check binaries and directories
+    if ($conf->{'arc_path'} && (! -d $conf->{'arc_path'})) {
+	printf STDERR "No web archives directory: %s\n", $conf->{'arc_path'};
+    }
+
+    if ($conf->{'bounce_path'} && (! -d $conf->{'bounce_path'})) {
+	printf STDERR "No bounces directory: %s\n", $conf->{'bounce_path'};
+    }
+
+    if ($conf->{'mhonarc'} && (! -x $conf->{'mhonarc'})) {
+	printf STDERR "MHonArc is not installed or %s is not executable.\n", $conf->{'mhonarc'};
+    }
+
     return $conf;
 }
 
