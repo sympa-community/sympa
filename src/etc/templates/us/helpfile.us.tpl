@@ -390,6 +390,8 @@ Available commands are:
  SET <list|*> DIGEST         * Message reception in compilation mode
  SET <list|*> SUMMARY        * Receiving the message index only
  SET <list|*> MAIL           * <list> reception in normal mode
+ SET <list|*> NOTICE         * Receiving message subject only
+
  SET <list|*> CONCEAL        * To become unlisted (hidden subscriber address)
  SET <list|*> NOCONCEAL      * Subscriber address visible via REView
 
