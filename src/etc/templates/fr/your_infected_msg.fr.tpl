@@ -1,14 +1,17 @@
 From: [from]
-Subject: Un virus a été détecté dans votre message
+Subject: Un virus a été détecté.
 Mime-version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-transfer-encoding: 8bit
 
     **** A L E R T E    V I R U S ****
 
-Votre e-mail pour [recipient]
-contenait le virus suivant : [virus_name].
+Un message qui semble avoir été émis par vous ([from])
+a destination de [recipient] contenait le virus
+suivant : [virus_name].
 
-Nous avons interrompu le transfert de ce message avant sa diffusion.
+Nous avons interrompu le transfert de ce message avant
+sa diffusion.
 
-Passez votre machine à l'anti-virus !
+Il peut être prudent de passez votre poste de travail à
+l'anti-virus.
