@@ -357,7 +357,7 @@ installdir:
 
 installconfig:
 	mkdir -p $(DESTDIR)$(CONFDIR)
-	for cfile in sympa.conf wwsympa.conf ; do \
+	@for cfile in sympa.conf wwsympa.conf ; do \
 	if [ ! -f $(DESTDIR)$(CONFDIR)/$$cfile ] ; then \
 	echo "Installing sample config file $$cfile..."; \
 	$(PERL)  $(DESTDIR)$(SBINDIR)/sympa_wizard.pl -c $$cfile; \
