@@ -161,7 +161,8 @@ undef my $log; # won't execute send_msg and delete_subs commands if true, only l
 #$log = 1;
 
 ## list of list task models
-my @list_models = ('expire', 'remind', 'sync_include');
+#my @list_models = ('expire', 'remind', 'sync_include');
+my @list_models = ('sync_include');
 
 ## hash of the global task models
 my %global_models = (#'crl_update_task' => 'crl_update', 
@@ -211,6 +212,10 @@ my %var_commands = ('delete_subs'      => ['var'],
 		                          # variable
 		    );
 
+foreach (keys %var_commands) {
+    $commands{$_} = $var_commands{$_};
+}                                     
+ 
 # commands which are used for assignments
 my %asgn_commands = ('select_subs'      => ['subarg'],
 		                            # condition
@@ -218,6 +223,10 @@ my %asgn_commands = ('select_subs'      => ['subarg'],
 		                            # variable
 		     );
 
+foreach (keys %asgn_commands) {
+    $commands{$_} = $asgn_commands{$_};
+}                                    
+     
 ###### INFINITE LOOP SCANING THE QUEUE (unless a sig TERM is received) ######
 while (!$end) {
     
@@ -540,7 +549,7 @@ sub chk_line {
 
 	unless ($commands{$command}) { 
 	    $Rhash->{'nature'} = 'error';
-	    $Rhash->{'error'} = 'unknown command';
+	    $Rhash->{'error'} = "unknown command $command";
 	    return 0;
 	}
     
@@ -559,7 +568,7 @@ sub chk_line {
 	chk_line ($2, \%hash2);
 	unless ( $asgn_commands{$hash2{'command'}} ) { 
 	    $Rhash->{'nature'} = 'error';
-	    $Rhash->{'error'} = 'non valid assignment';
+	    $Rhash->{'error'} = "non valid assignment $2";
 	    return 0;
 	}
 	$Rhash->{'nature'} = 'assignment';
@@ -831,7 +840,7 @@ sub next_cmd {
     my %data = ('creation_date'  => $context->{'execution_date'},
 		'execution_date' => 'execution_date');
     if ($name[3] eq '_global') {
-	$type = 'global';
+	$type = '_global';
 	foreach my $key (keys %global_models) {
 	    if ($global_models{$key} eq $model) {
 		$model_choice = $Conf{$key};
@@ -856,7 +865,7 @@ sub next_cmd {
 		return undef;
 	    }
 
-	    $model_choice = $list->{'admin'}{"$model\_task"};
+	    $model_choice = $list->{'admin'}{"$model\_task"}{'name'};
 	}
     }
 
@@ -907,11 +916,11 @@ sub select_subs {
 	}
     }
     
-    my $verify_context; # parameter of subroutine List::verify
-    $verify_context->{'sender'} = 'nobody' ;
-    $verify_context->{'email'} = $verify_context->{'sender'};
-    $verify_context->{'remote_host'} = 'unknown_host';
-    $verify_context->{'listname'} = $context->{'object_name'};
+    # parameter of subroutine List::verify
+    my $verify_context = {'sender' => 'nobody',
+			  'email' => 'nobody',
+			  'remote_host' => 'unknown_host',
+			  'listname' => $context->{'object_name'}};
     
     my $new_condition = $condition; # necessary to the older & newer condition rewriting
     # loop on the subscribers of $list_name
@@ -997,9 +1006,7 @@ sub create_cmd {
 	my $list = new List ($object);
 	$data{'list'}{'name'} = $list->{'name'};
     }
-    if ($type eq 'global') {
-	$type = '_global';
-    }
+    $type = '_global';
     #printf "xxxxxxxxxxxxx appel 3\n";
     unless (create ($context->{'execution_date'}, '', $model, $model_choice, $type, \%data)) {
 	error ($context->{'task_file'}, "error in create command : creation subroutine failure");
