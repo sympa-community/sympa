@@ -3533,6 +3533,7 @@ As a consequence, you can grant privileges in a list to people belonging to an \
 	
 \subsection {Definition}
 
+[STARTPARSE]
 	People are selected through an \index {LDAP filter} defined in a configuration file. This file must have the extension '.ldap'.It is stored in \dir {[ETCDIR]/search\_filters/}.
 	
 	You must give several informations in order to create a Named Filter:
@@ -3597,9 +3598,11 @@ The variables used by 'search' are :
 \begin{itemize}
 	\item{the name of the LDAP Configuration file}\\
 	\item{the [sender]}\\
-	That is to say the sender email. 
+	That is to say the sender email address. 
 \end{itemize}
  
+Note that \Sympa processes maintain a cache of processed search conditions to limit access to the LDAP directory ; each entry has a lifetime of 1 hour in the cache.
+
 The method of authentication does not change.
 [STARTPARSE]
 
