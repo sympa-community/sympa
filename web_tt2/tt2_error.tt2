@@ -25,7 +25,19 @@ a:visited {
 <body style="background-color: [% bg_color %]; color: [% text_color %];">
 
 <h2>[%|loc%]Sympa could not deliver the requested page for the following reason : [%END%]<br />
+[% IF tt2_error %]
 <em>[% tt2_error %]</em><br /><br />
+[% ELSIF errors %]
+          <table>
+          <tr style="background-color: [% error_color %];">
+            <td>
+              <span style="color: [% bg_color %];">
+       [% PROCESS error.tt2 %]
+       </span>
+            </td>
+          </tr>
+          </table>
+[% END %]
 [%|loc%]Please contact the listmaster.[%END%]</h2>
 
 <div style="text-align: right; margin-left: auto; margin-right: auto;">

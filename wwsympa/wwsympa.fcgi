@@ -388,6 +388,96 @@ my %action_type = ('editfile' => 'admin',
 #		'viewlogs' => 'admin'
 );
 
+## Regexp applied on incoming parameters (%in)
+## The aim is not a strict definition of parameter format
+## but rather a security check
+my %in_regexp = (
+		 ## Default regexp
+		 '*' => '[\w\-\.]+', 
+				 
+		 ## List config parameters
+		 'single_param' => '.+',
+		 'multiple*_param' => '.+',
+
+		 ## Textarea content
+		 'content' => '.+',
+		 'body' => '.+',
+		 'info' => '.+',
+
+		 ## Free data
+		 'subject' => '[^<>\\\*\$]+',
+		 'gecos' => '[^<>\\\*\$]+',
+		 'additional_field' => '[^<>\\\*\$]+',
+		 'dump' => '[^<>\\\*\$]+', # contents email + gecos
+
+		 ## Search
+		 'filter' => '[^<>\\\*\$]+', # search list
+		 'key_word' => '[^<>\\\*\$]+',
+
+		 ## File names
+		 'file' => '[\w\-\.]+', 
+		 'arc_file' => '[\w\-\.]+', 
+		 'path' => '^[<>\\\*\$]+',
+		 'dir' => '^[<>\\\*\$]+',
+		 'name_doc' => '^[<>\\\*\$]+',
+		 'shortname' => '^[<>\\\*\$]+',
+		 'new_name' => '^[<>\\\*\$]+',
+		 'id' => '^[<>\\\*\$]+',
+
+		 ## URL
+		 'referer' => '[^\\\$\*\"\'\`\^\|\<\>]+',
+		 'failure_referer' => '[^\\\$\*\"\'\`\^\|\<\>]+',
+		 'url' => '[^\\\$\*\"\'\`\^\|\<\>]+',
+
+		 ## Msg ID
+		 'msgid' => '[^\\\$\*\"\'\`\^\|\<\>]+',
+		 'in_reply_to' => '[^\\\$\*\"\'\`\^\|\<\>]+',
+		 'message_id' => '[^\\\$\*\"\'\`\^\|\<\>]+',
+
+		 ## Password
+		 'passwd' => '.+',
+		 'password' => '.+',
+		 'newpasswd1' => '.+',
+		 'newpasswd2' => '.+',
+		 'new_password' => '.+',
+		 
+		 ## Topics
+		 'topic' => '[\w\/]+',
+		 'subtopic' => '[\w\/]+',
+		 
+
+		 ## List names
+		 'list' => $tools::regexp{'listname'},
+		 'previous_list' => $tools::regexp{'listname'},
+		 'new_list' => $tools::regexp{'listname'},
+		 'listname' => $tools::regexp{'listname'},
+		 'new_listname' => $tools::regexp{'listname'},
+		 'selected_lists' => $tools::regexp{'listname'},
+
+		 ## Family names
+		 'family_name' => $tools::regexp{'family_name'},
+
+		 ## Email addresses
+		 'email' => $tools::regexp{'email'},
+		 'init_email' => $tools::regexp{'email'},
+		 'new_alternative_email' => $tools::regexp{'email'},
+		 'new_email' => $tools::regexp{'email'},
+		 'pending_email' => $tools::regexp{'email'},
+		 'sender' => $tools::regexp{'email'},
+		 'to' => $tools::regexp{'email'},
+
+		 ## Host
+		 'new_robot' => $tools::regexp{'host'},
+		 'remote_host' => $tools::regexp{'host'},
+		 'remote_addr' => $tools::regexp{'host'},
+
+		 ## Scenario name
+		 'scenario' => $tools::regexp{'scenario'},
+		 'read_access' => $tools::regexp{'scenario'},
+		 'edit_access' => $tools::regexp{'scenario'},
+
+		 );
+
 ## Open log
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 
@@ -426,6 +516,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
  while ($query = &new_loop()) {
 
 
+     undef %::changed_params;
+     
      undef $param;
      undef $list;
      undef $robot;
@@ -459,8 +551,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
      ## Parse CGI parameters
  #    &CGI::ReadParse();
 
-     ## Get PATH_INFO parameters
-     &get_parameters();
 
      if (defined $Conf{'robot_by_http_host'}{$ENV{'SERVER_NAME'}}) {
 	 my ($selected_robot, $selected_path);
@@ -537,6 +627,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      ## Default auth method (for scenarios)
      $param->{'auth_method'} = 'md5';
+
+     ## Get PATH_INFO parameters
+     unless (&get_parameters()) {	 
+	 &send_html('tt2_error.tt2');
+	 next;
+     }
 
      if (($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS') &&
 	 ($in{'action'} ne 'sso_login')) { ## Do not check client certificate automatically if in sso_login 
@@ -902,57 +998,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
  	 }
  	 close FILE;
      }else {
-	 ## Send HTML
-	 if ($param->{'date'}) {
-	     printf "Date: %s\n", &POSIX::strftime('%a, %d %b %Y %R %z',localtime($param->{'date'}));
-	 }
-	 print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;
-	 print "Content-Type: text/html\n\n";
-
-	 ## Icons
-	 $param->{'icons_url'} = $wwsconf->{'icons_url'};
-
-
-	 ## Retro compatibility concerns
-	 $param->{'active'} = 1;
-
-	 if (defined $list) {
-	     $param->{'list_conf'} = $list->{'admin'};
-	 }
-
-	 my $tt2_include_path = [$Conf{'etc'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'}),
-				 $Conf{'etc'}.'/web_tt2',
-				 '--ETCBINDIR--'.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'}),
-				 '--ETCBINDIR--'.'/web_tt2'];
-	 ## not the default robot
-	 if (lc($robot) ne lc($Conf{'host'})) {
-	     unshift @{$tt2_include_path}, $Conf{'etc'}.'/'.$robot.'/web_tt2';
-	     unshift @{$tt2_include_path}, $Conf{'etc'}.'/'.$robot.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
-	 }
-
-	 ## If in list context
-	 if (defined $list) {
-	     if (defined $list->{'admin'}{'family_name'}) {
-		 my $family = $list->get_family();
-		 unshift @{$tt2_include_path}, $family->{'dir'}.'/web_tt2';
-		 unshift @{$tt2_include_path}, $family->{'dir'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
-	     }
-
-	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2';
-	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
-	 }
-
-	 my $tt2_options = {};
-	 if ($Conf{'web_recode_to'}) {
-	     $tt2_options =  {'recode' => $Conf{'web_recode_to'}};
-	 }
-
-	 unless (&tt2::parse_tt2($param,'main.tt2' , \*STDOUT, $tt2_include_path, $tt2_options)) {
-	     my $error = &tt2::get_error();
-	     $param->{'tt2_error'} = $error;
-	     &List::send_notify_to_listmaster('web_tt2_error', $robot, $error);
-	     &tt2::parse_tt2($param,'tt2_error.tt2' , \*STDOUT, $tt2_include_path);
-	 }
+	 &send_html('main.tt2');
      }    
 
      # exit if wwsympa.fcgi itself has changed
@@ -960,10 +1006,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	  do_log('notice',"Exiting because $ENV{'SCRIPT_FILENAME'} has changed since fastcgi server started");
 	  exit(0);
      }
-
-     # At the end of this loop reset variables is important to use this cgi as a CGI::fast 
-     undef $param ; 
-     undef %::changed_params;
 
  }
 
@@ -1175,8 +1217,92 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 $in{'list'} = $lists[0];
      }
 
+     ## Check parameters format
+     foreach my $p (keys %in) {
+
+	 ## Skip empty parameters
+ 	 next if ($in{$p} =~ /^$/);
+
+	 my @tokens = split /\./, $p;
+	 my $pname = $tokens[0];
+	 my $regexp;
+	 if ($pname =~ /^additional_field/) {
+	     $regexp = $in_regexp{'additional_field'};
+	 }elsif ($in_regexp{$pname}) {
+	     $regexp = $in_regexp{$pname};
+	     }else {
+		 $regexp = $in_regexp{'*'};
+	     }
+	 foreach my $one_p (split /\0/, $in{$p}) {
+	     unless ($one_p =~ /^$regexp$/) {
+		 &error_message('syntax_errors', {'params' => $p} );
+		 &wwslog('err','get_parameters: syntax error for parameter %s', $p);
+		 return undef;
+	     }
+	 }
+     }
+
      return 1;
  }
+
+## Send HTML output
+sub send_html {
+
+    my $tt2_file = shift;
+
+    ## Send HTML
+    if ($param->{'date'}) {
+	printf "Date: %s\n", &POSIX::strftime('%a, %d %b %Y %R %z',localtime($param->{'date'}));
+    }
+    print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;
+    print "Content-Type: text/html\n\n";
+    
+    ## Icons
+    $param->{'icons_url'} = $wwsconf->{'icons_url'};
+    
+    
+    ## Retro compatibility concerns
+    $param->{'active'} = 1;
+    
+    if (defined $list) {
+	$param->{'list_conf'} = $list->{'admin'};
+    }
+    
+    my $tt2_include_path = [$Conf{'etc'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'}),
+			    $Conf{'etc'}.'/web_tt2',
+			    '--ETCBINDIR--'.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'}),
+			    '--ETCBINDIR--'.'/web_tt2'];
+    ## not the default robot
+    if (lc($robot) ne lc($Conf{'host'})) {
+	unshift @{$tt2_include_path}, $Conf{'etc'}.'/'.$robot.'/web_tt2';
+	unshift @{$tt2_include_path}, $Conf{'etc'}.'/'.$robot.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
+    }
+    
+    ## If in list context
+    if (defined $list) {
+	if (defined $list->{'admin'}{'family_name'}) {
+	    my $family = $list->get_family();
+	    unshift @{$tt2_include_path}, $family->{'dir'}.'/web_tt2';
+	    unshift @{$tt2_include_path}, $family->{'dir'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
+	}
+	
+	unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2';
+	unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
+    }
+    
+    my $tt2_options = {};
+    if ($Conf{'web_recode_to'}) {
+	$tt2_options =  {'recode' => $Conf{'web_recode_to'}};
+    }
+    
+    unless (&tt2::parse_tt2($param,$tt2_file , \*STDOUT, $tt2_include_path, $tt2_options)) {
+	my $error = &tt2::get_error();
+	$param->{'tt2_error'} = $error;
+	&List::send_notify_to_listmaster('web_tt2_error', $robot, $error);
+	&tt2::parse_tt2($param,'tt2_error.tt2' , \*STDOUT, $tt2_include_path);
+    }
+    
+}
 
  ## Analysis of incoming parameters
  sub check_param_in {
