@@ -608,6 +608,11 @@ a virtual robot or for the whole site.
 	The main daemon ; it processes commands and delivers
 	messages. Continuously scans the \dir {msg/} spool.
 
+	\item \file {sympa_wizard.pl}\\
+	A wizard to edit \file {sympa.conf} and \file {wwsympa.conf}.
+	Maybe it is a good idea to run it at the beginning, but thoses
+	file can also be edited with your favorite text editor. 
+
 	\item \file {wwsympa.fcgi}\\
 	The CGI program offering a complete web interface
 	to mailing lists. It can work in both classical CGI and
@@ -1315,7 +1320,7 @@ is still recognized but should not be used anymore.
 
 	\label{create-list}
 
-	 \default {listmaster}
+	 \default {public\_listmaster}
 
 	Defines who can create lists (or request list creations).
 	Sympa will use the corresponding scenario.
@@ -6037,6 +6042,18 @@ This paragraph defines bounce management parameters :
 	for the list will be halted, i.e. they are retained for subsequent 
 	moderation. Once the number of bounces exceeds this value,
 	messages for the list are no longer distributed. 
+
+\item
+\label {expire-bounce}
+\lparam {expire\_bounce} 
+
+	\default daily
+
+	Name of the task template use to remove old bounces. Usefull to
+        remove bounces for a subscriber email if some message are
+        distributed without receiving new bounce. In this case, the
+        subscriber email seems to be OK again. Active if
+        task\_manager.pl is running. 
 	
 \end{itemize}
 
