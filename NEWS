@@ -3,13 +3,46 @@
 
 (See Changelog file for the full changes log)
 
-3.3.6b.4	XXX
+3.3.6b.4	19 September 2002
+
+   New features :
+	
+	[Harry Westerman] Complete translation to Dutch
+
+	src/sympa.pl: New '--make_alias_file' option to build a complete alias file
+
+	wwsympa/wwsympa.fcgi: to avoide httpd restart when installing
+	some change wwsympa/wwsympa.fcgiserver exit just after serving a
+	page if wwsympa.fcgi as changed on disk.. Then Apache launch a new
+	fastcgi server
+
+	[requested by Janek Hiis] : custom subject can now refer to list variables 
+	([list->name] or [list->sequence])
 
    Changes :
 
 *****	wwsympa.conf parameter 'alias_manager' no more used
 *****	Sympa now always uses alias_manager.pl script ; installed aliases can be customized 
 *****	via the 'list_aliases.tpl' file
+
+	New Message.pm module that provide a complex message object including S/MIME information.  
+	This should fix the bug	related to moderation of crypted messages
+
+	src/List.pm: query database for total of subscribers, if no LIMIT was given or if first page
+
+	wwsympa/wwsympa.fcgi: [reported by Vincent Mathieu] Add filename to upload log
+
+   Bug fixes :
+
+	[reported by Sergiy Zhuk] Fix: umask was considered a decimal number ; now taken as octal
+
+	wwsympa/wwsympa.fcgi: [Herve Maza]:  missing $robot parameter to load_scenario_list() 
+	subroutine. Robot-specific d_read and d-edit scenarios were not available.
+
+	src/List.pm: wwsympa died (in request_action) if scenario had incorrect format
+
+	wwsympa/wwsympa.fcgi: reply-to problem from web archives
+
 
 3.3.6b.3	10 September 2002
 

@@ -1,3 +1,366 @@
+2002-09-19 16:48  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	sympa/index.html, sympa/node1.html, sympa/node10.html,
+	sympa/node11.html, sympa/node12.html, sympa/node13.html,
+	sympa/node14.html, sympa/node15.html, sympa/node16.html,
+	sympa/node17.html, sympa/node18.html, sympa/node19.html,
+	sympa/node2.html, sympa/node20.html, sympa/node3.html,
+	sympa/node4.html, sympa/node5.html, sympa/node6.html,
+	sympa/node7.html, sympa/node8.html, sympa/node9.html,
+	sympa/sympa.html, sympa/sympa.ps: Update documentation regarding
+	alias management
+
+2002-09-19 15:45  salaun
+
+	* src/Makefile: Remove postfix alias manager
+
+2002-09-19 15:40  salaun
+
+	* src/alias_manager.pl: alias_manager accept a filename as last
+	parameter
+
+2002-09-19 15:39  salaun
+
+	* src/sympa.pl: Sympa.pl --make_alias_file
+
+2002-09-18 17:14  salaun
+
+	* NEWS, src/README.postfix, src/postfix_manager.pl,
+	src/sympa_wizard.pl, wwsympa/wwslib.pm: Changes: no more
+	'alias_manager' conf parameter ; also supress postfix_manager.pl
+
+2002-09-18 16:52  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix typo
+
+2002-09-18 16:32  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: Allow edition of list_aliases.tpl from
+	the web
+
+2002-09-18 16:07  salaun
+
+	* src/Makefile: Fix: missing INSTALLDIR
+
+2002-09-18 16:04  salaun
+
+	* src/Makefile, src/alias_manager.pl, src/etc/list_aliases.tpl,
+	wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi: Changes: Rename alias.tpl
+	to list_aliases.tpl ; change some variable names
+
+2002-09-18 15:23  salaun
+
+	* src/alias_manager.pl: Fix typo
+
+2002-09-18 15:00  salaun
+
+	* src/alias_manager.pl: Fix
+
+2002-09-18 14:34  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix typo
+
+2002-09-18 14:29  salaun
+
+	* nls/fr.msg, nls/us.msg, src/alias_manager.pl: Changes: alias
+	management related
+
+2002-09-18 14:20  salaun
+
+	* doc/sympa.pdf, src/sympa.pl, src/task_manager.pl,
+	wwsympa/archived.pl, wwsympa/bounced.pl, wwsympa/wwsympa.fcgi,
+	doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
+	doc/sympa/node11.html, doc/sympa/node12.html,
+	doc/sympa/node13.html, doc/sympa/node14.html,
+	doc/sympa/node15.html, doc/sympa/node16.html,
+	doc/sympa/node17.html, doc/sympa/node18.html,
+	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
+	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
+	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
+	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps:
+	[reported by Sergiy Zhuk] Fix: umask was considered a decimal
+	number ; now taken as octal
+
+2002-09-18 09:20  salaun
+
+	* wwsympa/wwsympa.fcgi: [Herve Maza] Fix: missing $robot parameter
+	to load_scenario_list() subroutine. Robot-specific d_read and
+	d-edit scenarios were not available.
+
+2002-09-17 17:04  salaun
+
+	* src/sympa.pl: Fix send_auth() parameters
+
+2002-09-17 16:46  salaun
+
+	* src/: Commands.pm, List.pm, Makefile, Message.pm, sympa.pl,
+	tools.pl: New Message.pm module that provide a complex message
+	object including S/MIME information.  This should fix the bug
+	related to moderation of crypted messages
+
+2002-09-17 11:51  salaun
+
+	* src/List.pm: Fix: wwsympa died (in request_action) if scenario
+	had incorrect format
+
+2002-09-17 11:22  salaun
+
+	* src/List.pm: Fix: return undef if wrong scenario format
+
+2002-09-17 11:15  salaun
+
+	* src/etc/scenari/d_read.private: Fix typo
+
+2002-09-17 11:04  salaun
+
+	* doc/parse_tex.pl, src/List.pm, src/mail.pm, src/parser.pl,
+	src/task_manager.pl, wwsympa/wwsympa.fcgi: Fix: parser.pl is now a
+	package with its own symbol table. This fixes inclusions problems
+
+2002-09-16 16:55  salaun
+
+	* src/Commands.pm: Change: smime_decrypt() expect a List object as
+	parameter
+
+2002-09-16 16:54  salaun
+
+	* src/tools.pl: Change: smime_decrypt() parameter is now a List
+	object, no more a listname
+
+2002-09-16 11:21  salaun
+
+	* nls/Makefile, nls/nl.msg, src/List.pm,
+	src/etc/scenari/access_web_archive.closed,
+	src/etc/scenari/access_web_archive.intranet,
+	src/etc/scenari/access_web_archive.listmaster,
+	src/etc/scenari/access_web_archive.owner,
+	src/etc/scenari/access_web_archive.private,
+	src/etc/scenari/access_web_archive.public,
+	src/etc/scenari/add.auth, src/etc/scenari/add.closed,
+	src/etc/scenari/add.owner, src/etc/scenari/add.owner_notify,
+	src/etc/scenari/create_list.intranet,
+	src/etc/scenari/create_list.listmaster,
+	src/etc/scenari/create_list.public_listmaster,
+	src/etc/scenari/d_edit.owner, src/etc/scenari/d_edit.private,
+	src/etc/scenari/d_edit.public, src/etc/scenari/d_read.owner,
+	src/etc/scenari/d_read.private, src/etc/scenari/d_read.public,
+	src/etc/scenari/del.auth, src/etc/scenari/del.closed,
+	src/etc/scenari/del.owner, src/etc/scenari/del.owner_notify,
+	src/etc/scenari/edit_list.closed, src/etc/scenari/edit_list.owner,
+	src/etc/scenari/global_remind.listmaster,
+	src/etc/scenari/info.open, src/etc/scenari/info.private,
+	src/etc/scenari/invite.closed, src/etc/scenari/invite.owner,
+	src/etc/scenari/invite.private, src/etc/scenari/invite.public,
+	src/etc/scenari/remind.listmaster, src/etc/scenari/remind.owner,
+	src/etc/scenari/review.closed, src/etc/scenari/review.intranet,
+	src/etc/scenari/review.listmaster, src/etc/scenari/review.owner,
+	src/etc/scenari/review.private, src/etc/scenari/review.public,
+	src/etc/scenari/send.closed, src/etc/scenari/send.editor,
+	src/etc/scenari/send.editorkey, src/etc/scenari/send.editorkeyonly,
+	src/etc/scenari/send.editorkeyonlyauth,
+	src/etc/scenari/send.intranet,
+	src/etc/scenari/send.intranetorprivate,
+	src/etc/scenari/send.newsletter,
+	src/etc/scenari/send.newsletterkeyonly,
+	src/etc/scenari/send.private, src/etc/scenari/send.private_smime,
+	src/etc/scenari/send.privateandeditorkey,
+	src/etc/scenari/send.privateandnomultipartoreditorkey,
+	src/etc/scenari/send.privatekey,
+	src/etc/scenari/send.privatekeyandeditorkeyonly,
+	src/etc/scenari/send.privateoreditorkey,
+	src/etc/scenari/send.privateorpublickey,
+	src/etc/scenari/send.public, src/etc/scenari/send.public_nobcc,
+	src/etc/scenari/send.publickey,
+	src/etc/scenari/send.publicnoattachment,
+	src/etc/scenari/send.publicnomultipart,
+	src/etc/scenari/subscribe.auth,
+	src/etc/scenari/subscribe.auth_notify,
+	src/etc/scenari/subscribe.auth_owner,
+	src/etc/scenari/subscribe.closed,
+	src/etc/scenari/subscribe.intranet,
+	src/etc/scenari/subscribe.intranetorowner,
+	src/etc/scenari/subscribe.open,
+	src/etc/scenari/subscribe.open_notify,
+	src/etc/scenari/subscribe.open_quiet,
+	src/etc/scenari/subscribe.owner, src/etc/scenari/subscribe.smime,
+	src/etc/scenari/subscribe.smimeorowner,
+	src/etc/scenari/topics_visibility.conceal,
+	src/etc/scenari/topics_visibility.identified,
+	src/etc/scenari/topics_visibility.noconceal,
+	src/etc/scenari/unsubscribe.auth,
+	src/etc/scenari/unsubscribe.auth_notify,
+	src/etc/scenari/unsubscribe.closed,
+	src/etc/scenari/unsubscribe.open,
+	src/etc/scenari/unsubscribe.open_notify,
+	src/etc/scenari/unsubscribe.owner,
+	src/etc/scenari/visibility.conceal,
+	src/etc/scenari/visibility.intranet,
+	src/etc/scenari/visibility.noconceal,
+	src/etc/scenari/visibility.private,
+	src/etc/scenari/visibility.secret, src/etc/templates/nl/bye.nl.tpl,
+	src/etc/templates/nl/certif_warning.nl.tpl,
+	src/etc/templates/nl/expire_deletion.nl.tpl,
+	src/etc/templates/nl/expire_warning1.nl.tpl,
+	src/etc/templates/nl/expire_warning2.nl.tpl,
+	src/etc/templates/nl/global_remind.nl.tpl,
+	src/etc/templates/nl/helpfile.nl.tpl,
+	src/etc/templates/nl/info_report.nl.tpl,
+	src/etc/templates/nl/invite.nl.tpl,
+	src/etc/templates/nl/list_created.nl.tpl,
+	src/etc/templates/nl/list_unknown.nl.tpl,
+	src/etc/templates/nl/listmaster_notification.nl.tpl,
+	src/etc/templates/nl/listowner_notification.nl.tpl,
+	src/etc/templates/nl/lists.nl.tpl,
+	src/etc/templates/nl/moderate.nl.tpl,
+	src/etc/templates/nl/modindex.nl.tpl,
+	src/etc/templates/nl/reject.nl.tpl,
+	src/etc/templates/nl/remind.nl.tpl,
+	src/etc/templates/nl/removed.nl.tpl,
+	src/etc/templates/nl/review.nl.tpl,
+	src/etc/templates/nl/sendpasswd.nl.tpl,
+	src/etc/templates/nl/stats_report.nl.tpl,
+	src/etc/templates/nl/summary.nl.tpl,
+	src/etc/templates/nl/welcome.nl.tpl,
+	src/etc/templates/nl/x509-user-cert-missing.nl.tpl,
+	src/etc/templates/nl/your_infected_msg.nl.tpl, wwsympa/wwslib.pm,
+	wwsympa/wws_templates/nl/add_request.nl.tpl,
+	wwsympa/wws_templates/nl/admin_menu.nl.tpl,
+	wwsympa/wws_templates/nl/arc.nl.tpl,
+	wwsympa/wws_templates/nl/arc_protect.nl.tpl,
+	wwsympa/wws_templates/nl/arcsearch.nl.tpl,
+	wwsympa/wws_templates/nl/arcsearch_form.nl.tpl,
+	wwsympa/wws_templates/nl/change_email.nl.tpl,
+	wwsympa/wws_templates/nl/choosepasswd.nl.tpl,
+	wwsympa/wws_templates/nl/close_list.nl.tpl,
+	wwsympa/wws_templates/nl/compose_mail.nl.tpl,
+	wwsympa/wws_templates/nl/create_list.nl.tpl,
+	wwsympa/wws_templates/nl/create_list_request.nl.tpl,
+	wwsympa/wws_templates/nl/d_control.nl.tpl,
+	wwsympa/wws_templates/nl/d_editfile.nl.tpl,
+	wwsympa/wws_templates/nl/d_read.nl.tpl,
+	wwsympa/wws_templates/nl/edit_list_request.nl.tpl,
+	wwsympa/wws_templates/nl/editfile.nl.tpl,
+	wwsympa/wws_templates/nl/editsubscriber.nl.tpl,
+	wwsympa/wws_templates/nl/error.nl.tpl,
+	wwsympa/wws_templates/nl/get_closed_lists.nl.tpl,
+	wwsympa/wws_templates/nl/get_latest_lists.nl.tpl,
+	wwsympa/wws_templates/nl/get_pending_lists.nl.tpl,
+	wwsympa/wws_templates/nl/help.nl.tpl,
+	wwsympa/wws_templates/nl/help_admin.nl.tpl,
+	wwsympa/wws_templates/nl/help_editfile.nl.tpl,
+	wwsympa/wws_templates/nl/help_editlist.nl.tpl,
+	wwsympa/wws_templates/nl/help_user_options.nl.tpl,
+	wwsympa/wws_templates/nl/home.nl.tpl,
+	wwsympa/wws_templates/nl/install_pending_list.nl.tpl,
+	wwsympa/wws_templates/nl/list_menu.nl.tpl,
+	wwsympa/wws_templates/nl/lists.nl.tpl,
+	wwsympa/wws_templates/nl/login.nl.tpl,
+	wwsympa/wws_templates/nl/loginbanner.nl.tpl,
+	wwsympa/wws_templates/nl/main.nl.tpl,
+	wwsympa/wws_templates/nl/menu.nl.tpl,
+	wwsympa/wws_templates/nl/modindex.nl.tpl,
+	wwsympa/wws_templates/nl/notice.nl.tpl,
+	wwsympa/wws_templates/nl/pref.nl.tpl,
+	wwsympa/wws_templates/nl/remindpasswd.nl.tpl,
+	wwsympa/wws_templates/nl/remove_arc.nl.tpl,
+	wwsympa/wws_templates/nl/review.nl.tpl,
+	wwsympa/wws_templates/nl/reviewbouncing.nl.tpl,
+	wwsympa/wws_templates/nl/scenario_test.nl.tpl,
+	wwsympa/wws_templates/nl/serveradmin.nl.tpl,
+	wwsympa/wws_templates/nl/set_pending_list_request.nl.tpl,
+	wwsympa/wws_templates/nl/show_cert.nl.tpl,
+	wwsympa/wws_templates/nl/sigrequest.nl.tpl,
+	wwsympa/wws_templates/nl/stats.nl.tpl,
+	wwsympa/wws_templates/nl/subindex.nl.tpl,
+	wwsympa/wws_templates/nl/suboptions.nl.tpl,
+	wwsympa/wws_templates/nl/subrequest.nl.tpl,
+	wwsympa/wws_templates/nl/title.nl.tpl,
+	wwsympa/wws_templates/nl/view_translations.nl.tpl,
+	wwsympa/wws_templates/nl/viewmod.nl.tpl: [Harry Westerman] Complete
+	translation to Dutch
+
+2002-09-16 10:52  salaun
+
+	* doc/sympa/: contents.png, crossref.png, img1.old, img1.png,
+	img2.old, img2.png, index.html, index.png, next.png, next_g.png,
+	node1.html, node10.html, node11.html, node12.html, node13.html,
+	node14.html, node15.html, node16.html, node17.html, node18.html,
+	node19.html, node2.html, node20.html, node3.html, node4.html,
+	node5.html, node6.html, node7.html, node8.html, node9.html,
+	prev.png, prev_g.png, sympa.css, sympa.html, sympa.ps, up.png,
+	up_g.png: 
+	
+	HTML doc is usefull in CVS TREE
+
+2002-09-13 12:10  salaun
+
+	* src/List.pm: Change: query database for total of subscribers, if
+	no LIMIT was given or if first page
+
+2002-09-13 11:45  salaun
+
+	* doc/sympa.tex.tpl: [reported by John Douglass] REVIEW and INFO
+	commands behavior has changed
+
+2002-09-12 12:25  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Vincent Mathieu] Add filename
+	to upload log
+
+2002-09-12 11:09  salaun
+
+	* src/List.pm: Change log level
+
+2002-09-12 10:22  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix log entry
+
+2002-09-12 10:20  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Add
+	documentation about [sender] var
+
+2002-09-11 17:54  salaun
+
+	* src/: alias_manager.pl, etc/list_aliases.tpl: rewrite
+	alias_manager.pl in order to use template alias.tpl. Easy to adapt
+	alias syntaxe to any smtp engine. Need some update in
+	documentation.
+
+2002-09-11 17:27  salaun
+
+	* src/etc/scenari/topics_visibility.identified: [requested by John
+	Douglass] New scenario for topics shown to logged in users only
+
+2002-09-11 15:32  salaun
+
+	* wwsympa/wwsympa.fcgi: Changes: alias_manager.pl has been
+	rewritten ; New feature:to avoide httpd restart when installing
+	some change wwsympa/wwsympa.fcgiserver exit just after serving a
+	page if wwsympa.fcgi as changed on disk.. Then Apache launch a new
+	fastcgi server ; Fix: reply-to problem from web archives
+
+2002-09-11 14:29  salaun
+
+	* src/List.pm: Fix: $robot test not required
+
+2002-09-11 14:16  salaun
+
+	* src/etc/list_aliases.tpl: Ajust name of vars
+
+2002-09-11 11:30  salaun
+
+	* doc/sympa.pdf, src/List.pm, doc/sympa.ps, doc/sympa.tex,
+	doc/sympa.tex.tpl: [requested by Janek Hiis] New feature: custom
+	subject can now refer to list variables ([list->name] or
+	[list->sequence])
+
+2002-09-10 17:24  salaun
+
+	* .version, ChangeLog, NEWS: preparing 3.3.6b.3
+
 2002-09-10 11:53  salaun
 
 	* src/parser.pl: New features: a arrayref can be used by
@@ -191,8 +554,8 @@
 
 2002-08-09 11:17  salaun
 
-	* src/etc/alias.tpl: A aliases file template for futur use. (not
-	used yet because not recognized when removing aliases)
+	* src/etc/list_aliases.tpl: A aliases file template for futur use.
+	(not used yet because not recognized when removing aliases)
 
 2002-08-08 10:37  salaun
 
