@@ -37,7 +37,8 @@ use CPAN;
 	     'File::Spec' => '0.8',
              'Crypt::CipherSaber' => '0.50',
 	     'CGI' => '2.52',
-	     'Digest::MD5' => '2.00');
+	     'Digest::MD5' => '2.00',
+	     'DB_File' => '1.75');
 
 ### key:left "module" used by SYMPA, 
 ### right CPAN module.		     

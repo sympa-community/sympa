@@ -1315,6 +1315,10 @@ sub load {
 	
 	if ($self->{'name'} ne $name || $time_subscribers > $self->{'mtime'}[1]) {
 	    $users = _load_users("$self->{'dir'}/subscribers");
+	    unless (defined $users) {
+		do_log('err', 'Could not load subscribers for list %s', $self->{'name'});
+		return undef;
+	    }
 	    $m2 = $time_subscribers;
 	}
     }elsif($self->{'admin'}{'user_data_source'} eq 'include') {
@@ -1345,6 +1349,7 @@ sub load {
 	    
 	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 0);
 	    unless (defined $users) {
+		do_log('err', 'Could not load subscribers for list %s', $self->{'name'});
 		return undef;
 	    }
 
