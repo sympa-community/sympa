@@ -218,7 +218,7 @@ my %date_format = (
 my %regexp = ('email' => '(\S+|\".*\")(@\S+)',
 	      'host' => '[\w\.\-]+',
 	      'listname' => '[a-z0-9][a-z0-9\-\._]+',
-	      'sql_query' => 'SELECT.*',
+	      'sql_query' => '(SELECT|select).*',
 	      'scenario' => '[\w,\.\-]+',
 	      'task' => '\w+'
 	      );
