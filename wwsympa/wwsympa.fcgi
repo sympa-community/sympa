@@ -34,7 +34,7 @@ require "--BINDIR--/msg.pl";
 require "--BINDIR--/tools.pl";
 
 ## WWSympa librairies
-require "--BINDIR--/wws-lib.pl";
+require "--BINDIR--/wwslib.pl";
 require "--BINDIR--/cookie-lib.pl";
 
 ## Configuration

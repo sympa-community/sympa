@@ -1,7 +1,7 @@
 #! --PERL--
 
 use lib '--BINDIR--';
-require 'wws-lib.pl';
+require 'wwslib.pl';
 $wwsympa_conf_file = '--WWSCONFIG--';
 $sympa_conf_file = '--CONFIG--';
 
