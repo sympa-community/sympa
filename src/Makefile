@@ -25,7 +25,10 @@ newinstall: makedir subst $(SRC) installqueue installwrapper installscenari inst
 
 installtemplates:
 	@echo "Installing default templates..."
-	cp etc/templates/*.tpl  $(DESTDIR)$(ETCBINDIR)/templates
+	@for lang in etc/templates/* ; do \
+		echo $$lang; \
+		cp $$lang/*.tpl  $(DESTDIR)$(ETCBINDIR)/templates/; \
+	done
 
 installetc:
 	@echo "Installing default configuration ..."
