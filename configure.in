@@ -72,11 +72,11 @@ AC_SUBST(CVS2CL)
 AC_PATH_PROG(SH, sh, /bin/sh)
 
 USER=sympa
-AC_ARG_WITH(user, [  --with-user=LOGIN       set sympa user name (default sympa)], [SYMPA="$withval"])
+AC_ARG_WITH(user, [  --with-user=LOGIN       set sympa user name (default sympa)], [USER="$withval"])
 AC_SUBST(USER)
 
 GROUP=sympa
-AC_ARG_WITH(group, [  --with-group=LOGIN     set sympa group name (default sympa)], [SYMPA="$withval"])
+AC_ARG_WITH(group, [  --with-group=LOGIN     set sympa group name (default sympa)], [GROUP="$withval"])
 AC_SUBST(GROUP)
 
 dnl Initialize maintainer mode
