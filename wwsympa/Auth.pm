@@ -153,15 +153,19 @@ sub ldap_authentication {
 	 do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
 	 return undef;
      }
+     require Net::LDAP;
+
      unless (eval "require Net::LDAP::Entry") {
 	 do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
 	 return undef;
      }
+     require Net::LDAP::Entry;
 
      unless (eval "require Net::LDAP::Message") {
 	 do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
 	 return undef;
      }
+     require Net::LDAP::Message;
      
      foreach my $ldap (@{$Conf{'auth_services'}}){
 	 # only ldap service are to be applied here
@@ -186,6 +190,7 @@ sub ldap_authentication {
 		     do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
 		     return undef;
 		 } 
+		 require Net::LDAPS;
 
 		 my %param;
 		 $param{'timeout'} = $ldap->{'timeout'} if ($ldap->{'timeout'});
@@ -239,6 +244,7 @@ sub ldap_authentication {
 		     do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
 		     return undef;
 		 } 
+		 require Net::LDAPS;
 
 		 my %param;
 		 $param{'timeout'} = $ldap->{'timeout'} if ($ldap->{'timeout'});
@@ -334,16 +340,19 @@ sub cas_get_email_by_net_id {
 	do_log ('err',"Unable to use LDAP library, Net::LDAP required, install perl-ldap (CPAN) first");
 	return undef;
     }
+    require Net::LDAP;
+
     unless (eval "require Net::LDAP::Entry") {
 	do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
 	return undef;
     }
+    require Net::LDAP::Entry;
     
     unless (eval "require Net::LDAP::Message") {
 	do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
 	return undef;
     }
-
+    require Net::LDAP::Message;
 
     my $ldap = @{$Conf{'auth_services'}}[$auth_id];
     my $filter = $ldap->{'ldap_get_email_by_uid_filter'} ;
@@ -368,6 +377,7 @@ sub cas_get_email_by_net_id {
 		do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
 		return undef;
 	    } 
+	    require Net::LDAPS;
 	    
 	    $ldap_anonymous = Net::LDAPS->new($host,%param);
 	}else {

@@ -382,6 +382,7 @@ my $pinfo = &List::_apply_defaults();
 
 my $zip_is_installed ;
 if (eval "require Archive::Zip") {
+    require Archive::Zip;
     $zip_is_installed = 1;
 }
 
@@ -1774,6 +1775,7 @@ sub do_sso_login_succeeded {
 	 do_log ('err',"Unable to use LDAP library, Net::LDAP required,install perl-ldap (CPAN) first");
 	 return undef;
      }
+     require Net::LDAP;
 
      my ($ldap_anonymous,$host,$filter);
 
@@ -1809,6 +1811,7 @@ sub do_sso_login_succeeded {
 		     do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
 		     return undef;
 		 } 
+		 require Net::LDAPS;
 
 		 my %param;
 		 $param{'timeout'} = $ldap->{'timeout'} if ($ldap->{'timeout'});
@@ -4826,6 +4829,8 @@ sub do_set_pending_list_request {
 	 do_log ('err',"Unable to use Net library, Net::SMTP required, install it (CPAN) first");
 	 return undef;
      }
+     require Net::SMTP;
+
      if( $smtp = Net::SMTP->new($smtp_relay,
 				Hello => $smtp_relay,
 				Timeout => 30) ) {
