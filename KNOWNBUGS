@@ -1,12 +1,12 @@
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 Broken create_list_request page
-[3.0aX -> ???]
+[3.0a -> 3.0.1]
         
-        Because of some abscur reason, if editing a list config via the
+        If editing a list config via the
         web interface, this interface can't anymore be use for
         create_list_request. Some vars are corrupted by edit_list.
-        Currently, the only solution is to use edit_list as a cgi
-        (not a fast_cgi) or restart httpd :(
+        The only solution is to use edit_list as a cgi (not a fast_cgi)
+        or restart httpd (Fixed in 3.1a)
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 Close archive
