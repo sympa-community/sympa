@@ -65,7 +65,7 @@ unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
 
 # Load sympa.conf
 unless (Conf::load($sympa_conf_file)) {
-    do_log  ('notice',"Unable to load sympa configuration, file $sympa_conf_file has errors.");
+    do_log  ('err',"Unable to load sympa configuration, file $sympa_conf_file has errors.");
    exit(1);
 }
 
@@ -105,7 +105,7 @@ umask($Conf{'umask'});
 ## Change to list root
 unless (chdir($Conf{'home'})) {
     &message('chdir_error');
-    &do_log('info','unable to change directory');
+    &do_log('err','unable to change directory');
     exit (-1);
 }
 
@@ -151,14 +151,14 @@ while (!$end) {
 	   do_log('debug',"remove found : $file for list $1");
 
 	   unless (open REMOVE, "$queue/$file") {
-	        do_log ('notice',"Ignoring file $queue/$file because couldn't read it, archived.pl must use the same uid as sympa");
+	        do_log ('err',"Ignoring file $queue/$file because couldn't read it, archived.pl must use the same uid as sympa");
 		   next;
 	       }
 	   my $msgid = <REMOVE> ;
 	   close REMOVE;
 	   &remove($1,$msgid);
 	   unless (unlink("$queue/$file")) {
-	       do_log ('notice',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
+	       do_log ('err',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
 	       next;
 	   }
 	   
@@ -166,7 +166,7 @@ while (!$end) {
 	   do_log('debug',"rebuild found : $file for list $1");
 	   &rebuild($1);	
 	   unless (unlink("$queue/$file")) {
-	       do_log ('notice',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
+	       do_log ('err',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
 	       next;
 	   }
        }else{
@@ -187,7 +187,7 @@ while (!$end) {
 	       $ss = sprintf '%02d', $now[0];
 	       
 	   }else {
-	       do_log ('notice',"Ignoring file $queue/$file because not to be rebuild or liste archive");
+	       do_log ('err',"Ignoring file $queue/$file because not to be rebuild or liste archive");
                unlink("$queue/$file");
 	       next;
 	   }
@@ -196,11 +196,11 @@ while (!$end) {
 	   my $listname = $1;
 	   my $hostname = $2;
 
-	   do_log('debug',"Archiving $file for list $adrlist");      
+	   do_log('notice',"Archiving $file for list $adrlist");      
 	   mail2arc ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss) ;
 	   unless (unlink("$queue/$file")) {
-	       do_log ('notice',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
-	       do_log ('notice',"exiting because I don't want to loop until file system is full");
+	       do_log ('err',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
+	       do_log ('err',"exiting because I don't want to loop until file system is full");
 	       last;
 	   }
        }
@@ -229,7 +229,7 @@ sub remove {
         $arc = $2;
     }
 
-    do_log('debug',"Removing $msgid in list $adrlist section $2");
+    do_log('notice',"Removing $msgid in list $adrlist section $2");
   
     $arc =~ /^(\d{4})-(\d{2})$/ ;
     my $yyyy = $1 ;
@@ -259,7 +259,7 @@ sub rebuild {
     my $mhonarc_ressources = &get_ressources ($adrlist) ; 
 
     if ($arc) {
-        do_log('debug',"Rebuilding  $arc of $adrlist archive");
+        do_log('notice',"Rebuilding  $arc of $adrlist archive");
 	$arc =~ /^(\d{4})-(\d{2})$/ ;
 	my $yyyy = $1 ;
 	my $mm = $2 ;
@@ -268,13 +268,13 @@ sub rebuild {
 
 	my $exitcode = system($cmd);
 	if ($exitcode) {
-	    do_log('debug',"Command $cmd failed with exit code $exitcode");
+	    do_log('err',"Command $cmd failed with exit code $exitcode");
 	}
     }else{
-        do_log('debug',"Rebuilding $adrlist archive completely");
+        do_log('notice',"Rebuilding $adrlist archive completely");
 
 	if (!opendir(DIR, "$wwsconf->{'arc_path'}/$adrlist" )) {
-	    do_log('notice',"unable to open $wwsconf->{'arc_path'}/$adrlist to rebuild archive");
+	    do_log('err',"unable to open $wwsconf->{'arc_path'}/$adrlist to rebuild archive");
 	    return ;
 	}
 	my @archives = (grep (/^\d{4}-\d{2}/, readdir(DIR)));
@@ -304,7 +304,7 @@ sub mail2arc {
     
     if (! -d "$arcpath/$listname\@$hostname") {
 	unless (mkdir ("$arcpath/$listname\@$hostname", 0775)) {
-	    &do_log('notice', 'Cannot create directory %s', "$arcpath/$listname\@$hostname");
+	    &do_log('err', 'Cannot create directory %s', "$arcpath/$listname\@$hostname");
 	    return undef;
 	}
 	do_log('debug',"mkdir $arcpath/$listname\@$hostname");
@@ -336,14 +336,14 @@ sub mail2arc {
 
     if (! -d "$arcpath/$listname\@$hostname/$yyyy-$mm") {
 	unless (mkdir ("$arcpath/$listname\@$hostname/$yyyy-$mm", 0775)) {
-	    &do_log('notice', 'Cannot create directory %s', "$arcpath/$listname\@$hostname/$yyyy-$mm");
+	    &do_log('err', 'Cannot create directory %s', "$arcpath/$listname\@$hostname/$yyyy-$mm");
 	    return undef;
 	}
 	do_log('debug',"mkdir $arcpath/$listname\@$hostname/$yyyy-$mm");
     }
     if (! -d "$arcpath/$listname\@$hostname/$yyyy-$mm/arctxt") {
 	unless (mkdir ("$arcpath/$listname\@$hostname/$yyyy-$mm/arctxt", 0775)) {
-	    &do_log('notice', 'Cannot create directory %s', "$arcpath/$listname\@$hostname/$yyyy-$mm/arctxt");
+	    &do_log('err', 'Cannot create directory %s', "$arcpath/$listname\@$hostname/$yyyy-$mm/arctxt");
 	    return undef;
 	}
 	do_log('debug',"mkdir $arcpath/$listname\@$hostname/$yyyy-$mm/arctxt");
@@ -363,7 +363,7 @@ sub mail2arc {
     
     my $exitcode = system($cmd);
     if ($exitcode) {
-           do_log('debug',"Command $cmd failed with exit code $exitcode");
+           do_log('err',"Command $cmd failed with exit code $exitcode");
     }
 
     
@@ -385,7 +385,7 @@ sub get_ressources {
 	$adrlist = $1;
     }
     unless ($list = new List ($adrlist)) {
-	do_log('notice',"get_ressources : unable to load list $1, continue anyway");
+	do_log('err',"get_ressources : unable to load list $1, continue anyway");
     }  
     
     #$mhonarc_ressources = &tools::get_filename('etc', 'mhonarc-ressources', $robot, $list);
@@ -396,7 +396,7 @@ sub get_ressources {
     }elsif (-r "--ETCBINDIR--/mhonarc-ressources"){
         $mhonarc_ressources =  "--ETCBINDIR--/mhonarc-ressources" ;
     }else {
-	do_log('notice',"Cannot find any MhOnArc ressource file");
+	do_log('err',"Cannot find any MhOnArc ressource file");
 	return undef;
     }
     return  $mhonarc_ressources;
