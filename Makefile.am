@@ -1,34 +1,40 @@
+## Top-level Makefile.am for Sympa
+#SUBDIRS = src doc wwsympa nls
+
+ChangeLog:
+	@CVS2CL@
+
 ## User Id and Group for Sympa (your httpd should have the same uid.gid)
-USER	=	sympa
-GROUP	=	sympa
+USER	=	@USER@
+GROUP	=	@GROUP@
 
 ## configuration file
-CONFDIR	=	/etc
+CONFDIR	=	${sysconfdir}
 
 ## LC_ALL is set to this ; required to compile NLS
 LANG	=	fr_FR
 
 ##  Perl path
-PERL	=	/usr/bin/perl
+PERL	=	@PERL@
 
 ## For preparing samples
 HOST		=	`$(PERL) -MSys::Hostname -e "printf '%s', Sys::Hostname::hostname();"`
 COOKIE		=	`$(PERL) -e " print int(rand ( time ))  "`
 PERL_VERSION	=	`$(PERL) -e ' print $$]'`
 
-SYMPA_VERSION	=	'3.3a-vhost.10'
-
-#SYMPA_VERSION	=	`pwd | $(PERL) -e 'my @version = split /-/, <STDIN>; printf "%s", $$version[1];'`
+SYMPA_VERSION	=	@VERSION@
 
 ## Root directory for Sympa ; use absolute path.
 ## Binaries are located under $DIR/bin ; this directory needs to be
 ## readable for everyone ; `queue' needs to be executable 
 ## You can also set DESTDIR to the place where everything should be
 ## installed (usefull for packagers of Sympa)
-DIR	=	/home/sympa
+DIR	=	${prefix}
+
+EXPL_DIR	=	${localstatedir}
 
 ## PID location
-PIDDIR	=	/home/sympa
+PIDDIR	=	${prefix}
 
 ## Both queue and bouncequeue are lunched by sendmail. If sendmail
 ## is configured to used smrsh (check the mailer prog definition), thoses
@@ -38,12 +44,16 @@ MAILERPROGDIR	=	$(DIR)/bin
 #RPMTOPDIR	=	`rpm --eval %_topdir`
 RPMTOPDIR	=	/usr/src/redhat
 
-MANDIR		=	/usr/local/man
+MANDIR		=	${mandir}
 
 ## SYSV init scripts directory
 INITDIR		=	$(DIR)/bin
 
-BINDIR		=	$(DIR)/bin
+## no more used ##
+BINDIR		=	${bindir}
+
+SBINDIR		=	${sbindir}
+LIBDIR		=	${libdir}
 
 ## Spools directory
 SPOOLDIR	=	$(DIR)/spool
@@ -51,15 +61,7 @@ SPOOLDIR	=	$(DIR)/spool
 ## Directory for installing WWSympa
 WWSBINDIR	=	$(BINDIR)
 
-# Chose your prefered color.
-#
-DARK_COLOR	=	'\#330099'
-LIGHT_COLOR	=	'\#ccccff'
-TEXT_COLOR	=	'\#000000' 
-BG_COLOR	=	'\#ffffff'
-ERROR_COLOR	=	'\#ff6666'
-SELECTED_COLOR	=	'\#3366cc'
-SHADED_COLOR	=	'\#eeeeee'
+## Web interface colors are now defined in sympa.conf
 
 ## Target directory for installing Icons
 ICONSDIR	=	/home/httpd/icons
@@ -78,24 +80,24 @@ NEWALIASES    =       /usr/bin/newaliases
 SENDMAIL_ALIASES=     /etc/mail/sympa_aliases
 
 ## Path to gencat program (creates the .cat catalog file using the .msg)
-GENCAT	= 	/usr/bin/gencat
+GENCAT	= 	@GENCAT@
 
 ## Path to OpenSSL
-OPENSSL	=	/usr/local/ssl/bin/openssl
-SSLCERTDIR =	$(DIR)--/expl/X509-user-certs
+OPENSSL	=	@OPENSSL@
+SSLCERTDIR =	$(EXPL_DIR)--/X509-user-certs
 
-SH	=	/bin/sh
-CC	=	gcc
+SH	=	@SH@
+CC	=	@CC@
 CFLAGS	=	-g
 
 # Aix4.2 (and some others unix), use gnu make !
-MAKE	=	make
+#MAKE	=	@MAKE@
 
 ##---------- STOP ---------- STOP ---------- STOP ---------- STOP ----------
 
 CONFIG		=	$(CONFDIR)/sympa.conf
 WWSCONFIG	=	$(CONFDIR)/wwsympa.conf
-ETCBINDIR	=	$(BINDIR)/etc
+ETCBINDIR	=	${datadir}
 NLSDIR		=	$(DIR)/nls
 
 #ifeq ($(shell uname), Linux)
@@ -114,7 +116,7 @@ checkperl:
 	@echo "## You need to run the following command on your database :"
 	@echo "## ALTER TABLE subscriber_table ADD comment_subscriber varchar (150);"
 	@echo "## ";
-	@echo "## Then run $(BINDIR)/init_comment.pl"
+	@echo "## Then run $(SBINDIR)/init_comment.pl"
 	@if [ $(PERL_VERSION) = '5.006' ]; then \
 	echo "##################################"; \
 	echo "## You are using Perl version $(PERL_VERSION) :"; \
@@ -130,7 +132,7 @@ sources: src/Makefile src/queue.c src/bouncequeue.c src/aliaswrapper.c
 	@echo "Making src"
 	(cd src && echo "making in src..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
-	DIR='${DIR}' BINDIR='${BINDIR}' WWSBINDIR='${WWSBINDIR}' \
+	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' \
 	MAILERPROGDIR='${MAILERPROGDIR}' ETCBINDIR='${ETCBINDIR}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	USER='${USER}' GROUP='${GROUP}' \
@@ -141,7 +143,7 @@ doc: doc/sympa.tex.tpl doc/Makefile
 	@echo "Making doc"
 	(cd doc && echo "making in doc..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
-	DIR='${DIR}' BINDIR='${BINDIR}' WWSBINDIR='${WWSBINDIR}' \
+	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' \
 	MAILERPROGDIR='${MAILERPROGDIR}' ETCBINDIR='${ETCBINDIR}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	USER='${USER}' GROUP='${GROUP}');
@@ -155,7 +157,7 @@ languages:
 	@echo "Making nls"
 	(LC_ALL=$(LANG); export LC_ALL; cd nls && echo "making in nls..." && \
 	$(MAKE) SH='${SH}' PERL='${PERL}' ETCBINDIR='${ETCBINDIR}' \
-	DIR='${DIR}' NLSDIR='${NLSDIR}' BINDIR='${BINDIR}' \
+	DIR='${DIR}' NLSDIR='${NLSDIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' \
 	USER='${USER}' GROUP='${GROUP}' GENCAT='${GENCAT}');
 
 checkcpan: 
@@ -175,20 +177,19 @@ install: importantchanges installsrc installnls installwws installman installscr
 importantchanges:
 	( 	PERL=$(PERL); export PERL; \
 		UMASK=0600; export UMASK; \
-		BINDIR=$(BINDIR); export BINDIR; \
+		BINDIR=$(SBINDIR); export BINDIR; \
+		SBINDIR=$(SBINDIR); export SBINDIR; \
+		LIBDIR=$(LIBDIR); export LIBDIR; \
 		SYMPA_VERSION=$(SYMPA_VERSION); export SYMPA_VERSION; \
 		$(PERL) ./important_changes.pl \
-	) ;\
+	) ;
 
 
 installsrc:
 	(cd src && echo "making in src..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' SYMPA_VERSION='${SYMPA_VERSION}' \
-	DIR='${DIR}' BINDIR='${BINDIR}' WWSBINDIR='${WWSBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
-	DESTDIR='${DESTDIR}' \
-	DARK_COLOR='${DARK_COLOR}' LIGHT_COLOR='${LIGHT_COLOR}' TEXT_COLOR='${TEXT_COLOR}' \
-	BG_COLOR='${BG_COLOR}' SELECTED_COLOR='${SELECTED_COLOR}' ERROR_COLOR='${ERROR_COLOR}' \
-	SHADED_COLOR='${SHADED_COLOR}' \
+	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' \
+	DESTDIR='${DESTDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	ETCBINDIR='${ETCBINDIR}' SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' \
 	USER='${USER}' GROUP='${GROUP}' newinstall) || exit 1;
@@ -204,22 +205,17 @@ installnls:
 installwws:
 	(cd wwsympa && echo "making in wwsympa..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
-	DIR='${DIR}' BINDIR='${BINDIR}' WWSBINDIR='${WWSBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
+	DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' \
-	DESTDIR='${DESTDIR}' DARK_COLOR='${DARK_COLOR}' LIGHT_COLOR='${LIGHT_COLOR}' \
-	TEXT_COLOR='${TEXT_COLOR}' BG_COLOR='${BG_COLOR}' SHADED_COLOR='${SHADED_COLOR}' \
-	ERROR_COLOR='${ERROR_COLOR}' SELECTED_COLOR='${SELECTED_COLOR}' \
-	USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' newinstall) || exit 1;
+	DESTDIR='${DESTDIR}' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' newinstall) || exit 1;
 
 installsample:
 	(cd src/etc/sample && echo "making in src/etc/sample..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' LOG_SOCKET_TYPE='${LOG_SOCKET_TYPE}' \
-	DESTDIR='${DESTDIR}' DIR='${DIR}' BINDIR='${BINDIR}' WWSBINDIR='${WWSBINDIR}' HOST='${HOST}' \
+	DESTDIR='${DESTDIR}' DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' HOST='${HOST}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
-	DARK_COLOR='${DARK_COLOR}' LIGHT_COLOR='${LIGHT_COLOR}' COOKIE='${COOKIE}' \
-	SHADED_COLOR='${SHADED_COLOR}' OPENSSL='${OPENSSL}' SSLCERTDIR='${SSLCERTDIR}' \
-	SPOOLDIR='${SPOOLDIR}' TEXT_COLOR='${TEXT_COLOR}' BG_COLOR='${BG_COLOR}' ERROR_COLOR='${ERROR_COLOR}' \
-	USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' PIDDIR='${PIDDIR}' install) || exit 1;
+	COOKIE='${COOKIE}' OPENSSL='@OPENSSL@' SSLCERTDIR='${SSLCERTDIR}' \
+	SPOOLDIR='${SPOOLDIR}' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' PIDDIR='${PIDDIR}' install) || exit 1;
 
 installman:
 	mkdir -p $(DESTDIR)$(MANDIR)
@@ -250,12 +246,11 @@ installman:
 installscript:
 	(cd src/etc/script && echo "making in src/etc/script..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
-	DIR='${DIR}' DESTDIR='${DESTDIR}' BINDIR='${BINDIR}' WWSBINDIR='${WWSBINDIR}' HOST='${HOST}' \
+	DIR='${DIR}' DESTDIR='${DESTDIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' HOST='${HOST}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' \
 	MAILERPROGDIR='${MAILERPROGDIR}' \
-	DARK_COLOR='${DARK_COLOR}' LIGHT_COLOR='${LIGHT_COLOR}' COOKIE='${COOKIE}' INITDIR='${INITDIR}' \
-	TEXT_COLOR='${TEXT_COLOR}' BG_COLOR='${BG_COLOR}' ERROR_COLOR='${ERROR_COLOR}' OPENSSL='${OPENSSL}' \
-	SHADED_COLOR='${SHADED_COLOR}' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' install) || exit 1;
+	COOKIE='${COOKIE}' INITDIR='${INITDIR}' \
+	OPENSSL='@OPENSSL@' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' install) || exit 1;
 
 
 installdir:
@@ -310,15 +305,18 @@ installconfig:
 		PERL=$(PERL); export PERL; \
 		UMASK=0600; export UMASK; \
 		DIR=$(DIR); export DIR; \
+		EXPL_DIR=$(EXPL_DIR); export EXPL_DIR; \
 		INSTALLDIR=$(CONFDIR); export INSTALLDIR; \
 		DESTDIR=$(DESTDIR); export DESTDIR; \
 		BINDIR=$(BINDIR); export BINDIR; \
+		SBINDIR=$(SBINDIR); export SBINDIR; \
+		LIBDIR=$(LIBDIR); export LIBDIR; \
 		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
 		CONFIG=$(CONFIG); export CONFIG; \
 		LOG_SOCKET_TYPE=$(LOG_SOCKET_TYPE); export LOG_SOCKET_TYPE; \
 		COOKIE=$(COOKIE); export COOKIE; \
 		HOST=$(HOST); export HOST; \
-		OPENSSL=$(OPENSSL); export OPENSSL ; \
+		OPENSSL=@OPENSSL@; export OPENSSL ; \
 		SSLCERTDIR=$(SSLCERTDIR); export SSLCERTDIR ; \
 		PIDDIR=$(PIDDIR); export PIDDIR; \
 		SPOOLDIR=$(SPOOLDIR); export SPOOLDIR; \
