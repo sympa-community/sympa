@@ -60,7 +60,7 @@ use List;
 	     return $user;
 
 	 }else{
-	     &error_message('incorrect_passwd');
+	     &main::error_message('incorrect_passwd');
 	     &do_log('notice', "Incorrect Ldap password");
 	     return undef;
 	 }
@@ -110,12 +110,12 @@ sub authentication {
 	next unless (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
 	if ($auth_service->{'auth_type'} eq 'user_table') {
 	    if ($user->{'password'} =~ /^init/i) {
-		&error_message('init_passwd');
+		&main::error_message('init_passwd');
 		last;
 	    }
 	}
     }
-    &error_message('incorrect_passwd');
+    &main::error_message('incorrect_passwd');
     &do_log('info','authentication: incorrect password for user %s', $email);
 
     $param->{'init_email'} = $email;
