@@ -171,7 +171,7 @@
         each included list. Be careful, however, not to give rise an infinite loop
         making cross includes.<BR><BR>
         For this operation, one Sympa site act as a server while the other one act as
-        client. On the server side, the only setting needed is to give permition to the
+        client. On the server side, the only setting needed is to give permission to the
         remote Sympa to review the list. This is controled by the review scenario. 
       [ELSIF p->NAME=include_sql_query]
         This parameter will be interpreted only if the user_data_source value is set to
@@ -260,7 +260,7 @@
         in public web site. Various method are availible into Sympa and you can choose it with
         spam_protection and web_archive_spam_protection parameters. Possible value are:<BR><BR>
         <UL>
-          <LI>javascript: the adresse is hidden using a javascript. User who enable javascript can see a nice mailto adresses where others have nothing.</LI>
+          <LI>javascript: the address is hidden using a javascript. User who enable javascript can see a nice mailto address where others have nothing.</LI>
           <LI>at: the @ char is replaced by the string " AT ".</LI>
           <LI>none : no protection against spammer.</LI>
         </UL>

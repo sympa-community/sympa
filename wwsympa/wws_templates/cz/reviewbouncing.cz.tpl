@@ -56,13 +56,11 @@
     </TD></TR>
     </TABLE>
 
-    <TABLE WIDTH="100%" BORDER=1>
+    <TABLE BORDER=1>
       <TR BGCOLOR="[error_color]" NOWRAP>
 	<TH><FONT COLOR="[bg_color]">X</FONT></TH>
         <TH><FONT COLOR="[bg_color]">email</FONT></TH>
-	<TH><FONT COLOR="[bg_color]">poèet vrácených zpráv</FONT></TH>
-	<TH><FONT COLOR="[bg_color]">období</FONT></TH>
-	<TH NOWRAP><FONT COLOR="[bg_color]">typ</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">skóre vrácených zpráv</FONT></TH>
       </TR>
       
       [FOREACH u IN members]
@@ -70,31 +68,25 @@
 	[IF dark=1]
 	  <TR BGCOLOR="[shaded_color]">
 	[ELSE]
-          <TR>
+	  <TR BGCOLOR="[bg_color]">
 	[ENDIF]
 
 	  <TD>
 	    <INPUT TYPE=checkbox name="email" value="[u->escaped_email]">
 	  </TD>
-	  <TD NOWRAP><FONT SIZE=-1>
+	  <TD NOWRAP>
 	      <A HREF="[path_cgi]/editsubscriber/[list]/[u->escaped_email]/reviewbouncing">[u->email]</A>
 
-	  </FONT></TD>
-          <TD ALIGN="center"><FONT SIZE=-1>
-  	      [u->bounce_count]
-	    </FONT></TD>
-	  <TD NOWRAP ALIGN="center"><FONT SIZE=-1>
-	    od [u->first_bounce] do [u->last_bounce]
-	  </FONT></TD>
-	  <TD NOWRAP ALIGN="center"><FONT SIZE=-1>
-	    [IF u->bounce_class=2]
-	    	úspìch
-	    [ELSIF u->bounce_class=4]
-		doèasný
-	    [ELSIF u->bounce_class=5]
-		trvalý
+	  </TD>
+          <TD ALIGN="center"
+	  [IF u->bounce_level=2]
+            BGCOLOR="#FF0000"
+	  [ELSIF u->bounce_level=1]
+	    BGCOLOR="#FF8C00"
 	    [ENDIF]
-	  </FONT></TD>
+	  >
+  	      [u->bounce_score]
+	  </TD>
         </TR>
 
         [IF dark=1]
@@ -132,3 +124,6 @@
 
 
       </FORM>
+
+
+

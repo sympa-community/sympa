@@ -1,3 +1,4 @@
+$ Mar 2004, sync with the us version
 $ Apr 2001, Initial version by Petr Prazak <prazak@grisoft.cz>
 
 $ codeset=iso-8859-2
@@ -6,7 +7,7 @@ $quote "
 $set 1	Messages used while processing the configuration file
 1	"Konfiguraèní soubor obsahuje chyby.\n"
 3	"Chyba na øádku %d : %s"
-102	"3.1b.12"
+102	"3.3"
 
 $set 2	Messages used by Conf when verifying the files
 
@@ -29,9 +30,8 @@ Va¹e zpráva :\n"
 28	"Mezi èleny konference %s od %d dní, jich %d nepotvrdilo jejich pøihlá¹ení.\n"
 37	"Ignoruji tìlo zprávy, která neni ve formátu text/plain, prosím pou¾ijte pouze formát text/plain \n(nebo vlo¾te pøíkaz do subjektu zprávy).\n"
 38	"Vá¹ pøíkaz pro konferenci %s byl pøedán jejímu správci\n"
-39	"Ve zpráve nebyl nalezen ¾ádný pøíkaz."
+39	"Ve zprávì nebyl nalezen ¾ádný pøíkaz."
 40	"Va¹e zpráva bude moderována"
-
 
 $set 5	Messages used in the tools module
 1	"Safefork nemù¾e vytvoøit nový proces : %m"
@@ -41,7 +41,7 @@ pøíkazy jako subscribe, unsubscribe, help, index, get, ...\n\n\
 Pokud Va¹e zpráva skuteènì obsahovala pøíkaz, pov¹imnìte si prosím, ¾e \n\
 pøíkazy by se nemìly nikdy posílat do konference. Pøíkazy se musí odeslat\n\
 výhradnì na adresu %s .\n\n\
-Pokud jste chtìl Va¹i zprávu opravdu poslat do konference, byla\n\
+Pokud jste chtìl(a) Va¹i zprávu opravdu poslat do konference, byla\n\
 zpracována jako pøíkaz. Prosím kontaktujte správce: %s \n\
 aby se mohl o Va¹i zprávu postarat.\n\n\
 Dìkujeme za Va¹i pozornost.\n\n\
@@ -53,7 +53,7 @@ $set 6	Messages du module Commands.pm
 5	"Konference '%s' neexistuje.\n"
 7	"Archív této konference neobsahuje ¾ádné soubory.\n"
 8	"Po¾adovaný soubor neexistuje.\n"
-9	"Tato konference je soukromá : Nemù¾ete èít archiv.\n"
+9	"Tato konference je soukromá : Nemù¾ete èíst archiv.\n"
 10	"Tato konference je soukromá : Nelze prohlí¾et dostupné soubory.\n"
 11	"Tato konference je soukromá : Nelze prohlí¾et seznam èlenù.\n"
 13	"Chyba v pøíkazu.\n"
@@ -86,7 +86,7 @@ Pokud je to tak, omluvte nás prosím za tuto potí¾ a obnovte Va¹e èlenství.\n"
 37	"U¾ivatel %s je nyní èlenem konference %s.\n"
 38	"U¾ivatel %s byl odstranìn z konference %s.\n"
 39	"Nìkdo (doufejme, ¾e Vy) po¾adoval, aby byl pøidán nebo odstranìn\n\
-u¾ivatel konfernce %s.\n\n\
+u¾ivatel konference %s.\n\n\
 Pokud chcete provést tuto akci, ode¹lete zprávu na adresu\n\
 %s obsahující \n\n\
    %s\n\n\
@@ -95,7 +95,7 @@ Pokud nechcete tuto akci provést, prostì ignorujte tuto zprávu.\n"
 41	"Chyba pøístupu k moderované zprávì v konferenci %s pomocí klíèe %s.\n\
 Tato zpráva byla mo¾ná ji¾ odeslána jedním z moderátorù konference.\n\n"
 43	"Zpráva %s do konference %s byla odmítnuta.\n"
-44	"Zpráva %s do konference %s byla rezeslána.\n"
+44	"Zpráva %s do konference %s byla rozeslána.\n"
 45	"Konference %s nepøijímá re¾im DIGEST. Va¹e konfigurace nebyla zmìnìna.\n"
 46	"Pøíkaz MODINDEX je vyhrazen pouze moderátorùm.\n\
 Vy nejste moderátorem konference %s.\n"
@@ -129,7 +129,7 @@ pøihlá¹ení : EXPIREINDEX %s\n"
 58	"Mù¾ete odstranit tyto èleny z konference pomocí následujících pøíkazù :\n"
 60	"\
 Pøíkaz EXPIRE nemohl být spu¹tìn. Musí být následován vysvìtlujícím\n\
-Pro èleny, kteøí musí obnovit své èlenství.\n\
+textem pro èleny, kteøí musí obnovit své èlenství.\n\
 Tento text musí\n\n\
  - zaèínat hned na dal¹í øádce za pøíkazem EXPIRE,\n\
  - obsahovat alespoò 20 slov,\n\
@@ -162,6 +162,8 @@ Pokud nechcete provést tuto akci, jednodu¹e ignorujte tuto zprávu.\n"
 86	"U¾ivatel %s je v konferenci %s ne¾ádoucí.\n"
 90	"Konference %s dovoluje pouze tyto re¾imy pøíjmu : %s\n\
 Va¹e konfigurace nebyla zmìnìna.\n"
+91	"Konference %s neposkytuje mo¾nost nastavení pro èleny.\n"
+92	"Nezdaøilo se zmìnit Va¹e nastavení pro konferenci %s.\n"
 260	"Nìkdo (doufejme, ¾e Vy) po¾aduje, aby byla Va¹e emailová adresa\n\
 pøipojena do konference '%s'.\n\
 Pokud chcete provést tuto akci, buïto\n\
@@ -181,6 +183,8 @@ Pokud chcete provést tuto akci, buïto\n\
 \
 Mù¾ete to také udìlat pomocí tohoto odkazu %s\n\
 Pokud tuto akci nechcete provést, mù¾ete klidnì tuto zprávu ignorovat."
+262	"Podpis Va¹í zprávy byl úspì¹nì ovìøen pomocí S/MIME"
+263	"Va¹e zpráva nemá formát multipart/signed nebo Sympa nemohla\novìøit její podpis (uvìdomte si prosím, ¾e Sympa nemù¾e ovìrit podpis pokud vlo¾íte pøíkaz do subjektu zprávy)."
 
 $set 7	Commands syslog messages (Commands.pm)
 
@@ -253,6 +257,10 @@ $set 15 Templates files
 12	"souhrnná zpráva"
 13	"popis konference"
 14	"domovská stránka konference"
+15	"zpráva po¾adavku na vytvoøení konference"
+16	"zpráva o vytvoøení konference"
+17	"zpráva o virové infekci"
+18	"¹ablona aliasù konference"
 
 $set 16 Listm parameters titles
 1	"Úèet"
@@ -337,6 +345,43 @@ $set 16 Listm parameters titles
 87	"Kdo mù¾e editovat"
 88	"Dostupné volby pro pøihlá¹ení"
 89	"zpùsob pøijímání"
+90	"Adresa pro odpovìï"
+91	"hodnota"
+92	"jiná emailová adresa"
+93	"ohled na existující polo¾ku hlavièky"
+94	"volby pøipojení"
+97	"rozsah vyhledávání"
+98	"doba pro vypr¹ení spojení"
+135	"vlo¾ení dotazu druhé úrovnì z LDAP"
+136	"vzdálený poèítaè"
+137	"vzdálený port"
+138	"vzdálený u¾ivatel"
+139	"vzdálené heslo"
+140	"pøípona první úrovnì"
+141	"filtr první úrovnì"
+142	"extrahovaný atribut první úrovnì"
+143	"výbìr první úrovnì"
+144	"¹ablona pøípony druhé úrovnì"
+145	"¹ablona filtru druhé úrovnì"
+146	"extrahovaný atribut druhé úrovnì"
+147	"výbìr druhé úrovnì"
+148	"promìnné prostøedí pro databázové pøipojení"
+197	"rozsah vyhledávání první úrovnì"
+198	"doba pro vypr¹ení spojení první úrovnì"
+199	"rozsah vyhledávání druhé úrovnì"
+200	"doba pro vypr¹ení spojení druhé úrovnì"
+201	"regulární výraz první úrovnì"
+202	"regulární výraz druhé úrovnì"
+203	"kvóta"
+204	"kvóta"
+205	"metoda ochrany emailových adres"
+206	"vlo¾ení vzdálené konference"
+207	"vzdálená cesta pro výpis konference"
+208	"certifikát autenticity pro vzdálenou Sympu"
+209	"krátké jméno pro tento zdroj"
+210	"jméno konference nebo její adresa neho *@<doména> nebo *@*"
+211	"výbìr role administrátora"
+212	"Archívovat ¹ifrované zprávy jako prostý text"
 
 $set 17 Cookie expiration periods
 1	"sezení"

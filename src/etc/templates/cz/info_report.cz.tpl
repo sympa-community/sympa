@@ -16,6 +16,7 @@ Maximální velikost    : [max_size]
 [IF digest]
 Shrnutí               : [digest]
 [ENDIF]
-Zpùsob pøijímání      : [available_reception_mode]
+Re¾im pøijímání zpráv : [available_reception_mode]
+Domovská stránka      : [url]
 
 [PARSE 'info']

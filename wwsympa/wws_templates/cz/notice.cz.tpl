@@ -24,6 +24,15 @@ Va¹e heslo Vám bylo odesláno emailem
 [ELSIF notice->msg=you_should_choose_a_password]
 Pro zmìnu hesla jdìte do "Nastavení" v horní èasti stránky
 
+[ELSIF notice->msg=no_msg] 
+®ádná zpráva k moderování v konferenci [notice->list]
+
+[ELSIF notice->msg=subscribers_update_soon]
+Seznam èlenù konference bude sestaven/aktualizován bìhem nìkolika minut.
+
+[ELSIF notice->msg=add_performed]
+Bylo pøihlá¹eno celkem [notice->total] adres
+
 [ELSE]
 [notice->msg]
 

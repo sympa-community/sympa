@@ -18,7 +18,7 @@ privileged operation (one that requires your email address).
 [IF use_sso]
 [IF use_passwd=1]
 
-To login, select your organization authentication serveur below.<BR>
+To login, select your organization authentication server below.<BR>
 If it is not listed or if you don't have any, login using your email and password on the right column.
 
 [ENDIF]
@@ -110,7 +110,7 @@ Login with you email address and password. You can request a password reminder.
          <TR BGCOLOR="[light_color]">
           <TD NOWRAP align=center>
      	      <INPUT TYPE=hidden NAME=list VALUE="[list]">
-     	      <FONT SIZE=-1 COLOR="[selected_color]"><b>adresse email <INPUT TYPE="text" NAME="email" SIZE=20 VALUE="[init_email]">
+     	      <FONT SIZE=-1 COLOR="[selected_color]"><b>email address <INPUT TYPE="text" NAME="email" SIZE=20 VALUE="[init_email]">
       	      password : </b>
               <INPUT TYPE=password NAME=passwd SIZE=8>&nbsp;&nbsp;
               <INPUT TYPE="submit" NAME="action_login" VALUE="Login" SELECTED>

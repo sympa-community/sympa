@@ -62,14 +62,13 @@
 <TABLE>
 <TR>
 &nbsp;&nbsp;<FONT COLOR="[dark_color]">Unify your subscriptions with the email <B>[user->email]</B></FONT><BR> 
-&nbsp;&nbsp;<FONT COLOR="[dark_color]">That is to say using a unique email address in Sympa for your subscriptions and preferences</F
-ONT>
+&nbsp;&nbsp;<FONT COLOR="[dark_color]">That is to say using a unique email address in Sympa for your subscriptions and preferences</FONT>
 
 <TR>
 <TD>
     <FORM ACTION="[path_cgi]" METHOD=POST>
   
-&nbsp;&nbsp;<INPUT TYPE="submit" NAME="action_unify_email" VALUE="Valider"></FONT>
+&nbsp;&nbsp;<INPUT TYPE="submit" NAME="action_unify_email" VALUE="Validate"></FONT>
     </FORM>
 </TD>
 </TR>

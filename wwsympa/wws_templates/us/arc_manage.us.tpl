@@ -2,7 +2,7 @@
 <!-- begin arc_manage.us.tpl -->
 <Hr><b>Archive Management</b>
 <BR>
-Select bellow Archives months you want to delete or download (ZiP format):
+Select below Archives months you want to delete or download (ZiP format):
 <DL>
 <DT>Archives Selection :
 <FORM  NAME= "zip_form" METHOD=POST ACTION= "[path_cgi]">

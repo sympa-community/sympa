@@ -1,7 +1,112 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-    <TABLE WIDTH="100%" BORDER=0 CELLPADDING=10>
+   <TABLE WIDTH="100%" BORDER=0 CELLPADDING=0>
+ 
+     [IF main_robot]
+      <TR>
+        <TH BGCOLOR="[dark_color]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[selected_color]" WIDTH="50%">
+              <FONT COLOR="[bg_color]">
+	        Virtuální roboti
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+     </TR>
+
+     <TR><TD>
+    [IF robots]
+      Následující virtuální roboti bì¾í na tomto serveru :<UL>
+         [FOREACH vr IN robots]
+	    <LI><A HREF="[vr->wwsympa_url]/serveradmin">[vr->NAME]</A>
+	 [END]
+      </UL>
+    [ELSE]
+      Na tomto serveru není definován ¾ádný virtuální robot
+    [ENDIF]
+     <BR>
+     </TD></TR>
+    [ENDIF]
+
+      <TR>
+        <TH BGCOLOR="[dark_color]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[selected_color]" WIDTH="50%">
+              <FONT COLOR="[bg_color]">
+	        Lists
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+     </TR><TR>
+     <TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+      <A HREF="[path_cgi]/get_pending_lists">Èekající konference</A>
+       </TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+      <A HREF="[path_cgi]/get_latest_lists">Poslední konference</A>
+       </TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+      <A HREF="[path_cgi]/get_inactive_lists">Neaktivní konference</A>
+       </TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+      <A HREF="[path_cgi]/get_closed_lists">Uzavøené konference</A>
+       </TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+
+    <BR></TD></TR>
+
+    <TR>
+        <TH BGCOLOR="[dark_color]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[selected_color]" WIDTH="50%">
+              <FONT COLOR="[bg_color]">
+	        U¾ivatelé
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+    </TR>
+      <TR><TD NOWRAP>
+        <FORM ACTION="[path_cgi]" METHOD="POST">
+	  <INPUT NAME="email" SIZE="30" VALUE="[email]">
+	  <INPUT TYPE="hidden" NAME="action" VALUE="search_user">
+	  <INPUT TYPE="submit" NAME="action_search_user" VALUE="Hledat u¾ivatele">
+	</FORM>     
+      <BR></TD></TR>
+
       <TR VALIGN="top">
+
+        <TH BGCOLOR="[dark_color]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[selected_color]" WIDTH="50%">
+              <FONT COLOR="[bg_color]">
+	        ©ablony 
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+      </TR>
+      <TR>
         <TD NOWRAP>
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
 	    <FONT COLOR="[dark_color]"><B>Nastavení standardních ¹ablon konference</B></FONT><BR>
@@ -24,19 +129,31 @@
 	  </FORM>
 	</TD>
       </TR>
-      <TR><TD><A HREF="[path_cgi]/get_pending_lists"><B>Èekající konference</B></A></TD></TR>
+      <TR><TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+        <A HREF="[path_cgi]/view_translations">Pøizpùsobit ¹ablonys</A>
+       </TD>
+      [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+      <BR></TD></TR>
 
-      <TR><TD NOWRAP>
-        <FORM ACTION="[path_cgi]" METHOD="POST">
-	  <INPUT NAME="email" SIZE="30" VALUE="[email]">
-	  <INPUT TYPE="submit" NAME="action_search_user" VALUE="Najít u¾ivatele">
-	</FORM>     
-      </TD></TR>
+    <TR>
+        <TH BGCOLOR="[dark_color]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[selected_color]" WIDTH="50%">
+              <FONT COLOR="[bg_color]">
+	        Archívy
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+      </TR>
 
-      <TR><TD><A HREF="[path_cgi]/view_translations"><B>Upravit ¹ablony</B></A></TD></TR>
       <TR>
         <TD>
-<FONT COLOR="[dark_color]"><B>Znovu sestavit HTML archívy</B> pomocí <CODE>arctxt</CODE> adresáøe jako vstup.
+<FONT COLOR="[dark_color]"><B>Znovu sestavit HTML archívy</B> pomocí <CODE>arctxt</CODE> adresáøe jako vstup.</FONT>
         </TD>
       </TR>
       <TR>
@@ -68,3 +185,9 @@
       </TR>
 	
     </TABLE>
+
+<BR><BR>
+
+[IF loop_count]
+Tento FastCGI proces ([process_id]) obslou¾il [loop_count] cyklù od [start_time].
+[ENDIF]

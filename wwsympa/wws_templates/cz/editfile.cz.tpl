@@ -11,6 +11,8 @@
   <INPUT TYPE="submit" NAME="action_savefile" VALUE="Ulo¾it">
 
 [ELSE]
+Zde mù¾ete upravit rùzné zprávy èi soubory spojené s Va¹í konferencí :<BR><BR>
+
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	     <SELECT NAME="file">
 	      [FOREACH f IN files]
@@ -20,8 +22,7 @@
 	    <INPUT TYPE="submit" NAME="action_editfile" VALUE="Upravit">
 
 <P>
-[PARSE '/home/sympa/bin/etc/wws_templates/help_editfile.cz.tpl']
+[PARSE '--ETCBINDIR--/wws_templates/help_editfile.cz.tpl']
 
 [ENDIF]
 </FORM>
-

@@ -9,5 +9,5 @@ your password : [user->password].
 you are subscribed since : [subscriber->date].
 
 Everything about this list : [conf->wwsympa_url]/info/[list->name]
-Unsubscribtion :
+Unsubscription :
 mailto:[conf->email]@[conf->host]?subject=sig%20[list->name]%20[user->email]

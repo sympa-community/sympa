@@ -24,6 +24,7 @@ funkcím:
 
 <H2>Pøihlá¹ení</H2>
 
+[IF auth=classic]
 Pøi ovìøování toto¾nosti (<A HREF="[path_cgi]/loginrequest">pøihlá¹ení</A>), poskytujete Va¹i emailovou adresu a heslo.
 <BR><BR>
 Jakmile jste provìøen, je vytvoøena <I>"cookie"</I> která obsahuje
@@ -31,11 +32,12 @@ informace pro udr¾ení Va¹í toto¾nosti. Doba trvání <I>cookie</I>
 se dá zmìnit v <A HREF="[path_cgi]/pref">Nastavení</A>. 
 
 <BR><BR>
+[ENDIF]
 Mù¾ete se odhlásit (vymazáním <I>cookie</I>) kdykoli pomocí funkce
 <A HREF="[path_cgi]/logout">logout</A>.
 
 
-<H5>Otázky pøihlá¹ení</H5>
+<H5>Problémy pøi pøihlá¹ení</H5>
 
 <I>Nejsem èlenem konference</I><BR>
 To znamená, ¾e nejste registrován v databázi u¾ivatelù a tedy se nemù¾ete 

@@ -3,21 +3,17 @@
 <!-- begin list_menu.tpl -->
 <TABLE border="0"  CELLPADDING="0" CELLSPACING="0">
  <TR VALIGN="top"><!-- empty line in the left menu panel -->
-  <TD WIDTH="5" BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH="40" BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH="30" ></TD>
-  <TD WIDTH="40" ></TD>
+  <TD WIDTH="--COL1--" BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL2--" BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL3--" ></TD>
+  <TD WIDTH="--COL4--" ></TD>
  </TR>
  <TR>
-  <TD WIDTH="5" BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL1--" BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
 
 <!-- begin -->
-  <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
 
       [IF action=info]
         <TD WIDTH=100% BGCOLOR="[selected_color]" NOWRAP align=right>
@@ -30,68 +26,50 @@
         </TD>
       [ENDIF]
 
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
 
-  <TD WIDTH=40></TD>
+  <TD WIDTH=--COL4--></TD>
  </TR>
  <TR><!-- empty line in the left menu panel -->
-  <TD WIDTH=45 COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=70 COLSPAN=2><BR></TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
  <TR><!-- Panel list info -->
-  <TD WIDTH=5 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=110 COLSPAN=3 BGCOLOR="[bg_color]" NOWRAP align=left>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL234-- COLSPAN=3 BGCOLOR="[bg_color]" NOWRAP align=left>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
         <TD BGCOLOR="[light_color]">
 	  Celkem èlenù: <B>[total]</B><BR>
 	  <BR>
 	  Vlastníci
 	  [FOREACH o IN owner]
-	    <BR><FONT SIZE=-1><A HREF="mailto:[o->NAME]">[o->gecos]</A></FONT>
+	    [o->mailto]
 	  [END]
 	  <BR>
 	  [IF is_moderated]
 	    Moderátoøi
 	    [FOREACH e IN editor]
-	      <BR><FONT SIZE=-1><A HREF="mailto:[e->NAME]">[e->gecos]</A></FONT>
+		[e->mailto]
 	    [END]
 	  [ENDIF]
           <BR>
 	  [IF list_as_x509_cert]
           <BR><A HREF="[path_cgi]/load_cert/[list]"><font size="-1"><b>Nahrát certifikát<b></font></A><BR>
           [ENDIF]
-        </TD>
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
   </TD>
  </TR>
  <TR><!-- empty line in the left menu panel -->
-  <TD WIDTH=45 COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=70 COLSPAN=2><BR></TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
    [IF is_priv]
  <TR><!-- for listmaster owner and editor -->
-  <TD WIDTH=5 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
 
-  <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
 
    [IF action=admin]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Správa konference</b></font></TD>
@@ -109,27 +87,19 @@
         </TD>
    [ENDIF]
 
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
-  <TD WIDTH=40></TD>
+  <TD WIDTH=--COL4--></TD>
  </TR>
  <TR>
-  <TD WIDTH=45 COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=70 COLSPAN=2><BR></TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
  <TR><!-- Panel admin info -->
-  <TD WIDTH=5 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=110 COLSPAN=3 BGCOLOR="[bg_color]" NOWRAP align=left>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL234-- COLSPAN=3 BGCOLOR="[bg_color]" NOWRAP align=left>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
         <TD BGCOLOR="[light_color]">
 	   Pomìr vrácených zpráv: <B>[bounce_rate]%</B><BR>
            <BR>
@@ -140,16 +110,12 @@
            [endif]
 	  <BR>
         </TD>
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+         [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
  </TR>
  <TR>
-  <TD WIDTH=45 COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=70 COLSPAN=2><BR></TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
 
 
@@ -159,14 +125,10 @@
    [IF is_subscriber=1]
     [IF may_suboptions=1]
  <TR>
-  <TD WIDTH=5 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
 
-  <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
       [IF action=suboptions]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Nastavení èlena</b></font></TD>
       [ELSE]
@@ -176,36 +138,27 @@
         </b></font>
         </TD>
       [ENDIF]
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
-  <TD WIDTH=40>
+  <TD WIDTH=--COL4-->
   </TD>
 
  </TR>
   [ENDIF]
 
  <TR>
-  <TD WIDTH=45 COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=70 COLSPAN=2><BR></TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
    [IF may_signoff=1] 
  <TR>
-  <TD WIDTH=5 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
       [IF action=signoff]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Odhlásit se z konference</b></font></TD>
-      [ELSE]
-       [IF user->email]
+      [ELSIF user->email]
         <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
         <font size=-1><b>
          <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Opravdu se chcete odhlásit z konference [list]?'); return false;">Odhlásit se z konference</A>
@@ -218,37 +171,41 @@
         </b></font>
         </TD>
        [ENDIF]
-      [ENDIF]
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
 
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
   </TD>
 
-  <TD WIDTH=40></TD>
+  <TD WIDTH=--COL4--></TD>
  </TR>
    [ELSE]
+ 
+     [IF may_subscribe]
  <TR>
-  <TD WIDTH=5 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
         <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
-        <font size=-1 COLOR="[bg_color]"><b>Odhlásit se</b></font>
+        <font size=-1><b>
+     <A HREF="[path_cgi]/subscribe/[list]" onClick="request_confirm_link('[path_cgi]/subscribe/[list]', 'Opravdu se chcete pøihlásit do konference [list]?'); return false;">Pøihlásit se</A>
+        </b></font>
         </TD>
-        <TD WIDTH=40></TD>
-       </TR>
-      </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
      </TD>
     </TR>
-   </TABLE>
+     [ELSE]
+ <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
+        <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
+        <font size=-1 COLOR="[bg_color]"><b>Odhlásit se z konference</b></font>
+        </TD>
+        <TD WIDTH=--COL4--></TD>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
  </TR>
+     <!-- end may_subscribe -->
+     [ENDIF]
       <!-- end may_signoff -->
    [ENDIF]
       <!-- is_subscriber -->
@@ -257,13 +214,9 @@
       <!-- else is_subscriber -->
 
  <TR>
-  <TD WIDTH=5 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
    [IF action=subrequest]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Pøihlásit se</b></font></TD>
    [ELSE]
@@ -284,29 +237,21 @@
         </TD>
    [ENDIF]
 
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
-  <TD WIDTH=40></TD>
+  <TD WIDTH=--COL4--></TD>
  </TR>
 
    [IF may_signoff]
  <TR>
-  <TD WIDTH=45 COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=70 COLSPAN=2><BR></TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
  <TR>
-  <TD WIDTH=5 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
 
         <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
        [IF user->email]
@@ -319,32 +264,24 @@
         </b></font>
        [ENDIF]
         </TD>
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
-  <TD WIDTH=40></TD>
+  <TD WIDTH=--COL4--></TD>
  </TR>
    [ENDIF]
 
       <!-- END is_subscriber -->
    [ENDIF]
  <TR>
-  <TD WIDTH=45 COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=70 COLSPAN=2><BR></TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
    [IF is_archived]
  <TR>
-  <TD WIDTH=5 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
    [IF action=arc]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right>
           <font size=-1 COLOR="[bg_color]"><b>Archív konference</b></font>
@@ -374,31 +311,23 @@
         </TD>
    [ENDIF]
 
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
-  <TD WIDTH=40></TD>
+  <TD WIDTH=--COL4--></TD>
  </TR>
  <TR>
-  <TD WIDTH=45 COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=70 COLSPAN=2><BR></TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
       <!-- END is_archived -->
     [ENDIF]
 
  <!-- Post -->
  <TR>
-  <TD WIDTH=5 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
    [IF action=compose_mail]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right>
           <font size=-1 COLOR="[bg_color]"><b>Pøíspìvek do konference</b></font>
@@ -416,30 +345,22 @@
         </TD>
    [ENDIF]
 
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
-  <TD WIDTH=40></TD>
+  <TD WIDTH=--COL4--></TD>
  </TR>
  <TR>
-  <TD WIDTH=45 COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=70 COLSPAN=2><BR></TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
       <!-- END post -->
 
     [IF shared=exist]
  <TR>
-  <TD WIDTH=5 BGCOLOR="[dark_color]" NOWRAP>&nbsp; </TD>   
-  <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp; </TD>   
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
     [IF action=d_read]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1>
          <b>Sdílený adresáø</b></font>
@@ -458,47 +379,41 @@
       [ENDIF]
     [ENDIF]
 
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+      [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
        <!-- END shared --> 
-  <TD WIDTH=40></TD>
+  <TD WIDTH=--COL4--></TD>
  </TR> 
  <TR>
-  <TD WIDTH=45 COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=70 COLSPAN=2><BR></TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
     [ENDIF]
 
     [IF may_review]
  <TR>
-  <TD WIDTH=5 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH="70" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
+      [IF action=review]
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right>
+          <font size=-1 COLOR="[bg_color]"><b>U¾ivatelé konference</b></font>
+	</TD>
+      [ELSE]
         <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
          <font size=-1><b>
          <A HREF="[path_cgi]/review/[list]" >U¾ivatelé konference</A>
          </b></font>
 	</TD>
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+      [ENDIF]
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
-  <TD WIDTH=40></TD>
+  <TD WIDTH=--COL4--></TD>
  </TR>
  <TR>
-  <TD WIDTH=45 COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
-  <TD WIDTH=70 COLSPAN=2><BR></TD>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
     [ENDIF]
 </TABLE>

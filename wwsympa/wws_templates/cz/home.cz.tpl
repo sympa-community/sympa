@@ -46,20 +46,12 @@ odhlá¹ení, prohlí¾et archívy, správu konferenci atd.
    </TR>
    <TR>
 <TD>
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="[dark_color]">
-  <TD>
-  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
-     <TR> 
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
       <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 
       <A HREF="[path_cgi]/lists" >
      <FONT SIZE=-1><B>zobrazit v¹echny konference</B></FONT></A>
      </TD>
-    </TR>
-  </TABLE>
-  </TD>
-  </TR>
-</TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
 </TD>
 <TD width=100%></TD>
 <TD NOWRAP>
@@ -67,6 +59,10 @@ odhlá¹ení, prohlí¾et archívy, správu konferenci atd.
          <INPUT SIZE=25 NAME=filter VALUE=[filter]>
          <INPUT TYPE="hidden" NAME="action" VALUE="search_list">
          <INPUT TYPE="submit" NAME="action_search_list" VALUE="Hledat konference">
+	  <BR>
+	 <INPUT TYPE="radio" NAME="extended" VALUE="0" checked>Místní
+         <INPUT TYPE="radio" NAME="extended" VALUE="1">Roz¹íøené vyhledávání
+	 
         </FORM>
    </TD>
         

@@ -85,7 +85,7 @@ Parametry toho hledání <b> &quot;[key_word]&quot;</b>
 <INPUT TYPE=hidden NAME=previous     VALUE="[searched]">
 
 [IF body]
-	<INPUT TYPE=hidden NAME=body Value="[tìlo]">
+	<INPUT TYPE=hidden NAME=body Value="[body]">
 [ENDIF]
 
 [IF subj]

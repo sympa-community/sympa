@@ -34,9 +34,10 @@
 <INPUT TYPE="radio" NAME="status" VALUE="closed">Uzavøít &nbsp;&nbsp;
 <INPUT TYPE="radio" NAME="status" VALUE="open">Nainstalovat &nbsp;&nbsp;
 </MENU>
-</TD><TD>
-<TD BGCOLOR="[light_color]">
+</TD>
+<TD>
 <INPUT TYPE="submit" NAME="action_install_pending_list" VALUE="Odeslat">
+<INPUT TYPE="checkbox" NAME="notify" CHECKED>upozornit vlastníka
 </FORM>
 </TD>
 </TR>
@@ -77,3 +78,5 @@
  </TD>
 </TR>
 </TABLE>
+
+

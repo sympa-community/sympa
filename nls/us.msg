@@ -66,7 +66,7 @@ email address. Please try subscribing using your canonical address."
 18	"Your subscription to list %s has been removed."
 21	"Renewal of your subscription to list '%s'"
 24	"Subscription to this list are currently suspended.\n"
-25	"Your request of subscription/unssubscribtion has been forwarded to the list's\n\
+25	"Your request of subscription/unsubscription has been forwarded to the list's\n\
 owners for approval. You will receive a notification when you will have\n\
 been subscribed (or unsubscribed) to the list.\n"
 26	"Unsubscription is not available for list %s.\n"
@@ -107,7 +107,7 @@ You are not one of the moderators for list %s.\n"
 47	"The EXPIRE, EXPIREINDEX and EXPIREDEL commands are restricted to the owners of the list.\n\
 You are not one of the owners for list %s.\n"
 48	"\
-Someone (hopefully you) resquested that the subscribers to the list\n\
+Someone (hopefully you) requested that the subscribers to the list\n\
 '%s' for more than %d days have to confirm their subscription.\n\
 If you do not want this action to be taken, simply ignore this message.\n\
 To confirm this action, please send an e-mail to '%s', with the following command:\n\
@@ -179,7 +179,7 @@ If you want this action to be taken, please\n\
 \n\
 If you do not want this action to be taken, you can safely ignore\n\
 this message."
-261	"Someone (hopefully you) asked for you e-mail address\n\
+261	"Someone (hopefully you) asked for your e-mail address\n\
 to be removed from list '%s'.\n\
 If you want this action to be taken, please \n\
 \n\
@@ -380,7 +380,7 @@ $set 16 Listm parameters titles
 202	"second-level regular expression"
 203	"quota"
 204	"quota"
-205	"email adress protection method"
+205	"email address protection method"
 206	"remote list inclusion"
 207	"remote path of sympa list dump"
 208	"certificate for authentication by remote Sympa"

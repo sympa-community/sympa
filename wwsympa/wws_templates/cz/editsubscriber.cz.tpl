@@ -9,9 +9,10 @@
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 <INPUT TYPE="hidden" NAME="email" VALUE="[current_subscriber->escaped_email]">
 <DL>
-<DD>Adresa : <INPUT NAME="new_email" VALUE="[current_subscriber->email]" SIZE="25">
+<DD>Adresa : <INPUT NAME="new_email" VALUE="[current_subscriber->escaped_email]" SIZE="25">
 <DD>Jméno : <INPUT NAME="gecos" VALUE="[current_subscriber->gecos]" SIZE="25">
-<DD>èlenem od [current_subscriber->date]
+<DD>Èlenem od [current_subscriber->date]
+<DD>Poslední zmìna [current_subscriber->update_date]
 <DD>Pøíjem : <SELECT NAME="reception">
 		  [FOREACH r IN reception]
 		    <OPTION VALUE="[r->NAME]" [r->selected]>[r->description]
@@ -20,15 +21,29 @@
 
 <DD>Viditelnost : [current_subscriber->visibility]
 <DD>Jazyk : [current_subscriber->lang]
-<DD><INPUT TYPE="submit" NAME="action_set" VALUE="Zmìnit">
-<INPUT TYPE="submit" NAME="action_del" VALUE="Odhlásit u¾ivatele">
-<INPUT TYPE="checkbox" NAME="quiet"> Potichu
+[IF additional_fields]
+[FOREACH field IN additional_fields]
+ [IF field->type=enum]
+    <DD>[field->NAME] :  <SELECT NAME="additional_field_[field->NAME]">
+	                  <OPTION VALUE="">
+	[FOREACH e IN field->enum]
+		          <OPTION VALUE="[e->NAME]" [e]>[e->NAME]
+        [END]
+	                 </SELECT>
+ [ELSE]
+    <DD>[field->NAME] : <INPUT NAME="additional_field_[field->NAME]" VALUE="[field->value]" SIZE="25">
+ [ENDIF]
+[END]
+[ENDIF]
+<DD><INPUT TYPE="submit" NAME="action_set" VALUE="Update">
+<INPUT TYPE="submit" NAME="action_del" VALUE="Unsubscribe the User">
+<INPUT TYPE="checkbox" NAME="quiet"> quiet
 </DL>
 </TD></TR>
 [IF current_subscriber->bounce]
 <TR><TH BGCOLOR="[error_color]">
 <FONT COLOR="[bg_color]">Vracející se adresa</FONT>
-</TD></TR><TR><TD>
+</TH></TR><TR><TD>
 <DL>
 <DD>Stav : [current_subscriber->bounce_status] ([current_subscriber->bounce_code])
 <DD>Poèet vrácených zpráv : [current_subscriber->bounce_count]
@@ -40,3 +55,6 @@
 [ENDIF]
 </TABLE>
 </FORM>
+
+
+

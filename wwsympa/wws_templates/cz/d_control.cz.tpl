@@ -4,7 +4,7 @@
     Vlastník : [owner] <BR>
     Poslední zmìna : [doc_date] <BR>
     Popis : [doc_title] <BR><BR>
-<H3><A HREF="[path_cgi]/d_read/[list]/[father]"> <IMG ALIGN="bottom"  src="[father_icon]"> O úroveò vý¹</A></H3>
+<H3><A HREF="[path_cgi]/d_read/[list]/[escaped_father]"> <IMG ALIGN="bottom"  src="[father_icon]"> O úroveò vý¹</A></H3>
 
 <TABLE width=100%>
 

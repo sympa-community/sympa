@@ -12,7 +12,8 @@ Stisknìte tlaèítko dole :<BR>
 	</FORM>
 
   [ELSIF not_subscriber]
-Nejste èlenem konference [list] s adresou [email].
+
+      Nejste èlenem konference [list] s adresou [email].
       <BR><BR>
 Mo¾ná jste pøihlá¹en z jiné adresy. Kontaktujte prosím správce konference, aby
 Vám pomohl s odhlá¹ením:
@@ -25,7 +26,7 @@ Pro potvrzení Va¹í identity a abychom zabránili cizím osobám ve Va¹em odhlá¹ení
 proti Va¹í vùli, bude Vám odeslána zpráva s odkazem. <BR><BR>
 
 Zkontrolujte si Va¹i schránku a vlo¾te dole heslo, které je v dané zprávì.
-Tímto povrdíte Va¹e odhlá¹ení z konference [list].
+Tímto potvrdíte Va¹e odhlá¹ení z konference [list].
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
           <FONT COLOR="[dark_color]"><B>emailová adresa</B> </FONT>[email]<BR>

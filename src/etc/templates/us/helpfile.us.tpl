@@ -45,7 +45,7 @@ Available commands are:
  INDex <list>                * <list> archive file list
  GET <list> <file>           * To get <file> of <list> archive
  LAST <list>                 * Used to received the last message from <list>
- INVITE <list> <email>       * Invite <email> for subscribtion in <list>
+ INVITE <list> <email>       * Invite <email> for subscription in <list>
  CONFIRM <key>               * Confirmation for sending a message (depending
                                on the list's configuration)
  QUIT                        * Indicates the end of the commands (to ignore a

@@ -3,7 +3,7 @@
 <FORM ACTION="[path_cgi]" METHOD="POST">
 Od: [user->email]<BR>
 Pro: [mailto]<BR>
-Subjekt: <INPUT TYPE="text" SIZE ="25" NAME="subject">
+Subjekt: <INPUT TYPE="text" SIZE ="45" NAME="subject" VALUE="[subject]">
 <INPUT TYPE="submit" NAME="action_send_mail" VALUE="Poslat tuto zprávu">
 <BR>
 

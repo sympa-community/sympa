@@ -5,9 +5,9 @@
 
 <TABLE CELLPADDING="1" CELLSPACING="1" >
 <TR BGCOLOR="[selected_color]">
-<TH  ALIGN="left"><FONT COLOR="[bg_color]">Akce</TH>
+<TH  ALIGN="left"><FONT COLOR="[bg_color]">Akce</FONT></TH>
 [FOREACH lang IN tpl_lang]
-<TH ALIGN="left"><FONT COLOR="[bg_color]">[lang->NAME]</TH>
+<TH ALIGN="left"><FONT COLOR="[bg_color]">[lang->NAME]</FONT></TH>
 [END]
 </TR>
 [FOREACH file IN tpl]
@@ -24,4 +24,3 @@
 </TABLE>
 
 </TD></TR></TABLE>
-

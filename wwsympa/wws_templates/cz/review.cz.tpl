@@ -4,34 +4,38 @@
 <TABLE width=100% border="0" VALIGN="top">
 <TR>
 [IF is_owner]
-<TD VALIGN="top" NOWRAP>
+<TD VALIGN="top" NOWRAP COLSPAN="3">
     <FORM ACTION="[path_cgi]" METHOD="POST">
       <INPUT TYPE="hidden" NAME="previous_action" VALUE="review">
       <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
       <INPUT TYPE="hidden" NAME="action" VALUE="add">
-      <INPUT TYPE="text" NAME="email" SIZE="18">
-      <INPUT TYPE="submit" NAME="action_add" VALUE="Pøidat"> 
-      skrytì<INPUT TYPE="checkbox" NAME="quiet">
+      <INPUT TYPE="text" NAME="email" SIZE="35">
+      <INPUT TYPE="submit" NAME="action_add" VALUE="Pøidat"> quiet<INPUT TYPE="checkbox" NAME="skrytì">
     </FORM>
 </TD>
+</TR>
+<TR>
+<TD ALIGN="right">
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+         <FONT COLOR="[selected_color]" SIZE="-1">
+         <A HREF="[path_cgi]/subindex/[list]" ><b>Èekající ¾ádosti o èlenství</b></A>
+         </FONT>
+       </TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+</TD>
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
-   <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-     <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
          <A HREF="[path_cgi]/add_request/[list]" ><b>Vícenásobné pøidání</b></A>
          </FONT>
        </TD>
-     </TR>
-   </TABLE></TD></TR>
- </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
 </TD>
 
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
-   <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-     <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
 
@@ -39,9 +43,7 @@
 
          </FONT>
        </TD>
-     </TR>
-   </TABLE></TD></TR>
- </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
 </TD>
 
 [ENDIF]
@@ -84,7 +86,9 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
   [IF action<>search]
   <TD NOWRAP>
 	<INPUT TYPE="hidden" NAME="sortby" VALUE="[sortby]">
+
 	<INPUT TYPE="submit" NAME="action_review" VALUE="Velikost">
+
 	        <SELECT NAME="size">
                   <OPTION VALUE="[size]" SELECTED>[size]
 		  <OPTION VALUE="25">25
@@ -121,11 +125,38 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
 	    <FONT SIZE="-1"><b>Emailová adresa</b></A>
 	[ENDIF]
 	</TH>
-        <TH><FONT SIZE="-1"><B>Jméno</B></FONT>
+        [IF sortby=domain]
+  	    <TH NOWRAP BGCOLOR="[selected_color]">
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Doména</b></FONT>
+	[ELSE]
+	    <TH NOWRAP>
+	    <A HREF="[path_cgi]/review/[list]/1/[size]/domain" >
+	    <FONT SIZE="-1"><b>Doména</b></FONT></A>
+	[ENDIF]
+	</TH>
+	[IF sortby=name]
+	<TH NOWRAP BGCOLOR="[selected_color]">
+	  <FONT COLOR="[bg_color]" SIZE="-1">Jméno</FONT>
+	[ELSE]
+	<TH NOWRAP>
+		<A HREF="[path_cgi]/review/[list]/1/[size]/name">
+		<FONT SIZE="-1">Jméno</FONT></a>
+	[ENDIF] 
 	</TH>
         [IF is_owner]
 	  <TH><FONT SIZE="-1"><B>Zpùsob pøijímání</B></FONT>
 	  </TH>
+	  [IF list_conf->user_data_source=include2]
+         [IF sortby=sources]
+  	    <TH NOWRAP BGCOLOR="[selected_color]">
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Zdroje</b></FONT>
+	[ELSE]
+	    <TH NOWRAP>
+	    <A HREF="[path_cgi]/review/[list]/1/[size]/sources" >
+	    <FONT SIZE="-1"><b>Zdroje</b></FONT></A>
+	[ENDIF]
+	  </TH>
+          [ENDIF]
 	  [IF sortby=date]
   	    <TH NOWRAP BGCOLOR="[selected_color]">
 	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Datum pøihlá¹ení</b></FONT>
@@ -135,23 +166,31 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
 	    <b>Datum pøihlá¹ení</b></A></FONT>
 	  [ENDIF]
           </TH>
+	  <TH><FONT SIZE="-1"><B>Poslední zmìna</B></FONT></TH>
+	  [IF additional_fields]
+	  <TH><FONT SIZE="-1"><B>[additional_fields]</B></FONT></TH>
+	  [ENDIF]
         [ENDIF]
       </TR>
       
       [FOREACH u IN members]
 	[IF dark=1]
-	  <TR BGCOLOR="[shaded_color]">
+	  <TR BGCOLOR="[shaded_color]" VALIGN="top">
 	[ELSE]
-          <TR>
+          <TR BGCOLOR="[bg_color]" VALIGN="top">
 	[ENDIF]
 
 	 [IF is_owner]
+	  [IF u->subscribed]
 	    <TD>
 	        <INPUT TYPE=checkbox name="email" value="[u->escaped_email]">
 	    </TD>
+	  [ELSE]
+            <TD>&nbsp;</TD>
+          [ENDIF]
 	 [ENDIF]
 	 [IF u->bounce]
-	  <TD NOWRAP><FONT SIZE=-1>
+	  <TD COLSPAN=2 NOWRAP><FONT SIZE=-1>
 	 
 	      [IF is_owner]
 		<A HREF="[path_cgi]/editsubscriber/[list]/[u->escaped_email]/review">[u->email]</A>
@@ -159,12 +198,11 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
  	        [u->email]
  	      [ENDIF]
 	  </FONT></TD>
-            <TD ALIGN="right"BGCOLOR="[error_color]"><FONT SIZE=-1>
-		<FONT COLOR="[bg_color]"><B>vracející se zprávy</B></FONT>
+            <TD ALIGN="right"BGCOLOR="[error_color]"><FONT SIZE=-1 COLOR="[bg_color]"><B>vracející se zprávy</B></FONT>
 	    </TD>
 
 	 [ELSE]
-	  <TD COLSPAN=2 NOWRAP><FONT SIZE=-1>
+	  <TD COLSPAN=3 NOWRAP><FONT SIZE=-1>
 	      [IF is_owner]
 		<A HREF="[path_cgi]/editsubscriber/[list]/[u->escaped_email]/review">[u->email]</A>
 	      [ELSE]
@@ -182,9 +220,30 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
   	    <TD ALIGN="center"><FONT SIZE=-1>
   	      [u->reception]
 	    </FONT></TD>
+          [IF list_conf->user_data_source=include2]
+            <TD ALIGN="left"><FONT SIZE=-1>
+            [IF u->subscribed]
+              [IF u->included]
+                 pøíhlá¹en<BR>[u->sources]
+              [ELSE]
+                 pøíhlá¹en
+              [ENDIF]
+            [ELSE]
+              [u->sources]
+            [ENDIF]   
+            </FONT></TD>
+          [ENDIF]
 	    <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
 	      [u->date]
 	    </FONT></TD>
+	    <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
+	      [u->update_date]
+	    </FONT></TD>
+    	  [IF additional_fields]
+	     <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
+	      [u->additional]
+	    </FONT></TD>
+	  [ENDIF]
        	  [ENDIF]
         </TR>
 
@@ -202,7 +261,7 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
     <TR><TD ALIGN="left">
       [IF is_owner]
 
-        <!--INPUT TYPE="button" NAME="action_del" VALUE="Delete selected email addresses" onClick="return request_confirm('Do you really want to unsubscribe ALL selected subscribers ?')"-->
+        <!--INPUT TYPE="button" NAME="action_del" VALUE="Smazat oznaèené adresy" onClick="return request_confirm('Opravdu chcete odhlásit V©ECHNY vybrané èleny?')"-->
 
 	<INPUT TYPE="submit" NAME="action_del" VALUE="Smazat oznaèené adresy">
 
@@ -230,4 +289,9 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
     [ENDIF]
     </TABLE>
     </FORM>
+
+
+
+
+
 

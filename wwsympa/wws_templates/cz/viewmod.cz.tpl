@@ -6,7 +6,7 @@
 <TABLE>
 <TR BGCOLOR="[bg_color]"><TD>
   <INPUT TYPE="submit" NAME="action_distribute" VALUE="Rozeslat">
-  <INPUT TYPE="submit" NAME="action_reject.quiet" VALUE="Odmítnout">
+  <INPUT TYPE="submit" NAME="action_reject.quiet" VALUE="Odmítnout skrytì">
   <INPUT TYPE="submit" NAME="action_reject" VALUE="Odmítnutí s upozornìním">
 </TD></TR></TABLE>
 </FORM>

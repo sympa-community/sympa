@@ -36,7 +36,7 @@ vlastnímu prostøedí.
   [ELSIF status=notauth_noemail]
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="[dark_color]"><B>Your e-mail address</B> 
+          <FONT COLOR="[dark_color]"><B>Va¹e emailová adresa</B> </FONT>
 	  <INPUT  NAME="email" SIZE="30"><BR>
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="action" VALUE="subrequest">
@@ -44,7 +44,8 @@ vlastnímu prostøedí.
          </FORM>
 
   [ELSIF status=notauth]
-Pro potvrzení Va¹eho pøihlá¹ení do konference [list], vlo¾te Va¹e heslo:
+
+         Pro potvrzení Va¹eho pøihlá¹ení do konference [list], vlo¾te Va¹e heslo:
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
           <FONT COLOR="[dark_color]"><B>emailová adresa</B> </FONT>[email]<BR>
@@ -65,6 +66,9 @@ Pro potvrzení Va¹eho pøihlá¹ení do konference [list], vlo¾te Va¹e heslo:
 	<BR><BR>
 
 
-	[PARSE '/home/sympa/bin/etc/wws_templates/loginbanner.cz.tpl']
+	[PARSE '--ETCBINDIR--/wws_templates/loginbanner.cz.tpl']
 
   [ENDIF]      
+
+
+

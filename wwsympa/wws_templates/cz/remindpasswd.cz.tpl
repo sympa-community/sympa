@@ -1,7 +1,7 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 
-      Zapomnìl jste Va¹e heslo, nebo jste zde ¾ádné heslo nemìl.
+      Zapomnìl jste Va¹e heslo, nebo jste zde ¾ádné heslo nemìl nastaveno.
    <BR> Heslo Vám bude odesláno emailem :
 
       <FORM ACTION="[path_cgi]" METHOD=POST>

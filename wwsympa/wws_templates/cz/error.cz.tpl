@@ -26,16 +26,13 @@ Prosím poskytnìte Va¹e heslo
 [ELSIF error->msg=user_not_found]
 "[error->email]" : neznámý u¾ivatel
 
-[ELSIF error->msg=user_not_found]
-"[error->email]" není èlenem
-
 [ELSIF error->msg=passwd_not_found]
 U¾ivatel "[error->email]" nemá heslo
 
 [ELSIF error->msg=incorrect_passwd]
 Poskytnuté heslo je nesprávné
 
-[ELSIF error->msg=uncomplete_passwd]
+[ELSIF error->msg=incomplete_passwd]
 Poskytnuté heslo je nekompletní
 
 [ELSIF error->msg=no_user]
@@ -75,7 +72,11 @@ Chyba pøi pøidávání u¾ivatele [error->user]
 [error->action]: akce selhala
 
 [ELSIF error->msg=not_subscriber]
-Nejsem èlenem konference [error->list]
+[IF error->email]
+  Nejste pøihlá¹en: [error->email]
+[ELSE]
+Nejste èlenem konference [error->list]
+[ENDIF]
 
 [ELSIF error->msg=diff_passwd]
 Hesla nejsou stejná
@@ -137,11 +138,25 @@ Chyba : Adresáø [error->directory] není prázdný
 [ELSIF error->msg=init_passwd]
 Nezvolil jste si heslo, nechte si jej poslat 
 
-[ELSIF error->msg=empty_archives]
-Archív konference je prázdný.
+[ELSIF error->msg=change_email_failed]
+Nelze zmìnit emailovou adresu pro konferenci [error->list]
 
-[ELSIF error->msg=no_msg]
-®ádná zpráva nenalezena.
+[ELSIF error->msg=change_email_failed_because_subscribe_not_allowed]
+Nelze zmìnit Va¹i adresu v konferenci '[error->list]', proto¾e není dovoleno
+pøihlásit Va¹i novou adresu.
+
+[ELSIF error->msg=change_email_failed_because_unsubscribe_not_allowed]
+Nelze zmìnit Va¹i adresu v konferenci '[error->list]', proto¾e Vám není dovoleno
+odhlásit se.
+
+[ELSIF error->msg=shared_full]
+The document repository exceed disk quota.
+
+[ELSIF error->msg=ldap_user]
+Your password is stored in an LDAP directory, therefore Sympa cannot post you a reminder
+
+[ELSIF error->msg=select_month]
+Please select archive months
 
 [ELSE]
 [error->msg]
@@ -149,4 +164,3 @@ Archív konference je prázdný.
 
 <BR>
 [END]
- 
