@@ -256,7 +256,11 @@ sub get_list_list_tpl {
 
 		$list_templates->{$template}{'path'} = $dir;
 
-		if (-r $dir.'/'.$template.'/comment.tt2') {
+		my $locale = &Language::Lang2Locale( &Language::GetLang());
+		## Look for a comment.tt2 in the appropriate locale first
+		if (-r $dir.'/'.$template.'/'.$locale.'/comment.tt2') {
+		    $list_templates->{$template}{'comment'} = $dir.'/'.$template.'/'.$locale.'/comment.tt2';
+		}elsif (-r $dir.'/'.$template.'/comment.tt2') {
 		    $list_templates->{$template}{'comment'} = $dir.'/'.$template.'/comment.tt2';
 		}
 	    }
