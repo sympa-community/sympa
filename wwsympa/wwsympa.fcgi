@@ -4731,7 +4731,6 @@ sub do_remindpasswd {
 
 		 $msg_info{'date'} = &POSIX::strftime("%d %b %Y",localtime($msg_info{'date_epoch'}) );
 		 if ($msg_info{'date_epoch'} < $oldest_day) {
-		     $stop_search = 1;
 		     last;
 		 }
 	
