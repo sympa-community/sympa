@@ -122,7 +122,7 @@ sub get_https2{
 	my $trusted_ca_path = $ssl_data->{'capath'};
 	$trusted_ca_path ||= $Conf{'capath'};
 
-	do_log ('info','X509::get_https2 (%s,%s,%s,%s,%s)',$host,$port,$path,$trusted_ca_file,$trusted_ca_path );
+	do_log ('debug','X509::get_https2 (%s,%s,%s,%s,%s)',$host,$port,$path,$trusted_ca_file,$trusted_ca_path );
 
 	unless ( -r ($trusted_ca_file) ||  (-d $trusted_ca_path )) {
 	    do_log ('err',"error : incorrect access to cafile $trusted_ca_file bor capath $trusted_ca_path");
