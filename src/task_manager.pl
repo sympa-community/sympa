@@ -339,15 +339,28 @@ while (!$end) {
 		}
 
 		## Skip if parameter is not defined
-		unless (defined $list->{'admin'}{$task->{'model'}} && 
-			defined $list->{'admin'}{$task->{'model'}}{'name'}) {
-		    &do_log('notice','Removing task file %s', $task_file);
-		    unless (unlink "$spool_task/$task_file") {
-			&do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+		if ( $task->{'model'} eq 'sync_include') {
+		    unless (($list->{'admin'}{'user_data_source'} eq 'include2') &&
+			    $list->has_include_data_sources() &&
+			    ($list->{'admin'}{'status'} eq 'open')) {
+			&do_log('notice','Removing task file %s', $task_file);
+			unless (unlink "$spool_task/$task_file") {
+			    &do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+			    next;
+			}
 			next;
 		    }
-		    next;
-		}		
+		}else {
+		    unless (defined $list->{'admin'}{$task->{'model'}} && 
+			    defined $list->{'admin'}{$task->{'model'}}{'name'}) {
+			&do_log('notice','Removing task file %s', $task_file);
+			unless (unlink "$spool_task/$task_file") {
+			    &do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+			    next;
+			}
+			next;
+		    }		
+		}
 	    }
 	    execute ("$spool_task/$_");
 	}
