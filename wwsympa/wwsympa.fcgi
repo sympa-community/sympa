@@ -4627,7 +4627,8 @@ sub do_scenario_test {
 	$param->{'listname'}{$l}{'defined'}=1 ;
     }
     foreach my $a ('smtp','md5','smime') {
-	$param->{'auth_method'}{$a}{'define'}=1 ;
+	#$param->{'auth_method'}{$a}{'define'}=1 ;
+	$param->{'authmethod'}{$a}{'defined'}=1 ;
     }
 
     $param->{'scenario'}{$in{'scenario'}}{'selected'} = 'SELECTED' if $in{'scenario'};
