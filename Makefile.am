@@ -222,7 +222,7 @@ checkcpan:
 
 clean:
 	find . \( -name ".#*" -o -name "*~" -o -name ".*~" -o -name "#*#" \) -exec  rm -f {} \;
-	@for i in src nls wwsympa src/etc/sample;\
+	@for i in src wwsympa src/etc/sample;\
 	do \
 	(cd $$i && echo "making clean in $$i..." && \
 	$(MAKE) PERL='${PERL}' clean) || exit 1; \
