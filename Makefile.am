@@ -366,8 +366,9 @@ installconfig:
 	chgrp $(GROUP) $(DESTDIR)$(CONFDIR)/$$cfile; \
 	INITCONF='1'; \
 	fi \
-	done
-	if [ $(INITCONF) ] ; then \
+	done; \
+	if [ "$$INITCONF" ] ; then \
+	echo "###############################################"; \
 	echo "It seems to be your first installation of Sympa"; \
 	echo "The following wizard will help you create your $(CONFDIR)/sympa.conf and $(CONFDIR)/wwsympa.conf :"; \
 	$(PERL) -I $(DESTDIR)$(SBINDIR) $(DESTDIR)$(SBINDIR)/sympa_wizard.pl; \
