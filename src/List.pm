@@ -666,6 +666,19 @@ my %alias = ('reply-to' => 'reply_to',
 			    'title_id' => 73,
 			    'group' => 'command'
 			    },
+	    'task' => {'format' => 
+		       {'remind' => 
+				    {'format' => '\S+',
+				     'occurrence' => '0-1'
+				     }
+				},
+		       {'expire' => 
+				    {'format' => '\S+',
+				     'occurrence' => '0-1'
+				     }
+		    }
+		   },
+
 	    'topics' => {'format' => '\w+(\/\w+)?',
 			 'split_char' => ',',
 			 'occurrence' => '0-n',
