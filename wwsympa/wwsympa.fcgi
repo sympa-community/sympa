@@ -4090,7 +4090,12 @@ sub do_arcsearch {
     
     $param->{'key_word'} = $in{'key_word'};
     $in{'key_word'} =~ s/\@/\\\@/g;
-    
+    $in{'key_word'} =~ s/\[/\\\[/g;
+    $in{'key_word'} =~ s/\]/\\\]/g;
+    $in{'key_word'} =~ s/\(/\\\(/g;
+    $in{'key_word'} =~ s/\)/\\\)/g;
+    $in{'key_word'} =~ s/\$/\\\$/g;
+   
     $search->limit ($in{'limit'});
     
     $search->age (1) 
@@ -4223,6 +4228,8 @@ sub do_arcsearch_id {
     $in{'key_word'} =~ s/\@/\\\@/g;
     $in{'key_word'} =~ s/\[/\\\[/g;
     $in{'key_word'} =~ s/\]/\\\]/g;
+    $in{'key_word'} =~ s/\(/\\\(/g;
+    $in{'key_word'} =~ s/\)/\\\)/g;
     $in{'key_word'} =~ s/\$/\\\$/g;
 
     $search->limit (1);
