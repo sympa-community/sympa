@@ -153,7 +153,9 @@ sub gettext {
 	foreach (split /\n/,&Locale::Messages::gettext('')) {
 	    if ($var eq 'language') {
 		if (/^Language-Team:\s*(.+)$/i) {
-		    return $1;
+		    my $language = $1;
+		    $language =~ s/\<\S+\>//;
+		    return $language;
 		}
 	    }elsif ($var eq 'charset') {
 		if (/^Content-Type:\s*.*charset=(\S+)$/i) {
