@@ -1188,7 +1188,7 @@ sub check_param_out {
 
 ## Login WWSympa
 sub do_login {
-    &wwslog('debug', 'do_login(%s)', $in{'email'});
+    &wwslog('info', 'do_login(%s)', $in{'email'});
     my $user;
     my $next_action;
 
@@ -1481,7 +1481,7 @@ sub ldap_authentication {
 
 sub do_unify_email {
     
-    &wwslog('debug', 'do_unify_email');
+    &wwslog('info', 'do_unify_email');
     
     unless($param->{'user'}{'email'}){
 	&error_message('failed');
@@ -1529,7 +1529,7 @@ sub do_unify_email {
 ## Declare an alternative email
 sub do_record_email{
   
-    &wwslog('debug', 'do_record_email');
+    &wwslog('info', 'do_record_email');
     my $user;
     my $new_email;
     
@@ -1634,7 +1634,7 @@ sub is_ldap_user {
 
 ## send back login form
 sub do_loginrequest {
-    &wwslog('debug','do_loginrequest');
+    &wwslog('info','do_loginrequest');
     
     if ($param->{'user'}{'email'}) {
 	&error_message('already_login', {'email' => $param->{'user'}{'email'}});
@@ -1662,7 +1662,7 @@ sub do_loginrequest {
 
 ## Help / about WWSympa
 sub do_help {
-    &wwslog('debug','do_help(%s)', $in{'help_topic'});
+    &wwslog('info','do_help(%s)', $in{'help_topic'});
     
     ## Contextual help
     if ($in{'help_topic'}) {
@@ -1684,7 +1684,7 @@ sub do_help {
 
 ## Logout from WWSympa
 sub do_logout {
-    &wwslog('debug','do_logout(%s)', $param->{'user'}{'email'});
+    &wwslog('info','do_logout(%s)', $param->{'user'}{'email'});
     
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -1707,7 +1707,7 @@ sub do_logout {
 
 ## Remind the password
 sub do_remindpasswd {
-    &wwslog('debug', 'do_remindpasswd(%s)', $in{'email'}); 
+    &wwslog('info', 'do_remindpasswd(%s)', $in{'email'}); 
     
     my $url_redirect;
     if($in{'email'}){
@@ -1731,7 +1731,7 @@ sub do_remindpasswd {
 }
 
 sub do_sendpasswd {
-    &wwslog('debug', 'do_sendpasswd(%s)', $in{'email'}); 
+    &wwslog('info', 'do_sendpasswd(%s)', $in{'email'}); 
     my ($passwd, $user);
     
     unless ($in{'email'}) {
@@ -1806,7 +1806,7 @@ sub do_sendpasswd {
 ## TODO (pour listmaster, toutes les listes)
 sub do_which {
     my $which = {};
-    &wwslog('debug', 'do_which');
+    &wwslog('info', 'do_which');
     
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -1850,7 +1850,7 @@ sub do_which {
 ## The list of list
 sub do_lists {
     my @lists;
-    &wwslog('debug', 'do_lists(%s,%s)', $in{'topic'}, $in{'subtopic'});
+    &wwslog('info', 'do_lists(%s,%s)', $in{'topic'}, $in{'subtopic'});
 
     my %topics = &List::load_topics($robot);
 
@@ -1910,7 +1910,7 @@ sub do_lists {
 
 ## List information page
 sub do_info {
-    &wwslog('debug', 'do_info');
+    &wwslog('info', 'do_info');
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -1982,7 +1982,7 @@ sub do_info {
 
 ## Subscribers' list
 sub do_review {
-    &wwslog('debug', 'do_review(%d)', $in{'page'});
+    &wwslog('info', 'do_review(%d)', $in{'page'});
     my $record;
     my @users;
     my $size = $in{'size'} || $wwsconf->{'review_page_size'};
@@ -2097,7 +2097,7 @@ sub do_review {
 
 ## Search in subscribers
 sub do_search {
-    &wwslog('debug', 'do_search(%s)', $in{'filter'});
+    &wwslog('info', 'do_search(%s)', $in{'filter'});
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -2181,7 +2181,7 @@ sub do_search {
 
 ## Access to user preferences
 sub do_pref {
-    &wwslog('debug', 'do_pref');
+    &wwslog('info', 'do_pref');
 
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -2215,7 +2215,7 @@ sub do_pref {
 
 ## Set the initial password
 sub do_choosepasswd {
-    &wwslog('debug', 'do_choosepasswd');
+    &wwslog('info', 'do_choosepasswd');
 
     if($param->{'auth'} eq 'ldap'){
     	&error_message('may_not');
@@ -2241,7 +2241,7 @@ sub do_choosepasswd {
 
 ## Change subscription parameter
 sub do_set {
-    &wwslog('debug', 'do_set(%s, %s)', $in{'reception'}, $in{'visibility'});
+    &wwslog('info', 'do_set(%s, %s)', $in{'reception'}, $in{'visibility'});
 
     my ($reception, $visibility) = ($in{'reception'}, $in{'visibility'});
     my $email;
@@ -2330,7 +2330,7 @@ sub do_set {
 
 ## Update of user preferences
 sub do_setpref {
-    &wwslog('debug', 'do_setpref');
+    &wwslog('info', 'do_setpref');
     my $changes = {};
 
     unless ($param->{'user'}{'email'}) {
@@ -2374,7 +2374,7 @@ sub do_setpref {
 
 ## Prendre en compte les défauts
 sub do_viewfile {
-    &wwslog('debug', 'do_viewfile');
+    &wwslog('info', 'do_viewfile');
 
     unless ($in{'file'}) {
 	&error_message('missing_arg', {'argument' => 'file'});
@@ -2410,7 +2410,7 @@ sub do_viewfile {
 ## Subscribe to the list
 ## TOTO: accepter nouveaux users
 sub do_subscribe {
-    &wwslog('debug', 'do_subscribe(%s)', $in{'email'});
+    &wwslog('info', 'do_subscribe(%s)', $in{'email'});
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -2513,7 +2513,7 @@ sub do_subscribe {
 
 ## Subscription request (user not authentified)
 sub do_suboptions {
-    &wwslog('debug', 'do_suboptions()');
+    &wwslog('info', 'do_suboptions()');
     
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -2573,7 +2573,7 @@ sub do_suboptions {
 
 ## Subscription request (user not authentified)
 sub do_subrequest {
-    &wwslog('debug', 'do_subrequest(%s)', $in{'email'});
+    &wwslog('info', 'do_subrequest(%s)', $in{'email'});
     
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -2633,7 +2633,7 @@ sub do_subrequest {
 
 ## Unsubscribe from list
 sub do_signoff {
-    &wwslog('debug', 'do_signoff');
+    &wwslog('info', 'do_signoff');
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -2719,7 +2719,7 @@ sub do_signoff {
 
 ## Unsubscription request (user not authentified)
 sub do_sigrequest {
-    &wwslog('debug', 'do_sigrequest(%s)', $in{'email'});
+    &wwslog('info', 'do_sigrequest(%s)', $in{'email'});
     
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -2771,7 +2771,7 @@ sub do_sigrequest {
 
 ## Update of password
 sub do_setpasswd {
-    &wwslog('debug', 'do_setpasswd');
+    &wwslog('info', 'do_setpasswd');
     my $user;
 
     unless ($param->{'user'}{'email'}) {
@@ -2827,7 +2827,7 @@ sub do_setpasswd {
 
 ## List admin page
 sub do_admin {
-    &wwslog('debug', 'do_admin');
+    &wwslog('info', 'do_admin');
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -2866,7 +2866,7 @@ sub do_admin {
 
 ## Server admin page
 sub do_serveradmin {
-    &wwslog('debug', 'do_serveradmin');
+    &wwslog('info', 'do_serveradmin');
     my $f;
 
     unless ($param->{'user'}{'email'}) {
@@ -2908,7 +2908,7 @@ sub do_serveradmin {
 
 ## Multiple add
 sub do_add_request {
-    &wwslog('debug', 'do_add_request(%s)', $in{'email'});
+    &wwslog('info', 'do_add_request(%s)', $in{'email'});
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -2942,7 +2942,7 @@ sub do_add_request {
 ## Add a user to a list
 ## TODO: vérifier validité email
 sub do_add {
-    &wwslog('debug', 'do_add(%s)', $in{'email'});
+    &wwslog('info', 'do_add(%s)', $in{'email'});
 
     my %user;
 
@@ -3052,7 +3052,7 @@ sub do_add {
 ## Del a user to a list
 ## TODO: vérifier validité email
 sub do_del {
-    &wwslog('debug', 'do_del()');
+    &wwslog('info', 'do_del()');
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -3138,7 +3138,7 @@ sub do_del {
 }
 
 sub do_modindex {
-    &wwslog('debug', 'do_modindex');
+    &wwslog('info', 'do_modindex');
     my $msg;
 
     unless ($param->{'list'}) {
@@ -3206,7 +3206,7 @@ sub do_modindex {
 }
 
 sub do_reject {
-    &wwslog('debug', 'do_reject()');
+    &wwslog('info', 'do_reject()');
     my ($msg, $file);
 
     unless ($param->{'list'}) {
@@ -3271,7 +3271,7 @@ sub do_reject {
 
 ## TODO: supprimer le msg
 sub do_distribute {
-    &wwslog('debug', 'do_distribute()');
+    &wwslog('info', 'do_distribute()');
     my ($msg, $file);
 
     unless ($param->{'list'}) {
@@ -3330,7 +3330,7 @@ sub do_distribute {
 }
 
 sub do_viewmod {
-    &wwslog('debug', 'do_viewmod(%s)', $in{'id'});
+    &wwslog('info', 'do_viewmod(%s)', $in{'id'});
     my $msg;
 
     unless ($param->{'list'}) {
@@ -3405,7 +3405,7 @@ sub do_viewmod {
 ## No list -> sympa files (helpfile,...)
 ## TODO : upload
 sub do_editfile {
-    &wwslog('debug', 'do_editfile(%s)', $in{'file'});
+    &wwslog('info', 'do_editfile(%s)', $in{'file'});
     
     $param->{'subtitle'} = sprintf $param->{'subtitle'}, $in{'file'};
 
@@ -3464,7 +3464,7 @@ sub do_editfile {
 
 ## Saving of list files
 sub do_savefile {
-    &wwslog('debug', 'do_savefile(%s)', $in{'file'});
+    &wwslog('info', 'do_savefile(%s)', $in{'file'});
     
     $param->{'subtitle'} = sprintf $param->{'subtitle'}, $in{'file'};
 
@@ -3537,7 +3537,7 @@ sub do_savefile {
 
 ## Access to web archives
 sub do_arc {
-    &wwslog('debug', 'do_arc(%s, %s)', $in{'month'}, $in{'arc_file'});
+    &wwslog('info', 'do_arc(%s, %s)', $in{'month'}, $in{'arc_file'});
     my $latest;
     my $index = $wwsconf->{'archive_default_index'};
 
@@ -3729,7 +3729,7 @@ sub do_remove_arc {
 
 ## Output an initial form to search in web archives
 sub do_arcsearch_form {
-    &wwslog('debug', 'do_arcsearch_form(%s)', $param->{'list'});
+    &wwslog('info', 'do_arcsearch_form(%s)', $param->{'list'});
 
     unless ($param->{'list'}) {
         &error_message('missing_arg', {'argument' => 'list'});
@@ -3765,7 +3765,7 @@ sub do_arcsearch_form {
 
 ## Search in web archives
 sub do_arcsearch {
-    &wwslog('debug', 'do_arcsearch(%s)', $param->{'list'});
+    &wwslog('info', 'do_arcsearch(%s)', $param->{'list'});
 
     unless ($param->{'list'}) {
 	&error_message('missing_argument', {'argument' => 'list'});
@@ -3909,7 +3909,7 @@ sub do_arcsearch {
 
 ## Search message-id in web archives
 sub do_arcsearch_id {
-    &wwslog('debug', 'do_arcsearch_id(%s)', $param->{'list'});
+    &wwslog('info', 'do_arcsearch_id(%s)', $param->{'list'});
 
     unless ($param->{'list'}) {
 	&error_message('missing_argument', {'argument' => 'list'});
@@ -4002,7 +4002,7 @@ sub do_arcsearch_id {
 # get pendings lists
 sub do_get_pending_lists {
 
-    &wwslog('debug', 'get_pending_lists');
+    &wwslog('info', 'get_pending_lists');
 
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -4030,7 +4030,7 @@ sub do_get_pending_lists {
 # get closed lists
 sub do_get_closed_lists {
 
-    &wwslog('debug', 'get_closed_lists');
+    &wwslog('info', 'get_closed_lists');
 
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -4058,7 +4058,7 @@ sub do_get_closed_lists {
 # get latest lists
 sub do_get_latest_lists {
 
-    &wwslog('debug', 'get_latest_lists');
+    &wwslog('info', 'get_latest_lists');
 
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -4096,7 +4096,7 @@ sub do_get_latest_lists {
 
 ## show a list parameters
 sub do_set_pending_list_request {
-    &wwslog('debug', 'set_pending_list(%s)',$in{'list'});
+    &wwslog('info', 'set_pending_list(%s)',$in{'list'});
     
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -4128,7 +4128,7 @@ sub do_set_pending_list_request {
 
 ## show a list parameters
 sub do_install_pending_list {
-    &wwslog('debug', 'do_install_pending_list(%s,%s,%s)',$in{'list'},$in{'status'},$in{'notify'});
+    &wwslog('info', 'do_install_pending_list(%s,%s,%s)',$in{'list'},$in{'status'},$in{'notify'});
     
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -4169,7 +4169,7 @@ sub do_install_pending_list {
 
 ## Install sendmail aliases
 sub _install_aliases {
-    &wwslog('debug', '_install_aliases()');
+    &wwslog('info', '_install_aliases()');
 
     if ($wwsconf->{'alias_manager'}) {
 	&do_log('debug',"$wwsconf->{'alias_manager'} add $list->{'name'} $list->{'admin'}{'host'}");
@@ -4197,7 +4197,7 @@ sub _install_aliases {
 
 ## Remove sendmail aliases
 sub _remove_aliases {
-    &wwslog('debug', '_remove_aliases()');
+    &wwslog('info', '_remove_aliases()');
 
     if ($wwsconf->{'alias_manager'}) {
 	if ((-x $wwsconf->{'alias_manager'}) 
@@ -4263,7 +4263,7 @@ sub list_check_smtp {
 ## create a liste using a list template. 
 sub do_create_list {
 
-    &wwslog('debug', 'do_create_list(%s,%s,%s)',$in{'listname'},$in{'subject'},$in{'template'});
+    &wwslog('info', 'do_create_list(%s,%s,%s)',$in{'listname'},$in{'subject'},$in{'template'});
     
     foreach my $arg ('listname','subject','template','info','topics') {
 	unless ($in{$arg}) {
@@ -4392,7 +4392,7 @@ sub do_create_list {
 
 ## Return the creation form
 sub do_create_list_request {
-    &wwslog('debug', 'do_create_list_request()');
+    &wwslog('info', 'do_create_list_request()');
     
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -4445,7 +4445,7 @@ sub do_create_list_request {
 
 ## WWSympa Home-Page
 sub do_home {
-    &wwslog('debug', 'do_home');
+    &wwslog('info', 'do_home');
 
     my %topics = &List::load_topics($robot);
     
@@ -4480,7 +4480,7 @@ sub do_home {
 }
 
 sub do_editsubscriber {
-    &wwslog('debug', 'do_editsubscriber(%s)', $in{'email'});
+    &wwslog('info', 'do_editsubscriber(%s)', $in{'email'});
 
     my $user;
 
@@ -4547,7 +4547,7 @@ sub do_editsubscriber {
 }
 
 sub do_viewbounce {
-    &wwslog('debug', 'do_viewbounce(%s)', $in{'email'});
+    &wwslog('info', 'do_viewbounce(%s)', $in{'email'});
 
     unless ($param->{'is_owner'}) {
 	&error_message('may_not');
@@ -4582,7 +4582,7 @@ sub do_viewbounce {
 
 ## some help for listmaster and developpers
 sub do_scenario_test {
-    &wwslog('debug', 'do_scenario_test');
+    &wwslog('info', 'do_scenario_test');
 
     ## List available scenarii
     unless (opendir SCENARI, "--ETCBINDIR--/scenari/"){
@@ -4628,7 +4628,7 @@ sub do_scenario_test {
 
 ## Bouncing addresses review
 sub do_reviewbouncing {
-    &wwslog('debug', 'do_reviewbouncing(%d)', $in{'page'});
+    &wwslog('info', 'do_reviewbouncing(%d)', $in{'page'});
     my $size = $in{'size'} || $wwsconf->{'review_page_size'};
 
     unless ($in{'list'}) {
@@ -4709,7 +4709,7 @@ sub do_reviewbouncing {
 }
 
 sub do_resetbounce {
-    &wwslog('debug', 'do_resetbounce()');
+    &wwslog('info', 'do_resetbounce()');
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -4776,7 +4776,7 @@ sub do_resetbounce {
 
 ## Rebuild an archive using arctxt/
 sub do_rebuildarc {
-    &wwslog('debug', 'do_rebuildarc(%s, %s)', $param->{'list'}, $in{'month'});
+    &wwslog('info', 'do_rebuildarc(%s, %s)', $param->{'list'}, $in{'month'});
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -4816,7 +4816,7 @@ sub do_rebuildarc {
 
 ## Rebuild all archives using arctxt/
 sub do_rebuildallarc {
-    &wwslog('debug', 'do_rebuildallarc');
+    &wwslog('info', 'do_rebuildallarc');
     
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -4853,7 +4853,7 @@ sub do_rebuildallarc {
 
 ## Search among lists
 sub do_search_list {
-    &wwslog('debug', 'do_search_list(%s)', $in{'filter'});
+    &wwslog('info', 'do_search_list(%s)', $in{'filter'});
 
     unless ($in{'filter'}) {
 	&error_message('no_filter');
@@ -4925,7 +4925,7 @@ sub do_search_list {
 }
 
 sub do_edit_list {
-    &wwslog('debug', 'do_edit_list()');
+    &wwslog('info', 'do_edit_list()');
 
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -5270,7 +5270,7 @@ sub _shift_var {
 
 ## Send back the list config edition form
 sub do_edit_list_request {
-    &wwslog('debug', 'do_edit_list_request(%s)', $in{'group'});
+    &wwslog('info', 'do_edit_list_request(%s)', $in{'group'});
 
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -5502,7 +5502,7 @@ sub dump_var {
 
 ## NOT USED anymore (expect chinese)
 sub do_close_list_request {
-    &wwslog('debug', 'do_close_list_request()');
+    &wwslog('info', 'do_close_list_request()');
 
     unless ($param->{'is_listmaster'}) {
 	&error_message('may_not');
@@ -5520,7 +5520,7 @@ sub do_close_list_request {
 }
 
 sub do_purge_list {
-    &wwslog('debug', 'do_close_list_request()');
+    &wwslog('info', 'do_close_list_request()');
     
     unless ($param->{'is_listmaster'}) {
 	&error_message('may_not');
@@ -5548,7 +5548,7 @@ sub do_purge_list {
 }
 
 sub do_close_list {
-    &wwslog('debug', 'do_close_list_request()');
+    &wwslog('info', 'do_close_list_request()');
     
     unless ($param->{'is_listmaster'}) {
 	&error_message('may_not');
@@ -5587,7 +5587,7 @@ sub do_close_list {
 }
 
 sub do_restore_list {
-    &wwslog('debug', 'do_restore_list()');
+    &wwslog('info', 'do_restore_list()');
     
     unless ($param->{'is_listmaster'}) {
 	&error_message('may_not');
@@ -5750,7 +5750,7 @@ sub d_access_control {
     # $result{'scenario'}{'read'} = scenario name for the document
     # $result{'scenario'}{'edit'} = scenario name for the document
   
-    &wwslog('debug', "d_access_control");
+    &wwslog('info', "d_access_control");
     
     # Result
      my %result;
@@ -6088,7 +6088,7 @@ sub by_order {
 ##
 ## Function do_d_read
 sub do_d_read {
-    &wwslog('debug', 'do_d_read(%s)', $in{'path'});
+    &wwslog('info', 'do_d_read(%s)', $in{'path'});
 
     ### action relative to a list ?
     unless ($param->{'list'}) {
@@ -6510,7 +6510,7 @@ sub format_path {
 #*******************************************
 
 sub do_d_editfile {
-    &wwslog('debug', 'do_d_editfile(%s)', $in{'path'});
+    &wwslog('info', 'do_d_editfile(%s)', $in{'path'});
 
     # Variables
     my $path = $in{'path'};
@@ -6631,7 +6631,7 @@ sub do_d_editfile {
 #******************************************
 
 sub do_d_describe {
-    &wwslog('debug', 'do_d_describe(%s)', $in{'path'});
+    &wwslog('info', 'do_d_describe(%s)', $in{'path'});
 
     # Variables
     my $path = $in{'path'};
@@ -6777,7 +6777,7 @@ sub do_d_describe {
 #******************************************
 
 sub do_d_savefile {
-    &wwslog('debug', 'do_d_savefile(%s)', $in{'path'});
+    &wwslog('info', 'do_d_savefile(%s)', $in{'path'});
     
     # Variables
     my $path = $in{'path'};
@@ -6929,7 +6929,7 @@ sub do_d_savefile {
 #******************************************
 
 sub do_d_overwrite {
-    &wwslog('debug', 'do_d_overwrite(%s)', $in{'path'});
+    &wwslog('info', 'do_d_overwrite(%s)', $in{'path'});
  
     # Variables
     my $path = $in{'path'};
@@ -7082,7 +7082,7 @@ sub do_d_overwrite {
 #******************************************
 
 sub do_d_upload {
-    &wwslog('debug', 'do_d_upload(%s)', $in{'path'});
+    &wwslog('info', 'do_d_upload(%s)', $in{'path'});
   
     # Variables 
     my $path = $in{'path'};
@@ -7218,7 +7218,7 @@ sub do_d_upload {
 #******************************************
 
 sub do_d_delete {
-    &wwslog('debug', 'do_d_delete(%s)', $in{'path'});
+    &wwslog('info', 'do_d_delete(%s)', $in{'path'});
 
     #useful variables
     my $path = $in{'path'};
@@ -7336,7 +7336,7 @@ sub do_d_delete {
 #******************************************
 
 sub do_d_rename {
-    &wwslog('debug', 'do_d_rename(%s)', $in{'path'});
+    &wwslog('info', 'do_d_rename(%s)', $in{'path'});
 
     #useful variables
     my $path = $in{'path'};
@@ -7441,7 +7441,7 @@ sub do_d_rename {
 # Description : Creates a new file / directory
 #******************************************
 sub do_d_create_dir {
-    &wwslog('debug', 'do_d_create_dir(%s)', $in{'name_doc'});
+    &wwslog('info', 'do_d_create_dir(%s)', $in{'name_doc'});
   
     #useful variables
     my $path = $in{'path'};
@@ -7559,7 +7559,7 @@ sub do_d_create_dir {
 #*******************************************
 
 sub do_d_control {
-    &wwslog('debug', "do_d_control $in{'path'}");
+    &wwslog('info', "do_d_control $in{'path'}");
 
     # Variables
     my $path = $in{'path'};
@@ -7708,7 +7708,7 @@ sub do_d_control {
 #******************************************
 
 sub do_d_change_access {
-    &wwslog('debug', 'do_d_change_access(%s)', $in{'path'});
+    &wwslog('info', 'do_d_change_access(%s)', $in{'path'});
 
     # Variables
     my $path = $in{'path'};
@@ -7825,7 +7825,7 @@ sub do_d_change_access {
 }	
 
 sub do_d_set_owner {
-    &wwslog('debug', 'do_d_set_owner(%s)', $in{'path'});
+    &wwslog('info', 'do_d_set_owner(%s)', $in{'path'});
     
     # Variables
     my $desc_file;
@@ -7965,14 +7965,14 @@ sub do_d_set_owner {
 
 ## Protecting archives from Email Sniffers
 sub do_arc_protect {
-    &wwslog('debug', 'do_arc_protect()');
+    &wwslog('info', 'do_arc_protect()');
 
     return 1;
 } 
 
 ## Show a state of template translations
 sub do_view_translations {
-     &wwslog('debug', 'do_view_translations()');
+     &wwslog('info', 'do_view_translations()');
      my %lang = ('default' => 1);
 
      unless (opendir TPL, "--ETCBINDIR--/wws_templates/") {
@@ -8006,7 +8006,7 @@ sub do_view_translations {
 
 ## REMIND
 sub do_remind {
-    &wwslog('debug', 'do_remind()');
+    &wwslog('info', 'do_remind()');
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -8068,7 +8068,7 @@ sub do_remind {
 
 ## Load list certificat
 sub do_load_cert {
-    &wwslog('debug','do_load_cert(%s)', $param->{'list'});
+    &wwslog('info','do_load_cert(%s)', $param->{'list'});
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -8093,7 +8093,7 @@ sub do_load_cert {
 
 ## Change a user's email address in Sympa environment
 sub do_change_email {
-    &wwslog('debug','do_change_email(%s)', $in{'email'});
+    &wwslog('info','do_change_email(%s)', $in{'email'});
     
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -8237,7 +8237,7 @@ sub do_compose_mail {
 }
 
 sub do_send_mail {
-    &wwslog('debug', 'do_send_mail');
+    &wwslog('info', 'do_send_mail');
     
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -8273,7 +8273,7 @@ sub do_send_mail {
 }
 
 sub do_search_user {
-    &wwslog('debug', 'do_search_user');
+    &wwslog('info', 'do_search_user');
     
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -8320,7 +8320,7 @@ sub do_search_user {
 
 ## Set language
 sub do_set_lang {
-    &wwslog('debug', 'do_set_lang(%s)', $in{'lang'});
+    &wwslog('info', 'do_set_lang(%s)', $in{'lang'});
 
     $param->{'lang'} = $param->{'cookie_lang'} = $in{'lang'};
     &cookielib::set_lang_cookie($in{'lang'},$param->{'cookie_domain'});
@@ -8350,7 +8350,7 @@ sub do_set_lang {
 }
 ## Function do_attach
 sub do_attach {
-    &wwslog('debug', 'do_attach(%s)', $in{'path'});
+    &wwslog('info', 'do_attach(%s)', $in{'path'});
    
 
     ### action relative to a list ?
@@ -8420,7 +8420,7 @@ sub do_attach {
 }
 
 sub do_subindex {
-    &wwslog('debug', 'do_subindex');
+    &wwslog('info', 'do_subindex');
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -8454,7 +8454,7 @@ sub do_subindex {
 }
   
 sub do_ignoresub {
-    &wwslog('debug', 'do_ignoresub');
+    &wwslog('info', 'do_ignoresub');
 
     my @users;
 
@@ -8492,7 +8492,7 @@ sub do_ignoresub {
 }
 
 sub do_change_identity {
-    &wwslog('debug', 'do_change_identity(%s)', $in{'email'});
+    &wwslog('info', 'do_change_identity(%s)', $in{'email'});
     
     unless ($param->{'user'}{'email'}) {
         &error_message('no_user');
@@ -8525,7 +8525,7 @@ sub do_change_identity {
 }
 
 sub do_stats {
-    &wwslog('debug', 'do_stats');
+    &wwslog('info', 'do_stats');
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
