@@ -404,6 +404,10 @@ my %in_regexp = (
 		 'body' => '.+',
 		 'info' => '.+',
 
+		 ## Integer
+		 'page' => '\d+',
+		 'size' => '\d+',
+
 		 ## Free data
 		 'subject' => '[^<>\\\*\$]+',
 		 'gecos' => '[^<>\\\*\$]+',
