@@ -453,7 +453,7 @@ sub review {
 
 	my $is_owner = $list->am_i('owner', $sender);
 
-	unless ($user = $list->get_first_user('email')) {
+	unless ($user = $list->get_first_user({'sortby' => 'email'})) {
 	    return undef;
 	}
 

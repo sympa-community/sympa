@@ -1393,7 +1393,9 @@ sub do_review {
 
     ## Members list
     $count = -1;
-    for (my $i = $list->get_first_user($sortby, $offset, $size); 
+    for (my $i = $list->get_first_user({'sortby' => $sortby, 
+					'offset' => $offset, 
+					'rows' => $size}); 
 	 $i; $i = $list->get_next_user()) {
 	next if (($i->{'visibility'} eq 'conceal')
 		 and (! $param->{'is_owner'}) );
@@ -1460,20 +1462,27 @@ sub do_search {
 
     ## Regexp
     $param->{'filter'} = $in{'filter'};
-    $param->{'regexp'} = $param->{'filter'};
-    $param->{'regexp'} =~ s/\\/\\\\/g;
-    $param->{'regexp'} =~ s/\./\\\./g;
-    $param->{'regexp'} =~ s/\*/\.\*/g;
-    $param->{'regexp'} =~ s/\+/\\\+/g;
-    $param->{'regexp'} =~ s/\?/\\\?/g;
+    my $regexp = $param->{'filter'};
+    $regexp =~ s/\\/\\\\/g;
+    $regexp =~ s/\./\\\./g;
+    $regexp =~ s/\*/\.\*/g;
+    $regexp =~ s/\+/\\\+/g;
+    $regexp =~ s/\?/\\\?/g;
+
+    my $sql_regexp;
+    if ($list->{'admin'}{'user_data_source'} eq 'database') {
+	$sql_regexp = $param->{'filter'};
+	$sql_regexp =~ s/\%/\\\%/g;
+	$sql_regexp =~ s/\*/\%/g;
+    }
 
     my $record = 0;
     ## Members list
-    for (my $i = $list->get_first_user(); $i; $i = $list->get_next_user()) {
+    for (my $i = $list->get_first_user({'sql_regexp' => $sql_regexp}); $i; $i = $list->get_next_user()) {
 
 	## Search filter
-	next if ($i->{'email'} !~ /$param->{'regexp'}/i
-		 && $i->{'gecos'} !~ /$param->{'regexp'}/i);
+	next if ($i->{'email'} !~ /$regexp/i
+		 && $i->{'gecos'} !~ /$regexp/i);
 
 	next if (($i->{'visibility'} eq 'conceal')
 		 and (! $param->{'is_owner'}) );

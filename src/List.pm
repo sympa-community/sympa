@@ -2187,7 +2187,14 @@ sub get_subscriber {
 
 ## Returns the first user for the list.
 sub get_first_user {
-    my ($self, $sortby, $offset, $rows) = @_;
+    my ($self, $data) = @_;
+
+    my ($sortby, $offset, $rows, $sql_regexp);
+    $sortby = $data->{'sortby'};
+    $offset = $data->{'offset'};
+    $rows = $data->{'rows'};
+    $sql_regexp = $data->{'sql_regexp'};
+
     do_log('debug2', 'List::get_first_user(%s,%d,%d)', $sortby, $offset, $rows);
     
     ## Sort may be domain, email, date
@@ -2204,10 +2211,17 @@ sub get_first_user {
 	    return undef unless &db_connect();
 	}
 
+	## SQL regexp
+	my $selection;
+	if ($sql_regexp) {
+	    $selection = sprintf " AND (user_subscriber LIKE %s OR comment_subscriber LIKE %s)"
+		,$dbh->quote($sql_regexp), $dbh->quote($sql_regexp);
+	}
+
 	## Oracle
 	if ($Conf{'db_type'} eq 'Oracle') {
 
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\" FROM subscriber_table WHERE (list_subscriber = %s)", $date_field, $dbh->quote($name);
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\" FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $dbh->quote($name), $selection;
 
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
@@ -2224,7 +2238,7 @@ sub get_first_user {
 	## Sybase
 	}elsif ($Conf{'db_type'} eq 'Sybase'){
 
-		    $statement = sprintf "SELECT user_subscriber \"email\" comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\" FROM subscriber_table WHERE (list_subscriber = %s )", $date_field, $dbh->quote($name);
+		    $statement = sprintf "SELECT user_subscriber \"email\" comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\" FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $dbh->quote($name), $selection;
 	    
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
@@ -2241,7 +2255,7 @@ sub get_first_user {
 	## mysql
 	}elsif ($Conf{'db_type'} eq 'mysql') {
 	    
-    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date FROM subscriber_table WHERE (list_subscriber = %s)", $date_field, $dbh->quote($name);
+    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $dbh->quote($name), $selection;
 	    
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
@@ -2266,7 +2280,7 @@ sub get_first_user {
 	## Pg    
 	}else {
 	    
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date FROM subscriber_table WHERE (list_subscriber = %s)", $date_field, $dbh->quote($name);
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $dbh->quote($name), $selection;
 	    
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
