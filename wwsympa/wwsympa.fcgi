@@ -4282,6 +4282,19 @@ sub do_redirect {
 
 	  $param->{'file'} = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}";
      }else {
+	 
+	 if ($in{'arc_file'} =~ /^(msg\d+)\.html$/) {
+	     # Get subject message thanks to X-Subject field (<!--X-Subject: x -->)
+	     open (FILE, "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}");
+	     while (<FILE>) {
+		 if (/<!--X-Subject: (.+) -->/) {
+		     $param->{'subtitle'} = $1;
+		     last;
+		 }
+	     }
+	     close FILE;
+	 }
+	 
 	 &tt2::add_include_path("$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}");
 	 $param->{'file'} = "$in{'arc_file'}";
      }
