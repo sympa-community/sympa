@@ -1,0 +1,67 @@
+AC_INIT(check_perl_modules.pl)
+PACKAGE=sympa
+VERSION=`cat ${srcdir}/.version`
+MAJOR_VERSION=[`expr $VERSION : '\([0-9][0-9]*\)'`]
+AC_SUBST(MAJOR_VERSION)
+MINOR_VERSION=[`expr $VERSION : '[0-9][0-9]*\.\([0-9][0-9]*\)'`]
+AC_SUBST(MINOR_VERSION)
+MICRO_VERSION=[`expr $VERSION : '[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]*\)'`]
+AC_SUBST(MICRO_VERSION)
+AM_INIT_AUTOMAKE([sympa], $VERSION, nosubst)
+AC_PREREQ(2.13)
+
+AC_PREFIX_DEFAULT(/home/sympa)
+
+## Directories setup
+## for main config files
+sysconfdir=/etc
+
+## for executable programs
+bindir=${ac_default_prefix}/bin
+
+## for executable programs run by sysadmin
+sbindir=${ac_default_prefix}/bin
+
+## for libraries
+libdir=${ac_default_prefix}/bin
+
+## for *read-only* data files
+datadir=${ac_default_prefix}/bin/etc
+
+## for modifiable data files
+localstatedir=${ac_default_prefix}/expl
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_MAKE_SET
+AC_AIX
+
+AC_PATH_PROG(PERL, perl, /usr/bin/perl)
+AC_SUBST(PERL)
+
+AC_PATH_PROG(OPENSSL, openssl, /usr/local/ssl/bin)
+AC_SUBST(OPENSSL)
+
+AC_PATH_PROG(GENCAT, gencat, /usr/bin/gencat)
+AC_SUBST(GENCAT)
+
+AC_PATH_PROG(CVS2CL, cvs2cl.pl, /usr/local/bin)
+AC_SUBST(CVS2CL)
+
+AC_PATH_PROG(SH, sh, /bin/sh)
+
+USER=sympa
+AC_ARG_WITH(user, [  --with-user=LOGIN       set sympa user name (default sympa)], [SYMPA="$withval"])
+AC_SUBST(USER)
+
+GROUP=sympa
+AC_ARG_WITH(group, [  --with-group=LOGIN     set sympa group name (default sympa)], [SYMPA="$withval"])
+AC_SUBST(GROUP)
+
+dnl Initialize maintainer mode
+AM_MAINTAINER_MODE
+
+AC_OUTPUT(Makefile)
+
+
+
