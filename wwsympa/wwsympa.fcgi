@@ -7058,6 +7058,10 @@ sub do_change_email {
 	
 	&parse_tpl ($param, $tpl_file, MAIL);
 	close MAIL;
+
+	$param->{'email'} = $in{'email'};
+
+	return 'change_email';
     }
 
     $param->{'email'} = $in{'email'};
