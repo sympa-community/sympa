@@ -2593,7 +2593,7 @@ sub send_file {
 
     $data->{'list'}{'lang'} = $self->{'admin'}{'lang'};
     $data->{'list'}{'name'} = $name;
-    $data->{'robot_domain'} = $robot;
+    $data->{'list'}{'domain'} = $data->{'robot_domain'} = $robot;
     $data->{'list'}{'host'} = $self->{'admin'}{'host'};
     $data->{'list'}{'subject'} = $self->{'admin'}{'subject'};
     $data->{'list'}{'owner'} = $self->{'admin'}{'owner'};
