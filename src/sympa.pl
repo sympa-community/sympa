@@ -195,7 +195,7 @@ if ($signal ne 'hup' ) {
 	open(STDOUT, ">> /dev/null");
 	setpgrp(0, 0);
 	if ((my $child_pid = fork) != 0) {
-	    do_log('debug', "Starting server, pid $_");
+	    do_log('debug', "Starting server, pid $child_pid");
 
 	    exit(0);
 	}
