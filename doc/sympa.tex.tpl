@@ -3882,6 +3882,10 @@ referer URL when an action is performed. Here is a sample HTML anchor :
 <A HREF="/wws/loginrequest/referer">Login page</A>
 \end{verbatim}
 
+You can also have your own HTML page submitting data to \file {wwsympa.fcgi} CGI. If you're
+doing so, you can set the \texttt {referer} variable to another URI. You can also
+set the \texttt {failure\_referer} to make WWSympa redirect the client to a different
+URI if login fails.
 
 \item Using \WWSympa's HTTP cookie format within your auth module \\
 To cooperate with \WWSympa, you simply need to adopt its HTTP

@@ -1246,11 +1246,13 @@ sub do_login {
 	if($url_redirect = &is_ldap_user($in{'email'})){
 	    $param->{'redirect_to'} = $url_redirect
 		if ($url_redirect && ($url_redirect != 1));
+	}elsif ($in{'failure_referer'}) {
+	    $param->{'redirect_to'} = $in{'failure_referer'};	    
 	}else{
 	    $in{'init_email'} = $in{'email'};
 	    $param->{'init_email'} = $in{'email'};
 	    $param->{'escaped_init_email'} = &tools::escape_chars($in{'email'});
-	    return 'loginrequest';
+	    return $in{'failure_referer'}||'loginrequest';
 	}
     }
 
@@ -1262,9 +1264,11 @@ sub do_login {
 	if ($in{'previous_action'}) {
 	    delete $in{'passwd'};
 	    $in{'list'} = $in{'previous_list'};
-	    return $in{'previous_action'};
+	    return  $in{'previous_action'};
+	}elsif ($in{'failure_referer'}) {
+	    $param->{'redirect_to'} = $in{'failure_referer'};	    
 	}else {
-	    return 'loginrequest';
+	    return  'loginrequest';
 	}
     } 
     # &List::db_log('wwsympa',$in{'email'},'null',$ip,'login','',$robot,'','done');
@@ -1274,7 +1278,7 @@ sub do_login {
 	unless(&cookielib::set_cookie_extern($Conf{'cookie'},$param->{'cookie_domain'},%{$param->{'alt_emails'}})){
 	    # &List::db_log('wwsympa',$email,'null',$ip,'login','',$robot,'','Could not set cookie');
 	    &wwslog('notice', 'Could not set HTTP cookie for external_auth');
-	    exit -1;
+	    return undef;
 	}
     }
     
