@@ -1,6 +1,6 @@
 %define name sympa
 %define version --VERSION--
-%define release 2--SUFFIX--
+%define release 3--SUFFIX--
 %define home_s --HOMEDIR--
 
 Summary:  Sympa is a powerful multilingual List Manager - LDAP and SQL features.
@@ -25,7 +25,7 @@ Requires: perl-perl-ldap >= 0.10
 ## Also requires a DBD for the DBMS 
 ## (perl-DBD-Pg or Perl- Msql-Mysql-modules)
 Requires: perl-FCGI    >= 0.48
-Requires: MHonArc >= 2.4.5
+Requires: MHonArc >= 2.4.6
 Requires: apache
 Requires: openssl >= 0.9.5a
 Prereq: /usr/sbin/useradd
@@ -187,6 +187,9 @@ fi
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Feb  8 2001 Olivier Salaun <olivier.salaun@cru.fr> 3.1b.3
+- Requires MHOnArc 2.4.6
+
 * Tue Nov 21 2000 Olivier Salaun <olivier.salaun@cru.fr> 3.0b
 - Requires perl-DB_File and perl-perl-ldap
 - Set sympa user shell to /bin/false 
