@@ -8,7 +8,7 @@ Content-Type: text/plain; charset=iso-8859-1
 Content-transfer-encoding: 8bit
 
 Welcome in list [list->name]@[list->host].
-Your subscrition email is [user->email]
+Your subscription email is [user->email]
 [IF user->password]
 Your password : [user->password].
 [ENDIF]
@@ -28,7 +28,7 @@ Content-transfer-encoding: 8bit
 <BODY  BGCOLOR=#ffffff>
 
 <B>Welcome in list [list->name]@[list->host]. </B><BR>
-Your subscrition email is [user->email] 
+Your subscription email is [user->email] 
 [IF user->password] 
 <BR>
 Your password : [user->password]. 
