@@ -3298,7 +3298,7 @@ translated into 10 different languages :
 
 \begin{itemize}
 
-\item cn-big5: BIG5 Chinese (Honk Kong, Taiwan)
+\item cn-big5: BIG5 Chinese (Hong Kong, Taiwan)
 
 \item cn-gb: GB Chinese (Mainland China)
 
