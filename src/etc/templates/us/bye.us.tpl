@@ -18,7 +18,6 @@ Content-transfer-encoding: 8bit
  Gracias por su colaboración y hasta pronto !
 
 [ELSIF list->lang=it]
-From: [conf->email]@[conf->host]
 Subject: Cancellazione iscrizione [list->name]
 Mime-version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
@@ -29,7 +28,6 @@ Content-transfer-encoding: 8bit
  Arrivederci !
 
 [ELSIF list->lang=pl]
-From: [conf->email]@[conf->host]
 Subject: Wypisanie z listy [list->name]
 Mime-version: 1.0
 Content-Type: text/plain; charset=iso-8859-2
@@ -37,6 +35,16 @@ Content-transfer-encoding: 8bit
 
  Twój adres email [user->email] zosta³ wypisany z listy [list->name]@[list->host]
  Do widzenia!
+
+[ELSIF list->lang=cz]
+Subject: Odhlaseni z konference [list->name]
+Mime-version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-transfer-encoding: 8bit
+
+ Va¹e emailová adresa [user->email] byla odstranìna ze seznamu 
+ konference [list->name]@[list->host].
+ Na shledanou!
 
 [ELSE]
 Subject: Unsubscription from [list->name]

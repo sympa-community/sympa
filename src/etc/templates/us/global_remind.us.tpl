@@ -83,6 +83,32 @@ u¿yj swojego adresu email [user->email] i swojego has³a [user->passwd]
 
 [ENDIF]
 
+[ELSIF user->lang=cz]
+Mime-version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-transfer-encoding: 8bit
+
+Souhrn Va¹eho èlenství v konferencích (pøi pou¾ití adresy 
+[user->email]).
+Pokud se chcete odhlásit z nìjaké konference, ulo¾te si tuto zprávu.
+
+Pro ka¾dou konferenci je zde odkaz, kterým se mù¾ete odhlásit.
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[FOREACH l IN lists]
+[l]     mailto:[conf->sympa]?subject=sig%20[l]%20[user->email]
+[END]
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+[IF user->password]
+
+Pro ovìøení toto¾nosti na WWW rozhraní 
+na adrese [conf->wwsympa_url]
+pou¾ijte svoji emailovou adresu [user->email] 
+a svoje heslo [user->passwd]
+
+[ENDIF]
+
 [ELSE]
 Summary of your subscription (using the e-mail [user->email]).
 If you want to unsubscribe from some list, please save this mail.
