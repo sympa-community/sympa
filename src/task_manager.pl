@@ -325,6 +325,8 @@ while (!$end) {
 	    last unless ($task->{'date'} < $current_date);
 	    if ($task->{'list'} ne '_global') { # list task
 		my $list = new List ($task->{'list'});
+
+		## Skip closed lists
 		unless (defined $list && ($list->{'admin'}{'status'} eq 'open')) {
 		    &do_log('notice','Removing task file %s', $task_file);
 		    unless (unlink "$spool_task/$task_file") {
@@ -333,6 +335,17 @@ while (!$end) {
 		    }
 		    next;
 		}
+
+		## Skip if parameter is not defined
+		unless (defined $list->{'admin'}{$task->{'model'}} && 
+			defined $list->{'admin'}{$task->{'model'}}{'name'}) {
+		    &do_log('notice','Removing task file %s', $task_file);
+		    unless (unlink "$spool_task/$task_file") {
+			&do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+			next;
+		    }
+		    next;
+		}		
 	    }
 	    execute ("$spool_task/$_");
 	}
@@ -667,7 +680,7 @@ sub execute {
     my %vars; # list of task vars
     my $lnb = 0; # line number
 
-    &do_log('debug2', 'execute(%s, %d, %s)', $task_file, $lnb, join('/',  %vars));
+    &do_log('notice', 'Running task %s, line %d with vars %s)', $task_file, $lnb, join('/',  %vars));
     
     unless ( open (TASK, $task_file) ) {
 	&do_log ('err', "error : can't read the task $task_file");
