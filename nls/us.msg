@@ -190,6 +190,8 @@ If you want this action to be taken, please \n\
 This can be done via the URL %s\n\
 If you do not want this action to be taken, you can safely ignore\n\
 this message."
+262	"Your message signature was succesfuly verified using S/MIME"
+263	"Your message was not a multipart/signed message or Sympa could not\nverify the signature (be aware that Sympa can't check signature if you use the subject header to write a command)."
 
 $set 7	Commands syslog messages (Commands.pm)
 

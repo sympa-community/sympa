@@ -189,6 +189,8 @@ Pour confirmez cette action veuillez :\n\
 - cliquez l'URL %s )\n\n\
 Si vous ne souhaitez pas que l'action soit entreprise, ignorez simplement\n\
 ce message.\n"
+262	"Signature S/MIME correctement vérifiée"
+263	"Message non signé ou signature non reconnue (attention, Sympa ne peut\n verifier une signature S/MIME pour une commande dans l'entête Subject:)"
 
 $set 7	Messages syslog des commandes (Commands.pm)
 
