@@ -5205,6 +5205,11 @@ sub _load_list_param {
     my ($key, $value, $p, $directory) = @_;
     &do_log('debug2','_load_list_param(\'%s\',\'%s\')', $key, $value);
     
+    ## Empty value
+    if ($value =~ /^\s*$/) {
+	return undef;
+    }
+
     ## Default
     if ($value eq 'default') {
 	$value = $p->{'default'};
