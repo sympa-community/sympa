@@ -348,6 +348,20 @@ data access, and object oriented code for easy code maintenance.
 
 It took nearly two years to produce the first market releases.
 
+Other date :
+
+\begin {itemize}
+   \item Mar 1999 internal use of a database (Mysql), definition of list subscriber with external datasource (DBM or LDAP).
+   \item Oct 1999 WWsympa stable, introduction of scenarii.
+   \item Feb 2000 web bounce management
+   \item Apr 2000 archive search engine and remove message
+   \item May web interface to create new list
+   \item Jan 2001 : Support of S/MIME (signing and encryption), web interface for list configuration , Shared document repository for each list. Full rewrite of html look and feel
+   \item Jun 2001 Auto-install of aliases at list creation time, antivirus scanner plugging
+   \item Jan 2002 Virtual robot, LDAP authentication
+\end {itemize} 
+	  
+
 \section {Authors and credits}
 
 Christophe Wolfhugel is the author of the first beta version of
