@@ -38,7 +38,7 @@ my @valid_options = qw(
 		       cookie create_list crl_dir crl_update_task db_host db_env db_name db_options db_passwd db_type db_user 
 		       db_port db_additional_subscriber_fields db_additional_user_fields
 		       default_list_priority edit_list email etc
-		       global_remind home host domain lang listmaster log_socket_type 
+		       global_remind home host domain lang listmaster log_socket_type log_level 
 		       misaddressed_commands max_size maxsmtp msgcat nrcpt owner_priority pidfile spool queue 
 		       queueauth queuetask queuebounce queuedigest queueexpire queuemod queuesubscribe queueoutgoing tmpdir
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor
@@ -63,6 +63,7 @@ my %Default_Conf =
      'crl_dir' => '--EXPL_DIR--/crl',
      'umask'   => '027',
      'syslog'  => 'LOCAL1',
+     'log_level'  => 0,
      'nrcpt'   => 25,
      'avg'     => 10,
      'maxsmtp' => 20,
@@ -314,6 +315,7 @@ sub load_robots {
 				  'title'         => 1,
 				  default_home    => 1,
 				  log_smtp        => 1,
+				  log_level       => 1,
 				  create_list     => 1,
 				  dark_color      => 1,
 				  light_color     => 1,
@@ -362,15 +364,11 @@ sub load_robots {
 	$robot_conf->{$robot}{'host'} ||= $robot;
 
 	$robot_conf->{$robot}{'email'} ||= $Conf{'email'};
-
 	$robot_conf->{$robot}{'log_smtp'} ||= $Conf{'log_smtp'};
-
+	$robot_conf->{$robot}{'log_level'} ||= $Conf{'log_level'};
 	$robot_conf->{$robot}{'wwsympa_url'} ||= 'http://'.$robot_conf->{$robot}{'http_host'}.'/wws';
-
 	$robot_conf->{$robot}{'sympa'} = $robot_conf->{$robot}{'email'}.'@'.$robot_conf->{$robot}{'host'};
-
 	$robot_conf->{$robot}{'request'} = $robot_conf->{$robot}{'email'}.'-request@'.$robot_conf->{$robot}{'host'};
-
 	$Conf{'robot_by_http_host'}{$robot_conf->{$robot}{'http_host'}} = $robot ;
 
 

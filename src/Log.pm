@@ -28,9 +28,10 @@ use Sys::Syslog;
 use Carp;
 
 @ISA = qw(Exporter);
-@EXPORT = qw(fatal_err do_log do_openlog);
+@EXPORT = qw(fatal_err do_log do_openlog $log_level);
 
 my ($log_facility, $log_socket_type, $log_service);
+
 
 sub fatal_err {
     my $m  = shift;
@@ -46,6 +47,36 @@ sub fatal_err {
 }
 
 sub do_log {
+    my $fac = shift;
+    my $m = shift;
+
+    my $errno = $!;
+    my $debug = 0;
+
+    my $level = 0;
+
+    $level = 1 if ($fac =~ /^debug$/) ;
+
+    if ($fac =~ /debug(\d)/ ) {
+	$level = $1;
+	$fac = 'debug';
+    }    
+ 
+    # do not log if log level if too high regarding the log requested by user 
+    return if ($level gt $log_level);
+
+    unless (syslog($fac, $m, @_)) {
+	&do_connect();
+	    syslog($fac, $m, @_);
+    }
+    if ($main::options{'foreground'})  {
+	$m =~ s/%m/$errno/g;
+	printf STDERR "$m\n", @_;
+    }    
+}
+
+
+sub do_oldlog {
     my $fac = shift;
     my $m = shift;
     my $errno = $!;
@@ -73,7 +104,6 @@ sub do_log {
 	printf STDERR "$m\n", @_;
 	
     }
-    
 }
 
 
@@ -107,6 +137,9 @@ sub do_connect {
     }
     openlog("$log_service\[$$\]", 'ndelay', $log_facility);
 }
+
+
+$log_level |= 0;
 
 1;
 

@@ -984,8 +984,6 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 \item \unixcmd {--with-user=LOGIN}, set sympa user name (default sympa)\\
 \Sympa daemons are running under this UID.
 
-\item \unixcmd {--with-group=LOGIN}, set sympa group name (default sympa)\\
-\Sympa daemons are running under this UID.
 
 \item \unixcmd {--with-sendmail\_aliases=ALIASFILE}, set sendmail aliases file (default /etc/mail/sympa\_aliases)\\
 This is used by the alias\_manager script.
@@ -1993,7 +1991,11 @@ others. Depending on permissions, the same URL may generate a different view.
       is nobody.nobody)
 
 \item Use a virtual Apache server with sympa.sympa as uid.gid ; Apache
-      needs to be compiled with suexec.
+      needs to be compiled with suexec. Be aware that the Apache suexec usually define a lowest
+      UID/GID allowed to be a target user for suEXEC. For most systems including binaries
+      distribution of Apache, the default value 100 is common.
+      So Sympa UID (and Sympa GID) must be higher then 100 or suexec must be tuned in order to allow
+      lower UID/GID. Check http://httpd.apache.org/docs/suexec.html\#install for details
 
 \item Otherwise, you can overcome restrictions on the execution of suid scripts
       by using a short C program, owned by sympa and with the suid bit set, to start
@@ -5785,7 +5787,7 @@ added to a message.
 Definition of \lparam {digest} mode. If this parameter is present,
 subscribers can select the option of receiving messages in multipart/digest
 MIME format.  Messages are then grouped together, and compilations of messages
-are sent to subscribers in accordance with the rhythm selected
+are sent to subscribers in accordance with the rythm selected
 with this parameter.
 
 \textit {Daylist} designates a list of days in the week in number

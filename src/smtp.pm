@@ -104,7 +104,7 @@ sub smtpto {
    ## Check how many open smtp's we have, if too many wait for a few
    ## to terminate and then do our job.
 
-   do_log('debug3',""Open = $opensmtp");
+   do_log('debug3',"Open = $opensmtp");
    while ($opensmtp > $Conf{'maxsmtp'}) {
        do_log('debug3',"Smtpto: too many open SMTP ($opensmtp), calling reaper" );
        last if (&reaper(0) == -1); ## Blocking call to the reaper.

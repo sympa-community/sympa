@@ -78,8 +78,10 @@ use wwslib;
 #getopts('dF');
 ## Check options
 my %options;
-&GetOptions(\%main::options, 'debug|d', 'foreground|F');
-$main::options{'debug2'} = 1 if ($main::options{'debug'});
+&GetOptions(\%main::options, 'debug|d','log_level=s','foreground|F');
+# $main::options{'debug2'} = 1 if ($main::options{'debug'});
+
+$log_level = $main::options{'log_level'} if ($main::options{'log_level'});
 
 my $wwsympa_conf = "--WWSCONFIG--";
 my $sympa_conf_file = '--CONFIG--';
@@ -97,6 +99,7 @@ unless (Conf::load($sympa_conf_file)) {
     do_log  ('notice',"Unable to load sympa configuration, file $sympa_conf_file has errors.");
     exit(1);
 }
+
 
 unshift @INC, $wwsconf->{'wws_path'};
 

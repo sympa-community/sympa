@@ -47,7 +47,7 @@ my %Default_Conf =
 sub load {
     my $config = shift;
 
-   &Log::do_log('debug2','Ldap::load(%s)', $config);
+   &Log::do_log('debug3','Ldap::load(%s)', $config);
 
     my $line_num = 0;
     my $config_err = 0;
@@ -97,7 +97,7 @@ sub load {
 sub export_list{
     my ($directory,$list) = @_;
 
-    &Log::do_log('debug',' Ldap::export_list(%s,%s)', $directory,$list->{'name'});
+    &Log::do_log('debug2',' Ldap::export_list(%s,%s)', $directory,$list->{'name'});
 
     my (@owner_emails,@editor_emails,@editor_names,@owner_names);
 
@@ -189,7 +189,7 @@ sub export_list{
 
 sub delete_list{
     my($directory,$list,$ldap) = @_;
-    &Log::do_log('debug2', 'Ldap::delete_list(%s,%s)', $directory,$list->{'name'});
+    &Log::do_log('debug3', 'Ldap::delete_list(%s,%s)', $directory,$list->{'name'});
 
     my $already_binded = 1;
 
@@ -250,7 +250,7 @@ sub get_exported_lists{
     my $filter = shift;
     my $directory = shift;
 
-    &Log::do_log('debug2','Ldap::get_exported_lists(%s)',$directory);
+    &Log::do_log('debug3','Ldap::get_exported_lists(%s)',$directory);
 
     my %lists;
     

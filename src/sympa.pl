@@ -95,7 +95,7 @@ my %options;
 	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s', 'lowercase');
 
 
-$main::options{'debug2'} = 1 if ($main::options{'debug'});
+# $main::options{'debug2'} = 1 if ($main::options{'debug'});
 $log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
 my @parser_param = ($*, $/);
