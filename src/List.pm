@@ -2285,6 +2285,8 @@ sub send_msg_digest {
         my $msg = {};
         $msg->{'subject'} = $subject;	
         $msg->{'from'} = $mail->head->get('From');
+	$msg->{'full_msg'} = $mail->as_string;
+	$msg->{'body'} = $mail->body;
 	chomp $msg->{'from'};
 	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
 	$msg->{'message_id'} = $mail->head->get('Message-Id');
