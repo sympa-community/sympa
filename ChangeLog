@@ -1,3 +1,82 @@
+2004-04-26 13:56  salaun
+
+	* src/task_manager.pl: Change: move the log message (no msg_count)
+	to debug
+
+2004-04-26 11:42  salaun
+
+	* wwsympa/Makefile: [BugID 152] Fix: UMASK was not set when
+	installing web templates
+
+2004-04-26 11:34  salaun
+
+	* wwsympa/Makefile: [BugID 205] Fix: wws_templates/ directory was
+	installed with wrong permissions
+
+2004-04-22 17:48  salaun
+
+	* src/task_manager.pl: Fix: Do not warn/remove boucing members that
+	are included
+
+2004-04-21 11:54  salaun
+
+	* doc/sympa.tex.tpl: [reported by V.Mathieu] Fix
+	include_ldap_2level example
+
+2004-04-20 18:05  salaun
+
+	* src/task_manager.pl: Change: removing task files for
+	unknown/closed lists
+
+2004-04-20 11:38  salaun
+
+	* src/List.pm: [reported by O.Thalmann] Fix: total of subscribers
+	was not uptodate just after a DEL or ADD operation.  Added
+	'nocache' option to the call to _load_total_db() in
+	get_first_user()
+
+2004-04-20 09:51  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: badly commented List::db_log() calls
+
+2004-04-19 18:05  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: badly commented List::db_log() calls
+
+2004-04-19 15:22  salaun
+
+	* src/List.pm, src/sympa.pl, wwsympa/wwsympa.fcgi: [reported by
+	V.Mathieu] Fix: Ldap.pm was not loaded in sympa_soap_server.fcgi
+
+2004-04-19 15:07  salaun
+
+	* check_perl_modules.pl: [reported by V.Mathieu] Change: FCGI 0.67
+	is required for the SOAP server.  Corresponding error message :
+	Can't locate object method "BINMODE" via package "FCGI::Stream"
+
+2004-04-19 14:52  salaun
+
+	* ChangeLog, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	doc/sympa.tex.tpl, doc/html/index.html, doc/html/node1.html,
+	doc/html/node10.html, doc/html/node11.html, doc/html/node12.html,
+	doc/html/node13.html, doc/html/node14.html, doc/html/node15.html,
+	doc/html/node16.html, doc/html/node17.html, doc/html/node18.html,
+	doc/html/node19.html, doc/html/node2.html, doc/html/node20.html,
+	doc/html/node21.html, doc/html/node22.html, doc/html/node23.html,
+	doc/html/node24.html, doc/html/node3.html, doc/html/node4.html,
+	doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	doc/html/sympa.ps: [reported by V.Mathieu] Fix a few SOAP-related
+	typos
+
+2004-04-19 09:03  salaun
+
+	* src/.core.swp: removal of .core.swp
+
+2004-04-08 10:51  salaun
+
+	* src/parser.pl: Wrong comment for parse_tpl
+
 2004-04-06 09:19  salaun
 
 	* doc/sympa.tex.tpl: Details for make_alias_file
@@ -13030,10 +13109,9 @@
 	doc/latex2htmlicons/redball.png, doc/latex2htmlicons/up_motif.png,
 	doc/latex2htmlicons/up_motif_gr.png,
 	doc/latex2htmlicons/whiteball.png,
-	doc/latex2htmlicons/yellowball.png, src/.core.swp,
-	src/etc/create_list.conf, src/etc/sample/config.include,
-	src/etc/sample/topics.fr.conf, src/etc/sample/test/info,
-	src/etc/sample/test/message.footer,
+	doc/latex2htmlicons/yellowball.png, src/etc/create_list.conf,
+	src/etc/sample/config.include, src/etc/sample/topics.fr.conf,
+	src/etc/sample/test/info, src/etc/sample/test/message.footer,
 	src/etc/sample/test/welcome.tpl, wwsympa/INSTALL, wwsympa/Marc.pm,
 	wwsympa/mime.types: [no log message]
 
@@ -13045,12 +13123,12 @@
 	doc/sympa.ind, doc/sympa.log, doc/sympa.ps, doc/sympa.tex,
 	doc/sympa.toc, nls/Makefile, nls/README, nls/check.pl, nls/cn.msg,
 	nls/de.msg, nls/es.msg, nls/fi.msg, nls/fr.msg, nls/it.msg,
-	nls/tw.msg, nls/us.msg, src/Archive.pm, src/Commands.pm,
-	src/Conf.pm, src/Language.pm, src/List.pm, src/Log.pm,
-	src/Makefile, src/Version.pm, src/bouncequeue.c, src/mail.pm,
-	src/msg.pl, src/parser.pl, src/queue.c, src/smtp.pm, src/sympa.pl,
-	src/tools.pl, src/etc/ca-bundle.crt, src/etc/edit_list.conf,
-	src/etc/mhonarc-ressources,
+	nls/tw.msg, nls/us.msg, src/.core.swp, src/Archive.pm,
+	src/Commands.pm, src/Conf.pm, src/Language.pm, src/List.pm,
+	src/Log.pm, src/Makefile, src/Version.pm, src/bouncequeue.c,
+	src/mail.pm, src/msg.pl, src/parser.pl, src/queue.c, src/smtp.pm,
+	src/sympa.pl, src/tools.pl, src/etc/ca-bundle.crt,
+	src/etc/edit_list.conf, src/etc/mhonarc-ressources,
 	src/etc/create_list_templates/discussion_list/comment,
 	src/etc/create_list_templates/discussion_list/config.tpl,
 	src/etc/create_list_templates/hotline/config.tpl,
