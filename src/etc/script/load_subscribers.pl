@@ -22,9 +22,9 @@ unless (&Conf::load('--CONFIG--')) {
 $expl_dir = $Conf{'home'};
 $db_type = $Conf{'db_type'};
 $db_name = $Conf{'db_name'};
-$db_host = $Conf{'host'};
-$db_user = $Conf{'user'};
-$db_passwd = $Conf{'passwd'};
+$db_host = $Conf{'db_host'};
+$db_user = $Conf{'db_user'};
+$db_passwd = $Conf{'db_passwd'};
 
 %date_func = ('Pg' => '\'epoch\'::datetime + \'%d sec\'',
 	      'mysql' => 'FROM_UNIXTIME(%d)');
