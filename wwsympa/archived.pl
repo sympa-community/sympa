@@ -158,7 +158,12 @@ while (!$end) {
 	       my $date = $2;
 
 	       my @now = localtime($date);
-	       ($yyyy, $mm, $dd, $hh, $min, $ss) = (1900+$now[5], $now[4]+1, $now[3], $now[2], $now[1], $now[0]);
+	       $yyyy = sprintf '%04d', 1900+$now[5];
+	       $mm = sprintf '%02d', $now[4]+1;
+	       $dd = sprintf '%02d', $now[3];
+	       $hh = sprintf '%02d', $now[2];
+	       $min = sprintf '%02d', $now[1];
+	       $ss = sprintf '%02d', $now[0];
 	       
 	   }else {
 	       do_log ('notice',"Ignoring file $queue/$file because not to be rebuild or liste archive");
