@@ -1641,7 +1641,7 @@ sub load {
  	$self->{'admin'} = $admin;
  	
  	## check param_constraint.conf if belongs to a family and the config has been loaded
- 	if ($admin->{'family_name'} && ($admin->{'status'} ne 'error_config')) {
+ 	if (defined $admin->{'family_name'} && ($admin->{'status'} ne 'error_config')) {
  	    my $family;
  	    unless ($family = $self->get_family()) {
  		&do_log('err', 'Impossible to get list %s family : %s. The list is set in status error_config',$self->{'name'},$self->{'admin'}{'family_name'});
