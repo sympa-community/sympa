@@ -8,13 +8,13 @@
     <TR>
     <TD BGCOLOR="[light_color]" ALIGN="CENTER">
        [IF list_conf->status=closed]
-	[IF is_listmaster]
+	[IF is_privileged_owner]
         <A HREF="[path_cgi]/restore_list/[list]" >
           <FONT size="-1"><b>Palauta lista</b></font></A>
         [ELSE]
           <FONT size="-1" COLOR="[bg_color]"><b>>Palauta listaR</b></font>
         [ENDIF]
-       [ELSIF is_listmaster]
+       [ELSIF is_privileged_owner]
         <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Haluatko vamrasti sulkea listan [list] ?'); return false;"><FONT size=-1><b>Poista lista</b></font></A>
        [ENDIF]
     </TD>

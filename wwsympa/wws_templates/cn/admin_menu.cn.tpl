@@ -7,7 +7,7 @@
     <TR>
     <TD BGCOLOR="[light_color]" ALIGN="CENTER">
        [IF list_conf->status=closed]
-	[IF is_listmaster]
+	[IF is_privileged_owner]
         <A HREF="[path_cgi]/restore_list/[list]" >
           <FONT size="-1"><b>ª÷∏¥” µ›±Ì</b></font></A>
         [ELSE]

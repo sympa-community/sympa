@@ -5684,11 +5684,11 @@ sub do_purge_list {
 }
 
 sub do_close_list {
-    &wwslog('info', 'do_close_list_request()');
+    &wwslog('info', 'do_close_list()');
     
-    unless ($param->{'is_listmaster'}) {
+    unless ($param->{'is_privileged_owner'}) {
 	&error_message('may_not');
-	&wwslog('info','do_close_list: not listmaster');
+	&wwslog('info','do_close_list: not privileged owner');
 	return undef;
     }  
 

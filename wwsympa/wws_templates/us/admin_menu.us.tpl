@@ -76,7 +76,7 @@
 
     <TD BGCOLOR="[light_color]" ALIGN="CENTER">
 	[IF shared=none]
-          [IF is_listmaster]
+          [IF is_privileged_owner]
           <A HREF="[path_cgi]/d_admin/[list]/create" >
              <FONT size=-1><b>Create Shared</b></font></A>
           [ELSE]
@@ -96,13 +96,13 @@
 
    <TD BGCOLOR="[light_color]" ALIGN="CENTER">
        [IF list_conf->status=closed]         
-        [IF is_listmaster]                   
+        [IF is_privileged_owner]                   
         <A HREF="[path_cgi]/restore_list/[list]" >
           <FONT size="-1"><b>Restore List</b></font></A>
         [ELSE]                               
           <FONT size="-1" COLOR="[bg_color]"><b>Restore List</b></font>
         [ENDIF]                              
-       [ELSIF is_listmaster]                 
+       [ELSIF is_privileged_owner]                 
         <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Are you sure you wish to close [list] list ?'); return false;"><FONT size=-1><b>Remove List</b></font></A>
        [ELSIF is_owner]                      
        <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Are you sure you wish to close [list] list ?'); return false;"><FONT size=-1><b>Remove List</b></font></A>
