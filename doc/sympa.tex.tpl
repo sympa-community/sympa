@@ -1133,6 +1133,8 @@ the file is of no importance.
 
 \subsection {\cfkeyword {create\_list}}  
 
+	\label{create-list}
+
 	 \default {listmaster}
 
 	Defines who can create lists (or request list creations).
@@ -3464,6 +3466,7 @@ in the documentation.
 
 \section {List creation}
 
+
 Listmasters have all privileges. Currently the listmaster
 is defined in \file {sympa.conf} but in the future, it might be possible to
 define one listmaster per virtual robot. By default, newly created
@@ -3471,11 +3474,17 @@ lists must be activated by the listmaster. List creation is possible for all int
 (i.e. : users with an e-mail address within the same domain as Sympa).
 This is controlled by the \cfkeyword {create\_list} scenario.
 
-\subsection {create\_list scenario}
+\subsection {Who can create lists}
 
-This scenario can apply any condition concerning the [sender]
-(ie: WWSympa user), and it must return \cfkeyword {reject}, \cfkeyword {do\_it}
-or \cfkeyword {listmaster}.
+It is defined by \cfkeyword {create\_list} sympa.conf parameter (see \ref {create-list},  
+page~\pageref {create-list}). This parameter refers to a \textbf {create\_list} scenario.
+It will determine if the \textit {create list} button is displayed, if it requires
+a listmaster confirmation.
+
+The scenario can accepts any condition concerning the [sender]
+(ie WWSympa user), and it returns \cfkeyword {reject}, \cfkeyword {do\_it}
+or \cfkeyword {listmaster} as an action.
+
 Only in cases where a user is authorized by the create\_list scenario
 will the "create" button be available in the main menu.
 If the scenario returns \cfkeyword {do\_it}, the list will be created and installed.
@@ -3529,7 +3538,7 @@ public_anonymous hidden
 
 When a list is created, whatever its status (\cfkeyword {pending} or
 \cfkeyword {open}), the owner can use WWSympa admin features to modify list
-parameters (future version), or to edit the welcome message, and so on.
+parameters, or to edit the welcome message, and so on.
 
 WWSympa logs the creation and all modifications to a list as part of the list's
 \file {config} file (and old configuration files are saved).
