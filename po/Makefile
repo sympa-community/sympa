@@ -40,5 +40,6 @@ install: $(MOFILES)
 update-po: potfile
 	languages='$(LINGUAS)'; \
 	for lang in $$languages; do \
+		echo "Updating $$lang.po"; \
 		$(MSGMERGE) -o "$$lang.po" "$$lang.po" sympa.pot; \
 	done
