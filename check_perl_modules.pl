@@ -54,7 +54,8 @@ use CPAN;
 	     'MIME::Tools' => 'MIME-tools',
 	     'MIME::Base64' => 'MIME-Base64',
 	     'CGI' => 'CGI',
-	     'File::Spec' => 'File-Spec'
+	     'File::Spec' => 'File-Spec',
+	     'Archive::Zip' => 'Archive-Zip',
 	     );
 
 %opt_CPAN = ('DBI' => 'DBI',
@@ -69,7 +70,6 @@ use CPAN;
 	     'Net::SMTP' => 'libnet',
 	     'IO::Socket::SSL' => 'IO-Socket-SSL',
 	     'Net::SSLeay' => 'NET-SSLeay',
-	     'Archive::Zip' => 'Archive-Zip',
 	     'Bundle::LWP' => 'LWP');
 
 %opt_features = ('DBI' => 'a generic Database Driver, required by Sympa to access Subscriber information and User preferences. An additional Database Driver is required for each database type you wish to connect to.',
