@@ -272,7 +272,7 @@ PACKAGE_BUGREPORT=
 
 ac_unique_file="check_perl_modules.pl"
 ac_default_prefix=/home/sympa
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS MAJOR_VERSION MINOR_VERSION MICRO_VERSION build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE CONFDIR CGIDIR ICONSDIR BINDIR SBINDIR LIBEXECDIR LIBDIR DATADIR EXPLDIR MANDIR INITDIR LOCKDIR PIDDIR ETCDIR LOCALEDIR DOCDIR SCRIPTDIR SAMPLEDIR SPOOLDIR CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE CPP EGREP PERL SUIDPERL MHONARC OPENSSL CVS2CL SH USER GROUP SENDMAIL_ALIASES VIRTUAL_ALIASES NEWALIASES NEWALIASES_ARG POSTMAP POSTMAP_ARG MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS MAJOR_VERSION MINOR_VERSION MICRO_VERSION build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE CONFDIR CGIDIR ICONSDIR BINDIR SBINDIR LIBEXECDIR LIBDIR DATADIR EXPLDIR MANDIR INITDIR LOCKDIR PIDDIR ETCDIR LOCALEDIR DOCDIR SCRIPTDIR SAMPLEDIR SPOOLDIR CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE CPP EGREP PERL SUIDPERL MHONARC OPENSSL CVS2CL MSGFMT SH USER GROUP SENDMAIL_ALIASES VIRTUAL_ALIASES NEWALIASES NEWALIASES_ARG POSTMAP POSTMAP_ARG MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -3476,6 +3476,47 @@ fi
 
 
 
+# Extract the first word of "msgfmt", so it can be a program name with args.
+set dummy msgfmt; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_path_MSGFMT+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $MSGFMT in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_MSGFMT="$MSGFMT" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_MSGFMT="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_path_MSGFMT" && ac_cv_path_MSGFMT="/usr/bin/msgfmt"
+  ;;
+esac
+fi
+MSGFMT=$ac_cv_path_MSGFMT
+
+if test -n "$MSGFMT"; then
+  echo "$as_me:$LINENO: result: $MSGFMT" >&5
+echo "${ECHO_T}$MSGFMT" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+
 # Extract the first word of "sh", so it can be a program name with args.
 set dummy sh; ac_word=$2
 echo "$as_me:$LINENO: checking for $ac_word" >&5
@@ -4347,6 +4388,7 @@ s,@SUIDPERL@,$SUIDPERL,;t t
 s,@MHONARC@,$MHONARC,;t t
 s,@OPENSSL@,$OPENSSL,;t t
 s,@CVS2CL@,$CVS2CL,;t t
+s,@MSGFMT@,$MSGFMT,;t t
 s,@SH@,$SH,;t t
 s,@USER@,$USER,;t t
 s,@GROUP@,$GROUP,;t t
