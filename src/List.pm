@@ -83,6 +83,10 @@ Sends the file to the USER. FILE may only be welcome for now.
 
 Delete the indicated users from the list.
  
+=item delete_admin_user ( ROLE, ARRAY )
+
+Delete the indicated admin user with the predefined role from the list.
+
 =item get_cookie ()
 
 Returns the cookie for a list, if available.
@@ -103,27 +107,53 @@ Returns a default option of the list for subscription.
 
 Returns the number of subscribers to the list.
 
-=item get_user ( USER )
+=item get_user_db ( USER )
 
 Returns a hash with the informations regarding the indicated
 user.
 
+=item get_subscriber ( USER )
+
+Returns a subscriber of the list.
+
+=item get_admin_user ( ROLE, USER)
+
+Return an admin user of the list with predefined role
+
 =item get_first_user ()
 
 Returns a hash to the first user on the list.
+
+=item get_first_admin_user ( ROLE )
+
+Returns a hash to the first admin user with predifined role on the list.
 
 =item get_next_user ()
 
 Returns a hash to the next users, until we reach the end of
 the list.
 
+=item get_next_admin_user ()
+
+Returns a hash to the next admin users, until we reach the end of
+the list.
+
 =item update_user ( USER, HASHPTR )
 
 Sets the new values given in the hash for the user.
 
+=item update_admin_user ( USER, ROLE, HASHPTR )
+
+Sets the new values given in the hash for the admin user.
+
 =item add_user ( USER, HASHPTR )
 
 Adds a new user to the list. May overwrite existing
+entries.
+
+=item add_admin_user ( USER, ROLE, HASHPTR )
+
+Adds a new admin user to the list. May overwrite existing
 entries.
 
 =item is_user ( USER )
@@ -200,7 +230,7 @@ use Message;
 use PlainDigest;
 
 ## Database and SQL statement handlers
-my ($dbh, $sth, $db_connected, @sth_stack, $use_db, $include_lock_count);
+my ($dbh, $sth, $db_connected, @sth_stack, $use_db, $include_lock_count, $include_admin_user_lock_count);
 
 my %list_cache;
 my %persistent_cache;
@@ -483,6 +513,20 @@ my %alias = ('reply-to' => 'reply_to',
 			 'gettext_id' => "Moderators",
 			 'group' => 'description'
 			 },
+	    'editor_include' => {'format' => {'source' => {'datasource' => 1,
+							   'occurrence' => '1',
+							   'gettext_id' => 'the datasource',
+							   },
+					      'reception' => {'format' => ['mail','nomail'],
+							      'default' => 'mail',
+							      'gettext_id' => 'reception mode',
+							      'order' => 4,
+							      },
+					      },
+				  'occurrence' => '0-n',
+				  'gettext_id' => 'Moderators defined in an external datasource',
+				  'group' => 'description',
+			      },
 	    'expire_task' => {'task' => 'expire',
 			      'gettext_id' => "",
 			      'group' => 'other'
@@ -844,10 +888,29 @@ my %alias = ('reply-to' => 'reply_to',
 						   'order' => 4
 						   }
 				 },
-			'occurrence' => '1-n',
+			'occurrence' => '0-n',
 			'gettext_id' => "Owner",
 			'group' => 'description'
 			},
+	    'owner_include' => {'format' => {'source' => {'datasource' => 1,
+							  'occurrence' => '1',
+							  'gettext_id' => 'the datasource',
+						      },
+					     'reception' => {'format' => ['mail','nomail'],
+							     'default' => 'mail',
+							     'gettext_id' => 'reception mode',
+							     'order' =>5,
+							 },
+					     'profile' => {'format' => ['privileged','normal'],
+							   'default' => 'normal',
+							   'gettext_id' => 'profile',
+							   'order' => 4,
+						       }
+					 },
+				'occurrence' => '0-n',
+				'gettext_id' => 'Owners defined in an external datasource',
+				'group' => 'description',
+			    },
 	    'priority' => {'format' => [0..9,'z'],
 			   'length' => 1,
 			   'default' => {'conf' => 'default_list_priority'},
@@ -1224,7 +1287,7 @@ sub savestats {
     my $dir = $self->{'dir'};
     return undef unless ($list_of_lists{$name});
     
-   _save_stats_file("$dir/stats", $self->{'stats'}, $self->{'total'}, $self->{'last_sync'});
+   _save_stats_file("$dir/stats", $self->{'stats'}, $self->{'total'}, $self->{'last_sync'}, $self->{'last_sync_admin_user'});
     
     ## Changed on disk
     $self->{'mtime'}[2] = time;
@@ -1548,7 +1611,7 @@ sub load {
     my ($stats, $total);
 
     if (! $self->{'mtime'}[2] || ($time_stats > $self->{'mtime'}[2])) {
-	($stats, $total, $self->{'last_sync'}) = _load_stats_file("$self->{'dir'}/stats");
+	($stats, $total, $self->{'last_sync'}, $self->{'last_sync_admin_user'}) = _load_stats_file("$self->{'dir'}/stats");
 	$m3 = $time_stats;
 
 	$self->{'stats'} = $stats if (defined $stats);	
@@ -1580,24 +1643,95 @@ sub load {
     return $self;
 }
 
+## Return a hash of list's owners and their param
+sub get_owners {
+    my($self) = @_;
+    do_log('debug3', 'List::get_owners(%s)', $self->{'name'});
+  
+    my $owners = ();
+
+    # owners are in the admin_table
+    if ($self->{'admin'}{'user_data_source'} eq 'include2') {
+	for (my $owner = $self->get_first_admin_user('owner'); $owner; $owner = $self->get_next_admin_user()) {
+	    push(@{$owners},$owner);
+	} 
+
+    #owners are only in the config
+    } else {
+	$owners = $self->{'admin'}{'owner'};
+    }
+    return $owners;
+}
+
+sub get_nb_owners {
+    my($self) = @_;
+    do_log('debug3', 'List::get_nb_owners(%s)', $self->{'name'});
+    
+    my $resul = 0;
+    my $owners = $self->get_owners;
+
+    if (defined $owners) {
+	$resul = $#{$owners} + 1;
+    }
+    return $resul;
+}
+
+## Return a hash of list's editors and their param(empty if there isn't any editor)
+sub get_editors {
+    my($self) = @_;
+    do_log('debug3', 'List::get_editors(%s)', $self->{'name'});
+  
+    my $editors = ();
+
+    # editors are in the admin_table
+    if ($self->{'admin'}{'user_data_source'} eq 'include2') {
+	for (my $editor = $self->get_first_admin_user('editor'); $editor; $editor = $self->get_next_admin_user()) {
+	    push(@{$editors},$editor);
+	} 
+
+    #editors are only in the config
+    } else {
+	$editors = $self->{'admin'}{'editor'};
+    }
+    return $editors;
+}
+
+
 ## Returns an array of owners' email addresses (unless reception nomail)
 sub get_owners_email {
     my($self) = @_;
     do_log('debug3', 'List::get_owners_email(%s)', $self->{'name'});
     
-    my ($i, @rcpt);
-    my $admin = $self->{'admin'}; 
-    my $name = $self->{'name'};
+    my @rcpt;
+    my $owners = ();
 
-    foreach $i (@{$admin->{'owner'}}) {
-	next if ($i->{'reception'} eq 'nomail');
-	if (ref($i->{'email'})) {
-	    push(@rcpt, @{$i->{'email'}});
-	}elsif ($i->{'email'}) {
-	    push(@rcpt, $i->{'email'});
+    $owners = $self->get_owners();
+    foreach my $o (@{$owners}) {
+	next if ($o->{'reception'} eq 'nomail');
+	push (@rcpt, lc($o->{'email'}));
 	}
+    return @rcpt;
+}
+
+## Returns an array of editors' email addresses (unless reception nomail)
+#  or owners if there isn't any editors'email adress
+sub get_editors_email {
+    my($self) = @_;
+    do_log('debug3', 'List::get_editors_email(%s)', $self->{'name'});
+    
+    my @rcpt;
+    my $editors = ();
+
+    $editors = $self->get_editors();
+    foreach my $e (@{$editors}) {
+	next if ($e->{'reception'} eq 'nomail');
+	push (@rcpt, lc($e->{'email'}));
     }
 
+    unless (@rcpt) {
+	@rcpt = $self->get_owners_email();
+	do_log('notice','Warning : no editor defined for list %s, getting owners', $self->{'name'} );
+    }
     return @rcpt;
 }
 
@@ -1949,13 +2083,9 @@ sub send_to_editor {
 	   chdir $Conf{'home'};
        }
    }
-   foreach $i (@{$admin->{'editor'}}) {
-      next if ($i->{'reception'} eq 'nomail');
-      push(@rcpt, $i->{'email'}) if ($i->{'email'});
-   }
-   unless (@rcpt) {
-       @rcpt = $self->get_owners_email();
 
+   @rcpt = $self->get_editors_email();
+   unless (@rcpt) {
        do_log('notice','Warning : no editor defined for list %s, contacting owners', $name );
    }
 
@@ -2819,7 +2949,7 @@ sub send_file {
     $data->{'list'}{'domain'} = $data->{'robot_domain'} = $robot;
     $data->{'list'}{'host'} = $self->{'admin'}{'host'};
     $data->{'list'}{'subject'} = $self->{'admin'}{'subject'};
-    $data->{'list'}{'owner'} = $self->{'admin'}{'owner'};
+    $data->{'list'}{'owner'} = $self->get_owners();
     $data->{'list'}{'dir'} = $self->{'dir'};
 
     ## Sign mode
@@ -2930,6 +3060,47 @@ sub delete_user {
     $self->savestats();
     return (-1 * $total);
 }
+
+
+## Delete the indicated admin users from the list.
+sub delete_admin_user {
+    my($self, $role, @u) = @_;
+    do_log('debug2', 'List::delete_admin_user(%s)', $role); 
+
+    my $name = $self->{'name'};
+    my $total = 0;
+    
+    unless($self->{'admin'}{'user_data_source'} eq 'include2'){
+	&do_log('err', 'Cannot delete %s in list %s, user_data_source different than include2 ',$role, $self->{'name'}); 
+	return undef;
+    }
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+	    
+    foreach my $who (@u) {
+	$who = &tools::clean_email($who);
+	my $statement;
+	
+	$list_cache{'is_admin_user'}{$name}{$who} = undef;    
+	    
+	## Delete record in ADMIN
+	$statement = sprintf "DELETE FROM admin_table WHERE (user_admin=%s AND list_admin=%s AND role_admin=%s)",$dbh->quote($who), $dbh->quote($name),$dbh->quote($role);
+	
+	unless ($dbh->do($statement)) {
+	    do_log('err','Unable to execute SQL statement %s : %s', $statement, $dbh->errstr);
+	    return undef;
+	}   
+	
+	$total--;
+    }
+    
+    return (-1 * $total);
+}
+
+
 
 ## Returns the cookie for a list, if any.
 sub get_cookie {
@@ -3187,6 +3358,77 @@ sub get_subscriber {
 }
 
 
+## Returns an admin user of the list.
+sub get_admin_user {
+    my  $self= shift;
+    my  $role= shift;
+    my  $email = &tools::clean_email(shift);
+    
+    do_log('debug2', 'List::get_admin_user(%s,%s)', $role,$email); 
+
+    unless($self->{'admin'}{'user_data_source'} eq 'include2'){
+	&do_log('err', 'Cannot add %s in list %s, user_data_source different than include2 ', $role, $self->{'name'}); 
+	return undef;
+    }
+
+    my $name = $self->{'name'};
+    my $statement;
+    my $date_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'date_admin', 'date_admin';
+    my $update_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'update_admin', 'update_admin';	
+
+    ## Use session cache
+    if (defined $list_cache{'get_admin_user'}{$name}{$email}) {
+	&do_log('debug3', 'xxx Use cache(get_admin_user, %s,%s,%s)', $name, $role, $email);
+	return $list_cache{'get_admin_user'}{$name}{$email};
+    }
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+
+    if ($Conf{'db_type'} eq 'Oracle') {
+	## "AS" not supported by Oracle
+	$statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\",  subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\"  FROM admin_table WHERE (user_admin = %s AND list_admin = %s AND role_admin = %s)", $date_field, $update_field, $dbh->quote($email), $dbh->quote($name), $dbh->quote($role);
+    }else {
+	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id FROM admin_table WHERE (user_admin = %s AND list_admin = %s AND role_admin = %s)", $date_field, $update_field, $dbh->quote($email), $dbh->quote($name), $dbh->quote($role);
+    }
+    
+    push @sth_stack, $sth;
+
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    
+    my $admin_user = $sth->fetchrow_hashref;
+
+    if (defined $admin_user) {
+	$admin_user->{'reception'} ||= 'mail';
+	$admin_user->{'update_date'} ||= $admin_user->{'date'};
+	
+	## In case it was not set in the database
+	$admin_user->{'subscribed'} = 1
+	    if ($self->{'admin'}{'user_data_source'} eq 'database');
+    }
+    
+    $sth->finish();
+    
+    $sth = pop @sth_stack;
+    
+    ## Set session cache
+    $list_cache{'get_admin_user'}{$name}{$email} = $admin_user;
+    
+    return $admin_user;
+    
+}
+
+
 ## Returns the first user for the list.
 sub get_first_user {
     my ($self, $data) = @_;
@@ -3427,6 +3669,208 @@ sub get_first_user {
     }
 }
 
+## Returns the first admin_user with $role for the list.
+sub get_first_admin_user {
+    my ($self, $role, $data) = @_;
+
+    my ($sortby, $offset, $rows, $sql_regexp);
+    $sortby = $data->{'sortby'};
+    ## Sort may be domain, email, date
+    $sortby ||= 'domain';
+    $offset = $data->{'offset'};
+    $rows = $data->{'rows'};
+    $sql_regexp = $data->{'sql_regexp'};
+
+    &do_log('debug2', 'List::get_first_admin_user(%s,%s,%s,%d,%d)', $self->{'name'},$role, $sortby, $offset, $rows);
+
+    unless($self->{'admin'}{'user_data_source'} eq 'include2'){
+	&do_log('err', 'List::get_first_admin_user(%s,%s,%s,%d,%d) isn\'t defined when user_data_source is different than include2',
+		 $self->{'name'},$role,$sortby, $offset, $rows); 
+	return undef;
+    }
+   
+  
+    ## Get an Shared lock
+    $include_admin_user_lock_count++;
+    
+    ## first lock
+    if ($include_admin_user_lock_count == 1) {
+	my $lock_file = $self->{'dir'}.'/include_admin_user.lock';
+	
+	## Create include_admin_user.lock if needed
+	unless (-f $lock_file) {
+	    unless (open FH, ">>$lock_file") {
+		&do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+		return undef;
+	    }
+	}
+	
+	close $lock_file;
+	
+	## Read access to prevent "Bad file number" error on Solaris
+	unless (open FH, "$lock_file") {
+	    &do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+	    return undef;
+	}
+	
+	unless (flock (FH, LOCK_SH | LOCK_NB)) {
+	    &do_log('notice','Waiting for reading lock on %s', $lock_file);
+	    unless (flock (FH, LOCK_SH)) {
+		&do_log('err', 'Failed locking %s: %s', $lock_file, $!);
+		return undef;
+	    }
+	}
+	&do_log('debug2', 'Got lock for reading on %s', $lock_file); 
+    }
+          
+    my $name = $self->{'name'};
+    my $statement;
+    
+    my $date_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'date_admin', 'date_admin';
+    my $update_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'update_admin', 'update_admin';
+    
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+    
+    ## SQL regexp
+    my $selection;
+    if ($sql_regexp) {
+	$selection = sprintf " AND (user_admin LIKE %s OR comment_admin LIKE %s)"
+	    ,$dbh->quote($sql_regexp), $dbh->quote($sql_regexp);
+    }
+    
+     ## Oracle
+# and ok ?
+    if ($Conf{'db_type'} eq 'Oracle') {
+	
+	$statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\" FROM admin_table WHERE (list_admin = %s %s AND role_admin = %s)", $date_field, $update_field, $dbh->quote($name), $selection, $dbh->quote($role);
+	
+	## SORT BY
+	if ($sortby eq 'domain') {
+	    $statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\", substr(user_admin,instr(user_admin,'\@')+1) \"dom\"  FROM admin_table WHERE (list_admin = %s AND role_admin = %s ) ORDER BY \"dom\"", $date_field, $update_field, $dbh->quote($name), $dbh->quote($role);
+	    
+	}elsif ($sortby eq 'email') {
+	    $statement .= " ORDER BY \"email\"";
+	    
+	}elsif ($sortby eq 'date') {
+	    $statement .= " ORDER BY \"date\" DESC";
+	    
+	}elsif ($sortby eq 'sources') {
+	    $statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
+	    
+	}elsif ($sortby eq 'name') {
+	    $statement .= " ORDER BY \"gecos\"";
+	} 
+	
+	## Sybase
+    }elsif ($Conf{'db_type'} eq 'Sybase'){
+	
+	$statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\" FROM admin_table WHERE (list_admin = %s %s AND role_admin = %s)", $date_field, $update_field, $dbh->quote($name), $selection, $dbh->quote($role);
+	## SORT BY
+	if ($sortby eq 'domain') {
+	    $statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\", substring(user_admin,charindex('\@',user_admin)+1,100) \"dom\" FROM admin_table WHERE (list_admin = %s  AND role_admin = %s) ORDER BY \"dom\"", $date_field, $update_field,  $dbh->quote($name), $dbh->quote($role);
+	    
+	}elsif ($sortby eq 'email') {
+	    $statement .= " ORDER BY \"email\"";
+	    
+	}elsif ($sortby eq 'date') {
+	    $statement .= " ORDER BY \"date\" DESC";
+	    
+	}elsif ($sortby eq 'sources') {
+	    $statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
+	    
+	}elsif ($sortby eq 'name') {
+	    $statement .= " ORDER BY \"gecos\"";
+	}
+	
+	
+	## mysql
+    }elsif ($Conf{'db_type'} eq 'mysql') {
+	
+	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id  FROM admin_table WHERE (list_admin = %s %s AND role_admin = %s)", $date_field, $update_field, $dbh->quote($name), $selection, $dbh->quote($role);
+	
+	## SORT BY
+	if ($sortby eq 'domain') {
+	    ## Redefine query to set "dom"
+	    
+	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, REVERSE(SUBSTRING(user_admin FROM position('\@' IN user_admin) FOR 50)) AS dom FROM admin_table WHERE (list_admin = %s AND role_admin = %s ) ORDER BY dom", $date_field, $update_field, $dbh->quote($name), $dbh->quote($role);
+	    
+	}elsif ($sortby eq 'email') {
+	    ## Default SORT
+	    $statement .= ' ORDER BY email';
+	    
+	}elsif ($sortby eq 'date') {
+	    $statement .= ' ORDER BY date DESC';
+	    
+	}elsif ($sortby eq 'sources') {
+	    $statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
+	    
+	}elsif ($sortby eq 'name') {
+	    $statement .= ' ORDER BY gecos';
+	} 
+	
+	## LIMIT clause
+	if (defined($rows) and defined($offset)) {
+	    $statement .= sprintf " LIMIT %d, %d", $offset, $rows;
+	}
+	
+	## Pg    
+    }else {
+	
+	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id FROM admin_table WHERE (list_admin = %s %s AND role_admin = %s)", $date_field, $update_field, $dbh->quote($name), $selection, $dbh->quote($role);
+	
+	## SORT BY
+	if ($sortby eq 'domain') {
+	    ## Redefine query to set "dom"
+	    
+	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, SUBSTRING(user_admin FROM position('\@' IN user_admin) FOR 50) AS dom  FROM admin_table WHERE (list_admin = %s AND role_admin = %s) ORDER BY dom", $date_field, $update_field, $dbh->quote($name), $dbh->quote($role);
+	    
+	}elsif ($sortby eq 'email') {
+	    $statement .= ' ORDER BY email';
+	    
+	}elsif ($sortby eq 'date') {
+	    $statement .= ' ORDER BY date DESC';
+	    
+	}elsif ($sortby eq 'sources') {
+	    $statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
+	    
+	}elsif ($sortby eq 'email') {
+	    $statement .= ' ORDER BY gecos';
+	}
+	
+	## LIMIT clause
+	if (defined($rows) and defined($offset)) {
+	    $statement .= sprintf " LIMIT %d OFFSET %d", $rows, $offset;
+	}
+    }
+    push @sth_stack, $sth;	    
+    
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    
+    my $admin_user = $sth->fetchrow_hashref;
+    if (defined $admin_user) {
+	&do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
+	    if (! $admin_user->{'email'});
+	$admin_user->{'reception'} ||= 'mail';
+	$admin_user->{'update_date'} ||= $admin_user->{'date'};
+	
+	## In case it was not set in the database
+	$admin_user->{'subscribed'} = 1
+	    if (defined($admin_user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
+    }
+    return $admin_user;
+}
+    
 ## Loop for all subsequent users.
 sub get_next_user {
     my $self = shift;
@@ -3500,6 +3944,55 @@ sub get_next_user {
 	return undef;
     }
 }
+
+## Loop for all subsequent admin users with the role defined in get_first_admin_user.
+sub get_next_admin_user {
+    my $self = shift;
+    do_log('debug2', 'List::get_next_admin_user'); 
+
+    unless($self->{'admin'}{'user_data_source'} eq 'include2'){
+	&do_log('err', 'List::get_next_admin_user(%s) isn\'t defined when user_data_source is different than include2',
+		$self->{'name'}); 
+	return undef;
+    }
+    
+    unless (defined $sth) {
+	&do_log('err','Statement handle not defined in get_next_admin_user for list %s', $self->{'name'});
+	return undef;
+    }
+    
+    my $admin_user = $sth->fetchrow_hashref;
+
+    if (defined $admin_user) {
+	&do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
+	    if (! $admin_user->{'email'});
+	$admin_user->{'reception'} ||= 'mail';
+	$admin_user->{'update_date'} ||= $admin_user->{'date'};
+	
+	## In case it was not set in the database
+	$admin_user->{'subscribed'} = 1
+	    if (defined($admin_user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
+    }
+    else {
+	$sth->finish;
+	$sth = pop @sth_stack;
+	
+	## Release the Shared lock
+	$include_admin_user_lock_count--;
+	
+	## Last lock
+	if ($include_admin_user_lock_count == 0) {
+	    my $lock_file = $self->{'dir'}.'/include_admin_user.lock';
+	    flock(FH,LOCK_UN);
+	    close FH;
+	    &do_log('debug2', 'Release lock on %s', $lock_file);
+	}
+    }
+   return $admin_user;
+}
+
+
+
 
 ## Returns the first bouncing user
 sub get_first_bouncing_user {
@@ -3963,6 +4456,123 @@ sub update_user {
     return 1;
 }
 
+
+## Sets new values for the given admin user (except gecos)
+sub update_admin_user {
+    my($self, $who,$role, $values) = @_;
+    do_log('debug2', 'List::update_admin_user(%s,%s)', $role, $who); 
+    $who = &tools::clean_email($who);    
+
+    my ($field, $value);
+    
+    unless($self->{'admin'}{'user_data_source'} eq 'include2'){
+	&do_log('err', 'Cannot update %s in list %s, user_data_source different than include2', $role, $self->{'name'}); 
+	return undef;
+    }
+   
+    my ($admin_user, $statement, $table);
+    my $name = $self->{'name'};
+    
+    ## mapping between var and field names
+    my %map_field = ( reception => 'reception_admin',
+		      date => 'date_admin',
+		      update_date => 'update_admin',
+		      gecos => 'comment_admin',
+		      password => 'password_user',
+		      email => 'user_admin',
+		      subscribed => 'subscribed_admin',
+		      included => 'included_admin',
+		      id => 'include_sources_admin',
+		      info => 'info_admin',
+		      profile => 'profile_admin',
+		      role => 'role_admin'
+		      );
+    
+    ## mapping between var and tables
+    my %map_table = ( reception => 'admin_table',
+		      date => 'admin_table',
+		      update_date => 'admin_table',
+		      gecos => 'admin_table',
+		      password => 'user_table',
+		      email => 'admin_table',
+		      subscribed => 'admin_table',
+		      included => 'admin_table',
+		      id => 'admin_table',
+		      info => 'admin_table',
+		      profile => 'admin_table',
+		      role => 'admin_table'
+		      );
+#### ??
+    ## additional DB fields
+#    if (defined $Conf{'db_additional_user_fields'}) {
+#	foreach my $f (split ',', $Conf{'db_additional_user_fields'}) {
+#	    $map_table{$f} = 'user_table';
+#	    $map_field{$f} = $f;
+#	}
+#    }
+    
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }	   
+    
+    ## Update each table
+    foreach $table ('user_table','admin_table') {
+	
+	my @set_list;
+	while (($field, $value) = each %{$values}) {
+	    
+	    unless ($map_field{$field} and $map_table{$field}) {
+		&do_log('err', 'Unknown database field %s', $field);
+		next;
+	    }
+	    
+	    if ($map_table{$field} eq $table) {
+		if ($field eq 'date') {
+		    $value = sprintf $date_format{'write'}{$Conf{'db_type'}}, $value, $value;
+		}elsif ($field eq 'update_date') {
+		    $value = sprintf $date_format{'write'}{$Conf{'db_type'}}, $value, $value;
+		}elsif ($value eq 'NULL'){
+		    if ($Conf{'db_type'} eq 'mysql') {
+			$value = '\N';
+		    }
+		}else {
+		    $value = $dbh->quote($value);
+		}
+		my $set = sprintf "%s=%s", $map_field{$field}, $value;
+
+		push @set_list, $set;
+	    }
+	}
+	next unless @set_list;
+	
+	## Update field
+	if ($table eq 'user_table') {
+	    $statement = sprintf "UPDATE %s SET %s WHERE (email_user=%s)", $table, join(',', @set_list), $dbh->quote($who); 
+	    
+	}elsif ($table eq 'admin_table') {
+	    if ($who eq '*') {
+		$statement = sprintf "UPDATE %s SET %s WHERE (list_admin=%s AND role_admin=%s)", $table, join(',', @set_list), $dbh->quote($name), $dbh->quote($role);
+	    }else {
+		$statement = sprintf "UPDATE %s SET %s WHERE (user_admin=%s AND list_admin=%s AND role_admin=%s )", $table, join(',', @set_list), $dbh->quote($who), $dbh->quote($name), $dbh->quote($role);
+	    }
+	}
+    }
+    
+    unless ($dbh->do($statement)) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+
+    ## Reset session cache
+    $list_cache{'get_admin_user'}{$name}{$who} = undef;
+    
+    return 1;
+}
+
+
+
+
 ## Sets new values for the given user in the Database
 sub update_user_db {
     my($who, $values) = @_;
@@ -4169,30 +4779,110 @@ sub add_user {
 }
 
 
-## Update subscribers (used while renaming a list)
+## Adds a new admin user, no overwrite.
+sub add_admin_user {
+    my($self, $role, @new_admin_users) = @_;
+    do_log('debug2', 'List::add_admin_user');
+    
+    my $name = $self->{'name'};
+    my $total = 0;
+    
+    unless($self->{'admin'}{'user_data_source'} eq 'include2'){
+	&do_log('err', 'Cannot add %s in list %s, user_data_source different than include2', $role, $self->{'name'}); 
+	return undef;
+    }
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }	   
+	
+    foreach my $new_admin_user (@new_admin_users) {
+	my $who = &tools::clean_email($new_admin_user->{'email'});
+	
+	next unless $who;
+	
+	$new_admin_user->{'date'} ||= time;
+	$new_admin_user->{'update_date'} ||= $new_admin_user->{'date'};
+	    
+	my $date_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_admin_user->{'date'}, $new_admin_user->{'date'};
+	my $update_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_admin_user->{'update_date'}, $new_admin_user->{'update_date'};
+	    
+	$list_cache{'is_admin_user'}{$name}{$who} = undef;
+	    
+	my $statement;
+
+	##  either is_included or is_subscribed must be set
+	## default is is_subscriber for backward compatibility reason
+#	if ($self->{'admin'}{'user_data_source'} eq 'include2') {
+	    unless ($new_admin_user->{'included'}) {
+		$new_admin_user->{'subscribed'} = 1;
+	    }
+#	}
+	    
+	unless ($new_admin_user->{'included'}) {
+	    ## Is the email in user table ?
+	    if (! is_user_db($who)) {
+		## Insert in User Table
+		$statement = sprintf "INSERT INTO user_table (email_user, gecos_user, lang_user, password_user) VALUES (%s,%s,%s,%s)",$dbh->quote($who), $dbh->quote($new_admin_user->{'gecos'}), $dbh->quote($new_admin_user->{'lang'}), $dbh->quote($new_admin_user->{'password'});
+		
+		unless ($dbh->do($statement)) {
+		    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+		    return undef;
+		}
+	    }
+	}	    
+
+	## Update Admin Table
+	$statement = sprintf "INSERT INTO admin_table (user_admin, comment_admin, list_admin, date_admin, update_admin, reception_admin,subscribed_admin,included_admin,include_sources_admin, role_admin, info_admin, profile_admin) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", $dbh->quote($who), $dbh->quote($new_admin_user->{'gecos'}), $dbh->quote($name), $date_field, $update_field, $dbh->quote($new_admin_user->{'reception'}), $dbh->quote($new_admin_user->{'subscribed'}), $dbh->quote($new_admin_user->{'included'}), $dbh->quote($new_admin_user->{'id'}), $dbh->quote($role), $dbh->quote($new_admin_user->{'info'}), $dbh->quote($new_admin_user->{'profile'});
+	
+	unless ($dbh->do($statement)) {
+	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    return undef;
+	}
+	$total++;
+    }
+
+    return $total;
+}
+
+## Update subscribers and admin users (used while renaming a list)
 sub rename_list_db {
-    my($listname, $new_listname) = @_;
-    do_log('debug', 'List::rename_list_db(%s,%s)', $listname,$new_listname);
+    my($list, $new_listname) = @_;
+    do_log('debug', 'List::rename_list_db(%s,%s)', $list->{'name'},$new_listname);
 
     unless ($List::use_db) {
 	&do_log('info', 'Sympa not setup to use DBI');
 	return undef;
     }
 
-    my $statement;
+    my $statement_subscriber;
+    my $statement_admin;
     
     ## Check database connection
     unless ($dbh and $dbh->ping) {
 	return undef unless &db_connect();
     }	   
     
-    $statement =  sprintf "UPDATE subscriber_table SET list_subscriber=%s WHERE list_subscriber=%s", $dbh->quote($new_listname), $dbh->quote($listname) ; 
+    $statement_subscriber =  sprintf "UPDATE subscriber_table SET list_subscriber=%s WHERE list_subscriber=%s", $dbh->quote($new_listname), $dbh->quote($list->{'name'}) ; 
 
-    do_log('debug', 'List::rename_list_db statement : %s',  $statement );
+    do_log('debug', 'List::rename_list_db statement : %s',  $statement_subscriber );
 
-    unless ($dbh->do($statement)) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+    unless ($dbh->do($statement_subscriber)) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement_subscriber, $dbh->errstr);
 	return undef;
+    }
+
+    # admin_table is "alive" only in case include2
+    if ($list->{'admin'}{'user_data_source'} eq 'include2'){
+
+	$statement_admin =  sprintf "UPDATE admin_table SET list_admin=%s WHERE list_admin=%s", $dbh->quote($new_listname), $dbh->quote($list->{'name'}) ; 
+	do_log('debug', 'List::rename_list_db statement : %s',  $statement_admin );
+
+	unless ($dbh->do($statement_admin)) {
+	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement_admin, $dbh->errstr);
+	return undef;
+    }
     }
     
     return 1;
@@ -4224,9 +4914,8 @@ sub is_listmaster {
 ## Does the user have a particular function in the list ?
 sub am_i {
     my($self, $function, $who) = @_;
-    do_log('debug3', 'List::am_i(%s, %s)', $function, $who);
+    do_log('debug2', 'List::am_i(%s, %s)', $function, $who);
 
-    my $u;
     
     return undef unless ($self && $who);
     $function =~ y/A-Z/a-z/;
@@ -4237,13 +4926,71 @@ sub am_i {
     # sa contestable.
     return 1 if (($function eq 'owner') and &is_listmaster($who,$self->{'domain'}));
 
-    if ($function =~ /^editor$/i){
-	if ($self->{'admin'}{$function} && ($#{$self->{'admin'}{$function}} >= 0)) {
-	    foreach $u (@{$self->{'admin'}{$function}}) {
-		return 1 if (lc($u->{'email'}) eq lc($who));
+    if($self->{'admin'}{'user_data_source'} eq 'include2'){
+
+	##Check editors
+
+	if ($function =~ /^editor$/i){
+	    my $editor = $self->get_admin_user('editor',$who);
+
+	    if (defined $editor) {
+		return 1;
+	    }else {
+		# if no editor defined, owners has editor privilege
+		$editor = $self->get_admin_user('owner',$who);
+		if (defined $editor){
+		    return 1;
+		}else {
+		    return undef;
+		}
 	    }
-	    ## if no editor defined, owners has editor privilege
-	}else{
+	}
+	## Check owners
+	if ($function =~ /^owner$/i){
+	    my $owner = $self->get_admin_user('owner',$who);
+	    if (defined $owner) {
+		return 1;
+	    }else {
+		return undef;
+	    }
+	}
+	elsif ($function =~ /^privileged_owner$/i) {
+	    my $privileged = $self->get_admin_user('owner',$who);
+	    if ($privileged->{'profile'} eq 'privileged') {
+		return 1;
+	    }else {
+		return undef;
+	    }
+	}
+	else {
+	    return undef;
+	}
+    }else {
+	my $u;
+
+	if ($function =~ /^editor$/i){
+	    if ($self->{'admin'}{$function} && ($#{$self->{'admin'}{$function}} >= 0)) {
+		foreach $u (@{$self->{'admin'}{$function}}) {
+		    return 1 if (lc($u->{'email'}) eq lc($who));
+		}
+		## if no editor defined, owners has editor privilege
+	    }else{
+		foreach $u (@{$self->{'admin'}{'owner'}}) {
+		    if (ref($u->{'email'})) {
+			foreach my $o (@{$u->{'email'}}) {
+			    return 1 if (lc($o) eq lc($who));
+			}
+		    }else {
+			return 1 if (lc($u->{'email'}) eq lc($who));
+		    }
+		} 
+	    }
+	    return undef;
+	}
+	## Check owners
+	if ($function =~ /^owner$/i){
+	    return undef unless ($self->{'admin'} && $self->{'admin'}{'owner'});
+	    
 	    foreach $u (@{$self->{'admin'}{'owner'}}) {
 		if (ref($u->{'email'})) {
 		    foreach my $o (@{$u->{'email'}}) {
@@ -4252,37 +4999,22 @@ sub am_i {
 		}else {
 		    return 1 if (lc($u->{'email'}) eq lc($who));
 		}
-	    } 
+	    }
+	}
+	elsif ($function =~ /^privileged_owner$/i) {
+	    foreach $u (@{$self->{'admin'}{'owner'}}) {
+		next unless ($u->{'profile'} =~ 'privileged');
+		if (ref($u->{'email'})) {
+		    foreach my $o (@{$u->{'email'}}) {
+			return 1 if (lc($o) eq lc($who));
+		    }
+		}else {
+		    return 1 if (lc($u->{'email'}) eq lc($who));
+		}
+	    }
 	}
 	return undef;
     }
-    ## Check owners
-    if ($function =~ /^owner$/i){
-	return undef unless ($self->{'admin'} && $self->{'admin'}{'owner'});
-	
-	foreach $u (@{$self->{'admin'}{'owner'}}) {
-	    if (ref($u->{'email'})) {
-		foreach my $o (@{$u->{'email'}}) {
-		    return 1 if (lc($o) eq lc($who));
-		}
-	    }else {
-		return 1 if (lc($u->{'email'}) eq lc($who));
-	    }
-	}
-    }
-    elsif ($function =~ /^privileged_owner$/i) {
-	foreach $u (@{$self->{'admin'}{'owner'}}) {
-	    next unless ($u->{'profile'} =~ 'privileged');
-	    if (ref($u->{'email'})) {
-		foreach my $o (@{$u->{'email'}}) {
-		    return 1 if (lc($o) eq lc($who));
-		}
-	    }else {
-		return 1 if (lc($u->{'email'}) eq lc($who));
-	    }
-	}
-    }
-    return undef;
 }
 
 ## Return the action to perform for 1 sender using 1 auth method to perform 1 operation
@@ -5343,29 +6075,60 @@ sub _load_task_title {
     return $title;
 }
 
+## Loads all data sources
+sub load_data_sources_list {
+    my ($self, $robot) = @_;
+    do_log('debug3', 'List::load_data_sources_list(%s,%s)', $self->{'name'},$robot);
+
+    my $directory = "$self->{'dir'}";
+    my %list_of_data_sources;
+
+    foreach my $dir ("$directory/data_sources", "$Conf{'etc'}/$robot/data_sources", "$Conf{'etc'}/data_sources", "--ETCBINDIR--/data_sources") {
+
+	next unless (-d $dir);
+
+	while (<$dir/*.incl>) {
+	    next unless (/([\w\-]+)\.incl$/);
+      
+	    my $name = $1;
+	    
+	    next if (defined $list_of_data_sources{$name});
+
+	    $list_of_data_sources{$name}{'title'} = $name;
+	    $list_of_data_sources{$name}{'name'} = $name;
+	}
+    }
+    
+    return \%list_of_data_sources;
+}
+
 ## Loads the statistics informations
 sub _load_stats_file {
     my $file = shift;
     do_log('debug3', 'List::_load_stats_file(%s)', $file);
 
    ## Create the initial stats array.
-   my ($stats, $total, $last_sync);
+   my ($stats, $total, $last_sync, $last_sync_admin_user);
  
    if (open(L, $file)){     
-       if (<L> =~ /^(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(\s+(\d+))?(\s+(\d+))?/) {
+       if (<L> =~ /^(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(\s+(\d+))?(\s+(\d+))?(\s+(\d+))?/) {
 	   $stats = [ $1, $2, $3, $4];
 	   $total = $6;
 	   $last_sync = $8;
+	   $last_sync_admin_user = $10;
+	   
        } else {
 	   $stats = [ 0, 0, 0, 0];
 	   $total = 0;
 	   $last_sync = 0;
+	   $last_sync_admin_user = 0;
        }
        close(L);
    } else {
        $stats = [ 0, 0, 0, 0];
        $total = 0;
        $last_sync = 0;
+       $last_sync_admin_user = 0;
    }
 
    ## Return the array.
@@ -5534,14 +6297,21 @@ sub _include_users_remote_sympa_list {
  	$u{'reception'} = $user{'reception'};delete $user{'reception'};
  	$u{'visibility'} = $user{'visibility'};delete $user{'visibility'};
 	
+	if ($default_user_options->{'mode_force'}) {
+	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
+	}
+
 	if ($tied) {
 	    $users->{$email} = join("\n", %u);
 	}else{
 	    $users->{$email} = \%u;
 	}
 	delete $user{$email};undef $email;
+
     }
-    do_log('info','Include %d subscribers from list (%d subscribers) https://%s:%s%s',$total,$get_total,$host,$port,$path);
+    do_log('info','Include %d users from list (%d subscribers) https://%s:%s%s',$total,$get_total,$host,$port,$path);
     return $total ;    
 }
 
@@ -5585,20 +6355,26 @@ sub _include_users_list {
  	$u{'reception'} = $user->{'reception'};
  	$u{'visibility'} = $user->{'visibility'};
 
+	if ($default_user_options->{'mode_force'}) {
+	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
+	}
+
 	if ($tied) {
 	    $users->{$email} = join("\n", %u);
 	}else {
 	    $users->{$email} = \%u;
 	}
     }
-    do_log('info',"Include %d subscribers from list %s",$total,$includelistname);
+    do_log('info',"Include %d users from list %s",$total,$includelistname);
     return $total ;
 }
 
 ## include a lists owners lists privileged_owners or lists_editors.
 sub _include_users_admin {
     my ($users, $selection, $role, $default_user_options,$tied) = @_;
-#   il fautr préparer une liste de hash avec le nom de liste, le nom de robot, le répertoire de la liset pour appeler
+#   il faut préparer une liste de hash avec le nom de liste, le nom de robot, le répertoire de la liset pour appeler
 #    load_admin_file décommanter le include_admin
     my @lists;
     
@@ -5661,6 +6437,12 @@ sub _include_users_file {
 	$u{'gecos'} = $gecos;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
+	if ($default_user_options->{'mode_force'}) {
+	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
+	}
+
 	if ($tied) {
 	    $users->{$email} = join("\n", %u);
 	}else {
@@ -5669,7 +6451,8 @@ sub _include_users_file {
     }
     close INCLUDE ;
     
-    do_log('info',"include %d new subscribers from file %s",$total,$filename);
+    
+    do_log('info',"include %d new users from file %s",$total,$filename);
     return $total ;
 }
     
@@ -5728,6 +6511,12 @@ sub _include_users_remote_file {
 	    $u{'email'} = $email;
 	    $u{'gecos'} = $gecos;
 	    $u{'id'} = join (',', split(',', $u{'id'}), $id);
+	    
+	    if ($default_user_options->{'mode_force'}) {
+		$u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+		$u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+		$u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
+	    }
 	    
 	    if ($tied) {
 		$users->{$email} = join("\n", %u);
@@ -5859,6 +6648,12 @@ sub _include_users_ldap {
 	$u{'update_date'} = time;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
+	if ($default_user_options->{'mode_force'}) {
+	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
+	}
+
 	if ($tied) {
 	    $users->{$email} = join("\n", %u);
 	}else {
@@ -5867,7 +6662,7 @@ sub _include_users_ldap {
     }
 
     do_log('debug2',"unbinded from LDAP server %s ", join(',',@{$host}));
-    do_log('debug2','%d new subscribers included from LDAP query',$total);
+    do_log('debug2','%d new users included from LDAP query',$total);
 
     return $total;
 }
@@ -6029,6 +6824,12 @@ sub _include_users_ldap_2level {
 	$u{'update_date'} = time;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
+	if ($default_user_options->{'mode_force'}) {
+	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
+	}
+
 	if ($tied) {
 	    $users->{$email} = join("\n", %u);
 	}else {
@@ -6037,7 +6838,7 @@ sub _include_users_ldap_2level {
     }
 
     do_log('debug2',"unbinded from LDAP server %s ",join(',',@{$host})) ;
-    do_log('debug2','%d new subscribers included from LDAP query',$total);
+    do_log('debug2','%d new users included from LDAP query',$total);
 
     return $total;
 }
@@ -6140,6 +6941,12 @@ sub _include_users_sql {
 	$u{'update_date'} = time;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
+	if ($default_user_options->{'mode_force'}) {
+	    $u{'reception'} = $default_user_options->{'reception'} if (defined $default_user_options->{'reception'});
+	    $u{'profile'} = $default_user_options->{'profile'} if (defined $default_user_options->{'profile'});
+	    $u{'info'} = $default_user_options->{'info'} if (defined $default_user_options->{'info'});
+	}
+
 	if ($tied) {
 	    $users->{$email} = join("\n", %u);
 	}else {
@@ -6149,7 +6956,7 @@ sub _include_users_sql {
     $sth->finish ;
     $dbh->disconnect();
 
-    do_log('debug2','%d included subscribers from SQL query', $total);
+    do_log('debug2','%d included users from SQL query', $total);
     return $total;
 }
 
@@ -6355,6 +7162,251 @@ sub _load_users_include2 {
     return \%users;
 }
 
+## Loads the list of admin users from an external include source
+sub _load_admin_users_include {
+    my $name = shift;
+    my $role = shift;
+    my $list = shift ;
+   
+    &do_log('debug2', 'List::_load_admin_users_include(%s) for list %s',$role, $name); 
+
+    my (%admin_users, $depend_on, $ref);
+    my $total = 0;
+    my $list_admin = $list->{'admin'};
+    my $dir = $list->{'dir'};
+
+    unless($list->{'admin'}{'user_data_source'} eq 'include2'){
+	&do_log('err', '_load_admin_users_include isn\'t defined when user_data_source is different than include2 for list %s',
+	 $list->{'name'}); 
+	return undef;
+    }
+
+    foreach my $entry (@{$list_admin->{$role."_include"}}) {
+    
+	next unless (defined $entry); 
+
+	my %option;
+	$option{'mode_force'} = 1; # to force option values in _include_..._query
+	$option{'reception'} = $entry->{'reception'} if (defined $entry->{'reception'});
+	$option{'profile'} = $entry->{'profile'} if (defined $entry->{'profile'} && ($role eq 'owner'));
+	
+
+      	my $include_file = &tools::get_filename('etc',"data_sources/$entry->{'source'}{'name'}\.incl",$list->{'domain'},$list);
+
+        unless (defined $include_file){
+	    &do_log('err', '_load_admin_users_include : the file %s.incl doesn\'t exist',$entry->{'source'}{'name'});
+	    return undef;
+	}
+	
+	my $include_admin_user = &_load_include_admin_user_file($list->{'domain'},$include_file);
+
+	foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
+	    last unless (defined $total);
+	    
+	    foreach my $incl (@{$include_admin_user->{$type}}) {
+		my $included;
+		
+		## get the list of admin users
+		## does it need to define a 'default_admin_user_option' ?
+		if ($type eq 'include_sql_query') {
+		    $included = _include_users_sql(\%admin_users, $incl,\%option); 
+		}elsif ($type eq 'include_ldap_query') {
+		    $included = _include_users_ldap(\%admin_users, $incl,\%option); 
+		}elsif ($type eq 'include_ldap_2level_query') {
+		    $included = _include_users_ldap_2level(\%admin_users, $incl,\%option); 
+		}elsif ($type eq 'include_remote_sympa_list') {
+		    $included = _include_users_remote_sympa_list(\%admin_users, $incl, $dir,$list_admin->{'domain'},\%option);
+		}elsif ($type eq 'include_list') {
+		    $depend_on->{$name} = 1 ;
+		    if (&_inclusion_loop ($name,$incl,$depend_on)) {
+			do_log('err','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
+		    }else{
+			$depend_on->{$incl};
+			$included = _include_users_list (\%admin_users, $incl, \%option);
+		    }
+		}elsif ($type eq 'include_file') {
+		    $included = _include_users_file (\%admin_users, $incl, \%option);
+		}
+		unless (defined $included) {
+		    &do_log('err', 'Inclusion %s %s failed in list %s', $role, $type, $name);
+		    $total = undef;
+		    last;
+		}
+		$total += $included;
+	    }
+	}
+
+	## If an error occured, return an undef value
+	unless (defined $total) {
+	    return undef;
+	}
+    }
+   
+    return \%admin_users;
+}
+
+
+# Load an include admin user file (xx.incl)
+sub _load_include_admin_user_file {
+    my ($robot, $file) = @_;
+     &do_log('debug2', 'List::_load_include_admin_user_file(%s,%s)',$robot, $file); 
+   
+    unless (open INCLUDE, $file) {
+	&do_log('info', 'Cannot open %s', $file);
+    }
+    my %include;
+    my (@paragraphs);
+
+    ## Just in case...
+    $/ = "\n";
+
+    ## Split in paragraphs
+    my $i = 0;
+    while (<INCLUDE>) {
+	if (/^\s*$/) {
+	    $i++ if $paragraphs[$i];
+	}else {
+	    push @{$paragraphs[$i]}, $_;
+	}
+    }
+    
+    for my $index (0..$#paragraphs) {
+	my @paragraph = @{$paragraphs[$index]};
+	
+	my $pname;
+	
+	## Clean paragraph, keep comments
+	for my $i (0..$#paragraph) {
+	    my $changed = undef;
+	    for my $j (0..$#paragraph) {
+		if ($paragraph[$j] =~ /^\s*\#/) {
+		    chomp($paragraph[$j]);
+		    push @{$include{'comment'}}, $paragraph[$j];
+		    splice @paragraph, $j, 1;
+		    $changed = 1;
+		}elsif ($paragraph[$j] =~ /^\s*$/) {
+		    splice @paragraph, $j, 1;
+		    $changed = 1;
+		}
+		
+		last if $changed;
+	    }
+	    
+	    last unless $changed;
+	}
+	
+	## Empty paragraph
+	next unless ($#paragraph > -1);
+	
+	## Look for first valid line
+	unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
+	    &do_log('info', 'Bad paragraph "%s" in %s', @paragraph, $file);
+	    next;
+	}
+	
+	$pname = $1;   
+	
+	unless(($pname eq 'include_list')||($pname eq 'include_remote_sympa_list')||($pname eq 'include_file')||
+	       ($pname eq 'include_ldap_query')||($pname eq 'include_ldap_2level_query')||($pname eq 'include_sql_query'))   {
+	    &do_log('info', 'Unknown parameter "%s" in %s', $pname, $file);
+	    next;
+	}
+	
+	## Uniqueness
+	if (defined $include{$pname}) {
+	    unless (($::pinfo{$pname}{'occurrence'} eq '0-n') or
+		    ($::pinfo{$pname}{'occurrence'} eq '1-n')) {
+		&do_log('info', 'Multiple parameter "%s" in %s', $pname, $file);
+	    }
+	}
+	
+	## Line or Paragraph
+	if (ref $::pinfo{$pname}{'file_format'} eq 'HASH') {
+	    ## This should be a paragraph
+	    unless ($#paragraph > 0) {
+		&do_log('info', 'Expecting a paragraph for "%s" parameter in %s', $pname, $file);
+	    }
+	    
+	    ## Skipping first line
+	    shift @paragraph;
+	    
+	    my %hash;
+	    for my $i (0..$#paragraph) {	    
+		next if ($paragraph[$i] =~ /^\s*\#/);
+		
+		unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
+		    &do_log('info', 'Bad line "%s" in %s',$paragraph[$i], $file);
+		}
+		
+		my $key = $1;
+		
+		unless (defined $::pinfo{$pname}{'file_format'}{$key}) {
+		    &do_log('info', 'Unknown key "%s" in paragraph "%s" in %s', $key, $pname, $file);
+		    next;
+		}
+		
+		unless ($paragraph[$i] =~ /^\s*$key\s+($::pinfo{$pname}{'file_format'}{$key}{'file_format'})\s*$/i) {
+		    &do_log('info', 'Bad entry "%s" in paragraph "%s" in %s', $paragraph[$i], $key, $pname, $file);
+		    next;
+		}
+	       
+		$hash{$key} = &_load_list_param($robot,$key, $1, $::pinfo{$pname}{'file_format'}{$key});
+	    }
+
+	    ## Apply defaults & Check required keys
+	    my $missing_required_field;
+	    foreach my $k (keys %{$::pinfo{$pname}{'file_format'}}) {
+
+		## Default value
+		unless (defined $hash{$k}) {
+		    if (defined $::pinfo{$pname}{'file_format'}{$k}{'default'}) {
+			$hash{$k} = &_load_list_param($robot,$k, 'default', $::pinfo{$pname}{'file_format'}{$k});
+		    }
+		}
+		## Required fields
+		if ($::pinfo{$pname}{'file_format'}{$k}{'occurrence'} eq '1') {
+		    unless (defined $hash{$k}) {
+			&do_log('info', 'Missing key "%s" in param "%s" in %s', $k, $pname, $file);
+			$missing_required_field++;
+		    }
+		}
+	    }
+
+	    next if $missing_required_field;
+
+	    ## Should we store it in an array
+	    if (($::pinfo{$pname}{'occurrence'} =~ /n$/)) {
+		push @{$include{$pname}}, \%hash;
+	    }else {
+		$include{$pname} = \%hash;
+	    }
+	}else {
+	    ## This should be a single line
+	    unless ($#paragraph == 0) {
+		&do_log('info', 'Expecting a single line for "%s" parameter in %s', $pname, $file);
+	    }
+
+	    unless ($paragraph[0] =~ /^\s*$pname\s+($::pinfo{$pname}{'file_format'})\s*$/i) {
+		&do_log('info', 'Bad entry "%s" in %s', $paragraph[0], $file);
+		next;
+	    }
+
+	    my $value = &_load_list_param($robot,$pname, $1, $::pinfo{$pname});
+
+	    if (($::pinfo{$pname}{'occurrence'} =~ /n$/)
+		&& ! (ref ($value) =~ /^ARRAY/)) {
+		push @{$include{$pname}}, $value;
+	    }else {
+		$include{$pname} = $value;
+	    }
+	}
+    }
+ 
+    close INCLUDE;
+
+   return \%include;
+}
+
 sub sync_include {
     my ($self) = shift;
     my $option = shift;
@@ -6516,6 +7568,313 @@ sub sync_include {
 }
 
 
+
+sub sync_include_admin {
+    my ($self) = shift;
+    my $option = shift;
+    
+    my $name=$self->{'name'};
+    &do_log('debug', 'List:sync_include_admin(%s)', $name);
+
+    unless($self->{'admin'}{'user_data_source'} eq 'include2'){
+	&do_log('err', 'sync_include_admin is not defined when user_data_source different than include2 for list %s ', $self->{'name'}); 
+	return undef;
+    }
+
+    ## don't care about listmaster role
+    foreach my $role ('owner','editor'){
+	
+	my $old_admin_users = {};
+        ## Load a hash with the old admin users
+	for (my $admin_user=$self->get_first_admin_user($role); $admin_user; $admin_user=$self->get_next_admin_user()) {
+	    $old_admin_users->{lc($admin_user->{'email'})} = $admin_user;
+	}
+	
+	## Load a hash with the new admin user list from an include source(s)
+	my $new_admin_users_include;
+	## Load a hash with the new admin user users from the list config
+	my $new_admin_users_config;
+	unless ($option eq 'purge') {
+	    
+	    $new_admin_users_include = _load_admin_users_include($name,$role, $self);
+	    
+	    ## If include sources were not available, do not update admin users
+	    ## Use DB cache instead
+	    unless (defined $new_admin_users_include) {
+		&do_log('err', 'Could not get %ss from an include source for list %s', $role, $name);
+		&List::send_notify_to_listmaster('sync_include_admin_failed', $self->{'domain'}, $name);
+		return undef;
+	    }
+
+	    $new_admin_users_config = _load_admin_users_config($name,$role,$self);
+	    
+	    unless (defined $new_admin_users_config) {
+		&do_log('err', 'Could not get %ss from config for list %s', $role, $name);
+		return undef;
+	    }
+	}
+	
+	my @add_tab;
+	my $admin_users_added = 0;
+	my $admin_users_updated = 0;
+	
+	## Get an Exclusive lock
+	
+	my $lock_file = $self->{'dir'}.'/include_admin_user.lock';
+	unless (open FH, ">>$lock_file") {
+	    &do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+	    return undef;
+	}
+	unless (flock (FH, LOCK_EX | LOCK_NB)) {
+	    &do_log('notice','Waiting for writing lock on %s', $lock_file);
+	    unless (flock (FH, LOCK_EX)) {
+		&do_log('err', 'Failed locking %s: %s', $lock_file, $!);
+		return undef;
+	    }
+	}
+	&do_log('debug2', 'Got lock for writing on %s', $lock_file);
+	
+	## Go through new admin_users_include
+	foreach my $email (keys %{$new_admin_users_include}) {
+	    
+	    # included and subscribed
+	    if (defined $new_admin_users_config->{$email}) {
+		my $param;
+		foreach my $p ('reception','gecos','info','profile') {
+		    #  config parameters have priority on include parameters in case of conflict
+		    $param->{$p} = $new_admin_users_config->{$email}{$p} if (defined $new_admin_users_config->{$email}{$p});
+		    $param->{$p} ||= $new_admin_users_include->{$email}{$p};
+		}
+
+                #Admin User was already in the DB
+		if (defined $old_admin_users->{$email}) {
+
+		    $param->{'included'} = 1;
+		    $param->{'id'} = $new_admin_users_include->{$email}{'id'};
+		    $param->{'subscribed'} = 1;
+		   
+		    my $param_update = &is_update_param($param,$old_admin_users->{$email});
+		    
+		    # updating
+		    if (defined $param_update) {
+			if (%{$param_update}) {
+			    &do_log('debug', 'List:sync_include_admin : updating %s %s to list %s',$role, $email, $name);
+			    $param_update->{'update_date'} = time;
+			    
+			    unless ($self->update_admin_user($email, $role,$param_update)) {
+				&do_log('err', 'List:sync_include_admin(%s): Failed to update %s %s', $name,$role,$email);
+				next;
+			    }
+			    $admin_users_updated++;
+			}
+		    }
+		    #for the next foreach (sort of new_admin_users_config that are not included)
+		    delete ($new_admin_users_config->{$email});
+		    
+		# add a new included and subscribed admin user 
+		}else {
+		    &do_log('debug2 ', 'List:sync_include_admin: adding %s %s to list %s',$email,$role, $name);
+		    
+		    foreach my $key (keys %{$param}) {  
+			$new_admin_users_config->{$email}{$key} = $param->{$key};
+		    }
+		    $new_admin_users_config->{$email}{'included'} = 1;
+		    $new_admin_users_config->{$email}{'subscribed'} = 1;
+		    push (@add_tab,$new_admin_users_config->{$email});
+		    
+                    #for the next foreach (sort of new_admin_users_config that are not included)
+		    delete ($new_admin_users_config->{$email});
+		}
+		
+	    # only included
+	    }else {
+		my $param = $new_admin_users_include->{$email};
+
+                #Admin User was already in the DB
+		if (defined($old_admin_users->{$email}) ) {
+
+		    $param->{'included'} = 1;
+		    $param->{'id'} = $new_admin_users_include->{$email}{'id'};
+		    $param->{'subscribed'} = 0;
+
+		    my $param_update = &is_update_param($param,$old_admin_users->{$email});
+		   
+		    # updating
+		    if (defined $param_update) {
+			if (%{$param_update}) {
+			    &do_log('debug', 'List:sync_include_admin : updating %s %s to list %s', $role, $email, $name);
+			    $param_update->{'update_date'} = time;
+			    
+			    unless ($self->update_admin_user($email, $role,$param_update)) {
+				&do_log('err', 'List:sync_include_admin(%s): Failed to update %s %s', $name, $role,$email);
+				next;
+			    }
+			    $admin_users_updated++;
+			}
+		    }
+		# add a new included admin user 
+		}else {
+		    &do_log('debug2 ', 'List:sync_include_admin: adding %s %s to list %s', $role, $email, $name);
+		    
+		    foreach my $key (keys %{$param}) {  
+			$new_admin_users_include->{$email}{$key} = $param->{$key};
+		    }
+		    $new_admin_users_include->{$email}{'included'} = 1;
+		    push (@add_tab,$new_admin_users_include->{$email});
+		}
+	    }
+	}   
+
+	## Go through new admin_users_config (that are not included : only subscribed)
+	foreach my $email (keys %{$new_admin_users_config}) {
+	    
+	    my $param = $new_admin_users_config->{$email};
+	    
+	    #Admin User was already in the DB
+	    if (defined($old_admin_users->{$email}) ) {
+
+		$param->{'included'} = 0;
+		$param->{'id'} = '';
+		$param->{'subscribed'} = 1;
+		my $param_update = &is_update_param($param,$old_admin_users->{$email});
+
+		# updating
+		if (defined $param_update) {
+		    if (%{$param_update}) {
+			&do_log('debug', 'List:sync_include_admin : updating %s %s to list %s', $role, $email, $name);
+			$param_update->{'update_date'} = time;
+			
+			unless ($self->update_admin_user($email, $role,$param_update)) {
+			    &do_log('err', 'List:sync_include_admin(%s): Failed to update %s %s', $name, $role, $email);
+			    next;
+			}
+			$admin_users_updated++;
+		    }
+		}
+	    # add a new subscribed admin user 
+	    }else {
+		&do_log('debug2 ', 'List:sync_include_admin: adding %s %s to list %s', $role, $email, $name);
+		
+		foreach my $key (keys %{$param}) {  
+		    $new_admin_users_config->{$email}{$key} = $param->{$key};
+		}
+		$new_admin_users_config->{$email}{'subscribed'} = 1;
+		push (@add_tab,$new_admin_users_config->{$email});
+	    }
+	}
+	
+	if ($#add_tab >= 0) {
+	    unless( $admin_users_added = $self->add_admin_user($role,@add_tab ) ) {
+		&do_log('err', 'List:sync_include_admin(%s): Failed to add new %ss',  $role, $name);
+		return undef;
+	    }
+	}
+	
+	if ($admin_users_added) {
+	    &do_log('notice', 'List:sync_include_admin(%s): %d %s(s) added',
+		    $name, $admin_users_added, $role);
+	}
+	
+	&do_log('notice', 'List:sync_include_admin(%s): %d %s(s) updated', $name, $admin_users_updated, $role);
+
+	## Go though old list of admin users
+	my $admin_users_removed = 0;
+	my @deltab;
+	
+	foreach my $email (keys %$old_admin_users) {
+	    unless (defined($new_admin_users_include->{$email}) || defined($new_admin_users_config->{$email})) {
+		&do_log('debug2 ', 'List:sync_include_admin: removing %s %s to list %s', $role, $email, $name);
+		push(@deltab, $email);
+	    }
+	}
+	
+	if ($#deltab >= 0) {
+	    unless($admin_users_removed = $self->delete_admin_user($role,@deltab)) {
+		&do_log('err', 'List:sync_include_admin(%s): Failed to delete %s %s',
+			$name, $role, $admin_users_removed);
+		return undef;
+	    }
+	    &do_log('notice', 'List:sync_include_admin(%s): %d %s(s) removed',
+		    $name, $admin_users_removed, $role);
+	}
+
+	## Release lock
+	flock(FH,LOCK_UN);
+	close FH;
+	&do_log('debug2', 'Release lock on %s', $lock_file);
+    }	
+
+   
+    unless ( $self->get_nb_owners) {
+	&do_log('err', 'List:sync_include_admin(%s) failed  : no owner defined for the list',$self->{'name'});
+	&List::send_notify_to_listmaster('sync_include_admin_failed', $self->{'domain'}, $name);
+	return undef;
+    }
+
+
+    $self->{'last_sync_admin_user'} = time;
+    $self->savestats();
+ 
+    return 1;
+}
+
+## Load param admin users from the config of the list
+sub _load_admin_users_config {
+    my $name = shift;
+    my $role = shift; 
+    my $list = shift;
+    my %admin_users;
+
+    &do_log('debug2', 'List::_load_admin_users_config(%s) for list %s',$role, $name);  
+
+    foreach my $entry (@{$list->{'admin'}{$role}}) {
+	my $email = $entry->{'email'};
+	my %u;
+  
+	$u{'email'} = $email;
+	$u{'reception'} = $entry->{'reception'};
+	$u{'gecos'} = $entry->{'gecos'};
+	$u{'info'} = $entry->{'info'};
+	$u{'profile'} = $entry->{'profile'} if ($role eq 'owner');
+ 
+	$admin_users{$email} = \%u;
+    }
+    return \%admin_users;
+}
+
+## return true if new_param has changed from old_param
+#  $new_param is changed to return only entries that need to
+# be updated (only deals with admin user parameters, editor or owner)
+sub is_update_param {
+    my $new_param = shift;
+    my $old_param = shift;
+    my $resul = {};
+    my $update = 0;
+
+    &do_log('debug2', 'List::is_update_param ');  
+
+    foreach my $p ('reception','gecos','info','profile','id','included','subscribed') {
+	if (defined $new_param->{$p}) {
+	    if ($new_param->{$p} ne $old_param->{$p}) {
+		$resul->{$p} = $new_param->{$p};
+		$update = 1;
+	    }
+	}else {
+	    if (defined $old_param->{$p} && ($old_param->{$p} ne '')) {
+		$resul->{$p} = '';
+		$update = 1;
+	    }
+	}
+    }
+    if ($update) {
+	return $resul;
+    }else {
+	return undef;
+    }
+}
+
+
+
 sub _inclusion_loop {
 
     my $name = shift;
@@ -6589,10 +7948,12 @@ sub _save_stats_file {
     my $stats = shift;
     my $total = shift;
     my $last_sync = shift;
-    do_log('debug2', 'List::_save_stats_file(%s, %d, %d)', $file, $total,$last_sync );
+    my $last_sync_admin_user = shift;
+    
+    do_log('debug2', 'List::_save_stats_file(%s, %d, %d, %d)', $file, $total,$last_sync,$last_sync_admin_user );
     
     open(L, "> $file") || return undef;
-    printf L "%d %.0f %.0f %.0f %d %d\n", @{$stats}, $total, $last_sync;
+    printf L "%d %.0f %.0f %.0f %d %d %d\n", @{$stats}, $total, $last_sync, $last_sync_admin_user;
     close(L);
 }
 
@@ -7066,13 +8427,30 @@ sub probe_db {
 		      'subscribed_subscriber' => "enum('0','1')",
 		      'included_subscriber' => "enum('0','1')",
 		      'include_sources_subscriber' => 'varchar(50)',
-		      'bounce_score_subscriber' => 'smallint(6)'}
+		      'bounce_score_subscriber' => 'smallint(6)'},
+		     'admin_table' =>
+		     {'list_admin' => 'varchar(50)',
+		      'user_admin' => 'varchar(100)',
+		      'role_admin' => "enum('listmaster','owner','editor')",
+		      'date_admin' => 'datetime',
+		      'update_admin' => 'datetime',
+		      'reception_admin' => 'varchar(20)',
+		      'comment_admin' => 'varchar(150)',
+		      'subscribed_admin' => "enum('0','1')",
+		      'included_admin' => "enum('0','1')",
+		      'include_sources_admin' => 'varchar(50)',
+		      'info_admin' =>  'varchar(150)',
+		      'profile_admin' => "enum('privileged','normal')"}
 		     );
 
     my %not_null = ('email_user' => 1,
 		    'list_subscriber' => 1,
 		    'user_subscriber' => 1,
-		    'date_subscriber' => 1);
+		    'date_subscriber' => 1,
+		    'list_admin' => 1,
+		    'user_admin' => 1,
+		    'role_admin' => 1,
+		    'date_admin' => 1);
 
     ## Is the Database defined
     unless ($Conf{'db_name'}) {
@@ -7202,7 +8580,7 @@ sub probe_db {
 	$checked{$table} = 1;
     }
     
-    foreach $table('user_table', 'subscriber_table') {
+    foreach $table('user_table', 'subscriber_table', 'admin_table') {
 	unless ($checked{$table} || $checked{'public.' . $table}) {
 	    &do_log('err', 'Table %s not found in database %s', $table, $Conf{'db_name'});
 	    return undef;
@@ -7252,6 +8630,19 @@ sub probe_db {
 			}
 		    }
 
+		      if ($f eq 'user_admin') {
+			&do_log('info', 'Setting list_admin,user_admin,role_admin fields as PRIMARY');
+			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY (list_admin,user_admin,role_admin)")) {
+			    &do_log('err', 'Could not set field field \'list_admin,user_admin,role_admin\' as PRIMARY KEY, table\'%s\'.', $t);
+			    return undef;
+			}
+			unless ($dbh->do("ALTER TABLE $t ADD INDEX (user_admin,list_admin,role_admin)")) {
+			    &do_log('err', 'Could not set INDEX on field \'user_admin,list_admin,role_admin\', table\'%s\'.', $t);
+			    return undef;
+			}
+		    }
+
+		    
 		    &do_log('info', 'Field %s added to table %s', $f, $t);
 
 		    ## Remove temporary DB field
@@ -7367,7 +8758,14 @@ sub maintenance {
 
     ## Migration to tt2
     unless (&tools::higher_version($previous_version, '4.2b')) {
-	&do_log('notice','Migrating templates to TT2 format...');
+
+	&do_log('notice','Initializing the new admin_table...');
+	foreach my $l ( &List::get_lists('*') ) {
+	    my $list = new List ($l); 
+	    $list->sync_include_admin();
+	}
+
+	&do_log('notice','Migrating templates to TT2 format...');	
 	
 	unless (open EXEC, '--SCRIPTDIR--/tpl2tt2.pl|') {
 	    &do_log('err','Unable to run --SCRIPTDIR--/tpl2tt2.pl');
@@ -7622,6 +9020,11 @@ sub _apply_defaults {
 	    $::pinfo{$p}{'format'} = $tools::regexp{'task'};
 	}
 
+	## Datasource format
+	if ($::pinfo{$p}{'datasource'}) {
+	    $::pinfo{$p}{'format'} = $tools::regexp{'datasource'};
+	}
+
 	## Enumeration
 	if (ref ($::pinfo{$p}{'format'}) eq 'ARRAY') {
 	    $::pinfo{$p}{'file_format'} ||= join '|', @{$::pinfo{$p}{'format'}};
@@ -7660,6 +9063,11 @@ sub _apply_defaults {
 	    ## Task format
 	    if (ref($::pinfo{$p}{'format'}{$k}) && $::pinfo{$p}{'format'}{$k}{'task'}) {
 		$::pinfo{$p}{'format'}{$k}{'format'} = $tools::regexp{'task'};
+	    }
+
+	    ## Datasource format
+	    if (ref($::pinfo{$p}{'format'}{$k}) && $::pinfo{$p}{'format'}{$k}{'datasource'}) {
+		$::pinfo{$p}{'format'}{$k}{'format'} = $tools::regexp{'datasource'};
 	    }
 
 	    ## Enumeration
@@ -7707,7 +9115,8 @@ sub _save_list_param {
     next unless (defined ($p));
 
     if (defined ($::pinfo{$key}{'scenario'}) ||
-        defined ($::pinfo{$key}{'task'})) {
+        defined ($::pinfo{$key}{'task'}) ||
+	defined ($::pinfo{$key}{'datasource'})) {
 	next if ($p->{'name'} eq 'default');
 
 	printf $fd "%s %s\n", $key, $p->{'name'};
@@ -7783,6 +9192,8 @@ sub _load_list_param {
 	$value =~ y/,/_/;
 	$value = &List::_load_scenario_file ($p->{'scenario'},$robot, $value, $directory);
     }elsif ($p->{'task'}) {
+	$value = {'name' => $value};
+    }elsif ($p->{'datasource'}) {
 	$value = {'name' => $value};
     }
 
@@ -8712,7 +10123,7 @@ sub remove_bouncers {
     }
 
     unless (&delete_user($self,@$reftab)){
-      &do_log('info','error while calling sub delete_users');
+      &do_log('info','error while caling sub delete_users');
       return undef;
     }
     return 1;
@@ -8727,7 +10138,7 @@ sub notify_bouncers{
 
     foreach my $user (@$reftab){
  	&do_log('notice','Notifying bouncing subsrciber of list %s : %s', $self->{'name'}, $user);
-	$self->send_notify_to_subscriber('auto_notify_bouncers',$user);
+	$self->sendnotify_to_subscriber('auto_notify_bouncers',$user);
     }
     return 1;
 }

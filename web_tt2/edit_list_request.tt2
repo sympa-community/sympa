@@ -89,7 +89,7 @@
 	<dd>
 
 	[% IF p.type == 'paragraph' %]
-	<!-- Paragraph -->
+	<!-- ParagrapH -->
       	  [% FOREACH key = o.value %]
 	    [% IF key.may_edit != 'hidden' %]
  	      [% IF key.title %]
@@ -118,6 +118,27 @@
 	            [% END %]
 	          [% END %]
 	        [% END %]
+
+              [% ELSIF key.type == 'datasource' %]
+              <!-- Datasource -->
+                [% IF key.may_edit == 'write' %]
+		  <select name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
+	            [% FOREACH source = key.value %]
+	             <option value="[% source.value.name %]"
+	             [% IF source.value.selected == '1' %]
+		       selected="selected"
+	             [% END %]
+	             >[% source.value.title %]</option>
+	            [% END %]
+	          </select>
+	        [% ELSIF key.may_edit == 'read' %]
+	          [% FOREACH source = key.value %]
+	            [% IF source.value.selected == '1' %]
+	              [% source.value.title %] ([% source.value.name %])
+		      <input type="hidden" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% source.value.name %]" />
+	            [% END %]
+	          [% END %]
+	        [% END %]	      
 
 	      [% ELSE %]
 	      <!-- Scalar -->
@@ -194,6 +215,26 @@
 	[% END %]
       [% END %]
 
+    [% ELSIF p.type == 'datasource' %]
+    <!-- Datasource -->
+      [% IF p.may_edit == 'write' %]
+	<select name="single_param.[% p.name %].name">
+	  [% FOREACH source = p.value %]
+	  <option value="[% source.value.name %]"
+	     [% IF source.value.selected == '1' %]
+		selected="selected"
+	     [% END %]
+	  >[% source.value.title %] ([% source.value.name %])</option>
+	  [% END %]
+	</SELECT>
+      [% ELSIF p.may_edit == 'read' %]
+	[% FOREACH source = p.value %]
+	  [% IF source.value.selected == '1' %]
+	    [% source.value.title %] ([% source.value.name %])
+	  [% END %]
+	[% END %]
+      [% END %]
+
     [% ELSIF p.type == 'paragraph' %]
     <!-- Paragraph -->
       [% FOREACH key = p.value %]
@@ -240,6 +281,26 @@
 	      [% FOREACH task = key.value %]
 	        [% IF task.value.selected == '1' %]
 		  [% task.value.title %] ([% task.value.name %])
+	        [% END %]
+	      [% END %]
+	    [% END %]
+
+	  [% ELSIF key.type == 'datasource' %]
+	  <!-- Datasource -->
+	    [% IF key.may_edit == 'write' %]
+	      <select name="single_param.[% p.name %].[% key.name %].name">
+	        [% FOREACH source = key.value %]
+	          <option value="[% source.name %]"
+	          [% IF source.value.selected == '1' %]
+		    selected="selected"
+	          [% END %]
+	          >[% source.value.title %] ([% source.value.name %])</option>
+	        [% END %]
+	      </select>
+	    [% ELSIF key.may_edit == 'read' %]
+	      [% FOREACH source = key.value %]
+	        [% IF source.value.selected == '1' %]
+		  [% source.value.title %] ([% source.value.name %])
 	        [% END %]
 	      [% END %]
 	    [% END %]

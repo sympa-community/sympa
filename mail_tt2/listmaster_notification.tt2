@@ -34,6 +34,11 @@ Subject: [% FILTER qencode %][%|loc(param0)%]subscribers update failed for list 
 [%|loc%]Sympa could not include subscribers from external data sources ; the
 database or LDAP directory might be unreachable.[%END%] 
 [%|loc%]Check Sympa log files for more precise information[%END%]
+[% ELSIF type == 'sync_include_admin_failed' %]
+Subject: [% FILTER qencode %][%|loc(param0)%]admins update failed for list %1[%END%][%END%]
+
+[%|loc%]Sympa could not include admins from external data sources ; the database or LDAP directory might be unreachable. 
+Check Sympa log files for more precise information[%END%]
 [% ELSIF type == 'automatic_bounce_management' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 automatic bounce management[%END%][%END%]
 

@@ -257,8 +257,8 @@ in a single software package, including:
 	to the editor with a one-time secret numeric key that will be used by the
         editor to \textit {reject} or \textit {distribute} it.
         For details about the different sending modes, refer to the
-        \lparam {send} parameter (\ref {par-send}, page~\pageref
-        {par-send}). The sending process configuration (as well as most other list
+        \lparam {send} parameter (\ref {par-send}, page~\pageref {par-send}). 
+	The sending process configuration (as well as most other list
 	operations) is defined using  an \textbf {authorization scenario}. Any listmaster
         can define new authorization scenarios in order to complement the 20
 	predefined configurations included in the distribution. \\
@@ -307,9 +307,9 @@ in a single software package, including:
         \end {itemize}
 	(See \ref {WWSympa}, page~ \pageref {WWSympa})
 
-    \item \textbf {RDBMS} : the internal subscriber data structure can be stored in a
+    \item \textbf {RDBMS} : the internal subscriber and administrative data structure can be stored in a
         database or, for compatibility with versions 1.x, in text
-        files. The introduction of databases came out of the
+        files for subscriber data. The introduction of databases came out of the
         \WWSympa project.  The database ensures a secure access to
         shared data. The PERL database API \perlmodule {DBI}/\perlmodule {DBD} enables
         interoperability with various \textindex{RDBMS} (\textindex{MySQL}, \textindex{PostgreSQL},
@@ -324,7 +324,7 @@ in a single software package, including:
     	accepting \textindex {SQL} queries, or from an \textindex {LDAP} directory. In the interest
 	of reasonable response times, \Sympa retains the data source in an
 	internal cache controlled by a TTL (Time To Live) parameter.
-	(See ref {include-ldap-query}, page~\pageref {include-ldap-query})
+	(See \ref {include-ldap-query}, page~\pageref {include-ldap-query})
 
     \item \textbf {\textindex {LDAP authentication}}:  via uid and emails stored 
       	in LDAP Directories.  Alternative email addresses, extracted from LDAP 
@@ -551,11 +551,14 @@ a virtual robot or for the whole site.
 
 	\item \dir {[ETCDIR]/scenari/}\\
 	This directory will contain your authorization scenarios.
-	If you don't know what the hell an authorization scenario is, refer to \ref {scenarios}\ref {scenarios}, 
-	page~\pageref {scenarios}. Those authorization scenarios are default scenarios but you may look at
+	If you don't know what the hell an authorization scenario is, refer to \ref {scenarios},page~\pageref {scenarios}. Those authorization scenarios are default scenarios but you may look at
         \dir {[ETCDIR]/\samplerobot/scenari/} for default scenarios of \samplerobot
         virtual robot and \dir {[EXPL_DIR]/\samplelist/scenari} for scenarios
         specific to a particular list 
+
+	\item \dir {[ETCDIR]/data\_sources/}\\
+	This directory will contain your .incl files (see \ref {data-inclusion-file}, page~\pageref {data-inclusion-file}). 
+	For the moment it only deals with files requiered by paragraphs \lparam {owner\_include} and \lparam {editor\_include} in the config file.
 
 	\item \dir {[ETCDIR]/list\_task\_models/}\\
 	This directory will store your own list task models (see \ref {tasks}, page~\pageref {tasks}).	
@@ -780,7 +783,7 @@ detail in later sections.
     \item installation of DB Berkeley module (already installed on
       most UNIX systems)
 
-    \item installing a \textindex{RDBMS} (\textindex{Oracle}, \textindex{MySQL}, \textindex{Sybase} or \textindex{PostgreSQL}) and creating \Sympa's Database. This is required for using the web interface for \Sympa. Please refers to \"\Sympa and its database\" section (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
+    \item installing a \textindex{RDBMS} (\textindex{Oracle}, \textindex{MySQL}, \textindex{Sybase} or \textindex{PostgreSQL}) and creating \Sympa's Database. This is required for using the web interface for \Sympa. Please refers to \Sympa and its database section (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
 
     \item installation of
 	\textindex{CPAN}
@@ -2356,13 +2359,15 @@ Currently you can use one of the following RDBMS : MySQL, PostgreSQL, Oracle, Sy
 requires only a few changes in the code, since the API used, \htmladdnormallinkfoot {DBI} {http://www.symbolstone.org/technology/perl/DBI/} 
 (DataBase Interface), has DBD (DataBase Drivers) for many RDBMS.
 
-Sympa stores two kind of information in the database, each in one table :
+Sympa stores three kind of information in the database, each in one table :
 \begin {itemize}
 
   \item User preferences and passwords are stored in the \textindex {user\_table} table
 
-  \item List subscription information are stored in the \textindex {subscriber\_table} table, along with subscription options.
+  \item List subscription informations are stored in the \textindex {subscriber\_table} table, along with subscription options.
   This table also contains the cache for included users (if using include2 mode).
+
+  \item List administrative informations are stored in the \textindex {admin\_table} table if using include2 mode, along with owner and editor options. This table also contains the cache for included owners and editors.
 
 \end {itemize}
 
@@ -2400,6 +2405,11 @@ real name, password) and his/her subscription options (list
 concerned, date of subscription, reception option, visibility 
 option). This results in a separation of the data into two tables :
 the user\_table and the subscriber\_table, linked by a user/subscriber e-mail.
+
+The table concerning owners and editors, the admin\_table, is made on the same way as 
+the subscriber\_table but is used only in include2 mode. It constains owner and editor 
+options (list concerned, administrative role, date of ``subscription'', reception option, 
+private info, gecos and profile option for owners).
 
 \subsection {Database creation}
 
@@ -2508,11 +2518,11 @@ the \texttt {FastCgiServer} Apache configuration directive). In this case, or if
 \section {Management of the include cache}
 \label {include2-cache}
 
-You may dynamically add a list of users to a list with Sympa's \textbf {include2} user data source. Sympa is able to query
+You may dynamically add a list of subscribers, editors or owners to a list with Sympa's \textbf {include2} user data source. Sympa is able to query
 multiple data sources (RDBMS, LDAP directory, flat file, a local list, a remote list) to build a mailing list. 
 
-Sympa used to manage the cache of such \textit {included} users in a DB File (\textbf {include} mode) but now stores
-them in the database (\textbf {include2} mode). These changes brought the following advantages :
+Sympa used to manage the cache of such \textit {included} subscribers in a DB File (\textbf {include} mode) but now stores
+subscribers, editors and owners in the database (\textbf {include2} mode). These changes brought the following advantages :
 \begin {itemize}
 
     \item Sympa processes are smaller when dealing with big mailing lists (in include mode)
@@ -2535,8 +2545,7 @@ them in the database (\textbf {include2} mode). These changes brought the follow
 
 \section {Extending database table format}
 
-You can easily add other fields to \textbf {subscriber\_table} and
-\textbf {user\_table}, they will not disturb \Sympa because it lists
+You can easily add other fields to the three tables, they will not disturb \Sympa because it lists
 explicitely the field it expects in SELECT queries.
 
 Moreover you can access these database fields from within \Sympa
@@ -4334,10 +4343,9 @@ directory ; your site web templates in \tildedir {[ETCDIR]/web\_tt2} directory.
 Note that web colors are defined in \Sympa's main Makefile (see \ref {makefile},
 page~\pageref {makefile}).
 
-
 \section {Sharing data with other applications}
 
-You may extract subscribers for a list from any of :
+You may extract subscribers, owners and editors for a list from any of :
 \begin{itemize}
 
 \item a text file
@@ -4348,10 +4356,9 @@ You may extract subscribers for a list from any of :
 
 \end{itemize}
 
-See lparam {user\_data\_source} liste parameter \ref {user-data-source}, page~\pageref {user-data-source}.
+See \lparam {user\_data\_source} liste parameter \ref {user-data-source}, page~\pageref {user-data-source}.
 
-The \textbf {subscriber\_table} and \textbf {user\_table} can have more fields than
-the one used by \Sympa. by defining these additional fields, they will be available
+The three tables can have more fields than the one used by \Sympa, by defining these additional fields, they will be available
 from within \Sympa's authorization scenarios and templates (see \ref {db-additional-subscriber-fields}, 
 page~\pageref {db-additional-subscriber-fields} and \ref {db-additional-user-fields}, page~\pageref {db-additional-user-fields}).
 
@@ -4864,6 +4871,31 @@ It can also be referenced from template files for service messages.
 \file {[EXPL_DIR]/\samplelist/homepage} is the HTML text 
 on the \WWSympa info page for the list.
 
+\section {Data inclusion file}
+\label{data-inclusion-file}
+\index{data-inclusion-file}
+
+Sympa will use these files only if the list is configured in \texttt {include2} \lparam{user\_data\_source} mode.
+Every file has the .incl extension. 
+More over, these files must be declared in paragraphs \lparam {owner\_include} or \lparam {editor\_inlude} in the list configuration file 
+without the .incl extension (see \ref {list-configuration-param}, page~\pageref {list-configuration-param}).
+
+Sympa looks for them in the following order :
+\begin {enumerate}
+ 	\item \dir {[EXPL_DIR]/\samplelist/data\_sources/\texttt{<}file\texttt{>}.incl}. 
+	\item \dir {[ETCDIR]/data\_sources/\texttt{<}file\texttt{>}.incl}. 
+	\item \dir {[ETCDIR]/\samplerobot/data\_sources/\texttt{<}file\texttt{>}.incl}.
+\end {enumerate} 
+
+These files are used by Sympa to load administrative data in a relational database :
+Owners or editors are defined \emph {intensively} (definition of criteria owners or editors must satisfy).  
+Includes can be performed by extracting e-mail addresses using an \textindex {SQL} or \textindex {LDAP} query, or 
+by including other mailing lists.
+
+A data inclusion file is composed of pararaphs separated by blank lines and introduced by a keyword.
+Valid paragraphs are \lparam {include\_file}, \lparam {include\_list}, \lparam {include\_remote\_sympa\_list}, 
+\lparam {include\_sql\_query} and \lparam {include\_ldap\_query}. They are described in the list creation section, \ref {list-configuration-param}, page~\pageref {list-configuration-param}.
+
 \section {List template files}
 \label{list-tpl}
 \index{templates, list}
@@ -5277,7 +5309,7 @@ The configuration file is composed of paragraphs separated by blank
 lines and introduced by a keyword.
 
 Even though there are a very large number of possible parameters, the minimal list
-definition is very short. The only required parameters are  \lparam {owner} and \lparam {subject}.
+definition is very short. The only required parameters are \lparam {owner} (or \lparam {owner\_include}) and \lparam {subject}.
 All other parameters have a default value.
 
 \begin {quote}
@@ -5295,6 +5327,8 @@ blank lines and BLANK LINES ONLY !
 
 The \file {config} file contains one \lparam {editor} paragraph
 per \textindex {moderator} (or editor).
+It concerns static editor definition. For dynamic definition and more information about editors see~\ref {par-editor-include}, 
+page~\pageref {par-editor-include}.
 
 \textit {Example:} 
 
@@ -5315,6 +5349,29 @@ The \lparam {editor} parameter is also consulted in certain other cases
 
 The syntax of this directive is the same as that of the \lparam
 {owner} parameter (see~\ref {par-owner}, page~\pageref {par-owner}),
+even when several moderators are defined.
+
+
+\subsection {editor\_include}
+    \label {par-editor-include}
+    \index{data-inclusion-file}
+
+The \file {config} file contains one \lparam {editor\_include} paragraph
+per data inclusion file (see~\ref {data-inclusion-file}, page~\pageref {data-inclusion-file}).
+It concerns dynamic editor definition : inclusion of external data. For static editor definition and more information about moderation see~\ref {par-editor}, page~\pageref {par-editor}.
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+editor_include
+reception mail
+source myfile 
+\end{verbatim}
+\end {quote}
+
+The syntax of this directive is the same as that of the \lparam
+{owner\_include} parameter (see~\ref {par-owner-include}, page~\pageref {par-owner-include}),
 even when several moderators are defined.
 
 \subsection {host}
@@ -5350,8 +5407,8 @@ for available languages.
 \subsection {owner}
     \label {par-owner}
 
-
 The \file {config} file contains one \lparam {owner} paragraph per owner. 
+It concerns static owner definition. For dynamic definition see~\ref {par-owner-include}, page~\pageref {par-owner-include}.
 
 \textit {Example:} 
 
@@ -5417,6 +5474,51 @@ giving details regarding the owner's characteristics:
 
 \end {itemize}
 
+
+\subsection{owner\_include}
+    \label {par-owner-include}
+    \index{data-inclusion-file}
+
+The \file {config} file contains one \lparam {owner\_include} paragraph per data inclusion file 
+(see~\ref {data-inclusion-file}, page~\pageref {data-inclusion-file}.
+It concerns dynamic owner definition : inclusion of external data. For static owner definition and more information 
+about owners see~\ref {par-owner}, page~\pageref {par-owner}.
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+owner_include
+source myfile
+reception nomail
+profile normal
+\end{verbatim}
+\end {quote}
+
+The \lparam {owner\_include} directive is followed by one or several lines
+giving details regarding the owner(s) included characteristics:
+
+\begin {itemize}
+
+    \item  \lparam {source myfile}
+      
+        This is an mandatory field : it indicates the data inclusion file 
+	myfile.incl (but declared myfile).
+
+    \item  \lparam {reception nomail}
+
+        Optional attribute for owner(s) who does not wish to receive
+        mails.  
+
+    \item \lparam {profile} \texttt {privileged} \texttt{|}
+	                    \texttt {normal}
+
+	Profile of the owner(s).
+
+\end {itemize}
+
+
+
 \subsection {subject}
     \label {par-subject}
 
@@ -5473,7 +5575,7 @@ output generated in response to a \mailcmd {LISTS} command.
    \texttt {include2}
 
 Sympa allows the mailing list manager to choose how \Sympa loads
-subscriber data. Subscriber information can be stored in a text 
+subscriber and administartive data. User information can be stored in a text 
 file or relational database, or included from various external
 sources (list, flat file, result of \textindex {LDAP} or \textindex {SQL} query).
 
@@ -5514,7 +5616,8 @@ sources (list, flat file, result of \textindex {LDAP} or \textindex {SQL} query)
 
        This is a replacement for the \textindex {include} mode. In this mode, the members cache is no more maitained in
        a DB FIle but in the main database instead. The behavior of the cache is detailed in the database chapter 
-       (see~\ref {include2-cache}, page~\pageref {include2-cache}).
+       (see~\ref {include2-cache}, page~\pageref {include2-cache}). This is the only mode that run the database for administrative data 
+       in the database
 
 
 \end {itemize}
@@ -7459,6 +7562,9 @@ provide various features based on access to one or more LDAP directories :
 	  see ~\ref {named-filters}, page~\pageref {named-filters}
 	
  	\item{LDAP extraction of list subscribers (see ~\ref {par-user-data-source})}\\         
+
+	\item{LDAP extraction of list owners or editors}\\  
+	  see ~\ref {data-inclusion-file}, page~\pageref {data-inclusion-file}
 
 	\item{mail aliases stored in LDAP}\\
 	  see ~\ref {ldap-aliases}, page~\pageref {ldap-aliases}

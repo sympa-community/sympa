@@ -123,6 +123,12 @@
 [% ELSIF error.msg == 'synchro_failed' %]
 [%|loc%]Data have changed on disk. Cannot apply your changes[%END%] 
 
+[% ELSIF error.msg == 'sync_include_admin_failed' %]
+[%|loc%]Loading admins failed[%END%] 
+
+[% ELSIF error.msg == 'no_owner_defined' %]
+[%|loc%]There is not any owner defined for the list[%END%] 
+
 [% ELSIF error.msg == 'cannot_overwrite' %] 
 [%|loc(error.path)%]Cannot overwrite file %1[%END%] : [% error.reason %]
 

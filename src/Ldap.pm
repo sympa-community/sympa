@@ -110,7 +110,8 @@ sub export_list{
 
     ##To record owner's and editor's email and gecos
     ## !! STRUCTURE LDAP A REVOIR
-    foreach my $element (@{$list->{'admin'}{'owner'}}){
+    my $owners = $list->get_owners();
+    foreach my $element (@{$owners}) {
 	next unless (defined $element->{'email'});
 	if (ref($element->{'email'})) {
 	    push(@owner_emails, @{$element->{'email'}});

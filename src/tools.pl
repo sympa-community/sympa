@@ -48,7 +48,8 @@ $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------"
 	   'listname' => '[a-z0-9][a-z0-9\-\.\+_]*',
 	   'sql_query' => '(SELECT|select).*',
 	   'scenario' => '[\w,\.\-]+',
-	   'task' => '\w+'
+	   'task' => '\w+',
+	   'datasource' => '[\w-]+'
 	   );
 
 my %openssl_errors = (1 => 'an error occurred parsing the command options',
@@ -1468,16 +1469,16 @@ sub write_pid {
 
     ## Create and write the pidfile
     unless (open(LOCK, "+>> $pidfile")) {
-	 fatal_err("Could not open %s, exiting", $pidfile);
+	 fatal_err('Could not open %s, exiting', $pidfile);
     } 
     unless (flock(LOCK, 6)) {
-	fatal_err("Could not lock %s, process is probably already running : %s", $pidfile, $!);
+	fatal_err('Could not lock %s, process is probably already running : %s', $pidfile, $!);
     }
     unless (open(LCK, "> $pidfile")) {
-	fatal_err("Could not open %s, exiting", $pidfile);
+	fatal_err('Could not open %s, exiting', $pidfile);
     }
     unless (truncate(LCK, 0)) {
-	fatal_err("Could not truncate %s, exiting.", $pidfile);
+	fatal_err('Could not truncate %s, exiting.', $pidfile);
     }
     
     print LCK "$pid\n";

@@ -1080,12 +1080,12 @@ sub purge_user_table {
 	    next unless defined($list);
 
 	    ## Owners
-	    foreach my $o (@{$list->{'admin'}{'owner'}}) {
+	    foreach my $o (@{$list->get_owners()}) {
 		$known_people{$o->{'email'}} = 1;
 	    }
 
 	    ## Editors
-	    foreach my $e (@{$list->{'admin'}{'editor'}}) {
+	    foreach my $e (@{$list->get_editors()}) {
 		$known_people{$e->{'email'}} = 1;
 	    }
 	    
@@ -1683,6 +1683,7 @@ sub sync_include {
     }    
 
     $list->sync_include();
+    $list->sync_include_admin();
     }
 
 ## Check if the provided filename matches a task

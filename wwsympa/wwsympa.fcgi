@@ -1297,9 +1297,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
  
 	 ## Owners
-	 foreach my $o (@{$list->{'admin'}{'owner'}}) {
+	 my $owners = $list->get_owners();
+	 foreach my $o (@{$owners}) {
 	     next unless $o->{'email'};
-
 	     $param->{'owner'}{$o->{'email'}}{'gecos'} = $o->{'gecos'};
 	     $param->{'owner'}{$o->{'email'}}{'mailto'} = &mailto($list,$o->{'email'},$o->{'gecos'});
 	     ($param->{'owner'}{$o->{'email'}}{'local'},$param->{'owner'}{$o->{'email'}}{'domain'}) = split ('@',$o->{'email'});
@@ -1310,7 +1310,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	 ## Editors
 	 if (defined $list->{'admin'}{'editor'}) {
-	     foreach my $e (@{$list->{'admin'}{'editor'}}) {
+	     my $editors = $list->get_editors();
+	     foreach my $e (@{$editors}) {
 		 next unless $e->{'email'};
 		 $param->{'editor'}{$e->{'email'}}{'gecos'} = $e->{'gecos'};
 		 $param->{'editor'}{$e->{'email'}}{'mailto'} = &mailto($list,$e->{'email'},$e->{'gecos'});
@@ -4999,7 +5000,8 @@ sub do_set_pending_list_request {
      }
 
      if ($in{'notify'}) {
-	 foreach my $i (@{$list->{'admin'}{'owner'}}) {
+	 my $owners = $list->get_owners();
+	 foreach my $i (@{$owners}) {
 	     ## Notify all listowners, even if reception is nomail
 	     next unless ($i->{'email'});
 	     if ($in{'status'} eq 'open') {
@@ -5889,7 +5891,7 @@ sub do_edit_list {
 	 my ($type, $name) = ($1, $2);
 
 	 ## Tag parameter as present in the form
-	 $name =~ /^([^\.]+)(\.|$)/;
+	$name =~ /([^\.]+)(\.|$)/;
 	 $edited_param->{$1} = 1;
 
 	 ## Parameter value
@@ -5921,6 +5923,12 @@ sub do_edit_list {
      ## Check changes & check syntax
      my (%changed, %delete);
      my @syntax_error;
+
+
+     ## getting changes about owners or editors
+     my $owner_update = 0;
+     my $editor_update = 0;	
+
      foreach my $pname (sort List::by_order keys %{$edited_param}) {
 	 
 	 my ($p, $new_p);
@@ -5959,7 +5967,7 @@ sub do_edit_list {
 
 	     ## Scenario
 	     ## Eg: 'subscribe'
-	     if ($pinfo->{$pname}{'scenario'} || $pinfo->{$pname}{'task'}) {
+	     if ($pinfo->{$pname}{'scenario'} || $pinfo->{$pname}{'task'} || $pinfo->{$pname}{'datasource'} ) {
 		 if ($p->[$i]{'name'} ne $new_p->[$i]{'name'}) {
 		     $changed{$pname} = 1; next;
 		 }
@@ -6064,6 +6072,14 @@ sub do_edit_list {
      ## Delete selected params
      foreach my $p (keys %delete) {
 
+	 if (($p eq 'owner') || ($p eq 'owner_include')) {
+	     $owner_update = 1;
+	 }
+
+	 if (($p eq 'editor') || ($p eq 'editor_include')) {
+	     $editor_update = 1;
+	 }
+
 	 ## Delete ALL entries
 	 unless (ref ($delete{$p})) {
 	     undef $new_admin->{$p};
@@ -6078,7 +6094,7 @@ sub do_edit_list {
      ## Update config in memory
 	 my $data_source_updated;
      foreach my $pname (keys %changed) {
-
+	 
 	 my @users;
 
 	 ## If datasource config changed
@@ -6143,6 +6159,14 @@ sub do_edit_list {
 
 	     $list->get_total();
 	     $list->{'mtime'}[1] = 0;
+
+	     if (($pname eq 'owner') || ($pname eq 'owner_include')){
+		 $owner_update = 1;
+	     }
+	     
+	     if (($pname eq 'editor') || ($pname eq 'editor_include')){
+		 $editor_update = 1;
+	     }
 	 }
      }
 
@@ -6167,6 +6191,26 @@ sub do_edit_list {
 	     &error_message('failed_to_include_members');
 	 }
      }
+
+     ## call sync_include_admin if there are changes about owners or editors and we're in mode include2
+     if ( ($list->{'admin'}{'user_data_source'} eq 'include2')) {
+	 unless ($list->sync_include_admin()) {
+	     &error_message('sync_include_admin_failed');
+	     &wwslog('info','do_edit_list: sync_include_admin() failed');
+	     return undef;
+	 }
+     }
+#($owner_update || $editor_update) &&
+     ## checking there is some owner(s)	in case of sync_include_admin not called
+     if (($owner_update || $data_source_updated) && ($list->{'admin'}{'user_data_source'} ne 'include2')) {
+
+	 unless ( $list->get_nb_owners()) {
+	     &error_message('no_owner_defined');
+	     &wwslog('info','do_edit_list: no owner defined for list %s',$list->{'name'});
+	     return undef;
+	 }
+     }
+
 
      ##Exportation to an Ldap directory
      if(($list->{'admin'}{'status'} eq 'open')){
@@ -6410,6 +6454,14 @@ sub do_edit_list {
 
 	     $p->{'value'} = $list_of_task;
 
+	 }elsif ($struct->{'datasource'}) {
+	     $p_glob->{'type'} = 'datasource';
+	     my $list_of_data_sources = $list->load_data_sources_list($robot);
+
+	     $list_of_data_sources->{$d->{'name'}}{'selected'} = 1;
+
+	     $p->{'value'} = $list_of_data_sources;
+
 	 }elsif (ref ($struct->{'format'}) eq 'HASH') {
 	     $p_glob->{'type'} = 'paragraph';
 	     unless (ref($d) eq 'HASH') {
@@ -6637,7 +6689,7 @@ sub do_edit_list {
 
      # if subscribtion are stored in database rewrite the database
      if ($list->{'admin'}{'user_data_source'} =~ /^database|include2$/) {
-	 &List::rename_list_db ($in{'list'},$in{'new_listname'});
+	 &List::rename_list_db ($list,$in{'new_listname'});
 	 &wwslog('debug',"do_rename_list :List::rename_list_db ($in{'list'},$in{'new_listname'} ");
      }
 
