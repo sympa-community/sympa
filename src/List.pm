@@ -991,10 +991,10 @@ sub load {
     }
     if ($robot) {
 	$self->{'domain'} = $robot ;
-	$self->{'dir'} = "$robot/$name";
+	$self->{'dir'} = "$Conf{'home'}/$robot/$name";
     }elsif((!($robot)) && (-d "$Conf{'home'}/$name") && (-f "$Conf{'home'}/$name/config")) {
 	$self->{'domain'} = $Conf{'host'};
-	$self->{'dir'} = "$name";
+	$self->{'dir'} = "$Conf{'home'}/$name";
     }else{
 	&do_log('info', 'No such list %s', $name);
 	return undef ;
