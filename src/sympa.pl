@@ -214,7 +214,7 @@ if ($signal ne 'hup' ) {
 
     ## Required on FreeBSD to change ALL IDs(effective UID + real UID + saved UID)
     &POSIX::setuid((getpwnam('--USER--'))[2]);
-    &POSIX::setgid((getpwnam('--GROUP--'))[2]);
+    &POSIX::setgid((getgrnam('--GROUP--'))[2]);
 
     # Sets the UMASK
     umask(oct($Conf{'umask'}));
