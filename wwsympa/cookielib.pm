@@ -10,6 +10,8 @@ use POSIX;
 use CGI::Cookie;
 use Log;
 
+use strict vars;
+
 ## Returns user information extracted from the cookie
 sub check_cookie {
     my $http_cookie = shift;
@@ -212,7 +214,7 @@ sub set_cookie_extern {
     my $value;
 
     my @mails ;
-    foreach $mail (keys %alt_emails) {
+    foreach my $mail (keys %alt_emails) {
 	my $string = $mail.':'.$alt_emails{$mail};
 	push(@mails,$string);
     }
