@@ -1033,14 +1033,12 @@ sub new {
     ## Lowercase the list name.
     $name =~ tr/A-Z/a-z/;
     
-    my $regx = $Conf{'robots'}{$robot}{'list_check_suffixes'} || $Conf{'list_check_suffixes'};
-    if( defined ($regx) && $regx )
-    {
-	$regx =~ s/,/\|/g;
-	if ($name =~ /^(\S+)-(${regx})$/)
-	{
-		&do_log('err', 'Incorrect name: listname "%s" matches one of service aliases',  $name);
-		return undef;
+    ## Reject listnames with reserved list suffixes
+    my $regx = &Conf::get_robot_conf($robot,'list_check_regexp');
+    if ( $regx ) {
+	if ($name =~ /^(\S+)-($regx)$/) {
+	    &do_log('err', 'Incorrect name: listname "%s" matches one of service aliases',  $name);
+	    return undef;
 	}
     }
 

@@ -401,9 +401,10 @@ while (!$signal) {
 	}else{
 	    $t_robot = lc($Conf{'host'});
 	}
-	# do_log('debug2', "listname %s    robot  %s", $t_listname,$t_robot);
 
-	if ($t_listname =~ /^(\S+)-(request|owner|editor|subscribe|unsubscribe)$/) {
+	my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
+
+	if ($t_listname =~ /^(\S+)-($list_check_regexp)$/) {
 	    ($t_listname, $type) = ($1, $2);
 	}
 

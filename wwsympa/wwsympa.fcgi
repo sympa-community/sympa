@@ -4258,15 +4258,12 @@ sub do_create_list {
 	return 'create_list_request';
     }
     
-    my $regx = $Conf{'robots'}{$robot}{'list_check_suffixes'} || $Conf{'list_check_suffixes'};
-    if( defined ($regx) && $regx )
-    {
-	$regx =~ s/,/\|/g;
-	if ($in{'listname'} =~ /^(\S+)-(${regx})$/)
-	{
-		&error_message("Incorrect listname \"$in{'listname'}\" matches one of service aliases",{'listname' => $in{'listname'}});
-		&wwslog('info','do_create_list: incorrect listname %s matches one of service aliases', $in{'listname'});
-		return 'create_list_request';
+    my $regx = Conf::get_robot_conf($robot,'list_check_regexp');
+    if( $regx ) {
+	if ($in{'listname'} =~ /^(\S+)-($regx)$/) {
+	    &error_message("Incorrect listname \"$in{'listname'}\" matches one of service aliases",{'listname' => $in{'listname'}});
+	    &wwslog('info','do_create_list: incorrect listname %s matches one of service aliases', $in{'listname'});
+	    return 'create_list_request';
 	}
     }
     ## 'other' topic means no topic

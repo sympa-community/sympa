@@ -1555,6 +1555,7 @@ is still recognized but should not be used anymore.
 	This paramater is a comma-separated list of admin suffixes you're using
 	for \Sympa aliases, i.e. \samplelist-request, \samplelist-owner etc...
 	This parameter is used with \cfkeyword {list\_check\_smtp} parameter.
+	It is also used to check list names at list creation time.
 
 
 \section {Quotas}

@@ -149,7 +149,7 @@ my %Default_Conf =
      'ldap_export_dnmanager' => '',
      'ldap_export_connection_timeout' => '',
      'list_check_smtp' => '',
-     'list_check_suffixes' => 'request,owner,unsubscribe',
+     'list_check_suffixes' => 'request,owner,editor,unsubscribe,subscribe',
      'expire_bounce_task' => 'daily',
      'default_archive_quota' => '',
      'default_shared_quota' => '',
@@ -312,6 +312,12 @@ sub load {
     }
 
     @{$Conf{'listmasters'}} = split(/,/, $Conf{'listmaster'});
+
+    ## Set Regexp for accepted list suffixes
+    if (defined ($Conf{'list_check_suffixes'})) {
+	$Conf{'list_check_regexp'} = $Conf{'list_check_suffixes'};
+	$Conf{'list_check_regexp'} =~ s/,/\|/g;
+    }
 
     $Conf{'sympa'} = "$Conf{'email'}\@$Conf{'host'}";
     $Conf{'request'} = "$Conf{'email'}-request\@$Conf{'host'}";
