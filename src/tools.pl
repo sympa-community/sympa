@@ -514,21 +514,20 @@ sub smime_decrypt {
     my $msg = shift;
     my $list = shift ; ## the recipient of the msg
     
-    &do_log('debug2', 'tools::smime_decrypt message msg from %s,%s',$msg->head->get('from'),$list);
+    &do_log('debug2', 'tools::smime_decrypt message msg from %s,%s',$msg->head->get('from'),$list->{'name'});
 
-    my $self = new List($list);
-    my $certfile = $self->{'dir'}."/cert.pem" ;
+    my $certfile = $list->{'dir'}."/cert.pem" ;
     unless (-r $certfile){
 	do_log('err', "unable to decrypt message : cert missing  $certfile");
 	return undef;
     }
-    my $keyfile = $self->{'dir'}."/private_key";
+    my $keyfile = $list->{'dir'}."/private_key";
 
     unless (open (MSGDUMP , "> $Conf{'tmpdir'}/MSG.$$")) {
 	&do_log('err', 'unable to open %s/MSG.%s',$Conf{'tmpdir'},$$);
 	return undef;
     }
-    my $temporary_file = $Conf{'tmpdir'}."/".$list.".".$$ ;
+    my $temporary_file = $Conf{'tmpdir'}."/".$list->{'name'}.".".$$ ;
     
     ## dump the incomming message.
     if (!open(MSGDUMP,"> $temporary_file")) {
