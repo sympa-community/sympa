@@ -110,7 +110,7 @@
 	  <TD><center>
 	  <form method="post" ACTION="[path_cgi]">
 	  <FONT size=-2>
-	  <input type="button" value="    " name="action_d_delete" onClick="return request_confirm('Vuoi veramente cancellare [path][s->doc] ?')">
+	  <input type="submit" value="    " name="action_d_delete" onClick="return request_confirm('Vuoi veramente cancellare [path][s->doc] ?')">
 	  </FONT>
 	  <INPUT TYPE="hidden" NAME="action" VALUE="d_delete">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
@@ -182,7 +182,7 @@
 	<center>
 	<form method="post" ACTION="[path_cgi]">
 	<FONT size=-2>
-	<input type="button" value="    " name="action_d_delete" 
+	<input type="submit" value="    " name="action_d_delete" 
 	onClick="return request_confirm('Vuoi veramente cancellare [path][f->doc] ([f->size] Kb) ?')">
 	</FONT>
 	<INPUT TYPE="hidden" NAME="list" VALUE="[list]">

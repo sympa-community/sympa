@@ -13,7 +13,7 @@
 </TD>
 <TD>
   <FORM METHOD="post" ACTION="[path_cgi]">
-    <INPUT TYPE="button" VALUE="Upomenout v¹echny èleny" NAME="action_remind" onClick="return request_confirm('Chcete opravdu poslat upomínací zprávu k  [total] èlenùm?')">
+    <INPUT TYPE="submit" VALUE="Upomenout v¹echny èleny" NAME="action_remind" onClick="return request_confirm('Chcete opravdu poslat upomínací zprávu k  [total] èlenùm?')">
     <INPUT TYPE="hidden" NAME="action" VALUE="remind">
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   </FORM>	

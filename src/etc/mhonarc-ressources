@@ -426,7 +426,7 @@ Téma
 Téma
 [ELSIF lang=et]
 Teema järgi
-[ELSIF lang=de]
+[ELSIF` lang=de]
 Thread
 [ELSE]
 Thread
@@ -501,17 +501,17 @@ $TNEXTBUTTON$
   <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
   <INPUT TYPE="hidden" NAME="action" VALUE="">
 [IF lang=fr]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="marquer ce message pour suppression" onClick="request_confirm('Voulez-vous vraiment supprimer ce message ?','remove_arc')">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="marquer ce message pour suppression" onClick="return request_confirm('Voulez-vous vraiment supprimer ce message ?')">
 [ELSIF lang=cz]
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="oznaèit tuto zprávu ke smazání">
 [ELSIF lang=hu]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre" onClick="request_confirm('Tényleg törölni szeretnéd ezt a levelet?','remove_arc')">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre" onClick="return request_confirm('Tényleg törölni szeretnéd ezt a levelet?')">
 [ELSIF lang=et]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks" onClick="request_confirm('Oled kindel, et soovid selle kirja ära kustutada?','remove_arc')">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks" onClick="return request_confirm('Oled kindel, et soovid selle kirja ära kustutada?')">
 [ELSIF lang=de]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren" onClick="request_confirm('Wollen Sie wirklich diese Mitteilung löschen?','remove_arc')">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren" onClick="return request_confirm('Wollen Sie wirklich diese Mitteilung löschen?')">
 [ELSE]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="request_confirm('Do you really want to delete this message ?','remove_arc')">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="return request_confirm('Do you really want to delete this message ?')">
 [ENDIF]
 
 [ELSIF is_owner]
@@ -521,17 +521,17 @@ $TNEXTBUTTON$
   <INPUT TYPE="hidden" NAME="action" VALUE="">
 
 [IF lang=fr]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="marquer ce message pour suppression" onClick="request_confirm('Voulez-vous vraiment supprimer ce message ?','remove_arc')">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="marquer ce message pour suppression" onClick="return request_confirm('Voulez-vous vraiment supprimer ce message ?')">
 [ELSIF lang=cz]
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="oznaèit tuto zprávu ke smazání">
 [ELSIF lang=hu]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre" onClick="request_confirm('Tényleg törölni szeretnéd ezt a levelet?','remove_arc')">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre" onClick="return request_confirm('Tényleg törölni szeretnéd ezt a levelet?')">
 [ELSIF lang=et]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks" onClick="request_confirm('Oled kindel, et soovid selle kirja ära kustutada?','remove_arc')">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks" onClick="return request_confirm('Oled kindel, et soovid selle kirja ära kustutada?')">
 [ELSIF lang=de]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren" onClick="request_confirm('Wollen Sie wirklich diese Mitteilung löschen?','remove_arc')">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren" onClick="return request_confirm('Wollen Sie wirklich diese Mitteilung löschen?')">
 [ELSE]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="request_confirm('Do you really want to delete this message ?','remove_arc')">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="return request_confirm('Do you really want to delete this message ?')">
 [ENDIF]
 [ENDIF]
 [ENDIF]
