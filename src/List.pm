@@ -2198,6 +2198,11 @@ sub send_msg {
     my $alternative = ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/alternative/i);
  
     for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
+	unless ($user->{'email'}) {
+	    &do_log('err','Skipping user with no email address in list %s', $name);
+	    next;
+	}
+
 	if ($user->{'reception'} =~ /^digest|summary|nomail$/i) {
 	    next;
 	}elsif ($user->{'reception'} eq 'not_me'){
@@ -3303,6 +3308,8 @@ sub get_first_user {
 	
 	my $user = $sth->fetchrow_hashref;
 	if (defined $user) {
+	    &do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
+		if (! $user->{'email'});
 	    $user->{'reception'} ||= 'mail';
 	    $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	    unless ($self->is_available_reception_mode($user->{'reception'}));
@@ -3352,6 +3359,8 @@ sub get_next_user {
 	my $user = $sth->fetchrow_hashref;
 
 	if (defined $user) {
+	    &do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
+		if (! $user->{'email'});
 	    $user->{'reception'} ||= 'mail';
 	    unless ($self->is_available_reception_mode($user->{'reception'})){
 		$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
@@ -3489,6 +3498,9 @@ sub get_first_bouncing_user {
     
     my $user = $sth->fetchrow_hashref;
 	    
+    &do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
+	if (! $user->{'email'});
+
     ## In case it was not set in the database
     $user->{'subscribed'} = 1
 	if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
@@ -3526,6 +3538,9 @@ sub get_next_bouncing_user {
 	    }
 	}
     }
+
+    &do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
+	if (! $user->{'email'});
 
     ## In case it was not set in the database
     $user->{'subscribed'} = 1

@@ -234,7 +234,7 @@ sub mailto {
    ## if the message must be crypted,  we need to send it using one smtp session for each rcpt
    if ($message->{'smime_crypted'}){
        $numsmtp = 0;
-       while ($i = shift(@rcpt)) {
+       while (defined ($i = shift(@rcpt))) {
 	   &sendto($msg_header, $msg_body, $from, [$i], $message->{'smime_crypted'});
 	   $numsmtp++
 	   }
@@ -242,7 +242,7 @@ sub mailto {
        return ($numsmtp);
    }
 
-   while ($i = shift(@rcpt)) {
+   while (defined ($i = shift(@rcpt))) {
        my @k = reverse(split(/[\.@]/, $i));
        my @l = reverse(split(/[\.@]/, $j));
        if ($j && $#sendto >= $Conf{'avg'} && lc("$k[0] $k[1]") ne lc("$l[0] $l[1]")) {
