@@ -210,11 +210,10 @@ sub load {
     }
 
     ## LDAP directories for exportation
-    if ($Conf{'ldap_export_name'}) {
 	my @array = &_load_auth();
 	$Conf{'ldap_array'} = [@array];
 	
-	
+    if ($Conf{'ldap_export_name'}) {    
 	##Export
 	$Conf{'ldap_export'} = {$Conf{'ldap_export_name'} => { 'host' => $Conf{'ldap_export_host'},
 							   'suffix' => $Conf{'ldap_export_suffix'},
@@ -376,7 +375,7 @@ sub _load_auth {
 
     ## Open the configuration file or return and read the lines.
     unless (open(IN, $config)) {
-	printf STDERR  "load: Unable to open %s: %s\n", $config, $!;
+	do_log('notice',"load: Unable to open %s: %s\n", $config, $!);
 	return undef;
     }
     
@@ -409,7 +408,8 @@ sub _load_auth {
 	    $auth[$i]{$key} = $paragraphs[$i]{$key};
 	}
     }
-    return @auth;
+
+return @auth;
 
 
 }

@@ -40,7 +40,7 @@
         </TD>
       </TR>
 
-      [IF ldap_auth=classic]
+      [IF auth=classic]
       <TR VALIGN="top">
         <TH BGCOLOR="[dark_color]" COLSPAN="2">
           <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">

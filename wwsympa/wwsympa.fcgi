@@ -404,12 +404,8 @@ while ($query = &new_loop()) {
    
     ##Cookie extern : sympa_alt_email
     ## !!
-#    %{$param->{'alt_emails'}} 
-    my %emails = &cookielib::check_cookie_extern($ENV{'HTTP_COOKIE'},$Conf{'cookie'});
-    my $user_email = lc($param->{'user'}{'email'});
+    $param->{'alt_emails'} = &cookielib::check_cookie_extern($ENV{'HTTP_COOKIE'},$Conf{'cookie'},$param->{'user'}{'email'});
     
-    %{$param->{'alt_emails'}} = %emails if($emails{$user_email});
-   
     if ($param->{'user'}{'email'}) {
 	$param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}};
 
@@ -1156,7 +1152,6 @@ sub do_login {
 	}
     } 
 
-    ##lyly
     my $email = lc($param->{'user'}{'email'});
     unless($param->{'alt_emails'}{$email}){
 	unless(&cookielib::set_cookie_extern($Conf{'cookie'},$wwsconf->{'cookie_domain'},%{$param->{'alt_emails'}})){
@@ -1213,7 +1208,6 @@ sub check_auth{
 	
     }else{
 	## This is an UID
-	
 	if ($canonic = &ldap_authentication($auth,$pwd,'uid_filter')){
 	    $param->{'auth'} = 'ldap';   
 	    $param->{'alt_emails'}{$canonic} = 'ldap' if($canonic);
@@ -1303,7 +1297,7 @@ sub ldap_authentication {
 	do_log ('err',"Unable to use LDAP library,Net::LDAP::Entry required install perl-ldap (CPAN) first");
 	return undef;
     }
-    
+
     foreach my $ldap (@{$Conf{'ldap_array'}}){
 	foreach $host (split(/,/,$ldap->{'host'})){
 	
@@ -1398,6 +1392,7 @@ sub ldap_authentication {
 	    }
 	    
 	    $ldap_passwd->unbind or do_log('notice', "unable to unbind");
+	    do_log('notice',"xxxcanonic: $canonic_email[0]");
 	    return lc($canonic_email[0]);
 	}
 	

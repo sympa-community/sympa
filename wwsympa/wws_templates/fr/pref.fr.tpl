@@ -41,7 +41,7 @@
         </TD>
       </TR>
 
-      [IF ldap_auth = classic]
+      [IF auth=classic]
 
       <TR VALIGN="top">
         <TH BGCOLOR="[dark_color]" COLSPAN="2">

@@ -24,7 +24,7 @@ a customized environment with access to the following functions :
 
 <H2>Login</H2>
 
-[IF ldap_auth=classic]
+[IF auth=classic]
 When authentifying (<A HREF="[path_cgi]/loginrequest">Login</A>), provide your email address and associated password.
 <BR><BR>
 Once are authentified, a <I>cookie</I> containing your login 

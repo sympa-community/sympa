@@ -175,7 +175,7 @@ sub get_mac {
 }
 
 sub check_cookie_extern {
-    my ($http_cookie,$secret, $user_email) = @_;
+    my ($http_cookie,$secret,$user_email) = @_;
     my %cookies = parse CGI::Cookie($http_cookie);
  
     ## Scan parameters
@@ -194,10 +194,10 @@ sub check_cookie_extern {
 		$alt_emails{$array[0]} = $array[1];
 	    }
 	      
-	    unless ($alt_emails{$user_email}) {
-                 return undef;
+	    my $e = lc($user_email);
+	    unless ($alt_emails{$e}) {
+		 return undef;
 	    }
-	      
 	    return (\%alt_emails);
 	}
 	return undef ;
