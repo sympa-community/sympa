@@ -3251,7 +3251,7 @@ sub do_arcsearch_id {
     return undef;
     }
 
-    $param->{'key_word'} = $in{'key_word'};
+    $param->{'key_word'} = &tools::unescape_chars($in{'key_word'});
     $in{'key_word'} =~ s/\@/\\\@/g;
 
     $search->limit (1);
@@ -3270,12 +3270,19 @@ sub do_arcsearch_id {
     my $searched = $search->search;
 
     if (defined($search->error)) {
-    &wwslog('info','do_arcsearch_id_search_error : %s', $search->error);
+	&wwslog('info','do_arcsearch_id_search_error : %s', $search->error);
     }
 
     $search->searched($searched);
 
     $param->{'res'} = $search->res;
+
+    unless ($#{$param->{'res'}} >= 0) {
+	&message('msg_not_found');
+	&wwslog('info','No message found in archives matching Message-ID %s', $in{'key_word'});
+	return 'arc';
+    }
+
     $param->{'redirect_to'} = $param->{'res'}[0]{'file'};
 
     return 1;

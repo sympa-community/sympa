@@ -1706,9 +1706,17 @@ sub send_msg_digest {
 	my $mail = $list_of_mail[$i];	
 	my $subject = $mail->head->get('Subject') || "\n";
         my $msg = {};
-        $msg->{'subject'} = $subject;
-        $msg->{'from'} = $mail->head->get('From') || "\n";
-        push @{$param->{'msg'}},$msg ;
+        $msg->{'subject'} = $subject;	
+        $msg->{'from'} = $mail->head->get('From');
+	chomp $msg->{'from'};
+	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
+	$msg->{'message_id'} = $mail->head->get('Message-Id');
+	
+	## Clean up Message-ID
+	$msg->{'message_id'} =~ s/^\<(.+)\>$/$1/;
+	$msg->{'message_id'} = &tools::escape_chars($msg->{'message_id'});
+
+        push @{$param->{'msg'}}, $msg ;
 
 	push @topics, sprintf ' ' x (2 - length($i)) . "%d. %s", $i+1, $subject;
     }
@@ -1759,19 +1767,23 @@ sub send_msg_digest {
 
     ## Send summary
     ## What file   
-    if (-r "summary.tpl") {
-	$filename = "summary.tpl";
-    }elsif (-r "$Conf{'etc'}/templates/summary.tpl") {
-	$filename = "$Conf{'etc'}/templates/summary.tpl";
-    }elsif (-r "--ETCBINDIR--/templates/summary.tpl") {
-	$filename = "--ETCBINDIR--/templates/summary.tpl";
-    }else {
-	# $filename = '';
-	do_log ('err',"Unable to open file summary.tpl in list directory NOR $Conf{'etc'}/templates/summary.tpl NOR --ETCBINDIR--/templates/summary.tpl");
-	return undef;
-    }
+#    if (-r "summary.tpl") {
+#	$filename = "summary.tpl";
+#    }elsif (-r "$Conf{'etc'}/templates/summary.tpl") {
+#	$filename = "$Conf{'etc'}/templates/summary.tpl";
+#    }elsif (-r "--ETCBINDIR--/templates/summary.tpl") {
+#	$filename = "--ETCBINDIR--/templates/summary.tpl";
+#    }else {
+#	# $filename = '';
+#	do_log ('err',"Unable to open file summary.tpl in list directory NOR $Conf{'etc'}/templates/summary.tpl NOR --ETCBINDIR--/templates/summary.tpl");
+#	return undef;
+#    }
 
-    &mail::mailfile ($filename, \@tabrcptsummary, $param, 'none');
+    ## Prepare parameters for parsing
+    $param->{'subject'} = sprintf Msg(8, 31, 'Summary of list %s'), $self->{'name'};
+
+#    &mail::mailfile ($filename, \@tabrcptsummary, $param, 'none');
+    $self->send_file('summary', \@tabrcptsummary, $param);
 
 }
 
@@ -1835,17 +1847,30 @@ sub send_file {
 	&do_log('info', 'Cannot chdir to %s', $name); 
     }
 
-    unless ($data->{'user'}) {
-	unless ($data->{'user'} = &get_user_db($who)) {
-	    $data->{'user'}{'email'} = $who;
-	    $data->{'user'}{'lang'} = $self->{'admin'}{'lang'};
+    ## Unless multiple recepients
+    unless (ref ($who)) {
+	unless ($data->{'user'}) {
+	    unless ($data->{'user'} = &get_user_db($who)) {
+		$data->{'user'}{'email'} = $who;
+		$data->{'user'}{'lang'} = $self->{'admin'}{'lang'};
+	    }
+	}
+	
+	unless ($data->{'user'}{'password'}) {
+	    $data->{'user'}{'password'} = &tools::tmp_passwd($who);
+	}
+	
+	## Unique return-path
+	if ((($self->{'admin'}{'welcome_return_path'} eq 'unique') && ($action eq 'welcome')) ||
+	    (($self->{'admin'}{'remind_return_path'} eq 'unique') && ($action eq 'remind')))  {
+	    my $escapercpt = $who ;
+	    $escapercpt =~ s/\@/\=\=a\=\=/;
+	    $data->{'return_path'} = "bounce+$escapercpt\=\=$name\@$self->{'admin'}{'host'}";
+	}else{
+	    $data->{'return_path'} = "$name-owner\@$self->{'admin'}{'host'}";
 	}
     }
 
-    unless ($data->{'user'}{'password'}) {
-	$data->{'user'}{'password'} = &tools::tmp_passwd($who);
-    }
-    
     ## What file   
     if (-r "$action.tpl") {
 	$filename = "$action.tpl";
@@ -1864,16 +1889,6 @@ sub send_file {
     }else {
 	$filename = '';
 	do_log ('err',"Unable to open file $action.tpl in list directory NOR $Conf{'etc'}/templates/$action.tpl NOR --ETCBINDIR--/templates/$action.tpl");
-    }
-
-    ## Unique return-path
-    if ((($self->{'admin'}{'welcome_return_path'} eq 'unique') && ($action eq 'welcome')) ||
-	(($self->{'admin'}{'remind_return_path'} eq 'unique') && ($action eq 'remind')))  {
-	my $escapercpt = $who ;
-	$escapercpt =~ s/\@/\=\=a\=\=/;
-	$data->{'return_path'} = "bounce+$escapercpt\=\=$name\@$self->{'admin'}{'host'}";
-    }else{
-	$data->{'return_path'} = "$name-owner\@$self->{'admin'}{'host'}";
     }
     
     $data->{'conf'}{'email'} = $Conf{'email'};

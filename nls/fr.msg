@@ -243,6 +243,7 @@ Vous devriez supprimer les abonnés en erreur : \n\
 28	"ATTENTION: taux de bounces trop eleve dans la liste %s"
 29	"Invitation dans la liste %s"
 30	"Vous êtes invité à vous abonner à la liste %s"
+31	"Résumé de la liste %s"
 
 $set 9	Messages pour l'entête review
 1	"Propriétaire       : %s\n"

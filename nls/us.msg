@@ -242,6 +242,7 @@ You should delete bouncing subscribers : \n\
 28	"WARNING: bounce rate too high in list %s"
 29	"Invitation to join list %s"
 30	"You are invited to join list %s"
+31	"Summary of list %s"
 
 $set 9	Messages for the review header
 1	"Owner              : %s\n"
