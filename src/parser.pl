@@ -72,6 +72,8 @@ sub do_setvar {
 	if (ref ($data->{$2})) {
 	    $data->{$1} = $data->{$2}{$3};
 	}
+    }elsif ($echo && /\[\s*SET\s+(\w+)\s*\=\s*(\d+)\s*\]/i) {
+	$data->{$1} = $2;
     }
 
     return;
@@ -276,7 +278,7 @@ sub process {
 	    return;
 	}elsif (/\[\s*STOPPARSE\s*\]/i) {
 	    &do_stopparse();
-	}elsif (/\[\s*SET\s+(\w+)\s*\=\s*(\w+)\->(\w+)\s*\]/i) {
+	}elsif (/\[\s*SET\s+(\w+)\s*\=\s*(\w+\->\w+|\d+)\s*\]/i) {
 	    &do_setvar($echo);
 	}elsif ($echo == 1) {
 	    &do_parse();
