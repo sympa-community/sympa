@@ -22,6 +22,8 @@ sub check_cookie {
     foreach (sort keys %cookies) {
 	my $cookie = $cookies{$_};
 	
+	&do_log('debug', 'COOKIE: %s %s', $cookie->name, $cookie->value);
+
 	next unless ($cookie->name =~ /^sympauser|user$/);
 
 	if ($cookie->value =~ /^(.*):(\S+)\s*$/) {
@@ -60,7 +62,7 @@ sub set_cookie {
     }
     my ($expiration,$domain);
     if ($expires =~ /now/i) {
-	$expiration = 'now';
+	$expiration = '0';
     }elsif ($expires =~ /session/i) {
 	$expiration = '';
     }else{
