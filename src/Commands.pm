@@ -1622,7 +1622,7 @@ sub confirm {
 	
 	## Distribute the message
 	my $numsmtp;
-	unless ($numsmtp = $list->distribute_msg($msg, $bytes, $is_crypted)) {
+	unless ($numsmtp = $list->distribute_msg($msg, $bytes, $file, $is_crypted)) {
 	    return undef;
 	}
 
