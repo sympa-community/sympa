@@ -951,14 +951,12 @@ sub DoMessage{
 	do_log('info', 'Message for %s from %s sent to editors', $name, $sender);
 	$list->notify_sender($sender) unless ($2 eq 'quiet');
 	return 1;
-    }elsif($action =~ /^reject(\s?,\s?(quiet))?/) {
-    
-	do_log('notice', 'Message for %s from %s rejected because sender not allowed', $name, $sender);
-	unless ($2 eq 'quiet') {
-	    if ($action =~ /send_file\s?\(\[sender\],\'?([^\'\)]+)\'?\)/) {
-		my $file = $1;
-		$file =~ s/\.tpl$//;
-		$list->send_file($file, $sender, $robot, {});
+    }elsif($action =~ /^reject\(\'?(\w+)\'?\)(\s?,\s?(quiet))?/) {
+	my $tpl = $1;
+	do_log('notice', 'Message for %s from %s rejected(%s) because sender not allowed', $name, $sender, $tpl);
+	unless ($3 eq 'quiet') {
+	    if ($tpl) {
+		$list->send_file($tpl, $sender, $robot, {});
 	    }else {
 		*SIZ  = smtp::smtpto($Conf{'request'}, \$sender);
 		print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'request'}) . "\n";

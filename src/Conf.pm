@@ -244,16 +244,16 @@ sub load_robots {
     do_log('debug', "load_robots"); 
 
     my %robot_conf ;
-    my %valid_robot_key_words = ( 'http_host' => ' ', 
-				  listmaster => ' ', 'title' => ' ',
+    my %valid_robot_key_words = ( 'http_host' => undef, 
+				  listmaster => undef, 'title' => undef,
 				  default_home => 'home',
-				  dark_color      =>       ' ',
-				  light_color     =>       ' ',
-				  text_color      =>       ' ', 
-				  bg_color        =>       ' ',
-				  error_color     =>       ' ',
-				  selected_color  =>       ' ',
-				  shaded_color    =>       ' ' );  
+				  dark_color      =>       undef,
+				  light_color     =>       undef,
+				  text_color      =>       undef, 
+				  bg_color        =>       undef,
+				  error_color     =>       undef,
+				  selected_color  =>       undef,
+				  shaded_color    =>       undef );  
 
     unless (opendir DIR,'--DIR--/etc' ) {
 	do_log('info','Unable to open directory --DIR--/etc for virtual robots config' );

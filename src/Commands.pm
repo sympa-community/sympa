@@ -293,8 +293,14 @@ sub stats {
 					{'listname' => $listname,
 					 'sender' => $sender});
 
-    if ($action =~ /reject/i) {
-	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'STATS',$listname;
+    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
+	my $tpl = $1;
+
+	if ($tpl) {
+	    $list->send_file($tpl, $sender, $robot, {});
+	}else {
+	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'STATS',$listname;
+	}
 	do_log('info', 'stats %s from %s refused (not allowed)', $listname,$sender);
 	return 'not_allowed';
     }else {
@@ -485,8 +491,13 @@ sub review {
 	do_log('info', 'REVIEW %s from %s, auth requested (%d seconds)', $listname, $sender,time-$time_command);
 	return 1;
     }
-    if ($action =~ /reject/i) {
-	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'review',$listname;
+    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
+	my $tpl = $1;
+	if ($tpl) {
+	    $list->send_file($tpl, $sender, $robot, {});
+	}else {
+	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'review',$listname;
+	}
 	do_log('info', 'review %s from %s refused (not allowed)', $listname,$sender);
 	return 'not_allowed';
     }
@@ -601,8 +612,13 @@ sub subscribe {
     
     &do_log('debug2', 'action : %s', $action);
     
-    if ($action =~ /reject/i) {
-	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'subscribe',$which;
+    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
+	my $tpl = $1;
+	if ($tpl) {
+	    $list->send_file($tpl, $sender, $robot, {});
+	}else {
+	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'subscribe',$which;
+	}
 	do_log('info', 'SUB %s from %s refused (not allowed)', $which, $sender);
 	return 'not_allowed';
     }
@@ -724,8 +740,14 @@ sub info {
 				       {'listname' => $listname, 
 					'sender' => $sender });
     
-    if ($action =~ /reject/i) {
-	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'review',$listname;
+    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
+
+	my $tpl = $1;
+	if ($tpl) {
+	    $list->send_file($tpl, $sender, $robot, {});
+	}else {
+	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'review',$listname;
+	}
 	do_log('info', 'review %s from %s refused (not allowed)', $listname,$sender);
 	return 'not_allowed';
     }
@@ -829,8 +851,13 @@ sub signoff {
 					'email' => $email,
 					'sender' => $sender });
     
-    if ($action =~ /reject/i) {
-	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s %s in list %s.\n"),'sig',$which,$email;
+    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
+	my $tpl = $1;
+	if ($tpl) {
+	    $list->send_file($tpl, $sender, $robot, {});
+	}else {
+	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s %s in list %s.\n"),'sig',$which,$email;
+	}
 	do_log('info', 'DEL %s %s from %s refused (not allowed)', $which, $email, $sender);
 	return 'not_allowed';
     }
@@ -937,8 +964,13 @@ sub add {
 					'email' => $email,
 					'sender' => $sender });
     
-    if ($action =~ /reject/i) {
-	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'add',$which;
+    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
+	my $tpl = $1;
+	if ($tpl) {
+	    $list->send_file($tpl, $sender, $robot, {});
+	}else {
+	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'add',$which;
+	}
 	do_log('info', 'ADD %s %s from %s refused (not allowed)', $which, $email, $sender);
 	return 'not_allowed';
     }
@@ -1041,8 +1073,13 @@ sub invite {
 				       {'listname' => $which, 
 					'sender' => $sender });
 
-    if ($action =~ /reject/i) {
-	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'invite',$which;
+    if ($action =~ /rejectt\(\'?(\w+)\'?\)/i) {
+	my $tpl = $1;
+	if ($tpl) {
+	    $list->send_file($tpl, $sender, $robot, {});
+	}else {
+	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'invite',$which;
+	}
 	do_log('info', 'INVITE %s %s from %s refused (not allowed)', $which, $email, $sender);
 	return 'not_allowed';
     }
@@ -1087,9 +1124,14 @@ sub invite {
 		do_log('info', 'INVITE %s %s from %s accepted,  (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
 		push @msg::report, sprintf Msg(6, 85, "User %s has been invited to subscribe in list %s.\n"),$email,$which;
 
-	    }else {
+	    }elsif ($action =~ /reject\(\'?(\w+)\'?\)/i) {
+		$tpl = 41;
 		do_log('info', 'INVITE %s %s from %s refused, not allowed (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
-		push @msg::report, sprintf Msg(6, 86, "User %s is unwanteed in list %s.\n"),$email,$which;
+		if ($tpl) {
+		    $list->send_file($tpl, $sender, $robot, {});
+		}else {
+		    push @msg::report, sprintf Msg(6, 86, "User %s is unwanteed in list %s.\n"),$email,$which;
+		}
 	    }
 
 	}
@@ -1173,9 +1215,14 @@ sub remind {
 					    'sender' => $sender });
     }
 
-    if ($action =~ /reject/i) {
+    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
+	my $tpl = $1;
 	do_log ('info',"Remind for list $listname from $sender refused");
-	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform command %s in list %s\n"),'remind',$listname;
+	if ($tpl) {
+	    $list->send_file($tpl, $sender, $robot, {});
+	}else {
+	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform command %s in list %s\n"),'remind',$listname;
+	}
 	return 0;
     }elsif ($action =~ /request_auth/i) {
 	do_log ('debug',"auth requested from $sender");
@@ -1328,8 +1375,13 @@ sub del {
 
 #    my $action = &List::get_action ('del', $which, $sender, $who, $auth_method);
 
-    if ($action =~ /reject/i) {
-	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'del',$which;
+    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
+	my $tpl = $1;
+	if ($tpl) {
+	    $list->send_file($tpl, $sender, $robot, {});
+	}else {
+	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'del',$which;
+	}
 	do_log('info', 'DEL %s %s from %s refused (not allowed)', $which, $who, $sender);
 	return 'not_allowed';
     }
@@ -1666,19 +1718,24 @@ sub confirm {
 	do_log('info', 'Message for %s from %s sent to editors', $name, $sender);
 	$list->notify_sender($sender);
 	return 1;
-    }elsif($action =~ /^reject/) {
+    }elsif($action =~ /^reject\(\'?(\w+)\'?\)/) {
+	my $tpl = $1;
    	do_log('notice', 'Message for %s from %s rejected, sender not allowed', $name, $sender);
-	*SIZ  = smtp::smtpto($Conf{'request'}, \$sender);
-	print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'request'}) . "\n";
-	printf SIZ "To: %s\n", $sender;
-	printf SIZ "Subject: " . Msg(4, 11, "Your message for list %s has been rejected") . "\n", $name;
-	printf SIZ "MIME-Version: %s\n", Msg(12, 1, '1.0');
-	printf SIZ "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
-	printf SIZ "Content-Transfer-Encoding: %s\n\n", Msg(12, 3, '7bit');
-	printf SIZ Msg(4, 15, $msg::list_is_private), $name;
-	$msg->print(\*SIZ);
-	close(SIZ);
-	return 1;
+	if ($tpl) {
+	    $list->send_file($tpl, $sender, $robot, {});
+	}else {
+	    *SIZ  = smtp::smtpto($Conf{'request'}, \$sender);
+	    print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'request'}) . "\n";
+	    printf SIZ "To: %s\n", $sender;
+	    printf SIZ "Subject: " . Msg(4, 11, "Your message for list %s has been rejected") . "\n", $name;
+	    printf SIZ "MIME-Version: %s\n", Msg(12, 1, '1.0');
+	    printf SIZ "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
+	    printf SIZ "Content-Transfer-Encoding: %s\n\n", Msg(12, 3, '7bit');
+	    printf SIZ Msg(4, 15, $msg::list_is_private), $name;
+	    $msg->print(\*SIZ);
+	    close(SIZ);
+	    return 1;
+	}
     }elsif($action =~ /^do_it/) {
 
 	$hdr->add('X-Validation-by', $sender);
