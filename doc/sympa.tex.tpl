@@ -855,7 +855,7 @@ Before using \Sympa, you must customize the sources in order to
 specify a small number of parameters specific to your installation.
 
 First, extract the sources from the archive file, for example
-from the \tildedir {sympa/} directory: the archive will create a
+in the \tildedir {sympa/src/} directory: the archive will create a
 directory named \dir {sympa-\version/} where all the useful files
 and directories will be located. In particular, you will have a
 \dir {doc/} directory containing this documentation in various
@@ -874,41 +874,82 @@ Example:
 
 \label {makefile}
 
-Before running \unixcmd {make} in the main
-directory, you should edit and configure \file {Makefile},
-the first part of which requires customization.
-We advise against changing anything located after the STOP
-line.
+Now you can run the installation process :
 
-The \file {Makefile} file contains explanations for the fields,
-which you may have to change. They main ones are :
+\begin {quote}
+\tt
+\$ ./configure\\
+\$ make\\
+\$ make install\\
+\end {quote}
+
+
+\unixcmd {configure} will build the \file {Makefile} ; it recognizes the following 
+command-line arguments :
+
 \begin {itemize}
-\item USER and GROUP, the id of daemons.
-\item CONFIG and WWSCONFIG, the location of robot and cgi configurations
-\item DIR, the \Sympa home dir
-\item MAILERPROGDIR, the location of queue and bouncequeue programs. If sendmail
-is configured to use smrsh (check the mailer prog definition in your sendmail.cf),
-queue and bouncequeue need to be installed in /etc/smrsh.  This is probably
-the case if you are using redhat 6.X.
-\item SENDMAIL\_ALIASES, the sendmail aliases file. This is used by the alias\_manager
-script.
-\item NEWALIASES, the path to newaliases command.
-\item NEWALIASES\_ARG, arguments passed to newaliases command.
-\item INITDIR, the directory to contain a SYSV init script (typically /etc.rc.d/init.d/)
+
+\item \unixcmd {--prefix=PREFIX}, the \Sympa homedirectory (default /home/sympa/)
+
+\item \unixcmd {--bindir=DIR}, user executables in DIR (default /home/sympa/bin/)\\
+\file {queue} and \file {bouncequeue} programs will be installed in this directory.
+If sendmail is configured to use smrsh (check the mailer prog definition in your sendmail.cf),
+this should point to \dir {/etc/smrsh}.  This is probably the case if you are using Linux RedHat.
+
+\item \unixcmd {--sbindir=DIR}, system admin executables in DIR (default /home/sympa/bin/)
+
+\item \unixcmd {--libexecdir=DIR}, program executables in DIR (default /home/sympa/bin/)
+
+\item \unixcmd {--datadir=DIR}, default configuration data in DIR (default /home/sympa/bin/etc/)
+
+\item \unixcmd {--sysconfdir=DIR}, Sympa main configuration files in DIR (default /etc/)\\
+\file {sympa.conf} and \file {wwsympa.conf} will be installed there.
+
+\item \unixcmd {--localstatedir=DIR}, modifiable data in DIR (default /home/sympa/expl/)
+
+\item \unixcmd {--libdir=DIR},  code libraries in DIR (default /home/sympa/bin/)
+
+\item \unixcmd {--mandir=DIR}, man documentation in DIR (default /usr/local/man/)
+
+\item \unixcmd {--with-initdir=DIR}, install System V init script in DIR  (default etc/rc.d/init.d)
+
+\item \unixcmd {--with-perl=FULLPATH}, set full path to Perl interpreter (default /usr/bin/perl)
+
+\item \unixcmd {--with-openssl=FULLPATH}, set path to OpenSSL (default /usr/local/ssl/bin/openssl)
+
+\item \unixcmd {--with-gencat=FULLPATH}, set path to gencat (default /usr/bin/gencat)
+
+\item \unixcmd {--with-user=LOGIN}, set sympa user name (default sympa)\\
+\Sympa daemons are running under this UID.
+
+\item \unixcmd {--with-group=LOGIN}, set sympa group name (default sympa)\\
+\Sympa daemons are running under this UID.
+
+\item \unixcmd {--with-sendmail\_aliases=ALIASFILE}, set sendmail aliases file (default /etc/mail/sympa\_aliases)\\
+This is used by the alias\_manager script.
+
+\item \unixcmd {--with-newaliases=FULLPATH}, set path to sendmail newaliases command (default /usr/bin/newaliases)
+
+\item \unixcmd {--with-newaliases\_arg=ARGS}, set arguments to newaliases command (default NONE)
+
+\end {itemize}
+
+
+\unixcmd {make} will build a few binaries (\file {queue}, \file {bouncequeue} and \file {aliaswrapper})
+and help you install required CPAN modules.
+
+\unixcmd {make install} does the installation job. It it recognizes the following option :
+
+\begin {itemize}
+
 \item DESTDIR, can be set in the main Makefile to install sympa in DESTDIR/DIR
 (instead of DIR). This is useful for building RPM and DEB packages.
-\item PERL, SH and CC and GENCAT, respectively perl, sh, cc and gencat locations. 
+
 \end {itemize}
 
 Since version 3.3 of Sympa colors are \file {sympa.conf} parameters (see
 \ref {colors},  page~\pageref {colors})
 
-Once this file has been configured, you need to run the \texttt {make;make~install} commands.
-This generates the binary for the \file {queue} program along with the nls, and inserts
-the \Sympa and \WWSympa programs in their final slot, while having propagated
-a few parameters into the PERL files, such the access path
-to the PERL program. The make command includes the checking of CPAN modules.
- 
 If everything goes smoothly, the \tildedir {sympa/bin/} directory
 will contain various PERL programs as well as the \file {queue}
 binary.  You will remark that this binary has the \index{set-uid-on-exec
