@@ -73,7 +73,7 @@ use CPAN;
 	     'Bundle::LWP' => 'LWP');
 
 %opt_features = ('DBI' => 'a generic Database Driver, required by Sympa to access Subscriber information and User preferences. An additional Database Driver is required for each database type you wish to connect to.',
-		 'DBD::mysql' => 'Mysql database driver, required if you connect to a Mysql database.',
+		 'DBD::mysql' => 'Mysql database driver, required if you connect to a Mysql database.\nYou first need to install the Mysql server and have it started before installing the Perl DBD module.',
 		 'DBD::Pg' => 'PostgreSQL database driver, required if you connect to a PostgreSQL database.',
 		 'DBD::Oracle' => 'Oracle database driver, required if you connect to a Oracle database.',
 		 'DBD::Sybase' => 'Sybase database driver, required if you connect to a Sybase database.',
@@ -160,6 +160,10 @@ sub install_module {
 	print "Setting FTP Passive mode\n";
     }
 
+    ## This is required on RedHat 9 for DBD::mysql installation
+    my $lang = $ENV{'LANG'};
+    $ENV{'LANG'} = 'C' if ($ENV{'LANG'} eq 'en_US.UTF-8');
+
     unless ($> == 0) {
 	print "\#\# You need root privileges to install $module module. \#\#\n";
 	print "\#\# Press the Enter key to continue checking modules. \#\#\n";
@@ -174,6 +178,10 @@ sub install_module {
     next unless ($answer =~ /^y$/i);
   CPAN::Shell->conf('inactivity_timeout', 4);
     CPAN::Shell->install($module);
+
+    ## Restore lang
+    $ENV{'LANG'} = $lang if (defined $lang);
+
 }
 
 ###--------------------------
