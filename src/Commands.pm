@@ -1348,14 +1348,14 @@ sub set {
     my ($which, $mode) = ($1, $2);
 
     ## Unknown command (should be checked....)
-    unless ($mode =~ /^(DIGEST|NOMAIL|EACH|MAIL|CONCEAL|NOCONCEAL|SUMMARY|NOTICE)$/i) {
+    unless ($mode =~ /^(digest|nomail|each|mail|conceal|noconceal|summary|notice)$/i) {
 	push @msg::report, sprintf "Unknown command.\n";
 	return 'syntax_error';
     }
 
-    ## SET MAIL is a synonim for SET EACH
-    $mode = 'EACH' 
-	if ($mode =~ /^mail$/i);
+    ## SET EACH is a synonim for SET MAIL
+    $mode = 'mail' 
+	if ($mode =~ /^each$/i);
     $mode =~ y/[a-z]/[A-Z]/;
     
     ## Recursive call to subroutine
