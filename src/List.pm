@@ -5206,6 +5206,9 @@ sub _load_admin_file {
     my %admin;
     my (@paragraphs);
 
+    ## Just in case...
+    $/ = "\n";
+
     ## Set defaults to 1
     foreach my $pname (keys %::pinfo) {
 	$admin{'defaults'}{$pname} = 1;
