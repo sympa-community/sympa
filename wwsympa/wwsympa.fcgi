@@ -3174,7 +3174,7 @@ sub do_modindex {
 	    $param->{'spool'}{$id}{$field} =~ s/>/&gt;/;
 	}
     }
-    closedir SPOOL
+    closedir SPOOL;
 
     unless ($param->{'spool'}) {
 	&message('no_msg', {'list' => $in{'list'}});
