@@ -378,7 +378,7 @@ while ($query = &new_loop()) {
     ## Session loop
     while ($action) {
 
-	unless (&check_param()) {
+	unless (&check_param_in()) {
 	    &message('wrong_param');
 	    &wwslog('info','Wrong parameters');
 	    last;
@@ -415,6 +415,9 @@ while ($query = &new_loop()) {
 	
 	undef $action if ($action == 1);
     }
+
+    ## Prepare outgoing params
+    &check_param_out();
 
     ## Params 
     $param->{'action_type'} = $action_type{$param->{'action'}};
@@ -761,8 +764,8 @@ sub get_parameters {
     return 1;
 }
 
-## Analysis of parameters
-sub check_param {
+## Analysis of incoming parameters
+sub check_param_in {
     &wwslog('debug2', 'check_param');
 
     ## Lowercase list name
@@ -773,7 +776,7 @@ sub check_param {
 	$in{'list'} = $1;
     }
     
-     ## listmaster has owner and editor privileges for the list
+    ## listmaster has owner and editor privileges for the list
     if (&List::is_listmaster($param->{'user'}{'email'})) {
 	$param->{'is_listmaster'} = 1;
     }
@@ -800,7 +803,9 @@ sub check_param {
 	   $param->{'is_editor'} = $list->am_i('editor', $param->{'user'}{'email'});
 	   $param->{'is_priv'} = $param->{'is_owner'} || $param->{'is_editor'};
        }
-
+	
+       $param->{'is_moderated'} = $list->is_moderated();
+ 
        ## Privileged info
        if ($param->{'is_priv'}) {
 	   $param->{'mod_total'} = $list->get_mod_spool_size();
@@ -842,45 +847,7 @@ sub check_param {
 	       }
 	   }
        }
-       ## Should Not be used anymore ##
-       $param->{'may_subunsub'} = 1 
-	    if ($param->{'may_signoff'} || $param->{'may_subscribe'});
        
-       ## Owners
-       foreach my $o (@{$list->{'admin'}{'owner'}}) {
-	   $param->{'owner'}{$o->{'email'}}{'gecos'} = $o->{'gecos'} || $o->{'email'};
-       }
-       
-       ## Editors
-       foreach my $e (@{$list->{'admin'}{'editor'}}) {
-	   $param->{'editor'}{$e->{'email'}}{'gecos'} = $e->{'gecos'} || $e->{'email'};
-       }  
-       $param->{'is_moderated'} = $list->is_moderated();
-       
-       ## May review
-       my $action = &List::request_action ('review',$param->{'auth_method'},
-					   {'listname' => $param->{'list'},
-					    'sender' => $param->{'user'}{'email'},
-					    'remote_host' => $param->{'remote_host'},
-					    'remote_addr' => $param->{'remote_addr'}});
-       
-       $param->{'may_review'} = 1 if ($action =~ /do_it/);
-       
-       ## Archives Access control
-       if (defined $list->{'admin'}{'web_archive'}) {
-	   $param->{'is_archived'} = 1;
-	    
-	   if (&List::request_action ('web_archive.access',$param->{'auth_method'},
-				       {'listname' => $param->{'list'},
-					'sender' => $param->{'user'}{'email'},
-					'remote_host' => $param->{'remote_host'},
-					'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i) {
-	       $param->{'arc_access'} = 1; 
-	   }else{
-	       undef ($param->{'arc_access'});
-	   }
-       }
-
        ## Shared documents
        my %mode;
        $mode{'read'} = 1;
@@ -896,13 +863,6 @@ sub check_param {
        }
    }
     
-    ## Set Lang
-#    if ($param->{'user'}{'email'}) {
-#	&Language::SetLang($param->{'user'}{'lang'});
-#    }elsif ($list) {
-#	&Language::SetLang($list->{'admin'}{'lang'});
-#    }
-    
     if ($param->{'user'}{'email'} && 
 	(&List::request_action ('create_list',$param->{'auth_method'},
 				{'sender' => $param->{'user'}{'email'},
@@ -915,6 +875,55 @@ sub check_param {
 
     return 1;
 
+}
+
+## Prepare outgoing params
+sub check_param_out {
+    &wwslog('debug2', 'check_param');
+
+    if ($list) {
+	## Owners
+	foreach my $o (@{$list->{'admin'}{'owner'}}) {
+	    next unless $o->{'email'};
+	    $param->{'owner'}{$o->{'email'}}{'gecos'} = $o->{'gecos'} || $o->{'email'};
+	}
+	
+	## Editors
+	foreach my $e (@{$list->{'admin'}{'editor'}}) {
+	    next unless $e->{'email'};
+	    $param->{'editor'}{$e->{'email'}}{'gecos'} = $e->{'gecos'} || $e->{'email'};
+	}  
+ 
+	## Should Not be used anymore ##
+	$param->{'may_subunsub'} = 1 
+	    if ($param->{'may_signoff'} || $param->{'may_subscribe'});
+	
+	## May review
+	my $action = &List::request_action ('review',$param->{'auth_method'},
+					    {'listname' => $param->{'list'},
+					     'sender' => $param->{'user'}{'email'},
+					     'remote_host' => $param->{'remote_host'},
+					     'remote_addr' => $param->{'remote_addr'}});
+	
+	$param->{'may_review'} = 1 if ($action =~ /do_it/);
+	
+	## Archives Access control
+	if (defined $list->{'admin'}{'web_archive'}) {
+	    $param->{'is_archived'} = 1;
+	    
+	    if (&List::request_action ('web_archive.access',$param->{'auth_method'},
+				       {'listname' => $param->{'list'},
+					'sender' => $param->{'user'}{'email'},
+					'remote_host' => $param->{'remote_host'},
+					'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i) {
+		$param->{'arc_access'} = 1; 
+	    }else{
+		undef ($param->{'arc_access'});
+	    }
+	}
+	
+    }
+    
 }
 
 ## Login WWSympa
@@ -4115,6 +4124,7 @@ sub do_edit_list {
 		}
 		## Hash
 	    }elsif (ref ($pinfo->{$pname}{'format'}) eq 'HASH') {
+
 		foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
 
 		    next unless ($list->may_edit("$pname.$key",$param->{'user'}{'email'}) eq 'write');
@@ -4125,6 +4135,7 @@ sub do_edit_list {
 			}
 		    }else{
 			if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~ /n$/) {
+
 			    if ($#{$p->[$i]{$key}} != $#{$new_p->[$i]{$key}}) {
 				$changed{$pname} = 1; next;
 			    }
@@ -4143,7 +4154,7 @@ sub do_edit_list {
 				}
 				
 				## If empty and is primary key => delete entry
-				if ((! $new_p->[$i]{$key}) && ($pinfo->{$pname}{'format'}{$key}{'occurrence'} eq '1')) {
+				if ((! $new_p->[$i]{$key}) && ($pinfo->{$pname}{'format'}{$key}{'occurrence'} eq '1')) {				
 				    splice @{$new_p}, $i, 1;
 				}
 				$changed{$pname} = 1; next;
