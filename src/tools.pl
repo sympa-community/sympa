@@ -1069,10 +1069,10 @@ sub split_mail {
     else { 
 	    my $fileExt ;
 
-	    if ($head->mime_attr("content_type.name") =~ /\.(\S+)\s*\"*$/) {
+	    if ($head->mime_attr("content_type.name") =~ /\.(\w+)\s*\"*$/) {
 		$fileExt = $1 ;
 	    }
-	    elsif ($head->recommended_filename =~ /\.(\S+)\s*\"*$/) {
+	    elsif ($head->recommended_filename =~ /\.(\w+)\s*\"*$/) {
 		$fileExt = $1 ;
 	    }
 	    else {
@@ -1086,7 +1086,7 @@ sub split_mail {
 
 	    ## Store body in file 
 	    unless (open OFILE, ">$dir/$pathname.$fileExt") {
-		&do_log('err', "Unable to open $dir/$pathname.$fileExt") ;
+		&do_log('err', "Unable to create $dir/$pathname.$fileExt") ;
 		return undef ; 
 	    }
 	    
