@@ -1131,7 +1131,8 @@ sub purge_orphan_bounces {
     my @listes;
 
     unless (@listes = &List::get_lists('*')) {
-	&do_log('err','error while loading list of listes with function get_lists');
+	&do_log('notice','No list available');
+	return 1;
     }
 
 
