@@ -1095,9 +1095,11 @@ sub load {
 
 	$m2 = $self->{'mtime'}->[1]; 
 	## if (Config has changed) OR( TTL has expired ) then reload
-	if ( ($self->{'mtime'}->[0] && ($m1 > $self->{'mtime'}->[0])) || 
+	## unless we are a CGI
+	if ( (($self->{'mtime'}->[0] && ($m1 > $self->{'mtime'}->[0])) || 
 	     ( $m1 > $last_include) || 
-	     (time > ($last_include + $self->{'admin'}{'ttl'}))) {
+	     (time > ($last_include + $self->{'admin'}{'ttl'})))
+	     && !($ENV{'HTTP_HOST'} && (-f "$self->{'dir'}/subscribers.db"))) {
 
 	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 0);
 	    unless (defined $users) {
