@@ -1472,7 +1472,7 @@ sub get_dir_size {
 sub valid_email {
     my $email = shift;
     
-    $email =~ /^([\w\-\_\.\/\+\=]+|\".*\")\@[\w\-]+(\.[\w\-]+)+$/;
+    $email =~ /^([\w\-\_\.\/\+\=\']+|\".*\")\@[\w\-]+(\.[\w\-]+)+$/;
 }
 
 ## Clean email address

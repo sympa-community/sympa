@@ -218,7 +218,7 @@ my %date_format = (
 	       );
 
 ## Regexps for list params
-my %regexp = ('email' => '([\w\-\_\.\/\+\=]+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
+my %regexp = ('email' => '([\w\-\_\.\/\+\=\']+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 	      'host' => '[\w\.\-]+',
 	      'multiple_host_with_port' => '[\w\.\-]+(:\d+)?,([\w\.\-]+(:\d+)?)*',
 	      'listname' => '[a-z0-9][a-z0-9\-\._]+',
