@@ -1,3 +1,89 @@
+2003-09-18 16:12  salaun
+
+	* doc/sympa.tex.tpl, src/Commands.pm, src/List.pm, src/sympa.pl:
+	New feature: new variable available in authz scenarios :
+	[msg_encrypted] is set to 'smime' if message was S/MIME encrypted
+
+2003-09-18 15:36  salaun
+
+	* src/tools.pl: Change: rename new S/MIME related subroutines
+
+2003-09-18 15:24  salaun
+
+	* src/: Conf.pm, List.pm, tools.pl: [C. Mock] New features : -
+	allow separate signing/encryption S/MIME keys for users, lists, 
+	sympa; keys are extracted from the received signed emails, analyzed
+	for the key usage extensions, and saved either as before (when they
+	allow signing and encryption) or with a file extension
+	"@enc"/"@sign" for separate keys; cf extract_certs() in tools.pl
+	for saving them, parse_smime_cert() for getting all the info out
+	(this also encapsulates the issue of email addresses in the DN vs
+	SubjectAlternativeName), and find_smime_keys() to encapsulate the
+	decision which key to use for signing, encrypting and decrypting.
+	wwsympa has been altered accordingly to deliver either the
+	encryption certificate or the "both purposes certificate" from
+	"load cert".  - allow multiple "generations" of certificates for
+	lists + sympa, so that you can renew your certs before they expire
+	and run old and new certs alongside, so you don't need all your
+	users to switch at the very same moment; this is also encapsulated
+	in find_smime_keys().
+
+2003-09-18 11:08  salaun
+
+	* wwsympa/wwsympa.fcgi: [C. Mock] Fix: set content-type of list
+	cert depending on user-agent, so IE can automatically import the
+	file too; also, send CRLF terminated certificates with the
+	certificate itself only (no comment lines), also for IE.
+	Certificate installation from the web interface works for netscape
+	and IE now.
+
+2003-09-18 11:05  salaun
+
+	* wwsympa/wwsympa.fcgi: [C. Mock] Change: patched mod_ssl to
+	extract the  SubjectAlternativeName X509 email storage variant and
+	deliver it in $ENV{SSL_CLIENT_S_EMAIL}; this is checked in wwsympa
+	in preference to $ENV{SSL_CLIENT_S_DN_EMAIL}; need this for our
+	certificates which contain the email address _only_ in the
+	SubjectAlternativeName.
+
+2003-09-15 15:45  salaun
+
+	* src/tools.pl: [C. Mock] Log error string
+
+2003-09-15 15:40  salaun
+
+	* src/sympa.pl: [C. Mock] Fix log entry
+
+2003-09-15 15:35  salaun
+
+	* src/sympa.pl: [C. Mock] Removing unusefull SMIME code, now in
+	Message.pm
+
+2003-09-15 15:29  salaun
+
+	* src/Commands.pm: [C. Mock] Remove unusefull SMIME code, performed
+	in Message.pm
+
+2003-09-12 15:33  salaun
+
+	* wwsympa/Auth.pm: Bug fix: &error_message() not in Auth.pm
+
+2003-09-12 15:33  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: no CAS redirect in WSDL mode
+
+2003-09-12 14:16  salaun
+
+	* wwsympa/Auth.pm: Add Auth.pm
+
+2003-09-12 14:01  salaun
+
+	* .version: Preparing 4.0.a5
+
+2003-09-12 14:00  salaun
+
+	* ChangeLog: Updated
+
 2003-09-12 13:59  salaun
 
 	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
