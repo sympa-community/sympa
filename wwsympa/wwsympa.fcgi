@@ -6823,7 +6823,7 @@ sub do_d_control {
 
     ## other info
     my @info = stat "$shareddir/$path";
-    $param->{'doc_date'} =  &POSIX::strftime("%d %b %y  %H:%M", localtime($info[10]));;
+    $param->{'doc_date'} =  &POSIX::strftime("%d %b %y  %H:%M", localtime($info[10]));
 
     # template parameters
     $param->{'list'} = $list_name;
