@@ -551,7 +551,6 @@ sub DoFile {
     }
 
     if ($rcpt =~ /^listmaster(\@(\S+))?$/) {
-	printf "****427******forward\n";
 	$status = &DoForward('sympa', 'listmaster', $msg, $file, $sender);
 
 	## Mail adressed to the robot and mail 
@@ -571,7 +570,6 @@ sub DoFile {
 	    
 	    $status = &DoCommand("$name-$command", $msg, $file);
 	}else {
-printf "*****447*****forward \n";
 	    $status = &DoForward($name, $function, $msg, $file, $sender);
 	}       
     }else {
@@ -740,16 +738,19 @@ sub DoForward {
 	if ($list) {
 	    $list->send_file('your_infected_msg', $sender, 
 			     {'virus_name' => $rc,
-			      'recipient' => $list->{'name'}.'@'.$list->{'admin'}{'host'},
+			      'recipient' => $recepient.'@'.$host,
 			      'lang' => $list->{'admin'}{'lang'}});
 	}
 	else {
 	    my %context;
 	    $context{'virus_name'} = $rc ;
-	    $context{'recipient'} = $hdr->get('To');
+	    $context{'recipient'} = $recepient.'@'.$host;
 	    $context{'lang'} = $Conf{'lang'};
-	    &List::send_global_file('infected_msg', $sender,\%context );
+	    &List::send_global_file('your_infected_msg', $sender,\%context );
 	}    
+	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $recepient, $host, $sender, $rc);
+
+	return undef;
     }else{
  
 	*SIZ = smtp::smtpto($Conf{'request'}, \@rcpt);
@@ -831,13 +832,15 @@ sub DoMessage{
 	close(SIZ);
 	return undef;
     }
-     
+    
     my $rc;
    
     if ($rc= &tools::virus_infected($msg, $file)) {
 	printf "do message, virus= $rc \n";
-	$list->send_file('your_infected_msg', $sender, {'virus_name' => $rc});
- 
+	$list->send_file('your_infected_msg', $sender, {'virus_name' => $rc,
+							'recipient' => $name.'@'.$host,
+							'lang' => $list->{'admin'}{'lang'}});
+	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $name, $host, $sender, $rc);
 	return undef;
     }
     

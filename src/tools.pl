@@ -799,14 +799,13 @@ sub split_mail {
 sub virus_infected {
     my $mail = shift ;
     my $file = shift ;
+    &do_log('debug2', 'virus_infected (%s)', $file);
     
     # there is no virus anywhere if there is no antivus tools installed
     return 0 unless ($Conf{'antivirus_path'} );
     
     my @name = split(/\//,$file);
-    printf " name $name[$#name]\n";
     my $work_dir = "${Conf{'tmpdir'}}/antivirus";
-    printf "work dir $work_dir \n";
     
     unless ((-d $work_dir) ||( mkdir $work_dir)) {
 	do_log('err', "Unable to create tmp antivirus directory $work_dir");
@@ -815,7 +814,6 @@ sub virus_infected {
     }
 
     $work_dir = "${Conf{'tmpdir'}}/antivirus/${name[$#name]}";
-    printf "work dir $work_dir \n";
     
     unless ( mkdir ($work_dir)) {
 	do_log('err', "Unable to create tmp antivirus directory $work_dir");
