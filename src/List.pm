@@ -1100,10 +1100,18 @@ sub load {
 	     (time > ($last_include + $self->{'admin'}{'ttl'}))) {
 
 	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 0);
+	    unless (defined $users) {
+		return undef;
+	    }
+
 	    $m2 = time;
 	}elsif (! $self->{'users'}) {
 	    ## Use cache
 	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 1);
+
+	    unless (defined $users) {
+		return undef;
+	    }
 	}
 	
     }else { 
@@ -4936,22 +4944,26 @@ sub _load_users_include {
 	&do_log('debug2', 'Got lock for writing on %s', $db_file);
 
     foreach my $type ('include_list','include_file','include_ldap_query','include_sql_query') {
+	last unless (defined $total);
+
 	foreach my $incl (@{$admin->{$type}}) {
+	    my $included;
+
 	    ## get the list of users
 	    if ($type eq 'include_sql_query') {
-		$total += _include_users_sql(\%users, $incl, $admin->{'default_user_options'});
+		$included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'});
 	    }elsif ($type eq 'include_ldap_query') {
-		$total += _include_users_ldap(\%users, $incl, $admin->{'default_user_options'});
+		$included = _include_users_ldap(\%users, $incl, $admin->{'default_user_options'});
 	    }elsif ($type eq 'include_list') {
 		$depend_on->{$name} = 1 ;
 		if (&_inclusion_loop ($name,$incl,$depend_on)) {
 		    do_log('notice','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
 		}else{
 		    $depend_on->{$incl};
-		    $total += _include_users_list (\%users, $incl, $admin->{'default_user_options'});
+		    $included = _include_users_list (\%users, $incl, $admin->{'default_user_options'});
 		}
 	    }elsif ($type eq 'include_file') {
-		$total += _include_users_file (\%users, $incl, $admin->{'default_user_options'});
+		$included = _include_users_file (\%users, $incl, $admin->{'default_user_options'});
 #	    }elsif ($type eq 'include_admin') {
 #		my $result = _include_users_admin (\%users, $incl,$name);
 #		$total += $result->{'total'};
@@ -4959,6 +4971,13 @@ sub _load_users_include {
 #		    $depend_on->{$list_dependance} = 1 ;
 #		}
 	    }
+	    unless (defined $included) {
+		&do_log('err', 'Inclusion %s failed in list %s', $type, $name);
+		$total = undef;
+		last;
+	    }
+
+	    $total += $included;
 	}
     }
     }
@@ -4967,6 +4986,12 @@ sub _load_users_include {
     flock(DB_FH,LOCK_UN);
     &do_log('debug2', 'Release lock on %s', $db_file);
     close DB_FH;
+
+    ## Inclusion failed, clear cache
+    unless (defined $total) {
+	unlink $db_file;
+	return undef;
+    }
 
     my $l = {	 'ref'    => $ref,
 		 'users'  => \%users

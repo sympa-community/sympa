@@ -1099,9 +1099,13 @@ sub DoCommand {
     }
 
     ## No command found
-    unless (defined($success)) {
-	do_log('info', "No command found in message");
-	push @msg::report, sprintf Msg(4, 39, "No command found in message");
+    unless ($success == 1) {
+	## No status => no command
+	unless (defined $success) {
+	    do_log('info', "No command found in message");
+	    push @msg::report, sprintf Msg(4, 39, "No command found in message");
+	}
+	return undef;
     }
     
     # processing the expire function
