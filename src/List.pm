@@ -2927,16 +2927,7 @@ sub add_user {
 	}	   
 	
 	## Is the email in user table ?
-	if ($self->is_user($who)) {
-	    
-	    ## Update User Table
-	    $statement = sprintf "UPDATE user_table SET email_user=%s, lang_user=%s, password_user=%s WHERE email_user=%s", $dbh->quote($who), $dbh->quote($values->{'lang'}), $dbh->quote($values->{'password'}), $dbh->quote($who);
-	    
-	    unless ($dbh->do($statement)) {
-		do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-		return undef;
-	    }
-	}elsif (! is_user_db($who)) {
+	if (! is_user_db($who)) {
 	    ## Insert in User Table
 	    $statement = sprintf "INSERT INTO user_table (email_user, gecos_user, lang_user, password_user) VALUES (%s,%s,%s,%s)",$dbh->quote($who), $dbh->quote($values->{'gecos'}), $dbh->quote($values->{'lang'}), $dbh->quote($values->{'password'});
 	    
