@@ -504,7 +504,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 'title_id' => 54,
 			 'group' => 'command'
 			 },
-	    'lang' => {'format' => ['fr','us','de','it','fi','es','cn-big5','cn-gb','pl','cz'],
+	    'lang' => {'format' => ['fr','us','de','it','fi','es','cn-big5','cn-gb','pl','cz','hu'],
 		       'default' => {'conf' => 'lang'},
 		       'title_id' => 55,
 		       'group' => 'description'
@@ -1465,6 +1465,13 @@ sub distribute_msg {
     foreach my $i (@{$self->{'admin'}{'custom_header'}}) {
 	$hdr->add($1, $2) if ($i=~/^([\S\-\:]*)\s(.*)$/);
     }
+
+    ## Add RFC 2919 header field
+    if ($hdr->get('List-Id')) {
+	&do_log('notice', 'Found List-Id: %s', $hdr->get('List-Id'));
+	$hdr->delete('List-ID');
+    }
+    $hdr->add('List-Id', sprintf ('<%s@%s>', $self->{'name'}, $self->{'admin'}{'host'}));
 
     ## Add RFC 2369 header fields
     foreach my $field (@{$Conf{'rfc2369_header_fields'}}) {

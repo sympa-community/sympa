@@ -4,7 +4,8 @@ use Exporter;
 @ISA = ('Exporter');
 @EXPORT = ();
 
-@languages = ('fr','us','es','it','cn-gb','cz','de');
+## Supported web languages
+@languages = ('fr','us','es','it','cn-gb','cz','de','hu');
 
 %reception_mode = ('mail' => 'normal',
 		   'digest' => 'digest',
