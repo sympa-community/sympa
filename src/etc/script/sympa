@@ -50,11 +50,11 @@ sympa_status() {
     fi
 
     # Next try "pidof"
-    pid=`--PIDPRE-- $1.pl --PIDPOST--`
-    if [ "$pid" != "" ] ; then
-            echo "$1 (pid $pid) is active..."
-            return 0
-    fi
+#    pid=`--PIDPRE-- $1.pl --PIDPOST--`
+#    if [ "$pid" != "" ] ; then
+#            echo "$1 (pid $pid) is active..."
+#            return 0
+#    fi
  
     echo "$1 is stopped."
     return 3
@@ -139,7 +139,7 @@ case "$1" in
 		sympa_start sympa
 		sympa_start archived
 		sympa_start bounced
-		sympa_start task_manager
+#		sympa_start task_manager
 		touch --LOCKDIR--/sympa
 		echo
 	else
