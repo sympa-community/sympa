@@ -42,7 +42,8 @@ use CPAN;
 	     'IO::Socket::SSL' => '0.90',
 	     'Net::SSLeay' => '1.16',
 	     'Archive::Zip' => '1.05',
-	     'Bundle::LWP' => '1.09'
+	     'Bundle::LWP' => '1.09',
+	     'SOAP::Lite' => '0.60'
 	     );
 
 ### key:left "module" used by SYMPA, 
@@ -70,7 +71,8 @@ use CPAN;
 	     'Net::SMTP' => 'libnet',
 	     'IO::Socket::SSL' => 'IO-Socket-SSL',
 	     'Net::SSLeay' => 'NET-SSLeay',
-	     'Bundle::LWP' => 'LWP');
+	     'Bundle::LWP' => 'LWP',
+	     'SOAP::Lite' => 'SOAP-Lite');
 
 %opt_features = ('DBI' => 'a generic Database Driver, required by Sympa to access Subscriber information and User preferences. An additional Database Driver is required for each database type you wish to connect to.',
 		 'DBD::mysql' => 'Mysql database driver, required if you connect to a Mysql database.\nYou first need to install the Mysql server and have it started before installing the Perl DBD module.',
@@ -85,7 +87,8 @@ use CPAN;
 		 'Net::SMTP' => 'this is required if you set \'list_check_smtp\' sympa.conf parameter, used to check existing aliases before mailing list creation.',
 		 'IO::Socket::SSL' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
 		 'Net::SSLeay' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
-		 'Bundle::LWP' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication');
+		 'Bundle::LWP' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
+		 'SOAP::Lite' => 'required if you want to run the Sympa SOAP server that provides ML services via a "web service"');
 
 ### main:
 print "******* Check perl for SYMPA ********\n";
