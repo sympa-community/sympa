@@ -4,7 +4,7 @@
 
 Votre liste est créée.<BR> 
 Vous pouvez la configurer via le bouton <b>admin</b> ci-contre.
-
+<BR>
 [IF auto_aliases]
 Les alias ont été installés.
 [ELSE]
