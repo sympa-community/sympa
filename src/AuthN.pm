@@ -1,4 +1,4 @@
-# X509.pm - This module includes X509-related functions (except some
+# AuthN.pm - This module includes authentication related functions (except some
 # that use openssl command line.
 #
 #<!-- RCS Identication ; $Revision$ ; $Date$ -->
@@ -22,7 +22,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-package X509;
+package AuthN;
 
 require Exporter;
 @ISA = qw(Exporter);
@@ -124,7 +124,7 @@ sub get_https2{
 	my $trusted_ca_path = $ssl_data->{'capath'};
 	$trusted_ca_path ||= $Conf{'capath'};
 
-	do_log ('debug','X509::get_https2 (%s,%s,%s,%s,%s)',$host,$port,$path,$trusted_ca_file,$trusted_ca_path );
+	do_log ('debug','AuthN::get_https2 (%s,%s,%s,%s,%s)',$host,$port,$path,$trusted_ca_file,$trusted_ca_path );
 
 	unless ( -r ($trusted_ca_file) ||  (-d $trusted_ca_path )) {
 	    do_log ('err',"error : incorrect access to cafile $trusted_ca_file bor capath $trusted_ca_path");
