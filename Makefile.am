@@ -297,6 +297,11 @@ installdir:
 	chgrp $(GROUP) $(DESTDIR)$(DIR)
 	@if [ ! -f $(DESTDIR)$(CONFDIR)/sympa.conf ] ; then \
 	echo "First installation : installing directories..."; \
+	echo "Creating $(DESTDIR)$(DIR)/"; \
+	mkdir -p $(DESTDIR)$(DIR); \
+	chmod 755 $(DESTDIR)$(DIR); \
+	chown $(USER) $(DESTDIR)$(DIR); \
+	chgrp $(GROUP) $(DESTDIR)$(DIR); \
 	for dir in expl etc sample ; do \
 		if [ ! -d $(DESTDIR)$(DIR)/$$dir ] ; then \
 			echo "Creating $(DESTDIR)$(DIR)/$$dir"; \
