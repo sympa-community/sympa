@@ -31,6 +31,9 @@ sub mailback {
    my($data, $headers, $from, $to, @rcpt) = @_;
    do_log('debug2', 'mail::mailback(%s, %s)', $from, join(',', @rcpt));
 
+   ## encode Subject
+   $data->{'subject'} = MIME::Words::encode_mimewords($data->{'subject'});
+
    my ($fh, $sympa_file);
    
    ## Don't fork if used by a CGI (FastCGI problem)
