@@ -1124,7 +1124,7 @@ sub check_param_out {
 					     'remote_addr' => $param->{'remote_addr'}});
 	
 	$param->{'may_suboptions'} = 1 unless ($list->{'admin'}{'user_data_source'} eq 'include');
-	
+	$param->{'total'} = $list->get_total();
 	$param->{'may_review'} = 1 if ($action =~ /do_it/);
 	
 	## Archives Access control
@@ -2514,6 +2514,10 @@ sub do_subrequest {
 	return undef;
     }
     
+    my $ldap_user;
+    $ldap_user = 1
+	if (!&wwslib::valid_email($in{'email'}) || &is_ldap_user($in{'email'}));
+
     ## Auth ?
     if ($param->{'user'}{'email'}) {
 
@@ -2533,7 +2537,7 @@ sub do_subrequest {
 	}
 
 	## Subscriber ?
-	if ($list->is_user($in{'email'})) {
+	if (!$ldap_user && $list->is_user($in{'email'})) {
 	    $param->{'status'} = 'notauth_subscriber';
 	    return 1;
 	}
@@ -2546,7 +2550,7 @@ sub do_subrequest {
 	if ((!&List::is_user_db($in{'email'}) || 
 	     !$user->{'password'} || 
 	     ($user->{'password'} =~ /^INIT/i)) &&
-	    !&is_ldap_user($in{'email'})) {
+	    !$ldap_user) {
 
 	    &do_sendpasswd();
 	    $param->{'status'} = 'notauth_passwordsent';
@@ -2654,6 +2658,10 @@ sub do_sigrequest {
 	return undef;
     }
 
+    my $ldap_user;
+    $ldap_user = 1
+	if (!&wwslib::valid_email($in{'email'}) || &is_ldap_user($in{'email'}));
+
     ## Do it
     if ($param->{'user'}{'email'}) {
 	$param->{'status'} = 'auth';
@@ -2666,7 +2674,7 @@ sub do_sigrequest {
 	return 1;
     }
     
-    if ($list->is_user($in{'email'})) {
+    if ($list->is_user($in{'email'}) || $ldap_user) {
 	my $user;
 	$user = &List::get_user_db($in{'email'})
 	    if &List::is_user_db($in{'email'});
@@ -2675,7 +2683,7 @@ sub do_sigrequest {
 	if ((!&List::is_user_db($in{'email'}) || 
 	    !$user->{'password'} || 
 	    ($user->{'password'} =~ /^INIT/i)) &&
-	    !&is_ldap_user($in{'email'})) {
+	    !$ldap_user) {
 	    
 	    &do_sendpasswd();
 	    $param->{'email'} =$in{'email'};
