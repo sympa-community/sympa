@@ -1,0 +1,26 @@
+<!-- $Id$ -->
+
+<TABLE WIDTH="100%" BORDER=0 CELLSPACING=0  CELLPADDING=0>
+  <TR VALIGN=top>
+    <TD> 
+      <BR>
+      [% IF homepage_file %]
+         [% INSERT $homepage_file IF homepage_file %]
+      [% ELSE %]
+         <PRE>
+            [% INSERT $info_file IF info_file %]
+         </PRE>
+      [% END %]
+    </TD>
+  </TR>
+</TABLE>
+
+
+
+
+
+
+
+
+
+

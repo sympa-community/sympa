@@ -1,0 +1,12 @@
+From: [% conf.email %]@[% conf.host %]
+Subject: [% FILTER qencode %][%|l%]near expiration of your certificate[%END%][%END%]
+
+[%|l(expiration_date)%]Your authentification certificate will expire on %1.[%END%]
+[%|l%]The certificate subject is :[%END%]
+[% certificate_id %]
+
+[%|l%]You won't receive the signed messages from your lists.[%END%]
+[%|l(conf.email,conf.host)%]To receive them again, renew your certificate with your certification authority
+and send a signed message to %1@%2
+or
+click : [%END%]mailto:[% conf.email %]@[% conf.host %]?subject=WHICH

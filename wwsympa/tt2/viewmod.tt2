@@ -1,0 +1,14 @@
+<!-- $Id$ -->
+
+ <FORM ACTION="[% path_cgi %]" METHOD=POST>
+  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+  <INPUT TYPE="hidden" NAME="id" VALUE="[% id %]">
+<TABLE>
+<TR BGCOLOR="[% bg_color %]"><TD>
+  <INPUT TYPE="submit" NAME="action_distribute" VALUE="[%|l%]Distribute[%END%]">
+  <INPUT TYPE="submit" NAME="action_reject.quiet" VALUE="[%|l%]Reject[%END%]">
+  <INPUT TYPE="submit" NAME="action_reject" VALUE="[%|l%]Notified reject[%END%]">
+</TD></TR></TABLE>
+</FORM>
+[% PROCESS $file IF file %]
+

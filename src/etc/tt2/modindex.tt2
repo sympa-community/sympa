@@ -1,0 +1,33 @@
+From: [% conf.email %]@[% conf.host %]
+Subject: [% FILTER qencode %][%|l(list.name)%]Moderation spool for list %1[%END%][%END%]
+Mime-version: 1.0
+Content-Type: multipart/mixed; boundary="[% boundary1 %]"
+
+--[% boundary1 %]
+Content-Type: text/plain; charset=iso-8859-1
+Content-transfer-encoding: 8bit
+
+[%|l(total,list.name,list.host)%]There are %1 messages to be moderated for list %2@%3[%END%]
+
+[% IF spool %]
+--[% boundary1 %]
+Content-Type: multipart/digest; boundary="[% boundary2 %]"
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+
+This is a multi-part message in MIME format...
+
+[% FOREACH msg = spool %]
+    [% SET tmp = msg.key msg = msg.value msg.NAME = tmp IF msg.key.defined %]
+--[% boundary2 %]
+Content-Type: message/rfc822
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+
+[% msg %]
+
+[% END %]
+--[% boundary2 %]--
+
+--[% boundary1 %]--
+[% END %]

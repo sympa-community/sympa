@@ -1,0 +1,31 @@
+From: [% from %]
+To: [%|l(list.name)%]Moderators of list %1[%END%] <[% list.name %]-editor@[% list.host %]>
+Subject: [% FILTER qencode %][%|l(list.name)%]Article to be approved for %1[%END%][%END%]
+Reply-To: [% conf.email %]@[% conf.host %]
+Mime-version: 1.0
+Content-Type: multipart/mixed; boundary="[% boundary %]"
+
+--[% boundary %]
+Content-Type: text/plain
+Content-transfer-encoding: [%|l%]7bit[%END%]
+
+[% IF method == 'md5' %]
+[%|l(list.name)%]To distribute the attached message in list %1:[%END%]
+mailto:[% conf.email %]@[% conf.host %]?subject=DISTRIBUTE%20[% list.name %]%20[% modkey %]
+[%|l(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject :[%END%]
+DISTRIBUTE [% list.name %] [% modkey %]
+
+[%|l%]To reject it (it will be removed):[%END%]
+mailto:[% conf.email %]@[% conf.host %]?subject=REJECT%20[% list.name %]%20[% modkey %]
+[%|l(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject :[%END%]
+REJECT [% list.name %] [% modkey %]
+[% END %]
+
+--[% boundary %]
+Content-Type: message/rfc822
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+
+[% INSERT $msg IF msg %]
+
+--[% boundary %]--

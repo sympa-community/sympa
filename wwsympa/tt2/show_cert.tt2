@@ -1,0 +1,14 @@
+<!-- $Id$ -->
+
+<BR>
+<table border=1>
+<tr><td align=center><b>[%|l%]HTTPS authentication information[%END%]</b></td></TR>
+<tr><td>
+<table>
+<tr><td>[%|l%]User certificate belong to[%END%] </td><td>[% ssl_client_s_dn %]</td></tr>
+<tr><td>[%|l%]Certificate expiration date[%END%] </td><td>[% ssl_client_v_end %]</td></tr>
+<tr><td>[%|l%]Certificate issuer[%END%] </td><td>[% ssl_client_i_dn %]</td></tr>
+<tr><td>[%|l%]Cipher key size used[%END%] </td><td>[% ssl_cipher_usekeysize %]</td></tr>
+</table>
+</td></TR>
+</table>

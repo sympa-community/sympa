@@ -1,0 +1,190 @@
+<!-- $Id$ -->
+
+   <TABLE WIDTH="100%" BORDER=0 CELLPADDING=0>
+ 
+     [% IF main_robot %]
+      <TR>
+        <TH BGCOLOR="[% dark_color %]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[% selected_color %]" WIDTH="50%">
+              <FONT COLOR="[% bg_color %]">
+	        [%|l%]Virtual Robots[%END%]
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+     </TR>
+
+     <TR><TD>
+    [% IF robots %]
+      [%|l%]The following virtual robots are running on this server :[%END%]<UL>
+         [% FOREACH vr = robots %]
+    [% SET tmp = vr.key vr = vr.value vr.NAME = tmp IF vr.key.defined %]
+	    <LI><A HREF="[% vr.wwsympa_url %]/serveradmin">[% vr.NAME %]</A>
+	 [% END %]
+      </UL>
+    [% ELSE %]
+      [%|l%]No Virtual Robot defined on this server[%END%]
+    [% END %]
+     <BR>
+     </TD></TR>
+    [% END %]
+
+      <TR>
+        <TH BGCOLOR="[% dark_color %]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[% selected_color %]" WIDTH="50%">
+              <FONT COLOR="[% bg_color %]">
+	        [%|l%]Lists[%END%]
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+     </TR><TR>
+     <TD>
+     [% PROCESS 'button_header.tt2' %]
+       <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
+      <A HREF="[% path_cgi %]/get_pending_lists">[%|l%]Pending lists[%END%]</A>
+       </TD>
+     [% PROCESS 'button_footer.tt2' %]
+
+     [% PROCESS 'button_header.tt2' %]
+       <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
+      <A HREF="[% path_cgi %]/get_latest_lists">[%|l%]Latest lists[%END%]</A>
+       </TD>
+     [% PROCESS 'button_footer.tt2' %]
+
+     [% PROCESS 'button_header.tt2' %]
+       <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
+      <A HREF="[% path_cgi %]/get_closed_lists">[%|l%]Closed lists[%END%]</A>
+       </TD>
+     [% PROCESS 'button_footer.tt2' %]
+
+    <BR></TD></TR>
+
+    <TR>
+        <TH BGCOLOR="[% dark_color %]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[% selected_color %]" WIDTH="50%">
+              <FONT COLOR="[% bg_color %]">
+	        [%|l%]Users[%END%]
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+    </TR>
+      <TR><TD NOWRAP>
+        <FORM ACTION="[% path_cgi %]" METHOD="POST">
+	  <INPUT NAME="email" SIZE="30" VALUE="[% email %]">
+	  <INPUT TYPE="hidden" NAME="action" VALUE="search_user">
+	  <INPUT TYPE="submit" NAME="action_search_user" VALUE="[%|l%]Search User[%END%]">
+	</FORM>     
+      <BR></TD></TR>
+
+      <TR VALIGN="top">
+
+        <TH BGCOLOR="[% dark_color %]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[% selected_color %]" WIDTH="50%">
+              <FONT COLOR="[% bg_color %]">
+	        [%|l%]Templates[%END%] 
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+      </TR>
+      <TR>
+        <TD NOWRAP>
+	  <FORM ACTION="[% path_cgi %]" METHOD=POST>
+	    <FONT COLOR="[% dark_color %]"><B>[%|l%]Setting defaults list templates[%END%]</B></FONT><BR>
+	     <SELECT NAME="file">
+	      [% FOREACH f = lists_default_files %]
+    [% SET tmp = f.key f = f.value f.NAME = tmp IF f.key.defined %]
+	        <OPTION VALUE='[% f.NAME %]' [% f.selected %]>[% f.complete %]
+	      [% END %]
+	    </SELECT>
+	    <INPUT TYPE="submit" NAME="action_editfile" VALUE="[%|l%]Edit[%END%]">
+	  </FORM>
+
+	  <FORM ACTION="[% path_cgi %]" METHOD=POST>
+	    <FONT COLOR="[% dark_color %]"><B>[%|l%]Setting site templates[%END%]</B></FONT><BR>
+	     <SELECT NAME="file">
+	      [% FOREACH f = server_files %]
+    [% SET tmp = f.key f = f.value f.NAME = tmp IF f.key.defined %]
+	        <OPTION VALUE='[% f.NAME %]' [% f.selected %]>[% f.complete %]
+	      [% END %]
+	    </SELECT>
+	    <INPUT TYPE="submit" NAME="action_editfile" VALUE="[%|l%]Edit[%END%]">
+	  </FORM>
+	</TD>
+      </TR>
+      <TR><TD>
+     [% PROCESS 'button_header.tt2' %]
+       <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
+        <A HREF="[% path_cgi %]/view_translations">[%|l%]Customize templates[%END%]</A>
+       </TD>
+      [% PROCESS 'button_footer.tt2' %]
+      <BR></TD></TR>
+
+    <TR>
+        <TH BGCOLOR="[% dark_color %]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[% selected_color %]" WIDTH="50%">
+              <FONT COLOR="[% bg_color %]">
+	        [%|l%]Archives[%END%]
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+      </TR>
+
+      <TR>
+        <TD>
+<FONT COLOR="[% dark_color %]"><B>[%|l%]Rebuild HTML archives using "arctxt" directories as input.[%END%]</FONT>
+        </TD>
+      </TR>
+      <TR>
+        <TD>
+          <FORM ACTION="[% path_cgi %]" METHOD=POST>
+	  <INPUT TYPE="submit" NAME="action_rebuildallarc" VALUE="[%|l%]ALL[%END%]"><BR>
+	[%|l%]May take a lot of CPU time,  be careful ![%END%]
+          </FORM>
+	</TD>
+
+    <TD ALIGN="CENTER"> 
+          <FORM ACTION="[% path_cgi %]" METHOD=POST>
+	  <INPUT TYPE="text" NAME="list" SIZE="20">
+          <INPUT TYPE="submit" NAME="action_rebuildarc" VALUE="[%|l%]Rebuild archive[%END%]">
+          </FORM>
+    </TD>
+
+
+      </TR>
+
+      <TR>
+        <TD>
+	  <FONT COLOR="[% dark_color %]">
+	  <A HREF="[% path_cgi %]/scenario_test">
+	     <b>[%|l%]Scenari test module[%END%]</b>
+          </A>
+          </FONT>
+	</TD>
+      </TR>
+	
+    </TABLE>
+
+<BR><BR>
+
+[% IF loop_count %]
+[%|l(process_id,loop_count,start_time)%]This FastCGI process (%1) has served %2 since %3.[%END%]
+[% END %]

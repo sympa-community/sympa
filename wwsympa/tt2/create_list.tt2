@@ -1,0 +1,25 @@
+<!-- $Id$ -->
+
+[% IF status == 'open' %]
+[%|l%]Your list is created.[%END%]<BR> 
+[%|l%]You can configure it via the admin button beside.[%END%]
+<BR>
+[% IF auto_aliases %]
+[%|l%]Aliases have been installed.[%END%]
+[% ELSE %]
+ <TABLE BORDER=1>
+ <TR BGCOLOR="[% light_color %]"><TD align=center>[%|l%]Required aliases[%END%]</TD></TR>
+ <TR>
+ <TD>
+ <pre><code>
+ [% aliases %]
+ </code></pre>
+ </TD>
+ </TR>
+ </TABLE>
+[% END %]
+
+[% ELSE %]
+[%|l%]Your list creation request is registered. You can now  modify its
+configuration using the admin button but the list will be unusable until the listmaster validates it.[%END%]
+[% END %]

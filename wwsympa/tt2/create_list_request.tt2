@@ -1,0 +1,92 @@
+<!-- $Id$ -->
+
+
+<FORM ACTION="[% path_cgi %]" METHOD=POST>
+
+<P>
+<TABLE>
+ <TR>
+   <TD NOWRAP><B>[%|l%]List name:[%END%]</B></TD>
+   <TD><INPUT TYPE="text" NAME="listname" SIZE=30 VALUE="[% saved.listname %]"></TD>
+   <TD><img src="[% icons_url %]/unknown.png" alt="[%|l%]the list name ; be careful, not its address ![%END%]"></TD>
+ </TR>
+ 
+ <TR>
+   <TD NOWRAP><B>[%|l%]Owner:[%END%]</B></TD>
+   <TD><I>[% user.email %]</I></TD>
+   <TD><img src="[% icons_url %]/unknown.png" alt="[%|l%]You are the privileged owner of this list[%END%]"></TD>
+ </TR>
+
+ <TR>
+   <TD valign=top NOWRAP><B>[%|l%]List type :[%END%]</B></TD>
+   <TD>
+     <MENU>
+  [% FOREACH template = list_list_tpl %]
+    [% SET tmp = template.key template = template.value template.NAME = tmp IF template.key.defined %]
+     <INPUT TYPE="radio" NAME="template" Value="[% template.NAME %]"
+     [% IF template.selected %]
+       CHECKED
+     [% END %]
+     > [% template.NAME %]<BR>
+     <BLOCKQUOTE>
+     [% PROCESS $template.comment IF template.comment %]
+     </BLOCKQUOTE>
+     <BR>
+  [% END %]
+     </MENU>
+    </TD>
+    <TD valign=top><img src="[% icons_url %]/unknown.png" alt="[%|l%]The list type is a set of parameters' profile. Parameters will be editable, once the list created[%END%]"></TD>
+ </TR>
+ <TR>
+   <TD NOWRAP><B>[%|l%]Subject:[%END%]</B></TD>
+   <TD><INPUT TYPE="text" NAME="subject" SIZE=60 VALUE="[% saved.subject %]"></TD>
+   <TD><img src="[% icons_url %]/unknown.png" alt="[%|l%]The list's subject[%END%]"></TD>
+ </TR>
+ <TR>
+   <TD NOWRAP><B>[%|l%]Topics:[%END%]</B></TD>
+   <TD><SELECT NAME="topics">
+	<OPTION VALUE="">[%|l%]--Select a topic--[%END%]
+	[% FOREACH topic = list_of_topics %]
+    [% SET tmp = topic.key topic = topic.value topic.NAME = tmp IF topic.key.defined %]
+	  <OPTION VALUE="[% topic.NAME %]"
+	  [% IF topic.selected %]
+	    SELECTED
+	  [% END %]
+	  >[% topic.title %]
+	  [% IF topic.sub %]
+	  [% FOREACH subtopic = topic.sub %]
+    [% SET tmp = subtopic.key subtopic = subtopic.value subtopic.NAME = tmp IF subtopic.key.defined %]
+	     <OPTION VALUE="[% topic.NAME %]/[% subtopic.NAME %]">[% topic.title %] / [% subtopic.title %]
+	  [% END %]
+	  [% END %]
+	[% END %]
+	<OPTION VALUE="other">[%|l%]Other[%END%]
+     </SELECT>
+   </TD>
+   <TD valign=top><img src="[% icons_url %]/unknown.png" alt="[%|l%]List classification in the directory[%END%]"></TD>
+ </TR>
+
+ <TR>
+   <TD valign=top NOWRAP><B>[%|l%]Description:[%END%]</B></TD>
+   <TD><TEXTAREA COLS=60 ROWS=10 NAME="info">[% saved.info %]</TEXTAREA></TD>
+   <TD valign=top><img src="[% icons_url %]/unknown.png" alt="[%|l%]A few lines describing the list[%END%]"></TD>
+ </TR>
+
+ <TR>
+   <TD COLSPAN=2 ALIGN="center">
+    <TABLE>
+     <TR>
+      <TD BGCOLOR="[% light_color %]">
+<INPUT TYPE="submit" NAME="action_create_list" VALUE="[%|l%]Submit your creation request[%END%]">
+      </TD>
+     </TR></TABLE>
+</TD></TR>
+</TABLE>
+
+
+
+</FORM>
+
+
+
+

@@ -1,0 +1,129 @@
+<!-- $Id$ -->
+
+    <TABLE WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+      <TR VALIGN="top">
+        <TH BGCOLOR="[% dark_color %]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[% selected_color %]" WIDTH="50%">
+              <FONT COLOR="[% bg_color %]">
+                [%|l%]Your environment[%END%]
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+      </TR>
+      <TR VALIGN="top">
+        <TD>
+          <FORM ACTION="[% path_cgi %]" METHOD=POST>
+         
+            <FONT COLOR="[% dark_color %]">Email  </FONT> [% user.email %]<BR><BR>
+            <FONT COLOR="[% dark_color %]">[%|l%]Name[%END%]</FONT>
+            <INPUT TYPE="text" NAME="gecos" SIZE=20 VALUE="[% user.gecos %]"><BR><BR>
+            <FONT COLOR="[% dark_color %]">[%|l%]Language[%END%] </FONT>
+            <SELECT NAME="lang">
+              [% FOREACH l = languages %]
+    [% SET tmp = l.key l = l.value l.NAME = tmp IF l.key.defined %]
+                <OPTION VALUE='[% l.NAME %]' [% l.selected %]>[% l.complete %]
+              [% END %]
+            </SELECT>
+            <BR><BR>
+            <FONT COLOR="[% dark_color %]">[%|l%]Connexion expiration period[%END%] </FONT>
+            <SELECT NAME="cookie_delay">
+              [% FOREACH period = cookie_periods %]
+    [% SET tmp = period.key period = period.value period.NAME = tmp IF period.key.defined %]
+                <OPTION VALUE="[% period.value %]" [% period.selected %]>[% period.desc %]
+              [% END %]
+            </SELECT>
+            <BR><BR>
+            <INPUT TYPE="submit" NAME="action_setpref" VALUE="[%|l%]Submit[%END%]">
+          </FORM>
+        </TD>
+      </TR>
+
+      [% IF auth == 'classic' %]
+      <TR VALIGN="top">
+        <TH BGCOLOR="[% dark_color %]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH WIDTH="50%" BGCOLOR="[% selected_color %]">
+              <FONT COLOR="[% bg_color %]">
+                [%|l%]Changing your email address[%END%]
+              </FONT>
+             </TH><TH WIDTH="50%" BGCOLOR="[% selected_color %]">
+              <FONT COLOR="[% bg_color %]">
+                [%|l%]Changing your password[%END%]
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+
+      </TR>
+       
+      <TR VALIGN="top">
+           <TD>
+           <FORM ACTION="[% path_cgi %]" METHOD=POST>
+        
+            <BR><BR><FONT COLOR="[% dark_color %]">[%|l%]New email address :[%END%] </FONT>
+            <BR>&nbsp;&nbsp;&nbsp;<INPUT NAME="email" SIZE=15>
+            <BR><BR><INPUT TYPE="submit" NAME="action_change_email" VALUE="[%|l%]Submit[%END%]">
+            </FORM>
+        </TD>
+        <TD>
+          <FORM ACTION="[% path_cgi %]" METHOD=POST>
+            <BR><BR><FONT COLOR="[% dark_color %]">[%|l%]New password :[%END%] </FONT>
+            <BR>&nbsp;&nbsp;&nbsp;<INPUT TYPE="password" NAME="newpasswd1" SIZE=15>
+            <BR><FONT COLOR="[% dark_color %]">[%|l%]Re-enter your new password :[%END%] </FONT>
+            <BR>&nbsp;&nbsp;&nbsp;<INPUT TYPE="password" NAME="newpasswd2" SIZE=15>
+            <BR><BR><INPUT TYPE="submit" NAME="action_setpasswd" VALUE="[%|l%]Submit[%END%]">
+            </FORM>
+	    [% END %]
+
+        </TD>
+	<TR VALIGN="top">
+        <TH BGCOLOR="[% dark_color %]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH WIDTH="50%" BGCOLOR="[% selected_color %]">
+              <FONT COLOR="[% bg_color %]">
+                [%|l%]Your other email addresses[%END%]
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+      </TR>
+      [% IF !unique %]
+      <TR VALIGN="top">
+      <TD>  
+            <FORM ACTION="[% path_cgi %]" METHOD=POST> 
+   	    [% FOREACH email = alt_emails %]
+    [% SET tmp = email.key email = email.value email.NAME = tmp IF email.key.defined %]
+	    <A HREF="[% path_cgi %]/change_identity/[% email.NAME %]/pref">[% email.NAME %]</A>
+	    <INPUT NAME="email" TYPE=hidden VALUE="[% email.NAME %]">
+	    <BR>
+	    [% END %]
+	    </FORM>
+      </TD>
+      </TR> 
+      [% END %]
+      <TR VALIGN="top">
+      <TD>
+	    <FORM ACTION="[% path_cgi %]" METHOD=POST> 
+	    <BR>
+	    <FONT COLOR="[% dark_color %]">[%|l%]Other email address :[%END%] </FONT>
+	    &nbsp;&nbsp;&nbsp;<INPUT NAME="new_alternative_email" SIZE=15>
+	    &nbsp;&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|l%]Password :[%END%] </FONT>
+	    &nbsp;&nbsp;&nbsp;<INPUT TYPE = "password" NAME="new_password" SIZE=8>
+            &nbsp;&nbsp;&nbsp &nbsp; <INPUT TYPE="submit" NAME="action_record_email" VALUE="[%|l%]Submit[%END%]">
+            </FORM>
+      </TD>
+      <TD VALIGN="middle">
+      [%|l%]This other email address, that should be known by Sympa, will be recognized by Sympa as 
+	an alternate email address. You will also be able to unify your subscriptions with
+	your main email address.[%END%]  
+      </TD>
+      </TR>
+      </TABLE>

@@ -1,0 +1,83 @@
+
+              SYMPA -- Systeme de Multi-Postage Automatique
+                       (Automatic Mailing System)
+
+                                [%|l%]User's Guide[%END%]
+
+
+[%|l%]SYMPA is an electronic mailing-list manager that automates list management
+functions such as subscriptions, moderation, and archive management.[%END%]
+
+[%|l(conf.sympa)%]All commands must be sent to the electronic address %1[%END%]
+
+[%|l%]You can put multiple commands in a message. These commands must appear in the
+message body and each line must contain only one command. The message body
+is ignored if the Content-Type is different from text/plain but even with
+crasy mailer using multipart and text/html for any message, commands in the
+subject are recognized.[%END%]
+
+[%|l%]Available commands are:[%END%]
+
+ HELp                        * [%|l%]This help file[%END%]
+ INFO                        * [%|l%]Information about a list[%END%]
+ LISts                       * [%|l%]Directory of lists managed on this node[%END%]
+ REView [%|l%]<list>[%END%]               * [%|l%]Displays the subscribers to [%|l%]<list>[%END%][%END%]
+ WHICH                       * [%|l%]Displays which lists you are subscribed to[%END%]
+ SUBscribe [%|l%]<list>[%END%] <name>     * [%|l%]To subscribe or to confirm a subscription to
+                               [%|l%]<list>[%END%].[%END%]
+
+ UNSubscribe [%|l%]<list>[%END%] <EMAIL>  * [%|l%]To quit [%|l%]<list>[%END%]. <EMAIL> is an optional 
+                               email address, usefull if different from
+                               your "From:" address.[%END%]
+ UNSubscribe * <EMAIL>       * [%|l%]To quit all lists.[%END%]
+
+ SET [%|l%]<list>[%END%]|* NOMAIL         * [%|l%]To suspend the message reception for [%|l%]<list>[%END%][%END%]
+ SET [%|l%]<list>[%END%]|* DIGEST         * [%|l%]Message reception in compilation mode[%END%]
+ SET [%|l%]<list>[%END%]|* SUMMARY        * [%|l%]Receiving the message index only[%END%]
+ SET [%|l%]<list>[%END%]|* NOTICE         * [%|l%]Receiving message subject only[%END%]
+
+ SET [%|l%]<list>[%END%]|* MAIL           * [%|l%][%|l%]<list>[%END%] reception in normal mode[%END%]
+ SET [%|l%]<list>[%END%]|* CONCEAL        * [%|l%]To become unlisted (hidden subscriber address)[%END%]
+ SET [%|l%]<list>[%END%]|* NOCONCEAL      * [%|l%]Subscriber address visible via REView[%END%]
+
+
+ INDex [%|l%]<list>[%END%]                * [%|l%][%|l%]<list>[%END%] archive file list[%END%]
+ GET [%|l%]<list>[%END%] <file>           * [%|l%]To get <file> of [%|l%]<list>[%END%] archive[%END%]
+ LAST [%|l%]<list>[%END%]                 * [%|l%]Used to received the last message from [%|l%]<list>[%END%][%END%]
+ INVITE [%|l%]<list>[%END%] <email>       * [%|l%]Invite <email> for subscribtion in [%|l%]<list>[%END%][%END%]
+ CONFIRM [%|l%]<key>[%END%]               * [%|l%]Confirmation for sending a message (depending
+                               on the list's configuration)[%END%]
+ QUIT                        * [%|l%]Indicates the end of the commands (to ignore a
+                               signature)[%END%]
+
+[% IF is_owner %]
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+[%|l%]The following commands are available only for lists's owners or moderators:[%END%]
+
+ ADD [%|l%]<list>[%END%] [%|l%]user@host[%END%] [%|l%]Full name[%END%]  * [%|l%]To add a user to a list[%END%]
+ DEL [%|l%]<list>[%END%] [%|l%]user@host[%END%]            * [%|l%]To delete a user from a list[%END%]
+ STATS [%|l%]<list>[%END%]                    * [%|l%]To consult the statistics for [%|l%]<list>[%END%][%END%]
+ EXPire [%|l%]<list>[%END%] [%|l%]<old>[%END%] [%|l%]<delay>[%END%]     * [%|l%]To begin an expiration process for [%|l%]<list>[%END%]
+                                   subscribers who have not confirmed their
+                                   subscription for <old> days. The
+                                   subscribers have <delay> days to confirm[%END%]
+ EXPireINDex [%|l%]<list>[%END%]              * [%|l%]Displays the current expiration process
+                                   state for [%|l%]<list>[%END%][%END%]
+ EXPireDEL [%|l%]<list>[%END%]                * [%|l%]To de-activate the expiration process for
+                                   [%|l%]<list>[%END%][%END%]
+
+ REMIND [%|l%]<list>[%END%]                   * [%|l%]Send a reminder message to each
+                                   subscriber (this is a way to inform
+                                   anyone what is his real subscribing
+                                   email).[%END%]
+[% END %]
+[% IF is_editor %]
+
+ DISTribute [%|l%]<list>[%END%] <clef>        * [%|l%]Moderation: to validate a message[%END%]
+ REJect [%|l%]<list>[%END%] <clef>            * [%|l%]Moderation: to reject a message[%END%]
+ MODINDEX [%|l%]<list>[%END%]                 * [%|l%]Moderation: to consult the message list to
+                                   moderate[%END%]
+[% END %]
+
+[%|l%]Powered by Sympa[%END%] [% conf.version %] : http://listes.cru.fr/sympa/
+

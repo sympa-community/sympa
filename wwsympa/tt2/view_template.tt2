@@ -1,0 +1,6 @@
+<PRE>
+[% FOREACH l = tpl %]
+    [% SET tmp = l.key l = l.value l.NAME = tmp IF l.key.defined %]
+[% l %]
+[% END %]
+</PRE>

@@ -1,0 +1,17 @@
+From: [% conf.email %]@[% conf.host %]
+To: [%|l%]Listowners[%END%] <[% to %]>
+[% IF type == 'arc_quota_exceeded' -%]
+Subject: [% FILTER qencode %][%|l(list.name)%]List "%1" archive quota exceeded[%END%][%END%]
+
+[%|l(list.name,list.host,size,conf.host)%]%1 archive quota exceeded. 
+Total size used for %1@%2 archive is %3 Bytes. Messages
+are no more web-archived. Please contact listmaster@%4. [%END%]
+
+[% ELSIF type == 'arc_quota_95' -%]
+Subject: [% FILTER qencode %][%|l(list.name,rate)%]List "%1" warning : archive %2% full[%END%][%END%]
+
+[%|l(rate2,list.name,list.host,rate)%]%2@%3 archives use %4% of allowed disk quota.[%END%]
+[%|l(list.name,size)%]Total size used for %1@%2 Bytes.[%END%]
+
+[%|l(conf.host)%]Messages are still archived but you should contact listmaster@%1[%END%]. 
+[% END %]

@@ -1,0 +1,10 @@
+[% table_of_content %] :
+
+[% FOREACH m = msg_list %]
+    [% SET tmp = m.key m = m.value m.NAME = tmp IF m.key.defined %]
+[% m.id %]. [% m.subject %]   [% m.from %]
+[% IF conf.wwsympa_url %]
+   [% conf.wwsympa_url %]/arcsearch_id/[% list.name %]/[% m.month %]/[% m.message_id %]
+[% END %]
+[% END %]
+

@@ -1,0 +1,301 @@
+<!-- $Id$ -->
+
+[% IF file %]
+  [% INSERT $file IF file %]
+[% ELSE %]
+
+  [% IF path %]  
+    <h2><B><IMG SRC="[% icons_url %]/folder.open.png"> [% path %] </B> </h2> 
+    <A HREF="[% path_cgi %]/d_editfile/[% list %]/[% escaped_path %]">[%|l%]edit[%END%]</A> | 
+    <A HREF="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]" onClick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]', '[%|l(path)%]Do you really want to delete %1 ?[%END%]'); return false;">[%|l%]delete[%END%]</A> |
+    <A HREF="[% path_cgi %]/d_control/[% list %]/[% escaped_path %]">[%|l%]access[%END%]</A><BR>
+
+    [%|l(doc_owner)%]Owner : %1[%END%] <BR>
+    [%|l(doc_date)%]Last update : %1[%END%] <BR>
+    [% IF doc_title %]
+    [%|l(doc_title)%]Description : %1[%END%] <BR><BR>
+    [% END %]
+    <font size=+1> <A HREF="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <IMG ALIGN="bottom"  src="[% father_icon %]" BORDER="0"> [%|l%]Up to higher level directory[%END%]</A></font>
+    <BR>  
+  [% ELSE %]
+    <h2> <B> [%|l%]Listing of folder SHARED[%END%] </B> </h2> 
+  [% END %]
+   
+  <TABLE width=100%>
+  <TR BGCOLOR="[% dark_color %]">
+   
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[% bg_color %]">[%|l%]Document[%END%]</font></TD>
+  [% IF order_by != 'order_by_doc' %]  
+    <TD ALIGN="right">
+    <form method="post" ACTION="[% path_cgi %]">  
+    <INPUT ALIGN="top"  type="image" src="[% sort_icon %]" WIDTH=15 HEIGHT=15 name="[%|l%]Sort by name[%END%]">
+    <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+    <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
+    <INPUT TYPE="hidden" NAME="action" VALUE="d_read">
+    <INPUT TYPE="hidden" NAME="order" VALUE="order_by_doc">
+    </form>
+    </TD>
+  [% END %]	
+  </TR></TABLE>
+  </th>
+  
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[% bg_color %]">[%|l%]Author[%END%]</font></TD>
+  [% IF order_by != 'order_by_author' %]  
+    <TD ALIGN="right">
+    <form method="post" ACTION="[% path_cgi %]">  
+    <INPUT ALIGN="top"  type="image" src="[% sort_icon %]" WIDTH=15 HEIGHT=15 name="[%|l%]Sort by author[%END%]">
+    <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+    <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
+    <INPUT TYPE="hidden" NAME="action" VALUE="d_read">
+    <INPUT TYPE="hidden" NAME="order" VALUE="order_by_author">
+    </form>	
+    </TD>
+  [% END %]
+  </TR></TABLE>
+  </th> 
+
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[% bg_color %]">[%|l%]Size (Kb)[%END%]</font></TD>
+  [% IF order_by != 'order_by_size' %] 
+    <TD ALIGN="right">
+    <form method="post" ACTION="[% path_cgi %]">
+    <INPUT ALIGN="top"  type="image" src="[% sort_icon %]" WIDTH=15 HEIGHT=15 name="[%|l%]Sort by size[%END%]">
+    <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+    <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
+    <INPUT TYPE="hidden" NAME="action" VALUE="d_read">
+    <INPUT TYPE="hidden" NAME="order" VALUE="order_by_size">
+    </form>
+    </TD>
+  [% END %]
+  </TR></TABLE>   
+  </th> 
+
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="[% bg_color %]">[%|l%]Last update[%END%]</font></TD>
+  [% IF order_by != 'order_by_date' %]
+    <TD ALIGN="right">
+    <form method="post" ACTION="[% path_cgi %]">
+    <INPUT ALIGN="top"  type="image" src="[% sort_icon %]" WIDTH=15 HEIGHT=15 name="[%|l%]Sort by date[%END%]">
+    <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+    <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
+    <INPUT TYPE="hidden" NAME="action" VALUE="d_read">
+    <INPUT TYPE="hidden" NAME="order" VALUE="order_by_date">
+    </form>
+    </TD>
+  [% END %]
+  </TR></TABLE>  
+  </th> 
+
+  <TD ALIGN="center"><font color="[% bg_color %]">[%|l%]Edit[%END%]</font></TD> 
+  <TD ALIGN="center"><font color="[% bg_color %]">[%|l%]Delete[%END%]</font></TD>
+  <TD ALIGN="center"><font color="[% bg_color %]">[%|l%]Access[%END%]</font></TD></TR>
+      
+  [% IF empty %]
+    <TR BGCOLOR="[% light_color %]" VALIGN="top">
+    <TD COLSPAN=8 ALIGN="center"> [%|l%]Empty folder[%END%] </TD>
+    </TR>
+  [% ELSE %]   
+    [% IF sort_subdirs %]
+      [% FOREACH s = sort_subdirs %]
+    [% SET tmp = s.key s = s.value s.NAME = tmp IF s.key.defined %] 
+        <TR BGCOLOR="[% light_color %]">        
+	<TD NOWRAP> <A HREF="[% path_cgi %]/d_read/[% list %]/[% escaped_path %][% s.escaped_doc %]/"> 
+	<IMG ALIGN=bottom BORDER=0 SRC="[% s.icon %]" ALT="[% s.escaped_title %]"> [% s.doc %]</A></TD>
+	<TD>
+	[% IF s.author_known %] 
+	  [% s.author_mailto %]  
+        [% ELSE %]
+	   [%|l%]Unknown[%END%] 
+	[% END %]
+	</TD>	    
+	<TD>&nbsp;</TD>
+	<TD NOWRAP> [% s.date %] </TD>
+		
+	[% IF s.edit %]
+
+	<TD><center>
+	<font size=-1>
+	<A HREF="[% path_cgi %]/d_editfile/[% list %]/[% escaped_path %][% s.escaped_doc %]">[%|l%]edit[%END%]</A>
+	</font>
+	</center></TD>
+
+	  <TD><center>
+	  <FONT size=-1>
+	  <A HREF="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% s.escaped_doc %]" onClick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% s.escaped_doc %]', '[%|l(path,s.doc)%]Do you really want to delete %1%2 ?[%END%]'); return false;">[%|l%]delete[%END%]</A>
+	  </FONT>
+	  </center></TD>
+	[% ELSE %]
+	  <TD>&nbsp; </TD>
+	  <TD>&nbsp; </TD>
+	[% END %]
+	
+	[% IF s.control %]
+	  <TD>
+	  <center>
+	  <FONT size=-1>
+	  <A HREF="[% path_cgi %]/d_control/[% list %]/[% escaped_path %][% s.escaped_doc %]">[%|l%]access[%END%]</A>
+	  </font>
+	  </center>
+	  </TD>	 
+	[% ELSE %]
+	  <TD>&nbsp; </TD>
+	[% END %]
+      </TR>
+      [% END %] 
+    [% END %]
+
+    [% IF sort_files %]
+      [% FOREACH f = sort_files %]
+    [% SET tmp = f.key f = f.value f.NAME = tmp IF f.key.defined %]
+        <TR BGCOLOR="[% light_color %]"> 
+        <TD>&nbsp;
+        [% IF f.html %]
+	  <A HREF="[% path_cgi %]/d_read/[% list %]/[% escaped_path %][% f.escaped_doc %]" TARGET="html_window">
+	  <IMG ALIGN=bottom BORDER=0 SRC="[% f.icon %]" ALT="[% f.escaped_title %]"> [% f.doc %] </A>
+	[% ELSIF f.url %]
+	  <A HREF="[% f.url %]" TARGET="html_window">
+	  <IMG ALIGN=bottom BORDER=0 SRC="[% f.icon %]" ALT="[% f.escaped_title %]"> [% f.anchor %] </A>
+	[% ELSE %]
+	  <A HREF="[% path_cgi %]/d_read/[% list %]/[% escaped_path %][% f.escaped_doc %]">
+	  <IMG ALIGN=bottom BORDER=0 SRC="[% f.icon %]" ALT="[% f.escaped_title %]"> [% f.doc %] </A>
+        [% END %] 
+	</TD>  
+	 
+	<TD> 
+	[% IF f.author_known %]
+	  <A HREF="mailto:[% f.author %]">[% f.author %]</A>  
+	[% ELSE %]
+          [%|l%]Unknown[%END%]  
+        [% END %]
+	</TD>
+	 
+	<TD NOWRAP>&nbsp;
+	[% IF !f.url %]
+	[% f.size %] 
+	[% END %]
+	</TD>
+	<TD NOWRAP> [% f.date %] </TD>
+	 
+	[% IF f.edit %]
+	<TD>
+	<center>
+	<font size=-1>
+	<A HREF="[% path_cgi %]/d_editfile/[% list %]/[% escaped_path %][% f.escaped_doc %]">[%|l%]edit[%END%]</A>
+	</font>
+	</center>
+
+	</TD>
+	<TD>
+	<center>
+	<FONT size=-1>
+	<A HREF="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% f.escaped_doc %]" onClick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% f.escaped_doc %]', '[%|l(path,s.doc,f.size)%]Do you really want to delete %1%2 (%3 Kb) ?[%END%]'); return false;">[|l%]delete[%END%]</A>
+	</FONT>
+	</center>
+	</TD>
+	[% ELSE %]
+	  <TD>&nbsp; </TD> <TD>&nbsp; </TD>
+	[% END %]
+		 
+	[% IF f.control %]
+	  <TD> <center>
+	  <font size=-1>
+	  <A HREF="[% path_cgi %]/d_control/[% list %]/[% escaped_path %][% f.escaped_doc %]">[%|l%]access[%END%]</A>
+	  </font>
+	  </center></TD>
+	[% ELSE %]
+	<TD>&nbsp; </TD>
+	[% END %]
+	</TR>
+      [% END %] 
+    [% END %]
+  [% END %]
+  </TABLE>	        
+ 
+  <HR> 
+<TABLE CELLSPACING=20>
+   
+  [% IF may_edit %]
+    <TR>
+    <form method="post" ACTION="[% path_cgi %]">
+    <TD ALIGN="right" VALIGN="bottom">
+    [% IF path %]
+      <B> [%|l(path)%]Create a new folder inside the folder %1[%END%]</B> <BR>
+    [% ELSE %]
+      <B> [%|l%]Create a new folder inside the folder SHARED[%END%]</B> <BR>
+    [% END %]
+    <input MAXLENGTH=30 type="text" name="name_doc">
+    </TD>
+
+    <TD ALIGN="left" VALIGN="bottom">
+    <input type="submit" value="[%|l%]Create a new subdirectory[%END%]" name="action_d_create_dir">
+    <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
+    <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+    <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
+    <INPUT TYPE="hidden" NAME="type" VALUE="directory">
+    <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
+    </TD>
+    </form>
+    </TR>
+
+    <TR>
+    <form method="post" ACTION="[% path_cgi %]">
+    <TD ALIGN="right" VALIGN="bottom">
+      <B> [%|l%]Create a new file[%END%]</B> <BR>
+    <input MAXLENGTH=30 type="text" name="name_doc">
+    </TD>
+
+    <TD ALIGN="left" VALIGN="bottom">
+    <input type="submit" value="[%|l%]Create a new file[%END%]" name="action_d_create_dir">
+    <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
+    <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+    <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
+    <INPUT TYPE="hidden" NAME="type" VALUE="file">
+    <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
+    </TD>
+    </form>
+    </TR>
+
+    <TR>
+    <FORM METHOD="POST" ACTION="[% path_cgi %]">
+    <TD ALIGN="right" VALIGN="center">
+    <B>[%|l%]Add a bookmark[%END%]</B><BR>
+    [%|l%]title[%END%] <input MAXLENGTH=100 SIZE="20" type="text" name="name_doc"><BR>
+    [%|l%]URL[%END%] <input MAXLENGTH=100 SIZE="25" type="text" name="url">
+
+    </TD>
+
+    <TD ALIGN="left" VALIGN="bottom">
+    <input type="submit" value="[%|l%]Add[%END%]" name="action_d_savefile">
+    <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
+    <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+    <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
+    <INPUT TYPE="hidden" NAME="action" VALUE="d_savefile">
+    </TD>
+    </FORM>
+    </TR>
+
+
+   <TR>
+   <form method="post" ACTION="[% path_cgi %]" ENCTYPE="multipart/form-data">
+   <TD ALIGN="right" VALIGN="bottom">
+   [% IF path %]
+     <B> [%|l(path)%]Upload a file inside the folder %1[%END%]</B><BR>
+   [% ELSE %]
+     <B> [%|l%]Upload a file inside the folder SHARED[%END%] </B><BR>
+   [% END %]
+   <input type="file" name="uploaded_file">
+   </TD>
+
+   <TD ALIGN="left" VALIGN="bottom">
+   <input type="submit" value="[%|l%]Publish[%END%]" name="action_d_upload">
+   <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+   <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
+   <TD>
+   </form> 
+   </TR>
+   [% END %]
+</TABLE>
+[% END %]
+   
+
+
+
+

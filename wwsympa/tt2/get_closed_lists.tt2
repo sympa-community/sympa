@@ -1,0 +1,32 @@
+<!-- $Id$ -->
+
+
+<FORM ACTION="[% path_cgi %]" METHOD=POST>
+
+<B>[%|l%]Closed lists[%END%]</B>
+<P>
+<TABLE WIDTH="100%">
+ <TR bgcolor="[% light_color %]">
+   <TD><B>X</B></TD>
+   <TD><B>[%|l%]list name[%END%]</B></TD>
+   <TD><B>[%|l%]list subject[%END%]</B></TD>
+   <TD><B>[%|l%]Requested by[%END%]</B></TD>
+ </TR>
+
+[% FOREACH list = closed %]
+    [% SET tmp = list.key list = list.value list.NAME = tmp IF list.key.defined %]
+<TR>
+<TD><INPUT TYPE=checkbox name="selected_lists" value="[% list.NAME %]"></TD>
+<TD><A HREF="[% path_cgi %]/admin/[% list.NAME %]">[% list.NAME %]</A></TD>
+<TD>[% list.subject %]</TD>
+<TD>[% list.by %]</TD>
+</TR>
+[% END %]
+</TABLE>
+
+<INPUT TYPE="submit" NAME="action_purge_list" VALUE="[%|l%]Purge selected lists[%END%]">
+
+</FORM>
+
+
+

@@ -1,0 +1,39 @@
+From: [% conf.sympa %]
+Reply-to: [% conf.request %]
+To: [% newuser.email %]
+[% IF action == 'subrequest' -%]
+Subject: [% FILTER qencode %][%|l(conf.title,list)%]%1 / subscribing to %2[%END%][%END%]
+[% ELSIF action == 'sigrequest' -%]
+Subject: [% FILTER qencode %][%|l(conf.title,list)%]%1 / unsubscribing from %2[%END%][%END%]
+[% ELSE -%]
+Subject: [% FILTER qencode %][%|l(conf.title)%]%1 / your environment[%END%][%END%]
+[% END %]
+
+[% IF action == 'subrequest' %]
+[%|l(list)%]You requested a subscription to %1 mailing list.[%END%]
+
+[%|l%]To confirm your subscription, you need to provide the following password[%END%]
+
+	[%|l(newuser.password)%]password: %1[%END%]
+
+[% ELSIF action == 'sigrequest' %]
+[%|l(list)%]You requested unsubscription from %1 mailing list.[%END%]
+
+[%|l%]To unsubscribe from the list, you need to provide the following password[%END%]
+
+	[%|l(newuser.password)%]password: %1[%END%]
+
+[% ELSE %]
+[%|l%]To access your personal environment, you need to login first[%END%]
+
+     [%|l(newuser.email)%]your email address    : %1[%END%]
+     [%|l(newuser.password)%]your password : %1[%END%]
+
+[%|l%]Changing your password[%END%] 
+[% base_url %][% path_cgi %]/choosepasswd/[% newuser.escaped_email %]/[% newuser.password %]
+[% END %]
+
+
+[% conf.title %]: [% base_url %][% path_cgi %] 
+
+[%|l(base_url,path_cgi)%]Help on Sympa: %1%2[%END%]/help

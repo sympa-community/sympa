@@ -1,0 +1,24 @@
+[%|l(list.name,list.host)%]Information regarding list %1@%2[%END%] :
+
+[%|l(subject)%]Subject            : %1[%END%]
+[% FOREACH o = owner %]
+    [% SET tmp = o.key o = o.value o.NAME = tmp IF o.key.defined %]
+[%|l(o.gecos)%]Owner              : %1[%END%] <[% o.email %]>
+[% END %]
+[% FOREACH e = editor %]
+    [% SET tmp = e.key e = e.value e.NAME = tmp IF e.key.defined %]
+[%|l(e.gecos)%]Moderator          : %1[%END%] <[% e.email %]>
+[% END %]
+[%|l(subscribe)%]Subscription       : %1[%END%]
+[%|l(unsubscribe)%]Unsubscription     : %1[%END%]
+[%|l(send)%]Sending messages   : %1[%END%]
+[%|l(review)%]Review subscribers : %1[%END%]
+[%|l(reply_to)%]Reply to           : %1[%END%]
+[%|l(max_size)%]Maximum size       : %1[%END%]
+[% IF digest %]
+[%|l(digest)%]Digest       : %1[%END%]
+[% END %]
+[%|l(available_reception_mode)%]Reception modes    : %1[%END%]
+[%|l(url)%]Homepage           : %1[%END%]
+
+[% PROCESS 'info' %]

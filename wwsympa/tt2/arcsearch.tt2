@@ -1,0 +1,121 @@
+<!-- $Id$ -->
+
+<H2>[%|l%]Result of your search in the archive[%END%] 
+<A HREF="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><FONT COLOR="[% dark_color %]">[% list %]</font></a> : </H2>
+
+<P>[%|l%]Search field :[%END%] 
+[% FOREACH u = directories %]
+    [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
+<A HREF="[% path_cgi %]/arc/[% list %]/[% u %]"><FONT COLOR="[% dark_color %]">[% u %]</font></a> - 
+[% END %]
+</P>
+
+[%|l(key_word)%]Parameters of these search make on <b> &quot;%1&quot;</b>[%END%] 
+<I>
+
+[% IF how == 'phrase' %]
+	[%|l%](This sentence,[%END%] 
+[% ELSIF how == 'any' %]
+	[%|l%](All of this words,[%END%] 
+[% ELSE %]
+	[%|l%](Each of this words,[%END%] 
+[% END %]
+
+<i>
+
+[% IF case %]
+	[%|l%]case insensitive[%END%] 
+[% ELSE %]
+	[%|l%]case sensitive[%END%] 
+[% END %]
+
+[% IF match %]
+	[%|l%]and checking on part of word)[%END%]</i>
+[% ELSE %]
+	[%|l%]and checking on entire word)[%END%]</i>
+[% END %]
+<p>
+
+<HR>
+
+[% IF age %]
+	<B>[%|l%]Newest messages first[%END%]</b><P>
+[% ELSE %]
+	<B>[%|l%]Oldest messages first[%END%]</b><P>
+[% END %]
+
+[% FOREACH u = res %]
+    [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
+	<DT><A HREF=[% u.file %]>[% u.subj %]</A> -- <EM>[% u.date %]</EM><DD>[% u.from %]<PRE>[% u.body_string %]</PRE>
+[% END %]
+
+<DL>
+<B>[%|l%]Result[%END%]</b>
+<DT><B>[%|l(searched,num)%]%1 messages selected out of %2[%END%]...</b><BR>
+
+[% IF body %]
+	<DD>[%|l(body_count)%]%1 hits on message's Body[%END%]<BR>
+[% END %]
+
+[% IF subj %]
+	<DD>[%|l(subj_count)%]%1 hits on message's Subject field[%END%]<BR>
+[% END %]
+
+[% IF from %]
+	<DD>[%|l(from_count)%] %1 hits on message's From field[%END%]<BR>
+[% END %]
+
+[% IF date %]
+	<DD>[%|l(date_count)%]%1 hits on message's Date field[%END%]<BR>
+[% END %]
+
+</dl>
+
+<FORM METHOD=POST ACTION="[% path_cgi %]">
+<INPUT TYPE=hidden NAME=list		 VALUE="[% list %]">
+<INPUT TYPE=hidden NAME=archive_name VALUE="[% archive_name %]">
+<INPUT TYPE=hidden NAME=key_word     VALUE="[% key_word %]">
+<INPUT TYPE=hidden NAME=how          VALUE="[% how %]">
+<INPUT TYPE=hidden NAME=age          VALUE="[% age %]">
+<INPUT TYPE=hidden NAME=case         VALUE="[% case %]">
+<INPUT TYPE=hidden NAME=match        VALUE="[% match %]">
+<INPUT TYPE=hidden NAME=limit        VALUE="[% limit %]">
+<INPUT TYPE=hidden NAME=body_count   VALUE="[% body_count %]">
+<INPUT TYPE=hidden NAME=date_count   VALUE="[% date_count %]">
+<INPUT TYPE=hidden NAME=from_count   VALUE="[% from_count %]">
+<INPUT TYPE=hidden NAME=subj_count   VALUE="[% subj_count %]">
+<INPUT TYPE=hidden NAME=previous     VALUE="[% searched %]">
+
+[% IF body %]
+	<INPUT TYPE=hidden NAME=body Value="[% body %]">
+[% END %]
+
+[% IF subj %]
+	<INPUT TYPE=hidden NAME=subj Value="[% subj %]">
+[% END %]
+
+[% IF from %]
+	<INPUT TYPE=hidden NAME=from Value="[% from %]">
+[% END %]
+
+[% IF date %]
+	<INPUT TYPE=hidden NAME=date Value="[% date %]">
+[% END %]
+
+[% FOREACH u = directories %]
+    [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
+	<INPUT TYPE=hidden NAME=directories Value="[% u %]">
+[% END %]
+
+[% IF continue %]
+	<INPUT NAME=action_arcsearch TYPE=submit VALUE="[%|l%]Continue search[%END%]">
+[% END %]
+
+<INPUT NAME=action_arcsearch_form TYPE=submit VALUE="[%|l%]New search[%END%]">
+</FORM>
+<HR>
+[%|l%]Based on[%END%] <i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i>, [%|l%]search engine of MHonArc archives[%END%]<p>
+
+
+<A HREF="[% path_cgi %]/arc/[% list %]/[% archive_name %]"><B>[%|l(archive_name)%]Return to archive %1[%END%] 
+</B></A><br>

@@ -1,0 +1,29 @@
+<!-- $Id$ -->
+
+<TABLE BGCOLOR="[% dark_color %]" CELLPADDING="0" CELLSPACING="0">
+<TR><TD>
+
+<TABLE CELLPADDING="1" CELLSPACING="1" >
+<TR BGCOLOR="[% selected_color %]">
+<TH  ALIGN="left"><FONT COLOR="[% bg_color %]">Actions</FONT></TH>
+[% FOREACH lang = tpl_lang %]
+    [% SET tmp = lang.key lang = lang.value lang.NAME = tmp IF lang.key.defined %]
+<TH ALIGN="left"><FONT COLOR="[% bg_color %]">[% lang.NAME %]</FONT></TH>
+[% END %]
+</TR>
+[% FOREACH file = tpl %]
+    [% SET tmp = file.key file = file.value file.NAME = tmp IF file.key.defined %]
+  <TR><TH ALIGN="left" BGCOLOR="[% selected_color %]"><FONT COLOR="[% bg_color %]">[% file.NAME %]</FONT></TH>
+  [% FOREACH translation = file %]
+    [% SET tmp = translation.key translation = translation.value translation.NAME = tmp IF translation.key.defined %]
+      [% IF translation == 'none' %]
+	<TD BGCOLOR="[% bg_color %]"><A HREF="[% path_cgi %]/translate/[% file.NAME %]/[% translation.NAME %]">[%|l%]Do it[%END%]</A></TD>
+      [% ELSE %]
+	<TD><FONT COLOR="[% bg_color %]">[%|l%]translated[%END%]</FONT></TD>
+      [% END %]
+  [% END %]
+  </TR>
+[% END %]
+</TABLE>
+
+</TD></TR></TABLE>

@@ -1,0 +1,63 @@
+<!-- $Id$ -->
+
+<FORM ACTION="[% path_cgi %]" METHOD=POST>
+<TABLE WIDTH="100%" BORDER=0>
+<TR><TH BGCOLOR="[% dark_color %]">
+<FONT COLOR="[% bg_color %]">[%|l%]Subscriber information[%END%]</FONT>
+</TH></TR><TR><TD>
+<INPUT TYPE="hidden" NAME="previous_action" VALUE=[% previous_action %]>
+<INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+<INPUT TYPE="hidden" NAME="email" VALUE="[% current_subscriber.escaped_email %]">
+<DL>
+<DD>Email : <INPUT NAME="new_email" VALUE="[% current_subscriber.escaped_email %]" SIZE="25">
+<DD>[%|l%]Name :[%END%] <INPUT NAME="gecos" VALUE="[% current_subscriber.gecos %]" SIZE="25">
+<DD>[%|l(current_subscriber.date)%]Subscribed since %1[%END%]	
+<DD>[%|l(current_subscriber.update_date)%]Last update : %1[%END%]
+<DD>[%|l%]Reception :[%END%] <SELECT NAME="reception">
+		  [% FOREACH r = reception %]
+    [% SET tmp = r.key r = r.value r.NAME = tmp IF r.key.defined %]
+		    <OPTION VALUE="[% r.NAME %]" [% r.selected %]>[% r.description %]
+		  [% END %]
+	        </SELECT>
+
+<DD>[%|l(current_subscriber.visibility)%]Visibility : %1[%END%]
+<DD>[%|l(current_subscriber.lang)%]Language : %1[%END%]
+[% IF additional_fields %]
+[% FOREACH field = additional_fields %]
+    [% SET tmp = field.key field = field.value field.NAME = tmp IF field.key.defined %]
+ [% IF field.type == 'enum' %]
+    <DD>[% field.NAME %] :  <SELECT NAME="additional_field_[% field.NAME %]">
+	                  <OPTION VALUE="">
+	[% FOREACH e = field.enum %]
+    [% SET tmp = e.key e = e.value e.NAME = tmp IF e.key.defined %]
+		          <OPTION VALUE="[% e.NAME %]" [% e %]>[% e.NAME %]
+        [% END %]
+	                 </SELECT>
+ [% ELSE %]
+    <DD>[% field.NAME %] : <INPUT NAME="additional_field_[% field.NAME %]" VALUE="[% field.value %]" SIZE="25">
+ [% END %]
+[% END %]
+[% END %]
+<DD><INPUT TYPE="submit" NAME="action_set" VALUE="[%|l%]Update[%END%]">
+<INPUT TYPE="submit" NAME="action_del" VALUE="[%|l%]Unsubscribe the User[%END%]">
+<INPUT TYPE="checkbox" NAME="quiet"> [%|l%]quiet[%END%]
+</DL>
+</TD></TR>
+[% IF current_subscriber.bounce %]
+<TR><TH BGCOLOR="[% error_color %]">
+<FONT COLOR="[% bg_color %]">[%|l%]Bouncing address[%END%]</FONT>
+</TH></TR><TR><TD>
+<DL>
+<DD>[%|l(current_subscriber.bounce_status)%]Status : %1[%END%] ([% current_subscriber.bounce_code %])
+<DD>[%|l(current_subscriber.bounce_count)%]Bounces count : %1[%END%]
+<DD>[%|l(current_subscriber.first_bounce,current_subscriber.last_bounce)%]Period : from %1 to %2[%END%]
+<DD><A HREF="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.escaped_email %]">[%|l%]View last bounce[%END%]</A>
+<DD><INPUT TYPE="submit" NAME="action_resetbounce" VALUE="[%|l%]Reset errors[%END%]">
+</DL>
+</TD></TR>
+[% END %]
+</TABLE>
+</FORM>
+
+
+

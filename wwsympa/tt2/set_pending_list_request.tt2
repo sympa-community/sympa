@@ -1,0 +1,82 @@
+<!-- $Id$ -->
+
+<br>
+
+<BR>
+<TABLE BORDER=0 WIDTH=100% >
+<TR BGCOLOR="[% light_color %]">
+<TD>
+<TABLE BORDER=0 WIDTH=100% >
+<TR BGCOLOR="[% light_color %]">
+ <TD><B>[%|l%]Listname :[%END%]</B></TD><TD WIDTH=100% >[% list %]</TD>
+</TR>
+<TR BGCOLOR="[% light_color %]">
+ <TD><B>[%|l%]Subject :[%END%] </B></TD><TD WIDTH=100%>[% list_subject %]</TD>
+</TR>
+<TR BGCOLOR="[% light_color %]">
+ <TD NOWRAP><B>[%|l%]List requested by[%END%] </B></TD><TD WIDTH=100%>[% list_request_by %] <B>[%|l%]on[%END%]</B> [% list_request_date %]</TD>
+</TR>
+</TABLE>
+</TD>
+</TR>
+</TABLE>
+<BR><BR>
+[% IF is_listmaster %]
+[% IF list_status == 'pending' %]
+<TABLE BORDER=0>
+<TR>
+<TD>
+<FORM ACTION="[% path_cgi %]" METHOD=POST>
+<INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+<INPUT TYPE="hidden" NAME="serial" VALUE="[% list_serial %]">
+
+<MENU>
+<INPUT TYPE="radio" NAME="status" VALUE="closed">[%|l%]Close it[%END%] &nbsp;&nbsp;
+<INPUT TYPE="radio" NAME="status" VALUE="open">[%|l%]Install it[%END%] &nbsp;&nbsp;
+</MENU>
+</TD>
+<TD>
+<INPUT TYPE="submit" NAME="action_install_pending_list" VALUE="[%|l%]submit[%END%]">
+<INPUT TYPE="checkbox" NAME="notify" CHECKED>[%|l%]notify owner[%END%]
+</FORM>
+</TD>
+</TR>
+</TABLE>
+<BR><HR><BR>
+[% END %]
+[% END %]
+<TABLE BORDER=0 WIDTH=100%>
+<TR>
+ <TD ALIGN=CENTER>
+   <B>[%|l%]Information file[%END%]</B> 
+   [% IF is_listmaster %]
+      ([% list_info %])
+   [% END %]
+ </TD>
+</TR>
+<TR>
+ <TD>
+     <TABLE WIDTH=100% BORDER=1>
+      <TR><TD><CODE><PRE>
+       [% INSERT $list_info IF list_info %]
+      </PRE></CODE></TD></TR>
+     </TABLE>
+ </TD>
+</TR>
+<TR>
+ <TD ALIGN=CENTER><B>[%|l%]Configuration file[%END%]</B>
+   [% IF is_listmaster %]
+      ([% list_config %])
+   [% END %]
+ </TD>
+</TR><TR>
+ <TD><TABLE WIDTH=100% border=1>
+      <TR><TD><CODE><PRE>
+        [% INSERT $list_config IF list_config %]
+      </PRE></CODE></TD></TR>
+     </TABLE>
+ </TD>
+</TR>
+</TABLE>
+
+

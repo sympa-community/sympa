@@ -1,0 +1,29 @@
+<!-- $Id$ -->
+
+<FORM ACTION="[% path_cgi %]" METHOD="POST">
+
+[% IF file %]
+  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+  <INPUT TYPE="hidden" NAME="file" VALUE="[% file %]">
+<TEXTAREA NAME="content" COLS=80 ROWS=25>
+[% INSERT $filepath IF filepath %]
+</TEXTAREA>
+  <INPUT TYPE="submit" NAME="action_savefile" VALUE="[%|l%]Save[%END%]">
+
+[% ELSE %]
+[%|l%]You can edit several messages/files associated to your list :[%END%]<BR><BR>
+
+<INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+	     <SELECT NAME="file">
+	      [% FOREACH f = files %]
+    [% SET tmp = f.key f = f.value f.NAME = tmp IF f.key.defined %]
+	        <OPTION VALUE="[% f.NAME %]" [% f.selected %]>[% f.complete %]
+	      [% END %]
+	    </SELECT>
+	    <INPUT TYPE="submit" NAME="action_editfile" VALUE="[%|l%]Edit[%END%]">
+
+<P>
+[% PROCESS 'help_editfile.tt2' %]
+
+[% END %]
+</FORM>

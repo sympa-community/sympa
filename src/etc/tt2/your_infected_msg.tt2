@@ -1,0 +1,12 @@
+From: [% from %]
+Subject: [% FILTER qencode %][%|l%]A virus in your email[%END%][%END%]
+
+    [%|l%]***** V I R U S    A L E R T *****[%END%]
+
+[%|l(virus_name,recipient,from)%]Our viruschecker found a virus named %1
+in a message adressed to %2 and that seems
+to be yours (From: %3).[%END%]
+
+[%|l%]We stopped delivery of this email.[%END%]
+
+[%|l%]May be it is usefull to check your system for viruses.[%END%]

@@ -1,0 +1,167 @@
+<!-- $Id$ -->
+
+<!-- begin admin_menu.tt2 -->
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER" COLSPAN="8">
+	<FONT COLOR="[% bg_color %]"><b>[%|l%]List Administration Panel[%END%]</b></font>
+    </TD>
+    </TR>
+    <TR>
+        [% IF action == 'review' %]
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+       <FONT size="-1" COLOR="[% bg_color %]"><b>[%|l%]Subscribers[%END%]</b></FONT>
+    </TD>
+    [% ELSE %]
+    <TD BGCOLOR=[% light_color %] ALIGN=CENTER>
+       [% IF is_owner %]
+       <A HREF="[% path_cgi %]/review/[% list %]" >
+       <FONT size="-1"><b>[%|l%]Subscribers[%END%]</b></FONT></A>
+       [% END %]
+    </TD>
+    [% END %]
+
+    [% IF action == 'edit_list_request' %]
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+      <A HREF="[% path_cgi %]/edit_list_request/[% list %]" >
+      <FONT size="-1" COLOR="[% bg_color %]"><b>[%|l%]Edit List Config[%END%]</b></FONT></A>
+    </TD>
+    [% ELSE %]
+    <TD BGCOLOR="[% light_color %]" ALIGN="CENTER">
+        <A HREF="[% path_cgi %]/edit_list_request/[% list %]" >
+          <FONT size="-1"><b>[%|l%]Edit List Config[%END%]</b></FONT></A>
+    </TD>
+    [% END %]
+
+    [% IF action == 'modindex' %]
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+       <FONT size="-1" COLOR="[% bg_color %]"><b>[%|l%]Moderate[%END%]</b></FONT>
+    </TD>
+    [% ELSE %]
+       [% IF is_editor %]
+       <TD BGCOLOR="[% light_color %]" ALIGN=CENTER>
+         <A HREF="[% path_cgi %]/modindex/[% list %]" >
+         <FONT size="-1"><b>[%|l%]Moderate[%END%]</b></FONT></A>
+       </TD>
+       [% ELSE %]
+         <TD BGCOLOR="[% light_color %]" ALIGN="CENTER">
+           <FONT size="-1" COLOR="[% bg_color %]"><b>[%|l%]Moderate[%END%]</b></FONT>
+         </TD>
+       [% END %]
+    [% END %]
+
+    [% IF action == 'editfile' %]
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+       <FONT size="-1" COLOR="[% bg_color %]"><b>[%|l%]Customizing[%END%]</b></FONT>
+    </TD>
+    [% ELSE %]
+    <TD BGCOLOR="[% light_color %]" ALIGN="CENTER">
+       [% IF is_owner %]
+       <A HREF="[% path_cgi %]/editfile/[% list %]" >
+       <FONT size="-1"><b>[%|l%]Customizing[%END%]</b></FONT></A>
+       [% END %]
+    </TD>
+    [% END %]
+
+   [% IF is_archived %]
+    [% IF action == 'arc_manage' %]
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+      <A HREF="[% path_cgi %]/arc_manage/[% list %]" >
+      <FONT size="-1" COLOR="[% bg_color %]"><b>Manage Archives</b></FONT></A>
+    </TD>
+    [% ELSE %]
+    <TD BGCOLOR="[% light_color %]" ALIGN="CENTER">
+        [% IF is_owner %]
+        <A HREF="[% path_cgi %]/arc_manage/[% list %]" >
+	<FONT size="-1"><b>[%|l%]Manage Archives[%END%]</b></FONT></A>
+        [% END %]
+    </TD>
+    [% END %]
+  [% END %]
+
+    [% IF action == 'reviewbouncing' %]
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+       <FONT size="-1" COLOR="[% bg_color %]"><b>[%|l%]Bounces[%END%]</b></FONT>
+    </TD>
+    [% ELSE %]
+    <TD BGCOLOR="[% light_color %]" ALIGN="CENTER">
+       [% IF is_owner %]
+       <A HREF="[% path_cgi %]/reviewbouncing/[% list %]" >
+       <FONT size="-1"><b>[%|l%]Bounces[%END%]</b></FONT></A>
+       [% END %]
+    </TD>
+    [% END %]
+
+    <TD BGCOLOR="[% light_color %]" ALIGN="CENTER">
+	[% IF shared == 'none' %]
+          [% IF is_privileged_owner %]
+          <A HREF="[% path_cgi %]/d_admin/[% list %]/create" >
+             <FONT size=-1><b>[%|l%]Create Shared[%END%]</b></font></A>
+          [% ELSE %]
+             <FONT size=-1 COLOR="[% bg_color %]"><b>Create Shared</b></font>
+          [% END %]
+	[% ELSIF shared == 'deleted' %]
+          <A HREF="[% path_cgi %]/d_admin/[% list %]/restore" >
+             <FONT size=-1><b>[%|l%]Restore shared[%END%]</b></font></A>
+	[% ELSIF shared == 'exist' %]
+          <A HREF="[% path_cgi %]/d_admin/[% list %]/delete" >
+             <FONT size=-1><b>[%|l%]Delete Shared[%END%]</b></font></A>
+        [% ELSE %]
+          <FONT size=1 color=red>
+          [% shared %]
+	[% END %]        
+    </TD>
+
+   <TD BGCOLOR="[% light_color %]" ALIGN="CENTER">
+       [% IF list_conf.status == 'closed' %]         
+        [% IF is_privileged_owner %]                   
+        <A HREF="[% path_cgi %]/restore_list/[% list %]" >
+          <FONT size="-1"><b>[%|l%]Restore List[%END%]</b></font></A>
+        [% ELSE %]                               
+          <FONT size="-1" COLOR="[% bg_color %]"><b>[%|l%]Restore List[%END%]</b></font>
+        [% END %]                              
+       [% ELSIF is_privileged_owner %]                 
+        <A HREF="[% path_cgi %]/close_list/[% list %]" onClick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[%|l(list)%]Are you sure you wish to close %1 list ?[%END%]'); return false;"><FONT size=-1><b>[%|l%]Remove List[%END%]</b></font></A>
+       [% ELSIF is_owner %]                      
+       <A HREF="[% path_cgi %]/close_list/[% list %]" onClick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[%|l(list)%]Are you sure you wish to close %1 list ?[%END%]'); return false;"><FONT size=-1><b>[%|l%]Remove List[%END%]</b></font></A>
+       [% END %]                               
+    </TD>       
+    [% IF action == 'edit_list_request' %]
+    </TR>
+    <TR>
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+       <A HREF="[% path_cgi %]/edit_list_request/[% list %]/description" >
+       <FONT COLOR="[% bg_color %]" size=-1><B>[%|l%]List Definition[%END%]</B></FONT></A>
+    </TD>
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+       <A HREF="[% path_cgi %]/edit_list_request/[% list %]/sending" >
+       <FONT COLOR="[% bg_color %]" size=-1><B>[%|l%]Sending/Reception[%END%]</B></FONT></A>
+    </TD> 
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+       <A HREF="[% path_cgi %]/edit_list_request/[% list %]/command" >
+       <FONT COLOR="[% bg_color %]" size=-1><B>[%|l%]Privileges[%END%]</B></FONT></A>
+    </TD>
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+       <A HREF="[% path_cgi %]/edit_list_request/[% list %]/archives" >
+       <FONT COLOR="[% bg_color %]" size=-1><B>[%|l%]Archives[%END%]</B></FONT></A>
+    </TD> 
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+       <A HREF="[% path_cgi %]/edit_list_request/[% list %]/bounces" >
+       <FONT COLOR="[% bg_color %]" size=-1><B>[%|l%]Bounce Settings[%END%]</B></FONT></A>
+    </TD>
+    
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+       <A HREF="[% path_cgi %]/edit_list_request/[% list %]/other" >
+       <FONT COLOR="[% bg_color %]" size=-1><B>[%|l%]Miscellaneous[%END%]</B></FONT></A>
+    </TD>
+    [% IF is_listmaster %]
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+       <A HREF="[% path_cgi %]/edit_list_request/[% list %]/data_source" >
+       <FONT COLOR="[% bg_color %]" size=-1><B>[%|l%]Data Source[%END%]</B></FONT></A>
+    </TD>                             
+    [% ELSE %]
+    <TD BGCOLOR="[% selected_color %]" ALIGN="CENTER">
+    &nbsp;
+    </TD>
+    [% END %]
+    [% END %] 
+<!-- end menu_admin.tt2 -->
+

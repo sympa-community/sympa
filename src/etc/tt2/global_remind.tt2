@@ -1,0 +1,19 @@
+
+[%|l(user.email)%]Summary of your subscription (using the e-mail %1).[%END%]
+[%|l%]If you want to unsubscribe from some list, please save this mail.[%END%]
+
+[%|l%]Foreach list here is a mailto to use if you want to unsubscribe.[%END%]
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[% FOREACH l = lists %]
+    [% SET tmp = l.key l = l.value l.NAME = tmp IF l.key.defined %]
+[% l %]	mailto:[% conf.sympa %]?subject=sig%20[% l %]%20[% user.email %]
+[% END %]
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+[% IF user.password %]
+
+[%|l(conf.wwsympa_url,user.email,user.password)%]In order to authenticate on the web interface(%1)
+use your e-mail %2 and your password %3[%END%]
+
+[% END %]

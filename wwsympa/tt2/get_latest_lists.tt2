@@ -1,0 +1,23 @@
+<!-- $Id$ -->
+
+
+<TABLE WIDTH="100%">
+ <TR bgcolor="[% light_color %]">
+   <TD><B>[%|l%]Creation date[%END%]</B></TD>
+   <TD><B>[%|l%]Listname[%END%]</B></TD>
+   <TD><B>[%|l%]Subject[%END%]</B></TD>
+ </TR>
+
+[% FOREACH list = latest_lists %]
+    [% SET tmp = list.key list = list.value list.NAME = tmp IF list.key.defined %]
+<TR>
+<TD>[% list.creation_date %]</TD>
+<TD><A HREF="[% path_cgi %]/admin/[% list.name %]">[% list.name %]</A></TD>
+<TD>[% list.subject %]</TD>
+</TR>
+[% END %]
+</TABLE>
+
+
+
+

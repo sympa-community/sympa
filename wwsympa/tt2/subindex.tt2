@@ -1,0 +1,55 @@
+<FORM ACTION="[% path_cgi %]" METHOD="POST"> 
+<INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+
+    <TABLE WIDTH="100%" BORDER="1">
+      <TR BGCOLOR="[% dark_color %]">
+        <TH><FONT SIZE="-1" COLOR="[% bg_color %]"><B>X</B></FONT></TH>
+        <TH NOWRAP COLSPAN=2 >
+	<FONT COLOR="[% bg_color %]" SIZE="-1"><b>Email</b></FONT></TH>
+        <TH><FONT COLOR="[% bg_color %]" SIZE="-1"><B>[%|l%]Name[%END%]</B></FONT></TH>
+        <TH NOWRAP>
+	<FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|l%]Date[%END%]</b></FONT></TH>
+      </TR>
+      
+      [% IF subscriptions %]
+
+      [% FOREACH sub = subscriptions %]
+    [% SET tmp = sub.key sub = sub.value sub.NAME = tmp IF sub.key.defined %]
+
+	[% IF dark == '1' %]
+	  <TR BGCOLOR="[% shaded_color %]">
+	[% ELSE %]
+          <TR>
+	[% END %]
+	    <TD>
+           <INPUT TYPE=checkbox name="email" value="[% sub.NAME %],[% sub.gecos %]">
+	    </TD>
+	  <TD COLSPAN=2 NOWRAP><FONT SIZE=-1>
+	        [% sub.NAME %]
+	  </FONT></TD>
+	  <TD>
+             <FONT SIZE=-1>
+	        [% sub.gecos %]&nbsp;
+	     </FONT>
+          </TD>
+	    <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
+	      [% sub.date %]
+	    </FONT></TD>
+        </TR>
+
+        [% IF dark == '1' %]
+	  [% SET dark = 0 %]
+	[% ELSE %]
+	  [% SET dark = 1 %]
+	[% END %]
+
+        [% END %]
+
+        [% ELSE %]
+         <TR COLSPAN="4"><TH>[%|l%]No subscription requests[%END%]</TH></TR>
+        [% END %]
+      </TABLE>
+
+<INPUT TYPE="submit" NAME="action_add" VALUE="[%|l%]Add selected addresses[%END%]">
+<INPUT TYPE="submit" NAME="action_ignoresub" VALUE="[%|l%]Reject selected addresses[%END%]">
+</FORM>
