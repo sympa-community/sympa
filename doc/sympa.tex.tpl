@@ -3957,12 +3957,15 @@ a specific email address for the robot itself and its lists and also a virtual
 http server. Each robot provides access to a set of lists, each list is
 related to only one robot.
 
-Most configuration parameters can be define for each robot except 
+Most configuration parameters can be redefined for each robot except 
 general Sympa installation parameters (binary and spool location, smtp engine,
 antivirus plugging,...).
 
 The Virtual robot name as defined in \Sympa documentation and configuration file refers
 to the Internet domaine of the Virtual robot.
+
+Note that the main limitation of virtual robots in Sympa is that you cannot create 
+2 lists with the same name (local part) among your virtual robots.
 
 \section {How to create a virtual robot}
 
