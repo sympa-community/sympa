@@ -71,7 +71,7 @@
         \end {figure}
     }
 
-    \newcommand {\version} {3.3.6b.4}
+    \newcommand {\version} {3.4}
 
     \newcommand {\samplelist} {mylist}
 
@@ -92,9 +92,9 @@
 
     \newcommand {\example} [1] {Example: \texttt {#1}}
 
-    \newcommand {\unixcmd} [1] {\texttt {#1} \ttindex {#1} {#1} {UNIX command}}
+    \newcommand {\unixcmd} [1] {\ttindex {#1} {#1} {UNIX command}}
 
-    \newcommand {\option} [1] {\texttt {#1} \ttindex {#1} {#1} {option}}
+    \newcommand {\option} [1] {\ttindex {#1} {#1} {option}}
 
     \newcommand {\mailcmd} [1] {\ttindex {#1} {#1} {mail command}}
 
@@ -127,13 +127,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 3.3.6b.4\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 3.4\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {23 September 2002}
+    \date {21 October 2002}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -3926,7 +3926,7 @@ Your application needs to know what the \cfkeyword {cookie} parameter
 is, so it can check the HTTP cookie validity ; this is a secret shared
 between \WWSympa and your application.
 \WWSympa's \textit {loginrequest} page can be called to return to the
-referrer URL when an action is performed. Here is a sample HTML anchor :
+referer URL when an action is performed. Here is a sample HTML anchor :
 
 \begin{verbatim}
 <A HREF="/wws/loginrequest/referer">Login page</A>
@@ -4478,7 +4478,7 @@ page~\pageref {list-aliases})
 The configuration file for the \mailaddr {\samplelist} list is named
 \tildefile {sympa/expl/\samplerobot/\samplelist/config} 
 (or \tildefile {sympa/expl/\samplelist/config} if no virtual robot is defined). 
-\Sympa reads it into memory the first time the list is referred to. This file is not rewritten by 
+\Sympa reads it into memory the first time the list is refered to. This file is not rewritten by 
 \Sympa, so you may put comment lines in it. 
 It is possible to change this file when the program is running. 
 Changes are taken into account the next time the list is

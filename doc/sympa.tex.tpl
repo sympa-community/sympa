@@ -95,9 +95,9 @@
 
     \newcommand {\example} [1] {Example: \texttt {#1}}
 
-    \newcommand {\unixcmd} [1] {\texttt {#1} \ttindex {#1} {#1} {UNIX command}}
+    \newcommand {\unixcmd} [1] {\ttindex {#1} {#1} {UNIX command}}
 
-    \newcommand {\option} [1] {\texttt {#1} \ttindex {#1} {#1} {option}}
+    \newcommand {\option} [1] {\ttindex {#1} {#1} {option}}
 
     \newcommand {\mailcmd} [1] {\ttindex {#1} {#1} {mail command}}
 
