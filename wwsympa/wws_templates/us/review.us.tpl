@@ -124,10 +124,10 @@ Selection too wide, can not show selection
 	[ENDIF]
 	</TH>
         [IF sortby=domain]
-  	    <TH NOWRAP COLSPAN=2 BGCOLOR="[selected_color]">
+  	    <TH NOWRAP BGCOLOR="[selected_color]">
 	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Domain</b></FONT>
 	[ELSE]
-	    <TH NOWRAP COLSPAN=2>
+	    <TH NOWRAP>
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/domain" >
 	    <FONT SIZE="-1"><b>Domain</b></A>
 	[ENDIF]
