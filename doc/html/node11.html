@@ -89,11 +89,11 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <P>
 List parameters controlling the behavior of commands are linked to different authorization scenarios.
-For example : the <A NAME="6161"></A><TT>send private</TT> parameter is related to the send.private scenario.
+For example : the <A NAME="6164"></A><TT>send private</TT> parameter is related to the send.private scenario.
 There are four possible locations for a authorization scenario. When <I>Sympa</I> seeks to apply an authorization scenario, it
-looks first in the related list directory <A NAME="6177"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
-does not find the file there, it scans the current robot configuration directory <A NAME="6186"></A><TT>/home/sympa/etc/my.domain.org/scenari</TT>, then the site's configuration directory <A NAME="6189"></A><TT>/home/sympa/etc/scenari</TT>,
-and finally <A NAME="6192"></A><TT>/home/sympa/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
+looks first in the related list directory <A NAME="6180"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
+does not find the file there, it scans the current robot configuration directory <A NAME="6189"></A><TT>/home/sympa/etc/my.domain.org/scenari</TT>, then the site's configuration directory <A NAME="6192"></A><TT>/home/sympa/etc/scenari</TT>,
+and finally <A NAME="6195"></A><TT>/home/sympa/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
 
 <P>
 An authorization scenario is a small configuration language to describe who
@@ -120,11 +120,11 @@ Each authorization scenario rule contains :
  SRC="img2.png"
  ALT="$]$"> for the listname etc.
 </LI>
-<LI>an authentication method. The authentication method can be <A NAME="6196"></A><TT>smtp</TT>,
-<A NAME="6199"></A><TT>md5</TT> or <A NAME="6202"></A><TT>smime</TT>. The rule is applied by <I>Sympa</I> if both condition
-and authentication method match the runtime context. <A NAME="6206"></A><TT>smtp</TT> is used if
-<I>Sympa</I> use the SMTP <A NAME="6210"></A><TT>from:</TT> header , <A NAME="6213"></A><TT>md5</TT> is used if a unique
-md5 key as been returned by the requestor to validate her message, <A NAME="6216"></A><TT>smime</TT>
+<LI>an authentication method. The authentication method can be <A NAME="6199"></A><TT>smtp</TT>,
+<A NAME="6202"></A><TT>md5</TT> or <A NAME="6205"></A><TT>smime</TT>. The rule is applied by <I>Sympa</I> if both condition
+and authentication method match the runtime context. <A NAME="6209"></A><TT>smtp</TT> is used if
+<I>Sympa</I> use the SMTP <A NAME="6213"></A><TT>from:</TT> header , <A NAME="6216"></A><TT>md5</TT> is used if a unique
+md5 key as been returned by the requestor to validate her message, <A NAME="6219"></A><TT>smime</TT>
 is used for signed messages (see <A HREF="node21.html#smimeforsign">20.4.3</A>, page&nbsp;<A HREF="node21.html#smimeforsign"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 </LI>
 <LI>a returned atomic action that will be executed by <I>Sympa</I> if the rule matches
@@ -246,19 +246,19 @@ probably create authorization scenarios for your own need. In this case, don't f
 and wwsympa because authorization scenarios are not reloaded dynamicaly.
 
 <P>
-These standard authorization scenarios are located in the <A NAME="6222"></A><TT>/home/sympa/bin/etc/scenari/</TT>
+These standard authorization scenarios are located in the <A NAME="6225"></A><TT>/home/sympa/bin/etc/scenari/</TT>
 directory. Default scenarios are named <TT>&lt;</TT>command<TT>&gt;</TT>.default.
 
 <P>
 You may also define and name your own authorization scenarios. Store them in the
-<A NAME="6225"></A><TT>/home/sympa/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
-Scenarios can also be defined for a particular virtual robot (using directory <A NAME="6240"></A><TT>/home/sympa/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="6267"></A><TT>/home/sympa/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ).
+<A NAME="6228"></A><TT>/home/sympa/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
+Scenarios can also be defined for a particular virtual robot (using directory <A NAME="6243"></A><TT>/home/sympa/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="6270"></A><TT>/home/sympa/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ).
 
 <P>
 Example:
 
 <P>
-Copy the previous scenario to <A NAME="6282"></A><TT>scenari/subscribe.rennes1</TT> :
+Copy the previous scenario to <A NAME="6285"></A><TT>scenari/subscribe.rennes1</TT> :
 
 <P><PRE>
 equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -&gt; reject
@@ -285,7 +285,7 @@ subscribe rennes1
 At the moment Named Filters are only used in authorization scenarios. They enable to select a category of people who will be authorized or not to realise some actions.
 
 <P>
-As a consequence, you can grant privileges in a list to people belonging to an <A NAME="6285"></A>LDAP directory thanks to an authorization scenario.
+As a consequence, you can grant privileges in a list to people belonging to an <A NAME="6288"></A>LDAP directory thanks to an authorization scenario.
 
 <P>
 
@@ -294,7 +294,7 @@ As a consequence, you can grant privileges in a list to people belonging to an <
 </H2>
 
 <P>
-People are selected through an <A NAME="6286"></A>LDAP filter defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="6287"></A><TT>/home/sympa/etc/search_filters/</TT>.
+People are selected through an <A NAME="6289"></A>LDAP filter defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="6290"></A><TT>/home/sympa/etc/search_filters/</TT>.
 
 <P>
 You must give several informations in order to create a Named Filter:
@@ -465,7 +465,7 @@ at the my.domain.orgrobot level only.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2004-04-05
+2004-04-19
 </ADDRESS>
 </BODY>
 </HTML>

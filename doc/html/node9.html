@@ -121,9 +121,9 @@ for example).
 You <B>NEED TO</B> install FastCGI for the SOAP server to work properly because it will run as a daemon.
 
 <P>
-Here is a sample piece of your Apache <A NAME="6020"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
-	FastCgiServer /sympa_soap_server.pl -processes 1
-	ScriptAlias /sympasoap /sympa_soap_server.pl
+Here is a sample piece of your Apache <A NAME="6023"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
+	FastCgiServer /sympa_soap_server.fcgi -processes 1
+	ScriptAlias /sympasoap /sympa_soap_server.fcgi
 
 	&lt;Location /sympasoap&gt;
    	  SetHandler fastcgi-script
@@ -137,8 +137,8 @@ Here is a sample piece of your Apache <A NAME="6020"></A><TT>httpd.conf</TT> wit
 </H1>
 
 <P>
-The only parameters that you need to set in <A NAME="6023"></A><TT>sympa.conf</TT>/<A NAME="6026"></A><TT>robot.conf</TT> files is
-the <A NAME="6029"></A><TT>soap_url</TT> parameter that defines the URL of the SOAP service corresponding
+The only parameters that you need to set in <A NAME="6026"></A><TT>sympa.conf</TT>/<A NAME="6029"></A><TT>robot.conf</TT> files is
+the <A NAME="6032"></A><TT>soap_url</TT> parameter that defines the URL of the SOAP service corresponding
 to the ScriptAlias you've previously setup in Apache config. 
 
 <P>
@@ -704,7 +704,7 @@ String[] _abonnements = tmp.which();
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2004-04-05
+2004-04-19
 </ADDRESS>
 </BODY>
 </HTML>

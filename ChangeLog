@@ -1,3 +1,200 @@
+2004-04-06 09:19  salaun
+
+	* doc/sympa.tex.tpl: Details for make_alias_file
+
+2004-04-06 09:03  salaun
+
+	* src/sympa.pl: fix bug : sympa.pl --make_alias_file must not
+	create alias for list where list status is not 'open'
+
+2004-04-05 17:52  salaun
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	doc/html/node3.html, doc/html/node4.html, doc/html/node5.html,
+	doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	doc/html/node9.html, doc/html/sympa.html, doc/html/sympa.ps,
+	src/List.pm, src/mail.pm, src/etc/scenari/d_edit.editor,
+	src/etc/templates/fr/d_install_shared.fr.tpl,
+	src/etc/templates/fr/d_reject_shared.fr.tpl,
+	src/etc/templates/fr/listeditor_notification.fr.tpl,
+	src/etc/templates/us/d_install_shared.us.tpl,
+	src/etc/templates/us/d_reject_shared.us.tpl,
+	src/etc/templates/us/listeditor_notification.us.tpl,
+	wwsympa/wwsympa.fcgi, wwsympa/wws_templates/fr/admin_menu.fr.tpl,
+	wwsympa/wws_templates/fr/d_editfile.fr.tpl,
+	wwsympa/wws_templates/fr/d_install_shared.fr.tpl,
+	wwsympa/wws_templates/fr/d_read.fr.tpl,
+	wwsympa/wws_templates/fr/d_upload.fr.tpl,
+	wwsympa/wws_templates/fr/error.fr.tpl,
+	wwsympa/wws_templates/fr/help_admin.fr.tpl,
+	wwsympa/wws_templates/fr/list_menu.fr.tpl,
+	wwsympa/wws_templates/fr/modindex.fr.tpl,
+	wwsympa/wws_templates/fr/notice.fr.tpl,
+	wwsympa/wws_templates/us/d_control.us.tpl,
+	wwsympa/wws_templates/us/d_editfile.us.tpl,
+	wwsympa/wws_templates/us/d_install_shared.us.tpl,
+	wwsympa/wws_templates/us/d_read.us.tpl,
+	wwsympa/wws_templates/us/d_upload.us.tpl,
+	wwsympa/wws_templates/us/error.us.tpl,
+	wwsympa/wws_templates/us/help_admin.us.tpl,
+	wwsympa/wws_templates/us/list_menu.us.tpl,
+	wwsympa/wws_templates/us/modindex.us.tpl,
+	wwsympa/wws_templates/us/notice.us.tpl: [Gwenaelle Bouteille] New
+	features: added document moderation (in the document repository)
+	and other shared-related work
+
+2004-04-05 13:50  salaun
+
+	* src/etc/create_list_templates/private_working_group/config.tpl:
+	Change: set privileges for read/edit the shared
+
+2004-04-02 10:45  salaun
+
+	* src/tools.pl: [L. Labat] Fix: Antivirus check would fail under
+	some circumstances (Unable to open xxx). BODY filehandle was never
+	closed
+
+2004-04-02 09:21  salaun
+
+	* nls/README, nls/cz.msg, nls/us.msg,
+	src/etc/create_list_templates/discussion_list/comment,
+	src/etc/create_list_templates/hotline/comment,
+	src/etc/create_list_templates/html-news-letter/comment,
+	src/etc/create_list_templates/intranet_list/comment,
+	src/etc/create_list_templates/news-letter/comment,
+	src/etc/create_list_templates/private_working_group/comment,
+	src/etc/create_list_templates/public_web_forum/comment,
+	src/etc/global_task_models/chk_cert_expiration.daily.task,
+	src/etc/global_task_models/crl_update.daily.task,
+	src/etc/global_task_models/eval_bouncers.daily.task,
+	src/etc/global_task_models/expire_bounce.daily.task,
+	src/etc/global_task_models/process_bouncers.weekly.task,
+	src/etc/global_task_models/purge_orphan_bounces.monthly.task,
+	src/etc/global_task_models/purge_user_table.monthly.task,
+	src/etc/list_task_models/expire.yearly.task,
+	src/etc/list_task_models/remind.2month.task,
+	src/etc/list_task_models/remind.monthly.task,
+	src/etc/list_task_models/remind.yearly.task,
+	src/etc/list_task_models/sync_include.ttl.task,
+	src/etc/scenari/create_list.listmaster,
+	src/etc/scenari/send.editorkey,
+	src/etc/scenari/send.publicnoattachment,
+	src/etc/scenari/topics_visibility.conceal,
+	src/etc/scenari/topics_visibility.identified,
+	src/etc/templates/cz/bye.cz.tpl,
+	src/etc/templates/cz/info_report.cz.tpl,
+	src/etc/templates/us/certif_warning.us.tpl,
+	src/etc/templates/us/expire_warning1.us.tpl,
+	src/etc/templates/us/expire_warning2.us.tpl,
+	src/etc/templates/us/helpfile.us.tpl,
+	src/etc/templates/us/listmaster_notification.us.tpl,
+	src/etc/templates/us/listowner_notification.us.tpl,
+	src/etc/templates/us/remind.us.tpl,
+	src/etc/templates/us/your_infected_msg.us.tpl,
+	wwsympa/wws_templates/cz/arc.cz.tpl,
+	wwsympa/wws_templates/cz/arcsearch.cz.tpl,
+	wwsympa/wws_templates/cz/compose_mail.cz.tpl,
+	wwsympa/wws_templates/cz/d_control.cz.tpl,
+	wwsympa/wws_templates/cz/d_editfile.cz.tpl,
+	wwsympa/wws_templates/cz/d_read.cz.tpl,
+	wwsympa/wws_templates/cz/edit_list_request.cz.tpl,
+	wwsympa/wws_templates/cz/editfile.cz.tpl,
+	wwsympa/wws_templates/cz/editsubscriber.cz.tpl,
+	wwsympa/wws_templates/cz/error.cz.tpl,
+	wwsympa/wws_templates/cz/get_pending_lists.cz.tpl,
+	wwsympa/wws_templates/cz/help.cz.tpl,
+	wwsympa/wws_templates/cz/help_editfile.cz.tpl,
+	wwsympa/wws_templates/cz/help_editlist.cz.tpl,
+	wwsympa/wws_templates/cz/home.cz.tpl,
+	wwsympa/wws_templates/cz/list_menu.cz.tpl,
+	wwsympa/wws_templates/cz/lists.cz.tpl,
+	wwsympa/wws_templates/cz/loginbanner.cz.tpl,
+	wwsympa/wws_templates/cz/menu.cz.tpl,
+	wwsympa/wws_templates/cz/notice.cz.tpl,
+	wwsympa/wws_templates/cz/pref.cz.tpl,
+	wwsympa/wws_templates/cz/remindpasswd.cz.tpl,
+	wwsympa/wws_templates/cz/remove_arc.cz.tpl,
+	wwsympa/wws_templates/cz/review.cz.tpl,
+	wwsympa/wws_templates/cz/reviewbouncing.cz.tpl,
+	wwsympa/wws_templates/cz/scenario_test.cz.tpl,
+	wwsympa/wws_templates/cz/serveradmin.cz.tpl,
+	wwsympa/wws_templates/cz/set_pending_list_request.cz.tpl,
+	wwsympa/wws_templates/cz/show_cert.cz.tpl,
+	wwsympa/wws_templates/cz/sigrequest.cz.tpl,
+	wwsympa/wws_templates/cz/suboptions.cz.tpl,
+	wwsympa/wws_templates/cz/subrequest.cz.tpl,
+	wwsympa/wws_templates/cz/view_translations.cz.tpl,
+	wwsympa/wws_templates/cz/viewmod.cz.tpl,
+	wwsympa/wws_templates/us/arc.us.tpl,
+	wwsympa/wws_templates/us/arc_manage.us.tpl,
+	wwsympa/wws_templates/us/d_read.us.tpl,
+	wwsympa/wws_templates/us/help_editlist.us.tpl,
+	wwsympa/wws_templates/us/lists.us.tpl,
+	wwsympa/wws_templates/us/loginbanner.us.tpl,
+	wwsympa/wws_templates/us/translate.us.tpl: [Petr Prazak] Update
+	Czech translations + some English typos fixed
+
+2004-04-01 16:46  salaun
+
+	* wwsympa/wwsympa.fcgi: Remove log
+
+2004-04-01 16:44  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: renaming a list if the list was moved
+	to another robot with the same name
+
+2004-04-01 14:29  salaun
+
+	* src/sympa.pl: Fix: remove call to deprecated MIME::Head::decode()
+
+2004-03-24 15:45  salaun
+
+	* wwsympa/wws_templates/fr/arcsearch.fr.tpl: [reported by J.Andre]
+	Fix: typos
+
+2004-03-23 11:54  salaun
+
+	* src/List.pm: [reported by V. Mathieu] Fix: removed
+	'visibility.private' scenario is considered the same as
+	'visibility.conceal'
+
+2004-03-22 16:57  salaun
+
+	* src/etc/script/arcrepair.pl: This script will fix a bug of Sympa
+	4.1
+
+2004-03-22 16:13  salaun
+
+	* src/etc/scenari/send.editor, wwsympa/archived.pl: Fix: web
+	archives were stored in the wrong directory
+
+2004-03-22 14:33  salaun
+
+	* doc/sympa.tex.tpl, nls/fr.msg, nls/us.msg, src/List.pm,
+	wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/edit_list_request.fr.tpl,
+	wwsympa/wws_templates/us/edit_list_request.us.tpl: [requested by
+	C.hastie] New feature: per list rfc2369_header_fields parameter
+
+2004-03-22 11:16  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by V. Mathieu] Fix: list of
+	inactive lists did not consider the msg_count file was not ordered
+
+2004-03-22 11:02  salaun
+
+	* src/List.pm: Fix: sorting msg_count file when it is updated
+
+2004-03-18 14:17  salaun
+
+	* ChangeLog, NEWS: preparing 4.1
+
 2004-03-17 15:09  salaun
 
 	* wwsympa/archived.pl: Fix: archived.pl could not process old files
@@ -12833,7 +13030,7 @@
 	doc/latex2htmlicons/redball.png, doc/latex2htmlicons/up_motif.png,
 	doc/latex2htmlicons/up_motif_gr.png,
 	doc/latex2htmlicons/whiteball.png,
-	doc/latex2htmlicons/yellowball.png, nls/README, src/.core.swp,
+	doc/latex2htmlicons/yellowball.png, src/.core.swp,
 	src/etc/create_list.conf, src/etc/sample/config.include,
 	src/etc/sample/topics.fr.conf, src/etc/sample/test/info,
 	src/etc/sample/test/message.footer,
@@ -12846,12 +13043,12 @@
 	check_perl_modules.pl, subst.pl, doc/Makefile, doc/sympa.aux,
 	doc/sympa.cb, doc/sympa.dvi, doc/sympa.idx, doc/sympa.ilg,
 	doc/sympa.ind, doc/sympa.log, doc/sympa.ps, doc/sympa.tex,
-	doc/sympa.toc, nls/Makefile, nls/check.pl, nls/cn.msg, nls/de.msg,
-	nls/es.msg, nls/fi.msg, nls/fr.msg, nls/it.msg, nls/tw.msg,
-	nls/us.msg, src/Archive.pm, src/Commands.pm, src/Conf.pm,
-	src/Language.pm, src/List.pm, src/Log.pm, src/Makefile,
-	src/Version.pm, src/bouncequeue.c, src/mail.pm, src/msg.pl,
-	src/parser.pl, src/queue.c, src/smtp.pm, src/sympa.pl,
+	doc/sympa.toc, nls/Makefile, nls/README, nls/check.pl, nls/cn.msg,
+	nls/de.msg, nls/es.msg, nls/fi.msg, nls/fr.msg, nls/it.msg,
+	nls/tw.msg, nls/us.msg, src/Archive.pm, src/Commands.pm,
+	src/Conf.pm, src/Language.pm, src/List.pm, src/Log.pm,
+	src/Makefile, src/Version.pm, src/bouncequeue.c, src/mail.pm,
+	src/msg.pl, src/parser.pl, src/queue.c, src/smtp.pm, src/sympa.pl,
 	src/tools.pl, src/etc/ca-bundle.crt, src/etc/edit_list.conf,
 	src/etc/mhonarc-ressources,
 	src/etc/create_list_templates/discussion_list/comment,

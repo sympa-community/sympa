@@ -642,7 +642,7 @@ a virtual robot or for the whole site.
 	The daemon which manages the tasks : creation, checking, execution. 
 	It regularly scans the \dir {task/} spool.
 
-	\item \file {sympa\_soap\_server.pl}\\
+	\item \file {sympa\_soap\_server.fcgi}\\
 	The server will process SOAP (web services) request. This server requires FastCGI ;
 	it should be referenced from within your HTTPS config.
 
@@ -1499,7 +1499,7 @@ is still recognized but should not be used anymore.
 
 	This is the root URL of Sympa's SOAP server. Sympa's WSDL document refer to this URL in its \texttt {service} section.
 
-        \example {wwsympa\_url http://my.server/sympasoap}
+        \example {soap\_url http://my.server/sympasoap}
 
 \subsection {\cfkeyword {spam\_protection}}  
 
@@ -2943,8 +2943,8 @@ You \textbf {NEED TO} install FastCGI for the SOAP server to work properly becau
 Here is a sample piece of your Apache \file {httpd.conf} with a SOAP server configured :
 \begin {quote}
 \begin{verbatim}
-	FastCgiServer [CGIDIR]/sympa_soap_server.pl -processes 1
-	ScriptAlias /sympasoap [CGIDIR]/sympa_soap_server.pl
+	FastCgiServer [CGIDIR]/sympa_soap_server.fcgi -processes 1
+	ScriptAlias /sympasoap [CGIDIR]/sympa_soap_server.fcgi
 
 	<Location /sympasoap>
    	  SetHandler fastcgi-script
@@ -4001,6 +4001,9 @@ Only the following parameters can be redefined for a particular robot :
 
 	\item \cfkeyword {wwsympa\_url} \\
 	The base URL of WWSympa
+
+	\item \cfkeyword {soap\_url} \\
+	The base URL of Sympa's SOAP server (if it is running ; see ~\ref {soap}, page~\pageref {soap})
 
 	\item \cfkeyword {cookie\_domain}
 
