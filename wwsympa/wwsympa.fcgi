@@ -5290,6 +5290,13 @@ sub do_set_pending_list_request {
 	 $new_list->create_shared();
      }
 
+     ## Update admin_table
+     unless ($new_list->sync_include_admin()) {
+	 &error_message('sync_include_admin_failed');
+	 &wwslog('info','do_create_list: sync_include_admin() failed');
+	 return undef;
+     }
+
      ## Create list object
      $in{'list'} = $in{'listname'};
      &check_param_in();
