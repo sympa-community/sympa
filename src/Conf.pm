@@ -413,7 +413,14 @@ sub load_robots {
 	$robot_conf->{$robot}{'sympa'} = $robot_conf->{$robot}{'email'}.'@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'request'} = $robot_conf->{$robot}{'email'}.'-request@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'cookie_domain'} ||= 'localhost';
-	$Conf{'robot_by_http_host'}{$robot_conf->{$robot}{'http_host'}} = $robot ;
+
+	my ($host, $path);
+	if ($robot_conf->{$robot}{'http_host'} =~ /^([^\/]+)(\/.*)$/) {
+	    ($host, $path) = ($1,$2);
+	}else {
+	    ($host, $path) = ($robot_conf->{$robot}{'http_host'}, '/');
+	}
+	$Conf{'robot_by_http_host'}{$host}{$path} = $robot ;
 	
 
 	close (ROBOT_CONF);

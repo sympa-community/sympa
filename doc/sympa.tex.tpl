@@ -3463,8 +3463,15 @@ Only the following parameters can be redefined for a particular robot :
 \begin {itemize}
 
 	\item \cfkeyword {http\_host} \\
-	This hostname will be compared with 'SERVER\_NAME' ENV var in wwsympa.fcgi
-	to deduce the current Virtual Robot.
+	This hostname will be compared with 'SERVER\_NAME' environment variable in wwsympa.fcgi
+	to determine the current Virtual Robot. You can a path at the end of this parameter if
+	you are running multiple Virtual robots on the same host. 
+	\begin {quote}
+	\begin{verbatim}Examples: \\
+	http_host  myhost.mydom
+	http_host  myhost.mydom/sympa
+	\end{verbatim}
+	\end {quote}
 
 	\item \cfkeyword {wwsympa\_url} \\
 	The base URL of WWSympa

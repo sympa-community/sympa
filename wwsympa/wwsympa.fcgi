@@ -424,8 +424,22 @@ if ($wwsconf->{'use_fast_cgi'}) {
      ## Get PATH_INFO parameters
      &get_parameters();
 
-     $robot = $Conf{'robot_by_http_host'}{$ENV{'SERVER_NAME'}};
+     if (defined $Conf{'robot_by_http_host'}{$ENV{'SERVER_NAME'}}) {
+	 my ($selected_robot, $selected_path);
+	 my ($k,$v);
+	 while (($k, $v) = each %{$Conf{'robot_by_http_host'}{$ENV{'SERVER_NAME'}}}) {
+	     if ($ENV{'REQUEST_URI'} =~ /^$k/) {
+		 ## Longer path wins
+		 if (length($k) > length($selected_path)) {
+		     ($selected_robot, $selected_path) = ($v, $k);
+		 }
+	     }
+	 }
+	 $robot = $selected_robot;
+     }
+     
      $robot = $Conf{'host'} unless $robot;
+ 
      $param->{'cookie_domain'} = $Conf{'robots'}{$robot}{'cookie_domain'} if $Conf{'robots'}{$robot};
      $param->{'cookie_domain'} ||= $wwsconf->{'cookie_domain'};
      $ip = $ENV{'REMOTE_HOST'};
