@@ -40,19 +40,18 @@ my $expiresleep = 50 ;
 # delay between each read of the digestqueue
 my $digestsleep = 5; 
 
-## Options :  d		-> debug
-##            D         -> Debug with many logs
-##            f		-> name of configuration file
-##            m		-> log invocations to sendmail.
-##            l		-> language
-##            F		-> Foreground and log to stderr also.
-##            s         -> Dump subscribers list (listname or 'ALL' required)
+## Options :  debug		-> debug
+##            config		-> name of configuration file
+##            mail    		-> log invocations to sendmail.
+##            lang		-> language
+##            foreground	-> Foreground and log to stderr also.
+##            dump              -> Dump subscribers list (listname or 'ALL' required)
 
 #Getopt::Std::getopts('DdFf:ml:s:');
 
 ## Check --dump option
 my %options;
-&GetOptions(\%main::options, 'dump|s:s', 'debug|d', 'foreground|f', 'config|f=s', 'lang|l=s', 'messages|m');
+&GetOptions(\%main::options, 'dump|s:s', 'debug|d', 'foreground', 'config|f=s', 'lang|l=s', 'mail|m');
 
 ## Trace options
 #foreach my $k (keys %main::options) {
