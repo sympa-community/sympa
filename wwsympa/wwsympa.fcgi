@@ -1474,6 +1474,7 @@ sub do_search {
 	$sql_regexp = $param->{'filter'};
 	$sql_regexp =~ s/\%/\\\%/g;
 	$sql_regexp =~ s/\*/\%/g;
+	$sql_regexp = '%'.$sql_regexp.'%';
     }
 
     my $record = 0;
