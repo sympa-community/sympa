@@ -1207,7 +1207,7 @@ list messages. These aliases management will depend on the MTA (\unixcmd {sendma
 you are managing virtual domains or not.
 
 \section {Robot aliases}
-   \index{robot-aliases}
+   \label{robot-aliases}
     \index{robot aliases}
 
 An electronic list manager such as \Sympa is built around two processing steps:
