@@ -16,7 +16,7 @@ Copyright:  GPL
 Group: --APPGROUP--
 Source:  http://www.sympa.org/distribution/%{name}-%{version}.tar.--ZIPEXT--
 URL: http://www.sympa.org/
-Requires: MailTransportAgent
+Requires: --MTA--
 Requires: perl >= 0:5.005
 Requires: perl-MailTools >= 1.14
 Requires: perl-MIME-Base64   >= 1.0
@@ -68,12 +68,30 @@ rm -rf $RPM_BUILD_ROOT
 
 %build
 
-make sources languages CONFDIR=%{conf_s}
+./configure \
+--prefix=--HOMEDIR-- \
+--with-confdir=--CONFDIR-- \
+--with-etcdir=--ETCDIR-- \
+--with-cgidir=--CGIDIR-- \
+--with-iconsdir=--ICONSDIR-- \
+--with-bindir=--BINDIR-- \
+--with-sbindir=--SBINDIR-- \
+--with-mandir=%{_mandir} \
+--with-libexecdir=--SCRIPTDIR-- \
+--with-libdir=--LIBDIR-- \
+--with-datadir=--DATADIR-- \
+--with-expldir=--EXPLDIR-- \
+--with-piddir=--PIDDIR-- \
+--with-nlsdir=--NLSDIR-- \
+--with-scriptdir=--SCRIPTDIR-- \
+--with-sampledir=--SAMPLEDIR-- \
+--with-spooldir=--SPOOLDIR-- \
+;make sources languages
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-make INITDIR=--INITDIR-- HOST=MYHOST DIR=%{home_s} EXPL_DIR=--EXPLDIR-- PIDDIR=--PIDDIR-- BINDIR=--BINDIR-- SBINDIR=--SBINDIR-- LIBDIR=--LIBDIR-- MAILERPROGDIR=--BINDIR-- ETCDIR=--ETCDIR-- ETCBINDIR=%{data_s} DESTDIR=$RPM_BUILD_ROOT MANDIR=%{_mandir} ICONSDIR=--ICONSDIR-- CGIDIR=--CGIDIR-- CONFDIR=--CONFDIR-- NLSDIR=--NLSDIR-- SCRIPTDIR=--SCRIPTDIR-- SAMPLEDIR=--SAMPLEDIR-- SPOOLDIR=%{spoo_s} install
+make HOST=MYHOST DESTDIR=$RPM_BUILD_ROOT install
 
 # Create bounce and archive directories
 for dir in bounce wwsarchives wwsbounce ; do
@@ -214,8 +232,8 @@ chmod 0640 /etc/mail/sympa_aliases
 # reset the default cookie
 typeset -x secret
 secret=`perl -e "print int(rand(time))"`
-perl -pi -e "s|'cookie',\n|'cookie',|" --BINDIR--/sympa_wizard.pl
-perl -pi -e "s|'cookie',.*\n|'cookie', 'default' => '${secret}',\n|" --BINDIR--/sympa_wizard.pl
+perl -pi -e "s|'cookie',\n|'cookie',|" --SBINDIR--/sympa_wizard.pl
+perl -pi -e "s|'cookie',.*\n|'cookie', 'default' => '${secret}',\n|" --SBINDIR--/sympa_wizard.pl
 
 
 %postun
@@ -261,17 +279,16 @@ done
  
 # Documentation
 %doc %attr(-,root,root) INSTALL README AUTHORS COPYING NEWS ChangeLog
-# A VOIR %doc %attr(-,root,root) INSTALL LICENSE README RELEASE_NOTES
 %doc %attr(-,root,root) doc/sympa.tex doc/sympa.ps doc/sympa.pdf
-%doc %attr(-,root,root) doc/sympa/*
+%doc %attr(-,root,root) doc/html/
 %attr(-,root,root) %{_mandir}/man8/*
  
 # Spools
 %dir %{spoo_s}
 %dir %{spoo_s}/msg
 %dir %{spoo_s}/bounce
-%dir %{spoo_s}/wwsarchives
-%dir %{spoo_s}/wwsbounce
+#%dir %{spoo_s}/wwsarchives
+#%dir %{spoo_s}/wwsbounce
 %dir %{spoo_s}/digest
 %dir %{spoo_s}/moderation
 %dir %{spoo_s}/expire
@@ -280,70 +297,72 @@ done
 %dir %{spoo_s}/tmp
 %dir %{spoo_s}/task
  
-# PID directory
-#%dir --PIDDIR--
  
 # Config file
-%dir %{conf_s}
+#%dir %{conf_s}
 %config(noreplace) %attr(0640,sympa,sympa) %{conf_s}/sympa.conf
 %config(noreplace) %attr(0640,sympa,sympa) %{conf_s}/wwsympa.conf
  
 # Config directories populated by the user
-%dir %{etc_s}/create_list_templates
-%dir %{etc_s}/scenari
-%dir %{etc_s}/templates
-%dir %{etc_s}/wws_templates
-%dir %{etc_s}/general_task_models
-%dir %{etc_s}/task_models
+#%dir %{etc_s}/create_list_templates
+#%dir %{etc_s}/scenari
+#%dir %{etc_s}/templates
+#%dir %{etc_s}/wws_templates
+#%dir %{etc_s}/general_task_models
+#%dir %{etc_s}/task_models
  
 # Binaries
 # We use a configure where BINDIR = SBINDIR = LIBDIR = LIBEXECDIR
 # aliaswrapper is owned by root, don't change it
-%dir --BINDIR--
+#%dir --BINDIR--
 %attr(-,-,-) --BINDIR--/*
- 
+--SBINDIR--/*
+--LIBDIR--/*
+--LIBEXECDIR--/*
+
 # Locales
-%dir --NLSDIR--
---NLSDIR--/*.cat
+#%dir --NLSDIR--
+--NLSDIR--/
+
 # ATTENTION A VOIR %{_libdir}/sympa/nls/*.msg
  
 # Data
-%dir %{data_s}
-%{data_s}/ca-bundle.crt
-%{data_s}/create_list.conf
-%{data_s}/edit_list.conf
-%{data_s}/mhonarc-ressources
-%{data_s}/list_aliases.tpl
-%dir %{data_s}/create_list_templates
-%{data_s}/create_list_templates/*
-%dir %{data_s}/scenari
-%{data_s}/scenari/*
-%dir %{data_s}/templates
-%{data_s}/templates/*
-%dir %{data_s}/wws_templates
-%{data_s}/wws_templates/*
-%dir %{data_s}/list_task_models
-%{data_s}/list_task_models/*
-%dir %{data_s}/global_task_models
-%{data_s}/global_task_models/*
+%{data_s}/
+#%dir %{data_s}
+#%{data_s}/ca-bundle.crt
+#%{data_s}/create_list.conf
+#%{data_s}/edit_list.conf
+#%{data_s}/mhonarc-ressources
+#%{data_s}/list_aliases.tpl
+#%dir %{data_s}/create_list_templates
+#%{data_s}/create_list_templates/*
+#%dir %{data_s}/scenari
+#%{data_s}/scenari/*
+#%dir %{data_s}/templates
+#%{data_s}/templates/*
+#%dir %{data_s}/wws_templates
+#%{data_s}/wws_templates/*
+#%dir %{data_s}/list_task_models
+#%{data_s}/list_task_models/*
+#%dir %{data_s}/global_task_models
+#%{data_s}/global_task_models/*
  
 # Icons and binaries for Apache
 --CGIDIR--/wwsympa.fcgi
-%dir --ICONSDIR--
---ICONSDIR--/*
+--ICONSDIR--/
  
 # Init scripts
 %config(noreplace) %attr(0755,root,root) --INITDIR--/sympa
 
 # Examples
-%dir --SAMPLEDIR--
---SAMPLEDIR--/*
-#%dir --SAMPLEDIR--/sample-list
-#--SAMPLEDIR--/sample-list/*
+#%dir --SAMPLEDIR--
+--SAMPLEDIR--/
 
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%changelog
 
 * Mon Feb 17 2003 Guy Paressant - Academie de Nantes - <net@ac-nantes.fr> 3.4.3.1-8
 - Rebuilt for 3.4.3.1

@@ -159,6 +159,8 @@ CONFIG		=	$(CONFDIR)/sympa.conf
 WWSCONFIG	=	$(CONFDIR)/wwsympa.conf
 ETCBINDIR	=	@DATADIR@
 
+main_SRC	=	AUTHORS COPYING ChangeLog INSTALL KNOWNBUGS NEWS README
+
 #ifeq ($(shell uname), Linux)
 #	LOG_SOCKET_TYPE="inet"
 #else
@@ -401,10 +403,27 @@ build_rh_rpm: clean
 		SUFFIX=''; export SUFFIX; \
 		ZIPEXT='gz'; export ZIPEXT; \
 		APPGROUP='System Environment/Daemons'; export APPGROUP; \
+		MTA='smtpdaemon'; export MTA; \
 		HOMEDIR='/var/sympa'; export HOMEDIR; \
-		ICONSDIR='/var/www/icons'; export ICONSDIR; \
+		ICONSDIR='/var/www/icons/sympa'; export ICONSDIR; \
 		PIDDIR='/var/run/sympa'; export PIDDIR; \
 		VERSION=$(SYMPA_VERSION); export VERSION; \
+                CONFDIR='/etc'; export CONFDIR; \
+                SENDMAIL_ALIASES='/etc/mail/sympa_aliases'; export SENDMAIL_ALIASES; \
+                MAILERPROGDIR='/etc/smrsh'; export MAILERPROGDIR; \
+		INITDIR='/etc/rc.d/init.d';  export INITDIR; \
+                SPOOLDIR='/var/sympa/spool'; export SPOOLDIR; \
+                BINDIR='/etc/smrsh'; export BINDIR; \
+                SBINDIR='/var/sympa/sbin'; export SBINDIR; \
+                DATADIR='/usr/share/sympa'; export DATADIR; \
+                EXPLDIR='/var/sympa/expl'; export EXPLDIR; \
+                LIBDIR='/usr/lib/sympa/bin'; export LIBDIR; \
+                CGIDIR='/var/www/cgi-bin'; export CGIDIR; \
+                NLSDIR='/usr/lib/sympa/nls'; export NLSDIR; \
+		SCRIPTDIR='/var/sympa/bin'; export SCRIPTDIR; \
+		LIBEXECDIR='/var/sympa/bin'; export LIBEXECDIR; \
+		SAMPLEDIR='/usr/share/sympa/examples'; export SAMPLEDIR; \
+                ETCDIR='/etc/sympa'; export ETCDIR; \
 		$(PERL) ../../../subst.pl sympa.spec \
 	)
 	@( \
@@ -412,7 +431,7 @@ build_rh_rpm: clean
 		tar -cvf $(RPMTOPDIR)/SOURCES/sympa-$(SYMPA_VERSION).tar sympa-$(SYMPA_VERSION); \
 		gzip $(RPMTOPDIR)/SOURCES/sympa-$(SYMPA_VERSION).tar; \
 	)
-	rpm -ba $(RPMTOPDIR)/SPECS/sympa.spec
+	rpm  -ba $(RPMTOPDIR)/SPECS/sympa.spec
 
 build_mdk_rpm: clean
 	@echo "Building Mandrake RPM in $(RPMTOPDIR) ..."
@@ -424,25 +443,27 @@ build_mdk_rpm: clean
 		SUFFIX='mdk'; export SUFFIX; \
 		ZIPEXT='bz2'; export ZIPEXT; \
 		APPGROUP='System/Servers'; export APPGROUP; \
+		MTA='MailTransportAgent'; export MTA; \
 		HOMEDIR='/var/lib/sympa'; export HOMEDIR; \
 		VERSION=$(SYMPA_VERSION); export VERSION; \
-                CONFDIR=$(CONFDIR); export CONFDIR; \
-                SENDMAIL_ALIASES=$(SENDMAIL_ALIASES); export SENDMAIL_ALIASES; \
-                MAILERPROGDIR=$(MAILERPROGDIR); export MAILERPROGDIR; \
-                PIDDIR=$(PIDDIR); export PIDDIR; \
-		INITDIR=$(INITDIR);  export INITDIR; \
-                SPOOLDIR=$(SPOOLDIR); export SPOOLDIR; \
-		ICONSDIR=$(ICONSDIR); export ICONSDIR; \
-                BINDIR=$(BINDIR); export BINDIR; \
-                SBINDIR=$(SBINDIR); export SBINDIR; \
-                DATADIR=$(DATADIR); export DATADIR; \
-                EXPLDIR=$(EXPLDIR); export EXPLDIR; \
-                LIBDIR=$(LIBDIR); export LIBDIR; \
-                CGIDIR=$(CGIDIR); export CGIDIR; \
-                NLSDIR=$(NLSDIR); export NLSDIR; \
-		SCRIPTDIR=$(SCRIPTDIR); export SCRIPTDIR; \
-		SAMPLEDIR=$(SAMPLEDIR); export SAMPLEDIR; \
-                ETCDIR=$(ETCDIR); export ETCDIR; \
+                CONFDIR='/etc/sympa'; export CONFDIR; \
+                SENDMAIL_ALIASES='/etc/mail/sympa_aliases'; export SENDMAIL_ALIASES; \
+                MAILERPROGDIR='/usr/lib/sympa/bin'; export MAILERPROGDIR; \
+                PIDDIR='/var/run/sympa'; export PIDDIR; \
+		INITDIR='/etc/rc.d/init.d';  export INITDIR; \
+                SPOOLDIR='/var/spool/sympa'; export SPOOLDIR; \
+		ICONSDIR='/var/www/icons/sympa'; export ICONSDIR; \
+                BINDIR='/usr/lib/sympa/bin'; export BINDIR; \
+                SBINDIR='/usr/lib/sympa/bin'; export SBINDIR; \
+                DATADIR='/usr/share/sympa'; export DATADIR; \
+                EXPLDIR='/var/lib/sympa/expl'; export EXPLDIR; \
+                LIBDIR='/usr/lib/sympa/bin'; export LIBDIR; \
+                CGIDIR='/var/www/cgi-bin'; export CGIDIR; \
+                NLSDIR='/usr/lib/sympa/nls'; export NLSDIR; \
+		SCRIPTDIR='/usr/lib/sympa/bin'; export SCRIPTDIR; \
+		LIBEXECDIR='/usr/lib/sympa/bin'; export LIBEXECDIR; \
+		SAMPLEDIR='/usr/share/sympa/examples'; export SAMPLEDIR; \
+                ETCDIR='/etc/sympa'; export ETCDIR; \
 		$(PERL) ../../../subst.pl sympa.spec \
 	)
 	@( \
