@@ -6668,13 +6668,7 @@ sub do_edit_list {
 
      foreach my $l (@lists) {
 	 my $list = new List ($l);
-
-	# `/bin/rm -rf $list->{'dir'}`;
-	&tools::remove_dir($list->{'dir'});
-	if ($list->{'name'}) {
-		&tools::remove_dir("$wwsconf->{'arc_path'}/$list->{'name'}\@$list->{'domain'}");
-		&tools::remove_dir("$wwsconf->{'bounce_path'}/$list->{'name'}");
-	}
+	 $list->{'purge'}($param->{'user'}{'email'});
      }    
 
      &message('performed');
@@ -6683,7 +6677,7 @@ sub do_edit_list {
  }
 
  sub do_close_list {
-     &wwslog('info', 'do_close_list()');
+     &wwslog('info', "do_close_list($list->{'name'})");
 
      unless ($param->{'is_privileged_owner'}) {
 	 &error_message('may_not');
@@ -6695,13 +6689,17 @@ sub do_edit_list {
 	 &error_message('already_closed');
 	 &wwslog('info','do_close_list: already closed');
 	 return undef;
-     }      
+     }elsif($list->{'admin'}{'status'} eq 'pending') {
+	 &wwslog('info','do_close_list: closing a pending list make it purged');
+	 $list->purge($param->{'user'}{'email'});
+	 &message('list_purged');
+	 return 'home';	
+     }else{
+	 $list->close($param->{'user'}{'email'});
+	 &message('list_closed');
+         return 'admin';
+     }
 
-     $list->close($param->{'user'}{'email'});
-
-     &message('list_closed');
-
-     return 'admin';
  }
 
  sub do_restore_list {

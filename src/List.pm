@@ -8431,6 +8431,33 @@ sub close {
     return 1;
 }
 
+## Remove the list
+sub purge {
+    my ($self, $email) = @_;
+
+    return undef 
+	unless ($self && ($list_of_lists{$self->{'name'}}));
+    
+    &tools::remove_dir($self->{'dir'});
+
+    if ($self->{'name'}) {
+	my $arc_dir = &Conf::get_robot_conf($self->{'domain'},'arc_path');
+	&tools::remove_dir("$arc_dir/$self->{'name'}\@$self->{'domain'}");
+	my $bounce_dir = &Conf::get_robot_conf($self->{'domain'},'bounce_path');
+	&tools::remove_dir("$bounce_dir/$self->{'name'}");
+    }
+    my @users;
+    for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
+	push @users, $user->{'email'};
+    }
+    $self->delete_user(@users);
+    
+   # purge should remove alias but in most case aliases of thoses lists are undefined
+   # $self->remove_aliases();    
+    
+    return 1;
+}
+
 ## Remove list aliases
 sub remove_aliases {
     my $self = shift;
