@@ -2446,7 +2446,7 @@ ldap
 	timeout				30
 	suffix				dc=univ-rennes1,dc=fr
 	get_dn_by_uid_filter		(uid=[sender])
-	get_dn_by_email			(|(mail=[sender])(mailalternateaddress=[sender]))
+	get_dn_by_email_filter		(|(mail=[sender])(mailalternateaddress=[sender]))
 	email_attribute			mail
 	alternative_email_attribute	mailalternateaddress,ur1mail
 	scope				sub
@@ -2456,7 +2456,7 @@ ldap
 	timeout				20		
 	suffix				dc=univ-nancy2,dc=fr
 	get_dn_by_uid_filter		(uid=[sender])
-	get_dn_by_email			(|(mail=[sender])(n2atraliasmail=[sender]))
+	get_dn_by_email_filter			(|(mail=[sender])(n2atraliasmail=[sender]))
 	alternative_email_attribute	n2atrmaildrop
 	email_attribute			mail
 	scope				sub
