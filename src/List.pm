@@ -2412,7 +2412,7 @@ sub get_first_user {
 	my ($i, $j);
 	my $ref = $self->{'ref'};
 	
-	 if ($ref->seq($i, $j, R_FIRST) == 0)  {
+	 if (defined($ref) && $ref->seq($i, $j, R_FIRST) == 0)  {
 	    my %user = split(/\n/, $j);
 
 	    $user{'reception'} ||= 'mail';
