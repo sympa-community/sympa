@@ -197,7 +197,7 @@ use MIME::Parser;
 use Message;
 
 ## Database and SQL statement handlers
-my ($dbh, $sth, @sth_stack, $use_db, $include_lock_count);
+my ($dbh, $sth, $db_connected, @sth_stack, $use_db, $include_lock_count);
 
 my %list_cache;
 my %persistent_cache;
@@ -1013,6 +1013,8 @@ sub LOCK_UN {8};
 
 ## Connect to Database
 sub db_connect {
+    my $option = shift;
+
     do_log('debug3', 'List::db_connect');
 
     my $connect_string;
@@ -1057,10 +1059,17 @@ sub db_connect {
     }
 
     unless ( $dbh = DBI->connect($connect_string, $Conf{'db_user'}, $Conf{'db_passwd'}) ) {
+
+	return undef if ($option eq 'just_try');
+
 	do_log('err','Can\'t connect to Database %s as %s, still trying...', $connect_string, $Conf{'db_user'});
 
 	&send_notify_to_listmaster('no_db', $Conf{'domain'});
-	#&fatal_err('Sympa cannot connect to database %s, dying', $Conf{'db_name'});
+
+	## Die if first connect and not in web context
+	unless ($db_connected || $ENV{'HTTP_HOST'}) {
+	    &fatal_err('Sympa cannot connect to database %s, dying', $Conf{'db_name'});
+	}
 
 	## Loop until connect works
 	my $sleep_delay = 60;
@@ -1087,6 +1096,7 @@ sub db_connect {
     }
 
     do_log('debug3','Connected to Database %s',$Conf{'db_name'});
+    $db_connected = 1;
 
     return 1;
 }
@@ -6553,20 +6563,42 @@ sub probe_db {
 	&do_log('info', 'No db_name defined in configuration file');
 	return undef;
     }
-
     unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
+	unless (&db_connect('just_try')) {
+	    unless (&create_db()) {
+		return undef;
+	    }
+	    return undef unless &db_connect();
+	}
     }
 	
     my (@tables, $fields, %real_struct);
     if ($Conf{'db_type'} eq 'mysql') {
 	
 	## Get tables
-	unless (@tables = $dbh->tables()) {
-#	unless ($dbh->tables) {
+	@tables = $dbh->tables();
+	unless (defined $#tables) {
 	    &do_log('info', 'Can\'t load tables list from database %s : %s', $Conf{'db_name'}, $dbh->errstr);
 	    return undef;
 	}
+
+	## Check required tables
+	foreach my $t1 (keys %db_struct) {
+	    my $found;
+	    foreach my $t2 (@tables) {
+		$found = 1 if ($t1 eq $t2);
+	    }
+	    unless ($found) {
+		unless ($dbh->do("CREATE TABLE $t1 (temporary INT)")) {
+		    &do_log('err', 'Could not create table %s in database %s : %s', $t1, $Conf{'db_name'}, $dbh->errstr);
+		    next;
+		}
+
+		&do_log('notice', 'Table %s created in database %s', $t1, $Conf{'db_name'});
+		push @tables, $t1;
+	    }
+	}
+	
 
 	## Get fields
 	foreach my $t (@tables) {
@@ -6673,25 +6705,64 @@ sub probe_db {
 			return undef;
 		    }
 
-		    &do_log('info', 'Database structure updated');
+		    &do_log('info', 'Field %s added to table %s', $f, $t);
+
+		    ## Remove temporary DB field
+		    if ($real_struct{$t}{'temporary'}) {
+			unless ($dbh->do("ALTER TABLE $t DROP temporary")) {
+			    &do_log('err', 'Could not drop temporary table field : %s', $dbh->errstr);
+			}
+			delete $real_struct{$t}{'temporary'};
+		    }
+
 		    next;
 		}
 		
+		
 		unless ($real_struct{$t}{$f} eq $db_struct{$t}{$f}) {
 		     &do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', $f, $t, $Conf{'db_name'}, $db_struct{$t}{$f});
-
+		     
 		     unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$t}{$f}")) {
 			 &do_log('err', 'Could not change field \'%s\' in table\'%s\'.', $f, $t);
 			 &do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			 return undef;
 		     }
 		     
-		     &do_log('info', 'Database structure updated');
+		     &do_log('info', 'Field %s in table %s, structur updated', $f, $t);
 		}
 	    }
 	}
     }
     
+    return 1;
+}
+
+## Try to create the database
+sub create_db {
+    &do_log('debug3', 'List::create_db()');    
+
+    unless ($Conf{'db_type'} eq 'mysql') {
+	&do_log('err', 'Cannot create %s DB', $Conf{'db_type'});
+	return undef;
+    }
+
+    my $drh;
+    unless ($drh = DBI->connect("DBI:mysql:dbname=mysql;host=localhost", 'root', '')) {
+	&do_log('err', 'Cannot connect as root to database');
+	return undef;
+    }
+
+    ## Create DB
+    my $rc = $drh->func("createdb", $Conf{'db_name'}, 'localhost', $Conf{'db_user'}, $Conf{'db_passwd'}, 'admin');
+    unless (defined $rc) {
+	&do_log('err', 'Cannot create database %s : %s', $Conf{'db_name'}, $drh->errstr);
+	return undef;
+    }
+
+    &do_log('notice', 'Database %s created', $Conf{'db_name'});
+
+    $drh->disconnect();
+
     return 1;
 }
 
