@@ -6681,7 +6681,7 @@ sub probe_db {
     }
     
     foreach $table('user_table', 'subscriber_table') {
-	unless ($checked{$table}) {
+	unless ($checked{$table} || $checked{'public.' . $table}) {
 	    &do_log('err', 'Table %s not found in database %s', $table, $Conf{'db_name'});
 	    return undef;
 	}
