@@ -102,7 +102,7 @@ main(int argn, char **argv)
       exit(EX_NOPERM);
    }
    umask(027);
-   sprintf(qfile, "T.%s.%ld.%d", listname, time(NULL), getpid());
+   snprintf(qfile, sizeof(qfile), "T.%s.%ld.%d", listname, time(NULL), getpid());
    fd = open(qfile, O_CREAT|O_WRONLY, 0600);
    if (fd == -1)
       exit(EX_TEMPFAIL);
