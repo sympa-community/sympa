@@ -24,7 +24,7 @@ potfile: sympa.pot
 pot:
 	echo "Updating sympa.pot template file..."
 	cd .. ;\
-	$(XGETTEXT) -o po/sympa.pot src/*.p? soap/*.p? soap/*.fcgi wwsympa/wwsympa.fcgi wwsympa/*.p? wwsympa/tt2/*.tt2 src/etc/tt2/*.tt2 src/etc/mhonarc-ressources src/etc/scenari/*
+	$(XGETTEXT) -o po/sympa.pot src/*.p? soap/*.p? soap/*.fcgi wwsympa/wwsympa.fcgi wwsympa/*.p? wwsympa/tt2/*.tt2 src/etc/tt2/*.tt2 src/etc/mhonarc-ressources.tt2 src/etc/scenari/*
 
 install: $(MOFILES)
 	targetdir='$(DESTDIR)$(LOCALEDIR)'; \

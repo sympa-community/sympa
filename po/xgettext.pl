@@ -116,7 +116,12 @@ undef $/;
 foreach my $file (@ARGV) {
     next if ($file=~/\.po$/i); # Don't parse po files
     my $filename = $file;
-    open _, $file or die $!; $_ = <_>; $filename =~ s!^./!!;
+    printf STDOUT "Processing $file...\n";	    
+    unless (-f $file) {
+	print STDERR "Cannot open $file\n";
+	next;
+    }
+    open F, $file or die $!; $_ = <F>; $filename =~ s!^./!!;
 
     my $line = 1; pos($_) = 0;
     # Text::Template
