@@ -55,7 +55,7 @@ Options:
    -k, --keepcopy=dir  : keep a copy of incoming message
    -l, --lang=LANG     : use a language catalog for Sympa
    -m, --mail          : log calls to sendmail
-   -s, --dump=list|ALL : dumps subscribers 
+   --dump=list|ALL : dumps subscribers 
 
    -h, --help          : print this help
    -v, --version       : print version number
@@ -68,7 +68,7 @@ encryption.
 
 ## Check --dump option
 my %options;
-&GetOptions(\%main::options, 'dump|s=s', 'debug|d', 'foreground', 'config|f=s', 
+&GetOptions(\%main::options, 'dump=s', 'debug|d', 'foreground', 'config|f=s', 
 	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s');
 
 ## Trace options
