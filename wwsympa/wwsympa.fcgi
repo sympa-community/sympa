@@ -483,22 +483,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $log_level = $Conf{'robots'}{$robot}{'log_level'};
 
      ## Sympa parameters in $param->{'conf'}
-     if (defined $Conf{'robots'}{$robot}) {
-         $param->{'conf'} = {'email' => $Conf{'robots'}{$robot}{'email'},
-                             'host' =>  $Conf{'robots'}{$robot}{'host'},
-                             'sympa' => $Conf{'robots'}{$robot}{'sympa'},
-                             'request' => $Conf{'robots'}{$robot}{'request'},
-                             'soap_url' => $Conf{'robots'}{$robot}{'soap_url'},
-                             'wwsympa_url' => $Conf{'robots'}{$robot}{'wwsympa_url'}
-                         };
-     }else {
-         $param->{'conf'} = {'email' => $Conf{'email'},
-                             'host' =>  $Conf{'host'},
-                             'sympa' => $Conf{'sympa'},
-                             'request' => $Conf{'request'},
-                             'soap_url' => $Conf{'soap_url'},
-                             'wwsympa_url' => $Conf{'wwsympa_url'}
-                         };
+     $param->{'conf'} = {};
+     foreach my $p ('email','host','sympa','request','soap_url','wwsympa_url','listmaster_email',
+		    'dark_color','light_color','text_color','bg_color','error_color',
+                    'selected_color','shaded_color') {
+	 $param->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
+	 $param->{$p} = &Conf::get_robot_conf($robot, $p) if ($p =~ /_color$/);
      }
 
      foreach my $auth (keys  %{$Conf{'cas_id'}}) {
@@ -515,11 +505,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'use_passwd'} = $Conf{'use_passwd'};
      $param->{'use_sso'} = 1 if ($param->{'sso_number'});
      $param->{'wwsconf'} = $wwsconf;
-
-     foreach my $p ('dark_color','light_color','text_color','bg_color','error_color',
-                    'selected_color','shaded_color') { 
-         $param->{$p} = &Conf::get_robot_conf($robot, $p);
-     }
 
      $param->{'path_cgi'} = $ENV{'SCRIPT_NAME'};
      $param->{'version'} = $Version::Version;

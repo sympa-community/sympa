@@ -1528,6 +1528,30 @@ is still recognized but should not be used anymore.
 
         \example {listmaster postmaster@cru.fr,root@cru.fr}
 
+\subsection {\cfkeyword {listmaster\_email}} 
+
+	\default {listmaster}
+
+        Username (the part of the address preceding the \texttt {@} sign) used 
+	in the listmaster email. This parameter is useful if you want to run
+	more than one sympa on the same host (a sympa test for example).
+
+	If you change the default value, you must modify the sympa aliases too.
+
+	For example, if you put :
+
+\begin {quote}
+listmaster listmaster-test
+\end {quote}
+
+	you must modify the sympa aliases like this :
+
+\begin {quote}
+listmaster-test: 	"| /home/sympa/bin/queue listmaster@\samplerobot"
+\end {quote}
+
+ 	See \ref {robot-aliases},page~\pageref {robot-aliases} for all aliases.
+
 \subsection {\cfkeyword {wwsympa\_url}}  
 
 	 \default {http://\texttt{<}host\texttt{>}/wws}
@@ -2113,6 +2137,31 @@ see a  nice mailto adresses where others have nothing.
 	(\ref{bouncers-level2}, page~\pageref{bouncers-level2})
 
 	
+\subsection {\cfkeyword {bounce\_email\_prefix}} 
+
+	\default {bounce}
+
+        The prefix Username (the part of the address preceding the \texttt {@}
+	sign) used in the bounce email. The email is used to collect bounce.
+	This parameter is useful if you want to run more than one sympa on the
+	same host (a sympa test for example).
+
+	If you change the default value, you must modify the sympa aliases too.
+
+	For example, if you put :
+
+\begin {quote}
+bounce\_email\_prefix bounce-test
+\end {quote}
+
+	you must modify the sympa aliases like this :
+
+\begin {quote}
+bounce-test+*: 	"| /home/sympa/bin/queuebounce sympa@\samplerobot"
+\end {quote}
+
+ 	See \ref {robot-aliases},page~\pageref {robot-aliases} for all aliases.
+
 \section {Priority related}
 
 \subsection {\cfkeyword {sympa\_priority}}  

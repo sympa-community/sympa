@@ -115,7 +115,7 @@ sub new {
 	
 	my $conf_email = &Conf::get_robot_conf($robot, 'email');
 	my $conf_host = &Conf::get_robot_conf($robot, 'host');
-	unless ($listname =~ /^(sympa|listmaster|$conf_email)(\@$conf_host)?$/i) {
+	unless ($listname =~ /^(sympa|$Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
 	    my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
 	        if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
 		    $listname = $1;

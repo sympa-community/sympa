@@ -2174,7 +2174,7 @@ sub send_notify_to_listmaster {
 	my $host = &Conf::get_robot_conf($robot, 'host');
 
 	&send_global_file('listmaster_notification', &Conf::get_robot_conf($robot, 'listmaster'), $robot,
-			  {'to' => "listmaster\@$host",
+			  {'to' => "$Conf{'listmaster_email'}\@$host",
 			   'list' => {'name' => $list->{'name'},
 				      'host' => $list->{'domain'},
 				      'subject' => $list->{'admin'}{'subject'}},
@@ -2201,7 +2201,7 @@ sub send_notify_to_listmaster {
     #Virus scan failed
     }elsif ($operation eq 'virus_scan_failed') {
 	&send_global_file('listmaster_notification', $Conf{'listmaster'}, $robot,
-			 {'to' => "listmaster\@$Conf{'host'}",
+			 {'to' => "$Conf{'listmaster_email'}\@$Conf{'host'}",
 			  'type' => 'virus_scan_failed',
 			  'filename' => $param[0],
 			  'error_msg' => $param[1]});	
@@ -2213,14 +2213,14 @@ sub send_notify_to_listmaster {
 
 
 	$list->send_file('listmaster_notification',&Conf::get_robot_conf($robot, 'listmaster'), $robot,
-			  {'to' => "listmaster\@$host",
+			  {'to' => "$Conf{'listmaster_email'}\@$host",
 			   'type' => 'automatic_bounce_management',
 			   'action' => $param[1],
 			   'user_list' => $param[2],
 			   'total' => $#{$param[2]} + 1});		
 
     }else {
-	my $data = {'to' => "listmaster\@$Conf{'host'}",
+	my $data = {'to' => "$Conf{'listmaster_email'}\@$Conf{'host'}",
 		 'type' => $operation
 		 };
 	
@@ -3235,7 +3235,7 @@ sub send_global_file {
 
     my $filename = &tools::find_file($action.'.tt2',&tt2::get_include_path());
 
-    foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title') {
+    foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title','listmaster_email') {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
 
@@ -3297,7 +3297,7 @@ sub send_file {
 	    (($self->{'admin'}{'remind_return_path'} eq 'unique') && ($action eq 'remind')))  {
 	    my $escapercpt = $who ;
 	    $escapercpt =~ s/\@/\=\=a\=\=/;
-	    $data->{'return_path'} = "bounce+$escapercpt\=\=$name\@$self->{'admin'}{'host'}";
+	    $data->{'return_path'} = "$Conf{'bounce_email_prefix'}+$escapercpt\=\=$name\@$self->{'admin'}{'host'}";
 	}
     }
 
@@ -3332,7 +3332,7 @@ sub send_file {
 	&tt2::add_include_path($d);
     }
 
-    foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title') {
+    foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title','listmaster_email') {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
 

@@ -3,9 +3,9 @@ To: [% FILTER qencode %][%|loc%]Listowners[%END%][%END%] <[% to %]>
 [% IF type == 'arc_quota_exceeded' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" archive quota exceeded[%END%][%END%]
 
-[%|loc(list.name,list.host,size,conf.host)%]%1 archive quota exceeded. 
+[%|loc(list.name,list.host,size,conf.host,conf.listmaster_email)%]%1 archive quota exceeded. 
 Total size used for %1@%2 archive is %3 Bytes. Messages
-are no more web-archived. Please contact listmaster@%4. [%END%]
+are no more web-archived. Please contact %5@%4. [%END%]
 
 [% ELSIF type == 'arc_quota_95' -%]
 Subject: [% FILTER qencode %][%|loc(list.name,rate)%]List "%1" warning : archive %2% full[%END%][%END%]
@@ -13,7 +13,7 @@ Subject: [% FILTER qencode %][%|loc(list.name,rate)%]List "%1" warning : archive
 [%|loc(rate2,list.name,list.host,rate)%]%2@%3 archives use %4% of allowed disk quota.[%END%]
 [%|loc(list.name,size)%]Total size used for %1@%2 Bytes.[%END%]
 
-[%|loc(conf.host)%]Messages are still archived but you should contact listmaster@%1[%END%]. 
+[%|loc(conf.host,conf.listmaster_email)%]Messages are still archived but you should contact %2@%1[%END%]. 
 
 [% ELSIF type == 'closed_during_instantiation_family' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 is closed[%END%][%END%]

@@ -220,7 +220,7 @@ while (!$end) {
 	    my $head = $entity->head;
 	    my $to = $head->get('to', 0);
 	    close BOUNCE ;
-	    if ($to =~ /^bounce\+(.*)\=\=a\=\=(.*)\=\=(.*)\@/) {
+	    if ($to =~ /^$Conf{'bounce_email_prefix'}\+(.*)\=\=a\=\=(.*)\=\=(.*)\@/) {
 		my $who = "$1\@$2";
 		my $listname = $3 ;
 		my $list = new List ($listname);

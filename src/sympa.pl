@@ -741,11 +741,11 @@ while (!$signal) {
 	}
 
 	# (sa) le terme "(\@$Conf{'host'})?" est inutile
-	#unless ($t_listname =~ /^(sympa|listmaster|$Conf{'email'})(\@$Conf{'host'})?$/i) {
+	#unless ($t_listname =~ /^(sympa|$Conf{'listmaster_email'}|$Conf{'email'})(\@$Conf{'host'})?$/i) {
 	#    $list = new List ($t_listname);
 	#}
 	
-	if ($t_listname eq 'listmaster') {
+	if ($t_listname eq $Conf{'listmaster_email'}) {
 	    ## highest priority
 	    $priority = 0;
 	}elsif ($type eq 'request') {
@@ -926,7 +926,7 @@ sub DoFile {
 #    $hdr->replace('Subject', $subject_field);
         
     my ($list, $host, $name);   
-    if ($listname =~ /^(sympa|listmaster|$conf_email)(\@$conf_host)?$/i) {
+    if ($listname =~ /^(sympa|$Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
 	$host = $conf_host;
 	$name = $listname;
     }else {
@@ -995,7 +995,7 @@ sub DoFile {
     }
   
     if ($daemon_usage eq 'message') {
-	if (($rcpt =~ /^listmaster(\@(\S+))?$/) || ($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) || ($type =~ /^(subscribe|unsubscribe)$/o) || ($type =~ /^(request|owner|editor)$/o)) {
+	if (($rcpt =~ /^$Conf{'listmaster_email'}(\@(\S+))?$/) || ($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) || ($type =~ /^(subscribe|unsubscribe)$/o) || ($type =~ /^(request|owner|editor)$/o)) {
 	    do_log('err','internal serveur error : distribution daemon should never proceed with command');
 	    return undef;
 	} 
@@ -1127,7 +1127,7 @@ sub DoForward {
     my ($list, $admin, $host, $recepient, $priority);
 
     if ($function eq 'listmaster') {
-	$recepient="$function";
+	$recepient=$Conf{'listmaster_email'};
 	$host = &Conf::get_robot_conf($robot, 'host');
 	$priority = 0;
     }else {
