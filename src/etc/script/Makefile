@@ -59,7 +59,7 @@ installinit:
 		BINDIR=$(BINDIR); export BINDIR; \
 		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
 		CONFIG=$(CONFIG); export CONFIG; \
-		WWSCONFIG=$(CONFIG); export WWSCONFIG; \
+		WWSCONFIG=$(WWSCONFIG); export WWSCONFIG; \
 		COOKIE=$(COOKIE); export COOKIE; \
 		HOST=$(HOST); export HOST; \
 		$(PERL) ../../../subst.pl $(INITSRC) \
