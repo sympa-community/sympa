@@ -383,7 +383,7 @@ sub load_robots {
 	    next if (/^\s*$/o || /^[\#\;]/o);
 	    if (/^\s*(\S+)\s+(.+)\s*$/io) {
 		my($keyword, $value) = ($1, $2);
-		
+		$value =~ s/\s*$//;
 		$keyword = lc($keyword);
 		$value = lc($value) unless ($keyword eq 'title');
 		if ($valid_robot_key_words{$keyword}) {
