@@ -3101,7 +3101,7 @@ sub do_remindpasswd {
      $param->{'filepath'} = $list->{'dir'}.'/'.$in{'file'};
 
      if ((-e $param->{'filepath'}) and (! -r $param->{'filepath'})) {
-	 &error_message('read_error');
+	 &error_message('read_error',{'filepath' => $param->{'filepath'}});
 	 &wwslog('info','do_viewfile: cannot read %s', $param->{'filepath'});
 	 return undef;
      }
@@ -7646,7 +7646,7 @@ sub _restrict_values {
 	 &wwslog('info','do_close_list: already closed');
 	 return undef;
      }elsif($list->{'admin'}{'status'} eq 'pending') {
-	 &wwslog('info','do_close_list: closing a pending list make it purged');
+	 &wwslog('info','do_close_list: closing a pending list makes it purged');
 	 $list->purge($param->{'user'}{'email'});
 	 &message('list_purged');
 	 return 'home';	
@@ -11733,7 +11733,7 @@ sub d_test_existing_and_rights {
 	     }
 	 }
 
-	 &message('done');
+	 &message('performed');
 
 	 ## Update User_table
 	 &List::delete_user_db($in{'email'});
@@ -11903,7 +11903,7 @@ sub d_test_existing_and_rights {
      $param->{'email'} = $in{'email'};
 
      unless (defined $param->{'which'}) {
-	 &error_message('no_entry');
+	 &error_message('no_entry',{'email' => $in{'email'}});
 	 &wwslog('info','do_search_user: no entry for %s', $in{'email'});
 	 return 'serveradmin';
      }
@@ -12197,7 +12197,7 @@ sub d_test_existing_and_rights {
 
      unless ($param->{'list'}) {
 	 # any error message must start with 'err_' in order to allow remote Sympa to catch it
-	 &error_message('err_missing_arg_list');
+	 &error_message('missing_arg', {'argument' => 'list'});
 	 &do_log('info','do_dump: no list');
 	 return undef;
      }

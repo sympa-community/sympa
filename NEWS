@@ -3,6 +3,77 @@
 
 (See Changelog file for the full changes log)
 
+5.0b.2		15 March 2005
+
+   New features :
+
+	src/tt2.pl, web_tt2/main.tt2, web_tt2/rss.tt2, wwsympa/wwsympa.fcgi: [G.Bouteille] Changes: RSS related :	 
+		* fixed various encoding problems	
+		* added a link, refering to RSS chanels, in HTML pages
+
+	wwsympa/wwsympa.fcgi: now performs syntaxical checks on incoming parameters to prevent malicious code injection
+
+   Changes :
+
+	po/: Update PO and POT
+
+	src/etc/auth.conf: Fix exemple with eppn
+
+	po/hu.po: [G.Hargitai] Update translations
+
+	wwsympa/wwsympa.fcgi: return to the get_pending_list page when a list has been installed
+
+	src/sympa_wizard.pl: list of supported languages is reduced
+
+	src/Language.pm: Allow '%' chars to be escaped in templates : %%
+
+	wwsympa/wwsympa.fcgi: [BugID 369] [A.Bernstein]: check 'send' scenario to determine if 'Post' button is shown
+
+   Bug fixes :
+
+	wwsympa/wwsympa.fcgi: [BugID 391]: wwsympa did not rise an error if user provided no password at login
+
+	po/xgettext.pl: Fix: allow dashes in [% END %] tags
+
+	po/xgettext.pl: [reported by M.Charlot] an additional \n was added to multiline entries.  
+	These translations could not be used (not matched by gettext())
+
+	src/tools.pl: allow comment.tt2 file (create_list context) be localized
+
+	src/etc/mhonarc-ressources.tt2: [L.Kirsher] Domainkey-signature is not printed in archives (too long)
+
+	mail_tt2/moderate.tt2, src/List.pm: [BugID 299] Add number of messages awaiting moderation in moderate.tt2
+
+	mail_tt2/moderate.tt2, src/List.pm: [requested by G.Hargitai] Add message sender (msg_from) to the subject of the default
+	moderate.tt2 template
+
+	po/Makefile: [reported by G.Hargitai] translations in create_list templates were not collected
+
+	web_tt2/: [BugID 375] some input maxlength were too short
+
+	src/List.pm: [G.Bouteille] check if $user is defined first. Otherwise wwsympa would create loops
+
+	src/task_manager.pl: [reported by S.Ruberti] [BugID373] the task_manager created dummy remind tasks
+
+	mail_tt2/Makefile, web_tt2/Makefile: [C.Orteu] remove incorrect 'cd tt2' commands
+
+	src/queue.c, src/bouncequeue.c: [M.Schulze] fix vulnerability to a buffer overflow. This could potentially lead to 
+        the execution of arbitrary code under the sympa user id.
+
+	src/List.pm, wwsympa/wwsympa.fcgi: urlize and attach function were not fully working
+
+	wwsympa/archived.pl: Remove all previously generated files when rebuilding web archives. 
+	Attachments used to be duplicated...
+
+	src/task_manager.pl: remind messages (automatically sent by the task_manager) 
+	did not use appropriate variables (because current robot was not given)
+
+	check_perl_modules.pl: problem with RedHat ES and Archive:Zip
+
+	src/tools.pl: Could not create tmp directory for antivirus if already exists
+
+
+
 5.0b.1		11 January 2005
 
    New features :
