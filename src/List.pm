@@ -3147,9 +3147,7 @@ sub get_subscriber {
 	    $user->{'subscribed'} = 1
 		if ($self->{'admin'}{'user_data_source'} eq 'database');
 
-	    }elsif ($sortby eq 'name') {
-		$statement .= " ORDER BY \"gecos\"";
-	    } 
+	}
 
 	$sth->finish();
 
@@ -3820,22 +3818,6 @@ sub update_user {
 			  id => 'include_sources_subscriber'
 			  );
 
-	## additional DB fields
-	if (defined $Conf{'db_additional_subscriber_fields'}) {
-	    foreach my $f (split ',', $Conf{'db_additional_subscriber_fields'}) {
-		$map_table{$f} = 'subscriber_table';
-		$map_field{$f} = $f;
-	    }
-	}
-
-	if (defined $Conf{'db_additional_user_fields'}) {
-	    foreach my $f (split ',', $Conf{'db_additional_user_fields'}) {
-		$map_table{$f} = 'user_table';
-		$map_field{$f} = $f;
-	    }
-	}
-	
-	
 	## mapping between var and tables
 	my %map_table = ( reception => 'subscriber_table',
 			  visibility => 'subscriber_table',
@@ -4106,14 +4088,6 @@ sub add_user {
 	    
 	    my $statement;
 
-	    ## If datasource is 'include2' either is_included or is_subscribed must be set
-	    ## default is is_subscriber for backward compatibility reason
-	    if ($self->{'admin'}{'user_data_source'} eq 'include2') {
-		unless ($new_user->{'included'}) {
-		    $new_user->{'subscribed'} = 1;
-		}
-	    }
-
 	    ## Either is_included or is_subscribed must be set
 	    ## default is is_subscriber for backward compatibility reason
 	    unless ($new_user->{'included'}) {
@@ -4194,41 +4168,6 @@ sub rename_list_db {
     
     return 1;
 }
-
-
-
-
-
-## Update subscribers (used while renaming a list)
-sub update_subscribers_db {
-    my($listname, $new_listname) = @_;
-    do_log('debug', 'List::update_subscriber_db(%s,%s)', $listname,$new_listname);
-
-    unless ($List::use_db) {
-	&do_log('info', 'Sympa not setup to use DBI');
-	return undef;
-    }
-
-    my $statement;
-    
-    ## Check database connection
-    unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
-    }	   
-    
-    $statement =  sprintf "UPDATE subscriber_table SET list_subscriber=%s WHERE list_subscriber=%s", $dbh->quote($new_listname), $dbh->quote($listname) ; 
-
-    do_log('debug', 'List::update_subscriber_db statement : %s',  $statement );
-
-    unless ($dbh->do($statement)) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-	return undef;
-    }
-    
-    return 1;
-}
-
-
 
 
 ## Is the user listmaster
@@ -6359,17 +6298,6 @@ sub sync_include {
 		    $users_updated++;
 		}
 
-		## Gecos have changed for the user
-		if ($old_subscribers{$email}{'gecos'} ne $new_subscribers->{$email}{'gecos'}) {
-		    &do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
-		    unless( $self->update_user($email,  {'update_date' => time,
-							 'gecos' => $new_subscribers->{$email}{'gecos'} }) ) {
-			&do_log('err', 'List:sync_include(%s): Failed to update %s', $name, $email);
-			next;
-		    }
-		    $users_updated++;
-		}
-
 		## User was already subscribed, update include_sources_subscriber in DB
 	    }else {
 		&do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
@@ -6978,41 +6906,6 @@ sub get_db_field_type {
     return undef;
 }
 
-## Get the type of a DB field
-sub get_db_field_type {
-    my ($table, $field) = @_;
-
-    return undef unless ($Conf{'db_type'} eq 'mysql');
-
-    ## Is the Database defined
-    unless ($Conf{'db_name'}) {
-	&do_log('info', 'No db_name defined in configuration file');
-	return undef;
-    }
-
-    unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
-    }
-	
-    unless ($sth = $dbh->prepare("SHOW FIELDS FROM $table")) {
-	do_log('err','Unable to prepare SQL query : %s', $dbh->errstr);
-	return undef;
-    }
-    
-    unless ($sth->execute) {
-	do_log('err','Unable to execute SQL query : %s', $dbh->errstr);
-	return undef;
-    }
-	    
-    while (my $ref = $sth->fetchrow_hashref()) {
-	next unless ($ref->{'Field'} eq $field);
-
-	return $ref->{'Type'};
-    }
-
-    return undef;
-}
-
 sub probe_db {
     do_log('debug3', 'List::probe_db()');    
     my (%checked, $table);
@@ -7348,41 +7241,6 @@ sub maintenance {
     return 1;
 }
 
-## Try to create the database
-sub create_db {
-    &do_log('debug3', 'List::create_db()');    
-
-    unless ($Conf{'db_type'} eq 'mysql') {
-	&do_log('err', 'Cannot create %s DB', $Conf{'db_type'});
-	return undef;
-    }
-
-    my $drh;
-    unless ($drh = DBI->connect("DBI:mysql:dbname=mysql;host=localhost", 'root', '')) {
-	&do_log('err', 'Cannot connect as root to database');
-	return undef;
-    }
-
-    ## Create DB
-    my $rc = $drh->func("createdb", $Conf{'db_name'}, 'localhost', $Conf{'db_user'}, $Conf{'db_passwd'}, 'admin');
-    unless (defined $rc) {
-	&do_log('err', 'Cannot create database %s : %s', $Conf{'db_name'}, $drh->errstr);
-	return undef;
-    }
-
-    ## Grant privileges
-    unless ($drh->do("GRANT ALL ON $Conf{'db_name'}.* TO $Conf{'db_user'}\@localhost IDENTIFIED BY '$Conf{'db_passwd'}'")) {
-	&do_log('err', 'Cannot grant privileges to %s on database %s : %s', $Conf{'db_user'}, $Conf{'db_name'}, $drh->errstr);
-	return undef;
-    }
-
-    &do_log('notice', 'Database %s created', $Conf{'db_name'});
-
-    $drh->disconnect();
-
-    return 1;
-}
-
 ## Lowercase field from database
 sub lowercase_field {
     my ($table, $field) = @_;
@@ -7430,11 +7288,6 @@ sub load_topics {
     do_log('debug2', 'List::load_topics(%s)',$robot);
 
     my $conf_file = &tools::get_filename('etc','topics.conf',$robot);
-
-    unless ($conf_file) {
-	&do_log('err','No topics.conf defined');
-	return undef;
-    }
 
     unless ($conf_file) {
 	&do_log('err','No topics.conf defined');
@@ -8136,124 +7989,6 @@ sub _save_admin_file {
     close CONFIG;
 
     return 1;
-}
-
-
-# add log in RDBMS 
-sub db_log {
-
-    my $process = shift;
-    my $email_user = shift; $email_user = lc($email_user);
-    my $auth = shift;
-    my $ip = shift; $ip = lc($ip);
-    my $ope = shift; $ope = lc($ope);
-    my $list = shift; $list = lc($list);
-    my $robot = shift; $robot = lc($robot);
-    my $arg = shift; 
-    my $status = shift;
-    my $subscriber_count = shift;
-
-    do_log ('info',"db_log (PROCESS = $process, EMAIL = $email_user, AUTH = $auth, IP = $ip, OPERATION = $ope, LIST = $list,ROBOT = $robot, ARG = $arg ,STATUS = $status , LIST= list_subscriber)");
-
-    unless ($process =~ /^((task)|(archived)|(sympa)|(wwsympa)|(bounce))$/) {
-	do_log ('err',"Internal_error : incorrect process value $process");
-	return undef;
-    }
-
-    unless ($auth =~ /^((smtp)|(md5)|(smime)|(null))$/) {
-	do_log ('err',"Internal_error : incorrect auth value $auth");
-	return undef;
-    }
-    $auth = '' if ($auth eq 'null');
-
-    my $date=time;
-    
-    ## Insert in log_table
-
-
-
-    my $statement = 'INSERT INTO log_table (id, date, pid, process, email_user, auth, ip, operation, list, robot, arg, status, subscriber_count) ';
-
-    my $statement_value = sprintf "VALUES ('',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $date,$dbh->quote($$),$dbh->quote($process),$dbh->quote($email_user),$dbh->quote($auth),$dbh->quote($ip),$dbh->quote($ope),$dbh->quote($list),$dbh->quote($robot),$dbh->quote($arg),$dbh->quote($status),$dbh->quote($subscriber_count);		    
-    $statement = $statement.$statement_value;
-    
-		    unless ($dbh->do($statement)) {
-			do_log('err','Unable to execute SQL statement \n"%s" \n %s', $statement, $dbh->errstr);
-			return undef;
-		    }
-
-}
-
-# Scan log_table with appropriate select 
-sub get_first_db_log {
-
-    my $select = shift;
-
-    do_log('info','get_first_db_log (%s)',$select);
-    ## Check database connection
-    unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
-    }
-
-    my $statement; 
-
-    if ($Conf{'db_type'} eq 'Oracle') {
-	## "AS" not supported by Oracle
-	$statement = "SELECT date \"date\", pid \"pid\", process \"process\", email_user \"email\", auth \"auth\", ip \"ip\",operation \"operation\", list \"list\", robot \"robot\", arg \"arg\", status \"status\", subscriber_count \"count\" FROM log_table WHERE 1 ";
-    }else{
-	$statement = "SELECT date AS date, pid AS pid, process AS process, email_user AS email, auth AS auth, ip AS ip, operation AS operation, list AS list, robot AS robot, arg AS arg, status AS status, subscriber_count AS count FROM log_table WHERE 1 ";	
-    }
-
-    if ($select->{'list'}) {
-	$select->{'list'} = lc ($select->{'list'});
-	$statement .= sprintf "AND list = %s ",$select->{'list'}; 
-    }
-   
-    if ($select->{'robot'}) {
-	$select->{'robot'} = lc ($select->{'robot'});
-	$statement .= sprintf "AND robot = %s ",$select->{'robot'}; 
-    }
-   
-    if ($select->{'ip'}) {
-	$select->{'ip'} = lc ($select->{'ip'});
-	$statement .= sprintf "AND ip = %s ",$select->{'ip'}; 
-    }
-   
-    if ($select->{'ope'}) {
-	$select->{'ope'} = lc ($select->{'ope'});
-	$statement .= sprintf "AND operation = %s ",$select->{'operation'}; 
-    }
-
-
-    push @sth_stack, $sth;
-
-    do_log('info',"xxxxxxxxxxxxxx statement $statement ");
-
-    unless ($sth = $dbh->prepare($statement)) {
-	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
-	return undef;
-    }
-    
-    unless ($sth->execute) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-	return undef;
-    }
-
-    do_log('info',"xxxxxxxxxxxxxx found 1");
-  
-    return ($sth->fetchrow_hashref);
-
-}
-
-sub get_next_db_log {
-
-    my $log = $sth->fetchrow_hashref;
-    
-    unless (defined $log) {
-	$sth->finish;
-	$sth = pop @sth_stack;
-    }
-    return $log;
 }
 
 # Is a reception mode in the parameter reception of the available_user_options
