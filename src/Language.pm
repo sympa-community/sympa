@@ -85,7 +85,7 @@ sub Msg_file_open {
 
     #Opening   ##
     chomp($msgfile);
-    &do_log('info', 'Loading locale file %s version', $msgfile);	
+    &do_log('debug', 'Loading locale file %s version', $msgfile);	
     unless (-r $msgfile) { #check if file exists
 	&do_log('err','Cannot read file %s', $msgfile);
         return undef;
