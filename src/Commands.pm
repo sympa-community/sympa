@@ -1999,11 +1999,12 @@ sub expire {
 		return undef;
 }
 	    do {
-		next unless ($user->{'date'} < $limitday);
-		push @msg::report, "   $user->{'email'}\n";      
-		&mail::mailback(\@msgexp, 
-				{'Subject' => sprintf(Msg(6, 21, "Renewal of your subscription to %s"), $name)},
-				'sympa', $user->{'email'}, $user->{'email'}, $robot);
+		if ($user->{'update_date'} < $limitday){
+		    push @msg::report, " $user->{'email'}\n";
+		    &mail::mailback(\@msgexp, 
+				    {'Subject' => sprintf(Msg(6, 21, "Renewal of your subscription to %s"), $name)},
+				    'sympa', $user->{'email'}, $user->{'email'}, $robot);
+		}
 	    } while ($user = $list->get_next_user());
 
 	    push @msg::report, "\n";
@@ -2142,10 +2143,11 @@ sub expireindex {
 }
 
         do {
-	    next unless ($user->{'date'} < $limitday);
-	    push @msg::report, "," if ($temp==1);
-	    push @msg::report, " $user->{'email'} ";
-	    $temp = 1 if ($temp==0);
+	    if ($user->{'update_date'} < $limitday){
+		push @msg::report, "," if ($temp==1);
+		push @msg::report, " $user->{'email'} ";
+		$temp = 1 if ($temp==0);
+	    }
 	} while ($user = $list->get_next_user());
 	push @msg::report, "\n\n";
 	push @msg::report, sprintf Msg(6, 58, "If you want to delete these subscribers, please use the following commands :\n");
@@ -2156,8 +2158,9 @@ sub expireindex {
 	}
 
 	do {
-	    next unless ($user->{'date'} < $limitday);
-	    push @msg::report, sprintf "DEL   $name   $user->{'email'}\n";
+	    if ($user->{'update_date'} < $limitday){
+		push @msg::report, sprintf "DEL $name $user->{'email'}\n";
+	    }
 	} while ($user = $list->get_next_user());
 
 	do_log('info', 'EXPIREINDEX %s from %s accepted (%d seconds)', $name,
