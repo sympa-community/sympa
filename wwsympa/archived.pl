@@ -112,6 +112,10 @@ $( = $) = (getgrnam('--GROUP--'))[2];
 $< = $> = (getpwnam('--USER--'))[2];
 
 
+## Required on FreeBSD to change ALL IDs(effective UID + real UID + saved UID)
+&POSIX::setuid((getpwnam('--USER--'))[2]);
+&POSIX::setgid((getpwnam('--GROUP--'))[2]);
+
 ## Sets the UMASK
 umask(oct($Conf{'umask'}));
 
