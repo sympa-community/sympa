@@ -1367,8 +1367,13 @@ sub send_html {
 	    $param->{'is_editor'} = $list->am_i('editor', $param->{'user'}{'email'});
 	    $param->{'is_priv'} = $param->{'is_owner'} || $param->{'is_editor'};
 
-	    ## If user is identified
-	    $param->{'may_post'} = 1;
+	    #May post:
+	    my $action = &List::request_action ('send',$param->{'auth_method'},$robot,
+						{'listname' => $param->{'list'},
+						 'sender' => $param->{'user'}{'email'},
+						 'remote_host' => $param->{'remote_host'},
+						 'remote_addr' => $param->{'remote_addr'}});
+	    $param->{'may_post'} = 1 if ($action =~ /do_it/);
 
 	}
 
@@ -1556,9 +1561,14 @@ sub send_html {
 	    $param->{'is_editor'} = $list->am_i('editor', $param->{'user'}{'email'});
 	    $param->{'is_priv'} = $param->{'is_owner'} || $param->{'is_editor'};
 
-	    ## If user is identified
-	    $param->{'may_post'} = 1;
-
+	    #May post:
+	    my $action = &List::request_action ('send',$param->{'auth_method'},$robot,
+						{'listname' => $param->{'list'},
+						 'sender' => $param->{'user'}{'email'},
+						 'remote_host' => $param->{'remote_host'},
+						 'remote_addr' => $param->{'remote_addr'}});
+	    $param->{'may_post'} = 1 if ($action =~ /do_it/);
+	    
  	    if (($list->{'admin'}{'user_data_source'} eq 'include2') &&
 		$list->has_include_data_sources() &&
 		$param->{'is_owner'}) {
