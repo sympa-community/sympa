@@ -5006,13 +5006,18 @@ sub do_edit_list {
 			## Single Param
 			## Ex: 'owner->email'
 			}else {
-			    ## If empty and is primary key => delete entry
-			    if ((! $new_p->[$i]{$key}) && ($pinfo->{$pname}{'format'}{$key}{'occurrence'} eq '1')) {
-				$new_p->[$i] = undef;
-				#splice @{$new_p}, $i, 1;
-				
-				## Skip the rest of the paragraph
-				$changed{$pname} = 1; last;
+			    if (! $new_p->[$i]{$key}) {
+				## If empty and is primary key => delete entry
+				if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~ /^1/) {
+				    $new_p->[$i] = undef;
+				    
+				    ## Skip the rest of the paragraph
+				    $changed{$pname} = 1; last;
+
+				    ## If optionnal parameter
+				}else {
+				    $changed{$pname} = 1; next;
+				}
 			    }
 			    if ($p->[$i]{$key} ne $new_p->[$i]{$key}) {
 				
