@@ -68,12 +68,16 @@ while (<ABO>) {
     $user{'email'} =~ tr/A-Z/a-z/;
     
     ## Insert User in Database
-    $sql = sprintf "INSERT IGNORE INTO user_table (email_user,gecos_user) VALUES (%s,%s)",$dbh->quote($user{'email'}),$dbh->quote($user{'gecos'});
+    $sql = sprintf "INSERT IGNORE INTO user_table (email_user,gecos_user) VALUES (%s,%s)"
+	, $dbh->quote($user{'email'}),$dbh->quote($user{'gecos'});
     $dbh->do($sql);
     
     $date = sprintf "$date_func{$db_type}", $user{'date'};
     
-    $sql = sprintf "INSERT IGNORE INTO subscriber_table (user_subscriber,list_subscriber,date_subscriber,reception_subscriber,visibility_subscriber) VALUES (%s, %s, %s, %s, %s)", $dbh->quote($user{'email'}), $dbh->quote($listname), $date, $dbh->quote($user{'reception'}), $dbh->quote($user{'visibility'});
+    $sql = sprintf "INSERT IGNORE INTO subscriber_table (user_subscriber,list_subscriber,date_subscriber,comment_subscriber,reception_subscriber,visibility_subscriber) VALUES (%s, %s, %s, %s, %s, %s)"
+	, $dbh->quote($user{'email'}), $dbh->quote($listname), 
+	$date, $dbh->quote($user{'gecos'}), 
+	$dbh->quote($user{'reception'}), $dbh->quote($user{'visibility'});
     
     $dbh->do($sql) or die "$sql : $DBI::errstr";
 	
