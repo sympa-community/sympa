@@ -16,6 +16,9 @@ Zde je seznam konferencí [conf->email]@[conf->host]
 [ELSIF user->lang=de]
 Hier ist eine Übersicht der Mailing-Listen von [conf->email]@[conf->host]
 
+[ELSIF user->lang=hu]
+[conf->email]@[conf->host] gépen található levelezõlisták sora
+
 [ELSE]
 Here is the list of list from [conf->email]@[conf->host]
 

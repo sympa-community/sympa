@@ -129,6 +129,29 @@ Passwort [user->password] anmelden.
 
 [ENDIF]
 
+[ELSIF user->lang=hu]
+Mime-version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-transfer-encoding: 8bit
+
+Értesítés a feliratkozásaidról ([user->email] cím szerint).
+Ha valamelyik listáról le akarsz iratkozni, akkor mentsd ezt a levelet.
+
+Minden egyes listához itt megtalálod a leiratkozási címet.
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[FOREACH l IN lists]
+[l]     mailto:[conf->sympa]?subject=sig%20[l]%20[user->email]
+[END]
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+[IF user->password]
+
+A wwsympa [conf->wwsympa_url] belépésnél a(z) [user->email]
+email címet es [user->passwd] jelszót használd.
+
+[ENDIF]
+
 [ELSE]
 Summary of your subscription (using the e-mail [user->email]).
 If you want to unsubscribe from some list, please save this mail.

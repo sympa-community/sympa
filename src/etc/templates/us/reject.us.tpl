@@ -71,6 +71,20 @@ wurde von [rejected_by] (Moderator) abgelehnt.
 Sie können genaueres über die Liste erfahren unter:
 [conf->wwsympa_url]/info/[list->name]
 
+[ELSIF list->lang=hu]
+Subject: A leveled nem jelenhet meg
+Mime-version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-transfer-encoding: 8bit
+
+A(z) [list->name]@[list->host] listára küldött
+leveled megjelenését [rejected_by] moderátor elutasította.
+
+(Eredeti level tárgya: [subject])
+
+[list->name] lista használatáról bõvebben itt olvashatsz:
+[conf->wwsympa_url]/info/[list->name]
+
 [ELSE]
 Subject: Your message has been rejected.
 

@@ -186,6 +186,36 @@ Weitere Informationen &uuml;ber die Liste:
 <A HREF="[conf->wwsympa_url]/info/[list->name]">[conf->wwsympa_url]/info/[list->name]</A>
 </BODY></HTML>
 
+[ELSIF list->lang=hu]
+Subject: Üdvözlünk a(z) [list->name] levelezõlistán
+Mime-version: 1.0
+Content-Type: text/html; charset=iso-8859-2
+Content-transfer-encoding: 8bit
+
+<HTML>
+<HEAD>
+<TITLE>Üdvözlünk a(z) [list->name]@[list->host] levelezõlistán</title>
+<BODY  BGCOLOR=#ffffff>
+
+<B>Üdvözlünk a(z) [list->name]@[list->host] levelezõlistán. </B><BR>
+Feliratkozási email címed: [user->email] 
+[IF user->password] 
+<BR>
+Jelszavad: [user->password]. 
+[ENDIF]
+<BR><BR>
+<PRE>
+[PARSE 'info']
+</PRE>
+
+<HR>
+A listáról bõvebben itt:
+<A HREF="[conf->wwsympa_url]/info/[list->name]">[conf->wwsympa_url]/info/[list->name]</A>
+
+
+</body></html>
+
+--===Sympa===--
 [ELSE]
 Subject: Welcome in list [list->name]
 Content-Type: text/html
