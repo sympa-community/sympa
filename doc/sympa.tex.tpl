@@ -1708,8 +1708,9 @@ see a  nice mailto adresses where others have nothing.
 
 	\default {/usr/sbin/sendmail}
 
-        Absolute call path to SMTP message transfer agent (\unixcmd
-        {sendmail} for example).
+        Absolute path to SMTP message transfer agent binary. Sympa expects this binary to
+	be sendmail compatible (\textindex {postfix}, \textindex {Qmail} and \textindex {Exim} binaries all
+	provide sendmail compatibility).
 
         \example {sendmail        /usr/sbin/sendmail}
 
