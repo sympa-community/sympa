@@ -1,9 +1,8 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
-
     <BR><P> 
 <TABLE BORDER=0 BGCOLOR="#ccccff"><TR><TD>
 <P align=justify>
-您可以在这里访问邮递表服务器 [conf->email]@[conf->host]。从这里，您可以订阅、取消订阅、查看邮递表存档和进行邮递表管理等。
+您可以在这里访问邮递表服务器 [conf->email]@[conf->host]。从这里，您可以订阅、退订、查看邮递表存档和进行邮递表管理等。
 </P>
 </TD></TR></TABLE>
 <BR><BR>

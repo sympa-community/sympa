@@ -1,5 +1,4 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
-
 <!-- begin list_menu.tpl -->
 <TABLE border="0"  CELLPADDING="0" CELLSPACING="0">
  <TR VALIGN="top"><!-- empty line in the left menu panel -->
@@ -53,15 +52,15 @@
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
         <TD BGCOLOR="#ccccff">
-	  订阅者: <B>共 [total]</B><BR>
+	  订阅者: <B>共[total]人</B><BR>
 	  <BR>
-	  所有者
+	  所有者:
 	  [FOREACH o IN owner]
 	    <BR><FONT SIZE=-1><A HREF="mailto:[o->NAME]">[o->gecos]</A></FONT>
 	  [END]
 	  <BR>
 	  [IF is_moderated]
-	    调解者
+	    监管者:
 	    [FOREACH e IN editor]
 	      <BR><FONT SIZE=-1><A HREF="mailto:[e->NAME]">[e->gecos]</A></FONT>
 	    [END]
@@ -134,9 +133,9 @@
 	   退信率: <B>[bounce_rate]%</B><BR>
            <BR>
 	   [if mod_total=0]
-	   没有邮件要调解
+	   没有邮件要监管
            [else]
-           要调解的邮件:<B> 共 [mod_total]</B>
+           要监管的邮件:<B> 共 [mod_total]</B>
            [endif]
 	  <BR>
         </TD>
@@ -203,11 +202,11 @@
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
       [IF action=signoff]
-        <TD WIDTH="100%" BGCOLOR="#3366cc" NOWRAP align=right><font color="#ffffff" size=-1><b>取消订阅</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="#3366cc" NOWRAP align=right><font color="#ffffff" size=-1><b>退订</b></font></TD>
       [ELSE]
         <TD WIDTH="100%" BGCOLOR="#ccccff" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', '您确定要取消订阅邮递表 [list]?'); return false;">取消订阅</A>
+         <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', '您确定要退订邮递表 [list]?'); return false;">退订</A>
         </b></font>
         </TD>
       [ENDIF]
@@ -231,7 +230,7 @@
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
         <TD WIDTH="100%" BGCOLOR="#ccccff" NOWRAP align=right>
-        <font size=-1 COLOR="#ffffff"><b>取消订阅</b></font>
+        <font size=-1 COLOR="#ffffff"><b>退订</b></font>
         </TD>
         <TD WIDTH=40></TD>
        </TR>
@@ -296,7 +295,7 @@
 
         <TD WIDTH="100%" BGCOLOR="#ccccff" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', '您确定要取消订阅邮递表 [list]?'); return false;">取消订阅</A>
+         <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', '您确定要退订邮递表 [list]?'); return false;">退订</A>
         </b></font>
         </TD>
        </TR>

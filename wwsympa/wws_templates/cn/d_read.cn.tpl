@@ -1,5 +1,4 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
-
 [IF file]
   [INCLUDE file]
 [ELSE]
@@ -33,7 +32,7 @@
   </TR></TABLE>
   </th>
   
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">Author</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">作者</font></TD>
   [IF  order_by<>order_by_author]  
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">  
@@ -48,7 +47,7 @@
   </TR></TABLE>
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">大小(Kb)</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="#ffffff">大小(KB)</font></TD>
   [IF order_by<>order_by_size] 
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">

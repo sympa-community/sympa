@@ -1,6 +1,5 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
-
-<!-- begin admin_menu.us.tpl -->
+<!-- begin admin_menu.cn-gb.tpl -->
     <TD BGCOLOR="#3366cc" ALIGN="CENTER" COLSPAN="7">
 	<FONT COLOR="#ffffff"><b>邮递表管理面板</b></font>
     </TD>
@@ -15,7 +14,7 @@
           <FONT size="-1" COLOR="#ffffff"><b>恢复邮递表</b></font>
         [ENDIF]
        [ELSE]
-        <A HREF="[base_url][path_cgi]/close_list_request/[list]" ><FONT size=-1><b>Remove list</b></font></A>
+        <A HREF="[base_url][path_cgi]/close_list_request/[list]" ><FONT size=-1><b>删除邮递表</b></font></A>
        [ENDIF]
     </TD>
     <TD BGCOLOR="#ccccff" ALIGN="CENTER">
@@ -73,17 +72,17 @@
 
     [IF action=modindex]
     <TD BGCOLOR="#3366cc" ALIGN="CENTER">
-       <FONT size="-1" COLOR="#ffffff"><b>调解</b></FONT>
+       <FONT size="-1" COLOR="#ffffff"><b>监管</b></FONT>
     </TD>
     [ELSE]
        [IF is_editor]
        <TD BGCOLOR="#ccccff" ALIGN=CENTER>
          <A HREF="[base_url][path_cgi]/modindex/[list]" >
-         <FONT size="-1"><b>调解</b></FONT></A>
+         <FONT size="-1"><b>监管</b></FONT></A>
        </TD>
        [ELSE]
          <TD BGCOLOR="#ccccff" ALIGN="CENTER">
-	   <FONT size="-1" COLOR="#ffffff"><b>调解</b></FONT>
+	   <FONT size="-1" COLOR="#ffffff"><b>监管</b></FONT>
 	 </TD>
        [ENDIF]
     [ENDIF]
@@ -100,5 +99,5 @@
        [ENDIF]
     </TD>
     [ENDIF]
-<!-- end menu_admin.tpl -->
+<!-- end menu_admin.cn-gb.tpl -->
 

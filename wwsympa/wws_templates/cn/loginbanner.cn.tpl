@@ -1,5 +1,4 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
-
 <BR>
 [IF password_sent]
   您的口令已经被发送到您的 Email 地址 [init_email]。<BR>
@@ -49,7 +48,7 @@
      <TR> 
       <TD NOWRAP BGCOLOR="#ccccff" ALIGN="center"> 
          <A HREF="[path_cgi]/nomenu/remindpasswd/referer/[referer]"
-       onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=640,height=300')" TARGET="wws_login">
+       onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no')" TARGET="wws_login">
      <FONT SIZE=-1><B>给我发送口令</B></FONT></A>
      </TD>
     </TR>

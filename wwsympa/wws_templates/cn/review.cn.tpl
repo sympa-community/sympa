@@ -1,5 +1,4 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
-
 <P>
 <TABLE width=100% border="0" VALIGN="top">
 <TR>
@@ -10,7 +9,7 @@
       <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
       <INPUT TYPE="hidden" NAME="action" VALUE="add">
       <INPUT TYPE="text" NAME="email" SIZE="18">
-      <INPUT TYPE="submit" NAME="action_add" VALUE="Add"> 安静<INPUT TYPE="checkbox" NAME="quiet">
+      <INPUT TYPE="submit" NAME="action_add" VALUE="添加"> 安静<INPUT TYPE="checkbox" NAME="quiet">
     </FORM>
 </TD>
 <TD>
@@ -98,7 +97,7 @@
     <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="前一页"></A>
    [ENDIF]
    [IF page]
-     第[page]页，共[total_page]页
+     [page]/[total_page]
    [ENDIF]
    [IF next_page]
      <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.gif" BORDER="0" ALT="后一页"></A>
@@ -208,7 +207,7 @@
 	 <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="前一页"></A>
        [ENDIF]
        [IF page]
-  	  第[page]页，共[total_page]页
+  	  [page]/[total_page]
        [ENDIF]
        [IF next_page]
 	  <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.gif" BORDER=0 ALT="后一页"></A>

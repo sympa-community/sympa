@@ -1,5 +1,4 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
-
 From: [conf->sympa]
 Reply-to: [conf->request]
 To: [newuser->email]
@@ -13,9 +12,9 @@ Subject: 您的 [wwsconf->title] 环境设置
 	口令: [newuser->password]
 
 [ELSIF action=sigrequest]
-您请求取消订阅邮递表 [list]。
+您请求退订邮递表 [list]。
 
-要取消订阅，您需要使用以下的口令
+要退订，您需要使用以下的口令
 
 	口令: [newuser->password]
 

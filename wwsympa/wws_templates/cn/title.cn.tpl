@@ -1,5 +1,4 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
-
 <!-- begin title.us.tpl -->
 <!-- <TABLE WIDTH="100%" BORDER=0 cellpadding=2 cellspacing=0><TR><TD>-->
 <TABLE WIDTH="100%" BORDER="0" BGCOLOR="#330099" cellpadding="2" cellspacing="0">
@@ -16,7 +15,7 @@
 	 [ELSIF is_owner]
           所有者
          [ELSIF is_editor]
-          调解者
+          监管者
          [ELSIF is_subscriber]
 	  订阅者
 	 [ENDIF]
