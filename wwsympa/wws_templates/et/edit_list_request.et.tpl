@@ -1,8 +1,7 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 [IF !group]
-Te saate muuta järgnevaid parameetreid: <UL>
-You can choose below a subset of parameters to edit : <UL>
+Listi seaded on jagatud jägnevateks alamjaotusteks: <UL>
 <LI><A HREF="[path_cgi]/edit_list_request/[list]/description" >Listi kirjeldus</A>
 <LI><A HREF="[path_cgi]/edit_list_request/[list]/sending" >Saatmise/saamise seaded</A>
 <LI><A HREF="[path_cgi]/edit_list_request/[list]/command" >Privileegid</A>
@@ -40,11 +39,11 @@ You can choose below a subset of parameters to edit : <UL>
    </FONT>
   [IF is_listmaster]
     [IF p->default=1]
-      (default)
+      (vaikeseade)
     [ENDIF]
   [ENDIF]
   </TH><TH BGCOLOR="[light_color]">
-  <A HREF="[path_cgi]/help/editlist#[p->name]" onClick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" TARGET="wws_help"  ><FONT SIZE="-1">Help</FONT></A>
+  <A HREF="[path_cgi]/help/editlist#[p->name]" onClick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" TARGET="wws_help"  ><FONT SIZE="-1">Abi</FONT></A>
   </TH></TR></TABLE>
 
   </TH></TR>
@@ -318,7 +317,7 @@ You can choose below a subset of parameters to edit : <UL>
   </DL>
 
   [IF p->default=1]
-    <FONT COLOR="[bg_color]"><B>default</B></FONT>
+    <FONT COLOR="[bg_color]"><B>vaikeseade</B></FONT>
   [ENDIF]
 
 
@@ -330,7 +329,7 @@ You can choose below a subset of parameters to edit : <UL>
 [END]
 </TABLE>
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-<INPUT TYPE="submit" NAME="action_edit_list" VALUE="Update">
+<INPUT TYPE="submit" NAME="action_edit_list" VALUE="Uuenda">
 </FORM>
 [ENDIF]
 

@@ -37,8 +37,8 @@ Et kasutada listserveri kõiki võimalusi, peaksite esmalt sisse logima.<br>
 
 <CENTER>
 
-    <B>epost</B>, on sinu epostiaadress<BR>
-    <B>parool</B>, on sinu parool.<BR><BR>
+    <B>epost</B> on sinu epostiaadress<BR>
+    <B>parool</B> on sinu parool.<BR><BR>
 
 <TABLE border=0><TR>
 <TD>

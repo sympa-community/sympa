@@ -23,7 +23,7 @@
 <DD>Keel: [subscriber->lang]
 <DD><INPUT TYPE="submit" NAME="action_set" VALUE="Uuenda">
 <INPUT TYPE="submit" NAME="action_del" VALUE="Eemalda listist">
-<INPUT TYPE="checkbox" NAME="quiet"> ilma teavituseta
+<INPUT TYPE="checkbox" NAME="quiet"> teavituseta
 </DL>
 </TD></TR>
 [IF subscriber->bounce]

@@ -28,7 +28,7 @@
     <TR><TD ALIGN="left" NOWRAP>
         <BR>
         <INPUT TYPE="submit" NAME="action_del" VALUE="Kustuta valitud kasutajad">
-        <INPUT TYPE="checkbox" NAME="quiet"> ilma teavituseta
+        <INPUT TYPE="checkbox" NAME="quiet"> teavituseta
 
 	<INPUT TYPE="hidden" NAME="sortby" VALUE="[sortby]">
 	<INPUT TYPE="submit" NAME="action_reviewbouncing" VALUE="Lehe suurus">
@@ -112,7 +112,7 @@
       [IF is_owner]
         <BR>
         <INPUT TYPE="submit" NAME="action_del" VALUE="Kustuta valitud kasutajad">
-        <INPUT TYPE="checkbox" NAME="quiet"> quiet
+        <INPUT TYPE="checkbox" NAME="quiet"> teavituseta
 	<INPUT TYPE="submit" NAME="action_resetbounce" VALUE="Eemalda valitud kasutajatelt vead">
       [ENDIF]
     </TD><TD ALIGN="right" NOWRAP>

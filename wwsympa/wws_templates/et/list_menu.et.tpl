@@ -139,11 +139,11 @@
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
      [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
       [IF action=suboptions]
-        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Liikme võimalused</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Seaded</b></font></TD>
       [ELSE]
         <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[path_cgi]/suboptions/[list]" >Liikme võimalused</A>
+         <A HREF="[path_cgi]/suboptions/[list]" >Seaded</A>
         </b></font>
         </TD>
       [ENDIF]

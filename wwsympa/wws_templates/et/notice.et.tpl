@@ -22,7 +22,7 @@ Fail [notice->path] salvestati
 Teie parool saadeti teile e-postiga
 
 [ELSIF notice->msg=you_should_choose_a_password]
-Parooli muutmiseks valige 'seadistused' ülevalt menüüst
+Parooli muutmiseks valige 'eelistused' ülevalt menüüst
 
 [ELSIF notice->msg=no_msg] 
 Listis [notice->list] ei ole modereeritavaid kirju

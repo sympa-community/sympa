@@ -79,7 +79,7 @@ Liiga palju vastuseid, ei saa näidata
 
     <INPUT TYPE="submit" NAME="action_del" VALUE="Kustuta valitud aadressid">
 
-    <INPUT TYPE="checkbox" NAME="quiet"> quiet
+    <INPUT TYPE="checkbox" NAME="quiet"> teavituseta
   [ENDIF]
   </TD>
   <TD WIDTH="100%">&nbsp;</TD>

@@ -32,7 +32,7 @@
       <A HREF="[path_cgi]/nomenu/loginrequest/[action]/[list]"
      [ENDIF]
        onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=550,height=300')" TARGET="wws_login">
-       <FONT SIZE=-1><B>Login</B></FONT></A>
+       <FONT SIZE=-1><B>Logi sise</B></FONT></A>
       </TD>
   [ENDIF]
     </TR>
