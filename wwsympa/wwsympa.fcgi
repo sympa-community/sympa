@@ -2982,27 +2982,43 @@ sub do_add {
 	    next;
 	}
 
-	if ( $list->is_user($email) ) {
+	my $user_entry = $list->get_subscriber($email);
+
+	if ( defined($user_entry) && $list->is_user($email) &&
+	     ($user_entry->{'subscribed'} == 1)) {
 	    &error_message('user_already_subscriber', {'email' => $email,
-						 'list' => $list->{'name'}});
+						       'list' => $list->{'name'}});
 	    &wwslog('info','do_add: %s already subscriber', $email);
 	    next;
 	}
     
-	my $u2 = &List::get_user_db($email);
-	my $defaults = $list->get_default_user_options();
-	my $u;
-	%{$u} = %{$defaults};
-	$u->{'email'} = $email;
-	$u->{'gecos'} = $user{$email} || $u2->{'gecos'};
-	$u->{'date'} = $u->{'update_date'} = time;
-	$u->{'password'} = $u2->{'password'} || &tools::tmp_passwd($email) ;
-	$u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
+	## If already included
+	if (defined($user_entry)) {
+	    unless ($list->update_user($email, 
+				       {'subscribed' => 1,
+					'update_date' => time})) {
+		&error_message('failed');
+		&wwslog('info', 'do_add: update failed');
+		return undef;
+	    }
 
-	unless( $list->add_user($u)) {
-	    &error_message('failed_add', {'user' => $email});
-	    &wwslog('info','do_add: failed adding %s', $email);
-	    next;
+	}else {
+	    my $u2 = &List::get_user_db($email);
+	    my $defaults = $list->get_default_user_options();
+	    my $u;
+	    %{$u} = %{$defaults};
+	    $u->{'email'} = $email;
+	    $u->{'gecos'} = $user{$email} || $u2->{'gecos'};
+	    $u->{'date'} = $u->{'update_date'} = time;
+	    $u->{'password'} = $u2->{'password'} || &tools::tmp_passwd($email) ;
+	    $u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
+	    $u->{'subscribed'} = 1 if ($list->{'admin'}{'user_data_source'} eq 'include2');
+
+	    unless( $list->add_user($u)) {
+		&error_message('failed_add', {'user' => $email});
+		&wwslog('info','do_add: failed adding %s', $email);
+		next;
+	    }
 	}
 
 	## Delete subscription request if any
@@ -3074,18 +3090,31 @@ sub do_del {
 
 	my $escaped_email = &tools::escape_chars($email);
 	
-	unless ( $list->is_user($email) ) {
+	my $user_entry = $list->get_subscriber($email);
+
+	unless ( defined($user_entry) && ($user_entry->{'subscribed'} == 1) ) {
 	    &error_message('not_subscriber', {'email' => $email});
 	    &wwslog('info','do_del: %s not subscribed', $email);
 	    next;
 	}
 	
-	unless( $list->delete_user($email)) {
-	    &error_message('failed');
-	    &wwslog('info','do_del: failed for %s', $email);
-	    return undef;
-	}
+	if ($user_entry->{'included'}) {
+	    unless ($list->update_user($email, 
+				       {'subscribed' => 0,
+					'update_date' => time})) {
+		&error_message('failed');
+		&wwslog('info', 'do_del: update failed');
+		return undef;
+	    }
 
+
+	}else {
+	    unless( $list->delete_user($email)) {
+		&error_message('failed');
+		&wwslog('info','do_del: failed for %s', $email);
+		return undef;
+	    }
+	}
 	$del_count++;
 
 	if (-f "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email") {
