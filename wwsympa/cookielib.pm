@@ -46,7 +46,7 @@ sub check_arc_cookie {
 
     ## Scan parameters
     foreach (split /;/, $http_cookie ) {
-	if ( /^I_Am_Not_An_Email_Sniffer/ ) {
+	if ( /I_Am_Not_An_Email_Sniffer/ ) {
 	    return 1;
 	}
     }    
