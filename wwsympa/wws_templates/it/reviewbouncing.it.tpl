@@ -49,7 +49,7 @@
   	  page [page] / [total_page]
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0ALT="Prossima pagina"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0 ALT="Prossima pagina"></A>
         [ENDIF]
     </TD></TR>
     <TR><TD><INPUT TYPE="submit" NAME="action_resetbounce" VALUE="Azzera gli errori per gli utenti selezionati">

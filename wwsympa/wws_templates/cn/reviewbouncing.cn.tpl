@@ -49,7 +49,7 @@
   	  第[page]页，共[total_page]页
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0ALT="后一页"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0 ALT="后一页"></A>
         [ENDIF]
     </TD></TR>
     <TR><TD><INPUT TYPE="submit" NAME="action_resetbounce" VALUE="为选中的用户重置错误计数">
@@ -110,7 +110,7 @@
   	  第[page]页，共[total_page]页
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0ALT="后一页"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0 ALT="后一页"></A>
         [ENDIF]
     </TD></TR>
     </TABLE>

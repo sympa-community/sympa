@@ -49,7 +49,7 @@
   	  page [page] / [total_page]
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0ALT="Page suivante"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0 ALT="Page suivante"></A>
         [ENDIF]
     </TD></TR>
     <TR><TD><INPUT TYPE="submit" NAME="action_resetbounce" VALUE="Annuler les erreurs pour les abonnés sélectionnés">
@@ -123,7 +123,7 @@
   	  page [page] / [total_page]
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0ALT="Page suivante"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0 ALT="Page suivante"></A>
         [ENDIF]
     </TD></TR>
     <TR><TD><input type=button value="Inverser la Selection" onClick="toggle_selection(document.myform.email)">

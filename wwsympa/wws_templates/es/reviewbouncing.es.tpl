@@ -61,7 +61,7 @@
   	  pág [page] / [total_page]
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0ALT="Pág. sig."></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0 ALT="Pág. sig."></A>
         [ENDIF]
     </TD></TR>
     <TR><TD><INPUT TYPE="submit" NAME="action_resetbounce" VALUE="Inicializar errores de los usuarios seleccionados">
@@ -133,7 +133,7 @@
   	  page [page] / [total_page]
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0ALT="Pág. sig."></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="[icons_url]/right.png" BORDER=0 ALT="Pág. sig."></A>
         [ENDIF]
     </TD></TR>
     </TABLE>
