@@ -5323,6 +5323,22 @@ sub do_d_read {
 	    # current document
 	    my $path_doc = "$doc/$d";
 	
+	    # last update
+	    my @info = stat $path_doc;
+	    $subdirs{$d}{'date_epoch'} = $info[10];
+	    $subdirs{$d}{'date'} = &POSIX::strftime("%d %b %y  %H:%M", localtime($info[10]));
+
+	    # Case read authorized : fill the hash 
+	    $subdirs{$d}{'icon'} = $icon_table{'folder'};
+
+	    # name of the doc
+	    $subdirs{$d}{'doc'} = $d;
+	    
+	    $subdirs{$d}{'escaped_doc'} =  &tools::escape_chars($d);
+	    
+	    # size of the doc
+	    $subdirs{$d}{'size'} = (-s $path_doc)/1000;
+
 	    #case subdirectory
 	    if (-d $path_doc) {
 		
@@ -5338,14 +5354,6 @@ sub do_d_read {
 						  'remote_addr' => $param->{'remote_addr'},
 						  'scenario' => $desc_hash{'read'}}) =~ /do_it/i)) {
 			
-			# Case read authorized : fill the hash 
-			$subdirs{$d}{'icon'} = $icon_table{'folder'};
-
-			# last update
-			my @info = stat $path_doc;
-			$subdirs{$d}{'date_epoch'} = $info[10];
-			$subdirs{$d}{'date'} = &POSIX::strftime("%d %b %y  %H:%M", localtime($info[10]));
-
 			# description
 			$subdirs{$d}{'title'} = $desc_hash{'title'};
 
@@ -5374,10 +5382,7 @@ sub do_d_read {
 		    }
 		} else {
 		    # no description file = no need to check access for read
-		      # last update
-		    my @info = stat $path_doc;
-		    $subdirs{$d}{'date_epoch'} = $info[10];
-		    $subdirs{$d}{'date'} = &POSIX::strftime("%d %b %y  %H:%M", localtime($info[10]));
+
 		      # access for edit and control
 		    if ($may_edit || $may_control) {
 			$subdirs{$d}{'edit'} = 1;
@@ -5385,15 +5390,6 @@ sub do_d_read {
 		    }
 		    if ($may_control) {$subdirs{$d}{'control'} = 1;}
 		}
-		
-		# name of the doc
-		$subdirs{$d}{'doc'} = $d;
-		
-		$subdirs{$d}{'escaped_doc'} =  &tools::escape_chars($d);
-
-		# size of the doc
-		$subdirs{$d}{'size'} = (-s $path_doc)/1000;
-
 		
 	    }else {
 		# case file
@@ -6843,7 +6839,7 @@ sub do_d_set_owner {
     # the email must look like an email "somebody@somewhere"
     unless ($in{'content'} =~ /^[\w\.\-\~]+\@[\w\.\-\~]+$/) {
 	&error_message('incorrect_email', {'email' => $in{'content'}});
-	&wwslog('info',"d_set_owner : $in{'content'} : incrorrect email");
+	&wwslog('info',"d_set_owner : $in{'content'} : incorrect email");
 	return undef;
     }
     
