@@ -75,7 +75,6 @@ sub checkcommand {
 
    my($avoid, $i);
 
-   return 0 if ($#{$msg->body} >= 15);  ## More than 15 lines in the text.
    my $hdr = $msg->head;
 
    ## Check for commands in the subject.
@@ -88,6 +87,9 @@ sub checkcommand {
          }
       }
    }
+
+   return 0 if ($#{$msg->body} >= 15);  ## More than 15 lines in the text.
+
    foreach $i (@{$msg->body}) {
       foreach $avoid (@avoid_hdr) {
          if ($i =~ /^\s*(quiet)?($avoid)(\s+|$)/im) {  ## Suspicious line
