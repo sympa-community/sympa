@@ -1274,15 +1274,18 @@ sub load {
 
     $self->{'name'}  = $name ;
 
-    
-    my $m1 = (stat("$self->{'dir'}/config"))[9];
-    my $m2; $m2 = (stat("$self->{'dir'}/subscribers"))[9] if (-f "$self->{'dir'}/subscribers");
-    my $m3 = (stat("$self->{'dir'}/stats"))[9];
+    my ($m1, $m2, $m3) = (0, 0, 0);
+    ($m1, $m2, $m3) = @{$self->{'mtime'}} if (defined $self->{'mtime'});
+
+    my $time_config = (stat("$self->{'dir'}/config"))[9];
+    my $time_subscribers; 
+    my $time_stats = (stat("$self->{'dir'}/stats"))[9];
     
     my $admin;
     
-    if ($self->{'name'} ne $name || $m1 > $self->{'mtime'}->[0]) {
+    if ($self->{'name'} ne $name || $time_config > $self->{'mtime'}->[0]) {
 	$admin = _load_admin_file($self->{'dir'}, $self->{'domain'}, 'config');
+	$m1 = $time_config;
     }
     
     $self->{'admin'} = $admin if ($admin);
@@ -1301,16 +1304,18 @@ sub load {
 	
     }elsif($self->{'admin'}->{'user_data_source'} eq 'file') { 
 	
+	$time_subscribers = (stat("$self->{'dir'}/subscribers"))[9] if (-f "$self->{'dir'}/subscribers");
+
 	## Touch subscribers file if not exists
 	unless ( -r "$self->{'dir'}/subscribers") {
 	    open L, ">$self->{'dir'}/subscribers" or return undef;
 	    close L;
 	    do_log('info','No subscribers file, creating %s',"$self->{'dir'}/subscribers");
 	}
-
-	if ($self->{'name'} ne $name || $m2 > $self->{'mtime'}[1]) {
+	
+	if ($self->{'name'} ne $name || $time_subscribers > $self->{'mtime'}[1]) {
 	    $users = _load_users("$self->{'dir'}/subscribers");
-	    $m2 = (stat("$self->{'dir'}/subscribers"))[9];
+	    $m2 = $time_subscribers;
 	}
     }elsif($self->{'admin'}{'user_data_source'} eq 'include') {
 
@@ -1326,16 +1331,16 @@ sub load {
 	    return undef;
 	}
 
-	my $last_include = (stat("$self->{'dir'}/subscribers.db"))[9];
+	$time_subscribers = (stat("$self->{'dir'}/subscribers.db"))[9] if (-f "$self->{'dir'}/subscribers.db");
 
-	$m2 = $self->{'mtime'}->[1]; 
+
 	## Update 'subscriber.db'
 	if ( ## 'config' is more recent than 'subscribers.db'
-	     ($m1 > $last_include) || 
+	     ($time_config > $time_subscribers) || 
 	     ## 'ttl'*2 is NOT over
-	     (time > ($last_include + $self->{'admin'}{'ttl'} * 2)) ||
+	     (time > ($time_subscribers + $self->{'admin'}{'ttl'} * 2)) ||
 	     ## 'ttl' is over AND not Web context
-	     ((time > ($last_include + $self->{'admin'}{'ttl'})) &&
+	     ((time > ($time_subscribers + $self->{'admin'}{'ttl'})) &&
 	      !($ENV{'HTTP_HOST'} && (-f "$self->{'dir'}/subscribers.db")))) {
 	    
 	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 0);
@@ -1346,14 +1351,16 @@ sub load {
 	    $m2 = time;
 	}elsif (## First new()
 		! $self->{'users'} ||
-		## 'subscribers.db' is more recent than 'config'
-		($last_include > $m1)) {
+		## 'subscribers.db' is more recent than $self->{'users'}
+		($time_subscribers > $self->{'mtime'}->[1])) {
+
 	    ## Use cache
 	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 1);
 
 	    unless (defined $users) {
 		return undef;
 	    }
+	    $m2 = $time_subscribers;
 	}
 	
     }else { 
@@ -1364,9 +1371,10 @@ sub load {
 ## Load stats file if first new() or stats file changed
     my ($stats, $total);
 
-    if ($m3 > $self->{'mtime'}[2]) {
+    if ($time_stats > $self->{'mtime'}[2]) {
 	($stats, $total) = _load_stats_file("$self->{'dir'}/stats");
-	
+	$m3 = $time_stats;
+
 	$self->{'stats'} = $stats if (defined $stats);	
 	$self->{'total'} = $total if (defined $total);	
     }
