@@ -5120,6 +5120,10 @@ sub do_edit_list {
     foreach my $pname (keys %changed) {
 	$::changed_params{$pname} = 1;
     }
+
+    ## Save stats
+    $list->savestats();
+
 #    print "Content-type: text/plain\n\n";
 #    &dump_var(\%pinfo,0);
 #    &dump_var($list->{'admin'},0);
