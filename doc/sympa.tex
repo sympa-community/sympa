@@ -2059,12 +2059,13 @@ CREATE TABLE subscriber_table (
   	list_subscriber       	varchar (50) NOT NULL,
 	user_subscriber		varchar (100) NOT NULL,
 	date_subscriber		datetime NOT NULL,
+	update_subscriber	datetime,
 	visibility_subscriber	varchar (20),
 	reception_subscriber	varchar (20),
 	bounce_subscriber	varchar (30),
-	update_subscriber 	datetime,
-	comment_subscriber 	varchar (150),
-	PRIMARY KEY (list_subscriber, user_subscriber)
+	comment_subscriber	varchar (150),
+	PRIMARY KEY (list_subscriber, user_subscriber),
+	INDEX (user_subscriber,list_subscriber)
 );
 
 \end{verbatim}
