@@ -3,9 +3,15 @@
 
 (See Changelog file for the full changes log)
 
-4.1		05 March 2004
+4.1		15 March 2004
 
    Changes :
+
+	src/etc/scenari/visibility.secret: [proposed by P. Young] : make the list visible to list owners and editors
+
+	src/Conf.pm, src/List.pm, src/tools.pl,	src/etc/templates/fr/urlized_part.fr.tpl,
+	src/etc/templates/us/urlized_part.us.tpl: urlized parts are now defined in a template. 
+	Default is a text/plain part
 
 	src/Message.pm: previously only messages that included SMIME checked signature were preserved,  
 	now protect them even though signature might not be checked
@@ -16,6 +22,11 @@
 	Otherwise List object cannot be	created
 
    Bug fixes :
+
+	src/etc/templates/: fr/your_infected_msg.fr.tpl, us/your_infected_msg.us.tpl: [H.Gabor] 
+	used incorrect variable	in template ([from] instead of [user->email])
+
+	src/List.pm: prevent multiple custom_subject in message subjects with long threads
 
 	src/sympa.pl, src/task_manager.pl, wwsympa/archived.pl,	wwsympa/bounced.pl: [BugID 262] 
 	getpwnam instead of getgrnam used for setting a group id
