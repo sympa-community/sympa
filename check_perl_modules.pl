@@ -173,7 +173,7 @@ sub install_module {
 
     ## This is required on RedHat 9 for DBD::mysql installation
     my $lang = $ENV{'LANG'};
-    $ENV{'LANG'} = 'C' if ($ENV{'LANG'} eq 'en_US.UTF-8');
+    $ENV{'LANG'} = 'C' if ($ENV{'LANG'} =~ /UTF\-8/);
 
     unless ($> == 0) {
 	print "\#\# You need root privileges to install $module module. \#\#\n";
