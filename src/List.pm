@@ -1842,6 +1842,9 @@ sub send_auth {
        print DESC <IN>;
    }
    close IN;
+
+   print DESC "--$boundary--\n";
+
    close(DESC);
 
    return $modkey;
