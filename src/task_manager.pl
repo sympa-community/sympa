@@ -236,28 +236,8 @@ while (!$end) {
     
     my $current_date = time; # current epoch date
     my $rep = &tools::adate ($current_date);
-    # &do_log ('notice', "****** $rep ******");
 
-    ## @tasks initialisation
-    unless (opendir(DIR, $spool_task)) {
-	&do_log ('err', "error : can't open dir %s: %m", $spool_task);
-    }
-    my @tasks = sort epoch_sort (grep !/^\.\.?$/, readdir DIR);
-
-    ## processing of tasks anterior to the current date
-    &do_log ('debug3', 'processing of tasks anterior to the current date');
-    foreach my $task (@tasks) {
-	$task =~ /^(\d+)\.\w*\.\w+\.($regexp{'listname'}|_global)$/;
-	# &do_log ('debug3', "procesing %s/%s", $spool_task,$task);
-	last unless ($1 < $current_date);
-	if ($2 ne '_global') { # list task
-	    my $list = new List ($2);
-	    next unless ($list->{'admin'}{'status'} eq 'open');
-	}
-	execute ("$spool_task/$task");
-    }
-    # &do_log ('notice', 'done');
-
+    ## Create required tasks
     unless (opendir(DIR, $spool_task)) {
 	&do_log ('err', "error : can't open dir %s: %m", $spool_task);
     }
@@ -327,6 +307,29 @@ while (!$end) {
 	    }
 	}
     }
+
+    my $current_date = time; # current epoch date
+    my $rep = &tools::adate ($current_date);
+
+    ## Execute existing tasks
+    unless (opendir(DIR, $spool_task)) {
+	&do_log ('err', "error : can't open dir %s: %m", $spool_task);
+    }
+    my @tasks = sort epoch_sort (grep !/^\.\.?$/, readdir DIR);
+
+    ## processing of tasks anterior to the current date
+    &do_log ('debug3', 'processing of tasks anterior to the current date');
+    foreach my $task (@tasks) {
+	$task =~ /^(\d+)\.\w*\.\w+\.($regexp{'listname'}|_global)$/;
+	# &do_log ('debug3', "procesing %s/%s", $spool_task,$task);
+	last unless ($1 < $current_date);
+	if ($2 ne '_global') { # list task
+	    my $list = new List ($2);
+	    next unless ($list->{'admin'}{'status'} eq 'open');
+	}
+	execute ("$spool_task/$task");
+    }
+
     sleep 60;
     #$end = 1;
 
@@ -698,7 +701,7 @@ sub execute {
 	if ($result{'nature'} eq 'assignment') {
 	    $vars{$result{'var'}} = cmd_process ($result{'command'}, $result{'Rarguments'}, $task_file, \%vars, $lnb);
 	}
-					      
+	
 	# processing of the commands
 	if ($result{'nature'} eq 'command') {
 	    $status = &cmd_process ($result{'command'}, $result{'Rarguments'}, $task_file, \%vars, $lnb);
