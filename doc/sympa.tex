@@ -4888,11 +4888,31 @@ Every month \Sympa will delete subscribers older than one year who haven't answe
 You may create \tildefile {sympa/expl/\samplelist/message.header} and
 \tildefile {sympa/expl/\samplelist/message.footer} files. Their content
 is added, respectively at the beginning and at the end of each message 
-before the distribution process. 
+before the distribution process. You may also include the content-type
+of the appended part (when \lparam {footer\_type} list parameter s set 
+to \textbf {mime}) by renaming the files to \file {message.header.mime} 
+and \file {message.footer.mime}.
 
 The \lparam {footer\_type} list parameter defines whether to attach the 
 header/footer content as a MIME part (except for multipart/alternative 
 messages), or to append them to the message body (for text/plain messages).
+
+Under certain circumstances, Sympa will NOT add headers/footers, here is its
+algorythm :
+\begin {quote}
+\begin{verbatim}
+if message is not multipart/signed 
+        if footer_type==append
+	        if message is text/plain
+		       append header/footer to it
+		else if message is multipart AND first part is text/plain
+		       append header/footer to first part
+
+        if footer_type==mime
+	        if message is not multipart/alternative
+		       add header/footer as a new MIME part
+\end{verbatim}
+\end {quote}
 
 \subsection {Archive directory} 
 
