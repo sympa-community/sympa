@@ -1,3 +1,9 @@
+package cookielib;
+
+use Exporter;
+@ISA = ('Exporter');
+@EXPORT = ();
+
 
 use MD5;
 use POSIX;
