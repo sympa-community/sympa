@@ -463,7 +463,7 @@ my %in_regexp = (
 		 'init_email' => $tools::regexp{'email'},
 		 'new_alternative_email' => $tools::regexp{'email'},
 		 'new_email' => $tools::regexp{'email'},
-		 'pending_email' => $tools::regexp{'email'},
+		 'pending_email' => $tools::regexp{'email'}.',.*', # Email address is followed by ',' + gecos data
 		 'sender' => $tools::regexp{'email'},
 		 'to' => '([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+',
 
