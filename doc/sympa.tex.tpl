@@ -758,6 +758,7 @@ detail in later sections.
     \item installing a RDBMS (Oracle, MySQL, Sybase or PostgreSQL) and creating \Sympa's Database. This is required for using the web interface for \Sympa. Please refers to \"\Sympa and its database\" section (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
 
     \item installation of
+	\index{CPAN}
         \htmladdnormallinkfoot {CPAN (Comprehensive PERL Archive Network)}
                 {http://www.perl.com/CPAN}
         modules
@@ -822,6 +823,8 @@ You can retrieve DB on the
 where you will also find clear installation instructions.
 
 \subsection {Install PERL and CPAN modules}
+\label{Install PERL and CPAN modules}
+	\index{CPAN}
 
 To be able to use \Sympa you must have release 5.004\_03 or later of the
 PERL language, as well as several CPAN modules.
@@ -968,9 +971,9 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 
 \item \unixcmd {--mandir=DIR}, man documentation in DIR (default /usr/local/man/)
 
-\item \unixcmd {--with-initdir=DIR}, create .pid files in DIR  (default /home/sympa/)
+\item \unixcmd {--with-initdir=DIR}, install System V init script in DIR  (default /etc/rc.d/init.d)
 
-\item \unixcmd {--with-piddir=DIR}, install System V init script in DIR  (default /etc/rc.d/init.d)
+\item \unixcmd {--with-piddir=DIR}, create .pid files in DIR  (default /home/sympa/)
 
 \item \unixcmd {--with-perl=FULLPATH}, set full path to Perl interpreter (default /usr/bin/perl)
 
@@ -1242,12 +1245,13 @@ the file is of no importance.
 
 \section {Site customization}
 
-\subsection {\cfkeyword {host}}
+\subsection {\cfkeyword {domain}}
 
         This keyword is \textbf {mandatory}. It is the domain name
 used in the \rfcheader {From} header in replies to administrative
 requests. So the smtp engine (qmail, sendmail, postfix or whatever) must
-recognize this domain as a local adress. 
+recognize this domain as a local adress. The old keyword \cfkeyword {host}
+is still recognized but should not be used anymore.
 
 
         \example {domain cru.fr}
@@ -1755,7 +1759,7 @@ db_options	mysql_read_default_file=/home/joe/my.cnf
 \subsection {\cfkeyword {db\_env}}
 
 	Sets a list of environment variables to set before database connexion.
-	This is a ';'separated list of variable assignment.
+	This is a ';' separated list of variable assignment.
 
 Example for Oracle:
 \begin {quote}
@@ -2188,8 +2192,8 @@ MhOnArc is a neat little converter from mime messages to html. Refer to
 
 The long mhonarc resource file is used by \WWSympa in a particular way,
 as mhonarc is used to produce not a complete html document, but only part
-(to be included in a complete document starting with <HTML> and terminating
-with </HTML> ;-) )
+(to be included in a complete document starting with $<$HTML$>$ and terminating
+with $<$/HTML$>$ ;-) )
 The best way to start is to use the MhOnArc resource file as
 provided in the \WWSympa distribution. 
 
@@ -2303,9 +2307,8 @@ Check the \htmladdnormallinkfoot
 \Sympa will use DBI to communicate with the database system and
 therefore requires the DBD for your database system. DBI and 
 DBD::YourDB (Msql-Mysql-modules for MySQL) are distributed as 
-CPAN modules. Refer to ~\ref 
-{Install other required CPAN modules}, page~\pageref 
-{Install other required CPAN modules} for installation
+CPAN modules. Refer to ~\ref {Install PERL and CPAN modules}, 
+page~\pageref {Install PERL and CPAN modules} for installation
 details of these modules.
 
 \section {Creating a sympa DataBase}
@@ -2594,7 +2597,7 @@ ldap
 
         This keyword is \textbf {mandatory}. It is the domain name
 	used in order to bind to the directory and then to extract informations.
-	You must mention the port number after yhe server name.
+	You must mention the port number after the server name.
 	The replication is also taken in charge, then the different servers are comma separated.
 
         Example :
@@ -3059,15 +3062,20 @@ Most configuration parameters can be define for each robot except
 general Sympa installation parameters (binary and spool location, smtp engine,
 antivirus plugging,...).
 
-The Virtual robot name as defined in \Sympa documentation and configuration file refers to the Internet domaine of the Virtual robot.
+The Virtual robot name as defined in \Sympa documentation and configuration file refers
+to the Internet domaine of the Virtual robot.
 
 \section {How to create a virtual robot}
 
-You don't need to install several Sympa server. A single \file {sympa.pl} deamon and one or more 
-fastcgi servers can serve all virtual robot. Just configure the server environment in order to accept the new domain definition.
+You don't need to install several Sympa server. A single \file {sympa.pl} deamon
+and one or more fastcgi servers can serve all virtual robot. Just configure the 
+server environment in order to accept the new domain definition.
 \begin {itemize}
-\item \textbf {The DNS} must be configured to define a new mail exchanger record (MX) to route message to your server. A new host (A record) or alias (CNAME) are mandatory to define the new web server.
-\item Configure your \textbf {MTA (sendmail, postfix, exim, ...)} to accept incoming messages for the new robot domain. Add mail aliases for the robot :
+\item \textbf {The DNS} must be configured to define a new mail exchanger record (MX) 
+to route message to your server. A new host (A record) or alias (CNAME) are mandatory
+to define the new web server.
+\item Configure your \textbf {MTA (sendmail, postfix, exim, ...)} to accept incoming 
+messages for the new robot domain. Add mail aliases for the robot :
 
 \textit {Examples (with sendmail):} 
 \begin {quote}
@@ -3077,7 +3085,9 @@ listmaster@your.virtual.domain: "| /home/sympa/bin/queue listmaster@your.virtual
 \end{verbatim}
 \end {quote}
 
-\item Define a \textbf {virtual host in your HTTPD server}. The fastcgi servers defined in the common section of you httpd server can be used by each virtual server. You don't need to run dedicated fascgi server for each virtual robot.
+\item Define a \textbf {virtual host in your HTTPD server}. The fastcgi servers defined 
+in the common section of you httpd server can be used by each virtual server. You don't 
+need to run dedicated fascgi server for each virtual robot.
 
 \textit {Examples:} 
 \begin {quote}
@@ -3099,7 +3109,8 @@ FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 3 -idle-timeout 120
 \end{verbatim}
 \end {quote}
 
-\item Create a \file {robot.conf} for the virtual robot (current web interface does not provide Virtual robot creation yet).
+\item Create a \file {robot.conf} for the virtual robot (current web interface does
+not provide Virtual robot creation yet).
 
 \end {itemize}
 
@@ -3115,7 +3126,7 @@ Only the following parameters can be redefined for a particular robot :
 
 	\item \cfkeyword {http\_host} \\
 	This hostname will be compared with 'SERVER\_NAME' ENV var in wwsympa.fcgi
-	to deduce the current Virtual Robot
+	to deduce the current Virtual Robot.
 
 	\item \cfkeyword {host}\\
 	The hostname used by Sympa when sending emails
@@ -3198,7 +3209,7 @@ documentation.
 
 \subsection {Conditions}
 
-Conditions include variable comparisons (= and <>), or existence.
+Conditions include variable comparisons (= and $<$$>$), or existence.
 Syntactical elements for conditions are [IF xxx], [ELSE], [ELSIF xxx] and
 [ENDIF].
 
@@ -3336,7 +3347,7 @@ The following variables may be used in these template files :
 
 	\item[-] [conf-$>$email] : sympa e-mail address local part
 
-	\item[-] [conf-$>$host] : sympa host name
+	\item[-] [conf-$>$domain] : sympa robot domain name
 
 	\item[-] [conf-$>$sympa] : sympa's complete e-mail address
 
@@ -3383,7 +3394,7 @@ The following variables may be used in these template files :
 
 \begin {quote}
 \begin{verbatim}
-These are the public lists for [conf->email]@[conf->host]
+These are the public lists for [conf->email]@[conf->domain]
 
 [FOREACH l IN lists]
 	
@@ -3486,8 +3497,8 @@ The cookie format is :
 user=<user_email>:<md5>
 \end{verbatim}
 
-where <user\_email> is the user's complete e-mail address, and
-<md5> is a MD5 checksum of the <user\_email>+\Sympa \cfkeyword {cookie}
+where $<$user\_email$>$ is the user's complete e-mail address, and
+$<$md5$>$ is a MD5 checksum of the $<$user\_email$>$+\Sympa \cfkeyword {cookie}
 configuration parameter.
 Your application needs to know what the \cfkeyword {cookie} parameter
 is, so it can check the HTTP cookie validity ; this is a secret shared
@@ -3712,7 +3723,7 @@ Rules are defined as follows :
 <list_key_word> ::= name | host | lang | max_size | priority | reply_to | 
 		    status | subject | account | 
 
-<conf_key_word> ::= host | email | listmaster | default_list_priority | 
+<conf_key_word> ::= domain | email | listmaster | default_list_priority | 
 		      sympa_priority | request_priority | lang | max_size
 	 	      
 \end{verbatim}
@@ -3843,7 +3854,7 @@ For example a task sends every year the subscribers of a list a message to remin
 
 A task is created with a task model. It is a text file which describes a sequence of simple actions. 
 It may have different versions (for instance reminding subscribers every year or semester).
-A task model file name has the following format :	\file {<model name>.<model version>.task}.
+A task model file name has the following format : \file {<model name>.<model version>.task}.
 For instance \file {remind.annual.task}  or \file {remind.semestrial.task}.
 
 \Sympa provides several task models stored in \tildedir {sympa/bin/etc/global\_task\_models} 
@@ -4311,7 +4322,7 @@ The following variables may be used in list template files :
 
 	\item[-] [conf-$>$email] : sympa e-mail address local part
 
-	\item[-] [conf-$>$host] : sympa host name
+	\item[-] [conf-$>$domain] : sympa robot domain name
 
 	\item[-] [conf-$>$sympa] : sympa's complete e-mail address
 
@@ -4321,7 +4332,7 @@ The following variables may be used in list template files :
 
 	\item[-] [list-$>$name] : list name
 
-	\item[-] [list-$>$host] : list hostname
+	\item[-] [list-$>$host] : list hostname (default is sympa robot domain name)
 
 	\item[-] [list-$>$lang] : list language
 
@@ -4721,12 +4732,11 @@ even when several moderators are defined.
  \label {par-host}
  \index{host}
 
-	\default {\cfkeyword {host} robot parameter}
+	\default {\cfkeyword {domain} robot parameter}
 
 \lparam {host} \textit {fully-qualified-domain-name}
 
-Domain name of the list, mainly used on the web interface. 
-The default value is set in the \file {/etc/sympa.conf} file.
+Domain name of the list, default is the robot domain name set in the related \file {robot.conf} file or in file \file {/etc/sympa.conf}.
 
 \subsection {lang}
     \label {par-lang}
