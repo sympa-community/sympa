@@ -338,11 +338,7 @@ while (!$end) {
 	}
 
 	unless ($listname =~ /^(sympa|listmaster|$Conf{'email'})(\@$Conf{'host'})?$/i) {
-	    unless ($list = new List ($listname)) {
-		rename("$Conf{'queue'}/$t_filename", "$Conf{'queue'}/BAD-$t_filename");
-		do_log('notice', "Renaming bad file %s to BAD-%s", $t_filename, $t_filename);
-	    }
-	    next unless $list;
+	    $list = new List ($listname);
 	}
 	
 	if ($listname eq 'listmaster') {
@@ -355,7 +351,11 @@ while (!$end) {
 	}elsif ($listname =~ /^(sympa|$Conf{'email'})(\@$Conf{'host'})?$/i) {	
 	    $priority = $Conf{'sympa_priority'};
 	}else {
-	    $priority = $list->{'admin'}{'priority'};
+	    if ($list) {
+		$priority = $list->{'admin'}{'priority'};
+	    }else {
+		$priority = $Conf{'default_list_priority'};
+	    }
 	}
 	
 	if (ord($priority) < ord($highest_priority)) {
@@ -773,7 +773,12 @@ sub DoMessage{
 
     ## Search for the list
     my $list = new List ($listname);
-    return undef unless $list;
+
+    unless ($list) {
+	&do_log('notice', 'Unknown list %s', $listname);
+	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
+	return undef;
+    }
  
     my ($name, $host) = ($list->{'name'}, $list->{'admin'}{'host'});
 
