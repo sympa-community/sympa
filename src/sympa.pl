@@ -1308,7 +1308,6 @@ sub DoMessage{
 
     return undef unless (defined $action);
 
-    do_log('info', "xxxxxxxxxxxxxxxxxx action : $action daemon_usage $daemon_usage" );
     if (($action =~ /^do_it/) || ($daemon_usage eq 'message')) {
 	    
 	if (($daemon_usage eq  'message') || ($daemon_usage eq  'command_and_message')) {
