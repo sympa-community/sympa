@@ -4124,12 +4124,6 @@ sub do_redirect {
 	 close MAIL ;
      }
      if ($msgfile) {
-	 my $message;
-	 unless ($message = new Message("$arcpath/arctxt/$msgfile")) {
-	     &wwslog('info', 'do_send_me : could not create object message for file %s',"$arcpath/arctxt/$msgfile");
-	     $param->{'status'} = 'message_err';
-	 }
-
 	 my $tempfile =  $Conf{'queue'}."/T.".&Conf::get_robot_conf($robot, 'sympa').".".time.'.'.int(rand(10000)) ;
 	 unless (open TMP, ">$tempfile") {
 	     &do_log('notice', 'Cannot create %s : %s', $tempfile, $!);
