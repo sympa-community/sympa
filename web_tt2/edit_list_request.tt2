@@ -114,7 +114,7 @@
 	          [% FOREACH enum = key.value %]
 	            [% IF enum.value.selected == '1' %]
 	              [% enum.key %]
-		      <input type="hidden" name="single_param.[% p.name %].[% o_INDEX %].[% key.value.name %]" value="[% enum.key %]" />
+		      <input type="hidden" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% enum.key %]" />
 	            [% END %]
 	          [% END %]
 	        [% END %]
