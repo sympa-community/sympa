@@ -849,7 +849,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 if ($param->{'date'}) {
 	     printf "Date: %s\n", &POSIX::strftime('%a, %d %b %Y %R %z',localtime($param->{'date'}));
 	 }
-	 print "Cache-control: no-cache\n";
+	 print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;
 	 print "Content-Type: text/html\n\n";
 
 	 ## Icons
