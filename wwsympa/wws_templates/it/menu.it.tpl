@@ -1,8 +1,8 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 <!-- begin menu.it.tpl -->
-<TABLE CELLPADDING="0" CELLSPACING="0" WIDTH="100%" BORDER="0"><TR><TD>
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
+<TABLE CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BORDER="0"><TR><TD>
+<TABLE CELLPADDING="0" CELLSPACING="0" WIDTH="100%" BORDER="0">
   <TR ALIGN=center BGCOLOR="[dark_color]">
   [IF auth_method=smime]
   <TD bgcolor="[bg_color]">
@@ -10,7 +10,7 @@
      <IMG SRC="[icons_url]/locked.png" align="center" alt="security info" border=0></A>
   [ELSE]
   <TD>
-  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
+  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">
      <TR> 
   [IF user->email]
   [IF auth_method=md5]
