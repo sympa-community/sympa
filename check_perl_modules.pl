@@ -57,7 +57,7 @@ use CPAN;
 
 %opt_CPAN = ('DBI' => 'DBI',
 	     'DBD::mysql' => 'Msql-Mysql-modules',
-	     'DBD::Pg' => ' DBD-Pg',
+	     'DBD::Pg' => 'DBD-Pg',
 	     'DBD::Oracle' => 'DBD-Oracle',
 	     'DBD::Sybase' => 'DBD-Sybase',
 	     'Net::LDAP' =>   'perl-ldap',
@@ -68,6 +68,20 @@ use CPAN;
 	     'IO::Socket::SSL' => 'IO-Socket-SSL',
 	     'Net::SSLeay' => 'NET-SSLeay',
 	     'Bundle::LWP' => 'LWP');
+
+%opt_features = ('DBI' => 'a generic Database Driver, required by Sympa to access Subscriber information and User preferences. An additional Database Driver is required for each database type you wish to connect to.',
+		 'DBD::mysql' => 'Mysql database driver, required if you connect to a Mysql database.',
+		 'DBD::Pg' => 'PostgreSQL database driver, required if you connect to a PostgreSQL database.',
+		 'DBD::Oracle' => 'Oracle database driver, required if you connect to a Oracle database.',
+		 'DBD::Sybase' => 'Sybase database driver, required if you connect to a Sybase database.',
+		 'Net::LDAP' =>   'required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.',
+		 'CGI::Fast' => 'WWSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
+		 'Crypt::CipherSaber' => 'this module provides reversible encryption of user passwords in the database.',
+		 'FCGI' => 'WSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
+		 'Net::SMTP' => 'this is required if you set \'list_check_smtp\' sympa.conf parameter, used to check existing aliases before mailing list creation.',
+		 'IO::Socket::SSL' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
+		 'Net::SSLeay' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
+		 'Bundle::LWP' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication');
 
 ### main:
 print "******* Check perl for SYMPA ********\n";
@@ -118,7 +132,7 @@ sub check_modules {
 	    }
 	} elsif ($status eq "nofile") {
 	    ### not installed
-	    print "seems to be not available on this system.\n";
+	    print "was not found on this system.\n";
 
 	    &install_module($mod, $default);
 
@@ -144,6 +158,7 @@ sub install_module {
 	return undef;
     }
 
+    printf "Description: %s\n", $opt_features{$module};
     print "Install module $module ? [$default]";
     my $answer = <STDIN>; chomp $answer;
     $answer ||= $default;
