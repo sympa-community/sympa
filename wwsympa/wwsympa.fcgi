@@ -3999,6 +3999,11 @@ sub do_redirect {
 	 &wwslog('err','do_editfile: no user');
 	 return 'loginrequest';
      }
+     
+     my $subdir = '';
+     if ($in{'file'} =~ /\.tt2$/) {
+	 $subdir = 'mail_tt2/';
+     }
 
      if ($param->{'list'}) {
 	 unless ($list->may_edit($in{'file'}, $param->{'user'}{'email'}) eq 'write') {
@@ -4012,12 +4017,12 @@ sub do_redirect {
 	 #$file =~ s/\.tpl$/\.$list->{'admin'}{'lang'}\.tpl/;
 
 	 ## Look for the template
-	 $param->{'filepath'} = &tools::get_filename('etc','tt2/'.$file,$robot, $list);
+	 $param->{'filepath'} = &tools::get_filename('etc',$subdir.$file,$robot, $list);
 
 	 ## Default for 'homepage' is 'info'
 	 if (($in{'file'} eq 'homepage') &&
 	     ! $param->{'filepath'}) {
-	     $param->{'filepath'} = &tools::get_filename('etc','tt2/'.'info',$robot, $list);
+	     $param->{'filepath'} = &tools::get_filename('etc',$subdir.'info',$robot, $list);
 	 }
      }else {
 	 unless (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
@@ -4035,7 +4040,7 @@ sub do_redirect {
 	     #my $lang = &Conf::get_robot_conf($robot, 'lang');
 	     #$file =~ s/\.tpl$/\.$lang\.tpl/;
 
-	     $param->{'filepath'} = &tools::get_filename('etc','tt2/'.$file,$robot);
+	     $param->{'filepath'} = &tools::get_filename('etc',$subdir.$file,$robot);
 	 }
      }
 
@@ -4075,7 +4080,11 @@ sub do_redirect {
 	     return undef;
 	 }
 
-	 $param->{'filepath'} = $list->{'dir'}.'/'.$in{'file'};
+	 if ($in{'file'} =~ /\.tt2$/) {
+	     $param->{'filepath'} = $list->{'dir'}.'/mail_tt2/'.$in{'file'};
+	 }else {
+	     $param->{'filepath'} = $list->{'dir'}.'/'.$in{'file'};
+	 }
      }else {
 	 unless (&List::is_listmaster($param->{'user'}{'email'}),$robot) {
 	     &error_message('missing_arg', {'argument' => 'list'});
@@ -4087,13 +4096,13 @@ sub do_redirect {
 	     if ($in{'file'} eq 'list_aliases.tt2') {
 		 $param->{'filepath'} = "$Conf{'etc'}/$robot/$in{'file'}";
 	     }else {
-		 $param->{'filepath'} = "$Conf{'etc'}/$robot/tt2/$in{'file'}";
+		 $param->{'filepath'} = "$Conf{'etc'}/$robot/mail_tt2/$in{'file'}";
 	     }
 	 }else {
 	      if ($in{'file'} eq 'list_aliases.tt2') {
 		  $param->{'filepath'} = "$Conf{'etc'}/$in{'file'}";
 	      }else {
-		  $param->{'filepath'} = "$Conf{'etc'}/tt2/$in{'file'}";
+		  $param->{'filepath'} = "$Conf{'etc'}/mail_tt2/$in{'file'}";
 	      }
 	 }
      }

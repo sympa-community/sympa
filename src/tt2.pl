@@ -147,8 +147,8 @@ sub parse_tt2 {
     }
 
     # quick hack! wrong layer!
-    s|^/home/sympa/bin/etc/wws_templates/(.*?)(\...)?(\.tpl)|$1.tt2|
-	for values %$data;
+#    s|^/home/sympa/bin/etc/wws_templates/(.*?)(\...)?(\.tpl)|$1.tt2|
+#	for values %$data;
 
 #    &do_log('notice', 'TPL: %s ; LANG: %s', $template, $data->{lang});
 
@@ -164,8 +164,6 @@ sub parse_tt2 {
 	    loc => [\&maketext, 1],
 	    qencode => [\&qencode, 0]
 	    },
-       #PRE_CHOMP   => 1,
-       #POST_CHOMP   => 1,
 	    };
 
     if ($allow_absolute) {

@@ -156,11 +156,9 @@ foreach my $tpl (@templates) {
     if ($path =~ /\/wws_templates$/) {
 	$dest_path =~ s/wws_templates/web_tt2/;
     }elsif ($path =~ /\/templates$/) {
-	if ($path =~ /\/templates$/) {
-	    $dest_path =~ s/templates/tt2/;
-	}else {
-	    $dest_path .= '/tt2';
-	}
+	$dest_path =~ s/templates/mail_tt2/;
+    }elsif ($path =~ /\/expl\//) {
+	$dest_path .= '/mail_tt2';
     }else {
 	$dest_path = $path;
     }

@@ -2385,8 +2385,8 @@ sub add_parts {
     my ($header, $headermime);
     foreach my $file ("$listdir/message.header", 
 		      "$listdir/message.header.mime",
-		      "$Conf{'etc'}/tt2/message.header", 
-		      "$Conf{'etc'}/tt2/message.header.mime") {
+		      "$Conf{'etc'}/mail_tt2/message.header", 
+		      "$Conf{'etc'}/mail_tt2/message.header.mime") {
 	if (-f $file) {
 	    unless (-r $file) {
 		&do_log('notice', 'Cannot read %s', $file);
@@ -2400,8 +2400,8 @@ sub add_parts {
     my ($footer, $footermime);
     foreach my $file ("$listdir/message.footer", 
 		      "$listdir/message.footer.mime",
-		      "$Conf{'etc'}/tt2/message.footer", 
-		      "$Conf{'etc'}/tt2/message.footer.mime") {
+		      "$Conf{'etc'}/mail_tt2/message.footer", 
+		      "$Conf{'etc'}/mail_tt2/message.footer.mime") {
 	if (-f $file) {
 	    unless (-r $file) {
 		&do_log('notice', 'Cannot read %s', $file);
@@ -2680,15 +2680,15 @@ sub send_global_file {
     $data->{'lang'} = $data->{'lang'} = $data->{'user'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
-    my $tt2_include_path = ["$Conf{'etc'}/$robot/tt2",
-			    "$Conf{'etc'}/tt2",
-			    "--ETCBINDIR--/tt2"];
+    my $tt2_include_path = ["$Conf{'etc'}/$robot/mail_tt2",
+			    "$Conf{'etc'}/mail_tt2",
+			    "--ETCBINDIR--/mail_tt2"];
 
     foreach my $d (@{$tt2_include_path}) {
 	&tt2::add_include_path($d);
     }
 
-    my $filename = &tools::get_filename('etc', 'tt2/'.$action.'.tt2', $robot);
+    my $filename = &tools::get_filename('etc', 'mail_tt2/'.$action.'.tt2', $robot);
 
     foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title') {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
@@ -2761,10 +2761,10 @@ sub send_file {
     $data->{'lang'} = $data->{'user'}{'lang'} || $self->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
-    my $tt2_include_path = [$self->{'dir'},
-			    "$Conf{'etc'}/$robot/tt2",
-			    "$Conf{'etc'}/tt2",
-			    "--ETCBINDIR--/tt2"];
+    my $tt2_include_path = [$self->{'dir'}.'/mail_tt2',
+			    "$Conf{'etc'}/$robot/mail_tt2",
+			    "$Conf{'etc'}/mail_tt2",
+			    "--ETCBINDIR--/mail_tt2"];
 
     foreach my $d (@{$tt2_include_path}) {
 	&tt2::add_include_path($d);
@@ -2774,7 +2774,7 @@ sub send_file {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
 
-    my $filename = &tools::get_filename('etc', 'tt2/'.$action.'.tt2', $robot, $self);
+    my $filename = &tools::get_filename('etc', 'mail_tt2/'.$action.'.tt2', $robot, $self);
 
     $data->{'list'}{'lang'} = $self->{'admin'}{'lang'};
     $data->{'list'}{'name'} = $name;
@@ -8145,10 +8145,10 @@ sub _urlize_part {
     $parser->output_to_core(1);
     my @new_part;
 
-    my $tt2_include_path = [$list->{'dir'}.'/tt2',
-			    $Conf{'etc'}.'/'.$robot.'/tt2',
-			    $Conf{'etc'}.'/tt2',
-			    '--ETCBINDIR--'.'/tt2'];
+    my $tt2_include_path = [$list->{'dir'}.'/mail_tt2',
+			    $Conf{'etc'}.'/'.$robot.'/mail_tt2',
+			    $Conf{'etc'}.'/mail_tt2',
+			    '--ETCBINDIR--'.'/mail_tt2'];
     
     &tt2::parse_tt2({'file_name' => $file_name,
 		     'file_url'  => $file_url,

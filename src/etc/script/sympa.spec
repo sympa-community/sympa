@@ -308,7 +308,7 @@ done
 # Config directories populated by the user
 %dir %{etc_s}/create_list_templates
 %dir %{etc_s}/scenari
-%dir %{etc_s}/tt2
+%dir %{etc_s}/mail_tt2
 %dir %{etc_s}/web_tt2
 %dir %{etc_s}/general_task_models
 %dir %{etc_s}/task_models

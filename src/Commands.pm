@@ -146,7 +146,7 @@ sub help {
 
     # sa ne prends pas en compte la structure des répertoires par lang.
     # we should make this utilize Template's chain of responsibility
-    if ((-r "$Conf{'etc'}/tt2/helpfile.tt2")||("$Conf{'etc'}/$robot/tt2/helpfile.tt2")) {
+    if ((-r "$Conf{'etc'}/mail_tt2/helpfile.tt2")||("$Conf{'etc'}/$robot/mail_tt2/helpfile.tt2")) {
 
 	my $data = {};
 
@@ -183,7 +183,7 @@ sub help {
 	push @msg::report, sprintf gettext("\nPowered by Sympa %s : http://www.sympa.org/\n")
 	    , $Version ;
 
-    }elsif (-r "--ETCBINDIR--/tt2/helpfile.tt2") {
+    }elsif (-r "--ETCBINDIR--/mail_tt2/helpfile.tt2") {
 
 	my $data = {};
 
