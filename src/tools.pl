@@ -1180,7 +1180,7 @@ sub get_filename {
 	}
     }
     
-    &do_log('info','Cannot find %s', $name);
+    &do_log('debug3','tools::get_filename: Cannot find %s', $name);
     return undef;
 }
 
