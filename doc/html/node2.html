@@ -159,7 +159,7 @@ in a single software package, including:
 
 <UL>
 <LI>the use of your preferred SMTP engine, e.g.
-                <A NAME="3823"></A><TT>sendmail</TT>, <A NAME="3826"></A><TT>qmail</TT> or <A NAME="3829"></A><TT>postfix</TT>
+                <A NAME="3834"></A><TT>sendmail</TT>, <A NAME="3837"></A><TT>qmail</TT> or <A NAME="3840"></A><TT>postfix</TT>
 
 <P>
 </LI>
@@ -190,10 +190,10 @@ in a single software package, including:
 <P>
 </LI>
 <LI><B>MIME support</B>. <I>Sympa</I> naturally respects
-        <A NAME="3835"></A>MIME in the distribution process, and in addition
+        <A NAME="3846"></A>MIME in the distribution process, and in addition
         allows list owners to configure their lists with
         welcome, goodbye and other predefined messages using complex
-        <A NAME="3836"></A>MIME structures. For example, a welcome message can be
+        <A NAME="3847"></A>MIME structures. For example, a welcome message can be
         <B>i</B>n multipart/alternative format, using <B>text/html</B>,
         <B>audio/x-wav</B>&nbsp;:-), or whatever (Note that <I>Sympa</I> 
         commands in multipart messages are successfully processed, provided that
@@ -203,14 +203,14 @@ in a single software package, including:
 </LI>
 <LI>The <B>sending process is controlled</B> on a per-list basis.
         The list definition allows a number of different actions for
-        each incoming message. A <A NAME="3838"></A><TT>private</TT> list is a list where
+        each incoming message. A <A NAME="3849"></A><TT>private</TT> list is a list where
         only subscribers can send messages. A list configured using
-        <A NAME="3841"></A><TT>privateoreditorkey</TT> mode accepts incoming messages
+        <A NAME="3852"></A><TT>privateoreditorkey</TT> mode accepts incoming messages
         from subscribers, but will forward any other (i.e. non-subscriber) message
 	to the editor with a one-time secret numeric key that will be used by the
         editor to <I>reject</I> or <I>distribute</I> it.
         For details about the different sending modes, refer to the
-        <A NAME="3844"></A><TT>send</TT> parameter (<A HREF="node15.html#par-send">14.3.8</A>, page&nbsp;<A HREF="node15.html#par-send"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). The sending process configuration (as well as most other list
+        <A NAME="3855"></A><TT>send</TT> parameter (<A HREF="node15.html#par-send">14.3.8</A>, page&nbsp;<A HREF="node15.html#par-send"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). The sending process configuration (as well as most other list
 	operations) is defined using  a <B>scenario</B>. Any listmaster
         can define new scenarios (scenarii) in order to complement the 20
 	predefined configurations included in the distribution. 
@@ -222,13 +222,13 @@ Example : forward multipart messages to the list editor, while
 </LI>
 <LI>Privileged operations can be performed by list editors or
         list owners (or any other user category), as defined in the list
-        <A NAME="3847"></A><TT>config</TT> file or by
-        the robot <A NAME="3850"></A>administrator, the listmaster, defined
-        in the <A NAME="3851"></A><TT>/etc/sympa.conf</TT>  global configuration file (listmaster
+        <A NAME="3858"></A><TT>config</TT> file or by
+        the robot <A NAME="3861"></A>administrator, the listmaster, defined
+        in the <A NAME="3862"></A><TT>/etc/sympa.conf</TT>  global configuration file (listmaster
         can also be defined for a particular virtual robot).
-        Privileged operations include the usual <A NAME="3854"></A><TT>ADD</TT>, <A NAME="3857"></A><TT>DELETE</TT> or <A NAME="3860"></A><TT>REVIEW</TT> commands, which can be
+        Privileged operations include the usual <A NAME="3865"></A><TT>ADD</TT>, <A NAME="3868"></A><TT>DELETE</TT> or <A NAME="3871"></A><TT>REVIEW</TT> commands, which can be
         authenticated via a one-time password or an S/MIME signature.
-	 Any list owner using the <A NAME="3863"></A><TT>EXPIRE</TT>
+	 Any list owner using the <A NAME="3874"></A><TT>EXPIRE</TT>
         command can require the renewal of subscriptions. This is made
         possible by the presence of a subscription date stored in the
         <I>Sympa</I> database.
@@ -236,7 +236,7 @@ Example : forward multipart messages to the list editor, while
 <P>
 <A NAME="wwsympa"></A> 
 </LI>
-<LI>textbf Web interface : <A NAME="3867"></A><I>WWSympa</I>  is a global Web interface to all <I>Sympa</I> functions
+<LI>textbf Web interface : <A NAME="3878"></A><I>WWSympa</I>  is a global Web interface to all <I>Sympa</I> functions
     	(including administration). It provides :
 
 <P>
@@ -281,8 +281,8 @@ Example : forward multipart messages to the list editor, while
 <LI><B>RDBMS</B> : the internal subscriber data structure can be stored in a
         database or, for compatibility with versions 1.x, in text
         files. The introduction of databases came out of the
-        <A NAME="3871"></A><I>WWSympa</I> project.  The database ensures a secure access to
-        shared data. The PERL database API <A NAME="3874"></A><TT>DBI</TT>/<A NAME="3877"></A><TT>DBD</TT> enables
+        <A NAME="3882"></A><I>WWSympa</I> project.  The database ensures a secure access to
+        shared data. The PERL database API <A NAME="3885"></A><TT>DBI</TT>/<A NAME="3888"></A><TT>DBD</TT> enables
         interoperability with various <A NAME="175"></A> (<A NAME="176"></A>, <A NAME="177"></A>,
         <A NAME="178"></A>, <A NAME="179"></A>).
 	(See ref sec-rdbms, page&nbsp;<A HREF="node8.html#sec-rdbms"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
@@ -349,7 +349,7 @@ for information about project direction.
 
 <P>
 <I>Sympa</I> development started from scratch in 1995. The goal was to
-ensure continuity with the <A NAME="3885"></A>TULP list manager, produced
+ensure continuity with the <A NAME="3896"></A>TULP list manager, produced
 partly by the initial author of <I>Sympa</I>: Christophe Wolfhugel.
 
 <P>
@@ -507,7 +507,7 @@ Our thanks to all contributors, including:
 
 <P>
 </LI>
-<LI>All contributors and beta-testers cited in the <A NAME="3891"></A><TT>RELEASE_NOTES</TT> file, who, by serving as guinea pigs and
+<LI>All contributors and beta-testers cited in the <A NAME="3902"></A><TT>RELEASE_NOTES</TT> file, who, by serving as guinea pigs and
        being the first to use it, made it possible to quickly and
        efficiently debug the <I>Sympa</I> software.
 
@@ -624,7 +624,7 @@ and so on.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-05-14
+2003-05-16
 </ADDRESS>
 </BODY>
 </HTML>

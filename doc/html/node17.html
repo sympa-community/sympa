@@ -72,24 +72,24 @@ mad, or just delete them without further attention.
 
 <P>
 Bounces are received at mylist-owner address, which should
-be sent to the <A NAME="7626"></A><TT>bouncequeue</TT> program via aliases :
+be sent to the <A NAME="7640"></A><TT>bouncequeue</TT> program via aliases :
 
 <P><PRE>
 	\samplelist-owner: "|/home/sympa/bin/bouncequeue \samplelist"
 </PRE>
 
 <P>
-<A NAME="7629"></A><TT>bouncequeue</TT> (see <A HREF="node3.html#binaries">2.2</A>, page&nbsp;<A HREF="node3.html#binaries"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) stores bounces in a
-<A NAME="7632"></A><TT>/home/sympa/spool/bounce/</TT> spool.
+<A NAME="7643"></A><TT>bouncequeue</TT> (see <A HREF="node3.html#binaries">2.2</A>, page&nbsp;<A HREF="node3.html#binaries"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) stores bounces in a
+<A NAME="7646"></A><TT>/home/sympa/spool/bounce/</TT> spool.
 
 <P>
-Bounces are then processed by the <A NAME="7635"></A><TT>bounced.pl</TT> daemon.
+Bounces are then processed by the <A NAME="7649"></A><TT>bounced.pl</TT> daemon.
 This daemon analyses bounces to find out which
 e-mail addresses are concerned and what kind of error was generated.
 If bouncing addresses match a subscriber's address, information 
 is stored in the <I>Sympa</I> database (in subscriber_table). Moreover, the most recent
-bounce itself is archived in <A NAME="7639"></A><TT>bounce_path/mylist/email</TT>
-(where bounce_path is defined in a <A NAME="7642"></A><TT>wwsympa.conf</TT> parameter and
+bounce itself is archived in <A NAME="7653"></A><TT>bounce_path/mylist/email</TT>
+(where bounce_path is defined in a <A NAME="7656"></A><TT>wwsympa.conf</TT> parameter and
 email is the user e-mail address).
 
 <P>
@@ -134,7 +134,7 @@ of bouncing addresses.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-05-14
+2003-05-16
 </ADDRESS>
 </BODY>
 </HTML>

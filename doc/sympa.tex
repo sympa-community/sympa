@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {14 May 2003}
+    \date {16 May 2003}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -3968,6 +3968,29 @@ site web templates, before falling back on its defaults.
 
 Your list web template files should be placed in the \dir {/home/sympa/expl/\samplelist/wws\_templates} 
 directory ; your site web templates in \tildedir {/home/sympa/expl/wws\_templates} directory.
+
+There are actually 2 ways a template can include another template :
+
+\begin {enumerate}
+  \item directy, as in  subrequest.us.tpl : 
+\begin {quote}
+\begin{verbatim}
+[PARSE '/home/sympa/bin/etc/wws_templates/loginbanner.us.tpl'].
+\end{verbatim}
+\end {quote}
+    If you customize the loginbanner.us.tpl, you also have to customize templates that refer to it.
+
+   \item indirectly, via a variable, as in main.tpl : 
+\begin {quote}
+\begin{verbatim}
+[PARSE action_template]
+\end{verbatim}
+\end {quote}
+\end {enumerate}
+
+ Then  \file {wwsympa.fcgi} sets action\_template variable to the appropriate template file path (ie : in the best place according to Sympa default rules, and in the current language).
+
+We use (2) for some high level templates (action\_template, error\_template, notice\_template, title\_template, menu\_template, list\_menu\_template, admin\_menu\_template) but then we use (1) for lower-level template inclusions.
 
 Note that web colors are defined in \Sympa's main Makefile (see \ref {makefile},
 page~\pageref {makefile}).
