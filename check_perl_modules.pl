@@ -41,8 +41,8 @@ use CPAN;
 	     'DB_File' => '1.75',
 	     'IO::Socket::SSL' => '0.90',
 	     'Net::SSLeay' => '1.16',
-	     'Bundle::LWP' => '1.09',
-	     'MHonArc' => '2.5');
+	     'Bundle::LWP' => '1.09'
+	     );
 
 ### key:left "module" used by SYMPA, 
 ### right CPAN module.		     
@@ -54,8 +54,8 @@ use CPAN;
 	     'MIME::Tools' => 'MIME-tools',
 	     'MIME::Base64' => 'MIME-Base64',
 	     'CGI' => 'CGI',
-	     'File::Spec' => 'File-Spec',
-	     'MHonArc' => 'mhonarc');
+	     'File::Spec' => 'File-Spec'
+	     );
 
 %opt_CPAN = ('DBI' => 'DBI',
 	     'DBD::mysql' => 'Msql-Mysql-modules',
