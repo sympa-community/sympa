@@ -3352,7 +3352,9 @@ sub do_redirect {
      $list->save();
      &message('add_performed', {'total' => $total});
      ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$comma_emails,'done',$total) if (@new_users);
-     return 'review';
+     
+     $in{'list'} = $in{'previous_list'} if ($in{'previous_list'});
+     return $in{'previous_action'} || 'review';
  }
 
  ## Del a user to a list

@@ -49,6 +49,8 @@
         [ENDIF]
       </TABLE>
 
+<INPUT TYPE="hidden" NAME="previous_action" VALUE="subindex">
+<INPUT TYPE="hidden" NAME="previous_list" VALUE="[list]">
 <INPUT TYPE="submit" NAME="action_add" VALUE="Add selected addresses">
 <INPUT TYPE="submit" NAME="action_ignoresub" VALUE="Reject selected addresses">
 </FORM>

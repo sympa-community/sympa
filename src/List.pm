@@ -7916,7 +7916,7 @@ sub delete_subscription_request {
 	close REQUEST;
 	if ($line =~ /^$email\s/) {
 	    unless (unlink "$Conf{'queuesubscribe'}/$filename") {
-		do_log('notice', 'Could not delete file %s', $filename);
+		do_log('err', 'Could not delete file %s', $filename);
 		next;
 	    }
 	}
