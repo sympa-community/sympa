@@ -27,7 +27,7 @@ Subject: [% FILTER qencode %][%|l%]incorrect format of edit_list.conf[%END%][%EN
 [%|l(param0)%]Until then we recommend your remove %1 ;
 default configuration will be used.[%END%]
 [% ELSIF type == 'sync_include_failed' -%]
-Subject: [[% FILTER qencode %]%|l(param0)%]subscribers update failed for list %1[%END%][%END%]
+Subject: [% FILTER qencode %][%|l(param0)%]subscribers update failed for list %1[%END%][%END%]
 
 [%|l%]Sympa could not include subscribers from external data sources ; the
 database or LDAP directory might be unreachable.[%END%] 
