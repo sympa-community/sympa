@@ -5170,7 +5170,7 @@ sub do_set_pending_list_request {
      my $template_file = &tools::get_filename('etc', 'create_list_templates/'.$in{'template'}.'/config.tt2', $robot);
      unless ($template_file) {
 	 &error_message('unable_to_open_template');
-	 &do_log('info', 'no template %s in %s NOR %s',$in{'template'},"$Conf{'etc'}/$robot/create_list_templates/$in{'template'}","$Conf{'etc'}/create_list_templates/$in{'template'}","--ETCBINDIR--/create_list_templates/$in{'template'}");
+	 &do_log('info', 'no template %s in %s NOR %s',$in{'template'}.'/config.tt2',"$Conf{'etc'}/$robot/create_list_templates/$in{'template'}","$Conf{'etc'}/create_list_templates/$in{'template'}","--ETCBINDIR--/create_list_templates/$in{'template'}");
 
 	 return undef;
      }
