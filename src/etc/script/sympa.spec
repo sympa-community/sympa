@@ -304,12 +304,12 @@ done
 %config(noreplace) %attr(0640,sympa,sympa) %{conf_s}/wwsympa.conf
  
 # Config directories populated by the user
-#%dir %{etc_s}/create_list_templates
-#%dir %{etc_s}/scenari
-#%dir %{etc_s}/templates
-#%dir %{etc_s}/wws_templates
-#%dir %{etc_s}/general_task_models
-#%dir %{etc_s}/task_models
+%dir %{etc_s}/create_list_templates
+%dir %{etc_s}/scenari
+%dir %{etc_s}/templates
+%dir %{etc_s}/wws_templates
+%dir %{etc_s}/general_task_models
+%dir %{etc_s}/task_models
  
 # Binaries
 # We use a configure where BINDIR = SBINDIR = LIBDIR = LIBEXECDIR
