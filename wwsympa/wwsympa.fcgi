@@ -5648,10 +5648,8 @@ sub do_set_pending_list_request {
 
      $param->{'status'} = $in{'status'};
 
-     if ($in{'status'} ne 'open') {
-	 $list = $param->{'list'} = $in{'list'} = undef;
-	 return 'get_pending_lists';
-     }
+     $list = $param->{'list'} = $in{'list'} = undef;
+     return 'get_pending_lists';
 
      return 1;
  }
