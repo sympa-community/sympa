@@ -106,11 +106,21 @@
         <TD BGCOLOR="[% light_color %]">
 	   [%|l%]Bounced email rate:[%END%] <B>[% bounce_rate %]%</B><BR>
            <BR>
-	   [% IF mod_total == '0' %]
+        [% IF is_editor %]
+ 	   [% IF mod_total == '0' %]
 	   [%|l%]No message to moderate[%END%]
            [% ELSE %]
            [%|l%]Messages to moderate :[%END%]<B> [% mod_total %]</B>
            [% END %]
+           [% IF shared == 'exist' %]
+             <BR><BR>
+             [% IF mod_total_shared == '0' %]
+             [%|l%]No document to moderate[%END%]
+             [% ELSE %]
+             <B>[%|l%]Documents to moderate :[%END%]<B> [% mod_total_shared %]</B>
+             [% END %]
+           [% END %]
+         [% END %]
 	  <BR>
         </TD>
          [% PROCESS 'list_button_footer.tt2' %]

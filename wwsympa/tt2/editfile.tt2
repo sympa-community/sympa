@@ -13,7 +13,7 @@
 [% ELSE %]
 [%|l%]You can edit several messages/files associated to your list :[%END%]<BR><BR>
 
-<INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+<DD><INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
 	     <SELECT NAME="file">
 	      [% FOREACH f = files %]
     [% SET tmp = f.key f = f.value f.NAME = tmp IF f.key.defined %]

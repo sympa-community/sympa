@@ -1,0 +1,23 @@
+<FORM ACTION="[% path_cgi %]" METHOD="POST">
+ 
+
+ <BR> 
+ <TABLE>
+  [% FOREACH f = list_file %]
+   <TR><TD>[% f %]</TD></TR>
+  [% END %]
+   <TR><TD>&nbsp; </TD></TR>
+   <TR><TD>[%|l%]already exist(s), do you want to confirm the install and erase the old file(s) or cancel the install ?[%END%]
+   </TD></TR>
+ <TR>
+  <TD><INPUT TYPE="submit" NAME="mode_confirm" VALUE="[%|l%]Confirm[%END%]" ></TD>
+  <TD><INPUT TYPE="submit" NAME="mode_cancel" VALUE="[%|l%]Cancel[%END%]" ></TD>
+ </TR>
+ </TABLE>
+ <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+[% FOREACH elt = id %]
+    [% SET tmp = elt.key elt = elt.value elt.NAME = tmp IF elt.key.defined %]
+ <INPUT TYPE="hidden" NAME="id" VALUE="[% elt %]">
+[% END %]
+ <INPUT TYPE="hidden" NAME="action_d_install_shared" VALUE="1"> 
+</FORM>  

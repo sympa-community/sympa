@@ -130,6 +130,9 @@
 [% ELSIF error.msg == 'cannot_upload' %] 
 [%|l(error.path)%]Cannot upload file %1[%END%] : [% error.reason %]
 
+[ELSIF error->msg=cannot_create]
+[%|l(error.path)%]Cannot create %1[%END%] : [error->reason]
+
 [% ELSIF error.msg == 'cannot_create_dir' %] 
 [%|l(error.path)%]Cannot create directory %1[%END%] : [% error.reason %]
 

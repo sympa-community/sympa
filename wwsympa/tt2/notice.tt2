@@ -16,6 +16,9 @@
 [% ELSIF notice.msg == 'upload_success' %] 
 File [%|l(notice.path)%]%1 successfully uploaded![%END%]
 
+[% ELSIF notice.msg == to_moderate %]
+File [%|l(notice.path)%]File %1 waiting for moderation[%END%]
+
 [% ELSIF notice.msg == 'save_success' %] 
 [%|l(notice.path)%]File %1 saved[%END%]
 
@@ -26,10 +29,13 @@ File [%|l(notice.path)%]%1 successfully uploaded![%END%]
 [%|l%]To choose your password go to 'preferences', from the upper menu.[%END%]
 
 [% ELSIF notice.msg == 'no_msg' %] 
-[%|l(notice.list)%]No message to moderate for list %1[%END%]
+[%|l(notice.list)%]No message and no document to moderate for list %1[%END%]
 
 [% ELSIF notice.msg == 'subscribers_update_soon' %]
 [%|l%]The list of list members will be built/updated soon (a few minutes).[%END%]
+
+[% ELSIF notice->msg == 'add_performed' %]
+[%|l(notice.total)%]%1 addresses have been subscribed[%END%]
 
 [% ELSE %]
 [% notice.msg %]

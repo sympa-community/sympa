@@ -1,4 +1,4 @@
-<!-- $Id$ -->
+<!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 <TABLE width=100% border="0" VALIGN="top">
 <TR><TD>
@@ -13,7 +13,7 @@
 </TD>
 <TD>
   <FORM METHOD="post" ACTION="[% path_cgi %]">
-    <INPUT TYPE="button" VALUE="[%|l%]Remind all subscribers[%END%]" NAME="action_remind" onClick="request_confirm(this.form,'[%|l(total)%]Do you really want to send a subscription remind message to the %1 subscribers[%END%]')">
+    <INPUT TYPE="submit" VALUE="[%|l%]Remind all subscribers[%END%]" NAME="action_remind" onClick="return request_confirm('[%|l(total)%]Do you really want to send a subscription remind message to the %1 subscribers[%END%]')">
     <INPUT TYPE="hidden" NAME="action" VALUE="remind">
     <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
   </FORM>	
@@ -28,7 +28,7 @@
     <TR><TD ALIGN="left" NOWRAP>
         <BR>
         <INPUT TYPE="submit" NAME="action_del" VALUE="[%|l%]Delete selected users[%END%]">
-        <INPUT TYPE="checkbox" NAME="quiet"> [%|l%]quiet[%END%]
+        <INPUT TYPE="checkbox" NAME="quiet"> quiet
 
 	<INPUT TYPE="hidden" NAME="sortby" VALUE="[% sortby %]">
 	<INPUT TYPE="submit" NAME="action_reviewbouncing" VALUE="[%|l%]Page size[%END%]">
@@ -56,46 +56,38 @@
     </TD></TR>
     </TABLE>
 
-    <TABLE WIDTH="100%" BORDER=1>
+    <TABLE BORDER=1>
       <TR BGCOLOR="[% error_color %]" NOWRAP>
 	<TH><FONT COLOR="[% bg_color %]">X</FONT></TH>
-        <TH><FONT COLOR="[% bg_color %]">email</FONT></TH>
-	<TH><FONT COLOR="[% bg_color %]">[%|l%]bounce count[%END%]</FONT></TH>
-	<TH><FONT COLOR="[% bg_color %]">[%|l%]period[%END%]</FONT></TH>
-	<TH NOWRAP><FONT COLOR="[% bg_color %]">[%|l%]type[%END%]</FONT></TH>
+        <TH><FONT COLOR="[% bg_color %]">[%|l%]email[%END%]</FONT></TH>
+	<TH><FONT COLOR="[% bg_color %]">[%|l%]bounce score[%END%]</FONT></TH>
       </TR>
       
       [% FOREACH u = members %]
     [% SET tmp = u.key u = u.value u.NAME = tmp IF u.key.defined %]
-
+      
 	[% IF dark == '1' %]
 	  <TR BGCOLOR="[% shaded_color %]">
 	[% ELSE %]
-          <TR BGCOLOR="[% bg_color %]">
+	  <TR BGCOLOR="[% bg_color %]">
 	[% END %]
 
 	  <TD>
 	    <INPUT TYPE=checkbox name="email" value="[% u.escaped_email %]">
 	  </TD>
-	  <TD NOWRAP><FONT SIZE=-1>
+	  <TD NOWRAP>
 	      <A HREF="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/reviewbouncing">[% u.email %]</A>
 
-	  </FONT></TD>
-          <TD ALIGN="center"><FONT SIZE=-1>
-  	      [% u.bounce_count %]
-	    </FONT></TD>
-	  <TD NOWRAP ALIGN="center"><FONT SIZE=-1>
-	    du [% u.first_bounce %] au [% u.last_bounce %]
-	  </FONT></TD>
-	  <TD NOWRAP ALIGN="center"><FONT SIZE=-1>
-	    [% IF u.bounce_class == '2' %]
-	    	[%|l%]success[%END%]
-	    [% ELSIF u.bounce_class == '4' %]
-		[%|l%]temporary[%END%]
-	    [% ELSIF u.bounce_class == '5' %]
-		[%|l%]permanent[%END%]
-	    [% END %]
-	  </FONT></TD>
+	  </TD>
+          <TD ALIGN="center"
+	  [% IF u.bounce_level == '2' %]
+            BGCOLOR="#FF0000"
+	  [% ELSIF u.bounce_level == '1' %]
+	    BGCOLOR="#FF8C00"
+	  [% END %]
+	  >
+  	      [% u.bounce_score %]
+	  </TD>
         </TR>
 
         [% IF dark == '1' %]

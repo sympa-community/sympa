@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 
-<H1>[%|l(path)%]Access rights for the document %1[%END%]</H1>
+<H1>[%|l(visible_path)%]Access rights for the document %1[%END%]</H1>
     [%|l(owner)%]Owner : %1[%END%] <BR>
     [%|l(doc_date)%]Last update : %1[%END%] <BR>
     [%|l(doc_title)%]Description : %1[%END%] <BR><BR>
@@ -40,7 +40,7 @@
 
    [% IF set_owner %]
      <TD>
-     <B>[%|l(path)%]Set the owner of the directory %1[%END%]</B>
+     <B>[%|l(visible_path)%]Set the owner of the directory %1[%END%]</B>
 
      <FORM ACTION="[% path_cgi %]" METHOD="POST">
      <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">

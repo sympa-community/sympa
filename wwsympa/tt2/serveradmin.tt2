@@ -59,6 +59,12 @@
      [% PROCESS 'button_footer.tt2' %]
 
      [% PROCESS 'button_header.tt2' %]
+	<TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
+	<A HREF="[% path_cgi %]/get_inactive_lists">[%|l%]Inactive lists[%END%]</A>
+	</TD>
+     [% PROCESS 'button_footer.tt2' %]
+
+     [% PROCESS 'button_header.tt2' %]
        <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
       <A HREF="[% path_cgi %]/get_closed_lists">[%|l%]Closed lists[%END%]</A>
        </TD>

@@ -2,14 +2,14 @@
 
 [% IF status == 'done' %]
 <b>[%|l%]Operation successful[%END%]</b>[%|l%]. The message will be deleted as soon
-as possible. This task may be down in a few minutes.[%END%]
+as possible. This task may be performed in a few minutes.[%END%]
 [% ELSIF status == 'no_msgid' %]
 <b>[%|l%]Unable to find the message to delete[%END%]</b>[%|l%], probably this message
 was received without Message-Id. Please refer to listmaster with
-complete URL of the incriminated message[%END%]
+complete URL of the concerned message[%END%]
 [% ELSIF status == 'not_found' %]
 <b>[%|l%]Unable to find the message to delete[%END%]</b>
 [% ELSE %]
 <b>[%|l%]Error while deleting this message[%END%]</b>[%|l%], please refer to listmaster with
-complete URL of the incriminated message.[%END%]
+complete URL of the concerned message.[%END%]
 [% END %]

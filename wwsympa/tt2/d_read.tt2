@@ -5,9 +5,9 @@
 [% ELSE %]
 
   [% IF path %]  
-    <h2><B><IMG SRC="[% icons_url %]/folder.open.png"> [% path %] </B> </h2> 
+    <h2><B><IMG SRC="[% icons_url %]/folder.open.png"> [% visible_path %] </B> </h2> 
     <A HREF="[% path_cgi %]/d_editfile/[% list %]/[% escaped_path %]">[%|l%]edit[%END%]</A> | 
-    <A HREF="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]" onClick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]', '[%|l(path)%]Do you really want to delete %1 ?[%END%]'); return false;">[%|l%]delete[%END%]</A> |
+    <A HREF="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]" onClick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]', '[%|l(visible_path)%]Do you really want to delete %1 ?[%END%]'); return false;">[%|l%]delete[%END%]</A> |
     <A HREF="[% path_cgi %]/d_control/[% list %]/[% escaped_path %]">[%|l%]access[%END%]</A><BR>
 
     [%|l(doc_owner)%]Owner : %1[%END%] <BR>
@@ -86,7 +86,11 @@
 
   <TD ALIGN="center"><font color="[% bg_color %]">[%|l%]Edit[%END%]</font></TD> 
   <TD ALIGN="center"><font color="[% bg_color %]">[%|l%]Delete[%END%]</font></TD>
-  <TD ALIGN="center"><font color="[% bg_color %]">[%|l%]Access[%END%]</font></TD></TR>
+  <TD ALIGN="center"><font color="[% bg_color %]">[%|l%]Access[%END%]</font></TD>
+   [% IF is_editor %]
+     <TD ALIGN="center"><font color="[bg_color]">[%|l%]Moderation[%END%]</font></TD>
+   [%END%]
+  </TR>
       
   [% IF empty %]
     <TR BGCOLOR="[% light_color %]" VALIGN="top">
@@ -119,7 +123,7 @@
 
 	  <TD><center>
 	  <FONT size=-1>
-	  <A HREF="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% s.escaped_doc %]" onClick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% s.escaped_doc %]', '[%|l(path,s.doc)%]Do you really want to delete %1%2 ?[%END%]'); return false;">[%|l%]delete[%END%]</A>
+	  <A HREF="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% s.escaped_doc %]" onClick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% s.escaped_doc %]', '[%|l(visible_path,s.doc)%]Do you really want to delete %1%2 ?[%END%]'); return false;">[%|l%]delete[%END%]</A>
 	  </FONT>
 	  </center></TD>
 	[% ELSE %]
@@ -138,6 +142,9 @@
 	[% ELSE %]
 	  <TD>&nbsp; </TD>
 	[% END %]
+      [% IF is_editor %]
+       <TD>&nbsp; </TD>
+      [%END%]
       </TR>
       [% END %] 
     [% END %]
@@ -145,7 +152,11 @@
     [% IF sort_files %]
       [% FOREACH f = sort_files %]
     [% SET tmp = f.key f = f.value f.NAME = tmp IF f.key.defined %]
-        <TR BGCOLOR="[% light_color %]"> 
+	[% IF f.moderate %]
+         <TR BGCOLOR= "[% bg_color %]">
+	[% ELSE %]
+         <TR BGCOLOR="[% light_color %]"> 
+        [%END%]
         <TD>&nbsp;
         [% IF f.html %]
 	  <A HREF="[% path_cgi %]/d_read/[% list %]/[% escaped_path %][% f.escaped_doc %]" TARGET="html_window">
@@ -160,10 +171,14 @@
 	</TD>  
 	 
 	<TD> 
-	[% IF f.author_known %]
-	  <A HREF="mailto:[% f.author %]">[% f.author %]</A>  
+	[% IF f.moderate %]
+	  [%|l%]to moderate[%END%]
 	[% ELSE %]
-          [%|l%]Unknown[%END%]  
+	 [% IF f.author_known %]
+	   [% f.author_mailto %]
+ 	 [% ELSE %]
+           [%|l%]Unknown[%END%]  
+         [%END%]
         [% END %]
 	</TD>
 	 
@@ -186,7 +201,7 @@
 	<TD>
 	<center>
 	<FONT size=-1>
-	<A HREF="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% f.escaped_doc %]" onClick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% f.escaped_doc %]', '[%|l(path,s.doc,f.size)%]Do you really want to delete %1%2 (%3 Kb) ?[%END%]'); return false;">[%|l%]delete[%END%]</A>
+	<A HREF="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% f.escaped_doc %]" onClick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %][% f.escaped_doc %]', '[%|l(visible_path,s.doc,f.size)%]Do you really want to delete %1%2 (%3 Kb) ?[%END%]'); return false;">[%|l%]delete[%END%]</A>
 	</FONT>
 	</center>
 	</TD>
@@ -203,6 +218,19 @@
 	[% ELSE %]
 	<TD>&nbsp; </TD>
 	[% END %]
+
+        [% IF is_editor %]
+          [% IF f.moderate %]
+          <TD> <center>
+          <font size=-1>
+          <A HREF="[path_cgi]/modindex/[list]"> [%|l%]moderate[%END%]</A>
+          </font>
+          </center></TD>
+          [% ELSE %]
+          <TD>&nbsp; </TD>
+          [%END%]
+        [%END%]
+
 	</TR>
       [% END %] 
     [% END %]
@@ -217,7 +245,7 @@
     <form method="post" ACTION="[% path_cgi %]">
     <TD ALIGN="right" VALIGN="bottom">
     [% IF path %]
-      <B> [%|l(path)%]Create a new folder inside the folder %1[%END%]</B> <BR>
+      <B> [%|l(visible_path)%]Create a new folder inside the folder %1[%END%]</B> <BR>
     [% ELSE %]
       <B> [%|l%]Create a new folder inside the folder SHARED[%END%]</B> <BR>
     [% END %]
@@ -277,7 +305,7 @@
    <form method="post" ACTION="[% path_cgi %]" ENCTYPE="multipart/form-data">
    <TD ALIGN="right" VALIGN="bottom">
    [% IF path %]
-     <B> [%|l(path)%]Upload a file inside the folder %1[%END%]</B><BR>
+     <B> [%|l(visible_path)%]Upload a file inside the folder %1[%END%]</B><BR>
    [% ELSE %]
      <B> [%|l%]Upload a file inside the folder SHARED[%END%] </B><BR>
    [% END %]

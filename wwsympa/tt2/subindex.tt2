@@ -22,7 +22,7 @@
           <TR>
 	[% END %]
 	    <TD>
-           <INPUT TYPE=checkbox name="email" value="[% sub.NAME %],[% sub.gecos %]">
+           <INPUT TYPE=checkbox name="pending_email" value="[% sub.NAME %],[% sub.gecos %]">
 	    </TD>
 	  <TD COLSPAN=2 NOWRAP><FONT SIZE=-1>
 	        [% sub.NAME %]
@@ -49,7 +49,8 @@
          <TR COLSPAN="4"><TH>[%|l%]No subscription requests[%END%]</TH></TR>
         [% END %]
       </TABLE>
-
+<INPUT TYPE="hidden" NAME="previous_action" VALUE="subindex">
+<INPUT TYPE="hidden" NAME="previous_list" VALUE="[% list %]">
 <INPUT TYPE="submit" NAME="action_add" VALUE="[%|l%]Add selected addresses[%END%]">
 <INPUT TYPE="submit" NAME="action_ignoresub" VALUE="[%|l%]Reject selected addresses[%END%]">
 </FORM>

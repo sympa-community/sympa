@@ -4,6 +4,16 @@
 <!-- comment -->
 <HEAD>
 <META HTTP-EQUIV="content-type" CONTENT="text/html; charset=[%|l%]us-ascii[%END%]">
+
+[% IF use_htmlarea %]
+<script type="text/javascript">
+  _editor_url = "[% htmlarea_url %]/";
+  _editor_lang = "en";
+</script>
+
+<script type="text/javascript" src="[% htmlarea_url %]/htmlarea.js"></script>
+[% END %]
+
 <SCRIPT LANGUAGE="JavaScript">
 <!-- for other browsers
 
@@ -22,11 +32,12 @@
   }	
 
   // To confirm a form submition
-  function request_confirm(my_form, my_message, my_action) {
-    if (window.confirm(my_message)) {
-      my_form.action.value = my_action;
-      my_form.submit();
-    }
+  function request_confirm(my_message) {
+    if (confirm(my_message)) {
+      return true;
+    }else {
+      return false;
+    } 
 }
 
   // To confirm on a link (A HREF)
@@ -75,7 +86,7 @@
   function check_cookie() {
  
      if (GetCookie('sympauser') == null) {
-        alert("Sympa could not set a cookie for login.\n Your should setup your navigator to accept cookies");
+        alert("[%|l%]Sympa could not set a cookie for login.\n Your should setup your navigator to accept cookies[%END%]");
      }
   }
 [% END %]
@@ -106,12 +117,15 @@ A {
     <BASE HREF="[% base %]">
   [% END %]
   <TITLE>
-    [% title %]
+    [% main_title %]
   </TITLE>
 </HEAD>
 
 <BODY bgcolor="[% bg_color %]" text="[% text_color %]" link="[% selected_color %]" vlink="[% selected_color %]" 
 onLoad="
+[% IF use_htmlarea %]
+HTMLArea.replaceAll();
+[% END %]
 [% IF cookie_set %]
 check_cookie(); 
 [% END %]
@@ -202,7 +216,7 @@ setTimeout('refresh_mom_and_die()',1000);
        [% PROCESS $admin_menu_template IF admin_menu_template %]
       </TR>
       <TR VALIGN="top">
-        <TD colspan="8" BGCOLOR="[% shaded_color %]" >
+        <TD colspan="9" BGCOLOR="[% shaded_color %]" >
          [% IF active %]
           [% PROCESS $action_template IF action_template %]
          [% END %]

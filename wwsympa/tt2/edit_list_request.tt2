@@ -56,6 +56,36 @@
   [% IF p.occurrence == 'multiple' %]
   <!-- Multiple params -->
 
+  [% IF p.type == 'enum' %]
+   <!-- Multiple Enum -->
+            [% IF p.may_edit == 'write' %]
+               <SELECT NAME="multiple_param.[% p.name %]" MULTIPLE>
+              [% FOREACH enum = p.value %]
+    [% SET tmp = enum.key enum = enum.value enum.NAME = tmp IF enum.key.defined %]
+                <OPTION VALUE="[% enum.NAME %]"
+                [% IF enum.selected == '1' %]
+                  SELECTED
+                [% END %]
+                [% IF enum.title %]
+                  >[% enum.title %]
+                [% ELSE %]
+                  >[% enum.NAME %]
+                [% END %]
+              [% END %]
+              </SELECT>
+            [% ELSIF p.may_edit == 'read' %]
+              [% FOREACH enum = p.value %]
+    [% SET tmp = enum.key enum = enum.value enum.NAME = tmp IF enum.key.defined %]
+                [% IF enum.selected == '1' %]
+                  [% IF enum.title %]
+                    [% enum.title %]
+                  [% ELSE %]
+                    [% enum.NAME %]
+                  [% END %]
+                [% END %]
+              [% END %]
+            [% END %]
+   [% ELSE %]
      [% FOREACH o = p.value %]
     [% SET tmp = o.key o = o.value o.NAME = tmp IF o.key.defined %]
      <!-- Foreach occurrence -->
@@ -110,32 +140,6 @@
           [% END %]
           <HR>
 
-	[% ELSIF p.type == 'enum' %]
-	<!-- Enum -->
-	  [% IF p.may_edit == 'write' %]
-	    <SELECT NAME="single_param.[% p.name %].[% o.INDEX %]">
-	     [% FOREACH enum = o.value %]
-    [% SET tmp = enum.key enum = enum.value enum.NAME = tmp IF enum.key.defined %]
-	       <OPTION VALUE="[% enum.NAME %]"
-	       [% IF enum.selected == '1' %]
-		 SELECTED
-	       [% END %]
-	       [% IF enum.title %]
-		 >[% enum.title %]
-	       [% ELSE %]
-	         >[% enum.NAME %]
-	       [% END %]
-	     [% END %]
-	     </SELECT>
-	  [% ELSIF p.may_edit == 'read' %]
-	    [% FOREACH enum = o.value %]
-    [% SET tmp = enum.key enum = enum.value enum.NAME = tmp IF enum.key.defined %]
-	      [% IF enum.selected == '1' %]
-	        [% enum.NAME %]
-	      [% END %]
-	    [% END %]
-	  [% END %]
-
 	[% ELSE %]
 	<!-- Scalar -->
 
@@ -149,6 +153,8 @@
         <BR>
      [% END %]
      <!-- END Foreach occurrence -->
+   [%END%]
+   <!-- ENDIF Enum -->
 
   [% ELSE %]
   <!-- Single params -->
