@@ -40,20 +40,35 @@ my $expiresleep = 50 ;
 # delay between each read of the digestqueue
 my $digestsleep = 5; 
 
-## Options :  debug | d		-> debug
-##            config | f	-> name of configuration file
-##            mail | m 		-> log invocations to sendmail.
-##            lang | l		-> language
-##            foreground	-> Foreground and log to stderr also.
-##            dump | d          -> Dump subscribers list (listname or 'ALL' required)
-##            keepcopy | k     -> Keep a copy of incoming messages
+my $version_string = "Sympa version is $Version
 
-#Getopt::Std::getopts('DdFf:ml:s:');
+Try $0 --help for further information about Sympa
+";
+
+my $usage_string = "Usage:
+   $0 [OPTIONS]
+
+Options:
+   -d, --debug         : sets Sympa in debug mode 
+   -f, --config=FILE   : uses an alternative configuration file
+   -l, --lang=LANG     : use a language catalog for Sympa
+   -m, --mail          : log calls to sendmail
+   -k, --keepcopy=dir  : keep a copy of incoming message
+   -s, --dump=list|ALL : dumps subscribers 
+
+   -h, --help          : print this help
+   -v, --version       : print version number
+
+Sympa is a mailinglists manager and comes with a complete (user and admin)
+web interface. Sympa  can be linked to an LDAP directory or an RDBMS to 
+create dynamic mailing lists. Sympa provides S/MIME and HTTPS based authentication and
+encryption.
+";
 
 ## Check --dump option
 my %options;
 &GetOptions(\%main::options, 'dump|s:s', 'debug|d', 'foreground', 'config|f=s', 
-	    'lang|l=s', 'mail|m', 'keepcopy|k=s');
+	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version');
 
 ## Trace options
 #foreach my $k (keys %main::options) {
@@ -130,6 +145,14 @@ if ($main::options{'dump'}) {
 
     &List::dump(@listnames);
 
+    exit 0;
+}elsif ($main::options{'help'}) {
+    print $usage_string;
+    
+    exit 0;
+}elsif ($main::options{'version'}) {
+    print $version_string;
+    
     exit 0;
 }
 
