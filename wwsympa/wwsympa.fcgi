@@ -38,17 +38,6 @@ use wwslib;
 use cookielib;
 
 my %options;
-&GetOptions(\%main::options, 'debug|d', 'robot_domain=s');
-my $robot = $main::options{'robot_domain'};
-
-## Trace options
-#foreach my $k (keys %main::options) {
-#    printf "%s = %s\n", $k, $main::options{$k};
-#}
-
-$main::options{'debug2'} = 1 if ($main::options{'debug'});
-
-
 
 ## Configuration
 my $wwsconf = {};
@@ -84,7 +73,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 my $loop = 0;
 my $list;
 my $param = {};
-
+my $robot ;
 
 # hash of all the description files already loaded
 # format :
@@ -330,6 +319,7 @@ while ($query = &new_loop()) {
 
     undef $param;
     undef $list;
+    undef $robot;
 
     &Language::SetLang($Language::default_lang);
 
@@ -351,6 +341,11 @@ while ($query = &new_loop()) {
 
     ## Get PATH_INFO parameters
     &get_parameters();
+
+    $robot = $wwsconf->{'robot_domain'}{$ENV{'HTTP_HOST'}};
+    # printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, title :  $wwsconf->{'robot_title'}{$robot}}\n";
+
+    $robot = $Conf{'host'} unless $robot;
 
     ## Sympa parameters in $param->{'conf'}
     $param->{'conf'} = \%Conf;
@@ -462,7 +457,8 @@ while ($query = &new_loop()) {
     if ($param->{'list'}) {
 	$param->{'title'} = "$param->{'list'}\@$param->{'host'}";
     }else {
-	$param->{'title'} = $wwsconf->{'title'};
+	$param->{'title'} = $wwsconf->{'robot_title'}{$robot};
+	$param->{'title'} |= $wwsconf->{'title'} unless $param->{'title'};
     }
 
     ## Set cookies unless client use https authentication
@@ -768,6 +764,9 @@ sub get_parameters {
     }else {
 	$param->{'base_url'} = sprintf 'http://%s', $ENV{'HTTP_HOST'};
     }
+
+    $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{$ENV{'HTTP_HOST'}};
+
 
     if ($ENV{'REQUEST_METHOD'} eq 'GET') {
 	my $path_info = $ENV{'PATH_INFO'};
