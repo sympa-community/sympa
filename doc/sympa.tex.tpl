@@ -1345,7 +1345,7 @@ be used as a synonim.
 \subsection {\cfkeyword {log\_socket\_type}} 
     \label {par-log-socket-type}
 
-	\default {inet}
+	\default {unix}
 
         \Sympa communicates with \unixcmd {syslogd}
         using either UDP or UNIX sockets.  Set \cfkeyword
