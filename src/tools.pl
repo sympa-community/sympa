@@ -1122,7 +1122,9 @@ sub epoch_conv {
 
     my $arg = $_[0]; # argument date to convert
     my $time = $_[1]; # the epoch current date
- 
+
+    &do_log('debug4','tools::epoch_conv(%s, %d)', $arg, $time);
+
     my $result;
     
      # decomposition of the argument date
@@ -1188,9 +1190,9 @@ sub duration_conv {
 
     return 0 unless $arg;
   
-    $arg =~ /(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?$(\d+sec)?/i ;
-    my @date = ("$1", "$2", "$3", "$4", "$5", "$6");
-    for (my $i = 0; $i < 6; $i++) {
+    $arg =~ /(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?$/i ;
+    my @date = ("$1", "$2", "$3", "$4", "$5", "$6", "$7");
+    for (my $i = 0; $i < 7; $i++) {
 	chop ($date[$i]);
 	if (($i == 5) || ($i == 6)) {chop ($date[$i]); chop ($date[$i]);}
 	$date[$i] = 0 unless ($date[$i]);
