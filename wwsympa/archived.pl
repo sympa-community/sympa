@@ -71,6 +71,15 @@ unless (Conf::load($sympa_conf_file)) {
     &fatal_err("Unable to load sympa configuration, file $sympa_conf_file has errors.");
 }
 
+## Create arc_path if required
+if ($wwsconf->{'arc_path'}) {
+    unless (-d $wwsconf->{'arc_path'}) {
+	printf STDERR "Creating missing %s directory\n", $wwsconf->{'arc_path'};
+	mkdir $wwsconf->{'arc_path'}, 0775;
+	chown '--USER--', '--GROUP--', $wwsconf->{'arc_path'};
+    }
+}
+
 ## Check databse connectivity
 $List::use_db = &List::probe_db();
 
@@ -105,6 +114,11 @@ $< = $> = (getpwnam('--USER--'))[2];
 
 ## Sets the UMASK
 umask(oct($Conf{'umask'}));
+
+## Check access to arc_path 
+unless ((-r $wwsconf->{'arc_path'}) && (-w $wwsconf->{'arc_path'})) {
+    do_log('err', 'Unsufficient access to %s directory', $wwsconf->{'arc_path'});
+}
 
 ## Change to list root
 unless (chdir($Conf{'home'})) {

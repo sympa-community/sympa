@@ -157,6 +157,8 @@ substsbin:
 		INSTALLDIR=$(SBINDIR); export INSTALLDIR; \
 		SBINDIR=$(SBINDIR); export SBINDIR; \
 		CGIDIR=$(CGIDIR); export CGIDIR; \
+		USER=$(USER); export USER; \
+		GROUP=$(GROUP); export GROUP; \
 		PIDDIR=$(PIDDIR); export PIDDIR;\
 		LIBDIR=$(LIBDIR); export LIBDIR; \
 		DESTDIR=$(DESTDIR); export DESDIR; \
