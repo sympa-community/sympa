@@ -31,7 +31,6 @@ use Log;
 use Conf;
 use List;
 
-
 # use Net::SSLeay qw(&get_https);
 # use Net::SSLeay;
 
@@ -320,86 +319,6 @@ sub ldap_authentication {
 	 next unless ($host);
      }
  }
-
-
-
-sub check_cas_login {
-    my $base_url = shift;  #may include :port extention
-    my $uri = shift;
-    my $service = shift; #   Application return URL
-    my $blocking_check = shift; #   Option to be used for non blocking redirect
-
-    do_log ('debug',"Auth::check_login($base_url,$uri,backurl=$service,blocking=$blocking_check)");
-
-    my $host;
-    $base_url =~ /^http(s)?:\/\/(.+)$/ && ($host = $2);
-
-    my ($hostname,$port) = split(/:/,$host);
-    $port ||= '443';
-
-    my $option = 'gateway=1' if ($blocking_check =~ /no_blocking/) ;
-
-
-    # Encode ampersands so as not to lose GET data
-    $service =~ s/&/%26/g;    
-
-    # Parse the query string to get the ticket, plus any GET variables
-    # to rebuild our service (needed for CAS).
-
-    if($ENV{'QUERY_STRING'} =~ /&/) {
-	# Since there's an unescaped ampersand, we know there are GET vars
-	($get,$ticket) = split(/&ticket=/,$ENV{'QUERY_STRING'},2);
-	$get = "?" . $get;
-    } else {
-	($foo,$ticket) = split(/^ticket=/,$ENV{'QUERY_STRING'},2);
-    }
-    
-    # If there wasn't a ticket, build the GET vars for the redirect
-    if($ticket eq "") {
-	$get = $ENV{'QUERY_STRING'};
-	if($get ne "") {
-	    $get .= "?";
-	}
-    }
-    
-    if($ticket eq "") {    #  if there's no ticket, redirect them to CAS
-	my $url = "https://" . $host . $uri . "?service=" . $service;
-
-	if ($option ne '') {
-	    $url .= "&$option";
-	}
-	do_log('debug',"xxxxxxxxxxxxx check_cas_login return $url"); 
-        return $url;
-    }
-    
-    # Validate through CAS
-    do_log ('debug', "CAS validation $host - $uri?service=$service&ticket=$ticket");
-    $service =~ s/\%26ticket\=.*$// ;
-    my $path = $uri . "?service=$service&ticket=$ticket";
-
-    do_log ('debug', "X509::get_https2($hostname, $port, $path)");
-
-
-    # scan output to find a line with "yes" and the netid on the next line.
-    $valid = 0;
-    
-    foreach my $line (&X509::get_https2($hostname, $port, $path,{'cafile' =>  $Conf{'cafile'},  'capath' => $Conf{'capath'}})) {
-	chomp $line;
-	if ($line =~ /^no$/) {
-	    return(-1);
-	}
-	if ($line =~ /^yes$/) {
-	    $valid = 1;
-	    next;
-	}
-	if ($valid) {
-	    $line =~ s/\x0D//;
-	    return ($line);
-	}
-    }
-    
-    return (-1);
-}
 
 
 # fetch user email using his cas net_id and the paragrapah number in auth.conf

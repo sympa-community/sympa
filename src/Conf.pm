@@ -26,6 +26,7 @@ package Conf;
 use Log;
 use Language;
 use wwslib;
+use CAS;
 
 require Exporter;
 use Carp;
@@ -596,6 +597,33 @@ sub _load_auth {
 	    if (defined($current_paragraph)) {
 		
 		if ($current_paragraph->{'auth_type'} eq 'cas') {
+		    unless (defined $current_paragraph->{'base_url'}) {
+			&do_log('err','Incorrect CAS paragraph in auth.conf');
+			next;
+		    }
+
+		    my %cas_param = (casUrl => $current_paragraph->{'base_url'});
+
+		    ## Optional parameters
+		    ## We should also cope with X509 CAs
+		    $cas_param->{'loginPath'} = $current_paragraph->{'login_path'} 
+		    if (defined $current_paragraph->{'login_path'});
+		    $cas_param->{'logoutPath'} = $current_paragraph->{'logout_path'} 
+		    if (defined $current_paragraph->{'logout_path'});
+		    $cas_param->{'serviceValidatePath'} = $current_paragraph->{'service_validate_path'} 
+		    if (defined $current_paragraph->{'service_validate_path'});
+		    $cas_param->{'proxyPath'} = $current_paragraph->{'proxy_path'} 
+		    if (defined $current_paragraph->{'proxy_path'});
+		    $cas_param->{'proxyValidatePath'} = $current_paragraph->{'proxy_validate_path'} 
+		    if (defined $current_paragraph->{'proxy_validate_path'});
+		    
+		    $current_paragraph->{'cas_server'} = new CAS(%cas_param);
+		    unless (defined $current_paragraph->{'cas_server'}) {
+			&do_log('err', 'Failed to create CAS object for %s : %s', 
+				$current_paragraph->{'base_url'}, &CAS::get_errors());
+			next;
+		    }
+
 		    $Conf{'cas_number'}  ++ ;
 		    $Conf{'cas_id'}{$current_paragraph->{'auth_service_name'}} =  $#paragraphs+1 ; 
 		}elsif($current_paragraph->{'auth_type'} eq 'generic_sso') {
@@ -617,10 +645,8 @@ sub _load_auth {
 	    next ;
 	}
     }
-    
-    close (LOG);
-    
     close(IN); 
+
     return @paragraphs;
     
 }

@@ -146,7 +146,7 @@ sub getServerLoginURL {
 
 ## Returns non-blocking login URL
 ## ie: if user is logged in, return the ticket, otherwise do not prompt for login
-sub getServerGatewayURL {
+sub getServerLoginGatewayURL {
     my $self = shift;
     my $service = shift;
     
