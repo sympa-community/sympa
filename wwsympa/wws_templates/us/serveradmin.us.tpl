@@ -25,6 +25,14 @@
 	</TD>
       </TR>
       <TR><TD><A HREF="[path_cgi]/get_pending_lists"><B>Pending lists</B></A></TD></TR>
+
+      <TR><TD NOWRAP>
+        <FORM ACTION="[path_cgi]" METHOD="POST">
+	  <INPUT NAME="email" SIZE="30" VALUE="[email]">
+	  <INPUT TYPE="submit" NAME="action_search_user" VALUE="Search User">
+	</FORM>     
+      </TD></TR>
+
       <TR><TD><A HREF="[path_cgi]/view_translations"><B>Customize templates</B></A></TD></TR>
       <TR>
         <TD>

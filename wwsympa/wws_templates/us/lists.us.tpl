@@ -2,6 +2,8 @@
 
 [IF action=search_list]
   [occurrence] occurrences found<BR><BR>
+[ELSIF action=search_user]
+  <B>[email]</B> is subscribed to the following mailing lists
 [ENDIF]
 
 <TABLE BORDER="0" WIDTH="100%">

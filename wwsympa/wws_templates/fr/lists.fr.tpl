@@ -2,6 +2,8 @@
 
 [IF action=search_list]
   [occurrence] occurrences sélectionnées<BR><BR>
+[ELSIF action=search_user]
+  <B>[email]</B> est abonné aux listes suivantes
 [ENDIF]
 
 <TABLE BORDER="0" WIDTH="100%">

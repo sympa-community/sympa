@@ -183,7 +183,9 @@ my %comm = ('home' => 'do_home',
 	 'change_email' => 'do_change_email',
 	 'load_cert' => 'do_load_cert',
 	 'compose_mail' => 'do_compose_mail',
-	 'send_mail' => 'do_send_mail'
+	 'send_mail' => 'do_send_mail',
+	    'search_user' => 'do_search_user'
+
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -242,7 +244,8 @@ my %action_args = ('default' => ['list'],
 		'd_change_access' =>  ['list','@path'],
 		'd_set_owner' =>  ['list','@path'],
 		'view_translations' => [],
-		'search' => ['list','filter']
+		'search' => ['list','filter'],
+		   'search_user' => ['email']
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -272,7 +275,7 @@ my %action_type = ('editfile' => 'admin',
 		'scenario_test' =>'admin',
 		'close_list_request' =>'admin',
 		'close_list' =>'admin',
-		'restore_list' => 'do_restore_list',
+		'restore_list' => 'admin',
 		'd_admin' => 'admin',
 		'remind' => 'admin');
 
@@ -7221,4 +7224,51 @@ sub do_send_mail {
 
     &message('performed');
     return 'info';
+}
+
+sub do_search_user {
+    &wwslog('debug', 'do_search_user');
+    
+    unless ($param->{'user'}{'email'}) {
+	&error_message('no_user');
+	&wwslog('info','do_search_user: no user');
+	return 'serveradmin';
+    }
+
+    unless ($param->{'is_listmaster'}) {
+	&error_message('may_not');
+	&wwslog('info','do_search_user: requires listmaster privilege');
+	return undef;
+    }
+
+    unless ($in{'email'}) {
+	&error_message('missing_arg', {'argument' => 'email'});
+	&wwslog('info','do_search_user: no email');
+	return undef;
+    }
+    
+    foreach my $role ('member','owner','editor') {
+	foreach my $l ( &List::get_which($in{'email'}, $role) ) {
+	    my $list = new List ($l);
+	    
+	    $param->{'which'}{$l}{'subject'} = $list->{'admin'}{'subject'};
+	    $param->{'which'}{$l}{'host'} = $list->{'admin'}{'host'};
+	    if ($role eq 'member') {
+		$param->{'which'}{$l}{'info'} = 1;
+	    }else {
+		$param->{'which'}{$l}{'admin'} = 1;
+	    }
+	}
+    }
+    
+    $param->{'email'} = $in{'email'};
+
+    unless (defined $param->{'which'}) {
+	&error_message('no_entry');
+	&wwslog('info','do_search_user: no entry for %s', $in{'email'});
+	return 'serveradmin';
+    }
+
+    return 1;
+
 }
