@@ -3485,6 +3485,10 @@ sub do_savefile {
 
     ## Not empty
     if ($in{'content'} && ($in{'content'} !~ /^\s*$/)) {			
+
+	## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
+	$in{'content'} =~ s/\015//g;
+
 	## Save new file
 	unless (open FILE, ">$param->{'filepath'}") {
 	    &error_message('failed');
@@ -4347,6 +4351,9 @@ sub do_create_list {
     &parse_tpl($parameters, $template_file, CONFIG);
     close CONFIG;
     
+    ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
+    $in{'info'} =~ s/\015//g;
+
     open INFO, ">$list_dir/info" ;
     print INFO $in{'info'};
     close INFO;
@@ -8237,6 +8244,10 @@ sub do_send_mail {
 	}
 	$to = $list->{'name'}.'@'.$list->{'admin'}{'host'};
     }
+
+    ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
+    $in{'body'} =~ s/\015//g;
+
     my @body = split /\0/, $in{'body'};
 
     &mail::mailback(\@body, 
