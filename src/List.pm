@@ -932,13 +932,13 @@ sub save {
     my $user_file_name;
 
     if ($self->{'admin'}{'user_data_source'} eq 'file') {
-	$user_file_name = "$list->{'dir'}/subscribers";
+	$user_file_name = "$self->{'dir'}/subscribers";
 
         unless ($self->_save_users_file($user_file_name)) {
 	    &do_log('info', 'unable to save user file %s', $user_file_name);
 	    return undef;
 	}
-        $self->{'mtime'} = [ (stat("$list->{'dir'}/config"))[9], (stat("$list->{'dir'}/subscribers"))[9], (stat("$list->{'dir'}/stats"))[9] ];
+        $self->{'mtime'} = [ (stat("$self->{'dir'}/config"))[9], (stat("$self->{'dir'}/subscribers"))[9], (stat("$self->{'dir'}/stats"))[9] ];
     }
     
     return 1;
@@ -951,8 +951,8 @@ sub save_config {
 
     my $name = $self->{'name'};    
     my $old_serial = $self->{'admin'}{'serial'};
-    my $config_file_name = "$list->{'dir'}/config";
-    my $old_config_file_name = "$list->{'dir'}/config.$old_serial";
+    my $config_file_name = "$self->{'dir'}/config";
+    my $old_config_file_name = "$self->{'dir'}/config.$old_serial";
 
     return undef 
 	unless ($list_of_lists{$name});
@@ -980,22 +980,27 @@ sub load {
     my ($self, $name) = @_;
     do_log('debug2', 'List::load(%s)', $name);
     
-    my $users,$robot;
-    foreach my $r (&get_robot,'.') {
-	if ((-d "$robot/$name") && (-d "$robot/$name")) {
+    my $users;
+    my $robot;
+    foreach my $r (&get_robots) {
+	if ((-d "$Conf{'home'}/$r/$name") && (-f "$Conf{'home'}/$r/$name/config")) {
 	    $robot=$r;
 	    last;
 	}
     }
-    $self->{'domain'} = $robot;
-    $self->{'domain'} = $Conf{'host'} if $robot eq '.' ;
-    $self->{'name'}  = $name ;
-    $self->{'dir'} = "$robot/$name";
-    
-    unless ($robot) {
+    if ($robot) {
+	$self->{'domain'} = $robot ;
+	$self->{'dir'} = "$robot/$name";
+    }elsif((!($robot)) && (-d "$Conf{'home'}/$name") && (-f "$Conf{'home'}/$name/config")) {
+	$self->{'domain'} = $Conf{'host'};
+	$self->{'dir'} = "$name";
+    }else{
 	&do_log('info', 'No such list %s', $name);
 	return undef ;
     }    
+
+    $self->{'name'}  = $name ;
+
     
     my $m1 = (stat("$self->{'dir'}/config"))[9];
     my $m2; $m2 = (stat("$self->{'dir'}/subscribers"))[9] if (-f "$self->{'dir'}/subscribers");
@@ -4724,22 +4729,18 @@ sub store_digest {
     utime $oldtime,$oldtime,$filename   unless($newfile);
 }
 
-## List of lists hosted by Sympa
+## List of lists hosted a robot
 sub get_lists {
     my $robot = shift;
-
-    # by default return all lists
-    $robot = '*' unless $robot ; 
 
     my(@lists, $l);
     do_log('debug2', 'List::get_lists(%s)',$robot);
 
-
     my $robot_dir =  $Conf{'home'}.'/'.$robot ;
-    $robot_dir = $Conf{'home'} if ($robot eq '*');
-    
-    unless (-d $robot_dir ) {
-	do_log('err',"unknown robot $robot, no such directory $robot_dir");
+    $robot_dir = $Conf{'home'}  unless ((-d $robot_dir) || ($robot ne $Conf{'host'}));
+
+    unless (-d $robot_dir) {
+	do_log('err',"unknown robot $robot, Unable to open $robot_dir");
 	return undef ;
     }
     
@@ -4748,15 +4749,15 @@ sub get_lists {
 	return undef;
     }
     foreach $l (sort readdir(DIR)) {
-	next unless (($l !~ /^\./o) and (-d $robot_dir/$l) and (-f "$robot_dir/$l/config"));
+	next unless (($l !~ /^\./o) and (-d "$robot_dir/$l") and (-f "$robot_dir/$l/config"));
 	# push @lists, $l if (&list_by_robot ($l,$robot));*
-	push @lists ;
+	push @lists, $l;
 
     }
     return @lists;
 }
 
-## List of lists hosted by Sympa
+## List of robots hosted by Sympa
 sub get_robots {
 
     my(@robots, $r);
@@ -4772,11 +4773,12 @@ sub get_robots {
 	return undef;
     }
     foreach $r (sort readdir(DIR)) {
-	next unless (($r !~ /^\./o) and (-d $Conf{'home'}/$r) and (!(-f "$robot_dir/$r/config )));
-	push @robots ;
-
+	next unless (($r !~ /^\./o) && (-d "$Conf{'home'}/$r") && (!(-f "$Conf{'home'}/$r/config")));
+	next unless (-d "--DIR--/etc/$r");
+	next unless (-r "--DIR--/etc/$r/robot.conf");
+	push @robots, $r;
     }
-    return @robots;
+    return @robots ;
 }
 
 # return true if the list is managed by the robot
