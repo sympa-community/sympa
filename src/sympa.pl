@@ -36,6 +36,9 @@ my $expiresleep = 50 ;
 # delay between each read of the digestqueue
 my $digestsleep = 5; 
 
+## Init random engine
+srand (time());
+
 my $version_string = "Sympa version is $Version
 
 Try $0 --help for further information about Sympa

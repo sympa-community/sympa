@@ -1290,7 +1290,6 @@ sub send_to_editor {
    my $modqueue= $Conf{'queuemod'};
    return unless ($name && $admin);
   
-   srand (time());
    my @now=localtime(time);
    my $messageid=$now[6].$now[5].$now[4].$now[3].$now[2].$now[1]."."
                  .int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6))."\@".$host;
@@ -1406,7 +1405,6 @@ sub send_auth {
    my $authqueue = $Conf{'queueauth'};
    return undef unless ($name && $admin);
   
-   srand (time());
    my @now = localtime(time);
    my $messageid = $now[6].$now[5].$now[4].$now[3].$now[2].$now[1]."."
                    .int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6))

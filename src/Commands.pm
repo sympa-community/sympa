@@ -2188,7 +2188,6 @@ sub modindex {
     my $n;
     my ($myhdr,$hdr, $hdr2, $boundid,$msg);
     my %tabindex;
-    srand (time());
     my @now = localtime(time);
     my $messageid = $now[6].$now[5].$now[4].$now[3].$now[2].$now[1]."."
 	.int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6))."\@".$list->{'admin'}{'host'};
