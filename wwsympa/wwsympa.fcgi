@@ -415,7 +415,7 @@ my %in_regexp = (
 		 'key_word' => '[^<>\\\*\$]+',
 
 		 ## File names
-		 'file' => '[\w\-\.]+', 
+		 'file' => '[^<>\*\$]+',
 		 'arc_file' => '[\w\-\.]+', 
 		 'path' => '[^<>\\\*\$]+',
 		 'uploaded_file' => '[^<>\*\$]+', # Could be precised (use of "'")
@@ -11915,7 +11915,7 @@ sub d_test_existing_and_rights {
  }
  ## Function do_attach
  sub do_attach {
-     &wwslog('info', 'do_attach(%s)', $in{'path'});
+     &wwslog('info', 'do_attach(%s,%s)', $in{'dir'},$in{'file'});
 
 
      ### action relative to a list ?
@@ -11930,35 +11930,23 @@ sub d_test_existing_and_rights {
      # current list / current shared directory
      my $list_name = $list->{'name'};
 
-     # relative path / directory shared of the document 
-     my $path = &tools::escape_chars($in{'dir'}).'/'.$in{'file'};
-     my $path_orig = $path;
-
      # path of the urlized directory
      my $urlizeddir =  $list->{'dir'}.'/urlized';
 
      # document to read
-     my $doc;
-     if ($path) {
-	 # the path must have no slash a its end
-	 $path =~ /^(.*[^\/])?(\/*)$/;
-	 $path = $1;
-	 $doc = $urlizeddir.'/'.$path;
-     } else {
-	 $doc = $urlizeddir;
-     }
+     my $doc = $urlizeddir.'/'.$in{'dir'}.'/'.$in{'file'};
 
      ### Document exist ? 
      unless (-e "$doc") {
-	 &wwslog('info',"do_attach : unable to read $urlizeddir/$path : no such file or directory");
-	 &error_message('no_such_document', {'path' => $path});
+	 &wwslog('info',"do_attach : unable to read $doc : no such file or directory");
+	 &error_message('no_such_document', {'path' => .$in{'dir'}.'/'.$in{'file'}});
 	 return undef;
      }
 
      ### Document has non-size zero?
      unless (-s "$doc") {
-	 &wwslog('info',"do_attach : unable to read $urlizeddir/$path : empty document");
-	 &error_message('empty_document', {'path' => $path});
+	 &wwslog('info',"do_attach : unable to read $doc : empty document");
+	 &error_message('empty_document', {'path' => $in{'dir'}.'/'.$in{'file'}});
 	 return undef;
      }
 
@@ -11978,10 +11966,13 @@ sub d_test_existing_and_rights {
      $param->{'file'} = $doc;
 
      ## File type
-     $path =~ /^([^\/]*\/)*([^\/]+)\.([^\/]+)$/; 
+     if ($in{'file'} =~ /\.(\w+)$/) {
 
-     $param->{'file_extension'} = $3;
-     $param->{'bypass'} = 'asis';
+	 $param->{'file_extension'} = $1;
+	 $param->{'bypass'} = 'asis';
+     }
+
+     return 1;
  }
 
  sub do_subindex {

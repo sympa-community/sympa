@@ -10158,7 +10158,7 @@ sub _urlize_part {
     $message->purge ;	
 
     (my $file_name = $filename) =~ s/\./\_/g;
-    my $file_url = "$wwsympa_url/attach/$listname$dir/$filename";
+    my $file_url = "$wwsympa_url/attach/$listname".&tools::escape_chars("$dir/$filename",'/'); # do NOT escape '/' chars
 
     my $parser = new MIME::Parser;
     $parser->output_to_core(1);
