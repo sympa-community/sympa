@@ -140,6 +140,9 @@ Nezvolil jste si heslo, nechte si jej poslat
 [ELSIF error->msg=empty_archives]
 Archív konference je prázdný.
 
+[ELSIF error->msg=no_msg]
+®ádná zpráva nenalezena.
+
 [ELSE]
 [error->msg]
 [ENDIF]

@@ -2,7 +2,7 @@
 
   <FORM ACTION="[path_cgi]" METHOD=POST>
 
-  Jde èlenem od <FONT COLOR="#330099">[subscriber->date]</FONT>  <BR><BR>
+  Je èlenem od <FONT COLOR="#330099">[subscriber->date]</FONT>  <BR><BR>
      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
      Zpùsob pøíjímání : 
      <SELECT NAME="reception">

@@ -52,7 +52,7 @@
 	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0ALT="dal¹í strana"></A>
         [ENDIF]
     </TD></TR>
-    <TR><TD><INPUT TYPE="submit" NAME="action_resetbounce" VALUE="Reset errors for selected users">
+    <TR><TD><INPUT TYPE="submit" NAME="action_resetbounce" VALUE="Vynulovat chyby pro vybrané u¾ivatele">
     </TD></TR>
     </TABLE>
 
@@ -111,8 +111,8 @@
     <TR><TD ALIGN="left" NOWRAP>
       [IF is_owner]
         <BR>
-        <INPUT TYPE="submit" NAME="action_del" VALUE="Smazat vybrané èleny">
-        <INPUT TYPE="checkbox" NAME="quiet"> quiet
+        <INPUT TYPE="submit" NAME="action_del" VALUE="Smazat vybrané u¾ivatele">
+        <INPUT TYPE="checkbox" NAME="quiet"> skrytì
 	<INPUT TYPE="submit" NAME="action_resetbounce" VALUE="Vynulovat chyby pro vybrané u¾ivatele">
       [ENDIF]
     </TD><TD ALIGN="right" NOWRAP>

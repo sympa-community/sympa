@@ -1,4 +1,4 @@
-<!-- RCS Identication ; $Revision$ ; $Date$ -->
+From: [conf->sympa]
 Reply-to: [conf->request]
 To: [newuser->email]
 [IF action=subrequest]
