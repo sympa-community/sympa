@@ -1870,6 +1870,7 @@ sub distribute_msg {
     ## Add useful headers
     $hdr->add('X-Loop', "$name\@$host");
     $hdr->add('X-Sequence', $sequence);
+    $hdr->add('Errors-to', "$name-owner\@$host");
     $hdr->add('Precedence', 'list');
     $hdr->add('X-no-archive', 'yes');
     foreach my $i (@{$self->{'admin'}{'custom_header'}}) {
