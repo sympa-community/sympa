@@ -2029,7 +2029,6 @@ sub send_msg {
 	my $tag_regexp = $admin->{'custom_subject'};
 	$tag_regexp =~ s/[\[\]\*\{\}\?]//g;  ## cleanup, just in case dangerous chars were left
 	$tag_regexp =~ s/\[\S+\]/\.\+/g;
-	$subject_field =~ s/\[$tag_regexp\]//;
 
 	## Add subject tag
 	$message->{'msg'}->head->delete('Subject');
@@ -2039,8 +2038,13 @@ sub send_msg {
 			       }},
 		   [$admin->{'custom_subject'}], \@parsed_tag);
 
-
-	$message->{'msg'}->head->add('Subject', '['.$parsed_tag[0].']'." ".$subject_field);
+	## If subject is tagged, replace it with new tag
+	if ($subject_field =~ /\[$tag_regexp\]/) {
+	    $subject_field =~ s/\[$tag_regexp\]/\[$parsed_tag[0]\]/;
+	}else {
+	    $subject_field = '['.$parsed_tag[0].']'.$subject_field
+	}
+	$message->{'msg'}->head->add('Subject', $subject_field);
     }
  
     ## Who is the enveloppe sender ?
