@@ -84,7 +84,9 @@
 
     \newcommand {\example} [1] {Example: \texttt {#1}}
 
-    \newcommand {\unixcmd} [1] {\ttindex {#1} {#1} {UNIX command}}
+    \newcommand {\unixcmd} [1] {\texttt {#1} \ttindex {#1} {#1} {UNIX command}}
+
+    \newcommand {\option} [1] {\texttt {#1} \ttindex {#1} {#1} {option}}
 
     \newcommand {\mailcmd} [1] {\ttindex {#1} {#1} {mail command}}
 
@@ -952,50 +954,50 @@ command-line arguments :
 
 \begin {itemize}
 
-\item \unixcmd {--prefix=PREFIX}, the \Sympa homedirectory (default /home/sympa/)
+\item \option {- -prefix=PREFIX}, the \Sympa homedirectory (default /home/sympa/)
 
-\item \unixcmd {--bindir=DIR}, user executables in DIR (default /home/sympa/bin/)\\
+\item \option {--with-bindir=DIR}, user executables in DIR (default /home/sympa/bin/)\\
 \file {queue} and \file {bouncequeue} programs will be installed in this directory.
 If sendmail is configured to use smrsh (check the mailer prog definition in your sendmail.cf),
 this should point to \dir {/etc/smrsh}.  This is probably the case if you are using Linux RedHat.
 
-\item \unixcmd {--sbindir=DIR}, system admin executables in DIR (default /home/sympa/bin/)
+\item \option {--with-sbindir=DIR}, system admin executables in DIR (default /home/sympa/bin/)
 
-\item \unixcmd {--libexecdir=DIR}, program executables in DIR (default /home/sympa/bin/)
+\item \option {--with-libexecdir=DIR}, program executables in DIR (default /home/sympa/bin/)
 
-\item \unixcmd {--datadir=DIR}, default configuration data in DIR (default /home/sympa/bin/etc/)
+\item \option {--with-datadir=DIR}, default configuration data in DIR (default /home/sympa/bin/etc/)
 
-\item \unixcmd {--sysconfdir=DIR}, Sympa main configuration files in DIR (default /etc/)\\
+\item \option {--with-confdir=DIR}, Sympa main configuration files in DIR (default /etc/)\\
 \file {sympa.conf} and \file {wwsympa.conf} will be installed there.
 
-\item \unixcmd {--localstatedir=DIR}, modifiable data in DIR (default /home/sympa/expl/)
+\item \option {--with-exlpdir=DIR}, modifiable data in DIR (default /home/sympa/expl/)
 
-\item \unixcmd {--libdir=DIR},  code libraries in DIR (default /home/sympa/bin/)
+\item \option {--with-libdir=DIR},  code libraries in DIR (default /home/sympa/bin/)
 
-\item \unixcmd {--mandir=DIR}, man documentation in DIR (default /usr/local/man/)
+\item \option {--with-mandir=DIR}, man documentation in DIR (default /usr/local/man/)
 
-\item \unixcmd {--with-initdir=DIR}, install System V init script in DIR  (default /etc/rc.d/init.d)
+\item \option {--with-initdir=DIR}, install System V init script in DIR  (default /etc/rc.d/init.d)
 
-\item \unixcmd {--with-piddir=DIR}, create .pid files in DIR  (default /home/sympa/)
+\item \option {--with-piddir=DIR}, create .pid files in DIR  (default /home/sympa/)
 
-\item \unixcmd {--with-perl=FULLPATH}, set full path to Perl interpreter (default /usr/bin/perl)
+\item \option {--with-perl=FULLPATH}, set full path to Perl interpreter (default /usr/bin/perl)
 
-\item \unixcmd {--with-openssl=FULLPATH}, set path to OpenSSL (default /usr/local/ssl/bin/openssl)
+\item \option {--with-openssl=FULLPATH}, set path to OpenSSL (default /usr/local/ssl/bin/openssl)
 
-\item \unixcmd {--with-gencat=FULLPATH}, set path to gencat (default /usr/bin/gencat)
+\item \option {--with-gencat=FULLPATH}, set path to gencat (default /usr/bin/gencat)
 
-\item \unixcmd {--with-user=LOGIN}, set sympa user name (default sympa)\\
+\item \option {--with-user=LOGIN}, set sympa user name (default sympa)\\
 \Sympa daemons are running under this UID.
 
-\item \unixcmd {--with-group=LOGIN}, set sympa group name (default sympa)\\
+\item \option {--with-group=LOGIN}, set sympa group name (default sympa)\\
 \Sympa daemons are running under this UID.
 
-\item \unixcmd {--with-sendmail\_aliases=ALIASFILE}, set sendmail aliases file (default /etc/mail/sympa\_aliases)\\
+\item \option {--with-sendmail\_aliases=ALIASFILE}, set sendmail aliases file (default /etc/mail/sympa\_aliases)\\
 This is used by the alias\_manager script.
 
-\item \unixcmd {--with-newaliases=FULLPATH}, set path to sendmail newaliases command (default /usr/bin/newaliases)
+\item \option {--with-newaliases=FULLPATH}, set path to sendmail newaliases command (default /usr/bin/newaliases)
 
-\item \unixcmd {--with-newaliases\_arg=ARGS}, set arguments to newaliases command (default NONE)
+\item \option {--with-newaliases\_arg=ARGS}, set arguments to newaliases command (default NONE)
 
 \end {itemize}
 
@@ -1157,24 +1159,24 @@ To do this, add the following sequence or its equivalent in your
 
 \begin {itemize}
 
-\item --debug | -d 
+\item \option {--debug} | \option {-d} 
   
   Sets \Sympa in debug mode and keeps it attached to the terminal. 
   Debugging information is output to STDERR, along with standard log
   information. Each function call is traced. Useful while reporting
   a bug.
   
-\item --config | -f \textit {config\_file}
+\item \option {--config \textit {config\_file}} | \option {-f \textit {config\_file}}
   
   Forces \Sympa to use an alternative configuration file. Default behavior is
   to use the configuration file as defined in the Makefile (\$CONFIG).
   
-\item --mail | -m 
+\item \option {--mail} | \option {-m} 
   
   \Sympa will log calls to sendmail, including recipients. Useful for
   keeping track of each mail sent (log files may grow faster though).
   
-\item --lang | -l \textit {catalog}
+\item \option {--lang \textit {catalog}} | \option {-l \textit {catalog}}
   
   Set this option to use a language catalog for \Sympa. 
   The corresponding catalog file must be located in \tildedir {sympa/nls}
@@ -1182,7 +1184,7 @@ To do this, add the following sequence or its equivalent in your
   
   For example, with the \file {fr.cat} catalog:
 
-\item --keepcopy | -k \textit {recipient\_directory}
+\item \option {--keepcopy \textit {recipient\_directory}} | \option {-k \textit {recipient\_directory}}
 
   This option tells Sympa to keep a copy of every incoming message,
   instead of deleting them. \textit {recipient\_directory} is the directory
@@ -1195,25 +1197,25 @@ To do this, add the following sequence or its equivalent in your
 \end{verbatim}
   \end {quote}
 
-\item --dump \textit {listname | ALL}
+\item \option {--dump \textit {listname \texttt {|} ALL}}
   
   Dumps subscribers of a list or all lists. Subscribers are dumped
   in \file {subscribers.db.dump}.
  
-\item --import \textit {listname}
+\item \option {--import \textit {listname}}
   
 Import subscribers in the \textit {listname} list. Data are read from STDIN.
   
-\item --lowercase 
+\item \option {--lowercase}
   
 Lowercases e-mail addresses in database.
 
-\item --help | -h
+\item \option {--help} | \option {-h}
   
   Print usage of sympa.pl.
    
 
-\item --version | -v
+\item \option {--version} | \option {-v}
   
   Print current version of \Sympa.
  
@@ -2298,9 +2300,9 @@ The security of \WWSympa rests on the security of your database.
 \chapter {\Sympa and its database}
 \label {sec-rdbms}
 
-It is possible for \Sympa to store its user information in files but
-WWSympa need to use a
-relational database. Currently you can use one of the following
+Most basic feature of \Sympa will work without a RDBMS, but
+WWSympa and bounced require a relational database. 
+Currently you can use one of the following
 RDBMS : MySQL, PostgreSQL, Oracle, Sybase. Interfacing with other RDBMS
 requires only a few changes in the code, since the API used, 
 \htmladdnormallinkfoot {DBI} {http://www.symbolstone.org/technology/perl/DBI/} 
@@ -2398,6 +2400,20 @@ Example:
 \end{verbatim}  
 \end {quote}
 
+\section {Setting database privileges}
+
+We strongly recommend you restrict access to \textit {sympa} database. You will
+then set \cfkeyword {db\_user} and \cfkeyword {db\_passwd} in \file {sympa.conf}.
+
+With \index{MySQL} :
+\begin {quote}
+\begin{verbatim}
+set password for sympa@localhost=password('your_password');
+grant all privileges on sympa.* to sympa@localhost;
+flush privileges;
+\end{verbatim}
+\end {quote}
+
 \section {Importing subscribers data}
 
 \subsection {Importing data from a text file}
@@ -2437,7 +2453,7 @@ privileges) and change the data source from \textbf {file} to \textbf {database}
 ; subscribers data will be loaded into the database at the same time.
  
 If the subscribers file is too big, a timeout may occur with the FastCGI
-(You can set longer timeout with \texttt {-idle-timeout} option of
+(You can set longer timeout with \option {-idle-timeout} option of
 \texttt {FastCgiServer} Apache configuration directive). Then you should
 use \file {load\_subscribers.pl} script.
 
@@ -2915,12 +2931,12 @@ This is done using the optional parameters \unixcmd {openSSL} and
         The file \tildefile {sympa/bin/etc/ca\-bundle.crt} is distributed
         with Sympa and describes a well known set of CA's, such as the default Netscape
         navigator configuration. You can declare this set of certificates as trusted
-        by setting \cfkeyword {trusted\_ca\_options} \texttt {-CAfile \tildefile {sympa/bin/etc/ca\-bundle.crt}}.
-        You can also use the \texttt {-CApath} \unixcmd {openssl} option, or both 
+        by setting \cfkeyword {trusted\_ca\_options} \option {-CAfile \textit {/home/sympa/bin/etc/ca-bundle.crt}}.
+        You can also use the \option {-CApath} \unixcmd {openssl} option, or both 
         \texttt {-CApath} and \texttt {-CAfile}. Example :       
         \texttt {trusted\_ca\_options -CApath \tildefile {sympa/etc/ssl.crt} -CAfile \tildefile {sympa/bin/etc/ca-bundle.crt}}.
 
-	Both the \cfkeyword {-CAfile} file and the \cfkeyword {-CApath} directory
+	Both the \option {-CAfile} file and the \option {-CApath} directory
         should be shared with your Apache+mod\_ssl configuration. This is useful
 	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
   \item \cfkeyword {key\_password} : the password used to protect all list private keys. xxxxxxx	
@@ -3001,8 +3017,8 @@ It is a good idea to have a look at the OpenCA (http://www.openca.org)
 documentation and/or PKI providers' web documentation.
 You can use commercial certificates or home-made ones. Of course, the
 certificate must be approved for e-mail applications, and issued by one of
-the trusted CA's described in the \cfkeyword {-CAfile} file or the
-\cfkeyword {-CApath} OpenSSL option. 
+the trusted CA's described in the \option {-CAfile} file or the
+\option {-CApath} OpenSSL option. 
 
 
 The list private key must be installed in a file named
