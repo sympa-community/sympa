@@ -1073,7 +1073,9 @@ sub check_param_out {
 	## Owners
 	foreach my $o (@{$list->{'admin'}{'owner'}}) {
 	    next unless $o->{'email'};
+
 	    $param->{'owner'}{$o->{'email'}}{'gecos'} = $o->{'gecos'};
+	    ($param->{'owner'}{$o->{'email'}}{'local'},$param->{'owner'}{$o->{'email'}}{'domain'}) = split ('@',$o->{'email'});
 	    my $masked_email = $o->{'email'};
 	    $masked_email =~ s/\@/ AT /;
 	    $param->{'owner'}{$o->{'email'}}{'masked_email'} = $masked_email;
@@ -1083,6 +1085,7 @@ sub check_param_out {
 	foreach my $e (@{$list->{'admin'}{'editor'}}) {
 	    next unless $e->{'email'};
 	    $param->{'editor'}{$e->{'email'}}{'gecos'} = $e->{'gecos'};
+	    ($param->{'editor'}{$e->{'email'}}{'local'},$param->{'editor'}{$e->{'email'}}{'domain'}) = split ('@',$e->{'email'});
 	    my $masked_email = $e->{'email'};
 	    $masked_email =~ s/\@/ AT /;
 	    $param->{'editor'}{$e->{'email'}}{'masked_email'} = $masked_email;
