@@ -64,29 +64,6 @@ sub safefork {
    ## No return.
 }
 
-@avoid_hdr = (
-        'help',
-        'ind(ex)?',
-        'lists?',
-        '(please\s+)?(add|unsub?(scribe)?|remove|del|sub\s|sub?s?cribe|sign?o?f?f?)',
-        'rev(iew)?\s+\S+',
-        'stats\s+\S+',
-        'get\s+\S+\s+\S+',
-        'set\s+\S+\s+(no)?(mail|conceal|digest)',
-        'purge\s+\S+\s+\S+',
-        'exp(ire)?\s+\S+\s+\S+\s+\S+',
-        'exp(ire)?del\s+\S+',
-        'exp(ire)?ind(ex)?\s+\S+',
-        'ind(ex)?exp(ire)?\s+\S+',
-        'mod(eration)?ind(ex)?\s+\S+',
-        'ind(ex)?mod(eration)?\s+\S+',
-	'rev(iew)?\s+\S+',
-        'dis(tribute)?\s+\S+\s+\S+',
-        'rej(ect)?\s+\S+\s+\S+',
-        'confirm\s+\w+',
-	'rev(iew)?\s+\S+',
-);
-
 ## Check for commands in the body of the message. Returns true
 ## if there are some commands in it.
 sub checkcommand {
@@ -100,26 +77,22 @@ sub checkcommand {
    ## Check for commands in the subject.
    my $subject = $msg->head->get('Subject');
    if ($subject) {
-      foreach $avoid (@avoid_hdr) {
-         if ($subject =~ /^\s*(quiet)?($avoid)(\s+|$)/im) {
-            &rejectMessage($msg, $sender,$robot);
-            return 1;
-         }
-      }
+       if ($Conf{'misaddressed_commands_regexp'} && ($subject =~ /^$Conf{'misaddressed_commands_regexp'}$/im)) {
+	   &rejectMessage($msg, $sender,$robot);
+	   return 1;
+       }
    }
 
-   return 0 if ($#{$msg->body} >= 15);  ## More than 15 lines in the text.
+   return 0 if ($#{$msg->body} >= 5);  ## More than 5 lines in the text.
 
    foreach $i (@{$msg->body}) {
-      foreach $avoid (@avoid_hdr) {
-         if ($i =~ /^\s*(quiet)?($avoid)(\s+|$)/im) {  ## Suspicious line
-          #  &rejectMessage($msg, $sender);
-            return 1;
-         }
-      }
-      ## Control is only applied to first non-blank line
-      last unless $i =~ /^\s*$/;
-      
+       if ($Conf{'misaddressed_commands_regexp'} && ($i =~ /^$Conf{'misaddressed_commands_regexp'}$/im)) {
+	   &rejectMessage($msg, $sender, $robot);
+	   return 1;
+       }
+
+       ## Control is only applied to first non-blank line
+       last unless $i =~ /^\s*$/;
    }
    return 0;
 }

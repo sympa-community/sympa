@@ -39,7 +39,7 @@ my @valid_options = qw(
 		       db_port db_additional_subscriber_fields db_additional_user_fields
 		       default_list_priority edit_list email etc
 		       global_remind home host domain lang listmaster log_socket_type log_level 
-		       misaddressed_commands max_size maxsmtp msgcat nrcpt owner_priority pidfile spool queue 
+		       misaddressed_commands misaddressed_commands_regexp max_size maxsmtp msgcat nrcpt owner_priority pidfile spool queue 
 		       queueauth queuetask queuebounce queuedigest queueexpire queuemod queuesubscribe queueoutgoing tmpdir
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor
 		       remind_return_path request_priority rfc2369_header_fields sendmail sendmail_args sleep 
@@ -112,6 +112,7 @@ my %Default_Conf =
      'owner_priority' => 9,
      'lang' => 'us',
      'misaddressed_commands' => 'reject',
+     'misaddressed_commands_regexp' => '(subscribe|unsubscribe|signoff)',
      'max_size' => 5242880,
      'edit_list' => 'owner',
      'create_list' => 'public_listmaster',

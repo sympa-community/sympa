@@ -1410,6 +1410,12 @@ is still recognized but should not be used anymore.
 	When a robot command is sent to a list, by default Sympa reject this message. This feature
         can be turned off setting this parameter to \cfkeyword {ignore}.
 
+\subsection {\cfkeyword {misaddressed\_commands\_regexp}} 
+
+	\default {(subscribe|unsubscribe|signoff)}
+
+	This is the Perl regular expression applied on messages subject and body to detect 
+	misaddressed commands, see \cfkeyword {misaddressed\_commands} parameter above.
 
 \subsection {\cfkeyword {nrcpt}} 
 
