@@ -633,9 +633,10 @@ msgstr ""
 msgid "Are you sure you wish to close %1 list ?"
 msgstr "Biztosan meg akarod szüntetni a(z) %1 listát?"
 
-#. (list.name)
+#. (list.name,msg_from)
 #: mail_tt2/moderate.tt2:3
-msgid "Article to be approved for %1"
+#, fuzzy
+msgid "Article to be approved for list %1 from %2"
 msgstr "Engedélyezésre váró levél"
 
 # nlsref 16,31
@@ -648,7 +649,7 @@ msgid "Auth method"
 msgstr "Azonosítási mód"
 
 # nlsref 8,16
-#: src/List.pm:2574
+#: src/List.pm:2578
 msgid "Authentication requested"
 msgstr "Azonosítás szükséges"
 
@@ -1519,7 +1520,7 @@ msgid "Families"
 msgstr "Állomány"
 
 # nlsref 8,7
-#: src/List.pm:6173
+#: src/List.pm:6177
 msgid "File"
 msgstr "Állomány"
 
@@ -2618,6 +2619,12 @@ msgstr "Elvet és értesít"
 msgid "Number of forwarded messages:      %1"
 msgstr "Továbbküldött levelek száma:      %1"
 
+#. (mod_spool_size)
+#: mail_tt2/moderate.tt2:24
+#, fuzzy
+msgid "Number of messages awaiting moderation for this list : %1"
+msgstr "A %1 listán nincs moderálásra váró levél vagy dokumentum"
+
 #. (stats.msg_rcv)
 #: mail_tt2/stats_report.tt2:3
 msgid "Number of received messages :      %1"
@@ -3438,7 +3445,7 @@ msgid "Size (Kb)"
 msgstr "Méret (Kb)"
 
 # nlsref 6,260
-#: src/List.pm:8667
+#: src/List.pm:8671
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -3468,7 +3475,7 @@ msgstr ""
 "kívül ezt a levelet."
 
 # nlsref 6,260
-#: src/List.pm:8660
+#: src/List.pm:8664
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be removed from list '%s'.\n"
@@ -3498,7 +3505,7 @@ msgstr ""
 "kívül ezt a levelet."
 
 # nlsref 6,39
-#: src/List.pm:8672 src/List.pm:8677
+#: src/List.pm:8676 src/List.pm:8681
 msgid ""
 "Someone (hopefully you) requested a user of list %s to be\n"
 "added or removed.\n"
@@ -3685,7 +3692,7 @@ msgid "Summary"
 msgstr "Összegzés"
 
 # nlsref 8,31
-#: src/List.pm:3200
+#: src/List.pm:3204
 msgid "Summary of list %s"
 msgstr "Kivonat a(z) %s listáról"
 
@@ -3819,7 +3826,7 @@ msgstr ""
 msgid "Syntax errors with the following parameters : %1"
 msgstr "Hibásan megadott parancs: %1"
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:10 src/List.pm:3084
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:10 src/List.pm:3088
 msgid "Table of contents:"
 msgstr "Tartalomjegyzék:"
 
@@ -4626,7 +4633,7 @@ msgstr ""
 "következõ parancsot:"
 
 # nlsref 8,12
-#: src/List.pm:2585
+#: src/List.pm:2589
 msgid ""
 "To distribute the attached message in list %s :\n"
 "mailto:%s?subject=CONFIRM%%20%s\n"
@@ -5318,7 +5325,7 @@ msgstr ""
 "meg. Kérlek a megfelelõ e-mail címedet használd feliratkozáshoz.\n"
 
 # nlsref 6,79
-#: src/List.pm:8682 src/List.pm:8689
+#: src/List.pm:8686 src/List.pm:8693
 msgid ""
 "You requested a subscription reminder to be sent\n"
 "to each subscriber of list %s\n"

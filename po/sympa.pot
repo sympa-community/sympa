@@ -509,8 +509,8 @@ msgid "Are you sure you wish to close %1 list ?"
 msgstr ""
 
 #: mail_tt2/moderate.tt2:3
-#. (list.name)
-msgid "Article to be approved for %1"
+#. (list.name,msg_from)
+msgid "Article to be approved for list %1 from %2"
 msgstr ""
 
 #: src/List.pm:555
@@ -521,7 +521,7 @@ msgstr ""
 msgid "Auth method"
 msgstr ""
 
-#: src/List.pm:2574
+#: src/List.pm:2578
 msgid "Authentication requested"
 msgstr ""
 
@@ -1213,7 +1213,7 @@ msgstr ""
 msgid "Families"
 msgstr ""
 
-#: src/List.pm:6173
+#: src/List.pm:6177
 msgid "File"
 msgstr ""
 
@@ -2099,6 +2099,11 @@ msgstr ""
 msgid "Number of forwarded messages:      %1"
 msgstr ""
 
+#: mail_tt2/moderate.tt2:24
+#. (mod_spool_size)
+msgid "Number of messages awaiting moderation for this list : %1"
+msgstr ""
+
 #: mail_tt2/stats_report.tt2:3
 #. (stats.msg_rcv)
 msgid "Number of received messages :      %1"
@@ -2796,15 +2801,15 @@ msgstr ""
 msgid "Size (Kb)"
 msgstr ""
 
-#: src/List.pm:8667
+#: src/List.pm:8671
 msgid "Someone (hopefully you) asked for your e-mail address\nto be added to list '%s'.\nIf you want this action to be taken, please\n\n- reply to this mail\nOR\n- send a message to %s with subject\n %s\nOR\n- hit the following mailto %s\n\nIf you do not want this action to be taken, you can safely ignore\nthis message."
 msgstr ""
 
-#: src/List.pm:8660
+#: src/List.pm:8664
 msgid "Someone (hopefully you) asked for your e-mail address\nto be removed from list '%s'.\nIf you want this action to be taken, please \n\n- reply to this mail\nOR\n- send a message to '%s' with subject\n %s\nOR\n- hit the following mailto %s\n\nIf you do not want this action to be taken, you can safely ignore\nthis message"
 msgstr ""
 
-#: src/List.pm:8672 src/List.pm:8677
+#: src/List.pm:8676 src/List.pm:8681
 msgid "Someone (hopefully you) requested a user of list %s to be\nadded or removed.\n\nIf you want this action to be taken, please send an e-mail to\n%s containing \n\n   %s\n\nIf you do not want this action to be taken, simply ignore this message.\n"
 msgstr ""
 
@@ -2940,7 +2945,7 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-#: src/List.pm:3200
+#: src/List.pm:3204
 msgid "Summary of list %s"
 msgstr ""
 
@@ -3027,7 +3032,7 @@ msgstr ""
 msgid "Syntax errors with the following parameters : %1"
 msgstr ""
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:10 src/List.pm:3084
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:10 src/List.pm:3088
 msgid "Table of contents:"
 msgstr ""
 
@@ -3485,7 +3490,7 @@ msgstr ""
 msgid "To distribute the attached message in list %1:"
 msgstr ""
 
-#: src/List.pm:2585
+#: src/List.pm:2589
 msgid "To distribute the attached message in list %s :\nmailto:%s?subject=CONFIRM%%20%s\nOr send a message to %s with the following subject :\nCONFIRM %s\n"
 msgstr ""
 
@@ -4008,7 +4013,7 @@ msgid ""
 "email address. Please try subscribing using your canonical address.\n"
 msgstr ""
 
-#: src/List.pm:8682 src/List.pm:8689
+#: src/List.pm:8686 src/List.pm:8693
 msgid "You requested a subscription reminder to be sent\nto each subscriber of list %s\n\nIf you want this action to be taken, please send an e-mail to\n%s containing \n\n   %s\n\nIf you do not want this action to be taken, simply ignore this message.\n"
 msgstr ""
 
