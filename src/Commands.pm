@@ -199,12 +199,12 @@ sub lists {
     my $data = {};
     my $lists = {};
 
-    foreach my $l ( &List::get_lists() ) {
+    foreach my $l ( &List::get_lists($robot) ) {
 	my $list = new List ($l);
 
 	next unless ($list);
 	# skip list that are not in the current robot_domain
-        next unless ($list->{'admin'}{'host'} eq $robot);
+        # next unless ($list->{'admin'}{'host'} eq $robot);
 
 	my $action = &List::request_action('visibility','smtp',$robot,
                                             {'listname' => $l,
@@ -1213,11 +1213,11 @@ sub remind {
 
 	    $context{'subject'} = Msg(6, 83, "summary of your subscription");
 	    # this remind is a global remind.
-	    foreach my $listname (List::get_lists{}){
+	    foreach my $listname (List::get_lists($robot)){
 
 		my $list = new List ($listname);
 		next unless $list;
-		next unless ($robot eq $list->{'admin'}{'host'});
+		# next unless ($robot eq $list->{'admin'}{'host'});
 
 		next unless ($user = $list->get_first_user()) ;
 
