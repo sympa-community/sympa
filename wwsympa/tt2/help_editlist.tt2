@@ -142,7 +142,7 @@
           </LI>
         </UL>
       [% ELSIF p.NAME == 'review' %]
-        [%|l%]This parameter specifies who can use read addresses of subscribers. Since subscriber addresses can be abused by spammers, it is strongly recommended that you only authorize owners or subscribers to access the subscriber list. [%END%]
+        [%|l%]This parameter specifies who can access the list of members. Since subscriber addresses can be abused by spammers, it is strongly recommended that you only authorize owners or subscribers to access the subscriber list. [%END%]
       [% ELSIF p.NAME == 'send' %]
         [%|l%]This parameter specifies who can send messages to the list.[%END%]<BR><BR>
       [% ELSIF p.NAME == 'shared_doc' %]
