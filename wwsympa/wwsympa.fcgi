@@ -4817,7 +4817,7 @@ sub do_edit_list {
 	my ($p, $new_p);
 	## Check privileges first
 	next unless ($list->may_edit($pname,$param->{'user'}{'email'}) eq 'write');
-
+	next unless (defined $new_admin->{$pname});
 	next if $pinfo->{$pname}{'obsolete'};
 
 	my $to_index;
