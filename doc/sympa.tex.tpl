@@ -2,7 +2,7 @@
 % Copyright (C) 1999, 2000, 2001 Comité Réseau des Universités & Serge Aumont, Olivier Salaün
 %
 % Historique
-%   1999/04/12 : pda@prism.uvsq.fr : conversion to latex2e
+%   1999/04/12 : pda .AT. prism.uvsq.fr : conversion to latex2e
 %
 
 [STOPPARSE]
@@ -2796,12 +2796,13 @@ main archive.
 \begin{verbatim}
      web_archive
      access public|private|owner|listmaster|closed
+     quota 10000
 \end{verbatim}
 \end {quote}
 
      If web\_archive is defined for a list, every message distributed by this list is copied
      to \dir {[SPOOLDIR]/outgoing/}. (No need to create nonexistent subscribers to receive
-     copies of messages)
+     copies of messages). In this example disk quota for the archive is limited to 10 Mo.
 
 \item start \file {archived.pl}.
 \Sympa and Apache
@@ -6666,7 +6667,7 @@ parameter to control who can browse the web archive.
 \begin{verbatim}
 web_archive
 access private
-quota 1000
+quota 10000
 \end{verbatim}
 \end {quote}
 
