@@ -1436,6 +1436,19 @@ sub valid_email {
     $email =~ /^([\w\-\_\.\/\+\=]+|\".*\")\@[\w\-]+(\.[\w\-]+)+$/;
 }
 
+## Clean email address
+sub clean_email {
+    my $email = shift;
+
+    ## Lower-case
+    $email = lc($email);
+
+    ## remove leading and trailing spaces
+    $email =~ s/^\s*//;
+    $email =~ s/\s*$//;
+
+    return $email;
+}
 
 1;
 

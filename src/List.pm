@@ -2646,7 +2646,7 @@ sub delete_user_db {
     foreach my $who (@users) {
 	my $statement;
 	
-	$who = lc($who);
+	$who = &tools::clean_email($who);
 	
 	## Update field
 	$statement = sprintf "DELETE FROM user_table WHERE (email_user =%s)", $dbh->quote($who); 
@@ -2677,7 +2677,7 @@ sub delete_user {
 	}
 	    
 	foreach my $who (@u) {
-	    $who = lc($who);
+	    $who = &tools::clean_email($who);
 	    my $statement;
 	    
 	    $list_cache{'is_user'}{$name}{$who} = undef;    
@@ -2696,7 +2696,7 @@ sub delete_user {
 	my $users = $self->{'users'};
 
 	foreach my $who (@u) {
-	    $who = lc($who);
+	    $who = &tools::clean_email($who);
 	    
 	    delete $self->{'users'}{$who};
 	    $total-- unless (exists $users->{$who});
@@ -2760,7 +2760,7 @@ sub get_total {
 
 ## Returns a hash for a given user
 sub get_user_db {
-    my $who = lc(shift);
+    my $who = &tools::clean_email(shift);
     do_log('debug2', 'List::get_user_db(%s)', $who);
 
     my $statement;
@@ -2859,7 +2859,7 @@ sub get_all_user_db {
 ## Returns a subscriber of the list.
 sub get_subscriber {
     my  $self= shift;
-    my  $email = lc(shift);
+    my  $email = &tools::clean_email(shift);
     
     do_log('debug2', 'List::get_subscriber(%s)', $email);
 
@@ -3401,7 +3401,7 @@ sub get_total_bouncing {
 
 ## Is the person in user table (db only)
 sub is_user_db {
-   my $who = lc(pop);
+   my $who = &tools::clean_email(pop);
    do_log('debug3', 'List::is_user_db(%s)', $who);
 
    return undef unless ($who);
@@ -3444,7 +3444,7 @@ sub is_user_db {
 ## Is the indicated person a subscriber to the list ?
 sub is_user {
     my ($self, $who) = @_;
-    $who= lc($who);
+    $who = &tools::clean_email($who);
     do_log('debug3', 'List::is_user(%s)', $who);
     
     return undef unless ($self && $who);
@@ -3504,7 +3504,7 @@ sub is_user {
 sub update_user {
     my($self, $who, $values) = @_;
     do_log('debug2', 'List::update_user(%s)', $who);
-    $who = lc($who);    
+    $who = &tools::clean_email($who);    
 
     my ($field, $value);
     
@@ -3637,7 +3637,7 @@ sub update_user {
 sub update_user_db {
     my($who, $values) = @_;
     do_log('debug2', 'List::update_user_db(%s)', $who);
-    $who = lc($who);
+    $who = &tools::clean_email($who);
 
     unless ($List::use_db) {
 	&do_log('info', 'Sympa not setup to use DBI');
@@ -3711,7 +3711,7 @@ sub add_user_db {
     ## encrypt password   
     $values->{'password'} = &tools::crypt_password($values->{'password'}) if $values->{'password'};
     
-    return undef unless (my $who = lc($values->{'email'}));
+    return undef unless (my $who = &tools::clean_email($values->{'email'}));
     
     return undef if (is_user_db($who));
     
@@ -3771,7 +3771,7 @@ sub add_user {
 	}	   
 	
 	foreach my $new_user (@new_users) {
-	    my $who = lc($new_user->{'email'});
+	    my $who = &tools::clean_email($new_user->{'email'});
 
 	    next unless $who;
 
@@ -3811,7 +3811,7 @@ sub add_user {
 	my (%u, $i, $j);
 	
 	foreach my $new_user (@new_users) {
-	    my $who = lc($new_user->{'email'});
+	    my $who = &tools::clean_email($new_user->{'email'});
 	    
 	    next unless $who;
 	    
@@ -5038,7 +5038,7 @@ sub _include_users_remote_sympa_list {
 	do_log('err', 'Include remote list https://%s:%s/%s using cert %s, unable to open %s or %s', $host, $port, $path, $cert,$cert_file,$key_file);
 	return undef;
     }
-
+    
     my $getting_headers = 1;
 
     my %user ;
@@ -5237,7 +5237,7 @@ sub _include_users_file {
 	    &do_log('notice', 'Not an email address: %s', $_);
 	}
 
-	my $email = lc($1);
+	my $email = &tools::clean_email($1);
 	my $gecos = $4;
 
 	next unless $email;
@@ -5343,7 +5343,7 @@ sub _include_users_ldap {
 	## Multiple values
 	if (ref($entry) eq 'ARRAY') {
 	    foreach my $email (@{$entry}) {
-		push @emails, lc($email);
+		push @emails, &tools::clean_email($email);
 		last if ($ldap_select eq 'first');
 	    }
 	}else {
@@ -5359,7 +5359,7 @@ sub _include_users_ldap {
     foreach my $email (@emails) {
 	next if ($email =~ /^\s*$/);
 
-	$email = lc($email);
+	$email = &tools::clean_email($email);
 	my %u;
 	## Check if user has already been included
 	if ($users->{$email}) {
@@ -5510,7 +5510,7 @@ sub _include_users_ldap_2level {
 	    if (ref($entry) eq 'ARRAY') {
 		foreach my $email (@{$entry}) {
 		    next if (($ldap_select2 eq 'regex') && ($email !~ /$ldap_regex2/));
-		    push @emails, lc($email);
+		    push @emails, &tools::clean_email($email);
 		    last if ($ldap_select2 eq 'first');
 		}
 	    }else {
@@ -5528,7 +5528,7 @@ sub _include_users_ldap_2level {
     foreach my $email (@emails) {
 	next if ($email =~ /^\s*$/);
 
-	$email = lc($email);
+	$email = &tools::clean_email($email);
 	my %u;
 	## Check if user has already been included
 	if ($users->{$email}) {
@@ -5639,7 +5639,7 @@ sub _include_users_sql {
 	## Empty value
 	next if ($email =~ /^\s*$/);
 
-	$email = lc($email);
+	$email = &tools::clean_email($email);
 	my %u;
 	## Check if user has already been included
 	if ($users->{$email}) {
