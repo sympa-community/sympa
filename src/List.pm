@@ -2217,10 +2217,10 @@ sub send_file {
 	    my $escapercpt = $who ;
 	    $escapercpt =~ s/\@/\=\=a\=\=/;
 	    $data->{'return_path'} = "bounce+$escapercpt\=\=$name\@$self->{'admin'}{'host'}";
-	}else{
-	    $data->{'return_path'} = "$name-owner\@$self->{'admin'}{'host'}";
 	}
     }
+
+    $data->{'return_path'} ||= "$name-owner\@$self->{'admin'}{'host'}";
 
     ## Lang
     my $lang = $data->{'user'}{'lang'} || $self->{'lang'} || $Conf{'lang'};
