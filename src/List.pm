@@ -3839,8 +3839,8 @@ sub _load_users_file {
 #	$user{'stats'} = "$1 $2 $3" if (/^\s*stats\s+(\d+)\s+(\d+)\s+(\d+)\s*$/o);
 #	$user{'firstbounce'} = $1 if (/^\s*firstbounce\s+(\d+)\s*$/o);
 	$user{'date'} = $1 if (/^\s*date\s+(\d+)\s*$/o);
-	$user{'reception'} = $1 if (/^\s*reception\s+(digest|nomail)\s*$/o);
-	$user{'visibility'} = $1 if (/^\s*visibility\s+(conceal|oconceal)\s*$/o);
+	$user{'reception'} = $1 if (/^\s*reception\s+(digest|nomail|summary|notice)\s*$/o);
+	$user{'visibility'} = $1 if (/^\s*visibility\s+(conceal|noconceal)\s*$/o);
 
 	push @users, \%user;
     }
@@ -3869,6 +3869,9 @@ sub _include_users_list {
 	my %u = %{$default_user_options};
 	my $email =  $u{'email'} = $user->{'email'};
 	$u{'gecos'} = $user->{'gecos'};
+ 	$u{'date'} = $user->{'date'};
+ 	$u{'reception'} = $user->{'reception'};
+ 	$u{'visibility'} = $user->{'visibility'};
 	unless ($users->{$email}) {
 	    $total++;
 	    $users->{$email} = join("\n", %u);
