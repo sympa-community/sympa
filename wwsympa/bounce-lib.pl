@@ -209,9 +209,12 @@ sub anabounce {
 
 	    if ($champ{'x-failed-recipients'} =~ /^\s*(\S+)$/) {
 		$info{$1}{error} = "";
-	    }
+	    } elsif ($champ{'x-failed-recipients'} =~ /^\s*(\S+),/) {
+		for my $xfr (split (/\s*,\s*/, $champ{'x-failed-recipients'})) {
+		    $info{$xfr}{error} = "";
+		}
 
-	}elsif (/^\s*-+ The following addresses (had permanent fatal errors|had transient non-fatal errors|have delivery notifications) -+/m) {
+	    }elsif (/^\s*-+ The following addresses (had permanent fatal errors|had transient non-fatal errors|have delivery notifications) -+/m) {
 	    
 	    my $adr;
 	    
