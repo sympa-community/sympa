@@ -7442,7 +7442,7 @@ sub _apply_defaults {
     ## Default for user_data_source is 'file'
     ## if not using a RDBMS
     if ($List::use_db) {
-	$::pinfo{'user_data_source'}{'default'} = 'database';
+	$::pinfo{'user_data_source'}{'default'} = 'include2';
     }else {
 	$::pinfo{'user_data_source'}{'default'} = 'file';
     }
