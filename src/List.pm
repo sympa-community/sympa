@@ -4213,18 +4213,18 @@ sub verify {
 		my $field = $header->get($2);
 		$value =~ s/\[header\-\>([\w\-]+)\]/$field/;
 	    }else {
-		return -1;
+		return -1 * $negation;
 	    }
 	    
 	}elsif ($value =~ /\[msg_body\]/i) {
-	    return -1 unless (defined ($context->{'msg'}));
-	    return -1 unless (defined ($context->{'msg'}->effective_type() =~ /^text/));
-	    return -1 unless (defined $context->{'msg'}->bodyhandle);
+	    return -1 * $negation unless (defined ($context->{'msg'}));
+	    return -1 * $negation unless (defined ($context->{'msg'}->effective_type() =~ /^text/));
+	    return -1 * $negation unless (defined $context->{'msg'}->bodyhandle);
 
 	    $value = $context->{'msg'}->bodyhandle->as_string();
 
 	}elsif ($value =~ /\[msg_part\-\>body\]/i) {
-	    return -1 unless (defined ($context->{'msg'}));
+	    return -1 * $negation unless (defined ($context->{'msg'}));
 	    
 	    my @bodies;
 	    my @parts = $context->{'msg'}->parts();
@@ -4237,7 +4237,7 @@ sub verify {
 	    $value = \@bodies;
 
 	}elsif ($value =~ /\[msg_part\-\>type\]/i) {
-	    return -1 unless (defined ($context->{'msg'}));
+	    return -1 * $negation unless (defined ($context->{'msg'}));
 	    
 	    my @types;
 	    my @parts = $context->{'msg'}->parts();
@@ -4338,7 +4338,7 @@ sub verify {
 	$list2 = new List ($args[0]);
 	if (! $list2) {
 	    do_log('err',"unable to create list object \"$args[0]\"");
-	    return undef;
+	    return -1 * $negation ;
 	}
 
 	if ($condition_key eq 'is_subscriber') {
