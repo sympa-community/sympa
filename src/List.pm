@@ -2202,6 +2202,7 @@ sub add_parts {
 		    $msg->make_multipart unless $msg->is_multipart;
 		    my $header_part = build MIME::Entity Path        => $header,
 		    Type        => "text/plain",
+		    Filename    => "message-header.txt",
 		    Encoding    => "8bit";
 		    $msg->add_part($header_part, 0);
 		}
@@ -2220,6 +2221,7 @@ sub add_parts {
 		    $msg->make_multipart unless $msg->is_multipart;
 		    $msg->attach(Path        => $footer,
 				 Type        => "text/plain",
+				 Filename    => "message-footer.txt",
 				 Encoding    => "8bit"
 				 );
 		}
