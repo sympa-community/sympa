@@ -2291,32 +2291,27 @@ sub do_remindpasswd {
 	     next;
 	 }
 	 $nb_lists++;
-	 push (@date_lists,$param->{'which'}{$listname}{'date_epoch'}); 
      }
 
      if (defined $in{'count'}) {
 	 $param->{'count'} = $in{'count'};
 	
-	 if ($in{'count'}) {
-	
-	     if ($nb_lists > $in{'count'}) {
-		 @date_lists = sort @date_lists;
-		 @date_lists = reverse @date_lists;
-		 
-		 my $latest_day = $date_lists[$in{'count'}-1];
-				 
-		 foreach my $listname (keys (%{$param->{'which'}})) {
-		     if ($param->{'which'}{$listname}{'date_epoch'} < $latest_day) { 
-			 delete $param->{'which'}{$listname};
-			 next;
-		     }
-		 }
-	     } 
-	 }else {     
+	 unless ($in{'count'}) {
 	     $param->{'which'} = undef;
 	 }
      }
+
+     my $count_lists = 0;
      foreach my $l ( sort {$param->{'which'}{$b}{'date_epoch'} <=> $param->{'which'}{$a}{'date_epoch'}} (keys (%{$param->{'which'}}))) {
+
+	 $count_lists++;
+
+	 if ($in{'count'}) {
+	      if ($count_lists > $in{'count'}){
+		  last;
+	      }
+	  }
+
 	 $param->{'which'}{$l}{'name'} = $l;
 	 push @{$param->{'latest_lists'}} , $param->{'which'}{$l};
      }
@@ -2342,6 +2337,7 @@ sub do_remindpasswd {
 	 return undef;
      }
      
+     ## oldest interesting day
      my $oldest_day = 0;
      
      if (defined $in{'for'}) {
@@ -2353,6 +2349,7 @@ sub do_remindpasswd {
 	 }
      } 
 
+     ## get msg count for each list
      foreach my $l (keys (%{$param->{'which'}})) {
 	 my $list = new List ($l, $robot);
 	 my $file = "$list->{'dir'}/msg_count";
@@ -2366,7 +2363,9 @@ sub do_remindpasswd {
 		 }
 	     }
 	     close MSG_COUNT ;
+
 	     $param->{'which'}{$l}{'msg_count'}	= &count_total_msg_since($oldest_day,\%count);
+	  
 	     if ($in{'for'}) {
 		 my $average = $param->{'which'}{$l}{'msg_count'} / $in{'for'}; ## nb msg by day  
 		 $average = int($average * 10);
@@ -2378,10 +2377,12 @@ sub do_remindpasswd {
      }
 	
      my $nb_lists = 0;
+
+     ## get "count" lists
      foreach my $l ( sort {$param->{'which'}{$b}{'msg_count'} <=> $param->{'which'}{$a}{'msg_count'}} (keys (%{$param->{'which'}}))) {
 	 if (defined $in{'count'}) {
 	     $nb_lists++;
-	     if ($nb_lists >= $in{'count'}) {
+	     if ($nb_lists > $in{'count'}) {
 		 last;
 	     }
 	 }
@@ -2409,7 +2410,7 @@ sub do_remindpasswd {
      my $count = shift;
 
      my $total = 0;
-     foreach my $d (sort {$count->{$b} <=> $count->{$a}} keys %$count) {
+     foreach my $d (sort {$b <=> $a}  (keys %$count)) {
 	 if ($d < $oldest_day) {
 	     last;
 	 }
@@ -4685,19 +4686,26 @@ sub do_remindpasswd {
 		 my $parser = new MIME::Parser;
 		 $parser->output_to_core(1);
 		 
-		 unless (open (FILE,"$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$year_month/arctxt/$arc")) {
-		     &wwslog('err', 'Unable to open file %s', $arc);
+		 my $arc_file = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$year_month/arctxt/$arc";
+		 
+		 unless (open (FILE, $arc_file)) {
+		     &wwslog('err', 'Unable to open file %s', $arc_file);
 		 }
 		 
 		 my $message;
 		 unless ($message = $parser->read(\*FILE)) {
-		     &wwslog('err', 'Unable to parse message %s', $arc);
+		     &wwslog('err', 'Unable to parse message %s', $arc_file);
 		     next;
 		 }
 
 		 use Mail::Header;
 		 my $hdr = $message->head;
-
+		 
+		 unless (defined $hdr) {
+		     &wwslog('err', 'Unable to parse header of message %s', $arc_file);
+		     next;
+		 }
+		 
 		 $msg_info{'message_id'} = $hdr->get('Message-Id');
 		 if ( $msg_info{'message_id'} =~ /^\<(.+)\>$/) {
 		     $msg_info{'message_id'}  =~ s/^\<(.+)\>$/$1/;
@@ -4711,6 +4719,12 @@ sub do_remindpasswd {
 		 $msg_info{'from'} =   &MIME::Words::decode_mimewords($hdr->get('From')); 
 		 
 		 my $date = $hdr->get('Date'); 
+		 
+		 unless (defined $date) {
+		     &wwslog('err', 'No date found in message %s', $arc_file);
+		     next;
+		 }
+
 		 my @array_date = &time_utils::parse_date($date);
 
 		 $msg_info{'date_epoch'} = &get_timelocal_from_date(@array_date[1..$#array_date]);
@@ -4730,7 +4744,7 @@ sub do_remindpasswd {
 	
      }
 
-     @{$param->{'archives'}} = sort ({$a->{'date_epoch'} <=> $b->{'date_epoch'}} @archives);
+     @{$param->{'archives'}} = sort ({$b->{'date_epoch'} <=> $a->{'date_epoch'}} @archives);
 
      if ($list->{'admin'}{'web_archive_spam_protection'} eq 'cookie'){
 	 &cookielib::set_arc_cookie($param->{'cookie_domain'});
@@ -4741,7 +4755,7 @@ sub do_remindpasswd {
 
 
 sub get_timelocal_from_date {
-    my($mday, $mon, $yr, $hr, $min, $sec, $zone) = @_;
+    my($mday, $mon, $yr, $hr, $min, $sec, $zone) = @_;    
     my($time) = 0;
 
     $yr -= 1900  if $yr >= 1900;  # if given full 4 digit year
@@ -4750,6 +4764,7 @@ sub get_timelocal_from_date {
 	warn "Warning: Bad year (", $yr+1900, ") using current\n";
 	$yr = (localtime(time))[5];
     }    
+
     $time = &timelocal($sec,$min,$hr,$mday,$mon,$yr);
     return $time
 
