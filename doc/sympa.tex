@@ -149,41 +149,39 @@ For printing purpose, use the
 
 \Sympa is an electronic mailing list manager.  It is used to automate
 list management functions such as subscription, moderation,
-archive and shared documents management. 
+archive and shared document management. 
 It also includes management functions which
-would normally require a high quantity of work that may be time
-consumming and costly for the list owner.  Examples of these
+would normally require a substantial amount of work (time-consuming
+and costly for the list owner). These
 functions include automatic management of subscription renewals,
-list maintenance ...
+list maintenance, and many others.
 
-\Sympa is designed to manage many different kind of lists. It includes
-a web interface for all list function including management. It allows
-fine definition of each list feature such as sender autorisation,
-moderating process,  etc. \Sympa is designed to define for each list
-and for each feature on the list who can perform the
-operation and which method is used to authenticate this personn. Currently
-the authentication available method can be based either on the smtp From
-header, a password, or S/MIME signature.\\
-\Sympa is also able extract electronic
-addresses from an LDAP directory or any SQL server and include them
+\Sympa manages many different kinds of lists. It includes
+a web interface for all list functions including management. It allows
+a precise definition of each list feature, such as sender authorization,
+the moderating process, etc. \Sympa defines, for each feature of each list,
+exactly who is authorized to perform the relevant operations, along with the
+authentication method to be used. Currently, authentication can be based
+on either an smtp \From header, a password, or an S/MIME signature.\\
+\Sympa is also able to extract electronic
+addresses from an LDAP directory or SQL server, and include them
 dynamically in a list.
 
-\Sympa  manages sending of messages to the lists, e.g.  their
-routing up to the destination, and therefore makes it possible to
-reduce the load on the computer system hosting \Sympa.  In
-configurations that have enough memory, \Sympa is especially well
-adapted for large lists: for a 20,000 subscribers list, it takes
+\Sympa manages the dispatching of messages, and makes it possible to
+reduce the load on the computer system where it is installed. In
+configurations with sufficient memory, \Sympa is especially well
+adapted to handling large lists: for a list of 20,000 subscribers, it requires
 less than 6 minutes to send a message to 95 percent of the subscribers,
 assuming that the network is available (tested on a 300~MHz, 256~MB
 i386 serveur with Linux).
 
-This guide covers installation, configuration and management of
+This guide covers the installation, configuration and management of
 the current release (\version) of
 \htmladdnormallink {sympa} {http://listes.cru.fr/sympa/}.
 
 \section {License}
 
-\Sympa is a free software, you may distribute it under the terms
+\Sympa is free software; you may distribute it under the terms
 of the
 \htmladdnormallinkfoot {GNU General Public License Version 2}
         {http://www.gnu.org/copyleft/gpl.html}
@@ -194,120 +192,120 @@ of the original copyright notices and associated disclaimers.
 
 \section {Features}
 
-\Sympa provide all the basic features that any mailing list management robot
-should include. Most \Sympa features have equivalent into different
-software, but \Sympa provides all of thoses features
-into a single software, including:
+\Sympa provides all the basic features that any mailing list management robot
+should include. While most \Sympa features have their equivalents in other
+mailing list applications, \Sympa is unique in including features
+in a single software package, including:
 
 \begin {itemize}
-    \item High speed distribution process and load control. \Sympa
+    \item High speed distribution processing and load control. \Sympa
         can be tuned to allow the system administrator to control
-        the amount of computer resources used.  Its algorithm
-        is optimized:
+        the amount of computer resources used.  Its optimized algorithm
+        allows:
 
         \begin {itemize}
-            \item use of your prefered SMTP engine, e.g.
+            \item the use of your prefered SMTP engine, e.g.
                 \unixcmd {sendmail}, \unixcmd {qmail} or \unixcmd
-                {postfix}.
+                {postfix}
 
-            \item tune the maximum number of SMTP child processes.
+            \item tuning of the maximum number of SMTP child processes
 
-            \item sort email by domain and tune recipient grouping
-                factor (depending on repartion of subscriber's
-                domain)
+            \item grouping of messages according to recipients' domains,
+	    	and tuning of the grouping factor
 
-            \item detailed logs.
+            \item detailed logging
 
         \end {itemize}
 
-    \item \textbf {Multilingual} messages. Current version of
+    \item \textbf {Multilingual} messages. The current version of
         \Sympa allows the administrator to choose the language
-        catalog at run time. Currently, \Sympa robot is available for
-        french, english, spanish, italian, german, finish, polish and chinese
-	(Big5 and GB) languages (web interface is available
-        for french, english and spanish).
+        catalog at run time. At the present time the \Sympa robot is available in
+        English, Spanish, French, German, Italian, Polish, Finnish and Chinese
+	(Big5 and GB). The web interface is available in English, Spanish
+	and French.
 
-    \item \textbf {MIME support}. Of course, \Sympa respects
-        \textindex {MIME} in the distribution process but also,
-        \Sympa allows list owner to configure their list with
+    \item \textbf {MIME support}. \Sympa naturally respects
+        \textindex {MIME} in the distribution process, and in addition
+        allows list owners to configure their lists with
         welcome, goodbye and other predefined messages using complex
-        \textindex {MIME} structure, e.g. welcome message can be
-        \textbf {multipart/alternative} using \textbf {text/html},
-        \textbf {audio/x-wav}~:-) or whatever (Note that \Sympa
-        recognize commands in multipart messages as soon as one
-        part is \textbf {text/plain }).
+        \textindex {MIME} structures. For example, a welcome message can be
+        \textbf in {multipart/alternative} format, using \textbf {text/html},
+        \textbf {audio/x-wav}~:-), or whatever (Note that \Sympa
+        commands in multipart messages are successfully processed, provided that
+	one part is \textbf {text/plain }).
 
-    \item The \textbf {sending process is controlled} per list.
-        The list definition allows many different actions for
-        each incomming message. A \lparam {private} list is a list where
+    \item The \textbf {sending process is controlled} on a per-list basis.
+        The list definition allows a number of different actions for
+        each incoming message. A \lparam {private} list is a list where
         only subscribers can send messages. A list configured using
         \lparam {privateoreditorkey} mode accepts incoming messages
-        from subscribers, otherwise \Sympa forwards it to the editor
-        with a one time secret numeric key that will be used by the
-        editor to \textit {reject} or \textit {distribute} the
-        message. For details about all sending modes, refer to the
+        from subscribers, but will forward any other (i.e. \non-subscriber) message
+	to the editor with a one-time secret numeric key that will be used by the
+        editor to \textit {reject} or \textit {distribute} it.
+        For details about the different sending modes, refer to the
         \lparam {send} parameter (\ref {par-send}, page~\pageref
         {par-send}). The sending process configuration (as well as most other list
-	operation) is defined using  a \textbf {scenario}. Any listmaster
-        can define new scenario in order to describe some configuration
-        different from the 20 predefined configuration distributed. \\
-        Exemple : forward multipart messages to the list editor and  immediatly
-        distribute the others.
+	operations) is defined using  a \textbf {scenario}. Any listmaster
+        can define new scenarios (\scenarii) in order to complement the 20
+	predefined configurations included in the distribution. \\
+        Example : forward multipart messages to the list editor, while
+	distributing others without requiring any further authorization.
         
-    \item Privileged operations can be performed by list editor or
-        list owner (or any other user category) as defined in list
+    \item Privileged operations can be performed by list editors or
+        list owners (or any other user category), as defined in the list
         \file {config} file or by
-        the robot \textindex {administrator}: listmaster defined
+        the robot \textindex {administrator}, the \listmaster, defined
         in the \file {/etc/sympa.conf} global configuration file.
-        Those operation are the usual \mailcmd {ADD}, \mailcmd
-        {DELETE} or \mailcmd {REVIEW} commands which can be
-        authentified using a one time password or using S/MIME signature.
-	 Any list owner using \mailcmd {EXPIRE}
-        command can ask for renewal of subscriptions.  This is made
-        possible thanks to the subscription date stored in the
+        Privileged operations include the usual \mailcmd {ADD}, \mailcmd
+        {DELETE} or \mailcmd {REVIEW} commands, which can be
+        authenticated via a one-time password or an S/MIME signature.
+	 Any list owner using the \mailcmd {EXPIRE}
+        command can require the renewal of subscriptions. This is made
+        possible by the presence of a subscription date stored in the
         \Sympa database.
 
 
-    \item Dynamically include electronic addresses from a source
-        that can be either a database accepting SQL queries or an
-        LDAP directory. \Sympa keeps in his cache the data source
-        using a TTL (Time To Live) parameter for reasonable response
-        delays.
+    \item E-mail addresses can be retrieved dynamically from a database
+    	accepting SQL queries, or from an LDAP directory. In the interest
+	of reasonable response times, \Sympa retains the data source in an
+	internal cache controlled by a TTL (Time To Live) parameter.
 
-    \item Include lists subscriber set in one list. This is a real
-        inclusion, not a dirty subscribtion a lists to a list.
-
-    \item Internal subscriber data structure can be stored in a
+    \item Inclusion of the subscribers of one list among the subscribers of
+    	another. This is real inclusion, not the dirty, multi-level cascading
+	one might otherwise obtain by simply "subscribing list B to list A".
+	 
+    \item The internal subscriber data structure can be stored in a
         database or, for compatibility with versions 1.x, in text
-        files. The choice of using a database was driven by the
+        files. The introduction of databases came out of the
         \WWSympa project.  The database ensures a secure access to
-        shared data. The perl database API \textit {dbi/dbd} enables
+        shared data. The Perl database API \textit {dbi/dbd} enables
         interoperability with various RDBMS (MySQL, PostgreSQL,
         Oracle, Sybase).
 
     \label {wwsympa} 
     \item {\WWSympa} is a global Web interface to all \Sympa functions
-    	(including administration). It supplies :
+    	(including administration). It provides :
 
         \begin {itemize}
 
-	    \item classification of lists, search index
+	    \item classification of lists, along with a search index
 
-            \item access controle to all functions including to the list of lists
-                  so WWsympa is particulary adpated to be the main groupware tool
-                  of a intranet
+            \item access control to all functions, including the list of lists
+                  (which makes WWsympa particulary well suited to be the main
+		  groupware tool within an intranet)
  
-       	    \item management of list shared documents (download, upload, specific
+       	    \item management of shared documents (download, upload, specific
 		  access control for each document)
 
-            \item to each user, an HTML document presenting his current
-                  subscriptions including access to archives, subscription options
+            \item an HTML document presenting each user with the list of
+		  her current subscriptions, including access to archives, and
+		  subscription options
 
-            \item to list owners, list management tools (bounce processing, edition of
-                  list parameters, moderation of incoming messages
+            \item management tools for list managers (bounce processing, changing of
+                  list parameters, moderating incoming messages)
 
-            \item to robot administrators, list creation, global robot
-                  configuration \index{administrator}
+            \item tools for the robot administrator (list creation, global robot
+                  configuration) \index{administrator}
 
         \end {itemize}
 
@@ -318,56 +316,55 @@ into a single software, including:
 
 \section {Project directions}
 
-Future developpement should introduce:
+Future developments should include:
 
 \begin {itemize}
 
-    \item Virtual robot definition, ISP would appreciate the
+    \item Virtual robot definition. ISPs would appreciate the
         equivalent of \htmladdnormallinkfoot {Apache} {http://www.apache.org}
-        virtual server feature applied to mailing lists.
+        virtual server features applied to mailing lists.
 
-    \item Additional groupeware features such as calendar, scenari editor...
+    \item Additional groupware features such as a calendar, a scenario editor, etc
 
-    \item Pluggin commercial antivirus
+    \item The possibility of plugging in (commercial) antivirus applications
  
-    \item Subscriber preference for multipart/alternative messages reception.
-          Some news paper publish both text/plain and text/html version of
-          there mails. It should be nice to provide a sungle list for both format.
+    \item Subscriber preference for multipart/alternative message reception.
+          Some newspapers publish both text/plain and text/html version of
+          their mails. It would be nice to provide a single list for both formats.
 
 \end {itemize}
 
 \section {History}
 
-\Sympa developement started from scratch in 1995. The goal was to
-ensure continuity for the \textindex {TULP} list manager, produced
+\Sympa development started from scratch in 1995. The goal was to
+ensure continuity with the \textindex {TULP} list manager, produced
 partly by the initial author of \Sympa: Christophe Wolfhugel.
 
-New functionalities  were required, but for which the code of TULP
-was no more adequate to continue its life cycle. \Sympa initial
-version brings authentication, flexible management of commands,
-high performances in internal data access and object oriented code
-for easy code maintenance.
+New features were required, which the TULP code was just not up to
+handling. The initial version of \Sympa brought authentication,
+the flexible management of commands, high performances in internal
+data access, and object oriented code for easy code maintenance.
 
-It took nearly two years to come out  with the first market releases.
+It took nearly two years to produce the first market releases.
 
 \section {Authors and credits}
 
 Christophe Wolfhugel is the author of the first beta version of
-\Sympa, this work was performed while he was working for the
+\Sympa. He developed it while working for the
 \htmladdnormallinkfoot {Institut Pasteur} {http://www.pasteur.fr}.
 
-Later developments are mainly driven by the
+Later developments have mainly been driven by the
 \htmladdnormallinkfoot {Comit\'e R\'eseaux des Universit\'es} {http://www.cru.fr}
-(Olivier Sala\"un and Serge Aumont) in charge of a large mailing
+(Olivier Sala\"un and Serge Aumont), who look after a large mailing
 list service.
 
-We would like to thank contributors, among which:
+Our thanks to all contributors, including:
 
 \begin {itemize}
 
    \item Pierre David, who in addition to his help and suggestions
        in developing the code, participated more than actively in
-       the manual that you have in your hands.
+       producing this manual.
 
   \item Ollivier Robert, Usenet Canal Historique and the good manners
       guru in the Perl program.
@@ -375,31 +372,31 @@ We would like to thank contributors, among which:
   \item Rapha\"el Hertzog (debian) and St\'ephane Poirey (redhat) for
       Linux packages.
 
-  \item Olivier Lacroix for all his perseverance in bug fixing.
+  \item Olivier Lacroix, for all his perseverance in bug fixing.
 
-  \item Fabien Marquois who introduced many new features such as
-      digest.
+  \item Fabien Marquois, who introduced many new features such as
+      the digest.
 
-  \item Alex Nappa and Josep Roman for their spanish translations
+  \item Alex Nappa and Josep Roman for their Spanish translations
 
-  \item Carsten Clasohm and Jens-Uwe Gaspar for their german translations
+  \item Carsten Clasohm and Jens-Uwe Gaspar for their German translations
 
-  \item Marco Ferrante for his italian translations
+  \item Marco Ferrante for his Italian translations
 
   \item Hubert Ulliac for search in archive base on marcsearch.pm
 
-  \item Tung Siu Fai for his chinese translations
+  \item Tung Siu Fai for his Chinese translations
 
   \item and also: Manuel Valente, Dominique ROUSSEAU,
     Laurent Ghys, Francois Petillon, Guy Brand, Jean Brange, Fabrice
     Gaillard, Hervé Maza
 
-   \item Persuaded anonymous ones who never missed a chance to
+   \item Anonymous critics who never missed a chance to
        remind us that \textit {smartlist} already did all that
        better.
 
    \item All contributors and beta-testers cited in the \file
-       {RELEASE\_NOTES} file who by serving as guinea pigs and
+       {RELEASE\_NOTES} file, who, by serving as guinea pigs and
        being the first to use it, made it possible to quickly and
        efficiently debug the \Sympa software.
 
@@ -408,26 +405,26 @@ We would like to thank contributors, among which:
 
 \end {itemize}
 
-May those people we have forgotten to thank accept our apologies
-and make us aware of it so that we can correct this error in future
+We ask all those we have forgotten to thank to accept our apologies
+and to let us know, so that we can correct this error in future
 releases of this documentation.
 
-\section {Mailing list and support}
+\section {Mailing lists and support}
     \label {sympa@cru.fr}
 
 If you wish to contact the authors of \Sympa, please use the address
 \mailaddr {sympa-authors{\at}cru.fr}.
 
-There are also a \htmladdnormallinkfoot {few mailing-lists about \Sympa} {http://listes.cru.fr/wws/lists/informatique/sympa} :
+There are also a few \htmladdnormallinkfoot {mailing-lists about \Sympa} {http://listes.cru.fr/wws/lists/informatique/sympa} :
 
 	\begin {itemize}
 	   \item  \mailaddr {sympa-users{\at}cru.fr} general info list
 	   
-	   \item   \mailaddr {sympa-fr{\at}cru.fr}, for french-speaking users
+	   \item   \mailaddr {sympa-fr{\at}cru.fr}, for French-speaking users
 			   
-	   \item   \mailaddr {sympa-announce{\at}cru.fr}, \Sympa announces
+	   \item   \mailaddr {sympa-announce{\at}cru.fr}, \Sympa announcements
 			  
-	   \item   \mailaddr {sympa-dev{\at}cru.fr}, \Sympa developpers
+	   \item   \mailaddr {sympa-dev{\at}cru.fr}, \Sympa developers
 			  
 	\end {itemize}
 
@@ -439,14 +436,14 @@ To join, send the following message to \mailaddr {sympa{\at}cru.fr}:
 
 (replace \textit {Listname}, \textit {Firstname} and \textit {Name} by the list name, your first name and your family name).
 
-You may also have a look at the \Sympa \htmladdnormallink {home page} {http://listes.cru.fr/sympa},
-you will find the upto date version, \htmladdnormallink {FAQ} {http://listes.cru.fr/sympa/fom-serve/cache/1.html} and so on.
+You may also consult the \Sympa \htmladdnormallink {home page} {http://listes.cru.fr/sympa},
+you will find the latest version, \htmladdnormallink {FAQ} {http://listes.cru.fr/sympa/fom-serve/cache/1.html} and so on.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Overview, what is it made of ?
+% Overview: what does \Sympa consist of ?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cleardoublepage
-\chapter {Overview, what is it made of ?}
+\chapter {what does \Sympa consist of ?}
 
 %\begin {htmlonly}
 %<A NAME="overview">
@@ -455,13 +452,13 @@ you will find the upto date version, \htmladdnormallink {FAQ} {http://listes.cru
 \section {Organization}
 \label {organization}
 
-Here is a snapshot of what \Sympa looks like once it has settled 
-on your system. This also reveals the pruduct's philosophy I guess.
+Here is a snapshot of what \Sympa looks like once it has settled down
+on your system. This also illustrates the \Sympa philosophy, I guess.
 
 \begin {itemize}
 
 	\item \tildedir {sympa/}\\
-	The root directory of \Sympa, you will find almost everything
+	The root directory of \Sympa. You will find almost everything
 	related to \Sympa under this directory, except logs and main
 	configuration files.
 	
@@ -471,50 +468,49 @@ on your system. This also reveals the pruduct's philosophy I guess.
 	files.
 
 	\item \tildedir {sympa/bin/etc/}\\
-	\Sympa will find here defaults for what it expects in 
-	\tildedir {sympa/etc/} (scenarios, templates and configuration
+	Here \Sympa stores the default versions of what it will otherwise find
+	in \tildedir {sympa/etc/} (scenarios, templates and configuration
 	files, recognized S/Mime certificates).
 
 	\item \tildedir {sympa/etc/}\\
-	This is your site's configuration directory. Take a look at
-	\tildedir {sympa/bin/etc/} for designing your own.
+	This is your site's configuration directory. Consult
+	\tildedir {sympa/bin/etc/} when drawing up your own.
 
 	\item \tildedir {sympa/etc/create\_list\_templates/}\\
-	Here are your list's templates, those proposed at list
-	creation time.
+	List templates (suggested at list creation time).
 
 	\item \tildedir {sympa/etc/scenari/}\\
 	This directory will contain your scenarios. If you don't
-	know what the hell is a scenario, refer to \ref {scenarii}, 
+	know what the hell a scenario is, refer to \ref {scenarii}, 
 	page~\pageref {scenarii}.
 	
 	\item \tildedir {sympa/etc/wws\_templates/}\\
-	The web interface (\WWSympa) is made of template HTML
+	The web interface (\WWSympa) is composed of template HTML
 	files parsed by the CGI program.
 
 	\item \tildedir {sympa/etc/templates/}\\
-	Some replies of the mail robot are defined by templates
+	Some of the mail robot's replies are defined by templates
 	(\file{welcome.tpl} for SUBSCRIBE). You can overload
-	these template files in the list's directory, here are
-	the defaults.
+	these template files in the individual list directories, but these
+	are the defaults.
 
 	\item \tildedir {sympa/expl/}\\
-	The working directory of \Sympa.
+	\Sympa's working directory.
 
 	\item \tildedir {sympa/expl/\samplelist}\\
-	The list directory, refer to \ref {list-directory}, 
-	page~\pageref {list-directory}.
+	The list directory (refer to \ref {list-directory}, 
+	page~\pageref {list-directory}).
 
 	\item \tildedir {sympa/nls/}\\
 	Internationalization directory. It contains XPG4-compatible
-	messages catalogues. \Sympa has currently been translated
-	to 8 different languages.
+	message catalogues. \Sympa has currently been translated
+	into 8 different languages.
 
 	\item \tildedir {sympa/spool/}\\
 	\Sympa uses 6 different spools.
 
 	\item \tildedir {sympa/src/}\\
-	Here is where we store \Sympa sources.
+	\Sympa sources.
 
 \end {itemize}
 
@@ -525,32 +521,32 @@ on your system. This also reveals the pruduct's philosophy I guess.
 
 	\item \file {sympa.pl}\\
 	The main daemon ; it processes commands and delivers
-	messages. It is permanently scanning the \dir {msg/} spool.
+	messages. Continuously scans the \dir {msg/} spool.
 
 	\item \file {wwsympa.fcgi}\\
-	This is the CGI program, proposing a complete web interface
+	The CGI program offering a complete web interface
 	to mailing lists. It can work in both classical CGI and
-	FastCGI modes ; we recommand FastCGI mode though, being
+	FastCGI modes, although we recommand FastCGI mode, being
 	up to 10 times faster.
 
 	\item \file {bounced.pl}\\
-	This daemon processes bounces (non-delivery messages),
+	This daemon processes bounces (non-delivered messages),
 	looking for the bad addresses. List owners will later
-	access bounces information via \WWSympa. It is permanently 
-	scanning the \dir {bounce/} spool.
+	access bounce information via \WWSympa. Continuously scans
+	the \dir {bounce/} spool.
 
 	\item \file {archived.pl}\\
 	This daemon feeds the web archives, converting messages
 	to HTML format and linking them. It uses the amazing 
-	\file {MhOnArc}. It is permanently scanning the \dir {outgoing/} 
+	\file {MhOnArc}. Continuously scans the \dir {outgoing/} 
 	spool.
 
 	\item \file {queue}\\
 	This small program gets the incoming messages from the aliases
-	and store them in \dir {msg/} spool.
+	and stores them in \dir {msg/} spool.
 
 	\item \file {bouncequeue}\\
-	Same as \file {queue} for bounces. It stores bounces in 
+	Same as \file {queue} for bounces. Stores bounces in 
 	\dir {bounce/} spool.
 
 \end {itemize}
@@ -569,13 +565,13 @@ on your system. This also reveals the pruduct's philosophy I guess.
 	See \ref{wwsympa}, page~\pageref{wwsympa}.
 	
 	\item \file {edit\_list.conf}\\
-	It defines what parameters/files are editable by
+	Defines which parameters/files are editable by
 	owners. See \ref{list-edition}, page~\pageref{list-edition}.
 
 	\item \file {topics.conf}\\
-	Define your site's topics (classification in \WWSympa) in this 
-	file with titles. A sample is provided in \dir {sample/} directory
-	of the sympa distribution.
+	Contains the declarations your site's topics (classification in
+	\WWSympa), along with their titles. A sample is provided in the
+	\dir {sample/} directory of the sympa distribution.
 	See \ref{topics}, page~\pageref{topics}.
 
 \end {itemize}
@@ -586,16 +582,16 @@ on your system. This also reveals the pruduct's philosophy I guess.
 \begin {itemize}
 
 	\item \tildedir {sympa/spool/auth/}\\
-	For storing messsages until it has been confirmed.
+	For storing messsages until they have been confirmed.
 
 	\item \tildedir {sympa/spool/bounce/}\\
 	For storing incoming bouncing messages.
 
 	\item \tildedir {sympa/spool/digest/}\\
-	For storing lists' digests before it is sent.
+	For storing lists' digests before they are sent.
 
 	\item \tildedir {sympa/spool/expire/}\\
-	Related to expire process.
+	Used by the expire process.
 
 	\item \tildedir {sympa/spool/mod/}\\
 	For storing unmoderated messages.
@@ -604,8 +600,8 @@ on your system. This also reveals the pruduct's philosophy I guess.
 	For storing incoming messages (including commands).
 
 	\item \tildedir {sympa/spool/outgoing/}\\
-	\file {sympa.pl} dumps messages i this spool 
-	for \file {archived.pl} to archive them.
+	\file {sympa.pl} dumps messages in this spool to await archiving
+	by \file {archived.pl}.
 
 \end {itemize}
 
@@ -620,11 +616,11 @@ on your system. This also reveals the pruduct's philosophy I guess.
 %<A NAME="installsympa">
 %\end {htmlonly}
 
-\Sympa is a program written in Perl language. It also calls a short
-program written in C to perform some tasks for which it is not
-reasonable to entrust an interpreted language.
+\Sympa is a program written in Perl. It also calls a short
+program written in C for tasks which it would be unreasonable to
+perform via an interpreted language.
 
-\section {Getting \Sympa, related links}
+\section {Obtaining \Sympa, related links}
 
 The \Sympa distribution is available from
 \htmladdnormallink {\texttt {http://listes.cru.fr/sympa/}}
@@ -645,31 +641,28 @@ All important resources are referenced there:
 \section {Prerequisites}
 
 \Sympa installation and configuration are relatively easy
-tasks for an administrator who already has a good deal of experience
-with Unix systems and installation of tools written in Perl.
+tasks for experienced Unix users who have already installed Perl packages.
 
-The user will note that a large part of the installation time will
-be devoted to installation of the prerequisites if they are not
-already on the system. The number of ancillary tools required is
-not really of great importance, but on a current Unix system, it
-should be possible to do this without much of a problem. We strongly
-advise carrying out the system installations and checks in the
-order listed below; these steps will be explained in detail in later
-sections.
+Note that most of the installation time will
+involve putting in place the prerequisites, if they are not
+already on the system. No more than a handful of ancillary tools are needed,
+and on recent UNIX systems their installation is normally very
+straightforward. We strongly advise you to perform installation steps and
+checks in the order listed below; these steps will be explained in
+detail in later sections.
 
 \begin {itemize}
-    \item identification of characteristics of Unix system that
-        will host \Sympa.
+    \item identification of host system characteristics
 
     \item installation of DB Berkeley module (already installed on
-      most UNIX systems).
+      most UNIX systems)
 
     \item installation of
         \htmladdnormallinkfoot {CPAN (Comprehensive Perl Archive Network)}
                 {http://www.perl.com/CPAN}
-        modules.
+        modules
 
-    \item creation of a Unix user.
+    \item creation of a Unix user
 
 \end {itemize}
 
@@ -677,10 +670,9 @@ sections.
 
 You should have a Unix system that is more or less recent in order
 to be able to use \Sympa. In particular, it is necessary
-that your system have an ANSI C compiler (on the whole, in the case
-which is of interest to us, your compiler should support prototypes)
-as well as XPG4-standard \textindex {NLS} (Native Language Support, for
-languages other than English) extensions.
+that your system have an ANSI C compiler (in other words, your compiler
+should support prototypes), as well as XPG4-standard \textindex {NLS}
+(Native Language Support, for languages other than English) extensions.
 
 \Sympa has been installed and tested on the following
 systems, therefore you should not have any special problems:
@@ -694,7 +686,7 @@ systems, therefore you should not have any special problems:
     \item HP-UX 10.20
 \end {itemize}
 
-Anyone willing to port it on NT ? ;-)
+Anyone willing to port it to NT ? ;-)
 
 If your Unix system has a \unixcmd {gencat} command as well as
 \unixcmd {catgets(3)} and \unixcmd {catopen(3)} functions, it is
@@ -706,18 +698,18 @@ if this is not the case, you can install the \unixcmd {gcc} compiler,
 which you will find on the nearest GNU site, for example
 \htmladdnormallinkfoot {in France} {ftp://ftp.oleane.net/pub/mirrors/gnu/}.
 
-To complete the operation, you should make sure that you have a
-recent enough release of the \unixcmd {sendmail} MTA, e.g. release
+To complete the installation, you should make sure that you have a
+sufficiently recent release of the \unixcmd {sendmail} MTA, i.e. release
 \htmladdnormallinkfoot {8.9.x} {ftp://ftp.oleane.net/pub/mirrors/sendmail-ucb/}
 or a more recent release. You may also use \unixcmd {postfix} or
 \unixcmd {qmail}.
 
 \subsection {Install Berkeley DB (NEWDB)}
 
-Unix systems often have a highly simple system to manage indexed
-files.  This consists of extensions known under the name \texttt
-{dbm} and \texttt {ndbm}. For many programs, these are not sufficient,
-and in particular for \Sympa, which uses the \textindex {DB package}
+Unix systems often include a particularly unsophisticated mechanism to
+manage indexed files.  This consists of extensions known as \texttt {dbm}
+and \texttt {ndbm}, which are unable to meet the needs of many more recent
+programs, including \Sympa, which uses the \textindex {DB package}
 initially developed at the University of California in Berkeley,
 and which is now maintained by the company \htmladdnormallinkfoot
 {Sleepycat software} {http://www.sleepycat.com}.  Many UNIX  systems
@@ -726,16 +718,16 @@ standard version. If not you should install this tool if you have not
 already done so.
 
 You can retrieve DB on the
-\htmladdnormallinkfoot {Sleepycat site} {http://www.sleepycat.com/}
-and read its documentation to install it in your system.
+\htmladdnormallinkfoot {Sleepycat site} {http://www.sleepycat.com/},
+where you will also find clear installation instructions.
 
 \subsection {Install Perl and CPAN modules}
 
-To be able to use \Sympa, you must have release 5.004\_03 of the
-Perl language or a later release and several CPAN modules.
+To be able to use \Sympa you must have release 5.004\_03 or later of the
+Perl language, as well as several CPAN modules.
 
-At \texttt {make} time, \unixcmd {check\_perl\_modules.pl} script is run to
-check required Perl and CPAN modules versions. If a CPAN module is
+At \texttt {make} time, the \unixcmd {check\_perl\_modules.pl} script is run to
+check for installed versions of required Perl and CPAN modules. If a CPAN module is
 missing or out of date, this script will install it for you. 
 
 You can also download and install CPAN modules yourself. You will find 
@@ -746,21 +738,21 @@ it will find one for you.
 
 \subsection {Required CPAN modules}
 
-Here are CPAN modules required by \Sympa that not incuded in Perl's
-distribution. We'll try to keep this list uptodate ; if you have any doubt
-run \unixcmd {check\_perl\_modules.pl} script.
+The following CPAN modules required by \Sympa are not included in the standard
+Perl distribution. We try to keep this list up to date ; if you have any doubts
+run the \unixcmd {check\_perl\_modules.pl} script.
 
 \begin {itemize}
-   \item DB\_File (v. 1.50 or higher)
+   \item DB\_File (v. 1.50 or later)
    \item Msgcat
    \item MD5
-   \item MailTools (version 1.13 and upper)
+   \item MailTools (version 1.13 o later)
    \item MIME-tools (may require IO/Stringy)
    \item MIME-Base64
 \end {itemize}
 
 Since release 2, \Sympa requires a DMBS to work properly. It stores 
-users subscriptions and preferences in a database. \Sympa is also
+users' subscriptions and preferences in a database. \Sympa is also
 able to extract user data from within an external database. 
 These features require that you install database-related Perl libraries.
 This includes the generic Database interface (DBI) and a Database Driver
@@ -784,34 +776,33 @@ dynamical mailing lists, you need to install Perl LDAP libraries :
 
 \subsection {Create a Unix user}
 
-Last step before installing \Sympa: create a Unix user, and
-preferably, a group specific to the program. Most of the installation
+The final step prior to installing \Sympa: create a Unix user (and
+if possible a group) specific to the program. Most of the installation
 will be carried out with this account. We suggest that you use the
 name \texttt {sympa} for both user and group. Note that UID.GID must be
 the same as your httpd. If you are running a dedicated httpd server,
-this can be sympa.sympa, else it is possible either to define a virtual httpd
-server setting UID GID, either to run \Sympa as nobody.nobody. 
-This last solution is not safe because the information managed by \Sympa
+this can be sympa.sympa, otherwise it is possible either to define a virtual httpd
+server setting UID GID, or to run \Sympa as nobody.nobody. 
+This second solution is not advisable because the information managed by \Sympa
 will be owned by nobody.
 
-In the rest of this documentation, numerous files will be located
-in the user's login directory which you will have created in your
-system or in a sub-directory. We will mark this login directory
-with \tildedir {sympa/}.
+Numerous files will be located in the \Sympa user's login directory.
+Throughout the remainder of this documentation we shall refer to this
+login directory as \tildedir {sympa/}.
 
 \section {Compilation and installation }
 
-Before using \Sympa, you have to customize the sources so that you
-can specify a few specific parameters in your installation.
+Before using \Sympa, you must customize the sources in order to
+specify a small number of parameters specific to your installation.
 
-To start, extract the sources from the archive file, for example
+First, extract the sources from the archive file, for example
 from the \tildedir {sympa/} directory: the archive will create a
 directory named \dir {sympa-\version/} where all the useful files
 and directories will be located. In particular, you will have a
 \dir {doc/} directory containing this documentation in various
-formats, a \dir {sample/} directory containing a few examples of
-a configuration file, \dir {nls/} directory where multi-linguage
-messages are stored and of course, the \dir {src/} directory for the
+formats; a \dir {sample/} directory containing a few examples of
+configuration files; an \dir {nls/} directory where multi-lingual
+messages are stored; and, of course, the \dir {src/} directory for the
 mail robot and \dir {wwsympa} for the web interface.
 
 Example:
@@ -823,63 +814,63 @@ Example:
 \end {quote}
 
 Before running \unixcmd {make} in the main
-directory, you have to edit and configure \file {Makefile}
-so that you can customize the first part
-in them. We advise against changing anything located after the STOP
+directory, you should edit and configure \file {Makefile},
+the first part of which requires customization.
+We advise against changing anything located after the STOP
 line.
 
 The \file {Makefile} file contains explanations for the fields,
-which you may have to change. They are mainly :
+which you may have to change. They main ones are :
 \begin {itemize}
 \item USER and GROUP, the id of daemons.
-\item CONFIG and WWSCONFIG, the robot and the cgi configuration location
+\item CONFIG and WWSCONFIG, the location of robot and cgi configurations
 \item DIR, the \Sympa home dir
 \item MAILERPROGDIR, the location of queue and bouncequeue programs. If sendmail
-is configured to used smrsh (check the mailer prog definition in your sendmail.cf), queue and bouncequeue needs to be installed in /etc/smrsh.  This is probably your case if you are using
-redhat 6.X.
-\item INITDIR, the directory to install SYSV init script (typically /etc.rc.d/init.d/)
-\item DESTDIR, can be set in the main Makefile to install sympa in DESTDIR/DIR (instead of DIR).
-This is usefull for building RPM and DEB packages.
-\item PERL, SH and CC and GENCAT, respectivly perl, sh, cc and gencat location. 
+is configured to use smrsh (check the mailer prog definition in your sendmail.cf),
+queue and bouncequeue need to be installed in /etc/smrsh.  This is probably
+the case if you are using redhat 6.X.
+\item INITDIR, the directory to contain a SYSV init script (typically /etc.rc.d/init.d/)
+\item DESTDIR, can be set in the main Makefile to install sympa in DESTDIR/DIR
+(instead of DIR). This is usefull for building RPM and DEB packages.
+\item PERL, SH and CC and GENCAT, respectivly perl, sh, cc and gencat locations. 
 \item DARK\_COLOR, LIGHT\_COLOR, TEXT\_COLOR, BG\_COLOR, ERROR\_COLOR to define wwsympa
-RBG colors
+RGB colors
 \end {itemize}
 
-Once this file has been configured, you need to run \texttt
-{make;make~install} commands.  This
- generates the binary  for the \file {queue} program, and the nls and installs
+Once this file has been configured, you need to run the \texttt {make;make~install} commands.
+This generates the binary for the \file {queue} program along with the nls, and inserts
 the \Sympa and \WWSympa programs in their final slot, while having propagated
-a few parameters in the Perl files, as for example the access path
-to the Perl program. The make command includes a checking of cpan modules.
+a few parameters into the Perl files, such the access path
+to the Perl program. The make command includes the checking of cpan modules.
  
 If everything goes smoothly, the \tildedir {sympa/bin/} directory
 will contain various Perl programs as well as the \file {queue}
-binary.  You will note that this binary has the \index{set-uid-on-exec
+binary.  You will remark that this binary has the \index{set-uid-on-exec
 bit} \textit {set-uid-on-exec} bit (owner is the \texttt {sympa}
-user): this is normal and indispensable for \Sympa to run correctly.
+user): this is deliberate, and indispensable if \Sympa is to run correctly.
 
-\subsection {Choosing directory location}
+\subsection {Choosing directory locations}
 
-All directories are defined in \file {/etc/sympa.conf} file which
-is read by \Sympa at runtime. While installing \Sympa, if no \file {sympa.conf} file
-was found, a sample one will be installed.
-To see the default directories organization refer to \ref {organization}, 
+All directories are defined in the \file {/etc/sympa.conf} file, which
+is read by \Sympa at runtime. If no \file {sympa.conf} file
+was found during installation, a sample one will be created.
+For the default organization of directories, please refer to \ref {organization}, 
 page~\pageref {organization}.
 
-It is possible to disperse files and directories everywhere in the
-Unix system, however we recommand storing all the directories and
-files in  the \texttt {sympa} user's login directory.
+It would, of course, be possible to disperse files and directories to a number of different
+locations. However, we recommend storing all the directories and files in  the \texttt {sympa}
+user's login directory.
 
-You also have to create these directories now. You can use restrictive
+These directories must be created manually now. You can use restrictive
 authorizations if you like, since only programs running with the
-\texttt {sympa} account will have to access them.
+\texttt {sympa} account will need to access them.
 
 
 \section {Robot aliases}
     \index{aliases}
     \index{mail aliases}
 
-An electronic list manager such as \Sympa runs in two steps:
+An electronic list manager such as \Sympa is built around two processing steps:
 
 \begin {itemize}
     \item a message sent to a list or to \Sympa itself
@@ -887,21 +878,21 @@ An electronic list manager such as \Sympa runs in two steps:
         by the SMTP server (\unixcmd {sendmail} or \unixcmd {qmail}).
         The SMTP server, on reception of this message, runs the
         \file {queue} program (supplied in this package) to store
-        the message in a queue, e.g.  in a special directory.
+        the message in a queue, i.e. in a special directory.
 
-    \item the \file {sympa.pl} daemon, run once and for all during
-        startup of the system, scans the queue. As soon as it
+    \item the \file {sympa.pl} daemon, set in motion at
+        system startup, scans the queue. As soon as it
         detects a new message, it processes it and performs the
         requested action (distribution or processing of an
         administrative request).
 
 \end {itemize}
 
-To differentiate processing of administrative requests (subscription,
-unsubscription, help request, etc.) from messages sent to a list,
-a special mail alias is reserved for administrative requests, so
-that \Sympa can be accessible and users can join it. Thus, the
-lines below must be added to the \unixcmd {sendmail} alias file
+To separate the processing of administrative requests (subscription,
+unsubscription, help requests, etc.) from the processing of messages destined for mailing
+lists, a special mail alias is reserved for administrative requests, so
+that \Sympa can be permanently accessible to users. The following
+lines must therefore be added to the \unixcmd {sendmail} alias file
 (often \file {/etc/aliases}):
 
 \begin {quote}
@@ -915,22 +906,22 @@ sympa-owner:       postmaster
 \end {quote}
 
 \mailaddr {sympa-request} should be the address of the robot
-\textindex {administrator}, who is the person who takes care of
-\Sympa management (here \mailaddr {postmaster{\at}cru.fr}).
+\textindex {administrator}, i.e. a person who looks after
+\Sympa (here \mailaddr {postmaster{\at}cru.fr}).
 
 \mailaddr {sympa-owner} is the return address for \Sympa error
 messages.
 
-The alias bounce+* is dedicated to collect bounces. It is usefull
-only if at least one list use \texttt { welcome\_return\_path unique } or
+The alias bounce+* is dedicated to collect bounces. It is useful
+only if at least one list uses \texttt { welcome\_return\_path unique } or
 \texttt { remind\_return\_path unique}.
-Do not forget to run \unixcmd {newaliases} after any change to
+Don't forget to run \unixcmd {newaliases} after any change to
 the \file {/etc/aliases} file!
 
 Note: aliases based on \mailaddr {listserv} (in addition to those
-based on \mailaddr {sympa}) can be added in order to facilitate
-the task of users accustomed to the \mailaddr {listserv} and
-\mailaddr {majordomo} names. For example:
+based on \mailaddr {sympa}) can be added for the benefit of users
+accustomed to the \mailaddr {listserv} and \mailaddr {majordomo} names.
+For example:
 
 \begin {quote}
 \begin{verbatim}
@@ -942,19 +933,19 @@ listserv-owner:    sympa-owner
 \end {quote}
 
 Note: it will also be necessary to add entries in this alias file
-to create lists (see list creation section, \ref {list-aliases},
+when lists are created (see list creation section, \ref {list-aliases},
 page~\pageref {list-aliases}).
 
 
 \section {Logs}
 
-\Sympa keeps traces of each of its procedures in its log file.
-Nevertheless, this requires configuration of the \unixcmd {syslogd}
-daemon.  \Sympa's by default is to use \texttt {local1} facility
-(\lparam {syslog} parameter in \file {sympa.conf})
-,WWSympa uses (\lparam {log\_facility} parameter
-in \file {wwsympa.conf}), the default is \Sympa's log facility.\\
-Thus, a line must be added in the \unixcmd {syslogd} configuration file (\file
+\Sympa keeps a trace of each of its procedures in its log file.
+However, this requires configuration of the \unixcmd {syslogd}
+daemon.  By default \Sympa wil use the \texttt {local1} facility
+(\lparam {syslog} parameter in \file {sympa.conf}).
+WWSympa's logging behaviour is defined by the \lparam {log\_facility}
+parameter in \file {wwsympa.conf} (by default the same facility as \Sympa).\\
+To this end, a line must be added in the \unixcmd {syslogd} configuration file (\file
 {/etc/syslog.conf}). For example:
 
 \begin {quote}
@@ -966,14 +957,14 @@ local1.*       /var/log/sympa
 Then reload \unixcmd {syslogd}.
 
 Depending on your platform, your syslog daemon may use either
-UDP or Unix socket. \Sympa's default is to use Unix socket ;
+a UDP or a Unix socket. \Sympa's default is to use a Unix socket;
 you may change this behaviour by editing \file {sympa.conf}'s
 \lparam {log\_socket\_type} parameter (\ref{par-log-socket-type},
 page~\pageref{par-log-socket-type}).
 
 \section {Daemon loading}
 
-Once all files are configured, all you have to do is start \Sympa.
+Once the files are configured, all that remains is to start \Sympa.
 At startup, \file {sympa.pl} will change its UID to sympa (as defined in \file {Makefile}).
 To do this, add the following sequence or its equivalent in your
 \file {/etc/rc.local}:
@@ -988,26 +979,26 @@ To do this, add the following sequence or its equivalent in your
 \end{verbatim}
 \end {quote}
 
-\file {sympa.pl} recognises the following command line arguments:
+\file {sympa.pl} recognizes the following command line arguments:
 
 \begin {itemize}
 
 \item --debug | -d 
   
   Sets \Sympa in debug mode and keeps it attached to the terminal. 
-  Debug information are printed to STDERR as well as standard log
+  Debugging information is output to STDERR, along with standard log
   information. Each function call is traced. Usefull while reporting
   a bug.
   
 \item --config | -f \textit {config\_file}
   
-  Forces \Sympa to use an alternate configuration file. Default behaviour is
-  to use configuration file as defined in the Makefile (\$CONFIG).
+  Forces \Sympa to use an alternative configuration file. Default behaviour is
+  to use the configuration file as defined in the Makefile (\$CONFIG).
   
 \item --mail | -m 
   
-  \Sympa will log calls to sendmail, including recipients. Usefull to
-  keep track of each mail sent (log files may grow faster though).
+  \Sympa will log calls to sendmail, including recipients. Useful for
+  keeping track of each mail sent (log files may grow faster though).
   
 \item --lang | -l \textit {catalog}
   
@@ -1049,9 +1040,8 @@ To do this, add the following sequence or its equivalent in your
     \index{configuration file}
 
 The \file {/etc/sympa.conf} configuration file contains numerous
-parameters which are read on start-up of \Sympa and allow the
-program to run.  If you have to change this file, do not forget
-that you have to restart \Sympa. 
+parameters which are read on start-up of \Sympa. If you change this file, do not forget
+that you will need to restart \Sympa afterwards. 
 
 The \file {/etc/sympa.conf} file contains directives in the following
 format:
@@ -1069,9 +1059,8 @@ the file is of no importance.
 
 \subsection {\cfkeyword {host}}
 
-        This keyword is \textbf {mandatory}. It is the name of the
-        machine used in \rfcheader {From} header during responses
-        to administrative requests.
+        This keyword is \textbf {mandatory}. It is the domain name
+	used in the \rfcheader {From} header in replies to administrative requests.
 
         \example {host listhost.cru.fr}
 
@@ -1079,16 +1068,15 @@ the file is of no importance.
 	
 	\default {sympa}
 
-        Address (left part, name before the \texttt {@} sign) used
-        in \rfcheader {From} header during responses to administrative
-        requests.
+        Username (the part of the address preceding the \texttt {@} sign) used
+        in the \rfcheader {From} header in replies to administrative requests.
 
         \example {email           listserv}
 
 \subsection {\cfkeyword {listmaster}} 
 
-        The list of email address  of listmasters (person who can perform
-        global  serveur command).
+        The list of email addresses  of listmasters (users authorized to perform
+        global  serveur commands).
 
         \example {listmaster postmaster@cru.fr,root@home.cru.fr}
 
@@ -1103,13 +1091,14 @@ the file is of no importance.
 \subsection {\cfkeyword {cookie}} 
 
 	This string is used to generate MD5 authentication keys.
-	It allows such authentication keys to differ from one
+	It allows generated authentication keys to differ from one
 	site to another. It is also used for reversible encryption of
-        user password stored in database. Therefore you need to restrict
-        \file {sympa.conf} access to Sympa user. 
+        user passwords stored in the database. The presence of this string
+	is one reason why access to \file {sympa.conf} needs to be restricted
+	to the Sympa user. 
        
-        Don't forget that changing this parameter will break all
-        http cookies stored in user's browser and all user password.
+        Note that changing this parameter will break all
+        http cookies stored in users' browsers, as well as all user passwords.
 
         \example {cookie gh869jku5}
 
@@ -1117,7 +1106,7 @@ the file is of no importance.
 
 	 \default {listmaster}
 
-	It defines who can create a list (or request a list creation).
+	Defines who can create lists (or request list creations).
 	Sympa will use the corresponding scenario.
 
         \example {create\_list intranet}
@@ -1128,7 +1117,7 @@ the file is of no importance.
 
 	 \default {\tildedir {sympa/expl}}
 
-        The directory containing lists' subdirectories.
+        The directory whose subdirectories correspond to the different lists.
 
         \example {home          /home/sympa/expl}
 
@@ -1136,11 +1125,11 @@ the file is of no importance.
 
 	 \default {\tildedir {sympa/etc}}
 
-        This is the local directory for configuration files (like
-	\file {edit\_list.conf}. It contains 3 subdirectories :
-	\dir {scenari} for local scenari and \dir {templates}
-	for local site's templates and default lists' templates and \dir {wws\_templates}
-        for local site's html templates.
+        This is the local directory for configuration files (such as
+	\file {edit\_list.conf}. It contains 3 subdirectories:
+	\dir {scenari} for local scenari; \dir {templates}
+	for the site's local templates and default list templates; and \dir {wws\_templates}
+        for the site's local html templates.
 
         \example {home          /home/sympa/etc}
 
@@ -1150,7 +1139,7 @@ the file is of no importance.
 
 	\default {LOCAL1}
 
-        Name of sub-system (facility) for sending messages.
+        Name of the sub-system (facility) for logging messages.
 
         \example {syslog          LOCAL2}
 
@@ -1159,9 +1148,9 @@ the file is of no importance.
 
 	\default {inet}
 
-        \Sympa communication with \unixcmd {syslogd} can be performed
-        using either UDP or Unix socket type.  Set \cfkeyword
-        {log\_socket\_type} to \texttt {inet} to use UDP or \texttt
+        \Sympa communicates with \unixcmd {syslogd}
+        using either UDP or Unix sockets.  Set \cfkeyword
+        {log\_socket\_type} to \texttt {inet} to use UDP, or \texttt
         {unix} for Unix sockets.
 
 \subsection {\cfkeyword {pidfile}} 
@@ -1170,7 +1159,7 @@ the file is of no importance.
 
         The file where the \file {sympa.pl} daemon stores its
         process number. Warning: the \texttt {sympa} user must be
-        able to write in this file, and to create it if it doesn't
+        able to write to this file, and to create it if it doesn't
         exist.
 
         \example {pidfile         /var/run/sympa.pid}
@@ -1189,7 +1178,7 @@ the file is of no importance.
 
 	\default {20}
 
-        Maximum number of SMTP delivery child processes launched
+        Maximum number of SMTP delivery child processes spawned
         by  \Sympa. This is the main load control parameter.
 
         \example {maxsmtp           500}
@@ -1200,7 +1189,7 @@ the file is of no importance.
 	\default {5 Mb}
 
 	Maximum size allowed for messages distributed by \Sympa.
-	This may be custumized per list by setting \lparam {max\_size} 
+	This may be customized per list by setting the \lparam {max\_size} 
 	list parameter.
 
         \example {max\_size           2097152}
@@ -1210,8 +1199,8 @@ the file is of no importance.
 	\default {25}
 
         Maximum number of recipients per \unixcmd {sendmail} call.
-        This grouping factor makes it possible for the MTA (\unixcmd
-        {sendmail}) to optimize the number of SMTP sessions for
+        This grouping factor makes it possible for the (\unixcmd
+        {sendmail}) MTA to optimize the number of SMTP sessions for
         message distribution.
 
 \subsection {\cfkeyword {avg}} 
@@ -1225,7 +1214,7 @@ the file is of no importance.
 
 	\default {/usr/sbin/sendmail}
 
-        Absolute call path to SMTP message transfert agent (\unixcmd
+        Absolute call path to SMTP message transfer agent (\unixcmd
         {sendmail} for example).
 
         \example {sendmail        /usr/sbin/sendmail}
@@ -1243,9 +1232,9 @@ the file is of no importance.
 
         \default {Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To}
 
-        This is the list of headers that \Sympa should remove from the
+        This is the list of headers that \Sympa should remove from
         outgoing messages. Use it, for example, to ensure some privacy
-        to your users, while not retaining all the anonymous options.
+        for your users by discarding anonymous options.
         It is (for the moment) site-wide. It is applied before the
         \Sympa, {rfc2369\_header\_fields}, and {custom\_header} fields are
         added.
@@ -1277,7 +1266,7 @@ the file is of no importance.
 
 	\default {\tildedir {sympa/spool/moderation}}
 
-        This parameter is optional and still supported for backward compatibility.
+        This parameter is optional and retained solely for backward compatibility.
 
 
 \subsection {\cfkeyword {queuedigest}}  
@@ -1286,34 +1275,34 @@ the file is of no importance.
 
 	\default {\tildedir  {digest}}
 
-        This parameter is optional and still supported for backward compatibility.
+        This parameter is optional and retained solely for backward compatibility.
 
 \subsection {\cfkeyword {queueexpire}}  
 
 	\default {\tildedir {sympa/spool/expire}}
 
-        This parameter is optional and still supported for backward compatibility.
+        This parameter is optional and retained solely for backward compatibility.
 
 \subsection {\cfkeyword {queueauth}} 
 
 	\default {\tildedir {sympa/spool/auth}}
 
-        This parameter is optional and still supported for backward compatibility.
+        This parameter is optional and retained solely for backward compatibility.
 
 \subsection {\cfkeyword {queueoutgoing}} 
 
 	\default {\tildedir {sympa/spool/outgoing}}
 
-	This parameter is optional and still supported for backward compatibility.
+	This parameter is optional and retained solely for backward compatibility.
 
 \subsection {\cfkeyword {queuebounce}} 
     \index{bounce}
 
 	\default {\tildedir {sympa/spool/bounce}}
 
-        Spool to store bounces (non-delivery reports) received at \samplelist-owner 
-	or bounce+* address by \file {bouncequeue} program. This parameter is mandatory
-        and must be a absolute path.
+        Spool to store bounces (non-delivery reports) received by the \file {bouncequeue}
+	program via the \samplelist-owner or bounce+* addresses . This parameter is mandatory
+        and must be an absolute path.
 
 
 \subsection {\cfkeyword {sleep}}  
@@ -1321,18 +1310,18 @@ the file is of no importance.
 
 	\default {5}
 
-        Waiting period (in seconds) between each scan of main queue.
+        Waiting period (in seconds) between each scan of the main queue.
         Never set this value to~0!
 
 \subsection {\cfkeyword {clean\_delay\_queue}} 
 
 	\default {1}
 
-        Conservation time (in days) for ``bad'' messages in
+        Retention period (in days) for ``bad'' messages in
         \textindex {spool} (as specified by \cfkeyword {queue}).
         \Sympa keeps messages rejected for various reasons (badly
-        formatted messages, messages coming from loops, etc.) in
-        this directory, under a name prefixed by \texttt {BAD}.
+        formatted, looping, etc.) in
+        this directory, with a name prefixed by \texttt {BAD}.
         This configuration variable controls the number of days
         these messages are kept.
 
@@ -1342,18 +1331,18 @@ the file is of no importance.
 
 	\default {10}
 
-        Expiration date (in days) in \textindex {moderation}
+        Expiration delay (in days) in the \textindex {moderation}
         \textindex {spool} (as specified by \cfkeyword {queuemod}).
         Beyond this deadline, messages that have not been processed
-        are deleted.  The content of this spool can be consulted
-        for each moderated list using a key along with the \mailcmd
+        are deleted.  For moderated lists, the contents of this spool
+	can be consulted using a key along with the \mailcmd
         {MODINDEX} command.
 
 \subsection {\cfkeyword {clean\_delay\_queueauth}}  
 
 	\default {3}
 
-        Expiration delay (in days) in an \textindex {authentication}
+        Expiration delay (in days) in the \textindex {authentication}
         queue.  Beyond this deadline, messages not enabled are
         deleted.
 
@@ -1363,15 +1352,15 @@ the file is of no importance.
 
 	\default{\tildedir {sympa/nls}}
 
-        This is the multilinguale catalogs location (nls). Must be
-        set accordind to the \tildefile {src/nls/Makefile}.
+        The location of multilingual (nls) catalog files. Must correspond to
+	\tildefile {src/nls/Makefile}.
 
 \subsection {\cfkeyword {lang}}   
 
 	\default {us}
 
-        The is the language for \Sympa. The corresponding message
-	catalog (.cat) located in \cfkeyword {msgcat} directory
+        The is the language for \Sympa. The message
+	catalog (.cat) located in the corresponding \cfkeyword {msgcat} directory
 	will be used.
 
 \section {Bounce related}
@@ -1381,39 +1370,37 @@ the file is of no importance.
          
         \default {30}
 
-	This is the site default value for \lparam {bounce}.
-	Above this rate of bouncing addresses in a list, listowner
-	receives a warning for each mail distributed in the
-	list.
+	Site default value for \lparam {bounce}.
+	The listowner receives a warning whenever a message is distributed and
+	the number of bounces exceeds this value.
 
 \subsection {\cfkeyword {bounce\_halt\_rate}}
         \label {kw-bounce-halt-rate}
          
         \default {50}
 
-	\texttt {NOT USED YET}
+	\texttt {FOR FUTURE USE}
 
-	This is the site default value for \lparam {bounce}.
-	Above this rate of bouncing addresses in a list, messages
-	for the list aren't distributed.
+	Site default value for \lparam {bounce}.
+	Messages will cease to be distributed if the number of bounces exceeds this value.
 
 \subsection {\cfkeyword {welcome\_return\_path}}
         \label {kw-welcome-return-path}
          
         \default {owner}
 
-	If set to string \texttt {unique}, sympa will use a unique email adresse in the
-        return path starting with \texttt {bounce+} in order to remove the related subscriber.
-        You need the \texttt {bounced} deamon and the plussed aliases as in 
-        sendmail 8.7 and above.
+	If set to string \texttt {unique}, sympa will use a unique email address in the
+        return path, prefixed by \texttt {bounce+}, in order to remove the corresponding
+	subscriber. Requires the \texttt {bounced} daemon, and plussed aliases (as in 
+        sendmail 8.7 and later).
 
 \subsection {\cfkeyword {remind\_return\_path}}
         \label {kw-remind-return-path}
          
         \default {owner}
 
-        Like \cfkeyword {welcome\_return\_path} but efficient with the remind message.
-
+        Like \cfkeyword {welcome\_return\_path}, but relates to the remind message.
+	
 \section {Priority related}
 
 \subsection {\cfkeyword {sympa\_priority}}  
@@ -5449,3 +5436,4 @@ See also the
 \printindex
 
 \end {document}
+
