@@ -3075,6 +3075,8 @@ sub verify {
 	    do_log('info','Unable to create list object %s', $context->{'listname'});
 	    return undef;
 	}
+
+	$context->{'host'} = $list->{'admin'}{'host'};
     }
 
     unless ($condition =~ /(\!)?\s*(true|is_listmaster|is_editor|is_owner|is_subscriber|match|equal|message)\s*\(\s*(.*)\s*\)\s*/i) {
