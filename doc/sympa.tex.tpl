@@ -2006,7 +2006,8 @@ others. Depending on permissions, the same URL may generate a different view.
 #define WWSYMPA "/home/sympa/bin/wwsympa.fcgi"
 
 int main(int argn, char **argv, char **envp) {
-  execve(WWSYMPA,argv,envp);
+    argv[0] = WWSYMPA;
+    execve(WWSYMPA,argv,envp);
 }
 
 \end{verbatim}
