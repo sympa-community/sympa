@@ -149,7 +149,6 @@ sub create_list_old{
     if ($param->{'topics'}){
 	unless (&check_topics($param->{'topics'},$robot)){
 	    &do_log('err', 'admin::create_list_old : topics param %s not defined in topics.conf',$param->{'topics'});
-	    return undef;
 	}
     }
       
@@ -734,15 +733,19 @@ sub check_topics {
     my $robot = shift;
     &do_log('info', "admin::check_topics($topic,$robot)");
 
+    my ($top, $subtop) = split /\//, $topic;
+
     my %topics;
     unless (%topics = &List::load_topics($robot)) {
 	&do_log('err','admin::check_topics : unable to load list of topics');
     }
 
-    foreach my $t (keys %topics) {
-	next unless ($topics{$t}{'id'} eq $topic);
-	return 1;
+    if ($subtop) {
+	return 1 if (defined $topics{$top} && defined $topics{$top}{'sub'}{$subtop});
+    }else {
+	return 1 if (defined $topics{$top});
     }
+
     return undef;
 }
 
