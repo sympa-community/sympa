@@ -16,7 +16,7 @@ use Getopt::Long;
 use strict;
 
 ## Sympa API
-require 'parser.pl';
+require 'tt2native.pl';
 use List;
 use smtp;
 use Conf;
