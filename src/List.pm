@@ -7634,9 +7634,10 @@ sub _load_list_param {
 	$value = {'name' => $value};
     }
 
-    ## Do we need to split param
+    ## Do we need to split param if it is not already an array
     if (($p->{'occurrence'} =~ /n$/)
-	&& $p->{'split_char'}) {
+	&& $p->{'split_char'}
+	&& !(ref($value) eq 'ARRAY')) {
 	my @array = split /$p->{'split_char'}/, $value;
 	foreach my $v (@array) {
 	    $v =~ s/^\s*(.+)\s*$/$1/g;
