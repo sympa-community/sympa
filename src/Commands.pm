@@ -1356,7 +1356,7 @@ sub set {
 
     ## SET EACH is a synonim for SET MAIL
     $mode = 'mail' 
-	if ($mode =~ /^each$/i);
+	if ($mode =~ /^each|eachmail|nodigest$/i);
     $mode =~ y/[a-z]/[A-Z]/;
     
     ## Recursive call to subroutine
@@ -1379,6 +1379,13 @@ sub set {
 	do_log('info', 'SET %s %s from %s refused, unknown list', $which, $mode, $sender);
 	return 'unknown_list';
     }
+
+    ## No subscriber pref if 'include'
+    if ($list->{'admin'}{'user_data_source'} eq 'include') {
+		push @msg::report, sprintf Msg(6, 91, '%s mailing list does not provide subscriber preferences.\n'), $list->{'name'};
+	do_log('info', 'SET %s %s from %s refused, user_data_source include',  $which, $mode, $sender);
+	return 'not allowed';
+    }
     
     &Language::SetLang($list->{'admin'}{'lang'});
 
@@ -1386,18 +1393,18 @@ sub set {
     ## just reject the message.
     unless ($list->is_user($sender) ) {
 	push @msg::report, sprintf Msg(6, 33, "Email address %s was not found on the list.\n"), $sender;
-	do_log('info', 'SET %s %s from %s refused, not on list',  $which, $sender, $mode);
+	do_log('info', 'SET %s %s from %s refused, not on list',  $which, $mode, $sender);
 	return 'not allowed';
     }
     
     ## May set to DIGEST
-    if ($mode =~ /^(digest|summary)/i and !$list->is_digest()){
+    if ($mode =~ /^(digest|summary)/ and !$list->is_digest()){
 	push @msg::report, sprintf Msg(6, 45, "List %s has no digest mode. Your configuration hasn't been modified.\n"), $which;
 	do_log('info', 'SET %s DIGEST from %s refused, no digest mode', $which, $sender);
 	return 'not_allowed';
     }
     
-    if ($mode =~ /^(mail|each|nomail|digest|summary|notice)/i){
+    if ($mode =~ /^(mail|nomail|digest|summary|notice)/){
         # Verify that the mode is allowed
         if (! $list->is_available_reception_mode($mode)) {
 	  push @msg::report, sprintf Msg(6, 90, "List %s allows only these reception modes : %s\nYour configuration hasn't been modified.\n"), $which, $list->available_reception_mode;
@@ -1405,11 +1412,13 @@ sub set {
 	  return 'not_allowed';
 	}
 
-	$list->update_user($sender,{'reception'=> ''}) if($mode=~/^(mail|each(mail)?|nodigest)/i);
-	$list->update_user($sender,{'reception'=> 'nomail'}) if($mode=~/^nomail/i);
-	$list->update_user($sender,{'reception'=> 'digest'}) if($mode=~/^digest/i);
-	$list->update_user($sender,{'reception'=> 'summary'}) if($mode=~/^summary/i);
-	$list->update_user($sender,{'reception'=> 'notice'}) if($mode=~/^notice/i);
+	my $update_mode = $mode;
+	$update_mode if ($update_mode eq 'mail');
+	unless ($list->update_user($sender,{'reception'=> $update_mode})) {
+	    push @msg::report, sprintf Msg(6, 92, 'Failed to change your subscriber options for list %s.\n'), $list->{'name'};
+	    do_log('info', 'SET %s %s from %s refused, update failed',  $which, $mode, $sender);
+	    return 'failed';
+	}
 	$list->save();
 	
 	push @msg::report, sprintf Msg(6,40, "Your config file has been updated for list %s.\n"), $which   unless ($quiet || ($action =~ /quiet/i ));
@@ -1417,12 +1426,12 @@ sub set {
 	do_log('info', 'SET %s %s from %s accepted (%d seconds)', $which, $mode, $sender, time-$time_command);
     }
     
-    if ($mode =~ /^(conceal|noconceal)/i){
-	$list->update_user($sender,{'visibility'=> 'conceal'}) 
-	    if ($mode =~ /^conceal/i);
-	$list->update_user($sender,{'visibility'=> ''}) 
-	    if ($mode =~ /^noconceal/i);
-
+    if ($mode =~ /^(conceal|noconceal)/){
+	unless ($list->update_user($sender,{'visibility'=> $mode})) {
+	    push @msg::report, sprintf Msg(6, 92, 'Failed to change your subscriber options for list %s.\n'), $list->{'name'};
+	    do_log('info', 'SET %s %s from %s refused, update failed',  $which, $mode, $sender);
+	    return 'failed';
+	}
 	$list->save();
 	
 	push @msg::report, sprintf Msg(6,40, "Your config file have been updated on list %s.\n"), $which unless ($quiet || ($action =~ /quiet/i ));

@@ -2674,8 +2674,13 @@ sub update_user {
 
     my ($field, $value);
     
-    ## Subscribers stored in database
-    if ($self->{'admin'}{'user_data_source'} eq 'database') {
+    ## Subscribers extracted from external data source
+    if ($self->{'admin'}{'user_data_source'} eq 'file') {
+	&do_log('notice', 'Cannot update userin list %s, user_data_source include', $self->{'admin'}{'user_data_source'});
+	return undef;
+
+	## Subscribers stored in database
+    } elsif ($self->{'admin'}{'user_data_source'} eq 'database') {
 	
 	my ($user, $statement, $table);
 	my $name = $self->{'name'};
@@ -5511,6 +5516,7 @@ sub _load_admin_file {
 	foreach my $p ('subscribe','add','invite','unsubscribe','del') {
 	    $admin{$p} = &_load_list_param($p, 'closed', $::pinfo{$p}, 'closed', $directory);
 	}
+
     }
 
     ## Do we have a database config/access

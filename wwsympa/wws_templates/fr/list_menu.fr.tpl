@@ -155,6 +155,7 @@
    [ENDIF]
    <!-- Subscription depending on susbscriber or not, email define or not etc -->
    [IF is_subscriber=1]
+    [IF may_suboptions=1]
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
 
@@ -183,6 +184,7 @@
   <TD WIDTH=--COL4-->
   </TD>
  </TR>
+ [ENDIF]
  <TR>
   <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>

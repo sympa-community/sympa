@@ -958,6 +958,8 @@ sub check_param_out {
 					     'remote_host' => $param->{'remote_host'},
 					     'remote_addr' => $param->{'remote_addr'}});
 	
+	$param->{'may_suboptions'} = 1 unless ($list->{'admin'}{'user_data_source'} eq 'include');
+	
 	$param->{'may_review'} = 1 if ($action =~ /do_it/);
 	
 	## Archives Access control

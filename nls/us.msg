@@ -167,6 +167,8 @@ If you do not want this action to be taken, simply ignore this message.\n"
 86	"User %s is unwanted in list %s.\n"
 90	"List %s allows only these reception modes : %s\n\
 Your configuration hasn't been modified.\n"
+91	"%s mailing list does not provide subscriber preferences.\n"
+92	"Failed to change your subscriber options for list %s.\n"
 260	"Someone (hopefully you) asked for your e-mail address\n\
 to be added to list '%s'.\n\
 If you want this action to be taken, please\n\

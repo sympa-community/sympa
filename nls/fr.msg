@@ -173,6 +173,8 @@ ce message.\n"
 86	"Cette personne '%s' est indésirable dans la liste '%s'.\n"
 90	"La liste %s autorise uniquement ces modes de réception : %s\n\
 Votre configuration concernant n'a pas été modifiée.\n"
+91	"La liste %s ne propose pas d'options d'abonnement.\n"
+92	"Vos options d'abonné à la liste %s n'ont pu être mises à jour.\n"
 260	"Quelqu'un (probablement vous) a demandé votre abonnement à la  liste '%s'.\n\
 Pour confirmer cette action veuillez :\n\
 - répondre à ce message\nOU\n\
