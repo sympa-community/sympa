@@ -3781,7 +3781,6 @@ sub request_action {
     }
     foreach my $rule (@rules) {
 	next if ($rule eq 'scenario');
-	);
 	if ($auth_method eq $rule->{'auth_method'}) {
 	    my $result =  &verify ($context,$rule->{'condition'});
 
