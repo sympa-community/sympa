@@ -2414,8 +2414,7 @@ then set \cfkeyword {db\_user} and \cfkeyword {db\_passwd} in \file {sympa.conf}
 With \index{MySQL} :
 \begin {quote}
 \begin{verbatim}
-set password for sympa@localhost=password('your_password');
-grant all privileges on sympa.* to sympa@localhost;
+grant all on sympa.* to sympa@localhost identified by 'your_password';
 flush privileges;
 \end{verbatim}
 \end {quote}
