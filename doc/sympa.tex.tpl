@@ -1676,7 +1676,7 @@ States the model version used to create the task which regurlaly checks the cert
 expiration dates and warns users whose certificate have expired or are going to.
 To know more about tasks, see \ref {tasks}, page~\pageref {tasks}.
 
-\subsection {\cfkeyword {CRL\_update\_task}}
+\subsection {\cfkeyword {crl\_update\_task}}
 
 Specifies the model version used to create the task which regurlaly updates the certificate
 revocation lists. 
@@ -2848,9 +2848,9 @@ certificates stored in the \tildedir {sympa/expl/X509-user-certs/} directory.
 The user is warned with the \file {daily\_cert\_expiration} template when his certificate has expired
 or is going to expire within three days.
 
-\subsection {CRL\_update.hourly.task model}
+\subsection {crl\_update.hourly.task model}
 
-You may use the model \file {CRL\_update.daily.task} to create a task which daily updates the certificate revocation
+You may use the model \file {crl\_update.daily.task} to create a task which daily updates the certificate revocation
 lists when needed.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3612,9 +3612,9 @@ Here is the list of current avalaible commands :
 \item chk\_cert\_expiration ($<template>, <delay>$)
 
 	Send the template message to emails whose certificate has expired or will expire within the delay.
-\item update\_CRL ($<file name>, <delay>$)
+\item update\_crl ($<file name>, <delay>$)
 
-	Update CRLs which are expired or will expire within the delay. The file stores the CRL's URLs.
+	Update crls which are expired or will expire within the delay. The file stores the crl's URLs.
 \end {itemize}
 
 Model files may have a scenario-like title line at the beginning.
@@ -3655,11 +3655,11 @@ to remove existing task files in the \dir {task/} spool if needed. Task file nam
 	\end {quote}
 
 
-\item CRL\_update.hourly.task\\
+\item crl\_update.hourly.task\\
 	\begin {quote}
 	\begin{verbatim}
 	[STARTPARSE]
-	[INCLUDE '../src/etc/global_task_models/CRL_update.hourly.task']
+	[INCLUDE '../src/etc/global_task_models/crl_update.hourly.task']
 	[STOPPARSE]
 	\end{verbatim}
 	\end {quote}

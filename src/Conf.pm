@@ -12,9 +12,9 @@ use Carp;
 @EXPORT = qw(%Conf);
 
 my @valid_options = qw(
-		       avg bounce_warn_rate bounce_halt_rate
+		       avg bounce_warn_rate bounce_halt_rate chk_cert_expiration_task 
 		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod 
-		       cookie create_list db_host db_name db_options db_passwd db_type db_user 
+		       cookie create_list crl_update_task db_host db_name db_options db_passwd db_type db_user 
 		       db_additional_subscriber_fields db_additional_user_fields
 		       default_list_priority edit_list email etc
 		       global_remind home host domain lang listmaster log_socket_type 
@@ -103,7 +103,9 @@ my %Default_Conf =
      'bg_color' => '--BG_COLOR--',
      'error_color' => '--ERROR_COLOR--',
      'selected_color' => '--SELECTED_COLOR--',
-     'shaded_color' => '--SHADED_COLOR--'
+     'shaded_color' => '--SHADED_COLOR--',
+     'chk_cert_expiration_task' => '',
+     'crl_update_task' => ''
    );
    
 %Conf = ();

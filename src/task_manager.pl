@@ -138,8 +138,12 @@ my @tasks; # list of tasks in the spool
 undef my $log; # won't execute send_msg and delete commands if true, only log
 #$log = 1;
 
-## building of the list of models concerning individual lists
+## list of list task models
 my @list_models = ('expire','remind');
+
+## list of the global task models
+my %global_models = ('crl_update_task' => 'crl_update', 
+		     'chk_cert_expiration_task' => 'chk_cert_expiration');
 
 ## month hash used by epoch conversion routines
 my %months = ('Jan', 0, 'Feb', 1, 'Mar', 2, 'Apr', 3, 'May', 4,  'Jun', 5, 
@@ -164,7 +168,7 @@ my %commands = ('next'                  => ['date', '\w*'],
 		                           #script
 		'chk_cert_expiration' => ['\w+',   'delay'],
 		                           #template  delay
-		'update_CRL'            => ['\w+', 'delay'], 
+		'update_crl'            => ['\w+', 'delay'], 
 					   #file    #delay
 		);
 
@@ -214,7 +218,7 @@ while (!$end) {
     foreach my $task (@tasks) {
 	$task =~ /(\d+)\.\w+\.\w+\.(\w+)/;
 	last unless ($1 < $current_date);
-	if ($2 ne 'global') { # list task
+	if ($2 ne '_global') { # list task
 	    my $list = new List ($2);
 	    next unless ($list->{'admin'}{'status'} eq 'open');
 	}
@@ -240,39 +244,19 @@ while (!$end) {
 			'execution_date' => 'execution_date');
 
     ## global tasks
-    
-     # user global task models
-    if (opendir(DIR, $user_global_task_model_dir)) {
-	my @files = grep !/^\.\.?$/, readdir DIR;
-	foreach (@files) {
-	    /(\w+)\.(\w+)\.task/;
-	    my %data = %default_data; # hash of datas necessary to the creation of tasks
-	    if (!in (\@used_models, $1)) {
-		create ($current_date, '', $1, $2, 'global_task', \%data);
-		push (@used_models, $1);
-	    } 
-	}
-    }
 
-     # standart global task models
-    if  (opendir(DIR, $std_global_task_model_dir)) {
-	my @files = grep !/^\.\.?$/, readdir DIR;
-	foreach (@files) {
-	    /(\w+)\.(\w+)\.task/;
-	    my %data = %default_data;
-	    if (!in (\@used_models, $1)) {
-		create ($current_date, '', $1, $2, 'global_task', \%data);
+    foreach my $key (keys %global_models) {
+	if (!in (\@used_models, $global_models{$key})) {
+	    if ($Conf{$key}) { 
+		my %data = %default_data; # hash of datas necessary to the creation of tasks
+		create ($current_date, '', $global_models{$key}, $Conf{$key}, '_global', \%data);
 		push (@used_models, $1);
 	    }
-	    create ($current_date, '', $1, $2, 'global_task', \%data) if (! in (\@used_models, $1));
 	}
-    } else {
-	&do_log ('err', "error : can't open dir %s: %m", $std_global_task_model_dir);
-    }
+    }    
     
-    
-    ## tasks concerning individuals lists : loop on the lists
-    
+    ## list tasks
+
     foreach ( &List::get_lists() ) {
 	
 	my %data = %default_data;
@@ -280,18 +264,18 @@ while (!$end) {
 	
 	$data{'list'}{'name'} = $list->{'name'};
 	
-	my %list_models; # stores which models already have a task 
-	foreach (@list_models) { $list_models{$_} = undef; }
+	my %used_list_models; # stores which models already have a task 
+	foreach (@list_models) { $used_list_models{$_} = undef; }
 	
 	foreach $_ (@tasks) {
 	   /(.*)\.(.*)\.(.*)\.(.*)/;
 	   my $model = $3;
 	   my $object = $4;
-	   if ($object eq $list->{'name'}) { $list_models {$model} = 1; }
+	   if ($object eq $list->{'name'}) { $used_list_models {$model} = 1; }
        }
         
-	foreach my $model (keys %list_models) {
-	    unless ($list_models{$model}) {
+	foreach my $model (keys %used_list_models) {
+	    unless ($used_list_models{$model}) {
 		if ( $list->{'admin'}{$model.'_task'} ) {
 		    create ($current_date, '', $model, $list->{'admin'}{$model.'_task'}, 'list', \%data);
 		}
@@ -332,7 +316,7 @@ sub create {
     &do_log ('notice', "creation of $task_file");
 
      # for global model
-    if ($object eq 'global_task') {
+    if ($object eq '_global') {
 	if (open (MODEL, "$user_global_task_model_dir/$model_name")) {
 	    $model_file = "$user_global_task_model_dir/$model_name";
 	} elsif (open (MODEL, "$std_global_task_model_dir/$model_name")) {
@@ -689,7 +673,7 @@ sub cmd_process {
     return create_cmd ($Rarguments, \%context) if ($command eq 'create');
     return exec_cmd ($Rarguments) if ($command eq 'exec');
     return chk_cert_expiration ($Rarguments, \%context) if ($command eq 'chk_cert_expiration');
-    return update_CRL ($Rarguments, \%context) if ($command eq 'update_CRL');
+    return update_crl ($Rarguments, \%context) if ($command eq 'update_crl');
 }
 
 
@@ -860,7 +844,7 @@ sub create_cmd {
     my $object;
     if ($arg =~ /$subarg_regexp/) {
 	$type = $1;
-	$object = $2;
+	$object = $3;
     } else {
 	error ($context->{'task_file'}, "error in create command : don't know how to create $arg");
 	return undef;
@@ -875,13 +859,11 @@ sub create_cmd {
 	$data{'list'}{'name'} = $list->{'name'};
     }
     if ($type eq 'global') {
-	$type = 'global_task';
-        # AF prepare le %data
+	$type = '_global';
     }
 
     unless (create ($context->{'execution_date'}, '', $model, $model_choice, $type, \%data)) {
-	&do_log ('err', "creation command failed, task interrupted");
-        change_label ($context->{'task_file'}, 'ERROR');
+	error ($context->{'task_file'}, "error in create command : creation subroutine failure");
 	return undef;
     }
     
@@ -986,7 +968,7 @@ sub chk_cert_expiration {
     return 1;
 }
 
-sub update_CRL {
+sub update_crl {
 
     my $Rarguments = $_[0];
     my $context = $_[1];
@@ -995,12 +977,12 @@ sub update_CRL {
     my $delay = $tab[1];
     my $CA_file = "/usr/local/sympb/expl/$tab[0]"; # file where CA urls are stored ; AF completer avec un DIR std defini dans %conf
    
-    &do_log ('notice', "line $context->{'line_number'} : update_CRL (@tab)");
+    &do_log ('notice', "line $context->{'line_number'} : update_crl (@tab)");
 
     # building of CA list
     my @CA;
     unless (open (FILE, $CA_file)) {
-	error ($context->{'task_file'}, "error in update_CRL command : can't open $CA_file file");
+	error ($context->{'task_file'}, "error in update_crl command : can't open $CA_file file");
 	return undef;
     }
     while (<FILE>) {
@@ -1009,12 +991,12 @@ sub update_CRL {
     }
     close (FILE);
 
-    # updating of CRL files
-    my $CRL_dir = '/usr/local/sympb/expl/CRL'; # AF : sera defini dans la conf
+    # updating of crl files
+    my $crl_dir = '/usr/local/sympb/expl/crl'; # AF : sera defini dans la conf
     foreach my $url (@CA) {
 	
 	my $crl_file = &tools::escape_chars ($url); # convert an URL into a file name
-	my $file = "$CRL_dir/$crl_file";
+	my $file = "$crl_dir/$crl_file";
 	
 	## create $file if it doesn't exist
 	unless (-e $file) {
@@ -1024,7 +1006,7 @@ sub update_CRL {
 	    next;
 	}
 
-	 # building of the CRL expiration date
+	 # building of the crl expiration date
 	open (ID, "openssl crl -nextupdate -in \'$file\' -noout -inform der|");
 	my $date = <ID>; # expiration date
 	close (ID);
@@ -1034,7 +1016,7 @@ sub update_CRL {
 	my @date = (0, $4, $3 - 1, $2, $months{$1}, $5 - 1900);
 	my $expiration_date = timegm (@date); # epoch expiration date
 
-	## check if the CRL is soon expired or expired
+	## check if the crl is soon expired or expired
 	my $file_date = $context->{'execution_date'} - (-M $file) * 24 * 60 * 60; # last modification date
 	my $limit = &tools::epoch_conv ("$expiration_date-$delay", $context->{'execution_date'});
 	my $condition = "older($file_date, $limit)";
