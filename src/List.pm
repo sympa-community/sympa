@@ -4103,7 +4103,7 @@ sub search{
 
  
     my $filter = $ldap_conf{'filter'};	
-    $filter =~ s/\[sender\]/$sender/;
+    $filter =~ s/\[sender\]/$sender/g;
     
     if (defined ($persistent_cache{'named_filter'}{$ldap_file}{$filter}) &&
 	(time <= $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'update'} + $timeout)){ ## Cache has 1hour lifetime
