@@ -24,13 +24,13 @@ package Language;
 require Exporter;
 use Carp;
 @ISA = qw(Exporter);
-@EXPORT = qw(Msg gettext);
+@EXPORT = qw(Msg &gettext);
 
 use strict;
 use Log;
 use Version;
 use POSIX qw (setlocale);
-use Locale::Messages qw (:locale_h :libintl_h);
+use Locale::Messages qw (:locale_h :libintl_h !gettext);
 
 my %msghash;     # Hash organization is like Messages file: File>>Sections>>Messages
 my %set_comment; #sets-of-messages comment   
@@ -132,7 +132,7 @@ sub maketext {
 	$msg .= "\n";
     }
 
-    my $translation = gettext ($msg);
+    my $translation = &gettext ($msg);
 
     ## replace parameters in string
     $translation =~ s/\%(\d+)/$_[$1-1]/eg;
