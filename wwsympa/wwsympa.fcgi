@@ -530,7 +530,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
      ## Default auth method (for scenarios)
      $param->{'auth_method'} = 'md5';
 
-     if ($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS') {
+     if (($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS') &&
+	 ($in{'action'} ne 'sso_login')) { ## Do not check client certificate automatically if in sso_login 
+
 	 &do_log('debug2', "SSL verified, S_EMAIL = %s,"." S_DN_Email = %s", $ENV{'SSL_CLIENT_S_EMAIL'}, $ENV{SSL_CLIENT_S_DN_Email});
 	 if (($ENV{'SSL_CLIENT_S_EMAIL'})) {
 	     ## this is the X509v3 SubjectAlternativeName, and requires
@@ -1313,6 +1315,11 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		 $masked_email =~ s/\@/ AT /;
 		 $param->{'editor'}{$e->{'email'}}{'masked_email'} = $masked_email;
 	     }  
+	 }
+
+	 ## Environment variables
+	 foreach my $k (keys %ENV) {
+	     $param->{'env'}{$k} = $ENV{$k};
 	 }
 
 	## privileges

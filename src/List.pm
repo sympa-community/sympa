@@ -3022,6 +3022,14 @@ sub get_user_db {
 	$user->{'password'} = &tools::decrypt_password($user->{'password'});
     }
 
+    ## Turn user_attributes into a hash
+    my $attributes = $user->{'attributes'};
+    $user->{'attributes'} = undef;
+    foreach my $attr (split /;/, $attributes) {
+	my ($key, $value) = split /=/, $attr;
+	$user->{'attributes'}{$key} = $value;
+    }    
+
     return $user;
 }
 
@@ -4480,6 +4488,10 @@ sub verify {
 		return undef;
 	    }
 
+	}elsif ($value =~ /\[env\-\>([\w\-]+)\]/i) {
+	    
+	    $value =~ s/\[env\-\>([\w\-]+)\]/$ENV{$1}/;
+
 	    ## Sender's user/subscriber attributes (if subscriber)
 	}elsif ($value =~ /\[user\-\>([\w\-]+)\]/i) {
 
@@ -4488,13 +4500,8 @@ sub verify {
 
 	}elsif ($value =~ /\[user_attributes\-\>([\w\-]+)\]/i) {
 	    
-	    $context->{'user'} ||= &get_user_db($context->{'sender'});	    
-	    foreach my $attr (split /;/, $context->{'user'}{'attributes'}) {
-		my ($key, $value) = split /=/, $attr;
-		$context->{'user_attributes'}{$key} = $value;
-	    }
-
-	    $value =~ s/\[user_attributes\-\>([\w\-]+)\]/$context->{'user_attributes'}{$1}/;
+	    $context->{'user'} ||= &get_user_db($context->{'sender'});
+	    $value =~ s/\[user_attributes\-\>([\w\-]+)\]/$context->{'user'}{'attributes'}{$1}/;
 
 	}elsif (($value =~ /\[subscriber\-\>([\w\-]+)\]/i) && defined ($context->{'sender'} ne 'nobody')) {
 	    
