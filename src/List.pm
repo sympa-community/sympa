@@ -2138,7 +2138,7 @@ sub get_max_size {
 sub get_reply_to {
     my $value = shift->{'admin'}{'reply_to_header'}{'value'};
 
-    $value = shift->{'admin'}{'reply_to_header'}{'other_email'} if ($value = 'other_email');
+    $value = shift->{'admin'}{'reply_to_header'}{'other_email'} if ($value eq 'other_email');
 
     return $value
 }
