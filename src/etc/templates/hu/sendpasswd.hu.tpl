@@ -2,11 +2,11 @@ From: [conf->sympa]
 Reply-to: [conf->request]
 To: [newuser->email]
 [IF action=subrequest]
-Subject: [wwsconf->title] / feliratkozás a(z) [list] listára
+Subject: [conf->title] / feliratkozás a(z) [list] listára
 [ELSIF action=sigrequest]
-Subject: [wwsconf->title] / leiratkozás a(z) [list] listáról
+Subject: [conf->title] / leiratkozás a(z) [list] listáról
 [ELSE]
-Subject: [wwsconf->title] / beállításaid
+Subject: [conf->title] / beállításaid
 [ENDIF]
 Mime-version: 1.0
 Content-Type: text/plain; charset=iso-8859-2

@@ -2445,7 +2445,7 @@ sub send_global_file {
 	do_log('err',"Unable to open file $Conf{'etc'}/$robot/templates/$action.tpl NOR  $Conf{'etc'}/templates/$action.tpl NOR --ETCBINDIR--/templates/$action.tpl");
     }
 
-    foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url') {
+    foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title') {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
 
@@ -2533,7 +2533,7 @@ sub send_file {
 	do_log('err',"Unable to find '$action' template in list directory NOR $Conf{'etc'}/templates/ NOR --ETCBINDIR--/templates/");
     }
     
-    foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url') {
+    foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title') {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
 

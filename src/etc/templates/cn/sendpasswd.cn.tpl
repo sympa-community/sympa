@@ -2,7 +2,7 @@
 From: [conf->sympa]
 Reply-to: [conf->request]
 To: [newuser->email]
-Subject: 您的 [wwsconf->title] 环境设置
+Subject: 您的 [conf->title] 环境设置
 
 [IF action=subrequest]
 您请求订阅邮递表 [list]。

@@ -2,11 +2,11 @@ From: [conf->sympa]
 Reply-to: [conf->request]
 To: [newuser->email]
 [IF action=subrequest]
-Subject: [wwsconf->title] / prihlaseni se do konference [list]
+Subject: [conf->title] / prihlaseni se do konference [list]
 [ELSIF action=sigrequest]
-Subject: [wwsconf->title] / odhlaseni se z konference [list]
+Subject: [conf->title] / odhlaseni se z konference [list]
 [ELSE]
-Subject: [wwsconf->title] / vase prostredi
+Subject: [conf->title] / vase prostredi
 [ENDIF]
 Mime-version: 1.0
 Content-Type: text/plain; charset=iso-8859-2

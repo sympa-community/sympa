@@ -2,11 +2,11 @@ From: [conf->sympa]
 Reply-to: [conf->request]
 To: [newuser->email]
 [IF action=subrequest]
-Subject: [wwsconf->title] / Abonnement fuer [list]
+Subject: [conf->title] / Abonnement fuer [list]
 [ELSIF action=sigrequest]
-Subject: [wwsconf->title] / Abmeldung fuer [list]
+Subject: [conf->title] / Abmeldung fuer [list]
 [ELSE]
-Subject: [wwsconf->title] / Ihre Einstellungen
+Subject: [conf->title] / Ihre Einstellungen
 [ENDIF]
 
 [IF action=subrequest]

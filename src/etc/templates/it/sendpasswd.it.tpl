@@ -1,7 +1,7 @@
 From: [conf->sympa]
 Reply-to: [conf->request]
 To: [newuser->email]
-Subject: Le tue preferenze di [wwsconf->title]
+Subject: Le tue preferenze di [conf->title]
 
 [IF action=subrequest]
 Hai richiesto la sottoscrizione alla lista [list].

@@ -25,6 +25,7 @@ package Conf;
 
 use Log;
 use Language;
+use wwslib;
 
 require Exporter;
 use Carp;
@@ -151,6 +152,7 @@ my %Default_Conf =
      'default_shared_quota' => '',
    );
    
+my $wwsconf;
 %Conf = ();
 
 ## Loads and parses the configuration file. Reports errors if any.
@@ -332,6 +334,11 @@ sub load_robots {
 				  list_check_smtp => 1,
 				  list_check_suffixes => 1 );
 
+    ## Load wwsympa.conf
+    unless ($wwsconf = &wwslib::load_config('--WWSCONFIG--')) {
+	print STDERR "Unable to load config file --WWSCONFIG--\n";
+    }
+
     unless (opendir DIR,$Conf{'etc'} ) {
 	printf STDERR "Unable to open directory $Conf{'etc'} for virtual robots config\n" ;
 	return undef;
@@ -367,6 +374,9 @@ sub load_robots {
 
 	## Default for 'host' is the domain
 	$robot_conf->{$robot}{'host'} ||= $robot;
+
+	$robot_conf->{$robot}{'title'} ||= $wwsconf->{'title'};
+	$robot_conf->{$robot}{'default_home'} ||= $wwsconf->{'default_home'};
 
 	$robot_conf->{$robot}{'lang'} ||= $Conf{'lang'};
 	$robot_conf->{$robot}{'email'} ||= $Conf{'email'};
@@ -499,7 +509,7 @@ sub get_robot_conf {
     }
     
     ## default
-    return $Conf{$param};
+    return $Conf{$param} || $wwsconf->{$param};
 }
 
 ## Packages must return true.
