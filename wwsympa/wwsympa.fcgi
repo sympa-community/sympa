@@ -2334,37 +2334,7 @@ sub do_redirect {
 	 }
 
 	 ## Add user
-	 $i->{'date'} = &POSIX::strftime("%d %b %Y", localtime($i->{'date'}));
-	 $i->{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($i->{'update_date'}));
-
-	 $i->{'reception'} ||= 'mail';
-
-	 $i->{'email'} =~ /\@(.+)$/;
-	 $i->{'domain'} = $1;
-
-	 ## Escape some weird chars
-	 $i->{'escaped_email'} = &tools::escape_chars($i->{'email'});
-
-	 ## Check data sources
-	 if ($i->{'id'}) {
-	     my @s;
-	     my @ids = split /,/,$i->{'id'};
-	     foreach my $id (@ids) {
-		 unless (defined ($sources{$id})) {
-		     $sources{$id} = $list->search_datasource($id);
-		 }
-		 push @s, $sources{$id};
-	     }
-	     $i->{'sources'} = join ', ', @s;
-	 }
-
-	 if (@additional_fields) {
-	     my @fields;
-	     foreach my $f (@additional_fields) {
-		 push @fields, $i->{$f};
-	     }
-	     $i->{'additional'} = join ',', @fields;
-	 }
+	 &_prepare_subscriber($i, \@additional_fields, \%sources);
 
 	 push @{$param->{'members'}}, $i;
      }
@@ -2389,6 +2359,11 @@ sub do_redirect {
  ## Search in subscribers
  sub do_search {
      &wwslog('info', 'do_search(%s)', $in{'filter'});
+
+     my %sources;
+
+     ## Additional DB fields
+     my @additional_fields = split ',', $Conf{'db_additional_subscriber_fields'};
 
      unless ($param->{'list'}) {
 	 &error_message('missing_arg', {'argument' => 'list'});
@@ -2450,13 +2425,7 @@ sub do_redirect {
 		  and (! $param->{'is_owner'}) );
 
 	 ## Add user
-	 $i->{'date'} = &POSIX::strftime("%d %b %Y", localtime($i->{'date'}));
-	 $i->{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($i->{'update_date'}));
-
-	 $i->{'reception'} ||= 'mail';
-
-	 ## Escape some weird chars
-	 $i->{'escaped_email'} = &tools::escape_chars($i->{'email'});
+	 &_prepare_subscriber($i, \@additional_fields, \%sources);
 
 	 $record++;
 	 push @{$param->{'members'}}, $i;
@@ -10949,3 +10918,47 @@ sub do_review_family {
 
     return 1;
 }
+
+## Prepare subscriber data to be prompted on the web interface
+## Used by review, search,...
+sub _prepare_subscriber {
+    my $user = shift;
+    my $additional_fields = shift;
+    my $sources = shift;
+
+    ## Add user
+    $user->{'date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'date'}));
+    $user->{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'update_date'}));
+    
+    $user->{'reception'} ||= 'mail';
+    
+    $user->{'email'} =~ /\@(.+)$/;
+    $user->{'domain'} = $1;
+    
+    ## Escape some weird chars
+    $user->{'escaped_email'} = &tools::escape_chars($user->{'email'});
+    
+    ## Check data sources
+    if ($user->{'id'}) {
+	my @s;
+	     my @ids = split /,/,$user->{'id'};
+	foreach my $id (@ids) {
+	    unless (defined ($sources->{$id})) {
+		$sources->{$id} = $list->search_datasource($id);
+	    }
+	    push @s, $sources->{$id};
+	}
+	$user->{'sources'} = join ', ', @s;
+    }
+    
+    if (@{$additional_fields}) {
+	my @fields;
+	foreach my $f (@{$additional_fields}) {
+	    push @fields, $user->{$f};
+	}
+	$user->{'additional'} = join ',', @fields;
+    }
+    
+    return 1;
+}
+
