@@ -1791,10 +1791,17 @@ sub send_msg_digest {
     ## Index construction
     foreach $i (0 .. $#list_of_mail){
 	my $mail = $list_of_mail[$i];
+	my ($subject, $from);
 
 	## Subject cleanup
-	my $subject = &MIME::Words::decode_mimewords($mail->head->get('Subject')) or next;
-	$mail->head->replace('Subject', $subject);
+	if ($subject = &MIME::Words::decode_mimewords($mail->head->get('Subject'))) {
+	    $mail->head->replace('Subject', $subject);
+	}
+
+	## From cleanup
+	if ($from = &MIME::Words::decode_mimewords($mail->head->get('From'))) {
+	    $mail->head->replace('From', $from);
+	}
     }
 
     my @topics;
@@ -1868,20 +1875,6 @@ sub send_msg_digest {
 
     ## Send digest
     &smtp::mailto($msg, $param->{'return_path'}, 'none', '_ALTERED_', @tabrcpt );
-
-    ## Send summary
-    ## What file   
-#    if (-r "summary.tpl") {
-#	$filename = "summary.tpl";
-#    }elsif (-r "$Conf{'etc'}/templates/summary.tpl") {
-#	$filename = "$Conf{'etc'}/templates/summary.tpl";
-#    }elsif (-r "--ETCBINDIR--/templates/summary.tpl") {
-#	$filename = "--ETCBINDIR--/templates/summary.tpl";
-#    }else {
-#	# $filename = '';
-#	do_log ('err',"Unable to open file summary.tpl in list directory NOR $Conf{'etc'}/templates/summary.tpl NOR --ETCBINDIR--/templates/summary.tpl");
-#	return undef;
-#    }
 
     ## Prepare parameters for parsing
     $param->{'subject'} = sprintf Msg(8, 31, 'Summary of list %s'), $self->{'name'};
