@@ -3245,6 +3245,17 @@ a class of email.
 \item{host}\\
 	The host name of the CAS server including the port number.
 
+
+\item{non\_blocking\_redirection}\\  
+
+This parameter concern only the first access to Sympa services by a user, it activate or not the non blocking
+redirection to the related cas server to check automatically if the user as been previously authenticated with  this CAS server.
+Possible values are \textbf {on}  \textbf {off}, default is  \textbf {on}. The redirection to CAS is use with
+the cgi parameter \textbf {gateway=1} that specify to CAS server to always redirect the user to the origine
+URL but just check if the user is logged. If active, the SSO service is effective and transparent, but in case
+the CAS server is out of order the access to Sympa services is impossible.
+
+
 \item{login\_uri}\\
 	The login service URI, usually  \textbf {/cas/login}
 

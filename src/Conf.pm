@@ -524,6 +524,7 @@ sub _load_auth {
 					   'negative_regexp' => '.*'},
 			  
 			  'cas' => {'host' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
+				    'non_blocking_redirection' => 'on|off',
 				    'login_uri' => '.*',
 				    'logout_uri' => '.*',
 				    'check_uri' => '.*',
@@ -572,7 +573,9 @@ sub _load_auth {
 		}elsif($current_paragraph->{'auth_type'} eq 'user_table') {
 		    $Conf{'use_passwd'} = 1;
 		}
+		# setting default
 		$current_paragraph->{'regexp'} = '.*' unless (defined($current_paragraph->{'regexp'})) ;
+		$current_paragraph->{'non_blocking_redirection'} = 'on' unless (defined($current_paragraph->{'non_blocking_redirection'})) ;
 		push(@paragraphs,$current_paragraph);
 		
 		undef $current_paragraph;

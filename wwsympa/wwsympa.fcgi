@@ -574,7 +574,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     foreach my $auth_service (@{$Conf{'auth_services'}}){
 		 # skip auth services not related to cas
 		 next unless ($auth_service->{'auth_type'} eq 'cas');
-		 
+		 next unless ($auth_service->{'non_blocking_redirection'} eq 'on');
+
 		 # skip cas server where client as been allready redirect to (redirection carry the list of cas servers allready checked
 		 do_log ('debug',"check_cas checker_cas : $in{'checked_cas'} current cas_id $Conf{'cas_id'}{$auth_service->{'auth_service_name'}}");
 		 next if ($in{'checked_cas'} =~  /$Conf{'cas_id'}{$auth_service->{'auth_service_name'}}/) ;
