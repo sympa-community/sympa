@@ -377,6 +377,7 @@ installdir:
 
 installconfig:
 	mkdir -p $(DESTDIR)$(CONFDIR)
+	@INITCONF='0'
 	@for cfile in sympa.conf wwsympa.conf ; do \
 	if [ ! -f $(DESTDIR)$(CONFDIR)/$$cfile ] ; then \
 	echo "Installing sample config file $$cfile..."; \
