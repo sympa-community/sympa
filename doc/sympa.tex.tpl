@@ -1418,7 +1418,7 @@ You can also add a unique entry, with a regular expression, for your domain.
 
 With Postfix, you should edit the \file {/etc/postfix/virtual.regexp} file as follows :
 \begin {quote}
-/\verb+^+(.*)\samplerobot\$/	 \samplerobot-\${1}
+/\verb+^+(.*)@\samplerobot\$/	 \samplerobot-\${1}
 \end {quote}
  Entries in the 'aliases' file will look like this :
 \begin {quote}
