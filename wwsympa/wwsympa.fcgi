@@ -1559,7 +1559,7 @@ sub do_sso_login {
     }
 
     ## This is a CAS service
-    if (my $cas_id = $Conf{'cas_id'}{$in{'auth_service_name'}}) {
+    if (defined (my $cas_id = $Conf{'cas_id'}{$in{'auth_service_name'}})) {
 	my $cas_server = $Conf{'auth_services'}[$cas_id]{'cas_server'};
 	
 	my $path = '';
@@ -1579,7 +1579,7 @@ sub do_sso_login {
 	    print "Location: $param->{'redirect_to'}\n\n";
 	}
 	
-    }elsif (my $sso_id = $Conf{'generic_sso_id'}{$in{'auth_service_name'}}) {
+    }elsif (defined (my $sso_id = $Conf{'generic_sso_id'}{$in{'auth_service_name'}})) {
 	## Generic SSO
 	
 	## If contacted via POST, then redirect the user to the URL for the access control to apply
