@@ -14,6 +14,9 @@
         [ELSE]
           <FONT size="-1" COLOR="[bg_color]"><b>Restaurer la liste</b></font>
         [ENDIF]
+       [ELSIF is_owner]	
+         <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Are you 
+sure you wish to close [list] list ?'); return false;"><FONT size=-1><b>Remove list</b></font></A>
        [ELSIF is_listmaster]
         <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Êtes-vous sûr de vouloir fermer la liste [list] ?'); return false;"><FONT size=-1><b>Supprimer la liste</b></font></A>
        [ENDIF]

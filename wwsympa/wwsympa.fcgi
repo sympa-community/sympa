@@ -5595,9 +5595,9 @@ sub dump_var {
 sub do_close_list_request {
     &wwslog('info', 'do_close_list_request()');
 
-    unless ($param->{'is_listmaster'}) {
+    unless($param->{'is_owner'} || $param->{'is_listmaster'}) {
 	&error_message('may_not');
-	&wwslog('info','do_close_list_request: not listmaster');
+	&wwslog('info','do_close_list_request: not listmaster or list owner');
 	return undef;
     }
 
