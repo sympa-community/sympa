@@ -194,7 +194,7 @@ use MIME::Words;
 use MIME::Parser;
 
 ## Database and SQL statement handlers
-my ($dbh, $sth, @sth_stack, $use_db);
+my ($dbh, $sth, @sth_stack, $use_db, $include_lock_count);
 
 my %list_cache;
 my %persistent_cache;
@@ -2842,6 +2842,28 @@ sub get_first_user {
     if (($self->{'admin'}{'user_data_source'} eq 'database') ||
 	($self->{'admin'}{'user_data_source'} eq 'include2')){
 
+	if ($self->{'admin'}{'user_data_source'} eq 'include2') {
+	    ## Get an Shared lock
+	    $include_lock_count++;
+
+	    ## first lock
+	    if ($include_lock_count == 1) {
+		my $lock_file = $self->{'dir'}.'/include.lock';
+		unless (open FH, ">>$lock_file") {
+		    &do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+		    return undef;
+		}
+		unless (flock (FH, LOCK_SH | LOCK_NB)) {
+		    &do_log('notice','Waiting for reading lock on %s', $lock_file);
+		    unless (flock (FH, LOCK_SH)) {
+			&do_log('err', 'Failed locking %s: %s', $lock_file, $!);
+			return undef;
+		    }
+		}
+		&do_log('debug2', 'Got lock for reading on %s', $lock_file);
+	    }
+	}
+
 	my $name = $self->{'name'};
 	my $statement;
 	my $date_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'date_subscriber', 'date_subscriber';
@@ -3024,6 +3046,19 @@ sub get_next_user {
 	else {
 	    $sth->finish;
 	    $sth = pop @sth_stack;
+	    	    
+	    if ($self->{'admin'}{'user_data_source'} eq 'include2') {
+		## Release the Shared lock
+		$include_lock_count--;
+
+		## Last lock
+		if ($include_lock_count == 0) {
+		    my $lock_file = $self->{'dir'}.'/include.lock';
+		    flock(FH,LOCK_UN);
+		    close FH;
+		    &do_log('debug2', 'Release lock on %s', $lock_file);
+		}
+	    }
 	}
 
 #	$self->{'total'}++;
@@ -3064,6 +3099,28 @@ sub get_first_bouncing_user {
 	return undef;
     }
     
+    if ($self->{'admin'}{'user_data_source'} eq 'include2') {
+	## Get an Shared lock
+	$include_lock_count++;
+	
+	## first lock
+	if ($include_lock_count == 1) {
+	    my $lock_file = $self->{'dir'}.'/include.lock';
+	    unless (open FH, ">>$lock_file") {
+		&do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+		return undef;
+	    }
+	    unless (flock (FH, LOCK_SH | LOCK_NB)) {
+		&do_log('notice','Waiting for reading lock on %s', $lock_file);
+		unless (flock (FH, LOCK_SH)) {
+		    &do_log('err', 'Failed locking %s: %s', $lock_file, $!);
+		    return undef;
+		}
+	    }
+	    &do_log('debug2', 'Got lock for reading on %s', $lock_file);
+	}
+    }
+
     my $name = $self->{'name'};
     my $statement;
     my $date_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'date_subscriber', 'date_subscriber';
@@ -3124,6 +3181,19 @@ sub get_next_bouncing_user {
     unless (defined $user) {
 	$sth->finish;
 	$sth = pop @sth_stack;
+	
+	if ($self->{'admin'}{'user_data_source'} eq 'include2') {
+	    ## Release the Shared lock
+	    $include_lock_count--;
+	    
+	    ## Last lock
+	    if ($include_lock_count == 0) {
+		my $lock_file = $self->{'dir'}.'/include.lock';
+		flock(FH,LOCK_UN);
+		close FH;
+		&do_log('debug2', 'Release lock on %s', $lock_file);
+	    }
+	}
     }
 
     ## In case it was not set in the database
@@ -5521,6 +5591,22 @@ sub sync_include {
     my $users_added = 0;
     my $users_updated = 0;
 
+    ## Get an Exclusive lock
+    my $lock_file = $self->{'dir'}.'/include.lock';
+    unless (open FH, ">>$lock_file") {
+	&do_log('err', 'Cannot open %s: %s', $lock_file, $!);
+	return undef;
+    }
+    unless (flock (FH, LOCK_EX | LOCK_NB)) {
+	&do_log('notice','Waiting for writing lock on %s', $lock_file);
+	unless (flock (FH, LOCK_EX)) {
+	    &do_log('err', 'Failed locking %s: %s', $lock_file, $!);
+	    return undef;
+	}
+    }
+    &do_log('debug2', 'Got lock for writing on %s', $lock_file);
+
+
     ## Go through new users
     my @add_tab;
     foreach my $email (keys %{$new_subscribers}) {
@@ -5605,6 +5691,11 @@ sub sync_include {
 		$name, $users_added);
     }
     &do_log('notice', 'List:sync_include(%s): %d users removed', $name, $users_updated);
+
+    ## Release lock
+    flock(FH,LOCK_UN);
+    close FH;
+    &do_log('debug2', 'Release lock on %s', $lock_file);
 
     ## Get and save total of subscribers
     $self->{'total'} = _load_total_db($self->{'name'}, 'nocache');
