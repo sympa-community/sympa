@@ -362,12 +362,12 @@ It took nearly two years to produce the first market releases.
 Other date :
 
 \begin {itemize}
-   \item Mar 1999 internal use of a database (Mysql), definition of list subscriber with external datasource (DBM or LDAP).
-   \item Oct 1999 WWsympa stable, introduction of scenarii.
-   \item Feb 2000 web bounce management
-   \item Apr 2000 archive search engine and remove message
-   \item May web interface to create new list
-   \item Jan 2001 : Support of S/MIME (signing and encryption), web interface for list configuration , Shared document repository for each list. Full rewrite of html look and feel
+   \item Mar 1999 Internal use of a database (Mysql), definition of list subscriber with external datasource (RDBMS or LDAP).
+   \item Oct 1999 Stable version of WWsympa, introduction of scenarios.
+   \item Feb 2000 Web bounces management
+   \item Apr 2000 Archives search engine and message removal
+   \item May 2000 List creation feature from the web
+   \item Jan 2001 Support for S/MIME (signing and encryption), list setup through the web interface, Shared document repository for each list. Full rewrite of HTML look and feel
    \item Jun 2001 Auto-install of aliases at list creation time, antivirus scanner plugging
    \item Jan 2002 Virtual robot, LDAP authentication
 \end {itemize} 
@@ -3036,16 +3036,17 @@ Most configuration parameters can be define for each robot except
 general Sympa installation parameters (binary and spool location, smtp engine,
 antivirus plugging,...).
 
-The virtual robot name as define every where in Sympa documentation and configuration file is the internet domaine of the robot.
+The Virtual robot name as defined in \Sympa documentation and configuration file refers to the Internet domaine of the Virtual robot.
 
 \section {How to create a virtual robot}
 
-You don't need to install several Sympa server. One sympa.pl deamon and one or more fastcgi server can serve all virtual robot. Just configure the server environement in order to accept the new domain definition.
+You don't need to install several Sympa server. A single \file {sympa.pl} deamon and one or more 
+fastcgi servers can serve all virtual robot. Just configure the server environment in order to accept the new domain definition.
 \begin {itemize}
-\item The DNS must be configured in order to define a new mail exange record (MX) to route message to your server. A new host (A record) or alias (CNAME) are mandatory to define the new web server.
-\item Configure you MTA (sendmail, postfix, ...) to accept incomming messages for the new robot domain.
-\item Define a virtual host in your httpd server. The fastcgi servers defined in the common section of you httpd server can be used by each virtual server. You don't need to run dedicated fascgi server for each virtual robot.
-\item Define the virtual robot in Sympa configuration (current version of Sympa do not yet allow to create Sympa robot using administration web interface).
+\item \textbf {The DNS} must be configured to define a new mail exchanger record (MX) to route message to your server. A new host (A record) or alias (CNAME) are mandatory to define the new web server.
+\item Configure your \textbf {MTA (sendmail, postfix, exim, ...)} to accept incoming messages for the new robot domain.
+\item Define a \textbf {virtual host in your HTTPD server}. The fastcgi servers defined in the common section of you httpd server can be used by each virtual server. You don't need to run dedicated fascgi server for each virtual robot.
+\item Define the virtual robot in \textbf {Sympa configuration} (current web interface does not provide Virtual robot creation yet).
 \end {itemize}
 
 \section {Robot definition}
@@ -3091,7 +3092,7 @@ environment variable to recognize which robot is in used.
 
 \subsection {Robot customization}
 
-If needed, you cancustomize each virtual robot using its set of templates and scenario.
+If needed, you can customize each virtual robot using its set of templates and scenario.
 
 \tildedir {sympa/etc/\samplerobot/wws\_templates/},
 \tildedir {sympa/etc/\samplerobot/templates/}, 
