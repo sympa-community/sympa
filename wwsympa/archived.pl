@@ -149,18 +149,22 @@ while (!$end) {
 	       next;
 	   }
        }else{
-	   unless ($file =~ /^(\d{4})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(.*)$/) {
+	   my ($yyyy, $mm, $dd, $min, $ss, $adrlist);
+	   
+	   if ($file =~ /^(\d{4})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(.*)$/) {
+	       ($yyyy, $mm, $dd, $hh, $min, $ss, $adrlist) = ($1, $2, $3, $4, $5, $6, $7);
+	   }elsif ($file =~ /^(.*)\.(\d+)\.(\d+)$/) {
+	       $adrlist = $1;
+	       my $date = $2;
+
+	       my @now = localtime($date);
+	       ($yyyy, $mm, $dd, $hh, $min, $ss) = (1900+$now[5], $now[4]+1, $now[3], $now[2], $now[1], $now[0]);
+	       
+	   }else {
 	       do_log ('notice',"Ignoring file $queue/$file because not to be rebuild or liste archive");
                unlink("$queue/$file");
 	       next;
 	   }
-	   my $yyyy = $1;
-	   my $mm = $2;
-	   my $dd = $3;
-	   my $hh = $4;
-	   my $min = $5;
-	   my $ss = $6;
-	   my $adrlist = $7;
 	   
 	   $adrlist =~ /^(.*)\@(.*)$/;
 	   my $listname = $1;
