@@ -4820,6 +4820,25 @@ The hostname of the database system.
 These options ar appended to the connect string.
 This parameter is optional.
 
+Example :
+
+\begin {quote}
+\begin{verbatim}
+
+user_data_source include
+
+include_sql_query
+      db_type mysql
+      host sqlserv.admin.univ-x.fr
+      user stduser
+      passwd mysecret
+      db_name studentbody
+      sql_query SELECT DISTINCT email FROM student
+      connect_options mysql_connect_timeout=5
+\end{verbatim}
+\end {quote}
+
+Connexion timeout is set to 5 seconds.
 
 \item 
 \label {user}
