@@ -1,4 +1,20 @@
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Broken create_list_request page
+[3.0aX -> ???]
+        
+        Because of some abscur reason, if editing a list config via the
+        web interface, this interface can't anymore be use for
+        create_list_request. Some vars are corrupted by edit_list.
+        Currently, the only solution is to use edit_list as a cgi
+        (not a fast_cgi) or restart httpd :(
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Close archive
+[3.0aX -> ???]
+   
+        Can't close archives and web archives from the edit config page
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 glob failed, line 32
 [3.0]
    
@@ -57,3 +73,5 @@ Improper lang when notify
         use the editor lang preference.
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
