@@ -21,7 +21,9 @@ owner
 
 send privateoreditorkey
 
+[IF topics]
 topics [topics]
+[ENDIF]
 
 web_archive
 access public

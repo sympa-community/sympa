@@ -2,7 +2,9 @@ subject [subject]
 
 status [status]
 
+[IF topics]
 topics [topics]
+[ENDIF]
 
 visibility conceal
 
