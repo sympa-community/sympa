@@ -326,10 +326,6 @@ Future developments should include:
 
     \item Additional groupware features such as a calendar, a scenario editor, etc
 
-    \item The possibility of plugging in (commercial) antivirus applications
- 
-    \item The possibility of plugging in (commercial) antivirus applications
- 
     \item Subscriber preference for multipart/alternative message reception.
           Some newspapers publish both text/plain and text/html version of
           their mails. It would be nice to provide a single list for both formats.
@@ -509,7 +505,7 @@ on your system. This also illustrates the \Sympa philosophy, I guess.
 	into 8 different languages.
 
 	\item \tildedir {sympa/spool/}\\
-	\Sympa uses 7 different spools.
+	\Sympa uses 7 different spools (see \ref{spools}, page~\pageref{spools}).
 
 	\item \tildedir {sympa/src/}\\
 	\Sympa sources.
@@ -580,6 +576,9 @@ on your system. This also illustrates the \Sympa philosophy, I guess.
 
 \section {Spools}
 \label {spools}
+
+See \ref{spool-related}, page~\pageref{spool-related} for spool definition
+in \file {sympa.conf}.
 
 \begin {itemize}
 
@@ -1267,6 +1266,7 @@ the file is of no importance.
 
 
 \section {Spool related}
+\label {spool-related}
 
 \subsection {\cfkeyword {spool}}
 
@@ -1329,6 +1329,12 @@ the file is of no importance.
         and must be an absolute path.
 
 
+\subsection {\cfkeyword {tmpdir}}
+
+        \default {\tildedir {sympa/spool/tmpdir}}
+
+	Temporary directory used by openssl and antiviruses.
+
 \subsection {\cfkeyword {sleep}}  
         \label {kw-sleep}
 
@@ -1383,7 +1389,7 @@ the file is of no importance.
 
 	\default {us}
 
-        The is the language for \Sympa. The message
+        This is the default language for \Sympa. The message
 	catalog (.cat) located in the corresponding \cfkeyword {msgcat} directory
 	will be used.
 
@@ -1556,17 +1562,34 @@ You must then set two parameters.
 \subsection {\cfkeyword {antivirus\_path}}
 
 The path to your favorite antivirus binary file (including the binary file).
-         
+
+Example :
+\begin {quote}
+\begin{verbatim}
+antivirus_path		/usr/local/bin/uvscan
+\end{verbatim}
+\end {quote}
+   
 \subsection {\cfkeyword {antivirus\_args}} 
 
 The arguments used by the antivirus software to look for viruses.
 You must set them so as to get the virus name.
 You should use, if available, the 'unzip' option and check all extensions.
-(ie: 	uvscan : 	--summary or -verbose
-			--secure
-	fsav   :	--dumb
-			--archive).
-		       	
+
+Example with uvscan :
+\begin {quote}
+\begin{verbatim}
+antivirus_args		--summary --secure
+\end{verbatim}
+\end {quote}
+
+Example with fsav :
+\begin {quote}
+\begin{verbatim}
+antivirus_args		--dumb	--archive
+\end{verbatim}
+\end {quote}
+	       	
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % WWSympa
@@ -3299,6 +3322,11 @@ This file contains a message which is sent to each subscriber
 when one of the list owners sends the command \mailcmd {REMIND}
  (see~\ref {cmd-remind}, page~\pageref {cmd-remind}).
 
+\subsection {summary.tpl}
+
+Template for summaries (reception mode close to digest), 
+see~\ref {cmd-setsummary}, page~\pageref {cmd-setsummary}.
+
 \section {Stats file}
     \label {stats-file}
     \index{statistics}
@@ -4308,9 +4336,12 @@ Predifined scenari are :
         Only the list owner can use it.
 
 \end {itemize}
-\subsection {shared documents}
+\subsection {shared\_doc}
     \label {par-shared}
     \index{shared}
+
+This paragraph defines read and edit access to the shared documents 
+repository.
 
 \subsubsection {Read access}
 
@@ -4377,6 +4408,15 @@ Predifined scenari are :
         Only the list owner and the listmaster can edit in the directory \dir {shared}.
 
 \end {itemize}
+
+Example:
+\begin {quote}
+\begin{verbatim}
+shared_doc
+d_read		public
+d_edit		private
+\end{verbatim}
+\end {quote}
 
 \section {List tuning}
 
@@ -4546,6 +4586,15 @@ the one of \textit {default\_user\_options} paragraph.
 
 \end {itemize}
 
+Example :
+\begin {quote}
+\begin{verbatim}
+## Nomail reception mode is not available
+available_user_options
+reception  	digest,mail
+\end{verbatim}
+\end {quote}
+
 
 \subsection {default\_user\_options}
 
@@ -4573,6 +4622,15 @@ the one of \textit {default\_user\_options} paragraph.
         command.
 
 \end {itemize}
+
+Example :
+\begin {quote}
+\begin{verbatim}
+default_user_options
+reception  	digest
+visibility	noconceal
+\end{verbatim}
+\end {quote}
 
 
 \subsection {cookie}
@@ -4611,34 +4669,14 @@ stay in spool forever (useful to hangup a list).
 
 Available since release 2.3.1.
 
-\section {bounce}
-    \label {bounce}
+\section {Bounces related}
 
-\lparam {bounce}
+\subsection {bounce}
+    \label {bounce}
 
 This paragraph defines bounce management parameters :
 
 \begin{itemize}
-
-
-\item
-\label {welcome-return-path}
-\lparam {welcome\_return\_path} 
-
-	\default {\cfkeyword {welcome\_return\_path} robot parameter}
-
-	If set to \cfkeyword {unique}, the welcome message is sent using
-        a unique return path in order to remove the subscriber in case
-	of a bounce. 
-
-\item
-\label {remind-return-path}
-\lparam {remind\_return\_path} 
-
-	\default {\cfkeyword {remind\_return\_path} robot parameter}
-
-	Same as \cfkeyword {welcome\_return\_path} but applyed for remind
-        message.
 
 \item
 \label {warn-rate}
@@ -4663,6 +4701,36 @@ This paragraph defines bounce management parameters :
 	messages for the list aren't distributed. 
 	
 \end{itemize}
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+## Owners are warned with 10% bouncing addresses
+## message distribution is halted with 20% bouncing rate
+bounce
+warn_rate	10
+halt_rate	20
+\end{verbatim}
+\end {quote}
+
+\subsection {welcome\_return\_path}
+\label {welcome-return-path}
+
+	\default {\cfkeyword {welcome\_return\_path} robot parameter}
+
+	If set to \cfkeyword {unique}, the welcome message is sent using
+        a unique return path in order to remove the subscriber in case
+	of a bounce. 
+
+\subsection {remind\_return\_path} 
+\label {remind-return-path}
+
+	\default {\cfkeyword {remind\_return\_path} robot parameter}
+
+	Same as \cfkeyword {welcome\_return\_path} but applyed for remind
+        message.
+
 
 \section {Archives related}
 
@@ -5116,15 +5184,16 @@ of bouncing addresses.
 
 \cleardoublepage
 \chapter {Antivirus}
-\label {antivirus}
+\label {Antivirus}
 
 \Sympa lets you use an external antivirus solution to check the incoming mails.
-You must then set the conf-parameters antivirus_path and antivirus_args
+You must then set the conf-parameters \cfkeyword {antivirus\_path} and 
+\cfkeyword {antivirus\_args}
  (see \ref {Antivirus plug-in}, page~\pageref {Antivirus plug-in}.
 \Sympa is yet ready to work with Mcafee/uvscan and Fsecure/fsav.
-For each mail received, \Sympa splits its parts in a tmp_directory (/'tmpdir'/antivirus)and then calls the antivirus software to check it.
-When a virus is detected, \Sympa looks for the virus name in the generated outfile, sends a warning \file 'your_infected_msg.tpl' to the sender of the mail.
-The mail is saved as 'bad' and the working directory is deleted except if \Sympa debug option is active.
+For each mail received, \Sympa splits its parts in the \tildedir {sympa/spool/tmp/antivirus} directory and then calls the antivirus software to check it.
+When a virus is detected, \Sympa looks for the virus name in the virus scanner STDOUT, sends a warning \file {your\_infected\_msg.tpl} to the sender of the mail.
+The mail is saved as 'bad' and the working directory is deleted (except if \Sympa runs in debug mode).
   
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
