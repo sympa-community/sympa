@@ -473,7 +473,7 @@ my %alias = ('reply-to' => 'reply_to',
 	    'include_ldap_query' => {'format' => {'host' => {'format' => $regexp{'host'},
 							     'occurrence' => '1',
 							     'title_id' => 36,
-							     'order' => 1
+							     'order' => 2
 							     },
 						  'port' => {'format' => '\d+',
 							     'default' => 389,
@@ -521,7 +521,12 @@ my %alias = ('reply-to' => 'reply_to',
 								'unit' => 'seconds',
 								'title_id' => 98,
 								'order' => 6
-								}
+								},
+						   'name' => {'format' => '.+',
+							      'title_id' => 209,
+							      'length' => 15,
+							      'order' => 1
+							      }
 					      },
 				     'occurrence' => '0-n',
 				     'title_id' => 35,
@@ -621,7 +626,13 @@ my %alias = ('reply-to' => 'reply_to',
 								'default' => '',
 								'title_id' => 202,
 								'order' => 17
-								}
+								},
+						   'name' => {'format' => '.+',
+							      'title_id' => 209,
+							      'length' => 15,
+							      'order' => 1
+							      }
+
 					      },
 				     'occurrence' => '0-n',
 				     'title_id' => 135,
@@ -653,9 +664,14 @@ my %alias = ('reply-to' => 'reply_to',
                                                          'cert' => {'format' => ['robot','list'],
 							           'title_id' => 208,
 								   'default' => 'list',
-							           'order' => 4
-							           },
-							},
+								    'order' => 4
+								    },
+							   'name' => {'format' => '.+',
+								      'title_id' => 209,
+								      'length' => 15,
+								      'order' => 1
+								      }
+					},
 
 			       'occurrence' => '0-n',
 			       'title_id' => 206,
@@ -702,7 +718,13 @@ my %alias = ('reply-to' => 'reply_to',
 						  'f_dir' => {'format' => '.+',
 							     'title_id' => 52,
 							     'order' => 9
+							     },
+						  'name' => {'format' => '.+',
+							     'title_id' => 209,
+							     'length' => 15,
+							     'order' => 1
 							     }
+						 
 					     },
 				    'occurrence' => '0-n',
 				    'title_id' => 45,
@@ -3002,6 +3024,9 @@ sub get_first_user {
 	    }elsif ($sortby eq 'date') {
 		$statement .= " ORDER BY \"date\" DESC";
 
+	    }elsif ($sortby eq 'sources') {
+		$statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
+
 	    }
 
 	## Sybase
@@ -3018,6 +3043,9 @@ sub get_first_user {
 
 	    }elsif ($sortby eq 'date') {
 		$statement .= " ORDER BY \"date\" DESC";
+
+	    }elsif ($sortby eq 'sources') {
+		$statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
 
 	    }
 
@@ -3038,6 +3066,9 @@ sub get_first_user {
 
 	    }elsif ($sortby eq 'date') {
 		$statement .= ' ORDER BY date DESC';
+
+	    }elsif ($sortby eq 'sources') {
+		$statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
 
 	    }
 	    
@@ -3062,6 +3093,9 @@ sub get_first_user {
 
 	    }elsif ($sortby eq 'date') {
 		$statement .= ' ORDER BY date DESC';
+
+	    }elsif ($sortby eq 'sources') {
+		$statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
 
 	    }
 	    
@@ -7497,6 +7531,7 @@ sub _get_datasource_id {
 ## Searches the include datasource corresponding to the provided ID
 sub search_datasource {
     my ($self, $id) = @_;
+    &do_log('debug2','List::search_datasource(%s,%s)', $self->{'name'}, $id);
 
     ## Go through list parameters
     foreach my $p (keys %{$self->{'admin'}}) {
@@ -7504,9 +7539,13 @@ sub search_datasource {
 	
 	## Go through sources
 	foreach my $s (@{$self->{'admin'}{$p}}) {
-	    
-	    return $s
-	    if ($self->_get_datasource_id($s) eq $id);
+	    if (&_get_datasource_id($s) eq $id) {
+		if (ref($s)) {
+ 		    return $s->{'name'} || $s->{'host'};
+		}else{
+		    return $s;
+		}
+	    }
 	}
     }
 

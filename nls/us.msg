@@ -386,7 +386,8 @@ $set 16 Listm parameters titles
 205	"email adress protection method"
 206	"remote list inclusion"
 207	"remote path of sympa list dump"
-208	"certificat for authentication by remote Sympa"
+208	"certificate for authentication by remote Sympa"
+209	"short name for this source"
 
 $set 17 Cookie expiration periods
 1	"session"

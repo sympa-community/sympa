@@ -138,7 +138,15 @@ Selection too wide, can not show selection
 	  <TH><FONT SIZE="-1"><B>Reception</B></FONT>
 	  </TH>
 	  [IF list_conf->user_data_source=include2]
-           <TH><FONT SIZE="-1"><B>Sources</B></FONT></TH>
+         [IF sortby=sources]
+  	    <TH NOWRAP BGCOLOR="[selected_color]">
+	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Sources</b></FONT>
+	[ELSE]
+	    <TH NOWRAP>
+	    <A HREF="[path_cgi]/review/[list]/1/[size]/sources" >
+	    <FONT SIZE="-1"><b>Sources</b></FONT></A>
+	[ENDIF]
+	</TH>
           [ENDIF]
 	  [IF sortby=date]
   	    <TH NOWRAP BGCOLOR="[selected_color]">
@@ -207,12 +215,12 @@ Selection too wide, can not show selection
             <TD ALIGN="left"><FONT SIZE=-1>
             [IF u->subscribed]
               [IF u->included]
-                 included<BR>subscribed
+                 subscribed<BR>[u->sources]
               [ELSE]
                  subscribed
               [ENDIF]
             [ELSE]
-              included
+              [u->sources]
             [ENDIF]   
             </FONT></TD>
           [ENDIF]

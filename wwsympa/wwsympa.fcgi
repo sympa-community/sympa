@@ -2023,6 +2023,7 @@ sub do_review {
     my @users;
     my $size = $in{'size'} || $wwsconf->{'review_page_size'};
     my $sortby = $in{'sortby'} || 'email';
+    my %sources;
 
     unless ($param->{'list'}) {
 	&error_message('missing_arg', {'argument' => 'list'});
@@ -2103,6 +2104,19 @@ sub do_review {
 
 	## Escape some weird chars
 	$i->{'escaped_email'} = &tools::escape_chars($i->{'email'});
+
+	## Check data sources
+	if ($i->{'id'}) {
+	    my @s;
+	    my @ids = split /,/,$i->{'id'};
+	    foreach my $id (@ids) {
+		unless (defined ($sources{$id})) {
+		    $sources{$id} = $list->search_datasource($id);
+		}
+		push @s, $sources{$id};
+	    }
+	    $i->{'sources'} = join ', ', @s;
+	}
 
 	if (@additional_fields) {
 	    my @fields;

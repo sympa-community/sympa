@@ -402,6 +402,7 @@ $set 16 Titres des paramètres de config de listes
 206	"inclusion de liste distante"
 207	"path du dump de la liste distante"
 208	"Certificat pour authentification de la connection"
+209	"nom court pour cette source"
 
 $set 17 Cookie expiration periods
 1	"la session"
