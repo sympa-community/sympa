@@ -1559,7 +1559,7 @@ sub distribute_msg {
 	    }elsif ($self->{'admin'}{'reply_to_header'}{'value'} eq 'sender') {
 		$reply = undef;
 	    }elsif ($self->{'admin'}{'reply_to_header'}{'value'} eq 'all') {
-		$reply = "$name\@$host,$hdr->get('From')";
+		$reply = "$name\@$host,".$hdr->get('From');
 	    }elsif ($self->{'admin'}{'reply_to_header'}{'value'} eq 'other_email') {
 		$reply = $self->{'admin'}{'reply_to_header'}{'other_email'};
 	    }
