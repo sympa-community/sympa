@@ -161,7 +161,7 @@ undef my $log; # won't execute send_msg and delete_subs commands if true, only l
 
 ## list of list task models
 #my @list_models = ('expire', 'remind', 'sync_include');
-my @list_models = ('sync_include');
+my @list_models = ('sync_include','remind');
 
 ## hash of the global task models
 my %global_models = (#'crl_update_task' => 'crl_update', 
@@ -686,7 +686,7 @@ sub execute {
 	
 	# processing of the assignments
 	if ($result{'nature'} eq 'assignment') {
-	    $vars{$result{'var'}} = &cmd_process ($result{'command'}, $result{'Rarguments'}, $task_file, \%vars, $lnb);
+	    $status = $vars{$result{'var'}} = &cmd_process ($result{'command'}, $result{'Rarguments'}, $task_file, \%vars, $lnb);
 	    last unless defined($status);
 	}
 	
