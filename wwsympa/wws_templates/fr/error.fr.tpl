@@ -126,6 +126,9 @@ Impossible d'écraser le fichier [error->path] : [error->reason]
 [ELSIF error->msg=cannot_upload] 
 Impossible de déposer le fichier [error->path] : [error->reason]
 
+[ELSIF error->msg=cannot_create]
+Impossible de créer [error->path] : [error->reason]
+
 [ELSIF error->msg=cannot_create_dir] 
 Impossible de créer le répertoire [error->path] : [error->reason]
 

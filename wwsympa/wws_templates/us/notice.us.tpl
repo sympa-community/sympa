@@ -15,6 +15,9 @@ Configuration file has been updated
 [ELSIF notice->msg=upload_success] 
 File [notice->path] successfully uploaded!
 
+[ELSIF notice->msg=to_moderate] 
+File [notice->path] waiting for moderation
+
 [ELSIF notice->msg=save_success] 
 File [notice->path] saved
 
@@ -24,8 +27,8 @@ Your password has been emailed to you
 [ELSIF notice->msg=you_should_choose_a_password]
 To choose your password go to 'preferences', from the upper menu.
 
-[ELSIF notice->msg=no_msg] 
-No message to moderate for list [notice->list]
+[ELSIF notice->msg=no_msg_document] 
+No message and no document to moderate for list [notice->list]
 
 [ELSIF notice->msg=subscribers_update_soon]
 The list of list members will be built/updated soon (a few minutes).

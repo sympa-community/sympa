@@ -103,11 +103,22 @@
      [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
         <TD BGCOLOR="[light_color]">
 	   Taux d'adresses en erreur : <B>[bounce_rate]%</B><BR><BR>
-	   [if mod_total=0]
+
+	 [IF is_editor]
+ 	   [if mod_total=0]
 	   Aucun message à modérer
            [else]
            Messages en attente de modération :<B> [mod_total]</B>
            [endif]
+	   [IF shared=exist]
+ 	     <BR><BR>
+	     [IF mod_total_shared=0]
+	     Aucun document à moderer
+	     [else]
+             Documents en attente de modération :<B> [mod_total_shared]</B>
+             [endif]
+	   [ENDIF]
+         [ENDIF]
            <BR>
         </TD>
          [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']

@@ -33,17 +33,17 @@
 
     [IF action=modindex]
     <TD BGCOLOR="[selected_color]" ALIGN="CENTER">
-       <FONT size="-1" COLOR="[bg_color]"><b>Moderer</b></FONT>
+       <FONT size="-1" COLOR="[bg_color]"><b>Modérer</b></FONT>
     </TD>
     [ELSE]
        [IF is_editor]
        <TD BGCOLOR="[light_color]" ALIGN=CENTER>
          <A HREF="[path_cgi]/modindex/[list]" >
-         <FONT size="-1"><b>Moderer</b></FONT></A>
+         <FONT size="-1"><b>Modérer</b></FONT></A>
        </TD>
        [ELSE]
          <TD BGCOLOR="[light_color]" ALIGN="CENTER">
-           <FONT size="-1" COLOR="[bg_color]"><b>Moderer</b></FONT>
+           <FONT size="-1" COLOR="[bg_color]"><b>Modérer</b></FONT>
          </TD>
        [ENDIF]
     [ENDIF]

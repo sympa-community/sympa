@@ -7,7 +7,7 @@
 	  <LI><FONT COLOR="[dark_color]"><b>Configurer la liste</b></FONT> : A utiliser avec prudence. Ce menu vous permet de modifier certains paramètres
 de votre liste. Les paramètres modifiables dépendent de vos privilèges.
           <LI><FONT COLOR="[dark_color]"><b>Abonnés</b></FONT> : Gestion des abonnés, ajout/suppression, recherche, erreurs, etc.
-          <LI><FONT COLOR="[dark_color]"><b>Modérer</b></FONT> : Rejet et validation des messages pour distribution.
+          <LI><FONT COLOR="[dark_color]"><b>Modérer</b></FONT> : Rejet et validation des messages et documents pour distribution.
           <LI><FONT COLOR="[dark_color]"><b>Personnaliser</b></FONT> : Edition des différents fichiers liés à votre liste.
 	  <LI><FONT COLOR="[dark_color]"><b>Gerer les Archives</b></FONT> : Telechargement et Suppression des archives de la liste.	
 

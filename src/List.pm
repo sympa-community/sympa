@@ -1612,6 +1612,35 @@ sub get_owners_email {
     return @rcpt;
 }
 
+## Returns an array of editors' email addresses (unless reception nomail)
+#  or owners if there isn't any editors'email adress
+sub get_editors_email {
+    my($self) = @_;
+    do_log('debug3', 'List::get_editors_email(%s)', $self->{'name'});
+    
+    my ($i, @rcpt);
+    my $admin = $self->{'admin'}; 
+    my $name = $self->{'name'};
+
+    foreach $i (@{$admin->{'editor'}}) {
+	next if ($i->{'reception'} eq 'nomail');
+	if (ref($i->{'email'})) {
+	    push(@rcpt, @{$i->{'email'}});
+	}elsif ($i->{'email'}) {
+	    push(@rcpt, $i->{'email'});
+	}
+    }
+
+    if ($#rcpt < 0) {
+	return &get_owners_email($self);
+    }
+
+    return @rcpt;
+
+}
+
+
+
 ## Send a sub/sig notice to listmasters.
 sub send_notify_to_listmaster {
 
@@ -1804,6 +1833,30 @@ sub new_send_notify_to_owner {
     }
     return 1;
 }
+
+## Send a sub/sig notice to the editors (or owners if there isn't any editors).
+sub send_notify_to_editor {
+
+    my ($self,$operation,@param) = @_;
+
+    &do_log('debug2', 'List::send_notify_to_editor(%s, %s)', $self->{'name'}, $operation);
+
+    my @to = $self->get_editors_email();
+
+    unless (@to) {
+	do_log('notice', 'Warning : no editor or owner defined or all of them use nomail option in list %s', $self->{'name'} );
+	return undef;
+    }
+    if ($operation eq 'shared_moderated') {
+	$self->send_file('listeditor_notification',\@to, $self->{'domain'},
+			 {'type' => 'shared_moderated',
+			  'filename' => $param[0],
+			  'who' => $param[1],
+			  'address_interface' => $param[2]});
+    }
+    return 1;
+}
+
 
 sub send_notify_to_subscriber{
 
@@ -6738,6 +6791,74 @@ sub get_mod_spool_size {
     closedir SPOOL;
     return ($#msg + 1);
 }
+
+### moderation for shared
+
+# return 1 if the shared is open
+sub is_shared_open {
+    my $self = shift;
+    do_log('debug3', 'List::is_shared_open()');  
+    my $dir = $self->{'dir'}.'/shared';
+    
+    return (-e "$dir/shared");
+}
+
+# return the list of documents shared waiting for moderation 
+sub get_shared_moderated {
+    my $self = shift;
+    do_log('debug3', 'List::get_shared_moderated()');  
+    my $shareddir = $self->{'dir'}.'/shared';
+
+    unless (-e "$shareddir") {
+	return undef;
+    }
+    
+    ## sort of the shared
+     return &sort_dir_to_get_mod("$shareddir");
+}
+
+# return the list of documents awaiting for moderation in a dir and its subdirs
+sub sort_dir_to_get_mod {
+    #dir to explore
+    my $dir = shift;
+    do_log('debug3', 'List::sort_dir_to_get_mod()');  
+    
+    # listing of all the shared documents of the directory
+    unless (opendir DIR, "$dir") {
+	do_log('err',"sort_dir_to_get_mod : cannot open $dir : $!");
+	return undef;
+    }
+    
+    # array of entry of the directory DIR 
+    my @tmpdir = readdir DIR;
+    closedir DIR;
+
+    # private entry with documents not yet moderated
+    my @moderate_dir = grep (/(\.moderate)$/, @tmpdir);
+    @moderate_dir = grep (!/^\.desc\./, @moderate_dir);
+
+    foreach my $d (@moderate_dir) {
+	$d = "$dir/$d";
+    }
+   
+    my $path_d;
+    foreach my $d (@tmpdir) {
+	# current document
+        $path_d = "$dir/$d";
+
+	if ($d =~ /^\.+$/){
+	    next;
+	}
+
+	if (-d $path_d) {
+	    push(@moderate_dir,&sort_dir_to_get_mod("$path_d"));
+	}
+    }
+	
+    return @moderate_dir;
+    
+ } 
+
 
 ## Get the type of a DB field
 sub get_db_field_type {

@@ -5,9 +5,9 @@
 [ELSE]
 
   [IF path]  
-    <h2><B><IMG SRC="[icons_url]/folder.open.png"> [path] </B> </h2> 
+    <h2><B><IMG SRC="[icons_url]/folder.open.png"> [visible_path] </B> </h2> 
     <A HREF="[path_cgi]/d_editfile/[list]/[escaped_path]">éditer</A> |
-    <A HREF="[path_cgi]/d_delete/[list]/[escaped_path]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path]', 'Voulez-vous vraiment supprimer [path] ?'); return false;">supprimer</A> |
+    <A HREF="[path_cgi]/d_delete/[list]/[escaped_path]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path]', 'Voulez-vous vraiment supprimer [visible_path] ?'); return false;">supprimer</A> |
 <A HREF="[path_cgi]/d_control/[list]/[escaped_path]">accès</A><BR>
     Propriétaire : [doc_owner] <BR>
     Mise à jour : [doc_date] <BR>
@@ -86,6 +86,9 @@
   <TD ALIGN="center"><font color="[bg_color]">Editer</font></TD> 
   <TD ALIGN="center"><font color="[bg_color]">Supprimer</font></TD>
   <TD ALIGN="center"><font color="[bg_color]">Accès</font></TD></TR>
+ [IF is_editor] 
+  <TD ALIGN="center"><font color="[bg_color]">Modération</font></TD>
+ [ENDIF]
       
   [IF empty]
     <TR BGCOLOR="[light_color]">
@@ -116,7 +119,7 @@
 	
 	  <TD><center>
 	  <FONT size=-1>
-	  <A HREF="[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]', 'Voulez-vous vraiment supprimer [path][s->doc] ?'); return false;">supprimer</A>
+	  <A HREF="[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]', 'Voulez-vous vraiment supprimer [visible_path][s->doc] ?'); return false;">supprimer</A>
 	  </FONT>
 	  </center></TD>
 	[ELSE]
@@ -135,14 +138,23 @@
 	[ELSE]
 	  <TD>&nbsp; </TD>
 	[ENDIF]
+
+	[IF is_editor]
+          <TD>&nbsp; </TD>
+	[ENDIF]
+
       </TR>
       [END] 
     [ENDIF]
 
     [IF sort_files]
       [FOREACH f IN sort_files]
-        <TR BGCOLOR="[light_color]"> 
-        <TD NOWRAP>
+        [IF f->moderate] 
+	  <TR BGCOLOR= "[bg_color]">
+	[ELSE]
+       	  <TR BGCOLOR= "[light_color]">
+        [ENDIF]
+	<TD>&nbsp;
         [IF f->html]
 	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]" TARGET="html_window">
 	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]" ALT="[f->escaped-title]"> [f->doc] </A>
@@ -156,11 +168,15 @@
 	</TD>  
 	 
 	<TD> 
-	[IF f->author_known]
-	  [f->author_mailto]
+	[IF f->moderate]
+	 à modérer
 	[ELSE]
-          inconnu  
-        [ENDIF]
+ 	 [IF f->author_known]
+	   [f->author_mailto]
+	 [ELSE]
+           inconnu  
+         [ENDIF]
+	[ENDIF]
 	</TD>
 	 
 	<TD NOWRAP>&nbsp;
@@ -182,7 +198,7 @@
 	<TD>
 	<center>
 	<FONT size=-1>
-	<A HREF="[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]', 'Voulez-vous vraiment supprimer [path][f->doc] ([f->size] Ko) ?'); return false;">supprimer</A>
+	<A HREF="[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]', 'Voulez-vous vraiment supprimer [visible_path][f->doc] ([f->size] Ko) ?'); return false;">supprimer</A>
 	</FONT>
 	</center>
 	</TD>
@@ -199,6 +215,19 @@
 	[ELSE]
 	<TD>&nbsp; </TD>
 	[ENDIF]
+
+	[IF is_editor]
+          [IF f->moderate] 
+	  <TD> <center>
+	  <font size=-1>
+	  <A HREF="[path_cgi]/modindex/[list]">modérer</A>
+	  </font>
+	  </center></TD>
+          [ELSE]
+	  <TD>&nbsp; </TD>
+	  [ENDIF]
+        [ENDIF]
+
 	</TD>
 	</TR>
       [END] 
@@ -214,7 +243,7 @@
     <FORM METHOD="POST" ACTION="[path_cgi]">
     <TD ALIGN="right" VALIGN="bottom">
     [IF path]
-      <B> Créer un sous dossier dans [path]</B> <BR>
+      <B> Créer un sous dossier dans [visible_path]</B> <BR>
     [ELSE]
       <B> Créer un dossier</B> <BR>
     [ENDIF]
@@ -273,7 +302,7 @@
    <FORM METHOD="POST" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
    <TD ALIGN="right" VALIGN="bottom">
    [IF path]
-     <B> Télécharger un fichier dans le dossier [path]</B><BR>
+     <B> Télécharger un fichier dans le dossier [visible_path]</B><BR>
    [ELSE]
      <B> Télécharger un fichier </B><BR>
    [ENDIF]

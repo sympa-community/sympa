@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {15 March 2004}
+    \date {05 April 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -5295,6 +5295,7 @@ title.fr mise a jour quotidienne des listes de révocation
 title.us daily certificate revocation list update
 title.et sertifikaatide kehtivuse nimekirja uuendatakse iga päev
 title.hu napi frissítése a hitelesítési bizonylatok visszavonásának
+title.cz denní aktualizace seznamu revokací certifikátù
 
 /ACTION
 update_crl (CA_list, [execution_date]+1d)
@@ -6080,12 +6081,6 @@ output generated in response to a \mailcmd {LISTS} command.
      \item \lparam {visibility} \texttt {secret}
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.secret})
-	\end {htmlonly}\\
-	conceal even for subscribers
-
-     \item \lparam {visibility} \texttt {s}
-	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.s})
 	\end {htmlonly}\\
 	conceal even for subscribers
 
@@ -6979,12 +6974,6 @@ parameter are pointers to \emph {scenarios}.
 	\end {htmlonly}\\
 	closed
 
-     \item \lparam {send} \texttt {editor} 
-	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.editor})
-	\end {htmlonly}\\
-	Moderated, old style
-
      \item \lparam {send} \texttt {editorkey} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.editorkey})
@@ -7184,7 +7173,7 @@ Predefined authorization scenarios are :
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_read.owner})
 	\end {htmlonly}\\
-	restricted to list owners and document author
+	restricted to list owners
 
      \item \lparam {d\_read} \texttt {private} 
 	\begin {htmlonly}
@@ -7214,11 +7203,23 @@ and create subdirectories).
 Predefined authorization scenarios are :
 
 \begin {itemize}
+     \item \lparam {d\_edit} \texttt {editor} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.editor})
+	\end {htmlonly}\\
+	moderated to subscribers
+
+     \item \lparam {d\_edit} \texttt {e} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.e})
+	\end {htmlonly}\\
+	moderated to subscribers
+
      \item \lparam {d\_edit} \texttt {owner} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.owner})
 	\end {htmlonly}\\
-	restricted to list owners and document author
+	restricted to list owners
 
      \item \lparam {d\_edit} \texttt {private} 
 	\begin {htmlonly}
@@ -7339,6 +7340,18 @@ This parameter is optional. The headers specified
 will be added to the headers of messages distributed via the
 list. As of release 1.2.2 of \Sympa, it is possible to put several
 custom header lines in the configuration file at the same time.
+
+\example {custom\_header X-url: http://www.cru.fr/listes/apropos/sedesabonner.faq.html}.
+
+\subsection {rfc2369\_header\_fields}
+    	\label {par-rfc2369-header-fields}
+    	\index{rfc2369-header-fields}
+
+	\default {\cfkeyword {rfc2369\_header\_fields} sympa.conf parameter}
+	\lparam {rfc2369\_header\_fields} \textit {help,archive}
+
+RFC2369 compliant header fields (List-xxx) to be added to distributed messages. 
+These header-fields should be implemented by MUA's, adding menus.
 
 \example {custom\_header X-url: http://www.cru.fr/listes/apropos/sedesabonner.faq.html}.
 
@@ -8013,6 +8026,15 @@ Only the listmaster, list owners and the owner of the document
 (or those of a parent document) are allowed to perform the corresponding action.
 The \textbf {owner} scenario is the default scenario for editing. 
 
+\subsection {The scenario editor}
+The scenario \textbf {editor} is for a moderated shared space for editing. Every suscriber of the list is 
+allowed to editing a document. But this document will have to be installed or rejected by the editor of the 
+list. Documents awaiting for moderation are visible by their author and the editor(s) of the list in the
+shared space. The editor has also an interface with all documents awaiting. When there is a new document,
+the editor is notiied and when the document is installed, the author is notiied too. In case of reject, 
+the editor can notify the author or not.  
+
+
 \section {Access control}
     \label {shared-access}
 Access control is an important operation performed
@@ -8174,6 +8196,9 @@ to be substituted in its place.
 
 \subsection {d\_control.tpl}
 The page to edit the access rights and the owner of a document. 
+
+\subsection {d\_upload.tpl}
+This page to upload a file is only used when the name of the file already exists.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Using Sympa commands

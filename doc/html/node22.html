@@ -29,31 +29,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1224"
+<A NAME="tex2html1230"
   HREF="node23.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1218"
+<A NAME="tex2html1224"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1212"
+<A NAME="tex2html1218"
   HREF="node21.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1220"
+<A NAME="tex2html1226"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1222"
+<A NAME="tex2html1228"
   HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1225"
+<B> Next:</B> <A NAME="tex2html1231"
   HREF="node23.html">Index</A>
-<B> Up:</B> <A NAME="tex2html1219"
+<B> Up:</B> <A NAME="tex2html1225"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1213"
+<B> Previous:</B> <A NAME="tex2html1219"
   HREF="node21.html">20. Sympa with S/MIME and HTTPS</A>
- &nbsp <B>  <A NAME="tex2html1221"
+ &nbsp <B>  <A NAME="tex2html1227"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1223"
+ &nbsp <B>  <A NAME="tex2html1229"
   HREF="node23.html">Index</A></B> 
 <BR>
 <BR>
@@ -62,11 +62,11 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1226"
+<LI><A NAME="tex2html1232"
   HREF="node22.html#SECTION002210000000000000000">21.1 User commands</A>
-<LI><A NAME="tex2html1227"
+<LI><A NAME="tex2html1233"
   HREF="node22.html#SECTION002220000000000000000">21.2 Owner commands</A>
-<LI><A NAME="tex2html1228"
+<LI><A NAME="tex2html1234"
   HREF="node22.html#SECTION002230000000000000000">21.3 Moderator commands</A>
 </UL>
 <!--End of Table of Child-Links-->
@@ -86,8 +86,8 @@ This section describes administrative requests, as well as interaction
 modes in the case of private and moderated lists.  Administrative
 requests are messages whose body contains commands understood by
 <I>Sympa</I>, one per line. These commands can be indiscriminately placed
-in the <A NAME="8332"></A><TT>Subject:</TT> or in the body of the message. The
-<A NAME="8335"></A><TT>To:</TT> address is generally the <TT>sympadomain</TT>
+in the <A NAME="8352"></A><TT>Subject:</TT> or in the body of the message. The
+<A NAME="8355"></A><TT>To:</TT> address is generally the <TT>sympadomain</TT>
 alias, although it is also advisable to recognize the <TT>listservdomain</TT> address.
 
 <P>
@@ -104,7 +104,7 @@ QUIT
 </PRE>
 
 <P>
-Most user commands have three-letter abbreviations (e.g. <TT>REV</TT> instead of <A NAME="8342"></A><TT>REVIEW</TT>).
+Most user commands have three-letter abbreviations (e.g. <TT>REV</TT> instead of <A NAME="8362"></A><TT>REVIEW</TT>).
 
 <P>
 
@@ -115,40 +115,40 @@ Most user commands have three-letter abbreviations (e.g. <TT>REV</TT> instead of
 <P>
 
 <UL>
-<LI><A NAME="8345"></A><TT>HELP</TT>
+<LI><A NAME="8365"></A><TT>HELP</TT>
 
 <P>
 Provides instructions for the use of <I>Sympa</I> commands.  The
-        result is the content of the <A NAME="8349"></A><TT>helpfile.tpl</TT> template
+        result is the content of the <A NAME="8369"></A><TT>helpfile.tpl</TT> template
         file. 
 
 <P>
 </LI>
-<LI><A NAME="8352"></A><TT>INFO</TT> <I>listname</I>
+<LI><A NAME="8372"></A><TT>INFO</TT> <I>listname</I>
 
 <P>
 Provides the parameters of the specified list (owner,
         subscription mode, etc.) and its description. The
-        result is the content of <A NAME="8355"></A><TT>~welcome[.mime]</TT>.
+        result is the content of <A NAME="8375"></A><TT>~welcome[.mime]</TT>.
 
 <P>
 </LI>
-<LI><A NAME="8360"></A><TT>LISTS</TT>
+<LI><A NAME="8380"></A><TT>LISTS</TT>
         <A NAME="cmd-lists"></A>
 <P>
 Provides the names of lists managed by <I>Sympa</I>.  This list
-        is generated dynamically, using the <A NAME="8364"></A><TT>visibility</TT>
+        is generated dynamically, using the <A NAME="8384"></A><TT>visibility</TT>
         (see <A HREF="node16.html#par-visibility">15.1.7</A>, page&nbsp;<A HREF="node16.html#par-visibility"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 	The <TT>lists.tpl</TT> template defines the message return
-	by the <A NAME="8367"></A><TT>LISTS</TT> command.
+	by the <A NAME="8387"></A><TT>LISTS</TT> command.
 
 <P>
 </LI>
-<LI><A NAME="8370"></A><TT>REVIEW</TT> <I>listname</I>
+<LI><A NAME="8390"></A><TT>REVIEW</TT> <I>listname</I>
         <A NAME="cmd-review"></A>
 <P>
 Provides the addresses of subscribers if the run mode authorizes it. 
-	See the <A NAME="8373"></A><TT>review</TT> parameter (<A HREF="node16.html#par-review">15.3.9</A>, page&nbsp;<A HREF="node16.html#par-review"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) for the configuration file of each list,
+	See the <A NAME="8393"></A><TT>review</TT> parameter (<A HREF="node16.html#par-review">15.3.9</A>, page&nbsp;<A HREF="node16.html#par-review"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) for the configuration file of each list,
         which controls consultation authorizations for the subscriber
         list. Since subscriber addresses can be abused by spammers,
         it is strongly recommended that you <B>only authorize owners
@@ -156,7 +156,7 @@ Provides the addresses of subscribers if the run mode authorizes it.
 
 <P>
 </LI>
-<LI><A NAME="8376"></A><TT>WHICH</TT>
+<LI><A NAME="8396"></A><TT>WHICH</TT>
          <A NAME="cmd-which"></A>
 <P>
 Returns the list of lists to which one is subscribed,
@@ -165,78 +165,78 @@ Returns the list of lists to which one is subscribed,
 
 <P>
 </LI>
-<LI><A NAME="8379"></A><TT>STATS</TT> <I>listname</I>
+<LI><A NAME="8399"></A><TT>STATS</TT> <I>listname</I>
         <A NAME="cmd-stats"></A>
 <P>
 Provides statistics for the specified list:
         number of messages received, number of messages sent,
         megabytes received, megabytes sent. This is the contents
-        of the <A NAME="8382"></A><TT>stats</TT> file.
+        of the <A NAME="8402"></A><TT>stats</TT> file.
 
 <P>
-Access to this command is controlled by the <A NAME="8385"></A><TT>review</TT> parameter.
+Access to this command is controlled by the <A NAME="8405"></A><TT>review</TT> parameter.
 
 <P>
 </LI>
-<LI><A NAME="8388"></A><TT>INDEX</TT> <I>listname</I>
+<LI><A NAME="8408"></A><TT>INDEX</TT> <I>listname</I>
         <A NAME="cmd-index"></A>
 <P>
 Provides index of archives for specified list. Access rights
-        to this function are the same as for the <A NAME="8391"></A><TT>GET</TT>
+        to this function are the same as for the <A NAME="8411"></A><TT>GET</TT>
         command. 
 
 <P>
 </LI>
-<LI><A NAME="8394"></A><TT>GET</TT> <I>listname</I> <I>archive</I>
+<LI><A NAME="8414"></A><TT>GET</TT> <I>listname</I> <I>archive</I>
         <A NAME="cmd-get"></A>
 <P>
 To retrieve archives for list (see above).  Access
-        rights are the same as for the <A NAME="8397"></A><TT>REVIEW</TT> command.
-        See <A NAME="8400"></A><TT>review</TT> parameter (<A HREF="node16.html#par-review">15.3.9</A>,
+        rights are the same as for the <A NAME="8417"></A><TT>REVIEW</TT> command.
+        See <A NAME="8420"></A><TT>review</TT> parameter (<A HREF="node16.html#par-review">15.3.9</A>,
         page&nbsp;<A HREF="node16.html#par-review"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 </LI>
-<LI><A NAME="8403"></A><TT>LAST</TT> <I>listname</I>
+<LI><A NAME="8423"></A><TT>LAST</TT> <I>listname</I>
         <A NAME="cmd-last"></A>
 <P>
 To receive the last message distributed in a list (see above).  Access
-        rights are the same as for the <A NAME="8406"></A><TT>GET</TT> command.
+        rights are the same as for the <A NAME="8426"></A><TT>GET</TT> command.
 
 <P>
 </LI>
-<LI><A NAME="8409"></A><TT>SUBSCRIBE</TT> <I>listname firstname name</I>
+<LI><A NAME="8429"></A><TT>SUBSCRIBE</TT> <I>listname firstname name</I>
         <A NAME="cmd-subscribe"></A>
 <P>
 Requests sign-up to the specified list. The <I>firstname</I> and <I>name</I> are optional. If the
         list is parameterized with a restricted subscription (see
-        <A NAME="8412"></A><TT>subscribe</TT> parameter, <A HREF="node16.html#par-subscribe">15.3.1</A>,
+        <A NAME="8432"></A><TT>subscribe</TT> parameter, <A HREF="node16.html#par-subscribe">15.3.1</A>,
         page&nbsp;<A HREF="node16.html#par-subscribe"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), this command is sent to the
         list owner for approval.
 
 <P>
 </LI>
-<LI><A NAME="8415"></A><TT>INVITE</TT> <I>listname user@host name</I>
+<LI><A NAME="8435"></A><TT>INVITE</TT> <I>listname user@host name</I>
         <A NAME="cmd-invite"></A>
 <P>
 Invite someone to subscribe to the specified list. The 
         <I>name</I> is optional. The command is similar to the
-        <A NAME="8418"></A><TT>ADD</TT> but the specified person is not added to the
+        <A NAME="8438"></A><TT>ADD</TT> but the specified person is not added to the
         list but invited to subscribe to it in accordance with the 
-        <A NAME="8421"></A><TT>subscribe</TT> parameter, <A HREF="node16.html#par-subscribe">15.3.1</A>,
+        <A NAME="8441"></A><TT>subscribe</TT> parameter, <A HREF="node16.html#par-subscribe">15.3.1</A>,
         page&nbsp;<A HREF="node16.html#par-subscribe"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 </LI>
-<LI><A NAME="8424"></A><TT>SIGNOFF</TT> <I>listname</I> [ <I>user@host</I> ]
+<LI><A NAME="8444"></A><TT>SIGNOFF</TT> <I>listname</I> [ <I>user@host</I> ]
         <A NAME="cmd-signoff"></A>
 <P>
 Requests unsubscription from the specified list.
-        <A NAME="8427"></A><TT>SIGNOFF *</TT> means unsubscription from all lists.
+        <A NAME="8447"></A><TT>SIGNOFF *</TT> means unsubscription from all lists.
 
 <P>
 </LI>
-<LI><A NAME="8430"></A><TT>SET</TT> <I>listname</I> <TT>DIGEST</TT>
+<LI><A NAME="8450"></A><TT>SET</TT> <I>listname</I> <TT>DIGEST</TT>
         <A NAME="cmd-setdigest"></A>
 <P>
 Puts the subscriber in <I>digest</I> mode for the <I>listname</I> list.  Instead of receiving mail from the list
@@ -246,11 +246,11 @@ Puts the subscriber in <I>digest</I> mode for the <I>listname</I> list.  Instead
 
 <P>
 The sending period for these DIGESTs is regulated by the
-        list owner using the <A NAME="8433"></A><TT>digest</TT> parameter (see&nbsp;<A HREF="node16.html#par-digest">15.4.7</A>, page&nbsp;<A HREF="node16.html#par-digest"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).  See the <A NAME="8436"></A><TT>SET&nbsp;LISTNAME&nbsp;MAIL</TT> command (<A HREF="node22.html#cmd-setmail">21.1</A>, page&nbsp;<A HREF="node22.html#cmd-setmail"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and the <A NAME="8439"></A><TT>reception</TT> parameter (<A HREF="node14.html#par-reception">13.4</A>, page&nbsp;<A HREF="node14.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+        list owner using the <A NAME="8453"></A><TT>digest</TT> parameter (see&nbsp;<A HREF="node16.html#par-digest">15.4.8</A>, page&nbsp;<A HREF="node16.html#par-digest"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).  See the <A NAME="8456"></A><TT>SET&nbsp;LISTNAME&nbsp;MAIL</TT> command (<A HREF="node22.html#cmd-setmail">21.1</A>, page&nbsp;<A HREF="node22.html#cmd-setmail"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and the <A NAME="8459"></A><TT>reception</TT> parameter (<A HREF="node14.html#par-reception">13.4</A>, page&nbsp;<A HREF="node14.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 </LI>
-<LI><A NAME="8442"></A><TT>SET</TT> <I>listname</I> <TT>SUMMARY</TT>
+<LI><A NAME="8462"></A><TT>SET</TT> <I>listname</I> <TT>SUMMARY</TT>
         <A NAME="cmd-setsummary"></A>
 <P>
 Puts the subscriber in <I>summary</I> mode for the <I>listname</I> list.  Instead of receiving mail from the list
@@ -263,40 +263,40 @@ This option is available only if the digest mode is set.
 
 <P>
 </LI>
-<LI><A NAME="8445"></A><TT>SET</TT> <I>listname</I> <TT>NOMAIL</TT>
+<LI><A NAME="8465"></A><TT>SET</TT> <I>listname</I> <TT>NOMAIL</TT>
         <A NAME="cmd-setnomail"></A>
 <P>
 Puts subscriber in <I>nomail</I> mode for the <I>listname</I> list.  This mode is used when a subscriber no longer wishes
         to receive mail from the list, but nevertheless wishes to retain
         the possibility of posting to the list.
         This mode therefore prevents the subscriber from unsubscribing
-        and subscribing later on.  See the <A NAME="8448"></A><TT>SET&nbsp;LISTNAME&nbsp;MAIL</TT>
+        and subscribing later on.  See the <A NAME="8468"></A><TT>SET&nbsp;LISTNAME&nbsp;MAIL</TT>
         command (<A HREF="node22.html#cmd-setmail">21.1</A>, page&nbsp;<A HREF="node22.html#cmd-setmail"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and
-        the <A NAME="8451"></A><TT>reception</TT> (<A HREF="node14.html#par-reception">13.4</A>, page&nbsp;<A HREF="node14.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
+        the <A NAME="8471"></A><TT>reception</TT> (<A HREF="node14.html#par-reception">13.4</A>, page&nbsp;<A HREF="node14.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
 
 <P>
 </LI>
-<LI><A NAME="8454"></A><TT>SET</TT> <I>listname</I> <TT>TXT</TT>
+<LI><A NAME="8474"></A><TT>SET</TT> <I>listname</I> <TT>TXT</TT>
         <A NAME="cmd-settxt"></A>
 <P>
 Puts subscriber in <I>txt</I> mode for the <I>listname</I> list.  This mode is used when a subscriber wishes
         to receive mails sent in both format txt/html and txt/plain 
         only in txt/plain format.
-        See the <A NAME="8457"></A><TT>reception</TT> (<A HREF="node14.html#par-reception">13.4</A>, page&nbsp;<A HREF="node14.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
+        See the <A NAME="8477"></A><TT>reception</TT> (<A HREF="node14.html#par-reception">13.4</A>, page&nbsp;<A HREF="node14.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
 
 <P>
 </LI>
-<LI><A NAME="8460"></A><TT>SET</TT> <I>listname</I> <TT>HTML</TT>
+<LI><A NAME="8480"></A><TT>SET</TT> <I>listname</I> <TT>HTML</TT>
         <A NAME="cmd-sethtml"></A>
 <P>
 Puts subscriber in <I>html</I> mode for the <I>listname</I> list.  This mode is used when a subscriber wishes
         to receive mails sent in both format txt/html and txt/plain 
         only in txt/html format.
-        See the <A NAME="8463"></A><TT>reception</TT> (<A HREF="node14.html#par-reception">13.4</A>, page&nbsp;<A HREF="node14.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
+        See the <A NAME="8483"></A><TT>reception</TT> (<A HREF="node14.html#par-reception">13.4</A>, page&nbsp;<A HREF="node14.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
 
 <P>
 </LI>
-<LI><A NAME="8466"></A><TT>SET</TT> <I>listname</I> <TT>URLIZE</TT>
+<LI><A NAME="8486"></A><TT>SET</TT> <I>listname</I> <TT>URLIZE</TT>
         <A NAME="cmd-seturlize"></A>
 <P>
 Puts subscriber in <I>urlize</I> mode for the <I>listname</I> list.  This mode is used when a subscriber wishes
@@ -304,64 +304,64 @@ Puts subscriber in <I>urlize</I> mode for the <I>listname</I> list.  This mode i
         an URL leading to the file stored on the list site. 
 
 <P>
-See the <A NAME="8469"></A><TT>reception</TT> (<A HREF="node14.html#par-reception">13.4</A>, page&nbsp;<A HREF="node14.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
+See the <A NAME="8489"></A><TT>reception</TT> (<A HREF="node14.html#par-reception">13.4</A>, page&nbsp;<A HREF="node14.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
 
 <P>
 </LI>
-<LI><A NAME="8472"></A><TT>SET</TT> <I>listname</I> <TT>NOT_ME</TT>
+<LI><A NAME="8492"></A><TT>SET</TT> <I>listname</I> <TT>NOT_ME</TT>
         <A NAME="cmd-not-me"></A>
 <P>
 Puts subscriber in <I>not_me</I> mode for the <I>listname</I> list.  This mode is used when a subscriber wishes
         not to receive back the message that he has sent to the list. 
 
 <P>
-See the <A NAME="8475"></A><TT>reception</TT> (<A HREF="node14.html#par-reception">13.4</A>, page&nbsp;<A HREF="node14.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
+See the <A NAME="8495"></A><TT>reception</TT> (<A HREF="node14.html#par-reception">13.4</A>, page&nbsp;<A HREF="node14.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
 
 <P>
 </LI>
-<LI><A NAME="8478"></A><TT>SET</TT> <I>listname</I> <TT>MAIL</TT>
+<LI><A NAME="8498"></A><TT>SET</TT> <I>listname</I> <TT>MAIL</TT>
         <A NAME="cmd-setmail"></A>
 <P>
 Puts the subscriber in normal mode (default) for the <I>listname</I> list.  This option is mainly used to cancel the
         <I>nomail</I>, <I>summary</I> or <I>digest</I> modes. If the subscriber
         was in <I>nomail</I> mode, he or she will again receive
-        mail from the list in a normal manner.  See the <A NAME="8481"></A><TT>SET&nbsp;LISTNAME&nbsp;NOMAIL</TT> command (<A HREF="node22.html#cmd-setnomail">21.1</A>,
-        page&nbsp;<A HREF="node22.html#cmd-setnomail"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and the <A NAME="8484"></A><TT>reception</TT>
+        mail from the list in a normal manner.  See the <A NAME="8501"></A><TT>SET&nbsp;LISTNAME&nbsp;NOMAIL</TT> command (<A HREF="node22.html#cmd-setnomail">21.1</A>,
+        page&nbsp;<A HREF="node22.html#cmd-setnomail"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and the <A NAME="8504"></A><TT>reception</TT>
         parameter (<A HREF="node14.html#par-reception">13.4</A>, page&nbsp;<A HREF="node14.html#par-reception"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 </LI>
-<LI><A NAME="8487"></A><TT>SET</TT> <I>listname</I> <TT>CONCEAL</TT>
+<LI><A NAME="8507"></A><TT>SET</TT> <I>listname</I> <TT>CONCEAL</TT>
         <A NAME="cmd-setconceal"></A>
 <P>
 Puts the subscriber in <I>conceal</I> mode for the
         <I>listname</I> list.  The subscriber will then become
-        invisible during <A NAME="8490"></A><TT>REVIEW</TT> on this list. Only owners
+        invisible during <A NAME="8510"></A><TT>REVIEW</TT> on this list. Only owners
         will see the whole subscriber list.
 
 <P>
-See the <A NAME="8493"></A><TT>SET&nbsp;LISTNAME&nbsp;NOCONCEAL</TT> command (<A HREF="node22.html#cmd-setnoconceal">21.1</A>, page&nbsp;<A HREF="node22.html#cmd-setnoconceal"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and
-        the <A NAME="8496"></A><TT>visibility</TT> parameter (<A HREF="node16.html#par-visibility">15.1.7</A>,
+See the <A NAME="8513"></A><TT>SET&nbsp;LISTNAME&nbsp;NOCONCEAL</TT> command (<A HREF="node22.html#cmd-setnoconceal">21.1</A>, page&nbsp;<A HREF="node22.html#cmd-setnoconceal"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and
+        the <A NAME="8516"></A><TT>visibility</TT> parameter (<A HREF="node16.html#par-visibility">15.1.7</A>,
         page&nbsp;<A HREF="node16.html#par-visibility"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 </LI>
-<LI><A NAME="8499"></A><TT>SET</TT> <I>listname</I> <TT>NOCONCEAL</TT>
+<LI><A NAME="8519"></A><TT>SET</TT> <I>listname</I> <TT>NOCONCEAL</TT>
         <A NAME="cmd-setnoconceal"></A>
 <P>
 Puts the subscriber in <I>noconceal</I> mode (default)
         for <I>listname</I> list. The subscriber will then
-        become visible during <A NAME="8502"></A><TT>REVIEW</TT> of this list. The
+        become visible during <A NAME="8522"></A><TT>REVIEW</TT> of this list. The
         <I>conceal</I> mode is then cancelled.
 
 <P>
-See <A NAME="8505"></A><TT>SET&nbsp;LISTNAME&nbsp;CONCEAL</TT> command (<A HREF="node22.html#cmd-setconceal">21.1</A>, page&nbsp;<A HREF="node22.html#cmd-setconceal"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and
-        <A NAME="8508"></A><TT>visibility</TT> parameter (<A HREF="node16.html#par-visibility">15.1.7</A>,
+See <A NAME="8525"></A><TT>SET&nbsp;LISTNAME&nbsp;CONCEAL</TT> command (<A HREF="node22.html#cmd-setconceal">21.1</A>, page&nbsp;<A HREF="node22.html#cmd-setconceal"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) and
+        <A NAME="8528"></A><TT>visibility</TT> parameter (<A HREF="node16.html#par-visibility">15.1.7</A>,
         page&nbsp;<A HREF="node16.html#par-visibility"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 </LI>
-<LI><A NAME="8511"></A><TT>QUIT</TT>
+<LI><A NAME="8531"></A><TT>QUIT</TT>
         <A NAME="cmd-quit"></A>
 <P>
 Ends acceptance of commands. This can prove useful when
@@ -371,23 +371,23 @@ Ends acceptance of commands. This can prove useful when
 
 <P>
 </LI>
-<LI><A NAME="8514"></A><TT>CONFIRM</TT> <I>key</I>
+<LI><A NAME="8534"></A><TT>CONFIRM</TT> <I>key</I>
         <A NAME="cmd-confirm"></A>
 <P>
-If the <A NAME="8517"></A><TT>send</TT> parameter of a list is set to <TT>privatekey, publickey</TT> or <TT>privateorpublickey</TT>,
+If the <A NAME="8537"></A><TT>send</TT> parameter of a list is set to <TT>privatekey, publickey</TT> or <TT>privateorpublickey</TT>,
         messages are only distributed in the list after an
-        <A NAME="8520"></A>authentication phase by return mail, using a
+        <A NAME="8540"></A>authentication phase by return mail, using a
         one-time password (numeric key). For this authentication,
-        the sender of the message is requested to post the ``<A NAME="8521"></A><TT>CONFIRM</TT>&nbsp;<I>key</I>'' command to <I>Sympa</I>.
+        the sender of the message is requested to post the ``<A NAME="8541"></A><TT>CONFIRM</TT>&nbsp;<I>key</I>'' command to <I>Sympa</I>.
 
 <P>
 </LI>
-<LI><A NAME="8525"></A><TT>QUIET</TT>
+<LI><A NAME="8545"></A><TT>QUIET</TT>
 
 <P>
 This command is used for silent (mute) processing: no
         performance report is returned for commands prefixed with
-        <A NAME="8528"></A><TT>QUIET</TT>.
+        <A NAME="8548"></A><TT>QUIET</TT>.
 
 <P>
 </LI>
@@ -408,37 +408,37 @@ These comands are:
 <P>
 
 <UL>
-<LI><A NAME="8531"></A><TT>ADD</TT> <I>listname user@host firstname name</I>
+<LI><A NAME="8551"></A><TT>ADD</TT> <I>listname user@host firstname name</I>
         <A NAME="cmd-add"></A>
 <P>
-Add command similar to <A NAME="8534"></A><TT>SUBSCRIBE</TT>. 
-	You can avoid user notification by using the <A NAME="8537"></A><TT>QUIET</TT>
-	prefix (ie: <A NAME="8540"></A><TT>QUIET ADD</TT>).
+Add command similar to <A NAME="8554"></A><TT>SUBSCRIBE</TT>. 
+	You can avoid user notification by using the <A NAME="8557"></A><TT>QUIET</TT>
+	prefix (ie: <A NAME="8560"></A><TT>QUIET ADD</TT>).
 
 <P>
 </LI>
-<LI><A NAME="8543"></A><TT>DELETE</TT> <I>listname user@host</I>
+<LI><A NAME="8563"></A><TT>DELETE</TT> <I>listname user@host</I>
         <A NAME="cmd-delete"></A>
 <P>
-Delete command similar to <A NAME="8546"></A><TT>SIGNOFF</TT>.
-	You can avoid user notification by using the <A NAME="8549"></A><TT>QUIET</TT>
-	prefix (ie: <A NAME="8552"></A><TT>QUIET DELETE</TT>).
+Delete command similar to <A NAME="8566"></A><TT>SIGNOFF</TT>.
+	You can avoid user notification by using the <A NAME="8569"></A><TT>QUIET</TT>
+	prefix (ie: <A NAME="8572"></A><TT>QUIET DELETE</TT>).
 
 <P>
 </LI>
-<LI><A NAME="8555"></A><TT>REMIND</TT> <I>listname</I>
+<LI><A NAME="8575"></A><TT>REMIND</TT> <I>listname</I>
 	<A NAME="cmd-remind"></A>
 <P>
-<A NAME="8558"></A><TT>REMIND</TT> is used by list owners in order to send
+<A NAME="8578"></A><TT>REMIND</TT> is used by list owners in order to send
         an individual service reminder message to each subscriber. This
         message is made by parsing the remind.tpl file.
 
 <P>
 </LI>
-<LI><A NAME="8561"></A><TT>REMIND</TT> <I>*</I>
+<LI><A NAME="8581"></A><TT>REMIND</TT> <I>*</I>
 
 <P>
-<A NAME="8564"></A><TT>REMIND</TT> is used by the listmaster to send to each subscriber of any list a single
+<A NAME="8584"></A><TT>REMIND</TT> is used by the listmaster to send to each subscriber of any list a single
         message with a summary of his/her subscriptions. In this case the 
         message sent is constructed by parsing the global_remind.tpl file.
         For each list, <I>Sympa</I> tests whether the list is configured as hidden 
@@ -448,7 +448,7 @@ Delete command similar to <A NAME="8546"></A><TT>SIGNOFF</TT>.
 
 <P>
 </LI>
-<LI><A NAME="8568"></A><TT>EXPIRE</TT>
+<LI><A NAME="8588"></A><TT>EXPIRE</TT>
         <A NAME="cmd-expire"></A>
 <P>
 <I>listname</I>
@@ -458,11 +458,11 @@ Delete command similar to <A NAME="8546"></A><TT>SIGNOFF</TT>.
         <I>explanatory text to be sent to the subscribers concerned</I>
 
 <P>
-This command activates an <A NAME="8571"></A>expiration process
+This command activates an <A NAME="8591"></A>expiration process
         for former subscribers of the designated list. Subscribers
         for which no procedures have been enabled for more than
         <I>age</I> days receive the explanatory text appended
-        to the <A NAME="8572"></A><TT>EXPIRE</TT> command. This text, which must be
+        to the <A NAME="8592"></A><TT>EXPIRE</TT> command. This text, which must be
         adapted by the list owner for each subscriber population,
         should explain to the people receiving this message that
         they can update their subscription date so as to not be
@@ -470,47 +470,47 @@ This command activates an <A NAME="8571"></A>expiration process
         <I>deadline</I> days.
 
 <P>
-Past this deadline, the initiator of the <A NAME="8575"></A><TT>EXPIRE</TT>
+Past this deadline, the initiator of the <A NAME="8595"></A><TT>EXPIRE</TT>
         command receives the list of persons who have not confirmed
         their subscription.  It is up to the initiator to send
-        <I>Sympa</I> the corresponding <A NAME="8579"></A><TT>DELETE</TT> commands.
+        <I>Sympa</I> the corresponding <A NAME="8599"></A><TT>DELETE</TT> commands.
 
 <P>
 Any operation updating the subscription date of an address
         serves as confirmation of subscription. This is also the
-        case for <A NAME="8582"></A><TT>SET</TT> option selecting commands and for
-        the <A NAME="8585"></A><TT>SUBSCRIBE</TT> subscription command itself. The fact
+        case for <A NAME="8602"></A><TT>SET</TT> option selecting commands and for
+        the <A NAME="8605"></A><TT>SUBSCRIBE</TT> subscription command itself. The fact
         of sending a message to the list also updates the subscription
         date.
 
 <P>
 The explanatory message should contain at least 20 words;
-        it is possible to delimit it by the word <A NAME="8588"></A><TT>QUIT</TT>,
+        it is possible to delimit it by the word <A NAME="8608"></A><TT>QUIT</TT>,
         in particular in order not to include a signature, which
         would systematically end the command message.
 
 <P>
 A single expiration process can be activated at any given
-        time for a given list. The <A NAME="8591"></A><TT>EXPIRE</TT> command
-        systematically gives rise to <A NAME="8594"></A>authentication
-        by return mail.  The <A NAME="8595"></A><TT>EXPIRE</TT> command has <B>no effect on the subscriber list</B>.
+        time for a given list. The <A NAME="8611"></A><TT>EXPIRE</TT> command
+        systematically gives rise to <A NAME="8614"></A>authentication
+        by return mail.  The <A NAME="8615"></A><TT>EXPIRE</TT> command has <B>no effect on the subscriber list</B>.
 
 <P>
 </LI>
-<LI><A NAME="8598"></A><TT>EXPIREINDEX</TT> <I>listname</I>
+<LI><A NAME="8618"></A><TT>EXPIREINDEX</TT> <I>listname</I>
        <A NAME="cmd-expireindex"></A>
 <P>
 Makes it possible, at any time, for an expiration process
-       activated using an <A NAME="8601"></A><TT>EXPIRE</TT> command to receive the
+       activated using an <A NAME="8621"></A><TT>EXPIRE</TT> command to receive the
        list of addresses for which no enabling has been received.
 
 <P>
 </LI>
-<LI><A NAME="8604"></A><TT>EXPIREDEL</TT> <I>listname</I>
+<LI><A NAME="8624"></A><TT>EXPIREDEL</TT> <I>listname</I>
        <A NAME="cmd-expiredel"></A>
 <P>
-Deletion of a process activated using the <A NAME="8607"></A><TT>EXPIRE</TT>
-       command.  The <A NAME="8610"></A><TT>EXPIREDEL</TT> command has no effect on
+Deletion of a process activated using the <A NAME="8627"></A><TT>EXPIRE</TT>
+       command.  The <A NAME="8630"></A><TT>EXPIREDEL</TT> command has no effect on
        subscribers, but it possible to activate a new expiration
        process with new deadlines.
 
@@ -519,7 +519,7 @@ Deletion of a process activated using the <A NAME="8607"></A><TT>EXPIRE</TT>
 </UL>
 
 <P>
-As above, these commands can be prefixed with <A NAME="8613"></A><TT>QUIET</TT> to
+As above, these commands can be prefixed with <A NAME="8633"></A><TT>QUIET</TT> to
 indicate processing without acknowledgment of receipt.
 
 <P>
@@ -533,34 +533,34 @@ indicate processing without acknowledgment of receipt.
 <P>
 If a list is moderated, <I>Sympa</I> only distributes messages enabled by one of
 its moderators (editors). Moderators have several
-methods for enabling message distribution, depending on the <A NAME="8617"></A><TT>send</TT> list parameter (<A HREF="node16.html#par-send">15.3.8</A>, page&nbsp;<A HREF="node16.html#par-send"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+methods for enabling message distribution, depending on the <A NAME="8637"></A><TT>send</TT> list parameter (<A HREF="node16.html#par-send">15.3.8</A>, page&nbsp;<A HREF="node16.html#par-send"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 
 <UL>
-<LI><A NAME="8620"></A><TT>DISTRIBUTE</TT> <I>listname</I> <I>key</I>
+<LI><A NAME="8640"></A><TT>DISTRIBUTE</TT> <I>listname</I> <I>key</I>
         <A NAME="cmd-distribute"></A>
 <P>
-If the <A NAME="8623"></A><TT>send</TT> parameter of a list is set to <TT>editorkey</TT> or <TT>editorkeyonly</TT>, each message queued
-        for <A NAME="8626"></A>moderation is stored in a spool (see&nbsp;<A HREF="node6.html#cf:queuemod">5.6.3</A>, page&nbsp;<A HREF="node6.html#cf:queuemod"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), and linked
+If the <A NAME="8643"></A><TT>send</TT> parameter of a list is set to <TT>editorkey</TT> or <TT>editorkeyonly</TT>, each message queued
+        for <A NAME="8646"></A>moderation is stored in a spool (see&nbsp;<A HREF="node6.html#cf:queuemod">5.6.3</A>, page&nbsp;<A HREF="node6.html#cf:queuemod"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>), and linked
         to a key.
 
 <P>
-The <A NAME="8627"></A>moderator must use this command to enable
+The <A NAME="8647"></A>moderator must use this command to enable
         message distribution.
 
 <P>
 </LI>
-<LI><A NAME="8628"></A><TT>REJECT</TT> <I>listname</I> <I>key</I>
+<LI><A NAME="8648"></A><TT>REJECT</TT> <I>listname</I> <I>key</I>
         <A NAME="cmd-reject"></A>
 <P>
 The message with the <I>key</I> key is deleted from the
-        moderation <A NAME="8631"></A>spool of the <I>listname</I>
+        moderation <A NAME="8651"></A>spool of the <I>listname</I>
         list.
 
 <P>
 </LI>
-<LI><A NAME="8632"></A><TT>MODINDEX</TT> <I>listname</I>
+<LI><A NAME="8652"></A><TT>MODINDEX</TT> <I>listname</I>
         <A NAME="cmd-modindex"></A>
 <P>
 This command returns the list of messages queued for
@@ -585,36 +585,36 @@ See also the
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1224"
+<A NAME="tex2html1230"
   HREF="node23.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1218"
+<A NAME="tex2html1224"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1212"
+<A NAME="tex2html1218"
   HREF="node21.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1220"
+<A NAME="tex2html1226"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1222"
+<A NAME="tex2html1228"
   HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1225"
+<B> Next:</B> <A NAME="tex2html1231"
   HREF="node23.html">Index</A>
-<B> Up:</B> <A NAME="tex2html1219"
+<B> Up:</B> <A NAME="tex2html1225"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1213"
+<B> Previous:</B> <A NAME="tex2html1219"
   HREF="node21.html">20. Sympa with S/MIME and HTTPS</A>
- &nbsp <B>  <A NAME="tex2html1221"
+ &nbsp <B>  <A NAME="tex2html1227"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1223"
+ &nbsp <B>  <A NAME="tex2html1229"
   HREF="node23.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2004-03-15
+2004-04-05
 </ADDRESS>
 </BODY>
 </HTML>

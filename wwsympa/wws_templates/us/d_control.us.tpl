@@ -1,6 +1,6 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-<H1>Access rights for the document [path]</H1>
+<H1>Access rights for the document [visible_path]</H1>
     Owner : [owner] <BR>
     Last update : [doc_date] <BR>
     Description : [doc_title] <BR><BR>
@@ -38,7 +38,7 @@
 
    [IF set_owner]
      <TD>
-     <B>Set the owner of the directory [path]</B>
+     <B>Set the owner of the directory [visible_path]</B>
 
      <FORM ACTION="[path_cgi]" METHOD="POST">
      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">

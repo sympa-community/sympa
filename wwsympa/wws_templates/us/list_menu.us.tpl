@@ -104,11 +104,21 @@
         <TD BGCOLOR="[light_color]">
 	   Bounced email rate: <B>[bounce_rate]%</B><BR>
            <BR>
+	 [IF is_editor]	
 	   [if mod_total=0]
 	   No message to moderate
            [else]
            Messages to moderate :<B> [mod_total]</B>
            [endif]
+	   [IF shared=exist]
+ 	     <BR><BR>
+	     [IF mod_total_shared=0]
+	     No document to moderate
+	     [else]
+             Documents to moderate :<B> [mod_total_shared]</B>
+             [endif]
+	   [ENDIF]
+         [ENDIF]
 	  <BR>
         </TD>
          [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']

@@ -7,7 +7,7 @@
 	  <LI><FONT COLOR="[dark_color]"><b>Edit list config</b></FONT> must be used with care : it allows to modify some of the
                  list parameters. The list of parameters you can modify depends on your privilege.
           <LI><FONT COLOR="[dark_color]"><b>Subscribers</b></FONT> : subscribers management, add, del, search, bounces, etc...
-          <LI><FONT COLOR="[dark_color]"><b>Moderate</b></FONT> : reject and accept messages for distribution.
+          <LI><FONT COLOR="[dark_color]"><b>Moderate</b></FONT> : reject and accept messages and documents for distribution.
           <LI><FONT COLOR="[dark_color]"><b>Customizing</b></FONT> : editing of various files and messages attached to your list.
           <LI><FONT COLOR="[dark_color]"><b>Manage Archives</b></FONT> : Allow you to download and delete list archives.	
 

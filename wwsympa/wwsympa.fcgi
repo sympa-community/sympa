@@ -163,8 +163,14 @@ my %comm = ('home' => 'do_home',
 	 'modindex' => 'do_modindex',
 	 'reject' => 'do_reject',
 	 'reject_notify' => 'do_reject_notify',
+         'd_reject_shared' =>'admin',
+         'reject_notify_shared' =>'admin',
+         'd_install_shared' =>'admin',
 	 'distribute' => 'do_distribute',
 	 'viewmod' => 'do_viewmod',
+	 'd_reject_shared' => 'do_d_reject_shared',
+	 'reject_notify_shared' => 'do_reject_notify_shared',
+	 'd_install_shared' => 'do_d_install_shared',
 	 'editfile' => 'do_editfile',
 	 'savefile' => 'do_savefile',
 	 'arc' => 'do_arc',
@@ -256,6 +262,8 @@ my %action_args = ('default' => ['list'],
 		'pref' => ['previous_action','previous_list'],
 		'reject' => ['list','id'],
 		'distribute' => ['list','id'],
+		'd_reject_shared' => ['list','id'],
+		'd_install_shared' => ['list','id'],
 		'modindex' => ['list'],
 		'viewmod' => ['list','id','file'],
 		'viewfile' => ['list','file'],
@@ -639,7 +647,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
          unless (defined $param->{'user'}{'cookie_delay'}) {
              $param->{'user'}{'cookie_delay'} = $wwsconf->{'cookie_expire'};
          }
-         ## get subscrition using cookie and set param for use in templates
+         ## get sub crition using cookie and set param for use in templates
          @{$param->{'get_which'}}  =  &cookielib::get_which_cookie($ENV{'HTTP_COOKIE'});
 
          # if no cookie was received, look for subscriptions
@@ -948,6 +956,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $msg = "[list $param->{'list'}] " . $msg
 	 if $param->{'list'};
 
+	
      if ($param->{'alt_emails'}) {
 	 my @alts;
 	 foreach my $alt (keys %{$param->{'alt_emails'}}) {
@@ -1185,10 +1194,17 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	}
 
 	$param->{'is_moderated'} = $list->is_moderated();
+	$param->{'is_shared_open'} =$list->is_shared_open();
 
 	## Privileged info
+
 	if ($param->{'is_priv'}) {
 	    $param->{'mod_total'} = $list->get_mod_spool_size();
+	   
+	    my @doc_mod_list = $list->get_shared_moderated();
+	    $param->{'doc_mod_list'} = \@doc_mod_list;
+	    $param->{'mod_total_shared'} = $#doc_mod_list + 1;
+
 	    if ($param->{'total'} > 0) {
 		$param->{'bounce_total'} = $list->get_total_bouncing();
 		$param->{'bounce_rate'} = $param->{'bounce_total'} * 100 / $param->{'total'};
@@ -1334,15 +1350,17 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 ## Editors
-	 foreach my $e (@{$list->{'admin'}{'editor'}}) {
-	     next unless $e->{'email'};
-	     $param->{'editor'}{$e->{'email'}}{'gecos'} = $e->{'gecos'};
-	     $param->{'editor'}{$e->{'email'}}{'mailto'} = &mailto($list,$e->{'email'},$e->{'gecos'});
-	     ($param->{'editor'}{$e->{'email'}}{'local'},$param->{'editor'}{$e->{'email'}}{'domain'}) = split ('@',$e->{'email'});
-	     my $masked_email = $e->{'email'};
-	     $masked_email =~ s/\@/ AT /;
-	     $param->{'editor'}{$e->{'email'}}{'masked_email'} = $masked_email;
-	 }  
+	 if (defined $list->{'admin'}{'editor'}) {
+	     foreach my $e (@{$list->{'admin'}{'editor'}}) {
+		 next unless $e->{'email'};
+		 $param->{'editor'}{$e->{'email'}}{'gecos'} = $e->{'gecos'};
+		 $param->{'editor'}{$e->{'email'}}{'mailto'} = &mailto($list,$e->{'email'},$e->{'gecos'});
+		 ($param->{'editor'}{$e->{'email'}}{'local'},$param->{'editor'}{$e->{'email'}}{'domain'}) = split ('@',$e->{'email'});
+		 my $masked_email = $e->{'email'};
+		 $masked_email =~ s/\@/ AT /;
+		 $param->{'editor'}{$e->{'email'}}{'masked_email'} = $masked_email;
+	     }  
+	 }
 
 	## privileges
 	if ($param->{'user'}{'email'}) {
@@ -2833,7 +2851,7 @@ sub do_redirect {
 
      unless($s = $list->get_subscriber($param->{'user'}{'email'})) {
 	 &error_message('subscriber_not_found', {'email' => $param->{'user'}{'email'}});
-	 &wwslog('info', 'do_info: subscriber %s not found', $param->{'user'}{'email'});
+	 &wwslog('info', 'do_sub_options: subscriber %s not found', $param->{'user'}{'email'});
 	 return undef;
      }
 
@@ -3499,19 +3517,22 @@ sub do_redirect {
      return $in{'previous_action'} || 'review';
  }
 
+
+ ### moderation of messages and documents
  sub do_modindex {
      &wwslog('info', 'do_modindex');
      my $msg;
+     my $doc;
 
      unless ($param->{'list'}) {
 	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_modindex: no list');
+	 &wwslog('err','do_modindex: no list');
 	 return undef;
      }
 
      unless ($param->{'user'}{'email'}) {
 	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_modindex: no user');
+	 &wwslog('err','do_modindex: no user');
 	 $param->{'previous_action'} = 'modindex';
 	 $param->{'previous_list'} = $in{'list'};
 	 return 'loginrequest';
@@ -3519,14 +3540,14 @@ sub do_redirect {
 
      unless ($list->am_i('editor', $param->{'user'}{'email'})) {
 	 &error_message('may_not');
-	 &wwslog('info','do_modindex: %s not editor', $param->{'user'}{'email'});
+	 &wwslog('err','do_modindex: %s not editor', $param->{'user'}{'email'});
 	 return 'admin';
      }
 
      ## Loads message list
      unless (opendir SPOOL, $Conf{'queuemod'}) {
 	 &error_message('spool_error');
-	 &wwslog('info','do_modindex: unable to read spool');
+	 &wwslog('err','do_modindex: unable to read spool');
 	 return 'admin';
      }
 
@@ -3539,7 +3560,7 @@ sub do_redirect {
 	 ## Load msg
 	 unless (open MSG, "$Conf{'queuemod'}/$msg") {
 	     &error_message('msg_error');
-	     &wwslog('info','do_modindex: unable to read msg %s', $msg);
+	     &wwslog('err','do_modindex: unable to read msg %s', $msg);
 	     closedir SPOOL;
 	     return 'admin';
 	 }
@@ -3559,15 +3580,249 @@ sub do_redirect {
      }
      closedir SPOOL;
 
-     unless ($param->{'spool'}) {
-	 &message('no_msg', {'list' => $in{'list'}});
-	 &wwslog('info','do_modindex: no message');
+     ##  document shared awaiting for moderation
+     foreach my $d (@{$param->{'doc_mod_list'}}) {
+	 
+         $d =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+	 my $path = $1; # path without the filename
+	 my $fname = $3; # the filename with .moderate
+	 my $visible_fname = &make_visible_path($fname); # the filename without .moderate
+	 my $visible_path = $path;
+	 $visible_path =~ s/^.*\/shared//; #the path for the user, without the filename
+
+	 my %desc_hash;
+	 if ($d  && (-e "$path.desc.$fname")){
+	     %desc_hash = &get_desc_file("$path.desc.$fname");
+	 }
+
+	 my @info = stat $d;
+
+	 my $doc = {};
+	 $doc->{'visible_path'} = "$visible_path";
+         $doc->{'visible_fname'} = "$visible_fname";
+	 $doc->{'fname'} = "$fname";
+	 $doc->{'size'} = (-s $d)/1000; 
+	 $doc->{'date'} = POSIX::strftime("%d %b %Y", localtime($info[9]));
+	 $doc->{'author'} = $desc_hash{'email'};
+         $doc->{'path'} = $d;
+	
+	 push(@{$param->{'info_doc_mod'}},$doc)
+     }
+    
+     unless (($param->{'spool'}) || ($param->{'mod_total_shared'} > 0)) {
+	 &message('no_msg_document', {'list' => $in{'list'}});
+	 &wwslog('err','do_modindex: no message and no document');
 	 return 'admin';
      }
 
+     return 1;
+ }
+
+### moderation of documents shared
+ sub do_d_install_shared {
+     &wwslog('info', 'do_d_install_shared()');
+
+     unless ($param->{'list'}) {
+	 &error_message('missing_arg', {'argument' => 'list'});
+	 &wwslog('err','do_d_install_shared: no list');
+	 return undef;
+     }
+
+     unless ($param->{'user'}{'email'}) {
+	 &error_message('no_user');
+	 &wwslog('err','do_d_install_shared: no user');
+	 return 'loginrequest';
+     }
+
+     unless ($list->am_i('editor', $param->{'user'}{'email'})) {
+	 &error_message('may_not');
+	 &wwslog('err','do_d_install_shared: %s not editor', $param->{'user'}{'email'});
+	 return undef;
+     }
+
+     unless ($in{'id'}) {
+	 &error_message('missing_arg', {'argument' => 'docid'});
+	 &wwslog('err','do_d_install_shared: no docid');
+	 return undef;
+     }
+
+     if ($in{'mode_cancel'}) {
+	 return 'modindex';
+     }
+
+     my $shareddir =  $list->{'dir'}.'/shared';
+     my $file;
+     my $path;
+     my $fname;
+     my $visible_fname;
+     # list of file already existing
+     my @list_file_exist;
+    
+     unless($in{'mode_confirm'} || $in{'mode_cancel'}) {
+
+	 # file already exists ?
+	 foreach my $id (split /\0/, $in{'id'}) {
+	   
+	     $file = "$shareddir$id";
+	     $id =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+	     $path = $1; 
+	     $fname = $3; 
+	     $visible_fname = &make_visible_path($fname);
+	     
+	     if (-e "$file") {
+		 if (-e "$shareddir$path$visible_fname") {
+		     push(@list_file_exist,"$path$visible_fname");
+		 }
+	     }   
+	 }
+	 
+	 if (@list_file_exist) {
+
+	     $param->{'list_file'}=\@list_file_exist;
+	     my @id = split(/\0/,$in{'id'});
+	     $param->{'id'} = \@id;
 
      return 1;
  }
+     }
+     
+     # install the file(s) selected
+     foreach my $id (split /\0/, $in{'id'}) {
+
+	 $file = "$shareddir$id";
+         $id =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+	 $path = $1;
+	 $fname = $3;
+	 $visible_fname = &make_visible_path($fname);
+	 
+     	 if (-e "$file") {
+	     
+	     # rename the old file in .old if exists
+	     if (-e "$shareddir$path$visible_fname") {
+		 unless (rename "$shareddir$path$visible_fname","$shareddir$path$visible_fname.old"){
+		     &error_message('failed');
+		     &wwslog('err',"do_d_ulpoad : Failed to rename $shareddir$path$visible_fname to .old : %s",$!);
+		     return undef;
+		 }
+		 unless (rename "$shareddir$path.desc.$visible_fname","$shareddir$path.desc.$visible_fname.old"){
+		     &error_message('failed');
+		     &wwslog('err',"do_d_ulpoad : Failed to rename shareddir$path.desc.$visible_fname to .old : %s",$!);
+		     return undef;
+		 }
+		 
+	     }
+
+	     unless (rename ("$shareddir$id","$shareddir$path$visible_fname")){
+		 &error_message('failed');
+		 &wwslog('err',"do_d_install_shared : Failed to rename $file to $shareddir$path$visible_fname : $!");
+		 return undef; 
+	     }
+	     unless (rename ("$shareddir$path.desc.$fname","$shareddir$path.desc.$visible_fname")){
+		 &error_message('failed');
+		 &wwslog('err',"do_d_install_shared : Failed to rename $file to $shareddir$path$visible_fname : $!");
+		 return undef; 
+	     }
+	    
+	     # send a message to the author
+	     my %context;
+	     my $sender;
+	     $context{'installed_by'} = $param->{'user'}{'email'};
+	     $context{'filename'} = "$path$visible_fname";
+	     
+	     my %desc_hash;
+	     if ($id  && (-e "$shareddir$path.desc.$visible_fname")){
+		 %desc_hash = &get_desc_file("$shareddir$path.desc.$visible_fname");
+	     }
+	     
+	     $sender = $desc_hash{'email'};
+	     
+	     $list->send_file('d_install_shared', $sender, $robot, \%context);
+	 } 
+     }
+      
+     &message('performed');
+     return 'modindex';
+ }
+
+ sub do_d_reject_shared {
+     &wwslog('info', 'do_d_reject_shared()');
+  
+     unless ($param->{'list'}) {
+	 &error_message('missing_arg', {'argument' => 'list'});
+	 &wwslog('err','do_d_reject_shared: no list');
+	 return undef;
+     }
+
+     unless ($param->{'user'}{'email'}) {
+	 &error_message('no_user');
+	 &wwslog('err','do_d_reject_shared: no user');
+	 return 'loginrequest';
+     }
+
+     unless ($list->am_i('editor', $param->{'user'}{'email'})) {
+	 &error_message('may_not');
+	 &wwslog('err','do_d_reject_shared: %s not editor', $param->{'user'}{'email'});
+	 return undef;
+     }
+
+     unless ($in{'id'}) {
+	 &error_message('missing_arg', {'argument' => 'docid'});
+	 &wwslog('err','do_reject: no docid');
+	 return undef;
+     }
+
+     my $shareddir =  $list->{'dir'}.'/shared';
+     my $file;
+     my $path;
+     my $fname;
+     my $visible_fname;
+
+     foreach my $id (split /\0/, $in{'id'}) {
+
+	 $file = "$shareddir$id";
+         $id =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+	 $path = $1;
+	 $fname = $3;
+	 $visible_fname = &make_visible_path($fname); 
+
+	 unless ($in{'quiet'}) {
+	     
+	     my %context;
+	     my $sender;
+	     $context{'rejected_by'} = $param->{'user'}{'email'};
+	     $context{'filename'} = "$path$visible_fname";
+	     
+	     my %desc_hash;
+	     if ($id  && (-e "$shareddir$path.desc.$fname")){
+		 %desc_hash = &get_desc_file("$shareddir$path.desc.$fname");
+		 &wwslog('notice',"coucou");
+	     }
+	     &wwslog('notice',"coucou :$desc_hash{'email'}");
+	     $sender = $desc_hash{'email'};
+	     
+	     $list->send_file('d_reject_shared', $sender, $robot, \%context);
+	 }
+
+
+	 unless (unlink($file)) {
+	     &error_message('failed');
+	     &wwslog('err','do_d_reject_shared: failed to erase %s', $file);
+	     return undef;
+	 }
+
+	 unless (unlink("$shareddir$path.desc.$fname")) {
+	     &error_message('failed');
+	     &wwslog('err',"do_d_reject_shared: failed to erase $shareddir$path.desc.$fname");
+	     return undef;
+	 } 
+     }
+
+     &message('performed');
+     return 'modindex';
+ }
+
+
+### moderation of messages
 
  sub do_reject {
      &wwslog('info', 'do_reject()');
@@ -3575,25 +3830,25 @@ sub do_redirect {
 
      unless ($param->{'list'}) {
 	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_reject: no list');
+	 &wwslog('err','do_reject: no list');
 	 return undef;
      }
 
      unless ($param->{'user'}{'email'}) {
 	 &error_message('no_user');
-	 &wwslog('info','do_reject: no user');
+	 &wwslog('err','do_reject: no user');
 	 return 'loginrequest';
      }
 
      unless ($list->am_i('editor', $param->{'user'}{'email'})) {
 	 &error_message('may_not');
-	 &wwslog('info','do_reject: %s not editor', $param->{'user'}{'email'});
+	 &wwslog('err','do_reject: %s not editor', $param->{'user'}{'email'});
 	 return undef;
      }
 
      unless ($in{'id'}) {
 	 &error_message('missing_arg', {'argument' => 'msgid'});
-	 &wwslog('info','do_reject: no msgid');
+	 &wwslog('err','do_reject: no msgid');
 	 return undef;
      }
 
@@ -3604,7 +3859,7 @@ sub do_redirect {
 	 ## Open the file
 	 if (!open(IN, $file)) {
 	     &error_message('failed_someone_else_did_it');
-	     &wwslog('info','do_reject: Unable to open %s', $file);
+	     &wwslog('err','do_reject: Unable to open %s', $file);
 	     return undef;
 	 }
 	 unless ($in{'quiet'}) {
@@ -3629,7 +3884,7 @@ sub do_redirect {
 
 	 unless (unlink($file)) {
 	     &error_message('failed');
-	     &wwslog('info','do_reject: failed to erase %s', $file);
+	     &wwslog('err','do_reject: failed to erase %s', $file);
 	     return undef;
 	 }
 
@@ -3647,32 +3902,32 @@ sub do_redirect {
 
      unless ($param->{'list'}) {
 	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_distribute: no list');
+	 &wwslog('err','do_distribute: no list');
 	 return undef;
      }
 
      unless ($param->{'user'}{'email'}) {
 	 &error_message('no_user');
-	 &wwslog('info','do_distribute: no user');
+	 &wwslog('err','do_distribute: no user');
 	 return 'loginrequest';
      }
 
      unless ($list->am_i('editor', $param->{'user'}{'email'})) {
 	 &error_message('may_not');
-	 &wwslog('info','do_distribute: %s not editor', $param->{'user'}{'email'});
+	 &wwslog('err','do_distribute: %s not editor', $param->{'user'}{'email'});
 	 return undef;
      }
 
      unless ($in{'id'}) {
 	 &error_message('missing_arg', {'argument' => 'msgid'});
-	 &wwslog('info','do_distribute: no msgid');
+	 &wwslog('err','do_distribute: no msgid');
 	 return undef;
      }
      my $extention = time.".".int(rand 9999) ;
      my $sympa_email = &Conf::get_robot_conf($robot, 'sympa');
      unless (open DISTRIBUTE, ">$Conf{'queue'}/T.$sympa_email.$extention") {
 	 &error_message('failed');
-	 &wwslog('info','do_distribute: could not create %s: %s', "$Conf{'queue'}/T.$sympa_email.$extention",$!);
+	 &wwslog('err','do_distribute: could not create %s: %s', "$Conf{'queue'}/T.$sympa_email.$extention",$!);
 	 return undef;
      }
 
@@ -3687,7 +3942,7 @@ sub do_redirect {
 	 printf DISTRIBUTE ("QUIET DISTRIBUTE %s %s\n",$list->{'name'},$id);
 	 unless (rename($file,"$file.distribute")) {
 	     &error_message('failed');
-	     &wwslog('info','do_distribute: failed to rename %s', $file);
+	     &wwslog('err','do_distribute: failed to rename %s', $file);
 	 }
 
 
@@ -3706,25 +3961,25 @@ sub do_redirect {
 
      unless ($param->{'list'}) {
 	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_viewmod: no list');
+	 &wwslog('err','do_viewmod: no list');
 	 return undef;
      }
 
      unless ($param->{'user'}{'email'}) {
 	 &error_message('no_user');
-	 &wwslog('info','do_viewmod: no user');
+	 &wwslog('err','do_viewmod: no user');
 	 return 'loginrequest';
      }
 
      unless ($in{'id'}) {
 	 &error_message('missing_arg', {'argument' => 'msgid'});
-	 &wwslog('info','do_viewmod: no msgid');
+	 &wwslog('err','do_viewmod: no msgid');
 	 return undef;
      }
 
      unless ($list->am_i('editor', $param->{'user'}{'email'})) {
 	 &error_message('may_not');
-	 &wwslog('info','do_viewmod: %s not editor', $param->{'user'}{'email'});
+	 &wwslog('err','do_viewmod: %s not editor', $param->{'user'}{'email'});
 	 return undef;
      }
 
@@ -3732,7 +3987,7 @@ sub do_redirect {
 
      unless (-d $tmp_dir) {
 	 &error_message('no_html_message_available');
-	 &wwslog('info','do_viewmod: no HTML version of the message available in %s', $tmp_dir);
+	 &wwslog('err','do_viewmod: no HTML version of the message available in %s', $tmp_dir);
 	 return undef;
      }
 
@@ -3772,7 +4027,7 @@ sub do_redirect {
 
      unless (defined $wwslib::filenames{$in{'file'}}) {
 	 &error_message('file_not_editable', {'file' => $in{'file'}});
-	 &wwslog('info','do_editfile: file %s not editable', $in{'file'});
+	 &wwslog('err','do_editfile: file %s not editable', $in{'file'});
 	 return undef;
      }
 
@@ -3780,14 +4035,14 @@ sub do_redirect {
 
      unless ($param->{'user'}{'email'}) {
 	 &error_message('no_user');
-	 &wwslog('info','do_editfile: no user');
+	 &wwslog('err','do_editfile: no user');
 	 return 'loginrequest';
      }
 
      if ($param->{'list'}) {
 	 unless ($list->may_edit($in{'file'}, $param->{'user'}{'email'}) eq 'write') {
 	     &error_message('may_not');
-	     &wwslog('info','do_editfile: not allowed');
+	     &wwslog('err','do_editfile: not allowed');
 	     return undef;
 	 }
 
@@ -3806,7 +4061,7 @@ sub do_redirect {
      }else {
 	 unless (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
 	     &error_message('missing_arg', {'argument' => 'list'});
-	     &wwslog('info','do_editfile: no list');
+	     &wwslog('err','do_editfile: no list');
 	     return undef;
 	 }
 
@@ -3825,7 +4080,7 @@ sub do_redirect {
 
      if ($param->{'filepath'} && (! -r $param->{'filepath'})) {
 	 &error_message('failed');
-	 &wwslog('info','do_editfile: cannot read %s', $param->{'filepath'});
+	 &wwslog('err','do_editfile: cannot read %s', $param->{'filepath'});
 	 return undef;
      }
 
@@ -3840,20 +4095,20 @@ sub do_redirect {
 
      unless ($in{'file'}) {
 	 &error_message('missing_arg'. {'argument' => 'file'});
-	 &wwslog('info','do_savefile: no file');
+	 &wwslog('err','do_savefile: no file');
 	 return undef;
      }
 
      unless ($param->{'user'}{'email'}) {
 	 &error_message('no_user');
-	 &wwslog('info','do_savefile: no user');
+	 &wwslog('err','do_savefile: no user');
 	 return 'loginrequest';
      }
 
      if ($param->{'list'}) {
 	 unless ($list->am_i('owner', $param->{'user'}{'email'})) {
 	     &error_message('may_not');
-	     &wwslog('info','do_savefile: not allowed');
+	     &wwslog('err','do_savefile: not allowed');
 	     return undef;
 	 }
 
@@ -3861,7 +4116,7 @@ sub do_redirect {
      }else {
 	 unless (&List::is_listmaster($param->{'user'}{'email'}),$robot) {
 	     &error_message('missing_arg', {'argument' => 'list'});
-	     &wwslog('info','do_savefile: no list');
+	     &wwslog('err','do_savefile: no list');
 	     return undef;
 	 }
 
@@ -3882,7 +4137,7 @@ sub do_redirect {
 
      unless ((! -e $param->{'filepath'}) or (-w $param->{'filepath'})) {
 	 &error_message('failed');
-	 &wwslog('info','do_savefile: cannot write %s', $param->{'filepath'});
+	 &wwslog('err','do_savefile: cannot write %s', $param->{'filepath'});
 	 return undef;
      }
 
@@ -3900,7 +4155,7 @@ sub do_redirect {
 	 ## Save new file
 	 unless (open FILE, ">$param->{'filepath'}") {
 	     &error_message('failed');
-	     &wwslog('info','do_savefile: failed to save file %s: %s', $param->{'filepath'},$!);
+	     &wwslog('err','do_savefile: failed to save file %s: %s', $param->{'filepath'},$!);
 	     return undef;
 	 }
 	 print FILE $in{'content'};
@@ -3925,7 +4180,7 @@ sub do_redirect {
 
      unless ($param->{'list'}) {
 	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_arc: no list');
+	 &wwslog('err','do_arc: no list');
 	 return undef;
      }
 
@@ -3936,7 +4191,7 @@ sub do_redirect {
 				     'remote_host' => $param->{'remote_host'},
 				     'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i) {
 	 &error_message('may_not');
-	 &wwslog('info','do_arc: access denied for %s', $param->{'user'}{'email'});
+	 &wwslog('err','do_arc: access denied for %s', $param->{'user'}{'email'});
 	 return undef;
      }
 
@@ -3954,7 +4209,7 @@ sub do_redirect {
      ## Calendar
      unless (opendir ARC, "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}") {
 	 &error_message('empty_archives');
-	 &wwslog('info','do_arc: no directory %s', "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}");
+	 &wwslog('err','do_arc: no directory %s', "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}");
 	 return undef;
      }
      foreach my $dir (sort grep(!/^\./,readdir ARC)) {
@@ -3971,7 +4226,7 @@ sub do_redirect {
      unless ($in{'arc_file'}) {
 	 undef $latest;
 	 unless (opendir ARC, "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}") {
-	     &wwslog('info',"unable to readdir $wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}");
+	     &wwslog('err',"unable to readdir $wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}");
 	     &error_message('month_not_found');
 	 }
 	 foreach my $file (grep(/^$index/,readdir ARC)) {
@@ -3986,7 +4241,7 @@ sub do_redirect {
 
      ## File exist ?
      unless (-r "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}") {
-	 &wwslog('info',"unable to read $wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}");
+	 &wwslog('err',"unable to read $wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}");
 	 &error_message('arc_not_found');
 	 return undef;
      }
@@ -4028,7 +4283,7 @@ sub do_redirect {
 
      if ($in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
 	 &error_message('may_not_remove_arc');
-	 &wwslog('info','remove_arc: no message id found');
+	 &wwslog('err','remove_arc: no message id found');
 	 $param->{'status'} = 'no_msgid';
 	 return undef;
      } 
@@ -4603,7 +4858,7 @@ sub do_get_inactive_lists {
 	     close COUNT;
 
 	 }else {
-	     &wwslog('err', 'Could not open file %s', $list->{'dir'}.'/msg_count');	     
+	     &wwslog('info', 'Could not open file %s', $list->{'dir'}.'/msg_count');	     
 	 }
 
 
@@ -4881,7 +5136,7 @@ sub do_set_pending_list_request {
      my $res = list_check_smtp($in{'listname'});
      unless ( defined($res) ) {
 	 &error_message('unable_to_check_list_using_smtp');
-	 &do_log('err', "can't check list %.128s on %.128s",
+	 &do_log('info', "can't check list %.128s on %.128s",
 		 $in{'listname'},
 		 $wwsconf->{'list_check_smtp'});
 	 return undef;
@@ -5553,7 +5808,7 @@ sub do_edit_list {
 	 &error_message('may_not');
 	 &wwslog('info','do_edit_list: not allowed');
 	 return undef;
-     }
+}
 
      my $new_admin = {};
 
@@ -6230,7 +6485,7 @@ sub do_edit_list {
      my $res = list_check_smtp($in{'new_listname'});
      unless ( defined($res) ) {
 	 &error_message('unable_to_check_list_using_smtp');
-	 &do_log('err', "can't check list %.128s on %.128s",
+	 &do_log('info', "can't check list %.128s on %.128s",
 		 $in{'new_listname'},
 		 $wwsconf->{'list_check_smtp'});
 	 return undef;
@@ -6319,7 +6574,7 @@ sub do_edit_list {
      foreach my $spool ('queueauth','queuemod','queuetask','queuebounce',
 			'queue','queueoutgoing','queuesubscribe') {
 	 unless (opendir(DIR, $Conf{$spool})) {
-	     &wwslog('err', "Unable to open '%s' spool : %s", $Conf{$spool}, $!);
+	     &wwslog('info', "Unable to open '%s' spool : %s", $Conf{$spool}, $!);
 	 }
 	 
 	 foreach my $file (sort grep (!/^\.+$/,readdir(DIR))) {
@@ -6542,7 +6797,7 @@ sub do_edit_list {
 
      my @info = stat $path;
 
-     return ($date_epoch == $info[10]);
+     return ($date_epoch == $info[9]);
  }
 
 
@@ -6575,7 +6830,7 @@ sub do_edit_list {
 
      # return the hash
      # $result{'may'}{'read'} = 0 or 1 (right or not)
-     # $result{'may'}{'edit'} = 0 or 1 (right or not)
+     # $result{'may'}{'edit'} = 0(not may edit) or 0.5(may edit with moderation) or 1(may edit ) : it is not a boolean anymore
      # $result{'may'}{'control'} = 0 or 1 (right or not)
      # $result{'scenario'}{'read'} = scenario name for the document
      # $result{'scenario'}{'edit'} = scenario name for the document
@@ -6616,12 +6871,7 @@ sub do_edit_list {
      my $may_edit = 1;
      my $is_author = 0; # <=> $may_control
 
-
-
-     if (!$path) {    
-	 # Default control : if $path="", the rights are those of the shared space
-	 #                   in the config of the list
-
+     ## First check privileges on the root shared directory
 	 $result{'scenario'}{'read'} = $list->{'admin'}{'shared_doc'}{'d_read'}{'name'};
 	 $result{'scenario'}{'edit'} = $list->{'admin'}{'shared_doc'}{'d_edit'}{'name'};
 
@@ -6636,44 +6886,33 @@ sub do_edit_list {
 
 	 # if not privileged owner
 	 if ($mode_read) {
-	     $result{'may'}{'read'} = (&List::request_action ('shared_doc.d_read',$param->{'auth_method'},$robot,
+	 $may_read = (&List::request_action ('shared_doc.d_read',$param->{'auth_method'},$robot,
 							    {'listname' => $param->{'list'},
 							     'sender' => $param->{'user'}{'email'},
 							     'remote_host' => $param->{'remote_host'},
 							     'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i);
 	 }
+     
 	 if ($mode_edit) {
-	     $result{'may'}{'edit'} = (&List::request_action ('shared_doc.d_edit',$param->{'auth_method'},$robot,
+	 my $action = &List::request_action ('shared_doc.d_edit',$param->{'auth_method'},$robot,
 							       {'listname' => $param->{'list'},
 								'sender' => $param->{'user'}{'email'},
 								'remote_host' => $param->{'remote_host'},
-								'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i);
+					      'remote_addr' => $param->{'remote_addr'}});
+	 #edit = 0, 0.5 or 1
+	 $may_edit = &find_edit_mode($action);	 
 	 }
 
 	 ## Only authenticated users can edit files
-	 $result{'may'}{'edit'} = 0 unless ($param->{'user'}{'email'});
+     $may_edit = 0 unless ($param->{'user'}{'email'});
 
-	 if ($mode_control) {
-	     $result{'may'}{'control'} = 0;
-	 }
+#     if ($mode_control) {
+#	 $result{'may'}{'control'} = 0;
+#     }
 
-	 # result
-	 return %result;
-
-     } else {
-	 # path remaining to test
 	 my $current_path = $path;
-
-	 # current document to test
 	 my $current_document;
-
-	 # description file loaded in a hash
 	 my %desc_hash;
-
-	 # test of privileged owner once
-	 my $test_privilege = 1;
-
-	 # user : to compare string. In order not to test ('' eq '')!
 	 my $user = $param->{'user'}{'email'} || 'nobody';
 
 	 while ($current_path ne "") {
@@ -6683,6 +6922,7 @@ sub do_edit_list {
 
 	     $current_path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
 	     $current_document = $3;
+	     my $next_path = $1;
 
 	     # opening of the description file appropriated
 	     if (-d $shareddir.'/'.$current_path) {
@@ -6699,11 +6939,10 @@ sub do_edit_list {
 
 	     }else {
 		 # case file
-		 if (-e "$shareddir/$1.desc.$3"){
-		     $desc_file = $shareddir.'/'.$1.".desc.".$3;
+	     if (-e "$shareddir/$next_path.desc.$3"){
+		 $desc_file = $shareddir.'/'.$next_path.".desc.".$3;
 		     $def_desc_file = 1;
 		 } 
-
 	     }
 
 	     if ($def_desc_file) {
@@ -6711,21 +6950,6 @@ sub do_edit_list {
 		 # loading of acces information
 
 		 %desc_hash = &get_desc_file($desc_file);
-
-		 # Test of privileged owner
-		 if ($test_privilege) {
-		     if ($param->{'is_privileged_owner'}) {
-			 $result{'may'}{'read'} = 1;
-			 $result{'may'}{'edit'} = 1;
-			 $result{'may'}{'control'} = 1;
-			 $result{'scenario'}{'read'} = $desc_hash{'read'};
-			 $result{'scenario'}{'edit'} = $desc_hash{'edit'};
-
-			 return %result;
-		     }
-		 }
-		 $test_privilege = 0; # test privileges only once
-
 
 		 if ($mode_read) {
 		     $may_read = $may_read && (&List::request_action ('shared_doc.d_read',$param->{'auth_method'},$robot,
@@ -6736,15 +6960,16 @@ sub do_edit_list {
 								       'scenario'=> $desc_hash{'read'}}) =~ /do_it/i);
 		 }
 
-
 		 if ($mode_edit) {
-		     $may_edit = $may_edit && (&List::request_action ('shared_doc.d_edit',$param->{'auth_method'},$robot,
+		 my $action_edit = &List::request_action ('shared_doc.d_edit',$param->{'auth_method'},$robot,
 								      {'listname' => $param->{'list'},
 								       'sender' => $param->{'user'}{'email'},
 								       'remote_host' => $param->{'remote_host'},
 								       'remote_addr' => $param->{'remote_addr'},
-								       'scenario'=> $desc_hash{'edit'}}) =~ /do_it/i);
-
+							   'scenario'=> $desc_hash{'edit'}});
+		 # $may_edit = 0, 0.5 or 1
+		 my $may_action_edit = &find_edit_mode($action_edit);
+		 $may_edit = &merge_edit($may_edit,$may_action_edit); 
 		 }
 
 		 ## Only authenticated users can edit files
@@ -6759,7 +6984,7 @@ sub do_edit_list {
 
 		 if ($is_author) {
 		     $result{'may'}{'read'} = 1;
-		     $result{'may'}{'edit'} = 1;
+		 $result{'may'}{'edit'} = &merge_edit($may_edit,1);
 		     $result{'may'}{'control'} = 1;
 		     return %result;
 		 }
@@ -6767,42 +6992,7 @@ sub do_edit_list {
 	     }
 
 	     # truncate the path for the while   
-	     $current_path = $1; 
-	 }
-
-	 # default access 
-	 unless (defined $result{'scenario'}{'read'}) {
-	     $result{'scenario'}{'read'} =  $list->{'admin'}{'shared_doc'}{'d_read'}{'name'};
-	     $result{'scenario'}{'edit'} =  $list->{'admin'}{'shared_doc'}{'d_edit'}{'name'};
-	 }
-
-	 # Test of privileged owner if not already done in the while => no desc file found
-	 if ($test_privilege) {
-	     if ($param->{'is_privileged_owner'}) {
-		 $result{'may'}{'read'} = 1;
-		 $result{'may'}{'edit'} = 1;
-		 $result{'may'}{'control'} = 1;
-		 return %result;
-	     } else {
-		 # case no description file and no privileges
-		 $result{'may'}{'read'} = (&List::request_action ('shared_doc.d_read',$param->{'auth_method'},$robot,
-								  {'listname' => $param->{'list'},
-								   'sender' => $param->{'user'}{'email'},
-								   'remote_host' => $param->{'remote_host'},
-								   'remote_addr' => $param->{'remote_addr'},
-								   'scenario'=>$result{'scenario'}{'read'}}) =~ /do_it/i);
-		 $result{'may'}{'edit'} =  (&List::request_action ('shared_doc.d_edit',$param->{'auth_method'},$robot,
-								   {'listname' => $param->{'list'},
-								    'sender' => $param->{'user'}{'email'},
-								    'remote_host' => $param->{'remote_host'},
-								    'remote_addr' => $param->{'remote_addr'},
-								    'scenario'=>$result{'scenario'}{'edit'}}) =~ /do_it/i);
-		 ## Only authenticated users can edit files
-		 $result{'may'}{'edit'} = 0 unless ($param->{'user'}{'email'});
-
-		 $result{'may'}{'control'} = 0;
-		 return %result;
-	     }
+	 $current_path = $next_path; 
 	 }
 
 	 if ($mode_read) {
@@ -6813,16 +7003,48 @@ sub do_edit_list {
 	      $result{'may'}{'edit'} = $may_edit;
 	 }
 
-	 if ($mode_control) {
-	     $result{'may'}{'control'} = 0;
-	 }
-
+#     if ($mode_control) {
+#	 $result{'may'}{'control'} = 0;
+#     }
 
 	 return %result;
      }
 
+## return the mode of editing included in $action : 0, 0.5 or 1
+sub find_edit_mode{
+    my $action=shift;
 
+    my $result;
+    if ($action =~ /editor/i){
+	$result = 0.5;
+    } elsif ($action =~ /do_it/i){
+	$result = 1;
+    } else {
+	$result = 0;
+    }	 
+    return $result;
+}
+
+## return the mode of editing : 0, 0.5 or 1 :
+#  do the merging between 2 args of right access edit  : "0" > "0.5" > "1"
+#  instead of a "and" between two booleans : the most restrictive right is
+#  imposed 
+sub merge_edit{
+    my $arg1=shift;
+    my $arg2=shift;
+    my $result;
+
+    if ($arg1 == 0 || $arg2 == 0){
+	$result = 0; 
+    }elsif ($arg1 == 0.5 || $arg2 == 0.5){
+	$result = 0.5;
+    }else {
+	$result = 1;
  }
+    return $result;
+}
+
+
 
 
  # create the root shared document
@@ -6893,7 +7115,8 @@ sub do_edit_list {
  }
 
  #*******************************************
- # Function : do_d_read# Description : reads a file or a directory
+ # Function : do_d_read
+ # Description : reads a file or a directory
  #******************************************
 
  # Function which sorts a hash of documents
@@ -6924,15 +7147,16 @@ sub do_edit_list {
      }
  }
 
- ##
- ## Function do_d_read
+
+##
+## Function do_d_read
  sub do_d_read {
      &wwslog('info', 'do_d_read(%s)', $in{'path'});
 
      ### action relative to a list ?
      unless ($param->{'list'}) {
-	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_d_read: no list');
+	 &error_message('missing_arg',{'argument' => 'list'});
+	 &wwslog('err','do_d_read: no list');
 	 return undef;
      }
 
@@ -6945,6 +7169,8 @@ sub do_edit_list {
      # relative path / directory shared of the document 
      my $path = $in{'path'};
      my $path_orig = $path;
+     # moderation
+     my $visible_path = &make_visible_path($in{'path'});
 
      # path of the shared directory
      my $shareddir =  $list->{'dir'}.'/shared';
@@ -6962,22 +7188,22 @@ sub do_edit_list {
 
      ### Document exist ? 
      unless (-r "$doc") {
-	 &wwslog('info',"do_d_read : unable to read $shareddir/$path : no such file or directory");
-	 &error_message('no_such_document', {'path' => $path});
+	 &wwslog('err',"do_d_read : unable to read $shareddir/$path : no such file or directory");
+	 &error_message('no_such_document', {'path' => $visible_path});
 	 return undef;
      }
 
      ### Document has non-size zero?
      unless (-s "$doc") {
-	 &wwslog('info',"do_d_read : unable to read $shareddir/$path : empty document");
-	 &error_message('empty_document', {'path' => $path});
+	 &wwslog('err',"do_d_read : unable to read $shareddir/$path : empty document");
+	 &error_message('empty_document', {'path' => $visible_path});
 	 return undef;
      }
 
      ### Document isn't a description file
      unless ($path !~ /\.desc/) {
-	 &wwslog('info',"do_d_read : $shareddir/$path : description file");
-	 &error_message('no_such_document', {'path' => $path});
+	 &wwslog('err',"do_d_read : $shareddir/$path : description file");
+	 &error_message('no_such_document', {'path' => $visible_path});
 	 return undef;
      }
 
@@ -6990,7 +7216,7 @@ sub do_edit_list {
      my $may_read = $access{'may'}{'read'};
      unless ($may_read) {
 	 &error_message('may_not');
-	 &wwslog('info','d_read : access denied for %s', $param->{'user'}{'email'});
+	 &wwslog('err','d_read : access denied for %s', $param->{'user'}{'email'});
 	 return undef;
      }
 
@@ -7001,8 +7227,17 @@ sub do_edit_list {
      ### File or directory ?
 
      if (!(-d $doc)) {
+	 my @tokens = split /\//,$doc;
+	 my $filename = $tokens[$#tokens];
+
 	 ## Jump to the URL
-	 if ($doc =~ /\.url$/) {
+	 if ($filename =~ /^\..*\.(\w+)\.moderate$/) {
+	     $param->{'file_extension'} = $1;
+	 }elsif ($filename =~ /^.*\.(\w+)$/) {
+	     $param->{'file_extension'} = $1;
+	 }
+
+	 if ($param->{'file_extension'} eq 'url') {
 	     open DOC, $doc;
 	     my $url = <DOC>;
 	     close DOC;
@@ -7013,12 +7248,8 @@ sub do_edit_list {
 	     # parameters for the template file
 	     # view a file 
 	     $param->{'file'} = $doc;
-
-	     ## File type
-	     $path =~ /^([^\/]*\/)*([^\/]+)\.([^\/]+)$/; 
-
-	     $param->{'file_extension'} = $3;
 	     $param->{'bypass'} = 1;
+	     return 1;	 
 	 }
      }else {
 	 # verification of the URL (the path must have a slash at its end)
@@ -7040,12 +7271,27 @@ sub do_edit_list {
 	 # listing of all the shared documents of the directory
 	 unless (opendir DIR, "$doc") {
 	     &error_message('failed');
-	     &wwslog('info',"d_read : cannot open $doc : $!");
+	     &wwslog('err',"d_read : cannot open $doc : $!");
 	     return undef;
 	 }
 
-	 my @dir = grep !/^\./, readdir DIR;
+	 # array of entry of the directory DIR 
+	 my @tmpdir = readdir DIR;
 	 closedir DIR;
+
+         my @dir = grep !/^\./, @tmpdir;
+	 
+         # private entry with documents not yet moderated
+	 my @moderate_dir = grep (/(\.moderate)$/, @tmpdir);
+	 @moderate_dir = grep (!/^\.desc\./, @moderate_dir);
+	
+	 # the editor can see file not yet moderated
+	 if ($list->am_i('editor',$param->{'user'}{'email'})) {
+	     push(@dir,@moderate_dir);
+	 }else {
+	     my @privatedir = &select_my_files($param->{'user'}{'email'},$doc,\@moderate_dir);
+	     push(@dir,@privatedir);
+	 }
 
 	 # empty directory?
 	 $param->{'empty'} = ($#dir == -1);
@@ -7116,18 +7362,31 @@ sub do_edit_list {
 
 			 # if the file can be read, check for edit access & edit description files access
 			 ## only authentified users can edit a file
-			 if ($param->{'user'}{'email'} &&
-			     ($may_control || ($user eq $desc_hash{'email'}) ||
-			     ($may_edit && (&List::request_action ('shared_doc.d_edit',$param->{'auth_method'},$robot,
+
+			 if ($param->{'user'}{'email'}) {
+                             my $action_edit=&List::request_action ('shared_doc.d_edit',$param->{'auth_method'},$robot,
 								   {'listname' => $param->{'list'},
 								    'sender' => $param->{'user'}{'email'},
 								    'remote_host' => $param->{'remote_host'},
 								    'remote_addr' => $param->{'remote_addr'},
-								    'scenario' => $desc_hash{'edit'}}) =~ /do_it/i)))) {
-			     $subdirs{$d}{'edit'} = 1;
+			    				            'scenario' => $desc_hash{'edit'}});
+                             #may_action_edit = 0, 0.5 or 1
+                             my $may_action_edit=&find_edit_mode($action_edit);
+                             $may_action_edit=&merge_edit($may_action_edit,$may_edit);	
+                            
+                             if ($may_control || ($user eq $desc_hash{'email'})){
+
+				     $subdirs{$d}{'edit'} = 1;# or = $may_action_edit ?
+               			     # if index.html, must know if something can be edit in the dir
+		         	     $normal_mode = 1;                         
+			     } elsif ($may_action_edit != 0) {
+                                 # $may_action_edit = 0.5 or 1 
+				 $subdirs{$d}{'edit'} = $may_action_edit;
 			     # if index.html, must know if something can be edit in the dir
 			     $normal_mode = 1;
 			 }
+			 }
+			   
 			 if  ($may_control || ($user eq $desc_hash{'email'})) {
 			     $subdirs{$d}{'control'} = 1;
 			 }
@@ -7135,12 +7394,17 @@ sub do_edit_list {
 		     }
 		 } else {
 		     # no description file = no need to check access for read
-
 		     # access for edit and control
-		     if ($may_edit || $may_control) {
-			 $subdirs{$d}{'edit'} = 1;
+
+                     if ($may_control) {
+                         $subdirs{$d}{'edit'} = 1;# or = $may_action_edit ?
+			 $normal_mode = 1;
+		     } elsif ($may_edit !=0) {
+                              # $may_action_edit = 1 or 0.5
+                              $subdirs{$d}{'edit'} = $may_edit;
 			 $normal_mode = 1;
 		     }
+
 		     if ($may_control) {$subdirs{$d}{'control'} = 1;}
 		 }
 
@@ -7216,19 +7480,28 @@ sub do_edit_list {
 		     if ($def_desc) {
 			 # check access for edit and control the file
 			 ## Only authenticated users can edit files
-			 if ($param->{'user'}{'email'} &&
-			     (($user eq $desc_hash{'email'}) || $may_control ||
-			     ($may_edit && (&List::request_action ('shared_doc.d_edit',$param->{'auth_method'},$robot,
+
+                         if ($param->{'user'}{'email'}) {
+                             my $action_edit=&List::request_action ('shared_doc.d_edit',$param->{'auth_method'},$robot,
 								   {'listname' => $param->{'list'},
 								    'sender' => $param->{'user'}{'email'},
 								    'remote_host' => $param->{'remote_host'},
 								    'remote_addr' => $param->{'remote_addr'},
-								    'scenario' => $desc_hash{'edit'}}) =~ /do_it/i)))) {
+								     'scenario' => $desc_hash{'edit'}});
+                             #may_action_edit = 0, 0.5 or 1
+                             my $may_action_edit=&find_edit_mode($action_edit);
+                             $may_action_edit=&merge_edit($may_action_edit,$may_edit);
 
+                             if ($may_control || ($user eq $desc_hash{'email'})){
 			     $normal_mode = 1;
-			     $files{$d}{'edit'} = 1;    
+			         $files{$d}{'edit'} = 1;  # or = $may_action_edit ? 
+                             } elsif ($may_action_edit != 0){
+                                 # $may_action_edit = 1 or 0.5
+                                 $normal_mode = 1;
+			         $files{$d}{'edit'} = $may_action_edit;   
 			 }
 
+			     
 			 if (($user eq $desc_hash{'email'}) || $may_control) { 
 			     $files{$d}{'control'} = 1;    
 			 }
@@ -7244,15 +7517,24 @@ sub do_edit_list {
 			     $files{$d}{'author_mailto'} = &mailto($list,$desc_hash{'email'});
 			 }
 		     } else {
-			 if ($may_edit) {
-			     $files{$d}{'edit'} = 1;
+			     if ($may_edit!=0) {
+				 $files{$d}{'edit'} = $may_edit ;
 			     $normal_mode = 1;
 			 }    
 			 if ($may_control) {$files{$d}{'control'} = 1;} 
 		     }
 
 		       # name of the file
+			 if ($d =~ /^(\.).*(.moderate)$/) {
+			         # file not yet moderated can be seen by its author 
+			     	 my $visible_d = $d;
+				 $visible_d =~ s/^(\.)/ /;
+				 $visible_d =~ s/\.moderate/ /;
+				 $files{$d}{'doc'} = $visible_d;
+				 $files{$d}{'moderate'} = 1;
+			 } else {
 		     $files{$d}{'doc'} = $d;
+			 }
 		     $files{$d}{'escaped_doc'} =  &tools::escape_chars($d);
 
 		       # last update
@@ -7266,7 +7548,7 @@ sub do_edit_list {
 	 }
 
 	 closedir DIR;
-
+	 }
 
 	 ### Exception : index.html
 	 if ($indexhtml) {
@@ -7311,7 +7593,7 @@ sub do_edit_list {
 	     # Parameters for the description
 	     if (-e "$doc/.desc") {
 		 my @info = stat "$doc/.desc";
-		 $param->{'serial_desc'} = $info[10];
+		 $param->{'serial_desc'} = $info[9];
 		 my %desc_hash = &get_desc_file("$doc/.desc");
 		 $param->{'description'} = $desc_hash{'title'};
 	     }
@@ -7331,9 +7613,23 @@ sub do_edit_list {
      $param->{'father_icon'} = $icon_table{'father'};
      $param->{'sort_icon'} = $icon_table{'sort'};
      return 1;
-
  }
 
+## return an array that contains only file from @$refdir that belongs to $user
+sub select_my_files {
+    my ($user,$path,$refdir)=@_;
+    my @new_dir;
+   
+    foreach my $d (@$refdir) {
+	if (-e "$path/.desc.$d") {
+	    my %desc_hash = &get_desc_file("$path/.desc.$d");
+	    if  ($user eq $desc_hash{'email'}){
+		$new_dir[$#new_dir+1]=$d;
+	    }
+	}
+    }
+    return @new_dir;
+}
 
  ## Useful function to have the path with or without slash
  ## at its end
@@ -7351,6 +7647,22 @@ sub do_edit_list {
      return $path;
  } 
 
+## return a visible path from a moderated file or not
+sub make_visible_path {
+    my $path=shift;
+    if ($path =~ /\.moderate/){
+	$path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+	my $name = $3;
+	$name =~ s/^\.//;
+	$name =~ s/\.moderate//;
+	return "$2"."$name";
+    }
+    else {
+	return $path;
+    }
+}
+
+
  #*******************************************
  # Function : do_d_editfile
  # Description : prepares the parameters to
@@ -7367,9 +7679,8 @@ sub do_edit_list {
      $path = &format_path('without_slash',$path);
 
      my $list_name = $list->{'name'};
-
-     # path of the shared directory
      my $shareddir =  $list->{'dir'}.'/shared';
+     my $visible_path = &make_visible_path($path);
 
      $param->{'directory'} = -d "$shareddir/$path";
 
@@ -7378,27 +7689,27 @@ sub do_edit_list {
      ### action relative to a list ?
      unless ($param->{'list'}) {
 	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_d_editfile: no list');
+	 &wwslog('err','do_d_editfile: no list');
 	 return undef;
      }
 
      unless ($path) {
 	 &error_message('missing_arg', {'argument' => 'file name'});
-	 &wwslog('info','do_d_editfile: no file name');
+	 &wwslog('err','do_d_editfile: no file name');
 	 return undef;
      }   
 
      # Existing document? File?
      unless (-w "$shareddir/$path") {
-	 &error_message('no_such_file', {'path' => $path});
-	 &wwslog('info',"d_editfile : Cannot edit $shareddir/$path : not an existing file");
+	 &error_message('no_such_file', {'path' => $visible_path});
+	 &wwslog('err',"d_editfile : Cannot edit $shareddir/$path : not an existing file");
 	 return undef;
      }
 
      ### Document isn't a description file?
      unless ($path !~ /\.desc/) {
-	 &wwslog('info',"do_editdile : $shareddir/$path : description file");
-	 &error_message('no_such_document', {'path' => $path});
+	 &wwslog('err',"do_editdile : $shareddir/$path : description file");
+	 &error_message('no_such_document', {'path' => $visible_path});
 	 return undef;
      }
 
@@ -7418,9 +7729,9 @@ sub do_edit_list {
      my %access = &d_access_control(\%mode,$path);
      my $may_edit = $access{'may'}{'edit'};
 
-     unless ($may_edit) {
+     unless ($may_edit > 0) {
 	 &error_message('may_not');
-	 &wwslog('info','d_editfile : access denied for %s', $param->{'user'}{'email'});
+	 &wwslog('err','d_editfile : access denied for %s', $param->{'user'}{'email'});
 	 return undef;
      }
 
@@ -7428,7 +7739,7 @@ sub do_edit_list {
 
      $param->{'list'} = $list_name;
      $param->{'path'} = $path;
-
+     $param->{'visible_path'} = $visible_path;
 
      # test if it's a text file
      if (-T "$shareddir/$path") {
@@ -7463,12 +7774,12 @@ sub do_edit_list {
 	 $param->{'doc_owner'} = $desc_hash{'email'};   
 	 ## Synchronization
 	 my @info = stat $descfile;
-	 $param->{'serial_desc'} = $info[10];
+	 $param->{'serial_desc'} = $info[9];
      }
 
      ## Synchronization
      my @info = stat "$shareddir/$path";
-     $param->{'serial_file'} = $info[10];
+     $param->{'serial_file'} = $info[9];
      ## parameters of the current directory
      $param->{'doc_date'} =  &POSIX::strftime("%d %b %y  %H:%M", localtime($info[9]));
 
@@ -7489,12 +7800,9 @@ sub do_edit_list {
      my $path = $in{'path'};
      ## $path must have no slash at its end
      $path = &format_path('without_slash',$path);
-
+     my $visible_path=&make_visible_path($path);
      my $list_name = $list->{'name'};
-
-     # path of the shared directory
      my $shareddir =  $list->{'dir'}.'/shared';
-
      my $action_return;
 
  ####  Controls
@@ -7508,7 +7816,7 @@ sub do_edit_list {
      ### Document isn't a description file?
      unless ($path !~ /\.desc/) {
 	 &wwslog('info',"do_d_describe : $shareddir/$path : description file");
-	 &error_message('no_such_document', {'path' => $path});
+	 &error_message('no_such_document', {'path' => $visible_path});
 	 return undef;
      }
 
@@ -7531,7 +7839,7 @@ sub do_edit_list {
      unless (-e "$shareddir/$path") {
 	 &error_message('failed');
 	 &wwslog('info',"d_describe : Unable to describe $shareddir/$path : not an existing document");
-	 return undef;
+	 return undef;in{'shortname'}
      }
 
      # Access control
@@ -7540,7 +7848,7 @@ sub do_edit_list {
      $mode{'edit'} = 1;
      my %access = &d_access_control(\%mode,$path);
 
-     unless ($access{'may'}{'edit'}) {
+     unless ($access{'may'}{'edit'} > 0) {
 	 &error_message('may_not');
 	 &wwslog('info','d_describe : access denied for %s', $param->{'user'}{'email'});
 	 return undef;
@@ -7628,11 +7936,12 @@ sub do_edit_list {
  #               text area
  #******************************************
 
- sub do_d_savefile {
+sub do_d_savefile {
      &wwslog('info', 'do_d_savefile(%s)', $in{'path'});
 
      # Variables
      my $path = $in{'path'};
+     my $visible_path = &make_visible_path($path);
 
      if ($in{'url'}) {
 	 $path .= $in{'name_doc'} . '.url';
@@ -7640,7 +7949,7 @@ sub do_edit_list {
 
      if ($in{'name_doc'} =~ /[\[\]\/]/) {
 	 &error_message('incorrect_name', {'name' => $in{'name_doc'} });
-	 &wwslog('info',"do_d_savefile : Unable to create file $path : incorrect name");
+	 &wwslog('err',"do_d_savefile : Unable to create file $path : incorrect name");
 	 return undef;
      }
 
@@ -7650,21 +7959,20 @@ sub do_edit_list {
      #my $list_name = $in{'list'};
      my $list_name = $list->{'name'};
 
-     # path of the shared directory
      my $shareddir =  $list->{'dir'}.'/shared';
 
  ####  Controls
      ### action relative to a list ?
      unless ($param->{'list'}) {
 	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_d_savefile : no list');
+	 &wwslog('err','do_d_savefile : no list');
 	 return undef;
      }
 
      ## must be existing a content to replace the file
      unless ($in{'content'} || $in{'url'}) {
 	 &error_message('no_content');
-	 &wwslog('info',"do_d_savefile : Cannot save file $shareddir/$path : no content");
+	 &wwslog('err',"do_d_savefile : Cannot save file $shareddir/$path : no content");
 	 return undef;
      }
 
@@ -7673,8 +7981,8 @@ sub do_edit_list {
 
      ### Document isn't a description file
      unless ($path !~ /\.desc/) {
-	 &wwslog('info',"do_d_savefile : $shareddir/$path : description file");
-	 &error_message('no_such_document', {'path' => $path});
+	 &wwslog('err',"do_d_savefile : $shareddir/$path : description file");
+	 &error_message('no_such_document', {'path' => $visible_path});
 	 return undef;
      }
 
@@ -7683,24 +7991,23 @@ sub do_edit_list {
      $mode{'edit'} = 1;
      my %access = &d_access_control(\%mode,$path);
 
-     unless ($access{'may'}{'edit'}) {
+     unless ($access{'may'}{'edit'} > 0) {
 	 &error_message('may_not');
-	 &wwslog('info','d_savefile : access denied for %s', $param->{'user'}{'email'});
+	 &wwslog('err','do_d_savefile : access denied for %s', $param->{'user'}{'email'});
 	 return undef;
      }
-
  #### End of controls
 
      if (($in{'content'} =~ /^\s*$/) && ($in{'url'} =~ /^\s*$/)) {
 	 &error_message('no_content');
-	 &wwslog('info',"do_d_savefile : Cannot save file $shareddir/$path : no content");
+	 &wwslog('err',"do_d_savefile : Cannot save file $shareddir/$path : no content");
 	 return undef;
      }
 
      # Synchronization
      unless (&synchronize("$shareddir/$path",$in{'serial'})){
 	 &error_message('synchro_failed');
-	 &wwslog('info',"do_d_savefile : Synchronization failed for $shareddir/$path");
+	 &wwslog('err',"do_d_savefile : Synchronization failed for $shareddir/$path");
 	 return undef;
      }
 
@@ -7708,8 +8015,16 @@ sub do_edit_list {
      rename ("$shareddir/$path","$shareddir/$path.old")
 	 unless ($creation);
 
+     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+     my $dir = $1;
+     my $file = $3;
+
      if ($in{'url'}) {
-	 open URL, ">$shareddir/$path";
+	 if ($access{'may'}{'edit'} == 0) {
+	     open URL, ">$shareddir/$dir.$file.moderate";
+	 }else {		 
+	     open URL, ">$shareddir/$path";
+	 }
 	 print URL "$in{'url'}\n";
 	 close URL;
      }else {
@@ -7717,8 +8032,8 @@ sub do_edit_list {
 	 unless (open FILE, ">$shareddir/$path") {
 	     rename("$shareddir/$path.old","$shareddir/$path");
 	     &error_message('cannot_overwrite', {'reason' => $1,
-						 'path' => $path});
-	     &wwslog('info',"do_d_savefile : Cannot open for replace $shareddir/$path : $!");
+						 'path' => $visible_path });
+	     &wwslog('err',"do_d_savefile : Cannot open for replace $shareddir/$path : $!");
 	     return undef;
 	 }
 	 print FILE $in{'content'};
@@ -7728,9 +8043,6 @@ sub do_edit_list {
      unlink "$shareddir/$path.old";
 
      # Description file
-     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-     my $dir = $1;
-     my $file = $3;
      if (-e "$shareddir/$dir.desc.$file"){
 
 	 # if description file already exists : open it and modify it
@@ -7770,8 +8082,38 @@ sub do_edit_list {
 	 close DESC;
      }
 
-     &message('save_success', {'path' => $path});
-     return $in{'previous_action'} || 'd_editfile';
+     # shared_moderated
+     if (($access{'may'}{'edit'} == 0.5) && (($path eq $visible_path)||$in{'url'})) {
+	 unless (rename "$shareddir/$path","$shareddir/$dir.$file.moderate"){
+	     &error_message('failed');
+	     &wwslog('err',"do_d_savefile : Failed to rename  $path to $dir.$file.moderate : $!");
+	 }
+	 unless (rename "$shareddir/$dir.desc.$file","$shareddir/$dir.desc..$file.moderate"){
+	     &error_message('failed');
+	     &wwslog('err',"do_d_savefile : Failed to rename $dir.desc.$file to $dir.desc..$file.moderate : $!");
+	 }
+	 
+	 if (!$in{'url'}){
+	     $in{'path'}="$dir.$file.moderate";
+	     $param->{'path'}="$dir.$file.moderate";
+	 }else {
+	     $visible_path = $file;
+	 }
+
+	 $list->send_notify_to_editor('shared_moderated',("$visible_path",
+							  $param->{'user'}{'email'}));
+	
+	 &message('to_moderate', {'path' => $visible_path});
+     }
+
+     &message('save_success', {'path' => $visible_path});
+      if ($in{'previous_action'}) {
+	  return $in{'previous_action'};
+      }else {
+	  $in{'path'} =~ s/([^\/]+)$//;
+	  $param->{'path'} =~ s/([^\/]+)$//;
+	  return 'd_read';
+      }
  }
 
  #*******************************************
@@ -7788,6 +8130,8 @@ sub do_edit_list {
      ##### $path must have no slash at its end!
      $path = &format_path('without_slash',$path);
 
+     my $visible_path = &make_visible_path($path);
+
      #my $list_name = $in{'list'};
      my $list_name = $list->{'name'};
 
@@ -7796,45 +8140,34 @@ sub do_edit_list {
 
      # Parameters of the uploaded file
      my $fh = $query->upload('uploaded_file');
-     my $fn = $query->param('uploaded_file');
-
-     $fn =~ /([^\/\\]+)$/;
-     my $fname = $1;
 
 
  ####### Controls
      ### action relative to a list ?
      unless ($param->{'list'}) {
 	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_d_overwrite : no list');
-	 return undef;
-     }
-
-     # uploaded file must have a name 
-     unless ($fname) {
-	 &error_message('missing_arg');
-	 &wwslog('info',"do_d_overwrite : No file specified to overwrite");
+	 &wwslog('err','do_d_overwrite : no list');
 	 return undef;
      }
 
      ### Document isn't a description file?
      unless ($path !~ /\.desc/) {
-	 &wwslog('info',"do_d_overwrite : $shareddir/$path : description file");
-	 &error_message('no_such_document', {'path' => $path});
+	 &wwslog('err',"do_d_overwrite : $shareddir/$path : description file");
+	 &error_message('no_such_document', {'path' => $visible_path});
 	 return undef;
      }
 
      # the path to replace must already exist
      unless (-e "$shareddir/$path") {
 	 &error_message('failed');
-	 &wwslog('info',"do_d_overwrite : Unable to overwrite $shareddir/$path : not an existing file");
+	 &wwslog('err',"do_d_overwrite : Unable to overwrite $shareddir/$path : not an existing file");
 	 return undef;
      }
 
      # the path must represent a file
      if (-d "$shareddir/$path") {
 	 &error_message('failed');
-	 &wwslog('info',"do_d_overwrite : Unable to create $shareddir/$path : a directory named $path already exists");
+	 &wwslog('err',"do_d_overwrite : Unable to create $shareddir/$path : a directory named $path already exists");
 	 return undef;
      }
 
@@ -7844,19 +8177,17 @@ sub do_edit_list {
      $mode{'edit'} = 1;
      my %access = &d_access_control(\%mode,$path);
 
-     unless ($access{'may'}{'edit'}) {
+     unless ($access{'may'}{'edit'} > 0) {
 	 &error_message('may_not');
-	 &wwslog('info','do_d_overwrite :  access denied for %s', $param->{'user'}{'email'});
+	 &wwslog('err','do_d_overwrite :  access denied for %s', $param->{'user'}{'email'});
 	 return undef;
      }
-
  #### End of controls
-
 
      # Synchronization
      unless (&synchronize("$shareddir/$path",$in{'serial'})){
 	 &error_message('synchro_failed');
-	 &wwslog('info',"do_d_overwrite : Synchronization failed for $shareddir/$path");
+	 &wwslog('err',"do_d_overwrite : Synchronization failed for $shareddir/$path");
 	 return undef;
      }
 
@@ -7865,9 +8196,9 @@ sub do_edit_list {
 
      # Creation of the shared file
      unless (open FILE, ">$shareddir/$path") {
-	 &error_message('cannot_overwrite', {'path' => $path,
+	 &error_message('cannot_overwrite', {'path' => $visible_path,
 				       'reason' => $!});
-	 &wwslog('info',"d_overwrite : Cannot open for replace $shareddir/$path : $!");
+	 &wwslog('err',"d_overwrite : Cannot open for replace $shareddir/$path : $!");
 	 return undef;
      }
      while (<$fh>) {
@@ -7916,6 +8247,23 @@ sub do_edit_list {
 
      }
 
+     # shared_moderated
+     if (($access{'may'}{'edit'} == 0.5) && ($path eq $visible_path)) {
+	 unless (rename "$shareddir/$path","$shareddir/$dir.$file.moderate"){
+	     &error_message('failed');
+	     &wwslog('err',"do_d_overwrite : Failed to rename  $path to $dir.$file.moderate : $!");
+	 }
+	 unless (rename "$shareddir/$dir.desc.$file","$shareddir/$dir.desc..$file.moderate"){
+	     &error_message('failed');
+	     &wwslog('err',"do_d_overwrite : Failed to rename $dir.desc.$file to $dir.desc..$file.moderate : $!");
+	 }
+	 
+	 $list->send_notify_to_editor('shared_moderated',("$visible_path",
+							  $param->{'user'}{'email'}));
+	 $in{'path'}="$dir.$file.moderate";
+	 &message('to_moderate', {'path' => $visible_path});
+     }
+
      # Removing of the old file
      unlink "$shareddir/$path.old";
 
@@ -7923,7 +8271,7 @@ sub do_edit_list {
      #$in{'path'} = $dir;
 
      # message of success
-     &message('upload_success', {'path' => $path});
+     &message('upload_success', {'path' => $visible_path});
      return 'd_editfile';
  }
 
@@ -7937,28 +8285,39 @@ sub do_edit_list {
      # Parameters of the uploaded file
      my $fn = $query->param('uploaded_file');
 
-     $fn =~ /([^\/\\]+)$/;
-     my $fname = $1;
+     # name of the file, without path
+     my $fname;
+     if ($fn =~ /([^\/\\]+)$/) {
+	 $fname = $1; 
+     }
+     if ($in{'shortname'}){
+	 $fname = $in{'shortname'};
+     }
 
      &wwslog('info', 'do_d_upload(%s%s)', $in{'path'},$fname);
 
      # Variables 
      my $path = $in{'path'};
+     
+     # path of the shared directory
+     my $shareddir =  $list->{'dir'}.'/shared';
+     
+     # name of the file 
+     my $longname = "$shareddir/$path/$fname";
+     $longname =~ s/\/+/\//g;
+     
      ## $path must have a slash at its end
      $path = &format_path('with_slash',$path);
 
      #my $list_name = $in{'list'};
      my $list_name = $list->{'name'};
 
-     # path of the shared directory
-     my $shareddir =  $list->{'dir'}.'/shared';
 
-
- # Controls
-     ### action relative to a list ?
+  ## Controls
+     # action relative to a list ?
      unless ($param->{'list'}) {
 	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_d_upload : no list');
+	 &wwslog('err','do_d_upload : no list');
 	 return undef;
      }
 
@@ -7966,7 +8325,7 @@ sub do_edit_list {
      # uploaded file must have a name 
      unless ($fname) {
 	 &error_message('no_name');
-	 &wwslog('info',"do_d_upload : No file specified to upload");
+	 &wwslog('err',"do_d_upload : No file specified to upload");
 	 return undef;
      }
 
@@ -7974,7 +8333,7 @@ sub do_edit_list {
      if ($list->{'admin'}{'shared_doc'}{'quota'}) {
 	 if ($list->get_shared_size() >= $list->{'admin'}{'shared_doc'}{'quota'} * 1024){
 	     &error_message('shared_full');
-	     &wwslog('info',"do_d_upload : Shared Quota exceeded for list $list->{'name'}");
+	     &wwslog('err',"do_d_upload : Shared Quota exceeded for list $list->{'name'}");
 	     return undef;
 	 }
      }
@@ -7989,67 +8348,375 @@ sub do_edit_list {
  #	    $fname =~ /^[\w\-\.]+$/ and
  #	    $fname !~ /\.desc/) {
 	 &error_message('incorrect_name', {'name' => $fname});
-	 &wwslog('info',"do_d_upload : Unable to create file $fname : incorrect name");
+	 &wwslog('err',"do_d_upload : Unable to create file $fname : incorrect name");
 	 return undef;
      }
 
      # the file must be uploaded in a directory existing
      unless (-d "$shareddir/$path") {
 	 &error_message('failed');
-	 &wwslog('info',"do_d_upload : $shareddir/$path : not a directory");
+	 &wwslog('err',"do_d_upload : $shareddir/$path : not a directory");
+	 return undef;
+     }
+
+     # Access control for the directory where there is the uploading
+     my %mode;
+     $mode{'edit'} = 1;
+     $mode{'control'} = 1; # for the exception index.html
+     my %access_dir = &d_access_control(\%mode,$path);
+
+     unless ($access_dir{'may'}{'edit'} > 0) {
+	 &error_message('may_not');
+	 &wwslog('err','do_d_upload : access denied for %s', $param->{'user'}{'email'});
 	 return undef;
      }
 
      # Lowercase for file name
-     $fname = $fname;
+     # $fname = $fname;
 
-     # the file mustn't already exist
-     if (-e "$shareddir/$path$fname") {
-	 &error_message('cannot_upload', {'path' => "$path$fname",
-				    'reason' => "file already exists"});
-	 &wwslog('info',"do_d_upload : Unable to create $shareddir/$path$fname : file already exists");
-	 return undef;
-     }
+     ## when the file already exists :
 
-     # Access control
+     # the temporary name of the uploaded file : with .duplicate
+     my $tmpname="."."$fname".".duplicate";
+     my $longtmpname="$shareddir/$path/$tmpname";
+     $longtmpname =~ s/\/+/\//g;
+
+     # the temporary desc of the uploaded file : with .duplicate
+     my $tmpdesc=".desc."."$tmpname";
+     my $longtmpdesc="$shareddir/$path/$tmpdesc";
+     $longtmpdesc =~ s/\/+/\//g;
+		   
+     # if we aren't in mode_delete nor in mode_rename nor in mode_cancel and the file already exists 
+     # then we create of a temporary file
+     if ((-e "$longname") && 
+	 ($in{'mode_delete'} eq undef) && 
+	 ($in{'mode_rename'} eq undef) &&
+	 ($in{'mode_cancel'} eq undef)) {
+	 
+	 #access control for the file already existing
      my %mode;
      $mode{'edit'} = 1;
-     $mode{'control'} = 1; # for the exception index.html
-     my %access = &d_access_control(\%mode,$path);
+	 my %access_file = &d_access_control(\%mode,"$path$fname");
 
-     unless ($access{'may'}{'edit'}) {
-	 &error_message('may_not');
-	 &wwslog('info','do_d_upload : access denied for %s', $param->{'user'}{'email'});
+	 unless ($access_file{'may'}{'edit'} > 0) {
+	     &error_message('cannot_upload', {'path' => "$path$fname",
+					      'reason' => "access denied to the existing file "});
 	 return undef;
      }
 
-     ## Exception index.html
-     unless ($fname !~ /^index.html?$/i) {
-	 unless ($access{'may'}{'control'}) {
-	     &error_message('index_html', {'dir' => $path});
-	     &wwslog('info',"do_d_upload : $param->{'user'}{'email'} not authorized to upload a INDEX.HTML file in $path");
+	 if (-e "$longtmpname"){
+	     # if exists a temp file younger than 5 minutes that belongs to another user : upload refused
+	     my @info = stat $longtmpname;
+	     my $timeold = time - $info[10];
+	     
+	     if ($timeold<=300){
+		 my %desc_hash = &get_desc_file("$longtmpdesc");
+		 
+		 unless($desc_hash{'email'} eq $param->{'user'}{'email'}){
+		     &error_message('cannot_upload', {'path' => "$path$fname",
+						      'reason' => "file being uploaded by $desc_hash{'email'} at this time" });
+		     &wwslog('err',"do_d_upload : Unable to upload $longtmpname : file being uploaded at this time :   ");
+		     return undef;
+		 }
+	     }
+	 }
+	 
+	 &creation_shared_file($shareddir,$path,$tmpname);
+	 &creation_desc_file($shareddir,$path,$tmpname,%access_file);
+	 
+	 my @info = stat "$longname";
+	 $param->{'serial_file'} = $info[9];
+	 $param->{'path'} = &format_path('without_slash',$path);
+	 $param->{'shortname'} = $fname;
+	 
+	 return 1;
+     }
+     
+     
+     # for the moderation
+     my $longmodname = "$shareddir/$path/"."."."$fname".".moderate";
+     $longmodname =~ s/\/+/\//g;
+
+     my $longmoddesc="$shareddir/$path/".".desc.."."$fname".".moderate";
+     $longmoddesc =~ s/\/+/\//g;
+    
+     # when a file is already waiting for moderation
+     my $file_moderated; 
+      
+     if (-e "$longmodname"){
+	
+	 my %desc_hash = &get_desc_file("$longmoddesc");
+	 $file_moderated = 1;
+
+	 unless($desc_hash{'email'} eq $param->{'user'}{'email'}){
+	     &error_message('cannot_upload', {'path' => "$path$fname",
+					      'reason' => "file already exists but not yet moderated"});
+	     &wwslog('err',"do_d_upload : Unable to create $longname : file already exists but not yet moderated");
 	     return undef;
 	 }
      }
+     
 
+     ## Exception index.html
+     unless ($fname !~ /^index.html?$/i) {
+	 unless ($access_dir{'may'}{'control'}) {
+	     &error_message('index_html', {'dir' => $path});
+	     &wwslog('err',"do_d_upload : $param->{'user'}{'email'} not authorized to upload a INDEX.HTML file in $path");
+	     return undef;
+	 }
+     }
+     
+     # if we're in mode_delete or mode_rename or mode_cancel, the temp file and his desc file must exist
+     if ($in{'mode_delete'} ||
+	 $in{'mode_rename'} ||
+	 $in{'mode_cancel'})   {
+	 	
+	 unless(-e $longtmpname){
+	     &error_message('failed');
+	     &wwslog('err',"do_d_upload : there isn't any temp file for the uploaded file $fname");
+	     return undef;
+	 }
+	 
+	 unless(-e $longtmpdesc){
+	     &error_message('failed');
+	     &wwslog('err',"do_d_upload : there isn't any desc temp file for the uploaded file $fname");
+	     return undef;
+     }
+
+     }
  ## End of controls
 
- # Creation of the shared file
+
+     # in mode_delete the file is going to be overwritten
+     if ($in{'mode_delete'}) {
+	 
+	 # Synchronization
+	 unless (&synchronize("$longname",$in{'serial'})){
+	     &error_message('synchro_failed');
+	     &wwslog('err',"do_d_upload : Synchronization failed for $longname");
+	     return undef;
+	 }
+	 
+	 # Renaming the tmp file and the desc file
+	
+	 if ($access_dir{'may'}{'edit'} == 1 ){
+	 
+	     # Renaming of the old file 
+	     my $longgoodname="$shareddir/$path/$fname";
+	     $longgoodname =~ s/\/+/\//g;
+	     unless (rename "$longgoodname","$longgoodname.old"){
+		 &error_message('failed');
+		 &wwslog('err',"do_d_ulpoad : Failed to rename %s to .old : %s",$longgoodname, $!);
+		 return undef;
+	     }
+	     
+	     # Renaming of the old desc
+	     my $longgooddesc="$shareddir/$path/".".desc."."$fname";
+	     $longgooddesc =~ s/\/+/\//g;
+	     unless (rename "$longgooddesc","$longgooddesc.old"){
+		 &error_message('failed');
+		 &wwslog('err',"do_d_ulpoad : Failed to rename %s to .old : %s", $longgooddesc, $!);
+	     }
+
+	     # the tmp file
+	     unless (rename "$longtmpname","$longgoodname"){
+		 &error_message('failed');
+		 &wwslog('err',"do_d_ulpoad : Failed to rename %s to %s : %s", $longtmpname, $longgoodname, $!);
+	     }
+	     
+	     # the tmp desc file
+	     unless (rename "$longtmpdesc","$longgooddesc"){
+		 &error_message('failed');
+		 &wwslog('err',"do_d_ulpoad : Failed to rename %s to %s : %s", $longtmpdesc, $longgooddesc, $!);
+	     }
+
+	 }elsif ($access_dir{'may'}{'edit'} == 0.5 ){	 
+	     
+	     unless (rename "$longtmpname","$longmodname"){
+		 &error_message('failed');
+		 &wwslog('err',"do_d_ulpoad : Failed to rename %s to %s : %s", $longtmpname, $longmodname, $!);
+	     }
+	     
+	     unless (rename "$longtmpdesc","$longmoddesc"){
+		 &error_message('failed');
+		 &wwslog('err',"do_d_ulpoad : Failed to rename %s to %s : %s", $longtmpdesc, $longmoddesc, $!);
+	     }
+	       
+	     $list->send_notify_to_editor('shared_moderated',("$path$fname",
+							      $param->{'user'}{'email'}));
+
+	 }else {
+	     &error_message('may_not');
+	     &wwslog('err','do_d_upload : access denied for %s', $param->{'user'}{'email'});
+	     return undef;
+	 }
+
+#	 $in{'list'} = $list_name;
+	 
+	 # message of success
+	 &message('upload_success', {'path' => $fname});
+     	 return 'd_read';
+     }
+     
+     # in mode_rename the file is going to be renamed
+     if ($in{'mode_rename'}) {
+	 
+	 my $longnewname="$shareddir/$path/$in{'new_name'}";
+	 $longnewname =~ s/\/+/\//g;
+	 
+         # Control new document name
+	 unless ($in{'new_name'}) {
+	     &error_message('missing_arg', {'argument' => 'new name'});
+	     &wwslog('err',"do_d_upload : new name missing to rename the uploaded file");
+	     return undef;
+	 }
+	 if ($in{'new_name'} =~ /^\./
+	     || $in{'new_name'} =~ /\.desc/ 
+	     || $in{'new_name'} =~ /[~\#\[\]\/]$/) {
+	     &error_message('incorrect_name', {'name' => $in{'new_name'}});
+	     &wwslog('err',"do_d_upload : Unable to create file $in{'new_name'} : incorrect name");
+	     return undef;
+	 }
+	 
+	 if (($fname =~ /\.url$/) && ($in{'new_name'} !~ /\.url$/)) {
+	     &error_message('incorrect_name', {'name' => $in{'new_name'}});
+	     &wwslog('err',"do_d_upload : New file name $in{'new_name'} does not match URL filenames");
+	     return undef;
+	 }
+	 
+	 if (-e $longnewname){
+	     &error_message('this is an existing name',  {'name' => $in{'new_name'}});
+	     &wwslog('err',"do_d_upload : $in{'new_name'} is an existing name");
+	     return undef;
+	 }
+
+	 # when a file is already waiting for moderation
+	 if (-e "$shareddir/$path/.$in{'new_name'}.moderate"){
+	     &error_message('this is an existing name',  {'name' => $in{'new_name'}});
+	     &wwslog('err',"do_d_upload : $in{'new_name'} is an existing name for a not yet moderated file" );
+	     return undef;
+	 }
+	 # when a file is being uploaded
+	 if (-e "$shareddir/$path/.$in{'new_name'}.duplicate"){
+	     &error_message('this is an existing name', {'name' => $in{'new_name'}}); 
+	     &wwslog('err',"do_d_upload : $in{'new_name'} is an existing name for a file being uploaded ");
+	 }
+
+	 # Renaming the tmp file and the desc file
+
+	 if ($access_dir{'may'}{'edit'} == 1 ){
+	     unless (rename "$longtmpname","$longnewname"){
+		 &error_message('failed');
+		 &wwslog('err',"do_d_ulpoad : Failed to rename %s to %s : %s", $longtmpname, $longnewname, $!);
+	     }
+	     
+	     my $longnewdesc="$shareddir/$path/.desc.$in{'new_name'}";
+	     $longnewdesc =~ s/\/+/\//g;
+	     
+	     unless (rename "$longtmpdesc","$longnewdesc"){
+		 &error_message('failed');
+		 &wwslog('err',"do_d_ulpoad : Failed to rename %s to %s : %s", $longtmpdesc, $longnewdesc, $!);
+	     }
+	 
+	 }elsif ($access_dir{'may'}{'edit'} == 0.5 ){	 
+	     
+	     unless (rename "$longtmpname","$shareddir/$path/.$in{'new_name'}.moderate"){
+		 &error_message('failed');
+		 &wwslog('err',"do_d_ulpoad : Failed to rename $longtmpname to $shareddir/$path/.$in{'new_name'}.moderate : $!");
+	     }
+	     
+	     unless (rename "$longtmpdesc","$shareddir/$path/.desc..$in{'new_name'}.moderate"){
+		 &error_message('failed');
+		 &wwslog('err',"do_d_ulpoad : Failed to rename $longtmpdesc to $shareddir/$path/.desc..$in{'new_name'}.moderate: $!");
+	     }
+	       
+	     $list->send_notify_to_editor('shared_moderated',("$path$in{'new_name'}",
+							      $param->{'user'}{'email'}));
+
+	 }else {
+	     &error_message('may_not');
+	     &wwslog('err','do_d_upload : access denied for %s', $param->{'user'}{'email'});
+	     return undef;
+	 }
+	 
+#	 $in{'list'} = $list_name;
+
+	 # message of success
+	 &message('upload_success', {'path' => $fname});
+     	 return 'd_read';
+     }
+
+     # in mode_cancel, we delete the temp file and his desc
+     if ($in{'mode_cancel'}) {
+	 
+         # removing of the temp file
+	 unless (unlink($longtmpname)) {
+	     &error_message('failed');
+	     &wwslog('err','do_d_upload: failed to erase the temp file %s', $longtmpname);
+	     return undef;
+	 }
+	 
+	 # removing of the description temp file 
+	 unless (unlink($longtmpdesc)) {
+	     &error_message('failed');
+	     &wwslog('err','do_d_upload: failed to erase the desc temp file %s', $longtmpdesc);
+	     return undef;
+	 }
+	 
+	 return 'd_read';
+     }
+     
+     ## usual case
+
+     # shared_moderated
+     if ($access_dir{'may'}{'edit'} == 0.5 ) {
+	 my $modname="."."$fname".".moderate";
+	
+	 &creation_shared_file($shareddir,$path,$modname);
+	 &creation_desc_file($shareddir,$path,$modname,%access_dir);
+
+	 unless ($file_moderated){
+	     $list->send_notify_to_editor('shared_moderated',("$path$fname",
+							 $param->{'user'}{'email'}));
+	 }
+       
+	 &message('to_moderate', {'path' => $fname});
+	
+     } else {
+	 &creation_shared_file($shareddir,$path,$fname);
+	 &creation_desc_file($shareddir,$path,$fname,%access_dir);
+     }
+    
+     $in{'list'} = $list_name;
+  
+     &message('upload_success', {'path' => $fname});
+     return 'd_read';
+ }
+
+
+## Creation of a shared file
+sub creation_shared_file {
+    my($shareddir,$path,$fname)=@_;
+
      my $fh = $query->upload('uploaded_file');
      unless (open FILE, ">$shareddir/$path$fname") {
 	 &error_message('cannot_upload', {'path' => "$path$fname",
 				    'reason' => $!});
-	 &wwslog('info',"do_d_upload : Cannot open file $shareddir/$path$fname : $!");
+	&wwslog('err',"do_d_upload : Cannot open file $shareddir/$path$fname : $!");
 	 return undef;
      }
      while (<$fh>) {
 	 print FILE;
      }
      close FILE;
+}
 
- # Creation of the description file
+## Creation of the description file
+sub creation_desc_file {
+    my($shareddir,$path,$fname,%access)=@_;
+
      unless (open (DESC,">$shareddir/$path.desc.$fname")) {
-	 &wwslog('info',"do_d_upload: cannot create description file $shareddir/.desc.$path$fname");
+	&wwslog('err',"do_d_upload: cannot create description file $shareddir/.desc.$path$fname");
      }
 
      print DESC "title\n \n\n"; 
@@ -8060,11 +8727,8 @@ sub do_edit_list {
      print DESC "  edit $access{'scenario'}{'edit'}\n";  
 
      close DESC;
+}
 
-     ## ???
-     $in{'list'} = $list_name;
-     return 'd_read';
- }
 
  #*******************************************
  # Function : do_d_delete
@@ -8079,6 +8743,8 @@ sub do_edit_list {
      my $path = $in{'path'};
      ## $path must have no slash at its end!
      $path = &format_path('without_slash',$path);
+
+     my $visible_path = &make_visible_path($path);
 
      #Current directory and document to delete
      $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
@@ -8101,22 +8767,21 @@ sub do_edit_list {
      ## must be something to delete
      unless ($document) {
 	 &error_message('missing_arg', {'argument' => 'document'});
-	 &wwslog('info',"do_d_delete : no document to delete has been specified");
+	 &wwslog('err',"do_d_delete : no document to delete has been specified");
 	 return undef;
      }
 
      ### Document isn't a description file?
      unless ($document !~ /^\.desc/) {
-	 &wwslog('info',"do_d_delete : $shareddir/$path : description file");
-	 &error_message('no_such_document', {'path' => $path});
+	 &wwslog('err',"do_d_delete : $shareddir/$path : description file");
+	 &error_message('no_such_document', {'path' => $visible_path});
 	 return undef;
      }
 
-
      ### Document exists?
      unless (-e "$shareddir/$path") {
-	 &wwslog('info',"do_d_delete : $shareddir/$path : no such file or directory");
-	 &error_message('no_such_document', {'path' => $path});
+	 &wwslog('err',"do_d_delete : $shareddir/$path : no such file or directory");
+	 &error_message('no_such_document', {'path' => $visible_path});
 	 return undef;
      }
 
@@ -8128,9 +8793,9 @@ sub do_edit_list {
      $mode{'edit'} = 1;
      my %access = &d_access_control(\%mode,$path);
 
-     unless ($access{'may'}{'edit'}) {
+     unless ($access{'may'}{'edit'} > 0) {
 	 &error_message('may_not');
-	 &wwslog('info','do_d_rename : access denied for %s', $param->{'user'}{'email'});
+	 &wwslog('err','do_d_delete : access denied for %s', $param->{'user'}{'email'});
 	 return undef;
      }
 
@@ -8147,7 +8812,7 @@ sub do_edit_list {
 	 my @test_hidden = grep !(/^\.desc$/ | /^\.(\.)?$/ | /^[^\.]/), @readdir;
 	 if (($#test_normal != -1) || ($#test_hidden != -1)) {
 	     &error_message('full_directory', {'directory' => $path});
-	     &wwslog('info',"do_d_delete : Failed to erase $doc : directory not empty");
+	     &wwslog('err',"do_d_delete : Failed to erase $doc : directory not empty");
 	     return undef;
 	 }
 
@@ -8155,7 +8820,7 @@ sub do_edit_list {
 	 if (-e "$doc/\.desc") {
 	     unless (unlink("$doc/.desc")) {
 		 &error_message('failed');
-		 &wwslog('info',"do_d_delete : Failed to erase $doc/.desc : $!");
+		 &wwslog('err',"do_d_delete : Failed to erase $doc/.desc : $!");
 		 return undef;
 	     }
 	 }   
@@ -8168,13 +8833,13 @@ sub do_edit_list {
 	 # removing of the document
 	 unless (unlink($doc)) {
 	     &error_message('failed');
-	     &wwslog('info','do_d_delete: failed to erase %s', $doc);
+	     &wwslog('err','do_d_delete: failed to erase %s', $doc);
 	     return undef;
 	 }
 	 # removing of the description file if exists
 	 if (-e "$shareddir/$current_directory/.desc.$document") {
 	     unless (unlink("$shareddir/$current_directory/.desc.$document")) {
-		 &wwslog('info',"do_d_delete: failed to erase $shareddir/$current_directory/.desc.$document");
+		 &wwslog('err',"do_d_delete: failed to erase $shareddir/$current_directory/.desc.$document");
 	     }
 	 }   
      }
@@ -8199,6 +8864,13 @@ sub do_edit_list {
      ## $path must have no slash at its end!
      $path = &format_path('without_slash',$path);
 
+     #moderation
+     my $visible_path = &make_visible_path($path);     
+     my $moderate;
+     if ($visible_path ne $path) {
+	 $moderate=1;
+     }
+
      #Current directory and document to delete
      my $current_directory;
      if ($path =~ /^(.*)\/([^\/]+)$/) {
@@ -8217,35 +8889,35 @@ sub do_edit_list {
      ### action relative to a list ?
      unless ($param->{'list'}) {
 	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_d_rename : no list');
+	 &wwslog('err','do_d_rename : no list');
 	 return undef;
      }
 
      ## must be something to delete
      unless ($document) {
 	 &error_message('missing_arg', {'argument' => 'document'});
-	 &wwslog('info',"do_d_rename : no document to rename has been specified");
+	 &wwslog('err',"do_d_rename : no document to rename has been specified");
 	 return undef;
      }
 
      ### Document isn't a description file?
      unless ($document !~ /^\.desc/) {
-	 &wwslog('info',"do_d_rename : $shareddir/$path : description file");
-	 &error_message('no_such_document', {'path' => $path});
+	 &wwslog('err',"do_d_rename : $shareddir/$path : description file");
+	 &error_message('no_such_document', {'path' => $visible_path});
 	 return undef;
      }
 
      ### Document exists?
      unless (-e "$shareddir/$path") {
-	 &wwslog('info',"do_d_rename : $shareddir/$path : no such file or directory");
-	 &error_message('no_such_document', {'path' => $path});
+	 &wwslog('err',"do_d_rename : $shareddir/$path : no such file or directory");
+	 &error_message('no_such_document', {'path' => $visible_path});
 	 return undef;
      }
 
      ## New document name
      unless ($in{'new_name'}) {
 	 &error_message('missing_arg', {'argument' => 'new name'});
-	 &wwslog('info',"do_d_rename : new name missing");
+	 &wwslog('err',"do_d_rename : new name missing");
 	 return undef;
      }
 
@@ -8253,13 +8925,13 @@ sub do_edit_list {
 	 || $in{'new_name'} =~ /\.desc/ 
 	 || $in{'new_name'} =~ /[~\#\[\]\/]$/) {
 	 &error_message('incorrect_name', {'name' => $in{'new_name'}});
-	 &wwslog('info',"do_d_rename : Unable to create file $in{'new_name'} : incorrect name");
+	 &wwslog('err',"do_d_rename : Unable to create file $in{'new_name'} : incorrect name");
 	 return undef;
      }
 
      if (($document =~ /\.url$/) && ($in{'new_name'} !~ /\.url$/)) {
 	 &error_message('incorrect_name', {'name' => $in{'new_name'}});
-	 &wwslog('info',"do_d_rename : New file name $in{'new_name'} does not match URL filenames");
+	 &wwslog('err',"do_d_rename : New file name $in{'new_name'} does not match URL filenames");
 	 return undef;
      }
 
@@ -8270,27 +8942,37 @@ sub do_edit_list {
      $mode{'edit'} = 1;
      my %access = &d_access_control(\%mode,$path);
 
-     unless ($access{'may'}{'edit'}) {
+     unless ($access{'may'}{'edit'} > 0) {
 	 &error_message('may_not');
-	 &wwslog('info','do_d_rename : access denied for %s', $param->{'user'}{'email'});
+	 &wwslog('err','do_d_rename : access denied for %s', $param->{'user'}{'email'});
 	 return undef;
      }
-
+     if ($moderate){
+	 unless (rename $doc, "$shareddir/$current_directory/.$in{'new_name'}.moderate") {
+	     &error_message('failed');
+	     &wwslog('err',"do_d_rename : Failed to rename %s to %s : %s", $doc, "$shareddir/$current_directory/$in{'new_name'}", $!);
+	     return undef;
+	 }
+     }else {
      unless (rename $doc, "$shareddir/$current_directory/$in{'new_name'}") {
 	 &error_message('failed');
-	 &wwslog('info',"do_d_rename : Failed to rename %s to %s : %s", $doc, "$shareddir/$current_directory/$in{'new_name'}", $!);
+	     &wwslog('err',"do_d_rename : Failed to rename %s to %s : %s", $doc, "$shareddir/$current_directory/$in{'new_name'}", $!);
 	 return undef;
      }
-
+     }
      ## Rename description file
      my $desc_file = "$shareddir/$current_directory/.desc.$document";
-     if (-f $desc_file) {
 	 my $new_desc_file = $desc_file;
-	 $new_desc_file =~ s/$document/$in{'new_name'}/;
 
+     if (-f $desc_file) {
+	 if ($moderate){
+	     $new_desc_file =~ s/$document/\.$in{'new_name'}\.moderate/;
+	 }else {
+	     $new_desc_file =~ s/$document/$in{'new_name'}/;   
+	 }
 	 unless (rename $desc_file, $new_desc_file) {
 	     &error_message('failed');
-	     &wwslog('info',"do_d_rename : Failed to rename $desc_file : $!");
+	     &wwslog('err',"do_d_rename : Failed to rename $desc_file : $!");
 	     return undef;
 	 }
      }
@@ -8326,14 +9008,14 @@ sub do_edit_list {
      ### action relative to a list ?
      unless ($param->{'list'}) {
 	 &error_message('missing_arg', {'argument' => 'list'});
-	 &wwslog('info','do_d_create_dir : no list');
+	 &wwslog('err','do_d_create_dir : no list');
 	 return undef;
      }
 
       # Must be a directory to create (directory name not empty)
      unless ($name_doc) {
 	 &error_message('no_name');
-	 &wwslog('info',"do_d_create_dir : Unable to create directory : no name specified!");
+	 &wwslog('err',"do_d_create_dir : Unable to create directory : no name specified!");
 	 return undef;
      }
 
@@ -8342,7 +9024,7 @@ sub do_edit_list {
 	 || $name_doc =~ /\.desc/ 
 	 || $name_doc =~ /[~\#\[\]\/]$/) {
 	 &error_message('incorrect_name', {'name' => $name_doc});
-	 &wwslog('info',"do_d_create_dir : Unable to create directory $name_doc : incorrect name");
+	 &wwslog('err',"do_d_create_dir : Unable to create directory $name_doc : incorrect name");
 	 return undef;
      }
 
@@ -8352,12 +9034,11 @@ sub do_edit_list {
      $mode{'edit'} = 1;
      my %access = &d_access_control(\%mode, $path);
 
-     unless ($access{'may'}{'edit'}) {
+     unless ($access{'may'}{'edit'} > 0) {
 	 &error_message('may_not');
-	 &wwslog('info','do_d_create_dir :  access denied for %s', $param->{'user'}{'email'});
+	 &wwslog('err','do_d_create_dir :  access denied for %s', $param->{'user'}{'email'});
 	 return undef;
      }    
-     ### End of controls
 
      # path of the shared directory
      my $shareddir =  $list->{'dir'}.'/shared';
@@ -8366,12 +9047,41 @@ sub do_edit_list {
 
      $param->{'document'} = $document;
 
+     # the file musn't already exists
+     if (-e $document){
+	 &error_message('cannot_create', {'path' => "$path$name_doc",
+					  'reason' => "file already exists"});
+	 &wwslog('err',"do_d_create_dir : cannot create $path$name_doc : file already exists");
+	 return undef;
+     }
+
+     #if the file .moderate exists, only its author can erase it 
+     my $doc_moderate = "$shareddir/$path"."."."$name_doc".".moderate";
+     my $file_moderated;
+       
+     if (-e "$doc_moderate"){
+
+	 $file_moderated = 1;
+	 my $desc="$shareddir/$path/".".desc.."."$name_doc".".moderate";
+	 $desc =~ s/\/+/\//g;
+	 my %desc_hash = &get_desc_file("$desc");
+	 
+	 unless($desc_hash{'email'} eq $param->{'user'}{'email'}){
+	     &error_message('cannot_upload', {'path' => "$path$name_doc",
+					      'reason' => "file already exists but not yet moderated"});
+	     &wwslog('err',"do_d_create_dir : Unable to create $doc_moderate : file already exists but not yet moderated");
+	     return undef;
+	 }
+     }
+
+     ### End of controls
+
      if ($type eq 'directory') {
 	 # Creation of the new directory
 	 unless (mkdir ("$document",0777)) {
-	     &error_message('cannot_create_dir', {'path' => $document,
+	     &error_message('cannot_create_dir', {'path' => "$path$name_doc",
 						  'reason' => $!});
-	     &wwslog('info',"do_d_create_dir : Unable to create $document : $!");
+	     &wwslog('err',"do_d_create_dir : Unable to create $document : $!");
 	     return undef;
 	 }
 
@@ -8380,9 +9090,9 @@ sub do_edit_list {
      }else {
 	 # Creation of the new file
 	 unless (open FILE, ">$document") {
-	     &error_message('cannot_create_file', {'path' => $document,
+	     &error_message('cannot_create_file', {'path' => "$path$name_doc",
 						   'reason' => $!});
-	     &wwslog('info',"do_d_create_dir : Unable to create $document : $!");
+	     &wwslog('err',"do_d_create_dir : Unable to create $document : $!");
 	     return undef;
 	 }
 	 close FILE;
@@ -8393,7 +9103,7 @@ sub do_edit_list {
      # Creation of a default description file 
      unless (open (DESC,">$desc_file")) {
 	 &error_message('failed');
-	 &wwslog('info','do_d_create_dir : Cannot create description file %s', $document.'/.desc');
+	 &wwslog('err','do_d_create_dir : Cannot create description file %s', $document.'/.desc');
      }
 
      print DESC "title\n \n\n"; 
@@ -8405,11 +9115,33 @@ sub do_edit_list {
 
      close DESC;
 
+     # moderation
+     if (($access{'may'}{'edit'} == 0.5) && ($type ne 'directory')) { 
+	 unless (rename "$shareddir/$path$name_doc","$shareddir/$path.$name_doc.moderate"){
+	     &error_message('failed');
+	     &wwslog('err',"do_d_create_dir : Failed to rename $path$name_doc to $path.$name_doc.moderate : $!");
+	 }
+	 
+	 unless (rename "$desc_file","$shareddir/$path.desc..$name_doc.moderate"){
+	     &error_message('failed');
+	     &wwslog('err',"do_d_create_dir : Failed to rename $desc_file to $path.desc..$name_doc.moderate : $!");
+	 }
+
+	 unless ($file_moderated){
+	     $list->send_notify_to_editor('shared_moderated',("$path$name_doc",$param->{'user'}{'email'}));
+	 }
+     }
+
      if ($type eq 'directory') {
 	 return 'd_read';
      }
 
-     $in{'path'} = "$path$name_doc";
+     if ($access{'may'}{'edit'} == 0.5) {
+	 $in{'path'} = "$path.$name_doc.moderate";
+     }else {
+	 $in{'path'} = "$path$name_doc";
+     }
+
      return 'd_editfile';
  }
 
@@ -8434,6 +9166,8 @@ sub do_edit_list {
      my $shareddir =  $list->{'dir'}.'/shared';
      ## $path must have no slash at its end
      $path = &format_path('without_slash',$path);
+     #moderation
+     my $visible_path = &make_visible_path($path);
 
 
      ### action relative to a list ?
@@ -8451,7 +9185,7 @@ sub do_edit_list {
 
      # Existing document? 
      unless (-e "$shareddir/$path") {
-	 &error_message('no_such_document', {'path' => $path});
+	 &error_message('no_such_document', {'path' => $visible_path});
 	 &wwslog('info',"do_d_control : Cannot control $shareddir/$path : not an existing document");
 	 return undef;
      }
@@ -8459,7 +9193,7 @@ sub do_edit_list {
      ### Document isn't a description file?
      unless ($path !~ /\.desc/) {
 	 &wwslog('info',"do_d_control : $shareddir/$path : description file");
-	 &error_message('no_such_document', {'path' => $path});
+	 &error_message('no_such_document', {'path' => $visible_path});
 	 return undef;
      }
 
@@ -8501,7 +9235,7 @@ sub do_edit_list {
 
 	 ## Synchronization
 	 my @info = stat "$desc_file";
-	 $param->{'serial_desc'} = $info[10];
+	 $param->{'serial_desc'} = $info[9];
 	 my %desc_hash = &get_desc_file("$desc_file");
 	 # rights for read and edit
 	 $read = $desc_hash{'read'};
@@ -8521,6 +9255,7 @@ sub do_edit_list {
      # template parameters
      $param->{'list'} = $list_name;
      $param->{'path'} = $path;
+     $param->{'visible_path'} = $visible_path;
 
      my $lang = $param->{'lang'};
 
@@ -8698,6 +9433,9 @@ sub do_edit_list {
      ## $path must have no slash at its end
      $path = &format_path('without_slash',$path);
 
+     #moderation
+     my $visible_path = &make_visible_path($path);
+
      #my $list_name = $in{'list'};
      my $list_name = $list->{'name'};
 
@@ -8754,7 +9492,7 @@ sub do_edit_list {
      my $may_set = 1;
 
      unless ($may_set) {
-	 &error_message('full_directory', {'directory' => $path});
+	 &error_message('full_directory', {'directory' => $visible_path });
 	 &wwslog('info',"d_set_owner : cannot set owner of a full directory");
 	 return undef;
      }

@@ -1,11 +1,11 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 [IF url]
-<H1>Edition of the bookmark [path]</H1>
+<H1>Edition of the bookmark [visible_path]</H1>
 [ELSIF directory]
-<H1>Edition of the directory [path]</H1>
+<H1>Edition of the directory [visible_path]</H1>
 [ELSE]
-<H1>Edition of the file [path]</H1>
+<H1>Edition of the file [visible_path]</H1>
 [ENDIF]
     Owner : [doc_owner] <BR>
     Last update : [doc_date] <BR>
@@ -19,10 +19,10 @@
   <form method="post" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
   <TD ALIGN="right" VALIGN="bottom">
   [IF url]
-  <B> Bookmark URL </B><BR> 
+  <B> Bookmark URL [visible_path] </B><BR> 
   <input name="url" VALUE="[url]">
   [ELSE]
-  <B> Replace the file [path] by your file </B><BR> 
+  <B> Replace the file [visible_path] by your file </B><BR> 
   <input type="file" name="uploaded_file">
   [ENDIF]
   </TD>
@@ -44,9 +44,9 @@
   <FORM ACTION="[path_cgi]" METHOD="POST">
   <TD ALIGN="right" VALIGN="bottom">
   [IF directory]
-  <B> Describe the directory [path]</B><BR>
+  <B> Describe the directory [visible_path]</B><BR>
   [ELSE]
-  <B> Describe the file [path]</B><BR>
+  <B> Describe the file [visible_path]</B><BR>
   [ENDIF]
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
@@ -64,9 +64,9 @@
   <FORM ACTION="[path_cgi]" METHOD="POST">
   <TD ALIGN="right" VALIGN="bottom">
   [IF directory]
-  <B> Rename directory [path]</B><BR>
+  <B> Rename directory [visible_path]</B><BR>
   [ELSE]
-  <B> Rename file [path]</B><BR>
+  <B> Rename file [visible_path]</B><BR>
   [ENDIF]
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
@@ -86,7 +86,7 @@
 [IF !url]
 [IF textfile]
   <FORM ACTION="[path_cgi]" METHOD="POST">
-  <B> Edit the file [path]</B><BR>
+  <B> Edit the file [visible_path]</B><BR>
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
   <INPUT TYPE="hidden" NAME="serial" VALUE="[serial_file]">

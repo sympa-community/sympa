@@ -7127,6 +7127,15 @@ Only the listmaster, list owners and the owner of the document
 (or those of a parent document) are allowed to perform the corresponding action.
 The \textbf {owner} scenario is the default scenario for editing. 
 
+\subsection {The scenario editor}
+The scenario \textbf {editor} is for a moderated shared space for editing. Every suscriber of the list is 
+allowed to editing a document. But this document will have to be installed or rejected by the editor of the 
+list. Documents awaiting for moderation are visible by their author and the editor(s) of the list in the
+shared space. The editor has also an interface with all documents awaiting. When there is a new document,
+the editor is notiied and when the document is installed, the author is notiied too. In case of reject, 
+the editor can notify the author or not.  
+
+
 \section {Access control}
     \label {shared-access}
 Access control is an important operation performed
@@ -7288,6 +7297,9 @@ to be substituted in its place.
 
 \subsection {d\_control.tpl}
 The page to edit the access rights and the owner of a document. 
+
+\subsection {d\_upload.tpl}
+This page to upload a file is only used when the name of the file already exists.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Using Sympa commands

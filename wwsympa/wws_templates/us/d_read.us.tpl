@@ -5,9 +5,9 @@
 [ELSE]
 
   [IF path]  
-    <h2><B><IMG SRC="[icons_url]/folder.open.png"> [path] </B> </h2> 
+    <h2><B><IMG SRC="[icons_url]/folder.open.png"> [visible_path] </B> </h2> 
     <A HREF="[path_cgi]/d_editfile/[list]/[escaped_path]">edit</A> | 
-    <A HREF="[path_cgi]/d_delete/[list]/[escaped_path]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path]', 'Do you really want to delete [path] ?'); return false;">delete</A> |
+    <A HREF="[path_cgi]/d_delete/[list]/[escaped_path]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path]', 'Do you really want to delete [visible_path] ?'); return false;">delete</A> |
     <A HREF="[path_cgi]/d_control/[list]/[escaped_path]">access</A><BR>
 
     Owner : [doc_owner] <BR>
@@ -86,7 +86,11 @@
 
   <TD ALIGN="center"><font color="[bg_color]">Edit</font></TD> 
   <TD ALIGN="center"><font color="[bg_color]">Delete</font></TD>
-  <TD ALIGN="center"><font color="[bg_color]">Access</font></TD></TR>
+  <TD ALIGN="center"><font color="[bg_color]">Access</font></TD>
+  [IF is_editor] 
+   <TD ALIGN="center"><font color="[bg_color]">Moderation</font></TD>
+  [ENDIF]
+  </TR>
       
   [IF empty]
     <TR BGCOLOR="[light_color]" VALIGN="top">
@@ -118,7 +122,7 @@
 
 	  <TD><center>
 	  <FONT size=-1>
-	  <A HREF="[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]', 'Do you really want to delete [path][s->doc] ?'); return false;">delete</A>
+	  <A HREF="[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]', 'Do you really want to delete [visible_path][s->doc] ?'); return false;">delete</A>
 	  </FONT>
 	  </center></TD>
 	[ELSE]
@@ -137,13 +141,23 @@
 	[ELSE]
 	  <TD>&nbsp; </TD>
 	[ENDIF]
+
+	[IF is_editor]
+          <TD>&nbsp; </TD>
+	[ENDIF]
+
       </TR>
       [END] 
     [ENDIF]
 
     [IF sort_files]
       [FOREACH f IN sort_files]
-        <TR BGCOLOR="[light_color]"> 
+   
+        [IF f->moderate] 
+	  <TR BGCOLOR= "[bg_color]">
+	[ELSE]
+       	  <TR BGCOLOR= "[light_color]">
+        [ENDIF]
         <TD>&nbsp;
         [IF f->html]
 	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]" TARGET="html_window">
@@ -158,11 +172,15 @@
 	</TD>  
 	 
 	<TD> 
-	[IF f->author_known]
-	   [f->author_mailto]
+	[IF f->moderate]
+	  to moderate
 	[ELSE]
-          Unknown  
-        [ENDIF]
+	 [IF f->author_known]
+	   [f->author_mailto]
+ 	 [ELSE]
+           Unknown  
+         [ENDIF]
+	[ENDIF]
 	</TD>
 	 
 	<TD NOWRAP>&nbsp;
@@ -179,12 +197,12 @@
 	<A HREF="[path_cgi]/d_editfile/[list]/[escaped_path][f->escaped_doc]">edit</A>
 	</font>
 	</center>
-
 	</TD>
+	 
 	<TD>
 	<center>
 	<FONT size=-1>
-	<A HREF="[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]', 'Do you really want to delete [path][s->doc] ([f->size] Kb) ?'); return false;">delete</A>
+	  <A HREF="[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]', 'Do you really want to delete [visible_path][s->doc] ([f->size] Kb) ?'); return false;">delete</A>
 	</FONT>
 	</center>
 	</TD>
@@ -201,6 +219,19 @@
 	[ELSE]
 	<TD>&nbsp; </TD>
 	[ENDIF]
+
+	[IF is_editor]
+          [IF f->moderate] 
+	  <TD> <center>
+	  <font size=-1>
+	  <A HREF="[path_cgi]/modindex/[list]">moderate</A>
+	  </font>
+	  </center></TD>
+          [ELSE]
+	  <TD>&nbsp; </TD>
+	  [ENDIF]
+        [ENDIF]
+
 	</TR>
       [END] 
     [ENDIF]
@@ -217,7 +248,7 @@
     <form method="post" ACTION="[path_cgi]">
     <TD ALIGN="right" VALIGN="bottom">
     [IF path]
-      <B> Create a new folder inside the folder [path]</B> <BR>
+      <B> Create a new folder inside the folder [visible_path]</B> <BR>
     [ELSE]
       <B> Create a new folder inside the folder SHARED</B> <BR>
     [ENDIF]
@@ -277,7 +308,7 @@
    <form method="post" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
    <TD ALIGN="right" VALIGN="bottom">
    [IF path]
-     <B> Upload a file inside the folder [path]</B><BR>
+     <B> Upload a file inside the folder [visible_path]</B><BR>
    [ELSE]
      <B> Upload a file inside the folder SHARED </B><BR>
    [ENDIF]

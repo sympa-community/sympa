@@ -1,11 +1,11 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 [IF url]
-<H1>Edition du signet [path]</H1>
+<H1>Edition du signet [visible_path]</H1>
 [ELSIF directory]
-<H1>Edition du répertoire [path]</H1>
+<H1>Edition du répertoire [visible_path]</H1>
 [ELSE]
-<H1>Edition du fichier [path]</H1>
+<H1>Edition du fichier [visible_path]</H1>
 [ENDIF]
     Propriétaire : [doc_owner] <BR>
     Dernière mise à jour : [doc_date] <BR>
@@ -19,10 +19,10 @@
   <form method="post" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
   <TD ALIGN="right" VALIGN="bottom">
   [IF url]
-  <B> URL du signet [path] </B><BR> 
+  <B> URL du signet [visible_path] </B><BR> 
   <input name="url" VALUE="[url]">
   [ELSE]
-  <B> Remplacer le fichier [path] par votre fichier</B><BR> 
+  <B> Remplacer le fichier [visible_path] par votre fichier</B><BR> 
   <input type="file" name="uploaded_file">
   [ENDIF]
   </TD>
@@ -44,9 +44,9 @@
   <FORM ACTION="[path_cgi]" METHOD="POST">
   <TD ALIGN="right" VALIGN="bottom">
   [IF directory]
-  <B> Décrire le répertoire [path]</B><BR>
+  <B> Décrire le répertoire [visible_path]</B><BR>
   [ELSE]
-  <B> Décrire le fichier [path]</B><BR>
+  <B> Décrire le fichier [visible_path]</B><BR>
   [ENDIF]
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
@@ -64,9 +64,9 @@
   <FORM ACTION="[path_cgi]" METHOD="POST">
   <TD ALIGN="right" VALIGN="bottom">
   [IF directory]
-  <B> Renommer le répertoire [path]</B><BR>
+  <B> Renommer le répertoire [visible_path]</B><BR>
   [ELSE]
-  <B> Renommer le fichier [path]</B><BR>
+  <B> Renommer le fichier [visible_path]</B><BR>
   [ENDIF]
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
@@ -86,7 +86,7 @@
 [IF !url]
 [IF textfile]
   <FORM ACTION="[path_cgi]" METHOD="POST">
-  <B> Editer le fichier [path]</B><BR>
+  <B> Editer le fichier [visible_path]</B><BR>
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
   <INPUT TYPE="hidden" NAME="serial" VALUE="[serial_file]">

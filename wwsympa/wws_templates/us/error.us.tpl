@@ -129,6 +129,9 @@ Cannot overwrite file [error->path] : [error->reason]
 [ELSIF error->msg=cannot_upload] 
 Cannot upload file [error->path] : [error->reason]
 
+[ELSIF error->msg=cannot_create]
+Cannot create [error->path] : [error->reason]
+
 [ELSIF error->msg=cannot_create_dir] 
 Cannot create directory [error->path] : [error->reason]
 

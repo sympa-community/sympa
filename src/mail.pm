@@ -173,9 +173,14 @@ sub mailfile {
 	       return undef;
 	   }
 
-	   printf TMPMSG "X-Sympa-To: %s\n", $rcpt;
+	   my $all_rcpt = $rcpt;
+	   if (ref($rcpt)) {
+	       $all_rcpt = join (',', @$rcpt);
+	   }
+
+	   printf TMPMSG "X-Sympa-To: %s\n", $all_rcpt;
 	   printf TMPMSG "X-Sympa-From: %s\n", $data->{'return_path'};
-	   printf TMPMSG "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($rcpt);
+	   printf TMPMSG "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($all_rcpt);
 	   
 	   $sendmail = \*TMPMSG;
        }else {
