@@ -55,7 +55,8 @@ Options:
    -k, --keepcopy=dir  : keep a copy of incoming message
    -l, --lang=LANG     : use a language catalog for Sympa
    -m, --mail          : log calls to sendmail
-   --dump=list|ALL : dumps subscribers 
+   --dump=list|ALL     : dumps subscribers 
+   --lowercase         : lowercase email addresses in database
 
    -h, --help          : print this help
    -v, --version       : print version number
@@ -69,7 +70,7 @@ encryption.
 ## Check --dump option
 my %options;
 &GetOptions(\%main::options, 'dump=s', 'debug|d', 'foreground', 'config|f=s', 
-	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s');
+	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s', 'lowercase');
 
 ## Trace options
 #foreach my $k (keys %main::options) {
@@ -186,6 +187,25 @@ if ($main::options{'dump'}) {
     }
     
     printf STDERR "Total imported subscribers: %d\n", $total;
+
+    exit 0;
+}elsif ($main::options{'lowercase'}) {
+    
+    unless ($List::use_db) {
+	&fatal_err("You don't have a database setup, can't lowercase email addresses");
+    }
+
+    print STDERR "Working on user_table...\n";
+    my $total = &List::lowercase_field('user_table', 'email_user');
+
+    print STDERR "Working on subscriber_table...\n";
+    $total += &List::lowercase_field('subscriber_table', 'user_subscriber');
+
+    unless (defined $total) {
+	&fatal_err("Could not work on dabatase");
+    }
+
+    printf STDERR "Total lowercased rows: %d\n", $total;
 
     exit 0;
 }

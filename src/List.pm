@@ -4952,6 +4952,49 @@ sub probe_db {
     return 1;
 }
 
+## Lowercase field from database
+sub lowercase_field {
+    my ($table, $field) = @_;
+
+    my $total = 0;
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+
+    unless ($sth = $dbh->prepare("SELECT $field from $table")) {
+	do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+
+    unless ($sth->execute) {
+	do_log('debug','Unable to execute SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+
+    while (my $user = $sth->fetchrow_hashref) {
+	my $lower_cased = lc($user->{$field});
+	
+	next if ($lower_cased eq $user->{$field});
+
+	$total++;
+	printf STDERR "%s\t=>\t%s\n", $user->{$field}, $lower_cased;
+
+	## Updating Db
+	my $statement = sprintf "UPDATE $table SET $field=%s WHERE ($field=%s)", $dbh->quote($lower_cased), $dbh->quote($user->{$field});
+	
+	unless ($dbh->do($statement)) {
+	    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    return undef;
+	}
+	
+    }
+    $sth->finish();
+
+    return $total;
+}
+
 ## Loads the list of topics if updated
 sub load_topics {
     do_log('debug2', 'List::load_topics');
