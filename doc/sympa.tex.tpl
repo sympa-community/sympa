@@ -1180,6 +1180,10 @@ Lowercases e-mail addresses in database.
   
   Print usage of sympa.pl.
    
+\item \option {--make\_alias\_file}
+  
+Create an aliases file in /tmp/ with all list aliases. It uses the list\_aliases.tpl
+template.
 
 \item \option {--version} | \option {-v}
   

@@ -6,8 +6,8 @@ sympa (or sympa.pl) - A Modern Mailing List Manager
 
 S<B<sympa> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
       S<[ B<--import>=I<listname> ] [ B<-k, --keepcopy>=I<directory> ]>
-      S<[ B<-l, --lang>=I<catalog> ] [ B<--lowercase> ] [ B<-m, --mail> ]>
-      S<[ B<--dump>=I<listname> | ALL] [ B<-h, --help> ]>
+      S<[ B<-l, --lang>=I<catalog> ] [ B<--make_alias_file> ] [ B<--lowercase> ] 
+      S<[ B<-m, --mail> ]> <[ B<--dump>=I<listname> | ALL] [ B<-h, --help> ]>
       S<[ B<-v, --version> ]>
 
 =head1 DESCRIPTION
@@ -65,6 +65,11 @@ directory.
 =item B<--lowercase>
 
 Lowercases email addresses in database.
+
+=item B<--make_alias_file>
+
+Create an aliases file in /tmp/ with all list aliases. It uses the list_aliases.tpl
+template.
 
 =item B<-m, --mail>
 
