@@ -47,6 +47,18 @@ my %options;
 	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s', 'lowercase');
 
 # $main::options{'debug2'} = 1 if ($main::options{'debug'});
+
+if ($main::options{'debug'}) {
+    $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
+}
+# Some option force foreground mode
+$main::options{'foreground'} = 1 if ($main::options{'debug'} ||
+                                     $main::options{'version'} || 
+				     $main::options{'import'} ||
+				     $main::options{'help'} ||
+				     $main::options{'lowercase'} || 
+				     $main::options{'dump'});
+
 $log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
 my $Version = '0.1';
@@ -269,6 +281,7 @@ while (!$end) {
 	if (!in (\@used_models, $global_models{$key})) {
 	    if ($Conf{$key}) { 
 		my %data = %default_data; # hash of datas necessary to the creation of tasks
+		#printf "xxxxxxxxxxxxx appel 1\n";
 		create ($current_date, '', $global_models{$key}, $Conf{$key}, '_global', \%data);
 		push (@used_models, $1);
 	    }
@@ -296,8 +309,13 @@ while (!$end) {
         
 	foreach my $model (keys %used_list_models) {
 	    unless ($used_list_models{$model}) {
-		if ( $list->{'admin'}{$model.'_task'} ) {
-		    create ($current_date, '', $model, $list->{'admin'}{$model.'_task'}, 'list', \%data);
+		my $model_task_parameter = "$model".'_task';
+		if ( $list->{'admin'}{$model_task_parameter} ) {
+		    #printf "xxxxxxxxxxxxx appel 2 : model_task_parameter $model_task_parameter $list->{'admin'}{$model_task_parameter}\n";
+		    #printf "%s\n", join("|",%{$list->{'admin'}{$model_task_parameter}});
+
+#		    create ($current_date, '', $model, $list->{'admin'}{$model.'_task'}, 'list', \%data);
+		    create ($current_date, '', $model, $list->{'admin'}{$model_task_parameter}{'name'}, 'list', \%data);
 		}
 	    }
 	}
@@ -314,12 +332,14 @@ exit(0);
 ## task creations
 sub create {
         
-    my $date          = $_[0];
-    my $label         = $_[1];
-    my $model         = $_[2];
-    my $model_choice  = $_[3];
-    my $object        = $_[4];
-    my $Rdata         = $_[5];
+    my $date          = shift;
+    my $label         = shift;
+    my $model         = shift;
+    my $model_choice  = shift;
+    my $object        = shift;
+    my $Rdata         = shift;
+
+    &do_log ('debug2', "create date : $date label : $label model $model : $model_choice object : $object Rdata :$Rdata");
 
     my $task_file;
     my $list_name;
@@ -358,7 +378,7 @@ sub create {
 	} elsif (open (MODEL, "--ETCBINDIR--/list_task_models/$model_name")) {
 	    $model_file = "--ETCBINDIR--/list_task_models/$model_name";
 	} else { 
-	    &do_log ('err', "error : unable to find $model_name, creation aborted");
+	    &do_log ('err', "error : unable to find $model_name, for list $list_name creation aborted");
 	    return undef;
 	}
     }
@@ -393,6 +413,10 @@ sub create {
 	} 
     } # end of special checking
 
+    if (!$ok) {
+	&do_log ('err', "$task_file is unappropriate for a list with include");
+    }
+    
     if  (!$ok or !check ($task_file)) {
 	&do_log ('err', "error : syntax error in $task_file, you should check $model_file");
 	unlink ($task_file) ? 
@@ -408,7 +432,9 @@ sub create {
 ## check the syntax of a task
 sub check {
 
-    my $task_file = $_[0]; # the task to check
+    my $task_file = shift; # the task to check
+
+    &do_log ('debug2', "check($task_file)" );
     my %result; # stores the result of the chk_line subroutine
     my $lnb = 0; # line number
     my @used_labels; # list of labels used as parameter in commands
@@ -427,6 +453,8 @@ sub check {
 	chomp;
 
 	$lnb++;
+
+	next if ( $_ =~ /^\s*\#/ ); 
 	unless (chk_line ($_, \%result)) {
 	    &do_log ('err', "error at line $lnb : $_");
 	    &do_log ('err', "$result{'error'}");
@@ -916,7 +944,7 @@ sub create_cmd {
     if ($type eq 'global') {
 	$type = '_global';
     }
-
+    #printf "xxxxxxxxxxxxx appel 3\n";
     unless (create ($context->{'execution_date'}, '', $model, $model_choice, $type, \%data)) {
 	error ($context->{'task_file'}, "error in create command : creation subroutine failure");
 	return undef;
