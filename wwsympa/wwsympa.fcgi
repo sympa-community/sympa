@@ -2492,8 +2492,7 @@ sub do_suboptions {
 	return undef;
     }
 
-    unless($param->{'is_subscriber'} && 
-	   ($param->{'subscriber'}{'subscribed'} == 1)) {
+    unless($param->{'is_subscriber'} ) {
 	&error_message('not_subscriber', {'list' => $list->{'name'}});
 	&wwslog('info','do_suboptions: %s not subscribed to %s',$param->{'user'}{'email'}, $param->{'list'} );
 	return undef;
