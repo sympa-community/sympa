@@ -23,6 +23,7 @@
 
 use lib '--LIBDIR--';
 use wwslib;
+use Conf;
 require "tt2.pl";
 
 $wwsympa_conf_file = '--WWSCONFIG--';
@@ -32,8 +33,6 @@ use List;
 use Log;
 
 my %options;
-
-my $pinfo = &List::_apply_defaults();
 
 $| = 1;
 
@@ -55,6 +54,14 @@ unless ($wwsconf = &wwslib::load_config($wwsympa_conf_file)) {
 unless (&Conf::load($sympa_conf_file)) {
     die 'config_error';
 }
+
+if ($Conf{'db_name'} and $Conf{'db_type'}) {
+    unless ($List::use_db = &List::probe_db()) {
+ 	&die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf{'db_name'});
+    }
+}
+
+&List::_apply_defaults();
 
 ## We have a parameter that should be a template to convert
 ## Output is sent to stdout
