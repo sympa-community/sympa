@@ -633,7 +633,8 @@ sub unescape_chars {
     $s =~ s/%a5/\//g;  ## Special traetment for '/'
     foreach my $i (0x20..0x2c,0x3a..0x3f,0xc0..0xff) {
 	my $hex_i = sprintf "%lx", $i;
-	$s =~ s/%$hex_i/\x$hex_i/g;
+	my $hex_s = sprintf "%c", $i;
+	$s =~ s/%$hex_i/\$hex_c/g;
     }
 
     return $s;
