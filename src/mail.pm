@@ -235,6 +235,7 @@ sub mailfile {
 	   #&parser::parse_tpl($data, $filename, \$fh);
 	   my $output;
 	   my @path = split /\//, $filename;	   
+	   &Language::SetLang($data->{'lang'}) if (defined $data->{'lang'});
 	   &tt2::parse_tt2($data, $path[$#path], \$output);
 	   #warn 'from tmpl:',join('',$output);
 	   print $fh join('',$output);
