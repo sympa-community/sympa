@@ -214,12 +214,14 @@ for a_file in /etc/aliases /etc/postfix/aliases; do
 done
 
 # create the alias file used by sympa for his lists
-if [ ! -d "/etc/mail" ]; then
-  mkdir -p /etc/mail
+if [ ! -f "/etc/mail/sympa_aliases" ]; then
+  if [ ! -d "/etc/mail" ]; then
+    mkdir -p /etc/mail
+  fi
+  touch /etc/mail/sympa_aliases || /bin/true
+  chown sympa.sympa /etc/mail/sympa_aliases
+  chmod 0640 /etc/mail/sympa_aliases
 fi
-touch /etc/mail/sympa_aliases || /bin/true
-chown sympa.sympa /etc/mail/sympa_aliases
-chmod 0640 /etc/mail/sympa_aliases
 
 # reset the default cookie
 typeset -x secret
