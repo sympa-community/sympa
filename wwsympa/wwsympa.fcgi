@@ -493,11 +493,6 @@ $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 ## Set locale configuration	 
 $Language::default_lang = $Conf{'lang'};	 
 
-unless ($List::use_db = &List::probe_db()) {
-    &error_message('no_database');
-    &do_log('info','WWSympa requires a RDBMS to run');
-}
-
 my $pinfo = &List::_apply_defaults();
 
 &tools::ciphersaber_installed();
@@ -539,6 +534,11 @@ if ($wwsconf->{'use_fast_cgi'}) {
      unless ($> eq (getpwnam('--USER--'))[2]) {
 	 &error_message('incorrect_server_config');
 	 &wwslog('err','Config error: wwsympa should with UID %s (instead of %s)', (getpwnam('--USER--'))[2], $>);
+     }
+
+     unless ($List::use_db = &List::probe_db()) {
+	 &error_message('no_database');
+	 &do_log('info','WWSympa requires a RDBMS to run');
      }
 
      ## Get params in a hash

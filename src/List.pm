@@ -1357,8 +1357,10 @@ sub set_status_error_config {
 	$self->{'admin'}{'status'} = 'error_config';
 
 	my $host = &Conf::get_robot_conf($self->{'robot'}, 'host');
-	$self->save_config("listmaster\@$host");
-	$self->savestats();
+
+	## No more save config in error...
+	#$self->save_config("listmaster\@$host");
+	#$self->savestats();
 	&do_log('err', 'The list "%s" is set in status error_config',$self->{'name'});
 	&List::send_notify_to_listmaster($message, $self->{'domain'},@param);
     }
@@ -10018,7 +10020,8 @@ sub _load_admin_file {
 	($admin{'user_data_source'} eq 'include2')){
 	unless ($List::use_db) {
 	    &do_log('info', 'Sympa not setup to use DBI or no database access');
-	    return undef;
+	    ## We should notify the listmaster here...
+	    #return undef;
 	}
     }
 

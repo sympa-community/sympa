@@ -80,7 +80,9 @@ unless (Conf::load($sympa_conf_file)) {
 }
 
 ## Check databse connectivity
-$List::use_db = &List::probe_db();
+unless ($List::use_db = &List::probe_db()) {
+    &fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf{'db_name'});
+}
 
 ## Check for several files.
 unless (&Conf::checkfiles()) {
