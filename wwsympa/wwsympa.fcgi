@@ -395,6 +395,15 @@ while ($query = &new_loop()) {
     $robot = $Conf{'host'} unless $robot;
     $param->{'cookie_domain'} = $Conf{'robots'}{$robot}{'cookie_domain'} if $Conf{'robots'}{$robot};
     $param->{'cookie_domain'} ||= $wwsconf->{'cookie_domain'};
+    
+    ## In case HTTP_HOST does not match cookie_domain
+    my $http_host = $ENV{'HTTP_HOST'};
+    $http_host =~ s/:\d+$//; ## suppress port
+    unless ($param->{'cookie_domain'} =~ /$http_host$/) {
+	&wwslog('notice', 'Cookie_domain(%s) does NOT match HTTP_HOST; setting cookie_domain to %s', $param->{'cookie_domain'}, $http_host);
+	$param->{'cookie_domain'} = $http_host;
+    }
+
     $log_level = $Conf{'robots'}{$robot}{'log_level'};
 
     ## Sympa parameters in $param->{'conf'}
