@@ -2,18 +2,18 @@ package wwslib;
 
 use Exporter;
 @ISA = ('Exporter');
-@EXPORT = ('wwslog');
+@EXPORT = ('wwslog','message');
 
-my @languages = ('fr','us','es','it');
+@languages = ('fr','us','es','it');
 
-my %reception_mode = ('mail' => 'normal',
-		      'digest' => 'digest',
-		      'summary' => 'summary',
-		      'summary' => 'notice',
-		      'nomail' => 'no mail');
+%reception_mode = ('mail' => 'normal',
+		   'digest' => 'digest',
+		   'summary' => 'summary',
+		   'summary' => 'notice',
+		   'nomail' => 'no mail');
 
-my %visibility_mode = ('noconceal' => 'public',
-		       'conceal' => 'conceal');
+%visibility_mode = ('noconceal' => 'public',
+		    'conceal' => 'conceal');
 
 ## Filenames with corresponding entry in NLS
 %filenames = ('welcome.tpl' => 1,
@@ -210,7 +210,7 @@ sub get_email_from_cookie {
 	&wwslog('info', ' ENV{HTTP_COOKIE} undefined, authentication failure');
     }
 
-    unless ( $email = &check_cookie ($ENV{'HTTP_COOKIE'}, $secret)) {
+    unless ( $email = &cookielib::check_cookie ($ENV{'HTTP_COOKIE'}, $secret)) {
 	&message('auth failed');
 	&wwslog('info', 'get_email_from_cookie: auth failed for user %s', $email);
 	return undef;
