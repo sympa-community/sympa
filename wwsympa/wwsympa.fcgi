@@ -516,19 +516,25 @@ if ($wwsconf->{'use_fast_cgi'}) {
      ## Default auth method (for scenarios)
      $param->{'auth_method'} = 'md5';
 
-     ## Compatibility issue with old a-sign.at certs
-     if (!$ENV{'SSL_CLIENT_S_DN_Email'} && 
-         $ENV{'SSL_CLIENT_S_DN'} =~ /\+MAIL=([^\+\/]+)$/) {
-         $ENV{'SSL_CLIENT_S_DN_Email'} = $1;
-      }
-
-     if (($ENV{'SSL_CLIENT_S_DN_Email'}) && ($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS')) {
-         $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_DN_Email'});
-         $param->{'auth_method'} = 'smime';
-         $param->{'ssl_client_s_dn'} = $ENV{'SSL_CLIENT_S_DN'};
-         $param->{'ssl_client_v_end'} = $ENV{'SSL_CLIENT_V_END'};
-         $param->{'ssl_client_i_dn'} =  $ENV{'SSL_CLIENT_I_DN'};
-         $param->{'ssl_cipher_usekeysize'} =  $ENV{'SSL_CIPHER_USEKEYSIZE'};
+     if ($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS') {
+	 &do_log('debug2', "SSL verified, S_EMAIL = %s,"." S_DN_Email = %s", $ENV{'SSL_CLIENT_S_EMAIL'}, $ENV{SSL_CLIENT_S_DN_Email});
+	 if (($ENV{'SSL_CLIENT_S_EMAIL'})) {
+	     ## this is the X509v3 SubjectAlternativeName, and requires
+	     ## a patch to mod_ssl -- cm@coretec.at
+	     $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_EMAIL'});
+	 }elsif ($ENV{SSL_CLIENT_S_DN_Email}) {
+	     $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_DN_Email'});
+	 }elsif ($ENV{'SSL_CLIENT_S_DN'} =~ /\+MAIL=([^\+\/]+)$/) {
+	     ## Compatibility issue with old a-sign.at certs
+	     $param->{'user'}{'email'} = lc($1);
+	 }
+	 if($param->{user}{email}) {
+	     $param->{'auth_method'} = 'smime';
+	     $param->{'ssl_client_s_dn'} = $ENV{'SSL_CLIENT_S_DN'};
+	     $param->{'ssl_client_v_end'} = $ENV{'SSL_CLIENT_V_END'};
+	     $param->{'ssl_client_i_dn'} =  $ENV{'SSL_CLIENT_I_DN'};
+	     $param->{'ssl_cipher_usekeysize'} =  $ENV{'SSL_CIPHER_USEKEYSIZE'};
+	 }
 
      }elsif ($ENV{'HTTP_COOKIE'} =~ /(user|sympauser)\=/) {
          $param->{'user'}{'email'} = &wwslib::get_email_from_cookie($Conf{'cookie'});
