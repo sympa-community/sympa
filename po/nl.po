@@ -705,11 +705,12 @@ msgstr "Bounce Instellingen"
 
 # nlsref 8,27
 #: src/List.pm:2300
+#, fuzzy
 msgid ""
 "Bounce rate in list %s is %d%%.\n"
 "\n"
 "You should delete bouncing subscribers : \n"
-"%s/reviewbouncing/%s"
+"%s/reviewbouncing/%s\n"
 msgstr ""
 "Teruggekomen post ratio in lijst %s is %d%%.\n"
 "\n"
@@ -1798,7 +1799,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1).\n"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:582
+#: src/etc/mhonarc-ressources.tt2:583
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1916,7 +1917,6 @@ msgid ""
 "\n"
 "     Parameters : %4\n"
 "     Files : %5\n"
-"\n"
 msgstr ""
 
 # nlsref 6,90
@@ -3329,6 +3329,7 @@ msgstr "Size (Kb)"
 
 # nlsref 6,260
 #: src/List.pm:8671
+#, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -3342,7 +3343,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message."
+"this message.\n"
 msgstr ""
 "Iemand (hopelijk uzelf) vroeg om uw emaildres \n"
 "toe te voegen aan de lijst '%s'.\n"
@@ -3374,7 +3375,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message"
+"this message\n"
 msgstr ""
 "Iemand (hopelijk uzelf) vroeg om uw emaildres \n"
 "toe te voegen aan de lijst '%s'.\n"
@@ -3591,7 +3592,7 @@ msgstr "Samenvatting van lijst %s"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Samenvatting van uw abonnement (met het emailadres %1)."
 
-#: src/etc/mhonarc-ressources.tt2:564
+#: src/etc/mhonarc-ressources.tt2:565
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -3664,7 +3665,7 @@ msgstr ""
 #: web_tt2/main.tt2:94
 msgid ""
 "Sympa could not set a cookie for login.\n"
-" Your should setup your navigator to accept cookies"
+" Your should setup your navigator to accept cookies\n"
 msgstr ""
 
 #: web_tt2/tt2_error.tt2:22
@@ -4396,7 +4397,6 @@ msgstr ""
 msgid ""
 "To read the list of subscribers who haven't confirm their\n"
 "subscription : EXPIREINDEX %s\n"
-"\n"
 msgstr ""
 "Om de lijst abonnees te bekijken, geeft het \n"
 "commando : EXPIREINDEX %s\n"
@@ -4519,7 +4519,7 @@ msgstr "Niet gelukt om een kanaal te maken in smtpto: %m"
 #, fuzzy
 msgid ""
 "Unable to find the message of the list %s locked by the key %s.\n"
-"Warning : this message could have ever been send by another editor"
+"Warning : this message could have ever been send by another editor\n"
 msgstr ""
 "Onmogelijk om het gemodereerde bericht op lijst %s met sleutel %s te "
 "benaderen.\n"
@@ -4703,7 +4703,7 @@ msgstr ""
 msgid ""
 "WARNING : %s %s failed to unsubscribe from %s because his address was not "
 "found in the list\n"
-" (You may help this person)"
+" (You may help this person)\n"
 msgstr ""
 "WAARSCHUWING : %s %s lukt het niet om zich uit te schrijven van %s omdat het "
 "adres niet gevonden werd\n"
@@ -5261,10 +5261,11 @@ msgstr "Uw bericht aan %s is afgewezen."
 
 # nlsref 6,263
 #: src/Commands.pm:549
+#, fuzzy
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not\n"
 "verify the signature (be aware that Sympa can't check signature if you use "
-"the subject header to write a command)."
+"the subject header to write a command).\n"
 msgstr ""
 "Uw bericht was niet een multipart/signed berciht of Sympa kon uw\n"
 "handtekening niet controleren (let er op dat Sympa uw handtekening niet kan "
@@ -5315,7 +5316,6 @@ msgid ""
 "list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 "Uw aanvraag voor in- of uitschrijven is doorgestuurd naar de lijsteigenaars "
 "voor \n"
@@ -5329,7 +5329,6 @@ msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 "Uw aanvraag voor in- of uitschrijven is doorgestuurd naar de lijsteigenaars "
 "voor \n"
@@ -6324,8 +6323,7 @@ msgstr "beperkt tot het lokale domein en abonnees"
 msgid "restricted to local domain users"
 msgstr "beperkt tot lokale domeingebruikers"
 
-#: src/etc/scenari/d_edit.private-https~:1 src/etc/scenari/d_edit.private:1
-#: src/etc/scenari/d_read.private-https~:1 src/etc/scenari/d_read.private:1
+#: src/etc/scenari/d_edit.private:1 src/etc/scenari/d_read.private:1
 #: src/etc/scenari/info.private:1 src/etc/scenari/invite.private:1
 #: src/etc/scenari/review.private:1 src/etc/scenari/send.private:1
 msgid "restricted to subscribers"

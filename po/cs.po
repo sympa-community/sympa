@@ -411,8 +411,8 @@ msgid ""
 "<strong>Moderate</strong> : reject and accept messages and documents for "
 "distribution."
 msgstr ""
-": sprÃ¡va Ã¨lenÃ¹, pÃ¸idÃ¡nÃ­, odebrÃ¡nÃ­, vyhledÃ¡vÃ¡nÃ­, vrÃ¡cenÃ© "
-"zprÃ¡vy, atd"
+": sprÃ¡va Ã¨lenÃ¹, pÃ¸idÃ¡nÃ­, odebrÃ¡nÃ­, vyhledÃ¡vÃ¡nÃ­, vrÃ¡cenÃ© zprÃ¡vy, "
+"atd"
 
 #: web_tt2/help_admin.tt2:5
 #, fuzzy
@@ -427,8 +427,8 @@ msgid ""
 "<strong>Subscribers</strong> : subscribers management, add, del, search, "
 "bounces, etc..."
 msgstr ""
-": sprÃ¡va Ã¨lenÃ¹, pÃ¸idÃ¡nÃ­, odebrÃ¡nÃ­, vyhledÃ¡vÃ¡nÃ­, vrÃ¡cenÃ© "
-"zprÃ¡vy, atd"
+": sprÃ¡va Ã¨lenÃ¹, pÃ¸idÃ¡nÃ­, odebrÃ¡nÃ­, vyhledÃ¡vÃ¡nÃ­, vrÃ¡cenÃ© zprÃ¡vy, "
+"atd"
 
 #: web_tt2/create_list_request.tt2:77
 msgid "A few lines describing the list"
@@ -667,7 +667,7 @@ msgid ""
 "Bounce rate in list %s is %d%%.\n"
 "\n"
 "You should delete bouncing subscribers : \n"
-"%s/reviewbouncing/%s"
+"%s/reviewbouncing/%s\n"
 msgstr ""
 
 #: web_tt2/list_menu.tt2:105
@@ -1702,7 +1702,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1).\n"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:582
+#: src/etc/mhonarc-ressources.tt2:583
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1814,7 +1814,6 @@ msgid ""
 "\n"
 "     Parameters : %4\n"
 "     Files : %5\n"
-"\n"
 msgstr ""
 
 #: src/Commands.pm:1582
@@ -3191,7 +3190,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message."
+"this message.\n"
 msgstr ""
 
 #: src/List.pm:8664
@@ -3208,7 +3207,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message"
+"this message\n"
 msgstr ""
 
 #: src/List.pm:8676 src/List.pm:8681
@@ -3389,7 +3388,7 @@ msgstr "Moderatori della lista %1"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Souhrn VaÂ¹eho Ã¨lenstvÃ­ v konferencÃ­ch (pÃ¸i pouÂ¾itÃ­ adresy"
 
-#: src/etc/mhonarc-ressources.tt2:564
+#: src/etc/mhonarc-ressources.tt2:565
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -3461,7 +3460,7 @@ msgstr ""
 #: web_tt2/main.tt2:94
 msgid ""
 "Sympa could not set a cookie for login.\n"
-" Your should setup your navigator to accept cookies"
+" Your should setup your navigator to accept cookies\n"
 msgstr ""
 
 #: web_tt2/tt2_error.tt2:22
@@ -4092,8 +4091,7 @@ msgstr ""
 msgid ""
 "To confirm your subscription, you need to provide the following password"
 msgstr ""
-"Pro potvrzenÃ­ VaÂ¹eho pÃ¸ihlÃ¡Â¹enÃ­, musÃ­te poskytnout nÃ¡sledujÃ­cÃ­ "
-"heslo"
+"Pro potvrzenÃ­ VaÂ¹eho pÃ¸ihlÃ¡Â¹enÃ­, musÃ­te poskytnout nÃ¡sledujÃ­cÃ­ heslo"
 
 #. (list)
 #: web_tt2/sigrequest.tt2:60
@@ -4141,7 +4139,6 @@ msgstr ""
 msgid ""
 "To read the list of subscribers who haven't confirm their\n"
 "subscription : EXPIREINDEX %s\n"
-"\n"
 msgstr ""
 
 #. (conf.email,conf.host)
@@ -4177,8 +4174,7 @@ msgstr ""
 msgid ""
 "To unsubscribe from the list, you need to provide the following password"
 msgstr ""
-"Pro potvrzenÃ­ VaÂ¹eho pÃ¸ihlÃ¡Â¹enÃ­, musÃ­te poskytnout nÃ¡sledujÃ­cÃ­ "
-"heslo"
+"Pro potvrzenÃ­ VaÂ¹eho pÃ¸ihlÃ¡Â¹enÃ­, musÃ­te poskytnout nÃ¡sledujÃ­cÃ­ heslo"
 
 #. (mailto)
 #: web_tt2/compose_mail.tt2:5
@@ -4247,7 +4243,7 @@ msgstr ""
 #: src/Commands.pm:1656
 msgid ""
 "Unable to find the message of the list %s locked by the key %s.\n"
-"Warning : this message could have ever been send by another editor"
+"Warning : this message could have ever been send by another editor\n"
 msgstr ""
 
 #: web_tt2/remove_arc.tt2:11
@@ -4423,7 +4419,7 @@ msgstr ""
 msgid ""
 "WARNING : %s %s failed to unsubscribe from %s because his address was not "
 "found in the list\n"
-" (You may help this person)"
+" (You may help this person)\n"
 msgstr ""
 
 #: src/List.pm:2299
@@ -4443,8 +4439,7 @@ msgstr "WWSympa VÃ¡m zaÂ¹le heslo emailem :"
 #: web_tt2/help.tt2:8
 msgid "WWSympa provides  you access to your environment on mailing list server"
 msgstr ""
-"WWSympa VÃ¡m poskytuje pÃ¸Ã­stup k VaÂ¹emu prostÃ¸edÃ­ na konferenÃ¨nÃ­m "
-"serveru"
+"WWSympa VÃ¡m poskytuje pÃ¸Ã­stup k VaÂ¹emu prostÃ¸edÃ­ na konferenÃ¨nÃ­m serveru"
 
 #: mail_tt2/your_infected_msg.tt2:10
 msgid "We stopped delivery of this email."
@@ -4929,7 +4924,7 @@ msgstr "Vase zprava byla odmitnuta"
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not\n"
 "verify the signature (be aware that Sympa can't check signature if you use "
-"the subject header to write a command)."
+"the subject header to write a command).\n"
 msgstr ""
 
 #: web_tt2/pref.tt2:93
@@ -4977,7 +4972,6 @@ msgid ""
 "list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 
 #: src/Commands.pm:625 src/Commands.pm:892
@@ -4985,7 +4979,6 @@ msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 
 #. (user.email)
@@ -5907,8 +5900,7 @@ msgstr ""
 msgid "restricted to local domain users"
 msgstr ""
 
-#: src/etc/scenari/d_edit.private-https~:1 src/etc/scenari/d_edit.private:1
-#: src/etc/scenari/d_read.private-https~:1 src/etc/scenari/d_read.private:1
+#: src/etc/scenari/d_edit.private:1 src/etc/scenari/d_read.private:1
 #: src/etc/scenari/info.private:1 src/etc/scenari/invite.private:1
 #: src/etc/scenari/review.private:1 src/etc/scenari/send.private:1
 #, fuzzy

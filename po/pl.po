@@ -678,11 +678,12 @@ msgstr ""
 
 # nlsref 8,27
 #: src/List.pm:2300
+#, fuzzy
 msgid ""
 "Bounce rate in list %s is %d%%.\n"
 "\n"
 "You should delete bouncing subscribers : \n"
-"%s/reviewbouncing/%s"
+"%s/reviewbouncing/%s\n"
 msgstr ""
 "Limit odbiæ listów na li¶cie %s wynosi %d%%.\n"
 "\n"
@@ -1717,7 +1718,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1).\n"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:582
+#: src/etc/mhonarc-ressources.tt2:583
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1831,7 +1832,6 @@ msgid ""
 "\n"
 "     Parameters : %4\n"
 "     Files : %5\n"
-"\n"
 msgstr ""
 
 #: src/Commands.pm:1582
@@ -3189,6 +3189,7 @@ msgstr ""
 
 # nlsref 6,260
 #: src/List.pm:8671
+#, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -3202,7 +3203,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message."
+"this message.\n"
 msgstr ""
 "Kto¶ (miejmy nadziejê, ¿e ty) poprosi³ o dodanie swojego adresu email \n"
 "do listy '%s'.\n"
@@ -3233,7 +3234,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message"
+"this message\n"
 msgstr ""
 "Kto¶ (miejmy nadziejê, ¿e ty) poprosi³ o dodanie swojego adresu email \n"
 "do listy '%s'.\n"
@@ -3445,7 +3446,7 @@ msgstr ""
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:564
+#: src/etc/mhonarc-ressources.tt2:565
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -3517,7 +3518,7 @@ msgstr ""
 #: web_tt2/main.tt2:94
 msgid ""
 "Sympa could not set a cookie for login.\n"
-" Your should setup your navigator to accept cookies"
+" Your should setup your navigator to accept cookies\n"
 msgstr ""
 
 #: web_tt2/tt2_error.tt2:22
@@ -4224,7 +4225,6 @@ msgstr ""
 msgid ""
 "To read the list of subscribers who haven't confirm their\n"
 "subscription : EXPIREINDEX %s\n"
-"\n"
 msgstr ""
 "Aby odczytaæ listê zapisanych osób które nie potwierdzi³y zapisania \n"
 "wydaj polecenie : EXPIREINDEX %s\n"
@@ -4342,7 +4342,7 @@ msgstr "Nie mogê stworzyæ kana³u w smtptp: %m"
 #, fuzzy
 msgid ""
 "Unable to find the message of the list %s locked by the key %s.\n"
-"Warning : this message could have ever been send by another editor"
+"Warning : this message could have ever been send by another editor\n"
 msgstr ""
 "Nie mogê otworzyæ moderowanej wiadomo¶ci na li¶cie %s u¿y³em klucza %s.\n"
 "Ta wiadomo¶æ mog³a zostaæ ju¿ wys³ana przez jednego z moderatorów listy\n"
@@ -4523,7 +4523,7 @@ msgstr ""
 msgid ""
 "WARNING : %s %s failed to unsubscribe from %s because his address was not "
 "found in the list\n"
-" (You may help this person)"
+" (You may help this person)\n"
 msgstr ""
 "UWAGA : %s %s nie powiod³o siê wypisanie z %s poniewa¿ jego adres nie "
 "zosta³\n"
@@ -5070,12 +5070,11 @@ msgstr ""
 msgid "Your message to %s has been rejected"
 msgstr "Twoja wiadomo¶æ do %s zosta³a odrzucona"
 
-# nlsref 6,263
 #: src/Commands.pm:549
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not\n"
 "verify the signature (be aware that Sympa can't check signature if you use "
-"the subject header to write a command)."
+"the subject header to write a command).\n"
 msgstr ""
 
 #: web_tt2/pref.tt2:93
@@ -5123,7 +5122,6 @@ msgid ""
 "list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 "Twoja pro¶ba o zapisanie/wypisanie z listy zosta³a przes³ana do osoby "
 "administruj±cej\n"
@@ -5137,7 +5135,6 @@ msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 "Twoja pro¶ba o zapisanie/wypisanie z listy zosta³a przes³ana do osoby "
 "administruj±cej\n"
@@ -6148,8 +6145,7 @@ msgid "restricted to local domain users"
 msgstr ""
 
 # nlsref 16,67
-#: src/etc/scenari/d_edit.private-https~:1 src/etc/scenari/d_edit.private:1
-#: src/etc/scenari/d_read.private-https~:1 src/etc/scenari/d_read.private:1
+#: src/etc/scenari/d_edit.private:1 src/etc/scenari/d_read.private:1
 #: src/etc/scenari/info.private:1 src/etc/scenari/invite.private:1
 #: src/etc/scenari/review.private:1 src/etc/scenari/send.private:1
 #, fuzzy

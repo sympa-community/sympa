@@ -710,11 +710,12 @@ msgstr "><b>Teadete kohandamine</b></FONT>"
 
 # nlsref 8,27
 #: src/List.pm:2300
+#, fuzzy
 msgid ""
 "Bounce rate in list %s is %d%%.\n"
 "\n"
 "You should delete bouncing subscribers : \n"
-"%s/reviewbouncing/%s"
+"%s/reviewbouncing/%s\n"
 msgstr ""
 "Vigade hulk listis %s on %d%%.\n"
 "\n"
@@ -1795,7 +1796,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1).\n"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:582
+#: src/etc/mhonarc-ressources.tt2:583
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1916,7 +1917,6 @@ msgid ""
 "\n"
 "     Parameters : %4\n"
 "     Files : %5\n"
-"\n"
 msgstr ""
 
 # nlsref 6,90
@@ -3317,6 +3317,7 @@ msgstr "Suurus (Kb)"
 
 # nlsref 6,260
 #: src/List.pm:8671
+#, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -3330,7 +3331,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message."
+"this message.\n"
 msgstr ""
 "Keegi (loodetavasti teie) soovis teid lisada listi %s.\n"
 "Kui soovite saada listi liikmeks, siis:\n"
@@ -3360,7 +3361,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message"
+"this message\n"
 msgstr ""
 "Keegi (loodetavasti teie) soovis teid lisada listi %s.\n"
 "Kui soovite saada listi liikmeks, siis:\n"
@@ -3573,7 +3574,7 @@ msgstr "Listi %s kokkuvıte"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "%1"
 
-#: src/etc/mhonarc-ressources.tt2:564
+#: src/etc/mhonarc-ressources.tt2:565
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -3646,7 +3647,7 @@ msgstr ""
 #: web_tt2/main.tt2:94
 msgid ""
 "Sympa could not set a cookie for login.\n"
-" Your should setup your navigator to accept cookies"
+" Your should setup your navigator to accept cookies\n"
 msgstr ""
 
 #: web_tt2/tt2_error.tt2:22
@@ -4359,7 +4360,6 @@ msgstr ""
 msgid ""
 "To read the list of subscribers who haven't confirm their\n"
 "subscription : EXPIREINDEX %s\n"
-"\n"
 msgstr ""
 "Selleks, et lugeda aadresside nimekirja, kust ei ole uuendatud listi\n"
 "liikmestaatust kasutage k‰sku EXPIREINDEX %s\n"
@@ -4476,7 +4476,7 @@ msgstr "Unable to create a channel in smtpto: %m"
 #, fuzzy
 msgid ""
 "Unable to find the message of the list %s locked by the key %s.\n"
-"Warning : this message could have ever been send by another editor"
+"Warning : this message could have ever been send by another editor\n"
 msgstr ""
 "Listi %s saadetud kirjale ei ole vıimalik juurde p‰‰seda vıtmega %s.\n"
 "Mıni listi moderaatoritest vıib selle kirja juba listi saatnud olla\n"
@@ -4659,7 +4659,7 @@ msgstr ""
 msgid ""
 "WARNING : %s %s failed to unsubscribe from %s because his address was not "
 "found in the list\n"
-" (You may help this person)"
+" (You may help this person)\n"
 msgstr ""
 "HOIATUS: %s %s ei saanud lahkuda listist %s kuna tema aadressi ei \n"
 "leitud sellest listist\n"
@@ -5212,10 +5212,11 @@ msgstr "Sinu kirja saatmisest aadressile %s keelduti"
 
 # nlsref 6,263
 #: src/Commands.pm:549
+#, fuzzy
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not\n"
 "verify the signature (be aware that Sympa can't check signature if you use "
-"the subject header to write a command)."
+"the subject header to write a command).\n"
 msgstr ""
 "Teie kiri ei olnud saatetud multipart/signed vormigus vıi Sympa ei suutnud\n"
 " kontrollida signatuuri (Sympa ei saa kontrollida signatuuri kui k‰sk on\n"
@@ -5266,7 +5267,6 @@ msgid ""
 "list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 "Teie liitumise/lahkumise soov saadeti edasi listi omanikule kinnitamiseks\n"
 "Peale kinnituse saamist teavitatakse teid listiga liitumisest vıi listist\n"
@@ -5279,7 +5279,6 @@ msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 "Teie liitumise/lahkumise soov saadeti edasi listi omanikule kinnitamiseks\n"
 "Peale kinnituse saamist teavitatakse teid listiga liitumisest vıi listist\n"
@@ -6271,8 +6270,7 @@ msgstr "listi liikmed ja kohalikud kasutajad"
 msgid "restricted to local domain users"
 msgstr "vaid kohaliku domeeni e-postiaadressiga"
 
-#: src/etc/scenari/d_edit.private-https~:1 src/etc/scenari/d_edit.private:1
-#: src/etc/scenari/d_read.private-https~:1 src/etc/scenari/d_read.private:1
+#: src/etc/scenari/d_edit.private:1 src/etc/scenari/d_read.private:1
 #: src/etc/scenari/info.private:1 src/etc/scenari/invite.private:1
 #: src/etc/scenari/review.private:1 src/etc/scenari/send.private:1
 msgid "restricted to subscribers"

@@ -10,6 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
 "PO-Revision-Date: 2004-11-17 12:14+0100\n"
 "Last-Translator:  <giorgio.donnini@Unimi.it>\n"
@@ -17,7 +18,6 @@ msgstr ""
 "To: POT-Creation-Date: 2004-03-30 22:47-0500PO-Revision-Date: 2004-03-30 "
 "22:57-0500MIME-Version: 1.0Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: \n"
 
 #. (from_count)
 #: web_tt2/arcsearch.tt2:64
@@ -722,11 +722,12 @@ msgstr "Configurazione dei messaggi errati"
 
 # nlsref 8,27
 #: src/List.pm:2300
+#, fuzzy
 msgid ""
 "Bounce rate in list %s is %d%%.\n"
 "\n"
 "You should delete bouncing subscribers : \n"
-"%s/reviewbouncing/%s"
+"%s/reviewbouncing/%s\n"
 msgstr ""
 "Il tasso di messaggi respinti nella lista %s è del %d%%.\n"
 "\n"
@@ -1855,7 +1856,7 @@ msgstr ""
 "Non è stato possibile spedirlo perché il gestore delle liste non è stato in "
 "grado di accedere al tuo certificato personale (email %1)\n"
 
-#: src/etc/mhonarc-ressources.tt2:582
+#: src/etc/mhonarc-ressources.tt2:583
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1972,7 +1973,6 @@ msgid ""
 "\n"
 "     Parameters : %4\n"
 "     Files : %5\n"
-"\n"
 msgstr ""
 
 #: src/Commands.pm:1582
@@ -3441,6 +3441,7 @@ msgstr "Dimensioni (Kb)"
 
 # nlsref 6,260
 #: src/List.pm:8671
+#, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -3454,7 +3455,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message."
+"this message.\n"
 msgstr ""
 "Qualcuno (probabilmente tu) ha chiesto di essere iscritto alla lista '%s'.\n"
 "Per confermare questa operazione:\n"
@@ -3470,6 +3471,7 @@ msgstr ""
 
 # nlsref 6,260
 #: src/List.pm:8664
+#, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be removed from list '%s'.\n"
@@ -3483,7 +3485,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message"
+"this message\n"
 msgstr ""
 "Qualcuno (probabilmente tu) ha richiesto di essere tolto dalla lista '%s'.\n"
 "Per confermare questa operazione:\n"
@@ -3698,7 +3700,7 @@ msgstr "Riassunto della lista %s"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Riassunto delle sue iscrizioni (con indirizzo %1)."
 
-#: src/etc/mhonarc-ressources.tt2:564
+#: src/etc/mhonarc-ressources.tt2:565
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "domenica:lunedí:martedí:mercoledí:giovedí:venerdí:sabato"
 
@@ -3787,9 +3789,10 @@ msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
 
 #: web_tt2/main.tt2:94
+#, fuzzy
 msgid ""
 "Sympa could not set a cookie for login.\n"
-" Your should setup your navigator to accept cookies"
+" Your should setup your navigator to accept cookies\n"
 msgstr ""
 "Sympa non riesce a installare un cookie per il login.\n"
 "Devi impostare il navigatore ad accettare i cookies."
@@ -4667,10 +4670,10 @@ msgstr ""
 
 # nlsref 6,57
 #: src/Commands.pm:1982
+#, fuzzy
 msgid ""
 "To read the list of subscribers who haven't confirm their\n"
 "subscription : EXPIREINDEX %s\n"
-"\n"
 msgstr ""
 "Per leggere la lista degli utenti che non hanno riconfermato la propria\n"
 "iscrizione: EXPIREINDEX %s\n"
@@ -4790,9 +4793,10 @@ msgstr "Impossibile creare un canale in smtpto: %m"
 
 # nlsref 6,41
 #: src/Commands.pm:1656
+#, fuzzy
 msgid ""
 "Unable to find the message of the list %s locked by the key %s.\n"
-"Warning : this message could have ever been send by another editor"
+"Warning : this message could have ever been send by another editor\n"
 msgstr ""
 "Impossibile accedere al messaggio da moderare sulla lista '%s' con la chiave "
 "%s.\n"
@@ -4978,10 +4982,11 @@ msgstr "Visibilità dell'utente con il comando REVIEW"
 
 # nlsref 8,23
 #: src/List.pm:2270
+#, fuzzy
 msgid ""
 "WARNING : %s %s failed to unsubscribe from %s because his address was not "
 "found in the list\n"
-" (You may help this person)"
+" (You may help this person)\n"
 msgstr ""
 "ATTENZIONE: %s %s non e' riuscito a cancellarsi dalla lista %s \n"
 "perché il suo nome non è stato trovato tra gli iscritti.(Forse ha bisogno di "
@@ -5565,10 +5570,11 @@ msgstr "Il tuo messaggio a %s è stato rifiutato"
 
 # nlsref 6,263
 #: src/Commands.pm:549
+#, fuzzy
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not\n"
 "verify the signature (be aware that Sympa can't check signature if you use "
-"the subject header to write a command)."
+"the subject header to write a command).\n"
 msgstr ""
 "Il tuo messaggio non è di tipo multipart/signed, o Sympa non è stato in "
 "grado di verificare la firma. (Ti rendiamo noto che Sympa non può "
@@ -5622,7 +5628,6 @@ msgid ""
 "list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 "La tua richiesta di iscrizione/cancellazione alla lista è stata inoltrata al "
 "gestore per l'approvazione.\n"
@@ -5630,11 +5635,11 @@ msgstr ""
 
 # nlsref 6,25
 #: src/Commands.pm:625 src/Commands.pm:892
+#, fuzzy
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 "La tua richiesta di iscrizione/cancellazione alla lista è stata inoltrata al "
 "gestore per l'approvazione.\n"
@@ -6640,8 +6645,7 @@ msgstr "ristretto al dominio locale e agli iscritti"
 msgid "restricted to local domain users"
 msgstr "Ristretto agli utenti del dominio locale"
 
-#: src/etc/scenari/d_edit.private-https~:1 src/etc/scenari/d_edit.private:1
-#: src/etc/scenari/d_read.private-https~:1 src/etc/scenari/d_read.private:1
+#: src/etc/scenari/d_edit.private:1 src/etc/scenari/d_read.private:1
 #: src/etc/scenari/info.private:1 src/etc/scenari/invite.private:1
 #: src/etc/scenari/review.private:1 src/etc/scenari/send.private:1
 msgid "restricted to subscribers"

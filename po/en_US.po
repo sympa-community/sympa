@@ -703,11 +703,12 @@ msgid "Bounce Settings"
 msgstr "Bounce Settings"
 
 #: src/List.pm:2300
+#, fuzzy
 msgid ""
 "Bounce rate in list %s is %d%%.\n"
 "\n"
 "You should delete bouncing subscribers : \n"
-"%s/reviewbouncing/%s"
+"%s/reviewbouncing/%s\n"
 msgstr ""
 "Bounce rate in list %s is %d%%.\n"
 "\n"
@@ -1811,7 +1812,7 @@ msgstr ""
 "It was not possible to send it to you because the mailing list manager\n"
 "was unable to access to your personal certificat (email %1).\n"
 
-#: src/etc/mhonarc-ressources.tt2:582
+#: src/etc/mhonarc-ressources.tt2:583
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1922,7 +1923,6 @@ msgid ""
 "\n"
 "     Parameters : %4\n"
 "     Files : %5\n"
-"\n"
 msgstr ""
 
 #: src/Commands.pm:1582
@@ -3330,6 +3330,7 @@ msgid "Size (Kb)"
 msgstr "Size (Kb)"
 
 #: src/List.pm:8671
+#, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -3343,7 +3344,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message."
+"this message.\n"
 msgstr ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -3374,7 +3375,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message"
+"this message\n"
 msgstr ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -3579,7 +3580,7 @@ msgstr "Summary of list %s"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Summary of your subscription (using the e-mail %1)."
 
-#: src/etc/mhonarc-ressources.tt2:564
+#: src/etc/mhonarc-ressources.tt2:565
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 
@@ -3668,9 +3669,10 @@ msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
 
 #: web_tt2/main.tt2:94
+#, fuzzy
 msgid ""
 "Sympa could not set a cookie for login.\n"
-" Your should setup your navigator to accept cookies"
+" Your should setup your navigator to accept cookies\n"
 msgstr ""
 "Sympa could not set a cookie for login.\n"
 " Your should setup your navigator to accept cookies"
@@ -4533,10 +4535,10 @@ msgstr ""
 "password on the right column.\n"
 
 #: src/Commands.pm:1982
+#, fuzzy
 msgid ""
 "To read the list of subscribers who haven't confirm their\n"
 "subscription : EXPIREINDEX %s\n"
-"\n"
 msgstr ""
 "To read the list of subscribers who haven't confirm their\n"
 "subscription : EXPIREINDEX %s\n"
@@ -4652,7 +4654,7 @@ msgstr "Unable to create a channel in smtpto: %m"
 #, fuzzy
 msgid ""
 "Unable to find the message of the list %s locked by the key %s.\n"
-"Warning : this message could have ever been send by another editor"
+"Warning : this message could have ever been send by another editor\n"
 msgstr ""
 "Unable to access the moderated message on list %s with key %s.\n"
 "This message may already have been sent by one of the list's moderators\n"
@@ -4830,7 +4832,7 @@ msgstr "Visibility of the subscriber with the REVIEW command."
 msgid ""
 "WARNING : %s %s failed to unsubscribe from %s because his address was not "
 "found in the list\n"
-" (You may help this person)"
+" (You may help this person)\n"
 msgstr ""
 "WARNING : %s %s failed to unsubscribe from %s because his address was\n"
 
@@ -5368,10 +5370,11 @@ msgid "Your message to %s has been rejected"
 msgstr "Your message to %s has been rejected"
 
 #: src/Commands.pm:549
+#, fuzzy
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not\n"
 "verify the signature (be aware that Sympa can't check signature if you use "
-"the subject header to write a command)."
+"the subject header to write a command).\n"
 msgstr ""
 "Your message was not a multipart/signed message or Sympa could not\n"
 "verify the signature (be aware that Sympa can't check signature if you use "
@@ -5424,7 +5427,6 @@ msgid ""
 "list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 "Your request of subscription/unssubscribtion has been forwarded to the "
 "list's\n"
@@ -5433,11 +5435,11 @@ msgstr ""
 "\n"
 
 #: src/Commands.pm:625 src/Commands.pm:892
+#, fuzzy
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's\n"
 "owners for approval. You will receive a notification when you will have\n"
@@ -6373,8 +6375,7 @@ msgstr "restricted to local domain and subscribers"
 msgid "restricted to local domain users"
 msgstr "restricted to local domain users"
 
-#: src/etc/scenari/d_edit.private-https~:1 src/etc/scenari/d_edit.private:1
-#: src/etc/scenari/d_read.private-https~:1 src/etc/scenari/d_read.private:1
+#: src/etc/scenari/d_edit.private:1 src/etc/scenari/d_read.private:1
 #: src/etc/scenari/info.private:1 src/etc/scenari/invite.private:1
 #: src/etc/scenari/review.private:1 src/etc/scenari/send.private:1
 msgid "restricted to subscribers"

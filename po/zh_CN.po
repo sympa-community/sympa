@@ -709,11 +709,12 @@ msgstr ""
 
 # nlsref 8,27
 #: src/List.pm:2300
+#, fuzzy
 msgid ""
 "Bounce rate in list %s is %d%%.\n"
 "\n"
 "You should delete bouncing subscribers : \n"
-"%s/reviewbouncing/%s"
+"%s/reviewbouncing/%s\n"
 msgstr ""
 "ÓÊµÝ±í %s µÄÍËÐÅÂÊÊÇ %d%%¡£\n"
 "\n"
@@ -1788,7 +1789,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1).\n"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:582
+#: src/etc/mhonarc-ressources.tt2:583
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1912,7 +1913,6 @@ msgid ""
 "\n"
 "     Parameters : %4\n"
 "     Files : %5\n"
-"\n"
 msgstr ""
 
 #: src/Commands.pm:1582
@@ -3312,6 +3312,7 @@ msgstr "大小(KB)"
 
 # nlsref 6,260
 #: src/List.pm:8671
+#, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -3325,7 +3326,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message."
+"this message.\n"
 msgstr ""
 "ÓÐÈË(Ï£ÍûÊÇÄú)ÒªÇó½«ÄúµÄÓÊ¼þµØÖ·Ìí¼Óµ½ÓÊµÝ±í\n"
 "¡°%s¡±¡£\n"
@@ -3356,7 +3357,7 @@ msgid ""
 "- hit the following mailto %s\n"
 "\n"
 "If you do not want this action to be taken, you can safely ignore\n"
-"this message"
+"this message\n"
 msgstr ""
 "ÓÐÈË(Ï£ÍûÊÇÄú)ÒªÇó½«ÄúµÄÓÊ¼þµØÖ·Ìí¼Óµ½ÓÊµÝ±í\n"
 "¡°%s¡±¡£\n"
@@ -3570,7 +3571,7 @@ msgstr "ÓÊµÝ±í %s µÄ¸ÅÒª"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:564
+#: src/etc/mhonarc-ressources.tt2:565
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -3643,7 +3644,7 @@ msgstr ""
 #: web_tt2/main.tt2:94
 msgid ""
 "Sympa could not set a cookie for login.\n"
-" Your should setup your navigator to accept cookies"
+" Your should setup your navigator to accept cookies\n"
 msgstr ""
 
 #: web_tt2/tt2_error.tt2:22
@@ -4371,7 +4372,6 @@ msgstr ""
 msgid ""
 "To read the list of subscribers who haven't confirm their\n"
 "subscription : EXPIREINDEX %s\n"
-"\n"
 msgstr "Òª²éÔÄÃ»ÓÐÈ·ÈÏ¶©ÔÄµÄ¶©»§µÄÇåµ¥£¬ÇëÊ¹ÓÃ: EXPIREINDEX %s\n"
 
 #. (conf.email,conf.host)
@@ -4485,7 +4485,7 @@ msgstr "ÎÞ·¨ÔÚ smtpto ´´½¨Í¨µÀ: %m"
 #, fuzzy
 msgid ""
 "Unable to find the message of the list %s locked by the key %s.\n"
-"Warning : this message could have ever been send by another editor"
+"Warning : this message could have ever been send by another editor\n"
 msgstr ""
 "ÎÞ·¨·ÃÎÊÓÊµÝ±í %s µÄÊÜ¹ÜÖÆÓÊ¼þ£¬ÀûÓÃÔ¿³× %s¡£\n"
 "Õâ¸öÓÊ¼þ¿ÉÄÜÒÑ¾­±»Ä³¸ö´ËÓÊµÝ±íµÄ¼à¹ÜÈË·¢³ö¡£\n"
@@ -4668,7 +4668,7 @@ msgstr ""
 msgid ""
 "WARNING : %s %s failed to unsubscribe from %s because his address was not "
 "found in the list\n"
-" (You may help this person)"
+" (You may help this person)\n"
 msgstr ""
 "¾¯¸æ: %s %s ÎÞ·¨ÍË¶© %s£¬ÒòÎªËûµÄÓÊ¼þµØÖ·²»ÔÚÓÊµÝ±íÄÚ\n"
 "(Äú¿ÉÄÜÐèÒª°ïÖúËû)\n"
@@ -5203,12 +5203,11 @@ msgstr ""
 msgid "Your message to %s has been rejected"
 msgstr "Äú·¢µ½ %s µÄÓÊ¼þÒÑ¾­±»¾Ü¾ø"
 
-# nlsref 6,263
 #: src/Commands.pm:549
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not\n"
 "verify the signature (be aware that Sympa can't check signature if you use "
-"the subject header to write a command)."
+"the subject header to write a command).\n"
 msgstr ""
 
 #: web_tt2/pref.tt2:93
@@ -5256,7 +5255,6 @@ msgid ""
 "list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 "ÄúµÄ¶©ÔÄ»òÍË¶©ÇëÇóÒÑ¾­×ª¸øÁËÓÊµÝ±íËùÓÐÕßÒÔ»ñµÃÅú×¼£¬\n"
 "ÔÚÕâ¸ö³ÌÐòÍê³Éºó£¬Äú½«»áÊÕµ½Í¨Öª¡£\n"
@@ -5268,7 +5266,6 @@ msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's\n"
 "owners for approval. You will receive a notification when you will have\n"
 "been subscribed (or unsubscribed) to the list.\n"
-"\n"
 msgstr ""
 "ÄúµÄ¶©ÔÄ»òÍË¶©ÇëÇóÒÑ¾­×ª¸øÁËÓÊµÝ±íËùÓÐÕßÒÔ»ñµÃÅú×¼£¬\n"
 "ÔÚÕâ¸ö³ÌÐòÍê³Éºó£¬Äú½«»áÊÕµ½Í¨Öª¡£\n"
@@ -6288,8 +6285,7 @@ msgstr "Ë­¿ÉÒÔÌí¼Ó¶©»§"
 msgid "restricted to local domain users"
 msgstr ""
 
-#: src/etc/scenari/d_edit.private-https~:1 src/etc/scenari/d_edit.private:1
-#: src/etc/scenari/d_read.private-https~:1 src/etc/scenari/d_read.private:1
+#: src/etc/scenari/d_edit.private:1 src/etc/scenari/d_read.private:1
 #: src/etc/scenari/info.private:1 src/etc/scenari/invite.private:1
 #: src/etc/scenari/review.private:1 src/etc/scenari/send.private:1
 #, fuzzy
