@@ -103,7 +103,7 @@
 
     \newcommand {\default} [1]  {(Default value: \texttt {#1})}
 
-    \newcommand {\scenarized} [1] {\texttt {#1} parameter is defined by scenario (see~\ref {scenarii}, page~\pageref {scenarii})}
+    \newcommand {\scenarized} [1] {\texttt {#1} parameter is defined by an authorization scenario (see~\ref {scenarios}, page~\pageref {scenarios})}
 
     \newcommand {\lparam} [1] {\ttindex {#1} {#1} {list parameter}}
 
@@ -260,8 +260,8 @@ in a single software package, including:
         For details about the different sending modes, refer to the
         \lparam {send} parameter (\ref {par-send}, page~\pageref
         {par-send}). The sending process configuration (as well as most other list
-	operations) is defined using  a \textbf {scenario}. Any listmaster
-        can define new scenarios (scenarii) in order to complement the 20
+	operations) is defined using  an \textbf {authorization scenario}. Any listmaster
+        can define new authorization scenarios in order to complement the 20
 	predefined configurations included in the distribution. \\
         Example : forward multipart messages to the list editor, while
 	distributing others without requiring any further authorization.
@@ -375,7 +375,7 @@ Other date :
 
 \begin {itemize}
    \item Mar 1999 Internal use of a database (Mysql), definition of list subscriber with external datasource (RDBMS or \index {LDAP}).
-   \item Oct 1999 Stable version of WWsympa, introduction of scenarios.
+   \item Oct 1999 Stable version of WWsympa, introduction of authorization scenarios.
    \item Feb 2000 Web bounces management
    \item Apr 2000 Archives search engine and message removal
    \item May 2000 List creation feature from the web
@@ -529,14 +529,14 @@ a virtual robot or for the whole site.
 	
 	\item \dir {[BINDIR]}\\
 	This directory contains the binaries, including the CGI. It
-	also contains the default scenarios, templates and configuration
+	also contains the default authorization scenarios, templates and configuration
 	files as in the distribution.  \dir {[BINDIR]} may be completely
         overwritten by the \unixcmd {make install} so you must not customize
-        templates and scenarii under  \dir {[BINDIR]}.
+        templates and authorization scenarios under  \dir {[BINDIR]}.
 
 	\item \dir {[ETCBINDIR]}\\
 	Here \Sympa stores the default versions of what it will otherwise find
-	in \dir {[ETCDIR]} (task models, scenarios, templates and configuration
+	in \dir {[ETCDIR]} (task models, authorization scenarios, templates and configuration
 	files, recognized S/Mime certificates).
 
 	\item \dir {[ETCDIR]}\\
@@ -547,11 +547,11 @@ a virtual robot or for the whole site.
 	List templates (suggested at list creation time).
 
 	\item \dir {[ETCDIR]/scenari/}\\
-	This directory will contain your scenarii (or scenarios, if you prefer).
-	If you don't know what the hell a scenario is, refer to \ref {scenarii}\ref {scenarii}, 
-	page~\pageref {scenarii}. Those scenarii are default scenarii but you may look at
-        \dir {[ETCDIR]/\samplerobot/scenari/} for default scenarii of \samplerobot
-        virtual robot and \dir {[EXPL_DIR]/\samplelist/scenari} for scenarii
+	This directory will contain your authorization scenarios.
+	If you don't know what the hell an authorization scenario is, refer to \ref {scenarios}\ref {scenarios}, 
+	page~\pageref {scenarios}. Those authorization scenarios are default scenarios but you may look at
+        \dir {[ETCDIR]/\samplerobot/scenari/} for default scenarios of \samplerobot
+        virtual robot and \dir {[EXPL_DIR]/\samplelist/scenari} for scenarios
         specific to a particular list 
 
 	\item \dir {[ETCDIR]/list\_task\_models/}\\
@@ -1545,7 +1545,7 @@ see a  nice mailto adresses where others have nothing.
 	\scenarized {create\_list}
 
 	Defines who can create lists (or request list creations).
-	Sympa will use the corresponding scenario.
+	Sympa will use the corresponding authorization scenario.
 
         \example {create\_list intranet}
 
@@ -1575,7 +1575,7 @@ see a  nice mailto adresses where others have nothing.
 
         This is the local directory for configuration files (such as
 	\file {edit\_list.conf}. It contains 5 subdirectories:
-	\dir {scenari} for local scenarii; \dir {templates}
+	\dir {scenari} for local authorization scenarios; \dir {templates}
 	for the site's local templates and default list templates; \dir {wws\_templates}
         for the site's local html templates; \dir {global\_task\_models} for local
 	global task models; and \dir {list\_task\_models} for local list task models
@@ -2137,7 +2137,7 @@ db_env	ORACLE_TERM=vt100;ORACLE_HOME=/var/hote/oracle/7.3.4
 	If your \textbf {subscriber\_table} database table has more fields
 	than required by \Sympa (because other programs access this
 	table), you can make \Sympa load these fields. You will then be able to
-	use them from within mail/web templates and scenario (as [subscriber-\texttt{>}field]).
+	use them from within mail/web templates and authorization scenarios (as [subscriber-\texttt{>}field]).
 [STARTPARSE]
 	This parameter is a comma-separated list.
 
@@ -2867,7 +2867,7 @@ provide various features based on access to one or more LDAP directories :
 
 	\item{authentication using LDAP directory instead of sympa internal storage of password}\\
 
-	\item{named filters used in scenario condition}\\ 
+	\item{named filters used in authorization scenario condition}\\ 
 	
  	\item{LDAP extraction of list subscribers (see ~\ref {par-user-data-source})}\\         
 	
@@ -3262,9 +3262,9 @@ a class of email.
 
 \section {Named Filters}
 
-At the moment Named Filters are only used in scenarii. They enable to select a category of people who will be authorized or not to realise some actions.
+At the moment Named Filters are only used in authorization scenarios. They enable to select a category of people who will be authorized or not to realise some actions.
 	
-As a consequence, you can grant privileges in a list to people belonging to an \index {LDAP} directory thanks to a scenario.
+As a consequence, you can grant privileges in a list to people belonging to an \index {LDAP} directory thanks to an authorization scenario.
 	
 \subsection {Definition}
 
@@ -3319,7 +3319,7 @@ example.ldap : we want to select the professors of mathematics in the university
 
 \subsection {Search Condition}
 	
-The search condition is used in scenarii which are defined and  decribed in (see~\ref {scenarii}) 
+The search condition is used in authorization scenarios which are defined and described in (see~\ref {scenarios}) 
 
 The syntax of this rule is:
 \begin {quote}
@@ -3454,21 +3454,21 @@ This is done using the optional parameters \unixcmd {openSSL} and
 
 Once  \texttt {OpenSSL} has been installed, and \texttt {sympa.conf} configured,
 your S/Sympa is ready to use S/Mime signatures for any authentication operation. You simply need
-to use the appropriate scenario for the operation you want to secure. 
-(see \ref {scenarii}, page~\pageref {scenarii}).
+to use the appropriate authorization scenario for the operation you want to secure. 
+(see \ref {scenarios}, page~\pageref {scenarios}).
 
 When receiving a message, \Sympa applies
-the scenario with the appropriate authentication method parameter.
+the authorization scenario with the appropriate authentication method parameter.
 In most cases the authentication method is ``\texttt {smtp}'', but in cases
 where the message is signed and the signature has been checked and matches the
 sender e-mail, \Sympa applies the ``\texttt {smime}'' authentication
 method.
 
-It is vital to ensure that if the scenario does not recognize this authentication method, the
-operation requested will be rejected. Consequently, scenarii distributed
+It is vital to ensure that if the authorization scenario does not recognize this authentication method, the
+operation requested will be rejected. Consequently, authorization scenarios distributed
 prior to version 2.7 are not compatible with the OpenSSL configuration of Sympa. 
 All
-standard scenarii (those distributed with sympa)
+standard authorization scenarios (those distributed with sympa)
 now include the \texttt {smime} method. The following example is
 named \texttt {send.private\_smime}, and restricts sends to subscribers using an S/mime signature :
 
@@ -3485,7 +3485,7 @@ is_owner([listname],[sender])                  smime  -> do_it
 \end{verbatim}
 \end {quote}
 
-It as also possible to mix various authentication methods in a single scenario. The following
+It as also possible to mix various authentication methods in a single authorization scenario. The following
 example, \texttt {send.private\_key}, requires either an md5 return key or an S/Mime signature :
 \begin {quote}
 \begin{verbatim}
@@ -3705,7 +3705,7 @@ environment variable to recognize which robot is in used.
 
 \subsection {Robot customization}
 
-If needed, you can customize each virtual robot using its set of templates and scenario.
+If needed, you can customize each virtual robot using its set of templates and authorization scenarios.
 
 \dir {[ETCDIR]/\samplerobot/wws\_templates/},
 \dir {[ETCDIR]/\samplerobot/templates/}, 
@@ -4080,7 +4080,7 @@ See lparam {user\_data\_source} liste parameter \ref {user-data-source}, page~\p
 
 The \textbf {subscriber\_table} and \textbf {user\_table} can have more fields than
 the one used by \Sympa. by defining these additional fields, they will be available
-from within \Sympa's scenario and templates (see \ref {db-additional-subscriber-fields}, 
+from within \Sympa's authorization scenarios and templates (see \ref {db-additional-subscriber-fields}, 
 page~\pageref {db-additional-subscriber-fields} and \ref {db-additional-user-fields}, page~\pageref {db-additional-user-fields}).
 
 
@@ -4223,31 +4223,31 @@ You will notice that subtopics can be used, the separator being \textit {/}.
 The topic name is composed of alphanumerics (0-1a-zA-Z) or underscores (\_).
 The order in which the topics are listed is respected in \WWSympa's homepage.
 The \textbf {visibility} line defines who can view the topic (now available for subtopics).
-It refers to the associated topics\_visibility scenario.
+It refers to the associated topics\_visibility authorization scenario.
 You will find a sample \file {topics.conf} in the \dir {sample} 
 directory ; NONE is installed as the default. 
 
 A default topic is hard-coded in \Sympa : \textit {default}. This default topic
 contains all lists for which a topic has not been specified.
 
-\section {Scenarii}
-    \label {scenarii}
+\section {Authorization scenarios}
+    \label {scenarios}
     \index{scenario}
 
-List parameters controlling the behavior of commands are linked to different scenarii.
+List parameters controlling the behavior of commands are linked to different authorization scenarios.
 For example : the \cfkeyword {send private} parameter is related to the send.private scenario.
-There are three possible locations for a scenario. When \Sympa seeks to apply a scenario, it
+There are four possible locations for a authorization scenario. When \Sympa seeks to apply an authorization scenario, it
 looks first in the related list directory \dir {[EXPL_DIR]/\texttt{<}list\texttt{>}/scenari}. If it
-does not find the file there, it scans \dir {[ETCDIR]/scenari},
+does not find the file there, it scans the current robot configuration directory \dir {[ETCDIR]/\samplerobot/scenari}, then the site's configuration directory \dir {[ETCDIR]/scenari},
 and finally \dir {[ETCBINDIR]/scenari}, which is the directory installed by the Makefile.
 
-A scenario is a small configuration language to describe who
+An authorization scenario is a small configuration language to describe who
 can perform an operation and which authentication method is requested for it.
-A scenario is an ordered set of rules. The goal is to provide a simple and
-flexible way to configure authorization and authentication for each operation.
+An authorization scenario is an ordered set of rules. The goal is to provide a simple and
+flexible way to configure authorization and required authentication method for each operation.
 
 
-Each scenario rule contains :
+Each authorization scenario rule contains :
 \begin{itemize}
 [STOPPARSE]
 \item a condition : the condition is evaluated by \Sympa. It can use
@@ -4281,7 +4281,7 @@ title.es eliminación reservada sólo para el propietario, necesita autentificació
 
 \subsection {rules specifications}
 
-A scenario consists of rules, evaluated in order beginning with the first. 
+An authorization scenario consists of rules, evaluated in order beginning with the first. 
 Rules are defined as follows :
 \begin {quote}
 \begin{verbatim}
@@ -4353,24 +4353,25 @@ Rules are defined as follows :
 (Refer to  \ref {tasks}, page~\pageref {tasks} for date format definition)
 
 perl\_regexp can contain the string [host] (interpreted at run time as the list or robot domain).
-The variable notation [msg\_header-\texttt{>}\texttt{<}smtp\_key\_word\texttt{>}] is interpreted as the SMTP header value only when performing
-the sending message scenario. It can be used, for example, to require editor validation for multipart messages.
+The variable notation [msg\_header-\texttt{>}\texttt{<}smtp\_key\_word\texttt{>}] is interpreted as the 
+SMTP header value only when evaluating the authorization scenario for sending messages. 
+It can be used, for example, to require editor validation for multipart messages.
 [msg\_part-\texttt{>}type] and [msg\_part-\texttt{>}body] are the MIME parts content-types and bodies ; the body is available
 for MIME parts in text/xxx format only.
 
 
-A bunch of scenarii is provided with the \Sympa distribution ; they provide
+A bunch of authorization scenarios is provided with the \Sympa distribution ; they provide
 a large set of configuration that allow to create lists for most usage. But you will
-probably create scenarii for your own need. In this case, don't forget to restart \Sympa
-and wwsympa because scenarii are not reloaded dynamicaly.
+probably create authorization scenarios for your own need. In this case, don't forget to restart \Sympa
+and wwsympa because authorization scenarios are not reloaded dynamicaly.
 
 [STARTPARSE]
-These standard scenarii are located in the \dir {[ETCBINDIR]/scenari/}
-directory. Default scenarii are named \texttt{<}command\texttt{>}.default.
+These standard authorization scenarios are located in the \dir {[ETCBINDIR]/scenari/}
+directory. Default scenarios are named \texttt{<}command\texttt{>}.default.
 
-You may also define and name your own scenarii. Store them in the
+You may also define and name your own authorization scenarios. Store them in the
 \dir {[ETCDIR]/scenari} directory. They will not be overwritten by Sympa release.
-Scenarii can also be defined for a particular virtual robot (using directory \dir {[ETCDIR]/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {[EXPL_DIR]/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ).
+Scenarios can also be defined for a particular virtual robot (using directory \dir {[ETCDIR]/\texttt{<}robot\texttt{>}/scenari}) or for a list ( \dir {[EXPL_DIR]/\texttt{<}robot\texttt{>}/\texttt{<}list\texttt{>}/scenari} ).
 [STOPPARSE]
 
 Example:
@@ -4385,7 +4386,7 @@ true()                               smtp,smime -> owner
 \end{verbatim}
 \end {quote}
 
-You may now refer to this scenario in any list configuration file, for example :
+You may now refer to this authorization scenario in any list configuration file, for example :
 
 \begin {quote}
 \begin{verbatim}
@@ -4395,7 +4396,7 @@ subscribe rennes1
 
 \subsection {scenario inclusion}
 
-Scenarii can also contain includes :
+Scenarios can also contain includes :
 
 \begin {quote}
 \begin{verbatim}
@@ -4588,7 +4589,7 @@ Here is the list of current avalable commands :
 	Send the template message to emails stored in @user\_selection.
 \item {\at}user\_selection = select\_subs (\texttt{<}condition\texttt{>})
 
-	Store emails which match the condition in @user\_selection. See 8.6 Scenarii section to know how to write conditions. Only available for list models.
+	Store emails which match the condition in @user\_selection. See 8.6 Authorization Scenarios section to know how to write conditions. Only available for list models.
 \item create (global | list (\texttt{<}list name\texttt{>}), \texttt{<}model type\texttt{>}, \texttt{<}model\texttt{>})
 
 	Create a task for object with model file \tildefile {model type.model.task}.
@@ -5076,7 +5077,7 @@ is defined in \file {sympa.conf} but in the future, it might be possible to
 define one listmaster per virtual robot. By default, newly created
 lists must be activated by the listmaster. List creation is possible for all intranet users 
 (i.e. : users with an e-mail address within the same domain as Sympa).
-This is controlled by the \cfkeyword {create\_list} scenario.
+This is controlled by the \cfkeyword {create\_list} authorization scenario.
 
 List creation request message and list creation notification message are both
 templates that you can customize (\file {create\_list\_request.tpl} and
@@ -5085,17 +5086,17 @@ templates that you can customize (\file {create\_list\_request.tpl} and
 \subsection {Who can create lists}
 
 This is defined by the \cfkeyword {create\_list} sympa.conf parameter (see \ref {create-list},  
-page~\pageref {create-list}). This parameter refers to a \textbf {create\_list} scenario.
+page~\pageref {create-list}). This parameter refers to a \textbf {create\_list} authorization scenario.
 It will determine if the \textit {create list} button is displayed and if it requires
 a listmaster confirmation.
 
 [STOPPARSE]
-The scenario can accept any condition concerning the [sender]
+The authorization scenario can accept any condition concerning the [sender]
 (i.e. WWSympa user), and it returns \cfkeyword {reject}, \cfkeyword {do\_it}
 or \cfkeyword {listmaster} as an action.
 [STARTPARSE]
 
-Only in cases where a user is authorized by the create\_list scenario
+Only in cases where a user is authorized by the create\_list authorization scenario
 will the "create" button be available in the main menu.
 If the scenario returns \cfkeyword {do\_it}, the list will be created and installed.
 If the scenario returns "listmaster", the user is allowed to create a list, but
@@ -5529,7 +5530,7 @@ list. Be careful, however, not to give rise an infinite loop making cross includ
 For this operation, one \Sympa site act as a server while the other one
 act as client. On the server side, the only  setting needed is to
 give permition to the remote \Sympa to review the list. This is controled
-by the review scenario. 
+by the review authorization scenario. 
 
 From the client side you must define the remote list dump URI.
 
@@ -6031,7 +6032,7 @@ The file should contain one e-mail address per line
 	\scenarized {subscribe}
 
 The \lparam {subscribe} parameter defines the rules for subscribing to the list. 
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 \begin {itemize}
 
@@ -6056,7 +6057,7 @@ Predefined scenarii are :
 This parameter specifies the unsubscription method for the list.
 Use \texttt {open\_notify} or \texttt {auth\_notify} to allow owner
 notification of each unsubscribe command. 
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 \begin {itemize}
 [FOREACH s IN scenari->unsubscribe]
@@ -6077,7 +6078,7 @@ Predefined scenarii are :
 	\scenarized {add}
 
 This parameter specifies who is authorized to use the \mailcmd {ADD} command.
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 
 \begin {itemize}
@@ -6100,7 +6101,7 @@ Predefined scenarii are :
 	\scenarized {del}
 
 This parameter specifies who is authorized to use the \mailcmd {DEL} command.
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 
 \begin {itemize}
@@ -6123,7 +6124,7 @@ Predefined scenarii are :
 	\scenarized {remind}
 
 This parameter specifies who is authorized to use the \mailcmd {remind} command.
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 
 \begin {itemize}
@@ -6171,7 +6172,7 @@ expire annual
 	\scenarized {send}
 
 This parameter specifies who can send messages to the list. Valid values for this
-parameter are pointers to \emph {scenarii}.
+parameter are pointers to \emph {scenarios}.
 
 \begin {itemize}
 [FOREACH s IN scenari->send]
@@ -6196,7 +6197,7 @@ This parameter specifies who can use
 \mailcmd {REVIEW} (see~\ref {cmd-review}, page~\pageref {cmd-review}),
 administrative requests. 
 
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 \begin {itemize}
 [FOREACH s IN scenari->review]
@@ -6226,7 +6227,7 @@ repository.
 This parameter specifies who can read shared documents
 (access the contents of a list's \dir {shared} directory).
 
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 \begin {itemize}
 [FOREACH s IN scenari->d_read]
@@ -6250,7 +6251,7 @@ This parameter specifies who can perform changes
 within a list's \dir {shared} directory (i.e. upload files
 and create subdirectories).
 
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 \begin {itemize}
 [FOREACH s IN scenari->d_edit]
@@ -6798,7 +6799,7 @@ quota 1000
 
     \scenarized {access\_web\_archive}
 
-Predefined scenarii are :
+Predefined authorization scenarios are :
 
 \begin {itemize}
 [FOREACH s IN scenari->access_web_archive]
@@ -6997,8 +6998,8 @@ access
 \end{verbatim}
 \end {quote}
 
-\section {The predefined scenarii}
-    \label {shared-scenarii}
+\section {The predefined authorization scenarios}
+    \label {shared-scenarios}
 
 \subsection {The public scenario}
 The \textbf {public} scenario is the most permissive scenario. It enables anyone (including
@@ -7051,7 +7052,7 @@ The access control will proceed as follows :
 	To be authorized to perform a read action on
 	\dir {mydirectory/mysubdirectory/myfile}, \textbf {X} must be
 	authorized to read every document making up the path; in other words, she
-	must be allowed to read \dir {myfile} (the scenario of the description file
+	must be allowed to read \dir {myfile} (the authorization scenario of the description file
 	of \dir {myfile} must return \textit {do\_it} for user \textbf {X}), and the
 	same goes for \dir {mysubdirectory} and \dir {mydirectory}).\\
 	In addition, given that the owner of a document or one of its parent directories
