@@ -599,7 +599,7 @@ sub subscribe {
     my $list = new List ($which);
     unless (($list)&&(&List::list_by_robot($which,$robot))) {
 	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'SUB %s from %s refused, unknown list', $which,$sender);
+	do_log('info', 'SUB %s from %s refused, unknown list for robot %s', $which,$sender,$robot);
 	return 'unknown_list';
     }
 
