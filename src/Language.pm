@@ -29,7 +29,13 @@ sub LoadLang {
 
     $dir = $catdir;
 
-    foreach my $file (<$catdir/*.cat>) {
+    unless (opendir CATDIR, $catdir) {
+	do_log('info','Unable to open directory %s', $catdir);
+	return undef;
+    }
+
+    foreach my $file (grep /\.cat$/, readdir(CATDIR)) {    
+
 	$file =~ /\/([\w-]+)\.cat$/;
 	
 	my $catname = $1;
@@ -50,6 +56,7 @@ sub LoadLang {
 	$current_lang = $catname;
 	do_log('info', 'Loading locale file %s.cat version %s', $catname, Msg(1, 102, $Version));	
     }
+    closedir CATDIR;
 
     return 1;
 }
