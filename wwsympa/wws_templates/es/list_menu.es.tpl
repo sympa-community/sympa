@@ -53,7 +53,7 @@
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
         <TD BGCOLOR="--LIGHT_COLOR--">
-	  Subscriptores: <B>[total]</B><BR>
+	  Suscriptores: <B>[total]</B><BR>
 	  <BR>
 	  Propietarios
 	  [FOREACH o IN owner]
@@ -167,11 +167,11 @@
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
       [IF action=suboptions]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Subscriber Options</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Opciones del Suscriptor</b></font></TD>
       [ELSE]
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[path_cgi]/suboptions/[list]" >Opciones del Subscriptor</A>
+         <A HREF="[path_cgi]/suboptions/[list]" >Opciones del Suscriptor</A>
         </b></font>
         </TD>
       [ENDIF]
@@ -203,11 +203,11 @@
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
       [IF action=signoff]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Unsubscribe</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Darse de baja</b></font></TD>
       [ELSE]
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Do you really want to unsubscribe from list [list]?'); return false;">Anular subscripción</A>
+         <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', '¿Confirma su petición de baja de la lista [list]?'); return false;">Darse de baja</A>
         </b></font>
         </TD>
       [ENDIF]
@@ -231,7 +231,7 @@
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
-        <font size=-1 COLOR="--BG_COLOR--"><b>Anular subscripción</b></font>
+        <font size=-1 COLOR="--BG_COLOR--"><b>Darse de baja</b></font>
         </TD>
         <TD WIDTH=--COL4--></TD>
        </TR>
@@ -257,15 +257,15 @@
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
    [IF action=subrequest]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Subscribir</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Suscribirse</b></font></TD>
    [ELSE]
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
    [IF may_subscribe=1]
         <font size=-1><b>
-         <A HREF="[path_cgi]/subscribe/[list]" onClick="request_confirm_link('[path_cgi]/subscribe/[list]', 'Do you really want to subscribe to list [list]?'); return false;">Subscribir</A>
+         <A HREF="[path_cgi]/subscribe/[list]" onClick="request_confirm_link('[path_cgi]/subscribe/[list]', '¿Confirma que desea darse de alta en la lista [list]?'); return false;">Suscribirse</A>
         </b></font>
    [ELSE]
-	<font size=-1 COLOR="--BG_COLOR--"><b>Subscribir</b></font>
+	<font size=-1 COLOR="--BG_COLOR--"><b>Suscribirse</b></font>
    [ENDIF]
         </TD>
    [ENDIF]
@@ -296,7 +296,7 @@
 
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Do you really want to unsubscribe from list [list]?'); return false;">Anular subscripción</A>
+         <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', '¿Confirma su petición de baja de la lista [list]?'); return false;">Darse de baja</A>
         </b></font>
         </TD>
        </TR>
@@ -316,7 +316,7 @@
   <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
-   [IF is_Archivod]
+   [IF is_archived]
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
@@ -367,9 +367,50 @@
   <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
  </TR>
-      <!-- END is_Archivod -->
+      <!-- END is_archived -->
     [ENDIF]
+    
+ <!-- Post -->
+ <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
+    <TR>
+     <TD BGCOLOR="--DARK_COLOR--" VALIGN="top">
+      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
+       <TR>
+   [IF action=compose_mail]
+        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right>
+          <font size=-1 COLOR="--BG_COLOR--"><b>Redactar</b></font>
+	</TD>
+  [ELSE]
 
+        <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
+   [IF may_post]
+        <font size=-1><b>
+         <A HREF="[path_cgi]/compose_mail/[list]" >Redactar</A>
+        </b></font>
+   [ELSE]
+        <font size=-1 COLOR="--BG_COLOR--"><b>Redactar</b></font>
+   [ENDIF]
+        </TD>
+   [ENDIF]
+
+       </TR>
+      </TABLE>
+     </TD>
+    </TR>
+   </TABLE>
+  </TD>
+
+  <TD WIDTH=--COL4--></TD>
+ </TR>
+ <TR>
+  <TD WIDTH=--COL12-- COLSPAN=2 BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp;</TD>
+  <TD WIDTH=--COL34-- COLSPAN=2><BR></TD>
+ </TR>
+      <!-- END post -->
+      
     [IF shared=exist]
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="--DARK_COLOR--" NOWRAP>&nbsp; </TD>   
