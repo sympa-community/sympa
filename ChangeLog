@@ -1,7 +1,129 @@
+2002-03-13 11:46  salaun
+
+	* doc/sympa.tex.tpl: Update scenrio paragraph
+
+2002-03-11 15:26  salaun
+
+	* wwsympa/archived.pl: Sleep 6 is better then sleep 2 ???
+
+2002-03-11 13:30  salaun
+
+	* src/sympa.pl: New feature: Prevent command looping ; block
+	messages with known Message-ID
+
+2002-03-07 17:49  salaun
+
+	* src/etc/scenari/send.publicnoattachment: 
+	Reported by Roussel Florian : fix missmatch
+	Content-Disposition/Content-Type
+
+2002-03-05 10:31  salaun
+
+	* wwsympa/wws_templates/es/: add_request.es.tpl,
+	arcsearch_form.es.tpl, edit_list_request.es.tpl,
+	loginbanner.es.tpl: [Josep Román] Update translations
+
+2002-03-05 08:32  salaun
+
+	* src/etc/scenari/unsubscribe.owner: fixed : request auth if
+	[sender] not equal [email]
+
+2002-03-04 10:58  salaun
+
+	* wwsympa/Marc/Search.pm: [Sergiy Zhuk] Bug fix: with FastCGI,
+	despite the fact you're getting new search results, it still marks
+	the old keyword.  The problem was caused by the 'o' modifier in
+	Search.pm, which compiles the search pattern just once.
+
+2002-03-04 10:57  salaun
+
+	* src/sympa.pl: Change: -d option sets log_level to 2
+
+2002-03-01 11:10  salaun
+
+	* src/sympa.pl: fix option -d interaction with log_level
+
+2002-03-01 10:35  salaun
+
+	* doc/sympa.tex.tpl: Mysql privilege setup did not work
+
+2002-03-01 09:28  salaun
+
+	* doc/sympa.tex.tpl: [reported by Allison Faber] Refered to
+	database names instead of DBD names
+
+2002-02-28 18:04  salaun
+
+	* src/Conf.pm: [reported by Pascal Schelcher] Fix: allow \s in
+	auth.conf entries (filters) auth.conf paring should be more strict
+
+2002-02-28 18:00  salaun
+
+	* doc/sympa.tex.tpl: small fix
+
+2002-02-28 17:21  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Hanke Penning] Bug fix:
+	'quiet' scenario action was not used in do_add() and do_subscribe()
+
+2002-02-28 17:20  salaun
+
+	* src/Commands.pm: Fix: no relation between 'do_it' action and
+	owner notification
+
+2002-02-28 16:41  salaun
+
+	* doc/sympa.tex.tpl: Hide host variable in section robot.conf. This
+	variable is stil availible but not recommended. No valid reason to
+	use it.
+
+2002-02-28 16:38  salaun
+
+	* src/etc/sample/sympa.conf: replace host by domain
+
+2002-02-28 16:34  salaun
+
+	* src/etc/sample/robot.conf: hide host that is stil usuable but not
+	recommended
+
+2002-02-28 11:08  salaun
+
+	* wwsympa/bounced.pl: [reported by Malcolm] Fix: do not force file
+	access permissions to 777
+
+2002-02-27 17:27  salaun
+
+	* src/etc/script/sympa: [requested by Robert Marchand] No success &
+	failure subroutine on IRIX
+
+2002-02-27 17:18  salaun
+
+	* src/etc/sample/wwsympa.conf: Refer to alias_manager
+
+2002-02-27 16:57  salaun
+
+	* Makefile.in, config.guess, config.sub, configure, configure.in:
+	[requested by Robert Marchand] Add '-m' option to gencat on IRIX
+
+2002-02-27 15:32  salaun
+
+	* ChangeLog, Makefile.am, configure.in, doc/sympa.tex.tpl:
+	[requested by Robert Marchand] Add '--with-iconsdir' configure
+	option
+
+2002-02-27 14:39  salaun
+
+	* doc/sympa.tex.tpl: Add doc for --with-cgidir option
+
 2002-02-27 14:30  salaun
 
-	* Makefile.am, Makefile.in, configure, configure.in,
-	doc/sympa.tex.tpl: [no log message]
+	* doc/sympa.tex.tpl: [no log message]
+
+2002-02-27 14:30  salaun
+
+	* Makefile.am, Makefile.in, configure, configure.in: Bug fix:
+	Change configure options to with-xxx so they can be customized at
+	configure time
 
 2002-02-27 12:20  salaun
 

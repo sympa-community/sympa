@@ -3,6 +3,157 @@
 
 (See Changelog file for the full changes log)
 
+3.3.4b.3	13 Mar 2002
+
+   New features :
+
+	[Josep Roman] Update Spanish web templates
+
+	wwsympa/wwsympa.fcgi: Add by_domain sort in
+	REVIEW Also changed query for mysql in get_first_user()
+
+	src/List.pm: [requested by Walter Hopgood] Make 'body' and
+	'full_msg' available to summary.tpl
+
+	Add 'log_level' conf parameter
+
+	With FastCGI, serveradmin provides processid and request count
+
+	Make 'lang' a robot.conf parameter
+
+	New 'cookie_domain' parameter in robot.conf
+
+	src/sympa.pl: [Christian Mock] : handle pkcs7-mime content-type
+	of signed messages (outlook)
+
+	Add use_ssl variable availible for all wwsympa template. This
+	[use_ssl] and [auth_method]=smime must not be mistakeen one for the
+	other. [use_ssl] may be set while user are not logged because they
+	don't have certificate
+
+	add 'db_env' parameter to 'include_sql_query'
+
+   Changes :
+
+	just a few commands are now searched in messages. This is now defined in
+	sympa.conf ('misadressed_commands_regexp' parameter)
+
+	no more provide mailto:	in info page ; spam prevention
+
+	wwsympa/wwsympa.fcgi: [Herbert Straub] also search in
+	previous month in do_arcsearch_id()
+
+	wwsympa/wwsympa.fcgi: [reported by Yves Agostini] Change:
+	navigation in archives could fail because <BASE> did not correspond
+	to requested URL. Now use HTTP_HOST and SERVER_PORT to build BASE. 
+	<BASE could not be supressed because of the archives main (current)
+	page (relative URLs did not work).
+
+	src/sympa.pl: [proposed by Christian Mock] close STDIN Could
+	cause OPENSSL to hang under some circumstances..
+
+	Prevent command looping ; block	messages with known Message-ID
+	
+	wwsympa/wwsympa.fcgi: Mime encode subject when compose a mail via
+	WWsympa interface
+
+	src/etc/script/sympa: [requested by Robert Marchand] No success &
+	failure subroutine on IRIX
+
+	[requested by Robert Marchand] Add '-m' option to gencat on IRIX
+	Add '--with-iconsdir' configure	option
+
+	[proposed by J. Marant] Add 'codeset' to NLS catalogs Otherwise catalogs 
+	cannot be generated properly (Invalid caracter messages)
+
+	src/sympa.pl: cleanup in moderation and authentication spools
+
+	doc/sympa.tex.tpl: [reported by Benoit Marchal] Lots of
+	corrections
+
+	src/tools.pl: [Alan Hicks] message having the
+	multipart/alternative embedded in the first part of the
+	multipart/related were not recognized by tools::as_singlepart()
+
+	src/etc/mhonarc-ressources: Delete <CharsetConverters> so Mhonarc
+	uses its default
+
+	[reported by Joe Davidson] add a Message-ID to compose form to prevent
+	Sympa from distributing twice the same message (reload).  New
+	tools::get_message_id() sub
+
+	check_perl_modules.pl, src/List.pm: _ListTables is deprecated,
+	use $dbh->tables() instead.  Therefore requires recent version of
+	DBD::mysql
+
+	src/sympa.pl: Prevent loop while unable to rename file to the
+	'bad' directory.
+
+	src/List.pm: [Vincent Mathieu] multiple reference to variable
+	[sender] in lDAP filters.
+
+   Bug fixes : 
+
+	Makefile.am: Change configure options to with-xxx so they can be customized at
+	configure time
+
+	wwsympa/wwsympa.fcgi: did not store subscription request in wwsympa
+
+	wwsympa/Marc/Search.pm: [Sergiy Zhuk] Bug fix: with FastCGI,
+	despite the fact you're getting new search results, it still marks
+	the old keyword.  The problem was caused by the 'o' modifier in
+	Search.pm, which compiles the search pattern just once.
+
+	[Maguy Lebreton] Make sleep() longer in archived, so mhonarc has time to
+	process big messages.
+
+	src/etc/mhonarc-ressources: [reported by Serge Algarotti] 
+	Messages header fields were parsed in archives
+
+	src/etc/mhonarc-ressources: [Sergiy Zhuk] Fix formating
+	(introduced in 1.14)
+
+	src/Conf.pm: [reported by Pascal Schelcher] allow \s in
+	auth.conf entries (filters) auth.conf paring should be more strict
+
+	src/tools.pl: Fixe sign_check  : checking using original message
+	instead of object message in order to handle properly multipart
+	messages (b64 sign bug)
+
+	wwsympa/wwsympa.fcgi: [reported by Hanke Penning]
+	'quiet' scenario action was not used in do_add() and do_subscribe()
+
+	src/List.pm: [reported by Walter Hopgood] wrong value
+	for Sunday digest Could not send Sunday digests
+
+	wwsympa/wwsympa.fcgi: [Sergiy Zhuk] Fix Net::SMTP::mail() call
+
+	src/Commands.pm: no relation between 'do_it' action and
+	owner notification
+
+	src/sympa.pl: Fix CleanSpool: could not remove directories
+
+	wwsympa/bounced.pl: [reported by Malcolm] do not force file
+	access permissions to 777
+
+	wwsympa/wwsympa.fcgi: [reported by Michel Bouissou]
+	wrong link to father directory in shared
+
+	src/etc/scenari/send.publicnoattachment: [Reported by Roussel Florian] : 
+	fix missmatch Content-Disposition/Content-Type
+
+	src/Commands.pm: Command::which() did not skip first
+	argument WHICH command returned a wrong result for Virtual Robots
+
+	src/List.pm: [John Paul Dalbec] this section of code fixed
+	"name=" but broke "URL="
+	
+	src/etc/mhonarc-ressources: reported by Vincent Mathieu : fix
+	icons location in archive. must be related to wws.conf icons_url
+	parameter
+
+	[John Dalbec] Fix lots of misspellings/typos in templates
+
 3.3.3		25 Jan 2002
 
    New features :
