@@ -369,6 +369,7 @@ installconfig:
 	) ;\
 	chown $(USER) $(DESTDIR)$(CONFDIR)/$$cfile; \
 	chgrp $(GROUP) $(DESTDIR)$(CONFDIR)/$$cfile; \
+	$(PERL)  $(DESTDIR)/$(SBINDIR)/sympa_wizard.pl; \
 	fi \
 	done
 

@@ -21,11 +21,11 @@
 
 CDEFS	=	-DCONFIG=\"$(CONFIG)\"
 
-sbin_SRC	=	sympa.pl alias_manager.pl task_manager.pl
+sbin_SRC	=	sympa.pl alias_manager.pl task_manager.pl sympa_wizard.pl
 
 lib_SRC		=	Archive.pm Commands.pm Conf.pm \
 			Language.pm List.pm Log.pm mail.pm msg.pl Ldap.pm \
-			smtp.pm tools.pl Version.pm parser.pl 
+			smtp.pm tools.pl Version.pm parser.pl
 
 all:	queue bouncequeue aliaswrapper
 
