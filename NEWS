@@ -3,6 +3,106 @@
 
 (See Changelog file for the full changes log)
 
+5.0a		06 December 2004
+
+   New features :
+
+	[G. Bouteille] List families make it possible to automatically create a set of mailing lists that
+	share a common configuration template,  a set of constraints, templates and authZ scenarios. 
+	Family instantiation requires an XML document that defines mailing lists.
+
+	[G.Bouteille] Owners and moderators can be extracted from an external datasource. 
+	Data sources are gathered in a new 'data_sources' directory. Sympa manages a cache of data in a new 
+	'admin_table' database table.
+*****	You should update your DB structure (automatically performed by Sympa with MySQL), adding the following table (mySQL example) :
+*****	CREATE TABLE admin_table (
+*****	list_admin              varchar(50) NOT NULL,
+*****	user_admin              varchar(100) NOT NULL,
+*****	role_admin              enum('listmaster','owner','editor') NOT NULL,
+*****	date_admin              datetime NOT NULL,
+*****	update_admin            datetime,
+*****	reception_admin         varchar(20),
+*****	comment_admin           varchar(150),
+*****	subscribed_admin        enum('0','1'),
+*****	included_admin          enum('0','1'),
+*****	include_sources_admin   varchar(50),
+*****	info_admin              varchar(150),
+*****	profile_admin           enum('privileged','normal'),
+*****	PRIMARY KEY (list_admin, user_admin,role_admin),
+*****	INDEX (list_admin, user_admin,role_admin)
+*****	);
+
+*****	Extend the generic_sso feature ; Sympa is now able to retrieve the user email address in a LDAP directory
+
+	New include_remote_file list parameter
+
+	src/Conf.pm, src/alias_manager.pl: New sympa.conf parameter : sendmail_aliases
+
+	web_tt2/review.tt2, wwsympa/wwsympa.fcgi: Add a "synchronize members with data sources" on the review page
+
+
+   Changes :
+
+	wwsympa/wwsympa.fcgi: [O.Lacroix] notify listmasters of list creation/rejection
+
+	po/it.po, src/Conf.pm: [G. Donnini] Update of Italian translations
+
+	Makefile.am, configure.in: Check that msgfmt is available
+
+	wwsympa/: wwsympa.fcgi: When data-source related parameters have been edited, sync_include is run 
+	(not delegated to the task_manager)
+
+	wwsympa/wwsympa.fcgi: check the UID at startup
+
+   Bug fixes :
+
+	wwsympa/wwsympa.fcgi: datasources did not appear after a search ; now use a common subroutine
+
+	src/Commands.pm: 'SIG *' failed ; only unsubscribed from the first list
+
+	src/: List.pm, etc/script/create_db.Pg, etc/script/create_db.Sybase, etc/script/create_db.mysql: 
+	replace attributes_user type from 'text' to 'varchar(255)'; could make an "out of memory problem"
+
+	web_tt2/admin_menu.tt2: [O.Lacroix] data source admin menu was restricted to listmasters
+
+	src/mail.pm: Lang was not set correctly before parsing a template
+
+	src/List.pm: [G.Bouteille] check if $user is defined first. Otherwise wwsympa would create loops
+
+	wwsympa/wwsympa.fcgi: duplicate topics on the front page while changing the language
+
+	wwsympa/: wwsympa.fcgi: prevent upload if no file was selected
+
+	soap/: sympasoap.pm: [reported by F.Fareneau] CAS login failed on the SOAP interface if robot was not 
+	the default one
+
+	wwsympa/wwsympa.fcgi: could not save templates if mail_tt2/ directory did not exist
+
+	[BugID 336] regenerated config.sub and config.guess files
+
+	src/: List.pm: ldap include removed previous data about the user (overwritten with defaults)
+
+	src/: List.pm, task_manager.pl: do not create tasks for lists that have no include data sources
+
+	wwsympa/wwsympa.fcgi: [reported by E.Hoppenot] Moderators could not view concealed subscribers
+
+	src/List.pm: Fix default for archive_encrypted_message
+
+	src/List.pm, wwsympa/wwsympa.fcgi: [reported by E.Tinturier] : SSO-related user attributes 
+	were not available in web template. There are now available in [% user.attributes %] hash. 
+	Also made environment variables in both web templates and scenarios.
+
+	src/etc/templates/us/invite.us.tpl: [BugID 329] orphan [ELSE] removed
+
+	src/Commands.pm: [bugID 328] while setting reception options or unsubscribing for all lists, 
+	skip hidden lists
+
+	src/task_manager.pl: [reported by M.Bouissou] the bounce_score was not an integer.  
+	This would generate an error with Sybase : "invalid input syntax for integer:"
+
+	
+
+
 4.2b.3		13 August 2004
 
    New features :
