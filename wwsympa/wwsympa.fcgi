@@ -425,7 +425,6 @@ while ($query = &new_loop()) {
 
     ## Session loop
     while ($action) {
-	printf STDERR "1xxxxx action : $action\n";
 	unless (&check_param_in()) {
 	    &error_message('wrong_param');
 	    &wwslog('info','Wrong parameters');
@@ -437,7 +436,6 @@ while ($query = &new_loop()) {
 	
 	## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
 	    
-	printf STDERR "1xxxxx lang cookie_lang : $param->{'cookie_lang'}, user :  $param->{'user'}{'lang'} , robot : $Conf{'robots'}{$robot}{'lang'}\n";
 	$param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || $list->{'admin'}{'lang'} || $Conf{'robots'}{$robot}{'lang'} || $Conf{'lang'};
 	&Language::SetLang($param->{'lang'});
 	&POSIX::setlocale(&POSIX::LC_ALL, Msg(14, 1, 'en_US'));
@@ -3037,7 +3035,6 @@ sub do_savefile {
 
 	$param->{'filepath'} = "$Conf{'home'}/$list->{'name'}/$in{'file'}";
     }else {
-	printf STDERR "1xxxx  is_listmaster($param->{'user'}{'email'}),$robot)\n";
 	unless (&List::is_listmaster($param->{'user'}{'email'}),$robot) {
 	    &error_message('missing_arg', {'argument' => 'list'});
 	    &wwslog('info','do_savefile: no list');
