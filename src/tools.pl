@@ -1163,12 +1163,12 @@ sub date_conv {
 	return $arg;
     }
 	
-    if ($arg =~ /^(\d\d\d\dy)(\d+m)?(\d+d)?(\d+h)?(\d+min)?$/) { # absolute date
+    if ($arg =~ /^(\d\d\d\dy)(\d+m)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?$/) { # absolute date
 
-	my @date = (0, "$5", "$4", "$3", "$2", "$1");
+	my @date = ("$6", "$5", "$4", "$3", "$2", "$1");
 	for (my $i = 0; $i < 6; $i++) {
 	    chop ($date[$i]);
-	    if ($i == 1) {chop ($date[$i]); chop ($date[$i]);}
+	    if (($i == 1) || ($i== 2)) {chop ($date[$i]); chop ($date[$i]);}
 	    $date[$i] = 0 unless ($date[$i]);
 	}
 	$date[3] = 1 if ($date[3] == 0);
@@ -1188,15 +1188,15 @@ sub duration_conv {
 
     return 0 unless $arg;
   
-    $arg =~ /(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?$/i ;
+    $arg =~ /(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?$(\d+sec)?/i ;
     my @date = ("$1", "$2", "$3", "$4", "$5", "$6");
     for (my $i = 0; $i < 6; $i++) {
 	chop ($date[$i]);
-	if ($i == 5) {chop ($date[$i]); chop ($date[$i]);}
+	if (($i == 5) || ($i == 6)) {chop ($date[$i]); chop ($date[$i]);}
 	$date[$i] = 0 unless ($date[$i]);
     }
     
-    my $duration = 60*($date[5]+60*($date[4]+24*($date[3]+7*$date[2]+365*$date[0])));
+    my $duration = $date[6]+60*($date[5]+60*($date[4]+24*($date[3]+7*$date[2]+365*$date[0])));
 	
     # specific processing for the months because their duration varies
     my @months = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
