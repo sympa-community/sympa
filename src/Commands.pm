@@ -668,7 +668,7 @@ sub subscribe {
 				     'replyto' => &Conf::get_robot_conf($robot, 'sympa'),
 				     'gecos' => $comment,
 				     'type' => 'subrequest'});
-	$list->store_susbscription_request($sender, $comment);
+	$list->store_subscription_request($sender, $comment);
 	do_log('info', 'SUB %s from %s forwarded to the owners of the list (%d seconds)', $which, $sender,time-$time_command);   
 	return 1;
     }
@@ -1061,7 +1061,7 @@ sub add {
 	    $u->{'date'} = $u->{'update_date'} = time;
 	    
 	    return undef unless $list->add_user($u);
-	    $list->delete_susbscription_request($email);
+	    $list->delete_subscription_request($email);
 	    push @msg::report, sprintf Msg(6, 37, "User %s has been added to the list %s.\n"), $email, $which;
 	}
     

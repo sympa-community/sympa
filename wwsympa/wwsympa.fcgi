@@ -1007,7 +1007,8 @@ sub check_param_in {
 	       $param->{'may_subscribe'} = $param->{'may_signoff'} = 1;
 	       
 	   }else {
-	       if ($param->{'is_subscriber'}) {
+	       if ($param->{'is_subscriber'} &&
+		   ($param->{'subscriber'}{'subscribed'} == 1)) {
 		   ## May signoff
 		   $main::action = &List::request_action ('unsubscribe',$param->{'auth_method'},$robot,
 						    {'listname' =>$param->{'list'}, 
@@ -1017,6 +1018,7 @@ sub check_param_in {
 		   
 		   $param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner/);
 		   $param->{'may_suboptions'} = 1;
+
 	       }else {
 		   
 		   ## May Subscribe
@@ -2380,7 +2382,7 @@ sub do_subscribe {
 	    return 'subrequest';
 	}
 
-	if ( &List::is_user_db($in{'email'}) ) {
+	if ( &List::is_user_db($in{'email'})) {
 	    &error_message('no_user');
 	    &wwslog('info','do_subscribe: need auth for user %s', $in{'email'});
 	    return undef;
@@ -2388,7 +2390,8 @@ sub do_subscribe {
 	
     }
 
-    if ($param->{'is_subscriber'} ) {
+    if ($param->{'is_subscriber'} && 
+	     ($param->{'subscriber'}{'subscribed'} == 1)) {
 	&error_message('already_subscriber', {'list' => $list->{'name'}});
 	&wwslog('info','do_subscribe: %s already subscriber', $param->{'user'}{'email'});
 	return undef;
@@ -2414,28 +2417,37 @@ sub do_subscribe {
 				     'replyto' => &Conf::get_robot_conf($robot, 'sympa'),
 				     'gecos' => $param->{'user'}{'gecos'},
 				     'type' => 'subrequest'});
-	$list->store_susbscription_request($param->{'user'}{'email'});
+	$list->store_subscription_request($param->{'user'}{'email'});
 	&message('sent_to_owner');
 	&wwslog('info', 'do_subscribe: subscribe sent to owner');
 
 	return 'info';
     }elsif ($sub_is =~ /do_it/) {
-	my $defaults = $list->get_default_user_options();
-	my $u;
-	%{$u} = %{$defaults};
-	$u->{'email'} = $param->{'user'}{'email'};
-	$u->{'gecos'} = $param->{'user'}{'gecos'} || $in{'gecos'};
-	$u->{'date'} = $u->{'update_date'} = time;
-	$u->{'password'} = $param->{'user'}{'password'};
-	$u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
-	
-	unless ($list->add_user($u)) {
-	    &error_message('failed');
-	    &wwslog('info', 'do_subscribe: subscribe failed');
-	    return undef;
+	if ($param->{'is_subscriber'}) {
+	    unless ($list->update_user($param->{'user'}{'email'}, 
+				       {'subscribed' => 1,
+					'update_date' => time})) {
+		&error_message('failed');
+		&wwslog('info', 'do_subscribe: update failed');
+		return undef;
+	    }
+	}else {
+	    my $defaults = $list->get_default_user_options();
+	    my $u;
+	    %{$u} = %{$defaults};
+	    $u->{'email'} = $param->{'user'}{'email'};
+	    $u->{'gecos'} = $param->{'user'}{'gecos'} || $in{'gecos'};
+	    $u->{'date'} = $u->{'update_date'} = time;
+	    $u->{'password'} = $param->{'user'}{'password'};
+	    $u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
+	    
+	    unless ($list->add_user($u)) {
+		&error_message('failed');
+		&wwslog('info', 'do_subscribe: subscribe failed');
+		return undef;
+	    }
+	    $list->save();
 	}
-
-	$list->save();
 
 	unless ($sub_is =~ /quiet/i ) {
 	    my %context;
@@ -2643,13 +2655,23 @@ sub do_signoff {
 	&wwslog('info', 'do_signoff: signoff sent to owner');
 	return undef;
     }else {
-	unless ($list->delete_user($param->{'user'}{'email'})) {
-	    &error_message('failed');
-	    &wwslog('info', 'do_signoff: signoff failed');
-	    return undef;
+	if ($param->{'subscriber'}{'included'}) {
+	    unless ($list->update_user($param->{'user'}{'email'}, 
+				       {'subscribed' => 0,
+					'update_date' => time})) {
+		&error_message('failed');
+		&wwslog('info', 'do_signoff: update failed');
+		return undef;
+	    }
+	}else {
+	    unless ($list->delete_user($param->{'user'}{'email'})) {
+		&error_message('failed');
+		&wwslog('info', 'do_signoff: signoff failed');
+		return undef;
+	    }
+	    
+	    $list->save();
 	}
-
-	$list->save();
 
 	if ($sig_is =~ /notify/) {
 	    $list->send_notify_to_owner({'who' => $param->{'user'}{'email'},
@@ -2982,7 +3004,7 @@ sub do_add {
 	}
 
 	## Delete subscription request if any
-	$list->delete_susbscription_request($email);
+	$list->delete_subscription_request($email);
 	
 	$total++;
 	
@@ -5106,6 +5128,10 @@ sub do_edit_list {
     foreach my $pname (keys %changed) {
 
 	my @users;
+
+	if ($pname =~ /^(include_.*|user_data_source)$/) {
+	    $new_admin->{'update'}{'data_source_update'} = time;
+	}
 	
 	## User Data Source
 	if ($pname eq 'user_data_source') {
@@ -8439,7 +8465,7 @@ sub do_subindex {
     }
 
 
-    my $subscriptions = $list->get_susbscription_requests();
+    my $subscriptions = $list->get_subscription_requests();
     foreach my $sub (keys %{$subscriptions}) {
 	$subscriptions->{$sub}{'date'} = &POSIX::strftime("%d %b %Y", localtime($subscriptions->{$sub}{'date'}));
     }
@@ -8481,7 +8507,7 @@ sub do_ignoresub {
     }
 
     foreach my $u (@users) {
-	$list->delete_susbscription_request($u);
+	$list->delete_subscription_request($u);
     }
     
     return 'subindex';

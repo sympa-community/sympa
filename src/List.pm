@@ -846,6 +846,11 @@ my %alias = ('reply-to' => 'reply_to',
 						       'title_id' => 78,
 						       'order' => 3
 						       },
+				      'data_source_update' => {'format' => '\d+',
+							       'length' => 8,
+							       'title_id' => 205,
+							       'order' => 4
+						       },
 				      'date' => {'format' => '.+',
 						 'length' => 30,
 						 'title_id' => 79,
@@ -861,7 +866,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 'title_id' => 77,
 			 'group' => 'other'
 		     },
-	    'user_data_source' => {'format' => ['database','file','include'],
+	    'user_data_source' => {'format' => ['database','file','include','include2'],
 				   'default' => 'file',
 				   'title_id' => 81,
 				   'group' => 'data_source'
@@ -1064,7 +1069,7 @@ sub savestats {
     my $dir = $self->{'dir'};
     return undef unless ($list_of_lists{$name});
     
-   _save_stats_file("$dir/stats", $self->{'stats'}, $self->{'total'});
+   _save_stats_file("$dir/stats", $self->{'stats'}, $self->{'total'}, $self->{'last_sync'});
     
     ## Changed on disk
     $self->{'mtime'}[2] = time;
@@ -1169,7 +1174,8 @@ sub dump {
 	my $list = new List($l);
 	my $user_file_name;
 	
-	if ($list->{'admin'}{'user_data_source'} eq 'database') {
+	if (($list->{'admin'}{'user_data_source'} eq 'database') ||
+	    ($list->{'admin'}{'user_data_source'} eq 'include2')) {
             do_log('debug3', 'Dumping list %s',$l);
 	    $user_file_name = "$list->{'dir'}/subscribers.db.dump";
 	    $list->_save_users_file($user_file_name);
@@ -1229,7 +1235,8 @@ sub save_config {
     $self->{'admin'}{'defaults'}{'serial'} = 0;
     $self->{'admin'}{'update'} = {'email' => $email,
 				  'date_epoch' => time,
-				  'date' => &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time))
+				  'date' => &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time)),
+				  'data_source_update' => $self->{'admin'}{'update'}{'data_source_update'}
 				  };
     $self->{'admin'}{'defaults'}{'update'} = 0;
     
@@ -1330,6 +1337,21 @@ sub load {
 	    }
 	    $m2 = $time_subscribers;
 	}
+
+    }elsif ($self->{'admin'}{'user_data_source'} eq 'include2') {
+    ## include other subscribers as defined in include directives (list|ldap|sql|file|owners|editors)
+	unless ( defined $self->{'admin'}{'include_file'}
+		 || defined $self->{'admin'}{'include_list'}
+		 || defined $self->{'admin'}{'include_sql_query'}
+		 || defined $self->{'admin'}{'include_ldap_query'}
+		 || defined $self->{'admin'}{'include_ldap_2level_query'}
+#		 || defined $self->{'admin'}{'include_admin'}
+		 ) {
+	    &do_log('err', 'Include paragraph missing in configuration file %s', "$self->{'dir'}/config");
+#	    return undef;
+	}
+
+
     }elsif($self->{'admin'}{'user_data_source'} eq 'include') {
 
     ## include other subscribers as defined in include directives (list|ldap|sql|file|owners|editors)
@@ -1387,7 +1409,7 @@ sub load {
     my ($stats, $total);
 
     if (! $self->{'mtime'}[2] || ($time_stats > $self->{'mtime'}[2])) {
-	($stats, $total) = _load_stats_file("$self->{'dir'}/stats");
+	($stats, $total, $self->{'last_sync'}) = _load_stats_file("$self->{'dir'}/stats");
 	$m3 = $time_stats;
 
 	$self->{'stats'} = $stats if (defined $stats);	
@@ -1885,7 +1907,8 @@ sub send_msg {
 
     ## Bounce rate
     ## Available in database mode only
-    if ($admin->{'user_data_source'} eq 'database') {
+    if (($admin->{'user_data_source'} eq 'database') ||
+	($admin->{'user_data_source'} eq 'include2')){
 	my $rate = $self->get_total_bouncing() * 100 / $total;
 	if ($rate > $self->{'admin'}{'bounce'}{'warn_rate'}) {
 	    $self->send_alert_to_owner('bounce_rate', {'rate' => $rate});
@@ -2555,7 +2578,8 @@ sub delete_user {
 
     foreach my $who (@u) {
 	$who = lc($who);
-	if ($self->{'admin'}{'user_data_source'} eq 'database') {
+	if (($self->{'admin'}{'user_data_source'} eq 'database') ||
+	    ($self->{'admin'}{'user_data_source'} eq 'include2')){
 	    my $statement;
 	    
 	    $list_cache{'is_user'}{$name}{$who} = undef;    
@@ -2716,7 +2740,8 @@ sub get_subscriber {
     
     do_log('debug2', 'List::get_subscriber(%s)', $email);
 
-    if ($self->{'admin'}{'user_data_source'} eq 'database') {
+    if (($self->{'admin'}{'user_data_source'} eq 'database') ||
+	($self->{'admin'}{'user_data_source'} eq 'include2')){
 
 	my $name = $self->{'name'};
 	my $statement;
@@ -2742,9 +2767,9 @@ sub get_subscriber {
 
 	if ($Conf{'db_type'} eq 'Oracle') {
 	    ## "AS" not supported by Oracle
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", bounce_subscriber \"bounce\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", %s \"date\", %s \"update_date\"  %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $update_field, $additional, $dbh->quote($email), $dbh->quote($name);
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", bounce_subscriber \"bounce\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\"  %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $update_field, $additional, $dbh->quote($email), $dbh->quote($name);
 	}else {
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, reception_subscriber AS reception, visibility_subscriber AS visibility, %s AS date, %s AS update_date %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $update_field, $additional, $dbh->quote($email), $dbh->quote($name);
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, reception_subscriber AS reception, visibility_subscriber AS visibility, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $update_field, $additional, $dbh->quote($email), $dbh->quote($name);
 	}
 
 	push @sth_stack, $sth;
@@ -2771,6 +2796,10 @@ sub get_subscriber {
 
 	$sth = pop @sth_stack;
 
+	## In case it was not set in the database
+	$user->{'subscribed'} = 1
+	    if ($self->{'admin'}{'user_data_source'} eq 'database');
+
 	## Set session cache
 	$list_cache{'get_subscriber'}{$name}{$email} = $user;
 
@@ -2786,6 +2815,9 @@ sub get_subscriber {
 	$user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	     unless ($self->is_available_reception_mode($user{'reception'}));
 	
+	## In case it was not set in the database
+	$user{'subscribed'} = 1;
+
 	return \%user;
     }
 }
@@ -2805,7 +2837,8 @@ sub get_first_user {
 
     do_log('debug2', 'List::get_first_user(%s,%s,%d,%d)', $self->{'name'},$sortby, $offset, $rows);
         
-    if ($self->{'admin'}{'user_data_source'} eq 'database') {
+    if (($self->{'admin'}{'user_data_source'} eq 'database') ||
+	($self->{'admin'}{'user_data_source'} eq 'include2')){
 
 	my $name = $self->{'name'};
 	my $statement;
@@ -2833,11 +2866,11 @@ sub get_first_user {
 	## Oracle
 	if ($Conf{'db_type'} eq 'Oracle') {
 
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", %s \"update_date\" %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\" %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
 
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
-		$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", %s \"update_date\", substr(user_subscriber,instr(user_subscriber,'\@')+1) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s ) ORDER BY \"dom\"", $date_field, $update_field, $additional, $dbh->quote($name);
+		$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", substr(user_subscriber,instr(user_subscriber,'\@')+1) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s ) ORDER BY \"dom\"", $date_field, $update_field, $additional, $dbh->quote($name);
 
 	    }elsif ($sortby eq 'email') {
 		$statement .= " ORDER BY \"email\"";
@@ -2850,11 +2883,11 @@ sub get_first_user {
 	## Sybase
 	}elsif ($Conf{'db_type'} eq 'Sybase'){
 
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", %s \"update_date\" %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\" %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
 	    
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
-		$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", %s \"update_date\", substring(user_subscriber,charindex('\@',user_subscriber)+1,100) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY \"dom\"", $date_field, $update_field, $additional, $dbh->quote($name);
+		$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", substring(user_subscriber,charindex('\@',user_subscriber)+1,100) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY \"dom\"", $date_field, $update_field, $additional, $dbh->quote($name);
 		
 	    }elsif ($sortby eq 'email') {
 		$statement .= " ORDER BY \"email\"";
@@ -2867,13 +2900,13 @@ sub get_first_user {
 	## mysql
 	}elsif ($Conf{'db_type'} eq 'mysql') {
 	    
-    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, %s AS update_date %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
+    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
 	    
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
 		## Redefine query to set "dom"
 
-		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, %s AS update_date, REVERSE(SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50)) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $update_field, $additional, $dbh->quote($name);
+		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, REVERSE(SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50)) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $update_field, $additional, $dbh->quote($name);
 
 	    }elsif ($sortby eq 'email') {
 		## Default SORT
@@ -2892,13 +2925,13 @@ sub get_first_user {
 	## Pg    
 	}else {
 	    
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, %s AS update_date %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
 	    
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
 		## Redefine query to set "dom"
 
-		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, %s AS update_date, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $update_field, $additional, $dbh->quote($name);
+		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $update_field, $additional, $dbh->quote($name);
 
 	    }elsif ($sortby eq 'email') {
 		$statement .= ' ORDER BY email';
@@ -2966,7 +2999,8 @@ sub get_next_user {
     my $self = shift;
 #    do_log('debug2', 'List::get_next_user');
 
-    if ($self->{'admin'}{'user_data_source'} eq 'database') {
+    if (($self->{'admin'}{'user_data_source'} eq 'database') ||
+	($self->{'admin'}{'user_data_source'} eq 'include2')){
 	my $user = $sth->fetchrow_hashref;
 
 	if (defined $user) {
@@ -3012,7 +3046,8 @@ sub get_first_bouncing_user {
     my $self = shift;
     do_log('debug2', 'List::get_first_bouncing_user');
 
-    unless ($self->{'admin'}{'user_data_source'} eq 'database') {
+    unless (($self->{'admin'}{'user_data_source'} eq 'database') ||
+	    ($self->{'admin'}{'user_data_source'} eq 'include2')){
 	&do_log('info', "Function get_first_bouncing_user not available for list  $self->{'name'} because not in database mode");
 	return undef;
     }
@@ -3062,7 +3097,8 @@ sub get_next_bouncing_user {
     my $self = shift;
 #    do_log('debug2', 'List::get_next_bouncing_user');
 
-    unless ($self->{'admin'}{'user_data_source'} eq 'database') {
+    unless (($self->{'admin'}{'user_data_source'} eq 'database') ||
+	    ($self->{'admin'}{'user_data_source'} eq 'include2')){
 	&do_log('info', 'Function available for lists in database mode only');
 	return undef;
     }
@@ -3100,7 +3136,8 @@ sub get_total_bouncing {
     my $self = shift;
     do_log('debug2', 'List::get_total_boucing');
 
-    unless ($self->{'admin'}{'user_data_source'} eq 'database') {
+    unless (($self->{'admin'}{'user_data_source'} eq 'database') ||
+	    ($self->{'admin'}{'user_data_source'} eq 'include2')){
 	&do_log('info', 'Function available for lists in database mode only');
 	return undef;
     }
@@ -3187,7 +3224,8 @@ sub is_user {
     
     return undef unless ($self && $who);
     
-    if ($self->{'admin'}{'user_data_source'} eq 'database') {
+    if (($self->{'admin'}{'user_data_source'} eq 'database') ||
+	($self->{'admin'}{'user_data_source'} eq 'include2')){
 	
 	my $statement;
 	my $name = $self->{'name'};
@@ -3251,7 +3289,8 @@ sub update_user {
 	return undef;
 
 	## Subscribers stored in database
-    } elsif ($self->{'admin'}{'user_data_source'} eq 'database') {
+    } elsif (($self->{'admin'}{'user_data_source'} eq 'database') ||
+	     ($self->{'admin'}{'user_data_source'} eq 'include2')){
 	
 	my ($user, $statement, $table);
 	my $name = $self->{'name'};
@@ -3264,7 +3303,10 @@ sub update_user {
 			  gecos => 'comment_subscriber',
 			  password => 'password_user',
 			  bounce => 'bounce_subscriber',
-			  email => 'user_subscriber'
+			  email => 'user_subscriber',
+			  subscribed => 'subscribed_subscriber',
+			  included => 'included_subscriber',
+			  id => 'include_sources_subscriber'
 			  );
 	
 	## mapping between var and tables
@@ -3275,7 +3317,10 @@ sub update_user {
 			  gecos => 'subscriber_table',
 			  password => 'user_table',
 			  bounce => 'subscriber_table',
-			  email => 'subscriber_table'
+			  email => 'subscriber_table',
+			  subscribed => 'subscriber_table',
+			  included => 'subscriber_table',
+			  id => 'subscriber_table'
 			  );
 	
 	## Check database connection
@@ -3289,7 +3334,10 @@ sub update_user {
 	    my @set_list;
 	    while (($field, $value) = each %{$values}) {
 
-		next unless ($map_field{$field} and $map_table{$field});
+		unless ($map_field{$field} and $map_table{$field}) {
+		    &do_log('err', 'Unknown database field %s', $field);
+		    next;
+		}
 
 		if ($map_table{$field} eq $table) {
 		    if ($field eq 'date') {
@@ -3490,7 +3538,8 @@ sub add_user {
     return undef
 	unless ($who = lc($values->{'email'}));
     
-    if ($self->{'admin'}{'user_data_source'} eq 'database') {
+    if (($self->{'admin'}{'user_data_source'} eq 'database') ||
+	($self->{'admin'}{'user_data_source'} eq 'include2')){
 	
 	my $name = $self->{'name'};
 	
@@ -3515,7 +3564,7 @@ sub add_user {
 	}
 
 	## Update Subscriber Table
-	$statement = sprintf "INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, date_subscriber, update_subscriber, reception_subscriber, visibility_subscriber) VALUES (%s, %s, %s, %s, %s, %s, %s)", $dbh->quote($who), $dbh->quote($values->{'gecos'}), $dbh->quote($name), $date_field, $update_field, $dbh->quote($values->{'reception'}), $dbh->quote($values->{'visibility'});
+	$statement = sprintf "INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, date_subscriber, update_subscriber, reception_subscriber, visibility_subscriber,subscribed_subscriber,included_subscriber,include_sources_subscriber) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", $dbh->quote($who), $dbh->quote($values->{'gecos'}), $dbh->quote($name), $date_field, $update_field, $dbh->quote($values->{'reception'}), $dbh->quote($values->{'visibility'}), $dbh->quote($values->{'subscribed'}), $dbh->quote($values->{'included'}), $dbh->quote($values->{'id'});
        
 	unless ($dbh->do($statement)) {
 	    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
@@ -4613,20 +4662,23 @@ sub _load_stats_file {
     do_log('debug3', 'List::_load_stats_file(%s)', $file);
 
    ## Create the initial stats array.
-   my ($stats, $total);
+   my ($stats, $total, $last_sync);
  
    if (open(L, $file)){     
-       if (<L> =~ /^(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(\s+(\d+))?/) {
+       if (<L> =~ /^(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(\s+(\d+))?(\s+(\d+))?/) {
 	   $stats = [ $1, $2, $3, $4];
 	   $total = $6;
+	   $last_sync = $8;
        } else {
 	   $stats = [ 0, 0, 0, 0];
 	   $total = 0;
+	   $last_sync = 0;
        }
        close(L);
    } else {
        $stats = [ 0, 0, 0, 0];
        $total = 0;
+       $last_sync = 0;
    }
 
    ## Return the array.
@@ -4722,18 +4774,28 @@ sub _include_users_list {
 	return undef;
     }
     
+    my $id = _get_datasource_id($includelistname);
+
     for (my $user = $includelist->get_first_user(); $user; $user = $includelist->get_next_user()) {
-	my %u = %{$default_user_options};
+	my %u;
+
+	## Check if user has already been included
+	if ($users->{$user->{'email'}}) {
+	    %u = %{$users->{$user->{'email'}}};
+	}else {
+	    %u = %{$default_user_options};
+	    $total++;
+	}
+	    
 	my $email =  $u{'email'} = $user->{'email'};
 	$u{'gecos'} = $user->{'gecos'};
+	$u{'id'} = join (',', split(',', $u{'id'}), $id);
  	$u{'date'} = $user->{'date'};
 	$u{'update_date'} = $user->{'update_date'};
  	$u{'reception'} = $user->{'reception'};
  	$u{'visibility'} = $user->{'visibility'};
-	unless ($users->{$email}) {
-	    $total++;
-	    $users->{$email} = join("\n", %u);
-	}
+
+	$users->{$email} = \%u;
     }
     do_log('info',"Include %d subscribers from list %s",$total,$includelistname);
     return $total ;
@@ -4804,6 +4866,8 @@ sub _include_users_file {
 	return undef;
     }
     do_log('debug2','including file %s' , $filename);
+
+    my $id = _get_datasource_id($filename);
     
     while (<INCLUDE>) {
 	next if /^\s*$/;
@@ -4815,18 +4879,26 @@ sub _include_users_file {
 
 	my $email = lc($1);
 	my $gecos = $4;
-	my %u = %{$default_user_options};
+
+	next unless $email;
+
+	my %u;
+	## Check if user has already been included
+	if ($users->{$email}) {
+	    %u = %{$users->{$email}};
+	}else {
+	    %u = %{$default_user_options};
+	    $total++;
+	}
 	$u{'email'} = $email;
 	$u{'gecos'} = $gecos;
+	$u{'id'} = join (',', split(',', $u{'id'}), $id);
 
-	if ($email) {
-	    $total++;
-	    $users->{$email} = join("\n", %u);
-	}
+	$users->{$email} = \%u;
     }
     close INCLUDE ;
     
-    do_log('info',"include %d subscribers from file %s",$total,$filename);
+    do_log('info',"include %d new subscribers from file %s",$total,$filename);
     return $total ;
 }
 
@@ -4840,6 +4912,8 @@ sub _include_users_ldap {
 	do_log('debug2',"Unable to use LDAP library, install perl-ldap (CPAN) first");
 	return undef;
     }
+    
+    my $id = _get_datasource_id($param);
 
     my $host = $param->{'host'};
     my $port = $param->{'port'} || '389';
@@ -4916,19 +4990,27 @@ sub _include_users_ldap {
     
     foreach my $email (@emails) {
 	next if ($email =~ /^\s*$/);
+
+	my %u;
+	## Check if user has already been included
+	if ($users->{$email}) {
+	    %u = %{$users->{$email}};
+	}else {
+	    %u = %{$default_user_options};
+	    $total++;
+	}
+
 	my %u = %{$default_user_options};
 	$u{'email'} = $email;
 	$u{'date'} = time;
 	$u{'update_date'} = time;
-	## should consult user default options
-	unless ($users->{$email}) {
-	    $total++;
-	    $users->{$email} = join("\n", %u);
-	}
+	$u{'id'} = join (',', split(',', $u{'id'}), $id);
+
+	$users->{$email} = \%u;
     }
 
     do_log('debug2',"unbinded from LDAP server %s:%s ",$host,$port);
-    do_log('debug2','%d subscribers included from LDAP query',$total);
+    do_log('debug2','%d new subscribers included from LDAP query',$total);
 
     return $total;
 }
@@ -4943,6 +5025,8 @@ sub _include_users_ldap_2level {
 	do_log('err',"Unable to use LDAP library, install perl-ldap (CPAN) first");
 	return undef;
     }
+
+    my $id = _get_datasource_id($param);
 
     my $host = $param->{'host'};
     my $port = $param->{'port'} || '389';
@@ -5066,19 +5150,27 @@ sub _include_users_ldap_2level {
     
     foreach my $email (@emails) {
 	next if ($email =~ /^\s*$/);
-	my %u = %{$default_user_options};
+
+	
+	my %u;
+	## Check if user has already been included
+	if ($users->{$email}) {
+	    %u = %{$users->{$email}};
+	}else {
+	    %u = %{$default_user_options};
+	    $total++;
+	}
+
 	$u{'email'} = $email;
 	$u{'date'} = time;
 	$u{'update_date'} = time;
-	## should consult user default options
-	unless ($users->{$email}) {
-	    $total++;
-	    $users->{$email} = join("\n", %u);
-	}
+	$u{'id'} = join (',', split(',', $u{'id'}), $id);
+
+	$users->{$email} = \%u;
     }
 
     do_log('debug2',"unbinded from LDAP server %s:%s ",$host,$port) ;
-    do_log('debug2','%d subscribers included from LDAP query',$total);
+    do_log('debug2','%d new subscribers included from LDAP query',$total);
 
     return $total;
 }
@@ -5093,6 +5185,8 @@ sub _include_users_sql {
 	do_log('notice',"Intall module DBI (CPAN) before using include_sql_query");
 	return undef ;
     }
+
+    my $id = _get_datasource_id($param);
 
     my $db_type = $param->{'db_type'};
     my $db_name = $param->{'db_name'};
@@ -5157,19 +5251,24 @@ sub _include_users_sql {
     ## Process the SQL results
     my $email;
     while (defined ($email = $sth->fetchrow)) {
-	my %u = %{$default_user_options};
-
 	## Empty value
 	next if ($email =~ /^\s*$/);
 
-	$u{'email'} = $email;
+	my %u;
+	## Check if user has already been included
+	if ($users->{$email}) {
+	    %u = %{$users->{$email}};
+	}else {
+	    %u = %{$default_user_options};
+	    $total++;
+	}
 
+	$u{'email'} = $email;
 	$u{'date'} = time;
 	$u{'update_date'} = time;
-	unless ($users->{$email}) {
-	    $total++;
-	    $users->{$email} = join("\n", %u);
-	}
+	$u{'id'} = join (',', split(',', $u{'id'}), $id);
+
+	$users->{$email} = \%u;
     }
     $sth->finish ;
     $dbh->disconnect();
@@ -5315,6 +5414,168 @@ sub _load_users_include {
     $l;
 }
 
+## Loads the list of subscribers from an external include source
+sub _load_users_include2 {
+    my $name = shift; 
+    my $admin = shift ;
+    do_log('debug2', 'List::_load_users_include for list %s',$name);
+
+    my (%users, $depend_on, $ref);
+    my $total = 0;
+
+    foreach my $type ('include_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
+	last unless (defined $total);
+	    
+	foreach my $incl (@{$admin->{$type}}) {
+	    my $included;
+		
+	    ## get the list of users
+	    if ($type eq 'include_sql_query') {
+		$included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'});
+	    }elsif ($type eq 'include_ldap_query') {
+		$included = _include_users_ldap(\%users, $incl, $admin->{'default_user_options'});
+	    }elsif ($type eq 'include_ldap_2level_query') {
+		$included = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'});
+	    }elsif ($type eq 'include_list') {
+		$depend_on->{$name} = 1 ;
+		if (&_inclusion_loop ($name,$incl,$depend_on)) {
+		    do_log('notice','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
+		}else{
+		    $depend_on->{$incl};
+		    $included = _include_users_list (\%users, $incl, $admin->{'default_user_options'});
+		}
+	    }elsif ($type eq 'include_file') {
+		$included = _include_users_file (\%users, $incl, $admin->{'default_user_options'});
+	    }
+	    unless (defined $included) {
+		&do_log('err', 'Inclusion %s failed in list %s', $type, $name);
+		$total = undef;
+		last;
+	    }
+	    
+	    $total += $included;
+	}
+    }
+
+    return \%users;
+}
+
+sub sync_include {
+    my ($self) = shift;
+    my $name=$self->{'name'};
+    &do_log('debug', 'List:sync_include(%s)', $name);
+
+    unless ( $self->{'admin'}{'user_data_source'} eq 'include2' ) {
+	&do_log('notice', 'List::sync_include() called for %s but user_data_source is %s', 
+		$name, $self->{'admin'}{'user_data_source'});                                                
+	return undef;                                                          
+    }
+    my %old_subscribers;
+    my $total=0;
+
+    ## Load a hash with the old subscribers
+    for (my $user=$self->get_first_user(); $user; $user=$self->get_next_user()) {
+	$old_subscribers{$user->{'email'}} = $user;
+	$total++;
+    }
+
+    ## Load a hash with the new subscriber list
+    my $new_subscribers = _load_users_include2($name, $self->{'admin'});
+
+    my $users_added = 0;
+    my $users_updated = 0;
+
+    ## Go through new users
+    foreach my $email (keys %{$new_subscribers}) {
+	if (defined($old_subscribers{$email}) ) {	   
+	    if ($old_subscribers{$email}{'included'}) {
+
+		## Include sources have changed for the user
+		if ($old_subscribers{$email}{'id'} ne $new_subscribers->{$email}{'id'}) {
+		    &do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
+		    unless( $self->update_user($email,  {'update_date' => time,
+							 'id' => $new_subscribers->{$email}{'id'} }) ) {
+			&do_log('err', 'List:sync_include(%s): Failed to update %s', $name, $email);
+			next;
+		    }
+		    $users_updated++;
+		}
+
+		## User was already subscribed, update include_sources_subscriber in DB
+	    }else {
+		&do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
+		unless( $self->update_user($email,  {'update_date' => time,
+						     'included' => 1,
+						     'id' => $new_subscribers->{$email}{'id'} }) ) {
+		    &do_log('err', 'List:sync_include(%s): Failed to update %s',
+			    $name, $email);
+		    next;
+		}
+		$users_updated++;
+	    }
+
+	    ## Add new included user
+	}else {
+	    &do_log('debug', 'List:sync_include: adding %s to list %s', $email, $name);
+	    my $u = $new_subscribers->{$email};
+	    $u->{'included'} = 1;
+	    unless( $self->add_user( $u ) ) {
+		&do_log('err', 'List:sync_include(%s): Failed to add %s',
+			$name, $email);
+		next;
+	    }
+	    $users_added++;
+	}
+    }
+    if ($users_added) {
+        &do_log('notice', 'List:sync_include(%s): %d users added',
+		$name, $users_added);
+    }
+
+    ## Go though previous list of users
+    my $users_removed = 0;
+    my @deltab;
+    foreach my $email (keys %old_subscribers) {
+	unless( defined($new_subscribers->{$email}) ) {
+	    ## User is also subscribed, update DB entry
+	    if ($old_subscribers{$email}{'subscribed'}) {
+		&do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
+		unless( $self->update_user($email,  {'update_date' => time,
+						     'included' => 0,
+						     'id' => ''}) ) {
+		    &do_log('err', 'List:sync_include(%s): Failed to update %s',  $name, $email);
+		    next;
+		}
+		
+		$users_updated++;
+
+		## Tag user for deletion
+	    }else {
+		push(@deltab, $email);
+		$users_removed++;
+	    }
+	}
+    }
+    if ($users_removed) {
+	unless($self->delete_user(@deltab)) {
+	    &do_log('err', 'List:sync_include(%s): Failed to delete %s',
+		    $name, $users_removed);
+	    return undef;
+        }
+        &do_log('notice', 'List:sync_include(%s): %d users removed',
+		$name, $users_added);
+    }
+    &do_log('notice', 'List:sync_include(%s): %d users removed', $name, $users_updated);
+
+    ## Get and save total of subscribers
+    $self->{'total'} = _load_total_db($self->{'name'});
+    $self->{'last_sync'} = time;
+    $self->savestats();
+
+    return 1;
+}
+
+
 sub _inclusion_loop {
 
     my $name = shift;
@@ -5386,10 +5647,11 @@ sub _save_stats_file {
     my $file = shift;
     my $stats = shift;
     my $total = shift;
+    my $last_sync = shift;
     do_log('debug2', 'List::_save_stats_file(%s, %d)', $file, $total);
     
     open(L, "> $file") || return undef;
-    printf L "%d %.0f %.0f %.0f %d\n", @{$stats}, $total;
+    printf L "%d %.0f %.0f %.0f %d %d\n", @{$stats}, $total, $last_sync;
     close(L);
 }
 
@@ -5593,7 +5855,8 @@ sub get_which {
 	# next unless (($list->{'admin'}{'host'} eq $robot) || ($robot eq '*')) ;
 
         if ($function eq 'member') {
-	    if ($list->{'admin'}{'user_data_source'} eq 'database') {
+	    if (($list->{'admin'}{'user_data_source'} eq 'database') ||
+		($list->{'admin'}{'user_data_source'} eq 'include2')){
 		if ($db_which->{$l}) {
 		    push @which, $l ;
 		}
@@ -6560,7 +6823,8 @@ sub _load_admin_file {
     }
 
     ## Do we have a database config/access
-    if ($admin{'user_data_source'} eq 'database') {
+    if (($admin{'user_data_source'} eq 'database') ||
+	($admin{'user_data_source'} eq 'include2')){
 	unless ($List::use_db) {
 	    &do_log('info', 'Sympa not setup to use DBI or no database access');
 	    return undef;
@@ -6730,9 +6994,9 @@ sub _urlize_part {
      }	
 }
 
-sub store_susbscription_request {
+sub store_subscription_request {
     my ($self, $email, $gecos) = @_;
-    do_log('debug2', 'List::store_susbscription_request(%s, %s, %s)', $self->{'name'}, $email, $gecos);
+    do_log('debug2', 'List::store_subscription_request(%s, %s, %s)', $self->{'name'}, $email, $gecos);
 
     my $filename = $Conf{'queuesubscribe'}.'/'.$self->{'name'}.'.'.time.'.'.int(rand(1000));
     
@@ -6747,9 +7011,9 @@ sub store_susbscription_request {
     return 1;
 } 
 
-sub get_susbscription_requests {
+sub get_subscription_requests {
     my ($self) = shift;
-    do_log('debug2', 'List::get_susbscription_requests(%s)', $self->{'name'});
+    do_log('debug2', 'List::get_subscription_requests(%s)', $self->{'name'});
 
     my %subscriptions;
 
@@ -6777,9 +7041,9 @@ sub get_susbscription_requests {
     return \%subscriptions;
 } 
 
-sub delete_susbscription_request {
+sub delete_subscription_request {
     my ($self, $email) = @_;
-    do_log('debug2', 'List::delete_susbscription_request(%s, %s)', $self->{'name'}, $email);
+    do_log('debug2', 'List::delete_subscription_request(%s, %s)', $self->{'name'}, $email);
 
     unless (opendir SPOOL, $Conf{'queuesubscribe'}) {
 	&do_log('info', 'Unable to read spool %s', $Conf{'queuemod'});
@@ -6818,6 +7082,38 @@ sub get_arc_size {
 
     # do_log('notice',"$dir/$self->{'name'}\@$self->{'domain'}");
     return tools::get_dir_size("$dir/$self->{'name'}\@$self->{'domain'}");
+}
+
+
+## Returns a unique ID for an include datasource
+sub _get_datasource_id {
+    my ($source) = shift;
+
+    if (ref ($source)) {
+	return substr(Digest::MD5::md5_hex(join('/', %{$source})), -8);
+    }else {
+	return substr(Digest::MD5::md5_hex($source), -8);
+    }
+	
+}
+
+## Searches the include datasource corresponding to the provided ID
+sub search_datasource {
+    my ($self, $id) = @_;
+
+    ## Go through list parameters
+    foreach my $p (keys %{$self->{'admin'}}) {
+	next unless ($p =~ /^include/);
+	
+	## Go through sources
+	foreach my $s (@{$self->{'admin'}{$p}}) {
+	    
+	    return $s
+	    if ($self->_get_datasource_id($s) eq $id);
+	}
+    }
+
+    return undef;
 }
 
 

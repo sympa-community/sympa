@@ -146,7 +146,7 @@ document.write("<a href=" + "mail" + "to:" + "[e->local]" + "@" + "[e->domain]" 
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
      [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
       [IF action=suboptions]
-        <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Options d'abonné</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR"[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Options d'abonné</b></font></TD>
       [ELSE]
         <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
         <font size=-1><b>
