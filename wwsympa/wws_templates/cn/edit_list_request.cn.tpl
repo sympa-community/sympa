@@ -1,5 +1,16 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
+[IF !group]
+You can choose below a subset of parameters to edit : <UL>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/description" >List definition</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/sending" >Sending/reception setup</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/command" >Commands setup</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/archives" >Archives setup</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/bounces" >Bounces management</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/data_source" >Data sources setup</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/other" >Other parameters</A>
+</UL>
+[ELSE]
 <FORM ACTION="[path_cgi]" METHOD="POST">
 <INPUT TYPE="hidden" NAME="serial" VALUE="[serial]">
 <TABLE WIDTH="100%" BORDER=0 CELLPADDING="0" CELLSPACING="0">
@@ -320,6 +331,6 @@
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 <INPUT TYPE="submit" NAME="action_edit_list" VALUE="¸üÐÂ">
 </FORM>
-
+[ENDIF]
 
 
