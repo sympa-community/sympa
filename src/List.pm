@@ -3876,9 +3876,9 @@ sub search{
     }
     
     $ldap->bind();
-    my $mesg = $ldap->search(base => $ldap_conf{'suffix'} ,
+    my $mesg = $ldap->search(base => "$ldap_conf{'suffix'}" ,
 			     filter => "$filter",
-			     scope => $ldap_conf{'scope'});
+			     scope => "$ldap_conf{'scope'}");
     	
 
     if ($mesg->count() == 0){
@@ -4662,10 +4662,10 @@ sub _include_users_ldap {
     do_log('debug', "Binded to LDAP server $host:$port ; user : '$user'") if ($main::option{'debug'});
     
     do_log('debug', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $host, $ldap_suffix, $ldap_filter, $ldap_attrs) if ($main::options{'debug'});
-    unless ($fetch = $ldaph->search ( base => $ldap_suffix,
-                                      filter => $ldap_filter,
-				      attrs => $ldap_attrs,
-				      scope => $param->{'scope'})) {
+    unless ($fetch = $ldaph->search ( base => "$ldap_suffix",
+                                      filter => "$ldap_filter",
+				      attrs => "$ldap_attrs",
+				      scope => "$param->{'scope'}")) {
         do_log('debug',"Unable to perform LDAP search in $ldap_suffix for $ldap_filter : $@");
         return undef;
     }
