@@ -79,15 +79,15 @@ Options:
    --dump=list|ALL                       : dumps subscribers 
    --make_alias_file                     : create file in /tmp with all aliases (usefull when aliases.tpl is changed)
    --lowercase                           : lowercase email addresses in database
-   --create_list --robot=robot_name < file.xml 
+   --create_list --robot=robot_name --input_file=file.xml 
                                          : create a list with the xml file under robot_name
-   --instantiate_family=family_name  --robot=robot_name < file.xml       
+   --instantiate_family=family_name  --robot=robot_name --input_file=file.xml       
                                          : instantiate family_name lists described in the file.xml under robot_name,
                                            the family directory must exist
-  --add_list=family_name --robot=robot_name < file.xml
+  --add_list=family_name --robot=robot_name --input_file=file.xml
                                          : add the list described by the file.xml under robot_name, to the family
                                            family_name.
-   --modify_list=family_name --robot=robot_name < file.xml
+   --modify_list=family_name --robot=robot_name --input_file=file.xml
                                          : modify the existing list installed under the robot_name robot and that 
                                            belongs to family_name family. The new description is in the file.xml
    --close_family=family_name --robot=robot_name 
@@ -109,7 +109,8 @@ encryption.
 my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
-		    'close_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s')) {
+		    'close_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s',
+		    'input_file=s')) {
     &fatal_err("Unknown options.");
 }
 
@@ -380,7 +381,17 @@ if ($main::options{'dump'}) {
  	exit 1;
     }
     
-    my $config = new Config_XML(\*STDIN);
+    unless ($main::options{'input_file'}) {
+ 	print STDERR $usage_string;
+ 	exit 1;
+    }
+
+    unless (open INFILE, $main::options{'input_file'}) {
+	print STDERR $usage_string;
+ 	exit 1;	
+    }
+    
+    my $config = new Config_XML(\*INFILE);
     unless (defined $config->createHash()) {
  	print STDERR "Error in representation data with these xml data\n";
  	exit 1;
@@ -388,6 +399,8 @@ if ($main::options{'dump'}) {
     
     my $hash = $config->getHash();
     
+    close INFILE;
+
     my $resul = &admin::create_list_old($hash->{'config'},$hash->{'family'},$hash->{'description'},$robot);
     unless (defined $resul) {
  	print STDERR "Could not create list with these xml data\n";
@@ -418,13 +431,24 @@ if ($main::options{'dump'}) {
  	print STDERR "The family $family_name does not exist, impossible instantiation\n";
  	exit 1;
     }
-    unless ($family->instantiate(\*STDIN)) {
+
+    unless ($main::options{'input_file'}) {
+ 	print STDERR $usage_string;
+ 	exit 1;
+    }
+
+    unless (open INFILE, $main::options{'input_file'}) {
+	print STDERR $usage_string;
+ 	exit 1;	
+    }
+
+    unless ($family->instantiate(\*INFILE)) {
  	print STDERR "\nImpossible family instantiation : action stopped \n";
  	exit 1;
     } 
-    
-    
+        
     my $string = $family->get_instantiation_results();
+    close INFILE;
     print STDERR $string;
     
     exit 0;
@@ -449,8 +473,18 @@ if ($main::options{'dump'}) {
  	exit 1;
     }
     
+    unless ($main::options{'input_file'}) {
+ 	print STDERR $usage_string;
+ 	exit 1;
+    }
+
+    unless (open INFILE, $main::options{'input_file'}) {
+	print STDERR $usage_string;
+ 	exit 1;	
+    }
+
     my $result;
-    unless ($result = $family->add_list(\*STDIN)) {
+    unless ($result = $family->add_list(\*INFILE)) {
  	print STDERR "\nImpossible to add a list to the family : action stopped \n";
  	exit 1;
     } 
@@ -464,6 +498,8 @@ if ($main::options{'dump'}) {
  	exit 1;
     }
     
+    close INFILE;
+
     print STDOUT $result->{'string_info'};
     exit 0;
 }
@@ -490,8 +526,18 @@ elsif ($main::options{'modify_list'}) {
  	exit 1;
     }
     
+    unless ($main::options{'input_file'}) {
+ 	print STDERR $usage_string;
+ 	exit 1;
+    }
+
+    unless (open INFILE, $main::options{'input_file'}) {
+	print STDERR $usage_string;
+ 	exit 1;	
+    }
+
     my $result;
-    unless ($result = $family->modify_list(\*STDIN)) {
+    unless ($result = $family->modify_list(\*INFILE)) {
  	print STDERR "\nImpossible to modify the family list : action stopped. \n";
  	exit 1;
     } 
@@ -504,6 +550,8 @@ elsif ($main::options{'modify_list'}) {
  	print STDERR "$result->{'string_error'}";
  	exit 1;
     }
+
+    close INFILE;
     
     print STDOUT $result->{'string_info'};
     exit 0;

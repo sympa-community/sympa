@@ -644,7 +644,7 @@ sub instantiate {
 	    $answer = <STDIN>;
 	    chomp($answer);
 #######################
-	    $answer = 'y';
+	    $answer ||= 'y';
 	#}
 	if ($answer eq 'y'){
 

@@ -1188,7 +1188,7 @@ messages distribution.
 \end{verbatim}
   \end {quote}
 
-\item \option {--create\_list --robot \textit {robotname} < \textit {list\_file.xml}}
+\item \option {--create\_list --robot \textit {robotname} --input\_file \textit {list\_file.xml}}
 
 Create the list described by the xml file, see \ref{list-creation-sympa}, 
 page~\pageref{list-creation-sympa}.
@@ -1225,7 +1225,7 @@ template.
   
   Print current version of \Sympa.
 
-\item \option {--instanciate\_family \textit {familyname} \textit {robotname} < \textit {family\_file.xml}}
+\item \option {--instanciate\_family \textit {familyname} \textit {robotname} --input\_file \textit {family\_file.xml}}
 
 Instantiate the family \textit {familyname}. See \ref{lists-families}, 
 page~\pageref{lists-families}.
@@ -5166,7 +5166,7 @@ and a text describing the use of the list.
 Here is a sample command to create one list :.
 \begin {quote}
 \begin{verbatim}
-sympa.pl --create_list --robot \samplerobot < my_file.xml
+sympa.pl --create_list --robot \samplerobot --input_file my_file.xml
 \end{verbatim}   
 \end {quote}
 
@@ -5657,7 +5657,7 @@ by the set of values for affectation list parameters.
 Here is an exemple line command to instantiate a family :
 \begin {quote}
 \begin{verbatim}
-sympa.pl --instantiate_family my_family --robot my_robot < my_file.xml
+sympa.pl --instantiate_family my_family --robot my_robot --input_file my_file.xml
 \end{verbatim}
 \end {quote}
 This means lists that belong to family \file{my\_family} will be created under the robot 
@@ -5734,7 +5734,7 @@ Not already done.
 \subsection {Adding one list}
 Not already done.
 
-\subsection {Remmoving one list}
+\subsection {Removing one list}
 Not already done.
 
 \subsection {List parameters edition in a family context}
