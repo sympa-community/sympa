@@ -15,7 +15,16 @@
 </TD>
 </TR>
 <TR>
-<TD ALIGN="right">
+<TD ALIGN="right" NOWRAP>
+     [% PROCESS 'button_header.tt2' %]
+       <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
+         <FONT COLOR="[% selected_color %]" SIZE="-1">
+         <A HREF="[% path_cgi %]/sync_include/[% list %]" ><b>[%|loc%]Synchronize members with data sources[%END%]</b></A>
+         </FONT>
+       </TD>
+     [% PROCESS 'button_footer.tt2' %]
+
+
      [% PROCESS 'button_header.tt2' %]
        <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[% selected_color %]" SIZE="-1">
@@ -55,7 +64,8 @@
 <INPUT TYPE=hidden NAME=list VALUE="[% list %]">
 <INPUT TYPE="hidden" NAME="action" VALUE="search">
 <INPUT SIZE="18" NAME=filter VALUE="[% filter %]">
-<INPUT TYPE="submit" NAME="action_search" VALUE="[%|loc%]Search[%END%]">
+<INPUT TYPE="submit" NAME="action_search" VALUE="[%|loc%]Search[%END%]"> 
+
 [% IF action == 'search' %]
 <BR>[%|loc(occurrence)%]%1 occurrence(s) found[%END%]<BR>
 [% IF too_many_select %]

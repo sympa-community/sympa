@@ -237,7 +237,8 @@ my %comm = ('home' => 'do_home',
 	 'change_identity' => 'do_change_identity',
 	 'stats' => 'do_stats',
 	 'viewlogs'=> 'do_viewlogs',
-	 'wsdl'=> 'do_wsdl'
+	 'wsdl'=> 'do_wsdl',
+	 'sync_include' => 'do_sync_include',
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -317,7 +318,8 @@ my %action_args = ('default' => ['list'],
 		'rename_list' => ['list','new_list','new_robot'],
 		'redirect' => [],
 #		'viewlogs' => ['list'],
-		'wsdl' => []
+		'wsdl' => [],
+		'sync_include' => ['list'],
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -356,6 +358,7 @@ my %action_type = ('editfile' => 'admin',
 		'rename_list' => 'admin',
 		'rename_list_request' => 'admin',
 		'arc_manage' => 'admin',
+		'sync_include' => 'admin',
 #		'viewlogs' => 'admin'
 );
 
@@ -1334,6 +1337,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	    ## If user is identified
 	    $param->{'may_post'} = 1;
+
+ 	    if (($list->{'admin'}{'user_data_source'} eq 'include2') &&
+		$list->has_include_data_sources() &&
+		$param->{'is_owner'}) {
+		$param->{'may_sync'} = 1;
+	    }
 	}
 
 	 ## Should Not be used anymore ##
@@ -10546,5 +10555,28 @@ sub do_wsdl {
     return 1;
 }
 		
+## Synchronize list members with data sources
+sub do_sync_include {
+    &do_log('info', "do_sync_include($in{'list'})");
+ 
+    unless (defined $list) {
+	&error_message('missing_arg', {'argument' => 'list'});
+	&wwslog('err','do_sync_include: no list');
+	return undef;
+    }
 
+    unless ($param->{'is_owner'}) {
+	&error_message('may_not');
+	&wwslog('info','do_sync_include: not owner');
+	return undef;
+    }
+    
+    unless ($list->sync_include()) {
+	&error_message('failed_to_include_members');
+	return undef;
+    }
+
+    &message('subscribers_updated');
+    return 'review';
+}
 
