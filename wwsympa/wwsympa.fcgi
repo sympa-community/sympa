@@ -1215,8 +1215,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 $in{'list'} = $lists[0];
      }
 
-     return 1;
-
      ## Check parameters format
      foreach my $p (keys %in) {
 
