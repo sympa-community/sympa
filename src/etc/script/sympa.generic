@@ -1,0 +1,169 @@
+#! --SH--
+#
+
+#
+# This script starts/stops Sympa.
+#
+# Harald Wilhelmi TNG Technology Consulting GmbH
+# 	harald.wilhelmi@tngtech.com
+#
+# ATTENTION:
+#
+# This skript works only if the following variable is kept in sync
+# with a explicit configuration of the pidfile (sympa.conf),
+# bounced_pidfile and archived_pidfile (wwsympa.conf) parameters!
+#
+
+pidfilepath="/dist/sympa/run"
+
+#
+# It should be quite generic and work on most UNIX-Systems. Esspecially
+# it's a vailid HPUX 10.x/11.x startup skript.
+#
+# Arguments: start, stop, verify_up, verify_down, restart
+#
+# Return values (start and verify_up/stop verify_down):
+# 0: Success (all are up/all are down)
+# 1: Failure (including partial)
+# 2: Skipped
+#
+
+sympadir="--BINDIR--"
+sympaconf="--CONFIG--"
+wwsympaconf="--WWSCONFIG--"
+
+start_wait=3
+stop_wait=5
+
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin
+
+# Gets a module name and check is it is up.
+check_up() {
+	if [ -r $pidfilepath/$1.pid ]
+	then
+		ps -p `cat $pidfilepath/$1.pid` | grep -q $1.pl 
+		if [ $? -ne 0 ]
+		then
+			echo "   XXX $1.pl has crashed! (pidfile without proc)"
+			return 1
+		else
+			return 0
+		fi
+	else
+		echo "   XXX $1.pl is down! (no pidfile)"
+		return 1
+	fi
+}
+
+# Gets a module name and check is it is down.
+check_down() {
+	if [ -r $pidfilepath/$1.pid ]
+	then
+		ps -p `cat $pidfilepath/$1.pid` | grep -q $1.pl
+		if [ $? -ne 0 ]
+		then
+			echo "   XXX $1.pl has crashed! (pidfile without proc)"
+			return 0;
+		else
+			echo "   XXX $1.pl is still up!"
+			return 1;
+		fi
+	else
+		return 0;
+	fi
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	if [ ! -d $sympadir ]; then
+		echo "XXX $sympadir directory not found!"
+		exit 2
+	fi
+	if [ ! -f $sympaconf ]; then
+		echo "XXX $sympaconf not found!"
+		exit 2
+	fi
+	if [ ! -f $wwsympaconf ]; then
+		echo "XXX $wwsympadir not found!"
+		exit 2
+	fi
+
+	if [ ! -f $pidfilepath/sympa ]; then
+		echo "Starting Sympa subsystem: "
+		echo '   ***  sympa.pl...'
+    		$sympadir/sympa.pl
+		echo '   ***  archived.pl...'
+    		$sympadir/archived.pl
+		echo '   ***  bounced.pl...'
+    		$sympadir/bounced.pl
+		touch $pidfilepath/sympa
+		sleep $start_wait
+	else
+		echo "   Sympa seems active. No action will be taken."
+	fi
+	$0 verify_up
+	exit $?
+	;;
+  stop)
+	echo "Stopping Sympa subsystem: "
+	if [ -f $pidfilepath/sympa ]; then
+		kill `cat $pidfilepath/sympa.pid`
+		kill `cat $pidfilepath/archived.pid`
+		kill `cat $pidfilepath/bounced.pid`
+		sleep $stop_wait
+	else
+		echo "   Sympa seems down. No action will be taken."
+	fi
+	$0 verify_down
+	value=$?
+	if [ $value -eq 0 -a -r $pidfilepath/sympa ]
+	then
+		rm $pidfilepath/sympa 
+	fi
+	exit $value
+	;;
+  restart)
+	$0 stop && $0 start
+	exit $?
+	;;
+  verify_up)
+	some_are_down=0
+	echo "Verifying Sympa is UP:"
+	check_up sympa || some_are_down=1
+	check_up bounced || some_are_down=1
+	check_up archived || some_are_down=1
+	if [ $some_are_down -eq 0 ]; then 
+		echo "   All fine."
+		exit 0
+	else
+		echo "   *** FAILURE!"
+		exit 1
+	fi
+	;;
+  verify_down)
+	some_are_up=0
+	echo "Verifying Sympa is DOWN:"
+	check_down sympa || some_are_up=1
+	check_down bounced || some_are_up=1
+	check_down archived || some_are_up=1
+	if [ $some_are_up -eq 0 ]; then 
+		echo "   All is down."
+		exit 0
+	else
+		echo "   *** FAILURE!"
+		exit 1
+	fi
+	;;
+  start_msg)
+	echo "Starting Sympa"
+	exit 0
+	;;
+  stop_msg)
+	echo "Stopping Sympa"
+	exit 0
+	;;
+esac
+
+echo "Usage: $0 start|stop|start_msg|stop_msg|verify_up|verify_down|restart"
+exit 1
