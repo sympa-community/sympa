@@ -164,6 +164,7 @@ use Archive;
 use Language;
 use Log;
 use Conf;
+use mail;
 use Time::Local;
 use MIME::QuotedPrint;
 use MIME::Entity;

@@ -25,7 +25,6 @@ use smtp;
 use MIME::QuotedPrint;
 use List;
 
-use mail;
 require 'tools.pl';
 require 'msg.pl';
 require 'parser.pl';
