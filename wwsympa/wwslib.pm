@@ -157,7 +157,12 @@ sub load_mime_types {
 	    my ($k, $v) = ($1, $2);
 	    
 	    my @extensions = split / /, $v;
-	    
+	
+	    ## provides file extention, given the content-type
+	    if ($#extensions >= 0) {
+		$types->{$k} = $extensions[0];
+	    }
+    
 	    foreach my $ext (@extensions) {
 		$types->{$ext} = $k;
 	    }
