@@ -1211,16 +1211,22 @@ sub send_to_editor {
        if ($method eq 'md5');
    
    if($method eq 'md5'){  
-       open(OUT, ">$modqueue\/$name\_$modkey") || return;
-       if ($encrypt eq 'smime_crypted') {
-	   open (ENCRYPTEDMSG, $file) ;
-	   while (<ENCRYPTEDMSG>) {
-	       print OUT ;
-	   }
-	   close ENCRYPTEDMSG ;
-       }else{
-	   $msg->print(\*OUT);
+       unless (open(OUT, ">$modqueue\/$name\_$modkey")) {
+	   do_log('notice', 'Could not open %s', "$modqueue\/$name\_$modkey");
+	   return undef;
        }
+
+       ## Always copy the original, not the MIME::Entity
+       ## This prevents from message alterations
+       unless (open (MSG, $file)) {
+	   do_log('notice', 'Could not open %s', $file);
+	   return undef;   
+       }
+       while (<MSG>) {
+	   print OUT ;
+       }
+       close MSG ;
+
        close(OUT);
    }
    foreach $i (@{$admin->{'editor'}}) {
@@ -1287,8 +1293,11 @@ sub send_to_editor {
        print DESC "--$boundary\n" if ($method eq 'md5');
        print DESC "Content-Type: message/rfc822\n\n" if ($method eq 'md5');
        
-       $msg->print(\*DESC);
-       
+       unless (open (MSG, $file)) {
+	   do_log('notice', 'Could not open %s', $file);
+	   return undef;   
+       }
+       print DESC <MSG>;
        close(DESC);
    }
    return $modkey;

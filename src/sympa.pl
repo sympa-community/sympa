@@ -666,7 +666,7 @@ sub DoForward {
 ## Handles a message sent to a list.
 sub DoMessage{
     my($which, $msg, $bytes, $file, $encrypt ) = @_;
-    &do_log('debug2', 'DoMessage(%s, %s, msg from %s, %s, %s)', $which, $msg, $msg->head->get('From'), $bytes, $file, $encrypt);
+    &do_log('debug2', 'DoMessage(%s, %s, msg from %s, %s, %s,%s)', $which, $msg, $msg->head->get('From'), $bytes, $file, $encrypt);
     
     ## List and host.
     my($listname, $host) = split(/[@\s]+/, $which);
