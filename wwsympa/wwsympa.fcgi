@@ -135,6 +135,7 @@ my %comm = ('home' => 'do_home',
 	 'loginrequest' => 'do_loginrequest',
 	 'login' => 'do_login',
 	 'sso_login' => 'do_sso_login',
+	 'sso_login_succeeded' => 'do_sso_login_succeeded',
 	 'subscribe' => 'do_subscribe',
 	 'subrequest' => 'do_subrequest',
 	 'subindex' => 'do_subindex',
@@ -247,6 +248,7 @@ my %action_args = ('default' => ['list'],
 		'lists' => ['topic','subtopic'],
 		'login' => ['email','passwd','previous_action','previous_list'],
 		'sso_login' => ['auth_service_name','previous_action','previous_list'],
+		'sso_login_succeeded' => ['auth_service_name','previous_action','previous_list'],
 		'loginrequest' => ['previous_action','previous_list'],
 		'logout' => ['previous_action','previous_list'],
 		'remindpasswd' => ['previous_action','previous_list'],
@@ -567,6 +569,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		 $param->{'auth'} = 'cas';
 
 		 &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id);
+
+		 
 	     }else{
 		 do_log('err',"CAS ticket validation failed : %s", &CAS::get_errors()); 
 	     }
@@ -1425,21 +1429,34 @@ if ($wwsconf->{'use_fast_cgi'}) {
      my $user;
      my $next_action;     
 
+     if ($in{'referer'}) {
+	 $param->{'redirect_to'} = &tools::unescape_chars($in{'referer'});
+     }elsif ($in{'previous_action'}) {
+	 $next_action = $in{'previous_action'};
+	 $in{'list'} = $in{'previous_list'};
+     }else {
+	 $next_action = 'home';
+     }
+
      if ($param->{'user'}{'email'}) {
 	 &error_message('already_login', {'email' => $param->{'user'}{'email'}});
 	 &wwslog('info','do_login: user %s already logged in', $param->{'user'}{'email'});
-	 # &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'login','',$robot,'','already logged');
-	 return 'home';
-     }
-     
+
+	 if ($param->{'nomenu'}) {
+	     $param->{'back_to_mom'} = 1;
+	     return 1;
+	 }else {
+	     return $next_action;
+	 }
+     }     
 
      unless ($in{'email'}) {
 	 &error_message('no_email');
 	 &wwslog('info','do_login: no email');
 	 # &List::db_log('wwsympa','nobody',$param->{'auth_method'},$ip,'login','',$robot,'','no email');
-	 return 'home';
+	 return $in{'previous_action'} || 'home';
      }
-
+     
      unless ($in{'passwd'}) {
 	 my $url_redirect;
 	 #Does the email belongs to an ldap directory?
@@ -1452,7 +1469,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     $in{'init_email'} = $in{'email'};
 	     $param->{'init_email'} = $in{'email'};
 	     $param->{'escaped_init_email'} = &tools::escape_chars($in{'email'});
-	     return $in{'failure_referer'}||'loginrequest';
+	     return $in{'failure_referer'}||$in{'previous_action'};
 	 }
      }
 
@@ -1502,21 +1519,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
      if (($param->{'auth'} eq 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
 	 &message('you_should_choose_a_password');
      }
-
+     
      if ($in{'newpasswd1'} && $in{'newpasswd2'}) {
 	 my $old_action = $param->{'action'};
 	 $param->{'action'} = 'setpasswd';
 	 &do_setpasswd();
 	 $param->{'action'} = $old_action;
-     }
-
-     if ($in{'referer'}) {
-	 $param->{'redirect_to'} = &tools::unescape_chars($in{'referer'});
-     }elsif ($in{'previous_action'}) {
-	 $next_action = $in{'previous_action'};
-	 $in{'list'} = $in{'previous_list'};
-     }else {
-	 $next_action = 'home';
      }
 
      if ($param->{'nomenu'}) {
@@ -1555,12 +1563,11 @@ sub do_sso_login {
 	my $cas_server = $Conf{'auth_services'}[$cas_id]{'cas_server'};
 	
 	my $path = '';
-	if ($in{'previous_action'}) {
-	    $path = "/$in{'previous_action'}";
+	if ($param->{'nomenu'}) {
+	    $path = "/nomenu";
 	}
-	if ($in{'previous_list'}) {
-	    $path .= "/$in{'previous_list'}";
-	}
+	$path .= "/sso_login_succeeded/$in{'auth_service_name'}";
+
 	my $service = "$param->{'base_url'}$param->{'path_cgi'}".$path."?checked_cas=".$cas_id;
 	
 	my $redirect_url = $cas_server->getServerLoginURL($service);
@@ -1578,12 +1585,12 @@ sub do_sso_login {
 	## If contacted via POST, then redirect the user to the URL for the access control to apply
 	if ($ENV{'REQUEST_METHOD'} eq 'POST') {
 	    my $path = '';
-	    if ($in{'previous_action'}) {
-		$path = "/$in{'previous_action'}";
+
+	    if ($param->{'nomenu'}) {
+		$path = "/nomenu";
 	    }
-	    if ($in{'previous_list'}) {
-		$path .= "/$in{'previous_list'}";
-	    }
+	    $path .= "/sso_login_succeeded/$in{'auth_service_name'}";
+	    
 	    my $service = "$param->{'base_url'}$param->{'path_cgi'}/sso_login/$in{'auth_service_name'}".$path;
 	    
 	    &do_log('info', 'do_sso_login: redirect user to %s', $service);
@@ -1646,6 +1653,19 @@ sub do_sso_login {
     return 1;
 }
 
+sub do_sso_login_succeeded {
+    &do_log('info', 'do_sso_login(%s)', $in{'auth_service_name'});
+
+    &message('you_have_been_authenticated');
+    
+    ## We should refresh the main window
+    if ($param->{'nomenu'}) {
+	$param->{'back_to_mom'} = 1;
+	return 1;
+    }else {
+	return 'home';
+    }
+}
 
  sub do_unify_email {
 
@@ -1841,8 +1861,7 @@ sub do_sso_login {
      if ($in{'previous_action'} eq 'referer') {
 	 $param->{'referer'} = &tools::escape_chars($ENV{'HTTP_REFERER'});
      }elsif (! $param->{'previous_action'}) {
-	 $param->{'previous_action'} = $in{'previous_action'};
-	 $param->{'previous_list'} = $in{'previous_list'};
+	 $param->{'previous_action'} = 'loginrequest';
      }
 
      $param->{'title'} = 'Login'
