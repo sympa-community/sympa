@@ -95,7 +95,7 @@ AC_SUBST(INITDIR)
 
 ## Lock directory
 LOCKDIR=/var/lock/subsys
-AC_ARG_WITH(initdir, [  --with-lockdir=DIR     create lock files in DIR  (default /var/lock/subsys)], [LOCKDIR="$withval"])
+AC_ARG_WITH(lockdir, [  --with-lockdir=DIR     create lock files in DIR  (default /var/lock/subsys)], [LOCKDIR="$withval"])
 AC_SUBST(LOCKDIR)
 
 ## directory for storing .pid files
