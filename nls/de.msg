@@ -235,7 +235,7 @@ mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
 6	"Willkommen bei %s!"
 7	"Datei"
 9	"Zusammenfaßung für Liste %s"
-12	"Um die angeh"angte Nachricht über Liste %s zu verteilen:\n\
+12	"Um die angeh\"angte Nachricht über Liste %s zu verteilen:\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 Oder: Schicken Sie eine Nachricht an %s mit folgendem Subject:\n\
 CONFIRM %s\n"
