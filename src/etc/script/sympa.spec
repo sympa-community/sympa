@@ -216,6 +216,7 @@ for a_file in /etc/aliases /etc/postfix/aliases; do
       # and then invoke: /usr/bin/newaliases
       echo "Your new aliases have been set up in ${a_file}. Please check them out before running /usr/bin/newaliases"
       echo "You must configure your MTA (sendmail, postfix,...) for using a second aliases file, the one modified by sympa for his lists : /etc/mail/sympa_aliases"
+      echo "Refer to INSTALL file for more setup information..."
     fi
   fi
 done

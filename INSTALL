@@ -1,5 +1,7 @@
-Please refer to the documentation for installation
-notes : doc/sympa/node4.html
+Please refer to the documentation for full installation notes : doc/sympa/node4.html
+
+Installing Sympa from sources
+=============================
 
 Create a dedicated user sympa.sympa (and it's home directory and  run 
 
@@ -12,4 +14,28 @@ If you get sources from cvs tree first run:
 
 automake -a ; aclocal ; autoconf
    
-   
+
+Sympa setup
+==========
+
+1/ Customization of sympa.conf
+You can edit sympa.conf (and wwsympa.conf) manually or run sympa_wizard.pl that will help
+you create your configuration files.
+
+2/ Database (MySQL) setup
+db_xxx parameters in sympa.conf refer to your local database. 
+Sympa.pl should be able to create this database at runtime ; if it does not you'll
+have to create it yourself with the provided create_db.xxx scripts and provide
+read access to Sympa.
+
+3/ Mail aliases
+Sympa will use a dedicated alias file for its own mail aliases, default is /etc/mail/sympa_aliases.
+You have to configure your MTA (sendmail/postfix,...) to use this file.
+You should also create the main Sympa aliases ; they will look like this :
+	sympa: "| /home/sympa/bin/queue sympa@my.domain.org"
+	listmaster: "| /home/sympa/bin/queue listmaster@my.domain.org"
+	bounce+*: "| /home/sympa/bin/bouncequeue sympa@my.domain.org"
+	sympa-request: postmaster
+	sympa-owner: postmaster
+
+Note that Sympa can also manage virtual mail domains (refer to documentation)
