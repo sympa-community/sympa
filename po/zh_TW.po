@@ -182,11 +182,6 @@ msgid ""
 "are no more web-archived. Please contact %5@%4. \n"
 msgstr ""
 
-#. (l.average)
-#: web_tt2/rss.tt2:102
-msgid "%1 by day "
-msgstr ""
-
 #. (body_count)
 #: web_tt2/arcsearch.tt2:56
 msgid "%1 hits on message's Body"
@@ -232,9 +227,19 @@ msgstr "[% notice.action %]: 操作成功"
 msgid "%1: action failed"
 msgstr "%1: 操作失敗"
 
-#. (l.name,l.host,l.subject,l.msg_count)
-#: web_tt2/rss.tt2:101
-msgid "%1@%2 - %3 : %4 messages"
+#. (l.name,l.host,l.subject)
+#: web_tt2/rss.tt2:51
+msgid "%1@%2 - %3"
+msgstr ""
+
+#. (l.name,l.host,l.msg_count)
+#: web_tt2/rss.tt2:61
+msgid "%1@%2 : %3 messages"
+msgstr ""
+
+#. (l.name,l.host,l.msg_count,l.average)
+#: web_tt2/rss.tt2:59
+msgid "%1@%2 : %3 messages - %4 by day "
 msgstr ""
 
 #. (list.name,list.host,param0)
@@ -685,7 +690,7 @@ msgid "Body"
 msgstr "Body"
 
 #. (d.anchor)
-#: web_tt2/rss.tt2:121
+#: web_tt2/rss.tt2:78
 #, fuzzy
 msgid "Bookmark %1"
 msgstr "設定書簽網址"
@@ -783,7 +788,7 @@ msgstr ",AF>V$5=FZHU(B"
 msgid "Certificate issuer"
 msgstr ",AF>V$7\"2<U_(B"
 
-#: web_tt2/main.tt2:213 web_tt2/main.tt2:297
+#: web_tt2/main.tt2:225 web_tt2/main.tt2:309
 msgid "Change"
 msgstr ""
 
@@ -2622,7 +2627,7 @@ msgstr "間隔"
 msgid "Periodical subscription expiration task"
 msgstr ",AF>V$5=FZHU(B"
 
-#: web_tt2/main.tt2:170
+#: web_tt2/main.tt2:182
 msgid "Please activate JavaScript in your web browser"
 msgstr ""
 
@@ -2662,7 +2667,7 @@ msgstr ""
 msgid "Post"
 msgstr "發表"
 
-#: web_tt2/main.tt2:304 web_tt2/tt2_error.tt2:47
+#: web_tt2/main.tt2:316 web_tt2/tt2_error.tt2:47
 msgid "Powered by"
 msgstr ""
 
@@ -3185,7 +3190,7 @@ msgstr "Sending/reception setup"
 msgid "Serial number of the config"
 msgstr ""
 
-#: web_tt2/rss.tt2:28 web_tt2/rss.tt2:7
+#: web_tt2/rss.tt2:17 web_tt2/rss.tt2:5
 #, fuzzy
 msgid "Server error"
 msgstr "重置錯誤計數"
@@ -3583,7 +3588,7 @@ msgstr ""
 msgid "Sympa error - could not display web page"
 msgstr ""
 
-#: web_tt2/main.tt2:205 web_tt2/main.tt2:288
+#: web_tt2/main.tt2:217 web_tt2/main.tt2:300
 msgid "Sympa in your language:"
 msgstr ""
 
@@ -3631,7 +3636,7 @@ msgid ""
 msgstr ""
 
 #. (count)
-#: web_tt2/rss.tt2:31
+#: web_tt2/rss.tt2:19
 #, fuzzy
 msgid "The %1 latest created lists"
 msgstr ""
@@ -3642,24 +3647,19 @@ msgstr ""
 "      <TR><"
 
 #. (count)
-#: web_tt2/rss.tt2:51
+#: web_tt2/rss.tt2:31
 #, fuzzy
 msgid "The %1 latest messages"
 msgstr "最新郵件優先"
 
 #. (count)
-#: web_tt2/rss.tt2:60
+#: web_tt2/rss.tt2:36
 #, fuzzy
 msgid "The %1 latest shared documents"
-msgstr ""
-"/FORM>\n"
-"\t</TD>\n"
-"      </TR>\n"
-"\n"
-"      <TR><"
+msgstr "最新郵件優先"
 
 #. (count)
-#: web_tt2/rss.tt2:41
+#: web_tt2/rss.tt2:25
 #, fuzzy
 msgid "The %1 most active lists"
 msgstr ""
@@ -3802,7 +3802,7 @@ msgstr ""
 msgid "The following virtual robots are running on this server :"
 msgstr ""
 
-#: web_tt2/rss.tt2:33
+#: web_tt2/rss.tt2:20
 #, fuzzy
 msgid "The latest created lists"
 msgstr ""
@@ -3812,14 +3812,15 @@ msgstr ""
 "\n"
 "      <TR><"
 
-#: web_tt2/rss.tt2:53
+#: web_tt2/rss.tt2:32
 #, fuzzy
 msgid "The latest messages"
 msgstr "最新郵件優先"
 
-#: web_tt2/rss.tt2:62
+#: web_tt2/rss.tt2:37
+#, fuzzy
 msgid "The latest shared documents"
-msgstr ""
+msgstr "最新郵件優先"
 
 #. (conf.wwsympa_url,list.name)
 #: mail_tt2/d_install_shared.tt2:7
@@ -3857,7 +3858,7 @@ msgstr "郵遞論壇類型是參數集配置。可以在郵遞論壇創建後編
 msgid "The list's subject"
 msgstr "這是郵遞論壇的主題"
 
-#: web_tt2/rss.tt2:43
+#: web_tt2/rss.tt2:26
 #, fuzzy
 msgid "The most active lists"
 msgstr ""
@@ -4459,7 +4460,7 @@ msgid "Unsubscribe"
 msgstr "退訂"
 
 # nlsref 6,71
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3421
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3433
 msgid "Unsubscribe from list %s"
 msgstr "¥Ñ¶l±H²M³æ %s ÖÃ¶}"
 
@@ -4652,8 +4653,8 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:3192 wwsympa/wwsympa.fcgi:3193
-#: wwsympa/wwsympa.fcgi:3791 wwsympa/wwsympa.fcgi:3792
+#: wwsympa/wwsympa.fcgi:3204 wwsympa/wwsympa.fcgi:3205
+#: wwsympa/wwsympa.fcgi:3803 wwsympa/wwsympa.fcgi:3804
 msgid "Welcome on list %s"
 msgstr "Åwªï¥[¤J %s ¶l±H²M³æ"
 
@@ -4838,7 +4839,7 @@ msgid ""
 msgstr "您並未選取密碼, 請要求一份原先密碼的提醒"
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3422 wwsympa/wwsympa.fcgi:3897
+#: wwsympa/wwsympa.fcgi:3434 wwsympa/wwsympa.fcgi:3909
 #, fuzzy
 msgid "You have been removed from list %s.\n"
 msgstr "«ü©wªº­q¤á¤w¸g±q¶l±H²M³æ¤¤°£¥h¡C\n"
@@ -5200,7 +5201,7 @@ msgid "Your subscription email is %1"
 msgstr ""
 
 # nlsref 6,18
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3896
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3908
 msgid "Your subscription to list %s has been removed."
 msgstr "§A¦b¶l±H²M³æ %s ¤¤¸g¤w°£¥h"
 
@@ -5229,6 +5230,41 @@ msgstr ""
 #: src/PlainDigest.pm:327
 msgid "[ Text converted from HTML ]\n"
 msgstr ""
+
+#: web_tt2/main.tt2:162 web_tt2/main.tt2:165
+#, fuzzy
+msgid "\"RSS Active lists\""
+msgstr ""
+"/FORM>\n"
+"\t</TD>\n"
+"      </TR>\n"
+"\n"
+"      <TR><"
+
+#: web_tt2/main.tt2:158
+#, fuzzy
+msgid "\"RSS Latest documents\""
+msgstr ""
+"/FORM>\n"
+"\t</TD>\n"
+"      </TR>\n"
+"\n"
+"      <TR><"
+
+#: web_tt2/main.tt2:161 web_tt2/main.tt2:164
+#, fuzzy
+msgid "\"RSS Latest lists\""
+msgstr ""
+"/FORM>\n"
+"\t</TD>\n"
+"      </TR>\n"
+"\n"
+"      <TR><"
+
+#: web_tt2/main.tt2:157
+#, fuzzy
+msgid "\"RSS Latest messages\""
+msgstr "最新郵件優先"
 
 #: src/PlainDigest.pm:296 src/PlainDigest.pm:317
 msgid ""

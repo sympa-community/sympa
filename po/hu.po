@@ -172,13 +172,6 @@ msgstr ""
 "A(z) %1@%2 archívumának összmérete: %3 bájt. A leveleket\n"
 "tovább már nem archiváljuk. Kérem forduljon az üzemeltetõhöz, lismaster@%4.\n"
 
-# nlsref 17,6
-#. (l.average)
-#: web_tt2/rss.tt2:102
-#, fuzzy
-msgid "%1 by day "
-msgstr "1 nap múlva"
-
 #. (body_count)
 #: web_tt2/arcsearch.tt2:56
 msgid "%1 hits on message's Body"
@@ -224,9 +217,19 @@ msgstr "%1 tag sikeresen felírva"
 msgid "%1: action failed"
 msgstr "%1: hiba a mûvelet végrehajtásakor"
 
-#. (l.name,l.host,l.subject,l.msg_count)
-#: web_tt2/rss.tt2:101
-msgid "%1@%2 - %3 : %4 messages"
+#. (l.name,l.host,l.subject)
+#: web_tt2/rss.tt2:51
+msgid "%1@%2 - %3"
+msgstr ""
+
+#. (l.name,l.host,l.msg_count)
+#: web_tt2/rss.tt2:61
+msgid "%1@%2 : %3 messages"
+msgstr ""
+
+#. (l.name,l.host,l.msg_count,l.average)
+#: web_tt2/rss.tt2:59
+msgid "%1@%2 : %3 messages - %4 by day "
 msgstr ""
 
 #. (list.name,list.host,param0)
@@ -717,7 +720,7 @@ msgid "Body"
 msgstr "Törzs"
 
 #. (d.anchor)
-#: web_tt2/rss.tt2:121
+#: web_tt2/rss.tt2:78
 #, fuzzy
 msgid "Bookmark %1"
 msgstr "Webcím felvétele a könyvjelzõbe"
@@ -817,7 +820,7 @@ msgstr "Bizonylat lejárati dátuma:"
 msgid "Certificate issuer"
 msgstr "Bizonylat kiállítója:"
 
-#: web_tt2/main.tt2:213 web_tt2/main.tt2:297
+#: web_tt2/main.tt2:225 web_tt2/main.tt2:309
 #, fuzzy
 msgid "Change"
 msgstr "Mégsem"
@@ -2779,7 +2782,7 @@ msgstr ""
 msgid "Periodical subscription expiration task"
 msgstr "Felhasználható tagsági beállítások"
 
-#: web_tt2/main.tt2:170
+#: web_tt2/main.tt2:182
 msgid "Please activate JavaScript in your web browser"
 msgstr ""
 
@@ -2823,7 +2826,7 @@ msgstr ""
 msgid "Post"
 msgstr "Levél beküldés"
 
-#: web_tt2/main.tt2:304 web_tt2/tt2_error.tt2:47
+#: web_tt2/main.tt2:316 web_tt2/tt2_error.tt2:47
 #, fuzzy
 msgid "Powered by"
 msgstr "Mûködteti a Sympa"
@@ -3369,7 +3372,7 @@ msgstr "Küldések/fogadások beállítása"
 msgid "Serial number of the config"
 msgstr "A beállítás sorozatszáma"
 
-#: web_tt2/rss.tt2:28 web_tt2/rss.tt2:7
+#: web_tt2/rss.tt2:17 web_tt2/rss.tt2:5
 #, fuzzy
 msgid "Server error"
 msgstr "Hibák törlése"
@@ -3805,7 +3808,7 @@ msgstr ""
 msgid "Sympa error - could not display web page"
 msgstr ""
 
-#: web_tt2/main.tt2:205 web_tt2/main.tt2:288
+#: web_tt2/main.tt2:217 web_tt2/main.tt2:300
 msgid "Sympa in your language:"
 msgstr ""
 
@@ -3860,26 +3863,26 @@ msgstr ""
 "lista szerveren lett eltárolva."
 
 #. (count)
-#: web_tt2/rss.tt2:31
+#: web_tt2/rss.tt2:19
 #, fuzzy
 msgid "The %1 latest created lists"
 msgstr "Kijelölt listák törlése"
 
 #. (count)
-#: web_tt2/rss.tt2:51
+#: web_tt2/rss.tt2:31
 #, fuzzy
 msgid "The %1 latest messages"
 msgstr "Utolsó üzenet"
 
 # nlsref 16,70
 #. (count)
-#: web_tt2/rss.tt2:60
+#: web_tt2/rss.tt2:36
 #, fuzzy
 msgid "The %1 latest shared documents"
 msgstr "Megosztott dokumentumok"
 
 #. (count)
-#: web_tt2/rss.tt2:41
+#: web_tt2/rss.tt2:25
 #, fuzzy
 msgid "The %1 most active lists"
 msgstr "Inaktív listák"
@@ -4035,18 +4038,18 @@ msgstr ""
 msgid "The following virtual robots are running on this server :"
 msgstr "A következõ virtuális robotok érhetõk el a szerveren:"
 
-#: web_tt2/rss.tt2:33
+#: web_tt2/rss.tt2:20
 #, fuzzy
 msgid "The latest created lists"
 msgstr "Kijelölt listák törlése"
 
-#: web_tt2/rss.tt2:53
+#: web_tt2/rss.tt2:32
 #, fuzzy
 msgid "The latest messages"
 msgstr "Utolsó üzenet"
 
 # nlsref 16,70
-#: web_tt2/rss.tt2:62
+#: web_tt2/rss.tt2:37
 #, fuzzy
 msgid "The latest shared documents"
 msgstr "Megosztott dokumentumok"
@@ -4093,7 +4096,7 @@ msgstr ""
 msgid "The list's subject"
 msgstr "Amirõl a lista szól"
 
-#: web_tt2/rss.tt2:43
+#: web_tt2/rss.tt2:26
 #, fuzzy
 msgid "The most active lists"
 msgstr "Inaktív listák"
@@ -4850,7 +4853,7 @@ msgid "Unsubscribe"
 msgstr "Leiratkozás"
 
 # nlsref 6,71
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3421
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3433
 msgid "Unsubscribe from list %s"
 msgstr "Leiratkozás a(z) %s listáról"
 
@@ -5050,8 +5053,8 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:3192 wwsympa/wwsympa.fcgi:3193
-#: wwsympa/wwsympa.fcgi:3791 wwsympa/wwsympa.fcgi:3792
+#: wwsympa/wwsympa.fcgi:3204 wwsympa/wwsympa.fcgi:3205
+#: wwsympa/wwsympa.fcgi:3803 wwsympa/wwsympa.fcgi:3804
 msgid "Welcome on list %s"
 msgstr "Üdvözlünk a(z) %s listán"
 
@@ -5249,7 +5252,7 @@ msgstr ""
 "jelszavadat."
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3422 wwsympa/wwsympa.fcgi:3897
+#: wwsympa/wwsympa.fcgi:3434 wwsympa/wwsympa.fcgi:3909
 msgid "You have been removed from list %s.\n"
 msgstr "Törölve lettél a(z) %s listáról.\n"
 
@@ -5655,7 +5658,7 @@ msgid "Your subscription email is %1"
 msgstr "Feliratkozási e-mail címed: %1"
 
 # nlsref 6,18
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3896
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3908
 msgid "Your subscription to list %s has been removed."
 msgstr "A(z) %s listáról töröltek."
 
@@ -5683,6 +5686,27 @@ msgstr "[ Kép%s ]"
 #: src/PlainDigest.pm:327
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ A szöveg HTML-bõl lett átalakítva ]\n"
+
+#: web_tt2/main.tt2:162 web_tt2/main.tt2:165
+#, fuzzy
+msgid "\"RSS Active lists\""
+msgstr "Inaktív listák"
+
+# nlsref 16,70
+#: web_tt2/main.tt2:158
+#, fuzzy
+msgid "\"RSS Latest documents\""
+msgstr "Megosztott dokumentumok"
+
+#: web_tt2/main.tt2:161 web_tt2/main.tt2:164
+#, fuzzy
+msgid "\"RSS Latest lists\""
+msgstr "Legújabb listák"
+
+#: web_tt2/main.tt2:157
+#, fuzzy
+msgid "\"RSS Latest messages\""
+msgstr "Utolsó üzenet"
 
 #: src/PlainDigest.pm:296 src/PlainDigest.pm:317
 msgid ""
@@ -6889,6 +6913,11 @@ msgstr "e-mail címed: %1"
 #: mail_tt2/sendpasswd.tt2:30
 msgid "your password : %1"
 msgstr "jelszavad   : %1"
+
+# nlsref 17,6
+#, fuzzy
+#~ msgid "%1 by day "
+#~ msgstr "1 nap múlva"
 
 #~ msgid "Language : %1"
 #~ msgstr "Nyelv: %1"

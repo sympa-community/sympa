@@ -164,11 +164,6 @@ msgid ""
 "are no more web-archived. Please contact %5@%4. \n"
 msgstr ""
 
-#. (l.average)
-#: web_tt2/rss.tt2:102
-msgid "%1 by day "
-msgstr ""
-
 #. (body_count)
 #: web_tt2/arcsearch.tt2:56
 msgid "%1 hits on message's Body"
@@ -214,9 +209,19 @@ msgstr ""
 msgid "%1: action failed"
 msgstr ""
 
-#. (l.name,l.host,l.subject,l.msg_count)
-#: web_tt2/rss.tt2:101
-msgid "%1@%2 - %3 : %4 messages"
+#. (l.name,l.host,l.subject)
+#: web_tt2/rss.tt2:51
+msgid "%1@%2 - %3"
+msgstr ""
+
+#. (l.name,l.host,l.msg_count)
+#: web_tt2/rss.tt2:61
+msgid "%1@%2 : %3 messages"
+msgstr ""
+
+#. (l.name,l.host,l.msg_count,l.average)
+#: web_tt2/rss.tt2:59
+msgid "%1@%2 : %3 messages - %4 by day "
 msgstr ""
 
 #. (list.name,list.host,param0)
@@ -664,7 +669,7 @@ msgid "Body"
 msgstr ""
 
 #. (d.anchor)
-#: web_tt2/rss.tt2:121
+#: web_tt2/rss.tt2:78
 msgid "Bookmark %1"
 msgstr ""
 
@@ -760,7 +765,7 @@ msgstr ""
 msgid "Certificate issuer"
 msgstr ""
 
-#: web_tt2/main.tt2:213 web_tt2/main.tt2:297
+#: web_tt2/main.tt2:225 web_tt2/main.tt2:309
 msgid "Change"
 msgstr ""
 
@@ -2565,7 +2570,7 @@ msgstr ""
 msgid "Periodical subscription expiration task"
 msgstr ""
 
-#: web_tt2/main.tt2:170
+#: web_tt2/main.tt2:182
 msgid "Please activate JavaScript in your web browser"
 msgstr ""
 
@@ -2604,7 +2609,7 @@ msgstr ""
 msgid "Post"
 msgstr ""
 
-#: web_tt2/main.tt2:304 web_tt2/tt2_error.tt2:47
+#: web_tt2/main.tt2:316 web_tt2/tt2_error.tt2:47
 msgid "Powered by"
 msgstr ""
 
@@ -3122,7 +3127,7 @@ msgstr ""
 msgid "Serial number of the config"
 msgstr "Numer seryjny pliku konfiguracyjnego"
 
-#: web_tt2/rss.tt2:28 web_tt2/rss.tt2:7
+#: web_tt2/rss.tt2:17 web_tt2/rss.tt2:5
 msgid "Server error"
 msgstr ""
 
@@ -3525,7 +3530,7 @@ msgstr ""
 msgid "Sympa error - could not display web page"
 msgstr ""
 
-#: web_tt2/main.tt2:205 web_tt2/main.tt2:288
+#: web_tt2/main.tt2:217 web_tt2/main.tt2:300
 msgid "Sympa in your language:"
 msgstr ""
 
@@ -3573,29 +3578,31 @@ msgstr ""
 
 # nlsref 15,3
 #. (count)
-#: web_tt2/rss.tt2:31
+#: web_tt2/rss.tt2:19
 #, fuzzy
 msgid "The %1 latest created lists"
 msgstr "Wiadomo¶æ o usuniêciu"
 
 # nlsref 15,3
 #. (count)
-#: web_tt2/rss.tt2:51
+#: web_tt2/rss.tt2:31
 #, fuzzy
 msgid "The %1 latest messages"
 msgstr "Wiadomo¶æ o usuniêciu"
 
 # nlsref 16,70
 #. (count)
-#: web_tt2/rss.tt2:60
+#: web_tt2/rss.tt2:36
 #, fuzzy
 msgid "The %1 latest shared documents"
 msgstr "Dokumenty wspó³dzielone"
 
+# nlsref 15,3
 #. (count)
-#: web_tt2/rss.tt2:41
+#: web_tt2/rss.tt2:25
+#, fuzzy
 msgid "The %1 most active lists"
-msgstr ""
+msgstr "Wiadomo¶æ o usuniêciu"
 
 #: web_tt2/help_editlist.tt2:38
 msgid ""
@@ -3731,18 +3738,20 @@ msgstr ""
 msgid "The following virtual robots are running on this server :"
 msgstr ""
 
-#: web_tt2/rss.tt2:33
+# nlsref 15,3
+#: web_tt2/rss.tt2:20
+#, fuzzy
 msgid "The latest created lists"
-msgstr ""
+msgstr "Wiadomo¶æ o usuniêciu"
 
 # nlsref 15,3
-#: web_tt2/rss.tt2:53
+#: web_tt2/rss.tt2:32
 #, fuzzy
 msgid "The latest messages"
 msgstr "Wiadomo¶æ o usuniêciu"
 
 # nlsref 16,70
-#: web_tt2/rss.tt2:62
+#: web_tt2/rss.tt2:37
 #, fuzzy
 msgid "The latest shared documents"
 msgstr "Dokumenty wspó³dzielone"
@@ -3783,9 +3792,11 @@ msgstr ""
 msgid "The list's subject"
 msgstr ""
 
-#: web_tt2/rss.tt2:43
+# nlsref 15,3
+#: web_tt2/rss.tt2:26
+#, fuzzy
 msgid "The most active lists"
-msgstr ""
+msgstr "Wiadomo¶æ o usuniêciu"
 
 #: web_tt2/error.tt2:82
 msgid "The passwords you typed do not match"
@@ -4385,7 +4396,7 @@ msgid "Unsubscribe"
 msgstr ""
 
 # nlsref 6,71
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3421
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3433
 msgid "Unsubscribe from list %s"
 msgstr "Wypisanie z listy %s"
 
@@ -4578,8 +4589,8 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:3192 wwsympa/wwsympa.fcgi:3193
-#: wwsympa/wwsympa.fcgi:3791 wwsympa/wwsympa.fcgi:3792
+#: wwsympa/wwsympa.fcgi:3204 wwsympa/wwsympa.fcgi:3205
+#: wwsympa/wwsympa.fcgi:3803 wwsympa/wwsympa.fcgi:3804
 msgid "Welcome on list %s"
 msgstr "Witaj na li¶cie %s"
 
@@ -4765,7 +4776,7 @@ msgid ""
 msgstr ""
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3422 wwsympa/wwsympa.fcgi:3897
+#: wwsympa/wwsympa.fcgi:3434 wwsympa/wwsympa.fcgi:3909
 #, fuzzy
 msgid "You have been removed from list %s.\n"
 msgstr "U¿ytkownik %s zosta³ wypisany z listy %s.\n"
@@ -5147,7 +5158,7 @@ msgid "Your subscription email is %1"
 msgstr ""
 
 # nlsref 6,18
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3896
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3908
 msgid "Your subscription to list %s has been removed."
 msgstr "Zosta³e¶ wypisany z listy %s."
 
@@ -5176,6 +5187,28 @@ msgstr ""
 #: src/PlainDigest.pm:327
 msgid "[ Text converted from HTML ]\n"
 msgstr ""
+
+#: web_tt2/main.tt2:162 web_tt2/main.tt2:165
+msgid "\"RSS Active lists\""
+msgstr ""
+
+# nlsref 16,70
+#: web_tt2/main.tt2:158
+#, fuzzy
+msgid "\"RSS Latest documents\""
+msgstr "Dokumenty wspó³dzielone"
+
+# nlsref 15,3
+#: web_tt2/main.tt2:161 web_tt2/main.tt2:164
+#, fuzzy
+msgid "\"RSS Latest lists\""
+msgstr "Wiadomo¶æ o usuniêciu"
+
+# nlsref 15,3
+#: web_tt2/main.tt2:157
+#, fuzzy
+msgid "\"RSS Latest messages\""
+msgstr "Wiadomo¶æ o usuniêciu"
 
 #: src/PlainDigest.pm:296 src/PlainDigest.pm:317
 msgid ""

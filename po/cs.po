@@ -156,11 +156,6 @@ msgid ""
 "are no more web-archived. Please contact %5@%4. \n"
 msgstr ""
 
-#. (l.average)
-#: web_tt2/rss.tt2:102
-msgid "%1 by day "
-msgstr ""
-
 #. (body_count)
 #: web_tt2/arcsearch.tt2:56
 #, fuzzy
@@ -209,9 +204,19 @@ msgstr "pÃ¸idÃ¡no %1 Ã¨lenÃ¹"
 msgid "%1: action failed"
 msgstr "%1: akce selhala"
 
-#. (l.name,l.host,l.subject,l.msg_count)
-#: web_tt2/rss.tt2:101
-msgid "%1@%2 - %3 : %4 messages"
+#. (l.name,l.host,l.subject)
+#: web_tt2/rss.tt2:51
+msgid "%1@%2 - %3"
+msgstr ""
+
+#. (l.name,l.host,l.msg_count)
+#: web_tt2/rss.tt2:61
+msgid "%1@%2 : %3 messages"
+msgstr ""
+
+#. (l.name,l.host,l.msg_count,l.average)
+#: web_tt2/rss.tt2:59
+msgid "%1@%2 : %3 messages - %4 by day "
 msgstr ""
 
 #. (list.name,list.host,param0)
@@ -649,7 +654,7 @@ msgid "Body"
 msgstr "TÃ¬lo zprÃ¡vy"
 
 #. (d.anchor)
-#: web_tt2/rss.tt2:121
+#: web_tt2/rss.tt2:78
 #, fuzzy
 msgid "Bookmark %1"
 msgstr "Nahradit soubor [% path %] VaÂ¹Ã­m souborem"
@@ -741,7 +746,7 @@ msgstr "datum vyprÂšenÃ­ certifikÃ¡tu"
 msgid "Certificate issuer"
 msgstr "Certifikaci vydal"
 
-#: web_tt2/main.tt2:213 web_tt2/main.tt2:297
+#: web_tt2/main.tt2:225 web_tt2/main.tt2:309
 msgid "Change"
 msgstr ""
 
@@ -2543,7 +2548,7 @@ msgstr "obdobÃ­"
 msgid "Periodical subscription expiration task"
 msgstr "datum vyprÂšenÃ­ certifikÃ¡tu"
 
-#: web_tt2/main.tt2:170
+#: web_tt2/main.tt2:182
 msgid "Please activate JavaScript in your web browser"
 msgstr ""
 
@@ -2582,7 +2587,7 @@ msgstr ""
 msgid "Post"
 msgstr "PÃ¸Ã­spÃ¬vek do konference"
 
-#: web_tt2/main.tt2:304 web_tt2/tt2_error.tt2:47
+#: web_tt2/main.tt2:316 web_tt2/tt2_error.tt2:47
 #, fuzzy
 msgid "Powered by"
 msgstr "Powered by Sympa"
@@ -3109,7 +3114,7 @@ msgstr "Sending/reception setup"
 msgid "Serial number of the config"
 msgstr ""
 
-#: web_tt2/rss.tt2:28 web_tt2/rss.tt2:7
+#: web_tt2/rss.tt2:17 web_tt2/rss.tt2:5
 #, fuzzy
 msgid "Server error"
 msgstr "Vynulovat chyby"
@@ -3467,7 +3472,7 @@ msgstr ""
 msgid "Sympa error - could not display web page"
 msgstr ""
 
-#: web_tt2/main.tt2:205 web_tt2/main.tt2:288
+#: web_tt2/main.tt2:217 web_tt2/main.tt2:300
 msgid "Sympa in your language:"
 msgstr ""
 
@@ -3515,25 +3520,25 @@ msgid ""
 msgstr ""
 
 #. (count)
-#: web_tt2/rss.tt2:31
+#: web_tt2/rss.tt2:19
 #, fuzzy
 msgid "The %1 latest created lists"
 msgstr "VytvoÃ¸enÃ­ konference"
 
 #. (count)
-#: web_tt2/rss.tt2:51
+#: web_tt2/rss.tt2:31
 #, fuzzy
 msgid "The %1 latest messages"
 msgstr "ZaÃ¨Ã­t od nejnovÃ¬jÂ¹Ã­ch zprÃ¡v"
 
 #. (count)
-#: web_tt2/rss.tt2:60
+#: web_tt2/rss.tt2:36
 #, fuzzy
 msgid "The %1 latest shared documents"
 msgstr "SdÃ­lenÃ½ adresÃ¡Ã¸"
 
 #. (count)
-#: web_tt2/rss.tt2:41
+#: web_tt2/rss.tt2:25
 #, fuzzy
 msgid "The %1 most active lists"
 msgstr "VytvoÃ¸enÃ­ konference"
@@ -3649,16 +3654,17 @@ msgstr ""
 msgid "The following virtual robots are running on this server :"
 msgstr ""
 
-#: web_tt2/rss.tt2:33
+#: web_tt2/rss.tt2:20
+#, fuzzy
 msgid "The latest created lists"
-msgstr ""
+msgstr "VytvoÃ¸enÃ­ konference"
 
-#: web_tt2/rss.tt2:53
+#: web_tt2/rss.tt2:32
 #, fuzzy
 msgid "The latest messages"
 msgstr "ZaÃ¨Ã­t od nejnovÃ¬jÂ¹Ã­ch zprÃ¡v"
 
-#: web_tt2/rss.tt2:62
+#: web_tt2/rss.tt2:37
 #, fuzzy
 msgid "The latest shared documents"
 msgstr "SdÃ­lenÃ½ adresÃ¡Ã¸"
@@ -3701,7 +3707,7 @@ msgstr ""
 msgid "The list's subject"
 msgstr "TÃ©ma konference"
 
-#: web_tt2/rss.tt2:43
+#: web_tt2/rss.tt2:26
 #, fuzzy
 msgid "The most active lists"
 msgstr "VytvoÃ¸enÃ­ konference"
@@ -4281,7 +4287,7 @@ msgstr "Unknown"
 msgid "Unsubscribe"
 msgstr "OdhlÃ¡sit"
 
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3421
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3433
 #, fuzzy
 msgid "Unsubscribe from list %s"
 msgstr "OdhlaÂ¹uji se z konference %1"
@@ -4470,8 +4476,8 @@ msgstr ""
 
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:3192 wwsympa/wwsympa.fcgi:3193
-#: wwsympa/wwsympa.fcgi:3791 wwsympa/wwsympa.fcgi:3792
+#: wwsympa/wwsympa.fcgi:3204 wwsympa/wwsympa.fcgi:3205
+#: wwsympa/wwsympa.fcgi:3803 wwsympa/wwsympa.fcgi:3804
 #, fuzzy
 msgid "Welcome on list %s"
 msgstr "Vitejte v konferenci %1"
@@ -4651,7 +4657,7 @@ msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr ""
 
-#: wwsympa/wwsympa.fcgi:3422 wwsympa/wwsympa.fcgi:3897
+#: wwsympa/wwsympa.fcgi:3434 wwsympa/wwsympa.fcgi:3909
 #, fuzzy
 msgid "You have been removed from list %s.\n"
 msgstr "VaÂ¹e emailovÃ¡ adresa %1 byla odstranÃ¬na ze seznamu"
@@ -4986,7 +4992,7 @@ msgstr ""
 msgid "Your subscription email is %1"
 msgstr "Jste pÃ¸ihlÃ¡Â¹en z adresy %1"
 
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3896
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3908
 #, fuzzy
 msgid "Your subscription to list %s has been removed."
 msgstr "PoÂ¾adujete pÃ¸ihlÃ¡Â¹enÃ­ do konference %1."
@@ -5011,6 +5017,26 @@ msgstr ""
 #: src/PlainDigest.pm:327
 msgid "[ Text converted from HTML ]\n"
 msgstr ""
+
+#: web_tt2/main.tt2:162 web_tt2/main.tt2:165
+#, fuzzy
+msgid "\"RSS Active lists\""
+msgstr "VytvoÃ¸enÃ­ konference"
+
+#: web_tt2/main.tt2:158
+#, fuzzy
+msgid "\"RSS Latest documents\""
+msgstr "SdÃ­lenÃ½ adresÃ¡Ã¸"
+
+#: web_tt2/main.tt2:161 web_tt2/main.tt2:164
+#, fuzzy
+msgid "\"RSS Latest lists\""
+msgstr "VytvoÃ¸enÃ­ konference"
+
+#: web_tt2/main.tt2:157
+#, fuzzy
+msgid "\"RSS Latest messages\""
+msgstr "ZaÃ¨Ã­t od nejnovÃ¬jÂ¹Ã­ch zprÃ¡v"
 
 #: src/PlainDigest.pm:296 src/PlainDigest.pm:317
 msgid ""
