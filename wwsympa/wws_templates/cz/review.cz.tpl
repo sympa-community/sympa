@@ -228,8 +228,10 @@ Výbìr pøíli¹ rozsáhlý, nelze jej zobrazit
     </TD>
    [ENDIF]
     </TR>
+    [IF is_owner]
     <TR><TD><input type=button value="Obrátit výbìr" onClick="toggle_selection(document.myform.email)">
     </TD></TR>
+    [ENDIF]
     </TABLE>
     </FORM>
 

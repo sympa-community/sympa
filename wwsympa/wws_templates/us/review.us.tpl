@@ -227,8 +227,10 @@ Selection too wide, can not show selection
     </TD>
    [ENDIF]
     </TR>
+    [IF is_owner]
     <TR><TD><input type=button value="Toggle Selection" onClick="toggle_selection(document.myform.email)">
     </TD></TR>
+    [ENDIF]
     </TABLE>
     </FORM>
 
