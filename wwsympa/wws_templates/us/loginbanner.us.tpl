@@ -15,16 +15,16 @@ privileged operation (one that requires your email address).
  unidentified persons.<BR>
  In order to benefit from the full services provided by this server, you probably
  need to identify yourself first. <BR>
-[IF use_sso=0]
-[IF use_passwd=1]
-Login with you email address and password. You can request a password reminder.
-[ENDIF]
-[ELSE]
+[IF use_sso]
 [IF use_passwd=1]
 
 To login, select your organization authentication serveur below.<BR>
 If it is not listed or if you don't have any, login using your email and password on the right column.
 
+[ENDIF]
+[ELSE]
+[IF use_passwd=1]
+Login with you email address and password. You can request a password reminder.
 [ENDIF]
 [ENDIF]
 

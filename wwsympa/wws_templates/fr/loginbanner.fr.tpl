@@ -18,15 +18,15 @@ Identifiez-vous pour : <UL>
 cachées aux personnes non identifées.
 Pour bénéficier de l'accès intégral à ce serveur de listes, vous
 devez probablement vous identifier préalablement.<BR>
-[IF use_sso=0]
-[IF use_passwd=1]
-A cet effet, identifiez-vous en utilisant votre adresse messagerie et votre mot de passe. Au besoin faîtes vous allouer un mot de passe initial. 
-[ENDIF]
-[ELSE]
+[IF use_sso]
 [IF use_passwd=1]
 
 A cet effet, identifiez-vous de préférence en sélectionnant le serveur d'authentification de votre établissement ou à défault utilisez l'identification avec adresse et mot de passe
 
+[ENDIF]
+[ELSE]
+[IF use_passwd=1]
+A cet effet, identifiez-vous en utilisant votre adresse messagerie et votre mot de passe. Au besoin faîtes vous allouer un mot de passe initial. 
 [ENDIF]
 [ENDIF]
 
