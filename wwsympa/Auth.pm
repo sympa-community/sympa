@@ -356,11 +356,13 @@ sub cas_get_email_by_net_id {
 	my $ldap_anonymous;
 
 	my %param;
-	$param{'timeout'} = $ldap->{'ldap_timeout'} if ($ldap->{'ldap_timeout'});
-	$param{'sslversion'} = $ldap->{'ldap_ssl_version'} if ($ldap->{'ldap_ssl_version'});
-	$param{'ciphers'} = $ldap->{'ldap_ssl_ciphers'} if ($ldap->{'ldap_ssl_ciphers'});
+	$param{'timeout'} = $ldap->{'ldap_timeout'} || 3;
+	$param{'async'} = 1;
 	
 	if ($ldap->{'ldap_use_ssl'}) {
+	    $param{'sslversion'} = $ldap->{'ldap_ssl_version'} if ($ldap->{'ldap_ssl_version'});
+	    $param{'ciphers'} = $ldap->{'ldap_ssl_ciphers'} if ($ldap->{'ldap_ssl_ciphers'});
+
 	    unless (require Net::LDAPS) {
 		do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
 		return undef;
@@ -368,7 +370,7 @@ sub cas_get_email_by_net_id {
 	    
 	    $ldap_anonymous = Net::LDAPS->new($host,%param);
 	}else {
-	    $ldap_anonymous = Net::LDAP->new($host,timeout => $ldap->{'ldap_timeout'});
+	    $ldap_anonymous = Net::LDAP->new($host,%param);
 	}
 	
 	unless ($ldap_anonymous ){
