@@ -36,7 +36,7 @@ sub LoadLang {
 
     foreach my $file (grep /\.cat$/, readdir(CATDIR)) {    
 
-	$file =~ /\/([\w-]+)\.cat$/;
+	$file =~ /^([\w-]+)\.cat$/;
 	
 	my $catname = $1;
 
