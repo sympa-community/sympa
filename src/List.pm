@@ -255,12 +255,10 @@ my %alias = ('reply-to' => 'reply_to',
 				   'group' => 'tuning'
 				   },
 	    'archive' => {'format' => {'period' => {'format' => ['day','week','month','quarter','year'],
-						    'default' => 'week',
 						    'synonym' => {'weekly' => 'week'},
 						    'title_id' => 5
 						},
 				       'access' => {'format' => ['open','private','public','owner','closed'],
-						    'default' => 'owner',
 						    'synonym' => {'open' => 'public'},
 						    'title_id' => 6
 						}
