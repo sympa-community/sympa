@@ -3781,10 +3781,10 @@ and Remindpassword, you can copy \WWSympa's login page to your
 application, and then make use of the cookie information within your application. 
 The cookie format is :
 \begin{verbatim}
-sympauser=<user_email>:<md5>
+sympauser=<user_email>:<checksum>
 \end{verbatim}
 where \texttt{<}user\_email\texttt{>} is the user's complete e-mail address, and
-\texttt{<}md5\texttt{>} is a MD5 checksum of the \texttt{<}user\_email\texttt{>}+\Sympa \cfkeyword {cookie}
+\texttt{<}checksum\texttt{>} are the 8 first bytes of the a MD5 checksum of the \texttt{<}user\_email\texttt{>}+\Sympa \cfkeyword {cookie}
 configuration parameter.
 Your application needs to know what the \cfkeyword {cookie} parameter
 is, so it can check the HTTP cookie validity ; this is a secret shared
