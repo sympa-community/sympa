@@ -196,6 +196,20 @@ document.write("<a href=" + "mail" + "to:" + "[e->local]" + "@" + "[e->domain]" 
   <TD WIDTH=--COL4--></TD>
  </TR>
    [ELSE]
+     [IF may_subscribe]
+ <TR>
+  <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
+  <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
+        <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
+        <font size=-1><b>
+     <A HREF="[path_cgi]/subscribe/[list]" onClick="request_confirm_link('[path_cgi]/subscribe/[list]', 'Voulez-vous vous abonner à la liste [list] ?'); return false;">Abonnement</A>
+        </b></font>
+        </TD>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
+  </TD>
+  </TR> 
+     [ELSE]
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
@@ -208,6 +222,8 @@ document.write("<a href=" + "mail" + "to:" + "[e->local]" + "@" + "[e->domain]" 
      [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
  </TR>
+     <!-- end may_subscribe -->
+     [ENDIF]
       <!-- end may_signoff -->
    [ENDIF]
       <!-- is_subscriber -->
