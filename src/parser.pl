@@ -44,6 +44,11 @@ sub parse_tpl {
 	$previous_file = undef;
     }
 
+    unless (defined $template) {
+	&do_log('err','Parser [%d] parse_tpl() in %s : missing template parameter', $index, $previous_file);
+	return -1;	
+    }
+
     ## Prevent loops
     if ($previous_file eq $template) {
 	&do_log('err','Parser [%d] stopping loop with file %s', $index, $template);
