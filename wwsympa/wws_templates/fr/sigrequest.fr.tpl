@@ -29,7 +29,7 @@
         votre demande de désabonnement de [list].
 	
         <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="[dark_color]"><B>e-mail address</B> </FONT>[email]<BR>
+          <FONT COLOR="[dark_color]"><B>adresse email</B> </FONT>[email]<BR>
             <FONT COLOR="[dark_color]"><B>mot de passe</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
@@ -45,7 +45,7 @@
       la liste [list].
 
       <FORM ACTION="[path_cgi]" METHOD=POST>
-          <B>Votre addresse :</B> 
+          <B>Votre adresse :</B> 
           <INPUT NAME="email"><BR>
           <INPUT TYPE="hidden" NAME="action" VALUE="sigrequest">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
@@ -58,7 +58,7 @@
         merci de renseigner votre mot de passe ci-dessous :
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="[dark_color]"><B>e-mail address</B> </FONT>[email]<BR>
+          <FONT COLOR="[dark_color]"><B>adresse email</B> </FONT>[email]<BR>
             <FONT COLOR="[dark_color]"><B>mot de passe</B> </FONT> 
   	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
