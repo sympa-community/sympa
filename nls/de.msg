@@ -1,3 +1,4 @@
+$ 26 Apr 2001, Updated by H. Wilhelmi, TNG Tech. <harald.wilhelmi@tngtech.com>
 $ 26 Feb 2000, Update by Carsten Clasohm <cc@clasohm.com>
 $ 16 Sept 1999, Initial version by Carsten Clasohm <cc@clasohm.com>
 
@@ -33,6 +34,8 @@ haben %d ihr Abonnenment nicht bestätigt.\n"
 Bitte benutzen Sie text/plain (oder geben Sie den Befehl in der\n\
 Betreffzeile an).\n"
 38	"Ihre Nachricht an Liste %s wurde an den Moderator weitergeleitet\n"
+39	"Kein Kommando in Nachricht gefunden"
+40	"Ihre Nachricht wird moderiert"
 
 $set 5	Messages used in the tools module
 1	"Safefork konnte keinen neuen Prozeß erzeugen: %m"
@@ -159,7 +162,7 @@ Dieser Text muß\n\
 - mit dem Wort QUIT enden.\n"
 61	"Deshalb wurde die Nachricht an Sie zurückgeschickt:\n"
 67	"Sie haben im Moment diese Listen abonniert:\n\n"
-68	"Kann auf die Nachricht mit dem Schlüssel %s nicht zugreifen.\n"
+68	"Kann auf die Nachricht mit dem Schlüßel %s nicht zugreifen.\n"
 69	"%s hat Ihre EXPIRE-Nachricht an folgende Adressen geschickt:\n"
 70	"\nPowered by Sympa %s : http://listes.cru.fr/sympa/\n"
 71	"Abonnement der Liste %s aufheben"
@@ -179,12 +182,16 @@ EMail an %s mit dem Befehl\n\n\
    %s\n\n\
 Ansonsten ignorieren Sie diese Nachricht einfach.\n"
 80	"Sie dürfen den Befehl %s für die Liste %s nicht ausführen\n"
-81	"User guide"
-82	"Public lists"
-83	"Subscription summary"
-84	"The User '%s' is already subscriber of list '%s'\n"
-85	"User %s has been invited to subscribe in list %s.\n"
-86	"The User '%s' is unwanted in list '%s'\n"
+81	"Anleitung"
+82	"Öffentliche Mailing-Listen"
+83	"Zusammenfaßung"
+84	"Der Benutzer '%s' ist bereits Abonneten der Liste '%s'\n"
+85	"Benutzer %s wurde eingeladen die Liste %s zuabonnieren.\n"
+86	"Der Benutzer '%s' ist gegen seinen Willen auf '%s'\n"
+90	"Liste %s erlaubt nur die folgenden Empfangsmodi: %s \n\
+Ihre Konfiguration wurde nicht modifiziert.\n"
+91	"Die Liste %s ermöglicht keine Abonneteneinstellung.\n"
+92	"Änderung Ihrer Einstellungen für Liste %s ist fehlgeschlagen.\n"
 260	"\
 Jemand (hoffentlich Sie) hat darum gebeten, daß Ihre EMail-Adresse\n\
 zur Liste '%s' hinzugefügt wird.\n\
@@ -233,13 +240,13 @@ mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
 \n\
    Verschickte MByte                     : %9.2f\n\
    Weitergeleitete MByte                 : %9.2f\n"
-9	"Zusammenfassung für Liste %s"
+9	"Zusammenfaßung für Liste %s"
 10	"Um die angehängte Nachricht an die Liste %s weiterzuleiten :\n\
 mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\n"
 11	"Um sie abzulehnen:\n\
 mailto:%s?subject=REJECT%%20%s%%20%s\n"
 13	"Inhaltsverzeichnis" 
-14	"Ende der Zusammenfassung für Liste %s"
+14	"Ende der Zusammenfaßung für Liste %s"
 15	"%d Nachrichten in Liste %s müssen überprüft werden" 
 16	"Authentifizierung erforderlich"
 21	"Zur Information: %s list %s von %s %s"
@@ -261,6 +268,7 @@ Sie sollten die ungültigen Adressen löschen:\n\
 28	"WARNUNG: Zu viele ungültige Mailadressen in Liste %s"
 29	"Einladung für Liste %s"
 30	"Sie sind eingeladen worden, die Liste %s zu abonnieren"
+31	"Zusammenfaßung von Liste %s"
 
 $set 9	Messages for the review header
 1	"Verwalter            : %s\n"
@@ -275,11 +283,12 @@ $set 9	Messages for the review header
 10	"Auslese              : %s\n"
 11	"Angepaßter Betreff   : %s\n"
 12	"Betreff              : %s\n"
+13	"Empfangsmodus        : %s\n"
 
 $set 11	Messages used by the smtp module.
 1	"Ihr System folgt nicht dem POSIX P1003.1 Standard oder\n\
 Ihre Perl-Version definiert in der POSIX-Bibliothek die Konstante\n\
-_SC_ARG_MAX nicht. Sie müssen das smtp.pm-Modul anpassen und der\n\
+_SC_ARG_MAX nicht. Sie müssen das smtp.pm-Modul anpaßen und der\n\
 Variablen $max_arg einen Wert zuweisen.\n"
 2	"smtpto konnte keinen Kanal öffnen: %m"
 
@@ -294,3 +303,117 @@ $set 13	Messages for the header of moderation index
 2	"\t     Absender             : %s"
 3	"\t     Größe                : %s\n"
 4	"\t     Moderator-Schlüssel  : %s\n"
+
+$set 14 Pour le web
+1	"de_DE"
+2	"deutsch"
+
+$set 15 Templates files
+1	"Begrüßungsnachricht"
+2	"Abmeldungsnachricht"
+3	"Löschnachricht"
+4	"Nachrichtungenfuß"
+5	"Nachrichtenkopf"
+6	"Erinnerungsnachricht"
+7	"Moderator-Ablehnungs-Nachricht"
+8	"Einladungsnachricht"
+9	"Hilfstext"
+10	"Mailing-Listen-Übersicht"
+11	"Globale Erinnerungsnachricht"
+12	"Zusammenfaßungsnachricht"
+13	"Listenbeschreibung"
+14	"Listen-Homepage"
+
+$set 16 parameters titles
+1	"Benutzerkennung"
+2	"Wer kann Abonnenten hinzufügen"
+3	"Anonymer Absender"
+4	"Archiv"
+5	"Häufigkeit"
+6	"Zugriffsrechte"
+7	"Unzustellbare Nachrichten"
+8	"Warnungrate"
+9	"Stoprate"
+10	"Verfall unmoderierter Nachrichten"
+11	"Geheimer Wert zum Erzeugen eindeutiger Schlüssel"
+12	"Erzeugung der Liste"
+16	"Angepaßte Kopfzeile"
+17	"Titel-Markierung (Subject)"
+18	"Abonnierungsprofil"
+19	"Empfangsmodus"
+20	"Sichbarkeit"
+21	"Wer kann Abonnenten löschen"
+22	"Häufigkeit der Zusammenfaßungen"
+23	"Tage"
+24	"Stunde"
+25	"Minute"
+26	"Moderatoren"
+27	"EMail-Adresse"
+28	"Empfangsmodus"
+29	"Name"
+30	"private Information"
+31	"Anlagentyp"
+32	"Feste Antwortadresse"
+33	"Hostname"
+34	"Datei einbeziehen"
+35	"LDAP-Anfrage einbeziehen"
+36	"entfernter Rechner"
+37	"Port auf entferntem Rechner"
+38	"Benutzer auf entferntem Rechner"
+39	"Passwort auf entferntem Rechner"
+40	"Endung"
+41	"Filter"
+42	"extrahiertes Attribut"
+43	"Auswahl (falls mehrere)"
+44	"Liste einbeziehen"
+45	"SQL-Abfrage einbeziehen"
+46	"Datenbanktyp"
+47	"entfernter Rechner"
+48	"Datanbankname"
+49	"entfernter Benutzer"
+50	"entferntes Passwort"
+51	"SQL-Abfrage"
+53	"Wer kann Listen-Information ansehen"
+54	"Wer kann neue Abonneten einladen"
+55	"Sprache"
+56	"Maximale Nachrichtengröße"
+57	"Besitzer"
+58	"Email-Adresse"
+59	"Empfangsmodus"
+60	"Name"
+61	"private Information"
+62	"Profil"
+63	"Priorität"
+64	"Wer kann Erinnerungen veranlassen"
+65	"Rücklaufpfad für Erinnerungen"
+66	"Antwortadresse"
+67	"Wer kann Abonneten überprüfen"
+68	"Wer kann Nachrichten verschicken"
+69	"Seriennummer der Konfiguration"
+70	"Gemeinsame Dokumente"
+71	"Status der Liste"
+72	"Titel der Liste"
+73	"Wer kann die Liste abonnieren"
+74	"Thema der Liste"
+75	"Timeout bei Einfügung"
+76	"Wer kann abbestellen"
+77	"Letze Konfigurationsänderung"
+81	"Benutzerdatenquelle"
+82	"Sichbarkeit der Liste"
+83	"Web-Archiv"
+84	"Zugriffsrechte"
+85	"Rücklaufpfad für Begrüßungen"
+86	"Wer kann anschauen"
+87	"Wer kann editieren"
+88	"Verfügbare Abonnement-Optionen"
+89	"Empfangsmodus"
+
+$set 17 Cookie expiration periods
+1	"Sitzung"
+2	"10 Minuten"
+3	"30 Minuten"
+4	"1 Stunde"
+5	"6 Stunden"
+6	"1 Tag"
+7	"1 Woche"
+
