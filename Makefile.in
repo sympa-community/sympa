@@ -434,6 +434,12 @@ checkperl:
 		echo "## Suidperl is required to run WWSympa with SetUID."; \
 		echo "#####################################################"; \
 	fi
+	@if [ ! -f $(MSGFMT) ]; then \
+		echo "##################################"; \
+		echo "## You don't have msgfmt installed. It is required to build message catalogues"; \
+		echo "## msgfmt is provided with a 'gettest' package on most systems..."; \
+		echo "#####################################################"; \
+	fi
 
 checkmhonarc:
 	@if [ ! -f $(MHONARC) ]; then \
