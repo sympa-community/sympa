@@ -15,7 +15,7 @@
           <FONT size="-1" COLOR="--BG_COLOR--"><b>Restore list</b></font>
         [ENDIF]
        [ELSE]
-        <A HREF="[base_url][path_cgi]/close_list_request/[list]" ><FONT size=-1><b>Remove list</b></font></A>
+        <A HREF="[base_url][path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Are you sure you wish to close [list] list ?'); return false;"><FONT size=-1><b>Remove list</b></font></A>
        [ENDIF]
     </TD>
     <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER">

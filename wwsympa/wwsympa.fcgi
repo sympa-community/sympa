@@ -4506,6 +4506,7 @@ sub dump_var {
     }
 }
 
+## NOT USED anymore (expect chinese)
 sub do_close_list_request {
     &wwslog('debug', 'do_close_list_request()');
 
