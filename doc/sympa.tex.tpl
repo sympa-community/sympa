@@ -3882,6 +3882,8 @@ Rules are defined as follows :
 
 [is_bcc] ::= set to 1 if the list is neither in To: nor Cc:
 
+[sender] ::= email address of the current user (used on web or mail interface). Default value is 'nobody'
+
 <date> ::= '<date_element> [ +|- <date_element>]'
 
 <date_element> ::= <epoch_date> | <var> | <date_expr>
