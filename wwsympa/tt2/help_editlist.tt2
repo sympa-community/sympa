@@ -9,15 +9,14 @@
       [% IF p.NAME == 'add' %]
         [%|l%]Privilege for adding (ADD command) a subscriber to the list[%END%]
       [% ELSIF p.NAME == 'anonymous_sender' %]
-        [%|l%]To hide the sender's email address before distributing the message.
-        It is replaced by the provided email address.[%END%]
+        [%|l%]To hide the sender's email address before distributing the message. It is replaced by the provided email address.[%END%]
       [% ELSIF p.NAME == 'archive' %]
         [%|l%]Privilege for reading mail archives and frequency of archiving[%END%]
       [% ELSIF p.NAME == 'available_user_options' %]
         [%|l%]The available_user_options parameter starts a paragraph to define available options for the subscribers of the list.[%END%]<BR><BR>
         <UL>
-          <LI>[%|l%]reception <i>modelist</i> (Default value: reception mail,notice,digest,digestplain,summary,nomail)<BR><BR>
-              <i>modelist</i> is a list of modes (mail, notice, digest, digestplain, summary, nomail), separated by commas. Only these modes will be allowed for the subscribers of this list. If a subscriber has a reception mode not in the list, sympa uses the mode specified in the default_user_options paragraph.[%END%]
+          <LI>reception <i>modelist</i> [%|l%](Default value: reception mail,notice,digest,digestplain,summary,nomail)[%END%]<BR><BR>
+              [%|l%]<i>modelist</i> is a list of modes (mail, notice, digest, digestplain, summary, nomail), separated by commas. Only these modes will be allowed for the subscribers of this list. If a subscriber has a reception mode not in the list, sympa uses the mode specified in the default_user_options paragraph.[%END%]
           </LI>
         </UL>
       [% ELSIF p.NAME == 'bounce' %]

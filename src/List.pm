@@ -508,29 +508,6 @@ my %alias = ('reply-to' => 'reply_to',
 			       'group' => 'data_source'
 			       },
 
-	    'include_admin' => {'format' => {'list' => {'format' => '\S+',
-						        'occurrence' => '1',
-							'gettext_id' => "a listname or list address or *@<domain> or *@*",
-							'order' => 1
-							},
-					     'role' => {'format' => ['owners','editors','privileged_owners','listmaster'],
-					                'occurrence' => '0-n',
-					                'split_char' => ',',
-					                'gettext_id' => "admin role selection",
-					               }
-					 },
-				 'occurrence' => '0-n',
-
-				 'name' => {'format' => '.+',
-					    'gettext_id' => "short name for this source",
-					    'length' => 15,
-					    'order' => 1
-					   },
-
-				 'group' => 'data_source'
-				 },
-
-
 	    'include_ldap_query' => {'format' => {'host' => {'format' => $tools::regexp{'multiple_host_with_port'},
 							     'occurrence' => '1',
 							     'gettext_id' => "remote host",
@@ -1749,7 +1726,7 @@ sub send_notify_to_owner {
     if ($param->{'type'} eq 'warn-signoff') {
 	my ($body, $subject);
 	$subject = sprintf (gettext("FYI: %s list %s from %s %s"), $param->{'type'}, $name, $param->{'who'}, $param->{'gecos'});
-	$body = sprintf (gettext("WARNING : %s %s failed to unsubscribe from %s because his address was\n"),$param->{'who'}, $param->{'gecos'}, $name);
+	$body = sprintf (gettext("WARNING : %s %s failed to unsubscribe from %s because his address was not found in the list\n (You may help this person)"),$param->{'who'}, $param->{'gecos'}, $name);
 	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
     }elsif ($param->{'type'} eq 'subrequest') {
 	## Replace \s by %20 in email

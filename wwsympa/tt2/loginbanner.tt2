@@ -2,8 +2,7 @@
 
 <BR>
 [% IF password_sent %]
-  [%|l%]Your password has been sent to your email address [% init_email %].<BR>
-  Please check your e-mail box to provide your password below.[%END%]
+  [%|l(init_email)%]Your password has been sent to your email address %1.<BR>Please check your e-mail box to provide your password below.[%END%]
   <BR><BR>
 [% END %]
 

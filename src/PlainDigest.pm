@@ -320,7 +320,7 @@
     }
     
     else {
-      $outstring .= gettext ("\n[ ** Unable to process HTML message part * *]\n");
+      $outstring .= gettext ("\n[ ** Unable to process HTML message part **]\n");
       return 1;      
     }
     

@@ -8,7 +8,7 @@ Content-Type: text/plain; charset=iso-8859-1
 Content-transfer-encoding: 8bit
 
 [%|l(list.name,list.host)%]Welcome to list %1@%2[%END%]
-[%|l(user.email)%]Your subscription email is %3[%END%]
+[%|l(user.email)%]Your subscription email is %1[%END%]
 [% IF user.password %]
 [%|l(user.password)%]Your password: %1.[%END%]
 [% END %]
