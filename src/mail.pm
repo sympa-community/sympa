@@ -31,9 +31,6 @@ sub mailback {
    my($data, $headers, $from, $to, @rcpt) = @_;
    do_log('debug2', 'mail::mailback(%s, %s)', $from, join(',', @rcpt));
 
-   ## encode Subject
-   $headers->{'subject'} = MIME::Words::encode_mimewords($headers->{'subject'});
-
    my ($fh, $sympa_file);
    
    ## Don't fork if used by a CGI (FastCGI problem)
@@ -55,14 +52,17 @@ sub mailback {
        $fh = smtp::smtpto("$Conf{'sympa'}", \@rcpt);
    }
    
-   printf $fh "To:  %s\n", $to;
+   ## Charset for encoding
+   my $charset = sprintf (Msg(12, 2, 'us-ascii'));
+
+   printf $fh "To:  %s\n", MIME::Words::encode_mimewords($to, 'Q', $charset);
    if ($from eq 'sympa') {
-       printf $fh "From: %s\n", sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'sympa'});
+       printf $fh "From: %s\n", MIME::Words::encode_mimewords((sprintf (Msg(12, 4, 'SYMPA <%s>'), $Conf{'sympa'})), 'Q', $charset);
    }else {
        printf $fh "From: %s\n", $from;
    }
    foreach my $field (keys %{$headers}) {
-       printf $fh "%s: %s\n", $field, $headers->{$field};
+       printf $fh "%s: %s\n", $field, MIME::Words::encode_mimewords($headers->{$field}, 'Q', $charset);
    }
    printf $fh "MIME-Version: %s\n", Msg(12, 1, '1.0');
    printf $fh "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
