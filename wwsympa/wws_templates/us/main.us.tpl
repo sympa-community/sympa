@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 
 <HEAD>
@@ -31,6 +32,17 @@
     self.close()
   }
 
+  function toggle_selection(myfield) {
+    for (i = 0; i < myfield.length; i++) {
+    [STOPPARSE]
+       if (myfield[i].checked) {
+            myfield[i].checked = false;
+       }else {
+	    myfield[i].checked = true;
+       }
+    [STARTPARSE]
+    }
+  }
 // end browsers -->
 </SCRIPT>
 

@@ -18,7 +18,7 @@
 </TD>
 
 </TR></TABLE>
-    <FORM ACTION="[path_cgi]" METHOD=POST>
+    <FORM NAME="myform" ACTION="[path_cgi]" METHOD=POST>
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
     <INPUT TYPE="hidden" NAME="previous_action" VALUE="reviewbouncing">
 
@@ -110,6 +110,8 @@
         [IF next_page]
 	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0ALT="Page suivante"></A>
         [ENDIF]
+    </TD></TR>
+    <TR><TD><input type=button value="Inverser la Selection" onClick="toggle_selection(document.myform.email)">
     </TD></TR>
     </TABLE>
 
