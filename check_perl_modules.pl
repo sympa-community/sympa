@@ -57,7 +57,7 @@ use CPAN;
 	     'CGI' => 'CGI',
 	     'File::Spec' => 'File-Spec',
 	     'Regexp::Common' => 'Regexp-Common',
-	     'Locale::Messages' => 'libintl-perl',
+	     'Locale::TextDomain' => 'libintl-perl',
 	     'AppConfig' => 'AppConfig',
 	     'Template' => 'Template-Toolkit',
 	     'Archive::Zip' => 'Archive-Zip',
