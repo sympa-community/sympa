@@ -1193,8 +1193,9 @@ sub send_notify_to_listmaster {
     }elsif ($operation eq 'request_list_creation') {
 	my $list = new List $param[0];
 
-	$list->send_file('create_list_request', $Conf{'listmaster'}, $Conf{'host'},
+	$list->send_file('listmaster_notification', $Conf{'listmaster'}, $robot,
 			 {'to' => "listmaster\@$Conf{'host'}",
+			  'type' => 'request_list_creation',
 			  'email' => $param[1]});
 
     ## Loop detected in Sympa
@@ -1214,6 +1215,11 @@ sub send_notify_to_listmaster {
 	*FH = &smtp::smtpto($Conf{'request'}, \$rcpt);
 	$notice->print(\*FH);
 	close FH;
+    }elsif ($operation eq 'virus_scan_failed') {
+	&send_global_file('listmaster_notification', $Conf{'listmaster'}, $robot,
+			 {'to' => "listmaster\@$Conf{'host'}",
+			  'type' => 'virus_scan_failed',
+			  'error_msg' => $param[0]});	
     }
     
     return 1;
@@ -2251,7 +2257,7 @@ sub send_file {
 
     ## 2.7b
     if ($filename) {
-        mail::mailfile($filename, $who, $data, $robot, $sign_mode);
+        mail::mailfile($filename, $who, $data, $self->{'domain'}, $sign_mode);
     }
     chdir $Conf{'home'};
 

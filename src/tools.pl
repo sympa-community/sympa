@@ -825,6 +825,8 @@ sub virus_infected {
     &split_mail ($mail,'msg', $work_dir) ;
 
     my $virusfound; 
+    my $error_msg;
+    my $result;
 
     ## McAfee
     if ($Conf{'antivirus_path'} =~  /\/uvscan$/) {
@@ -835,6 +837,7 @@ sub virus_infected {
 	open (ANTIVIR,"$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ; 
 		
 	while (<ANTIVIR>) {
+	    $result .= $_; chomp $result;
 	    if (/^\s*Found the\s+(.*)\s*virus.*$/i){
 		$virusfound = $1;
 	    }
@@ -847,6 +850,9 @@ sub virus_infected {
         if (( $status == 13) and not($virusfound)) { 
 	    $virusfound = "unknown";
 	}
+
+	$error_msg = $result
+	    if ($status != 0);
 
     ## Trend Micro
     }elsif ($Conf{'antivirus_path'} =~  /\/vscan$/) {
@@ -891,9 +897,14 @@ sub virus_infected {
         if (( $status == 3) and not($virusfound)) { 
 	    $virusfound = "unknown";
 	}    
-
     }
-## if debug mode is active, the working directory is kept
+
+    ## Error while running antivir, notify listmaster
+    if ($error_msg) {
+	&List::send_notify_to_listmaster('virus_scan_failed', $Conf{'domain'}, ($error_msg));
+    }
+
+    ## if debug mode is active, the working directory is kept
     unless ($main::options{'debug'}) {
 	opendir (DIR, ${work_dir});
 	my @list = readdir(DIR);
