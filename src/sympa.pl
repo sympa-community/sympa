@@ -79,6 +79,7 @@ Options:
    -m, --mail          : log calls to sendmail
    --dump=list|ALL     : dumps subscribers 
    --lowercase         : lowercase email addresses in database
+   --log_level=LEVEL   : sets Sympa log level
 
    -h, --help          : print this help
    -v, --version       : print version number
