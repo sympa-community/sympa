@@ -13,7 +13,7 @@ Content-transfer-encoding: 8bit
 [%|loc(user.password)%]Your password: %1.[%END%]
 [% END %]
 
-[% INSERT "${list.dir}/info" %]
+[% INSERT "info" %]
 
 [%|loc%]Everything about this list:[%END%]
 [% conf.wwsympa_url %]/info/[% list.name %]
@@ -35,7 +35,7 @@ Content-transfer-encoding: 8bit
 [% END %]
 <BR><BR>
 <PRE>
-[% INSERT "${list.dir}/info" %]
+[% INSERT "info" %]
 </PRE>
 
 <HR>

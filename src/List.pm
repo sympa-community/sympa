@@ -1960,6 +1960,7 @@ sub send_to_editor {
 	   print CRYPTED $cryptedmsg;
 	   close CRYPTED;
 	   
+	   &tt2::allow_absolute_path();
 	   $self->send_file('moderate', $recipient, $self->{'domain'}, {'modkey' => $modkey,
 									'boundary' => $boundary,
 									'msg' => $crypted_file,
