@@ -3856,6 +3856,11 @@ As a consequence, you can grant privileges in a list to people belonging to an \
 		Search the whole tree below the base object. This is the default. 
 	\end{itemize}
  
+	\item{bind\_dn}\\
+	  If anonymous bind is not allowed on the LDAP server, a DN and password can be used.
+
+	\item{bind\_password}\\
+	  This password is used, combined with the bind\_dn above.
 
 \end{itemize}
 
