@@ -3141,6 +3141,8 @@ Only the following parameters can be redefined for a particular robot :
 	\item \cfkeyword {host}\\
 	The hostname used by Sympa when sending emails
 
+	\item \cfkeyword {cookie\_domain}
+
 	\item \cfkeyword {email}
 
 	\item \cfkeyword {title}
