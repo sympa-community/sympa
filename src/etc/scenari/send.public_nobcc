@@ -2,6 +2,7 @@ title.us public list Bcc rejected (anti-spam)
 title.fr liste ouverte, Bcc interdit (anti-spam)
 title.de Oeffentliche Liste, Bcc verwerfen (Anti-Spam)
 title.es lista pública Bcc rejected (anti-spam)
+title.cz veøejná konference Bcc odmítnuto (anti-spam)
 
 match([header->To],/[listname]/)      smtp,smime,md5    -> do_it
 match([header->Cc],/[listname]/)      smtp,smime,md5    -> do_it

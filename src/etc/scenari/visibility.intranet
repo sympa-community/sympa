@@ -2,6 +2,7 @@ title.us intranet access
 title.fr visible de l'intranet
 title.de Intranet-Zugang
 title.es visible en Intranet
+title.cz viditelná jen z intranetu
 
 match([remote_host],/[conf->host]$/)       smtp,md5,smime    -> do_it
 match([sender],/[conf->host]$/)            smtp,md5,smime    -> do_it

@@ -2,6 +2,7 @@ title.us public list multipart messages are rejected
 title.fr liste ouverte mais attachements interdits
 title.es lista pública pero los mensajes con anexos no están permitidos
 title.de oeffentliche Liste, multipart-Nachrichten werden verworfen
+title.cz veøejné zprávy s více èástmi jsou odmítnuty
 
 match([header->Content-Type],/multipart/)      smtp,smime,md5    -> reject
 true()				               smtp,md5    -> do_it
