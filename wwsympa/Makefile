@@ -106,6 +106,7 @@ installtemplates:
 		( \
 		cd $$lang; \
 		PERL=$(PERL); export PERL; \
+		UMASK=0644; export UMASK; \
 		INSTALLDIR=$(ETCBINDIR)/wws_templates; export INSTALLDIR; \
 		SBINDIR=$(SBINDIR); export SBINDIR; \
 		CGIDIR=$(CGIDIR); export CGIDIR; \
