@@ -1,0 +1,90 @@
+=head1 NAME
+
+archived (or archived.pl) - Mailing List Archiving Daemon for WWSympa
+
+=head1 SYNOPSYS
+
+S<B<archived> [ B<-F> ] [ B<-d, -dF> ]>
+
+=head1 DESCRIPTION
+
+This manual page documents briefly the archived command.
+
+This manual page was written for the Debian GNU/Linux distribution
+because the original program does not have a manual page.
+
+Archived is a program which scan permanently the outgoing queue and
+feeds the web archives, converting messages to the HTML format and
+linking them.
+
+The HTML conversion is achieved by the means of the MhOnArc program.
+
+=head1 OPTIONS
+
+These programs follow the usual GNU command line syntax,
+with long options starting with two dashes (`-').  A summary of
+options is included below.
+
+=over 5
+
+=item B<-F>
+
+Do not detach TTY.
+
+=item B<-d>, B<-dF>
+
+Run the program in a debug mode.
+
+=back
+
+=head1 FILES
+
+F</etc/sympa/wwsympa.conf> WWSympa configuration file.
+
+F</var/spool/sympa/archived.pid> this file contains the process ID
+of F<archived.pl>.
+
+=head1 MORE DOCUMENTATION
+
+The full documentation in HTML and PostScript formats can be
+found in F</usr/share/doc/sympa/html/>. 
+
+The mailing lists (with web archives) can be accessed at
+http://listes.cru.fr/wws/lists/informatique/sympa.
+
+=head1 AUTHORS
+
+Serge Aumont
+ 	Comité Réseau des Universités
+
+Olivier Salaün
+ 	Comité Réseau des Universités
+
+Contact authors at <sympa-authors@cru.fr>
+
+This manual page was written by Jérôme Marant <jerome.marant@IDEALX.org>
+for the Debian GNU/Linux system (but may be used by others).
+
+=head1 COPYRIGHT
+
+Copyright E<169> 1997,1998,1999,2000,2001 Comité Réseau des Universités
+
+Copyright E<169> 1997,1998,1999 Institut Pasteur & Christophe Wolfhugel
+
+You may distribute this software under the terms of the GNU General
+Public License Version 2 (L<http://www.gnu.org/copyleft/gpl.html>)
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A
+copy of the license can be found under
+F</usr/share/common-licenses/FDL>
+
+=head1 BUGS
+
+Report bugs to <sympa-dev@cru.fr>.
+
+=head1 SEE ALSO
+
+L<sympa(1)>, L<bounced(1)>, L<mhonarc(1)>, L<wwsympa.conf(5)>.

@@ -98,7 +98,7 @@ NLSDIR		=	$(DIR)/nls
 LOG_SOCKET_TYPE	=	"unix"
 #endif
 
-all:	checkcpan sources languages checkperl
+all:	checkcpan sources languages checkperl man
 
 rpm: build_rh_rpm build_mdk_rpm
 
@@ -120,7 +120,7 @@ checkperl:
 	echo "#############################################################################"; \
 	fi
 
-sources: 
+sources: src/Makefile src/queue.c src/bouncequeue.c
 	@echo "Making src"
 	(cd src && echo "making in src..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
@@ -138,6 +138,11 @@ doc:	doc/sympa.tex
 	MAILERPROGDIR='${MAILERPROGDIR}' ETCBINDIR='${ETCBINDIR}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	USER='${USER}' GROUP='${GROUP}');
+
+man: doc/man8/Makefile
+	@echo "Making man"
+	(cd doc/man8 && echo "making in doc/man8/..." && \
+	$(MAKE) SYMPA_VERSION='$(SYMPA_VERSION)');
 
 languages:
 	@echo "Making nls"
@@ -201,7 +206,7 @@ installsample:
 installman:
 	mkdir -p $(DESTDIR)$(MANDIR)
 	mkdir -p $(DESTDIR)$(MANDIR)/man8
-	@for manfile in sympa.8 ; do \
+	@for manfile in sympa.8 archived.8 bounced.8 alias_manager.8; do \
 	echo "Installing man file man8/$$manfile..."; \
 	( \
 		cd doc/man8 ; \

@@ -1,0 +1,83 @@
+=head1 NAME
+
+alias_manager (or alias_manager.pl) - manage Sympa aliases
+
+=head1 SYNOPSYS
+
+S<B<alias_manager> B<add> I<listname> I<domain>>
+S<B<alias_manager> B<del> I<listname> I<domain>>
+
+=head1 DESCRIPTION
+
+This manual page documents briefly the bounced command.
+
+This manual page was written for the Debian GNU/Linux distribution
+because the original program does not have a manual page.
+
+Alias_manager is a program that helps in installing aliases for newly
+created lists and deleting aliases for closed lists.
+
+=head1 OPTIONS
+
+=over 5
+
+=item B<add> I<listname> I<domain>
+
+Add the set of aliases for the mailing list I<listname> in the
+domain I<domain>.
+
+=item B<del> I<listname> I<domain>
+
+Remove the set of aliases for the mailing list I<listname> in the
+domain I<domain>.
+
+=back
+
+=head1 FILES
+
+F</etc/aliases> sendmail aliases file.
+
+=head1 MORE DOCUMENTATION
+
+The full documentation in HTML and PostScript formats can be
+found in F</usr/share/doc/sympa/html/>. 
+
+The mailing lists (with web archives) can be accessed at
+http://listes.cru.fr/wws/lists/informatique/sympa.
+
+=head1 AUTHORS
+
+Serge Aumont
+ 	Comité Réseau des Universités
+
+Olivier Salaün
+ 	Comité Réseau des Universités
+
+Contact authors at <sympa-authors@cru.fr>
+
+This manual page was written by Jérôme Marant <jerome.marant@IDEALX.org>
+for the Debian GNU/Linux system (but may be used by others).
+
+=head1 COPYRIGHT
+
+Copyright E<169> 1997,1998,1999,2000,2001 Comité Réseau des Universités
+
+Copyright E<169> 1997,1998,1999 Institut Pasteur & Christophe Wolfhugel
+
+You may distribute this software under the terms of the GNU General
+Public License Version 2 (L<http://www.gnu.org/copyleft/gpl.html>)
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A
+copy of the license can be found under
+F</usr/share/common-licenses/FDL>
+
+=head1 BUGS
+
+Report bugs to <sympa-dev@cru.fr>.
+
+=head1 SEE ALSO
+
+L<sympa(1)>, L<sendmail(8)>.
