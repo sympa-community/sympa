@@ -190,6 +190,7 @@ use Language;
 use Log;
 use Conf;
 use mail;
+use Ldap;
 use Time::Local;
 use MIME::Entity;
 use MIME::Words;
@@ -4740,7 +4741,7 @@ sub search{
     my $value;
 
     my %ldap_conf;
-
+    
     return undef unless (%ldap_conf = &Ldap::load($file));
 
  

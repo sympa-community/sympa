@@ -45,7 +45,6 @@ use Conf;
 use Commands;
 use Language;
 use Log;
-use Ldap;
 use Auth;
 
 use Mail::Header;
