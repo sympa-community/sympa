@@ -810,7 +810,6 @@ sub check_param_in {
 						  'sender' => $param->{'user'}{'email'},
 						  'remote_host' => $param->{'remote_host'},
 						  'remote_addr' => $param->{'remote_addr'}});
-	   &do_log('debug', "May Post: $may_post");
 	   $param->{'may_post'} = 1 
 	       unless ($may_post =~ /reject/);
        }
@@ -892,7 +891,7 @@ sub check_param_in {
 sub check_param_out {
     &wwslog('debug2', 'check_param');
 
-    if ($list) {
+    if ($list->{'name'}
 	## Owners
 	foreach my $o (@{$list->{'admin'}{'owner'}}) {
 	    next unless $o->{'email'};
