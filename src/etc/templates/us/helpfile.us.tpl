@@ -34,6 +34,8 @@ Les commandes disponibles sont :
  SET <list|*> NOMAIL         * Suspendre la reception des messages de <list>
  SET <list|*> DIGEST         * Reception des message en mode compilation
  SET <list|*> SUMMARY        * Reception de la liste des messages uniquement
+ SET <list|*> NOTICE         * Reception de l'objet des message uniquement
+
  SET <list|*> MAIL           * Reception de la liste <list> en mode normal
  SET <list|*> CONCEAL        * Passage en liste rouge (adresse d'abonné cachée)
  SET <list|*> NOCONCEAL      * Adresse d'abonné visible via REView
@@ -470,6 +472,8 @@ Available commands are:
  SET <list|*> NOMAIL         * To suspend the message reception for <list>
  SET <list|*> DIGEST         * Message reception in compilation mode
  SET <list|*> SUMMARY        * Receiving the message index only
+ SET <list|*> NOTICE         * Receiving message subject only
+
  SET <list|*> MAIL           * <list> reception in normal mode
  SET <list|*> CONCEAL        * To become unlisted (hidden subscriber address)
  SET <list|*> NOCONCEAL      * Subscriber address visible via REView
