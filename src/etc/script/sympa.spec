@@ -1,6 +1,6 @@
 %define name sympa
 %define version --VERSION--
-%define release 3--SUFFIX--
+%define release 4--SUFFIX--
 %define home_s --HOMEDIR--
 
 Summary:  Sympa is a powerful multilingual List Manager - LDAP and SQL features.
@@ -56,7 +56,7 @@ make DIR=%{home_s} sources languages
 %install
 rm -rf $RPM_BUILD_ROOT
 
-make INITDIR=/etc/rc.d/init.d HOST=MYHOST DIR=%{home_s} DESTDIR=$RPM_BUILD_ROOT install
+make INITDIR=/etc/rc.d/init.d HOST=MYHOST DIR=%{home_s} DESTDIR=$RPM_BUILD_ROOT MANDIR=%{man_dir} install
 
 ## Setting Runlevels
 for I in 0 1 2 6; do
