@@ -7,7 +7,7 @@ MAN8	=	archived.8 bounced.8 alias_manager.8 sympa.8
 
 .pod.8:
 	rm -f $@
-	pod2man --section=8 --center="sympa $(SYMPA_VERSION)" --lax --release=$(SYMPA_VERSION) $< $@
+	pod2man --section=8 --center="sympa $(SYMPA_VERSION)" --lax --release="$(SYMPA_VERSION)" $< $@
 
 all:	$(MAN8)
 
