@@ -18,6 +18,7 @@ use Digest::MD5;
 use Fcntl;
 use DB_File;
 use Time::Local;
+use MIME::Words;
 
 require 'tools.pl';
 
@@ -139,7 +140,7 @@ sub help {
 	
 	$data->{'is_owner'} = 1 if ($#owner > -1);
 	$data->{'is_editor'} = 1 if ($#editor > -1);
-	$data->{'subject'} = sprintf Msg(6, 81, "User guide");
+	$data->{'subject'} = MIME::Words::encode_mimewords(sprintf Msg(6, 81, "User guide"));
 
 	&List::send_global_file("helpfile", $sender, $robot, $data);
     
@@ -210,6 +211,9 @@ sub lists {
 	my $action = &List::request_action('visibility','smtp',$robot,
                                             {'listname' => $l,
                                              'sender' => $sender });
+	return undef
+	    unless (defined $action);
+
 	if ($action eq 'do_it') {
 	    $lists->{$l}{'subject'} = $list->{'admin'}{'subject'};
 	    $lists->{$l}{'host'} = $list->{'admin'}{'host'};
@@ -220,7 +224,7 @@ sub lists {
     if ((-r "$Conf{'etc'}/$robot/templates/lists.tpl") || (-r "$Conf{'etc'}/templates/lists.tpl") || (-r "--ETCBINDIR--/templates/lists.tpl")) {
 	my $data = {};
 	$data->{'lists'} = $lists;
-	$data->{'subject'} = sprintf Msg(6, 82, "Public lists");
+	$data->{'subject'} = MIME::Words::encode_mimewords(sprintf Msg(6, 82, "Public lists"));
 
 	&List::send_global_file('lists', $sender, $robot, $data);
 
@@ -292,6 +296,9 @@ sub stats {
     my $action = &List::request_action ('review',$auth_method,$robot,
 					{'listname' => $listname,
 					 'sender' => $sender});
+
+    return undef
+	unless (defined $action);
 
     if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
 	my $tpl = $2;
@@ -485,6 +492,9 @@ sub review {
                                      {'listname' => $listname,
                                       'sender' => $sender});
 
+    return undef
+	unless (defined $action);
+
     if ($action =~ /request_auth/i) {
 	do_log ('debug',"auth requested from $sender");
         $list->request_auth ($sender,'review',$robot);
@@ -610,6 +620,9 @@ sub subscribe {
 					'sender' => $sender });
 #    my $action = &List::get_action ('subscribe',$which,$sender,$auth_method);
     
+    return undef
+	unless (defined $action);
+
     &do_log('debug2', 'action : %s', $action);
     
     if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
@@ -740,6 +753,9 @@ sub info {
 				       {'listname' => $listname, 
 					'sender' => $sender });
     
+    return undef
+	unless (defined $action);
+
     if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
 
 	my $tpl = $2;
@@ -851,6 +867,9 @@ sub signoff {
 					'email' => $email,
 					'sender' => $sender });
     
+    return undef
+	unless (defined $action);
+
     if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
 	my $tpl = $2;
 	if ($tpl) {
@@ -964,6 +983,9 @@ sub add {
 					'email' => $email,
 					'sender' => $sender });
     
+    return undef
+	unless (defined $action);
+
     if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
 	my $tpl = $2;
 	if ($tpl) {
@@ -1073,6 +1095,9 @@ sub invite {
 				       {'listname' => $which, 
 					'sender' => $sender });
 
+    return undef
+	unless (defined $action);
+
     if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
 	my $tpl = $2;
 	if ($tpl) {
@@ -1105,6 +1130,9 @@ sub invite {
 	    my $action = &List::request_action('subscribe','smtp',$robot,
 					       {'listname' => $which, 
 						'sender' => $sender });
+
+	    return undef
+		unless (defined $action);
 
             if ($action =~ /request_auth/i) {
 		my $keyauth = $list->compute_auth ($email, 'subscribe');
@@ -1214,6 +1242,9 @@ sub remind {
 					   {'listname' => $listename, 
 					    'sender' => $sender });
     }
+
+    return undef
+	unless (defined $action);
 
     if ($action =~ /reject(\(\'?(\w+)\'?\))/i) {
 	my $tpl = $2;
@@ -1372,6 +1403,10 @@ sub del {
 					 'sender' => $sender,
 					 'email' => $who,
 					 });
+
+    return undef
+	unless (defined $action);
+
 
 #    my $action = &List::get_action ('del', $which, $sender, $who, $auth_method);
 
@@ -1707,6 +1742,9 @@ sub confirm {
 				       {'listname' => $name, 
 					'sender' => $sender ,
 					'msg' => $msg});
+
+    return undef
+	unless (defined $action);
 
     if ($action =~ /^editorkey/) {
 	my $key = $list->send_to_editor('md5', $msg, $file, 'not_crypted');
