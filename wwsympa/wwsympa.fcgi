@@ -160,15 +160,11 @@ my %comm = ('home' => 'do_home',
 	 'resetbounce' => 'do_resetbounce',
 	 'scenario_test' => 'do_scenario_test',
 	 'search_list' => 'do_search_list',
-	 'shared' => 'do_shared',
-	 'upload_request' => 'do_upload_request',
-	 'upload' => 'do_upload',
 	 'close_list_request' => 'do_close_list_request',
 	 'close_list' => 'do_close_list',
 	 'restore_list' => 'do_restore_list',
 	 'd_read' => 'do_d_read',
 	 'd_create_dir' => 'do_d_create_dir',
-	 'd_upload' => 'do_d_upload',
 	 'd_editfile' => 'do_d_editfile',
 	 'd_overwrite' => 'do_d_overwrite',
 	 'd_savefile' => 'do_d_savefile',
@@ -229,7 +225,6 @@ my %action_args = ('default' => ['list'],
 		'shared' => ['list','@path'],
 		'd_read' => ['list','@path'],
 		'd_admin' => ['list','d_admin'],
-		'd_upload' => ['list','@path'],
 		'd_delete' => ['list','@path'],
 		'd_create_dir' => ['list','@path'],
 		'd_overwrite' => ['list','@path'],
@@ -1267,8 +1262,8 @@ sub do_info {
 	$s->{'visibility'} ||= 'noconceal';
 	$s->{'date'} = &POSIX::strftime("%d %b %Y", localtime($s->{'date'}));
 	
-	foreach $m (keys %reception_mode) {
-	    $param->{'reception'}{$m}{'description'} = $reception_mode{$m};
+	foreach $m (keys %wwslib::reception_mode) {
+	    $param->{'reception'}{$m}{'description'} = $wwslib::reception_mode{$m};
 	    if ($s->{'reception'} eq $m) {
 		$param->{'reception'}{$m}{'selected'} = 'SELECTED';
 	    }else {
@@ -1354,7 +1349,7 @@ sub do_review {
 
     ## Members list
     $count = -1;
-    for ($i = $list->get_first_user($sortby, $offset, $size); 
+    for (my $i = $list->get_first_user($sortby, $offset, $size); 
 	 $i; $i = $list->get_next_user()) {
 	next if (($i->{'visibility'} eq 'conceal')
 		 and (! $param->{'is_owner'}) );
@@ -1432,7 +1427,7 @@ sub do_search {
 
     my $record = 0;
     ## Members list
-    for ($i = $list->get_first_user(); $i; $i = $list->get_next_user()) {
+    for (my $i = $list->get_first_user(); $i; $i = $list->get_next_user()) {
 
 	## Search filter
 	next if ($i->{'email'} !~ /$param->{'regexp'}/i
@@ -1479,7 +1474,7 @@ sub do_pref {
     ## Available languages
 #    foreach $l (keys %languages) {
     my $saved_lang = &Language::GetLang();
-    foreach my $l (@languages) {
+    foreach my $l (@wwslib::languages) {
 #	$param->{'languages'}{$l}{'complete'} = $languages{$l};
 	&Language::SetLang($l);
 	$param->{'languages'}{$l}{'complete'} = Msg(14, 2, $l);
@@ -1650,7 +1645,7 @@ sub do_viewfile {
 	return undef;
     }
 
-    unless (defined $filenames{$in{'file'}}) {
+    unless (defined $wwslib::filenames{$in{'file'}}) {
 	$param->{'error'}{'file'} = $in{'file'};
 	&message('file_not_editable');
 	&wwslog('info','do_viewfile: file %s not editable', $in{'file'});
@@ -1811,8 +1806,8 @@ sub do_suboptions {
     $s->{'visibility'} ||= 'noconceal';
     $s->{'date'} = &POSIX::strftime("%d %b %Y", localtime($s->{'date'}));
     
-    foreach $m (keys %reception_mode) {
-	$param->{'reception'}{$m}{'description'} = $reception_mode{$m};
+    foreach $m (keys %wwslib::reception_mode) {
+	$param->{'reception'}{$m}{'description'} = $wwslib::reception_mode{$m};
 	if ($s->{'reception'} eq $m) {
 	    $param->{'reception'}{$m}{'selected'} = 'SELECTED';
 	}else {
@@ -1820,8 +1815,8 @@ sub do_suboptions {
 	}
     }
     
-    foreach $m (keys %visibility_mode) {
-	$param->{'visibility'}{$m}{'description'} = $visibility_mode{$m};
+    foreach $m (keys %wwslib::visibility_mode) {
+	$param->{'visibility'}{$m}{'description'} = $wwslib::visibility_mode{$m};
 	if ($s->{'visibility'} eq $m) {
 	    $param->{'visibility'}{$m}{'selected'} = 'SELECTED';
 	}else {
@@ -2133,16 +2128,16 @@ sub do_admin {
     }
  
     ## Messages edition
-    foreach $f ('info','homepage','welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl') {
+    foreach my $f ('info','homepage','welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl') {
 	next unless ($list->may_edit($f, $param->{'user'}{'email'}) eq 'write');
-	$param->{'files'}{$f}{'complete'} = Msg(15, $filenames{$f}, $f);
+	$param->{'files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
 	$param->{'files'}{$f}{'selected'} = '';
     }
     $param->{'files'}{'info'}{'selected'} = 'SELECTED';
    
-    my %mode;
-    $mode{'edit'} = 1;
-    my %access = &d_access_control(\%mode,$path);
+#    my %mode;
+#    $mode{'edit'} = 1;
+#    my %access = &d_access_control(\%mode,$path);
 
     return 1;
 }
@@ -2169,14 +2164,14 @@ sub do_serveradmin {
     $param->{'conf'} = \%Conf;
 
     ## Lists Default files
-    foreach $f ('welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl') {
-	$param->{'lists_default_files'}{$f}{'complete'} = Msg(15, $filenames{$f}, $f);
+    foreach my $f ('welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl') {
+	$param->{'lists_default_files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
 	$param->{'lists_default_files'}{$f}{'selected'} = '';
     }
     
     ## Server files
-    foreach $f ('helpfile.tpl','lists.tpl','global_remind.tpl','summary.tpl') {
-	$param->{'server_files'}{$f}{'complete'} = Msg(15, $filenames{$f}, $f);
+    foreach my $f ('helpfile.tpl','lists.tpl','global_remind.tpl','summary.tpl') {
+	$param->{'server_files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
 	$param->{'server_files'}{$f}{'selected'} = '';
     }
     $param->{'server_files'}{'helpfile.tpl'}{'selected'} = 'SELECTED';
@@ -2512,7 +2507,7 @@ sub do_reject {
 		my $rejected_sender = $sender_hdr[0]->address;
 		my %context;
 		$context{'subject'} = $message->head->get('subject');
-		$context{'rejected_by'} = $sender;
+		$context{'rejected_by'} = $param->{'user'}{'email'};
 		$list->send_file('reject', $rejected_sender, \%context);
 	    }
 	}
@@ -2568,7 +2563,7 @@ sub do_distribute {
     open DISTRIBUTE, ">$Conf{'queue'}/T.$Conf{'sympa'}.$extention" ;
 
     printf DISTRIBUTE ("X-Sympa-To: %s\n",$Conf{'sympa'});
-    printf DISTRIBUTE ("Message-Id: <%s\@wwsympa>\n",$time);
+    printf DISTRIBUTE ("Message-Id: <%s\@wwsympa>\n", time);
     printf DISTRIBUTE ("From: %s\n\n", $param->{'user'}{'email'});
 
     foreach my $id (split /\0/, $in{'id'}) {
@@ -2683,15 +2678,15 @@ sub do_editfile {
 
     unless ($in{'file'}) {
 	## Messages edition
-	foreach $f ('info','homepage','welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl') {
+	foreach my $f ('info','homepage','welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl') {
 	    next unless ($list->may_edit($f, $param->{'user'}{'email'}) eq 'write');
-	    $param->{'files'}{$f}{'complete'} = Msg(15, $filenames{$f}, $f);
+	    $param->{'files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
 	    $param->{'files'}{$f}{'selected'} = '';
 	}
 	return 1;
     }
 
-    unless (defined $filenames{$in{'file'}}) {
+    unless (defined $wwslib::filenames{$in{'file'}}) {
 	$param->{'error'}{'file'} = $in{'file'};
 	&message('file_not_editable');
 	&wwslog('info','do_editfile: file %s not editable', $in{'file'});
@@ -2858,7 +2853,7 @@ sub do_arc {
 	&wwslog('info','do_arc: no directory %s', "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}");
 	return undef;
     }
-    foreach $dir (sort grep(!/^\./,readdir ARC)) {
+    foreach my $dir (sort grep(!/^\./,readdir ARC)) {
 	if ($dir =~ /^(\d{4})-(\d{2})$/) {
 	    $param->{'calendar'}{$1}{$2} = 1;
 	    $latest = $dir;
@@ -2875,7 +2870,7 @@ sub do_arc {
 	    &wwslog('info',"unable to readdir $wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}");
 	    &message('month_not_found');
 	}
-	foreach $file (grep(/^$index/,readdir ARC)) {
+	foreach my $file (grep(/^$index/,readdir ARC)) {
 	    if ($file =~ /^$index(\d+)\.html$/) {
 		$latest = $1 if ($latest < $1);
 	    }
@@ -2938,13 +2933,13 @@ sub do_remove_arc {
 
     opendir ARC, "$arcpath/arctxt";
     my $message;
-    foreach $file (grep (!/\./,readdir ARC)) {
+    foreach my $file (grep (!/\./,readdir ARC)) {
 	## &wwslog('info','remove_arc: scanning %s', $file);
 	next unless (open MAIL,"$arcpath/arctxt/$file") ;
 	while (<MAIL>) {
 	    last if /^$/ ;
 	    if (/^Message-id:\s?<?([^>\s]+)>?\s?/i ) {
-		$id = $1;
+		my $id = $1;
 		if ($id eq $in{'msgid'}) {
 		    $message = $file ;
 		}
@@ -3552,8 +3547,8 @@ sub do_editsubscriber {
     ## Prefs
     $param->{'subscriber'}{'reception'} ||= 'mail';
     $param->{'subscriber'}{'visibility'} ||= 'noconceal';
-    foreach my $m (keys %reception_mode) {		
-	$param->{'reception'}{$m}{'description'} = $reception_mode{$m};
+    foreach my $m (keys %wwslib::reception_mode) {		
+	$param->{'reception'}{$m}{'description'} = $wwslib::reception_mode{$m};
 	if ($param->{'subscriber'}{'reception'} eq $m) {
 	    $param->{'reception'}{$m}{'selected'} = 'SELECTED';
 	}else {
@@ -3569,7 +3564,7 @@ sub do_editsubscriber {
     	$param->{'subscriber'}{'bounce_count'} = $bounce[2];
 	if ($bounce[3] =~ /^(\d+\.(\d+\.\d+))$/) {
 	   $user->{'bounce_code'} = $1;
-	   $user->{'bounce_status'} = $bounce_status{$2};
+	   $user->{'bounce_status'} = $wwslib::bounce_status{$2};
  	}	
 
 	$param->{'previous_action'} = $in{'previous_action'};
@@ -3646,16 +3641,16 @@ sub do_scenario_test {
 	return undef;
     }
 
-    foreach $scfile (readdir SCENARI) {
+    foreach my $scfile (readdir SCENARI) {
 	if ($scfile =~ /^(\w+)\.(\w+)/ ) {
 	    $param->{'scenario'}{$1}{'defined'}=1 ;
 	}
     }
     closedir SCENARI;
-    foreach $l ( &List::get_lists() ) {
+    foreach my $l ( &List::get_lists() ) {
 	$param->{'listname'}{$l}{'defined'}=1 ;
     }
-    foreach $a ('smtp','md5','smime') {
+    foreach my $a ('smtp','md5','smime') {
 	$param->{'auth_method'}{$a}{'define'}=1 ;
     }
 
@@ -3715,7 +3710,7 @@ sub do_reviewbouncing {
 
     my @users;
     ## Members list
-    for ($i = $list->get_first_bouncing_user(); $i; $i = $list->get_next_bouncing_user()) {
+    for (my $i = $list->get_first_bouncing_user(); $i; $i = $list->get_next_bouncing_user()) {
 	$i->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
 	$i->{'first_bounce'} = $1;
 	$i->{'last_bounce'} = $2;
@@ -3889,7 +3884,7 @@ sub do_rebuildallarc {
 	&wwslog('info','do_rebuildallarc: not listmaster');
 	return undef;
     }
-    foreach $l ( &List::get_lists() ) {
+    foreach my $l ( &List::get_lists() ) {
 	my $list = new List ($l); 
 	next unless (defined $list->{'admin'}{'web_archive'});
         my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'admin'}{'host'}";
@@ -3933,7 +3928,7 @@ sub do_search_list {
 
     ## Members list
     my $record = 0;
-    foreach $l ( &List::get_lists() ) {
+    foreach my $l ( &List::get_lists() ) {
 	my $is_admin;
 	my $list = new List ($l);
 
@@ -3991,7 +3986,7 @@ sub do_edit_list {
 	my ($type, $name) = ($1, $2);
 
 	## Parameter value
-	$value = $in{$key};
+	my $value = $in{$key};
 	next if ($value eq '');
 
 	if ($type eq 'multiple_param') {
@@ -4061,7 +4056,7 @@ sub do_edit_list {
 			    if ($#{$p->[$i]{$key}} != $#{$new_p->[$i]{$key}}) {
 				$changed{$pname} = 1; next;
 			    }
-			    foreach $index (0..$#{$p->[$i]{$key}}) {
+			    foreach my $index (0..$#{$p->[$i]{$key}}) {
 				if ($p->[$i]{$key}[$index] ne $new_p->[$i]{$key}[$index]) {
 				    unless ($new_p->[$i]{$key}[$index] =~ /^$pinfo->{$pname}{'file_format'}{$key}{'file_format'}$/) {
 					push @syntax_error, $pname;
@@ -4101,7 +4096,7 @@ sub do_edit_list {
 	$param->{'error'}{'params'} = join(',',@syntax_error);
 	&message('syntax_errors');
 	foreach my $pname (@syntax_error) {
-	    &wwslog('info','do_edit_list: Syntax errors, param %s=\'%s\'', $pname, $new_p->{$pname});
+	    &wwslog('info','do_edit_list: Syntax errors, param %s=\'%s\'', $pname, $new_admin->{$pname});
 	}
 	return undef;
     }
@@ -4155,7 +4150,7 @@ sub do_edit_list {
 
     ## Tag changed parameters
     foreach my $pname (keys %changed) {
-	$changed_params{$pname} = 1;
+	$main::changed_params{$pname} = 1;
     }
 #    print "Content-type: text/plain\n\n";
 #    &dump_var(\%pinfo,0);
@@ -4259,9 +4254,9 @@ sub _prepare_edit_form {
 
 	$p->{'default'} = $list_config->{'defaults'}{$pname};
 	$p->{'may_edit'} = $list->may_edit($pname,$param->{'user'}{'email'});
-	$p->{'changed'} = $changed_params{$pname};
+	$p->{'changed'} = $main::changed_params{$pname};
 
-	if ($changed_params{$pname}) {
+	if ($main::changed_params{$pname}) {
 	    &do_log('debug', 'CHANGED: %s', $pname);
 	}
 
@@ -4324,6 +4319,7 @@ sub _prepare_data {
 	      };
 
     ## Occurrences
+    my $data2;
     if ($struct->{'occurrence'} =~ /n$/) {
 	$p_glob->{'occurrence'} = 'multiple';
 	if (defined($data)) {
@@ -4428,42 +4424,6 @@ sub dump_var {
 	    print STDOUT "\t"x$level."UNDEF\n";
 	}
     }
-}
-
-sub do_shared {
-    &wwslog('debug', 'do_shared(%s)', $in{'path'});
-    
-    return 1;
-}
-
-sub do_upload_request {
-    &wwslog('debug', 'do_upload_request()');
-
-    return 1;
-}
-
-sub do_upload {
-    &wwslog('debug', 'do_upload()');
-
-    my $fh = $query->upload('uploaded_file');
-    my $fn = $query->param('uploaded_file');
-
-    $fn =~ /([^\/\\]+)$/;
-    $fname = $1;
-    $fname ||= 'uploaded';
-
-    open FILE, ">/tmp/$fname";
- #   my $buffer;
- #   while (read($f, $buffer, 1024)) {
-#	print FILE $buffer;
-#    }
-
-    while (<$fh>) {
-	print FILE;
-    }
-    close FILE;
-
-    return 1;
 }
 
 sub do_close_list_request {
@@ -4629,41 +4589,13 @@ sub get_desc_file {
 
 }
 
-# Function get_desc_file
-# gets the parameters of the description file, loading it
-# if it's not yet in the variable %desc_files_map
-
-### NOT AVAILABLE WITH 2 CGI
-sub OLD_get_desc_file {
-    my $file = shift;
-
-    # stats on the file : 10th element is the date of the last modification 
-    my @info = stat $file;
-
-    # if the information is already loaded and has not been modified
-    # we keep it. Else, we have to load the description file.
-    if ($desc_files_map{$file}{'date'} > $info[10]) {
-	
-	%hash = %{$desc_files_map{$file}{'desc_hash'}};
-
-    }else {
-	$desc_files_map{$file}{'date'} = time;
-	%hash = &load_desc_file($file);
-	#copy the result in the hash only if changes
-	foreach my $k (keys %hash) { 
-	    $desc_files_map{$file}{'desc_hash'}{$k} = $hash{$k};
-	}
-    }
-    return %hash;
-}
-
 ## Function synchronize
 ## Return true if the file in parameter can be overwrited
 ## false if it has changes since the parameter date_epoch
 sub synchronize {
     # args : 'path' , 'date_epoch'
-    $path = shift;
-    $date_epoch = shift;
+    my $path = shift;
+    my $date_epoch = shift;
 
     my @info = stat $path;
 
@@ -4802,7 +4734,8 @@ sub d_access_control {
 
 	while ($current_path ne "") {
 	    # no description file found yet
-	    $def_desc_file = 0;
+	    my $def_desc_file = 0;
+	    my $desc_file;
 
 	    $current_path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
 	    $current_document = $3;
@@ -4810,22 +4743,23 @@ sub d_access_control {
 	    # opening of the description file appropriated
 	    if (-d $shareddir.'/'.$current_path) {
 		# case directory
-		unless ($slash) {
-		    $current_path = $current_path.'/';
-		}
+
+#		unless ($slash) {
+		$current_path = $current_path.'/';
+#		}
 		
 		if (-e "$shareddir/$current_path.desc"){
 		    $desc_file = $shareddir.'/'.$current_path.".desc";
 		    $def_desc_file = 1;
 		}
-
-	    } else {
+		
+	    }else {
 		# case file
 		if (-e "$shareddir/$1.desc.$3"){
 		    $desc_file = $shareddir.'/'.$1.".desc.".$3;
 		    $def_desc_file = 1;
 		} 
-		    
+		
 	    }
 
 	    if ($def_desc_file) {
@@ -4946,7 +4880,7 @@ sub d_access_control {
 sub do_d_admin {
     my %mode;
     $mode{'edit'} = 1;
-    my %access = &d_access_control(\%mode,$path);
+    my %access = &d_access_control(\%mode,$in{'path'});
 
     if ($access{'may'}{'edit'}) {
 	my $dir = "$Conf{'home'}/$param->{'list'}";
@@ -5156,7 +5090,7 @@ sub do_d_read {
 
 	## parameters of the current directory
 	if ($path && (-e "$doc/.desc")) {
-	    %desc_hash = &get_desc_file("$doc/.desc");
+	    my %desc_hash = &get_desc_file("$doc/.desc");
 	    $param->{'doc_owner'} = $desc_hash{'email'};
 	    $param->{'doc_title'} = $desc_hash{'title'};
 	}
@@ -5612,7 +5546,7 @@ sub do_d_describe {
     }
 
     ### Document isn't a description file?
-    unless ($path !~ /$desc/) {
+    unless ($path !~ /\.desc/) {
 	$param->{'error'}{'path'} = $path;
 	&wwslog('info',"do_d_describe : $shareddir/$path : description file");
 	&message('no_such_document');
@@ -5662,8 +5596,8 @@ sub do_d_describe {
 	
 	# Description file
 	$path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-	$dir = $1;
-	$file = $3;
+	my $dir = $1;
+	my $file = $3;
 
 	my $desc_file;
 	if (-d "$shareddir/$path") {
@@ -5676,7 +5610,7 @@ sub do_d_describe {
 
 	if (-e "$desc_file"){
 	    # if description file already exists : open it and modify it
-	    %desc_hash = &get_desc_file ("$desc_file");
+	    my %desc_hash = &get_desc_file ("$desc_file");
 
 	    # Synchronization
 	    unless (&synchronize($desc_file,$in{'serial'})){
@@ -5836,12 +5770,12 @@ sub do_d_savefile {
 
 	# Description file
 	$path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-	$dir = $1;
-	$file = $3;
+	my $dir = $1;
+	my $file = $3;
 	if (-e "$shareddir/$dir.desc.$file"){
 
 	    # if description file already exists : open it and modify it
-	    %desc_hash = &get_desc_file ("$shareddir/$dir.desc.$file");
+	    my %desc_hash = &get_desc_file ("$shareddir/$dir.desc.$file");
 	    
 	    open DESC,">$shareddir/$dir.desc.$file"; 
 
@@ -5915,7 +5849,7 @@ sub do_d_overwrite {
     my $fn = $query->param('uploaded_file');
 
     $fn =~ /([^\/\\]+)$/;
-    $fname = $1;
+    my $fname = $1;
     
 
 ####### Controls
@@ -5998,11 +5932,11 @@ sub do_d_overwrite {
 
     # Description file
     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-    $dir = $1;
-    $file = $3;
+    my $dir = $1;
+    my $file = $3;
     if (-e "$shareddir/$dir.desc.$file"){
 	# if description file already exists : open it and modify it
-	%desc_hash = &get_desc_file ("$shareddir/$dir.desc.$file");
+	my %desc_hash = &get_desc_file ("$shareddir/$dir.desc.$file");
 	
 	open DESC,">$shareddir/$dir.desc.$file"; 
 	
@@ -6075,7 +6009,7 @@ sub do_d_upload {
     my $fn = $query->param('uploaded_file');
 
     $fn =~ /([^\/\\]+)$/;
-    $fname = $1;
+    my $fname = $1;
 
 # Controls
     ### action relative to a list ?
@@ -6205,8 +6139,8 @@ sub do_d_delete {
     
     #Current directory and document to delete
     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-    $current_directory = &format_path('with_slash',$1);
-    $document = $3;
+    my $current_directory = &format_path('with_slash',$1);
+    my $document = $3;
     
      # path of the shared directory
     #my $list_name = $in{'list'};
@@ -6339,7 +6273,7 @@ sub do_d_delete {
 #******************************************
 sub do_d_create_dir {
     #action_args == ['list','@path']
-    &wwslog('debug', 'do_d_create_dir(%s)', $name_doc);
+    &wwslog('debug', 'do_d_create_dir(%s)', $in{'name_doc'});
   
       #useful variables
     my $expl = $Conf{'home'};
@@ -6511,6 +6445,7 @@ sub do_d_control {
     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
     $param->{'father'} = $1;    
     
+    my $desc_file;
     # path of the description file
     if (-d "$shareddir/$path") {
 	$desc_file = "$shareddir/$1$3/.desc";
@@ -6653,9 +6588,9 @@ sub do_d_change_access {
     ## End of controls
     
     # Description file
-    $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-    $dir = $1;
-    $file = $3;
+    my $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+    my $dir = $1;
+    my $file = $3;
 
     my $desc_file;
     if (-d "$shareddir/$path") {
@@ -6666,7 +6601,7 @@ sub do_d_change_access {
 
     if (-e "$desc_file"){
 	# if description file already exists : open it and modify it
-	%desc_hash = &get_desc_file ("$desc_file");
+	my %desc_hash = &get_desc_file ("$desc_file");
 	
 	# Synchronization
 	unless (&synchronize($desc_file,$in{'serial'})){
@@ -6765,8 +6700,9 @@ sub do_d_set_owner {
     # Access control
     ## father directory
     my $desc_file;
-    $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-    $dir = $1; $file = $3;
+    my $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+    my $dir = $1; 
+    my $file = $3;
     if (-d "$shareddir/$path") {
 	$desc_file = "$shareddir/$dir$file/.desc"; 
     }else {
@@ -6786,7 +6722,7 @@ sub do_d_set_owner {
 	return undef;
     }
 
-    $may_set = 1;
+    my $may_set = 1;
    
     unless ($may_set) {
 	$param->{'error'}{'directory'} = $path;
@@ -6948,7 +6884,7 @@ sub do_remind {
     open REMIND, ">$Conf{'queue'}/T.$Conf{'sympa'}.$extention" ;
     
     printf REMIND ("X-Sympa-To: %s\n",$Conf{'sympa'});
-    printf REMIND ("Message-Id: <%s\@wwsympa>\n",$time);
+    printf REMIND ("Message-Id: <%s\@wwsympa>\n", time);
     printf REMIND ("From: %s\n\n", $param->{'user'}{'email'});
 
     printf REMIND "$mail_command\n";
@@ -6982,7 +6918,7 @@ sub do_load_cert {
 
     $param->{'bypass'} = 'extreme';
     printf "Content-type: application/x-x509-email-cert\n\n";
-    foreach $l (@cert) {
+    foreach my $l (@cert) {
 	printf "$l";
     }
     return 1;
@@ -7023,7 +6959,7 @@ sub do_change_email {
 	}
 
 	## Change email
-	foreach $l ( &List::get_which($param->{'user'}{'email'}, 'member') ) {
+	foreach my $l ( &List::get_which($param->{'user'}{'email'}, 'member') ) {
 	    my $list = new List ($l);
 	    
 	    unless ($list->update_user($param->{'user'}{'email'}, {'email' => $in{'email'}}) ) {
