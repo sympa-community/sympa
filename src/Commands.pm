@@ -828,7 +828,7 @@ sub signoff {
 		next;
 	    }
 	    
-            $success ||= &signoff($l,$email);
+            $success ||= &signoff("$l $email", $robot);
 	}
 	return ($success);
     }
