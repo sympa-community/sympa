@@ -1163,12 +1163,13 @@ sub do_login {
 	&wwslog('info','do_login: no email');
 	return 'home';
     }
-
+    
     unless ($in{'passwd'}) {
 	my $url_redirect;
 	#Does the email belongs to an ldap directory?
 	if($url_redirect = &is_ldap_user($in{'email'})){
-	    $param->{'redirect_to'} = $url_redirect;
+	    $param->{'redirect_to'} = $url_redirect
+		if ($url_redirect && ($url_redirect != 1));
 	}else{
 	    $in{'init_email'} = $in{'email'};
 	    $param->{'init_email'} = $in{'email'};
@@ -1519,7 +1520,6 @@ sub do_record_email{
 }
 
 sub is_ldap_user {
-
     unless (&tools::get_filename('etc', 'auth.conf', $robot)) {
 	return undef;
     }
@@ -1536,6 +1536,9 @@ sub is_ldap_user {
 	    unless($host){
 		last;
 	    }
+
+	    &do_log('debug','Host: %s', $host);
+	    
 	    my @alternative_conf = split(/,/,$ldap->{'alternative_email_attribute'});
 	    my $attrs = $ldap->{'email_attribute'};
 	    
@@ -1547,7 +1550,7 @@ sub is_ldap_user {
 	    $filter =~ s/\[sender\]/$auth/ig;
 
 	    ## !! une fonction get_dn_by_email/uid
-
+	    
 	    $ldap_anonymous = Net::LDAP->new($host,timeout => $ldap->{'timeout'} );
 	    
 	    unless ($ldap_anonymous ){
@@ -1569,7 +1572,7 @@ sub is_ldap_user {
 
 	    $ldap_anonymous->unbind;
 	    my $redirect = $ldap->{'authentication_info_url'};
-	    return $redirect;
+	    return $redirect || 1;
 	}
 	next unless ($ldap_anonymous);
 	next unless ($host);
@@ -1656,8 +1659,8 @@ sub do_remindpasswd {
     my $url_redirect;
     if($in{'email'}){
 	if($url_redirect = &is_ldap_user($in{'email'})){
-	    $param->{'redirect_to'} = "$url_redirect";
-	
+	    $param->{'redirect_to'} = $url_redirect
+		if ($url_redirect && ($url_redirect != 1));
 	}elsif (! &wwslib::valid_email($in{'email'})) {
 	    &error_message('incorrect_email', {'email' => $in{'email'}});
 	    &wwslog('info','do_remindpasswd: incorrect email %s', $in{'email'});
@@ -1692,7 +1695,8 @@ sub do_sendpasswd {
     
     my $url_redirect;
     if($url_redirect = &is_ldap_user($in{'email'})){
-	$param->{'redirect_to'} = "$url_redirect";
+	$param->{'redirect_to'} = $url_redirect
+	    if ($url_redirect && ($url_redirect != 1));
 	return 1;
     }
 
@@ -2510,16 +2514,6 @@ sub do_subrequest {
 	return undef;
     }
     
-    ## Basic check of email if provided
-    if ($in{'email'}) {
-	unless (&wwslib::valid_email($in{'email'})) {
-	    &error_message('incorrect_email');
-	    &wwslog('info','do_subrequest: incorrect email %s'
-		    , $in{'email'});
-	    return undef;
-	}
-    }
-    
     ## Auth ?
     if ($param->{'user'}{'email'}) {
 
@@ -2543,15 +2537,16 @@ sub do_subrequest {
 	    $param->{'status'} = 'notauth_subscriber';
 	    return 1;
 	}
-
+	
 	my $user;
 	$user = &List::get_user_db($in{'email'})
 	    if &List::is_user_db($in{'email'});
 
 	## Need to send a password by email
-	if (!&List::is_user_db($in{'email'}) || 
-	    !$user->{'password'} || 
-	    ($user->{'password'} =~ /^INIT/i)) {
+	if ((!&List::is_user_db($in{'email'}) || 
+	     !$user->{'password'} || 
+	     ($user->{'password'} =~ /^INIT/i)) &&
+	    !&is_ldap_user($in{'email'})) {
 
 	    &do_sendpasswd();
 	    $param->{'status'} = 'notauth_passwordsent';
@@ -2671,25 +2666,16 @@ sub do_sigrequest {
 	return 1;
     }
     
-    ## Basic check of email if provided
-    if ($in{'email'}) {
-	unless (&wwslib::valid_email($in{'email'})) {
-	    &error_message('incorrect_email');
-	    &wwslog('info','do_sigrequest: incorrect email %s'
-		    , $in{'email'});
-	    return undef;
-	}
-    }
-    
     if ($list->is_user($in{'email'})) {
 	my $user;
 	$user = &List::get_user_db($in{'email'})
 	    if &List::is_user_db($in{'email'});
 
 	## Need to send a password by email
-	if (!&List::is_user_db($in{'email'}) || 
+	if ((!&List::is_user_db($in{'email'}) || 
 	    !$user->{'password'} || 
-	    ($user->{'password'} =~ /^INIT/i)) {
+	    ($user->{'password'} =~ /^INIT/i)) &&
+	    !&is_ldap_user($in{'email'})) {
 	    
 	    &do_sendpasswd();
 	    $param->{'email'} =$in{'email'};
