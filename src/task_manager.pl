@@ -1417,7 +1417,7 @@ sub purge_orphan_bounces {
 
 	 ## Analizing file Msg-count and fill %$list_traffic
 	 unless (open(COUNT,$list->{'dir'}.'/msg_count')){
-	     &do_log('err','** ERROR WHILE OPENING msg_count FILE for liste %s',$listname);
+	     &do_log('debug','** Could not open msg_count FILE for list %s',$listname);
 	     next;
 	 }    
 	 while (<COUNT>) {
