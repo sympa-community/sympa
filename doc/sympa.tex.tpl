@@ -294,7 +294,7 @@ in a single software package, including:
                   configuration) \index{administrator}
 
         \end {itemize}
-	(See ref {WWSympa}}, page~\pageref {WWSympa}})
+	(See \ref {WWSympa}, page~ \pageref {WWSympa})
 
     \item \textbf {RDBMS} : the internal subscriber data structure can be stored in a
         database or, for compatibility with versions 1.x, in text
@@ -396,11 +396,13 @@ Our thanks to all contributors, including:
 
   \item Philippe Rivière for its persevering in \Sympa tuning with Postfix.
 
-  \item Vincent Mathieu, Lynda amadouche, John Dalbec for there integration
-	of LDAP features in \Sympa.
-
   \item Rapha\"el Hertzog (debian), Jerome Marant (debian) and St\'ephane Poirey (redhat) for
       Linux packages.
+
+  \item Loic Dachary for guiding us through the \textit {GNU Coding Standards}
+
+  \item Vincent Mathieu, Lynda amadouche, John Dalbec for there integration
+	of LDAP features in \Sympa.
 
   \item Olivier Lacroix, for all his perseverance in bug fixing.
 
@@ -753,15 +755,14 @@ detail in later sections.
     \item installation of DB Berkeley module (already installed on
       most UNIX systems)
 
+    \item installing a RDBMS (Oracle, MySQL, Sybase or PostgreSQL) and creating \Sympa's Database. This is required for using the web interface for \Sympa. Please refers to \"\Sympa and its database\" section (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
+
     \item installation of
         \htmladdnormallinkfoot {CPAN (Comprehensive PERL Archive Network)}
                 {http://www.perl.com/CPAN}
         modules
 
     \item creation of a UNIX user
-
-    \item The web interface for Sympa named WWSympa requires one of Oracle, MySQL, Sybase or Postgres RDBMS. Please refers to \"\Sympa and its database\" section
-       (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
 
 \end {itemize}
 
@@ -1815,7 +1816,7 @@ db_additional_user_fields 	address,gender
 In this case, the three first following parameters must be assigned by the listmaster
 (see \ref {smimeconf},  page~\pageref {smimeconf}). The two others are optionnals.
 
-\subsection {\cfkeyword {openSSL}}
+\subsection {\cfkeyword {openssl}}
 
 The path for the openSSL binary file.
          
@@ -1943,6 +1944,96 @@ others. Depending on permissions, the same URL may generate a different view.
 
 	\item Parse the HTML template files
 \end {enumerate}
+
+\section {HTTPD setup}
+
+\subsection {wwsympa.fcgi access permissions}
+ 
+      
+     Because Sympa and WWSympa share a lot of files, \file {wwsympa.fcgi},
+     must run with the same 
+     uid/gid as \file {archived.pl}, \file {bounced.pl} and \file {sympa.pl}.
+     There are different ways to organize this :
+\begin{itemize}
+\item With some operating systems no special setup is required because
+      wwsympa.fcgi is installed with suid and sgid bits, but this will not work
+      if suid scripts are refused by your system.
+
+\item Run a dedicated Apache server with sympa.sympa as uid.gid (The Apache default
+      is nobody.nobody)
+
+\item Use a virtual Apache server with sympa.sympa as uid.gid ; Apache
+      needs to be compiled with suexec.
+
+\item Otherwise, you can overcome restrictions on the execution of suid scripts
+      by using a short C program, owned by sympa and with the suid bit set, to start
+      \file {wwsympa.fcgi}. Here is an example (with no guarantee attached) :
+\begin {quote}
+\begin{verbatim}
+
+#include <unistd.h>
+
+#define WWSYMPA "/home/sympa/bin/wwsympa.fcgi"
+
+int main(int argn, char **argv, char **envp) {
+  execve(WWSYMPA,argv,envp);
+}
+
+\end{verbatim}
+\end {quote}
+\end{itemize}
+
+\subsection {Installing wwsympa.fcgi in your Apache server}
+     If you chose to run \file {wwsympa.fcgi} as a simple CGI, you simply need to
+     script alias it. 
+
+\begin {quote}
+\begin{verbatim}
+     Example :
+       	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+\end{verbatim}
+\end {quote}
+
+     Running  FastCGI will provide much faster responses from your server and 
+     reduce load (to understand why, read 
+     \htmladdnormallink 
+     {http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm}
+     {http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm})
+     
+\begin {quote}
+\begin{verbatim}
+     Example :
+	FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 2
+	<Location /wws>
+   	  SetHandler fastcgi-script
+	</Location>
+
+	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+
+ \end{verbatim}
+\end {quote}
+ 
+If you run Virtual robots, then the FastCgiServer(s) can serve multiple robots. 
+Therefore you need to define it in the common section of your Apache configuration
+file.
+
+\subsection {Using FastCGI}
+
+\htmladdnormallink {FastCGI} {http://www.fastcgi.com/} is an extention to CGI that provides persistency for CGI programs. It is extemely usefull
+with \WWSympa because it all the intialisations are only performed once, at server startup ; then
+file {wwsympa.fcgi} instances are awaiting clients requests. 
+
+\WWSympa can also work without FastCGI, depending on \textbf {use\_fast\_cgi} parameter 
+(see \ref {use-fastcgi}, page~\pageref {use-fastcgi}).
+
+To run \WWSympa with FastCGI, you need to install :
+\begin{itemize}
+
+\item mod\_fastcgi : the Apache module that provides FastCGI features
+
+\item FCGI : the Perl module used by \WWSympa
+
+\end{itemize}
 
 \section {wwsympa.conf parameters}
 
@@ -2132,91 +2223,6 @@ You can also rebuild web archives from within the admin page of the list.
 
 \end{enumerate}
  
-\section {HTTPD setup}
-
-\subsection {wwsympa.fcgi access permissions}
- 
-      
-     Because Sympa and WWSympa share a lot of files, \file {wwsympa.fcgi},
-     must run with the same 
-     uid/gid as \file {archived.pl}, \file {bounced.pl} and \file {sympa.pl}.
-     There are different ways to organize this :
-\begin{itemize}
-\item With some operating systems no special setup is required because
-      wwsympa.fcgi is installed with suid and sgid bits, but this will not work
-      if suid scripts are refused by your system.
-
-\item Run a dedicated Apache server with sympa.sympa as uid.gid (The Apache default
-      is nobody.nobody)
-
-\item Use a virtual Apache server with sympa.sympa as uid.gid ; Apache
-      needs to be compiled with suexec.
-
-\item Otherwise, you can overcome restrictions on the execution of suid scripts
-      by using a short C program, owned by sympa and with the suid bit set, to start
-      \file {wwsympa.fcgi}. Here is an example (with no guarantee attached) :
-\begin {quote}
-\begin{verbatim}
-
-#include <unistd.h>
-
-#define WWSYMPA "/home/sympa/bin/wwsympa.fcgi"
-
-int main(int argn, char **argv, char **envp) {
-  execve(WWSYMPA,argv,envp);
-}
-
-\end{verbatim}
-\end {quote}
-\end{itemize}
-
-\subsection {Installing wwsympa.fcgi in your Apache server}
-     If you chose to run \file {wwsympa.fcgi} as a simple CGI, you simply need to
-     script alias it. 
-
-\begin {quote}
-\begin{verbatim}
-     Example :
-       	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
-\end{verbatim}
-\end {quote}
-
-     Running  FastCGI will provide much faster responses from your server and 
-     reduce load (to understand why, read 
-     \htmladdnormallink 
-     {http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm}
-     {http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm})
-     
-\begin {quote}
-\begin{verbatim}
-     Example :
-	FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 2
-	<Location /wws>
-   	  SetHandler fastcgi-script
-	</Location>
-
-	ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
-
- \end{verbatim}
-\end {quote}
- 
-\subsection {Using FastCGI}
-
-\htmladdnormallink {FastCGI} {http://www.fastcgi.com/} is an extention to CGI that provides persistency for CGI programs. It is extemely usefull
-with \WWSympa because it all the intialisations are only performed once, at server startup ; then
-file {wwsympa.fcgi} instances are awaiting clients requests. 
-
-\WWSympa can also work without FastCGI, depending on \textbf {use\_fast\_cgi} parameter 
-(see \ref {use-fastcgi}, page~\pageref {use-fastcgi}).
-
-To run \WWSympa with FastCGI, you need to install :
-\begin{itemize}
-
-\item mod\_fastcgi : the Apache module that provides FastCGI features
-
-\item FCGI : the Perl module used by \WWSympa
-
-\end{itemize}
 
 \section {Database configuration}
 
@@ -2448,7 +2454,7 @@ provide various features based on access to one or more LDAP directories :
 
 	\item{named filters used in scenario condition}\\ 
 	
- 	\item{dynamic evaluation of list subscribers set (see ~\ref {par-user-data-source})}\\         
+ 	\item{LDAP extraction of list subscribers (see ~\ref {par-user-data-source})}\\         
 	
 \end{itemize}
 
@@ -3011,6 +3017,86 @@ or is going to expire within three days.
 
 You may use the model \file {crl\_update.daily.task} to create a task which daily updates the certificate revocation
 lists when needed.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Virtual robot how to
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter {Virtual robot}
+    \label {virtual-robot}
+
+Sympa is designed to manage multiple distinct mailing list servers on
+a single host with a single Sympa installation. Sympa virtual robots
+are like Apache virtual hosting. Sympa virtual robot definition includes
+a specific email address for the robot itself and its lists and also a virtual
+http server. Each robot provides access to a set of lists, each list is
+related to only one robot.
+
+Most configuration parameters can be define for each robot except 
+general Sympa installation parameters (binary and spool location, smtp engine,
+antivirus plugging,...).
+
+The virtual robot name as define every where in Sympa documentation and configuration file is the internet domaine of the robot.
+
+\section {How to create a virtual robot}
+
+You don't need to install several Sympa server. One sympa.pl deamon and one or more fastcgi server can serve all virtual robot. Just configure the server environement in order to accept the new domain definition.
+\begin {itemize}
+\item The DNS must be configured in order to define a new mail exange record (MX) to route message to your server. A new host (A record) or alias (CNAME) are mandatory to define the new web server.
+\item Configure you MTA (sendmail, postfix, ...) to accept incomming messages for the new robot domain.
+\item Define a virtual host in your httpd server. The fastcgi servers defined in the common section of you httpd server can be used by each virtual server. You don't need to run dedicated fascgi server for each virtual robot.
+\item Define the virtual robot in Sympa configuration (current version of Sympa do not yet allow to create Sympa robot using administration web interface).
+\end {itemize}
+
+\section {Robot definition}
+
+A robot is named by its domain, let's say \samplerobot and defined by a directory 
+\tildedir {sympa/etc/\samplerobot}. This directory must contain at least a 
+\file {robot.conf} file. This files has the same format as  \file {/etc/sympa.conf}
+(have a look at robot.conf in the sample dir).
+Only the following parameters can be redefined for a particular robot :
+
+\begin {itemize}
+
+	\item \cfkeyword {http\_host} \\
+	This hostname will be compared with 'SERVER\_NAME' ENV var in wwsympa.fcgi
+	to deduce the current Virtual Robot
+
+	\item \cfkeyword {host}\\
+	The hostname used by Sympa when sending emails
+
+	\item \cfkeyword {email}
+
+	\item \cfkeyword {title}
+
+	\item \cfkeyword {default\_home}
+	
+	\item \cfkeyword {create\_list}
+
+	\item \cfkeyword {lang}
+
+	\item \cfkeyword {log\_smtp}
+
+	\item \cfkeyword {listmaster}
+
+	\item \cfkeyword {max\_size}
+
+	\item \cfkeyword {dark\_color}, \cfkeyword {light\_color}, \cfkeyword {text\_color}, \cfkeyword {bg\_color}, \cfkeyword {error\_color}, \cfkeyword {selected\_color}, \cfkeyword {shaded\_color} 
+\end {itemize}
+
+These settings overwrite the equivalent global parameter as defined in \file {/etc/sympa.conf}
+for \samplerobot robot ; the main \cfkeyword {listmaster} still has privileges on Virtual
+Robots though. The http\_host parameter is compared by wwsympa with the SERVER\_NAME
+environment variable to recognize which robot is in used. 
+
+\subsection {Robot customization}
+
+If needed, you cancustomize each virtual robot using its set of templates and scenario.
+
+\tildedir {sympa/etc/\samplerobot/wws\_templates/},
+\tildedir {sympa/etc/\samplerobot/templates/}, 
+\tildedir {sympa/etc/\samplerobot/scenari/} directories are searched when
+loading templates or scenari before searching into \tildedir {sympa/etc} and  \tildedir {sympa/bin/etc}. This allows to define different privileges and a different GUI for a Virtual Robot.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Customization
@@ -4326,87 +4412,6 @@ The \tildedir {sympa/expl/\samplelist/archives/} directory contains the
 archived messages for lists which are archived; see \ref {par-archive}, 
 page~\pageref {par-archive}. The files are named in accordance with the 
 archiving frequency defined by the \lparam {archive} parameter.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Virtual robot how to
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\chapter {Virtual robot}
-    \label {virtual-robot}
-
-Sympa is designed to manage multiple distinct mailing list servers on
-a single host with a single Sympa installation. Sympa virtual robots
-are like Apache virtual hosting. Sympa virtual robot definition includes
-a specific email address for the robot itself and its lists and also a virtual
-http server. Each robot provides access to a set of lists, each list is
-related to only one robot.
-
-Most configuration parameters can be define for each robot except 
-general Sympa installation parameters (binary and spool location, smtp engine,
-antivirus plugging,...).
-
-The virtual robot name as define every where in Sympa documentation and configuration file is the internet domaine of the robot.
-
-\section {How to create a virtual robot}
-
-You don't need to install several Sympa server. One sympa.pl deamon and one or more fastcgi server can serve all virtual robot. Just configure the server environement in order to accept the new domain definition.
-\begin {itemize}
-\item The DNS must be configured in order to define a new mail exange record (MX) to route message to your server. A new host (A record) or alias (CNAME) are mandatory to define the new web server.
-\item Configure you MTA (sendmail, postfix, ...) to accept incomming messages for the new robot domain.
-\item Define a virtual host in your httpd server. The fastcgi servers defined in the common section of you httpd server can be used by each virtual server. You don't need to run dedicated fascgi server for each virtual robot.
-\item Define the virtual robot in Sympa configuration (current version of Sympa do not yet allow to create Sympa robot using administration web interface).
-\end {itemize}
-
-\section {Robot definition}
-
-A robot is named by its domain, let's say \samplerobot and defined by a directory 
-\tildedir {sympa/etc/\samplerobot}. This directory must contain at least a 
-\file {robot.conf} file. This files has the same format as  \file {/etc/sympa.conf}
-(have a look at robot.conf in the sample dir).
-Only the following parameters can be redefined for a particular robot :
-
-\begin {itemize}
-
-	\item \cfkeyword {http\_host} \\
-	This hostname will be compared with 'SERVER\_NAME' ENV var in wwsympa.fcgi
-	to deduce the current Virtual Robot
-
-	\item \cfkeyword {host}\\
-	The hostname used by Sympa when sending emails
-
-	\item \cfkeyword {email}
-
-	\item \cfkeyword {title}
-
-	\item \cfkeyword {default\_home}
-	
-	\item \cfkeyword {create\_list}
-
-	\item \cfkeyword {lang}
-
-	\item \cfkeyword {log\_smtp}
-
-	\item \cfkeyword {listmaster}
-
-	\item \cfkeyword {max\_size}
-
-	\item \cfkeyword {dark\_color}, \cfkeyword {light\_color}, \cfkeyword {text\_color}, \cfkeyword {bg\_color}, \cfkeyword {error\_color}, \cfkeyword {selected\_color}, \cfkeyword {shaded\_color} 
-\end {itemize}
-
-These settings overwrite the equivalent global parameter as defined in \file {/etc/sympa.conf}
-for \samplerobot robot ; the main \cfkeyword {listmaster} still has privileges on Virtual
-Robots though. The http\_host parameter is compared by wwsympa with the SERVER\_NAME
-environment variable to recognize which robot is in used. 
-
-\subsection {Robot customization}
-
-If needed, you cancustomize each virtual robot using its set of templates and scenario.
-
-\tildedir {sympa/etc/\samplerobot/wws\_templates/},
-\tildedir {sympa/etc/\samplerobot/templates/}, 
-\tildedir {sympa/etc/\samplerobot/scenari/} directories are searched when
-loading templates or scenari before searching into \tildedir {sympa/etc} and  \tildedir {sympa/bin/etc}. This allows to define different privileges and a different GUI for a Virtual Robot.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
