@@ -3,8 +3,12 @@
 ## Worl Wide Sympa is a front-end to Sympa Mailing Lists Manager
 ## Copyright Comite Reseau des Universites
 
+## Patch 2001.07.24 by nablaphi <nablaphi@bigfoot.com>
+## Change the Getopt::Std to Getopt::Long
+
 ## Options :  F         -> do not detach TTY
 ##         :  d		-> debug -d is equiv to -dF
+## Now, it is impossible to use -dF but you have to write it -d -F
 
 ## Change this to point to your Sympa bin directory
 use lib '--BINDIR--';
@@ -16,7 +20,8 @@ use List;
 use Conf;
 use Log;
 use smtp;
-use Getopt::Std;
+#use Getopt::Std;
+use Getopt::Long;
 use POSIX;
 
 require 'tools.pl';
@@ -47,7 +52,11 @@ my %equiv = ( "user unknown" => '5.1.1',
 require "--BINDIR--/bounce-lib.pl";
 use wwslib;
 
-getopts('dF');
+#getopts('dF');
+## Check options
+my %options;
+&GetOptions(\%main::options, 'debug|d', 'foreground|F');
+$main::options{'debug2'} = 1 if ($main::options{'debug'});
 
 my $wwsympa_conf = "--WWSCONFIG--";
 my $sympa_conf_file = '--CONFIG--';
@@ -81,7 +90,7 @@ $< = $> = (getpwnam('--USER--'))[2];
 $( = $) = (getpwnam('--GROUP--'))[2];
 
 ## Put ourselves in background if not in debug mode. 
-unless ($Getopt::Std::opt_d || $Getopt::Std::opt_F) {
+unless ($main::options{'debug'} || $main::options{'foreground'}) {
     open(STDERR, ">> /dev/null");
     open(STDOUT, ">> /dev/null");
     if (open(TTY, "/dev/tty")) {
