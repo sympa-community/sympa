@@ -1403,6 +1403,10 @@ the form of aliases used by the alias\_manager. You can customize the \file {lis
 template that is parsed to generate list aliases (see\ref {list-aliases-tpl},  
 page~\pageref {list-aliases-tpl}).
 
+\label {ldap-aliases}
+L. Marcotte has written a version of \file {alias\_manager.pl} that is LDAP enabled.
+Check the contrib. page for more information : \htmladdnormallink {http://sympa.org/contrib.html} {http://sympa.org/contrib.html}.
+
 %\tildefile {sympa/bin/postfix\_manager.pl} also requires \index{VIRTUAL\_ALIASES}
 %variable to be defined in the Makefile. It runs a \unixcmd{postmap} command (via
 %\file {virtualwrapper}), after any changes to virtualtable file.
@@ -7485,6 +7489,9 @@ provide various features based on access to one or more LDAP directories :
 	  see ~\ref {named-filters}, page~\pageref {named-filters}
 	
  	\item{LDAP extraction of list subscribers (see ~\ref {par-user-data-source})}\\         
+
+	\item{mail aliases stored in LDAP}\\
+	  see ~\ref {ldap-aliases}, page~\pageref {ldap-aliases}
 	
 \end{itemize}
 

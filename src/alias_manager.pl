@@ -2,7 +2,11 @@
 # alias_manager.pl -  this script is intended to create automatically list aliases
 # when using sympa. Aliases can be added or removed in file --SENDMAIL_ALIASES--
 # RCS Identication ; $Revision$ ; $Date$ 
-#
+
+# L. Marcotte has written a version of alias_manager.pl that is LDAP enabled
+# check the contrib. page for more information :
+# http://sympa.org/contrib.html
+
 # Sympa - SYsteme de Multi-Postage Automatique
 # Copyright (c) 1997, 1998, 1999, 2000, 2001 Comite Reseau des Universites
 # Copyright (c) 1997,1998, 1999 Institut Pasteur & Christophe Wolfhugel

@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {03 June 2004}
+    \date {24 June 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -1399,6 +1399,10 @@ the form of aliases used by the alias\_manager. You can customize the \file {lis
 template that is parsed to generate list aliases (see\ref {list-aliases-tpl},  
 page~\pageref {list-aliases-tpl}).
 
+\label {ldap-aliases}
+L. Marcotte has written a version of \file {alias\_manager.pl} that is LDAP enabled.
+Check the contrib. page for more information : \htmladdnormallink {http://sympa.org/contrib.html} {http://sympa.org/contrib.html}.
+
 %\tildefile {sympa/bin/postfix\_manager.pl} also requires \index{VIRTUAL\_ALIASES}
 %variable to be defined in the Makefile. It runs a \unixcmd{postmap} command (via
 %\file {virtualwrapper}), after any changes to virtualtable file.
@@ -1704,8 +1708,9 @@ see a  nice mailto adresses where others have nothing.
 
 	\default {/usr/sbin/sendmail}
 
-        Absolute call path to SMTP message transfer agent (\unixcmd
-        {sendmail} for example).
+        Absolute path to SMTP message transfer agent binary. Sympa expects this binary to
+	be sendmail compatible (\textindex {postfix}, \textindex {Qmail} and \textindex {Exim} binaries all
+	provide sendmail compatibility).
 
         \example {sendmail        /usr/sbin/sendmail}
 
@@ -4517,12 +4522,15 @@ a specific email address for the robot itself and its lists and also a virtual
 http server. Each robot provides access to a set of lists, each list is
 related to only one robot.
 
-Most configuration parameters can be define for each robot except 
+Most configuration parameters can be redefined for each robot except 
 general Sympa installation parameters (binary and spool location, smtp engine,
 antivirus plugging,...).
 
 The Virtual robot name as defined in \Sympa documentation and configuration file refers
 to the Internet domaine of the Virtual robot.
+
+Note that the main limitation of virtual robots in Sympa is that you cannot create 
+2 lists with the same name (local part) among your virtual robots.
 
 \section {How to create a virtual robot}
 
@@ -5673,6 +5681,8 @@ by white space within a single line :
 	\item Number of bytes X number of messages X number of recipients
 
 	\item Number of subscribers
+
+	\item Last update date (epoch format) of the subscribers cache in DB, used by lists in \textbf {include2} mode only
 
 \end {itemize}
 
@@ -7243,6 +7253,12 @@ Predefined authorization scenarios are :
 	\end {htmlonly}\\
 	
 
+     \item \lparam {d\_edit} \texttt {e} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.e})
+	\end {htmlonly}\\
+	
+
      \item \lparam {d\_edit} \texttt {owner} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.owner})
@@ -8372,6 +8388,9 @@ provide various features based on access to one or more LDAP directories :
 	  see ~\ref {named-filters}, page~\pageref {named-filters}
 	
  	\item{LDAP extraction of list subscribers (see ~\ref {par-user-data-source})}\\         
+
+	\item{mail aliases stored in LDAP}\\
+	  see ~\ref {ldap-aliases}, page~\pageref {ldap-aliases}
 	
 \end{itemize}
 
