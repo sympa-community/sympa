@@ -128,7 +128,10 @@ La sélection est trop large, impossible d'afficher la sélection
 	    <b>Abonné depuis</b></A></FONT>
 	  [ENDIF]
           </TH>
-	  <TH><FONT SIZE="-1"><B>Dernière mise à jour</B></FONT>
+	  <TH><FONT SIZE="-1"><B>Dernière mise à jour</B></FONT></TH>
+	  [IF additional_fields]
+	  <TH><FONT SIZE="-1"><B>[additional_fields]</B></FONT></TH>
+	  [ENDIF]
         [ENDIF]
       </TR>
       
@@ -187,6 +190,11 @@ La sélection est trop large, impossible d'afficher la sélection
 	    <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
 	      [u->update_date]
 	    </FONT></TD>
+    	  [IF additional_fields]
+	     <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
+	      [u->additional]
+	    </FONT></TD>
+	  [ENDIF]
        	  [ENDIF]
         </TR>
 

@@ -134,7 +134,10 @@ Selection too wide, can not show selection
 	    <b>Sub date</b></A></FONT>
 	  [ENDIF]
           </TH>
-	  <TH><FONT SIZE="-1"><B>Last update</B></FONT>
+	  <TH><FONT SIZE="-1"><B>Last update</B></FONT></TH>
+	  [IF additional_fields]
+	  <TH><FONT SIZE="-1"><B>[additional_fields]</B></FONT></TH>
+	  [ENDIF]
         [ENDIF]
       </TR>
       
@@ -192,6 +195,11 @@ Selection too wide, can not show selection
 	    <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
 	      [u->update_date]
 	    </FONT></TD>
+    	  [IF additional_fields]
+	     <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
+	      [u->additional]
+	    </FONT></TD>
+	  [ENDIF]
        	  [ENDIF]
         </TR>
 

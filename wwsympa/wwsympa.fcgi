@@ -1530,6 +1530,9 @@ sub do_review {
 	$limit_not_used = 1;
     }
 
+    ## Additional DB fields
+    my @additional_fields = split ',', $Conf{'db_additional_subscriber_fields'};
+
     ## Members list
     $count = -1;
     for (my $i = $list->get_first_user({'sortby' => $sortby, 
@@ -1553,6 +1556,14 @@ sub do_review {
 	## Escape some weird chars
 	$i->{'escaped_email'} = &tools::escape_chars($i->{'email'});
 
+	if (@additional_fields) {
+	    my @fields;
+	    foreach my $f (@additional_fields) {
+		push @fields, $i->{$f};
+	    }
+	    $i->{'additional'} = join ',', @fields;
+	}
+
 	push @{$param->{'members'}}, $i;
     }
 
@@ -1567,6 +1578,9 @@ sub do_review {
     $param->{'size'} = $size;
     $param->{'sortby'} = $sortby;
 
+    ## additional DB fields
+    $param->{'additional_fields'} = $Conf{'db_additional_subscriber_fields'};
+    
     return 1;
 }
 
