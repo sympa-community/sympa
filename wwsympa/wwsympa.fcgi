@@ -448,12 +448,12 @@ my %in_regexp = (
 		 
 
 		 ## List names
-		 'list' => $tools::regexp{'listname'},
-		 'previous_list' => $tools::regexp{'listname'},
-		 'new_list' => $tools::regexp{'listname'},
-		 'listname' => $tools::regexp{'listname'},
-		 'new_listname' => $tools::regexp{'listname'},
-		 'selected_lists' => $tools::regexp{'listname'},
+		 'list' => '[a-zA-Z0-9][a-z0-9\-\.\+_]*', ## $tools::regexp{'listname'} + uppercase
+		 'previous_list' => '[a-zA-Z0-9][a-z0-9\-\.\+_]*',
+		 'new_list' => '[a-zA-Z0-9][a-z0-9\-\.\+_]*',
+		 'listname' => '[a-zA-Z0-9][a-z0-9\-\.\+_]*',
+		 'new_listname' => '[a-zA-Z0-9][a-z0-9\-\.\+_]*',
+		 'selected_lists' => '[a-zA-Z0-9][a-z0-9\-\.\+_]*',
 
 		 ## Family names
 		 'family_name' => $tools::regexp{'family_name'},
