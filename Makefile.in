@@ -571,7 +571,7 @@ installconfig:
 	$(PERL) -I $(DESTDIR)$(LIBDIR) $(DESTDIR)$(SBINDIR)/sympa_wizard.pl -c $$cfile; \
 	chown $(USER) $(DESTDIR)$(CONFDIR)/$$cfile; \
 	chgrp $(GROUP) $(DESTDIR)$(CONFDIR)/$$cfile; \
-	if [ $(DESTDIR) = '' ]; then \
+	if [ "$(DESTDIR)" = "" ]; then \
 	INITCONF='1'; \
 	fi \
 	fi \
