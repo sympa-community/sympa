@@ -2,7 +2,7 @@ subject [% subject %]
 
 status [% status %]
 
-[% IF topics %]
+[% IF topics -%]
 topics [% topics %]
 [% END %]
 
@@ -31,18 +31,18 @@ custom_subject [% listname %]
 
 digest 1,4 6:56
 
-[% FOREACH o = owner %]
+[% FOREACH o = owner -%]
 owner
   email [% o.email %]
   profile privileged
-  [% IF o.gecos %] 
+  [% IF o.gecos -%] 
   gecos [% o.gecos %]
   [% END %]
 
 [% END %]
 
-[% IF editor %]
-[% FOREACH e = editor %]
+[% IF editor -%]
+[% FOREACH e = editor -%]
 editor
   email [% e.email %]
 
@@ -56,7 +56,7 @@ d_read private
 creation
   date [% creation.date %]
   date_epoch [% creation.date_epoch %]
-[% IF creation_email %]
+[% IF creation_email -%]
   email [% creation_email %]
 [% END %]
 

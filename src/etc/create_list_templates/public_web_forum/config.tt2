@@ -2,7 +2,7 @@ subject [% subject %]
 
 status [% status %]
 
-[% IF topics %]
+[% IF topics -%]
 topics [% topics %]
 [% END %]
 
@@ -37,18 +37,18 @@ digest 3 4:36
 default_user_options
   reception summary
 
-[% FOREACH o = owner %]
+[% FOREACH o = owner -%]
 owner
   email [% o.email %]
   profile privileged
-  [% IF o.gecos %] 
+  [% IF o.gecos -%] 
   gecos [% o.gecos %]
   [% END %]
 
 [% END %]
 
-[% IF editor %]
-[% FOREACH e = editor %]
+[% IF editor -%]
+[% FOREACH e = editor -%]
 editor
   email [% e.email %]
 
@@ -62,7 +62,7 @@ d_read public
 creation
   date [% creation.date %]
   date_epoch [% creation.date_epoch %]
-[% IF creation_email %]
+[% IF creation_email -%]
   email [% creation_email %]
 [% END %]
 
