@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {02 June 2003}
+    \date {17 June 2003}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -1174,6 +1174,13 @@ To do this, add the following sequence or its equivalent in your
 /home/sympa/bin/sympa.pl
 \end{verbatim}
   \end {quote}
+
+
+\item \option {--close\_list \textit {listname@robot}}
+
+Close the list (changing its status to closed), remove aliases and remove
+subscribers from DB (a dump is created in the list directory to allow restoring
+the list)
 
 \item \option {--dump \textit {listname \texttt {|} ALL}}
   

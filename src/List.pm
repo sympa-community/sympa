@@ -7915,6 +7915,62 @@ sub get_next_db_log {
     return $log;
 }
 
+## Close the list (remove from DB, remove aliases, change status to 'closed')
+sub close {
+    my ($self, $email) = @_;
+
+    return undef 
+	unless ($self && ($list_of_lists{$self->{'name'}}));
+    
+    ## Dump subscribers
+    $self->_save_users_file("$self->{'dir'}/subscribers.closed.dump");
+
+    ## Delete users
+    my @users;
+    for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
+	push @users, $user->{'email'};
+    }
+    $self->delete_user(@users);
+
+    ## Change status & save config
+    $self->{'admin'}{'status'} = 'closed';
+    $self->{'admin'}{'defaults'}{'status'} = 0;
+
+    $self->save_config($email);
+    $self->savestats();
+    
+    $self->remove_aliases();    
+    
+    return 1;
+}
+
+## Remove list aliases
+sub remove_aliases {
+    my $self = shift;
+
+    return undef 
+	unless ($self && ($list_of_lists{$self->{'name'}}));
+    
+    my $alias_manager = '--SBINDIR--/alias_manager.pl';
+    
+    unless (-x $alias_manager) {
+	&do_log('err','Cannot run alias_manager %s', $alias_manager);
+	return undef;
+    }
+    
+    system ("$alias_manager del $self->{'name'} $self->{'admin'}{'host'}");
+    my $status = $? / 256;
+    unless ($status == 0) {
+	do_log('err','Failed to remove aliases ; status %d : %s', $status, $!);
+	return undef;
+    }
+    
+    &do_log('info','Aliases for list %s removed successfully', $self->{'name'});
+    
+    return 1;
+}
+
+
 #################################################################
 
 ## Packages must return true.

@@ -87,7 +87,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 </H1>
 
 <P>
-<A NAME="1231"></A> is a client-server protocol for accessing a directory service. Sympa
+<A NAME="1232"></A> is a client-server protocol for accessing a directory service. Sympa
 provide various features based on access to one or more LDAP directories :
 
 <P>
@@ -116,13 +116,13 @@ provide various features based on access to one or more LDAP directories :
 </H1>
 
 <P>
-<I>Sympa</I> stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of <A NAME="1239"></A> allows to use <I>Sympa</I> in an intranet without duplicating user passwords. 
+<I>Sympa</I> stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of <A NAME="1240"></A> allows to use <I>Sympa</I> in an intranet without duplicating user passwords. 
 
 <P>
-This way users can indifferently authenticate with their ldap_uid, their alternate_email or their canonic email stored in the <A NAME="1240"></A> directory.
+This way users can indifferently authenticate with their ldap_uid, their alternate_email or their canonic email stored in the <A NAME="1241"></A> directory.
 
 <P>
-<I>Sympa</I> gets the canonic email in the <A NAME="1241"></A> directory with the ldap_uid or the alternate_email.  
+<I>Sympa</I> gets the canonic email in the <A NAME="1242"></A> directory with the ldap_uid or the alternate_email.  
 <I>Sympa</I> will first attempt an anonymous bind to the directory to get the user's DN, then <I>Sympa</I> will bind with the DN and the user's ldap_password in order to perform an efficient authentication. This last bind will work only if the good ldap_password is provided. Indeed the value returned by the bind(DN,ldap_password) is tested.
 
 <P>
@@ -158,16 +158,16 @@ That means that <I>Sympa</I> will get this email and use it during all the sessi
 </H2>
 
 <P>
-The <A NAME="5573"></A><TT>/home/sympa/etc/auth.conf</TT> configuration file contains numerous
+The <A NAME="5590"></A><TT>/home/sympa/etc/auth.conf</TT> configuration file contains numerous
 parameters which are read on start-up of <I>Sympa</I>. If you change this file, do not forget
 that you will need to restart <I>Sympa</I> afterwards. 
 
 <P>
-The <A NAME="5578"></A><TT>/home/sympa/etc/auth.conf</TT> is organised in paragraphs. Each paragraph coincides with the configuration of 
+The <A NAME="5595"></A><TT>/home/sympa/etc/auth.conf</TT> is organised in paragraphs. Each paragraph coincides with the configuration of 
 an ldap directory.
 
 <P>
-The <A NAME="5581"></A><TT>/home/sympa/etc/auth.conf</TT> file contains directives in the following format:
+The <A NAME="5598"></A><TT>/home/sympa/etc/auth.conf</TT> file contains directives in the following format:
 
 <P>
 <P>
@@ -410,7 +410,7 @@ If set to <TT>1</TT>, connection to the LDAP server will use SSL (LDAPS).
 <LI>ssl_version
 
 <P>
-This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="1301"></A> to <TT>sslv2/3</TT>, 
+This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="1302"></A> to <TT>sslv2/3</TT>, 
 	other possible values are <TT>sslv2</TT>, <TT>sslv3</TT>, and <TT>tlsv1</TT>.
 
 <P>
@@ -419,7 +419,7 @@ This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="13
 
 <P>
 Specify which subset of cipher suites are permissible for this connection, using the standard 
-	OpenSSL string format. The default value of <A NAME="1307"></A> for ciphers is <TT>ALL</TT>, 
+	OpenSSL string format. The default value of <A NAME="1308"></A> for ciphers is <TT>ALL</TT>, 
 	which permits all ciphers, even those that don't encrypt!
 
 <P>
@@ -436,7 +436,7 @@ Specify which subset of cipher suites are permissible for this connection, using
 At the moment Named Filters are only used in scenarii. They enable to select a category of people who will be authorized or not to realise some actions.
 
 <P>
-As a consequence, you can grant privileges in a list to people belonging to an <A NAME="1311"></A> directory thanks to a scenario.
+As a consequence, you can grant privileges in a list to people belonging to an <A NAME="1312"></A> directory thanks to a scenario.
 
 <P>
 
@@ -445,7 +445,7 @@ As a consequence, you can grant privileges in a list to people belonging to an <
 </H2>
 
 <P>
-People are selected through an <A NAME="1313"></A> defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="5590"></A><TT>/home/sympa/etc/search_filters/</TT>.
+People are selected through an <A NAME="1314"></A> defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="5607"></A><TT>/home/sympa/etc/search_filters/</TT>.
 
 <P>
 You must give several informations in order to create a Named Filter:
@@ -568,7 +568,7 @@ The method of authentication does not change.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-06-02
+2003-06-17
 </ADDRESS>
 </BODY>
 </HTML>

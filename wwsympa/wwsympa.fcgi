@@ -4620,31 +4620,25 @@ if ($wwsconf->{'use_fast_cgi'}) {
  sub _remove_aliases {
      &wwslog('info', "_remove_aliases($list->{'name'},$list->{'admin'}{'host'})");
 
-     my $alias_manager = '--SBINDIR--/alias_manager.pl';
+     my $status = $list->remove_aliases();
 
-     unless (-x $alias_manager) {
-	 &wwslog('info','Cannot run alias_manager %s', $alias_manager);
+     unless ($status == 1) {
+	 &wwslog('info','Failed to remove aliases for list %s', $list->{'name'});
 	 &error_message('failed_to_remove_aliases');
-     }
 
-     system ("$alias_manager del $list->{'name'} $list->{'admin'}{'host'}");
-     my $status = $? / 256;
-     if ($status == 0) {
-	 &wwslog('info','Aliases removed successfully');
-	 $param->{'auto_aliases'} = 1;
-     }else {
-	 &wwslog('info','Failed to remove aliases ; status %d : %s', $status, $!);
-	 &error_message('failed_to_remove_aliases');
-     }
-
-     unless ($param->{'auto_aliases'}) {
+	 ## build a list of required aliases the listmaster should install
 	 $param->{'aliases'}  = "#----------------- $in{'list'}\n";
 	 $param->{'aliases'} .= "$in{'list'}: \"| --MAILERPROGDIR--/queue $in{'list'}\"\n";
 	 $param->{'aliases'} .= "$in{'list'}-request: \"| --MAILERPROGDIR--/queue $in{'list'}-request\"\n";
 	 $param->{'aliases'} .= "$in{'list'}-owner: \"| --MAILERPROGDIR--/bouncequeue $in{'list'}\"\n";
 	 $param->{'aliases'} .= "$in{'list'}-unsubscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-unsubscribe\"\n";
 	 $param->{'aliases'} .= "# $in{'list'}-subscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-subscribe\"\n";
+	 
+	 return 1;
      }
+
+     &wwslog('info','Aliases removed successfully');
+     $param->{'auto_aliases'} = 1;
 
      return 1;
  }
@@ -6188,24 +6182,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 return undef;
      }      
 
-     ## Dump subscribers
-     $list->_save_users_file("$list->{'dir'}/subscribers.closed.dump");
-
-     ## Delete users
-     my @users;
-     for ( my $user = $list->get_first_user(); $user; $user = $list->get_next_user() ){
-	 push @users, $user->{'email'};
-     }
-     $list->delete_user(@users);
-
-     ## Change status & save config
-     $list->{'admin'}{'status'} = 'closed';
-     $list->{'admin'}{'defaults'}{'status'} = 0;
-
-     $list->save_config($param->{'user'}{'email'});
-     $list->savestats();
-
-     &_remove_aliases();
+     $list->close($param->{'user'}{'email'});
 
      &message('list_closed');
 

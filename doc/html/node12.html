@@ -139,7 +139,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <!--End of Table of Child-Links-->
 <HR>
 
-<H1><A NAME="SECTION001200000000000000000"></A><A NAME="5778"></A>
+<H1><A NAME="SECTION001200000000000000000"></A><A NAME="5795"></A>
     <A NAME="customization"></A>
 <BR>
 11. Customizing <I>Sympa</I>/<I>WWSympa</I> 
@@ -148,13 +148,13 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <P>
 
 <H1><A NAME="SECTION001210000000000000000"></A>
-<A NAME="tpl-format"></A><A NAME="1478"></A>
+<A NAME="tpl-format"></A><A NAME="1479"></A>
 <BR>
 11.1 Template file format
 </H1>
 
 <P>
-Template files within <I>Sympa</I> and <A NAME="5782"></A><I>WWSympa</I> are text files containing 
+Template files within <I>Sympa</I> and <A NAME="5799"></A><I>WWSympa</I> are text files containing 
 programming elements (variables, conditions, loops, file inclusions)
 that will be parsed in order to adapt to the runtime context. These 
 templates are an extension of programs and therefore give access to 
@@ -265,7 +265,7 @@ Inclusion of a text file :
 </PRE>
 
 <P>
-The first example includes a file whose relative path is <A NAME="5785"></A><TT>archives/last_message</TT>.
+The first example includes a file whose relative path is <A NAME="5802"></A><TT>archives/last_message</TT>.
 The second example includes a file whose path is in file_path variable.
 
 <P>
@@ -277,7 +277,7 @@ Inclusion and parsing of a template file :
 </PRE>
 
 <P>
-The first example includes the template file <A NAME="5788"></A><TT>welcome.tpl</TT>.
+The first example includes the template file <A NAME="5805"></A><TT>welcome.tpl</TT>.
 The second example includes a template file whose path is in file_path variable.
 
 <P>
@@ -350,14 +350,14 @@ Here is an unparsed undef variable : [unknown_var]
 <P>
 
 <H1><A NAME="SECTION001220000000000000000"></A>
-<A NAME="site-tpl"></A><A NAME="1544"></A>
+<A NAME="site-tpl"></A><A NAME="1545"></A>
 <BR>
 11.2 Site template files
 </H1>
 
 <P>
-These files are used by Sympa as service messages for the <A NAME="5791"></A><TT>HELP</TT>, 
-<A NAME="5794"></A><TT>LISTS</TT> and <A NAME="5797"></A><TT>REMIND *</TT> commands. These files are interpreted 
+These files are used by Sympa as service messages for the <A NAME="5808"></A><TT>HELP</TT>, 
+<A NAME="5811"></A><TT>LISTS</TT> and <A NAME="5814"></A><TT>REMIND *</TT> commands. These files are interpreted 
 (parsed) by <I>Sympa</I> and respect the template format ; every file has a .tpl extension. 
 See <A HREF="node12.html#tpl-format">11.1</A>, 
 page&nbsp;<A HREF="node12.html#tpl-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. 
@@ -368,17 +368,17 @@ listname if defined, <TT>&lt;</TT>action<TT>&gt;</TT> is the name of the command
 the preferred language of the user) :
 
 <OL>
-<LI><A NAME="5825"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.<TT>&lt;</TT>lang<TT>&gt;</TT>.tpl</TT>. 
+<LI><A NAME="5842"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.<TT>&lt;</TT>lang<TT>&gt;</TT>.tpl</TT>. 
 </LI>
-<LI><A NAME="5864"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tpl</TT>. 
+<LI><A NAME="5881"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tpl</TT>. 
 </LI>
-<LI><A NAME="5897"></A><TT>/home/sympa/etc/templates/<TT>&lt;</TT>action<TT>&gt;</TT>.<TT>&lt;</TT>lang<TT>&gt;</TT>.tpl</TT>. 
+<LI><A NAME="5914"></A><TT>/home/sympa/etc/templates/<TT>&lt;</TT>action<TT>&gt;</TT>.<TT>&lt;</TT>lang<TT>&gt;</TT>.tpl</TT>. 
 </LI>
-<LI><A NAME="5924"></A><TT>/home/sympa/etc/templates/<TT>&lt;</TT>action<TT>&gt;</TT>.tpl</TT>. 
+<LI><A NAME="5941"></A><TT>/home/sympa/etc/templates/<TT>&lt;</TT>action<TT>&gt;</TT>.tpl</TT>. 
 </LI>
-<LI><A NAME="5951"></A><TT>/home/sympa/bin/etc/templates/<TT>&lt;</TT>action<TT>&gt;</TT>.<TT>&lt;</TT>lang<TT>&gt;</TT>.tpl</TT>.
+<LI><A NAME="5968"></A><TT>/home/sympa/bin/etc/templates/<TT>&lt;</TT>action<TT>&gt;</TT>.<TT>&lt;</TT>lang<TT>&gt;</TT>.tpl</TT>.
 </LI>
-<LI><A NAME="5978"></A><TT>/home/sympa/bin/etc/templates/<TT>&lt;</TT>action<TT>&gt;</TT>.tpl</TT>.
+<LI><A NAME="5995"></A><TT>/home/sympa/bin/etc/templates/<TT>&lt;</TT>action<TT>&gt;</TT>.tpl</TT>.
 </LI>
 </OL>
 
@@ -408,7 +408,7 @@ The following variables may be used in these template files :
 <P>
 </DD>
 <DT>-</DT>
-<DD>[conf-<TT>&gt;</TT>wwsympa_url] : <A NAME="5987"></A><I>WWSympa</I> root URL
+<DD>[conf-<TT>&gt;</TT>wwsympa_url] : <A NAME="6004"></A><I>WWSympa</I> root URL
 
 <P>
 </DD>
@@ -444,7 +444,7 @@ The following variables may be used in these template files :
 </H2> 
 
 <P>
-This file is sent in response to a <A NAME="5990"></A><TT>HELP</TT> command. 
+This file is sent in response to a <A NAME="6007"></A><TT>HELP</TT> command. 
 	You may use additional variables
 <DL COMPACT>
 <DT>-</DT>
@@ -466,13 +466,13 @@ This file is sent in response to a <A NAME="5990"></A><TT>HELP</TT> command.
 </H2> 
 
 <P>
-File returned by <A NAME="5993"></A><TT>LISTS</TT> command. 
+File returned by <A NAME="6010"></A><TT>LISTS</TT> command. 
 	An additional variable is available :
 <DL COMPACT>
 <DT>-</DT>
 <DD>[lists] : this is a hash table indexed by list names and
 			containing lists' subjects. Only lists visible
-			to this user (according to the <A NAME="5996"></A><TT>visibility</TT> 
+			to this user (according to the <A NAME="6013"></A><TT>visibility</TT> 
 			list parameter) are listed.
 </DD>
 </DL>
@@ -497,7 +497,7 @@ These are the public lists for [conf-&gt;email]@[conf-&gt;domain]
 </H2> 
 
 <P>
-This file is sent in response to a <A NAME="5999"></A><TT>REMIND *</TT> command. 
+This file is sent in response to a <A NAME="6016"></A><TT>REMIND *</TT> command. 
 	(see&nbsp;<A HREF="node19.html#cmd-remind">18.2</A>, page&nbsp;<A HREF="node19.html#cmd-remind"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 	You may use additional variables
 <DL COMPACT>
@@ -538,19 +538,19 @@ indicating the name of the virus found
 <P>
 
 <H1><A NAME="SECTION001230000000000000000"></A>
-<A NAME="web-tpl"></A><A NAME="1621"></A>
+<A NAME="web-tpl"></A><A NAME="1622"></A>
 <BR>
 11.3 Web template files
 </H1>
 
 <P>
 You may define your own web template files, different from the standard
-ones. <A NAME="6002"></A><I>WWSympa</I> first looks for list specific web templates, then for
+ones. <A NAME="6019"></A><I>WWSympa</I> first looks for list specific web templates, then for
 site web templates, before falling back on its defaults. 
 
 <P>
-Your list web template files should be placed in the <A NAME="6005"></A><TT>/home/sympa/expl/mylist/wws_templates</TT> 
-directory ; your site web templates in <A NAME="6008"></A><TT>~/home/sympa/expl/wws_templates</TT> directory.
+Your list web template files should be placed in the <A NAME="6022"></A><TT>/home/sympa/expl/mylist/wws_templates</TT> 
+directory ; your site web templates in <A NAME="6025"></A><TT>~/home/sympa/expl/wws_templates</TT> directory.
 
 <P>
 There are actually 2 ways a template can include another template :
@@ -572,7 +572,7 @@ There are actually 2 ways a template can include another template :
 </OL>
 
 <P>
-Then  <A NAME="6013"></A><TT>wwsympa.fcgi</TT> sets action_template variable to the appropriate template file path (ie : in the best place according to Sympa default rules, and in the current language).
+Then  <A NAME="6030"></A><TT>wwsympa.fcgi</TT> sets action_template variable to the appropriate template file path (ie : in the best place according to Sympa default rules, and in the current language).
 
 <P>
 We use (2) for some high level templates (action_template, error_template, notice_template, title_template, menu_template, list_menu_template, admin_menu_template) but then we use (1) for lower-level template inclusions.
@@ -616,7 +616,7 @@ page&nbsp;<A HREF="node6.html#db-additional-subscriber-fields"><IMG  ALIGN="BOTT
 
 <P>
 
-<H1><A NAME="SECTION001250000000000000000"></A><A NAME="6019"></A>
+<H1><A NAME="SECTION001250000000000000000"></A><A NAME="6036"></A>
 <BR>
 11.5 Sharing <I>WWSympa</I> authentication with other applications
 </H1>
@@ -631,22 +631,22 @@ work with <I>Sympa</I>, you have two possibilities :
 <P>
 
 <UL>
-<LI>Delegating authentication operations to <A NAME="6025"></A><I>WWSympa</I> 
+<LI>Delegating authentication operations to <A NAME="6042"></A><I>WWSympa</I> 
 <BR>
 If you want to avoid spending a lot of time programming a CGI to do Login, Logout
-and Remindpassword, you can copy <A NAME="6028"></A><I>WWSympa</I>'s login page to your 
+and Remindpassword, you can copy <A NAME="6045"></A><I>WWSympa</I>'s login page to your 
 application, and then make use of the cookie information within your application. 
 The cookie format is :
 <PRE>
 sympauser=&lt;user_email&gt;:&lt;checksum&gt;
 </PRE>
 where <TT>&lt;</TT>user_email<TT>&gt;</TT> is the user's complete e-mail address, and
-<TT>&lt;</TT>checksum<TT>&gt;</TT> are the 8 first bytes of the a MD5 checksum of the <TT>&lt;</TT>user_email<TT>&gt;</TT>+<I>Sympa</I> <A NAME="6032"></A><TT>cookie</TT>
+<TT>&lt;</TT>checksum<TT>&gt;</TT> are the 8 first bytes of the a MD5 checksum of the <TT>&lt;</TT>user_email<TT>&gt;</TT>+<I>Sympa</I> <A NAME="6049"></A><TT>cookie</TT>
 configuration parameter.
-Your application needs to know what the <A NAME="6035"></A><TT>cookie</TT> parameter
+Your application needs to know what the <A NAME="6052"></A><TT>cookie</TT> parameter
 is, so it can check the HTTP cookie validity ; this is a secret shared
-between <A NAME="6038"></A><I>WWSympa</I> and your application.
-<A NAME="6041"></A><I>WWSympa</I>'s <I>loginrequest</I> page can be called to return to the
+between <A NAME="6055"></A><I>WWSympa</I> and your application.
+<A NAME="6058"></A><I>WWSympa</I>'s <I>loginrequest</I> page can be called to return to the
 referer URL when an action is performed. Here is a sample HTML anchor :
 
 <P>
@@ -655,18 +655,18 @@ referer URL when an action is performed. Here is a sample HTML anchor :
 </PRE>
 
 <P>
-You can also have your own HTML page submitting data to <A NAME="6044"></A><TT>wwsympa.fcgi</TT> CGI. If you're
+You can also have your own HTML page submitting data to <A NAME="6061"></A><TT>wwsympa.fcgi</TT> CGI. If you're
 doing so, you can set the <TT>referer</TT> variable to another URI. You can also
 set the <TT>failure_referer</TT> to make WWSympa redirect the client to a different
 URI if login fails.
 
 <P>
 </LI>
-<LI>Using <A NAME="6047"></A><I>WWSympa</I>'s HTTP cookie format within your auth module 
+<LI>Using <A NAME="6064"></A><I>WWSympa</I>'s HTTP cookie format within your auth module 
 <BR>
-To cooperate with <A NAME="6050"></A><I>WWSympa</I>, you simply need to adopt its HTTP
+To cooperate with <A NAME="6067"></A><I>WWSympa</I>, you simply need to adopt its HTTP
 cookie format and share the secret it uses to generate MD5 checksums,
-i.e. the <A NAME="6053"></A><TT>cookie</TT> configuration parameter. In this way, <A NAME="6056"></A><I>WWSympa</I> 
+i.e. the <A NAME="6070"></A><TT>cookie</TT> configuration parameter. In this way, <A NAME="6073"></A><I>WWSympa</I> 
 will accept users authenticated through your application without
 further authentication.
 
@@ -677,8 +677,8 @@ further authentication.
 <P>
 
 <H1><A NAME="SECTION001260000000000000000"></A>
-<A NAME="internationalization"></A><A NAME="1671"></A>
-<A NAME="1672"></A>
+<A NAME="internationalization"></A><A NAME="1672"></A>
+<A NAME="1673"></A>
 <BR>
 11.6 Internationalization
 </H1>
@@ -687,7 +687,7 @@ further authentication.
 <I>Sympa</I> was originally designed as a multilingual Mailing List
 Manager. Even in its earliest versions, <I>Sympa</I> separated messages from
 the code itself, messages being stored in NLS catalogues (according 
-to the XPG4 standard). Later a <A NAME="6061"></A><TT>lang</TT> list parameter was introduced.
+to the XPG4 standard). Later a <A NAME="6078"></A><TT>lang</TT> list parameter was introduced.
 Nowadays <I>Sympa</I> is able to keep track of individual users' language preferences.
 
 <P>
@@ -699,7 +699,7 @@ Nowadays <I>Sympa</I> is able to keep track of individual users' language prefer
 <P>
 Every message sent by <I>Sympa</I> to users, owners and editors is outside
 the code, in a message catalog. These catalogs are located in the
-<A NAME="6067"></A><TT>/home/sympa/nls</TT> directory. Messages have currently been
+<A NAME="6084"></A><TT>/home/sympa/nls</TT> directory. Messages have currently been
 translated into 14 different languages : 
 
 <P>
@@ -753,8 +753,8 @@ translated into 14 different languages :
 
 <P>
 To tell <I>Sympa</I> to use a particular message catalog, you can either set 
-the <A NAME="6071"></A><TT>lang</TT> parameter in <A NAME="6074"></A><TT>sympa.conf</TT>, or
-set the <A NAME="6077"></A><TT>sympa.pl</TT> <TT>-l</TT> option on the command line.
+the <A NAME="6088"></A><TT>lang</TT> parameter in <A NAME="6091"></A><TT>sympa.conf</TT>, or
+set the <A NAME="6094"></A><TT>sympa.pl</TT> <TT>-l</TT> option on the command line.
 
 <P>
 
@@ -763,8 +763,8 @@ set the <A NAME="6077"></A><TT>sympa.pl</TT> <TT>-l</TT> option on the command l
 </H2>
 
 <P>
-The <A NAME="6080"></A><TT>lang</TT> list parameter defines the language for a list.
-It is currently used by <A NAME="6083"></A><I>WWSympa</I> and to initialize users'
+The <A NAME="6097"></A><TT>lang</TT> list parameter defines the language for a list.
+It is currently used by <A NAME="6100"></A><I>WWSympa</I> and to initialize users'
 language preferences at subscription time.
 
 <P>
@@ -778,29 +778,29 @@ a list should be in the list's language.
 </H2>
 
 <P>
-The user language preference is currently used by <A NAME="6087"></A><I>WWSympa</I> 
+The user language preference is currently used by <A NAME="6104"></A><I>WWSympa</I> 
 only. There is no e-mail-based command for a user to set his/her
 language. The language preference is initialized when the user
-subscribes to his/her first list. <A NAME="6090"></A><I>WWSympa</I> allows the user to change 
+subscribes to his/her first list. <A NAME="6107"></A><I>WWSympa</I> allows the user to change 
 it.
 
 <P>
 
 <H1><A NAME="SECTION001270000000000000000"></A>
-<A NAME="topics"></A><A NAME="1687"></A>
+<A NAME="topics"></A><A NAME="1688"></A>
 <BR>
 11.7 Topics
 </H1>
 
 <P>
-<A NAME="6093"></A><I>WWSympa</I>'s homepage shows a list of topics for classifying
+<A NAME="6110"></A><I>WWSympa</I>'s homepage shows a list of topics for classifying
 mailing lists. This is dynamically generated using the different lists'
-<A NAME="6096"></A><TT>topics</TT> configuration parameters. A list may appear 
+<A NAME="6113"></A><TT>topics</TT> configuration parameters. A list may appear 
 in multiple categories.
 
 <P>
-The list of topics is defined in the <A NAME="6099"></A><TT>topics.conf</TT> configuration
-file, located in the <A NAME="6102"></A><TT>/home/sympa/etc</TT> directory. The format of this file is 
+The list of topics is defined in the <A NAME="6116"></A><TT>topics.conf</TT> configuration
+file, located in the <A NAME="6119"></A><TT>/home/sympa/etc</TT> directory. The format of this file is 
 as follows :<PRE>
 &lt;topic1_name&gt;
 title	&lt;topic1 title&gt;
@@ -813,10 +813,10 @@ title	&lt;topicn title&gt;
 <P>
 You will notice that subtopics can be used, the separator being <I>/</I>.
 The topic name is composed of alphanumerics (0-1a-zA-Z) or underscores (_).
-The order in which the topics are listed is respected in <A NAME="6105"></A><I>WWSympa</I>'s homepage.
+The order in which the topics are listed is respected in <A NAME="6122"></A><I>WWSympa</I>'s homepage.
 The <B>visibility</B> line defines who can view the topic (now available for subtopics).
 It refers to the associated topics_visibility scenario.
-You will find a sample <A NAME="6108"></A><TT>topics.conf</TT> in the <A NAME="6111"></A><TT>sample</TT> 
+You will find a sample <A NAME="6125"></A><TT>topics.conf</TT> in the <A NAME="6128"></A><TT>sample</TT> 
 directory ; NONE is installed as the default. 
 
 <P>
@@ -826,18 +826,18 @@ contains all lists for which a topic has not been specified.
 <P>
 
 <H1><A NAME="SECTION001280000000000000000"></A>
-    <A NAME="scenarii"></A>    <A NAME="1702"></A>
+    <A NAME="scenarii"></A>    <A NAME="1703"></A>
 <BR>
 11.8 Scenarii
 </H1>
 
 <P>
 List parameters controlling the behavior of commands are linked to different scenarii.
-For example : the <A NAME="6115"></A><TT>send private</TT> parameter is related to the send.private scenario.
+For example : the <A NAME="6132"></A><TT>send private</TT> parameter is related to the send.private scenario.
 There are three possible locations for a scenario. When <I>Sympa</I> seeks to apply a scenario, it
-looks first in the related list directory <A NAME="6131"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
-does not find the file there, it scans <A NAME="6140"></A><TT>/home/sympa/etc/scenari</TT>,
-and finally <A NAME="6143"></A><TT>/home/sympa/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
+looks first in the related list directory <A NAME="6148"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
+does not find the file there, it scans <A NAME="6157"></A><TT>/home/sympa/etc/scenari</TT>,
+and finally <A NAME="6160"></A><TT>/home/sympa/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
 
 <P>
 A scenario is a small configuration language to describe who
@@ -864,11 +864,11 @@ Each scenario rule contains :
  SRC="img2.png"
  ALT="$]$"> for the listname etc.
 </LI>
-<LI>an authentication method. The authentication method can be <A NAME="6147"></A><TT>smtp</TT>,
-<A NAME="6150"></A><TT>md5</TT> or <A NAME="6153"></A><TT>smime</TT>. The rule is applied by <I>Sympa</I> if both condition
-and authentication method match the runtime context. <A NAME="6157"></A><TT>smtp</TT> is used if
-<I>Sympa</I> use the SMTP <A NAME="6161"></A><TT>from:</TT> header , <A NAME="6164"></A><TT>md5</TT> is used if a unique
-md5 key as been returned by the requestor to validate her message, <A NAME="6167"></A><TT>smime</TT>
+<LI>an authentication method. The authentication method can be <A NAME="6164"></A><TT>smtp</TT>,
+<A NAME="6167"></A><TT>md5</TT> or <A NAME="6170"></A><TT>smime</TT>. The rule is applied by <I>Sympa</I> if both condition
+and authentication method match the runtime context. <A NAME="6174"></A><TT>smtp</TT> is used if
+<I>Sympa</I> use the SMTP <A NAME="6178"></A><TT>from:</TT> header , <A NAME="6181"></A><TT>md5</TT> is used if a unique
+md5 key as been returned by the requestor to validate her message, <A NAME="6184"></A><TT>smime</TT>
 is used for signed messages (see <A HREF="node10.html#smimeforsign">9.4.3</A>, page&nbsp;<A HREF="node10.html#smimeforsign"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 </LI>
 <LI>a returned atomic action that will be executed by <I>Sympa</I> if the rule matches
@@ -982,19 +982,19 @@ probably create scenarii for your own need. In this case, don't forget to restar
 and wwsympa because scenarii are not reloaded dynamicaly.
 
 <P>
-These standard scenarii are located in the <A NAME="6173"></A><TT>/home/sympa/bin/etc/scenari/</TT>
+These standard scenarii are located in the <A NAME="6190"></A><TT>/home/sympa/bin/etc/scenari/</TT>
 directory. Default scenarii are named <TT>&lt;</TT>command<TT>&gt;</TT>.default.
 
 <P>
 You may also define and name your own scenarii. Store them in the
-<A NAME="6176"></A><TT>/home/sympa/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
-Scenarii can also be defined for a particular virtual robot (using directory <A NAME="6191"></A><TT>/home/sympa/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="6218"></A><TT>/home/sympa/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ).
+<A NAME="6193"></A><TT>/home/sympa/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
+Scenarii can also be defined for a particular virtual robot (using directory <A NAME="6208"></A><TT>/home/sympa/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="6235"></A><TT>/home/sympa/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ).
 
 <P>
 Example:
 
 <P>
-Copy the previous scenario to <A NAME="6233"></A><TT>scenari/subscribe.rennes1</TT> :
+Copy the previous scenario to <A NAME="6250"></A><TT>scenari/subscribe.rennes1</TT> :
 
 <P><PRE>
 equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -&gt; reject
@@ -1058,7 +1058,7 @@ a complex date format.
 <P>
 
 <H1><A NAME="SECTION0012100000000000000000"></A>
-    <A NAME="loop-detection"></A>    <A NAME="1775"></A>
+    <A NAME="loop-detection"></A>    <A NAME="1776"></A>
 <BR>
 11.10 Loop detection
 </H1>
@@ -1104,20 +1104,20 @@ The loop detection algorithm is :
 <P>
 </LI>
 <LI>If we are within the sampling period (as defined by the
-	<A NAME="6242"></A><TT>loop_command_sampling_delay</TT> parameter)
+	<A NAME="6259"></A><TT>loop_command_sampling_delay</TT> parameter)
 
 <P>
 
 <UL>
 <LI>If the counter exceeds the 
-		<A NAME="6245"></A><TT>loop_command_max</TT> parameter, then 
+		<A NAME="6262"></A><TT>loop_command_max</TT> parameter, then 
 		do not send the report, and notify the listmaster
 
 <P>
 </LI>
 <LI>Else, start a new sampling period and reinitialize
 		the counter,  i.e. multiply it by the 
-		<A NAME="6248"></A><TT>loop_command_decrease_factor</TT> parameter
+		<A NAME="6265"></A><TT>loop_command_decrease_factor</TT> parameter
 	
 </LI>
 </UL>
@@ -1129,7 +1129,7 @@ The loop detection algorithm is :
 <P>
 
 <H1><A NAME="SECTION0012110000000000000000"></A>
-    <A NAME="tasks"></A>    <A NAME="1789"></A>
+    <A NAME="tasks"></A>    <A NAME="1790"></A>
 <BR>
 11.11 Tasks
 </H1>
@@ -1142,12 +1142,12 @@ For example a task sends every year the subscribers of a list a message to remin
 <P>
 A task is created with a task model. It is a text file which describes a sequence of simple actions. 
 It may have different versions (for instance reminding subscribers every year or semester).
-A task model file name has the following format : <A NAME="6269"></A><TT><TT>&lt;</TT>model name<TT>&gt;</TT>.<TT>&lt;</TT>model version<TT>&gt;</TT>.task</TT>.
-For instance <A NAME="6284"></A><TT>remind.annual.task</TT>  or <A NAME="6287"></A><TT>remind.semestrial.task</TT>.
+A task model file name has the following format : <A NAME="6286"></A><TT><TT>&lt;</TT>model name<TT>&gt;</TT>.<TT>&lt;</TT>model version<TT>&gt;</TT>.task</TT>.
+For instance <A NAME="6301"></A><TT>remind.annual.task</TT>  or <A NAME="6304"></A><TT>remind.semestrial.task</TT>.
 
 <P>
-<I>Sympa</I> provides several task models stored in <A NAME="6291"></A><TT>/home/sympa/bin/etc/global_task_models</TT> 
-  and <A NAME="6294"></A><TT>/home/sympa/bin/etc/list_task_models</TT> directories.
+<I>Sympa</I> provides several task models stored in <A NAME="6308"></A><TT>/home/sympa/bin/etc/global_task_models</TT> 
+  and <A NAME="6311"></A><TT>/home/sympa/bin/etc/list_task_models</TT> directories.
 Others can be designed by the listmaster. 
 
 <P>
@@ -1168,11 +1168,11 @@ following order :
 <P>
 
 <OL>
-<LI><A NAME="6309"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list name<TT>&gt;</TT>/</TT>
+<LI><A NAME="6326"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list name<TT>&gt;</TT>/</TT>
 </LI>
-<LI><A NAME="6318"></A><TT>/home/sympa/etc/list_task_models/</TT>
+<LI><A NAME="6335"></A><TT>/home/sympa/etc/list_task_models/</TT>
 </LI>
-<LI><A NAME="6321"></A><TT>/home/sympa/bin/etc/list_task_models/</TT>
+<LI><A NAME="6338"></A><TT>/home/sympa/bin/etc/list_task_models/</TT>
 </LI>
 </OL>
 
@@ -1186,16 +1186,16 @@ See also <A HREF="node13.html#Listmodelfiles">12.9</A>, page&nbsp;<A HREF="node1
 </H2>
 
 <P>
-The task manager daemon checks if a version of a global task model is specified in <A NAME="6325"></A><TT>sympa.conf</TT> 
+The task manager daemon checks if a version of a global task model is specified in <A NAME="6342"></A><TT>sympa.conf</TT> 
 and then creates a task as soon as it finds the model file by looking in different directories
 in the following order :
 
 <P>
 
 <OL>
-<LI><A NAME="6328"></A><TT>/home/sympa/etc/global_task_models/</TT>
+<LI><A NAME="6345"></A><TT>/home/sympa/etc/global_task_models/</TT>
 </LI>
-<LI><A NAME="6331"></A><TT>/home/sympa/bin/etc/global_task_models/</TT>
+<LI><A NAME="6348"></A><TT>/home/sympa/bin/etc/global_task_models/</TT>
 </LI>
 </OL>
 
@@ -1285,7 +1285,7 @@ Store emails which match the condition in @user_selection. See 8.6 Scenarii sect
 <LI>create (global | list (<TT>&lt;</TT>list name<TT>&gt;</TT>), <TT>&lt;</TT>model type<TT>&gt;</TT>, <TT>&lt;</TT>model<TT>&gt;</TT>)
 
 <P>
-Create a task for object with model file <A NAME="6334"></A><TT>~model type.model.task</TT>.
+Create a task for object with model file <A NAME="6351"></A><TT>~model type.model.task</TT>.
 </LI>
 <LI>chk_cert_expiration (<TT>&lt;</TT>template<TT>&gt;</TT>, <TT>&lt;</TT>date value<TT>&gt;</TT>)
 
@@ -1304,10 +1304,10 @@ Model files may have a scenario-like title line at the beginning.
 
 <P>
 When you change a configuration file by hand, and a task parameter is created or modified, it is up to you
-to remove existing task files in the <A NAME="6339"></A><TT>task/</TT> spool if needed. Task file names have the following format : 
+to remove existing task files in the <A NAME="6356"></A><TT>task/</TT> spool if needed. Task file names have the following format : 
 
 <P>
-<A NAME="6372"></A><TT><TT>&lt;</TT>date<TT>&gt;</TT>.<TT>&lt;</TT>label<TT>&gt;</TT>.<TT>&lt;</TT>model name<TT>&gt;</TT>.<TT>&lt;</TT>list name | global<TT>&gt;</TT></TT> where :
+<A NAME="6389"></A><TT><TT>&lt;</TT>date<TT>&gt;</TT>.<TT>&lt;</TT>label<TT>&gt;</TT>.<TT>&lt;</TT>model name<TT>&gt;</TT>.<TT>&lt;</TT>list name | global<TT>&gt;</TT></TT> where :
 
 <P>
 
@@ -1388,7 +1388,7 @@ next ([execution_date] + 1d, ACTION)
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-06-02
+2003-06-17
 </ADDRESS>
 </BODY>
 </HTML>

@@ -5,10 +5,13 @@ sympa (or sympa.pl) - A Modern Mailing List Manager
 =head1 SYNOPSIS
 
 S<B<sympa> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
-      S<[ B<--import>=I<listname> ] [ B<-k, --keepcopy>=I<directory> ]>
-      S<[ B<-l, --lang>=I<catalog> ] [ B<--make_alias_file> ] [ B<--lowercase> ] 
-      S<[ B<-m, --mail> ]> <[ B<--dump>=I<listname> | ALL] [ B<-h, --help> ]>
-      S<[ B<-v, --version> ]>
+      S<[ B<-k, --keepcopy>=I<directory> ]>
+      S<[ B<-l, --lang>=I<catalog> ]> [ B<-m, --mail> ]
+      S<[ B<-h, --help> ]> [ B<-v, --version> ]
+      S<>
+      S<[ B<--import>=I<listname> ]> [ B<--close_list>=I<list[@robot]>]
+      S<[ B<--lowercase> ] [ B<--make_alias_file> ]>
+      S<[ B<--dump>=I<listname> | ALL]>
 
 =head1 DESCRIPTION
 
@@ -36,6 +39,36 @@ Enable debug mode.
 Force Sympa to use an alternative configuration file instead
 of F</etc/sympa/sympa.conf>.
 
+=item B<-k, --keepcopy=>F<directory>
+
+This option tells Sympa to keep a copy of every incoming message, 
+instead of deleting them. `directory' is the directory to 
+store messages.
+
+=item B<-l, --lang=>I<catalog>
+
+Set this option to use a language catalog for Sympa. The corresponding
+catalog file `catalogue'.cat must be located in F</usr/lib/sympa/nls>
+directory.
+
+=item B<-m, --mail>
+
+Sympa will log calls to sendmail, including recipients. This option is
+useful for keeping track of each mail sent (log files may grow faster
+though).
+
+=item B<-h, --help>
+
+Print this help message.
+
+=item B<-v, --version>
+
+Print the version number.
+
+
+
+With the following options F<sympa.pl> will run in batch mode :
+
 =item B<--import=>I<list>
 
 Import subscribers in the list. Data are read from STDIN.
@@ -50,17 +83,11 @@ Sample :
     john.steward@some.company.com           John - accountant
     mary.blacksmith@another.company.com     Mary - secretary
 
-=item B<-k, --keepcopy=>F<directory>
+=item B<--close_list>=I<list[@robot]>
 
-This option tells Sympa to keep a copy of every incoming message, 
-instead of deleting them. `directory' is the directory to 
-store messages.
-
-=item B<-l, --lang=>I<catalog>
-
-Set this option to use a language catalog for Sympa. The corresponding
-catalog file `catalogue'.cat must be located in F</usr/lib/sympa/nls>
-directory.
+Close the list (changing its status to closed), remove aliases and remove
+subscribers from DB (a dump is created in the list directory to allow restoring
+the list)
 
 =item B<--lowercase>
 
@@ -71,24 +98,11 @@ Lowercases email addresses in database.
 Create an aliases file in /tmp/ with all list aliases. It uses the list_aliases.tpl
 template.
 
-=item B<-m, --mail>
-
-Sympa will log calls to sendmail, including recipients. This option is
-useful for keeping track of each mail sent (log files may grow faster
-though).
-
 =item B<--dump=>I<listname> | ALL
 
 Dumps subscribers of for `listname' list or all lists. Subscribers are 
 dumped in subscribers.db.dump.
 
-=item B<-h, --help>
-
-Print this help message.
-
-=item B<-v, --version>
-
-Print the version number.
 
 =back
 

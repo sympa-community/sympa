@@ -69,18 +69,19 @@ my $usage_string = "Usage:
    $0 [OPTIONS]
 
 Options:
-   -d, --debug         : sets Sympa in debug mode 
-   -f, --config=FILE   : uses an alternative configuration file
-   --import=list       : import subscribers (read from STDIN)
-   -k, --keepcopy=dir  : keep a copy of incoming message
-   -l, --lang=LANG     : use a language catalog for Sympa
-   -m, --mail          : log calls to sendmail
-   --dump=list|ALL     : dumps subscribers 
-   --lowercase         : lowercase email addresses in database
-   --log_level=LEVEL   : sets Sympa log level
+   -d, --debug                           : sets Sympa in debug mode 
+   -f, --config=FILE                     : uses an alternative configuration file
+   --import=list                         : import subscribers (read from STDIN)
+   -k, --keepcopy=dir                    : keep a copy of incoming message
+   -l, --lang=LANG                       : use a language catalog for Sympa
+   -m, --mail                            : log calls to sendmail
+   --dump=list|ALL                       : dumps subscribers 
+   --lowercase                           : lowercase email addresses in database
+   --close_list=LISTNAME[\@ROBOT]         : close a list
+   --log_level=LEVEL                     : sets Sympa log level
 
-   -h, --help          : print this help
-   -v, --version       : print version number
+   -h, --help                            : print this help
+   -v, --version                         : print version number
 
 Sympa is a mailinglists manager and comes with a complete (user and admin)
 web interface. Sympa  can be linked to an LDAP directory or an RDBMS to 
@@ -91,7 +92,8 @@ encryption.
 ## Check --dump option
 my %options;
 &GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'config|f=s', 
-	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase');
+	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
+	    'close_list=s');
 
 
 if ($main::options{'debug'}) {
@@ -104,7 +106,8 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
 				     $main::options{'help'} || 
 				     $main::options{'make_alias_file'} || 
 				     $main::options{'lowercase'} || 
-				     $main::options{'dump'});
+				     $main::options{'dump'} ||
+				     $main::options{'close_list'});
 
 ## Batch mode, ie NOT daemon
  $main::options{'batch'} = 1 if ($main::options{'dump'} || 
@@ -112,7 +115,8 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
 				 $main::options{'version'} || 
 				 $main::options{'import'} || 
 				 $main::options{'make_alias_file'} ||
-				 $main::options{'lowercase'} );
+				 $main::options{'lowercase'} ||
+				 $main::options{'close_list'});
 
 $log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
@@ -314,6 +318,24 @@ if ($main::options{'dump'}) {
 
     printf STDERR "Total lowercased rows: %d\n", $total;
 
+    exit 0;
+}elsif ($main::options{'close_list'}) {
+
+    my ($listname, $robotname) = split /\@/, $main::options{'close_list'};
+    my $list = new List ($listname, $robotname);
+
+    unless (defined $list) {
+	print STDERR "Incorrect list name $main::options{'close_list'}\n";
+	exit 1;
+    }
+
+    unless ($list->close()) {
+	print STDERR "Could not close list $main::options{'close_list'}\n";
+	exit 1;	
+    }
+
+    printf STDOUT "List %s has been closed, aliases have been removed\n", $list->{'name'};
+    
     exit 0;
 }
 

@@ -218,26 +218,26 @@ feel at home, and there may even be changes you will wish to suggest to us.
 <P>
 The basic requirement is to let <I>Sympa</I> know where to find the binary file for the OpenSSL program
 and the certificates of the trusted certificate authority. 
-This is done using the optional parameters <A NAME="5605"></A><TT>openSSL</TT> and
-<A NAME="5608"></A><TT>capath</TT> and / or <A NAME="5611"></A><TT>cafile</TT>.
+This is done using the optional parameters <A NAME="5622"></A><TT>openSSL</TT> and
+<A NAME="5625"></A><TT>capath</TT> and / or <A NAME="5628"></A><TT>cafile</TT>.
 
 <P>
 
 <UL>
-<LI><A NAME="5614"></A><TT>openSSL</TT> : the path for the OpenSSL binary file,
+<LI><A NAME="5631"></A><TT>openSSL</TT> : the path for the OpenSSL binary file,
          usually <TT>/usr/local/ssl/bin/openSSL</TT>
 </LI>
-<LI><A NAME="5617"></A><TT>cafile</TT> : the path of a bundle of trusted ca certificates. 
-        The file <A NAME="5620"></A><TT>~/home/sympa/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
+<LI><A NAME="5634"></A><TT>cafile</TT> : the path of a bundle of trusted ca certificates. 
+        The file <A NAME="5637"></A><TT>~/home/sympa/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
 
 <P>
-Both the <A NAME="5625"></A><TT>cafile</TT> file and the <A NAME="5628"></A><TT>capath</TT> directory
+Both the <A NAME="5642"></A><TT>cafile</TT> file and the <A NAME="5645"></A><TT>capath</TT> directory
         should be shared with your Apache+mod_ssl configuration. This is useful
 	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
 
 <P>
 </LI>
-<LI><A NAME="5631"></A><TT>key_password</TT> : the password used to protect all list private keys. xxxxxxx	
+<LI><A NAME="5648"></A><TT>key_password</TT> : the password used to protect all list private keys. xxxxxxx	
 </LI>
 </UL>
 
@@ -322,7 +322,7 @@ So the first requirement is to install a certificate and a private key for
 the list.
 The mechanism whereby certificates are obtained and managed is complex. Current versions
 of S/Sympa assume that list certificates and private keys are installed by
-the listmaster using <A NAME="5636"></A><TT>/home/sympa/bin/p12topem.pl</TT> script. This script allows
+the listmaster using <A NAME="5653"></A><TT>/home/sympa/bin/p12topem.pl</TT> script. This script allows
 you to install a PKCS#12 bundle file containing a private key and
 a certificate using the appropriate format.
 
@@ -331,14 +331,14 @@ It is a good idea to have a look at the OpenCA (http://www.openssl.org)
 documentation and/or PKI providers' web documentation.
 You can use commercial certificates or home-made ones. Of course, the
 certificate must be approved for e-mail applications, and issued by one of
-the trusted CA's described in the <A NAME="5639"></A><TT>cafile</TT> file or the
-<A NAME="5642"></A><TT>capath</TT> Sympa configuration parameter. 
+the trusted CA's described in the <A NAME="5656"></A><TT>cafile</TT> file or the
+<A NAME="5659"></A><TT>capath</TT> Sympa configuration parameter. 
 
 <P>
 The list private key must be installed in a file named
-<A NAME="5645"></A><TT>/home/sympa/expl/mylist/private_key</TT>. All the list private
+<A NAME="5662"></A><TT>/home/sympa/expl/mylist/private_key</TT>. All the list private
 keys must be encrypted using a single password defined by the
-<A NAME="5648"></A><TT>password</TT> parameter in <A NAME="5651"></A><TT>sympa.conf</TT>.
+<A NAME="5665"></A><TT>password</TT> parameter in <A NAME="5668"></A><TT>sympa.conf</TT>.
 
 <P>
 
@@ -365,10 +365,10 @@ the output file. The format used by Netscape is  ``pkcs#12''.
 Copy this file to the list home directory.
 </LI>
 <LI>convert the pkcs#12 file into a pair of pem files :
-<A NAME="5654"></A><TT>cert.pem</TT> and <A NAME="5657"></A><TT>private_key</TT> using
-the <A NAME="5660"></A><TT>/home/sympa/bin/p12topem.pl</TT> script. Use <A NAME="5663"></A><TT>p12topem.pl -help</TT> for details.
+<A NAME="5671"></A><TT>cert.pem</TT> and <A NAME="5674"></A><TT>private_key</TT> using
+the <A NAME="5677"></A><TT>/home/sympa/bin/p12topem.pl</TT> script. Use <A NAME="5680"></A><TT>p12topem.pl -help</TT> for details.
 </LI>
-<LI>be sure that <A NAME="5666"></A><TT>cert.pem</TT> and <A NAME="5669"></A><TT>private_key</TT>
+<LI>be sure that <A NAME="5683"></A><TT>cert.pem</TT> and <A NAME="5686"></A><TT>private_key</TT>
 are owned by sympa with ``r'' access.
 </LI>
 <LI>As soon as a certificate is installed for a list, the list  home page
@@ -395,9 +395,9 @@ Report to <A HREF="node6.html#certificate-task-config">5.12.4</A>, page&nbsp;<A 
 </H2>
 
 <P>
-A task created with the model <A NAME="5674"></A><TT>chk_cert_expiration.daily.task</TT> checks every day the expiration date of
-certificates stored in the <A NAME="5677"></A><TT>/home/sympa/expl/X509-user-certs/</TT> directory.
-The user is warned with the <A NAME="5680"></A><TT>daily_cert_expiration</TT> template when his certificate has expired
+A task created with the model <A NAME="5691"></A><TT>chk_cert_expiration.daily.task</TT> checks every day the expiration date of
+certificates stored in the <A NAME="5694"></A><TT>/home/sympa/expl/X509-user-certs/</TT> directory.
+The user is warned with the <A NAME="5697"></A><TT>daily_cert_expiration</TT> template when his certificate has expired
 or is going to expire within three days.
 
 <P>
@@ -407,7 +407,7 @@ or is going to expire within three days.
 </H2>
 
 <P>
-You may use the model <A NAME="5683"></A><TT>crl_update.daily.task</TT> to create a task which daily updates the certificate revocation
+You may use the model <A NAME="5700"></A><TT>crl_update.daily.task</TT> to create a task which daily updates the certificate revocation
 lists when needed.
 
 <P>
@@ -442,7 +442,7 @@ lists when needed.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-06-02
+2003-06-17
 </ADDRESS>
 </BODY>
 </HTML>

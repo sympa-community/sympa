@@ -1179,6 +1179,13 @@ To do this, add the following sequence or its equivalent in your
 \end{verbatim}
   \end {quote}
 
+
+\item \option {--close\_list \textit {listname@robot}}
+
+Close the list (changing its status to closed), remove aliases and remove
+subscribers from DB (a dump is created in the list directory to allow restoring
+the list)
+
 \item \option {--dump \textit {listname \texttt {|} ALL}}
   
   Dumps subscribers of a list or all lists. Subscribers are dumped
