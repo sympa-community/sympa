@@ -302,6 +302,7 @@ my %alias = ('reply-to' => 'reply_to',
 ## order :       Order of parameters within paragraph
 ## internal :    Indicates that the parameter is an internal parameter
 ##               that should always be saved in the config file
+## field_type :  used to select passwords web input type
 ###############################################################
 %::pinfo = ('account' => {'format' => '\S+',
 			  'length' => 10,
@@ -582,6 +583,7 @@ my %alias = ('reply-to' => 'reply_to',
 							      },
 						   'passwd' => {'format' => '.+',
 								'length' => 10,
+								'field_type' => 'password',
 								'gettext_id' => "remote password",
 								'order' => 4,
 								'occurrence' => '0-1'
@@ -614,6 +616,7 @@ my %alias = ('reply-to' => 'reply_to',
 							     },
 						  'passwd' => {'format' => '.+',
 							       'length' => 10,
+							       'field_type' => 'password',
 							       'gettext_id' => "remote password",
 							       'order' => 3
 							       },
@@ -677,6 +680,7 @@ my %alias = ('reply-to' => 'reply_to',
 							     },
 						  'passwd' => {'format' => '.+',
 							       'length' => 10,
+							       'field_type' => 'password',
 							       'gettext_id' => "remote password",
 							       'order' => 3
 							       },
@@ -834,6 +838,7 @@ my %alias = ('reply-to' => 'reply_to',
 							    'order' => 6
 							    },
 						 'passwd' => {'format' => '.+',
+							      'field_type' => 'password',
 							      'gettext_id' => "remote password",
 							      'order' => 7
 							      },

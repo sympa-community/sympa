@@ -6685,6 +6685,9 @@ sub _prepare_data {
 		 $p_glob->{'type'} = 'scalar';
 		 $p->{'value'} = &tools::escape_html($d);
 		 $p->{'length'} = $struct->{'length'};
+		 $p->{'field_type'} = $struct->{'field_type'};
+		 my $l = length($p->{'value'});
+		 $p->{'hidden_field'} = '*' x $l;
 		 $p->{'unit'} = $struct->{'unit'};
 		 if ($restrict) { # for topics
 		     $p_glob->{'constraint'} = $constraint;

@@ -143,9 +143,17 @@
 	      [% ELSE %]
 	      <!-- Scalar -->
                 [% IF key.may_edit == 'write' %]
+                  [% IF key.field_type == 'password' %]
+	          <input type="password" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
+                  [% ELSE %]
 	          <input type="text" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
+	          [% END %]
 	        [% ELSIF key.may_edit == 'read' %]
-	          [% key.value %]
+                  [% IF key.field_type == 'password' %]
+                   [% key.hidden_field %]
+                  [% ELSE %]
+	           [% key.value %]
+	          [% END %]
 		  <input type="hidden" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% key.value %]" />
 	        [% END %]
 	        [% key.unit %]
