@@ -24,7 +24,7 @@
        <TD>&nbsp;</TD>
      [ENDIF]
      <TD WIDTH="100%" ROWSPAN="2">
-     <A HREF="[path_cgi]/info/[l->NAME]" ><B>[l->NAME]@[l->host]</B></A>
+     <A HREF="[path_cgi]/info/[l->NAME]" ><B>[hidden_head][l->NAME][hidden_at][l->host][hidden_end]</B></A>
      <BR>
      [l->subject]
      </TD></TR> 

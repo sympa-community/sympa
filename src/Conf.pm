@@ -541,7 +541,12 @@ sub _load_auth {
 				    'ldap_use_ssl' => '1',
 				    'ldap_ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1',
 				    'ldap_ssl_ciphers' => '[\w:]+'
-				}
+				    },
+			  'generic_sso' => {'service_name' => '.+',
+					    'service_id' => '\S+',
+					    'http_header_prefix' => '\w+',
+					    'email_http_header' => '\w+'
+					    }
 			  );
     
 
@@ -553,6 +558,7 @@ sub _load_auth {
     }
     
     $Conf{'cas_number'} = 0;
+    $Conf{'generic_sso_number'} = 0;
     $Conf{'ldap_number'} = 0;
     $Conf{'use_passwd'} = 0;
     
@@ -561,27 +567,8 @@ sub _load_auth {
 
 	$line_num++;
 	next if (/^\s*[\#\;]/o);		
-	if (/^\s+$/o) {
-	    if (defined($current_paragraph)) {
 
-		if ($current_paragraph->{'auth_type'} eq 'cas') {
-		    $Conf{'cas_number'}  ++ ;
-		    $Conf{'cas_id'}{$current_paragraph->{'auth_service_name'}} =  $#paragraphs+1 ; 
-		}elsif($current_paragraph->{'auth_type'} eq 'ldap') {
-		    $Conf{'ldap'}  ++ ;
-		    $Conf{'use_passwd'} = 1;
-		}elsif($current_paragraph->{'auth_type'} eq 'user_table') {
-		    $Conf{'use_passwd'} = 1;
-		}
-		# setting default
-		$current_paragraph->{'regexp'} = '.*' unless (defined($current_paragraph->{'regexp'})) ;
-		$current_paragraph->{'non_blocking_redirection'} = 'on' unless (defined($current_paragraph->{'non_blocking_redirection'})) ;
-		push(@paragraphs,$current_paragraph);
-		
-		undef $current_paragraph;
-	    } 
-	    next ;
-	}elsif (/^\s*(ldap|cas|user_table)\s*$/io) {
+	if (/^\s*(ldap|cas|user_table|generic_sso)\s*$/io) {
 	    $current_paragraph->{'auth_type'} = lc($1);
 	}elsif (/^\s*(\S+)\s+(.*\S)\s*$/o){
 	    my ($keyword,$value) = ($1,$2);
@@ -596,20 +583,34 @@ sub _load_auth {
 	    
 	    $current_paragraph->{$keyword} = $value;
 	}
+
+	## process current paragraph
+	if (/^\s+$/o || eof(IN)) {
+	    if (defined($current_paragraph)) {
+		
+		if ($current_paragraph->{'auth_type'} eq 'cas') {
+		    $Conf{'cas_number'}  ++ ;
+		    $Conf{'cas_id'}{$current_paragraph->{'auth_service_name'}} =  $#paragraphs+1 ; 
+		}elsif($current_paragraph->{'auth_type'} eq 'generic_sso') {
+		    $Conf{'generic_sso_number'}  ++ ;
+		    $Conf{'generic_sso_id'}{$current_paragraph->{'service_id'}} =  $#paragraphs+1 ; 
+		}elsif($current_paragraph->{'auth_type'} eq 'ldap') {
+		    $Conf{'ldap'}  ++ ;
+		    $Conf{'use_passwd'} = 1;
+		}elsif($current_paragraph->{'auth_type'} eq 'user_table') {
+		    $Conf{'use_passwd'} = 1;
+		}
+		# setting default
+		$current_paragraph->{'regexp'} = '.*' unless (defined($current_paragraph->{'regexp'})) ;
+		$current_paragraph->{'non_blocking_redirection'} = 'on' unless (defined($current_paragraph->{'non_blocking_redirection'})) ;
+		push(@paragraphs,$current_paragraph);
+		
+		undef $current_paragraph;
+	    } 
+	    next ;
+	}
     }
     
-    if (defined($current_paragraph)) {
-	if ($current_paragraph->{'auth_type'} eq 'cas') {
-	    $Conf{'cas_number'} ++ ;
-	    # $Conf{'cas_list'}{$current_paragraph->{'auth_service_name'}} = 1;
-	    $Conf{'cas'}{$current_paragraph->{'auth_service_name'}}{'login_url'} =  $current_paragraph->{'login_url'} ;
-	    $Conf{'cas'}{$current_paragraph->{'auth_service_name'}}{'logout_url'} =  $current_paragraph->{'logout_url'} ;
-	    $Conf{'cas'}{$current_paragraph->{'auth_service_name'}}{'check_url'} =  $current_paragraph->{'check_url'} ;
-	}
-	$current_paragraph->{'regexp'} = '.*' unless (defined($current_paragraph->{'regexp'})) ;
-	push(@paragraphs,$current_paragraph);
-	undef $current_paragraph;	
-    }    
     close (LOG);
     
     close(IN); 

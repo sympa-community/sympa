@@ -282,23 +282,11 @@ sub rebuild {
     my $mhonarc_ressources = &get_ressources ($adrlist) ; 
 
     if (($list->{'admin'}{'web_archive_spam_protection'} ne 'none') && ($list->{'admin'}{'web_archive_spam_protection'} ne 'cookie')) {
-	$ENV{'M2H_ADDRESSMODIFYCODE'} = 's|([\!\%\w\.\-+=/]+)@([\w\.\-]+)|[hidden_head]'.$1.'[hidden_at]'.$2.'[hidden_end]|g';
+	&set_hidden_mode();
+    }else {
+	&unset_hidden_mode();
     }
 
-#    if ($list->{'admin'}{'web_archive_spam_protection'} eq 'at') {
-#	$ENV{'M2H_ADDRESSMODIFYCODE'} = 's|([\!\%\w\.\-+=/]+)@([\w\.\-]+)|$1.'."' AT '".'.$2|ge';
-#    }elsif ($list->{'admin'}{'web_archive_spam_protection'} eq 'javascript'){
-#	my $javascript = '
-#<SCRIPT language=JavaScript>
-#<!--
-#document.write("<A HREF=" + "mail" + "to:" + "$1" + "@" + "$2" + "$1" + "@" + "$2" +"</A>") 
-#// --> </SCRIPT>';
-#	$javascript =~ s/</\\\</g;
-#	$javascript =~ s/>//g;
-#	
-#	$ENV{'M2H_ADDRESSMODIFYCODE'} = 's|([\!\%\w\.\-+=/]+)@([\w\.\-]+)|'.$javascript.'|ge';
-#	$ENV{'M2H_ADDRESSMODIFYCODE'} = 's|([\!\%\w\.\-+=/]+)@([\w\.\-]+)|'.$javascript.'|g';
-#    }
     do_log('notice','Rebuilding  $arc with M2H_ADDRESSMODIFYCODE : %s',$ENV{'M2H_ADDRESSMODIFYCODE'});
 
 
@@ -350,6 +338,12 @@ sub mail2arc {
     
 
     my $list = new List($listname);
+
+    if (($list->{'admin'}{'web_archive_spam_protection'} ne 'none') && ($list->{'admin'}{'web_archive_spam_protection'} ne 'cookie')) {
+	&set_hidden_mode();
+    }else {
+	&unset_hidden_mode();
+    }    
 
     do_log('debug',"mail2arc $file for $listname\@$hostname yyyy:$yyyy, mm:$mm dd:$dd hh:$hh min$min ss:$ss");
     #    chdir($wwsconf->{'arc_path'});
@@ -454,7 +448,15 @@ sub get_ressources {
     return  $mhonarc_ressources;
 }
 
+sub set_hidden_mode {
+    ## $ENV{'M2H_MODIFYBODYADDRESSES'} à positionner si le corps du message est parsé
+    $ENV{'M2H_ADDRESSMODIFYCODE'} = 's|^([^@]+)@([^@]+)$|\[hidden_head\]$1\[hidden_at\]$2\[hidden_end\]|g';	
+}
 
-
+sub unset_hidden_mode {
+    
+    ## Be carefull, the .mhonarc.db file keeps track of previous M2H_ADDRESSMODIFYCODE setup
+    $ENV{'M2H_ADDRESSMODIFYCODE'} = '';
+}
 
 

@@ -105,7 +105,7 @@ A {
     <BASE HREF="[base]">
   [ENDIF]
   <TITLE>
-    [title]
+    [main_title]
   </TITLE>
 </HEAD>
 

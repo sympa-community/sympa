@@ -44,29 +44,13 @@
 	  Abonnés : <B>[total]</B><BR>
 	  Propriétaires :
 	  [FOREACH o IN owner]
-<SCRIPT language=JavaScript>
-<!--
-	    [IF o->gecos]
-document.write("<a href=" + "mail" + "to:" + "[o->local]" + "@" + "[o->domain]" + ">[o->gecos]</a><BR>")
-            [ELSE]
-document.write("<a href=" + "mail" + "to:" + "[o->local]" + "@" + "[o->domain]" + ">[o->local]" + "@" + "[o->domain]</a><BR>")
-	    [ENDIF]
-// --></SCRIPT>
-
-
+	    [o->mailto]
 	  [END]
 	  <BR>
 	  [IF is_moderated]
 	    Modérateurs :
 	    [FOREACH e IN editor]
-<SCRIPT language=JavaScript>
-<!--
-	    [IF e->gecos]
-document.write("<a href=" + "mail" + "to:" + "[e->local]" + "@" + "[e->domain]" + ">[e->gecos]</a>")
-            [ELSE]
-document.write("<a href=" + "mail" + "to:" + "[e->local]" + "@" + "[e->domain]" + ">[e->local]" + "@" + "[e->domain]</a>")
-	    [ENDIF]
-// --></SCRIPT>
+	    [e->mailto]
 	    [END]
 	  [ENDIF]
           <BR>

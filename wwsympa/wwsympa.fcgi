@@ -483,10 +483,16 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }
 
      foreach my $auth (keys  %{$Conf{'cas_id'}}) {
-	 &do_log('debug2', "cas authentication service name $auth");
+	 &do_log('debug2', "cas authentication service $auth");
 	 $param->{'sso'}{$auth} = $auth;
      }
-     $param->{'sso_number'} = $Conf{'cas_number'};
+
+     foreach my $auth (keys  %{$Conf{'generic_sso_id'}}) {
+	 &do_log('debug', "Generic SSO authentication service $auth");
+	 $param->{'sso'}{$auth} = $Conf{'auth_services'}[$Conf{'generic_sso_id'}{$auth}]{'service_name'};
+     }
+
+     $param->{'sso_number'} = $Conf{'cas_number'} + $Conf{'generic_sso_number'};
      $param->{'use_passwd'} = $Conf{'use_passwd'};
      $param->{'use_sso'} = 1 if ($param->{'sso_number'});
      $param->{'wwsconf'} = $wwsconf;
@@ -712,10 +718,10 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'action_type'} = 'none' unless ($param->{'is_priv'});
 
      if ($param->{'list'}) {
-	 $param->{'title'} = "$param->{'list'}\@$list->{'admin'}{'host'}";
+	 $param->{'main_title'} = "$param->{'list'} - $list->{'admin'}{'subject'}";
+	 $param->{'title'} = &get_protected_email_address($param->{'list'}, $list->{'admin'}{'host'});
      }else {
-	 $param->{'title'} = $Conf{'robots'}{$robot}{'title'};
-	 $param->{'title'} = $wwsconf->{'title'} unless $param->{'title'};
+	 $param->{'main_title'} = $param->{'title'} = &Conf::get_robot_conf($robot,'title');
      }
 
      ## Set cookies "your_subscribtions"
@@ -1147,6 +1153,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	    ## If user is identified
 	    $param->{'may_post'} = 1;
+
 	}
 
 	$param->{'is_moderated'} = $list->is_moderated();
@@ -1234,15 +1241,64 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'start_time'} = $start_time;
      $param->{'process_id'} = $$;
 
+     ## Email addresses protection
+     if (&Conf::get_robot_conf($robot,'spam_protection') eq 'at') {
+	 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = ' AT ';	$param->{'hidden_end'} = '';
+     }elsif(&Conf::get_robot_conf($robot,'spam_protection') eq 'javascript') {
+	 $param->{'hidden_head'} = '
+ <SCRIPT language="JavaScript">
+ <!-- 
+ document.write("';
+	 $param->{'hidden_at'} ='" + "@" + "';
+	 $param->{'hidden_end'} ='")
+ // -->
+ </SCRIPT>';
+     }else {
+	 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = '@';	$param->{'hidden_end'} = '';
+     }
+
      if ($list->{'name'}) {
 	 &wwslog('debug2', "list-name $list->{'name'}");
 
+	 ## Email addresses protection
+ 	 if ($in{'action'} eq 'arc') {
+	     if ($list->{'admin'}{'web_archive_spam_protection'} eq 'at') {
+		 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = ' AT ';	$param->{'hidden_end'} = '';
+	     }elsif($list->{'admin'}{'web_archive_spam_protection'} eq 'javascript') {
+		 $param->{'hidden_head'} = '
+ <SCRIPT language="JavaScript">
+ <!-- 
+ document.write("';
+		 $param->{'hidden_at'} ='" + "@" + "';
+		 $param->{'hidden_end'} ='")
+ // -->
+ </SCRIPT>';
+	     }else {
+		 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = '@';	$param->{'hidden_end'} = '';
+	     }
+	 }else {
+	     if ($list->{'admin'}{'spam_protection'} eq 'at') {
+		 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = ' AT ';	$param->{'hidden_end'} = '';
+	     }elsif($list->{'admin'}{'spam_protection'} eq 'javascript') {
+		 $param->{'hidden_head'} = '
+ <SCRIPT language="JavaScript">
+ <!-- 
+ document.write("';
+		 $param->{'hidden_at'} ='" + "@" + "';
+		 $param->{'hidden_end'} ='")
+ // -->
+ </SCRIPT>';
+	     }else {
+		 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = '@';	$param->{'hidden_end'} = '';
+	     }	     
+	 }
+ 
 	 ## Owners
 	 foreach my $o (@{$list->{'admin'}{'owner'}}) {
 	     next unless $o->{'email'};
 
 	     $param->{'owner'}{$o->{'email'}}{'gecos'} = $o->{'gecos'};
-	     $param->{'owner'}{$o->{'email'}}{mailto} = &mailto($list,$o->{'email'},$o->{'gecos'});
+	     $param->{'owner'}{$o->{'email'}}{'mailto'} = &mailto($list,$o->{'email'},$o->{'gecos'});
 	     ($param->{'owner'}{$o->{'email'}}{'local'},$param->{'owner'}{$o->{'email'}}{'domain'}) = split ('@',$o->{'email'});
 	     my $masked_email = $o->{'email'};
 	     $masked_email =~ s/\@/ AT /;
@@ -1253,7 +1309,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 foreach my $e (@{$list->{'admin'}{'editor'}}) {
 	     next unless $e->{'email'};
 	     $param->{'editor'}{$e->{'email'}}{'gecos'} = $e->{'gecos'};
-	     $param->{'editor'}{$e->{'email'}}{mailto} = &mailto($list,$e->{'email'},$e->{'gecos'});
+	     $param->{'editor'}{$e->{'email'}}{'mailto'} = &mailto($list,$e->{'email'},$e->{'gecos'});
 	     ($param->{'editor'}{$e->{'email'}}{'local'},$param->{'editor'}{$e->{'email'}}{'domain'}) = split ('@',$e->{'email'});
 	     my $masked_email = $e->{'email'};
 	     $masked_email =~ s/\@/ AT /;
@@ -1450,7 +1506,7 @@ sub do_sso_login {
     
     if ($param->{'user'}{'email'}) {
 	&error_message('already_login', {'email' => $param->{'user'}{'email'}});
-	&do_log('info','do_login: user %s already logged in', $param->{'user'}{'email'});
+	&do_log('err','do_login: user %s already logged in', $param->{'user'}{'email'});
 	# &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'login','',$robot,'','already logged');
 	return 'home';
     }
@@ -1458,34 +1514,81 @@ sub do_sso_login {
     
     unless ($in{'auth_service_name'}) {
 	&error_message('no_authentication_service_name');
-	&do_log('info','do_sso_login: no auth_service_name');
+	&do_log('err','do_sso_login: no auth_service_name');
 	return 'home';
     }
 
-    my $cas_id = $Conf{'cas_id'}{$in{'auth_service_name'}};
-    my $host = $Conf{'auth_services'}[$cas_id]{'host'};
-    my $login_uri = $Conf{'auth_services'}[$cas_id]{'login_uri'};
-    
-    my $path = '';
-    if ($in{'previous_action'}) {
- 	$path = "/$in{'previous_action'}";
-    }
-    if ($in{'previous_list'}) {
- 	$path .= "/$in{'previous_list'}";
-    }
-    my $service = "$param->{'base_url'}$param->{'path_cgi'}".$path."?checked_cas=".$cas_id;
-    
-    my $redirect_url = &Auth::check_cas_login($host,$login_uri,$service); 
-    &do_log('info', 'do_sso_login: redirect_url(%s)', $redirect_url);
-    if ($redirect_url =~ /http(s)+\:\//i) {
-	$in{'action'} = 'redirect';
-	$param->{'redirect_to'} = $redirect_url;
-	$param->{'bypass'} = 'extreme';
-	print "Location: $param->{'redirect_to'}\n\n";
-	#printf "Location: https://sso-cas.univ-rennes1.fr/login?service=http://www.cru.fr/wws\n\n";
-	#return('redirect');	
-    }
-       
+    ## This is a CAS service
+    if (my $cas_id = $Conf{'cas_id'}{$in{'auth_service_name'}}) {
+	my $host = $Conf{'auth_services'}[$cas_id]{'host'};
+	my $login_uri = $Conf{'auth_services'}[$cas_id]{'login_uri'};
+	
+	my $path = '';
+	if ($in{'previous_action'}) {
+	    $path = "/$in{'previous_action'}";
+	}
+	if ($in{'previous_list'}) {
+	    $path .= "/$in{'previous_list'}";
+	}
+	my $service = "$param->{'base_url'}$param->{'path_cgi'}".$path."?checked_cas=".$cas_id;
+	
+	my $redirect_url = &Auth::check_cas_login($host,$login_uri,$service); 
+	&do_log('info', 'do_sso_login: redirect_url(%s)', $redirect_url);
+	if ($redirect_url =~ /http(s)+\:\//i) {
+	    $in{'action'} = 'redirect';
+	    $param->{'redirect_to'} = $redirect_url;
+	    $param->{'bypass'} = 'extreme';
+	    print "Location: $param->{'redirect_to'}\n\n";
+	}
+	
+    }elsif (my $sso_id = $Conf{'generic_sso_id'}{$in{'auth_service_name'}}) {
+	## Generic SSO
+	
+	## If contacted via POST, then redirect the user to the URL for the access control to apply
+	if ($ENV{'REQUEST_METHOD'} eq 'POST') {
+	    my $path = '';
+	    if ($in{'previous_action'}) {
+		$path = "/$in{'previous_action'}";
+	    }
+	    if ($in{'previous_list'}) {
+		$path .= "/$in{'previous_list'}";
+	    }
+	    my $service = "$param->{'base_url'}$param->{'path_cgi'}/sso_login/$in{'auth_service_name'}".$path;
+	    
+	    &do_log('info', 'do_sso_login: redirect user to %s', $service);
+	    $in{'action'} = 'redirect';
+	    $param->{'redirect_to'} = $service;
+	    $param->{'bypass'} = 'extreme';
+	    print "Location: $param->{'redirect_to'}\n\n";
+	    
+	    return 1;
+	}
+	
+	my $email = $ENV{$Conf{'auth_services'}[$sso_id]{'email_http_header'}};
+	unless ($email) {
+	    &error_message('no_identified_user');
+	    &do_log('err','do_sso_login: user could not be identified, no %s HTTP header set', $Conf{'auth_services'}[$sso_id]{'email_http_header'});
+	    return 'home';	
+	}
+
+	$param->{'user'}{'email'} = $email;
+	&do_log('notice', 'User identified as %s', $email);
+	my $prefix = $Conf{'auth_services'}[$sso_id]{'http_header_prefix'};
+	foreach my $k (keys %ENV) {
+	    if ($k =~ /^$prefix/) {
+		&do_log('notice', 'Var : %s = %s', $k, $ENV{$k});
+	    }
+	}
+
+	return 'home';
+    }else {
+	## Unknown SSO service
+	&error_message('unknown_authentication_service');
+	&do_log('err','do_sso_login: unknow authentication service %s', $in{'auth_service_name'});
+	return 'home';	
+    }    
+
+    return 1;
 }
 
 
@@ -4023,18 +4126,6 @@ sub do_redirect {
 		 return 'arc_protect';
 	     }
 	 }
-     }
-     if ($list->{'admin'}{'web_archive_spam_protection'} eq 'at') {
-	 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = ' AT ';	$param->{'hidden_end'} = '';
-     }elsif($list->{'admin'}{'web_archive_spam_protection'} eq 'javascript') {
-	 $param->{'hidden_head'} = '
- <SCRIPT language="JavaScript">
- <!-- 
- document.write("';
-	 $param->{'hidden_at'} ='" + "@" + "';
-	 $param->{'hidden_end'} ='")
- // -->
- </SCRIPT>';
      }
 
      ## Calendar
@@ -9476,7 +9567,7 @@ sub do_redirect {
  }
 
 
- ## retrurn a mailto according to spam protection parameter
+ ## returns a mailto according to list spam protection parameter
  sub mailto {
 
      my $list = shift;
@@ -9503,6 +9594,25 @@ sub do_redirect {
 	 return ("$local AT $domain");
      }
  }
+
+## Returns a spam-protected form of email address
+sub get_protected_email_address {
+    my ($local_part, $domain_part) = @_;
+    
+    if($list->{'admin'}{'spam_protection'} eq 'javascript') {
+
+	 my $return = "<SCRIPT language=JavaScript>
+ <!--
+ document.write(\"$local_part\" + \"@\" + \"$domain_part\")
+ // --></SCRIPT>";
+	 return ($return);
+     }elsif($list->{'admin'}{'spam_protection'} eq 'at') {
+	 return ("$local_part AT $domain_part");
+     }else {
+	 return($local_part.'@'.$domain_part);
+     }
+    
+}
 
  ## View translation for a template
  sub do_translate {

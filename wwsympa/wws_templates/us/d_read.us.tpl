@@ -159,7 +159,7 @@
 	 
 	<TD> 
 	[IF f->author_known]
-	  <A HREF="mailto:[f->author]">[f->author]</A>  
+	   [f->author_mailto]
 	[ELSE]
           Unknown  
         [ENDIF]

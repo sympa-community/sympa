@@ -78,7 +78,7 @@ If it is not listed or if you don't have any, login using your email and passwor
 
               <SELECT NAME="auth_service_name" onchange="this.form.submit();">
                 [FOREACH server IN sso]
-                   <OPTION VALUE="[server->NAME]">[server->NAME]
+                   <OPTION VALUE="[server->NAME]">[server]
                 [END]
               </SELECT>
               <INPUT TYPE="submit" NAME="action_sso_login" VALUE="Go" SELECTED>
