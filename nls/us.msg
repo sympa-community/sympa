@@ -230,9 +230,11 @@ CONFIRM %s\n"
 not found in the list\n (You may help this person)\n"
 24	"UNsubscription request from list %s"
 25	"Dear owner of list %s,\n\n\
-A user asked to be deleted from the subscriber list. Shall this be fine\n\
-with you, you should consider using the following command:\n\n\
-DEL %s %s\n"
+A user asked to be deleted from your list. Shall this be fine\n\
+with you, you should click the following URL :\n\n\
+mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n\n\
+or send an email to %s with the following subject :\n\
+AUTH %s DEL %s %s\n"
 26	"FYI command %s list %s from %s %s validated by %s\n (no action needed)\n"
 27	"Bounce rate in list %s is %d%%.\n\n\
 You should delete bouncing subscribers : \n\

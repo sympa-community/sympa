@@ -1132,7 +1132,7 @@ sub notify_sender{
 
 ## Send a Unsubscription request to the owners.
 sub send_sig_to_owner {
-    my($self, $who) = @_;
+    my($self, $who, $keyauth) = @_;
     do_log('debug2', 'List::send_sig_to_owner(%s)', $who);
     
     my($i, @rcpt);
@@ -1153,7 +1153,7 @@ sub send_sig_to_owner {
 
     my $subject = sprintf(Msg(8, 24, "%s UNsubscription request"), $name);
     my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
-    my $body = sprintf Msg(8, 25, $msg::sig_owner), $name, $name, $who;
+    my $body = sprintf Msg(8, 25, $msg::sig_owner), $name, $Conf{'sympa'}, $keyauth, $name, $who, $Conf{'sympa'}, $keyauth, $name, $who;
     &mail::mailback (\$body, $subject, $to, @rcpt);
 }
 

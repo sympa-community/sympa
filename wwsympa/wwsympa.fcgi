@@ -1956,7 +1956,8 @@ sub do_signoff {
 		, $param->{'user'}{'email'}, $param->{'list'});
 	return undef;
     }elsif ($sig_is =~ /owner/) {
-	$list->send_sig_to_owner($param->{'user'}{'email'});
+	my $keyauth = $list->compute_auth($param->{'user'}{'email'}, 'del');
+	$list->send_sig_to_owner($param->{'user'}{'email'}, $keyauth);
 	&message('sent_to_owner');
 	&wwslog('info', 'do_signoff: signoff sent to owner');
 	return undef;

@@ -266,17 +266,27 @@ $stats_detail = '
 ';
 
 $sub_owner =
-'Dear Owner(s) of list %s, some user requested to be added to your list.
-Should you wish to do so please issue following command:
+'Dear owner of list %s,
 
-ADD %s %s %s
+A user asked to be added as a subscriber to your list. Shall this be fine
+with you, you should click the following URL :
+
+mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s
+
+or send an email to %s with the following subject :
+AUTH %s ADD %s %s %s
 ';
 
 $sig_owner =
-'Dear Owner(s) of list %s, some user requested to be deleted from your list.
-Should you wish to do so please issue following command:
+'Dear owner of list %s,
 
-DEL %s %s
+A user asked to be deleted from your list. Shall this be fine
+with you, you should click the following URL :
+
+mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s
+
+or send an email to %s with the following subject :
+AUTH %s DEL %s %s
 ';
 
 
