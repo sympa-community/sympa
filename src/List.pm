@@ -2156,6 +2156,8 @@ sub get_subscriber {
 	}
 	
 	my $user = $sth->fetchrow_hashref;
+	$$user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+	  unless ($self->is_available_reception_mode($$user{'reception'}));
 
 	$sth->finish();
 
@@ -2168,6 +2170,8 @@ sub get_subscriber {
 	    unless $self->{'users'}{$email};
 
 	my %user = split(/\n/, $self->{'users'}{$email});
+	$user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+	  unless ($self->is_available_reception_mode($user{'reception'}));
 	
 	return \%user;
     }
@@ -2289,6 +2293,10 @@ sub get_first_user {
 	}
 	
 	my $user = $sth->fetchrow_hashref;
+	if (defined $user) {
+	  $$user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+	    unless ($self->is_available_reception_mode($$user{'reception'}));
+	}
 
 	return $user;
     }else {
@@ -2297,6 +2305,8 @@ sub get_first_user {
 	
 	if ($ref->seq($i, $j, R_FIRST) == 0)  {
 	    my %user = split(/\n/, $j);
+	    $user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+	      unless ($self->is_available_reception_mode($user{'reception'}));
 	    return \%user;
 	}
 	return undef;
@@ -2311,7 +2321,11 @@ sub get_next_user {
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
 	my $user = $sth->fetchrow_hashref;
 
-	unless (defined $user) {
+	if (defined $user) {
+	  $$user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+	    unless ($self->is_available_reception_mode($$user{'reception'}));
+	}
+	else {
 	    $sth->finish;
 	    $sth = pop @sth_stack;
 	}
@@ -2325,6 +2339,8 @@ sub get_next_user {
 	
 	if ($ref->seq($i, $j, R_NEXT) == 0) {
 	    my %user = split(/\n/, $j);
+	    $user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+	      unless ($self->is_available_reception_mode($user{'reception'}));
 	    return \%user;
 	}
 	return undef;
@@ -2992,6 +3008,11 @@ sub request_action {
 
 	    if (! defined ($result)) {
 		do_log ('info',"error in $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'}" );
+
+#		if (defined $context->{'listname'}) {
+		    &do_log('info', 'Error in %s scenario, in list %s', $context->{'scenario'}, $context->{'listname'});
+#		}
+
 		return ("error-performing-condition : $rule->{'condition'}",$rule->{'auth_method'},'reject') ;
 	    }
 	    if ($result == -1) {
@@ -3691,8 +3712,10 @@ sub print_info {
 	push @result, sprintf Msg(9, 10, "DIGEST       : %s\n"), $digest;
     }
     
-    push @result, sprintf Msg(9, 11, "custom_subject    : %s\n"), $admin->{'custom_subject'} 
+    push @result, sprintf Msg(9, 11, "Custom_subject    : %s\n"), $admin->{'custom_subject'} 
     if ($admin->{'custom_subject'});
+
+    push @result, sprintf Msg(9, 13, "Reception mode    : %s\n"), $self->available_reception_mode;
     
     push @result, "\n";
     
@@ -5343,6 +5366,15 @@ sub _load_admin_file {
 	$admin{'visibility'} = &_load_list_param('visibility', 'conceal', $::pinfo{'visibility'}, $directory);
     }
 
+    ## reception of default_user_options must be one of reception of
+    ## available_user_options. If none, warning and put reception of
+    ## default_user_options in reception of available_user_options
+    if (! grep (/^$admin{'default_user_options'}{'reception'}$/,
+		@{$admin{'available_user_options'}{'reception'}})) {
+      push @{$admin{'available_user_options'}{'reception'}}, $admin{'default_user_options'}{'reception'};
+      do_log('info','reception is not compatible between default_user_options and available_user_options in %s',$directory);
+    }
+
     return \%admin;
 }
 
@@ -5406,6 +5438,32 @@ sub _save_admin_file {
     close CONFIG;
 
     return 1;
+}
+
+# Is a reception mode in the parameter reception of the available_user_options
+# section ?
+sub is_available_reception_mode {
+  my ($self,$mode) = @_;
+  $mode =~ y/[A-Z]/[a-z]/;
+  
+  return undef unless ($self && $mode);
+
+  my @available_mode = @{$self->{'admin'}{'available_user_options'}{'reception'}};
+  
+  foreach my $m (@available_mode) {
+    if ($m eq $mode) {
+      return $mode;
+    }
+  }
+
+  return undef;
+}
+
+# List the parameter reception of the available_user_options section 
+sub available_reception_mode {
+  my $self = shift;
+  
+  return join (' ',@{$self->{'admin'}{'available_user_options'}{'reception'}});
 }
 
 #################################################################

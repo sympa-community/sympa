@@ -171,6 +171,8 @@ ce message.\n"
 84	"Cette personne '%s' est déjà abonnée à la liste '%s'.\n"
 85	"Cette personne '%s' a été conviée à s'abonner dans la liste '%s'.\n"
 86	"Cette personne '%s' est indésirable dans la liste '%s'.\n"
+90	"La liste %s autorise uniquement ces modes de réception : %s\n\
+Votre configuration concernant n'a pas été modifiée.\n"
 260	"Quelqu'un (probablement vous) a demandé votre abonnement à la  liste '%s'.\n\
 Pour confirmer cette action veuillez :\n\
 - répondre à ce message\nOU\n\
@@ -258,6 +260,7 @@ $set 9	Messages pour l'entête review
 10	"Digest             : %s\n"
 11	"Sujet personnalisé : %s\n"
 12	"Sujet              : %s\n"
+13	"Modes de réception : %s\n"
 
 $set 11	Messages utilisés par le module smtp.
 1	"Votre système ne semble pas répondre au standard POSIX P1003.1, ou bien\n\

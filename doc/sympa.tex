@@ -4429,6 +4429,26 @@ queue at least once between the time laid down for sending of the
 digest and 12:00~PM. Usually do not use digest time later than
 11:00~PM.
 
+\subsection {available\_user\_options}
+
+    	\label {par-available-user-options}
+	\index{available-user-options}
+
+	\lparam {available\_user\_options} parameter start a paragraph to
+	define available options for the subscribers of the list.
+
+\begin {itemize}
+   \item \lparam {reception} \textit {modelist}
+
+	\default {\cfkeyword {reception} mail,notice,digest,summary,nomail}
+
+\textit {modelist} is a list of modes (mail, notice, digest, symmary, nomail),
+separated by commas. Only these modes will be allowed for the subscribers of
+this list. If a subscriber has a reception mode not in the list, sympa uses
+the one of \textit {default\_user\_options} paragraph.
+
+\end {itemize}
+
 
 \subsection {default\_user\_options}
 
@@ -4440,6 +4460,7 @@ digest and 12:00~PM. Usually do not use digest time later than
 
 \begin {itemize}
     \item \lparam {reception}
+            \texttt {notice} $|$
             \texttt {digest} $|$
             \texttt {summary} $|$
             \texttt {nomail} $|$

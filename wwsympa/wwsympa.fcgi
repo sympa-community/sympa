@@ -1596,6 +1596,12 @@ sub do_set {
 	return undef;
     }
     
+    # Verify that the mode is allowed
+    if (! $list->is_available_reception_mode($reception)) {
+      &message('not_allowed');
+      return undef;
+    }
+
     $reception = '' if $reception eq 'mail';
     $visibility = '' if $visibility eq 'noconceal';
    
@@ -1847,12 +1853,14 @@ sub do_suboptions {
     $s->{'date'} = &POSIX::strftime("%d %b %Y", localtime($s->{'date'}));
     
     foreach $m (keys %wwslib::reception_mode) {
+      if ($list->is_available_reception_mode($m)) {
 	$param->{'reception'}{$m}{'description'} = $wwslib::reception_mode{$m};
 	if ($s->{'reception'} eq $m) {
 	    $param->{'reception'}{$m}{'selected'} = 'SELECTED';
 	}else {
 	    $param->{'reception'}{$m}{'selected'} = '';
 	}
+      }
     }
     
     foreach $m (keys %wwslib::visibility_mode) {
@@ -3683,12 +3691,14 @@ sub do_editsubscriber {
     $param->{'subscriber'}{'reception'} ||= 'mail';
     $param->{'subscriber'}{'visibility'} ||= 'noconceal';
     foreach my $m (keys %wwslib::reception_mode) {		
+      if ($list->is_available_reception_mode($m)) {
 	$param->{'reception'}{$m}{'description'} = $wwslib::reception_mode{$m};
 	if ($param->{'subscriber'}{'reception'} eq $m) {
 	    $param->{'reception'}{$m}{'selected'} = 'SELECTED';
 	}else {
 	    $param->{'reception'}{$m}{'selected'} = '';
 	}
+      }
     }
 
     ## Bounces

@@ -1397,6 +1397,13 @@ sub set {
     }
     
     if ($mode =~ /^(mail|each|nomail|digest|summary|notice)/i){
+        # Verify that the mode is allowed
+        if (! $list->is_available_reception_mode($mode)) {
+	  push @msg::report, sprintf Msg(6, 90, "List %s allows only these reception modes : %s\nYour configuration hasn't been modified.\n"), $which, $list->available_reception_mode;
+	  do_log('info','SET %s %s from %s refused, mode not available', $which, $mode, $sender);
+	  return 'not_allowed';
+	}
+
 	$list->update_user($sender,{'reception'=> ''}) if($mode=~/^(mail|each(mail)?|nodigest)/i);
 	$list->update_user($sender,{'reception'=> 'nomail'}) if($mode=~/^nomail/i);
 	$list->update_user($sender,{'reception'=> 'digest'}) if($mode=~/^digest/i);

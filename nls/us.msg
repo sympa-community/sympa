@@ -165,6 +165,8 @@ If you do not want this action to be taken, simply ignore this message.\n"
 84	"The User '%s' is already subscriber of list '%s'\n"
 85	"User %s has been invited to subscribe in list %s.\n"
 86	"User %s is unwanted in list %s.\n"
+90	"List %s allows only these reception modes : %s\n\
+Your configuration hasn't been modified.\n"
 260	"Someone (hopefully you) asked for your e-mail address\n\
 to be added to list '%s'.\n\
 If you want this action to be taken, please\n\
@@ -257,6 +259,7 @@ $set 9	Messages for the review header
 10	"Digest             : %s\n"
 11	"Custom subject     : %s\n"
 12	"Subject            : %s\n"
+13	"Reception mode     : %s\n"
 
 $set 11	Messages used by the smtp module.
 1	"Your system does not conform to the POSIX P1003.1 standard, or\n\
