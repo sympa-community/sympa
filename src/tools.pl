@@ -1341,8 +1341,9 @@ sub get_filename {
 		}
 	    }
 
-	    ## No 'templates' subdir in list directory
+	    ## Also look for templates in the list's directory
 	    if ($name =~ /^templates\/(.*)$/) {
+		unshift @try, $list->{'dir'}.'/'.$name;
 		unshift @try, $list->{'dir'}.'/'.$1;
 	    }else {
 		unshift @try, $list->{'dir'}.'/'.$name;
