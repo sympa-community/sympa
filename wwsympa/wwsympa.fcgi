@@ -1021,7 +1021,7 @@ sub do_logout {
 sub do_remindpasswd {
     &wwslog('debug', 'do_remindpasswd(%s)', $in{'email'}); 
     
-    if ($in{'email'} and ! &valid_email($in{'email'})) {
+    if ($in{'email'} and ! &wwslib::valid_email($in{'email'})) {
 	$param->{'error'}{'email'} = $in{'email'};
 	&message('incorrect_email');
 	&wwslog('info','do_remindpasswd: incorrect email %s', $in{'email'});
@@ -1047,7 +1047,7 @@ sub do_sendpasswd {
 	return 'remindpasswd';
     }
     
-    unless (&valid_email($in{'email'})) {
+    unless (&wwslib::valid_email($in{'email'})) {
 	$param->{'error'}{'email'} = $in{'email'};
 	&message('incorrect_email');
 	&wwslog('info','do_sendpasswd: incorrect email %s', $in{'email'});
@@ -1843,7 +1843,7 @@ sub do_subrequest {
     
     ## Basic check of email if provided
     if ($in{'email'}) {
-	unless (&valid_email($in{'email'})) {
+	unless (&wwslib::valid_email($in{'email'})) {
 	    &message('incorrect_email');
 	    &wwslog('info','do_subrequest: incorrect email %s'
 		    , $in{'email'});
@@ -2013,7 +2013,7 @@ sub do_sigrequest {
     
     ## Basic check of email if provided
     if ($in{'email'}) {
-	unless (&valid_email($in{'email'})) {
+	unless (&wwslib::valid_email($in{'email'})) {
 	    &message('incorrect_email');
 	    &wwslog('info','do_sigrequest: incorrect email %s'
 		    , $in{'email'});
@@ -2266,7 +2266,7 @@ sub do_add {
 
     foreach my $email (keys %user) {
 
-	unless (&valid_email($email)) {
+	unless (&wwslib::valid_email($email)) {
 	    $param->{'error'}{'email'} = $email;
 	    &message('incorrect_email');
 	    &wwslog('info','do_add: incorrect email %s', $email);
