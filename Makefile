@@ -5,6 +5,9 @@ GROUP	=	sympa
 ## configuration file
 CONFDIR	=	/etc
 
+## LC_ALL is set to this ; required to compile NLS
+LANG	=	fr_FR
+
 ##  Perl path
 PERL	=	/usr/bin/perl
 
@@ -146,7 +149,7 @@ man: doc/man8/Makefile
 
 languages:
 	@echo "Making nls"
-	(cd nls && echo "making in nls..." && \
+	(LC_ALL=$(LANG); export LC_ALL; cd nls && echo "making in nls..." && \
 	$(MAKE) SH='${SH}' PERL='${PERL}' ETCBINDIR='${ETCBINDIR}' \
 	DIR='${DIR}' NLSDIR='${NLSDIR}' BINDIR='${BINDIR}' \
 	USER='${USER}' GROUP='${GROUP}' GENCAT='${GENCAT}');
