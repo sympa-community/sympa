@@ -1970,6 +1970,7 @@ sub send_to_editor {
 									});
        }
    }else{
+       &tt2::allow_absolute_path();
        $self->send_file('moderate', \@rcpt, $self->{'domain'}, {'modkey' => $modkey,
 								'boundary' => $boundary,
 								'msg' => $file,
