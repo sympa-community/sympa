@@ -1205,10 +1205,8 @@ sub load {
     
 
     
-    ## Only load total of users from a Database
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
-#	$users->{'total'} = _load_total_db($name)
-#	    unless (defined $self->{'total'});
+	
     }elsif($self->{'admin'}->{'user_data_source'} eq 'file') { 
 	
 	## Touch subscribers file if not exists
@@ -1279,11 +1277,13 @@ sub load {
     $self->{'users'} = $users->{'users'} if ($users);
     $self->{'ref'}   = $users->{'ref'} if ($users);
         
-#    my $previous_total = $self->{'total'};
     if ($users && defined($users->{'total'})) {
 	$self->{'total'} = $users->{'total'};
     }elsif ($total) {
 	$self->{'total'} = $total;
+    }elsif ($self->{'admin'}{'user_data_source'} eq 'database'){
+	## If no total found in 'stats' AND database mode
+	$self->{'total'} = _load_total_db($name);
     }
 
     $self->{'mtime'} = [ $m1, $m2, $m3 ];
