@@ -52,12 +52,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %build
 
-make DIR=%{home_s} sources languages
+make  sources languages
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-make INITDIR=/etc/rc.d/init.d HOST=MYHOST DIR=%{home_s} DESTDIR=$RPM_BUILD_ROOT MANDIR=%{man_dir} ICONSDIR=--ICONSDIR-- install
+make INITDIR=/etc/rc.d/init.d HOST=MYHOST DIR=%{home_s} EXPL_DIR=%{home_s}/expl PIDDIR=%{home_s} BINDIR=%{home_s}/bin SBINDIR=%{home_s}/sbin LIBDIR=%{home_s}/lib MAILERPROGDIR=/etc/smrsh ETCBINDIR=%{home_s}/bin/etc DESTDIR=$RPM_BUILD_ROOT MANDIR=%{man_dir} ICONSDIR=--ICONSDIR-- install
 
 ## Setting Runlevels
 for I in 0 1 2 6; do
@@ -150,8 +150,10 @@ fi
 %defattr(0755,sympa,sympa)
 %dir %{home_s}
 %dir %{home_s}/bin
-%dir %{home_s}/bin/Marc
 %dir %{home_s}/bin/etc
+%dir %{home_s}/lib
+%dir %{home_s}/lib/Marc
+%dir %{home_s}/sbin
 %dir %{home_s}/sample
 %dir %{home_s}/expl
 %dir %{home_s}/spool
@@ -163,7 +165,7 @@ fi
 
 %defattr(-,sympa,sympa)
 %{home_s}/sample/*
-%{home_s}/bin/Marc/*
+%{home_s}/lib/Marc/*
 %{home_s}/bin/etc/*
 %{home_s}/expl/*
 
@@ -171,14 +173,16 @@ fi
 %attr(0644,root,root)--ICONSDIR--/*
 
 %defattr(-,sympa,sympa)
-%{home_s}/bin/*.pm
 %{home_s}/bin/*.pl
+%{home_s}/lib/*.pm
+%{home_s}/lib/*.pl
 %{home_s}/bin/create_db.*
-%{home_s}/bin/wwsympa.fcgi
+%{home_s}/sbin/*.pl
+%{home_s}/sbin/wwsympa.fcgi
 
-%attr(4755,sympa,sympa) %{home_s}/bin/queue
-%attr(4755,sympa,sympa) %{home_s}/bin/bouncequeue
-%attr(4755,sympa,sympa) %{home_s}/bin/aliaswrapper
+%attr(4755,sympa,sympa) /etc/smrsh/queue
+%attr(4755,sympa,sympa) /etc/smrsh/bouncequeue
+%attr(4755,sympa,sympa) /etc/smrsh/aliaswrapper
 
 
 %{home_s}/nls/*.cat
@@ -191,13 +195,19 @@ fi
 %config /etc/rc.d/rc*/*
 
 %defattr(-,root,root)
-%doc INSTALL LICENSE README RELEASE_NOTES
+%doc AUTHORS COPYING ChangeLog INSTALL KNOWNBUGS NEWS README
 %doc doc/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+
+* Wed Nov 15 2001 Olivier Salaun <olivier.salaun@cru.fr> 3.3b.3
+- HOMEPAGE is /var/sympa/
+- install binaries with SetUID in /etc/smrsh
+- new lib/ sbin/ directories
+
 * Wed Sep 26 2001 Olivier Salaun <olivier.salaun@cru.fr> 3.3a.vhost
 - add bouncequeue-related
 - add perl-Cipher-saber

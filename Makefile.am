@@ -39,7 +39,7 @@ PIDDIR	=	${prefix}
 ## Both queue and bouncequeue are lunched by sendmail. If sendmail
 ## is configured to used smrsh (check the mailer prog definition), thoses
 ## files needs to be installed in /etc/smrsh.  
-MAILERPROGDIR	=	$(DIR)/bin
+MAILERPROGDIR	=	${bindir}
 
 #RPMTOPDIR	=	`rpm --eval %_topdir`
 RPMTOPDIR	=	/usr/src/redhat
@@ -89,7 +89,7 @@ GENCAT	= 	@GENCAT@
 
 ## Path to OpenSSL
 OPENSSL	=	@OPENSSL@
-SSLCERTDIR =	$(EXPL_DIR)--/X509-user-certs
+SSLCERTDIR =	$(EXPL_DIR)/X509-user-certs
 
 SH	=	@SH@
 CC	=	@CC@
