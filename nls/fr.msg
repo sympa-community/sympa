@@ -304,6 +304,9 @@ $set 15 Templates files
 12	"résumé des messages"
 13	"description de la liste"
 14	"page d'accueil de la liste"
+15	"demande de création de liste"
+16	"notification de création de liste"
+17	"rejet d'un message contenant un virus"
 
 
 $set 16 Titres des paramètres de config de listes

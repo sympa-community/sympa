@@ -303,6 +303,9 @@ $set 15 Templates files
 12	"summary message"
 13	"list description"
 14	"list homepage"
+15	"list creation request message"
+16	"list creation notification message"
+17	"virus infection message"
 
 $set 16 Listm parameters titles
 1	"Account"

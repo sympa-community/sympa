@@ -29,7 +29,7 @@ use Exporter;
 %visibility_mode = ('noconceal' => 'public',
 		    'conceal' => 'conceal');
 
-## Filenames with corresponding entry in NLS
+## Filenames with corresponding entry in NLS set 15
 %filenames = ('welcome.tpl' => 1,
 	      'bye.tpl' => 2,
 	      'removed.tpl'=> 3,
@@ -43,7 +43,10 @@ use Exporter;
 	      'global_remind.tpl' => 11,
 	      'summary.tpl' => 12,
 	      'info' => 13,
-	      'homepage' => 14
+	      'homepage' => 14,
+	      'create_list_request.tpl' => 15,
+	      'list_created.tpl' => 16,
+	      'your_infected_msg.tpl' => 17
 	      );
 
 ## Defined in RFC 1893

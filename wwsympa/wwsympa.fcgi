@@ -2347,13 +2347,13 @@ sub do_serveradmin {
     $param->{'conf'} = \%Conf;
 
     ## Lists Default files
-    foreach my $f ('welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl') {
+    foreach my $f ('welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl','your_infected_msg.tpl') {
 	$param->{'lists_default_files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
 	$param->{'lists_default_files'}{$f}{'selected'} = '';
     }
     
     ## Server files
-    foreach my $f ('helpfile.tpl','lists.tpl','global_remind.tpl','summary.tpl') {
+    foreach my $f ('helpfile.tpl','lists.tpl','global_remind.tpl','summary.tpl','create_list_request.tpl','list_created.tpl') {
 	$param->{'server_files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
 	$param->{'server_files'}{$f}{'selected'} = '';
     }
@@ -2849,7 +2849,7 @@ sub do_editfile {
 
     unless ($in{'file'}) {
 	## Messages edition
-	foreach my $f ('info','homepage','welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl') {
+	foreach my $f ('info','homepage','welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl','your_infected_msg.tpl') {
 	    next unless ($list->may_edit($f, $param->{'user'}{'email'}) eq 'write');
 	    $param->{'files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
 	    $param->{'files'}{$f}{'selected'} = '';
@@ -3500,6 +3500,14 @@ sub do_install_pending_list {
 
     ## create the list
     &_install_aliases();
+
+    if ($in{'notify'}) {
+	foreach my $i (@{$list->{'admin'}{'owner'}}) {
+	    next if ($i->{'reception'} eq 'nomail');
+	    $list->send_file('list_created', $i->{'email'}, {})
+		if ($i->{'email'});
+	}
+    }
 }
 
 ## Install sendmail aliases
@@ -3653,9 +3661,9 @@ sub do_create_list {
 	&_install_aliases();
     }
     
-    ## notify postmaster
+    ## notify listmaster
     if ($param->{'create_action'} =~ /notify/) {
-	&do_log('info','notify postmaster');
+	&do_log('info','notify listmaster');
   	&List::send_notify_to_listmaster('request_list_creation',$in{'listname'},$parameters->{'owner'}{'email'});
     }
     return 1;

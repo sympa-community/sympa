@@ -1112,9 +1112,11 @@ sub send_notify_to_listmaster {
 
     ## creation list requested
     }elsif ($operation eq 'request_list_creation') {
-        my $body = "list ($param[0]) creation is requested by $param[1]" ; 
-	my $to = sprintf "Listmaster <%s>", $Conf{'listmaster'};
-	&mail::mailback (\$body, {'Subject' => "list ($param[0]) creation is requested by $param[1]"}, 'sympa', $to, $Conf{'listmaster'});
+	my $list = new List $param[0];
+
+	$list->send_file('create_list_request', $Conf{'listmaster'}, 
+			 {'to' => "listmaster\@$Conf{'host'}",
+			  'email' => $param[1]});
 
     ## Loop detected in Sympa
     }elsif ($operation eq 'loop_command') {

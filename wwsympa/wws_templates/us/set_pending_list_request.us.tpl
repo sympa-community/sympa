@@ -34,9 +34,10 @@
 <INPUT TYPE="radio" NAME="status" VALUE="closed">Close it &nbsp;&nbsp;
 <INPUT TYPE="radio" NAME="status" VALUE="open">Install it &nbsp;&nbsp;
 </MENU>
-</TD><TD>
-<TD BGCOLOR="--LIGHT_COLOR--">
+</TD>
+<TD>
 <INPUT TYPE="submit" NAME="action_install_pending_list" VALUE="submit">
+<INPUT TYPE="checkbox" NAME="notify" CHECKED>notify owner
 </FORM>
 </TD>
 </TR>
