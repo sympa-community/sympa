@@ -536,7 +536,6 @@ my %alias = ('reply-to' => 'reply_to',
 							       },
 						  'attrs1' => {'format' => '\w+',
 							      'length' => 15,
-							      'default' => 'mail',
 							      'title_id' => 142,
 							      'order' => 8
 							      },
