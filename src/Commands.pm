@@ -820,6 +820,14 @@ sub signoff {
     if ($which eq '*') {
 	my $success ;
 	foreach $l ( List::get_which ($email,$robot,'member') ){
+
+	    ## Skip hidden lists
+	    if (&List::request_action ('visibility', 'smtp',$robot,
+				       {'listname' =>  $l,
+					'sender' => $sender}) =~ /reject/) {
+		next;
+	    }
+	    
             $success ||= &signoff($l,$email);
 	}
 	return ($success);
@@ -1519,6 +1527,14 @@ sub set {
         my ($l);
 	my $status;
 	foreach $l ( List::get_which ($sender,$robot,'member')){
+
+	    ## Skip hidden lists
+	    if (&List::request_action ('visibility', 'smtp',$robot,
+				       {'listname' =>  $l,
+					'sender' => $sender}) =~ /reject/) {
+		next;
+	    }
+
 	    my $current_status = &set ("$l $mode");
 	    $status ||= $current_status;
 	}
