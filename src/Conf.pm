@@ -287,7 +287,8 @@ sub load_robots {
 	    }
 	}
 	# listmaster is a list of email separated by commas
-	@{$robot_conf->{$robot}{'listmasters'}} = split(/,/, $robot_conf->{$robot}{'listmaster'});
+	@{$robot_conf->{$robot}{'listmasters'}} = split(/,/, $robot_conf->{$robot}{'listmaster'})
+	    if $robot_conf->{$robot}{'listmaster'};
 
 	$robot_conf->{'robot_by_http_host'}{$robot_conf->{$robot}{'http_host'}} = $robot ;
 
