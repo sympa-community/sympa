@@ -179,7 +179,9 @@ if ($main::options{'dump'}) {
 
 	my $email = lc($1);
 	my $gecos = $4;
-	my $u = $list->get_default_user_options();
+	my $u;
+	my $defaults = $list->get_default_user_options();
+	%{$u} = %{$defaults};
 	$u->{'email'} = $email;
 	$u->{'gecos'} = $gecos;
 

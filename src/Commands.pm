@@ -622,7 +622,9 @@ sub subscribe {
 		unless $list->update_user($sender, $user);
 	}else {
 
-	    my $u = $list->get_default_user_options();
+	    my $u;
+	    my $defaults = $list->get_default_user_options();
+	    %{$u} = %{$defaults};
 	    $u->{'email'} = $sender;
 	    $u->{'gecos'} = $comment;
 	    $u->{'date'} = $u->{'update_date'} = time;
@@ -935,7 +937,9 @@ sub add {
 		unless $list->update_user($email, $user);
 	    push @msg::report, sprintf Msg(6, 36, "User %s record has been updated for list %s.\n"),$email,$which;
 	}else {
-	    my $u = $list->get_default_user_options();
+	    my $u;
+	    my $defaults = $list->get_default_user_options();
+	    %{$u} = %{$defaults};
 	    $u->{'email'} = $email;
 	    $u->{'gecos'} = $comment;
 	    $u->{'date'} = $u->{'update_date'} = time;
