@@ -11,7 +11,7 @@ use Carp;
 @ISA = qw(Exporter);
 @EXPORT = qw(fatal_err do_log do_openlog);
 
-## RCS identification.
+my ($log_facility, $log_socket_type, $log_service);
 
 sub fatal_err {
     my $m  = shift;
@@ -36,9 +36,11 @@ sub do_log {
 	$fac = 'debug';
 	$debug = 1;
 	
-    }
-    else{
-         syslog($fac, $m, @_);
+    }else {
+	unless (syslog($fac, $m, @_)) {
+	    &do_connect();
+	    syslog($fac, $m, @_);
+	}
     }
 
     $m =~ s/%m/$errno/g;
@@ -70,14 +72,20 @@ sub do_openlog {
    my ($fac, $socket_type, $service) = @_;
    $service ||= 'sympa';
 
-   foreach my $k (keys %options) {
-       printf "%s = %s\n", $k, $options{$k};
-   }
+   ($log_facility, $log_socket_type, $log_service) = ($fac, $socket_type, $service);
 
-   if ($socket_type =~ /^(unix|inet)$/i) {
-      Sys::Syslog::setlogsock(lc($socket_type));
-   }
-   openlog("$service\[$$\]", 'ndelay', $fac);
+#   foreach my $k (keys %options) {
+#       printf "%s = %s\n", $k, $options{$k};
+#   }
+
+   &do_connect();
+}
+
+sub do_connect {
+    if ($log_socket_type =~ /^(unix|inet)$/i) {
+      Sys::Syslog::setlogsock(lc($log_socket_type));
+    }
+    openlog("$log_service\[$$\]", 'ndelay', $log_facility);
 }
 
 1;
