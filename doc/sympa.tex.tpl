@@ -4954,6 +4954,202 @@ Example :
 \end {quote}
 
 
+\subsection {include\_ldap\_2level\_query}
+    \label {include-ldap-2level-query}
+
+\lparam {include\_ldap\_2level\_query}
+
+This paragraph defines parameters for a two-level LDAP query returning a
+list of subscribers. Usually the first-level query returns a list of DNs
+and the second-level queries convert the DNs into e-mail addresses.
+This paragraph is used only if \lparam
+{user\_data\_source} is set to \texttt {include}. This feature
+requires the Net::LDAP (perlldap) PERL module.
+
+\begin{itemize}
+
+\item
+\label {host}
+\lparam {host} \textit {ldap\_directory\_hostname} 
+
+Name of the LDAP directory host.
+
+\item
+\label {port}
+\lparam {port} \textit {ldap\_directory\_port} (Default 389) 
+
+Port on which the Directory accepts connections.
+
+\item
+\label {user}
+\lparam {user} \textit {ldap\_user\_name}
+
+Username with read access to the LDAP directory.
+
+\item
+\label {passwd}
+\lparam {passwd} \textit {LDAP\_user\_password}
+
+Password for \lparam {user}.
+
+
+\item
+\label {suffix1}
+\lparam {suffix1} \textit {directory name}
+
+Defines the naming space covered by the first-level search (optional, depending
+on the LDAP server).
+
+\item
+\label {timeout1}
+\lparam {timeout1} \textit {delay\_in\_seconds}
+
+Timeout for the first-level query when connecting to the remote server.
+
+\item
+\label {filter1}
+\lparam {filter1} \textit {search\_filter}
+
+Defines the LDAP search filter for the first-level query (RFC 2254 compliant).
+
+\item
+\label {attrs1}
+\lparam {attrs1} \textit {attribute} 
+%\default {mail}
+
+The attribute containing the data in the returned object that will be used for
+the second-level query.  This data is referenced using the syntax ``[attrs1]''.
+
+\item
+\label {select1}
+\lparam {select1} \textit {first $|$ all $|$ regex}
+\default {first}
+
+Defines whether to use only the first attribute value, all the values, or only
+those values matching a regular expression.
+
+\item
+\label {regex1}
+\lparam {regex1} \textit {regular_expression}
+\default {}
+
+The Perl regular expression to use if ``select1'' is set to ``regex''.
+
+\item
+\label {scope1}
+\lparam {scope1} \textit {base $|$ one $|$ sub}
+\default {sub}
+
+By default the first-level search is performed on the whole tree below the
+specified base object. This may be changed by specifying a scope parameter
+with one of the following values. 
+\begin{itemize}
+
+	\item \textbf {base} : 
+	Search only the base object. 
+	
+	\item \textbf {one} : 
+	Search the entries immediately below the base object.
+
+	\item \textbf {sub} : 
+	Search the whole tree below the base object. 
+
+\end{itemize}
+
+
+\item
+\label {suffix2}
+\lparam {suffix2} \textit {directory name}
+
+Defines the naming space covered by the second-level search (optional, depending
+on the LDAP server).  The ``[attrs1]'' syntax may be used to substitute data
+from the first-level query into this parameter.
+
+\item
+\label {timeout2}
+\lparam {timeout2} \textit {delay\_in\_seconds}
+
+Timeout for the second-level queries when connecting to the remote server.
+
+\item
+\label {filter2}
+\lparam {filter2} \textit {search\_filter}
+
+Defines the LDAP search filter for the second-level queries
+(RFC 2254 compliant).  The ``[attrs1]'' syntax may be used to
+substitute data from the first-level query into this parameter.
+
+\item
+\label {attrs2}
+\lparam {attrs2} \textit {mail_attribute} 
+\default {mail}
+
+The attribute containing the e-mail address(es) in the returned objects from the
+second-level queries.
+
+\item
+\label {select2}
+\lparam {select2} \textit {first $|$ all $|$ regex}
+\default {first}
+
+Defines whether to use only the first address, all the addresses, or only
+those addresses matching a regular expression in the second-level queries.
+
+\item
+\label {regex2}
+\lparam {regex2} \textit {regular_expression}
+\default {}
+
+The Perl regular expression to use if ``select2'' is set to ``regex''.
+
+\item
+\label {scope2}
+\lparam {scope2} \textit {base $|$ one $|$ sub}
+\default {sub}
+
+By default the second-level search is performed on the whole tree below the
+specified base object. This may be changed by specifying a scope2 parameter
+with one of the following values. 
+\begin{itemize}
+
+	\item \textbf {base} : 
+	Search only the base object. 
+	
+	\item \textbf {one} : 
+	Search the entries immediately below the base object.
+
+	\item \textbf {sub} : 
+	Search the whole tree below the base object. 
+
+\end{itemize}
+
+\end{itemize}
+
+Example : (cn=testgroup,dc=cru,dc=fr should be a groupOfUniqueNames here)
+
+\begin {quote}
+\begin{verbatim}
+
+    include_ldap_2level_query
+    host ldap.cru.fr
+    suffix1 cn=testgroup, dc=cru, dc=fr
+    timeout1 10
+    filter1 (objectClass=*)
+    attrs1 uniqueMember
+    select1 all
+    scope1 base
+    suffix2 dc=cru, dc=fr
+    timeout2 10
+    filter2 (&(dn=[attrs1]) (c=fr))
+    attrs2 mail
+    select2 regex
+    regex2 ^*@cru.fr$
+    scope2 one
+
+\end{verbatim}
+\end {quote}
+
+
 \subsection {include\_file}
     \label {include-file}
 
