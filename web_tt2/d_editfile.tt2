@@ -30,13 +30,13 @@
   <label><strong> [%|loc%]Bookmark URL[%END%] </strong><br /> 
   <input name="url" value="[% url %]" /></label>
   [% ELSE %]
-  <label><strong> [%|loc(visible_path)%]Replace the file %1 by your file[%END%] </strong><br /> 
+  <label><strong> [%|loc(visible_path)%]Replace the file %1 with your file[%END%] </strong><br /> 
   <input type="file" name="uploaded_file" /></label>
   [% END %]
   </td>
   <td style="text-align: left;" valign="bottom"> 
   [% IF url %]
-  <input type="submit" value="[%|loc%]Modifier[%END%]" name="action_d_savefile" />
+  <input type="submit" value="[%|loc%]Update[%END%]" name="action_d_savefile" />
   [% ELSE %]
   <input type="submit" value="[%|loc%]Publish[%END%]" name="action_d_overwrite" />
   [% END %]

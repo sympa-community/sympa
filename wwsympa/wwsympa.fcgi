@@ -8461,8 +8461,9 @@ sub do_d_savefile {
      # Variables
      my $path = &no_slash_end($in{'path'});
 
-     if ($in{'url'} && !$in{'path'}) {
-	 $path .= $in{'name_doc'} . '.url';
+     if ($in{'url'} && 
+	 $in{'previous_action'} eq 'd_read') {
+	 $path .= '/'.$in{'name_doc'} . '.url';
      }
 
 
