@@ -1138,7 +1138,7 @@ sub DoCommand {
 
     ## Process the body of the message
     ## unless subject contained commands or message has no body
-    unless (($success == 1) || (! defined $msg->bodyhandle)) { 
+    unless (defined($success) || (! defined $msg->bodyhandle)) { 
 #	foreach $i (@{$msg->body}) {
 	my @body = $msg->bodyhandle->as_lines();
 	foreach $i (@body) {
