@@ -6157,7 +6157,7 @@ sub do_d_read {
 	    $param->{'doc_title'} = $desc_hash{'title'};
 	}
 	my @info = stat $doc;
-	$param->{'doc_date'} =  &POSIX::strftime("%d %b %Y", localtime($info[10]));
+	$param->{'doc_date'} =  &POSIX::strftime("%d %b %Y", localtime($info[9]));
 
 
 	# listing of all the shared documents of the directory
@@ -6199,8 +6199,8 @@ sub do_d_read {
 		
 		# last update
 		my @info = stat $path_doc;
-		$subdirs{$d}{'date_epoch'} = $info[10];
-		$subdirs{$d}{'date'} = &POSIX::strftime("%d %b %Y", localtime($info[10]));
+		$subdirs{$d}{'date_epoch'} = $info[9];
+		$subdirs{$d}{'date'} = &POSIX::strftime("%d %b %Y", localtime($info[9]));
 		
 		# Case read authorized : fill the hash 
 		$subdirs{$d}{'icon'} = $icon_table{'folder'};
@@ -6371,8 +6371,8 @@ sub do_d_read {
 
 		      # last update
 		    my @info = stat $path_doc;
-		    $files{$d}{'date_epoch'} = $info[10];
-		    $files{$d}{'date'} = POSIX::strftime("%d %b %Y", localtime($info[10]));
+		    $files{$d}{'date_epoch'} = $info[9];
+		    $files{$d}{'date'} = POSIX::strftime("%d %b %Y", localtime($info[9]));
 		      # size
 		    $files{$d}{'size'} = (-s $path_doc)/1000; 
 		}
@@ -6580,7 +6580,7 @@ sub do_d_editfile {
     my @info = stat "$shareddir/$path";
     $param->{'serial_file'} = $info[10];
     ## parameters of the current directory
-    $param->{'doc_date'} =  &POSIX::strftime("%d %b %y  %H:%M", localtime($info[10]));
+    $param->{'doc_date'} =  &POSIX::strftime("%d %b %y  %H:%M", localtime($info[9]));
 
     $param->{'father_icon'} = $icon_table{'father'};
     return 1;
@@ -7616,7 +7616,7 @@ sub do_d_control {
 
     ## other info
     my @info = stat "$shareddir/$path";
-    $param->{'doc_date'} =  &POSIX::strftime("%d %b %y  %H:%M", localtime($info[10]));
+    $param->{'doc_date'} =  &POSIX::strftime("%d %b %y  %H:%M", localtime($info[9]));
 
     # template parameters
     $param->{'list'} = $list_name;
