@@ -525,13 +525,13 @@ sub DoFile {
 	if ($Conf{'openssl'}) {
 	    $is_crypted = 'smime_crypted';
 	    $file = '_ALTERED_';
-	    unless ($msg = &tools::smime_decrypt ($msg,$name)) {
+	    unless (($msg, $file) = &tools::smime_decrypt ($msg,$name)) {
 		do_log('debug','unable to decrypt message');
 		## xxxxx traitement d'erreur ?
 		return undef;
 	    };
 	    $hdr = $msg->head;
-	    do_log('debug2', "message succefully decrypted");
+	    do_log('debug2', "message successfully decrypted");
 	    # do_log('debug2', "xxxx dumped in /tmp/decrypted");
 	    # open (XXDUMP, ">/tmp/decrypted");
 	    # $msg->print(\*XXDUMP);

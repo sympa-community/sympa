@@ -211,6 +211,10 @@ sub mailto {
 
    if ($originalfile eq '_ALTERED_') {
        $msg_body = $msg->body_as_string;
+
+   }elsif (ref($originalfile)) {
+       $msg_body = $$originalfile;
+
    }else {
    ## Get body from original file
        unless (open MSG, $originalfile) {

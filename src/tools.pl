@@ -498,7 +498,6 @@ unlink ($temporary_file) unless ($main::options{'debug'} || $main::options{'debu
 sub smime_decrypt {
     my $msg = shift;
     my $list = shift ; ## the recipient of the msg
-    my $as = shift;
     
     &do_log('debug2', 'tools::smime_decrypt message msg from %s,%s',$msg->head->get('from'),$list);
 
@@ -542,41 +541,38 @@ sub smime_decrypt {
 	unlink ("$Conf{'tmpdir'}/pass.$$");
     }
     
-    if ($as eq 'as_array') {
-
-	my @array = <NEWMSG>;
-	return \@array;
-	
-    }else {
-
-	my $parser = new MIME::Parser;
-	$parser->output_to_core(1);
-	unless ($decryptedmsg = $parser->read(\*NEWMSG)) {
-	    do_log('notice', 'Unable to parse message');
-	    return undef;
-	}
-	close NEWMSG ;
-	unlink ($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;
-	
-	## foreach header defined in the incomming message but undefined in the
-	## decrypted message, add this header in the decrypted form.
-	my $predefined_headers ;
-	foreach my $header ($decryptedmsg->head->tags) {
-	    $predefined_headers->{$header} = 1 if ($decryptedmsg->head->get($header)) ;
-	}
-	
-	foreach my $header ($msg->head->tags) {
-	    $decryptedmsg->head->add($header,$msg->head->get($header)) unless $predefined_headers->{$header} ;
-	}
-	## Some headers from the initial message should not be restored
-	## Content-Disposition and Content-Transfer-Encoding if the result is multipart
-	$decryptedmsg->head->delete('Content-Disposition') if ($msg->head->get('Content-Disposition'));
-	if ($decryptedmsg->head->get('Content-Type') =~ /multipart/) {
-	    $decryptedmsg->head->delete('Content-Transfer-Encoding') if ($msg->head->get('Content-Transfer-Encoding'));
-	}
-	
-	return $decryptedmsg;
+    my $msg_as_string;
+    while (<NEWMSG>) {
+	$msg_as_string .= $_;
     }
+	
+    my $parser = new MIME::Parser;
+    $parser->output_to_core(1);
+    unless ($decryptedmsg = $parser->parse_data($msg_as_string)) {
+	do_log('notice', 'Unable to parse message');
+	return undef;
+    }
+    close NEWMSG ;
+    unlink ($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;
+    
+    ## foreach header defined in the incomming message but undefined in the
+    ## decrypted message, add this header in the decrypted form.
+    my $predefined_headers ;
+    foreach my $header ($decryptedmsg->head->tags) {
+	$predefined_headers->{$header} = 1 if ($decryptedmsg->head->get($header)) ;
+    }
+    
+    foreach my $header ($msg->head->tags) {
+	$decryptedmsg->head->add($header,$msg->head->get($header)) unless $predefined_headers->{$header} ;
+    }
+    ## Some headers from the initial message should not be restored
+    ## Content-Disposition and Content-Transfer-Encoding if the result is multipart
+    $decryptedmsg->head->delete('Content-Disposition') if ($msg->head->get('Content-Disposition'));
+    if ($decryptedmsg->head->get('Content-Type') =~ /multipart/) {
+	$decryptedmsg->head->delete('Content-Transfer-Encoding') if ($msg->head->get('Content-Transfer-Encoding'));
+    }
+
+    return ($decryptedmsg, \$msg_as_string);
 }
 
 
