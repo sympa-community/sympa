@@ -140,7 +140,7 @@ setTimeout('refresh_mom_and_die()',1000);
           <TR BGCOLOR="[% error_color %]">
             <TD>
               <FONT COLOR="[% bg_color %]">
-       [% PROCESS $error_template IF error_template %]
+       [% PROCESS error.tt2 %]
        </FONT>
             </TD>
           </TR>
@@ -151,16 +151,16 @@ setTimeout('refresh_mom_and_die()',1000);
           <TR BGCOLOR="[% shaded_color %]">
             <TD>
               <FONT COLOR="[% text_color %]">
-       [% PROCESS $notice_template IF notice_template %]
+       [% PROCESS notice.tt2 %]
        </FONT>
             </TD>
           </TR>
           </TABLE>
     [% END %]
 
-  [% PROCESS $title_template IF title_template %]
+  [% PROCESS title.tt2 %]
   <BR>
-  [% PROCESS $action_template IF action_template %]
+  [% PROCESS "${action}.tt2" IF action %]
 
      <FORM ACTION="[% path_cgi %]" METHOD="POST">
      <INPUT TYPE="hidden" NAME="action" VALUE="set_lang">
@@ -175,13 +175,13 @@ setTimeout('refresh_mom_and_die()',1000);
      </FORM>
 
 [% ELSE %]
-  [% PROCESS $menu_template IF menu_template %]
-  [% PROCESS $title_template IF title_template %]
+  [% PROCESS menu.tt2 %]
+  [% PROCESS title.tt2 %]
   <TABLE CELLSPACING=0 CELLPADDING=0 WIDTH="100%">
    <TR VALIGN="top">
      [% IF list %]
        <TD>
-         [% PROCESS $list_menu_template IF list_menu_template %]
+         [% PROCESS list_menu.tt2 %]
        </TD>
      [% END %]
    <TD WIDTH="100%">
@@ -190,7 +190,7 @@ setTimeout('refresh_mom_and_die()',1000);
         <TR BGCOLOR="[% error_color %]">
           <TD>
             <FONT COLOR="[% bg_color %]">
-	    [% PROCESS $error_template IF error_template %]
+	    [% PROCESS error.tt2 %]
 	    </FONT>
           </TD>
         </TR>
@@ -201,7 +201,7 @@ setTimeout('refresh_mom_and_die()',1000);
         <TR BGCOLOR="[% shaded_color %]">
           <TD>
            <FONT COLOR="[% text_color %]">
-	   [% PROCESS $notice_template IF notice_template %]
+	   [% PROCESS notice.tt2 %]
 	   </FONT>
           </TD>
         </TR>
@@ -212,12 +212,12 @@ setTimeout('refresh_mom_and_die()',1000);
 
     [% IF action_type == 'admin' %]
       <TR VALIGN="top">
-       [% PROCESS $admin_menu_template IF admin_menu_template %]
+       [% PROCESS admin_menu.tt2 %]
       </TR>
       <TR VALIGN="top">
         <TD colspan="9" BGCOLOR="[% shaded_color %]" >
          [% IF active %]
-          [% PROCESS $action_template IF action_template %]
+          [% PROCESS "${action}.tt2" IF action %]
          [% END %]
         </TD>
       </TR>
@@ -225,7 +225,7 @@ setTimeout('refresh_mom_and_die()',1000);
     [% ELSE %]
       <TR VALIGN="top"><TD BGCOLOR="[% shaded_color %]">
         [% IF active %]
-         [% PROCESS $action_template IF action_template %]
+         [% PROCESS "${action}.tt2" IF action %]
         [% END %]
       </TD>
       </TR>

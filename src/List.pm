@@ -2681,17 +2681,12 @@ sub send_global_file {
     $data->{'lang'} = $data->{'lang'} = $data->{'user'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
-    foreach my $f ("$Conf{'etc'}/$robot/tt2/$action.tt2",
-		   "$Conf{'etc'}/tt2/$action.tt2",
-		   "--ETCBINDIR--/tt2/$action.tt2") {
-	if (-r $f) {
-	    $filename = $f;
-	    last;
-	}
-    }
+    my $tt2_include_path = ["$Conf{'etc'}/$robot/tt2",
+			    "$Conf{'etc'}/tt2",
+			    "--ETCBINDIR--/tt2"];
 
-    unless ($filename) {
-	do_log('err',"Unable to open file $Conf{'etc'}/$robot/tt2/$action.tt2 NOR  $Conf{'etc'}/tt2/$action.tt2 NOR --ETCBINDIR--/tt2/$action.tt2");
+    foreach my $d (@{$tt2_include_path}) {
+	&tt2::add_include_path($d);
     }
 
     foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title') {
@@ -2703,7 +2698,7 @@ sub send_global_file {
     $data->{'robot_domain'} = $robot;
     $data->{'return_path'} = &Conf::get_robot_conf($robot, 'request');
 
-    mail::mailfile($filename, $who, $data, $robot);
+    &mail::mailfile($action.'.tt2', $who, $data, $robot);
 
     return 1;
 }
@@ -2766,23 +2761,15 @@ sub send_file {
     $data->{'lang'} = $data->{'user'}{'lang'} || $self->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
-    foreach my $f ("$self->{'dir'}/$action.tt2",
-		   "$self->{'dir'}/$action.mime","$self->{'dir'}/$action",
-		   "$Conf{'etc'}/$robot/tt2/$action.tt2",
-		   "$Conf{'etc'}/tt2/$action.tt2",
-		   "$Conf{'home'}/$action.mime",
-		   "$Conf{'home'}/$action",
-		   "--ETCBINDIR--/tt2/$action.tt2") {
-	if (-r $f) {
-	    $filename = $f;
-	    last;
-	}
+    my $tt2_include_path = [$self->{'dir'},
+			    "$Conf{'etc'}/$robot/tt2",
+			    "$Conf{'etc'}/tt2",
+			    "--ETCBINDIR--/tt2"];
+
+    foreach my $d (@{$tt2_include_path}) {
+	&tt2::add_include_path($d);
     }
 
-    unless ($filename) {
-	do_log('err',"Unable to find '$action' template in list directory NOR $Conf{'etc'}/tt2/ NOR --ETCBINDIR--/tt2/");
-    }
-    
     foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title') {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
@@ -2816,11 +2803,7 @@ sub send_file {
 	$data->{'context'}{$key} = $context->{$key};
     }
 
-    chdir $self->{'dir'};
-    if ($filename) {
-        mail::mailfile($filename, $who, $data, $self->{'domain'}, $sign_mode);
-    }
-    chdir $Conf{'home'};
+    &mail::mailfile($action.'.tt2', $who, $data, $self->{'domain'}, $sign_mode);
 
     return 1;
 }
@@ -8159,11 +8142,18 @@ sub _urlize_part {
     my $parser = new MIME::Parser;
     $parser->output_to_core(1);
     my @new_part;
+
+    my $tt2_include_path = [$list->{'dir'}.'/tt2',
+			    $Conf{'etc'}.'/'.$robot.'/tt2',
+			    $Conf{'etc'}.'/tt2',
+			    '--ETCBINDIR--'.'/tt2'];
+    
     &tt2::parse_tt2({'file_name' => $file_name,
-			'file_url'  => $file_url,
-			'file_size' => $size },
-		       &tools::get_filename('etc', 'tt2/urlized_part.'.'.tt2', $robot, $list),
-		       \@new_part);
+		     'file_url'  => $file_url,
+		     'file_size' => $size },
+		    'urlized_part.tt2',
+		    \@new_part,
+		    $tt2_include_path);
 
     my $entity = $parser->parse_data(\@new_part);
 

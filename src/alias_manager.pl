@@ -76,10 +76,18 @@ $data{'list'}{'domain'} = $data{'robot'} = $domain;
 $data{'list'}{'name'} = $listname;
 $data{'default_domain'} = $default_domain;
 $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
-my $template_file = &tools::get_filename('etc', 'list_aliases.tt2', $domain);
 my @aliases ;
-&tt2::parse_tt2 (\%data,$template_file,\@aliases);
 
+my $tt2_include_path = [$Conf{'etc'}.'/'.$domain,
+			$Conf{'etc'},
+			'--ETCBINDIR--'];
+
+&tt2::parse_tt2 (\%data, 'list_aliases.tt2',\@aliases, $tt2_include_path);
+
+unless (@aliases) {
+    	print STDERR "No aliases defined\n";
+	exit(15);
+}
 
 if ($operation eq 'add') {
     ## Create a lock

@@ -26,6 +26,9 @@ package Sympa::Template::Compat;
 use strict;
 use base 'Template::Provider';
 
+my @other_include_path;
+my $allow_absolute;
+
 sub _load {
 	my ($self, $name, $alias) = @_;
 	my ($data, $error) = $self->SUPER::_load($name, $alias);
@@ -94,19 +97,6 @@ use CGI::Util;
 use Log;
 use Language;
 
-my $tt2 = Template->new({
-    ABSOLUTE => 1,
-    INCLUDE_PATH => '--ETCBINDIR--/web_tt2',
-
-    FILTERS => {
-	unescape => \&CGI::Util::unescape,
-	l => [\&maketext, 1],
-	qencode => [\&qencode, 0]
-	},
-#PRE_CHOMP   => 1,
-#POST_CHOMP   => 1,
-	}) or die $!;
-
 my $current_lang;
 
 sub qencode {
@@ -123,6 +113,18 @@ sub maketext {
     }
 }
 
+## To add a directory to the TT2 include_path
+sub add_include_path {
+    my $path = shift;
+
+    push @other_include_path, $path;
+}
+
+## Allow inclusion/insertion of file with absolute path
+sub allow_absolute_path {
+    $allow_absolute = 1;
+}
+
 ## The main parsing sub
 ## Parameters are   
 ## data: a HASH ref containing the data   
@@ -130,7 +132,13 @@ sub maketext {
 ## output : a Filedescriptor or a SCALAR ref for the output
 
 sub parse_tt2 {
-    my ($data, $template, $output, $recurse) = @_;
+    my ($data, $template, $output, $include_path) = @_;
+    $include_path ||= ['--ETCBINDIR--'];
+
+    ## Add directories that may have been added
+    push @{$include_path}, @other_include_path;
+    @other_include_path = []; ## Reset it
+
     my $wantarray;
 
     ## An array can be used as a template (instead of a filename)
@@ -145,6 +153,26 @@ sub parse_tt2 {
 #    &do_log('notice', 'TPL: %s ; LANG: %s', $template, $data->{lang});
 
     &Language::SetLang($data->{lang});
+
+    my $config = {
+	# ABSOLUTE => 1,
+	INCLUDE_PATH => $include_path,
+	
+	FILTERS => {
+	    unescape => \&CGI::Util::unescape,
+	    l => [\&maketext, 1],
+	    qencode => [\&qencode, 0]
+	    },
+       #PRE_CHOMP   => 1,
+       #POST_CHOMP   => 1,
+	    };
+
+    if ($allow_absolute) {
+	$config->{'ABSOLUTE'} = 1;
+	$allow_absolute = 0;
+    }
+
+    my $tt2 = Template->new($config) or die $!;
 
     unless ($tt2->process($template, $data, $output)) {
 	&do_log('err', 'Failed to parse %s : %s', $template, $tt2->error());

@@ -2,17 +2,17 @@
 <definitions name="Sympa" 
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
 	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
-	targetNamespace="[conf->wwsympa_url]/wsdl" 
-	xmlns:tns="[conf->wwsympa_url]/wsdl"
+	targetNamespace="[% conf.wwsympa_url %]/wsdl" 
+	xmlns:tns="[% conf.wwsympa_url %]/wsdl"
 	xmlns="http://schemas.xmlsoap.org/wsdl/" 
-	xmlns:xsdl="[conf->soap_url]/wsdl">
+	xmlns:xsdl="[% conf.soap_url %]/wsdl">
 
 
 <!-- types part -->	
 
 
 <types>
-<schema targetNamespace="[conf->wwsympa_url]/wsdl" 
+<schema targetNamespace="[% conf.wwsympa_url %]/wsdl" 
 	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
 	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
 	xmlns="http://www.w3.org/2001/XMLSchema">
@@ -397,7 +397,7 @@
 
 <service name="SympaSOAP">
 	<port name="SympaPort" binding="tns:SOAP">
-		<soap:address location="[conf->soap_url]"/>
+		<soap:address location="[% conf.soap_url %]"/>
 	</port>
 </service>
 

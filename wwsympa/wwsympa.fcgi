@@ -846,79 +846,23 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 ## Retro compatibility concerns
 	 $param->{'active'} = 1;
 
-	 ## Action template
-	 if (defined $param->{'action'}) {
-	     $param->{'action_template'} = &tools::get_filename('etc', "web_tt2/$param->{'action'}.tt2", $robot,$list);
-	     unless ($param->{'action_template'})  {
-		 &error_message('template_error');
-		 &do_log('info',"unable to find template for $param->{'action'}");
-	     }
-	 }
-
-	 ## Menu template
-	 $param->{'menu_template'} = &tools::get_filename('etc', "web_tt2/menu.tt2", $robot,$list);
-	 unless ($param->{'menu_template'})  {
-	     &error_message('template_error');
-	     &do_log('info','unable to find menu template');
-	 }
-
-	 ## List_menu template
-	 $param->{'list_menu_template'} = &tools::get_filename('etc', "web_tt2/list_menu.tt2", $robot,$list);
-
-	 unless ($param->{'list_menu_template'})  {
-	     &error_message('template_error');
-	     &do_log('info','unable to find list_menu template');
-	 }
-
-	 ## admin_menu template
-	 $param->{'admin_menu_template'} = &tools::get_filename('etc', "web_tt2/admin_menu.tt2", $robot,$list);
-
-	 unless ($param->{'admin_menu_template'})  {
-	     &error_message('template_error');
-	     &do_log('info','unable to find admin_menu template');
-	 }
-
-	 ## Title template
-	 $param->{'title_template'} = &tools::get_filename('etc', "web_tt2/title.tt2", $robot,$list);
-
-	 unless ($param->{'title_template'})  {
-	     &error_message('template_error');
-	     &do_log('info','unable to find title template');
-	 }
-
-	 ## Error template
-	  $param->{'error_template'} = &tools::get_filename('etc', "web_tt2/error.tt2", $robot,$list);
-
-	 unless ($param->{'error_template'})  {
-	     &error_message('template_error');
-	     &do_log('info','unable to find error template');
-	 }
-
-	 ## Notice template
-	 $param->{'notice_template'} = &tools::get_filename('etc', "web_tt2/notice.tt2", $robot,$list);
-
-	 unless ($param->{'notice_template'})  {
-	     &error_message('template_error');
-	     &do_log('info','unable to find notice template');
-	 }
-
-	 ## Help template
-	 $param->{'help_template'} = &tools::get_filename('etc', "web_tt2/help_$param->{'help_topic'}.tt2", $robot,$list);
-
-	 ## main template
-	 my $main = &tools::get_filename('etc', "web_tt2/main.tt2", $robot,$list);
-
-	 unless ($main)  {
-	     &error_message('template_error');
-	     &do_log('info','unable to find main template');
-	 }
-
 	 if (defined $list) {
 	     $param->{'list_conf'} = $list->{'admin'};
 	 }
 
-	 #&parser::parse_tpl($param,'main.tt2' , \*STDOUT);
-	 &tt2::parse_tt2($param,$main , \*STDOUT);
+	 my $tt2_include_path = [$Conf{'etc'}.'/web_tt2',
+				 '--ETCBINDIR--'.'/web_tt2'];
+	 ## not the default robot
+	 if (lc($robot) ne lc($Conf{'host'})) {
+	     unshift @{$tt2_include_path}, $Conf{'etc'}.'/'.$robot.'/web_tt2';
+	 }
+
+	 ## If in list context
+	 if (defined $list) {
+	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2';
+	 }
+
+	 &tt2::parse_tt2($param,'main.tt2' , \*STDOUT, $tt2_include_path);
      }    
 
      # exit if wwsympa.fcgi itself has changed
@@ -2246,12 +2190,9 @@ sub do_redirect {
 
      ## Get List Description
      if (-r $list->{'dir'}.'/homepage') {
-	 $param->{'homepage_file'} = $list->{'dir'}.'/homepage';
-     }else {
-	 $param->{'info_file'} = $list->{'dir'}.'/info';
+	 $param->{'homepage'} = 1;
      }
-
-
+     &tt2::add_include_path($list->{'dir'});
 
      return 1;
  }
@@ -4013,7 +3954,7 @@ sub do_redirect {
 	 $param->{'file'} = "$Conf{'queuemod'}/.$list->{'name'}_$in{'id'}/$in{'file'}";
 	 $param->{'bypass'} = 1;
      }else {
-	 $param->{'file'} = "$Conf{'queuemod'}/.$list->{'name'}_$in{'id'}/msg00000.html" ;
+	 &tt2::add_include_path("$Conf{'queuemod'}/.$list->{'name'}_$in{'id'}") ;
      }
 
      $param->{'base'} = sprintf "%s%s/viewmod/%s/%s/", $param->{'base_url'}, $param->{'path_cgi'}, $param->{'list'}, $in{'id'};
@@ -4103,6 +4044,8 @@ sub do_redirect {
 	 &wwslog('err','do_editfile: cannot read %s', $param->{'filepath'});
 	 return undef;
      }
+
+     &tt2::allow_absolute_path();
 
      return 1;
  }
@@ -4267,16 +4210,19 @@ sub do_redirect {
      }
 
      ## File type
-     unless ($in{'arc_file'} =~ /^(mail\d+|msg\d+|thrd\d+)\.html$/) {
+     if ($in{'arc_file'} !~ /^(mail\d+|msg\d+|thrd\d+)\.html$/) {
 	 $in{'arc_file'} =~ /\.(\w+)$/;
 	 $param->{'file_extension'} = $1;
 
 	 if ($param->{'file_extension'} !~ /^html$/i) {
 	     $param->{'bypass'} = 1;
 	 }
-     }
 
-     $param->{'file'} = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}";
+	  $param->{'file'} = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}/$in{'arc_file'}";
+     }else {
+	 &tt2::add_include_path("$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}/$in{'month'}");
+	 $param->{'file'} = "$in{'arc_file'}";
+     }
 
      $param->{'base'} = sprintf "%s%s/arc/%s/%s/", $param->{'base_url'}, $param->{'path_cgi'}, $param->{'list'}, $in{'month'};
 
@@ -4928,6 +4874,8 @@ sub do_set_pending_list_request {
      $param->{'list_serial'} = $list->{'admin'}{'serial'};
      $param->{'list_status'} = $list->{'admin'}{'status'};
 
+     &tt2::add_include_path($list->{'dir'});
+
      return 1;
  }
 
@@ -5024,15 +4972,17 @@ sub do_set_pending_list_request {
 	 }elsif ($status == '5')  {
 	     &wwslog('info','Unable to append to alias file') ;
 	 }elsif ($status == '6')  {
-	     &wwslog('info','Unable run newaliases') ;
+	     &wwslog('info','Unable to run newaliases') ;
 	 }elsif ($status == '7')  {
 	     &wwslog('info','Unable to read alias file, report to httpd error_log') ;
 	 }elsif ($status == '8')  {
-	     &wwslog('info','Could not create temporay file, report to httpd error_log') ;
+	     &wwslog('info','Could not create temporary file, report to httpd error_log') ;
 	 }elsif ($status == '13') {
 	     &wwslog('info','Some of list aliases already exist') ;
 	 }elsif ($status == '14') {
 	     &wwslog('info','Can not open lock file, report to httpd error_log') ;
+	 }elsif ($status == '15') {
+	     &wwslog('info','The parser returned empty aliases') ;
 	 }else {
 	     &error_message('failed_to_install_aliases');
 	     &wwslog('info',"Unknown error $status while running alias manager $alias_manager");
@@ -5043,16 +4993,20 @@ sub do_set_pending_list_request {
      }
 
      unless ($param->{'auto_aliases'}) {
-	 my $template_file = &tools::get_filename('etc', 'list_aliases.tt2', $robot);
-	 my @aliases ;
+	 my $aliases ;
 	 my %data;
 	 $data{'list'}{'domain'} = $data{'robot'} = $robot;
 	 $data{'list'}{'name'} = $list->{'name'};
 	 $data{'default_domain'} = $Conf{'domain'};
 	 $data{'is_default_domain'} = 1 if ($robot == $Conf{'domain'});
-	 &tt2::parse_tt2 (\%data,$template_file,\@aliases);
-	 $param->{'aliases'}  = '';
-	 foreach (@aliases) {$param->{'aliases'} .= $_; }
+
+	 my $tt2_include_path = [$Conf{'etc'}.'/'.$robot,
+				 $Conf{'etc'},
+				 '--ETCBINDIR--'];
+
+	 &tt2::parse_tt2 (\%data,'list_aliases.tt2',\$aliases, $tt2_include_path);
+
+	 $param->{'aliases'}  = $aliases;
      }
 
      return 1;
@@ -5243,8 +5197,12 @@ sub do_set_pending_list_request {
      $parameters->{'status'} = $param->{'status'};
      $parameters->{'topics'} = $in{'topics'};
 
+     my $tt2_include_path = [$Conf{'etc'}.'/'.$robot.'/create_list_templates/'.$in{'template'},
+			     $Conf{'etc'}.'/create_list_templates/'.$in{'template'},
+			     '--ETCBINDIR--'.'/create_list_templates/'.$in{'template'}];     
+
      open CONFIG, ">$list_dir/config";
-     &tt2::parse_tt2($parameters, $template_file, \*CONFIG);
+     &tt2::parse_tt2($parameters, 'config.tt2', \*CONFIG, $tt2_include_path);
      close CONFIG;
 
      ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
@@ -5310,6 +5268,8 @@ sub do_set_pending_list_request {
      unless ($param->{'list_list_tpl'} = &tools::get_list_list_tpl($robot)) {
 	 &error_message('unable_to_load_create_list_templates');
      }	
+
+     &tt2::allow_absolute_path();
 
      foreach my $template (keys %{$param->{'list_list_tpl'}}){
 	 $param->{'tpl_count'} ++ ;
@@ -5463,6 +5423,8 @@ sub do_set_pending_list_request {
 	 &wwslog('info','do_viewbounce: no bounce %s', $param->{'lastbounce_path'});
 	 return undef;
      }
+
+     &tt2::allow_absolute_path();
 
      return 1;
  }
@@ -10522,7 +10484,7 @@ sub do_wsdl {
     
    $param->{'conf'}{'soap_url'}  = $soap_url;
 
-    &tt2::parse_tt2($param,$sympawsdl , \*STDOUT);
+    &tt2::parse_tt2($param, 'sympa.wsdl' , \*STDOUT, ['--ETCBINDIR--']);
     
 #    unless (open (WSDL,$sympawsdl)) {
 # 	&error_message('404');

@@ -1,7 +1,7 @@
 <!-- $Id$ -->
 
 [% IF help_topic %]
- [% PROCESS $help_template IF help_template %]
+ [% PROCESS "help_${help_topic}.tt2" IF help_topic %]
 
 [% ELSE %]
 <br />

@@ -4,11 +4,11 @@
   <TR VALIGN=top>
     <TD> 
       <BR>
-      [% IF homepage_file %]
-         [% INSERT $homepage_file IF homepage_file %]
+      [% IF homepage %]
+         [% INSERT 'homepage' %]
       [% ELSE %]
          <PRE>
-            [% INSERT $info_file IF info_file %]
+            [% INSERT 'info' %]
          </PRE>
       [% END %]
     </TD>
