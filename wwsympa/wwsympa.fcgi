@@ -2896,7 +2896,7 @@ sub do_serveradmin {
     }
     
     ## Server files
-    foreach my $f ('helpfile.tpl','lists.tpl','global_remind.tpl','summary.tpl','create_list_request.tpl','list_created.tpl') {
+    foreach my $f ('helpfile.tpl','lists.tpl','global_remind.tpl','summary.tpl','create_list_request.tpl','list_created.tpl','list_aliases.tpl') {
 	$param->{'server_files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
 	$param->{'server_files'}{$f}{'selected'} = '';
     }
@@ -3488,14 +3488,17 @@ sub do_editfile {
 	    return undef;
 	}
 
-	## Add robot lang to tpl filename
 	my $file = $in{'file'};
-	my $lang = &Conf::get_robot_conf($robot, 'lang');
-	$file =~ s/\.tpl$/\.$lang\.tpl/;
 
 	## Look for the template
-	$param->{'filepath'} = &tools::get_filename('etc','templates/'.$file,$robot);
+	if ($file eq 'list_aliases.tpl') {
+	    $param->{'filepath'} = &tools::get_filename('etc',$file,$robot);
+	}else {
+	    my $lang = &Conf::get_robot_conf($robot, 'lang');
+	    $file =~ s/\.tpl$/\.$lang\.tpl/;
 
+	    $param->{'filepath'} = &tools::get_filename('etc','templates/'.$file,$robot);
+	}
     }
 
     if ($param->{'filepath'} && (! -r $param->{'filepath'})) {
@@ -3541,9 +3544,17 @@ sub do_savefile {
 	}
 
 	if ($robot ne $Conf{'domain'}) {
-	    $param->{'filepath'} = "$Conf{'etc'}/$robot/templates/$in{'file'}";
+	    if ($in{'file'} eq 'list_aliases.tpl') {
+		$param->{'filepath'} = "$Conf{'etc'}/$robot/$in{'file'}";
+	    }else {
+		$param->{'filepath'} = "$Conf{'etc'}/$robot/templates/$in{'file'}";
+	    }
 	}else {
-	    $param->{'filepath'} = "$Conf{'etc'}/templates/$in{'file'}";
+	     if ($in{'file'} eq 'list_aliases.tpl') {
+		 $param->{'filepath'} = "$Conf{'etc'}/$in{'file'}";
+	     }else {
+		 $param->{'filepath'} = "$Conf{'etc'}/templates/$in{'file'}";
+	     }
 	}
     }
 
