@@ -16,6 +16,7 @@
 </TR>
 <TR>
 <TD ALIGN="right" NOWRAP>
+  [% IF may_sync %]
      [% PROCESS 'button_header.tt2' %]
        <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[% selected_color %]" SIZE="-1">
@@ -23,7 +24,7 @@
          </FONT>
        </TD>
      [% PROCESS 'button_footer.tt2' %]
-
+  [%END%]
 
      [% PROCESS 'button_header.tt2' %]
        <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
