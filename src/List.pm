@@ -4716,6 +4716,7 @@ sub _load_scenario_file {
     close SCENARI;
     unless ($structure = &_load_scenario ($function,$robot,$name,$paragraph, $directory)) { 
 	do_log('err',"error in $function scenario $scenario_file ");
+	return undef;
     }
     return $structure ;
 }
