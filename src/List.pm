@@ -8106,9 +8106,13 @@ sub remove_aliases {
 sub remove_bouncers {
     my $self = shift;
     my $reftab = shift;
-   
-    &do_log('info','removing bouncing users for list %s',$self->{'name'});
+    &do_log('debug','List::remove_bouncers(%s)',$self->{'name'});
     
+    ## Log removal
+    foreach my $bouncer (@{$reftab}) {
+	&do_log('notice','Removing bouncing subsrciber of list %s : %s', $self->{'name'}, $bouncer);
+    }
+
     unless (&delete_user($self,@$reftab)){
       &do_log('info','error while calling sub delete_users');
       return undef;
@@ -8119,14 +8123,13 @@ sub remove_bouncers {
 #Sub for notifying users : "Be carefull,You're bouncing"
 #
 sub notify_bouncers{
-
     my $self = shift;
     my $reftab = shift;
-    
-    &do_log('info','List::notify_bouncers');
+    &do_log('debug','List::notify_bouncers(%s)', $self->{'name'});
 
     foreach my $user (@$reftab){
-      $self->send_notify_to_subscriber('auto_notify_bouncers',$user);
+ 	&do_log('notice','Notifying bouncing subsrciber of list %s : %s', $self->{'name'}, $user);
+	$self->send_notify_to_subscriber('auto_notify_bouncers',$user);
     }
     return 1;
 }
