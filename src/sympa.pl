@@ -43,6 +43,7 @@ use Ldap;
 
 require 'tools.pl';
 require 'msg.pl';
+require 'parser.pl';
 
 
 # durty global variables
