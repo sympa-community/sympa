@@ -1049,7 +1049,7 @@ sub virus_infected {
 	return undef;
     }
 
-    my $virusfound; 
+    my $virusfound = 0; 
     my $error_msg;
     my $result;
 
@@ -1246,7 +1246,7 @@ sub virus_infected {
 	rmdir ($work_dir) ;
     }
    
-    return ($virusfound);
+    return $virusfound;
    
 }
 
