@@ -4717,7 +4717,7 @@ sub load_topics {
 	    
 	    if ($#tree == 0) {
 		$list_of_topics{$tree[0]}{'title'} = $topic->{'title'};
-		$list_of_topics{$tree[0]}{'visibility'} = _load_scenario_file('topics_visibility', $topic->{'visibility'}||'default');
+		$list_of_topics{$tree[0]}{'visibility'} = &_load_scenario_file('topics_visibility', $topic->{'visibility'}||'default');
 		$list_of_topics{$tree[0]}{'order'} = $topic->{'order'};
 	    }else {
 		my $subtopic = join ('/', @tree[1..$#tree]);
@@ -4726,7 +4726,18 @@ sub load_topics {
 	}
     }
 
-    return \%list_of_topics;
+    ## Set undefined Topic (defined via subtopic)
+    foreach my $t (keys %list_of_topics) {
+	unless (defined $list_of_topics{$t}{'visibility'}) {
+	    $list_of_topics{$t}{'visibility'} = &_load_scenario_file('topics_visibility', 'default');
+	}
+
+	unless (defined $list_of_topics{$t}{'title'}) {
+	    $list_of_topics{$t}{'title'} = $t;
+	}	
+    }
+
+    return %list_of_topics;
 }
 
 ## Inner sub used by load_topics()
