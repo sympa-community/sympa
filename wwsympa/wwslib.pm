@@ -9,7 +9,7 @@ use Exporter;
 %reception_mode = ('mail' => 'normal',
 		   'digest' => 'digest',
 		   'summary' => 'summary',
-		   'summary' => 'notice',
+		   'notice' => 'notice',
 		   'nomail' => 'no mail');
 
 %visibility_mode = ('noconceal' => 'public',
