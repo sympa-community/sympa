@@ -64,7 +64,13 @@
       </TR>
       
       [FOREACH u IN members]
-         <TR>
+
+	[IF dark=1]
+	  <TR BGCOLOR="--SHADED_COLOR--">
+	[ELSE]
+          <TR>
+	[ENDIF]
+
 	  <TD>
 	    <INPUT TYPE=checkbox name="email" value="[u->escaped_email]">
 	  </TD>
@@ -88,6 +94,13 @@
 	    [ENDIF]
 	  </FONT></TD>
         </TR>
+
+        [IF dark=1]
+	  [SET dark=0]
+	[ELSE]
+	  [SET dark=1]
+	[ENDIF]
+
         [END]
 
 

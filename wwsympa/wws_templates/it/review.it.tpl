@@ -125,7 +125,13 @@
       </TR>
       
       [FOREACH u IN members]
-        <TR>
+
+	[IF dark=1]
+	  <TR BGCOLOR="--SHADED_COLOR--">
+	[ELSE]
+          <TR>
+	[ENDIF]
+
 	 [IF is_owner]
 	    <TD>
 	      [IF action=search]
@@ -172,6 +178,13 @@
 	    </FONT></TD>
        	  [ENDIF]
         </TR>
+
+        [IF dark=1]
+	  [SET dark=0]
+	[ELSE]
+	  [SET dark=1]
+	[ENDIF]
+
         [END]
 
 
