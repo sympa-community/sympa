@@ -1,3 +1,91 @@
+2003-09-12 13:59  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	html/index.html, html/node1.html, html/node10.html,
+	html/node11.html, html/node12.html, html/node13.html,
+	html/node14.html, html/node15.html, html/node16.html,
+	html/node17.html, html/node18.html, html/node19.html,
+	html/node2.html, html/node20.html, html/node21.html,
+	html/node3.html, html/node4.html, html/node5.html, html/node6.html,
+	html/node7.html, html/node8.html, html/node9.html, html/sympa.html,
+	html/sympa.ps: Reorganize documentation with authN and authZ
+	chapters
+
+2003-09-12 10:10  salaun
+
+	* doc/sympa.tex.tpl: Change: rename 'scenario' to 'authorization
+	scenario'
+
+2003-09-11 17:15  salaun
+
+	* wwsympa/: cookielib.pm, wwsympa.fcgi,
+	wws_templates/us/loginbanner.us.tpl: Fix some CAS-related problems
+	:    + login failed unless 'do_not_use_cas' cookie is set    +
+	'cas_server' cookie was not removed at logout time    + casified
+	loginbanner.us Also allow wwsympa to return a WDSL XML file
+	(soap-related)
+
+2003-09-05 13:40  salaun
+
+	* wwsympa/wws_templates/fr/admin_menu.fr.tpl: fix a typo.
+
+2003-09-05 10:43  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/loginbanner.fr.tpl: Fix
+	bug in CAS authentication if only one CAS server is defined
+
+2003-09-04 17:40  salaun
+
+	* wwsympa/wwsympa.fcgi: fix bug related to explicite blocking
+	redirection to CAS
+
+2003-09-04 16:02  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/loginbanner.fr.tpl: Some
+	patches about CAS
+
+2003-09-04 08:27  salaun
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	doc/html/node3.html, doc/html/node4.html, doc/html/node5.html,
+	doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	doc/html/node9.html, doc/html/sympa.html, doc/html/sympa.ps,
+	src/Conf.pm, src/X509.pm, src/tools.pl, wwsympa/Makefile,
+	wwsympa/cookielib.pm, wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/loginbanner.fr.tpl: Introduce CAS support
+	(yale central Authentication Service). This feature is buggy and
+	should be used only for test purpose. You must check auth.conf
+	section in  documentation : new auth.conf new format is not
+	compatible with previous version but is more flexible.
+	
+	Known bug : CAS ticket validation session. https session is
+	impossible though Tomcat, it works when using Apache as http
+	front-end to Tomcat. Maybe a bug in Tomcat ?
+	
+	When user select a CAS server the ticket validation return invalid
+	ticket.
+	
+	Please report Sympa-authors AT cru.fr about your test.
+
+2003-08-26 08:35  salaun
+
+	* src/sympa.pl: Skip line beginning with # while performing
+	commands in a message
+
+2003-08-26 08:27  salaun
+
+	* src/sympa.pl: remove debug code : dump message in DoFile
+	(/tmp/dump)
+
+2003-08-14 14:05  salaun
+
+	* ChangeLog, NEWS: Preparing 4.0.a4
+
 2003-08-14 11:44  salaun
 
 	* wwsympa/cookielib.pm: Fix: could not set 'sympalang' cookie
