@@ -152,6 +152,9 @@ Le quota d'espace disque est dépassé.
 [ELSIF error->msg=ldap_user]
 Votre mot de passe est défini dans un annuaire LDAP, Sympa ne peut donc pas vous le rapeller
 
+[ELSIF error->msg=select_month]
+Veuillez sélectionner les mois d'archives
+
 [ELSE]
 [error->msg]
 [ENDIF]

@@ -1,3 +1,435 @@
+2003-04-16 17:46  salaun
+
+	* ChangeLog, NEWS: Add patch to 3.4.4
+
+2003-04-16 17:43  salaun
+
+	* src/List.pm: [BugID 144] [R. Marchand] FIx: When upgrading to
+	Sympa 3.4.3.1 from 3.3.5.  Sympa adds the two fields
+	'subscribed_subscriber' and 'include_sources_subscriber' when
+	started the first time but fail to add the third field
+	'included_subscriber'.	Consequence of this is that no user is
+	found when viewing the lists admin pages.  There may be other
+	consequences.
+
+2003-04-16 17:39  salaun
+
+	* src/List.pm: {BugID 144] [R. Marchand] FIx: When upgrading to
+	Sympa 3.4.3.1 from 3.3.5.  Sympa adds the two fields
+	'subscribed_subscriber' and 'include_sources_subscriber' when
+	started the first time but fail to add the third field
+	'included_subscriber'.	Consequence of this is that no user is
+	found when viewing the lists admin pages.  There may be other
+	consequences.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node9.html: file node9.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/img1.png: file img1.png was initially added on branch
+	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/index.png: file index.png was initially added on branch
+	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node15.html: file node15.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/up_g.png: file up_g.png was initially added on branch
+	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/sympa.css: file sympa.css was initially added on branch
+	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node20.html: file node20.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node18.html: file node18.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node1.html: file node1.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/index.html: file index.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node4.html: file node4.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/sympa.html: file sympa.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node10.html: file node10.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node7.html: file node7.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node13.html: file node13.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/img2.png: file img2.png was initially added on branch
+	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node16.html: file node16.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node19.html: file node19.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node2.html: file node2.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node21.html: file node21.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node5.html: file node5.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node11.html: file node11.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/next.png: file next.png was initially added on branch
+	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node8.html: file node8.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/prev.png: file prev.png was initially added on branch
+	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node14.html: file node14.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/: contents.png, crossref.png, img1.png, img2.png,
+	index.html, index.png, next.png, next_g.png, node1.html,
+	node10.html, node11.html, node12.html, node13.html, node14.html,
+	node15.html, node16.html, node17.html, node18.html, node19.html,
+	node2.html, node20.html, node21.html, node3.html, node4.html,
+	node5.html, node6.html, node7.html, node8.html, node9.html,
+	prev.png, prev_g.png, sympa.css, sympa.html, sympa.ps, up.png,
+	up_g.png, contents.png, crossref.png, img1.old, img1.png, img2.old,
+	img2.png, index.html, index.png, next.png, next_g.png, node1.html,
+	node10.html, node11.html, node12.html, node13.html, node14.html,
+	node15.html, node16.html, node17.html, node18.html, node19.html,
+	node2.html, node20.html, node21.html, node3.html, node4.html,
+	node5.html, node6.html, node7.html, node8.html, node9.html,
+	prev.png, prev_g.png, sympa.css, sympa.html, sympa.ps, up.png,
+	up_g.png: Restore documentation in HTML format
+
+2003-04-16 13:52  salaun
+
+	* doc/html/prev_g.png: file prev_g.png was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/up.png: file up.png was initially added on branch
+	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/next_g.png: file next_g.png was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node17.html: file node17.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/crossref.png: file crossref.png was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node3.html: file node3.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/sympa.ps: file sympa.ps was initially added on branch
+	sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/contents.png: file contents.png was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node6.html: file node6.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:52  salaun
+
+	* doc/html/node12.html: file node12.html was initially added on
+	branch sympa-3_4-branch.
+
+2003-04-16 13:29  salaun
+
+	* important_changes.pl, important_changes.pl: Comment debug trace
+
+2003-04-16 13:15  salaun
+
+	* .version, ChangeLog, NEWS: Preparing 3.4.4
+
+2003-04-16 11:59  salaun
+
+	* Makefile.am, Makefile.in, configure, configure.in, Makefile.am,
+	Makefile.in, configure, configure.in: New feature: check suidperl
+	and mhonarc are installed
+
+2003-04-11 17:07  salaun
+
+	* wwsympa/wws_templates/us/: main.us.tpl, main.us.tpl: Revert
+	previous change
+
+2003-04-11 16:16  salaun
+
+	* wwsympa/wws_templates/us/: main.us.tpl, main.us.tpl: [B. Hortner]
+	Fix: missing } in javascript subroutine
+
+2003-04-11 11:40  salaun
+
+	* src/: tools.pl, tools.pl: Fix: make better error handling in
+	virus scanning subroutine, in case we can't decode message parts
+
+2003-04-09 17:47  salaun
+
+	* src/etc/script/: sympa.spec, sympa.spec: [G. Paressant] Change:
+	use a spam-proof email address
+
+2003-04-09 17:19  salaun
+
+	* src/etc/scenari/: access_web_archive.intranet, review.intranet,
+	access_web_archive.intranet, review.intranet: [N. Arles] Fix: look
+	for current domain in email addresses when logged in
+
+2003-04-09 17:16  salaun
+
+	* ChangeLog: Update
+
+2003-04-09 16:43  salaun
+
+	* src/etc/script/sympa.spec: [reported by G. Paressant] Restore
+	definition of etc/ subdirectories
+
+2003-04-09 16:36  salaun
+
+	* src/etc/script/sympa.spec: [reported by G. Paressant] Restore
+	definition of etc/ subdirectories
+
+2003-04-09 15:57  salaun
+
+	* doc/man8/alias_manager.8, doc/man8/archived.8,
+	doc/man8/bounced.8, doc/man8/sympa.8, Makefile.in,
+	doc/man8/alias_manager.8, doc/man8/archived.8, doc/man8/bounced.8,
+	doc/man8/sympa.8, src/etc/script/sympa.spec: Add missing man pages
+	to CVS
+
+2003-04-09 15:17  salaun
+
+	* Makefile.am, Makefile.am: Change: no more clean required in nls/
+
+2003-04-08 17:20  salaun
+
+	* doc/man8/: archived.pod, archived.pod: [reported by xavier AT
+	cs.gouv.qc.ca]Fix: no more refer to -dF option
+
+2003-04-08 17:08  salaun
+
+	* wwsympa/wws_templates/us/help_editlist.us.tpl: [A. de Pretis]
+	Update: complete parameter information
+
+2003-04-08 15:45  salaun
+
+	* Makefile.am, Makefile.in, check_perl_modules.pl, configure,
+	configure.in, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	doc/sympa.tex.tpl, nls/Makefile, src/Language.pm: [B. Hortner] New
+	feature: no more use Locale::Msgcat for NLS management, home-made
+	functions instead.  This solves MacOS X users problem that don't
+	have gencat available ;-)
+
+2003-04-08 15:37  salaun
+
+	* Makefile.am, Makefile.in, check_perl_modules.pl, configure,
+	configure.in, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	doc/sympa.tex.tpl, nls/Makefile, src/Language.pm: [B. Hortner] New
+	feature: no more use Locale::Msgcat for NLS management, home-made
+	functions instead.  This solves MacOS X users problem that don't
+	have gencat available ;-)
+
+2003-04-08 15:24  salaun
+
+	* Makefile.am, Makefile.in, src/etc/script/sympa.spec: Changes:
+	these changes are related to the RPM building : 	+ Add
+	missing variables to build sympa.spec for RH	  + require
+	'smtpdaemon' with RH, 'MailTransportAgent' with MDK   + ./configure
+	is done at RPM build time with relevant options   + correct path to
+	sympa_wizard  + fix problems with the %files section, when changing
+	directories	  + missing %changelog
+
+2003-04-08 15:18  salaun
+
+	* src/etc/script/sympa.spec: [G. Paressant] Update
+
+2003-04-08 15:16  salaun
+
+	* ChangeLog: Update
+
+2003-04-08 15:15  salaun
+
+	* doc/Makefile: Change: rename sympa/ directory to html/
+
+2003-04-08 15:13  salaun
+
+	* Makefile.am, Makefile.in, src/etc/script/sympa.spec: Changes:
+	these changes are related to the RPM building : 	+ Add
+	missing variables to build sympa.spec for RH	  + require
+	'smtpdaemon' with RH, 'MailTransportAgent' with MDK   + ./configure
+	is done at RPM build time with relevant options   + correct path to
+	sympa_wizard  + fix problems with the %files section, when changing
+	directories	  + missing %changelog
+
+2003-04-08 15:09  salaun
+
+	* doc/Makefile: Change: rename sympa/ directory to html/
+
+2003-04-08 14:47  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Restore
+	\verbatim with this problematic line
+
+2003-04-08 14:40  salaun
+
+	* src/etc/script/sympa.spec: [G. Paressant] Update
+
+2003-04-04 10:41  salaun
+
+	* ChangeLog, src/sympa_wizard.pl, src/sympa_wizard.pl: Fix:
+	parameter was not parsed
+
+2003-04-04 10:33  salaun
+
+	* src/: alias_manager.pl, alias_manager.pl: [reported by Xavier AT
+	cs.gouv.qc.ca] Missing \n when printing to STDERR
+
+2003-04-03 16:26  salaun
+
+	* wwsympa/wws_templates/: fr/d_editfile.fr.tpl,
+	us/d_editfile.us.tpl, fr/d_editfile.fr.tpl, us/d_editfile.us.tpl:
+	[reported by J. Rezeau] Fix: wrong default for rename input
+
+2003-04-03 09:36  salaun
+
+	* check_perl_modules.pl, wwsympa/wwsympa.fcgi: 
+	
+	Introducing ZIP download of a full month archive from wwsympa. 
+	(Benoit Ortner) (No yet completed)
+
+2003-04-02 17:13  salaun
+
+	* src/etc/script/: arc2webarc.pl, crypt_passwd.pl, init_comment.pl,
+	p12topem.pl, arc2webarc.pl, crypt_passwd.pl, init_comment.pl,
+	p12topem.pl: [A. de Pretis] Fix: scripts were looking for libs in
+	the wrong directory (BINDIR instead LIBDIR)
+
+2003-04-02 11:26  salaun
+
+	* src/Message.pm, src/sympa.pl, ChangeLog, src/Message.pm,
+	src/sympa.pl: [reported by H. Penning] Bug fix: Sympa would log
+	"Incorrect name" entries when processing messages for -request,
+	-unsubscribe, etc... messages
+
+2003-03-25 10:37  salaun
+
+	* check_perl_modules.pl, check_perl_modules.pl: Change: set FTP
+	Passive mode for CPAN install to work behind a firewall
+
+2003-03-24 14:20  salaun
+
+	* src/: Commands.pm, sympa.pl, Commands.pm, sympa.pl: Fix: "no
+	command found in message" when distributing twice a moderated
+	message
+
+2003-03-18 12:02  salaun
+
+	* doc/: sympa.tex.tpl, sympa.tex.tpl: [reported by  X. Renaut]
+	\samplerobot variables not interpreted because of verbatim
+	paragraphs
+
+2003-03-17 09:33  salaun
+
+	* ChangeLog, Makefile.in, doc/sympa.pdf, doc/sympa.ps,
+	doc/sympa.tex: Update doc
+
+2003-03-17 09:33  salaun
+
+	* doc/: Makefile, parse_tex.pl, sympa.tex.tpl: [BugID 133]
+	[reported by X. Renaut] Missing paths in documentation ; using Env
+	variables in parse_tex.tpl
+
+2003-03-13 09:44  salaun
+
+	* src/Ldap.pm, wwsympa/wwsympa.fcgi, src/Ldap.pm, src/sympa.pl,
+	wwsympa/wwsympa.fcgi: [BugID 131] [G. Paressant] Fix:  Incorrect
+	LDAP password crashes wwsympa ; fixed similar code in Ldap.pm
+
 2003-03-12 08:49  salaun
 
 	* src/etc/script/: Makefile, testlogs.pl: 
@@ -15,15 +447,7 @@
 
 2003-03-07 17:05  salaun
 
-	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa/index.html,
-	sympa/node1.html, sympa/node10.html, sympa/node11.html,
-	sympa/node12.html, sympa/node13.html, sympa/node14.html,
-	sympa/node15.html, sympa/node16.html, sympa/node17.html,
-	sympa/node18.html, sympa/node19.html, sympa/node2.html,
-	sympa/node20.html, sympa/node3.html, sympa/node4.html,
-	sympa/node5.html, sympa/node6.html, sympa/node7.html,
-	sympa/node8.html, sympa/node9.html, sympa/sympa.html,
-	sympa/sympa.ps: Update doc
+	* doc/: sympa.pdf, sympa.ps, sympa.tex: Update doc
 
 2003-03-07 17:05  salaun
 
@@ -258,15 +682,7 @@
 
 2003-01-28 10:34  salaun
 
-	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa/index.html,
-	sympa/node1.html, sympa/node10.html, sympa/node11.html,
-	sympa/node12.html, sympa/node13.html, sympa/node14.html,
-	sympa/node15.html, sympa/node16.html, sympa/node17.html,
-	sympa/node18.html, sympa/node19.html, sympa/node2.html,
-	sympa/node20.html, sympa/node3.html, sympa/node4.html,
-	sympa/node5.html, sympa/node6.html, sympa/node7.html,
-	sympa/node8.html, sympa/node9.html, sympa/sympa.html,
-	sympa/sympa.ps: Update doc
+	* doc/: sympa.pdf, sympa.ps, sympa.tex: Update doc
 
 2003-01-28 10:22  salaun
 
@@ -283,15 +699,6 @@
 2003-01-27 10:52  salaun
 
 	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
-	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
-	doc/sympa/node11.html, doc/sympa/node12.html,
-	doc/sympa/node13.html, doc/sympa/node14.html,
-	doc/sympa/node15.html, doc/sympa/node16.html,
-	doc/sympa/node17.html, doc/sympa/node18.html,
-	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
-	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
-	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
-	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps,
 	src/etc/scenari/subscribe.auth_owner,
 	src/etc/scenari/subscribe.owner, wwsympa/wwsympa.fcgi: 
 	
@@ -396,15 +803,7 @@
 
 2003-01-22 17:29  salaun
 
-	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa/index.html,
-	sympa/node1.html, sympa/node10.html, sympa/node11.html,
-	sympa/node12.html, sympa/node13.html, sympa/node14.html,
-	sympa/node15.html, sympa/node16.html, sympa/node17.html,
-	sympa/node18.html, sympa/node19.html, sympa/node2.html,
-	sympa/node20.html, sympa/node3.html, sympa/node4.html,
-	sympa/node5.html, sympa/node6.html, sympa/node7.html,
-	sympa/node8.html, sympa/node9.html, sympa/sympa.html,
-	sympa/sympa.ps: Update doc
+	* doc/: sympa.pdf, sympa.ps, sympa.tex: Update doc
 
 2003-01-22 17:25  salaun
 
@@ -501,15 +900,6 @@
 2002-12-24 09:50  salaun
 
 	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
-	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
-	doc/sympa/node11.html, doc/sympa/node12.html,
-	doc/sympa/node13.html, doc/sympa/node14.html,
-	doc/sympa/node15.html, doc/sympa/node16.html,
-	doc/sympa/node17.html, doc/sympa/node18.html,
-	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
-	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
-	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
-	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps,
 	nls/de.msg, nls/fr.msg, nls/us.msg, src/Commands.pm, src/List.pm,
 	src/Message.pm, src/sympa.pl, src/tools.pl: [C. Mock] Fixes:
 	decrypted message was not always used ; now used as default.  New
@@ -589,18 +979,10 @@
 2002-12-17 09:49  salaun
 
 	* Makefile.am, Makefile.in, doc/sympa.pdf, doc/sympa.ps,
-	doc/sympa.tex, doc/sympa.tex.tpl, doc/sympa/index.html,
-	doc/sympa/node1.html, doc/sympa/node10.html, doc/sympa/node11.html,
-	doc/sympa/node12.html, doc/sympa/node13.html,
-	doc/sympa/node14.html, doc/sympa/node15.html,
-	doc/sympa/node16.html, doc/sympa/node17.html,
-	doc/sympa/node18.html, doc/sympa/node19.html, doc/sympa/node2.html,
-	doc/sympa/node20.html, doc/sympa/node3.html, doc/sympa/node4.html,
-	doc/sympa/node5.html, doc/sympa/node6.html, doc/sympa/node7.html,
-	doc/sympa/node8.html, doc/sympa/node9.html, doc/sympa/sympa.html,
-	doc/sympa/sympa.ps: Changes: Now all path in documentation use
-	XXXDIR variables.  This should be used by packagers to do a "make
-	documentation" so the documentation refer to correct path.
+	doc/sympa.tex, doc/sympa.tex.tpl: Changes: Now all path in
+	documentation use XXXDIR variables.  This should be used by
+	packagers to do a "make documentation" so the documentation refer
+	to correct path.
 
 2002-12-17 09:44  salaun
 
@@ -620,15 +1002,7 @@
 2002-12-16 17:44  salaun
 
 	* Makefile.am, Makefile.in, doc/Makefile, doc/parse_tex.pl,
-	doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
-	doc/sympa/node10.html, doc/sympa/node11.html,
-	doc/sympa/node12.html, doc/sympa/node13.html,
-	doc/sympa/node14.html, doc/sympa/node15.html,
-	doc/sympa/node16.html, doc/sympa/node17.html,
-	doc/sympa/node18.html, doc/sympa/node19.html, doc/sympa/node2.html,
-	doc/sympa/node20.html, doc/sympa/node3.html, doc/sympa/node4.html,
-	doc/sympa/node5.html, doc/sympa/node6.html, doc/sympa/node7.html,
-	doc/sympa/node8.html, doc/sympa/node9.html, doc/sympa/sympa.ps:
+	doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl:
 	Changes: Now all path in documentation use XXXDIR variables.  This
 	should be used by packagers to do a "make documentation" so the
 	documentation refer to correct path.
@@ -642,15 +1016,6 @@
 
 	* Makefile.am, Makefile.in, configure, configure.in, doc/Makefile,
 	doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
-	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
-	doc/sympa/node11.html, doc/sympa/node12.html,
-	doc/sympa/node13.html, doc/sympa/node14.html,
-	doc/sympa/node15.html, doc/sympa/node16.html,
-	doc/sympa/node17.html, doc/sympa/node18.html,
-	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
-	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
-	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
-	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps,
 	src/Conf.pm, src/sympa_wizard.pl, src/etc/README,
 	src/etc/script/sympa.spec: [G. Paressant] Changes: New sympa.spec
 	and build procedure for Mandrake.  New parameters are available in
@@ -793,29 +1158,14 @@
 2002-12-06 10:22  salaun
 
 	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
-	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
-	doc/sympa/node11.html, doc/sympa/node12.html,
-	doc/sympa/node13.html, doc/sympa/node14.html,
-	doc/sympa/node15.html, doc/sympa/node16.html,
-	doc/sympa/node17.html, doc/sympa/node18.html,
-	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
-	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
-	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
-	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps,
 	src/Conf.pm, wwsympa/wwsympa.fcgi: [proposed by J. Douglass] New
 	features: Add SSL support while authenticating to LDAP server New
 	'use_ssl', 'ssl_version' and 'ssl_ciphers' parameters in auth.conf
 
 2002-12-05 17:06  salaun
 
-	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
-	sympa/node10.html, sympa/node11.html, sympa/node12.html,
-	sympa/node13.html, sympa/node14.html, sympa/node15.html,
-	sympa/node16.html, sympa/node17.html, sympa/node18.html,
-	sympa/node19.html, sympa/node2.html, sympa/node20.html,
-	sympa/node3.html, sympa/node4.html, sympa/node5.html,
-	sympa/node6.html, sympa/node7.html, sympa/node8.html,
-	sympa/node9.html, sympa/sympa.ps: Detail header/footer algorythm
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Detail
+	header/footer algorythm
 
 2002-12-05 17:00  salaun
 
@@ -843,16 +1193,8 @@
 
 2002-11-27 16:33  salaun
 
-	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
-	sympa/index.html, sympa/node1.html, sympa/node10.html,
-	sympa/node11.html, sympa/node12.html, sympa/node13.html,
-	sympa/node14.html, sympa/node15.html, sympa/node16.html,
-	sympa/node17.html, sympa/node18.html, sympa/node19.html,
-	sympa/node2.html, sympa/node20.html, sympa/node3.html,
-	sympa/node4.html, sympa/node5.html, sympa/node6.html,
-	sympa/node7.html, sympa/node8.html, sympa/node9.html,
-	sympa/sympa.html, sympa/sympa.ps: Document spam protection list
-	parameters
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Document
+	spam protection list parameters
 
 2002-11-27 15:56  salaun
 
@@ -993,30 +1335,13 @@
 2002-11-14 14:44  salaun
 
 	* ChangeLog, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
-	doc/sympa.tex.tpl, doc/sympa/index.html, doc/sympa/node1.html,
-	doc/sympa/node10.html, doc/sympa/node11.html,
-	doc/sympa/node12.html, doc/sympa/node13.html,
-	doc/sympa/node14.html, doc/sympa/node15.html,
-	doc/sympa/node16.html, doc/sympa/node17.html,
-	doc/sympa/node18.html, doc/sympa/node19.html, doc/sympa/node2.html,
-	doc/sympa/node20.html, doc/sympa/node3.html, doc/sympa/node4.html,
-	doc/sympa/node5.html, doc/sympa/node6.html, doc/sympa/node7.html,
-	doc/sympa/node8.html, doc/sympa/node9.html, doc/sympa/sympa.html,
-	doc/sympa/sympa.ps: complete mail aliases doc
+	doc/sympa.tex.tpl: complete mail aliases doc
 
 2002-11-14 14:40  salaun
 
 	* Makefile.in, important_changes.pl, doc/sympa.pdf, doc/sympa.ps,
-	doc/sympa.tex, doc/sympa.tex.tpl, doc/sympa/index.html,
-	doc/sympa/node1.html, doc/sympa/node10.html, doc/sympa/node11.html,
-	doc/sympa/node12.html, doc/sympa/node13.html,
-	doc/sympa/node14.html, doc/sympa/node15.html,
-	doc/sympa/node16.html, doc/sympa/node17.html,
-	doc/sympa/node18.html, doc/sympa/node19.html, doc/sympa/node2.html,
-	doc/sympa/node20.html, doc/sympa/node3.html, doc/sympa/node4.html,
-	doc/sympa/node5.html, doc/sympa/node6.html, doc/sympa/node7.html,
-	doc/sympa/node8.html, doc/sympa/node9.html, doc/sympa/sympa.html,
-	doc/sympa/sympa.ps: Complete documentation about mail aliases
+	doc/sympa.tex, doc/sympa.tex.tpl: Complete documentation about mail
+	aliases
 
 2002-11-14 10:59  salaun
 
@@ -1049,16 +1374,8 @@
 
 2002-11-13 11:12  salaun
 
-	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
-	sympa/index.html, sympa/node1.html, sympa/node10.html,
-	sympa/node11.html, sympa/node12.html, sympa/node13.html,
-	sympa/node14.html, sympa/node15.html, sympa/node16.html,
-	sympa/node17.html, sympa/node18.html, sympa/node19.html,
-	sympa/node2.html, sympa/node20.html, sympa/node3.html,
-	sympa/node4.html, sympa/node5.html, sympa/node6.html,
-	sympa/node7.html, sympa/node8.html, sympa/node9.html,
-	sympa/sympa.html, sympa/sympa.ps: Missing documentation for
-	'authentication_info_url' in auth.conf
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Missing
+	documentation for 'authentication_info_url' in auth.conf
 
 2002-11-13 11:06  salaun
 
@@ -1281,16 +1598,9 @@
 
 2002-10-21 11:29  salaun
 
-	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
-	sympa/index.html, sympa/node1.html, sympa/node10.html,
-	sympa/node11.html, sympa/node12.html, sympa/node13.html,
-	sympa/node14.html, sympa/node15.html, sympa/node16.html,
-	sympa/node17.html, sympa/node18.html, sympa/node19.html,
-	sympa/node2.html, sympa/node20.html, sympa/node3.html,
-	sympa/node4.html, sympa/node5.html, sympa/node6.html,
-	sympa/node7.html, sympa/node8.html, sympa/node9.html,
-	sympa/sympa.html, sympa/sympa.ps: [bugID 59] [reported by xavier AT
-	cs.gouv.qc.ca] Duplicates in manual ; fix macros
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: [bugID 59]
+	[reported by xavier AT cs.gouv.qc.ca] Duplicates in manual ; fix
+	macros
 
 2002-10-21 11:24  salaun
 
@@ -1521,27 +1831,12 @@
 2002-09-23 14:55  salaun
 
 	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
-	man8/sympa.8, man8/sympa.pod, sympa/node10.html, sympa/node11.html,
-	sympa/node12.html, sympa/node13.html, sympa/node14.html,
-	sympa/node15.html, sympa/node16.html, sympa/node17.html,
-	sympa/node18.html, sympa/node19.html, sympa/node2.html,
-	sympa/node20.html, sympa/node3.html, sympa/node4.html,
-	sympa/node5.html, sympa/node6.html, sympa/node7.html,
-	sympa/node8.html, sympa/node9.html, sympa/sympa.ps: Add
-	documentation for --make_alias_file option
+	man8/sympa.8, man8/sympa.pod: Add documentation for
+	--make_alias_file option
 
 2002-09-23 12:15  salaun
 
 	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
-	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
-	doc/sympa/node11.html, doc/sympa/node12.html,
-	doc/sympa/node13.html, doc/sympa/node14.html,
-	doc/sympa/node15.html, doc/sympa/node16.html,
-	doc/sympa/node17.html, doc/sympa/node18.html,
-	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
-	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
-	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
-	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps,
 	wwsympa/wwsympa.fcgi: Change: Allow non-anonymous bind in
 	auth.conf. New bind_dn and bind_pawword parameters
 
@@ -1590,16 +1885,8 @@
 
 2002-09-19 16:48  salaun
 
-	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
-	sympa/index.html, sympa/node1.html, sympa/node10.html,
-	sympa/node11.html, sympa/node12.html, sympa/node13.html,
-	sympa/node14.html, sympa/node15.html, sympa/node16.html,
-	sympa/node17.html, sympa/node18.html, sympa/node19.html,
-	sympa/node2.html, sympa/node20.html, sympa/node3.html,
-	sympa/node4.html, sympa/node5.html, sympa/node6.html,
-	sympa/node7.html, sympa/node8.html, sympa/node9.html,
-	sympa/sympa.html, sympa/sympa.ps: Update documentation regarding
-	alias management
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Update
+	documentation regarding alias management
 
 2002-09-19 15:45  salaun
 
@@ -1660,18 +1947,9 @@
 
 	* doc/sympa.pdf, src/sympa.pl, src/task_manager.pl,
 	wwsympa/archived.pl, wwsympa/bounced.pl, wwsympa/wwsympa.fcgi,
-	doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
-	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
-	doc/sympa/node11.html, doc/sympa/node12.html,
-	doc/sympa/node13.html, doc/sympa/node14.html,
-	doc/sympa/node15.html, doc/sympa/node16.html,
-	doc/sympa/node17.html, doc/sympa/node18.html,
-	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
-	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
-	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
-	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps:
-	[reported by Sergiy Zhuk] Fix: umask was considered a decimal
-	number ; now taken as octal
+	doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl: [reported by Sergiy
+	Zhuk] Fix: umask was considered a decimal number ; now taken as
+	octal
 
 2002-09-18 09:20  salaun
 
@@ -1870,19 +2148,6 @@
 	wwsympa/wws_templates/nl/view_translations.nl.tpl,
 	wwsympa/wws_templates/nl/viewmod.nl.tpl: [Harry Westerman] Complete
 	translation to Dutch
-
-2002-09-16 10:52  salaun
-
-	* doc/sympa/: contents.png, crossref.png, img1.old, img1.png,
-	img2.old, img2.png, index.html, index.png, next.png, next_g.png,
-	node1.html, node10.html, node11.html, node12.html, node13.html,
-	node14.html, node15.html, node16.html, node17.html, node18.html,
-	node19.html, node2.html, node20.html, node3.html, node4.html,
-	node5.html, node6.html, node7.html, node8.html, node9.html,
-	prev.png, prev_g.png, sympa.css, sympa.html, sympa.ps, up.png,
-	up_g.png: 
-	
-	HTML doc is usefull in CVS TREE
 
 2002-09-13 12:10  salaun
 

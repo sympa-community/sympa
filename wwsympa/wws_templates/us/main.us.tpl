@@ -1,5 +1,3 @@
-<!-- RCS Identication ; $Revision$ ; $Date$ -->
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 
@@ -8,32 +6,46 @@
 <SCRIPT LANGUAGE="JavaScript">
 <!-- for other browsers
 
+// To confirm archives deletion
+ function dbl_confirm(my_form, my_message,my_message2) {
+     
+      if (confirm(my_message)) 
+      {
+    	 if (confirm(my_message2)) 
+	 {
+	     my_form.zip.value = "1";
+	 }
+	 }else{
+	return false;
+	}
+  }	
+
   // To confirm a form submition
-  function request_confirm(my_form, my_message, my_action){
+  function request_confirm(my_form, my_message, my_action) {
     if (window.confirm(my_message)) {
       my_form.action.value = my_action;
       my_form.submit();
     }
-  }
+}
 
   // To confirm on a link (A HREF)
-  function request_confirm_link(my_url, my_message){
-    question = confirm(my_message)
-    if (question !="0"){
-         top.location = my_url
+  function request_confirm_link(my_url, my_message) {
+    question = confirm(my_message);
+    if (question !="0") {
+         top.location = my_url;
     }
   }
 
   // To confirm on a link (A HREF)
-  function refresh_mom_and_die(){
-    url = window.opener.location.href
+  function refresh_mom_and_die() {
+    url = window.opener.location.href;
 
     if (url.indexOf('logout') > -1 ) {
-      url = '[path_cgi]/'
+      url = '[path_cgi]/';
     }
 
-    window.opener.location = url
-    self.close()
+    window.opener.location = url;
+    self.close();
   }
 
 [IF cookie_set]
@@ -44,11 +56,11 @@
      var i = 0;
      while (i < clen) {
        var j = i + alen;
-       if (document.cookie.substring(i, j) == arg)
+       if (document.cookie.substring(i, j) == arg) 
          return getCookieVal (j);
          i = document.cookie.indexOf(" ", i) + 1;
          if (i == 0) break; 
-     }
+       }
      return null;
   }  
 
@@ -62,7 +74,7 @@
   function check_cookie() {
  
      if (GetCookie('sympauser') == null) {
-        alert("Sympa could not set a cookie for login (or this Javascript could not access your cookies).\n Your should setup your navigator to accept cookies");
+        alert("Sympa could not set a cookie for login.\n Your should setup your navigator to accept cookies");
      }
   }
 [ENDIF]
@@ -188,7 +200,7 @@ setTimeout('refresh_mom_and_die()',1000);
        [PARSE admin_menu_template]
       </TR>
       <TR VALIGN="top">
-        <TD colspan="7" BGCOLOR="[shaded_color]" >
+        <TD colspan="8" BGCOLOR="[shaded_color]" >
          [IF active]
           [PARSE action_template]
          [ENDIF]

@@ -166,6 +166,7 @@ my %comm = ('home' => 'do_home',
 	 'editfile' => 'do_editfile',
 	 'savefile' => 'do_savefile',
 	 'arc' => 'do_arc',
+	 'arc_manage' => 'do_arc_manage',                             
 	 'remove_arc' => 'do_remove_arc',
 	 'send_me' => 'do_send_me',
 	 'arcsearch_form' => 'do_arcsearch_form',
@@ -173,7 +174,8 @@ my %comm = ('home' => 'do_home',
 	 'arcsearch' => 'do_arcsearch',
 	 'rebuildarc' => 'do_rebuildarc',
 	 'rebuildallarc' => 'do_rebuildallarc',
-	 'arcdownload' => 'do_arcdownload',
+	 'arc_download' => 'do_arc_download',
+	 'arc_delete' => 'do_arc_delete',
 	 'serveradmin' => 'do_serveradmin',
 	 'help' => 'do_help',
 	 'edit_list_request' => 'do_edit_list_request',
@@ -259,11 +261,13 @@ my %action_args = ('default' => ['list'],
 		'review' => ['list','page','size','sortby'],
 		'reviewbouncing' => ['list','page','size'],
 		'arc' => ['list','month','arc_file'],
+		'arc_manage' => ['list'],                                          
 		'arcsearch_form' => ['list','archive_name'],
 		'arcsearch_id' => ['list','archive_name','key_word'],
 		'rebuildarc' => ['list','month'],
 		'rebuildallarc' => [],
-		'arcdownload' => ['list','month'],
+		'arc_download' => ['list'],
+		'arc_delete' => ['list','zip'],
 		'home' => [],
 		'help' => ['help_topic'],
 		'show_cert' => [],
@@ -343,6 +347,7 @@ my %action_type = ('editfile' => 'admin',
 		'ignoresub' => 'admin',
 		'rename_list' => 'admin',
 		'rename_list_request' => 'admin',
+		'arc_manage' => 'admin',
 #		'viewlogs' => 'admin'
 );
 
@@ -958,7 +963,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 ## POST
 	 foreach my $p (keys %in) {
 	     if ($p =~ /^action_(\w+)((\.\w+)*)$/) {
-
+		 
 		 $in{'action'} = $1;
 		 if ($2) {
 		     foreach my $v (split /\./, $2) {
@@ -3033,7 +3038,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      unless ($param->{'is_owner'} or $param->{'is_editor'}) {
 	 &error_message('may_not');
-	 &wwslog('info','do_admin: %s not priv user', $param->{'user'}{'email'});
+	 &wwslog('info','do_admin: %s not private user', $param->{'user'}{'email'});
 	 return undef;
      }
 
@@ -9447,66 +9452,131 @@ if ($wwsconf->{'use_fast_cgi'}) {
      return 1;
  }
 
-sub do_arcdownload {
-     &do_log('info', "do_arcdownload ($in{'list'}, $in{'mounth'})");
+sub do_arc_manage {
+    &wwslog('info', "do_arc_manage ($in{'list'})");
 
-     unless($zip_is_installed) {
-	 &error_message('service_unavalible');
-	 &wwslog('info','service unavalible because zip cpan module is not installed');
-	 return undef;
-     }
-
-     unless($param->{'is_owner'} || $param->{'is_listmaster'}) {
-	 &error_message('may_not');
-	 &wwslog('info','do_arcdownload : not listmaster or list owner');
-	 return undef;
-     }
-
-     my $dir = "$wwsconf->{'arc_path'}/$in{'list'}\@$list->{'admin'}{'host'}/$in{'month'}/arctxt/";
-
-     unless (-d $dir) {
-	 &error_message('arc_not_found');
-	 &wwslog('info','archive %s not found',$dir);
-	 return undef;
-     }
-     unless ( opendir(ARCDIR,$dir)){
-	 &error_message('arc_not_found');
-	 &wwslog('info','%s : incorrect access',$dir);
-	 return undef;
-     }
-     closedir(ARCDIR);
-     my $zipname = "$in{'list'}-$in{'month'}.zip";
-     my $zip = Archive::Zip->new();
-
-     $zip->addTree ($dir,$zipname);
-
-     if ($zip->numberOfMembers()== 0) {
-	 &error_message('empty_arc');
-	 &wwslog('info','empty directory %s',$dir);
-	 return undef;
-     }
-     
-     unless ($zip->writeToFileNamed("$Conf{'tmpdir'}/$zipname") == AZ_OK){
-	 &error_message('internal_error');
-	 do_log ('info', 'Error while writing Zip File %s\n',"$Conf{'tmpdir'}/$zipname");
-	 return undef;
-     }
-     
-     $param->{'bypass'} ='extreme' ;
-     printf "Content-Type: application/zip name=\"$zipname\"\n\n";
-     unless (open (ZIP, "$Conf{'tmpdir'}/$zipname")) {
-	  &error_message('internal_error');
-	  do_log ('info', 'Error while reading Zip File %s\n',"$Conf{'tmpdir'}/$zipname");
-	  return undef;
-     }
-     while (<ZIP>) {
-	 printf $_;
-     }
-     close ZIP ;
-     unless (unlink ("Conf{'tmpdir'}/$zipname")){
-	 &error_message('internal_error');
-	 do_log ('info', 'Error while unlinking File %s\n',"$Conf{'tmpdir'}/$zipname");
-     }
-
-     return 1;
+    my $search_base = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}";
+    opendir ARC, "$search_base";
+    foreach my $dir (sort {$b cmp $a} grep(!/^\./,readdir ARC)) {
+	if ($dir =~ /^(\d{4})-(\d{2})$/) {
+	    push @{$param->{'yyyymm'}}, $dir;
+	}
+    }
+    closedir ARC;
+    
+    return 1;
 }
+
+## create a zip file with archives from (list,month)
+sub do_arc_download {
+    
+    &wwslog('info', "do_arc_download ($in{'list'})");
+    
+    ##check if zip module has been installed
+    unless($zip_is_installed) {
+	&error_message('service_unavailable');
+	&wwslog('info','service unavailable because zip CPAN module is not installed');
+	return undef;
+    }
+
+    ##check access rights
+    unless($param->{'is_owner'} || $param->{'is_listmaster'}) {
+	&error_message('may_not');
+	&wwslog('info','do_arc_download : not listmaster or list owner');
+	return undef;
+    }
+    
+    ##zip file name:listname_archives.zip  
+    my $zip_file_name = $in{'list'}.'_archives.zip';
+    my $zip_abs_file = $Conf{'tmpdir'}.'/'.$zip_file_name;
+    my $zip = Archive::Zip->new();
+    
+    #Search for months to put in zip
+    unless (defined($in{'directories'})) {
+	&error_message('select_month');
+	&wwslog('info','do_arc_download : no archives specified');
+	return 'arc_manage';
+    }
+    
+    #for each selected month
+    foreach my $dir (split/\0/, $in{'directories'}) {
+	my $abs_dir = ($wwsconf->{'arc_path'}.'/'.$in{'list'}.'@'.$param->{'host'}.'/'.$dir.'/arctxt');
+	##check arc directory
+	unless (-d $abs_dir) {
+	    &error_message('month_not_found');
+	    &wwslog('info','archive %s not found',$dir);
+	    next;
+	}
+	## create and fill a new folder in zip
+	$zip->addTree ($abs_dir, $in{'list'}.'_'.$dir);                           
+    }
+    
+    ## check if zip isn't empty
+    if ($zip->numberOfMembers()== 0) {                      
+	&error_message('month_not_found');                   
+	&wwslog('info','Error : empty directories');
+	return undef;
+    }   
+    ##writing zip file
+    unless ($zip->writeToFileNamed($zip_abs_file) == AZ_OK){
+	&error_message('internal_error');
+	&wwslog ('info', 'Error while writing Zip File %s\n',$zip_file_name);
+	return undef;
+    }
+
+    ##Sending Zip to browser
+    $param->{'bypass'} ='extreme';
+    printf("Content-Type: application/zip;\nContent-disposition: filename=\"%s\";\n\n",$zip_file_name);
+    ##MIME Header
+    unless (open (ZIP,$zip_abs_file)) {
+	&error_message('internal_error');
+	&wwslog ('info', 'Error while reading Zip File %s\n',$zip_file_name);
+	return undef;
+    }
+    while (<ZIP>) {
+	printf $_;
+    }
+    close ZIP ;
+    
+    ## remove zip file from server disk
+    unless (unlink ($zip_abs_file)){     
+	&error_message('internal_error');
+	&wwslog ('info', 'Error while unlinking File %s\n',$zip_abs_file);
+    }
+    
+    return 1;
+}
+
+sub do_arc_delete {
+  
+    my @abs_dirs;
+    
+    &wwslog('info', "do_arc_delete ($in{'list'})");
+    
+    unless (defined  $in{'directories'}){
+      	&error_message('month_not_found');
+	&wwslog('info','No Archives months selected');
+	return 'arc_manage';
+    }
+    
+    ## if user want to download archives before delete
+    &wwslog('notice', "ZIP: $in{'zip'}");
+    if ($in{'zip'} == 1) {
+	&do_arc_download();
+    }
+  
+    
+    foreach my $dir (split/\0/, $in{'directories'}) {
+	push(@abs_dirs ,$wwsconf->{'arc_path'}.'/'.$in{'list'}.'@'.$param->{'host'}.'/'.$dir);
+    }
+
+    unless (tools::remove_dir(@abs_dirs)) {
+	&wwslog('info','Error while Calling tools::remove_dir');
+    }
+    
+    &message('performed');
+    return 'arc_manage';
+}
+		
+
+

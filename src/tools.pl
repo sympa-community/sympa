@@ -28,6 +28,7 @@ use Conf;
 use Language;
 use Log;
 use Time::Local;
+use File::Find;
 
 ## RCS identification.
 #my $id = '@(#)$Id$';
@@ -1468,5 +1469,33 @@ sub clean_email {
     return $email;
 }
 
+## Function for Removing a non-empty directory
+## It takes a variale number of arguments : 
+## it can be a list of directory
+## or few direcoty paths
+sub remove_dir {
+    
+    do_log('info','remove_dir()');
+    
+    foreach my $current_dir (@_){
+
+	finddepth(\&del,$current_dir);
+    }
+    sub del {
+	my $name = $File::Find::name;
+
+	if (!-l && -d _) {
+	    &do_log('info','removing dir %s',$name);
+	    unless (rmdir($name)) {
+		&do_log('info','Error while removing dir %s',$name);
+	    }
+	}else{
+	    unless (unlink($name)) {
+		&do_log('info','Error while removing file  %s',$name);
+	    }
+	}
+    }
+    return 1;
+}
 1;
 

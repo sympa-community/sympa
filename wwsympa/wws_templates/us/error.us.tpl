@@ -155,6 +155,9 @@ The document repository exceed disk quota.
 [ELSIF error->msg=ldap_user]
 Your password is stored in an LDAP directory, therefore Sympa cannot post you a reminder
 
+[ELSIF error->msg=select_month]
+Please select archive months
+
 [ELSE]
 [error->msg]
 [ENDIF]

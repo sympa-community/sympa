@@ -918,6 +918,16 @@ using \index {FastCGI}. Therefore you need to install the following Perl module 
 
 \end {itemize}
 
+If you want to Download Zip files of list's Archives, you'll need to install
+perl Module for Archive Management : 
+
+\begin {itemize}
+
+    \item \perlmodule {Archive::Zip}
+
+\end {itemize}
+
+
 \subsection {Create a UNIX user}
 
 The final step prior to installing \Sympa: create a UNIX user (and
@@ -2536,6 +2546,7 @@ the owner of this file is \Sympa.
 \end {quote}
 You can also rebuild web archives from within the admin page of the list.
 
+Furthermore, if you want to get list's archives, you can do it via the \cfkeyword{ List-admin menu-> Archive Management}
 \end{enumerate}
  
 

@@ -1,7 +1,7 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 <!-- begin admin_menu.fr.tpl -->
-    <TD BGCOLOR="[selected_color]" ALIGN="CENTER" COLSPAN="7">
+    <TD BGCOLOR="[selected_color]" ALIGN="CENTER" COLSPAN="8">
 	<FONT COLOR="[bg_color]"><b>Administration de liste</b></font>
     </TD>
     </TR>
@@ -33,17 +33,17 @@
 
     [IF action=modindex]
     <TD BGCOLOR="[selected_color]" ALIGN="CENTER">
-       <FONT size="-1" COLOR="[bg_color]"><b>Modérer</b></FONT>
+       <FONT size="-1" COLOR="[bg_color]"><b>Moderer</b></FONT>
     </TD>
     [ELSE]
        [IF is_editor]
        <TD BGCOLOR="[light_color]" ALIGN=CENTER>
          <A HREF="[path_cgi]/modindex/[list]" >
-         <FONT size="-1"><b>Modérer</b></FONT></A>
+         <FONT size="-1"><b>Moderer</b></FONT></A>
        </TD>
        [ELSE]
          <TD BGCOLOR="[light_color]" ALIGN="CENTER">
-           <FONT size="-1" COLOR="[bg_color]"><b>Modérer</b></FONT>
+           <FONT size="-1" COLOR="[bg_color]"><b>Moderer</b></FONT>
          </TD>
        [ENDIF]
     [ENDIF]
@@ -60,6 +60,22 @@
        [ENDIF]
     </TD>
     [ENDIF]
+
+   [IF is_archived]
+     [IF action=arc_manage]
+     <TD BGCOLOR="[selected_color]" ALIGN="CENTER">
+       <A HREF="[path_cgi]/arc_manage/[list]" >
+       <FONT size="-1" COLOR="[bg_color]"><b>Gerer les Archives</b></FONT></A>
+     </TD>
+     [ELSE]
+     <TD BGCOLOR="[light_color]" ALIGN="CENTER">
+       [IF is_owner]
+       <A HREF="[path_cgi]/arc_manage/[list]" >
+       <FONT size="-1"><b>Gerer les Archives</b></FONT></A>
+       [ENDIF]
+     </TD>
+     [ENDIF]
+  [ENDIF]
 
     [IF action=reviewbouncing]
     <TD BGCOLOR="[selected_color]" ALIGN="CENTER">
@@ -87,7 +103,7 @@
              <FONT size=-1><b>Restaurer l'espace partagé</b></font></A>
 	[ELSIF shared=exist]
           <A HREF="[path_cgi]/d_admin/[list]/delete" >
-             <FONT size=-1><b>Fermer l'espace partagé</b></font></A>
+             <FONT size=-1><b>Fermer l'espace partager</b></font></A>
         [ELSE]
           <FONT size=1 color=red>
           [shared]
@@ -103,7 +119,7 @@
           <FONT size="-1" COLOR="[bg_color]"><b>Restaurer la liste</b></font>
         [ENDIF]                              
        [ELSIF is_privileged_owner]                 
-        <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Vous êtes sur le point de supprimer la liste [list]. Confirmer ?'); return false;"><FONT size=-1><b>Supprimer la liste</b></font></A>
+        <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Vous êtes sur le point de supprimer la liste [list]. Confiormer ?'); return false;"><FONT size=-1><b>Supprimer la liste</b></font></A>
        [ELSIF is_owner]                      
        <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Vous êtes sur le point de suppimer la liste [list]. Confirmer ?'); return false;"><FONT size=-1><b>Supprimer la liste</b></font></A>
        [ENDIF]                               

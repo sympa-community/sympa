@@ -9,6 +9,7 @@
           <LI><FONT COLOR="[dark_color]"><b>Subscribers</b></FONT> : subscribers management, add, del, search, bounces, etc...
           <LI><FONT COLOR="[dark_color]"><b>Moderate</b></FONT> : reject and accept messages for distribution.
           <LI><FONT COLOR="[dark_color]"><b>Customizing</b></FONT> : editing of various files and messages attached to your list.
+          <LI><FONT COLOR="[dark_color]"><b>Manage Archives</b></FONT> : Allow you to download and delete list archives.	
 
 <!-- end help_admin.tpl -->
 
