@@ -918,7 +918,8 @@ sub virus_infected {
 		
 	while (<ANTIVIR>) {
 	    $result .= $_; chomp $result;
-	    if (/^\s*Found the\s+(.*)\s*virus.*$/i){
+	    if ((/^\s*Found the\s+(.*)\s*virus.*$/i) ||
+		(/^\s*Found application\s+(.*)\.\s*$/i)){
 		$virusfound = $1;
 	    }
 	}
