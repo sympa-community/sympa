@@ -1078,7 +1078,7 @@ sub virus_infected {
     unless ($main::options{'debug'}) {
 	opendir (DIR, ${work_dir});
 	my @list = readdir(DIR);
-	close (DIR);
+	closedir (DIR);
         foreach (@list) {
 	    my $nbre = unlink ("$work_dir/$_")  ;
 	}
