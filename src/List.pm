@@ -335,42 +335,42 @@ my %alias = ('reply-to' => 'reply_to',
 								 'length' => 2,
 								 'unit' => 'Points',
 								 'default' => {'conf' => 'default_bounce_level1_rate'},
-								 'title_id' => 214,
+								 'gettext_id' => "threshold",
 								 'order' => 1
 								 },
 				               'action' => {'format' => ['remove_bouncers','notify_bouncers','none'],
 								   'default' => 'notify_bouncers',
-								   'title_id' => 215,
+								   'gettext_id' => "action for this population",
 								   'order' => 2
 								   },
 					       'notification' => {'format' => ['none','owner','listmaster'],
 									 'default' => 'owner',
-									 'title_id' => 219,
+									 'gettext_id' => "notification",
 									 'order' => 3
 									 }
 					   },
-				      'title_id' => 213,
+				      'gettext_id' => "Management of bouncers, 1st level",
 				      'group' => 'bounces'
 				  },
 	     'bouncers_level2' => {'format' => {'rate' => {'format' => '\d+',
 								 'length' => 2,
 								 'unit' => 'Points',
 								 'default' => {'conf' => 'default_bounce_level2_rate'},
-								 'title_id' => 217,
+								 'gettext_id' => "threshold",
 								 'order' => 1
 								 },
 				               'action' => {'format' =>  ['remove_bouncers','notify_bouncers','none'],
 								   'default' => 'remove_bouncers',
-								   'title_id' => 218,
+								   'gettext_id' => "action for this population",
 								   'order' => 2
 								   },
 					       'notification' => {'format' => ['none','owner','listmaster'],
 									 'default' => 'owner',
-									 'title_id' => 219,
+									 'gettext_id' => "notification",
 									 'order' => 3
 									 }
 								     },
-				      'title_id' => 216,
+				      'gettext_id' => "Management of bouncers, 2nd level",
 				      'group' => 'bounces'
 				  },
 	    'clean_delay_queuemod' => {'format' => '\d+',
@@ -852,7 +852,7 @@ my %alias = ('reply-to' => 'reply_to',
 			   'group' => 'description'
 		       },
 	    'remind' => {'scenario' => 'remind',
-			 'title_id' => 64,
+			 'gettext_id' => "Who can start a remind process",
 			 'group' => 'command'
 			  },
 	    'remind_return_path' => {'format' => ['unique','owner'],
@@ -898,7 +898,7 @@ my %alias = ('reply-to' => 'reply_to',
 					'default' => {'conf' => 'rfc2369_header_fields'},
 					'occurrence' => '0-n',
 					'split_char' => ',',
-					'title_id' => 213,
+					'gettext_id' => "RFC 2369 Header fields",
 					'group' => 'sending'
 					},
 	    'send' => {'scenario' => 'send',
@@ -954,7 +954,7 @@ my %alias = ('reply-to' => 'reply_to',
 			  'group' => 'description'
 			   },
 	    'subscribe' => {'scenario' => 'subscribe',
-			    'title_id' => 73,
+			    'gettext_id' => "Who can subscribe to the list",
 			    'group' => 'command'
 			    },
 	    'topics' => {'format' => '\w+(\/\w+)?',
