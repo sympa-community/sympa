@@ -134,7 +134,7 @@ Acest text trebuie \n\n\
 67	"Acestea sunt listele la care esti in prezent inscris:\n\n"
 68	"Accesul la mesajul autentificat cu tasta %s invalid.\n"
 69	"%s a afisat mesajul expirat la urmatoarea adresa:\n"
-70	"\nPowered de Sympa %s : http://listes.cru.fr/sympa/\n"
+70	"\nPowered de Sympa %s : http://www.sympa.org/\n"
 71	"Renunta la lista %s"
 72	"\n\nListe a caror proprietar esti:\n\n"
 73	"\n\nListe a caror editor esti:\n\n"

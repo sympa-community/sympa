@@ -179,7 +179,7 @@ sub help {
 		close IN;
 	    }
 	}
-	push @msg::report, sprintf Msg(6, 70, "\nPowered by Sympa %s : http://listes.cru.fr/sympa/\n")
+	push @msg::report, sprintf Msg(6, 70, "\nPowered by Sympa %s : http://www.sympa.org/\n")
 	    , $Version ;
 
     }elsif (-r "--ETCBINDIR--/templates/helpfile.tpl") {

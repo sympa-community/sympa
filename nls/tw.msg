@@ -123,7 +123,7 @@ EXPIRE 指令不能執行。\n\
 67	"以下是你訂閱\了的郵寄清單 :\n\n"
 68	"不能用 %s 鍵存取電郵。\n"
 69	"%s 郵件你的滿期(expiration)電郵到下列電郵地址 :\n"
-70	"\nPowered by Sympa %s : http://listes.cru.fr/sympa/\n"
+70	"\nPowered by Sympa %s : http://www.sympa.org/\n"
 71	"由郵寄清單 %s 离開"
 72	"\n\n你是下列郵寄清單的擁有者 :\n\n"
 73	"\n\n你是下列郵寄清單的編輯 :\n\n"

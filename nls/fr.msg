@@ -149,7 +149,7 @@ leur abonnement. Ce texte doit\n\n\
 67	"Voici les listes auxquelles vous êtes abonné :\n\n"
 68	"Impossible d'accéder au message authentifié avec la clé %s.\n"
 69	"%s a posté votre message d'expiration aux adresses suivantes :\n"
-70	"\nService rendu par Sympa %s : http://listes.cru.fr/sympa/\n"
+70	"\nService rendu par Sympa %s : http://www.sympa.org/\n"
 71	"Desabonnement de la liste %s"
 72	"Voici les listes dont vous êtes propriétaire :\n\n"
 73	"Voici les listes dont vous êtes modérateur :\n\n"

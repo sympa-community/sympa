@@ -141,7 +141,7 @@ Este texto debe:\n\n\
 67	"Estas son las listas a las cuales está usted suscrito :\n\n"
 68	"Imposible acceder al mensaje autentificado con la clave %s.\n"
 69	"%s mandó por correo su mensaje de expiración a las direcciones siguientes:\n"
-70	"\nServido por Sympa %s: http://listes.cru.fr/sympa/\n"
+70	"\nServido por Sympa %s: http://www.sympa.org/\n"
 71	"Anular suscripción de la lista %s"
 72	"\n\nListas de las que usted es propietario :\n\n"
 73	"\n\nListas de las que usted es editor :\n\n"

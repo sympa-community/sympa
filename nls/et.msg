@@ -140,7 +140,7 @@ See tekst peab:\n\n\
 67	"Hetkel olete nende listide liige:\n\n"
 68	"Ei leia kirja, mille autentimisvõti on  %s.\n"
 69	"%s saatis aegumisteated järgnevatele aadressidele:\n"
-70	"\nSiin töötab Sympa %s : http://listes.cru.fr/sympa/\n"
+70	"\nSiin töötab Sympa %s : http://www.sympa.org/\n"
 71	"Lahku listist %s"
 72	"\n\nOled nende listide omanik:\n\n"
 73	"\n\nOled nende listide toimetaja:\n\n"

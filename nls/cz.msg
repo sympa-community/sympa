@@ -138,7 +138,7 @@ Tento text musí\n\n\
 67	"Zde je seznam konferencí, jich¾ jste èlenem :\n\n"
 68	"Nelze pøistupovat ke zprávì, ovìøené klíèem %s.\n"
 69	"%s odeslal expiraèní zprávu na následující adresy :\n"
-70	"\nPowered by Sympa %s : http://listes.cru.fr/sympa/\n"
+70	"\nPowered by Sympa %s : http://www.sympa.org/\n"
 71	"Odhlá¹ení z konference %s"
 72	"\n\nKonference, jich¾ jste vlastníky :\n\n"
 73	"\n\nKonference, jich¾ jste editory :\n\n"

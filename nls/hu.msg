@@ -139,7 +139,7 @@ A indoklás szövegének\n\n\
 67	"Jelenleg a következõ listáknak vagy tagja:\n\n"
 68	"A(z) %s kulccsal azonosított üzenetet nem lehet elérni.\n"
 69	"%s a megerõsítési üzenetedet a következõ címre küldte el:\n"
-70	"\nSympa levelezõlista-kezelõ %s : http://listes.cru.fr/sympa/\n"
+70	"\nSympa levelezõlista-kezelõ %s : http://www.sympa.org/\n"
 71	"Leiratkozás a(z) %s listáról"
 72	"\n\nAz következõ listák tulajdonosa vagy:\n\n"
 73	"\n\nAz következõ listák szerkesztõje vagy:\n\n"

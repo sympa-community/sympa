@@ -130,7 +130,7 @@ EXPIRE 命令不能执行。它后面必须有针对需要确认订阅的订户的说明。\n\
 67	"以下是您订阅了的邮递表清单:\n\n"
 68	"用 %s 验证后无法访问邮件。\n"
 69	"%s 将您的过期操作邮件发送到下列邮件地址:\n"
-70	"\nPowered by Sympa %s : http://listes.cru.fr/sympa/\n"
+70	"\nPowered by Sympa %s : http://www.sympa.org/\n"
 71	"退订邮递表 %s"
 72	"\n\n您是下列邮递表的所有者:\n\n"
 73	"\n\n您是下列邮递表的编辑:\n\n"

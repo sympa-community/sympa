@@ -23,7 +23,7 @@
 
 ## Copyright 1999 Comité Réseaux des Universités
 ## web interface to Sympa mailing lists manager
-## Sympa: http://listes.cru.fr/sympa/
+## Sympa: http://www.sympa.org/
 
 ## Authors :
 ##           Serge Aumont <sa@cru.fr>

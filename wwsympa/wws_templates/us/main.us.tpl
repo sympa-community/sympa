@@ -211,7 +211,7 @@ setTimeout('refresh_mom_and_die()',1000);
    </TD> 
    <TD WIDTH="100%">&nbsp;</TD>
     <TD NOWRAP><I>Powered by</I></TD>
-    <TD><A HREF="http://listes.cru.fr/sympa/">
+    <TD><A HREF="http://www.sympa.org/">
          [IF auth_method=smime]
            <IMG SRC="[icons_url]/logo-s-lock.png" ALT="Sympa [version]" BORDER="0" >
          [ELSE]

@@ -133,7 +133,7 @@ Teks ten musi\n\
 67	"Oto listy na które jeste¶ obecnie zapisany/a :\n\n"
 68	"Brak dostêpu do wiadomo¶ci identyfikowanej kluczem %s.\n"
 69	"%s wys³a³ powiadomienie o wyga¶niêciu zapisania na adresy :\n"
-70	"\nObs³ugiwane przez Sympa %s : http://listes.cru.fr/sympa/\n"
+70	"\nObs³ugiwane przez Sympa %s : http://www.sympa.org/\n"
 71	"Wypisanie z listy %s"
 72	"\n\nListy których jeste¶ w³a¶cicielem:\n\n"
 73	"\n\nListy których jeste¶ edytorem :\n\n"

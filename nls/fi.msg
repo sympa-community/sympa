@@ -139,7 +139,7 @@ T‰m‰n tekstin t‰ytyy\n\
 67	"T‰ss‰ listat, joiden tilaaja t‰ll‰ hetkell‰ olet :\n\n"
 68	"En voinut k‰ytt‰‰ avaimella %s vahvistettua viesti‰.\n"
 69	"%s l‰hetti tilauksen p‰‰ttymisviestisi seuraaviin osoitteisiin :\n"
-70	"\nPowered by Sympa %s : http://listes.cru.fr/sympa/\n"
+70	"\nPowered by Sympa %s : http://www.sympa.org/\n"
 71	"Lopeta tilauksesi listalle %s"
 72	"\n\nListat, joiden omistaja olet:\n\n"
 73	"\n\nListat, joiden toimittaja olet:\n\n"

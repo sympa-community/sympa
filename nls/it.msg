@@ -133,7 +133,7 @@ Questo testo deve\n\n\
 67	"Lei e' attualmente iscritto alle liste:\n\n"
 68	"Accesso impossibile al messaggio identificato dalla chiave %s.\n"
 69	"%s ha inviato il messaggio di scadenza ai seguenti indirizzi:\n"
-70	"\nPowered by Sympa %s : http://listes.cru.fr/sympa/\n"
+70	"\nPowered by Sympa %s : http://www.sympa.org/\n"
 71	"Cancellazione dalla lista '%s'"
 72	"\n\nListe di cui lei e' gestore:\n\n"
 73	"\n\nListe di cui lei e' moderatore:\n\n"

@@ -143,7 +143,7 @@ This text must\n\n\
 67	"Here are the lists you are currently subscribe to :\n\n"
 68	"Unable to access to the message authenticated with key %s.\n"
 69	"%s posted your expiration message to the following addresses :\n"
-70	"\nPowered by Sympa %s : http://listes.cru.fr/sympa/\n"
+70	"\nPowered by Sympa %s : http://www.sympa.org/\n"
 71	"Unsubscribe from list %s"
 72	"\n\nLists you are owner of:\n\n"
 73	"\n\nLists you are editor of :\n\n"

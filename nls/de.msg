@@ -164,7 +164,7 @@ Dieser Text muß\n\
 67	"Sie haben im Moment diese Listen abonniert:\n\n"
 68	"Kann auf die Nachricht mit dem Schlüßel %s nicht zugreifen.\n"
 69	"%s hat Ihre EXPIRE-Nachricht an folgende Adressen geschickt:\n"
-70	"\nPowered by Sympa %s : http://listes.cru.fr/sympa/\n"
+70	"\nPowered by Sympa %s : http://www.sympa.org/\n"
 71	"Abonnement der Liste %s aufheben"
 72	"\n\nListen, die Sie verwalten:\n\n"
 73	"\n\nListen, die Sie moderieren:\n\n"
