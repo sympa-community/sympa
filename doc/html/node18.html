@@ -29,31 +29,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1149"
+<A NAME="tex2html1147"
   HREF="node19.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1143"
+<A NAME="tex2html1141"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1137"
+<A NAME="tex2html1135"
   HREF="node17.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1145"
+<A NAME="tex2html1143"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1147"
+<A NAME="tex2html1145"
   HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1150"
+<B> Next:</B> <A NAME="tex2html1148"
   HREF="node19.html">18. Antivirus</A>
-<B> Up:</B> <A NAME="tex2html1144"
+<B> Up:</B> <A NAME="tex2html1142"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1138"
+<B> Previous:</B> <A NAME="tex2html1136"
   HREF="node17.html">16. Shared documents</A>
- &nbsp <B>  <A NAME="tex2html1146"
+ &nbsp <B>  <A NAME="tex2html1144"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1148"
+ &nbsp <B>  <A NAME="tex2html1146"
   HREF="node23.html">Index</A></B> 
 <BR>
 <BR>
@@ -72,24 +72,24 @@ mad, or just delete them without further attention.
 
 <P>
 Bounces are received at mylist-owner address, which should
-be sent to the <A NAME="8065"></A><TT>bouncequeue</TT> program via aliases :
+be sent to the <A NAME="8048"></A><TT>bouncequeue</TT> program via aliases :
 
 <P><PRE>
 	\samplelist-owner: "|/home/sympa/bin/bouncequeue \samplelist"
 </PRE>
 
 <P>
-<A NAME="8068"></A><TT>bouncequeue</TT> (see <A HREF="node3.html#binaries">2.2</A>, page&nbsp;<A HREF="node3.html#binaries"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) stores bounces in a
-<A NAME="8071"></A><TT>/home/sympa/spool/bounce/</TT> spool.
+<A NAME="8051"></A><TT>bouncequeue</TT> (see <A HREF="node3.html#binaries">2.2</A>, page&nbsp;<A HREF="node3.html#binaries"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) stores bounces in a
+<A NAME="8054"></A><TT>/home/sympa/spool/bounce/</TT> spool.
 
 <P>
-Bounces are then processed by the <A NAME="8074"></A><TT>bounced.pl</TT> daemon.
+Bounces are then processed by the <A NAME="8057"></A><TT>bounced.pl</TT> daemon.
 This daemon analyses bounces to find out which
 e-mail addresses are concerned and what kind of error was generated.
 If bouncing addresses match a subscriber's address, information 
 is stored in the <I>Sympa</I> database (in subscriber_table). Moreover, the most recent
-bounce itself is archived in <A NAME="8078"></A><TT>bounce_path/mylist/email</TT>
-(where bounce_path is defined in a <A NAME="8081"></A><TT>wwsympa.conf</TT> parameter and
+bounce itself is archived in <A NAME="8061"></A><TT>bounce_path/mylist/email</TT>
+(where bounce_path is defined in a <A NAME="8064"></A><TT>wwsympa.conf</TT> parameter and
 email is the user e-mail address).
 
 <P>
@@ -103,10 +103,10 @@ With these informations, the automatic bounce management is possible:
 <P>
 
 <UL>
-<LI>The automatic task <A NAME="8084"></A><TT>eval_bouncer</TT> gives a score foreach bouncing user.
+<LI>The automatic task <A NAME="8067"></A><TT>eval_bouncer</TT> gives a score foreach bouncing user.
   The score, between 0 to 100, allows the classification of bouncing users in two levels.
   (Level 1 or 2). 
-  According to the level, automatic actions are executed periodicaly by <A NAME="8087"></A><TT>process_bouncers</TT>
+  According to the level, automatic actions are executed periodicaly by <A NAME="8070"></A><TT>process_bouncers</TT>
   task.
 
 <P>
@@ -114,16 +114,16 @@ With these informations, the automatic bounce management is possible:
 <LI>The score evaluation main parameters are: 
 
 <P>
-<A NAME="8090"></A><TT>Bounces count</TT>: The number of bouncing messages received by sympa for the user.
+<A NAME="8073"></A><TT>Bounces count</TT>: The number of bouncing messages received by sympa for the user.
 
 <P>
-<A NAME="8093"></A><TT>Type rate</TT> : Bounces are classified depending on the type of errors generated on the user
+<A NAME="8076"></A><TT>Type rate</TT> : Bounces are classified depending on the type of errors generated on the user
   side. If the error type is "mailbox is full" (ie a temporary 4.2.2 error type) the type rate will be
   0.5 whereas permanent errors (5.x.x) have a type rate equal to 1.
 
 <P>
-<A NAME="8096"></A><TT>Regularity rate</TT> : This rate tells if the bounces where received regularly, compared to list
- traffic. The list traffic is deduced from <A NAME="8099"></A><TT>msg_count</TT> file data.
+<A NAME="8079"></A><TT>Regularity rate</TT> : This rate tells if the bounces where received regularly, compared to list
+ traffic. The list traffic is deduced from <A NAME="8082"></A><TT>msg_count</TT> file data.
 
 <P><PRE>
       The score formula is  :
@@ -138,12 +138,12 @@ To avoid making decisions (ie defining a score) without enough relevant data, th
 <P>
 
 <UL>
-<LI>The number of the number of received bounces is lower than <A NAME="8102"></A><TT>minimum_bouncing_count</TT> 
+<LI>The number of the number of received bounces is lower than <A NAME="8085"></A><TT>minimum_bouncing_count</TT> 
 	(see <A HREF="node6.html#kw-minimum-bouncing-count">5.8.9</A>, page&nbsp;<A HREF="node6.html#kw-minimum-bouncing-count"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
 </LI>
-<LI>The bouncing period is shorter than <A NAME="8105"></A><TT>minimum_bouncing_period</TT> 
+<LI>The bouncing period is shorter than <A NAME="8088"></A><TT>minimum_bouncing_period</TT> 
 	(see <A HREF="node6.html#kw-minimum-bouncing-period">5.8.10</A>, page&nbsp;<A HREF="node6.html#kw-minimum-bouncing-period"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
 
 <P>
@@ -170,36 +170,36 @@ To avoid making decisions (ie defining a score) without enough relevant data, th
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1149"
+<A NAME="tex2html1147"
   HREF="node19.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1143"
+<A NAME="tex2html1141"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1137"
+<A NAME="tex2html1135"
   HREF="node17.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1145"
+<A NAME="tex2html1143"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1147"
+<A NAME="tex2html1145"
   HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1150"
+<B> Next:</B> <A NAME="tex2html1148"
   HREF="node19.html">18. Antivirus</A>
-<B> Up:</B> <A NAME="tex2html1144"
+<B> Up:</B> <A NAME="tex2html1142"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1138"
+<B> Previous:</B> <A NAME="tex2html1136"
   HREF="node17.html">16. Shared documents</A>
- &nbsp <B>  <A NAME="tex2html1146"
+ &nbsp <B>  <A NAME="tex2html1144"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1148"
+ &nbsp <B>  <A NAME="tex2html1146"
   HREF="node23.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2004-01-12
+2004-01-13
 </ADDRESS>
 </BODY>
 </HTML>

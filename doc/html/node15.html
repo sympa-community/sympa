@@ -29,31 +29,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1034"
+<A NAME="tex2html1032"
   HREF="node16.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1028"
+<A NAME="tex2html1026"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1022"
+<A NAME="tex2html1020"
   HREF="node14.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1030"
+<A NAME="tex2html1028"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1032"
+<A NAME="tex2html1030"
   HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1035"
+<B> Next:</B> <A NAME="tex2html1033"
   HREF="node16.html">15. List configuration parameters</A>
-<B> Up:</B> <A NAME="tex2html1029"
+<B> Up:</B> <A NAME="tex2html1027"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1023"
+<B> Previous:</B> <A NAME="tex2html1021"
   HREF="node14.html">13. Mailing list definition</A>
- &nbsp <B>  <A NAME="tex2html1031"
+ &nbsp <B>  <A NAME="tex2html1029"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1033"
+ &nbsp <B>  <A NAME="tex2html1031"
   HREF="node23.html">Index</A></B> 
 <BR>
 <BR>
@@ -62,16 +62,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1036"
+<LI><A NAME="tex2html1034"
   HREF="node15.html#SECTION001510000000000000000">14.1 List creation</A>
 <UL>
-<LI><A NAME="tex2html1037"
+<LI><A NAME="tex2html1035"
   HREF="node15.html#SECTION001511000000000000000">14.1.1 Who can create lists</A>
-<LI><A NAME="tex2html1038"
+<LI><A NAME="tex2html1036"
   HREF="node15.html#SECTION001512000000000000000">14.1.2 typical list profile</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html1039"
+<LI><A NAME="tex2html1037"
   HREF="node15.html#SECTION001520000000000000000">14.2 List edition</A>
 </UL>
 <!--End of Table of Child-Links-->
@@ -105,16 +105,16 @@ in the documentation.
 
 <P>
 Listmasters have all privileges. Currently the listmaster
-is defined in <A NAME="6951"></A><TT>sympa.conf</TT> but in the future, it might be possible to
+is defined in <A NAME="6946"></A><TT>sympa.conf</TT> but in the future, it might be possible to
 define one listmaster per virtual robot. By default, newly created
 lists must be activated by the listmaster. List creation is possible for all intranet users 
 (i.e. : users with an e-mail address within the same domain as Sympa).
-This is controlled by the <A NAME="6954"></A><TT>create_list</TT> authorization scenario.
+This is controlled by the <A NAME="6949"></A><TT>create_list</TT> authorization scenario.
 
 <P>
 List creation request message and list creation notification message are both
-templates that you can customize (<A NAME="6957"></A><TT>create_list_request.tpl</TT> and
-<A NAME="6960"></A><TT>list_created.tpl</TT>).
+templates that you can customize (<A NAME="6952"></A><TT>create_list_request.tpl</TT> and
+<A NAME="6955"></A><TT>list_created.tpl</TT>).
 
 <P>
 
@@ -123,22 +123,22 @@ templates that you can customize (<A NAME="6957"></A><TT>create_list_request.tpl
 </H2>
 
 <P>
-This is defined by the <A NAME="6963"></A><TT>create_list</TT> sympa.conf parameter (see <A HREF="node6.html#create-list">5.1.10</A>,  
+This is defined by the <A NAME="6958"></A><TT>create_list</TT> sympa.conf parameter (see <A HREF="node6.html#create-list">5.1.10</A>,  
 page&nbsp;<A HREF="node6.html#create-list"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). This parameter refers to a <B>create_list</B> authorization scenario.
 It will determine if the <I>create list</I> button is displayed and if it requires
 a listmaster confirmation.
 
 <P>
 The authorization scenario can accept any condition concerning the [sender]
-(i.e. WWSympa user), and it returns <A NAME="6966"></A><TT>reject</TT>, <A NAME="6969"></A><TT>do_it</TT>
-or <A NAME="6972"></A><TT>listmaster</TT> as an action.
+(i.e. WWSympa user), and it returns <A NAME="6961"></A><TT>reject</TT>, <A NAME="6964"></A><TT>do_it</TT>
+or <A NAME="6967"></A><TT>listmaster</TT> as an action.
 
 <P>
 Only in cases where a user is authorized by the create_list authorization scenario
 will the "create" button be available in the main menu.
-If the scenario returns <A NAME="6975"></A><TT>do_it</TT>, the list will be created and installed.
+If the scenario returns <A NAME="6970"></A><TT>do_it</TT>, the list will be created and installed.
 If the scenario returns "listmaster", the user is allowed to create a list, but
-the list is created with the <A NAME="6978"></A><TT>pending</TT> status,
+the list is created with the <A NAME="6973"></A><TT>pending</TT> status,
 which means that only the list owner may view or use it.
 The listmaster will need to open the list of pending lists
 using the "pending list" button in the "server admin"
@@ -159,10 +159,10 @@ the list creator simply to choose a profile for the list, and to fill in
 the owner's e-mail and the list subject together with a short description.
 
 <P>
-List profiles can be stored in <A NAME="6982"></A><TT>/home/sympa/etc/create_list_templates</TT> or
-<A NAME="6985"></A><TT>/home/sympa/bin/etc/create_list_templates</TT>, which are part of the Sympa
+List profiles can be stored in <A NAME="6977"></A><TT>/home/sympa/etc/create_list_templates</TT> or
+<A NAME="6980"></A><TT>/home/sympa/bin/etc/create_list_templates</TT>, which are part of the Sympa
 distribution and should not be modified.  
-<A NAME="6988"></A><TT>/home/sympa/etc/create_list_templates</TT>, which will not be
+<A NAME="6983"></A><TT>/home/sympa/etc/create_list_templates</TT>, which will not be
 overwritten by make install, is intended to contain site customizations.
 
 <P>
@@ -174,15 +174,15 @@ templates by modifying existing ones. Contributions to the distribution are welc
 <P>
 You might want to hide or modify profiles (not useful, or dangerous 
 for your site). If a profile exists both in the local site directory
-<A NAME="6991"></A><TT>/home/sympa/etc/create_list_templates</TT> and
-<A NAME="6994"></A><TT>/home/sympa/bin/etc/create_list_templates</TT> directory, then the local profile 
+<A NAME="6986"></A><TT>/home/sympa/etc/create_list_templates</TT> and
+<A NAME="6989"></A><TT>/home/sympa/bin/etc/create_list_templates</TT> directory, then the local profile 
 will be used by WWSympa. 
 
 <P>
 Another way to control publicly available profiles is to
-edit the <A NAME="6997"></A><TT>create_list.conf</TT> file (the default for this file is in
-the <A NAME="7000"></A><TT>/home/sympa/bin/etc</TT> directory, and you may create your own customized
-version in <A NAME="7003"></A><TT>/home/sympa/etc</TT>).
+edit the <A NAME="6992"></A><TT>create_list.conf</TT> file (the default for this file is in
+the <A NAME="6995"></A><TT>/home/sympa/bin/etc</TT> directory, and you may create your own customized
+version in <A NAME="6998"></A><TT>/home/sympa/etc</TT>).
 This file controls which of the available list templates are to be displayed. Example :<PRE>
 # Do not allow the public_anonymous profile
 public_anonymous hidden
@@ -190,13 +190,13 @@ public_anonymous hidden
 </PRE>
 
 <P>
-When a list is created, whatever its status (<A NAME="7006"></A><TT>pending</TT> or
-<A NAME="7009"></A><TT>open</TT>), the owner can use WWSympa admin features to modify list
+When a list is created, whatever its status (<A NAME="7001"></A><TT>pending</TT> or
+<A NAME="7004"></A><TT>open</TT>), the owner can use WWSympa admin features to modify list
 parameters, or to edit the welcome message, and so on.
 
 <P>
 WWSympa logs the creation and all modifications to a list as part of the list's
-<A NAME="7012"></A><TT>config</TT> file (and old configuration files are saved).
+<A NAME="7007"></A><TT>config</TT> file (and old configuration files are saved).
 
 <P>
 
@@ -207,9 +207,9 @@ WWSympa logs the creation and all modifications to a list as part of the list's
 </H1>
 
 <P>
-For each parameter, you may specify (via the <A NAME="7015"></A><TT>/home/sympa/etc/edit_list.conf</TT>
+For each parameter, you may specify (via the <A NAME="7010"></A><TT>/home/sympa/etc/edit_list.conf</TT>
 configuration file) who has the right to edit the parameter concerned ; the default 
-<A NAME="7018"></A><TT>/home/sympa/bin/etc/edit_list.conf</TT> is reasonably safe.
+<A NAME="7013"></A><TT>/home/sympa/bin/etc/edit_list.conf</TT> is reasonably safe.
 
 <P>
 <PRE>
@@ -247,7 +247,7 @@ Eg: listmaster will not match rules refering to owner or privileged_owner
 </PRE>
 
 <P>
-Privileged owners are defined in the list's <A NAME="7021"></A><TT>config</TT> file as follows :
+Privileged owners are defined in the list's <A NAME="7016"></A><TT>config</TT> file as follows :
 	<PRE>
 	owner
 	email owners.email@foo.bar
@@ -296,36 +296,36 @@ Sympa aims to define two levels of trust for owners (some being entitled
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1034"
+<A NAME="tex2html1032"
   HREF="node16.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1028"
+<A NAME="tex2html1026"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1022"
+<A NAME="tex2html1020"
   HREF="node14.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1030"
+<A NAME="tex2html1028"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1032"
+<A NAME="tex2html1030"
   HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1035"
+<B> Next:</B> <A NAME="tex2html1033"
   HREF="node16.html">15. List configuration parameters</A>
-<B> Up:</B> <A NAME="tex2html1029"
+<B> Up:</B> <A NAME="tex2html1027"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1023"
+<B> Previous:</B> <A NAME="tex2html1021"
   HREF="node14.html">13. Mailing list definition</A>
- &nbsp <B>  <A NAME="tex2html1031"
+ &nbsp <B>  <A NAME="tex2html1029"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1033"
+ &nbsp <B>  <A NAME="tex2html1031"
   HREF="node23.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2004-01-12
+2004-01-13
 </ADDRESS>
 </BODY>
 </HTML>
