@@ -58,7 +58,7 @@ Content-Transfer-Encoding:  7bit
 <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="right"><A HREF="[base_url][path_cgi]">Accueil</A> <B>|</B>
 <A HREF="[base_url][path_cgi]/help">Aide</A></TD>
 </TR>
-<TR><TD COLSPAN="2" ALIGN="center" SELECTED_COLOR="--DARK_COLOR--">
+<TR><TD COLSPAN="2" ALIGN="center" BGCOLOR="--SELECTED_COLOR--">
 <FONT COLOR="--BG_COLOR--" SIZE="+2"><B>
 [IF action=subrequest]
 [wwsconf->title] / abonnement à [list]
