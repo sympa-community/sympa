@@ -5256,30 +5256,24 @@ sub _load_users_file {
     
     ## Open the file and switch to paragraph mode.
     open(L, $file) || return undef;
-    my @old = ($*, $/);
-    $* = 1; $/ = '';
     
     ## Process the lines
+    local $/;
+    my $data = <L>;
+
     my @users;
-    while (<L>) {
+    foreach (split /\n\n/, $data) {
 	my(%user, $email);
-	$user{'email'} = $email = $1 if (/^\s*email\s+(.+)\s*$/o);
-	$user{'gecos'} = $1 if (/^\s*gecos\s+(.+)\s*$/o);
-#	$user{'options'} = $1 if (/^\s*options\s+(.+)\s*$/o);
-#	$user{'auth'} = $1 if (/^\s*auth\s+(\S+)\s*$/o);
-#	$user{'password'} = $1 if (/^\s*password\s+(.+)\s*$/o);
-#	$user{'stats'} = "$1 $2 $3" if (/^\s*stats\s+(\d+)\s+(\d+)\s+(\d+)\s*$/o);
-#	$user{'firstbounce'} = $1 if (/^\s*firstbounce\s+(\d+)\s*$/o);
-	$user{'date'} = $1 if (/^\s*date\s+(\d+)\s*$/o);
-	$user{'update_date'} = $1 if (/^\s*update_date\s+(\d+)\s*$/o);
-	$user{'reception'} = $1 if (/^\s*reception\s+(digest|nomail|summary|notice|txt|html|urlize|not_me)\s*$/o);
-	$user{'visibility'} = $1 if (/^\s*visibility\s+(conceal|noconceal)\s*$/o);
+	$user{'email'} = $email = $1 if (/^\s*email\s+(.+)\s*$/om);
+	$user{'gecos'} = $1 if (/^\s*gecos\s+(.+)\s*$/om);
+	$user{'date'} = $1 if (/^\s*date\s+(\d+)\s*$/om);
+	$user{'update_date'} = $1 if (/^\s*update_date\s+(\d+)\s*$/om);
+	$user{'reception'} = $1 if (/^\s*reception\s+(digest|nomail|summary|notice|txt|html|urlize|not_me)\s*$/om);
+	$user{'visibility'} = $1 if (/^\s*visibility\s+(conceal|noconceal)\s*$/om);
 
 	push @users, \%user;
     }
     close(L);
-    
-    ($*, $/) = @old;
     
     return @users;
 }
