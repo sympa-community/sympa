@@ -33,7 +33,7 @@ use Conf;
 use Log;
 use Getopt::Long;
 use Time::Local;
-use MD5;
+use Digest::MD5;
 use smtp;
 use wwslib;
  
