@@ -912,9 +912,9 @@ sub check_param_in {
 	    &wwslog('info','check_param: unknown list %s', $in{'list'});
 	    return undef;
 	}
-	unless (($list->{'admin'}{'domain'} eq $robot) || ($robot = '*')) {
+	unless (&list_by_robot($in{'list'},$robot)) {
 	    &error_message('unknown_list', {'list' => $in{'list'}} );
-	    &wwslog('info','check_param: unknown list %s', $in{'list'});
+	    &wwslog('info','check_param: unknown list %s for robot %s', $in{'list'},$robot);
 	    return undef;
 	}
     }
