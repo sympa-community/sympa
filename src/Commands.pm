@@ -2376,6 +2376,7 @@ sub modindex {
 ## return information about the sender 
 sub which {
     my($listname, @which);
+    shift;
     my $robot = shift;
     do_log('debug', 'Commands::which(%s)', $listname);
     
