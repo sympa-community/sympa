@@ -162,7 +162,7 @@ sub sendto {
 	    }
 	    $email = lc ($rcpt->[0]); 
 	}
-	$msg = &tools::smime_encrypt ($msg_header, $msg_body, ,$email);
+	$msg = &tools::smime_encrypt ($msg_header, $msg_body, $email);
     }else {
         $msg = $msg_header->as_string . "\n" . $msg_body;
     }

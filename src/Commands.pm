@@ -433,7 +433,12 @@ sub review {
 	$auth_method='smtp';
     }
 
-    my $action = &List::get_action ('review',$listname,$sender,$auth_method);
+#    my $action = &List::get_action ('review',$listname,$sender,$auth_method);
+    my $action = &List::request_action ('review',$auth_method,
+                                     {'listname' => $listname,
+                                      'sender' => $sender});
+
+
     if ($action =~ /request_auth/i) {
 	do_log ('debug',"auth requested from $sender");
         $list->request_auth ($sender,'review');

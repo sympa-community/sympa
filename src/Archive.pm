@@ -23,7 +23,7 @@ sub outgoing {
     return 1 if ($dir eq '/dev/null');
 
     ## ignoring message with a no-archive flag
-    if (($msg->head->get('X-no-archive') =~ /yes/i) || ($msg->head->get('Restrict') =~ /no\-external\-archive/i)) {
+    if (ref($msg) && (($msg->head->get('X-no-archive') =~ /yes/i) || ($msg->head->get('Restrict') =~ /no\-external\-archive/i))) {
 	do_log('info',"Do not archive message with no-archive flag for list $listname");
 	return 1;
     }
@@ -56,7 +56,7 @@ sub outgoing {
 sub store {
     my($dir, $period, $msg) = @_;
     
-    do_log ('debug2','archive::store (%s,%s,%s)',$dir, $period, $msg);
+    do_log ('debug2','archive::store (%s,%s)',$dir, $period);
     
     my($filename, $newfile);
     

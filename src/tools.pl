@@ -340,6 +340,7 @@ sub smime_sign {
     foreach my $header ($in_msg->head->tags) {
 	$signed_msg->head->add($header,$in_msg->head->get($header)) unless $predefined_headers->{$header} ;
     }
+
     return $signed_msg;
 }
 
@@ -372,12 +373,12 @@ sub smime_sign_check {
 	return undef ;
     }
 
-    unless (open MSG, $file) {
-	do_log('err', 'Unable to open file %s: %s', $file, $!);
-	return undef;
-    }
+#    unless (open MSG, $file) {
+#	do_log('err', 'Unable to open file %s: %s', $file, $!);
+#	return undef;
+#    }
 
-    print MSGDUMP <MSG>;
+    $msg->print(\*MSGDUMP);
     close MSGDUMP; close MSG;
     
     ## second step is the message signer match the sender
@@ -428,19 +429,16 @@ sub smime_encrypt {
     my $list = shift ;
 
     my $usercert;
-    
+    my $cryptedmsg;
+    my $encrypted_body;    
 
-    &do_log('debug2', 'tools::smime_encrypt message msg from %s for %s %s',$msg->head->get('from'),$list, $email);
+    &do_log('debug2', 'tools::smime_encrypt message msg for %s %s',$list, $email);
     if ($list eq 'list') {
 	$usercert = "$Conf{'home'}/$email/cert.pem";
     }else{
 	$usercert = "$Conf{'ssl_cert_dir'}/".&tools::escape_chars($email);
     }
     if (-r $usercert) {
-	unless (open (MSGDUMP , "> $Conf{'tmpdir'}/MSG.$$")) {
-	    &do_log('err', 'unable to open %s/MSG.%s',$Conf{'tmpdir'},$$);
-	    return undef;
-	}
 	my $temporary_file = $Conf{'tmpdir'}."/".$email.".".$$ ;
 
 	## encrypt the incomming message parse it.
@@ -448,10 +446,9 @@ sub smime_encrypt {
 	if (!open(MSGDUMP, "| $Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert")) {
 	    &do_log('info', 'Can\'t encrypt message for recipient %s', $email);
 	}
-	$msg->print(\*MSGDUMP);
+	$msg_header->print(\*MSGDUMP);
+	printf MSGDUMP "\n%s", $msg_body;
 	close(MSGDUMP);
-
-	my $cryptedmsg;
 
         ## Get as MIME object
 	open (NEWMSG, $temporary_file);
@@ -465,7 +462,6 @@ sub smime_encrypt {
 
         ## Get body
 	open (NEWMSG, $temporary_file);
-	my $encypted_body;
         my $in_header = 1 ;
 	while (<NEWMSG>) {
 	   if ( !$in_header)  { 
@@ -502,8 +498,8 @@ unlink ($temporary_file) unless ($main::options{'debug'} || $main::options{'debu
 sub smime_decrypt {
     my $msg = shift;
     my $list = shift ; ## the recipient of the msg
+    my $as = shift;
     
-
     &do_log('debug2', 'tools::smime_decrypt message msg from %s,%s',$msg->head->get('from'),$list);
 
     my $certfile = "$Conf{'home'}/$list/cert.pem" ;
@@ -532,6 +528,7 @@ sub smime_decrypt {
 	# if password is define in sympa.conf pass the password to OpenSSL using
 	$pass_option = "-passin file:$Conf{'tmpdir'}/pass.$$";	
     }
+
     open (NEWMSG, "$Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option 2>&1 |");
     if ($Conf{'key_passwd'} ne '') {
 	unless (&POSIX::mkfifo("$Conf{'tmpdir'}/pass.$$",0600)) {
@@ -571,9 +568,8 @@ sub smime_decrypt {
 	$decryptedmsg->head->delete('Content-Transfer-Encoding') if ($msg->head->get('Content-Transfer-Encoding'));
     }
 
-
     return $decryptedmsg;
-
+   }
     
 }
 
@@ -829,8 +825,6 @@ sub virus_infected {
 
     my $virusfound; 
 
-    print STDERR "$Conf{'antivirus_path'}\n";
-
     ## McAfee
     if ($name[$#name] eq 'uvscan') {
 
@@ -856,7 +850,6 @@ sub virus_infected {
     ## Trend Micro
     }elsif ($name[$#name] eq 'vscan') {
 
-	print STDERR "$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir\n";
 	open (ANTIVIR,"$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ; 
 		
 	while (<ANTIVIR>) {

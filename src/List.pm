@@ -1464,7 +1464,7 @@ sub distribute_msg {
     ## Archives
     my $msgtostore = $msg;
     if ($encrypt eq 'smime_crypted'){
-	$msgtostore = &tools::smime_encrypt($msg,$self->{'name'},'list');
+	$msgtostore = &tools::smime_encrypt($msg->head, $msg->body_as_string,$self->{'name'},'list');
     }
     $self->archive_msg($msgtostore);
 
