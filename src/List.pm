@@ -927,8 +927,8 @@ sub load {
 
     ## Only load total of users from a Database
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
-	$users->{'total'} = _load_total_db($name)
-	    unless (defined $self->{'total'});
+#	$users->{'total'} = _load_total_db($name)
+#	    unless (defined $self->{'total'});
     }elsif($self->{'admin'}->{'user_data_source'} eq 'file') { 
 	
 	## Touch subscribers file if not exists
@@ -967,13 +967,24 @@ sub load {
 	return undef;
     }
 
-    my $stats = _load_stats_file("$name/stats")  if ($self->{'name'} ne $name || $m3 > $self->{'mtime'}->[2]);
+    ## Load stats file if first new() or stats file changed
+    my ($stats, $total);
+    ($stats, $total) = _load_stats_file("$name/stats")
+	if (!$m3 || ($m3 > $self->{'mtime'}->[2]));
+
+#    my $stats = _load_stats_file("$name/stats")  if ($self->{'name'} ne $name || $m3 > $self->{'mtime'}->[2]);
 
     $self->{'name'}  = $name if (-d "$name");
     $self->{'stats'} = $stats if ($stats);
     $self->{'users'} = $users->{'users'} if ($users);
     $self->{'ref'}   = $users->{'ref'} if ($users);
-    $self->{'total'} = $users->{'total'} if ($users);
+
+    if ($users) {
+	$self->{'total'} = $users->{'total'}
+    }elsif ($total && ($self->{'admin'}{'user_data_source'} eq 'database')) {
+	$self->{'total'} = $total 
+    }
+
     $self->{'mtime'} = [ $m1, $m2, $m3 ];
 
     $list_of_lists{$name} = $self;
@@ -2068,13 +2079,13 @@ sub get_total {
     my $self = shift;
     my $name = $self->{'name'};
 
-    if ($self->{'admin'}{'user_data_source'} eq 'database') {
+#    if ($self->{'admin'}{'user_data_source'} eq 'database') {
 	## If stats file was updated
-	my $time = (stat("$name/stats"))[9];
-	if ($time > $self->{'mtime'}[0]) {
-	    $self->{'total'} = _load_total_db($self->{'name'});
-	}
-    }
+#	my $time = (stat("$name/stats"))[9];
+#	if ($time > $self->{'mtime'}[0]) {
+#	    $self->{'total'} = _load_total_db($self->{'name'});
+#	}
+#    }
     
     return $self->{'total'};
 }
@@ -2330,6 +2341,12 @@ sub get_first_user {
 	    $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	    unless ($self->is_available_reception_mode($user->{'reception'}));
 	}
+
+	## If no LIMIT was used, update total of subscribers
+#	unless ($offset || $rows) {
+	    $self->{'total'} = &_load_total_db($self->{'name'});
+	    $self->savestats();
+#	}
 
 	return $user;
     }else {
@@ -3884,21 +3901,24 @@ sub _load_stats_file {
     do_log('debug2', 'List::_load_stats_file(%s)', $file);
 
    ## Create the initial stats array.
-   my $stats;
+   my ($stats, $total);
  
    if (open(L, $file)){     
-       if (<L> =~ /^(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/) {
-	   $stats = [ $1, $2, $3, $4 ];
+       if (<L> =~ /^(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/) {
+	   $stats = [ $1, $2, $3, $4];
+	   $total = $5;
        } else {
-	   $stats = [ 0, 0, 0, 0 ];
+	   $stats = [ 0, 0, 0, 0];
+	   $total = 0;
        }
        close(L);
    } else {
-       $stats = [ 0, 0, 0, 0 ];
+       $stats = [ 0, 0, 0, 0];
+       $total = 0;
    }
 
    ## Return the array.
-   $stats;
+   return ($stats, $total);
 }
 
 ## Loads the list of subscribers as a tied hash
