@@ -2480,10 +2480,12 @@ sub do_subscribe {
 
 	$list->save();
 
-	my %context;
-	$context{'subject'} = sprintf(Msg(8, 6, "Welcome to list %s"), $list->{'name'});
-	$context{'body'} = sprintf(Msg(8, 6, "You are now subscriber of list %s"), $list->{'name'});
-	$list->send_file('welcome', $param->{'user'}{'email'}, $robot, \%context);
+	unless ($sub_is =~ /quiet/i ) {
+	    my %context;
+	    $context{'subject'} = sprintf(Msg(8, 6, "Welcome to list %s"), $list->{'name'});
+	    $context{'body'} = sprintf(Msg(8, 6, "You are now subscriber of list %s"), $list->{'name'});
+	    $list->send_file('welcome', $param->{'user'}{'email'}, $robot, \%context);
+	}
 
 	if ($sub_is =~ /notify/) {
 	    $list->send_notify_to_owner($param->{'user'}{'email'}, $param->{'user'}{'gecos'}, 'subscribe');
@@ -3017,7 +3019,7 @@ sub do_add {
 	
 	$total++;
 	
-	unless ($in{'quiet'}) {
+	unless ($in{'quiet'} || ($add_is =~ /quiet/i )) {
 	    my %context;
 	    $context{'subject'} = sprintf(Msg(8, 6, "Welcome to list %s"), $list->{'name'});
 	    $context{'body'} = sprintf(Msg(8, 6, "You are now subscriber of list %s"), $list->{'name'});
