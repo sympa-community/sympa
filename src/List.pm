@@ -4883,28 +4883,37 @@ sub store_digest {
 
 ## List of lists hosted a robot
 sub get_lists {
-    my $robot = shift;
+    my $robot_context = shift;
 
-    my(@lists, $l);
+    my(@lists, $l,@robots);
     do_log('debug2', 'List::get_lists(%s)',$robot);
 
-    my $robot_dir =  $Conf{'home'}.'/'.$robot ;
-    $robot_dir = $Conf{'home'}  unless ((-d $robot_dir) || ($robot ne $Conf{'host'}));
-
-    unless (-d $robot_dir) {
-	do_log('err',"unknown robot $robot, Unable to open $robot_dir");
-	return undef ;
+    if ($robot_context eq '*') {
+	@robots = &get_robots ;
+    }else{
+	push @robots, $robot_context ;
     }
+
     
-    unless (opendir(DIR, $robot_dir)) {
-	do_log('err',"Unable to open $robot_dir");
-	return undef;
-    }
-    foreach $l (sort readdir(DIR)) {
-	next unless (($l !~ /^\./o) and (-d "$robot_dir/$l") and (-f "$robot_dir/$l/config"));
-	# push @lists, $l if (&list_by_robot ($l,$robot));*
-	push @lists, $l;
-
+    foreach my $robot (@robots) {
+    
+	my $robot_dir =  $Conf{'home'}.'/'.$robot ;
+	$robot_dir = $Conf{'home'}  unless ((-d $robot_dir) || ($robot ne $Conf{'host'}));
+	
+	unless (-d $robot_dir) {
+	    do_log('err',"unknown robot $robot, Unable to open $robot_dir");
+	    return undef ;
+	}
+	
+	unless (opendir(DIR, $robot_dir)) {
+	    do_log('err',"Unable to open $robot_dir");
+	    return undef;
+	}
+	foreach $l (sort readdir(DIR)) {
+	    next unless (($l !~ /^\./o) and (-d "$robot_dir/$l") and (-f "$robot_dir/$l/config"));
+	    push @lists, $l;
+	    
+	}
     }
     return @lists;
 }
