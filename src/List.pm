@@ -7631,6 +7631,52 @@ sub remove_task {
     return 1;
 }
 
+
+# add log in RDBMS 
+sub db_log {
+
+    my $process = shift;
+    my $email_user = shift;
+    my $auth = shift;
+    my $ip = shift;
+    my $ope = shift;
+    my $list = shift;
+    my $robot = shift;
+    my $arg = shift;
+    my $status = shift;
+    my $list_subscriber = shift;
+
+    do_log ('info',"db_log (PROCESS = $process, EMAIL = $email_user, AUTH = $auth, IP = $ip, OPERATION = $ope, LIST = $list,ROBOT = $robot, ARG = $arg ,STATUS = $status , LIST= list_subscriber)");
+
+    unless ($process =~ /^((task)|(archived)|(sympa)|(wwsympa)|(bounce))$/) {
+	do_log ('err',"Internal_error : incorrect process value $process");
+	return undef;
+    }
+
+    unless ($auth =~ /^((smtp)|(md5)|(smime)|(null))$/) {
+	do_log ('err',"Internal_error : incorrect auth value $auth");
+	return undef;
+    }
+    $auth = '' if ($auth eq 'null');
+
+
+    my $date=time;
+    my $date_operation = sprintf $date_format{'write'}{$Conf{'db_type'}}, $date, $date;
+    
+    ## Insert in log_table
+
+    my $statement = 'INSERT INTO log_table (id, date_operation, pid, process, email_user, auth, ip, operation, operation_list, operation_robot, operation_arg, operation_status, list_subscriber) ';
+
+    my $statement_value = sprintf "VALUES ('',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $date_operation,$dbh->quote($$),$dbh->quote($process),$dbh->quote($email_user),$dbh->quote($auth),$dbh->quote($ip),$dbh->quote($ope),$dbh->quote($list),$dbh->quote($robot),$dbh->quote($arg),$dbh->quote($status),$dbh->quote($list_subscriber);		    
+    $statement = $statement.$statement_value;
+    
+		    unless ($dbh->do($statement)) {
+			do_log('err','Unable to execute SQL statement \n"%s" \n %s', $statement, $dbh->errstr);
+			return undef;
+		    }
+
+}
+
 #################################################################
 
 ## Packages must return true.
