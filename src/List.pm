@@ -3821,6 +3821,14 @@ sub add_user {
 	    $list_cache{'is_user'}{$name}{$who} = undef;
 	    
 	    my $statement;
+
+	    ## If datasource is 'include2' either is_included or is_subscribed must be set
+	    ## default is is_subscriber for backward compatibility reason
+	    if ($self->{'admin'}{'user_data_source'} eq 'include2') {
+		unless ($new_user->{'included'}) {
+		    $new_user->{'subscribed'} = 1;
+		}
+	    }
 	    
 	    unless ($new_user->{'included'}) {
 		## Is the email in user table ?
