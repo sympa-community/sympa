@@ -40,7 +40,7 @@
   [ELSIF status=notauth_noemail]
 
          <FORM ACTION="[path_cgi]" METHOD=POST>
-          <FONT COLOR="[dark_color]"><B>Your e-mail address</B> 
+          <FONT COLOR="[dark_color]"><B>Your e-mail address</B> </FONT>
 	  <INPUT  NAME="email" SIZE="30"><BR>
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	  <INPUT TYPE="hidden" NAME="action" VALUE="subrequest">
@@ -67,7 +67,7 @@
 
   [ELSIF status=notauth_subscriber]
 
-	<FONT COLOR="[dark_color]"><B>You are already subscriber of list [list].
+	<FONT COLOR="[dark_color]"><B>You are already subscriber of list [list].</B>
 	</FONT>
 	<BR><BR>
 

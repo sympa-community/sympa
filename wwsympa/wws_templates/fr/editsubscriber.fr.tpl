@@ -29,7 +29,7 @@
 [IF subscriber->bounce]
 <TR><TH BGCOLOR="[error_color]">
 <FONT COLOR="[bg_color]">Address en erreur</FONT>
-</TD></TR><TR><TD>
+</TH></TR><TR><TD>
 <DL>
 <DD>Type d'erreur : [subscriber->bounce_status] ([subscriber->bounce_code])
 <DD>Nombre de retour : [subscriber->bounce_count]

@@ -114,7 +114,7 @@ La sélection est trop large, impossible d'afficher la sélection
 	[ELSE]
 	    <TH NOWRAP COLSPAN=2>
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/email" >
-	    <FONT SIZE="-1"><b>Email</b></A>
+	    <FONT SIZE="-1"><b>Email</b></FONT></A>
 	[ENDIF]
 	</TH>
 	[IF sortby=domain]
@@ -123,7 +123,7 @@ La sélection est trop large, impossible d'afficher la sélection
 	[ELSE]
 	    <TH NOWRAP>
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/domain" >
-	    <FONT SIZE="-1"><b>Domaine</b></A>
+	    <FONT SIZE="-1"><b>Domaine</b></FONT></A>
 	[ENDIF]
 	</TH>
         <TH><FONT SIZE="-1"><B>Nom</B></FONT>
@@ -168,8 +168,7 @@ La sélection est trop large, impossible d'afficher la sélection
  	        [u->email]
  	      [ENDIF]
 	  </FONT></TD>
-            <TD ALIGN="right"BGCOLOR="[error_color]"><FONT SIZE=-1>
-		<FONT COLOR="[bg_color]"><B>en erreur</B></FONT>
+            <TD ALIGN="right"BGCOLOR="[error_color]"><FONT SIZE=-1 COLOR="[bg_color]"><B>en erreur</B></FONT>
 	    </TD>
 
 	 [ELSE]

@@ -147,7 +147,7 @@
 
       <TR>
         <TD>
-<FONT COLOR="[dark_color]"><B>Reconstruire les archives HTML </B> .
+<FONT COLOR="[dark_color]"><B>Reconstruire les archives HTML </B> .</FONT>
         </TD>
       </TR>
       <TR>

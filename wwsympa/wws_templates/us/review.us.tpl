@@ -120,7 +120,7 @@ Selection too wide, can not show selection
 	[ELSE]
 	    <TH NOWRAP COLSPAN=2>
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/email" >
-	    <FONT SIZE="-1"><b>Email</b></A>
+	    <FONT SIZE="-1"><b>Email</b></FONT></A>
 	[ENDIF]
 	</TH>
         [IF sortby=domain]
@@ -129,7 +129,7 @@ Selection too wide, can not show selection
 	[ELSE]
 	    <TH NOWRAP>
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/domain" >
-	    <FONT SIZE="-1"><b>Domain</b></A>
+	    <FONT SIZE="-1"><b>Domain</b></FONT></A>
 	[ENDIF]
 	</TH>
         <TH><FONT SIZE="-1"><B>Name</B></FONT>
@@ -174,8 +174,7 @@ Selection too wide, can not show selection
  	        [u->email]
  	      [ENDIF]
 	  </FONT></TD>
-            <TD ALIGN="right"BGCOLOR="[error_color]"><FONT SIZE=-1>
-		<FONT COLOR="[bg_color]"><B>bouncing</B></FONT>
+            <TD ALIGN="right"BGCOLOR="[error_color]"><FONT SIZE=-1 COLOR="[bg_color]"><B>bouncing</B></FONT>
 	    </TD>
 
 	 [ELSE]

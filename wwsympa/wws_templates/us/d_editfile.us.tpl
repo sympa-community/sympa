@@ -44,9 +44,9 @@
   <FORM ACTION="[path_cgi]" METHOD="POST">
   <TD ALIGN="right" VALIGN="bottom">
   [IF directory]
-  <B> Describe the directory [path]</B></BR>
+  <B> Describe the directory [path]</B><BR>
   [ELSE]
-  <B> Describe the file [path]</B></BR>
+  <B> Describe the file [path]</B><BR>
   [ENDIF]
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="path" VALUE="[path]">

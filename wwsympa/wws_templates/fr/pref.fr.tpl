@@ -36,7 +36,7 @@
               [END]
             </SELECT>
             <BR><BR>
-            <INPUT TYPE="submit" NAME="action_setpref" VALUE= "Valider"></FONT>
+            <INPUT TYPE="submit" NAME="action_setpref" VALUE= "Valider">
           </FORM>
         </TD>
       </TR>

@@ -5,12 +5,12 @@
 as possible. This task may be down in a few minutes, don't forget to
 reload the incriminated page.
 [ELSIF status = no_msgid]
-<b>Unable to find the message to delete, probably this message
+<b>Unable to find the message to delete</b>, probably this message
 was received without "Message-Id:" Please refer to listmaster with
-complete URL of the incriminated message</center>
+complete URL of the incriminated message
 [ELSIF status = not_found]
 <b>Unable to find the message to delete</b>
 [ELSE]
-<b>Error while deleting this message, please refer to listmaster with
-complete URL of the incriminated message.</b>
+<b>Error while deleting this message</b>, please refer to listmaster with
+complete URL of the incriminated message.
 [ENDIF]

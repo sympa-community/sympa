@@ -35,7 +35,7 @@
               [END]
             </SELECT>
             <BR><BR>
-            <INPUT TYPE="submit" NAME="action_setpref" VALUE="Submit"></FONT>
+            <INPUT TYPE="submit" NAME="action_setpref" VALUE="Submit">
           </FORM>
         </TD>
       </TR>

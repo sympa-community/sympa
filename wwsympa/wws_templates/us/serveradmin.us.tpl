@@ -147,7 +147,7 @@
 
       <TR>
         <TD>
-<FONT COLOR="[dark_color]"><B>Rebuild HTML archives</B> using <CODE>arctxt</CODE> directories as input.
+<FONT COLOR="[dark_color]"><B>Rebuild HTML archives</B> using <CODE>arctxt</CODE> directories as input.</FONT>
         </TD>
       </TR>
       <TR>

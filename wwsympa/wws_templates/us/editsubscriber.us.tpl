@@ -29,7 +29,7 @@
 [IF subscriber->bounce]
 <TR><TH BGCOLOR="[error_color]">
 <FONT COLOR="[bg_color]">Bouncing address</FONT>
-</TD></TR><TR><TD>
+</TH></TR><TR><TD>
 <DL>
 <DD>Status : [subscriber->bounce_status] ([subscriber->bounce_code])
 <DD>Bounces count : [subscriber->bounce_count]

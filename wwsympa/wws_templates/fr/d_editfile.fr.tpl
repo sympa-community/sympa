@@ -44,9 +44,9 @@
   <FORM ACTION="[path_cgi]" METHOD="POST">
   <TD ALIGN="right" VALIGN="bottom">
   [IF directory]
-  <B> Décrire le répertoire [path]</B></BR>
+  <B> Décrire le répertoire [path]</B><BR>
   [ELSE]
-  <B> Décrire le fichier [path]</B></BR>
+  <B> Décrire le fichier [path]</B><BR>
   [ENDIF]
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
@@ -64,9 +64,9 @@
   <FORM ACTION="[path_cgi]" METHOD="POST">
   <TD ALIGN="right" VALIGN="bottom">
   [IF directory]
-  <B> Renommer le répertoire [path]</B></BR>
+  <B> Renommer le répertoire [path]</B><BR>
   [ELSE]
-  <B> Renommer le fichier [path]</B></BR>
+  <B> Renommer le fichier [path]</B><BR>
   [ENDIF]
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
