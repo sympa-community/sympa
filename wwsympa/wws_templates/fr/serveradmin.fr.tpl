@@ -182,5 +182,5 @@
 
 <BR><BR>
 [IF loop_count]
-Ce processus FastCGI ([process_id]) a traité [loop_count] requêtes depuis [start_date].
+Ce processus FastCGI ([process_id]) a traité [loop_count] requêtes depuis [start_time].
 [ENDIF]
