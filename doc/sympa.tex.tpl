@@ -3193,6 +3193,9 @@ Only the following parameters can be redefined for a particular robot :
 	This hostname will be compared with 'SERVER\_NAME' ENV var in wwsympa.fcgi
 	to deduce the current Virtual Robot.
 
+	\item \cfkeyword {wwsympa\_url} \\
+	The base URL of WWSympa
+
 	\item \cfkeyword {cookie\_domain}
 
 	\item \cfkeyword {email}
