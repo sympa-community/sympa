@@ -431,7 +431,7 @@ while ($query = &new_loop()) {
 	    last;
 	}
 
-	$param->{'host'} = $list->{'domain'}{'host'} || $robot;
+	$param->{'host'} = $list->{'admin'}{'host'} || $robot;
 	$param->{'domain'} = $param->{'host'};
 	
 	## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
