@@ -265,30 +265,47 @@ sub lists {
 
 ## Sends the statistics about a list.
 sub stats {
-    my $which = shift;
+    my $listname = shift;
     my $robot=shift;
 
-    do_log('debug2', 'Commands::stats(%s)', $which);
+    do_log('debug2', 'Commands::stats(%s)', $listname);
 
-    my $list = new List ($which);
-    unless (($list) && (&List::list_by_robot ($which,$robot))) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'STATS %s from %s refused, unknown list for robot %s', $which, $sender,$robot);
+    my $list = new List ($listname);
+    unless (($list) && (&List::list_by_robot ($listname,$robot))) {
+	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
+	do_log('info', 'STATS %s from %s refused, unknown list for robot %s', $listname, $sender,$robot);
 	return 'unknown_list';
     }
 
-    # sa pas de controle sur qui à le droit de faire stats !!!
-    my %stats = ('msg_rcv' => $list->{'stats'}[0],
-		 'msg_sent' => $list->{'stats'}[1],
-		 'byte_rcv' => sprintf ('%9.2f', ($list->{'stats'}[2] / 1024 / 1024)),
-		 'byte_sent' => sprintf ('%9.2f', ($list->{'stats'}[3] / 1024 / 1024))
-		 );
+    my $auth_method;
 
-    $list->send_file('stats_report', $sender, $robot, {'stats' => \%stats, 
-					'from' => "SYMPA <$Conf{'email'}\@$robot>",
-					'subject' => "STATS $list->{'name'}"});
-    
-    do_log('info', 'STATS %s from %s accepted (%d seconds)', $which, sender, time-$time_command);
+    if ($sign_mod eq 'smime') {
+	$auth_method='smime';
+    }else { 
+	$auth_method = 'smtp';
+    }
+
+    my $action = &List::request_action ('review',$auth_method,$robot,
+					{'listname' => $listname,
+					 'sender' => $sender});
+
+    if ($action =~ /reject/i) {
+	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'STATS',$listname;
+	do_log('info', 'stats %s from %s refused (not allowed)', $listname,$sender);
+	return 'not_allowed';
+    }else {
+	my %stats = ('msg_rcv' => $list->{'stats'}[0],
+		     'msg_sent' => $list->{'stats'}[1],
+		     'byte_rcv' => sprintf ('%9.2f', ($list->{'stats'}[2] / 1024 / 1024)),
+		     'byte_sent' => sprintf ('%9.2f', ($list->{'stats'}[3] / 1024 / 1024))
+		     );
+	
+	$list->send_file('stats_report', $sender, $robot, {'stats' => \%stats, 
+							   'from' => "SYMPA <$Conf{'email'}\@$robot>",
+							   'subject' => "STATS $list->{'name'}"});
+	
+	do_log('info', 'STATS %s from %s accepted (%d seconds)', $listname, sender, time-$time_command);
+    }
 
     return 1;
 }
@@ -1062,7 +1079,7 @@ sub invite {
                 $context{'subject'} = "sub $which $comment";
 		$context{'url'}= "mailto:$Conf{'email'}\@$robot?subject=$context{'subject'}";
 		$context{'url'} =~ s/\s/%20/g;
-		$list->send_file('invite', $email, $robot,\%context) ;            
+		$list->send_file('invite', $email, $robot,\%context) ;      
 		do_log('info', 'INVITE %s %s from %s accepted,  (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
 		push @msg::report, sprintf Msg(6, 85, "User %s has been invited to subscribe in list %s.\n"),$email,$which;
 
