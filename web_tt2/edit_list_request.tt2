@@ -339,9 +339,9 @@
 
 	  [% ELSE %]
 	  <!-- Scalar -->
-	    [% IF p.may_edit == 'write' %]
+	    [% IF key.may_edit == 'write' %]
 	      <input type="text" name="single_param.[% p.name %].[% key.name %]" value="[% key.value %]" size="[% key.length %]" />
-	      [% ELSIF p.may_edit == 'read' %]
+	      [% ELSIF key.may_edit == 'read' %]
 	        [% key.value %]
 	      [% END %]
 	      [% key.unit %]

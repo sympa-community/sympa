@@ -40,7 +40,7 @@
  [%|loc%]CONFIRM <key>               * Confirmation for sending a message (depending on the list's configuration)[%END%]
  [%|loc%]QUIT                        * Indicates the end of the commands (to ignore a signature)[%END%]
 
-[% IF is_owner %]
+[% IF is_owner -%]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 [%|loc%]The following commands are available only for lists's owners or moderators:[%END%]
 
@@ -50,7 +50,7 @@
 
  [%|loc%]REMIND <list>                   * Send a reminder message to each subscriber (this is a way to inform anyone what is his real subscribing email).[%END%]
 [% END %]
-[% IF is_editor %]
+[% IF is_editor -%]
 
  [%|loc%]DISTribute <list> <key>        * Moderation: to validate a message[%END%]
  [%|loc%]REJect <list> <key>            * Moderation: to reject a message[%END%]

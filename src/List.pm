@@ -227,6 +227,7 @@ use MIME::Words;
 use MIME::WordDecoder;
 use MIME::Parser;
 use Message;
+use Family;
 use PlainDigest;
 
 ## Database and SQL statement handlers
@@ -255,8 +256,8 @@ my %default = ('occurrence' => '0-1',
 	       'length' => 25
 	       );
 
-my @param_order = qw (subject visibility info subscribe add unsubscribe del owner send editor 
-		      account topics 
+my @param_order = qw (subject visibility info subscribe add unsubscribe del owner owner_include
+		      send editor editor_include account topics 
 		      host lang web_archive archive digest available_user_options 
 		      default_user_options reply_to_header reply_to forced_reply_to * 
 		      welcome_return_path remind_return_path user_data_source include_file include_remote_file 
@@ -298,6 +299,8 @@ my %alias = ('reply-to' => 'reply_to',
 ## obsolete :    Obsolete parameter ; should not be displayed 
 ##               nor saved
 ## order :       Order of parameters within paragraph
+## internal :    Indicates that the parameter is an internal parameter
+##               that should always be saved in the config file
 ###############################################################
 %::pinfo = ('account' => {'format' => '\S+',
 			  'length' => 10,
@@ -431,6 +434,7 @@ my %alias = ('reply-to' => 'reply_to',
 						    }
 				    },
 			   'gettext_id' => "Creation of the list",
+			   'internal' => 1,
 			   'group' => 'other'
 
 		       },
@@ -531,6 +535,12 @@ my %alias = ('reply-to' => 'reply_to',
 			      'gettext_id' => "",
 			      'group' => 'other'
 			 },
+ 	    'family_name' => {'format' => $tools::regexp{'family_name'},
+ 			      'occurrence' => '0-1',
+ 			      'gettext_id' => 'Family name',
+			      'internal' => 1,
+ 			      'group' => 'description'
+ 			      },
 	    'footer_type' => {'format' => ['mime','append'],
 			      'default' => 'mime',
 			      'gettext_id' => "Attachment type",
@@ -854,6 +864,25 @@ my %alias = ('reply-to' => 'reply_to',
 		       'gettext_id' => "Language of the list",
 		       'group' => 'description'
 		   },
+ 	    'latest_instantiation' => {'format' => {'date_epoch' => {'format' => '\d+',
+ 								     'occurrence' => '1',
+ 								     'gettext_id' => 'epoch date',
+ 								     'order' => 3
+ 								     },
+ 						    'date' => {'format' => '.+',
+ 							       'gettext_id' => 'date',
+ 							       'order' => 2
+ 							       },
+ 						    'email' => {'format' => $tools::regexp{'email'},
+ 								'occurrence' => '0-1',
+ 								'gettext_id' => 'who ran the instantiation',
+ 								'order' => 1
+ 								}
+ 						},
+ 				       'gettext_id' => 'Latest family instantiation',
+				       'internal' => 1,
+				       'group' => 'other'
+ 				       },
 	    'max_size' => {'format' => '\d+',
 			   'length' => 8,
 			   'unit' => 'bytes',
@@ -976,6 +1005,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 'length' => 3,
 			 'default' => 0,
 			 'gettext_id' => "Serial number of the config",
+			 'internal' => 1,
 			 'group' => 'other'
 			 },
 	    'shared_doc' => {'format' => {'d_read' => {'scenario' => 'd_read',
@@ -1008,11 +1038,12 @@ my %alias = ('reply-to' => 'reply_to',
 			 'group' => 'other'
 			  },
 
-	    'status' => {'format' => ['open','closed','pending'],
+	    'status' => {'format' => ['open','closed','pending','error_config','family_closed'],
 			 'default' => 'open',
 			 'gettext_id' => "Status of the list",
+			 'internal' => 1,
 			 'group' => 'other'
-			  },
+			 },
 	    'subject' => {'format' => '.+',
 			  'length' => 50,
 			  'occurrence' => '1',
@@ -1043,22 +1074,23 @@ my %alias = ('reply-to' => 'reply_to',
 	    'update' => {'format' => {'date_epoch' => {'format' => '\d+',
 						       'length' => 8,
 						       'occurrence' => '1',
-						       'gettext_id' => "",
+						       'gettext_id' => 'epoch date',
 						       'order' => 3
 						       },
 				      'date' => {'format' => '.+',
 						 'length' => 30,
-						 'gettext_id' => "",
+						 'gettext_id' => 'date',
 						 'order' => 2
 						 },
 				      'email' => {'format' => $tools::regexp{'email'},
 						  'length' => 30,
 						  'occurrence' => '1',
-						  'gettext_id' => "",
+						  'gettext_id' => 'who updated the config',
 						  'order' => 1
 						  }
 				  },
 			 'gettext_id' => "Last update of config",
+			 'internal' => 1,
 			 'group' => 'other'
 		     },
 	    'user_data_source' => {'format' => ['database','file','include','include2'],
@@ -1238,7 +1270,7 @@ sub db_get_handler {
 ## Creates an object.
 sub new {
     my($pkg, $name, $robot) = @_;
-    my $liste={};
+    my $list={};
     do_log('debug2', 'List::new(%s,%s)', $name, $robot);
     
     ## Allow robot in the name
@@ -1255,7 +1287,7 @@ sub new {
     }
     ## Lowercase the list name.
     $name =~ tr/A-Z/a-z/;
-    
+
     ## Reject listnames with reserved list suffixes
     my $regx = &Conf::get_robot_conf($robot,'list_check_regexp');
     if ( $regx ) {
@@ -1267,14 +1299,64 @@ sub new {
 
     if ($list_of_lists{$name}){
 	# use the current list in memory and update it
-	$liste=$list_of_lists{$name};
+	$list=$list_of_lists{$name};
     }else{
 	# create a new object list
-	bless $liste, $pkg;
+	bless $list, $pkg;
     }
-    return undef unless ($liste->load($name, $robot));
+    
+    my $status = $list->load($name, $robot);
+    
+    unless (defined $status) {
+	return undef;
+    }
 
-    return $liste;
+    ## Config file was loaded or reloaded
+    if ($status == 1) {
+	## Update admin_table
+	unless (defined $list->sync_include_admin()) {
+	    &do_log('err','List::new() : sync_include_admin_failed');
+	}
+	if ($list->get_nb_owners() < 1 &&
+	    $list->{'admin'}{'status'} ne 'error_config') {
+	    &do_log('err', 'The list "%s" has got no owner defined',$list->{'name'});
+	    $list->set_status_error_config('no_owner_defined',$list->{'name'});
+	}
+    }
+
+    return $list;
+}
+
+## set the list in status error_config and send a notify to listmaster
+sub set_status_error_config {
+    my ($self, $message, @param) = @_;
+    &do_log('debug3', 'List::set_status_error_config');
+
+    unless ($self->{'admin'}{'status'} eq 'error_config'){
+	$self->{'admin'}{'status'} = 'error_config';
+	$self->save_config($Conf{'listmaster'});
+	$self->savestats();
+	&do_log('err', 'The list "%s" is set in status error_config',$self->{'name'});
+	&List::send_notify_to_listmaster($message, $self->{'domain'},@param);
+    }
+}
+
+## set the list in status family_closed and send a notify to owners
+sub set_status_family_closed {
+    my ($self, $message, @param) = @_;
+    &do_log('debug2', 'List::set_status_family_closed');
+
+    unless ($self->{'admin'}{'status'} eq 'family_closed'){
+	unless ($self->close($Conf{'listmaster'},'family_closed')) {
+	    &do_log('err','Impossible to set the list %s in status family_closed');
+	    return undef;
+	}
+	&do_log('err', 'The list "%s" is set in status family_closed',$self->{'name'});
+	unless ($self->new_send_notify_to_owner($message,@param)){
+	    &do_log('err','Impossible to send notify to owner informing status family_closed for the list %s',$self->{'name'});
+	}
+    }
+    return 1;
 }
 
 ## Saves the statistics data to disk.
@@ -1452,13 +1534,15 @@ sub save_config {
  
     ## Update management info
     $self->{'admin'}{'serial'}++;
-    $self->{'admin'}{'defaults'}{'serial'} = 0;
+#   $self->{'admin'}{'defaults'}{'serial'} = 0;
     $self->{'admin'}{'update'} = {'email' => $email,
 				  'date_epoch' => time,
 				  'date' => &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time))
 				  };
-    $self->{'admin'}{'defaults'}{'update'} = 0;
-    
+#   $self->{'admin'}{'defaults'}{'update'} = 0;
+#    $self->{'admin'}{'defaults'}{'family_name'} = 0;
+#    $self->{'admin'}{'defaults'}{'latest_instantiation'} = 0;
+
     unless (&_save_admin_file($config_file_name, $old_config_file_name, $self->{'admin'})) {
 	&do_log('info', 'unable to save config file %s', $config_file_name);
 	return undef;
@@ -1515,21 +1599,51 @@ sub load {
     my $time_config = (stat("$self->{'dir'}/config"))[9];
     my $time_subscribers; 
     my $time_stats = (stat("$self->{'dir'}/stats"))[9];
-    
+    my $config_reloaded = 0;
     my $admin;
     
     if ($self->{'name'} ne $name || $time_config > $self->{'mtime'}->[0]) {
 	$admin = _load_admin_file($self->{'dir'}, $self->{'domain'}, 'config');
+	$config_reloaded = 1;
+ 	unless (defined $admin) {
+ 	    &do_log('err', 'Impossible to load list config file for list % set in status error_config',$self->{'name'});
+ 	    $self->set_status_error_config('load_admin_file_error',$self->{'name'});
+ 	    return undef;	    
+ 	}
+
 	$m1 = $time_config;
     }
     
-    $self->{'admin'} = $admin if ($admin);
+     if ($admin) {
+ 	$self->{'admin'} = $admin;
+ 	
+ 	## check param_constraint.conf if belongs to a family and the config has been loaded
+ 	if ($admin->{'family_name'} && ($admin->{'status'} ne 'error_config')) {
+ 	    my $family;
+ 	    unless ($family = $self->get_family()) {
+ 		&do_log('err', 'Impossible to get list %s family : %s. The list is set in status error_config',$self->{'name'},$self->{'admin'}{'family_name'});
+ 		$self->set_status_error_config('no_list_family',$self->{'name'}, $admin->{'family_name'});
+ 		return undef;
+ 	    }  
+ 	    my $error = $family->check_param_constraint($self);
+ 	    unless($error) {
+ 		&do_log('err', 'Impossible to check parameters constraint for list % set in status error_config',$self->{'name'});
+ 		$self->set_status_error_config('no_check_rules_family',$self->{'name'}, $family->{'name'});
+ 		return undef;
+ 	    }
+	    if (ref($error) eq 'ARRAY') {
+ 		&do_log('err', 'The list "%s" does not respect the rules from its family %s',$self->{'name'}, $family->{'name'});
+ 		$self->set_status_error_config('no_respect_rules_family',$self->{'name'}, $family->{'name'});
+ 		return undef;
+ 	    }
+ 	}
+     } 
 
     # default list host is robot domain
     $self->{'admin'}{'host'} ||= $self->{'domain'};
     # uncomment the following line if you want virtual robot to overwrite list->host
     # $self->{'admin'}{'host'} = $self->{'domain'} if ($self->{'domain'} ne $Conf{'host'});
-
+ 
     # Would make sympa same 'dir' as a parameter
     #$self->{'admin'}{'dir'} ||= $self->{'dir'};
 
@@ -1580,7 +1694,7 @@ sub load {
 	     ((time > ($time_subscribers + $self->{'admin'}{'ttl'})) &&
 	      !($ENV{'HTTP_HOST'} && (-f "$self->{'dir'}/subscribers.db")))) {
 	    
-	    $users = _load_users_include($name, $self->{'admin'}, $self->{'dir'}, "$self->{'dir'}/subscribers.db", 0);
+	    $users = $self->_load_users_include("$self->{'dir'}/subscribers.db", 0);
 	    unless (defined $users) {
 		do_log('err', 'Could not load subscribers for list %s', $self->{'name'});
 		#return undef;
@@ -1593,7 +1707,7 @@ sub load {
 		($time_subscribers > $self->{'mtime'}->[1])) {
 
 	    ## Use cache
-	    $users = _load_users_include($name, $self->{'admin'}, $self->{'dir'}, "$self->{'dir'}/subscribers.db", 1);
+	    $users = $self->_load_users_include("$self->{'dir'}/subscribers.db", 1);
 
 	    unless (defined $users) {
 		return undef;
@@ -1640,13 +1754,13 @@ sub load {
     $self->{'mtime'} = [ $m1, $m2, $m3 ];
 
     $list_of_lists{$name} = $self;
-    return $self;
+    return $config_reloaded;
 }
 
-## Return a hash of list's owners and their param
+## Return a list of hash's owners and their param
 sub get_owners {
     my($self) = @_;
-    do_log('debug3', 'List::get_owners(%s)', $self->{'name'});
+    &do_log('debug3', 'List::get_owners(%s)', $self->{'name'});
   
     my $owners = ();
 
@@ -1665,7 +1779,7 @@ sub get_owners {
 
 sub get_nb_owners {
     my($self) = @_;
-    do_log('debug3', 'List::get_nb_owners(%s)', $self->{'name'});
+    &do_log('debug3', 'List::get_nb_owners(%s)', $self->{'name'});
     
     my $resul = 0;
     my $owners = $self->get_owners;
@@ -1679,7 +1793,7 @@ sub get_nb_owners {
 ## Return a hash of list's editors and their param(empty if there isn't any editor)
 sub get_editors {
     my($self) = @_;
-    do_log('debug3', 'List::get_editors(%s)', $self->{'name'});
+    &do_log('debug3', 'List::get_editors(%s)', $self->{'name'});
   
     my $editors = ();
 
@@ -1762,7 +1876,259 @@ sub get_editors_email {
 
 }
 
+## Returns an object Family if the list belongs to a family
+#  or undef
+sub get_family {
+    my $self = shift;
+    &do_log('debug3', 'List::get_family(%s)', $self->{'name'});
+    
+    if (ref($self->{'family'}) eq 'Family') {
+	return $self->{'family'};
+    }
 
+    my $family_name;
+    my $robot = $self->{'domain'};
+
+    unless (defined $self->{'admin'}{'family_name'}) {
+	&do_log('err', 'List::get_family(%s) : this list has not got any family', $self->{'name'});
+	return undef;
+    }
+        
+    my $family_name = $self->{'admin'}{'family_name'};
+	    
+    my $family;
+    unless ($family = new Family($family_name,$robot)) {
+	&do_log('err', 'List::get_family(%s) : new Family(%s) impossible', $self->{'name'},$family_name);
+	return undef;
+    }
+  	
+    $self->{'family'} = $family;
+    return $family;
+}
+
+## return the config_changes hash
+sub get_config_changes {
+    my $self = shift;
+    &do_log('debug3', 'List::get_config_changes(%s)', $self->{'name'});
+    
+    unless ($self->{'admin'}{'family_name'}) {
+	&do_log('err', 'List::get_config_changes(%s) is called but there is no family_name for this list.',$self->{'name'});
+	return undef;
+    }
+    
+    ## load config_changes
+    my $time_file = (stat("$self->{'dir'}/config_changes"))[9];
+    unless (defined $self->{'config_changes'} && ($self->{'config_changes'}{'mtime'} >= $time_file)) {
+	unless ($self->{'config_changes'} = $self->_load_config_changes_file()) {
+	    &do_log('err','Impossible to load file config_changes from list %s',$self->{'name'});
+	    return undef;
+	}
+    }
+    return $self->{'config_changes'};
+}
+
+
+## update file config_changes if the list belongs to a family by
+#  writing the $what(file or param) name 
+sub update_config_changes {
+    my $self = shift;
+    my $what = shift;
+    # one param or a ref on array of param
+    my $name = shift;
+    &do_log('debug2', 'List::update_config_changes(%s,%s)', $self->{'name'},$what);
+    
+    unless ($self->{'admin'}{'family_name'}) {
+	&do_log('err', 'List::update_config_changes(%s,%s,%s) is called but there is no family_name for this list.',$self->{'name'},$what);
+	return undef;
+    }
+    unless (($what eq 'file') || ($what eq 'param')){
+	&do_log('err', 'List::update_config_changes(%s,%s) : %s is wrong : must be "file" or "param".',$self->{'name'},$what);
+	return undef;
+    } 
+    
+    # status parameter isn't updating set in config_changes
+    if (($what eq 'param') && ($name eq 'status')) {
+	return 1;
+    }
+
+    ## load config_changes
+    my $time_file = (stat("$self->{'dir'}/config_changes"))[9];
+    unless (defined $self->{'config_changes'} && ($self->{'config_changes'}{'mtime'} >= $time_file)) {
+	unless ($self->{'config_changes'} = $self->_load_config_changes_file()) {
+	    &do_log('err','Impossible to load file config_changes from list %s',$self->{'name'});
+	    return undef;
+	}
+    }
+    
+    if (ref($name) eq 'ARRAY' ) {
+	foreach my $n (@{$name}) {
+	    $self->{'config_changes'}{$what}{$n} = 1; 
+	}
+    } else {
+	$self->{'config_changes'}{$what}{$name} = 1;
+    }
+    
+    $self->_save_config_changes_file();
+    
+    return 1;
+}
+
+## return a hash of config_changes file
+sub _load_config_changes_file {
+    my $self = shift;
+    &do_log('debug3', 'List::_load_config_changes_file(%s)', $self->{'name'});
+
+    unless (open (FILE,"$self->{'dir'}/config_changes")) {
+	&do_log('err','Unable to open file %s/config_changes : %s', $self->{'dir'},$_);
+	return undef;
+    }
+    
+    my $config_changes = {};
+    while (<FILE>) {
+	
+	next if /^\s*(\#.*|\s*)$/;
+
+	if (/^param\s+(.+)\s*$/) {
+	    $config_changes->{'param'}{$1} = 1;
+
+	}elsif (/^file\s+(.+)\s*$/) {
+	    $config_changes->{'file'}{$1} = 1;
+	
+	}else {
+	    &do_log ('err', 'List::_load_config_changes_file(%s) : bad line : %s',$self->{'name'},$_);
+	    next;
+	}
+    }
+    close FILE;
+
+    $config_changes->{'mtime'} = (stat("$self->{'dir'}/config_changes"))[9];
+
+    return $config_changes;
+}
+
+## save config_changes file in the list directory
+sub _save_config_changes_file {
+    my $self = shift;
+    &do_log('debug3', 'List::_save_config_changes_file(%s)', $self->{'name'});
+
+    unless ($self->{'admin'}{'family_name'}) {
+	&do_log('err', 'List::_save_config_changes_file(%s) is called but there is no family_name for this list.',$self->{'name'});
+	return undef;
+    }
+    unless (open (FILE,">$self->{'dir'}/config_changes")) {
+	&do_log('err','List::_save_config_changes_file(%s) : unable to create file %s/config_changes : %s',$self->{'name'},$self->{'dir'},$_);
+	return undef;
+    }
+
+    foreach my $what ('param','file') {
+	foreach my $name (keys %{$self->{'config_changes'}{$what}}) {
+	    print FILE "$what $name\n";
+	}
+    }
+    close FILE;
+    
+    return 1;
+}
+
+
+
+
+sub _get_param_value_anywhere {
+    my $new_admin = shift;
+    my $param = shift; 
+    &do_log('debug3', '_get_param_value_anywhere(%s %s)',$param);
+    my $minor_p;
+    my @values;
+
+   if ($param =~ /^([\w-]+)\.([\w-]+)$/) {
+	$param = $1;
+	$minor_p = $2;
+    }
+
+    ## Multiple parameter (owner, custom_header, ...)
+    if ((ref ($new_admin->{$param}) eq 'ARRAY') &&
+	!($::pinfo{$param}{'split_char'})) {
+	foreach my $elt (@{$new_admin->{$param}}) {
+	    my $val = &List::_get_single_param_value($elt,$param,$minor_p);
+	    if (defined $val) {
+		push @values,$val;
+	    }
+	}
+
+    }else {
+	my $val = &List::_get_single_param_value($new_admin->{$param},$param,$minor_p);
+	if (defined $val) {
+	    push @values,$val;
+	}
+    }
+    return \@values;
+}
+
+
+## Returns the list parameter value from $list->{'admin'}
+#  the parameter is simple ($param) or composed ($param & $minor_param)
+#  the value is a scalar or a ref on an array of scalar
+# (for parameter digest : only for days)
+sub get_param_value {
+    my $self = shift;
+    my $param = shift; 
+    &do_log('debug3', 'List::get_param_value(%s,%s)', $self->{'name'},$param);
+    my $minor_param;
+    my $value;
+
+    if ($param =~ /^([\w-]+)\.([\w-]+)$/) {
+	$param = $1;
+	$minor_param = $2;
+    }
+
+    ## Multiple parameter (owner, custom_header, ...)
+    if ((ref ($self->{'admin'}{$param}) eq 'ARRAY') &&
+	! $::pinfo{$param}{'split_char'}) {
+	my @values;
+	foreach my $elt (@{$self->{'admin'}{$param}}) {
+	    push @values,&_get_single_param_value($elt,$param,$minor_param) 
+	}
+	$value = \@values;
+    }else {
+	$value = &_get_single_param_value($self->{'admin'}{$param},$param,$minor_param);
+    }
+    return $value;
+}
+
+## Returns the single list parameter value from struct $p, with $key entrie,
+#  $k is optionnal
+#  the single value can be a ref on a list when the parameter value is a list
+sub _get_single_param_value {
+    my ($p,$key,$k) = @_;
+    &do_log('debug4', 'List::_get_single_value(%s %s)',$key,$k);
+
+    if (defined ($::pinfo{$key}{'scenario'}) ||
+        defined ($::pinfo{$key}{'task'})) {
+	return $p->{'name'};
+    
+    }elsif (ref($::pinfo{$key}{'file_format'})) {
+	
+	if (defined ($::pinfo{$key}{'file_format'}{$k}{'scenario'})) {
+	    return $p->{$k}{'name'};
+
+	}elsif (($::pinfo{$key}{'file_format'}{$k}{'occurrence'} =~ /n$/)
+		    && $::pinfo{$key}{'file_format'}{$k}{'split_char'}) {
+	    return $p->{$k}; # ref on an array
+	}else {
+	    return $p->{$k};
+	}
+
+    }else {
+	if (($::pinfo{$key}{'occurrence'} =~ /n$/)
+	    && $::pinfo{$key}{'split_char'}) {
+	    return $p; # ref on an array
+	}elsif ($key eq 'digest') {
+	    return $p->{'days'}; # ref on an array 
+	}else {
+	    return $p;
+	}
+    }
+}
 
 ## Send a sub/sig notice to listmasters.
 sub send_notify_to_listmaster {
@@ -1943,7 +2309,7 @@ sub new_send_notify_to_owner {
 
     &do_log('debug2', 'List::(new_)send_notify_to_owner(%s, %s)', $self->{'name'}, $operation);
 
-    my $host = $self->{'admin'}->{'host'};
+    my $host = $self->{'admin'}{'host'};
     my @to = $self->get_owners_email;
     my $robot = $self->{'domain'};
 
@@ -1960,6 +2326,15 @@ sub new_send_notify_to_owner {
 			  'user_list' => $param[2],
 			  'total' => $#{$param[2]} + 1
 			 });		
+    } else {
+ 	my $data = {};
+ 	$data->{'type'} = $operation;
+ 	for my $i(0..$#param) {
+ 	    $data->{"param$i"} = $param[$i];
+ 	    
+ 	}
+	
+ 	$self->send_file('listowner_notification', join(',', @to), $robot, $data);	
     }
     return 1;
 }
@@ -2862,7 +3237,7 @@ sub send_global_file {
 ## Send a file to a user
 sub send_file {
     my($self, $action, $who, $robot, $context) = @_;
-    do_log('debug2', 'List::send_file(%s, %s, %s, %s)', $action, $who, $robot);
+    do_log('debug2', 'List::send_file(%s, %s, %s)', $action, $who, $robot);
 
     my $name = $self->{'name'};
     my $sign_mode;
@@ -2916,9 +3291,7 @@ sub send_file {
     $data->{'lang'} = $data->{'user'}{'lang'} || $self->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
-    my $tt2_include_path = [$self->{'dir'}.'/mail_tt2/'.&Language::Lang2Locale($data->{'lang'}),
-			    $self->{'dir'}.'/mail_tt2',
-			    "$Conf{'etc'}/$robot/mail_tt2/".&Language::Lang2Locale($data->{'lang'}),
+    my $tt2_include_path = ["$Conf{'etc'}/$robot/mail_tt2/".&Language::Lang2Locale($data->{'lang'}),
 			    "$Conf{'etc'}/$robot/mail_tt2",
 			    "$Conf{'etc'}/mail_tt2/".&Language::Lang2Locale($data->{'lang'}),
 			    "$Conf{'etc'}/mail_tt2",
@@ -2927,6 +3300,17 @@ sub send_file {
 			    $self->{'dir'},            ## list directory to get the 'info' file
 			    $self->{'dir'}.'/archives' ## list archives to include the last message
 			    ];
+
+    ## Add family-related path
+    if (defined $self->{'admin'}{'family_name'}) {
+	my $family = $self->get_family();
+	unshift @{$tt2_include_path}, $family->{'dir'}.'/mail_tt2';
+	unshift @{$tt2_include_path}, $family->{'dir'}.'/mail_tt2/'.&Language::Lang2Locale($data->{'lang'});
+    }
+
+    ## Add list-related path
+    unshift @{$tt2_include_path}, $self->{'dir'}.'/mail_tt2';
+    unshift @{$tt2_include_path}, $self->{'dir'}.'/mail_tt2/'.&Language::Lang2Locale($data->{'lang'});
 
     foreach my $d (@{$tt2_include_path}) {
 	&tt2::add_include_path($d);
@@ -5451,7 +5835,14 @@ sub verify {
     
     ##search
     if ($condition_key eq 'search') {
-	my $val_search = &search($args[0],$args[1],$context->{'robot_domain'});
+	my $val_search;
+ 	# we could search in the family if we got ref on Family object
+ 	if (defined $list){
+ 	    $val_search = &search($args[0],$args[1],$context->{'robot_domain'},$list);
+ 	}else {
+ 	    $val_search = &search($args[0],$args[1],$context->{'robot_domain'});
+ 	}
+
 	if($val_search == 1) { 
 	    return $negation;
 	}else {
@@ -5483,12 +5874,13 @@ sub search{
     my $ldap_file = shift;
     my $sender = shift;
     my $robot = shift;
+    my $list = shift;
 
     &do_log('debug2', 'List::search(%s,%s,%s)', $ldap_file, $sender, $robot);
 
     my $file;
 
-    unless ($file = &tools::get_filename('etc',"search_filters/$ldap_file", $robot)) {
+    unless ($file = &tools::get_filename('etc',"search_filters/$ldap_file", $robot, $list)) {
 	&do_log('err', 'Could not find LDAP filter %s', $ldap_file);
 	return undef;
     }   
@@ -5581,9 +5973,9 @@ sub may_edit {
 
     my $edit_conf;
     
-    if (! $edit_list_conf{$self->{'domain'}} || ((stat(&tools::get_filename('etc','edit_list.conf',$self->{'domain'})))[9] > $mtime{'edit_list_conf'}{$self->{'domain'}})) {
+    if (! $edit_list_conf{$self->{'domain'}} || ((stat(&tools::get_filename('etc','edit_list.conf',$self->{'domain'},$self)))[9] > $mtime{'edit_list_conf'}{$self->{'domain'}})) {
 
-        $edit_conf = $edit_list_conf{$self->{'domain'}} = &tools::load_edit_list_conf($self->{'domain'});
+        $edit_conf = $edit_list_conf{$self->{'domain'}} = &tools::load_edit_list_conf($self->{'domain'}, $self);
 	$mtime{'edit_list_conf'}{$self->{'domain'}} = time;
     }else {
         $edit_conf = $edit_list_conf{$self->{'domain'}};
@@ -5639,13 +6031,13 @@ sub may_edit {
 # edit_conf devrait être aussi dépendant du robot
 sub may_create_parameter {
 
-    my($parameter, $who,$robot) = @_;
+    my($self, $parameter, $who,$robot) = @_;
     do_log('debug3', 'List::may_create_parameter(%s, %s, %s)', $parameter, $who,$robot);
 
     if ( &is_listmaster($who,$robot)) {
 	return 1;
     }
-    my $edit_conf = &tools::load_edit_list_conf($robot);
+    my $edit_conf = &tools::load_edit_list_conf($robot,$self);
     $edit_conf->{$parameter} ||= $edit_conf->{'default'};
     if (! $edit_conf->{$parameter}) {
 	do_log('notice','tools::load_edit_list_conf privilege for parameter $parameter undefined');
@@ -6208,7 +6600,7 @@ sub _load_users_file {
 
 ## include a remote sympa list as subscribers.
 sub _include_users_remote_sympa_list {
-    my ($users, $param, $dir, $robot, $default_user_options , $tied) = @_;
+    my ($self, $users, $param, $dir, $robot, $default_user_options , $tied) = @_;
 
     my $host = $param->{'host'};
     my $port = $param->{'port'} || '443';
@@ -6217,7 +6609,7 @@ sub _include_users_remote_sympa_list {
 
     my $id = _get_datasource_id($param);
 
-    do_log('debug', 'List::_include_users_remote_sympa_list https://%s:%s/%s using cert %s,', $host, $port, $path, $cert);
+    do_log('debug', 'List::_include_users_remote_sympa_list(%s) https://%s:%s/%s using cert %s,', $self->{'name'}, $host, $port, $path, $cert);
     
     my $total = 0; 
     my $get_total = 0;
@@ -6230,8 +6622,8 @@ sub _include_users_remote_sympa_list {
 	$cert_file = $dir.'/cert.pem';
 	$key_file = $dir.'/private_key';
     }elsif($cert eq 'robot') {
-	$cert_file = &tools::get_filename('etc','cert.pem',$robot);
-	$key_file =  &tools::get_filename('etc','private_key',$robot);
+	$cert_file = &tools::get_filename('etc','cert.pem',$robot,$self);
+	$key_file =  &tools::get_filename('etc','private_key',$robot,$self);
     }
     unless ((-r $cert_file) && ( -r $key_file)) {
 	do_log('err', 'Include remote list https://%s:%s/%s using cert %s, unable to open %s or %s', $host, $port, $path, $cert,$cert_file,$key_file);
@@ -6964,11 +7356,12 @@ sub _include_users_sql {
 
 ## Loads the list of subscribers from an external include source
 sub _load_users_include {
-    my $name = shift; 
-    my $admin = shift ;
-    my $dir = shift;
+    my $self = shift;
     my $db_file = shift;
     my $use_cache = shift;
+    my $name = $self->{'name'}; 
+    my $admin = $self->{'admin'};
+    my $dir = $self->{'dir'};
     do_log('debug2', 'List::_load_users_include for list %s ; use_cache: %d',$name, $use_cache);
 
     my (%users, $depend_on, $ref);
@@ -7028,7 +7421,7 @@ sub _load_users_include {
 
 		    }
 		}elsif ($type eq 'include_remote_sympa_list') {
-		    $included = _include_users_remote_sympa_list(\%users, $incl, $dir,$admin->{'domain'},$admin->{'default_user_options'}, 'tied');
+		    $included = $self->_include_users_remote_sympa_list(\%users, $incl, $dir,$admin->{'domain'},$admin->{'default_user_options'}, 'tied');
 		}elsif ($type eq 'include_file') {
 		    $included = _include_users_file (\%users, $incl, $admin->{'default_user_options'}, 'tied');
 		}elsif ($type eq 'include_remote_file') {
@@ -7108,9 +7501,10 @@ sub _load_users_include {
 
 ## Loads the list of subscribers from an external include source
 sub _load_users_include2 {
-    my $name = shift; 
-    my $admin = shift ;
-    my $dir = shift;
+    my $self = shift;
+    my $name = $self->{'name'}; 
+    my $admin = $self->{'admin'};
+    my $dir = $self->{'dir'};
     do_log('debug2', 'List::_load_users_include for list %s',$name);
 
     my (%users, $depend_on, $ref, $error);
@@ -7130,7 +7524,7 @@ sub _load_users_include2 {
 	    }elsif ($type eq 'include_ldap_2level_query') {
 		$included = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'});
 	    }elsif ($type eq 'include_remote_sympa_list') {
-		$included = _include_users_remote_sympa_list(\%users, $incl, $dir,$admin->{'domain'},$admin->{'default_user_options'});
+		$included = $self->_include_users_remote_sympa_list(\%users, $incl, $dir,$admin->{'domain'},$admin->{'default_user_options'});
 	    }elsif ($type eq 'include_list') {
 		$depend_on->{$name} = 1 ;
 		if (&_inclusion_loop ($name,$incl,$depend_on)) {
@@ -7166,20 +7560,20 @@ sub _load_users_include2 {
 
 ## Loads the list of admin users from an external include source
 sub _load_admin_users_include {
-    my $name = shift;
+    my $self = shift;
     my $role = shift;
-    my $list = shift ;
+    my $name = $self->{'name'};
    
     &do_log('debug2', 'List::_load_admin_users_include(%s) for list %s',$role, $name); 
 
     my (%admin_users, $depend_on, $ref);
     my $total = 0;
-    my $list_admin = $list->{'admin'};
-    my $dir = $list->{'dir'};
+    my $list_admin = $self->{'admin'};
+    my $dir = $self->{'dir'};
 
-    unless($list->{'admin'}{'user_data_source'} eq 'include2'){
+    unless($self->{'admin'}{'user_data_source'} eq 'include2'){
 	&do_log('err', '_load_admin_users_include isn\'t defined when user_data_source is different than include2 for list %s',
-	 $list->{'name'}); 
+	 $self->{'name'}); 
 	return undef;
     }
 
@@ -7193,14 +7587,14 @@ sub _load_admin_users_include {
 	$option{'profile'} = $entry->{'profile'} if (defined $entry->{'profile'} && ($role eq 'owner'));
 	
 
-      	my $include_file = &tools::get_filename('etc',"data_sources/$entry->{'source'}{'name'}\.incl",$list->{'domain'},$list);
+      	my $include_file = &tools::get_filename('etc',"data_sources/$entry->{'source'}{'name'}\.incl",$self->{'domain'},$self);
 
         unless (defined $include_file){
 	    &do_log('err', '_load_admin_users_include : the file %s.incl doesn\'t exist',$entry->{'source'}{'name'});
 	    return undef;
 	}
 	
-	my $include_admin_user = &_load_include_admin_user_file($list->{'domain'},$include_file);
+	my $include_admin_user = &_load_include_admin_user_file($self->{'domain'},$include_file);
 
 	foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
 	    last unless (defined $total);
@@ -7217,7 +7611,7 @@ sub _load_admin_users_include {
 		}elsif ($type eq 'include_ldap_2level_query') {
 		    $included = _include_users_ldap_2level(\%admin_users, $incl,\%option); 
 		}elsif ($type eq 'include_remote_sympa_list') {
-		    $included = _include_users_remote_sympa_list(\%admin_users, $incl, $dir,$list_admin->{'domain'},\%option);
+		    $included = $self->_include_users_remote_sympa_list(\%admin_users, $incl, $dir,$list_admin->{'domain'},\%option);
 		}elsif ($type eq 'include_list') {
 		    $depend_on->{$name} = 1 ;
 		    if (&_inclusion_loop ($name,$incl,$depend_on)) {
@@ -7439,7 +7833,7 @@ sub sync_include {
     ## Load a hash with the new subscriber list
     my $new_subscribers;
     unless ($option eq 'purge') {
-	$new_subscribers = _load_users_include2($name, $self->{'admin'}, $self->{'dir'});
+	$new_subscribers = $self->_load_users_include2();
 
 	## If include sources were not available, do not update subscribers
 	## Use DB cache instead
@@ -7576,10 +7970,10 @@ sub sync_include_admin {
     my $option = shift;
     
     my $name=$self->{'name'};
-    &do_log('debug', 'List:sync_include_admin(%s)', $name);
+    &do_log('debug2', 'List:sync_include_admin(%s)', $name);
 
     unless($self->{'admin'}{'user_data_source'} eq 'include2'){
-	&do_log('err', 'sync_include_admin is not defined when user_data_source different than include2 for list %s ', $self->{'name'}); 
+	&do_log('err', 'sync_include_admin failed ; user_data_source for list %s is set to %s', $self->{'name'}, $self->{'admin'}{'user_data_source'}); 
 	return undef;
     }
 
@@ -7598,7 +7992,7 @@ sub sync_include_admin {
 	my $new_admin_users_config;
 	unless ($option eq 'purge') {
 	    
-	    $new_admin_users_include = _load_admin_users_include($name,$role, $self);
+	    $new_admin_users_include = $self->_load_admin_users_include($role);
 	    
 	    ## If include sources were not available, do not update admin users
 	    ## Use DB cache instead
@@ -7608,7 +8002,7 @@ sub sync_include_admin {
 		return undef;
 	    }
 
-	    $new_admin_users_config = _load_admin_users_config($name,$role,$self);
+	    $new_admin_users_config = $self->_load_admin_users_config($role);
 	    
 	    unless (defined $new_admin_users_config) {
 		&do_log('err', 'Could not get %ss from config for list %s', $role, $name);
@@ -7729,7 +8123,7 @@ sub sync_include_admin {
 
 	## Go through new admin_users_config (that are not included : only subscribed)
 	foreach my $email (keys %{$new_admin_users_config}) {
-	    
+
 	    my $param = $new_admin_users_config->{$email};
 	    
 	    #Admin User was already in the DB
@@ -7773,11 +8167,11 @@ sub sync_include_admin {
 	}
 	
 	if ($admin_users_added) {
-	    &do_log('notice', 'List:sync_include_admin(%s): %d %s(s) added',
+	    &do_log('debug', 'List:sync_include_admin(%s): %d %s(s) added',
 		    $name, $admin_users_added, $role);
 	}
 	
-	&do_log('notice', 'List:sync_include_admin(%s): %d %s(s) updated', $name, $admin_users_updated, $role);
+	&do_log('debug', 'List:sync_include_admin(%s): %d %s(s) updated', $name, $admin_users_updated, $role);
 
 	## Go though old list of admin users
 	my $admin_users_removed = 0;
@@ -7796,7 +8190,7 @@ sub sync_include_admin {
 			$name, $role, $admin_users_removed);
 		return undef;
 	    }
-	    &do_log('notice', 'List:sync_include_admin(%s): %d %s(s) removed',
+	    &do_log('debug', 'List:sync_include_admin(%s): %d %s(s) removed',
 		    $name, $admin_users_removed, $role);
 	}
 
@@ -7805,31 +8199,23 @@ sub sync_include_admin {
 	close FH;
 	&do_log('debug2', 'Release lock on %s', $lock_file);
     }	
-
    
-    unless ( $self->get_nb_owners) {
-	&do_log('err', 'List:sync_include_admin(%s) failed  : no owner defined for the list',$self->{'name'});
-	&List::send_notify_to_listmaster('sync_include_admin_failed', $self->{'domain'}, $name);
-	return undef;
-    }
-
-
     $self->{'last_sync_admin_user'} = time;
     $self->savestats();
  
-    return 1;
+    return $self->get_nb_owners;
 }
 
 ## Load param admin users from the config of the list
 sub _load_admin_users_config {
-    my $name = shift;
+    my $self = shift;
     my $role = shift; 
-    my $list = shift;
+    my $name = $self->{'name'};
     my %admin_users;
 
     &do_log('debug2', 'List::_load_admin_users_config(%s) for list %s',$role, $name);  
 
-    foreach my $entry (@{$list->{'admin'}{$role}}) {
+    foreach my $entry (@{$self->{'admin'}{$role}}) {
 	my $email = lc($entry->{'email'});
 	my %u;
   
@@ -9115,14 +9501,16 @@ sub _save_list_param {
     &do_log('debug4', '_save_list_param(%s)', $key);
 
     ## Ignore default value
-    next if ($defaults == 1);
+    return 1 if ($defaults == 1);
+#    next if ($defaults == 1);
 
-    next unless (defined ($p));
+    return 1 unless (defined ($p));
+#    next  unless (defined ($p));
 
     if (defined ($::pinfo{$key}{'scenario'}) ||
         defined ($::pinfo{$key}{'task'}) ||
 	defined ($::pinfo{$key}{'datasource'})) {
-	next if ($p->{'name'} eq 'default');
+	return 1 if ($p->{'name'} eq 'default');
 
 	printf $fd "%s %s\n", $key, $p->{'name'};
 	print $fd "\n";
@@ -9152,13 +9540,17 @@ sub _save_list_param {
     }else {
 	if (($::pinfo{$key}{'occurrence'} =~ /n$/)
 	    && $::pinfo{$key}{'split_char'}) {
-	    printf $fd "%s %s\n\n", $key, join($::pinfo{$key}{'split_char'}, @{$p});
+	    ################" avant de debugger do_edit_list qui crée des nouvelles entrées vides
+ 	    my $string = join($::pinfo{$key}{'split_char'}, @{$p});
+ 	    $string =~ s/\,\s*$//;
+	    
+ 	    printf $fd "%s %s\n\n", $key, $string;
 	}elsif ($key eq 'digest') {
 	    my $value = sprintf '%s %d:%d', join(',', @{$p->{'days'}})
 		,$p->{'hour'}, $p->{'minute'};
 	    printf $fd "%s %s\n\n", $key, $value;
-	}elsif (($key eq 'user_data_source') && $defaults && $List::use_db) {
-	    printf $fd "%s %s\n\n", $key,  'database';
+##	}elsif (($key eq 'user_data_source') && $defaults && $List::use_db) {
+##	    printf $fd "%s %s\n\n", $key,  'database';
 	}else {
 	    printf $fd "%s %s\n\n", $key, $p;
 	}
@@ -9289,8 +9681,8 @@ sub _load_admin_file {
     $/ = "\n";
 
     ## Set defaults to 1
-    foreach my $pname (keys %::pinfo) {
-	$admin{'defaults'}{$pname} = 1;
+    foreach my $pname (keys %::pinfo) {       
+	$admin{'defaults'}{$pname} = 1 unless ($::pinfo{$pname}{'internal'});
     }
 
     unless (open CONFIG, $config_file) {
@@ -10030,7 +10422,7 @@ sub get_next_db_log {
 
 ## Close the list (remove from DB, remove aliases, change status to 'closed')
 sub close {
-    my ($self, $email) = @_;
+    my ($self, $email, $status) = @_;
 
     return undef 
 	unless ($self && ($list_of_lists{$self->{'name'}}));
@@ -10047,6 +10439,16 @@ sub close {
 
     ## Change status & save config
     $self->{'admin'}{'status'} = 'closed';
+
+    if (defined $status) {
+ 	foreach my $s ('family_closed','closed') {
+ 	    if ($status eq $s) {
+ 		$self->{'admin'}{'status'} = $status;
+ 		last;
+ 	    }
+ 	}
+    }
+    
     $self->{'admin'}{'defaults'}{'status'} = 0;
 
     $self->save_config($email);

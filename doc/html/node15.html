@@ -9,8 +9,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>14. Creating and editing mailing using the web</TITLE>
-<META NAME="description" CONTENT="14. Creating and editing mailing using the web">
+<TITLE>14. List creation, families and list edition</TITLE>
+<META NAME="description" CONTENT="14. List creation, families and list edition">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -29,32 +29,32 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1048"
+<A NAME="tex2html1070"
   HREF="node16.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1042"
+<A NAME="tex2html1064"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1036"
+<A NAME="tex2html1058"
   HREF="node14.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1044"
+<A NAME="tex2html1066"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1046"
-  HREF="node23.html">
+<A NAME="tex2html1068"
+  HREF="node24.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1049"
-  HREF="node16.html">15. List configuration parameters</A>
-<B> Up:</B> <A NAME="tex2html1043"
+<B> Next:</B> <A NAME="tex2html1071"
+  HREF="node16.html">15. Lists Families</A>
+<B> Up:</B> <A NAME="tex2html1065"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1037"
+<B> Previous:</B> <A NAME="tex2html1059"
   HREF="node14.html">13. Mailing list definition</A>
- &nbsp <B>  <A NAME="tex2html1045"
+ &nbsp <B>  <A NAME="tex2html1067"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1047"
-  HREF="node23.html">Index</A></B> 
+ &nbsp <B>  <A NAME="tex2html1069"
+  HREF="node24.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -62,83 +62,327 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1050"
-  HREF="node15.html#SECTION001510000000000000000">14.1 List creation</A>
+<LI><A NAME="tex2html1072"
+  HREF="node15.html#SECTION001510000000000000000">14.1 List families</A>
+<LI><A NAME="tex2html1073"
+  HREF="node15.html#SECTION001520000000000000000">14.2 List creation on command line with <TT>sympa.pl</TT></A>
 <UL>
-<LI><A NAME="tex2html1051"
-  HREF="node15.html#SECTION001511000000000000000">14.1.1 Who can create lists</A>
-<LI><A NAME="tex2html1052"
-  HREF="node15.html#SECTION001512000000000000000">14.1.2 typical list profile</A>
+<LI><A NAME="tex2html1074"
+  HREF="node15.html#SECTION001521000000000000000">14.2.1 typical list profile (list template creation)</A>
+<LI><A NAME="tex2html1075"
+  HREF="node15.html#SECTION001522000000000000000">14.2.2 XML file format</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html1053"
-  HREF="node15.html#SECTION001520000000000000000">14.2 List edition</A>
-</UL>
+<LI><A NAME="tex2html1076"
+  HREF="node15.html#SECTION001530000000000000000">14.3 Creating and editing mailing using the web</A>
+<UL>
+<LI><A NAME="tex2html1077"
+  HREF="node15.html#SECTION001531000000000000000">14.3.1 List creation on the Web interface</A>
+<LI><A NAME="tex2html1078"
+  HREF="node15.html#SECTION001532000000000000000">14.3.2 Who can create lists on the Web interface</A>
+<LI><A NAME="tex2html1079"
+  HREF="node15.html#SECTION001533000000000000000">14.3.3 List edition</A>
+</UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
 
 <H1><A NAME="SECTION001500000000000000000"></A>
-    <A NAME="web-ml-creation"></A>
+    <A NAME="ml-creation"></A>
 <BR>
-14. Creating and editing mailing using the web
+14. List creation, families and list edition
 </H1>
 
 <P>
-The management of mailing lists by list owners will usually be
-done via the web interface. This is based on a strict definition
-of privileges which pertain respectively to the
-listmaster, to the main list owner, and to basic list owners. The goal is to
-allow each listmaster to define who can create lists, and which
-parameters may be set by owners. Therefore, a complete
-installation requires some careful planning, although default
-values should be acceptable for most sites.
+The list creation can be done by two ways, according to listmaster 
+needs : 
+
+<UL>
+<LI>instanciation family to create and manage large number of related lists. 
+    In this case, lists are linked to their family all along their life.
+</LI>
+<LI>command line creation of individual list with <A NAME="7626"></A><TT>sympa.pl</TT> or on the Web 
+interface according to privileges defined by listmasters. Here lists are free from 
+their model creation.
+</LI>
+</UL> 
+Management of mailing lists by list owners is usually done via the web interface : 
+when a list is created, whatever its status (<A NAME="7629"></A><TT>pending</TT> or <A NAME="7632"></A><TT>open</TT>), the owner 
+can use WWSympa admin features to modify list parameters, or to edit the welcome 
+message, and so on.
 
 <P>
-Some features are already available, others will be so shortly, as specified
-in the documentation.
+WWSympa keeps logs of the creation and all modifications to a list as part of the list's
+<A NAME="7635"></A><TT>config</TT> file (old configuration files are archived).
+A complete installation requires some careful planning, although default
+values should be acceptable for most sites.
 
 <P>
 
 <H1><A NAME="SECTION001510000000000000000">
-14.1 List creation</A>
+14.1 List families</A>
 </H1>
 
 <P>
-Listmasters have all privileges. Currently the listmaster
-is defined in <A NAME="7376"></A><TT>sympa.conf</TT> but in the future, it might be possible to
-define one listmaster per virtual robot. By default, newly created
-lists must be activated by the listmaster. List creation is possible for all intranet users 
-(i.e. : users with an e-mail address within the same domain as Sympa).
-This is controlled by the <A NAME="7379"></A><TT>create_list</TT> authorization scenario.
-
-<P>
-List rejection message and list creation notification message are both
-templates that you can customize (<A NAME="7382"></A><TT>list_rejected.tt2</TT> and
-<A NAME="7385"></A><TT>list_created.tt2</TT>).
+See chapter <A HREF="node16.html#lists-families">15</A>, page&nbsp;<A HREF="node16.html#lists-families"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
 
 <P>
 
-<H2><A NAME="SECTION001511000000000000000">
-14.1.1 Who can create lists</A>
+<H1><A NAME="SECTION001520000000000000000"></A><A NAME="7638"></A>
+    <A NAME="list-creation-sympa"></A>
+<BR>
+14.2 List creation on command line with <TT>sympa.pl</TT>
+</H1>
+
+<P>
+This way to create lists is independent of family. 
+To create a list, some data are required : 
+the list name, the subject of the list, the list owner(s), 
+the name of the typical list profile (the list creation template),
+and a text describing the use of the list.
+
+<P>
+Here is a sample command to create one list :.<PRE>
+sympa.pl --create_list --robot \samplerobot &lt; my_file.xml
+</PRE>
+
+<P>
+The list is created under the <A NAME="7641"></A><TT>my.domain.org</TT> robot and the list 
+is described in the file <A NAME="7644"></A><TT>my_file.xml</TT>. The list description is a XML file
+described below, see <A HREF="node15.html#xml-file-format">14.2.2</A>, page&nbsp;<A HREF="node15.html#xml-file-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+Moreover required data, the list description, provides values to assign to 
+vars being in the list profile. Then the result is the list configuration file :
+<BR>
+<P>
+sch&#233;mas
+<BR>
+<P>
+By default, the status of the created list is <A NAME="7647"></A><TT>open</TT>.
+
+<P>
+
+<H2><A NAME="SECTION001521000000000000000"></A>
+    <A NAME="typical-list-profile"></A>
+<BR>
+14.2.1 typical list profile (list template creation)
+</H2>
+Mailing lists can have many different uses. <I>Sympa</I> offers a
+wide choice of parameters to adapt a list behavior
+to different situations. Users might have difficulty selecting all the
+correct parameters, so instead the create list form asks
+the list creator simply to choose a profile for the list, and to fill in
+the owner's e-mail and the list subject together with a short description.
+
+<P>
+List profiles are stored in <A NAME="7651"></A><TT>/home/sympa/etc/create_list_templates</TT> or in
+<A NAME="7654"></A><TT>/home/sympa/bin/etc/create_list_templates</TT> (default of distrib).
+
+<P>
+A list profile is an almost complete list configuration, but with a number of unspecified fields
+(such as owner e-mail)
+to be replaced by WWSympa at list creation time. It is easy to create new list 
+templates by modifying existing ones. (Contributions to the distribution are welcome...)
+
+<P>
+You might want to hide or modify profiles (not useful, or dangerous 
+for your site). If a profile exists both in the local site directory
+<A NAME="7657"></A><TT>/home/sympa/etc/create_list_templates</TT> and
+<A NAME="7660"></A><TT>/home/sympa/bin/etc/create_list_templates</TT> directory, then the local profile 
+will be used by WWSympa. 
+
+<P>
+
+<H2><A NAME="SECTION001522000000000000000"></A>
+<A NAME="xml-file-format"></A>
+<BR>
+14.2.2 XML file format
 </H2>
 
 <P>
-This is defined by the <A NAME="7388"></A><TT>create_list</TT> sympa.conf parameter (see <A HREF="node6.html#create-list">5.1.10</A>,  
+Here is an example of XML document that you can map with the following example of list creation template.:
+
+<P><PRE>
+&lt;?xml version="1.0" ?&gt;
+&lt;list&gt;
+	&lt;listname&gt;example&lt;/listname&gt;
+  	&lt;family&gt;my_profile&lt;/family&gt;
+  	&lt;subject&gt;a list example&lt;/subject&gt;
+  	&lt;description/&gt;
+  	&lt;status&gt;open&lt;/status&gt;
+  	&lt;shared_edit&gt;editor&lt;/shared_edit&gt;
+    	&lt;shared_read&gt;private&lt;/shared_read&gt;
+	&lt;language&gt;fr&lt;/language&gt;
+	&lt;owner multiple="1"&gt; 
+	   &lt;email&gt;serge.aumont@cru.fr&lt;/email&gt;
+	   &lt;gecos&gt;C.R.U.&lt;/gecos&gt;
+	&lt;/owner&gt;
+	&lt;owner multiple="1"&gt; 
+	   &lt;email&gt;olivier.salaun@cru.fr&lt;/email&gt;
+	&lt;/owner&gt;
+	&lt;owner_include multiple="1"&gt;
+	   &lt;source&gt;my_file&lt;/source&gt;
+	&lt;/owner_include&gt;
+	&lt;sql&gt; 
+	   &lt;type&gt;oracle&lt;/type&gt;
+	   &lt;host&gt;sqlserv.admin.univ-x.fr&lt;/host&gt;
+	   &lt;user&gt;stdutilisateur&lt;/user&gt;
+	   &lt;pwd&gt;monsecret&lt;/pwd&gt;
+	   &lt;name&gt;les_etudiants&lt;/name&gt;
+	   &lt;query&gt;SELECT DISTINCT email FROM etudiant&lt;/query&gt;
+	&lt;/sql&gt;
+&lt;/list&gt;
+
+
+
+subject [% subject %]
+
+status [% status %]
+
+[% IF topic %]
+topics [% topic %]
+
+[% END %]
+visibility noconceal
+
+send privateoreditorkey
+
+Web_archive
+  access public
+
+subscribe open_notify
+
+shared_doc
+  d_edit [% shared_edit %]
+  d_read [% shared_read %]
+
+lang [% language %]
+
+[% FOREACH o = owner %]
+owner
+  email [% o.email %]
+  profile privileged
+  [% IF o.gecos %] 
+  gecos [% o.gecos %]
+  [% END %]
+
+[% END %]
+[% IF moderator %]
+   [% FOREACH m = moderator %]
+editor
+  email [% m.email %]
+
+   [% END %]
+[% END %]
+ 
+[% IF sql %]
+include_sql_query
+  db_type [% sql.type %]
+  host [% sql.host %]
+  user [% sql.user %]
+  passwd [% sql.pwd %]
+  db_name [% sql.name %]
+  sql_query [% sql.query %]
+    
+[% END %]
+ttl 360
+</PRE>
+
+<P>
+The XML file format should comply with the following rules : 
+
+<UL>
+<LI>The root element is <A NAME="7663"></A><TT>&lt;list&gt;</TT>
+</LI>
+<LI>Four elements are mandatory : 
+    
+<UL>
+<LI><A NAME="7666"></A><TT>&lt;listname&gt;</TT> : contains the name of the list
+</LI>
+<LI><A NAME="7669"></A><TT>&lt;subject&gt;</TT> : contains the subject of the list
+</LI>
+<LI><A NAME="7672"></A><TT>&lt;family&gt;</TT> : contains the name of the list creation template
+</LI>
+<LI><A NAME="7675"></A><TT>&lt;description&gt;</TT> : contains a text describing the use of the list
+	     (it can be a CDATA section). This text will be put in the <A NAME="7678"></A><TT>info</TT> file.
+    
+</LI>
+</UL>
+</LI>
+<LI>For other elements, their name are the name of vars to assign in the list creation template. 
+</LI>
+<LI>Each element concerning multiple parameters must have the <A NAME="7681"></A><TT>multiple</TT> attribute set 
+    to ``1'', example : <A NAME="7684"></A><TT>&lt;owner multiple=''1''></TT>. 
+</LI>
+<LI>For composed and multiple parameters, sub-elements are used. Example for <A NAME="7687"></A><TT>owner</TT> parameter :
+    <A NAME="7690"></A><TT>&lt;email&gt;</TT> and <A NAME="7693"></A><TT>&lt;gecos&gt;</TT> elements are contained in the <A NAME="7696"></A><TT>&lt;owner&gt;</TT>element. 
+    An element can only have homogeneous content.
+</LI>
+<LI>A list requires at least one owner, defined in the XML input file with one of the following elements :
+    
+<UL>
+<LI><A NAME="7699"></A><TT>&lt;owner multiple=''1''> &lt;email&gt; ... &lt;/email&gt; &lt;/owner&gt;</TT>
+</LI>
+<LI><A NAME="7702"></A><TT>&lt;owner_include&gt; &lt;source&gt; ... &lt;/source&gt; &lt;/owner_include&gt;</TT>
+    
+</LI>
+</UL>
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION001530000000000000000"></A>
+    <A NAME="web-ml-creation"></A>
+<BR>
+14.3 Creating and editing mailing using the web
+</H1>
+
+<P>
+The management of mailing lists is based on a strict definition of privileges 
+which pertain respectively to the listmaster, to the main list owner, and to 
+basic list owners. The goal is to allow each listmaster to define who can create 
+lists, and which parameters may be set by owners.
+
+<P>
+
+<H2><A NAME="SECTION001531000000000000000">
+14.3.1 List creation on the Web interface</A>
+</H2>
+
+<P>
+Listmasters have all privileges. The listmaster
+is defined in <A NAME="7705"></A><TT>sympa.conf</TT> and others are defined at the virtual robot level. By default, newly created
+lists must be activated by the listmaster. List creation is possible for all intranet users 
+(i.e. : users with an e-mail address within the same domain as Sympa).
+This is controlled by the <A NAME="7708"></A><TT>create_list</TT> authorization scenario.
+
+<P>
+List rejection message and list creation notification message are both
+templates that you can customize (<A NAME="7711"></A><TT>list_rejected.tt2</TT> and
+<A NAME="7714"></A><TT>list_created.tt2</TT>).
+
+<P>
+
+<H2><A NAME="SECTION001532000000000000000">
+14.3.2 Who can create lists on the Web interface</A>
+</H2>
+
+<P>
+This is defined by the <A NAME="7717"></A><TT>create_list</TT> sympa.conf parameter (see <A HREF="node6.html#create-list">5.1.10</A>,  
 page&nbsp;<A HREF="node6.html#create-list"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). This parameter refers to a <B>create_list</B> authorization scenario.
 It will determine if the <I>create list</I> button is displayed and if it requires
 a listmaster confirmation.
 
 <P>
 The authorization scenario can accept any condition concerning the [sender]
-(i.e. WWSympa user), and it returns <A NAME="7391"></A><TT>reject</TT>, <A NAME="7394"></A><TT>do_it</TT>
-or <A NAME="7397"></A><TT>listmaster</TT> as an action.
+(i.e. WWSympa user), and it returns <A NAME="7720"></A><TT>reject</TT>, <A NAME="7723"></A><TT>do_it</TT>
+or <A NAME="7726"></A><TT>listmaster</TT> as an action.
 
 <P>
 Only in cases where a user is authorized by the create_list authorization scenario
 will the "create" button be available in the main menu.
-If the scenario returns <A NAME="7400"></A><TT>do_it</TT>, the list will be created and installed.
+If the scenario returns <A NAME="7729"></A><TT>do_it</TT>, the list will be created and installed.
 If the scenario returns "listmaster", the user is allowed to create a list, but
-the list is created with the <A NAME="7403"></A><TT>pending</TT> status,
+the list is created with the <A NAME="7732"></A><TT>pending</TT> status,
 which means that only the list owner may view or use it.
 The listmaster will need to open the list of pending lists
 using the "pending list" button in the "server admin"
@@ -146,43 +390,17 @@ menu in order to install or refuse a pending list.
 
 <P>
 
-<H2><A NAME="SECTION001512000000000000000">
-14.1.2 typical list profile</A>
-</H2>
+<H3><A NAME="SECTION001532100000000000000">
+14.3.2.1 typical list profile and Web interface</A>
+</H3>
 
 <P>
-Mailing lists can have many different uses. <I>Sympa</I> offers a
-wide choice of parameters to adapt a list's behavior
-to different situations. Users might have difficulty selecting all the
-correct parameters, so instead the create list form asks
-the list creator simply to choose a profile for the list, and to fill in
-the owner's e-mail and the list subject together with a short description.
-
-<P>
-List profiles can be stored in <A NAME="7407"></A><TT>/home/sympa/etc/create_list_templates</TT> or
-<A NAME="7410"></A><TT>/home/sympa/bin/etc/create_list_templates</TT>, which are part of the Sympa
-distribution and should not be modified.  
-<A NAME="7413"></A><TT>/home/sympa/etc/create_list_templates</TT>, which will not be
-overwritten by make install, is intended to contain site customizations.
-
-<P>
-A list profile is an almost complete list configuration, but with a number of missing fields
-(such as owner e-mail)
-to be replaced by WWSympa at installation time. It is easy to create new list 
-templates by modifying existing ones. Contributions to the distribution are welcome.
-
-<P>
-You might want to hide or modify profiles (not useful, or dangerous 
-for your site). If a profile exists both in the local site directory
-<A NAME="7416"></A><TT>/home/sympa/etc/create_list_templates</TT> and
-<A NAME="7419"></A><TT>/home/sympa/bin/etc/create_list_templates</TT> directory, then the local profile 
-will be used by WWSympa. 
-
-<P>
-Another way to control publicly available profiles is to
-edit the <A NAME="7422"></A><TT>create_list.conf</TT> file (the default for this file is in
-the <A NAME="7425"></A><TT>/home/sympa/bin/etc</TT> directory, and you may create your own customized
-version in <A NAME="7428"></A><TT>/home/sympa/etc</TT>).
+Typical list profile are described before, see <A HREF="node15.html#typical-list-profile">14.2.1</A>, page&nbsp;<A HREF="node15.html#typical-list-profile"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. 
+You can check available profile. On the Web interface, another way 
+to control publicly available profiles is to
+edit the <A NAME="7735"></A><TT>create_list.conf</TT> file (the default for this file is in
+the <A NAME="7738"></A><TT>/home/sympa/bin/etc</TT> directory, and you may create your own customized
+version in <A NAME="7741"></A><TT>/home/sympa/etc</TT>).
 This file controls which of the available list templates are to be displayed. Example :<PRE>
 # Do not allow the public_anonymous profile
 public_anonymous hidden
@@ -190,26 +408,17 @@ public_anonymous hidden
 </PRE>
 
 <P>
-When a list is created, whatever its status (<A NAME="7431"></A><TT>pending</TT> or
-<A NAME="7434"></A><TT>open</TT>), the owner can use WWSympa admin features to modify list
-parameters, or to edit the welcome message, and so on.
 
-<P>
-WWSympa logs the creation and all modifications to a list as part of the list's
-<A NAME="7437"></A><TT>config</TT> file (and old configuration files are saved).
-
-<P>
-
-<H1><A NAME="SECTION001520000000000000000"></A>
+<H2><A NAME="SECTION001533000000000000000"></A>
 <A NAME="list-edition"></A>
 <BR>
-14.2 List edition
-</H1>
+14.3.3 List edition
+</H2>
 
 <P>
-For each parameter, you may specify (via the <A NAME="7440"></A><TT>/home/sympa/etc/edit_list.conf</TT>
+For each parameter, you may specify (via the <A NAME="7744"></A><TT>/home/sympa/etc/edit_list.conf</TT>
 configuration file) who has the right to edit the parameter concerned ; the default 
-<A NAME="7443"></A><TT>/home/sympa/bin/etc/edit_list.conf</TT> is reasonably safe.
+<A NAME="7747"></A><TT>/home/sympa/bin/etc/edit_list.conf</TT> is reasonably safe.
 
 <P>
 <PRE>
@@ -247,7 +456,7 @@ Eg: listmaster will not match rules refering to owner or privileged_owner
 </PRE>
 
 <P>
-Privileged owners are defined in the list's <A NAME="7446"></A><TT>config</TT> file as follows :
+Privileged owners are defined in the list's <A NAME="7750"></A><TT>config</TT> file as follows :
 	<PRE>
 	owner
 	email owners.email@foo.bar
@@ -293,39 +502,42 @@ Sympa aims to define two levels of trust for owners (some being entitled
       referring to the listmaster.
 
 <P>
+Concerning list edition in a family context, see <A HREF="node16.html#list-param-edit-family">15.2.7</A>, page&nbsp;<A HREF="node16.html#list-param-edit-family"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+
+<P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1048"
+<A NAME="tex2html1070"
   HREF="node16.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1042"
+<A NAME="tex2html1064"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1036"
+<A NAME="tex2html1058"
   HREF="node14.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1044"
+<A NAME="tex2html1066"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1046"
-  HREF="node23.html">
+<A NAME="tex2html1068"
+  HREF="node24.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1049"
-  HREF="node16.html">15. List configuration parameters</A>
-<B> Up:</B> <A NAME="tex2html1043"
+<B> Next:</B> <A NAME="tex2html1071"
+  HREF="node16.html">15. Lists Families</A>
+<B> Up:</B> <A NAME="tex2html1065"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1037"
+<B> Previous:</B> <A NAME="tex2html1059"
   HREF="node14.html">13. Mailing list definition</A>
- &nbsp <B>  <A NAME="tex2html1045"
+ &nbsp <B>  <A NAME="tex2html1067"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1047"
-  HREF="node23.html">Index</A></B> 
+ &nbsp <B>  <A NAME="tex2html1069"
+  HREF="node24.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2004-10-12
+2004-10-20
 </ADDRESS>
 </BODY>
 </HTML>

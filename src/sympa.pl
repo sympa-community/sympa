@@ -40,6 +40,9 @@ use smtp;
 use MIME::QuotedPrint;
 use List;
 use Message;
+use admin;
+use Config_XML;
+use Family;
 
 require 'tools.pl';
 require 'tt2.pl';
@@ -76,6 +79,12 @@ Options:
    --dump=list|ALL                       : dumps subscribers 
    --make_alias_file                     : create file in /tmp with all aliases (usefull when aliases.tpl is changed)
    --lowercase                           : lowercase email addresses in database
+   --create_list --robot=robot_name < file.xml 
+                                         : create a list with the xml file under robot_name
+   --instantiate_family=family_name  --robot=robot_name < file.xml       
+                                         : instantiate family_name lists described in the file.xml under robot_name,
+                                           the family directory must exist
+
    --close_list=LISTNAME[\@ROBOT]         : close a list
    --log_level=LEVEL                     : sets Sympa log level
 
@@ -92,7 +101,7 @@ encryption.
 my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase',
-		    'close_list=s')) {
+		    'close_list=s','create_list','instantiate_family=s','robot=s')) {
     &fatal_err("Unknown options.");
 }
 
@@ -107,7 +116,9 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
 				     $main::options{'make_alias_file'} || 
 				     $main::options{'lowercase'} || 
 				     $main::options{'dump'} ||
-				     $main::options{'close_list'});
+				     $main::options{'close_list'} ||
+				     $main::options{'create_list'} ||
+				     $main::options{'instantiate_family'});
 
 ## Batch mode, ie NOT daemon
  $main::options{'batch'} = 1 if ($main::options{'dump'} || 
@@ -116,7 +127,9 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
 				 $main::options{'import'} || 
 				 $main::options{'make_alias_file'} ||
 				 $main::options{'lowercase'} ||
-				 $main::options{'close_list'});
+				 $main::options{'close_list'} ||
+				 $main::options{'create_list'} ||
+				 $main::options{'instantiate_family'});
 
 $log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
@@ -338,7 +351,64 @@ if ($main::options{'dump'}) {
     printf STDOUT "List %s has been closed, aliases have been removed\n", $list->{'name'};
     
     exit 0;
+}elsif ($main::options{'create_list'}) {
+    
+    my $robot;
+    unless ($robot = $main::options{'robot'}) {
+ 	print STDERR $usage_string;
+ 	exit 1;
+    }
+    
+    my $config = new Config_XML(\*STDIN);
+    unless (defined $config->createHash()) {
+ 	print STDERR "Error in representation data with these xml data\n";
+ 	exit 1;
+    } 
+    
+    my $hash = $config->getHash();
+    
+    my $resul = &admin::create_list_old($hash->{'config'},$hash->{'family'},$hash->{'description'},$robot);
+    unless (defined $resul) {
+ 	print STDERR "Could not create list with these xml data\n";
+ 	exit 1;
+    }
+    
+    if ($resul->{'aliases'} == 1) {
+ 	printf STDOUT "List has been created \n";
+ 	exit 0;
+    }else {
+ 	printf STDOUT "List has been created, required aliases :\n $resul->{'aliases'} \n";
+ 	exit 0;
+    }
+}elsif ($main::options{'instantiate_family'}) {
+    
+    my $robot;
+    unless ($robot = $main::options{'robot'}) {
+ 	print STDERR $usage_string;
+ 	exit 1;
+    }
+    my $family_name;
+    unless ($family_name = $main::options{'instantiate_family'}) {
+ 	print STDERR $usage_string;
+ 	exit 1;
+    }
+    my $family;
+    unless ($family = new Family($family_name,$robot)) {
+ 	print STDERR "The family $family_name does not exist, impossible instantiation\n";
+ 	exit 1;
+    }
+    unless ($family->instantiate(\*STDIN)) {
+ 	print STDERR "\nImpossible family instantiation : action stopped \n";
+ 	exit 1;
+    } 
+    
+    
+    my $string = $family->get_instantiation_results();
+    print STDERR $string;
+    
+    exit 0;
 }
+ 
 
 ## Maintenance
 ## Update DB structure or content if required

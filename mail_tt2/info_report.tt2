@@ -1,10 +1,10 @@
 [%|loc(list.name,list.host)%]Information regarding list %1@%2[%END%] :
 
 [%|loc(subject)%]Subject            : %1[%END%]
-[% FOREACH o = owner %]
+[% FOREACH o = owner -%]
 [%|loc(o.gecos)%]Owner              : %1[%END%] <[% o.email %]>
 [% END %]
-[% FOREACH e = editor %]
+[% FOREACH e = editor -%]
 [%|loc(e.gecos)%]Moderator          : %1[%END%] <[% e.email %]>
 [% END %]
 [%|loc(subscribe)%]Subscription       : %1[%END%]
@@ -13,7 +13,7 @@
 [%|loc(review)%]Review subscribers : %1[%END%]
 [%|loc(reply_to)%]Reply to           : %1[%END%]
 [%|loc(max_size)%]Maximum size       : %1[%END%]
-[% IF digest %]
+[% IF digest -%]
 [%|loc(digest)%]Digest       : %1[%END%]
 [% END %]
 [%|loc(available_reception_mode)%]Reception modes    : %1[%END%]

@@ -1,29 +1,29 @@
 From: [% conf.sympa %]
 Reply-to: [% conf.request %]
 To: [% newuser.email %]
-[% IF action == 'subrequest' %]
+[% IF action == 'subrequest' -%]
 Subject: [% FILTER qencode %][%|loc(conf.title,list)%]%1 / subscribing to %2[%END%][%END%]
-[% ELSIF action == 'sigrequest' %]
+[% ELSIF action == 'sigrequest' -%]
 Subject: [% FILTER qencode %][%|loc(conf.title,list)%]%1 / unsubscribing from %2[%END%][%END%]
-[% ELSE %]
+[% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(conf.title)%]%1 / your environment[%END%][%END%]
 [% END %]
 
-[% IF action == 'subrequest' %]
+[% IF action == 'subrequest' -%]
 [%|loc(list)%]You requested a subscription to %1 mailing list.[%END%]
 
 [%|loc%]To confirm your subscription, you need to provide the following password[%END%]
 
 	[%|loc(newuser.password)%]password: %1[%END%]
 
-[% ELSIF action == 'sigrequest' %]
+[% ELSIF action == 'sigrequest' -%]
 [%|loc(list)%]You requested unsubscription from %1 mailing list.[%END%]
 
 [%|loc%]To unsubscribe from the list, you need to provide the following password[%END%]
 
 	[%|loc(newuser.password)%]password: %1[%END%]
 
-[% ELSE %]
+[% ELSE -%]
 [%|loc%]To access your personal environment, you need to login first[%END%]
 
      [%|loc(newuser.email)%]your email address    : %1[%END%]

@@ -540,7 +540,7 @@ a virtual robot or for the whole site.
 	\item \dir {[ETCBINDIR]}\\
 	Here \Sympa stores the default versions of what it will otherwise find
 	in \dir {[ETCDIR]} (task models, authorization scenarios, templates and configuration
-	files, recognized S/Mime certificates).
+	files, recognized S/Mime certificates, families).
 
 	\item \dir {[ETCDIR]}\\
 	This is your site's configuration directory. Consult
@@ -578,6 +578,9 @@ a virtual robot or for the whole site.
 	these template files in the individual list directories or
         for each virtual robot, but these are the defaults.
 
+	\item \dir {[ETCDIR]/families/}\\
+	Contains family directories of yours (see \ref {ml-creation}, page~\pageref {ml-creation}).
+	Families directories can also be created in \dir {[ETCDIR]/\samplerobot/families/}
 
 	\item \dir {[ETCDIR]/\samplerobot}\\
         The directory to define the virtual robot \samplerobot dedicated to
@@ -1185,6 +1188,10 @@ messages distribution.
 \end{verbatim}
   \end {quote}
 
+\item \option {--create\_list --robot \textit {robotname} < \textit {list\_file.xml}}
+
+Create the list described by the xml file, see \ref{list-creation-sympa}, 
+page~\pageref{list-creation-sympa}.
 
 \item \option {--close\_list \textit {listname@robot}}
 
@@ -1217,7 +1224,12 @@ template.
 \item \option {--version} | \option {-v}
   
   Print current version of \Sympa.
- 
+
+\item \option {--instanciate\_family \textit {familyname} \textit {robotname} < \textit {family\_file.xml}}
+
+Instantiate the family \textit {familyname}. See \ref{lists-families}, 
+page~\pageref{lists-families}.
+
   
 \end {itemize}
 
@@ -4894,7 +4906,7 @@ by including other mailing lists.
 
 A data inclusion file is composed of pararaphs separated by blank lines and introduced by a keyword.
 Valid paragraphs are \lparam {include\_file}, \lparam {include\_list}, \lparam {include\_remote\_sympa\_list}, 
-\lparam {include\_sql\_query} and \lparam {include\_ldap\_query}. They are described in the list creation section, \ref {list-configuration-param}, page~\pageref {list-configuration-param}.
+\lparam {include\_sql\_query} and \lparam {include\_ldap\_query}. They are described in the list configuration parameters chapitre, \ref {list-configuration-param}, page~\pageref {list-configuration-param}.
 
 \section {List template files}
 \label{list-tpl}
@@ -5112,31 +5124,219 @@ archiving frequency defined by the \lparam {archive} parameter.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% List configuration parameters
+% List creation, families  and edition
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter {Creating and editing mailing using the web}
-    \label {web-ml-creation}
+\chapter {List creation, families and list edition}
+    \label {ml-creation}
 
-The management of mailing lists by list owners will usually be
-done via the web interface. This is based on a strict definition
-of privileges which pertain respectively to the
-listmaster, to the main list owner, and to basic list owners. The goal is to
-allow each listmaster to define who can create lists, and which
-parameters may be set by owners. Therefore, a complete
-installation requires some careful planning, although default
+The list creation can be done by two ways, according to listmaster 
+needs : 
+\begin{itemize}
+  \item instanciation family to create and manage large number of related lists. 
+    In this case, lists are linked to their family all along their life.
+  \item command line creation of individual list with \file {sympa.pl} or on the Web 
+interface according to privileges defined by listmasters. Here lists are free from 
+their model creation.
+\end{itemize} 
+Management of mailing lists by list owners is usually done via the web interface : 
+when a list is created, whatever its status (\cfkeyword {pending} or \cfkeyword {open}), the owner 
+can use WWSympa admin features to modify list parameters, or to edit the welcome 
+message, and so on.
+
+WWSympa keeps logs of the creation and all modifications to a list as part of the list's
+\file {config} file (old configuration files are archived).
+A complete installation requires some careful planning, although default
 values should be acceptable for most sites.
 
-Some features are already available, others will be so shortly, as specified
-in the documentation.
+\section {List families}
 
-\section {List creation}
+See chapter \ref{lists-families}, page~\pageref{lists-families}
+
+\section {List creation on command line with \file {sympa.pl}}
+    \label {list-creation-sympa}
+
+This way to create lists is independent of family. 
+To create a list, some data are required : 
+the list name, the subject of the list, the list owner(s), 
+the name of the typical list profile (the list creation template),
+and a text describing the use of the list.
+
+Here is a sample command to create one list :.
+\begin {quote}
+\begin{verbatim}
+sympa.pl --create_list --robot \samplerobot < my_file.xml
+\end{verbatim}   
+\end {quote}
+
+The list is created under the \file{\samplerobot} robot and the list 
+is described in the file \file{my\_file.xml}. The list description is a XML file
+described below, see \ref{xml-file-format}, page~\pageref{xml-file-format}.
+Moreover required data, the list description, provides values to assign to 
+vars being in the list profile. Then the result is the list configuration file :\\
+
+schémas\\
+
+By default, the status of the created list is \file{open}.
+
+\subsection {typical list profile (list template creation)}
+    \label{typical-list-profile}
+Mailing lists can have many different uses. \Sympa offers a
+wide choice of parameters to adapt a list behavior
+to different situations. Users might have difficulty selecting all the
+correct parameters, so instead the create list form asks
+the list creator simply to choose a profile for the list, and to fill in
+the owner's e-mail and the list subject together with a short description.
+
+List profiles are stored in \dir {[ETCDIR]/create\_list\_templates} or in
+\dir {[ETCBINDIR]/create\_list\_templates} (default of distrib).
+
+A list profile is an almost complete list configuration, but with a number of unspecified fields
+(such as owner e-mail)
+to be replaced by WWSympa at list creation time. It is easy to create new list 
+templates by modifying existing ones. (Contributions to the distribution are welcome...)
+
+You might want to hide or modify profiles (not useful, or dangerous 
+for your site). If a profile exists both in the local site directory
+\dir {[ETCDIR]/create\_list\_templates} and
+\dir {[ETCBINDIR]/create\_list\_templates} directory, then the local profile 
+will be used by WWSympa. 
 
 
-Listmasters have all privileges. Currently the listmaster
-is defined in \file {sympa.conf} but in the future, it might be possible to
-define one listmaster per virtual robot. By default, newly created
+\subsection {XML file format}
+\label{xml-file-format}
+
+Here is an example of XML document that you can map with the following example of list creation template.:
+
+\begin {quote}
+\begin{verbatim}
+<?xml version="1.0" ?>
+<list>
+	<listname>example</listname>
+  	<family>my_profile</family>
+  	<subject>a list example</subject>
+  	<description/>
+  	<status>open</status>
+  	<shared_edit>editor</shared_edit>
+    	<shared_read>private</shared_read>
+	<language>fr</language>
+	<owner multiple="1"> 
+	   <email>serge.aumont@cru.fr</email>
+	   <gecos>C.R.U.</gecos>
+	</owner>
+	<owner multiple="1"> 
+	   <email>olivier.salaun@cru.fr</email>
+	</owner>
+	<owner_include multiple="1">
+	   <source>my_file</source>
+	</owner_include>
+	<sql> 
+	   <type>oracle</type>
+	   <host>sqlserv.admin.univ-x.fr</host>
+	   <user>stdutilisateur</user>
+	   <pwd>monsecret</pwd>
+	   <name>les_etudiants</name>
+	   <query>SELECT DISTINCT email FROM etudiant</query>
+	</sql>
+</list>
+
+
+
+[STOPPARSE]
+subject [% subject %]
+
+status [% status %]
+
+[% IF topic %]
+topics [% topic %]
+
+[% END %]
+visibility noconceal
+
+send privateoreditorkey
+
+Web_archive
+  access public
+
+subscribe open_notify
+
+shared_doc
+  d_edit [% shared_edit %]
+  d_read [% shared_read %]
+
+lang [% language %]
+
+[% FOREACH o = owner %]
+owner
+  email [% o.email %]
+  profile privileged
+  [% IF o.gecos %] 
+  gecos [% o.gecos %]
+  [% END %]
+
+[% END %]
+[% IF moderator %]
+   [% FOREACH m = moderator %]
+editor
+  email [% m.email %]
+
+   [% END %]
+[% END %]
+ 
+[% IF sql %]
+include_sql_query
+  db_type [% sql.type %]
+  host [% sql.host %]
+  user [% sql.user %]
+  passwd [% sql.pwd %]
+  db_name [% sql.name %]
+  sql_query [% sql.query %]
+    
+[% END %]
+ttl 360
+[STARTPARSE]
+\end{verbatim}
+\end {quote}
+ 
+
+The XML file format should comply with the following rules : 
+\begin{itemize}
+  \item The root element is \file{<list>}
+  \item Four elements are mandatory : 
+    \begin{itemize}
+      \item \file{<listname>} : contains the name of the list
+      \item \file{<subject>} : contains the subject of the list
+      \item \file{<family>} : contains the name of the list creation template
+      \item \file{<description>} : contains a text describing the use of the list
+	     (it can be a CDATA section). This text will be put in the \file{info} file.
+    \end{itemize}
+  \item For other elements, their name are the name of vars to assign in the list creation template. 
+  \item Each element concerning multiple parameters must have the \file{multiple} attribute set 
+    to ``1'', example : \file{<owner multiple=''1''>}. 
+  \item For composed and multiple parameters, sub-elements are used. Example for \file{owner} parameter :
+    \file{<email>} and \file{<gecos>} elements are contained in the \file{<owner>}element. 
+    An element can only have homogeneous content.
+  \item A list requires at least one owner, defined in the XML input file with one of the following elements :
+    \begin{itemize}
+      \item \file{<owner multiple=''1''> <email> ... </email> </owner>}
+      \item \file{<owner\_include> <source> ... </source> </owner\_include>}
+    \end{itemize}
+\end{itemize}
+   
+
+\section {Creating and editing mailing using the web}
+    \label {web-ml-creation}
+
+The management of mailing lists is based on a strict definition of privileges 
+which pertain respectively to the listmaster, to the main list owner, and to 
+basic list owners. The goal is to allow each listmaster to define who can create 
+lists, and which parameters may be set by owners.
+
+\subsection {List creation on the Web interface}
+
+Listmasters have all privileges. The listmaster
+is defined in \file {sympa.conf} and others are defined at the virtual robot level. By default, newly created
 lists must be activated by the listmaster. List creation is possible for all intranet users 
 (i.e. : users with an e-mail address within the same domain as Sympa).
 This is controlled by the \cfkeyword {create\_list} authorization scenario.
@@ -5145,7 +5345,7 @@ List rejection message and list creation notification message are both
 templates that you can customize (\file {list\_rejected.tt2} and
 \file {list\_created.tt2}).
 
-\subsection {Who can create lists}
+\subsection {Who can create lists on the Web interface}
 
 This is defined by the \cfkeyword {create\_list} sympa.conf parameter (see \ref {create-list},  
 page~\pageref {create-list}). This parameter refers to a \textbf {create\_list} authorization scenario.
@@ -5168,34 +5368,11 @@ The listmaster will need to open the list of pending lists
 using the "pending list" button in the "server admin"
 menu in order to install or refuse a pending list.
 
-\subsection {typical list profile}
+\subsubsection {typical list profile and Web interface}
 
-Mailing lists can have many different uses. \Sympa offers a
-wide choice of parameters to adapt a list's behavior
-to different situations. Users might have difficulty selecting all the
-correct parameters, so instead the create list form asks
-the list creator simply to choose a profile for the list, and to fill in
-the owner's e-mail and the list subject together with a short description.
-
-List profiles can be stored in \dir {[ETCDIR]/create\_list\_templates} or
-\dir {[ETCBINDIR]/create\_list\_templates}, which are part of the Sympa
-distribution and should not be modified.  
-\dir {[ETCDIR]/create\_list\_templates}, which will not be
-overwritten by make install, is intended to contain site customizations.
-
-
-A list profile is an almost complete list configuration, but with a number of missing fields
-(such as owner e-mail)
-to be replaced by WWSympa at installation time. It is easy to create new list 
-templates by modifying existing ones. Contributions to the distribution are welcome.
-
-You might want to hide or modify profiles (not useful, or dangerous 
-for your site). If a profile exists both in the local site directory
-\dir {[ETCDIR]/create\_list\_templates} and
-\dir {[ETCBINDIR]/create\_list\_templates} directory, then the local profile 
-will be used by WWSympa. 
-
-Another way to control publicly available profiles is to
+Typical list profile are described before, see \ref{typical-list-profile}, page~\pageref{typical-list-profile}. 
+You can check available profile. On the Web interface, another way 
+to control publicly available profiles is to
 edit the \cfkeyword {create\_list.conf} file (the default for this file is in
 the \dir {[ETCBINDIR]} directory, and you may create your own customized
 version in \dir {[ETCDIR]}).
@@ -5209,15 +5386,7 @@ public_anonymous hidden
 \end {quote}
 
 
-When a list is created, whatever its status (\cfkeyword {pending} or
-\cfkeyword {open}), the owner can use WWSympa admin features to modify list
-parameters, or to edit the welcome message, and so on.
-
-WWSympa logs the creation and all modifications to a list as part of the list's
-\file {config} file (and old configuration files are saved).
-
-
-\section {List edition}
+\subsection {List edition}
 \label {list-edition}
 
 For each parameter, you may specify (via the \file {[ETCDIR]/edit\_list.conf}
@@ -5293,6 +5462,292 @@ of any owner
       but they cannot grant the responsibility of list management to others without
       referring to the listmaster.
 
+Concerning list edition in a family context, see \ref{list-param-edit-family}, page~\pageref{list-param-edit-family}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Lists Families 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Lists Families}
+    \label {lists-families}
+    \index{families}
+
+A list can have from three parameters to many tens of them. Some listmasters need to create 
+a set of lists that have the same profile. In order to simplify the apprehension of these parameters, 
+list families define a lists typology.
+Families provide a new level for defaults : in the past, defaults in Sympa were global and 
+most sites using Sympa needed multiple defaults for different group of lists.
+Moreover families allow listmaster to delegate a part of configuration list to owners, in a controlled way 
+according to family properties.
+Distribution will provide defaults families.
+
+\section {Family concept}
+     \label {family-concept}
+
+A family provides a model for all of its lists. It is specified by the following characteristics :
+
+\begin {itemize}
+
+    \item a list creation template providing a common profile for each list configuration file.
+    \item an degree of independence between the lists and the family : list parameters edition rights and 
+constraints on these parameters can be \textit{free} (no constraint), \textit{controlled} (a set of 
+available values is defined for these parameters) or \textit{fixed} (the value for the parameter is imposed by 
+the family). That prevents lists from diverging from the original and it allows list owner customizations in 
+a controlled way. 
+    \item a filiation kept between lists and family all along the list life : family modifications 
+are applied on lists while keeping listowners customizations.
+
+\end {itemize}
+
+Here is a list of operation performed on a family : 
+
+\begin {itemize}
+
+    \item definition : definition of the list creation template, the degree of independence and family customizations.
+    \item instantiation : lists creation or modifications of existing lists while respecting family properties.
+          The set of data defining the lists is an XML document. 
+    \item modification : modification of family properties. The modification is effective at the next instantiation time, that have consequences on every list.
+    \item closure : closure of each list.
+    \item adding one list to a family.
+    \item removing one list to a family
+
+\end {itemize}
+
+\section {Using family}
+    \label {using-family}
+
+\subsection {Definition}
+Families can be defined at the robot level, at  the site level or on the distribution level
+ (where default families are provided).
+So, you have to create a sub directory named after the family's name in a \file {families} directory  : 
+
+\textit {Examples:} 
+\begin {quote}
+\begin{verbatim}
+/home/sympa/etc/families/my_family
+/home/sympa/etc/my_robot/families/my_family 
+\end{verbatim}
+\end {quote}
+In this directory you must provide these files :
+\begin{itemize}
+  \item \file{config.tt2} (mandatory)
+  \item \file{param\_constraint.conf} (mandatory)
+  \item \file{edit\_list.conf}
+  \item customizable files
+\end{itemize}
+
+   \subsubsection {config.tt2}
+   \label{using-family-config-tpl}
+      This is a list creation template, this file is mandatory.It provides default values for parameters. 
+      This file is an almost complete list configuration, with a number of missing fields 
+      (such as owner e-mail) to be replaced by data obtained at the time of family instantiation.
+      It is easy to create new list templates by modifying existing ones. See \ref{list-tpl}, page~\pageref{list-tpl}
+      and \ref{tpl-format}, page~\pageref{tpl-format}.\\
+
+\textit {Examples:} 
+\begin {quote}
+\begin{verbatim}
+[STOPPARSE]
+subject [% subject %]
+
+status [% status %]
+
+[% IF topic %]
+topics [% topic %]
+
+[% END %]
+visibility noconceal
+
+send privateoreditorkey
+
+web_archive
+  access public
+
+subscribe open_notify
+
+shared_doc
+  d_edit [% shared_edit %]
+  d_read [% shared_read %]
+
+lang [% language %]
+
+[% FOREACH o = owner %]
+owner
+  email [% o.email %]
+  profile privileged
+  [% IF o.gecos %] 
+  gecos [% o.gecos %]
+  [% END %]
+
+[% END %]
+[% IF moderator %]
+   [% FOREACH m = moderator %]
+editor
+  email [% m.email %]
+
+   [% END %]
+[% END %]
+ 
+[% IF sql %]
+include_sql_query
+  db_type [% sql.type %]
+  host [% sql.host %]
+  user [% sql.user %]
+  passwd [% sql.pwd %]
+  db_name [% sql.name %]
+  sql_query [% sql.query %]
+    
+[% END %]
+ttl 360
+[STARTPARSE]
+\end{verbatim}
+\end {quote}
+
+
+     \subsubsection {param\_constraint.conf}
+     \index{param\_constraint.conf}
+         This file is obligatory. It defines constraints on parameters. There are three kind of constraints :
+	 \begin {itemize}
+	    \item \textit{free} parameters : no constraint on these parameters, 
+                  they are not written in the \file{param\_constraint.conf} file.
+	    \item \textit{controlled} parameters : these parameters must select their values 
+                  in a set of available values indicated in the \file{param\_constraint.conf} file.
+	    \item \textit{fixed} parameters : these parameters must have the imposed value indicated
+	          in the \file{param\_constraint.conf} file.
+    
+	 \end{itemize}
+	 The parameters constraints will be checked at every list loading.
+    
+\textit {Example:} 
+\begin {quote}
+\begin{verbatim}
+lang                fr,us			
+archive.period      days,week,month	
+visibility          conceal,noconceal	
+shared_doc.d_read   public		
+shared_doc.d_edit   editor		
+\end{verbatim}
+\end {quote}
+
+    \subsubsection {edit\_list.conf}
+        This is an optional file. It defines which parameters/files are editable by
+	owners. See \ref{list-edition}, page~\pageref{list-edition}.
+	If the family does not have this file, \textit{Sympa} will look for 
+	the one defined on robot level, server site level or distribution level. 
+	(This file already exists without family context)\\
+	Notes that by default parameter family\_name is not writable, you should not change 
+	this edition right.
+
+    \subsubsection {customizable files}
+        Families provides a new level of customization for scenarios (see \ref{scenarios}, 
+	page~\pageref{scenarios}), templates for service messages (see \ref {site-tpl}, 
+	page~\pageref {site-tpl}) and templates for web pages (see \ref{web-tpl} , 
+	page~\pageref{web-tpl}). \textit{Sympa} looks for these files in the following 
+	level order: list, family, robot, server site or distribution. 
+
+\subsection {Instantiation}
+
+Instantiation permits to generate lists.You must provide an XML file that is 
+composed of lists description, the root element is \textit{family} and is only 
+composed of \textit{list} elements. List elements are described in section 
+\ref{list-creation-sympa}, page~\pageref{list-creation-sympa}. Each list is described 
+by the set of values for affectation list parameters.
+
+Here is an exemple line command to instantiate a family :
+\begin {quote}
+\begin{verbatim}
+sympa.pl --instantiate_family my_family --robot my_robot < my_file.xml
+\end{verbatim}
+\end {quote}
+This means lists that belong to family \file{my\_family} will be created under the robot 
+\file{my\_robot} and these lists are described in the file \file{my\_file.xml}. Sympa will split this file 
+into several xml files describing lists. Each list XML file is put in each list directory.\\
+
+\textit {Example:} 
+\begin {quote}
+\begin{verbatim}
+<family>
+  <list> ... <listname> liste1 </listname> ... </list>
+  <list> ...                                   </list>
+  <list> ...                                   </list>
+   ...
+</family>
+\end{verbatim}
+\end {quote}
+
+
+Each instantiation describes lists. Compared to the previous instantiation, there are three cases :
+\begin{itemize}
+  \item lists creation : new lists described by the new instantiation
+  \item lists modification : lists already existing but possibly changed because of changed parameters values in
+        the XML file or because of changed family's properties.
+  \item lists removal : lists nomore described by the new instantiation. In this case, the listmaster must 
+        valid his choice on command line. If the list is removed, it is set in status \file{family\_closed}, or if the 
+	list is recovered, the list XML file from the previous instantiation is got back to go on as a list modification then.
+
+\end{itemize}
+
+
+After list creation or modification, parameters constraints are checked :
+\begin{itemize}
+  \item \textit{fixed} parameter : the value must be the one imposed.
+  \item \textit{controlled} parameter : the value must be one of the set of available values.
+  \item \textit{free} parameter : there is no checking.
+
+\end{itemize}
+
+
+diagram
+
+In case of modification (see diagram), allowed customizations can be preserved :
+\begin{itemize}
+  \item (1) : for every modified parameters (via Web interface), noted in the \file{config\_changes} 
+    file, values can be collected in the old list configuration file, according to new family properties :
+    \begin{itemize}
+      \item \textit{fixed} parameter : the value is not collected.
+      \item \textit{controlled} parameter : the value is collected only if constraints are respected.
+      \item \textit{free} parameter : the value is collected.
+    \end{itemize}
+  \item (2) : a new list configuration file is made with the new family properties
+  \item (3) : collected values are set in the new list configuration file.
+
+\end {itemize}
+
+
+Notes : 
+\begin{itemize}
+  \item For each list problem (as family file error, error parameter constraint, error instanciation ...),
+    the list is set in status \file{error\_config} and the listmaster is notified. He will have to do necessary to put list in use.
+  \item For each list closing in family context, the list is set in status \file{family\_closed} and the owner is notified.
+  \item For each overwritten list customization, the owner is notified. 
+\end{itemize}
+
+\subsection {Modification}
+To modify a family, you have to edit family files manually. The modification will be effective while the next instanciation.\\
+\textbf {WARNING}: The family modification must be done just before an instantiation. If it is not, alive lists wouldn't respect 
+new family properties and they would be set in status error\_config immediately.
+
+\subsection {Closure}
+Not already done.
+
+\subsection {Adding one list}
+Not already done.
+
+\subsection {Remmoving one list}
+Not already done.
+
+\subsection {List parameters edition in a family context}
+    \label{list-param-edit-family}
+According to file \file{edit\_list.conf}, edition rights are controlled.  
+See \ref{list-edition}, page~\pageref{list-edition}. But in a family context, constraints parameters are 
+added to edition right as it is summarized in this array :\\
+
+array\\
+
+
+
+Note : In order to preserve list customization for instanciation, every modified parameter (via the Web interface) is noted in the \file{config\_changes} file. 
 
 
 
@@ -7087,6 +7542,41 @@ see a  nice mailto adresses where others have nothing.
         A additional value is available : cookie which mean that users
         must submit a small form in order to receive a cookie before
         browsing archives. This block all robot, even google and co.
+
+\section {Intern parameters}
+   
+
+\subsection {family\_name}
+     \label {par-family-name}
+     \index{family\_name}
+
+This parameter indicates the name of the family that the list belongs to. 
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+family_name my_family
+\end{verbatim}
+\end {quote}
+
+\subsection {latest\_instantiation}
+     \label {par-latest-instantiation}
+     \index{latest\_instantiation}
+
+This parameter indicates the date of the latest instantiation.
+
+\textit {Example:} 
+
+\begin {quote}
+\begin{verbatim}
+latest_instantiation
+email serge.aumont@cru.fr
+date 27 jui 2004 at 09:04:38
+date_epoch 1090911878
+\end{verbatim}
+\end {quote}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

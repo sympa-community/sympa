@@ -31,15 +31,23 @@ custom_subject [% listname %]
 
 digest 5 20:56
 
+[% FOREACH o = owner %]
 owner
-  email [% owner.email %]
+  email [% o.email %]
   profile privileged
-  [% IF owner.gecos %] 
-  gecos [% owner.gecos %]
+  [% IF o.gecos %] 
+  gecos [% o.gecos %]
   [% END %]
 
+[% END %]
+
+[% IF editor %]
+[% FOREACH e = editor %]
 editor
-  email [% owner.email %]
+  email [% e.email %]
+
+[% END %]
+[% END %]
 
 shared_doc
 d_edit default
@@ -48,6 +56,8 @@ d_read private
 creation
   date [% creation.date %]
   date_epoch [% creation.date_epoch %]
-  email [% creation.email %]
+[% IF creation_email %]
+  email [% creation_email %]
+[% END %]
 
 serial 0

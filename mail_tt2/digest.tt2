@@ -11,7 +11,7 @@ Content-transfer-encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc%]Table of contents:[%END%]
 
-[% FOREACH m = msg_list %]
+[% FOREACH m = msg_list -%]
 [% m.id %]. [% m.subject %] - [% m.from %]
 [% END %]
 
@@ -21,7 +21,7 @@ Mime-Version: 1.0
 
 This is a multi-part message in MIME format...
 
-[% FOREACH m = msg_list %]
+[% FOREACH m = msg_list -%]
 --[% boundary2 %]
 Content-Type: message/rfc822
 Content-Disposition: inline

@@ -5,7 +5,7 @@
 [%|loc%]Foreach list here is a mailto to use if you want to unsubscribe.[%END%]
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-[% FOREACH l = lists %]
+[% FOREACH l = lists -%]
 [% l %]	mailto:[% conf.sympa %]?subject=sig%20[% l %]%20[% user.email %]
 [% END %]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

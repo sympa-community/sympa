@@ -183,6 +183,7 @@ sub parse_tt2 {
     my $config = {
 	# ABSOLUTE => 1,
 	INCLUDE_PATH => $include_path,
+#	PRE_CHOMP  => 1,
 	
 	FILTERS => {
 	    unescape => \&CGI::Util::unescape,
@@ -202,6 +203,7 @@ sub parse_tt2 {
     unless ($tt2->process($template, $data, $output)) {
 	$last_error = $tt2->error();
 	&do_log('err', 'Failed to parse %s : %s', $template, $tt2->error());
+	&do_log('err', 'Looking for TT2 files in %s', join(',',@{$include_path}));
 	return undef;
     } 
 }

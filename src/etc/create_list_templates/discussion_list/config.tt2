@@ -12,12 +12,15 @@ subscribe open_notify
 
 unsubscribe open_notify
 
+[% FOREACH o = owner%]
 owner
-  email [% owner.email %]
+  email [% o.email %]
   profile privileged
-  [% IF owner.gecos %] 
-  gecos [% owner.gecos %]
+  [% IF o.gecos %]
+  gecos [% o.gecos %]
   [% END %]
+
+[% END %]
 
 send privateoreditorkey
 
@@ -43,4 +46,6 @@ d_read public
 creation
 date_epoch [% creation.date_epoch %]
 date       [% creation.date %]
-email      [% creation.email %]
+[% IF creation_email %]
+email      [% creation_email %]
+[% END %]

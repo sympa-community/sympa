@@ -9,8 +9,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>19. Using Sympa with LDAP</TITLE>
-<META NAME="description" CONTENT="19. Using Sympa with LDAP">
+<TITLE>19. Antivirus</TITLE>
+<META NAME="description" CONTENT="19. Antivirus">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -29,85 +29,60 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1197"
+<A NAME="tex2html1235"
   HREF="node21.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1191"
+<A NAME="tex2html1229"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1185"
+<A NAME="tex2html1223"
   HREF="node19.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1193"
+<A NAME="tex2html1231"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1195"
-  HREF="node23.html">
+<A NAME="tex2html1233"
+  HREF="node24.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1198"
-  HREF="node21.html">20. Sympa with S/MIME and HTTPS</A>
-<B> Up:</B> <A NAME="tex2html1192"
+<B> Next:</B> <A NAME="tex2html1236"
+  HREF="node21.html">20. Using Sympa with LDAP</A>
+<B> Up:</B> <A NAME="tex2html1230"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1186"
-  HREF="node19.html">18. Antivirus</A>
- &nbsp <B>  <A NAME="tex2html1194"
+<B> Previous:</B> <A NAME="tex2html1224"
+  HREF="node19.html">18. Bounce management</A>
+ &nbsp <B>  <A NAME="tex2html1232"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1196"
-  HREF="node23.html">Index</A></B> 
+ &nbsp <B>  <A NAME="tex2html1234"
+  HREF="node24.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 
 <H1><A NAME="SECTION002000000000000000000"></A>
-<A NAME="ldap"></A>
+<A NAME="antivirus"></A>
 <BR>
-19. Using <I>Sympa</I> with LDAP
+19. Antivirus
 </H1>
 
 <P>
-<A NAME="8609"></A>LDAP is a client-server protocol for accessing a directory service. Sympa
-provide various features based on access to one or more LDAP directories :
-
-<P>
-
-<UL>
-<LI>authentication using LDAP directory instead of sympa internal storage of password
-<BR>
-see&nbsp;<A HREF="node10.html#auth-conf">9.5</A>, page&nbsp;<A HREF="node10.html#auth-conf"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
-
-<P>
-</LI>
-<LI>named filters used in authorization scenario condition
-<BR>
-see&nbsp;<A HREF="node11.html#named-filters">10.2</A>, page&nbsp;<A HREF="node11.html#named-filters"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
-
-<P>
-</LI>
-<LI>LDAP extraction of list subscribers (see&nbsp;<A HREF="node16.html#par-user-data-source">15.2.1</A>)
-<BR>
-<P>
-</LI>
-<LI>LDAP extraction of list owners or editors
-<BR>
-see&nbsp;<A HREF="node14.html#data-inclusion-file">13.7</A>, page&nbsp;<A HREF="node14.html#data-inclusion-file"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
-
-<P>
-</LI>
-<LI>mail aliases stored in LDAP
-<BR>
-see&nbsp;<A HREF="node5.html#ldap-aliases">4.3</A>, page&nbsp;<A HREF="node5.html#ldap-aliases"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
-
-<P>
-</LI>
-</UL>
+<I>Sympa</I> lets you use an external antivirus solution to check incoming mails.
+In this case you must set the <A NAME="8944"></A><TT>antivirus_path</TT> and 
+<A NAME="8947"></A><TT>antivirus_args</TT> configuration parameters
+ (see <A HREF="node6.html#Antivirus_plug-in">5.13</A>, page&nbsp;<A HREF="node6.html#Antivirus_plug-in"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+<I>Sympa</I> is already compatible with McAfee/uvscan, Fsecure/fsav, Sophos, AVP, Trend Micro/VirusWall and Clam Antivirus.
+For each mail received, <I>Sympa</I> extracts its MIME parts in the <A NAME="8952"></A><TT>/home/sympa/spool/tmp/antivirus</TT> directory and
+then calls the antivirus software to check them.
+When a virus is detected, <I>Sympa</I> looks for the virus name in the virus scanner STDOUT and sends a
+<A NAME="8956"></A><TT>your_infected_msg.tt2</TT> warning to the sender of the mail.
+The mail is saved as 'bad' and the working directory is deleted (except if <I>Sympa</I> is running in debug mode).
 
 <P>
 
 <BR><HR>
 <ADDRESS>
 root
-2004-10-12
+2004-10-20
 </ADDRESS>
 </BODY>
 </HTML>

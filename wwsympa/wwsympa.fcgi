@@ -46,6 +46,7 @@ use Commands;
 use Language;
 use Log;
 use Auth;
+use admin;
 
 use Mail::Header;
 use Mail::Address;
@@ -239,6 +240,7 @@ my %comm = ('home' => 'do_home',
 	 'viewlogs'=> 'do_viewlogs',
 	 'wsdl'=> 'do_wsdl',
 	 'sync_include' => 'do_sync_include',
+	    'review_family' => 'do_review_family',
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -320,6 +322,7 @@ my %action_args = ('default' => ['list'],
 #		'viewlogs' => ['list'],
 		'wsdl' => [],
 		'sync_include' => ['list'],
+		   'review_family' => ['family_name'],
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -874,6 +877,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	 ## If in list context
 	 if (defined $list) {
+	     if (defined $list->{'admin'}{'family_name'}) {
+		 my $family = $list->get_family();
+		 unshift @{$tt2_include_path}, $family->{'dir'}.'/web_tt2';
+		 unshift @{$tt2_include_path}, $family->{'dir'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
+	     }
+
 	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2';
 	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
 	 }
@@ -3229,6 +3238,13 @@ sub do_redirect {
 	 $param->{'robots'} = $Conf{'robots'};
      }
 
+     ## Families
+     my @families = &Family::get_available_families($robot);
+
+     if (@families) {
+	 $param->{'families'} = \@families;
+     }
+     
      ## Server files
      foreach my $f ('helpfile.tt2','lists.tt2','global_remind.tt2','summary.tt2','create_list_request.tt2','list_created.tt2','list_aliases.tt2') {
 	 $param->{'server_files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
@@ -4011,9 +4027,10 @@ sub do_redirect {
  }
 
 
- ## Edition of list/sympa files
- ## No list -> sympa files (helpfile,...)
- ## TODO : upload
+## Edition of list/sympa files
+## No list -> sympa files (helpfile,...)
+## TODO : upload
+## TODO : edit family file ???
  sub do_editfile {
      &wwslog('info', 'do_editfile(%s)', $in{'file'});
 
@@ -4064,7 +4081,7 @@ sub do_redirect {
 	 #$file =~ s/\.tpl$/\.$list->{'admin'}{'lang'}\.tpl/;
 
 	 ## Look for the template
-	 $param->{'filepath'} = &tools::get_filename('etc',$subdir.$file,$robot, $list);
+	 $param->{'filepath'} = &tools::Sget_filename('etc',$subdir.$file,$robot, $list);
 
 	 ## Default for 'homepage' is 'info'
 	 if (($in{'file'} eq 'homepage') &&
@@ -4082,12 +4099,12 @@ sub do_redirect {
 
 	 ## Look for the template
 	 if ($file eq 'list_aliases.tt2') {
-	     $param->{'filepath'} = &tools::get_filename('etc',$file,$robot);
+	     $param->{'filepath'} = &tools::get_filename('etc',$file,$robot,$list);
 	 }else {
 	     #my $lang = &Conf::get_robot_conf($robot, 'lang');
 	     #$file =~ s/\.tpl$/\.$lang\.tpl/;
 
-	     $param->{'filepath'} = &tools::get_filename('etc',$subdir.$file,$robot);
+	     $param->{'filepath'} = &tools::get_filename('etc',$subdir.$file,$robot,$list);
 	 }
      }
 
@@ -4131,6 +4148,15 @@ sub do_redirect {
 	     $param->{'filepath'} = $list->{'dir'}.'/mail_tt2/'.$in{'file'};
 	 }else {
 	     $param->{'filepath'} = $list->{'dir'}.'/'.$in{'file'};
+	     
+	     if (defined $list->{'admin'}{'family_name'}) {
+		 unless ($list->update_config_changes('file',$in{'file'})) {
+		     &error_message('failed');
+		     &wwslog('info','do_savefile: cannot write in config_changes for file %s', $param->{'filepath'});
+		     return undef;
+		 }
+	     }
+
 	 }
      }else {
 	 unless (&List::is_listmaster($param->{'user'}{'email'}),$robot) {
@@ -4814,7 +4840,8 @@ sub do_redirect {
 
      foreach my $l ( &List::get_lists($robot) ) {
 	 my $list = new List ($l,$robot);
-	 if ($list->{'admin'}{'status'} eq 'closed') {
+	 if ($list->{'admin'}{'status'} eq 'closed' ||
+	     $list->{'admin'}{'status'} eq 'family_closed') {
 	     $param->{'closed'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 	     $param->{'closed'}{$l}{'by'} = $list->{'admin'}{'creation'}{'email'};
 	 }
@@ -4996,7 +5023,14 @@ sub do_set_pending_list_request {
 
      ## create the aliases
      if ($in{'status'} eq 'open') {
-	 &_install_aliases();
+ 	 my $aliases = &admin::install_aliases($list,$robot);
+ 	 if ($aliases == 1) {
+ 	     $param->{'auto_aliases'} = 1;
+ 	 }else { 
+ 	     $param->{'aliases'} = $aliases;
+ 	     $param->{'auto_aliases'} = 0;
+ 	 }
+
      }
 
      if ($in{'notify'}) {
@@ -5152,7 +5186,7 @@ sub do_set_pending_list_request {
     return undef;
  }
 
- ## create a liste using a list template. 
+## create a liste using a list template. 
  sub do_create_list {
 
      &wwslog('info', 'do_create_list(%s,%s,%s)',$in{'listname'},$in{'subject'},$in{'template'});
@@ -5164,52 +5198,15 @@ sub do_set_pending_list_request {
 	     return undef;
 	 }
      }
-
-     $in{'listname'} = lc ($in{'listname'});
-
-     unless ($in{'listname'} =~ /^[a-z0-9][a-z0-9\-\+\._]*$/i) {
-	 &error_message('incorrect_listname', {'listname' => $in{'listname'}});
-	 &wwslog('info','do_create_list: incorrect listname %s', $in{'listname'});
-	 return 'create_list_request';
-     }
-
-     my $regx = Conf::get_robot_conf($robot,'list_check_regexp');
-     if( $regx ) {
-	 if ($in{'listname'} =~ /^(\S+)-($regx)$/) {
-	     &error_message("Incorrect listname \"$in{'listname'}\" matches one of service aliases",{'listname' => $in{'listname'}});
-	     &wwslog('info','do_create_list: incorrect listname %s matches one of service aliases', $in{'listname'});
-	     return 'create_list_request';
-	 }
-     }
-     ## 'other' topic means no topic
-     $in{'topics'} = undef if ($in{'topics'} eq 'other');
-
-     ## Check listname on SMTP server
-     my $res = list_check_smtp($in{'listname'});
-     unless ( defined($res) ) {
-	 &error_message('unable_to_check_list_using_smtp');
-	 &do_log('info', "can't check list %.128s on %.128s",
-		 $in{'listname'},
-		 $wwsconf->{'list_check_smtp'});
-	 return undef;
-     }
-     if( $res || new List ($in{'listname'})) {
-	 &error_message('list_already_exists');
-	 &do_log('info', 'could not create already existing list %s for %s', 
-		 $in{'listname'},
-		 $param->{'user'}{'email'});
-	 return undef;
-     }
-
-
      unless ($param->{'user'}{'email'}) {
 	 &error_message('no_user');
-	 &wwslog('info','do_create_list_request:  no user');
+	 &wwslog('info','do_create_list :  no user');
 	 return 'loginrequest';
      }
-     my $lang = $param->{'lang'};
 
      $param->{'create_action'} = $param->{'create_list'};
+
+     &wwslog('info',"do_create_list, get action : $param->{'create_action'} ");
 
      if ($param->{'create_action'} =~ /reject/) {
 	 &error_message('may_not');
@@ -5225,84 +5222,42 @@ sub do_set_pending_list_request {
 	 return undef;
      }
 
-     my $template_file = &tools::get_filename('etc', 'create_list_templates/'.$in{'template'}.'/config.tt2', $robot);
-     unless ($template_file) {
-	 &error_message('unable_to_open_template');
-	 &do_log('info', 'no template %s in %s NOR %s',$in{'template'}.'/config.tt2',"$Conf{'etc'}/$robot/create_list_templates/$in{'template'}","$Conf{'etc'}/create_list_templates/$in{'template'}","--ETCBINDIR--/create_list_templates/$in{'template'}");
-
-	 return undef;
-     }
-
-     my $list_dir;
-
-     ## A virtual robot
-     if (-d "$Conf{'home'}/$robot") {
-	 unless (-d $Conf{'home'}.'/'.$robot) {
-	     unless (mkdir ($Conf{'home'}.'/'.$robot,0777)) {
-		 &error_message('unable_to_create_dir');
-		 &do_log('info', 'unable to create %s/%s : %s',$Conf{'home'},$robot,$?);
-		 return undef;
-	     }    
-	 }
-
-	 $list_dir = $Conf{'home'}.'/'.$robot.'/'.$in{'listname'};
-     }else {
-	 $list_dir = $Conf{'home'}.'/'.$in{'listname'};
-     }
-
-     unless (mkdir ($list_dir,0777)) {
-	 &error_message('unable_to_create_dir');
-	 &do_log('info', 'unable to create %s : %s',$list_dir,$?);
-	 return undef;
-     }    
+     ## 'other' topic means no topic
+     $in{'topics'} = undef if ($in{'topics'} eq 'other');
+  
+     my %owner;
+     $owner{'email'} = $param->{'user'}{'email'};
+     $owner{'gecos'} = $param->{'user'}{'gecos'};
 
      my $parameters;
-     $parameters->{'owner'}{'email'} = $param->{'user'}{'email'};
-     $parameters->{'owner'}{'gecos'} = $param->{'user'}{'gcos'};
+     push @{$parameters->{'owner'}},\%owner;
      $parameters->{'listname'} = $in{'listname'};
      $parameters->{'subject'} = $in{'subject'};
-     $parameters->{'creation'}{'date'} = $param->{'date'};
-     $parameters->{'creation'}{'date_epoch'} = time;
-     $parameters->{'creation'}{'email'} = $param->{'user'}{'email'};
-     $parameters->{'lang'} = $lang;
+     $parameters->{'creation_email'} = $param->{'user'}{'email'};
+     $parameters->{'lang'} = $param->{'lang'};
      $parameters->{'status'} = $param->{'status'};
      $parameters->{'topics'} = $in{'topics'};
 
-     my $tt2_include_path = [$Conf{'etc'}.'/'.$robot.'/create_list_templates/'.$in{'template'},
-			     $Conf{'etc'}.'/create_list_templates/'.$in{'template'},
-			     '--ETCBINDIR--'.'/create_list_templates/'.$in{'template'}];     
 
-     open CONFIG, ">$list_dir/config";
-     &tt2::parse_tt2($parameters, 'config.tt2', \*CONFIG, $tt2_include_path);
-     close CONFIG;
-
-     ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
-     $in{'info'} =~ s/\015//g;
-
-     open INFO, ">$list_dir/info" ;
-     print INFO $in{'info'};
-     close INFO;
-
-     my $new_list = new List ($in{'listname'},$robot);
+     ## create liste
+     my $resul = &admin::create_list_old($parameters,$in{'template'},$in{'info'},$robot);
+     unless(defined $resul) {
+	 &error_message('failed');
+	 &wwslog('info','do_create_list: unable to create list %s for %s',$in{'listname'},$param->{'user'}{'email'});
+	 return undef
+     }
      
-     ## Create shared if required
-     if (defined $new_list->{'admin'}{'shared_doc'}) {
-	 $new_list->create_shared();
-     }
-
-     ## Update admin_table
-     unless ($new_list->sync_include_admin()) {
-	 &error_message('sync_include_admin_failed');
-	 &wwslog('info','do_create_list: sync_include_admin() failed');
-	 return undef;
-     }
-
      ## Create list object
      $in{'list'} = $in{'listname'};
      &check_param_in();
 
      if  ($param->{'create_action'} =~ /do_it/i) {
-	 &_install_aliases();
+	 if ($resul->{'aliases'} == 1) {
+	     $param->{'auto_aliases'}  = 1;
+	 }else {
+	     $param->{'aliases'} = $resul->{'aliases'};
+	     $param->{'auto_aliases'} = 0;
+	 }
      }
 
      ## notify listmaster
@@ -5310,6 +5265,11 @@ sub do_set_pending_list_request {
 	 &do_log('info','notify listmaster');
 	 &List::send_notify_to_listmaster('request_list_creation',$robot, $in{'listname'},$parameters->{'owner'}{'email'});
      }
+     
+     $in{'list'} = $resul->{'list'}{'name'};
+     &check_param_in();
+
+     $param->{'listname'} = $resul->{'list'}{'name'};
      return 1;
  }
 
@@ -5880,27 +5840,38 @@ sub do_edit_list {
 	 return 'loginrequest';
      }
 
-     unless ($param->{'is_owner'}) {
+      unless ($param->{'is_owner'}) {
 	 &error_message('may_not');
 	 &wwslog('info','do_edit_list: not allowed');
 	 return undef;
-}
+     }
 
-     my $new_admin = {};
+      my $family;
+      if (defined $list->{'admin'}{'family_name'}) {
+	  unless ($family = $list->get_family()) {
+	      &error_message('failed');
+	      &wwslog('info','do_edit_list : impossible to get list %s\'s family',$list->{'name'});
+	      return undef;
+	  }          
+      }
+      
+      my $new_admin = {};
 
      ## List the parameters editable sent in the form
      my $edited_param = {};
 
-     foreach my $key (sort keys %in) {
+      foreach my $key (sort keys %in) {
 	 next unless ($key =~ /^(single_param|multiple_param)\.(\S+)$/);
 	 
 	 $key =~ /^(single_param|multiple_param)\.(\S+)$/;
 	 my ($type, $name) = ($1, $2);
 
 	 ## Tag parameter as present in the form
-	$name =~ /([^\.]+)(\.|$)/;
-	 $edited_param->{$1} = 1;
-
+	 if ($name =~ /^([^\.]+)(\.)/ ||
+	     $name =~ /^([^\.]+)$/) {
+	     $edited_param->{$1} = 1;
+	 }
+	 
 	 ## Parameter value
 	 my $value = $in{$key};
 	 next if ($value eq '');
@@ -5920,18 +5891,21 @@ sub do_edit_list {
  #    print "Content-type: text/plain\n\n";
  #    &tools::dump_var($new_admin,0);
 
-     ## Did the config changed ?
+      ## Did the config changed ?
      unless ($list->{'admin'}{'serial'} == $in{'serial'}) {
 	 &error_message('config_changed', {'email' => $list->{'admin'}{'update'}{'email'}});
 	 &wwslog('info','do_edit_list: Config file has been modified(%d => %d) by %s. Cannot apply changes', $in{'single_param.serial'}, $list->{'admin'}{'serial'}, $list->{'admin'}{'update'}{'email'});
 	 return undef;
      }
 
-     ## Check changes & check syntax
-     my (%changed, %delete);
-     my @syntax_error;
-
-
+      ## Check changes & check syntax
+      my (%changed, %delete);
+      my @syntax_error;
+      
+      ## Check family constraint
+      my %check_family;
+      
+      
      ## getting changes about owners or editors
      my $owner_update = 0;
      my $editor_update = 0;	
@@ -5941,6 +5915,22 @@ sub do_edit_list {
 	 my ($p, $new_p);
 	 ## Check privileges first
 	 next unless ($list->may_edit($pname,$param->{'user'}{'email'}) eq 'write');
+	 
+	 ## family_constraint : edit control
+	 if (ref($family) eq 'Family') {
+	     
+	     if ((ref($::pinfo{$pname}{'format'}) ne 'HASH') && (!ref($pname))) { # simple parameter
+		 my $constraint = $family->get_param_constraint($pname);
+		 
+		 if (ref($constraint) eq 'HASH') { # controlled parameter        
+		     $check_family{$pname} = $constraint;
+		     
+		 } elsif ($constraint ne '0') {    # fixed parameter (free : no control)
+		     next;
+		 }
+	     }
+	 }
+ 	 
 	 #next unless (defined $new_admin->{$pname});
 	 next if $pinfo->{$pname}{'obsolete'};
 
@@ -5987,7 +5977,20 @@ sub do_edit_list {
 		 foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
 
 		     next unless ($list->may_edit("$pname.$key",$param->{'user'}{'email'}) eq 'write');
-
+		     
+		     ## family_constraint : edit_control
+		     if (ref($family) eq 'Family') {
+			 if ((ref($::pinfo{$pname}{'format'}) eq 'HASH') && !ref($pname) && !ref($key)) {
+			     my $constraint = $family->get_param_constraint("$pname.$key");
+			     
+			     if (ref($constraint) eq 'HASH') { # controlled parameter        
+				 $check_family{$pname}{$key} = $constraint;
+			     } elsif ($constraint ne '0') {    # fixed parameter
+				 next;
+			     }
+			 }
+		     }		     
+		     
 		     ## Ex: 'shared_doc->d_read'
 		     if ($pinfo->{$pname}{'format'}{$key}{'scenario'} || $pinfo->{$pname}{'format'}{$key}{'task'}) {
 			 if ($p->[$i]{$key}{'name'} ne $new_p->[$i]{$key}{'name'}) {
@@ -6089,6 +6092,11 @@ sub do_edit_list {
 
 	 ## Delete ALL entries
 	 unless (ref ($delete{$p})) {
+	     #	    if (defined $check_family{$p}) { # $p is family controlled
+	     #		&error_message('failed');
+	     #		&wwslog('info','do_edit_list : parameter %s must have values (family context)',$p);
+	     #		return undef;	
+	     #	    }
 	     undef $new_admin->{$p};
 	     next;
 	 }
@@ -6097,13 +6105,42 @@ sub do_edit_list {
 	 foreach my $k (reverse @{$delete{$p}}) {
 	     splice @{$new_admin->{$p}}, $k, 1;
 	 }
+
+	 if (defined $check_family{$p}) { # $p is family controlled
+	     if ($#{$new_admin->{$p}} < 0) {
+		 &error_message('failed');
+		 &wwslog('info','do_edit_list : parameter %s must have values (family context)',$p);
+		 return undef;	
+	     }    
+	 }
      }
-     ## Update config in memory
-	 my $data_source_updated;
-     foreach my $pname (keys %changed) {
+      
+      # updating config_changes for deleted parameters
+      if (ref($family)) {
+	  my @array_delete = keys %delete;
+	  unless ($list->update_config_changes('param',\@array_delete)) {
+	      &error_message('failed');
+	      &wwslog('info','do_savefile: cannot write in config_changes for deleted parameters from list %s', $list->{'name'});
+	      return undef;
+	  }
+      }
+ 	
+      ## Update config in memory
+      my $data_source_updated;
+      foreach my $parameter (keys %changed) {
+	  my $pname;
+	  if ($parameter =~ /^([\w-]+)\.([\w-]+)$/) {
+	      $pname = $1;
+	  } else{
+	      $pname = $parameter;
+	  }
 	 
 	 my @users;
 
+	  if (defined $check_family{$pname}) { # $pname is CONTROLLED
+	      &_check_new_values(\%check_family,$pname,$new_admin);
+	  }	  
+	  
 	 ## If datasource config changed
 	 if ($pname =~ /^(include_.*|user_data_source|ttl)$/) {
 	     $data_source_updated = 1;
@@ -6148,7 +6185,7 @@ sub do_edit_list {
 	 }
 
 	 $list->{'admin'}{$pname} = $new_admin->{$pname};
-	 if (defined $new_admin->{$pname}) {
+	 if (defined $new_admin->{$pname} || $pinfo->{$pname}{'internal'}) {
 	     delete $list->{'admin'}{'defaults'}{$pname};
 	 }else {
 	     $list->{'admin'}{'defaults'}{$pname} = 1;
@@ -6175,6 +6212,15 @@ sub do_edit_list {
 		 $editor_update = 1;
 	     }
 	 }
+	  # updating config_changes for changed parameters
+	  if (ref($family)) {
+	      my @array_changed = keys %changed;
+	      unless ($list->update_config_changes('param',\@array_changed)) {
+		  &error_message('failed');
+		  &wwslog('info','do_savefile: cannot write in config_changes for changed parameters from list %s', $list->{'name'});
+		  return undef;
+	      }
+	  }
      }
 
      ## Save config file
@@ -6320,7 +6366,7 @@ sub do_edit_list {
 
      if ($in{'group'}) {
 	 $param->{'group'} = $in{'group'};
-	 &_prepare_edit_form ($list->{'admin'});
+	 &_prepare_edit_form ($list);
      }
 
  #    print "Content-type: text/plain\n\n";
@@ -6333,22 +6379,92 @@ sub do_edit_list {
      return 1;
  }
 
- ## Prepare config data to be send in the
- ## edition form
-      sub _prepare_edit_form {
-      my $list_config = shift;
+sub _check_new_values {
+    my $check_family = shift;
+    my $pname = shift;
+    my $new_admin = shift;
+    &do_log('debug3', '_check_new_values(%s)',$pname);
+    
+    if (ref($::pinfo{$pname}{'format'}) eq 'HASH') { #composed parameter
 
-      foreach my $pname (sort List::by_order keys %{$pinfo}) {
+	foreach my $key (keys %{$check_family->{$pname}}) {
+		    
+	    my $constraint = $check_family->{$pname}{$key};
+	    my $values = &List::_get_param_value_anywhere($new_admin,"$pname.$key");
+	    my $nb_for = 0;
+	    
+	    foreach my $p_val (@{$values}) { #each element value
+		$nb_for++;
+		if (ref($p_val) eq 'ARRAY') { # multiple values
+		    foreach my $p (@{$p_val}) {
+			if (!($constraint->{$p}) && (($nb_for == 1) || ($p ne ''))) {
+			    &error_message('failed');
+			    &wwslog('info','do_edit_list : parameter %s has got wrong value : %s (family context), %s, %d',$pname,$p);
+			    return undef;
+			}
+		    }
+		} else { # single value
+		    if (!($constraint->{$p_val}) && (($nb_for == 1) || ($p_val ne ''))) {
+			&error_message('failed');
+			&wwslog('info','do_edit_list : parameter %s has got wrong value : %s (family context), %s, %d',$pname,$p_val);
+			return undef;
+		    }
+		}
+	    }
+	}
+    } else { #simple parameter
+
+	my $constraint = $check_family->{$pname};
+	my $values = &List::_get_param_value_anywhere($new_admin,$pname);
+	my $nb_for = 0;
+
+	foreach my $p_val (@{$values}) { #each element value
+	    $nb_for++;
+	    if (ref($p_val) eq 'ARRAY') { # multiple values
+		foreach my $p (@{$p_val}) {
+		    if (!($constraint->{$p}) && (($nb_for == 1) || ($p ne ''))) {
+			&error_message('failed');
+			&wwslog('info','do_edit_list : parameter %s has got wrong value : %s (family context), %s, %d',$pname,$p);
+			return undef;
+		    }
+		}
+	    } else { # single value
+		if (!($constraint->{$p_val}) && (($nb_for == 1) || ($p_val ne ''))) {
+		    &error_message('failed');
+		    &wwslog('info','do_edit_list : parameter %s has got wrong value : %s (family context), %s, %d',$pname,$p_val);
+		    return undef;
+		}
+	    }
+	}
+    }
+}
+
+## Prepare config data to be send in the
+## edition form
+sub _prepare_edit_form {
+    my $list = shift;
+    my $list_config = $list->{'admin'};
+    my $family;
+
+    if (defined $list_config->{'family_name'}) {
+	unless ($family = $list->get_family()) {
+	    &error_message('failed');
+	    &wwslog('info','_prepare_edit_form : impossible to get list %s\'s family',$list->{'name'});
+	    return undef;
+	}          
+    }
+
+    foreach my $pname (sort List::by_order keys %{$pinfo}) {
 	 next if ($pname =~ /^comment|defaults$/);
 	 next if ($in{'group'} && ($pinfo->{$pname}{'group'} ne $in{'group'}));
-
+	 
 	 ## Skip obsolete parameters
 	 next if $pinfo->{$pname}{'obsolete'};
 
-	 my $p = &_prepare_data($pname, $pinfo->{$pname}, $list_config->{$pname});
+	 my $may_edit = $list->may_edit($pname,$param->{'user'}{'email'});
+	 my $p = &_prepare_data($pname, $pinfo->{$pname}, $list_config->{$pname},$may_edit,$family);
 
 	 $p->{'default'} = $list_config->{'defaults'}{$pname};
-	 $p->{'may_edit'} = $list->may_edit($pname,$param->{'user'}{'email'});
 	 $p->{'changed'} = $::changed_params{$pname};
 
 	 ## Exceptions...too many
@@ -6361,6 +6477,11 @@ sub do_edit_list {
 	     }
 	     undef $p->{'value'};
 	     my %list_of_topics = &List::load_topics($robot);
+	     
+	     if (defined $p->{'constraint'}) {
+		 &_restrict_values(\%list_of_topics,$p->{'constraint'});
+	     }
+
 	     foreach my $topic (keys %list_of_topics) {
 		 $p->{'value'}{$topic}{'selected'} = 0;
 		 $p->{'value'}{$topic}{'title'} = $list_of_topics{$topic}{'current_title'};
@@ -6402,16 +6523,45 @@ sub do_edit_list {
      return 1; 
  }
 
- sub _prepare_data {
-     my ($name, $struct, $data) = @_;
-     &do_log('debug3', '_prepare_data(%s, %s)', $name, $data);
-
-     next if ($struct->{'obsolete'});
+sub _prepare_data {
+    my ($name, $struct,$data,$may_edit,$family,$main_p) = @_;
+    #    &do_log('debug2', '_prepare_data(%s, %s)', $name, $data);
+    # $family and $main_p (recursive call) are optionnal
+    # if $main_p is needed, $family also
+    next if ($struct->{'obsolete'});
 
      ## Prepare data structure for the parser
      my $p_glob = {'name' => $name,
 		   'comment' => $struct->{'comment'}{$param->{'lang'}}
 	       };
+
+    ## family_constraint
+    my $restrict = 0;
+    my $constraint;
+    if ((ref($family) eq 'Family') && ($may_edit eq 'write')) {
+	
+ 	if ($main_p && defined $::pinfo{$main_p}) { 
+ 	    if (ref($::pinfo{$main_p}{'format'}) eq 'HASH') { # composed parameter
+ 		$constraint = $family->get_param_constraint("$main_p.$p_glob->{'name'}");
+ 	    }	
+ 	} else {       # simple parameter
+ 	    if (ref($::pinfo{$p_glob->{'name'}}{'format'}) ne 'HASH') { # simple parameter
+ 		$constraint = $family->get_param_constraint($p_glob->{'name'});
+ 	    }
+ 	}
+ 	if ($constraint eq '0') {              # free parameter
+ 	    $p_glob->{'may_edit'} = 'write';         	
+ 	} elsif (ref($constraint) eq 'HASH') { # controlled parameter        
+ 	    $p_glob->{'may_edit'} = 'write';
+ 	    $restrict = 1;
+ 	} else {                               # fixed parameter
+ 	    $p_glob->{'may_edit'} = 'read';
+ 	    
+ 	}
+	
+    } else {
+ 	$p_glob->{'may_edit'} = $may_edit;
+    }        
 
      if ($struct->{'gettext_id'}) {
 	 $p_glob->{'title'} = gettext($struct->{'gettext_id'});
@@ -6453,6 +6603,10 @@ sub do_edit_list {
 	     
 	     $p->{'value'} = $list_of_scenario;
 
+	     if ($restrict) {
+		 &_restrict_values($p->{'value'},$constraint);
+	     }
+
 	 }elsif ($struct->{'task'}) {
 	     $p_glob->{'type'} = 'task';
 	     my $list_of_task = $list->load_task_list($struct->{'task'}, $robot);
@@ -6460,6 +6614,10 @@ sub do_edit_list {
 	     $list_of_task->{$d->{'name'}}{'selected'} = 1;
 
 	     $p->{'value'} = $list_of_task;
+
+	     if ($restrict) {
+		 &_restrict_values($p->{'value'},$constraint);
+	     } 	    	     
 
 	 }elsif ($struct->{'datasource'}) {
 	     $p_glob->{'type'} = 'datasource';
@@ -6478,7 +6636,8 @@ sub do_edit_list {
 	     foreach my $k (sort {$struct->{'format'}{$a}{'order'} <=> $struct->{'format'}{$b}{'order'}} 
 			    keys %{$struct->{'format'}}) {
 		 ## Prepare data recursively
-		 my $v = &_prepare_data($k, $struct->{'format'}{$k}, $d->{$k});
+		 my $m_e = $list->may_edit("$name.$k",$param->{'user'}{'email'});
+		 my $v = &_prepare_data($k, $struct->{'format'}{$k}, $d->{$k},$m_e,$family,$name);
 		 $v->{'may_edit'} = $list->may_edit("$name.$k",$param->{'user'}{'email'});
 
 		 push @{$p->{'value'}}, $v;
@@ -6502,11 +6661,32 @@ sub do_edit_list {
 		 $p_glob->{'value'}{$d}{'selected'} = 1 if (defined $d);
 	     }
 	     
+	     if ($restrict) {
+		 &_restrict_values($p_glob->{'value'},$constraint);
+	     }
+	     
 	 }else {
-	     $p_glob->{'type'} = 'scalar';
-	     $p->{'value'} = &tools::escape_html($d);
-	     $p->{'length'} = $struct->{'length'};
-	     $p->{'unit'} = $struct->{'unit'};
+	     if ($restrict && ($name ne 'topics')) {
+		 $p_glob->{'type'} = 'enum';
+		 
+		 foreach my $elt (keys %{$constraint}) {
+		     $p->{'value'}{&tools::escape_html($elt)}{'selected'} = 0;
+		 } 
+		 
+		 $p->{'value'}{&tools::escape_html($d)}{'selected'} = 1;
+		 $p->{'length'} = $struct->{'length'};
+		 $p->{'unit'} = $struct->{'unit'};
+		 
+	     } else {
+		 
+		 $p_glob->{'type'} = 'scalar';
+		 $p->{'value'} = &tools::escape_html($d);
+		 $p->{'length'} = $struct->{'length'};
+		 $p->{'unit'} = $struct->{'unit'};
+		 if ($restrict) { # for topics
+		     $p_glob->{'constraint'} = $constraint;
+		 }
+	     }
 	 }
 
 	 push @all_p, $p;
@@ -6619,12 +6799,12 @@ sub do_edit_list {
      }
 
      ## Check listname on SMTP server
-     my $res = list_check_smtp($in{'new_listname'});
+     my $res = list_check_smtp($in{'new_listname'}, $robot);
      unless ( defined($res) ) {
 	 &error_message('unable_to_check_list_using_smtp');
 	 &do_log('info', "can't check list %.128s on %.128s",
 		 $in{'new_listname'},
-		 $wwsconf->{'list_check_smtp'});
+		 $Conf{'list_check_smtp'});
 	 return undef;
      }
      if( $res || 
@@ -6651,7 +6831,13 @@ sub do_edit_list {
      ## Dump subscribers
      $list->_save_users_file("$list->{'dir'}/subscribers.closed.dump");
 
-     &_remove_aliases();
+     my $aliases = &admin::remove_aliases($list,$robot);
+     if ($aliases == 1) {
+ 	 $param->{'auto_aliases'} = 1;
+     }else { 
+ 	 $param->{'aliases'} = $aliases;
+ 	 $param->{'auto_aliases'} = 0;
+     }     
 
      ## Rename this list itself
      my $new_dir;
@@ -6708,7 +6894,16 @@ sub do_edit_list {
 	 &error_message('failed');
 	 return undef;
      }
-     &_install_aliases() if ($list->{'admin'}{'status'} eq 'open');
+
+     if ($list->{'admin'}{'status'} eq 'open') {
+      	 my $aliases = &admin::install_aliases($list,$robot);
+ 	 if ($aliases == 1) {
+ 	     $param->{'auto_aliases'} = 1;
+ 	 }else { 
+ 	     $param->{'aliases'} = $aliases;
+ 	     $param->{'auto_aliases'} = 0;
+ 	 }
+     } 
 
      ## Rename files in spools
      ## Auth & Mod  spools
@@ -6840,7 +7035,6 @@ sub do_edit_list {
 
      ## Change status & save config
      $list->{'admin'}{'status'} = 'open';
-     $list->{'admin'}{'defaults'}{'status'} = 0;
      $list->save_config($param->{'user'}{'email'});
 
      if ($list->{'admin'}{'user_data_source'} eq 'file') {
@@ -6860,8 +7054,14 @@ sub do_edit_list {
 
      $list->savestats(); 
 
-     &_install_aliases();
-
+     my $aliases = &admin::install_aliases($list,$robot);
+     if ($aliases == 1) {
+ 	 $param->{'auto_aliases'} = 1;
+     }else { 
+	 $param->{'aliases'} = $aliases;
+ 	 $param->{'auto_aliases'} = 0;
+     }
+     
      &message('list_restored');
 
      return 'admin';
@@ -10683,3 +10883,49 @@ sub do_sync_include {
     return 'review';
 }
 
+## Review lists from a family
+sub do_review_family {
+    &wwslog('info', 'do_review_family');
+
+    unless ($param->{'user'}{'email'}) {
+	&error_message('no_user');
+	&wwslog('info','do_review_family: no user');
+	$param->{'previous_action'} = 'serveradmin';
+	return 'loginrequest';
+     }
+    
+    unless ($param->{'is_listmaster'}) {
+	&error_message('may_not');
+	&wwslog('err','do_review_family: %s not listmaster', $param->{'user'}{'email'});
+	return undef;
+    }
+
+    unless ($in{'family_name'}) {
+	&error_message('missing_arg', {'argument' => 'family_name'});
+	&wwslog('err','do_review_family: no family');
+	return undef;
+    }
+
+    my $family = new Family ($in{'family_name'}, $robot);
+    unless (defined $family) {
+	&error_message('failed');
+	&wwslog('err', 'do_review_family: incorrect family %s', $in{'family_name'});
+	return undef;	
+    }
+
+    my $all_lists = $family->get_family_lists();
+    foreach my $l (@{$all_lists}) {
+	my $flist = new List ($l, $robot);
+	unless (defined $flist) {
+	    &wwslog('err', 'do_review_family: incorrect list %s', $l);
+	    next;	    
+	}
+	push @{$param->{'family_lists'}}, {'name' => $flist->{'name'},
+					   'status' => $flist->{'admin'}{'status'},
+					   'instantiation_date' => $flist->{'admin'}{'latest_instantiation'}{'date'},
+					   'subject' => $flist->{'admin'}{'subject'},
+				       };
+    }
+
+    return 1;
+}

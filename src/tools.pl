@@ -43,6 +43,7 @@ $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------"
 ## Caution : if this regexp changes (more/less parenthesis), then regexp using it should 
 ## also be changed
 %regexp = ('email' => '([\w\-\_\.\/\+\=\']+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
+	   'family_name' => '[a-z0-9][a-z0-9\-\.\+_]*', 
 	   'host' => '[\w\.\-]+',
 	   'multiple_host_with_port' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
 	   'listname' => '[a-z0-9][a-z0-9\-\.\+_]*',
@@ -140,13 +141,14 @@ sub rejectMessage {
 ## return a hash from the edit_list_conf file
 sub load_edit_list_conf {
     my $robot = shift;
+    my $list = shift;
     do_log('debug2', 'tools::load_edit_list_conf (%s)',$robot);
 
     my $file;
     my $conf ;
     
     return undef 
-	unless ($file = &tools::get_filename('etc','edit_list.conf',$robot));
+	unless ($file = &tools::get_filename('etc','edit_list.conf',$robot,$list));
 
     unless (open (FILE, $file)) {
 	&do_log('info','Unable to open config file %s', $file);
@@ -1395,9 +1397,24 @@ sub duration_conv {
 
 ## Look for a file in the list > robot > server > default locations
 sub get_filename {
-    my ($type, $name, $robot, $list) = @_;
+    my ($type, $name, $robot, $object) = @_;
+    my $list;
+    my $family;
     &do_log('debug3','tools::get_filename(%s,%s,%s,%s)', $type, $name, $robot, $list->{'name'});
-
+    
+    if (ref($object) eq 'List') {
+ 	$list = $object;
+ 	if ($list->{'admin'}{'family_name'}) {
+ 	    unless ($family = $list->get_family()) {
+ 		&do_log('err', 'Impossible to get list %s family : %s. The list is set in status error_config',$self->{'name'},$self->{'admin'}{'family_name'});
+ 		$self->set_status_error_config('no_list_family',$self->{'name'}, $admin->{'family_name'});
+ 		return undef;
+ 	    }  
+ 	}
+    }elsif (ref($object) eq 'Family') {
+ 	$family = $object;
+    }
+    
     if ($type eq 'etc') {
 	my (@try, $default_name);
 	
@@ -1417,6 +1434,16 @@ sub get_filename {
 		    $Conf{'etc'}.'/'.$name,
 		    '--ETCBINDIR--'.'/'.$name);
 	}
+	
+	if ($family) {
+ 	    ## Default tpl
+ 	    if ($default_name) {
+		unshift @try, $family->{'dir'}.'/'.$default_name;
+	    }
+	}
+	
+	unshift @try, $family->{'dir'}.'/'.$name;
+    
 	if ($list->{'name'}) {
 	    ## Default tpl
 	    if ($default_name) {
@@ -1433,7 +1460,7 @@ sub get_filename {
 	}
     }
     
-    &do_log('debug3','tools::get_filename: Cannot find %s', $name);
+    &do_log('notice','tools::get_filename: Cannot find %s in %s', $name, join(',',@try));
     return undef;
 }
 
@@ -1614,20 +1641,6 @@ sub remove_dir {
 	}
     }
     return 1;
-}
-
-## Return canonical email address (lower-cased + space cleanup)
-## It could also support alternate email
-sub get_canonical_email {
-    my $email = shift;
-
-    ## Remove leading and trailing white spaces
-    $email =~ s/^\s*(\S.*\S)\s*$/$1/;
-
-    ## Lower-case
-    $email = lc($email);
-
-    return $email;
 }
 
 ## find the appropriate S/MIME keys/certs for $oper in $dir.

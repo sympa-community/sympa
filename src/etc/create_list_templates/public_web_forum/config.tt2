@@ -37,15 +37,23 @@ digest 3 4:36
 default_user_options
   reception summary
 
+[% FOREACH o = owner %]
 owner
-  email [% owner.email %]
+  email [% o.email %]
   profile privileged
-  [% IF owner.gecos %] 
-  gecos [% owner.gecos %]
+  [% IF o.gecos %] 
+  gecos [% o.gecos %]
   [% END %]
 
+[% END %]
+
+[% IF editor %]
+[% FOREACH e = editor %]
 editor
-  email [% owner.email %]
+  email [% e.email %]
+
+[% END %]
+[% END %]
 
 shared_doc
 d_edit default
@@ -54,6 +62,8 @@ d_read public
 creation
   date [% creation.date %]
   date_epoch [% creation.date_epoch %]
-  email [% creation.email %]
+[% IF creation_email %]
+  email [% creation_email %]
+[% END %]
 
 serial 0
