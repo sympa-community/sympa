@@ -198,7 +198,7 @@ while (!$end) {
 	   
 	   if ($file =~ /^(\d{4})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(.*)$/) {
 	       ($yyyy, $mm, $dd, $hh, $min, $ss, $adrlist) = ($1, $2, $3, $4, $5, $6, $7);
-	   }elsif ($file =~ /^(.*)\.(\d+)\.(\d+)(\.(\d+))?$/) {
+	   }elsif (($file =~ /^(.*)\.(\d+)\.(\d+)\.(\d+)$/) || ($file =~ /^(.*)\.(\d+)\.(\d+)$/)) {
 	       $adrlist = $1;
 	       my $date = $2;
 
@@ -323,6 +323,7 @@ sub rebuild {
 	    $arc =~ /^(\d{4})-(\d{2})$/ ;
 	    my $yyyy = $1 ;
 	    my $mm = $2 ;
+
 	    my $cmd = "$wwsconf->{'mhonarc'}  -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc \" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
 	    my $exitcode = system($cmd);
 	    if ($exitcode) {
