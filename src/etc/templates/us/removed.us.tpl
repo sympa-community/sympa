@@ -54,9 +54,9 @@ mailto:[conf->email]@[conf->host]?subject=sub%20[list->name]
 Subject: Removed from [list->name]
 
 
- Your adresse ([user->email]) has been removed from the list 
-[list->name]@[list->host], probably parce because we receive
-bounces for your adresse.
+Your address ([user->email]) has been removed from list 
+[list->name]@[list->host], probably because we received
+non-delivery reports for your address.
 
 You can subscribe again :
 mailto:[conf->email]@[conf->host]?subject=sub%20[list->name]
