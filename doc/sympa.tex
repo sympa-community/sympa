@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {27 January 2003}
+    \date {07 March 2003}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -2296,6 +2296,9 @@ others. Depending on permissions, the same URL may generate a different view.
       So Sympa UID (and Sympa GID) must be higher then 100 or suexec must be tuned in order to allow
       lower UID/GID. Check http://httpd.apache.org/docs/suexec.html\#install for details
 
+      The User and Group directive have to be set before the FastCgiServer directive
+      is encountered.
+
 \item Otherwise, you can overcome restrictions on the execution of suid scripts
       by using a short C program, owned by sympa and with the suid bit set, to start
       \file {wwsympa.fcgi}. Here is an example (with no guarantee attached) :
@@ -4022,6 +4025,10 @@ referer URL when an action is performed. Here is a sample HTML anchor :
 <A HREF="/wws/loginrequest/referer">Login page</A>
 \end{verbatim}
 
+You can also have your own HTML page submitting data to \file {wwsympa.fcgi} CGI. If you're
+doing so, you can set the \texttt {referer} variable to another URI. You can also
+set the \texttt {failure\_referer} to make WWSympa redirect the client to a different
+URI if login fails.
 
 \item Using \WWSympa's HTTP cookie format within your auth module \\
 To cooperate with \WWSympa, you simply need to adopt its HTTP
@@ -5714,13 +5721,25 @@ requires the \perlmodule {Net::LDAP} (perlldap) PERL module.
 \label {host}
 \lparam {host} \textit {ldap\_directory\_hostname} 
 
-Name of the LDAP directory host.
+Name of the LDAP directory host or a comma separated list of host:port. The
+second form is usefull if you are using some replication ldap host. 
+
+Example :
+
+\begin {quote}
+\begin{verbatim}
+    host ldap.cru.fr:389,backup-ldap.cru.fr:389
+
+\end{verbatim}
+\end {quote}
+
+
 
 \item
 \label {port}
 \lparam {port} \textit {ldap\_directory\_port} (Default 389) 
 
-Port on which the Directory accepts connections.
+Port on which the Directory accepts connections (this parameter is ignored if host definition include port specification).
 
 \item
 \label {user}
