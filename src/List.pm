@@ -2058,7 +2058,7 @@ sub send_msg {
     if (@tabrcpt_url) {
 	my $url_msg = $saved_msg->dup;
  
-	my $expl = $Conf{'home'}.'/'.$name.'/urlized';
+	my $expl = $self->{'dir'}.'/urlized';
     
 	unless ((-d $expl) ||( mkdir $expl, 0775)) {
 	    do_log('err', "Unable to create urlize directory $expl");
