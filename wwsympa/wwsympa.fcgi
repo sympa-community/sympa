@@ -1231,7 +1231,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		 $regexp = $in_regexp{'*'};
 	     }
 	 foreach my $one_p (split /\0/, $in{$p}) {
-	     unless ($one_p =~ /^$regexp$/) {
+	     unless ($one_p =~ /^$regexp$/m) {
 		 ## Dump parameters in a tmp file for later analysis
 		 my $dump_file = '/tmp/sympa_dump.'.time.'.'.$$;
 		 unless (open DUMP, ">$dump_file") {
