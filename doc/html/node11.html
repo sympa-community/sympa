@@ -1,0 +1,281 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>10. Virtual robot</TITLE>
+<META NAME="description" CONTENT="10. Virtual robot">
+<META NAME="keywords" CONTENT="sympa">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sympa.css">
+
+<LINK REL="next" HREF="node12.html">
+<LINK REL="previous" HREF="node10.html">
+<LINK REL="up" HREF="sympa.html">
+<LINK REL="next" HREF="node12.html">
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#ffffff">
+<!--Navigation Panel-->
+<A NAME="tex2html859"
+  HREF="node12.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html853"
+  HREF="sympa.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html847"
+  HREF="node10.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html855"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html857"
+  HREF="node20.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html860"
+  HREF="node12.html">11. Customizing Sympa/WWSympa</A>
+<B> Up:</B> <A NAME="tex2html854"
+  HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
+<B> Previous:</B> <A NAME="tex2html848"
+  HREF="node10.html">9. Sympa with S/MIME and HTTPS</A>
+ &nbsp <B>  <A NAME="tex2html856"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp <B>  <A NAME="tex2html858"
+  HREF="node20.html">Index</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html861"
+  HREF="node11.html#SECTION001110000000000000000">10.1 How to create a virtual robot</A>
+<LI><A NAME="tex2html862"
+  HREF="node11.html#SECTION001120000000000000000">10.2 robot.conf</A>
+<UL>
+<LI><A NAME="tex2html863"
+  HREF="node11.html#SECTION001121000000000000000">10.2.1 Robot customization</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION001100000000000000000"></A>
+    <A NAME="virtual-robot"></A>
+<BR>
+10. Virtual robot
+</H1>
+
+<P>
+Sympa is designed to manage multiple distinct mailing list servers on
+a single host with a single Sympa installation. Sympa virtual robots
+are like Apache virtual hosting. Sympa virtual robot definition includes
+a specific email address for the robot itself and its lists and also a virtual
+http server. Each robot provides access to a set of lists, each list is
+related to only one robot.
+
+<P>
+Most configuration parameters can be define for each robot except 
+general Sympa installation parameters (binary and spool location, smtp engine,
+antivirus plugging,...).
+
+<P>
+The Virtual robot name as defined in <I>Sympa</I> documentation and configuration file refers
+to the Internet domaine of the Virtual robot.
+
+<P>
+
+<H1><A NAME="SECTION001110000000000000000">
+10.1 How to create a virtual robot</A>
+</H1>
+
+<P>
+You don't need to install several Sympa servers. A single <A NAME="5647"></A><TT>sympa.pl</TT> daemon
+and one or more fastcgi servers can serve all virtual robot. Just configure the 
+server environment in order to accept the new domain definition.
+
+<UL>
+<LI><B>The DNS</B> must be configured to define a new mail exchanger record (MX) 
+to route message to your server. A new host (A record) or alias (CNAME) are mandatory
+to define the new web server.
+</LI>
+<LI>Configure your <B>MTA (sendmail, postfix, exim, ...)</B> to accept incoming 
+messages for the new robot domain. Add mail aliases for the robot :
+
+<P>
+<I>Examples (with sendmail):</I> <PRE>
+sympa@your.virtual.domain:      "| /home/sympa/bin/queue sympa@your.virtual.domain"
+listmaster@your.virtual.domain: "| /home/sympa/bin/queue listmaster@your.virtual.domain"
+</PRE>
+
+<P>
+</LI>
+<LI>Define a <B>virtual host in your HTTPD server</B>. The fastcgi servers defined 
+in the common section of you httpd server can be used by each virtual host. You don't 
+need to run dedicated fascgi server for each virtual robot.
+
+<P>
+<I>Examples:</I> <PRE>
+FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 3 -idle-timeout 120
+.....
+&lt;VirtualHost 195.215.92.16&gt;
+  ServerAdmin webmaster@your.virtual.domain
+  DocumentRoot /var/www/your.virtual.domain
+  ServerName your.virtual.domain
+
+  &lt;Location /wws&gt;
+     SetHandler fastcgi-script
+  &lt;/Location&gt;
+
+  ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+
+&lt;/VirtualHost&gt;
+</PRE>
+
+<P>
+</LI>
+<LI>Create a <A NAME="5650"></A><TT>robot.conf</TT> for the virtual robot (current web interface does
+not provide Virtual robot creation yet).
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION001120000000000000000">
+10.2 robot.conf</A>
+</H1>
+A robot is named by its domain, let's say my.domain.organd defined by a directory 
+<A NAME="5653"></A><TT>/home/sympa/etc/my.domain.org</TT>. This directory must contain at least a 
+<A NAME="5656"></A><TT>robot.conf</TT> file. This files has the same format as  <A NAME="5659"></A><TT>/etc/sympa.conf</TT>
+(have a look at robot.conf in the sample dir).
+Only the following parameters can be redefined for a particular robot :
+
+<P>
+
+<UL>
+<LI><A NAME="5662"></A><TT>http_host</TT> 
+<BR>
+This hostname will be compared with 'SERVER_NAME' ENV var in wwsympa.fcgi
+	to deduce the current Virtual Robot.
+
+<P>
+</LI>
+<LI><A NAME="5665"></A><TT>wwsympa_url</TT> 
+<BR>
+The base URL of WWSympa
+
+<P>
+</LI>
+<LI><A NAME="5668"></A><TT>cookie_domain</TT>
+
+<P>
+</LI>
+<LI><A NAME="5671"></A><TT>email</TT>
+
+<P>
+</LI>
+<LI><A NAME="5674"></A><TT>title</TT>
+
+<P>
+</LI>
+<LI><A NAME="5677"></A><TT>default_home</TT>
+
+<P>
+</LI>
+<LI><A NAME="5680"></A><TT>create_list</TT>
+
+<P>
+</LI>
+<LI><A NAME="5683"></A><TT>lang</TT>
+
+<P>
+</LI>
+<LI><A NAME="5686"></A><TT>log_smtp</TT>
+
+<P>
+</LI>
+<LI><A NAME="5689"></A><TT>listmaster</TT>
+
+<P>
+</LI>
+<LI><A NAME="5692"></A><TT>max_size</TT>
+
+<P>
+</LI>
+<LI><A NAME="5695"></A><TT>dark_color</TT>, <A NAME="5698"></A><TT>light_color</TT>, <A NAME="5701"></A><TT>text_color</TT>, <A NAME="5704"></A><TT>bg_color</TT>, <A NAME="5707"></A><TT>error_color</TT>, <A NAME="5710"></A><TT>selected_color</TT>, <A NAME="5713"></A><TT>shaded_color</TT> 
+</LI>
+</UL>
+
+<P>
+These settings overwrite the equivalent global parameter defined in <A NAME="5716"></A><TT>/etc/sympa.conf</TT>
+for my.domain.orgrobot ; the main <A NAME="5719"></A><TT>listmaster</TT> still has privileges on Virtual
+Robots though. The http_host parameter is compared by wwsympa with the SERVER_NAME
+environment variable to recognize which robot is in used. 
+
+<P>
+
+<H2><A NAME="SECTION001121000000000000000">
+10.2.1 Robot customization</A>
+</H2>
+
+<P>
+If needed, you can customize each virtual robot using its set of templates and scenario.
+
+<P>
+<A NAME="5722"></A><TT>/home/sympa/etc/my.domain.org/wws_templates/</TT>,
+<A NAME="5725"></A><TT>/home/sympa/etc/my.domain.org/templates/</TT>, 
+<A NAME="5728"></A><TT>/home/sympa/etc/my.domain.org/scenari/</TT> directories are searched when
+loading templates or scenari before searching into <A NAME="5731"></A><TT>/home/sympa/etc</TT> and  <A NAME="5734"></A><TT>/home/sympa/bin/etc</TT>. This allows to define different privileges and a different GUI for a Virtual Robot.
+
+<P>
+
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html859"
+  HREF="node12.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html853"
+  HREF="sympa.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html847"
+  HREF="node10.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html855"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html857"
+  HREF="node20.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html860"
+  HREF="node12.html">11. Customizing Sympa/WWSympa</A>
+<B> Up:</B> <A NAME="tex2html854"
+  HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
+<B> Previous:</B> <A NAME="tex2html848"
+  HREF="node10.html">9. Sympa with S/MIME and HTTPS</A>
+ &nbsp <B>  <A NAME="tex2html856"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp <B>  <A NAME="tex2html858"
+  HREF="node20.html">Index</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+root
+2003-04-08
+</ADDRESS>
+</BODY>
+</HTML>

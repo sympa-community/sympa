@@ -1,0 +1,630 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>1. Presentation</TITLE>
+<META NAME="description" CONTENT="1. Presentation">
+<META NAME="keywords" CONTENT="sympa">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sympa.css">
+
+<LINK REL="next" HREF="node3.html">
+<LINK REL="previous" HREF="node1.html">
+<LINK REL="up" HREF="sympa.html">
+<LINK REL="next" HREF="node3.html">
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#ffffff">
+<!--Navigation Panel-->
+<A NAME="tex2html564"
+  HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html558"
+  HREF="sympa.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html552"
+  HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html560"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html562"
+  HREF="node20.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html565"
+  HREF="node3.html">2. what does Sympa consist of</A>
+<B> Up:</B> <A NAME="tex2html559"
+  HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
+<B> Previous:</B> <A NAME="tex2html553"
+  HREF="node1.html">Contents</A>
+ &nbsp <B>  <A NAME="tex2html561"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp <B>  <A NAME="tex2html563"
+  HREF="node20.html">Index</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html566"
+  HREF="node2.html#SECTION00210000000000000000">1.1 License</A>
+<LI><A NAME="tex2html567"
+  HREF="node2.html#SECTION00220000000000000000">1.2 Features</A>
+<LI><A NAME="tex2html568"
+  HREF="node2.html#SECTION00230000000000000000">1.3 Project directions</A>
+<LI><A NAME="tex2html569"
+  HREF="node2.html#SECTION00240000000000000000">1.4 History</A>
+<LI><A NAME="tex2html570"
+  HREF="node2.html#SECTION00250000000000000000">1.5 Authors and credits</A>
+<LI><A NAME="tex2html571"
+  HREF="node2.html#SECTION00260000000000000000">1.6 Mailing lists and support</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00200000000000000000">
+1. Presentation</A>
+</H1>
+
+<P>
+<I>Sympa</I> is an electronic mailing list manager.  It is used to automate
+list management functions such as subscription, moderation,
+archive and shared document management. 
+It also includes management functions which
+would normally require a substantial amount of work (time-consuming
+and costly for the list owner). These
+functions include automatic management of subscription renewals,
+list maintenance, and many others.
+
+<P>
+<I>Sympa</I> manages many different kinds of lists. It includes
+a web interface for all list functions including management. It allows
+a precise definition of each list feature, such as sender authorization,
+the moderating process, etc. <I>Sympa</I> defines, for each feature of each list,
+exactly who is authorized to perform the relevant operations, along with the
+authentication method to be used. Currently, authentication can be based
+on either an SMTP From header, a password, or an S/MIME signature.
+<BR><I>Sympa</I> is also able to extract electronic
+addresses from an <A NAME="124"></A> directory or <A NAME="125"></A> server, and include them
+dynamically in a list.
+
+<P>
+<I>Sympa</I> manages the dispatching of messages, and makes it possible to
+reduce the load on the computer system where it is installed. In
+configurations with sufficient memory, <I>Sympa</I> is especially well
+adapted to handling large lists: for a list of 20,000 subscribers, it requires
+less than 6 minutes to send a message to 95 percent of the subscribers,
+assuming that the network is available (tested on a 300&nbsp;MHz, 256&nbsp;MB
+i386 server with Linux).
+
+<P>
+This guide covers the installation, configuration and management of
+the current release (4.0.a1) of
+<A NAME="tex2html2"
+  HREF="http://listes.cru.fr/sympa/">sympa</A>.
+
+<P>
+
+<H1><A NAME="SECTION00210000000000000000">
+1.1 License</A>
+</H1>
+
+<P>
+<I>Sympa</I> is free software; you may distribute it under the terms
+of the
+<A NAME="tex2html3"
+  HREF="http://www.gnu.org/copyleft/gpl.html">GNU General Public License Version 2</A>
+<P>
+You may make and give away verbatim copies of the source form of
+this package without restriction, provided that you duplicate all
+of the original copyright notices and associated disclaimers.
+
+<P>
+
+<H1><A NAME="SECTION00220000000000000000">
+1.2 Features</A>
+</H1>
+
+<P>
+<I>Sympa</I> provides all the basic features that any mailing list management robot
+should include. While most <I>Sympa</I> features have their equivalents in other
+mailing list applications, <I>Sympa</I> is unique in including features
+in a single software package, including:
+
+<P>
+
+<UL>
+<LI><B>High speed distribution processing</B> and <B>load control</B>. <I>Sympa</I> 
+        can be tuned to allow the system administrator to control
+        the amount of computer resources used.  Its optimized algorithm
+        allows:
+
+<P>
+
+<UL>
+<LI>the use of your preferred SMTP engine, e.g.
+                <A NAME="3820"></A><TT>sendmail</TT>, <A NAME="3823"></A><TT>qmail</TT> or <A NAME="3826"></A><TT>postfix</TT>
+
+<P>
+</LI>
+<LI>tuning of the maximum number of SMTP child processes
+
+<P>
+</LI>
+<LI>grouping of messages according to recipients' domains,
+	    	and tuning of the grouping factor
+
+<P>
+</LI>
+<LI>detailed logging
+
+<P>
+</LI>
+</UL>
+
+<P>
+</LI>
+<LI><B>Multilingual</B> messages. The current version of
+        <I>Sympa</I> allows the administrator to choose the language
+        catalog at run time. At the present time the <I>Sympa</I> robot is available in
+        Chinese, Czech, English, Finnish, French, German, Hungarian, Italian, Polish, 
+	Portuguese, Spanish, Romanian. The web interface is available in English, Spanish,
+	French, Chinese, Czech, Hungarian, Italian.
+
+<P>
+</LI>
+<LI><B>MIME support</B>. <I>Sympa</I> naturally respects
+        <A NAME="3832"></A>MIME in the distribution process, and in addition
+        allows list owners to configure their lists with
+        welcome, goodbye and other predefined messages using complex
+        <A NAME="3833"></A>MIME structures. For example, a welcome message can be
+        <B>i</B>n multipart/alternative format, using <B>text/html</B>,
+        <B>audio/x-wav</B>&nbsp;:-), or whatever (Note that <I>Sympa</I> 
+        commands in multipart messages are successfully processed, provided that
+	one part is <B>text/plain </B>).
+
+<P>
+</LI>
+<LI>The <B>sending process is controlled</B> on a per-list basis.
+        The list definition allows a number of different actions for
+        each incoming message. A <A NAME="3835"></A><TT>private</TT> list is a list where
+        only subscribers can send messages. A list configured using
+        <A NAME="3838"></A><TT>privateoreditorkey</TT> mode accepts incoming messages
+        from subscribers, but will forward any other (i.e. non-subscriber) message
+	to the editor with a one-time secret numeric key that will be used by the
+        editor to <I>reject</I> or <I>distribute</I> it.
+        For details about the different sending modes, refer to the
+        <A NAME="3841"></A><TT>send</TT> parameter (<A HREF="node15.html#par-send">14.3.8</A>, page&nbsp;<A HREF="node15.html#par-send"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). The sending process configuration (as well as most other list
+	operations) is defined using  a <B>scenario</B>. Any listmaster
+        can define new scenarios (scenarii) in order to complement the 20
+	predefined configurations included in the distribution. 
+<BR>
+Example : forward multipart messages to the list editor, while
+	distributing others without requiring any further authorization.
+
+<P>
+</LI>
+<LI>Privileged operations can be performed by list editors or
+        list owners (or any other user category), as defined in the list
+        <A NAME="3844"></A><TT>config</TT> file or by
+        the robot <A NAME="3847"></A>administrator, the listmaster, defined
+        in the <A NAME="3848"></A><TT>/etc/sympa.conf</TT>  global configuration file (listmaster
+        can also be defined for a particular virtual robot).
+        Privileged operations include the usual <A NAME="3851"></A><TT>ADD</TT>, <A NAME="3854"></A><TT>DELETE</TT> or <A NAME="3857"></A><TT>REVIEW</TT> commands, which can be
+        authenticated via a one-time password or an S/MIME signature.
+	 Any list owner using the <A NAME="3860"></A><TT>EXPIRE</TT>
+        command can require the renewal of subscriptions. This is made
+        possible by the presence of a subscription date stored in the
+        <I>Sympa</I> database.
+
+<P>
+<A NAME="wwsympa"></A> 
+</LI>
+<LI>textbf Web interface : <A NAME="3864"></A><I>WWSympa</I>  is a global Web interface to all <I>Sympa</I> functions
+    	(including administration). It provides :
+
+<P>
+
+<UL>
+<LI>classification of lists, along with a search index
+
+<P>
+</LI>
+<LI>access control to all functions, including the list of lists
+                  (which makes WWSympa particularly well suited to be the main
+		  groupware tool within an intranet)
+
+<P>
+</LI>
+<LI>management of shared documents (download, upload, specific
+		  access control for each document)
+
+<P>
+</LI>
+<LI>an HTML document presenting each user with the list of
+		  her current subscriptions, including access to archives, and
+		  subscription options
+
+<P>
+</LI>
+<LI>management tools for list managers (bounce processing, changing of
+                  list parameters, moderating incoming messages)
+
+<P>
+</LI>
+<LI>tools for the robot administrator (list creation, global robot
+                  configuration) <A NAME="168"></A>
+
+<P>
+</LI>
+</UL>
+	(See <A HREF="node7.html#WWSympa">6.1</A>, page&nbsp; <A HREF="node7.html#WWSympa"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
+</LI>
+<LI><B>RDBMS</B> : the internal subscriber data structure can be stored in a
+        database or, for compatibility with versions 1.x, in text
+        files. The introduction of databases came out of the
+        <A NAME="3868"></A><I>WWSympa</I> project.  The database ensures a secure access to
+        shared data. The PERL database API <A NAME="3871"></A><TT>DBI</TT>/<A NAME="3874"></A><TT>DBD</TT> enables
+        interoperability with various <A NAME="175"></A> (<A NAME="176"></A>, <A NAME="177"></A>,
+        <A NAME="178"></A>, <A NAME="179"></A>).
+	(See ref sec-rdbms, page&nbsp;<A HREF="node8.html#sec-rdbms"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
+</LI>
+<LI><B>Virtual robots</B> : a single <I>Sympa</I> installation
+        can provide multiple virtual robots with both email and web interface
+        customization (See <A HREF="node11.html#virtual-robot">10</A>, page&nbsp;<A HREF="node11.html#virtual-robot"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+</LI>
+<LI><B><A NAME="185"></A></B> : e-mail addresses can be retrieved dynamically from a database
+    	accepting <A NAME="186"></A> queries, or from an <A NAME="187"></A> directory. In the interest
+	of reasonable response times, <I>Sympa</I> retains the data source in an
+	internal cache controlled by a TTL (Time To Live) parameter.
+	(See ref include-ldap-query, page&nbsp;<A HREF="node15.html#include-ldap-query"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
+</LI>
+<LI><B><A NAME="190"></A></B>:  via uid and emails stored 
+      	in LDAP Directories.  Alternative email addresses, extracted from LDAP 
+        directory, may be used to "unify" subscriptions.
+	(See ref ldap-auth, page&nbsp;<A HREF="node9.html#ldap-auth"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
+</LI>
+<LI><B>Antivirus scanner</B> : <I>Sympa</I> extracts attachements from incoming
+	messages and run a virus scanner on them. Curently working with McAfee/uvscan,
+	Fsecure/fsav, Sophos, AVP, Trend Micro/VirusWall and Clam Antivirus.
+	(See ref antivirus, page&nbsp;<A HREF="node18.html#antivirus"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
+</LI>
+<LI>Inclusion of the subscribers of one list among the subscribers of
+    	another. This is real inclusion, not the dirty, multi-level cascading
+	one might otherwise obtain by simply "subscribing list B to list A".
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00230000000000000000">
+1.3 Project directions</A>
+</H1>
+
+<P>
+<I>Sympa</I> is a very active project : check the release note 
+<A NAME="tex2html4"
+  HREF="http://listes.cru.fr/sympa/release.shtml">release note</A>.
+So it is no longer possible to
+maintain multiple document about Sympa project direction.
+Please refer to <A NAME="tex2html5"
+  HREF="http://www.sympa.org/sympa/direct/in-the-future.html">in-the-futur document</A>
+for information about project direction.
+
+<P>
+
+<H1><A NAME="SECTION00240000000000000000">
+1.4 History</A>
+</H1>
+
+<P>
+<I>Sympa</I> development started from scratch in 1995. The goal was to
+ensure continuity with the <A NAME="3882"></A>TULP list manager, produced
+partly by the initial author of <I>Sympa</I>: Christophe Wolfhugel.
+
+<P>
+New features were required, which the TULP code was just not up to
+handling. The initial version of <I>Sympa</I> brought authentication,
+the flexible management of commands, high performances in internal
+data access, and object oriented code for easy code maintenance.
+
+<P>
+It took nearly two years to produce the first market releases.
+
+<P>
+Other date :
+
+<P>
+
+<UL>
+<LI>Mar 1999 Internal use of a database (Mysql), definition of list subscriber with external datasource (RDBMS or <A NAME="205"></A>).
+</LI>
+<LI>Oct 1999 Stable version of WWsympa, introduction of scenarios.
+</LI>
+<LI>Feb 2000 Web bounces management
+</LI>
+<LI>Apr 2000 Archives search engine and message removal
+</LI>
+<LI>May 2000 List creation feature from the web
+</LI>
+<LI>Jan 2001 Support for S/MIME (signing and encryption), list setup through the web interface, Shared document repository for each list. Full rewrite of HTML look and feel
+</LI>
+<LI>Jun 2001 Auto-install of aliases at list creation time, antivirus scanner plugging
+</LI>
+<LI>Jan 2002 Virtual robot, <A NAME="206"></A>
+</LI>
+</UL> 
+
+<P>
+
+<H1><A NAME="SECTION00250000000000000000">
+1.5 Authors and credits</A>
+</H1>
+
+<P>
+Christophe Wolfhugel is the author of the first beta version of
+<I>Sympa</I>. He developed it while working for the
+<A NAME="tex2html6"
+  HREF="http://www.pasteur.fr">Institut Pasteur</A>.
+
+<P>
+Later developments have mainly been driven by the
+<A NAME="tex2html7"
+  HREF="http://www.cru.fr">Comit&#233; R&#233;seaux des Universit&#233;s</A>
+(Olivier Sala&#252;n and Serge Aumont), who look after a large mailing
+list service.
+
+<P>
+Our thanks to all contributors, including:
+
+<P>
+
+<UL>
+<LI>Pierre David, who in addition to his help and suggestions
+       in developing the code, participated more than actively in
+       producing this manual.
+
+<P>
+</LI>
+<LI>David Lewis who corrected this documentation
+
+<P>
+</LI>
+<LI>Philippe Rivi&#232;re for his persevering in tuning <I>Sympa</I> for Postfix.
+
+<P>
+</LI>
+<LI>Rapha&#235;l Hertzog (debian), Jerome Marant (debian) and St&#233;phane Poirey (redhat) for
+      Linux packages.
+
+<P>
+</LI>
+<LI>Loic Dachary for guiding us through the <I>GNU Coding Standards</I>
+
+<P>
+</LI>
+<LI>Vincent Mathieu, Lynda Amadouche, John Dalbec for their integration
+	of <A NAME="215"></A> features in <I>Sympa</I>.
+
+<P>
+</LI>
+<LI>Olivier Lacroix, for all his perseverance in bug fixing.
+
+<P>
+</LI>
+<LI>Hubert Ulliac for search in archive base on marcsearch.pm
+
+<P>
+</LI>
+<LI>Florent Guilleux who wrote the Task Manager
+
+<P>
+</LI>
+<LI>Nadia Euzen for developping the antivirus scanner pluggin.
+
+<P>
+</LI>
+<LI>Fabien Marquois, who introduced many new features such as
+      the digest.
+
+<P>
+</LI>
+<LI>Valics Lehel, for his Romanian translations
+
+<P>
+</LI>
+<LI>Vizi Szilard for his Hungarian translations
+
+<P>
+</LI>
+<LI>Petr Prazak for his Czech translations
+
+<P>
+</LI>
+<LI>Rodrigo Filgueira Prates for his Portuguese translations
+
+<P>
+</LI>
+<LI>Lukasz Zalubski for his Polish translations
+
+<P>
+</LI>
+<LI>Alex Nappa and Josep Roman for their Spanish translations
+
+<P>
+</LI>
+<LI>Carsten Clasohm and Jens-Uwe Gaspar for their German translations
+
+<P>
+</LI>
+<LI>Marco Ferrante for his Italian translations
+
+<P>
+</LI>
+<LI>Tung Siu Fai, Wang Jian and Autrijus Tang for their Chinese translations
+
+<P>
+</LI>
+<LI>and also: Manuel Valente, Dominique Rousseau,
+    Laurent Ghys, Francois Petillon, Guy Brand, Jean Brange, Fabrice
+    Gaillard, Herv&#233; Maza, Harald Wilhelmi, 
+
+<P>
+</LI>
+<LI>Anonymous critics who never missed a chance to
+       remind us that <I>smartlist</I> already did all that
+       better.
+
+<P>
+</LI>
+<LI>All contributors and beta-testers cited in the <A NAME="3888"></A><TT>RELEASE_NOTES</TT> file, who, by serving as guinea pigs and
+       being the first to use it, made it possible to quickly and
+       efficiently debug the <I>Sympa</I> software.
+
+<P>
+</LI>
+<LI>Ollivier Robert, Usenet Canal Historique and the good manners
+      guru in the PERL program.
+
+<P>
+</LI>
+<LI>Bernard Barbier, without whom <I>Sympa</I> would not
+        have a name.
+
+<P>
+</LI>
+</UL>
+
+<P>
+We ask all those we have forgotten to thank to accept our apologies
+and to let us know, so that we can correct this error in future
+releases of this documentation.
+
+<P>
+
+<H1><A NAME="SECTION00260000000000000000"></A>
+    <A NAME="sympa_cru.fr"></A>
+<BR>
+1.6 Mailing lists and support
+</H1>
+
+<P>
+If you wish to contact the authors of <I>Sympa</I>, please use the address
+<TT>sympa-authorscru.fr</TT>.
+
+<P>
+There are also a few <A NAME="tex2html8"
+  HREF="http://listes.cru.fr/wws/lists/informatique/sympa">mailing-lists about <I>Sympa</I> </A>
+:
+
+<P>
+
+<UL>
+<LI><TT>sympa-userscru.fr</TT> general info list
+
+<P>
+</LI>
+<LI><TT>sympa-frcru.fr</TT>, for French-speaking users
+
+<P>
+</LI>
+<LI><TT>sympa-announcecru.fr</TT>, <I>Sympa</I> announcements
+
+<P>
+</LI>
+<LI><TT>sympa-devcru.fr</TT>, <I>Sympa</I> developers
+
+<P>
+</LI>
+<LI><TT>sympa-translationcru.fr</TT>, <I>Sympa</I> translators
+
+<P>
+</LI>
+</UL>
+
+<P>
+To join, send the following message to <TT>sympacru.fr</TT>:
+
+<P>
+<BLOCKQUOTE>
+<TT>subscribe</TT> <I>Listname</I> <I>Firstname</I> <I>Name</I>
+
+</BLOCKQUOTE>
+
+<P>
+(replace <I>Listname</I>, <I>Firstname</I> and <I>Name</I> by the list name, your first name and your family name).
+
+<P>
+You may also consult the <I>Sympa</I> <A NAME="tex2html9"
+  HREF="http://listes.cru.fr/sympa">home page</A>,
+you will find the latest version, <A NAME="tex2html10"
+  HREF="http://listes.cru.fr/sympa/fom-serve/cache/1.html">FAQ</A>
+and so on.
+
+<P>
+
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html564"
+  HREF="node3.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html558"
+  HREF="sympa.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html552"
+  HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html560"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html562"
+  HREF="node20.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html565"
+  HREF="node3.html">2. what does Sympa consist of</A>
+<B> Up:</B> <A NAME="tex2html559"
+  HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
+<B> Previous:</B> <A NAME="tex2html553"
+  HREF="node1.html">Contents</A>
+ &nbsp <B>  <A NAME="tex2html561"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp <B>  <A NAME="tex2html563"
+  HREF="node20.html">Index</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+root
+2003-04-08
+</ADDRESS>
+</BODY>
+</HTML>

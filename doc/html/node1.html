@@ -1,0 +1,845 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Contents</TITLE>
+<META NAME="description" CONTENT="Contents">
+<META NAME="keywords" CONTENT="sympa">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sympa.css">
+
+<LINK REL="next" HREF="node2.html">
+<LINK REL="previous" HREF="sympa.html">
+<LINK REL="up" HREF="sympa.html">
+<LINK REL="next" HREF="node2.html">
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#ffffff">
+<!--Navigation Panel-->
+<A NAME="tex2html233"
+  HREF="node2.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html229"
+  HREF="sympa.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html223"
+  HREF="sympa.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A>  
+<A NAME="tex2html231"
+  HREF="node20.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html234"
+  HREF="node2.html">1. Presentation</A>
+<B> Up:</B> <A NAME="tex2html230"
+  HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
+<B> Previous:</B> <A NAME="tex2html224"
+  HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
+ &nbsp <B>  <A NAME="tex2html232"
+  HREF="node20.html">Index</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<BR>
+
+<H2><A NAME="SECTION00100000000000000000">
+Contents</A>
+</H2>
+<!--Table of Contents-->
+
+<UL>
+<LI><A NAME="tex2html235"
+  HREF="node2.html">1. Presentation</A>
+<UL>
+<LI><A NAME="tex2html236"
+  HREF="node2.html#SECTION00210000000000000000">1.1 License</A>
+<LI><A NAME="tex2html237"
+  HREF="node2.html#SECTION00220000000000000000">1.2 Features</A>
+<LI><A NAME="tex2html238"
+  HREF="node2.html#SECTION00230000000000000000">1.3 Project directions</A>
+<LI><A NAME="tex2html239"
+  HREF="node2.html#SECTION00240000000000000000">1.4 History</A>
+<LI><A NAME="tex2html240"
+  HREF="node2.html#SECTION00250000000000000000">1.5 Authors and credits</A>
+<LI><A NAME="tex2html241"
+  HREF="node2.html#SECTION00260000000000000000">1.6 Mailing lists and support</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html242"
+  HREF="node3.html">2. what does Sympa consist of ?</A>
+<UL>
+<LI><A NAME="tex2html243"
+  HREF="node3.html#SECTION00310000000000000000">2.1 Organization</A>
+<LI><A NAME="tex2html244"
+  HREF="node3.html#SECTION00320000000000000000">2.2 Binaries</A>
+<LI><A NAME="tex2html245"
+  HREF="node3.html#SECTION00330000000000000000">2.3 Configuration files</A>
+<LI><A NAME="tex2html246"
+  HREF="node3.html#SECTION00340000000000000000">2.4 Spools</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html247"
+  HREF="node4.html">3. Installing Sympa </A>
+<UL>
+<LI><A NAME="tex2html248"
+  HREF="node4.html#SECTION00410000000000000000">3.1 Obtaining Sympa, related links</A>
+<LI><A NAME="tex2html249"
+  HREF="node4.html#SECTION00420000000000000000">3.2 Prerequisites</A>
+<UL>
+<LI><A NAME="tex2html250"
+  HREF="node4.html#SECTION00421000000000000000">3.2.1 System requirements</A>
+<LI><A NAME="tex2html251"
+  HREF="node4.html#SECTION00422000000000000000">3.2.2 Install Berkeley DB (NEWDB)</A>
+<LI><A NAME="tex2html252"
+  HREF="node4.html#SECTION00423000000000000000">3.2.3 Install PERL and CPAN modules</A>
+<LI><A NAME="tex2html253"
+  HREF="node4.html#SECTION00424000000000000000">3.2.4 Required CPAN modules</A>
+<LI><A NAME="tex2html254"
+  HREF="node4.html#SECTION00425000000000000000">3.2.5 Create a UNIX user</A>
+</UL>
+<LI><A NAME="tex2html255"
+  HREF="node4.html#SECTION00430000000000000000">3.3 Compilation and installation </A>
+<UL>
+<LI><A NAME="tex2html256"
+  HREF="node4.html#SECTION00431000000000000000">3.3.1 Choosing directory locations</A>
+</UL>
+<LI><A NAME="tex2html257"
+  HREF="node4.html#SECTION00440000000000000000">3.4 Robot aliases</A>
+<LI><A NAME="tex2html258"
+  HREF="node4.html#SECTION00450000000000000000">3.5 Logs</A>
+<LI><A NAME="tex2html259"
+  HREF="node4.html#SECTION00460000000000000000">3.6 sympa.pl</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html260"
+  HREF="node5.html">4. Mail aliases</A>
+<UL>
+<LI><A NAME="tex2html261"
+  HREF="node5.html#SECTION00510000000000000000">4.1 Robot aliases</A>
+<LI><A NAME="tex2html262"
+  HREF="node5.html#SECTION00520000000000000000">4.2 List aliases</A>
+<LI><A NAME="tex2html263"
+  HREF="node5.html#SECTION00530000000000000000">4.3 Alias manager</A>
+<LI><A NAME="tex2html264"
+  HREF="node5.html#SECTION00540000000000000000">4.4 Virtual domains</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html265"
+  HREF="node6.html">5. sympa.conf parameters</A>
+<UL>
+<LI><A NAME="tex2html266"
+  HREF="node6.html#SECTION00610000000000000000">5.1 Site customization</A>
+<UL>
+<LI><A NAME="tex2html267"
+  HREF="node6.html#SECTION00611000000000000000">5.1.1 domain</A>
+<LI><A NAME="tex2html268"
+  HREF="node6.html#SECTION00612000000000000000">5.1.2 email</A>
+<LI><A NAME="tex2html269"
+  HREF="node6.html#SECTION00613000000000000000">5.1.3 listmaster</A>
+<LI><A NAME="tex2html270"
+  HREF="node6.html#SECTION00614000000000000000">5.1.4 wwsympa_url</A>
+<LI><A NAME="tex2html271"
+  HREF="node6.html#SECTION00615000000000000000">5.1.5 spam_protection</A>
+<LI><A NAME="tex2html272"
+  HREF="node6.html#SECTION00616000000000000000">5.1.6 web_archive_spam_protection</A>
+<LI><A NAME="tex2html273"
+  HREF="node6.html#SECTION00617000000000000000">5.1.7 dark_color light_color text_color bg_color error_color selected_color shaded_color</A>
+<LI><A NAME="tex2html274"
+  HREF="node6.html#SECTION00618000000000000000">5.1.8 cookie</A>
+<LI><A NAME="tex2html275"
+  HREF="node6.html#SECTION00619000000000000000">5.1.9 create_list</A>
+<LI><A NAME="tex2html276"
+  HREF="node6.html#SECTION006110000000000000000">5.1.10 global_remind</A>
+</UL>
+<LI><A NAME="tex2html277"
+  HREF="node6.html#SECTION00620000000000000000">5.2 Directories</A>
+<UL>
+<LI><A NAME="tex2html278"
+  HREF="node6.html#SECTION00621000000000000000">5.2.1 home</A>
+<LI><A NAME="tex2html279"
+  HREF="node6.html#SECTION00622000000000000000">5.2.2 etc</A>
+</UL>
+<LI><A NAME="tex2html280"
+  HREF="node6.html#SECTION00630000000000000000">5.3 System related</A>
+<UL>
+<LI><A NAME="tex2html281"
+  HREF="node6.html#SECTION00631000000000000000">5.3.1 syslog</A>
+<LI><A NAME="tex2html282"
+  HREF="node6.html#SECTION00632000000000000000">5.3.2 log_level</A>
+<LI><A NAME="tex2html283"
+  HREF="node6.html#SECTION00633000000000000000">5.3.3 log_socket_type</A>
+<LI><A NAME="tex2html284"
+  HREF="node6.html#SECTION00634000000000000000">5.3.4 pidfile</A>
+<LI><A NAME="tex2html285"
+  HREF="node6.html#SECTION00635000000000000000">5.3.5 umask</A>
+</UL>
+<LI><A NAME="tex2html286"
+  HREF="node6.html#SECTION00640000000000000000">5.4 Sending related</A>
+<UL>
+<LI><A NAME="tex2html287"
+  HREF="node6.html#SECTION00641000000000000000">5.4.1 maxsmtp</A>
+<LI><A NAME="tex2html288"
+  HREF="node6.html#SECTION00642000000000000000">5.4.2 log_smtp</A>
+<LI><A NAME="tex2html289"
+  HREF="node6.html#SECTION00643000000000000000">5.4.3 max_size</A>
+<LI><A NAME="tex2html290"
+  HREF="node6.html#SECTION00644000000000000000">5.4.4 misaddressed_commands</A>
+<LI><A NAME="tex2html291"
+  HREF="node6.html#SECTION00645000000000000000">5.4.5 misaddressed_commands_regexp</A>
+<LI><A NAME="tex2html292"
+  HREF="node6.html#SECTION00646000000000000000">5.4.6 nrcpt</A>
+<LI><A NAME="tex2html293"
+  HREF="node6.html#SECTION00647000000000000000">5.4.7 avg</A>
+<LI><A NAME="tex2html294"
+  HREF="node6.html#SECTION00648000000000000000">5.4.8 sendmail</A>
+<LI><A NAME="tex2html295"
+  HREF="node6.html#SECTION00649000000000000000">5.4.9 sendmail_args</A>
+<LI><A NAME="tex2html296"
+  HREF="node6.html#SECTION006410000000000000000">5.4.10 rfc2369_header_fields</A>
+<LI><A NAME="tex2html297"
+  HREF="node6.html#SECTION006411000000000000000">5.4.11 remove_headers</A>
+<LI><A NAME="tex2html298"
+  HREF="node6.html#SECTION006412000000000000000">5.4.12 anonymous_headers_fields</A>
+<LI><A NAME="tex2html299"
+  HREF="node6.html#SECTION006413000000000000000">5.4.13 list_check_smtp</A>
+<LI><A NAME="tex2html300"
+  HREF="node6.html#SECTION006414000000000000000">5.4.14 list_check_suffixes</A>
+</UL>
+<LI><A NAME="tex2html301"
+  HREF="node6.html#SECTION00650000000000000000">5.5 Quotas</A>
+<UL>
+<LI><A NAME="tex2html302"
+  HREF="node6.html#SECTION00651000000000000000">5.5.1 default_shared_quota</A>
+<LI><A NAME="tex2html303"
+  HREF="node6.html#SECTION00652000000000000000">5.5.2 default_archive_quota</A>
+</UL>
+<LI><A NAME="tex2html304"
+  HREF="node6.html#SECTION00660000000000000000">5.6 Spool related</A>
+<UL>
+<LI><A NAME="tex2html305"
+  HREF="node6.html#SECTION00661000000000000000">5.6.1 spool</A>
+<LI><A NAME="tex2html306"
+  HREF="node6.html#SECTION00662000000000000000">5.6.2 queue</A>
+<LI><A NAME="tex2html307"
+  HREF="node6.html#SECTION00663000000000000000">5.6.3 queuemod</A>
+<LI><A NAME="tex2html308"
+  HREF="node6.html#SECTION00664000000000000000">5.6.4 queuedigest</A>
+<LI><A NAME="tex2html309"
+  HREF="node6.html#SECTION00665000000000000000">5.6.5 queueexpire</A>
+<LI><A NAME="tex2html310"
+  HREF="node6.html#SECTION00666000000000000000">5.6.6 queueauth</A>
+<LI><A NAME="tex2html311"
+  HREF="node6.html#SECTION00667000000000000000">5.6.7 queueoutgoing</A>
+<LI><A NAME="tex2html312"
+  HREF="node6.html#SECTION00668000000000000000">5.6.8 queuebounce</A>
+<LI><A NAME="tex2html313"
+  HREF="node6.html#SECTION00669000000000000000">5.6.9 queuetask</A>
+<LI><A NAME="tex2html314"
+  HREF="node6.html#SECTION006610000000000000000">5.6.10 tmpdir</A>
+<LI><A NAME="tex2html315"
+  HREF="node6.html#SECTION006611000000000000000">5.6.11 sleep</A>
+<LI><A NAME="tex2html316"
+  HREF="node6.html#SECTION006612000000000000000">5.6.12 clean_delay_queue</A>
+<LI><A NAME="tex2html317"
+  HREF="node6.html#SECTION006613000000000000000">5.6.13 clean_delay_queuemod</A>
+<LI><A NAME="tex2html318"
+  HREF="node6.html#SECTION006614000000000000000">5.6.14 clean_delay_queueauth</A>
+</UL>
+<LI><A NAME="tex2html319"
+  HREF="node6.html#SECTION00670000000000000000">5.7 Internationalization related</A>
+<UL>
+<LI><A NAME="tex2html320"
+  HREF="node6.html#SECTION00671000000000000000">5.7.1 msgcat</A>
+<LI><A NAME="tex2html321"
+  HREF="node6.html#SECTION00672000000000000000">5.7.2 lang</A>
+</UL>
+<LI><A NAME="tex2html322"
+  HREF="node6.html#SECTION00680000000000000000">5.8 Bounce related</A>
+<UL>
+<LI><A NAME="tex2html323"
+  HREF="node6.html#SECTION00681000000000000000">5.8.1 bounce_warn_rate</A>
+<LI><A NAME="tex2html324"
+  HREF="node6.html#SECTION00682000000000000000">5.8.2 bounce_halt_rate</A>
+<LI><A NAME="tex2html325"
+  HREF="node6.html#SECTION00683000000000000000">5.8.3 welcome_return_path</A>
+<LI><A NAME="tex2html326"
+  HREF="node6.html#SECTION00684000000000000000">5.8.4 remind_return_path</A>
+<LI><A NAME="tex2html327"
+  HREF="node6.html#SECTION00685000000000000000">5.8.5 expire_bounce_task</A>
+</UL>
+<LI><A NAME="tex2html328"
+  HREF="node6.html#SECTION00690000000000000000">5.9 Priority related</A>
+<UL>
+<LI><A NAME="tex2html329"
+  HREF="node6.html#SECTION00691000000000000000">5.9.1 sympa_priority</A>
+<LI><A NAME="tex2html330"
+  HREF="node6.html#SECTION00692000000000000000">5.9.2 request_priority</A>
+<LI><A NAME="tex2html331"
+  HREF="node6.html#SECTION00693000000000000000">5.9.3 owner_priority</A>
+<LI><A NAME="tex2html332"
+  HREF="node6.html#SECTION00694000000000000000">5.9.4 default_list_priority</A>
+</UL>
+<LI><A NAME="tex2html333"
+  HREF="node6.html#SECTION006100000000000000000">5.10 Database related</A>
+<UL>
+<LI><A NAME="tex2html334"
+  HREF="node6.html#SECTION006101000000000000000">5.10.1 db_type</A>
+<LI><A NAME="tex2html335"
+  HREF="node6.html#SECTION006102000000000000000">5.10.2 db_name</A>
+<LI><A NAME="tex2html336"
+  HREF="node6.html#SECTION006103000000000000000">5.10.3 db_host</A>
+<LI><A NAME="tex2html337"
+  HREF="node6.html#SECTION006104000000000000000">5.10.4 db_port</A>
+<LI><A NAME="tex2html338"
+  HREF="node6.html#SECTION006105000000000000000">5.10.5 db_user</A>
+<LI><A NAME="tex2html339"
+  HREF="node6.html#SECTION006106000000000000000">5.10.6 db_passwd</A>
+<LI><A NAME="tex2html340"
+  HREF="node6.html#SECTION006107000000000000000">5.10.7 db_options</A>
+<LI><A NAME="tex2html341"
+  HREF="node6.html#SECTION006108000000000000000">5.10.8 db_env</A>
+<LI><A NAME="tex2html342"
+  HREF="node6.html#SECTION006109000000000000000">5.10.9 db_additional_subscriber_fields</A>
+<LI><A NAME="tex2html343"
+  HREF="node6.html#SECTION0061010000000000000000">5.10.10 db_additional_user_fields</A>
+</UL>
+<LI><A NAME="tex2html344"
+  HREF="node6.html#SECTION006110000000000000000">5.11 Loop prevention</A>
+<UL>
+<LI><A NAME="tex2html345"
+  HREF="node6.html#SECTION006111000000000000000">5.11.1 loop_command_max</A>
+<LI><A NAME="tex2html346"
+  HREF="node6.html#SECTION006112000000000000000">5.11.2 loop_command_sampling_delay</A>
+<LI><A NAME="tex2html347"
+  HREF="node6.html#SECTION006113000000000000000">5.11.3 loop_command_decrease_factor</A>
+</UL>
+<LI><A NAME="tex2html348"
+  HREF="node6.html#SECTION006120000000000000000">5.12 S/MIME configuration</A>
+<UL>
+<LI><A NAME="tex2html349"
+  HREF="node6.html#SECTION006121000000000000000">5.12.1 openssl</A>
+<LI><A NAME="tex2html350"
+  HREF="node6.html#SECTION006122000000000000000">5.12.2 capath</A>
+<LI><A NAME="tex2html351"
+  HREF="node6.html#SECTION006123000000000000000">5.12.3 cafile</A>
+<LI><A NAME="tex2html352"
+  HREF="node6.html#SECTION006124000000000000000">5.12.4 key_passwd</A>
+<LI><A NAME="tex2html353"
+  HREF="node6.html#SECTION006125000000000000000">5.12.5 chk_cert_expiration_task</A>
+<LI><A NAME="tex2html354"
+  HREF="node6.html#SECTION006126000000000000000">5.12.6 crl_update_task</A>
+</UL>
+<LI><A NAME="tex2html355"
+  HREF="node6.html#SECTION006130000000000000000">5.13 Antivirus plug-in</A>
+<UL>
+<LI><A NAME="tex2html356"
+  HREF="node6.html#SECTION006131000000000000000">5.13.1 antivirus_path</A>
+<LI><A NAME="tex2html357"
+  HREF="node6.html#SECTION006132000000000000000">5.13.2 antivirus_args</A>
+<LI><A NAME="tex2html358"
+  HREF="node6.html#SECTION006133000000000000000">5.13.3 antivirus_notify</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html359"
+  HREF="node7.html">6. WWSympa</A>
+<UL>
+<LI><A NAME="tex2html360"
+  HREF="node7.html#SECTION00710000000000000000">6.1 Organization</A>
+<LI><A NAME="tex2html361"
+  HREF="node7.html#SECTION00720000000000000000">6.2 HTTPD setup</A>
+<UL>
+<LI><A NAME="tex2html362"
+  HREF="node7.html#SECTION00721000000000000000">6.2.1 wwsympa.fcgi access permissions</A>
+<LI><A NAME="tex2html363"
+  HREF="node7.html#SECTION00722000000000000000">6.2.2 Installing wwsympa.fcgi in your Apache server</A>
+<LI><A NAME="tex2html364"
+  HREF="node7.html#SECTION00723000000000000000">6.2.3 Using FastCGI</A>
+</UL>
+<LI><A NAME="tex2html365"
+  HREF="node7.html#SECTION00730000000000000000">6.3 wwsympa.conf parameters</A>
+<UL>
+<LI><A NAME="tex2html366"
+  HREF="node7.html#SECTION00731000000000000000">6.3.1 arc_path</A>
+<LI><A NAME="tex2html367"
+  HREF="node7.html#SECTION00732000000000000000">6.3.2 archive_default_index thrd | mail</A>
+<LI><A NAME="tex2html368"
+  HREF="node7.html#SECTION00733000000000000000">6.3.3 archived_pidfile</A>
+<LI><A NAME="tex2html369"
+  HREF="node7.html#SECTION00734000000000000000">6.3.4 bounce_path</A>
+<LI><A NAME="tex2html370"
+  HREF="node7.html#SECTION00735000000000000000">6.3.5 bounced_pidfile</A>
+<LI><A NAME="tex2html371"
+  HREF="node7.html#SECTION00736000000000000000">6.3.6 cookie_expire</A>
+<LI><A NAME="tex2html372"
+  HREF="node7.html#SECTION00737000000000000000">6.3.7 cookie_domain</A>
+<LI><A NAME="tex2html373"
+  HREF="node7.html#SECTION00738000000000000000">6.3.8 default_home</A>
+<LI><A NAME="tex2html374"
+  HREF="node7.html#SECTION00739000000000000000">6.3.9 icons_url</A>
+<LI><A NAME="tex2html375"
+  HREF="node7.html#SECTION007310000000000000000">6.3.10 log_facility</A>
+<LI><A NAME="tex2html376"
+  HREF="node7.html#SECTION007311000000000000000">6.3.11 mhonarc</A>
+<LI><A NAME="tex2html377"
+  HREF="node7.html#SECTION007312000000000000000">6.3.12 password_case sensitive | insensitive</A>
+<LI><A NAME="tex2html378"
+  HREF="node7.html#SECTION007313000000000000000">6.3.13 title</A>
+<LI><A NAME="tex2html379"
+  HREF="node7.html#SECTION007314000000000000000">6.3.14 use_fast_cgi 0 | 1</A>
+</UL>
+<LI><A NAME="tex2html380"
+  HREF="node7.html#SECTION00740000000000000000">6.4 MhOnArc</A>
+<LI><A NAME="tex2html381"
+  HREF="node7.html#SECTION00750000000000000000">6.5 Archiving daemon</A>
+<LI><A NAME="tex2html382"
+  HREF="node7.html#SECTION00760000000000000000">6.6 Database configuration</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html383"
+  HREF="node8.html">7. Sympa and its database</A>
+<UL>
+<LI><A NAME="tex2html384"
+  HREF="node8.html#SECTION00810000000000000000">7.1 Prerequisites</A>
+<LI><A NAME="tex2html385"
+  HREF="node8.html#SECTION00820000000000000000">7.2 Installing PERL modules</A>
+<LI><A NAME="tex2html386"
+  HREF="node8.html#SECTION00830000000000000000">7.3 Creating a sympa DataBase</A>
+<UL>
+<LI><A NAME="tex2html387"
+  HREF="node8.html#SECTION00831000000000000000">7.3.1 Database structure</A>
+<LI><A NAME="tex2html388"
+  HREF="node8.html#SECTION00832000000000000000">7.3.2 Database creation</A>
+</UL>
+<LI><A NAME="tex2html389"
+  HREF="node8.html#SECTION00840000000000000000">7.4 Setting database privileges</A>
+<LI><A NAME="tex2html390"
+  HREF="node8.html#SECTION00850000000000000000">7.5 Importing subscribers data</A>
+<UL>
+<LI><A NAME="tex2html391"
+  HREF="node8.html#SECTION00851000000000000000">7.5.1 Importing data from a text file</A>
+<LI><A NAME="tex2html392"
+  HREF="node8.html#SECTION00852000000000000000">7.5.2 Importing data from subscribers files</A>
+</UL>
+<LI><A NAME="tex2html393"
+  HREF="node8.html#SECTION00860000000000000000">7.6 Extending database table format</A>
+<LI><A NAME="tex2html394"
+  HREF="node8.html#SECTION00870000000000000000">7.7 Sympa configuration</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html395"
+  HREF="node9.html">8. Using Sympa with LDAP</A>
+<UL>
+<LI><A NAME="tex2html396"
+  HREF="node9.html#SECTION00910000000000000000">8.1 Authentication via uid or alternate email</A>
+<UL>
+<LI><A NAME="tex2html397"
+  HREF="node9.html#SECTION00911000000000000000">8.1.1 auth.conf</A>
+</UL>
+<LI><A NAME="tex2html398"
+  HREF="node9.html#SECTION00920000000000000000">8.2 Named Filters</A>
+<UL>
+<LI><A NAME="tex2html399"
+  HREF="node9.html#SECTION00921000000000000000">8.2.1 Definition</A>
+<LI><A NAME="tex2html400"
+  HREF="node9.html#SECTION00922000000000000000">8.2.2 Search Condition</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html401"
+  HREF="node10.html">9. Sympa with S/MIME and HTTPS</A>
+<UL>
+<LI><A NAME="tex2html402"
+  HREF="node10.html#SECTION001010000000000000000">9.1 Signed message distribution</A>
+<LI><A NAME="tex2html403"
+  HREF="node10.html#SECTION001020000000000000000">9.2 Use of S/MIME signature by Sympa itself</A>
+<LI><A NAME="tex2html404"
+  HREF="node10.html#SECTION001030000000000000000">9.3 Use of S/MIME encryption</A>
+<LI><A NAME="tex2html405"
+  HREF="node10.html#SECTION001040000000000000000">9.4 S/Sympa configuration</A>
+<UL>
+<LI><A NAME="tex2html406"
+  HREF="node10.html#SECTION001041000000000000000">9.4.1 Installation</A>
+<LI><A NAME="tex2html407"
+  HREF="node10.html#SECTION001042000000000000000">9.4.2 configuration in sympa.conf</A>
+<LI><A NAME="tex2html408"
+  HREF="node10.html#SECTION001043000000000000000">9.4.3 configuration to recognize S/MIME signatures</A>
+<LI><A NAME="tex2html409"
+  HREF="node10.html#SECTION001044000000000000000">9.4.4 distributing encrypted messages</A>
+</UL>
+<LI><A NAME="tex2html410"
+  HREF="node10.html#SECTION001050000000000000000">9.5 Managing certificates with tasks</A>
+<UL>
+<LI><A NAME="tex2html411"
+  HREF="node10.html#SECTION001051000000000000000">9.5.1 chk_cert_expiration.daily.task model</A>
+<LI><A NAME="tex2html412"
+  HREF="node10.html#SECTION001052000000000000000">9.5.2 crl_update.daily.task model</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html413"
+  HREF="node11.html">10. Virtual robot</A>
+<UL>
+<LI><A NAME="tex2html414"
+  HREF="node11.html#SECTION001110000000000000000">10.1 How to create a virtual robot</A>
+<LI><A NAME="tex2html415"
+  HREF="node11.html#SECTION001120000000000000000">10.2 robot.conf</A>
+<UL>
+<LI><A NAME="tex2html416"
+  HREF="node11.html#SECTION001121000000000000000">10.2.1 Robot customization</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html417"
+  HREF="node12.html">11. Customizing Sympa/WWSympa </A>
+<UL>
+<LI><A NAME="tex2html418"
+  HREF="node12.html#SECTION001210000000000000000">11.1 Template file format</A>
+<UL>
+<LI><A NAME="tex2html419"
+  HREF="node12.html#SECTION001211000000000000000">11.1.1 Variables</A>
+<LI><A NAME="tex2html420"
+  HREF="node12.html#SECTION001212000000000000000">11.1.2 Conditions</A>
+<LI><A NAME="tex2html421"
+  HREF="node12.html#SECTION001213000000000000000">11.1.3 Loops</A>
+<LI><A NAME="tex2html422"
+  HREF="node12.html#SECTION001214000000000000000">11.1.4 File inclusions</A>
+<LI><A NAME="tex2html423"
+  HREF="node12.html#SECTION001215000000000000000">11.1.5 Stop parsing</A>
+<LI><A NAME="tex2html424"
+  HREF="node12.html#SECTION001216000000000000000">11.1.6 Parsing options</A>
+</UL>
+<LI><A NAME="tex2html425"
+  HREF="node12.html#SECTION001220000000000000000">11.2 Site template files</A>
+<UL>
+<LI><A NAME="tex2html426"
+  HREF="node12.html#SECTION001221000000000000000">11.2.1 helpfile.tpl</A>
+<LI><A NAME="tex2html427"
+  HREF="node12.html#SECTION001222000000000000000">11.2.2 lists.tpl</A>
+<LI><A NAME="tex2html428"
+  HREF="node12.html#SECTION001223000000000000000">11.2.3 global_remind.tpl</A>
+<LI><A NAME="tex2html429"
+  HREF="node12.html#SECTION001224000000000000000">11.2.4 your_infected_msg.tpl</A>
+</UL>
+<LI><A NAME="tex2html430"
+  HREF="node12.html#SECTION001230000000000000000">11.3 Web template files</A>
+<LI><A NAME="tex2html431"
+  HREF="node12.html#SECTION001240000000000000000">11.4 Sharing data with other applications</A>
+<LI><A NAME="tex2html432"
+  HREF="node12.html#SECTION001250000000000000000">11.5 Sharing WWSympa authentication with other applications</A>
+<LI><A NAME="tex2html433"
+  HREF="node12.html#SECTION001260000000000000000">11.6 Internationalization</A>
+<UL>
+<LI><A NAME="tex2html434"
+  HREF="node12.html#SECTION001261000000000000000">11.6.1 Sympa internationalization</A>
+<LI><A NAME="tex2html435"
+  HREF="node12.html#SECTION001262000000000000000">11.6.2 List internationalization</A>
+<LI><A NAME="tex2html436"
+  HREF="node12.html#SECTION001263000000000000000">11.6.3 User internationalization</A>
+</UL>
+<LI><A NAME="tex2html437"
+  HREF="node12.html#SECTION001270000000000000000">11.7 Topics</A>
+<LI><A NAME="tex2html438"
+  HREF="node12.html#SECTION001280000000000000000">11.8 Scenarii</A>
+<UL>
+<LI><A NAME="tex2html439"
+  HREF="node12.html#SECTION001281000000000000000">11.8.1 rules specifications</A>
+<LI><A NAME="tex2html440"
+  HREF="node12.html#SECTION001282000000000000000">11.8.2 scenario inclusion</A>
+</UL>
+<LI><A NAME="tex2html441"
+  HREF="node12.html#SECTION001290000000000000000">11.9 Sample scenario rules</A>
+<LI><A NAME="tex2html442"
+  HREF="node12.html#SECTION0012100000000000000000">11.10 Loop detection</A>
+<LI><A NAME="tex2html443"
+  HREF="node12.html#SECTION0012110000000000000000">11.11 Tasks</A>
+<UL>
+<LI><A NAME="tex2html444"
+  HREF="node12.html#SECTION0012111000000000000000">11.11.1 List task creation</A>
+<LI><A NAME="tex2html445"
+  HREF="node12.html#SECTION0012112000000000000000">11.11.2 Global task creation</A>
+<LI><A NAME="tex2html446"
+  HREF="node12.html#SECTION0012113000000000000000">11.11.3 Model file format</A>
+<LI><A NAME="tex2html447"
+  HREF="node12.html#SECTION0012114000000000000000">11.11.4 Model file examples</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html448"
+  HREF="node13.html">12. Mailing list definition</A>
+<UL>
+<LI><A NAME="tex2html449"
+  HREF="node13.html#SECTION001310000000000000000">12.1 Mail aliases</A>
+<LI><A NAME="tex2html450"
+  HREF="node13.html#SECTION001320000000000000000">12.2 List configuration file</A>
+<LI><A NAME="tex2html451"
+  HREF="node13.html#SECTION001330000000000000000">12.3 Examples of configuration files</A>
+<LI><A NAME="tex2html452"
+  HREF="node13.html#SECTION001340000000000000000">12.4 Subscribers file</A>
+<LI><A NAME="tex2html453"
+  HREF="node13.html#SECTION001350000000000000000">12.5 Info file</A>
+<LI><A NAME="tex2html454"
+  HREF="node13.html#SECTION001360000000000000000">12.6 Homepage file</A>
+<LI><A NAME="tex2html455"
+  HREF="node13.html#SECTION001370000000000000000">12.7 List template files</A>
+<UL>
+<LI><A NAME="tex2html456"
+  HREF="node13.html#SECTION001371000000000000000">12.7.1 welcome.tpl</A>
+<LI><A NAME="tex2html457"
+  HREF="node13.html#SECTION001372000000000000000">12.7.2 bye.tpl</A>
+<LI><A NAME="tex2html458"
+  HREF="node13.html#SECTION001373000000000000000">12.7.3 removed.tpl</A>
+<LI><A NAME="tex2html459"
+  HREF="node13.html#SECTION001374000000000000000">12.7.4 reject.tpl</A>
+<LI><A NAME="tex2html460"
+  HREF="node13.html#SECTION001375000000000000000">12.7.5 invite.tpl</A>
+<LI><A NAME="tex2html461"
+  HREF="node13.html#SECTION001376000000000000000">12.7.6 remind.tpl</A>
+<LI><A NAME="tex2html462"
+  HREF="node13.html#SECTION001377000000000000000">12.7.7 summary.tpl</A>
+<LI><A NAME="tex2html463"
+  HREF="node13.html#SECTION001378000000000000000">12.7.8 list_aliases.tpl</A>
+</UL>
+<LI><A NAME="tex2html464"
+  HREF="node13.html#SECTION001380000000000000000">12.8 Stats file</A>
+<LI><A NAME="tex2html465"
+  HREF="node13.html#SECTION001390000000000000000">12.9 List model files</A>
+<UL>
+<LI><A NAME="tex2html466"
+  HREF="node13.html#SECTION001391000000000000000">12.9.1 remind.annual.task</A>
+<LI><A NAME="tex2html467"
+  HREF="node13.html#SECTION001392000000000000000">12.9.2 expire.annual.task</A>
+</UL>
+<LI><A NAME="tex2html468"
+  HREF="node13.html#SECTION0013100000000000000000">12.10 Message header and footer</A>
+<UL>
+<LI><A NAME="tex2html469"
+  HREF="node13.html#SECTION0013101000000000000000">12.10.1 Archive directory</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html470"
+  HREF="node14.html">13. Creating and editing mailing using the web</A>
+<UL>
+<LI><A NAME="tex2html471"
+  HREF="node14.html#SECTION001410000000000000000">13.1 List creation</A>
+<UL>
+<LI><A NAME="tex2html472"
+  HREF="node14.html#SECTION001411000000000000000">13.1.1 Who can create lists</A>
+<LI><A NAME="tex2html473"
+  HREF="node14.html#SECTION001412000000000000000">13.1.2 typical list profile</A>
+</UL>
+<LI><A NAME="tex2html474"
+  HREF="node14.html#SECTION001420000000000000000">13.2 List edition</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html475"
+  HREF="node15.html">14. List configuration parameters</A>
+<UL>
+<LI><A NAME="tex2html476"
+  HREF="node15.html#SECTION001510000000000000000">14.1 List description</A>
+<UL>
+<LI><A NAME="tex2html477"
+  HREF="node15.html#SECTION001511000000000000000">14.1.1 editor</A>
+<LI><A NAME="tex2html478"
+  HREF="node15.html#SECTION001512000000000000000">14.1.2 host</A>
+<LI><A NAME="tex2html479"
+  HREF="node15.html#SECTION001513000000000000000">14.1.3 lang</A>
+<LI><A NAME="tex2html480"
+  HREF="node15.html#SECTION001514000000000000000">14.1.4 owner</A>
+<LI><A NAME="tex2html481"
+  HREF="node15.html#SECTION001515000000000000000">14.1.5 subject</A>
+<LI><A NAME="tex2html482"
+  HREF="node15.html#SECTION001516000000000000000">14.1.6 topics</A>
+<LI><A NAME="tex2html483"
+  HREF="node15.html#SECTION001517000000000000000">14.1.7 visibility </A>
+</UL>
+<LI><A NAME="tex2html484"
+  HREF="node15.html#SECTION001520000000000000000">14.2 Data source related</A>
+<UL>
+<LI><A NAME="tex2html485"
+  HREF="node15.html#SECTION001521000000000000000">14.2.1 user_data_source</A>
+<LI><A NAME="tex2html486"
+  HREF="node15.html#SECTION001522000000000000000">14.2.2 ttl</A>
+<LI><A NAME="tex2html487"
+  HREF="node15.html#SECTION001523000000000000000">14.2.3 include_list</A>
+<LI><A NAME="tex2html488"
+  HREF="node15.html#SECTION001524000000000000000">14.2.4 include_remote_sympa_list</A>
+<LI><A NAME="tex2html489"
+  HREF="node15.html#SECTION001525000000000000000">14.2.5 include_sql_query</A>
+<LI><A NAME="tex2html490"
+  HREF="node15.html#SECTION001526000000000000000">14.2.6 include_ldap_query</A>
+<LI><A NAME="tex2html491"
+  HREF="node15.html#SECTION001527000000000000000">14.2.7 include_ldap_2level_query</A>
+<LI><A NAME="tex2html492"
+  HREF="node15.html#SECTION001528000000000000000">14.2.8 include_file</A>
+</UL>
+<LI><A NAME="tex2html493"
+  HREF="node15.html#SECTION001530000000000000000">14.3 Command related</A>
+<UL>
+<LI><A NAME="tex2html494"
+  HREF="node15.html#SECTION001531000000000000000">14.3.1 subscribe</A>
+<LI><A NAME="tex2html495"
+  HREF="node15.html#SECTION001532000000000000000">14.3.2 unsubscribe</A>
+<LI><A NAME="tex2html496"
+  HREF="node15.html#SECTION001533000000000000000">14.3.3 add</A>
+<LI><A NAME="tex2html497"
+  HREF="node15.html#SECTION001534000000000000000">14.3.4 del</A>
+<LI><A NAME="tex2html498"
+  HREF="node15.html#SECTION001535000000000000000">14.3.5 remind</A>
+<LI><A NAME="tex2html499"
+  HREF="node15.html#SECTION001536000000000000000">14.3.6 remind_task</A>
+<LI><A NAME="tex2html500"
+  HREF="node15.html#SECTION001537000000000000000">14.3.7 expire_task</A>
+<LI><A NAME="tex2html501"
+  HREF="node15.html#SECTION001538000000000000000">14.3.8 send</A>
+<LI><A NAME="tex2html502"
+  HREF="node15.html#SECTION001539000000000000000">14.3.9 review</A>
+<LI><A NAME="tex2html503"
+  HREF="node15.html#SECTION0015310000000000000000">14.3.10 shared_doc</A>
+</UL>
+<LI><A NAME="tex2html504"
+  HREF="node15.html#SECTION001540000000000000000">14.4 List tuning</A>
+<UL>
+<LI><A NAME="tex2html505"
+  HREF="node15.html#SECTION001541000000000000000">14.4.1 reply_to_header</A>
+<LI><A NAME="tex2html506"
+  HREF="node15.html#SECTION001542000000000000000">14.4.2 max_size</A>
+<LI><A NAME="tex2html507"
+  HREF="node15.html#SECTION001543000000000000000">14.4.3 anonymous_sender</A>
+<LI><A NAME="tex2html508"
+  HREF="node15.html#SECTION001544000000000000000">14.4.4 custom_header</A>
+<LI><A NAME="tex2html509"
+  HREF="node15.html#SECTION001545000000000000000">14.4.5 custom_subject</A>
+<LI><A NAME="tex2html510"
+  HREF="node15.html#SECTION001546000000000000000">14.4.6 footer_type</A>
+<LI><A NAME="tex2html511"
+  HREF="node15.html#SECTION001547000000000000000">14.4.7 digest</A>
+<LI><A NAME="tex2html512"
+  HREF="node15.html#SECTION001548000000000000000">14.4.8 available_user_options</A>
+<LI><A NAME="tex2html513"
+  HREF="node15.html#SECTION001549000000000000000">14.4.9 default_user_options</A>
+<LI><A NAME="tex2html514"
+  HREF="node15.html#SECTION0015410000000000000000">14.4.10 cookie</A>
+<LI><A NAME="tex2html515"
+  HREF="node15.html#SECTION0015411000000000000000">14.4.11 priority</A>
+</UL>
+<LI><A NAME="tex2html516"
+  HREF="node15.html#SECTION001550000000000000000">14.5 Bounce related</A>
+<UL>
+<LI><A NAME="tex2html517"
+  HREF="node15.html#SECTION001551000000000000000">14.5.1 bounce</A>
+<LI><A NAME="tex2html518"
+  HREF="node15.html#SECTION001552000000000000000">14.5.2 welcome_return_path</A>
+<LI><A NAME="tex2html519"
+  HREF="node15.html#SECTION001553000000000000000">14.5.3 remind_return_path</A>
+</UL>
+<LI><A NAME="tex2html520"
+  HREF="node15.html#SECTION001560000000000000000">14.6 Archive related</A>
+<UL>
+<LI><A NAME="tex2html521"
+  HREF="node15.html#SECTION001561000000000000000">14.6.1 archive</A>
+<LI><A NAME="tex2html522"
+  HREF="node15.html#SECTION001562000000000000000">14.6.2 web_archive</A>
+<LI><A NAME="tex2html523"
+  HREF="node15.html#SECTION001563000000000000000">14.6.3 archive_crypted_msg</A>
+</UL>
+<LI><A NAME="tex2html524"
+  HREF="node15.html#SECTION001570000000000000000">14.7 Spam protection</A>
+<UL>
+<LI><A NAME="tex2html525"
+  HREF="node15.html#SECTION001571000000000000000">14.7.1 spam_protection</A>
+<LI><A NAME="tex2html526"
+  HREF="node15.html#SECTION001572000000000000000">14.7.2 web_archive_spam_protection</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html527"
+  HREF="node16.html">15. Shared documents</A>
+<UL>
+<LI><A NAME="tex2html528"
+  HREF="node16.html#SECTION001610000000000000000">15.1 The three kind of operations on a document</A>
+<LI><A NAME="tex2html529"
+  HREF="node16.html#SECTION001620000000000000000">15.2 The description file</A>
+<UL>
+<LI><A NAME="tex2html530"
+  HREF="node16.html#SECTION001621000000000000000">15.2.1 Structure of description files</A>
+</UL>
+<LI><A NAME="tex2html531"
+  HREF="node16.html#SECTION001630000000000000000">15.3 The predefined scenarii</A>
+<UL>
+<LI><A NAME="tex2html532"
+  HREF="node16.html#SECTION001631000000000000000">15.3.1 The public scenario</A>
+<LI><A NAME="tex2html533"
+  HREF="node16.html#SECTION001632000000000000000">15.3.2 The private scenario</A>
+<LI><A NAME="tex2html534"
+  HREF="node16.html#SECTION001633000000000000000">15.3.3 The scenario owner</A>
+</UL>
+<LI><A NAME="tex2html535"
+  HREF="node16.html#SECTION001640000000000000000">15.4 Access control</A>
+<UL>
+<LI><A NAME="tex2html536"
+  HREF="node16.html#SECTION001641000000000000000">15.4.1 Listmaster and privileged owners</A>
+<LI><A NAME="tex2html537"
+  HREF="node16.html#SECTION001642000000000000000">15.4.2 Special case of the shared directory</A>
+<LI><A NAME="tex2html538"
+  HREF="node16.html#SECTION001643000000000000000">15.4.3 General case</A>
+</UL>
+<LI><A NAME="tex2html539"
+  HREF="node16.html#SECTION001650000000000000000">15.5 Shared document actions</A>
+<LI><A NAME="tex2html540"
+  HREF="node16.html#SECTION001660000000000000000">15.6 Template files</A>
+<UL>
+<LI><A NAME="tex2html541"
+  HREF="node16.html#SECTION001661000000000000000">15.6.1 d_read.tpl</A>
+<LI><A NAME="tex2html542"
+  HREF="node16.html#SECTION001662000000000000000">15.6.2 d_editfile.tpl</A>
+<LI><A NAME="tex2html543"
+  HREF="node16.html#SECTION001663000000000000000">15.6.3 d_control.tpl</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html544"
+  HREF="node17.html">16. Bounce management</A>
+<LI><A NAME="tex2html545"
+  HREF="node18.html">17. Antivirus</A>
+<LI><A NAME="tex2html546"
+  HREF="node19.html">18. Using Sympa commands</A>
+<UL>
+<LI><A NAME="tex2html547"
+  HREF="node19.html#SECTION001910000000000000000">18.1 User commands</A>
+<LI><A NAME="tex2html548"
+  HREF="node19.html#SECTION001920000000000000000">18.2 Owner commands</A>
+<LI><A NAME="tex2html549"
+  HREF="node19.html#SECTION001930000000000000000">18.3 Moderator commands</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html550"
+  HREF="node20.html">Index</A>
+<LI><A NAME="tex2html551"
+  HREF="node21.html">About this document ...</A>
+</UL>
+<!--End of Table of Contents-->    
+
+<P>
+
+<BR><HR>
+<ADDRESS>
+root
+2003-04-08
+</ADDRESS>
+</BODY>
+</HTML>

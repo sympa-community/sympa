@@ -1,0 +1,549 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>7. Sympa and its database</TITLE>
+<META NAME="description" CONTENT="7. Sympa and its database">
+<META NAME="keywords" CONTENT="sympa">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sympa.css">
+
+<LINK REL="next" HREF="node9.html">
+<LINK REL="previous" HREF="node7.html">
+<LINK REL="up" HREF="sympa.html">
+<LINK REL="next" HREF="node9.html">
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#ffffff">
+<!--Navigation Panel-->
+<A NAME="tex2html790"
+  HREF="node9.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html784"
+  HREF="sympa.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html778"
+  HREF="node7.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html786"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html788"
+  HREF="node20.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html791"
+  HREF="node9.html">8. Using Sympa with LDAP</A>
+<B> Up:</B> <A NAME="tex2html785"
+  HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
+<B> Previous:</B> <A NAME="tex2html779"
+  HREF="node7.html">6. WWSympa</A>
+ &nbsp <B>  <A NAME="tex2html787"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp <B>  <A NAME="tex2html789"
+  HREF="node20.html">Index</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html792"
+  HREF="node8.html#SECTION00810000000000000000">7.1 Prerequisites</A>
+<LI><A NAME="tex2html793"
+  HREF="node8.html#SECTION00820000000000000000">7.2 Installing PERL modules</A>
+<LI><A NAME="tex2html794"
+  HREF="node8.html#SECTION00830000000000000000">7.3 Creating a sympa DataBase</A>
+<UL>
+<LI><A NAME="tex2html795"
+  HREF="node8.html#SECTION00831000000000000000">7.3.1 Database structure</A>
+<LI><A NAME="tex2html796"
+  HREF="node8.html#SECTION00832000000000000000">7.3.2 Database creation</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html797"
+  HREF="node8.html#SECTION00840000000000000000">7.4 Setting database privileges</A>
+<LI><A NAME="tex2html798"
+  HREF="node8.html#SECTION00850000000000000000">7.5 Importing subscribers data</A>
+<UL>
+<LI><A NAME="tex2html799"
+  HREF="node8.html#SECTION00851000000000000000">7.5.1 Importing data from a text file</A>
+<LI><A NAME="tex2html800"
+  HREF="node8.html#SECTION00852000000000000000">7.5.2 Importing data from subscribers files</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html801"
+  HREF="node8.html#SECTION00860000000000000000">7.6 Extending database table format</A>
+<LI><A NAME="tex2html802"
+  HREF="node8.html#SECTION00870000000000000000">7.7 <I>Sympa</I> configuration</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00800000000000000000"></A>
+<A NAME="sec-rdbms"></A>
+<BR>
+7. <I>Sympa</I> and its database
+</H1>
+
+<P>
+Most basic feature of <I>Sympa</I> will work without a RDBMS, but
+WWSympa and bounced require a relational database. 
+Currently you can use one of the following
+RDBMS : MySQL, PostgreSQL, Oracle, Sybase. Interfacing with other RDBMS
+requires only a few changes in the code, since the API used, 
+<A NAME="tex2html26"
+  HREF="http://www.symbolstone.org/technology/perl/DBI/">DBI</A>
+(DataBase Interface), has DBD (DataBase Drivers) for many RDBMS.
+
+<P>
+
+<H1><A NAME="SECTION00810000000000000000">
+7.1 Prerequisites</A>
+</H1>
+
+<P>
+You need to have a DataBase System installed (not necessarily 
+on the same host as <I>Sympa</I>), and the client libraries for that
+Database installed on the <I>Sympa</I> host ; provided, of course, that
+a PERL DBD (DataBase Driver) is available for your chosen RDBMS!
+Check the <A NAME="tex2html27"
+  HREF="http://www.symbolstone.org/technology/perl/DBI/"><TT>DBI</TT> Module Availability</A>.
+
+<P>
+
+<H1><A NAME="SECTION00820000000000000000">
+7.2 Installing PERL modules</A>
+</H1>
+
+<P>
+<I>Sympa</I> will use <A NAME="5441"></A><TT>DBI</TT> to communicate with the database system and
+therefore requires the DBD for your database system. DBI and 
+DBD::YourDB (<A NAME="5444"></A><TT>Msql-Mysql-modules</TT> for MySQL) are distributed as 
+CPAN modules. Refer to&nbsp;<A HREF="node4.html#Install_PERL_and_CPAN_modules">3.2.3</A>, 
+page&nbsp;<A HREF="node4.html#Install_PERL_and_CPAN_modules"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for installation
+details of these modules.
+
+<P>
+
+<H1><A NAME="SECTION00830000000000000000">
+7.3 Creating a sympa DataBase</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION00831000000000000000">
+7.3.1 Database structure</A>
+</H2>
+
+<P>
+The sympa database structure is slightly different from the
+structure of a <A NAME="5447"></A><TT>subscribers</TT> file. A <A NAME="5450"></A><TT>subscribers</TT>
+file is a text file based on paragraphs (similar to 
+the <A NAME="5453"></A><TT>config</TT> file) ; each paragraph completely describes 
+a subscriber. If somebody is subscribed to two lists, he/she 
+will appear in both subscribers files.
+
+<P>
+The DataBase distinguishes information relative to a person (e-mail,
+real name, password) and his/her subscription options (list
+concerned, date of subscription, reception option, visibility 
+option). This results in a separation of the data into two tables :
+the user_table and the subscriber_table, linked by a user/subscriber e-mail.
+
+<P>
+
+<H2><A NAME="SECTION00832000000000000000">
+7.3.2 Database creation</A>
+</H2>
+
+<P>
+The <A NAME="5456"></A><TT>create_db</TT> script below will create the sympa database for 
+you. You can find it in the <A NAME="5459"></A><TT>script/</TT> directory of the 
+distribution (currently scripts are available for MySQL, PostgreSQL, Oracle and Sybase).
+
+<P>
+
+<UL>
+<LI>MySQL database creation script
+<BR>	<PRE>
+## MySQL Database creation script
+
+CREATE DATABASE sympa;
+
+## Connect to DB 
+\r sympa
+
+CREATE TABLE user_table (
+  	email_user          	varchar (100) NOT NULL,
+  	gecos_user          	varchar (150),
+  	password_user		varchar (40),
+	cookie_delay_user	int,
+	lang_user		varchar (10),
+	PRIMARY KEY (email_user)
+);
+
+CREATE TABLE subscriber_table (
+  	list_subscriber       	varchar (50) NOT NULL,
+	user_subscriber		varchar (100) NOT NULL,
+	date_subscriber		datetime NOT NULL,
+	update_subscriber	datetime,
+	visibility_subscriber	varchar (20),
+	reception_subscriber	varchar (20),
+	bounce_subscriber	varchar (35),
+	comment_subscriber	varchar (150),
+	subscribed_subscriber 	enum ('0','1'),
+	included_subscriber 	enum ('0','1'),
+	include_sources_subscriber varchar(50),
+	PRIMARY KEY (list_subscriber, user_subscriber),
+	INDEX (user_subscriber,list_subscriber)
+);
+
+# CREATE TABLE log_table (
+# 	id			INT UNSIGNED DEFAULT 0 NOT NULL auto_increment,
+# 	date			int NOT NULL,
+# 	pid			int,
+# 	process			enum ('task','archived','sympa','wwsympa','bounced'),
+#   	email_user          	varchar (100),
+# 	auth			enum ('smtp','md5','smime','null'),	
+# 	ip			varchar (15),
+#   	operation		varchar (40),
+# 	list			varchar (50),
+# 	robot			varchar (60),
+# 	arg			varchar (100),
+# 	status			varchar (100),
+# 	subscriber_count	int,
+# 	PRIMARY KEY (id),
+# 	INDEX (date),	
+# 	INDEX (robot),
+# 	INDEX (list),
+# 	INDEX (email_user)
+# );
+</PRE>
+
+<P>
+</LI>
+<LI>PostgreSQL database creation script
+<BR>	<PRE>
+-- PostgreSQL Database creation script
+
+CREATE DATABASE sympa;
+
+-- Connect to DB 
+\connect sympa
+
+DROP TABLE user_table;
+CREATE TABLE user_table (
+  	email_user          	varchar (100) NOT NULL,
+  	gecos_user          	varchar (150),
+	cookie_delay_user       int4,
+        password_user		varchar (40),
+        lang_user               varchar (10),
+	CONSTRAINT ind_user PRIMARY KEY (email_user)
+);
+
+DROP TABLE subscriber_table;
+CREATE TABLE subscriber_table (
+  	list_subscriber       	varchar (50) NOT NULL,
+	user_subscriber		varchar (100) NOT NULL,
+	date_subscriber		timestamp with time zone NOT NULL,
+	update_subscriber 	timestamp with time zone,
+	visibility_subscriber	varchar (20),
+	reception_subscriber	varchar (20),
+	bounce_subscriber	varchar (35),
+	comment_subscriber	varchar (150),
+	subscribed_subscriber 	bit(1),
+	included_subscriber 	bit(1),
+	include_sources_subscriber varchar(50),
+	CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber, user_subscriber)
+);
+CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber);
+</PRE>
+
+<P>
+</LI>
+<LI>Sybase database creation script
+<BR>	<PRE>
+/* Sybase Database creation script 2.5.2 */
+/* Thierry Charles &lt;tcharles@electron-libre.com&gt; */
+/* 15/06/01 : extend password_user */
+
+/* sympa database must have been created */
+/* eg: create database sympa on your_device_data=10 log on your_device_log=4 */
+use sympa
+go
+
+create table user_table
+(
+    email_user             varchar(100)           not null,
+    gecos_user             varchar(150)           null    ,
+    password_user          varchar(40)            null    ,
+    cookie_delay_user      numeric                null    ,
+    lang_user              varchar(10)            null    ,
+    constraint ind_user primary key (email_user)
+)
+go
+
+create index email_user_fk on user_table (email_user)
+go
+
+
+create table subscriber_table
+(
+    list_subscriber        varchar(50)            not null,
+    user_subscriber        varchar(100)           not null,
+    date_subscriber        datetime               not null,
+    update_subscriber      datetime               null,
+    visibility_subscriber  varchar(20)            null    ,
+    reception_subscriber   varchar(20)            null    ,
+    bounce_subscriber      varchar(35)            null    ,
+    comment_subscriber     varchar(150)           null    ,
+    subscribed_subscriber  numeric		  null    ,
+    included_subscriber    numeric                null    ,
+    include_sources_subscriber varchar(50)        null    ,
+    constraint ind_subscriber primary key (list_subscriber, user_subscriber)
+)
+go
+
+create index list_subscriber_fk on subscriber_table (list_subscriber)
+go
+
+create index user_subscriber_fk on subscriber_table (user_subscriber)
+go
+</PRE>
+
+<P>
+</LI>
+<LI>Oracle database creation script
+<BR>	<PRE>
+## Oracle Database creation script
+## Fabien Marquois &lt;fmarquoi@univ-lr.fr&gt;
+
+/Bases/oracle/product/7.3.4.1/bin/sqlplus loginsystem/passwdoracle &lt;&lt;-!
+ create user SYMPA identified by SYMPA default tablespace TABLESP
+temporary tablespace TEMP;
+ grant create session to SYMPA;
+ grant create table to SYMPA;
+ grant create synonym to SYMPA;
+ grant create view to SYMPA;
+ grant execute any procedure to SYMPA;
+ grant select any table to SYMPA;
+ grant select any sequence to SYMPA;
+ grant resource to SYMPA;
+!
+
+/Bases/oracle/product/7.3.4.1/bin/sqlplus SYMPA/SYMPA &lt;&lt;-!
+CREATE TABLE user_table (
+        email_user              varchar2(100) NOT NULL,
+        gecos_user              varchar2(150),
+        password_user           varchar2(40),
+        cookie_delay_user       number,
+        lang_user               varchar2(10),
+        CONSTRAINT ind_user PRIMARY KEY (email_user)
+);
+CREATE TABLE subscriber_table (
+        list_subscriber         varchar2(50) NOT NULL,
+        user_subscriber         varchar2(100) NOT NULL,
+        date_subscriber         date NOT NULL,
+	update_subscriber	date,
+        visibility_subscriber   varchar2(20),
+        reception_subscriber    varchar2(20),
+ 	bounce_subscriber       varchar2 (35),
+ 	comment_subscriber      varchar2 (150),
+	subscribed_subscriber 	number(1,0),
+	included_subscriber 	number(1,0),
+	include_sources_subscriber varchar2(50),
+        CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber,user_subscriber)
+);
+!
+</PRE>
+
+<P>
+</LI>
+</UL>
+
+<P>
+You can execute the script using a simple SQL shell such as
+mysql, psql or sqlplus.
+
+<P>
+Example:
+
+<P><PRE>
+# mysql  &lt; create_db.mysql
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00840000000000000000">
+7.4 Setting database privileges</A>
+</H1>
+
+<P>
+We strongly recommend you restrict access to <I>sympa</I> database. You will
+then set <A NAME="5462"></A><TT>db_user</TT> and <A NAME="5465"></A><TT>db_passwd</TT> in <A NAME="5468"></A><TT>sympa.conf</TT>.
+
+<P>
+With <A NAME="1174"></A> :<PRE>
+grant all on sympa.* to sympa@localhost identified by 'your_password';
+flush privileges;
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00850000000000000000">
+7.5 Importing subscribers data</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION00851000000000000000">
+7.5.1 Importing data from a text file</A>
+</H2>
+
+<P>
+You can import subscribers data into the database from a text file having
+one entry per line : the first field is an e-mail address, the second (optional) 
+field is the free form name.  Fields are spaces-separated.
+
+<P>
+Example:<PRE>
+## Data to be imported
+## email        gecos
+john.steward@some.company.com           John - accountant
+mary.blacksmith@another.company.com     Mary - secretary
+</PRE>
+
+<P>
+To import data into the database :
+
+<P><PRE>
+cat /tmp/my_import_file | sympa.pl --import=my_list
+</PRE>
+
+<P>
+(see <A HREF="node4.html#sympa.pl">3.6</A>, page&nbsp;<A HREF="node4.html#sympa.pl"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+
+<H2><A NAME="SECTION00852000000000000000">
+7.5.2 Importing data from subscribers files</A>
+</H2>
+
+<P>
+If a mailing list was previously setup to store subscribers into 
+<A NAME="5471"></A><TT>subscribers</TT> file (the default mode in versions older then 2.2b) 
+you can load subscribers data into the sympa database. The easiest way
+is to edit the list configuration using <A NAME="5474"></A><I>WWSympa</I> (this requires listmaster 
+privileges) and change the data source from <B>file</B> to <B>database</B>
+; subscribers data will be loaded into the database at the same time.
+
+<P>
+If the subscribers file is big, a timeout may occur during the FastCGI execution
+(Note that you can set a longer timeout with the <A NAME="5477"></A><TT>-idle-timeout</TT> option of
+the <TT>FastCgiServer</TT> Apache configuration directive). In this case, or if you have not installed <A NAME="5480"></A><I>WWSympa</I>, you should use the <A NAME="5483"></A><TT>load_subscribers.pl</TT> script.
+
+<P>
+
+<H1><A NAME="SECTION00860000000000000000">
+7.6 Extending database table format</A>
+</H1>
+
+<P>
+You can easily add other fields to <B>subscriber_table</B> and
+<B>user_table</B>, they will not disturb <I>Sympa</I> because it lists
+explicitely the field it expects in SELECT queries.
+
+<P>
+Moreover you can access these database fields from within <I>Sympa</I> 
+(in templates), as far as you list these additional fields in
+<A NAME="5488"></A><TT>sympa.conf</TT> (See <A HREF="node6.html#db-additional-subscriber-fields">5.10.9</A>, page&nbsp;<A HREF="node6.html#db-additional-subscriber-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+and <A HREF="node6.html#db-additional-user-fields">5.10.10</A>, page&nbsp;<A HREF="node6.html#db-additional-user-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+
+<H1><A NAME="SECTION00870000000000000000">
+7.7 <I>Sympa</I> configuration</A>
+</H1>
+
+<P>
+To store subscriber information in your newly created
+database, you first need to tell <I>Sympa</I> what kind of
+database to work with, then you must configure
+your list to access the database.
+
+<P>
+You define the database source in <A NAME="5493"></A><TT>sympa.conf</TT> :
+<A NAME="5496"></A><TT>db_type</TT>, <A NAME="5499"></A><TT>db_name</TT>, 
+<A NAME="5502"></A><TT>db_host</TT>, <A NAME="5505"></A><TT>db_user</TT>, 
+<A NAME="5508"></A><TT>db_passwd</TT>.
+
+<P>
+If you are interfacing <I>Sympa</I> with an Oracle database, 
+<A NAME="5512"></A><TT>db_name</TT> is the SID.
+
+<P>
+All your lists are now configured to use the database,
+unless you set list parameter <A NAME="5515"></A><TT>user_data_source</TT> 
+to <B>file</B> or <B>include</B>. 
+
+<P>
+<I>Sympa</I> will now extract and store user
+information for this list using the database instead of the
+<A NAME="5519"></A><TT>subscribers</TT> file. Note however that subscriber information is 
+dumped to <A NAME="5522"></A><TT>subscribers.db.dump</TT> at every shutdown, 
+to allow a manual rescue restart (by renaming subscribers.db.dump to
+subscribers and changing the user_data_source parameter), if ever the
+database were to become inaccessible.
+
+<P>
+
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html790"
+  HREF="node9.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html784"
+  HREF="sympa.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html778"
+  HREF="node7.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html786"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html788"
+  HREF="node20.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html791"
+  HREF="node9.html">8. Using Sympa with LDAP</A>
+<B> Up:</B> <A NAME="tex2html785"
+  HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
+<B> Previous:</B> <A NAME="tex2html779"
+  HREF="node7.html">6. WWSympa</A>
+ &nbsp <B>  <A NAME="tex2html787"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp <B>  <A NAME="tex2html789"
+  HREF="node20.html">Index</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+root
+2003-04-08
+</ADDRESS>
+</BODY>
+</HTML>

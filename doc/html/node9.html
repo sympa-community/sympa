@@ -1,0 +1,574 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with jLaTeX2HTML 2002 (1.62) JA patch-1.4
+patched version by:  Kenshi Muto, Debian Project.
+LaTeX2HTML 2002 (1.62),
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>8. Using Sympa with LDAP</TITLE>
+<META NAME="description" CONTENT="8. Using Sympa with LDAP">
+<META NAME="keywords" CONTENT="sympa">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="jLaTeX2HTML v2002 JA patch-1.4">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="sympa.css">
+
+<LINK REL="next" HREF="node10.html">
+<LINK REL="previous" HREF="node8.html">
+<LINK REL="up" HREF="sympa.html">
+<LINK REL="next" HREF="node10.html">
+</HEAD>
+
+<BODY TEXT="#000000" BGCOLOR="#ffffff">
+<!--Navigation Panel-->
+<A NAME="tex2html815"
+  HREF="node10.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html809"
+  HREF="sympa.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html803"
+  HREF="node8.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html811"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html813"
+  HREF="node20.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html816"
+  HREF="node10.html">9. Sympa with S/MIME and HTTPS</A>
+<B> Up:</B> <A NAME="tex2html810"
+  HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
+<B> Previous:</B> <A NAME="tex2html804"
+  HREF="node8.html">7. Sympa and its database</A>
+ &nbsp <B>  <A NAME="tex2html812"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp <B>  <A NAME="tex2html814"
+  HREF="node20.html">Index</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html817"
+  HREF="node9.html#SECTION00910000000000000000">8.1 Authentication via uid or alternate email</A>
+<UL>
+<LI><A NAME="tex2html818"
+  HREF="node9.html#SECTION00911000000000000000">8.1.1 auth.conf</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html819"
+  HREF="node9.html#SECTION00920000000000000000">8.2 Named Filters</A>
+<UL>
+<LI><A NAME="tex2html820"
+  HREF="node9.html#SECTION00921000000000000000">8.2.1 Definition</A>
+<LI><A NAME="tex2html821"
+  HREF="node9.html#SECTION00922000000000000000">8.2.2 Search Condition</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION00900000000000000000"></A>
+<A NAME="ldap"></A>
+<BR>
+8. Using <I>Sympa</I> with LDAP
+</H1>
+
+<P>
+<A NAME="1221"></A> is a client-server protocol for accessing a directory service. Sympa
+provide various features based on access to one or more LDAP directories :
+
+<P>
+
+<UL>
+<LI>authentication using LDAP directory instead of sympa internal storage of password
+<BR>
+<P>
+</LI>
+<LI>named filters used in scenario condition
+<BR>
+<P>
+</LI>
+<LI>LDAP extraction of list subscribers (see&nbsp;<A HREF="node15.html#par-user-data-source">14.2.1</A>)
+<BR>
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00910000000000000000"></A>
+<A NAME="ldap-auth"></A>
+<BR>
+8.1 Authentication via uid or alternate email
+</H1>
+
+<P>
+<I>Sympa</I> stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of <A NAME="1229"></A> allows to use <I>Sympa</I> in an intranet without duplicating user passwords. 
+
+<P>
+This way users can indifferently authenticate with their ldap_uid, their alternate_email or their canonic email stored in the <A NAME="1230"></A> directory.
+
+<P>
+<I>Sympa</I> gets the canonic email in the <A NAME="1231"></A> directory with the ldap_uid or the alternate_email.  
+<I>Sympa</I> will first attempt an anonymous bind to the directory to get the user's DN, then <I>Sympa</I> will bind with the DN and the user's ldap_password in order to perform an efficient authentication. This last bind will work only if the good ldap_password is provided. Indeed the value returned by the bind(DN,ldap_password) is tested.
+
+<P>
+Example: a person is described by<PRE>
+                 Dn:cn=Fabrice Rafart,
+                 ou=Siege ,
+                 o=MaSociete ,
+                 c=FR Objectclass:
+                 person Cn: Fabrice Rafart
+                 Title: Network Responsible
+                 O: Siege
+                 Or: Data processing
+                 Telephonenumber: 01-00-00-00-00
+                 Facsimiletelephonenumber:01-00-00-00-00
+                 L:Paris
+                 Country: France
+
+		 uid: frafart
+ 		 mail: Fabrice.Rafart@MaSociete.fr
+                 alternate_email: frafart@MaSociete.fr
+                 alternate:rafart@MaSociete.fr
+</PRE>
+
+<P>
+So Fabrice Rafart can be authenticated with: frafart, Fabrice.Rafart@MaSociete.fr, frafart@MaSociete.fr,Rafart@MaSociete.fr.
+After this operation, the address in the field FROM will be the Canonic email, in this case  Fabrice.Rafart@MaSociete.fr. 
+That means that <I>Sympa</I> will get this email and use it during all the session until you clearly ask <I>Sympa</I> to change your email address via the two pages : which and pref.
+
+<P>
+
+<H2><A NAME="SECTION00911000000000000000">
+8.1.1 auth.conf</A>
+</H2>
+
+<P>
+The <A NAME="5533"></A><TT>/home/sympa/etc/auth.conf</TT> configuration file contains numerous
+parameters which are read on start-up of <I>Sympa</I>. If you change this file, do not forget
+that you will need to restart <I>Sympa</I> afterwards. 
+
+<P>
+The <A NAME="5538"></A><TT>/home/sympa/etc/auth.conf</TT> is organised in paragraphs. Each paragraph coincides with the configuration of 
+an ldap directory.
+
+<P>
+The <A NAME="5541"></A><TT>/home/sympa/etc/auth.conf</TT> file contains directives in the following format:
+
+<P>
+<P>
+<BLOCKQUOTE><I>paragraphs</I>
+<BR>    <I>keyword    value</I>
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><I>paragraphs</I>
+<BR>    <I>keyword    value</I> 
+</BLOCKQUOTE>
+<P>
+
+<P>
+Comments start with the <TT>#</TT> character at the beginning of a line.
+
+<P>
+Empty lines are also considered as comments and are ignored at the beginning. After the first paragraph they are considered as paragraphs separators.
+
+<P>
+There should only be one directive per line, but their order in the file is of no importance.
+
+<P>
+Thanks to this type of configuration <I>Sympa</I> is able to consult various directories. So, users who come from different directories will be authenticated through their ldap_password. Indeed, <I>Sympa</I> will try to bind on the first directory with the given ldap_password. If it does not work,  <I>Sympa</I> will try to bind on the second with the same ldap_password, etc. This mechanism is useful in the case of homonyms.
+
+<P>
+Example :
+
+<P><PRE>
+#Configuration file auth.conf for the LDAP authentification
+#Description of parameters for each directory
+
+
+
+ldap
+	host				ldap.univ-rennes1.fr:389
+	timeout				30
+	suffix				dc=univ-rennes1,dc=fr
+	get_dn_by_uid_filter		(uid=[sender])
+	get_dn_by_email_filter		(|(mail=[sender])(mailalternateaddress=[sender]))
+	email_attribute			mail
+	alternative_email_attribute	mailalternateaddress,ur1mail
+	scope				sub
+	use_ssl                         1
+	ssl_version                     sslv3
+	ssl_ciphers                     MEDIUM:HIGH
+
+ldap
+	host				ldap.univ-nancy2.fr:392,ldap1.univ-nancy2.fr:392,ldap2.univ-nancy2.fr:392
+	timeout				20
+	bind_dn                         cn=sympa,ou=people,dc=cru,dc=fr
+	bind_password                   sympaPASSWD
+	suffix				dc=univ-nancy2,dc=fr
+	get_dn_by_uid_filter		(uid=[sender])
+	get_dn_by_email_filter			(|(mail=[sender])(n2atraliasmail=[sender]))
+	alternative_email_attribute	n2atrmaildrop
+	email_attribute			mail
+	scope				sub
+        authentication_info_url         http://sso.univ-nancy2.fr/
+</PRE>
+
+<P>
+
+<UL>
+<LI>host
+<BR>
+<P>
+This keyword is <B>mandatory</B>. It is the domain name
+	used in order to bind to the directory and then to extract informations.
+	You must mention the port number after the server name.
+	Server replication is supported by listing several servers separated by commas.
+
+<P>
+Example :
+	<PRE>
+	host ldap.univ-rennes1.fr:389
+	host ldap0.university.com:389,ldap1.university.com:389,ldap2.university.com:389
+</PRE>
+
+<P>
+</LI>
+<LI>timeout
+<BR>
+<P>
+It corresponds to the timelimit in the Search fonction. A timelimit that restricts the maximum 
+	time (in seconds) allowed for a search. A value of 0 (the default), means that no timelimit
+        will be requested.
+
+<P>
+</LI>
+<LI>suffix
+<BR>
+<P>
+The root of the DIT (Directory Information Tree). The DN that is the base object entry relative 
+	to which the search is to be performed. 
+
+<P>
+Example: <TT>dc=university,dc=fr</TT>
+
+<P>
+</LI>
+<LI>bind_dn
+<BR>
+<P>
+If anonymous bind is not allowed on the LDAP server, a DN and password can be used.
+
+<P>
+</LI>
+<LI>bind_password
+<BR>
+<P>
+This password is used, combined with the bind_dn above.
+
+<P>
+</LI>
+<LI>get_dn_by_uid_filter
+<BR>
+<P>
+Defines the search filter corresponding to the ldap_uid. (RFC 2254 compliant).
+	If you want to apply the filter on the user, use the variable ' [sender] '. It will work with every
+	type of authentication (uid, alternate_email..). 
+
+<P>
+Example :
+	<PRE>
+	(Login = [sender])
+	(|(ID = [sender])(UID = [sender]))
+</PRE>
+
+<P>
+</LI>
+<LI>get_dn_by_email_filter
+<BR>
+<P>
+Defines the search filter corresponding to the email addresses (canonic and alternative).(RFC 2254 compliant). 
+	If you want to apply the filter on the user, use the variable ' [sender] '. It will work with every
+	type of authentication (uid, alternate_email..). 
+
+<P>
+Example: a person is described by
+
+<P><PRE>
+                 Dn:cn=Fabrice Rafart,
+                 ou=Siege ,
+                 o=MaSociete ,
+                 c=FR Objectclass:
+                 person Cn: Fabrice Rafart
+                 Title: Network Responsible
+                 O: Siege
+                 Or: Data processing
+                 Telephonenumber: 01-00-00-00-00
+                 Facsimiletelephonenumber:01-00-00-00-00
+                 L:Paris
+                 Country: France
+
+		 uid: frafart
+ 		 mail: Fabrice.Rafart@MaSociete.fr
+                 alternate_email: frafart@MaSociete.fr
+                 alternate:rafart@MaSociete.fr
+</PRE>
+
+<P>
+The filters can be :
+
+<P><PRE>
+	
+	(mail = [sender])
+	(| (mail = [sender])(alternate_email = [sender]) )
+	(| (mail = [sender])(alternate_email = [sender])(alternate  = [sender]) )
+</PRE>
+
+<P>
+</LI>
+<LI>email_attribute
+<BR>
+<P>
+The name of the attribute for the canonic email in your directory : for instance mail, canonic_email, canonic_address ...
+	In the previous example the canonic email is 'mail'.
+
+<P>
+</LI>
+<LI>alternate_email_attribute
+<BR>
+<P>
+The name of the attribute for the alternate email in your directory : for instance alternate_email, mailalternateaddress, ...
+	You make a list of these attributes separated by commas.
+
+<P>
+With this list <I>Sympa</I> creates a cookie which contains various information : the user is authenticated via Ldap or not, his alternate email. To store the alternate email is interesting when you want to canonify your preferences and subscriptions. 
+	That is to say you want to use a unique address in User_table and Subscriber_table which is the canonic email.
+
+<P>
+</LI>
+<LI>scope
+<BR>
+<P>
+(Default value: <TT>sub</TT>)
+	By default the search is performed on the whole tree below the specified base object. This may be changed by 
+	specifying a scope :
+
+<P>
+
+<UL>
+<LI>base
+<BR>
+Search only the base object.
+
+<P>
+</LI>
+<LI>one
+<BR>
+Search the entries immediately below the base object. 
+
+<P>
+</LI>
+<LI>sub
+<BR>
+Search the whole tree below the base object. This is the default. 
+
+<P>
+</LI>
+</UL>
+
+<P>
+</LI>
+<LI>authentication_info_url
+<BR>
+<P>
+Defines the URL of a document describing LDAP password management. When hitting Sympa's 
+	<I>Send me a password</I> button, LDAP users will be redirected to this URL.
+
+<P>
+</LI>
+<LI>use_ssl
+
+<P>
+If set to <TT>1</TT>, connection to the LDAP server will use SSL (LDAPS).
+
+<P>
+</LI>
+<LI>ssl_version
+
+<P>
+This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="1291"></A> to <TT>sslv2/3</TT>, 
+	other possible values are <TT>sslv2</TT>, <TT>sslv3</TT>, and <TT>tlsv1</TT>.
+
+<P>
+</LI>
+<LI>ssl_ciphers
+
+<P>
+Specify which subset of cipher suites are permissible for this connection, using the standard 
+	OpenSSL string format. The default value of <A NAME="1297"></A> for ciphers is <TT>ALL</TT>, 
+	which permits all ciphers, even those that don't encrypt!
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION00920000000000000000">
+8.2 Named Filters</A>
+</H1>
+
+<P>
+At the moment Named Filters are only used in scenarii. They enable to select a category of people who will be authorized or not to realise some actions.
+
+<P>
+As a consequence, you can grant privileges in a list to people belonging to an <A NAME="1301"></A> directory thanks to a scenario.
+
+<P>
+
+<H2><A NAME="SECTION00921000000000000000">
+8.2.1 Definition</A>
+</H2>
+
+<P>
+People are selected through an <A NAME="1303"></A> defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="5550"></A><TT>/home/sympa/etc/search_filters/</TT>.
+
+<P>
+You must give several informations in order to create a Named Filter:
+
+<UL>
+<LI>host
+<BR>
+A list of host:port LDAP directories (replicates) entries.
+
+<P>
+</LI>
+<LI>suffix
+<BR>
+Defines the naming space covered by the search (optional, depending on the LDAP server).
+
+<P>
+</LI>
+<LI>filter
+<BR>
+Defines the LDAP search filter (RFC 2254 compliant). 
+	But you must absolutely take into account the first part of the filter which is:
+	('mail_attribute' = [sender]) as shown in the example. you will have to replce 'mail_attribute' by the name 
+	of the attribute for the email.
+	<I>Sympa</I> verifies if the user belongs to the category of people defined in the filter. 
+
+<P>
+</LI>
+<LI>scope
+<BR>
+By default the search is performed on the whole tree below the specified base object. This may be changed by specifying a scope :
+
+<P>
+
+<UL>
+<LI>base : Search only the base object.
+</LI>
+<LI>one
+<BR>
+Search the entries immediately below the base object. 
+</LI>
+<LI>sub
+<BR>
+Search the whole tree below the base object. This is the default. 
+	
+</LI>
+</UL>
+
+<P>
+</LI>
+</UL>
+
+<P>
+example.ldap : we want to select the professors of mathematics in the university of Rennes1 in France<PRE>
+	
+	host		ldap.univ-rennes1.fr:389,ldap2.univ-rennes1.fr:390
+	suffix		dc=univ-rennes1.fr,dc=fr
+	filter		(&amp;(canonic_mail = [sender])(EmployeeType = prof)(subject = math))
+	scope		sub
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION00922000000000000000">
+8.2.2 Search Condition</A>
+</H2>
+
+<P>
+The search condition is used in scenarii which are defined and  decribed in (see&nbsp;<A HREF="node12.html#scenarii">11.8</A>) 
+
+<P>
+The syntax of this rule is:<PRE>
+	search(example.ldap,[sender])      smtp,smime,md5    -&gt; do_it
+</PRE>
+
+<P>
+The variables used by 'search' are :
+
+<UL>
+<LI>the name of the LDAP Configuration file
+<BR></LI>
+<LI>the [sender]
+<BR>
+That is to say the sender email. 
+</LI>
+</UL>
+
+<P>
+The method of authentication does not change.
+
+<P>
+
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html815"
+  HREF="node10.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html809"
+  HREF="sympa.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html803"
+  HREF="node8.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html811"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html813"
+  HREF="node20.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
+<BR>
+<B> Next:</B> <A NAME="tex2html816"
+  HREF="node10.html">9. Sympa with S/MIME and HTTPS</A>
+<B> Up:</B> <A NAME="tex2html810"
+  HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
+<B> Previous:</B> <A NAME="tex2html804"
+  HREF="node8.html">7. Sympa and its database</A>
+ &nbsp <B>  <A NAME="tex2html812"
+  HREF="node1.html">Contents</A></B> 
+ &nbsp <B>  <A NAME="tex2html814"
+  HREF="node20.html">Index</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+root
+2003-04-08
+</ADDRESS>
+</BODY>
+</HTML>
