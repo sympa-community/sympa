@@ -39,7 +39,6 @@ use wwslib;
 use smtp;
 
 require 'parser.pl';
-require 'msg.pl';
 require 'tools.pl';
 
 #getopts('dF');

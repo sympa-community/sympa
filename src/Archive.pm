@@ -88,7 +88,7 @@ sub store {
     mkdir ($dir, "0775") if !(-d $dir);
     chmod 0774, $dir;
     
-    my $separator = $msg::separator;  
+    my $separator = $tools::separator;  
     
     my @now  = localtime(time);
     
@@ -120,7 +120,7 @@ sub store {
     }else {
  	print OUT $msg;
     }
-    print OUT "\n$separator\n\n";
+    printf OUT "\n%s\n\n", $tools::separator;
     close(OUT);
     
     ## erase the last  message and replace it by the current one

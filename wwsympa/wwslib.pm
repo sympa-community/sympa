@@ -33,7 +33,9 @@ use Conf;
 # use Net::SSLeay;
 
 ## Supported web languages
-@languages = ('fr','us','es','it','nl','cn','cz','de','hu','et','ro','fi');
+@languages = ('cs_CZ','de_DE','en_US','es_ES','et_EE',
+	      'fi_FI','fr_FR','hu_HU','it_IT','nl_NL',
+	      'pl_PL','pt_PT','ro_RO','zh_CN','zh_TW');
 
 %reception_mode = ('mail' => 'normal',
 		   'digest' => 'digest',
@@ -47,36 +49,36 @@ use Conf;
 		   'not_me' => 'not_me');
 
 ## Cookie expiration periods with corresponding entry in NLS
-%cookie_period = (0     => 1,
-		  10    => 2,
-		  30    => 3, 
-		  60    => 4,
-		  360   => 5,
-		  1440  => 6, 
-		  43200 => 7);
+%cookie_period = (0     => {'gettext_id' => "session"},
+		  10    => {'gettext_id' => "10 minutes"},
+		  30    => {'gettext_id' => "30 minutes"}, 
+		  60    => {'gettext_id' => "1 hour"},
+		  360   => {'gettext_id' => "6 hours"},
+		  1440  => {'gettext_id' => "1 day"}, 
+		  43200 => {'gettext_id' => "1 week"});
 
 %visibility_mode = ('noconceal' => 'public',
 		    'conceal' => 'conceal');
 
 ## Filenames with corresponding entry in NLS set 15
-%filenames = ('welcome.tpl' => 1,
-	      'bye.tpl' => 2,
-	      'removed.tpl'=> 3,
-	      'message.footer' => 4,
-	      'message.header' => 5,
-	      'remind.tpl' => 6,
-	      'reject.tpl' => 7,
-	      'invite.tpl' => 8,
-	      'helpfile.tpl' => 9,
-	      'lists.tpl' => 10,
-	      'global_remind.tpl' => 11,
-	      'summary.tpl' => 12,
-	      'info' => 13,
-	      'homepage' => 14,
-	      'create_list_request.tpl' => 15,
-	      'list_created.tpl' => 16,
-	      'your_infected_msg.tpl' => 17,
-	      'list_aliases.tpl' => 18
+%filenames = ('welcome.tpl'             => {'gettext_id' => "welcome message"},
+	      'bye.tpl'                 => {'gettext_id' => "unsubscription message"},
+	      'removed.tpl'             => {'gettext_id' => "deletion message"},
+	      'message.footer'          => {'gettext_id' => "message footer"},
+	      'message.header'          => {'gettext_id' => "message header"},
+	      'remind.tpl'              => {'gettext_id' => "remind message"},
+	      'reject.tpl'              => {'gettext_id' => "editor rejection message"},
+	      'invite.tpl'              => {'gettext_id' => "subscribing invitation message"},
+	      'helpfile.tpl'            => {'gettext_id' => "help file"},
+	      'lists.tpl'               => {'gettext_id' => "directory of lists"},
+	      'global_remind.tpl'       => {'gettext_id' => "global remind message"},
+	      'summary.tpl'             => {'gettext_id' => "summary message"},
+	      'info'                    => {'gettext_id' => "list description"},
+	      'homepage'                => {'gettext_id' => "list homepage"},
+	      'create_list_request.tpl' => {'gettext_id' => "list creation request message"},
+	      'list_created.tpl'        => {'gettext_id' => "list creation notification message"},
+	      'your_infected_msg.tpl'   => {'gettext_id' => "virus infection message"},
+	      'list_aliases.tpl'        => {'gettext_id' => "list aliases template"}
 	      );
 
 ## Defined in RFC 1893

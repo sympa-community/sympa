@@ -74,20 +74,20 @@ sub mailback {
    }
    
    ## Charset for encoding
-   my $charset = sprintf (Msg(12, 2, 'us-ascii'));
+   my $charset = sprintf (gettext("us-ascii"));
 
    printf $fh "To:  %s\n", MIME::Words::encode_mimewords($to, 'Q', $charset);
    if ($from eq 'sympa') {
-       printf $fh "From: %s\n", MIME::Words::encode_mimewords((sprintf (Msg(12, 4, 'SYMPA <%s>'), $sympa_email)), 'Q', $charset);
+       printf $fh "From: %s\n", MIME::Words::encode_mimewords((sprintf (gettext("SYMPA <%s>"), $sympa_email)), 'Q', $charset);
    }else {
        printf $fh "From: %s\n", $from;
    }
    foreach my $field (keys %{$headers}) {
        printf $fh "%s: %s\n", $field, MIME::Words::encode_mimewords($headers->{$field}, 'Q', $charset);
    }
-   printf $fh "MIME-Version: %s\n", Msg(12, 1, '1.0');
-   printf $fh "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
-   printf $fh "Content-Transfer-Encoding: %s\n", Msg(12, 3, '7bit');
+   printf $fh "MIME-Version: %s\n", gettext("1.0");
+   printf $fh "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
+   printf $fh "Content-Transfer-Encoding: %s\n", gettext("7bit");
    print $fh "\n";
 
    if (ref($data) eq 'SCALAR') {
@@ -123,9 +123,9 @@ sub mailarc {
    my($fh) = &smtp::smtpto($Conf{'robots'}{$robot}{'sympa'} || $Conf{'request'}, \@rcpt);
    printf $fh "To: %s\n", join(",\n   ", @rcpt);
    print $fh "Subject: $subject\n";
-   printf $fh "MIME-Version: %s\n", Msg(12, 1, '1.0');
-   printf $fh "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
-   printf $fh "Content-Transfer-Encoding: %s\n", Msg(12, 3, '7bit');
+   printf $fh "MIME-Version: %s\n", gettext("1.0");
+   printf $fh "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
+   printf $fh "Content-Transfer-Encoding: %s\n", gettext("7bit");
    print $fh "\n";
    print $fh $i while ($i = <IN>);
    close($fh);
@@ -194,7 +194,7 @@ sub mailfile {
 #  }
 
    ## Does the file include headers ?
-   if ($filename =~ /\.tpl$/) {
+   if ($filename =~ /\.tt2$/) {
        open TPL, $filename;
        my $first_line = <TPL>;
        $full_msg = 1 if ($first_line =~ /^From:\s/);
@@ -224,15 +224,19 @@ sub mailfile {
        print $fh "From: $data->{'from'}\n";
        print $fh "Subject: $data->{'subject'}\n";
        print $fh "Reply-to: $data->{'replyto'}\n" if ($data->{'replyto'}) ;
-       printf $fh "MIME-Version: %s\n", Msg(12, 1, '1.0');
-       printf $fh "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
-       printf $fh "Content-Transfer-Encoding: %s\n", Msg(12, 3, '7bit');
+       printf $fh "MIME-Version: %s\n", gettext("1.0");
+       printf $fh "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
+       printf $fh "Content-Transfer-Encoding: %s\n", gettext("7bit");
        print $fh "\n";
    }
 
    if ($filename) {
-       if ($filename =~ /\.tpl$/) {
-	   &parser::parse_tpl($data, $filename, $fh);
+       if ($filename =~ /\.tt2$/) {
+	   #&parser::parse_tpl($data, $filename, \$fh);
+	   my $output;
+	   &parser::parse_tpl($data, $filename, \$output);
+	   #warn 'from tmpl:',join('',$output);
+	   print $fh join('',$output);
 
        }else {
 	   ## Old style

@@ -34,66 +34,32 @@ thrd1.html
 
 <!--  mail1.html -->
 <IDXPGBEGIN>
-
+[%TAGS <-% %-> %]
 <CENTER>
 <P>
-<FONT COLOR="[dark_color]" SIZE=+1><B>$mois$ $yyyy$</B></FONT>
+<FONT COLOR="<-% dark_color %->" SIZE=+1><B>$mois$ $yyyy$</B></FONT>
 <HR WIDTH=30%>
 
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="[dark_color]"><TD>
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="<-% dark_color %->"><TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
 <TR ALIGN=CENTER VALIGN=MIDDLE>
 
 $PREVPGLINK$
-<TD  NOWRAP BGCOLOR="[light_color]" ALIGN="CENTER"><b>$NUMOFMSG$ 
-[IF lang=fr]
- messages, page n&#176;
-[ELSIF lang=cz]
- zpráv, strana 
-[ELSIF lang=hu]
- levelek, oldalak
-[ELSIF lang=et]
- kirju, lehekülg #
-[ELSIF lang=de]
- Mitteilungen, Seite
-[ELSE]
- mails, page # 
-[ENDIF]
-  $PAGENUM$/$NUMOFPAGES$</B></TD>
+<TD  NOWRAP BGCOLOR="<-% light_color %->" ALIGN="CENTER"><b>$NUMOFMSG$ 
+<-%TAGS [% %]%->[%|l($PAGENUM$,$NUMOFPAGES$)%]mails, page # %1/%2[%END%][%TAGS <-% %-> %]
+</B></TD>
 $NEXTPGLINK$
 
 </TD>
 
-<TD NOWRAP BGCOLOR="[light_color]" ALIGN=CENTER>
+<TD NOWRAP BGCOLOR="<-% light_color %->" ALIGN=CENTER>
 
-<FONT COLOR="[bg_color]" SIZE="-1"><b>
-[IF lang=fr]
-Suivi chronologique
-[ELSIF lang=cz]
-Chronologicky
-[ELSIF lang=hu]
-Idõrendben
-[ELSIF lang=et]
-Ajaline
-[ELSIF lang=de]
-Chronologisch
-[ELSE]
-Chronological
-[ENDIF]
+<FONT COLOR="<-% bg_color %->" SIZE="-1"><b>
+<-%TAGS [% %]%->[%|l%]Chronological[%END%][%TAGS <-% %-> %]
 </b></FONT>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <A HREF="thrd$PAGENUM$.html" STYLE="TEXT-DECORATION: NONE"><FONT size=-1>
-[IF lang=fr]
-<b>Suivi de conversation</b> <i>thread</i>
-[ELSIF lang=cz]
-<b>Téma</b> (<i>thread</i>)
-[ELSIF lang=hu]
-<b>Témák szerint</b>
-[ELSIF lang=et]
-<b>Teema järgi lõimedena</b>
-[ELSE]
-<B>Thread</B>
-[ENDIF]
+<B><-%TAGS [% %]%->[%|l%]Thread[%END%][%TAGS <-% %-> %]</B>
 </FONT></A>
 </TD></TR></TABLE>
 </TD></TR></TABLE>
@@ -106,37 +72,25 @@ Chronological
 <IDXPGEND>
 <HR>
 <P>
-<font size=-1 color="[dark_color]">
-[IF lang=fr]
-Archives basées sur
-[ELSIF lang=cz]
-Archív zalo¾en na
-[ELSIF lang=hu]
-Archívumot kezeli: 
-[ELSIF lang=et]
-Arhiveerib: 
-[ELSE]
-Archive powered by
-[ENDIF]
+<font size=-1 color="<-% dark_color %->">
+<-%TAGS [% %]%->[%|l%]Archive powered by[%END%][%TAGS <-% %-> %]
  <A HREF="$DOCURL$">MhonArc $VERSION$ </A>.
-
+<-%TAGS [% %]%->
 </IDXPGEND>
 
 <!-- top of message list -->
 <ListBegin>
 <ul>
-[STOPPARSE]
 </LISTBEGIN>
 
 <!-- bottom of message list -->
 <LISTEND>
-[STARTPARSE]
 </ul>
 </LISTEND>  
 
 
 <!-- item of maillist.html -->
-<LITEMPLATE> 
+<LITEMPLATE>
 <LI><b> $SUBJECT$ </b> <code>$FROMNAME$</code>
 </LITEMPLATE> 
 
@@ -146,78 +100,44 @@ Archive powered by
 
 <!-- top of thread index -->
 <TIDXPGBEGIN>
-
+[%TAGS <-% %-> %]
 </TIDXPGBEGIN>
 
 <!-- bottom of threads index -->
 
 <TIDXPGEND>
 
-<font size=-1 color="[dark_color]">
-[IF lang=fr]
- Les archives de wwsympa sont basées sur
-[ELSIF lang=cz]
-Archív zalo¾en na
-[ELSIF lang=hu]
-Archívumot kezeli: 
-[ELSIF lang=et]
-Arhiveerib: 
-[ELSE]
-Archive powered by
-[ENDIF]
+<font size=-1 color="<-% dark_color %->">
+<-%TAGS [% %]%->[%|l%]Archive powered by[%END%][%TAGS <-% %-> %]
  <A HREF="$DOCURL$">MhonArc $VERSION$ </A>.
-
+<-%TAGS [% %]%->
 </TIDXPGEND>
 
 <THEAD>
+
 <center>
 
-<font color="[dark_color]" size=+1><b>$mois$ $yyyy$</b></font>
+<font color="<-% dark_color %->" size=+1><b>$mois$ $yyyy$</b></font>
 <HR width=30%>
 
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="[dark_color]"><TD>
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="<-% dark_color %->"><TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
 <TR ALIGN=CENTER VALIGN=MIDDLE>
 
 $TPREVPGLINK$
-[IF lang=de]
-<TD  NOWRAP BGCOLOR="[light_color]" ALIGN="CENTER">Seite $PAGENUM$ / $NUMOFPAGES$</TD>
-[ELSE]
-<TD  NOWRAP BGCOLOR="[light_color]" ALIGN="CENTER">page n&#176; $PAGENUM$ / $NUMOFPAGES$</TD>
-[ENDIF]
+<TD  NOWRAP BGCOLOR="<-% light_color %->" ALIGN="CENTER"><-%TAGS [% %]%->[%|l('$PAGENUM$','$NUMOFPAGES$')%]page n&#176; %1/%2[%END%][%TAGS <-% %-> %]</TD>
 $TNEXTPGLINK$
 
-<td NOWRAP BGCOLOR="[light_color]" align="center">
+<td NOWRAP BGCOLOR="<-% light_color %->" align="center">
 <A HREF="mail$PAGENUM$.html" STYLE="TEXT-DECORATION: NONE">
 <font size=-1><b>
-[IF lang=fr]
-Suivi chronologique
-[ELSIF lang=cz]
-Chronologicky
-[ELSIF lang=hu]
-Idõrendben
-[ELSIF lang=et]
-Ajaline
-[ELSIF lang=de]
-Chronologisch
-[ELSE]
-Chronological
-[ENDIF]
+<-%TAGS [% %]%->[%|l%]Chronological[%END%][%TAGS <-% %-> %]
 </B></FONT></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-<FONT COLOR="[bg_color]" SIZE="-1">
-[IF lang=fr]
-<b>Suivi de conversation</b> <i>thread</i> 
-[ELSIF lang=cz]
-<b>Téma</b> (<i>thread</i>)
-[ELSIF lang=hu]
-<b>Témák szerint</b>
-[ELSIF lang=et]
-<b>Teema järgi lõimedena</b>
-[ELSE]
-<b>Thread</b>
-[ENDIF]
+<FONT COLOR="<-% bg_color %->" SIZE="-1">
+<b>
+<-%TAGS [% %]%->[%|l%]Thread[%END%][%TAGS <-% %-> %]
 </b></FONT>
 
 </TD></TR></TABLE>
@@ -234,9 +154,7 @@ Chronological
 </TFOOT>
 
 <TTOPBEGIN>
-[STOPPARSE]
 <LI><b> $SUBJECT$ </b> <code>$FROMNAME$</code><BR>
-[STARTPARSE]
 </TTOPBEGIN>
 
 <TTOPEND>
@@ -246,19 +164,7 @@ Chronological
 
 <TCONTBEGIN>
 <LI><STRONG>$SUBJECTNA$</STRONG>, <EM>
-[IF lang=fr]
-suite
-[ELSIF lang=cz]
-dal¹í
-[ELSIF lang=hu]
-következõ
-[ELSIF lang=et]
-edasi
-[ELSIF lang=de]
-weiter
-[ELSE]
-next
-[ENDIF]
+<-%TAGS [% %]%->[%|l%]next[%END%][%TAGS <-% %-> %]
 </em>
 </TCONTBEGIN>
 
@@ -279,16 +185,12 @@ next
 </TSUBJECTBEG>
 
 <TSINGLETXT>
-[STOPPARSE]
 <LI><b> $SUBJECT$ </b><code>$FROMNAME$</code>
 </LI>
-[STARTPARSE]
 </TSINGLETXT>
 
 <TLITXT>
-[STOPPARSE]
 <LI><b> $SUBJECT$ </b><code>$FROMNAME$</code>
-[STARTPARSE]
 </TLITXT>
 
 <TLIEND>
@@ -297,19 +199,7 @@ next
 
 <TLiNone>
 <LI><EM>
-[IF lang=fr]
-Message non disponible
-[ELSIF lang=cz]
-Zpráva není dostupná
-[ELSIF lang=hu]
-A levél nem érhetõ el.
-[ELSIF lang=et]
-Kirja ei ole.
-[ELSIF lang=de]
-Mitteilung nicht vorhanden
-[ELSE]
-Message not available
-[ENDIF]
+<-%TAGS [% %]%->[%|l%]Message not available[%END%][%TAGS <-% %-> %]
 </EM>
 </TLiNone>
 <TLINoneEnd>
@@ -318,119 +208,100 @@ Message not available
 
 <!-- links definition -->
 <PrevPgLink chop>
-<td NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;<A HREF="$FIRSTPG$" ><FONT FACE=Arial,Helvetica COLOR="[dark_color]"><IMG SRC="[icons_url]/begin.png" ALT="first" height=20 border=0 align=middle></font></A>&nbsp;<A HREF="$PREVPG$"><FONT FACE=Arial,Helvetica COLOR="[dark_color]"><IMG SRC="[icons_url]/left.png" ALT="previous" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center">&nbsp;&nbsp;<A HREF="$FIRSTPG$" ><FONT FACE=Arial,Helvetica COLOR="<-% dark_color %->"><IMG SRC="<-% icons_url %->/begin.png" ALT="first" height=20 border=0 align=middle></font></A>&nbsp;<A HREF="$PREVPG$"><FONT FACE=Arial,Helvetica COLOR="<-% dark_color %->"><IMG SRC="<-% icons_url %->/left.png" ALT="previous" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
 </PrevPgLink>
 
 <PrevPgLinkIA chop>
-<td NOWRAP BGCOLOR="[light_color]">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="<-% light_color %->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </PrevPgLinkIA>
 
 <NextPgLink chop>
-<td NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;<A HREF="$NEXTPG$"><FONT FACE=Arial,Helvetica COLOR="[dark_color]"><IMG SRC="[icons_url]/right.png" ALT="next" height=20 border=0 align=center></font></A>&nbsp;<A HREF="$LASTPG$"><FONT FACE=Arial,Helvetica COLOR="[dark_color]"><IMG SRC="[icons_url]/end.png" ALT="last" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center">&nbsp;&nbsp;<A HREF="$NEXTPG$"><FONT FACE=Arial,Helvetica COLOR="<-% dark_color %->"><IMG SRC="<-% icons_url %->/right.png" ALT="next" height=20 border=0 align=center></font></A>&nbsp;<A HREF="$LASTPG$"><FONT FACE=Arial,Helvetica COLOR="<-% dark_color %->"><IMG SRC="<-% icons_url %->/end.png" ALT="last" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
 </NextPgLink>
 
 <NextPgLinkIA chop>
-<td NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </NextPgLinkIA>
 
 <TPrevPgLink chop>
-<td NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;<A HREF="$TFIRSTPG$" ><FONT FACE=Arial,Helvetica COLOR="[dark_color]"><IMG SRC="[icons_url]/begin.png" ALT="first" height=20 border=0 align=middle></font></A>&nbsp;<A HREF="$TPREVPG$"><FONT FACE=Arial,Helvetica COLOR="[dark_color]"><IMG SRC="[icons_url]/left.png" ALT="previous" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center">&nbsp;&nbsp;<A HREF="$TFIRSTPG$" ><FONT FACE=Arial,Helvetica COLOR="<-% dark_color %->"><IMG SRC="<-% icons_url %->/begin.png" ALT="first" height=20 border=0 align=middle></font></A>&nbsp;<A HREF="$TPREVPG$"><FONT FACE=Arial,Helvetica COLOR="<-% dark_color %->"><IMG SRC="<-% icons_url %->/left.png" ALT="previous" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
 </TPrevPgLink>
 
 <TPrevPgLinkIA chop>
-<td NOWRAP BGCOLOR="[light_color]">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="<-% light_color %->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </TPrevPgLinkIA>
 
 <TNextPgLink chop>
-<td NOWRAP BGCOLOR="[light_color]" ALIGN="center" >&nbsp;&nbsp;<A HREF="$TNEXTPG$"><FONT FACE=Arial,Helvetica COLOR="[dark_color]"><IMG SRC="[icons_url]/right.png" ALT="next" height=20 border=0 align=center></font></A>&nbsp;<A HREF="$TLASTPG$"><FONT FACE=Arial,Helvetica COLOR="[dark_color]"><IMG SRC="[icons_url]/end.png" ALT="last" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center" >&nbsp;&nbsp;<A HREF="$TNEXTPG$"><FONT FACE=Arial,Helvetica COLOR="<-% dark_color %->"><IMG SRC="<-% icons_url %->/right.png" ALT="next" height=20 border=0 align=center></font></A>&nbsp;<A HREF="$TLASTPG$"><FONT FACE=Arial,Helvetica COLOR="<-% dark_color %->"><IMG SRC="<-% icons_url %->/end.png" ALT="last" height=20 border=0 align=middle></font></A>&nbsp;&nbsp;</td>
 </TNextPgLink>
 
 <TNextPgLinkIA chop>
-<td NOWRAP BGCOLOR="[light_color]" ALIGN="center" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </TNextPgLinkIA>
 
 <PREVBUTTON>
-<TD  NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;<A HREF="$PREVMSG$"><IMG SRC="[icons_url]/left.png" HEIGHT=20 BORDER=0 ALIGN=MIDDLE ALT="previous"></A>&nbsp;&nbsp;</TD>
+<TD  NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center">&nbsp;&nbsp;<A HREF="$PREVMSG$"><IMG SRC="<-% icons_url %->/left.png" HEIGHT=20 BORDER=0 ALIGN=MIDDLE ALT="previous"></A>&nbsp;&nbsp;</TD>
 </PREVBUTTON>
 
 <PREVBUTTONIA>
-<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </PREVBUTTONIA>
 
 <!-- next message button -->
 
 <NEXTBUTTON>
-<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp<A HREF="$NEXTMSG$"><IMG SRC="[icons_url]/right.png" height=20 border=0 align=middle ALT="next"></A>&nbsp;&nbsp</td>
+<TD NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center">&nbsp;&nbsp<A HREF="$NEXTMSG$"><IMG SRC="<-% icons_url %->/right.png" height=20 border=0 align=middle ALT="next"></A>&nbsp;&nbsp</td>
 </NEXTBUTTON>
 
 <NEXTBUTTONIA>
-<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </NEXTBUTTONIA>
 
 
 <TPREVBUTTON>
-<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;<A HREF="$TPREVMSG$"><IMG SRC="[icons_url]/left.png" height=20 border=0 align=middle ALT="previous"></A>&nbsp;&nbsp;</TD>
+<TD NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center">&nbsp;&nbsp;<A HREF="$TPREVMSG$"><IMG SRC="<-% icons_url %->/left.png" height=20 border=0 align=middle ALT="previous"></A>&nbsp;&nbsp;</TD>
 </TPREVBUTTON>
 
 <TPREVBUTTONIA>
-<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TPREVBUTTONIA>
 
 <!-- prev message button in thread page -->
 
 <TNEXTBUTTON>
-<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp<A HREF="$TNEXTMSG$"><IMG SRC="[icons_url]/right.png" height=20 border=0 align=middle ALT="next"></A>&nbsp;&nbsp</td>
+<TD NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center">&nbsp;&nbsp<A HREF="$TNEXTMSG$"><IMG SRC="<-% icons_url %->/right.png" height=20 border=0 align=middle ALT="next"></A>&nbsp;&nbsp</td>
 </TNEXTBUTTON>
 
 <TNEXTBUTTONIA>
-<TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD NOWRAP BGCOLOR="<-% light_color %->" ALIGN="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TNEXTBUTTONIA>
 
 
 <!-- ==================================  Les messages -->
 
-<MSGPGBEGIN>
+<MSGPGSSMARKUP>
+[% TAGS <-% %-> %]
+<-% bozo %->
+</MSGPGSSMARKUP>
 
-</MSGPGBEGIN>
+<MSGPGEND>
+<-%TAGS [% %]%->
+</MSGPGEND>
 
 <TOPLINKS>
 <center>
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="[dark_color]"><TD>
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0"><TR ALIGN=center BGCOLOR="<-% dark_color %->"><TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
 <TR ALIGN=CENTER VALIGN=MIDDLE>
  $PREVBUTTON$
- <TD NOWRAP BGCOLOR="[light_color]" ALIGN="CENTER"><A HREF="$IDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
-[IF lang=fr]
-Chronologie
-[ELSIF lang=cz]
-Chronologicky
-[ELSIF lang=hu]
-Idõrendben
-[ELSIF lang=et]
-Ajaline
-[ELSIF lang=de]
-Chronologisch
-[ELSE]
-Chronological
-[ENDIF]
+ <TD NOWRAP BGCOLOR="<-% light_color %->" ALIGN="CENTER"><A HREF="$IDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
+<-%TAGS [% %]%->[%|l%]Chronological[%END%][%TAGS <-% %-> %]
 </B></FONT></A></TD>
 $NEXTBUTTON$ 
-<TD WIDTH=40% BGCOLOR="[light_color]">&nbsp;</TD>
+<TD WIDTH=40% BGCOLOR="<-% light_color %->">&nbsp;</TD>
 $TPREVBUTTON$ 
-<TD  NOWRAP BGCOLOR="[light_color]" ALIGN="CENTER"><A HREF="$TIDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
-[IF lang=fr]
-Conversation
-[ELSIF lang=cz]
-Téma
-[ELSIF lang=hu]
-Téma
-[ELSIF lang=et]
-Teema järgi
-[ELSIF` lang=de]
-Thread
-[ELSE]
-Thread
-[ENDIF]
+<TD  NOWRAP BGCOLOR="<-% light_color %->" ALIGN="CENTER"><A HREF="$TIDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
+<-%TAGS [% %]%->[%|l%]Thread[%END%][%TAGS <-% %-> %]
 </B></FONT></A></TD>
 
 $TNEXTBUTTON$ 
@@ -451,93 +322,48 @@ $TNEXTBUTTON$
 <TABLE border=0 width=100%>
 <TR>
  <TD>
-  <FONT size=+1 COLOR="[dark_color]">
-  [STOPPARSE]
+  <FONT size=+1 COLOR="<-% dark_color %->">
   <B> $SUBJECTNA$</B></FONT><FONT size=+1> $FROMNAME$ </FONT>
-  [STARTPARSE]
  </TD>
 
-<TD ALIGN=RIGHT bgcolor="[bg_color]">
+<TD ALIGN=RIGHT bgcolor="<-% bg_color %->">
 <FONT size="-1">
-[IF user->email]
+<-% IF user.email %->
 <!-- reply to button -->
-<FORM ACTION="[path_cgi]" METHOD=POST>
-  [STOPPARSE]
+<FORM ACTION="<-% path_cgi %->" METHOD=POST>
   <INPUT TYPE="hidden" NAME="in_reply_to" VALUE="$MSGID$">
   <INPUT TYPE="hidden" NAME="subject" VALUE="Re: $SUBJECTNA$">
-  [STARTPARSE]
-  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-[IF lang=fr]
-   répondre à l'auteur <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
-  à la liste <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
- <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Répondre">
-  <INPUT TYPE="submit" NAME="action_send_me" VALUE="renvoyer à [user->email]">
-[ELSIF lang=hu]
-  Válasz a feladónak <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
-  a listának <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
-  <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Válasz">
-  <INPUT TYPE="submit" NAME="action_send_me" VALUE="send it back to [user->email]">
-[ELSIF lang=et]
-  Vasta saatjale <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
-  listi <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
-  <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Vasta">
-  <INPUT TYPE="submit" NAME="action_send_me" VALUE="send it back to [user->email]">
-[ELSIF lang=de]
-  Antwort an Sender <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
-  an Liste <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
-  <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Antworten">
-  <INPUT TYPE="submit" NAME="action_send_me" VALUE="send it back to [user->email]">
-[ELSE] 
-  Reply to sender <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
-  to list <INPUT TYPE="radio" NAME="to" VALUE="[list] [list_conf->host]">
-  <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Reply">
-  <INPUT TYPE="submit" NAME="action_send_me" VALUE="send it back to [user->email]">	
-[ENDIF]
+  <INPUT TYPE="hidden" NAME="list" VALUE="<-% list %->">
+<-%TAGS [% %]%->[%|l%]Reply to sender[%END%][%TAGS <-% %-> %]
+<INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
+<-%TAGS [% %]%->[%|l%]to list[%END%][%TAGS <-% %-> %]
+<INPUT TYPE="radio" NAME="to" VALUE="<-% list %-> <-% list_conf.host %->">
+<INPUT TYPE="submit" NAME="action_compose_mail" VALUE="<-%TAGS [% %]%->[%|l%]Reply[%END%][%TAGS <-% %-> %]">
+<INPUT TYPE="submit" NAME="action_send_me" VALUE="<-%TAGS [% %]%->[%|l(user.email)%]send it back to %1[%END%][%TAGS <-% %-> %]">	
 
-[IF action<>viewmod]
-[IF user->email=$FROMADDR$]
+<-% IF action != 'viewmod' %->
+<-% IF user.email == '$FROMADDR$' %->
   <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
   <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
   <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
   <INPUT TYPE="hidden" NAME="action" VALUE="">
-[IF lang=fr]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="marquer ce message pour suppression" onClick="return request_confirm('Voulez-vous vraiment supprimer ce message ?')">
-[ELSIF lang=cz]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="oznaèit tuto zprávu ke smazání">
-[ELSIF lang=hu]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre" onClick="return request_confirm('Tényleg törölni szeretnéd ezt a levelet?')">
-[ELSIF lang=et]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks" onClick="return request_confirm('Oled kindel, et soovid selle kirja ära kustutada?')">
-[ELSIF lang=de]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren" onClick="return request_confirm('Wollen Sie wirklich diese Mitteilung löschen?')">
-[ELSE]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="return request_confirm('Do you really want to delete this message ?')">
-[ENDIF]
+<-%TAGS [% %]%->
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="[%|l%]tag this mail for deletion[%END%]" onClick="return request_confirm('[%|l%]Do you really want to delete this message ?[%END%]')">
+[%TAGS <-% %-> %]
 
-[ELSIF is_owner]
+<-% ELSIF is_owner %->
   <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
   <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
   <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
   <INPUT TYPE="hidden" NAME="action" VALUE="">
-
-[IF lang=fr]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="marquer ce message pour suppression" onClick="return request_confirm('Voulez-vous vraiment supprimer ce message ?')">
-[ELSIF lang=cz]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="oznaèit tuto zprávu ke smazání">
-[ELSIF lang=hu]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre" onClick="return request_confirm('Tényleg törölni szeretnéd ezt a levelet?')">
-[ELSIF lang=et]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks" onClick="return request_confirm('Oled kindel, et soovid selle kirja ära kustutada?')">
-[ELSIF lang=de]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren" onClick="return request_confirm('Wollen Sie wirklich diese Mitteilung löschen?')">
-[ELSE]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="return request_confirm('Do you really want to delete this message ?')">
-[ENDIF]
-[ENDIF]
-[ENDIF]
+<-%TAGS [% %]%->
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="[%|l%]tag this mail for deletion[%END%]" onClick="return request_confirm('[%|l%]Do you really want to delete this message ?[%END%]')">
+[%TAGS <-% %-> %]
+<-% END %->
+<-% END %->
 </FORM>
 
-[ENDIF]
+<-% END %->
 </FONT>
  </TD>
  </TR>
@@ -585,11 +411,11 @@ date
 </FIELDORDER>
 
 <FIELDSBEG>
-[SETOPTION ignore_undef]
+<-% IF 1 %->
 </FIELDSBEG>
 
 <FIELDSEND>
-[UNSETOPTION ignore_undef]
+<-% END %->
 </FIELDSEND>
 
 <LABELSTYLES>
@@ -609,150 +435,42 @@ Subject:strong
 </DayEnd>
 
 <WEEKDAYS>
-[IF lang=fr]
-Dimanche
-[ELSIF lang=cz]
-Nedìle
-[ELSIF lang=hu]
-Vasárnap
-[ELSIF lang=et]
-Pühapäev
-[ELSIF lang=de]
-Sonntag
-[ELSE]
-Sunday
-[ENDIF]
-:
-[IF lang=fr]
-Lundi
-[ELSIF lang=cz]
-Pondìlí
-[ELSIF lang=hu]
-Hétfõ
-[ELSIF lang=et]
-Esmaspäev
-[ELSIF lang=de]
-Montag
-[ELSE]
-Monday
-[ENDIF]
-:
-[IF lang=fr]
-Mardi
-[ELSIF lang=cz]
-Úterý
-[ELSIF lang=hu]
-Kedd
-[ELSIF lang=et]
-Teisipäev
-[ELSIF lang=de]
-Dienstag
-[ELSE]
-Tuesday
-[ENDIF]
-:
-[IF lang=fr]
-Mercredi
-[ELSIF lang=cz]
-Støeda
-[ELSIF lang=hu]
-Szerda
-[ELSIF lang=et]
-Kolmapäev
-[ELSIF lang=de]
-Mittwoch
-[ELSE]
-Wednesday
-[ENDIF]
-:
-[IF lang=fr]
-Jeudi
-[ELSIF lang=cz]
-Ètvrtek
-[ELSIF lang=hu]
-Csütörtök
-[ELSIF lang=et]
-Neljapäev
-[ELSIF lang=de]
-Donnerstag
-[ELSE]
-Thursday
-[ENDIF]
-:
-[IF lang=fr]
-Vendredi
-[ELSIF lang=cz]
-Pátek
-[ELSIF lang=hu]
-Péntek
-[ELSIF lang=et]
-Reede
-[ELSIF lang=de]
-Freitag
-[ELSE]
-Friday
-[ENDIF]
-:
-[IF lang=fr]
-Samedi
-[ELSIF lang=cz]
-Sobota
-[ELSIF lang=hu]
-Szombat
-[ELSIF lang=et]
-Laupäev
-[ELSIF lang=de]
-Samstag
-[ELSE]
-Saturday
-[ENDIF]
+<-%TAGS [% %]%->[%|l%]Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday[%END%][%TAGS <-% %-> %]
 </WEEKDAYS>
 
-[IF lang=cz]
+<-% IF lang == 'cz' %->
 <WEEKDAYSABR>
 Ne:Po:Út:St:Èt:Pá:So
 </WEEKDAYSABR>
-[ELSIF lang=hu]
+<-% ELSIF lang == 'hu' %->
 <WEEKDAYSABR>
 V:H:K:Sz:Cs:P:Szo
 </WEEKDAYSABR>
-[ELSIF lang=et]
+<-% ELSIF lang == 'et' %->
 <WEEKDAYSABR>
 P:M:T:K:N:R:L
 </WEEKDAYSABR>
-[ENDIF]
+<-% END %->
 
 <MONTHS>
-[IF lang=fr]
-Janvier:Fevrier:Mars:Avril:Mai:Juin:Juillet:Aout:Septembre:Octobre:Novembre:Decembre
-[ELSIF lang=cz]
-Leden:Únor:Bøezen:Duben:Kvìten:Èerven:Èervenec:Srpen:Záøí:Øíjen:Listopad:Prosinec
-[ELSIF lang=hu]
-Január:Február:Március:Április:Május:Június:Július:Augusztus:Szeptember:Október:November:December
-[ELSIF lang=et]
-Jaanuar:Veebruar:Märts:Aprill:Mai:Juuni:Juuli:August:September:Oktoober:November:Detsember
-[ELSIF lang=de]
-Januar:Februar:März:April:Mai:Juni:Juli:August:September:Oktober:November:Dezember
-[ELSE]
-January:February:March:April:May:June:July:August:September:October:November:December
-[ENDIF]
+<-%TAGS [% %]%->[%|l%]January:February:March:April:May:June:July:August:September:October:November:December[%END%][%TAGS <-% %-> %]
 </MONTHS>
 
-[IF lang=cz]
+<-% IF lang == 'cz' %->
 <MONTHSABR>
 Led:Úno:Bøe:Dub:Kvì:Èern:Èerv:Srp:Záø:Øíj:List:Pro
 </MONTHSABR>
-[ELSIF lang=hu]
+<-% ELSIF lang == 'hu' %->
 <MONTHSABR>
 Jan:Feb:Már:Ápr:Máj:Jún:Júl:Aug:Szep:Okt:Nov:Dec
 </MONTHSABR>
-[ELSIF lang=hu]
+<-% ELSIF lang == 'hu' %->
 <MONTHSABR>
 Jan:Veeb:Mär:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
 </MONTHSABR>
-[ENDIF]
+<-% END %->
 
-[IF lang=cz]
+<-% IF lang == 'cz' %->
 <UseLocalTime>
 
 <MSGLOCALDATEFMT>
@@ -762,7 +480,7 @@ Jan:Veeb:Mär:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
 <LOCALDATEFMT>
 %d. %B. %Y %H:%M
 </LOCALDATEFMT>
-[ELSIF lang=hu]
+<-% ELSIF lang == 'hu' %->
 <UseLocalTime>
  
 <MSGLOCALDATEFMT>
@@ -773,7 +491,7 @@ Jan:Veeb:Mär:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
 %Y. %B %d., %A %H:%M
 </LOCALDATEFMT>
 
-[ELSIF lang=et]
+<-% ELSIF lang == 'et' %->
 <UseLocalTime>
 
 <MSGLOCALDATEFMT>
@@ -784,18 +502,35 @@ Jan:Veeb:Mär:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
 %Y. %B %d., %A %H:%M
 </LOCALDATEFMT>
  
-[ELSE]
+<-% ELSE %->
 <MsgLocalDateFmt>
 %A %d %B %Y
 </MsgLocalDateFmt>
-[ENDIF]
+<-% END %->
 
 <HEADBODYSEP>
 <BR><BR>
-[STOPPARSE]
 </HEADBODYSEP>
 
 <MSGBODYEND>
 <BR>
-[STARTPARSE]
 </MSGBODYEND>
+
+<CHARSETALIASES>
+big5; big5
+big5; big5-eten
+</CHARSETALIASES>
+
+<TextEncode>
+utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
+</TextEncode>
+
+<-- With data translated to UTF-8, it simplifies CHARSETCONVERTERS -->
+<CharsetConverters override>
+default; mhonarc::htmlize
+</CharsetConverters>
+
+<-- Need to also register UTF-8-aware text clipping function -->
+<TextClipFunc>
+MHonArc::UTF8::clip; MHonArc/UTF8.pm
+</TextClipFunc>

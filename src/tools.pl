@@ -37,6 +37,8 @@ use Digest::MD5;
 ## global var to store a CipherSaber object 
 my $cipher;
 
+my $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
+
 ## Regexps for list params
 ## Caution : if this regexp changes (more/less parenthesis), then regexp using it should 
 ## also be changed
@@ -123,28 +125,14 @@ sub rejectMessage {
 
    *REJ = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
    print REJ "To: $sender\n";
-   print REJ "Subject: [sympa] " . Msg(5, 2, "Misadressed message ?") . "\n";
-   printf REJ "MIME-Version: %s\n", Msg(12, 1, '1.0');
-   printf REJ "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
-   printf REJ "Content-Transfer-Encoding: %s\n", Msg(12, 3, '7bit');
+   print REJ "Subject: [sympa] " . gettext("Routing error ?") . "\n";
+   printf REJ "MIME-Version: %s\n", gettext("1.0");
+   printf REJ "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
+   printf REJ "Content-Transfer-Encoding: %s\n", gettext("7bit");
    print REJ "\n";
-   printf REJ Msg(5, 3, "\
-Your message has been sent to a list but it seems it contains commands like
-subscribe, signoff, help, index, get, ...
-
-If your message did really contain a command, please note that such messages
-must be sent to %s only.
-
-If it happens that your message was by mistake considered as containing
-commands, then please contact the manager of this service %s
-so that he can take care of your problem.
-
-Thank you for your attention.
-
------- Beginning of the suspect message --------
-"), &Conf::get_robot_conf($robot, 'sympa'), &Conf::get_robot_conf($robot, 'request');
+   printf REJ gettext("The following message was sent to a list while it seems to contain\ncommands like subscribe, unsubscribe, help, index, get, ...\n\nIf your message effectively contained a command, please notice that \ncommands should never ever be sent to lists. Commands must be sent\nto %s exclusively.\n\nIf your message was effectively addressed to the list, it has been\ninterpreted by the software as a command. Please contact the manager\nof the service : %s so that they can take care of your message.\n\nThank you for your attention.\n\n------ Beginning of suspected message ------\n"), &Conf::get_robot_conf($robot, 'sympa'), &Conf::get_robot_conf($robot, 'request');
    $msg->print(\*REJ);
-   print REJ Msg(5, 4, "------- Fin message suspect ---------\n");
+   print REJ gettext("------ End of suspected message ------\n");
    close(REJ);
 }
 
@@ -1469,8 +1457,8 @@ sub get_filename {
 	
 	## template refers to a language
 	## => extend search to default tpls
-	if ($name =~ /^(\S+)\.(\S+)\.tpl$/) {
-	    $default_name = $1.'.tpl';
+	if ($name =~ /^(\S+)\.([^\s\/]+)\.tt2$/) {
+	    $default_name = $1.'.tt2';
 	    
 	    @try = ("$Conf{'etc'}/$robot".'/'.$name,
 		    "$Conf{'etc'}/$robot".'/'.$default_name,
@@ -1483,25 +1471,14 @@ sub get_filename {
 		    $Conf{'etc'}.'/'.$name,
 		    '--ETCBINDIR--'.'/'.$name);
 	}
-	if ($list) {
+	if ($list->{'name'}) {
 	    ## Default tpl
 	    if ($default_name) {
-		## No 'templates' subdir in list directory
-		if ($default_name =~ /^templates\/(.*)$/) {
-		    unshift @try, $list->{'dir'}.'/'.$1;
-		}else {
-		    unshift @try, $list->{'dir'}.'/'.$default_name;
-		}
+		unshift @try, $list->{'dir'}.'/'.$default_name;
 	    }
-
-	    ## Also look for templates in the list's directory
-	    if ($name =~ /^templates\/(.*)$/) {
-		unshift @try, $list->{'dir'}.'/'.$name;
-		unshift @try, $list->{'dir'}.'/'.$1;
-	    }else {
-		unshift @try, $list->{'dir'}.'/'.$name;
-	    }
-	}	
+	    
+	    unshift @try, $list->{'dir'}.'/'.$name;
+	}
 	foreach my $f (@try) {
 	    &do_log('debug3','get_filname : NAME: %s ; DIR %s', $name, $f  );
 	    if (-r $f) {
@@ -1599,6 +1576,49 @@ sub clean_email {
     ## remove leading and trailing spaces
     $email =~ s/^\s*//;
     $email =~ s/\s*$//;
+
+    return $email;
+}
+
+## Function for Removing a non-empty directory
+## It takes a variale number of arguments : 
+## it can be a list of directory
+## or few direcoty paths
+sub remove_dir {
+    
+    do_log('info','remove_dir()');
+    
+    foreach my $current_dir (@_){
+
+	finddepth(\&del,$current_dir);
+    }
+    sub del {
+	my $name = $File::Find::name;
+
+	if (!-l && -d _) {
+	    &do_log('info','removing dir %s',$name);
+	    unless (rmdir($name)) {
+		&do_log('info','Error while removing dir %s',$name);
+	    }
+	}else{
+	    unless (unlink($name)) {
+		&do_log('info','Error while removing file  %s',$name);
+	    }
+	}
+    }
+    return 1;
+}
+
+## Return canonical email address (lower-cased + space cleanup)
+## It could also support alternate email
+sub get_canonical_email {
+    my $email = shift;
+
+    ## Remove leading and trailing white spaces
+    $email =~ s/^\s*(\S.*\S)\s*$/$1/;
+
+    ## Lower-case
+    $email = lc($email);
 
     return $email;
 }

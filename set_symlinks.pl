@@ -42,14 +42,14 @@ my %wws_template_equiv = ('lists' => ['which', 'search_list','search_user'],
 			  );
 
 unless ($#ARGV >= 1) {
-    printf STDERR "Usage %s wws_templates|templates|scenari <install directory>\n", $0;
+    printf STDERR "Usage %s web_tt2|tt2|scenari <install directory>\n", $0;
     exit -1;
 }
 
 my ($action, $dir) = ($ARGV[0], $ARGV[1]);
 
-unless ($action =~ /^wws_templates|templates|scenari$/) {
-    printf STDERR "Usage %s wws_templates|templates|scenari <install directory>\n", $0;
+unless ($action =~ /^web_tt2|tt2|scenari$/) {
+    printf STDERR "Usage %s web_tt2|tt2|scenari <install directory>\n", $0;
     exit -1;
 }
  
@@ -83,33 +83,8 @@ if ($action eq 'scenari') {
 	}
 	
     }
-}elsif ($action eq 'wws_templates') {
+}elsif ($action eq 'web_tt2') {
     chdir $dir;
-    ## Set defaults
-    unless (opendir DIR, '.') {
-	printf STDERR "Failed to open directory %s: %s\n", $dir, $!;
-	next;
-    }
-
-    foreach my $tpl (grep /\.$default_lang\.tpl$/, readdir(DIR)) {
-	$tpl =~ /^(.+)\.$default_lang\.tpl$/;
-	my $link = $1.'.tpl';
-
-	if (-f $link) {
-	    unless (unlink $link) {
-		printf STDERR "Cannot delete file %s : %s\n", $link, $!;
-		next;
-	    }
-	}
-
-	printf "Setting symlink: %s => %s\n", $link, $tpl;
-	unless (symlink $tpl, $link) {
-	    printf STDERR "Failed to set symlink %s: %s\n", $link, $!;
-	    next;
-	}
-    }
-    closedir DIR;
-    
 
     ## Set equiv
     unless (opendir DIR, '.') {
@@ -117,7 +92,7 @@ if ($action eq 'scenari') {
 	next;
     }
 
-    foreach my $tpl (grep /\.tpl$/, readdir(DIR)) {
+    foreach my $tpl (grep /\.tt2$/, readdir(DIR)) {
 	$tpl =~ /^(\w+)\.(.+)$/;
 	my ($action, $suffix) = ($1, $2);
 
@@ -145,32 +120,8 @@ if ($action eq 'scenari') {
     }
     closedir DIR;
 
-}elsif ($action eq 'templates') {
+}elsif ($action eq 'tt2') {
     chdir $dir;
-    ## Set defaults
-    unless (opendir DIR, '.') {
-	printf STDERR "Failed to open directory %s: %s\n", $dir, $!;
-	next;
-    }
-
-    foreach my $tpl (grep /\.$default_lang\.tpl$/, readdir(DIR)) {
-	$tpl =~ /^(.+)\.$default_lang\.tpl$/;
-	my $link = $1.'.tpl';
-
-	if (-f $link) {
-	    unless (unlink $link) {
-		printf STDERR "Cannot delete file %s : %s\n", $link, $!;
-		next;
-	    }
-	}
-
-	printf "Setting symlink: %s => %s\n", $link, $tpl;
-	unless (symlink $tpl, $link) {
-	    printf STDERR "Failed to set symlink %s: %s\n", $link, $!;
-	    next;
-	}
-    }
-    closedir DIR;
 }
 
 exit 0;

@@ -128,7 +128,7 @@ sub parse {
 sub finished {
     do_log('debug2', 'Commands::finished');
 
-    push @msg::report, sprintf Msg(4, 18, "Found `quit' command, exiting.\n");
+    push @msg::report, sprintf gettext("Command 'quit' found : ignoring end of message.\n");
 
     return 1;
 }
@@ -145,7 +145,8 @@ sub help {
     do_log('debug', 'Commands::help to robot %s',$robot);
 
     # sa ne prends pas en compte la structure des répertoires par lang.
-    if ((-r "$Conf{'etc'}/templates/helpfile.tpl")||("$Conf{'etc'}/$robot/templates/helpfile.tpl")) {
+    # we should make this utilize Template's chain of responsibility
+    if ((-r "$Conf{'etc'}/tt2/helpfile.tt2")||("$Conf{'etc'}/$robot/tt2/helpfile.tt2")) {
 
 	my $data = {};
 
@@ -154,7 +155,9 @@ sub help {
 	
 	$data->{'is_owner'} = 1 if ($#owner > -1);
 	$data->{'is_editor'} = 1 if ($#editor > -1);
-	$data->{'subject'} = MIME::Words::encode_mimewords(sprintf Msg(6, 81, "User guide"));
+	$data->{'user'} =  &List::get_user_db($sender);
+	&Language::SetLang($data->{'user'}{'lang'}) if $data->{'user'}{'lang'};
+	$data->{'subject'} = MIME::Words::encode_mimewords(sprintf gettext("User guide"));
 
 	&List::send_global_file("helpfile", $sender, $robot, $data);
     
@@ -177,10 +180,10 @@ sub help {
 		close IN;
 	    }
 	}
-	push @msg::report, sprintf Msg(6, 70, "\nPowered by Sympa %s : http://www.sympa.org/\n")
+	push @msg::report, sprintf gettext("\nPowered by Sympa %s : http://www.sympa.org/\n")
 	    , $Version ;
 
-    }elsif (-r "--ETCBINDIR--/templates/helpfile.tpl") {
+    }elsif (-r "--ETCBINDIR--/tt2/helpfile.tt2") {
 
 	my $data = {};
 
@@ -190,12 +193,12 @@ sub help {
 	$data->{'is_owner'} = 1 if ($#owner > -1);
 	$data->{'is_editor'} = 1 if ($#editor > -1);
 
-	$data->{'subject'} = sprintf Msg(6, 81, "User guide");
+	$data->{'subject'} = sprintf gettext("User guide");
 
 	&List::send_global_file("helpfile", $sender, $robot, $data);
 
     }else{
-	push @msg::report, sprintf Msg(6, 2, "Could not read help file: %s\n"), $!;
+	push @msg::report, sprintf gettext("Unable to read help file : %s\n"), $!;
 	do_log('info', 'HELP from %s refused, file not found'
 	       , $sender,);
 	return undef;
@@ -239,7 +242,7 @@ sub lists {
 
     my $data = {};
     $data->{'lists'} = $lists;
-    $data->{'subject'} = MIME::Words::encode_mimewords(sprintf Msg(6, 82, "Public lists"));
+    $data->{'subject'} = MIME::Words::encode_mimewords(sprintf gettext("Public lists"));
     
     &List::send_global_file('lists', $sender, $robot, $data);
 
@@ -257,7 +260,7 @@ sub stats {
 
     my $list = new List ($listname, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $listname;
 	do_log('info', 'STATS %s from %s refused, unknown list for robot %s', $listname, $sender,$robot);
 	return 'unknown_list';
     }
@@ -283,7 +286,7 @@ sub stats {
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
-	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'STATS',$listname;
+	    push @msg::report, sprintf gettext("You are not allowed to perform command %s in list %s\n"),'STATS',$listname;
 	}
 	do_log('info', 'stats %s from %s refused (not allowed)', $listname,$sender);
 	return 'not_allowed';
@@ -313,7 +316,7 @@ sub getfile {
 
     my $list = new List ($which, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $which;
 	do_log('info', 'GET %s %s from %s refused, list unknown for robot %s', $which, $file, $sender, $robot);
 	return 'unknownlist';
     }
@@ -321,23 +324,23 @@ sub getfile {
     &Language::SetLang($list->{'admin'}{'lang'});
 
     unless ($list->is_archived()) {
-	push @msg::report, sprintf Msg(6, 7, "No files are available for this list.\n");
+	push @msg::report, sprintf gettext("This list's archives do not contain any file.\n");
 	do_log('info', 'GET %s %s from %s refused, archive not found', $which, $file, $sender);
 	return 'no_archive';
     }
     ## Check file syntax
     if ($file =~ /(\.\.|\/)/) {
-	push @msg::report, sprintf Msg(6, 8, "The requested file has not been found.\n");
+	push @msg::report, sprintf gettext("Required file does not exist.\n");
 	do_log('info', 'GET %s %s from %s, incorrect filename', $which, $file, $sender);
 	return 'no_archive';
     }
     unless ($list->archive_exist($file)) {
-	push @msg::report, sprintf Msg(6, 8, "The requested file has not been found.\n");
+	push @msg::report, sprintf gettext("Required file does not exist.\n");
  	do_log('info', 'GET %s %s from %s refused, archive not found', $which, $file, $sender);
 	return 'no_archive';
     }
     unless ($list->may_do('get', $sender)) {
-	push @msg::report, sprintf Msg(6, 9, "This list is private, you may not get files from the archive.\n");
+	push @msg::report, sprintf gettext("List is Private : You can not read the archives.\n");
 	do_log('info', 'GET %s %s from %s refused, review not allowed', $which, $file, $sender);
 	return 'not_allowed';
     }
@@ -358,7 +361,7 @@ sub last {
 
     my $list = new List ($which,$robot);
     unless ($list)  {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $which;
 	do_log('info', 'LAST %s from %s refused, list unknown for robot %s', $which, $sender, $robot);
 	return 'unknownlist';
     }
@@ -366,18 +369,18 @@ sub last {
     &Language::SetLang($list->{'admin'}{'lang'});
 
     unless ($list->is_archived()) {
-	push @msg::report, sprintf Msg(6, 7, "No files are available for this list.\n");
+	push @msg::report, sprintf gettext("This list's archives do not contain any file.\n");
 	do_log('info', 'LAST %s from %s refused, list not archived', $which,  $sender);
 	return 'no_archive';
     }
 
     unless ($list->archive_exist('last_message')) {
-	push @msg::report, sprintf Msg(6, 8, "The requested file has not been found.\n");
+	push @msg::report, sprintf gettext("Required file does not exist.\n");
  	do_log('info', 'LAST %s from %s refused, archive not found', $which,  $sender);
 	return 'no_archive';
     }
     unless ($list->may_do('get', $sender)) {
-	push @msg::report, sprintf Msg(6, 9, "This list is private, you may not get files from the archive.\n");
+	push @msg::report, sprintf gettext("List is Private : You can not read the archives.\n");
 	do_log('info', 'LAST %s from %s refused, archive access not allowed', $which, $sender);
 	return 'not_allowed';
     }
@@ -404,7 +407,7 @@ sub index {
 
     my $list = new List ($which, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $which;
 	do_log('info', 'INDEX %s from %s refused, list unknown for robot %s', $which, $sender,$robot);
 	return 'unknown_list';
     }
@@ -415,12 +418,12 @@ sub index {
     ## Check all this depending on the values of the Review field in
     ## the control file.
     unless ($list->may_do('index', $sender)) {
-	push @msg::report, sprintf Msg(6, 10, "This list is private, you may not retrieve the list of available files.\n");
+	push @msg::report, sprintf gettext("List is Private : You can not browse available files.\n");
 	do_log('info', 'INDEX %s from %s refused, not allowed', $which, $sender);
 	return 'not_allowed';
     }
     unless ($list->is_archived()) {
-	push @msg::report, sprintf Msg(6, 7, "No files are available for this list.\n");
+	push @msg::report, sprintf gettext("This list's archives do not contain any file.\n");
 	do_log('info', 'INDEX %s from %s refused, list not archived', $which, $sender);
 	return 'no_archive';
     }
@@ -445,7 +448,7 @@ sub review {
     my $list = new List ($listname, $robot);
 
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $listname;
 	do_log('info', 'REVIEW %s from %s refused, list unknown to robot %s', $listname,$sender,$robot);
 	return 'unknown_list';
     }
@@ -460,7 +463,7 @@ sub review {
 	    $auth_method='md5';
 	}else{
             do_log ('debug2', 'auth should be %s',$list->compute_auth ('','review'));
-	    push @msg::report, sprintf Msg(6, 15, $msg::wrong_authenticator);
+	    push @msg::report, sprintf gettext("The authentication process failed\n\n");
 	    do_log('info', 'REVIEW %s from %s refused, auth failed', $listname,$sender);
 	    return 'wrong_auth';
 	}
@@ -487,7 +490,7 @@ sub review {
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
-	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'review',$listname;
+	    push @msg::report, sprintf gettext("You are not allowed to perform command %s in list %s\n"),'review',$listname;
 	}
 	do_log('info', 'review %s from %s refused (not allowed)', $listname,$sender);
 	return 'not_allowed';
@@ -498,7 +501,7 @@ sub review {
     if ($action =~ /do_it/i) {
 	my $is_owner = $list->am_i('owner', $sender);
 	unless ($user = $list->get_first_user({'sortby' => 'email'})) {
-	    push @msg::report, sprintf Msg(6, 3, "List %s has no subscriber.\n"), $list->{'name'};
+	    push @msg::report, sprintf gettext("List '%s' has no subscriber.\n"), $list->{'name'};
 	    do_log('err', "No subscribers in list '%s'", $list->{'name'});
 	    return 'no_subscribers';
 	}
@@ -540,10 +543,10 @@ sub verify {
     if ($sign_mod eq 'smime') {
 	$auth_method='smime';
 	do_log('info', 'VERIFY successfull from %s', $sender,time-$time_command);
-	push @msg::report, sprintf Msg(6, 262, "Your message signature as been succesfully verified using smime.\n");
+	push @msg::report, sprintf gettext("Your message signature was succesfuly verified using S/MIME");
     }else{
 	do_log('info', 'VERIFY from %s : could not find correct s/mime signature', $sender,time-$time_command);
-	push @msg::report, sprintf Msg(6, 263, "Could not find signature or could not verify it using smime.\n");
+	push @msg::report, sprintf gettext("Your message was not a multipart/signed message or Sympa could not\nverify the signature (be aware that Sympa can't check signature if you use the subject header to write a command).");
 	
     }
     return 1;
@@ -567,7 +570,7 @@ sub subscribe {
     ## subscription if this list is unknown to us.
     my $list = new List ($which, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $which;
 	do_log('info', 'SUB %s from %s refused, unknown list for robot %s', $which,$sender,$robot);
 	return 'unknown_list';
     }
@@ -587,8 +590,9 @@ sub subscribe {
 	if ($auth eq $list->compute_auth ($sender,'subscribe')) {
 	    $auth_method='md5';
 	}else{
-	    push @msg::report, sprintf Msg(6, 15, $msg::wrong_authenticator);
-	    push @msg::report, sprintf Msg(6, 16, $msg::non_canonical);
+	    push @msg::report, sprintf gettext("The authentication process failed\n\n");
+	    push @msg::report, sprintf gettext("You probably confirmed your subscription using a different
+email address. Please try subscribing using your canonical address.");
 	    do_log('info', 'SUB %s from %s refused, auth failed'
 		   , $which,$sender);
 	    return 'wrong_auth';
@@ -612,13 +616,15 @@ sub subscribe {
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
-	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'subscribe',$which;
+	    push @msg::report, sprintf gettext("You are not allowed to perform command %s in list %s\n"),'subscribe',$which;
 	}
 	do_log('info', 'SUB %s from %s refused (not allowed)', $which, $sender);
 	return 'not_allowed';
     }
     if ($action =~ /owner/i) {
-	push @msg::report, sprintf Msg(6, 25, $msg::subscription_forwarded);
+	push @msg::report, sprintf gettext("Your request of subscription/unssubscribtion has been forwarded to the list's
+owners for approval. You will receive a notification when you will have
+been subscribed (or unsubscribed) to the list.\n");
 	## Send a notice to the owners.
 	$list->send_notify_to_owner({'who' => $sender,
 				     'keyauth' => $list->compute_auth($sender,'add'),
@@ -676,8 +682,8 @@ sub subscribe {
 	## Now send the welcome file to the user
 	unless ($quiet || ($action =~ /quiet/i )) {
 	    my %context;
-	    $context{'subject'} = sprintf(Msg(8, 6, "Welcome to list %s"), $list->{'name'});
-	    $context{'body'} = sprintf(Msg(8, 6, "You are now subscriber of list %s"), $list->{'name'});
+	    $context{'subject'} = sprintf(gettext("Welcome on list %s"), $list->{'name'});
+	    $context{'body'} = sprintf(gettext("Welcome on list %s"), $list->{'name'});
 	    $list->send_file('welcome', $sender, $robot, \%context);
 	}
 
@@ -709,7 +715,7 @@ sub info {
 
     my $list = new List ($listname, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $listname;
 	do_log('info', 'INFO %s from %s refused, unknown list for robot %s', $listname,$sender,$robot);
 	return 'unknown_list';
     }
@@ -724,7 +730,7 @@ sub info {
 	    $auth_method='md5';
 	}else{
             do_log ('debug2', 'auth should be %s',$list->compute_auth ('','info'));
-	    push @msg::report, sprintf Msg(6, 15, $msg::wrong_authenticator);
+	    push @msg::report, sprintf gettext("The authentication process failed\n\n");
 	    do_log('info', 'INFO %s from %s refused, auth failed', $listname,$sender);
 	    return 'wrong_auth';
 	}
@@ -746,7 +752,7 @@ sub info {
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
-	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'review',$listname;
+	    push @msg::report, sprintf gettext("You are not allowed to perform command %s in list %s\n"),'review',$listname;
 	}
 	do_log('info', 'review %s from %s refused (not allowed)', $listname,$sender);
 	return 'not_allowed';
@@ -804,7 +810,7 @@ sub signoff {
 
     ## $email is defined if command is "unsubscribe <listname> <e-mail>"    
     unless ($which =~ /^(\*|[\w\.\-]+)(\@$host)?(\s+(.+))?$/) {
-	push @msg::report, sprintf Msg(6, 13, "Command syntax error\n");
+	push @msg::report, sprintf gettext("Command syntax error.\n");
 	do_log ('notice', "Command syntax error\n");
         return 'syntax_error';
     }
@@ -823,7 +829,7 @@ sub signoff {
     
     ## Is this list defined
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $which;
 	do_log('info', 'SIG %s %s from %s, unknown list for robot %s', $which,$email,$sender,$robot);
 	return 'unknown_list';
     }
@@ -836,8 +842,9 @@ sub signoff {
 	if ($auth eq $list->compute_auth ($email,'signoff')) {
 	    $auth_method='md5';
 	}else{
-	    push @msg::report, sprintf Msg(6, 15, $msg::wrong_authenticator);
-	    push @msg::report, sprintf Msg(6, 16, $msg::non_canonical);
+	    push @msg::report, sprintf gettext("The authentication process failed\n\n");
+	    push @msg::report, sprintf gettext("You probably confirmed your subscription using a different
+email address. Please try subscribing using your canonical address.");
 	    do_log('info', 'SIG %s from %s refused, auth failed'
 		   , $which,$sender);
 	    return 'wrong_auth';
@@ -859,7 +866,7 @@ sub signoff {
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
-	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s %s in list %s.\n"),'sig',$which,$email;
+	    push @msg::report, sprintf gettext("You are not allowed to perform command %s in list %s\n"),'sig',$which,$email;
 	}
 	do_log('info', 'DEL %s %s from %s refused (not allowed)', $which, $email, $sender);
 	return 'not_allowed';
@@ -873,7 +880,9 @@ sub signoff {
     }
 
     if ($action =~ /owner/i) {
-	push @msg::report, sprintf Msg(6, 25, $msg::subscription_forwarded)
+	push @msg::report, sprintf gettext("Your request of subscription/unssubscribtion has been forwarded to the list's
+owners for approval. You will receive a notification when you will have
+been subscribed (or unsubscribed) to the list.\n")
 	    unless ($action =~ /quiet/i);
 	## Send a notice to the owners.
 	$list->send_notify_to_owner({'who' => $sender,
@@ -888,7 +897,7 @@ sub signoff {
 	## command.
 	my $user_entry = $list->get_subscriber($email);
 	unless ((defined $user_entry) && ($user_entry->{'subscribed'} == 1)) {
-	    push @msg::report, sprintf Msg(6, 30, "Email address %s has not been found on the list %s. You did perhaps\nsubscribe using a different address ?\n"), $email, $list->{'name'};
+	    push @msg::report, sprintf gettext("Your e-mail address has not been found in the list %s. Maybe\nyou subscribed from a different e-mail address ?\n"), $email, $list->{'name'};
 	    do_log('info', 'SIG %s from %s refused, not on list', $which, $email);
 	    
 	    ## Tell the owner somebody tried to unsubscribe
@@ -925,8 +934,8 @@ sub signoff {
 	unless ($quiet || ($action =~ /quiet/i)) {
 	    ## Send bye file to subscriber
 	    my %context;
-	    $context{'subject'} = sprintf(Msg(6 , 71, 'Signoff from list %s'), $list->{'name'});
-	    $context{'body'} = sprintf(Msg(6 , 31, "You have been removed from list %s.\n Thanks for being with us.\n"), $list->{'name'});
+	    $context{'subject'} = sprintf(gettext("Unsubscribe from list %s"), $list->{'name'});
+	    $context{'body'} = sprintf(gettext("You have been removed from list %s.\nThank you for using this list.\n"), $list->{'name'});
 	    $list->send_file('bye', $email, $robot, \%context);
 	}
 
@@ -956,7 +965,7 @@ sub add {
     ## subscription if this list is unknown to us.
     my $list = new List ($which, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $which;
 	do_log('info', 'ADD %s %s from %s refused, unknown list for robot %s', $which, $email,$sender,$robot);
 	return 'unknown_list';
     }
@@ -969,8 +978,9 @@ sub add {
 	if ($auth eq $list->compute_auth ($email, 'add')) {
 	    $auth_method='md5';
 	}else{
-	    push @msg::report, sprintf Msg(6, 15, $msg::wrong_authenticator);
-	    push @msg::report, sprintf Msg(6, 16, $msg::non_canonical);
+	    push @msg::report, sprintf gettext("The authentication process failed\n\n");
+	    push @msg::report, sprintf gettext("You probably confirmed your subscription using a different
+email address. Please try subscribing using your canonical address.");
 	    do_log('info', 'ADD %s %s from %s refused, auth failed', $which,$email,$sender);
 	    return 'wrong_auth';
 	}
@@ -991,7 +1001,7 @@ sub add {
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
-	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'add',$which;
+	    push @msg::report, sprintf gettext("You are not allowed to perform command %s in list %s\n"),'add',$which;
 	}
 	do_log('info', 'ADD %s %s from %s refused (not allowed)', $which, $email, $sender);
 	return 'not_allowed';
@@ -1013,7 +1023,7 @@ sub add {
 
 	    return undef 
 		unless $list->update_user($email, $user);
-	    push @msg::report, sprintf Msg(6, 36, "User %s record has been updated for list %s.\n"),$email,$which;
+	    push @msg::report, sprintf gettext("Information regarding user %s have been updated for list %s.\n"),$email,$which;
 	}else {
 	    my $u;
 	    my $defaults = $list->get_default_user_options();
@@ -1024,7 +1034,7 @@ sub add {
 	    
 	    return undef unless $list->add_user($u);
 	    $list->delete_subscription_request($email);
-	    push @msg::report, sprintf Msg(6, 37, "User %s has been added to the list %s.\n"), $email, $which;
+	    push @msg::report, sprintf gettext("User %s is now subscriber of list %s.\n"), $email, $which;
 	}
     
 	if ($List::use_db) {
@@ -1040,8 +1050,8 @@ sub add {
 	## Now send the welcome file to the user if it exists.
 	unless ($quiet || ($action =~ /quiet/i )) {
 	    my %context;
-	    $context{'subject'} = sprintf(Msg(8, 6, "Welcome to list %s"), $list->{'name'});
-	    $context{'body'} = sprintf(Msg(8, 6, "You are now subscriber of list %s"), $list->{'name'});
+	    $context{'subject'} = sprintf(gettext("Welcome on list %s"), $list->{'name'});
+	    $context{'body'} = sprintf(gettext("Welcome on list %s"), $list->{'name'});
 	    $list->send_file('welcome', $email, $robot, \%context);
 	}
 
@@ -1075,7 +1085,7 @@ sub invite {
     ## subscription if this list is unknown to us.
     my $list = new List ($which, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $which;
 	do_log('info', 'INVITE %s %s from %s refused, unknown list for robot', $which, $email,$sender,$robot);
 	return 'unknown_list';
     }
@@ -1088,8 +1098,9 @@ sub invite {
 	if ($auth eq $list->compute_auth ($email, 'invite')) {
 	    $auth_method='md5';
 	}else{
-	    push @msg::report, sprintf Msg(6, 15, $msg::wrong_authenticator);
-	    push @msg::report, sprintf Msg(6, 16, $msg::non_canonical);
+	    push @msg::report, sprintf gettext("The authentication process failed\n\n");
+	    push @msg::report, sprintf gettext("You probably confirmed your subscription using a different
+email address. Please try subscribing using your canonical address.");
 	    do_log('info', 'ADD %s %s from %s refused, auth failed', $which,$email,$sender);
 	    return 'wrong_auth';
 	}
@@ -1109,7 +1120,7 @@ sub invite {
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
-	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'invite',$which;
+	    push @msg::report, sprintf gettext("You are not allowed to perform command %s in list %s\n"),'invite',$which;
 	}
 	do_log('info', 'INVITE %s %s from %s refused (not allowed)', $which, $email, $sender);
 	return 'not_allowed';
@@ -1122,13 +1133,11 @@ sub invite {
     }
     if ($action =~ /do_it/i) {
 	if ($list->is_user($email)) {
-	    push @msg::report, sprintf Msg(6, 84, "User %s is already subscriber of list %s.\n"),$email,$which;
+	    push @msg::report, sprintf gettext("The User '%s' is already subscriber of list '%s'\n"),$email,$which;
 	}else{
             ## Is the guest user allowed to subscribe in this list ?
 
 	    my %context;
-	    $context{'subject'} = sprintf(Msg(8, 29, "Invitation to join list %s"), $list->{'name'});
-	    $context{'body'} = sprintf(Msg(8, 30, "You are invited to join list %s"), $list->{'name'});
 	    $context{'user'}{'email'} = $email;
 	    $context{'user'}{'gecos'} = $comment;
 	    $context{'requested_by'} = $sender;
@@ -1148,7 +1157,7 @@ sub invite {
 		$context{'url'} =~ s/\s/%20/g;
 		$list->send_file('invite', $email, $robot, \%context);            
 		do_log('info', 'INVITE %s %s from %s accepted, auth requested (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
-		push @msg::report, sprintf Msg(6, 85, "User %s has been invited to subscribe in list %s.\n"),$email,$which;
+		push @msg::report, sprintf gettext("User %s has been invited to subscribe in list %s.\n"),$email,$which;
 
 	    }elsif ($action !~ /reject/i) {
                 $context{'subject'} = "sub $which $comment";
@@ -1156,7 +1165,7 @@ sub invite {
 		$context{'url'} =~ s/\s/%20/g;
 		$list->send_file('invite', $email, $robot,\%context) ;      
 		do_log('info', 'INVITE %s %s from %s accepted,  (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
-		push @msg::report, sprintf Msg(6, 85, "User %s has been invited to subscribe in list %s.\n"),$email,$which;
+		push @msg::report, sprintf gettext("User %s has been invited to subscribe in list %s.\n"),$email,$which;
 
 	    }elsif ($action =~ /reject\(\'?(\w+)\'?\)/i) {
 		$tpl = 41;
@@ -1164,7 +1173,7 @@ sub invite {
 		if ($tpl) {
 		    $list->send_file($tpl, $sender, $robot, {});
 		}else {
-		    push @msg::report, sprintf Msg(6, 86, "User %s is unwanteed in list %s.\n"),$email,$which;
+		    push @msg::report, sprintf gettext("User %s is unwanted in list %s.\n"),$email,$which;
 		}
 	    }
 
@@ -1189,7 +1198,7 @@ sub remind {
     my %context;
     
     unless ($which =~ /^(\*|[\w\.\-]+)(\@$host)?\s*$/) {
-	push @msg::report, sprintf Msg(6, 13, "Command syntax error\n");
+	push @msg::report, sprintf gettext("Command syntax error.\n");
 	do_log ('notice', "Command syntax error\n");
         return 'syntax_error';
     }
@@ -1200,7 +1209,7 @@ sub remind {
     unless ($listname eq '*') {
 	$list = new List ($listname, $robot);
 	unless ($list) {
-	    push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
+	    push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $listname;
 	    do_log('info', 'REMIND %s from %s refused, unknown list for robot %s', $which, $sender,$robot);
 	    return 'unknown_list';
 	}
@@ -1222,7 +1231,7 @@ sub remind {
 	    $auth_method = 'md5';
 	}else{
             do_log ('debug2', 'auth should be %s', $should_be);
-	    push @msg::report, sprintf Msg(6, 15, $msg::wrong_authenticator);
+	    push @msg::report, sprintf gettext("The authentication process failed\n\n");
 	    do_log('info', 'REMIND %s from %s refused, auth failed', $listname,$sender);
 	    return 'wrong_auth';
 	}
@@ -1256,7 +1265,7 @@ sub remind {
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
-	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform command %s in list %s\n"),'remind',$listname;
+	    push @msg::report, sprintf gettext("You are not allowed to perform command %s in list %s\n"),'remind',$listname;
 	}
 	return 'not_allowed';
     }elsif ($action =~ /request_auth/i) {
@@ -1273,7 +1282,7 @@ sub remind {
 	if ($listname ne '*') {
 
 	    unless ($list) {
-		push @msg::report, sprintf Msg(6, 5, "List '%s' not found.\n"), $which;
+		push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $which;
 		do_log('info', 'REMIND %s from %s refused, unknown list for robot %s', $listname,$sender,$robot);
 		return 'unknown_list';
 	    }
@@ -1288,14 +1297,14 @@ sub remind {
 	    
 	    do {
 		my %context;
-		$context{'subject'} = sprintf(Msg(6, 76, "Subscription reminder of list %s"), $list->{'name'});
-		$context{'body'} = sprintf(Msg(6, 77, "You are subscriber of the list %s with email %s.\n"), $list->{'name'}, $user->{'email'});
+		$context{'subject'} = sprintf(gettext("Reminder of your %s subscription"), $list->{'name'});
+		$context{'body'} = sprintf(gettext("You are member of list %s with email %s\n"), $list->{'name'}, $user->{'email'});
 
 		$list->send_file('remind', $user->{'email'},$robot, \%context);
 		$total += 1 ;
 	    } while ($user = $list->get_next_user());
 	    
-	    push @msg::report, sprintf(Msg(6, 78,  "Subscription reminder sent to each of %d %s subscribers\n"),$total,$listname);
+	    push @msg::report, sprintf(gettext("Subscription reminder sent to each of %d %s subscribers\n"),$total,$listname);
 	    do_log('info', 'REMIND %s  from %s accepted, sent to %d subscribers (%d seconds)',$listname,$sender,$total,time-$time_command);
 	    
 
@@ -1306,7 +1315,7 @@ sub remind {
 	    my %global_info;
 	    my $count = 0 ;
 
-	    $context{'subject'} = Msg(6, 83, "summary of your subscription");
+	    $context{'subject'} = gettext("Subscription summary");
 	    # this remind is a global remind.
 	    foreach my $listname (List::get_lists($robot)){
 
@@ -1377,7 +1386,7 @@ sub del {
     ## subscription if this list is unknown to us.
     my $list = new List ($which, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $which;
 	do_log('info', 'DEL %s %s from %s refused, unknown list for robot %s', $which, $who,$sender,$robot);
 	return 'unknown_list';
     }
@@ -1390,8 +1399,9 @@ sub del {
 	if ($auth eq $list->compute_auth ($who,'del')) {
 	    $auth_method='md5';
 	}else{
-	    push @msg::report, sprintf Msg(6, 15, $msg::wrong_authenticator);
-	    push @msg::report, sprintf Msg(6, 16, $msg::non_canonical);
+	    push @msg::report, sprintf gettext("The authentication process failed\n\n");
+	    push @msg::report, sprintf gettext("You probably confirmed your subscription using a different
+email address. Please try subscribing using your canonical address.");
 	    do_log('info', 'DEL %s %s from %s refused, auth failed'
 		   , $which,$who,$sender);
 	    return 'wrong_auth';
@@ -1416,7 +1426,7 @@ sub del {
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
-	    push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'del',$which;
+	    push @msg::report, sprintf gettext("You are not allowed to perform command %s in list %s\n"),'del',$which;
 	}
 	do_log('info', 'DEL %s %s from %s refused (not allowed)', $which, $who, $sender);
 	return 'not_allowed';
@@ -1435,7 +1445,7 @@ sub del {
 	my $user_entry = $list->get_subscriber($who);
 
 	unless ((defined $user_entry) && ($user_entry->{'subscribed'} == 1)) {
-	    push @msg::report, sprintf Msg(6, 33, "Email address %s has not been found on the list.\n"), $who;
+	    push @msg::report, sprintf gettext("E-mail address %s was not found in the list.\n"), $who;
 	    do_log('info', 'DEL %s %s from %s refused, not on list', $which, $who, $sender);
 	    return 'not_allowed';
 	}
@@ -1462,13 +1472,13 @@ sub del {
 	## quiet del.
 	unless ($quiet || ($action =~ /quiet/i )) {
 	    my %context;
-	    $context{'subject'} = sprintf(Msg(6, 18, "You have been removed from list %s\n"), $list->{'name'});
-	    $context{'body'} = sprintf(Msg(6, 31, "You have been removed from list %s.\nThanks for being with us.\n"), $list->{'name'});
+	    $context{'subject'} = sprintf(gettext("Your subscription to list %s has been removed."), $list->{'name'});
+	    $context{'body'} = sprintf(gettext("You have been removed from list %s.\nThank you for using this list.\n"), $list->{'name'});
 	    
 	    $list->send_file('removed', $who, $robot, \%context);
 	    
 	}
-	push @msg::report, sprintf Msg(6, 38, $msg::user_removed_from_list), $who, $which;
+	push @msg::report, sprintf gettext("The user %s has been removed from the list %s/\n"), $who, $which;
 	do_log('info', 'DEL %s %s from %s accepted (%d seconds, %d subscribers)', $which, $who, $sender, time-$time_command, $list->get_total() );
 	if ($action =~ /notify/i) {
 	    $list->send_notify_to_owner({'who' => $who, 
@@ -1520,14 +1530,14 @@ sub set {
     my $list = new List ($which, $robot);
 
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $which;
 	do_log('info', 'SET %s %s from %s refused, unknown list for robot %s', $which, $mode, $sender,$robot);
 	return 'unknown_list';
     }
 
     ## No subscriber pref if 'include'
     if ($list->{'admin'}{'user_data_source'} eq 'include') {
-		push @msg::report, sprintf Msg(6, 91, '%s mailing list does not provide subscriber preferences.\n'), $list->{'name'};
+		push @msg::report, sprintf gettext("%s mailing list does not provide subscriber preferences.\n"), $list->{'name'};
 	do_log('info', 'SET %s %s from %s refused, user_data_source include',  $which, $mode, $sender);
 	return 'not allowed';
     }
@@ -1537,14 +1547,14 @@ sub set {
     ## Check if we know this email on the list and remove it. Otherwise
     ## just reject the message.
     unless ($list->is_user($sender) ) {
-	push @msg::report, sprintf Msg(6, 33, "Email address %s was not found on the list.\n"), $sender;
+	push @msg::report, sprintf gettext("E-mail address %s was not found in the list.\n"), $sender;
 	do_log('info', 'SET %s %s from %s refused, not on list',  $which, $mode, $sender);
 	return 'not allowed';
     }
     
     ## May set to DIGEST
     if ($mode =~ /^(digest|digestplain|summary)/ and !$list->is_digest()){
-	push @msg::report, sprintf Msg(6, 45, "List %s has no digest mode. Your configuration hasn't been modified.\n"), $which;
+	push @msg::report, sprintf gettext("List %s does not accept the DIGEST mode. Your configuration regarding this command has not been updated.\n"), $which;
 	do_log('info', 'SET %s DIGEST from %s refused, no digest mode', $which, $sender);
 	return 'not_allowed';
     }
@@ -1552,7 +1562,7 @@ sub set {
     if ($mode =~ /^(mail|nomail|digest|digestplain|summary|notice|txt|html|urlize|not_me)/){
         # Verify that the mode is allowed
         if (! $list->is_available_reception_mode($mode)) {
-	  push @msg::report, sprintf Msg(6, 90, "List %s allows only these reception modes : %s\nYour configuration hasn't been modified.\n"), $which, $list->available_reception_mode;
+	  push @msg::report, sprintf gettext("List %s allows only these reception modes : %s\n"), $which, $list->available_reception_mode;
 	  do_log('info','SET %s %s from %s refused, mode not available', $which, $mode, $sender);
 	  return 'not_allowed';
 	}
@@ -1560,26 +1570,26 @@ sub set {
 	my $update_mode = $mode;
 	$update_mode = '' if ($update_mode eq 'mail');
 	unless ($list->update_user($sender,{'reception'=> $update_mode, 'update_date' => time})) {
-	    push @msg::report, sprintf Msg(6, 92, 'Failed to change your subscriber options for list %s.\n'), $list->{'name'};
+	    push @msg::report, sprintf gettext("Failed to change your subscriber options for list %s.\n"), $list->{'name'};
 	    do_log('info', 'SET %s %s from %s refused, update failed',  $which, $mode, $sender);
 	    return 'failed';
 	}
 	$list->save();
 	
-	push @msg::report, sprintf Msg(6,40, "Your config file has been updated for list %s.\n"), $which   unless ($quiet || ($action =~ /quiet/i ));
+	push @msg::report, sprintf gettext("Your configuration regarding list %s has been updated.\n"), $which   unless ($quiet || ($action =~ /quiet/i ));
 
 	do_log('info', 'SET %s %s from %s accepted (%d seconds)', $which, $mode, $sender, time-$time_command);
     }
     
     if ($mode =~ /^(conceal|noconceal)/){
 	unless ($list->update_user($sender,{'visibility'=> $mode, 'update_date' => time})) {
-	    push @msg::report, sprintf Msg(6, 92, 'Failed to change your subscriber options for list %s.\n'), $list->{'name'};
+	    push @msg::report, sprintf gettext("Failed to change your subscriber options for list %s.\n"), $list->{'name'};
 	    do_log('info', 'SET %s %s from %s refused, update failed',  $which, $mode, $sender);
 	    return 'failed';
 	}
 	$list->save();
 	
-	push @msg::report, sprintf Msg(6,40, "Your config file have been updated on list %s.\n"), $which unless ($quiet || ($action =~ /quiet/i ));
+	push @msg::report, sprintf gettext("Your configuration regarding list %s has been updated.\n"), $which unless ($quiet || ($action =~ /quiet/i ));
 	do_log('info', 'SET %s %s from %s accepted (%d seconds)', $which, $mode, $sender, time-$time_command);
     }
 
@@ -1603,7 +1613,7 @@ sub distribute {
     ## subscription if this list is unknown to us.
     my $list = new List ($which, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $which;
 	do_log('info', 'DISTRIBUTE %s %s from %s refused, unknown list for robot %s', $which, $key, $sender,$robot);
 	return 'unknown_list';
     }
@@ -1653,7 +1663,7 @@ sub distribute {
     do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions), size=%d',
 	   $which, $sender, time - $start_time, $numsmtp, $bytes);
 
-    push @msg::report, sprintf Msg(6, 44, "Message %s for list %s has been distributed"), $key, $name   unless ($quiet || ($action =~ /quiet/i ));
+    push @msg::report, sprintf gettext("Message %s for list %s has been distributed.\n"), $key, $name   unless ($quiet || ($action =~ /quiet/i ));
     do_log('info', 'DISTRIBUTE %s %s from %s accepted (%d seconds)', $name, $key, $sender, time-$time_command);
     unlink($file);
     
@@ -1687,7 +1697,7 @@ sub confirm {
     closedir DIR ;
     
     unless ($file) {
-        push @msg::report, sprintf Msg(6, 68, "Unable to find the message auth locked by the key %s."),$key;
+        push @msg::report, sprintf gettext("Unable to access to the message authenticated with key %s.\n"),$key;
         do_log('info', 'CONFIRM %s from %s refused, auth failed', $key,$sender);
         return 'wrong_auth';
     }
@@ -1695,7 +1705,8 @@ sub confirm {
     my $message = new Message ($file);
     unless (defined $message) {
 	do_log('err', 'Unable to create Message object %s', $file);
-	return undef;
+	push @msg::report, sprintf gettext("Unable to access the moderated message on list %s with key %s.\nThis message may already have been sent by one of the list's moderators\n"),$name,$key ;
+	return 'msg_not_found';
     }
 
     my $msg = $message->{'msg'};
@@ -1733,13 +1744,13 @@ sub confirm {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
 	    *SIZ  = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
-	    print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), &Conf::get_robot_conf($robot, 'request')) . "\n";
+	    print SIZ "From: " . sprintf (gettext("SYMPA <%s>"), &Conf::get_robot_conf($robot, 'request')) . "\n";
 	    printf SIZ "To: %s\n", $sender;
-	    printf SIZ "Subject: " . Msg(4, 11, "Your message for list %s has been rejected") . "\n", $name;
-	    printf SIZ "MIME-Version: %s\n", Msg(12, 1, '1.0');
-	    printf SIZ "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
-	    printf SIZ "Content-Transfer-Encoding: %s\n\n", Msg(12, 3, '7bit');
-	    printf SIZ Msg(4, 15, $msg::list_is_private), $name;
+	    printf SIZ "Subject: " . gettext("Your message to %s has been rejected") . "\n", $name;
+	    printf SIZ "MIME-Version: %s\n", gettext("1.0");
+	    printf SIZ "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
+	    printf SIZ "Content-Transfer-Encoding: %s\n\n", gettext("7bit");
+	    printf SIZ gettext("Your message for list %s has been rejected.\nThe message is thus sent back to you.\n\nYour message :\n"), $name;
 	    $msg->print(\*SIZ);
 	    close(SIZ);
 	    return 1;
@@ -1754,7 +1765,7 @@ sub confirm {
 	    return undef;
 	}
 
-	push @msg::report, sprintf Msg(6, 44, "Message %s for list %s has been distributed."), $key, $name   unless ($quiet || ($action =~ /quiet/i ));
+	push @msg::report, sprintf gettext("Message %s for list %s has been distributed.\n"), $key, $name   unless ($quiet || ($action =~ /quiet/i ));
 	do_log('info', 'CONFIRM %s from %s for list %s accepted (%d seconds)', $key, $sender, $which, time-$time_command);
 	unlink($file);
 	
@@ -1777,7 +1788,7 @@ sub reject {
     ## subscription if this list is unknown to us.
     my $list = new List ($which, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $which;
 	do_log('info', 'REJECT %s %s from %s refused, unknown list for robot %s', $which, $key, $sender,$robot);
 	return 'unknown_list';
     }
@@ -1807,13 +1818,13 @@ sub reject {
     
     ## Open the file
     if (!open(IN, $file)) {
-	push @msg::report, sprintf Msg(6, 41, "Unable to find the message of the list %s locked by the key %s.\nWarning : this message could have ever been send by another editor"),$name,$key ;
+	push @msg::report, sprintf gettext("Unable to access the moderated message on list %s with key %s.\nThis message may already have been sent by one of the list's moderators\n"),$name,$key ;
 	do_log('info', 'REJECT %s %s from %s refused, auth failed', $which, $key, $sender);
 	return 'wrong_auth';
     }
     do_log('debug2', 'message to be rejected by %s',$sender);
     unless ($quiet || ($action =~ /quiet/i )) {
-	push @msg::report, sprintf Msg(6, 43, "Message %s for list %s has been rejected"),$key, $name  ;
+	push @msg::report, sprintf gettext("Message %s for list %s has been rejected.\n"),$key, $name  ;
 
 	my $message;
 	my $parser = new MIME::Parser;
@@ -1855,7 +1866,7 @@ sub expire {
 	($name, $d1, $d2) = ($1, $2, $3);
 	$name =~ y/A-Z/a-z/;
     }else {
-	push @msg::report, sprintf Msg(6, 13, "Syntax error.\n");
+	push @msg::report, sprintf gettext("Command syntax error.\n");
 	do_log('info', 'EXPIRE %s from %s refused, syntax error', $name, $sender);
 	return 'syntax_error';
     }
@@ -1866,7 +1877,7 @@ sub expire {
     ## subscription if this list is unknown to us.
     my $list = new List ($name, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $name;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $name;
 	do_log('info', 'EXPIRE %s %d %d from %s refused, unknown list for robot %s', $name, $d1 , $d2, $sender,$robot);
 	return 'unknown_list';
     }
@@ -1879,7 +1890,7 @@ sub expire {
 
     ## Check if the requestor is an authorized owner for this list.
     unless ($list->may_do('expire', $sender)) {
-        push @msg::report, sprintf Msg(6, 47, $msg::not_owner_expire), $name;
+        push @msg::report, sprintf gettext("The EXPIRE, EXPIREINDEX and EXPIREDEL commands are restricted to the owners of the list.\nYou are not one of the owners for list %s.\n"), $name;
         do_log('info', 'EXPIRE %s %d %d from %s refused, not allowed', $name,
 	      $d1,$d2,$sender);
         return 'not_allowed';
@@ -1894,9 +1905,9 @@ sub expire {
 	    $nbwords+=$#words+1 if ($#words>=0); 
         }   
 	unless ($nbwords>=$nb_words_max){
-	    push @msg::report, sprintf Msg(6, 60,$msg::expire_end ), $nb_words_max;
+	    push @msg::report, sprintf gettext("\nThe EXPIRE command couldn't be run. It must followed by an explication\ntext aimed to subscribers who need to confirm their subscription.\nThis text must\n\n - start on the very first line following the EXPIRE command,\n - contain at least 20 words,\n - and end with the QUIT word.\n"), $nb_words_max;
 	    push @msg::report, "\n\n";
-	    push @msg::report, sprintf Msg(6, 61,"Your rejected message is :\n");
+	    push @msg::report, sprintf gettext("Thus, your message is sent back to you :\n");
 	    foreach(@msgexp){
 		push @msg::report, $_;
 	    }
@@ -1937,9 +1948,10 @@ sub expire {
 	    close(IN);
 	    my @timefile= localtime( (stat "$file")[9]);
 	    
-	    push @msg::report, sprintf Msg(6, 49, $msg::expire_running), $name, $proprio, POSIX::strftime("%a %b %e %H:%M:%S %Y",@timefile), $d1, $d2, POSIX::strftime("%a %b %e %H:%M:%S %Y", localtime($confirmday));
-	    push @msg::report, sprintf Msg(6, 57, $msg::expireindex_info), $name;       
-	    push @msg::report, sprintf Msg(6, 53, $msg::expiredel_info), $name;
+	    push @msg::report, sprintf gettext("\nAn EXPIRE command is currently running for list %s.\nIt had been run by owner %s (%s)\nThere cannot be more than one 'expire' process at a time for a given list.\nThe currently running expiration is for people subscribing for more\nthan %d days and who didn't confirm their subscription. The expiration\nwill end in %d day(s) (%s).\n"), $name, $proprio, POSIX::strftime("%a %b %e %H:%M:%S %Y",@timefile), $d1, $d2, POSIX::strftime("%a %b %e %H:%M:%S %Y", localtime($confirmday));
+	    push @msg::report, sprintf gettext("To read the list of subscribers who haven't confirm their
+subscription : EXPIREINDEX %s\n"), $name;       
+	    push @msg::report, sprintf gettext("To stop the expiration process : EXPIREDEL %s\n"), $name;
 	    do_log('info', 'EXPIRE %s %d %d from %s refused, another expire is running', $name,
 		   $limitday,$confirmday,$sender);
 	    return 'not_allowed';
@@ -1950,7 +1962,7 @@ sub expire {
             ## Read the temporary config file .<nomliste>_<mk5key>
 	    ## Auth failed
 	    if (! open(IN, "$queueexpire\/\.$name\_$auth")) {
-		push @msg::report, sprintf Msg(6, 15, $msg::wrong_authenticator);
+		push @msg::report, sprintf gettext("The authentication process failed\n\n");
 		do_log('info', 'EXPIRE %s %d %d from %s refused, auth failed', $name,
 		       $limitday,$confirmday,$sender);
 		return 'wrong_auth';
@@ -1977,8 +1989,8 @@ sub expire {
 	    close(IN);
 	    unlink "$queueexpire\/\.$name\_$auth";
 
-	    push @msg::report, sprintf Msg(6, 56, $msg::expire_comment), $name, $d2;	   	    	    
-	    push @msg::report, sprintf Msg(6, 69, "%s posted your expiration message to the following addresses :\n"), &Conf::get_robot_conf($robot, 'sympa');
+	    push @msg::report, sprintf gettext("\nAn expiration process for list %s has been started. This process\nwill end in %d days. You will then receive the list of subscribers \nwho didn't confirm their subscription in time.\nYou will then be able to remove these addresses yourself with the DEL command.\n"), $name, $d2;	   	    	    
+	    push @msg::report, sprintf gettext("%s posted your expiration message to the following addresses :\n"), &Conf::get_robot_conf($robot, 'sympa');
 
 	    ## Send the confirmation request to concerned subscribers
 	    my $user;
@@ -1990,14 +2002,14 @@ sub expire {
 		if ($user->{'update_date'} < $limitday){
 		    push @msg::report, " $user->{'email'}\n";
 		    &mail::mailback(\@msgexp, 
-				    {'Subject' => sprintf(Msg(6, 21, "Renewal of your subscription to %s"), $name)},
+				    {'Subject' => sprintf(gettext("Renewal of your subscription to list '%s'"), $name)},
 				    'sympa', $user->{'email'}, $user->{'email'}, $robot);
 		}
 	    } while ($user = $list->get_next_user());
 
 	    push @msg::report, "\n";
-	    push @msg::report, sprintf Msg(6, 57, $msg::expireindex_info), $name;       
-	    push @msg::report, sprintf Msg(6, 53, $msg::expiredel_info), $name;
+	    push @msg::report, sprintf gettext("An expiration process for list %s has been started. This process\nwill end in %d days. You will then receive the list of subscribers \nwho didn't confirm their subscription in time.\nYou will then be able to remove these addresses yourself with the DEL command.\n"), $name;       
+	    push @msg::report, sprintf gettext("To stop the expiration process : EXPIREDEL %s\n"), $name;
 
 
 	    ## Save the expire config in the expirequeue
@@ -2014,7 +2026,7 @@ sub expire {
     }else { 
         ## Ask the requestor for an authentication
 	$key=substr(Digest::MD5::md5_hex(join('/', $list->get_cookie(), $name, $sender, $d1, $d2, 'expire', time)), -8);
-	push @msg::report, sprintf Msg(6, 48, $msg::expire_need_auth), $name, $d1, &Conf::get_robot_conf($robot, 'sympa'),$key,$name, $d1, $d2;
+	push @msg::report, sprintf gettext("Someone (hopefully you) resquested that the subscribers to the list\n'%s' for more than %d days have to confirm their subscription.\nIf you do not want this action to be taken, simply ignore this message.\nTo confirm this action, please send an e-mail to '%s', with the following command:\n\nAUTH %s EXPIRE %s %d %d\n"), $name, $d1, &Conf::get_robot_conf($robot, 'sympa'),$key,$name, $d1, $d2;
 
 	$limitday= time - 86400* $d1;
 	$confirmday= time + 86400* $d2;
@@ -2076,7 +2088,7 @@ sub expireindex {
     ## subscription if this list is unknown to us.
     my $list = new List ($name, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $name;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $name;
 	do_log('info', 'EXPIREINDEX %s from %s refused, unknown list for list %s', $name, $sender,$robot);
 	return 'unknown_list';
     } 
@@ -2091,7 +2103,7 @@ sub expireindex {
 
     ## Check if the requestor is an authorized owner for this list.
     unless ($list->may_do('expire', $sender)) {
-	push @msg::report, sprintf Msg(6, 47, $msg::not_owner_expire), $name;
+	push @msg::report, sprintf gettext("The EXPIRE, EXPIREINDEX and EXPIREDEL commands are restricted to the owners of the list.\nYou are not one of the owners for list %s.\n"), $name;
 	do_log('info', 'EXPIREINDEX %s from %s refused, not allowed', $name,$sender);
 	return 'not_allowed';
     }
@@ -2119,9 +2131,9 @@ sub expireindex {
 	close(IN);
 	my @timefile= localtime( (stat "$file")[9]);
 
-	 push @msg::report, sprintf Msg(6, 49, $msg::expire_running), $name, $proprio, POSIX::strftime("%a %b %e %H:%M:%S %Y",@timefile), $d1, $d2, POSIX::strftime("%a %b %e %H:%M:%S %Y", localtime($confirmday));
+	 push @msg::report, sprintf gettext("\nAn EXPIRE command is currently running for list %s.\nIt had been run by owner %s (%s)\nThere cannot be more than one 'expire' process at a time for a given list.\nThe currently running expiration is for people subscribing for more\nthan %d days and who didn't confirm their subscription. The expiration\nwill end in %d day(s) (%s).\n"), $name, $proprio, POSIX::strftime("%a %b %e %H:%M:%S %Y",@timefile), $d1, $d2, POSIX::strftime("%a %b %e %H:%M:%S %Y", localtime($confirmday));
 
-	push @msg::report, sprintf Msg(6, 52, "%s did not receive confirmation for the following addresses :\n"), &Conf::get_robot_conf($robot, 'sympa');
+	push @msg::report, sprintf gettext("%s did not receive confirmation for the following addresses :\n"), &Conf::get_robot_conf($robot, 'sympa');
 	push @msg::report, "\n";
 	my $temp = 0;
 	my $user;
@@ -2138,7 +2150,7 @@ sub expireindex {
 	    }
 	} while ($user = $list->get_next_user());
 	push @msg::report, "\n\n";
-	push @msg::report, sprintf Msg(6, 58, "If you want to delete these subscribers, please use the following commands :\n");
+	push @msg::report, sprintf gettext("You can remove these subscriber from the list by using the following commands :\n");
 	push @msg::report, "\n";
 
 	unless ($user = $list->get_first_user()) {
@@ -2155,7 +2167,7 @@ sub expireindex {
 	       $sender,time-$time_command);
 	return 1;
     }else{
-	push @msg::report, sprintf Msg(6, 54, "There is no expire for the list %s \n"),$name;
+	push @msg::report, sprintf gettext("List %s is not currently running an expiration process.\n"),$name;
 	do_log('info', 'EXPIREINDEX %s from %s refused, no current expire', $name, $sender);
 	return 'not_allowed';
    }
@@ -2174,7 +2186,7 @@ sub expiredel {
     ## subscription if this list is unknown to us.
     my $list = new List ($name, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $name;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $name;
  	do_log('info', 'EXPIREDEL %s from %s refused, unknown list for robot', $name, $sender, $robot);
  	return 'unknown_list';
     }
@@ -2187,19 +2199,19 @@ sub expiredel {
     my ($limitday,$confirmday,$proprio);
    ## Check if the requestor is an authorized owner for this list.
    unless ($list->may_do('expire', $sender)) {
-       push @msg::report, sprintf Msg(6, 47, $msg::not_owner_expire), $name;
+       push @msg::report, sprintf gettext("The EXPIRE, EXPIREINDEX and EXPIREDEL commands are restricted to the owners of the list.\nYou are not one of the owners for list %s.\n"), $name;
        do_log('info', 'EXPIREDEL %s from %s refused, not allowed', $name,$sender);
        return 'not_allowed';
    }
    ## Open and read the file
    if (-e $file) {
        unlink($file);
-       push @msg::report, sprintf Msg(6, 55, "You have canceled the current expire process on list \"%s\"\n"),$name;  
+       push @msg::report, sprintf gettext("You just stopped the expiration process for list %s\n"),$name;  
        do_log('info', 'EXPIREDEL %s from %s accepted (%d seconds)', $name,
 	  $sender,time-$time_command);
       return 1;
    }else{
-       push @msg::report, sprintf Msg(6, 54, "There is no expire for the list %s \n"),$name;
+       push @msg::report, sprintf gettext("List %s is not currently running an expiration process.\n"),$name;
        do_log('info', 'EXPIREDEL %s from %s refused, no current expire', $name, $sender);
    }
 
@@ -2218,7 +2230,7 @@ sub modindex {
 
     my $list = new List ($name, $robot);
     unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $name;
+	push @msg::report, sprintf gettext("List '%s' does not exist.\n"), $name;
 	do_log('info', 'MODINDEX %s from %s refused, unknown list for robot %s', $name, $sender, $robot);
 	return 'unknown_list';
     }
@@ -2230,7 +2242,7 @@ sub modindex {
     my $i;
     
     unless ($list->may_do('modindex', $sender)) {
-	push @msg::report, sprintf Msg(6, 46, "Only editors can use the command modindex. You are not  an editor of the list %s.\n"),$name ;
+	push @msg::report, sprintf gettext("The MODINDEX command is restricted to moderators.\n"),$name ;
 	do_log('info', 'MODINDEX %s from %s refused, not allowed', $name,$sender);
 	return 'not_allowed';
     }
@@ -2319,7 +2331,7 @@ sub which {
     do_log('debug', 'Commands::which(%s)', $listname);
     
     ## Subscriptions
-    push @msg::report, sprintf  Msg(6, 67, "List of your current subscriptions : \n\n");    
+    push @msg::report, sprintf  gettext("Here are the lists you are currently subscribe to :\n\n");    
     foreach $listname (List::get_which ($sender,$robot,'member')){
 	next unless (&List::request_action ('visibility', 'smtp',$robot,
 					    {'listname' =>  $listname,
@@ -2329,7 +2341,7 @@ sub which {
 
     ## Ownership
     if (@which = List::get_which ($sender,$robot,'owner')){
-	push @msg::report, sprintf  Msg(6, 72, " Here are the lists where you are owner: \n\n");
+	push @msg::report, sprintf  gettext("\n\nLists you are owner of:\n\n");
 	foreach $listname (@which){
 	    push @msg::report, sprintf "\t%s\n",$listname;
 	}
@@ -2337,7 +2349,7 @@ sub which {
 
     ## Editorship
     if (@which = List::get_which ($sender,$robot,'editor')){
-	push @msg::report, sprintf  Msg(6, 73, " Here are the lists where you are editor: \n\n");
+	push @msg::report, sprintf  gettext("\n\nLists you are editor of :\n\n");
 	foreach $listname (@which){
 	    push @msg::report, sprintf "\t%s\n",$listname;
 	}

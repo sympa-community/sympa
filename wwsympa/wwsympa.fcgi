@@ -35,7 +35,7 @@ use Getopt::Long;
 use strict vars;
 
 ## Template parser
-require "--LIBDIR--/parser.pl";
+require "--LIBDIR--/tt2native.pl";
 
 ## Sympa API
 use List;
@@ -50,7 +50,6 @@ use Auth;
 use Mail::Header;
 use Mail::Address;
 
-require "--LIBDIR--/msg.pl";
 require "--LIBDIR--/tools.pl";
 
 ## WWSympa librairies
@@ -374,10 +373,6 @@ $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 &Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'wwsympa');
 &do_log('info', 'WWSympa started');
 
-## Set locale configuration
-$Language::default_lang = $Conf{'lang'};
-&Language::LoadLang($Conf{'msgcat'});
-
 unless ($List::use_db = &List::probe_db()) {
     &error_message('no_database');
     &do_log('info','WWSympa requires a RDBMS to run');
@@ -390,6 +385,11 @@ my $pinfo = &List::_apply_defaults();
 my $zip_is_installed ;
 if (eval "require Archive::Zip") {
     require Archive::Zip;
+    $zip_is_installed = 1;
+}
+
+my $zip_is_installed ;
+if (require Archive::Zip) {
     $zip_is_installed = 1;
 }
 
@@ -691,7 +691,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 
          $param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || 
 	     $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
-         &Language::SetLang($param->{'lang'});
+         $param->{'locale'} = &Language::SetLang($param->{'lang'});
 
          ## use default_home parameter
          if ($action eq 'home') {
@@ -802,10 +802,14 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      ## Available languages
      my $saved_lang = &Language::GetLang();
-     foreach my $l (@wwslib::languages) {
-	 &Language::SetLang($l);
-	 $param->{'languages'}{$l}{'complete'} = sprintf Msg(14, 2, $l);
-	 if ($param->{'lang'} eq $l) {
+     foreach my $l (&Language::GetSupportedLanguages()) {
+	 &Language::SetLang($l) || next;
+	 $param->{'languages'}{$l}{'complete'} = gettext("english");
+	 if (($param->{'languages'}{$l}{'complete'} eq 'english')) {
+	     $param->{'languages'}{$l}{'complete'} = $l;
+	 }
+
+	 if ($param->{'locale'} eq $l) {
 	     $param->{'languages'}{$l}{'selected'} = 'SELECTED';
 	 }else {
 	     $param->{'languages'}{$l}{'selected'} = '';
@@ -855,7 +859,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	 ## Action template
 	 if (defined $param->{'action'}) {
-	     $param->{'action_template'} = &tools::get_filename('etc', "wws_templates/$param->{'action'}.$param->{'lang'}.tpl", $robot,$list);
+	     $param->{'action_template'} = &tools::get_filename('etc', "web_tt2/$param->{'action'}.$param->{'lang'}.tt2", $robot,$list);
 	     unless ($param->{'action_template'})  {
 		 &error_message('template_error');
 		 &do_log('info',"unable to find template for $param->{'action'}");
@@ -863,14 +867,14 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 ## Menu template
-	 $param->{'menu_template'} = &tools::get_filename('etc', "wws_templates/menu.$param->{'lang'}.tpl", $robot,$list);
+	 $param->{'menu_template'} = &tools::get_filename('etc', "web_tt2/menu.$param->{'lang'}.tt2", $robot,$list);
 	 unless ($param->{'menu_template'})  {
 	     &error_message('template_error');
 	     &do_log('info','unable to find menu template');
 	 }
 
 	 ## List_menu template
-	 $param->{'list_menu_template'} = &tools::get_filename('etc', "wws_templates/list_menu.$param->{'lang'}.tpl", $robot,$list);
+	 $param->{'list_menu_template'} = &tools::get_filename('etc', "web_tt2/list_menu.$param->{'lang'}.tt2", $robot,$list);
 
 	 unless ($param->{'list_menu_template'})  {
 	     &error_message('template_error');
@@ -878,7 +882,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 ## admin_menu template
-	 $param->{'admin_menu_template'} = &tools::get_filename('etc', "wws_templates/admin_menu.$param->{'lang'}.tpl", $robot,$list);
+	 $param->{'admin_menu_template'} = &tools::get_filename('etc', "web_tt2/admin_menu.$param->{'lang'}.tt2", $robot,$list);
 
 	 unless ($param->{'admin_menu_template'})  {
 	     &error_message('template_error');
@@ -886,7 +890,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 ## Title template
-	 $param->{'title_template'} = &tools::get_filename('etc', "wws_templates/title.$param->{'lang'}.tpl", $robot,$list);
+	 $param->{'title_template'} = &tools::get_filename('etc', "web_tt2/title.$param->{'lang'}.tt2", $robot,$list);
 
 	 unless ($param->{'title_template'})  {
 	     &error_message('template_error');
@@ -894,7 +898,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 ## Error template
-	 $param->{'error_template'} = &tools::get_filename('etc', "wws_templates/error.$param->{'lang'}.tpl", $robot,$list);
+	  $param->{'error_template'} = &tools::get_filename('etc', "web_tt2/error.$param->{'lang'}.tt2", $robot,$list);
 
 	 unless ($param->{'error_template'})  {
 	     &error_message('template_error');
@@ -902,7 +906,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 }
 
 	 ## Notice template
-	 $param->{'notice_template'} = &tools::get_filename('etc', "wws_templates/notice.$param->{'lang'}.tpl", $robot,$list);
+	 $param->{'notice_template'} = &tools::get_filename('etc', "web_tt2/notice.$param->{'lang'}.tt2", $robot,$list);
 
 	 unless ($param->{'notice_template'})  {
 	     &error_message('template_error');
@@ -913,7 +917,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 $param->{'help_template'} = &tools::get_filename('etc', "wws_templates/help_$param->{'help_topic'}.$param->{'lang'}.tpl", $robot,$list);
 
 	 ## main template
-	 my $main = &tools::get_filename('etc', "wws_templates/main.$param->{'lang'}.tpl", $robot,$list);
+	 my $main = &tools::get_filename('etc', "web_tt2/main.$param->{'lang'}.tt2", $robot,$list);
 
 	 unless ($main)  {
 	     &error_message('template_error');
@@ -924,6 +928,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     $param->{'list_conf'} = $list->{'admin'};
 	 }
 
+	 #&parser::parse_tpl($param,'main.tt2' , \*STDOUT);
 	 &parser::parse_tpl($param,$main , \*STDOUT);
      }    
 
@@ -2481,7 +2486,7 @@ sub do_redirect {
 	 my $entry = {'value' => $p};
 
 	 ## Set description from NLS
-	 $entry->{'desc'} = sprintf Msg(17, $wwslib::cookie_period{$p}, $p);
+	 $entry->{'desc'} = sprintf gettext($wwslib::cookie_period{$p}{'gettext_id'});
 
 	 ## Choose nearest delay
 	 if ((! $selected) && $param->{'user'}{'cookie_delay'} >= $p) {
@@ -2599,6 +2604,13 @@ sub do_redirect {
 	 }
 
 	 $update->{'email'} = $in{'new_email'};
+     }
+
+     ## Get additional DB fields
+     foreach my $v (keys %in) {
+	 if ($v =~ /^additional_field_(\w+)$/) {
+	     $update->{$1} = $in{$v};
+	 }
      }
 
      ## Get additional DB fields
@@ -2798,8 +2810,8 @@ sub do_redirect {
 
 	 unless ($sub_is =~ /quiet/i ) {
 	     my %context;
-	     $context{'subject'} = sprintf(Msg(8, 6, "Welcome to list %s"), $list->{'name'});
-	     $context{'body'} = sprintf(Msg(8, 6, "You are now subscriber of list %s"), $list->{'name'});
+	     $context{'subject'} = sprintf(gettext("Welcome on list %s"), $list->{'name'});
+	     $context{'body'} = sprintf(gettext("Welcome on list %s"), $list->{'name'});
 	     $list->send_file('welcome', $param->{'user'}{'email'}, $robot, \%context);
 	 }
 
@@ -3027,8 +3039,8 @@ sub do_redirect {
 	 }
 
 	 my %context;
-	 $context{'subject'} = sprintf(Msg(6 , 71, 'Signoff from list %s'), $list->{'name'});
-	 $context{'body'} = sprintf(Msg(6 , 31, "You have been removed from list %s.\n Thanks for being with us.\n"), $list->{'name'});
+	 $context{'subject'} = sprintf(gettext("Unsubscribe from list %s"), $list->{'name'});
+	 $context{'body'} = sprintf(gettext("You have been removed from list %s.\n"), $list->{'name'});
 	 ## perform which to update your_subscribtions cookie ;
 	 @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
 
@@ -3176,7 +3188,7 @@ sub do_redirect {
      ## Messages edition
      foreach my $f ('info','homepage','welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl') {
 	 next unless ($list->may_edit($f, $param->{'user'}{'email'}) eq 'write');
-	 $param->{'files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
+	 $param->{'files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
 	 $param->{'files'}{$f}{'selected'} = '';
      }
      $param->{'files'}{'info'}{'selected'} = 'SELECTED';
@@ -3210,7 +3222,7 @@ sub do_redirect {
 
      ## Lists Default files
      foreach my $f ('welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl','your_infected_msg.tpl') {
-	 $param->{'lists_default_files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
+	 $param->{'lists_default_files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
 	 $param->{'lists_default_files'}{$f}{'selected'} = '';
      }
 
@@ -3222,7 +3234,7 @@ sub do_redirect {
 
      ## Server files
      foreach my $f ('helpfile.tpl','lists.tpl','global_remind.tpl','summary.tpl','create_list_request.tpl','list_created.tpl','list_aliases.tpl') {
-	 $param->{'server_files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
+	 $param->{'server_files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
 	 $param->{'server_files'}{$f}{'selected'} = '';
      }
      $param->{'server_files'}{'helpfile.tpl'}{'selected'} = 'SELECTED';
@@ -3382,8 +3394,8 @@ sub do_redirect {
 
 	 unless ($in{'quiet'} || ($add_is =~ /quiet/i )) {
 	     my %context;
-	     $context{'subject'} = sprintf(Msg(8, 6, "Welcome to list %s"), $list->{'name'});
-	     $context{'body'} = sprintf(Msg(8, 6, "You are now subscriber of list %s"), $list->{'name'});
+	     $context{'subject'} = sprintf(gettext("Welcome on list %s"), $list->{'name'});
+	     $context{'body'} = sprintf(gettext("Welcome on list %s"), $list->{'name'});
 	     $list->send_file('welcome', $email, $robot, \%context);
 	 }
      }
@@ -3487,8 +3499,8 @@ sub do_redirect {
 
 	 unless ($in{'quiet'}) {
 	     my %context;
-	     $context{'subject'} = sprintf(Msg(6, 18, "You have been removed from list %s\n"), $list->{'name'});
-	     $context{'body'} = sprintf(Msg(6, 31, "You have been removed from list %s.\nThanks for being with us.\n"), $list->{'name'});
+	     $context{'subject'} = sprintf(gettext("Your subscription to list %s has been removed."), $list->{'name'});
+	     $context{'body'} = sprintf(gettext("You have been removed from list %s.\n"), $list->{'name'});
 
 	     $list->send_file('removed', $email, $robot, \%context);
 	 }
@@ -4015,7 +4027,7 @@ sub do_redirect {
 	 ## Messages edition
 	 foreach my $f ('info','homepage','welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl','your_infected_msg.tpl') {
 	     next unless ($list->may_edit($f, $param->{'user'}{'email'}) eq 'write');
-	     $param->{'files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
+	     $param->{'files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
 	     $param->{'files'}{$f}{'selected'} = '';
 	 }
 	 return 1;
@@ -5172,7 +5184,7 @@ sub do_set_pending_list_request {
 	 return undef;
      }
 
-     my $template_file = &tools::get_filename('etc', 'create_list_templates/'.$in{'template'}.'/config.tpl', $robot);
+     my $template_file = &tools::get_filename('etc', 'create_list_templates/'.$in{'template'}.'/config.tt2', $robot);
      unless ($template_file) {
 	 &error_message('unable_to_open_template');
 	 &do_log('info', 'no template %s in %s NOR %s',$in{'template'},"$Conf{'etc'}/$robot/create_list_templates/$in{'template'}","$Conf{'etc'}/create_list_templates/$in{'template'}","--ETCBINDIR--/create_list_templates/$in{'template'}");
@@ -5621,6 +5633,7 @@ sub do_set_pending_list_request {
 
 	 unless ( $list->is_user($email) ) {
 	     &error_message('not_subscriber', {'email' => $email});
+	     ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'not subscriber');
 	     &wwslog('info','do_del: %s not subscribed', $email);
 	     return undef;
 	 }
@@ -6264,7 +6277,7 @@ sub do_edit_list {
 	     my $saved_lang = &Language::GetLang();
 	     foreach my $lang (keys %{$p->{'value'}}) {
 		 &Language::SetLang($lang);
-		 $p->{'value'}{$lang}{'title'} = Msg(14, 2, $lang);
+		 $p->{'value'}{$lang}{'title'} = gettext("english");
 	     }
 	     &Language::SetLang($saved_lang);
 	 }
@@ -6282,7 +6295,7 @@ sub do_edit_list {
 
      ## Prepare data structure for the parser
      my $p_glob = {'name' => $name,
-		   'title' => Msg(16, $struct->{'title_id'}, $name),
+		   'title' => Msg(16, gettext($struct->{'gettext_id'}),
 		   'comment' => $struct->{'comment'}{$param->{'lang'}}
 	       };
 
@@ -6319,7 +6332,7 @@ sub do_edit_list {
 	     $list_of_scenario->{$d->{'name'}}{'selected'} = 1;
 
 	     foreach my $key (keys %{$list_of_scenario}) {
-		 $list_of_scenario->{$key}{'title'} = $list_of_scenario->{$key}{'title'}{$param->{'lang'}} || $key;
+		 $list_of_scenario->{$key}{'title'} = gettext($list_of_scenario->{$key}{'title'}) || $key;
 	     }
 
 	     $p->{'value'} = $list_of_scenario;

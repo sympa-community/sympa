@@ -1,3 +1,115 @@
+2004-05-05 18:00  salaun
+
+	* src/etc/script/Makefile: Update for TT2
+
+2004-05-05 17:05  salaun
+
+	* check_perl_modules.pl: Update for TT2
+
+2004-05-05 16:58  salaun
+
+	* Makefile.am: Update with TT2 changes
+
+2004-05-05 16:47  salaun
+
+	* src/tt2.pl, src/tt2native.pl, src/etc/list_aliases.tt2,
+	src/etc/create_list_templates/discussion_list/config.tt2,
+	src/etc/create_list_templates/hotline/config.tt2,
+	src/etc/create_list_templates/html-news-letter/config.tt2,
+	src/etc/create_list_templates/intranet_list/config.tt2,
+	src/etc/create_list_templates/news-letter/config.tt2,
+	src/etc/create_list_templates/private_working_group/config.tt2,
+	src/etc/create_list_templates/public_web_forum/config.tt2,
+	src/etc/script/tpl2tt2.pl, src/etc/script/xgettext.pl,
+	src/etc/tt2/bye.tt2, src/etc/tt2/certif_warning.tt2,
+	src/etc/tt2/digest.tt2, src/etc/tt2/expire_deletion.tt2,
+	src/etc/tt2/expire_warning1.tt2, src/etc/tt2/expire_warning2.tt2,
+	src/etc/tt2/global_remind.tt2, src/etc/tt2/helpfile.tt2,
+	src/etc/tt2/info_report.tt2, src/etc/tt2/invite.tt2,
+	src/etc/tt2/list_created.tt2, src/etc/tt2/list_rejected.tt2,
+	src/etc/tt2/list_unknown.tt2,
+	src/etc/tt2/listmaster_notification.tt2,
+	src/etc/tt2/listowner_notification.tt2, src/etc/tt2/lists.tt2,
+	src/etc/tt2/moderate.tt2, src/etc/tt2/modindex.tt2,
+	src/etc/tt2/reject.tt2, src/etc/tt2/remind.tt2,
+	src/etc/tt2/removed.tt2, src/etc/tt2/review.tt2,
+	src/etc/tt2/sendpasswd.tt2, src/etc/tt2/stats_report.tt2,
+	src/etc/tt2/summary.tt2, src/etc/tt2/welcome.tt2,
+	src/etc/tt2/x509-user-cert-missing.tt2,
+	src/etc/tt2/your_infected_msg.tt2, wwsympa/tt2/add_request.tt2,
+	wwsympa/tt2/admin.tt2, wwsympa/tt2/admin_menu.tt2,
+	wwsympa/tt2/arc.tt2, wwsympa/tt2/arc_manage.tt2,
+	wwsympa/tt2/arc_protect.tt2, wwsympa/tt2/arcsearch.tt2,
+	wwsympa/tt2/arcsearch_form.tt2, wwsympa/tt2/button_footer.tt2,
+	wwsympa/tt2/button_header.tt2, wwsympa/tt2/change_email.tt2,
+	wwsympa/tt2/choosepasswd.tt2, wwsympa/tt2/close_list.tt2,
+	wwsympa/tt2/compose_mail.tt2, wwsympa/tt2/create_list.tt2,
+	wwsympa/tt2/create_list_request.tt2, wwsympa/tt2/d_control.tt2,
+	wwsympa/tt2/d_editfile.tt2, wwsympa/tt2/d_read.tt2,
+	wwsympa/tt2/edit_list_request.tt2, wwsympa/tt2/editfile.tt2,
+	wwsympa/tt2/editsubscriber.tt2, wwsympa/tt2/error.tt2,
+	wwsympa/tt2/get_closed_lists.tt2, wwsympa/tt2/get_latest_lists.tt2,
+	wwsympa/tt2/get_pending_lists.tt2, wwsympa/tt2/help.tt2,
+	wwsympa/tt2/help_admin.tt2, wwsympa/tt2/help_editfile.tt2,
+	wwsympa/tt2/help_editlist.tt2, wwsympa/tt2/help_user_options.tt2,
+	wwsympa/tt2/home.tt2, wwsympa/tt2/info.tt2,
+	wwsympa/tt2/install_pending_list.tt2,
+	wwsympa/tt2/list_button_footer.tt2,
+	wwsympa/tt2/list_button_header.tt2, wwsympa/tt2/list_menu.tt2,
+	wwsympa/tt2/lists.tt2, wwsympa/tt2/login.tt2,
+	wwsympa/tt2/loginbanner.tt2, wwsympa/tt2/loginrequest.tt2,
+	wwsympa/tt2/main.tt2, wwsympa/tt2/menu.tt2,
+	wwsympa/tt2/modindex.tt2, wwsympa/tt2/notice.tt2,
+	wwsympa/tt2/pref.tt2, wwsympa/tt2/remindpasswd.tt2,
+	wwsympa/tt2/remove_arc.tt2, wwsympa/tt2/review.tt2,
+	wwsympa/tt2/reviewbouncing.tt2, wwsympa/tt2/scenario_test.tt2,
+	wwsympa/tt2/serveradmin.tt2,
+	wwsympa/tt2/set_pending_list_request.tt2,
+	wwsympa/tt2/show_cert.tt2, wwsympa/tt2/sigrequest.tt2,
+	wwsympa/tt2/stats.tt2, wwsympa/tt2/subindex.tt2,
+	wwsympa/tt2/suboptions.tt2, wwsympa/tt2/subrequest.tt2,
+	wwsympa/tt2/title.tt2, wwsympa/tt2/translate.tt2,
+	wwsympa/tt2/view_template.tt2, wwsympa/tt2/view_translations.tt2,
+	wwsympa/tt2/viewbounce.tt2, wwsympa/tt2/viewmod.tt2: Add
+	TT2-related files
+
+2004-05-05 16:07  salaun
+
+	* po/: Makefile, cs.po, de.po, en_US.po, es.po, et.po, fi.po,
+	fr.po, hu.po, it.po, nl.po, pl.po, pt.po, ro.po, sympa.pot,
+	zh_CN.po, zh_TW.po: New PO files + Makefile
+
+2004-05-05 14:22  salaun
+
+	* src/List.pm: Fix previous changes
+
+2004-05-05 10:59  salaun
+
+	* src/Commands.pm, src/List.pm, src/sympa.pl, src/tools.pl,
+	wwsympa/wwsympa.fcgi: Change: Now always set 'subscribed' DB field,
+	whatever the user_data_source is.  New feature: Store a
+	data_structure_version file in etc/ to determine what changes need
+	to be done to the DB.  Set 'subscribed' DB field if version < 4.2a
+
+2004-05-04 16:55  salaun
+
+	* src/List.pm: Fix: set 'subscribed' to 1 if neither subscribed nor
+	included is set
+
+2004-05-04 11:09  salaun
+
+	* .version, ChangeLog, NEWS, doc/sympa.pdf, doc/sympa.ps,
+	doc/sympa.tex, doc/html/index.html, doc/html/node1.html,
+	doc/html/node10.html, doc/html/node11.html, doc/html/node12.html,
+	doc/html/node13.html, doc/html/node14.html, doc/html/node15.html,
+	doc/html/node16.html, doc/html/node17.html, doc/html/node18.html,
+	doc/html/node19.html, doc/html/node2.html, doc/html/node20.html,
+	doc/html/node21.html, doc/html/node22.html, doc/html/node23.html,
+	doc/html/node24.html, doc/html/node3.html, doc/html/node4.html,
+	doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	doc/html/sympa.ps: preparing 4.2b.1
+
 2004-05-03 17:37  salaun
 
 	* wwsympa/wwsympa.fcgi: Fix: notify user that the config will be

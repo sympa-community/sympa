@@ -53,7 +53,7 @@ installmod:
 	@echo "Setting SetUID bit on wwsympa.fcgi..."
 	chmod u+s $(DESTDIR)$(CGIDIR)/wwsympa.fcgi
 	chmod g+s $(DESTDIR)$(CGIDIR)/wwsympa.fcgi
-	chmod 755 $(DESTDIR)$(ETCBINDIR)/wws_templates
+	chmod 755 $(DESTDIR)$(ETCBINDIR)/web_tt2
 	chmod 755 $(DESTDIR)$(ICONSDIR)
 	chmod 755 $(DESTDIR)$(LIBDIR)/Marc
 	@for i in $(lib_SUBST) Marc/Search.pm; do \
@@ -79,9 +79,9 @@ makedir:
 		echo "Creating required directory $(DESTDIR)$(ETCBINDIR)"; \
 		mkdir -p $(DESTDIR)$(ETCBINDIR); \
 	fi
-	@if [ ! -d $(DESTDIR)$(ETCBINDIR)/wws_templates ]; then \
-		echo "Creating required directory $(DESTDIR)$(ETCBINDIR)/wws_templates"; \
-		mkdir $(DESTDIR)$(ETCBINDIR)/wws_templates; \
+	@if [ ! -d $(DESTDIR)$(ETCBINDIR)/web_tt2 ]; then \
+		echo "Creating required directory $(DESTDIR)$(ETCBINDIR)/web_tt2"; \
+		mkdir $(DESTDIR)$(ETCBINDIR)/web_tt2; \
 	fi
 	@if [ ! -d $(DESTDIR)$(ICONSDIR) ]; then \
 		echo "Creating required directory $(DESTDIR)$(ICONSDIR)"; \
@@ -101,13 +101,11 @@ installsrc:
 installtemplates:
 	@echo
 	@echo "Installing templates..."
-	@for lang in wws_templates/* ; do \
-		echo $$lang; \
 		( \
-		cd $$lang; \
+		cd tt2; \
 		PERL=$(PERL); export PERL; \
 		UMASK=0644; export UMASK; \
-		INSTALLDIR=$(ETCBINDIR)/wws_templates; export INSTALLDIR; \
+		INSTALLDIR=$(ETCBINDIR)/web_tt2; export INSTALLDIR; \
 		SBINDIR=$(SBINDIR); export SBINDIR; \
 		CGIDIR=$(CGIDIR); export CGIDIR; \
 		LIBDIR=$(LIBDIR); export LIBDIR; \
@@ -123,8 +121,7 @@ installtemplates:
 		COL234=110; export COL234; \
 		$(PERL) ../../../subst.pl *.tpl; \
 		); \
-	done
-	$(PERL) ../set_symlinks.pl wws_templates $(DESTDIR)$(ETCBINDIR)/wws_templates
+	$(PERL) ../set_symlinks.pl web_tt2 $(DESTDIR)$(ETCBINDIR)/wws_tt2
 	find $(DESTDIR)$(ETCBINDIR) -type d -exec chmod 755 {} \;
 	find $(DESTDIR)$(ETCBINDIR) -type f -exec chmod 644 {} \;
 
@@ -140,6 +137,8 @@ substlib:
 		INSTALLDIR=$(LIBDIR); export INSTALLDIR; \
 		SBINDIR=$(SBINDIR); export SBINDIR; \
 		CGIDIR=$(CGIDIR); export CGIDIR; \
+		USER=$(USER); export USER; \
+		GROUP=$(GROUP); export GROUP; \
 		PIDDIR=$(PIDDIR); export PIDDIR;\
 		LIBDIR=$(LIBDIR); export LIBDIR; \
 		DESTDIR=$(DESTDIR); export DESDIR; \

@@ -25,7 +25,7 @@ package Message;
 use strict;
 require Exporter;
 require 'tools.pl';
-require 'parser.pl';
+require 'tt2native.pl';
 my @ISA = qw(Exporter);
 my @EXPORT = qw();
 
