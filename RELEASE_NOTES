@@ -1,7 +1,24 @@
 *****    Changes which are not compatible with previous versions are
 *****    listed using "*****"in the margin. Please check this at least.
 
-3.2     xx xx xx xx
+3.2b     xx xx xx xx
+
+  New features :
+
+	[Nadia Euzen] antivirus scanner, curently working with McAfee Uvscan and 
+	FSecure	FSAV.  New conf parameters antivirus_path and antivirus_args New
+	template your_infected_msg.tpl
+
+	nls/hu.msg, wwsympa/wws_templates/hu, src/etc/scenari/,src/etc/templates/: 
+	[Vizi Szilard] New feature: Translations to Hungrian
+
+	[Harald Wilhelmi] Mail templates translated to German
+
+	[Jérôme Marant] New feature: change sympa man page to POD format
+	Add archived, bounced and alias_manager man pages
+
+	wwsympa/wwsympa.fcgi: "Reply" feature from web archives It uses the "compose_mail" 
+	action of WWSympa
 
   Changes :
 
@@ -12,7 +29,44 @@
 *****	With PostgreSQL :
 *****	CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber));
 
-  Bug Fix :
+*****	src/List.pm: [proposed by Petr Prazak] supress lower() function from SQL 
+*****	SELECT queries in user_table.  This makes query much faster (t/100) with MySQL
+*****	
+*****	You should therefore lowercase your database entries :
+*****	sympa.pl --lowercase
+
+	src/etc/mhonarc-ressources: Decode encoded header fields
+
+	src/List.pm, wwsympa/wwsympa.fcgi: Order list parameters within a paragraph
+
+	src/List.pm: [Straub Herbert] Changes: change connect string for
+	PostgreSQL Did not work with Pg 7.1
+
+	Replace 'reply_to' and 'forced_reply_to' list parameters with 
+	'reply_to_header' parameter (paragraph)
+
+	Less restrictions on file names in shared (allow spaces)
+
+	wwsympa/wwsympa.fcgi: Bug fix: did not work when scenario returned multiple actions
+
+	wwsympa/wwsympa.fcgi: could not edit digest hour
+
+	wwsympa/wwsympa.fcgi: [proposed by Petr Prazak] Don't stop deletion process 
+	if one address is not subscribed
+
+	src/etc/scenari/send.*: Changes in scenario titles
+
+	src/etc/mhonarc-ressources: Changes: add deletion confirmation
+
+	nls/es.msg, src/etc/create_list_templates/*, wwsympa/wws_templates/es/*: 
+	[Philippe Mingo] Changes: corrections
+
+	nls/de.msg [Harald Wilhelmi] updates
+
+	[Petr Prazak] Czech templates update
+
+
+  Bug Fixes :
 	
 *****	Too many arguments for substr at CipherSaber.pm line 63
 *****	If you have Perl Perl 5.005 or earlier installed, you
@@ -23,7 +77,63 @@
 *****        	return $self->crypt($iv, $message);
 *****	}
 
-  
+	src/Commands.pm, wwsympa/wwsympa.fcgi: Bug fix: Apply list
+	visibility to WHICH command (hide secret lists)
+
+	src/Conf.pm: Check if we may executes programs listed in sympa.conf
+
+	wwsympa/cookielib.pm: could not set HTTP cookie if 'cookie_domain' 
+	conf parameter was defined
+
+	src/List.pm: [Michail Bachmann] missing comma (',') in Sybase SQL query
+
+	src/etc/mhonarc-ressources: do not parse message body in archives
+
+	src/Commands.pm: [reported by Odile Germes] Sympa would
+	die when receiving a REMIND command for an unknown list
+
+	src/List.pm: [reported by Petr Prazak] use correct charset for digest table of content
+
+	src/List.pm: Q-decode From header field in digest table of content
+
+	src/List.pm: [Straub Herbert] encode digest Subject header field
+
+	src/List.pm: Sympa was erasing user preferences	(including password) 
+	when loading subscribers file to database (from wwsympa edit_list)
+
+	wwsympa/wwsympa.fcgi: Set folder icon though directory
+	has no .desc
+
+	src/List.pm: [Yann Bizeul] Escape % chars in moderation message
+
+	wwsympa/wwsympa.fcgi: Did not list lists with no topic
+
+	could not delete editor/owner entries
+
+	src/Makefile: [Jérôme Marant] Change: clean aliaswrapper
+
+	src/Commands.pm: Missing list::get_user_db() in REMIND for getting 
+	user prefs (including password)
+	
+	wwsympa/wwsympa.fcgi: Bug fix: don't reject login if user has no password in db
+
+	src/etc/templates/global_remind.tpl: correct [user->passwd] to [user->password]
+
+	wwsympa/Marc/Search.pm: Bug fix: Search in message body was
+	looping if <!--X-MsgBody-End--> was not found
+
+	src/List.pm: [reported by Jean-Michel Beuken] Bug fix: Check if
+	scenari dir exists 
+	Bug description: wwsympa died when editing list	config : 
+		glob failed (child exited with status 1)
+
+	src/sympa.pl: Bug fix: set list language for digest
+
+	src/List.pm: Bug fix: Do not delete 'Received' header field in
+	List::store_digest()
+
+ 	src/Commands.pm: Bug fix: SET <list> <mode> did not work
+	Case-sensitivity problem 
 
 3.1.1	Wed 25 Apr 2001
 
