@@ -2266,8 +2266,9 @@ sub add_parts {
 
 ## Send a digest message to the subscribers with reception digest or summary
 sub send_msg_digest {
-    my ($self,$robot) = @_;
+    my ($self) = @_;
     my $listname = $self->{'name'};
+    my $robot = $self->{'domain'};
     do_log('debug2', 'List:send_msg_digest(%s)', $listname);
     
     my $filename = "$Conf{'queuedigest'}/$listname";
