@@ -6282,7 +6282,7 @@ sub do_edit_list {
 
      ## Prepare data structure for the parser
      my $p_glob = {'name' => $name,
-		   'title' => Msg(16, gettext($struct->{'gettext_id'}),
+		   'title' => Msg(16, gettext($struct->{'gettext_id'})),
 		   'comment' => $struct->{'comment'}{$param->{'lang'}}
 	       };
 
