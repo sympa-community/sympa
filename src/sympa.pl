@@ -325,6 +325,7 @@ while (!$signal) {
 	my $priority;
 	my $type;
 	my $list;
+	my ($t_listname, $t_robot);
 
 	# trying to fix a bug (perl bug ??) of solaris version
 	($*, $/) = @parser_param;
@@ -345,38 +346,33 @@ while (!$signal) {
 	## Don't process temporary files created by queue (T.xxx)
 	next if ($t_filename =~ /^T\./);
 
-	## Extract listname from filename
-	# $listname = $1;
-	# $listname =~ s/\@.*$//; 
-	# $listname =~ y/A-Z/a-z/;
-
-	($listname, $robot) = split(/\@/,$1);
+	($t_listname, $t_robot) = split(/\@/,$1);
 	
-	$listname = lc($listname);
-	if ($robot) {
-	    $robot=lc($robot);
+	$t_listname = lc($t_listname);
+	if ($t_robot) {
+	    $t_robot=lc($t_robot);
 	}else{
-	    $robot = lc($Conf{'host'});
+	    $t_robot = lc($Conf{'host'});
 	}
-	# do_log('debug', "listname %s    robot  %s", $listname,$robot);
+	# do_log('debug', "listname %s    robot  %s", $t_listname,$t_robot);
 
-	if ($listname =~ /^(\S+)-(request|owner|editor|subscribe|unsubscribe)$/) {
-	    ($listname, $type) = ($1, $2);
+	if ($t_listname =~ /^(\S+)-(request|owner|editor|subscribe|unsubscribe)$/) {
+	    ($t_listname, $type) = ($1, $2);
 	}
 
 	# (sa) le terme "(\@$Conf{'host'})?" est inutile
-	unless ($listname =~ /^(sympa|listmaster|$Conf{'email'})(\@$Conf{'host'})?$/i) {
-	    $list = new List ($listname);
+	unless ($t_listname =~ /^(sympa|listmaster|$Conf{'email'})(\@$Conf{'host'})?$/i) {
+	    $list = new List ($t_listname);
 	}
 	
-	if ($listname eq 'listmaster') {
+	if ($t_listname eq 'listmaster') {
 	    ## highest priority
 	    $priority = 0;
 	}elsif ($type eq 'request') {
 	    $priority = $Conf{'request_priority'};
 	}elsif ($type eq 'owner') {
 	    $priority = $Conf{'owner_priority'};
-	}elsif ($listname =~ /^(sympa|$Conf{'email'})(\@$Conf{'host'})?$/i) {	
+	}elsif ($t_listname =~ /^(sympa|$Conf{'email'})(\@$Conf{'host'})?$/i) {	
 	    $priority = $Conf{'sympa_priority'};
 	}else {
 	    if ($list) {
@@ -405,7 +401,7 @@ while (!$signal) {
 		$main::options{'mail'} = $robot if ($Conf{'robots'}{$robot}{'log_smtp'});
 	$main::options{'mail'} = $robot if ($Conf{'log_smtp'});
     }
-    my $status = &DoFile($listname, $robot, "$Conf{'queue'}/$filename");
+    my $status = &DoFile("$Conf{'queue'}/$filename");
     
     if (defined($status)) {
 	do_log('debug', "Finished %s", "$Conf{'queue'}/$filename") if ($main::options{'debug'});
@@ -465,9 +461,10 @@ sub sighup {
 ## call the adequate function wether we have received a command or a
 ## message to be redistributed to a list.
 sub DoFile {
-    my ($listname, $robot, $file) = @_;
-    &do_log('debug', 'DoFile(%s, %s, %s)', $listname ,$robot, $file);
+    my ($file) = @_;
+    &do_log('debug', 'DoFile(%s)', $file);
     
+    my ($listname, $robot);
     my $status;
     
     ## Open and parse the file   
@@ -478,9 +475,6 @@ sub DoFile {
     
     my $parser = new MIME::Parser;
     $parser->output_to_core(1);
-#    $parser->output_under('/tmp', (DirName => "MIMEParser.$$",
-#				   Purge => 1)
-#			  );
 
     my $msg;
     unless ($msg = $parser->read(\*IN)) {
@@ -499,6 +493,24 @@ sub DoFile {
 	do_log('notice', 'No From found in message, skipping.');
 	return undef;
     }    
+
+    ## Search the X-Sympa-To header.
+    my $rcpt = $hdr->get('X-Sympa-To');
+    unless ($rcpt) {
+	do_log('notice', 'no X-Sympa-To found, ignoring message file %s', $file);
+	return undef;
+    }
+    chomp $rcpt;
+
+    ## get listname & robot
+    ($listname, $robot) = split(/\@/,$rcpt);
+
+    $robot = lc($robot);
+    $listname = lc($listname);
+    $robot ||= $Conf{'host'};
+
+    ## Strip of the initial X-Sympa-To field
+    $hdr->delete('X-Sympa-To');
 
     my @sender_hdr = Mail::Address->parse($hdr->get('From'));
     
@@ -534,16 +546,6 @@ sub DoFile {
 	$host = $list->{'admin'}{'host'};
 	$name = $list->{'name'};
     }
-
-    ## Search the X-Sympa-To header.
-    my $rcpt = $hdr->get('X-Sympa-To');
-    unless ($rcpt) {
-	do_log('notice', 'no X-Sympa-To found, ignoring message file %s', $file);
-	return undef;
-    }
-
-    ## Strip of the initial X-Sympa-To field
-    $hdr->delete('X-Sympa-To');
     
     ## Loop prevention
     my $loop;
