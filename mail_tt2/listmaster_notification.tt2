@@ -28,15 +28,80 @@ Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%
 [%|loc(param0)%]Refer to documentation to adapt %1.[%END%]
 [%|loc(param0)%]Until then we recommend your remove %1 ;
 default configuration will be used.[%END%]
+<<<<<<< listmaster_notification.tt2
+
 [% ELSIF type == 'sync_include_failed' -%]
+=======
+[% ELSIF type == 'sync_include_failed' -%]
+>>>>>>> 1.5
 Subject: [% FILTER qencode %][%|loc(param0)%]subscribers update failed for list %1[%END%][%END%]
 
 [%|loc%]Sympa could not include subscribers from external data sources ; the
 database or LDAP directory might be unreachable.[%END%] 
 [%|loc%]Check Sympa log files for more precise information[%END%]
-[% ELSIF type == 'sync_include_admin_failed' %]
+
+[% ELSIF type == 'no_owner_defined' -%]
+Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+
+[%|loc(param0)%]No owner is defined for list %1.[%END%]
+[%|loc%]The list status has been set to error_config.[%END%]
+[%|loc%]Check Sympa log files for more precise information.[%END%]
+
+[% ELSIF type == 'error_family_file' -%]
+Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+
+[%|loc(param0,param1)%]Errors occured while copying family %2 file in list %1 directory.[%END%]
+[%|loc%]The list status has been set to error_config.[%END%]
+[%|loc%]Check Sympa log files for more precise information.[%END%]
+
+[% ELSIF type == 'no_respect_rules_family' -%]
+Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+
+[%|loc(param0,param1)%]List %1 configuration does not respect family %2 rules.[%END%]
+[%|loc%]The list status has been set to error_config.[%END%]
+[%|loc%]Check Sympa log files for more precise information.[%END%]
+
+[% ELSIF type == 'no_check_rules_family' -%]
+Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+
+[%|loc(param0,param1)%]Sympa could not check family %2 rules with list %1 param_constraint.conf file.[%END%]
+[%|loc%]The list status has been set to error_config.[%END%]
+[%|loc%]Check Sympa log files for more precise information.[%END%]
+
+[% ELSIF type == 'param_constraint_conf_error' -%]
+Subject: [% FILTER qencode %][%|loc%]errors in param_constraint.conf file[%END%][%END%]
+
+[%|loc(param0)%]Error(s) found in the file %1.[%END%]
+[%|loc%]Check Sympa log files for more precise information.[%END%]
+
+[% ELSIF type == 'load_admin_file_error' -%]
+Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+
+[%|loc%]Sympa could not load the list config file.[%END%]
+[%|loc%]The list status has been set to error_config.[%END%]
+[%|loc%]Check Sympa log files for more precise information.[%END%]
+
+[% ELSIF type == 'no_list_family' -%]
+Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+
+[%|loc(param0,param1)%]Sympa could not load family %2 for list %1.[%END%]
+[%|loc%]The list status has been set to error_config.[%END%]
+[%|loc%]Check Sympa log files for more precise information.[%END%]
+
+[% ELSIF type == 'instantiation_family' -%]
+Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+
+[%|loc(param0,param1)%]Failed to instantiate family %2 for list %1[%END%]
+[%|loc%]The list status has been set to error_config.[%END%]
+[%|loc%]Check Sympa log files for more precise information.[%END%]
+
+[% ELSIF type == 'sync_include_admin_failed' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]admins update failed for list %1[%END%][%END%]
 
+[%|loc%]Sympa could not include admins from external data sources ; the database or LDAP directory might be unreachable.[%END%]
+[%|loc%]Check Sympa log files for more precise information[%END%]
+[% ELSIF type == 'automatic_bounce_management' -%]
+=======
 [%|loc%]Sympa could not include admins from external data sources ; the database or LDAP directory might be unreachable. 
 Check Sympa log files for more precise information[%END%]
 [% ELSIF type == 'automatic_bounce_management' -%]
@@ -53,7 +118,7 @@ removed from list %2:[%END%]
 selected by Sympa as severe bouncing addresses:[%END%]
 [%END%]
 
-[% FOREACH user = user_list %]
+[% FOREACH user = user_list -%]
 [% user %]
 [%END%]
 
