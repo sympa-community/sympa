@@ -35,6 +35,8 @@ MAILERPROGDIR	=	$(DIR)/bin
 #RPMTOPDIR	=	`rpm --eval %_topdir`
 RPMTOPDIR	=	/usr/src/redhat
 
+MANDIR		=	/usr/local/man
+
 ## SYSV init scripts directory
 INITDIR		=	$(DIR)/bin
 
@@ -145,7 +147,7 @@ clean:
 	$(MAKE) PERL='${PERL}' clean) || exit 1; \
 	done;
 
-install: installsrc installnls installwws installscript installsample installdir installconfig
+install: installsrc installnls installwws installman installscript installsample installdir installconfig
 
 installsrc:
 	(cd src && echo "making in src..." && \
@@ -182,6 +184,28 @@ installsample:
 	SHADED_COLOR='${SHADED_COLOR}' OPENSSL='${OPENSSL}' SSLCERTDIR='${SSLCERTDIR}' \
 	SPOOLDIR='${SPOOLDIR}' TEXT_COLOR='${TEXT_COLOR}' BG_COLOR='${BG_COLOR}' ERROR_COLOR='${ERROR_COLOR}' \
 	USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' PIDDIR='${PIDDIR}' install) || exit 1;
+
+installman:
+	mkdir -p $(DESTDIR)$(MANDIR)
+	mkdir -p $(DESTDIR)$(MANDIR)/man8
+	@for manfile in sympa.8 ; do \
+	echo "Installing man file man8/$$manfile..."; \
+	( \
+		cd doc/man8 ; \
+		PERL=$(PERL); export PERL; \
+		UMASK=0600; export UMASK; \
+		DIR=$(DIR); export DIR; \
+		INSTALLDIR=$(MANDIR)/man8; export INSTALLDIR; \
+		DESTDIR=$(DESTDIR); export DESTDIR; \
+		SYMPA_VERSION=$(SYMPA_VERSION); export SYMPA_VERSION; \
+		CONFDIR=$(CONFDIR); export CONFDIR; \
+		PIDDIR=$(PIDDIR); export PIDDIR; \
+		$(PERL) ../../subst.pl $$manfile \
+	) ;\
+	chown $(USER) $(DESTDIR)$(MANDIR)/man8/$$manfile; \
+	chgrp $(GROUP) $(DESTDIR)$(MANDIR)/man8/$$manfile; \
+	done
+
 
 installscript:
 	(cd src/etc/script && echo "making in src/etc/script..." && \
