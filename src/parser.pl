@@ -107,7 +107,8 @@ sub parse_tpl {
 
 return 1;
 
-## Processes [SETOPTION xx] 
+## Processes [SETOPTION xx]
+## Currently available options : escape_html, ignore_undef 
 sub do_setoption {
 
     if (/\[\s*SETOPTION\s+(\w+)\s*\]/i) {
@@ -154,13 +155,17 @@ sub do_include {
     }
 
     my $fh = new FileHandle $file;
+    foreach (<$fh>) {
 
-    if (ref($current_output) eq 'ARRAY') {
-	push @{$current_output}, sprintf <$fh>;
-    }else {
-	print <$fh>;
+	$_ = &escape_html($_)
+	    if ($option{'escape_html'});
+
+	if (ref($current_output) eq 'ARRAY') {
+	    push @{$current_output}, sprintf $_;
+	}else {
+	    print $_;
+	}
     }
-
     close $fh;
 }
 
@@ -422,3 +427,16 @@ sub do_eval {
 
     return $returned_value;
 }
+
+## Escape HTML meta-chars
+sub escape_html {
+    my $s = shift;
+
+    $s =~ s/\&/\&amp;/g;
+    $s =~ s/\"/\&quot\;/g;
+    $s =~ s/\</&lt\;/g;
+    $s =~ s/\>/&gt\;/g;
+    
+    return $s;
+}
+
