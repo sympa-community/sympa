@@ -704,6 +704,9 @@ detail in later sections.
 
     \item creation of a UNIX user
 
+    \item The web interface for Sympa named WWSympa require one of Oracle, MySQL, Sybase or Postgres RDBMS. Please refers to \"\Sympa and its database\" section
+       (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
+
 \end {itemize}
 
 \subsection {System requirements}
@@ -2084,14 +2087,15 @@ The security of \WWSympa rests on the security of your database.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Using Sympa with an RDBMS
+% Sympa and its RDBMS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cleardoublepage
-\chapter {Using \Sympa with a relational database}
+\chapter {\Sympa and its database}
 \label {sec-rdbms}
 
-It is possible for \Sympa to store its user information using a
+It is possible for \Sympa to store its user information in files but
+WWSympa need to use a
 relational database. Currently you can use one of the following
 RDBMS : MySQL, PostgreSQL, Oracle, Sybase. Interfacing with other RDBMS
 requires only a few changes in the code, since the API used, 
@@ -4608,7 +4612,7 @@ sources (list, flat file, result of LDAP or SQL query).
        We strongly recommend the use of database in place of text files.
        It will improve performance, and solve possible conflicts between
        \Sympa and \WWSympa. Please refer to the 
-       \"Using \Sympa with a relational database\" section
+       \"\Sympa and its database\" section
        (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
 
 \item \lparam {user\_data\_source} \texttt {include} 

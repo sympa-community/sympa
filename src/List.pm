@@ -3851,7 +3851,7 @@ sub may_edit {
 
     return undef unless ($self);
 
-    my $edit_conf = &tools::load_edit_list_conf;
+    my $edit_conf = &tools::load_edit_list_conf($self->{'domain'});
 
     if ( &is_listmaster($who,$self->{'domain'})) {
 	## listmaster has read write acces on any parameter
@@ -3918,7 +3918,7 @@ sub may_create_parameter {
     if ( &is_listmaster($who,$robot)) {
 	return 1;
     }
-    my $edit_conf = &tools::load_edit_list_conf;
+    my $edit_conf = &tools::load_edit_list_conf($robot);
     $edit_conf->{$parameter} ||= $edit_conf->{'default'};
     if (! $edit_conf->{$parameter}) {
 	do_log('notice','tools::load_edit_list_conf privilege for parameter $parameter undefined');

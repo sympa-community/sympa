@@ -138,10 +138,14 @@ Thank you for your attention.
 
 ## return a hash from the edit_list_conf file
 sub load_edit_list_conf {
+    my $robot = shift;
+
     my $file;
     my $conf ;
     
-    if (-r "$Conf{'etc'}/edit_list.conf") {
+    if (-r "$Conf{'etc'}/$robot/edit_list.conf") {
+	$file = "$Conf{'etc'}/$robot/edit_list.conf";
+    }elsif (-r "$Conf{'etc'}/edit_list.conf") {
 	$file = "$Conf{'etc'}/edit_list.conf";
     }elsif (-r "--ETCBINDIR--/edit_list.conf") {
 	$file = "--ETCBINDIR--/edit_list.conf";
