@@ -144,12 +144,7 @@ La sélection est trop large, impossible d'afficher la sélection
 	[ENDIF]
 	 [IF is_owner]
 	    <TD>
-	      [IF action=search]
-	        <INPUT TYPE=checkbox name="email" value="[u->escaped_email]" CHECKED>
-	      [ELSE]
 	        <INPUT TYPE=checkbox name="email" value="[u->escaped_email]">
-	      [ENDIF]
-
 	    </TD>
 	 [ENDIF]
 	 [IF u->bounce]
