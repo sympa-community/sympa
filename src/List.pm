@@ -2181,9 +2181,11 @@ sub get_max_size {
 
 ## Returns an array with the Reply-To data
 sub get_reply_to {
-    my $value = shift->{'admin'}{'reply_to_header'}{'value'};
+    my $admin = shift->{'admin'};
 
-    $value = shift->{'admin'}{'reply_to_header'}{'other_email'} if ($value eq 'other_email');
+    my $value = $admin->{'reply_to_header'}{'value'};
+
+    $value = $admin->{'reply_to_header'}{'other_email'} if ($value eq 'other_email');
 
     return $value
 }
@@ -3874,7 +3876,7 @@ sub print_info {
 	, $admin->{'review'}{'title'}{$lang};
     
     if ($admin->{'reply_to_header'}) {
-	push @result, sprintf Msg(9, 7, "Reply-to           : %s\n"), &get_reply_to();
+	push @result, sprintf Msg(9, 7, "Reply-to           : %s\n"), $self->get_reply_to();
     }
     
     push @result, sprintf Msg(9, 8, "Maximum size       : %d\n"), $admin->{'max_size'} 
