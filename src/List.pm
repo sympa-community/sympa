@@ -764,6 +764,11 @@ use DB_File;
 
 $DB_BTREE->{compare} = '_compare_addresses';
 
+sub LOCK_SH {1};
+sub LOCK_EX {2};
+sub LOCK_NB {4};
+sub LOCK_UN {8};
+
 ## Connect to Database
 sub db_connect {
     do_log('debug2', 'List::db_connect');
@@ -4788,10 +4793,39 @@ sub _load_users_include {
     return undef unless ($btree);
     $btree->{'compare'} = '_compare_addresses';
     my $ref = tie %users, 'DB_File', $db_file, O_CREAT|O_RDWR, 0600, $btree;
-#    my $ref = tie %users, 'DB_File', undef, O_CREAT|O_RDWR, 0600, $btree;
     return undef unless ($ref);
 
+    if ($use_cache) {
+	## Lock DB_File
+	my $fd = $ref->fd;
+	unless (open DB_FH, "+<&$fd") {
+	    &do_log('err', 'Cannot open DB_File: %s', $!);
+	    return undef;
+	}
+	unless (flock (DB_FH, LOCK_SH | LOCK_NB)) {
+	    &do_log('notice','Waiting for reading lock on DB_File');
+	    unless (flock (DB_FH, LOCK_SH)) {
+		&do_log('err', 'Failed locking DB_File: %s', $!);
+		return undef;
+	    }
+	}
+    }
+
     unless ($use_cache) {
+	## Lock DB_File
+	my $fd = $ref->fd;
+	unless (open DB_FH, "+<&$fd") {
+	    &do_log('err', 'Cannot open DB_File: %s', $!);
+	    return undef;
+	}
+	unless (flock (DB_FH, LOCK_EX | LOCK_NB)) {
+	    &do_log('notice','Waiting for writing lock on DB_File');
+	    unless (flock (DB_FH, LOCK_EX)) {
+		&do_log('err', 'Failed locking DB_File: %s', $!);
+		return undef;
+	    }
+	}
+
     foreach my $type ('include_list','include_file','include_ldap_query','include_sql_query') {
 	foreach my $incl (@{$admin->{$type}}) {
 	    ## get the list of users
@@ -4819,6 +4853,10 @@ sub _load_users_include {
 	}
     }
     }
+
+    ## Unlock DB_file
+    flock(DB_FH,LOCK_UN);
+    close DB_FH;
 
     my $l = {	 'ref'    => $ref,
 		 'users'  => \%users
