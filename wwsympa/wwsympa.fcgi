@@ -1165,7 +1165,6 @@ sub do_sendpasswd {
 			       'password' => &tools::tmp_passwd($in{'email'}) 
 			       };
 
-	$param->{'init_passwd'} = 1;
     }
 
     unless (open MAIL, "|$Conf{'sendmail'} $in{'email'}") {
@@ -1186,6 +1185,9 @@ sub do_sendpasswd {
 	    last;
 	}
     }
+
+    $param->{'init_passwd'} = 1 
+	if ($param->{'user'}{'password'} =~ /^init/);
     
     &parse_tpl ($param, $tpl_file, MAIL);
     close MAIL;
