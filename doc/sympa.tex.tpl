@@ -1892,7 +1892,7 @@ main archive.
      to \tildedir {sympa/spool/outgoing/}. (No need to create nonexistent subscribers to receive
      copies of messages)
 
-\item start \file {archived.pl}. It MUST run with the same uid/gid as 
+\item start \file {archived.pl}.
 \Sympa and Apache
  
 \item check \WWSympa logs, or alternatively, start \file {archived.pl} in debug mode (-d). 
