@@ -2676,11 +2676,11 @@ sub send_global_file {
     $data->{'lang'} = $data->{'lang'} = $data->{'user'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
-    my $tt2_include_path = ["$Conf{'etc'}/$robot/mail_tt2/".$data->{'lang'},
+    my $tt2_include_path = ["$Conf{'etc'}/$robot/mail_tt2/".&Language::Lang2Locale($data->{'lang'}),
 			    "$Conf{'etc'}/$robot/mail_tt2",
-			    "$Conf{'etc'}/mail_tt2/".$data->{'lang'},
+			    "$Conf{'etc'}/mail_tt2/".&Language::Lang2Locale($data->{'lang'}),
 			    "$Conf{'etc'}/mail_tt2",
-			    "--ETCBINDIR--/mail_tt2/".$data->{'lang'},
+			    "--ETCBINDIR--/mail_tt2/".&Language::Lang2Locale($data->{'lang'}),
 			    "--ETCBINDIR--/mail_tt2"];
 
     foreach my $d (@{$tt2_include_path}) {
@@ -2760,13 +2760,13 @@ sub send_file {
     $data->{'lang'} = $data->{'user'}{'lang'} || $self->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
-    my $tt2_include_path = [$self->{'dir'}.'/mail_tt2/'.$data->{'lang'},
+    my $tt2_include_path = [$self->{'dir'}.'/mail_tt2/'.&Language::Lang2Locale($data->{'lang'}),
 			    $self->{'dir'}.'/mail_tt2',
-			    "$Conf{'etc'}/$robot/mail_tt2/".$data->{'lang'},
+			    "$Conf{'etc'}/$robot/mail_tt2/".&Language::Lang2Locale($data->{'lang'}),
 			    "$Conf{'etc'}/$robot/mail_tt2",
-			    "$Conf{'etc'}/mail_tt2/".$data->{'lang'},
+			    "$Conf{'etc'}/mail_tt2/".&Language::Lang2Locale($data->{'lang'}),
 			    "$Conf{'etc'}/mail_tt2",
-			    "--ETCBINDIR--/mail_tt2/".$data->{'lang'},
+			    "--ETCBINDIR--/mail_tt2/".&Language::Lang2Locale($data->{'lang'}),
 			    "--ETCBINDIR--/mail_tt2",
 			    $self->{'dir'},            ## list directory to get the 'info' file
 			    $self->{'dir'}.'/archives' ## list archives to include the last message
