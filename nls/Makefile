@@ -1,5 +1,5 @@
 ## Available catalogues (languages)
-CAT	=	fr.cat us.cat es.cat de.cat it.cat cn-gb.cat cn-big5.cat fi.cat
+CAT	=	fr.cat us.cat es.cat de.cat it.cat cn-gb.cat cn-big5.cat fi.cat pl.cat
 
 .SUFFIXES:	.cat .msg
 
