@@ -62,6 +62,10 @@ if ($_GET['viewSource']) {
     echo "[<A HREF=\"".$_SERVER['PHP_SELF']."?logout=1\">logout</A>]\n";
     
   }else {
+    echo "This PHP script shows how you can easily provide access to a Sympa mailing list service from another server, using a different programming language using web services.<BR><BR>
+This script does not access Sympa data, nor does it reinvent the mailing list server's job. It does remote high level procedure calls on Sympa server using <A HREF=\"http://www.w3.org/2002/ws/\">SOAP</A>. A Sympa SOAP server is running on the server ; it currently implements a subset of Sympa features including Login, Subscription, Signoff, Lists, Which,... The list of available remote procedures are published in a WSDL document that is fetched by the SOAP client.<BR><BR>
+Read Sympa documentation about the SOAP server for more details.";
+
     echo "You need to login first :<BR><BR>\n";
     echo "<form action=\"".$_SERVER['PHP_SELF']."\" method=\"post\">
     Email:  <input type=\"text\" name=\"email\"><br>
