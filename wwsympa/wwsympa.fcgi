@@ -5106,6 +5106,8 @@ sub do_edit_list_request {
     if ($in{'group'}) {
 	$param->{'group'} = $in{'group'};
 	&_prepare_edit_form ($list->{'admin'});
+    }else { ## This is required for languages which edit_list tpl was not updated
+	&_prepare_edit_form ($list->{'admin'});
     }
 
 #    print "Content-type: text/plain\n\n";
