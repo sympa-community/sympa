@@ -1540,15 +1540,38 @@ sub _add_parts {
     my ($msg, $listname, $type) = @_;
     do_log('debug2', 'List:_add_parts(%s, %s, %s)', $msg, $listname, $type);
 
-    ## Add footer
-    my $footer = "$listname/message.footer";
-    my $footermime = $footer . ".mime";
+    my ($header, $headermime);
+    foreach my $file ("$listname/message.header", 
+		      "$listname/message.header.mime",
+		      "$Conf{'etc'}/templates/message.header", 
+		      "$Conf{'etc'}/templates/message.header.mime") {
+	if (-f $file) {
+	    unless (-r $file) {
+		&do_log('notice', 'Cannot read %s', $file);
+		next;
+	    }
+	    $header = $file;
+	    last;
+	} 
+    }
 
-    my $header = "$listname/message.header";
-    my $headermime = $header . ".mime";
-
+    my ($footer, $footermime);
+    foreach my $file ("$listname/message.footer", 
+		      "$listname/message.footer.mime",
+		      "$Conf{'etc'}/templates/message.footer", 
+		      "$Conf{'etc'}/templates/message.footer.mime") {
+	if (-f $file) {
+	    unless (-r $file) {
+		&do_log('notice', 'Cannot read %s', $file);
+		next;
+	    }
+	    $footer = $file;
+	    last;
+	} 
+    }
+    
     ## No footer/header
-    unless (-f $footermime or -f $footer or -f $headermime or -f $header) {
+    unless (-f $footer or -f $header) {
 	return undef;
     }
     
@@ -1562,13 +1585,13 @@ sub _add_parts {
     if ($type eq 'append'){
 
 	my (@footer_msg, @header_msg);
-	if (-r $header) {
+	if ($header) {
 	    open HEADER, $header;
 	    @header_msg = <HEADER>;
 	    close HEADER;
 	}
 	
-	if (-r $footer) {
+	if ($footer) {
 	    open FOOTER, $footer;
 	    @footer_msg = <FOOTER>;
 	    close FOOTER;
@@ -1611,36 +1634,40 @@ sub _add_parts {
 	    &do_log('notice', 'Cannot add header/footer to message in multipart/alternative format');
 	}else {
 	    
-	    if (-r $headermime) {
-		
-		my $header_part = $parser->parse_in($headermime);    
-		$msg->make_multipart unless $msg->is_multipart;
-		$msg->add_part($header_part, 0); ## Add AS FIRST PART (0)
-		
-		## text/plain header
-	    }elsif (-r $header ) {
-		
-		$msg->make_multipart unless $msg->is_multipart;
-		my $header_part = build MIME::Entity Path        => $header,
-		Type        => "text/plain",
-		Encoding    => "8bit";
-		$msg->add_part($header_part, 0);
+	    if ($header) {
+		if ($header =~ /\.mime$/) {
+		    
+		    my $header_part = $parser->parse_in($header);    
+		    $msg->make_multipart unless $msg->is_multipart;
+		    $msg->add_part($header_part, 0); ## Add AS FIRST PART (0)
+		    
+		    ## text/plain header
+		}else {
+		    
+		    $msg->make_multipart unless $msg->is_multipart;
+		    my $header_part = build MIME::Entity Path        => $header,
+		    Type        => "text/plain",
+		    Encoding    => "8bit";
+		    $msg->add_part($header_part, 0);
+		}
 	    }
 	    
-	    if (-r $footermime) {
-		
-		my $footer_part = $parser->parse_in($footermime);    
-		$msg->make_multipart unless $msg->is_multipart;
-		$msg->add_part($footer_part);
-		
-		## text/plain footer
-	    }elsif (-r $footer ) {
-		
-		$msg->make_multipart unless $msg->is_multipart;
-		$msg->attach(Path        => $footer,
-			     Type        => "text/plain",
-			     Encoding    => "8bit"
-			     );
+	    if ($footer) {
+		if ($footer =~ /\.mime$/) {
+		    
+		    my $footer_part = $parser->parse_in($footer);    
+		    $msg->make_multipart unless $msg->is_multipart;
+		    $msg->add_part($footer_part);
+		    
+		    ## text/plain footer
+		}else {
+		    
+		    $msg->make_multipart unless $msg->is_multipart;
+		    $msg->attach(Path        => $footer,
+				 Type        => "text/plain",
+				 Encoding    => "8bit"
+				 );
+		}
 	    }
 	}
     }
