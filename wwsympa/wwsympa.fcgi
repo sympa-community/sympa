@@ -5033,7 +5033,14 @@ sub do_set_pending_list_request {
 
      }
 
-     if ($in{'notify'}) {
+     ## Notify listmasters
+     if ($in{'status'} eq 'open') {
+	 $list->send_file('list_created', &Conf::get_robot_conf($robot, 'listmaster'), $robot,{});
+     }elsif ($in{'status'} eq 'closed') {
+	 $list->send_file('list_rejected', &Conf::get_robot_conf($robot, 'listmaster'), $robot,{});
+     }
+
+    if ($in{'notify'}) {
 	 my $owners = $list->get_owners();
 	 foreach my $i (@{$owners}) {
 	     ## Notify all listowners, even if reception is nomail
