@@ -37,7 +37,7 @@ use Digest::MD5;
 ## global var to store a CipherSaber object 
 my $cipher;
 
-my $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
+$separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
 
 ## Regexps for list params
 ## Caution : if this regexp changes (more/less parenthesis), then regexp using it should 
