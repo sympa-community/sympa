@@ -5249,12 +5249,12 @@ sub _include_users_file {
 	next if /^\s*$/;
 	next if /^\s*\#/;
 
-	unless (/^\s*$regexp{'email'}(\s*(\S.*))?\s*$/) {
+	unless (/^\s*($regexp{'email'})(\s*(\S.*))?\s*$/) {
 	    &do_log('notice', 'Not an email address: %s', $_);
 	}
 
 	my $email = &tools::clean_email($1);
-	my $gecos = $4;
+	my $gecos = $5;
 
 	next unless $email;
 
