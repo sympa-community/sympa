@@ -201,7 +201,6 @@
 	[ELSE]
 	<TD>&nbsp; </TD>
 	[ENDIF]
-	</TD>
 	</TR>
       [END] 
     [ENDIF]

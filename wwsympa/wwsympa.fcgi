@@ -187,6 +187,7 @@ my %comm = ('home' => 'do_home',
 	 'd_savefile' => 'do_d_savefile',
 	 'd_describe' => 'do_d_describe',
 	 'd_delete' => 'do_d_delete',
+	 'd_rename' => 'do_d_rename',   
 	 'd_control' => 'do_d_control',
 	 'd_change_access' => 'do_d_change_access',
 	 'd_set_owner' => 'do_d_set_owner',
@@ -249,6 +250,7 @@ my %action_args = ('default' => ['list'],
 		'd_read' => ['list','@path'],
 		'd_admin' => ['list','d_admin'],
 		'd_delete' => ['list','@path'],
+		'd_rename' => ['list','@path'],
 		'd_create_dir' => ['list','@path'],
 		'd_overwrite' => ['list','@path'],
 		'd_savefile' => ['list','@path'],
@@ -5810,8 +5812,6 @@ sub do_d_describe {
     ## $path must have no slash at its end
     $path = &format_path('without_slash',$path);
 
-
-    #my $list_name = $in{'list'};
     my $list_name = $list->{'name'};
 
     # path of the shared directory
@@ -5855,7 +5855,6 @@ sub do_d_describe {
 	&wwslog('info',"d_describe : Unable to describe $shareddir/$path : not an existing document");
 	return undef;
     }
-
     
     # Access control
         # Access control
@@ -6398,7 +6397,7 @@ sub do_d_delete {
     
     #Current directory and document to delete
     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-    my $current_directory = &format_path('with_slash',$1);
+    my $current_directory = &format_path('without_slash',$1);
     my $document = $3;
     
      # path of the shared directory
@@ -6439,40 +6438,33 @@ sub do_d_delete {
     # removing of the document
     my $doc = "$shareddir/$path";
    
+    # Access control
+    my %mode;
+    $mode{'edit'} = 1;
+    my %access = &d_access_control(\%mode,$path);
+    
+    unless ($access{'may'}{'edit'}) {
+	&error_message('may_not');
+	&wwslog('info','do_d_rename : access denied for %s', $param->{'user'}{'email'});
+	return undef;
+    }
+
+    ## Directory
     if (-d "$shareddir/$path") {
-	# case directory
-	
-	# Access control
-	my %mode;
-	$mode{'edit'} = 1;
-	my %access = &d_access_control(\%mode,$path);
-   
-	unless ($access{'may'}{'edit'}) {
-	    &error_message('may_not');
-	    &wwslog('info','do_d_delete : access denied for %s', $param->{'user'}{'email'});
-	    return undef;
-	}
 
 	# test of emptiness
 	opendir DIR, "$doc";
 	my @readdir = readdir DIR;
-	  
-	  # test for "ordinary" files
-	my @test = grep !/^\./, @readdir;
-	if ($#test != -1) {
+	close DIR;
+	
+	# test for "ordinary" files
+	my @test_normal = grep !/^\./, @readdir;
+	my @test_hidden = grep !(/^\.desc$/ | /^\.(\.)?$/ | /^[^\.]/), @readdir;
+	if (($#test_normal != -1) || ($#test_hidden != -1)) {
 	    &error_message('full_directory', {'directory' => $path});
 	    &wwslog('info',"do_d_delete : Failed to erase $doc : directory not empty");
 	    return undef;
 	}
-	  # test for files of type ".*" except ".desc";
-	@test = grep !(/^\.desc$/ | /^\.(\.)?$/ | /^[^\.]/), @readdir;
-	if ($#test != -1) {
-	    &error_message('failed');
-	    &wwslog('info',"do_d_delete : Failed to erase $doc : directory contains files of type .*");
-	    return undef;
-	}
-	close DIR;
-
 
 	# removing of the description file if exists
 	if (-e "$doc/\.desc") {
@@ -6485,19 +6477,8 @@ sub do_d_delete {
 	# removing of the directory
 	rmdir $doc;
 
-    } else {
-	# case file
-
-	# Access control
-	my %mode;
-	$mode{'edit'} = 1;
-	my %access = &d_access_control(\%mode,$path);
-   
-	unless ($access{'may'}{'edit'}) {
-	    &error_message('may_not');
-	    &wwslog('info','do_d_delete : access denied for %s', $param->{'user'}{'email'});
-	    return undef;
-	}
+	## File
+    }else {
 
 	# removing of the document
 	unless (unlink($doc)) {
@@ -6506,16 +6487,124 @@ sub do_d_delete {
 	    return undef;
 	}
 	# removing of the description file if exists
-	if (-e "$shareddir/$current_directory.desc.$document") {
-	    unless (unlink("$shareddir/$current_directory.desc.$document")) {
-		&wwslog('info',"do_d_delete: failed to erase $shareddir/$current_directory.desc.$document");
+	if (-e "$shareddir/$current_directory/.desc.$document") {
+	    unless (unlink("$shareddir/$current_directory/.desc.$document")) {
+		&wwslog('info',"do_d_delete: failed to erase $shareddir/$current_directory/.desc.$document");
 	    }
 	}   
     }
-
     
     $in{'list'} = $list_name;
-    $in{'path'} = $current_directory;
+    $in{'path'} = $current_directory.'/';
+    return 'd_read';
+}
+
+#*******************************************
+# Function : do_d_rename
+# Description : Rename a document
+#               (file or directory)
+#******************************************
+
+sub do_d_rename {
+    &wwslog('debug', 'do_d_rename(%s)', $in{'path'});
+
+    #useful variables
+    my $expl = $Conf{'home'};
+
+    my $path = $in{'path'};
+
+    ## $path must have no slash at its end!
+    $path = &format_path('without_slash',$path);
+    
+    #Current directory and document to delete
+    $path =~ /^(.*)\/([^\/]+)$/; 
+    my $current_directory = &format_path('without_slash',$1);
+    my $document = $2;
+    
+    # path of the shared directory
+    my $list_name = $list->{'name'};
+    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    
+#### Controls
+    ### action relative to a list ?
+    unless ($param->{'list'}) {
+	&error_message('missing_arg', {'argument' => 'list'});
+	&wwslog('info','do_d_rename : no list');
+	return undef;
+    }
+    
+    ## must be something to delete
+    unless ($document) {
+	&error_message('missing_arg', {'argument' => 'document'});
+	&wwslog('info',"do_d_rename : no document to delete has been specified");
+	return undef;
+    }
+
+    ### Document isn't a description file?
+    unless ($document !~ /^\.desc/) {
+	&wwslog('info',"do_d_rename : $shareddir/$path : description file");
+	&error_message('no_such_document', {'path' => $path});
+	return undef;
+    }
+        
+    ### Document exists?
+    unless (-e "$shareddir/$path") {
+	&wwslog('info',"do_d_rename : $shareddir/$path : no such file or directory");
+	&error_message('no_such_document', {'path' => $path});
+	return undef;
+    }
+
+    ## New document name
+    unless ($in{'new_name'}) {
+	&error_message('missing_arg', {'argument' => 'new name'});
+	&wwslog('info',"do_d_rename : new name missing");
+	return undef;
+    }
+
+    if ($in{'new_name'} =~ /^\./
+	|| $in{'new_name'} =~ /\.desc/ 
+	|| $in{'new_name'} =~ /[~\#]$/) {
+	&error_message('incorrect_name', {'name' => $in{'new_name'}});
+	&wwslog('info',"do_d_rename : Unable to create file $in{'new_name'} : incorrect name");
+	return undef;
+    }
+
+    my $doc = "$shareddir/$path";
+	
+    # Access control
+    my %mode;
+    $mode{'edit'} = 1;
+    my %access = &d_access_control(\%mode,$path);
+    
+    unless ($access{'may'}{'edit'}) {
+	&error_message('may_not');
+	&wwslog('info','do_d_rename : access denied for %s', $param->{'user'}{'email'});
+	return undef;
+    }
+
+    unless (rename $doc, "$shareddir/$current_directory/$in{'new_name'}") {
+	&error_message('failed');
+	&wwslog('info',"do_d_rename : Failed to rename $doc : $!");
+	return undef;
+    }
+
+    ## Rename description file
+    if (-f "$shareddir/$path") {
+	my $desc_file = "$shareddir/$current_directory/.desc.$document";
+	if (-f $desc_file) {
+	    my $new_desc_file = $desc_file;
+	    $new_desc_file =~ s/$document/$in{'new_name'}/;
+	    
+	    unless (rename $desc_file, $new_desc_file) {
+		&error_message('failed');
+		&wwslog('info',"do_d_rename : Failed to rename $desc_file : $!");
+		return undef;
+	    }
+	}
+    }
+
+    $in{'list'} = $list_name;
+    $in{'path'} = $current_directory.'/';
     return 'd_read';
 }
 
@@ -6576,7 +6665,7 @@ sub do_d_create_dir {
 	return undef;
     }
 
-
+    
 
 ### End of controls
     
