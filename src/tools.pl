@@ -956,7 +956,7 @@ sub split_mail {
 		return undef ; 
 	    }
 	    
-	    if ($encoding =~ /^binary|7bit|8bit|base64|quoted-printable|x-uu|x-uuencode|x-gzip64$/ ) {
+	    if ($encoding =~ /^(binary|7bit|8bit|base64|quoted-printable|x-uu|x-uuencode|x-gzip64)$/ ) {
 		open TMP, ">$dir/$pathname.$fileExt.$encoding";
 		$message->print_body (\*TMP);
 		close TMP;
@@ -1011,7 +1011,10 @@ sub virus_infected {
     #$mail->dump_skeleton;
 
     ## Call the procedure of spliting mail
-    &split_mail ($mail,'msg', $work_dir) ;
+    unless (&split_mail ($mail,'msg', $work_dir)) {
+	&do_log('err', 'Could not split mail %s', $mail);
+	return undef;
+    }
 
     my $virusfound; 
     my $error_msg;
