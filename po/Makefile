@@ -7,6 +7,7 @@ DEPENDON = $(shell cd .. ; ls src/*.p? wwsympa/wwsympa.fcgi wwsympa/*.p? wwsympa
 
 MSGMERGE = msgmerge
 MSGFMT   = msgfmt
+MSGATTRIB = msgattrib
 XGETTEXT = po/xgettext.pl
 
 ## Available catalogues (languages)
@@ -42,4 +43,19 @@ update-po: potfile
 	for lang in $$languages; do \
 		echo "Updating $$lang.po"; \
 		$(MSGMERGE) -o "$$lang.po" "$$lang.po" sympa.pot; \
+	done
+
+stats:
+	languages='$(LINGUAS)'; \
+	for lang in $$languages; do \
+		echo "Stats for  $$lang.po"; \
+		echo -n "  Translated: "; \
+		$(MSGATTRIB) --translated --no-obsolete "$$lang.po"|grep -c "^msgid"; \
+		echo -n "  Not translated: "; \
+		$(MSGATTRIB) --untranslated --no-obsolete "$$lang.po"|grep -c "^msgid"; \
+		echo -n "  Fuzzy: "; \
+		$(MSGATTRIB) --only-fuzzy --no-obsolete "$$lang.po"|grep -c "^msgid"; \
+		echo -n "  Obsolete: "; \
+		$(MSGATTRIB) --only-obsolete "$$lang.po"|grep -c "^#~ msgid"; \
+		echo ;\
 	done
