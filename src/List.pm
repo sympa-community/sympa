@@ -2579,16 +2579,16 @@ sub delete_user {
     if (($self->{'admin'}{'user_data_source'} eq 'database') ||
 	($self->{'admin'}{'user_data_source'} eq 'include2')){
 	
+	## Check database connection
+	unless ($dbh and $dbh->ping) {
+	    return undef unless &db_connect();
+	}
+	    
 	foreach my $who (@u) {
 	    $who = lc($who);
 	    my $statement;
 	    
 	    $list_cache{'is_user'}{$name}{$who} = undef;    
-	    
-	    ## Check database connection
-	    unless ($dbh and $dbh->ping) {
-		return undef unless &db_connect();
-	    }
 	    
 	    ## Delete record in SUBSCRIBER
 	    $statement = sprintf "DELETE FROM subscriber_table WHERE (user_subscriber=%s AND list_subscriber=%s)",$dbh->quote($who), $dbh->quote($name);
@@ -3552,60 +3552,72 @@ sub add_user_db {
 
 ## Adds a new user, no overwrite.
 sub add_user {
-    my($self, $values) = @_;
+    my($self, @new_users) = @_;
     do_log('debug2', 'List::add_user');
-    my $who;
-
-    $values->{'date'} ||= time;
-    $values->{'update_date'} ||= $values->{'date'};
-
-    my $date_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $values->{'date'}, $values->{'date'};
-    my $update_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $values->{'update_date'}, $values->{'update_date'};
-
-    return undef
-	unless ($who = lc($values->{'email'}));
     
+    my $name = $self->{'name'};
+	
     if (($self->{'admin'}{'user_data_source'} eq 'database') ||
 	($self->{'admin'}{'user_data_source'} eq 'include2')){
-	
-	my $name = $self->{'name'};
-	
-	$list_cache{'is_user'}{$name}{$who} = undef;
-
-	my $statement;
 	
 	## Check database connection
 	unless ($dbh and $dbh->ping) {
 	    return undef unless &db_connect();
 	}	   
 	
-	## Is the email in user table ?
-	if (! is_user_db($who)) {
-	    ## Insert in User Table
-	    $statement = sprintf "INSERT INTO user_table (email_user, gecos_user, lang_user, password_user) VALUES (%s,%s,%s,%s)",$dbh->quote($who), $dbh->quote($values->{'gecos'}), $dbh->quote($values->{'lang'}), $dbh->quote($values->{'password'});
+	foreach my $new_user (@new_users) {
+	    my $who = lc($new_user->{'email'});
+
+	    next unless $who;
+
+	    $new_user->{'date'} ||= time;
+	    $new_user->{'update_date'} ||= $new_user->{'date'};
+	    
+	    my $date_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_user->{'date'}, $new_user->{'date'};
+	    my $update_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_user->{'update_date'}, $new_user->{'update_date'};
+	    
+	    $list_cache{'is_user'}{$name}{$who} = undef;
+	    
+	    my $statement;
+	    
+	    unless ($self->{'admin'}{'user_data_source'} eq 'include2') {
+		## Is the email in user table ?
+		if (! is_user_db($who)) {
+		    ## Insert in User Table
+		    $statement = sprintf "INSERT INTO user_table (email_user, gecos_user, lang_user, password_user) VALUES (%s,%s,%s,%s)",$dbh->quote($who), $dbh->quote($new_user->{'gecos'}), $dbh->quote($new_user->{'lang'}), $dbh->quote($new_user->{'password'});
+		    
+		    unless ($dbh->do($statement)) {
+			do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+			return undef;
+		    }
+		}
+	    }	    
+
+	    ## Update Subscriber Table
+	    $statement = sprintf "INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, date_subscriber, update_subscriber, reception_subscriber, visibility_subscriber,subscribed_subscriber,included_subscriber,include_sources_subscriber) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", $dbh->quote($who), $dbh->quote($new_user->{'gecos'}), $dbh->quote($name), $date_field, $update_field, $dbh->quote($new_user->{'reception'}), $dbh->quote($new_user->{'visibility'}), $dbh->quote($new_user->{'subscribed'}), $dbh->quote($new_user->{'included'}), $dbh->quote($new_user->{'id'});
 	    
 	    unless ($dbh->do($statement)) {
 		do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-	       return undef;
+		return undef;
 	    }
+	    
+	    $self->{'total'}++;
 	}
-
-	## Update Subscriber Table
-	$statement = sprintf "INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, date_subscriber, update_subscriber, reception_subscriber, visibility_subscriber,subscribed_subscriber,included_subscriber,include_sources_subscriber) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", $dbh->quote($who), $dbh->quote($values->{'gecos'}), $dbh->quote($name), $date_field, $update_field, $dbh->quote($values->{'reception'}), $dbh->quote($values->{'visibility'}), $dbh->quote($values->{'subscribed'}), $dbh->quote($values->{'included'}), $dbh->quote($values->{'id'});
-       
-	unless ($dbh->do($statement)) {
-	    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-	    return undef;
-	}
-
-	$self->{'total'}++;
-	
     }else {
 	my (%u, $i, $j);
 	
-	$self->{'total'}++ unless ($self->{'users'}->{$who});
-	$u{$i} = $j while (($i, $j) = each %{$values});
-	$self->{'users'}->{$who} = join("\n", %u);
+	foreach my $new_user (@new_users) {
+	    my $who = lc($new_user->{'email'});
+	    
+	    next unless $who;
+	    
+	    $new_user->{'date'} ||= time;
+	    $new_user->{'update_date'} ||= $new_user->{'date'};
+
+	    $self->{'total'}++ unless ($self->{'users'}->{$who});
+	    $u{$i} = $j while (($i, $j) = each %{$new_user});
+	    $self->{'users'}->{$who} = join("\n", %u);
+	}
     }
 
    $self->savestats();
@@ -5513,6 +5525,7 @@ sub sync_include {
     my $users_updated = 0;
 
     ## Go through new users
+    my @add_tab;
     foreach my $email (keys %{$new_subscribers}) {
 	if (defined($old_subscribers{$email}) ) {	   
 	    if ($old_subscribers{$email}{'included'}) {
@@ -5543,17 +5556,19 @@ sub sync_include {
 
 	    ## Add new included user
 	}else {
-	    &do_log('debug', 'List:sync_include: adding %s to list %s', $email, $name);
+	    &do_log('debug3', 'List:sync_include: adding %s to list %s', $email, $name);
 	    my $u = $new_subscribers->{$email};
 	    $u->{'included'} = 1;
-	    unless( $self->add_user( $u ) ) {
-		&do_log('err', 'List:sync_include(%s): Failed to add %s',
-			$name, $email);
-		next;
-	    }
+	    push @add_tab, $u;
 	    $users_added++;
 	}
     }
+
+    unless( $self->add_user( @add_tab ) ) {
+	&do_log('err', 'List:sync_include(%s): Failed to add new users', $name);
+	next;
+    }
+
     if ($users_added) {
         &do_log('notice', 'List:sync_include(%s): %d users added',
 		$name, $users_added);
