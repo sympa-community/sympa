@@ -1859,8 +1859,8 @@ sub distribute_msg {
 	}
     }
     
-    ## Does the list accept digest mode
-    if ($self->is_digest()){
+    ## store msg in digest if list accept digest mode (encrypted message can't be included in digest)
+    if (($self->is_digest()) and ($encrypt ne 'smime_crypted')) {
 	$self->archive_msg_digest($msgtostore);
     }
 
@@ -2501,8 +2501,7 @@ sub send_file {
 
     ## Sign mode
     if ($Conf{'openssl'} &&
-	(-r $Conf{'home'}.'/'.$self->{'name'}.'/cert.pem') && 
-	(-r $Conf{'home'}.'/'.$self->{'name'}.'/private_key')) {
+	(-r $self->{'dir'}.'/cert.pem') && (-r $self->{'dir'}.'/private_key')) {
 	$sign_mode = 'smime';
     }
 
@@ -6343,7 +6342,7 @@ sub get_cert {
     do_log('debug2', 'List::load_cert(%s)',$self->{'name'});
 
 
-    my $certfile = "$self->{'name'}/cert.pem";
+    my $certfile = "$self->{'dir'}/cert.pem";
     do_log('info', 'List::load_cert certfile ');
     unless ( -r "$certfile") {
 	do_log('info', 'List::load_cert(%s), unable to read %s',$self->{'name'},$certfile);
