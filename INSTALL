@@ -1,34 +1,62 @@
 Please refer to the documentation for full installation notes : doc/html/node4.html
 
+Reference manual
+===============
+This document is only a quick start.
+For detailed installation / setup information, refer to the reference manual :
+
+	http://www.sympa.org/doc/html/
+
+
 Installing Sympa from sources
 =============================
 
-Create a dedicated user sympa.sympa (and it's home directory and  run 
+(If you get sources from cvs tree first run: automake -a ; aclocal ; autoconf)
+
+Create a dedicated user sympa.sympa (and it's home directory) and  run 
 
 ./configure; make; make install.  (you may have to use Gnu make).
 
 If usefull, the make will propose that you upgrade some CPAN module.
 In this case you'll need to be root.
-
-If you get sources from cvs tree first run:
-
-automake -a ; aclocal ; autoconf
    
 
-Sympa setup
+Requirements
+=============================
+
+Sympa requires other applications to run :
+  * perl and suidperl (needed to run the web insterface with sufficient privileges)
+  * sendmail or another MTA (postfix, exim and qmail supported)
+  * mysql or another relational database (postgresql, oracle and sybase supported)
+  * apache (or another web server)
+  * mod_fastcgi is required to provide good web perf
+  * many perl modules : they are automatically installed at 'make' time
+  * antivirus : it is highly recommended that you plug an antivirus with Sympa
+    (ClamAv is free antivirus that works with Sympa : http://www.clamav.net/)
+
+Setup
 ==========
 
-1/ Customization of sympa.conf
+1/ Sympa setup
 You can edit sympa.conf (and wwsympa.conf) manually or run sympa_wizard.pl that will help
 you create your configuration files.
 
-2/ Database (MySQL) setup
+2/ Syslog setup
+Default for Sympa is to log in 'local1' (you can configure this in sympa.conf)
+You should add the following line to your /etc/syslog.conf file :
+	local1.*	/var/log/sympa
+
+On Solaris (7 & 8) and True64, the '.*' level is not recognized in syslog.conf
+You need to enumerate levels :
+	local1.info,local1.notice,local1.debug /var/log/sympa
+
+3/ MySQL setup
 db_xxx parameters in sympa.conf refer to your local database. 
 Sympa.pl should be able to create this database at runtime ; if it does not you'll
 have to create it yourself with the provided create_db.xxx scripts and provide
 read access to Sympa.
 
-3/ Mail aliases
+4/ Mail aliases setup
 Sympa will use a dedicated alias file for its own mail aliases, default is /etc/mail/sympa_aliases.
 You have to configure your MTA (sendmail/postfix,...) to use this file.
 You should also create the main Sympa aliases ; they will look like this :
@@ -38,4 +66,17 @@ You should also create the main Sympa aliases ; they will look like this :
 	sympa-request: postmaster
 	sympa-owner: postmaster
 
-Note that Sympa can also manage virtual mail domains (refer to documentation)
+(Later mailing lists aliases will be installed automatically by Sympa)
+
+5/ Web setup
+You should add these lines to your httpd.conf file :
+
+	ScriptAlias /sympa /wwsympa.fcgi
+
+	## Running FastCGI will provide much faster responses from your server and reduce load 
+	## (to understand why, read http://www.fastcgi.com/fcgi-devkit-2.1/doc/fcgi-perf.htm)
+	#FastCgiServer /wwsympa.fcgi -processes 2
+	#<Location /sympa>
+   	#  SetHandler fastcgi-script
+	#</Location>
+
