@@ -65,13 +65,13 @@
      [IF action=arc_manage]
      <TD BGCOLOR="[selected_color]" ALIGN="CENTER">
        <A HREF="[path_cgi]/arc_manage/[list]" >
-       <FONT size="-1" COLOR="[bg_color]"><b>Gerer les Archives</b></FONT></A>
+       <FONT size="-1" COLOR="[bg_color]"><b>Gérer les Archives</b></FONT></A>
      </TD>
      [ELSE]
      <TD BGCOLOR="[light_color]" ALIGN="CENTER">
        [IF is_owner]
        <A HREF="[path_cgi]/arc_manage/[list]" >
-       <FONT size="-1"><b>Gerer les Archives</b></FONT></A>
+       <FONT size="-1"><b>Gérer les Archives</b></FONT></A>
        [ENDIF]
      </TD>
      [ENDIF]
