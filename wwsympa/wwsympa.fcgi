@@ -1341,13 +1341,13 @@ sub ldap_authentication {
 		next;
 	    }
 
-	    #$cnx = $ldap_passwd->bind($DN[0], password => $pwd);
-	    #unless($cnx->code() == 0){
-		#do_log('notice', 'Incorrect password for user %s ; host: %s',$auth, $host);
-	        #do_log ('err','Ldap Error : %s, Ldap server error : %s',$cnx->error,$cnx->server_error);
-		#$ldap_passwd->unbind;
-		#last;
-	    #}
+	    $cnx = $ldap_passwd->bind($DN[0], password => $pwd);
+	    unless($cnx->code() == 0){
+		do_log('notice', 'Incorrect password for user %s ; host: %s',$auth, $host);
+	        do_log ('err','Ldap Error : %s, Ldap server error : %s',$cnx->error,$cnx->server_error);
+		$ldap_passwd->unbind;
+		last;
+	    }
 	    $ldap_passwd->bind($DN[0]);
 	    $mesg= $ldap_passwd->search ( base => $ldap->{'suffix'},
 					  filter => "$filter",
