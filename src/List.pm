@@ -1046,7 +1046,7 @@ sub savestats {
 ## msg count.
 sub increment_msg_count {
     my $self = shift;
-    do_log('notice', "List::increment_msg_count list : $self->{'name'}");
+    do_log('debug2', "List::increment_msg_count($self->{'name'})");
    
     ## Be sure the list has been loaded.
     my $name = $self->{'name'};
@@ -1054,7 +1054,6 @@ sub increment_msg_count {
     
     my %count ; 
     if (open(MSG_COUNT, $file)) {	
-    do_log('notice', 'List::increment_msg_count file openned');
 	while (<MSG_COUNT>){
 	    if ($_ =~ /^(\d+)\s(\d+)$/) {
 		$count{$1} = $2;	
@@ -1073,7 +1072,6 @@ sub increment_msg_count {
 	do_log('err', "Unable to create '%s.%s' : %s", $file,$$, $!);
 	return undef;
     }
-    do_log('notice', 'List::increment_msg_count writing $file.$$');
     foreach my $key (keys %count) {
 	printf MSG_COUNT "%d\t%d\n",$key,$count{$key} ;
     }
@@ -1083,7 +1081,6 @@ sub increment_msg_count {
 	do_log('err', "Unable to write '%s' : %s", $file, $!);
 	return undef;
     }
-    do_log('notice', 'List::increment_msg_count renamed');
     return 1;
 }
 
