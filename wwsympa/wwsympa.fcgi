@@ -3226,7 +3226,7 @@ sub do_redirect {
  ## Add a user to a list
  ## TODO: vérifier validité email
  sub do_add {
-     &wwslog('info', 'do_add(%s)', $in{'email'});
+     &wwslog('info', 'do_add(%s)', $in{'email'}||$in{'pending_email'});
 
      my %user;
 
@@ -3240,20 +3240,6 @@ sub do_redirect {
 	 &error_message('no_user');
 	 &wwslog('info','do_add: no user');
 	 return 'loginrequest';
-     }
-
-     my $add_is = &List::request_action ('add',$param->{'auth_method'},$robot,
-					 {'listname' => $param->{'list'},
-					  'sender' => $param->{'user'}{'email'}, 
-					  'email' => $in{'email'},
-					  'remote_host' => $param->{'remote_host'},
-					  'remote_addr' => $param->{'remote_addr'}});
-
-     unless ($add_is =~ /do_it/) {
-	 &error_message('may_not');
-	 &wwslog('info','do_add: %s may not add', $param->{'user'}{'email'});
-	 ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$in{'email'},'may not');
-	 return undef;
      }
 
      if ($in{'dump'}) {
@@ -3270,6 +3256,14 @@ sub do_redirect {
 	 }
      }elsif ($in{'email'}) {
 	 $user{&tools::get_canonical_email($in{'email'})} = $in{'gecos'};
+     }elsif ($in{'pending_email'}) {
+	 foreach my $pair (split /\0/, $in{'pending_email'}) {
+	     my ($email, $gecos);
+	     if ($pair =~ /^(.+),(.*)$/) {
+		 ($email, $gecos) = ($1,$2);
+		 $user{&tools::get_canonical_email($email)} = $gecos;
+	     }
+	 }
      }else {
 	 &error_message('no_email');
 	 &wwslog('info','do_add: no email');
@@ -3280,6 +3274,20 @@ sub do_redirect {
      my $comma_emails ;
      foreach my $email (keys %user) {
 
+	 my $add_is = &List::request_action ('add',$param->{'auth_method'},$robot,
+					     {'listname' => $param->{'list'},
+					      'sender' => $param->{'user'}{'email'}, 
+					      'email' => $in{'email'},
+					      'remote_host' => $param->{'remote_host'},
+					      'remote_addr' => $param->{'remote_addr'}});
+	 
+	 unless ($add_is =~ /do_it/) {
+	     &error_message('may_not');
+	     &wwslog('info','do_add: %s may not add', $param->{'user'}{'email'});
+	     ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'add',$param->{'list'},$robot,$in{'email'},'may not');
+	     return undef;
+	 }
+	 
 	 unless (&tools::valid_email($email)) {
 	     &error_message('incorrect_email', {'email' => $email});
 	     &wwslog('info','do_add: incorrect email %s', $email);
