@@ -15,10 +15,10 @@
     <h2> <B> Liste des documents</B> </h2> 
   [ENDIF]
    
-  <TABLE width=100%>
+  <TABLE width=100% CELLPADDING="0">
   <TR BGCOLOR="--DARK_COLOR--">
    
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Document</font></TD>
+  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="--BG_COLOR--">Document</font></TD>
   [IF  order_by<>order_by_doc]  
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">  
@@ -33,7 +33,7 @@
   </TR></TABLE>
   </th>
   
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Auteur</font></TD>
+  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="--BG_COLOR--">Auteur</font></TD>
   [IF  order_by<>order_by_author]  
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">  
@@ -48,7 +48,7 @@
   </TR></TABLE>
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Taille (Kb)</font></TD>
+  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="--BG_COLOR--">Taille (Kb)</font></TD>
   [IF order_by<>order_by_size] 
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -63,7 +63,7 @@
   </TR></TABLE>   
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Mise à jour</font></TD>
+  <th><TABLE width=100% CELLPADDING="0"><TR><TD ALIGN="left"><font color="--BG_COLOR--">Mise à jour</font></TD>
   [IF order_by<>order_by_date]
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -109,13 +109,9 @@
 	[IF s->edit]
 	  <TD><center>
 	  <form method="post" ACTION="[path_cgi]">
-	  <FONT size=-2>
-	  <input type="button" value="    " name="action_d_delete" onClick="request_confirm(this.form,'Voulez-vous vraiment supprimer [path][s->doc] ?')">
+	  <FONT size=-1>
+	  <A HREF="[path_cgi]/d_delete/[list]/[path][s->doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[path][s->doc]', 'Voulez-vous vraiment supprimer [path][f->doc] ?'); return false;">supprimer</A>
 	  </FONT>
-	  <INPUT TYPE="hidden" NAME="action" VALUE="d_delete">
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	  <INPUT TYPE="hidden" NAME="path" VALUE="[path][s->doc]">
-	  </form>	 
 	  </center></TD>
 	[ELSE]
 	  <TD>&nbsp; </TD>
@@ -124,13 +120,9 @@
 	[IF s->control]
 	  <TD>
 	  <center>
-	  <form method="post" ACTION="[path_cgi]">
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	  <INPUT TYPE="hidden" NAME="path" VALUE="[path][s->doc]">
-	  <FONT size=-2>     
-	  <input type="submit" value="    " name="action_d_control">
+	  <FONT size=-1>
+	  <A HREF="[path_cgi]/d_control/[list]/[path][s->doc]">accès</A>
 	  </font>
-	  </form>
 	  </center>
 	  </TD>	 
 	[ELSE]
@@ -168,26 +160,17 @@
 	[IF f->edit]
 	<TD>
 	<center>
-	<form method="post" ACTION="[path_cgi]">
-	<font size=-2>
-        <input type="submit" value="    " name="action_d_editfile">
+	<font size=-1>
+	<A HREF="[path_cgi]/d_editfile/[list]/[path][f->doc]">éditer</A>
 	</font>
-	<INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	<INPUT TYPE="hidden" NAME="path" VALUE="[path][f->doc]">
-	</form>
 	</center>
 
 	</TD>
 	<TD>
 	<center>
-	<form method="post" ACTION="[path_cgi]">
-	<FONT size=-2>
-	<input type="button" value="    " name="action_d_delete" 
-	onClick="request_confirm(this.form,'Voulez-vous vraiment supprimer [path][f->doc] ([f->size] Kb) ?')">
+	<FONT size=-1>
+	<A HREF="[path_cgi]/d_delete/[list]/[path][f->doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[path][f->doc]', 'Voulez-vous vraiment supprimer [path][f->doc] ([f->size] Kb) ?'); return false;">supprimer</A>
 	</FONT>
-	<INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	<INPUT TYPE="hidden" NAME="path" VALUE="[path][f->doc]">
-	</form>
 	</center>
 	</TD>
 	[ELSE]
@@ -196,13 +179,9 @@
 		 
 	[IF f->control]
 	  <TD> <center>
-	  <form method="post" ACTION="[path_cgi]">
-	  <font size=-2>
-	  <input type="submit" value="    " name="action_d_control">
+	  <font size=-1>
+	  <A HREF="[path_cgi]/d_control/[list]/[path][f->doc]">accès</A>
 	  </font>
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	  <INPUT TYPE="hidden" NAME="path" VALUE="[path][f->doc]">     
-	  </form>
 	  </center></TD>
 	[ELSE]
 	<TD>&nbsp; </TD>
@@ -215,13 +194,13 @@
   </TABLE>	        
  
   <HR> 
+   <FORM METHOD="POST" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
 <TABLE CELLSPACING=20>
    
    [IF path]
          
       [IF may_edit]
       <TR>
-      <form method="post" ACTION="[path_cgi]">
       <TD ALIGN="right" VALIGN="bottom">
       <B> Décrire le dossier [path] </B> <BR>
             
@@ -236,13 +215,11 @@
       <INPUT TYPE="hidden" NAME="action" VALUE="d_describe">
       </TD>
 
-      </form>
       </TR>
       [ENDIF]
    
       [IF may_control]
       <TR>   
-      <form method="post" ACTION="[path_cgi]">
            
       <TD ALIGN="right" VALIGN="center">
       <B> Editer les droits d'accès du dossier [path]</B> 
@@ -255,7 +232,6 @@
       <INPUT TYPE="hidden" NAME="path" VALUE="[path]">     
       </TD>
 
-      </form>
       </TR><BR>
       [ENDIF]
   
@@ -264,7 +240,6 @@
 
   [IF may_edit]
     <TR>
-    <form method="post" ACTION="[path_cgi]">
     <TD ALIGN="right" VALIGN="bottom">
     [IF path]
       <B> Créer un sous dossier dans [path]</B> <BR>
@@ -281,11 +256,9 @@
     <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
     <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
     </TD>
-    </form>
     </TR><BR>
 
    <TR>
-   <form method="post" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
    <TD ALIGN="right" VALIGN="bottom">
    [IF path]
      <B> Télécharger un fichier dans le dossier [path]</B><BR>
@@ -300,10 +273,10 @@
    <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
    <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
    <TD>
-   </form> 
    </TR>
    [ENDIF]
 </TABLE>
+</FORM>
 [ENDIF]
    
 
