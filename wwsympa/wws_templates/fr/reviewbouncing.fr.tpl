@@ -58,7 +58,7 @@
       <TR BGCOLOR="--ERROR_COLOR--" NOWRAP>
 	<TH><FONT COLOR="--BG_COLOR--">X</FONT></TH>
         <TH><FONT COLOR="--BG_COLOR--">email</FONT></TH>
-	<TH><FONT COLOR="--BG_COLOR--">Nombre d'erreur</FONT></TH>
+	<TH><FONT COLOR="--BG_COLOR--">Nombre d'erreurs</FONT></TH>
 	<TH><FONT COLOR="--BG_COLOR--">période</FONT></TH>
 	<TH NOWRAP><FONT COLOR="--BG_COLOR--">type</FONT></TH>
       </TR>
