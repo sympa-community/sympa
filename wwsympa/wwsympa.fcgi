@@ -1012,7 +1012,7 @@ sub check_param_in {
        $param->{'subtitle'} = $list->{'admin'}{'subject'};
        $param->{'subscribe'} = $list->{'admin'}{'subscribe'}{'name'};
        $param->{'send'} = $list->{'admin'}{'send'}{'title'}{$param->{'lang'}};
-       $param->{'total'} = $list->get_total();
+       $param->{'total'} = $list->get_total('nocache');
        $param->{'list_as_x509_cert'} = $list->{'as_x509_cert'};
        $param->{'listconf'} = $list->{'admin'};
 
