@@ -3,6 +3,124 @@
 
 (See Changelog file for the full changes log)
 
+4.0.a7		16 October 2003
+
+   New features :
+
+	[requested by Internet2 Shib developpers] Support for a generic SSO system, compatible with
+	Shibboleth. New 'generic_sso' auth.conf paragraphs. Sympa delegates the authentication process 
+	to the SSO and is also able to use provided user attributes within authorization scenarios.  
+***** 	New 'user_attributes' field in the 'subscriber_table' 
+***** 	If you are using MySQL, Sympa.pl will change the database structure 
+***** 	at startup. If using Pg, Oracle or Sybase you should ALTER the table
+***** 	structure according to the provided create_db.x scripts.
+	
+	src/Conf.pm, wwsympa/wwsympa.fcgi: New CAS parameter in auth.conf : non_blocking_redirection 
+	to disable automatic transparent redirection to CAS server
+
+   Changes :
+
+	wwsympa/archived.pl: Use standard tools::get_fileneme()	to find relevant mhonarc-ressources file.
+
+	src/task_manager.pl: no more update update_date user field in the bounce process
+
+	src/sympa.pl: Parse all message (except bounce) because Sobig was able to subscribe 
+	via sympa@domain?subject=subscribe%20liste
+
+	src/: Commands.pm, List.pm, tools.pl, task_manager.pl: [J.Dalbek] 
+	Incorrect listname regexp in task_manager (ingnored lists with '+').  Now centralized regexps in tools.pl
+
+   Bug fixes :
+
+	src/tools.pl: S/MIME related ; Sympa would die if it could	not find user certificate
+
+	src/etc/scenari/visibility.private: visibility was not granted to list owner
+
+	src/: bouncequeue.c, queue.c: [BugID 2006] Wrong exit codes
+
+	src/List.pm: [BugID 204] [reported by M. Grund] db_env variables could not be set (usefull for Oracle)
+
+	src/: Conf.pm, etc/auth.conf: Install a default auth.conf otherwise authentication would 
+	not work without auth.conf.
+
+	wwsympa/wwsympa.fcgi: [reported by M. Krafft] Javascript email addresses protection was not working 
+	with owner/editor when	no gecos was defined
+
+	web spam protection : corrected regexp (M2H_ADDRESSMODIFYCODE var) in archived.pl
+	email list address now protected ; document authors in shared now protected
+
+	wwsympa/wwsympa.fcgi: Fix a bug related to cas logout et virtual robot.
+
+	wwsympa/wws_templates/: fr/loginbanner.fr.tpl,	us/loginbanner.us.tpl: 
+	missing ENDIF ; loginbanner was broken
+
+	wwsympa/wwsympa.fcgi: Fix bug related to CAS and virtual robot
+
+	src/List.pm: wrong multiple_host_with_port regexp would	require a comma after a single hostname
+
+4.0.a6		18 September 2003
+
+   New features :
+
+	src/Commands.pm, src/List.pm, src/sympa.pl: new variable available in authz scenarios :
+	[msg_encrypted] is set to 'smime' if message was S/MIME encrypted
+
+	src/: Conf.pm, List.pm, tools.pl: [C. Mock] : 
+		-allow separate signing/encryption S/MIME keys for users, lists, 
+		sympa; keys are extracted from the received signed emails, analyzed
+		for the key usage extensions, and saved either as before (when they
+		allow signing and encryption) or with a file extension
+		"@enc"/"@sign" for separate keys; cf extract_certs() in tools.pl
+		for saving them, parse_smime_cert() for getting all the info out
+		(this also encapsulates the issue of email addresses in the DN vs
+		SubjectAlternativeName), and find_smime_keys() to encapsulate the
+		decision which key to use for signing, encrypting and decrypting.
+		wwsympa has been altered accordingly to deliver either the
+		encryption certificate or the "both purposes certificate" from
+		"load cert".  
+
+		- allow multiple "generations" of certificates for
+		lists + sympa, so that you can renew your certs before they expire
+		and run old and new certs alongside, so you don't need all your
+		users to switch at the very same moment; this is also encapsulated
+		in find_smime_keys().
+  
+   Changes :
+
+	wwsympa/wwsympa.fcgi: [C. Mock] Change: patched mod_ssl to extract the  SubjectAlternativeName 
+	X509 email storage variant and deliver it in $ENV{SSL_CLIENT_S_EMAIL}; this is checked in wwsympa
+	in preference to $ENV{SSL_CLIENT_S_DN_EMAIL}; need this for our certificates which contain the 
+	email address _only_ in the SubjectAlternativeName.
+
+
+   Bug fixes :
+
+	wwsympa/wwsympa.fcgi: [C. Mock] Fix: set content-type of list cert depending on user-agent, 
+	so IE can automatically import the file too; also, send CRLF terminated certificates with the
+	certificate itself only (no comment lines), also for IE. Certificate installation from the web 
+	interface works for netscape and IE now.
+
+	src/Commands.pm,src/sympa.pl: [C. Mock] Remove unusefull SMIME code, performed in Message.pm
+
+
+4.0.a5		12 September 2003
+
+   New features :
+	
+	Sympa can rely on CAS single sign-on system (Yale central Authentication Service)
+	for authenticating users. Check auth.conf section in documentation for more details.
+	Sympa first tries a transparent login, if it did not succeed, it then prompts the user
+	for his favourite CAS server.
+*****	auth.conf format has changed ; if you had a previous auth.conf file you 
+*****	should change it according to the new format
+
+   Changes :
+
+	doc/: Reorganize documentation with authN and authZ chapters
+
+	doc/sympa.tex.tpl: Change: rename 'scenario' to 'authorization scenario'
+	
+
 4.0.a4		14 August 2003
 
    New features :

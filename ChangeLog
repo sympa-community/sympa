@@ -1,3 +1,31 @@
+2003-10-15 17:13  salaun
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	doc/html/node3.html, doc/html/node4.html, doc/html/node5.html,
+	doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	doc/html/node9.html, doc/html/sympa.html, doc/html/sympa.ps,
+	src/List.pm, src/etc/script/create_db.Oracle,
+	src/etc/script/create_db.Pg, src/etc/script/create_db.Sybase,
+	src/etc/script/create_db.mysql, wwsympa/Auth.pm,
+	wwsympa/cookielib.pm, wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi: New
+	feature: support for a generic SSO system, compatible with
+	Shibboleth. New 'generic_sso' auth.conf paragraphs. Sympa delegates
+	the authentication process to the SSO and is also able to use
+	provided user attributes within authorization scenarios.  ***** New
+	'user_attributes' field in the 'subscriber_table' ***** If you are
+	using MySQL, Sympa.pl will change the database structure ***** at
+	startup. If using Pg, Oracle or Sybase you should ALTER the table
+	***** structure according to the provided create_db.x scripts.
+
+2003-10-15 11:20  salaun
+
+	* ChangeLog: update
+
 2003-10-09 13:21  salaun
 
 	* src/tools.pl: Fix: S/MIME related ; Sympa would die if it could
