@@ -1,6 +1,4 @@
-
 <BR>
-Authentification HTTPS :<br>
 <table border=1>
 <tr><td><b>HTTPS authentication information</b></td></TR>
 <table>
