@@ -35,6 +35,7 @@ use Commands;
 #use Getopt::Std;
 use Getopt::Long;
 use Language;
+use Digest::MD5;
 
 use wwslib;
 use smtp;
@@ -271,7 +272,6 @@ sub rebuild {
 
     my $adrlist = shift;
     my $arc ;
-    my $time = time;
 
     do_log ('debug2',"rebuild ($adrlist)");
 
@@ -284,6 +284,8 @@ sub rebuild {
     my $listname = $1;
     my $hostname = $2;
 
+    my $tag = &get_tag($listname);
+
     my $list = new List($listname);
 
     do_log('debug',"Rebuilding $adrlist archive ($2)");
@@ -291,7 +293,7 @@ sub rebuild {
     my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources.tt2',$list->{'domain'}, $list);
 
     if (($list->{'admin'}{'web_archive_spam_protection'} ne 'none') && ($list->{'admin'}{'web_archive_spam_protection'} ne 'cookie')) {
-	&set_hidden_mode($time);
+	&set_hidden_mode($tag);
     }else {
 	&unset_hidden_mode();
     }
@@ -305,7 +307,7 @@ sub rebuild {
 	my $yyyy = $1 ;
 	my $mm = $2 ;
 
-	my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\' -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc time=$time\" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
+	my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\' -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
 
 	do_log('debug',"System call : $cmd");
 	my $exitcode = system($cmd);
@@ -330,7 +332,7 @@ sub rebuild {
 	    ## Remove .mhonarc.db
 	    unlink $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/.mhonarc/db';
 	    
-	    my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc time=$time\" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
+	    my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
 	    my $exitcode = system($cmd);
 	    if ($exitcode) {
 		do_log('err',"Command $cmd failed with exit code $exitcode");
@@ -346,12 +348,13 @@ sub mail2arc {
     my ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss) = @_;
     my $arcpath = $wwsconf->{'arc_path'};
     my $newfile;
-    my $time = time;
 
     my $list = new List($listname);
 
+    my $tag = &get_tag($listname);
+
     if (($list->{'admin'}{'web_archive_spam_protection'} ne 'none') && ($list->{'admin'}{'web_archive_spam_protection'} ne 'cookie')) {
-	&set_hidden_mode($time);
+	&set_hidden_mode($tag);
     }else {
 	&unset_hidden_mode();
     }    
@@ -427,9 +430,11 @@ sub mail2arc {
     my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources.tt2',$list->{'domain'}, $list);
     
     do_log ('debug',"calling $wwsconf->{'mhonarc'} for list $listname\@$hostname" ) ;
-    my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $arcpath/$listname\@$hostname/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc time=$time\" -umask $Conf{'umask'} < $queue/$file";
+    my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $arcpath/$listname\@$hostname/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} < $queue/$file";
     
-    my $exitcode = system($cmd);
+    do_log('debug',"System call : $cmd");
+    
+   my $exitcode = system($cmd);
     if ($exitcode) {
            do_log('err',"Command $cmd failed with exit code $exitcode");
     }
@@ -447,10 +452,10 @@ sub mail2arc {
 }
 
 sub set_hidden_mode {
-    my $time = shift; ## time is used as variable elements in tags to prevent message contents to be parsed
+    my $tag = shift; ## tag is used as variable elements in tags to prevent message contents to be parsed
 
     ## $ENV{'M2H_MODIFYBODYADDRESSES'} à positionner si le corps du message est parse
-    $ENV{'M2H_ADDRESSMODIFYCODE'} = "s|^([^\@]+)\@([^\@]+)\$|\($time\%hidden_head\%$time\)\$1\($time\%hidden_at\%$time\)\$2\($time\%hidden_end\%$time\)|g";
+    $ENV{'M2H_ADDRESSMODIFYCODE'} = "s|^([^\@]+)\@([^\@]+)\$|\($tag\%hidden_head\%$tag\)\$1\($tag\%hidden_at\%$tag\)\$2\($tag\%hidden_end\%$tag\)|g";
     $ENV{'M2H_MODIFYBODYADDRESSES'} = 1;
 }
 
@@ -469,3 +474,8 @@ sub save_idx {
     #   do_log('debug',"last arc entry for $index is $lst");
 }
 
+sub get_tag {
+    my $listname = shift;
+    
+    return (substr(Digest::MD5::md5_hex(join('/', $Conf{'cookie'}, $listname)), -10)) ;
+}
