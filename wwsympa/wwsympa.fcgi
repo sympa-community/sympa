@@ -2319,7 +2319,7 @@ sub do_add {
 	my $u2 = &List::get_user_db($email);
 	my $u = $list->get_default_user_options();
 	$u->{'email'} = $email;
-	$u->{'gecos'} = $u2->{'gecos'} || $user{$email};
+	$u->{'gecos'} = $user{$email} || $u2->{'gecos'};
 	$u->{'date'} = time;
 	$u->{'password'} = $u2->{'password'} || &tools::tmp_passwd($email) ;
 	$u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
