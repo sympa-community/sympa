@@ -3817,8 +3817,8 @@ sub verify {
 
 	    ## List param
 	}elsif ($value =~ /\[list\-\>([\w\-]+)\]/i) {
-	    if ($1 eq 'name' and $list->{'name'}) {
-		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{'name'}/;
+	    if ($1 =~ /^name|total$/) {
+		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{$1}/;
 	    }elsif ($list->{'admin'}{$1} and (!ref($list->{'admin'}{$1})) ) {
 		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{'admin'}{$1}/;
 	    }else{

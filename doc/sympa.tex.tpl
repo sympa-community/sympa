@@ -3850,7 +3850,7 @@ Rules are defined as follows :
 			  | <additional_subscriber_fields>
 
 <list_key_word> ::= name | host | lang | max_size | priority | reply_to | 
-		    status | subject | account | 
+		    status | subject | account | total
 
 <conf_key_word> ::= domain | email | listmaster | default_list_priority | 
 		      sympa_priority | request_priority | lang | max_size
