@@ -3564,7 +3564,7 @@ are \cfkeyword {regexp} or \cfkeyword {negative\_regexp} which are perl regular 
 	In the previous example the canonic email is 'mail'.
 
 		 
-\item{alternate\_email\_attribute}\\
+\item{alternative\_email\_attribute}\\
 
 	The name of the attribute for the alternate email in your directory : for instance alternate\_email, mailalternateaddress, ...
 	You make a list of these attributes separated by commas.
