@@ -5156,8 +5156,6 @@ sub do_set_pending_list_request {
 
      $param->{'create_action'} = $param->{'create_list'};
 
-     &wwslog('info',"do_create_list, get action : $param->{'create_action'} ");
-
      if ($param->{'create_action'} =~ /reject/) {
 	 &error_message('may_not');
 	 &wwslog('info','do_create_list: not allowed');
