@@ -20,26 +20,13 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 ## Available catalogues (languages)
-CAT	=	fr.cat us.cat es.cat de.cat it.cat cn.cat tw.cat fi.cat pl.cat cz.cat hu.cat ro.cat et.cat nl.cat
-
-.SUFFIXES:	.cat .msg
-
-.cat:	.msg
-
-.msg.cat:
-	rm -f $@
-	$(GENCAT) $@ $<
-
-all:	$(CAT)
-
-clean:
-	rm -f *.cat
+MSG	=	fr.msg us.msg es.msg de.msg it.msg cn.msg tw.msg fi.msg pl.msg cz.msg hu.msg ro.msg et.msg nl.msg
 
 install: 
 	echo "Please use the main Makefile for installing NLS."
 
 newinstall: makedir 
-	@for c in $(CAT); do \
+	@for c in $(MSG); do \
 		echo "Installing catalog...$(DESTDIR)$(NLSDIR)/$$c"; \
 		cp $$c $(DESTDIR)$(NLSDIR); \
 	done

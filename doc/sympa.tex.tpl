@@ -596,7 +596,7 @@ a virtual robot or for the whole site.
 	\item \dir {[NLSDIR]}\\
 	Internationalization directory. It contains XPG4-compatible
 	message catalogues. \Sympa has currently been translated
-	into 8 different languages.
+	into 14 different languages.
 
 	\item \dir {[SPOOLDIR]}\\
 	\Sympa uses 7 different spools (see \ref{spools}, page~\pageref{spools}).
@@ -791,8 +791,9 @@ detail in later sections.
 You should have a UNIX system that is more or less recent in order
 to be able to use \Sympa. In particular, it is necessary
 that your system have an ANSI C compiler (in other words, your compiler
-should support prototypes), as well as XPG4-standard \textindex {NLS}
-(Native Language Support, for languages other than English) extensions.
+should support prototypes);
+%, as well as XPG4-standard \textindex {NLS}
+%(Native Language Support, for languages other than English) extensions.
 
 \Sympa has been installed and tested on the following
 systems, therefore you should not have any special problems:
@@ -809,10 +810,10 @@ systems, therefore you should not have any special problems:
 
 Anyone willing to port it to NT ? ;-)
 
-If your UNIX system has a \unixcmd {gencat} command as well as
-\unixcmd {catgets(3)} and \unixcmd {catopen(3)} functions, it is
-likely that it has \textindex {NLS} extensions and that these extensions comply
-with the XPG4 specifications.
+% If your UNIX system has a \unixcmd {gencat} command as well as
+% \unixcmd {catgets(3)} and \unixcmd {catopen(3)} functions, it is
+% likely that it has \textindex {NLS} extensions and that these extensions comply
+% with the XPG4 specifications.
 
 Finally, most UNIX systems are now supplied with an ANSI C compiler;
 if this is not the case, you can install the \unixcmd {gcc} compiler,
@@ -867,7 +868,6 @@ run the \unixcmd {check\_perl\_modules.pl} script.
 
 \begin {itemize}
    \item \perlmodule {DB\_File} (v. 1.50 or later)
-   \item \perlmodule {Msgcat}
    \item \perlmodule {Digest-MD5}
    \item \perlmodule {MailTools} (version 1.13 o later)
    \item \perlmodule {IO-stringy}
@@ -1015,8 +1015,6 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 
 \item \option {--with-openssl=FULLPATH}, set path to OpenSSL (default /usr/local/ssl/bin/openssl)
 
-\item \option {--with-gencat=FULLPATH}, set path to gencat (default /usr/bin/gencat)
-
 \item \option {--with-user=LOGIN}, set sympa user name (default sympa)\\
 \Sympa daemons are running under this UID.
 
@@ -1158,8 +1156,6 @@ To do this, add the following sequence or its equivalent in your
   The corresponding catalog file must be located in \tildedir {sympa/nls}
   directory. 
   
-  For example, with the \file {fr.cat} catalog:
-
 \item \option {--keepcopy \textit {recipient\_directory}} | \option {-k \textit {recipient\_directory}}
 
   This option tells Sympa to keep a copy of every incoming message,
@@ -1392,7 +1388,9 @@ You can also add a unique entry, with a regular expression, for your domain.
 
 With Postfix, you should edit the \file {/etc/postfix/virtual.regexp} file as follows :
 \begin {quote}
-/^(.*)\samplerobot$/	 \samplerobot-${1}
+\begin{verbatim}
+/^(.*)samplerobot\$/	 samplerobot-\${1}
+\end{verbatim}
 \end {quote}
  Entries in the 'aliases' file will look like this :
 \begin {quote}
@@ -1879,7 +1877,7 @@ see a  nice mailto adresses where others have nothing.
 	\default {us}
 
         This is the default language for \Sympa. The message
-	catalog (.cat) located in the corresponding \cfkeyword {msgcat} directory
+	catalog (.msg) located in the corresponding \cfkeyword {nls} directory
 	will be used.
 
 \section {Bounce related}
@@ -3907,7 +3905,7 @@ Nowadays \Sympa is able to keep track of individual users' language preferences.
 Every message sent by \Sympa to users, owners and editors is outside
 the code, in a message catalog. These catalogs are located in the
 \dir {[NLSDIR]} directory. Messages have currently been
-translated into 10 different languages : 
+translated into 14 different languages : 
 
 \begin{itemize}
 

@@ -128,9 +128,6 @@ SENDMAIL_ALIASES=	@SENDMAIL_ALIASES@
 ## and declared in main.cf!
 VIRTUAL_ALIASES=	@VIRTUAL_ALIASES@
 
-## Path to gencat program (creates the .cat catalog file using the .msg)
-GENCAT	= 	@GENCAT@
-
 ## Path to OpenSSL
 OPENSSL	=	@OPENSSL@
 SSLCERTDIR =	$(EXPL_DIR)/X509-user-certs
@@ -217,7 +214,7 @@ languages:
 	(cd nls && echo "making in nls..." && \
 	$(MAKE) SH='${SH}' PERL='${PERL}' ETCBINDIR='${ETCBINDIR}' \
 	DIR='${DIR}' NLSDIR='${NLSDIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' \
-	USER='${USER}' GROUP='${GROUP}' GENCAT='${GENCAT}');
+	USER='${USER}' GROUP='${GROUP}');
 
 checkcpan: 
 	@echo "Checking needed CPAN modules ..."
@@ -272,7 +269,7 @@ installnls:
 	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' \
 	VIRTUAL_ALIASES='${VIRTUAL_ALIASES}' \
-	USER='${USER}' GROUP='${GROUP}' GENCAT='${GENCAT}' newinstall) || exit 1;
+	USER='${USER}' GROUP='${GROUP}' newinstall) || exit 1;
 
 installwws:
 	@(cd wwsympa && echo "making in wwsympa..." && \

@@ -27,81 +27,138 @@ use Carp;
 @EXPORT = qw(Msg);
 
 use strict;
-use Locale::Msgcat;
 use Log;
 use Version;
 
-my %Message;
-
-my $dir;
+my %msghash;     # Hash organization is like Messages file: File>>Sections>>Messages
+my %set_comment; #sets-of-messages comment   
 my $current_lang;
 my $default_lang;
 
+
+
+sub GetHash { return %msghash;}
+
 sub LoadLang {
-    my $catdir = pop;
+#############
+#To Load all files in MsgHash
 
-    unless (-d $catdir && -r $catdir) {
-	do_log('info','Cannot read Locale directory %s', $catdir);
+    my $msgdir = shift;
+    &do_log('debug', "Language::LoadLang(%s)", $msgdir);
+
+    unless (-d $msgdir && -r $msgdir){
+	
+	do_log('err','Cannot read Locale directory %s', $msgdir);
 	return undef;
     }
-
-    $dir = $catdir;
-
-    unless (opendir CATDIR, $catdir) {
-	do_log('info','Unable to open directory %s', $catdir);
+   
+    unless (opendir MSGDIR, $msgdir) {
+	do_log('err','Unable to open directory %s', $msgdir);
 	return undef;
     }
+    
+    foreach my $file (grep /\.msg$/, readdir(MSGDIR)) {    
 
-    foreach my $file (grep /\.cat$/, readdir(CATDIR)) {    
-
-	$file =~ /^([\w-]+)\.cat$/;
+	$file =~ /^([\w-]+)\.msg$/;
 	
-	my $catname = $1;
-
-	my $catfile = $catdir.'/'.$catname.'.cat';
-	unless (-r $catfile) {
-	    do_log('info','Locale file %s not found', $catfile);
+	my $lang_name = $1;
+	
+	unless (Msg_file_open($msgdir.'/'.$file,$lang_name)) {
+	    do_log('err','Error while calling Msg_file_Open(%s, %s)', $msgdir.'/'.$file,$lang_name);
 	    return undef;
 	}
-
-	$Message{$catname} = new Locale::Msgcat;
-
-	unless ($Message{$catname}->catopen($catfile, 1)) {
-	    do_log('info','Locale file %s.cat not used, using builtin messages', $catname);
-	    return undef;
-	}
-	
-	$current_lang = $catname;
-	do_log('info', 'Loading locale file %s.cat version %s', $catname, Msg(1, 102, $Version));	
     }
-    closedir CATDIR;
-
+    closedir MSGDIR;
+    
     return 1;
-}
+}#sub Load_Lang
+
+
+sub Msg_file_open {
+#################
+
+    my $msgfile = shift; #Messages File name
+    my $lang = shift;    #Language
+    my $set_num;           # Section Number
+    my $msg_num;        # Message Number in Section
+    my $msg_value;     # Message content
+
+    #Opening   ##
+    chomp($msgfile);
+    do_log('info', 'Loading locale file %s version', $msgfile);	
+    unless (-r $msgfile) { #check if file exists
+	do_log('err','Cannot read file %s', $msgfile);
+        return undef;
+    }
+
+    unless (open(MSGFILE,$msgfile)) { 
+	do_log('err','Cannot open message File %s', $msgfile);
+	return undef;
+    }
+
+    #Process  ##
+    while (<MSGFILE>) {  
+   	my $current_line = $_;
+	chomp($current_line);
+
+	next if ($current_line =~ /^\s*$/) || ($current_line =~ /^\$(\s+|quote)/);         # for empty or comments Lines
+
+	if ($current_line =~ /^\$set\s+(\d+)\s+(.+)$/i){	                           # When it's a Section-separation  Line
+	    $set_num = $1;
+	    $set_comment{$set_num} = $2;	                                                 
+	
+	}elsif ($current_line =~ /^(\d+)\s+\"(.*)(\\|\")\s*$/i){                          # When it's a Begin of Message
+	    $msg_num = $1;  
+	    $msghash{$lang}{$set_num}{$msg_num} = $2;
+
+     	}elsif ($current_line =~ /^(.+)(\\|\")\s*$/i){                                   # When it's the follow or End of a message
+	    $msghash{$lang}{$set_num}{$msg_num} .= $1;
+	}   
+
+	$msghash{$lang}{$set_num}{$msg_num} =~ s/(\\n)/\n/g;                            #some sequences need to be substitute:
+	$msghash{$lang}{$set_num}{$msg_num} =~ s/(\\t)/\t/g;                           # \n, \t
+	$msghash{$lang}{$set_num}{$msg_num} =~ s/(\\\\)/\\/g;
+
+	
+    }# while
+    #############
+    close(MSGFILE);
+    return 1;
+}#sub Msg_file_open
 
 sub SetLang {
-    my $catname = shift;
-    do_log('debug3', 'Language::SetLang(%s)', $catname);
+###########
+    my $lang = shift;
+    do_log('debug3', 'Language::SetLang(%s)', $lang);
    
-    unless (defined ($Message{$catname})) {
-	do_log('info','unknown Locale %s', $catname);
+    unless (defined ($msghash{$lang})) {
+	do_log('err','unknown Locale %s', $lang);
 	return undef;
     }
 	    
-    $current_lang = $catname;
+    $current_lang = $lang;
     return 1;
-}
+}#SetLang
 
-sub Msg {
-    
-    if (defined ($Message{$current_lang})) {
-	$Message{$current_lang}->catgets(@_);
-    }else {
-	$_[2];
+sub Msg{
+#######
+
+    my $set = shift;
+    my $msg = shift;
+    my $msg_default = shift;
+  
+    unless (defined($msghash{$current_lang}{$set}{$msg})) {
+	return $msg_default;
+	do_log('info','%s-Message %d of set %d not found, using user Message : %s ',$current_lang, $msg, $set, $msg_default);
     }
-}
+
+    return $msghash{$current_lang}{$set}{$msg};
+
+}#sub Msg
 
 sub GetLang {
+############
+
     return $current_lang;
 }
 

@@ -142,15 +142,6 @@ AC_PATH_PROG(OPENSSL, openssl, /usr/local/ssl/bin)
 AC_ARG_WITH(openssl, [  --with-openssl=FULLPATH       set path to OpenSSL (default /usr/local/ssl/bin/openssl)], [OPENSSL="$withval"])
 AC_SUBST(OPENSSL)
 
-AC_PATH_PROG(GENCAT, gencat, "/usr/bin/gencat -m")
-case "$build_os" in
-irix*) 
-	GENCAT="$GENCAT -m"
-	;;
-esac
-AC_ARG_WITH(gencat, [  --with-gencat=FULLPATH       set path to gencat (default /usr/bin/gencat)], [GENCAT="$withval"])
-AC_SUBST(GENCAT)
-
 AC_PATH_PROG(CVS2CL, cvs2cl.pl, /usr/local/bin)
 AC_SUBST(CVS2CL)
 

@@ -48,7 +48,6 @@ use CPAN;
 ### key:left "module" used by SYMPA, 
 ### right CPAN module.		     
 %req_CPAN = ('DB_File' => 'DB_FILE',
-	     'Locale::Msgcat' => 'Msgcat',
 	     'Digest::MD5' => 'Digest-MD5',
 	     'Mail::Internet' =>, 'MailTools',
 	     'IO::Scalar' => 'IO-stringy',
