@@ -1245,7 +1245,7 @@ sub increment_msg_count {
 	do_log('err', "Unable to create '%s.%s' : %s", $file,$$, $!);
 	return undef;
     }
-    foreach my $key (keys %count) {
+    foreach my $key (sort {$a <=> $b} keys %count) {
 	printf MSG_COUNT "%d\t%d\n",$key,$count{$key} ;
     }
     close MSG_COUNT ;
