@@ -629,7 +629,7 @@ my %alias = ('reply-to' => 'reply_to',
 			       'title_id' => 44,
 			       'group' => 'data_source'
 			       },
-	    'include_sql_query' => {'format' => {'db_type' => {'format' => ['mysql','Pg','Oracle','Sybase'],
+	    'include_sql_query' => {'format' => {'db_type' => {'format' => '\S+',
 							       'occurrence' => '1',
 							       'title_id' => 46,
 							       'order' => 1
