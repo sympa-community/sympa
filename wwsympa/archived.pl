@@ -124,8 +124,6 @@ unless ((-r $wwsconf->{'arc_path'}) && (-w $wwsconf->{'arc_path'})) {
     do_log('err', 'Unsufficient access to %s directory', $wwsconf->{'arc_path'});
 }
 
-&Language::LoadLang($Conf{'msgcat'});
-
 ## Change to list root
 unless (chdir($Conf{'home'})) {
     &message('chdir_error');
