@@ -493,6 +493,9 @@ $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 ## Set locale configuration	 
 $Language::default_lang = $Conf{'lang'};	 
 
+## Important to leave this there because it defined defaults for user_data_source
+$List::use_db = &List::probe_db()
+
 my $pinfo = &List::_apply_defaults();
 
 &tools::ciphersaber_installed();
