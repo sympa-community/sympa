@@ -28,6 +28,12 @@ edit_list.conf format has changed :
 Refer to documentation to adapt [param0].
 Until then we recommend your remove [param0] ; 
 default configuration will be used.
+[ELSIF type=sync_include_failed]
+Subject: subscribers update failed for list [param0]
+
+Sympa could not include subscribers from external data sources ; the
+database or LDAP directory might be unreachable. 
+Check Sympa log files for more precise information
 [ELSE]
 Subject: [type]
 

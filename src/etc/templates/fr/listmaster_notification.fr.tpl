@@ -29,6 +29,13 @@ Le format du fichier de configuration edit_list.conf a changé :
 Reportez-vous à la documentation pour adapter [param0].
 D'ici là, nous vous suggérons de supprimer [param0].
 La configuration par défaut sera utilisée.
+[ELSIF type=sync_include_failed]
+Subject: problème de mise à jour des membres de la liste [param0]
+
+Sympa n'a pas pu mettre à jour la liste des membres à partir des sources de 
+données externes ; la base de données ou l'annuaire LDAP ne sont probablement
+pas intérogeables.
+Consultez les logs de Sympa pour plus de précisions.
 [ELSE]
 Subject: [type]
 

@@ -2709,7 +2709,7 @@ sub delete_user {
 
     $self->{'total'} += $total;
     $self->savestats();
-    return $total;
+    return (-1 * $total);
 }
 
 ## Returns the cookie for a list, if any.
@@ -5900,6 +5900,10 @@ sub _load_users_include2 {
 	}
     }
 
+    ## If an error occured, return an undef value
+    unless (defined $total) {
+	return undef;
+    }
     return \%users;
 }
 
@@ -5922,6 +5926,14 @@ sub sync_include {
     my $new_subscribers;
     unless ($option eq 'purge') {
 	$new_subscribers = _load_users_include2($name, $self->{'admin'}, $self-{'dir'});
+
+	## If include sources were not available, do not update subscribers
+	## Use DB cache instead
+	unless (defined $new_subscribers) {
+	    &do_log('err', 'Could not include subscribers for list %s', $name);
+	    &List::send_notify_to_listmaster('sync_include_failed', $self->{'domain'}, $name);
+	    return undef;
+	}
     }
 
     my $users_added = 0;
@@ -6024,9 +6036,9 @@ sub sync_include {
 	    return undef;
         }
         &do_log('notice', 'List:sync_include(%s): %d users removed',
-		$name, $users_added);
+		$name, $users_removed);
     }
-    &do_log('notice', 'List:sync_include(%s): %d users removed', $name, $users_updated);
+    &do_log('notice', 'List:sync_include(%s): %d users updated', $name, $users_updated);
 
     ## Release lock
     flock(FH,LOCK_UN);
