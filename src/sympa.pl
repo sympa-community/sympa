@@ -1088,6 +1088,13 @@ sub DoCommand {
     my @sender_hdr = Mail::Address->parse($from_field);
     my $sender = $sender_hdr[0]->address;
 
+    ## Detect loops
+    if ($msgid_table{$robot}{$messageid}) {
+	do_log('notice', 'Found known Message-ID, ignoring command which would cause a loop');
+	return undef;
+    }
+    $msgid_table{$robot}{$messageid}++;
+
     ## If X-Sympa-To = <listname>-<subscribe|unsubscribe> parse as a unique command
     if ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o) {
 	do_log('debug',"processing message for $1-$2");
