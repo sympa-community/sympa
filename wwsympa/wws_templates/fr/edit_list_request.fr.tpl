@@ -276,7 +276,7 @@
 [END]
 </TABLE>
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-<INPUT TYPE="submit" NAME="action_edit_list" VALUE="Update">
+<INPUT TYPE="submit" NAME="action_edit_list" VALUE="Mise à jour">
 </FORM>
 
 
