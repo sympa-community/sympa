@@ -79,6 +79,7 @@ installinit:
 		UMASK=0755; export UMASK; \
 		DIR=$(DIR); export DIR; \
 		DESTDIR=$(DESTDIR); export DESTDIR; \
+		INITDIR=$(INITDIR); export INITDIR; \
 		INSTALLDIR=$(INITDIR); export INSTALLDIR; \
 		BINDIR=$(BINDIR); export BINDIR; \
 		PIDDIR=$(PIDDIR); export PIDDIR; \

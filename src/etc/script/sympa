@@ -16,7 +16,7 @@
 
 if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "solaris" ]; then
     # Source function library.
-    . /etc/rc.d/init.d/functions
+    . --INITDIR--/functions
 
     # Get config.
     . /etc/sysconfig/network
