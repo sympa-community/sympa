@@ -126,7 +126,7 @@ sub rejectMessage {
    *REJ = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
    print REJ "To: $sender\n";
    print REJ "Subject: [sympa] " . gettext("Routing error ?") . "\n";
-   printf REJ "MIME-Version: %s\n", gettext("1.0");
+   printf REJ "MIME-Version: 1.0\n";
    printf REJ "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
    printf REJ "Content-Transfer-Encoding: %s\n", gettext("7bit");
    print REJ "\n";

@@ -773,7 +773,7 @@ sub DoFile {
 	$reply_hdr->add('To', $sender);
 	$reply_hdr->add('Subject', gettext("Results of your commands"));
 	$reply_hdr->add('X-Loop', &Conf::get_robot_conf($robot, 'sympa'));
-	$reply_hdr->add('MIME-Version', gettext("1.0"));
+	$reply_hdr->add('MIME-Version', '1.0');
 	$reply_hdr->add('Content-type', sprintf 'text/plain; charset=%s', 
 			gettext("us-ascii"));
 	$reply_hdr->add('Content-Transfer-Encoding', gettext("7bit"));
@@ -985,7 +985,7 @@ sub DoMessage{
 	print SIZ "From: " . sprintf (gettext("SYMPA <%s>"), &Conf::get_robot_conf($robot, 'request')) . "\n";
 	printf SIZ "To: %s\n", $sender;
 	printf SIZ "Subject: " . gettext("Your message to %s has been rejected") . "\n", $listname;
-	printf SIZ "MIME-Version: %s\n", gettext("1.0");
+	printf SIZ "MIME-Version: 1.0\n";
 	printf SIZ "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
 	printf SIZ "Content-Transfer-Encoding: %s\n\n", gettext("7bit");
 	print SIZ gettext("Your message could not be sent because its size \nwas over the maximum size allowed on this list.\n");
@@ -1058,7 +1058,7 @@ sub DoMessage{
 		print SIZ "From: " . sprintf (gettext("SYMPA <%s>"), &Conf::get_robot_conf($robot, 'request')) . "\n";
 		printf SIZ "To: %s\n", $sender;
 		printf SIZ "Subject: " . gettext("Your message to %s has been rejected")."\n", $listname ;
-		printf SIZ "MIME-Version: %s\n", gettext("1.0");
+		printf SIZ "MIME-Version: 1.0\n";
 		printf SIZ "Content-Type: text/plain; charset=%s\n", gettext("us-ascii");
 		printf SIZ "Content-Transfer-Encoding: %s\n\n", gettext("7bit");
 		printf SIZ gettext("Your message for list %s has been rejected.\nThe message is thus sent back to you.\n\nYour message :\n"), $listname;
@@ -1308,7 +1308,7 @@ sub ProcessExpire{
 	    $reply_hdr->add('To', $proprio);
  	    $reply_hdr->add('Subject',sprintf( gettext("End of your EXPIRE command on list %s"),$expire));
 
-	    $reply_hdr->add('MIME-Version', gettext("1.0"));
+	    $reply_hdr->add('MIME-Version', '1.0');
 	    my $content_type = 'text/plain; charset='.gettext("us-ascii");
 	    $reply_hdr->add('Content-type', $content_type);
 	    $reply_hdr->add('Content-Transfer-Encoding', gettext("7bit"));
