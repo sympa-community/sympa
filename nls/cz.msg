@@ -32,6 +32,7 @@ Va¹e zpráva :\n"
 39	"Ve zpráve nebyl nalezen ¾ádný pøíkaz."
 40	"Va¹e zpráva bude moderována"
 
+
 $set 5	Messages used in the tools module
 1	"Safefork nemù¾e vytvoøit nový proces : %m"
 2	"Chyba routování ?"

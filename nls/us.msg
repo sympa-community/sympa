@@ -247,7 +247,7 @@ $set 12 MIME headers
 3	"7bit"
 4	"SYMPA <%s>"
 
-$set 14 Pour le web
+$set 14 Locale equivalent and language name
 1	"en_US"
 2	"english"
 
