@@ -20,4 +20,14 @@ L'appel à l'antivirus a échoué lors du traitement du fichier suivant :
 Le message d'erreur :
 	[error_msg]
 [error_msg]
+[ELSIF type=edit_list_error]
+Subject: format incorrect edit_list.conf
+
+Le format du fichier de configuration edit_list.conf a changé :
+'default' n'est plus reconnu pour une population.
+
+Reportez-vous à la documentation pour adapter [param0].
+D'ici là nous vous suggérons de supprimer [param0] ; 
+la configuration par défaut sera utilisée.
+
 [ENDIF]

@@ -1183,7 +1183,7 @@ sub send_alert_to_owner {
 ## Send a sub/sig notice to the owners.
 sub send_notify_to_listmaster {
     my ($operation, $robot, @param) = @_;
-    do_log('info', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
+    do_log('debug2', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
 
     ## No DataBase
     if ($operation eq 'no_db') {
@@ -1223,6 +1223,16 @@ sub send_notify_to_listmaster {
 			  'type' => 'virus_scan_failed',
 			  'filename' => $param[0],
 			  'error_msg' => $param[1]});	
+    }else {
+	my $data = {'to' => "listmaster\@$Conf{'host'}",
+		 'type' => $operation
+		 };
+	
+	for my $i(0..$#param) {
+	    $data->{"param$i"} = $param[$i];
+	}
+
+	&send_global_file('listmaster_notification', $Conf{'listmaster'}, $robot, $data);
     }
     
     return 1;
@@ -3910,8 +3920,8 @@ sub may_edit {
     
     if (! $edit_list_conf{$self->{'domain'}} || ((stat(&tools::get_filename('etc','edit_list.conf',$self->{'domain'})))[9] > $mtime{'edit_list_conf'}{$self->{'domain'}})) {
 
-        $edit_conf = &tools::load_edit_list_conf($self->{'domain'});
-
+        $edit_conf = $edit_list_conf{$self->{'domain'}} = &tools::load_edit_list_conf($self->{'domain'});
+	$mtime{'edit_list_conf'}{$self->{'domain'}} = time;
     }else {
         $edit_conf = $edit_list_conf{$self->{'domain'}};
     }

@@ -139,6 +139,7 @@ Thank you for your attention.
 ## return a hash from the edit_list_conf file
 sub load_edit_list_conf {
     my $robot = shift;
+    do_log('debug2', 'tools::load_edit_list_conf (%s)',$robot);
 
     my $file;
     my $conf ;
@@ -151,6 +152,7 @@ sub load_edit_list_conf {
 	return undef;
     }
 
+    my $error_in_conf;
     $roles_regexp = 'listmaster|privileged_owner|owner|editor|subscriber|default';
     while (<FILE>) {
 	next if /^\s*(\#.*|\s*)$/;
@@ -161,6 +163,7 @@ sub load_edit_list_conf {
 	    foreach my $r (@roles) {
 		$r =~ s/^\s*(\S+)\s*$/$1/;
 		if ($r eq 'default') {
+		    $error_in_conf = 1;
 		    &do_log('notice', '"default" is no more recognised');
 		    foreach my $set ('owner','privileged_owner','listmaster') {
 			$conf->{$param}{$set} = $priv;
@@ -173,6 +176,10 @@ sub load_edit_list_conf {
 	    &do_log ('info', 'unknown parameter in %s  (Ignored) %s', "$Conf{'etc'}/edit_list.conf",$_ );
 	    next;
 	}
+    }
+
+    if ($error_in_conf) {
+	&List::send_notify_to_listmaster('edit_list_error', $robot, $file);
     }
     
     close FILE;
