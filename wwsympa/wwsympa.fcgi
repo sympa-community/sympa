@@ -4065,7 +4065,7 @@ sub do_edit_list {
 			    }
 			    foreach my $index (0..$#{$p->[$i]{$key}}) {
 				if ($p->[$i]{$key}[$index] ne $new_p->[$i]{$key}[$index]) {
-				    unless ($new_p->[$i]{$key}[$index] =~ /^$pinfo->{$pname}{'file_format'}{$key}{'file_format'}$/) {
+				    unless ($new_p->[$i]{$key}[$index] =~ /^$pinfo->{$pname}{'format'}{$key}{'file_format'}$/) {
 					push @syntax_error, $pname;
 				    }
 				    $changed{$pname} = 1; next;
@@ -4073,12 +4073,12 @@ sub do_edit_list {
 			    }
 			}else {
 			    if ($p->[$i]{$key} ne $new_p->[$i]{$key}) {
-				unless ($new_p->[$i]{$key} =~ /^$pinfo->{$pname}{'format'}{$key}{'format'}$/) {
+				unless ($new_p->[$i]{$key} =~ /^$pinfo->{$pname}{'format'}{$key}{'file_format'}$/) {
 				    push @syntax_error, $pname;
 				}
 				
 				## If empty and is primary key => delete entry
-				if ((! $new_p->[$i]{$key}) && ($pinfo->{$pname}{'file_format'}{$key}{'occurrence'} eq '1')) {
+				if ((! $new_p->[$i]{$key}) && ($pinfo->{$pname}{'format'}{$key}{'occurrence'} eq '1')) {
 				    splice @{$new_p}, $i, 1;
 				}
 				$changed{$pname} = 1; next;
