@@ -1,6 +1,45 @@
 *****    Changes which are not compatible with previous versions are
 *****    listed using "*****"in the margin. Please check this at least.
 
+3.1	Tue 24 Apr 2001
+
+  New features :
+	
+	[Harald Wilhelmi] Translations of web templates & scenario titles
+	to German
+
+	[Petr Prazak] Translation of scenari titles to Czech
+
+	Add auto alias removal
+
+  Bug Fixes :
+
+	src/List.pm: [reported by Petr Prazak] Did not keep date of 
+	'subscribers' file Could not synchronize with changed 'subscribers' 
+	file
+
+	[reported by Fiona Dix] forgbid changes in subscriber options 
+	if user_data_source is 'include'
+
+
+	src/List.pm: [Petr Prazak] Died while getting first
+	subcriber if subscribers file is empty 
+	Bug error: Can't call method "seq" on an undefined value
+
+	wwsympa/wwsympa.fcgi: [reported by Petr Prazak] did not
+	apply subscriber options changes if user_data_source is 'file'
+
+	doc/sympa.tex: [David Lewis] Many corrections
+
+	wwsympa/archived.pl: [Petr Prazak] quote listname
+	command line argument Add log if mhonarc call failed
+
+	src/List.pm: Consider empty value as undef
+	Empty editor/owner mailto: were displayed on WWSympa
+
+	wwsympa/wws_templates/us/main.us.tpl: [reported by Petr Prazak]
+	Bug fix: missing getCookieVal() function
+
 3.1b.13 Fri 13 Apr 2001
 
   New features :
