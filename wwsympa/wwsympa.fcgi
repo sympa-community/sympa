@@ -9585,6 +9585,10 @@ sub do_redirect {
 	 return("<A HREF=\"mailto:$email\">$gecos</A>");
      }elsif($list->{'admin'}{'spam_protection'} eq 'javascript') {
 
+	 if ($gecos =~ /\@/) {
+	     $gecos = "$`\" + \"@\" + \"$'";
+	 }
+
 	 my $return = "<SCRIPT language=JavaScript>
  <!--
  document.write(\"<A HREF=\" + \"mail\" + \"to:\" + \"$local\" + \"@\" + \"$domain\" + \">$gecos</A>\")
