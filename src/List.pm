@@ -3001,7 +3001,7 @@ sub update_user {
     
     ## Subscribers extracted from external data source
     if ($self->{'admin'}{'user_data_source'} eq 'include') {
-	&do_log('notice', 'Cannot update userin list %s, user_data_source include', $self->{'admin'}{'user_data_source'});
+	&do_log('notice', 'Cannot update user in list %s, user_data_source include', $self->{'admin'}{'user_data_source'});
 	return undef;
 
 	## Subscribers stored in database
