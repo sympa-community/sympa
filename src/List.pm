@@ -1462,7 +1462,7 @@ sub send_msg {
 	my $tag = '['.$admin->{'custom_subject'}.']';
 	my $subject_field = $msg->head->get('Subject');
 	$subject_field =~ s/^\s*(.*)\s*$/$1/;
-	if (index($subject_field, $tag) <0) {
+	if (index(&MIME::Words::decode_mimewords($subject_field), $tag) <0) {
 	    $msg->head->delete('Subject');
 	    $msg->head->add('Subject', $tag." ".$subject_field);
 	}
