@@ -24,14 +24,18 @@
 
 int main(int argc, char *argv[])
 {
-        void *env = NULL;
-	char *arg = NEWALIASES_ARG;
-	if(*arg == '\0') {
-	  arg = NULL;
-	}
+	extern char **environ;
+	char *arg[3];
 
+	environ[0] = NULL;
+	arg[0] = NEWALIASES;
+	arg[1] = NEWALIASES_ARG;
+	arg[2] = NULL;
+	if (*arg[1] == '\0') {
+	  arg[1] = NULL;
+	}
 	setuid(0);
-	execle(NEWALIASES, NEWALIASES, arg, &env);
+	execv(arg[0], arg);
 	perror("Exec of "NEWALIASES NEWALIASES_ARG" failed!");
 	exit(1);
 }
