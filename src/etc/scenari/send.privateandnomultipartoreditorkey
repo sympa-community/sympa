@@ -3,6 +3,7 @@ title.fr Modérée, pour les non abonnés postant un message multipart
 title.de Nicht-Abonnenten und multipart-Nachrichten gehen an Moderator
 title.es mensajes de los subscriptores son enviados al editor (multipart messages are sent to editor)
 title.cz neèlenové a zprávy s více èástmi pomocí moderátora
+title.hu nem listatagok és többrészes levelek a szerkesztõhöz lesznek átirányítva
 
 match([header->Content-Type],/multipart/)      smtp,smime,md5  -> editorkey
 is_subscriber([listname],[sender])             smtp,md5        -> do_it
