@@ -904,6 +904,29 @@ sub virus_infected {
         if (( $status == 3) and not($virusfound)) { 
 	    $virusfound = "unknown";
 	}    
+    }elsif($Conf{'antivirus_path'} =~ /f-prot\.sh$/) {
+
+        &do_log('debug2', 'f-prot is running');    
+
+        open (ANTIVIR,"$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ;
+        
+        while (<ANTIVIR>) {
+        
+            if (/Infection:\s+(.*)/){
+                $virusfound = $1;
+            }
+        }
+        
+        close ANTIVIR;
+        
+        my $status = $?/256 ;
+        
+        &do_log('debug2', 'Status: '.$status);    
+        
+        ## f-prot status =3 (*256) => virus
+        if (( $status == 3) and not($virusfound)) { 
+            $virusfound = "unknown";
+        }    
     }
 
     ## Error while running antivir, notify listmaster
