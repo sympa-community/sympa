@@ -88,7 +88,7 @@ If it is not listed or if you don't have any, login using your email and passwor
      	  </TR>
        </TABLE>
  </FORM>
-[END] 
+[ENDIF] 
 </TD>
 
 [ENDIF]

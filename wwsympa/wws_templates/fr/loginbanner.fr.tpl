@@ -90,7 +90,7 @@ A cet effet, identifiez-vous de préférence en sélectionnant le serveur d'authent
      	  </TR>
        </TABLE>
  </FORM>
-[END] 
+[ENDIF] 
 </TD>
 
 [ENDIF]
