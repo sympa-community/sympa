@@ -3217,7 +3217,7 @@ sub get_first_user {
 
 	    }elsif ($sortby eq 'email') {
 		## Default SORT
-		#$statement .= ' ORDER BY email';
+		$statement .= ' ORDER BY email';
 
 	    }elsif ($sortby eq 'date') {
 		$statement .= ' ORDER BY date DESC';
