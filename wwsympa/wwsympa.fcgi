@@ -4937,10 +4937,8 @@ sub d_access_control {
     my $mode_control = $mode->{'control'};
 
     # Useful parameters
-    my $expl = $Conf{'home'};
-
     my $list_name = $list->{'name'};
-    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
     
 
     # document to read
@@ -5279,11 +5277,9 @@ sub do_d_read {
     # relative path / directory shared of the document 
     my $path = $in{'path'};
     my $path_orig = $path;
-  
-    my $expl = $Conf{'home'};
-    
+      
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
 
     # document to read
     my $doc;
@@ -5686,16 +5682,15 @@ sub do_d_editfile {
     &wwslog('debug', 'do_d_editfile(%s)', $in{'path'});
 
     # Variables
-    my $expl = $Conf{'home'};
     my $path = $in{'path'};
+
     # $path must have no slash at its end
     $path = &format_path('without_slash',$path);
 
-    #my $list_name = $in{'list'};
     my $list_name = $list->{'name'};
    
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
 
     $param->{'directory'} = -d "$shareddir/$path";
 
@@ -5715,7 +5710,7 @@ sub do_d_editfile {
     }   
 
     # Existing document? File?
-    unless (-r "$shareddir/$path") {
+    unless (-w "$shareddir/$path") {
 	&error_message('no_such_file', {'path' => $path});
 	&wwslog('info',"d_editfile : Cannot edit $shareddir/$path : not an existing file");
 	return undef;
@@ -5806,8 +5801,6 @@ sub do_d_describe {
     &wwslog('debug', 'do_d_describe(%s)', $in{'path'});
 
     # Variables
-    my $expl = $Conf{'home'};
-
     my $path = $in{'path'};
     ## $path must have no slash at its end
     $path = &format_path('without_slash',$path);
@@ -5815,7 +5808,7 @@ sub do_d_describe {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
 
     my $action_return;
 
@@ -5955,8 +5948,6 @@ sub do_d_savefile {
     &wwslog('debug', 'do_d_savefile(%s)', $in{'path'});
     
     # Variables
-    my $expl = $Conf{'home'};
-
     my $path = $in{'path'};
 
     if ($in{'url'}) {
@@ -5970,7 +5961,7 @@ sub do_d_savefile {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
 
 ####  Controls
     ### action relative to a list ?
@@ -6102,8 +6093,6 @@ sub do_d_overwrite {
     &wwslog('debug', 'do_d_overwrite(%s)', $in{'path'});
  
     # Variables
-    my $expl = $Conf{'home'};
-    
     my $path = $in{'path'};
     ##### $path must have no slash at its end!
     $path = &format_path('without_slash',$path);
@@ -6112,7 +6101,7 @@ sub do_d_overwrite {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
 
     # Parameters of the uploaded file
     my $fh = $query->upload('uploaded_file');
@@ -6258,7 +6247,6 @@ sub do_d_upload {
     &wwslog('debug', 'do_d_upload(%s)', $in{'path'});
   
     # Variables 
-    my $expl = $Conf{'home'};
     my $path = $in{'path'};
     ## $path must have a slash at its end
     $path = &format_path('with_slash',$path);
@@ -6267,7 +6255,7 @@ sub do_d_upload {
     my $list_name = $list->{'name'};
    
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
 
     # Parameters of the uploaded file
     my $fn = $query->param('uploaded_file');
@@ -6388,9 +6376,7 @@ sub do_d_delete {
     #action_args == ['list','@path']
     &wwslog('debug', 'do_d_delete(%s)', $in{'path'});
 
-        #useful variables
-    my $expl = $Conf{'home'};
-
+    #useful variables
     my $path = $in{'path'};
     ## $path must have no slash at its end!
     $path = &format_path('without_slash',$path);
@@ -6403,7 +6389,7 @@ sub do_d_delete {
      # path of the shared directory
     #my $list_name = $in{'list'};
     my $list_name = $list->{'name'};
-    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
 
 #### Controls
     ### action relative to a list ?
@@ -6509,8 +6495,6 @@ sub do_d_rename {
     &wwslog('debug', 'do_d_rename(%s)', $in{'path'});
 
     #useful variables
-    my $expl = $Conf{'home'};
-
     my $path = $in{'path'};
 
     ## $path must have no slash at its end!
@@ -6523,7 +6507,7 @@ sub do_d_rename {
     
     # path of the shared directory
     my $list_name = $list->{'name'};
-    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
     
 #### Controls
     ### action relative to a list ?
@@ -6609,15 +6593,14 @@ sub do_d_rename {
 }
 
 #*******************************************
-# Function : do_d_create_dir
-# Description : Creates a new directory
+# Function : do_d_create
+# Description : Creates a new file / directory
 #******************************************
 sub do_d_create_dir {
     #action_args == ['list','@path']
     &wwslog('debug', 'do_d_create_dir(%s)', $in{'name_doc'});
   
-      #useful variables
-    my $expl = $Conf{'home'};
+    #useful variables
     my $path = $in{'path'};
     ## $path must have a slash at its end
     $path = &format_path('with_slash',$path);
@@ -6629,6 +6612,9 @@ sub do_d_create_dir {
     $param->{'list'} = $list_name;
     $param->{'path'} = $path;
     
+    my $type = $in{'type'} || 'directory';
+    my $desc_file;
+
 ### Controls
     ### action relative to a list ?
     unless ($param->{'list'}) {
@@ -6657,35 +6643,48 @@ sub do_d_create_dir {
     # Access control
     my %mode;
     $mode{'edit'} = 1;
-    my %access = &d_access_control(\%mode,$path);
+    my %access = &d_access_control(\%mode, $path);
     
     unless ($access{'may'}{'edit'}) {
 	&error_message('may_not');
 	&wwslog('info','do_d_create_dir :  access denied for %s', $param->{'user'}{'email'});
 	return undef;
-    }
-
-    
-
-### End of controls
+    }    
+    ### End of controls
     
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
     
     my $document = "$shareddir/$path$name_doc";
     
     $param->{'document'} = $document;
-      	
-    # Creation of the new directory
-    unless (mkdir ("$document",0777)) {
-	&error_message('cannot_create_dir', {'path' => $document,
-				       'reason' => $!});
-	&wwslog('info',"do_d_create_dir : Unable to create $document : $!");
-	return undef;
+
+    if ($type eq 'directory') {
+	# Creation of the new directory
+	unless (mkdir ("$document",0777)) {
+	    &error_message('cannot_create_dir', {'path' => $document,
+						 'reason' => $!});
+	    &wwslog('info',"do_d_create_dir : Unable to create $document : $!");
+	    return undef;
+	}
+
+	$desc_file = "$document/.desc";
+	
+    }else {
+	# Creation of the new file
+	unless (open FILE, ">$document") {
+	    &error_message('cannot_create_file', {'path' => $document,
+						  'reason' => $!});
+	    &wwslog('info',"do_d_create_dir : Unable to create $document : $!");
+	    return undef;
+	}
+	close FILE;
+
+	$desc_file = "$shareddir/$path.desc.$name_doc";
     }
 
     # Creation of a default description file 
-    unless (open (DESC,">$document/.desc")) {
+    unless (open (DESC,">$desc_file")) {
 	&error_message('failed');
 	&wwslog('info','do_d_create_dir : Cannot create description file %s', $document.'/.desc');
     }
@@ -6699,7 +6698,12 @@ sub do_d_create_dir {
     
     close DESC;
 
-    return 'd_read';
+    if ($type eq 'directory') {
+	return 'd_read';
+    }
+
+    $in{'path'} = "$path$name_doc";
+    return 'd_editfile';
 }
 
 ############## Control
@@ -6715,13 +6719,12 @@ sub do_d_control {
     &wwslog('debug', "do_d_control $in{'path'}");
 
     # Variables
-    my $expl = $Conf{'home'};
     my $path = $in{'path'};
     #my $list_name = $in{'list'};
     my $list_name = $list->{'name'};
        
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
     ## $path must have no slash at its end
     $path = &format_path('without_slash',$path);
 
@@ -6860,8 +6863,6 @@ sub do_d_change_access {
     &wwslog('debug', 'do_d_change_access(%s)', $in{'path'});
 
     # Variables
-    my $expl = $Conf{'home'};
-
     my $path = $in{'path'};
     ## $path must have no slash at its end
     $path = &format_path('without_slash',$path);
@@ -6869,7 +6870,7 @@ sub do_d_change_access {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
 
 ####  Controls
     ### action relative to a list ?
@@ -6981,7 +6982,6 @@ sub do_d_set_owner {
     
     # Variables
     my $desc_file;
-    my $expl = $Conf{'home'};
 
     my $path = $in{'path'};
     ## $path must have no slash at its end
@@ -6991,7 +6991,7 @@ sub do_d_set_owner {
     my $list_name = $list->{'name'};
 
     # path of the shared directory
-    my $shareddir =  $expl.'/'.$list_name.'/shared';
+    my $shareddir =  $Conf{'home'}.'/'.$list_name.'/shared';
 
 ####  Controls
     ### action relative to a list ?
@@ -7509,10 +7509,8 @@ sub do_attach {
     my $path = $in{'path'};
     my $path_orig = $path;
   
-    my $expl = $Conf{'home'};
-    
     # path of the urlized directory
-    my $urlizeddir =  $expl.'/'.$list_name.'/urlized';
+    my $urlizeddir =  $Conf{'home'}.'/'.$list_name.'/urlized';
 
     # document to read
     my $doc;

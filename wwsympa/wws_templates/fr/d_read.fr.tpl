@@ -226,6 +226,25 @@
     <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
     <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
+    <INPUT TYPE="hidden" NAME="type" VALUE="directory">
+    <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
+    </TD>
+    </FORM>
+    </TR>
+
+    <TR>
+    <FORM METHOD="POST" ACTION="[path_cgi]">
+    <TD ALIGN="right" VALIGN="bottom">
+      <B> Créer un fichier</B> <BR>
+    <input MAXLENGTH=30 type="text" name="name_doc">
+    </TD>
+
+    <TD ALIGN="left" VALIGN="bottom">
+    <input type="submit" value="Créer" name="action_d_create_dir">
+    <INPUT TYPE="hidden" NAME="previous_action" VALUE="d_read">
+    <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+    <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
+    <INPUT TYPE="hidden" NAME="type" VALUE="file">
     <INPUT TYPE="hidden" NAME="action" VALUE="d_create_dir">
     </TD>
     </FORM>
