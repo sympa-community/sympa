@@ -1091,6 +1091,9 @@ sub DoMessage{
 	    }
 	}
 	return undef;
+    }else {
+	&do_log('err','Unknown action %s returned by the scenario', $action);
+	return undef;
     }
 }
 

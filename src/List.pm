@@ -4248,6 +4248,13 @@ sub request_action {
 		if ($debug) {
 		    return ($rule->{'condition'},$rule->{'auth_method'},$rule->{'action'});
 		}
+
+		## Check syntax of returned action
+		unless ($rule->{'action'} =~ /^(do_it|reject|request_auth|owner|editor|editorkey)/) {
+		    &do_log('err', "Matched unknown action '%s' in scenario", $rule->{'action'});
+		    return undef;
+		}
+
 		return $rule->{'action'};
 	    }
 	}
