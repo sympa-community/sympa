@@ -1,3 +1,99 @@
+2002-04-10 09:09  salaun
+
+	* wwsympa/wws_templates/fr/compose_mail.fr.tpl: Add hidden
+	message_id
+
+2002-04-09 15:47  salaun
+
+	* wwsympa/wws_templates/: fr/admin_menu.fr.tpl,
+	us/admin_menu.us.tpl: [reported by Tellier Gilles] Don't propose
+	'close_list' button to listowners
+
+2002-04-09 15:29  salaun
+
+	* src/: List.pm, etc/script/create_db.Oracle,
+	etc/script/create_db.Pg, etc/script/create_db.Sybase,
+	etc/script/create_db.mysql: [reported by Daniel Pittman] Fix:
+	extend 'bounce_subscriber' database field. Could lead to errors in
+	Mysql : "value too long for type character varying(30)"
+
+2002-04-09 15:15  salaun
+
+	* wwsympa/wws_templates/us/: error.us.tpl, help_editfile.us.tpl,
+	help_editlist.us.tpl, help_user_options.us.tpl: [John Paul Dalbec]
+	Better english translations
+
+2002-04-09 11:09  salaun
+
+	* set_symlinks.pl: Fix: no default for create_list
+
+2002-04-09 11:09  salaun
+
+	* src/etc/scenari/create_list.listmaster: [reported by Frederic
+	Connes] Wrong scenario (was public_listmaster)
+
+2002-04-09 10:57  salaun
+
+	* doc/sympa.tex.tpl: [reported by Frederic Connes] wwsympa_url in
+	robot.conf was not documented
+
+2002-04-09 10:41  salaun
+
+	* src/aliaswrapper.c: [Frederic Connes] Bug fix: problems when
+	NEWALIASES_ARG is defined
+
+2002-04-09 10:18  salaun
+
+	* src/etc/edit_list.conf: [reported by John Douglass]
+	'include_ldap_2level_query' is hidden
+
+2002-04-09 08:03  salaun
+
+	* wwsympa/wwsympa.fcgi: Reported by Frederic Connes : fix quota
+	checking. (no quota applied if shared/quota is undef)
+
+2002-04-08 16:55  salaun
+
+	* check_perl_modules.pl, src/List.pm: DB_FIle < 1.75 will not work
+	properly with BerkeleyDB 3.2 Sympa error log : "_load_users :
+	cachesise too small"
+
+2002-04-08 11:39  salaun
+
+	* src/List.pm: [Guy Brand] Bug fix: Integer overflow occured when
+	saving 'stats' file. loadstats would fail leeding to "empty list" ;
+	message was considered as bad
+
+2002-04-08 08:20  salaun
+
+	* src/etc/scenari/send.public_nobcc: use [is_bcc] variable
+
+2002-04-05 17:21  salaun
+
+	* src/aliaswrapper.c: [Christian Mock] Fix: when NEWALIASES_ARGS is
+	empty aliaswrapper died ; should be a NULL pointer
+
+2002-04-05 17:06  salaun
+
+	* src/List.pm: [reported by V. Mathieu] Bug fix: 'stats' file was
+	not updated when 'subscribers.db' was updated (this concerns
+	'include' type of lists)
+
+2002-04-05 15:53  salaun
+
+	* src/List.pm: Fix: processes were always synchronizing with
+	'subscribers.db' file even when they had up to date subscribers in
+	memory, This was due to a wrong condition for _load_users_include()
+
+2002-04-05 10:56  salaun
+
+	* wwsympa/archived.pl: Fix: don't check archives quota if no quota
+	is defined
+
+2002-04-04 14:49  salaun
+
+	* ChangeLog, NEWS: preparing release
+
 2002-04-04 14:48  salaun
 
 	* wwsympa/wwsympa.fcgi: Change facility from 'debug' to 'info'

@@ -3,6 +3,53 @@
 
 (See Changelog file for the full changes log)
 
+3.3.4b.6	10 Apr 2002
+
+   New features :
+
+   Changes :
+
+*****	[reported by Daniel Pittman] extend 'bounce_subscriber' database field. 
+*****	Could lead to errors in	Mysql : "value too long for type character varying(30)"
+*****	With MySQL sympa.pl will make database structure changes at startup (if
+*****	it has the alter_table privilege)
+
+*****	DB_FIle < 1.75 will not work properly with BerkeleyDB 3.2 Sympa error log : 
+*****	"_load_users : cachesise too small" ; you probably need to upgrade DB_FIle 
+*****	perl module
+
+	[John Paul Dalbec] Better english translations of web templates
+
+   Bug Fixes :
+
+	src/List.pm: [Guy Brand] Integer overflow occured when saving 'stats' file. 
+	loadstats would fail leeding to "empty list" ; message was considered as bad
+
+	src/List.pm: [reported by V. Mathieu] 'stats' file was not updated when 
+	'subscribers.db' was updated (this concerns 'include' type of lists)
+
+	src/List.pm: processes were always synchronizing with
+	'subscribers.db' file even when they had up to date subscribers in
+	memory, This was due to a wrong condition for _load_users_include()
+
+	src/aliaswrapper.c: [Frederic Connes] problems when NEWALIASES_ARG is defined
+
+	src/aliaswrapper.c: [Christian Mock] when NEWALIASES_ARGS is
+	empty aliaswrapper died ; should be a NULL pointer
+
+	wwsympa/wwsympa.fcgi: [Reported by Frederic Connes] : fix quota
+	checking. (no quota applied if shared/quota is undef)
+
+	wwsympa/archived.pl: don't check archives quota if no quota is defined
+
+	wwsympa/wws_templates/fr/compose_mail.fr.tpl: Add hidden
+	message_id
+
+	[reported by Tellier Gilles] Don't propose 'close_list' button to listowners
+
+	src/etc/scenari/create_list.listmaster: [reported by Frederic
+	Connes] Wrong scenario (was public_listmaster)
+
 3.3.4b.5	4  Apr 2002
 
    New features :
