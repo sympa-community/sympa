@@ -1347,8 +1347,9 @@ sub load {
     # uncomment the following line if you want virtual robot to overwrite list->host
     # $self->{'admin'}{'host'} = $self->{'domain'} if ($self->{'domain'} ne $Conf{'host'});
 
+    # Would make sympa same 'dir' as a parameter
+    #$self->{'admin'}{'dir'} ||= $self->{'dir'};
 
-    $self->{'admin'}{'dir'} ||= $self->{'dir'};
     $self->{'as_x509_cert'} = 1  if (-r "$self->{'dir'}/cert.pem");
     
 
@@ -1417,7 +1418,7 @@ sub load {
 	     ((time > ($time_subscribers + $self->{'admin'}{'ttl'})) &&
 	      !($ENV{'HTTP_HOST'} && (-f "$self->{'dir'}/subscribers.db")))) {
 	    
-	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 0);
+	    $users = _load_users_include($name, $self->{'admin'}, $self->{'dir'}, "$self->{'dir'}/subscribers.db", 0);
 	    unless (defined $users) {
 		do_log('err', 'Could not load subscribers for list %s', $self->{'name'});
 		return undef;
@@ -1430,7 +1431,7 @@ sub load {
 		($time_subscribers > $self->{'mtime'}->[1])) {
 
 	    ## Use cache
-	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 1);
+	    $users = _load_users_include($name, $self->{'admin'}, $self->{'dir'}, "$self->{'dir'}/subscribers.db", 1);
 
 	    unless (defined $users) {
 		return undef;
@@ -5635,6 +5636,7 @@ sub _include_users_sql {
 sub _load_users_include {
     my $name = shift; 
     my $admin = shift ;
+    my $dir = shift;
     my $db_file = shift;
     my $use_cache = shift;
     do_log('debug2', 'List::_load_users_include for list %s ; use_cache: %d',$name, $use_cache);
@@ -5695,7 +5697,7 @@ sub _load_users_include {
 
 		    }
 		}elsif ($type eq 'include_remote_sympa_list') {
-		    $included = _include_users_remote_sympa_list(\%users, $incl, $admin->{'dir'},$admin->{'domain'},$admin->{'default_user_options'}, 'tied');
+		    $included = _include_users_remote_sympa_list(\%users, $incl, $dir,$admin->{'domain'},$admin->{'default_user_options'}, 'tied');
 		}elsif ($type eq 'include_file') {
 		    $included = _include_users_file (\%users, $incl, $admin->{'default_user_options'}, 'tied');
 		}
@@ -5775,6 +5777,7 @@ sub _load_users_include {
 sub _load_users_include2 {
     my $name = shift; 
     my $admin = shift ;
+    my $dir = shift;
     do_log('debug2', 'List::_load_users_include for list %s',$name);
 
     my (%users, $depend_on, $ref);
@@ -5794,7 +5797,7 @@ sub _load_users_include2 {
 	    }elsif ($type eq 'include_ldap_2level_query') {
 		$included = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'});
 	    }elsif ($type eq 'include_remote_sympa_list') {
-		$included = _include_users_remote_sympa_list(\%users, $incl, $admin->{'dir'},$admin->{'domain'},$admin->{'default_user_options'});
+		$included = _include_users_remote_sympa_list(\%users, $incl, $dir,$admin->{'domain'},$admin->{'default_user_options'});
 	    }elsif ($type eq 'include_list') {
 		$depend_on->{$name} = 1 ;
 		if (&_inclusion_loop ($name,$incl,$depend_on)) {
@@ -5837,7 +5840,7 @@ sub sync_include {
     ## Load a hash with the new subscriber list
     my $new_subscribers;
     unless ($option eq 'purge') {
-	$new_subscribers = _load_users_include2($name, $self->{'admin'});
+	$new_subscribers = _load_users_include2($name, $self->{'admin'}, $self-{'dir'});
     }
 
     my $users_added = 0;
