@@ -147,7 +147,7 @@ sub check_modules {
 	    ### doesn't return 1;
 	    print "$mod doesn't return 1 (check it).\n";
 	} else {
-	    print "$status";
+	    print "$status\n";
 	}
     }
 }
