@@ -81,7 +81,7 @@ sub parse {
    my $i = shift;
    my $sign_mod = shift;
 
-   do_log('debug', 'Commands::parse(%s, %s, %s, %s)', $sender, $robot, $i,$sign_mod );
+   do_log('debug2', 'Commands::parse(%s, %s, %s, %s)', $sender, $robot, $i,$sign_mod );
 
    my @msgsup = @_; ## For special commands (such as expire) needing
                     ## a message within a command
@@ -218,7 +218,7 @@ sub lists {
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
     my $host = &Conf::get_robot_conf($robot, 'host');
 
-    do_log('debug2', 'Commands::lists for robot %s', $robot);
+    do_log('debug', 'Commands::lists for robot %s', $robot);
 
     my $data = {};
     my $lists = {};
@@ -295,7 +295,7 @@ sub stats {
     my $listname = shift;
     my $robot=shift;
 
-    do_log('debug2', 'Commands::stats(%s)', $listname);
+    do_log('debug', 'Commands::stats(%s)', $listname);
 
     my $list = new List ($listname, $robot);
     unless ($list) {
@@ -351,7 +351,7 @@ sub getfile {
     my($which, $file) = split(/\s+/, shift);
     my $robot=shift;
 
-    do_log('debug2', 'Commands::getfile(%s, %s)', $which, $file);
+    do_log('debug', 'Commands::getfile(%s, %s)', $which, $file);
 
     my $list = new List ($which, $robot);
     unless ($list) {
@@ -396,7 +396,7 @@ sub last {
 
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
 
-    do_log('debug2', 'Commands::last(%s, %s)', $which);
+    do_log('debug', 'Commands::last(%s, %s)', $which);
 
     my $list = new List ($which,$robot);
     unless ($list)  {
@@ -442,7 +442,7 @@ sub index {
     my $robot = shift;
 
 
-    do_log('debug2', 'Commands::index(%s) robot (%s)',$which,$robot);
+    do_log('debug', 'Commands::index(%s) robot (%s)',$which,$robot);
 
     my $list = new List ($which, $robot);
     unless ($list) {
@@ -497,11 +497,11 @@ sub review {
     if ($sign_mod eq 'smime') {
 	$auth_method='smime';
     }elsif ($auth ne '') {
-	do_log ('debug2',"auth received from $sender : $auth");
+	do_log ('debug',"auth received from $sender : $auth");
 	if ($auth eq $list->compute_auth ('','review')) {
 	    $auth_method='md5';
 	}else{
-            do_log ('debug', 'auth should be %s',$list->compute_auth ('','review'));
+            do_log ('debug2', 'auth should be %s',$list->compute_auth ('','review'));
 	    push @msg::report, sprintf Msg(6, 15, $msg::wrong_authenticator);
 	    do_log('info', 'REVIEW %s from %s refused, auth failed', $listname,$sender);
 	    return 'wrong_auth';
@@ -519,7 +519,7 @@ sub review {
 	unless (defined $action);
 
     if ($action =~ /request_auth/i) {
-	do_log ('debug',"auth requested from $sender");
+	do_log ('debug2',"auth requested from $sender");
         $list->request_auth ($sender,'review',$robot);
 	do_log('info', 'REVIEW %s from %s, auth requested (%d seconds)', $listname, $sender,time-$time_command);
 	return 1;
@@ -573,7 +573,7 @@ sub verify {
     my $robot = shift;
 
     my $sign_mod = shift ;
-    do_log('debug2', 'Commands::verify(%s)', $sign_mod );
+    do_log('debug', 'Commands::verify(%s)', $sign_mod );
     
     my $user;
     
@@ -599,7 +599,7 @@ sub subscribe {
 
     my $sign_mod = shift ;
 
-    do_log('debug2', 'Commands::subscribe(%s,%s)', $what,$sign_mod);
+    do_log('debug', 'Commands::subscribe(%s,%s)', $what,$sign_mod);
 
     $what =~ /^(\S+)(\s+(.+))?\s*$/;
     my($which, $comment) = ($1, $3);
@@ -746,7 +746,7 @@ sub info {
     my $robot = shift;
     my $sign_mod = shift ;
 
-    do_log('debug2', 'Commands::info(%s,%s)', $listname,$robot);
+    do_log('debug', 'Commands::info(%s,%s)', $listname,$robot);
 
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
 
@@ -762,11 +762,11 @@ sub info {
     if ($sign_mod eq 'smime') {
 	$auth_method='smime';
     }elsif ($auth ne '') {
-	do_log ('debug',"auth received from $sender : $auth");
+	do_log ('debug2',"auth received from $sender : $auth");
 	if ($auth eq $list->compute_auth ('','info')) {
 	    $auth_method='md5';
 	}else{
-            do_log ('debug', 'auth should be %s',$list->compute_auth ('','info'));
+            do_log ('debug2', 'auth should be %s',$list->compute_auth ('','info'));
 	    push @msg::report, sprintf Msg(6, 15, $msg::wrong_authenticator);
 	    do_log('info', 'INFO %s from %s refused, auth failed', $listname,$sender);
 	    return 'wrong_auth';
@@ -822,7 +822,7 @@ sub info {
 	return 1;
     }
     if ($action =~ /request_auth/) {
-	do_log ('debug',"auth requested from $sender");
+	do_log ('debug2',"auth requested from $sender");
         $list->request_auth ($sender,'info', $robot);
 	do_log('info', 'REVIEW %s from %s, auth requested (%d seconds)', $listname, $sender,time-$time_command);
 	return 1;
@@ -841,7 +841,7 @@ sub signoff {
     my $robot = shift;
 
     my $sign_mod = shift ;
-    do_log('debug2', 'Commands::signoff(%s,%s)', $which,$sign_mod);
+    do_log('debug', 'Commands::signoff(%s,%s)', $which,$sign_mod);
 
     my ($l,$list,$auth_method);
     my $host = &Conf::get_robot_conf($robot, 'host');
@@ -975,7 +975,7 @@ sub add {
 
     my $sign_mod = shift ;
 
-    do_log('debug2', 'Commands::add(%s,%s)', $what,$sign_mod );
+    do_log('debug', 'Commands::add(%s,%s)', $what,$sign_mod );
 
     $what =~ /^(\S+)\s+($email_regexp)(\s+(.+))?\s*$/;
     my($which, $email, $comment) = ($1, $2, $4);
@@ -1089,7 +1089,7 @@ sub invite {
     my $what = shift;
     my $robot=shift;
     my $sign_mod = shift ;
-    do_log('debug2', 'Commands::invite(%s,%s)', $what,$sign_mod);
+    do_log('debug', 'Commands::invite(%s,%s)', $what,$sign_mod);
 
     my $sympa = &Conf::get_robot_conf($robot, 'sympa');
 
@@ -1207,7 +1207,7 @@ sub remind {
     my $robot = shift;
     my $sign_mod = shift ;
 
-    do_log('debug2', 'Commands::remind(%s,%s)', $which,$sign_mod);
+    do_log('debug', 'Commands::remind(%s,%s)', $which,$sign_mod);
 
     my $host = &Conf::get_robot_conf($robot, 'host');
     
@@ -1235,7 +1235,7 @@ sub remind {
     if ($sign_mod eq 'smime') {
 	$auth_method='smime';
     }elsif ($auth ne '') {
-	do_log ('debug',"auth received from $sender : $auth");
+	do_log ('debug2',"auth received from $sender : $auth");
 
 	my $should_be;
 	if ($listname eq '*') {
@@ -1247,7 +1247,7 @@ sub remind {
 	if ($auth eq $should_be) {
 	    $auth_method = 'md5';
 	}else{
-            do_log ('debug', 'auth should be %s', $should_be);
+            do_log ('debug2', 'auth should be %s', $should_be);
 	    push @msg::report, sprintf Msg(6, 15, $msg::wrong_authenticator);
 	    do_log('info', 'REMIND %s from %s refused, auth failed', $listname,$sender);
 	    return 'wrong_auth';
@@ -1288,7 +1288,7 @@ sub remind {
 	}
 	return 0;
     }elsif ($action =~ /request_auth/i) {
-	do_log ('debug',"auth requested from $sender");
+	do_log ('debug2',"auth requested from $sender");
 	if ($listname eq '*') {
 	    &List::request_auth ($sender,'remind', $robot);
 	}else {
@@ -1354,12 +1354,12 @@ sub remind {
 			
 			$global_info{$email} = $user;
 
-			do_log('debug','remind * : %s subscriber of %s', $email,$listname);
+			do_log('debug2','remind * : %s subscriber of %s', $email,$listname);
 			$count++ ;
 		    } 
 		} while ($user = $list->get_next_user());
 	    }
-	    do_log('debug','Sending REMIND * to %d users', $count);
+	    do_log('debug2','Sending REMIND * to %d users', $count);
 
 	    foreach my $email (keys %global_subscription) {
 		my $user = &List::get_user_db($email);
@@ -1395,7 +1395,7 @@ sub del {
 
     my $sign_mod = shift ;
 
-    do_log('debug2', 'Commands::del(%s,%s)', $what,$sign_mod);
+    do_log('debug', 'Commands::del(%s,%s)', $what,$sign_mod);
 
     $what =~ /^(\S+)\s+($email_regexp)\s*/;
     my($which, $who) = ($1, $2);
@@ -1506,7 +1506,7 @@ sub set {
     my $what = shift;
     my $robot = shift;
 
-    do_log('debug2', 'Commands::set(%s)', $what);
+    do_log('debug', 'Commands::set(%s)', $what);
 
     $what =~ /^\s*(\S+)\s+(\S+)\s*$/; 
     my ($which, $mode) = ($1, $2);
@@ -1666,7 +1666,7 @@ sub distribute {
 	    $file = '_ALTERED_';
 	    do_log('debug2','xxxxxxxxxxxxxxxxxxxxxxxx is crypted');
 	    unless ($msg = &tools::smime_decrypt ($msg,$list->{'name'})) {
-		do_log('debug','unable to decrypt message');
+		do_log('debug2','unable to decrypt message');
 		## xxxxx traitement d'erreur ?
 		return undef;
 	    };
@@ -1698,7 +1698,7 @@ sub confirm {
     my $what = shift;
     my $robot = shift;
 
-    do_log('debug2', 'Commands::confirm(%s)', $what);
+    do_log('debug', 'Commands::confirm(%s)', $what);
 
     $what =~ /^\s*(\S+)\s*$/;
     my $key = $1;
@@ -1829,7 +1829,7 @@ sub reject {
     my $what = shift;
     my $robot = shift;
 
-    do_log('debug2', 'Commands::reject(%s)', $what);
+    do_log('debug', 'Commands::reject(%s)', $what);
 
     $what =~ /^(\S+)\s+(.+)\s*$/;
     my($which, $key) = ($1, $2);
@@ -1912,7 +1912,7 @@ sub expire {
     my $what = shift;
     my $robot=shift;
 
-    do_log('debug2', 'Commands::expire(%s)', $what);
+    do_log('debug', 'Commands::expire(%s)', $what);
 
     my @msgexp = @_;
     my $name, $d1, $d2;
@@ -2134,7 +2134,7 @@ sub expireindex {
     my $robot = shift;
 
     $name =~ y/A-Z/a-z/;
-    do_log('debug2', 'Commands::expireindex(%s)', $name);
+    do_log('debug', 'Commands::expireindex(%s)', $name);
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
@@ -2230,7 +2230,7 @@ sub expiredel {
     my $name = shift;
     my $robot = shift;
     $name =~ y/A-Z/a-z/;
-    do_log('debug2', 'Commands::expiredel(%s)', $name);
+    do_log('debug', 'Commands::expiredel(%s)', $name);
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
@@ -2274,7 +2274,7 @@ sub expiredel {
 sub modindex {
     my $name = shift;
     my $robot = shift;
-    do_log('debug2', 'Commands::modindex(%s)', $name);
+    do_log('debug', 'Commands::modindex(%s)', $name);
     
     $name =~ y/A-Z/a-z/;
 
@@ -2377,7 +2377,7 @@ sub modindex {
 sub which {
     my($listname, @which);
     my $robot = shift;
-    do_log('debug2', 'Commands::which(%s)', $listname);
+    do_log('debug', 'Commands::which(%s)', $listname);
     
     ## Subscriptions
     push @msg::report, sprintf  Msg(6, 67, "List of your current subscriptions : \n\n");    
