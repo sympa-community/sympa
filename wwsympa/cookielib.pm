@@ -174,14 +174,15 @@ sub set_lang_cookie {
 ## returns Message Authentication Check code
 sub get_mac {
         my $email = shift ;
-	my $secret = shift ;
-	
+	my $secret = shift ;	
+	&main::wwslog('debug4', "get_mac($email, $secret)");
+
 	unless ($secret) {
-	    printf STDERR 'get_mac : failure missing server secret for cookie MD5 digest';
+	    &main::wwslog('err', 'get_mac : failure missing server secret for cookie MD5 digest');
 	    return undef;
 	}
 	unless ($email) {
-	    printf STDERR 'get_mac : failure missing email adresse or cookie MD5 digest';
+	    &main::wwslog('err', 'get_mac : failure missing email adresse or cookie MD5 digest');
 	    return undef;
 	}
 
@@ -262,8 +263,7 @@ sub set_cookie_extern {
 sub get_which_cookie {
     
     my $http_cookie = shift;
-
-    do_log ('debug2',"get_which_cookie ($http_cookie)");    
+    &main::wwslog('debug2',"get_which_cookie ($http_cookie)");    
 
     my %cookies = parse CGI::Cookie($http_cookie);
         
@@ -290,7 +290,7 @@ sub set_which_cookie {
     if ($domain eq 'localhost') {
 	$domain="";
     }
-    do_log ('debug2',"set_which_cookie ($domain,$commawhich)");
+    &main::wwslog('debug2',"set_which_cookie ($domain,$commawhich)");
 
     my $cookie = new CGI::Cookie (-name    => 'your_subscriptions',
 				  -value   => $commawhich ,
