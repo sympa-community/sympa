@@ -4394,6 +4394,12 @@ sub do_reviewbouncing {
 	return 'admin';
     }
 
+    unless ($param->{'bounce_total'}) {
+	&error_message('no_bouncing_subscriber');
+	&wwslog('info','do_reviewbouncing: no bouncing subscriber');
+	return 'admin';
+    }
+
     ## Owner
     $param->{'page'} = $in{'page'} || 1;
     $param->{'total_page'} = int ( $param->{'bounce_total'} / $size);
