@@ -249,11 +249,13 @@ CONFIRM %s\n"
 weil die Adresse nicht gefunden wurde.\n\
 (Sie können diesem Benutzer vielleicht helfen.)\n"
 24	"UNsubscription-Befehl für Liste %s"
-25	"Lieber Verwalter der Liste %s,\n\n\
+25	"Hallo Verwalter der Liste %s,\n\n\
 ein Benutzer hat darum gebeten, daß sein Abonnement der Liste aufgehoben\n\
 wird. Wenn das in Ordnung ist, können Sie ihn mit dem folgenden Befehl\n\
 aus der Liste löschen:\n\n\
-DEL %s %s\n"
+mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n\n\
+Oder senden Sie eine Mail an %s mit folgendem Betreff:\n\n\
+AUTH %s DEL %s %s\n"
 26	"Zur Information: Der Befehl %s list %s von %s %s\n\
 wurde von %s bestätigt. (kein Eingreifen nötig)\n"
 27	"Der Anteil ungültige Mailadressen in Liste %s beträgt %d%%.\n\n\
