@@ -2406,8 +2406,8 @@ sub add_parts {
     my ($header, $headermime);
     foreach my $file ("$listdir/message.header", 
 		      "$listdir/message.header.mime",
-		      "$Conf{'etc'}/templates/message.header", 
-		      "$Conf{'etc'}/templates/message.header.mime") {
+		      "$Conf{'etc'}/tt2/message.header", 
+		      "$Conf{'etc'}/tt2/message.header.mime") {
 	if (-f $file) {
 	    unless (-r $file) {
 		&do_log('notice', 'Cannot read %s', $file);
@@ -2421,8 +2421,8 @@ sub add_parts {
     my ($footer, $footermime);
     foreach my $file ("$listdir/message.footer", 
 		      "$listdir/message.footer.mime",
-		      "$Conf{'etc'}/templates/message.footer", 
-		      "$Conf{'etc'}/templates/message.footer.mime") {
+		      "$Conf{'etc'}/tt2/message.footer", 
+		      "$Conf{'etc'}/tt2/message.footer.mime") {
 	if (-f $file) {
 	    unless (-r $file) {
 		&do_log('notice', 'Cannot read %s', $file);
@@ -8090,7 +8090,7 @@ sub _urlize_part {
     &parser::parse_tpl({'file_name' => $file_name,
 			'file_url'  => $file_url,
 			'file_size' => $size },
-		       &tools::get_filename('etc', 'templates/urlized_part.'.$list->{'admin'}{'lang'}.'.tpl', $robot, $list),
+		       &tools::get_filename('etc', 'tt2/urlized_part.'.'.tt2', $robot, $list),
 		       \@new_part);
 
     my $entity = $parser->parse_data(\@new_part);
