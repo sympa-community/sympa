@@ -110,7 +110,7 @@
 	  <TD><center>
 	  <form method="post" ACTION="[path_cgi]">
 	  <FONT size=-1>
-	  <A HREF="[path_cgi]/d_delete/[list]/[path][s->doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[path][s->doc]', 'Voulez-vous vraiment supprimer [path][f->doc] ?'); return false;">supprimer</A>
+	  <A HREF="[path_cgi]/d_delete/[list]/[path][s->doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[path][s->doc]', 'Voulez-vous vraiment supprimer [path][s->doc] ?'); return false;">supprimer</A>
 	  </FONT>
 	  </center></TD>
 	[ELSE]
