@@ -414,6 +414,12 @@ sub _load_auth {
 	    undef $current_paragraph;
 	}
     }
+
+    if (defined($current_paragraph)) {
+	push(@paragraphs,$current_paragraph);
+	undef $current_paragraph;
+    }
+    
   		   	
     close(IN);
 
