@@ -4554,7 +4554,7 @@ sub request_auth {
     my $keyauth;
     my ($body, $command);
 
-    if ($self) {
+    if (ref($self) eq 'List') {
 	my $listname = $self->{'name'};
 
 	if ($cmd =~ /signoff$/){
