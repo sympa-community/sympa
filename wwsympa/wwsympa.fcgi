@@ -747,7 +747,7 @@ sub get_parameters {
 
 ## Analysis of parameters
 sub check_param {
-#    &wwslog('debug', 'check_param');
+    &wwslog('debug', 'check_param');
 
     ## Lowercase list name
     $in{'list'} =~ tr/A-Z/a-z/;

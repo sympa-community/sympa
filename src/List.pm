@@ -1972,15 +1972,14 @@ sub delete_user {
     my($self, @u) = @_;
     do_log('debug2', 'List::delete_user');
 
-    my $who;
     my $name = $self->{'name'};
 
-    delete $::list_cache{'is_user'}{$name}{$who};    
-
-    foreach $who (@u) {
-        $who = lc($who);
+    foreach my $who (@u) {
+	$who = lc($who);
 	if ($self->{'admin'}{'user_data_source'} eq 'database') {
 	    my $statement;
+	    
+	    $list_cache{'is_user'}{$name}{$who} = undef;    
 
 	    ## Check database connection
 	    unless ($dbh and $dbh->ping) {
@@ -2488,8 +2487,9 @@ sub is_user {
 	my $name = $self->{'name'};
 	
 	## Use cache
-	if (defined $::list_cache{'is_user'}{$name}{$who}) {
-	    return $::list_cache{'is_user'}{$name}{$who};
+	if (defined $list_cache{'is_user'}{$name}{$who}) {
+	    &do_log('debug', 'xxx Use cache(%s,%s): %s', $name, $who, $list_cache{'is_user'}{$name}{$who});
+	    return $list_cache{'is_user'}{$name}{$who};
 	}
 	
 	## Check database connection
@@ -2519,7 +2519,7 @@ sub is_user {
 	$sth = pop @sth_stack;
 
 	## Set cache
-	$::list_cache{'is_user'}{$name}{$who} = $is_user;
+	$list_cache{'is_user'}{$name}{$who} = $is_user;
 
        return $is_user;
    }else {
@@ -2764,12 +2764,13 @@ sub add_user {
     
     return undef
 	unless ($who = lc($values->{'email'}));
-
-    delete $::list_cache{'is_user'}{$self->{'name'}}{$who};
     
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
 	
 	my $name = $self->{'name'};
+	
+	$list_cache{'is_user'}{$name}{$who} = undef;
+
 	my $statement;
 	
 	## Check database connection
@@ -3092,7 +3093,7 @@ sub get_action {
 sub init_list_cache {
     &do_log('debug2', 'List::init_list_cache()');
     
-    undef %::list_cache;
+    undef %list_cache;
 }
 
 ## check if email respect some condition
