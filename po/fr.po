@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2005-02-16 14:42+0100\n"
+"PO-Revision-Date: 2005-02-16 17:34+0100\n"
 "Last-Translator: Olivier Salaun <olivier.salaun@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
@@ -164,12 +164,6 @@ msgstr ""
 "la liste\n"
 "ne sont plus archivés. Veuillez contacter %5@%4.\n"
 
-# nlsref 17,6
-#. (l.average)
-#: web_tt2/rss.tt2:102
-msgid "%1 by day "
-msgstr "%1 par jour "
-
 #. (body_count)
 #: web_tt2/arcsearch.tt2:56
 msgid "%1 hits on message's Body"
@@ -215,10 +209,20 @@ msgstr "%1 adresses ont été abonnées"
 msgid "%1: action failed"
 msgstr "%1 : l'opération a échoué"
 
-#. (l.name,l.host,l.subject,l.msg_count)
-#: web_tt2/rss.tt2:101
-msgid "%1@%2 - %3 : %4 messages"
-msgstr "%1@%2 - %3 : %4 messages"
+#. (l.name,l.host,l.subject)
+#: web_tt2/rss.tt2:51
+msgid "%1@%2 - %3"
+msgstr "%1@%2 - %3"
+
+#. (l.name,l.host,l.msg_count)
+#: web_tt2/rss.tt2:61
+msgid "%1@%2 : %3 messages"
+msgstr "%1@%2 : %3 messages"
+
+#. (l.name,l.host,l.msg_count,l.average)
+#: web_tt2/rss.tt2:59
+msgid "%1@%2 : %3 messages - %4 by day "
+msgstr "%1@%2 : %3 messages - %4 par jour"
 
 #. (list.name,list.host,param0)
 #: mail_tt2/listowner_notification.tt2:22
@@ -702,7 +706,7 @@ msgid "Body"
 msgstr "Contenu de message"
 
 #. (d.anchor)
-#: web_tt2/rss.tt2:121
+#: web_tt2/rss.tt2:78
 msgid "Bookmark %1"
 msgstr "Signet %1"
 
@@ -797,7 +801,7 @@ msgstr "Date d'expiration"
 msgid "Certificate issuer"
 msgstr "Certificat émis par"
 
-#: web_tt2/main.tt2:213 web_tt2/main.tt2:297
+#: web_tt2/main.tt2:225 web_tt2/main.tt2:309
 msgid "Change"
 msgstr "Changer"
 
@@ -2303,7 +2307,9 @@ msgstr ""
 msgid ""
 "Messages can either be read via email (subscription) or\n"
 "via the web (web archives)\n"
-msgstr "Les messages peuvent être consultés par mail (abonnement) ou par l'interface web\n"
+msgstr ""
+"Les messages peuvent être consultés par mail (abonnement) ou par l'interface "
+"web\n"
 
 #. (list.name,to,subscriber.first_bounce)
 #: mail_tt2/subscriber_notification.tt2:8
@@ -2741,7 +2747,7 @@ msgstr "Période :"
 msgid "Periodical subscription expiration task"
 msgstr "Tache périodique d'expiration des abonnements"
 
-#: web_tt2/main.tt2:170
+#: web_tt2/main.tt2:182
 msgid "Please activate JavaScript in your web browser"
 msgstr "Veuillez activer Javascript dans votre navigateur"
 
@@ -2782,7 +2788,7 @@ msgstr ""
 msgid "Post"
 msgstr "Poster"
 
-#: web_tt2/main.tt2:304 web_tt2/tt2_error.tt2:47
+#: web_tt2/main.tt2:316 web_tt2/tt2_error.tt2:47
 msgid "Powered by"
 msgstr "Ce service est rendu par"
 
@@ -3315,7 +3321,7 @@ msgstr "Diffusion/réception"
 msgid "Serial number of the config"
 msgstr "Numéro de série de la config"
 
-#: web_tt2/rss.tt2:28 web_tt2/rss.tt2:7
+#: web_tt2/rss.tt2:17 web_tt2/rss.tt2:5
 msgid "Server error"
 msgstr "Erreur du serveur"
 
@@ -3740,7 +3746,7 @@ msgstr ""
 msgid "Sympa error - could not display web page"
 msgstr "Erreur de Sympa - impossible d'afficher la page web"
 
-#: web_tt2/main.tt2:205 web_tt2/main.tt2:288
+#: web_tt2/main.tt2:217 web_tt2/main.tt2:300
 msgid "Sympa in your language:"
 msgstr "Sympa dans votre langue"
 
@@ -3794,23 +3800,23 @@ msgstr ""
 "listes "
 
 #. (count)
-#: web_tt2/rss.tt2:31
+#: web_tt2/rss.tt2:19
 msgid "The %1 latest created lists"
 msgstr "Les %1 dernières listes créées"
 
 #. (count)
-#: web_tt2/rss.tt2:51
+#: web_tt2/rss.tt2:31
 msgid "The %1 latest messages"
 msgstr "Les %1 derniers messages"
 
 # nlsref 16,70
 #. (count)
-#: web_tt2/rss.tt2:60
+#: web_tt2/rss.tt2:36
 msgid "The %1 latest shared documents"
 msgstr "Les %1 derniers documents publiées"
 
 #. (count)
-#: web_tt2/rss.tt2:41
+#: web_tt2/rss.tt2:25
 msgid "The %1 most active lists"
 msgstr "Les %1 listes les plus actives"
 
@@ -3965,16 +3971,16 @@ msgstr ""
 msgid "The following virtual robots are running on this server :"
 msgstr "Ci-dessous la liste des robots virtuels gérés sur ce serveur :"
 
-#: web_tt2/rss.tt2:33
+#: web_tt2/rss.tt2:20
 msgid "The latest created lists"
 msgstr "Les dernières listes créées"
 
-#: web_tt2/rss.tt2:53
+#: web_tt2/rss.tt2:32
 msgid "The latest messages"
 msgstr "Les derniers messages"
 
 # nlsref 16,70
-#: web_tt2/rss.tt2:62
+#: web_tt2/rss.tt2:37
 msgid "The latest shared documents"
 msgstr "Les derniers documents publiés"
 
@@ -4020,7 +4026,7 @@ msgstr ""
 msgid "The list's subject"
 msgstr "L'object de la liste"
 
-#: web_tt2/rss.tt2:43
+#: web_tt2/rss.tt2:26
 msgid "The most active lists"
 msgstr "Les listes les plus actives"
 
@@ -4706,7 +4712,8 @@ msgid ""
 "Warning : this message could have ever been send by another editor\n"
 msgstr ""
 "Impossible d'accéder au message à modérer de la liste %s avec la clé %s.\n"
-"Il se peut que ce message ait déjà été diffusé par un modérateur de la liste.\n"
+"Il se peut que ce message ait déjà été diffusé par un modérateur de la "
+"liste.\n"
 
 #: web_tt2/remove_arc.tt2:11
 msgid "Unable to find the message to delete"
@@ -4749,7 +4756,7 @@ msgid "Unsubscribe"
 msgstr "Désabonnement"
 
 # nlsref 6,71
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3421
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3433
 msgid "Unsubscribe from list %s"
 msgstr "Desabonnement de la liste %s"
 
@@ -4945,8 +4952,8 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:3192 wwsympa/wwsympa.fcgi:3193
-#: wwsympa/wwsympa.fcgi:3791 wwsympa/wwsympa.fcgi:3792
+#: wwsympa/wwsympa.fcgi:3204 wwsympa/wwsympa.fcgi:3205
+#: wwsympa/wwsympa.fcgi:3803 wwsympa/wwsympa.fcgi:3804
 msgid "Welcome on list %s"
 msgstr "Bienvenue sur la liste %s"
 
@@ -5144,7 +5151,7 @@ msgstr ""
 "initial"
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3422 wwsympa/wwsympa.fcgi:3897
+#: wwsympa/wwsympa.fcgi:3434 wwsympa/wwsympa.fcgi:3909
 msgid "You have been removed from list %s.\n"
 msgstr "Vous avez désabonné de la liste %s.\n"
 
@@ -5544,7 +5551,7 @@ msgid "Your subscription email is %1"
 msgstr "Votre adresse d'abonné est : %1"
 
 # nlsref 6,18
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3896
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:3908
 msgid "Your subscription to list %s has been removed."
 msgstr "Vous avez été retiré de la liste %s"
 
@@ -5575,6 +5582,23 @@ msgstr "[ Image %s ]"
 #: src/PlainDigest.pm:327
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ Texte initialement au format HTML ]\n"
+
+#: web_tt2/main.tt2:162 web_tt2/main.tt2:165
+msgid "\"RSS Active lists\""
+msgstr "\"RSS : les listes actives\""
+
+# nlsref 16,70
+#: web_tt2/main.tt2:158
+msgid "\"RSS Latest documents\""
+msgstr "\"RSS : les nouvelles documents\""
+
+#: web_tt2/main.tt2:161 web_tt2/main.tt2:164
+msgid "\"RSS Latest lists\""
+msgstr "\"RSS : les nouvelles listes\""
+
+#: web_tt2/main.tt2:157
+msgid "\"RSS Latest messages\""
+msgstr "\"RSS : les derniers messages\""
 
 #: src/PlainDigest.pm:296 src/PlainDigest.pm:317
 msgid ""
@@ -6772,6 +6796,10 @@ msgstr "votre adresse électronique : %1"
 msgid "your password : %1"
 msgstr "votre mot de passe         : %1"
 
+# nlsref 17,6
+#~ msgid "%1 by day "
+#~ msgstr "%1 par jour "
+
 #~ msgid "Language : %1"
 #~ msgstr "Langue : %1"
 
@@ -6780,9 +6808,6 @@ msgstr "votre mot de passe         : %1"
 
 #~ msgid "Visibility : %1"
 #~ msgstr "Visibilité : %1"
-
-#~ msgid "%1@%2 - %3"
-#~ msgstr "%1@%2 - %3"
 
 #, fuzzy
 #~ msgid "The [% count %] latest messages"
