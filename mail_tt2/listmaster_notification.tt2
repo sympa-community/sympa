@@ -96,10 +96,6 @@ Subject: [% FILTER qencode %][%|loc(param0)%]admins update failed for list %1[%E
 
 [%|loc%]Sympa could not include admins from external data sources ; the database or LDAP directory might be unreachable.[%END%]
 [%|loc%]Check Sympa log files for more precise information[%END%]
-[% ELSIF type == 'automatic_bounce_management' -%]
-=======
-[%|loc%]Sympa could not include admins from external data sources ; the database or LDAP directory might be unreachable. 
-Check Sympa log files for more precise information[%END%]
 
 [% ELSIF type == 'modify_list_family' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
