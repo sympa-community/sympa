@@ -1758,7 +1758,7 @@ sub send_to_editor {
        unless (-d $tmp_dir) {
 	   unless (mkdir ($tmp_dir, 0777)) {
 	       &error_message('may_not_create_dir');
-	       &wwslog('info','do_viewmod: unable to create %s', $tmp_dir);
+	       &do_log('info','do_viewmod: unable to create %s', $tmp_dir);
 	       return undef;
 	   }
 	   my $mhonarc_ressources = &tools::get_filename('etc', 'mhonarc-ressources', $robot, $self);
