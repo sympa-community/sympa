@@ -1,4 +1,4 @@
-From: [from]
+From: [conf->email]@[conf->host]
 To: Moderateurs de la liste [list->name] <[list->name]-editor@[list->host]>
 Subject: Message à modérer pour [list->name]
 Mime-version: 1.0

@@ -1,4 +1,4 @@
-From: [from]
+From: [conf->email]@[conf->host]
 To: Moderators of list [list->name] <[list->name]-editor@[list->host]>
 Subject: Article to be approved for [list->name]
 Mime-version: 1.0
