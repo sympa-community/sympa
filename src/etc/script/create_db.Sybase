@@ -1,6 +1,6 @@
 /* Sybase Database creation script 2.5.2 */
 /* Thierry Charles <tcharles@electron-libre.com> */
-
+/* 15/06/01 : extend password_user */
 
 /* sympa database must have been created */
 /* eg: create database sympa on your_device_data=10 log on your_device_log=4 */
@@ -11,7 +11,7 @@ create table user_table
 (
     email_user             varchar(100)           not null,
     gecos_user             varchar(150)           null    ,
-    password_user          varchar(20)            null    ,
+    password_user          varchar(40)            null    ,
     cookie_delay_user      numeric                null    ,
     lang_user              varchar(10)            null    ,
     constraint ind_user primary key (email_user)
