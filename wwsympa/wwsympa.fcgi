@@ -4976,7 +4976,7 @@ sub do_edit_list {
 	
 	$key =~ /^(single_param|multiple_param)\.(\S+)$/;
 	my ($type, $name) = ($1, $2);
-
+	
 	## Tag parameter as present in the form
 	$name =~ /^([^\.]+)(\.|$)/;
 	$edited_param->{$1} = 1;
@@ -5165,13 +5165,14 @@ sub do_edit_list {
 	}
     }
     ## Update config in memory
+	my $data_source_updated;
     foreach my $pname (keys %changed) {
 
 	my @users;
 
 	## If datasource config changed
 	if ($pname =~ /^(include_.*|user_data_source|ttl)$/) {
-	    ## start sync_include_task
+	    $data_source_updated = 1;
 	}
 	
 	## User Data Source
@@ -5218,7 +5219,7 @@ sub do_edit_list {
 	
 	if (($pname eq 'user_data_source') &&
 	    ($#users >= 0)) {
-
+	    
 	    $list->{'total'} = 0;
 	    
 	    ## Insert users in database
@@ -5238,8 +5239,15 @@ sub do_edit_list {
 	return undef;
     }
 
+	
     ## Reload config
     $list = new List $list->{'name'};
+
+    ## remove existing sync_include task
+    ## to start a new one
+    if ($data_source_updated && ($list->{'admin'}{'user_data_source'} eq 'include2')) {
+	$list->remove_task('sync_include');
+    }
 
     ##Exportation to an Ldap directory
     if(($list->{'admin'}{'status'} eq 'open')){
