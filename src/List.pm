@@ -3936,7 +3936,8 @@ sub may_edit {
     ## What privilege does he/she has ?
     my ($what, @order);
 
-    if ($parameter =~ /^(\w+)\.(\w+)$/) {
+    if (($parameter =~ /^(\w+)\.(\w+)$/) &&
+	($parameter !~ /\.tpl$/)) {
 	my $main_parameter = $1;
 	@order = ($edit_conf->{$parameter}{$role},
 		  $edit_conf->{$main_parameter}{$role}, 
