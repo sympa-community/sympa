@@ -254,8 +254,9 @@
     <FORM METHOD="POST" ACTION="[path_cgi]">
     <TD ALIGN="right" VALIGN="center">
     <B>Ajouter un signet</B><BR>
-    URL <input MAXLENGTH=100 SIZE="25" type="text" name="url"><BR>
-    intitulé <input MAXLENGTH=100 SIZE="20" type="text" name="name_doc">
+    intitulé <input MAXLENGTH=100 SIZE="20" type="text" name="name_doc"><BR>
+    URL <input MAXLENGTH=100 SIZE="25" type="text" name="url">
+    
     </TD>
 
     <TD ALIGN="left" VALIGN="bottom">
