@@ -25,7 +25,7 @@ use strict;
 require X509;
 require Exporter;
 require 'tools.pl';
-require 'parser.pl';
+
 my @ISA = qw(Exporter);
 my @EXPORT = qw(%list_of_lists);
 
@@ -1981,7 +1981,7 @@ sub send_msg {
 	## Add subject tag
 	$msg->head->delete('Subject');
 	my @parsed_tag;
-	&parse_tpl({'list' => {'name' => $self->{'name'},
+	&parser::parse_tpl({'list' => {'name' => $self->{'name'},
 			       'sequence' => $self->{'stats'}->[0]
 			       }},
 		   [$admin->{'custom_subject'}], \@parsed_tag);

@@ -60,7 +60,7 @@ foreach my $file (<../src/etc/scenari/*.*>) {
 }
 
 open OUT, ">$out_file" || die;
-&parse_tpl(\%data, $in_file, \*OUT);
+&parser::parse_tpl(\%data, $in_file, \*OUT);
 close OUT;
 
 exit 0;

@@ -227,7 +227,7 @@ sub mailfile {
 
    if ($filename) {
        if ($filename =~ /\.tpl$/) {
-	   &main::parse_tpl($data, $filename, $fh);
+	   &parser::parse_tpl($data, $filename, $fh);
 
        }else {
 	   ## Old style

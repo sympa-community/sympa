@@ -389,7 +389,7 @@ sub create {
 
     ## creation
     open (TASK, ">$task_file");
-    parse_tpl ($Rdata, $model_file, TASK);
+    &parser::parse_tpl($Rdata, $model_file, \*TASK);
     close (TASK);
     
     # special checking for list whose user_data_source config parmater is include. The task won't be created if there is a delete_subs command
