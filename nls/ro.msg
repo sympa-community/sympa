@@ -25,7 +25,7 @@ Mesajul:\n"
 24	"Comanda EXPIRE executat pe lista %s."
 26	"Lista membrilor:\n"
 27	"Lista enumerata o poti sterge cu urmatoarea comanda:\n"
-28	"De pe lista %s de %d zile %d nu au confirmat inscrierea.\n"
+28	"De pe lista %s de %d zile %d nu au confirmat abonarerea.\n"
 37 	"Mesaj ignorat pentru ca nu este in format text, Scrie doar mesaje in format text \n(sau pune comanda in subiect).\n"
 38	"%s mesajul trimis pe lista a fost trimisa si la administrator(i)\n"
 39	"Aceasta comanda nu este prezenta in mesaj."
@@ -57,13 +57,13 @@ $set 6 Messages du module Commands.pm
 11	" Lista particulara: Lista continutului nu poate fi accesata.\n"
 13	"Comanda eronata.\n"
 15	"Procesul de actualizare a esuat\n\n"
-16	"Confirmarea inscrierii probabil a fost facuta de pe o alta adresa email\n\. Foloseste aceeasi adresa email."
+16	"Confirmarea abonarii probabil a fost facuta de pe o alta adresa email\n\. Foloseste aceeasi adresa email."
 18	"Inscrierea ta pe lista %s nu mai este valida  ."
 21	"Reinoirea contului la lista '%s'"
 24	"Inscrierile pe aceasta lista sunt momentan suspendate.\n"
-25	"Cererea de inscriere/renuntare a fost trimisa la administratorul listei\n\ pentru aprobare. Vei fi anuntat cand vei fiaccepta/sters de pe lista.\n"
+25	"Cererea de abonare/renuntare a fost trimisa la administratorul listei\n\ pentru aprobare. Vei fi anuntat cand vei fiaccepta/sters de pe lista.\n"
 26	"Renuntarea la lista %s nu este posibila .\n"
-27	"Informatiile privind inscrierea ta au fost actualizate.\n"
+27	"Informatiile privind abonarea ta au fost actualizate.\n"
 28	"Ai acces la lista %s.\n"
 29	"Informatii privind aceasta lista vor fi trimise intr-un mesaj separat.\n"
 30	"Adresa ta email nu exista in lista %s. \n\
@@ -99,7 +99,7 @@ Nu esti unul dintre moderatorii listei %s.\n"
 Nu esti unul dintre proprietarii listei %s.\n"
 48	"\
 Cineva (sa speram ca chiar tu) a cerut ca cei inscrisi pe lista\n\
-'%s' pentru mai mult de %d zile trebuie confirme inscrierea.\n\
+'%s' pentru mai mult de %d zile trebuie confirme abonarea.\n\
 Daca aceasta actiune vrei sa nu fie pusa in aplicare, ignora mesajul.\n\
 Pentru a confirma actiunea, trimite un mail la '%s', cu urmatoarea comnada:\n\
 \n\
@@ -109,7 +109,7 @@ O comanda EXPIRE ruleaza pentru lista %s.\n\
 A fost rulata de catre proprietarul %s (%s)\n\
 Nu pot fi rulate mai multe procese 'expire' in acelasi timp pentru aceasta lista.\n\
 Procesul “expire” curent ruleaza pentru oamenii care s-au inscris de mai mult \n\
-de %d zile si care nu si-au confirmat inscrierea. Procesul de expirare\n\
+de %d zile si care nu si-au confirmat abonarea. Procesul de expirare\n\
 se va incheia in %d zile(s) (%s).\n"
 52	"%s Nu s-a primit confirmarea pentru urmatoarele adrese:\n"
 53	"Pentru a stopa procesul de expirare : EXPIREDEL %s\n"
@@ -118,14 +118,14 @@ se va incheia in %d zile(s) (%s).\n"
 56	"\
 Pentru lista %s a fost pornit un proces de expirare. Acest proces\n\
 se va incheia in %d zile. Vei primi apoi o lista cu inscrisi \n\
-care nu au confirmat inscrierea in tiimp util.\n\
+care nu au confirmat abonarea in tiimp util.\n\
 Acum vei putea sa stergi aceste adrese cu comanda  DEL.\n"
 57	"Pentru a citi lista celor care nu au confirmat \n\
 subscrierea:EXPIREINDEX %s\n"
 58	"Aceste adrese email pot fi sterse utilizand urmatoarele comenzi :\n"
 60	"\
 Comanda EXPIRE nu poate fi rulata. Trebuie urmata de o explicatie\n\
-care sa se adreseze direct celor care trebuie sa confirme inscrierea.\n\
+care sa se adreseze direct celor care trebuie sa confirme abonarea.\n\
 Acest text trebuie \n\n\
  - sa inceapa pe prima linie dupa comanda EXPIRE,\n\
  - sa contina cel putin 20 de cuvinte,\n\
@@ -153,9 +153,9 @@ Daca nu doresti sa confirm actiunea, ignora mesajul.\n"
 80	"Comanda %s nu este permisa in lista %s\n"
 81	"Ghidul utilizatorului"
 82	"Liste publice"
-83	"Rezumatul inscrierilor"
+83	"Rezumatul abonarilor"
 84	"Utilizatorul '%s' este deja inscris la lista '%s'\n"
-85	"Utilizatorul %s a fost invitat sa se inscrie in lista %s.\n"
+85	"Utilizatorul %s a fost invitat sa se abona in lista %s.\n"
 86	"Utilizatorul %s este persona non-grata in lista %s.\n"
 90	"Lista %s permite doar aceste metode de primire a mesajelor: %s\n\
 Configuratia contului tau nu a fost modificata.\n"

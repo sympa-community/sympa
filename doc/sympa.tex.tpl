@@ -228,9 +228,9 @@ in a single software package, including:
     \item \textbf {Multilingual} messages. The current version of
         \Sympa allows the administrator to choose the language
         catalog at run time. At the present time the \Sympa robot is available in
-        Chinese (Big5 and GB), Czech, English, Finnish, French, German, Hungarian, Italian, Polish, 
-	Portuguese, Spanish. The web interface is available in English, Spanish
-	and French.
+        Chinese, Czech, English, Finnish, French, German, Hungarian, Italian, Polish, 
+	Portuguese, Spanish, Romanian. The web interface is available in English, Spanish,
+	French, Chinese, Czech, Hungarian, Italian.
 
     \item \textbf {MIME support}. \Sympa naturally respects
         \textindex {MIME} in the distribution process, and in addition
@@ -419,6 +419,8 @@ Our thanks to all contributors, including:
 
   \item Fabien Marquois, who introduced many new features such as
       the digest.
+
+  \item Valics Lehel, for his Romanian translations
 
   \item Vizi Szilard for his Hungarian translations
 
