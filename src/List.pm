@@ -4639,7 +4639,7 @@ sub _include_users_ldap {
 
     ## Connection timeout (default is 120)
     #my $timeout = 30; 
-
+    
     unless ($ldaph = Net::LDAP->new($host, port => "$port", timeout => $param->{'timeout'})) {
 	do_log ('notice',"Can\'t connect to LDAP server '$host' '$port' : $@");
 	return undef;
@@ -4647,9 +4647,16 @@ sub _include_users_ldap {
     
     do_log('debug', "Connected to LDAP server $host:$port") if ($main::options{'debug'});
     
-    unless ($ldaph->bind ($user, password => "$passwd")) {
-	do_log ('notice',"Can\'t bind with server $host:$port as user '$user' : $@");
-	return undef;
+    if ( defined $user ) {
+	unless ($ldaph->bind ($user, password => "$passwd")) {
+	    do_log ('notice',"Can\'t bind with server $host:$port as user '$user' : $@");
+	    return undef;
+	}
+    }else {
+	unless ($ldaph->bind ) {
+	    do_log ('notice',"Can\'t do anonymous bind with server $host:$port : $@");
+	    return undef;
+	}
     }
 
     do_log('debug', "Binded to LDAP server $host:$port ; user : '$user'") if ($main::option{'debug'});
