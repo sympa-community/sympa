@@ -973,7 +973,33 @@ sub virus_infected {
         if (( $status >= 3) and not($virusfound)) { 
 	    $virusfound = "unknown";
 	}
-    }    
+
+        ## Sophos Antivirus... by liuk@publinet.it
+    }elsif ("${Conf{'antivirus_path'}}" =~ /\/sweep$/) {
+	
+        # impossible to look for viruses with no option set
+        return 0 unless ($Conf{'antivirus_args'});
+    
+        #do_log('err',"Running: $Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ;
+
+        open (ANTIVIR,"$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ;
+	
+	#do_log('err', "Ok, entering virus_infected(), sweep part... ($work_dir) --liuk");
+        
+	while (<ANTIVIR>) {
+	    if (/Virus\s+(.*)/) {
+		$virusfound = $1;
+	    }
+	}       
+	close ANTIVIR;
+        
+	my $status = $?/256 ;
+        
+	## sweep status =3 (*256) => virus
+	if (( $status == 3) and not($virusfound)) {
+	    $virusfound = "unknown";
+	}
+    }        
 
     ## Error while running antivir, notify listmaster
     if ($error_msg) {

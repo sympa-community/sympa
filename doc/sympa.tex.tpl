@@ -322,7 +322,7 @@ in a single software package, including:
 
     \item \textbf {Antivirus scanner} : \Sympa extracts attachements from incoming
 	messages and run a virus scanner on them. Curently working with McAfee/uvscan,
-	Fsecure/fsav, AVP and Trend Micro/VirusWall.
+	Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall.
 	(See ref {Antivirus}, page~\pageref {Antivirus})
 
     \item Inclusion of the subscribers of one list among the subscribers of
@@ -1905,6 +1905,14 @@ Exemple with AVP :
 \begin{verbatim}
 antivirus_path  /opt/AVP/AvpLinux
 antivirus_args  -Y -O- -MP -I0
+\end{verbatim}
+\end {quote}
+
+Exemple with Sophos :
+\begin {quote}
+\begin{verbatim}
+antivirus_path  /usr/local/bin/sweep
+antivirus_args  -nc -nb -ss -archive
 \end{verbatim}
 \end {quote}
 
@@ -6412,7 +6420,7 @@ of bouncing addresses.
 In this case you must set the \cfkeyword {antivirus\_path} and 
 \cfkeyword {antivirus\_args} configuration parameters
  (see \ref {Antivirus plug-in}, page~\pageref {Antivirus plug-in}.
-\Sympa is already compatible with McAfee/uvscan, Fsecure/fsav, AVP and Trend Micro/VirusWall.
+\Sympa is already compatible with McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall.
 For each mail received, \Sympa deposits its component parts in the \tildedir {sympa/spool/tmp/antivirus} directory and
 then calls the antivirus software to check them.
 When a virus is detected, \Sympa looks for the virus name in the virus scanner STDOUT and sends a
