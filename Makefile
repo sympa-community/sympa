@@ -163,7 +163,16 @@ clean:
 	$(MAKE) PERL='${PERL}' clean) || exit 1; \
 	done;
 
-install: installsrc installnls installwws installman installscript installsample installdir installconfig
+install: importantchanges installsrc installnls installwws installman installscript installsample installdir installconfig
+
+importantchanges:
+	( 	PERL=$(PERL); export PERL; \
+		UMASK=0600; export UMASK; \
+		BINDIR=$(BINDIR); export BINDIR; \
+		SYMPA_VERSION=$(SYMPA_VERSION); export SYMPA_VERSION; \
+		$(PERL) ./important_changes.pl \
+	) ;\
+
 
 installsrc:
 	(cd src && echo "making in src..." && \
