@@ -66,6 +66,11 @@ WWSBINDIR	=	$(BINDIR)
 ## Target directory for installing Icons
 ICONSDIR	=	/home/httpd/icons
 
+## Settings used in src/etc/scripts/sympa
+PIDPRE		=	pidof -x
+PIDPOST		=	
+LOCKDIR		=	/var/lock/subsys
+
 ## Path to newaliases command (or what else may be called to rebuild
 ## Mail aliases database)
 NEWALIASES    =       /usr/bin/newaliases
@@ -92,6 +97,17 @@ CFLAGS	=	-g
 
 # Aix4.2 (and some others unix), use gnu make !
 #MAKE	=	@MAKE@
+
+# FreeBSD hier(7) structure and locations
+# by Autrijus Tang 2001/10/11
+#ifeq ($(shell uname), FreeBSD)
+#	PIDPRE	= 	ps -ax | grep
+#	PIDPOST	= 	| grep perl | head -n 1 | cut -f 2 -d " "
+#	LOCKDIR	= 	/var/spool/lock
+#	ICONSDIR	=	/usr/local/www/icons
+#	RPMTOPDIR	=	/usr/local/src/redhat
+#	OPENSSL	=	/usr/bin/openssl
+#endif
 
 ##---------- STOP ---------- STOP ---------- STOP ---------- STOP ----------
 
@@ -137,7 +153,8 @@ sources: src/Makefile src/queue.c src/bouncequeue.c src/aliaswrapper.c
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	USER='${USER}' GROUP='${GROUP}' \
 	SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' NEWALIASES='${NEWALIASES}' \
-	NEWALIASES_ARG='${NEWALIASES_ARG}');
+	NEWALIASES_ARG='${NEWALIASES_ARG}' \
+	PIDPRE='${PIDPRE}' PIDPOST='${PIDPOST}' LOCKDIR='${LOCKDIR}');
 
 doc: doc/sympa.tex.tpl doc/Makefile 
 	@echo "Making doc"
@@ -250,6 +267,7 @@ installscript:
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' \
 	MAILERPROGDIR='${MAILERPROGDIR}' \
 	COOKIE='${COOKIE}' INITDIR='${INITDIR}' \
+	PIDPRE='${PIDPRE}' PIDPOST='${PIDPOST}' LOCKDIR='${LOCKDIR}' \
 	OPENSSL='@OPENSSL@' USER='${USER}' GROUP='${GROUP}' ICONSDIR='${ICONSDIR}' install) || exit 1;
 
 

@@ -14,11 +14,13 @@
 # chkconfig: 345 95 05
 # description: sympa is a powerfull mailing lists management system.
 
-# Source function library.
-. /etc/rc.d/init.d/functions
+if [ ${OSTYPE} != "FreeBSD" ]; then
+    # Source function library.
+    . /etc/rc.d/init.d/functions
 
-# Get config.
-. /etc/sysconfig/network
+    # Get config.
+    . /etc/sysconfig/network
+fi
 
 # Sympa parameters
 # Sympa binaries directory
@@ -39,7 +41,7 @@ sympa_status() {
     fi
  
     # First try "pidof"
-    pid=`pidof -x $1.pl`
+    pid=`--PIDPRE-- $1.pl --PIDPOST--`
     if [ "$pid" != "" ] ; then
             echo "$1 (pid $pid) is active..."
             return 0
@@ -70,9 +72,9 @@ sympa_module_start() {
 #		startparam=""
 #	fi
  
-	daemon $sympadir/$1.pl $startparam
+	$sympadir/$1.pl $startparam &
 	sleep 1
-	pid=`pidof -x $sympadir/$1.pl`
+	pid=`--PIDPRE-- $sympadir/$1.pl --PIDPOST--`
 	if [ $pid ]; then
 		echo $pid > /var/run/$1.pl.pid
 	fi
@@ -113,6 +115,7 @@ sympa_stop() {
 	if [ -f /var/run/$1.pl.pid ]; then
 		echo -n "Stopping module $1.pl: "
 		killproc $1.pl
+		# kill `--PIDPRE-- $1.pl --PIDPOST--`
 		rm -f /var/run/$1.pl.pid
 		echo
 	fi
@@ -120,9 +123,11 @@ sympa_stop() {
 
 
 # Check that networking is up.
-if [ ${NETWORKING} = "no" ]
-then
-	exit 0
+if [ ${OSTYPE} != "FreeBSD" ]; then
+    if [ ${NETWORKING} = "no" ]
+    then
+	    exit 0
+    fi
 fi
 
 # Check config files
@@ -133,13 +138,13 @@ fi
 # See how we were called.
 case "$1" in
   start)
-	if [ ! -f /var/lock/subsys/sympa ]; then
+	if [ ! -f --LOCKDIR--/sympa ]; then
 		echo "Starting Sympa subsystem: "
 		sympa_start sympa
 		sympa_start archived
 		sympa_start bounced
 		sympa_start task_manager
-		touch /var/lock/subsys/sympa
+		touch --LOCKDIR--/sympa
 		echo
 	else
 
@@ -154,14 +159,14 @@ case "$1" in
 	sympa_stop archived
 	sympa_stop sympa
 	sympa_stop task_manager
-	if [ -f /var/lock/subsys/sympa ]; then
-		rm -f /var/lock/subsys/sympa
+	if [ -f --LOCKDIR--/sympa ]; then
+		rm -f --LOCKDIR--/sympa
 	fi
 	;;
   status)
 	echo "Status of Sympa subsystem: "
 	echo -n "Status file for subsystem "
-	if [ -f /var/lock/subsys/sympa ]; then
+	if [ -f --LOCKDIR--/sympa ]; then
 		echo "found."
 	else
 		echo "NOT found."

@@ -36,6 +36,9 @@ installsubstsrc:
 		COOKIE=$(COOKIE); export COOKIE; \
 		HOST=$(HOST); export HOST; \
 		OPENSSL=$(OPENSSL); export OPENSSL; \
+		PIDPRE='$(PIDPRE)'; export PIDPRE; \
+		PIDPOST='$(PIDPOST)'; export PIDPOST; \
+		LOCKDIR=$(LOCKDIR); export LOCKDIR; \
 		$(PERL) ../../../subst.pl $(SUBSTSRC) \
 	)
 
