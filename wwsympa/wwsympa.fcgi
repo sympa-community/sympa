@@ -6294,7 +6294,11 @@ sub do_redirect {
      foreach my $l (@lists) {
 	 my $list = new List ($l);
 
-	 `/bin/rm -rf $list->{'dir'}`;
+	# `/bin/rm -rf $list->{'dir'}`;
+	&tools::remove_dir($list->{'dir'});
+	if ($list->{'name'}) {
+		&tools::remove_dir("$wwsconf->{'arc_path'}/$list->{'name'}\@$list->{'domain'}");
+	}
      }    
 
      &message('performed');
