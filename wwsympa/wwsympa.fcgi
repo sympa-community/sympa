@@ -209,6 +209,7 @@ my %comm = ('home' => 'do_home',
 	 'd_change_access' => 'do_d_change_access',
 	 'd_set_owner' => 'do_d_set_owner',
 	 'd_admin' => 'do_d_admin',
+	 'dump' => 'do_dump',
 	 'arc_protect' => 'do_arc_protect',
 	 'view_translations' => 'do_view_translations',
 	 'remind' => 'do_remind',
@@ -284,6 +285,7 @@ my %action_args = ('default' => ['list'],
 		'd_control' => ['list','@path'],
 		'd_change_access' =>  ['list','@path'],
 		'd_set_owner' =>  ['list','@path'],
+		'dump' => ['list'],
 		'view_translations' => [],
 		'search' => ['list','filter'],
 		'search_user' => ['email'],
@@ -321,6 +323,7 @@ my %action_type = ('editfile' => 'admin',
 		'close_list' =>'admin',
 		'restore_list' => 'admin',
 		'd_admin' => 'admin',
+		'dump' => 'admin',
 		'remind' => 'admin',
 		'subindex' => 'admin',
 		'stats' => 'admin',
@@ -630,22 +633,30 @@ while ($query = &new_loop()) {
 	}
     }
     &Language::SetLang($saved_lang);
-    # if bypass defined use file extention
+    # if bypass is defined select the content-type from various vars
     if ($param->{'bypass'}) {
 
        ## if bypass = 'extreme' leave the action send the content-type
        unless ($param->{'bypass'} eq 'extreme') {
 
-            ## if bypass = 'asis', file content-type is in the file itself
+            ## if bypass = 'asis', file content-type is in the file itself as is define by the action in $param->{'content_type'};
             unless ($param->{'bypass'} eq 'asis') {
-               $mime_types->{$param->{'file_extension'}} ||= 'application/octet-stream';
- 
-               printf "Content-Type: %s\n\n", $mime_types->{$param->{'file_extension'}};
+		$mime_types->{$param->{'file_extension'}} ||= $param->{'content_type'};
+		$mime_types->{$param->{'file_extension'}} ||= 'application/octet-stream';
+                printf "Content-Type: %s\n\n", $mime_types->{$param->{'file_extension'}};
             }
+	    
+	    #  $param->{'file'} or $param->{'error'} must be define in this case.
 
-	    open (FILE, $param->{'file'});
-	    print <FILE>;
-	    close FILE;
+	    if (open (FILE, $param->{'file'})){
+		print <FILE>;
+		close FILE;
+	    }elsif($param->{'error_msg'}){
+		printf "$param->{'error_msg'}\n";
+	    }else{
+		printf "Internal error content-type nor file defined\n";
+		&do_log('err', 'Internal error content-type nor file defined');
+	    }
 	}
 
     }elsif ($param->{'redirect_to'}) {
@@ -872,7 +883,7 @@ sub get_parameters {
 	}else{
 	    $main::options{'debug_level'} = 0 ;
 	} 
-	do_log ('debug2', "xxxxxxxxxxxxxxxx  debug level $main::options{'debug_level'}");
+	do_log ('debug2', "debug level $main::options{'debug_level'}");
 	
 	if ($#params >= 0) {
 	    $in{'action'} = $params[0];
@@ -8706,6 +8717,45 @@ sub export_topics {
     
     $param->{'topics'}[int($total / 2)]{'next'} = 1;
 }
+
+
+## Subscribers' list
+sub do_dump {
+    &do_log('info', "do_dump($param->{'list'})");
+
+    ## Whatever the action return, it must never send a complex html page
+    $param->{'bypass'} = 1;
+    $param->{'content_type'} = "text/plain";
+    $param->{'file'} = undef ; 
+    
+    unless ($param->{'list'}) {
+	# any error message must start with 'err_' in order to allow remote Sympa to catch it
+	&error_message('err_missing_arg_list');
+	&do_log('info','do_dump: no list');
+	return undef;
+    }
+
+    ## May dump is may review
+    my $action = &List::request_action ('review',$param->{'auth_method'},$robot,
+					{'listname' => $param->{'list'},
+					 'sender' => $param->{'user'}{'email'},
+					 'remote_host' => $param->{'remote_host'},
+					 'remote_addr' => $param->{'remote_addr'}});
+
+
+    &do_log('info',"do_dump: request_action : $action");
+    unless ($action =~ /do_it/) {
+	# any error message must start with 'err_' in order to allow remote Sympa to catch it
+	&error_message ('err_not_allowed');
+	&do_log('info','do_dump: may not review');
+	return undef;
+    }
+    my @listnames = $param->{'list'} ;
+    &List::dump(@listnames);
+    $param->{'file'} = "$list->{'dir'}/subscribers.db.dump";
+    return 1;
+}
+
 
 ## retrurn a mailto according to spam protection parameter
 sub mailto {
