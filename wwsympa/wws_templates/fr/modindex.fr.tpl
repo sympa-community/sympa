@@ -4,7 +4,7 @@
 <!-- moderation of messages -->
   <FORM ACTION="[path_cgi]" METHOD=POST>
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-  <h2> <B> Liste des messages en attente de modÃ©ration </B> </h2> 
+  <h2> <B> Liste des messages en attente de modération </B> </h2> 
 <TABLE>
 <TR BGCOLOR="[bg_color]"><TD>
   <INPUT TYPE="submit" NAME="action_distribute" VALUE="Distribuer">
@@ -57,7 +57,7 @@
 [IF mod_total_shared]
   <FORM ACTION="[path_cgi]" METHOD=POST>
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-  <h2> <B> Liste des documents en attente de modÃ©ration </B> </h2> 
+  <h2> <B> Liste des documents en attente de modération </B> </h2> 
 <TABLE>
 <TR BGCOLOR="[bg_color]"><TD>
   <INPUT TYPE="submit" NAME="action_d_install_shared" VALUE="Valider">
