@@ -1,4 +1,4 @@
-<!-- =============== Mhonarc ressources, you must check mhonarc documentation              -->
+
 
 <DECODEHEADS>
 
@@ -466,7 +466,6 @@ $TNEXTBUTTON$
   <INPUT TYPE="hidden" NAME="in_reply_to" VALUE="$MSGID$">
   <INPUT TYPE="hidden" NAME="subject" VALUE="Re: $SUBJECTNA$">
   [STARTPARSE]
-  <INPUT TYPE="hidden" NAME="action" VALUE="compose_mail">
   <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 [IF lang=fr]
    répondre à l'auteur <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
@@ -492,32 +491,28 @@ $TNEXTBUTTON$
 
 [IF action<>viewmod]
 [IF user->email=$FROMADDR$]
-  <FORM ACTION="[path_cgi]" METHOD=POST>
-  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
   <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
   <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
+
 [IF lang=fr]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="marquer ce message pour suppression">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="marquer ce message pour suppression" onClick="request_confirm(this.form,'Voulez-vous vraiment supprimer ce message ?')">
 [ELSIF lang=cz]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="Oznaèit tuto zprávu ke smazání">
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="oznaèit tuto zprávu ke smazání">
 [ELSIF lang=hu]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre" onClick="request_confirm(this.form,'Tényleg törölni szeretnéd ezt a levelet?')">
 [ELSIF lang=et]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks" onClick="request_confirm(this.form,'Oled kindel, et soovid selle kirja ära kustutada?')">
 [ELSIF lang=de]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren" onClick="request_confirm(this.form,'Wollen Sie wirklich diese Mitteilung löschen?')">
 [ELSE]
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="tag this mail for deletion">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="request_confirm(this.form,'Do you really want to delete this message ?')">
 [ENDIF]
 
 [ELSIF is_owner]
-  <FORM ACTION="[path_cgi]" METHOD=POST>
-  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
   <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
   <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
-  <INPUT TYPE="hidden" NAME="action" VALUE="remove_arc">
 
 [IF lang=fr]
   <INPUT TYPE="button" NAME="action_remove_arc" VALUE="marquer ce message pour suppression" onClick="request_confirm(this.form,'Voulez-vous vraiment supprimer ce message ?')">
