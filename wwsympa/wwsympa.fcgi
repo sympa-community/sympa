@@ -4904,7 +4904,7 @@ sub do_edit_list {
     }
 
     ## Check changes & check syntax
-    my %changed;
+    my (%changed, %delete);
     my @syntax_error;
     foreach my $pname (sort List::by_order keys %{$pinfo}) {
 	my ($p, $new_p);
@@ -5019,14 +5019,13 @@ sub do_edit_list {
 	    ## Ex: 'max_size'
 	    }else {
 		if (! defined($new_p->[$i])) {
-		    splice @{$new_p}, $i, 1;
-		}
-
-		if ($p->[$i] ne $new_p->[$i]) {
+		    push @{$delete{$pname}}, $i;
+		    $changed{$pname} = 1;
+		}elsif ($p->[$i] ne $new_p->[$i]) {
 		    unless ($new_p->[$i] =~ /^$pinfo->{$pname}{'file_format'}$/) {
 			push @syntax_error, $pname;
 		    }
-		    $changed{$pname} = 1; next;
+		    $changed{$pname} = 1; 
 		}
 	    }	    
 	}
@@ -5041,6 +5040,19 @@ sub do_edit_list {
 	return undef;
     }
 
+    ## Delete selected params
+    foreach my $p (keys %delete) {
+	## Delete ALL entries
+	unless (ref ($delete{$p})) {
+	    undef $new_admin->{$p};
+	    next;
+	}
+
+	## Delete selected entries
+	foreach my $k (reverse @{$delete{$p}}) {
+	    splice @{$new_admin->{$p}}, $k, 1;
+	}
+    }
     ## Update config in memory
     foreach my $pname (keys %changed) {
 
