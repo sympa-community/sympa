@@ -2304,6 +2304,9 @@ others. Depending on permissions, the same URL may generate a different view.
       So Sympa UID (and Sympa GID) must be higher then 100 or suexec must be tuned in order to allow
       lower UID/GID. Check http://httpd.apache.org/docs/suexec.html\#install for details
 
+      The User and Group directive have to be set before the FastCgiServer directive
+      is encountered.
+
 \item Otherwise, you can overcome restrictions on the execution of suid scripts
       by using a short C program, owned by sympa and with the suid bit set, to start
       \file {wwsympa.fcgi}. Here is an example (with no guarantee attached) :
