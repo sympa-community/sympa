@@ -12,5 +12,5 @@
 [list->domain]-[list->name]-editor: "| --MAILERPROGDIR--/queue [list->name]-editor@[list->domain]"
 #[list->domain]-[list->name]-subscribe: "| --MAILERPROGDIR--/queue [list->name]-subscribe@[list->domain]"
 [list->domain]-[list->name]-unsubscribe: "| --MAILERPROGDIR--/queue [list->name]-unsubscribe@[list->domain]"
-[list->domain]-[list->name]-owner: "| --MAILERPROGDIR--/bouncequeue [list->name]-unsubscribe@[list->domain]"
+[list->domain]-[list->name]-owner: "| --MAILERPROGDIR--/bouncequeue [list->name]@[list->domain]"
 [ENDIF]
