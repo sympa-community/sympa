@@ -32,6 +32,11 @@ static char     qfile[128];
 static char     buf[16384];
 static int      i, fd;
 
+/* For HP-UX */
+#ifndef EX_CONFIG
+# define EX_CONFIG 78
+#endif
+
 #ifndef CONFIG
 # define CONFIG		"/etc/sympa.conf"
 #endif
