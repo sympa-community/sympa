@@ -4,7 +4,8 @@
   <TR ALIGN=center BGCOLOR="#330099">
   [IF auth_method=smime]
   <TD bgcolor="#ffffff">
-     <IMG SRC="[icons_url]/locked.gif" align="center" alt="https">
+<A HREF="[path_cgi]/show_cert" onClick="winhelp=window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=320');winlogin.focus()" TARGET="wws_help">
+     <IMG SRC="[icons_url]/locked.gif" align="center" alt="https" border=0></A>
   [ELSE]
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
