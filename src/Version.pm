@@ -8,6 +8,7 @@ use Carp;
 @ISA = qw(Exporter);
 @EXPORT = qw($Version);
 
+
 $Version = '--SYMPA_VERSION--';
 
 1;
