@@ -2532,35 +2532,37 @@ sub send_file {
 
 ## Delete a new user to Database (in User table)
 sub delete_user_db {
-    my($who) = lc(shift);
+    my @users = @_;
+    
     do_log('debug2', 'List::delete_user_db');
     
-    my ($field, $value);
-    my ($user, $statement, $table);
+    return undef unless ($#users >= 0);
     
     unless ($List::use_db) {
 	&do_log('info', 'Sympa not setup to use DBI');
 	return undef;
     }
     
-    
-    return undef unless $who;
-    
     ## Check database connection
     unless ($dbh and $dbh->ping) {
 	return undef unless &db_connect();
     }	   
 
-    ## Update field
-    $statement = sprintf "DELETE FROM user_table WHERE (email_user =%s)"
-	, $dbh->quote($who); 
-    
-    unless ($dbh->do($statement)) {
-	do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-	return undef;
+    foreach my $who (@users) {
+	my $statement;
+	
+	$who = lc($who);
+	
+	## Update field
+	$statement = sprintf "DELETE FROM user_table WHERE (email_user =%s)", $dbh->quote($who); 
+	
+	unless ($dbh->do($statement)) {
+	    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    return undef;
+	}
     }
-    
-    return 1;
+
+    return $#users + 1;
 }
 
 ## Delete the indicate users from the list.
@@ -2592,22 +2594,6 @@ sub delete_user {
 		do_log('debug','Unable to execute SQL statement %s : %s', $statement, $dbh->errstr);
 		return undef;
 	    }   
-
-#	    ## Is it his/her last subscription
-#	    my @which;
-#	    foreach my $role ('member','editor','owner') {
-#		@which = (@which, &get_which ($who,'*',$role));
-#	    }
-#
-#	    ## Cleanup in user_table
-#	    if ($#which < 0) {
-#		$statement = sprintf "DELETE FROM user_table WHERE (email_user=%s)",$dbh->quote($who);
-#		
-#		unless ($dbh->do($statement)) {
-#		    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-#		    return undef;
-#		}   
-#	    }
 
 	    $total--;
 	}
@@ -2731,6 +2717,48 @@ sub get_user_db {
     }
 
     return $user;
+}
+
+## Returns an array of all users in User table hash for a given user
+sub get_all_user_db {
+    do_log('debug2', 'List::get_all_user_db()');
+
+    my $statement;
+    my @users;
+ 
+    unless ($List::use_db) {
+	&do_log('info', 'Sympa not setup to use DBI');
+	return undef;
+    }
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+
+    $statement = sprintf "SELECT email_user FROM user_table";
+    
+    push @sth_stack, $sth;
+
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    
+    while (my $email = ($sth->fetchrow_array)[0]) {
+	push @users, $email;
+    }
+ 
+    $sth->finish();
+
+    $sth = pop @sth_stack;
+
+    return @users;
 }
 
 ## Returns a subscriber of the list.

@@ -168,7 +168,8 @@ my @list_models = ('expire', 'remind', 'sync_include');
 ## hash of the global task models
 my %global_models = (#'crl_update_task' => 'crl_update', 
 		     #'chk_cert_expiration_task' => 'chk_cert_expiration',
-		     'expire_bounce_task' => 'expire_bounce'
+		     'expire_bounce_task' => 'expire_bounce',
+		     'purge_user_table_task' => 'purge_user_table'
 		     #,'global_remind_task' => 'global_remind'
 		     );
 
@@ -200,6 +201,7 @@ my %commands = ('next'                  => ['date', '\w*'],
 		'chk_cert_expiration'   => ['\w+', 'date'],
 		                           #template  date
 		'sync_include'          => [],
+		'purge_user_table'      => []
 		);
 
 # commands which use a variable. If you add such a command, the first parameter must be the variable
@@ -696,7 +698,7 @@ sub execute {
 	    &do_log ('err', "error : $result{'error'}");
 	    return undef;
 	}
-		
+	
 	# processing of the assignments
 	if ($result{'nature'} eq 'assignment') {
 	    $vars{$result{'var'}} = cmd_process ($result{'command'}, $result{'Rarguments'}, $task_file, \%vars, $lnb);
@@ -705,7 +707,7 @@ sub execute {
 	# processing of the commands
 	if ($result{'nature'} eq 'command') {
 	    $status = &cmd_process ($result{'command'}, $result{'Rarguments'}, $task_file, \%vars, $lnb);
-	    last unless $status;
+	    last unless defined($status);
 	}
     } 
 
@@ -752,6 +754,7 @@ sub cmd_process {
     return exec_cmd ($Rarguments) if ($command eq 'exec');
     return update_crl ($Rarguments, \%context) if ($command eq 'update_crl');
     return expire_bounce ($Rarguments, \%context) if ($command eq 'expire_bounce');
+    return purge_user_table (\%context) if ($command eq 'purge_user_table');
     return sync_include(\%context) if ($command eq 'sync_include');
 
      # commands which use a variable
@@ -1044,6 +1047,63 @@ sub exec_cmd {
     system ($file);
     
     return 1;
+}
+
+sub purge_user_table {
+    my $Rarguments = $_[0];
+    my $context = $_[1];
+    do_log('debug2','purge_user_table()');
+
+    ## Load user_table entries
+    my @users = &List::get_all_user_db();
+
+    ## Load known subscribers/owners/editors
+    my %known_people;
+
+    ## Listmasters
+    foreach my $l (@{$Conf{'listmasters'}}) {
+	$known_people{$l} = 1;
+    }
+
+    foreach my $r (keys %{$Conf{'robots'}}) {
+	foreach my $l (&List::get_lists($r)){
+	    my $list = new List($l);
+	    next unless defined($list);
+
+	    ## Owners
+	    foreach my $o (@{$list->{'admin'}{'owner'}}) {
+		$known_people{$o->{'email'}} = 1;
+	    }
+
+	    ## Editors
+	    foreach my $e (@{$list->{'admin'}{'editor'}}) {
+		$known_people{$e->{'email'}} = 1;
+	    }
+	    
+	    ## Subscribers
+	    for (my $user = $list->get_first_user(); $user; $user = $list->get_next_user()) {
+		$known_people{$user->{'email'}} = 1;
+	    }
+	}
+    }    
+
+    ## Look for unused entries
+    my @purged_users;
+    foreach (@users) {
+	unless ($known_people{$_}) {
+	    &do_log('debug2','User to purge: %s', $_);
+	    push @purged_users, $_;
+	}
+    }
+    
+    unless ($#purged_users < 0) {
+	unless (&List::delete_user_db(@purged_users)) {
+	    &do_log('err', 'purge_user_table error: Failed to delete users');
+	    return undef;
+	}
+    }
+
+    return $#purged_users + 1;
 }
 
 sub expire_bounce {

@@ -43,6 +43,7 @@ my @valid_options = qw(
 		       misaddressed_commands misaddressed_commands_regexp max_size maxsmtp msgcat nrcpt owner_priority pidfile spool queue 
 		       queueauth queuetask queuebounce queuedigest queueexpire queuemod queuesubscribe queueoutgoing tmpdir
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor
+		       purge_user_table_task
 		       remind_return_path request_priority rfc2369_header_fields sendmail sendmail_args sleep 
 		       sort sympa_priority syslog log_smtp umask welcome_return_path wwsympa_url
                        openssl capath cafile  key_passwd ssl_cert_dir remove_headers
@@ -50,7 +51,7 @@ my @valid_options = qw(
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
 		       ldap_export_dnmanager ldap_export_connection_timeout
-		       list_check_smtp list_check_suffixes
+		       list_check_smtp list_check_suffixes 
 );
 
 my %old_options = ('trusted_ca_options' => 'capath,cafile');
@@ -151,6 +152,7 @@ my %Default_Conf =
      'list_check_smtp' => '',
      'list_check_suffixes' => 'request,owner,editor,unsubscribe,subscribe',
      'expire_bounce_task' => 'daily',
+     'purge_user_table_task' => 'monthly',
      'default_archive_quota' => '',
      'default_shared_quota' => '',
      'capath' => '',

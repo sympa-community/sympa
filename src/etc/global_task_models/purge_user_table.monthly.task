@@ -1,0 +1,7 @@
+title.fr supression des entrées orphelines de la table user tous les mois
+title.us purge of orphan entries in user table every month
+
+
+/ACTION
+purge_user_table ()
+next ([execution_date] + 1m, ACTION)
