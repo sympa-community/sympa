@@ -3,6 +3,10 @@
 package List;
 
 use strict;
+require Exporter;
+require 'tools.pl';
+my @ISA = qw(Exporter);
+my @EXPORT = qw(%list_of_lists);
 
 =head1 CONSTRUCTOR
 
@@ -195,7 +199,8 @@ my %regexp = ('email' => '(\S+|\".*\")(@\S+)',
 	      'host' => '[\w\.\-]+',
 	      'listname' => '[a-z0-9][a-z0-9\-\._]+',
 	      'sql_query' => 'SELECT.*',
-	      'scenario' => '[\w,\.\-]+'
+	      'scenario' => '[\w,\.\-]+',
+	      'task' => '\w+'
 	      );
 
 ## List parameters defaults
@@ -412,6 +417,9 @@ my %alias = ('reply-to' => 'reply_to',
 			 'title_id' => 26,
 			 'group' => 'description'
 			 },
+	    'expire_task' => {'task' => 'expire',
+			      'title_id' => 95
+			 },
 	    'footer_type' => {'format' => ['mime','append'],
 			      'default' => 'mime',
 			      'title_id' => 31,
@@ -598,6 +606,9 @@ my %alias = ('reply-to' => 'reply_to',
 				     'title_id' => 65,
 				     'group' => 'bounces'
 				 },
+	    'remind_task' => {'task' => 'remind',
+			      'tilte-id' => 96
+			      },
 	    'reply_to' => {'format' => '\S+',
 			   'default' => 'sender',
 			   'title_id' => 66,
@@ -665,19 +676,6 @@ my %alias = ('reply-to' => 'reply_to',
 			    'title_id' => 73,
 			    'group' => 'command'
 			    },
-	    'task' => {'format' => 
-		       {'remind' => 
-				    {'format' => '\S+',
-				     'occurrence' => '0-1'
-				     }
-				},
-		       {'expire' => 
-				    {'format' => '\S+',
-				     'occurrence' => '0-1'
-				     }
-		    }
-		   },
-
 	    'topics' => {'format' => '\w+(\/\w+)?',
 			 'split_char' => ',',
 			 'occurrence' => '0-n',
@@ -3564,6 +3562,7 @@ sub verify {
 	return undef;
     }
 
+    $context->{'execution_date'} = time unless ( defined ($context->{'execution_date'}) );
 
     if (defined ($context->{'msg'})) {
 	my $header = $context->{'msg'}->head;
@@ -3586,7 +3585,7 @@ sub verify {
 	$context->{'host'} = $list->{'admin'}{'host'};
     }
 
-    unless ($condition =~ /(\!)?\s*(true|is_listmaster|is_editor|is_owner|is_subscriber|match|equal|message)\s*\(\s*(.*)\s*\)\s*/i) {
+    unless ($condition =~ /(\!)?\s*(true|is_listmaster|is_editor|is_owner|is_subscriber|match|equal|message|older|newer|all)\s*\(\s*(.*)\s*\)\s*/i) {
 	&do_log('err', "error rule syntaxe: unknown condition $condition");
 	return undef;
     }
@@ -3695,7 +3694,7 @@ sub verify {
 	
     }
     # condition that require 0 argument
-    if ($condition_key eq 'true') {
+    if ($condition_key =~ /^true|all$/i) {
 	unless ($#args == -1){ 
 	    do_log('err',"error rule syntaxe : incorrect number of argument or incorrect argument syntaxe $condition") ; 
 	    return undef ;
@@ -3708,7 +3707,7 @@ sub verify {
 	}
 	# condition that require 2 args
 #
-    }elsif ($condition_key =~ /^is_owner|is_editor|is_subscriber|match|equal|message$/i) {
+    }elsif ($condition_key =~ /^is_owner|is_editor|is_subscriber|match|equal|message|newer|older$/i) {
 	unless ($#args == 1) {
 	    do_log ('err',"error rule syntaxe : incorrect argument number for condition $condition_key") ; 
 	    return undef ;
@@ -3719,7 +3718,7 @@ sub verify {
     }
     ## Now eval the condition
     ##### condition : true
-    if ($condition_key =~ /\s*(true|any)\s*/i) {
+    if ($condition_key =~ /\s*(true|any|all)\s*/i) {
 	return $negation;
     }
     ##### condition is_listmaster
@@ -3735,6 +3734,22 @@ sub verify {
 	    return -1 * $negation;
 	}
     }
+
+    ##### condition older
+    if ($condition_key =~ /older|newer/) {
+	 
+	$negation *= -1 if ($condition_key eq 'newer');
+ 	my $arg0 = &tools::epoch_conv($args[0]);
+ 	my $arg1 = &tools::epoch_conv($args[1]);
+ 
+ 	if ($arg0 <= $arg1 ) {
+ 	    return $negation;
+ 	}else{
+ 	    return -1 * $negation;
+ 	}
+     }
+
+
     ##### condition is_owner, is_subscriber and is_editor
     if ($condition_key =~ /is_owner|is_subscriber|is_editor/i) {
 
@@ -4247,7 +4262,7 @@ sub _load_scenario {
 ## Loads all scenari for an action
 sub load_scenario_list {
     my ($self, $action,$robot) = @_;
-    do_log('debug2', 'List::_load_scenario_list(%s,%s)', $action,$robot);
+    do_log('debug2', 'List::load_scenario_list(%s,%s)', $action,$robot);
 
     my $directory = "$self->{'dir'}";
     my %list_of_scenario;
@@ -4270,6 +4285,53 @@ sub load_scenario_list {
     return \%list_of_scenario;
 }
 
+sub load_task_list {
+    my ($self, $action,$robot) = @_;
+    do_log('debug', 'List::load_task_list(%s,%s)', $action,$robot);
+
+    my $directory = "$self->{'dir'}";
+    my %list_of_task;
+    
+    foreach my $dir ("$directory/list_task_models", "$Conf{'etc'}/$robot/list_task_models", "$Conf{'etc'}/list_task_models", "--ETCBINDIR--/list_task_models") {
+
+	next unless (-d $dir);
+
+	foreach my $file (<$dir/$action.*>) {
+	    next unless ($file =~ /$action\.(\w+)\.task$/);
+	    my $name = $1;
+	    
+	    next if (defined $list_of_task{$name});
+	    
+	    $list_of_task{$name}{'title'} = &List::_load_task_title ($file);
+	    $list_of_task{$name}{'name'} = $name;
+	}
+    }
+
+    return \%list_of_task;
+}
+
+sub _load_task_title {
+    my $file = shift;
+    do_log('debug2', 'List::_load_task_title(%s)', $file);
+    my $title = {};
+
+    unless (open TASK, $file) {
+	do_log('err', 'Unable to open file "%s"' , $file);
+	return undef;
+    }
+
+    while (<TASK>) {
+	last if /^\s*$/;
+
+	if (/^title\.([\w-]+)\s+(.*)\s*$/) {
+	    $title->{$1} = $2;
+	}
+    }
+
+    close TASK;
+
+    return $title;
+}
 
 ## Loads the statistics informations
 sub _load_stats_file {
@@ -5506,6 +5568,11 @@ sub _apply_defaults {
 	    $::pinfo{$p}{'default'} = 'default';
 	}
 
+	## Task format
+	if ($::pinfo{$p}{'task'}) {
+	    $::pinfo{$p}{'format'} = $regexp{'task'};
+	}
+
 	## Enumeration
 	if (ref ($::pinfo{$p}{'format'}) eq 'ARRAY') {
 	    $::pinfo{$p}{'file_format'} ||= join '|', @{$::pinfo{$p}{'format'}};
@@ -5539,6 +5606,11 @@ sub _apply_defaults {
 	    if (ref($::pinfo{$p}{'format'}{$k}) && $::pinfo{$p}{'format'}{$k}{'scenario'}) {
 		$::pinfo{$p}{'format'}{$k}{'format'} = $regexp{'scenario'};
 		$::pinfo{$p}{'format'}{$k}{'default'} = 'default' unless (($p eq 'web_archive') && ($k eq 'access'));
+	    }
+
+	    ## Task format
+	    if (ref($::pinfo{$p}{'format'}{$k}) && $::pinfo{$p}{'format'}{$k}{'task'}) {
+		$::pinfo{$p}{'format'}{$k}{'format'} = $regexp{'task'};
 	    }
 
 	    ## Enumeration
@@ -5588,12 +5660,13 @@ sub _save_list_param {
 
     next unless (defined ($p));
 
-    if (defined ($::pinfo{$key}{'scenario'})) {
+    if (defined ($::pinfo{$key}{'scenario'}) ||
+        defined ($::pinfo{$key}{'task'})) {
 	next if ($p->{'name'} eq 'default');
 
 	printf $fd "%s %s\n", $key, $p->{'name'};
 	print $fd "\n";
-	
+
     }elsif (ref($::pinfo{$key}{'file_format'})) {
 	printf $fd "%s\n", $key;
 	foreach my $k (keys %{$p}) {

@@ -2,7 +2,7 @@ CDEFS	=	-DCONFIG=\"$(CONFIG)\"
 
 SRC	=	sympa.pl Archive.pm Commands.pm Conf.pm \
 		Language.pm List.pm Log.pm mail.pm msg.pl \
-		smtp.pm tools.pl Version.pm parser.pl alias_manager.pl
+		smtp.pm tools.pl Version.pm parser.pl alias_manager.pl task_manager.pl
 
 all:	queue bouncequeue aliaswrapper
 
@@ -20,7 +20,7 @@ clean:
 install: 
 	echo "Please use the main Makefile for installing sources."
 
-newinstall: makedir subst $(SRC) installqueue installwrapper installscenari installtemplates installetc installlisttemplates installmod info
+newinstall: makedir subst $(SRC) installqueue installwrapper installscenari installtask_models installtemplates installetc installlisttemplates installmod installgeneral_task_models info
 
 
 installtemplates:
@@ -32,6 +32,14 @@ installtemplates:
 		cp $$lang/*.tpl  $(DESTDIR)$(ETCBINDIR)/templates/; \
 	done
 	$(PERL) ../set_symlinks.pl templates $(DESTDIR)$(ETCBINDIR)/templates
+
+installtask_models:
+	@echo "Installing default task models ..."
+	cp -pR etc/list_task_models/* $(DESTDIR)$(ETCBINDIR)/list_task_models
+
+installgeneral_task_models:
+	@echo "Installing general task models ..."
+	cp -pR etc/global_task_models/* $(DESTDIR)$(ETCBINDIR)/global_task_models
 
 installetc:
 	@echo "Installing default configuration ..."
@@ -94,6 +102,14 @@ makedir:
 		echo "Creating required directory $(DESTDIR)$(ETCBINDIR)/templates"; \
 		mkdir $(DESTDIR)$(ETCBINDIR)/templates; \
 	fi
+	@if [ ! -d $(DESTDIR)$(ETCBINDIR)/list_task_models ]; then \
+		echo "Creating required directory $(DESTDIR)$(ETCBINDIR)/list_task_models"; \
+		mkdir $(DESTDIR)$(ETCBINDIR)/list_task_models; \
+	fi
+	@if [ ! -d $(DESTDIR)$(ETCBINDIR)/global_task_models ]; then \
+		echo "Creating required directory $(DESTDIR)$(ETCBINDIR)/global_task_models"; \
+		mkdir $(DESTDIR)$(ETCBINDIR)/global_task_models; \
+	fi
 
 installmod:
 	@echo "Setting group and owner for $(DESTDIR)$(BINDIR)..."
@@ -103,7 +119,7 @@ installmod:
 	chgrp $(GROUP) $(DESTDIR)$(MAILERPROGDIR)/aliaswrapper
 	@echo "Setting privileges..."
 	chmod 755 $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCBINDIR) 
-	chmod 755 $(DESTDIR)$(ETCBINDIR)/scenari $(DESTDIR)$(ETCBINDIR)/templates
+	chmod 755 $(DESTDIR)$(ETCBINDIR)/scenari $(DESTDIR)$(ETCBINDIR)/templates $(DESTDIR)$(ETCBINDIR)/list_task_models $(DESTDIR)$(ETCBINDIR)/global_task_models
 	chmod 755 $(DESTDIR)$(ETCBINDIR)/create_list_templates
 	chmod 644 $(DESTDIR)$(ETCBINDIR)/*.conf $(DESTDIR)$(ETCBINDIR)/*.crt 
 	chmod 600 $(DESTDIR)$(ETCBINDIR)/ca-bundle.crt

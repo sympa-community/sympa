@@ -21,6 +21,10 @@ use Time::Local;
 
 require 'tools.pl';
 
+use Exporter;
+@ISA = ('Exporter');
+@EXPORT_OK=('$sender');
+
 my %comms =  ('add' =>			   	     'add',
 	      'con|confirm' =>	                     'confirm',
 	      'del|delete' =>			     'del',

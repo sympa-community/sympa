@@ -19,7 +19,7 @@ my @valid_options = qw(
 		       default_list_priority edit_list email etc
 		       global_remind home host domain lang listmaster log_socket_type 
 		       max_size maxsmtp msgcat nrcpt owner_priority pidfile spool queue 
-		       queueauth queuebounce queuedigest queueexpire queuemod queuesubscribe queueoutgoing tmpdir
+		       queueauth queuetask queuebounce queuedigest queueexpire queuemod queuesubscribe queueoutgoing tmpdir
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor
 		       remind_return_path request_priority rfc2369_header_fields sendmail sleep 
 		       sort sympa_priority syslog umask welcome_return_path wwsympa_url
@@ -57,6 +57,7 @@ my %Default_Conf =
      'queueauth'  => undef,
      'queueoutgoing'  => undef,
      'queuebounce'  => undef,    
+     'queuetask' => undef,
      'queuesubscribe' => undef,
      'tmpdir'  => undef,     
      'sleep'      => 5,
@@ -172,6 +173,9 @@ sub load {
     unless (defined $o{'queuesubscribe'}) {
 	$o{'queuesubscribe'}[0] = "$spool/subscribe";
     }
+    unless (defined $o{'queuetask'}) {
+	$o{'queuetask'}[0] = "$spool/task";
+    }
     unless (defined $o{'tmpdir'}) {
 	$o{'tmpdir'}[0] = "$spool/tmp";
     }
@@ -235,8 +239,6 @@ sub load {
 sub load_robots {
     
     do_log('debug', "load_robots"); 
-
-    printf STDERR  "1xxxxxxxxx load_robots\n";
 
     my %robot_conf ;
     my %valid_robot_key_words = ( 'http_host' => ' ', 
@@ -305,7 +307,8 @@ sub checkfiles {
 	}
     }
 
-    foreach my $qdir ('spool','queue','queuedigest','queuemod','queueexpire','queueauth','queueoutgoing','queuebounce','queuesubscribe','tmpdir') {
+    foreach my $qdir ('spool','queue','queuedigest','queuemod','queueexpire','queueauth','queueoutgoing','queuebounce','queuesubscribe','queuetask','tmpdir')
+{
 	unless (-d $Conf{$qdir}) {
 	    do_log('info', "creating spool $Conf{$qdir}");
 	    unless ( mkdir ($Conf{$qdir}, 0775)) {

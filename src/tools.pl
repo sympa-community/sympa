@@ -8,6 +8,7 @@ use Mail::Header;
 use Conf;
 use Language;
 use Log;
+use Time::Local;
 
 ## RCS identification.
 #my $id = '@(#)$Id$';
@@ -922,5 +923,126 @@ sub virus_infected {
     return ($virusfound);
    
 }
+
+## subroutines for epoch and human format date processings
+
+
+## convert an epoch date into a readable date scalar
+sub adate {
+
+    my $epoch = $_[0];
+    my @date = localtime ($epoch);
+    my $date = POSIX::strftime ("%e %a %b %Y  %H h %M min %S s", @date);
+    
+    return $date;
+}
+
+## human format (used in task models and scenarii)
+
+# -> absolute date :
+#  xxxxYxxMxxDxxHxxMin
+# Y year ; M : month (1-12) ; D : day (1-28|29|30|31) ; H : hour (0-23) ; Min : minutes (0-59)
+# H and Min parameters are optionnal
+# ex 2001y9m13d14h10min
+
+# -> duration :
+# +|- xxYxxMxxWxxDxxHxxMin
+# W week, others are the same
+# all parameters are optionnals
+# before the duration you may write an absolute date, an epoch date or the keyword 'execution_date' which refers to the epoch date when the subroutine is executed. If you put nothing, the execution_date is used
+
+
+## convert a human format date into an epoch date
+sub epoch_conv {
+
+    my $arg = $_[0]; # argument date to convert
+    my $time = $_[1]; # the epoch current date
+ 
+    my $result;
+    
+     # decomposition of the argument date
+    my $date;
+    my $duration;
+    my $op;
+
+    if ($arg =~ /\+|\-/) {
+	$date = $`;
+	$duration = $';
+	$op = $&;
+    } else {
+	$date = $arg;
+	$duration = '';
+	$op = '+';
+	}
+
+     #conversion
+    $date = date_conv ($date, $time);
+    $duration = duration_conv ($duration, $date);
+
+    if ($op eq '+') {$result = $date + $duration;}
+    else {$result = $date - $duration;}
+
+    return $result;
+}
+
+sub date_conv {
+   
+    my $arg = $_[0];
+    my $time = $_[1];
+
+    if ( ($arg eq 'execution_date') ){ # execution date
+	return time;
+    }
+
+    if ($arg =~ /^\d+$/) { # already an epoch date
+	return $arg;
+    }
+	
+    if ($arg =~ /^(\d\d\d\dy)(\d+m)?(\d+d)?(\d+h)?(\d+min)?$/) { # absolute date
+
+	my @date = (0, "$5", "$4", "$3", "$2", "$1");
+	for (my $i = 0; $i < 6; $i++) {
+	    chop ($date[$i]);
+	    if ($i == 1) {chop ($date[$i]); chop ($date[$i]);}
+	    $date[$i] = 0 unless ($date[$i]);
+	}
+	$date[3] = 1 if ($date[3] == 0);
+	$date[4]-- if ($date[4] != 0);
+	$date[5] -= 1900;
+	
+	return timelocal (@date);
+    }
+    
+    return time;
+}
+
+sub duration_conv {
+    
+    my $arg = $_[0];
+    my $start_date = $_[1];
+
+    return 0 unless $arg;
+  
+    $arg =~ /(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?$/i ;
+    my @date = ("$1", "$2", "$3", "$4", "$5", "$6");
+    for (my $i = 0; $i < 6; $i++) {
+	chop ($date[$i]);
+	if ($i == 5) {chop ($date[$i]); chop ($date[$i]);}
+	$date[$i] = 0 unless ($date[$i]);
+    }
+    
+    my $duration = 60*($date[5]+60*($date[4]+24*($date[3]+7*$date[2]+365*$date[0])));
+	
+    # specific processing for the months because their duration varies
+    my @months = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
+		  31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+    my $start  = (localtime ($start_date))[4];
+    for (my $i = 0; $i < $date[1]; $i++) {
+	$duration += $months[$start + $i] * 60 * 60 * 24;
+    }
+	
+    return $duration;
+}
+
 
 1;
