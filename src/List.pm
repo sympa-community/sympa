@@ -2688,7 +2688,7 @@ sub send_global_file {
 	&tt2::add_include_path($d);
     }
 
-    my $filename = &tools::get_filename('etc', $action.'.tt2', $robot);
+    my $filename = &tools::get_filename('etc/tt2', $action.'.tt2', $robot);
 
     foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title') {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
@@ -2774,7 +2774,7 @@ sub send_file {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
 
-    my $filename = &tools::get_filename('etc', $action.'.tt2', $robot, $self);
+    my $filename = &tools::get_filename('etc/tt2', $action.'.tt2', $robot, $self);
 
     $data->{'list'}{'lang'} = $self->{'admin'}{'lang'};
     $data->{'list'}{'name'} = $name;
