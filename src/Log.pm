@@ -49,8 +49,8 @@ sub do_log {
 	printf STDERR "%s\t$m\n", time, @_;
     }elsif($debug){
 	return ;
-#    }elsif ($main::options{'debug'} || $main::options{'foreground'})   {
-    }elsif ($main::options{'debug'} || $main::options{'foreground'} || $ENV{'HTTP_HOST'})   {
+    }elsif ($main::options{'debug'} || $main::options{'foreground'})   {
+#    }elsif ($main::options{'debug'} || $main::options{'foreground'} || $ENV{'HTTP_HOST'})   {
 	printf STDERR "$m\n", @_;
 	
     }
