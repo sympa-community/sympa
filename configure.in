@@ -98,6 +98,37 @@ PIDDIR='${prefix}'
 AC_ARG_WITH(piddir, [  --with-piddir=DIR     create .pid files in DIR  (default ${prefix})], [PIDDIR="$withval"])
 AC_SUBST(PIDDIR)
 
+## directory for Config directories populated by the user
+ETCDIR='${prefix}/etc'
+AC_ARG_WITH(etcdir, [  --with-etcdir=DIR     Config directories populated by the user are in DIR  (default ${prefix}/etc)], [ETCDIR="$withval"])
+AC_SUBST(ETCDIR)
+
+## directory for language files
+NLSDIR='${prefix}/nls'
+AC_ARG_WITH(nlsdir, [  --with-nlsdir=DIR     create language files in DIR  (default ${prefix}/nls)], [NLSDIR="$withval"])
+AC_SUBST(NLSDIR)
+
+## directory for Documentation files
+DOCDIR='${prefix}/doc'
+AC_ARG_WITH(docdir, [  --with-docdir=DIR     create documentation files in DIR  (default ${prefix}/doc)], [DOCDIR="$withval"])
+AC_SUBST(DOCDIR)
+
+## directory for script files
+SCRIPTDIR='${prefix}/bin'
+AC_ARG_WITH(scriptdir, [  --with-scriptdir=DIR     create script files in DIR  (default ${prefix}/bin)], [SCRIPTDIR="$withval"])
+AC_SUBST(SCRIPTDIR)
+
+## directory for sample files
+SAMPLEDIR='${prefix}/sample'
+AC_ARG_WITH(sampledir, [  --with-sampledir=DIR     create sample files in DIR  (default ${prefix}/sample)], [SAMPLEDIR="$withval"])
+AC_SUBST(SAMPLEDIR)
+
+## directory for sample files
+SPOOLDIR='${prefix}/spool'
+AC_ARG_WITH(spooldir, [  --with-spooldir=DIR     spool directory is DIR  (default ${prefix}/spool)], [SPOOLDIR="$withval"])
+AC_SUBST(SPOOLDIR)
+
+
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_MAKE_SET

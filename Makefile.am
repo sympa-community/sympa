@@ -58,15 +58,14 @@ PIDDIR	=	@PIDDIR@
 ## files needs to be installed in /etc/smrsh.  
 MAILERPROGDIR	=	@BINDIR@
 
-#RPMTOPDIR	=	`rpm --eval %_topdir`
-RPMTOPDIR	=	/usr/src/redhat
+RPMTOPDIR	=	`rpm --eval %_topdir`
+#RPMTOPDIR	=	/usr/src/redhat
 
 MANDIR		=	@MANDIR@
 
 ## SYSV init scripts directory
 INITDIR		=	@INITDIR@
 
-## no more used ##
 BINDIR		=	@BINDIR@
 
 SBINDIR		=	@SBINDIR@
@@ -75,8 +74,18 @@ CGIDIR		=	@CGIDIR@
 
 LIBDIR		=	@LIBDIR@
 
+NLSDIR		=	@NLSDIR@
+
+DOCDIR		=	@DOCDIR@
+
+ETCDIR		=	@ETCDIR@
+
+SCRIPTDIR	=	@SCRIPTDIR@
+
+SAMPLEDIR	=	@SAMPLEDIR@
+
 ## Spools directory
-SPOOLDIR	=	$(DIR)/spool
+SPOOLDIR	=	@SPOOLDIR@
 
 ## Directory for installing WWSympa
 WWSBINDIR	=	$(BINDIR)
@@ -149,7 +158,6 @@ CFLAGS	=	-g
 CONFIG		=	$(CONFDIR)/sympa.conf
 WWSCONFIG	=	$(CONFDIR)/wwsympa.conf
 ETCBINDIR	=	@DATADIR@
-NLSDIR		=	$(DIR)/nls
 
 #ifeq ($(shell uname), Linux)
 #	LOG_SOCKET_TYPE="inet"
@@ -220,7 +228,7 @@ clean:
 	$(MAKE) PERL='${PERL}' clean) || exit 1; \
 	done;
 
-install: importantchanges installsrc installnls installwws installman installscript installsample installdir installconfig
+install: importantchanges installsrc installnls installwws installman installscript installsample installdir installconfig installdoc
 
 importantchanges:
 	@( 	PERL=$(PERL); export PERL; \
@@ -245,6 +253,15 @@ installsrc:
 	SSLCERTDIR='${SSLCERTDIR}' \
 	USER='${USER}' GROUP='${GROUP}' newinstall) || exit 1;
 
+installdoc:
+	@(cd doc && echo "make install in doc..." && \
+	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
+	DIR='${DIR}' DOCDIR='${DOCDIR}' ETCBINDIR='${ETCBINDIR}' \
+	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
+	SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' \
+	VIRTUAL_ALIASES='${VIRTUAL_ALIASES}' \
+	USER='${USER}' GROUP='${GROUP}' install) || exit 1;
+
 installnls:
 	@(cd nls && echo "making in nls..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
@@ -265,7 +282,8 @@ installwws:
 installsample:
 	@(cd src/etc/sample && echo "making in src/etc/sample..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' LOG_SOCKET_TYPE='${LOG_SOCKET_TYPE}' \
-	DESTDIR='${DESTDIR}' DIR='${DIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' \
+	DESTDIR='${DESTDIR}' DIR='${DIR}' SAMPLEDIR='${SAMPLEDIR}' \
+	BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' \
 	EXPL_DIR='${EXPL_DIR}' WWSBINDIR='${WWSBINDIR}' HOST='${HOST}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' MAILERPROGDIR='${MAILERPROGDIR}' \
 	COOKIE='${COOKIE}' OPENSSL='@OPENSSL@' SSLCERTDIR='${SSLCERTDIR}' \
@@ -301,7 +319,9 @@ installman:
 installscript:
 	@(cd src/etc/script && echo "making in src/etc/script..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \
-	DIR='${DIR}' DESTDIR='${DESTDIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' WWSBINDIR='${WWSBINDIR}' HOST='${HOST}' \
+	DIR='${DIR}' DESTDIR='${DESTDIR}' SCRIPTDIR='${SCRIPTDIR}' \
+	BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' \
+	WWSBINDIR='${WWSBINDIR}' HOST='${HOST}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' ETCBINDIR='${ETCBINDIR}' \
 	MAILERPROGDIR='${MAILERPROGDIR}' PIDDIR='${PIDDIR}' \
 	COOKIE='${COOKIE}' INITDIR='${INITDIR}' \
@@ -320,7 +340,7 @@ installdir:
 	chmod 755 $(DESTDIR)$(DIR); \
 	chown $(USER) $(DESTDIR)$(DIR); \
 	chgrp $(GROUP) $(DESTDIR)$(DIR); \
-	for dir in $(EXPL_DIR) $(DIR)/etc $(DIR)/sample ; do \
+	for dir in $(EXPL_DIR) $(CONFDIR) $(SAMPLEDIR) ; do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
 			mkdir -p $(DESTDIR)$$dir; \
@@ -331,13 +351,13 @@ installdir:
 	fi
 	@if [ ! -f $(DESTDIR)$(CONFDIR)/sympa.conf ] ; then \
 	echo "First installation : installing conf directories..."; \
-	for dir in etc/create_list_templates etc/templates etc/wws_templates etc/scenari \
-	etc/task_models etc/general_task_models; do \
-		if [ ! -d $(DESTDIR)$(DIR)/$$dir ] ; then \
-			echo "Creating $(DESTDIR)$(DIR)/$$dir"; \
-			mkdir -p $(DESTDIR)$(DIR)/$$dir; \
-			chown $(USER) $(DESTDIR)$(DIR)/$$dir; \
-			chgrp $(GROUP) $(DESTDIR)$(DIR)/$$dir; \
+	for dir in create_list_templates templates wws_templates scenari \
+	task_models general_task_models; do \
+		if [ ! -d $(DESTDIR)$(ETCDIR)/$$dir ] ; then \
+			echo "Creating $(DESTDIR)$(ETCDIR)/$$dir"; \
+			mkdir -p $(DESTDIR)$(ETCDIR)/$$dir; \
+			chown $(USER) $(DESTDIR)$(ETCDIR)/$$dir; \
+			chgrp $(GROUP) $(DESTDIR)$(ETCDIR)/$$dir; \
 		fi \
 	done \
 	fi
@@ -365,7 +385,9 @@ installconfig:
 	$(PERL) -I $(DESTDIR)$(LIBDIR) $(DESTDIR)$(SBINDIR)/sympa_wizard.pl -c $$cfile; \
 	chown $(USER) $(DESTDIR)$(CONFDIR)/$$cfile; \
 	chgrp $(GROUP) $(DESTDIR)$(CONFDIR)/$$cfile; \
+	if [ $(DESTDIR) = '' ]; then \
 	INITCONF='1'; \
+	fi \
 	fi \
 	done; \
 	if [ "$$INITCONF" ] ; then \
@@ -410,9 +432,23 @@ build_mdk_rpm: clean
 		ZIPEXT='bz2'; export ZIPEXT; \
 		APPGROUP='System/Servers'; export APPGROUP; \
 		HOMEDIR='/var/lib/sympa'; export HOMEDIR; \
-		PIDDIR='/var/run/sympa'; export PIDDIR; \
-		ICONSDIR='/var/www/icons'; export ICONSDIR; \
 		VERSION=$(SYMPA_VERSION); export VERSION; \
+                CONFDIR=$(CONFDIR); export CONFDIR; \
+                SENDMAIL_ALIASES=$(SENDMAIL_ALIASES); export SENDMAIL_ALIASES; \
+                MAILERPROGDIR=$(MAILERPROGDIR); export MAILERPROGDIR; \
+                PIDDIR=$(PIDDIR); export PIDDIR; \
+                SPOOLDIR=$(SPOOLDIR); export SPOOLDIR; \
+		ICONSDIR=$(ICONSDIR); export ICONSDIR; \
+                BINDIR=$(BINDIR); export BINDIR; \
+                SBINDIR=$(SBINDIR); export SBINDIR; \
+                DATADIR=$(DATADIR); export DATADIR; \
+                EXPLDIR=$(EXPLDIR); export EXPLDIR; \
+                LIBDIR=$(LIBDIR); export LIBDIR; \
+                CGIDIR=$(CGIDIR); export CGIDIR; \
+                NLSDIR=$(NLSDIR); export NLSDIR; \
+		SCRIPTDIR=$(SCRIPTDIR); export SCRIPTDIR; \
+		SAMPLEDIR=$(SAMPLEDIR); export SAMPLEDIR; \
+                ETCDIR=$(ETCDIR); export ETCDIR; \
 		$(PERL) ../../../subst.pl sympa.spec \
 	)
 	@( \

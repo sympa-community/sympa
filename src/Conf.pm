@@ -61,7 +61,7 @@ map { $valid_options{$_}++; } @valid_options;
 
 my %Default_Conf = 
     ('home'    => '--EXPL_DIR--',
-     'etc'     => '--DIR--/etc',
+     'etc'     => '--ETCDIR--',
      'key_passwd' => '',
      'ssl_cert_dir' => '--EXPL_DIR--/X509-user-certs',
      'crl_dir' => '--EXPL_DIR--/crl',
@@ -78,9 +78,9 @@ my %Default_Conf =
      'domain'  => undef,
      'email'   => 'sympa',
      'pidfile' => '--PIDDIR--/sympa.pid',
-     'msgcat'  => '--DIR--/nls',
+     'msgcat'  => '--NLSDIR--',
      'sort'    => 'fr,ca,be,ch,uk,edu,*,com',
-     'spool'   => '--DIR--/spool',
+     'spool'   => '--SPOOLDIR--',
      'queue'   => undef,
      'queuedigest'=> undef,
      'queuemod'   => undef,
