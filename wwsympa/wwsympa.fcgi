@@ -9714,7 +9714,8 @@ sub do_wsdl {
 	return undef;
     }
 
-    unless (defined $Conf{'soap_url'}) {
+    my $soap_url= &Conf::get_robot_conf($robot,'soap_url');
+    unless (defined $soap_url) {
 	&error_message('no_soap_service');
 	&wwslog('err','No SOAP service was defined in sympa.conf (soap_url parameter)');
 	return undef;
@@ -9723,7 +9724,7 @@ sub do_wsdl {
     $param->{'bypass'} = 'extreme';
     printf "Content-type: text/xml\n\n";
     
-   $param->{'conf'}{'soap_url'}  = $Conf{'soap_url'};
+   $param->{'conf'}{'soap_url'}  = $soap_url;
 
     &parser::parse_tpl($param,$sympawsdl , \*STDOUT);
     
