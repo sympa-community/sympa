@@ -55,7 +55,11 @@
 [% ELSIF action == 'active_lists' -%]
  [% FOREACH l = active_lists -%]
   <item>
-    <title>[% FILTER escape_xml %][%|loc(l.name,l.host,l.msg_count)%]%1@%2 : %3 messages[%- IF l.average -%] - [% l.average %] by day [%- END -%][%-END-%][%- END -%]</title>
+[%- IF l.average -%]
+<title>[% FILTER escape_xml %][%|loc(l.name,l.host,l.msg_count,l.average)%]%1@%2 : %3 messages - %4 by day [%-END-%][%- END -%]</title>
+[%- ELSE -%]
+<title>[% FILTER escape_xml %][%|loc(l.name,l.host,l.msg_count)%]%1@%2 : %3 messages[%-END-%][%- END -%]</title>
+[%- END -%]
     <link>[% FILTER escape_xml %][% base_url %][% path_cgi %]/info/[% l.name %][%- END -%]</link>
     <description>[% FILTER escape_xml %][% l.subject %][%- END -%]</description>
   </item>
