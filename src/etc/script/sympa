@@ -221,6 +221,7 @@ case "$1" in
   restart)
 	echo "Restarting Sympa subsystem: "
 	$0 stop
+	sleep 3
 	$0 start
 	echo
 	;;
