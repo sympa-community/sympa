@@ -272,7 +272,7 @@ PACKAGE_BUGREPORT=
 
 ac_unique_file="check_perl_modules.pl"
 ac_default_prefix=/home/sympa
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS MAJOR_VERSION MINOR_VERSION MICRO_VERSION build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE CONFDIR CGIDIR ICONSDIR BINDIR SBINDIR LIBEXECDIR LIBDIR DATADIR EXPLDIR MANDIR INITDIR PIDDIR ETCDIR NLSDIR DOCDIR SCRIPTDIR SAMPLEDIR SPOOLDIR CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE CPP EGREP PERL SUIDPERL MHONARC OPENSSL CVS2CL SH USER GROUP SENDMAIL_ALIASES VIRTUAL_ALIASES NEWALIASES NEWALIASES_ARG POSTMAP POSTMAP_ARG MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS MAJOR_VERSION MINOR_VERSION MICRO_VERSION build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE CONFDIR CGIDIR ICONSDIR BINDIR SBINDIR LIBEXECDIR LIBDIR DATADIR EXPLDIR MANDIR INITDIR LOCKDIR PIDDIR ETCDIR NLSDIR DOCDIR SCRIPTDIR SAMPLEDIR SPOOLDIR CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE CPP EGREP PERL SUIDPERL MHONARC OPENSSL CVS2CL SH USER GROUP SENDMAIL_ALIASES VIRTUAL_ALIASES NEWALIASES NEWALIASES_ARG POSTMAP POSTMAP_ARG MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -832,6 +832,7 @@ Optional Packages:
   --with-expldir=DIR     modifiable data files in DIR (default ${prefix}/expl)
   --with-mandir=DIR     documentation in DIR (default /usr/local/man)
   --with-initdir=DIR     install System V init script in DIR  (default /etc/rc.d/init.d)
+  --with-lockdir=DIR     create lock files in DIR  (default /var/lock/subsys)
   --with-piddir=DIR     create .pid files in DIR  (default ${prefix})
   --with-etcdir=DIR     Config directories populated by the user are in DIR  (default ${prefix}/etc)
   --with-nlsdir=DIR     create language files in DIR  (default ${prefix}/nls)
@@ -1842,6 +1843,16 @@ INITDIR=/etc/rc.d/init.d
 if test "${with_initdir+set}" = set; then
   withval="$with_initdir"
   INITDIR="$withval"
+fi;
+
+
+## Lock directory
+LOCKDIR=/var/lock/subsys
+
+# Check whether --with-initdir or --without-initdir was given.
+if test "${with_initdir+set}" = set; then
+  withval="$with_initdir"
+  LOCKDIR="$withval"
 fi;
 
 
@@ -4307,6 +4318,7 @@ s,@DATADIR@,$DATADIR,;t t
 s,@EXPLDIR@,$EXPLDIR,;t t
 s,@MANDIR@,$MANDIR,;t t
 s,@INITDIR@,$INITDIR,;t t
+s,@LOCKDIR@,$LOCKDIR,;t t
 s,@PIDDIR@,$PIDDIR,;t t
 s,@ETCDIR@,$ETCDIR,;t t
 s,@NLSDIR@,$NLSDIR,;t t

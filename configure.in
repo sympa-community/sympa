@@ -93,6 +93,11 @@ INITDIR=/etc/rc.d/init.d
 AC_ARG_WITH(initdir, [  --with-initdir=DIR     install System V init script in DIR  (default /etc/rc.d/init.d)], [INITDIR="$withval"])
 AC_SUBST(INITDIR)
 
+## Lock directory
+LOCKDIR=/var/lock/subsys
+AC_ARG_WITH(initdir, [  --with-lockdir=DIR     create lock files in DIR  (default /var/lock/subsys)], [LOCKDIR="$withval"])
+AC_SUBST(LOCKDIR)
+
 ## directory for storing .pid files
 PIDDIR='${prefix}'
 AC_ARG_WITH(piddir, [  --with-piddir=DIR     create .pid files in DIR  (default ${prefix})], [PIDDIR="$withval"])

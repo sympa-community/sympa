@@ -1017,6 +1017,8 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 
 \item \option {--with-initdir=DIR}, install System V init script in DIR  (default /etc/rc.d/init.d)
 
+\item \option {--with-lockdir=DIR}, create lock files in DIR  (default /var/lock/subsys)
+
 \item \option {--with-piddir=DIR}, create .pid files in DIR  (default /home/sympa/)
 
 \item \option {--with-etcdir=DIR}, Config directories populated by the user are in DIR (default /home/sympa/etc)

@@ -98,7 +98,7 @@ ICONSDIR	=	@ICONSDIR@
 ## Settings used in src/etc/scripts/sympa
 PIDPRE		=	pidof -x
 PIDPOST		=	
-LOCKDIR		=	/var/lock/subsys
+LOCKDIR		=	@LOCKDIR@
 
 ## Path to newaliases command (or what else may be called to rebuild
 ## Mail aliases database)
