@@ -5097,7 +5097,7 @@ sub do_rebuildallarc {
 	&wwslog('info','do_rebuildallarc: not listmaster');
 	return undef;
     }
-    foreach my $l ( &List::get_lists('*') ) {
+    foreach my $l ( &List::get_lists($robot) ) {
 	my $list = new List ($l); 
 	next unless (defined $list->{'admin'}{'web_archive'});
         my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'admin'}{'host'}";
