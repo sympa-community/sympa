@@ -1510,7 +1510,8 @@ sub ldap_authentication {
 		$ldap_passwd->unbind;
 		last;
 	    }
-	    $ldap_passwd->bind($DN[0]);
+            # this bind is anonymous and may return 
+	    # $ldap_passwd->bind($DN[0]);
 	    $mesg= $ldap_passwd->search ( base => $ldap->{'suffix'},
 					  filter => "$filter",
 					  scope => $ldap->{'scope'},
