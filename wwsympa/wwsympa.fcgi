@@ -5036,10 +5036,10 @@ sub do_edit_list {
 	    ## Migrating to database
 	    if (($list->{'admin'}{'user_data_source'} eq 'file') &&
 		($new_admin->{'user_data_source'} eq 'database')) {
-		unless (-f "$list->{'name'}/subscribers") {
+		unless (-f "$list->{'dir'}/subscribers") {
 		    &wwslog('notice', 'No subscribers to load in database');
 		}
-		@users = &List::_load_users_file("$list->{'name'}/subscribers");
+		@users = &List::_load_users_file("$list->{'dir'}/subscribers");
 	    }	    
 	}
 
