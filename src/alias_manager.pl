@@ -82,7 +82,7 @@ if ($operation eq 'add') {
     
     ## Write aliases
     # print ALIAS "# --- aliases for list $listname\n";
-    foreach my $suffix ('', '-request', '-owner', '-unsubscribe') {
+    foreach my $suffix ('', '-request', 'editor', '-owner', '-unsubscribe') {
 	
 	my $alias = $listname . $suffix;
 	$alias .= '@'.$domain
@@ -123,7 +123,7 @@ if ($operation eq 'add') {
     my $deleted_lines;
   FIC: while (<ALIAS>) {
       if (/^\s*$listname/) {
-	  foreach my $suffix ('', '-request', '-owner', '-unsubscribe') {
+	  foreach my $suffix ('', '-request', 'editor', '-owner', '-unsubscribe') {
 	      my $local = $listname . $suffix;
 	      if (( /^\s*$local(\s*\:)/) ||
 		  ( ("$default_domain" eq "$domain") && (/^\s*$local\@/)) ||
@@ -185,7 +185,7 @@ sub already_defined {
 
     while (<ALIAS>) {
 	if (/^\s*$listname/) {
-	    foreach my $suffix ('', '-request', '-owner', '-unsubscribe') {
+	    foreach my $suffix ('', '-request', 'editor', '-owner', '-unsubscribe') {
 		my $local = $listname . $suffix;
 		if (( /^\s*$local(\s*\:)/) ||
 		    ( ("$default_domain" eq "$domain") && (/^\s*$local\@/)) ||
