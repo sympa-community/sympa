@@ -120,18 +120,10 @@ sub smtpto {
    if ($pid == 0) {
        close(OUT);
        open(STDIN, "<&IN");
-#       my $filter = '' ;
-#       if ($sign_mode eq 'smime') {
-#	   # xxxx a remplacer par un pipe in/out ? Attention $filter est pas configurable
-#           # xxxx et ne bénéficie pas de Conf.pm 
-#
-#	   $filter = "/home/sympa/bin/sign_filter.pl -c ./cert.pem -k ./private_key -d |"
-#       }
+
        if (ref($rcpt) eq 'SCALAR') {
-#	   exec "$filter $Conf{'sendmail'} -oi -odi -oem -f $from $$rcpt";
 	   exec $Conf{'sendmail'}, split(/ /,$Conf{'sendmail_args'}), '-f', $from, $$rcpt;
        }else{
-#	   exec "$filter $Conf{'sendmail'} -oi -odi -oem -f $from @$rcpt";
 	   exec $Conf{'sendmail'}, split(/ /,$Conf{'sendmail_args'}), '-f', $from, @$rcpt;
        }
        exit 1; ## Should never get there.
