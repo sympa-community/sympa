@@ -1419,10 +1419,11 @@ sub ldap_authentication {
 		$cnx = $ldap_anonymous->bind;
 	    }
 
-	    unless($cnx->code() == 0){
-		do_log ('err','Ldap Error : %s, Ldap server error : %s',$cnx->error,$cnx->server_error);
-		$ldap_anonymous->unbind;
+	    unless(defined($cnx) && ($cnx->code() == 0)){
+		do_log('notice',"Can\'t bind to LDAP server $host");
 		last;
+		#do_log ('err','Ldap Error : %s, Ldap server error : %s',$cnx->error,$cnx->server_error);
+		#$ldap_anonymous->unbind;
 	    }
 
 	    $mesg = $ldap_anonymous->search(base => $ldap->{'suffix'},
@@ -1450,9 +1451,9 @@ sub ldap_authentication {
 	    }
 
 	    $cnx = $ldap_passwd->bind($DN[0], password => $pwd);
-	    unless($cnx->code() == 0){
+	    unless(defined($cnx) && ($cnx->code() == 0)){
 		do_log('notice', 'Incorrect password for user %s ; host: %s',$auth, $host);
-	        do_log ('err','Ldap Error : %s, Ldap server error : %s',$cnx->error,$cnx->server_error);
+	        #do_log ('err','Ldap Error : %s, Ldap server error : %s',$cnx->error,$cnx->server_error);
 		$ldap_passwd->unbind;
 		last;
 	    }
