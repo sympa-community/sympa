@@ -4159,8 +4159,8 @@ sub _load_scenario_file {
 		## Distrib scenario
 		$scenario_file = "--ETCBINDIR--/scenari/$function.$name";
 		unless (open SCENARI,$scenario_file) {
-		    do_log ('err',"Unable to open scenario file $function.$name, please report to listmaster");
-		    return &_load_scenario ($function,$robot,$name,'true() smtp -> reject', $directory);
+		    do_log ('err',"Unable to open scenario file $function.$name, please report to listmaster") unless ($name =~ /\.header$/) ;
+		    return &_load_scenario ($function,$robot,$name,'true() smtp -> reject', $directory) unless ($function eq 'include');
 		}
 	    }
 	}
