@@ -4833,6 +4833,11 @@ sub do_get_inactive_lists {
 	     next;
 	 }
 
+	 ## skip closed lists
+	 if ($list->{'admin'}{'status'} eq 'closed') {
+	     next;
+	 }
+
 	 my $last_message;
 
 	 if (open COUNT, $list->{'dir'}.'/msg_count') {
