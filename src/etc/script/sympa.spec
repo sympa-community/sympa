@@ -104,9 +104,9 @@ for a_file in /etc/aliases /etc/postfix/aliases; do
       echo >> ${a_file}
       echo "# added by %{name}-%{version} rpm "$(date) >> ${a_file}
       if [ `grep -c listmaster ${a_file}` -eq 0 ]; then
-        echo "# listmaster:     root" >> ${a_file}
+        echo "# listmaster:     \"|%{home_s}/bin/queue listmaster\"" >> ${a_file}
       fi
-      echo "# sympa: \"|%{home_s}/bin/queue 0 sympa\"" >> ${a_file}
+      echo "# sympa: \"|%{home_s}/bin/queue sympa\"" >> ${a_file}
       echo "# sympa-request:  listmaster@${HOSTNAME}" >> ${a_file}
       echo "# sympa-owner:    listmaster@${HOSTNAME}" >> ${a_file}
       echo "" >> ${a_file}
