@@ -143,12 +143,49 @@ if (!chdir($Conf{'home'})) {
    ## Function never returns.
 }
 
-## Sets the UMASK
-umask($Conf{'umask'});
+if ($signal ne 'hup' ) {
+    ## Put ourselves in background if we're not in debug mode. That method
+    ## works on many systems, although, it seems that Unix conceptors have
+    ## decided that there won't be a single and easy way to detach a process
+    ## from its controlling tty.
+    unless ($main::options{'debug'} || $main::options{'foreground'} ||
+	    $main::options{'dump'} || $main::options{'help'} ||
+	    $main::options{'version'} || $main::options{'import'} ||
+	    $main::options{'lowercase'} ) {
+	if (open(TTY, "/dev/tty")) {
+	    ioctl(TTY, 0x20007471, 0);         # XXX s/b &TIOCNOTTY
+	    #       ioctl(TTY, &TIOCNOTTY, 0);
+	    close(TTY);
+	}
+	open(STDERR, ">> /dev/null");
+	open(STDOUT, ">> /dev/null");
+	setpgrp(0, 0);
+	if ((my $child_pid = fork) != 0) {
+	    do_log('debug', "Starting server, pid $_");
+
+	    ## Create and write the child's pidfile
+	    &tools::write_pid($Conf{'pidfile'}, $child_pid);
+
+	    exit(0);
+	}
+	do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
+    }
+    
+ ## Most initializations have now been done.
+    do_log('notice', "Sympa $Version started");
+    printf "Sympa $Version started\n";
+}else{
+    do_log('notice', "Sympa $Version reload config");
+    printf "Sympa $Version reload config\n";
+    $signal = '0';
+}
 
 ## Set the UserID & GroupID for the process
 $< = $> = (getpwnam('--USER--'))[2];
 $( = $) = (getpwnam('--GROUP--'))[2];
+
+## Sets the UMASK
+umask($Conf{'umask'});
 
 ## Check for several files.
 unless (&Conf::checkfiles()) {
@@ -244,59 +281,6 @@ if ($main::options{'keepcopy'}) {
     }
 }
 
-
-if ($signal ne 'hup' ) {
-    ## Put ourselves in background if we're not in debug mode. That method
-    ## works on many systems, although, it seems that Unix conceptors have
-    ## decided that there won't be a single and easy way to detach a process
-    ## from its controlling tty.
-    unless ($main::options{'debug'} || $main::options{'foreground'}) {
-	if (open(TTY, "/dev/tty")) {
-	    ioctl(TTY, 0x20007471, 0);         # XXX s/b &TIOCNOTTY
-	    #       ioctl(TTY, &TIOCNOTTY, 0);
-	    close(TTY);
-	}
-	open(STDERR, ">> /dev/null");
-	open(STDOUT, ">> /dev/null");
-	setpgrp(0, 0);
-	if (($_ = fork) != 0) {
-	    do_log('debug', "Starting server, pid $_");
-	    exit(0);
-	}
-	do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
-    }
-    
-    ## Create and write the pidfile
-    unless (open(LOCK, "+>> $Conf{'pidfile'}")) {
-	fatal_err("Could not open %s, exiting", $Conf{'pidfile'});
-	## No return.
-    }
-    unless (flock(LOCK, 6)) {
-	fatal_err("Could not lock %s: Sympa is probably already running.", $Conf{'pidfile'});
-	## No return.
-    }
-
-    unless (open(LCK, "> $Conf{'pidfile'}")) {
-	fatal_err("Could not open %s, exiting", $Conf{'pidfile'});
-	## No return.
-    }
-    
-    unless (truncate(LCK, 0)) {
-	fatal_err("Could not truncate %s, exiting.", $Conf{'pidfile'});
-	## No return.
-    }
-    print LCK "$$\n";
-    close(LCK);
-    
-
- ## Most initializations have now been done.
-    do_log('notice', "Sympa $Version started");
-    printf "Sympa $Version started\n";
-}else{
-    do_log('notice', "Sympa $Version reload config");
-    printf "Sympa $Version reload config\n";
-    $signal = '0';
-}
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
 $SIG{'HUP'} = 'sighup';

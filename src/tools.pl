@@ -1144,4 +1144,43 @@ sub get_filename {
     return undef;
 }
 
+sub write_pid {
+    my ($pidfile, $pid) = @_;
+
+    my $uid = (getpwnam('--USER--'))[2];
+    my $gid = (getpwnam('--GROUP--'))[2];
+
+    my $piddir = $pidfile;
+    $piddir =~ s/\/[^\/]+$//;
+
+    ## Create piddir
+    unless (-d $piddir) {
+	mkdir $piddir, 0755;
+    }
+    
+    chown $uid, $gid, $piddir;
+
+    ## Create and write the pidfile
+    unless (open(LOCK, "+>> $pidfile")) {
+	 fatal_err("Could not open %s, exiting", $pidfile);
+    } 
+    unless (flock(LOCK, 6)) {
+	&do_log ('err', "Could not lock $pidfile : task_manager is probably already running");
+	fatal_err("Could not lock %s: task_manager is probably already running.", $pidfile);
+    }
+    unless (open(LCK, "> $pidfile")) {
+	fatal_err("Could not open %s, exiting", $pidfile);
+    }
+    unless (truncate(LCK, 0)) {
+	fatal_err("Could not truncate %s, exiting.", $pidfile);
+    }
+    
+    print LCK "$pid\n";
+    close(LCK);
+    
+    chown $uid, $gid, $pidfile;
+
+    return 1;
+}
+
 1;

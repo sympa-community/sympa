@@ -66,10 +66,6 @@ unless (Conf::load($sympa_conf_file)) {
 ## Check databse connectivity
 $List::use_db = &List::probe_db();
 
-## Set the UserID & GroupID for the process
-$< = $> = (getpwnam('--USER--'))[2];
-$( = $) = (getpwnam('--GROUP--'))[2];
-
 ## Put ourselves in background if not in debug mode. 
 unless ($main::options{'debug'} || $main::options{'foreground'}) {
    open(STDERR, ">> /dev/null");
@@ -79,13 +75,21 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
       close(TTY);
    }
    setpgrp(0, 0);
-   if (($_ = fork) != 0) {
+   if ((my $child_pid = fork) != 0) {
       do_log('debug', "Starting archive daemon, pid $_");
+
+      ## Create and write the pidfile
+      &tools::write_pid($wwsconf->{'archived_pidfile'}, $child_pid);
+
       exit(0);
    }
    $wwsconf->{'log_facility'}||= $Conf{'syslog'};
    do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'archived');
 }
+
+## Set the UserID & GroupID for the process
+$< = $> = (getpwnam('--USER--'))[2];
+$( = $) = (getpwnam('--GROUP--'))[2];
 
 ## Sets the UMASK
 umask($Conf{'umask'});
@@ -98,24 +102,6 @@ unless (chdir($Conf{'home'})) {
 }
 
 my $pinfo = &List::_apply_defaults();
-
-## Create and write the pidfile
-unless (open(LOCK, "+>> $wwsconf->{'archived_pidfile'}")) {
-   fatal_err("Could not open %s, exiting", $wwsconf->{'archived_pidfile'});
-}
-unless (flock(LOCK, 6)) {
-   printf STDERR "Could not lock %s: archived is probably already running",$wwsconf->{'archived_pidfile'} ;
-   fatal_err("Could not lock %s: archived is probably already running.", $wwsconf->{'archived_pidfile'});
-}
-unless (open(LCK, "> $wwsconf->{'archived_pidfile'}")) {
-   fatal_err("Could not open %s, exiting", $wwsconf->{'archived_pidfile'});
-}
-unless (truncate(LCK, 0)) {
-   fatal_err("Could not truncate %s, exiting.", $wwsconf->{'archived_pidfile'});
-}
-
-print LCK "$$\n";
-close(LCK);
 
 do_log('notice', "archived $Version Started");
 

@@ -81,10 +81,6 @@ unless (Conf::load($sympa_conf_file)) {
 ## Check databse connectivity
 $List::use_db = &List::probe_db();
 
-## Set the UserID & GroupID for the process
-$< = $> = (getpwnam('sympa'))[2];
-$( = $) = (getpwnam('sympa'))[2];
-
 ## Check for several files.
 unless (&Conf::checkfiles()) {
    fatal_err("Missing files. Aborting.");
@@ -101,13 +97,20 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 	close(TTY);
     }
     setpgrp(0, 0);
-    if (($_ = fork) != 0) {
+    if ((my $child_pid = fork) != 0) {
 	&do_log('debug', "Starting task_manager daemon, pid $_");
+
+	&tools::write_pid($wwsconf->{'task_manager_pidfile'}, $child_pid);
+
 	exit(0);
     }
     $wwsconf->{'log_facility'}||= $Conf{'syslog'};
     do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'task_manager');
 }
+
+## Set the UserID & GroupID for the process
+$< = $> = (getpwnam('sympa'))[2];
+$( = $) = (getpwnam('sympa'))[2];
 
 ## Sets the UMASK
 umask($Conf{'umask'});
@@ -120,24 +123,6 @@ unless (chdir($Conf{'home'})) {
 }
 
 my $pinfo = &List::_apply_defaults();
-
-## Create and write the pidfile
-unless (open(LOCK, "+>> $wwsconf->{'task_manager_pidfile'}")) {
-    fatal_err("Could not open %s, exiting", $wwsconf->{'task_manager_pidfile'});
-}
-unless (flock(LOCK, 6)) {
-    &do_log ('err', "Could not lock $wwsconf->{'task_manager_pidfile'} : task_manager is probably already running");
-    fatal_err("Could not lock %s: task_manager is probably already running.", $wwsconf->{'task_manager_pidfile'});
-}
-unless (open(LCK, "> $wwsconf->{'task_manager_pidfile'}")) {
-    fatal_err("Could not open %s, exiting", $wwsconf->{'task_manager_pidfile'});
-}
-unless (truncate(LCK, 0)) {
-    fatal_err("Could not truncate %s, exiting.", $wwsconf->{'task_manager_pidfile'});
-}
-
-print LCK "$$\n";
-close(LCK);
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';

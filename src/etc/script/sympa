@@ -112,6 +112,7 @@ sympa_stop() {
 		echo -n "Stopping module $1.pl: "
 		pid=`head -1 --PIDDIR--/$1.pid`
 		kill -TERM $pid && success || failure
+		rm -f /var/run/$1.pl.pid
 		echo
 	fi
 }

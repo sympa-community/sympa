@@ -108,10 +108,6 @@ unless ($List::use_db = &List::probe_db()) {
     exit (-1);
 }
 
-## Set the UserID & GroupID for the process
-$< = $> = (getpwnam('--USER--'))[2];
-$( = $) = (getpwnam('--GROUP--'))[2];
-
 ## Put ourselves in background if not in debug mode. 
 unless ($main::options{'debug'} || $main::options{'foreground'}) {
     open(STDERR, ">> /dev/null");
@@ -122,11 +118,19 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 	close(TTY);
     }
     setpgrp(0, 0);
-    if (($_ = fork) != 0) {
+    if ((my $child_pid = fork) != 0) {
 	do_log('debug', "Starting bounce daemon, pid $_");
+
+	## Create and write the pidfile
+	&tools::write_pid($wwsconf->{'bounced_pidfile'}, $child_pid);
+
 	exit(0);
     }
 }
+
+## Set the UserID & GroupID for the process
+$< = $> = (getpwnam('--USER--'))[2];
+$( = $) = (getpwnam('--GROUP--'))[2];
 
 ## Sets the UMASK
 umask($Conf{'umask'});
@@ -139,24 +143,6 @@ unless (chdir($Conf{'home'})) {
 }
 
 my $pinfo = &List::_apply_defaults();
-
-## Create and write the pidfile
-unless (open(LOCK, "+>> $wwsconf->{'bounced_pidfile'}")) {
-    fatal_err("Could not open %s, exiting", $wwsconf->{'bounced_pidfile'});
-}
-unless (flock(LOCK, 6)) {
-    printf STDERR "Could not lock %s: bounced is probably already running",$wwsconf->{'bounced_pidfile'} ;
-    fatal_err("Could not lock %s: bounced is probably already running.", $wwsconf->{'bounced_pidfile'});
-}
-unless (open(LCK, "> $wwsconf->{'bounced_pidfile'}")) {
-    fatal_err("Could not open %s, exiting", $wwsconf->{'bounced_pidfile'});
-}
-unless (truncate(LCK, 0)) {
-    fatal_err("Could not truncate %s, exiting.", $wwsconf->{'bounced_pidfile'});
-}
-
-print LCK "$$\n";
-close(LCK);
 
 do_log('notice', "bounced Started");
 
