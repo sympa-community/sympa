@@ -6226,7 +6226,6 @@ sub do_edit_list {
 	 return undef;
      }
 
-     &wwslog('notice', 'Dir: %s', $list->{'dir'});
      ## Check listname on SMTP server
      my $res = list_check_smtp($in{'new_listname'});
      unless ( defined($res) ) {
