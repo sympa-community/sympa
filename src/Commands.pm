@@ -454,10 +454,6 @@ sub review {
     my @users;
 
     if ($action =~ /do_it/i) {
-    ## Print all administrative informations
-	push @msg::report, sprintf Msg(6, 6, "Informations for list %s:\n\n"), $listname;
-#	$list->print_info();
-
 	my $is_owner = $list->am_i('owner', $sender);
 
 	unless ($user = $list->get_first_user({'sortby' => 'email'})) {
@@ -474,15 +470,8 @@ sub review {
 	    push @users, $user;
 	} while ($user = $list->get_next_user());
 
-	## Prints user info
-	foreach my $u (@users) {
-	    push @msg::report, sprintf "%s - %s",$u->{'email'} ,$u->{'gecos'};
-	    push @msg::report, sprintf " - %s", $u->{'reception'} if $u->{'reception'};
-	    push @msg::report, "\n";
-	}
+	$list->send_file('review', $sender, {'users' => \@users, 'total' => $list->get_total()});
 
-	push @msg::report, "\n";
-	push @msg::report, sprintf Msg(6, 12, "Total: %d\n"), $list->get_total();
 	do_log('info', 'REVIEW %s from %s accepted (%d seconds)', $listname, $sender,time-$time_command);
 	
 	return 1;
@@ -512,93 +501,6 @@ sub verify {
 	
     }
     return 1;
-}
-
-## Test mailto
-sub xxx {
-    my $listname  = shift;
-    my $sign_mod = shift ;
-    do_log('debug2', 'Commands::xxx(%s,%s)', $listname,$sign_mod );
-
-    my $user;
-    my $list = new List ($listname);
-    unless ($list) {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $listname;
-	do_log('info', 'REVIEW %s from %s refused, unknown list', $listname,$sender);
-	return 'unknown_list';
-    }
-    
-    &Language::SetLang($list->{'admin'}{'lang'});
-
-    if ($sign_mod eq 'smime') {
-	$auth_method='smime';
-    }elsif ($auth ne '') {
-	do_log ('debug2',"auth received from $sender : $auth");
-	if ($auth eq $list->compute_auth ('','review')) {
-	    $auth_method='md5';
-	}else{
-            do_log ('debug', 'auth should be %s',$list->compute_auth ('','review'));
-	    push @msg::report, sprintf Msg(6, 15, $msg::wrong_authenticator);
-	    do_log('info', 'REVIEW %s from %s refused, auth failed', $listname,$sender);
-	    return 'wrong_auth';
-	}
-	
-    }else {
-	$auth_method='smtp';
-    }
-
-    my $action = &List::get_action ('review',$listname,$sender,$auth_method);
-    if ($action =~ /request_auth/i) {
-	do_log ('debug',"auth requested from $sender");
-        $list->request_auth ($sender,'review');
-	do_log('info', 'REVIEW %s from %s, auth requested (%d seconds)', $listname, $sender,time-$time_command);
-	return 1;
-    }
-    if ($action =~ /reject/i) {
-	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'review',$listname;
-	do_log('info', 'review %s from %s refused (not allowed)', $listname,$sender);
-	return 'not_allowed';
-    }
-
-    my @users;
-
-    if ($action =~ /do_it/i) {
-    ## Print all administrative informations
-	push @msg::report, sprintf Msg(6, 6, "Informations for list %s:\n\n"), $listname;
-#	$list->print_info();
-
-	my $is_owner = $list->am_i('owner', $sender);
-
-	unless ($user = $list->get_first_user()) {
-	    return undef;
-	}
-
-	do {
-	    ## Owners bypass the visibility option
-	    next if ( ($user->{'visibility'} eq 'conceal') 
-		      and (! $is_owner) );
-
-	    ## Lower case email address
-	    $user->{'email'} =~ y/A-Z/a-z/;
-	    push @users, $user->{'email'};
-	} while ($user = $list->get_next_user());
-
-	&smtp::NOTmailto($msg, $from, '', @users);
-
-	## Prints user info
-	foreach my $u (@users) {
-	    push @msg::report, sprintf "%s\n",$u;
-	}
-
-	push @msg::report, "\n";
-	push @msg::report, sprintf Msg(6, 12, "Total: %d\n"), $list->get_total();
-	do_log('info', 'REVIEW %s from %s accepted (%d seconds)', $listname, $sender,time-$time_command);
-	
-	return 1;
-    }
-    do_log('info', 'REVIEW %s from %s aborted, unknown requested action in scenario',$listname,$sender);
-    push @msg::report, sprintf("Internal configuration error, please report to listmaster\nreview %s aborted because unknown requested action in scenario\n",$listname);
-    return undef;
 }
 
 ## Adds a user to a list. The user sent a subscribe

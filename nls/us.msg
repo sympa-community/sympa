@@ -58,7 +58,6 @@ $set 6	Messages du module Commands.pm
 9	"List is Private : You can not read the archives.\n"
 10	"List is Private : You can not browse available files.\n"
 11	"List is Private : You can not browse subscribers' list.\n"
-12	"Subscribers : %d\n"
 13	"Command syntax error.\n"
 15	"The authentication process failed\n\n"
 16	"You probably confirmed your subscription using a different\n\

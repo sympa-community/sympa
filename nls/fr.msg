@@ -58,7 +58,6 @@ $set 6	Messages du module Commands.pm
 fichiers disponibles.\n"
 11	"La liste est privée : vous ne pouvez pas consulter la liste des\n\
 abonnés.\n"
-12	"Nombre d'abonnés : %d\n"
 13	"Erreur de syntaxe.\n"
 15	"La phase d'authentification a échoué.\n\n"
 16	"Vous avez très probablement validé votre abonnement en utilisant une\n\
