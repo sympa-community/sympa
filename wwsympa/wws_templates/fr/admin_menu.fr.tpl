@@ -80,7 +80,7 @@
        [IF is_editor]
        <TD BGCOLOR="[light_color]" ALIGN=CENTER>
          <A HREF="[base_url][path_cgi]/modindex/[list]" >
-         <FONT size="-1"><b>Moderer</b></FONT></A>
+         <FONT size="-1"><b>Modérer</b></FONT></A>
        </TD>
        [ELSE]
          <TD BGCOLOR="[light_color]" ALIGN="CENTER">

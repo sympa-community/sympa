@@ -121,6 +121,6 @@
             </FORM>
       </TD>
       <TD VALIGN="middle">
-       Cette autre adresse email doit etre connue de Sympa.      </TD>
+       Cette autre adresse email doit être connue de Sympa.      </TD>
       </TR>
     </TABLE>
