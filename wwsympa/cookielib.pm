@@ -7,28 +7,33 @@ use Exporter;
 
 use MD5;
 use POSIX;
+use CGI::Cookie;
+use Log;
 
 ## Returns user information extracted from the cookie
 sub check_cookie {
-
     my $http_cookie = shift;
-    $http_cookie =~ s/%40/@/ ; 
-    $http_cookie =~ s/%3A/:/ ; 
     my $secret = shift;
-
+    
+    my %cookies = parse CGI::Cookie($http_cookie);
+    
     ## Scan parameters
-    foreach (split /;/, $http_cookie ) {
-	if ( /^\s*(sympauser|user)\=(.*):(\S+)\s*$/ ) {
-	    my ($email, $mac) = ($2, $3);
+    ## With Sort, priority is given to newly 'sympauser'
+    foreach (sort keys %cookies) {
+	my $cookie = $cookies{$_};
+	
+	next unless ($cookie->name =~ /^sympauser|user$/);
+
+	if ($cookie->value =~ /^(.*):(\S+)\s*$/) {
+	    my ($email, $mac) = ($1, $2);
 
 	    ## Check the MAC
 	    if (&get_mac($email,$secret) eq $mac) {
 		return $email;
-	    }else{
-		return undef 
 	    }
-	}
-    }    
+	}	
+    }
+
     return undef;
 }
 
@@ -53,30 +58,32 @@ sub set_cookie {
     unless ($email) {
 	return undef;
     }
-    my ($date,$expiration,$domain);
+    my ($expiration,$domain);
     if ($expires =~ /now/i) {
-	$expiration = 'expires=Tue,1-Jan-1970 10:10:10 GMT; ';
+	$expiration = 'now';
     }elsif ($expires =~ /session/i) {
-	$expiration = "";
+	$expiration = '';
     }else{
-	## Keep locale and set it to 
-	my $locale = $ENV{'LC_ALL'};
-	&POSIX::setlocale(&POSIX::LC_ALL, 'C');
-	
-	my $date = &POSIX::strftime("%A, %d-%b-%Y %H:%M:%S GMT", gmtime(time + (60 * $expires) ));
-	
-	## Restore locale
-	&POSIX::setlocale(&POSIX::LC_ALL, $locale);
-	
-	$expiration = 'expires='.$date.'; ';
+	$expiration = '+'.$expires.'m';
     }
+
     if ($http_domain eq 'localhost') {
 	$domain="";
     }else{
 	$domain='domain='.$http_domain.'; ';
     }
+
+    my $value = sprintf '%s:%s', $email, &get_mac($email,$secret);
+
+    my $cookie = new CGI::Cookie (-name    => 'sympauser',
+				  -value   => $value,
+				  -expires => $expiration,
+				  -domain  => $domain,
+				  -path    => '/'
+				  );
+
     ## Send cookie to the client
-    printf "Set-Cookie: sympauser=%s:%s; %s %s path=/\n", $email, &get_mac($email,$secret), $expiration,$domain;
+    printf "Set-Cookie: %s\n", $cookie->as_string;
    
     return 1;
 }
@@ -85,17 +92,15 @@ sub set_cookie {
 sub set_arc_cookie {
     my ($date,$expiration,$domain);
 
-    ## Keep locale and set it to 
-    my $locale = $ENV{'LC_ALL'};
-    &POSIX::setlocale(&POSIX::LC_ALL, 'C');
-    
-    my $date = &POSIX::strftime("%A, %d-%b-%Y %H:%M:%S GMT", gmtime(time + (60 * 60 * 24 * 30) ));
-    
-    ## Restore locale
-    &POSIX::setlocale(&POSIX::LC_ALL, $locale);
+    my $cookie = new CGI::Cookie (-name    => 'I_Am_Not_An_Email_Sniffer',
+				  -value   => 'Let_Me_In',
+				  -expires => '+1y',
+				  -domain  => $domain,
+				  -path    => '/'
+				  );
     
     ## Send cookie to the client
-    printf "Set-Cookie: I_Am_Not_An_Email_Sniffer=Let_Me_In; expires=%s path=/\n", $date;
+    printf "Set-Cookie:  %s\n", $cookie->as_string;
    
     return 1;
 }
