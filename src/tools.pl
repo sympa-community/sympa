@@ -634,7 +634,7 @@ sub unescape_chars {
     foreach my $i (0x20..0x2c,0x3a..0x3f,0xc0..0xff) {
 	my $hex_i = sprintf "%lx", $i;
 	my $hex_s = sprintf "%c", $i;
-	$s =~ s/%$hex_i/\$hex_s/g;
+	$s =~ s/%$hex_i/$hex_s/g;
     }
 
     return $s;
