@@ -10,7 +10,7 @@ CREATE TABLE user_table (
   	email_user          	varchar (100) NOT NULL,
   	gecos_user          	varchar (150),
 	cookie_delay_user       int4,
-        password_user		varchar (20),
+        password_user		varchar (40),
         lang_user               varchar (10),
 	CONSTRAINT ind_user PRIMARY KEY (email_user)
 );

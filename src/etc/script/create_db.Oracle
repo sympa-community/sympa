@@ -18,7 +18,7 @@ temporary tablespace TEMP;
 CREATE TABLE user_table (
         email_user              varchar2(100) NOT NULL,
         gecos_user              varchar2(150),
-        password_user           varchar2(20),
+        password_user           varchar2(40),
         cookie_delay_user       number,
         lang_user               varchar2(10),
         CONSTRAINT ind_user PRIMARY KEY (email_user)

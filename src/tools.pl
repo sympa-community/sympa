@@ -615,7 +615,7 @@ sub sympa_checksum {
 # create a cipher
 sub ciphersaber_installed {
     if (require Crypt::CipherSaber) {
-	return &Crypt::CipherSaber->new($Conf{'cookie'});
+	return Crypt::CipherSaber->new($Conf{'cookie'});
     }else{
 	return ('no_cipher');
     }
@@ -629,7 +629,11 @@ sub crypt_password {
 	$cipher = ciphersaber_installed();
     }
     return $inpasswd if ($cipher eq 'no_cipher') ;
-    return ("crypt.".$cipher->encrypt ($inpasswd)) ;
+
+    my $xx = &MIME::Base64::encode($cipher->decrypt ($inpasswd));
+    do_log('info',"xxxxxx crypt_passwd :-crypt.$xx-");
+
+    return ("crypt.".&MIME::Base64::encode($cipher->encrypt ($inpasswd))) ;
 }
 
 ## decrypt a password
@@ -646,7 +650,9 @@ sub decrypt_password {
 	do_log('info','password seems crypted while CipherSaber is not installed !');
 	return $inpasswd ;
     }
-    return $cipher->decrypt ($inpasswd);
+    my $xx = $cipher->decrypt (&MIME::Base64::decode($inpasswd));
+    do_log('info',"xxxxxx decrypt : password -$xx-");
+    return ($cipher->decrypt(&MIME::Base64::decode($inpasswd)));
 }
 
 

@@ -2111,7 +2111,7 @@ sub get_user_db {
     $sth = pop @sth_stack;
 
     ## decrypt password
-    $user = &tools::decrypt_password($user->{'password'}) if ($user->{'password'});
+    $user->{'password'} = &tools::decrypt_password($user->{'password'}) if ($user->{'password'});
 
     return $user;
 }
@@ -2654,7 +2654,7 @@ sub update_user_db {
     }
 
     ## encrypt password   
-    $values->{'password'} = &tools::encrypt_password($values->{'password'}) if ($values->{'password'});
+    $values->{'password'} = &tools::crypt_password($values->{'password'}) if ($values->{'password'});
 
     my ($field, $value);
     
@@ -2718,7 +2718,7 @@ sub add_user_db {
     }
  
     ## encrypt password   
-    $values->{'password'} = &tools::encrypt_password($values->{'password'}) if $values->{'password'};
+    $values->{'password'} = &tools::crypt_password($values->{'password'}) if $values->{'password'};
     
     return undef unless (my $who = lc($values->{'email'}));
     

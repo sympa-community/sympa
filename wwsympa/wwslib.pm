@@ -82,6 +82,10 @@ use Exporter;
 		  '7.7' => 'Message integrity failure');
 
 
+
+## if Crypt::CipherSaber installed store the cipher object
+my $cipher;
+
 ## Load WWSympa configuration file
 sub load_config {
     my $file = pop;
@@ -229,6 +233,44 @@ sub valid_email {
     $email =~ /^(\S+|\".*\")@\S+$/;
 
 }
+
+# create a cipher
+sub ciphersaber_installed {
+    if (require (Crypt::CipherSaber)) {
+	return &Crypt::CipherSaber->new($Conf{'cookie'});
+    }else{
+	return ('no_cipher');
+    }
+}
+
+## encrypt a password
+sub crypt_passwd {
+    my $inpasswd = shift ;
+
+    unless (define($cipher)){
+	$cipher = ciphersaber_installed();
+    }
+    return $inpasswd if ($cipher eq 'no_cipher') ;
+    return ("crypt.".$cipher->encrypt ($inpasswd)) ;
+}
+
+## decrypt a password
+sub decrypt_passwd {
+    my $inpasswd = shift ;
+
+    return $inpasswd unless ($inpasswd =~ /^crypt\.(.*)$/) ;
+    $inpasswd = $1;
+
+    unless (define($cipher)){
+	$cipher = ciphersaber_installed();
+    }
+    if ($cipher eq 'no_cipher') {
+	do_log('info','password seems crypted while CipherSaber is not installed !');
+	return $inpasswd ;
+    }
+    return $cipher->decrypt ($inpasswd);
+}
+
 
 sub init_passwd {
     my ($email, $data) = @_;

@@ -3,6 +3,7 @@
 # Laurent Ghys (Laurent.Ghys@ircam.fr)
 #
 # Changes
+# 03/02/2001 [SA] Add Cipher:Saber as a optional module
 # 03/08/2000 [O Salaun] arg passed to CPAN::Shell->install() is the module name
 # 02/08/2000 [O Salaun] require CGI 2.52 (Vars())
 # 26/07/2000 [O Salaun] corrected MIME::Tools to MIME::tools
@@ -26,6 +27,7 @@ use CPAN;
 	     'FCGI' => '0.48',
 	     'MIME::Tools' => '5.209',
 	     'File::Spec' => '0.8',
+             'Crypt::CipherSaber' => '0.50',
 	     'CGI' => '2.52');
 
 ### key:left "module" used by SYMPA, 
@@ -43,6 +45,7 @@ use CPAN;
 %opt_CPAN = ('DBI' => 'DBI',
 	     'Net::LDAP' =>   'perl-ldap',
 	     'CGI::Fast' => 'CGI',
+             'Crypt::CipherSaber' => 'CipherSaber',
 	     'FCGI' => 'FCGI');
 
 ### main:
