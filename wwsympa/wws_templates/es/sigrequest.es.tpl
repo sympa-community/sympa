@@ -46,6 +46,7 @@
           <INPUT NAME="email"><BR>
           <INPUT TYPE="hidden" NAME="action" VALUE="sigrequest">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+	  <INPUT TYPE="submit" NAME="action_sigrequest" VALUE="Anula suscripción">
          </FORM>
 
   [ELSE]

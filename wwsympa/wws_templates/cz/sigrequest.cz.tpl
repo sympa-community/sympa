@@ -45,6 +45,7 @@ Prosím, napi¹te Va¹i adresu pro odhlá¹ení se z konference [list].
           <INPUT NAME="email"><BR>
           <INPUT TYPE="hidden" NAME="action" VALUE="sigrequest">
 	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+	  <INPUT TYPE="submit" NAME="action_sigrequest" VALUE="Odhlásit">
          </FORM>
 
 
