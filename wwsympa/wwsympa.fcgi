@@ -1136,7 +1136,7 @@ sub do_which {
 	return 'loginrequest';
     }
 
-    foreach my$role ('member','owner','editor') {
+    foreach my $role ('member','owner','editor') {
 	foreach my $l ( &List::get_which($param->{'user'}{'email'}, $role) ) {
 	    my $list = new List ($l);
 	    
