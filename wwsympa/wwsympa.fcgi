@@ -7391,17 +7391,15 @@ sub do_d_rename {
     }
 
     ## Rename description file
-    if (-f "$shareddir/$path") {
-	my $desc_file = "$shareddir/$current_directory/.desc.$document";
-	if (-f $desc_file) {
-	    my $new_desc_file = $desc_file;
-	    $new_desc_file =~ s/$document/$in{'new_name'}/;
-	    
-	    unless (rename $desc_file, $new_desc_file) {
-		&error_message('failed');
-		&wwslog('info',"do_d_rename : Failed to rename $desc_file : $!");
-		return undef;
-	    }
+    my $desc_file = "$shareddir/$current_directory/.desc.$document";
+    if (-f $desc_file) {
+	my $new_desc_file = $desc_file;
+	$new_desc_file =~ s/$document/$in{'new_name'}/;
+	
+	unless (rename $desc_file, $new_desc_file) {
+	    &error_message('failed');
+	    &wwslog('info',"do_d_rename : Failed to rename $desc_file : $!");
+	    return undef;
 	}
     }
 
