@@ -474,19 +474,30 @@ my %alias = ('reply-to' => 'reply_to',
 							       'length' => 50,
 							       'occurrence' => '1',
 							       'title_id' => 41,
-							       'order' => 5
+							       'order' => 7
 							       },
 						  'attrs' => {'format' => '\w+',
 							      'length' => 15,
 							      'default' => 'mail',
 							      'title_id' => 42,
-							      'order' => 6 
+							      'order' => 8
 							      },
 						  'select' => {'format' => ['all','first'],
 							       'default' => 'first',
 							       'title_id' => 43,
-							       'order' => 7
-							       }  
+							       'order' => 9
+							       },
+					          'scope' => {'format' => ['base','one','sub'],
+							      'default' => 'sub',
+							      'title_id' => 97,
+							      'order' => 5
+							      },
+						  'timeout' => {'format' => '\w+',
+								'default' => 30,
+								'unit' => 'seconds',
+								'title_id' => 98,
+								'order' => 6
+								}
 					      },
 				     'occurrence' => '0-n',
 				     'title_id' => 35,
@@ -4615,9 +4626,9 @@ sub _include_users_ldap {
     my ($ldaph, $fetch);
 
     ## Connection timeout (default is 120)
-    my $timeout = 30; 
+    #my $timeout = 30; 
 
-    unless ($ldaph = Net::LDAP->new($host, port => "$port", timeout => $timeout)) {
+    unless ($ldaph = Net::LDAP->new($host, port => "$port", timeout => $param->{'timeout'})) {
 	do_log ('notice',"Can\'t connect to LDAP server '$host' '$port' : $@");
 	return undef;
     }
@@ -4632,9 +4643,10 @@ sub _include_users_ldap {
     do_log('debug', "Binded to LDAP server $host:$port ; user : '$user'") if ($main::option{'debug'});
     
     do_log('debug', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $host, $ldap_suffix, $ldap_filter, $ldap_attrs) if ($main::options{'debug'});
-    unless ($fetch = $ldaph->search ( base => "$ldap_suffix",
-                                      filter => "$ldap_filter",
-				      attrs => "$ldap_attrs")) {
+    unless ($fetch = $ldaph->search ( base => $ldap_suffix,
+                                      filter => $ldap_filter,
+				      attrs => $ldap_attrs,
+				      scope => $param->{'scope'})) {
         do_log('debug',"Unable to perform LDAP search in $ldap_suffix for $ldap_filter : $@");
         return undef;
     }

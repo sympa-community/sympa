@@ -4272,8 +4272,8 @@ lists must be activated by the listmaster. List creation is possible for all int
 This is controlled by the \cfkeyword {create\_list} scenario.
 
 List creation request message and list creation notifiaction message are both
-templates that you can customize (\file {create_list_request.tpl} and
-\file {list_created.tpl).
+templates that you can customize (\file {create\_list\_request.tpl} and
+\file {list\_created.tpl}).
 
 \subsection {Who can create lists}
 
@@ -4831,6 +4831,12 @@ Defines the naming space covered by the search (optional, depending on
 the LDAP server).
 
 \item
+\label {timeout}
+\lparam {timeout} \textit {delay\_in\_seconds}
+
+Timeout when connecting the remote server.
+
+\item
 \label {filter}
 \lparam {filter} \textit {search\_filter}
 
@@ -4851,6 +4857,27 @@ The attribute containing the e-mail address(es) in the returned object.
 Defines whether to use only the first address, or all the addresses, in
 cases where multiple values are returned.
 
+\item
+\label {scope}
+\lparam {scope} \textit {base $|$ one $|$ sub}
+\default {sub}
+
+By default the search is performed on the whole tree below the specified
+base object. This may be chaned by specifying a scope parameter with one
+of the following values. 
+\begin{itemize}
+
+	\item \textbf {base} : 
+	Search only the base object. 
+	
+	\item \textbf {one} : 
+	Search the entries immediately below the base object.
+
+	\item \textbf {sub} : 
+	Search the whole tree below the base object. 
+
+\end{itemize}
+
 \end{itemize}
 
 Example :
@@ -4861,9 +4888,11 @@ Example :
     include_ldap_query
     host ldap.cru.fr
     suffix dc=cru, dc=fr
+    timeout 10
     filter (&(cn=aumont) (c=fr))
     attrs mail
     select first
+    scope one
 
 \end{verbatim}
 \end {quote}
