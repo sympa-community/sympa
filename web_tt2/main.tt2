@@ -1,5 +1,5 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="[% iso639 = locale.match('^(.)(.)'); iso639.0; iso639.1 %]">
 
 <!-- comment -->
 <head>
@@ -132,7 +132,6 @@
 // end browsers -->
 </script>
 
-<noscript><em>[%|loc%]Please activate JavaScript in your web browser[%END%]</em></noscript>
 
 <style type="text/css" title="style sympa">
 <!--
@@ -168,6 +167,7 @@ check_cookie();
 setTimeout('refresh_mom_and_die()',1000);
 [% END %]
 ">
+<noscript><p><em>[%|loc%]Please activate JavaScript in your web browser[%END%]</em></p></noscript>
 
 [% IF nomenu %]
     [% IF errors %]
@@ -197,17 +197,23 @@ setTimeout('refresh_mom_and_die()',1000);
   <br />
   [% PROCESS "${action}.tt2" IF action %]
 
+     [% IF languages.size > 1 %]
      <form action="[% path_cgi %]" method="post">
      <input type="hidden" name="action" value="set_lang" />
      <input type="hidden" name="previous_action" value="[% action %]" />
      <input type="hidden" name="previous_list" value="[% list %]" />
-     <select name="lang" onchange="this.form.submit();">
-
+     <label for="l_select2"><span style="font-size: smaller;">[%|loc%]Sympa in your language:[%END%]</span>
+     <select name="lang" id="l_select2" onchange="this.form.submit();">
      [% FOREACH lang = languages %]
      <option value="[% lang.key %]" [% lang.value.selected %]>[% lang.value.complete %]</option>
      [% END %]
      </select>
+     </label>
+     <noscript>
+	<div><input type="submit" name="submit" value="[%|loc%]Change[%END%]" /></div>
+     </noscript>
      </form>
+     [% END %]
 
 [% ELSE %]
   [% PROCESS menu.tt2 %]
@@ -243,7 +249,7 @@ setTimeout('refresh_mom_and_die()',1000);
        </table>
      [% END %]
 
-   <table border="0" style="width: 100%;" cellpadding="0" cellspacing="1" valign="top"><tr><td style="background-color: [% dark_color %];"><table border="0" style="width: 100%;" cellpadding="1" cellspacing="1" valign="top">
+   <table border="0" style="width: 100%;" cellpadding="0" cellspacing="1"><tr><td style="background-color: [% dark_color %];"><table border="0" style="width: 100%;" cellpadding="1" cellspacing="1">
 
     [% IF action_type == 'admin' %]
       <tr valign="top">
@@ -272,18 +278,27 @@ setTimeout('refresh_mom_and_die()',1000);
  </table>
  <table border="0" align="right">
   <tr>
-   <td align="left">
+   <td align="left" style="white-space: nowrap;">
+     [% IF languages.size > 1 %]
      <form action="[% path_cgi %]" method="post">
+     <div>
      <input type="hidden" name="action" value="set_lang" />
      <input type="hidden" name="previous_action" value="[% action %]" />
      <input type="hidden" name="previous_list" value="[% list %]" />
-     <select name="lang" onchange="this.form.submit();">
+     <label for="l_select1"><span style="font-size: smaller;">[%|loc%]Sympa in your language:[%END%]</span>
+     <select name="lang" id="l_select1" onchange="this.form.submit();">
 
      [% FOREACH lang = languages %]
      <option value="[% lang.key %]" [% lang.value.selected %]>[% lang.value.complete %]</option>
      [% END %]
      </select>
+     </label>
+     <noscript>
+	<div><input type="submit" name="submit" value="[%|loc%]Change[%END%]" /></div>
+     </noscript>
+     </div>
      </form>
+     [% END %]
    </td> 
    <td style="width: 100%;">&nbsp;</td>
     <td style="white-space: nowrap;"><em>[%|loc%]Powered by[%END%]</em></td>

@@ -19,10 +19,9 @@
           <form action="[% path_cgi %]" method="post">
          
 	  <table border="0" style="border-spacing: 0.5em;">
-	 		<tr>	 
 				<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];">[%|loc%]Email[%END%] :</th><td>[% user.email %]</td></tr>
 				<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="gecos">[%|loc%]Name[%END%] :</label></th>
-					<td><input type="text" id="gecos" name="gecos" size="20" value="[% user.gecos %]"></th></tr>
+					<td><input type="text" id="gecos" name="gecos" size="20" value="[% user.gecos %]" /></td></tr>
 					<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="lang">[%|loc%]Language[%END%] :</label></th>
             <td><select id="lang" name="lang">
               [% FOREACH l = languages %]

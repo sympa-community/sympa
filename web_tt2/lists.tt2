@@ -6,6 +6,7 @@
   [%|loc(email)%]<strong>%1</strong> is subscribed to the following mailing lists[%END%]
 [% END %]
 
+[% IF which %]
 <table border="0" style="width: 100%;">
    [% FOREACH l = which %]
      <tr>
@@ -72,8 +73,11 @@
     </form>
 </td>
 </tr>
-<br />
-
 </table>
+<br />
 [% END %]
 [% END %]
+[% ELSE %]
+<p>[%|loc%]No mailing list available.[%END%]</p>
+[% END %]
+

@@ -10,7 +10,7 @@
   <h1>[%|loc(visible_path)%]Properties of the file %1[%END%]</h1>
   [% END %]
  <td align="right">
-  <h3><a href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <img style="border: 0px; vertical-align: bottom;" src="[% father_icon %]"> [%|loc%]Up to higher level directory[%END%] </a></h3>
+  <h3><a href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <img style="border: 0px; vertical-align: bottom;" src="[% father_icon %]" /> [%|loc%]Up to higher level directory[%END%] </a></h3>
  </td>      
 </tr></table>
 <br/>
@@ -18,10 +18,11 @@
     [%|loc(doc_date)%]Last update : %1[%END%] <br />
     [%|loc(desc)%]Description : %1[%END%] <br /><br />
 
-<table cellspacing="15">
+<table cellpadding="0" cellspacing="0" border="0" style="width: 100%; border-spacing: 0em 2em;">
   <tr>
+  <td valign="bottom">
   <form action="[% path_cgi %]" method="post">
-  <td style="text-align: right;" valign="bottom">
+  <div style="float: left; width: 60%; text-align: right;">
   <label>
   [% IF directory %]
   <strong> [%|loc(fname)%]Describe the directory %1[%END%]</strong><br />
@@ -34,16 +35,18 @@
   <input type="hidden" name="path" value="[% path %]" />
   <input type="hidden" name="serial" value="[% serial_desc %]" />
   <input type="hidden" name="action" value="d_describe" />
-  </td>
-  <td style="text-align: left;" valign="bottom">
+  </div>
+  <div style="float: right; width: 35%; text-align: left;">
   <input size="50" maxlength="100" type="submit" name="action_d_describe" value="[%|loc%]Apply[%END%]" />
-  </td>
+  </div>
   </form>
+  </td>
   </tr>
 
   <tr>
+  <td valign="bottom">
   <form action="[% path_cgi %]" method="post">
-  <td style="text-align: right;" valign="bottom">
+  <div style="float: left; width: 60%; text-align: right;">
   <label>
   [% IF directory %]
   <strong> [%|loc(fname)%]Rename directory %1[%END%]</strong><br />
@@ -56,11 +59,12 @@
   <input type="hidden" name="path" value="[% path %]" />
   <input type="hidden" name="serial" value="[% serial_desc %]" />
   <input type="hidden" name="action" value="d_rename" />
-  </td>
-  <td style="text-align: left;" valign="bottom">
+  </div>
+  <div style="float: right; width: 35%; text-align: left;">
   <input size="20" maxlength="50" type="submit" name="action_d_rename" value="[%|loc%]Rename[%END%]" />
-  </td>
+  </div>
   </form>
+  </td>
   </tr>
 
 </table>

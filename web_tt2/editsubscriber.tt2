@@ -8,50 +8,52 @@
 <input type="hidden" name="previous_action" value="[% previous_action %]" />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="email" value="[% current_subscriber.escaped_email %]" />
-<dl>
-<dd><label>Email : <input type="text" name="new_email" value="[% current_subscriber.escaped_email %]" size="25" /></label></dd>
-<dd><label>[%|loc%]Name :[%END%] <input type="text" name="gecos" value="[% current_subscriber.gecos %]" size="25" /></label></dd>
-<dd>[%|loc(current_subscriber.date)%]Subscribed since %1[%END%]</dd>
-<dd>[%|loc(current_subscriber.update_date)%]Last update : %1[%END%]</dd>
-<dd><label>[%|loc%]Reception :[%END%] <select name="reception">
+<table border="0" style="text-align: left;">
+<tr><th><label for="new_email">[%|loc%]Email :[%END%]</label></th><td><input type="text" name="new_email" id="new_email" value="[% current_subscriber.escaped_email %]" size="25" /></td></tr>
+<tr><th><label for="gecos">[%|loc%]Name :[%END%]</label></th><td><input type="text" name="gecos" id="gecos" value="[% current_subscriber.gecos %]" size="25" /></td></tr>
+<tr><th>[%|loc%]Subscribed since :[%END%]</th><td>[% current_subscriber.date %]</td></tr>
+<tr><th>[%|loc%]Last update :[%END%]</th><td>[% current_subscriber.update_date %]</td></tr>
+<tr><th><label for="reception">[%|loc%]Reception :[%END%]</label><td><select name="reception" id="reception">
 		  [% FOREACH r = reception %]
 		    <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
 		  [% END %]
-	        </select></label></dd>
+	        </select></td></tr>
 
-<dd>[%|loc(current_subscriber.visibility)%]Visibility : %1[%END%]</dd>
-<dd>[%|loc(current_subscriber.lang)%]Language : %1[%END%]</dd>
+<tr><th>[%|loc%]Visibility :[%END%]</th><td>[% current_subscriber.visibility %]</td></tr>
+<tr><th>[%|loc%]Language :[%END%]</th><td>[% current_subscriber.lang %]</td></tr>
 [% IF additional_fields %]
 [% FOREACH field = additional_fields %]
  [% IF field.value.type == 'enum' %]
-    <dd><label>[% field.key %] :  <select name="additional_field_[% field.key %]">
+    <tr><th><label for="additional_field_[% field.key %]">[% field.key %] :</label></th><td><select name="additional_field_[% field.key %]" id="additional_field_[% field.key %]">
 	                  <option value=""> </option>
 	[% FOREACH e = field.value.enum %]
 		          <option value="[% e.key %]" [% e.value %]>[% e.key %]</option>
         [% END %]
-	                 </select></label></dd>
+	                 </select></td></tr>
  [% ELSE %]
-    <dd><label>[% field.key %] : <input type="text" name="additional_field_[% field.key %]" value="[% field.value.value %]" size="25" /></label></dd>
+    <tr><th><label for="additional_field_[% field.key %]">[% field.key %] :</label></th><td><input type="text" name="additional_field_[% field.key %]" id="additional_field_[% field.key %]" value="[% field.value.value %]" size="25" /></th></tr>
  [% END %]
 [% END %]
 [% END %]
-<dd><input type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
+<tr><td colspan="2"><input type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
 <input type="submit" name="action_del" value="[%|loc%]Unsubscribe the User[%END%]" />
 <label><input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]</label>
-</dd>
-</dl>
+</td>
+</tr>
+</table>
 </td></tr>
 [% IF current_subscriber.bounce %]
 <tr><th style="background: [% error_color %];">
 <span style="color: [% bg_color %];">[%|loc%]Bouncing address[%END%]</span>
-</th></tr><tr><td>
-<dl>
-<dd>[%|loc(current_subscriber.bounce_status)%]Status : %1[%END%] ([% current_subscriber.bounce_code %])</dd>
-<dd>[%|loc(current_subscriber.bounce_count)%]Bounces count : %1[%END%]</dd>
-<dd>[%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]Period : from %1 to %2[%END%]</dd>
-<dd><a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.escaped_email %]">[%|loc%]View last bounce[%END%]</a></dd>
-<dd><input type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" /></dd>
-</dl>
+</th></tr>
+<tr><td>
+<table border="0">
+<tr><th>[%|loc%]Status :[%END%]</th><td>[% current_subscriber.bounce_status %] ([% current_subscriber.bounce_code %])</td></tr>
+<tr><th>[%|loc%]Bounces count :[%END%]</th><td>[% current_subscriber.bounce_count %]</td></tr>
+<tr><th>[%|loc%]Period :[%END%]</th><td>[%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]from %1 to %2[%END%]</td></tr>
+<tr><td colspan="2"><a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.escaped_email %]">[%|loc%]View last bounce[%END%]</a></td></tr>
+<tr><td colspan="2"><input type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" /></td></tr>
+</table>
 </td></tr>
 [% END %]
 </table>

@@ -918,7 +918,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 $param->{'languages'}{$l}{'complete'} = gettext("_language_");
 
 	 if ($param->{'locale'} eq $l) {
-	     $param->{'languages'}{$l}{'selected'} = 'SELECTED';
+	     $param->{'languages'}{$l}{'selected'} = 'selected="selected"';
 	 }else {
 	     $param->{'languages'}{$l}{'selected'} = '';
 	 }
@@ -1473,13 +1473,13 @@ sub send_html {
 	 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = ' AT ';	$param->{'hidden_end'} = '';
      }elsif(&Conf::get_robot_conf($robot,'spam_protection') eq 'javascript') {
 	 $param->{'hidden_head'} = '
- <SCRIPT language="JavaScript">
+ <script type="text/javascript">
  <!-- 
  document.write("';
 	 $param->{'hidden_at'} ='" + "@" + "';
 	 $param->{'hidden_end'} ='")
  // -->
- </SCRIPT>';
+ </script>';
      }else {
 	 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = '@';	$param->{'hidden_end'} = '';
      }
@@ -1493,13 +1493,13 @@ sub send_html {
 		 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = ' AT ';	$param->{'hidden_end'} = '';
 	     }elsif($list->{'admin'}{'web_archive_spam_protection'} eq 'javascript') {
 		 $param->{'hidden_head'} = '
- <SCRIPT language="JavaScript">
+ <script type="text/javascript">
  <!-- 
  document.write("';
 		 $param->{'hidden_at'} ='" + "@" + "';
 		 $param->{'hidden_end'} ='")
  // -->
- </SCRIPT>';
+ </script>';
 	     }else {
 		 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = '@';	$param->{'hidden_end'} = '';
 	     }
@@ -1508,13 +1508,13 @@ sub send_html {
 		 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = ' AT ';	$param->{'hidden_end'} = '';
 	     }elsif($list->{'admin'}{'spam_protection'} eq 'javascript') {
 		 $param->{'hidden_head'} = '
- <SCRIPT language="JavaScript">
+ <script type="text/javascript">
  <!-- 
  document.write("';
 		 $param->{'hidden_at'} ='" + "@" + "';
 		 $param->{'hidden_end'} ='")
  // -->
- </SCRIPT>';
+ </script>';
 	     }else {
 		 $param->{'hidden_head'} = '';	$param->{'hidden_at'} = '@';	$param->{'hidden_end'} = '';
 	     }	     
@@ -2619,7 +2619,7 @@ sub do_remindpasswd {
 	 foreach $m (keys %wwslib::reception_mode) {
 	     $param->{'reception'}{$m}{'description'} = $wwslib::reception_mode{$m};
 	     if ($s->{'reception'} eq $m) {
-		 $param->{'reception'}{$m}{'selected'} = 'SELECTED';
+		 $param->{'reception'}{$m}{'selected'} = 'selected="selected"';
 	     }else {
 		 $param->{'reception'}{$m}{'selected'} = '';
 	     }
@@ -2876,7 +2876,7 @@ sub do_remindpasswd {
 
 	 ## Choose nearest delay
 	 if ((! $selected) && $param->{'user'}{'cookie_delay'} >= $p) {
-	     $entry->{'selected'} = 'SELECTED';
+	     $entry->{'selected'} = 'selected="selected"';
 	     $selected = 1;
 	 }
 
@@ -3251,7 +3251,7 @@ sub do_remindpasswd {
        if ($list->is_available_reception_mode($m)) {
 	 $param->{'reception'}{$m}{'description'} = $wwslib::reception_mode{$m};
 	 if ($s->{'reception'} eq $m) {
-	     $param->{'reception'}{$m}{'selected'} = 'SELECTED';
+	     $param->{'reception'}{$m}{'selected'} = 'selected="selected"';
 	 }else {
 	     $param->{'reception'}{$m}{'selected'} = '';
 	 }
@@ -3261,7 +3261,7 @@ sub do_remindpasswd {
      foreach $m (keys %wwslib::visibility_mode) {
 	 $param->{'visibility'}{$m}{'description'} = $wwslib::visibility_mode{$m};
 	 if ($s->{'visibility'} eq $m) {
-	     $param->{'visibility'}{$m}{'selected'} = 'SELECTED';
+	     $param->{'visibility'}{$m}{'selected'} = 'selected="selected"';
 	 }else {
 	     $param->{'visibility'}{$m}{'selected'} = '';
 	 }
@@ -3574,7 +3574,7 @@ sub do_remindpasswd {
 	 }
 	 $param->{'files'}{$f}{'selected'} = '';
      }
-     $param->{'files'}{'info'}{'selected'} = 'SELECTED';
+     $param->{'files'}{'info'}{'selected'} = 'selected="selected"';
 
  #    my %mode;
  #    $mode{'edit'} = 1;
@@ -3631,7 +3631,7 @@ sub do_remindpasswd {
 	 $param->{'server_files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
 	 $param->{'server_files'}{$f}{'selected'} = '';
      }
-     $param->{'server_files'}{'helpfile.tt2'}{'selected'} = 'SELECTED';
+     $param->{'server_files'}{'helpfile.tt2'}{'selected'} = 'selected="selected"';
 
      return 1;
  }
@@ -5981,7 +5981,7 @@ sub do_set_pending_list_request {
        if ($list->is_available_reception_mode($m)) {
 	 $param->{'reception'}{$m}{'description'} = $wwslib::reception_mode{$m};
 	 if ($param->{'current_subscriber'}{'reception'} eq $m) {
-	     $param->{'reception'}{$m}{'selected'} = 'SELECTED';
+	     $param->{'reception'}{$m}{'selected'} = 'selected="selected"';
 	 }else {
 	     $param->{'reception'}{$m}{'selected'} = '';
 	 }
@@ -6026,7 +6026,7 @@ sub do_set_pending_list_request {
 		 }
 		 $data{$field}{'type'} = 'enum';
 
-		 $data{$field}{'enum'}{$user->{$field}} = 'SELECTED'
+		 $data{$field}{'enum'}{$user->{$field}} = 'selected="selected"'
 		     if (defined $user->{$field});
 	     }else {
 		 $data{$field}{'type'} = 'string';
@@ -6100,11 +6100,11 @@ sub do_set_pending_list_request {
 	 $param->{'authmethod'}{$a}{'defined'}=1 ;
      }
 
-     $param->{'scenario'}{$in{'scenario'}}{'selected'} = 'SELECTED' if $in{'scenario'};
+     $param->{'scenario'}{$in{'scenario'}}{'selected'} = 'selected="selected"' if $in{'scenario'};
 
-     $param->{'listname'}{$in{'listname'}}{'selected'} = 'SELECTED' if $in{'listname'};
+     $param->{'listname'}{$in{'listname'}}{'selected'} = 'selected="selected"' if $in{'listname'};
 
-     $param->{'authmethod'}{$in{'auth_method'}}{'selected'} = 'SELECTED' if $in{'auth_method'};
+     $param->{'authmethod'}{$in{'auth_method'}}{'selected'} = 'selected="selected"' if $in{'auth_method'};
 
      $param->{'email'} = $in{'email'};
 
@@ -7370,7 +7370,7 @@ sub _restrict_values {
      if (&List::is_listmaster($param->{'user'}{'email'})) {
 	 foreach (keys %{$Conf{'robots'}}) {
 	     if ($_ eq $robot) {
-		 $param->{'robots'}{$_} = 'SELECTED';
+		 $param->{'robots'}{$_} = 'selected="selected"';
 	     }else {
 		 $param->{'robots'}{$_} = '';
 	     }	  
@@ -11237,7 +11237,7 @@ sub d_test_existing_and_rights {
      ## Scenario list for READ
 
      $param->{'scenari_read'} = $list->load_scenario_list('d_read', $robot);
-     $param->{'scenari_read'}{$read}{'selected'} = 'SELECTED';
+     $param->{'scenari_read'}{$read}{'selected'} = 'selected="selected"';
 
 #     my $read_scenario_list = $list->load_scenario_list('d_read', $robot);
 #     $param->{'read'}{'scenario_name'} = $read;
@@ -11247,13 +11247,13 @@ sub d_test_existing_and_rights {
 #	 $param->{'scenari_read'}{$key}{'scenario_name'} = $read_scenario_list->{$key}{'name'};
 #	 $param->{'scenari_read'}{$key}{'scenario_label'} = $read_scenario_list->{$key}{'title'}{$lang};
 #	 if ($key eq $read) {
-#	     $param->{'scenari_read'}{$key}{'selected'} = 'SELECTED';
+#	     $param->{'scenari_read'}{$key}{'selected'} = 'selected="selected"';
 #	 }
 #     }
 
      ## Scenario list for EDIT
      $param->{'scenari_edit'} = $list->load_scenario_list('d_edit', $robot);
-     $param->{'scenari_edit'}{$edit}{'selected'} = 'SELECTED';
+     $param->{'scenari_edit'}{$edit}{'selected'} = 'selected="selected"';
 
 
 #     my $edit_scenario_list = $list->load_scenario_list('d_edit', $robot);
@@ -11264,7 +11264,7 @@ sub d_test_existing_and_rights {
 #	 $param->{'scenari_edit'}{$key}{'scenario_name'} = $edit_scenario_list->{$key}{'name'};
 #	 $param->{'scenari_edit'}{$key}{'scenario_label'} = $edit_scenario_list->{$key}{'title'}{$lang};
 #	 if ($key eq $edit) {
-#	     $param->{'scenari_edit'}{$key}{'selected'} = 'SELECTED';
+#	     $param->{'scenari_edit'}{$key}{'selected'} = 'selected="selected"';
 #	 }
 #     }
 
@@ -12228,10 +12228,10 @@ sub d_test_existing_and_rights {
 	     $gecos = "$`\" + \"@\" + \"$'";
 	 }
 
-	 my $return = "<SCRIPT language=JavaScript>
+	 my $return = "<script type=\"text/javascript\">
  <!--
- document.write(\"<A HREF=\" + \"mail\" + \"to:\" + \"$local\" + \"@\" + \"$domain\" + \">$gecos</A>\")
- // --></SCRIPT>";
+ document.write(\"<A HREF=\" + \"mail\" + \"to:\" + \"$local\" + \"@\" + \"$domain\" + \">$gecos<\" + \"/A>\")
+ // --></script>";
 	 return ($return);
      }elsif($list->{'admin'}{'spam_protection'} eq 'at') {
 	 return ("$local AT $domain");
@@ -12244,10 +12244,10 @@ sub get_protected_email_address {
     
     if($list->{'admin'}{'spam_protection'} eq 'javascript') {
 
-	 my $return = "<SCRIPT language=JavaScript>
+	 my $return = "<script type=\"text/javascript\">
  <!--
  document.write(\"$local_part\" + \"@\" + \"$domain_part\")
- // --></SCRIPT>";
+ // --></script>";
 	 return ($return);
      }elsif($list->{'admin'}{'spam_protection'} eq 'at') {
 	 return ("$local_part AT $domain_part");

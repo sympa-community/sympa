@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 
-<br /><p></p> 
+<br />
 <table border="0" style="background: [% light_color %];"><tr><td>
 <p style="text-align: justify;">
 [%|loc(conf.email,conf.host)%]This server provides you access to your environment on mailing list server %1@%2. Starting from this URL, you can perform subscription options, unsubscription,
@@ -52,6 +52,7 @@ archives, list management and so on.[%END%]
 </td>
 <td style="width: 100%;"></td>
 <td style="white-space: nowrap;">
+	<div>
         <form action="[% path_cgi %]" method="post"> 
          <input size="25" name="filter" value="[% filter %]" />
          <input type="hidden" name="action" value="search_list" />
@@ -59,9 +60,8 @@ archives, list management and so on.[%END%]
 	  <br />
 	 <label><input type="radio" name="extended" value="0" checked="checked" />[%|loc%]Local[%END%]</label>
          <label><input type="radio" name="extended" value="1" />[%|loc%]Extended search[%END%]</label>
-	 
         </form>
-   </td>
+	</div>
         
    </td></tr>
   </table>
@@ -71,9 +71,9 @@ archives, list management and so on.[%END%]
 </div>
 
 [% IF ! user.email %]
-<table border="0" style="width: 100%;" cellpadding="1" cellspacing="0" valign="top">
+<table border="0" style="width: 100%;" cellpadding="1" cellspacing="0">
    <tr><td style="background-color: [% dark_color %];">
-          <table border="0" style="width: 100%;" valign="top"> 
+          <table border="0" style="width: 100%;"> 
               <tr><td style="background-color: [% bg_color %];">
 [% PROCESS 'loginbanner.tt2' %]
 </td></tr></table>

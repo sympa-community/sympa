@@ -65,7 +65,7 @@
   [% IF order_by != 'order_by_doc' %]  
     <td style="text-align: right;">
     <form method="post" action="[% path_cgi %]">  
-    <input style="vertical-align: top;" type="image" src="[% sort_icon %]" width="15" height="15" name="[%|loc%]Sort by name[%END%]" />
+    <input style="vertical-align: top; width: 15px; height: 15px;" type="image" src="[% sort_icon %]" alt="[%|loc%]Sort by name[%END%]" name="[%|loc%]Sort by name[%END%]" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% path %]" />
     <input type="hidden" name="action" value="d_read" />
@@ -80,7 +80,7 @@
   [% IF order_by != 'order_by_author' %]  
     <td style="text-align: right;">
     <form method="post" action="[% path_cgi %]">  
-    <input style="vertical-align: top;"  type="image" src="[% sort_icon %]" width="15" height="15" name="[%|loc%]Sort by author[%END%]" />
+    <input style="vertical-align: top; width: 15px; height: 15px;"  type="image" src="[% sort_icon %]" alt="[%|loc%]Sort by author[%END%]" name="[%|loc%]Sort by author[%END%]" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% path %]" />
     <input type="hidden" name="action" value="d_read" />
@@ -95,7 +95,7 @@
   [% IF order_by != 'order_by_size' %] 
     <td style="text-align: right;">
     <form method="post" action="[% path_cgi %]">
-    <input style="vertical-align: top;" type="image" src="[% sort_icon %]" width="15" height="15" name="[%|loc%]Sort by size[%END%]" />
+    <input style="vertical-align: top; width: 15px; height: 15px;" type="image" src="[% sort_icon %]" alt="[%|loc%]Sort by size[%END%]" name="[%|loc%]Sort by size[%END%]" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% path %]" />
     <input type="hidden" name="action" value="d_read" />
@@ -110,7 +110,7 @@
   [% IF order_by != 'order_by_date' %]
     <td style="text-align: right;">
     <form method="post" action="[% path_cgi %]">
-    <input style="vertical-align: top;" type="image" src="[% sort_icon %]" width="15" height="15" name="[%|loc%]Sort by date[%END%]" />
+    <input style="vertical-align: top; width: 15px; height: 15px;" type="image" src="[% sort_icon %]" alt="[%|loc%]Sort by date[%END%]" name="[%|loc%]Sort by date[%END%]" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% path %]" />
     <input type="hidden" name="action" value="d_read" />
@@ -352,110 +352,125 @@
   [% END %]
   </table>	        
  
-  <hr /> 
-<table cellspacing="20">
+<table cellspacing="0" cellpadding="0" border="0" style="width: 100%;">
    
   [% IF expert_page %] 
   [% IF may_edit %]
    [% IF total_edit %]
     <tr>
+    <td valign="bottom">
+    <hr /> 
     <form method="post" action="[% path_cgi %]">
-    <td style="text-align: right;" valign="bottom"><label>
+    <div style="float: left; width: 60%; text-align: right;">
+    <label>
     [% IF path %]
       <strong> [%|loc(visible_path)%]Create a new folder inside the folder %1[%END%]</strong> <br />
     [% ELSE %]
       <strong> [%|loc%]Create a new folder inside the folder SHARED[%END%]</strong> <br />
     [% END %]
     <input maxlength="30" type="text" name="name_doc" /></label>
-    </td>
-
-    <td style="text-align: left;" valign="bottom">
+    </div>
+    <div style="float: right; width: 35%; text-align: left;">
     <input type="submit" value="[%|loc%]Create a new subdirectory[%END%]" name="action_d_create_dir" />
     <input type="hidden" name="previous_action" value="d_read" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% path %]" />
     <input type="hidden" name="type" value="directory" />
     <input type="hidden" name="action" value="d_create_dir" />
-    </td>
+    </div>
     </form>
+    </td>
     </tr>
     [% END %]
 
     <tr>
+    <td valign="bottom">
+    <hr /> 
     <form method="post" action="[% path_cgi %]">
-    <td style="text-align: right;" valign="bottom"><label>
+    <div style="float: left; width: 60%; text-align: right;">
+    <label>
       <strong> [%|loc%]Create a new file[%END%]</strong> <br />
     <input maxlength="30" type="text" name="name_doc" /></label>
-    </td>
+    </div>
 
-    <td style="text-align: left;" valign="bottom">
+    <div style="float: right; width: 35%; text-align: left;">
     <input type="submit" value="[%|loc%]Create a new file[%END%]" name="action_d_create_dir" />
     <input type="hidden" name="previous_action" value="d_read" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% path %]" />
     <input type="hidden" name="type" value="file" />
     <input type="hidden" name="action" value="d_create_dir" />
-    </td>
+    </div>
     </form>
+    </td>
     </tr>
 
     <tr>
+    <td valign="bottom">
+    <hr /> 
     <form method="post" action="[% path_cgi %]">
-    <td style="text-align: right;" valign="middle">
+    <div style="float: left; width: 60%; text-align: right;">
     <strong>[%|loc%]Add a bookmark[%END%]</strong><br />
-    [%|loc%]title[%END%] <input maxlength="100" size="20" type="text" name="name_doc" /><br />
-    [%|loc%]URL[%END%] <input maxlength="100" size="25" type="text" name="url" />
-    </td>
-
-    <td style="text-align: left;" valign="bottom">
+    <label>[%|loc%]title[%END%] <input maxlength="100" size="20" type="text" name="name_doc" /></label><br />
+    <label>[%|loc%]URL[%END%] <input maxlength="100" size="25" type="text" name="url" /></label>
+    </div>
+    <div style="float: right; width: 35%; text-align: left;">
     <input type="submit" value="[%|loc%]Add[%END%]" name="action_d_savefile" />
     <input type="hidden" name="previous_action" value="d_read" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% path %]" />
     <input type="hidden" name="action" value="d_savefile" />
-    </td>
+    </div>
     </form>
+    </td>
     </tr>
 
 
    <tr>
-     <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
-   <td style="text-align: right;" valign="bottom"><label>
+   <td valign="bottom">
+   <hr /> 
+   <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
+   <div style="float: left; width: 60%; text-align: right;">
+   <label>
    [% IF path %]
      <strong> [%|loc(visible_path)%]Upload a file inside the folder %1[%END%]</strong><br />
    [% ELSE %]
      <strong> [%|loc%]Upload a file inside the folder SHARED[%END%] </strong><br />
    [% END %]
      <input type="file" name="uploaded_file"/></label>
-   </td>
+   </div>
 
-   <td style="text-align: left;" valign="bottom">
+   <div style="float: right; width: 35%; text-align: left;">
    <input type="submit" value="[%|loc%]Publish[%END%]" name="action_d_upload" />
    <input type="hidden" name="list" value="[% list %]" />
    <input type="hidden" name="path" value="[% path %]" />
-   <td>
+   </div>
    </form> 
+   </td>
    </tr>
 
       [% IF total_edit %]
         <tr>
+        <td valign="bottom">
+	<hr />
         <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
-         <td style="text-align: right;" valign="bottom"><label>
+	<div style="float: left; width: 60%; text-align: right;">
+	<label>
  	[% IF path %]
            <strong> [%|loc(visible_path)%]Unzip a file inside the folder %1[%END%]</strong><br />
          [% ELSE %]
            <strong> [%|loc%]Unzip a file inside the folder SHARED[%END%] </strong><br />
          [% END %]
         <input type="file" name="unzipped_file"/></label>
-        </td>
+        </div>
  
-        <td style="text-align: left;" valign="bottom">
- 
+        <div style="float: right; width: 35%; text-align: left;">
         <input type="submit" value="[%|loc%]Publish[%END%]" name="action_d_unzip" />
         <input type="hidden" name="list" value="[% list %]" />
         <input type="hidden" name="path" value="[% path %]" />
-        <td>
+        </div>
         </form> 
+	</td>
         </tr>
        
        [% END %]

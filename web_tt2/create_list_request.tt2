@@ -7,7 +7,7 @@
 <table style="width: 100%;">
  <tr>
    <th style="text-align: left; white-space: nowrap;"><label for="listname"><strong>[%|loc%]List name:[%END%]</strong></label></th>
-   <td><input type="text" id="listname" name="listname" size="30" VALUE="[% saved.listname %]" /></td>
+   <td><input type="text" id="listname" name="listname" size="30" value="[% saved.listname %]" /></td>
    <td><img src="[% icons_url %]/unknown.png" alt="?" title="[%|loc%]the list name ; be careful, not its address ![%END%]" /></td>
  </tr>
  
@@ -22,15 +22,22 @@
    <td>
      <ul>
   [% FOREACH template = list_list_tpl %]
-      <li>
+      <li style="margin: 1em;">
+      <dl>
+      <dt>
      <label><input type="radio" name="template" value="[% template.key %]"
-     [% IF template.valuye.selected %]
+     [% IF template.value.selected %]
        checked="checked"
      [% END %]
-     /> [% template.key %]</label><br />
-     <blockquote>
-     [% PROCESS $template.value.comment IF template.value.comment %]
-     </blockquote>
+     /> [% template.key %]</label>
+     </dt>
+     [% IF template.value.comment %]
+     <dd>
+     [% PROCESS $template.value.comment %]
+     </dd>
+     [% END %]
+     </dl>
+
      </li>
   [% END %]
      </ul>

@@ -28,7 +28,7 @@
        <table style="width: 100%;" cellpadding="0">
           <tr><td style="background-color: [% selected_color %]; white-space: nowrap; text-align: center;">
 	    <span style="color: [% bg_color %]; font-size: larger;"><strong style="font-size: larger;">[% title %]</strong></span>
-	     <br /><span style="color: [% bg_color %];">[% subtitle %]</span>
+	    <br />[% IF subtitle.length > 0 %]<span style="color: [% bg_color %];">[% subtitle %]</span>[% END %]
             </td>
            </tr>
         </table>

@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 
-<table style="width: 100%;" border="0" valign="top">
+<table style="width: 100%;" border="0">
 <tr>
 [% IF is_owner %]
 <td valign="top" style="white-space: nowrap;" colspan="3">
@@ -89,7 +89,7 @@
 
     <input type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
 
-    <label><input type="checkbox" name="quiet"> [%|loc%]quiet[%END%]</label>
+    <label><input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]</label>
   [% END %]
   </td>
   <td style="width: 100%;">&nbsp;</td>
