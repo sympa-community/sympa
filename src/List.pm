@@ -7223,14 +7223,14 @@ sub maintenance {
 	    return undef unless &db_connect();
 	}
 	
-	my $statement = "UPDATE subscriber_table SET subscribed_subscriber='1' WHERE (subscribed_subscriber!='1' && included_subscriber!='1')";
+	my $statement = "UPDATE subscriber_table SET subscribed_subscriber='1' WHERE ((included_subscriber IS NULL || included_subscriber!='1') && (subscribed_subscriber IS NULL || subscribed_subscriber!='1'))";
 	
 	&do_log('notice','Updating subscribed field of the subscriber table...');
 	my $rows = $dbh->do($statement);
 	unless (defined $rows) {
 	    &fatal_err("Unable to execute SQL statement %s : %s", $statement, $dbh->errstr);	    
 	}
-	&do_log('notice','%d rows have been updated');
+	&do_log('notice','%d rows have been updated', $rows);
     }    
     
     ## Saving current version
