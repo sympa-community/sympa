@@ -1398,6 +1398,7 @@ sub send_to_editor {
 	   $self->send_file('moderate', $recipient, $self->{'domain'}, {'modkey' => $modkey,
 									'boundary' => $boundary,
 									'msg' => $crypted_file,
+									'method' => $method,
 									## From the list because it is signed
 									'from' => $self->{'name'}.'@'.$self->{'domain'}
 									});
@@ -1406,6 +1407,7 @@ sub send_to_editor {
        $self->send_file('moderate', \@rcpt, $self->{'domain'}, {'modkey' => $modkey,
 								'boundary' => $boundary,
 								'msg' => $file,
+								'method' => $method,
 								'from' => $Conf{'email'}.'@'.$Conf{'host'}
 								});
    }

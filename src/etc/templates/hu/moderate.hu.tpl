@@ -8,6 +8,7 @@ Content-Type: multipart/mixed; boundary="[boundary]"
 Content-Type: text/plain; charset=iso-8859-2
 Content-transfer-encoding: 8bit
 
+[IF method=md5]
 A(z) [list->name] listán a melléklet megjelenésének jóváhagyásához használd a következõt:
 mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%%20[list->name]%%20[modkey]
 Vagy [conf->email]@[conf->host] címre küldj egy levelet a következõ tárggyal:
@@ -17,6 +18,7 @@ Visszautasításhoz (ez törlést jelent) használd a következõt:
 mailto:[conf->email]@[conf->host]?subject=REJECT%%20[list->name]%%20[modkey]
 Vagy [conf->email]@[conf->host] címre küldj egy levelet a következõ tárggyal:
 REJECT [list->name] [modkey]
+[ENDIF]
 
 --[boundary]
 Content-Type: message/rfc822

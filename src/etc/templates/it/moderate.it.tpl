@@ -8,11 +8,13 @@ Content-Type: multipart/mixed; boundary="[boundary]"
 Content-Type: text/plain; charset=iso-8859-1
 Content-transfer-encoding: 8bit
 
+[IF method=md5]
 Per inoltrare il messaggio allegato alla lista '[list->name]' :\n\
 mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%%20[list->name]%%20[modkey]\n\n
 
 Per respingerlo (sara' cancellato) :\n\
 mailto:[conf->email]@[conf->host]?subject=REJECT%%20[list->name]%%20[modkey]
+[ENDIF]
 
 --[boundary]
 Content-Type: message/rfc822
