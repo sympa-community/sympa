@@ -134,16 +134,28 @@ AC_ARG_WITH(group, [  --with-group=LOGIN     set sympa group name (default sympa
 AC_SUBST(GROUP)
 
 SENDMAIL_ALIASES=/etc/mail/sympa_aliases
-AC_ARG_WITH(sendmail_aliases, [  --with-sendmail_aliases=ALIASFILE     set sendmail aliases file to be used by Sympa (default /etc/mail/sympa_aliases)], [SENDMAIL_ALIASES="$withval"])
+AC_ARG_WITH(sendmail_aliases, [  --with-sendmail_aliases=ALIASFILE     set aliases file to be used by Sympa (default /etc/mail/sympa_aliases)], [SENDMAIL_ALIASES="$withval"])
 AC_SUBST(SENDMAIL_ALIASES)
 
+VIRTUAL_ALIASES=/etc/mail/sympa_virtual
+AC_ARG_WITH(virtual_aliases, [  --with-virtual_aliases=ALIASFILE     set postfix virtual file to be used by Sympa (default /etc/mail/sympa_virtual)], [VIRTUAL_ALIASES="$withval"])
+AC_SUBST(VIRTUAL_ALIASES)
+
 NEWALIASES=/usr/bin/newaliases
-AC_ARG_WITH(newaliases, [  --with-newaliases=FULLPATH     set path to sendmail newaliases command (default /usr/bin/newaliases)], [NEWALIASES="$withval"])
+AC_ARG_WITH(newaliases, [  --with-newaliases=FULLPATH     set path to newaliases command (default /usr/bin/newaliases)], [NEWALIASES="$withval"])
 AC_SUBST(NEWALIASES)
 
 NEWALIASES_ARG=
 AC_ARG_WITH(newaliases_arg, [  --with-newaliases_arg=ARGS     set arguments to newaliases command (default NONE)], [NEWALIASES_ARG="$withval"])
 AC_SUBST(NEWALIASES_ARG)
+
+POSTMAP=/usr/sbin/postmap
+AC_ARG_WITH(postmap, [  --with-postmap=FULLPATH     set path to postfix postmap command (default /usr/sbin/postmap)], [POSTMAP="$withval"])
+AC_SUBST(POSTMAP)
+
+POSTMAP_ARG=
+AC_ARG_WITH(postmap_arg, [  --with-postmap_arg=ARGS     set arguments to postfix postmap command (default NONE)], [POSTMAP_ARG="$withval"])
+AC_SUBST(POSTMAP_ARG)
 
 dnl Initialize maintainer mode
 AM_MAINTAINER_MODE

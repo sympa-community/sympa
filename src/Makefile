@@ -21,13 +21,13 @@
 
 CDEFS	=	-DCONFIG=\"$(CONFIG)\"
 
-sbin_SRC	=	sympa.pl alias_manager.pl task_manager.pl sympa_wizard.pl
+sbin_SRC	=	sympa.pl alias_manager.pl postfix_manager.pl task_manager.pl sympa_wizard.pl
 
 lib_SRC		=	Archive.pm Commands.pm Conf.pm \
 			Language.pm List.pm Log.pm mail.pm msg.pl Ldap.pm \
 			smtp.pm tools.pl Version.pm parser.pl
 
-all:	queue bouncequeue aliaswrapper
+all:	queue bouncequeue aliaswrapper virtualwrapper
 
 clean:
 	@if [ -f ./queue ]; then \
@@ -38,6 +38,9 @@ clean:
 	fi
 	@if [ -f ./aliaswrapper ]; then \
 		rm aliaswrapper ; \
+	fi
+	@if [ -f ./virtualwrapper ]; then \
+		rm virtualwrapper ; \
 	fi
 
 install: 
@@ -99,6 +102,8 @@ installqueue:
 installwrapper:
 	@echo "Installing AliasWrapper binary..."
 	cp aliaswrapper $(DESTDIR)$(MAILERPROGDIR)/
+	@echo "Installing VirtualWrapper binary..."
+	cp virtualwrapper $(DESTDIR)$(MAILERPROGDIR)/
 
 makedir:
 	@if [ ! -d $(DESTDIR)$(MAILERPROGDIR) ]; then \
@@ -150,6 +155,8 @@ installmod:
 	chgrp -R $(GROUP) $(DESTDIR)$(LIBDIR)
 	chown root $(DESTDIR)$(MAILERPROGDIR)/aliaswrapper
 	chgrp $(GROUP) $(DESTDIR)$(MAILERPROGDIR)/aliaswrapper
+	chown root $(DESTDIR)$(MAILERPROGDIR)/virtualwrapper
+	chgrp $(GROUP) $(DESTDIR)$(MAILERPROGDIR)/virtualwrapper
 	@echo "Setting privileges..."
 	chmod 755 $(DESTDIR)$(SBINDIR) $(DESTDIR)$(ETCBINDIR) 
 	chmod 755 $(DESTDIR)$(ETCBINDIR)/scenari $(DESTDIR)$(ETCBINDIR)/templates $(DESTDIR)$(ETCBINDIR)/list_task_models $(DESTDIR)$(ETCBINDIR)/global_task_models
@@ -158,6 +165,7 @@ installmod:
 	chmod 600 $(DESTDIR)$(ETCBINDIR)/ca-bundle.crt
 	chmod 4755 $(DESTDIR)$(MAILERPROGDIR)/queue $(DESTDIR)$(MAILERPROGDIR)/bouncequeue
 	chmod 4750 $(DESTDIR)$(MAILERPROGDIR)/aliaswrapper
+	chmod 4750 $(DESTDIR)$(MAILERPROGDIR)/virtualwrapper
 
 queue: queue.c Makefile ../Makefile
 	$(CC) $(CFLAGS) $(CDEFS) -o queue queue.c
@@ -168,6 +176,10 @@ bouncequeue: bouncequeue.c Makefile ../Makefile
 aliaswrapper: aliaswrapper.c Makefile ../Makefile
 	$(CC) $(CFLAGS) $(CDEFS) -DNEWALIASES=\"${NEWALIASES}\" \
 		-DNEWALIASES_ARG=\"${NEWALIASES_ARG}\" -o aliaswrapper aliaswrapper.c
+
+virtualwrapper: virtualwrapper.c Makefile ../Makefile
+	$(CC) $(CFLAGS) $(CDEFS) -DPOSTMAP=\"${POSTMAP}\" \
+		-DPOSTMAP_ARG=\"${POSTMAP_ARG}\" -o virtualwrapper virtualwrapper.c
 
 subst:
 	@echo "Doing multiple substitutions while installing binaries..."
@@ -184,6 +196,7 @@ subst:
 		CONFIG=$(CONFIG); export CONFIG;\
 		SYMPA_VERSION=$(SYMPA_VERSION); export SYMPA_VERSION;\
 		SENDMAIL_ALIASES=$(SENDMAIL_ALIASES); export SENDMAIL_ALIASES;\
+		VIRTUAL_ALIASES=$(VIRTUAL_ALIASES); export VIRTUAL_ALIASES;\
 		$(PERL) ../subst.pl $(sbin_SRC) \
 	)
 	@echo "Doing multiple substitutions while installing libraries ..."
@@ -200,6 +213,7 @@ subst:
 		CONFIG=$(CONFIG); export CONFIG;\
 		SYMPA_VERSION=$(SYMPA_VERSION); export SYMPA_VERSION;\
 		SENDMAIL_ALIASES=$(SENDMAIL_ALIASES); export SENDMAIL_ALIASES;\
+		VIRTUAL_ALIASES=$(VIRTUAL_ALIASES); export VIRTUAL_ALIASES;\
 		$(PERL) ../subst.pl $(lib_SRC) \
 	)
 

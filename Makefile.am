@@ -93,17 +93,31 @@ LOCKDIR		=	/var/lock/subsys
 
 ## Path to newaliases command (or what else may be called to rebuild
 ## Mail aliases database)
-NEWALIASES    =       @NEWALIASES@
+NEWALIASES	=	@NEWALIASES@
 
 ## Argument to newaliases command
 # NEWALIASES_ARG	=	hash:/etc/mail/sympa_aliases
 NEWALIASES_ARG	=	@NEWALIASES_ARG@
 
+## Path to postmap command (or what else may be called to rebuild
+## Mail virtual database)
+POSTMAP		=	@POSTMAP@
+
+## Argument to postmap command
+# POSTMAP_ARG	=	hash:/etc/mail/sympa_virtual
+POSTMAP_ARG	=	@POSTMAP_ARG@
+
 ## The sendmail aliases file we use. Better use a seperate one for sympa.
-## Of cause a extra alias file must be generated with proper permissions
+## Of course an extra alias file must be generated with proper permissions
 ## (owner sympa, write access for sympa, no write access for anyone else)
 ## and declared in sendmail.cf!
-SENDMAIL_ALIASES=     @SENDMAIL_ALIASES@
+SENDMAIL_ALIASES=	@SENDMAIL_ALIASES@
+
+## The postfix virtual file we use. Better use a seperate one for sympa.
+## Of course an extra alias file must be generated with proper permissions
+## (owner sympa, write access for sympa, no write access for anyone else)
+## and declared in main.cf!
+VIRTUAL_ALIASES=	@VIRTUAL_ALIASES@
 
 ## Path to gencat program (creates the .cat catalog file using the .msg)
 GENCAT	= 	@GENCAT@
@@ -173,8 +187,10 @@ sources: src/Makefile src/queue.c src/bouncequeue.c src/aliaswrapper.c
 	MAILERPROGDIR='${MAILERPROGDIR}' ETCBINDIR='${ETCBINDIR}' \
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	USER='${USER}' GROUP='${GROUP}' \
-	SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' NEWALIASES='${NEWALIASES}' \
-	NEWALIASES_ARG='${NEWALIASES_ARG}' \
+	SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' \
+	VIRTUAL_ALIASES='${VIRTUAL_ALIASES}' \
+	NEWALIASES='${NEWALIASES}' NEWALIASES_ARG='${NEWALIASES_ARG}' \
+	POSTMAP='${POSTMAP}' POSTMAP_ARG='${POSTMAP_ARG}' \
 	PIDPRE='${PIDPRE}' PIDPOST='${PIDPOST}' LOCKDIR='${LOCKDIR}');
 
 doc: doc/sympa.tex.tpl doc/Makefile 
@@ -230,6 +246,7 @@ installsrc:
 	DESTDIR='${DESTDIR}' MAILERPROGDIR='${MAILERPROGDIR}' EXPL_DIR='${EXPL_DIR}' \
 	PIDDIR='${PIDDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	ETCBINDIR='${ETCBINDIR}' SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' \
+	VIRTUAL_ALIASES='${VIRTUAL_ALIASES}' \
 	USER='${USER}' GROUP='${GROUP}' newinstall) || exit 1;
 
 installnls:
@@ -238,6 +255,7 @@ installnls:
 	DIR='${DIR}' NLSDIR='${NLSDIR}' ETCBINDIR='${ETCBINDIR}' \
 	DESTDIR='${DESTDIR}' CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' \
+	VIRTUAL_ALIASES='${VIRTUAL_ALIASES}' \
 	USER='${USER}' GROUP='${GROUP}' GENCAT='${GENCAT}' newinstall) || exit 1;
 
 installwws:
@@ -271,6 +289,7 @@ installman:
 		SYMPA_VERSION=$(SYMPA_VERSION); export SYMPA_VERSION; \
 		CONFDIR=$(CONFDIR); export CONFDIR; \
 		SENDMAIL_ALIASES=$(SENDMAIL_ALIASES); export SENDMAIL_ALIASES; \
+		VIRTUAL_ALIASES=$(VIRTUAL_ALIASES); export VIRTUAL_ALIASES; \
 		MAILERPROGDIR=$(MAILERPROGDIR); export MAILERPROGDIR; \
 		PIDDIR=$(PIDDIR); export PIDDIR; \
 		SPOOLDIR=$(SPOOLDIR); export SPOOLDIR; \
