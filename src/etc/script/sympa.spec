@@ -169,6 +169,8 @@ fi
 
 %attr(4755,sympa,sympa) %{home_s}/bin/queue
 %attr(4755,sympa,sympa) %{home_s}/bin/bouncequeue
+%attr(4755,sympa,sympa) %{home_s}/bin/aliaswrapper
+
 
 %{home_s}/nls/*.cat
 
