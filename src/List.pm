@@ -2575,11 +2575,12 @@ sub delete_user {
     do_log('debug2', 'List::delete_user');
 
     my $name = $self->{'name'};
-
-    foreach my $who (@u) {
-	$who = lc($who);
-	if (($self->{'admin'}{'user_data_source'} eq 'database') ||
-	    ($self->{'admin'}{'user_data_source'} eq 'include2')){
+    
+    if (($self->{'admin'}{'user_data_source'} eq 'database') ||
+	($self->{'admin'}{'user_data_source'} eq 'include2')){
+	
+	foreach my $who (@u) {
+	    $who = lc($who);
 	    my $statement;
 	    
 	    $list_cache{'is_user'}{$name}{$who} = undef;    
@@ -2614,16 +2615,19 @@ sub delete_user {
 #	    }
 
 	    $self->{'total'}--;
-	    $self->savestats();
-	}else {
-	    my $users = $self->{'users'};
+	}
+    }else {
+	my $users = $self->{'users'};
 
+	foreach my $who (@u) {
+	    $who = lc($who);
+	    
 	    delete $self->{'users'}{$who};
 	    $self->{'total'}-- unless (exists $users->{$who});
-	    $self->savestats();
 	}
     }
 
+    $self->savestats();
     return 1;
 }
 
