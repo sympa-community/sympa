@@ -282,7 +282,7 @@ my %alias = ('reply-to' => 'reply_to',
 		      },
 	    'anonymous_sender' => {'format' => '.+',
 				   'title_id' => 3,
-				   'group' => 'tuning'
+				   'group' => 'sending'
 				   },
 	    'archive' => {'format' => {'period' => {'format' => ['day','week','month','quarter','year'],
 						    'synonym' => {'weekly' => 'week'},
@@ -305,7 +305,8 @@ my %alias = ('reply-to' => 'reply_to',
 								      'title_id' => 89
 								      }
 						  },
-					 'title_id' => 88
+					 'title_id' => 88,
+					 'group' => 'sending'
 				     },
 
 	    'bounce' => {'format' => {'warn_rate' => {'format' => '\d+',
@@ -362,12 +363,12 @@ my %alias = ('reply-to' => 'reply_to',
 				'length' => 30,
 				'occurrence' => '0-n',
 				'title_id' => 16,
-				'group' => 'tuning'
+				'group' => 'sending'
 				},
 	    'custom_subject' => {'format' => '.*',
 				 'length' => 15,
 				 'title_id' => 17,
-				 'group' => 'tuning'
+				 'group' => 'sending'
 				 },
 	    'default_user_options' => {'format' => {'reception' => {'format' => ['digest','mail','nomail','summary','notice','txt','html','urlize','not_me'],
 								    'default' => 'mail',
@@ -381,7 +382,7 @@ my %alias = ('reply-to' => 'reply_to',
 								     }
 						},
 				       'title_id' => 18,
-				       'group' => 'other'
+				       'group' => 'sending'
 				   },
 	    'del' => {'scenario' => 'del',
 		      'title_id' => 21,
@@ -408,7 +409,7 @@ my %alias = ('reply-to' => 'reply_to',
 						   }
 				  },
 			 'title_id' => 22,
-			 'group' => 'tuning'
+			 'group' => 'sending'
 		     },
 
 	    'editor' => {'format' => {'email' => {'format' => $regexp{'email'},
@@ -438,16 +439,16 @@ my %alias = ('reply-to' => 'reply_to',
 			 'group' => 'description'
 			 },
 	    'expire_task' => {'task' => 'expire',
-			      'title_id' => 95
+			      'title_id' => 95,
+			      'group' => 'other'
 			 },
 	    'footer_type' => {'format' => ['mime','append'],
 			      'default' => 'mime',
 			      'title_id' => 31,
-			      'group' => 'tuning'
+			      'group' => 'sending'
 			      },
 	    'forced_reply_to' => {'format' => '\S+',
 				  'title_id' => 32,
-				  'group' => 'tuning',
 				  'obsolete' => 1
 			 },
 	    'host' => {'format' => $regexp{'host'},
@@ -689,7 +690,7 @@ my %alias = ('reply-to' => 'reply_to',
 			   'unit' => 'bytes',
 			   'default' => {'conf' => 'max_size'},
 			   'title_id' => 56,
-			   'group' => 'tuning'
+			   'group' => 'sending'
 		       },
 	    'owner' => {'format' => {'email' => {'format' => $regexp{'email'},
 						 'length' =>30,
@@ -726,7 +727,7 @@ my %alias = ('reply-to' => 'reply_to',
 			   'length' => 1,
 			   'default' => {'conf' => 'default_list_priority'},
 			   'title_id' => 63,
-			   'group' => 'tuning'
+			   'group' => 'description'
 		       },
 	    'remind' => {'scenario' => 'remind',
 			 'title_id' => 64,
@@ -738,12 +739,13 @@ my %alias = ('reply-to' => 'reply_to',
 				     'group' => 'bounces'
 				 },
 	    'remind_task' => {'task' => 'remind',
-			      'tilte-id' => 96
+			      'tilte-id' => 96,
+			      'group' => 'other'
 			      },
 	    'reply_to' => {'format' => '\S+',
 			   'default' => 'sender',
 			   'title_id' => 66,
-			   'group' => 'tuning',
+			   'group' => 'sending',
 			   'obsolete' => 1
 			   },
 	    'reply_to_header' => {'format' => {'value' => {'format' => ['sender','list','all','other_email'],
@@ -763,7 +765,7 @@ my %alias = ('reply-to' => 'reply_to',
 							   }
 					   },
 				  'title_id' => 90,
-				  'group' => 'tuning'
+				  'group' => 'sending'
 				  },		
 	    'review' => {'scenario' => 'review',
 			 'synonym' => {'open' => 'public'},
@@ -771,7 +773,8 @@ my %alias = ('reply-to' => 'reply_to',
 			 'group' => 'command'
 			 },
 	    'send' => {'scenario' => 'send',
-		       'title_id' => 68
+		       'title_id' => 68,
+		       'group' => 'sending'
 		       },
 	    'serial' => {'format' => '\d+',
 			 'default' => 0,
@@ -873,6 +876,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 'split_char' => ',',
 			 'occurrence' => '0-n',
 			 'default' =>'',
+			 'group' => 'data_source'
 		     }
 	    
 	    );

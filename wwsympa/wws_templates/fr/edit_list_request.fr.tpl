@@ -1,5 +1,16 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
+[IF !group]
+Vous pouvez éditer ci-dessous un sous-ensemble des paramètres de la liste : <UL>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/description" >Définition de la liste</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/sending" >Diffusion/réception</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/command" >Paramètrages des commandes</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/archives" >Paramètrage des Archives</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/bounces" >Gestion des rapports de non-remise</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/data_source" >Définition des sources de données</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/other" >Autres paramètres</A>
+</UL>
+[ELSE]
 <FORM ACTION="[path_cgi]" METHOD="POST">
 <INPUT TYPE="hidden" NAME="serial" VALUE="[serial]">
 <TABLE WIDTH="100%" BORDER=0 CELLPADDING="0" CELLSPACING="0">
@@ -320,6 +331,6 @@
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 <INPUT TYPE="submit" NAME="action_edit_list" VALUE="Mise à jour">
 </FORM>
-
+[ENDIF]
 
 

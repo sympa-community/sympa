@@ -283,6 +283,7 @@ my %action_args = ('default' => ['list'],
 		'set_lang' => ['lang'],
 		'attach' => ['list','@path'],
 		'change_identity' => ['email','previous_action','previous_list'],
+		   'edit_list_request' => ['list','group']
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -5086,7 +5087,7 @@ sub _shift_var {
 
 ## Send back the list config edition form
 sub do_edit_list_request {
-    &wwslog('debug', 'do_edit_list_request()');
+    &wwslog('debug', 'do_edit_list_request(%s)', $in{'group'});
 
     unless ($param->{'user'}{'email'}) {
 	&error_message('no_user');
@@ -5102,7 +5103,10 @@ sub do_edit_list_request {
 	return undef;
     }
 
-    &_prepare_edit_form ($list->{'admin'});
+    if ($in{'group'}) {
+	$param->{'group'} = $in{'group'};
+	&_prepare_edit_form ($list->{'admin'});
+    }
 
 #    print "Content-type: text/plain\n\n";
 #    &dump_var(\%pinfo,0);
@@ -5121,6 +5125,7 @@ sub _prepare_edit_form {
 
     foreach my $pname (sort List::by_order keys %{$pinfo}) {
 	next if ($pname =~ /^comment|defaults$/);
+	next if ($in{'group'} && ($pinfo->{$pname}{'group'} ne $in{'group'}));
 
 	## Skip obsolete parameters
 	next if $pinfo->{$pname}{'obsolete'};
