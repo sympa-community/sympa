@@ -89,7 +89,8 @@ sub new {
     }
     
     ## Strip of the initial X-Sympa-To field
-    $hdr->delete('X-Sympa-To');
+    # Used by checksum later
+    #$hdr->delete('X-Sympa-To');
     
     ## get listname & robot
     my ($listname, $robot) = split(/\@/,$message->{'rcpt'});
