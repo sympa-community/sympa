@@ -58,7 +58,6 @@ Danke für Ihre Aufmerksamkeit.\n\n\
 $set 6	Messages du module Commands.pm
 2	"Kann Hilfedatei nicht lesen: %s\n"
 5	"Liste '%s' existiert nicht.\n"
-6	"Informationen über Liste %s:\n\n"
 7	"Das Archiv dieser Liste enthält keine Dateien.\n"
 8	"Benötigte Datei existiert nicht.\n"
 9	"Die Liste ist privat. Sie können das Archiv nicht lesen.\n"
@@ -263,21 +262,6 @@ Sie sollten die ungültigen Adressen löschen:\n\
 29	"Einladung für Liste %s"
 30	"Sie sind eingeladen worden, die Liste %s zu abonnieren"
 31	"Zusammenfaßung von Liste %s"
-
-$set 9	Messages for the review header
-1	"Verwalter            : %s\n"
-2	"Moderator            : %s\n"
-3	"Abonnieren           : %s\n"
-4	"Abonnement aufheben  : %s\n"
-5	"Nachricht senden     : %s\n"
-6	"Liste der Mitglieder : %s\n"
-7	"Antwort an           : %s\n"
-8	"Maximale Größe       : %d\n"
-9	"URL der Liste        : %s\n"
-10	"Auslese              : %s\n"
-11	"Angepaßter Betreff   : %s\n"
-12	"Betreff              : %s\n"
-13	"Empfangsmodus        : %s\n"
 
 $set 11	Messages used by the smtp module.
 1	"Ihr System folgt nicht dem POSIX P1003.1 Standard oder\n\

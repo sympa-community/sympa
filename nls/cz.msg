@@ -49,7 +49,6 @@ Dìkujeme za Va¹i pozornost.\n\n\
 $set 6	Messages du module Commands.pm
 2	"Nelze èíst soubor s nápovìdou : %s\n"
 5	"Konference '%s' neexistuje.\n"
-6	"Informace o konferenci %s :\n\n"
 7	"Archív této konference neobsahuje ¾ádné soubory.\n"
 8	"Po¾adovaný soubor neexistuje.\n"
 9	"Tato konference je soukromá : Nemù¾ete èít archiv.\n"
@@ -232,21 +231,6 @@ Mìl byste odstranit chybné adresy: \n\
 29	"Pozvání k pøipojení se ke konferenci %s"
 30	"Jste zván, abyste se pøipojil ke konferenci %s"
 31	"Souhrn konference %s"
-
-$set 9	Messages for the review header
-1	"Vlastník             : %s\n"
-2	"Moderátor            : %s\n"
-3	"Pøihlá¹ení           : %s\n"
-4	"Odhlá¹ení            : %s\n"
-5	"Zasílání zpráv       : %s\n"
-6	"Seznam èlenù         : %s\n"
-7	"Odpovìï na           : %s\n"
-8	"Maximální velikost   : %d\n"
-9	"Odkaz pro konferenci : %s\n"
-10	"Shrnutí              : %s\n"
-11	"Vlastní subjekt      : %s\n"
-12	"Subjekt              : %s\n"
-13	"Zpùsob pøijímání     : %s\n"
 
 $set 11	Messages used by the smtp module.
 1	"Vá¹ systém neodpovídá standardu POSIX P1003.1, nebo\n\

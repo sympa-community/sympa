@@ -52,7 +52,6 @@ Thank you for your attention.\n\n\
 $set 6	Messages du module Commands.pm
 2	"Unable to read help file : %s\n"
 5	"List '%s' does not exist.\n"
-6	"Information regarding list %s :\n\n"
 7	"This list's archives do not contain any file.\n"
 8	"Required file does not exist.\n"
 9	"List is Private : You can not read the archives.\n"
@@ -243,21 +242,6 @@ You should delete bouncing subscribers : \n\
 29	"Invitation to join list %s"
 30	"You are invited to join list %s"
 31	"Summary of list %s"
-
-$set 9	Messages for the review header
-1	"Owner              : %s\n"
-2	"Moderator          : %s\n"
-3	"Subscription       : %s\n"
-4	"Un-subscription    : %s\n"
-5	"Sending messages   : %s\n"
-6	"Subscribers' list  : %s\n"
-7	"Answer to          : %s\n"
-8	"Maximum size       : %d\n"
-9	"URL for the list   : %s\n"
-10	"Digest             : %s\n"
-11	"Custom subject     : %s\n"
-12	"Subject            : %s\n"
-13	"Reception mode     : %s\n"
 
 $set 11	Messages used by the smtp module.
 1	"Your system does not conform to the POSIX P1003.1 standard, or\n\

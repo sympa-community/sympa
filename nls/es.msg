@@ -56,7 +56,6 @@ Gracias por su atención. \n\n\
 $set 6  Mensajes del módulo de Commands.pm
 2	"Imposible leer el archivo de ayuda: %s\n"
 5	"La lista '%s' no existe.\n"
-6	"Información acerca de la lista %s :\n\n"
 7	"No hay ningún archivo en el histórico de esta lista.\n"
 8	"El archivo solicitado no existe.\n"
 9	"La lista es privada: usted no puede consultar los archivos.\n"
@@ -230,21 +229,6 @@ Si se desea suprimir los suscriptores con esos problemas:\n\
 29	"Invitación para unirse a la lista %s"
 30	"Usted está invitado a unirse a la lista %s"
 31	"Sumario de la lista %s"
-
-$set 9  Mensajes para la cabecera del comando 'review'
-1	"Propietario            : %s\n"
-2	"Moderador              : %s\n"
-3	"Suscripción            : %s\n"
-4	"Supresión              : %s\n"
-5	"Enviando mensajes      : %s\n"
-6	"Lista de suscriptores  : %s\n"
-7	"Respuesta a            : %s\n"
-8	"Tamaño Máximo          : %d\n"
-9	"URL de la lista        : %s\n"
-10	"Resumen                : %s\n"
-11	"Tema personalizado     : %s\n"
-12	"Tema normal            : %s\n"
-13	"Modo de recepción      : %s\n"
 
 $set 11 Mensajes utilizados por el modulo smtp.
 1	"Su sistema no parece conformar el estándar POSIX P1003.1, o bien\n\

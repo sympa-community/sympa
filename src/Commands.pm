@@ -493,7 +493,7 @@ sub review {
     return undef;
 }
 
-## Sends the list of subscribers to the requester.
+## Verify an S/MIME signature
 sub verify {
     my $listname = shift ;
     my $sign_mod = shift ;
@@ -688,8 +688,26 @@ sub info {
 	return 'not_allowed';
     }
     if ($action =~ /do_it/i) {
-	push @msg::report, sprintf Msg(6, 6, "Informations for list %s:\n\n"), $listname;
-	push @msg::report, $list->print_info();
+
+	my %data = %{$list->{'admin'}};
+	$data{'from'} = "SYMPA <$Conf{'sympa'}>";
+	$data{'subject'} = "INFO $listname";
+	foreach my $p ('subscribe','unsubscribe','send','review') {
+	    $data{$p} = $data{$p}->{'title'}{$list->{'admin'}{'lang'}};
+	}
+
+	## Digest
+	my @days;
+	foreach my $d (@{$list->{'admin'}{'digest'}{'days'}}) {
+	    push @days, &POSIX::strftime("%A", localtime(0 + ($d +3) * (3600 * 24)))
+	}
+	$data{'digest'} = join (',', @days).' '.$list->{'admin'}{'digest'}{'hour'}.':'.$list->{'admin'}{'digest'}{'minute'};
+
+	$data{'available_reception_mode'} = $list->available_reception_mode();
+	$data{'url'} = $Conf{'wwsympa_url'}.'/info/'.$list->{'name'};
+
+	$list->send_file('info_report', $sender, \%data);
+
 	do_log('info', 'INFO %s from %s accepted (%d seconds)', $listname, $sender,time-$time_command);
 	return 1;
     }

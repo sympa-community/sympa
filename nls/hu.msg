@@ -50,7 +50,6 @@ Köszönöm megértésedet.\n\n\
 $set 6	Messages du module Commands.pm
 2	"Nem olvasható a súgó állomány: %s\n"
 5	"Nincs '%s' nevû lista.\n"
-6	"Információk a(z) %s listáról:\n\n"
 7	"A lista archívuma nem tartalmaz egyetlen levelet sem.\n"
 8	"A kért állomány nem létezik.\n"
 9	"Privát lista: Az archívumot nem olvashatod.\n"
@@ -235,21 +234,6 @@ DEL %s %s\n"
 29	"Felkérés a(z) %s listára való feliratkozásra"
 30	"Felkértek, hogy legyél a(z) %s lista tagja"
 31	"Kivonat a(z) %s listáról"
-
-$set 9	Messages for the review header
-1	"Tulajdonos         : %s\n"
-2	"Moderátor          : %s\n"
-3	"Feliratkozás       : %s\n"
-4	"Leiratkozás        : %s\n"
-5	"Levelek küldése    : %s\n"
-6	"Tagok listája      : %s\n"
-7	"Válasz cím         : %s\n"
-8	"Maximális méret    : %d\n"
-9	"Lista web címe     : %s\n"
-10	"Digest             : %s\n"
-11	"Egyéni tárgy       : %s\n"
-12	"Tárgy              : %s\n"
-13      "Fogadási mód	    : %s\n"
 
 $set 11	Messages used by the smtp module.
 1	"A rendszer nem felel meg a POSIX P1003.1 szabványnak, vagy\n\

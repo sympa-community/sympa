@@ -48,7 +48,6 @@ o tym osobê administruj±c± po adresem: %s \n\n\
 $set 6	Messages du module Commands.pm
 2	"Nie mogê odczytaæ pliku pomocy : %s\n"
 5	"Lista '%s' nie istnieje.\n"
-6	"Informacje na temat listy %s :\n\n"
 7	"Archiwum tej listy nie zawiera ¿adnych plików.\n"
 8	"Wymagany plik nie istnieje.\n"
 9	"Lista prywatna : Nie mo¿esz odczytywaæ jej archiwów.\n"
@@ -221,20 +220,6 @@ Powiniene¶ usun±æ adresy odbijaj±ce listy : \n\
 28	"UWAGA: limit odbiæ listów jest zbyt wysoki na li¶cie %s"
 29	"Zaproszenie do zapisania na listê %s"
 30	"Zosta³e¶ zaproszony do zapisana siê na listê %s"
-
-$set 9	Messages for the review header
-1	"Administrator      : %s\n"
-2	"Moderator          : %s\n"
-3	"Zapisanie          : %s\n"
-4	"Wypisanie          : %s\n"
-5	"Wysy³anie listów   : %s\n"
-6	"Lista zapisanych   : %s\n"
-7	"Odpowiedzi na      : %s\n"
-8	"Limit rozmiaru     : %d\n"
-9	"Adres URL listy    : %s\n"
-10	"Digest             : %s\n"
-11	"Dodatkowy temat    : %s\n"
-12	"Temat              : %s\n"
 
 $set 11	Messages used by the smtp module.
 1	"Twój system nie jest zgodny ze standardem POSIX P1003.1 lub\n\
