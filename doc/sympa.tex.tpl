@@ -468,7 +468,7 @@ a virtual robot or for the whole site.
 	\item \tildedir {sympa/bin/}\\
 	This directory contains the binaries, including CGI. It
 	also contains the default scenarios, templates and configuration
-	files as in the distribution.  \tildedir {sympa/bin/} may be completly
+	files as in the distribution.  \tildedir {sympa/bin/} may be completely
         overwritten by the \unixcmd {make install} So you must not customize
         templates and scenarii under  \tildedir {sympa/bin/}.
 
