@@ -63,7 +63,8 @@ sub LoadLang {
 
 sub SetLang {
     my $catname = shift;
-    
+    do_log('debug2', 'Language::SetLang(%s)', $catname);
+   
     unless (defined ($Message{$catname})) {
 	do_log('info','unknown Locale %s', $catname);
 	return undef;
