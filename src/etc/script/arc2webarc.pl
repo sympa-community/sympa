@@ -62,6 +62,8 @@ unless (&Conf::load($sympa_conf_file)) {
     die 'config_error';
 }
 
+$List::use_db = &List::probe_db();
+
 chdir $Conf::Conf{'home'};
 
 my $list = new List($listname) 
