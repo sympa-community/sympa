@@ -1,4 +1,4 @@
-# Commands.pm - this module does the mail commands processing
+# Command.pm - this module does the mail commands processing
 # RCS Identication ; $Revision$ ; $Date$ 
 
 # Sympa - SYsteme de Multi-Postage Automatique
@@ -71,7 +71,7 @@ my $sender = '';
 my $time_command;
 my $msg_file;
 
-my $email_regexp = '\S+|\".*\"@\S+';
+my $email_regexp = '([\w\-\_\.\/\+\=]+|\".*\")\@[\w\-]+(\.[\w\-]+)+';
 
 ## Parse the command and call the adequate subroutine with
 ## the arguments to the command.

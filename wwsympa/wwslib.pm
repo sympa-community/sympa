@@ -284,8 +284,7 @@ sub new_passwd {
 sub valid_email {
     my $email = shift;
     
-#    $email =~ /^(\S+|\".*\")@\S+$/;
-    $email =~ /^([^\s<>]+|\".*\")(@\S+)$/;
+    $email =~ /^([\w\-\_\.\/\+\=]+|\".*\")\@[\w\-]+(\.[\w\-]+)+$/;
 }
 
 # create a cipher

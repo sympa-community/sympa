@@ -1339,5 +1339,12 @@ sub get_dir_size {
     return $size;
 }
 
+## Basic check of an email address
+sub valid_email {
+    my $email = shift;
+    
+    $email =~ /^([\w\-\_\.\/\+\=]+|\".*\")\@[\w\-]+(\.[\w\-]+)+$/;
+}
+
 1;
 

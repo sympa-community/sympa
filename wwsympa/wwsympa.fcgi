@@ -1242,7 +1242,7 @@ sub check_auth{
     my $auth = shift; ## User email or UID
     my $pwd = shift; ## Password
 
-    if( &wwslib::valid_email($auth)) {
+    if( &tools::valid_email($auth)) {
 	return &authentication($auth,$pwd);
 	
     }else{
@@ -1522,7 +1522,7 @@ sub do_record_email{
     ##To verify the associated password 
     ##If not in User table we add him 
     
-    unless(&wwslib::valid_email($in{'new_alternative_email'})){
+    unless(&tools::valid_email($in{'new_alternative_email'})){
 	&error_message('incorrect_email', {'email' => $in{'new_alternative_email'}});
 	&do_log('notice', "do_record_email:incorrect email %s",$in{'new_alternative_email'});
 	return 'pref';
@@ -1574,7 +1574,7 @@ sub is_ldap_user {
 	    my @alternative_conf = split(/,/,$ldap->{'alternative_email_attribute'});
 	    my $attrs = $ldap->{'email_attribute'};
 	    
-	    if (&wwslib::valid_email($auth)){
+	    if (&tools::valid_email($auth)){
 		$filter = $ldap->{'get_dn_by_email_filter'};
 	    }else{
 		$filter = $ldap->{'get_dn_by_uid_filter'};
@@ -1693,7 +1693,7 @@ sub do_remindpasswd {
 	if($url_redirect = &is_ldap_user($in{'email'})){
 	    $param->{'redirect_to'} = $url_redirect
 		if ($url_redirect && ($url_redirect != 1));
-	}elsif (! &wwslib::valid_email($in{'email'})) {
+	}elsif (! &tools::valid_email($in{'email'})) {
 	    &error_message('incorrect_email', {'email' => $in{'email'}});
 	    &wwslog('info','do_remindpasswd: incorrect email %s', $in{'email'});
 	    return undef;
@@ -1719,7 +1719,7 @@ sub do_sendpasswd {
 	return 'remindpasswd';
     }
     
-    unless (&wwslib::valid_email($in{'email'})) {
+    unless (&tools::valid_email($in{'email'})) {
 	&error_message('incorrect_email', {'email' => $in{'email'}});
 	&wwslog('info','do_sendpasswd: incorrect email %s', $in{'email'});
 	return 'remindpasswd';
@@ -2275,10 +2275,13 @@ sub do_set {
     my $update = {'reception' => $reception,
 		  'visibility' => $visibility,
 		  'update_date' => time};
-    
+
+    ## Lower-case new email address
+    $in{'new_email'} = lc( $in{'new_email'});
+
     if ($in{'email'} ne $in{'new_email'}) {
 
-	unless ($in{'new_email'} && &wwslib::valid_email($in{'new_email'})) {
+	unless ($in{'new_email'} && &tools::valid_email($in{'new_email'})) {
 	    &do_log('notice', "do_set:incorrect email %s",$in{'new_email'});
 	    &error_message('incorrect_email', {'email' => $in{'new_email'}});
 	    return undef;
@@ -2581,7 +2584,7 @@ sub do_subrequest {
     
     my $ldap_user;
     $ldap_user = 1
-	if (!&wwslib::valid_email($in{'email'}) || &is_ldap_user($in{'email'}));
+	if (!&tools::valid_email($in{'email'}) || &is_ldap_user($in{'email'}));
 
     ## Auth ?
     if ($param->{'user'}{'email'}) {
@@ -2741,7 +2744,7 @@ sub do_sigrequest {
 
     my $ldap_user;
     $ldap_user = 1
-	if (!&wwslib::valid_email($in{'email'}) || &is_ldap_user($in{'email'}));
+	if (!&tools::valid_email($in{'email'}) || &is_ldap_user($in{'email'}));
 
     ## Do it
     if ($param->{'user'}{'email'}) {
@@ -3008,8 +3011,9 @@ sub do_add {
 
 	## Clean email
 	$email =~ s/^\s*(\S.*\S)\s*$/$1/;
+        $email = lc($email);
 
-	unless (&wwslib::valid_email($email)) {
+	unless (&tools::valid_email($email)) {
 	    &error_message('incorrect_email', {'email' => $email});
 	    &wwslog('info','do_add: incorrect email %s', $email);
 	    next;
@@ -8010,7 +8014,7 @@ sub do_d_set_owner {
     }
 
     # the email must look like an email "somebody@somewhere"
-    unless ($in{'content'} =~ /^[\w\.\-\~]+\@[\w\.\-\~]+$/) {
+    unless (&tools::valid_email($in{'content'})) {
 	&error_message('incorrect_email', {'email' => $in{'content'}});
 	&wwslog('info',"d_set_owner : $in{'content'} : incorrect email");
 	return undef;
@@ -8668,7 +8672,7 @@ sub do_change_identity {
 	return $in{'previous_action'};
     }
 
-    unless (&wwslib::valid_email($in{'email'})) {
+    unless (&tools::valid_email($in{'email'})) {
         &error_message('incorrect_email', {'email' => $in{'email'}});
         &wwslog('info','do_change_identity: incorrect email %s', $in{'email'});
         return $in{'previous_action'};
