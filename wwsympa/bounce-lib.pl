@@ -353,10 +353,15 @@ sub anabounce {
          ## Rapport NTMail
 	 }elsif (/^The requested destination was:\s+(.*)$/m) {
 
+	     $type = 7;
+
+	 }elsif (($type == 7) && (/^\s+(\S+)/)) {
+
+	     undef $type;
 	     my $adr =$1;
 	     $adr =~ s/^[\"\<](.+)[\"\>]$/$1/;
-	     $info{$adr} = 1;
-	     $type = 7;
+	     next unless $adr;
+	     $info{$adr}{'error'} = '';
 
 	 ## Rapport Qmail dans prochain paragraphe
 	 }elsif (/^Hi\. This is the qmail-send program/m) {
@@ -925,6 +930,8 @@ sub anabounce {
     my $count=0;
     ## On met les adresses au clair
     foreach my $a1 (keys %info) {
+
+	next unless ($a1 and ref ($info{$a1}));
 
         $count++;
 	my ($a2, $a3);
