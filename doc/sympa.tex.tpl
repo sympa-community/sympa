@@ -1124,7 +1124,8 @@ the file is of no importance.
 	to the Sympa user. 
        
         Note that changing this parameter will break all
-        http cookies stored in users' browsers, as well as all user passwords.
+        http cookies stored in users' browsers, as well as all user passwords
+	and lists X509 private keys.
 
         \example {cookie gh869jku5}
 
