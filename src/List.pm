@@ -205,7 +205,7 @@ my %default = ('occurrence' => '0-1',
 
 my @param_order = qw (subject visibility info subscribe add unsubscribe del owner send editor 
 		      account topics 
-		      host domain lang web_archive archive digest available_user_options 
+		      domain host lang web_archive archive digest available_user_options 
 		      default_user_options reply_to_header reply_to forced_reply_to * 
 		      welcome_return_path remind_return_path user_data_source include_file 
 		      include_list include_ldap_query include_sql_query ttl creation update 
