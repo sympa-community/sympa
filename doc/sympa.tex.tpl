@@ -1244,13 +1244,11 @@ lines must therefore be added to the \unixcmd {sendmail} alias file
 (often \file {/etc/aliases}):
 
 \begin {quote}
-\begin{verbatim}
 sympa:             "| [MAILERPROGDIR]/queue sympa@\samplerobot"
 listmaster: 	   "| [MAILERPROGDIR]/queue listmaster@\samplerobot"
 bounce+*:          "| [MAILERPROGDIR]/bouncequeue sympa@\samplerobot"
 sympa-request:     postmaster
 sympa-owner:       postmaster
-\end{verbatim}
 \end {quote}
 
 Note: if you run \Sympa virtual robots, you will need one \mailaddr {sympa}
@@ -1394,24 +1392,18 @@ You can also add a unique entry, with a regular expression, for your domain.
 
 With Postfix, you should edit the \file {/etc/postfix/virtual.regexp} file as follows :
 \begin {quote}
-\begin{verbatim}
 /^(.*)\samplerobot$/	 \samplerobot-${1}
-\end{verbatim}
 \end {quote}
  Entries in the 'aliases' file will look like this :
 \begin {quote}
-\begin{verbatim}
     \samplerobot-sympa:   "|[MAILERPROGDIR]/sympa.pl sympa@\samplerobot"
     .....
     \samplerobot-listA:   "|[MAILERPROGDIR]/sympa.pl listA@\samplerobot"
-\end{verbatim}
 \end {quote}
 
 With Sendmail, add the following entry to \file {/etc/mail/virtusertable} file :
 \begin {quote}
-\begin{verbatim}
 @\samplerobot       \samplerobot-%1%3
-\end{verbatim}
 \end {quote}
 
 
@@ -3642,7 +3634,7 @@ Escaping sensitive JavaScript functions :
 <!-- for other browsers
   function toggle_selection(myfield) {
     for (i = 0; i < myfield.length; i++) {
-    [STOPPARSE]
+    [escaped_stop]
        if (myfield[i].checked) {
             myfield[i].checked = false;
        }else {
