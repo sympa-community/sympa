@@ -27,7 +27,7 @@ use Exporter;
 @EXPORT = ();
 
 ## Supported web languages
-@languages = ('fr','us','es','it','cn','cz','de','hu','et','ro','fi');
+@languages = ('fr','us','es','it','nl','cn','cz','de','hu','et','ro','fi');
 
 %reception_mode = ('mail' => 'normal',
 		   'digest' => 'digest',
@@ -68,7 +68,8 @@ use Exporter;
 	      'homepage' => 14,
 	      'create_list_request.tpl' => 15,
 	      'list_created.tpl' => 16,
-	      'your_infected_msg.tpl' => 17
+	      'your_infected_msg.tpl' => 17,
+	      'alias.tpl' => 18
 	      );
 
 ## Defined in RFC 1893

@@ -718,7 +718,7 @@ my %alias = ('reply-to' => 'reply_to',
 			 'title_id' => 54,
 			 'group' => 'command'
 			 },
-	    'lang' => {'format' => ['fr','us','de','it','fi','es','tw','cn','pl','cz','hu','ro','et'],
+	    'lang' => {'format' => ['fr','us','de','it','fi','es','tw','cn','pl','cz','hu','ro','et','nl'],
 		       'default' => {'conf' => 'lang'},
 		       'title_id' => 55,
 		       'group' => 'description'
