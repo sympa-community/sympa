@@ -1095,7 +1095,12 @@ the file is of no importance.
 
 	This string is used to generate MD5 authentication keys.
 	It allows such authentication keys to differ from one
-	site to another.
+	site to another. It is also used for reversible encryption of
+        user password stored in database. Therefore you need to restrict
+        \file {sympa.conf} access to Sympa user. 
+       
+        Don't forget that changing this parameter will break all
+        http cookies stored in user's browser and all user password.
 
         \example {cookie gh869jku5}
 
