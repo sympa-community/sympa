@@ -34,7 +34,7 @@ use Carp;
 @EXPORT = qw(%Conf);
 
 my @valid_options = qw(
-		       avg bounce_warn_rate bounce_halt_rate chk_cert_expiration_task expire_bounce
+		       avg bounce_warn_rate bounce_halt_rate chk_cert_expiration_task expire_bounce_task
 		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod 
 		       cookie create_list crl_dir crl_update_task db_host db_env db_name db_options db_passwd db_type db_user 
 		       db_port db_additional_subscriber_fields db_additional_user_fields
@@ -117,7 +117,7 @@ my %Default_Conf =
      'max_size' => 5242880,
      'edit_list' => 'owner',
      'create_list' => 'public_listmaster',
-     'global_remind' => '',
+     'global_remind' => 'listmaster',
      'wwsympa_url' => undef,
      'bounce_warn_rate' => '30',
      'bounce_halt_rate' => '50',
@@ -147,7 +147,7 @@ my %Default_Conf =
      'ldap_export_connection_timeout' => '',
      'list_check_smtp' => '',
      'list_check_suffixes' => 'request,owner,unsubscribe',
-     'expire_bounce' => 'daily',
+     'expire_bounce_task' => 'daily',
      'default_archive_quota' => '',
      'default_shared_quota' => '',
    );

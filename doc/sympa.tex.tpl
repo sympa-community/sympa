@@ -1332,10 +1332,23 @@ is still recognized but should not be used anymore.
 
 	 \default {public\_listmaster}
 
+	\scenarized {create\_list}
+
 	Defines who can create lists (or request list creations).
 	Sympa will use the corresponding scenario.
 
         \example {create\_list intranet}
+
+\subsection {\cfkeyword {global\_remind}}  
+
+	\label{global-remind}
+
+	 \default {listmaster}
+
+	\scenarized {global\_remind}
+
+	Defines who can run a \texttt {REMIND *} command.
+
 
 \section {Directories}
 
@@ -1719,8 +1732,8 @@ is still recognized but should not be used anymore.
         Like \cfkeyword {welcome\_return\_path}, but relates to the remind message.
 	Also requires the bounce+* alias to be installed.
 
-\subsection {\cfkeyword {expire\_bounce}}
-        \label {kw-expire-bounce}
+\subsection {\cfkeyword {expire\_bounce\_task}}
+        \label {kw-expire-bounce-task}
          
         \default {daily}
 
@@ -6063,8 +6076,8 @@ This paragraph defines bounce management parameters :
 	messages for the list are no longer distributed. 
 
 \item
-\label {expire-bounce}
-\lparam {expire\_bounce} 
+\label {expire-bounce-task}
+\lparam {expire\_bounce\_task} 
 
 	\default daily
 
