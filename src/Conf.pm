@@ -58,7 +58,8 @@ my @valid_options = qw(
 		       list_check_smtp list_check_suffixes  spam_protection web_archive_spam_protection soap_url
 );
 
-my %old_options = ('trusted_ca_options' => 'capath,cafile');
+my %old_options = ('trusted_ca_options' => 'capath,cafile',
+		   'msgcat' => 'localedir');
 
 my %valid_options = ();
 map { $valid_options{$_}++; } @valid_options;
