@@ -2680,7 +2680,8 @@ Rules are defined as follows :
                 | is_owner (<listname>, <var>)
                 | is_editor (<listname>, <var>)
                 | is_listmaster (<var>)
-<var> ::= [email] | [sender] | [host] | [header-><smtp\_key\_word>] |  <string>
+<var> ::= [email] | [sender] | [list-><list\_key\_word>] | [conf-><conf\_key\_word>] | [header-><smtp\_key\_word>] |  <string>
+
 <listname> ::= [listname] | <listname_string>
 
 <auth\_list> ::= <auth>,<auth\_list> | <auth>
@@ -2692,6 +2693,13 @@ Rules are defined as follows :
              | reject
              | request_auth
              | owner
+
+<list\_key\_word> ::= name | host | lang | max\_size | priority | reply\_to | 
+		      status | subject | account | 
+
+<conf\_key\_word> ::= host | email | listmaster | default\_list\_priority | 
+		      sympa\_priority | request\_priority | lang | max\_size
+	 	      
 \end{verbatim}
 \end{quote}
 
