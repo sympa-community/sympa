@@ -6228,6 +6228,18 @@ sub sync_include {
     ## Load a hash with the old subscribers
     for (my $user=$self->get_first_user(); $user; $user=$self->get_next_user()) {
 	$old_subscribers{lc($user->{'email'})} = $user;
+	
+	## User neither included nor subscribed = > set subscribed to 1 
+	unless ($old_subscribers{lc($user->{'email'})}{'included'} || $old_subscribers{lc($user->{'email'})}{'subscribed'}) {
+	    &do_log('notice','Update user %s neither included nor subscribed', $user->{'email'});
+	    unless( $self->update_user(lc($user->{'email'}),  {'update_date' => time,
+							       'subscribed' => 1 }) ) {
+		&do_log('err', 'List:sync_include(%s): Failed to update %s', $name, lc($user->{'email'}));
+		next;
+	    }			    
+	    $old_subscribers{lc($user->{'email'})}{'subscribed'} = 1;
+	}
+
 	$total++;
     }
 
