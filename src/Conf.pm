@@ -314,6 +314,7 @@ sub load_robots {
 				  host            => 1,
 				  wwsympa_url     => 1,
 				  'title'         => 1,
+				  lang            => 1,
 				  default_home    => 1,
 				  cookie_domain   => 1,
 				  log_smtp        => 1,
@@ -365,6 +366,7 @@ sub load_robots {
 	## Default for 'host' is the domain
 	$robot_conf->{$robot}{'host'} ||= $robot;
 
+	$robot_conf->{$robot}{'lang'} ||= $Conf{'lang'};
 	$robot_conf->{$robot}{'email'} ||= $Conf{'email'};
 	$robot_conf->{$robot}{'log_smtp'} ||= $Conf{'log_smtp'};
 	$robot_conf->{$robot}{'log_level'} ||= $Conf{'log_level'};

@@ -2380,7 +2380,7 @@ sub send_global_file {
     }
 
     ## Lang
-    my $lang = $data->{'user'}{'lang'} || $Conf{'lang'};
+    my $lang = $data->{'user'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
     foreach my $f ("$Conf{'etc'}/$robot/templates/$action.$lang.tpl","$Conf{'etc'}/$robot/templates/$action.tpl",
@@ -2460,7 +2460,7 @@ sub send_file {
     $data->{'return_path'} ||= "$name-owner\@$self->{'admin'}{'host'}";
 
     ## Lang
-    my $lang = $data->{'user'}{'lang'} || $self->{'lang'} || $Conf{'lang'};
+    my $lang = $data->{'user'}{'lang'} || $self->{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
     foreach my $f ("$self->{'dir'}/$action.$lang.tpl",

@@ -439,6 +439,10 @@ while (!$signal) {
 	$main::options{'mail'} = $robot if ($Conf{'robots'}{$robot}{'log_smtp'});
 	$main::options{'mail'} = $robot if ($Conf{'log_smtp'});
     }
+
+    ## Set NLS default lang for current message
+    $Language::default_lang = $main::options{'lang'} || &Conf::get_robot_conf($robot, 'lang');
+
     my $status = &DoFile("$Conf{'queue'}/$filename");
     
     if (defined($status)) {
@@ -862,7 +866,7 @@ sub DoForward {
 	    my %context;
 	    $context{'virus_name'} = $rc ;
 	    $context{'recipient'} = $recepient.'@'.$host;
-	    $context{'lang'} = $Conf{'lang'};
+	    $context{'lang'} = &Conf::get_robot_conf($robot, 'lang');
 	    &List::send_global_file('your_infected_msg', $sender, $robot, \%context );
 	}    
 	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $recepient, $host, $sender, $rc);

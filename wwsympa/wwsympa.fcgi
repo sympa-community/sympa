@@ -501,7 +501,7 @@ while ($query = &new_loop()) {
 	
 	## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
 	    
-	$param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || $list->{'admin'}{'lang'} || $Conf{'robots'}{$robot}{'lang'} || $Conf{'lang'};
+	$param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 	&Language::SetLang($param->{'lang'});
 	&POSIX::setlocale(&POSIX::LC_ALL, Msg(14, 1, 'en_US'));
 
@@ -1232,7 +1232,7 @@ sub do_login {
     ## Current authentication mode
     $param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
 
-    $param->{'lang'} = $user->{'lang'} || $list->{'admin'}{'lang'} || $Conf{'lang'};
+    $param->{'lang'} = $user->{'lang'} || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
     $param->{'cookie_lang'} = undef;    
 
     if (($param->{'auth'} eq 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
@@ -1682,7 +1682,7 @@ sub do_logout {
     
     delete $param->{'user'};
 
-    $param->{'lang'} = $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'}) || $list->{'admin'}{'lang'} || $Conf{'lang'};
+    $param->{'lang'} = $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'}) || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     &wwslog('info','do_logout: logout performed');
     
