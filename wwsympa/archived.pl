@@ -34,6 +34,7 @@ use Log;
 use Commands;
 #use Getopt::Std;
 use Getopt::Long;
+use Language;
 
 use wwslib;
 use smtp;
@@ -133,6 +134,8 @@ unless (chdir($Conf{'home'})) {
 }
 
 my $pinfo = &List::_apply_defaults();
+
+$Language::default_lang = $Conf{'lang'};
 
 do_log('notice', "archived $Version Started");
 
