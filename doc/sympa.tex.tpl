@@ -1518,8 +1518,8 @@ be used as a synonim.
 
 	If set to string \texttt {unique}, sympa will use a unique e-mail address in the
         return path, prefixed by \texttt {bounce+}, in order to remove the corresponding
-	subscriber. Requires the \texttt {bounced} daemon, and plussed aliases (as in 
-        sendmail 8.7 and later).
+	subscriber. Requires the \texttt {bounced} daemon to run and bounce+* alias to
+	be installed (plussed aliases as in sendmail 8.7 and later).
 
 \subsection {\cfkeyword {remind\_return\_path}}
         \label {kw-remind-return-path}
@@ -1527,6 +1527,7 @@ be used as a synonim.
         \default {owner}
 
         Like \cfkeyword {welcome\_return\_path}, but relates to the remind message.
+	Also requires the bounce+* alias to be installed.
 	
 \section {Priority related}
 
