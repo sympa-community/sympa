@@ -1745,7 +1745,7 @@ sub do_sendpasswd {
 	return 'loginrequest';
     }
     
-    return 1;
+    return 'loginrequest';
 }
 
 ## Which list the user is subscribed to 
