@@ -6345,17 +6345,6 @@ sub do_edit_list {
 	     my $list_of_scenario = $list->load_scenario_list($struct->{'scenario'},$robot);
 
 	     $list_of_scenario->{$d->{'name'}}{'selected'} = 1;
-
-	     foreach my $key (keys %{$list_of_scenario}) {
-		 if (defined  $list_of_scenario->{$key}{'title'}{&Language::GetLang()}) {
-		     $list_of_scenario->{$key}{'title'} = $list_of_scenario->{$key}{'title'}{&Language::GetLang()};
-		 }elsif (defined $list_of_scenario->{$key}{'title'}{'gettext'}) {
-		     $list_of_scenario->{$key}{'title'} =gettext($list_of_scenario->{$key}{'title'}{'gettext'});
-		 }else {
-		     $list_of_scenario->{$key}{'title'} = $key;
-		     
-		 }	     
-	     }
 	     
 	     $p->{'value'} = $list_of_scenario;
 
@@ -9297,30 +9286,38 @@ sub creation_desc_file {
      my $lang = $param->{'lang'};
 
      ## Scenario list for READ
-     my $read_scenario_list = $list->load_scenario_list('d_read', $robot);
-     $param->{'read'}{'scenario_name'} = $read;
-     $param->{'read'}{'label'} = $read_scenario_list->{$read}{'title'}{$lang};
 
-     foreach my $key (keys %{$read_scenario_list}) {
-	 $param->{'scenari_read'}{$key}{'scenario_name'} = $read_scenario_list->{$key}{'name'};
-	 $param->{'scenari_read'}{$key}{'scenario_label'} = $read_scenario_list->{$key}{'title'}{$lang};
-	 if ($key eq $read) {
-	     $param->{'scenari_read'}{$key}{'selected'} = 'SELECTED';
-	 }
-     }
+     $param->{'scenari_read'} = $list->load_scenario_list('d_read', $robot);
+     $param->{'scenari_read'}{$read}{'selected'} = 'SELECTED';
+
+#     my $read_scenario_list = $list->load_scenario_list('d_read', $robot);
+#     $param->{'read'}{'scenario_name'} = $read;
+#     $param->{'read'}{'label'} = $read_scenario_list->{$read}{'title'}{$lang};
+#
+#     foreach my $key (keys %{$read_scenario_list}) {
+#	 $param->{'scenari_read'}{$key}{'scenario_name'} = $read_scenario_list->{$key}{'name'};
+#	 $param->{'scenari_read'}{$key}{'scenario_label'} = $read_scenario_list->{$key}{'title'}{$lang};
+#	 if ($key eq $read) {
+#	     $param->{'scenari_read'}{$key}{'selected'} = 'SELECTED';
+#	 }
+#     }
 
      ## Scenario list for EDIT
-     my $edit_scenario_list = $list->load_scenario_list('d_edit', $robot);
-     $param->{'edit'}{'scenario_name'} = $edit;
-     $param->{'edit'}{'label'} = $edit_scenario_list->{$edit}{'title'}{$lang};
+     $param->{'scenari_edit'} = $list->load_scenario_list('d_edit', $robot);
+     $param->{'scenari_edit'}{$edit}{'selected'} = 'SELECTED';
 
-     foreach my $key (keys %{$edit_scenario_list}) {
-	 $param->{'scenari_edit'}{$key}{'scenario_name'} = $edit_scenario_list->{$key}{'name'};
-	 $param->{'scenari_edit'}{$key}{'scenario_label'} = $edit_scenario_list->{$key}{'title'}{$lang};
-	 if ($key eq $edit) {
-	     $param->{'scenari_edit'}{$key}{'selected'} = 'SELECTED';
-	 }
-     }
+
+#     my $edit_scenario_list = $list->load_scenario_list('d_edit', $robot);
+#     $param->{'edit'}{'scenario_name'} = $edit;
+#     $param->{'edit'}{'label'} = $edit_scenario_list->{$edit}{'title'}{$lang};
+#
+#     foreach my $key (keys %{$edit_scenario_list}) {
+#	 $param->{'scenari_edit'}{$key}{'scenario_name'} = $edit_scenario_list->{$key}{'name'};
+#	 $param->{'scenari_edit'}{$key}{'scenario_label'} = $edit_scenario_list->{$key}{'title'}{$lang};
+#	 if ($key eq $edit) {
+#	     $param->{'scenari_edit'}{$key}{'selected'} = 'SELECTED';
+#	 }
+#     }
 
      ## father directory
      if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {

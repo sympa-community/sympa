@@ -15,8 +15,7 @@
   <B>[%|l%]Read access[%END%]</B><BR>
   <SELECT NAME="read_access">
   [% FOREACH s = scenari_read %]
-    [% SET tmp = s.key s = s.value s.NAME = tmp IF s.key.defined %]
-    <OPTION VALUE='[% s.scenario_name %]' [% s.selected %]>[% s.scenario_label %]
+    <OPTION VALUE='[% s.key %]' [% s.value.selected %]>[% s.value.title %]
   [% END %]
   </SELECT>
   <BR>
@@ -24,8 +23,7 @@
   <B>[%|l%]Edit access[%END%]</B><BR>
   <SELECT NAME="edit_access">
   [% FOREACH s = scenari_edit %]
-    [% SET tmp = s.key s = s.value s.NAME = tmp IF s.key.defined %]
-    <OPTION VALUE='[% s.scenario_name %]' [% s.selected %]>[% s.scenario_label %]
+    <OPTION VALUE='[% s.key %]' [% s.value.selected %]>[% s.value.title %]
   [% END %]
   </SELECT>
   <BR>
