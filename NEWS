@@ -3,6 +3,36 @@
 
 (See Changelog file for the full changes log)
 
+5.0b.1		11 January 2005
+
+   New features :
+
+	wwsympa/wwsympa.fcgi: perform security checks on incoming parameters syntax
+
+	 doc/: Upgrade chapter added
+
+   Changes :
+
+	web_tt2/: [P.Levesque]complete XHTML compliance work 
+
+	src/etc/mhonarc-ressources.tt2: Add keepspace to text/plain filter args
+
+	src/List.pm: use tools::lock() and tools::unlock() for include_admin
+
+	wwsympa/archived.pl: Remove previous HTML files while rebuilding web archives
+
+   Fixes :
+
+	src/sympa.pl, src/Commands.pm: daemon_mode variable was not accessible from within Commands.pm.  
+	Bug description : moderated / confirmed messages were moved to 'distribute' spool though 
+	'distribution_mode' sympa.conf parameter was not set to 'fork'
+
+	src/etc/mhonarc-ressources.tt2: htmlize text/plain messages in archives, 
+	otherwise <> chars are not correctly printed
+
+	src/List.pm: [H.Gabor] Postgresql does not support && and || ; replaced them with OR and AND
+
+
 5.0b		04 January 2005
 
    New features :
@@ -18,7 +48,7 @@
 	default is to use each language native charset (iso-xxx)
 
 
-   Chqnges :
+   Changes :
 	
 	check_perl_modules.pl: Newer version of MIME::Base64 required by MIME::Words
 

@@ -1,3 +1,49 @@
+2005-01-11 11:27  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: allow '\' in uploaded_file var
+
+2005-01-11 11:15  sympa-authors
+
+	* .version, ChangeLog, src/sympa.pl: Fix: daemon_mode variable was
+	  not accessible from within Commands.pm.  Bug description :
+	  moderated / confirmed messages were moved to 'distribute' spool
+	  though 'distribution_mode' sympa.conf parameter was not set to
+	  'fork'
+
+2005-01-11 10:23  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix 'to' regexp
+
+2005-01-11 10:19  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: incorrect regexp for 'to'
+
+2005-01-11 09:53  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: renamed parameter of arcsearch_id from
+	  'key_word' to 'msgid'
+
+2005-01-11 09:41  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: allow '$' for message IDs
+
+2005-01-11 09:34  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: missing regexp for 'uploaded_file'
+
+2005-01-10 15:46  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: multiline search in incoming
+	  parameters
+
+2005-01-10 15:13  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fixed 'to' regexp
+
+2005-01-10 15:09  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fixed parameter checking
+
 2005-01-10 13:26  sympa-authors
 
 	* web_tt2/: create_list_request.tt2, edit_list_request.tt2,
