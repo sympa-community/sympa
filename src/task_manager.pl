@@ -315,12 +315,21 @@ while (!$end) {
     ## processing of tasks anterior to the current date
     &do_log ('debug3', 'processing of tasks anterior to the current date');
     foreach (@tasks) {
-	if (my $task = &match_task($_)) {
-	    &do_log ('debug3', "procesing %s/%s", $spool_task,$_);
+	my $task_file = $_;
+
+	if (my $task = &match_task($task_file)) {
+	    &do_log ('debug3', "procesing %s/%s", $spool_task,$task_file);
 	    last unless ($task->{'date'} < $current_date);
 	    if ($task->{'list'} ne '_global') { # list task
 		my $list = new List ($task->{'list'});
-		next unless ($list->{'admin'}{'status'} eq 'open');
+		unless (defined $list && ($list->{'admin'}{'status'} eq 'open')) {
+		    &do_log('notice','Removing task file %s', $task_file);
+		    unless (unlink "$spool_task/$task_file") {
+			&do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+			next;
+		    }
+		    next;
+		}
 	    }
 	    execute ("$spool_task/$_");
 	}
