@@ -4092,12 +4092,10 @@ sub add_user {
 	    
 	    my $statement;
 
-	    ## If datasource is 'include2' either is_included or is_subscribed must be set
+	    ## Either is_included or is_subscribed must be set
 	    ## default is is_subscriber for backward compatibility reason
-	    if ($self->{'admin'}{'user_data_source'} eq 'include2') {
-		unless ($new_user->{'included'}) {
-		    $new_user->{'subscribed'} = 1;
-		}
+	    unless ($new_user->{'included'}) {
+		$new_user->{'subscribed'} = 1;
 	    }
 	    
 	    unless ($new_user->{'included'}) {
@@ -7191,6 +7189,58 @@ sub create_db {
     &do_log('notice', 'Database %s created', $Conf{'db_name'});
 
     $drh->disconnect();
+
+    return 1;
+}
+
+## Update DB structure or content if required
+sub maintenance {
+    my $version_file = "$Conf{'etc'}/data_structure.version";
+    my $previous_version;
+
+    if (-f $version_file) {
+	unless (open VFILE, $version_file) {
+	    do_log('err', "Unable to open %s : %s", $version_file, $!);
+	    return undef;
+	}
+	while (<VFILE>) {
+	    next if /^\s*$/;
+	    next if /^\s*\#/;
+	    chomp;
+	    $previous_version = $_;
+	    last;
+	}
+	close VFILE;
+    }else {
+	$previous_version = '0';
+    }
+    
+    ## Set 'subscribed' data field to '1' is none of 'subscribed' and 'included' is set
+    unless (&tools::higher_version($previous_version, '4.2a')) {
+
+	## Check database connection
+	unless ($dbh and $dbh->ping) {
+	    return undef unless &db_connect();
+	}
+	
+	my $statement = "UPDATE subscriber_table SET subscribed_subscriber='1' WHERE (subscribed_subscriber!='1' && included_subscriber!='1')";
+	
+	&do_log('notice','Updating subscribed field of the subscriber table...');
+	my $rows = $dbh->do($statement);
+	unless (defined $rows) {
+	    &fatal_err("Unable to execute SQL statement %s : %s", $statement, $dbh->errstr);	    
+	}
+	&do_log('notice','%d rows have been updated');
+    }    
+    
+    ## Saving current version
+    unless (open VFILE, ">$version_file") {
+	do_log('err', "Unable to open %s : %s", $version_file, $!);
+	return undef;
+    }
+    printf VFILE "# This file is automatically created by sympa.pl after installation\n# Unless you know what you are doing, you should not modify it\n";
+    printf VFILE "%s\n", $Version::Version;
+    close VFILE;
 
     return 1;
 }

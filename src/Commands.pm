@@ -659,7 +659,6 @@ sub subscribe {
 	    $u->{'email'} = $sender;
 	    $u->{'gecos'} = $comment;
 	    $u->{'date'} = $u->{'update_date'} = time;
-	    $u->{'subscribed'} = 1 if ($list->{'admin'}{'user_data_source'} eq 'include2');
 
 	    return undef  unless $list->add_user($u);
 	}
@@ -1022,7 +1021,6 @@ sub add {
 	    $u->{'email'} = $email;
 	    $u->{'gecos'} = $comment;
 	    $u->{'date'} = $u->{'update_date'} = time;
-	    $u->{'subscribed'} = 1 if ($list->{'admin'}{'user_data_source'} eq 'include2');
 	    
 	    return undef unless $list->add_user($u);
 	    $list->delete_subscription_request($email);

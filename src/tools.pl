@@ -1873,6 +1873,42 @@ sub change_x_sympa_to {
     return 1;
 }
 
+## Compare 2 versions of Sympa
+sub higher_version {
+    my ($v1, $v2) = @_;
+
+    my @tab1 = split /\./,$v1;
+    my @tab2 = split /\./,$v2;
+    
+    
+    my $max = $#tab1;
+    $max = $#tab2 if ($#tab2 > $#tab1);
+
+    for $i (0..$max) {
+    
+        if ($tab1[0] =~ /^(\d*)a$/) {
+            $tab1[0] = $1 - 0.5;
+        }elsif ($tab1[0] =~ /^(\d*)b$/) {
+            $tab1[0] = $1 - 0.25;
+        }
+
+        if ($tab2[0] =~ /^(\d*)a$/) {
+            $tab2[0] = $1 - 0.5;
+        }elsif ($tab2[0] =~ /^(\d*)b$/) {
+            $tab2[0] = $1 - 0.25;
+        }
+
+        if ($tab1[0] eq $tab2[0]) {
+            #printf "\t%s = %s\n",$tab1[0],$tab2[0];
+            shift @tab1;
+            shift @tab2;
+            next;
+        }
+        return ($tab1[0] > $tab2[0]);
+    }
+
+    return 0;
+}
 
 1;
 

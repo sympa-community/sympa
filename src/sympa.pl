@@ -346,6 +346,10 @@ if ($main::options{'dump'}) {
     exit 0;
 }
 
+## Maintenance
+## Update DB structure or content if required
+&List::maintenance();
+
 ## Do we have right access in the directory
 if ($main::options{'keepcopy'}) {
     if (! -d $main::options{'keepcopy'}) {

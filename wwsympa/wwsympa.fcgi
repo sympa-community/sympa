@@ -2787,7 +2787,6 @@ sub do_redirect {
 	     $u->{'date'} = $u->{'update_date'} = time;
 	     $u->{'password'} = $param->{'user'}{'password'};
 	     $u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
-	     $u->{'subscribed'} = 1 if ($list->{'admin'}{'user_data_source'} eq 'include2');
 
 	     unless ($list->add_user($u)) {
 		 &error_message('failed');
@@ -3368,7 +3367,6 @@ sub do_redirect {
 	     $u->{'date'} = $u->{'update_date'} = time;
 	     $u->{'password'} = $u2->{'password'} || &tools::tmp_passwd($email) ;
 	     $u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
-	     $u->{'subscribed'} = 1 if ($list->{'admin'}{'user_data_source'} eq 'include2');
 	     if ($comma_emails) {
 		 $comma_emails = $comma_emails .','. $email;
 	     }else{
