@@ -3455,8 +3455,11 @@ sub add_user {
     do_log('debug2', 'List::add_user');
     my $who;
 
+    $values->{'date'} ||= time;
+    $values->{'update_date'} ||= $values->{'date'};
+
     my $date_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $values->{'date'}, $values->{'date'};
-    my $update_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $values->{'update'}, $values->{'update'};
+    my $update_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $values->{'update_date'}, $values->{'update_date'};
 
     return undef
 	unless ($who = lc($values->{'email'}));
