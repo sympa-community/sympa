@@ -13,6 +13,9 @@ clean:
 	@if [ -f ./bouncequeue ]; then \
 		rm bouncequeue ; \
 	fi
+	@if [ -f ./aliaswrapper ]; then \
+		rm aliaswrapper ; \
+	fi
 
 install: 
 	echo "Please use the main Makefile for installing sources."
