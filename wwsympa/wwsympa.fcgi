@@ -944,7 +944,7 @@ sub do_login {
     }
     
     unless ($user = &List::get_user_db($in{'email'})) {
-
+	
 	$user = {'email' => $in{'email'},
 		 'password' => &tools::tmp_passwd($in{'email'}) 
 		 };

@@ -635,6 +635,7 @@ sub crypt_password {
 ## decrypt a password
 sub decrypt_password {
     my $inpasswd = shift ;
+    do_log('debug2', 'tools::decrypt_password (%s)', $inpasswd);
 
     return $inpasswd unless ($inpasswd =~ /^crypt\.(.*)$/) ;
     $inpasswd = $1;

@@ -2111,7 +2111,9 @@ sub get_user_db {
     $sth = pop @sth_stack;
 
     ## decrypt password
-    $user->{'password'} = &tools::decrypt_password($user->{'password'}) if ($user->{'password'});
+    if ((defined $user) && $user->{'password'}) {
+	$user->{'password'} = &tools::decrypt_password($user->{'password'});
+    }
 
     return $user;
 }
@@ -2491,7 +2493,7 @@ sub is_user {
 	
 	## Use cache
 	if (defined $list_cache{'is_user'}{$name}{$who}) {
-	    &do_log('debug', 'xxx Use cache(%s,%s): %s', $name, $who, $list_cache{'is_user'}{$name}{$who});
+	    &do_log('debug2', 'xxx Use cache(%s,%s): %s', $name, $who, $list_cache{'is_user'}{$name}{$who});
 	    return $list_cache{'is_user'}{$name}{$who};
 	}
 	
