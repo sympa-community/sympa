@@ -1950,7 +1950,7 @@ sub distribute_msg {
 	&do_log('notice', 'Found List-Id: %s', $hdr->get('List-Id'));
 	$hdr->delete('List-ID');
     }
-    $hdr->add('List-Id', sprintf ('<%s@%s>', $self->{'name'}, $self->{'admin'}{'host'}));
+    $hdr->add('List-Id', sprintf ('<%s.%s>', $self->{'name'}, $self->{'admin'}{'host'}));
 
     ## Add RFC 2369 header fields
     foreach my $field (@{$Conf{'rfc2369_header_fields'}}) {
