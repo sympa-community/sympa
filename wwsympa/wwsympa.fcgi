@@ -886,11 +886,15 @@ sub get_parameters {
 
     ## CGI URL
     if ($ENV{'HTTPS'} eq 'on') {
-	$param->{'base_url'} = sprintf 'https://%s', $ENV{'SERVER_NAME'};
+	$param->{'base_url'} = sprintf 'https://%s', $ENV{'HTTP_HOST'};
 	$param->{'use_ssl'} = 1;
     }else {
-	$param->{'base_url'} = sprintf 'http://%s', $ENV{'SERVER_NAME'};
+	$param->{'base_url'} = sprintf 'http://%s', $ENV{'HTTP_HOST'};
 	$param->{'use_ssl'} = 0;
+    }
+
+    if ($ENV{'SERVER_PORT'} != 80) {
+	$param->{'base_url'} .= ':'.$ENV{'SERVER_PORT'};
     }
 
     $param->{'robot_domain'} = $wwsconf->{'robot_domain'}{$ENV{'SERVER_NAME'}};
