@@ -441,7 +441,7 @@ msgstr "Aliasy, kterÃ© byste mÃ¬l instalovat do poÂ¹tovnÃ­ho sys
 msgid "All commands must be sent to the electronic address %1"
 msgstr "VÂ¹echny pÃ¸Ã­kazy se musÃ­ posÃ­lat na adresu %1"
 
-#: src/sympa.pl:1619
+#: src/sympa.pl:1622
 msgid ""
 "Among subscriber of list %s since %d days, %d didn't confirm there "
 "subscription.\n"
@@ -492,6 +492,10 @@ msgstr "Bounces management"
 
 #: src/List.pm:335
 msgid "Archive encrypted mails as cleartext"
+msgstr ""
+
+#: src/etc/mhonarc-ressources.tt2:109 src/etc/mhonarc-ressources.tt2:74
+msgid "Archive powered by"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:152 web_tt2/edit_list_request.tt2:8
@@ -715,6 +719,11 @@ msgstr ""
 msgid "Choose your authentication server"
 msgstr "PÃ¸i ovÃ¬Ã¸ovÃ¡nÃ­ totoÂ¾nosti ("
 
+#: src/etc/mhonarc-ressources.tt2:132 src/etc/mhonarc-ressources.tt2:298
+#: src/etc/mhonarc-ressources.tt2:56
+msgid "Chronological"
+msgstr ""
+
 #: web_tt2/show_cert.tt2:11
 msgid "Cipher key size used"
 msgstr "PouÂita dÃ©lka klÃ­Ã¨e"
@@ -732,7 +741,7 @@ msgstr ""
 msgid "Command 'quit' found : ignoring end of message.\n"
 msgstr ""
 
-#: src/sympa.pl:1475 src/sympa.pl:1506
+#: src/sympa.pl:1478 src/sympa.pl:1509
 msgid "Command not understood: ignoring end of message.\n"
 msgstr ""
 
@@ -1002,6 +1011,11 @@ msgstr "Opravdu chcete smazat %1%2 ?"
 msgid "Do you really want to delete Selected Archives?"
 msgstr "Opravdu chcete smazat %1%2 ?"
 
+#: src/etc/mhonarc-ressources.tt2:350 src/etc/mhonarc-ressources.tt2:357
+#, fuzzy
+msgid "Do you really want to delete this message ?"
+msgstr "Opravdu chcete smazat %1%2 ?"
+
 #: web_tt2/rename_list_request.tt2:14
 #, fuzzy
 msgid "Do you really want to rename this list?"
@@ -1162,7 +1176,7 @@ msgstr "Konec shrnutÃ­ konference %1 - %2"
 msgid "End of digest for list %1 - %2"
 msgstr "Konec shrnutÃ­ konference %1 - %2"
 
-#: src/sympa.pl:1591
+#: src/sympa.pl:1594
 msgid "End of your EXPIRE command on list %s"
 msgstr ""
 
@@ -1457,7 +1471,7 @@ msgid ""
 "If you never had a password from that server or if you don't remember it :"
 msgstr "Pokud zde nemÃ¡te heslo, nebo si ho nepamatujete :"
 
-#: src/sympa.pl:1639
+#: src/sympa.pl:1642
 #, fuzzy
 msgid ""
 "If you want to remove these subscriber from the list, use the following "
@@ -1470,7 +1484,7 @@ msgid "If you want to unsubscribe from some list, please save this mail."
 msgstr ""
 "Pokud se chcete odhlÃ¡sit z nÃ¬jakÃ© konference, uloÂ¾te si tuto zprÃ¡vu."
 
-#: src/sympa.pl:1428
+#: src/sympa.pl:1431
 msgid ""
 "Ignoring message body not in text/plain, please use text/plain only \n"
 "(or put your command in the subject).\n"
@@ -1559,6 +1573,12 @@ msgstr "Informace o konferenci %1"
 msgid ""
 "It was not possible to send it to you because the mailing list manager\n"
 "was unable to access to your personal certificat (email %1).\n"
+msgstr ""
+
+#: src/etc/mhonarc-ressources.tt2:444
+msgid ""
+"January:February:March:April:May:June:July:August:September:October:November:"
+"December"
 msgstr ""
 
 #: mail_tt2/helpfile.tt2:38
@@ -1951,6 +1971,10 @@ msgid ""
 "attachment at the beginning of each message distributed to the list.\n"
 msgstr ""
 
+#: src/etc/mhonarc-ressources.tt2:200
+msgid "Message not available"
+msgstr ""
+
 #. (conf.host)
 #: mail_tt2/listowner_notification.tt2:16
 msgid "Messages are still archived but you should contact listmaster@%1"
@@ -2138,7 +2162,7 @@ msgstr ""
 msgid "No bounces for user  %1"
 msgstr "Pro uÂ¾ivatele %1 nejsou vrÃ¡cenÃ© zprÃ¡vy"
 
-#: src/sympa.pl:1497
+#: src/sympa.pl:1500
 msgid "No command found in message"
 msgstr ""
 
@@ -2626,6 +2650,10 @@ msgstr "Pripomenuti Vaseho clenstvi v konferenci %1"
 msgid "Replace the file %1 by your file"
 msgstr "Nahradit soubor %1 VaÂ¹Ã­m souborem"
 
+#: src/etc/mhonarc-ressources.tt2:341
+msgid "Reply"
+msgstr ""
+
 #: src/List.pm:979 src/List.pm:999
 #, fuzzy
 msgid "Reply address"
@@ -2635,6 +2663,10 @@ msgstr "emailovÃ¡ adresa"
 #: mail_tt2/info_report.tt2:14
 msgid "Reply to           : %1"
 msgstr "OdpovÃ¬Ã¯ na            : %1"
+
+#: src/etc/mhonarc-ressources.tt2:337
+msgid "Reply to sender"
+msgstr ""
 
 #: web_tt2/get_closed_lists.tt2:13 web_tt2/get_pending_lists.tt2:16
 msgid "Requested by"
@@ -2672,7 +2704,7 @@ msgstr "VÃ½sledek"
 msgid "Result of your search in the archive"
 msgstr "VÃ½sledek VaÂ¹eho hledÃ¡nÃ­ v archÃ­vu"
 
-#: src/sympa.pl:1045
+#: src/sympa.pl:1048
 msgid "Results of your commands"
 msgstr ""
 
@@ -3128,6 +3160,10 @@ msgstr "Moderatori della lista %1"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Souhrn VaÂ¹eho Ã¨lenstvÃ­ v konferencÃ­ch (pÃ¸i pouÂ¾itÃ­ adresy"
 
+#: src/etc/mhonarc-ressources.tt2:426
+msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
+msgstr ""
+
 #: web_tt2/menu.tt2:69 web_tt2/menu.tt2:73
 msgid "Sympa admin"
 msgstr "Sympa admin"
@@ -3453,7 +3489,7 @@ msgstr ""
 msgid "There is not any owner defined for the list"
 msgstr ""
 
-#: src/sympa.pl:1621
+#: src/sympa.pl:1624
 #, fuzzy
 msgid "These subscribers are :\n"
 msgstr "pÃ¸idÃ¡no %1 Ã¨lenÃ¹"
@@ -3722,6 +3758,11 @@ msgid ""
 "archives, list management and so on.\n"
 msgstr ""
 
+#: src/etc/mhonarc-ressources.tt2:138 src/etc/mhonarc-ressources.tt2:304
+#: src/etc/mhonarc-ressources.tt2:60
+msgid "Thread"
+msgstr ""
+
 #: src/Commands.pm:1940
 msgid "Thus, your message is sent back to you :\n"
 msgstr ""
@@ -3916,7 +3957,7 @@ msgstr "Odhlaseni z konference %1"
 msgid "URL"
 msgstr "[% END %]"
 
-#: src/sympa.pl:1518
+#: src/sympa.pl:1521
 msgid "Unable to access directory %s : %m"
 msgstr ""
 
@@ -4565,7 +4606,7 @@ msgstr ""
 msgid "Your list is created."
 msgstr "VaÂ¹e konference je vytvoÃ¸ena."
 
-#: src/sympa.pl:1268
+#: src/sympa.pl:1271
 msgid ""
 "Your message could not be sent because its size \n"
 "was over the maximum size allowed on this list.\n"
@@ -4584,7 +4625,7 @@ msgstr "Vase zprava byla odmitnuta"
 msgid "Your message for list %s has been forwarded to editor(s)\n"
 msgstr "VÃ¡Â¹ poÂ¾adavek byl odeslÃ¡n sprÃ¡vci konference"
 
-#: src/Commands.pm:1776 src/sympa.pl:1345
+#: src/Commands.pm:1776 src/sympa.pl:1348
 msgid ""
 "Your message for list %s has been rejected.\n"
 "The message is thus sent back to you.\n"
@@ -4600,7 +4641,7 @@ msgstr "Vase zprava byla odmitnuta"
 msgid "Your message signature was succesfuly verified using S/MIME"
 msgstr ""
 
-#: src/Commands.pm:1772 src/sympa.pl:1264 src/sympa.pl:1341
+#: src/Commands.pm:1772 src/sympa.pl:1267 src/sympa.pl:1344
 #, fuzzy
 msgid "Your message to %s has been rejected"
 msgstr "Vase zprava byla odmitnuta"
@@ -5262,6 +5303,12 @@ msgstr ""
 msgid "local domain users or owner approval"
 msgstr ""
 
+#. ($PAGENUM$,$NUMOFPAGES$)
+#: src/etc/mhonarc-ressources.tt2:47
+#, fuzzy
+msgid "mails, page # %1/%2"
+msgstr "strana %1 z %2"
+
 #: wwsympa/wwslib.pm:62
 #, fuzzy
 msgid "message footer"
@@ -5311,6 +5358,10 @@ msgstr ""
 #, fuzzy
 msgid "newest messages"
 msgstr "ZaÃ¨Ã­t od nejnovÃ¬jÂ¹Ã­ch zprÃ¡v"
+
+#: src/etc/mhonarc-ressources.tt2:165
+msgid "next"
+msgstr ""
 
 #: src/etc/scenari/topics_visibility.noconceal:1
 #: src/etc/scenari/visibility.noconceal:1
@@ -5365,6 +5416,12 @@ msgstr ""
 #. (page,total_page)
 #: web_tt2/reviewbouncing.tt2:115 web_tt2/reviewbouncing.tt2:49
 msgid "page %1 / %2"
+msgstr "strana %1 z %2"
+
+#. ('$PAGENUM$','$NUMOFPAGES$')
+#: src/etc/mhonarc-ressources.tt2:126
+#, fuzzy
+msgid "page n&#176; %1/%2"
 msgstr "strana %1 z %2"
 
 #: web_tt2/arcsearch_form.tt2:43
@@ -5603,6 +5660,11 @@ msgstr "List info"
 msgid "selection (if multiple)"
 msgstr ""
 
+#. (user.email)
+#: src/etc/mhonarc-ressources.tt2:342
+msgid "send it back to %1"
+msgstr ""
+
 #: web_tt2/scenario_test.tt2:35
 msgid "sender email"
 msgstr "adresa odesÃ­latele"
@@ -5657,6 +5719,10 @@ msgstr ""
 msgid "summary message"
 msgstr "zprÃ¡vÃ¡m"
 
+#: src/etc/mhonarc-ressources.tt2:350 src/etc/mhonarc-ressources.tt2:357
+msgid "tag this mail for deletion"
+msgstr ""
+
 #: web_tt2/help_editlist.tt2:152
 msgid "the @ char is replaced by the string \" AT \"."
 msgstr ""
@@ -5690,6 +5756,11 @@ msgid "title"
 msgstr ""
 "[% ELSE %]\n"
 "      <B> VytvoÃ¸it novÃ½ adresÃ¡Ã¸ ve sdÃ­lenÃ©m adresÃ¡Ã¸i</B>"
+
+#: src/etc/mhonarc-ressources.tt2:339
+#, fuzzy
+msgid "to list"
+msgstr "Obnovit konference"
 
 #: web_tt2/d_read.tt2:165
 #, fuzzy
@@ -5749,22 +5820,6 @@ msgstr "VaÂ¹e adresa  : %1"
 #: mail_tt2/sendpasswd.tt2:30
 msgid "your password : %1"
 msgstr "VaÂ¹e heslo   : %1"
-
-#, fuzzy
-#~ msgid "Do you really want to delete this message ?"
-#~ msgstr "Opravdu chcete smazat %1%2 ?"
-
-#, fuzzy
-#~ msgid "mails, page # %1/%2"
-#~ msgstr "strana %1 z %2"
-
-#, fuzzy
-#~ msgid "page n&#176; %1/%2"
-#~ msgstr "strana %1 z %2"
-
-#, fuzzy
-#~ msgid "to list"
-#~ msgstr "Obnovit konference"
 
 #, fuzzy
 #~ msgid "7bit"

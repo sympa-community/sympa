@@ -479,7 +479,7 @@ msgid "All commands must be sent to the electronic address %1"
 msgstr "Toutes les commandes doivent être adressées à l'adresse %1"
 
 # nlsref 4,28
-#: src/sympa.pl:1619
+#: src/sympa.pl:1622
 msgid ""
 "Among subscriber of list %s since %d days, %d didn't confirm there "
 "subscription.\n"
@@ -543,6 +543,10 @@ msgstr "Gestion des archives"
 #: src/List.pm:335
 msgid "Archive encrypted mails as cleartext"
 msgstr "Archivage des messages cryptés"
+
+#: src/etc/mhonarc-ressources.tt2:109 src/etc/mhonarc-ressources.tt2:74
+msgid "Archive powered by"
+msgstr "Archives gérées par"
 
 #: web_tt2/admin_menu.tt2:152 web_tt2/edit_list_request.tt2:8
 #: web_tt2/serveradmin.tt2:173
@@ -789,6 +793,11 @@ msgstr ""
 msgid "Choose your authentication server"
 msgstr "Sélectionnez votre serveur d'authentification"
 
+#: src/etc/mhonarc-ressources.tt2:132 src/etc/mhonarc-ressources.tt2:298
+#: src/etc/mhonarc-ressources.tt2:56
+msgid "Chronological"
+msgstr "Chronologique"
+
 #: web_tt2/show_cert.tt2:11
 msgid "Cipher key size used"
 msgstr "Taille de clef utilisée"
@@ -807,7 +816,7 @@ msgid "Command 'quit' found : ignoring end of message.\n"
 msgstr "Commande 'quit' trouvée : la fin du message est ignorée.\n"
 
 # nlsref 4,19
-#: src/sympa.pl:1475 src/sympa.pl:1506
+#: src/sympa.pl:1478 src/sympa.pl:1509
 msgid "Command not understood: ignoring end of message.\n"
 msgstr "Commande non comprise : la fin du message est ignorée.\n"
 
@@ -1099,6 +1108,10 @@ msgstr "Voulez-vous vraiment supprimer %1%2 ?"
 msgid "Do you really want to delete Selected Archives?"
 msgstr "Voulez-vous vraiment supprimer les archives sélectionnées ?"
 
+#: src/etc/mhonarc-ressources.tt2:350 src/etc/mhonarc-ressources.tt2:357
+msgid "Do you really want to delete this message ?"
+msgstr "Voulez-vous vraiment supprimer ce message ?"
+
 #: web_tt2/rename_list_request.tt2:14
 msgid "Do you really want to rename this list?"
 msgstr "Voulez-vous vraiment renommer cette liste ?"
@@ -1279,7 +1292,7 @@ msgid "End of digest for list %1 - %2"
 msgstr "Fin de compilation de la liste %1 - %2"
 
 # nlsref 4,24
-#: src/sympa.pl:1591
+#: src/sympa.pl:1594
 msgid "End of your EXPIRE command on list %s"
 msgstr "Fin de votre commande EXPIRE de la liste %s"
 
@@ -1609,7 +1622,7 @@ msgid ""
 msgstr "Si vous n'avez jamais eu de mot de passe ou si vous l'avez oublié :"
 
 # nlsref 4,27
-#: src/sympa.pl:1639
+#: src/sympa.pl:1642
 msgid ""
 "If you want to remove these subscriber from the list, use the following "
 "commands :\n"
@@ -1621,7 +1634,7 @@ msgid "If you want to unsubscribe from some list, please save this mail."
 msgstr "Pour pouvoir vous désabonner d'une liste, conservez ce message."
 
 # nlsref 4,37
-#: src/sympa.pl:1428
+#: src/sympa.pl:1431
 msgid ""
 "Ignoring message body not in text/plain, please use text/plain only \n"
 "(or put your command in the subject).\n"
@@ -1729,6 +1742,15 @@ msgstr ""
 "Il n'a pas été possible de vous remettre ce message car le serveur\n"
 "de liste ne dispose pas de votre certificat X509 (pour l'adresse\n"
 "%1).\n"
+
+#: src/etc/mhonarc-ressources.tt2:444
+msgid ""
+"January:February:March:April:May:June:July:August:September:October:November:"
+"December"
+msgstr ""
+"Janvier:Février:Mars:Avril:Mai:Juin:Juillet:Aout:Septembre:Octobre:Novembre:"
+"DécembreJanuary:February:March:April:May:June:July:August:September:October:"
+"November:December"
 
 #: mail_tt2/helpfile.tt2:38
 msgid ""
@@ -2149,6 +2171,10 @@ msgstr ""
 "Attachement de début de message : Si non vide, ce fichier estattaché au "
 "début de chaque message diffusé dans la liste.\n"
 
+#: src/etc/mhonarc-ressources.tt2:200
+msgid "Message not available"
+msgstr "Message non disponible"
+
 #. (conf.host)
 #: mail_tt2/listowner_notification.tt2:16
 msgid "Messages are still archived but you should contact listmaster@%1"
@@ -2349,7 +2375,7 @@ msgid "No bounces for user  %1"
 msgstr "Aucun bounce pour l'utilisateur %1"
 
 # nlsref 4,39
-#: src/sympa.pl:1497
+#: src/sympa.pl:1500
 msgid "No command found in message"
 msgstr "Aucune commande n'a été reconnue dans votre message"
 
@@ -2872,6 +2898,10 @@ msgstr "Renouvellement de votre abonnement à la liste '%s'"
 msgid "Replace the file %1 by your file"
 msgstr "Remplacer le fichier %1 par votre fichier"
 
+#: src/etc/mhonarc-ressources.tt2:341
+msgid "Reply"
+msgstr "Répondre"
+
 # nlsref 16,66
 #: src/List.pm:979 src/List.pm:999
 msgid "Reply address"
@@ -2881,6 +2911,10 @@ msgstr "Adresse de réponse"
 #: mail_tt2/info_report.tt2:14
 msgid "Reply to           : %1"
 msgstr "Réponse à          : %1"
+
+#: src/etc/mhonarc-ressources.tt2:337
+msgid "Reply to sender"
+msgstr "Répondre à l'auteur"
 
 #: web_tt2/get_closed_lists.tt2:13 web_tt2/get_pending_lists.tt2:16
 msgid "Requested by"
@@ -2920,7 +2954,7 @@ msgid "Result of your search in the archive"
 msgstr "Résultat de votre recherche dans les archives"
 
 # nlsref 4,17
-#: src/sympa.pl:1045
+#: src/sympa.pl:1048
 msgid "Results of your commands"
 msgstr "Resultats de vos commandes"
 
@@ -3436,6 +3470,10 @@ msgstr "Résumé de la liste %s"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Synthèse de vos abonnements (avec l'adresse %1)."
 
+#: src/etc/mhonarc-ressources.tt2:426
+msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
+msgstr "Lundi:Mardi:Mercredi:Jeudi:Vendredi:Samedi:Dimanche"
+
 #: web_tt2/menu.tt2:69 web_tt2/menu.tt2:73
 msgid "Sympa admin"
 msgstr "Admin Sympa"
@@ -3854,7 +3892,7 @@ msgid "There is not any owner defined for the list"
 msgstr ""
 
 # nlsref 4,26
-#: src/sympa.pl:1621
+#: src/sympa.pl:1624
 msgid "These subscribers are :\n"
 msgstr "Ces abonnés sont :\n"
 
@@ -4213,6 +4251,11 @@ msgstr ""
 "désabonner, accéder aux archives ou gérer les listes dont vous êtes "
 "propriétaire, etc.\n"
 
+#: src/etc/mhonarc-ressources.tt2:138 src/etc/mhonarc-ressources.tt2:304
+#: src/etc/mhonarc-ressources.tt2:60
+msgid "Thread"
+msgstr "Suivi de conversation"
+
 # nlsref 6,61
 #: src/Commands.pm:1940
 msgid "Thus, your message is sent back to you :\n"
@@ -4448,7 +4491,7 @@ msgid "URL"
 msgstr "URL"
 
 # nlsref 3,1
-#: src/sympa.pl:1518
+#: src/sympa.pl:1521
 msgid "Unable to access directory %s : %m"
 msgstr "Impossible d'aller dans le repertoire %s : %m"
 
@@ -5189,7 +5232,7 @@ msgid "Your list is created."
 msgstr "Votre liste est créée."
 
 # nlsref 4,12
-#: src/sympa.pl:1268
+#: src/sympa.pl:1271
 msgid ""
 "Your message could not be sent because its size \n"
 "was over the maximum size allowed on this list.\n"
@@ -5212,7 +5255,7 @@ msgid "Your message for list %s has been forwarded to editor(s)\n"
 msgstr "Votre message pour la liste %s a été transmis au(x) modérateur(s)\n"
 
 # nlsref 4,15
-#: src/Commands.pm:1776 src/sympa.pl:1345
+#: src/Commands.pm:1776 src/sympa.pl:1348
 msgid ""
 "Your message for list %s has been rejected.\n"
 "The message is thus sent back to you.\n"
@@ -5234,7 +5277,7 @@ msgid "Your message signature was succesfuly verified using S/MIME"
 msgstr "Signature S/MIME correctement vérifiée"
 
 # nlsref 4,11
-#: src/Commands.pm:1772 src/sympa.pl:1264 src/sympa.pl:1341
+#: src/Commands.pm:1772 src/sympa.pl:1267 src/sympa.pl:1344
 msgid "Your message to %s has been rejected"
 msgstr "Votre message pour %s a ete rejete"
 
@@ -5989,6 +6032,11 @@ msgstr "listmaster seulement"
 msgid "local domain users or owner approval"
 msgstr "usager du domaine local ou via autorisation du proprio"
 
+#. ($PAGENUM$,$NUMOFPAGES$)
+#: src/etc/mhonarc-ressources.tt2:47
+msgid "mails, page # %1/%2"
+msgstr "mails, page %1 / %2"
+
 # nlsref 15,4
 #: wwsympa/wwslib.pm:62
 msgid "message footer"
@@ -6032,6 +6080,10 @@ msgstr "soumis a authentification (notification des proprio)"
 #: web_tt2/arcsearch_form.tt2:31
 msgid "newest messages"
 msgstr "Messages les plus récents en tête"
+
+#: src/etc/mhonarc-ressources.tt2:165
+msgid "next"
+msgstr "suivant"
 
 #: src/etc/scenari/topics_visibility.noconceal:1
 #: src/etc/scenari/visibility.noconceal:1
@@ -6083,6 +6135,11 @@ msgstr "ouvert a tous après autorisation du proprio"
 #. (page,total_page)
 #: web_tt2/reviewbouncing.tt2:115 web_tt2/reviewbouncing.tt2:49
 msgid "page %1 / %2"
+msgstr "page %1 / %2"
+
+#. ('$PAGENUM$','$NUMOFPAGES$')
+#: src/etc/mhonarc-ressources.tt2:126
+msgid "page n&#176; %1/%2"
 msgstr "page %1 / %2"
 
 #: web_tt2/arcsearch_form.tt2:43
@@ -6325,6 +6382,11 @@ msgstr "sécurité"
 msgid "selection (if multiple)"
 msgstr "sélection (si multiple)"
 
+#. (user.email)
+#: src/etc/mhonarc-ressources.tt2:342
+msgid "send it back to %1"
+msgstr "renvoyer à %1"
+
 #: web_tt2/scenario_test.tt2:35
 msgid "sender email"
 msgstr "adresse de l'émetteur"
@@ -6380,6 +6442,10 @@ msgstr "suffixe"
 msgid "summary message"
 msgstr "résumé des messages"
 
+#: src/etc/mhonarc-ressources.tt2:350 src/etc/mhonarc-ressources.tt2:357
+msgid "tag this mail for deletion"
+msgstr "marquer ce message pour suppression"
+
 #: web_tt2/help_editlist.tt2:152
 msgid "the @ char is replaced by the string \" AT \"."
 msgstr "le caractère @ est remplacé par la chaîne \"AT\"."
@@ -6413,6 +6479,10 @@ msgstr "seuil"
 #: web_tt2/d_read.tt2:265
 msgid "title"
 msgstr "intitulé"
+
+#: src/etc/mhonarc-ressources.tt2:339
+msgid "to list"
+msgstr "à la liste"
 
 #: web_tt2/d_read.tt2:165
 msgid "to moderate"
@@ -6471,56 +6541,6 @@ msgstr "votre adresse électronique : %1"
 #: mail_tt2/sendpasswd.tt2:30
 msgid "your password : %1"
 msgstr "votre mot de passe         : %1"
-
-#~ msgid "Archive powered by"
-#~ msgstr "Archives gérées par"
-
-#~ msgid "Chronological"
-#~ msgstr "Chronologique"
-
-#~ msgid "Do you really want to delete this message ?"
-#~ msgstr "Voulez-vous vraiment supprimer ce message ?"
-
-#~ msgid ""
-#~ "January:February:March:April:May:June:July:August:September:October:"
-#~ "November:December"
-#~ msgstr ""
-#~ "Janvier:Février:Mars:Avril:Mai:Juin:Juillet:Aout:Septembre:Octobre:"
-#~ "Novembre:DécembreJanuary:February:March:April:May:June:July:August:"
-#~ "September:October:November:December"
-
-#~ msgid "Message not available"
-#~ msgstr "Message non disponible"
-
-#~ msgid "Reply"
-#~ msgstr "Répondre"
-
-#~ msgid "Reply to sender"
-#~ msgstr "Répondre à l'auteur"
-
-#~ msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
-#~ msgstr "Lundi:Mardi:Mercredi:Jeudi:Vendredi:Samedi:Dimanche"
-
-#~ msgid "Thread"
-#~ msgstr "Suivi de conversation"
-
-#~ msgid "mails, page # %1/%2"
-#~ msgstr "mails, page %1 / %2"
-
-#~ msgid "next"
-#~ msgstr "suivant"
-
-#~ msgid "page n&#176; %1/%2"
-#~ msgstr "page %1 / %2"
-
-#~ msgid "send it back to %1"
-#~ msgstr "renvoyer à %1"
-
-#~ msgid "tag this mail for deletion"
-#~ msgstr "marquer ce message pour suppression"
-
-#~ msgid "to list"
-#~ msgstr "à la liste"
 
 # nlsref 12,3
 #~ msgid "7bit"
