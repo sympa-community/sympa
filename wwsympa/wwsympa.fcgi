@@ -393,6 +393,8 @@ while ($query = &new_loop()) {
 
     $robot = $Conf{'robot_by_http_host'}{$ENV{'SERVER_NAME'}};
     $robot = $Conf{'host'} unless $robot;
+    $param->{'cookie_domain'} = $Conf{'robots'}{$robot}{'cookie_domain'} if $Conf{'robots'}{$robot};
+    $param->{'cookie_domain'} ||= $wwsconf->{'cookie_domain'};
     $log_level = $Conf{'robots'}{$robot}{'log_level'};
 
     ## Sympa parameters in $param->{'conf'}
@@ -563,7 +565,7 @@ while ($query = &new_loop()) {
 		$delay = 'session';
 	    }
 
-	    unless (&cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $wwsconf->{'cookie_domain'},$delay )) {
+	    unless (&cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $param->{'cookie_domain'},$delay )) {
 		&wwslog('notice', 'Could not set HTTP cookie');
 		exit -1;
 	    }
@@ -576,13 +578,13 @@ while ($query = &new_loop()) {
 	    }  
 	    $param->{'unique'} = 1 if($number <= 1);
 
-  	    unless(&cookielib::set_cookie_extern($Conf{'cookie'},$wwsconf->{'cookie_domain'},%{$param->{'alt_emails'}})){
+  	    unless(&cookielib::set_cookie_extern($Conf{'cookie'},$param->{'cookie_domain'},%{$param->{'alt_emails'}})){
 	         &wwslog('notice', 'Could not set HTTP cookie for external_auth');
 	         exit -1;
 	    }
 	  
 	}elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/){
-	    &cookielib::set_cookie('unknown', $Conf{'cookie'}, $wwsconf->{'cookie_domain'}, 'now');
+	    &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
 	}
     }
 
@@ -1213,7 +1215,7 @@ sub do_login {
 
     my $email = lc($param->{'user'}{'email'});
     unless($param->{'alt_emails'}{$email}){
-	unless(&cookielib::set_cookie_extern($Conf{'cookie'},$wwsconf->{'cookie_domain'},%{$param->{'alt_emails'}})){
+	unless(&cookielib::set_cookie_extern($Conf{'cookie'},$param->{'cookie_domain'},%{$param->{'alt_emails'}})){
 	    &wwslog('notice', 'Could not set HTTP cookie for external_auth');
 	    exit -1;
 	}
@@ -3532,7 +3534,7 @@ sub do_arc {
     ## Reject Email Sniffers
     unless (&cookielib::check_arc_cookie($ENV{'HTTP_COOKIE'})) {
 	if ($param->{'user'}{'email'} or $in{'not_a_sniffer'}) {
-	    &cookielib::set_arc_cookie();
+	    &cookielib::set_arc_cookie($param->{'cookie_domain'});
 	}else {
 	    return 'arc_protect';
 	}
@@ -3594,7 +3596,7 @@ sub do_arc {
 
     $param->{'archive_name'} = $in{'month'};
 
-    &cookielib::set_arc_cookie();
+    &cookielib::set_arc_cookie($param->{'cookie_domain'});
 
     return 1;
 }
@@ -8280,7 +8282,7 @@ sub do_set_lang {
     &wwslog('debug', 'do_set_lang(%s)', $in{'lang'});
 
     $param->{'lang'} = $param->{'cookie_lang'} = $in{'lang'};
-    &cookielib::set_lang_cookie($in{'lang'});
+    &cookielib::set_lang_cookie($in{'lang'},$param->{'cookie_domain'});
 
     if ($param->{'user'}{'email'}) {
 	if (&List::is_user_db($param->{'user'}{'email'})) {

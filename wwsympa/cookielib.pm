@@ -139,7 +139,7 @@ sub set_cookie {
     
 ## Set cookie for accessing web archives
 sub set_arc_cookie {
-    my ($date,$expiration,$domain);
+    my ($domain);
 
     my $cookie = new CGI::Cookie (-name    => 'I_Am_Not_An_Email_Sniffer',
 				  -value   => 'Let_Me_In',
@@ -156,9 +156,7 @@ sub set_arc_cookie {
     
 ## Set cookie with lang pref
 sub set_lang_cookie {
-    my $lang = shift;
-
-    my ($date, $expiration, $domain);
+    my ($lang,$domain) = @_;
 
     my $cookie = new CGI::Cookie (-name    => 'sympalang',
 				  -value   => $lang,

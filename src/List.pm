@@ -3776,13 +3776,6 @@ sub init_list_cache {
     undef %list_cache;
 }
 
-## Initialize internal list cache
-sub init_list_cache {
-    &do_log('debug2', 'List::init_list_cache()');
-    
-    undef %list_cache;
-}
-
 ## check if email respect some condition
 sub verify {
     my ($context, $condition) = @_;

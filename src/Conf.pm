@@ -315,6 +315,7 @@ sub load_robots {
 				  wwsympa_url     => 1,
 				  'title'         => 1,
 				  default_home    => 1,
+				  cookie_domain   => 1,
 				  log_smtp        => 1,
 				  log_level       => 1,
 				  create_list     => 1,
@@ -370,8 +371,9 @@ sub load_robots {
 	$robot_conf->{$robot}{'wwsympa_url'} ||= 'http://'.$robot_conf->{$robot}{'http_host'}.'/wws';
 	$robot_conf->{$robot}{'sympa'} = $robot_conf->{$robot}{'email'}.'@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'request'} = $robot_conf->{$robot}{'email'}.'-request@'.$robot_conf->{$robot}{'host'};
+	$robot_conf->{$robot}{'cookie_domain'} ||= 'localhost';
 	$Conf{'robot_by_http_host'}{$robot_conf->{$robot}{'http_host'}} = $robot ;
-
+	
 
 	close (ROBOT_CONF);
     }
