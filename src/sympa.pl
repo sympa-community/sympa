@@ -320,7 +320,7 @@ while (!$signal) {
     # setting log_level using conf unless it is set by calling option
     unless ($main::options{'log_level'}) {
 	$log_level = $Conf{'log_level'};
-	do_log('notice', "Reset default log level  $log_level"); 
+	# do_log('notice', "Reset default log level  $log_level"); 
     }
     
 
