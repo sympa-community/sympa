@@ -119,7 +119,7 @@
           <FONT size="-1" COLOR="[bg_color]"><b>Restaurer la liste</b></font>
         [ENDIF]                              
        [ELSIF is_privileged_owner]                 
-        <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Vous êtes sur le point de supprimer la liste [list]. Confiormer ?'); return false;"><FONT size=-1><b>Supprimer la liste</b></font></A>
+        <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Vous êtes sur le point de supprimer la liste [list]. Confirmer ?'); return false;"><FONT size=-1><b>Supprimer la liste</b></font></A>
        [ELSIF is_owner]                      
        <A HREF="[path_cgi]/close_list/[list]" onClick="request_confirm_link('[path_cgi]/close_list/[list]', 'Vous êtes sur le point de suppimer la liste [list]. Confirmer ?'); return false;"><FONT size=-1><b>Supprimer la liste</b></font></A>
        [ENDIF]                               
