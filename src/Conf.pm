@@ -422,7 +422,7 @@ sub checkfiles {
 ##########################################
 
 sub _load_auth {
-    my $config = '--ETCBINDIR--/etc/auth.conf';
+    my $config = '--DIR--/etc/auth.conf';
     my $line_num = 0;
     my $config_err = 0;
     my @paragraphs;
