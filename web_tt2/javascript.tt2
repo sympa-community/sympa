@@ -1,0 +1,124 @@
+<!-- begin javascript.tt2 (distrib) -->
+[% IF use_htmlarea %]
+<script type="text/javascript">
+  _editor_url = "[% htmlarea_url %]/";
+  _editor_lang = "en";
+</script>
+
+<script type="text/javascript" src="[% htmlarea_url %]/htmlarea.js"></script>
+[% END %]
+
+<script type="text/javascript">
+<!-- for other browsers
+
+// To confirm archives deletion
+ function dbl_confirm(my_form, my_message,my_message2) {
+     
+      if (confirm(my_message)) 
+      {
+    	 if (confirm(my_message2)) 
+	 {
+	     my_form.zip.value = "1";
+	 }
+	 }else{
+	return false;
+	}
+  }	
+
+  // To confirm a form submition
+  function request_confirm(my_message) {
+    if (confirm(my_message)) {
+      return true;
+    }else {
+      return false;
+    } 
+}
+
+  // To confirm on a link (A HREF)
+  function request_confirm_link(my_url, my_message) {
+    question = confirm(my_message);
+    if (question !="0") {
+         top.location = my_url;
+    }
+  }
+
+  // To confirm on a link (A HREF)
+  function refresh_mom_and_die() {
+    url = window.opener.location.href;
+
+    if (url.indexOf('logout') > -1 ) {
+      url = '[% path_cgi %]/';
+    }
+
+    window.opener.location = url;
+    self.close();
+  }
+
+[% IF cookie_set %]
+  function GetCookie (name) {
+     var arg = name + "=";
+     var alen = arg.length;
+     var clen = document.cookie.length;
+     var i = 0;
+     while (i < clen) {
+       var j = i + alen;
+       if (document.cookie.substring(i, j) == arg) 
+         return getCookieVal (j);
+         i = document.cookie.indexOf(" ", i) + 1;
+         if (i == 0) break; 
+       }
+     return null;
+  }  
+
+  function getCookieVal (offset) {
+    var endstr = document.cookie.indexOf (";", offset);
+    if (endstr == -1)
+      endstr = document.cookie.length;
+    return unescape(document.cookie.substring(offset, endstr));
+  }
+
+  function check_cookie() {
+ 
+     if (GetCookie('sympauser') == null) {
+        alert("[%|loc%]Sympa could not set a cookie for login.\n Your should setup your navigator to accept cookies[%END%]");
+     }
+  }
+[% END %]
+
+  function toggle_selection(myfield) {
+    for (i = 0; i < myfield.length; i++) {
+       if (myfield[i].checked) {
+            myfield[i].checked = false;
+       }else {
+	    myfield[i].checked = true;
+       }
+    }
+  }
+
+  //If the motif is found in the string, my_question is asked
+  // if the answer == yes than action is d_unzip else d_upload 
+
+  function requestBasedOnRegExp(my_question,my_form) {
+    expr = /^.+\.zip$/i;
+
+    found = expr.exec(document.getElementById("uploaded_file").value);
+
+    if (found) {
+      if (confirm(my_question)) {
+        document.getElementById("javascript_action").value = "d_unzip";
+
+      } else {
+        document.getElementById("javascript_action").value = "d_upload";
+      }
+    }else {
+      document.getElementById("javascript_action").value = "d_upload";
+    }
+    return true;
+  }   
+
+
+
+// end browsers -->
+</script>
+
+<!-- end javascript.tt2 -->
