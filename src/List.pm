@@ -8625,6 +8625,25 @@ sub notify_bouncers{
     return 1;
 }
 
+## Create the document repository
+sub create_shared {
+    my $self = shift;
+
+    my $dir = $self->{'dir'}.'/shared';
+
+    if (-e $dir) {
+	&do_log('err',"List::create_shared : %s allready exists", $dir);
+	return undef;
+    }
+
+    unless (mkdir ($dir, 0777)) {
+	&do_log('err',"List::create_shared : unable to create %s : %s ", $dir, $!);
+	return undef;
+    }
+
+    return 1;
+}
+
 
 #################################################################
 

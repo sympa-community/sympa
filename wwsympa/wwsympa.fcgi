@@ -5228,6 +5228,13 @@ sub do_set_pending_list_request {
      print INFO $in{'info'};
      close INFO;
 
+     my $new_list = new List ($in{'listname'},$robot);
+     
+     ## Create shared if required
+     if (defined $new_list->{'admin'}{'shared_doc'}) {
+	 $new_list->create_shared();
+     }
+
      ## Create list object
      $in{'list'} = $in{'listname'};
      &check_param_in();
@@ -7068,27 +7075,22 @@ sub merge_edit{
      $mode{'edit'} = 1;
      my %access = &d_access_control(\%mode,$in{'path'});
 
+     my $dir = $list->{'dir'};
+
      unless ($access{'may'}{'edit'}) {
 	 &wwslog('info',"do_d_admin : permission denied for $param->{'user'}{'email'} ");
 	 &error_message('failed');
 	 return undef;
      }
 
-     my $dir = $list->{'dir'};
-
      if ($in{'d_admin'} eq 'create') {
 
-	 if (-e "$dir/shared") {
-	     &wwslog('info',"do_d_admin :  create; $dir/shared allready exist");
+	 unless ($list->create_shared()) {
+	     &wwslog('info',"do_d_admin : could not create the shared");
 	     &error_message('failed');
-	     return undef;
+	     return undef;	 
 	 }
-	 unless (mkdir ("$dir/shared",0777)) {
-	     &wwslog('info',"do_d_admin : create; unable to create $dir/shared : $! ");
-	     &error_message('failed');
-	     return undef;
-	 }
-
+	 
 	 return 'd_read';
      }elsif($in{'d_admin'} eq 'restore') {
 	 unless (-e "$dir/pending.shared") {

@@ -7529,7 +7529,7 @@ Consequently, the only way to encrypt a message for a list of recipients is
 to encrypt and send the message for each recipient. This is what S/Sympa
 does when distributing an encrypted message.
 
-The S/Sympa encryption feature in the distribution process supposes that sympa
+The S/Sympa encryption feature in the distribution process supposes that Sympa
 has received an encrypted message for some list. To be able to encrypt a message
 for a list, the sender must have some access to an X509 certificate for the list.
 So the first requirement is to install a certificate and a private key for
@@ -7552,21 +7552,20 @@ The list private key must be installed in a file named
 keys must be encrypted using a single password defined by the
 \cfkeyword {password} parameter in \cfkeyword {sympa.conf}.
 
-\subsubsection {Use of Netscape navigator to obtain X509 list certificates}
+\subsubsection {Use of navigator to obtain X509 list certificates}
 
 In many cases e-mail X509 certificates are distributed via a web server and
-loaded into the browser using your mouse :) Netscape allows
-certificates to be exported to a file. So one way to get a list certificate is to obtain an e-mail
-certificate for the canonical list address in your browser, and then to export and install it for Sympa :
-\begin {enumerate}
-\item browse the net and load a certificate for the list address on some
-PKI provider (your own OpenCa pki server , thawte, verisign, ...). Be
-careful :  the e-mail certificate must be correspond exactly to the canonical address of
-your  list, otherwise, the signature will be incorrect (sender e-mail will
-not match signer e-mail).
-\item in the security menu, select the intended certificate and export
-it. Netscape will prompt you for a password and a filename to encrypt
-the output file. The format used by Netscape is  ``pkcs\#12''. 
+loaded into the browser using your mouse :) Mozilla or internet explorer allows
+certificates to be exported to a file.
+
+Here is a way to install a certificat for a list:
+
+\begin {itemize} 
+\item Get a list certificate is to obtain an personal e-mail
+certificate for the canonical list address in your browser as if it was your personal certificate, 
+
+\item export the intended certificate
+it. The format used by Netscape is  ``pkcs\#12''. 
 Copy this file to the list home directory.
 \item convert the pkcs\#12 file into a pair of pem files :
 \cfkeyword {cert.pem} and \cfkeyword {private\_key} using
