@@ -155,6 +155,7 @@ sub new {
 	
 	## Check S/MIME signatures
 	if ($hdr->get('Content-Type') =~ /multipart\/signed|application\/(x-)?pkcs7-mime/i) {
+	    $message->{'protected'} = 1; ## Messages that should not be altered (not footer)
 	    my $signed = &tools::smime_sign_check ($message);
 	    if ($signed->{'body'}) {
 		$message->{'smime_signed'} = 1;
