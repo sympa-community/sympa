@@ -2240,6 +2240,12 @@ sub do_set {
     
     if ($in{'email'} ne $in{'new_email'}) {
 
+	unless ($in{'new_email'} && &wwslib::valid_email($in{'new_email'})) {
+	    &do_log('notice', "do_set:incorrect email %s",$in{'new_email'});
+	    &error_message('incorrect_email', {'email' => $in{'new_email'}});
+	    return undef;
+	}
+
 	## Duplicate entry in user_table
 	unless (&List::is_user_db($in{'new_email'})) {
 
