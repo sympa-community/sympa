@@ -1415,7 +1415,7 @@ sub do_unify_email {
     
     foreach my $role ('member','owner','editor'){
 	foreach my $email ( keys %{$param->{'alt_emails'}} ){
-	    my @array = &List::get_which($email,$role); 
+	    my @array = &List::get_which($email,$robot, $role); 
 	    $param->{'alternative_subscribers_entries'}{$role}{$email} = \@array if($#array > -1);
 	}
     }
