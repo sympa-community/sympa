@@ -304,13 +304,17 @@ sub smime_sign {
     $in_msg->print(\*MSGDUMP);
     close(MSGDUMP);
 
-     unless (open (NEWMSG,"$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file 2>&1 |")) {
-    	&do_log('notice', 'Cannot sign message');
-    }
     if ($Conf{'key_passwd'} ne '') {
 	unless ( &POSIX::mkfifo("$Conf{'tmpdir'}/pass.$$",0600)) {
 	    do_log('notice', 'Unable to make fifo for %s/pass.%s',$Conf{'tmpdir'},$$);
 	}
+    }
+
+     unless (open (NEWMSG,"$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file 2>&1 |")) {
+    	&do_log('notice', 'Cannot sign message');
+    }
+
+    if ($Conf{'key_passwd'} ne '') {
 	unless (open (FIFO,"> $Conf{'tmpdir'}/pass.$$")) {
 	    do_log('notice', 'Unable to open fifo for %s/pass.%s',$Conf{'tmpdir'},$$);
 	}
@@ -528,13 +532,19 @@ sub smime_decrypt {
 	$pass_option = "-passin file:$Conf{'tmpdir'}/pass.$$";	
     }
 
-    open (NEWMSG, "$Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option 2>&1 |");
     if ($Conf{'key_passwd'} ne '') {
 	unless (&POSIX::mkfifo("$Conf{'tmpdir'}/pass.$$",0600)) {
 	    do_log('notice', 'Unable to make fifo for %s/pass.%s',$Conf{'tmpdir'},$$);
+	    return undef;
 	}
+    }
+
+    open (NEWMSG, "$Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option 2>&1 |");
+
+    if ($Conf{'key_passwd'} ne '') {
 	unless (open (FIFO,"> $Conf{'tmpdir'}/pass.$$")) {
 	    do_log('notice', 'Unable to open fifo for %s/pass.%s',$Conf{'tmpdir'},$$);
+	    return undef;
 	}
 	print FIFO $Conf{'key_passwd'};
 	close FIFO;
