@@ -4550,10 +4550,12 @@ as follows :
 \begin{verbatim}
 <topic1_name>
 title	<topic1 title>
+title.fr <topic french title>
 visibility <topic1 visibility>
 ....
 <topicn_name/subtopic_name>
 title	<topicn title>
+title.de <topicn german title>
 \end{verbatim}
 \end {quote}
 
