@@ -1478,7 +1478,8 @@ sub do_search {
 
     my $record = 0;
     ## Members list
-    for (my $i = $list->get_first_user({'sql_regexp' => $sql_regexp}); $i; $i = $list->get_next_user()) {
+    for (my $i = $list->get_first_user({'sql_regexp' => $sql_regexp, 'sortby' => 'email'})
+	 ; $i; $i = $list->get_next_user()) {
 
 	## Search filter
 	next if ($i->{'email'} !~ /$regexp/i
