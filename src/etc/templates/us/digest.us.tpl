@@ -6,8 +6,8 @@ Mime-version: 1.0
 Content-Type: multipart/mixed; boundary="[boundary1]"
 
 --[boundary1]
-Content-Type: text/plain
-Content-transfer-encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1;
+Content-transfer-encoding: 8bit
 
 Table of contents:
 
