@@ -13,7 +13,7 @@
 [ELSE]
 Voit muuttaa useita viestejä/tiedostoja jotka liittyvät listaasi:<BR><BR>
 
-<DD><INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+<INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	     <SELECT NAME="file">
 	      [FOREACH f IN files]
 	        <OPTION VALUE="[f->NAME]" [f->selected]>[f->complete]

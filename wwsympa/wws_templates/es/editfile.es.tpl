@@ -11,7 +11,7 @@
   <INPUT TYPE="submit" NAME="action_savefile" VALUE="Guardar">
 
 [ELSE]
-<DD><INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+<INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	     <SELECT NAME="file">
 	      [FOREACH f IN files]
 	        <OPTION VALUE="[f->NAME]" [f->selected]>[f->complete]

@@ -13,7 +13,7 @@
 [ELSE]
 U kunt verschillende berichten/bestanden die bij uw lijst horen wijzigen :<BR><BR>
 
-<DD><INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+<INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	     <SELECT NAME="file">
 	      [FOREACH f IN files]
 	        <OPTION VALUE="[f->NAME]" [f->selected]>[f->complete]

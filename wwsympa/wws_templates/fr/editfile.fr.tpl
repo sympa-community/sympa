@@ -14,7 +14,7 @@
 Vous pouvez éditer ci-dessous les messages de services et d'autres fichiers associés
 à votre liste :<BR><BR>
 
-<DD><INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+<INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	     <SELECT NAME="file">
 	      [FOREACH f IN files]
 	        <OPTION VALUE="[f->NAME]" [f->selected]>[f->complete]

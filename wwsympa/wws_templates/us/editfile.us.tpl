@@ -13,7 +13,7 @@
 [ELSE]
 You can edit several messages/files associated to your list :<BR><BR>
 
-<DD><INPUT TYPE="hidden" NAME="list" VALUE="[list]">
+<INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 	     <SELECT NAME="file">
 	      [FOREACH f IN files]
 	        <OPTION VALUE="[f->NAME]" [f->selected]>[f->complete]
