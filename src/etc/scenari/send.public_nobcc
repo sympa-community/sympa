@@ -5,8 +5,8 @@ title.es lista pública Bcc rejected (anti-spam)
 title.cz veøejná konference Bcc odmítnuto (anti-spam)
 title.hu nyilvános lista, de Bcc nélkül (anti-spam)
 
-match([header->To],/[listname]/)      smtp,smime,md5    -> do_it
-match([header->Cc],/[listname]/)      smtp,smime,md5    -> do_it
+equal([is_bcc],1)	              smtp,smime,md5    -> reject
+
 
 
 
