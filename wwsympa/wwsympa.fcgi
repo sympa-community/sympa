@@ -774,10 +774,11 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		  $number ++ if ($element);
 	     }  
 	     $param->{'unique'} = 1 if($number <= 1);
-
-	     unless(&cookielib::set_cookie_extern($Conf{'cookie'},$param->{'cookie_domain'},%{$param->{'alt_emails'}})){
-		  &wwslog('notice', 'Could not set HTTP cookie for external_auth');
-		  exit -1;
+	     
+	     unless ($number == 0) {
+		 unless(&cookielib::set_cookie_extern($Conf{'cookie'},$param->{'cookie_domain'},%{$param->{'alt_emails'}})){
+		     &wwslog('notice', 'Could not set HTTP cookie for external_auth');
+		 }
 	     }
 	 }
      }elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/){
