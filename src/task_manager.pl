@@ -1183,7 +1183,7 @@ sub purge_orphan_bounces {
 		     next;
 		 }
 
-		 unless( $list->update_user($email, {'bounce' => 'NULL', 'update_date' => time})) {
+		 unless( $list->update_user($email, {'bounce' => 'NULL'})) {
 		     do_log('info','expire_bounce: failed update database for %s', $email);
 		     next;
 		 }
@@ -1412,7 +1412,7 @@ sub purge_orphan_bounces {
 	    my $score = &get_score($user_ref,$list_traffic) || 0;
 
 	    ## copying score into DataBase
-	    unless ($list->update_user($user_ref->{'email'},{'score' => $score, 'update_date' => time }) ) {
+	    unless ($list->update_user($user_ref->{'email'},{'score' => $score }) ) {
 		&do_log('err','Task eval_bouncers :Error while updating DB for user %s',$user_ref->{'email'});
 		next;
 	    }
