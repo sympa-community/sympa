@@ -34,7 +34,7 @@ File [%|l(notice.path)%]File %1 waiting for moderation[%END%]
 [% ELSIF notice.msg == 'subscribers_update_soon' %]
 [%|l%]The list of list members will be built/updated soon (a few minutes).[%END%]
 
-[% ELSIF notice->msg == 'add_performed' %]
+[% ELSIF notice.msg == 'add_performed' %]
 [%|l(notice.total)%]%1 addresses have been subscribed[%END%]
 
 [% ELSE %]
