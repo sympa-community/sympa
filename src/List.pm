@@ -4967,13 +4967,13 @@ sub _include_users_ldap_2level {
 	## Multiple values
 	if (ref($entry) eq 'ARRAY') {
 	    foreach my $attr (@{$entry}) {
-		next if ($ldap_select1 eq 'regex' && ! $attr =~ /$ldap_regex1/);
+		next if (($ldap_select1 eq 'regex') && ($attr !~ /$ldap_regex1/));
 		push @attrs, $attr;
 		last if ($ldap_select1 eq 'first');
 	    }
 	}else {
 	    push @attrs, $entry
-		unless ($ldap_select1 eq 'regex' && ! $entry =~ /$ldap_regex1/);
+		unless (($ldap_select1 eq 'regex') && ($entry !~ /$ldap_regex1/));
 	}
     }
 
@@ -5001,13 +5001,13 @@ sub _include_users_ldap_2level {
 	    ## Multiple values
 	    if (ref($entry) eq 'ARRAY') {
 		foreach my $email (@{$entry}) {
-		    next if ($ldap_select2 eq 'regex' && ! $email =~ /$ldap_regex2/);
+		    next if (($ldap_select2 eq 'regex') && ($email !~ /$ldap_regex2/));
 		    push @emails, $email;
 		    last if ($ldap_select2 eq 'first');
 		}
 	    }else {
 		push @emails, $entry
-		    unless ($ldap_select2 eq 'regex' && ! $entry =~ /$ldap_regex2/);
+		    unless (($ldap_select2 eq 'regex') && ($entry !~ /$ldap_regex2/));
 	    }
 	}
     }
