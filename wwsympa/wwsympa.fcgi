@@ -1265,17 +1265,11 @@ sub authentication{
 	return $user;
     }else{
 	
-        ## Uncomplete password
-	if ($user->{'password'} =~ /$pwd/) {
-	    &error_message('uncomplete_passwd');
-	    &wwslog('info','do_login: uncomplete password for user %s', $email);
-	}else {
-	    if ($user->{'password'} =~ /^init/i) {
-		&error_message('init_passwd');
-	    }
-	    &error_message('incorrect_passwd');
-	    &wwslog('info','authentication: incorrect password for user %s', $email);
+	if ($user->{'password'} =~ /^init/i) {
+	    &error_message('init_passwd');
 	}
+	&error_message('incorrect_passwd');
+	&wwslog('info','authentication: incorrect password for user %s', $email);
 	
 	$param->{'init_email'} = $email;
 	$param->{'escaped_init_email'} = &tools::escape_chars($email);
