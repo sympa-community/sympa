@@ -5816,8 +5816,12 @@ custom header lines in the configuration file at the same time.
 This parameter is optional. It specifies a string which is
 added to the subject of distributed messages (intended to help
 users who do not use automatic tools to sort incoming messages).
+This string can refer to list variables, currently \texttt {[list->name]}
+or \texttt {[list->sequence]} (the sequence number of the message).
 
-\example {custom\_subject [sympa-users]}.
+\example {custom\_subject sympa-users}.
+
+\example {custom\_subject Msg \texttt {[list->sequence]}}.
 
 \subsection {footer\_type}
     	\label {par-footer-type}
