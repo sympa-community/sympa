@@ -2434,7 +2434,7 @@ sub get_next_user {
 
 	if (defined $user) {
 	    $user->{'reception'} ||= 'mail';
-	    unless ($self->is_available_reception_mode($user{'reception'})){
+	    unless ($self->is_available_reception_mode($user->{'reception'})){
 		$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	    }
 	}
