@@ -2798,7 +2798,7 @@ sub get_subscriber {
 
 	## In case it was not set in the database
 	$user->{'subscribed'} = 1
-	    if ($self->{'admin'}{'user_data_source'} eq 'database');
+	    if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
 
 	## Set session cache
 	$list_cache{'get_subscriber'}{$name}{$email} = $user;
@@ -2816,7 +2816,7 @@ sub get_subscriber {
 	     unless ($self->is_available_reception_mode($user{'reception'}));
 	
 	## In case it was not set in the database
-	$user{'subscribed'} = 1;
+	$user{'subscribed'} = 1 if (defined(%user));
 
 	return \%user;
     }
@@ -2967,7 +2967,7 @@ sub get_first_user {
 
 	    ## In case it was not set in the database
 	    $user->{'subscribed'} = 1
-		if ($self->{'admin'}{'user_data_source'} eq 'database');
+		if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
 	}
 
 	## If no LIMIT was used, update total of subscribers
@@ -2992,7 +2992,7 @@ sub get_first_user {
 	    $user{'reception'} ||= 'mail';
 	    $user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	    unless ($self->is_available_reception_mode($user{'reception'}));
-	    $user{'subscribed'} = 1;
+	    $user{'subscribed'} = 1 if (defined(%user));
 	    return \%user;
 	}
 	return undef;
@@ -3017,7 +3017,7 @@ sub get_next_user {
 
 	    ## In case it was not set in the database
 	    $user->{'subscribed'} = 1
-		if ($self->{'admin'}{'user_data_source'} eq 'database');
+		if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
 	}
 	else {
 	    $sth->finish;
@@ -3039,7 +3039,7 @@ sub get_next_user {
 	    $user{'reception'} ||= 'mail';
 	    $user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	      unless ($self->is_available_reception_mode($user{'reception'}));
-	    $user{'subscribed'} = 1;
+	    $user{'subscribed'} = 1 if (defined(%user));
 	    return \%user;
 	}
 	## Update total
@@ -3101,7 +3101,7 @@ sub get_first_bouncing_user {
 	    
     ## In case it was not set in the database
     $user->{'subscribed'} = 1
-	if ($self->{'admin'}{'user_data_source'} eq 'database');    
+	if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
     
     return $user;
 }
@@ -3109,7 +3109,7 @@ sub get_first_bouncing_user {
 ## Loop for all subsequent bouncing users.
 sub get_next_bouncing_user {
     my $self = shift;
-#    do_log('debug2', 'List::get_next_bouncing_user');
+    do_log('debug2', 'List::get_next_bouncing_user');
 
     unless (($self->{'admin'}{'user_data_source'} eq 'database') ||
 	    ($self->{'admin'}{'user_data_source'} eq 'include2')){
@@ -3126,7 +3126,7 @@ sub get_next_bouncing_user {
 
     ## In case it was not set in the database
     $user->{'subscribed'} = 1
-	if ($self->{'admin'}{'user_data_source'} eq 'database');    
+	if (defined ($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
 
     return $user;
 }
