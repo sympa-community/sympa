@@ -7,6 +7,7 @@ Subject: <INPUT TYPE="text" SIZE ="45" NAME="subject" VALUE="[subject]">
 <INPUT TYPE="submit" NAME="action_send_mail" VALUE="Send this mail">
 <BR>
 <INPUT TYPE="hidden" NAME="in_reply_to" value="[in_reply_to]">
+<INPUT TYPE="hidden" NAME="message_id" value="[message_id]">
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 <INPUT TYPE="hidden" NAME="to" VALUE="[to]">
 

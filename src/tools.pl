@@ -1181,4 +1181,12 @@ sub write_pid {
     return 1;
 }
 
+sub get_message_id {
+    my $robot = shift;
+
+    my $id = sprintf '<sympa.%d.%d.%d@%s>', time, $$, int(rand(999)), $robot;
+
+    return $id;
+}
+
 1;

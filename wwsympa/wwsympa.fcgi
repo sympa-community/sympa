@@ -8137,7 +8137,6 @@ sub do_change_email {
 }
 
 sub do_compose_mail {
-
     &wwslog('info', 'do_compose_mail');
 
     unless ($param->{'user'}{'email'}) {
@@ -8166,6 +8165,7 @@ sub do_compose_mail {
     $param->{'subject'}= &MIME::Words::encode_mimewords($in{'subject'});
 
     $param->{'in_reply_to'}= $in{'in_reply_to'};
+    $param->{'message_id'} = &tools::get_message_id($robot);
     return 1;
 }
 
@@ -8196,7 +8196,9 @@ sub do_send_mail {
     my @body = split /\0/, $in{'body'};
 
     &mail::mailback(\@body, 
-                    {'Subject' => $in{'subject'}, 'In-Reply-To' => $in{'in_reply_to'}}, 
+                    {'Subject' => $in{'subject'}, 
+		     'In-Reply-To' => $in{'in_reply_to'},
+		     'Message-ID' => $in{'message_id'}}, 
 		    $param->{'user'}{'email'}, $to, $robot, $to);
 
     &message('performed');
