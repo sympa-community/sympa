@@ -19,7 +19,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-cgi_SUBST	=	sympa_soap_server.fcgi sympa_soap_client.pl
+cgi_SUBST	=	sympa_soap_server.fcgi 
+
+script_SUBST	=	sympa_soap_client.pl
 
 lib_SUBST	=	sympasoap.pm SympaTransport.pm
 
@@ -40,6 +42,10 @@ installmod:
 	chown $(USER) $(DESTDIR)$(ETCBINDIR)/$$i; \
 	chgrp $(GROUP) $(DESTDIR)$(ETCBINDIR)/$$i; \
 	done
+	@for i in $(script_SRC) ; do \
+	chown $(USER) $(DESTDIR)$(SCRIPTDIR)/$$i; \
+	chgrp $(GROUP) $(DESTDIR)$(SCRIPTDIR)/$$i; \
+	done
 	@for i in $(cgi_SUBST) ; do \
 	chown $(USER) $(DESTDIR)$(CGIDIR)/$$i; \
 	chgrp $(GROUP) $(DESTDIR)$(CGIDIR)/$$i; \
@@ -57,6 +63,10 @@ makedir:
 	@if [ ! -d $(DESTDIR)$(CGIDIR) ]; then \
 		echo "Creating required directory $(DESTDIR)$(CGIDIR)"; \
 		mkdir -p $(DESTDIR)$(CGIDIR); \
+	fi
+	@if [ ! -d $(DESTDIR)$(SCRIPTDIR) ]; then \
+		echo "Creating required directory $(DESTDIR)$(SCRIPTDIR)"; \
+		mkdir -p $(DESTDIR)$(SCRIPTDIR); \
 	fi
 	@if [ ! -d $(DESTDIR)$(LIBDIR) ]; then \
 		echo "Creating required directory $(DESTDIR)$(LIBDIR)"; \

@@ -282,7 +282,7 @@ done
 # Documentation
 %doc %attr(-,root,root) INSTALL README AUTHORS COPYING NEWS ChangeLog
 %doc %attr(-,root,root) doc/sympa.tex doc/sympa.ps doc/sympa.pdf
-%doc %attr(-,root,root) doc/html/*
+%doc %attr(-,root,root) --DOCDIR--/*
 %attr(-,root,root) %{_mandir}/man8/*
  
 # Spools
@@ -350,6 +350,7 @@ done
  
 # Icons and binaries for Apache
 --CGIDIR--/wwsympa.fcgi
+--CGIDIR--/sympa_soap_server.fcgi
 --ICONSDIR--/
  
 # Init scripts
@@ -357,7 +358,7 @@ done
 
 # Examples
 #%dir --SAMPLEDIR--
---SAMPLEDIR--/
+#--SAMPLEDIR--/
 
 
 %clean
