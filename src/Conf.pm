@@ -115,7 +115,8 @@ my %Default_Conf =
      'ldap_export_host' => '',
      'ldap_export_suffix' => '',
      'ldap_export_password' => '',
-     'ldap_export_dnmanager' => ''
+     'ldap_export_dnmanager' => '',
+     'ldap_export_connection_timeout' => ''
    );
    
 %Conf = ();
@@ -208,19 +209,22 @@ sub load {
 	$Conf{$i} = $o{$i}[0] || $Default_Conf{$i};
     }
 
-    my @array = &_load_auth();
-    $Conf{'ldap_array'} = [@array];
-    
-    
-    ##Export
-    $Conf{'ldap_export'} = {$Conf{'ldap_export_name'} => { 'host' => $Conf{'ldap_export_host'},
+    ## LDAP directories for exportation
+    if ($Conf{'ldap_export_name'}) {
+	my @array = &_load_auth();
+	$Conf{'ldap_array'} = [@array];
+	
+	
+	##Export
+	$Conf{'ldap_export'} = {$Conf{'ldap_export_name'} => { 'host' => $Conf{'ldap_export_host'},
 							   'suffix' => $Conf{'ldap_export_suffix'},
-							   'password' => $Conf{'ldap_export_password'},
-							   'DnManager' => $Conf{'ldap_export_dnmanager'},
-                                                           'connection_timeout' => $Conf{'ldap_export_connection_timeout'}
-						       }
-			};
-   
+							       'password' => $Conf{'ldap_export_password'},
+							       'DnManager' => $Conf{'ldap_export_dnmanager'},
+							       'connection_timeout' => $Conf{'ldap_export_connection_timeout'}
+							   }
+			    };
+    }
+    
     
     my $p = 1;
     foreach (split(/,/, $Conf{'sort'})) {
