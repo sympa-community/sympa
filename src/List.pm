@@ -2139,6 +2139,11 @@ sub send_file {
 	
 	$data->{'subscriber'} = $self->get_subscriber($who);
 
+	if ($data->{'subscriber'}) {
+	    $data->{'subscriber'}{'date'} = &POSIX::strftime("%d %b %Y", localtime($data->{'subscriber'}{'date'}));
+	    $data->{'subscriber'}{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($data->{'subscriber'}{'update_date'}));
+	}
+	
 	unless ($data->{'user'}{'password'}) {
 	    $data->{'user'}{'password'} = &tools::tmp_passwd($who);
 	}
@@ -2155,6 +2160,7 @@ sub send_file {
     }
 
     ## Lang
+    &do_log('debug', 'LANG: %s', $data->{'user'}{'lang'});
     my $lang = $data->{'user'}{'lang'} || $self->{'lang'} || $Conf{'lang'};
 
     ## What file   

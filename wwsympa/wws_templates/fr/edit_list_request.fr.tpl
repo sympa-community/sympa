@@ -154,6 +154,26 @@
 	[END]
       [ENDIF]
 
+    [ELSIF p->type=task]
+    <!-- Task -->
+      [IF p->may_edit=write]
+	<SELECT NAME="single_param.[p->name].name">
+	  [FOREACH task IN p->value]
+	  <OPTION VALUE="[task->name]"
+	     [IF task->selected=1]
+		SELECTED
+	     [ENDIF]
+	  >[task->title] ([task->name])
+	  [END]
+	</SELECT>
+      [ELSIF p->may_edit=read]
+	[FOREACH task IN p->value]
+	  [IF task->selected=1]
+	    [task->title] ([task->name])
+	  [ENDIF]
+	[END]
+      [ENDIF]
+
     [ELSIF p->type=paragraph]
     <!-- Paragraph -->
       [FOREACH key IN p->value]
@@ -180,6 +200,26 @@
 	      [FOREACH scenario IN key->value]
 	        [IF scenario->selected=1]
 		  [scenario->title] ([scenario->name])
+	        [ENDIF]
+	      [END]
+	    [ENDIF]
+
+	  [ELSIF key->type=task]
+	  <!-- Task -->
+	    [IF key->may_edit=write]
+	      <SELECT NAME="single_param.[p->name].[key->name].name">
+	        [FOREACH task IN key->value]
+	          <OPTION VALUE="[task->name]"
+	          [IF task->selected=1]
+		    SELECTED
+	          [ENDIF]
+	          >[task->title] ([task->name])
+	        [END]
+	      </SELECT>
+	    [ELSIF key->may_edit=read]
+	      [FOREACH task IN key->value]
+	        [IF task->selected=1]
+		  [task->title] ([task->name])
 	        [ENDIF]
 	      [END]
 	    [ENDIF]

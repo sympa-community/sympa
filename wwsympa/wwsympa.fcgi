@@ -4362,7 +4362,7 @@ sub do_edit_list {
 	foreach my $i (0..$#{$p}) {
 
 	    ## Scenario
-	    if ($pinfo->{$pname}{'scenario'}) {
+	    if ($pinfo->{$pname}{'scenario'} || $pinfo->{$pname}{'task'}) {
 		if ($p->[$i]{'name'} ne $new_p->[$i]{'name'}) {
 		    $changed{$pname} = 1; next;
 		}
@@ -4374,7 +4374,7 @@ sub do_edit_list {
 
 		    next unless ($list->may_edit("$pname.$key",$param->{'user'}{'email'}) eq 'write');
 
-		    if ($pinfo->{$pname}{'format'}{$key}{'scenario'}) {
+		    if ($pinfo->{$pname}{'format'}{$key}{'scenario'} || $pinfo->{$pname}{'format'}{$key}{'task'}) {
 			if ($p->[$i]{$key}{'name'} ne $new_p->[$i]{$key}{'name'}) {
 			    $changed{$pname} = 1; next;
 			}
@@ -4692,7 +4692,7 @@ sub _prepare_data {
 	## Type of data
 	if ($struct->{'scenario'}) {
 	    $p_glob->{'type'} = 'scenario';
-	    my $list_of_scenario = $list->load_scenario_list($struct->{'scenario'});
+	    my $list_of_scenario = $list->load_scenario_list($struct->{'scenario'},$robot);
 	    
 	    $list_of_scenario->{$d->{'name'}}{'selected'} = 1;
 	    
@@ -4701,6 +4701,18 @@ sub _prepare_data {
 	    }
 	    
 	    $p->{'value'} = $list_of_scenario;
+
+	}elsif ($struct->{'task'}) {
+	    $p_glob->{'type'} = 'task';
+	    my $list_of_task = $list->load_task_list($struct->{'task'}, $robot);
+	    
+	    $list_of_task->{$d}{'selected'} = 1;
+	    
+	    foreach my $key (keys %{$list_of_task}) {
+		$list_of_task->{$key}{'title'} = $list_of_task->{$key}{'title'}{$param->{'lang'}} || $key;
+	    }
+	    
+	    $p->{'value'} = $list_of_task;
 
 	}elsif (ref ($struct->{'format'}) eq 'HASH') {
 	    $p_glob->{'type'} = 'paragraph';

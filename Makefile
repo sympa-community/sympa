@@ -275,7 +275,8 @@ installdir:
 	fi
 	@if [ ! -f $(DESTDIR)$(CONFDIR)/sympa.conf ] ; then \
 	echo "First installation : installing conf directories..."; \
-	for dir in etc/create_list_templates etc/templates etc/wws_templates etc/scenari ; do \
+	for dir in etc/create_list_templates etc/templates etc/wws_templates etc/scenari \
+	etc/task_models etc/general_task_models; do \
 		if [ ! -d $(DESTDIR)$(DIR)/$$dir ] ; then \
 			echo "Creating $(DESTDIR)$(DIR)/$$dir"; \
 			mkdir -p $(DESTDIR)$(DIR)/$$dir; \
@@ -287,7 +288,8 @@ installdir:
 	@if [ ! -f $(DESTDIR)$(CONFDIR)/sympa.conf ] ; then \
 	echo "First installation : installing spool directories..."; \
 	for dir in $(SPOOLDIR) $(SPOOLDIR)/msg $(SPOOLDIR)/digest $(SPOOLDIR)/moderation \
-	$(SPOOLDIR)/expire $(SPOOLDIR)/auth $(SPOOLDIR)/outgoing $(SPOOLDIR)/tmp ; do \
+	$(SPOOLDIR)/expire $(SPOOLDIR)/auth $(SPOOLDIR)/outgoing $(SPOOLDIR)/tmp \
+	$(SPOOLDIR)/task ; do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
 			mkdir -p $(DESTDIR)$$dir; \
