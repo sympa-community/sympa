@@ -1929,9 +1929,12 @@ sub send_msg {
     my $robot = $self->{'domain'};
     my $admin = $self->{'admin'};
     my $total = $self->{'total'};
-    my @sender_hdr = Mail::Address->parse($hdr->get('From'));
-  
-
+    my $sender_line = $hdr->get('From');
+    my @sender_hdr = Mail::Address->parse($sender_line);
+    my %sender_hash;
+    foreach my $email (@sender_hdr) {
+	$sender_hash{lc($email->address)} = 1;
+    }
    
     unless ($total > 0) {
 	&do_log('info', 'No subscriber in list %s', $name);
@@ -1966,22 +1969,12 @@ sub send_msg {
     my $mixed = ($msg->head->get('Content-Type') =~ /multipart\/mixed/i);
     my $alternative = ($msg->head->get('Content-Type') =~ /multipart\/alternative/i);
  
-    my $sender;
-    my $me; 
-   for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
-       if ($user->{'reception'} =~ /^digest|summary|nomail$/i) {
-	   next;
-       } elsif ($user->{'reception'} eq 'not_me'){
-	   $me =  0;
-	   foreach $sender (@sender_hdr) {
-	       if ($user->{'email'} eq $sender->address){
-		   $me = 1;
-		   next;
-	       }	   
-	       if ($me) {        
-		   next;
-	       }	   
-	  }
+    for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
+	if ($user->{'reception'} =~ /^digest|summary|nomail$/i) {
+	    next;
+	}elsif ($user->{'reception'} eq 'not_me'){
+	    push @tabrcpt, $user->{'email'} unless ($sender_hash{$user->{'email'}});
+
        } elsif ($user->{'reception'} eq 'notice') {
            push @tabrcpt_notice, $user->{'email'}; 
        } elsif ($alternative and ($user->{'reception'} eq 'txt')) {
