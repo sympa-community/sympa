@@ -2111,7 +2111,7 @@ sub get_user_db {
     $sth = pop @sth_stack;
 
     ## decrypt password
-    $user = &tools::decrypt_password($user->{'password')) if ($user->{'password'});
+    $user = &tools::decrypt_password($user->{'password'}) if ($user->{'password'});
 
     return $user;
 }
