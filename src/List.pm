@@ -3092,8 +3092,8 @@ sub get_first_user {
 		if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
 	}
 
-	## If no LIMIT was used, update total of subscribers
-	unless ($offset || $rows) {
+	## If no offset (for LIMIT) was used, update total of subscribers
+	unless ($offset) {
 	    my $total = &_load_total_db($self->{'name'});
 	    if ($total != $self->{'total'}) {
 		$self->{'total'} = $total;
