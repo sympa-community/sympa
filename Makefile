@@ -13,7 +13,7 @@ HOST		=	`$(PERL) -MSys::Hostname -e "printf '%s', Sys::Hostname::hostname();"`
 COOKIE		=	`$(PERL) -e " print int(rand ( time ))  "`
 PERL_VERSION	=	`$(PERL) -e ' print $$]'`
 
-SYMPA_VERSION	=	'3.1b.2'
+SYMPA_VERSION	=	'3.1b.3'
 
 #SYMPA_VERSION	=	`pwd | $(PERL) -e 'my @version = split /-/, <STDIN>; printf "%s", $$version[1];'`
 
