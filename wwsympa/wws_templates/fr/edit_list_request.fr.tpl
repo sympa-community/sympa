@@ -4,11 +4,11 @@
 Vous pouvez éditer ci-dessous un sous-ensemble des paramètres de la liste : <UL>
 <LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/description" >Définition de la liste</A>
 <LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/sending" >Diffusion/réception</A>
-<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/command" >Paramètrages des commandes</A>
-<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/archives" >Paramètrage des Archives</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/command" >Droits d'accès</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/archives" >Archives</A>
 <LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/bounces" >Gestion des rapports de non-remise</A>
 <LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/data_source" >Définition des sources de données</A>
-<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/other" >Autres paramètres</A>
+<LI><A HREF="[base_url][path_cgi]/edit_list_request/[list]/other" >Divers</A>
 </UL>
 [ELSE]
 <FORM ACTION="[path_cgi]" METHOD="POST">
