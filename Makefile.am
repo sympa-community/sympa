@@ -357,18 +357,17 @@ installdir:
 
 installconfig:
 	mkdir -p $(DESTDIR)$(CONFDIR)
-	@for cfile in sympa.conf wwsympa.conf ; do \
+	for cfile in sympa.conf wwsympa.conf ; do \
 	if [ ! -f $(DESTDIR)$(CONFDIR)/$$cfile ] ; then \
 	echo "Installing sample config file $$cfile..."; \
-	$(PERL)  $(DESTDIR)$(SBINDIR)/sympa_wizard.pl -c $$cfile; \
+	$(PERL) -I $(DESTDIR)$(SBINDIR) $(DESTDIR)$(SBINDIR)/sympa_wizard.pl -c $$cfile; \
 	chown $(USER) $(DESTDIR)$(CONFDIR)/$$cfile; \
 	chgrp $(GROUP) $(DESTDIR)$(CONFDIR)/$$cfile; \
 	INITCONF='1'; \
-	$(PERL)  $(DESTDIR)$(SBINDIR)/sympa_wizard.pl; \
 	fi \
 	done; \
 	if [ $(INITCONF) ] ; then \
-	$(PERL)  $(DESTDIR)$(SBINDIR)/sympa_wizard.pl; \
+	$(PERL) -I $(DESTDIR)$(SBINDIR) $(DESTDIR)$(SBINDIR)/sympa_wizard.pl; \
 	fi
 
 build_rh_rpm: clean

@@ -471,6 +471,11 @@ if ($ARGV[0] eq '-c') {
     }else {
 	exit 1;
     }
+
+    ## For RPM/Debian building
+    if ($ENV{'DESTDIR'}) {
+	$conf = $ENV{'DESTDIR'}.$conf;
+    }
     
     exit 1 if (-f $conf);
     
