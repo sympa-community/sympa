@@ -21,6 +21,7 @@ les listes dont vous êtes propriétaire , etc.
    <TABLE BORDER=0 CELLPADDING=3><TR VALIGN="top">
     <TD WIDTH=33% NOWRAP>
      [FOREACH topic IN topics]
+      o
       [IF topic->id=topicsless]
        <A HREF="[path_cgi]/lists/[topic->id]"><B>Autre</B></A><BR>
       [ELSE]
@@ -32,6 +33,7 @@ les listes dont vous êtes propriétaire , etc.
 	&nbsp;&nbsp;<A HREF="[path_cgi]/lists/[topic->id]/[subtopic->NAME]">[subtopic->title]</A><BR>
        </FONT>
       [END]
+
       [IF topic->next]
 	</TD><TD></TD><TD WIDTH=33% NOWRAP>
       [ENDIF]

@@ -19,6 +19,7 @@ archives, list management and so on.
    <TABLE BORDER=0 CELLPADDING=3><TR VALIGN="top">
     <TD WIDTH=33% NOWRAP>
      [FOREACH topic IN topics]
+      o
       [IF topic->id=topicsless]
        <A HREF="[path_cgi]/lists/[topic->id]"><B>Others</B></A><BR>
       [ELSE]
