@@ -29,6 +29,7 @@
       <TR><TD NOWRAP>
         <FORM ACTION="[path_cgi]" METHOD="POST">
 	  <INPUT NAME="email" SIZE="30" VALUE="[email]">
+	  <INPUT TYPE="hidden" NAME="action" VALUE="search_user">
 	  <INPUT TYPE="submit" NAME="action_search_user" VALUE="Rechercher un utilisateur">
 	</FORM>     
       </TD></TR>
