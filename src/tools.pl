@@ -36,6 +36,12 @@ use File::Find;
 ## global var to store a CipherSaber object 
 my $cipher;
 
+my %openssl_errors = (1 => 'an error occurred parsing the command options',
+		      2 => 'one of the input files could not be read',
+		      3 => 'an error occurred creating the PKCS#7 file or when reading the MIME message',
+		      4 => 'an error occurred decrypting or verifying the message',
+		      5 => 'the message was verified correctly but an error occurred writing out the signers certificates');
+
 ## Sorts the list of adresses by domain name
 ## Input : users hash
 ## Sort by domain.
@@ -406,6 +412,12 @@ sub smime_sign {
     }
     close NEWMSG ;
 
+    my $status = $?/256 ;
+    unless ($status == 0) {
+	do_log('notice', 'Unable to S/MIME sign message : status = %d', $status);
+	return undef;	
+    }
+
     unlink ($temporary_file) unless ($main::options{'debug'}) ;
     
     ## foreach header defined in  the incomming message but undefined in the
@@ -463,28 +475,14 @@ sub smime_sign_check {
 	print MSGDUMP <MSG>;
     }
 
-    close MSGDUMP;
-    my $status = $?/256 ;
     close MSG;
-    if ($status == '1') {
-	do_log('err', "Openssl ERROR while parsing the command options : $Conf{'openssl'} smime -verify  $Conf{'trusted_ca_options'} -signer  $temporary_file");
+    close MSGDUMP;
+
+    my $status = $?/256 ;
+    unless ($status == 0) {
+	do_log('err', 'Unable to check S/MIME signature : %s', $openssl_errors{$status});
 	return undef ;
     }
-    if ($status == '2') {
-	do_log('err', "One of input file could not be read : $Conf{'openssl'} smime -verify  $Conf{'trusted_ca_options'} -signer  $temporary_file");
-	return undef ;
-    }
-    if ($status == '3') {
-	do_log('err', "Error creating the PKCS#7 file: $Conf{'openssl'} smime -verify  $Conf{'trusted_ca_options'} -signer  $temporary_file");
-	return undef ;
-    }
-    if ($status == '4') {
-	do_log('err', "Error while verifying the message signature. The message may have been corrupted");
-	return undef ;
-    }
-    if ($status == '5') {
-	do_log('err', "The message signature is checked but could not write out the signers certificates");
-    }    
     
     ## second step is the message signer match the sender
     ## a better analyse should be performed to extract the signer email. 
@@ -567,6 +565,12 @@ sub smime_encrypt {
 
 	printf MSGDUMP "\n%s", $msg_body;
 	close(MSGDUMP);
+
+	my $status = $?/256 ;
+	unless ($status == 0) {
+	    do_log('err', 'Unable to S/MIME encrypt message : %s', $openssl_errors{$status});
+	    return undef ;
+	}
 
         ## Get as MIME object
 	open (NEWMSG, $temporary_file);
@@ -677,6 +681,13 @@ sub smime_decrypt {
 	return undef;
     }
     close NEWMSG ;
+
+    my $status = $?/256 ;
+    unless ($status == 0) {
+	do_log('err', 'Unable to decrypt S/MIME message : %s', $openssl_errors{$status});
+	return undef ;
+    }
+
     unlink ($temporary_file) unless ($main::options{'debug'}) ;
     
     ## foreach header defined in the incomming message but undefined in the
