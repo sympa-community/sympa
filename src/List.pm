@@ -4369,20 +4369,27 @@ sub _load_users {
 
     ## Create the in memory btree using DB_File.
     my %users;
+    my @users_list = (&_load_users_file($file)) ;     
     my $btree = new DB_File::BTREEINFO;
     return undef unless ($btree);
     $btree->{'compare'} = '_compare_addresses';
+    $btree->{'cachesize'} = 200 * ( $#users_list + 1 ) ;
     my $ref = tie %users, 'DB_File', undef, O_CREAT|O_RDWR, 0600, $btree;
     return undef unless ($ref);
 
     ## Counters.
     my $total = 0;
 
-    foreach my $user (&_load_users_file($file)) {
+    foreach my $user ( @users_list ) {
 	my $email = $user->{'email'};
 	unless ($users{$email}) {
 	    $total++;
 	    $users{$email} = join("\n", %{$user});
+	    unless ( defined ( $users{$email} )) { 
+		# $btree->{'cachesize'} under-sized
+		&do_log('err', '_load_users : cachesise too small : (%d users)', $total);
+		return undef;  
+	    }
 	}
     }
 
