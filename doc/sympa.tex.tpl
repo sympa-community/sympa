@@ -1242,14 +1242,12 @@ the file is of no importance.
 
 \section {Site customization}
 
-\subsection {\cfkeyword {domain}}
+\subsection {\cfkeyword {host}}
 
         This keyword is \textbf {mandatory}. It is the domain name
 used in the \rfcheader {From} header in replies to administrative
 requests. So the smtp engine (qmail, sendmail, postfix or whatever) must
-recognize this domain as a local adress. This parameter name replace
-the previous parameter name {\cfkeyword {host}} which can always
-be used as a synonim. 
+recognize this domain as a local adress. 
 
 
         \example {domain cru.fr}
@@ -1330,7 +1328,7 @@ be used as a synonim.
         for the site's local html templates; \dir {global\_task\_models} for local
 	global task models; and \dir {list\_task\_models} for local list task models
 
-        \example {home          /home/sympa/etc}
+        \example {etc          /home/sympa/etc}
 
 \section {System related}
 
@@ -1439,8 +1437,6 @@ be used as a synonim.
 	\default {-oi -odi -oem}
 
         Arguments passed to SMTP message transfer agent
-
-        \example {sendmail        /usr/sbin/sendmail}
 
 \subsection {\cfkeyword {rfc2369\_header\_fields}} 
 
@@ -1948,7 +1944,7 @@ This is required to allow the authentication scheme to be applied
 systematically.
 
 Authentication is based on passwords stored in the database table
-user\_table ; if the the appropriate \file {Crypt::CipherSaber} is
+user\_table ; if the appropriate \file {Crypt::CipherSaber} is
 installed, password are encrypted in the database using reversible
 encryption based on RC4. Otherwise they are stored in clear text.
 In both cases reminding of passwords is possible.
@@ -2084,7 +2080,7 @@ To run \WWSympa with FastCGI, you need to install :
 	Example : \tildefile {sympa/bin/alias\_manager.pl} add \samplelist cru.fr
 
 	\tildefile {sympa/bin/alias\_manager.pl} works on the alias file as defined
-	by the SENDMAIL\_ALIASES variable in the main Makefile (see \ref {makefile},  
+	by the \index{SENDMAIL\_ALIASES} variable in the main Makefile (see \ref {makefile},  
 	page~\pageref {makefile}). It runs a \unixcmd{newaliases} command (via
 	\file {aliaswrapper}), after any changes to aliases file.
 
@@ -2495,9 +2491,9 @@ provide various features based on access to one or more LDAP directories :
 
 \Sympa stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication . The  module of LDAP authentication allows to use \Sympa in intranet without duplicating the user's passwords. 
 
-Then, users can indiferently authenticate with their ldap\_uid, their alternate\_email or their canonic email stored in theldap directory (the most explicit user's email :for example  John.Carpenter@Host.com).
+Then, users can indiferently authenticate with their ldap\_uid, their alternate\_email or their canonic email stored in the LDAP directory.
 
-\Sympa gets the canonic email in the ldap directory with the ldap\_uid or the alternate\_email.  
+\Sympa gets the canonic email in the LDAP directory with the ldap\_uid or the alternate\_email.  
 \Sympa will first intend an anonymous bind to the directory to get the user's DN, and then \Sympa will bind with the DN and the user's ldap\_password in order to realise an efficient authentication. This last bind will work only if the good ldap\_password is provided. Indeed the value returned by the bind(DN,ldap\_password) is tested.
 
 
@@ -3692,7 +3688,7 @@ Rules are defined as follows :
 
 [is_bcc] ::= set to 1 if the list is neither in To: nor Cc:
 
-<date> ::= <epoch date> | <date format (see \ref {tasks}, page~\pageref {tasks})>
+<date> ::= <epoch date> | <date format>
 
 <listname> ::= [listname] | <listname_string>
 
@@ -3725,6 +3721,8 @@ Rules are defined as follows :
 	 	      
 \end{verbatim}
 \end {quote}
+
+(Refer to  \ref {tasks}, page~\pageref {tasks} for date format definition)
 
 perl\_regexp can contain the string [host] (interpreted at run time as the list or robot domain).
 The variable notation [msg\_header-$>$<smtp\_key\_word>] is interpreted as the SMTP header value only when performing
