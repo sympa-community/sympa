@@ -213,8 +213,8 @@ sub sendto {
 }
 
 sub mailto {
-   my($msg, $from, $encrypt, $originalfile , @rcpt) = @_;
-   do_log('debug2', 'smtp::mailto(from: %s, %s, %d rcpt)', $from, $encrypt, $#rcpt+1);
+   my($message, $from, @rcpt) = @_;
+   do_log('debug2', 'smtp::mailto(from: %s, , file:%s, %s, %d rcpt)', $from, $message->{'filename'}, $message->{'smime_crypted'}, $#rcpt+1);
 
    my($i, $j, $nrcpt, $size, @sendto);
    my $numsmtp = 0;
@@ -223,18 +223,18 @@ sub mailto {
    ## Extract body from original file to preserve signature
    my ($msg_body, $msg_header);
 
-   $msg_header = $msg->head;
+   $msg_header = $message->{'msg'}->head;
 
-   if ($originalfile eq '_ALTERED_') {
-       $msg_body = $msg->body_as_string;
-
-   }elsif (ref($originalfile)) {
-       $msg_body = $$originalfile;
-
+   if ($message->{'altered'}) {
+       $msg_body = $message->{'msg'}->body_as_string;
+       
+   }elsif ($message->{'smime_crypted'}) {
+       $msg_body = ${$message->{'msg_as_string'}};
+       
    }else {
-   ## Get body from original file
-       unless (open MSG, $originalfile) {
-	   do_log ('notice',"unable to open %s:%s",$originalfile,$!);
+       ## Get body from original file
+       unless (open MSG, $message->{'filename'}) {
+	   do_log ('notice',"Unable to open %s:%s",$message->{'filename'},$!);
 	   last;
        }
        my $in_header = 1 ;
@@ -249,10 +249,10 @@ sub mailto {
    }
    
    ## if the message must be crypted,  we need to send it using one smtp session for each rcpt
-   if ($encrypt eq 'smime_crypted'){
+   if ($message->{'smime_crypted'}){
        $numsmtp = 0;
        while ($i = shift(@rcpt)) {
-	   &sendto($msg_header, $msg_body, $from, [$i], $encrypt);
+	   &sendto($msg_header, $msg_body, $from, [$i], $message->{'smime_crypted'});
 	   $numsmtp++
 	   }
        

@@ -194,6 +194,7 @@ use Time::Local;
 use MIME::Entity;
 use MIME::Words;
 use MIME::Parser;
+use Message;
 
 ## Database and SQL statement handlers
 my ($dbh, $sth, @sth_stack, $use_db, $include_lock_count);
@@ -1877,16 +1878,14 @@ sub send_auth {
 ## Distribute a message to the list
 sub distribute_msg {
     my($self, $message) = @_;
-    my ($msg, $bytes, $msg_file, $encrypt) = ($message->{'msg'}, $message->{'size'}, $message->{'msg_as_string'}, $message->{'smime_crypted'});
-    $encrypt = 'smime_crypted' if ( $encrypt);
-    do_log('debug2', 'List::distribute_msg(%s, %s, %s, %s, %s)', $self->{'name'}, $msg, $bytes, $msg_file, $encrypt);
+    do_log('debug2', 'List::distribute_msg(%s, %s, %s, %s, %s)', $self->{'name'}, $message->{'msg'}, $message->{'size'}, $message->{'filename'}, $message->{'smime_crypted'});
 
-    my $hdr = $msg->head;
+    my $hdr = $message->{'msg'}->head;
     my ($name, $host) = ($self->{'name'}, $self->{'admin'}{'host'});
     my $robot = $self->{'domain'};
 
     ## Update the stats, and returns the new X-Sequence, if any.
-    my $sequence = $self->update_stats($bytes);
+    my $sequence = $self->update_stats($message->{'size'});
     
     ## Hide the sender if the list is anonymoused
     if ( $self->{'admin'}{'anonymous_sender'} ) {
@@ -1901,8 +1900,8 @@ sub distribute_msg {
     }
 
     ## Archives
-    my $msgtostore = $msg;
-    if (($encrypt eq 'smime_crypted') &&
+    my $msgtostore = $message->{'msg'};
+    if (($message->{'smime_crypted'} eq 'smime_crypted') &&
 	($self->{admin}{archive_crypted_msg} eq 'cleartext')) {
 	$msgtostore = $message->{'orig_msg'};
     }
@@ -1973,12 +1972,12 @@ sub distribute_msg {
     }
     
     ## store msg in digest if list accept digest mode (encrypted message can't be included in digest)
-    if (($self->is_digest()) and ($encrypt ne 'smime_crypted')) {
+    if (($self->is_digest()) and ($message->{'smime_crypted'} ne 'smime_crypted')) {
 	$self->archive_msg_digest($msgtostore);
     }
 
     ## Blindly send the message to all users.
-    my $numsmtp = $self->send_msg($msg, $msg_file, $encrypt);
+    my $numsmtp = $self->send_msg($message);
     unless (defined ($numsmtp)) {
 	return $numsmtp;
     }
@@ -1990,10 +1989,10 @@ sub distribute_msg {
 
 ## Send a message to the list
 sub send_msg {
-    my($self, $msg, $msg_file, $encrypt) = @_;
-    do_log('debug2', 'List::send_msg(%s, %s)', $msg_file, $encrypt);
+    my($self, $message) = @_;
+    do_log('debug2', 'List::send_msg(%s, %s)', $message->{'filename'}, $message->{'smime_crypted'});
     
-    my $hdr = $msg->head;
+    my $hdr = $message->{'msg'}->head;
     my $name = $self->{'name'};
     my $robot = $self->{'domain'};
     my $admin = $self->{'admin'};
@@ -2023,7 +2022,7 @@ sub send_msg {
 
     ## Add Custom Subject
     if ($admin->{'custom_subject'}) {
-	my $subject_field = &MIME::Words::decode_mimewords($msg->head->get('Subject'));
+	my $subject_field = &MIME::Words::decode_mimewords($message->{'msg'}->head->get('Subject'));
 	$subject_field =~ s/^\s*(.*)\s*$/$1/; ## Remove leading and trailing blanks
 
 	## Search previous subject tagging in Subject
@@ -2033,7 +2032,7 @@ sub send_msg {
 	$subject_field =~ s/\[$tag_regexp\]//;
 
 	## Add subject tag
-	$msg->head->delete('Subject');
+	$message->{'msg'}->head->delete('Subject');
 	my @parsed_tag;
 	&parser::parse_tpl({'list' => {'name' => $self->{'name'},
 			       'sequence' => $self->{'stats'}->[0]
@@ -2041,7 +2040,7 @@ sub send_msg {
 		   [$admin->{'custom_subject'}], \@parsed_tag);
 
 
-	$msg->head->add('Subject', '['.$parsed_tag[0].']'." ".$subject_field);
+	$message->{'msg'}->head->add('Subject', '['.$parsed_tag[0].']'." ".$subject_field);
     }
  
     ## Who is the enveloppe sender ?
@@ -2049,8 +2048,8 @@ sub send_msg {
     my $from = "$name-owner\@$host";
     
     my (@tabrcpt, @tabrcpt_notice, @tabrcpt_txt, @tabrcpt_html, @tabrcpt_url);
-    my $mixed = ($msg->head->get('Content-Type') =~ /multipart\/mixed/i);
-    my $alternative = ($msg->head->get('Content-Type') =~ /multipart\/alternative/i);
+    my $mixed = ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/mixed/i);
+    my $alternative = ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/alternative/i);
  
     for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
 	if ($user->{'reception'} =~ /^digest|summary|nomail$/i) {
@@ -2077,20 +2076,20 @@ sub send_msg {
 	return 0;
     }
     #save the message before modifying it
-    my $saved_msg = $msg->dup;
+    my $saved_msg = $message->{'msg'}->dup;
     my $nbr_smtp;
 
     ##Send message for normal reception mode
     if (@tabrcpt) {
 	## Add a footer
-	unless ($msg->head->get('Content-Type') =~ /multipart\/signed/i) {
-	    my $new_msg = $self->add_parts($msg);
+	unless ($message->{'smime_signed'}) {
+	    my $new_msg = $self->add_parts($message->{'msg'});
 	    if (defined $new_msg) {
-		$msg = $new_msg;
-		$msg_file = '_ALTERED_';
+		$message->{'msg'} = $new_msg;
+		$message->{'altered'} = '_ALTERED_';
 	    }
 	}
-	 $nbr_smtp = &smtp::mailto($msg, $from, $encrypt, $msg_file, @tabrcpt);
+	 $nbr_smtp = &smtp::mailto($message, $from, @tabrcpt);
     }
 
     ##Prepare and send message for notice reception mode
@@ -2098,7 +2097,8 @@ sub send_msg {
 	my $notice_msg = $saved_msg->dup;
         $notice_msg->bodyhandle(undef);    
 	$notice_msg->parts([]);
-	$nbr_smtp += &smtp::mailto($notice_msg, $from, $encrypt, '_ALTERED_', @tabrcpt_notice);
+	my $new_message = new Message($notice_msg);
+	$nbr_smtp += &smtp::mailto($new_message, $from, @tabrcpt_notice);
     }
 
     ##Prepare and send message for txt reception mode
@@ -2112,8 +2112,9 @@ sub send_msg {
 	my $new_msg = $self->add_parts($txt_msg);
 	if (defined $new_msg) {
 	    $txt_msg = $new_msg;
-        }
-	$nbr_smtp += &smtp::mailto($txt_msg, $from, $encrypt, '_ALTERED_', @tabrcpt_txt);
+       }
+	my $new_message = new Message($txt_msg);
+ 	$nbr_smtp += &smtp::mailto($new_message, $from, @tabrcpt_txt);
     }
 
    ##Prepare and send message for html reception mode
@@ -2127,7 +2128,8 @@ sub send_msg {
 	if (defined $new_msg) {
 	    $html_msg = $new_msg;
         }
-	$nbr_smtp += &smtp::mailto($html_msg, $from, $encrypt, '_ALTERED_', @tabrcpt_html);
+	my $new_message = new Message($html_msg);
+	$nbr_smtp += &smtp::mailto($new_message, $from, @tabrcpt_html);
     }
 
    ##Prepare and send message for urlize reception mode
@@ -2163,7 +2165,8 @@ sub send_msg {
 	if (defined $new_msg) {
 	    $url_msg = $new_msg;
 	} 
-	$nbr_smtp += &smtp::mailto($url_msg, $from, $encrypt, '_ALTERED_', @tabrcpt_url);
+	my $new_message = new Message($url_msg);
+	$nbr_smtp += &smtp::mailto($new_message, $from, @tabrcpt_url);
     }
 
     return $nbr_smtp;

@@ -44,10 +44,21 @@ use Log;
 ## Creates a new object
 sub new {
     my($pkg, $file) = @_;
-    my $message = {'filename' => $file};
+    my $message;
     &do_log('debug2', 'Message::new(%s)', $file);
     
+    if (ref($file) =~ /MIME::Entity/i) {
+	$message->{'msg'} = $file;
+	$message->{'altered'} = '_ALTERED';
+	
+	## Bless Message object
+	bless $message, $pkg;
+	
+	return $message;
+    }
+
     ## Parse message as a MIME::Entity
+    $message->{'filename'} = $file;
     unless (open FILE, $file) {
 	&do_log('err', 'Cannot open message file %s : %s',  $file, $!);
 	return undef;
@@ -55,18 +66,19 @@ sub new {
     
     my $parser = new MIME::Parser;
     $parser->output_to_core(1);
-
+    
     my $msg;
     unless ($msg = $parser->read(\*FILE)) {
 	do_log('err', 'Unable to parse message %s', $file);
 	return undef;
     }
     $message->{'msg'} = $msg;
-
-    my $hdr = $msg->head;
-
+    
     ## Message size
     $message->{'size'} = -s $file;    
+
+    my $hdr = $message->{'msg'}->head;
+
 
     ## Extract sender address
     unless ($hdr->get('From')) {
@@ -114,9 +126,9 @@ sub new {
 	## Decrypt messages
 	if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
 	    ($hdr->get('Content-Type') !~ /signed-data/)){
-	    my ($dec, $dec_as_string) = &tools::smime_decrypt ($msg, $message->{'list'});
+	    my ($dec, $dec_as_string) = &tools::smime_decrypt ($message->{'msg'}, $message->{'list'});
 	    if ($dec) {
-		$message->{'smime_crypted'} = 1;
+		$message->{'smime_crypted'} = 'smime_crypted';
 		$message->{'orig_msg'} = $message->{'msg'};
 		$message->{'msg'} = $dec;
 		$message->{'msg_as_string'} = $dec_as_string;

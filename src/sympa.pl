@@ -889,15 +889,12 @@ sub DoForward {
 ## Handles a message sent to a list.
 sub DoMessage{
     my($which, $message, $robot) = @_;
-    my ($msg, $file, $bytes) = ($message->{'msg'}, $message->{'msg_as_string'}, $message->{'size'});
-    my $encrypt;
-    $encrypt = 'smime_crypted' if ($message->{'smime_crypted'});
-    &do_log('debug', 'DoMessage(%s, %s, %s, msg from %s, %s, %s,%s)', $which, $msg, $robot, $msg->head->get('From'), $bytes, $file, $encrypt);
+    &do_log('debug', 'DoMessage(%s, %s, %s, msg from %s, %s, %s,%s)', $which, $message->{'msg'}, $robot, $message->{'sender'}, $message->{'size'}, $message->{'msg_as_string'}, $message->{'smime_crypted'});
     
     ## List and host.
     my($listname, $host) = split(/[@\s]+/, $which);
 
-    my $hdr = $msg->head;
+    my $hdr = $message->{'msg'}->head;
     
     my $from_field = $hdr->get('From');
     my $messageid = $hdr->get('Message-Id');
@@ -945,7 +942,7 @@ sub DoMessage{
     # Reject messages with commands
     if ($Conf{'misaddressed_commands'} =~ /reject/i) {
 	## Check the message for commands and catch them.
-	if (tools::checkcommand($msg, $sender, $robot)) {
+	if (tools::checkcommand($message->{'msg'}, $sender, $robot)) {
 	    &do_log('notice', 'Found command in message, ignoring message');
 	    
 	    return undef;
@@ -966,8 +963,8 @@ sub DoMessage{
     
     ## Check if the message is too large
     my $max_size = $list->get_max_size() || $Conf{'max_size'};
-    if ($max_size && $bytes > $max_size) {
-	do_log('notice', 'Message for %s from %s rejected because too large (%d > %d)', $name, $sender, $bytes, $max_size);
+    if ($max_size && $message->{'size'} > $max_size) {
+	do_log('notice', 'Message for %s from %s rejected because too large (%d > %d)', $name, $sender, $message->{'size'}, $max_size);
 	*SIZ  = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
 	print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), &Conf::get_robot_conf($robot, 'request')) . "\n";
 	printf SIZ "To: %s\n", $sender;
@@ -976,14 +973,14 @@ sub DoMessage{
 	printf SIZ "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
 	printf SIZ "Content-Transfer-Encoding: %s\n\n", Msg(12, 3, '7bit');
 	print SIZ Msg(4, 12, $msg::msg_too_large);
-	$msg->print(\*SIZ);
+	$message->{'msg'}->print(\*SIZ);
 	close(SIZ);
 	return undef;
     }
     
     my $rc;
    
-    if ($rc= &tools::virus_infected($msg, $file)) {
+    if ($rc= &tools::virus_infected($message->{'msg'}, $message->{'filename'})) {
 	if ($Conf{'antivirus_notify'} eq 'sender') {
 	    #printf "do message, virus= $rc \n";
 	    $list->send_file('your_infected_msg', $sender, $robot, {'virus_name' => $rc,
@@ -1002,12 +999,12 @@ sub DoMessage{
 	$action = &List::request_action ('send', 'smime',$robot,
 					 {'listname' => $name,
 					  'sender' => $sender,
-					  'msg' => $msg });
+					  'msg' => $message->{'msg'} });
     }else{
 	$action = &List::request_action ('send', 'smtp',$robot,
 					 {'listname' => $name,
 					  'sender' => $sender,
-					  'msg' => $msg });
+					  'msg' => $message->{'msg'} });
     }
 
     return undef
@@ -1024,7 +1021,7 @@ sub DoMessage{
 	    return undef;
 	}
 
-	do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions), size=%d', $name, $sender, time - $start_time, $numsmtp, $bytes);
+	do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions), size=%d', $name, $sender, time - $start_time, $numsmtp, $message->{'size'});
 	
 	## Everything went fine, return TRUE in order to remove the file from
 	## the queue.
@@ -1035,7 +1032,7 @@ sub DoMessage{
 	return 1;
     }elsif($action =~ /^editorkey(\s?,\s?(quiet))?/){
 	my $key = $list->send_to_editor('md5',$message);
-	do_log('info', 'Key %s for list %s from %s sent to editors, %s', $key, $name, $sender, $file, $encrypt);
+	do_log('info', 'Key %s for list %s from %s sent to editors, %s', $key, $name, $sender, $message->{'filename'});
 	$list->notify_sender($sender) unless ($2 eq 'quiet');
 	return 1;
     }elsif($action =~ /^editor(\s?,\s?(quiet))?/){
@@ -1058,7 +1055,7 @@ sub DoMessage{
 		printf SIZ "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
 		printf SIZ "Content-Transfer-Encoding: %s\n\n", Msg(12, 3, '7bit');
 		printf SIZ Msg(4, 15, $msg::list_is_private), $name;
-		$msg->print(\*SIZ);
+		$message->{'msg'}->print(\*SIZ);
 		close(SIZ);
 	    }
 	}
