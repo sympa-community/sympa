@@ -1262,6 +1262,153 @@ page~\pageref{lists-families}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Upgrading Sympa
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Upgrading Sympa}
+    \label {upgrading-sympa}
+
+Sympa upgrade is a relatively riskless operations, mainly because the install process preserves your
+customizations (templates, configuration, authorization scenarios,...) and also because Sympa automates
+a few things (DB update, CPAN modules installation).
+
+\section {Uncompatible changes}
+    \index{changes}
+
+New features, changes and bug fixes are summarized in the \file {NEWS} file, part of the tar.gz (the 
+\file {Changelog} file is a complete log file of CVS changes). As mentionned at the beginning of this
+file, uncompatible changes are preceded by '*****'. While running the \unixcmd {make install} Sympa will
+detect the previously installed version and will prompt you with uncompatible changes between both versions
+of the software. You can interrupt the install process at that stage if you are too frightened.
+Output of the \unixcmd {make install} :
+\begin {quote}
+\begin{verbatim}
+You are upgrading from Sympa 4.2
+You should read CAREFULLY the changes listed below ; they might be uncompatible changes :
+<RETURN>
+
+*****   require new perlmodule XML-LibXML
+
+*****   You should update your DB structure (automatically performed by Sympa with MySQL), adding the following table (mySQL example) :
+*****   CREATE TABLE admin_table (
+*****   list_admin              varchar(50) NOT NULL,
+*****   user_admin              varchar(100) NOT NULL,
+*****   role_admin              enum('listmaster','owner','editor') NOT NULL,
+*****   date_admin              datetime NOT NULL,
+*****   update_admin            datetime,
+*****   reception_admin         varchar(20),
+*****   comment_admin           varchar(150),
+*****   subscribed_admin        enum('0','1'),
+*****   included_admin          enum('0','1'),
+*****   include_sources_admin   varchar(50),
+*****   info_admin              varchar(150),
+*****   profile_admin           enum('privileged','normal'),
+*****   PRIMARY KEY (list_admin, user_admin,role_admin),
+*****   INDEX (list_admin, user_admin,role_admin)
+*****   );
+
+*****   Extend the generic_sso feature ; Sympa is now able to retrieve the user email address in a LDAP directory
+<RETURN>
+\end{verbatim}
+\end {quote}
+
+\section {CPAN modules update}
+    \index{cpan update}
+
+Required and optional perl modules (CPAN) installation is automatically handled at the \unixcmd {make} time. You are asked before each module is installed. For optional modules, associated features are listed.
+
+Output of the \unixcmd {make} command :
+\begin {quote}
+\begin{verbatim}
+Checking for REQUIRED modules:
+------------------------------------------
+perl module          from CPAN       STATUS
+-----------          ---------       ------
+Archive::Zip         Archive-Zip    OK (1.09   >= 1.05)
+CGI                  CGI            OK (2.89   >= 2.52)
+DB_File              DB_FILE        OK (1.806  >= 1.75)
+Digest::MD5          Digest-MD5     OK (2.20   >= 2.00)
+FCGI                 FCGI           OK (0.67   >= 0.67)
+File::Spec           File-Spec      OK (0.83   >= 0.8)
+IO::Scalar           IO-stringy     OK (2.104  >= 1.0)
+LWP                  libwww-perl    OK (5.65   >= 1.0)
+Locale::TextDomain   libintl-perl   OK (1.10   >= 1.0)
+MHonArc::UTF8        MHonArc        version is too old ( < 2.4.6).
+>>>>>>> You must update "MHonArc" to version "" <<<<<<.
+Setting FTP Passive mode
+Description: 
+Install module MHonArc::UTF8 ? n
+MIME::Base64         MIME-Base64    OK (3.05   >= 3.03)
+MIME::Tools          MIME-tools     OK (5.411  >= 5.209)
+Mail::Internet       MailTools      OK (1.60   >= 1.51)
+Regexp::Common       Regexp-Common  OK (2.113  >= 1.0)
+Template             Template-ToolkitOK (2.13   >= 1.0)
+XML::LibXML          XML-LibXML     OK (1.58   >= 1.0)
+
+Checking for OPTIONAL modules:
+------------------------------------------
+perl module          from CPAN       STATUS
+-----------          ---------       ------
+Bundle::LWP          LWP            OK (1.09   >= 1.09)
+Constant subroutine CGI::XHTML_DTD redefined at /usr/lib/perl5/5.8.0/constant.pm line 108, <STDIN> line 1.
+CGI::Fast            CGI            CGI::Fast doesn't return 1 (check it).
+Crypt::CipherSaber   CipherSaber    OK (0.61   >= 0.50)
+DBD::Oracle          DBD-Oracle     was not found on this system.
+Description: Oracle database driver, required if you connect to a Oracle database.
+Install module DBD::Oracle ? 
+\end{verbatim}
+\end {quote}
+
+\section {Database structure update}
+    \index{db update}
+
+Whatever RDBMS you are using (mysql, Pg, Sybase or Oracle) Sympa will check every database tables and fields. If one is missing \file {sympa.pl}
+will not start. If you are using \textindex{mysql} Sympa will also check field types and will try to change them (or create them) automatically ; 
+assuming that the DB user configured has sufficient privileges. If You are not using Mysql or if the DB user configured in \file {sympa.conf} 
+does have sufficient privileges, then you should change the database structure yourself, as mentionned in the \file {NEWS} file.
+
+Output of Sympa logs :
+\begin {quote}
+\begin{verbatim}
+Table admin_table created in database sympa
+Field 'comment_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
+Field comment_admin added to table admin_table
+Field 'date_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
+Field date_admin added to table admin_table
+Field 'include_sources_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
+Field include_sources_admin added to table admin_table
+Field 'included_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
+Field included_admin added to table admin_table
+Field 'info_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
+Field info_admin added to table admin_table
+Field 'list_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
+Field list_admin added to table admin_table
+Field 'profile_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
+Field profile_admin added to table admin_table
+Field 'reception_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
+Field reception_admin added to table admin_table
+Field 'role_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
+Field role_admin added to table admin_table
+Field 'subscribed_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
+Field subscribed_admin added to table admin_table
+Field 'update_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
+Field update_admin added to table admin_table
+Field 'user_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
+Setting list_admin,user_admin,role_admin fields as PRIMARY
+Field user_admin added to table admin_table
+\end{verbatim}
+\end {quote}
+
+
+\section {Preserving your customizations}
+    \index{preserve customizations}
+
+Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the \dir {/home/sympa/bin} directory. 
+If you need to customize some of them, you should copy the file first in a safe place, ie in the \dir {/home/sympa/etc} directory.
+If you do so, the Sympa upgrade process will preserve your site customizations.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mail aliases 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cleardoublepage
@@ -5586,6 +5733,8 @@ next ([execution_date] + 1d, ACTION)
 	\end {quote}
 
 \end{itemize}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mailing list definition
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

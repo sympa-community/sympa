@@ -9,8 +9,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>13. Customizing Sympa/WWSympa </TITLE>
-<META NAME="description" CONTENT="13. Customizing Sympa/WWSympa ">
+<TITLE>13. Virtual robot</TITLE>
+<META NAME="description" CONTENT="13. Virtual robot">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -29,32 +29,32 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1053"
+<A NAME="tex2html1063"
   HREF="node15.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1047"
+<A NAME="tex2html1057"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1041"
+<A NAME="tex2html1051"
   HREF="node13.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1049"
+<A NAME="tex2html1059"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1051"
-  HREF="node25.html">
+<A NAME="tex2html1061"
+  HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1054"
-  HREF="node15.html">14. Mailing list definition</A>
-<B> Up:</B> <A NAME="tex2html1048"
+<B> Next:</B> <A NAME="tex2html1064"
+  HREF="node15.html">14. Customizing Sympa/WWSympa</A>
+<B> Up:</B> <A NAME="tex2html1058"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1042"
-  HREF="node13.html">12. Virtual robot</A>
- &nbsp <B>  <A NAME="tex2html1050"
+<B> Previous:</B> <A NAME="tex2html1052"
+  HREF="node13.html">12. Authorization scenarios</A>
+ &nbsp <B>  <A NAME="tex2html1060"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1052"
-  HREF="node25.html">Index</A></B> 
+ &nbsp <B>  <A NAME="tex2html1062"
+  HREF="node26.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -62,104 +62,101 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1055"
-  HREF="node14.html#SECTION001410000000000000000">13.1 Template file format</A>
-<LI><A NAME="tex2html1056"
-  HREF="node14.html#SECTION001420000000000000000">13.2 Site template files</A>
-<UL>
-<LI><A NAME="tex2html1057"
-  HREF="node14.html#SECTION001421000000000000000">13.2.1 helpfile.tt2</A>
-<LI><A NAME="tex2html1058"
-  HREF="node14.html#SECTION001422000000000000000">13.2.2 lists.tt2</A>
-<LI><A NAME="tex2html1059"
-  HREF="node14.html#SECTION001423000000000000000">13.2.3 global_remind.tt2</A>
-<LI><A NAME="tex2html1060"
-  HREF="node14.html#SECTION001424000000000000000">13.2.4 your_infected_msg.tt2</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html1061"
-  HREF="node14.html#SECTION001430000000000000000">13.3 Web template files</A>
-<LI><A NAME="tex2html1062"
-  HREF="node14.html#SECTION001440000000000000000">13.4 Sharing data with other applications</A>
-<LI><A NAME="tex2html1063"
-  HREF="node14.html#SECTION001450000000000000000">13.5 Sharing <I>WWSympa</I> authentication with other applications</A>
-<LI><A NAME="tex2html1064"
-  HREF="node14.html#SECTION001460000000000000000">13.6 Internationalization</A>
-<UL>
 <LI><A NAME="tex2html1065"
-  HREF="node14.html#SECTION001461000000000000000">13.6.1 <I>Sympa</I> internationalization</A>
+  HREF="node14.html#SECTION001410000000000000000">13.1 How to create a virtual robot</A>
 <LI><A NAME="tex2html1066"
-  HREF="node14.html#SECTION001462000000000000000">13.6.2 List internationalization</A>
+  HREF="node14.html#SECTION001420000000000000000">13.2 robot.conf</A>
+<UL>
 <LI><A NAME="tex2html1067"
-  HREF="node14.html#SECTION001463000000000000000">13.6.3 User internationalization</A>
+  HREF="node14.html#SECTION001421000000000000000">13.2.1 Robot customization</A>
 </UL>
 <BR>
 <LI><A NAME="tex2html1068"
-  HREF="node14.html#SECTION001470000000000000000">13.7 Topics</A>
-<LI><A NAME="tex2html1069"
-  HREF="node14.html#SECTION001480000000000000000">13.8 Authorization scenarios</A>
-<LI><A NAME="tex2html1070"
-  HREF="node14.html#SECTION001490000000000000000">13.9 Loop detection</A>
-<LI><A NAME="tex2html1071"
-  HREF="node14.html#SECTION0014100000000000000000">13.10 Tasks</A>
-<UL>
-<LI><A NAME="tex2html1072"
-  HREF="node14.html#SECTION0014101000000000000000">13.10.1 List task creation</A>
-<LI><A NAME="tex2html1073"
-  HREF="node14.html#SECTION0014102000000000000000">13.10.2 Global task creation</A>
-<LI><A NAME="tex2html1074"
-  HREF="node14.html#SECTION0014103000000000000000">13.10.3 Model file format</A>
-<LI><A NAME="tex2html1075"
-  HREF="node14.html#SECTION0014104000000000000000">13.10.4 Model file examples</A>
-</UL></UL>
+  HREF="node14.html#SECTION001430000000000000000">13.3 Managing multiple virtual robots</A>
+</UL>
 <!--End of Table of Child-Links-->
 <HR>
 
-<H1><A NAME="SECTION001400000000000000000"></A><A NAME="7247"></A>
-    <A NAME="customization"></A>
+<H1><A NAME="SECTION001400000000000000000"></A>
+    <A NAME="virtual-robot"></A>
 <BR>
-13. Customizing <I>Sympa</I>/<I>WWSympa</I> 
+13. Virtual robot
 </H1>
 
 <P>
+Sympa is designed to manage multiple distinct mailing list servers on
+a single host with a single Sympa installation. Sympa virtual robots
+are like Apache virtual hosting. Sympa virtual robot definition includes
+a specific email address for the robot itself and its lists and also a virtual
+http server. Each robot provides access to a set of lists, each list is
+related to only one robot.
 
-<H1><A NAME="SECTION001410000000000000000"></A>
-<A NAME="tpl-format"></A><A NAME="1906"></A>
-<BR>
-13.1 Template file format
+<P>
+Most configuration parameters can be redefined for each robot except 
+general Sympa installation parameters (binary and spool location, smtp engine,
+antivirus plugging,...).
+
+<P>
+The Virtual robot name as defined in <I>Sympa</I> documentation and configuration file refers
+to the Internet domaine of the Virtual robot.
+
+<P>
+Note that the main limitation of virtual robots in Sympa is that you cannot create 
+2 lists with the same name (local part) among your virtual robots.
+
+<P>
+
+<H1><A NAME="SECTION001410000000000000000">
+13.1 How to create a virtual robot</A>
 </H1>
 
 <P>
-Template files within <I>Sympa</I> used to be in a proprietary format that has been
-replaced with the <A NAME="tex2html34"
-  HREF="http://www.tt2.org">TT2</A>
-template format.
-
-<P>
-You will find detailed documentation about the TT2 syntax on the web site : <B>http://www.tt2.org</B>
-
-<P>
-Here are some aspects regarding templates that are specific to <I>Sympa</I>: 
+You don't need to install several Sympa servers. A single <A NAME="7191"></A><TT>sympa.pl</TT> daemon
+and one or more fastcgi servers can serve all virtual robot. Just configure the 
+server environment in order to accept the new domain definition.
 
 <UL>
-<LI>References to PO catalogue are noted with the <B>[% loc %]</B> tag that may include 
-  parameters. Example: <TT>[%|loc(list.name,list.host)%]Welcome to list %1%2[%END%]</TT>.
+<LI><B>The DNS</B> must be configured to define a new mail exchanger record (MX) 
+to route message to your server. A new host (A record) or alias (CNAME) are mandatory
+to define the new web server.
+</LI>
+<LI>Configure your <B>MTA (sendmail, postfix, exim, ...)</B> to accept incoming 
+messages for the new robot domain. Add mail aliases for the robot :
+
+<P>
+<I>Examples (with sendmail):</I> <PRE>
+sympa@your.virtual.domain:      "| /home/sympa/bin/queue sympa@your.virtual.domain"
+listmaster@your.virtual.domain: "| /home/sympa/bin/queue listmaster@your.virtual.domain"
+</PRE>
 
 <P>
 </LI>
-<LI>Few exceptions apart, templates cannot insert or parse a file given its full or relative 
-   path, for security reason. Only the file name should be provided ; the TT2 parser will then
-   use the INCLUDE_PATH provided by <I>Sympa</I> to find the relevant file to insert/parse.
+<LI>Define a <B>virtual host in your HTTPD server</B>. The fastcgi servers defined 
+in the common section of you httpd server can be used by each virtual host. You don't 
+need to run dedicated fascgi server for each virtual robot.
+
+<P>
+<I>Examples:</I> <PRE>
+FastCgiServer /wwsympa.fcgi -processes 3 -idle-timeout 120
+.....
+&lt;VirtualHost 195.215.92.16&gt;
+  ServerAdmin webmaster@your.virtual.domain
+  DocumentRoot /var/www/your.virtual.domain
+  ServerName your.virtual.domain
+
+  &lt;Location /sympa&gt;
+     SetHandler fastcgi-script
+  &lt;/Location&gt;
+
+  ScriptAlias /sympa /wwsympa.fcgi
+
+&lt;/VirtualHost&gt;
+</PRE>
 
 <P>
 </LI>
-<LI>The <B>qencode</B> filter should be used if a template includes SMTP header fields
-  that should be Q-encoded. Example: <TT>[% FILTER qencode %]Message &#224; mod&#233;rer[%END%]</TT>
-
-<P>
-</LI>
-<LI>You can write different versions of a template file in different language, each of them 
-  being located in a subdirectory of the <B>tt2</B> directory. Example: <TT>/web_tt2/fr_FR/helpfile.tt2</TT>
+<LI>Create a <A NAME="7194"></A><TT>robot.conf</TT> for the virtual robot (current web interface does
+not provide Virtual robot creation yet).
 
 <P>
 </LI>
@@ -167,719 +164,154 @@ Here are some aspects regarding templates that are specific to <I>Sympa</I>:
 
 <P>
 
-<H1><A NAME="SECTION001420000000000000000"></A>
-<A NAME="site-tpl"></A><A NAME="1920"></A>
-<BR>
-13.2 Site template files
+<H1><A NAME="SECTION001420000000000000000">
+13.2 robot.conf</A>
 </H1>
+A robot is named by its domain, let's say my.domain.organd defined by a directory 
+<A NAME="7197"></A><TT>/home/sympa/etc/my.domain.org</TT>. This directory must contain at least a 
+<A NAME="7200"></A><TT>robot.conf</TT> file. This files has the same format as  <A NAME="7203"></A><TT>/etc/sympa.conf</TT>
+(have a look at robot.conf in the sample dir).
+Only the following parameters can be redefined for a particular robot :
 
 <P>
-These files are used by Sympa as service messages for the <A NAME="7256"></A><TT>HELP</TT>, 
-<A NAME="7259"></A><TT>LISTS</TT> and <A NAME="7262"></A><TT>REMIND *</TT> commands. These files are interpreted 
-(parsed) by <I>Sympa</I> and respect the TT2 template format ; every file has a <B>.tt2</B> extension. 
-See <A HREF="node14.html#tpl-format">13.1</A>, 
-page&nbsp;<A HREF="node14.html#tpl-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. 
+
+<UL>
+<LI><A NAME="7206"></A><TT>http_host</TT> 
+<BR>
+This hostname will be compared with 'SERVER_NAME' environment variable in wwsympa.fcgi
+	to determine the current Virtual Robot. You can a path at the end of this parameter if
+	you are running multiple Virtual robots on the same host. 
+	<PRE>Examples: \\
+	http_host  myhost.mydom
+	http_host  myhost.mydom/sympa
+</PRE>
 
 <P>
-Sympa looks for these files in the following order (where <TT>&lt;</TT>list<TT>&gt;</TT> is the
-listname if defined, <TT>&lt;</TT>action<TT>&gt;</TT> is the name of the command, and <TT>&lt;</TT>lang<TT>&gt;</TT> is
-the preferred language of the user) :
-
-<OL>
-<LI><A NAME="7290"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
 </LI>
-<LI><A NAME="7329"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="7209"></A><TT>wwsympa_url</TT> 
+<BR>
+The base URL of WWSympa
+
+<P>
 </LI>
-<LI><A NAME="7362"></A><TT>/home/sympa/etc/my.domain.org/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="7212"></A><TT>soap_url</TT> 
+<BR>
+The base URL of Sympa's SOAP server (if it is running ; see&nbsp;<A HREF="node11.html#soap">10</A>, page&nbsp;<A HREF="node11.html#soap"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
 </LI>
-<LI><A NAME="7389"></A><TT>/home/sympa/etc/my.domain.org/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="7215"></A><TT>cookie_domain</TT>
+
+<P>
 </LI>
-<LI><A NAME="7416"></A><TT>/home/sympa/etc/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="7218"></A><TT>email</TT>
+
+<P>
 </LI>
-<LI><A NAME="7443"></A><TT>/home/sympa/etc/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+<LI><A NAME="7221"></A><TT>title</TT>
+
+<P>
 </LI>
-<LI><A NAME="7470"></A><TT>/home/sympa/bin/etc/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>.
+<LI><A NAME="7224"></A><TT>default_home</TT>
+
+<P>
 </LI>
-<LI><A NAME="7497"></A><TT>/home/sympa/bin/etc/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>.
+<LI><A NAME="7227"></A><TT>create_list</TT>
+
+<P>
 </LI>
-</OL>
+<LI><A NAME="7230"></A><TT>lang</TT>
 
 <P>
-If the file starts with a From: line, it is considered as
-a full message and will be sent (after parsing) without adding SMTP
-headers. Otherwise the file is treated as a text/plain message body.
+</LI>
+<LI><A NAME="7233"></A><TT>supported_lang</TT>
 
 <P>
-The following variables may be used in these template files :
+</LI>
+<LI><A NAME="7236"></A><TT>log_smtp</TT>
 
 <P>
-<DL COMPACT>
-<DT>-</DT>
-<DD>[% conf.email %] : sympa e-mail address local part
+</LI>
+<LI><A NAME="7239"></A><TT>listmaster</TT>
 
 <P>
-</DD>
-<DT>-</DT>
-<DD>[% conf.domain %] : sympa robot domain name
+</LI>
+<LI><A NAME="7242"></A><TT>max_size</TT>
 
 <P>
-</DD>
-<DT>-</DT>
-<DD>[% conf.sympa %] : sympa's complete e-mail address
+</LI>
+<LI><A NAME="7245"></A><TT>dark_color</TT>, <A NAME="7248"></A><TT>light_color</TT>, <A NAME="7251"></A><TT>text_color</TT>, <A NAME="7254"></A><TT>bg_color</TT>, <A NAME="7257"></A><TT>error_color</TT>, <A NAME="7260"></A><TT>selected_color</TT>, <A NAME="7263"></A><TT>shaded_color</TT> 
+</LI>
+</UL>
 
 <P>
-</DD>
-<DT>-</DT>
-<DD>[% conf.wwsympa_url %] : <A NAME="7506"></A><I>WWSympa</I> root URL
-
-<P>
-</DD>
-<DT>-</DT>
-<DD>[% conf.listmaster %] : listmaster e-mail addresses
-
-<P>
-</DD>
-<DT>-</DT>
-<DD>[% user.email %] : user e-mail address
-
-<P>
-</DD>
-<DT>-</DT>
-<DD>[% user.gecos %] : user gecos field (usually his/her name)
-
-<P>
-</DD>
-<DT>-</DT>
-<DD>[% user.password %] : user password
-
-<P>
-</DD>
-<DT>-</DT>
-<DD>[% user.lang %] : user language	
-</DD>
-</DL>
+These settings overwrite the equivalent global parameter defined in <A NAME="7266"></A><TT>/etc/sympa.conf</TT>
+for my.domain.orgrobot ; the main <A NAME="7269"></A><TT>listmaster</TT> still has privileges on Virtual
+Robots though. The http_host parameter is compared by wwsympa with the SERVER_NAME
+environment variable to recognize which robot is in used. 
 
 <P>
 
 <H2><A NAME="SECTION001421000000000000000">
-13.2.1 helpfile.tt2</A>
-</H2> 
-
-<P>
-This file is sent in response to a <A NAME="7509"></A><TT>HELP</TT> command. 
-	You may use additional variables
-<DL COMPACT>
-<DT>-</DT>
-<DD>[% is_owner %] : TRUE if the user is list owner
-
-<P>
-</DD>
-<DT>-</DT>
-<DD>[% is_editor %] : TRUE if the user is list editor
-
-<P>
-</DD>
-</DL>
-
-<P>
-
-<H2><A NAME="SECTION001422000000000000000">
-13.2.2 lists.tt2</A>
-</H2> 
-
-<P>
-File returned by <A NAME="7512"></A><TT>LISTS</TT> command. 
-	An additional variable is available :
-<DL COMPACT>
-<DT>-</DT>
-<DD>[% lists %] : this is a hash table indexed by list names and
-			containing lists' subjects. Only lists visible
-			to this user (according to the <A NAME="7515"></A><TT>visibility</TT> 
-			list parameter) are listed.
-</DD>
-</DL>
-
-<P>
-<I>Example:</I> 
-
-<P><PRE>
-These are the public lists for [conf-&gt;email]@[conf-&gt;domain]
-
-[% FOREACH l = lists %]
-[% l.key %]@[% l.value.host %] : [% l.value.subject %]
-
-[% END %]
-</PRE>
-
-<P>
-
-<H2><A NAME="SECTION001423000000000000000">
-13.2.3 global_remind.tt2</A>
-</H2> 
-
-<P>
-This file is sent in response to a <A NAME="7518"></A><TT>REMIND *</TT> command. 
-	(see&nbsp;<A HREF="node24.html#cmd-remind">23.2</A>, page&nbsp;<A HREF="node24.html#cmd-remind"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
-	You may use additional variables
-<DL COMPACT>
-<DT>-</DT>
-<DD>[% lists %] : this is an array containing the list names the user
-			is subscribed to.
-</DD>
-</DL>
-
-<P>
-<I>Example:</I> 
-
-<P><PRE>
-This is a subscription reminder.
-
-You are subscribed to the following lists :
-[% FOREACH l = lists %]
-	
- [% l %] : [% conf.wwsympa\_url \%]/info/[% l %]
-
-[% END %]
-
-Your subscriber e-mail : [% user.email %]
-Your password : [% user.password %]
-</PRE>
-
-<P>
-
-<H2><A NAME="SECTION001424000000000000000">
-13.2.4 your_infected_msg.tt2</A>
-</H2> 
-
-<P>
-This message is sent to warn the sender of a virus infected mail,
-indicating the name of the virus found 
-(see&nbsp;<A HREF="#Antivirus"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, page&nbsp;<A HREF="#Antivirus"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-
-<P>
-
-<H1><A NAME="SECTION001430000000000000000"></A>
-<A NAME="web-tpl"></A><A NAME="1995"></A>
-<BR>
-13.3 Web template files
-</H1>
-
-<P>
-You may define your own web template files, different from the standard
-ones. <A NAME="7521"></A><I>WWSympa</I> first looks for list specific web templates, then for
-site web templates, before falling back on its defaults. 
-
-<P>
-Your list web template files should be placed in the <A NAME="7524"></A><TT>/home/sympa/expl/mylist/web_tt2</TT> 
-directory ; your site web templates in <A NAME="7527"></A><TT>~/home/sympa/etc/web_tt2</TT> directory.
-
-<P>
-Note that web colors are defined in <I>Sympa</I>'s main Makefile (see <A HREF="node4.html#makefile">3.3</A>,
-page&nbsp;<A HREF="node4.html#makefile"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-
-<P>
-
-<H1><A NAME="SECTION001440000000000000000">
-13.4 Sharing data with other applications</A>
-</H1>
-
-<P>
-You may extract subscribers, owners and editors for a list from any of :
-
-<UL>
-<LI>a text file
-
-<P>
-</LI>
-<LI>a Relational database
-
-<P>
-</LI>
-<LI>a LDAP directory
-
-<P>
-</LI>
-</UL>
-
-<P>
-See <A NAME="7533"></A><TT>user_data_source</TT> liste parameter <A HREF="node18.html#user-data-source">17.2.1</A>, page&nbsp;<A HREF="node18.html#user-data-source"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
-
-<P>
-The three tables can have more fields than the one used by <I>Sympa</I>, by defining these additional fields, they will be available
-from within <I>Sympa</I>'s authorization scenarios and templates (see <A HREF="node6.html#db-additional-subscriber-fields">5.10.9</A>, 
-page&nbsp;<A HREF="node6.html#db-additional-subscriber-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> and <A HREF="node6.html#db-additional-user-fields">5.10.10</A>, page&nbsp;<A HREF="node6.html#db-additional-user-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-
-<P>
-
-<H1><A NAME="SECTION001450000000000000000"></A><A NAME="7538"></A>
-<BR>
-13.5 Sharing <I>WWSympa</I> authentication with other applications
-</H1>
-
-<P>
-See <A HREF="node11.html#sharing-auth">10.6</A>, page&nbsp;<A HREF="node11.html#sharing-auth"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
-
-<P>
-
-<H1><A NAME="SECTION001460000000000000000"></A>
-<A NAME="internationalization"></A><A NAME="2015"></A>
-<A NAME="2016"></A>
-<BR>
-13.6 Internationalization
-</H1>
-
-<P>
-<I>Sympa</I> was originally designed as a multilingual Mailing List
-Manager. Even in its earliest versions, <I>Sympa</I> separated messages from
-the code itself, messages being stored in NLS catalogues (according 
-to the XPG4 standard). Later a <A NAME="7543"></A><TT>lang</TT> list parameter was introduced.
-Nowadays <I>Sympa</I> is able to keep track of individual users' language preferences.
-
-<P>
-If you are willing to provide Sympa into your native language, please check the <B>translation howto</B> (<A NAME="tex2html35"
-  HREF="http://www.sympa.org/howtotranslate.html"><TT>http://www.sympa.org/howtotranslate.html</TT></A>);
-
-<P>
-
-<H2><A NAME="SECTION001461000000000000000">
-13.6.1 <I>Sympa</I> internationalization</A>
+13.2.1 Robot customization</A>
 </H2>
 
 <P>
-Every message sent by <I>Sympa</I> to users, owners and editors is outside
-the code, in a message catalog. These catalogs are located in the
-<A NAME="7549"></A><TT>/home/sympa/locale</TT> directory. 
+If needed, you can customize each virtual robot using its set of templates and authorization scenarios.
 
 <P>
-To tell <I>Sympa</I> to use a particular message catalog, you can should set 
-the <A NAME="7553"></A><TT>lang</TT> parameter in <A NAME="7556"></A><TT>sympa.conf</TT>.
-
-<P>
-
-<H2><A NAME="SECTION001462000000000000000">
-13.6.2 List internationalization</A>
-</H2>
-
-<P>
-The <A NAME="7559"></A><TT>lang</TT> list parameter defines the language for a list.
-It is currently used by <A NAME="7562"></A><I>WWSympa</I> and to initialize users'
-language preferences at subscription time.
-
-<P>
-In future versions, all messages returned by <I>Sympa</I> concerning
-a list should be in the list's language. 
+<A NAME="7272"></A><TT>/home/sympa/etc/my.domain.org/wws_templates/</TT>,
+<A NAME="7275"></A><TT>/home/sympa/etc/my.domain.org/templates/</TT>, 
+<A NAME="7278"></A><TT>/home/sympa/etc/my.domain.org/scenari/</TT> directories are searched when
+loading templates or scenari before searching into <A NAME="7281"></A><TT>/home/sympa/etc</TT> and  <A NAME="7284"></A><TT>/home/sympa/bin/etc</TT>. This allows to define different privileges and a different GUI for a Virtual Robot.
 
 <P>
 
-<H2><A NAME="SECTION001463000000000000000">
-13.6.3 User internationalization</A>
-</H2>
-
-<P>
-The user language preference is currently used by <A NAME="7566"></A><I>WWSympa</I> 
-only. There is no e-mail-based command for a user to set his/her
-language. The language preference is initialized when the user
-subscribes to his/her first list. <A NAME="7569"></A><I>WWSympa</I> allows the user to change 
-it.
-
-<P>
-
-<H1><A NAME="SECTION001470000000000000000"></A>
-<A NAME="topics"></A><A NAME="2030"></A>
-<BR>
-13.7 Topics
+<H1><A NAME="SECTION001430000000000000000">
+13.3 Managing multiple virtual robots</A>
 </H1>
 
 <P>
-<A NAME="7572"></A><I>WWSympa</I>'s homepage shows a list of topics for classifying
-mailing lists. This is dynamically generated using the different lists'
-<A NAME="7575"></A><TT>topics</TT> configuration parameters. A list may appear 
-in multiple categories.
+If you are managing more than 2 virtual robots, then you might cinsider moving all the mailing lists in the default
+robot to a dedicated virtual robot located in the <A NAME="7287"></A><TT>/home/sympa/expl/my.domain.org/</TT> directory. The main benefit of 
+this organisation is the ability to define default configuration elements (templates or authorization scenarios) 
+for this robot without inheriting them within other virtual robots.
 
 <P>
-The list of topics is defined in the <A NAME="7578"></A><TT>topics.conf</TT> configuration
-file, located in the <A NAME="7581"></A><TT>/home/sympa/etc</TT> directory. The format of this file is 
-as follows :<PRE>
-&lt;topic1_name&gt;
-title	&lt;topic1 title&gt;
-title.fr &lt;topic french title&gt;
-visibility &lt;topic1 visibility&gt;
-....
-&lt;topicn_name/subtopic_name&gt;
-title	&lt;topicn title&gt;
-title.de &lt;topicn german title&gt;
-</PRE>
-
-<P>
-You will notice that subtopics can be used, the separator being <I>/</I>.
-The topic name is composed of alphanumerics (0-1a-zA-Z) or underscores (_).
-The order in which the topics are listed is respected in <A NAME="7584"></A><I>WWSympa</I>'s homepage.
-The <B>visibility</B> line defines who can view the topic (now available for subtopics).
-It refers to the associated topics_visibility authorization scenario.
-You will find a sample <A NAME="7587"></A><TT>topics.conf</TT> in the <A NAME="7590"></A><TT>sample</TT> 
-directory ; NONE is installed as the default. 
-
-<P>
-A default topic is hard-coded in <I>Sympa</I>: <I>default</I>. This default topic
-contains all lists for which a topic has not been specified.
-
-<P>
-
-<H1><A NAME="SECTION001480000000000000000">
-13.8 Authorization scenarios</A>
-</H1>
-
-<P>
-See <A HREF="node12.html#scenarios">11</A>, page&nbsp;<A HREF="node12.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
-
-<P>
-
-<H1><A NAME="SECTION001490000000000000000"></A>
-    <A NAME="loop-detection"></A>    <A NAME="2048"></A>
-<BR>
-13.9 Loop detection
-</H1>
-
-<P>
-<I>Sympa</I> uses multiple heuristics to avoid loops in Mailing lists
-
-<P>
-First, it rejects messages coming from a robot (as indicated by the
-From: and other header fields), and messages containing commands.
-
-<P>
-Secondly, every message sent by <I>Sympa</I> includes an X-Loop header field set to
-the listname. If the message comes back, <I>Sympa</I> will detect that
-it has already been sent (unless X-Loop header fields have been
-erased).
-
-<P>
-Thirdly, <I>Sympa</I> keeps track of Message IDs and will refuse to send multiple
-messages with the same message ID to the same mailing list.
-
-<P>
-Finally, <I>Sympa</I> detect loops arising from command reports (i.e. sympa-generated replies to commands). 
-This sort of loop might occur as follows:
-
-<P><PRE>
-1 - X sends a command to Sympa
-2 - Sympa sends a command report to X
-3 - X has installed a home-made vacation program replying to programs
-4 - Sympa processes the reply and sends a report
-5 - Looping to step 3
-</PRE>
-
-<P>
-<I>Sympa</I> keeps track (via an internal counter) of reports sent to any particular address.
-The loop detection algorithm is :
-
-<P>
-
-<UL>
-<LI>Increment the counter
-
-<P>
-</LI>
-<LI>If we are within the sampling period (as defined by the
-	<A NAME="7600"></A><TT>loop_command_sampling_delay</TT> parameter)
-
-<P>
-
-<UL>
-<LI>If the counter exceeds the 
-		<A NAME="7603"></A><TT>loop_command_max</TT> parameter, then 
-		do not send the report, and notify the listmaster
-
-<P>
-</LI>
-<LI>Else, start a new sampling period and reinitialize
-		the counter,  i.e. multiply it by the 
-		<A NAME="7606"></A><TT>loop_command_decrease_factor</TT> parameter
-	
-</LI>
-</UL>
-
-<P>
-</LI>
-</UL>
-
-<P>
-
-<H1><A NAME="SECTION0014100000000000000000"></A>
-    <A NAME="tasks"></A>    <A NAME="2062"></A>
-<BR>
-13.10 Tasks
-</H1>
-
-<P>
-A task is a sequence of simple actions which realize a complex routine. It is executed in background 
-by the task manager daemon and allow the list master to automate the processing of recurrent tasks. 
-For example a task sends every year the subscribers of a list a message to remind their subscription. 
-
-<P>
-A task is created with a task model. It is a text file which describes a sequence of simple actions. 
-It may have different versions (for instance reminding subscribers every year or semester).
-A task model file name has the following format : <A NAME="7627"></A><TT><TT>&lt;</TT>model name<TT>&gt;</TT>.<TT>&lt;</TT>model version<TT>&gt;</TT>.task</TT>.
-For instance <A NAME="7642"></A><TT>remind.annual.task</TT>  or <A NAME="7645"></A><TT>remind.semestrial.task</TT>.
-
-<P>
-<I>Sympa</I> provides several task models stored in <A NAME="7649"></A><TT>/home/sympa/bin/etc/global_task_models</TT> 
-  and <A NAME="7652"></A><TT>/home/sympa/bin/etc/list_task_models</TT> directories.
-Others can be designed by the listmaster. 
-
-<P>
-A task is global or related to a list.
-
-<P>
-
-<H2><A NAME="SECTION0014101000000000000000">
-13.10.1 List task creation</A>
-</H2>
-
-<P>
-You define in the list config file the model and the version you want to use (see 
-<A HREF="node18.html#list-task-parameters">17.3.5</A>, page&nbsp;<A HREF="node18.html#list-task-parameters"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). Then the task manager daemon will automatically 
-create the task by looking for the appropriate model file in different directories in the
-following order :
-
-<P>
-
-<OL>
-<LI><A NAME="7667"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list name<TT>&gt;</TT>/</TT>
-</LI>
-<LI><A NAME="7676"></A><TT>/home/sympa/etc/list_task_models/</TT>
-</LI>
-<LI><A NAME="7679"></A><TT>/home/sympa/bin/etc/list_task_models/</TT>
-</LI>
-</OL>
-
-<P>
-See also <A HREF="node15.html#Listmodelfiles">14.10</A>, page&nbsp;<A HREF="node15.html#Listmodelfiles"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, to know more about standard list models provided with <I>Sympa</I>.
-
-<P>
-
-<H2><A NAME="SECTION0014102000000000000000">
-13.10.2 Global task creation</A>
-</H2>
-
-<P>
-The task manager daemon checks if a version of a global task model is specified in <A NAME="7683"></A><TT>sympa.conf</TT> 
-and then creates a task as soon as it finds the model file by looking in different directories
-in the following order :
-
-<P>
-
-<OL>
-<LI><A NAME="7686"></A><TT>/home/sympa/etc/global_task_models/</TT>
-</LI>
-<LI><A NAME="7689"></A><TT>/home/sympa/bin/etc/global_task_models/</TT>
-</LI>
-</OL>
-
-<P>
-
-<H2><A NAME="SECTION0014103000000000000000">
-13.10.3 Model file format</A>
-</H2>
-
-<P>
-Model files are composed of comments, labels, references, variables, date values
-and commands. All those syntactical elements are composed of alphanumerics (0-9a-zA-Z) and underscores (_).
-
-<P>
-
-<UL>
-<LI>Comment lines begin by '#' and are not interpreted by the task manager.
-</LI>
-<LI>Label lines begin by '/' and are used by the next command (see below).
-</LI>
-<LI>References are enclosed between brackets '[]'. They refer to a value 
-depending on the object of the task (for instance [list-<TT>&gt;</TT>name]). Those variables
-are instantiated when a task file is created from a model file. The list of available 
-variables is the same as for templates (see <A HREF="node15.html#list-tpl">14.8</A>, see 
-page&nbsp;<A HREF="node15.html#list-tpl"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) plus [creation_date] (see below).
-</LI>
-<LI>Variables store results of some commands and are paramaters for others.
-Their name begins with '@'.
-</LI>
-<LI>A date value may be written in two ways :
-
-<P>
-
-<UL>
-<LI>absolute dates follow the format : xxxxYxxMxxDxxHxxMin. Y is the year, 
-		M the month (1-12), D the day (1-28<TT>|</TT>30<TT>|</TT>31, leap-years are not managed),
-		H the hour (0-23), Min the minute (0-59). H and Min are optionnals.
-		For instance, 2001y12m4d44min is the 4th of December 2001 at 00h44.
-
-<P>
-</LI>
-<LI>relative dates use the [creation_date] or [execution_date] references. 
-		[creation_date] is the date when the task file is created, [execution_date] 
-		when the command line is executed.
-		A duration may follow with '+' or '-' operators. The duration is expressed 
-		like an absolute date whose all parameters are optionnals. 	
-		Examples : [creation_date], [execution_date]+1y, [execution_date]-6m4d
-	
-</LI>
-</UL>
-
-<P>
-</LI>
-<LI>Command arguments are separated by commas and enclosed between parenthesis '()'.
-</LI>
-</UL>
-
-<P>
-Here is the list of current avalable commands :
-
-<UL>
-<LI>stop ()
-
-<P>
-Stops the execution of the task and delete the task file
-</LI>
-<LI>next (<TT>&lt;</TT>date value<TT>&gt;</TT>, <TT>&lt;</TT>label<TT>&gt;</TT>)
-
-<P>
-Stop the execution. The task will go on at the date value and begin at the label line.
-</LI>
-<LI><TT>&lt;</TT>deleted_users<TT>&gt;</TT> = delete_subs (<TT>&lt;</TT>user_selection<TT>&gt;</TT>)
-
-<P>
-Delete @user_selection email list and stores user emails successfully deleted in @deleted_users.
-</LI>
-<LI>send_msg (<TT>&lt;</TT>user_selection<TT>&gt;</TT>, <TT>&lt;</TT>template<TT>&gt;</TT>)
-
-<P>
-Send the template message to emails stored in @user_selection.
-</LI>
-<LI>user_selection = select_subs (<TT>&lt;</TT>condition<TT>&gt;</TT>)
-
-<P>
-Store emails which match the condition in @user_selection. See 8.6 Authorization Scenarios section to know how to write conditions. Only available for list models.
-</LI>
-<LI>create (global | list (<TT>&lt;</TT>list name<TT>&gt;</TT>), <TT>&lt;</TT>model type<TT>&gt;</TT>, <TT>&lt;</TT>model<TT>&gt;</TT>)
-
-<P>
-Create a task for object with model file <A NAME="7692"></A><TT>~model type.model.task</TT>.
-</LI>
-<LI>chk_cert_expiration (<TT>&lt;</TT>template<TT>&gt;</TT>, <TT>&lt;</TT>date value<TT>&gt;</TT>)
-
-<P>
-Send the template message to emails whose certificate has expired or will expire before the date value.
-</LI>
-<LI>update_crl (<TT>&lt;</TT>file name<TT>&gt;</TT>, <TT>&lt;</TT>date value<TT>&gt;</TT>)
-
-<P>
-Update certificate revocation lists (CRL) which are expired or will expire before the date value. The file stores the CRL's URLs.
-
-<P>
-</LI>
-<LI>purge_orphan_bounces()
-
-<P>
-Clean bounces by removing unsubscribed-users archives.
-
-<P>
-</LI>
-<LI>eval_bouncers()
-
-<P>
-Evaluate all bouncing users of all list and give them a score from 0 to 100. (0 = no bounces for this user, 100 is for users who should be removed).
-
-<P>
-</LI>
-<LI>process_bouncers()
-
-<P>
-Execute actions defined in list configuration on each bouncing users, according to their score.
-</LI>
-</UL>
-
-<P>
-Model files may have a scenario-like title line at the beginning.
-
-<P>
-When you change a configuration file by hand, and a task parameter is created or modified, it is up to you
-to remove existing task files in the <A NAME="7697"></A><TT>task/</TT> spool if needed. Task file names have the following format : 
-
-<P>
-<A NAME="7730"></A><TT><TT>&lt;</TT>date<TT>&gt;</TT>.<TT>&lt;</TT>label<TT>&gt;</TT>.<TT>&lt;</TT>model name<TT>&gt;</TT>.<TT>&lt;</TT>list name | global<TT>&gt;</TT></TT> where :
-
-<P>
-
-<UL>
-<LI>date is when the task is executed, it is an epoch date
-</LI>
-<LI>label states where in the task file the execution begins. If empty, starts at the beginning 
-</LI>
-</UL>
-
-<P>
-
-<H2><A NAME="SECTION0014104000000000000000">
-13.10.4 Model file examples</A>
-</H2>
-
-<P>
-
-<UL>
-<LI>remind.annual.task
-	<A NAME="remind-annual-task"></A>	<PRE>
-</PRE>
-
-<P>
-</LI>
-<LI>expire.annual.task
-	<A NAME="expire-annual-task"></A>	<PRE>
-</PRE>
-
-<P>
-</LI>
-<LI>crl_update.daily.task
-<BR>	<PRE>
-title.gettext daily update of the certificate revocation list
-
-/ACTION
-update_crl (CA_list, [execution_date]+1d)
-next ([execution_date] + 1d, ACTION)
-</PRE>
-
-<P>
-</LI>
-</UL>
+To create such a virtual robot, you need to create <A NAME="7290"></A><TT>/home/sympa/expl/my.domain.org/</TT> and <A NAME="7293"></A><TT>/home/sympa/etc/my.domain.org/</TT> directories ; 
+customize <A NAME="7296"></A><TT>host</TT>, <A NAME="7299"></A><TT>http_host</TT> and <A NAME="7302"></A><TT>wwsympa_url</TT> parameters in the <A NAME="7305"></A><TT>/home/sympa/etc/my.domain.org/robot.conf</TT> 
+with the same values as the default robot (as defined in <A NAME="7308"></A><TT>sympa.conf</TT> and <A NAME="7311"></A><TT>wwsympa.conf</TT> files).
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1053"
+<A NAME="tex2html1063"
   HREF="node15.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1047"
+<A NAME="tex2html1057"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1041"
+<A NAME="tex2html1051"
   HREF="node13.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1049"
+<A NAME="tex2html1059"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1051"
-  HREF="node25.html">
+<A NAME="tex2html1061"
+  HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1054"
-  HREF="node15.html">14. Mailing list definition</A>
-<B> Up:</B> <A NAME="tex2html1048"
+<B> Next:</B> <A NAME="tex2html1064"
+  HREF="node15.html">14. Customizing Sympa/WWSympa</A>
+<B> Up:</B> <A NAME="tex2html1058"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1042"
-  HREF="node13.html">12. Virtual robot</A>
- &nbsp <B>  <A NAME="tex2html1050"
+<B> Previous:</B> <A NAME="tex2html1052"
+  HREF="node13.html">12. Authorization scenarios</A>
+ &nbsp <B>  <A NAME="tex2html1060"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html1052"
-  HREF="node25.html">Index</A></B> 
+ &nbsp <B>  <A NAME="tex2html1062"
+  HREF="node26.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root

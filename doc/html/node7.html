@@ -9,8 +9,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>6. Sympa and its database</TITLE>
-<META NAME="description" CONTENT="6. Sympa and its database">
+<TITLE>6. sympa.conf parameters</TITLE>
+<META NAME="description" CONTENT="6. sympa.conf parameters">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -29,32 +29,32 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html887"
+<A NAME="tex2html789"
   HREF="node8.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html881"
+<A NAME="tex2html783"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html875"
+<A NAME="tex2html777"
   HREF="node6.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html883"
+<A NAME="tex2html785"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html885"
-  HREF="node25.html">
+<A NAME="tex2html787"
+  HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html888"
-  HREF="node8.html">7. WWSympa, Sympa's web interface</A>
-<B> Up:</B> <A NAME="tex2html882"
+<B> Next:</B> <A NAME="tex2html790"
+  HREF="node8.html">7. Sympa and its database</A>
+<B> Up:</B> <A NAME="tex2html784"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html876"
-  HREF="node6.html">5. sympa.conf parameters</A>
- &nbsp <B>  <A NAME="tex2html884"
+<B> Previous:</B> <A NAME="tex2html778"
+  HREF="node6.html">5. Mail aliases</A>
+ &nbsp <B>  <A NAME="tex2html786"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html886"
-  HREF="node25.html">Index</A></B> 
+ &nbsp <B>  <A NAME="tex2html788"
+  HREF="node26.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -62,641 +62,2036 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
+<LI><A NAME="tex2html791"
+  HREF="node7.html#SECTION00710000000000000000">6.1 Site customization</A>
+<UL>
+<LI><A NAME="tex2html792"
+  HREF="node7.html#SECTION00711000000000000000">6.1.1 <TT>domain</TT></A>
+<LI><A NAME="tex2html793"
+  HREF="node7.html#SECTION00712000000000000000">6.1.2 <TT>email</TT></A>
+<LI><A NAME="tex2html794"
+  HREF="node7.html#SECTION00713000000000000000">6.1.3 <TT>listmaster</TT></A>
+<LI><A NAME="tex2html795"
+  HREF="node7.html#SECTION00714000000000000000">6.1.4 <TT>listmaster_email</TT></A>
+<LI><A NAME="tex2html796"
+  HREF="node7.html#SECTION00715000000000000000">6.1.5 <TT>wwsympa_url</TT></A>
+<LI><A NAME="tex2html797"
+  HREF="node7.html#SECTION00716000000000000000">6.1.6 <TT>rss_url</TT></A>
+<LI><A NAME="tex2html798"
+  HREF="node7.html#SECTION00717000000000000000">6.1.7 <TT>soap_url</TT></A>
+<LI><A NAME="tex2html799"
+  HREF="node7.html#SECTION00718000000000000000">6.1.8 <TT>spam_protection</TT></A>
+<LI><A NAME="tex2html800"
+  HREF="node7.html#SECTION00719000000000000000">6.1.9 <TT>web_archive_spam_protection</TT></A>
+<LI><A NAME="tex2html801"
+  HREF="node7.html#SECTION007110000000000000000">6.1.10 <TT>dark_color</TT> <TT>light_color</TT> <TT>text_color</TT> <TT>bg_color</TT> <TT>error_color</TT> <TT>selected_color</TT> <TT>shaded_color</TT></A>
+<LI><A NAME="tex2html802"
+  HREF="node7.html#SECTION007111000000000000000">6.1.11 <TT>cookie</TT></A>
+<LI><A NAME="tex2html803"
+  HREF="node7.html#SECTION007112000000000000000">6.1.12 <TT>create_list</TT></A>
+<LI><A NAME="tex2html804"
+  HREF="node7.html#SECTION007113000000000000000">6.1.13 <TT>global_remind</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html805"
+  HREF="node7.html#SECTION00720000000000000000">6.2 Directories</A>
+<UL>
+<LI><A NAME="tex2html806"
+  HREF="node7.html#SECTION00721000000000000000">6.2.1 <TT>home</TT></A>
+<LI><A NAME="tex2html807"
+  HREF="node7.html#SECTION00722000000000000000">6.2.2 <TT>etc</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html808"
+  HREF="node7.html#SECTION00730000000000000000">6.3 System related</A>
+<UL>
+<LI><A NAME="tex2html809"
+  HREF="node7.html#SECTION00731000000000000000">6.3.1 <TT>syslog</TT></A>
+<LI><A NAME="tex2html810"
+  HREF="node7.html#SECTION00732000000000000000">6.3.2 <TT>log_level</TT></A>
+<LI><A NAME="tex2html811"
+  HREF="node7.html#SECTION00733000000000000000">6.3.3 <TT>log_socket_type</TT></A>
+<LI><A NAME="tex2html812"
+  HREF="node7.html#SECTION00734000000000000000">6.3.4 <TT>pidfile</TT></A>
+<LI><A NAME="tex2html813"
+  HREF="node7.html#SECTION00735000000000000000">6.3.5 <TT>umask</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html814"
+  HREF="node7.html#SECTION00740000000000000000">6.4 Sending related</A>
+<UL>
+<LI><A NAME="tex2html815"
+  HREF="node7.html#SECTION00741000000000000000">6.4.1 <TT>distribution_mode</TT></A>
+<LI><A NAME="tex2html816"
+  HREF="node7.html#SECTION00742000000000000000">6.4.2 <TT>maxsmtp</TT></A>
+<LI><A NAME="tex2html817"
+  HREF="node7.html#SECTION00743000000000000000">6.4.3 <TT>log_smtp</TT></A>
+<LI><A NAME="tex2html818"
+  HREF="node7.html#SECTION00744000000000000000">6.4.4 <TT>max_size</TT></A>
+<LI><A NAME="tex2html819"
+  HREF="node7.html#SECTION00745000000000000000">6.4.5 <TT>misaddressed_commands</TT></A>
+<LI><A NAME="tex2html820"
+  HREF="node7.html#SECTION00746000000000000000">6.4.6 <TT>misaddressed_commands_regexp</TT></A>
+<LI><A NAME="tex2html821"
+  HREF="node7.html#SECTION00747000000000000000">6.4.7 <TT>nrcpt</TT></A>
+<LI><A NAME="tex2html822"
+  HREF="node7.html#SECTION00748000000000000000">6.4.8 <TT>avg</TT></A>
+<LI><A NAME="tex2html823"
+  HREF="node7.html#SECTION00749000000000000000">6.4.9 <TT>sendmail</TT></A>
+<LI><A NAME="tex2html824"
+  HREF="node7.html#SECTION007410000000000000000">6.4.10 <TT>sendmail_args</TT></A>
+<LI><A NAME="tex2html825"
+  HREF="node7.html#SECTION007411000000000000000">6.4.11 <TT>sendmail_alias</TT></A>
+<LI><A NAME="tex2html826"
+  HREF="node7.html#SECTION007412000000000000000">6.4.12 <TT>rfc2369_header_fields</TT></A>
+<LI><A NAME="tex2html827"
+  HREF="node7.html#SECTION007413000000000000000">6.4.13 <TT>remove_headers</TT></A>
+<LI><A NAME="tex2html828"
+  HREF="node7.html#SECTION007414000000000000000">6.4.14 <TT>anonymous_headers_fields</TT></A>
+<LI><A NAME="tex2html829"
+  HREF="node7.html#SECTION007415000000000000000">6.4.15 <TT>list_check_smtp</TT></A>
+<LI><A NAME="tex2html830"
+  HREF="node7.html#SECTION007416000000000000000">6.4.16 <TT>list_check_suffixes</TT></A>
+<LI><A NAME="tex2html831"
+  HREF="node7.html#SECTION007417000000000000000">6.4.17 <TT>urlize_min_size</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html832"
+  HREF="node7.html#SECTION00750000000000000000">6.5 Quotas</A>
+<UL>
+<LI><A NAME="tex2html833"
+  HREF="node7.html#SECTION00751000000000000000">6.5.1 <TT>default_shared_quota</TT></A>
+<LI><A NAME="tex2html834"
+  HREF="node7.html#SECTION00752000000000000000">6.5.2 <TT>default_archive_quota</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html835"
+  HREF="node7.html#SECTION00760000000000000000">6.6 Spool related</A>
+<UL>
+<LI><A NAME="tex2html836"
+  HREF="node7.html#SECTION00761000000000000000">6.6.1 <TT>spool</TT></A>
+<LI><A NAME="tex2html837"
+  HREF="node7.html#SECTION00762000000000000000">6.6.2 <TT>queue</TT></A>
+<LI><A NAME="tex2html838"
+  HREF="node7.html#SECTION00763000000000000000">6.6.3 <TT>queuedistribute</TT></A>
+<LI><A NAME="tex2html839"
+  HREF="node7.html#SECTION00764000000000000000">6.6.4 <TT>queuemod</TT></A>
+<LI><A NAME="tex2html840"
+  HREF="node7.html#SECTION00765000000000000000">6.6.5 <TT>queuedigest</TT></A>
+<LI><A NAME="tex2html841"
+  HREF="node7.html#SECTION00766000000000000000">6.6.6 <TT>queueexpire</TT></A>
+<LI><A NAME="tex2html842"
+  HREF="node7.html#SECTION00767000000000000000">6.6.7 <TT>queueauth</TT></A>
+<LI><A NAME="tex2html843"
+  HREF="node7.html#SECTION00768000000000000000">6.6.8 <TT>queueoutgoing</TT></A>
+<LI><A NAME="tex2html844"
+  HREF="node7.html#SECTION00769000000000000000">6.6.9 <TT>queuebounce</TT></A>
+<LI><A NAME="tex2html845"
+  HREF="node7.html#SECTION007610000000000000000">6.6.10 <TT>queuetask</TT></A>
+<LI><A NAME="tex2html846"
+  HREF="node7.html#SECTION007611000000000000000">6.6.11 <TT>tmpdir</TT></A>
+<LI><A NAME="tex2html847"
+  HREF="node7.html#SECTION007612000000000000000">6.6.12 <TT>sleep</TT></A>
+<LI><A NAME="tex2html848"
+  HREF="node7.html#SECTION007613000000000000000">6.6.13 <TT>clean_delay_queue</TT></A>
+<LI><A NAME="tex2html849"
+  HREF="node7.html#SECTION007614000000000000000">6.6.14 <TT>clean_delay_queuemod</TT></A>
+<LI><A NAME="tex2html850"
+  HREF="node7.html#SECTION007615000000000000000">6.6.15 <TT>clean_delay_queueauth</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html851"
+  HREF="node7.html#SECTION00770000000000000000">6.7 Internationalization related</A>
+<UL>
+<LI><A NAME="tex2html852"
+  HREF="node7.html#SECTION00771000000000000000">6.7.1 <TT>localedir</TT></A>
+<LI><A NAME="tex2html853"
+  HREF="node7.html#SECTION00772000000000000000">6.7.2 <TT>supported_lang</TT></A>
+<LI><A NAME="tex2html854"
+  HREF="node7.html#SECTION00773000000000000000">6.7.3 <TT>lang</TT></A>
+<LI><A NAME="tex2html855"
+  HREF="node7.html#SECTION00774000000000000000">6.7.4 <TT>web_recode_to</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html856"
+  HREF="node7.html#SECTION00780000000000000000">6.8 Bounce related</A>
+<UL>
+<LI><A NAME="tex2html857"
+  HREF="node7.html#SECTION00781000000000000000">6.8.1 <TT>bounce_warn_rate</TT></A>
+<LI><A NAME="tex2html858"
+  HREF="node7.html#SECTION00782000000000000000">6.8.2 <TT>bounce_halt_rate</TT></A>
+<LI><A NAME="tex2html859"
+  HREF="node7.html#SECTION00783000000000000000">6.8.3 <TT>welcome_return_path</TT></A>
+<LI><A NAME="tex2html860"
+  HREF="node7.html#SECTION00784000000000000000">6.8.4 <TT>remind_return_path</TT></A>
+<LI><A NAME="tex2html861"
+  HREF="node7.html#SECTION00785000000000000000">6.8.5 <TT>expire_bounce_task</TT></A>
+<LI><A NAME="tex2html862"
+  HREF="node7.html#SECTION00786000000000000000">6.8.6 <TT>purge_orphan_bounces_task</TT></A>
+<LI><A NAME="tex2html863"
+  HREF="node7.html#SECTION00787000000000000000">6.8.7 <TT>eval_bouncers_task</TT></A>
+<LI><A NAME="tex2html864"
+  HREF="node7.html#SECTION00788000000000000000">6.8.8 <TT>process_bouncers_task</TT></A>
+<LI><A NAME="tex2html865"
+  HREF="node7.html#SECTION00789000000000000000">6.8.9 <TT>minimum_bouncing_count</TT></A>
+<LI><A NAME="tex2html866"
+  HREF="node7.html#SECTION007810000000000000000">6.8.10 <TT>minimum_bouncing_period</TT></A>
+<LI><A NAME="tex2html867"
+  HREF="node7.html#SECTION007811000000000000000">6.8.11 <TT>bounce_delay</TT></A>
+<LI><A NAME="tex2html868"
+  HREF="node7.html#SECTION007812000000000000000">6.8.12 <TT>default_bounce_level1_rate</TT></A>
+<LI><A NAME="tex2html869"
+  HREF="node7.html#SECTION007813000000000000000">6.8.13 <TT>default_bounce_level2_rate</TT></A>
+<LI><A NAME="tex2html870"
+  HREF="node7.html#SECTION007814000000000000000">6.8.14 <TT>bounce_email_prefix</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html871"
+  HREF="node7.html#SECTION00790000000000000000">6.9 Priority related</A>
+<UL>
+<LI><A NAME="tex2html872"
+  HREF="node7.html#SECTION00791000000000000000">6.9.1 <TT>sympa_priority</TT></A>
+<LI><A NAME="tex2html873"
+  HREF="node7.html#SECTION00792000000000000000">6.9.2 <TT>request_priority</TT></A>
+<LI><A NAME="tex2html874"
+  HREF="node7.html#SECTION00793000000000000000">6.9.3 <TT>owner_priority</TT></A>
+<LI><A NAME="tex2html875"
+  HREF="node7.html#SECTION00794000000000000000">6.9.4 <TT>default_list_priority</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html876"
+  HREF="node7.html#SECTION007100000000000000000">6.10 Database related</A>
+<UL>
+<LI><A NAME="tex2html877"
+  HREF="node7.html#SECTION007101000000000000000">6.10.1 <TT>db_type</TT></A>
+<LI><A NAME="tex2html878"
+  HREF="node7.html#SECTION007102000000000000000">6.10.2 <TT>db_name</TT></A>
+<LI><A NAME="tex2html879"
+  HREF="node7.html#SECTION007103000000000000000">6.10.3 <TT>db_host</TT></A>
+<LI><A NAME="tex2html880"
+  HREF="node7.html#SECTION007104000000000000000">6.10.4 <TT>db_port</TT></A>
+<LI><A NAME="tex2html881"
+  HREF="node7.html#SECTION007105000000000000000">6.10.5 <TT>db_user</TT></A>
+<LI><A NAME="tex2html882"
+  HREF="node7.html#SECTION007106000000000000000">6.10.6 <TT>db_passwd</TT></A>
+<LI><A NAME="tex2html883"
+  HREF="node7.html#SECTION007107000000000000000">6.10.7 <TT>db_options</TT></A>
+<LI><A NAME="tex2html884"
+  HREF="node7.html#SECTION007108000000000000000">6.10.8 <TT>db_env</TT></A>
+<LI><A NAME="tex2html885"
+  HREF="node7.html#SECTION007109000000000000000">6.10.9 <TT>db_additional_subscriber_fields</TT></A>
+<LI><A NAME="tex2html886"
+  HREF="node7.html#SECTION0071010000000000000000">6.10.10 <TT>db_additional_user_fields</TT></A>
+<LI><A NAME="tex2html887"
+  HREF="node7.html#SECTION0071011000000000000000">6.10.11 <TT>purge_user_table_task</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html888"
+  HREF="node7.html#SECTION007110000000000000000">6.11 Loop prevention</A>
+<UL>
 <LI><A NAME="tex2html889"
-  HREF="node7.html#SECTION00710000000000000000">6.1 Prerequisites</A>
+  HREF="node7.html#SECTION007111000000000000000">6.11.1 <TT>loop_command_max</TT></A>
 <LI><A NAME="tex2html890"
-  HREF="node7.html#SECTION00720000000000000000">6.2 Installing PERL modules</A>
+  HREF="node7.html#SECTION007112000000000000000">6.11.2 <TT>loop_command_sampling_delay</TT></A>
 <LI><A NAME="tex2html891"
-  HREF="node7.html#SECTION00730000000000000000">6.3 Creating a sympa DataBase</A>
-<UL>
+  HREF="node7.html#SECTION007113000000000000000">6.11.3 <TT>loop_command_decrease_factor</TT></A>
+</UL>
+<BR>
 <LI><A NAME="tex2html892"
-  HREF="node7.html#SECTION00731000000000000000">6.3.1 Database structure</A>
-<LI><A NAME="tex2html893"
-  HREF="node7.html#SECTION00732000000000000000">6.3.2 Database creation</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html894"
-  HREF="node7.html#SECTION00740000000000000000">6.4 Setting database privileges</A>
-<LI><A NAME="tex2html895"
-  HREF="node7.html#SECTION00750000000000000000">6.5 Importing subscribers data</A>
+  HREF="node7.html#SECTION007120000000000000000">6.12 S/MIME configuration</A>
 <UL>
+<LI><A NAME="tex2html893"
+  HREF="node7.html#SECTION007121000000000000000">6.12.1 <TT>openssl</TT></A>
+<LI><A NAME="tex2html894"
+  HREF="node7.html#SECTION007122000000000000000">6.12.2 <TT>capath</TT></A>
+<LI><A NAME="tex2html895"
+  HREF="node7.html#SECTION007123000000000000000">6.12.3 <TT>cafile</TT></A>
 <LI><A NAME="tex2html896"
-  HREF="node7.html#SECTION00751000000000000000">6.5.1 Importing data from a text file</A>
+  HREF="node7.html#SECTION007124000000000000000">6.12.4 <TT>key_passwd</TT></A>
 <LI><A NAME="tex2html897"
-  HREF="node7.html#SECTION00752000000000000000">6.5.2 Importing data from subscribers files</A>
+  HREF="node7.html#SECTION007125000000000000000">6.12.5 <TT>chk_cert_expiration_task</TT></A>
+<LI><A NAME="tex2html898"
+  HREF="node7.html#SECTION007126000000000000000">6.12.6 <TT>crl_update_task</TT></A>
 </UL>
 <BR>
-<LI><A NAME="tex2html898"
-  HREF="node7.html#SECTION00760000000000000000">6.6 Management of the include cache</A>
 <LI><A NAME="tex2html899"
-  HREF="node7.html#SECTION00770000000000000000">6.7 Extending database table format</A>
+  HREF="node7.html#SECTION007130000000000000000">6.13 Antivirus plug-in</A>
+<UL>
 <LI><A NAME="tex2html900"
-  HREF="node7.html#SECTION00780000000000000000">6.8 <I>Sympa</I> configuration</A>
-</UL>
+  HREF="node7.html#SECTION007131000000000000000">6.13.1 <TT>antivirus_path</TT></A>
+<LI><A NAME="tex2html901"
+  HREF="node7.html#SECTION007132000000000000000">6.13.2 <TT>antivirus_args</TT></A>
+<LI><A NAME="tex2html902"
+  HREF="node7.html#SECTION007133000000000000000">6.13.3 <TT>antivirus_notify</TT></A>
+</UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
 
 <H1><A NAME="SECTION00700000000000000000"></A>
-<A NAME="sec-rdbms"></A>
+    <A NAME="exp-admin"></A>    <A NAME="773"></A>
+    <A NAME="774"></A>
 <BR>
-6. <I>Sympa</I> and its database
+6. sympa.conf parameters
 </H1>
 
 <P>
-Most basic feature of <I>Sympa</I> will work without a RDBMS, but WWSympa and bounced require a relational database. 
-Currently you can use one of the following RDBMS : MySQL, PostgreSQL, Oracle, Sybase. Interfacing with other RDBMS
-requires only a few changes in the code, since the API used, <A NAME="tex2html19"
-  HREF="http://www.symbolstone.org/technology/perl/DBI/">DBI</A>
-(DataBase Interface), has DBD (DataBase Drivers) for many RDBMS.
+The <A NAME="5902"></A><TT>/etc/sympa.conf</TT> configuration file contains numerous
+parameters which are read on start-up of <I>Sympa</I>. If you change this file, do not forget
+that you will need to restart <I>Sympa</I> afterwards. 
 
 <P>
-Sympa stores three kind of information in the database, each in one table :
-
-<UL>
-<LI>User preferences and passwords are stored in the <A NAME="6500"></A>user_table  table
+The <A NAME="5907"></A><TT>/etc/sympa.conf</TT> file contains directives in the following
+format:
 
 <P>
-</LI>
-<LI>List subscription informations are stored in the <A NAME="6501"></A>subscriber_table  table, along with subscription options.
-  This table also contains the cache for included users (if using include2 mode).
+<BLOCKQUOTE>
+<I>keyword    value</I>
+
+</BLOCKQUOTE>
 
 <P>
-</LI>
-<LI>List administrative informations are stored in the <A NAME="6502"></A>admin_table  table if using include2 mode, along with owner and editor options. This table also contains the cache for included owners and editors.
-
-<P>
-</LI>
-</UL>
+Comments start with the <TT>#</TT> character at the beginning of
+a line.  Empty lines are also considered as comments and are ignored.
+There should only be one directive per line, but their order in
+the file is of no importance.
 
 <P>
 
 <H1><A NAME="SECTION00710000000000000000">
-6.1 Prerequisites</A>
+6.1 Site customization</A>
 </H1>
 
 <P>
-You need to have a DataBase System installed (not necessarily 
-on the same host as <I>Sympa</I>), and the client libraries for that
-Database installed on the <I>Sympa</I> host ; provided, of course, that
-a PERL DBD (DataBase Driver) is available for your chosen RDBMS!
-Check the <A NAME="tex2html20"
-  HREF="http://www.symbolstone.org/technology/perl/DBI/"><TT>DBI</TT> Module Availability</A>.
+
+<H2><A NAME="SECTION00711000000000000000"></A><A NAME="5910"></A>
+<BR>
+6.1.1 <TT>domain</TT>
+</H2>
+
+<P>
+This keyword is <B>mandatory</B>. It is the domain name
+used in the <A NAME="5913"></A><TT>From:</TT> header in replies to administrative
+requests. So the smtp engine (qmail, sendmail, postfix or whatever) must
+recognize this domain as a local address. The old keyword <A NAME="5916"></A><TT>host</TT>
+is still recognized but should not be used anymore.
+
+<P>
+Example: <TT>domain cru.fr</TT>
+
+<P>
+
+<H2><A NAME="SECTION00712000000000000000"></A><A NAME="5920"></A>
+<BR>
+6.1.2 <TT>email</TT>
+</H2> 
+
+<P>
+(Default value: <TT>sympa</TT>)
+
+<P>
+Username (the part of the address preceding the <TT>@</TT> sign) used
+        in the <A NAME="5924"></A><TT>From:</TT> header in replies to administrative requests.
+
+<P>
+Example: <TT>email           listserv</TT>
+
+<P>
+
+<H2><A NAME="SECTION00713000000000000000"></A><A NAME="5928"></A>
+<BR>
+6.1.3 <TT>listmaster</TT>
+</H2> 
+
+<P>
+The list of e-mail addresses  of listmasters (users authorized to perform
+        global  server commands). Listmasters can be defined for each virtual robot.
+
+<P>
+Example: <TT>listmaster postmaster@cru.fr,root@cru.fr</TT>
+
+<P>
+
+<H2><A NAME="SECTION00714000000000000000"></A><A NAME="5932"></A>
+<BR>
+6.1.4 <TT>listmaster_email</TT>
+</H2> 
+
+<P>
+(Default value: <TT>listmaster</TT>)
+
+<P>
+Username (the part of the address preceding the <TT>@</TT> sign) used 
+	in the listmaster email. This parameter is useful if you want to run
+	more than one sympa on the same host (a sympa test for example).
+
+<P>
+If you change the default value, you must modify the sympa aliases too.
+
+<P>
+For example, if you put :
+
+<P>
+<BLOCKQUOTE>
+listmaster listmaster-test
+
+</BLOCKQUOTE>
+
+<P>
+you must modify the sympa aliases like this :
+
+<P>
+<BLOCKQUOTE>
+listmaster-test: 	"| /home/sympa/bin/queue listmaster@my.domain.org"
+
+</BLOCKQUOTE>
+
+<P>
+See <A HREF="node6.html#robot-aliases">5.1</A>,page&nbsp;<A HREF="node6.html#robot-aliases"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for all aliases.
+
+<P>
+
+<H2><A NAME="SECTION00715000000000000000"></A><A NAME="5936"></A>
+<BR>
+6.1.5 <TT>wwsympa_url</TT>
+</H2>  
+
+<P>
+(Default value: <TT>http://<TT>&lt;</TT>host<TT>&gt;</TT>/wws</TT>)
+
+<P>
+This is the root URL of <A NAME="5942"></A><I>WWSympa</I>.
+
+<P>
+Example: <TT>wwsympa_url https://my.server/sympa</TT>
+
+<P>
+
+<H2><A NAME="SECTION00716000000000000000"></A><A NAME="5946"></A>
+<BR>
+6.1.6 <TT>rss_url</TT>
+</H2>  
+
+<P>
+(Default value: <TT>http://<TT>&lt;</TT>host<TT>&gt;</TT>/sympa/rss</TT>)
+
+<P>
+This is the root URL of <A NAME="5952"></A><I>WWSympa</I>'s rss channel.
+
+<P>
+Example: <TT>wwsympa_url https://my.server/sympa/rss</TT>
+
+<P>
+
+<H2><A NAME="SECTION00717000000000000000"></A><A NAME="5956"></A>
+<BR>
+6.1.7 <TT>soap_url</TT>
+</H2>  
+
+<P>
+This is the root URL of Sympa's SOAP server. Sympa's WSDL document refer to this URL in its <TT>service</TT> section.
+
+<P>
+Example: <TT>soap_url http://my.server/sympasoap</TT>
+
+<P>
+
+<H2><A NAME="SECTION00718000000000000000"></A><A NAME="5960"></A>
+<BR>
+6.1.8 <TT>spam_protection</TT>
+</H2>  
+
+<P>
+<A NAME="5963"></A>spam_protection 
+	 (Default value: <TT>javascript</TT>)
+
+<P>
+There is a need to protection Sympa web site against spambot which collect
+        email adresse in public web site. Various method are availble into Sympa
+        and you can choose it with <A NAME="5965"></A><TT>spam_protection</TT> and
+        <A NAME="5968"></A><TT>web_archive_spam_protection</TT> parameters.
+        Possible value are :
+
+<UL>
+<LI>javascript : the adresse is hidden using a javascript. User who enable javascript can
+see a  nice mailto adresses where others have nothing.
+</LI>
+<LI>at : the @ char is replaced by the string " AT ".
+</LI>
+<LI>none : no protection against spammer.
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00719000000000000000"></A><A NAME="5971"></A>
+<BR>
+6.1.9 <TT>web_archive_spam_protection</TT>
+</H2>
+	  (Default value: <TT>cookie</TT>)
+
+<P>
+Idem <A NAME="5975"></A><TT>spam_protection</TT> but restricted to web archive.
+        A additional value is availible : cookie which mean that users
+        must submit a small form in order to receive a cookie before
+        browsing archives. This block all robot, even google and co.
+
+<P>
+
+<H2><A NAME="SECTION007110000000000000000"></A><A NAME="5978"></A><A NAME="5981"></A><A NAME="5984"></A><A NAME="5987"></A><A NAME="5990"></A><A NAME="5993"></A><A NAME="5996"></A>
+<A NAME="colors"></A>
+<BR>
+6.1.10 <TT>dark_color</TT> <TT>light_color</TT> <TT>text_color</TT> <TT>bg_color</TT> <TT>error_color</TT> <TT>selected_color</TT> <TT>shaded_color</TT>
+</H2>
+
+<P>
+They are the color definition for web interface. Default are set in the main Makefile. Thoses parameters can be overwritten in each virtual robot definition.
+
+<P>
+
+<H2><A NAME="SECTION007111000000000000000"></A><A NAME="5999"></A>
+<BR>
+6.1.11 <TT>cookie</TT>
+</H2> 
+
+<P>
+This string is used to generate MD5 authentication keys.
+	It allows generated authentication keys to differ from one
+	site to another. It is also used for reversible encryption of
+        user passwords stored in the database. The presence of this string
+	is one reason why access to <A NAME="6002"></A><TT>sympa.conf</TT> needs to be restricted
+	to the Sympa user. 
+
+<P>
+Note that changing this parameter will break all
+        http cookies stored in users' browsers, as well as all user passwords
+	and lists X509 private keys.
+
+<P>
+Example: <TT>cookie gh869jku5</TT>
+
+<P>
+
+<H2><A NAME="SECTION007112000000000000000"></A><A NAME="6006"></A>
+<BR>
+6.1.12 <TT>create_list</TT>
+</H2>  
+
+<P>
+<A NAME="create-list"></A>
+<P>
+(Default value: <TT>public_listmaster</TT>)
+
+<P>
+<TT>create_list</TT> parameter is defined by an authorization scenario (see&nbsp;<A HREF="node13.html#scenarios">12</A>, page&nbsp;<A HREF="node13.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
+Defines who can create lists (or request list creations).
+	Sympa will use the corresponding authorization scenario.
+
+<P>
+Example: <TT>create_list intranet</TT>
+
+<P>
+
+<H2><A NAME="SECTION007113000000000000000"></A><A NAME="6014"></A>
+<BR>
+6.1.13 <TT>global_remind</TT>
+</H2>  
+
+<P>
+<A NAME="global-remind"></A>
+<P>
+(Default value: <TT>listmaster</TT>)
+
+<P>
+<TT>global_remind</TT> parameter is defined by an authorization scenario (see&nbsp;<A HREF="node13.html#scenarios">12</A>, page&nbsp;<A HREF="node13.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
+Defines who can run a <TT>REMIND *</TT> command.
 
 <P>
 
 <H1><A NAME="SECTION00720000000000000000">
-6.2 Installing PERL modules</A>
+6.2 Directories</A>
 </H1>
 
+<H2><A NAME="SECTION00721000000000000000"></A><A NAME="6021"></A>
+<BR>
+6.2.1 <TT>home</TT>
+</H2>
+
 <P>
-<I>Sympa</I> will use <A NAME="6509"></A><TT>DBI</TT> to communicate with the database system and
-therefore requires the DBD for your database system. DBI and 
-DBD::YourDB (<A NAME="6512"></A><TT>Msql-Mysql-modules</TT> for MySQL) are distributed as 
-CPAN modules. Refer to&nbsp;<A HREF="node4.html#Install_PERL_and_CPAN_modules">3.2.3</A>, 
-page&nbsp;<A HREF="node4.html#Install_PERL_and_CPAN_modules"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for installation
-details of these modules.
+(Default value: <TT><A NAME="6026"></A><TT>/home/sympa/expl</TT></TT>)
+
+<P>
+The directory whose subdirectories correspond to the different lists.
+
+<P>
+Example: <TT>home          /home/sympa/expl</TT>
+
+<P>
+
+<H2><A NAME="SECTION00722000000000000000"></A><A NAME="6030"></A>
+<BR>
+6.2.2 <TT>etc</TT>
+</H2>
+
+<P>
+(Default value: <TT><A NAME="6035"></A><TT>/home/sympa/etc</TT></TT>)
+
+<P>
+This is the local directory for configuration files (such as
+	<A NAME="6038"></A><TT>edit_list.conf</TT>. It contains 5 subdirectories:
+	<A NAME="6041"></A><TT>scenari</TT> for local authorization scenarios; <A NAME="6044"></A><TT>templates</TT>
+	for the site's local templates and default list templates; <A NAME="6047"></A><TT>wws_templates</TT>
+        for the site's local html templates; <A NAME="6050"></A><TT>global_task_models</TT> for local
+	global task models; and <A NAME="6053"></A><TT>list_task_models</TT> for local list task models
+
+<P>
+Example: <TT>etc          /home/sympa/etc</TT>
 
 <P>
 
 <H1><A NAME="SECTION00730000000000000000">
-6.3 Creating a sympa DataBase</A>
+6.3 System related</A>
 </H1>
 
 <P>
 
-<H2><A NAME="SECTION00731000000000000000">
-6.3.1 Database structure</A>
+<H2><A NAME="SECTION00731000000000000000"></A><A NAME="6057"></A>
+<BR>
+6.3.1 <TT>syslog</TT>
+</H2> 
+
+<P>
+(Default value: <TT>LOCAL1</TT>)
+
+<P>
+Name of the sub-system (facility) for logging messages.
+
+<P>
+Example: <TT>syslog          LOCAL2</TT>
+
+<P>
+
+<H2><A NAME="SECTION00732000000000000000"></A><A NAME="6062"></A>
+<BR>
+6.3.2 <TT>log_level</TT>
+</H2> 
+
+<P>
+(Default value: <TT>0</TT>)
+
+<P>
+This parameter sets the verbosity of Sympa processes (including) in log files.
+	With level 0 only main operations are logged, in level 3 almost everything is
+	logged.
+
+<P>
+Example: <TT>log_level          2</TT>
+
+<P>
+
+<H2><A NAME="SECTION00733000000000000000"></A><A NAME="6067"></A> 
+    <A NAME="par-log-socket-type"></A>
+<BR>
+6.3.3 <TT>log_socket_type</TT>
 </H2>
 
 <P>
-The sympa database structure is slightly different from the
-structure of a <A NAME="6515"></A><TT>subscribers</TT> file. A <A NAME="6518"></A><TT>subscribers</TT>
-file is a text file based on paragraphs (similar to 
-the <A NAME="6521"></A><TT>config</TT> file) ; each paragraph completely describes 
-a subscriber. If somebody is subscribed to two lists, he/she 
-will appear in both subscribers files.
+(Default value: <TT>unix</TT>)
 
 <P>
-The DataBase distinguishes information relative to a person (e-mail,
-real name, password) and his/her subscription options (list
-concerned, date of subscription, reception option, visibility 
-option). This results in a separation of the data into two tables :
-the user_table and the subscriber_table, linked by a user/subscriber e-mail.
-
-<P>
-The table concerning owners and editors, the admin_table, is made on the same way as 
-the subscriber_table but is used only in include2 mode. It constains owner and editor 
-options (list concerned, administrative role, date of ``subscription'', reception option, 
-private info, gecos and profile option for owners).
+<I>Sympa</I> communicates with <A NAME="6072"></A><TT>syslogd</TT>
+        using either UDP or UNIX sockets.  Set <A NAME="6075"></A><TT>log_socket_type</TT> to <TT>inet</TT> to use UDP, or <TT>unix</TT> for UNIX sockets.
 
 <P>
 
-<H2><A NAME="SECTION00732000000000000000">
-6.3.2 Database creation</A>
-</H2>
+<H2><A NAME="SECTION00734000000000000000"></A><A NAME="6078"></A>
+<BR>
+6.3.4 <TT>pidfile</TT>
+</H2> 
 
 <P>
-The <A NAME="6524"></A><TT>create_db</TT> script below will create the sympa database for 
-you. You can find it in the <A NAME="6527"></A><TT>script/</TT> directory of the 
-distribution (currently scripts are available for MySQL, PostgreSQL, Oracle and Sybase).
+(Default value: <TT><A NAME="6083"></A><TT>/home/sympa/etc/sympa.pid</TT></TT>)
+
+<P>
+The file where the <A NAME="6086"></A><TT>sympa.pl</TT> daemon stores its
+        process number. Warning: the <TT>sympa</TT> user must be
+        able to write to this file, and to create it if it doesn't
+        exist.
+
+<P>
+Example: <TT>pidfile         /var/run/sympa.pid</TT>
 
 <P>
 
-<UL>
-<LI>MySQL database creation script
-<BR>	<PRE>
-## MySQL Database creation script
-
-CREATE DATABASE sympa;
-
-## Connect to DB 
-\r sympa
-
-CREATE TABLE user_table (
-  	email_user          	varchar (100) NOT NULL,
-  	gecos_user          	varchar (150),
-  	password_user		varchar (40),
-	cookie_delay_user	int,
-	lang_user		varchar (10),
-	attributes_user		varchar(255),
-	PRIMARY KEY (email_user)
-);
-
-CREATE TABLE subscriber_table (
-  	list_subscriber       	varchar (50) NOT NULL,
-	user_subscriber		varchar (100) NOT NULL,
-	date_subscriber		datetime NOT NULL,
-	update_subscriber	datetime,
-	visibility_subscriber	varchar (20),
-	reception_subscriber	varchar (20),
-	bounce_subscriber	varchar (35),
-	comment_subscriber	varchar (150),
-	subscribed_subscriber 	enum ('0','1'),
-	included_subscriber 	enum ('0','1'),
-	include_sources_subscriber varchar(50),
-	bounce_score_subscriber smallint (6),
-	PRIMARY KEY (list_subscriber, user_subscriber),
-	INDEX (user_subscriber,list_subscriber)
-);
-
-CREATE TABLE admin_table (
-	list_admin 		varchar(50) NOT NULL,
- 	user_admin 		varchar(100) NOT NULL,
-	role_admin 		enum('listmaster','owner','editor') NOT NULL,
-	date_admin 		datetime NOT NULL,
-	update_admin 		datetime,
-	reception_admin 	varchar(20),
-	comment_admin 		varchar(150),
-	subscribed_admin  	enum('0','1'),
-	included_admin  	enum('0','1'),
-	include_sources_admin  	varchar(50),
-	info_admin   		varchar(150),
-	profile_admin  		enum('privileged','normal'),
-	PRIMARY KEY (list_admin, user_admin,role_admin),
-	INDEX (list_admin, user_admin,role_admin)
-);
- 
-
-
-# CREATE TABLE log_table (
-# 	id			INT UNSIGNED DEFAULT 0 NOT NULL auto_increment,
-# 	date			int NOT NULL,
-# 	pid			int,
-# 	process			enum ('task','archived','sympa','wwsympa','bounced'),
-#   	email_user          	varchar (100),
-# 	auth			enum ('smtp','md5','smime','null'),	
-# 	ip			varchar (15),
-#   	operation		varchar (40),
-# 	list			varchar (50),
-# 	robot			varchar (60),
-# 	arg			varchar (100),
-# 	status			varchar (100),
-# 	subscriber_count	int,
-# 	PRIMARY KEY (id),
-# 	INDEX (date),	
-# 	INDEX (robot),
-# 	INDEX (list),
-# 	INDEX (email_user)
-# );
-</PRE>
+<H2><A NAME="SECTION00735000000000000000"></A><A NAME="6090"></A>
+<BR>
+6.3.5 <TT>umask</TT>
+</H2> 
 
 <P>
-</LI>
-<LI>PostgreSQL database creation script
-<BR>	<PRE>
--- PostgreSQL Database creation script
-
-CREATE DATABASE sympa;
-
--- Connect to DB 
-\connect sympa
-
-DROP TABLE user_table;
-CREATE TABLE user_table (
-  	email_user          	varchar (100) NOT NULL,
-  	gecos_user          	varchar (150),
-	cookie_delay_user       int4,
-        password_user		varchar (40),
-        lang_user               varchar (10),
-	attributes_user		varchar (255),
-	CONSTRAINT ind_user PRIMARY KEY (email_user)
-);
-
-DROP TABLE subscriber_table;
-CREATE TABLE subscriber_table (
-  	list_subscriber       	varchar (50) NOT NULL,
-	user_subscriber		varchar (100) NOT NULL,
-	date_subscriber		timestamp with time zone NOT NULL,
-	update_subscriber 	timestamp with time zone,
-	visibility_subscriber	varchar (20),
-	reception_subscriber	varchar (20),
-	bounce_subscriber	varchar (35),
-	bounce_score_subscriber int4,
-	comment_subscriber	varchar (150),
-	subscribed_subscriber 	bit(1),
-	included_subscriber 	bit(1),
-	include_sources_subscriber varchar(50),
-	CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber, user_subscriber)
-);
-CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber);
-
-DROP TABLE admin_table;
-CREATE TABLE admin_table (
-	list_admin 		varchar(50) NOT NULL,
- 	user_admin 		varchar(100) NOT NULL,
-	role_admin 		varchar(15) NOT NULL,
-	date_admin 		timestamp with time zone NOT NULL,
-	update_admin 		timestamp with time zone,
-	reception_admin 	varchar(20),
-	comment_admin 		varchar(150),
-	subscribed_admin  	bit(1),
-	included_admin  	bit(1),
-	include_sources_admin  	varchar(50),
-	info_admin   		varchar(150),
-	profile_admin  		varchar(15),
-        CONSTRAINT ind_admin PRIMARY KEY (list_admin, user_admin,role_admin)
-);
-CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin,role_admin);
-</PRE>
+(Default value: <TT>027</TT>)
 
 <P>
-</LI>
-<LI>Sybase database creation script
-<BR>	<PRE>
-/* Sybase Database creation script 2.5.2 */
-/* Thierry Charles &lt;tcharles@electron-libre.com&gt; */
-/* 15/06/01 : extend password_user */
-
-/* sympa database must have been created */
-/* eg: create database sympa on your_device_data=10 log on your_device_log=4 */
-use sympa
-go
-
-create table user_table
-(
-    email_user             varchar(100)           not null,
-    gecos_user             varchar(150)           null    ,
-    password_user          varchar(40)            null    ,
-    cookie_delay_user      numeric                null    ,
-    lang_user              varchar(10)            null    ,
-    attributes_user	   varchar(255)           null    ,
-    constraint ind_user primary key (email_user)
-)
-go
-
-create index email_user_fk on user_table (email_user)
-go
-
-
-create table subscriber_table
-(
-    list_subscriber        varchar(50)            not null,
-    user_subscriber        varchar(100)           not null,
-    date_subscriber        datetime               not null,
-    update_subscriber      datetime               null,
-    visibility_subscriber  varchar(20)            null    ,
-    reception_subscriber   varchar(20)            null    ,
-    bounce_subscriber      varchar(35)            null    ,
-    bounce_score_subscriber numeric               null    ,
-    comment_subscriber     varchar(150)           null    ,
-    subscribed_subscriber  numeric		  null    ,
-    included_subscriber    numeric                null    ,
-    include_sources_subscriber varchar(50)        null    ,
-    constraint ind_subscriber primary key (list_subscriber, user_subscriber)
-)
-go
-
-create index list_subscriber_fk on subscriber_table (list_subscriber)
-go
-
-create index user_subscriber_fk on subscriber_table (user_subscriber)
-go
-
-create table admin_table 
-(
-	list_admin 		varchar(50)       not null,
- 	user_admin 		varchar(100) 	  not null,
-	role_admin 		varchar(15)       not null,
-	date_admin 		datetime 	  not null,
-	update_admin 		datetime          null,
-	reception_admin 	varchar(20)       null,
-	comment_admin 		varchar(150)	  null,
-	subscribed_admin  	numeric           null,
-	included_admin  	numeric           null,
-	include_sources_admin  	varchar(50)       null,
-	info_admin   		varchar(150)      null,
-	profile_admin  		varchar(15)       null,
-       constraint ind_admin primary key (list_admin, user_admin,role_admin)
-)
-go
-
-create index list_admin_fk on admin_table (list_admin)
-go
-
-create index user_admin_fk on admin_table (user_admin)
-go
-
-create index role_admin_fk on admin_table (role_admin)
-go
-</PRE>
+Default mask for file creation (see <A NAME="6094"></A><TT>umask</TT>(2)).
+	Note that it will be interpreted as an octual value.
 
 <P>
-</LI>
-<LI>Oracle database creation script
-<BR>	<PRE>
-## Oracle Database creation script
-## Fabien Marquois &lt;fmarquoi@univ-lr.fr&gt;
-
-/Bases/oracle/product/7.3.4.1/bin/sqlplus loginsystem/passwdoracle &lt;&lt;-!
- create user SYMPA identified by SYMPA default tablespace TABLESP
-temporary tablespace TEMP;
- grant create session to SYMPA;
- grant create table to SYMPA;
- grant create synonym to SYMPA;
- grant create view to SYMPA;
- grant execute any procedure to SYMPA;
- grant select any table to SYMPA;
- grant select any sequence to SYMPA;
- grant resource to SYMPA;
-!
-
-/Bases/oracle/product/7.3.4.1/bin/sqlplus SYMPA/SYMPA &lt;&lt;-!
-CREATE TABLE user_table (
-        email_user              varchar2(100) NOT NULL,
-        gecos_user              varchar2(150),
-        password_user           varchar2(40),
-        cookie_delay_user       number,
-        lang_user               varchar2(10),
-	attributes_user		varchar2(500),
-        CONSTRAINT ind_user PRIMARY KEY (email_user)
-);
-CREATE TABLE subscriber_table (
-        list_subscriber         varchar2(50) NOT NULL,
-        user_subscriber         varchar2(100) NOT NULL,
-        date_subscriber         date NOT NULL,
-	update_subscriber	date,
-        visibility_subscriber   varchar2(20),
-        reception_subscriber    varchar2(20),
- 	bounce_subscriber       varchar2 (35),
-	bounce_score_subscriber number,
- 	comment_subscriber      varchar2 (150),
-	subscribed_subscriber 	number(1,0),
-	included_subscriber 	number(1,0),
-	include_sources_subscriber varchar2(50),
-        CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber,user_subscriber)
-);
-CREATE TABLE admin_table (
-	list_admin 		varchar2(50) NOT NULL,
- 	user_admin 		varchar2(100) NOT NULL,
-	role_admin 		number('listmaster','owner','editor') NOT NULL,
-	date_admin 		date NOT NULL,
-	update_admin 		date,
-	reception_admin 	varchar2(20),
-	comment_admin 		varchar2(150),
-	subscribed_admin  	number('0','1'),
-	included_admin  	number('0','1'),
-	include_sources_admin  	varchar2(50),
-	info_admin   		varchar2(150),
-	profile_admin  		number('privileged','normal'),
-       CONSTRAINT ind_admin PRIMARY KEY (list_admin,user_admin,role_admin),
-);
-
-!
-</PRE>
-
-<P>
-</LI>
-</UL>
-
-<P>
-You can execute the script using a simple SQL shell such as
-mysql, psql or sqlplus.
-
-<P>
-Example:
-
-<P><PRE>
-# mysql  &lt; create_db.mysql
-</PRE>
+Example: <TT>umask 007</TT>
 
 <P>
 
 <H1><A NAME="SECTION00740000000000000000">
-6.4 Setting database privileges</A>
-</H1>
-
-<P>
-We strongly recommend you restrict access to <I>sympa</I> database. You will
-then set <A NAME="6530"></A><TT>db_user</TT> and <A NAME="6533"></A><TT>db_passwd</TT> in <A NAME="6536"></A><TT>sympa.conf</TT>.
-
-<P>
-With <A NAME="6539"></A>MySQL :<PRE>
-grant all on sympa.* to sympa@localhost identified by 'your_password';
-flush privileges;
-</PRE>
-
-<P>
-
-<H1><A NAME="SECTION00750000000000000000">
-6.5 Importing subscribers data</A>
+6.4 Sending related</A>
 </H1>
 
 <P>
 
-<H2><A NAME="SECTION00751000000000000000">
-6.5.1 Importing data from a text file</A>
+<H2><A NAME="SECTION00741000000000000000"></A><A NAME="6098"></A>
+<BR>
+6.4.1 <TT>distribution_mode</TT>
 </H2>
 
 <P>
-You can import subscribers data into the database from a text file having one entry per line : the first field is 
-an e-mail address, the second (optional) field is the free form name.  Fields are spaces-separated.
+(Default value: <TT>single</TT>) 
+	Use this parameter to determine if your installation nrun only one sympa.pl daemon that process both messages
+        to distribute and commands (single) or if sympa.pl will fork to run two separate processus one dedicated to message distribution
+	and one dedicated to commands and message pre-processing (fork). The second choice make a better priority processing for message
+        distribution and faster command response, but it require a bit more computer ressources.
 
 <P>
-Example:<PRE>
-## Data to be imported
-## email        gecos
-john.steward@some.company.com           John - accountant
-mary.blacksmith@another.company.com     Mary - secretary
-</PRE>
-
-<P>
-To import data into the database :
-
-<P><PRE>
-cat /tmp/my_import_file | sympa.pl --import=my_list
-</PRE>
-
-<P>
-(see <A HREF="node4.html#sympa.pl">3.7</A>, page&nbsp;<A HREF="node4.html#sympa.pl"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+Example: <TT>distribution_mode fork</TT>
 
 <P>
 
-<H2><A NAME="SECTION00752000000000000000">
-6.5.2 Importing data from subscribers files</A>
+<H2><A NAME="SECTION00742000000000000000"></A><A NAME="6103"></A>
+<BR>
+6.4.2 <TT>maxsmtp</TT>
+</H2> 
+
+<P>
+(Default value: <TT>20</TT>)
+
+<P>
+Maximum number of SMTP delivery child processes spawned
+        by  <I>Sympa</I>. This is the main load control parameter.
+
+<P>
+Example: <TT>maxsmtp           500</TT>
+
+<P>
+
+<H2><A NAME="SECTION00743000000000000000"></A><A NAME="6109"></A>
+<BR>
+6.4.3 <TT>log_smtp</TT>
+</H2> 
+
+<P>
+(Default value: <TT>off</TT>)
+
+<P>
+Set logging of each MTA call. Can be overwritten by -m sympa option.
+
+<P>
+Example: <TT>log_smtp           on</TT>
+
+<P>
+
+<H2><A NAME="SECTION00744000000000000000"></A><A NAME="6114"></A>
+<BR>
+6.4.4 <TT>max_size</TT>
+</H2> 
+
+<P>
+(Default value: <TT>5 Mb</TT>)
+
+<P>
+Maximum size allowed for messages distributed by <I>Sympa</I>.
+	This may be customized per virtual robot or per list by setting the <A NAME="6119"></A><TT>max_size</TT> 
+	robot or list parameter.
+
+<P>
+Example: <TT>max_size           2097152</TT>
+
+<P>
+
+<H2><A NAME="SECTION00745000000000000000"></A><A NAME="6123"></A>
+<BR>
+6.4.5 <TT>misaddressed_commands</TT>
+</H2> 
+
+<P>
+(Default value: <TT>reject</TT>)
+
+<P>
+When a robot command is sent to a list, by default Sympa reject this message. This feature
+        can be turned off setting this parameter to <A NAME="6127"></A><TT>ignore</TT>.
+
+<P>
+
+<H2><A NAME="SECTION00746000000000000000"></A><A NAME="6130"></A>
+<BR>
+6.4.6 <TT>misaddressed_commands_regexp</TT>
+</H2> 
+
+<P>
+(Default value: <TT>(subscribe|unsubscribe|signoff)</TT>)
+
+<P>
+This is the Perl regular expression applied on messages subject and body to detect 
+	misaddressed commands, see <A NAME="6134"></A><TT>misaddressed_commands</TT> parameter above.
+
+<P>
+
+<H2><A NAME="SECTION00747000000000000000"></A><A NAME="6137"></A>
+<BR>
+6.4.7 <TT>nrcpt</TT>
+</H2> 
+
+<P>
+(Default value: <TT>25</TT>)
+
+<P>
+Maximum number of recipients per <A NAME="6141"></A><TT>sendmail</TT> call.
+        This grouping factor makes it possible for the (<A NAME="6144"></A><TT>sendmail</TT>) MTA to optimize the number of SMTP sessions for
+        message distribution.
+
+<P>
+
+<H2><A NAME="SECTION00748000000000000000"></A><A NAME="6147"></A>
+<BR>
+6.4.8 <TT>avg</TT>
+</H2> 
+
+<P>
+(Default value: <TT>10</TT>)
+
+<P>
+Maximum number of different internet domains within addresses per
+        <A NAME="6151"></A><TT>sendmail</TT> call.
+
+<P>
+
+<H2><A NAME="SECTION00749000000000000000"></A><A NAME="6154"></A>
+<BR>
+6.4.9 <TT>sendmail</TT>
+</H2> 
+
+<P>
+(Default value: <TT>/usr/sbin/sendmail</TT>)
+
+<P>
+Absolute path to SMTP message transfer agent binary. Sympa expects this binary to
+	be sendmail compatible (<A NAME="6158"></A>postfix, <A NAME="6159"></A>Qmail and <A NAME="6160"></A>Exim binaries all
+	provide sendmail compatibility).
+
+<P>
+Example: <TT>sendmail        /usr/sbin/sendmail</TT>
+
+<P>
+
+<H2><A NAME="SECTION007410000000000000000"></A><A NAME="6162"></A>
+<BR>
+6.4.10 <TT>sendmail_args</TT>
+</H2> 
+
+<P>
+(Default value: <TT>-oi -odi -oem</TT>)
+
+<P>
+Arguments passed to SMTP message transfer agent
+
+<P>
+
+<H2><A NAME="SECTION007411000000000000000"></A><A NAME="6166"></A>
+<BR>
+6.4.11 <TT>sendmail_alias</TT>
+</H2> 
+
+<P>
+(Default value: <TT>defined by makefile, sendmail_aliases</TT>)
+
+<P>
+Path of the alias file that contain all lists related aliases. It is recommended to create a sp&#233;cific alias file so Sympa never overright the standard alias file but only a dedicated file.You must refer to this aliases file in your <A NAME="6170"></A><TT>sendmail.mc</TT> :
+
+<P>
+
+<H2><A NAME="SECTION007412000000000000000"></A><A NAME="6173"></A>
+<BR>
+6.4.12 <TT>rfc2369_header_fields</TT>
+</H2> 
+
+<P>
+(Default value: <TT>help,subscribe,unsubscribe,post,owner,archive</TT>)
+
+<P>
+RFC2369 compliant header fields (List-xxx) to be added to 
+	distributed messages. These header-fields should be implemented
+	by MUA's, adding menus.
+
+<P>
+
+<H2><A NAME="SECTION007413000000000000000"></A><A NAME="6177"></A>
+<BR>
+6.4.13 <TT>remove_headers</TT>
+</H2> 
+
+<P>
+(Default value: <TT>Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To</TT>)
+
+<P>
+This is the list of headers that <I>Sympa</I> should remove from
+        outgoing messages. Use it, for example, to ensure some privacy
+        for your users by discarding anonymous options.
+        It is (for the moment) site-wide. It is applied before the
+        <I>Sympa</I>, rfc2369_header_fields, and custom_header fields are
+        added.
+
+<P>
+Example: <TT>remove_headers      Resent-Date,Resent-From,Resent-To,Resent-Message-Id,Sender,Delivered-To,Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To</TT>
+
+<P>
+
+<H2><A NAME="SECTION007414000000000000000"></A><A NAME="6184"></A>
+<BR>
+6.4.14 <TT>anonymous_headers_fields</TT>
+</H2> 
+
+<P>
+(Default value: <TT>Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender</TT>)
+
+<P>
+This parameter defines the list of SMTP header fields that should be
+	removed when a mailing list is setup in anonymous mode (see 
+	<A HREF="node19.html#par-anonymous-sender">18.4.3</A>,  page&nbsp;<A HREF="node19.html#par-anonymous-sender"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+
+<H2><A NAME="SECTION007415000000000000000"></A><A NAME="6188"></A>
+<BR>
+6.4.15 <TT>list_check_smtp</TT>
+</H2> 
+
+<P>
+(Default value: <TT>NONE</TT>)
+
+<P>
+If this parameter is set with a SMTP server address, <I>Sympa</I> will check if alias
+	with the same name as the list you're gonna create already exists on the
+	SMTP server. It is robot specific, i.e. you can specify a different SMTP
+	server for every virtual robot you are running. This is needed if you are
+	running <I>Sympa</I> on somehost.foo.org, but you handle all your mail on a
+	separate mail relay.
+
+<P>
+
+<H2><A NAME="SECTION007416000000000000000"></A><A NAME="6194"></A>
+<BR>
+6.4.16 <TT>list_check_suffixes</TT>
+</H2> 
+
+<P>
+(Default value: <TT>request,owner,unsubscribe</TT>)
+
+<P>
+This paramater is a comma-separated list of admin suffixes you're using
+	for <I>Sympa</I> aliases, i.e. mylist-request, mylist-owner etc...
+	This parameter is used with <A NAME="6199"></A><TT>list_check_smtp</TT> parameter.
+	It is also used to check list names at list creation time.
+
+<P>
+
+<H2><A NAME="SECTION007417000000000000000"></A><A NAME="6202"></A>
+<BR>
+6.4.17 <TT>urlize_min_size</TT>
+</H2> 
+
+<P>
+(Default value: <TT>10240</TT>)
+
+<P>
+This parameter is related to the <TT>URLIZE</TT> subscriber reception mode ; it
+	defines the minimum size (in bytes) for MIME attachments to be urlized.
+
+<P>
+
+<H1><A NAME="SECTION00750000000000000000"></A>
+<A NAME="quotas"></A>
+<BR>
+6.5 Quotas
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION00751000000000000000"></A><A NAME="6206"></A>
+<BR>
+6.5.1 <TT>default_shared_quota</TT>
 </H2>
 
 <P>
-If a mailing list was previously setup to store subscribers into 
-<A NAME="6540"></A><TT>subscribers</TT> file (the default mode in versions older then 2.2b) 
-you can load subscribers data into the sympa database. The easiest way
-is to edit the list configuration using <A NAME="6543"></A><I>WWSympa</I> (this requires listmaster 
-privileges) and change the data source from <B>file</B> to <B>database</B>
-; subscribers data will be loaded into the database at the same time.
+The default disk quota for lists' document repository.
 
 <P>
-If the subscribers file is big, a timeout may occur during the FastCGI execution
-(Note that you can set a longer timeout with the <A NAME="6546"></A><TT>-idle-timeout</TT> option of
-the <TT>FastCgiServer</TT> Apache configuration directive). In this case, or if you have not installed <A NAME="6549"></A><I>WWSympa</I>, you should use the <A NAME="6552"></A><TT>load_subscribers.pl</TT> script.
+
+<H2><A NAME="SECTION00752000000000000000"></A><A NAME="6209"></A>
+<BR>
+6.5.2 <TT>default_archive_quota</TT>
+</H2>
+
+<P>
+The default disk quota for lists' web archives.
 
 <P>
 
 <H1><A NAME="SECTION00760000000000000000"></A>
-<A NAME="include2-cache"></A>
+<A NAME="spool-related"></A>
 <BR>
-6.6 Management of the include cache
+6.6 Spool related
 </H1>
 
-<P>
-You may dynamically add a list of subscribers, editors or owners to a list with Sympa's <B>include2</B> user data source. Sympa is able to query
-multiple data sources (RDBMS, LDAP directory, flat file, a local list, a remote list) to build a mailing list. 
+<H2><A NAME="SECTION00761000000000000000"></A><A NAME="6212"></A>
+<BR>
+6.6.1 <TT>spool</TT>
+</H2>
 
 <P>
-Sympa used to manage the cache of such <I>included</I> subscribers in a DB File (<B>include</B> mode) but now stores
-subscribers, editors and owners in the database (<B>include2</B> mode). These changes brought the following advantages :
-
-<UL>
-<LI>Sympa processes are smaller when dealing with big mailing lists (in include mode)
+(Default value: <TT><A NAME="6217"></A><TT>/home/sympa/spool</TT></TT>)
 
 <P>
-</LI>
-<LI>Cache update is now performed regularly by a dedicated process, the task manager
+The parent directory which contains all the other spools.  
 
 <P>
-</LI>
-<LI>Mixed lists (included + subscribed users) can now be created
+
+<H2><A NAME="SECTION00762000000000000000"></A><A NAME="6220"></A>
+<BR>
+6.6.2 <TT>queue</TT>
+</H2> 
 
 <P>
-</LI>
-<LI>Sympa can now provide reception options for <I>included</I> members
+The absolute path of the directory which contains the queue, used both by the
+        <A NAME="6223"></A><TT>queue</TT> program and the <A NAME="6226"></A><TT>sympa.pl</TT> daemon. This
+        parameter is mandatory.
 
 <P>
-</LI>
-<LI>Bounces information can be managed for <I>included</I> members
+Example: <TT><A NAME="6231"></A><TT>/home/sympa/spool/msg</TT></TT>
 
 <P>
-</LI>
-<LI>Sympa keeps track of the data sources of a member (available on the web REVIEW page)
+
+<H2><A NAME="SECTION00763000000000000000"></A><A NAME="6234"></A> 
+	<A NAME="951"></A>
+	<A NAME="952"></A>
+<BR>
+6.6.3 <TT>queuedistribute</TT>
+</H2>
 
 <P>
-</LI>
-<LI><I>included</I> members can also subscribe to the list. It allows them to remain in the list though they might no more be included.
+(Default value: <TT><A NAME="6239"></A><TT>/home/sympa/spool/distribute</TT></TT>)
 
 <P>
-</LI>
-</UL>
+This parameter is optional and retained solely for backward compatibility.
+
+<P>
+
+<H2><A NAME="SECTION00764000000000000000"></A><A NAME="6242"></A>  
+        <A NAME="cf:queuemod"></A>        <A NAME="956"></A>
+<BR>
+6.6.4 <TT>queuemod</TT>
+</H2>
+
+<P>
+(Default value: <TT><A NAME="6247"></A><TT>/home/sympa/spool/moderation</TT></TT>)
+
+<P>
+This parameter is optional and retained solely for backward compatibility.
+
+<P>
+
+<H2><A NAME="SECTION00765000000000000000"></A><A NAME="6250"></A>  
+        <A NAME="959"></A>
+        <A NAME="960"></A>
+<BR>
+6.6.5 <TT>queuedigest</TT>
+</H2>
+
+<P>
+This parameter is optional and retained solely for backward compatibility.
+
+<P>
+
+<H2><A NAME="SECTION00766000000000000000"></A><A NAME="6253"></A>
+<BR>
+6.6.6 <TT>queueexpire</TT>
+</H2>  
+
+<P>
+(Default value: <TT><A NAME="6258"></A><TT>/home/sympa/spool/expire</TT></TT>)
+
+<P>
+This parameter is optional and retained solely for backward compatibility.
+
+<P>
+
+<H2><A NAME="SECTION00767000000000000000"></A><A NAME="6261"></A>
+<BR>
+6.6.7 <TT>queueauth</TT>
+</H2> 
+
+<P>
+(Default value: <TT><A NAME="6266"></A><TT>/home/sympa/spool/auth</TT></TT>)
+
+<P>
+This parameter is optional and retained solely for backward compatibility.
+
+<P>
+
+<H2><A NAME="SECTION00768000000000000000"></A><A NAME="6269"></A>
+<BR>
+6.6.8 <TT>queueoutgoing</TT>
+</H2> 
+
+<P>
+(Default value: <TT><A NAME="6274"></A><TT>/home/sympa/spool/outgoing</TT></TT>)
+
+<P>
+This parameter is optional and retained solely for backward compatibility.
+
+<P>
+
+<H2><A NAME="SECTION00769000000000000000"></A><A NAME="6277"></A> 
+    <A NAME="968"></A>
+<BR>
+6.6.9 <TT>queuebounce</TT>
+</H2>
+
+<P>
+(Default value: <TT><A NAME="6282"></A><TT>/home/sympa/spool/bounce</TT></TT>)
+
+<P>
+Spool to store bounces (non-delivery reports) received by the <A NAME="6285"></A><TT>bouncequeue</TT>
+	program via the mylist-owner or bounce+* addresses . This parameter is mandatory
+        and must be an absolute path.
+
+<P>
+
+<H2><A NAME="SECTION007610000000000000000"></A><A NAME="6288"></A> 
+    <A NAME="972"></A>
+<BR>
+6.6.10 <TT>queuetask</TT>
+</H2>
+
+<P>
+(Default value: <TT><A NAME="6293"></A><TT>/home/sympa/spool/task</TT></TT>)
+
+<P>
+Spool to store task files created by the task manager. This parameter is mandatory
+        and must be an absolute path.
+
+<P>
+
+<H2><A NAME="SECTION007611000000000000000"></A><A NAME="6296"></A>
+<BR>
+6.6.11 <TT>tmpdir</TT>
+</H2>
+
+<P>
+(Default value: <TT><A NAME="6301"></A><TT>/home/sympa/spool/tmp</TT></TT>)
+
+<P>
+Temporary directory used by OpenSSL and antiviruses.
+
+<P>
+
+<H2><A NAME="SECTION007612000000000000000"></A><A NAME="6304"></A>  
+        <A NAME="kw-sleep"></A>
+<BR>
+6.6.12 <TT>sleep</TT>
+</H2>
+
+<P>
+(Default value: <TT>5</TT>)
+
+<P>
+Waiting period (in seconds) between each scan of the main queue.
+        Never set this value to&nbsp;0!
+
+<P>
+
+<H2><A NAME="SECTION007613000000000000000"></A><A NAME="6308"></A>
+<BR>
+6.6.13 <TT>clean_delay_queue</TT>
+</H2> 
+
+<P>
+(Default value: <TT>1</TT>)
+
+<P>
+Retention period (in days) for ``bad'' messages in
+        <A NAME="6312"></A>spool (as specified by <A NAME="6313"></A><TT>queue</TT>).
+        <I>Sympa</I> keeps messages rejected for various reasons (badly
+        formatted, looping, etc.) in
+        this directory, with a name prefixed by <TT>BAD</TT>.
+        This configuration variable controls the number of days
+        these messages are kept.
+
+<P>
+Example: <TT>clean_delay_queue 3</TT>
+
+<P>
+
+<H2><A NAME="SECTION007614000000000000000"></A><A NAME="6318"></A>
+<BR>
+6.6.14 <TT>clean_delay_queuemod</TT>
+</H2> 
+
+<P>
+(Default value: <TT>10</TT>)
+
+<P>
+Expiration delay (in days) in the <A NAME="6322"></A>moderation
+        <A NAME="6323"></A>spool (as specified by <A NAME="6324"></A><TT>queuemod</TT>).
+        Beyond this deadline, messages that have not been processed
+        are deleted.  For moderated lists, the contents of this spool
+	can be consulted using a key along with the <A NAME="6327"></A><TT>MODINDEX</TT> command.
+
+<P>
+
+<H2><A NAME="SECTION007615000000000000000"></A><A NAME="6330"></A>
+<BR>
+6.6.15 <TT>clean_delay_queueauth</TT>
+</H2>  
+
+<P>
+(Default value: <TT>3</TT>)
+
+<P>
+Expiration delay (in days) in the <A NAME="6334"></A>authentication
+        queue.  Beyond this deadline, messages not enabled are
+        deleted.
 
 <P>
 
 <H1><A NAME="SECTION00770000000000000000">
-6.7 Extending database table format</A>
-</H1>
+6.7 Internationalization related</A>
+</H1>    
 
 <P>
-You can easily add other fields to the three tables, they will not disturb <I>Sympa</I> because it lists
-explicitely the field it expects in SELECT queries.
+
+<H2><A NAME="SECTION00771000000000000000"></A><A NAME="6335"></A>
+<BR>
+6.7.1 <TT>localedir</TT>
+</H2>   
 
 <P>
-Moreover you can access these database fields from within <I>Sympa</I> 
-(in templates), as far as you list these additional fields in
-<A NAME="6557"></A><TT>sympa.conf</TT> (See <A HREF="node6.html#db-additional-subscriber-fields">5.10.9</A>, page&nbsp;<A HREF="node6.html#db-additional-subscriber-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
-and <A HREF="node6.html#db-additional-user-fields">5.10.10</A>, page&nbsp;<A HREF="node6.html#db-additional-user-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+(Default value: <TT><A NAME="6340"></A><TT>/home/sympa/locale</TT></TT>)
+
+<P>
+The location of multilingual catalog files. Must correspond to	<A NAME="6343"></A><TT>~src/locale/Makefile</TT>.
+
+<P>
+
+<H2><A NAME="SECTION00772000000000000000"></A><A NAME="6348"></A>
+<BR>
+6.7.2 <TT>supported_lang</TT>
+</H2>
+
+<P>
+Example: <TT>supported_lang  fr,en_US,de,es</TT>
+
+<P>
+This parameter lists all supported languages (comma separated) for the user interface. The default value will include
+	all message catalogues but it can be narrowed by the listmaster.
+
+<P>
+
+<H2><A NAME="SECTION00773000000000000000"></A><A NAME="6352"></A>
+<BR>
+6.7.3 <TT>lang</TT>
+</H2>   
+
+<P>
+(Default value: <TT>en_US</TT>)
+
+<P>
+This is the default language for <I>Sympa</I>. The message catalog (.po, compiled as a .mo file) located 
+	in the corresponding <A NAME="6357"></A><TT>locale</TT> directory will be used.
+
+<P>
+
+<H2><A NAME="SECTION00774000000000000000"></A><A NAME="6360"></A>
+<BR>
+6.7.4 <TT>web_recode_to</TT>
+</H2>   
+
+<P>
+If you set this parameter to a charset then web pages will be recoded to this specified charset. This is usefull to have web pages 
+	in UTF-8, allowing multi-lingual contents. You should check that customized web templates, topics.conf, list config files, info files are
+	all using the same charset.
+
+<P>
+Example :<PRE>
+web_recode_to   utf-8
+</PRE>
+
+<P>
+Note : if you recode web pages to utf-8, you should also add the following tag to your <A NAME="6363"></A><TT>mhonarc-ressources.tt2</TT> file :<PRE>
+&lt;TextEncode&gt;
+utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
+&lt;/TextEncode&gt;
+</PRE>
 
 <P>
 
 <H1><A NAME="SECTION00780000000000000000">
-6.8 <I>Sympa</I> configuration</A>
+6.8 Bounce related</A>
 </H1>
 
 <P>
-To store subscriber information in your newly created
-database, you first need to tell <I>Sympa</I> what kind of
-database to work with, then you must configure
-your list to access the database.
+
+<H2><A NAME="SECTION00781000000000000000"></A><A NAME="6366"></A>
+        <A NAME="kw-bounce-warn-rate"></A>
+<BR>
+6.8.1 <TT>bounce_warn_rate</TT>
+</H2>
 
 <P>
-You define the database source in <A NAME="6562"></A><TT>sympa.conf</TT> :
-<A NAME="6565"></A><TT>db_type</TT>, <A NAME="6568"></A><TT>db_name</TT>, 
-<A NAME="6571"></A><TT>db_host</TT>, <A NAME="6574"></A><TT>db_user</TT>, 
-<A NAME="6577"></A><TT>db_passwd</TT>.
+(Default value: <TT>30</TT>)
 
 <P>
-If you are interfacing <I>Sympa</I> with an Oracle database, 
-<A NAME="6581"></A><TT>db_name</TT> is the SID.
+Site default value for <A NAME="6370"></A><TT>bounce</TT>.
+	The list owner receives a warning whenever a message is distributed and
+	the number of bounces exceeds this value.
 
 <P>
-All your lists are now configured to use the database,
-unless you set list parameter <A NAME="6584"></A><TT>user_data_source</TT> 
-to <B>file</B> or <B>include</B>. 
+
+<H2><A NAME="SECTION00782000000000000000"></A><A NAME="6373"></A>
+        <A NAME="kw-bounce-halt-rate"></A>
+<BR>
+6.8.2 <TT>bounce_halt_rate</TT>
+</H2>
 
 <P>
-<I>Sympa</I> will now extract and store user
-information for this list using the database instead of the
-<A NAME="6588"></A><TT>subscribers</TT> file. Note however that subscriber information is 
-dumped to <A NAME="6591"></A><TT>subscribers.db.dump</TT> at every shutdown, 
-to allow a manual rescue restart (by renaming subscribers.db.dump to
-subscribers and changing the user_data_source parameter), if ever the
-database were to become inaccessible.
+(Default value: <TT>50</TT>)
+
+<P>
+<TT>FOR FUTURE USE</TT>
+
+<P>
+Site default value for <A NAME="6377"></A><TT>bounce</TT>.
+	Messages will cease to be distributed if the number of bounces exceeds this value.
+
+<P>
+
+<H2><A NAME="SECTION00783000000000000000"></A><A NAME="6380"></A>
+        <A NAME="kw-welcome-return-path"></A>
+<BR>
+6.8.3 <TT>welcome_return_path</TT>
+</H2>
+
+<P>
+(Default value: <TT>owner</TT>)
+
+<P>
+If set to string <TT>unique</TT>, sympa will use a unique e-mail address in the
+        return path, prefixed by <TT>bounce+</TT>, in order to remove the corresponding
+	subscriber. Requires the <TT>bounced</TT> daemon to run and bounce+* alias to
+	be installed (plussed aliases as in sendmail 8.7 and later).
+
+<P>
+
+<H2><A NAME="SECTION00784000000000000000"></A><A NAME="6384"></A>
+        <A NAME="kw-remind-return-path"></A>
+<BR>
+6.8.4 <TT>remind_return_path</TT>
+</H2>
+
+<P>
+(Default value: <TT>owner</TT>)
+
+<P>
+Like <A NAME="6388"></A><TT>welcome_return_path</TT>, but relates to the remind message.
+	Also requires the bounce+* alias to be installed.
+
+<P>
+
+<H2><A NAME="SECTION00785000000000000000"></A><A NAME="6391"></A>
+        <A NAME="kw-expire-bounce-task"></A>
+<BR>
+6.8.5 <TT>expire_bounce_task</TT>
+</H2>
+
+<P>
+(Default value: <TT>daily</TT>)
+
+<P>
+This parameter tells what task will be used by <A NAME="6395"></A><TT>task_manager.pl</TT>
+	to perform bounces expiration. This task resets bouncing information for
+	addresses not bouncing in the last 10 days after the latest message distribution.
+
+<P>
+
+<H2><A NAME="SECTION00786000000000000000"></A><A NAME="6398"></A>
+        <A NAME="kw-purge-orphan-bounce-task"></A>
+<BR>
+6.8.6 <TT>purge_orphan_bounces_task</TT>
+</H2>
+
+<P>
+(Default value: <TT>Monthly</TT>)
+
+<P>
+This parameter tells what task will be used by <A NAME="6402"></A><TT>task_manager.pl</TT>
+	to perform bounces cleaning. This task delete bounces archives for 
+	unsubscribed users.	
+
+<P>
+
+<H2><A NAME="SECTION00787000000000000000"></A><A NAME="6405"></A>
+        <A NAME="kw-eval-bouncers-task"></A>
+<BR>
+6.8.7 <TT>eval_bouncers_task</TT>
+</H2>
+
+<P>
+(Default value: <TT>daily</TT>)
+
+<P>
+The task eval_bouncers evaluate all bouncing users for all lists, and fill
+	the field <A NAME="6409"></A><TT>bounce_score_suscriber</TT> in table <A NAME="6412"></A><TT>suscriber_table</TT>
+	with a score. This score allow the auto-management of bouncing-users.
+
+<P>
+
+<H2><A NAME="SECTION00788000000000000000"></A><A NAME="6415"></A>
+        <A NAME="kw-process-bouncers-task"></A>
+<BR>
+6.8.8 <TT>process_bouncers_task</TT>
+</H2>
+
+<P>
+(Default value: <TT>monthly</TT>)
+
+<P>
+The task process_bouncers execute configured actions on bouncing users, according to 
+	their Score. The association between score and actions has to be done in List configuration,
+	This parameter define the frequency of execution for this task.
+
+<P>
+
+<H2><A NAME="SECTION00789000000000000000"></A><A NAME="6419"></A>
+        <A NAME="kw-minimum-bouncing-count"></A>
+<BR>
+6.8.9 <TT>minimum_bouncing_count</TT>
+</H2>
+
+<P>
+(Default value: <TT>10</TT>)
+
+<P>
+This parameter is for the bounce-score evaluation : the bounce-score is a note that
+	allows the auto-management of bouncing users. This score is evaluated with,in particular, 
+	the number of messages bounces received for the user. This parameter sets the minimum number 
+	of these messages to allow the bounce-score evaluation for a user.
+
+<P>
+
+<H2><A NAME="SECTION007810000000000000000"></A><A NAME="6423"></A>
+        <A NAME="kw-minimum-bouncing-period"></A>
+<BR>
+6.8.10 <TT>minimum_bouncing_period</TT>
+</H2>
+
+<P>
+(Default value: <TT>10</TT>)
+
+<P>
+Determine the minimum bouncing period for a user to allow his bounce-score evaluation.
+	Like previous parameter, if this value is too low, bounce-score will be 0.
+
+<P>
+
+<H2><A NAME="SECTION007811000000000000000"></A><A NAME="6427"></A>
+        <A NAME="kw-bounce-score-min-bouncing-period"></A>
+<BR>
+6.8.11 <TT>bounce_delay</TT>
+</H2>
+
+<P>
+(Default value: <TT>0</TT>) Days
+
+<P>
+Another parameter for the bounce-score evaluation : This one represent the average time
+	(days) for a bounce to come back to sympa-server after a post was send to a list.
+	Usually bounces are arriving same day as the original message.
+
+<P>
+
+<H2><A NAME="SECTION007812000000000000000"></A><A NAME="6431"></A>
+        <A NAME="kw-default-bounce-level1-rate"></A>
+<BR>
+6.8.12 <TT>default_bounce_level1_rate</TT>
+</H2>
+
+<P>
+(Default value: <TT>45</TT>)
+
+<P>
+This is the default value for <A NAME="6435"></A><TT>bouncerslevel1</TT> <A NAME="6438"></A><TT>rate</TT> entry
+	(<A HREF="#bouncers-level1"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, page&nbsp;<A HREF="#bouncers-level1"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
+
+<H2><A NAME="SECTION007813000000000000000"></A><A NAME="6441"></A>
+        <A NAME="kw-default-bounce-level1-rate"></A>
+<BR>
+6.8.13 <TT>default_bounce_level2_rate</TT>
+</H2>
+
+<P>
+(Default value: <TT>75</TT>)
+
+<P>
+This is the default value for <A NAME="6445"></A><TT>bouncerslevel2</TT> <A NAME="6448"></A><TT>rate</TT> entry
+	(<A HREF="node19.html#bouncers-level2">18.5.3</A>, page&nbsp;<A HREF="node19.html#bouncers-level2"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
+
+<H2><A NAME="SECTION007814000000000000000"></A><A NAME="6451"></A>
+<BR>
+6.8.14 <TT>bounce_email_prefix</TT>
+</H2> 
+
+<P>
+(Default value: <TT>bounce</TT>)
+
+<P>
+The prefix Username (the part of the address preceding the <TT>@</TT>
+	sign) used in the bounce email. The email is used to collect bounce.
+	This parameter is useful if you want to run more than one sympa on the
+	same host (a sympa test for example).
+
+<P>
+If you change the default value, you must modify the sympa aliases too.
+
+<P>
+For example, if you put :
+
+<P>
+<BLOCKQUOTE>
+bounce_email_prefix bounce-test
+
+</BLOCKQUOTE>
+
+<P>
+you must modify the sympa aliases like this :
+
+<P>
+<BLOCKQUOTE>
+bounce-test+*: 	"| /home/sympa/bin/queuebounce sympa@my.domain.org"
+
+</BLOCKQUOTE>
+
+<P>
+See <A HREF="node6.html#robot-aliases">5.1</A>,page&nbsp;<A HREF="node6.html#robot-aliases"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for all aliases.
+
+<P>
+
+<H1><A NAME="SECTION00790000000000000000">
+6.9 Priority related</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION00791000000000000000"></A><A NAME="6455"></A>  
+        <A NAME="kw-sympa-priority"></A>
+<BR>
+6.9.1 <TT>sympa_priority</TT>
+</H2>
+
+<P>
+(Default value: <TT>1</TT>)
+
+<P>
+Priority applied to <I>Sympa</I> commands while running the spool.
+
+<P>
+Available since release 2.3.1.
+
+<P>
+
+<H2><A NAME="SECTION00792000000000000000"></A><A NAME="6460"></A>  
+        <A NAME="kw-request-priority"></A>
+<BR>
+6.9.2 <TT>request_priority</TT>
+</H2>
+
+<P>
+(Default value: <TT>0</TT>)
+
+<P>
+Priority for processing of messages for mylist-request,
+	i.e. for owners of the list.
+
+<P>
+Available since release 2.3.3
+
+<P>
+
+<H2><A NAME="SECTION00793000000000000000"></A><A NAME="6464"></A>  
+        <A NAME="kw-owner-priority"></A>
+<BR>
+6.9.3 <TT>owner_priority</TT>
+</H2>
+
+<P>
+(Default value: <TT>9</TT>)
+
+<P>
+Priority for processing messages for mylist-owner in
+	the spool. This address will receive non-delivery reports
+	(bounces) and should have a low priority.
+
+<P>
+Available since release 2.3.3
+
+<P>
+
+<H2><A NAME="SECTION00794000000000000000"></A><A NAME="6468"></A>  
+        <A NAME="kw-default-list-priority"></A>
+<BR>
+6.9.4 <TT>default_list_priority</TT>
+</H2>
+
+<P>
+(Default value: <TT>5</TT>)
+
+<P>
+Default priority for messages if not defined in the list
+        configuration file.
+
+<P>
+Available since release 2.3.1.
+
+<P>
+
+<H1><A NAME="SECTION007100000000000000000">
+6.10 Database related</A>
+</H1>
+
+<P>
+The following parameters are needed when using an RDBMS, but are otherwise not
+required:
+
+<P>
+
+<H2><A NAME="SECTION007101000000000000000"></A><A NAME="6472"></A>
+<BR>
+6.10.1 <TT>db_type</TT>
+</H2>
+
+<P>
+<TT>Format: db_type mysql | Pg | Oracle | Sybase</TT>
+
+<P>
+Database management system used (e.g. MySQL, Pg, Oracle)
+
+<P>
+This corresponds to the PERL DataBase Driver (DBD) name and
+	is therefore case-sensitive.
+
+<P>
+
+<H2><A NAME="SECTION007102000000000000000"></A><A NAME="6475"></A>
+<BR>
+6.10.2 <TT>db_name</TT>
+</H2> 
+
+<P>
+(Default value: <TT>sympa</TT>)
+
+<P>
+Name of the database containing user information. See
+        detailed notes on database structure, <A HREF="#rdbms-struct"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>,
+        page&nbsp;<A HREF="#rdbms-struct"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+
+<P>
+
+<H2><A NAME="SECTION007103000000000000000"></A><A NAME="6479"></A>
+<BR>
+6.10.3 <TT>db_host</TT>
+</H2>
+
+<P>
+Database host name.
+
+<P>
+
+<H2><A NAME="SECTION007104000000000000000"></A><A NAME="6482"></A>
+<BR>
+6.10.4 <TT>db_port</TT>
+</H2>
+
+<P>
+Database port.
+
+<P>
+
+<H2><A NAME="SECTION007105000000000000000"></A><A NAME="6485"></A>
+<BR>
+6.10.5 <TT>db_user</TT>
+</H2>
+
+<P>
+User with read access to the database.
+
+<P>
+
+<H2><A NAME="SECTION007106000000000000000"></A><A NAME="6488"></A>
+<BR>
+6.10.6 <TT>db_passwd</TT>
+</H2>
+
+<P>
+Password for <A NAME="6491"></A><TT>db_user</TT>.
+
+<P>
+
+<H2><A NAME="SECTION007107000000000000000"></A><A NAME="6494"></A>
+<BR>
+6.10.7 <TT>db_options</TT>
+</H2>
+
+<P>
+If these options are defined, they will be appended to the
+	database connect string.
+
+<P>
+Example for MySQL:<PRE>
+db_options	mysql_read_default_file=/home/joe/my.cnf
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION007108000000000000000"></A><A NAME="6497"></A>
+<BR>
+6.10.8 <TT>db_env</TT>
+</H2>
+
+<P>
+Gives a list of environment variables to set before database connexion.
+	This is a ';' separated list of variable assignments.
+
+<P>
+Example for Oracle:<PRE>
+db_env	ORACLE_TERM=vt100;ORACLE_HOME=/var/hote/oracle/7.3.4
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION007109000000000000000"></A><A NAME="6500"></A>
+<A NAME="db-additional-subscriber-fields"></A>
+<BR>
+6.10.9 <TT>db_additional_subscriber_fields</TT>
+</H2>
+
+<P>
+If your <B>subscriber_table</B> database table has more fields
+	than required by <I>Sympa</I> (because other programs access this
+	table), you can make <I>Sympa</I> load these fields. You will then be able to
+	use them from within mail/web templates and authorization scenarios (as [subscriber-<TT>&gt;</TT>field]).
+	This parameter is a comma-separated list.
+
+<P>
+Example :<PRE>
+db_additional_subscriber_fields 	billing_delay,subscription_expiration
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION0071010000000000000000"></A><A NAME="6505"></A>
+<BR>
+6.10.10 <TT>db_additional_user_fields</TT>
+</H2>
+
+<P>
+<A NAME="db-additional-user-fields"></A>
+<P>
+If your <B>user_table</B> database table has more fields
+	than required by <I>Sympa</I> (because other programs access this
+	table), you can make <I>Sympa</I> load these fields. You will then be able to
+	use them from within mail/web templates (as [user-<TT>&gt;</TT>field]).
+
+<P>
+This parameter is a comma-separated list.
+
+<P>
+Example :<PRE>
+db_additional_user_fields 	address,gender
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION0071011000000000000000"></A><A NAME="6510"></A>
+<BR>
+6.10.11 <TT>purge_user_table_task</TT>
+</H2>
+
+<P>
+<A NAME="purge-user-table-task"></A>
+<P>
+This parameter refers to the name of the task (Example: <TT>monthly</TT>) that will be regularly run
+by the <A NAME="6514"></A><TT>task_manager.pl</TT> to remove entries in the <A NAME="6517"></A>user_table  table that
+have no corresponding entries in the <A NAME="6518"></A>subscriber_table  table.
+
+<P>
+
+<H1><A NAME="SECTION007110000000000000000">
+6.11 Loop prevention</A>
+</H1>
+
+<P>
+The following define your loop prevention policy for commands.
+(see&nbsp;<A HREF="node15.html#loop-detection">14.9</A>, page&nbsp;<A HREF="node15.html#loop-detection"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
+
+<H2><A NAME="SECTION007111000000000000000"></A><A NAME="6519"></A>
+<BR>
+6.11.1 <TT>loop_command_max</TT>
+</H2>
+
+<P>
+(Default value: <TT>200</TT>)
+
+<P>
+The maximum number of command reports sent to an e-mail
+	address. When it is reached, messages are stored with the BAD
+	prefix, and reports are no longer sent.
+
+<P>
+
+<H2><A NAME="SECTION007112000000000000000"></A><A NAME="6523"></A>
+<BR>
+6.11.2 <TT>loop_command_sampling_delay</TT>
+</H2> 
+
+<P>
+(Default value: <TT>3600</TT>)
+
+<P>
+This parameter defines the delay in seconds before decrementing
+	the counter of reports sent to an e-mail address.
+
+<P>
+
+<H2><A NAME="SECTION007113000000000000000"></A><A NAME="6527"></A>
+<BR>
+6.11.3 <TT>loop_command_decrease_factor</TT>
+</H2> 
+
+<P>
+(Default value: <TT>0.5</TT>)
+
+<P>
+The decrementation factor (<TT>from 0 to 1</TT>), used to
+	determine the new report counter after expiration of the delay.
+
+<P>
+
+<H1><A NAME="SECTION007120000000000000000">
+6.12 S/MIME configuration</A>
+</H1>
+
+<P>
+<I>Sympa</I> can optionally verify and use S/MIME signatures for security purposes.
+In this case, the three first following parameters must be set by the listmaster
+(see <A HREF="node24.html#smimeconf">23.4.2</A>,  page&nbsp;<A HREF="node24.html#smimeconf"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). The two others are optionnal.
+
+<P>
+
+<H2><A NAME="SECTION007121000000000000000"></A><A NAME="6532"></A>
+<BR>
+6.12.1 <TT>openssl</TT>
+</H2>
+
+<P>
+The path for the openSSL binary file.
+
+<P>
+
+<H2><A NAME="SECTION007122000000000000000"></A><A NAME="6535"></A>
+<BR>
+6.12.2 <TT>capath</TT>
+</H2> 
+The directory path use by openssl for trusted CA certificates.
+
+<P>
+A directory of trusted certificates. The certificates should
+have names of the form: hash.0 or have symbolic links to
+them of this form ("hash" is the hashed certificate subject
+name: see the -hash option of the openssl x509 utility). This
+directory should be the same as the  directory
+SSLCACertificatePath specified for mod_ssl module for Apache.
+
+<P>
+
+<H2><A NAME="SECTION007123000000000000000"></A><A NAME="6538"></A>
+<BR>
+6.12.3 <TT>cafile</TT>
+</H2> 
+This parameter sets the all-in-one file where you can assemble
+the Certificates of Certification Authorities (CA) whose clients
+you deal with. These are used for Client Authentication. Such a
+file is simply the concatenation of the various PEM-encoded
+Certificate files, in order of preference. This can be used
+alternatively and/or additionally to <A NAME="6541"></A><TT>capath</TT>. 
+
+<P>
+
+<H2><A NAME="SECTION007124000000000000000"></A><A NAME="6544"></A>
+<BR>
+6.12.4 <TT>key_passwd</TT>
+</H2> 
+
+<P>
+The password for list private key encryption. If not
+	defined, <I>Sympa</I> assumes that list private keys are not encrypted.
+
+<P>
+<A NAME="certificate-task-config"></A>
+<H2><A NAME="SECTION007125000000000000000"></A><A NAME="6548"></A>
+<BR>
+6.12.5 <TT>chk_cert_expiration_task</TT>
+</H2>
+
+<P>
+States the model version used to create the task which regularly checks the certificate
+expiration dates and warns users whose certificate have expired or are going to.
+To know more about tasks, see <A HREF="node15.html#tasks">14.10</A>, page&nbsp;<A HREF="node15.html#tasks"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+
+<P>
+
+<H2><A NAME="SECTION007126000000000000000"></A><A NAME="6551"></A>
+<BR>
+6.12.6 <TT>crl_update_task</TT>
+</H2>
+
+<P>
+Specifies the model version used to create the task which regurlaly updates the certificate
+revocation lists. 
+
+<P>
+
+<H1><A NAME="SECTION007130000000000000000"></A>
+<A NAME="Antivirus_plug-in"></A>
+<BR>
+6.13 Antivirus plug-in
+</H1>
+
+<P>
+<I>Sympa</I> can optionally check incoming messages before delivering them, using an external antivirus solution.
+You must then set two parameters.
+
+<P>
+
+<H2><A NAME="SECTION007131000000000000000"></A><A NAME="6555"></A>
+<BR>
+6.13.1 <TT>antivirus_path</TT>
+</H2>
+
+<P>
+The path to your favorite antivirus binary file (including the binary file).
+
+<P>
+Example :<PRE>
+antivirus_path		/usr/local/bin/uvscan
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION007132000000000000000"></A><A NAME="6558"></A>
+<BR>
+6.13.2 <TT>antivirus_args</TT>
+</H2> 
+
+<P>
+The arguments used by the antivirus software to look for viruses.
+You must set them so as to get the virus name.
+You should use, if available, the 'unzip' option and check all extensions.
+
+<P>
+Example with uvscan :<PRE>
+antivirus_args		--summary --secure
+</PRE>
+
+<P>
+Example with fsav :<PRE>
+antivirus_args		--dumb	--archive
+</PRE>
+
+<P>
+Exemple with AVP :<PRE>
+antivirus_path  /opt/AVP/kavscanner
+antivirus_args  -Y -O- -MP -I0
+</PRE>
+
+<P>
+Exemple with Sophos :<PRE>
+antivirus_path  /usr/local/bin/sweep
+antivirus_args  -nc -nb -ss -archive
+</PRE>
+
+<P>
+Exemple with Clam :<PRE>
+antivirus_path  /usr/local/bin/clamscan
+antivirus_args  --stdout
+</PRE>
+
+<P>
+
+<H2><A NAME="SECTION007133000000000000000"></A><A NAME="6561"></A>
+<BR>
+6.13.3 <TT>antivirus_notify</TT>
+</H2> <TT>sender</TT> | <TT>nobody</TT>
+
+<P>
+(Default value: <TT>sender</TT>)
+
+<P>
+This parameter tells if <I>Sympa</I> should notify the email sender when a virus has been
+detected.
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html887"
+<A NAME="tex2html789"
   HREF="node8.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html881"
+<A NAME="tex2html783"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html875"
+<A NAME="tex2html777"
   HREF="node6.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html883"
+<A NAME="tex2html785"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html885"
-  HREF="node25.html">
+<A NAME="tex2html787"
+  HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html888"
-  HREF="node8.html">7. WWSympa, Sympa's web interface</A>
-<B> Up:</B> <A NAME="tex2html882"
+<B> Next:</B> <A NAME="tex2html790"
+  HREF="node8.html">7. Sympa and its database</A>
+<B> Up:</B> <A NAME="tex2html784"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html876"
-  HREF="node6.html">5. sympa.conf parameters</A>
- &nbsp <B>  <A NAME="tex2html884"
+<B> Previous:</B> <A NAME="tex2html778"
+  HREF="node6.html">5. Mail aliases</A>
+ &nbsp <B>  <A NAME="tex2html786"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html886"
-  HREF="node25.html">Index</A></B> 
+ &nbsp <B>  <A NAME="tex2html788"
+  HREF="node26.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
