@@ -69,7 +69,7 @@ $data{'path_to_bouncequeue'} = '--MAILERPROGDIR--/bouncequeue';
 $data{'domain'} = $data{'robot'} = $domain;
 $data{'listname'} = $listname;
 $data{'default_domain'} = $default_domain;
-$data{'is_default_domain'} = 1 if ($domain == $default_domain);
+$data{'is_default_domain'} = 1 if ($domain eq $default_domain);
 my $template_file = &tools::get_filename('etc', 'alias.tpl', $domain);
 my @aliases ;
 &parser::parse_tpl (\%data,$template_file,\@aliases);
