@@ -4058,7 +4058,7 @@ Rules are defined as follows :
                 | is_listmaster (<var>)
                 | older (<date>, <date>)    # true if first date is anterior to the second date
                 | newer (<date>, <date>)    # true if first date is posterior to the second date
-<var> ::= [email] | [sender] | [user-><user_key_word>] 
+<var> ::= [email] | [sender] | [user-><user_key_word>] | [previous_email]
 	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
 		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
 	 	  | [msg_part->type] | [msg_part->body] | [is_bcc] | [current_date] | <string>
@@ -4066,6 +4066,8 @@ Rules are defined as follows :
 [is_bcc] ::= set to 1 if the list is neither in To: nor Cc:
 
 [sender] ::= email address of the current user (used on web or mail interface). Default value is 'nobody'
+
+[previous_email] ::= old email when changing subscribtion email in preference page. 
 
 <date> ::= '<date_element> [ +|- <date_element>]'
 

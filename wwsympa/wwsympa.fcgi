@@ -8682,6 +8682,7 @@ sub do_change_email {
 	    my $sub_is = &List::request_action('subscribe',$param->{'auth_method'},$robot,
 					       {'listname' => $l,
 						'sender' => $in{'email'}, 
+						'previous_email' => $param->{'user'}{'email'},
 						'remote_host' => $param->{'remote_host'},
 						'remote_addr' => $param->{'remote_addr'}});
 
