@@ -862,13 +862,16 @@ sub DoMessage{
 	return undef;
     }
     
-    
-    ## Check the message for commands and catch them.
-    if (tools::checkcommand($msg, $sender)) {
-	&do_log('notice', 'Found command in message, ignoring message');
-	return undef;
+    # Reject messages with commands
+    if ($Conf{'misaddressed_commands'} =~ /reject/i) {
+	## Check the message for commands and catch them.
+	if (tools::checkcommand($msg, $sender)) {
+	    &do_log('notice', 'Found command in message, ignoring message');
+	    
+	    return undef;
+	}
     }
-       
+
     my $admin = $list->{'admin'};
     return undef unless $admin;
     

@@ -1277,6 +1277,14 @@ be used as a synonim.
 
         \example {max\_size           2097152}
 
+\subsection {\cfkeyword {misaddressed\_commands}} 
+
+	\default {reject}
+
+	When a robot command is sent to a list, by default Sympa reject this message. This feature
+        can be turned off setting this parameter to \cfkeyword {ignore}.
+
+
 \subsection {\cfkeyword {nrcpt}} 
 
 	\default {25}

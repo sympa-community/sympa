@@ -94,7 +94,7 @@ sub checkcommand {
    foreach $i (@{$msg->body}) {
       foreach $avoid (@avoid_hdr) {
          if ($i =~ /^\s*(quiet)?($avoid)(\s+|$)/im) {  ## Suspicious line
-            &rejectMessage($msg, $sender);
+          #  &rejectMessage($msg, $sender);
             return 1;
          }
       }
