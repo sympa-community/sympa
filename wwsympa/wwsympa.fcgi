@@ -6750,8 +6750,8 @@ sub do_d_savefile {
 	$path .= $in{'name_doc'} . '.url';
     }
     
-    if ($path =~ /[\[\]]$/) {
-	&error_message('incorrect_name', {'name' => $path});
+    if ($in{'name_doc'} =~ /[\[\]\/]/) {
+	&error_message('incorrect_name', {'name' => $in{'name_doc'} });
 	&wwslog('info',"do_d_savefile : Unable to create file $path : incorrect name");
 	return undef;
     }
@@ -7357,7 +7357,7 @@ sub do_d_rename {
 
     if ($in{'new_name'} =~ /^\./
 	|| $in{'new_name'} =~ /\.desc/ 
-	|| $in{'new_name'} =~ /[~\#\[\]]$/) {
+	|| $in{'new_name'} =~ /[~\#\[\]\/]$/) {
 	&error_message('incorrect_name', {'name' => $in{'new_name'}});
 	&wwslog('info',"do_d_rename : Unable to create file $in{'new_name'} : incorrect name");
 	return undef;
@@ -7442,7 +7442,7 @@ sub do_d_create_dir {
     # The name of the directory must be correct
     if ($name_doc =~ /^\./
 	|| $name_doc =~ /\.desc/ 
-	|| $name_doc =~ /[~\#\[\]]$/) {
+	|| $name_doc =~ /[~\#\[\]\/]$/) {
 	&error_message('incorrect_name', {'name' => $name_doc});
 	&wwslog('info',"do_d_create_dir : Unable to create directory $name_doc : incorrect name");
 	return undef;
