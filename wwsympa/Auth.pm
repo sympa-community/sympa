@@ -71,7 +71,7 @@ use List;
 sub authentication {
     my ($email,$pwd) = @_;
     my ($user,$canonic);
-    &do_log('debug', 'Auth::authentication(%s)', $auth);
+    &do_log('debug', 'Auth::authentication(%s)', $email);
 
 
     unless ($user = &List::get_user_db($email)) {
