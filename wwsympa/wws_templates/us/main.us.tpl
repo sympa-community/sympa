@@ -51,6 +51,13 @@
      return null;
   }  
 
+  function getCookieVal (offset) {
+    var endstr = document.cookie.indexOf (";", offset);
+    if (endstr == -1)
+      endstr = document.cookie.length;
+    return unescape(document.cookie.substring(offset, endstr));
+  }
+
   function check_cookie() {
  
      if (GetCookie('sympauser') == null) {
