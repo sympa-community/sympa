@@ -1163,14 +1163,14 @@ sub do_lists {
     my @lists;
     &wwslog('debug', 'do_lists(%s,%s)', $in{'topic'}, $in{'subtopic'});
 
-    my $topics = &List::load_topics();
+    my %topics = &List::load_topics();
 
     if ($in{'topic'}) {
 	if ($in{'subtopic'}) {
-	    $param->{'subtitle'} = sprintf "%s / %s", $topics->{$in{'topic'}}{'title'}, $topics->{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'title'};
+	    $param->{'subtitle'} = sprintf "%s / %s", $topics{$in{'topic'}}{'title'}, $topics{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'title'};
 	    $param->{'subtitle'} ||= "$in{'topic'} / $in{'subtopic'}";
 	}else {
-	    $param->{'subtitle'} = $topics->{$in{'topic'}}{'title'} || $in{'topic'};
+	    $param->{'subtitle'} = $topics{$in{'topic'}}{'title'} || $in{'topic'};
 	}
     }
 
@@ -3452,9 +3452,11 @@ sub do_create_list_request {
 	return undef;
     }
 
-    unless ($param->{'list_of_topics'} = &List::load_topics()) {
+    my %topics;
+    unless (%topics = &List::load_topics()) {
 	&message('unable_to_load_list_of_topics');
     }
+    $param->{'list_of_topics'} = \%topics;
 
     $param->{'list_of_topics'}{$in{'topics'}}{'selected'} = 1
 	if ($in{'topics'});
@@ -3479,27 +3481,32 @@ sub do_create_list_request {
 sub do_home {
     &wwslog('debug', 'do_home');
 
-    my $topics = &List::load_topics();
+    my %topics = &List::load_topics();
     
     my $total = 0;
-    foreach my $t (sort {$topics->{$a}{'order'} <=> $topics->{$b}{'order'}} keys %{$topics}) {
+    foreach my $t (sort {$topics{$a}{'order'} <=> $topics{$b}{'order'}} keys %topics) {
 	next unless (&List::request_action ('topics_visibility', $param->{'auth_method'},
 					   {'topicname' => $t, 
 					    'sender' => $param->{'user'}{'email'},
 					    'remote_host' => $param->{'remote_host'},
 					    'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/);
 	
-	my $current = $topics->{$t};
+	my $current = $topics{$t};
 	$current->{'id'} = $t;
+
+	## For compatibility reasons
 	$current->{'mod'} = $total % 3;
 	$current->{'mod2'} = $total % 2;
+
 	push @{$param->{'topics'}}, $current;
 
 	$total++;
     }
     
     push @{$param->{'topics'}}, {'id' => 'topicsless',
-				 'mod' => $total};
+				 'mod' => $total,
+				 'sub' => {}
+			     };
     
     $param->{'topics'}[int($total / 2)]{'next'} = 1;
 
@@ -4256,10 +4263,6 @@ sub _prepare_edit_form {
 	$p->{'may_edit'} = $list->may_edit($pname,$param->{'user'}{'email'});
 	$p->{'changed'} = $::changed_params{$pname};
 
-	if ($::changed_params{$pname}) {
-	    &do_log('debug', 'CHANGED: %s', $pname);
-	}
-
 	## Exceptions...too many
 	if ($pname eq 'topics') {
 	    $p->{'type'} = 'enum';
@@ -4269,16 +4272,16 @@ sub _prepare_edit_form {
 		push @topics, $topic->{'value'};
 	    }
 	    undef $p->{'value'};
-	    my $list_of_topics = &List::load_topics();
+	    my %list_of_topics = &List::load_topics();
 	    foreach my $selected_topic (@topics) {
 		my $menu = {};
-		foreach my $topic (keys %{$list_of_topics}) {
+		foreach my $topic (keys %list_of_topics) {
 		    $menu->{'value'}{$topic}{'selected'} = 0;
-		    $menu->{'value'}{$topic}{'title'} = $list_of_topics->{$topic}{'title'};
+		    $menu->{'value'}{$topic}{'title'} = $list_of_topics{$topic}{'title'};
 
-		    foreach my $subtopic (keys %{$list_of_topics->{$topic}{'sub'}}) {
+		    foreach my $subtopic (keys %{$list_of_topics{$topic}{'sub'}}) {
 			$menu->{'value'}{"$topic/$subtopic"}{'selected'} = 0;
-			$menu->{'value'}{"$topic/$subtopic"}{'title'} = "$list_of_topics->{$topic}{'title'}/$list_of_topics->{$topic}{'sub'}{$subtopic}{'title'}";
+			$menu->{'value'}{"$topic/$subtopic"}{'title'} = "$list_of_topics{$topic}{'title'}/$list_of_topics{$topic}{'sub'}{$subtopic}{'title'}";
 		    }
 		}
 		$menu->{'value'}{$selected_topic}{'selected'} = 1;
