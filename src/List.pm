@@ -1127,7 +1127,7 @@ sub send_notify_to_listmaster {
     }elsif ($operation eq 'request_list_creation') {
 	my $list = new List $param[0];
 
-	$list->send_file('create_list_request', $Conf{'listmaster'}, 
+	$list->send_file('create_list_request', $Conf{'listmaster'}, $Conf{'host'}
 			 {'to' => "listmaster\@$Conf{'host'}",
 			  'email' => $param[1]});
 
@@ -1882,7 +1882,7 @@ sub _add_parts {
 
 ## Send a digest message to the subscribers with reception digest or summary
 sub send_msg_digest {
-    my($self) = @_;
+    my ($self,$robot) = @_;
     my $listname = $self->{'name'};
     do_log('debug2', 'List:send_msg_digest(%s)', $listname);
     
@@ -2040,15 +2040,14 @@ sub send_msg_digest {
     ## Prepare parameters for parsing
     $param->{'subject'} = sprintf Msg(8, 31, 'Summary of list %s'), $self->{'name'};
 
-#    &mail::mailfile ($filename, \@tabrcptsummary, $param, 'none');
-    $self->send_file('summary', \@tabrcptsummary, $param);
+    $self->send_file('summary', \@tabrcptsummary, $robot, $param);
 
 }
 
 ## Send a global (not relative to a list) file to a user
 sub send_global_file {
-    my($action, $who, $context) = @_;
-    do_log('debug2', 'List::send_global_file(%s, %s)', $action, $who);
+    my($action, $who, $robot, $context) = @_;
+    do_log('debug2', 'List::send_global_file(%s, %s, %s)', $action, $who, $robot);
 
     my $filename;
     my $data = $context;
@@ -2070,7 +2069,8 @@ sub send_global_file {
     my $lang = $data->{'user'}{'lang'} || $Conf{'lang'};
 
     ## What file   
-    foreach my $f ("$Conf{'etc'}/templates/$action.$lang.tpl","$Conf{'etc'}/templates/$action.tpl",
+    foreach my $f ("$Conf{'etc'}/$robot/templates/$action.$lang.tpl","$Conf{'etc'}/$robot/templates/$action.tpl",
+		   "$Conf{'etc'}/templates/$action.$lang.tpl","$Conf{'etc'}/templates/$action.tpl",
 		   "--ETCBINDIR--/templates/$action.$lang.tpl","--ETCBINDIR--/templates/$action.tpl") {
 	if (-r $f) {
 	    $filename = $f;
@@ -2079,16 +2079,17 @@ sub send_global_file {
     }
 
     unless ($filename) {
-	do_log ('err',"Unable to open file $Conf{'etc'}/templates/$action.tpl NOR --ETCBINDIR--/templates/$action.tpl");
+	do_log ('err',"Unable to open file $Conf{'etc'}/$robot/templates/$action.tpl NOR  $Conf{'etc'}/templates/$action.tpl NOR --ETCBINDIR--/templates/$action.tpl");
     }
 
     $data->{'conf'}{'email'} = $Conf{'email'};
     $data->{'conf'}{'host'} = $Conf{'host'};
-    $data->{'conf'}{'sympa'} = $Conf{'sympa'};
+    $data->{'conf'}{'sympa'} = "$Conf{'email'}\@$robot";
     $data->{'conf'}{'listmaster'} = $Conf{'listmaster'};
     $data->{'conf'}{'wwsympa_url'} = $Conf{'wwsympa_url'};
     $data->{'conf'}{'version'} = $main::Version;
     $data->{'from'} = $Conf{'request'};
+    $data->{'robot_domain'} = $robot;
     $data->{'return_path'} = $Conf{'request'};
 
     mail::mailfile($filename, $who, $data);
@@ -2098,8 +2099,8 @@ sub send_global_file {
 
 ## Send a file to a user
 sub send_file {
-    my($self, $action, $who, $context) = @_;
-    do_log('debug2', 'List::send_file(%s, %s, %s)', $action, $who);
+    my($self, $action, $who, $robot, $context) = @_;
+    do_log('debug2', 'List::send_file(%s, %s, %s, %s)', $action, $who, $robot);
 
     my $name = $self->{'name'};
     my $filename;
@@ -2142,9 +2143,15 @@ sub send_file {
     my $lang = $data->{'user'}{'lang'} || $self->{'lang'} || $Conf{'lang'};
 
     ## What file   
-    foreach my $f ("$action.$lang.tpl","$action.tpl","$action.mime","$action","$Conf{'etc'}/templates/$action.$lang.tpl",
-		   "$Conf{'etc'}/templates/$action.tpl","$Conf{'home'}/$action.mime","$Conf{'home'}/$action",
-		   "--ETCBINDIR--/templates/$action.$lang.tpl","--ETCBINDIR--/templates/$action.tpl") {
+    foreach my $f ("$action.$lang.tpl","$action.tpl","$action.mime","$action",
+		   "$Conf{'etc'}/$robot/templates/$action.$lang.tpl",
+		   "$Conf{'etc'}/$robot/templates/$action.tpl",
+		   "$Conf{'etc'}/templates/$action.$lang.tpl",
+		   "$Conf{'etc'}/templates/$action.tpl",
+		   "$Conf{'home'}/$action.mime",
+		   "$Conf{'home'}/$action",
+		   "--ETCBINDIR--/templates/$action.$lang.tpl",
+		   "--ETCBINDIR--/templates/$action.tpl") {
 	if (-r $f) {
 	    $filename = $f;
 	    last;
@@ -2157,11 +2164,12 @@ sub send_file {
     
     $data->{'conf'}{'email'} = $Conf{'email'};
     $data->{'conf'}{'host'} = $Conf{'host'};
-    $data->{'conf'}{'sympa'} = $Conf{'sympa'};
+    $data->{'conf'}{'sympa'} = "$Conf{'email'}\@$robot";
     $data->{'conf'}{'listmaster'} = $Conf{'listmaster'};
     $data->{'conf'}{'wwsympa_url'} = $Conf{'wwsympa_url'};
     $data->{'list'}{'lang'} = $self->{'admin'}{'lang'};
     $data->{'list'}{'name'} = $name;
+    $data->{'robot_domain'} = $robot;
     $data->{'list'}{'host'} = $self->{'admin'}{'host'};
     $data->{'list'}{'subject'} = $self->{'admin'}{'subject'};
     $data->{'list'}{'owner'} = $self->{'admin'}{'owner'};
@@ -2262,7 +2270,7 @@ sub delete_user {
 	    ## Is it his/her last subscription
 	    my @which;
 	    foreach my $role ('member','editor','owner') {
-		@which = (@which, &get_which ($who, $role));
+		@which = (@which, &get_which ($who,'*',$role));
 	    }
 
 	    ## Cleanup in user_table
@@ -3279,13 +3287,16 @@ sub get_state {
 sub request_action {
     my $operation = shift;
     my $auth_method = shift;
+    my $robot=shift;
     my $context = shift;
     my $debug = shift;
-    do_log('debug2', 'List::request_action %s,%s',$operation,$auth_method);
+    do_log('debug2', 'List::request_action %s,%s,%s',$operation,$auth_method,$robot);
 
     $context->{'sender'} ||= 'nobody' ;
     $context->{'email'} ||= $context->{'sender'};
     $context->{'remote_host'} ||= 'unknown_host' ;
+    $context->{'robot_domain'} = $robot ;
+
 
     unless ( $auth_method =~ /^(smtp|md5|pgp|smime)/) {
 	do_log ('info',"fatal error : unknown auth method $auth_method in List::get_action");
@@ -3306,7 +3317,7 @@ sub request_action {
 	my $data_ref;
 	if ($#operations == 0) {
 	    $data_ref = $list->{'admin'}{$operation};
-	}else {
+	}else{
 	    $data_ref = $list->{'admin'}{$operations[0]}{$operations[1]};
 	}
 	
@@ -3323,7 +3334,7 @@ sub request_action {
 	    # loading of the structure
 	    my $scenario;
 	    return undef
-		unless($scenario = &_load_scenario_file ($operations[$#operations], $s_name));
+		unless($scenario = &_load_scenario_file ($operations[$#operations], $s_name, $robot));
 	    @rules = @{$scenario->{'rules'}};
 	    $name = $scenario->{'name'}; 
 	    $data_ref = $scenario;
@@ -3333,6 +3344,7 @@ sub request_action {
 	$name = $data_ref->{'name'};
 
     }elsif ($context->{'topicname'}) {
+	# sa pourquoi on passe pas par load_scenario file ?
 	my $scenario = $list_of_topics{$context->{'topicname'}}{'visibility'};
 	@rules = @{$scenario->{'rules'}};
 	$name = $scenario->{'name'};
@@ -3340,7 +3352,7 @@ sub request_action {
     }else{	
 	my $scenario;
 	return undef 
-	    unless ($scenario = &_load_scenario_file ($operation, $Conf{$operation}));
+	    unless ($scenario = &_load_scenario_file ($operation, $Conf{$operation}),$robot);
         @rules = @{$scenario->{'rules'}};
 	$name = $scenario->{'name'};
     }
@@ -3963,25 +3975,30 @@ sub get_nextdigest {
 
 ## load a scenario if not inline (in the list configuration file)
 sub _load_scenario_file {
-    my ($function, $name, $directory)= @_;
-    do_log('debug2', 'List::_load_scenario_file(%s, %s, %s)', $function, $name, $directory);
-
+    my ($function, $name, $robot, $directory)= @_;
+    do_log('debug2', 'List::_load_scenario_file(%s, %s, %s, %s)', $function, $name, $robot, $directory);
 
     my $structure;
     
     ## List scenario
+   
     my $scenario_file = $directory.'/scenari/'.$function.'.'.$name ;
     unless (($directory) && (open SCENARI, $scenario_file)) {
+	
+	## Robot scenario
+	$scenario_file = "$Conf{'etc'}/$robot/scenari/$function.$name";
+	unless (($robot) && (open SCENARI, $scenario_file)) {
 
-	## Site scenario
-	$scenario_file = "$Conf{'etc'}/scenari/$function.$name";
-	unless (open SCENARI, $scenario_file) {
-
-	    ## Distrib scenario
-	    $scenario_file = "--ETCBINDIR--/scenari/$function.$name";
-	    unless (open SCENARI,$scenario_file) {
-		do_log ('info',"Unable to open scenario $scenario_file, please report to listmaster");
-		return &_load_scenario ($function,$name,'true() smtp -> reject', $directory);
+	    ## Site scenario
+	    $scenario_file = "$Conf{'etc'}/$robot/scenari/$function.$name";
+	    unless (($robot) && (open SCENARI, $scenario_file)) {
+		
+		## Distrib scenario
+		$scenario_file = "--ETCBINDIR--/scenari/$function.$name";
+		unless (open SCENARI,$scenario_file) {
+		    do_log ('info',"Unable to open scenario $scenario_file, please report to listmaster");
+		    return &_load_scenario ($function,$name,'true() smtp -> reject', $directory);
+		}
 	    }
 	}
     }
@@ -3997,7 +4014,7 @@ sub _load_scenario_file {
 
 sub _load_scenario {
     my ($function, $scenario_name, $paragraph, $directory ) = @_;
-    do_log('debug2', 'List::_load_scenario(%s,%s)', $function,$scenario_name);
+    # do_log('debug2', 'List::_load_scenario(%s,%s)', $function,$scenario_name);
 
     my $structure = {};
     $structure->{'name'} = $scenario_name ;
@@ -4760,9 +4777,10 @@ sub get_which_db {
     return \%which;
 }
 
-## List of lists where $1 (an email) is $2 (owner, editor or subscriber)
+## List of lists where $1 (an email) is $3 (owner, editor or subscriber)
 sub get_which {
     my $email = shift;
+    my $robot =shift;
     my $function = shift;
     do_log('debug2', 'List::get_which(%s, %s)', $email, $function);
 
@@ -4781,6 +4799,8 @@ sub get_which {
  
 	my $list = new List ($l);
 	next unless ($list);
+	next unless (($list->{'admin'}{'host'} eq $robot) || ($robot eq '*')) ;
+
         if ($function eq 'member') {
 	    if ($list->{'admin'}{'user_data_source'} eq 'database') {
 		if ($db_which->{$l}) {
@@ -4807,7 +4827,7 @@ sub get_which {
 sub request_auth {
     do_log('debug2', 'List::request_auth(%s, %s, %s, %s)', @_);
     my $first_param = shift;
-    my ($self, $email, $cmd, @param);
+    my ($self, $email, $cmd, $robot, @param);
 
     if (ref($first_param) eq 'List') {
 	$self = $first_param;
@@ -4816,53 +4836,53 @@ sub request_auth {
 	$email = $first_param;
     }
     $cmd = shift;
+    $robot = shift;
     @param = @_;
     do_log('debug2', 'List::request_auth() List : %s,$email: %s cmd : %s',$self->{'name'},$email,$cmd);
 
     
     my $keyauth;
     my ($body, $command);
-
+    my $robot_email = "$Conf{'email'}\@$robot";
     if (ref($self) eq 'List') {
 	my $listname = $self->{'name'};
 
 	if ($cmd =~ /signoff$/){
 	    $keyauth = $self->compute_auth ($email, 'signoff');
 	    $command = "auth $keyauth $cmd $listname $email";
-	    my $url = "mailto:$Conf{'sympa'}?subject=$command";
+	    my $url = "mailto:$robot_email?subject=$command";
 	    $url =~ s/\s/%20/g;
-	    $body = sprintf Msg(6, 261, $msg::signoff_need_auth ),
-	    $listname, $Conf{'sympa'},$command, $url;
+	    $body = sprintf Msg(6, 261, $msg::signoff_need_auth ), $listname, $robot_email ,$command, $url;
 	    
 	}elsif ($cmd =~ /subscribe$/){
 	    $keyauth = $self->compute_auth ($email, 'subscribe');
 	    $command = "auth $keyauth $cmd $listname $param[0]";
-	    my $url = "mailto:$Conf{'sympa'}?subject=$command";
+	    my $url = "mailto:$robot_email?subject=$command";
 	    $url =~ s/\s/%20/g;
 	    $body = sprintf Msg(6, 260, $msg::subscription_need_auth)
-		,$listname,  $Conf{'sympa'}, $command, $url ;
+		,$listname,  $robot_email, $command, $url ;
 	}elsif ($cmd =~ /add$/){
 	    $keyauth = $self->compute_auth ($param[0],'add');
 	    $command = "auth $keyauth $cmd $listname $param[0] $param[1]";
 	    $body = sprintf Msg(6, 39, $msg::adddel_need_auth),$listname
-		, $Conf{'sympa'}, $command;
+		, $robot_email, $command;
 	}elsif ($cmd =~ /del$/){
 	    my $keyauth = $self->compute_auth($param[0], 'del');
 	    $command = "auth $keyauth $cmd $listname $param[0]";
 	    $body = sprintf Msg(6, 39, $msg::adddel_need_auth),$listname
-		, $Conf{'sympa'}, $command;
+		, $robot_email, $command;
 	}elsif ($cmd eq 'remind'){
 	    my $keyauth = $self->compute_auth('','remind');
 	    $command = "auth $keyauth $cmd $listname";
 	    $body = sprintf Msg(6, 79, $msg::remind_need_auth),$listname
-		, $Conf{'sympa'}, $command;
+		, $robot_email, $command;
 	}
     }else {
 	if ($cmd eq 'remind'){
 	    my $keyauth = &List::compute_auth('',$cmd);
 	    $command = "auth $keyauth $cmd *";
 	    $body = sprintf Msg(6, 79, $msg::remind_need_auth),'*'
-		, $Conf{'sympa'}, $command;
+		, $robot_email, $command;
 	}
     }
 
@@ -5132,9 +5152,13 @@ sub lowercase_field {
 
 ## Loads the list of topics if updated
 sub load_topics {
+    
+    my $robot = shift ;
     do_log('debug2', 'List::load_topics');
 
-    my $conf_file = "$Conf{'etc'}/topics.conf";
+    my $conf_file = "$Conf{'etc'}/$robot/topics.conf";
+    $conf_file = "$Conf{'etc'}/topics.conf" unless (-r $conf_file);
+
     my $topics = {};
 
     ## Load if not loaded or changed on disk
@@ -5228,9 +5252,7 @@ sub _add_topic {
     }
 }
 
-
 ############ THIS IS RELATED TO NEW LOAD_ADMIN_FILE #############
-
 
 ## Sort function for writing config files
 sub by_order {
@@ -5387,7 +5409,7 @@ sub _save_list_param {
 ## Load a single line
 sub _load_list_param {
     my ($key, $value, $p, $directory) = @_;
-    &do_log('debug2','_load_list_param(\'%s\',\'%s\')', $key, $value);
+    # &do_log('debug2','_load_list_param(\'%s\',\'%s\')', $key, $value);
     
     ## Empty value
     if ($value =~ /^\s*$/) {
@@ -5990,4 +6012,7 @@ sub delete_susbscription_request {
 
 ## Packages must return true.
 1;
+
+
+
 
