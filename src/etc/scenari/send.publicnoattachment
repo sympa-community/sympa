@@ -6,4 +6,4 @@ title.nl publieke lijst multipart/mixed berichten voor naar de moderator gestuur
 
 match([header->Content-Disposition],/attachment/)      	smtp,smime,md5    -> editorkey
 match([header->Content-Type],/multipart\/mixed/)        smtp,smime,md5    -> editorkey
-true()                                         		smtp,md5    -> do_it
+true()                                         		smtp,md5,smime    -> do_it

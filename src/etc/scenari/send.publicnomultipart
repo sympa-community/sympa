@@ -8,7 +8,7 @@ title.hu nyilvános lista, többrészes levelek elutasítva
 title.nl publieke lijst multipart berichten worden geweigerd
 
 match([header->Content-Type],/multipart/)      smtp,smime,md5    -> reject
-true()				               smtp,md5    -> do_it
+true()				               smtp,md5,smime    -> do_it
 
 
 
