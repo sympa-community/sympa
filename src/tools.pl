@@ -458,7 +458,7 @@ sub smime_encrypt {
 	open (NEWMSG, $temporary_file);
 	my $encypted_body;
         my $in_header = 1 ;
-	while (<MSG>) {
+	while (<NEWMSG>) {
 	   if ( !$in_header)  { 
 	     $encrypted_body .= $_;       
 	   }else {
