@@ -117,14 +117,6 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
 				 $main::options{'lowercase'} ||
 				 $main::options{'close_list'});
 
-## Batch mode, ie NOT daemon
- $main::options{'batch'} = 1 if ($main::options{'dump'} || 
-				 $main::options{'help'} ||
-				 $main::options{'version'} || 
-				 $main::options{'import'} || 
-				 $main::options{'make_alias_file'} ||
-				 $main::options{'lowercase'} );
-
 $log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
 my @parser_param = ($*, $/);
@@ -1006,7 +998,7 @@ sub DoMessage{
     if ($max_size && $message->{'size'} > $max_size) {
 	do_log('notice', 'Message for %s from %s rejected because too large (%d > %d)', $listname, $sender, $message->{'size'}, $max_size);
 	*SIZ  = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
-	print SIZ "From: " . sprintf (gettext("SYMPA <%s>")), &Conf::get_robot_conf($robot, 'request')) . "\n";
+	print SIZ "From: " . sprintf (gettext("SYMPA <%s>"), &Conf::get_robot_conf($robot, 'request')) . "\n";
 	printf SIZ "To: %s\n", $sender;
 	printf SIZ "Subject: " . gettext("Your message to %s has been rejected") . "\n", $listname;
 	printf SIZ "MIME-Version: %s\n", gettext("1.0");
@@ -1090,7 +1082,7 @@ sub DoMessage{
 		$list->send_file($tpl, $sender, $robot, {});
 	    }else {
 		*SIZ  = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
-		print SIZ "From: " . sprintf (gettext("SYMPA <%s>")), &Conf::get_robot_conf($robot, 'request')) . "\n";
+		print SIZ "From: " . sprintf (gettext("SYMPA <%s>"), &Conf::get_robot_conf($robot, 'request')) . "\n";
 		printf SIZ "To: %s\n", $sender;
 		printf SIZ "Subject: " . gettext("Your message to %s has been rejected")."\n", $listname ;
 		printf SIZ "MIME-Version: %s\n", gettext("1.0");
