@@ -20,7 +20,7 @@
 	<complexType name="ArrayOfLists">
 		<complexContent>
 			<restriction base="SOAP-ENC:Array">
-				<attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="tns:List_type[]"/>
+				<attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="tns:listType[]"/>
 			</restriction>
 		</complexContent>
 	</complexType>
@@ -33,13 +33,13 @@
 		</complexContent>
 	</complexType>
 	
-	<complexType name="List_type">
+	<complexType name="listType">
            <all>
-		<element name="list_address" minOccurs="1" type="string"/>
+		<element name="listAddress" minOccurs="1" type="string"/>
 		<element name="homepage" minOccurs="0" type="string"/>
-		<element name="is_subscriber" minOccurs="0" type="boolean"/>
-		<element name="is_owner" minOccurs="0" type="boolean"/>
-		<element name="is_editor" minOccurs="0" type="boolean"/>
+		<element name="isSubscriber" minOccurs="0" type="boolean"/>
+		<element name="isOwner" minOccurs="0" type="boolean"/>
+		<element name="isEditor" minOccurs="0" type="boolean"/>
 		<element name="subject" minOccurs="0" type="string"/>
            </all>
 	</complexType>
@@ -54,30 +54,21 @@
 </message>
 
 <message name="infoResponse">
-	<part name="return" type="xsdl:List_type"/>
+	<part name="return" type="tns:listType"/>
+</message>
+
+<message name="complexWhichRequest">
+</message>
+
+<message name="complexWhichResponse">
+	<part name="return" type="tns:ArrayOfLists"/>
 </message>
 
 <message name="whichRequest">
 </message>
 
 <message name="whichResponse">
-	<part name="return" type="xsdl:ArrayOfLists"/>
-</message>
-
-<message name="simpleWhichRequest">
-</message>
-
-<message name="simpleWhichResponse">
-	<part name="listInfo" type="xsdl:ArrayOfString"/>
-</message>
-
-<message name="isSubscriberRequest">
-	<part name="list" type="xsd:string"/>
-	<part name="user" type="xsd:string"/>
-</message>
-
-<message name="isSubscriberResponse">
-	<part name="return" type="xsd:boolean"/>
+	<part name="listInfo" type="tns:ArrayOfString"/>
 </message>
 
 <message name="amIRequest">
@@ -95,7 +86,7 @@
 </message>
 
 <message name="reviewResponse">
-	<part name="return" type="xsdl:ArrayOfString"/>
+	<part name="return" type="tns:ArrayOfString"/>
 </message>
 
 <message name="signoffRequest">
@@ -122,15 +113,26 @@
 </message>
 
 <message name="loginResponse">
-	<part name="return" type="xsd:boolean"/>	
+	<part name="return" type="xsd:string"/>	
 </message>
 
-<message name="cas_loginRequest">
+<message name="authenticateAndRunRequest">
+	<part name="email" type="xsd:string"/>
+	<part name="cookie" type="xsd:string"/>
+	<part name="service" type="xsd:string"/>
+	<part name="parameters" type="tns:ArrayOfString" xsd:minOccurs="0"/>
+</message>
+
+<message name="authenticateAndRunResponse">
+	<part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/>	
+</message>
+
+<message name="casLoginRequest">
 	<part name="proxyTicket" type="xsd:string"/>
 </message>
 
-<message name="cas_loginResponse">
-	<part name="return" type="xsd:boolean"/>	
+<message name="casLoginResponse">
+	<part name="return" type="xsd:string"/>	
 </message>
 
 <message name="listsRequest">
@@ -142,10 +144,10 @@
 	<part name="listInfo" type="xsd:string"/>	
 </message>
 
-<message name="check_cookieRequest">
+<message name="checkCookieRequest">
 </message>
 
-<message name="check_cookieResponse">
+<message name="checkCookieResponse">
 	<part name="email" type="xsd:string"/>
 </message>
 
@@ -157,17 +159,13 @@
 		<input message="tns:infoRequest" />
 		<output message="tns:infoResponse" />
 	</operation>
+	<operation name="complexWhich">
+		<input message="tns:complexWhichRequest" />
+		<output message="tns:complexWhichResponse" />
+	</operation>
 	<operation name="which">
 		<input message="tns:whichRequest" />
 		<output message="tns:whichResponse" />
-	</operation>
-	<operation name="simple_which">
-		<input message="tns:simpleWhichRequest" />
-		<output message="tns:simpleWhichResponse" />
-	</operation>
-	<operation name="isSubscriber">
-		<input message="tns:isSubscriberRequest" />
-		<output message="tns:isSubscriberResponse" />
 	</operation>
 	<operation name="amI">
 		<input message="tns:amIRequest" />
@@ -189,17 +187,21 @@
 		<input message="tns:loginRequest" />
 		<output message="tns:loginResponse" />
 	</operation>
-	<operation name="cas_login">
-		<input message="tns:cas_loginRequest" />
-		<output message="tns:cas_loginResponse" />
+	<operation name="casLogin">
+		<input message="tns:casLoginRequest" />
+		<output message="tns:casLoginResponse" />
+	</operation>
+	<operation name="authenticateAndRun">
+		<input message="tns:authenticateAndRunRequest" />
+		<output message="tns:authenticateAndRunResponse" />
 	</operation>
 	<operation name="lists">
 		<input message="tns:listsRequest" />
 		<output message="tns:listsResponse" />
 	</operation>
-	<operation name="check_cookie">
-		<input message="tns:check_cookieRequest" />
-		<output message="tns:check_cookieResponse" />
+	<operation name="checkCookie">
+		<input message="tns:checkCookieRequest" />
+		<output message="tns:checkCookieResponse" />
 	</operation>
 </portType>
 
@@ -221,34 +223,21 @@
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</output>
 	</operation>
+	<operation name="complexWhich">
+		<soap:operation soapAction="urn:sympasoap#complexWhich"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
 	<operation name="which">
 		<soap:operation soapAction="urn:sympasoap#which"/>
-			<input>
-				<soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</input>
-			<output>
-				<soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</output>
-	</operation>
-	<operation name="simple_which">
-		<soap:operation soapAction="urn:sympasoap#simple_which"/>
-			<input>
-				<soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</input>
-			<output>
-				<soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
-			</output>
-	</operation>
-	<operation name="isSubscriber">
-		<soap:operation soapAction="urn:sympasoap#isSubscriber"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -325,8 +314,21 @@
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</output>
 	</operation>
-	<operation name="cas_login">
-		<soap:operation soapAction="urn:sympasoap#cas_login"/>
+	<operation name="casLogin">
+		<soap:operation soapAction="urn:sympasoap#casLogin"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="authenticateAndRun">
+		<soap:operation soapAction="urn:sympasoap#authenticateAndRun"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 
@@ -351,8 +353,8 @@
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</output>
 	</operation>
-	<operation name="check_cookie">
-		<soap:operation soapAction="urn:sympasoap#check_cookie"/>
+	<operation name="checkCookie">
+		<soap:operation soapAction="urn:sympasoap#checkCookie"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 

@@ -52,15 +52,20 @@ $soap->proxy('http://www.cru.fr/wwsoap',
 
 print "LOGIN....\n";
 
-#$reponse = $soap->cas_login($ARGV[0]);
+#$reponse = $soap->casLogin($ARGV[0]);
 $reponse = $soap->login($ARGV[0],$ARGV[1]);
 $cookies->save;
+&print_result($reponse);
+my $md5 = $reponse->result;
+
+print "\n\nAuthenticateAndRun simple which....\n";
+$reponse = $soap->authenticateAndRun($ARGV[0],$md5,'which');
 &print_result($reponse);
 
 #printf "%s\n", $cookies->as_string();
 
 print "\n\nWHICH....\n";
-$reponse = $soap->simple_which();
+$reponse = $soap->which();
 &print_result($reponse);
 
 #print "\n\nINFO....\n";
@@ -84,8 +89,12 @@ print "\n\nLIST....\n";
 $reponse = $soap->lists('Kulturelles');
 &print_result($reponse);
 
-print "\n\nCheck_cookie....\n";
-$reponse = $soap->check_cookie();
+print "\n\nAM I....\n";
+$reponse = $soap->amI('aliba','owner','olivier.salaun@cru.fr');
+&print_result($reponse);
+
+print "\n\nCheckCookie....\n";
+$reponse = $soap->checkCookie();
 &print_result($reponse);
 
 sub print_result {

@@ -12,72 +12,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-=head1 METHODS
-
-=item check_cookie( <VALUE OF THE COOKIE> )
-
-This web service take the value of a cookie (I<VALUE OF THE COOKIE>) given by Sympa and try to check
-if the cookie is not a fake one. A Server fault is given back if the cookie
-is a fake one. If the cookie has been given by Sympa the email of the personn
-authenticated is given back
- 
-=item lists(I<ROBOT>,I<SENDER>,I<TOPIC>,I<SUBTOPIC>)
-
-Return the list of lists for a topic/subtopic
-I<TOPIC> and I<SUBTOPIC> are optional parameters: if none specified, the list of all lists
-is given back. 
-I<SENDER> authentification is checked to know which lists can be see by the user.
-If the authorization failed it return only list of public lists
-If the number of parameters is incorrect it generates a SOAP.Client Exception.
-
-=item login( <HTTP_HOST> <EMAIL> <PASSWORD> )
-
-This web service gives back a cookie from Sympa (the one called sympauser) only
-if the user I<EMAIL> gives his password (I<PASSWORD>). The parameter I<HTTP_HOST> is 
-usually $ENV{HTTP_HOST}, but needs to be given in order to make the cookie.
- 
-=item isSubscriber( I<LIST>, I<USER>)
-
-Return true of false weather I<USER> is a subscriber of I<LIST>
-or not. If the number of parameters is incorrect it generates a SOAP.Client
-Exception.
- 
-=item review( I<LIST>, I<ROBOT>, I<SENDER>, I<PASSWORD>)
-
-Return the members of I<LIST> in the virtual robot I<ROBOT>, only
-if I<SENDER> (e-mail) and his password (I<PASSWORD>) matchs and have
-the rights. If not gives a reason of failure : unknown_list, no_subscribers,
-undef.
-If the number of parameters is incorrect it generates a SOAP.Client Exception.
-If the authorization failed it generates a SOAP.Server Exception.
-If request_action gives back nothing it generates a SOAP.Server Exception.
- 
-=item signoff( I<LIST>, I<ROBOT>, I<SENDER>, I<PASSWORD>, I<EMAIL>)
-
-The user I<SENDER> sign off from the list I<LIST> with the given password (I<PASSWORD>)
-and the given email I<EMAIL> (if it's a different one from I<SENDER>).
-
-=item subscribe( I<LIST>, I<VIRTUAL ROBOT>, I<SENDER>, I<PASSWORD>, I<GECOS>)
-
-The user I<SENDER> subscribe to the list I<LIST> with the following password (I<PASSWORD>)
-and gecos (I<GECOS> is optionnal).
-
-=item which(I<ROBOT>,I<SENDER>)
-
-Return the list of subscribed lists for the sender
-If the number of parameters is incorrect it generates a SOAP.Client Exception.
-
-
-=cut
-
-
 package SOAP::XMLSchema1999::Serializer;
 
-#sub as_List_type {
+#sub as_listType {
 #    my $self = shift;
 #    my($value, $name, $type, $attr) = @_;
 #    return [$name, $attr, $value];
-##    return [$name, {'xsi:type' => 'sympaType:List_type', %$attr}, $value];
+##    return [$name, {'xsi:type' => 'sympaType:listType', %$attr}, $value];
 #}
 
 
@@ -94,7 +35,7 @@ use Log;
 use Auth;
 use CAS;
 
-sub check_cookie {
+sub checkCookie {
     my $class = shift;
 
     my $sender = $ENV{'USER_EMAIL'};
@@ -105,7 +46,7 @@ sub check_cookie {
 	    ->faultdetail('You should login first');
     }
 
-    &Log::do_log('debug', 'SOAP check_cookie');
+    &Log::do_log('debug', 'SOAP checkCookie');
     
     return SOAP::Data->name('result')->type('string')->value($sender);
 }
@@ -139,13 +80,13 @@ sub lists {
 	next unless ($action eq 'do_it');
 	
 	##building result packet
-	$result_item->{'list_address'} = $listname.'@'.$list->{'domain'};
+	$result_item->{'listAddress'} = $listname.'@'.$list->{'domain'};
 	$result_item->{'subject'} = $list->{'admin'}{'subject'};
 	$result_item->{'subject'} =~ s/;/,/g;
 	$result_item->{'homepage'} = $Conf{'wwsympa_url'}.'/info/'.$listname; 
 	
 	my $listInfo = join (';', 
-			     'list_address='.$result_item->{'list_address'},
+			     'listAddress='.$result_item->{'listAddress'},
 			     'homepage='.$result_item->{'homepage'},
 			     'subject='.$result_item->{'subject'});
 
@@ -210,18 +151,21 @@ sub login {
 	    ->faultdetail('Could not set HTTP cookie for external_auth');
     }
 
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    ## Also return the cookie value
+    return SOAP::Data->name('result')->type('string')->value(&cookielib::get_mac($email,$Conf::Conf{'cookie'}));
+
+#    return SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
-sub cas_login {
+sub casLogin {
     my $class = shift;
     my $proxyTicket = shift;
 
     my $http_host = $ENV{'SERVER_NAME'};
-    &Log::do_log('notice', 'cas_login(%s)', $proxyTicket);
+    &Log::do_log('notice', 'casLogin(%s)', $proxyTicket);
     
     unless ($http_host and $proxyTicket) {
-	&do_log('err', 'cas_login(): incorrect number of parameters');
+	&do_log('err', 'casLogin(): incorrect number of parameters');
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Incorrect number of parameters')
 	    ->faultdetail('Use : <HTTP host> <proxyTicket>');
@@ -275,27 +219,62 @@ sub cas_login {
 	    ->faultdetail('Could not set HTTP cookie for external_auth');
     }
 
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    ## Also return the cookie value
+    return SOAP::Data->name('result')->type('string')->value(&cookielib::get_mac($email,$Conf::Conf{'cookie'}));
+
+#    return SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
-sub isSubscriber {
-  my ($class,$listname,$user)=@_;
+## Used to call a service as an authenticated user without using HTTP cookies
+## First parameter is the secret contained in the cookie
+sub authenticateAndRun {
+    my ($self, $email, $cookie, $service, $parameters) = @_;
 
-  unless ($listname and $user) {
+    &do_log('notice','authenticateAndRun(%s,%s,%s,%s)', $email, $cookie, $service, join(',',@$parameters));
+
+    unless ($email and $cookie and $service) {
+	die SOAP::Fault->faultcode('Client')
+	    ->faultstring('Incorrect number of parameters')
+	    ->faultdetail('Use : <email> <cookie> <service>');
+    }
+
+    unless (&cookielib::get_mac($email, $Conf::Conf{'cookie'}) eq $cookie) {
+	&do_log('notice', "authenticateAndRun(): authentication failed");
+	die SOAP::Fault->faultcode('Server')
+	    ->faultstring('Authentification failed')
+	    ->faultdetail("Incorrect cookie $cookie for user $email");
+    }
+
+    $ENV{'USER_EMAIL'} = $email;
+
+    &{$service}($self,@$parameters);
+}
+
+sub amI {
+  my ($class,$listname,$function,$user)=@_;
+
+  unless ($listname and $user and $function) {
       die SOAP::Fault->faultcode('Client')
 	  ->faultstring('Incorrect number of parameters')
-	  ->faultdetail('Use : <list> <user email>');
+	  ->faultdetail('Use : <list> <function> <user email>');
   }
 
   $listname = lc($listname);  
-  my $thelist = new List ($listname);  
+  my $list = new List ($listname);  
 
   &Log::do_log('debug', 'SOAP isSubscriber(%s)', $listname);
 
-  if ($thelist) {
-      return SOAP::Data->name('result')->type('boolean')->value($thelist->is_user($user));
-  }
-  else {
+  if ($list) {
+      if ($function eq 'subscriber') {
+	  return SOAP::Data->name('result')->type('boolean')->value($list->is_user($user));
+      }elsif ($function =~ /^owner|editor$/) {
+	  return SOAP::Data->name('result')->type('boolean')->value($list->am_i($function, $user));
+      }else {
+	  die SOAP::Fault->faultcode('Server')
+	      ->faultstring('Unknown function.')
+	      ->faultdetail("Function $function unknown");
+      }
+  }else {
       die SOAP::Fault->faultcode('Server')
 	  ->faultstring('Unknown list.')
 	  ->faultdetail("List $listname unknown");
@@ -359,22 +338,22 @@ sub info {
     if ($action =~ /do_it/i) {
 	my $result_item;
 
-	$result_item->{'list_address'} = SOAP::Data->name('list_address')->type('string')->value($listname.'@'.$list->{'domain'});
+	$result_item->{'listAddress'} = SOAP::Data->name('listAddress')->type('string')->value($listname.'@'.$list->{'domain'});
 	$result_item->{'subject'} = SOAP::Data->name('subject')->type('string')->value($list->{'admin'}{'subject'});
 	$result_item->{'homepage'} = SOAP::Data->name('homepage')->type('string')->value($Conf{'wwsympa_url'}.'/info/'.$listname); 
 	
 	## determine status of user 
 	if (($list->am_i('owner',$sender) || $list->am_i('owner',$sender))) {
-	     $result_item->{'is_owner'} = SOAP::Data->name('is_owner')->type('boolean')->value(1);
+	     $result_item->{'isOwner'} = SOAP::Data->name('isOwner')->type('boolean')->value(1);
 	 }
 	if (($list->am_i('editor',$sender) || $list->am_i('editor',$sender))) {
-	    $result_item->{'is_editor'} = SOAP::Data->name('is_editor')->type('boolean')->value(1);
+	    $result_item->{'isEditor'} = SOAP::Data->name('isEditor')->type('boolean')->value(1);
 	}
 	if ($list->is_user($sender)) {
-	    $result_item->{'is_subscriber'} = SOAP::Data->name('is_subscriber')->type('boolean')->value(1);
+	    $result_item->{'isSubscriber'} = SOAP::Data->name('isSubscriber')->type('boolean')->value(1);
 	}
 	
-	#push @result, SOAP::Data->type('List_type')->value($result_item);
+	#push @result, SOAP::Data->type('listType')->value($result_item);
 	return SOAP::Data->value($result_item);
     }
     &Log::do_log('info', 'SOAP : info %s from %s aborted, unknown requested action in scenario',$listname,$sender);
@@ -717,11 +696,11 @@ sub subscribe {
 
  ## Which list the user is subscribed to 
  ## TODO (pour listmaster, toutes les listes)
- sub which {
+ sub complexWhich {
      my $self = shift;
-     &do_log('debug', 'which(%s)',$sender);
      my @result;
      my $sender = $ENV{'USER_EMAIL'};
+     &do_log('debug', 'complexWhich(%s)',$sender);
 
      unless ($sender) {
 	 die SOAP::Fault->faultcode('Client')
@@ -738,27 +717,25 @@ sub subscribe {
 					     {'listname' =>  $listname,
 					      'sender' =>$sender}) =~ /do_it/);
 	 
-	 $result_item->{'list_address'} = SOAP::Data->name('list_address')->type('string')->value($listname.'@'.$list->{'domain'});
+	 $result_item->{'listAddress'} = SOAP::Data->name('listAddress')->type('string')->value($listname.'@'.$list->{'domain'});
 	 $result_item->{'subject'} = SOAP::Data->name('subject')->type('string')->value($list->{'admin'}{'subject'});
 	 $result_item->{'homepage'} = SOAP::Data->name('homepage')->type('string')->value($Conf{'wwsympa_url'}.'/info/'.$listname); 
 	 
 	 ## determine status of user 
 	 if (($list->am_i('owner',$sender) || $list->am_i('owner',$sender))) {
-	     $result_item->{'is_owner'} = SOAP::Data->name('is_owner')->type('boolean')->value(1);
+	     $result_item->{'isOwner'} = SOAP::Data->name('isOwner')->type('boolean')->value(1);
 	 }
 	 if (($list->am_i('editor',$sender) || $list->am_i('editor',$sender))) {
-	     $result_item->{'is_editor'} = SOAP::Data->name('is_editor')->type('boolean')->value(1);
+	     $result_item->{'isEditor'} = SOAP::Data->name('isEditor')->type('boolean')->value(1);
 	 }
 	 if ($list->is_user($sender)) {
-	     $result_item->{'is_subscriber'} = SOAP::Data->name('is_subscriber')->type('boolean')->value(1);
+	     $result_item->{'isSubscriber'} = SOAP::Data->name('isSubscriber')->type('boolean')->value(1);
 	 }
 	 
-	 #push @result, SOAP::Data->type('List_type')->value($result_item);
+	 #push @result, SOAP::Data->type('listType')->value($result_item);
 	 push @result, SOAP::Data->value($result_item);
 	
      }
-
-     &do_log('notice','SOAP: ....which()');
 
 #     return SOAP::Data->attr({'xmlns:sympaType' => $Conf::Conf{'soap_url'}.'/wsdl'})->name('return')->value(\@result);
      return SOAP::Data->name('return')->value(\@result);
@@ -768,12 +745,12 @@ sub subscribe {
 ## Which list the user is subscribed to 
 ## TODO (pour listmaster, toutes les listes)
 ## Simplified return structure
-sub simple_which {
+sub which {
     my $self = shift;
-    &do_log('debug', 'simple_which(%s)',$sender);
     my @result;
     my $sender = $ENV{'USER_EMAIL'};
-    
+    &do_log('debug', 'which(%s)',$sender);
+
     unless ($sender) {
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('User not authentified')
@@ -790,39 +767,37 @@ sub simple_which {
 					    {'listname' =>  $listname,
 					     'sender' =>$sender}) =~ /do_it/);
 	
-	$result_item->{'list_address'} = $listname.'@'.$list->{'domain'};
+	$result_item->{'listAddress'} = $listname.'@'.$list->{'domain'};
 	$result_item->{'subject'} = $list->{'admin'}{'subject'};
 	$result_item->{'subject'} =~ s/;/,/g;
 	$result_item->{'homepage'} = $Conf{'wwsympa_url'}.'/info/'.$listname;
 	 
 	## determine status of user 
-	$result_item->{'is_owner'} = 0;
+	$result_item->{'isOwner'} = 0;
 	if (($list->am_i('owner',$sender) || $list->am_i('owner',$sender))) {
-	    $result_item->{'is_owner'} = 1;
+	    $result_item->{'isOwner'} = 1;
 	}
-	$result_item->{'is_editor'} = 0;
+	$result_item->{'isEditor'} = 0;
 	if (($list->am_i('editor',$sender) || $list->am_i('editor',$sender))) {
-	     $result_item->{'is_editor'} = 1;
+	     $result_item->{'isEditor'} = 1;
 	 }
-	$result_item->{'is_subscriber'} = 0;
+	$result_item->{'isSubscriber'} = 0;
 	if ($list->is_user($sender)) {
-	    $result_item->{'is_subscriber'} = 1;
+	    $result_item->{'isSubscriber'} = 1;
 	}
 	
 	my $listInfo = join (';', 
-			     'list_address='.$result_item->{'list_address'},
+			     'listAddress='.$result_item->{'listAddress'},
 			     'homepage='.$result_item->{'homepage'},
-			     'is_subscriber='.$result_item->{'is_subscriber'},
-			     'is_owner='.$result_item->{'is_owner'},
-			     'is_editor='.$result_item->{'is_editor'},
+			     'isSubscriber='.$result_item->{'isSubscriber'},
+			     'isOwner='.$result_item->{'isOwner'},
+			     'isEditor='.$result_item->{'isEditor'},
 			     'subject='.$result_item->{'subject'});
 
 	push @result, SOAP::Data->type('string')->value($listInfo);
 	
     }
     
-    &do_log('notice','SOAP: ....simple_which()');
-
 #    return SOAP::Data->name('return')->type->('ArrayOfString')->value(\@result);
     return SOAP::Data->name('listInfo')->value(\@result);
 }
