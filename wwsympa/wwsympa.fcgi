@@ -348,7 +348,7 @@ while ($query = &new_loop()) {
 
 
 
-    }elsif ($ENV{'HTTP_COOKIE'} =~ /user\=/) {
+    }elsif ($ENV{'HTTP_COOKIE'} =~ /(user|sympauser)\=/) {
 	$param->{'user'}{'email'} = &wwslib::get_email_from_cookie($Conf{'cookie'});
 	$param->{'auth_method'} = 'md5';
     }else{
@@ -445,9 +445,10 @@ while ($query = &new_loop()) {
 	    }
 
 	    &cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $wwsconf->{'cookie_domain'},$delay ) || exit;
-	}elsif ($ENV{'HTTP_COOKIE'} =~ /user\=/){
-	    &cookielib::set_cookie('unknown',$Conf{'cookie'}, $wwsconf->{'cookie_domain'}, 'now');
 	}
+#elsif ($ENV{'HTTP_COOKIE'} =~ /user\=/){
+#	    &cookielib::set_cookie('unknown',$Conf{'cookie'}, $wwsconf->{'cookie_domain'}, 'now');
+#	}
     }
 
     # if bypass defined use file extention, if bypass = 'extrem' leave the action send the content-type
