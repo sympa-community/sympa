@@ -4548,7 +4548,7 @@ sub store_digest {
 
        # send the date of the next digest to the users
     }
-    $msg->head->delete('Received') if ($msg->head->get('received'));
+    #$msg->head->delete('Received') if ($msg->head->get('received'));
     $msg->print(\*OUT);
     print OUT "\n$separator\n\n";
     close(OUT);
