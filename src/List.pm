@@ -222,7 +222,7 @@ my %alias = ('reply-to' => 'reply_to',
 	     'max-size' => 'max_size');
 
 ##############################################################
-## This hash COMPLETELY defined ALL list parameters     
+## This hash COMPLETELY defines ALL list parameters     
 ## It is then used to load, save, view, edit list config files
 ##############################################################
 ## List parameters format accepts the following keywords :
@@ -239,16 +239,20 @@ my %alias = ('reply-to' => 'reply_to',
 ##               possible values: 0-1 | 1 | 0-n | 1-n
 ##               example : a list may have multiple owner 
 ## title_id :    Title reference in NLS catalogues
+## group :       Group of parameters
 ###############################################################
 %::pinfo = ('account' => {'format' => '\S+',
 			  'length' => 10,
-			  'title_id' => 1
+			  'title_id' => 1,
+			  'group' => 'other'
 			  },
 	    'add' => {'scenario' => 'add',
-		      'title_id' => 2
+		      'title_id' => 2,
+		      'group' => 'command'
 		      },
 	    'anonymous_sender' => {'format' => '.+',
-				   'title_id' => 3
+				   'title_id' => 3,
+				   'group' => 'tuning'
 				   },
 	    'archive' => {'format' => {'period' => {'format' => ['day','week','month','quarter','year'],
 						    'default' => 'week',
@@ -261,7 +265,8 @@ my %alias = ('reply-to' => 'reply_to',
 						    'title_id' => 6
 						}
 				   },
-			  'title_id' => 4
+			  'title_id' => 4,
+			  'group' => 'archives'
 		      },
 
 	    'bounce' => {'format' => {'warn_rate' => {'format' => '\d+',
@@ -277,18 +282,21 @@ my %alias = ('reply-to' => 'reply_to',
 						      'title_id' => 9
 						  }
 				  },
-			 'title_id' => 7
+			 'title_id' => 7,
+			 'group' => 'bounces'
 		     },
 	    'clean_delay_queuemod' => {'format' => '\d+',
 				       'length' => 3,
 				       'unit' => 'days',
 				       'default' => {'conf' => 'clean_delay_queuemod'},
-				       'title_id' => 10
+				       'title_id' => 10,
+				       'group' => 'other'
 				       },
 	    'cookie' => {'format' => '\S+',
 			 'length' => 15,
 			 'default' => {'conf' => 'cookie'},
-			 'title_id' => 11
+			 'title_id' => 11,
+			 'group' => 'other'
 		     },
 	    'creation' => {'format' => {'date_epoch' => {'format' => '\d+',
 							 'occurrence' => '1',
@@ -302,17 +310,20 @@ my %alias = ('reply-to' => 'reply_to',
 						    'title_id' => 15
 						    }
 				    },
-			   'title_id' => 12
+			   'title_id' => 12,
+			   'group' => 'other'
 
 		       },
 	    'custom_header' => {'format' => '\S+:\s+.*',
 				'length' => 30,
 				'occurrence' => '0-n',
-				'title_id' => 16
+				'title_id' => 16,
+				'group' => 'tuning'
 				},
 	    'custom_subject' => {'format' => '.*',
 				 'length' => 15,
-				 'title_id' => 17
+				 'title_id' => 17,
+				 'group' => 'tuning'
 				 },
 	    'default_user_options' => {'format' => {'reception' => {'format' => ['digest','mail','nomail',
 										 'summary','notice'],
@@ -324,10 +335,12 @@ my %alias = ('reply-to' => 'reply_to',
 								     'title_id' => 20
 								     }
 						},
-				       'title_id' => 18
+				       'title_id' => 18,
+				       'group' => 'other'
 				   },
 	    'del' => {'scenario' => 'del',
-		      'title_id' => 21
+		      'title_id' => 21,
+		      'group' => 'command'
 		      },
 	    'digest' => {'file_format' => '\d+(\s*,\s*\d+)*\s+\d+:\d+',
 			 'format' => {'days' => {'format' => [1..7],
@@ -345,7 +358,8 @@ my %alias = ('reply-to' => 'reply_to',
 						   'title_id' => 25
 						   }
 				  },
-			 'title_id' => 22
+			 'title_id' => 22,
+			 'group' => 'tuning'
 		     },
 	    'editor' => {'format' => {'email' => {'format' => $regexp{'email'},
 						  'length' => 30,
@@ -366,24 +380,29 @@ my %alias = ('reply-to' => 'reply_to',
 						 }
 				  },
 			 'occurrence' => '0-n',
-			 'title_id' => 26
+			 'title_id' => 26,
+			 'group' => 'description'
 			 },
 	    'footer_type' => {'format' => ['mime','append'],
 			      'default' => 'mime',
-			      'title_id' => 31
+			      'title_id' => 31,
+			      'group' => 'tuning'
 			      },
 	    'forced_reply_to' => {'format' => '\S+',
-				  'title_id' => 32
+				  'title_id' => 32,
+				 'group' => 'tuning'
 			 },
 	    'host' => {'format' => $regexp{'host'},
 		       'length' => 20,
 		       'default' => {'conf' => 'host'},
-		       'title_id' => 33
+		       'title_id' => 33,
+		       'group' => 'description'
 		   },
 	    'include_file' => {'format' => '\S+',
 			       'length' => 20,
 			       'occurrence' => '0-n',
-			       'title_id' => 34
+			       'title_id' => 34,
+			       'group' => 'data_source'
 			       },
 
 #	    'include_admin' => {'format' => ['owners','editors','privileged_owners'],
@@ -425,11 +444,13 @@ my %alias = ('reply-to' => 'reply_to',
 							       }  
 					      },
 				     'occurrence' => '0-n',
-				     'title_id' => 35
+				     'title_id' => 35,
+				     'group' => 'data_source'
 				     },
 	    'include_list' => {'format' => $regexp{'listname'},
 			       'occurrence' => '0-n',
-			       'title_id' => 44
+			       'title_id' => 44,
+			       'group' => 'data_source'
 			       },
 	    'include_sql_query' => {'format' => {'db_type' => {'format' => ['mysql','Pg','Oracle','Sybase'],
 							       'occurrence' => '1',
@@ -460,23 +481,28 @@ my %alias = ('reply-to' => 'reply_to',
 							     }
 					     },
 				    'occurrence' => '0-n',
-				    'title_id' => 45
+				    'title_id' => 45,
+				    'group' => 'data_source'
 				    },
 	    'info' => {'scenario' => 'info',
-		       'title_id' => 53
+		       'title_id' => 53,
+		       'group' => 'command'
 		       },
 	    'invite' => {'scenario' => 'invite',
-			 'title_id' => 54
+			 'title_id' => 54,
+			 'group' => 'command'
 			 },
 	    'lang' => {'format' => ['fr','us','de','it','fi','es','cn-big5','cn-gb'],
 		       'default' => {'conf' => 'lang'},
-		       'title_id' => 55
+		       'title_id' => 55,
+		       'group' => 'description'
 		   },
 	    'max_size' => {'format' => '\d+',
 			   'length' => 8,
 			   'unit' => 'bytes',
 			   'default' => {'conf' => 'max_size'},
-			   'title_id' => 56
+			   'title_id' => 56,
+			   'group' => 'tuning'
 		       },
 	    'owner' => {'format' => {'email' => {'format' => $regexp{'email'},
 						 'length' =>30,
@@ -501,26 +527,32 @@ my %alias = ('reply-to' => 'reply_to',
 						   }
 				 },
 			'occurrence' => '1-n',
-			'title_id' => 57
+			'title_id' => 57,
+			'group' => 'description'
 			},
 	    'priority' => {'format' => [0..9,'z'],
 			   'length' => 1,
 			   'default' => {'conf' => 'default_list_priority'},
-			   'title_id' => 63
+			   'title_id' => 63,
+			   'group' => 'tuning'
 		       },
 	    'remind' => {'scenario' => 'remind',
-			 'title_id' => 64
+			 'title_id' => 64,
+			 'group' => 'command'
 			  },
 	    'remind_return_path' => {'format' => ['unique','owner'],
 				     'default' => {'conf' => 'remind_return_path'},
-				     'title_id' => 65
+				     'title_id' => 65,
+				     'group' => 'bounces'
 				 },
 	    'reply_to' => {'format' => '\S+',
 			   'default' => 'sender',
-			   'title_id' => 66
+			   'title_id' => 66,
+			   'group' => 'tuning'
 			   },
 	    'review' => {'scenario' => 'review',
-			 'title_id' => 67
+			 'title_id' => 67,
+			 'group' => 'command'
 			 },
 	    'send' => {'scenario' => 'send',
 		       'title_id' => 68
@@ -529,7 +561,8 @@ my %alias = ('reply-to' => 'reply_to',
 			 'default' => 0,
 			 'length' => 3,
 			 'default' => 0,
-			 'title_id' => 69
+			 'title_id' => 69,
+			 'group' => 'other'
 			 },
 	    'shared_doc' => {'format' => {'d_read' => {'scenario' => 'd_read',
 						       'title_id' => 86
@@ -538,33 +571,40 @@ my %alias = ('reply-to' => 'reply_to',
 						       'title_id' => 87
 						       }
 				      },
-			     'title_id' => 70
+			     'title_id' => 70,
+			     'group' => 'command'
 			 },
 	    'status' => {'format' => ['open','closed','pending'],
 			 'default' => 'open',
-			 'title_id' => 71
+			 'title_id' => 71,
+			 'group' => 'other'
 			  },
 	    'subject' => {'format' => '.+',
 			  'length' => 50,
 			  'occurrence' => '1',
-			  'title_id' => 72
+			  'title_id' => 72,
+			  'group' => 'description'
 			   },
 	    'subscribe' => {'scenario' => 'subscribe',
-			    'title_id' => 73
+			    'title_id' => 73,
+			    'group' => 'command'
 			    },
 	    'topics' => {'file_format' => '\w+(\/\w+)*(,\w+(\/\w+)*)*',
 			 'format' => '\w+(\/\w+)?',
 			 'occurrence' => '0-n',
-			 'title_id' => 74
+			 'title_id' => 74,
+			 'group' => 'description'
 			 },
 	    'ttl' => {'format' => '\d+',
 		      'length' => 6,
 		      'unit' => 'seconds',
 		      'default' => 3600,
-		      'title_id' => 75
+		      'title_id' => 75,
+		      'group' => 'data_source'
 		      },
 	    'unsubscribe' => {'scenario' => 'unsubscribe',
-			      'title_id' => 76
+			      'title_id' => 76,
+			      'group' => 'command'
 			      },
 	    'update' => {'format' => {'date_epoch' => {'format' => '\d+',
 						       'length' => 8,
@@ -581,25 +621,30 @@ my %alias = ('reply-to' => 'reply_to',
 						  'title_id' => 80
 						  }
 				  },
-			 'title_id' => 77
+			 'title_id' => 77,
+			 'group' => 'other'
 		     },
 	    'user_data_source' => {'format' => ['database','file','include'],
 				   'default' => 'file',
-				   'title_id' => 81
+				   'title_id' => 81,
+				   'group' => 'data_source'
 				   },
 	    'visibility' => {'scenario' => 'visibility',
-			     'title_id' => 82
+			     'title_id' => 82,
+			     'group' => 'description'
 			     },
 	    'web_archive'  => {'format' => {'access' => {'scenario' => 'access_web_archive',
 							 'title_id' => 84
 							 }
 					},
-			       'title_id' => 83
+			       'title_id' => 83,
+			       'group' => 'archives'
 
 			   },
 	    'welcome_return_path' => {'format' => ['unique','owner'],
 				      'default' => {'conf' => 'welcome_return_path'},
-				      'title_id' => 85
+				      'title_id' => 85,
+				      'group' => 'bounces'
 				  }
 	    );
 
