@@ -3678,28 +3678,23 @@ You can define a set of common scenario rules, used by all lists.
 include.\texttt{<}action\texttt{>}.header is automatically added to evaluated scenarios.
 
 
-\section {Sample scenario rules}
+\section {Hidding scenario files}
 
-\begin {quote}
-\begin{verbatim}
-newer([current_date], '[subscriber->date]+2m')   smtp,md5,smime -> do_it
-\end{verbatim}
-\end {quote}
-Subscription date is less than 2 month old.
+Because \Sympa is distributed with many default scenario files, you may want to hidde some of them 
+to list owners (to make list admin menus shorter and readable). To hidde a scenario file you should 
+create an empty file with the \texttt{:ignore} suffix. Depending on where this file has been created
+will make it ignored at either a global, robot or list level.
 
-\begin {quote}
-\begin{verbatim}
-older([current_date], '[subscriber->expiration_date]')   smtp,md5,smime -> do_it
-\end{verbatim}
-\end {quote}
-Subscriber's expiration date is over.
-The subscriber's expiration date is an additional, site defined, data field ; it needs
-to be defined by the listmaster in the database an declared in sympa.conf 
-(see~\ref {db-additional-subscriber-fields}, page~\pageref {db-additional-subscriber-fields}).
-Note that expiration\_date database field should be an integer (epoch date format) not
-a complex date format.
 [STARTPARSE]
+\textit {Example :} 
+\begin {quote}
+\begin{verbatim}
+[ETCDIR]/\samplerobot/scenari/send.intranetorprivate:ignore
+\end{verbatim}
+\end {quote}
 
+The \texttt{intranetorprivate} \texttt{send} scenario will be hidden (on the web admin interface),
+at the \samplerobot robot level only.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Virtual robot how to

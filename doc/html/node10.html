@@ -76,7 +76,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LI><A NAME="tex2html886"
   HREF="node10.html#SECTION001030000000000000000">9.3 scenario inclusion</A>
 <LI><A NAME="tex2html887"
-  HREF="node10.html#SECTION001040000000000000000">9.4 Sample scenario rules</A>
+  HREF="node10.html#SECTION001040000000000000000">9.4 Hidding scenario files</A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
@@ -89,11 +89,11 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <P>
 List parameters controlling the behavior of commands are linked to different authorization scenarios.
-For example : the <A NAME="5982"></A><TT>send private</TT> parameter is related to the send.private scenario.
+For example : the <A NAME="5980"></A><TT>send private</TT> parameter is related to the send.private scenario.
 There are four possible locations for a authorization scenario. When <I>Sympa</I> seeks to apply an authorization scenario, it
-looks first in the related list directory <A NAME="5998"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
-does not find the file there, it scans the current robot configuration directory <A NAME="6007"></A><TT>/home/sympa/etc/my.domain.org/scenari</TT>, then the site's configuration directory <A NAME="6010"></A><TT>/home/sympa/etc/scenari</TT>,
-and finally <A NAME="6013"></A><TT>/home/sympa/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
+looks first in the related list directory <A NAME="5996"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT>. If it
+does not find the file there, it scans the current robot configuration directory <A NAME="6005"></A><TT>/home/sympa/etc/my.domain.org/scenari</TT>, then the site's configuration directory <A NAME="6008"></A><TT>/home/sympa/etc/scenari</TT>,
+and finally <A NAME="6011"></A><TT>/home/sympa/bin/etc/scenari</TT>, which is the directory installed by the Makefile.
 
 <P>
 An authorization scenario is a small configuration language to describe who
@@ -120,11 +120,11 @@ Each authorization scenario rule contains :
  SRC="img2.png"
  ALT="$]$"> for the listname etc.
 </LI>
-<LI>an authentication method. The authentication method can be <A NAME="6017"></A><TT>smtp</TT>,
-<A NAME="6020"></A><TT>md5</TT> or <A NAME="6023"></A><TT>smime</TT>. The rule is applied by <I>Sympa</I> if both condition
-and authentication method match the runtime context. <A NAME="6027"></A><TT>smtp</TT> is used if
-<I>Sympa</I> use the SMTP <A NAME="6031"></A><TT>from:</TT> header , <A NAME="6034"></A><TT>md5</TT> is used if a unique
-md5 key as been returned by the requestor to validate her message, <A NAME="6037"></A><TT>smime</TT>
+<LI>an authentication method. The authentication method can be <A NAME="6015"></A><TT>smtp</TT>,
+<A NAME="6018"></A><TT>md5</TT> or <A NAME="6021"></A><TT>smime</TT>. The rule is applied by <I>Sympa</I> if both condition
+and authentication method match the runtime context. <A NAME="6025"></A><TT>smtp</TT> is used if
+<I>Sympa</I> use the SMTP <A NAME="6029"></A><TT>from:</TT> header , <A NAME="6032"></A><TT>md5</TT> is used if a unique
+md5 key as been returned by the requestor to validate her message, <A NAME="6035"></A><TT>smime</TT>
 is used for signed messages (see <A HREF="node20.html#smimeforsign">19.4.3</A>, page&nbsp;<A HREF="node20.html#smimeforsign"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 </LI>
 <LI>a returned atomic action that will be executed by <I>Sympa</I> if the rule matches
@@ -246,19 +246,19 @@ probably create authorization scenarios for your own need. In this case, don't f
 and wwsympa because authorization scenarios are not reloaded dynamicaly.
 
 <P>
-These standard authorization scenarios are located in the <A NAME="6043"></A><TT>/home/sympa/bin/etc/scenari/</TT>
+These standard authorization scenarios are located in the <A NAME="6041"></A><TT>/home/sympa/bin/etc/scenari/</TT>
 directory. Default scenarios are named <TT>&lt;</TT>command<TT>&gt;</TT>.default.
 
 <P>
 You may also define and name your own authorization scenarios. Store them in the
-<A NAME="6046"></A><TT>/home/sympa/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
-Scenarios can also be defined for a particular virtual robot (using directory <A NAME="6061"></A><TT>/home/sympa/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="6088"></A><TT>/home/sympa/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ).
+<A NAME="6044"></A><TT>/home/sympa/etc/scenari</TT> directory. They will not be overwritten by Sympa release.
+Scenarios can also be defined for a particular virtual robot (using directory <A NAME="6059"></A><TT>/home/sympa/etc/<TT>&lt;</TT>robot<TT>&gt;</TT>/scenari</TT>) or for a list ( <A NAME="6086"></A><TT>/home/sympa/expl/<TT>&lt;</TT>robot<TT>&gt;</TT>/<TT>&lt;</TT>list<TT>&gt;</TT>/scenari</TT> ).
 
 <P>
 Example:
 
 <P>
-Copy the previous scenario to <A NAME="6103"></A><TT>scenari/subscribe.rennes1</TT> :
+Copy the previous scenario to <A NAME="6101"></A><TT>scenari/subscribe.rennes1</TT> :
 
 <P><PRE>
 equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -&gt; reject
@@ -294,7 +294,7 @@ As a consequence, you can grant privileges in a list to people belonging to an <
 </H2>
 
 <P>
-People are selected through an <A NAME="1513"></A> defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="6106"></A><TT>/home/sympa/etc/search_filters/</TT>.
+People are selected through an <A NAME="1513"></A> defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="6104"></A><TT>/home/sympa/etc/search_filters/</TT>.
 
 <P>
 You must give several informations in order to create a Named Filter:
@@ -415,23 +415,23 @@ include.<TT>&lt;</TT>action<TT>&gt;</TT>.header is automatically added to evalua
 <P>
 
 <H1><A NAME="SECTION001040000000000000000">
-9.4 Sample scenario rules</A>
+9.4 Hidding scenario files</A>
 </H1>
 
-<P><PRE>
-newer(, '+2m')   smtp,md5,smime -&gt; do_it
-</PRE>
-Subscription date is less than 2 month old.
+<P>
+Because <I>Sympa</I> is distributed with many default scenario files, you may want to hidde some of them 
+to list owners (to make list admin menus shorter and readable). To hidde a scenario file you should 
+create an empty file with the <TT>:ignore</TT> suffix. Depending on where this file has been created
+will make it ignored at either a global, robot or list level.
 
-<P><PRE>
-older(, '')   smtp,md5,smime -&gt; do_it
+<P>
+<I>Example :</I> <PRE>
+/home/sympa/etc/\samplerobot/scenari/send.intranetorprivate:ignore
 </PRE>
-Subscriber's expiration date is over.
-The subscriber's expiration date is an additional, site defined, data field ; it needs
-to be defined by the listmaster in the database an declared in sympa.conf 
-(see&nbsp;<A HREF="node6.html#db-additional-subscriber-fields">5.10.9</A>, page&nbsp;<A HREF="node6.html#db-additional-subscriber-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-Note that expiration_date database field should be an integer (epoch date format) not
-a complex date format.
+
+<P>
+The <TT>intranetorprivate</TT> <TT>send</TT> scenario will be hidden (on the web admin interface),
+at the my.domain.orgrobot level only.
 
 <P>
 <HR>
@@ -465,7 +465,7 @@ a complex date format.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-10-15
+2003-11-24
 </ADDRESS>
 </BODY>
 </HTML>

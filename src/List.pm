@@ -5079,16 +5079,25 @@ sub load_scenario_list {
 
     my $directory = "$self->{'dir'}";
     my %list_of_scenario;
+    my %skip_scenario;
 
     foreach my $dir ("$directory/scenari", "$Conf{'etc'}/$robot/scenari", "$Conf{'etc'}/scenari", "--ETCBINDIR--/scenari") {
 
 	next unless (-d $dir);
+
+	while (<$dir/$action.*:ignore>) {
+	    if (/$action\.($tools::regexp{'scenario'}):ignore$/) {
+		my $name = $1;
+		$skip_scenario{$name} = 1;
+	    }
+	}
 
 	while (<$dir/$action.*>) {
 	    next unless (/$action\.($tools::regexp{'scenario'})$/);
 	    my $name = $1;
 	    
 	    next if (defined $list_of_scenario{$name});
+	    next if (defined $skip_scenario{$name});
 
 	    my $scenario = &List::_load_scenario_file ($action, $robot, $name, $directory);
 	    $list_of_scenario{$name} = $scenario;
