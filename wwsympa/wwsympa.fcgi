@@ -4,8 +4,7 @@
 # RCS Identication ; $Revision$ ; $Date$ 
 #
 # Sympa - SYsteme de Multi-Postage Automatique
-# Copyright (c) 1997, 1998, 1999, 2000, 2001 Comite Reseau des Universites
-# Copyright (c) 1997,1998, 1999 Institut Pasteur & Christophe Wolfhugel
+# Copyright (c) 1997-2003 Comite Reseau des Universites
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -226,7 +225,8 @@ my %comm = ('home' => 'do_home',
 	 'set_lang' => 'do_set_lang',
 	 'attach' => 'do_attach',
 	 'change_identity' => 'do_change_identity',
-	 'stats' => 'do_stats'
+	 'stats' => 'do_stats',
+	 'viewlogs'=> 'do_viewlogs'
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -298,7 +298,8 @@ my %action_args = ('default' => ['list'],
 		'set_lang' => ['lang'],
 		'attach' => ['list','@path'],
 		'change_identity' => ['email','previous_action','previous_list'],
-		   'edit_list_request' => ['list','group']
+		'edit_list_request' => ['list','group'],
+		'viewlogs' => ['list','email_regexp','since','page']
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -333,7 +334,9 @@ my %action_type = ('editfile' => 'admin',
 		'remind' => 'admin',
 		'subindex' => 'admin',
 		'stats' => 'admin',
-		'ignoresub' => 'admin');
+		'ignoresub' => 'admin',
+		'viewlogs' => 'admin'
+);
 
 ## Open log
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
@@ -410,8 +413,7 @@ while ($query = &new_loop()) {
     $ip = $ENV{'REMOTE_HOST'};
     $ip = $ENV{'REMOTE_ADDR'} unless ($ip);
     $ip = 'undef' unless ($ip);
-    do_log ('info',"xxxxxxx setting ip : $ip (host : $ENV{'REMOTE_HOST'},addr : $ENV{'REMOTE_ADDR'}");
-    ## In case HTTP_HOST does not match cookie_domain
+     ## In case HTTP_HOST does not match cookie_domain
     my $http_host = $ENV{'HTTP_HOST'};
     $http_host =~ s/:\d+$//; ## suppress port
     unless (($http_host =~ /$param->{'cookie_domain'}$/) || 
@@ -9045,6 +9047,13 @@ sub do_view_template {
     close TPL;
 
     $param->{'tpl'} = \@tpl;
+
+    return 1;
+}
+
+## view logs stored in MySQL
+sub do_viewlogs {
+#    &do_log('info', 'do_viewlogs(%s,%s,%s,%s)',$list,$email_regexp,$since);
 
     return 1;
 }
