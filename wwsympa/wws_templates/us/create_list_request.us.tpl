@@ -27,7 +27,9 @@
        CHECKED
      [ENDIF]
      > [template->NAME]<BR>
+     <BLOCKQUOTE>
      [PARSE template->comment]
+     </BLOCKQUOTE>
      <BR>
   [END]
      </MENU>
