@@ -212,6 +212,9 @@ my %comm = ('home' => 'do_home',
 	 'dump' => 'do_dump',
 	 'arc_protect' => 'do_arc_protect',
 	 'view_translations' => 'do_view_translations',
+	 'translate' => 'do_translate',
+	 'view_template' => 'do_view_template',
+	 'update_translation' => 'do_update_translation',
 	 'remind' => 'do_remind',
 	 'change_email' => 'do_change_email',
 	 'load_cert' => 'do_load_cert',
@@ -287,6 +290,9 @@ my %action_args = ('default' => ['list'],
 		'd_set_owner' =>  ['list','@path'],
 		'dump' => ['list'],
 		'view_translations' => [],
+		'translate' => ['template','lang'],
+		'view_template' => ['template','lang'],
+		'update_translation' => ['template','lang'],
 		'search' => ['list','filter'],
 		'search_user' => ['email'],
 		'set_lang' => ['lang'],
@@ -8821,4 +8827,111 @@ document.write(\"<A HREF=\" + \"mail\" + \"to:\" + \"$local\" + \"@\" + \"$domai
     }elsif($list->{'admin'}{'spam_protection'} eq 'at') {
 	return ("$local AT $domain");
     }
+}
+
+## View translation for a template
+sub do_translate {
+    &do_log('info', "do_translate($in{'template'}, $in{'lang'})");
+
+    my ($template, $lang) = ($in{'template'}, $in{'lang'});
+
+    unless ($in{'template'}) {
+	&error_message('missing_arg', {'argument' => 'template'});
+	&wwslog('info','do_translate: no template');
+	return undef;
+    }
+
+    unless ($in{'lang'}) {
+	&error_message('missing_arg', {'argument' => 'lang'});
+	&wwslog('info','do_translate: no lang');
+	return undef;
+    }
+    
+    $param->{'trans'} = &tools::load_translation($template, $lang, $robot);
+    $param->{'lang'} = $lang;
+    $param->{'template'} = $template;
+
+    return 1; 
+}
+
+## View a template for translation
+sub do_view_template {
+    &do_log('info', "do_view_template($in{'template'}, $in{'lang'})");
+
+    unless ($in{'template'}) {
+	&error_message('missing_arg', {'argument' => 'template'});
+	&wwslog('info','do_view_template: no template');
+	return undef;
+    }
+
+    unless ($in{'lang'}) {
+	&error_message('missing_arg', {'argument' => 'lang'});
+	&wwslog('info','do_view_template: no lang');
+	return undef;
+    }
+    
+    my $src_file =  &tools::get_filename('etc', 'wws_templates/'.$in{template}.'.src', $robot);
+    unless (open TPL, $src_file) {
+	do_log('err', 'Unable to open file %s: %s', $src_file, $!);
+	return undef;
+    }
+
+    my @tpl;
+    while (<TPL>) {
+	push @tpl, &tools::escape_html($_);
+    }
+    close TPL;
+
+    $param->{'tpl'} = \@tpl;
+
+    return 1;
+}
+
+## Update translation for a template
+sub do_update_translation {
+    &do_log('info', "do_update_translation($in{'template'}, $in{'lang'})");
+
+    unless ($in{'template'}) {
+	&error_message('missing_arg', {'argument' => 'template'});
+	&wwslog('info','do_update_translation: no template');
+	return undef;
+    }
+
+    unless ($in{'lang'}) {
+	&error_message('missing_arg', {'argument' => 'lang'});
+	&wwslog('info','do_update_translation: no lang');
+	return undef;
+    }
+    
+    ## Load full index
+    my $index_file =  &tools::get_filename('etc', "wws_templates/index.$in{'lang'}", $robot);
+    my $index;
+    unless ($index = &tools::load_index($in{'lang'}, $index_file)) {
+	&error_message('failed');
+	&wwslog('info','do_update_translation: failed to load full index');
+	return undef;		
+    }
+    
+    ## Update index with incoming values
+    foreach my $var (keys %in) {
+	if ($var =~ /^trans(\d+)$/) {
+	    $index->{$in{'template'}}{$1} = $in{$var};
+	}
+    }
+        
+    ## Save updated index
+    my $index_file;
+    if ($robot ne $Conf{'domain'}) {
+	$index_file = "$Conf{'etc'}/$robot/wws_templates/index.$in{'lang'}";
+    }else {
+	$index_file = "$Conf{'etc'}/wws_templates/index.$in{'lang'}";
+    }
+
+    unless (&tools::save_index($in{'lang'}, $index_file, $index)) {
+	&error_message('failed');
+	&wwslog('info','do_update_translation: failed to save index');
+	return undef;	
+    }
+
+    return 1;
 }
