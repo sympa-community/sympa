@@ -129,10 +129,10 @@ sub smtpto {
 #       }
        if (ref($rcpt) eq 'SCALAR') {
 #	   exec "$filter $Conf{'sendmail'} -oi -odi -oem -f $from $$rcpt";
-	   exec $Conf{'sendmail'}, $Conf{'sendmail_args'}, '-f', $from, $$rcpt;
+	   exec $Conf{'sendmail'}, split(/ /,$Conf{'sendmail_args'}), '-f', $from, $$rcpt;
        }else{
 #	   exec "$filter $Conf{'sendmail'} -oi -odi -oem -f $from @$rcpt";
-	   exec $Conf{'sendmail'}, $Conf{'sendmail_args'}, '-f', $from, @$rcpt;
+	   exec $Conf{'sendmail'}, split(/ /,$Conf{'sendmail_args'}), '-f', $from, @$rcpt;
        }
        exit 1; ## Should never get there.
    }
