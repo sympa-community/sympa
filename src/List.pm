@@ -2168,9 +2168,9 @@ sub get_user_db {
 
     if ($Conf{'db_type'} eq 'Oracle') {
 	## "AS" not supported by Oracle
-	$statement = sprintf "SELECT lower(email_user) \"email\", gecos_user \"gecos\", password_user \"password\", cookie_delay_user \"cookie_delay\", lang_user \"lang\" FROM user_table WHERE lower(email_user) = %s ", $dbh->quote($who);
+	$statement = sprintf "SELECT email_user \"email\", gecos_user \"gecos\", password_user \"password\", cookie_delay_user \"cookie_delay\", lang_user \"lang\" FROM user_table WHERE email_user = %s ", $dbh->quote($who);
     }else {
-	$statement = sprintf "SELECT lower(email_user) AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang FROM user_table WHERE lower(email_user) = %s ", $dbh->quote($who);
+	$statement = sprintf "SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang FROM user_table WHERE email_user = %s ", $dbh->quote($who);
     }
     
     push @sth_stack, $sth;
