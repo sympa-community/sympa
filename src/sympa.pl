@@ -864,7 +864,10 @@ sub DoMessage{
     
     
     ## Check the message for commands and catch them.
-    return undef if (tools::checkcommand($msg, $sender));
+    if (tools::checkcommand($msg, $sender)) {
+	&do_log('notice', 'Found command in message, ignoring message');
+	return undef;
+    }
        
     my $admin = $list->{'admin'};
     return undef unless $admin;
