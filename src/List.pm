@@ -3911,7 +3911,7 @@ sub request_action {
 	    $data_ref = $list->{'admin'}{$operations[0]}{$operations[1]};
 	}
 	
-	unless (defined $data_ref) {
+	unless ((defined $data_ref) && (defined $data_ref->{'rules'})) {
 	    do_log('info',"request_action: no entry $operation defined for list");
 	    return undef ;
 	}
@@ -3929,9 +3929,8 @@ sub request_action {
 	    my $s_name = $context->{'scenario'}; 
 	    
 	    # loading of the structure
-	    my $scenario;
-	    return undef
-		unless($scenario = &_load_scenario_file ($operations[$#operations], $robot, $s_name,$list->{'dir'}));
+	    my  $scenario = &_load_scenario_file ($operations[$#operations], $robot, $s_name,$list->{'dir'});
+	    return undef unless (defined $scenario);
 	    @rules = @{$scenario->{'rules'}};
 	    $name = $scenario->{'name'}; 
 	    $data_ref = $scenario;
@@ -4715,7 +4714,7 @@ sub _load_scenario_file {
     my $paragraph= join '',<SCENARI>;
     close SCENARI;
     unless ($structure = &_load_scenario ($function,$robot,$name,$paragraph, $directory)) { 
-	do_log('err',"error in $function scenario $scenario_file ");
+	do_log('err',"Error in $function scenario $scenario_file ");
 	return undef;
     }
     return $structure ;
