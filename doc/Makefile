@@ -51,6 +51,7 @@ LATEX	= latex
 DVIPS	= dvips
 FIG2DEV	= fig2dev
 LATEX2HTML = latex2html
+PDFLATEX	=	pdflatex	
 MAKEINDEX = makeindex
 
 # encapsulated postcript part of the source
@@ -63,7 +64,7 @@ MAKEINDEX = makeindex
 	fig2dev -Lps $*.fig > $*.eps
 
 
-all:	ps html parse_tex.pl
+all:	ps pdf html parse_tex.pl
 
 #
 # PS generation
@@ -71,8 +72,13 @@ all:	ps html parse_tex.pl
 
 ps:	sympa.ps
 
+pdf:	sympa.pdf
+
 sympa.ps: sympa.dvi
 	$(DVIPS) -f sympa.dvi > sympa.ps
+
+sympa.pdf: sympa.tex
+	$(PDFLATEX) sympa.tex
 
 sympa.tex: sympa.tex.tpl
 	$(PERL) ./parse_tex.pl sympa.tex.tpl sympa.tex
