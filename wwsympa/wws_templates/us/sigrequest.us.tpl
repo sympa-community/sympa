@@ -44,7 +44,7 @@
 	allow you to access your custom environment.
 
   [ELSIF ! email]
-      Please gives your email address for your unsubscription request from list [list].
+      Please provide your email address for your unsubscription request from list [list].
 
       <FORM ACTION="[path_cgi]" METHOD=POST>
           <B>Your e-mail address :</B> 
