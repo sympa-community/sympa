@@ -480,7 +480,7 @@ while ($query = &new_loop()) {
 	@{$param->{'get_which'}}  =  &cookielib::get_which_cookie($ENV{'HTTP_COOKIE'});
 	
 	# if $param->{'get_which'}[0] is undefined the tab is empty
-        if ($param->{'get_which'}[0]) {
+        unless (defined $param->{'get_which'}[0]) {
 	    @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
 	}
 	
