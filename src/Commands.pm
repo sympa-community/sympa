@@ -517,7 +517,8 @@ sub review {
     if ($action =~ /do_it/i) {
 	my $is_owner = $list->am_i('owner', $sender);
 	unless ($user = $list->get_first_user({'sortby' => 'email'})) {
-	    return undef;
+	    do_log('err', "No subscribers in list '%s'", $list->{'name'});
+	    return 'no_subscribers';
 	}
 	do {
 	    ## Owners bypass the visibility option
