@@ -1,3 +1,399 @@
+2002-02-27 14:30  salaun
+
+	* Makefile.am, Makefile.in, configure, configure.in,
+	doc/sympa.tex.tpl: [no log message]
+
+2002-02-27 12:20  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Yves Agostini] Change:
+	navigation in archives could fail because <BASE> did not correspond
+	to requested URL. Now use HTTP_HOST and SERVER_PORT to build BASE. 
+	<BASE could not be supressed because of the archives main (current)
+	page (relative URLs did not work).
+
+2002-02-27 10:18  salaun
+
+	* src/List.pm: [reported by Walter Hopgood] Bug fix: wrong value
+	for Sunday digest Could not send Sunday digests
+
+2002-02-27 09:38  salaun
+
+	* src/sympa.pl: Unused
+
+2002-02-26 17:54  salaun
+
+	* wwsympa/wws_templates/: cn/admin_menu.cn.tpl,
+	cn/edit_list_request.cn.tpl, cn/lists.cn.tpl, cn/review.cn.tpl,
+	cz/admin_menu.cz.tpl, cz/edit_list_request.cz.tpl, cz/lists.cz.tpl,
+	cz/review.cz.tpl, de/admin_menu.de.tpl,
+	de/edit_list_request.de.tpl, de/lists.de.tpl, de/review.de.tpl,
+	es/admin_menu.es.tpl, es/edit_list_request.es.tpl, es/lists.es.tpl,
+	es/review.es.tpl, fr/admin_menu.fr.tpl,
+	fr/edit_list_request.fr.tpl, fr/lists.fr.tpl, fr/review.fr.tpl,
+	hu/admin_menu.hu.tpl, hu/edit_list_request.hu.tpl, hu/lists.hu.tpl,
+	hu/review.hu.tpl, it/admin_menu.it.tpl,
+	it/edit_list_request.it.tpl, it/lists.it.tpl, it/review.it.tpl,
+	us/admin_menu.us.tpl, us/edit_list_request.us.tpl, us/lists.us.tpl,
+	us/main.us.tpl, us/review.us.tpl: Fix: supress base_url from
+	templates This fixes proxy usage problems
+
+2002-02-26 11:21  salaun
+
+	* src/sympa.pl: Fix CleanSpool: could not remove directories
+
+2002-02-22 14:22  salaun
+
+	* src/etc/mhonarc-ressources: [Sergiy Zhuk] Fix formating
+	(introduced in 1.14)
+
+2002-02-22 11:22  salaun
+
+	* Makefile.am, Makefile.in, nls/cn.msg, nls/cz.msg, nls/de.msg,
+	nls/es.msg, nls/fi.msg, nls/fr.msg, nls/hu.msg, nls/it.msg,
+	nls/pl.msg, nls/tw.msg, nls/us.msg: [proposed by J. Marant] Bug
+	fix: Add 'codeset' to NLS catalogs Otherwise catalogs cannot be
+	generated properly (Invalid caracter messages)
+
+2002-02-22 09:16  salaun
+
+	* wwsympa/wws_templates/fr/subindex.fr.tpl: Fix color
+
+2002-02-21 17:55  salaun
+
+	* wwsympa/wws_templates/: fr/review.fr.tpl, us/review.us.tpl: Fix
+	colspan
+
+2002-02-21 17:40  salaun
+
+	* .version: New version
+
+2002-02-21 17:39  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/review.fr.tpl,
+	wwsympa/wws_templates/us/review.us.tpl: Add by_domain sort in
+	REVIEW Also changed query for mysql in get_first_user()
+
+2002-02-21 12:04  salaun
+
+	* src/etc/create_list_templates/discussion_list/comment,
+	src/etc/create_list_templates/private_working_group/comment,
+	wwsympa/wws_templates/fr/admin_menu.fr.tpl,
+	wwsympa/wws_templates/fr/pref.fr.tpl,
+	wwsympa/wws_templates/fr/serveradmin.fr.tpl: [Nicolas Gauvrit]
+	corrections
+
+2002-02-21 11:53  salaun
+
+	* src/List.pm: [requested by Walter Hopgood] Make 'body' and
+	'full_msg' available to summary.tpl
+
+2002-02-21 10:52  salaun
+
+	* wwsympa/wwsympa.fcgi: [Sergiy Zhuk] Fix Net::SMTP::mail() call
+
+2002-02-21 10:50  salaun
+
+	* doc/sympa.tex.tpl: Add indexes
+
+2002-02-20 17:19  salaun
+
+	* src/sympa.pl: Change: cleanup in moderation and authentication
+	spools
+
+2002-02-20 17:09  salaun
+
+	* doc/sympa.tex.tpl: [reported by Benoit Marchal] Lots of
+	corrections
+
+2002-02-20 16:41  salaun
+
+	* src/etc/scenari/: access_web_archive.intranet, review.intranet:
+	New 'review.intranet' scenario Translate
+	'access_web_archive.intranet' title to English
+
+2002-02-20 11:25  salaun
+
+	* src/Conf.pm, src/List.pm, src/sympa.pl, wwsympa/wwsympa.fcgi: New
+	feature: make 'lang' a robot.conf parameter
+
+2002-02-20 09:45  salaun
+
+	* src/tools.pl: [Alan Hicks] Change: message having the
+	multipart/alternative embedded in the first part of the
+	multipart/related were not recognized by tools::as_singlepart()
+
+2002-02-19 17:00  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/list_menu.fr.tpl,
+	wws_templates/us/list_menu.us.tpl: Change: no more provide mailto:
+	in info page ; spam prevention
+
+2002-02-19 16:36  salaun
+
+	* src/tools.pl: Change log level
+
+2002-02-18 14:51  salaun
+
+	* wwsympa/wws_templates/: fr/serveradmin.fr.tpl,
+	us/serveradmin.us.tpl: Wrong variable used [start_date]
+
+2002-02-18 14:42  salaun
+
+	* src/Commands.pm: Bug fix: Command::which() did not skip first
+	argument WHICH command returned a wrong result for Virtual Robots
+
+2002-02-18 14:23  salaun
+
+	* .version: 3.3.4b.1
+
+2002-02-18 14:07  salaun
+
+	* src/etc/mhonarc-ressources: Delete <CharsetConverters> so Mhonarc
+	uses its default
+
+2002-02-15 15:55  salaun
+
+	* wwsympa/wws_templates/: fr/lists.fr.tpl, us/lists.us.tpl: Fix
+	admin button
+
+2002-02-15 14:21  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Michel Bouissou] Bug fix:
+	wrong link to father directory in shared
+
+2002-02-15 12:29  salaun
+
+	* doc/sympa.tex.tpl: New 'cookie_domain' robot.conf param
+
+2002-02-15 12:27  salaun
+
+	* src/Conf.pm, src/List.pm, src/Log.pm, wwsympa/cookielib.pm,
+	wwsympa/wwsympa.fcgi: Fix cookie_domain related bugs. New
+	'cookie_domain' parameter in robot.conf
+
+2002-02-15 11:34  salaun
+
+	* wwsympa/wws_templates/: us/menu.us.tpl, it/menu.it.tpl,
+	fr/menu.fr.tpl: Fixed cellpading & cellspacing
+
+2002-02-15 11:30  salaun
+
+	* wwsympa/wws_templates/: cn/menu.cn.tpl, cz/menu.cz.tpl,
+	de/menu.de.tpl, es/menu.es.tpl, hu/menu.hu.tpl: Fixed cellpading &
+	cellspacing
+
+2002-02-15 11:19  salaun
+
+	* wwsympa/wwsympa.fcgi: Fixed ldap authentication error
+	
+	Add use_ssl variable availible for all wwsympa template. This
+	[use_ssl] and [auth_method]=smime must not be mistakeen one for the
+	other. [use_ssl] may be set while user are not logged because they
+	don't have certificate
+
+2002-02-15 08:11  salaun
+
+	* src/tools.pl: Fixed filename cookies.history (reported by Sergiy
+	Zhuk )
+
+2002-02-15 08:10  salaun
+
+	* src/sympa.pl: fixed extra useless logging (Reported by Sergiy
+	Zhuk )
+
+2002-02-15 08:08  salaun
+
+	* src/task_manager.pl: Fixed some typo in log facility
+
+2002-02-15 08:07  salaun
+
+	* src/Log.pm: Fixed log_level declaration (reported by Sergiy Zhuk)
+
+2002-02-14 17:48  salaun
+
+	* doc/sympa.tex.tpl, nls/fr.msg, nls/us.msg, src/List.pm,
+	src/sympa.pl, src/tools.pl: New feature: add 'db_env' parameter to
+	'include_sql_query'
+
+2002-02-14 16:27  salaun
+
+	* src/etc/mhonarc-ressources: [reported by Serge Algarotti] Bug
+	fix: Messages header fields were parsed in archives
+
+2002-02-14 12:21  salaun
+
+	* nls/es.msg, src/sympa.pl, src/tools.pl,
+	wwsympa/wws_templates/es/get_closed_lists.es.tpl,
+	wwsympa/wws_templates/es/get_latest_lists.es.tpl,
+	wwsympa/wws_templates/es/help_user_options.es.tpl,
+	wwsympa/wws_templates/es/subindex.es.tpl: [Josep Roman] Update of
+	the Spanish templates and NLS
+
+2002-02-14 12:01  salaun
+
+	* src/List.pm: [John Paul Dalbec] Fix: this section of code fixed
+	"name=" but broke "URL="
+
+2002-02-14 11:38  salaun
+
+	* src/tools.pl: Fixe sign_check  : checking using original message
+	instead of object message in order to handle properly multipart
+	messages (b64 sign bug)
+
+2002-02-13 17:41  salaun
+
+	* src/sympa.pl, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/serveradmin.fr.tpl,
+	wwsympa/wws_templates/us/serveradmin.us.tpl: New features: with
+	FastCGI, serveradmin provides processid and request count
+
+2002-02-13 12:01  salaun
+
+	* wwsympa/wwsympa.fcgi: [Herbert Straub] Changes: also search in
+	previous month in do_arcsearch_id()
+
+2002-02-13 11:46  salaun
+
+	* wwsympa/wwsympa.fcgi: [Herbert Straub] Fix: searched in current
+	month and older month (instead of previous one)
+
+2002-02-13 10:20  salaun
+
+	* wwsympa/wws_templates/: es/loginbanner.es.tpl,
+	it/change_email.it.tpl, it/loginbanner.it.tpl,
+	it/sigrequest.it.tpl, us/admin_menu.us.tpl, us/arcsearch.us.tpl,
+	us/change_email.us.tpl, us/create_list.us.tpl,
+	us/create_list_request.us.tpl, us/edit_list_request.us.tpl,
+	us/error.us.tpl, us/help.us.tpl, us/help_admin.us.tpl,
+	us/help_editfile.us.tpl, us/help_editlist.us.tpl,
+	us/list_menu.us.tpl, us/loginbanner.us.tpl, us/remove_arc.us.tpl,
+	us/serveradmin.us.tpl, us/sigrequest.us.tpl, us/subrequest.us.tpl:
+	[John Dalbec] Fix lots of misspellings/typos in templates
+
+2002-02-12 16:51  salaun
+
+	* wwsympa/wwsympa.fcgi: Bug fix: did not store subscription request
+	in wwsympa
+
+2002-02-12 16:08  salaun
+
+	* src/tools.pl, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/us/compose_mail.us.tpl: [reported by Joe
+	Davidson] Bug fix: add a Message-ID to compose form to prevent
+	Sympa from distributing twice the same message (reload).  New
+	tools::get_message_id() sub
+
+2002-02-12 11:25  salaun
+
+	* doc/sympa.tex.tpl, src/Conf.pm, src/tools.pl: Change: just a few
+	commands are now searched in messages. This is now defined in
+	sympa.conf ('misadressed_commands_regexp' parameter)
+
+2002-02-11 18:00  salaun
+
+	* src/sympa.pl: [proposed by Christian Mock] Fix: close STDIN Could
+	cause OPENSSL to hang under some circumstances..
+
+2002-02-11 17:56  salaun
+
+	* src/Log.pm: Supress unused functions do_list_log and old_do_log
+
+2002-02-11 17:53  salaun
+
+	* src/Log.pm: Declare $log_level
+
+2002-02-11 17:33  salaun
+
+	* doc/sympa.tex.tpl: Restore supressed text
+
+2002-02-11 15:54  salaun
+
+	* check_perl_modules.pl, src/List.pm: _ListTables is deprecated,
+	use $dbh->tables() instead.  Therefore requires recent version of
+	DBD::mysql
+
+2002-02-11 15:43  salaun
+
+	* doc/sympa.tex.tpl, src/Conf.pm, src/Ldap.pm, src/Log.pm,
+	src/smtp.pm, src/sympa.pl, wwsympa/bounced.pl: Add 'log_level' conf
+	parameter
+
+2002-02-05 15:34  salaun
+
+	* wwsympa/wwsympa.fcgi: Mime encode subject when compose a mail via
+	WWsympa interface
+
+2002-02-05 13:55  salaun
+
+	* src/smtp.pm: Log_level patch
+
+2002-02-05 13:47  salaun
+
+	* src/tools.pl: Log_level patch
+
+2002-02-05 13:42  salaun
+
+	* src/task_manager.pl: Log_level patch
+
+2002-02-05 13:05  salaun
+
+	* src/Commands.pm: Log_level patch
+
+2002-02-05 11:56  salaun
+
+	* src/List.pm: log_level patch
+
+2002-02-05 11:36  salaun
+
+	* src/Language.pm: log_level patch
+
+2002-02-04 15:52  salaun
+
+	* src/sympa.pl: Prevent loop while unable to rename file to the
+	'bad' directory.
+	
+	Introduce new var log_level that can be set in options, sympa.conf
+	or robot.conf. The higher is teh log_level the more messages are
+	logged.
+
+2002-01-30 11:46  salaun
+
+	* doc/sympa.tex.tpl: various bug reported by B.Marchal.  Replace
+	<host> by <domain> everywhere it is related to sympa.conf or
+	robot.conf setting.
+
+2002-01-29 15:55  salaun
+
+	* wwsympa/wwsympa.fcgi: 
+	
+	Default search now search in the current mounth and in the previous
+	no empty one.
+
+2002-01-29 11:23  salaun
+
+	* src/etc/mhonarc-ressources: reported by Vincent Mathieu : fix
+	icons location in archive. must be related to wws.conf icons_url
+	parameter
+
+2002-01-29 11:12  salaun
+
+	* wwsympa/wwsympa.fcgi: location of left.png and right.png icons
+
+2002-01-29 09:47  salaun
+
+	* src/List.pm: [Vincent Mathieu] multiple reference to variable
+	[sender] in lDAP filters.
+
+2002-01-29 08:35  salaun
+
+	* src/sympa.pl: [Christian Mock] : handle pkcs7-mime content-type
+	of signed messages (outlook)
+
+2002-01-25 15:22  salaun
+
+	* .version, ChangeLog, NEWS: preparing Sympa.3.3.3
+
 2002-01-25 10:46  salaun
 
 	* important_changes.pl: Better version comparison

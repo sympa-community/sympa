@@ -84,7 +84,7 @@ WWSBINDIR	=	$(BINDIR)
 ## Web interface colors are now defined in sympa.conf
 
 ## Target directory for installing Icons
-ICONSDIR	=	/home/httpd/icons
+ICONSDIR	=	@ICONSDIR@
 
 ## Settings used in src/etc/scripts/sympa
 PIDPRE		=	pidof -x

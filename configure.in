@@ -46,6 +46,11 @@ CGIDIR='${prefix}/bin'
 AC_ARG_WITH(cgidir, [  --with-cgidir=DIR     CGIs in DIR  (default ${prefix}/bin)], [CGIDIR="$withval"])
 AC_SUBST(CGIDIR)
 
+## location of icons
+ICONSDIR='/home/httpd/icons'
+AC_ARG_WITH(iconsdir, [  --with-iconsdir=DIR     web interface icons in DIR  (default /home/httpd/icons)], [ICONSDIR="$withval"])
+AC_SUBST(ICONSDIR)
+
 ## location of user executables
 BINDIR='${prefix}/bin'
 AC_ARG_WITH(bindir, [  --with-bindir=DIR     user executables in DIR (default ${prefix}/bin). queue and bouncequeue programs will be installed in this directory. If sendmail is configured to use smrsh (check the mailer prog definition in your sendmail.cf), this should point to /etc/smrsh. This is probably the case if you are using Linux], [BINDIR="$withval"])

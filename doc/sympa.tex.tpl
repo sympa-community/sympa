@@ -961,15 +961,17 @@ command-line arguments :
 If sendmail is configured to use smrsh (check the mailer prog definition in your sendmail.cf),
 this should point to \dir {/etc/smrsh}.  This is probably the case if you are using Linux RedHat.
 
-\item \option {--with-sbindir=DIR}, system admin executables in DIR (default /home/sympa/bin/)
+\item \option {--with-sbindir=DIR}, system admin executables in DIR (default /home/sympa/bin)
 
-\item \option {--with-libexecdir=DIR}, program executables in DIR (default /home/sympa/bin/)
+\item \option {--with-libexecdir=DIR}, program executables in DIR (default /home/sympa/bin)
 
-\item \option {--with-cgidir=DIR}, CGI programs in DIR (default /home/sympa/bin/)
+\item \option {--with-cgidir=DIR}, CGI programs in DIR (default /home/sympa/bin)
 
-\item \option {--with-datadir=DIR}, default configuration data in DIR (default /home/sympa/bin/etc/)
+\item \option {--with-iconsdir=DIR}, web interface icons in DIR (default /home/httpd/icons)
 
-\item \option {--with-confdir=DIR}, Sympa main configuration files in DIR (default /etc/)\\
+\item \option {--with-datadir=DIR}, default configuration data in DIR (default /home/sympa/bin/etc)
+
+\item \option {--with-confdir=DIR}, Sympa main configuration files in DIR (default /etc)\\
 \file {sympa.conf} and \file {wwsympa.conf} will be installed there.
 
 \item \option {--with-exlpdir=DIR}, modifiable data in DIR (default /home/sympa/expl/)
