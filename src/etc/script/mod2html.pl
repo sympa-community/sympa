@@ -55,7 +55,10 @@ foreach $msg ( sort grep(!/^\./, readdir SPOOL )) {
     my $host = $admin->{'host'};
     my $robot = $self->{'domain'};
     my $modqueue = $Conf{'queuemod'};
-    die unless ($name && $admin);
+    unless ($name && $admin) {
+	print STDERR "Unkown list $listname, skipping\n";
+	next;
+    }
     
     my $tmp_dir = "$modqueue\/.$name\_$modkey";
     unless (-d $tmp_dir) {
