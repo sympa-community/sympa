@@ -679,20 +679,16 @@ sub subscribe {
     }
     if ($action =~ /do_it/i) {
 
-	my $is_sub = $list->is_user($sender);
+	my $user_entry = $list->get_subscriber($sender);
 	
-	unless (defined($is_sub)) {
-	    do_log('info','User lookup failed');
-	    return undef;
-	}
-	
-	if ($is_sub) {
-	    
+	if (defined $user_entry) {
+		
 	    ## Only updates the date
 	    ## Options remain the same
 	    my $user = {};
 	    $user->{'update_date'} = time;
-	    $user->{'gecos'} = $comment if $comment;
+		$user->{'gecos'} = $comment if $comment;
+	    $user->{'subscribed'} = 1;
 	    
 	    return undef
 		unless $list->update_user($sender, $user);
@@ -704,6 +700,7 @@ sub subscribe {
 	    $u->{'email'} = $sender;
 	    $u->{'gecos'} = $comment;
 	    $u->{'date'} = $u->{'update_date'} = time;
+	    $u->{'subscribed'} = 1 if ($list->{'admin'}{'user_data_source'} eq 'include2');
 
 	    return undef  unless $list->add_user($u);
 	}
@@ -931,7 +928,8 @@ sub signoff {
 	## Now check if we know this email on the list and
 	## remove it if found, otherwise just reject the
 	## command.
-	unless ($list->is_user($email)) {
+	my $user_entry = $list->get_subscriber($email);
+	unless ((defined $user_entry) && ($user_entry->{'subscribed'} == 1)) {
 	    push @msg::report, sprintf Msg(6, 30, "Email address %s has not been found on the list %s. You did perhaps\nsubscribe using a different address ?\n"), $email, $list->{'name'};
 	    do_log('info', 'SIG %s from %s refused, not on list', $which, $email);
 	    
@@ -944,8 +942,18 @@ sub signoff {
 	    return 'not_allowed';
 	}
 	
-	## Really delete and rewrite to disk.
-	$list->delete_user($email);
+	if ($user_entry->{'included'} == 1) {
+	    unless ($list->update_user($email, 
+				       {'subscribed' => 0,
+					'update_date' => time})) {
+		do_log('info', 'SIG %s from %s failed, database update failed', $which, $email);
+		return undef;
+	    }
+
+	}else {
+	    ## Really delete and rewrite to disk.
+	    $list->delete_user($email);
+	}
 	
 	## Notify the owner
 	if ($action =~ /notify/i) {
@@ -1043,6 +1051,7 @@ sub add {
 	    my $user = {};
 	    $user->{'update_date'} = time;
 	    $user->{'gecos'} = $comment if $comment;
+	    $user->{'subscribed'} = 1;
 
 	    return undef 
 		unless $list->update_user($email, $user);
@@ -1054,6 +1063,7 @@ sub add {
 	    $u->{'email'} = $email;
 	    $u->{'gecos'} = $comment;
 	    $u->{'date'} = $u->{'update_date'} = time;
+	    $u->{'subscribed'} = 1 if ($list->{'admin'}{'user_data_source'} eq 'include2');
 	    
 	    return undef unless $list->add_user($u);
 	    $list->delete_subscription_request($email);
@@ -1465,19 +1475,30 @@ sub del {
     if ($action =~ /do_it/i) {
 	## Check if we know this email on the list and remove it. Otherwise
 	## just reject the message.
-	unless ($list->is_user($who)) {
+	my $user_entry = $list->get_subscriber($who);
+
+	unless ((defined $user_entry) && ($user_entry->{'subscribed'} == 1)) {
 	    push @msg::report, sprintf Msg(6, 33, "Email address %s has not been found on the list.\n"), $who;
 	    do_log('info', 'DEL %s %s from %s refused, not on list', $which, $who, $sender);
 	    return 'not_allowed';
 	}
 	
 	## Get gecos before deletion
-	my $u = $list->get_subscriber($who);
-	my $gecos = $u->{'gecos'};
-
-	## Really delete and rewrite to disk.
-	my $u = $list->delete_user($who);
+	my $gecos = $user_entry->{'gecos'};
 	
+	if ($user_entry->{'included'} == 1) {
+	    unless ($list->update_user($who, 
+				       {'subscribed' => 0,
+					'update_date' => time})) {
+		do_log('info', 'DEL %s %s from %s failed, database update failed', $which, $who, $sender);
+		return undef;
+	    }
+
+	}else {
+	    ## Really delete and rewrite to disk.
+	    my $u = $list->delete_user($who);
+	}
+
 	$list->save();
 	
 	## Send a notice to the removed user, unless the owner indicated
