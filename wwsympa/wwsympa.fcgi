@@ -3042,7 +3042,7 @@ sub do_add {
     unless( $total = $list->add_user(@new_users)) {
 	&error_message('failed_add');
 	&wwslog('info','do_add: failed adding');
-	next;
+	return undef;
     }
 
     if ($total == 0) {
