@@ -214,7 +214,7 @@ my %action_args = ('default' => ['list'],
 		'reviewbouncing' => ['list','page','size'],
 		'arc' => ['list','month','arc_file'],
 		'arcsearch_form' => ['list','archive_name'],
-        'arcsearch_id' => ['list','archive_name','key_word'],
+		 'arcsearch_id' => ['list','archive_name','key_word'],
 		'rebuildarc' => ['list','month'],
 		'rebuildallarc' => [],
 		'home' => [],
@@ -241,7 +241,8 @@ my %action_args = ('default' => ['list'],
 		'd_control' => ['list','@path'],
 		'd_change_access' =>  ['list','@path'],
 		'd_set_owner' =>  ['list','@path'],
-		'view_translations' => []
+		'view_translations' => [],
+		'search' => ['list','filter']
 		);
 
 my %action_type = ('editfile' => 'admin',
