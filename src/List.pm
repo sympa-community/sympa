@@ -24,6 +24,7 @@ package List;
 use strict;
 require X509;
 require Exporter;
+#require Encode;
 require 'tools.pl';
 
 my @ISA = qw(Exporter);
@@ -263,7 +264,7 @@ my %alias = ('reply-to' => 'reply_to',
 ## occurrence :  Occurerence of the parameter in the config file
 ##               possible values: 0-1 | 1 | 0-n | 1-n
 ##               example : a list may have multiple owner 
-## title_id :    Title reference in NLS catalogues
+## gettext_id :    Title reference in NLS catalogues
 ## group :       Group of parameters
 ## obsolete :    Obsolete parameter ; should not be displayed 
 ##               nor saved
@@ -271,44 +272,44 @@ my %alias = ('reply-to' => 'reply_to',
 ###############################################################
 %::pinfo = ('account' => {'format' => '\S+',
 			  'length' => 10,
-			  'title_id' => 1,
+			  'gettext_id' => "Account",
 			  'group' => 'other'
 			  },
 	    'add' => {'scenario' => 'add',
-		      'title_id' => 2,
+		      'gettext_id' => "Who can add subscribers",
 		      'group' => 'command'
 		      },
 	    'anonymous_sender' => {'format' => '.+',
-				   'title_id' => 3,
+				   'gettext_id' => "Anonymous sender",
 				   'group' => 'sending'
 				   },
 	    'archive' => {'format' => {'period' => {'format' => ['day','week','month','quarter','year'],
 						    'synonym' => {'weekly' => 'week'},
-						    'title_id' => 5,
+						    'gettext_id' => "frequency",
 						    'order' => 1
 						},
 				       'access' => {'format' => ['open','private','public','owner','closed'],
 						    'synonym' => {'open' => 'public'},
-						    'title_id' => 6,
+						    'gettext_id' => "access right",
 						    'order' => 2
 						}
 				   },
-			  'title_id' => 4,
+			  'gettext_id' => "Text archives",
 			  'group' => 'archives'
 		      },
 	    'archive_crypted_msg' => {'format' => ['original','decrypted'],
 				    'default' => 'cleartext',
-				    'title_id' => 212,
+				    'gettext_id' => "Archive encrypted mails as cleartext",
 				    'group' => 'archives'
 				    },
         'available_user_options' => {'format' => {'reception' => {'format' => ['mail','notice','digest','digestplain','summary','nomail','txt','html','urlize','not_me'],
 								      'occurrence' => '1-n',
 								      'split_char' => ',',
                                       'default' => 'mail,notice,digest,digestplain,summary,nomail,txt,html,urlize,not_me',
-								      'title_id' => 89
+								      'gettext_id' => "reception mode"
 								      }
 						  },
-					 'title_id' => 88,
+					 'gettext_id' => "Available subscription options",
 					 'group' => 'sending'
 				     },
 
@@ -316,18 +317,18 @@ my %alias = ('reply-to' => 'reply_to',
 						      'length' => 3,
 						      'unit' => '%',
 						      'default' => {'conf' => 'bounce_warn_rate'},
-						      'title_id' => 8,
+						      'gettext_id' => "warn rate",
 						      'order' => 1
 						  },
 				      'halt_rate' => {'format' => '\d+',
 						      'length' => 3,
 						      'unit' => '%',
 						      'default' => {'conf' => 'bounce_halt_rate'},
-						      'title_id' => 9,
+						      'gettext_id' => "halt rate",
 						      'order' => 2
 						  }
 				  },
-			 'title_id' => 7,
+			 'gettext_id' => "Bounces management",
 			 'group' => 'bounces'
 		     },
 	    'bouncers_level1' => {'format' => {'rate' => {'format' => '\d+',
@@ -376,153 +377,153 @@ my %alias = ('reply-to' => 'reply_to',
 				       'length' => 3,
 				       'unit' => 'days',
 				       'default' => {'conf' => 'clean_delay_queuemod'},
-				       'title_id' => 10,
+				       'gettext_id' => "Expiration of unmoderated messages",
 				       'group' => 'other'
 				       },
 	    'cookie' => {'format' => '\S+',
 			 'length' => 15,
 			 'default' => {'conf' => 'cookie'},
-			 'title_id' => 11,
+			 'gettext_id' => "Secret string for generating unique keys",
 			 'group' => 'other'
 		     },
 	    'creation' => {'format' => {'date_epoch' => {'format' => '\d+',
 							 'occurrence' => '1',
-							 'title_id' => 13,
+							 'gettext_id' => "",
 							 'order' => 3
 						     },
 					'date' => {'format' => '.+',
-						   'title_id' => 14,
+						   'gettext_id' => "",
 						   'order' => 2
 						   },
 					'email' => {'format' => $tools::regexp{'email'},
 						    'occurrence' => '1',
-						    'title_id' => 15,
+						    'gettext_id' => "",
 						    'order' => 1
 						    }
 				    },
-			   'title_id' => 12,
+			   'gettext_id' => "Creation of the list",
 			   'group' => 'other'
 
 		       },
 	    'custom_header' => {'format' => '\S+:\s+.*',
 				'length' => 30,
 				'occurrence' => '0-n',
-				'title_id' => 16,
+				'gettext_id' => "Custom header field",
 				'group' => 'sending'
 				},
 	    'custom_subject' => {'format' => '.+',
 				 'length' => 15,
-				 'title_id' => 17,
+				 'gettext_id' => "Subject tagging",
 				 'group' => 'sending'
 				 },
         'default_user_options' => {'format' => {'reception' => {'format' => ['digest','digestplain','mail','nomail','summary','notice','txt','html','urlize','not_me'],
 								    'default' => 'mail',
-								    'title_id' => 19,
+								    'gettext_id' => "reception mode",
 								    'order' => 1
 								    },
 						    'visibility' => {'format' => ['conceal','noconceal'],
 								     'default' => 'noconceal',
-								     'title_id' => 20,
+								     'gettext_id' => "visibility",
 								     'order' => 2
 								     }
 						},
-				       'title_id' => 18,
+				       'gettext_id' => "Subscription profile",
 				       'group' => 'sending'
 				   },
 	    'del' => {'scenario' => 'del',
-		      'title_id' => 21,
+		      'gettext_id' => "Who can delete subscribers",
 		      'group' => 'command'
 		      },
 	    'digest' => {'file_format' => '\d+(\s*,\s*\d+)*\s+\d+:\d+',
 			 'format' => {'days' => {'format' => [0..6],
 						 'file_format' => '1|2|3|4|5|6|7',
 						 'occurrence' => '1-n',
-						 'title_id' => 23,
+						 'gettext_id' => "days",
 						 'order' => 1
 						 },
 				      'hour' => {'format' => '\d+',
 						 'length' => 2,
 						 'occurrence' => '1',
-						 'title_id' => 24,
+						 'gettext_id' => "hour",
 						 'order' => 2
 						 },
 				      'minute' => {'format' => '\d+',
 						   'length' => 2,
 						   'occurrence' => '1',
-						   'title_id' => 25,
+						   'gettext_id' => "minute",
 						   'order' => 3
 						   }
 				  },
-			 'title_id' => 22,
+			 'gettext_id' => "Digest frequency",
 			 'group' => 'sending'
 		     },
 
 	    'editor' => {'format' => {'email' => {'format' => $tools::regexp{'email'},
 						  'length' => 30,
 						  'occurrence' => '1',
-						  'title_id' => 27,
+						  'gettext_id' => "email address",
 						  'order' => 1
 						  },
 				      'reception' => {'format' => ['mail','nomail'],
 						      'default' => 'mail',
-						      'title_id' => 28,
+						      'gettext_id' => "reception mode",
 						      'order' => 4
 						      },
 				      'gecos' => {'format' => '.+',
 						  'length' => 30,
-						  'title_id' => 29,
+						  'gettext_id' => "name",
 						  'order' => 2
 						  },
 				      'info' => {'format' => '.+',
 						 'length' => 30,
-						 'title_id' => 30,
+						 'gettext_id' => "private information",
 						 'order' => 3
 						 }
 				  },
 			 'occurrence' => '0-n',
-			 'title_id' => 26,
+			 'gettext_id' => "Moderators",
 			 'group' => 'description'
 			 },
 	    'expire_task' => {'task' => 'expire',
-			      'title_id' => 95,
+			      'gettext_id' => "",
 			      'group' => 'other'
 			 },
 	    'footer_type' => {'format' => ['mime','append'],
 			      'default' => 'mime',
-			      'title_id' => 31,
+			      'gettext_id' => "Attachment type",
 			      'group' => 'sending'
 			      },
 	    'forced_reply_to' => {'format' => '\S+',
-				  'title_id' => 32,
+				  'gettext_id' => "Forced reply address",
 				  'obsolete' => 1
 			 },
 	    'host' => {'format' => $tools::regexp{'host'},
 		       'length' => 20,
-		       'title_id' => 33,
+		       'gettext_id' => "Internet domain",
 		       'group' => 'description'
 		   },
 	    'include_file' => {'format' => '\S+',
 			       'length' => 20,
 			       'occurrence' => '0-n',
-			       'title_id' => 34,
+			       'gettext_id' => "File inclusion",
 			       'group' => 'data_source'
 			       },
 
 	    'include_admin' => {'format' => {'list' => {'format' => '\S+',
 						        'occurrence' => '1',
-							'title_id' => 210,
+							'gettext_id' => "a listname or list address or *@<domain> or *@*",
 							'order' => 1
 							},
 					     'role' => {'format' => ['owners','editors','privileged_owners','listmaster'],
 					                'occurrence' => '0-n',
 					                'split_char' => ',',
-					                'title_id' => 211,
+					                'gettext_id' => "admin role selection",
 					               }
 					 },
 				 'occurrence' => '0-n',
 
 				 'name' => {'format' => '.+',
-					    'title_id' => 209,
+					    'gettext_id' => "short name for this source",
 					    'length' => 15,
 					    'order' => 1
 					   },
@@ -533,321 +534,321 @@ my %alias = ('reply-to' => 'reply_to',
 
 	    'include_ldap_query' => {'format' => {'host' => {'format' => $tools::regexp{'multiple_host_with_port'},
 							     'occurrence' => '1',
-							     'title_id' => 36,
+							     'gettext_id' => "remote host",
 							     'order' => 2
 							     },
 						  'port' => {'format' => '\d+',
 							     'default' => 389,
 							     'length' => 4,
-							     'title_id' => 37,
+							     'gettext_id' => "remote port",
 							     'obsolete' => 1,
 							     'order' => 2
 							     },
 						  'user' => {'format' => '.+',
-							     'title_id' => 38,
+							     'gettext_id' => "remote user",
 							     'order' => 3
 							     },
 						  'passwd' => {'format' => '.+',
 							       'length' => 10,
-							       'title_id' => 39,
+							       'gettext_id' => "remote password",
 							       'order' => 3
 							       },
 						  'suffix' => {'format' => '.+',
-							       'title_id' => 40,
+							       'gettext_id' => "suffix",
 							       'order' => 4
 							       },
 						  'filter' => {'format' => '.+',
 							       'length' => 50,
 							       'occurrence' => '1',
-							       'title_id' => 41,
+							       'gettext_id' => "filter",
 							       'order' => 7
 							       },
 						  'attrs' => {'format' => '\w+',
 							      'length' => 15,
 							      'default' => 'mail',
-							      'title_id' => 42,
+							      'gettext_id' => "extracted attribute",
 							      'order' => 8
 							      },
 						  'select' => {'format' => ['all','first'],
 							       'default' => 'first',
-							       'title_id' => 43,
+							       'gettext_id' => "selection (if multiple)",
 							       'order' => 9
 							       },
 					          'scope' => {'format' => ['base','one','sub'],
 							      'default' => 'sub',
-							      'title_id' => 97,
+							      'gettext_id' => "search scope",
 							      'order' => 5
 							      },
 						  'timeout' => {'format' => '\w+',
 								'default' => 30,
 								'unit' => 'seconds',
-								'title_id' => 98,
+								'gettext_id' => "connection timeout",
 								'order' => 6
 								},
 						   'name' => {'format' => '.+',
-							      'title_id' => 209,
+							      'gettext_id' => "short name for this source",
 							      'length' => 15,
 							      'order' => 1
 							      }
 					      },
 				     'occurrence' => '0-n',
-				     'title_id' => 35,
+				     'gettext_id' => "LDAP query inclusion",
 				     'group' => 'data_source'
 				     },
 	    'include_ldap_2level_query' => {'format' => {'host' => {'format' => $tools::regexp{'multiple_host_with_port'},
 							     'occurrence' => '1',
-							     'title_id' => 136,
+							     'gettext_id' => "remote host",
 							     'order' => 1
 							     },
 						  'port' => {'format' => '\d+',
 							     'default' => 389,
 							     'length' => 4,
-							     'title_id' => 137,
+							     'gettext_id' => "remote port",
 							     'obsolete' => 1,
 							     'order' => 2
 							     },
 						  'user' => {'format' => '.+',
-							     'title_id' => 138,
+							     'gettext_id' => "remote user",
 							     'order' => 3
 							     },
 						  'passwd' => {'format' => '.+',
 							       'length' => 10,
-							       'title_id' => 139,
+							       'gettext_id' => "remote password",
 							       'order' => 3
 							       },
 						  'suffix1' => {'format' => '.+',
-							       'title_id' => 140,
+							       'gettext_id' => "first-level suffix",
 							       'order' => 4
 							       },
 						  'filter1' => {'format' => '.+',
 							       'length' => 50,
 							       'occurrence' => '1',
-							       'title_id' => 141,
+							       'gettext_id' => "first-level filter",
 							       'order' => 7
 							       },
 						  'attrs1' => {'format' => '\w+',
 							      'length' => 15,
-							      'title_id' => 142,
+							      'gettext_id' => "first-level extracted attribute",
 							      'order' => 8
 							      },
 						  'select1' => {'format' => ['all','first','regex'],
 							       'default' => 'first',
-							       'title_id' => 143,
+							       'gettext_id' => "first-level selection",
 							       'order' => 9
 							       },
 					          'scope1' => {'format' => ['base','one','sub'],
 							      'default' => 'sub',
-							      'title_id' => 197,
+							      'gettext_id' => "first-level search scope",
 							      'order' => 5
 							      },
 						  'timeout1' => {'format' => '\w+',
 								'default' => 30,
 								'unit' => 'seconds',
-								'title_id' => 198,
+								'gettext_id' => "first-level connection timeout",
 								'order' => 6
 								},
 						  'regex1' => {'format' => '.+',
 								'length' => 50,
 								'default' => '',
-								'title_id' => 201,
+								'gettext_id' => "first-level regular expression",
 								'order' => 10
 								},
 						  'suffix2' => {'format' => '.+',
-							       'title_id' => 144,
+							       'gettext_id' => "second-level suffix template",
 							       'order' => 11
 							       },
 						  'filter2' => {'format' => '.+',
 							       'length' => 50,
 							       'occurrence' => '1',
-							       'title_id' => 145,
+							       'gettext_id' => "second-level filter template",
 							       'order' => 14
 							       },
 						  'attrs2' => {'format' => '\w+',
 							      'length' => 15,
 							      'default' => 'mail',
-							      'title_id' => 146,
+							      'gettext_id' => "second-level extracted attribute",
 							      'order' => 15
 							      },
 						  'select2' => {'format' => ['all','first','regex'],
 							       'default' => 'first',
-							       'title_id' => 147,
+							       'gettext_id' => "second-level selection",
 							       'order' => 16
 							       },
 					          'scope2' => {'format' => ['base','one','sub'],
 							      'default' => 'sub',
-							      'title_id' => 199,
+							      'gettext_id' => "second-level search scope",
 							      'order' => 12
 							      },
 						  'timeout2' => {'format' => '\w+',
 								'default' => 30,
 								'unit' => 'seconds',
-								'title_id' => 200,
+								'gettext_id' => "second-level connection timeout",
 								'order' => 13
 								},
 						  'regex2' => {'format' => '.+',
 								'length' => 50,
 								'default' => '',
-								'title_id' => 202,
+								'gettext_id' => "second-level regular expression",
 								'order' => 17
 								},
 						   'name' => {'format' => '.+',
-							      'title_id' => 209,
+							      'gettext_id' => "short name for this source",
 							      'length' => 15,
 							      'order' => 1
 							      }
 
 					      },
 				     'occurrence' => '0-n',
-				     'title_id' => 135,
+				     'gettext_id' => "LDAP 2-level query inclusion",
 				     'group' => 'data_source'
 				     },
 	    'include_list' => {'format' => $tools::regexp{'listname'},
 			       'occurrence' => '0-n',
-			       'title_id' => 44,
+			       'gettext_id' => "List inclusion",
 			       'group' => 'data_source'
 			       },
 	    'include_remote_sympa_list' => {'format' => {'host' => {'format' => $tools::regexp{'host'},
 							    'occurrence' => '1',
-							    'title_id' => 136,
+							    'gettext_id' => "remote host",
 							    'order' => 1
 							    },
 							 'port' => {'format' => '\d+',
 							     'default' => 443,
 							     'length' => 4,
-							     'title_id' => 137,
+							     'gettext_id' => "remote port",
 							     'order' => 2
 							     },
 							 'path' => {'format' => '\S+',
 			                                     'length' => 20,
 			                                     'occurrence' => '1',
-			                                     'title_id' => 207,
+			                                     'gettext_id' => "remote path of sympa list dump",
 							     'order' => 3 
 
 			                                     },
                                                          'cert' => {'format' => ['robot','list'],
-							           'title_id' => 208,
+							           'gettext_id' => "certificate for authentication by remote Sympa",
 								   'default' => 'list',
 								    'order' => 4
 								    },
 							   'name' => {'format' => '.+',
-								      'title_id' => 209,
+								      'gettext_id' => "short name for this source",
 								      'length' => 15,
 								      'order' => 1
 								      }
 					},
 
 			       'occurrence' => '0-n',
-			       'title_id' => 206,
+			       'gettext_id' => "remote list inclusion",
 			       'group' => 'data_source'
 			       },
 	    'include_sql_query' => {'format' => {'db_type' => {'format' => '\S+',
 							       'occurrence' => '1',
-							       'title_id' => 46,
+							       'gettext_id' => "database type",
 							       'order' => 1
 							       },
 						 'host' => {'format' => $tools::regexp{'host'},
 							    'occurrence' => '1',
-							    'title_id' => 47,
+							    'gettext_id' => "remote host",
 							    'order' => 2
 							    },
 						 'db_name' => {'format' => '\S+',
 							       'occurrence' => '1',
-							       'title_id' => 48,
+							       'gettext_id' => "database name",
 							       'order' => 3 
 							       },
 						 'connect_options' => {'format' => '.+',
-								       'title_id' => 94,
+								       'gettext_id' => "connection options",
 								       'order' => 4
 								       },
 						 'db_env' => {'format' => '\w+\=\S+(;\w+\=\S+)*',
 							      'order' => 5,
-							      'title_id' => 148
+							      'gettext_id' => "environment variables for database connexion"
 							      },
 						 'user' => {'format' => '\S+',
 							    'occurrence' => '1',
-							    'title_id' => 49,
+							    'gettext_id' => "remote user",
 							    'order' => 6
 							    },
 						 'passwd' => {'format' => '.+',
-							      'title_id' => 50,
+							      'gettext_id' => "remote password",
 							      'order' => 7
 							      },
 						 'sql_query' => {'format' => $tools::regexp{'sql_query'},
 								 'length' => 50,
 								 'occurrence' => '1',
-								 'title_id' => 51,
+								 'gettext_id' => "SQL query",
 								 'order' => 8
 								 },
 						  'f_dir' => {'format' => '.+',
-							     'title_id' => 52,
+							     'gettext_id' => "",
 							     'order' => 9
 							     },
 						  'name' => {'format' => '.+',
-							     'title_id' => 209,
+							     'gettext_id' => "short name for this source",
 							     'length' => 15,
 							     'order' => 1
 							     }
 						 
 					     },
 				    'occurrence' => '0-n',
-				    'title_id' => 45,
+				    'gettext_id' => "SQL query inclusion",
 				    'group' => 'data_source'
 				    },
 	    'info' => {'scenario' => 'info',
-		       'title_id' => 53,
+		       'gettext_id' => "Who can view list information",
 		       'group' => 'command'
 		       },
 	    'invite' => {'scenario' => 'invite',
-			 'title_id' => 54,
+			 'gettext_id' => "Who can invite people",
 			 'group' => 'command'
 			 },
 	    'lang' => {'format' => ['fr','us','de','it','fi','es','tw','cn','pl','cz','hu','ro','et','nl'],
 		       'default' => {'conf' => 'lang'},
-		       'title_id' => 55,
+		       'gettext_id' => "Language of the list",
 		       'group' => 'description'
 		   },
 	    'max_size' => {'format' => '\d+',
 			   'length' => 8,
 			   'unit' => 'bytes',
 			   'default' => {'conf' => 'max_size'},
-			   'title_id' => 56,
+			   'gettext_id' => "Maximum message size",
 			   'group' => 'sending'
 		       },
 	    'owner' => {'format' => {'email' => {'format' => $tools::regexp{'email'},
 						 'length' =>30,
 						 'occurrence' => '1',
-						 'title_id' => 58,
+						 'gettext_id' => "email address",
 						 'order' => 1
 						 },
 				     'reception' => {'format' => ['mail','nomail'],
 						     'default' => 'mail',
-						     'title_id' => 59,
+						     'gettext_id' => "reception mode",
 						     'order' =>5
 						     },
 				     'gecos' => {'format' => '.+',
 						 'length' => 30,
-						 'title_id' => 60,
+						 'gettext_id' => "name",
 						 'order' => 2
 						 },
 				     'info' => {'format' => '.+',
 						'length' => 30,
-						'title_id' => 61,
+						'gettext_id' => "private informations",
 						'order' => 3
 						},
 				     'profile' => {'format' => ['privileged','normal'],
 						   'default' => 'normal',
-						   'title_id' => 62,
+						   'gettext_id' => "profile",
 						   'order' => 4
 						   }
 				 },
 			'occurrence' => '1-n',
-			'title_id' => 57,
+			'gettext_id' => "Owner",
 			'group' => 'description'
 			},
 	    'priority' => {'format' => [0..9,'z'],
 			   'length' => 1,
 			   'default' => {'conf' => 'default_list_priority'},
-			   'title_id' => 63,
+			   'gettext_id' => "Priority",
 			   'group' => 'description'
 		       },
 	    'remind' => {'scenario' => 'remind',
@@ -856,7 +857,7 @@ my %alias = ('reply-to' => 'reply_to',
 			  },
 	    'remind_return_path' => {'format' => ['unique','owner'],
 				     'default' => {'conf' => 'remind_return_path'},
-				     'title_id' => 65,
+				     'gettext_id' => "Remind return-path",
 				     'group' => 'bounces'
 				 },
 	    'remind_task' => {'task' => 'remind',
@@ -865,32 +866,32 @@ my %alias = ('reply-to' => 'reply_to',
 			      },
 	    'reply_to' => {'format' => '\S+',
 			   'default' => 'sender',
-			   'title_id' => 66,
+			   'gettext_id' => "Reply address",
 			   'group' => 'sending',
 			   'obsolete' => 1
 			   },
 	    'reply_to_header' => {'format' => {'value' => {'format' => ['sender','list','all','other_email'],
 							   'default' => 'sender',
-							   'title_id' => 91,
+							   'gettext_id' => "value",
 							   'occurrence' => '1',
 							   'order' => 1
 							   },
 					       'other_email' => {'format' => $tools::regexp{'email'},
-								 'title_id' => 92,
+								 'gettext_id' => "other email address",
 								 'order' => 2
 								 },
 					       'apply' => {'format' => ['forced','respect'],
 							   'default' => 'respect',
-							   'title_id' => 93,
+							   'gettext_id' => "respect of existing header field",
 							   'order' => 3
 							   }
 					   },
-				  'title_id' => 90,
+				  'gettext_id' => "Reply address",
 				  'group' => 'sending'
 				  },		
 	    'review' => {'scenario' => 'review',
 			 'synonym' => {'open' => 'public'},
-			 'title_id' => 67,
+			 'gettext_id' => "Who can review subscribers",
 			 'group' => 'command'
 			 },
 	    'rfc2369_header_fields' => {'format' => ['help','subscribe','unsubscribe','post','owner','archive'],
@@ -901,55 +902,55 @@ my %alias = ('reply-to' => 'reply_to',
 					'group' => 'sending'
 					},
 	    'send' => {'scenario' => 'send',
-		       'title_id' => 68,
+		       'gettext_id' => "Who can send messages",
 		       'group' => 'sending'
 		       },
 	    'serial' => {'format' => '\d+',
 			 'default' => 0,
 			 'length' => 3,
 			 'default' => 0,
-			 'title_id' => 69,
+			 'gettext_id' => "Serial number of the config",
 			 'group' => 'other'
 			 },
 	    'shared_doc' => {'format' => {'d_read' => {'scenario' => 'd_read',
-						       'title_id' => 86,
+						       'gettext_id' => "Who can view",
 						       'order' => 1
 						       },
 					  'd_edit' => {'scenario' => 'd_edit',
-						       'title_id' => 87,
+						       'gettext_id' => "Who can edit",
 						       'order' => 2
 						       },
 					  'quota' => {'format' => '\d+',
 						      'default' => {'conf' => 'default_shared_quota'},
 						      'length' => 8,
 						      'unit' => 'Kbytes',
-						      'title_id' => 203,
+						      'gettext_id' => "quota",
 						      'order' => 3
 						      }
 				      },
-			     'title_id' => 70,
+			     'gettext_id' => "Shared documents",
 			     'group' => 'command'
 			 },
 	    'spam_protection' => {'format' => ['at','javascript','none'],
 			 'default' => 'javascript',
-			 'title_id' => 205,
+			 'gettext_id' => "email adress protection method",
 			 'group' => 'other'
 			  },
 	    'web_archive_spam_protection' => {'format' => ['cookie','javascript','at','none'],
 			 'default' => {'conf' => 'web_archive_spam_protection'},
-			 'title_id' => 205,
+			 'gettext_id' => "email adress protection method",
 			 'group' => 'other'
 			  },
 
 	    'status' => {'format' => ['open','closed','pending'],
 			 'default' => 'open',
-			 'title_id' => 71,
+			 'gettext_id' => "Status of the list",
 			 'group' => 'other'
 			  },
 	    'subject' => {'format' => '.+',
 			  'length' => 50,
 			  'occurrence' => '1',
-			  'title_id' => 72,
+			  'gettext_id' => "Subject of the list",
 			  'group' => 'description'
 			   },
 	    'subscribe' => {'scenario' => 'subscribe',
@@ -959,72 +960,72 @@ my %alias = ('reply-to' => 'reply_to',
 	    'topics' => {'format' => '\w+(\/\w+)?',
 			 'split_char' => ',',
 			 'occurrence' => '0-n',
-			 'title_id' => 74,
+			 'gettext_id' => "Topics for the list",
 			 'group' => 'description'
 			 },
 	    'ttl' => {'format' => '\d+',
 		      'length' => 6,
 		      'unit' => 'seconds',
 		      'default' => 3600,
-		      'title_id' => 75,
+		      'gettext_id' => "Inclusions timeout",
 		      'group' => 'data_source'
 		      },
 	    'unsubscribe' => {'scenario' => 'unsubscribe',
-			      'title_id' => 76,
+			      'gettext_id' => "Who can unsubscribe",
 			      'group' => 'command'
 			      },
 	    'update' => {'format' => {'date_epoch' => {'format' => '\d+',
 						       'length' => 8,
 						       'occurrence' => '1',
-						       'title_id' => 78,
+						       'gettext_id' => "",
 						       'order' => 3
 						       },
 				      'date' => {'format' => '.+',
 						 'length' => 30,
-						 'title_id' => 79,
+						 'gettext_id' => "",
 						 'order' => 2
 						 },
 				      'email' => {'format' => $tools::regexp{'email'},
 						  'length' => 30,
 						  'occurrence' => '1',
-						  'title_id' => 80,
+						  'gettext_id' => "",
 						  'order' => 1
 						  }
 				  },
-			 'title_id' => 77,
+			 'gettext_id' => "Last update of config",
 			 'group' => 'other'
 		     },
 	    'user_data_source' => {'format' => ['database','file','include','include2'],
 				   'default' => 'include2',
-				   'title_id' => 81,
+				   'gettext_id' => "User data source",
 				   'group' => 'data_source'
 				   },
 	    'visibility' => {'scenario' => 'visibility',
 			     'synonym' => {'public' => 'noconceal',
 					   'private' => 'conceal'},
-			     'title_id' => 82,
+			     'gettext_id' => "Visibility of the list",
 			     'group' => 'description'
 			     },
 	    'web_archive'  => {'format' => {'access' => {'scenario' => 'access_web_archive',
-							 'title_id' => 84,
+							 'gettext_id' => "access right",
 							 'order' => 1
 							 },
 					    'quota' => {'format' => '\d+',
 							'default' => {'conf' => 'default_archive_quota'},
 							'length' => 8,
 							'unit' => 'Kbytes',
-							'title_id' => 204,
+							'gettext_id' => "quota",
 							'order' => 2
 							}
 					},
 			       
-			       'title_id' => 83,
+			       'gettext_id' => "Web archives",
 			       'group' => 'archives'
 
 			   },
 	    'welcome_return_path' => {'format' => ['unique','owner'],
 				      'default' => {'conf' => 'welcome_return_path'},
-				      'title_id' => 85,
+				      'gettext_id' => "Welcome return-path",
 				      'group' => 'bounces'
 				  },
 	    'export' => {'format' => '\w+',
@@ -1741,12 +1742,12 @@ sub send_notify_to_owner {
     ## Use list lang
     &Language::SetLang($self->{'admin'}{'lang'});
 
-    my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
+    my $to = sprintf (gettext("Owners of list %s"), $name)." <$name-request\@$host>";
 
     if ($param->{'type'} eq 'warn-signoff') {
 	my ($body, $subject);
-	$subject = sprintf (Msg(8, 21, "WARNING: %s list %s from %s %s"), $param->{'type'}, $name, $param->{'who'}, $param->{'gecos'});
-	$body = sprintf (Msg(8, 23, "WARNING : %s %s failed to signoff from %s\nbecause his address was not found in the list\n (You may help this person)\n"),$param->{'who'}, $param->{'gecos'}, $name);
+	$subject = sprintf (gettext("FYI: %s list %s from %s %s"), $param->{'type'}, $name, $param->{'who'}, $param->{'gecos'});
+	$body = sprintf (gettext("WARNING : %s %s failed to unsubscribe from %s because his address was\n"),$param->{'who'}, $param->{'gecos'}, $name);
 	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
     }elsif ($param->{'type'} eq 'subrequest') {
 	## Replace \s by %20 in email
@@ -1755,9 +1756,9 @@ sub send_notify_to_owner {
 	my $escaped_who = $param->{'who'};
 	$escaped_who =~ s/\s/\%20/g;
 
-	my $subject = sprintf(Msg(8, 2, "%s subscription request"), $name);
-	my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
-	my $body = sprintf Msg(8, 3, $msg::sub_owner), $name, $param->{'replyto'}, $param->{'keyauth'}, $name, $escaped_who, $escaped_gecos, $param->{'replyto'}, $param->{'keyauth'}, $name, $param->{'who'}, $param->{'gecos'};
+	my $subject = sprintf(gettext("Subscription request to list %s"), $name);
+	my $to = sprintf (gettext("Owners of list %s"), $name)." <$name-request\@$host>";
+	my $body = sprintf gettext("\nDear owner of list %s,\n\nA user asked to be added as a subscriber to your list. Shall this be fine\nwith you, you should click the following URL :\n\nmailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n\nor send an email to %s with the following subject :\nAUTH %s ADD %s %s %s\n"), $name, $param->{'replyto'}, $param->{'keyauth'}, $name, $escaped_who, $escaped_gecos, $param->{'replyto'}, $param->{'keyauth'}, $name, $param->{'who'}, $param->{'gecos'};
 	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
 
     }elsif ($param->{'type'} eq 'sigrequest') {
@@ -1767,16 +1768,16 @@ sub send_notify_to_owner {
 	my $escaped_who = $param->{'who'};
 	$escaped_who =~ s/\s/\%20/g;
 
-	my $subject = sprintf(Msg(8, 24, "%s UNsubscription request"), $name);
-	my $to = sprintf (Msg(8, 1, "Owners of list %s :"), $name)." <$name-request\@$host>";
-	my $body = sprintf Msg(8, 25, $msg::sig_owner), $name, $sympa, $param->{'keyauth'}, $name, $escaped_who, $sympa, $param->{'keyauth'}, $name, $param->{'who'};
+	my $subject = sprintf(gettext("UNsubscription request from list %s"), $name);
+	my $to = sprintf (gettext("Owners of list %s"), $name)." <$name-request\@$host>";
+	my $body = sprintf gettext("Dear owner of list %s,\n\nA user asked to be deleted from your list. Shall this be fine\nwith you, you should click the following URL :\n\nmailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n\nor send an email to %s with the following subject :\nAUTH %s DEL %s %s\n"), $name, $sympa, $param->{'keyauth'}, $name, $escaped_who, $sympa, $param->{'keyauth'}, $name, $param->{'who'};
 	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
 
     }elsif ($param->{'type'} eq 'bounce_rate') {
 	my $rate = int ($param->{'rate'} * 10) / 10;
 
-        my $subject = sprintf(Msg(8, 28, "WARNING: bounce rate too high in list %s"), $name);
-        my $body = sprintf Msg(8, 27, "Bounce rate in list %s is %d%%.\nYou should delete bouncing subscribers : %s/reviewbouncing/%s"), $name, $rate, &Conf::get_robot_conf($self->{'domain'}, 'wwsympa_url'), $name ;
+        my $subject = sprintf(gettext("WARNING: bounce rate too high in list %s"), $name);
+        my $body = sprintf gettext("Bounce rate in list %s is %d%%.\n\nYou should delete bouncing subscribers : \n%s/reviewbouncing/%s"), $name, $rate, &Conf::get_robot_conf($self->{'domain'}, 'wwsympa_url'), $name ;
         &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
 
     }elsif ($param->{'type'} eq 'automatic_bounce_management') {
@@ -1787,11 +1788,11 @@ sub send_notify_to_owner {
 
     }elsif ($param->{'who'}) {
 	my ($body, $subject);
-	$subject = sprintf(Msg(8, 21, "FYI: %s list %s from %s %s"), $param->{'type'}, $name, $param->{'who'}, $param->{'gecos'});
+	$subject = sprintf(gettext("FYI: %s list %s from %s %s"), $param->{'type'}, $name, $param->{'who'}, $param->{'gecos'});
 	if ($param->{'by'}) {
-	    $body = sprintf Msg(8, 26, "FYI command %s list %s from %s %s validated by %s\n (no action needed)\n"),$param->{'type'}, $name, $param->{'who'}, $param->{'gecos'}, $param->{'by'};
+	    $body = sprintf gettext("FYI command %s list %s from %s %s validated by %s\n (no action needed)\n"),$param->{'type'}, $name, $param->{'who'}, $param->{'gecos'}, $param->{'by'};
 	}else {
-	    $body = sprintf Msg(8, 22, "FYI command %s list %s from %s %s \n (no action needed)\n"),$param->{'type'}, $name, $param->{'who'}, $param->{'gecos'} ;
+	    $body = sprintf gettext("FYI command %s list %s from %s %s \n (no action needed)\n"),$param->{'type'}, $name, $param->{'who'}, $param->{'gecos'} ;
 	}
 	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to,$self->{'domain'}, @rcpt);
 
@@ -1881,8 +1882,8 @@ sub notify_sender{
    my $name = $self->{'name'};
    return unless ($name && $admin && $sender);
 
-   my $subject = sprintf Msg(4, 40, 'Moderating your message');
-   my $body = sprintf Msg(4, 38, "Your message for list %s has been forwarded to editor(s)\n"), $name;
+   my $subject = sprintf gettext("Moderating your message");
+   my $body = sprintf gettext("Your message for list %s has been forwarded to editor(s)\n"), $name;
    &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $sender, $self->{'domain'}, $sender);
 }
 
@@ -2041,9 +2042,9 @@ sub send_auth {
    close IN; close OUT;
  
    my $hdr = new Mail::Header;
-   $hdr->add('From', sprintf Msg(12, 4, 'SYMPA <%s>'), $sympa);
+   $hdr->add('From', sprintf gettext("SYMPA <%s>"), $sympa);
    $hdr->add('To', $sender );
-#   $hdr->add('Subject', Msg(8, 16, "Authentication needed"));
+#   $hdr->add('Subject', gettext("Authentication requested"));
    $hdr->add('Subject', "confirm $modkey");
    $hdr->add('MIME-Version', "1.0");
    $hdr->add('Content-Type',"multipart/mixed; boundary=\"$boundary\"") ;
@@ -2054,7 +2055,7 @@ sub send_auth {
    print DESC "\n";
    print DESC "--$boundary\n";
    print DESC "Content-Type: text/plain\n\n";
-   printf DESC Msg(8, 12,"In order to broadcast the following message into list %s, either click on this link:\nmailto:%s?subject=CONFIRM%%20%s\nOr reply to %s with this subject :\nCONFIRM %s"), $name, $sympa, $modkey, $sympa, $modkey;
+   printf DESC gettext("To distribute the attached message in list %s :\nmailto:%s?subject=CONFIRM%%20%s\nOr send a message to %s with the following subject :\nCONFIRM %s\n"), $name, $sympa, $modkey, $sympa, $modkey;
    print DESC "--$boundary\n";
    print DESC "Content-Type: message/rfc822\n\n";
    
@@ -2553,7 +2554,7 @@ sub send_msg_digest {
 		 'return_path' => "$self->{'name'}-owner\@$self->{'admin'}{'host'}",
 		 'reply' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
 		 'to' => "$self->{'name'}\@$self->{'admin'}{'host'}",
-		 'table_of_content' => sprintf(Msg(8, 13, "Table of content")),
+		 'table_of_content' => sprintf(gettext("Table of content")),
 		 'boundary1' => '----------=_'.&tools::get_message_id($robot),
 		 'boundary2' => '----------=_'.&tools::get_message_id($robot),
 		 };
@@ -2587,7 +2588,7 @@ sub send_msg_digest {
     }
 
     my $old = $/;
-    $/ = "\n\n" . $msg::separator . "\n\n";
+    $/ = "\n\n" . $tools::separator . "\n\n";
 
     ## Digest split in individual messages
     open DIGEST, $filename or return undef;
@@ -2669,7 +2670,7 @@ sub send_msg_digest {
 
     ## send summary
     if (@tabrcptsummary) {
-	$param->{'subject'} = sprintf Msg(8, 31, 'Summary of list %s'), $self->{'name'};
+	$param->{'subject'} = sprintf gettext("Summary of list %s"), $self->{'name'};
 	$self->send_file('summary', \@tabrcptsummary, $robot, $param);
     }
     
@@ -2698,12 +2699,11 @@ sub send_global_file {
     }
 
     ## Lang
-    my $lang = $data->{'user'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
-
+    my $lang = $data->{'lang'} = $data->{'user'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
+ 
     ## What file   
-    foreach my $f ("$Conf{'etc'}/$robot/templates/$action.$lang.tpl","$Conf{'etc'}/$robot/templates/$action.tpl",
-		   "$Conf{'etc'}/templates/$action.$lang.tpl","$Conf{'etc'}/templates/$action.tpl",
-		   "--ETCBINDIR--/templates/$action.$lang.tpl","--ETCBINDIR--/templates/$action.tpl") {
+    foreach my $f ("$Conf{'etc'}/$robot/tt2/$action.$lang.tt2","$Conf{'etc'}/$robot/tt2/$action.tt2",
+		   "$Conf{'etc'}/tt2/$action.tt2", "--ETCBINDIR--/tt2/$action.tt2") {
 	if (-r $f) {
 	    $filename = $f;
 	    last;
@@ -2711,7 +2711,7 @@ sub send_global_file {
     }
 
     unless ($filename) {
-	do_log('err',"Unable to open file $Conf{'etc'}/$robot/templates/$action.tpl NOR  $Conf{'etc'}/templates/$action.tpl NOR --ETCBINDIR--/templates/$action.tpl");
+	do_log('err',"Unable to open file $Conf{'etc'}/$robot/tt2/$action.tt2 NOR  $Conf{'etc'}/tt2/$action.tt2 NOR --ETCBINDIR--/tt2/$action.tt2");
     }
 
     foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title') {
@@ -2786,17 +2786,13 @@ sub send_file {
     my $lang = $data->{'user'}{'lang'} || $self->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
-    foreach my $f ("$self->{'dir'}/$action.$lang.tpl",
-		   "$self->{'dir'}/$action.tpl",
+    foreach my $f ("$self->{'dir'}/$action.tt2",
 		   "$self->{'dir'}/$action.mime","$self->{'dir'}/$action",
-		   "$Conf{'etc'}/$robot/templates/$action.$lang.tpl",
-		   "$Conf{'etc'}/$robot/templates/$action.tpl",
-		   "$Conf{'etc'}/templates/$action.$lang.tpl",
-		   "$Conf{'etc'}/templates/$action.tpl",
+		   "$Conf{'etc'}/$robot/tt2/$action.tt2",
+		   "$Conf{'etc'}/tt2/$action.tt2",
 		   "$Conf{'home'}/$action.mime",
 		   "$Conf{'home'}/$action",
-		   "--ETCBINDIR--/templates/$action.$lang.tpl",
-		   "--ETCBINDIR--/templates/$action.tpl") {
+		   "--ETCBINDIR--/tt2/$action.tt2") {
 	if (-r $f) {
 	    $filename = $f;
 	    last;
@@ -2804,7 +2800,7 @@ sub send_file {
     }
 
     unless ($filename) {
-	do_log('err',"Unable to find '$action' template in list directory NOR $Conf{'etc'}/templates/ NOR --ETCBINDIR--/templates/");
+	do_log('err',"Unable to find '$action' template in list directory NOR $Conf{'etc'}/tt2/ NOR --ETCBINDIR--/tt2/");
     }
     
     foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title') {
@@ -3151,7 +3147,9 @@ sub get_subscriber {
 	    $user->{'subscribed'} = 1
 		if ($self->{'admin'}{'user_data_source'} eq 'database');
 
-	}
+	    }elsif ($sortby eq 'name') {
+		$statement .= " ORDER BY \"gecos\"";
+	    } 
 
 	$sth->finish();
 
@@ -3821,6 +3819,22 @@ sub update_user {
 			  included => 'included_subscriber',
 			  id => 'include_sources_subscriber'
 			  );
+
+	## additional DB fields
+	if (defined $Conf{'db_additional_subscriber_fields'}) {
+	    foreach my $f (split ',', $Conf{'db_additional_subscriber_fields'}) {
+		$map_table{$f} = 'subscriber_table';
+		$map_field{$f} = $f;
+	    }
+	}
+
+	if (defined $Conf{'db_additional_user_fields'}) {
+	    foreach my $f (split ',', $Conf{'db_additional_user_fields'}) {
+		$map_table{$f} = 'user_table';
+		$map_field{$f} = $f;
+	    }
+	}
+	
 	
 	## mapping between var and tables
 	my %map_table = ( reception => 'subscriber_table',
@@ -4092,6 +4106,14 @@ sub add_user {
 	    
 	    my $statement;
 
+	    ## If datasource is 'include2' either is_included or is_subscribed must be set
+	    ## default is is_subscriber for backward compatibility reason
+	    if ($self->{'admin'}{'user_data_source'} eq 'include2') {
+		unless ($new_user->{'included'}) {
+		    $new_user->{'subscribed'} = 1;
+		}
+	    }
+
 	    ## Either is_included or is_subscribed must be set
 	    ## default is is_subscriber for backward compatibility reason
 	    unless ($new_user->{'included'}) {
@@ -4164,6 +4186,39 @@ sub rename_list_db {
     $statement =  sprintf "UPDATE subscriber_table SET list_subscriber=%s WHERE list_subscriber=%s", $dbh->quote($new_listname), $dbh->quote($listname) ; 
 
     do_log('debug', 'List::rename_list_db statement : %s',  $statement );
+
+    unless ($dbh->do($statement)) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    
+    return 1;
+}
+
+
+
+
+
+## Update subscribers (used while renaming a list)
+sub update_subscribers_db {
+    my($listname, $new_listname) = @_;
+    do_log('debug', 'List::update_subscriber_db(%s,%s)', $listname,$new_listname);
+
+    unless ($List::use_db) {
+	&do_log('info', 'Sympa not setup to use DBI');
+	return undef;
+    }
+
+    my $statement;
+    
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }	   
+    
+    $statement =  sprintf "UPDATE subscriber_table SET list_subscriber=%s WHERE list_subscriber=%s", $dbh->quote($new_listname), $dbh->quote($listname) ; 
+
+    do_log('debug', 'List::update_subscriber_db statement : %s',  $statement );
 
     unless ($dbh->do($statement)) {
 	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
@@ -4467,8 +4522,10 @@ sub verify {
 		
 		$value =~ s/\[conf\-\>([\w\-]+)\]/$conf_value/;
 	    }else{
-		do_log('err',"unknown variable context $value in rule $condition");
-		return undef;
+		do_log('debug',"undefine variable context $value in rule $condition");
+		# a condition related to a undefined context variable is always false
+		return -1 * $negation;
+ #		return undef;
 	    }
 
 	    ## List param
@@ -4846,7 +4903,7 @@ sub may_edit {
     my ($what, @order);
 
     if (($parameter =~ /^(\w+)\.(\w+)$/) &&
-	($parameter !~ /\.tpl$/)) {
+	($parameter !~ /\.tt2$/)) {
 	my $main_parameter = $1;
 	@order = ($edit_conf->{$parameter}{$role},
 		  $edit_conf->{$main_parameter}{$role}, 
@@ -4994,7 +5051,7 @@ sub archive_send {
    return unless ($self->is_archived());
    my $i;
    if ($i = Archive::exist("$self->{'dir'}/archives", $file)) {
-      mail::mailarc($i, Msg(8, 7, "File") . " $self->{'name'} $file",$who );
+      mail::mailarc($i, gettext("File") . " $self->{'name'} $file",$who );
    }
 }
 
@@ -5151,8 +5208,8 @@ sub _load_scenario {
 	my $rule = {};
 	s/\#.*$//;         # remove comments
         next if (/^\s*$/); # reject empty lines
-	if (/^\s*title\.(\w+)\s+(.*)\s*$/i) {
-	    $structure->{'title'}{$1} = $2;
+	if (/^\s*title\.gettext\s+(.*)\s*$/i) {
+	    $structure->{'title'} = $1;
 	    next;
 	}
         
@@ -6302,6 +6359,17 @@ sub sync_include {
 		    $users_updated++;
 		}
 
+		## Gecos have changed for the user
+		if ($old_subscribers{$email}{'gecos'} ne $new_subscribers->{$email}{'gecos'}) {
+		    &do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
+		    unless( $self->update_user($email,  {'update_date' => time,
+							 'gecos' => $new_subscribers->{$email}{'gecos'} }) ) {
+			&do_log('err', 'List:sync_include(%s): Failed to update %s', $name, $email);
+			next;
+		    }
+		    $users_updated++;
+		}
+
 		## User was already subscribed, update include_sources_subscriber in DB
 	    }else {
 		&do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
@@ -6508,7 +6576,7 @@ sub store_digest {
     do_log('debug3', 'List::store_digest');
 
     my($filename, $newfile);
-    my $separator = $msg::separator;  
+    my $separator = $tools::separator;  
 
     unless ( -d "$Conf{'queuedigest'}") {
 	return;
@@ -6525,13 +6593,13 @@ sub store_digest {
 	printf OUT "\nThis digest for list has been created on %s\n\n",
       POSIX::strftime("%a %b %e %H:%M:%S %Y", @now);
 	print OUT "------- THIS IS A RFC934 COMPLIANT DIGEST, YOU CAN BURST IT -------\n\n";
-	print OUT "\n$separator\n\n";
+	printf OUT "\n%s\n\n", $tools::separator;
 
        # send the date of the next digest to the users
     }
     #$msg->head->delete('Received') if ($msg->head->get('received'));
     $msg->print(\*OUT);
-    print OUT "\n$separator\n\n";
+    printf OUT "\n%s\n\n", $tools::separator;
     close(OUT);
     
     #replace the old time
@@ -6718,36 +6786,36 @@ sub request_auth {
 	    $command = "auth $keyauth $cmd $listname $email";
 	    my $url = "mailto:$robot_email?subject=$command";
 	    $url =~ s/\s/%20/g;
-	    $body = sprintf Msg(6, 261, $msg::signoff_need_auth ), $listname, $robot_email ,$command, $url;
+	    $body = sprintf gettext("Someone (hopefully you) asked for you e-mail address\nto be removed from list '%s'.\nIf you want this action to be taken, please \n\n- reply to this mail\nOR\n- send a message to '%s' with subject\n %s\nOR\n- hit the following mailto %s\n\nThis can be done via the URL %s\nIf you do not want this action to be taken, you can safely ignore\nthis message"), $listname, $robot_email ,$command, $url;
 	    
 	}elsif ($cmd =~ /subscribe$/){
 	    $keyauth = $self->compute_auth ($email, 'subscribe');
 	    $command = "auth $keyauth $cmd $listname $param[0]";
 	    my $url = "mailto:$robot_email?subject=$command";
 	    $url =~ s/\s/%20/g;
-	    $body = sprintf Msg(6, 260, $msg::subscription_need_auth)
+	    $body = sprintf gettext("Someone (hopefully you) asked for your e-mail address\nto be added to list '%s'.\nIf you want this action to be taken, please\n\n- reply to this mail\nOR\n- send a message to %s with subject\n %s\nOR\n- hit the following mailto %s\n\nIf you do not want this action to be taken, you can safely ignore\nthis message.")
 		,$listname,  $robot_email, $command, $url ;
 	}elsif ($cmd =~ /add$/){
 	    $keyauth = $self->compute_auth ($param[0],'add');
 	    $command = "auth $keyauth $cmd $listname $param[0] $param[1]";
-	    $body = sprintf Msg(6, 39, $msg::adddel_need_auth),$listname
+	    $body = sprintf gettext("Someone (hopefully you) requested a user of list %s to be\nadded or removed.\n\nIf you want this action to be taken, please send an e-mail to\n%s containing \n\n   %s\n\nIf you do not want this action to be taken, simply ignore this message.\n"),$listname
 		, $robot_email, $command;
 	}elsif ($cmd =~ /del$/){
 	    my $keyauth = $self->compute_auth($param[0], 'del');
 	    $command = "auth $keyauth $cmd $listname $param[0]";
-	    $body = sprintf Msg(6, 39, $msg::adddel_need_auth),$listname
+	    $body = sprintf gettext("Someone (hopefully you) requested a user of list %s to be\nadded or removed.\n\nIf you want this action to be taken, please send an e-mail to\n%s containing \n\n   %s\n\nIf you do not want this action to be taken, simply ignore this message.\n"),$listname
 		, $robot_email, $command;
 	}elsif ($cmd eq 'remind'){
 	    my $keyauth = $self->compute_auth('','remind');
 	    $command = "auth $keyauth $cmd $listname";
-	    $body = sprintf Msg(6, 79, $msg::remind_need_auth),$listname
+	    $body = sprintf gettext("You requested a subscription reminder to be sent\nto each subscriber of list %s\n\nIf you want this action to be taken, please send an e-mail to\n%s containing \n\n   %s\n\nIf you do not want this action to be taken, simply ignore this message.\n"),$listname
 		, $robot_email, $command;
 	}
     }else {
 	if ($cmd eq 'remind'){
 	    my $keyauth = &List::compute_auth('',$cmd);
 	    $command = "auth $keyauth $cmd *";
-	    $body = sprintf Msg(6, 79, $msg::remind_need_auth),'*'
+	    $body = sprintf gettext("You requested a subscription reminder to be sent\nto each subscriber of list %s\n\nIf you want this action to be taken, please send an e-mail to\n%s containing \n\n   %s\n\nIf you do not want this action to be taken, simply ignore this message.\n"),'*'
 		, $robot_email, $command;
 	}
     }
@@ -6874,6 +6942,41 @@ sub sort_dir_to_get_mod {
     
  } 
 
+
+## Get the type of a DB field
+sub get_db_field_type {
+    my ($table, $field) = @_;
+
+    return undef unless ($Conf{'db_type'} eq 'mysql');
+
+    ## Is the Database defined
+    unless ($Conf{'db_name'}) {
+	&do_log('info', 'No db_name defined in configuration file');
+	return undef;
+    }
+
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+	
+    unless ($sth = $dbh->prepare("SHOW FIELDS FROM $table")) {
+	do_log('err','Unable to prepare SQL query : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL query : %s', $dbh->errstr);
+	return undef;
+    }
+	    
+    while (my $ref = $sth->fetchrow_hashref()) {
+	next unless ($ref->{'Field'} eq $field);
+
+	return $ref->{'Type'};
+    }
+
+    return undef;
+}
 
 ## Get the type of a DB field
 sub get_db_field_type {
@@ -7245,6 +7348,41 @@ sub maintenance {
     return 1;
 }
 
+## Try to create the database
+sub create_db {
+    &do_log('debug3', 'List::create_db()');    
+
+    unless ($Conf{'db_type'} eq 'mysql') {
+	&do_log('err', 'Cannot create %s DB', $Conf{'db_type'});
+	return undef;
+    }
+
+    my $drh;
+    unless ($drh = DBI->connect("DBI:mysql:dbname=mysql;host=localhost", 'root', '')) {
+	&do_log('err', 'Cannot connect as root to database');
+	return undef;
+    }
+
+    ## Create DB
+    my $rc = $drh->func("createdb", $Conf{'db_name'}, 'localhost', $Conf{'db_user'}, $Conf{'db_passwd'}, 'admin');
+    unless (defined $rc) {
+	&do_log('err', 'Cannot create database %s : %s', $Conf{'db_name'}, $drh->errstr);
+	return undef;
+    }
+
+    ## Grant privileges
+    unless ($drh->do("GRANT ALL ON $Conf{'db_name'}.* TO $Conf{'db_user'}\@localhost IDENTIFIED BY '$Conf{'db_passwd'}'")) {
+	&do_log('err', 'Cannot grant privileges to %s on database %s : %s', $Conf{'db_user'}, $Conf{'db_name'}, $drh->errstr);
+	return undef;
+    }
+
+    &do_log('notice', 'Database %s created', $Conf{'db_name'});
+
+    $drh->disconnect();
+
+    return 1;
+}
+
 ## Lowercase field from database
 sub lowercase_field {
     my ($table, $field) = @_;
@@ -7292,6 +7430,11 @@ sub load_topics {
     do_log('debug2', 'List::load_topics(%s)',$robot);
 
     my $conf_file = &tools::get_filename('etc','topics.conf',$robot);
+
+    unless ($conf_file) {
+	&do_log('err','No topics.conf defined');
+	return undef;
+    }
 
     unless ($conf_file) {
 	&do_log('err','No topics.conf defined');
@@ -7993,6 +8136,124 @@ sub _save_admin_file {
     close CONFIG;
 
     return 1;
+}
+
+
+# add log in RDBMS 
+sub db_log {
+
+    my $process = shift;
+    my $email_user = shift; $email_user = lc($email_user);
+    my $auth = shift;
+    my $ip = shift; $ip = lc($ip);
+    my $ope = shift; $ope = lc($ope);
+    my $list = shift; $list = lc($list);
+    my $robot = shift; $robot = lc($robot);
+    my $arg = shift; 
+    my $status = shift;
+    my $subscriber_count = shift;
+
+    do_log ('info',"db_log (PROCESS = $process, EMAIL = $email_user, AUTH = $auth, IP = $ip, OPERATION = $ope, LIST = $list,ROBOT = $robot, ARG = $arg ,STATUS = $status , LIST= list_subscriber)");
+
+    unless ($process =~ /^((task)|(archived)|(sympa)|(wwsympa)|(bounce))$/) {
+	do_log ('err',"Internal_error : incorrect process value $process");
+	return undef;
+    }
+
+    unless ($auth =~ /^((smtp)|(md5)|(smime)|(null))$/) {
+	do_log ('err',"Internal_error : incorrect auth value $auth");
+	return undef;
+    }
+    $auth = '' if ($auth eq 'null');
+
+    my $date=time;
+    
+    ## Insert in log_table
+
+
+
+    my $statement = 'INSERT INTO log_table (id, date, pid, process, email_user, auth, ip, operation, list, robot, arg, status, subscriber_count) ';
+
+    my $statement_value = sprintf "VALUES ('',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", $date,$dbh->quote($$),$dbh->quote($process),$dbh->quote($email_user),$dbh->quote($auth),$dbh->quote($ip),$dbh->quote($ope),$dbh->quote($list),$dbh->quote($robot),$dbh->quote($arg),$dbh->quote($status),$dbh->quote($subscriber_count);		    
+    $statement = $statement.$statement_value;
+    
+		    unless ($dbh->do($statement)) {
+			do_log('err','Unable to execute SQL statement \n"%s" \n %s', $statement, $dbh->errstr);
+			return undef;
+		    }
+
+}
+
+# Scan log_table with appropriate select 
+sub get_first_db_log {
+
+    my $select = shift;
+
+    do_log('info','get_first_db_log (%s)',$select);
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+
+    my $statement; 
+
+    if ($Conf{'db_type'} eq 'Oracle') {
+	## "AS" not supported by Oracle
+	$statement = "SELECT date \"date\", pid \"pid\", process \"process\", email_user \"email\", auth \"auth\", ip \"ip\",operation \"operation\", list \"list\", robot \"robot\", arg \"arg\", status \"status\", subscriber_count \"count\" FROM log_table WHERE 1 ";
+    }else{
+	$statement = "SELECT date AS date, pid AS pid, process AS process, email_user AS email, auth AS auth, ip AS ip, operation AS operation, list AS list, robot AS robot, arg AS arg, status AS status, subscriber_count AS count FROM log_table WHERE 1 ";	
+    }
+
+    if ($select->{'list'}) {
+	$select->{'list'} = lc ($select->{'list'});
+	$statement .= sprintf "AND list = %s ",$select->{'list'}; 
+    }
+   
+    if ($select->{'robot'}) {
+	$select->{'robot'} = lc ($select->{'robot'});
+	$statement .= sprintf "AND robot = %s ",$select->{'robot'}; 
+    }
+   
+    if ($select->{'ip'}) {
+	$select->{'ip'} = lc ($select->{'ip'});
+	$statement .= sprintf "AND ip = %s ",$select->{'ip'}; 
+    }
+   
+    if ($select->{'ope'}) {
+	$select->{'ope'} = lc ($select->{'ope'});
+	$statement .= sprintf "AND operation = %s ",$select->{'operation'}; 
+    }
+
+
+    push @sth_stack, $sth;
+
+    do_log('info',"xxxxxxxxxxxxxx statement $statement ");
+
+    unless ($sth = $dbh->prepare($statement)) {
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+
+    do_log('info',"xxxxxxxxxxxxxx found 1");
+  
+    return ($sth->fetchrow_hashref);
+
+}
+
+sub get_next_db_log {
+
+    my $log = $sth->fetchrow_hashref;
+    
+    unless (defined $log) {
+	$sth->finish;
+	$sth = pop @sth_stack;
+    }
+    return $log;
 }
 
 # Is a reception mode in the parameter reception of the available_user_options

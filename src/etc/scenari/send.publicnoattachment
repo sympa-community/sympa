@@ -1,9 +1,4 @@
-title.us public list multipart/mixed messages are forwarded to moderator
-title.et saata võib igaüks, manustega kirjad edastatakse moderaatorile
-title.fr liste ouverte mais attachements passés au modérateur
-title.hu nyilvános lista, mellékletet tartalmazó levelek a szerkesztõhöz kerülnek
-title.nl publieke lijst multipart/mixed berichten voor naar de moderator gestuurd.
-title.cz veøejná konference, zprávy s pøílohou jsou poslany moderátorùm
+title.gettext public list multipart/mixed messages are forwarded to moderator
 
 match([header->Content-Disposition],/attachment/)      	smtp,smime,md5    -> editorkey
 match([header->Content-Type],/multipart\/mixed/)        smtp,smime,md5    -> editorkey

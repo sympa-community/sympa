@@ -1,11 +1,4 @@
-title.us public list multipart messages are rejected
-title.et saata võivad kõik, manustega kirjad ei ole lubatud
-title.fr liste ouverte mais attachements interdits
-title.es lista pública pero los mensajes con anexos no están permitidos
-title.de oeffentliche Liste, multipart-Nachrichten werden verworfen
-title.cz veøejné zprávy s více èástmi jsou odmítnuty
-title.hu nyilvános lista, többrészes levelek elutasítva
-title.nl publieke lijst multipart berichten worden geweigerd
+title.gettext public list multipart messages are rejected
 
 match([header->Content-Type],/multipart/)      smtp,smime,md5    -> reject
 true()				               smtp,md5,smime    -> do_it
