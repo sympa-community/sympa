@@ -3229,7 +3229,7 @@ sub is_listmaster {
 
     return 0 unless ($who);
 
-    if ($robot && @{$Conf{'robots'}{$robot}{'listmasters'}}) {
+    if ($robot && $Conf{'robots'}{$robot}{'listmasters'}) {
 	foreach my $listmaster (@{$Conf{'robots'}{$robot}{'listmasters'}}){
 	    return 1 if ($listmaster =~ /^\s*$who\s*$/i);
 	} 
