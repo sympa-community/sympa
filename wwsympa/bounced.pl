@@ -280,6 +280,7 @@ while (!$end) {
 	    ## No address found
 	    unless ($adr_count) {
 		
+		$escaped_from = &tools::escape_chars($from);
 		&do_log('info', 'error: no address found in message from %s for list %s',$from, $list->{'name'});
 		
 		## We keep bounce msg
@@ -291,13 +292,13 @@ while (!$end) {
 		## Original msg
 		if (-w "$bounce_dir/OTHER") {
 		    open BOUNCE, "$queue/$file";
-		    open ARC, ">$bounce_dir/OTHER/$from" or &leave();
+		    open ARC, ">$bounce_dir/OTHER/$escaped_from" or &leave("creating $bounce_dir/OTHER/$escaped_from");
 		    print ARC <BOUNCE>;
 		    close BOUNCE;
 		    close ARC;
-		    chmod 0777, '$bounce_dir/OTHER/$from';
+		    chmod 0777, '$bounce_dir/OTHER/$escaped_from';
 		}else {
-		    &do_log('notice', "Failed to write $bounce_dir/OTHER/$from");
+		    &do_log('notice', "Failed to write $bounce_dir/OTHER/$escaped_from");
 		}
 	    }
 	    
@@ -331,7 +332,7 @@ sub process_bounce {
 sub leave() {
     my $msg = shift(@_);
 
-    die "Errorr : $msg";
+    die "Error : $msg";
 }
 
 
