@@ -1049,21 +1049,24 @@ sub duration_conv {
 ## Look for a file in the list > robot > server > default locations
 sub get_filename {
     my ($type, $name, $robot, $list) = @_;
-    
+    &do_log('debug2','tools::get_filename(%s,%s,%s,%s)', $type, $name, $robot, $list->{'name'});
+
     if ($type eq 'etc') {
-	my @dirs = ("$Conf{'etc'}/$robot",$Conf{'etc'},'--ETCBINDIR--');
+	my @try = ("$Conf{'etc'}/$robot".'/'.$name,
+		   $Conf{'etc'}.'/'.$name,
+		   '--ETCBINDIR--'.'/'.$name);
 	if ($list) {
 	    ## No 'templates' subdir in list directory
 	    if ($name =~ /^templates\/(.*)$/) {
-		unshift @dirs, $list->{'dir'}.'/'.$1;
+		unshift @try, $list->{'dir'}.'/'.$1;
 	    }else {
-		unshift @dirs, $list->{'dir'}.'/'.$name;
+		unshift @try, $list->{'dir'}.'/'.$name;
 	    }
 	}	
-	foreach my $dir (@dirs) {
+	foreach my $f (@try) {
 #	    &do_log('debug','NAME: %s ; DIR %s', $name, $dir);
-	    if (-r "$dir/$name") {
-		return "$dir/$name";
+	    if (-r $f) {
+		return $f;
 	    }
 	}
     }
