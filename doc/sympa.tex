@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {30 January 2004}
+    \date {02 February 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -175,7 +175,7 @@ exactly who is authorized to perform the relevant operations, along with the
 authentication method to be used. Currently, authentication can be based
 on either an SMTP From header, a password, or an S/MIME signature.\\
 \Sympa is also able to extract electronic
-addresses from an \index {LDAP} directory or \index {SQL} server, and include them
+addresses from an \textindex {LDAP} directory or \textindex {SQL} server, and include them
 dynamically in a list.
 
 \Sympa manages the dispatching of messages, and makes it possible to
@@ -309,21 +309,21 @@ in a single software package, including:
         files. The introduction of databases came out of the
         \WWSympa project.  The database ensures a secure access to
         shared data. The PERL database API \perlmodule {DBI}/\perlmodule {DBD} enables
-        interoperability with various \index{RDBMS} (\index{MySQL}, \index{PostgreSQL},
-        \index{Oracle}, \index{Sybase}).
+        interoperability with various \textindex{RDBMS} (\textindex{MySQL}, \textindex{PostgreSQL},
+        \textindex{Oracle}, \textindex{Sybase}).
 	(See ref {sec-rdbms}, page~\pageref {sec-rdbms})
 
     \item \textbf {Virtual robots} : a single \Sympa installation
         can provide multiple virtual robots with both email and web interface
         customization (See \ref {virtual-robot}, page~\pageref {virtual-robot}).
 
-    \item \textbf {\index {LDAP-based mailing lists}} : e-mail addresses can be retrieved dynamically from a database
-    	accepting \index {SQL} queries, or from an \index {LDAP} directory. In the interest
+    \item \textbf {\textindex {LDAP-based mailing lists}} : e-mail addresses can be retrieved dynamically from a database
+    	accepting \textindex {SQL} queries, or from an \textindex {LDAP} directory. In the interest
 	of reasonable response times, \Sympa retains the data source in an
 	internal cache controlled by a TTL (Time To Live) parameter.
 	(See ref {include-ldap-query}, page~\pageref {include-ldap-query})
 
-    \item \textbf {\index {LDAP authentication}}:  via uid and emails stored 
+    \item \textbf {\textindex {LDAP authentication}}:  via uid and emails stored 
       	in LDAP Directories.  Alternative email addresses, extracted from LDAP 
         directory, may be used to "unify" subscriptions.
 	(See ref {ldap-auth}, page~\pageref {ldap-auth})
@@ -370,14 +370,14 @@ It took nearly two years to produce the first market releases.
 Other date :
 
 \begin {itemize}
-   \item Mar 1999 Internal use of a database (Mysql), definition of list subscriber with external datasource (RDBMS or \index {LDAP}).
+   \item Mar 1999 Internal use of a database (Mysql), definition of list subscriber with external datasource (RDBMS or \textindex {LDAP}).
    \item Oct 1999 Stable version of WWsympa, introduction of authorization scenarios.
    \item Feb 2000 Web bounces management
    \item Apr 2000 Archives search engine and message removal
    \item May 2000 List creation feature from the web
    \item Jan 2001 Support for S/MIME (signing and encryption), list setup through the web interface, Shared document repository for each list. Full rewrite of HTML look and feel
    \item Jun 2001 Auto-install of aliases at list creation time, antivirus scanner plugging
-   \item Jan 2002 Virtual robot, \index {LDAP authentication}
+   \item Jan 2002 Virtual robot, \textindex {LDAP authentication}
 \end {itemize} 
 	  
 
@@ -410,7 +410,7 @@ Our thanks to all contributors, including:
   \item Loic Dachary for guiding us through the \textit {GNU Coding Standards}
 
   \item Vincent Mathieu, Lynda Amadouche, John Dalbec for their integration
-	of \index {LDAP} features in \Sympa.
+	of \textindex {LDAP} features in \Sympa.
 
   \item Olivier Lacroix, for all his perseverance in bug fixing.
 
@@ -676,7 +676,7 @@ a virtual robot or for the whole site.
 	See \ref{topics}, page~\pageref{topics}.
 
 	\item \file {auth.conf}\\
-	Defines authentication backend organisation ( \index {LDAP-based authentication},  \index {CAS-based authentication} and sympa internal )
+	Defines authentication backend organisation ( \textindex {LDAP-based authentication},  \textindex {CAS-based authentication} and sympa internal )
 
 	\item \file {robot.conf}\\
 	It is a subset of \file {sympa.conf} defining a Virtual robot 
@@ -774,10 +774,10 @@ detail in later sections.
     \item installation of DB Berkeley module (already installed on
       most UNIX systems)
 
-    \item installing a \index{RDBMS} (\index{Oracle}, \index{MySQL}, \index{Sybase} or \index{PostgreSQL}) and creating \Sympa's Database. This is required for using the web interface for \Sympa. Please refers to \"\Sympa and its database\" section (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
+    \item installing a \textindex{RDBMS} (\textindex{Oracle}, \textindex{MySQL}, \textindex{Sybase} or \textindex{PostgreSQL}) and creating \Sympa's Database. This is required for using the web interface for \Sympa. Please refers to \"\Sympa and its database\" section (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
 
     \item installation of
-	\index{CPAN}
+	\textindex{CPAN}
         \htmladdnormallinkfoot {CPAN (Comprehensive PERL Archive Network)}
                 {http://www.perl.com/CPAN}
         modules
@@ -896,7 +896,7 @@ for your RDBMS (DBD) :
 
 \end {itemize}
 
-If you plan to interface \Sympa with an \index {LDAP} directory to build
+If you plan to interface \Sympa with an \textindex {LDAP} directory to build
 dynamical mailing lists, you need to install PERL LDAP libraries :
 
 \begin {itemize}
@@ -914,7 +914,7 @@ install the following reversible cryptography library :
 \end {itemize}
 
 For performence concerns, we recommend using \WWSympa as a persistent CGI,
-using \index {FastCGI}. Therefore you need to install the following Perl module :
+using \textindex {FastCGI}. Therefore you need to install the following Perl module :
 
 \begin {itemize}
 
@@ -1130,8 +1130,8 @@ using  \file {testlogs.pl}.
 The \unixcmd {make install} step should have installed a sysV init script in
 your \dir {/etc/rc.d/init.d/} directory (you can change this at \unixcmd {configure}
 time with the \option {--with-initdir} option). You should edit your runlevels to make
-sure \Sympa starts after Apache and MySQL. Note that \index{MySQL} should
-also start before \index{Apache} because of \file {wwsympa.fcgi}.
+sure \Sympa starts after Apache and MySQL. Note that \textindex{MySQL} should
+also start before \textindex{Apache} because of \file {wwsympa.fcgi}.
 
 \section {sympa.pl}
 \label{sympa.pl}
@@ -1382,7 +1382,7 @@ The script expects the following arguments :
 Example : \file {/home/sympa/bin/alias\_manager.pl add \samplelist cru.fr}
 
 \file {/home/sympa/bin/alias\_manager.pl} works on the alias file as defined
-by the \index{SENDMAIL\_ALIASES} variable (default is \file {/etc/mail/sympa\_aliases}) in the main Makefile (see \ref {makefile},  page~\pageref {makefile}). You must refer to this aliases file in your \file {sendmail.cf} (if using sendmail) :
+by the \textindex{SENDMAIL\_ALIASES} variable (default is \file {/etc/mail/sympa\_aliases}) in the main Makefile (see \ref {makefile},  page~\pageref {makefile}). You must refer to this aliases file in your \file {sendmail.cf} (if using sendmail) :
 \begin {quote}
 \begin{verbatim}
 define(`ALIAS_FILE', `/etc/aliases,/etc/mail/sympa_aliases')dnl
@@ -1497,7 +1497,7 @@ is still recognized but should not be used anymore.
 
 \subsection {\cfkeyword {spam\_protection}}  
 
-    \index{spam\_protection}
+    \textindex{spam\_protection}
 	 \default {javascript}
 
 	There is a need to protection Sympa web site against spambot which collect
@@ -2320,13 +2320,20 @@ detected.
 \chapter {\Sympa and its database}
 \label {sec-rdbms}
 
-Most basic feature of \Sympa will work without a RDBMS, but
-WWSympa and bounced require a relational database. 
-Currently you can use one of the following
-RDBMS : MySQL, PostgreSQL, Oracle, Sybase. Interfacing with other RDBMS
-requires only a few changes in the code, since the API used, 
-\htmladdnormallinkfoot {DBI} {http://www.symbolstone.org/technology/perl/DBI/} 
+Most basic feature of \Sympa will work without a RDBMS, but WWSympa and bounced require a relational database. 
+Currently you can use one of the following RDBMS : MySQL, PostgreSQL, Oracle, Sybase. Interfacing with other RDBMS
+requires only a few changes in the code, since the API used, \htmladdnormallinkfoot {DBI} {http://www.symbolstone.org/technology/perl/DBI/} 
 (DataBase Interface), has DBD (DataBase Drivers) for many RDBMS.
+
+Sympa stores two kind of information in the database, each in one table :
+\begin {itemize}
+
+  \item User preferences and passwords are stored in the \textindex {user\_table} table
+
+  \item List subscription information are stored in the \textindex {subscriber\_table} table, along with subscription options.
+  This table also contains the cache for included users (if using include2 mode).
+
+\end {itemize}
 
 \section {Prerequisites}
 
@@ -2594,7 +2601,7 @@ Example:
 We strongly recommend you restrict access to \textit {sympa} database. You will
 then set \cfkeyword {db\_user} and \cfkeyword {db\_passwd} in \file {sympa.conf}.
 
-With \index{MySQL} :
+With \textindex{MySQL} :
 \begin {quote}
 \begin{verbatim}
 grant all on sympa.* to sympa@localhost identified by 'your_password';
@@ -2606,9 +2613,8 @@ flush privileges;
 
 \subsection {Importing data from a text file}
 
-You can import subscribers data into the database from a text file having
-one entry per line : the first field is an e-mail address, the second (optional) 
-field is the free form name.  Fields are spaces-separated.
+You can import subscribers data into the database from a text file having one entry per line : the first field is 
+an e-mail address, the second (optional) field is the free form name.  Fields are spaces-separated.
 
 Example:
 \begin {quote}
@@ -2643,6 +2649,34 @@ privileges) and change the data source from \textbf {file} to \textbf {database}
 If the subscribers file is big, a timeout may occur during the FastCGI execution
 (Note that you can set a longer timeout with the \option {-idle-timeout} option of
 the \texttt {FastCgiServer} Apache configuration directive). In this case, or if you have not installed \WWSympa, you should use the \file {load\_subscribers.pl} script.
+
+
+\section {Management of the include cache}
+\label {include2-cache}
+
+You may dynamically add a list of users to a list with Sympa's \textbf {include2} user data source. Sympa is able to query
+multiple data sources (RDBMS, LDAP directory, flat file, a local list, a remote list) to build a mailing list. 
+
+Sympa used to manage the cache of such \textit {included} users in a DB File (\textbf {include} mode) but now stores
+them in the database (\textbf {include2} mode). These changes brought the following advantages :
+\begin {itemize}
+
+    \item Sympa processes are smaller when dealing with big mailing lists (in include mode)
+
+    \item Cache update is now performed regularly by a dedicated process, the task manager
+
+    \item Mixed lists (included + subscribed users) can now be created
+
+    \item Sympa can now provide reception options for \textit {included} members
+
+    \item Bounces information can be managed for \textit {included} members
+
+    \item Sympa keeps track of the data sources of a member (available on the web REVIEW page)
+
+    \item \textit {included} members can also subscribe to the list. It allows them to remain in the list though they might no more be included.
+
+\end {itemize}
+
 
 
 \section {Extending database table format}
@@ -2833,7 +2867,7 @@ file {wwsympa.fcgi} instances are waiting for clients requests.
 To run \WWSympa with FastCGI, you need to install :
 \begin{itemize}
 
-\item \index {mod\_fastcgi} : the Apache module that provides \index {FastCGI} features
+\item \textindex {mod\_fastcgi} : the Apache module that provides \textindex {FastCGI} features
 
 \item \perlmodule {FCGI} : the Perl module used by \WWSympa
 
@@ -2924,7 +2958,7 @@ To run \WWSympa with FastCGI, you need to install :
 	\subsection {password\_case sensitive | insensitive}
 	\default {insensitive} \\
 	If set to \textbf {insensitive}, WWSympa's password check will be insensitive.
-	This only concerns passwords stored in Sympa database, not the ones in \index {LDAP}.
+	This only concerns passwords stored in Sympa database, not the ones in \textindex {LDAP}.
 	
 	\textbf {Be careful :} in previous 3.xx versions of Sympa, passwords were 
 	lowercased before database insertion. Therefore changing to case-sensitive 
@@ -3642,11 +3676,11 @@ SSLVerifyDepth  10
 \section {Authentication with email address, uid or alternate email address}
 \label {ldap-auth}
 
-\Sympa stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of \index {LDAP authentication} allows to use \Sympa in an intranet without duplicating user passwords. 
+\Sympa stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of \textindex {LDAP authentication} allows to use \Sympa in an intranet without duplicating user passwords. 
 
-This way users can indifferently authenticate with their ldap\_uid, their alternate\_email or their canonic email stored in the \index {LDAP} directory.
+This way users can indifferently authenticate with their ldap\_uid, their alternate\_email or their canonic email stored in the \textindex {LDAP} directory.
 
-\Sympa gets the canonic email in the \index {LDAP} directory with the ldap\_uid or the alternate\_email.  
+\Sympa gets the canonic email in the \textindex {LDAP} directory with the ldap\_uid or the alternate\_email.  
 \Sympa will first attempt an anonymous bind to the directory to get the user's DN, then \Sympa will bind with the DN and the user's ldap\_password in order to perform an efficient authentication. This last bind will work only if the good ldap\_password is provided. Indeed the value returned by the bind(DN,ldap\_password) is tested.
 
 
@@ -3969,13 +4003,13 @@ are \cfkeyword {regexp} or \cfkeyword {negative\_regexp} which are perl regular 
 
 \item{ssl\_version}
 
-        This defines the version of the SSL/TLS protocol to use. Defaults of \index {Net::LDAPS} to \texttt {sslv2/3}, 
+        This defines the version of the SSL/TLS protocol to use. Defaults of \textindex {Net::LDAPS} to \texttt {sslv2/3}, 
 	other possible values are \texttt {sslv2}, \texttt {sslv3}, and \texttt {tlsv1}.
 
 \item{ssl\_ciphers}
   
         Specify which subset of cipher suites are permissible for this connection, using the standard 
-	OpenSSL string format. The default value of \index {Net::LDAPS} for ciphers is \texttt {ALL}, 
+	OpenSSL string format. The default value of \textindex {Net::LDAPS} for ciphers is \texttt {ALL}, 
 	which permits all ciphers, even those that don't encrypt!
 
 
@@ -4084,13 +4118,13 @@ the CAS server is out of order the access to Sympa services is impossible.
 
 \item{ldap\_ssl\_version}
 
-        This defines the version of the SSL/TLS protocol to use. Defaults of \index {Net::LDAPS} to \texttt {sslv2/3}, 
+        This defines the version of the SSL/TLS protocol to use. Defaults of \textindex {Net::LDAPS} to \texttt {sslv2/3}, 
 	other possible values are \texttt {sslv2}, \texttt {sslv3}, and \texttt {tlsv1}.
 
 \item{ldap\_ssl\_ciphers}
   
         Specify which subset of cipher suites are permissible for this connection, using the  
-	OpenSSL string format. The default value of \index {Net::LDAPS} for ciphers is \texttt {ALL}, 
+	OpenSSL string format. The default value of \textindex {Net::LDAPS} for ciphers is \texttt {ALL}, 
 	which permits all ciphers, even those that don't encrypt!
 
 \end{itemize}
@@ -4316,11 +4350,11 @@ subscribe rennes1
 
 At the moment Named Filters are only used in authorization scenarios. They enable to select a category of people who will be authorized or not to realise some actions.
 	
-As a consequence, you can grant privileges in a list to people belonging to an \index {LDAP} directory thanks to an authorization scenario.
+As a consequence, you can grant privileges in a list to people belonging to an \textindex {LDAP} directory thanks to an authorization scenario.
 	
 \subsection {Definition}
 
-	People are selected through an \index {LDAP filter} defined in a configuration file. This file must have the extension '.ldap'.It is stored in \dir {/home/sympa/etc/search\_filters/}.
+	People are selected through an \textindex {LDAP filter} defined in a configuration file. This file must have the extension '.ldap'.It is stored in \dir {/home/sympa/etc/search\_filters/}.
 	
 	You must give several informations in order to create a Named Filter:
 \begin{itemize}
@@ -6062,12 +6096,13 @@ output generated in response to a \mailcmd {LISTS} command.
 \lparam {user\_data\_source}
    \texttt {file} \texttt{|}
    \texttt {database} \texttt{|}
-   \texttt {include}
+   \texttt {include} \texttt{|}
+   \texttt {include2}
 
 Sympa allows the mailing list manager to choose how \Sympa loads
 subscriber data. Subscriber information can be stored in a text 
 file or relational database, or included from various external
-sources (list, flat file, result of \index {LDAP} or \index {SQL} query).
+sources (list, flat file, result of \textindex {LDAP} or \textindex {SQL} query).
 
 \begin {itemize}
 \item  \lparam {user\_data\_source} \texttt {file}
@@ -6096,11 +6131,19 @@ sources (list, flat file, result of \index {LDAP} or \index {SQL} query).
        Here, subscribers are not defined \emph {extensively} (enumeration
        of their e-mail addresses) but \emph {intensively} (definition of criteria
        subscribers must satisfy). Includes can be performed 
-       by extracting e-mail addresses using an \index {SQL} or \index {LDAP} query, or 
+       by extracting e-mail addresses using an \textindex {SQL} or \textindex {LDAP} query, or 
        by including other mailing lists. At least one include 
        paragraph, defining a data source, is needed. Valid include paragraphs (see
        below) are \lparam {include\_file}, \lparam {include\_list}, \lparam {include\_remote\_sympa\_list}, 
 	\lparam {include\_sql\_query} and \lparam {include\_ldap\_query}. 
+
+\item \lparam {user\_data\_source} \texttt {include2} 
+
+       This is a replacement for the \textindex {include} mode. In this mode, the members cache is no more maitained in
+       a DB FIle but in the main database instead. The behavior of the cache is detailed in the database chapter 
+       (see~\ref {include2-cache}, page~\pageref {include2-cache}).
+
+
 \end {itemize}
 
 
@@ -6306,7 +6349,7 @@ include_sql_query
 
 \lparam {include\_ldap\_query}
 
-This paragraph defines parameters for a \index {LDAP} query returning a
+This paragraph defines parameters for a \textindex {LDAP} query returning a
 list of subscribers. This paragraph is used only if \lparam
 {user\_data\_source} is set to \texttt {include}. This feature
 requires the \perlmodule {Net::LDAP} (perlldap) PERL module.
@@ -6429,7 +6472,7 @@ Example :
 
 \lparam {include\_ldap\_2level\_query}
 
-This paragraph defines parameters for a two-level \index {LDAP} query returning a
+This paragraph defines parameters for a two-level \textindex {LDAP} query returning a
 list of subscribers. Usually the first-level query returns a list of DNs
 and the second-level queries convert the DNs into e-mail addresses.
 This paragraph is used only if \lparam
@@ -8256,7 +8299,7 @@ The mail is saved as 'bad' and the working directory is deleted (except if \Symp
 \chapter {Using \Sympa with LDAP}
 \label {ldap}
 
-\index {LDAP} is a client-server protocol for accessing a directory service. Sympa
+\textindex {LDAP} is a client-server protocol for accessing a directory service. Sympa
 provide various features based on access to one or more LDAP directories :
 
 \begin{itemize}
