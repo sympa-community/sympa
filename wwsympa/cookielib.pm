@@ -258,4 +258,53 @@ sub set_cookie_extern {
     return 1;
 }
 
+## get cookie for list of subscribtion
+sub get_which_cookie {
+    
+    my $http_cookie = shift;
+
+    do_log ('debug2',"get_which_cookie ($http_cookie)");    
+
+    my %cookies = parse CGI::Cookie($http_cookie);
+        
+    foreach (sort keys %cookies) {
+	my $cookie = $cookies{$_};
+	
+	next unless ($cookie->name eq 'your_subscriptions');
+	my @which;
+	foreach my $list (split /,/, $cookie->value) {
+	    push @which,$list;
+	}
+	return (@which);
+    }
+    return undef;
+}
+
+## Set cookie for accessing web archives
+sub set_which_cookie {
+    my $domain = shift ;
+    my @which = @_;
+
+    my $commawhich = join ',', @which;
+    
+    if ($domain eq 'localhost') {
+	$domain="";
+    }
+    do_log ('debug2',"set_which_cookie ($domain,$commawhich)");
+
+    my $cookie = new CGI::Cookie (-name    => 'your_subscriptions',
+				  -value   => $commawhich ,
+				  -domain  => $domain,
+				  -path    => '/'
+				  );
+    
+    ## Send cookie to the client
+    printf "Set-Cookie:  %s\n", $cookie->as_string;
+    return 1;
+}
+
+
 1;
+
+
+
