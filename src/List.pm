@@ -424,7 +424,6 @@ my %alias = ('reply-to' => 'reply_to',
 			 },
 	    'host' => {'format' => $regexp{'host'},
 		       'length' => 20,
-		       'default' => {'conf' => 'host'},
 		       'title_id' => 33,
 		       'group' => 'description'
 		   },
@@ -744,6 +743,7 @@ my %alias = ('reply-to' => 'reply_to',
 
 ## This is the generic hash which keeps all lists in memory.
 my %list_of_lists = ();
+my %list_of_robots = ();
 my %list_of_topics = ();
 my @mtime;
 
@@ -849,7 +849,7 @@ sub new {
 	# use the current list in memory and update it
 	$liste=$list_of_lists{$name};
     }else{
-	do_log('debug', 'List object %s created', $name) if $main::options{'debug'}; ##TEMP
+	do_log('debug', 'List object %s creation', $name) if $main::options{'debug'}; ##TEMP
 
 	# create a new object list
 	bless $liste, $pkg;
@@ -982,7 +982,8 @@ sub load {
     
     my $users;
     my $robot;
-    foreach my $r (&get_robots) {
+#    foreach my $r (&get_robots) {
+    foreach my $r (keys %{$Conf{'robots'}}) {
 	if ((-d "$Conf{'home'}/$r/$name") && (-f "$Conf{'home'}/$r/$name/config")) {
 	    $robot=$r;
 	    last;
@@ -1009,14 +1010,21 @@ sub load {
     my $admin;
     
     if ($self->{'name'} ne $name || $m1 > $self->{'mtime'}->[0]) {
-	$admin = _load_admin_file($self->{'dir'}, $robot, 'config');
+	$admin = _load_admin_file($self->{'dir'}, $self->{'domain'}, 'config');
     }
     
     $self->{'admin'} = $admin if ($admin);
+    
+    # default list host is robot domain
+    $self->{'admin'}{'host'} ||= $self->{'domain'};
+    # uncomment the following line if you want virtual robot to overwrite list->host
+    # $self->{'admin'}{'host'} = $self->{'domain'} if ($self->{'domain'} ne $Conf{'host'});
+
 
     $self->{'as_x509_cert'} = 1  if (-r "$self->{'dir'}/cert.pem");
     
 
+    
     ## Only load total of users from a Database
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
 #	$users->{'total'} = _load_total_db($name)
@@ -1649,7 +1657,7 @@ sub send_msg {
        }
    }    
 
-    ## xxxx   ce return 0 est un Pb isn't it ?
+    ## xxxx sa  return 0  = Pb  ?
     unless (@tabrcpt || @tabrcpt_notice || @tabrcpt_txt || @tabrcpt_html || @tabrcpt_url) {
 	&do_log('info', 'No subscriber for sending msg in list %s', $name);
 	return 0;
@@ -2152,7 +2160,7 @@ sub send_file {
     my $lang = $data->{'user'}{'lang'} || $self->{'lang'} || $Conf{'lang'};
 
     ## What file   
-    foreach my $f ("$action.$lang.tpl","$action.tpl","$action.mime","$action",
+    foreach my $f ("$self->{'dir'}/$action.$lang.tpl","$self->{'dir'}/$action.tpl","$self->{'dir'}/$action.mime","$self->{'dir'}/$action",
 		   "$Conf{'etc'}/$robot/templates/$action.$lang.tpl",
 		   "$Conf{'etc'}/$robot/templates/$action.tpl",
 		   "$Conf{'etc'}/templates/$action.$lang.tpl",
@@ -2869,7 +2877,7 @@ sub is_user {
 	
 	## Use cache
 	if (defined $list_cache{'is_user'}{$name}{$who}) {
-	    &do_log('debug2', 'xxx Use cache(%s,%s): %s', $name, $who, $list_cache{'is_user'}{$name}{$who});
+	    # &do_log('debug2', 'Use cache(%s,%s): %s', $name, $who, $list_cache{'is_user'}{$name}{$who});
 	    return $list_cache{'is_user'}{$name}{$who};
 	}
 	
@@ -3215,12 +3223,21 @@ sub is_listmaster {
     my $robot = shift;
 
     $who =~ y/A-Z/a-z/;
-    foreach my $listmaster (@{$Conf{'listmasters'}}){
-	return 1 if ($listmaster =~ /^\s*$who\s*$/i);
-    }    
-    foreach my $listmaster (@{$Conf{'robots'}{$robot}{'listmasters'}}){
-	return 1 if ($listmaster =~ /^\s*$who\s*$/i);
-    }    
+
+    return 0 unless ($who);
+
+    printf STDERR "xxxxxxx is_listmaster (email=$who, robot=$robot)\n";
+
+    if ($robot) {
+	foreach my $listmaster (@{$Conf{'robots'}{$robot}{'listmasters'}}){
+	    return 1 if ($listmaster =~ /^\s*$who\s*$/i);
+	}    
+    }
+    if ($Conf{'host'} eq $robot) {
+	foreach my $listmaster (@{$Conf{'listmasters'}}){
+	    return 1 if ($listmaster =~ /^\s*$who\s*$/i);
+	}    
+    }
     return 0;
 }
 
@@ -3237,7 +3254,8 @@ sub am_i {
     chomp($who);
     
     ## Listmaster has all privileges except editor
-    return 1 if (($function eq 'owner') and &is_listmaster($who));
+    # sa contestable.
+    return 1 if (($function eq 'owner') and &is_listmaster($who,$self->{'domain'}));
 
     if ($function =~ /^editor$/i){
 	if ($self->{'admin'}{$function} && ($#{$self->{'admin'}{$function}} >= 0)) {
@@ -3357,7 +3375,126 @@ sub request_action {
 	$name = $data_ref->{'name'};
 
     }elsif ($context->{'topicname'}) {
-	my $scenario = $list_of_topics{$context->{'topicname'}}{'visibility'};
+	printf STDERR "1xxxxxxxxxx context->{'topicname'} : $context->{'topicname'}\n";
+	my $scenario = $list_of_topics{$robot}{$context->{'topicname'}}{'visibility'};
+	@rules = @{$scenario->{'rules'}};
+	$name = $scenario->{'name'};
+
+    }else{	
+	my $scenario;
+	return undef 
+	    unless ($scenario = &_load_scenario_file ($operation, $robot, $Conf{$operation}));
+        @rules = @{$scenario->{'rules'}};
+	$name = $scenario->{'name'};
+    }
+
+    unless ($name) {
+	do_log ('err',"internal error : configuration for operation $operation is not yet performed by scenario");
+	return undef;
+    }
+    foreach my $rule (@rules) {
+	next if ($rule eq 'scenario');
+	if ($auth_method eq $rule->{'auth_method'}) {
+	    my $result =  &verify ($context,$rule->{'condition'});
+
+	    if (! defined ($result)) {
+		do_log ('info',"error in $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'}" );
+
+#		if (defined $context->{'listname'}) {
+		    &do_log('info', 'Error in %s scenario, in list %s', $context->{'scenario'}, $context->{'listname'});
+#		}
+
+		if ($debug) {
+		    return ("error-performing-condition : $rule->{'condition'}",$rule->{'auth_method'},'reject') ;
+		}
+		return 'reject';
+	    }
+	    if ($result == -1) {
+		do_log ('debug2',"rule $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'} rejected");
+		next;
+	    }
+	    if ($result == 1) {
+		do_log ('debug2',"rule $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'} accepted");
+		if ($debug) {
+		    return ($rule->{'condition'},$rule->{'auth_method'},$rule->{'action'});
+		}
+		return $rule->{'action'};
+	    }
+	}
+    }
+    do_log ('debug2',"no rule match, reject");
+    return ('default','default','reject');
+}
+
+## Initialize internal list cache
+sub init_list_cache {
+    &do_log('debug2', 'List::init_list_cache()');
+    
+    undef %list_cache;
+}
+
+## Return the action to perform for 1 sender using 1 auth method to perform 1 operation
+sub request2_action {
+    my $operation = shift;
+    my $auth_method = shift;
+    my $robot=shift;
+    my $context = shift;
+    my $debug = shift;
+    do_log('debug2', 'List::request_action %s,%s,%s',$operation,$auth_method,$robot);
+
+    $context->{'sender'} ||= 'nobody' ;
+    $context->{'email'} ||= $context->{'sender'};
+    $context->{'remote_host'} ||= 'unknown_host' ;
+    $context->{'robot_domain'} = $robot ;
+
+
+    unless ( $auth_method =~ /^(smtp|md5|pgp|smime)/) {
+	do_log ('info',"fatal error : unknown auth method $auth_method in List::get_action");
+	return undef;
+    }
+    my (@rules, $name) ;
+    my $list;
+    if ($context->{'listname'}) {
+        unless ( $list = new List ($context->{'listname'}) ){
+	    do_log ('info',"request_action :  unable to create object $context->{'listname'}");
+	    return undef ;
+	}
+
+	## provide subscriber information
+	$context->{'subscriber'} = $list->get_subscriber($context->{'sender'});
+
+	my @operations = split /\./, $operation;
+	my $data_ref;
+	if ($#operations == 0) {
+	    $data_ref = $list->{'admin'}{$operation};
+	}else{
+	    $data_ref = $list->{'admin'}{$operations[0]}{$operations[1]};
+	}
+	
+	unless (defined $data_ref) {
+	    do_log ('info',"request_action: no entry $operation defined for list");
+	    return undef ;
+	}
+
+	### the following lines are used by the document sharing action 
+	if (defined $context->{'scenario'}) { 
+	    # information about the  scenario to load
+	    my $s_name = $context ->{'scenario'}; 
+	    
+	    # loading of the structure
+	    my $scenario;
+	    return undef
+		unless($scenario = &_load_scenario_file ($operations[$#operations], $robot, $s_name));
+	    @rules = @{$scenario->{'rules'}};
+	    $name = $scenario->{'name'}; 
+	    $data_ref = $scenario;
+	}
+
+	@rules = @{$data_ref->{'rules'}};
+	$name = $data_ref->{'name'};
+
+    }elsif ($context->{'topicname'}) {
+	my $scenario = $list_of_topics{$robot}{$context->{'topicname'}}{'visibility'};
 	@rules = @{$scenario->{'rules'}};
 	$name = $scenario->{'name'};
 
@@ -3582,7 +3719,7 @@ sub verify {
 	    return -1 * $negation ;
 	}
 
-	if ( &is_listmaster($args[0])) {
+	if ( &is_listmaster($args[0]),$context->{'robot_domain'}) {
 	    return $negation;
 	}else{
 	    return -1 * $negation;
@@ -3688,14 +3825,15 @@ sub may_edit {
 
     my $edit_conf = &tools::load_edit_list_conf;
 
-    if ( &is_listmaster($who)) {
+    if ( &is_listmaster($who,$self->{'domain'})) {
 	## listmaster has read write acces on any parameter
 	return 'write';
 
     }
 
     ## What privilege ?
-    if (&is_listmaster($who)) {
+    # sa on ne peut jamais satisfaire ce test
+    if (&is_listmaster($who,$self->{'domain'})) {
 	$role = 'listmaster';
     }elsif ( $self->am_i('privileged_owner',$who) ) {
 	$role = 'privileged_owner';
@@ -3742,12 +3880,14 @@ sub may_edit {
 
 
 ## May the indicated user edit a paramter while creating a new list
+# sa cette procédure est appelée nul part, je lui ajoute malgrès tout le paramêtre robot
+# edit_conf devrait être aussi dépendant du robot
 sub may_create_parameter {
 
-    my($parameter, $who) = @_;
-    do_log('debug2', 'List::may_create_parameter(%s, %s)', $parameter, $who);
+    my($parameter, $who,$robot) = @_;
+    do_log('debug2', 'List::may_create_parameter(%s, %s, %s)', $parameter, $who,$robot);
 
-    if ( &is_listmaster($who)) {
+    if ( &is_listmaster($who,$robot)) {
 	return 1;
     }
     my $edit_conf = &tools::load_edit_list_conf;
@@ -3995,10 +4135,8 @@ sub _load_scenario_file {
     ## List scenario
    
     # sa tester le chargement de scenario spécifique à un répertoire du shared
-    my $scenario_file ;
-    $scenario_file = $directory.'/scenari/'.$function.'.'.$name ;
+    my $scenario_file = $directory.'/scenari/'.$function.'.'.$name ;
     unless (($directory) && (open SCENARI, $scenario_file)) {
-	do_log('debug2', "xxxxxxxx -------------------------------------------------- $scenario_file");
 	## Robot scenario
 	$scenario_file = "$Conf{'etc'}/$robot/scenari/$function.$name";
 	unless (($robot) && (open SCENARI, $scenario_file)) {
@@ -4016,13 +4154,11 @@ sub _load_scenario_file {
 	    }
 	}
     }
-
     my $paragraph= join '',<SCENARI>;
     close SCENARI;
     unless ($structure = &_load_scenario ($function,$robot,$name,$paragraph, $directory)) { 
 	do_log ('err',"error in $function scenario $scenario_file ");
     }
-
     return $structure ;
 }
 
@@ -4761,20 +4897,14 @@ sub get_lists {
 sub get_robots {
 
     my(@robots, $r);
-    do_log('debug2', 'List::get_robots(%s)');
+    do_log('debug2', 'List::get_robots()');
 
-    unless (-d $Conf{'home'} ) {
-	do_log('err',"no such directory $Conf{'home'}");
-	return undef ;
-    }
-    
-    unless (opendir(DIR, $Conf{'home'})) {
-	do_log('err',"Unable to open $Conf{'home'}");
+    unless (opendir(DIR, '--DIR--/etc')) {
+	do_log('err',"Unable to open --DIR--/etc");
 	return undef;
     }
     foreach $r (sort readdir(DIR)) {
-	next unless (($r !~ /^\./o) && (-d "$Conf{'home'}/$r") && (!(-f "$Conf{'home'}/$r/config")));
-	next unless (-d "--DIR--/etc/$r");
+	next unless (($r !~ /^\./o) && (-d "$Conf{'home'}/$r"));
 	next unless (-r "--DIR--/etc/$r/robot.conf");
 	push @robots, $r;
     }
@@ -4786,7 +4916,8 @@ sub list_by_robot {
 
     my($listname,$robot) = @_;
 
-    my $list = new List ($listname);
+    my $list ;
+    return undef unless ($list = new List ($listname));
     return 1 if ($list->{'domain'} eq $robot) ;
     # for compatibility with previous versions :
     # if 'domain' is undefined for this list but if the current robot is the default one
@@ -5192,7 +5323,6 @@ sub lowercase_field {
 
     while (my $user = $sth->fetchrow_hashref) {
 	my $lower_cased = lc($user->{$field});
-	
 	next if ($lower_cased eq $user->{$field});
 
 	$total++;
@@ -5204,7 +5334,6 @@ sub lowercase_field {
 	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	    return undef;
 	}
-	
     }
     $sth->finish();
 
@@ -5215,10 +5344,12 @@ sub lowercase_field {
 sub load_topics {
     
     my $robot = shift ;
-    do_log('debug2', 'List::load_topics');
+    do_log('debug2', 'List::load_topics(%s)',$robot);
 
     my $conf_file = "$Conf{'etc'}/$robot/topics.conf";
     $conf_file = "$Conf{'etc'}/topics.conf" unless (-r $conf_file);
+
+    printf STDERR "1xxxxxxx topics file : $conf_file\n";
 
     my $topics = {};
 
@@ -5275,28 +5406,28 @@ sub load_topics {
 	    my @tree = split '/', $topic->{'name'};
 	    
 	    if ($#tree == 0) {
-		$list_of_topics{$tree[0]}{'title'} = $topic->{'title'};
-		$list_of_topics{$tree[0]}{'visibility'} = &_load_scenario_file('topics_visibility', $robot,$topic->{'visibility'}||'default');
-		$list_of_topics{$tree[0]}{'order'} = $topic->{'order'};
+		$list_of_topics{$robot}{$tree[0]}{'title'} = $topic->{'title'};
+		$list_of_topics{$robot}{$tree[0]}{'visibility'} = &_load_scenario_file('topics_visibility', $robot,$topic->{'visibility'}||'default');
+		$list_of_topics{$robot}{$tree[0]}{'order'} = $topic->{'order'};
 	    }else {
 		my $subtopic = join ('/', @tree[1..$#tree]);
-		$list_of_topics{$tree[0]}{'sub'}{$subtopic} = &_add_topic($subtopic,$topic->{'title'},);
+		$list_of_topics{$robot}{$tree[0]}{'sub'}{$subtopic} = &_add_topic($subtopic,$topic->{'title'},);
 	    }
 	}
     }
 
     ## Set undefined Topic (defined via subtopic)
-    foreach my $t (keys %list_of_topics) {
-	unless (defined $list_of_topics{$t}{'visibility'}) {
-	    $list_of_topics{$t}{'visibility'} = &_load_scenario_file('topics_visibility', $robot,'default');
+    foreach my $t (keys %{$list_of_topics{$robot}}) {
+	unless (defined $list_of_topics{$robot}{$t}{'visibility'}) {
+	    $list_of_topics{$robot}{$t}{'visibility'} = &_load_scenario_file('topics_visibility', $robot,'default');
 	}
 
-	unless (defined $list_of_topics{$t}{'title'}) {
-	    $list_of_topics{$t}{'title'} = $t;
+	unless (defined $list_of_topics{$robot}{$t}{'title'}) {
+	    $list_of_topics{$robot}{$t}{'title'} = $t;
 	}	
     }
 
-    return %list_of_topics;
+    return %{$list_of_topics{$robot}};
 }
 
 ## Inner sub used by load_topics()
@@ -5538,7 +5669,7 @@ sub get_cert {
 ## Load a config file
 sub _load_admin_file {
     my ($directory,$robot, $file) = @_;
-    do_log('debug2', 'List::_load_admin_file(%s, %s)', $directory, $robot, $file);
+    do_log('debug2', 'List::_load_admin_file(%s, %s, %s)', $directory, $robot, $file);
 
     my $config_file = $directory.'/'.$file;
 
