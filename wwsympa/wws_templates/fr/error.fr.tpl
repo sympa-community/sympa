@@ -128,6 +128,9 @@ Impossible de créer le répertoire [error->path] : [error->reason]
 [ELSIF error->msg=full_directory]
 Echec : le répertoire [error->directory] n'est pas vide  
 
+[ELSIF error->msg=init_passwd]
+Vous n'avez pas défini de mot de passe, demandez un rappel du mot de passe initial
+
 [ELSE]
 [error->msg]
 [ENDIF]

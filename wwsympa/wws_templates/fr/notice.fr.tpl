@@ -15,6 +15,12 @@ Le fichier [notice->path] a été déposé
 [ELSIF notice->msg=save_success] 
 Fichier [notice->path] sauvegardé
 
+[ELSIF notice->msg=you_should_choose_a_password]
+Pour choisir votre mot de passe, allez dans vos 'Préférences', depuis le menu supérieur
+
+[ELSIF notice->msg=init_passwd]
+Vous n'avez pas défini de mot de passe, demandez un rappel du mot de passe initial
+
 [ELSE]
 [notice->msg]
 

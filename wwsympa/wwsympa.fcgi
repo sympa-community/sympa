@@ -982,19 +982,19 @@ sub do_login {
     if ($param->{'user'}{'email'}) {
 	&error_message('already_login', {'email' => $param->{'user'}{'email'}});
 	&wwslog('info','do_login: user %s already logged in', $param->{'user'}{'email'});
-	return undef;
+	return 'home';
     }
     
     unless ($in{'email'}) {
 	&error_message('no_email');
 	&wwslog('info','do_login: no email');
-	return undef;
+	return 'home';
     }
     
     unless (&wwslib::valid_email($in{'email'})) {
 	&error_message('incorrect_email', {'email' => $in{'email'}});
 	&wwslog('info','do_login: incorrect email %s', $in{'email'});
-	return undef;
+	return 'home';
     }    
     
     unless ($in{'passwd'}) {
@@ -1030,6 +1030,9 @@ sub do_login {
 	    &wwslog('info','do_login: uncomplete password for user %s', $in{'email'});
 	}else {
 	    &error_message('incorrect_passwd');
+	    if ($user->{'password'} =~ /^init/i) {
+		&error_message('init_passwd');
+	    }
 	    &wwslog('info','do_login: incorrect password for user %s', $in{'email'});
 	}
 
@@ -1039,6 +1042,10 @@ sub do_login {
     }
     
     $param->{'user'} = $user;
+
+    if ($param->{'user'}{'password'} =~ /^init/) {
+	&message('you_should_choose_a_password');
+    }
 
     if ($in{'newpasswd1'} && $in{'newpasswd2'}) {
 	my $old_action = $param->{'action'};
@@ -3661,6 +3668,11 @@ sub do_home {
 			     };
     
     $param->{'topics'}[int($total / 2)]{'next'} = 1;
+
+    if (($param->{'user'}{'email'} && ! $param->{'user'}{'password'}) || 
+	($param->{'user'}{'password'} =~ /^init/)) {
+	&message('you_should_choose_a_password');
+    }
 
     return 1;
 }

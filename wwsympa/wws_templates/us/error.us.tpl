@@ -68,20 +68,11 @@ You are already subscriber in list [error->list]
 [ELSIF error->msg=user_already_subscriber]
 [error->email] is already subscriber in list [error->list] 
 
-[ELSIF error->msg=sent_to_owner]
-Your request has been forwarded to the list owner
-
 [ELSIF error->msg=failed_add]
 Failed adding user [error->user]
 
 [ELSIF error->msg=failed]
 Action failed
-
-[ELSIF error->msg=add_performed]
-[error->total] subscribers added
-
-[ELSIF error->msg=performed]
-[error->action] : action succeeded
 
 [ELSIF error->msg=not_subscriber]
 You are not subscriber in list [error->list]
@@ -98,16 +89,11 @@ No bounce for user  [error->email]
 [ELSIF error->msg=update_privilege_bypassed]
 You have changed a parameter without permissions: [error->pname]
 
-[ELSIF error->msg=list_config_updated]
-Configuration file has been updated
-
 [ELSIF error->msg=config_changed]
 Config file has been modified by [error->email]. Cannot apply your changes
 
 [ELSIF error->msg=syntax_errors]
 Syntax errors with the following parameters : [error->params]
-
-
 
 [ELSIF error->msg=no_such_document]
 [error->path] : No such file or directory 
@@ -145,19 +131,11 @@ Cannot upload file [error->path] : [error->reason]
 [ELSIF error->msg=cannot_create_dir] 
 Cannot create directory [error->path] : [error->reason]
 
-[ELSIF error->msg=upload_success] 
-File [error->path] successfully uploaded!
-
-[ELSIF error->msg=save_success] 
-File [error->path] saved
-
 [ELSIF error->msg=full_directory]
 Failed : [error->directory] not empty 
 
-[ELSIF error->msg=password_sent]
-Your password has been emailed to you
-
- 
+[ELSIF error->msg=init_passwd]
+You did not choose a password, request a reminder of the initial password
 
 [ELSE]
 [error->msg]
