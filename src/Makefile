@@ -31,6 +31,7 @@ installtemplates:
 		echo $$lang; \
 		cp $$lang/*.tpl  $(DESTDIR)$(ETCBINDIR)/templates/; \
 	done
+	$(PERL) ../set_symlinks.pl templates $(DESTDIR)$(ETCBINDIR)/templates
 
 installetc:
 	@echo "Installing default configuration ..."

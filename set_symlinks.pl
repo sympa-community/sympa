@@ -17,21 +17,21 @@ my @scenario_defaults = ('add.owner',
 			 'visibility.conceal'
 			 );
 
-$wws_templates_default_lang = 'us';
+$default_lang = 'us';
 
 my %wws_template_equiv = ('lists' => ['which', 'search_list','search_user'],
 			  'review' => ['search']
 			  );
 
 unless ($#ARGV >= 1) {
-    printf STDERR "Usage %s wws_templates|scenari <install directory>\n", $0;
+    printf STDERR "Usage %s wws_templates|templates|scenari <install directory>\n", $0;
     exit -1;
 }
 
 my ($action, $dir) = ($ARGV[0], $ARGV[1]);
 
-unless ($action =~ /^wws_templates|scenari$/) {
-    printf STDERR "Usage %s wws_templates|scenari <install directory>\n", $0;
+unless ($action =~ /^wws_templates|templates|scenari$/) {
+    printf STDERR "Usage %s wws_templates|templates|scenari <install directory>\n", $0;
     exit -1;
 }
  
@@ -73,8 +73,8 @@ if ($action eq 'scenari') {
 	next;
     }
 
-    foreach my $tpl (grep /\.$wws_templates_default_lang\.tpl$/, readdir(DIR)) {
-	$tpl =~ /^(.+)\.$wws_templates_default_lang\.tpl$/;
+    foreach my $tpl (grep /\.$default_lang\.tpl$/, readdir(DIR)) {
+	$tpl =~ /^(.+)\.$default_lang\.tpl$/;
 	my $link = $1.'.tpl';
 
 	if (-f $link) {
@@ -127,6 +127,32 @@ if ($action eq 'scenari') {
     }
     closedir DIR;
 
+}elsif ($action eq 'templates') {
+    chdir $dir;
+    ## Set defaults
+    unless (opendir DIR, '.') {
+	printf STDERR "Failed to open directory %s: %s\n", $dir, $!;
+	next;
+    }
+
+    foreach my $tpl (grep /\.$default_lang\.tpl$/, readdir(DIR)) {
+	$tpl =~ /^(.+)\.$default_lang\.tpl$/;
+	my $link = $1.'.tpl';
+
+	if (-f $link) {
+	    unless (unlink $link) {
+		printf STDERR "Cannot delete file %s : %s\n", $link, $!;
+		next;
+	    }
+	}
+
+	printf "Setting symlink: %s => %s\n", $link, $tpl;
+	unless (symlink $tpl, $link) {
+	    printf STDERR "Failed to set symlink %s: %s\n", $link, $!;
+	    next;
+	}
+    }
+    closedir DIR;
 }
 
 exit 0;
