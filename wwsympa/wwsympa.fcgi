@@ -285,6 +285,8 @@ unless ($List::use_db = &List::probe_db()) {
 
 my $pinfo = &List::_apply_defaults();
 
+%::changed_params;
+
 my (%in, $query);
 
 ## Main loop
@@ -297,10 +299,8 @@ while ($query = &new_loop()) {
 
     ## Get params in a hash
     %in = $query->Vars;
-    
-    my %changed_params;
 
-    foreach my $k (keys %changed_params) {
+    foreach my $k (keys %::changed_params) {
 	&do_log('debug', 'Changed Param: %s', $k);
     }
 
@@ -600,7 +600,7 @@ while ($query = &new_loop()) {
 
     # At the end of this loop reset variables is important to use this cgi as a CGI::fast 
     undef $param ; 
-    undef %changed_params;
+    undef %::changed_params;
     
 }
 
@@ -4150,7 +4150,7 @@ sub do_edit_list {
 
     ## Tag changed parameters
     foreach my $pname (keys %changed) {
-	$main::changed_params{$pname} = 1;
+	$::changed_params{$pname} = 1;
     }
 #    print "Content-type: text/plain\n\n";
 #    &dump_var(\%pinfo,0);
@@ -4254,9 +4254,9 @@ sub _prepare_edit_form {
 
 	$p->{'default'} = $list_config->{'defaults'}{$pname};
 	$p->{'may_edit'} = $list->may_edit($pname,$param->{'user'}{'email'});
-	$p->{'changed'} = $main::changed_params{$pname};
+	$p->{'changed'} = $::changed_params{$pname};
 
-	if ($main::changed_params{$pname}) {
+	if ($::changed_params{$pname}) {
 	    &do_log('debug', 'CHANGED: %s', $pname);
 	}
 
