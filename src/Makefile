@@ -23,9 +23,13 @@ CDEFS	=	-DCONFIG=\"$(CONFIG)\"
 
 sbin_SRC	=	sympa.pl alias_manager.pl task_manager.pl sympa_wizard.pl
 
+bin_SRC		=	queue bouncequeue
+
 lib_SRC		=	Archive.pm Commands.pm Conf.pm \
 			Language.pm List.pm Log.pm mail.pm msg.pl Ldap.pm \
 			smtp.pm tools.pl Version.pm parser.pl X509.pm Message.pm
+
+libexec_SRC	=	aliaswrapper virtualwrapper
 
 all:	queue bouncequeue aliaswrapper virtualwrapper
 
@@ -160,10 +164,17 @@ makedir:
 
 installmod:
 	@echo "Setting group and owner for $(DESTDIR)$(SBINDIR)..."
-	chown -R $(USER) $(DESTDIR)$(SBINDIR)
-	chgrp -R $(GROUP) $(DESTDIR)$(SBINDIR)
-	chown -R $(USER) $(DESTDIR)$(LIBDIR)
-	chgrp -R $(GROUP) $(DESTDIR)$(LIBDIR)
+	@for file in $(sbin_SRC) ; do \
+		chown $(USER) $(DESTDIR)$(SBINDIR)/$$file; \
+		chgrp $(GROUP) $(DESTDIR)$(SBINDIR)/$$file; \
+	done
+	@echo "Setting group and owner for $(DESTDIR)$(LIBDIR)..."
+	@for file in $(lib_SRC) ; do \
+		chown $(USER) $(DESTDIR)$(LIBDIR)/$$file; \
+		chgrp $(GROUP) $(DESTDIR)$(LIBDIR)/$$file; \
+	done
+	chown -R $(USER) $(DESTDIR)$(ETCBINDIR)
+	chgrp -R $(GROUP) $(DESTDIR)$(ETCBINDIR)
 	chown root $(DESTDIR)$(LIBEXECDIR)/aliaswrapper
 	chgrp $(GROUP) $(DESTDIR)$(LIBEXECDIR)/aliaswrapper
 	chown root $(DESTDIR)$(LIBEXECDIR)/virtualwrapper
@@ -174,9 +185,16 @@ installmod:
 	chmod 755 $(DESTDIR)$(ETCBINDIR)/create_list_templates
 	chmod 644 $(DESTDIR)$(ETCBINDIR)/*.conf $(DESTDIR)$(ETCBINDIR)/*.crt 
 	chmod 600 $(DESTDIR)$(ETCBINDIR)/ca-bundle.crt
-	chmod 4755 $(DESTDIR)$(MAILERPROGDIR)/queue $(DESTDIR)$(MAILERPROGDIR)/bouncequeue
-	chmod 4750 $(DESTDIR)$(LIBEXECDIR)/aliaswrapper
-	chmod 4750 $(DESTDIR)$(LIBEXECDIR)/virtualwrapper
+	@for file in $(bin_SRC) ; do \
+		chown $(USER) $(DESTDIR)$(MAILERPROGDIR)/$$file; \
+		chgrp $(GROUP) $(DESTDIR)$(MAILERPROGDIR)/$$file; \
+		chmod 4755 $(DESTDIR)$(MAILERPROGDIR)/$$file; \
+	done
+	@for file in $(libexec_SRC) ; do \
+		chown $(USER) $(DESTDIR)$(LIBEXECDIR)/$$file; \
+		chgrp $(GROUP) $(DESTDIR)$(LIBEXECDIR)/$$file; \
+		chmod 4750 $(DESTDIR)$(LIBEXECDIR)/$$file; \
+	done
 
 queue: queue.c Makefile ../Makefile
 	$(CC) $(CFLAGS) $(CDEFS) -o queue queue.c
