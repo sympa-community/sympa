@@ -1,3 +1,128 @@
+2003-10-09 13:21  salaun
+
+	* src/tools.pl: Fix: S/MIME related ; Sympa would die if it could
+	not find user certificate
+
+2003-10-08 15:45  salaun
+
+	* src/etc/scenari/visibility.private: Fix: visibility was not
+	granted to list owner
+
+2003-10-07 14:04  salaun
+
+	* src/: bouncequeue.c, queue.c: [BugID 2006] Fix: Wrong exit codes
+
+2003-10-07 13:50  salaun
+
+	* src/List.pm: [BugID 204] [reported by M. Grund] Fix: db_env
+	variables could not be set (usefull for Oracle)
+
+2003-10-07 11:21  salaun
+
+	* src/: Conf.pm, etc/auth.conf: Fix: install a default auth.conf
+	otherwise authentication would not work without auth.conf.
+
+2003-10-07 10:58  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by M. Krafft] Fix: Javascript
+	email addresses protection was not working with owner/editor when
+	no gecos was defined
+
+2003-10-07 09:23  salaun
+
+	* wwsympa/archived.pl: Change: Use standard tools::get_fileneme()
+	to find relevant mhonarc-ressources file.
+
+2003-10-07 09:10  salaun
+
+	* src/Conf.pm, wwsympa/archived.pl, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/d_read.fr.tpl,
+	wwsympa/wws_templates/fr/list_menu.fr.tpl,
+	wwsympa/wws_templates/fr/lists.fr.tpl,
+	wwsympa/wws_templates/fr/loginbanner.fr.tpl,
+	wwsympa/wws_templates/us/d_read.us.tpl,
+	wwsympa/wws_templates/us/lists.us.tpl,
+	wwsympa/wws_templates/us/loginbanner.us.tpl,
+	wwsympa/wws_templates/us/main.us.tpl: These changes include both a
+	new feature (sso-related) and fixes (spam protection-related) : Fix
+	web spam protection :	 * corrected regexp (M2H_ADDRESSMODIFYCODE
+	var) in archived.pl    * email list address now protected    *
+	document authors in shared now protected
+	
+	[requested by Internet2 Shib developpers] New feature : New
+	generic_sso auth.conf parameter allows Sympa to authenticate via an
+	external Single Sign-on service. The SSO login service is defined
+	by a protected URI on the local web server (eg: protected via an
+	Apache module). Sympa gets user identity information from its
+	environment variables. This feature is not finalized...
+
+2003-10-06 12:05  salaun
+
+	* doc/sympa.tex.tpl: Fix: missing doc about search filters caching
+
+2003-10-06 10:12  salaun
+
+	* src/etc/templates/fr/your_infected_msg.fr.tpl: de passer / de
+	passez
+
+2003-10-02 15:10  salaun
+
+	* src/etc/mhonarc-ressources: Fix typo
+
+2003-09-26 15:55  salaun
+
+	* src/task_manager.pl: Change: no more update update_date user
+	field in the bounce process
+
+2003-09-26 12:06  salaun
+
+	* src/sympa.pl: Parse all message (except bounce) because Sobig was
+	able to subscribe via sympa@domain?subject=subscribe%20liste
+
+2003-09-25 16:03  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix a bug related to cas logout et virtual
+	robot.
+
+2003-09-25 09:26  salaun
+
+	* src/tools.pl: Fix previous changes
+
+2003-09-25 09:19  salaun
+
+	* src/: Commands.pm, List.pm, tools.pl, task_manager.pl: [J.
+	Dalbek] Fix: incorrect listname regexp in task_manager (ingnored
+	lists with '+').  Now centralized regexps in tools.pl
+
+2003-09-24 11:11  salaun
+
+	* doc/sympa.tex.tpl, src/Conf.pm, wwsympa/wwsympa.fcgi: New cas
+	parameter in auth.conf : non_blocking_redirection to desable
+	automatic transparent redirection to CAS server
+
+2003-09-23 10:30  salaun
+
+	* wwsympa/wws_templates/: fr/loginbanner.fr.tpl,
+	us/loginbanner.us.tpl: Fix: missing ENDIF ; loginbanner was broken
+
+2003-09-23 09:34  salaun
+
+	* wwsympa/wwslib.pm: new subroutine get_my_url() used for CAS
+
+2003-09-23 09:33  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix bug related to CAS and virtual robot
+
+2003-09-19 08:15  salaun
+
+	* src/List.pm: Fix: wrong multiple_host_with_port regexp would
+	require a comma after a single hostname
+
+2003-09-18 16:14  salaun
+
+	* .version, ChangeLog: Prepare 4.0.a6 version with S/MIME changes
+	proposed by C. Mock
+
 2003-09-18 16:12  salaun
 
 	* doc/sympa.tex.tpl, src/Commands.pm, src/List.pm, src/sympa.pl:
