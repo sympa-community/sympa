@@ -3790,7 +3790,7 @@ Your application needs to know what the \cfkeyword {cookie} parameter
 is, so it can check the HTTP cookie validity ; this is a secret shared
 between \WWSympa and your application.
 \WWSympa's \textit {loginrequest} page can be called to return to the
-referrer URL when an action is performed. Here is a sample HTML anchor :
+referer URL when an action is performed. Here is a sample HTML anchor :
 
 \begin{verbatim}
 <A HREF="/wws/loginrequest/referer">Login page</A>
@@ -4343,7 +4343,7 @@ page~\pageref {list-aliases})
 The configuration file for the \mailaddr {\samplelist} list is named
 \tildefile {sympa/expl/\samplerobot/\samplelist/config} 
 (or \tildefile {sympa/expl/\samplelist/config} if no virtual robot is defined). 
-\Sympa reads it into memory the first time the list is referred to. This file is not rewritten by 
+\Sympa reads it into memory the first time the list is refered to. This file is not rewritten by 
 \Sympa, so you may put comment lines in it. 
 It is possible to change this file when the program is running. 
 Changes are taken into account the next time the list is
