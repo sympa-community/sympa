@@ -40,18 +40,20 @@ my $expiresleep = 50 ;
 # delay between each read of the digestqueue
 my $digestsleep = 5; 
 
-## Options :  debug		-> debug
-##            config		-> name of configuration file
-##            mail    		-> log invocations to sendmail.
-##            lang		-> language
+## Options :  debug | d		-> debug
+##            config | f	-> name of configuration file
+##            mail | m 		-> log invocations to sendmail.
+##            lang | l		-> language
 ##            foreground	-> Foreground and log to stderr also.
-##            dump              -> Dump subscribers list (listname or 'ALL' required)
+##            dump | d          -> Dump subscribers list (listname or 'ALL' required)
+##            keepcopy | k     -> Keep a copy of incoming messages
 
 #Getopt::Std::getopts('DdFf:ml:s:');
 
 ## Check --dump option
 my %options;
-&GetOptions(\%main::options, 'dump|s:s', 'debug|d', 'foreground', 'config|f=s', 'lang|l=s', 'mail|m');
+&GetOptions(\%main::options, 'dump|s:s', 'debug|d', 'foreground', 'config|f=s', 
+	    'lang|l=s', 'mail|m', 'keepcopy|k=s');
 
 ## Trace options
 #foreach my $k (keys %main::options) {
@@ -127,6 +129,17 @@ if ($main::options{'dump'}) {
     &List::dump(@listnames);
 
     exit 0;
+}
+
+## Do we have right access in the directory
+if ($main::options{'keepcopy'}) {
+    if (! -d $main::options{'keepcopy'}) {
+	&do_log('notice', 'Cannot keep a copy of incoming messages : %s is not a directory', $main::options{'keepcopy'});
+	delete $main::options{'keepcopy'};
+    }elsif (! -w $main::options{'keepcopy'}) {
+	&do_log('notice', 'Cannot keep a copy of incoming messages : no write access to %s', $main::options{'keepcopy'});
+	delete $main::options{'keepcopy'};
+    }
 }
 
 ## Put ourselves in background if we're not in debug mode. That method
@@ -287,7 +300,15 @@ while (!$end) {
     
     if (defined($status)) {
 	do_log('debug', "Finished %s", "$Conf{'queue'}/$filename") if ($main::options{'debug'});
-	unlink("$Conf{'queue'}/$filename");
+
+	if ($main::options{'keepcopy'}) {
+	    unless (rename "$Conf{'queue'}/$filename", $main::options{'keepcopy'}."/$filename") {
+		do_log('notice', 'Could not rename %s to %s: %s', "$Conf{'queue'}/$filename", $main::options{'keepcopy'}."/$filename", $!);
+		unlink("$Conf{'queue'}/$filename");
+	    }
+	}else {
+	    unlink("$Conf{'queue'}/$filename");
+	}
     }else {
 	rename("$Conf{'queue'}/$filename", "$Conf{'queue'}/BAD-$filename");
 	do_log('notice', "Renaming bad file %s to BAD-%s", $filename, $filename);
