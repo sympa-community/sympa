@@ -754,6 +754,10 @@ sub get_parameters {
 
 	my @params = split /\//, $path_info;
 
+	foreach my $i(0..$#params) {
+	    $params[$i] = &tools::unescape_chars($params[$i]);
+	}
+
 	if ($params[0] eq 'nomenu') {
 	    $param->{'nomenu'} = 1;
 	    shift @params;

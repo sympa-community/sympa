@@ -600,19 +600,18 @@ sub as_singlepart {
 
 ## Escape weird characters
 sub escape_chars {
-    my $s = shift;
+    my $s = shift;    
     my $except = shift; ## Exceptions
+    $except = ord($except) if (defined $except);
 
-    $s =~ s/\%/\%25/g;
-    $s =~ s/\"/\%22/g;
-    $s =~ s/\s/\%20/g;
-    $s =~ s/\xa5/\%a5/g;
-    unless ($except =~ /\//) {
-	$s =~ s/\//\%a5/g; ## Special traetment for '/'
+    ## Escape chars
+    ##  !"#$%&'()+,:;<=>? AND accented chars
+    foreach my $i (0x20..0x2c,0x3a..0x3f,0xc0..0xff) {
+	next if ($i == $except);
+	my $hex_i = sprintf "%lx", $i;
+	$s =~ s/\x$hex_i/%$hex_i/g;
     }
-    $s =~ s/\:/\%3a/g;
-    $s =~ s/\#/\%23/g;
-    
+ 
     return $s;
 }
 
@@ -620,13 +619,12 @@ sub escape_chars {
 sub unescape_chars {
     my $s = shift;
 
-    $s =~ s/\%25/\%/g;
-    $s =~ s/\%22/\"/g;
-    $s =~ s/\%20/ /g;
-    $s =~ s/\%a5/\//g;  ## Special traetment for '/'
-    $s =~ s/\%3a/\:/g;
-    $s =~ s/\%23/\#/g;
-    
+    $s =~ s/%a5/\//g;  ## Special traetment for '/'
+    foreach my $i (0x20..0x2c,0x3a..0x3f,0xc0..0xff) {
+	my $hex_i = sprintf "%lx", $i;
+	$s =~ s/%$hex_i/\x$hex_i/g;
+    }
+
     return $s;
 }
 
