@@ -6,10 +6,10 @@ Mime-version: 1.0
 Content-Type: multipart/mixed; boundary="[% boundary1 %]"
 
 --[% boundary1 %]
-Content-Type: text/plain
+Content-Type: text/plain; charset=[%|l%]us-ascii[%END%];
 Content-transfer-encoding: [%|l%]7bit[%END%]
 
-[%|l%]Table of content:[%END%]
+[%|l%]Table of contents:[%END%]
 
 [% FOREACH m = msg_list %]
     [% SET tmp = m.key m = m.value m.NAME = tmp IF m.key.defined %]

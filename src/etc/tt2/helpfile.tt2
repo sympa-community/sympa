@@ -33,6 +33,7 @@ subject are recognized.[%END%]
 
  SET [%|l%]<list>[%END%]|* NOMAIL         * [%|l%]To suspend the message reception for [%|l%]<list>[%END%][%END%]
  SET [%|l%]<list>[%END%]|* DIGEST         * [%|l%]Message reception in compilation mode[%END%]
+ SET <list|*> DIGESTPLAIN    		  * [%|l%]Message reception in compilation mode, sent as a plain text email with all attachments[%END%]
  SET [%|l%]<list>[%END%]|* SUMMARY        * [%|l%]Receiving the message index only[%END%]
  SET [%|l%]<list>[%END%]|* NOTICE         * [%|l%]Receiving message subject only[%END%]
 
@@ -44,7 +45,7 @@ subject are recognized.[%END%]
  INDex [%|l%]<list>[%END%]                * [%|l%][%|l%]<list>[%END%] archive file list[%END%]
  GET [%|l%]<list>[%END%] <file>           * [%|l%]To get <file> of [%|l%]<list>[%END%] archive[%END%]
  LAST [%|l%]<list>[%END%]                 * [%|l%]Used to received the last message from [%|l%]<list>[%END%][%END%]
- INVITE [%|l%]<list>[%END%] <email>       * [%|l%]Invite <email> for subscribtion in [%|l%]<list>[%END%][%END%]
+ INVITE [%|l%]<list>[%END%] <email>       * [%|l%]Invite <email> for subscription in [%|l%]<list>[%END%][%END%]
  CONFIRM [%|l%]<key>[%END%]               * [%|l%]Confirmation for sending a message (depending
                                on the list's configuration)[%END%]
  QUIT                        * [%|l%]Indicates the end of the commands (to ignore a

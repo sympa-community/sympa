@@ -10,7 +10,7 @@ Content-transfer-encoding: 8bit
 [%|l(list.name,list.host)%]Welcome to list %1@%2[%END%]
 [%|l(user.email)%]Your subscription email is %3[%END%]
 [% IF user.password %]
-[%|l(user.password)%]Your password : %1[%END%]
+[%|l(user.password)%]Your password: %1.[%END%]
 [% END %]
 
 [% INSERT "${list.dir}/info" %]
@@ -31,7 +31,7 @@ Content-transfer-encoding: 8bit
 [%|l(user.email)%]Your subscription email is %1[%END%] 
 [% IF user.password %] 
 <BR>
-[%|l(user.password)%]Your password : %1[%END%]
+[%|l(user.password)%]Your password: %1.[%END%]
 [% END %]
 <BR><BR>
 <PRE>

@@ -1,0 +1,34 @@
+From: [% from %]
+To: [% to %]
+Reply-to: [% reply %]
+Subject: [% FILTER qencode %][%|l(list.name,date)%]%1 Digest %2[%END%][%END%]
+Content-Type: text/plain; charset=[%|l%]us-ascii[%END%];
+Content-transfer-encoding: [%|l%]7bit[%END%]
+
+[%|l(list.name,date)%]%1 Digest             %2[%END%]
+
+[%|l%]Table of contents:[%END%]
+
+[% FOREACH m = msg_list %]
+    [% SET tmp = m.key m = m.value m.NAME = tmp IF m.key.defined %]
+[% m.id %]. [% m.subject %] - [% m.from %]
+[% END %]
+
+----------------------------------------------------------------------
+
+[% FOREACH m = msg_list %]
+    [% SET tmp = m.key m = m.value m.NAME = tmp IF m.key.defined %]
+Date: [% m.date %]
+From: [% m.from %]
+Subject: [% m.subject %]
+
+[% m.plain_body %]
+
+------------------------------
+
+[% END %]
+[%|l(list.name,date)%]End of %1 Digest %2[%END%]
+*********************************************
+
+
+
