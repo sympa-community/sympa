@@ -2747,7 +2747,7 @@ To run \WWSympa with FastCGI, you need to install :
 	Path to the (superb) MhOnArc program. Required for html archives
 	http://www.oac.uci.edu/indiv/ehood/mhonarc.html
 
-	\subsection {htmlarea_url}
+	\subsection {htmlarea\_url}
 	\default {undefined} \\
 	URL to the (superb) on line html editor named HTMLarea. If you have installed javascript application you can use it
         when editing html document in teh shared document repository. In order to activate this plugging the value of this
@@ -3995,6 +3995,16 @@ If needed, you can customize each virtual robot using its set of templates and a
 \dir {[ETCDIR]/\samplerobot/scenari/} directories are searched when
 loading templates or scenari before searching into \dir {[ETCDIR]} and  \dir {[ETCBINDIR]}. This allows to define different privileges and a different GUI for a Virtual Robot.
 
+\section {Managing multiple virtual robots}
+
+If you are managing more than 2 virtual robots, then you might cinsider moving all the mailing lists in the default
+robot to a dedicated virtual robot located in the \dir {[EXPL_DIR]/\samplerobot/} directory. The main benefit of 
+this organisation is the ability to define default configuration elements (templates or authorization scenarios) 
+for this robot without inheriting them within other virtual robots.
+
+To create such a virtual robot, you need to create \dir {[EXPL_DIR]/\samplerobot/} and \file {[ETCDIR]/\samplerobot/} directories ; 
+customize \cfkeyword {host}, \cfkeyword {http\_host} and \cfkeyword {wwsympa\_url} parameters in the \file {[ETCDIR]/\samplerobot/robot.conf} 
+with the same values as the default robot (as defined in \file {sympa.conf} and \file {wwsympa.conf} files).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Customization
