@@ -305,6 +305,7 @@ $SIG{'HUP'} = 'sighup';
 
 my $index_queuedigest = 0; # verify the digest queue
 my $index_queueexpire = 0; # verify the expire queue
+my $index_cleanqueue = 0; 
 my @qfile;
 
 ## This is the main loop : look after files in the directory, handles
@@ -330,6 +331,12 @@ while (!$signal) {
     if ($index_queueexpire++ >=$expiresleep){
 	$index_queueexpire=0;
 	&ProcessExpire();
+    }
+
+    ## Clean queue (bad)
+    if ($index_cleanqueue++ >= 100){
+	$index_cleanqueue=0;
+	&CleanSpool("$Conf{'queue'}/bad", $Conf{'clean_delay_queue'});
     }
 
     my $filename;
@@ -434,8 +441,15 @@ while (!$signal) {
 	    unlink("$Conf{'queue'}/$filename");
 	}
     }else {
-	rename("$Conf{'queue'}/$filename", "$Conf{'queue'}/BAD-$filename");
-	do_log('notice', "Renaming bad file %s to BAD-%s", $filename, $filename);
+	my $bad_dir = "$Conf{'queue'}/bad";
+	unless ((-d $bad_dir) || (mkdir $bad_dir, 0775)) {
+	    do_log('err', "Unable to create '%s' directory", $bad_dir);
+	    rename("$Conf{'queue'}/$filename", "$Conf{'queue'}/BAD-$filename");
+	    do_log('notice', "Renaming bad file %s to BAD-%s", $filename, $filename);
+	}
+
+	rename("$Conf{'queue'}/$filename", "$bad_dir/$filename");
+	do_log('notice', "Moving bad file %s to bad/", $filename);
     }
 
 } ## END of infinite loop
@@ -1294,6 +1308,30 @@ sub ProcessExpire{
     }
 }
 
+## Clean old files from spool
+sub CleanSpool {
+    my ($spool_dir, $clean_delay) = @_;
+    &do_log('debug2', 'CleanSpool(%s,%s)', $spool_dir, $clean_delay);
+
+    unless (opendir(DIR, $spool_dir)) {
+	do_log('err', "Unable to open '%s'spool : %s", $spool_dir, $!);
+	return undef;
+    }
+
+    my @qfile = sort grep (!/^\.+$/,readdir(DIR));
+    closedir DIR;
+    
+    my ($curlist,$moddelay);
+    foreach my $f (sort @qfile) {
+
+	if ((stat "$spool_dir/$f")[9] < (time - $clean_delay * 60 * 60 * 24)) {
+	    unlink ("$spool_dir/$f") ;
+	    do_log('notice', 'Deleting old file %s', "$spool_dir/$f");
+	}
+    }
+
+    return 1;
+}
 
 1;
 

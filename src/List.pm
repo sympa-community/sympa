@@ -1923,8 +1923,7 @@ sub send_msg {
     
 	unless ((-d $expl) ||( mkdir $expl, 0775)) {
 	    do_log('err', "Unable to create urlize directory $expl");
-	    printf "Unable to create urlized directory $expl";
-	    return 0;
+	    return undef;
 	}
 
 	my $dir1 = $url_msg->head->get('Message-ID');
