@@ -5568,14 +5568,10 @@ sub _load_users_include2 {
 
 sub sync_include {
     my ($self) = shift;
+    my $option = shift;
     my $name=$self->{'name'};
     &do_log('debug', 'List:sync_include(%s)', $name);
 
-    unless ( $self->{'admin'}{'user_data_source'} eq 'include2' ) {
-	&do_log('notice', 'List::sync_include() called for %s but user_data_source is %s', 
-		$name, $self->{'admin'}{'user_data_source'});                                                
-	return undef;                                                          
-    }
     my %old_subscribers;
     my $total=0;
 
@@ -5586,7 +5582,10 @@ sub sync_include {
     }
 
     ## Load a hash with the new subscriber list
-    my $new_subscribers = _load_users_include2($name, $self->{'admin'});
+    my $new_subscribers;
+    unless ($option eq 'purge') {
+	$new_subscribers = _load_users_include2($name, $self->{'admin'});
+    }
 
     my $users_added = 0;
     my $users_updated = 0;

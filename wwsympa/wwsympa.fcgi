@@ -5188,6 +5188,9 @@ sub do_edit_list {
 		    ($new_admin->{'user_data_source'} eq 'include2')) {
 		$list->update_user('*', {'subscribed' => 1});
 		&message('subscribers_update_soon');
+	    }elsif (($list->{'admin'}{'user_data_source'} eq 'include2') &&
+		    ($new_admin->{'user_data_source'} eq 'database')) {
+		$list->sync_include('purge');
 	    }
 
 	    ## Update total of subscribers

@@ -1350,6 +1350,13 @@ sub sync_include {
 	return undef;
     }
 
+    unless ( $list->{'admin'}{'user_data_source'} eq 'include2' ) {
+	&do_log('notice', 'sync_include() called for %s but user_data_source is %s', 
+		$list->{'name'}, $list->{'admin'}{'user_data_source'});                                                
+	return undef;                                                          
+    }
+ 
+
     $list->sync_include();
 }
 
