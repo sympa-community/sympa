@@ -24,6 +24,7 @@ CREATE TABLE subscriber_table (
 	visibility_subscriber	varchar (20),
 	reception_subscriber	varchar (20),
 	bounce_subscriber	varchar (30),
+	comment_subscriber	varchar (150),
 	CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber, user_subscriber)
 );
 
