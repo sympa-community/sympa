@@ -6282,9 +6282,14 @@ sub do_edit_list {
 
      ## Prepare data structure for the parser
      my $p_glob = {'name' => $name,
-		   'title' => Msg(16, gettext($struct->{'gettext_id'})),
 		   'comment' => $struct->{'comment'}{$param->{'lang'}}
 	       };
+
+     if (defined $struct->{'gettext_id'}) {
+	 $p_glob->{'title'} = gettext($struct->{'gettext_id'});
+     }else {
+	 $p_glob->{'title'} = $name;
+     }
 
      ## Occurrences
      my $data2;
