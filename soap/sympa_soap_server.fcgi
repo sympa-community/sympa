@@ -55,8 +55,7 @@ $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 &Log::do_log('info', 'SOAP server launched');
 
 unless ($List::use_db = &List::probe_db()) {
-    &error_message('no_database');
-    &do_log('info','SOAP server requires a RDBMS to run');
+    &do_log('err','SOAP server requires a RDBMS to run');
 }
 
 my $pinfo = &List::_apply_defaults();
