@@ -6598,7 +6598,8 @@ sub do_d_change_access {
     ## End of controls
     
     # Description file
-    my $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+    my $path;
+    $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
     my $dir = $1;
     my $file = $3;
 
@@ -6710,7 +6711,8 @@ sub do_d_set_owner {
     # Access control
     ## father directory
     my $desc_file;
-    my $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+    my $path;
+    $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
     my $dir = $1; 
     my $file = $3;
     if (-d "$shareddir/$path") {
