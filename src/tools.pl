@@ -549,6 +549,7 @@ sub smime_decrypt {
 
 ## Make a multipart/alternative, a singlepart
 sub as_singlepart {
+    &do_log('debug2', 'tools::as_singlepart()');
     my ($msg, $preferred_type) = @_;
     my $done = 0;
     
