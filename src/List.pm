@@ -297,7 +297,7 @@ my %alias = ('reply-to' => 'reply_to',
 			  'group' => 'archives'
 		      },
 	    'archive_crypted_msg' => {'format' => ['original','decrypted'],
-				    'default' => 'cleartext',
+				    'default' => 'original',
 				    'gettext_id' => "Archive encrypted mails as cleartext",
 				    'group' => 'archives'
 				    },
