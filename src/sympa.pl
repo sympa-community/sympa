@@ -645,6 +645,9 @@ sub DoFile {
     if ($hdr->get('Content-Identifier') =~ /Auto-replied/i) {
 	do_log('notice', "Ignoring message which would cause a loop (Content-Identifier: Auto-replied)");
 	return undef;
+    }elsif ($hdr->get('X400-Content-Identifier') =~ /Auto Reply to/i) {
+	do_log('notice', "Ignoring message which would cause a loop (X400-Content-Identifier: Auto Reply to)");
+	return undef;
     }
 
     ## encrypted message
