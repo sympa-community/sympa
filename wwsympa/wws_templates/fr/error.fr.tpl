@@ -33,6 +33,9 @@ Aucun mot de passe pour l'utilisateur "[error->email]"
 [ELSIF error_msg=incorrect_passwd]
 Mot de passe saisi incorrect
 
+[ELSIF error_msg=uncomplete_passwd]
+Mot de passe saisi incomplet
+
 [ELSIF error_msg=no_user]
 Vous devez vous identifier
 

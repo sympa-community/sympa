@@ -33,6 +33,9 @@ No password for user "[error->email]"
 [ELSIF error_msg=incorrect_passwd]
 Provided password is incorrect
 
+[ELSIF error_msg=uncomplete_passwd]
+Provided password is uncomplete
+
 [ELSIF error_msg=no_user]
 You need to login
 

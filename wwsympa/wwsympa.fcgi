@@ -959,8 +959,16 @@ sub do_login {
     }
     
     unless ($in{'passwd'} eq $user->{'password'}) {
-	&message('incorrect_passwd');
-	&wwslog('info','do_login: incorrect password for user %s', $in{'email'});
+
+	## Uncomplete password
+	if ($user->{'password'} =~ /$in{'passwd'}/) {
+	    &message('uncomplete_passwd');
+	    &wwslog('info','do_login: uncomplete password for user %s', $in{'email'});
+	}else {
+	    &message('incorrect_passwd');
+	    &wwslog('info','do_login: incorrect password for user %s', $in{'email'});
+	}
+
 	$param->{'init_email'} = $in{'email'};
 	return 'loginrequest';
     }
