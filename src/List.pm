@@ -1094,8 +1094,11 @@ sub get_latest_distribution_date {
     my $file = "$self->{'dir'}/msg_count";
     
     my %count ; 
-    my $latest_date ; 
-    return undef unless (open(MSG_COUNT, $file));
+    my $latest_date = 0 ; 
+    unless (open(MSG_COUNT, $file)) {
+	do_log ('debug',"get_latest_distribution_date: unable to open $file");
+	return undef ;
+    }
 
     while (<MSG_COUNT>){
 	if ($_ =~ /^(\d+)\s(\d+)$/) {
@@ -1104,6 +1107,7 @@ sub get_latest_distribution_date {
     }
     close MSG_COUNT ;
 
+    return undef if ($latest_date == 0); 
     return $latest_date ;
 }
 
