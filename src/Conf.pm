@@ -480,9 +480,25 @@ sub _load_auth {
     my @paragraphs;
     my $current_paragraph = {};
 
+    my %valid_keywords = ('host' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
+			  'timeout' => '\d+',
+			  'suffix' => '.+',
+			  'bind_dn' => '.+',
+			  'bind_password' => '.+',
+			  'get_dn_by_uid_filter' => '.+',
+			  'get_dn_by_email_filter' => '.+',
+			  'email_attribute' => '\w+',
+			  'alternative_email_attribute' => '(\w+)(,\w+)*',
+			  'scope' => 'base|one|sub',
+			  'authentication_info_url' => 'http(s)?:/.*',
+			  'use_ssl' => '1',
+			  'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1',
+			  'ssl_ciphers' => '[\w:]+');
+			  
+
     ## Open the configuration file or return and read the lines.
     unless (open(IN, $config)) {
-	do_log('notice',"load: Unable to open %s: %s\n", $config, $!);
+	do_log('notice',"_load_auth: Unable to open %s: %s\n", $config, $!);
 	return undef;
     }
     
@@ -497,6 +513,16 @@ sub _load_auth {
 	if (/^\s*(\S+)\s+(.*\S)\s*$/o){
 	    
 	    my ($keyword,$value) = ($1,$2);
+
+	    unless (defined $valid_keywords{$keyword}) {
+		do_log('notice',"_load_auth: unknown keyword '%s' in %s", $keyword, $config);
+		next;
+	    }
+	    unless ($value =~ /^$valid_keywords{$keyword}$/) {
+		do_log('notice',"_load_auth: unknown format '%s' for keyword '%s' in %s", $value, $keyword, $config);
+		next;
+	    }
+
 	    $current_paragraph->{$keyword} = $value;
 	}
 	

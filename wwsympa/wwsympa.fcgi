@@ -1415,8 +1415,23 @@ sub ldap_authentication {
 	    $filter =~ s/\[sender\]/$auth/ig;
 
 	    ##anonymous bind in order to have the user's DN
-	    $ldap_anonymous = Net::LDAP->new($host,timeout => $ldap->{'timeout'});
-	  
+	    my $ldap_anonymous;
+	    if ($ldap->{'use_ssl'}) {
+		unless (require Net::LDAPS) {
+		    do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
+		    return undef;
+		} 
+		
+		my %param;
+		$param{'timeout'} = $ldap->{'timeout'} if ($ldap->{'timeout'});
+		$param{'sslversion'} = $ldap->{'ssl_version'} if ($ldap->{'ssl_version'});
+		$param{'ciphers'} = $ldap->{'ssl_ciphers'} if ($ldap->{'ssl_ciphers'});
+		
+		$ldap_anonymous = Net::LDAPS->new($host,%param);
+	    }else {
+		$ldap_anonymous = Net::LDAP->new($host,timeout => $ldap->{'timeout'});
+	    }
+
 	    unless ($ldap_anonymous ){
 		do_log ('err','Unable to connect to the LDAP server %s',$host);
 		next;
@@ -1453,7 +1468,22 @@ sub ldap_authentication {
 	    $ldap_anonymous->unbind;
 
 	    ##  bind with the DN and the pwd
-	    $ldap_passwd = Net::LDAP->new($host);
+	    my $ldap_passwd;
+	    if ($ldap->{'use_ssl'}) {
+		unless (require Net::LDAPS) {
+		    do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
+		    return undef;
+		} 
+		
+		my %param;
+		$param{'timeout'} = $ldap->{'timeout'} if ($ldap->{'timeout'});
+		$param{'sslversion'} = $ldap->{'ssl_version'} if ($ldap->{'ssl_version'});
+		$param{'ciphers'} = $ldap->{'ssl_ciphers'} if ($ldap->{'ssl_ciphers'});
+		
+		$ldap_passwd = Net::LDAPS->new($host,%param);
+	    }else {
+		$ldap_passwd = Net::LDAP->new($host,timeout => $ldap->{'timeout'});
+	    }
 
 	    unless ($ldap_passwd) {
 		do_log('err','Unable to (re) connect to the LDAP server %s', $host);
@@ -1650,7 +1680,23 @@ sub is_ldap_user {
 
 	    ## !! une fonction get_dn_by_email/uid
 	    
-	    $ldap_anonymous = Net::LDAP->new($host,timeout => $ldap->{'timeout'} );
+	    my $ldap_anonymous;
+	    if ($ldap->{'use_ssl'}) {
+		unless (require Net::LDAPS) {
+		    do_log ('err',"Unable to use LDAPS library, Net::LDAPS required");
+		    return undef;
+		} 
+		
+		my %param;
+		$param{'timeout'} = $ldap->{'timeout'} if ($ldap->{'timeout'});
+		$param{'sslversion'} = $ldap->{'ssl_version'} if ($ldap->{'ssl_version'});
+		$param{'ciphers'} = $ldap->{'ssl_ciphers'} if ($ldap->{'ssl_ciphers'});
+		
+		$ldap_anonymous = Net::LDAPS->new($host,%param);
+	    }else {
+		$ldap_anonymous = Net::LDAP->new($host,timeout => $ldap->{'timeout'});
+	    }
+
 	    
 	    unless ($ldap_anonymous ){
 		do_log ('err','Unable to connect to the LDAP server %s',$host);

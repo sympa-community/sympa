@@ -133,7 +133,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {27 November 2002}
+    \date {06 December 2002}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -3028,6 +3028,9 @@ ldap
 	email_attribute			mail
 	alternative_email_attribute	mailalternateaddress,ur1mail
 	scope				sub
+	use_ssl                         1
+	ssl_version                     sslv3
+	ssl_ciphers                     MEDIUM:HIGH
 
 ldap
 	host				ldap.univ-nancy2.fr:392,ldap1.univ-nancy2.fr:392,ldap2.univ-nancy2.fr:392
@@ -3186,6 +3189,21 @@ ldap
 
         Defines the URL of a document describing LDAP password management. When hitting Sympa's 
 	\textit {Send me a password} button, LDAP users will be redirected to this URL.
+
+\item{use\_ssl}
+   
+        If set to \texttt {1}, connection to the LDAP server will use SSL (LDAPS).
+
+\item{ssl\_version}
+
+        This defines the version of the SSL/TLS protocol to use. Defaults of \index {Net::LDAPS} to \texttt {sslv2/3}, 
+	other possible values are \texttt {sslv2}, \texttt {sslv3}, and \texttt {tlsv1}.
+
+\item{ssl\_ciphers}
+  
+        Specify which subset of cipher suites are permissible for this connection, using the standard 
+	OpenSSL string format. The default value of \index {Net::LDAPS} for ciphers is \texttt {ALL}, 
+	which permits all ciphers, even those that don't encrypt!
 
 
 \end{itemize}
