@@ -22,6 +22,9 @@
 </TABLE>
 <BR><BR>
 [IF is_listmaster]
+[IF auto_aliases]
+Aliasy jsou nyní nainstalovány.
+[ELSE]
 
 <TABLE BORDER=1>
 <TR BGCOLOR="#ccccff"><TD align=center>Aliasy, které byste mìl instalovat do po¹tovního systému</TD></TR>
@@ -33,3 +36,6 @@
 </TD>
 </TR>
 </TABLE>
+[ENDIF]
+[ENDIF]
+

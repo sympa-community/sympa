@@ -2,6 +2,8 @@
 
 [IF action=search_list]
   nalezeno [occurrence] výskytù<BR><BR>
+[ELSIF action=search_user]
+  <B>[email]</B> je pøihlá¹en v následujících konferencích
 [ENDIF]
 
 <TABLE BORDER="0" WIDTH="100%">

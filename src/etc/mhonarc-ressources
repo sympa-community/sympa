@@ -1,5 +1,32 @@
 <!-- =============== Mhonarc ressources, you must check mhonarc documentation              -->
 
+[IF lang=cz]
+
+<DECODEHEADS>
+<CharsetConverters>
+plain;          mhonarc::htmlize;
+us-ascii;       mhonarc::htmlize;
+iso-8859-1;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-2; -decode-
+windows-1250;   win1250::cnv;		win1250.pl
+iso-8859-3;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-4;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-5;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-6;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-7;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-8;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-9;     iso_8859::str2sgml;     iso8859.pl
+iso-8859-10;    iso_8859::str2sgml;     iso8859.pl
+default;        -ignore-
+</CharsetConverters>
+
+<MIMEARGS>
+text/plain; asis=us-ascii:iso-8859-2 nonfixed quote htmlcheck maxwidth=78
+text/html; asis=us-ascii:iso-8859-2
+</MIMEARGS>
+
+[ENDIF]
+
 <NOMAILTO>
 <MULTIPG>
 
@@ -38,6 +65,8 @@ $PREVPGLINK$
 <TD  NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER"><b>$NUMOFMSG$ 
 [IF lang=fr]
  messages, page n&#176;
+[ELSIF lang=cz]
+ zpráv, strana 
 [ELSE]
  mails, page # 
 [ENDIF]
@@ -51,6 +80,8 @@ $NEXTPGLINK$
 <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>
 [IF lang=fr]
 Suivi chronologique
+[ELSIF lang=cz]
+Chronologicky
 [ELSE]
 Chronological
 [ENDIF]
@@ -59,6 +90,8 @@ Chronological
 <A HREF="thrd$PAGENUM$.html" STYLE="TEXT-DECORATION: NONE"><FONT size=-1>
 [IF lang=fr]
 <b>Suivi de conversation</b> <i>thread</i>
+[ELSIF lang=cz]
+<b>Téma</b> (<i>thread</i>)
 [ELSE]
 <B>Thread</B>
 [ENDIF]
@@ -77,6 +110,8 @@ Chronological
 <font size=-1 color="--DARK_COLOR--">
 [IF lang=fr]
 Archives basées sur
+[ELSIF lang=cz]
+Archív zalo¾en na
 [ELSE]
 Archive powered by
 [ENDIF]
@@ -116,6 +151,8 @@ Archive powered by
 <font size=-1 color="--DARK_COLOR--">
 [IF lang=fr]
  Les archives de wwsympa sont basées sur
+[ELSIF lang=cz]
+Archív zalo¾en na
 [ELSE]
 Archive powered by
 [ENDIF]
@@ -142,6 +179,8 @@ $TNEXTPGLINK$
 <font size=-1><b>
 [IF lang=fr]
 Suivi chronologique
+[ELSIF lang=cz]
+Chronologicky
 [ELSE]
 Chronological
 [ENDIF]
@@ -151,6 +190,8 @@ Chronological
 <FONT COLOR="--BG_COLOR--" SIZE="-1">
 [IF lang=fr]
 <b>Suivi de conversation</b> <i>thread</i> 
+[ELSIF lang=cz]
+<b>Téma</b> (<i>thread</i>)
 [ELSE]
 <b>Thread</b>
 [ENDIF]
@@ -182,6 +223,8 @@ Chronological
 <LI><STRONG>$SUBJECTNA$</STRONG>, <EM>
 [IF lang=fr]
 suite
+[ELSIF lang=cz]
+dal¹í
 [ELSE]
 next
 [ENDIF]
@@ -221,6 +264,8 @@ next
 <LI><EM>
 [IF lang=fr]
 Message non disponible
+[ELSIF lang=cz]
+Zpráva není dostupná
 [ELSE]
 Message not availible
 [ENDIF]
@@ -316,6 +361,8 @@ Message not availible
  <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER"><A HREF="$IDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
 [IF lang=fr]
 Chronologie
+[ELSIF lang=cz]
+Chronologicky
 [ELSE]
 Chronological
 [ENDIF]
@@ -326,6 +373,8 @@ $TPREVBUTTON$
 <TD  NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER"><A HREF="$TIDXFNAME$#$MSGNUM$" STYLE="TEXT-DECORATION: NONE"><FONT size=-1><B>
 [IF lang=fr]
 Conversation
+[ELSIF lang=cz]
+Téma
 [ELSE]
 Thread
 [ENDIF]
@@ -361,13 +410,14 @@ $TNEXTBUTTON$
   <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
   <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
   <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="
 [IF lang=fr]
-  marquer ce message pour suppression
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="marquer ce message pour suppression">
+[ELSIF lang=cz]
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="Oznaèit tuto zprávu ke smazání">
 [ELSE]
-  tag this mail for deletion
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="tag this mail for deletion">
 [ENDIF]
-"></br>
+</br>
   </FORM>
 [ELSIF is_owner]
   <FORM ACTION="[path_cgi]" METHOD=POST>
@@ -375,13 +425,15 @@ $TNEXTBUTTON$
   <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
   <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
   <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
-  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="
+
 [IF lang=fr]
-  marquer ce message pour suppression
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="marquer ce message pour suppression">
+[ELSIF lang=cz]
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="oznaèit tuto zprávu ke smazání">
 [ELSE]
-  tag this mail for deletion
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="tag this mail for deletion">
 [ENDIF]
-"></br>
+</br>
   </FORM>
 [ENDIF]
 
@@ -418,6 +470,7 @@ list-post
 list-subscribe
 list-unsubscribe
 in-reply-to
+delivered-to
 </EXCS>
 
 <!-- ordre d'affichage des éléments de l'entête -->
@@ -449,52 +502,97 @@ Subject:strong
 <WEEKDAYS>
 [IF lang=fr]
 Dimanche
+[ELSIF lang=cz]
+Nedìle
 [ELSE]
 Sunday
 [ENDIF]
 :
 [IF lang=fr]
 Lundi
+[ELSIF lang=cz]
+Pondìlí
 [ELSE]
 Monday
 [ENDIF]
 :
 [IF lang=fr]
 Mardi
+[ELSIF lang=cz]
+Úterý
 [ELSE]
 Tuesday
 [ENDIF]
 :
 [IF lang=fr]
 Mercredi
+[ELSIF lang=cz]
+Støeda
 [ELSE]
 Wednesday
 [ENDIF]
 :
 [IF lang=fr]
 Jeudi
+[ELSIF lang=cz]
+Ètvrtek
 [ELSE]
 Thursday
 [ENDIF]
 :
 [IF lang=fr]
 Vendredi
+[ELSIF lang=cz]
+Pátek
 [ELSE]
 Friday
 [ENDIF]
 :
 [IF lang=fr]
 Samedi
+[ELSIF lang=cz]
+Sobota
 [ELSE]
 Saturday
 [ENDIF]
 </WEEKDAYS>
 
+[IF lang=cz]
+<WEEKDAYSABR>
+Ne:Po:Út:St:Èt:Pá:So
+</WEEKDAYSABR>
+[ENDIF]
+
 <MONTHS>
+[IF lang=fr]
 Janvier:Fevrier:Mars:Avril:Mai:Juin:Juillet:Aout:Septembre:Octobre:Novembre:Decembre
+[ELSIF lang=cz]
+Leden:Únor:Bøezen:Duben:Kvìten:Èerven:Èervenec:Srpen:Záøí:Øíjen:Listopad:Prosinec
+[ELSE]
+January:February:March:April:May:June:July:August:September:October:November:December
+[ENDIF]
 </MONTHS>
 
+[IF lang=cz]
+<MONTHSABR>
+Led:Úno:Bøe:Dub:Kvì:Èern:Èerv:Srp:Záø:Øíj:List:Pro
+</MONTHSABR>
+[ENDIF]
+
+[IF lang=cz]
+<UseLocalTime>
+
+<MSGLOCALDATEFMT>
+%d. %B. %Y %H:%M
+</MSGLOCALDATEFMT>
+
+<LOCALDATEFMT>
+%d. %B. %Y %H:%M
+</LOCALDATEFMT>
+[ELSE]
 <MsgLocalDateFmt>
 %A %d %B %Y
 </MsgLocalDateFmt>
+[ENDIF]
+
 
