@@ -689,6 +689,18 @@ sub DoFile {
 	undef $is_signed;
     }
 
+   #  anti-virus
+    if (my $rc= &tools::virus_infected($message->{'msg'}, $message->{'filename'})) {
+	if ($Conf{'antivirus_notify'} eq 'sender') {
+	    #printf "do message, virus= $rc \n";
+	    &List::send_global_file('your_infected_msg', $sender, $robot, {'virus_name' => $rc,
+									   'recipient' => $name.'@'.$host,
+									   'lang' => $Language::default_lang});
+	}
+	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $name, $host, $sender, $rc);
+	return undef;
+    }
+   #  
 
     if ($rcpt =~ /^listmaster(\@(\S+))?$/) {
 	$status = &DoForward('sympa', 'listmaster', $robot, $msg, $file, $sender);
@@ -699,12 +711,9 @@ sub DoFile {
 	$status = &DoCommand($rcpt, $robot, $msg, $file);
 	
 	## forward mails to <list>-request <list>-owner etc
-#    }elsif ($rcpt =~ /^(\S+)-(request|owner|editor)(\@(\S+))?$/o) {
     }elsif ($type =~ /^(request|owner|editor)$/o) {
-#	my ($name, $function) = ($1, $2);
 	
 	## Simulate Smartlist behaviour with command in subject
-         ## 
 	if (($type eq 'request') and ($subject_field =~ /^\s*(subscribe|unsubscribe)(\s*$listname)?\s*$/i) ) {
 	    my $command = $1;
 	    
@@ -873,33 +882,33 @@ sub DoForward {
     my $rc;
     my $msg_copy = $msg->dup;
 
-    if ($rc = &tools::virus_infected($msg_copy, $file)) {
-	if ($Conf{'antivirus_notify'} eq 'sender') {
-	    if ($list) {
-		$list->send_file('your_infected_msg', $sender, $robot, 
-				 {'virus_name' => $rc,
-				  'recipient' => $recepient.'@'.$host,
-				  'lang' => $list->{'admin'}{'lang'}});
-	    }
-	    else {
-		my %context;
-		$context{'virus_name'} = $rc ;
-		$context{'recipient'} = $recepient.'@'.$host;
-		$context{'lang'} = &Conf::get_robot_conf($robot, 'lang');
-		&List::send_global_file('your_infected_msg', $sender, $robot, \%context );
-	    }    
-	}
-	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $recepient, $host, $sender, $rc);
-
-	return undef;
-    }else{
+#    if ($rc = &tools::virus_infected($msg_copy, $file)) {
+#	if ($Conf{'antivirus_notify'} eq 'sender') {
+#	    if ($list) {
+#		$list->send_file('your_infected_msg', $sender, $robot, 
+#				 {'virus_name' => $rc,
+#				  'recipient' => $recepient.'@'.$host,
+#				  'lang' => $list->{'admin'}{'lang'}});
+#	    }
+#	    else {
+#		my %context;
+#		$context{'virus_name'} = $rc ;
+#		$context{'recipient'} = $recepient.'@'.$host;
+#		$context{'lang'} = &Conf::get_robot_conf($robot, 'lang');
+#		&List::send_global_file('your_infected_msg', $sender, $robot, \%context );
+#	    }    
+#	}
+#	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $recepient, $host, $sender, $rc);
+#
+#	return undef;
+#    }else{
  
 	*SIZ = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \@rcpt);
 	$msg->print(\*SIZ);
 	close(SIZ);
 	
 	do_log('info',"Message for %s forwarded", $recepient);
-    }
+#   }
     return 1;
 }
 
@@ -998,16 +1007,16 @@ sub DoMessage{
     
     my $rc;
    
-    if ($rc= &tools::virus_infected($message->{'msg'}, $message->{'filename'})) {
-	if ($Conf{'antivirus_notify'} eq 'sender') {
-	    #printf "do message, virus= $rc \n";
-	    $list->send_file('your_infected_msg', $sender, $robot, {'virus_name' => $rc,
-								    'recipient' => $name.'@'.$host,
-								    'lang' => $list->{'admin'}{'lang'}});
-	}
-	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $name, $host, $sender, $rc);
-	return undef;
-    }
+#    if ($rc= &tools::virus_infected($message->{'msg'}, $message->{'filename'})) {
+#	if ($Conf{'antivirus_notify'} eq 'sender') {
+#	    #printf "do message, virus= $rc \n";
+#	    $list->send_file('your_infected_msg', $sender, $robot, {'virus_name' => $rc,
+#								    'recipient' => $name.'@'.$host,
+#								    'lang' => $list->{'admin'}{'lang'}});
+#	}
+#	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $name, $host, $sender, $rc);
+#	return undef;
+#    }
     
     ## Call scenarii : auth_method MD5 do not have any sense in send
     ## scenarii because auth is perfom by distribute or reject command.
