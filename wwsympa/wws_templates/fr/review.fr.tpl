@@ -138,7 +138,7 @@ La sélection est trop large, impossible d'afficher la sélection
       [FOREACH u IN members]
 
 	[IF dark=1]
-	  <TR BGCOLOR="[error_color]">
+	  <TR BGCOLOR="[shaded_color]">
 	[ELSE]
           <TR>
 	[ENDIF]
