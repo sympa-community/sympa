@@ -1,3 +1,329 @@
+2002-11-14 10:26  salaun
+
+	* src/etc/templates/fr/list_rejected.fr.tpl,
+	src/etc/templates/us/list_rejected.us.tpl, wwsympa/wwsympa.fcgi:
+	[reported by R. Salmon] Fix: rejection of pending lists was not
+	coded
+
+2002-11-13 11:42  salaun
+
+	* src/: sympa_wizard.pl, sympa_wizard.pl: Change: make the wizard
+	less quiet
+
+2002-11-13 11:24  salaun
+
+	* wwsympa/: wwsympa.fcgi, wwsympa.fcgi: Fix: wwsympa would die
+	under certain circumstances if LDAP Bind failed with error mewssage
+	: "Can't call method "code" on an undefined value"
+
+2002-11-13 11:12  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Missing
+	documentation for 'authentication_info_url' in auth.conf
+
+2002-11-13 11:06  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Missing
+	documentation for 'authentication_info_url' in auth.conf
+
+2002-11-12 18:10  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/error.fr.tpl,
+	wws_templates/us/error.us.tpl: Fix: wwsympa would prompt a
+	'template error' if an LDAP user requested a password reminder when
+	the authentication_info_url URL was not defined in auth.conf. Now
+	return an error message.
+
+2002-11-12 18:04  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/error.fr.tpl,
+	wws_templates/us/error.us.tpl: Fix: wwsympa would prompt a
+	'template error' if an LDAP user requested a password reminder when
+	the authentication_info_url URL was not defined in auth.conf. Now
+	return an error message.
+
+2002-11-12 17:13  salaun
+
+	* src/Conf.pm: Fix: detect 'SET listname mode' commands as
+	miaddressed commands
+
+2002-11-12 17:10  salaun
+
+	* check_perl_modules.pl: Cannot auto-install mhonarc
+
+2002-11-12 15:49  salaun
+
+	* doc/sympa.tex.tpl: Fix previous changes
+
+2002-11-12 15:46  salaun
+
+	* check_perl_modules.pl: Mhonarc is installed by
+	check_perl_modules.pl
+
+2002-11-12 15:31  salaun
+
+	* doc/sympa.tex.tpl: [Janek Hiis] Fix AVP example
+
+2002-11-05 17:33  salaun
+
+	* src/tools.pl: Fix incorrect openssl argument rtelated to null
+	capath or null cafile argument.
+
+2002-11-05 14:45  salaun
+
+	* doc/sympa.tex.tpl: Fixe cookie format description
+
+2002-11-05 13:27  salaun
+
+	* check_perl_modules.pl: Changes: Require recent Mailtools because
+	of mailx security problems
+
+2002-11-05 12:04  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: [BugID 67]
+	Fix: reference to robot aliases
+
+2002-11-04 17:59  salaun
+
+	* src/sympa.pl: [BugID 70] [H. Maza] Bug fix:  In the final report
+	of expire process, the first subscriber is skiped, no matter his
+	subscription is confirmed ot not.
+
+2002-11-04 17:52  salaun
+
+	* src/Commands.pm: [BugID 70] [H. Maza] Bug fix:  In many cases,
+	uncorrect list of subscribers to be notified, or uncorrect list of
+	unconfirmed subscriptions, is reported during an expire process. In
+	addition, sympa reports an error : "Command not understood:
+	ignoring end of message."
+
+2002-10-25 11:58  salaun
+
+	* ChangeLog: update
+
+2002-10-25 11:57  salaun
+
+	* src/: List.pm, tools.pl: [reported by G. Paressant] Bug fix: if
+	email entries returned by List::_include_users_ldap() contained
+	spaces characters, then the database update could lead to a
+	"duplicate entry error", causing the List::sync_include() to fail
+
+2002-10-25 11:56  salaun
+
+	* src/: List.pm, tools.pl: [reported by G. Paressant] Bug fix: if
+	email entries returned by List::_include_users_ldap() contained
+	spaces characters, then the database update could lead to a
+	"duplicate entry error", causing the List::sync_include() to fail
+
+2002-10-25 11:30  salaun
+
+	* src/List.pm: Change: use standard email regexp
+
+2002-10-25 10:54  salaun
+
+	* src/List.pm: Fix: lots of errors were logged in 'debug' log level
+	; now use 'err'
+
+2002-10-25 09:43  salaun
+
+	* ChangeLog: Correct Changelog
+
+2002-10-25 09:11  salaun
+
+	* src/sympa.pl: Slightly change rejection log
+
+2002-10-24 17:29  salaun
+
+	* .version, ChangeLog: Update
+
+2002-10-24 17:27  salaun
+
+	* ChangeLog, src/List.pm: [BugID 63] [reported by G. Paressant]
+	Fix: sync_include() made the task_manager die if duplicate emails
+	where found in SQL or LDAP query result
+
+2002-10-24 16:43  salaun
+
+	* src/List.pm: [BugID 63] [reported by G. Paressant] Fix:
+	sync_include() made the task_manager die if duplicate emails where
+	found in SQL or LDAP query result
+
+2002-10-24 15:32  salaun
+
+	* src/sympa_wizard.pl: [BugID 58] [reported by Xavier AT
+	cs.gouv.qc.ca] Fix: sympa_wizard used temporary files in /tmp/ ; if
+	/tmp/ was an a different filesystem than /etc/, then the rename()
+	would fail. No more use temporary files.  Change: only warn if
+	rename() of previous cong files failed
+
+2002-10-24 14:59  salaun
+
+	* src/sympa_wizard.pl: [BugID 58] [reported by Xavier AT
+	cs.gouv.qc.ca] Fix: sympa_wizard used temporary files in /tmp/ ; if
+	/tmp/ was an a different filesystem than /etc/, then the rename()
+	would fail. No more use temporary files.  Change: only warn if
+	rename() of previous cong files failed
+
+2002-10-22 17:51  salaun
+
+	* src/List.pm: [reported by M. Beheregaray] Fix: Sympa.pl would die
+	with error "unmatched [] in regexp" if custom_subject contained
+	'[]' Now do some custom_subject cleanup
+
+2002-10-22 17:25  salaun
+
+	* nls/fr.msg, nls/us.msg, src/List.pm, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/review.fr.tpl,
+	wwsympa/wws_templates/us/review.us.tpl: [requested by V. Mathieu]
+	New feature: Add names to data sources, also allow sorting from
+	REVIEW page
+
+2002-10-22 16:01  salaun
+
+	* wwsympa/wws_templates/: fr/review.fr.tpl, us/review.us.tpl:
+	Change: remove unusefull 'domain' column
+
+2002-10-22 15:13  salaun
+
+	* src/etc/mhonarc-ressources, wwsympa/icons/begin.png,
+	wwsympa/icons/end.png: [O. Lacroix] New feature: new 'FastForward'
+	and 'Rewind' button in archives
+
+2002-10-22 15:12  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: jump to 'serveradmin' when a
+	rebuildall has been performed
+
+2002-10-22 14:49  salaun
+
+	* src/tools.pl: Change: Also look for templates in the list's
+	templates/ subdir
+
+2002-10-22 14:46  salaun
+
+	* src/tools.pl: Change: do not use $' for emacs's sake
+
+2002-10-22 14:43  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: re-evaluate important vars before
+	parsing templates ; things change so fast....
+
+2002-10-22 14:42  salaun
+
+	* src/List.pm: Fix: reset 'get_subscriber' cache entry after an
+	update
+
+2002-10-22 14:26  salaun
+
+	* wwsympa/wws_templates/: fr/list_menu.fr.tpl, us/list_menu.us.tpl:
+	Fix: in inckude2 mode, show 'subscribe' button even if user is
+	included
+
+2002-10-22 14:14  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix previous change
+
+2002-10-22 14:08  salaun
+
+	* wwsympa/wwsympa.fcgi: Change: don't use $' for emacs edition
+	concerns
+
+2002-10-22 14:06  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: with 'include2', included users could
+	not be added ; included+subscribed users could not be deleted
+
+2002-10-21 13:46  salaun
+
+	* src/parse_translation.pl, src/tools.pl, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/us/translate.us.tpl,
+	wwsympa/wws_templates/us/view_template.us.tpl: New feature: web
+	templates translation system (first version)
+
+2002-10-21 11:29  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: [bugID 59]
+	[reported by xavier AT cs.gouv.qc.ca] Duplicates in manual ; fix
+	macros
+
+2002-10-21 11:24  salaun
+
+	* NEWS: fix missing "you MUST rebuild archives"
+
+2002-10-21 11:21  salaun
+
+	* NEWS: missing "you MUST rebuild archives"
+
+2002-10-21 11:12  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex: [bugID 59] [reported by
+	xavier AT cs.gouv.qc.ca] Duplicates in manual ; fix macros
+
+2002-10-21 11:09  salaun
+
+	* doc/sympa.tex.tpl: [bugID 59] [reported by xavier AT
+	cs.gouv.qc.ca] Duplicates in manual ; fix macros
+
+2002-10-18 10:02  salaun
+
+	* wwsympa/wwsympa.fcgi: [path_info] available in web templates
+
+2002-10-18 09:35  salaun
+
+	* src/sympa_wizard.pl: [xavier AT cs.gouv.qc.ca] Changes: Precise
+	error message
+
+2002-10-17 17:17  salaun
+
+	* src/sympa.pl: Fix: 'antivirus_notify' was only used in message
+	forarding context
+
+2002-10-17 15:44  salaun
+
+	* wwsympa/wws_templates/fr/: admin_menu.fr.tpl,
+	get_closed_lists.fr.tpl, get_latest_lists.fr.tpl,
+	set_pending_list_request.fr.tpl: [O. Lacroix] New translated
+	templates, fixes
+
+2002-10-17 14:50  salaun
+
+	* wwsympa/wwsympa.fcgi: [O. Lacroix] Fix: wrong comparison operator
+	for reloading wwsympa
+
+2002-10-17 14:37  salaun
+
+	* wwsympa/wwsympa.fcgi: [O. Lacroix] Fix: wrong comparison operator
+	for reloading wwsympa
+
+2002-10-17 14:32  salaun
+
+	* .version: New version
+
+2002-10-17 14:24  salaun
+
+	* src/Commands.pm: Fix: Sympa would use part of the email address
+	as the user name.  Fix regular expretion usage
+
+2002-10-17 14:11  salaun
+
+	* src/Commands.pm: Fix: Sympa would use part of the email address
+	as the user name.  Fix regular expretion usage
+
+2002-10-17 12:31  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Philippe Amelant] incorect
+	command for remove_aliases
+
+2002-10-16 15:43  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Philippe Amelant] incorect
+	command for remove_aliases
+
+2002-10-16 09:35  salaun
+
+	* ChangeLog, NEWS: 
+	preparing 3.4
+
 2002-10-15 15:49  salaun
 
 	* .version, ChangeLog, NEWS: preparing release 3.4
@@ -149,27 +475,12 @@
 2002-09-23 14:55  salaun
 
 	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
-	man8/sympa.8, man8/sympa.pod, sympa/node10.html, sympa/node11.html,
-	sympa/node12.html, sympa/node13.html, sympa/node14.html,
-	sympa/node15.html, sympa/node16.html, sympa/node17.html,
-	sympa/node18.html, sympa/node19.html, sympa/node2.html,
-	sympa/node20.html, sympa/node3.html, sympa/node4.html,
-	sympa/node5.html, sympa/node6.html, sympa/node7.html,
-	sympa/node8.html, sympa/node9.html, sympa/sympa.ps: Add
-	documentation for --make_alias_file option
+	man8/sympa.8, man8/sympa.pod: Add documentation for
+	--make_alias_file option
 
 2002-09-23 12:15  salaun
 
 	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
-	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
-	doc/sympa/node11.html, doc/sympa/node12.html,
-	doc/sympa/node13.html, doc/sympa/node14.html,
-	doc/sympa/node15.html, doc/sympa/node16.html,
-	doc/sympa/node17.html, doc/sympa/node18.html,
-	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
-	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
-	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
-	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps,
 	wwsympa/wwsympa.fcgi: Change: Allow non-anonymous bind in
 	auth.conf. New bind_dn and bind_pawword parameters
 
@@ -218,16 +529,8 @@
 
 2002-09-19 16:48  salaun
 
-	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
-	sympa/index.html, sympa/node1.html, sympa/node10.html,
-	sympa/node11.html, sympa/node12.html, sympa/node13.html,
-	sympa/node14.html, sympa/node15.html, sympa/node16.html,
-	sympa/node17.html, sympa/node18.html, sympa/node19.html,
-	sympa/node2.html, sympa/node20.html, sympa/node3.html,
-	sympa/node4.html, sympa/node5.html, sympa/node6.html,
-	sympa/node7.html, sympa/node8.html, sympa/node9.html,
-	sympa/sympa.html, sympa/sympa.ps: Update documentation regarding
-	alias management
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Update
+	documentation regarding alias management
 
 2002-09-19 15:45  salaun
 
@@ -288,18 +591,9 @@
 
 	* doc/sympa.pdf, src/sympa.pl, src/task_manager.pl,
 	wwsympa/archived.pl, wwsympa/bounced.pl, wwsympa/wwsympa.fcgi,
-	doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
-	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
-	doc/sympa/node11.html, doc/sympa/node12.html,
-	doc/sympa/node13.html, doc/sympa/node14.html,
-	doc/sympa/node15.html, doc/sympa/node16.html,
-	doc/sympa/node17.html, doc/sympa/node18.html,
-	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
-	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
-	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
-	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps:
-	[reported by Sergiy Zhuk] Fix: umask was considered a decimal
-	number ; now taken as octal
+	doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl: [reported by Sergiy
+	Zhuk] Fix: umask was considered a decimal number ; now taken as
+	octal
 
 2002-09-18 09:20  salaun
 
@@ -498,19 +792,6 @@
 	wwsympa/wws_templates/nl/view_translations.nl.tpl,
 	wwsympa/wws_templates/nl/viewmod.nl.tpl: [Harry Westerman] Complete
 	translation to Dutch
-
-2002-09-16 10:52  salaun
-
-	* doc/sympa/: contents.png, crossref.png, img1.old, img1.png,
-	img2.old, img2.png, index.html, index.png, next.png, next_g.png,
-	node1.html, node10.html, node11.html, node12.html, node13.html,
-	node14.html, node15.html, node16.html, node17.html, node18.html,
-	node19.html, node2.html, node20.html, node3.html, node4.html,
-	node5.html, node6.html, node7.html, node8.html, node9.html,
-	prev.png, prev_g.png, sympa.css, sympa.html, sympa.ps, up.png,
-	up_g.png: 
-	
-	HTML doc is usefull in CVS TREE
 
 2002-09-13 12:10  salaun
 

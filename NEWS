@@ -3,6 +3,91 @@
 
 (See Changelog file for the full changes log)
 
+4.0.a1		14 November 2002
+
+   New features :
+
+	[requested by V. Mathieu]: Add names to data sources, also allow sorting from REVIEW page
+
+	[O. Lacroix] New feature: new 'FastForward' and 'Rewind' button in archives
+
+	New web templates translation system (first version)
+
+   Changes :
+
+	sympa_wizard.pl: Change: make the wizard less quiet
+
+	src/Conf.pm: detect 'SET listname mode' commands as miaddressed commands
+
+	check_perl_modules.pl: Require recent Mailtools because	of mailx security problems
+
+	src/List.pm: lots of errors were logged in 'debug' log level ; now use 'err'
+
+	wwsympa/wws_templates/: remove unusefull 'domain' column in REVIEW page
+
+	src/tools.pl: Also look for templates in the list's templates/ subdir
+	
+	wwsympa/wwsympa.fcgi: Fix: re-evaluate important vars before parsing templates ; 
+	things change so fast....
+
+	wwsympa/wwsympa.fcgi: [path_info] available in web templates
+
+   Bug fixes :
+
+	src/List.pm: [reported by M. Beheregaray] : Sympa.pl would die with error "unmatched [] in regexp" 
+	if custom_subject contained '[]' Now do some custom_subject cleanup
+
+	src/tools.pl: Fix incorrect openssl argument rtelated to null capath or null cafile argument.
+
+	[reported by G. Paressant] : if	email entries returned by List::_include_users_ldap() contained
+	spaces characters, then the database update could lead to a "duplicate entry error", 
+	causing the List::sync_include() to fail
+
+	src/List.pm: [BugID 63] [reported by G. Paressant]: sync_include() made the task_manager die if 
+	duplicate emails where found in SQL or LDAP query result
+
+	wwsympa.fcgi: wwsympa would die	under certain circumstances if LDAP Bind failed with error message
+	: "Can't call method "code" on an undefined value"
+
+	wwsympa would prompt a 'template error' if an LDAP user requested a password reminder when
+	the authentication_info_url URL was not defined in auth.conf. Now return an error message.
+
+	src/List.pm: reset 'get_subscriber' cache entry after an update
+
+	in inckude2 mode, show 'subscribe' button even if user is included
+
+	wwsympa/wwsympa.fcgi: with 'include2', included users could not be added ; 
+	included+subscribed users could not be deleted
+
+	doc/:Missing	documentation for 'authentication_info_url' in auth.conf
+
+	doc/sympa.tex.tpl: Fixe cookie format description
+
+	doc/sympa.tex.tpl: [Janek Hiis] Fix AVP example
+
+	[reported by R. Salmon] rejection of pending lists was not coded
+
+	src/Commands.pm: Sympa would use part of the email address as the user name.  
+	Fix regular expretion usage
+
+	src/sympa.pl: 'antivirus_notify' was only used in message forwarding context
+
+	wwsympa/wwsympa.fcgi: [O. Lacroix] wrong comparison operator for reloading wwsympa
+
+	wwsympa/wwsympa.fcgi: [reported by Philippe Amelant] incorect command for remove_aliases
+
+	src/sympa_wizard.pl: [BugID 58] [reported by Xavier AT cs.gouv.qc.ca] : sympa_wizard used temporary 
+	files in /tmp/ ; if /tmp/ was an a different filesystem than /etc/, then the rename()
+	would fail. No more use temporary files.  Change: only warn if rename() of previous cong files failed
+
+	src/sympa.pl: [BugID 70] [H. Maza] :  In the final report of expire process, 
+	the first subscriber is skiped, no matter his subscription is confirmed ot not.
+
+	src/Commands.pm: [BugID 70] [H. Maza] :  In many cases,	uncorrect list of 
+	subscribers to be notified, or uncorrect list of unconfirmed subscriptions, 
+	is reported during an expire process. In addition, sympa reports an error : 
+	"Command not understood: ignoring end of message."
+
 3.4		15 October 2002
 
    Changes :
