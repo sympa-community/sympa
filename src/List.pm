@@ -4377,38 +4377,6 @@ sub may_do {
    return undef;
 }
 
-## Is the list moderated ?
-sub is_moderated {
-    return 1 if (defined shift->{'admin'}{'editor'});
-
-    return 0;
-}
-
-## Is the list moderated with a key?
-sub is_moderated_key {
-   return (shift->{'admin'}->{'send'}{'name'}=~/^(editorkeyonly|editorkey|privateoreditorkey)$/);
-}
-
-## Is the list moderated with a key?
-sub is_privateoreditorkey {
-   return (shift->{'admin'}{'send'}{'name'}=~/^privateoreditorkey$/);
-}
-
-## Is the list auth with a key?
-sub is_private_key {
-   return (shift->{'admin'}->{'send'}{'name'}=~/^privatekey$/);
-}
-
-## Is the list auth with a key?
-sub is_public_key {
-   return (shift->{'admin'}{'send'}{'name'}=~/^publickey$/);
-}
-
-## Is the list auth with a key?
-sub is_authentified {
-   return (shift->{'admin'}{'send'}{'name'}=~/^(publickey|privatekey|privateorpublickey)$/);
-}
-
 ## Does the list support digest mode
 sub is_digest {
    return (shift->{'admin'}{'digest'});
