@@ -26,6 +26,10 @@ unless ($first_install) {
 }
 close VERSION;
 
+if ($previous_version eq $current_version) {
+    exit 0;
+}
+
 print "You are upgrading from Sympa $previous_version\nYou should read CAREFULLY the changes listed below ; they might be uncompatible changes :\n<RETURN>";
 my $wait = <STDIN>;
 
