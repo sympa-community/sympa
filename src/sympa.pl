@@ -687,17 +687,16 @@ sub DoFile {
 	## forward mails to <list>-request <list>-owner etc
 #    }elsif ($rcpt =~ /^(\S+)-(request|owner|editor)(\@(\S+))?$/o) {
     }elsif ($type =~ /^(request|owner|editor)$/o) {
-	my ($name, $function) = ($1, $2);
+#	my ($name, $function) = ($1, $2);
 	
 	## Simulate Smartlist behaviour with command in subject
-        ## xxxxxxxxxxx  ÅÈtendre le jeu de command reconnue sous cette forme ?
-        ## 
-	if (($function eq 'request') and ($subject_field =~ /^\s*(subscribe|unsubscribe)(\s*$name)?\s*$/i) ) {
+         ## 
+	if (($type eq 'request') and ($subject_field =~ /^\s*(subscribe|unsubscribe)(\s*$listname)?\s*$/i) ) {
 	    my $command = $1;
 	    
-	    $status = &DoCommand("$name-$command", $robot, $msg, $file);
+	    $status = &DoCommand("$listname-$command", $robot, $msg, $file);
 	}else {
-	    $status = &DoForward($name, $function, $robot, $msg, $file, $sender);
+	    $status = &DoForward($listname, $type, $robot, $msg, $file, $sender);
 	}       
     }else {
 	$status =  &DoMessage($rcpt, $message, $robot);
