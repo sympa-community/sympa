@@ -3787,8 +3787,8 @@ even when several moderators are defined.
 
 \lparam {host} \textit {fully-qualified-domain-name}
 
-Domain name of the server hosting the list (used for \rfcheader {From} , for
-example). The default value is set in the \file {/etc/sympa.conf} file.
+Domain name of the list, mainly used on the web interface. 
+The default value is set in the \file {/etc/sympa.conf} file.
 
 \subsection {lang}
     \label {par-lang}
