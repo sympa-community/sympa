@@ -879,11 +879,13 @@ sub split_mail {
 sub virus_infected {
     my $mail = shift ;
     my $file = shift ;
-    &do_log('debug2', 'virus_infected (%s)', $file);
+
+    &do_log('debug2', 'Scan virus in %s', $file);
     
-    # there is no virus anywhere if there is no antivus tools installed
-    return 0 unless ($Conf{'antivirus_path'} );
-    
+    unless ($Conf{'antivirus_path'} ) {
+        &do_log('debug2', 'Sympa not configured to scan virus in message');
+	return 0;
+    }
     my @name = split(/\//,$file);
     my $work_dir = $Conf{'tmpdir'}.'/antivirus';
     
