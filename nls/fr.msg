@@ -401,6 +401,7 @@ $set 16 Titres des paramètres de config de listes
 208	"Certificat pour authentification de la connection"
 209	"nom court pour cette source"
 212	"Archivage des messages cryptés"
+213	"Champs d'entête compatibles RFC 2369"
 
 $set 17 Cookie expiration periods
 1	"la session"

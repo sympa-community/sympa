@@ -5523,7 +5523,7 @@ sub do_set_pending_list_request {
      if($in{'extended'}){
 	 foreach my $directory (keys %{$Conf{'ldap_export'}}){
 	     next unless(%lists = &Ldap::get_exported_lists($param->{'regexp'},$directory));
-
+	     
 	     foreach my $list_name (keys %lists) {
 		 $param->{'occurrence'}++ unless($param->{'which'}{$list_name});
 		 next if($param->{'which'}{$list_name});
@@ -5533,15 +5533,15 @@ sub do_set_pending_list_request {
 						  'list_address' => "$lists{$list_name}{'list_address'}",
 						  'export' => 'yes',
 					      };
-	     } 
+	     }  
 	 }
-     }
-
+     } 
+     
      return 1;
  }
 
- sub do_edit_list {
-     &wwslog('info', 'do_edit_list()');
+sub do_edit_list {
+      &wwslog('info', 'do_edit_list()');
 
      unless ($param->{'user'}{'email'}) {
 	 &error_message('no_user');
@@ -5562,7 +5562,7 @@ sub do_set_pending_list_request {
 
      foreach my $key (sort keys %in) {
 	 next unless ($key =~ /^(single_param|multiple_param)\.(\S+)$/);
-
+	 
 	 $key =~ /^(single_param|multiple_param)\.(\S+)$/;
 	 my ($type, $name) = ($1, $2);
 
@@ -5600,7 +5600,7 @@ sub do_set_pending_list_request {
      my (%changed, %delete);
      my @syntax_error;
      foreach my $pname (sort List::by_order keys %{$edited_param}) {
-
+	 
 	 my ($p, $new_p);
 	 ## Check privileges first
 	 next unless ($list->may_edit($pname,$param->{'user'}{'email'}) eq 'write');
@@ -5951,16 +5951,16 @@ sub do_set_pending_list_request {
  #    &tools::dump_var($param->{'param'},0);
 
      $param->{'serial'} = $list->{'admin'}{'serial'};
-
+     
      return 1;
  }
 
  ## Prepare config data to be send in the
  ## edition form
- sub _prepare_edit_form {
-     my $list_config = shift;
+      sub _prepare_edit_form {
+      my $list_config = shift;
 
-     foreach my $pname (sort List::by_order keys %{$pinfo}) {
+      foreach my $pname (sort List::by_order keys %{$pinfo}) {
 	 next if ($pname =~ /^comment|defaults$/);
 	 next if ($in{'group'} && ($pinfo->{$pname}{'group'} ne $in{'group'}));
 
@@ -5974,7 +5974,7 @@ sub do_set_pending_list_request {
 	 $p->{'changed'} = $::changed_params{$pname};
 
 	 ## Exceptions...too many
-	 if ($pname eq 'topics') {
+         if ($pname eq 'topics') {
 	     $p->{'type'} = 'enum';
 
 	     my @topics;
@@ -5983,23 +5983,22 @@ sub do_set_pending_list_request {
 	     }
 	     undef $p->{'value'};
 	     my %list_of_topics = &List::load_topics($robot);
-	     foreach my $selected_topic (@topics) {
-		 my $menu = {};
-		 foreach my $topic (keys %list_of_topics) {
-		     $menu->{'value'}{$topic}{'selected'} = 0;
-		     $menu->{'value'}{$topic}{'title'} = $list_of_topics{$topic}{'title'};
-
-		     if ($list_of_topics{$topic}{'sub'}) {
-			 foreach my $subtopic (keys %{$list_of_topics{$topic}{'sub'}}) {
-			     $menu->{'value'}{"$topic/$subtopic"}{'selected'} = 0;
-			     $menu->{'value'}{"$topic/$subtopic"}{'title'} = "$list_of_topics{$topic}{'title'}/$list_of_topics{$topic}{'sub'}{$subtopic}{'title'}";
-			 }
+	     foreach my $topic (keys %list_of_topics) {
+		 $p->{'value'}{$topic}{'selected'} = 0;
+		 $p->{'value'}{$topic}{'title'} = $list_of_topics{$topic}{'title'};
+		 
+		 if ($list_of_topics{$topic}{'sub'}) {
+		     foreach my $subtopic (keys %{$list_of_topics{$topic}{'sub'}}) {
+			 $p->{'value'}{"$topic/$subtopic"}{'selected'} = 0;
+			 $p->{'value'}{"$topic/$subtopic"}{'title'} = "$list_of_topics{$topic}{'title'}/$list_of_topics{$topic}{'sub'}{$subtopic}{'title'}";
 		     }
 		 }
-		 $menu->{'value'}{$selected_topic}{'selected'} = 1;
-		 $menu->{'value'}{$selected_topic}{'title'} = "Unknown ($selected_topic)"
-		     unless (defined $menu->{'value'}{$selected_topic}{'title'});
-		 push @{$p->{'value'}}, $menu;
+	     }
+	     foreach my $selected_topic (@topics) {
+		 next unless (defined $selected_topic);
+		 $p->{'value'}{$selected_topic}{'selected'} = 1;
+		 $p->{'value'}{$selected_topic}{'title'} = "Unknown ($selected_topic)"
+		     unless (defined $p->{'value'}{$selected_topic}{'title'});
 	     }
 	 }elsif ($pname eq 'digest') {
 	     foreach my $v (@{$p->{'value'}}) {
@@ -6043,7 +6042,7 @@ sub do_set_pending_list_request {
 	     $data2 = $data;
 
 	     ## Add an empty entry
-	     unless (($name eq 'days') || ($name eq 'reception')) {
+	     unless (($name eq 'days') || ($name eq 'reception') || ($name eq 'rfc2369_header_fields') || ($name eq 'topics')) {
 		 push @{$data2}, undef;
 		 ## &do_log('debug2', 'Add 1 %s', $name);
 	     }

@@ -6470,6 +6470,18 @@ custom header lines in the configuration file at the same time.
 
 \example {custom\_header X-url: http://www.cru.fr/listes/apropos/sedesabonner.faq.html}.
 
+\subsection {rfc2369\_header\_fields}
+    	\label {par-rfc2369-header-fields}
+    	\index{rfc2369-header-fields}
+
+	\default {\cfkeyword {rfc2369\_header\_fields} sympa.conf parameter}
+	\lparam {rfc2369\_header\_fields} \textit {help,archive}
+
+RFC2369 compliant header fields (List-xxx) to be added to distributed messages. 
+These header-fields should be implemented by MUA's, adding menus.
+
+\example {custom\_header X-url: http://www.cru.fr/listes/apropos/sedesabonner.faq.html}.
+
 \subsection {custom\_subject}
 
 	\label {par-custom-subject}

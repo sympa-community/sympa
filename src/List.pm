@@ -890,6 +890,13 @@ my %alias = ('reply-to' => 'reply_to',
 			 'title_id' => 67,
 			 'group' => 'command'
 			 },
+	    'rfc2369_header_fields' => {'format' => ['help','subscribe','unsubscribe','post','owner','archive'],
+					'default' => {'conf' => 'rfc2369_header_fields'},
+					'occurrence' => '0-n',
+					'split_char' => ',',
+					'title_id' => 213,
+					'group' => 'sending'
+					},
 	    'send' => {'scenario' => 'send',
 		       'title_id' => 68,
 		       'group' => 'sending'
@@ -1445,7 +1452,7 @@ sub load {
     }
     
     $self->{'admin'} = $admin if ($admin);
-    
+
     # default list host is robot domain
     $self->{'admin'}{'host'} ||= $self->{'domain'};
     # uncomment the following line if you want virtual robot to overwrite list->host
@@ -2096,7 +2103,7 @@ sub distribute_msg {
     $hdr->add('List-Id', sprintf ('<%s.%s>', $self->{'name'}, $self->{'admin'}{'host'}));
 
     ## Add RFC 2369 header fields
-    foreach my $field (@{$Conf{'rfc2369_header_fields'}}) {
+    foreach my $field (@{$self->{'admin'}{'rfc2369_header_fields'}}) {
 	if ($field eq 'help') {
 	    $hdr->add('List-Help', sprintf ('<mailto:%s@%s?subject=help>', &Conf::get_robot_conf($robot, 'email'), &Conf::get_robot_conf($robot, 'host')));
 	}elsif ($field eq 'unsubscribe') {

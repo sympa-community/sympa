@@ -54,6 +54,35 @@ Vous pouvez éditer ci-dessous un sous-ensemble des paramètres de la liste : <UL>
   [IF p->occurrence=multiple]
   <!-- Multiple params -->
 
+   [IF p->type=enum]
+   <!-- Multiple Enum -->
+   	    [IF p->may_edit=write]
+	       <SELECT NAME="multiple_param.[p->name]" MULTIPLE>
+	      [FOREACH enum IN p->value]
+	        <OPTION VALUE="[enum->NAME]"
+	        [IF enum->selected=1]
+	  	  SELECTED
+	        [ENDIF]
+	        [IF enum->title]
+	          >[enum->title]
+	        [ELSE]
+	          >[enum->NAME]
+	        [ENDIF]
+	      [END]
+	      </SELECT>
+	    [ELSIF p->may_edit=read]
+	      [FOREACH enum IN p->value]
+	        [IF enum->selected=1]
+		  [IF enum->title]
+		    [enum->title] 
+	  	  [ELSE]
+		    [enum->NAME]
+		  [ENDIF]
+	        [ENDIF]
+	      [END]
+	    [ENDIF]
+   [ELSE]
+
      [FOREACH o IN p->value]
      <!-- Foreach occurrence -->
 	<DD>
@@ -104,30 +133,6 @@ Vous pouvez éditer ci-dessous un sous-ensemble des paramètres de la liste : <UL>
           [END]
           <HR>
 
-	[ELSIF p->type=enum]
-	<!-- Enum -->
-	  [IF p->may_edit=write]
-	    <SELECT NAME="single_param.[p->name].[o->INDEX]">
-	     [FOREACH enum IN o->value]
-	       <OPTION VALUE="[enum->NAME]"
-	       [IF enum->selected=1]
-		 SELECTED
-	       [ENDIF]
-	       [IF enum->title]
-		 >[enum->title]
-	       [ELSE]
-	         >[enum->NAME]
-	       [ENDIF]
-	     [END]
-	     </SELECT>
-	  [ELSIF p->may_edit=read]
-	    [FOREACH enum IN o->value]
-	      [IF enum->selected=1]
-	        [enum->NAME]
-	      [ENDIF]
-	    [END]
-	  [ENDIF]
-
 	[ELSE]
 	<!-- Scalar -->
 
@@ -141,6 +146,8 @@ Vous pouvez éditer ci-dessous un sous-ensemble des paramètres de la liste : <UL>
         <BR>
      [END]
      <!-- END Foreach occurrence -->
+    [ENDIF]
+    <!-- ENDIF Enum --> 
 
   [ELSE]
   <!-- Single params -->

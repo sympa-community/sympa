@@ -388,6 +388,7 @@ $set 16 Listm parameters titles
 210	"a listname or list address or *@<domain> or *@*"
 211	"admin role selection"
 212	"Archive encrypted mails as cleartext"
+213	"RFC 2369 Header fields"
 
 $set 17 Cookie expiration periods
 1	"session"
