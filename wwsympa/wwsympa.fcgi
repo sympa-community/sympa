@@ -4275,6 +4275,11 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      $param->{'res'} = $search->res;
 
+     ## Decode subject header fields
+     foreach my $m (@{$param->{'res'}}) {
+	 $m->{'subj'} = &MIME::Words::decode_mimewords($m->{'subj'});
+     }
+
      return 1;
  }
 

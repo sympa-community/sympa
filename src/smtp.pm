@@ -165,6 +165,9 @@ sub sendto {
 
     my $msg;
 
+    ## Encode subject before sending
+    $msg_header->replace('Subject', MIME::Words::encode_mimewords($msg_header->get('Subject')));
+
     if ($encrypt eq 'smime_crypted') {
 	my $email ;
 	if (ref($rcpt) eq 'SCALAR') {
