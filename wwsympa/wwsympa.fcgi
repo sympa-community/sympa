@@ -7668,8 +7668,13 @@ sub do_view_translations {
      &wwslog('debug', 'do_view_translations()');
      my %lang = ('default' => 1);
 
-     foreach my $tpl (<--ETCBINDIR--/wws_templates/*.tpl>) {
-	 $tpl =~ s/^.*\/([^\/]+)$/$1/;
+     unless (opendir TPL, "--ETCBINDIR--/wws_templates/") {
+	 &error_message('error');
+	 &wwslog('info','do_view_translations: unable to read --ETCBINDIR--/wws_templates/');
+	 return undef;
+     }
+    
+     foreach my $tpl (sort grep(/\.tpl$/, readdir TPL)) {
 	 my @token = split /\./, $tpl;
 	 if ($#token == 2) {
 	     $param->{'tpl'}{$token[0]}{$token[1]} = 'bin';
@@ -7678,6 +7683,8 @@ sub do_view_translations {
 	     $param->{'tpl'}{$token[0]}{'default'} = 'bin';
 	 }
      }
+
+     close TPL;
 
      foreach my $l (keys %lang) {
 	 foreach my $t (keys %{$param->{'tpl'}}) {
