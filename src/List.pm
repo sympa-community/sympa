@@ -3368,6 +3368,13 @@ sub request_action {
 	    return undef ;
 	}
 
+	## pending/closed lists => send/visibility are closed
+	unless ($list->{'admin'}{'status'} eq 'open') {
+	    if ($operation =~ /^send|visibility$/) {
+		return 'undef';
+	    }
+	}
+
 	### the following lines are used by the document sharing action 
 	if (defined $context->{'scenario'}) { 
 	    # information about the  scenario to load
@@ -6075,12 +6082,12 @@ sub _load_admin_file {
     }
 
     ## This default setting MUST BE THE LAST ONE PERFORMED
-    if ($admin{'status'} ne 'open') {
-	## requested and closed list are just list hidden using visibility parameter
-	## and with send parameter set to closed.
-	$admin{'send'} = &_load_list_param('.','send', 'closed', $::pinfo{'send'}, $directory);
-	$admin{'visibility'} = &_load_list_param('.','visibility', 'conceal', $::pinfo{'visibility'}, $directory);
-    }
+#    if ($admin{'status'} ne 'open') {
+#	## requested and closed list are just list hidden using visibility parameter
+#	## and with send parameter set to closed.
+#	$admin{'send'} = &_load_list_param('.','send', 'closed', $::pinfo{'send'}, $directory);
+#	$admin{'visibility'} = &_load_list_param('.','visibility', 'conceal', $::pinfo{'visibility'}, $directory);
+#    }
 
     ## reception of default_user_options must be one of reception of
     ## available_user_options. If none, warning and put reception of

@@ -3595,7 +3595,7 @@ sub do_install_pending_list {
     }    
 
     $list->{'admin'}{'status'} = $in{'status'};
-    
+
     unless ($list->save_config($param->{'user'}{'email'})) {
 	&error_message('cannot_save_config');
 	&wwslog('info','_create_list: Cannot save config file');
