@@ -603,7 +603,7 @@ sub unescape_chars {
 sub tmp_passwd {
     my $email = shift;
 
-    return ('INIT'.substr(MD5->hexhash(join('/', $Conf{'cookie'}, $email)), -8)) ;
+    return ('init'.substr(MD5->hexhash(join('/', $Conf{'cookie'}, $email)), -8)) ;
 }
 
 # Check sum used to authenticate communication from wwsympa to sympa

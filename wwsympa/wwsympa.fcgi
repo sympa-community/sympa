@@ -1558,7 +1558,7 @@ sub do_choosepasswd {
 	return 'login';
     }
 
-    $param->{'init_passwd'} = 1 if ($param->{'user'}{'password'} =~ /^INIT/);
+    $param->{'init_passwd'} = 1 if ($param->{'user'}{'password'} =~ /^INIT/i);
 
     return 1;
 }
@@ -1941,7 +1941,7 @@ sub do_subrequest {
 	## Need to send a password by email
 	if (!&List::is_user_db($in{'email'}) || 
 	    !$user->{'password'} || 
-	    ($user->{'password'} =~ /^INIT/)) {
+	    ($user->{'password'} =~ /^INIT/i)) {
 
 	    &do_sendpasswd();
 	    $param->{'status'} = 'notauth_passwordsent';
@@ -2087,7 +2087,7 @@ sub do_sigrequest {
 	## Need to send a password by email
 	if (!&List::is_user_db($in{'email'}) || 
 	    !$user->{'password'} || 
-	    ($user->{'password'} =~ /^INIT/)) {
+	    ($user->{'password'} =~ /^INIT/i)) {
 	    
 	    &do_sendpasswd();
 	    $param->{'email'} =$in{'email'};
