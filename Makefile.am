@@ -398,7 +398,7 @@ build_mdk_rpm: clean
 		ZIPEXT='bz2'; export ZIPEXT; \
 		APPGROUP='System/Servers'; export APPGROUP; \
 		HOMEDIR='/var/lib/sympa'; export HOMEDIR; \
-		ICONSDIR=$(ICONSDIR); export ICONSDIR; \
+		ICONSDIR='/var/www/icons'; export ICONSDIR; \
 		VERSION=$(SYMPA_VERSION); export VERSION; \
 		$(PERL) ../../../subst.pl sympa.spec \
 	)
