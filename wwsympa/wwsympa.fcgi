@@ -458,16 +458,19 @@ while ($query = &new_loop()) {
 	}
     }
 
-    # if bypass defined use file extention, if bypass = 'extrem' leave the action send the content-type
+    # if bypass defined use file extention
     if ($param->{'bypass'}) {
-#	if ($param->{'bypass'} eq 'extreme') {
-#	    do_log ('info',"extermmmmmmme xxxx");
-#	    printf "Content-type: text/plain\n\n%s\n','bli bli';
-#	}	
+
+	## if bypass = 'extreme' leave the action send the content-type
 	unless ($param->{'bypass'} eq 'extreme') {
-	    $mime_types->{$param->{'file_extension'}} ||= 'application/octet-stream';
-	    
-	    printf "Content-Type: %s\n\n", $mime_types->{$param->{'file_extension'}};
+
+	    ## if bypass = 'asis', file content-type is in the file itself
+	    unless ($param->{'bypass'} eq 'asis') {
+		$mime_types->{$param->{'file_extension'}} ||= 'application/octet-stream';
+		
+		printf "Content-Type: %s\n\n", $mime_types->{$param->{'file_extension'}};
+	    }
+
 	    open (FILE, $param->{'file'});
 	    print <FILE>;
 	    close FILE;
