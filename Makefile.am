@@ -387,3 +387,8 @@ build_mdk_rpm: clean
 	)
 	rpm -ba $(RPMTOPDIR)/SPECS/sympa.spec
 
+tag:	ChangeLog
+	@if [ ! $(NEW_VERSION) ]; then \
+	echo "You need to define NEW_VERSION"; \
+	else echo "NEW_VERSION: $(NEW_VERSION)"; \
+	fi
