@@ -3383,7 +3383,7 @@ sub get_first_user {
 
 	## If no offset (for LIMIT) was used, update total of subscribers
 	unless ($offset) {
-	    my $total = &_load_total_db($self->{'name'});
+	    my $total = &_load_total_db($self->{'name'},'nocache');
 	    if ($total != $self->{'total'}) {
 		$self->{'total'} = $total;
 		$self->savestats();
