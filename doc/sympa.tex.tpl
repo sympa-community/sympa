@@ -2234,6 +2234,339 @@ dumped to \file {subscribers.db.dump} at every shutdown,
 to allow a manual rescue restart (by renaming subscribers.db.dump to
 subscribers and changing the user\_data\_source parameter), if ever the
 database were to become inaccessible.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Using Sympa with LDAP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Using \Sympa with LDAP}
+\label {ldap}
+
+LDAP is a client-server protocol for accessing a directory service. Sympa
+provide various features based on access to one or more LDAP directories :
+
+\begin{itemize}
+
+	\item{authentication using LDAP directory insteed of sympa internal storage of password}\\
+
+	\item{named filters used in scenario condition}\\ 
+	
+ 	\item{dynamic evaluation of list subscribers set (see ~\ref {par-user-data-source})}\\         
+	
+\end{itemize}
+
+
+\section {Authentication via uid or alternate email}
+
+\Sympa stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication . The  module of LDAP authentication allows to use \Sympa in intranet without duplicating the user's passwords. 
+
+Then, users can indiferently authenticate with their ldap\_uid, their alternate\_email or their canonic email stored in theldap directory (the most explicit user's email :for example  John.Carpenter@Host.com).
+
+\Sympa gets the canonic email in the ldap directory with the ldap\_uid or the alternate\_email.  
+\Sympa will first intend an anonymous bind to the directory to get the user's DN, and then \Sympa will bind with the DN and the user's ldap\_password in order to realise an efficient authentication. This last bind will work only if the good ldap\_password is provided. Indeed the value returned by the bind(DN,ldap\_password) is tested.
+
+
+Example: a person is described by
+\begin {quote}
+\begin{verbatim}
+                 Dn:cn=Fabrice Rafart,
+                 ou=Siege ,
+                 o=MaSociete ,
+                 c=FR Objectclass:
+                 person Cn: Fabrice Rafart
+                 Title: Network Responsible
+                 O: Siege
+                 Or: Data processing
+                 Telephonenumber: 01-00-00-00-00
+                 Facsimiletelephonenumber:01-00-00-00-00
+                 L:Paris
+                 Country: France
+
+		 uid: frafart
+ 		 mail: Fabrice.Rafart@MaSociete.fr
+                 alternate_email: frafart@MaSociete.fr
+                 alternate:rafart@MaSociete.fr
+\end{verbatim}
+\end {quote}
+
+So Fabrice Rafart can be authenticated with: frafart, Fabrice.Rafart@MaSociete.fr, frafart@MaSociete.fr,Rafart@MaSociete.fr.
+After this operation, the address in the field FROM will be the Canonic email, in this case  Fabrice.Rafart@MaSociete.fr. 
+That means that \Sympa will get this email and use it during all the session until you clearly ask to \Sympa to change your email address via 2 pages : which and pref.
+  
+
+
+\subsection {auth.conf}
+
+The \file {/etc/auth.conf} configuration file contains numerous
+parameters which are read on start-up of \Sympa. If you change this file, do not forget
+that you will need to restart \Sympa afterwards. 
+
+The \file {/etc/auth.conf} is organised in paragraphs. Each paragraph coincides with the configuration of 
+an ldap directory.
+
+The \file {/etc/auth.conf} file contains directives in the following format:
+
+\begin {quote}
+
+ \textit {paragraphs}\\
+    \textit {keyword    value}
+
+ \textit {paragraphs}\\
+    \textit {keyword    value} 
+
+\end{quote}
+
+Comments start with the \texttt {\#} character at the beginning of a line.
+  
+Empty lines are also considered as comments and are ignored at the beginning. After the first paragraph they are consideredas paragrahs separators.
+
+There should only be one directive per line, but their order in the file is of no importance.
+
+Thanks to this type of configuration \Sympa is able to consult various directories. So, users who come from different directories will be authenticated thanks to their ldap\_password. Indeed, \Sympa will try to bind on the first directory with the given ldap\_password, if it does not work,  \Sympa will try to bind on the second with the same ldap\_password etc.. This mecanism is useful in the case of homonyms.
+
+
+Example :
+
+\begin {quote}
+\begin{verbatim}
+
+#Configuration file auth.conf for the LDAP authentification
+#Description of parameters for each directory
+
+
+
+ldap
+	host				ldap.univ-rennes1.fr:389
+	timeout				30
+	suffix				dc=univ-rennes1,dc=fr
+	get_dn_by_uid_filter		(uid=[sender])
+	get_dn_by_email			(|(mail=[sender])(mailalternateaddress=[sender]))
+	email_attribute			mail
+	alternative_email_attribute	mailalternateaddress,ur1mail
+	scope				sub
+
+ldap
+	host				ldap.univ-nancy2.fr:392,ldap1.univ-nancy2.fr:392,ldap2.univ-nancy2.fr:392
+	timeout				20		
+	suffix				dc=univ-nancy2,dc=fr
+	get_dn_by_uid_filter		(uid=[sender])
+	get_dn_by_email			(|(mail=[sender])(n2atraliasmail=[sender]))
+	alternative_email_attribute	n2atrmaildrop
+	email_attribute			mail
+	scope				sub
+	
+\end{verbatim}
+\end {quote}
+
+\begin{itemize}
+\item{host}\\
+
+        This keyword is \textbf {mandatory}. It is the domain name
+	used in order to bind to the directory and then to extract informations.
+	You must mention the port number after yhe server name.
+	The replication is also taken in charge, then the different servers are comma separated.
+
+        Example :
+	\begin {quote}
+	\begin{verbatim}
+
+	host ldap.univ-rennes1.fr:389
+	host ldap0.university.com:389,ldap1.university.com:389,ldap2.university.com:389
+
+	\end{verbatim}
+	\end {quote}
+	
+
+\item{timeout}\\ 
+	
+	It corresponds to the timelimit in the Search fonction. A timelimit that restricts the maximum 
+	time (in seconds) allowed for a search. A value of 0, and the default, means that no timelimit
+        will be requested.
+ 
+\item{suffix}\\ 
+
+	The root of the DIT (Directory Information Tree).The DN that is the base object entry relative 
+	to which the search is to be performed. 
+
+        \example {dc=university,dc=fr}
+
+\item{get\_dn\_by\_uid\_filter}\\
+	
+	You define the search filter corresponding to the ldap\_uid. (RFC 2254 compliant).
+	If you want to apply the filter on the user, mention him with the variable ' [sender] '. It would work with every
+	type of authentication (uid, alternate\_email..). 
+	  
+	Example :
+	\begin {quote}
+	\begin{verbatim}
+
+	(Login = [sender])
+	(|(ID = [sender])(UID = [sender]))
+
+	\end{verbatim}
+	\end {quote}
+	
+\item{get\_dn\_by\_email\_filter}\\
+
+	You define the search filter corresponding to the emails (canonic and alternative).(RFC 2254 compliant). 
+	If you want to apply the filter on the user, mention him with the variable ' [sender] '. It would work with every
+	type of authentication (uid, alternate\_email..). 
+
+ 		Example: a person is described by
+
+\begin {quote}
+\begin{verbatim}
+
+
+
+                 Dn:cn=Fabrice Rafart,
+                 ou=Siege ,
+                 o=MaSociete ,
+                 c=FR Objectclass:
+                 person Cn: Fabrice Rafart
+                 Title: Network Responsible
+                 O: Siege
+                 Or: Data processing
+                 Telephonenumber: 01-00-00-00-00
+                 Facsimiletelephonenumber:01-00-00-00-00
+                 L:Paris
+                 Country: France
+
+		 uid: frafart
+ 		 mail: Fabrice.Rafart@MaSociete.fr
+                 alternate_email: frafart@MaSociete.fr
+                 alternate:rafart@MaSociete.fr
+  
+
+\end{verbatim}
+\end {quote}
+
+	The filters can be :
+
+\begin {quote}
+\begin{verbatim}
+	
+	(mail = [sender])
+	(| (mail = [sender])(alternate_email = [sender]) )
+	(| (mail = [sender])(alternate_email = [sender])(alternate  = [sender]) )
+
+
+\end{verbatim}
+\end {quote}
+
+\item{email\_attribute}\\
+	
+	The name of the attribute for the canonic email in your directory : for instance mail, canonic\_email, canonic\_add	   res ...
+	In the previous example the canonic email is 'mail'.
+
+		 
+\item{alternate\_email\_attribute}\\
+
+	The name of the attribute for the alternate email in your directory : for instance alternate\_email, mailalternatea	   ddress, ...
+	You make a list of these attributes separated by commas.
+
+	With this list \Sympa creates a cookie which contains various informations : the user is authenticated via Ldap or 	   not, his alternate email. To store the alternate email is interesting when you want to canonify your preferences an	      d subscriptions. 
+	That is to say  you want to use a unique adress in User\_table and Subscriber\_table which is the canonic email.
+
+\item{scope}\\
+
+	\default {sub}
+	By default the search is performed on the whole tree below the specified base object. This may be changed by 
+	specifying a scope :
+
+\begin{itemize}
+
+	\item{base}\\
+	Search only the base object.
+
+	\item{one}\\ 
+	Search the entries immediately below the base object. 
+
+ 	\item{sub}\\         
+	Search the whole tree below the base object. This is the default. 
+
+\end{itemize}
+\end{itemize}
+
+
+\section {Named Filters}
+
+At the moment Named Filters are only used in scenarii. They enable to select a category of people who will be authorized or not to realise some actions.
+	
+As a consequence, you can grant privileges in a list to people belonging to an LDAP directory thanks to a scenario.
+	
+\subsection {Definition}
+
+	People are selected thanks to an Ldap filter defined in a configuration file. This file must have the extension '.ldap'.It is stored in \tildedir {sympa/etc/search\_filters/}.
+	
+	You must mention many informations in order to create a Named Filter:
+
+\begin{itemize}
+
+	\item{host}\\
+	Name of the LDAP directory host.
+
+	\item{port}\\
+	port ldap\_directory\_port (Default 389)	
+
+	\item{suffix}\\
+	Defines the naming space covered by the search (optional, depending on the LDAP server).
+
+	\item{filter}\\
+	Defines the LDAP search filter (RFC 2254 compliant). 
+	But you must absolutely take into account the first part of the filter which is:
+	('mail\_attribute' = [sender]) as shown in the example. you will have to replce 'mail\_attribute' by the name 
+	of the attribute for the email.
+	So \Sympa verifies if the user belongs to the category of people defined in the filter. 
+	
+	\item{scope}\\
+	By default the search is performed on the whole tree below the specified base object. This may be chaned by specify	   ing a scope :
+
+	\begin{itemize}
+		\item{base} : Search only the base object.
+		\item{one}\\ 
+		Search the entries immediately below the base object. 
+ 		\item{sub}\\         
+		Search the whole tree below the base object. This is the default. 
+	\end{itemize}
+ 
+
+\end{itemize}
+
+
+example.ldap : we want to select the professors of mathematics in the university of Rennes1 in France
+\begin {quote}
+\begin{verbatim}
+	
+	host		ldap.univ-rennes1.fr
+	port		389
+	suffix		dc=univ-rennes1.fr,dc=fr
+	filter		(&(canonic_mail = [sender])(EmployeeType = prof)(subject = math))
+	scope		sub
+
+\end{verbatim}
+\end {quote}
+
+
+\subsection {Search Condition}
+	
+The search condition is used in scenarii which are defined and  decribed in (see~\ref {scenarii}) 
+
+The syntax of this rule is:
+\begin {quote}
+\begin{verbatim}
+	search(example.ldap,[sender])      smtp,smime,md5    -> do_it
+\end{verbatim}
+\end {quote}
+
+The variables used by 'search' are :
+\begin{itemize}
+	\item{the name of the LDAP Configuration file}\\
+	\item{the [sender]}\\
+	That is to say the sender email. 
+\end{itemize}
+ 
+The method of authentication does not change.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SMIME
