@@ -4,7 +4,7 @@
 <TABLE width=100% border="0" VALIGN="top">
 <TR>
 [IF is_owner]
-<TD VALIGN="top" NOWRAP>
+<TD VALIGN="top" NOWRAP COLSPAN="3">
     <FORM ACTION="[path_cgi]" METHOD="POST">
       <INPUT TYPE="hidden" NAME="previous_action" VALUE="review">
       <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
@@ -12,6 +12,21 @@
       <INPUT TYPE="text" NAME="email" SIZE="18">
       <INPUT TYPE="submit" NAME="action_add" VALUE="Add"> quiet<INPUT TYPE="checkbox" NAME="quiet">
     </FORM>
+</TD>
+</TR>
+<TR>
+<TD ALIGN="right">
+ <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
+   <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
+     <TR>
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+         <FONT COLOR="[selected_color]" SIZE="-1">
+         <A HREF="[base_url][path_cgi]/subindex/[list]" ><b>Pending subscriptions</b></A>
+         </FONT>
+       </TD>
+     </TR>
+   </TABLE></TD></TR>
+ </TABLE>
 </TD>
 <TD>
  <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
