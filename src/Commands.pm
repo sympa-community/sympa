@@ -293,8 +293,8 @@ sub stats {
 					{'listname' => $listname,
 					 'sender' => $sender});
 
-    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
-	my $tpl = $1;
+    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
+	my $tpl = $2;
 
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
@@ -491,8 +491,8 @@ sub review {
 	do_log('info', 'REVIEW %s from %s, auth requested (%d seconds)', $listname, $sender,time-$time_command);
 	return 1;
     }
-    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
-	my $tpl = $1;
+    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
+	my $tpl = $2;
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
@@ -612,8 +612,8 @@ sub subscribe {
     
     &do_log('debug2', 'action : %s', $action);
     
-    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
-	my $tpl = $1;
+    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
+	my $tpl = $2;
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
@@ -740,9 +740,9 @@ sub info {
 				       {'listname' => $listname, 
 					'sender' => $sender });
     
-    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
+    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
 
-	my $tpl = $1;
+	my $tpl = $2;
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
@@ -851,8 +851,8 @@ sub signoff {
 					'email' => $email,
 					'sender' => $sender });
     
-    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
-	my $tpl = $1;
+    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
+	my $tpl = $2;
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
@@ -964,8 +964,8 @@ sub add {
 					'email' => $email,
 					'sender' => $sender });
     
-    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
-	my $tpl = $1;
+    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
+	my $tpl = $2;
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
@@ -1073,8 +1073,8 @@ sub invite {
 				       {'listname' => $which, 
 					'sender' => $sender });
 
-    if ($action =~ /rejectt\(\'?(\w+)\'?\)/i) {
-	my $tpl = $1;
+    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
+	my $tpl = $2;
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
@@ -1215,8 +1215,8 @@ sub remind {
 					    'sender' => $sender });
     }
 
-    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
-	my $tpl = $1;
+    if ($action =~ /reject(\(\'?(\w+)\'?\))/i) {
+	my $tpl = $2;
 	do_log ('info',"Remind for list $listname from $sender refused");
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
@@ -1375,8 +1375,8 @@ sub del {
 
 #    my $action = &List::get_action ('del', $which, $sender, $who, $auth_method);
 
-    if ($action =~ /reject\(\'?(\w+)\'?\)/i) {
-	my $tpl = $1;
+    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
+	my $tpl = $2;
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
 	}else {
@@ -1718,8 +1718,8 @@ sub confirm {
 	do_log('info', 'Message for %s from %s sent to editors', $name, $sender);
 	$list->notify_sender($sender);
 	return 1;
-    }elsif($action =~ /^reject\(\'?(\w+)\'?\)/) {
-	my $tpl = $1;
+    }elsif($action =~ /^reject(\(\'?(\w+)\'?\))?/) {
+	my $tpl = $2;
    	do_log('notice', 'Message for %s from %s rejected, sender not allowed', $name, $sender);
 	if ($tpl) {
 	    $list->send_file($tpl, $sender, $robot, {});
