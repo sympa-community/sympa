@@ -56,6 +56,10 @@ use CPAN;
 	     'MIME::Base64' => 'MIME-Base64',
 	     'CGI' => 'CGI',
 	     'File::Spec' => 'File-Spec',
+	     'Regexp::Common' => 'Regexp-Common',
+	     'Locale::Messages' => 'libintl-perl',
+	     'AppConfig' => 'AppConfig',
+	     'Template' => 'Template-Toolkit',
 	     'Archive::Zip' => 'Archive-Zip',
 	     );
 
