@@ -1147,7 +1147,13 @@ sub do_login {
     unless($param->{'user'} = &check_auth($in{'email'},$in{'passwd'})){
 	&error_message('failed');
 	do_log('notice', "Authentication failed\n");
-	return 'home';
+	if ($in{'previous_action'}) {
+	    delete $in{'passwd'};
+	    $in{'list'} = $in{'previous_list'};
+	    return $in{'previous_action'};
+	}else {
+	    return 'loginrequest';
+	}
     } 
 
     ##lyly
@@ -1270,7 +1276,7 @@ sub authentication{
 	
 	$param->{'init_email'} = $email;
 	$param->{'escaped_init_email'} = &tools::escape_chars($email);
-	return 'loginrequest';
+	return undef;
     }
     
 }
