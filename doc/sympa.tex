@@ -1540,8 +1540,11 @@ This is required to allow the authentication scheme to be applied
 on everything.
 
 Authentication is based on passwords stored in the database table
-user\_table ; passwords are not crypted to allow reminding
-of passwords. To keep track of authentication information, \WWSympa
+user\_table ; if the the appropriate \file {Crypt::CipherSaber} is
+installed, password are encrypted in the database using reversible
+encryption based on RC4. Otherwise they are stored in clear form.
+In both case  reminding of passwords is possible.
+ To keep track of authentication information, \WWSympa
 uses HTTP cookies, stored on the client side. The HTTP cookie only 
 indicates that a specified email address has been authentified ;
 privileges are evaluated when an action is requested.
@@ -1824,7 +1827,9 @@ scripts for creating it are also provided with \Sympa distribution
 (in \dir {script}). 
 
 User information (password and prefs) are stored in «User» table.
-User passwords stored in database are NOT CRYPTED since \WWSympa
+User passwords stored in database are encrypted using reversible
+RC4 encryption controled with the \cfkeyword {cookie} parameter
+since \WWSympa
 might need to remind users with their passwords. 
 \WWSympa security relies on your database's security. 
 
@@ -1941,7 +1946,7 @@ CREATE DATABASE sympa;
 CREATE TABLE user_table (
   	email_user          	varchar (100) NOT NULL,
   	gecos_user          	varchar (150),
-  	password_user		varchar (20),
+  	password_user		varchar (40),
 	cookie_delay_user	int,
 	lang_user		varchar (10),
 	PRIMARY KEY (email_user)
