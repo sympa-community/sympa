@@ -1,3 +1,169 @@
+2001-11-16 13:02  aumont
+
+	* doc/sympa.tex.tpl: Fix: escape '_'
+
+2001-11-16 13:01  aumont
+
+	* src/etc/templates/us/listmaster_notification.us.tpl: Bug fix:
+	edit_list_conf memory cache was not used ! Change: alert listmaster
+	if edit_list.conf has a wrong format
+
+2001-11-16 11:58  aumont
+
+	* doc/sympa.tex.tpl: doc log_smtp
+
+2001-11-16 11:56  aumont
+
+	* src/: List.pm, tools.pl,
+	etc/templates/fr/listmaster_notification.fr.tpl: Bug fix:
+	edit_list_conf memory cache was not used ! Change: alert listmaster
+	if edit_list.conf has a wrong format
+
+2001-11-16 11:53  aumont
+
+	* doc/sympa.tex.tpl: [no log message]
+
+2001-11-16 11:48  aumont
+
+	* src/sympa.pl: fix log_smtp
+
+2001-11-16 11:17  aumont
+
+	* src/List.pm: small fix
+
+2001-11-16 11:10  aumont
+
+	* NEWS: prefix edit_list.conf changes with *****
+
+2001-11-16 11:09  aumont
+
+	* important_changes.pl: Fix: check NEWS instead of RELEASE_NOTES
+
+2001-11-16 11:07  aumont
+
+	* src/sympa.pl: [no log message]
+
+2001-11-16 10:47  aumont
+
+	* src/Conf.pm: replace logmail by log_smtp
+
+2001-11-16 10:32  aumont
+
+	* wwsympa/wws_templates/us/: home.us.tpl, list_menu.us.tpl,
+	menu.us.tpl, review.us.tpl, reviewbouncing.us.tpl,
+	serveradmin.us.tpl: Changes: make buttons border thinner
+
+2001-11-16 09:38  aumont
+
+	* src/Conf.pm: New Sympa and robot parameter "logmail" (default
+	off).
+
+2001-11-16 09:29  aumont
+
+	* src/Log.pm: Supress log in Apache error log
+
+2001-11-15 17:41  aumont
+
+	* wwsympa/cookielib.pm: Fix a bug in check_arc_cookie (users always
+	redirected to the "I'am not a spammer" form)
+
+2001-11-15 17:05  aumont
+
+	* src/: Commands.pm, List.pm: Bug fix: REMIND <listname> failed
+
+2001-11-15 17:04  aumont
+
+	* wwsympa/icons/: back.gif, back.png, binary.gif, binary.png,
+	down.gif, down.png, folder.gif, folder.open.gif, folder.open.png,
+	folder.png, image2.gif, image2.png, left.gif, left.png, link.gif,
+	link.png, locked.gif, locked.png, logo-s-lock.gif, logo-s-lock.png,
+	logo-s.gif, logo-s.png, movie.gif, movie.png, right.gif, right.png,
+	sound1.gif, sound1.png, text.gif, text.png, unknown.gif,
+	unknown.png: [requested by GNU] Changes: Change GIF icons to PNG. 
+	Problem with transparency
+
+2001-11-15 17:01  aumont
+
+	* src/etc/mhonarc-ressources, wwsympa/Makefile,
+	wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/cn-gb/create_list_request.cn-gb.tpl,
+	wwsympa/wws_templates/cn-gb/menu.cn-gb.tpl,
+	wwsympa/wws_templates/cn-gb/review.cn-gb.tpl,
+	wwsympa/wws_templates/cn-gb/reviewbouncing.cn-gb.tpl,
+	wwsympa/wws_templates/cz/create_list_request.cz.tpl,
+	wwsympa/wws_templates/cz/menu.cz.tpl,
+	wwsympa/wws_templates/cz/review.cz.tpl,
+	wwsympa/wws_templates/cz/reviewbouncing.cz.tpl,
+	wwsympa/wws_templates/de/create_list_request.de.tpl,
+	wwsympa/wws_templates/de/menu.de.tpl,
+	wwsympa/wws_templates/de/review.de.tpl,
+	wwsympa/wws_templates/de/reviewbouncing.de.tpl,
+	wwsympa/wws_templates/es/create_list_request.es.tpl,
+	wwsympa/wws_templates/es/menu.es.tpl,
+	wwsympa/wws_templates/es/review.es.tpl,
+	wwsympa/wws_templates/es/reviewbouncing.es.tpl,
+	wwsympa/wws_templates/fr/create_list_request.fr.tpl,
+	wwsympa/wws_templates/fr/d_read.fr.tpl,
+	wwsympa/wws_templates/fr/menu.fr.tpl,
+	wwsympa/wws_templates/fr/review.fr.tpl,
+	wwsympa/wws_templates/fr/reviewbouncing.fr.tpl,
+	wwsympa/wws_templates/hu/create_list_request.hu.tpl,
+	wwsympa/wws_templates/hu/d_read.hu.tpl,
+	wwsympa/wws_templates/hu/menu.hu.tpl,
+	wwsympa/wws_templates/hu/review.hu.tpl,
+	wwsympa/wws_templates/hu/reviewbouncing.hu.tpl,
+	wwsympa/wws_templates/it/create_list_request.it.tpl,
+	wwsympa/wws_templates/it/menu.it.tpl,
+	wwsympa/wws_templates/it/review.it.tpl,
+	wwsympa/wws_templates/it/reviewbouncing.it.tpl,
+	wwsympa/wws_templates/us/create_list_request.us.tpl,
+	wwsympa/wws_templates/us/d_read.us.tpl,
+	wwsympa/wws_templates/us/main.us.tpl,
+	wwsympa/wws_templates/us/menu.us.tpl,
+	wwsympa/wws_templates/us/review.us.tpl,
+	wwsympa/wws_templates/us/reviewbouncing.us.tpl: [requested by GNU]
+	Changes: Change GIF icons to PNG.  Problem with transparency
+
+2001-11-15 15:33  aumont
+
+	* src/List.pm: Reply_to_header/value parameter allow the value all
+	to force Reply-to; [list],[sender]
+
+2001-11-15 15:02  aumont
+
+	* INSTALL: [no log message]
+
+2001-11-15 14:47  aumont
+
+	* src/List.pm: Undo reply_to_header changes
+
+2001-11-15 14:27  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: [requested by Daniel Pittman]
+	Change: if 'default_home' parameter was defined use it anytime
+	instead of 'home'. Also use 'lists' as a default action if no
+	topics.conf was found
+
+2001-11-15 11:17  salaun
+
+	* doc/sympa.tex.tpl: Fix typos
+
+2001-11-15 10:50  salaun
+
+	* Makefile.am, src/etc/script/sympa.spec: Fixes to generate RPMs
+
+2001-11-14 17:29  salaun
+
+	* src/etc/script/sympa.spec: Missing release number
+
+2001-11-14 17:03  salaun
+
+	* .version, ChangeLog, NEWS: Preparing 3.3b.3
+
+2001-11-14 17:02  salaun
+
+	* nls/es.msg: [Josep Roman] Fix for HP/UX
+
 2001-11-13 17:46  salaun
 
 	* nls/de.msg: [Ralf Ebeling] Fix: Message 8::25 didn't produce a

@@ -3,6 +3,36 @@
 
 (See Changelog file for the full changes log)
 
+3.3b.4		16 Nov 2001
+
+   New feature :
+
+	Reply_to_header/value parameter allow the value 'all' to force 
+	Reply-to: [list],[sender]. This is usefull for hotline MLs
+
+	New 'log_smtp' sympa.conf/robot.conf parameter : allows per/robot
+	logging of Sendmail calls
+
+   Changes :
+
+	[requested by Daniel Pittman] If 'default_home' parameter was defined use it 
+	anytime	instead of 'home'. Also use 'lists' as a default action if no
+	topics.conf was found
+
+	[requested by GNU] Change GIF icons to PNG. (Problem with transparency)
+
+   Bug fix:
+
+	edit_list_conf memory cache was not used
+
+	Fix a bug in check_arc_cookie (users always redirected to the 
+	"I'am not a spammer" form)
+
+	REMIND <listname> failed
+
+	[reported by V. Mathieu] Supress logging in Apache error log
+	
+
 3.3b.3		14 Nov 2001
 
    New features : 
