@@ -790,6 +790,10 @@ sub db_connect {
 	$connect_string = sprintf 'DBI:%s:dbname=%s;host=%s', $Conf{'db_type'}, $Conf{'db_name'}, $Conf{'db_host'};
     }
 
+    if ($Conf{'db_port'}) {
+	$connect_string .= ';port=' . $Conf{'db_port'};
+    }
+
     if ($Conf{'db_options'}) {
 	$connect_string .= ';' . $Conf{'db_options'};
     }

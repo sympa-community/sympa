@@ -1572,6 +1572,10 @@ required:
 
         Database host name.
 
+\subsection {\cfkeyword {db\_port}}
+
+        Database port.
+
 \subsection {\cfkeyword {db\_user}}
 
         User with read access to the database.

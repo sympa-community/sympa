@@ -15,7 +15,7 @@ my @valid_options = qw(
 		       avg bounce_warn_rate bounce_halt_rate chk_cert_expiration_task 
 		       clean_delay_queue clean_delay_queueauth clean_delay_queuemod 
 		       cookie create_list crl_dir crl_update_task db_host db_env db_name db_options db_passwd db_type db_user 
-		       db_additional_subscriber_fields db_additional_user_fields
+		       db_port db_additional_subscriber_fields db_additional_user_fields
 		       default_list_priority edit_list email etc
 		       global_remind home host domain lang listmaster log_socket_type 
 		       max_size maxsmtp msgcat nrcpt owner_priority pidfile spool queue 
@@ -75,6 +75,7 @@ my %Default_Conf =
      'db_passwd'  => '',
      'db_options' => '',
      'db_env' => '',
+     'db_port' => '',
      'db_additional_subscriber_fields' => '',
      'db_additional_user_fields' => '',
      'listmaster' => undef,
@@ -99,13 +100,13 @@ my %Default_Conf =
      'antivirus_path' => '',
      'antivirus_args' => '',
      'anonymous_header_fields' => 'Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender',
-     'dark_color' => '--DARK_COLOR--',
-     'light_color' => '--LIGHT_COLOR--',
-     'text_color' => '--TEXT_COLOR--',
-     'bg_color' => '--BG_COLOR--',
-     'error_color' => '--ERROR_COLOR--',
-     'selected_color' => '--SELECTED_COLOR--',
-     'shaded_color' => '--SHADED_COLOR--',
+     'dark_color' => '#330099',
+     'light_color' => '#ccccff',
+     'text_color' => '#000000',
+     'bg_color' => '#ffffff',
+     'error_color' => '#ff6666',
+     'selected_color' => '#3366cc',
+     'shaded_color' => '#eeeeee',
      'chk_cert_expiration_task' => '',
      'crl_update_task' => ''
    );
