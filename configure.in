@@ -17,19 +17,19 @@ AC_PREFIX_DEFAULT(/home/sympa)
 sysconfdir=/etc
 
 ## for executable programs
-bindir=${ac_default_prefix}/bin
+bindir='${prefix}/bin'
 
 ## for executable programs run by sysadmin
-sbindir=${ac_default_prefix}/bin
+sbindir='${prefix}/bin'
 
 ## for libraries
-libdir=${ac_default_prefix}/bin
+libdir='${prefix}/bin'
 
 ## for *read-only* data files
-datadir=${ac_default_prefix}/bin/etc
+datadir='${prefix}/bin/etc'
 
 ## for modifiable data files
-localstatedir=${ac_default_prefix}/expl
+localstatedir='${prefix}/expl'
 
 dnl Checks for programs.
 AC_PROG_CC
