@@ -444,6 +444,7 @@ my %in_regexp = (
 		 
 		 ## Topics
 		 'topic' => '[\w\/]+',
+		 'topics' => '[\w\/]+',
 		 'subtopic' => '[\w\/]+',
 		 
 
