@@ -51,6 +51,7 @@ Thank you for your attention.\n\n\
 
 $set 6	Messages du module Commands.pm
 2	"Unable to read help file : %s\n"
+3	"List '%s' has no subscriber.\n"
 5	"List '%s' does not exist.\n"
 7	"This list's archives do not contain any file.\n"
 8	"Required file does not exist.\n"

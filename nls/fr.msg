@@ -49,6 +49,7 @@ votre message.\n\nMerci de votre attention.\n\n\
 
 $set 6	Messages du module Commands.pm
 2	"Impossible de lire le fichier d'aide : %s\n"
+3	"La liste '%s' ne comporte aucun abonné.\n"
 5	"Liste '%s' inexistante.\n"
 6	"Informations concernant la liste %s :\n\n"
 7	"Il n'y a pas de fichiers dans les archives de cette liste.\n"
@@ -374,6 +375,25 @@ $set 16 Titres des paramètres de config de listes
 94	"paramètres de connexion"
 97	"portée de la recherche"
 98	"délai de connexion"
+135	"LDAP 2-level query inclusion"
+136	"remote host"
+137	"remote port"
+138	"remote user"
+139	"remote password"
+140	"first-level suffix"
+141	"first-level filter"
+142	"first-level extracted attribute"
+143	"first-level selection"
+144	"second-level suffix template"
+145	"second-level filter template"
+146	"second-level extracted attribute"
+147	"second-level selection"
+197	"first-level search scope"
+198	"first-level connection timeout"
+199	"second-level search scope"
+200	"second-level connection timeout"
+201	"first-level regular expression"
+202	"second-level regular expression"
 
 $set 17 Cookie expiration periods
 1	"la session"

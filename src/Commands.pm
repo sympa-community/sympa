@@ -517,6 +517,7 @@ sub review {
     if ($action =~ /do_it/i) {
 	my $is_owner = $list->am_i('owner', $sender);
 	unless ($user = $list->get_first_user({'sortby' => 'email'})) {
+	    push @msg::report, sprintf Msg(6, 3, "List %s has no subscriber.\n"), $list->{'name'};
 	    do_log('err', "No subscribers in list '%s'", $list->{'name'});
 	    return 'no_subscribers';
 	}
