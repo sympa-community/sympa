@@ -12,6 +12,9 @@ use Log;
 ## RCS identification.
 #my $id = '@(#)$Id$';
 
+## global var to store a CipherSaber object 
+my $ cipher;
+
 ## Sorts the list of adresses by domain name
 ## Input : users hash
 ## Sort by domain.
@@ -609,13 +612,43 @@ sub sympa_checksum {
     return (substr(MD5->hexhash(join('/', $Conf{'cookie'}, $rcpt)), -10)) ;
 }
 
+# create a cipher
+sub ciphersaber_installed {
+    if (require (Crypt::CipherSaber)) {
+	return &Crypt::CipherSaber->new($Conf{'cookie'});
+    }else{
+	return ('no_cipher');
+    }
+}
+
+## encrypt a password
+sub crypt_passwd {
+    my $inpasswd = shift ;
+
+    unless (define($cipher)){
+	$cipher = ciphersaber_installed();
+    }
+    return $inpasswd if ($cipher eq 'no_cipher') ;
+    return ("crypt.".$cipher->encrypt ($inpasswd)) ;
+}
+
+## decrypt a password
+sub decrypt_passwd {
+    my $inpasswd = shift ;
+
+    return $inpasswd unless ($inpasswd =~ /^crypt\.(.*)$/) ;
+    $inpasswd = $1;
+
+    unless (define($cipher)){
+	$cipher = ciphersaber_installed();
+    }
+    if ($cipher eq 'no_cipher') {
+	do_log('info','password seems crypted while CipherSaber is not installed !');
+	return $inpasswd ;
+    }
+    return $cipher->decrypt ($inpasswd);
+}
+
+
+
 1;
-
-
-
-
-
-
-
-
-
