@@ -3098,7 +3098,7 @@ sub send_msg_digest {
     my @tabrcptplain;
     my $i;
     
-    my ($mail, @list_of_mail);
+    my (@list_of_mail);
 
     ## Create the list of subscribers in various digest modes
     for (my $user = $self->get_first_user(); $user; $user = $self->get_next_user()) {
@@ -3135,10 +3135,12 @@ sub send_msg_digest {
 
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
-    $parser->extract_uuencode(1);  
-    $parser->extract_nested_messages(1);
-#   $parser->output_dir($Conf{'spool'} ."/tmp");    
-	$mail = $parser->parse_data(\@text);
+	$parser->extract_uuencode(1);  
+	$parser->extract_nested_messages(1);
+	#   $parser->output_dir($Conf{'spool'} ."/tmp");    
+	my $mail = $parser->parse_data(\@text);
+
+	next unless (defined $mail);
 
 	push @list_of_mail, $mail;
 	
@@ -3165,7 +3167,10 @@ sub send_msg_digest {
 	chomp $msg->{'date'};
 
 	#$mail->tidy_body;
-	$mail->remove_sig;
+
+	## Commented because one Spam made Sympa die (MIME::tools 5.413)
+	## $mail->remove_sig; 
+
 	$msg->{'full_msg'} = $mail->as_string;
 	$msg->{'body'} = $mail->body_as_string;
 	$msg->{'plain_body'} = $mail->PlainDigest::plain_body_as_string();
