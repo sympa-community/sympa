@@ -5938,7 +5938,7 @@ sub store_digest {
 
 ## List of lists hosted a robot
 sub get_lists {
-    my $robot_context = shift;
+    my $robot_context = shift || '*';
 
     my(@lists, $l,@robots);
     do_log('debug2', 'List::get_lists(%s)',$robot_context);
