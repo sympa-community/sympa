@@ -162,7 +162,7 @@ a precise definition of each list feature, such as sender authorization,
 the moderating process, etc. \Sympa defines, for each feature of each list,
 exactly who is authorized to perform the relevant operations, along with the
 authentication method to be used. Currently, authentication can be based
-on either an smtp \From header, a password, or an S/MIME signature.\\
+on either an smtp From header, a password, or an S/MIME signature.\\
 \Sympa is also able to extract electronic
 addresses from an LDAP directory or SQL server, and include them
 dynamically in a list.
@@ -239,14 +239,14 @@ in a single software package, including:
         each incoming message. A \lparam {private} list is a list where
         only subscribers can send messages. A list configured using
         \lparam {privateoreditorkey} mode accepts incoming messages
-        from subscribers, but will forward any other (i.e. \non-subscriber) message
+        from subscribers, but will forward any other (i.e. non-subscriber) message
 	to the editor with a one-time secret numeric key that will be used by the
         editor to \textit {reject} or \textit {distribute} it.
         For details about the different sending modes, refer to the
         \lparam {send} parameter (\ref {par-send}, page~\pageref
         {par-send}). The sending process configuration (as well as most other list
 	operations) is defined using  a \textbf {scenario}. Any listmaster
-        can define new scenarios (\scenarii) in order to complement the 20
+        can define new scenarios (scenarii) in order to complement the 20
 	predefined configurations included in the distribution. \\
         Example : forward multipart messages to the list editor, while
 	distributing others without requiring any further authorization.
@@ -254,7 +254,7 @@ in a single software package, including:
     \item Privileged operations can be performed by list editors or
         list owners (or any other user category), as defined in the list
         \file {config} file or by
-        the robot \textindex {administrator}, the \listmaster, defined
+        the robot \textindex {administrator}, the listmaster, defined
         in the \file {/etc/sympa.conf} global configuration file.
         Privileged operations include the usual \mailcmd {ADD}, \mailcmd
         {DELETE} or \mailcmd {REVIEW} commands, which can be
