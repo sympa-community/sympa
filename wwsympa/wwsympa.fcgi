@@ -324,6 +324,9 @@ while ($query = &new_loop()) {
     &Language::SetLang($Language::default_lang);
 
     ## Get params in a hash
+#    foreach ($query->param) {
+#	$in{$_} = $query->param($_);
+#    }
     %in = $query->Vars;
 
     foreach my $k (keys %::changed_params) {
