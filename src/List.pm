@@ -8034,8 +8034,8 @@ sub sync_include_admin {
     &do_log('debug2', 'List:sync_include_admin(%s)', $name);
 
     unless($self->{'admin'}{'user_data_source'} eq 'include2'){
-	&do_log('err', 'sync_include_admin failed ; user_data_source for list %s is set to %s', $self->{'name'}, $self->{'admin'}{'user_data_source'}); 
-	return undef;
+	&do_log('debug', 'sync_include_admin failed ; user_data_source for list %s is set to %s', $self->{'name'}, $self->{'admin'}{'user_data_source'}); 
+	return 0;
     }
 
     ## don't care about listmaster role
