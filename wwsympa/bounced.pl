@@ -147,6 +147,8 @@ $< = $> = (getpwnam('--USER--'))[2];
 ## Sets the UMASK
 umask(oct($Conf{'umask'}));
 
+&Language::LoadLang($Conf{'msgcat'});
+
 ## Change to list root
 unless (chdir($Conf{'home'})) {
     &message('chdir_error');
