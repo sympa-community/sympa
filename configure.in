@@ -57,8 +57,13 @@ mandir='/usr/local/man'
 
 ## SYS V init scripts directory
 INITDIR=/etc/rc.d/init.d
-AC_ARG_WITH(initdir, [  --with-initdir=DIR     install System V init script in DIR  (default etc/rc.d/init.d)], [INITDIR="$withval"])
+AC_ARG_WITH(initdir, [  --with-initdir=DIR     install System V init script in DIR  (default /etc/rc.d/init.d)], [INITDIR="$withval"])
 AC_SUBST(INITDIR)
+
+## directory for storing .pid files
+PIDDIR='${prefix}'
+AC_ARG_WITH(piddir, [  --with-piddir=DIR     create .pid files in DIR  (default ${prefix})], [PIDDIR="$withval"])
+AC_SUBST(PIDDIR)
 
 dnl Checks for programs.
 AC_PROG_CC

@@ -54,7 +54,7 @@ DIR	=	${prefix}
 EXPL_DIR	=	${localstatedir}
 
 ## PID location
-PIDDIR	=	${prefix}
+PIDDIR	=	@PIDDIR@
 
 ## Both queue and bouncequeue are lunched by sendmail. If sendmail
 ## is configured to used smrsh (check the mailer prog definition), thoses

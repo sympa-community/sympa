@@ -968,7 +968,9 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 
 \item \unixcmd {--mandir=DIR}, man documentation in DIR (default /usr/local/man/)
 
-\item \unixcmd {--with-initdir=DIR}, install System V init script in DIR  (default etc/rc.d/init.d)
+\item \unixcmd {--with-initdir=DIR}, create .pid files in DIR  (default /home/sympa/)
+
+\item \unixcmd {--with-piddir=DIR}, install System V init script in DIR  (default /etc/rc.d/init.d)
 
 \item \unixcmd {--with-perl=FULLPATH}, set full path to Perl interpreter (default /usr/bin/perl)
 
