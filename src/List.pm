@@ -8190,7 +8190,7 @@ sub _urlize_part {
 
     my $parser = new MIME::Parser;
     $parser->output_to_core(1);
-    my @new_part;
+    my $new_part;
 
     my $lang = &Language::GetLang();
     my $tt2_include_path = [$list->{'dir'}.'/mail_tt2/'.$lang,
@@ -8206,10 +8206,10 @@ sub _urlize_part {
 		     'file_url'  => $file_url,
 		     'file_size' => $size },
 		    'urlized_part.tt2',
-		    \@new_part,
+		    \$new_part,
 		    $tt2_include_path);
 
-    my $entity = $parser->parse_data(\@new_part);
+    my $entity = $parser->parse_data(\$new_part);
 
     return $entity;
 }
