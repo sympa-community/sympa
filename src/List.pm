@@ -4755,7 +4755,6 @@ sub probe_db {
 
 	## Get fields
 	foreach my $t (@tables) {
-	    &do_log('debug', 'Table %s', $t);
 
 #	    unless ($sth = $dbh->table_info) {
 #	    unless ($sth = $dbh->prepare("LISTFIELDS $t")) {
