@@ -60,7 +60,9 @@
         \end {figure}
     }
 
-    \newcommand {\version} {2.7}
+[STARTPARSE]
+    \newcommand {\version} {[version]}
+[STOPPARSE]
 
     \newcommand {\samplelist} {mylist}
 
@@ -2401,14 +2403,14 @@ That means that \Sympa will get this email and use it during all the session unt
 
 \subsection {auth.conf}
 
-The \file {/etc/auth.conf} configuration file contains numerous
+The \tildefile {sympa/etc/auth.conf} configuration file contains numerous
 parameters which are read on start-up of \Sympa. If you change this file, do not forget
 that you will need to restart \Sympa afterwards. 
 
-The \file {/etc/auth.conf} is organised in paragraphs. Each paragraph coincides with the configuration of 
+The \file {sympa/etc/auth.conf} is organised in paragraphs. Each paragraph coincides with the configuration of 
 an ldap directory.
 
-The \file {/etc/auth.conf} file contains directives in the following format:
+The \file {sympa/etc/auth.conf} file contains directives in the following format:
 
 \begin {quote}
 
