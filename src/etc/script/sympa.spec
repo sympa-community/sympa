@@ -21,7 +21,6 @@ Requires: perl >= 0:5.005
 Requires: perl-MailTools >= 1.14
 Requires: perl-MIME-Base64   >= 1.0
 Requires: perl-IO-stringy    >= 1.0
-Requires: perl-Msgcat        >= 1.03
 Requires: perl-MIME-tools    >= 5.209
 Requires: perl-CGI    >= 2.52
 Requires: perl-DBI    >= 1.06
