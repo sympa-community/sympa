@@ -71,7 +71,7 @@
         \end {figure}
     }
 
-    \newcommand {\version} {3.3.6b.3}
+    \newcommand {\version} {3.3.6b.4}
 
     \newcommand {\samplelist} {mylist}
 
@@ -127,13 +127,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 3.3.6b.3\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 3.3.6b.4\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {19 September 2002}
+    \date {23 September 2002}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -2971,7 +2971,9 @@ ldap
 
 ldap
 	host				ldap.univ-nancy2.fr:392,ldap1.univ-nancy2.fr:392,ldap2.univ-nancy2.fr:392
-	timeout				20		
+	timeout				20
+	bind_dn                         cn=sympa,ou=people,dc=cru,dc=fr
+	bind_password                   sympaPASSWD
 	suffix				dc=univ-nancy2,dc=fr
 	get_dn_by_uid_filter		(uid=[sender])
 	get_dn_by_email_filter			(|(mail=[sender])(n2atraliasmail=[sender]))
@@ -3013,6 +3015,14 @@ ldap
 	to which the search is to be performed. 
 
         \example {dc=university,dc=fr}
+
+\item{bind\_dn}\\ 
+
+        If anonymous bind is not allowed on the LDAP server, a DN and password can be used.
+
+\item{bind\_password}\\ 
+
+        This password is used, combined with the bind\_dn above.
 
 \item{get\_dn\_by\_uid\_filter}\\
 	

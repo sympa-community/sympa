@@ -1356,7 +1356,20 @@ sub ldap_authentication {
 		next;
 	    }
 	    
-	    $ldap_anonymous->bind;
+	    my $cnx;
+	    ## Not always anonymous...
+	    if (defined ($ldap->{'bind_dn'}) && defined ($ldap->{'bind_password'})) {
+		$cnx = $ldap_anonymous->bind($ldap->{'bind_dn'}, password =>$ldap->{'bind_password'});
+	    }else {
+		$cnx = $ldap_anonymous->bind;
+	    }
+
+	    unless($cnx->code() == 0){
+		do_log ('err','Ldap Error : %s, Ldap server error : %s',$cnx->error,$cnx->server_error);
+		$ldap_anonymous->unbind;
+		last;
+	    }
+
 	    $mesg = $ldap_anonymous->search(base => $ldap->{'suffix'},
 					    filter => "$filter",
 					    scope => $ldap->{'scope'} ,

@@ -2835,7 +2835,9 @@ ldap
 
 ldap
 	host				ldap.univ-nancy2.fr:392,ldap1.univ-nancy2.fr:392,ldap2.univ-nancy2.fr:392
-	timeout				20		
+	timeout				20
+	bind_dn                         cn=sympa,ou=people,dc=cru,dc=fr
+	bind_password                   sympaPASSWD
 	suffix				dc=univ-nancy2,dc=fr
 	get_dn_by_uid_filter		(uid=[sender])
 	get_dn_by_email_filter			(|(mail=[sender])(n2atraliasmail=[sender]))
@@ -2877,6 +2879,14 @@ ldap
 	to which the search is to be performed. 
 
         \example {dc=university,dc=fr}
+
+\item{bind\_dn}\\ 
+
+        If anonymous bind is not allowed on the LDAP server, a DN and password can be used.
+
+\item{bind\_password}\\ 
+
+        This password is used, combined with the bind\_dn above.
 
 \item{get\_dn\_by\_uid\_filter}\\
 	

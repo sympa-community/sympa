@@ -9,7 +9,7 @@
 %DVIPSWebPage: (www.radicaleye.com)
 %DVIPSCommandLine: dvips -f sympa.dvi
 %DVIPSParameters: dpi=600, compressed
-%DVIPSSource:  TeX output 2002.09.19:1643
+%DVIPSSource:  TeX output 2002.09.23:1211
 %%BeginProcSet: texc.pro
 %!
 /TeXDict 300 dict def TeXDict begin/N{def}def/B{bind def}N/S{exch}N/X{S
@@ -792,8 +792,8 @@ rf /Fr 64[37 10[28 11[28 16[83 42 1[37 37 24[37 42 42
 21 47 42 28 28 28 1[69 42 42 1[28 2[28 26[46 46 2[{
 TeXBase1Encoding ReEncodeFont}93 83.022 /Times-Roman
 rf /Fs 87[33 49[50 50 28 39 33 1[50 50 50 78 28 2[28
-50 50 33 44 2[50 44 9[94 3[55 3[72 11[66 1[72 7[50 6[50
-50 50 3[25 44[{TeXBase1Encoding ReEncodeFont}28 99.6264
+50 50 33 44 2[50 44 9[94 3[55 3[72 11[66 1[72 13[50 50
+1[50 3[25 44[{TeXBase1Encoding ReEncodeFont}27 99.6264
 /Times-Roman rf /Ft 136[124 86 1[57 67 76 1[96 86 96
 143 48 2[48 96 86 57 76 2[96 86 13[96 5[163 115 8[124
 9[86 86 86 86 86 86 86 86 86 86 1[43 46[{TeXBase1Encoding ReEncodeFont}
@@ -813,9 +813,9 @@ TeXDict begin
 %%Page: 1 1
 1 0 bop Black Black Black Black 1360 2216 a Fu(Sympa)325
 2424 y Ft(Mailing)42 b(Lists)h(Management)h(Softwar)m(e)1095
-2631 y(v)n(ersion)g(3.3.6b)-7 b(.3)586 2996 y Fs(Ser)n(ge)26
+2631 y(v)n(ersion)g(3.3.6b)-7 b(.4)586 2996 y Fs(Ser)n(ge)26
 b(Aumont,)d(Oli)n(vier)h(Sala)8 b(\250)-41 b(un,)25 b(Christophe)f(W)-8
-b(olfhugel,)1277 3355 y(19)25 b(September)g(2002)p Black
+b(olfhugel,)1277 3355 y(23)25 b(September)g(2002)p Black
 Black eop
 %%Page: 2 2
 2 1 bop Black 656 241 a Fr(2)p Black Black Black eop
@@ -1763,7 +1763,7 @@ b(,)232 4185 y Fo(Sympa)16 b Fr(is)h(especially)e(well)i(adapted)e(to)h
 (ailable)e(\(tested)h(on)g(a)h(300)e(MHz,)h(256)f(MB)i(i386)e(serv)o
 (er)g(with)232 4484 y(Linux\).)232 4702 y(This)h(guide)e(co)o(v)o(ers)f
 (the)i(installation,)g(con\002guration)d(and)i(management)f(of)i(the)g
-(current)e(release)232 4802 y(\(3.3.6b)m(.3\))h(of)j(sympa.)p
+(current)e(release)232 4802 y(\(3.3.6b)m(.4\))h(of)j(sympa.)p
 Black 1623 5662 a(11)p Black eop
 %%Page: 12 12
 12 11 bop Black 656 241 a Fr(12)1649 b Fm(CHAPITRE)20
@@ -2478,7 +2478,7 @@ Black Black eop
 25 24 bop Black 232 241 a Fm(3.3.)41 b(COMPILA)-9 b(TION)19
 b(AND)h(INST)-8 b(ALLA)f(TION)1243 b Fr(25)p Black 232
 531 a(rectory)27 b(:)h(the)f(archi)n(v)o(e)g(will)h(create)f(a)h
-(directory)e(named)g Fn(sympa-3.3.6b.3/)c Fr(where)27
+(directory)e(named)g Fn(sympa-3.3.6b.4/)c Fr(where)27
 b(all)h(the)232 631 y(useful)18 b(\002les)h(and)f(directories)f(will)i
 (be)f(located.)f(In)h(particular)m(,)e(you)h(will)i(ha)n(v)o(e)e(a)i
 Fn(doc/)e Fr(directory)232 731 y(containing)25 b(this)j(documentation)c
@@ -2490,7 +2490,7 @@ y(are)j(stored)12 b(;)24 b(and,)e(of)h(course,)g(the)g
 Fn(src/)f Fr(directory)f(for)i(the)g(mail)g(robot)f(and)h
 Fn(wwsympa)e Fr(for)h(the)232 1029 y(web)f(interf)o(ace.)232
 1247 y(Example)e(:)p Black Black 440 1512 a Fn(#)43 b(su)g(-)440
-1612 y($)g(gzip)f(-dc)g(sympa-3.3.6b.3.ta)o(r.g)o(z)37
+1612 y($)g(gzip)f(-dc)g(sympa-3.3.6b.4.ta)o(r.g)o(z)37
 b(|)44 b(tar)e(xf)h(-)232 1876 y Fr(No)n(w)21 b(you)e(can)h(run)f(the)h
 (installation)g(process)g(:)p Black Black 440 2141 a
 Fn($)43 b(./configure)440 2241 y($)g(make)440 2340 y($)g(make)f
@@ -4251,177 +4251,187 @@ a Fn(#Configuration)38 b(file)k(auth.conf)e(for)i(the)g(LDAP)g
 3252 y(ldap)440 3352 y(host)g(ldap.univ-nancy2)o(.f)o(r:3)o(92)o(,ld)o
 (ap)o(1.u)o(ni)o(v-)o(nan)o(cy)o(2.f)o(r:)o(39)o(2,l)o(da)o(p2.)o(un)o
 (iv-)o(na)o(nc)o(y2.)o(fr)o(:39)o(2)440 3452 y(timeout)f(20)440
-3551 y(suffix)g(dc=univ-nancy2,d)o(c=f)o(r)440 3651 y(get_dn_by_uid_fi)
-o(lte)o(r)c(\(uid=[sender]\))440 3750 y(get_dn_by_email_)o(fil)o(te)o
-(r)g(\(|\(mail=[sender]\))o(\(n2)o(at)o(ral)o(ia)o(sm)o(ail)o(=[)o(sen)
-o(de)o(r]\))o(\))440 3850 y(alternative_emai)o(l_a)o(tt)o(ri)o(but)o(e)
-g(n2atrmaildrop)440 3950 y(email_attribute)g(mail)440
-4049 y(scope)42 b(sub)p Black 232 4367 a Fr(\226)p Black
-41 w(host)315 4566 y(This)32 b(k)o(e)o(yw)o(ord)d(is)i
+3551 y(bind_dn)1087 b(cn=sympa,ou=peop)o(le)o(,d)o(c=c)o(ru)o(,dc)o(=f)
+o(r)440 3651 y(bind_password)823 b(sympaPASSWD)440 3750
+y(suffix)41 b(dc=univ-nancy2,d)o(c=f)o(r)440 3850 y(get_dn_by_uid_fi)o
+(lte)o(r)c(\(uid=[sender]\))440 3950 y(get_dn_by_email_)o(fil)o(te)o(r)
+g(\(|\(mail=[sender]\))o(\(n2)o(at)o(ral)o(ia)o(sm)o(ail)o(=[)o(sen)o
+(de)o(r]\))o(\))440 4049 y(alternative_emai)o(l_a)o(tt)o(ri)o(but)o(e)g
+(n2atrmaildrop)440 4149 y(email_attribute)g(mail)440
+4249 y(scope)42 b(sub)p Black 232 4566 a Fr(\226)p Black
+41 w(host)315 4765 y(This)32 b(k)o(e)o(yw)o(ord)d(is)i
 Fq(mandatory)p Fr(.)f(It)h(is)g(the)g(domain)f(name)g(used)h(in)g
-(order)e(to)i(bind)f(to)h(the)315 4666 y(directory)21
+(order)e(to)i(bind)f(to)h(the)315 4865 y(directory)21
 b(and)h(then)g(to)h(e)o(xtract)e(informations.)f(Y)-9
 b(ou)22 b(must)h(mention)e(the)h(port)g(number)f(after)315
-4765 y(the)i(serv)o(er)f(name.)f(Serv)o(er)h(replication)f(is)j
+4964 y(the)i(serv)o(er)f(name.)f(Serv)o(er)h(replication)f(is)j
 (supported)c(by)j(listing)f(se)n(v)o(eral)g(serv)o(ers)g(separated)315
-4865 y(by)e(commas.)315 4964 y(Example)f(:)p Black Black
-Black Black 498 5214 a Fn(host)42 b(ldap.univ-rennes)o(1.f)o(r:)o(389)
-498 5313 y(host)g(ldap0.university)o(.co)o(m:)o(389)o(,l)o(da)o(p1.)o
-(un)o(ive)o(rs)o(ity)o(.c)o(om)o(:38)o(9,)o(lda)o(p2)o(.u)o(niv)o(er)o
-(sit)o(y.)o(com)o(:3)o(89)p Black Black eop
+5064 y(by)e(commas.)315 5164 y(Example)f(:)p Black Black
+Black Black 498 5413 a Fn(host)42 b(ldap.univ-rennes)o(1.f)o(r:)o(389)p
+Black Black eop
 %%Page: 72 72
 72 71 bop Black 656 241 a Fr(72)1253 b Fm(CHAPITRE)21
 b(8.)40 b(USING)21 b Fo(SYMP)-7 b(A)19 b Fm(WITH)i(LD)m(AP)p
-Black Black 656 531 a Fr(\226)p Black 41 w(timeout)739
-731 y(It)j(corresponds)d(to)j(the)g(timelimit)g(in)g(the)g(Search)f
-(fonction.)f(A)i(timelimit)g(that)g(restricts)g(the)739
-830 y(maximum)c(time)j(\(in)f(seconds\))f(allo)n(wed)h(for)f(a)i
-(search.)f(A)g(v)n(alue)g(of)g(0)g(\(the)g(def)o(ault\),)f(means)739
-930 y(that)f(no)g(timelimit)g(will)h(be)f(requested.)p
-Black 656 1029 a(\226)p Black 41 w(suf)n(\002x)739 1229
-y(The)27 b(root)f(of)h(the)g(DIT)g(\(Directory)f(Information)e(T)m
+Black 922 531 a Fn(host)41 b(ldap0.university.)o(com)o(:3)o(89,)o(ld)o
+(ap)o(1.u)o(ni)o(ver)o(si)o(ty.)o(co)o(m:)o(389)o(,l)o(dap)o(2.)o(un)o
+(ive)o(rs)o(ity)o(.c)o(om:)o(38)o(9)p Black 656 753 a
+Fr(\226)p Black 41 w(timeout)739 952 y(It)24 b(corresponds)d(to)j(the)g
+(timelimit)g(in)g(the)g(Search)f(fonction.)f(A)i(timelimit)g(that)g
+(restricts)g(the)739 1052 y(maximum)c(time)j(\(in)f(seconds\))f(allo)n
+(wed)h(for)f(a)i(search.)f(A)g(v)n(alue)g(of)g(0)g(\(the)g(def)o
+(ault\),)f(means)739 1151 y(that)f(no)g(timelimit)g(will)h(be)f
+(requested.)p Black 656 1251 a(\226)p Black 41 w(suf)n(\002x)739
+1450 y(The)27 b(root)f(of)h(the)g(DIT)g(\(Directory)f(Information)e(T)m
 (ree\).)j(The)g(DN)g(that)h(is)g(the)f(base)g(object)739
-1328 y(entry)19 b(relati)n(v)o(e)h(to)g(which)g(the)g(search)g(is)h(to)
-f(be)g(performed.)739 1428 y(Example:)f Fn(dc=university,dc)o(=f)o(r)p
-Black 656 1528 a Fr(\226)p Black 41 w(get)p 846 1528
-25 4 v 29 w(dn)p 959 1528 V 29 w(by)p 1072 1528 V 29
-w(uid)p 1208 1528 V 29 w(\002lter)739 1727 y(De\002nes)e(the)f(search)g
-(\002lter)h(corresponding)d(to)i(the)h(ldap)p 2373 1727
-V 29 w(uid.)f(\(RFC)h(2254)f(compliant\).)e(If)j(you)739
-1826 y(w)o(ant)26 b(to)g(apply)f(the)h(\002lter)g(on)g(the)g(user)m(,)f
-(use)h(the)g(v)n(ariable)f(')h([sender])e('.)i(It)h(will)f(w)o(ork)g
-(with)739 1926 y(e)n(v)o(ery)19 b(type)g(of)h(authentication)f(\(uid,)g
-(alternate)p 2153 1926 V 28 w(email..\).)739 2026 y(Example)g(:)p
-Black Black Black Black 922 2253 a Fn(\(Login)41 b(=)i([sender]\))922
-2353 y(\(|\(ID)e(=)i([sender]\)\(UID)38 b(=)44 b([sender]\)\))p
-Black 656 2581 a Fr(\226)p Black 41 w(get)p 846 2581
-V 29 w(dn)p 959 2581 V 29 w(by)p 1072 2581 V 29 w(email)p
-1286 2581 V 29 w(\002lter)739 2780 y(De\002nes)30 b(the)g(search)f
+1550 y(entry)19 b(relati)n(v)o(e)h(to)g(which)g(the)g(search)g(is)h(to)
+f(be)g(performed.)739 1649 y(Example:)f Fn(dc=university,dc)o(=f)o(r)p
+Black 656 1749 a Fr(\226)p Black 41 w(bind)p 893 1749
+25 4 v 28 w(dn)739 1948 y(If)24 b(anon)o(ymous)e(bind)h(is)j(not)e
+(allo)n(wed)f(on)h(the)h(LD)m(AP)f(serv)o(er)m(,)f(a)i(DN)g(and)f
+(passw)o(ord)g(can)g(be)739 2048 y(used.)p Black 656
+2148 a(\226)p Black 41 w(bind)p 893 2148 V 28 w(passw)o(ord)739
+2347 y(This)c(passw)o(ord)g(is)h(used,)f(combined)e(with)i(the)g(bind)p
+2303 2347 V 29 w(dn)g(abo)o(v)o(e.)p Black 656 2446 a(\226)p
+Black 41 w(get)p 846 2446 V 29 w(dn)p 959 2446 V 29 w(by)p
+1072 2446 V 29 w(uid)p 1208 2446 V 29 w(\002lter)739
+2646 y(De\002nes)d(the)f(search)g(\002lter)h(corresponding)d(to)i(the)h
+(ldap)p 2373 2646 V 29 w(uid.)f(\(RFC)h(2254)f(compliant\).)e(If)j(you)
+739 2745 y(w)o(ant)26 b(to)g(apply)f(the)h(\002lter)g(on)g(the)g(user)m
+(,)f(use)h(the)g(v)n(ariable)f(')h([sender])e('.)i(It)h(will)f(w)o(ork)
+g(with)739 2845 y(e)n(v)o(ery)19 b(type)g(of)h(authentication)f(\(uid,)
+g(alternate)p 2153 2845 V 28 w(email..\).)739 2945 y(Example)g(:)p
+Black Black Black Black 922 3166 a Fn(\(Login)41 b(=)i([sender]\))922
+3266 y(\(|\(ID)e(=)i([sender]\)\(UID)38 b(=)44 b([sender]\)\))p
+Black 656 3487 a Fr(\226)p Black 41 w(get)p 846 3487
+V 29 w(dn)p 959 3487 V 29 w(by)p 1072 3487 V 29 w(email)p
+1286 3487 V 29 w(\002lter)739 3686 y(De\002nes)30 b(the)g(search)f
 (\002lter)h(corresponding)d(to)j(the)g(email)g(addresses)f(\(canonic)f
-(and)i(alter)n(-)739 2880 y(nati)n(v)o(e\).\(RFC)d(2254)g(compliant\).)
+(and)i(alter)n(-)739 3786 y(nati)n(v)o(e\).\(RFC)d(2254)g(compliant\).)
 f(If)i(you)f(w)o(ant)i(to)f(apply)f(the)h(\002lter)h(on)f(the)g(user)m
-(,)f(use)i(the)739 2979 y(v)n(ariable)35 b(')i([sender])d('.)j(It)f
+(,)f(use)i(the)739 3885 y(v)n(ariable)35 b(')i([sender])d('.)j(It)f
 (will)h(w)o(ork)f(with)g(e)n(v)o(ery)f(type)h(of)g(authentication)e
-(\(uid,)i(alter)n(-)739 3079 y(nate)p 883 3079 V 29 w(email..\).)739
-3179 y(Example)19 b(:)i(a)f(person)f(is)i(described)e(by)p
-Black Black Black Black 1663 3620 a Fn(Dn:cn=Fabrice)38
-b(Rafart,)1663 3719 y(ou=Siege)i(,)1663 3819 y(o=MaSociete)f(,)1663
-3919 y(c=FR)i(Objectclass:)1663 4018 y(person)g(Cn:)h(Fabrice)f(Rafart)
-1663 4118 y(Title:)g(Network)f(Responsible)1663 4218
-y(O:)i(Siege)1663 4317 y(Or:)g(Data)g(processing)1663
-4417 y(Telephonenumber)o(:)37 b(01-00-00-00-00)1663 4516
+(\(uid,)i(alter)n(-)739 3985 y(nate)p 883 3985 V 29 w(email..\).)739
+4085 y(Example)19 b(:)i(a)f(person)f(is)i(described)e(by)p
+Black Black Black Black 1663 4516 a Fn(Dn:cn=Fabrice)38
+b(Rafart,)1663 4616 y(ou=Siege)i(,)1663 4716 y(o=MaSociete)f(,)1663
+4815 y(c=FR)i(Objectclass:)1663 4915 y(person)g(Cn:)h(Fabrice)f(Rafart)
+1663 5015 y(Title:)g(Network)f(Responsible)1663 5114
+y(O:)i(Siege)1663 5214 y(Or:)g(Data)g(processing)1663
+5313 y(Telephonenumber)o(:)37 b(01-00-00-00-00)1663 5413
 y(Facsimileteleph)o(on)o(enu)o(mb)o(er:)o(01)o(-00)o(-0)o(0-)o(00-)o
-(00)1663 4616 y(L:Paris)1663 4716 y(Country:)j(France)965
-4915 y(uid:)i(frafart)1052 5015 y(mail:)g(Fabrice.Rafart@M)o(aS)o(oci)o
-(et)o(e.)o(fr)1663 5114 y(alternate_email)o(:)37 b(frafart@MaSociete)o
-(.fr)1663 5214 y(alternate:rafar)o(t@)o(MaS)o(oc)o(iet)o(e.)o(fr)p
-Black Black eop
+(00)p Black Black eop
 %%Page: 73 73
 73 72 bop Black 232 241 a Fm(8.2.)41 b(N)m(AMED)20 b(FIL)-8
-b(TERS)1973 b Fr(73)p Black 315 531 a(The)20 b(\002lters)h(can)f(be)g
-(:)p Black Black Black Black 498 922 a Fn(\(mail)42 b(=)h([sender]\))
-498 1021 y(\(|)g(\(mail)e(=)j([sender]\)\(alter)o(nat)o(e_)o(em)o(ail)
-37 b(=)43 b([sender]\))d(\))498 1121 y(\(|)j(\(mail)e(=)j
+b(TERS)1973 b Fr(73)p Black 1239 531 a Fn(L:Paris)1239
+631 y(Country:)40 b(France)542 830 y(uid:)i(frafart)629
+930 y(mail:)f(Fabrice.Rafart@Ma)o(Soc)o(ie)o(te)o(.fr)1239
+1029 y(alternate_email:)c(frafart@MaSociet)o(e.f)o(r)1239
+1129 y(alternate:rafart)o(@Ma)o(So)o(cie)o(te)o(.fr)315
+1461 y Fr(The)20 b(\002lters)h(can)f(be)g(:)p Black Black
+Black Black 498 1693 a Fn(\(mail)42 b(=)h([sender]\))498
+1793 y(\(|)g(\(mail)e(=)j([sender]\)\(alter)o(nat)o(e_)o(em)o(ail)37
+b(=)43 b([sender]\))d(\))498 1892 y(\(|)j(\(mail)e(=)j
 ([sender]\)\(alter)o(nat)o(e_)o(em)o(ail)37 b(=)43 b
 ([sender]\)\(altern)o(ate)80 b(=)43 b([sender]\))d(\))p
-Black 232 1611 a Fr(\226)p Black 41 w(email)p 505 1611
-25 4 v 30 w(attrib)n(ute)315 1810 y(The)34 b(name)f(of)g(the)g(attrib)n
+Black 232 2224 a Fr(\226)p Black 41 w(email)p 505 2224
+25 4 v 30 w(attrib)n(ute)315 2424 y(The)34 b(name)f(of)g(the)g(attrib)n
 (ute)h(for)e(the)i(canonic)e(email)i(in)g(your)e(directory)g(:)i(for)f
-(instance)315 1910 y(mail,)24 b(canonic)p 773 1910 V
-28 w(email,)f(canonic)p 1290 1910 V 29 w(address)g(...)g(In)g(the)h
+(instance)315 2523 y(mail,)24 b(canonic)p 773 2523 V
+28 w(email,)f(canonic)p 1290 2523 V 29 w(address)g(...)g(In)g(the)h
 (pre)n(vious)e(e)o(xample)g(the)i(canonic)e(email)315
-2009 y(is)g('mail'.)p Black 232 2109 a(\226)p Black 41
-w(alternate)p 607 2109 V 29 w(email)p 821 2109 V 30 w(attrib)n(ute)315
-2308 y(The)32 b(name)f(of)g(the)g(attrib)n(ute)h(for)f(the)g(alternate)
+2623 y(is)g('mail'.)p Black 232 2722 a(\226)p Black 41
+w(alternate)p 607 2722 V 29 w(email)p 821 2722 V 30 w(attrib)n(ute)315
+2922 y(The)32 b(name)f(of)g(the)g(attrib)n(ute)h(for)f(the)g(alternate)
 g(email)h(in)f(your)g(directory)f(:)i(for)f(instance)315
-2408 y(alternate)p 607 2408 V 29 w(email,)18 b(mailalternateaddress,)d
+3021 y(alternate)p 607 3021 V 29 w(email,)18 b(mailalternateaddress,)d
 (...)j(Y)-9 b(ou)17 b(mak)o(e)g(a)h(list)h(of)f(these)g(attrib)n(utes)f
-(separated)315 2507 y(by)j(commas.)315 2607 y(W)m(ith)k(this)g(list)g
+(separated)315 3121 y(by)j(commas.)315 3221 y(W)m(ith)k(this)g(list)g
 Fo(Sympa)e Fr(creates)i(a)g(cookie)e(which)g(contains)h(v)n(arious)f
-(information)f(:)j(the)f(user)315 2707 y(is)j(authenticated)d(via)i
+(information)f(:)j(the)f(user)315 3320 y(is)j(authenticated)d(via)i
 (Ldap)e(or)i(not,)f(his)h(alternate)f(email.)h(T)-7 b(o)24
-b(store)h(the)g(alternate)f(email)g(is)315 2806 y(interesting)h(when)g
+b(store)h(the)g(alternate)f(email)g(is)315 3420 y(interesting)h(when)g
 (you)g(w)o(ant)h(to)g(canonify)e(your)g(preferences)g(and)i
-(subscriptions.)e(That)h(is)315 2906 y(to)c(say)g(you)f(w)o(ant)h(to)f
-(use)h(a)g(unique)e(address)i(in)f(User)p 1901 2906 V
-30 w(table)h(and)f(Subscriber)p 2612 2906 V 28 w(table)g(which)g(is)315
-3005 y(the)h(canonic)e(email.)p Black 232 3105 a(\226)p
-Black 41 w(scope)315 3304 y(\(Def)o(ault)h(v)n(alue:)g
+(subscriptions.)e(That)h(is)315 3519 y(to)c(say)g(you)f(w)o(ant)h(to)f
+(use)h(a)g(unique)e(address)i(in)f(User)p 1901 3519 V
+30 w(table)h(and)f(Subscriber)p 2612 3519 V 28 w(table)g(which)g(is)315
+3619 y(the)h(canonic)e(email.)p Black 232 3719 a(\226)p
+Black 41 w(scope)315 3918 y(\(Def)o(ault)h(v)n(alue:)g
 Fn(sub)p Fr(\))f(By)h(def)o(ault)g(the)g(search)g(is)h(performed)d(on)i
-(the)g(whole)f(tree)i(belo)n(w)e(the)315 3404 y(speci\002ed)h(base)h
+(the)g(whole)f(tree)i(belo)n(w)e(the)315 4018 y(speci\002ed)h(base)h
 (object.)e(This)h(may)g(be)g(changed)f(by)g(specifying)g(a)i(scope)e(:)
-p Black 315 3504 a(\226)p Black 42 w(base)399 3603 y(Search)g(only)h
-(the)g(base)g(object.)p Black 315 3703 a(\226)p Black
-42 w(one)399 3802 y(Search)f(the)h(entries)g(immediately)f(belo)n(w)h
-(the)g(base)g(object.)p Black 315 3902 a(\226)p Black
-42 w(sub)399 4002 y(Search)f(the)h(whole)g(tree)g(belo)n(w)g(the)g
-(base)g(object.)g(This)g(is)h(the)f(def)o(ault.)232 4644
-y Fl(8.2)119 b(Named)31 b(Filters)232 4996 y Fr(At)17
+p Black 315 4117 a(\226)p Black 42 w(base)399 4217 y(Search)g(only)h
+(the)g(base)g(object.)p Black 315 4317 a(\226)p Black
+42 w(one)399 4416 y(Search)f(the)h(entries)g(immediately)f(belo)n(w)h
+(the)g(base)g(object.)p Black 315 4516 a(\226)p Black
+42 w(sub)399 4615 y(Search)f(the)h(whole)g(tree)g(belo)n(w)g(the)g
+(base)g(object.)g(This)g(is)h(the)f(def)o(ault.)232 5010
+y Fl(8.2)119 b(Named)31 b(Filters)232 5313 y Fr(At)17
 b(the)f(moment)f(Named)g(Filters)i(are)f(only)g(used)f(in)i(scenarii.)e
 (The)o(y)g(enable)h(to)g(select)h(a)f(cate)o(gory)232
-5096 y(of)k(people)f(who)h(will)h(be)f(authorized)e(or)i(not)g(to)h
-(realise)f(some)g(actions.)232 5313 y(As)26 b(a)f(consequence,)d(you)i
-(can)g(grant)g(pri)n(vile)o(ges)g(in)g(a)h(list)h(to)f(people)f
-(belonging)e(to)j(an)f(LD)m(AP)232 5413 y(directory)19
-b(thanks)g(to)i(a)f(scenario.)p Black Black eop
+5413 y(of)k(people)f(who)h(will)h(be)f(authorized)e(or)i(not)g(to)h
+(realise)f(some)g(actions.)p Black Black eop
 %%Page: 74 74
 74 73 bop Black 656 241 a Fr(74)1253 b Fm(CHAPITRE)21
 b(8.)40 b(USING)21 b Fo(SYMP)-7 b(A)19 b Fm(WITH)i(LD)m(AP)p
-Black 656 531 a Ff(8.2.1)99 b(De\002nition)656 807 y
-Fr(People)29 b(are)h(selected)f(through)f(an)i(LD)m(AP)f(\002lter)h
-(de\002ned)f(in)h(a)g(con\002guration)d(\002le.)j(This)g(\002le)656
-907 y(must)20 b(ha)n(v)o(e)g(the)g(e)o(xtension)f('.ldap'.It)f(is)j
-(stored)f(in)g Fn(~sympa/etc/searc)o(h)p 2921 907 27
-4 v 25 w(filters/)p Fr(.)656 1125 y(Y)-9 b(ou)19 b(must)i(gi)n(v)o(e)e
-(se)n(v)o(eral)h(informations)e(in)i(order)f(to)h(create)g(a)h(Named)e
-(Filter)i(:)p Black 656 1342 a(\226)p Black 41 w(host)739
-1442 y(A)g(list)g(of)f(host)g(:port)g(LD)m(AP)g(directories)f
-(\(replicates\))g(entries.)p Black 656 1542 a(\226)p
-Black 41 w(suf)n(\002x)739 1641 y(De\002nes)j(the)g(naming)f(space)h
+Black 656 531 a Fr(As)k(a)g(consequence,)e(you)g(can)i(grant)f(pri)n
+(vile)o(ges)f(in)i(a)g(list)h(to)e(people)g(belonging)e(to)j(an)g(LD)m
+(AP)656 631 y(directory)18 b(thanks)i(to)g(a)h(scenario.)656
+998 y Ff(8.2.1)99 b(De\002nition)656 1274 y Fr(People)29
+b(are)h(selected)f(through)f(an)i(LD)m(AP)f(\002lter)h(de\002ned)f(in)h
+(a)g(con\002guration)d(\002le.)j(This)g(\002le)656 1374
+y(must)20 b(ha)n(v)o(e)g(the)g(e)o(xtension)f('.ldap'.It)f(is)j(stored)
+f(in)g Fn(~sympa/etc/searc)o(h)p 2921 1374 27 4 v 25
+w(filters/)p Fr(.)656 1592 y(Y)-9 b(ou)19 b(must)i(gi)n(v)o(e)e(se)n(v)
+o(eral)h(informations)e(in)i(order)f(to)h(create)g(a)h(Named)e(Filter)i
+(:)p Black 656 1809 a(\226)p Black 41 w(host)739 1909
+y(A)g(list)g(of)f(host)g(:port)g(LD)m(AP)g(directories)f
+(\(replicates\))g(entries.)p Black 656 2009 a(\226)p
+Black 41 w(suf)n(\002x)739 2108 y(De\002nes)j(the)g(naming)f(space)h
 (co)o(v)o(ered)e(by)i(the)g(search)f(\(optional,)f(depending)g(on)i
-(the)g(LD)m(AP)739 1741 y(serv)o(er\).)p Black 656 1841
-a(\226)p Black 41 w(\002lter)739 1940 y(De\002nes)d(the)f(LD)m(AP)g
+(the)g(LD)m(AP)739 2208 y(serv)o(er\).)p Black 656 2307
+a(\226)p Black 41 w(\002lter)739 2407 y(De\002nes)d(the)f(LD)m(AP)g
 (search)g(\002lter)h(\(RFC)h(2254)d(compliant\).)f(But)j(you)f(must)g
-(absolutely)g(tak)o(e)739 2040 y(into)e(account)g(the)h(\002rst)g(part)
+(absolutely)g(tak)o(e)739 2507 y(into)e(account)g(the)h(\002rst)g(part)
 g(of)f(the)h(\002lter)g(which)f(is)i(:)f(\('mail)p 2494
-2040 25 4 v 29 w(attrib)n(ute')f(=)h([sender]\))e(as)i(sho)n(wn)739
-2139 y(in)22 b(the)h(e)o(xample.)e(you)g(will)i(ha)n(v)o(e)f(to)h
-(replce)e('mail)p 2245 2139 V 30 w(attrib)n(ute')g(by)h(the)h(name)f
-(of)g(the)g(attrib)n(ute)739 2239 y(for)e(the)g(email.)g
+2507 25 4 v 29 w(attrib)n(ute')f(=)h([sender]\))e(as)i(sho)n(wn)739
+2606 y(in)22 b(the)h(e)o(xample.)e(you)g(will)i(ha)n(v)o(e)f(to)h
+(replce)e('mail)p 2245 2606 V 30 w(attrib)n(ute')g(by)h(the)h(name)f
+(of)g(the)g(attrib)n(ute)739 2706 y(for)e(the)g(email.)g
 Fo(Sympa)g Fr(v)o(eri\002es)g(if)g(the)h(user)f(belongs)f(to)i(the)f
-(cate)o(gory)f(of)h(people)f(de\002ned)h(in)739 2339
-y(the)g(\002lter)-5 b(.)p Black 656 2438 a(\226)p Black
-41 w(scope)739 2538 y(By)18 b(def)o(ault)g(the)g(search)f(is)i
+(cate)o(gory)f(of)h(people)f(de\002ned)h(in)739 2806
+y(the)g(\002lter)-5 b(.)p Black 656 2905 a(\226)p Black
+41 w(scope)739 3005 y(By)18 b(def)o(ault)g(the)g(search)f(is)i
 (performed)c(on)j(the)g(whole)f(tree)h(belo)n(w)g(the)g(speci\002ed)f
-(base)h(object.)739 2638 y(This)i(may)g(be)g(changed)e(by)i(specifying)
-f(a)i(scope)e(:)p Black 739 2737 a(\226)p Black 41 w(base)h(:)h(Search)
-f(only)f(the)h(base)h(object.)p Black 739 2837 a(\226)p
-Black 41 w(one)822 2936 y(Search)f(the)g(entries)g(immediately)f(belo)n
-(w)g(the)i(base)f(object.)p Black 739 3036 a(\226)p Black
-41 w(sub)822 3136 y(Search)g(the)g(whole)f(tree)i(belo)n(w)e(the)h
-(base)h(object.)e(This)h(is)i(the)e(def)o(ault.)656 3353
+(base)h(object.)739 3104 y(This)i(may)g(be)g(changed)e(by)i(specifying)
+f(a)i(scope)e(:)p Black 739 3204 a(\226)p Black 41 w(base)h(:)h(Search)
+f(only)f(the)h(base)h(object.)p Black 739 3304 a(\226)p
+Black 41 w(one)822 3403 y(Search)f(the)g(entries)g(immediately)f(belo)n
+(w)g(the)i(base)f(object.)p Black 739 3503 a(\226)p Black
+41 w(sub)822 3603 y(Search)g(the)g(whole)f(tree)i(belo)n(w)e(the)h
+(base)h(object.)e(This)h(is)i(the)e(def)o(ault.)656 3820
 y(e)o(xample.ldap)27 b(:)j(we)g(w)o(ant)f(to)h(select)g(the)g
 (professors)e(of)h(mathematics)g(in)h(the)f(uni)n(v)o(ersity)f(of)656
-3453 y(Rennes1)20 b(in)g(France)p Black Black Black Black
-863 3687 a Fn(host)42 b(ldap.univ-rennes1)o(.f)o(r:3)o(89)o(,ld)o(ap)o
-(2.u)o(ni)o(v-)o(ren)o(ne)o(s1.)o(fr)o(:3)o(90)863 3786
-y(suffix)g(dc=univ-rennes1)o(.f)o(r,d)o(c=)o(fr)863 3886
+3920 y(Rennes1)20 b(in)g(France)p Black Black Black Black
+863 4154 a Fn(host)42 b(ldap.univ-rennes1)o(.f)o(r:3)o(89)o(,ld)o(ap)o
+(2.u)o(ni)o(v-)o(ren)o(ne)o(s1.)o(fr)o(:3)o(90)863 4253
+y(suffix)g(dc=univ-rennes1)o(.f)o(r,d)o(c=)o(fr)863 4353
 y(filter)g(\(&\(canonic_mail)37 b(=)43 b([sender]\)\(Employ)o(eeT)o(yp)
 o(e)38 b(=)43 b(prof\)\(subject)38 b(=)43 b(math\)\))863
-3986 y(scope)f(sub)656 4452 y Ff(8.2.2)99 b(Sear)n(ch)26
-b(Condition)656 4728 y Fr(The)20 b(search)g(condition)e(is)j(used)f(in)
+4452 y(scope)f(sub)656 4919 y Ff(8.2.2)99 b(Sear)n(ch)26
+b(Condition)656 5195 y Fr(The)20 b(search)g(condition)e(is)j(used)f(in)
 g(scenarii)g(which)g(are)g(de\002ned)f(and)h(decribed)e(in)j(\(see)f
-(11.8\))656 4946 y(The)g(syntax)f(of)h(this)h(rule)f(is)h(:)p
-Black Black Black Black 863 5080 a Fn(search\(example.ld)o(ap,)o([s)o
-(en)o(der)o(]\))255 b(smtp,smime,md5)168 b(->)43 b(do_it)656
-5214 y Fr(The)20 b(v)n(ariables)f(used)h(by)g(')-5 b(search')19
-b(are)h(:)p Black 656 5313 a(\226)p Black 41 w(the)g(name)g(of)g(the)g
-(LD)m(AP)g(Con\002guration)e(\002le)p Black Black eop
+(11.8\))656 5413 y(The)g(syntax)f(of)h(this)h(rule)f(is)h(:)p
+Black Black eop
 %%Page: 75 75
 75 74 bop Black 232 241 a Fm(8.2.)41 b(N)m(AMED)20 b(FIL)-8
-b(TERS)1973 b Fr(75)p Black Black 232 531 a(\226)p Black
-41 w(the)21 b([sender])315 631 y(That)f(is)i(to)e(say)g(the)h(sender)e
-(email.)232 731 y(The)h(method)f(of)h(authentication)e(does)i(not)g
+b(TERS)1973 b Fr(75)p Black Black Black Black Black 440
+531 a Fn(search\(example.l)o(dap)o(,[)o(se)o(nde)o(r])o(\))256
+b(smtp,smime,md5)168 b(->)43 b(do_it)232 661 y Fr(The)20
+b(v)n(ariables)g(used)g(by)f(')-5 b(search')20 b(are)g(:)p
+Black 232 760 a(\226)p Black 41 w(the)h(name)e(of)h(the)g(LD)m(AP)h
+(Con\002guration)d(\002le)p Black 232 960 a(\226)p Black
+41 w(the)j([sender])315 1059 y(That)f(is)i(to)e(say)g(the)h(sender)e
+(email.)232 1159 y(The)h(method)f(of)h(authentication)e(does)i(not)g
 (change.)p Black Black eop
 %%Page: 76 76
 76 75 bop Black 656 241 a Fr(76)1253 b Fm(CHAPITRE)21
