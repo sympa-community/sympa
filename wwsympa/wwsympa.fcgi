@@ -1870,7 +1870,7 @@ sub do_subscribe {
 					'remote_host' => $param->{'remote_host'},
 					'remote_addr' => $param->{'remote_addr'}});
 
-    if ($sub_is eq 'closed') {
+    if ($sub_is =~ /reject/) {
        	&error_message('may_not');
 	&wwslog('info', 'do_subscribe: subscribe closed');
 	return undef;
@@ -1878,7 +1878,7 @@ sub do_subscribe {
 
     $param->{'may_subscribe'} = 1;
     
-    if ($sub_is eq 'owner') {
+    if ($sub_is =~ /owner/) {
 	my $keyauth = $list->compute_auth($param->{'user'}{'email'}, 'add');
 	$list->send_sub_to_owner($param->{'user'}{'email'}, $keyauth, $Conf{'sympa'}, $param->{'user'}{'gecos'});
 	&message('sent_to_owner');
@@ -1909,10 +1909,9 @@ sub do_subscribe {
 	if ($sub_is =~ /notify/) {
 	    $list->send_notify_to_owner($param->{'user'}{'email'}, $param->{'user'}{'gecos'}, 'subscribe');
 	}
+	&message('performed');
     }
     
-    &message('performed');
-
     if ($in{'previous_action'}) {
 	return $in{'previous_action'};
     }
