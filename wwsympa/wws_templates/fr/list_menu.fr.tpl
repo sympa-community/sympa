@@ -169,7 +169,7 @@
       [ELSE]
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[path_cgi]/suboptions/[list]" >Options d'abonnés</A>
+         <A HREF="[path_cgi]/suboptions/[list]" >Options d'abonné</A>
         </b></font>
         </TD>
       [ENDIF]
