@@ -1,6 +1,6 @@
 %define name sympa
 %define version --VERSION--
-%define release --SUFFIX--
+%define release 6--SUFFIX--
 %define home_s --HOMEDIR--
 
 Summary:  Sympa is a powerful multilingual List Manager - LDAP and SQL features.
