@@ -463,7 +463,7 @@ sub _load_auth {
     while (<IN>) {
  	
 	$line_num++;
-	next if (/^[\#\;]/o);	
+	next if (/^\s*[\#\;]/o);	
 	
       	if (/^\s*(\S+)\s*$/o) {$parag_name = $1;}
 	
