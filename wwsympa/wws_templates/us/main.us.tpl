@@ -62,7 +62,7 @@
   function check_cookie() {
  
      if (GetCookie('sympauser') == null) {
-        alert("Sympa could not set a cookie for login.\n Your should setup your navigator to accept cookies");
+        alert("Sympa could not set a cookie for login (or this Javascript could not access your cookies).\n Your should setup your navigator to accept cookies");
      }
   }
 [ENDIF]
