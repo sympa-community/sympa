@@ -5753,7 +5753,6 @@ sub _include_users_ldap {
 	    $total++;
 	}
 
-	my %u = %{$default_user_options};
 	$u{'email'} = $email;
 	$u{'date'} = time;
 	$u{'update_date'} = time;
@@ -6210,7 +6209,7 @@ sub _load_users_include2 {
 	    
 	foreach my $incl (@{$admin->{$type}}) {
 	    my $included;
-		
+
 	    ## get the list of users
 	    if ($type eq 'include_sql_query') {
 		$included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'});
