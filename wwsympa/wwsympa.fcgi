@@ -6188,7 +6188,7 @@ sub do_edit_list {
 
  # in order to rename a list you must be list owner and you must be allowed to create new list
  sub do_rename_list {
-     &wwslog('info', 'do_rename_list()');
+     &wwslog('info', 'do_rename_list(%s,%s)', $in{'new_listname'}, $in{'new_robot'});
 
      unless (($param->{'is_privileged_owner'}) || ($param->{'is_listmaster'})) {
 	 &error_message('may_not');
@@ -6226,6 +6226,7 @@ sub do_edit_list {
 	 return undef;
      }
 
+     &wwslog('notice', 'Dir: %s', $list->{'dir'});
      ## Check listname on SMTP server
      my $res = list_check_smtp($in{'new_listname'});
      unless ( defined($res) ) {
@@ -6235,7 +6236,9 @@ sub do_edit_list {
 		 $wwsconf->{'list_check_smtp'});
 	 return undef;
      }
-     if( $res || new List ($in{'new_listname'}, $in{'new_robot'})) {
+     if( $res || 
+	 ($list->{'name'} ne $in{'new_listname'}) && ## Do not test if listname did not change
+	 (new List ($in{'new_listname'}, $in{'new_robot'}))) {
 	 &error_message('list_already_exists');
 	 &do_log('info', 'Could not rename list %s for %s: new list %s already existing list', 
 		 $in{'listname'},$param->{'user'}{'email'},$in{'new_listname'});
@@ -6267,8 +6270,12 @@ sub do_edit_list {
      }else {
 	 $new_dir = $Conf{'home'}.'/'.$in{'new_robot'}.'/'.$in{'new_listname'};
      }
+
+     ## Save config file for the new() later to reload it
+     $list->save_config($param->{'user'}{'email'});
+
      unless (rename ($list->{'dir'}, $new_dir )){
-	 &wwslog('info',"do_rename_list : unable to rename $list->{'dir'} to $new_dir");
+	 &wwslog('info',"do_rename_list : unable to rename $list->{'dir'} to $new_dir : $!");
 	 &error_message('failed');
 	 return undef;
      }
@@ -6282,10 +6289,12 @@ sub do_edit_list {
 	 }
      }
      ## Rename bounces
-     if (-d "$wwsconf->{'bounce_path'}/$list->{'name'}") {
-	 unless (rename ("wwsconf->{'bounce_path'}/$list->{'name'}","wwsconf->{'bounce_path'}/$in{'new_listname'}")) {
+     if (-d "$wwsconf->{'bounce_path'}/$list->{'name'}" &&
+	 ($list->{'name'} ne $in{'new_listname'})
+	 ) {
+	 unless (rename ("$wwsconf->{'bounce_path'}/$list->{'name'}","$wwsconf->{'bounce_path'}/$in{'new_listname'}")) {
 	      &error_message('unable_to_rename_bounces');
-	      &wwslog('info',"do_rename_list unable to rename bounces from wwsconf->{'bounce_path'}/$list->{'name'} to sconf->{'bounce_path'}/$in{'new_listname'}");
+	      &wwslog('info',"do_rename_list unable to rename bounces from $wwsconf->{'bounce_path'}/$list->{'name'} to $wwsconf->{'bounce_path'}/$in{'new_listname'}");
 	 }
      }
 
@@ -6298,6 +6307,7 @@ sub do_edit_list {
 
      ## Install new aliases
      $in{'listname'} = $in{'new_listname'};
+     
      unless ($list = new List ($in{'new_listname'}, $in{'new_robot'})) {
 	 &wwslog('info',"do_rename_list : unable to load $in{'new_listname'} while renamming");
 	 &error_message('failed');
