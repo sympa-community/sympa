@@ -24,7 +24,7 @@
 	  </FORM>
 	</TD>
       </TR>
-      <TR><TD><A HREF="[path_cgi]/get_pending_lists"><B>Beavatkozásra váró teendõk</B></A></TD></TR>
+      <TR><TD><A HREF="[path_cgi]/get_pending_lists"><B>Függõ listák</B></A></TD></TR>
 
       <TR><TD NOWRAP>
         <FORM ACTION="[path_cgi]" METHOD="POST">

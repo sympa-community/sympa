@@ -80,7 +80,7 @@ Content-transfer-encoding: 8bit
 A(z) [list->name]@[list->host] listára küldött
 leveled megjelenését [rejected_by] moderátor elutasította.
 
-(Eredeti level tárgya: [subject])
+(Eredeti levél tárgya: [subject])
 
 [list->name] lista használatáról bõvebben itt olvashatsz:
 [conf->wwsympa_url]/info/[list->name]

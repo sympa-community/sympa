@@ -21,7 +21,7 @@
         </TD>
     </TR>
     <TR>
-        <TD>Listname</TD>
+        <TD>Lista neve</TD>
 
         <TD>
 	  <SELECT NAME="listname">
@@ -32,7 +32,7 @@
         </TD>
     </TR>
     <TR>
-        <TD>küldõ emailcím</TD>
+        <TD>Küldõ email cím/TD>
         <TD>
           <INPUT TYPE="text" NAME="sender" SIZE="20" value="[sender]">
         </TD>
@@ -67,7 +67,7 @@
     </TR>
     <TR>
 
-	<TD><INPUT TYPE="submit" NAME="action_scenario_test" VALUE="kért szabály letöltése"></TD>
+	<TD><INPUT TYPE="submit" NAME="action_scenario_test" VALUE="Szabály letöltése"></TD>
         <TD bgcolor="--DARK_COLOR--">
           [IF scenario_action]
              <code>[scenario_condition], [scenario_auth_method] -> [scenario_action]</code>

@@ -13,7 +13,7 @@
 
   [ELSIF not_subscriber]
 
-      Nem vagy a(z) [list] listán nyílvántartva [email] 
+      Nem vagy a(z) [list] listán nyilvántartva [email] 
       email címmel.
       <BR><BR>
       Lehet, hogy a listára másik címmel iratkoztál fel.
@@ -23,7 +23,7 @@
   [ELSIF init_passwd]
 	Le szeretnél iratkozni a(z) [list] listáról.
 	<BR><BR>
-	Azonosításodhoz és hogy mások tudtod nélkül ne tudjanak leiratni 
+	Azonosításodhoz és hogy mások tudtod nélkül ne tudjanak törölni 
 	levélben kapsz egy pontos internet címet (URL).<BR><BR>
 
 	A Sympa által küldött levélben található jelszót kell itt megadnod

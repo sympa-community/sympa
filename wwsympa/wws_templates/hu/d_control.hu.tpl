@@ -1,6 +1,6 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-<H1>A [path] könyvtár jogosultságai</H1>
+<H1>Jogosultságok a(z) [path] könyvtárra</H1>
     Tulajdonos: [owner] <BR>
     Utolsó frissítés: [doc_date] <BR>
     Leírás: [doc_title] <BR><BR>
@@ -31,14 +31,14 @@
    <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
    <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
    <INPUT TYPE="hidden" NAME="serial" VALUE="[serial_desc]">
-   <INPUT TYPE="submit" NAME="action_d_change_access" VALUE="jogok megváltoztatása">
+   <INPUT TYPE="submit" NAME="action_d_change_access" VALUE="Hozzáférés megváltoztatása">
    </FORM>
 
    </TD>
 
    [IF set_owner]
      <TD>
-     <B>A [path] könyvtár tulajdonosának beállítása</B>
+     <B>A(z) [path] könyvtár tulajdonosának beállítása</B>
 
      <FORM ACTION="[path_cgi]" METHOD="POST">
      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">

@@ -5,7 +5,7 @@ A lista mûködik.<BR>
 Az <B>admin</B> gombra kattintva állíthatod be a paramétereit.
 <BR>
 [IF auto_aliases]
-A lista bejegyzések (aliases) mentve lettek.
+A lista bejegyzések (aliases) elmentve.
 [ELSE]
  <TABLE BORDER=1>
  <TR BGCOLOR="--LIGHT_COLOR--"><TD align=center>Szükséges bejegyzések</TD></TR>

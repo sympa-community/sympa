@@ -18,7 +18,7 @@
 		  [END]
 	        </SELECT>
 
-<DD>Nyílvánosság: [subscriber->visibility]
+<DD>Nyilvánosság: [subscriber->visibility]
 <DD>Nyelv: [subscriber->lang]
 <DD><INPUT TYPE="submit" NAME="action_set" VALUE="Frissít">
 <INPUT TYPE="submit" NAME="action_del" VALUE="A tag törlése">
@@ -27,7 +27,7 @@
 </TD></TR>
 [IF subscriber->bounce]
 <TR><TH BGCOLOR="--ERROR_COLOR--">
-<FONT COLOR="--BG_COLOR--">Továbbküldõ címek</FONT>
+<FONT COLOR="--BG_COLOR--">Visszapattanó címek</FONT>
 </TD></TR><TR><TD>
 <DL>
 <DD>Állapot: [subscriber->bounce_status] ([subscriber->bounce_code])

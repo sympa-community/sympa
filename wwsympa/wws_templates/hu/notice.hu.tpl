@@ -22,7 +22,7 @@ A beállításokat tartalmazó állomány frissítve.
 Jelszavad emailben el lett küldve.
 
 [ELSIF notice->msg=you_should_choose_a_password]
-Jelszavad kiválasztásához válaszd a felsõ menü 'Beállítások' részét.
+Jelszavad módosításához válaszd a felsõ menü 'Beállításaim' részét.
 
 [ELSE]
 [notice->msg]

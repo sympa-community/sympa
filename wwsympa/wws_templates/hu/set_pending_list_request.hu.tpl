@@ -36,7 +36,7 @@
 </MENU>
 </TD><TD>
 <TD BGCOLOR="--LIGHT_COLOR--">
-<INPUT TYPE="submit" NAME="action_install_pending_list" VALUE="Elment">
+<INPUT TYPE="submit" NAME="action_install_pending_list" VALUE="Mentés">
 </FORM>
 </TD>
 </TR>

@@ -2,11 +2,11 @@ Feladó: [conf->sympa]
 Reply-to: [conf->request]
 Címzett: [newuser->email]
 [IF action=subrequest]
-Tárgy: [wwsconf->title] / subscribing to [list]
+Tárgy: [wwsconf->title] / feliratkozás a(z) [list] listára
 [ELSIF action=sigrequest]
-Tárgy: [wwsconf->title] / unsubscribing from [list]
+Tárgy: [wwsconf->title] / leiratkozás a(z) [list] listáról
 [ELSE]
-Tárgy: [wwsconf->title] / your environment
+Tárgy: [wwsconf->title] / beállításaid
 [ENDIF]
 
 [IF action=subrequest]

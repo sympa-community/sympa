@@ -56,7 +56,7 @@
 [IF action=search]
 <BR>[occurrence] találat<BR>
 [IF too_many_select]
-Túl sok a találat, nem jeleníthetõ meg.
+Túl sokat jelöltél ki, nem tudom megjeleníteni.
 [ENDIF]
 [ENDIF]
 </FORM>
@@ -123,15 +123,15 @@ Túl sok a találat, nem jeleníthetõ meg.
         <TH><FONT SIZE="-1"><B>Név</B></FONT>
 	</TH>
         [IF is_owner]
-	  <TH><FONT SIZE="-1"><B>Fogadás</B></FONT>
+	  <TH><FONT SIZE="-1"><B>Kézbesítés típusa</B></FONT>
 	  </TH>
 	  [IF sortby=date]
   	    <TH NOWRAP BGCOLOR="--SELECTED_COLOR--">
-	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Feliratkozva</b></FONT>
+	    <FONT COLOR="--BG_COLOR--" SIZE="-1"><b>Feliratkozott</b></FONT>
 	  [ELSE]
 	    <TH NOWRAP><FONT SIZE="-1">
 	    <A HREF="[path_cgi]/review/[list]/1/[size]/date" >
-	    <b>Feliratkozva</b></A></FONT>
+	    <b>Feliratkozott</b></A></FONT>
 	  [ENDIF]
           </TH>
         [ENDIF]
@@ -163,7 +163,7 @@ Túl sok a találat, nem jeleníthetõ meg.
  	      [ENDIF]
 	  </FONT></TD>
             <TD ALIGN="right"BGCOLOR="--ERROR_COLOR--"><FONT SIZE=-1>
-		<FONT COLOR="--BG_COLOR--"><B>visszaküldések</B></FONT>
+		<FONT COLOR="--BG_COLOR--"><B>visszadobások</B></FONT>
 	    </TD>
 
 	 [ELSE]

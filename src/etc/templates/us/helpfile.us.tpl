@@ -22,8 +22,8 @@ du messages sont reconnues.
 
 Les commandes disponibles sont :
 
- HELp	                     * Ce fichier d'aide
- LISts	                     * Annuaire des listes geres sur ce noeud
+ HELp                        * Ce fichier d'aide
+ LISts                       * Annuaire des listes geres sur ce noeud
  REView <list>               * Connaitre la liste des abonnes de <list>
  WHICH                       * Savoir à quelles listes on est abonné
  SUBscribe <list> Prenom Nom * S'abonner ou confirmer son abonnement a la 
@@ -31,21 +31,12 @@ Les commandes disponibles sont :
  SIGnoff <list|*> [user->email]    * Quitter la liste <list>, ou toutes les listes.
                                Où [user->email] est facultatif
 
-			     Mise à jour du mode de reception:	
- SET <list|*> MAIL           * Reception de la liste <list> en mode normal
  SET <list|*> NOMAIL         * Suspendre la reception des messages de <list>
  SET <list|*> DIGEST         * Reception des message en mode compilation
  SET <list|*> SUMMARY        * Reception de la liste des messages uniquement
- SET <list|*> NOTICE         * Reception de l'objet des messages uniquement
- SET <list|*> TXT            * Reception uniquement au format texte pour les messages émis 
-			       conjointement en HTML et en texte simple.
- SET <list|*> HTML           * Reception uniquement au format HTML pour les messages émis 
-			       conjointement en HTML et en texte simple. 
- SET <list|*> URLIZE	     * Remplacement des attachements par une URL
- SET <list|*> NOT_ME         * Ne pas recevoir les messages dont je suis l'auteur
+ SET <list|*> NOTICE         * Reception de l'objet des message uniquement
 
-
-			     Mise à jour de la visibilite:	
+ SET <list|*> MAIL           * Reception de la liste <list> en mode normal
  SET <list|*> CONCEAL        * Passage en liste rouge (adresse d'abonné cachée)
  SET <list|*> NOCONCEAL      * Adresse d'abonné visible via REView
 
@@ -530,12 +521,12 @@ Následující pøíkazy jsou dostupné pouze správcùm nebo moderátorùm konference:
               SYMPA -- Systeme de Multi-Postage Automatique
                        (Automatikus Levelezõ Rendszer)
 
-                                Felhaszálói Könyv
+                                Felhasználói Kézikönyv
 
 SYMPA egy automatikus levelezõlista-kezelõ program, mellyel a listakezelést,
 mint pl. a feliratkozásokat, moderálást és archíválást lehet elvégezni.
 
-Az összes email parancsot a következõ címre kell küldeni: [conf->sympa]
+Minden parancsot a következõ email címre kell küldeni: [conf->sympa]
 
 Egy levélben több parancsot is meg lehet adni. A parancsokat a levél 
 törzsében, soronként egyesével kell megadni. A levél törzse csak akkor
@@ -556,7 +547,7 @@ Az alkalmazható parancsok a következõk:
 
  UNSubscribe <lista> <EMAIL> * Törlés a <listá>-ról. <EMAIL> az az email 
 			       cím, amellyel a lista tagja vagy, hasznos
-			       ha a jelenlegi címed eltér a nyilvántarottól.
+			       ha a jelenlegi címed eltér a nyilvántartottól.
  
  UNSubscribe * <EMAIL>       * Törlés az összes listáról.
 
@@ -588,7 +579,7 @@ Parancsok csak a lista tulajdonosának vagy szerkesztõjének:
  STATS <lista>                    * <lista> statisztikájának megtekintése
  EXPire <lista> <nap> <határidõ>  * Azon tagok értesítése a <listá>-n akik 
 			            <nap> óta nem erõsítették meg lista-
-				    tagásgukat. A tagoknak <határidõ>-ben
+				    tagságukat. A tagoknak <határidõ>-ben
 				    megadott nap áll rendelkezésükre ezt
 				    pótolni.
  EXPireINDex <lista>              * A <listá>-n jelenleg érvényben levõ
@@ -596,10 +587,10 @@ Parancsok csak a lista tulajdonosának vagy szerkesztõjének:
  EXPireDEL <lista>                * A <listá>-n lévõ megerõsítési folyamat
 				    törlése
 
- REMIND <lista>                   * Send a reminder message to each
-                                   subscriber (this is a way to inform
-                                   anyone what is his real subscribing
-                                   email).
+ REMIND <lista>                   * Emlékeztetõ levél elküldése a <lista>
+                                    összes tagjának. (Így adható tudtukra,
+                                    hogy milyen címmel vannak a listán
+                                    nyilvántartva.)
 [ENDIF]
 [IF is_editor]
 
@@ -728,13 +719,6 @@ Available commands are:
  SET <list|*> DIGEST         * Message reception in compilation mode
  SET <list|*> SUMMARY        * Receiving the message index only
  SET <list|*> NOTICE         * Receiving message subject only
- SET <list|*> TXT            * Receiving only text/plain part of messages send in both
-			       text/plain and in text/html format.
- SET <list|*> HTML           * Receiving only text/html part of messages send in both
-			       text/plain and in text/html format.
- SET <list|*> URLIZE         * Attachments are replaced by and URL.
- SET <list|*> NOT_ME         * No copy is sent to the sender of the message
-
 
  SET <list|*> MAIL           * <list> reception in normal mode
  SET <list|*> CONCEAL        * To become unlisted (hidden subscriber address)

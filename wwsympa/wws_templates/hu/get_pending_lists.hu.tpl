@@ -8,12 +8,12 @@
 <P>
 <TABLE>
  <TR>
-   <TD Colspan=3 bgcolor="--LIGHT_COLOR--"><B>Teendõk listája</B></TD>
+   <TD Colspan=3 bgcolor="--LIGHT_COLOR--"><B>Engedélyezésre váró listák</B></TD>
  </TR>
  <TR bgcolor="--LIGHT_COLOR--">
-   <TD><B>lista neve</B></TD>
-   <TD><B>lista tárgya</B></TD>
-   <TD><B>Kérelmezõ: </B></TD>
+   <TD><B>A lista neve</B></TD>
+   <TD><B>A lista tárgya</B></TD>
+   <TD><B>Kérelmezõje</B></TD>
  </TR>
 
 [FOREACH list IN pending]

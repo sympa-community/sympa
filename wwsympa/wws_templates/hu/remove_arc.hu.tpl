@@ -3,7 +3,7 @@
 [IF status = done]
 <b>Mûvelet sikeresen befejezve.</b> Az üzenetet amint lehet törölni
 fogjuk. Ez pár percen belül megtörténhet, fontos hogy ne felejtsd el
-a hivatkozó oldalt frissíteni.
+frissíteni a hivatkozó oldalt.
 [ELSIF status = no_msgid]
 <b>A törlésre szánt üzenet nem található, valószínüleg az üzenetet
 "Message-Id:" azonosító nélkül kaptad. Kérlek fordulj a listmasterhez

@@ -209,7 +209,7 @@ Jelszavad: [user->password].
 </PRE>
 
 <HR>
-A listáról bõvebben itt:
+A listáról bõvebben itt olvashatsz:
 <A HREF="[conf->wwsympa_url]/info/[list->name]">[conf->wwsympa_url]/info/[list->name]</A>
 
 

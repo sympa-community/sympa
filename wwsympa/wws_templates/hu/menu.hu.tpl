@@ -6,7 +6,7 @@
   <TR ALIGN=center BGCOLOR="--DARK_COLOR--">
   [IF auth_method=smime]
   <TD bgcolor="--BG_COLOR--">
-<A HREF="[path_cgi]/show_cert" onClick="winhelp=window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=320');winlogin.focus()" TARGET="wws_help"><IMG SRC="[icons_url]/locked.gif" align="center" alt="security info" border=0></A>
+<A HREF="[path_cgi]/show_cert" onClick="winhelp=window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=320');winlogin.focus()" TARGET="wws_help"><IMG SRC="[icons_url]/locked.gif" align="center" alt="titkosítási információk" border=0></A>
   [ELSE]
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
@@ -78,30 +78,30 @@
 
   [IF action=pref]
   <TD NOWRAP BGCOLOR="--SELECTED_COLOR--"  ALIGN="center">
-      <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Beállítások</B></FONT>
+      <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Beállításaim</B></FONT>
   </TD>
   [ELSE]
   <TD NOWRAP BGCOLOR="--LIGHT_COLOR--">
-      <A HREF="[path_cgi]/pref/[action]/[list]" ><FONT SIZE=-1><B>Beállítások</B></FONT></A>
+      <A HREF="[path_cgi]/pref/[action]/[list]" ><FONT SIZE=-1><B>Beállításaim</B></FONT></A>
   </TD>
   [ENDIF]
 
   [IF action=which]
   <TD NOWRAP BGCOLOR="--SELECTED_COLOR--" ALIGN="center">
-      <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Feliratkozások</B></FONT>
+      <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Feliratkozásaim</B></FONT>
   </TD>
   [ELSE]
   <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">
-      <A HREF="[path_cgi]/which" ><FONT SIZE=-1><B>Feliratkozások</B></FONT></A>
+      <A HREF="[path_cgi]/which" ><FONT SIZE=-1><B>Feliratkozásaim</B></FONT></A>
    </TD>
    [ENDIF]
   
   [ELSE]
   <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">
-      <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Beállítások</B></FONT>
+      <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Beállításaim</B></FONT>
   </TD>
   <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">
-      <FONT SIZE=-1 COLOR="--BG_COLOR--"><B>Feliratkozások</B></FONT>
+      <FONT SIZE=-1 COLOR="--BG_COLOR--"><B>Feliratkozásaim</B></FONT>
   </TD>
   [ENDIF]
 

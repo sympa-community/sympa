@@ -60,7 +60,7 @@
       <TR BGCOLOR="--ERROR_COLOR--" NOWRAP>
 	<TH><FONT COLOR="--BG_COLOR--">X</FONT></TH>
         <TH><FONT COLOR="--BG_COLOR--">email</FONT></TH>
-	<TH><FONT COLOR="--BG_COLOR--">visszaküldések száma</FONT></TH>
+	<TH><FONT COLOR="--BG_COLOR--">visszakdobások száma</FONT></TH>
 	<TH><FONT COLOR="--BG_COLOR--">idõszak</FONT></TH>
 	<TH NOWRAP><FONT COLOR="--BG_COLOR--">type</FONT></TH>
       </TR>

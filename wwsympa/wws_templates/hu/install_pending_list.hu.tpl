@@ -14,7 +14,7 @@
  <TD><B>Tématerülete: </B></TD><TD WIDTH=100%>[list_subject]</TD>
 </TR>
 <TR BGCOLOR="--LIGHT_COLOR--">
- <TD NOWRAP>A lista mûkdösését [list_request_date]-ei <b>napon</b></TD><TD WIDTH=100%>[list_request_by] <B>kérvényezte</B>.</TD>
+ <TD NOWRAP>A lista mûködését [list_request_date]-ei <b>napon</b></TD><TD WIDTH=100%>[list_request_by] <B>kérvényezte</B>.</TD>
 </TR>
 </TABLE>
 </TD>

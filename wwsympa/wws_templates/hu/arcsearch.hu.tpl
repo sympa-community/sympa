@@ -1,37 +1,37 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-<H2>Találatok az archívumban 
-<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="--DARK_COLOR--">[list]</font></a> : </H2>
+<H2>Találatok a(z) 
+<A HREF="[path_cgi]/arc/[list]/[archive_name]"><FONT COLOR="--DARK_COLOR--">[list]</font></a> archívumban: </H2>
 
-<P>Keresendõ kifejezés: 
+<P>Keresési tartomány: 
 [FOREACH u IN directories]
 <A HREF="[path_cgi]/arc/[list]/[u]"><FONT COLOR="--DARK_COLOR--">[u]</font></a> - 
 [END]
 </P>
 
-A keresésben megadott feltételek <b> &quot;[key_word]&quot;</b> 
+Megadott paraméterek a keresésben a(z) <b> &quot;[key_word]&quot;</b> kulcsszavakhoz:
 <I>
 
 [IF how=phrase]
-	(Ez a kifejezés, 
+	(Teljes mondat, 
 [ELSIF how=any]
-	(Az összes megadott szó, 
+	(Minden szó, 
 [ELSE]
-	(A szavak bármelyike, 
+	(Bármyel szó, 
 [ENDIF]
 
 <i>
 
 [IF case]
-	kis- és nagybetû nem különbözik 
+	kis- és nagybetû megkülönböztetése nélkül 
 [ELSE]
-	kis- és nagybetû megkülönböztetése 
+	kis- és nagybetû megkülönböztetésével 
 [ENDIF]
 
 [IF match]
-	és ha bármelyik szóban megtalálható.)</i>
+	és szórészeket is vizsgálva.)</i>
 [ELSE]
-	és csak ha ez a teljes szó.)</i>
+	csak egész szavakat vizsgálva.)</i>
 [ENDIF]
 <p>
 
@@ -52,7 +52,7 @@ A keresésben megadott feltételek <b> &quot;[key_word]&quot;</b>
 <DT><B>[searched] találatból [num] mutatva...</b><BR>
 
 [IF body]
-	<DD><B>[body_count]</b> találat a levél <i>Törzsben</i><BR>
+	<DD><B>[body_count]</b> találat a levél <i>Törzsében</i><BR>
 [ENDIF]
 
 [IF subj]
@@ -111,9 +111,8 @@ A keresésben megadott feltételek <b> &quot;[key_word]&quot;</b>
 <INPUT NAME=action_arcsearch_form TYPE=submit VALUE="Új keresés">
 </FORM>
 <HR>
-Keresést az archívumban a <Font size=+1 color="--DARK_COLOR--"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font> a <B>MHonArc</B>
-keresõ program végezte.<p>
+Keresést az archívumban a <b>MHonArc</b> keresõ programja, a <Font size=+1 color="--DARK_COLOR--"><i><A HREF="http://www.mhonarc.org/contrib/marc-search/">Marc-Search</a></i></font> végezte.<p>
 
 
-<A HREF="[path_cgi]/arc/[list]/[archive_name]"><B>Visszatérés a(z) [archive_name] archívumhoz
+<A HREF="[path_cgi]/arc/[list]/[archive_name]"><B>Vissza a(z) [archive_name] archívumhoz
 </B></A><br>

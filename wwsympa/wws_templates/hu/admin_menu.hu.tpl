@@ -60,13 +60,13 @@
 
     [IF action=reviewbouncing]
     <TD BGCOLOR="--SELECTED_COLOR--" ALIGN="CENTER">
-       <FONT size="-1" COLOR="--BG_COLOR--"><b>Továbbküldések</b></FONT>
+       <FONT size="-1" COLOR="--BG_COLOR--"><b>Visszadobások</b></FONT>
     </TD>
     [ELSE]
     <TD BGCOLOR="--LIGHT_COLOR--" ALIGN="CENTER">
        [IF is_owner]
        <A HREF="[base_url][path_cgi]/reviewbouncing/[list]" >
-       <FONT size="-1"><b>Továbbküldések</b></FONT></A>
+       <FONT size="-1"><b>Visszadobások</b></FONT></A>
        [ENDIF]
     </TD>
     [ENDIF]

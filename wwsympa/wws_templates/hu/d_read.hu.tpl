@@ -5,14 +5,14 @@
 [ELSE]
 
   [IF path]  
-    <h2> <B> [path] könyvtár tulajdonságai</B> </h2> 
+    <h2> <B> [path] könyvtár tartalma</B> </h2> 
     Tulajdonos: [doc_owner] <BR>
     Utolsó frissítés: [doc_date] <BR>
     Leírás: [doc_title] <BR><BR>
     <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[father]"> <IMG ALIGN="bottom"  src="[father_icon]">Egy könyvtárral feljebb</A></font>
     <BR>  
   [ELSE]
-    <h2> <B>Megosztott könyvtár tulajdonságai</B> </h2> 
+    <h2> <B>Megosztott könyvtár tartalma</B> </h2> 
   [ENDIF]
    
   <TABLE width=100%>
@@ -63,7 +63,7 @@
   </TR></TABLE>   
   </th> 
 
-  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Utolsõ frissítés</font></TD>
+  <th><TABLE width=100%><TR><TD ALIGN="left"><font color="--BG_COLOR--">Utolsó módosítás</font></TD>
   [IF order_by<>order_by_date]
     <TD ALIGN="right">
     <form method="post" ACTION="[path_cgi]">
@@ -109,7 +109,7 @@
 	[IF s->edit]
 	  <TD><center>
 	  <FONT size=-1>
-	  <A HREF="[path_cgi]/d_delete/[list]/[path][s->doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[path][s->doc]', 'Tényleg szeretnéd törölni a következõt [path][s->doc] ?'); return false;">töröl</A>
+	  <A HREF="[path_cgi]/d_delete/[list]/[path][s->doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[path][s->doc]', 'Tényleg szeretnéd törölni a következõt: [path][s->doc] ?'); return false;">töröl</A>
 	  </FONT>
 	  </center></TD>
 	[ELSE]

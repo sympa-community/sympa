@@ -1,6 +1,6 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-Emailben elküldésre kerül a jelszavad. Email cimedet csak<br>
+Emailben elküldésre kerül a jelszavad. Email címedet csak<br>
 akkor tudod megváltoztatni, ha a lejebb található jelszót
 is megadod:
 

@@ -6,16 +6,16 @@
 [error->action]: ismeretlen parancs
 
 [ELSIF error->msg=unknown_list]
-[error->list]: ismereteln lista
+[error->list]: ismeretlen lista
 
 [ELSIF error->msg=already_login]
-[error->email] címmel már tag vagy.
+[error->email] címmel már beléptél.
 
 [ELSIF error->msg=no_email]
 Kérlek add meg az email címedet.
 
 [ELSIF error->msg=incorrect_email]
-Nem megfelelõ email címe: "[error->email]" 
+Nem megfelelõ email cím: "[error->email]" 
 
 [ELSIF error->msg=incorrect_listname]
 "[error->listname]": hibásan megadott listanév
@@ -27,7 +27,7 @@ Kérlek add meg a jelszavadat.
 "[error->email]": ismeretlen felhasználó
 
 [ELSIF error->msg=user_not_found]
-"[error->email]" nincs feliratkozva.
+"[error->email]" nem tagja a listának.
 
 [ELSIF error->msg=passwd_not_found]
 "[error->email]" felhasználónak nincsen jelszava.
@@ -42,7 +42,7 @@ A megadott jelszó nem teljes.
 Be kell jelentkezned.
 
 [ELSIF error->msg=may_not]
-[error->action]: nincs jogod a muvelethez.
+[error->action]: nincs jogod a mûvelethez.
 [IF ! user->email]
 <BR>Be kell jelentkezned.
 [ENDIF]
@@ -51,7 +51,7 @@ Be kell jelentkezned.
 A listára senkisem iratkozott fel.
 
 [ELSIF error->msg=no_bounce]
-A listán nincsen problémás felhasználó.
+A listán nincsen visszapattant levél.
 
 [ELSIF error->msg=no_page]
 Nincs ilyen nevû oldal: [error->page]
@@ -84,7 +84,7 @@ A megadott jelszavak nem egyeznek.
 Hiányzó paraméter: [error->argument]
 
 [ELSIF error->msg=no_bounce]
-[error->email] felhasználónál nincsen visszaküldés.
+[error->email] felhasználónak nincsen visszapattant levele.
 
 [ELSIF error->msg=update_privilege_bypassed]
 Megfelelõ jogosultságok hiányában próbáltál meg módosítani: [error->pname]

@@ -64,6 +64,8 @@ $PREVPGLINK$
  messages, page n&#176;
 [ELSIF lang=cz]
  zpráv, strana 
+[ELSIF lang=hu]
+ levelek, oldalak
 [ELSE]
  mails, page # 
 [ENDIF]
@@ -79,6 +81,8 @@ $NEXTPGLINK$
 Suivi chronologique
 [ELSIF lang=cz]
 Chronologicky
+[ELSIF lang=hu]
+Idõrendben
 [ELSE]
 Chronological
 [ENDIF]
@@ -89,6 +93,8 @@ Chronological
 <b>Suivi de conversation</b> <i>thread</i>
 [ELSIF lang=cz]
 <b>Téma</b> (<i>thread</i>)
+[ELSIF lang=hu]
+<b>Témák szerint</b>
 [ELSE]
 <B>Thread</B>
 [ENDIF]
@@ -109,6 +115,8 @@ Chronological
 Archives basées sur
 [ELSIF lang=cz]
 Archív zalo¾en na
+[ELSIF lang=hu]
+Archívumot kezeli: 
 [ELSE]
 Archive powered by
 [ENDIF]
@@ -150,6 +158,8 @@ Archive powered by
  Les archives de wwsympa sont basées sur
 [ELSIF lang=cz]
 Archív zalo¾en na
+[ELSIF lang=hu]
+Archívumot kezeli: 
 [ELSE]
 Archive powered by
 [ENDIF]
@@ -178,6 +188,8 @@ $TNEXTPGLINK$
 Suivi chronologique
 [ELSIF lang=cz]
 Chronologicky
+[ELSIF lang=hu]
+Idõrendben
 [ELSE]
 Chronological
 [ENDIF]
@@ -189,6 +201,8 @@ Chronological
 <b>Suivi de conversation</b> <i>thread</i> 
 [ELSIF lang=cz]
 <b>Téma</b> (<i>thread</i>)
+[ELSIF lang=hu]
+<b>Témák szerint</b>
 [ELSE]
 <b>Thread</b>
 [ENDIF]
@@ -222,6 +236,8 @@ Chronological
 suite
 [ELSIF lang=cz]
 dal¹í
+[ELSIF lang=hu]
+következõ
 [ELSE]
 next
 [ENDIF]
@@ -263,6 +279,8 @@ next
 Message non disponible
 [ELSIF lang=cz]
 Zpráva není dostupná
+[ELSIF lang=hu]
+A levél nem érhetõ el.
 [ELSE]
 Message not availible
 [ENDIF]
@@ -360,6 +378,8 @@ Message not availible
 Chronologie
 [ELSIF lang=cz]
 Chronologicky
+[ELSIF lang=hu]
+Idõrendben
 [ELSE]
 Chronological
 [ENDIF]
@@ -371,6 +391,8 @@ $TPREVBUTTON$
 [IF lang=fr]
 Conversation
 [ELSIF lang=cz]
+Téma
+[ELSIF lang=hu]
 Téma
 [ELSE]
 Thread
@@ -410,6 +432,10 @@ $TNEXTBUTTON$
    répondre à l'auteur <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
   à la liste <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list->host]">
  <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Répondre">
+[ELSIF lang=hu]
+  Válasz a feladónak <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
+  a listának <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list->host]">
+  <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="Válasz">
 [ELSE] 
   Reply to sender <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDR$" CHECKED>
   to list <INPUT TYPE="radio" NAME="to" VALUE="[list]@[list->host]">
@@ -430,6 +456,8 @@ $TNEXTBUTTON$
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="marquer ce message pour suppression">
 [ELSIF lang=cz]
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="Oznaèit tuto zprávu ke smazání">
+[ELSIF lang=hu]
+  <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre">
 [ELSE]
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="tag this mail for deletion">
 [ENDIF]
@@ -446,6 +474,8 @@ $TNEXTBUTTON$
   <INPUT TYPE="button" NAME="action_remove_arc" VALUE="marquer ce message pour suppression" onClick="request_confirm(this.form,'Voulez-vous vraiment supprimer ce message ?')">
 [ELSIF lang=cz]
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="oznaèit tuto zprávu ke smazání">
+[ELSIF lang=hu]
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre" onClick="request_confirm(this.form,'Tényleg törölni szeretnéd ezt a levelet?')">
 [ELSE]
   <INPUT TYPE="button" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="request_confirm(this.form,'Do you really want to delete this message ?')">
 [ENDIF]
@@ -519,6 +549,8 @@ Subject:strong
 Dimanche
 [ELSIF lang=cz]
 Nedìle
+[ELSIF lang=hu]
+Vasárnap
 [ELSE]
 Sunday
 [ENDIF]
@@ -527,6 +559,8 @@ Sunday
 Lundi
 [ELSIF lang=cz]
 Pondìlí
+[ELSIF lang=hu]
+Hétfõ
 [ELSE]
 Monday
 [ENDIF]
@@ -535,6 +569,8 @@ Monday
 Mardi
 [ELSIF lang=cz]
 Úterý
+[ELSIF lang=hu]
+Kedd
 [ELSE]
 Tuesday
 [ENDIF]
@@ -543,6 +579,8 @@ Tuesday
 Mercredi
 [ELSIF lang=cz]
 Støeda
+[ELSIF lang=hu]
+Szerda
 [ELSE]
 Wednesday
 [ENDIF]
@@ -551,6 +589,8 @@ Wednesday
 Jeudi
 [ELSIF lang=cz]
 Ètvrtek
+[ELSIF lang=hu]
+Csütörtök
 [ELSE]
 Thursday
 [ENDIF]
@@ -559,6 +599,8 @@ Thursday
 Vendredi
 [ELSIF lang=cz]
 Pátek
+[ELSIF lang=hu]
+Péntek
 [ELSE]
 Friday
 [ENDIF]
@@ -567,6 +609,8 @@ Friday
 Samedi
 [ELSIF lang=cz]
 Sobota
+[ELSIF lang=hu]
+Szombat
 [ELSE]
 Saturday
 [ENDIF]
@@ -576,6 +620,10 @@ Saturday
 <WEEKDAYSABR>
 Ne:Po:Út:St:Èt:Pá:So
 </WEEKDAYSABR>
+[ELSIF lang=hu]
+<WEEKDAYSABR>
+V:H:K:Sz:Cs:P:Szo
+</WEEKDAYSABR>
 [ENDIF]
 
 <MONTHS>
@@ -583,6 +631,8 @@ Ne:Po:Út:St:Èt:Pá:So
 Janvier:Fevrier:Mars:Avril:Mai:Juin:Juillet:Aout:Septembre:Octobre:Novembre:Decembre
 [ELSIF lang=cz]
 Leden:Únor:Bøezen:Duben:Kvìten:Èerven:Èervenec:Srpen:Záøí:Øíjen:Listopad:Prosinec
+[ELSIF lang=hu]
+Január:Február:Március:Április:Május:Június:Július:Augusztus:Szeptember:Október:November:December
 [ELSE]
 January:February:March:April:May:June:July:August:September:October:November:December
 [ENDIF]
@@ -591,6 +641,10 @@ January:February:March:April:May:June:July:August:September:October:November:Dec
 [IF lang=cz]
 <MONTHSABR>
 Led:Úno:Bøe:Dub:Kvì:Èern:Èerv:Srp:Záø:Øíj:List:Pro
+</MONTHSABR>
+[ELSIF lang=hu]
+<MONTHSABR>
+Jan:Feb:Már:Ápr:Máj:Jún:Júl:Aug:Szep:Okt:Nov:Dec
 </MONTHSABR>
 [ENDIF]
 
@@ -604,6 +658,17 @@ Led:Úno:Bøe:Dub:Kvì:Èern:Èerv:Srp:Záø:Øíj:List:Pro
 <LOCALDATEFMT>
 %d. %B. %Y %H:%M
 </LOCALDATEFMT>
+[ELSIF lang=hu]
+<UseLocalTime>
+ 
+<MSGLOCALDATEFMT>
+%Y. %B %d., %A %H:%M
+</MSGLOCALDATEFMT>
+
+<LOCALDATEFMT>
+%Y. %B %d., %A %H:%M
+</LOCALDATEFMT>
+ 
 [ELSE]
 <MsgLocalDateFmt>
 %A %d %B %Y

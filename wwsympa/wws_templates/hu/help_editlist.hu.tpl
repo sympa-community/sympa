@@ -6,12 +6,12 @@
 <DL>
 <DD>
 [IF p->NAME=add]
-  Jog tag feliratásához (ADD parancs) a listára
+  Jogosultság tag felvételére (ADD parancs) a listára
 [ELSIF p->NAME=anonymous_sender]
-  Az üzenet eredeti feladójának elrejtése a levél listán megjelenésekor.
+  Az üzenet eredeti feladójának elrejtése annak a listán megjelenésekor.
   A megadott email cím kerül a feladó helyére.
 [ELSIF p->NAME=archive]
-  Jog a levél archívum olvasásához és annak frissítéséhez.
+  Jogosultság a levél archívum olvasásához és annak frissítéséhez.
 [ELSIF p->NAME=owner]
   A tulajdonosok a listatagokat kezelhetik. Tagokat ellenõrízhetnek, felírhatnak
   vagy törölhetnek a listán. Ha tulajdonosa vagy a listának, akkor újabb gazdákat
@@ -32,4 +32,4 @@ levelet, addíg a moderálásra váró levelek között marad.
 
 </DL>
 [END]
-	
+

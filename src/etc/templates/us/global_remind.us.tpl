@@ -134,7 +134,7 @@ Mime-version: 1.0
 Content-Type: text/plain; charset=iso-8859-2
 Content-transfer-encoding: 8bit
 
-Értesítés a feliratkozásaidról ([user->email] cím szerint).
+Értesítés a feliratkozásaidról ([user->email] címmel).
 Ha valamelyik listáról le akarsz iratkozni, akkor mentsd ezt a levelet.
 
 Minden egyes listához itt megtalálod a leiratkozási címet.

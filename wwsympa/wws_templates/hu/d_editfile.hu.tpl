@@ -11,7 +11,7 @@
   <TR>
   <form method="post" ACTION="[path_cgi]" ENCTYPE="multipart/form-data">
   <TD ALIGN="right" VALIGN="bottom">
-  <B> A [path] állomány felülírása a sajátoddal </B><BR> 
+  <B> A(z) [path] állomány felülírása a sajátoddal </B><BR> 
   <input type="file" name="uploaded_file">
   </TD>
   <TD ALIGN="left" VALIGN="bottom"> 

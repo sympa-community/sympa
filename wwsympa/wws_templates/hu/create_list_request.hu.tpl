@@ -8,7 +8,7 @@
  <TR>
    <TD NOWRAP><B>Lista neve:</B></TD>
    <TD><INPUT TYPE="text" NAME="listname" SIZE=30 VALUE="[saved->listname]"></TD>
-   <TD><img src="/icons/unknown.gif" alt="a lista neve; nem a címe kell ide!"></TD>
+   <TD><img src="/icons/unknown.gif" alt="A lista neve; nem a címe!"></TD>
  </TR>
  
  <TR>
@@ -18,7 +18,7 @@
  </TR>
 
  <TR>
-   <TD valign=top NOWRAP><B>Lista típusa:</B></TD>
+   <TD valign=top NOWRAP><B>A lista típusa:</B></TD>
    <TD>
      <MENU>
   [FOREACH template IN list_list_tpl]
@@ -37,12 +37,12 @@
     <TD valign=top><img src="/icons/unknown.gif" alt="A lista típusát annak beállítása adja meg. A beállításokat a lista létrehozása után lehet elvégezni."></TD>
  </TR>
  <TR>
-   <TD NOWRAP><B>Témakör:</B></TD>
+   <TD NOWRAP><B>Tárgy:</B></TD>
    <TD><INPUT TYPE="text" NAME="subject" SIZE=60 VALUE="[saved->subject]"></TD>
-   <TD><img src="/icons/unknown.gif" alt="A lista témaköre"></TD>
+   <TD><img src="/icons/unknown.gif" alt="Amirõl a lista szól"></TD>
  </TR>
  <TR>
-   <TD NOWRAP><B>Témák:</B></TD>
+   <TD NOWRAP><B>Témakörök:</B></TD>
    <TD><SELECT NAME="topics">
 	<OPTION VALUE="">--Válassz egyet--
 	[FOREACH topic IN list_of_topics]

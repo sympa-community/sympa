@@ -53,15 +53,15 @@
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
         <TD BGCOLOR="--LIGHT_COLOR--">
-	  Tagok: <B>[total]</B><BR>
+	  Tagok száma: <B>[total]</B><BR>
 	  <BR>
-	  Tulajdonosok
+	  Tulajdonosok:
 	  [FOREACH o IN owner]
 	    <BR><FONT SIZE=-1><A HREF="mailto:[o->NAME]">[o->gecos]</A></FONT>
 	  [END]
 	  <BR>
 	  [IF is_moderated]
-	    Szerkesztõk
+	    Szerkesztõk:
 	    [FOREACH e IN editor]
 	      <BR><FONT SIZE=-1><A HREF="mailto:[e->NAME]">[e->gecos]</A></FONT>
 	    [END]
@@ -94,17 +94,17 @@
        <TR>
 
    [IF action=admin]
-        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Lista adminisztrátora</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right><font color="--BG_COLOR--" size=-1><b>Lista adminisztráció</b></font></TD>
    [ELSIF action_type=admin]
         <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right>
         <b>
-         <A HREF="[path_cgi]/admin/[list]" ><FONT COLOR="--BG_COLOR--" SIZE="-1">Lista adminisztrátora</FONT></A>
+         <A HREF="[path_cgi]/admin/[list]" ><FONT COLOR="--BG_COLOR--" SIZE="-1">Lista adminisztráció</FONT></A>
         </b>
         </TD>
    [ELSE]
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[path_cgi]/admin/[list]" >Lista adminisztrátora</A>
+         <A HREF="[path_cgi]/admin/[list]" >Lista adminisztráció</A>
         </b></font>
         </TD>
    [ENDIF]
@@ -131,7 +131,7 @@
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
         <TD BGCOLOR="--LIGHT_COLOR--">
-	   Visszaküldött levelek aránya: <B>[bounce_rate]%</B><BR>
+	   Visszadobott levelek aránya: <B>[bounce_rate]%</B><BR>
            <BR>
 	   [if mod_total=0]
  	   Nincs moderálásra váró levél.
@@ -401,17 +401,17 @@
        <TR>
    [IF action=compose_mail]
         <TD WIDTH="100%" BGCOLOR="--SELECTED_COLOR--" NOWRAP align=right>
-          <font size=-1 COLOR="--BG_COLOR--"><b>Beküldés</b></font>
+          <font size=-1 COLOR="--BG_COLOR--"><b>Levél beküldés</b></font>
 	</TD>
   [ELSE]
 
         <TD WIDTH="100%" BGCOLOR="--LIGHT_COLOR--" NOWRAP align=right>
    [IF may_post]
         <font size=-1><b>
-         <A HREF="[path_cgi]/compose_mail/[list]" >Beküldés</A>
+         <A HREF="[path_cgi]/compose_mail/[list]" >Levél beküldés</A>
         </b></font>
    [ELSE]
-        <font size=-1 COLOR="--BG_COLOR--"><b>Beküldés</b></font>
+        <font size=-1 COLOR="--BG_COLOR--"><b>Levél beküldés</b></font>
    [ENDIF]
         </TD>
    [ENDIF]

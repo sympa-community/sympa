@@ -1,8 +1,8 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 
-      Ha elfelejtetted a jelszavadat, vagy ezen a gépen nem is rendelkeztél egyetlen <br>
-      eggyel sem, akkor most emailben lekérheted azt:
+      Ha elfelejtetted a jelszavadat, vagy ezen a gépen még nincsen,<br>
+      akkor most emailben lekérheted:
 
       <FORM ACTION="[path_cgi]" METHOD=POST>
 	  <INPUT TYPE="hidden" NAME="referer" VALUE="[referer]">
