@@ -6271,7 +6271,7 @@ sub do_edit_list {
 	     my $saved_lang = &Language::GetLang();
 	     
 	     foreach my $lang (keys %{$p->{'value'}}) {
-		 &do_log('notice','LANG: %s', $lang);
+		 #&do_log('notice','LANG: %s', $lang);
 		 &Language::SetLang($lang);
 		 $p->{'value'}{$lang}{'title'} = gettext('_language_');
 	     }
