@@ -9,7 +9,7 @@
     Owner : [doc_owner] <BR>
     Mise à jour : [doc_date] <BR>
     Description : [doc_title] <BR><BR>
-    <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[escaped_father]"> <IMG ALIGN="bottom"  src="[father_icon]"> Dossier parent</A></font>
+    <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[escaped_father]"> <IMG ALIGN="bottom"  src="[father_icon]" BORDER="0"> Dossier parent</A></font>
     <BR>  
   [ELSE]
     <h2> <B> Liste des documents</B> </h2> 

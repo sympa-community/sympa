@@ -106,7 +106,7 @@ $icon_table{'audio'} = '/icons/sound1.gif';
 $icon_table{'image'} = '/icons/image2.gif';
 $icon_table{'text'} = '/icons/text.gif';
 $icon_table{'video'} = '/icons/movie.gif';
-$icon_table{'father'} = '/icons/small/back.gif';
+$icon_table{'father'} = '/icons/folder.open.gif';
 $icon_table{'sort'} = '/icons/down.gif';
 ## Shared directory and description file
 
@@ -5161,65 +5161,65 @@ sub do_d_admin {
     $mode{'edit'} = 1;
     my %access = &d_access_control(\%mode,$in{'path'});
 
-    if ($access{'may'}{'edit'}) {
-	my $dir = "$Conf{'home'}/$param->{'list'}";
-
-	if ($in{'d_admin'} eq 'create') {
-
-	    if (-e "$dir/shared") {
-		&wwslog('info',"do_d_admin :  create; $dir/shared allready exist");
-		&error_message('failed');
-		return undef;
-	    }
-	    unless (mkdir ("$dir/shared",0777)) {
-		&wwslog('info',"do_d_admin : create; unable to create $dir/shared : $! ");
-		&error_message('failed');
-		return undef;
-	    }
-
-	    return 'd_read';
-	}elsif($in{'d_admin'} eq 'restore') {
-	    unless (-e "$dir/pending.shared") {
-		&wwslog('info',"do_d_admin : restore; $dir/pending.shared not found");
-		&error_message('failed');
-		return undef;
-	    }
-	    if (-e "$dir/shared") {
-		&wwslog('info',"do_d_admin : restore; $dir/shared allready exist");
-		&error_message('failed');
-		return undef;
-	    }
-	    unless (rename ("$dir/pending.shared", "$dir/shared")){
-		&wwslog('info',"do_d_admin : restore; unable to rename $dir/pending.shared");
-		&error_message('failed');
-		return undef;
-	    }
-
-	    return 'd_read';
-        }elsif($in{'d_admin'} eq 'delete') {
-	    unless (-e "$dir/shared") {
-		&wwslog('info',"do_d_admin : restore; $dir/shared not found");
-		&error_message('failed');
-		return undef;
-	    }
-	    if (-e "$dir/pending.shared") {
-		&wwslog('info',"do_d_admin : delete ; $dir/pending.shared allready exist");
-		&error_message('failed');
-		return undef;
-	    }
-	    unless (rename ("$dir/shared", "$dir/pending.shared")){
-		&wwslog('info',"do_d_admin : restore; unable to rename $dir/shared");
-		&error_message('failed');
-		return undef;
-	    }
-	}
-	
-	return 'admin';
-    }else{
+    unless ($access{'may'}{'edit'}) {
 	&wwslog('info',"do_d_admin : permission denied for $param->{'user'}{'email'} ");
 	&error_message('failed');
 	return undef;
     }
+    
+    my $dir = "$Conf{'home'}/$param->{'list'}";
+    
+    if ($in{'d_admin'} eq 'create') {
+	
+	if (-e "$dir/shared") {
+	    &wwslog('info',"do_d_admin :  create; $dir/shared allready exist");
+	    &error_message('failed');
+	    return undef;
+	}
+	unless (mkdir ("$dir/shared",0777)) {
+	    &wwslog('info',"do_d_admin : create; unable to create $dir/shared : $! ");
+	    &error_message('failed');
+	    return undef;
+	}
+	
+	return 'd_read';
+    }elsif($in{'d_admin'} eq 'restore') {
+	unless (-e "$dir/pending.shared") {
+	    &wwslog('info',"do_d_admin : restore; $dir/pending.shared not found");
+	    &error_message('failed');
+	    return undef;
+	}
+	if (-e "$dir/shared") {
+	    &wwslog('info',"do_d_admin : restore; $dir/shared allready exist");
+	    &error_message('failed');
+	    return undef;
+	}
+	unless (rename ("$dir/pending.shared", "$dir/shared")){
+	    &wwslog('info',"do_d_admin : restore; unable to rename $dir/pending.shared");
+	    &error_message('failed');
+	    return undef;
+	}
+	
+	return 'd_read';
+    }elsif($in{'d_admin'} eq 'delete') {
+	unless (-e "$dir/shared") {
+	    &wwslog('info',"do_d_admin : restore; $dir/shared not found");
+	    &error_message('failed');
+	    return undef;
+	}
+	if (-e "$dir/pending.shared") {
+	    &wwslog('info',"do_d_admin : delete ; $dir/pending.shared allready exist");
+	    &error_message('failed');
+	    return undef;
+	}
+	unless (rename ("$dir/shared", "$dir/pending.shared")){
+	    &wwslog('info',"do_d_admin : restore; unable to rename $dir/shared");
+	    &error_message('failed');
+	    return undef;
+	    }
+    }
+	
+    return 'admin';
 }
 
 #*******************************************
@@ -5257,10 +5257,7 @@ sub by_order {
 ##
 ## Function do_d_read
 sub do_d_read {
-    #action_args == ['list','@path']
-    
     &wwslog('debug', 'do_d_read(%s)', $in{'path'});
-   
 
     ### action relative to a list ?
     unless ($param->{'list'}) {
@@ -5348,17 +5345,9 @@ sub do_d_read {
 	    
     }else {
 	# verification of the URL (the path must have a slash at its end)
-	if ($path) {
-	    if ($path_orig !~ /\/$/) {
-		$param->{'redirect_to'} = "$param->{'base_url'}$param->{'path_cgi'}/d_read/$list_name/$path_orig/";
-		return 1;
-	    }
-	    
-	}else {
-	    if ($ENV{'PATH_INFO'} !~ /\/$/) { 
-		$param->{'redirect_to'} = "$param->{'base_url'}$param->{'path_cgi'}/d_read/$list_name/";
-		return 1;
-	    }
+	if ($ENV{'PATH_INFO'} !~ /\/$/) { 
+	    $param->{'redirect_to'} = "$param->{'base_url'}$param->{'path_cgi'}/d_read/$list_name/";
+	    return 1;
 	}
 
 	## parameters of the current directory
@@ -5649,28 +5638,17 @@ sub do_d_read {
 ## Useful function to have the path with or without slash
 ## at its end
 sub format_path {
-    my $mode = shift;
-    # mode = 'with_slash' / 'without_slash'
+    my $mode = shift; #'with_slash' / 'without_slash'
     my $path = shift;
-    # path = path to format
-    
-    my $slash;
-    if ($mode eq 'with_slash') {
-	$slash = '/';
-    }
-    elsif ($mode eq 'without_slash') {
-	$slash = '';
-    } else {
-	return $path;
-    }
-   
-    $path =~ /^((.+[^\/])(\/*))?$/;
-    
-    unless ($1) { 
-	return "";
-    }
 
-    return ($2.$slash);
+    ## supress ending '/'
+    $path =~ s/\/+$//;
+    
+    if ($mode eq 'with_slash') {
+	return $path . '/';
+    }
+    
+    return $path;
 } 
 
 #*******************************************
@@ -6588,7 +6566,7 @@ sub do_d_create_dir {
     # Creation of a default description file 
     unless (open (DESC,">$document/.desc")) {
 	&error_message('failed');
-	&wwslog('info','do_d_create_dir : annot create description file %s', $document.'/.desc');
+	&wwslog('info','do_d_create_dir : Cannot create description file %s', $document.'/.desc');
     }
 
     print DESC "title\n \n\n"; 
@@ -6715,7 +6693,6 @@ sub do_d_control {
     my $lang = $param->{'lang'};
 
     ## Scenario list for READ
-    #XXXXXX SHOULD use List::load_scenario_list()
     my $read_scenario_list = $list->load_scenario_list('d_read');
     $param->{'read'}{'scenario_name'} = $read;
     $param->{'read'}{'label'} = $read_scenario_list->{$read}{'title'}{$lang};
@@ -6729,7 +6706,6 @@ sub do_d_control {
     }
 
     ## Scenario list for EDIT
-    #XXXXXX SHOULD use List::load_scenario_list()
     my $edit_scenario_list = $list->load_scenario_list('d_edit');
     $param->{'edit'}{'scenario_name'} = $edit;
     $param->{'edit'}{'label'} = $edit_scenario_list->{$edit}{'title'}{$lang};
@@ -6771,7 +6747,6 @@ sub do_d_change_access {
     ## $path must have no slash at its end
     $path = &format_path('without_slash',$path);
 
-    #my $list_name = $in{'list'};
     my $list_name = $list->{'name'};
 
     # path of the shared directory
@@ -6784,7 +6759,6 @@ sub do_d_change_access {
 	&wwslog('info','do_d_change_access: no list');
 	return undef;
     }
-
        
     ## the path must not be empty (the description file of the shared directory
     #  doesn't exist)
@@ -6812,7 +6786,6 @@ sub do_d_change_access {
 	&wwslog('info','d_change_access : access denied for %s', $param->{'user'}{'email'});
 	return undef;
     }
-
 
     ## End of controls
     

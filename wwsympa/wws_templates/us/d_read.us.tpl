@@ -9,7 +9,7 @@
     Owner : [doc_owner] <BR>
     Last update : [doc_date] <BR>
     Description : [doc_title] <BR><BR>
-    <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[escaped_father]"> <IMG ALIGN="bottom"  src="[father_icon]"> Up to higher level directory</A></font>
+    <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[escaped_father]"> <IMG ALIGN="bottom"  src="[father_icon]" BORDER="0"> Up to higher level directory</A></font>
     <BR>  
   [ELSE]
     <h2> <B> Listing of folder SHARED </B> </h2> 
