@@ -389,7 +389,7 @@ my %alias = ('reply-to' => 'reply_to',
 		      'group' => 'command'
 		      },
 	    'digest' => {'file_format' => '\d+(\s*,\s*\d+)*\s+\d+:\d+',
-			 'format' => {'days' => {'format' => [1..7],
+			 'format' => {'days' => {'format' => [0..6],
 						 'file_format' => '1|2|3|4|5|6|7',
 						 'occurrence' => '1-n',
 						 'title_id' => 23,
@@ -669,7 +669,7 @@ my %alias = ('reply-to' => 'reply_to',
 								 'title_id' => 51,
 								 'order' => 8
 								 },
-						 'f_dir' => {'format' => '.+',
+						  'f_dir' => {'format' => '.+',
 							     'title_id' => 52,
 							     'order' => 9
 							     }
@@ -5194,11 +5194,11 @@ sub _include_users_sql {
     do_log('debug2','Connected to Database %s',$db_name);
     
     unless ($sth = $dbh->prepare($sql_query)) {
-        do_log('debug2','Unable to prepare SQL query : %s', $dbh->errstr);
+        do_log('notice','Unable to prepare SQL query : %s', $dbh->errstr);
         return undef;
     }
     unless ($sth->execute) {
-        do_log('debug2','Unable to perform SQL query %s : %s ',$sql_query, $dbh->errstr);
+        do_log('notice','Unable to perform SQL query %s : %s ',$sql_query, $dbh->errstr);
         return undef;
     }
     
