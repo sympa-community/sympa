@@ -67,7 +67,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LI><A NAME="tex2html913"
   HREF="node10.html#SECTION001020000000000000000">9.2 Authentication with email address, uid or alternate email address</A>
 <LI><A NAME="tex2html914"
-  HREF="node10.html#SECTION001030000000000000000">9.3 Generis SSO authentication</A>
+  HREF="node10.html#SECTION001030000000000000000">9.3 Generic SSO authentication</A>
 <LI><A NAME="tex2html915"
   HREF="node10.html#SECTION001040000000000000000">9.4 CAS-based authentication</A>
 <LI><A NAME="tex2html916"
@@ -202,7 +202,7 @@ That means that <I>Sympa</I> will get this email and use it during all the sessi
 <H1><A NAME="SECTION001030000000000000000"></A>
 <A NAME="generic-sso"></A>
 <BR>
-9.3 Generis SSO authentication
+9.3 Generic SSO authentication
 </H1>
 
 <P>
@@ -217,10 +217,10 @@ The authentication method has first been introduced to allow interraction with <
 </PRE>
 
 <P>
-The SSO is also expected to provide user attributes including the user email address as environment variables. To make the SSO appear in the login menu, a textbf generic_sso paragraph describing the SSO service should be added to  <A NAME="6079"></A><TT>auth.conf</TT>. The format of this paragraph is described in the following section.
+The SSO is also expected to provide user attributes including the user email address as environment variables. To make the SSO appear in the login menu, a <B>generic_sso</B> paragraph describing the SSO service should be added to  <A NAME="6079"></A><TT>auth.conf</TT>. The format of this paragraph is described in the following section.
 
 <P>
-Apart from the user email address, the SSO can provide other user attributes that <I>Sympa</I> will store in the user_table DB table (for persistancy) and make them available in the [user_attributes] structure that you can use within authorization scenarios (see&nbsp;<A HREF="node11.html#rules">10.1</A>, page&nbsp;<A HREF="node11.html#rules"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+Apart from the user email address, the SSO can provide other user attributes that <I>Sympa</I> will store in the user_table DB table (for persistancy) and make them available in the [user_attributes] structure that you can use within authorization scenarios (see&nbsp;<A HREF="node11.html#rules">10.1</A>, page&nbsp;<A HREF="node11.html#rules"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) or in web templates via the [% user.attributes %] structure.
 
 <P>
 
@@ -865,7 +865,7 @@ further authentication.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2004-08-31
+2004-09-09
 </ADDRESS>
 </BODY>
 </HTML>

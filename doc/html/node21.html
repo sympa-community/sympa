@@ -317,7 +317,7 @@ to encrypt and send the message for each recipient. This is what S/Sympa
 does when distributing an encrypted message.
 
 <P>
-The S/Sympa encryption feature in the distribution process supposes that sympa
+The S/Sympa encryption feature in the distribution process supposes that Sympa
 has received an encrypted message for some list. To be able to encrypt a message
 for a list, the sender must have some access to an X509 certificate for the list.
 So the first requirement is to install a certificate and a private key for
@@ -345,25 +345,27 @@ keys must be encrypted using a single password defined by the
 <P>
 
 <H3><A NAME="SECTION002144100000000000000">
-20.4.4.1 Use of Netscape navigator to obtain X509 list certificates</A>
+20.4.4.1 Use of navigator to obtain X509 list certificates</A>
 </H3>
 
 <P>
 In many cases e-mail X509 certificates are distributed via a web server and
-loaded into the browser using your mouse :) Netscape allows
-certificates to be exported to a file. So one way to get a list certificate is to obtain an e-mail
-certificate for the canonical list address in your browser, and then to export and install it for Sympa :
+loaded into the browser using your mouse :) Mozilla or internet explorer allows
+certificates to be exported to a file.
 
-<OL>
-<LI>browse the net and load a certificate for the list address on some
-PKI provider (your own OpenCa pki server , thawte, verisign, ...). Be
-careful :  the e-mail certificate must be correspond exactly to the canonical address of
-your  list, otherwise, the signature will be incorrect (sender e-mail will
-not match signer e-mail).
+<P>
+Here is a way to install a certificat for a list:
+
+<P>
+
+<UL>
+<LI>Get a list certificate is to obtain an personal e-mail
+certificate for the canonical list address in your browser as if it was your personal certificate, 
+
+<P>
 </LI>
-<LI>in the security menu, select the intended certificate and export
-it. Netscape will prompt you for a password and a filename to encrypt
-the output file. The format used by Netscape is  ``pkcs#12''. 
+<LI>export the intended certificate
+it. The format used by Netscape is  ``pkcs#12''. 
 Copy this file to the list home directory.
 </LI>
 <LI>convert the pkcs#12 file into a pair of pem files :
@@ -377,7 +379,7 @@ are owned by sympa with ``r'' access.
 includes a new link to load the certificate to the user's browser, and the welcome
 message is signed by the list.
 </LI>
-</OL> 
+</UL> 
 
 <P>
 
@@ -445,7 +447,7 @@ lists when needed.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2004-08-31
+2004-09-09
 </ADDRESS>
 </BODY>
 </HTML>

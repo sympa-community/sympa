@@ -3182,7 +3182,7 @@ After this operation, the address in the field FROM will be the Canonic email, i
 That means that \Sympa will get this email and use it during all the session until you clearly ask \Sympa to change your email address via the two pages : which and pref.
   
 
-\section {Generis SSO authentication}
+\section {Generic SSO authentication}
 \label {generic-sso}
 
 The authentication method has first been introduced to allow interraction with \htmladdnormallink {Shibboleth} {http://shibboleth.internet2.edu/}, Internet2's inter-institutional authentication system. But it should be usable with any SSO system that provides an Apache authentication module being able to protect a specified URL on the site (not the whole site). Here is a sample httpd.conf that shib-protects the associated Sympa URL :
@@ -3198,9 +3198,9 @@ The authentication method has first been introduced to allow interraction with \
 \end {quote}
 
 
-The SSO is also expected to provide user attributes including the user email address as environment variables. To make the SSO appear in the login menu, a textbf {generic\_sso} paragraph describing the SSO service should be added to  \file {auth.conf}. The format of this paragraph is described in the following section.
+The SSO is also expected to provide user attributes including the user email address as environment variables. To make the SSO appear in the login menu, a \textbf {generic\_sso} paragraph describing the SSO service should be added to  \file {auth.conf}. The format of this paragraph is described in the following section.
 
-Apart from the user email address, the SSO can provide other user attributes that \Sympa will store in the user\_table DB table (for persistancy) and make them available in the [user\_attributes] structure that you can use within authorization scenarios (see~\ref {rules}, page~\pageref {rules}).
+Apart from the user email address, the SSO can provide other user attributes that \Sympa will store in the user\_table DB table (for persistancy) and make them available in the [user\_attributes] structure that you can use within authorization scenarios (see~\ref {rules}, page~\pageref {rules}) or in web templates via the [\% user.attributes \%] structure.
 
 \section {CAS-based authentication}
 \label {cas}
@@ -3623,7 +3623,7 @@ The cookie format is :
 sympauser=<user_email>:<checksum>
 \end{verbatim}
 where \texttt{<}user\_email\texttt{>} is the user's complete e-mail address, and
-\texttt{<}checksum\texttt{>} are the 8 first bytes of the a MD5 checksum of the \texttt{<}user\_email\texttt{>}+\Sympa \cfkeyword {cookie}
+\texttt{<}checksum\texttt{>} are the 8 last bytes of the a MD5 checksum of the \texttt{<}user\_email\texttt{>}+\Sympa \cfkeyword {cookie}
 configuration parameter.
 Your application needs to know what the \cfkeyword {cookie} parameter
 is, so it can check the HTTP cookie validity ; this is a secret shared
@@ -3724,7 +3724,7 @@ Rules are defined as follows :
                 | newer (<date>, <date>)    # true if first date is posterior to the second date
 <var> ::= [email] | [sender] | [user-><user_key_word>] | [previous_email]
                   | [remote_host] | [remote_addr] | [user_attributes-><user_attributes_keyword>]
-	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
+	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] | [env-><env_var>]
 		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
 	 	  | [msg_part->type] | [msg_part->body] | [msg_encrypted] | [is_bcc] | [current_date] | <string>
 
@@ -7576,7 +7576,7 @@ are owned by sympa with ``r'' access.
 \item As soon as a certificate is installed for a list, the list  home page
 includes a new link to load the certificate to the user's browser, and the welcome
 message is signed by the list.
-\end {enumerate} 
+\end {itemize} 
 
 
 \section {Managing certificates with tasks}

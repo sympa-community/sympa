@@ -70,7 +70,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {4.2b.3}
+    \newcommand {\version} {4.2b.4}
 
     \newcommand {\samplelist} {mylist}
 
@@ -124,13 +124,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 4.2b.3\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 4.2b.4\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {31 August 2004}
+    \date {09 September 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -3755,7 +3755,7 @@ After this operation, the address in the field FROM will be the Canonic email, i
 That means that \Sympa will get this email and use it during all the session until you clearly ask \Sympa to change your email address via the two pages : which and pref.
   
 
-\section {Generis SSO authentication}
+\section {Generic SSO authentication}
 \label {generic-sso}
 
 The authentication method has first been introduced to allow interraction with \htmladdnormallink {Shibboleth} {http://shibboleth.internet2.edu/}, Internet2's inter-institutional authentication system. But it should be usable with any SSO system that provides an Apache authentication module being able to protect a specified URL on the site (not the whole site). Here is a sample httpd.conf that shib-protects the associated Sympa URL :
@@ -3771,9 +3771,9 @@ The authentication method has first been introduced to allow interraction with \
 \end {quote}
 
 
-The SSO is also expected to provide user attributes including the user email address as environment variables. To make the SSO appear in the login menu, a textbf {generic\_sso} paragraph describing the SSO service should be added to  \file {auth.conf}. The format of this paragraph is described in the following section.
+The SSO is also expected to provide user attributes including the user email address as environment variables. To make the SSO appear in the login menu, a \textbf {generic\_sso} paragraph describing the SSO service should be added to  \file {auth.conf}. The format of this paragraph is described in the following section.
 
-Apart from the user email address, the SSO can provide other user attributes that \Sympa will store in the user\_table DB table (for persistancy) and make them available in the [user\_attributes] structure that you can use within authorization scenarios (see~\ref {rules}, page~\pageref {rules}).
+Apart from the user email address, the SSO can provide other user attributes that \Sympa will store in the user\_table DB table (for persistancy) and make them available in the [user\_attributes] structure that you can use within authorization scenarios (see~\ref {rules}, page~\pageref {rules}) or in web templates via the [\% user.attributes \%] structure.
 
 \section {CAS-based authentication}
 \label {cas}
@@ -4292,7 +4292,7 @@ Rules are defined as follows :
                 | newer (<date>, <date>)    # true if first date is posterior to the second date
 <var> ::= [email] | [sender] | [user-><user_key_word>] | [previous_email]
                   | [remote_host] | [remote_addr] | [user_attributes-><user_attributes_keyword>]
-	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
+	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] | [env-><env_var>]
 		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
 	 	  | [msg_part->type] | [msg_part->body] | [msg_encrypted] | [is_bcc] | [current_date] | <string>
 
@@ -8418,7 +8418,7 @@ Consequently, the only way to encrypt a message for a list of recipients is
 to encrypt and send the message for each recipient. This is what S/Sympa
 does when distributing an encrypted message.
 
-The S/Sympa encryption feature in the distribution process supposes that sympa
+The S/Sympa encryption feature in the distribution process supposes that Sympa
 has received an encrypted message for some list. To be able to encrypt a message
 for a list, the sender must have some access to an X509 certificate for the list.
 So the first requirement is to install a certificate and a private key for
@@ -8441,21 +8441,20 @@ The list private key must be installed in a file named
 keys must be encrypted using a single password defined by the
 \cfkeyword {password} parameter in \cfkeyword {sympa.conf}.
 
-\subsubsection {Use of Netscape navigator to obtain X509 list certificates}
+\subsubsection {Use of navigator to obtain X509 list certificates}
 
 In many cases e-mail X509 certificates are distributed via a web server and
-loaded into the browser using your mouse :) Netscape allows
-certificates to be exported to a file. So one way to get a list certificate is to obtain an e-mail
-certificate for the canonical list address in your browser, and then to export and install it for Sympa :
-\begin {enumerate}
-\item browse the net and load a certificate for the list address on some
-PKI provider (your own OpenCa pki server , thawte, verisign, ...). Be
-careful :  the e-mail certificate must be correspond exactly to the canonical address of
-your  list, otherwise, the signature will be incorrect (sender e-mail will
-not match signer e-mail).
-\item in the security menu, select the intended certificate and export
-it. Netscape will prompt you for a password and a filename to encrypt
-the output file. The format used by Netscape is  ``pkcs\#12''. 
+loaded into the browser using your mouse :) Mozilla or internet explorer allows
+certificates to be exported to a file.
+
+Here is a way to install a certificat for a list:
+
+\begin {itemize} 
+\item Get a list certificate is to obtain an personal e-mail
+certificate for the canonical list address in your browser as if it was your personal certificate, 
+
+\item export the intended certificate
+it. The format used by Netscape is  ``pkcs\#12''. 
 Copy this file to the list home directory.
 \item convert the pkcs\#12 file into a pair of pem files :
 \cfkeyword {cert.pem} and \cfkeyword {private\_key} using
@@ -8466,7 +8465,7 @@ are owned by sympa with ``r'' access.
 \item As soon as a certificate is installed for a list, the list  home page
 includes a new link to load the certificate to the user's browser, and the welcome
 message is signed by the list.
-\end {enumerate} 
+\end {itemize} 
 
 
 \section {Managing certificates with tasks}
