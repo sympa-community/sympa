@@ -130,7 +130,14 @@ foreach my $d (@directories) {
 
 my $total;
 foreach my $tpl (@templates) {
-    
+
+    ## We don't migrate mhonarc-ressources files
+    if ($tpl =~ /mhonarc\-ressources$/) {
+	rename $tpl, "$tpl.uncompatible";
+	print STDERR "File $tpl could not be translated to TT2 ; it has been renamed $tpl.uncompatible. You should customize a standard mhonarc-ressourses.tt2 file\n";
+	next;
+    }
+
     unless (-r $tpl) {
 	print STDERR "Error : Unable to read file %s\n", $tpl;
 	next;
@@ -148,7 +155,7 @@ foreach my $tpl (@templates) {
     $dest_path = $path;
     if ($path =~ /\/wws_templates$/) {
 	$dest_path =~ s/wws_templates/web_tt2/;
-    }elsif ($path =~ /\/templates$/) {) {
+    }elsif ($path =~ /\/templates$/) {
 	if ($path =~ /\/templates$/) {
 	    $dest_path =~ s/templates/tt2/;
 	}else {
@@ -195,8 +202,6 @@ print "\n$total template files have been converted\n";
 sub convert {
     my ($in_file, $out_file) = @_;
 
-    my $out;
-
     ## Convert tpl file
     unless (open TPL, $in_file) {
 	print STDERR "Cannot open $in_filel : $!\n";
@@ -207,18 +212,19 @@ sub convert {
 	    print STDERR "Cannot create $out_file : $!\n";
 	    next;
 	}
-	$out = *TT2;
-    }else {
-	$out = *STDOUT;
     }
 
     while (<TPL>) {
-	print $out Sympa::Template::Compat::_translate($_);
+	if ($out_file) {
+	    print TT2 Sympa::Template::Compat::_translate($_);
+	}else {
+	    print STDOUT Sympa::Template::Compat::_translate($_);
+	}
     }
     close TT2 if ($out_file);
     close TPL;
 
-    printf "Template file $in_file has been converted to $$out_file\n";
+    printf "Template file $in_file has been converted to $out_file\n";
     
     chown '--USER--', '--GROUP--', $out_file;    
 }

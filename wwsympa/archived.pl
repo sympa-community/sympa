@@ -444,7 +444,8 @@ sub mail2arc {
 
 sub set_hidden_mode {
     ## $ENV{'M2H_MODIFYBODYADDRESSES'} à positionner si le corps du message est parse
-    $ENV{'M2H_ADDRESSMODIFYCODE'} = 's|^([^@]+)@([^@]+)$|\[hidden_head\]$1\[hidden_at\]$2\[hidden_end\]|g';	
+    $ENV{'M2H_ADDRESSMODIFYCODE'} = 's|^([^@]+)@([^@]+)$|\(\-%hidden_head\%-\)$1\(-\%hidden_at\%-\)$2\(-\%hidden_end\%-\)|g';
+    $ENV{'M2H_MODIFYBODYADDRESSES'} = 1;
 }
 
 sub unset_hidden_mode {
