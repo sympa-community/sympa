@@ -1970,7 +1970,7 @@ sub do_lists {
     }
 
     foreach my $l ( &List::get_lists($robot) ) {
-	my $list = new List ($l);
+	my $list = new List ($l, $robot);
 
 	my $sender = $param->{'user'}{'email'} || 'nobody';
 	my $action = &List::request_action ('visibility',$param->{'auth_method'},$robot,
@@ -4286,7 +4286,7 @@ sub do_get_pending_lists {
 	return undef;
     } 
 
-    foreach my $l ( &List::get_lists('*') ) {
+    foreach my $l ( &List::get_lists($robot) ) {
 	my $list = new List ($l,$robot);
 	if ($list->{'admin'}{'status'} eq 'pending') {
 	    $param->{'pending'}{$l}{'subject'} = $list->{'admin'}{'subject'};
@@ -4314,7 +4314,7 @@ sub do_get_closed_lists {
 	return undef;
     } 
 
-    foreach my $l ( &List::get_lists('*') ) {
+    foreach my $l ( &List::get_lists($robot) ) {
 	my $list = new List ($l,$robot);
 	if ($list->{'admin'}{'status'} eq 'closed') {
 	    $param->{'closed'}{$l}{'subject'} = $list->{'admin'}{'subject'};
@@ -4344,7 +4344,7 @@ sub do_get_latest_lists {
     } 
 
     my @unordered_lists;
-    foreach my $l ( &List::get_lists('*') ) {
+    foreach my $l ( &List::get_lists($robot) ) {
 	my $list = new List ($l,$robot);
 	unless ($list) {
 	    next;
@@ -5154,7 +5154,7 @@ sub do_rebuildallarc {
 	return undef;
     }
     foreach my $l ( &List::get_lists($robot) ) {
-	my $list = new List ($l); 
+	my $list = new List ($l,$robot); 
 	next unless (defined $list->{'admin'}{'web_archive'});
         my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'admin'}{'host'}";
 
@@ -5198,7 +5198,7 @@ sub do_search_list {
     my $record = 0;
     foreach my $l ( &List::get_lists($robot) ) {
 	my $is_admin;
-	my $list = new List ($l);
+	my $list = new List ($l, $robot);
 
 	## Search filter
 	next if (($list->{'name'} !~ /$param->{'regexp'}/i) 
