@@ -1436,6 +1436,20 @@ sub get_filename {
     return undef;
 }
 
+## Find a file in an ordered list of directories
+sub find_file {
+    my ($filename, @directories) = @_;
+    &do_log('debug3','tools::find_file(%s,%s)', $filename, join(':',@directories));
+
+    foreach my $d (@directories) {
+	if (-f "$d/$filename") {
+	    return "$d/$filename";
+	}
+    }
+    
+    return undef;
+}
+
 sub write_pid {
     my ($pidfile, $pid) = @_;
 

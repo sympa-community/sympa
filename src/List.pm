@@ -2683,15 +2683,18 @@ sub send_global_file {
     $data->{'lang'} = $data->{'lang'} = $data->{'user'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
-    my $tt2_include_path = ["$Conf{'etc'}/$robot/mail_tt2",
+    my $tt2_include_path = ["$Conf{'etc'}/$robot/mail_tt2/".$data->{'lang'},
+			    "$Conf{'etc'}/$robot/mail_tt2",
+			    "$Conf{'etc'}/mail_tt2/".$data->{'lang'},
 			    "$Conf{'etc'}/mail_tt2",
+			    "--ETCBINDIR--/mail_tt2/".$data->{'lang'},
 			    "--ETCBINDIR--/mail_tt2"];
 
     foreach my $d (@{$tt2_include_path}) {
 	&tt2::add_include_path($d);
     }
 
-    my $filename = &tools::get_filename('etc', 'mail_tt2/'.$action.'.tt2', $robot);
+    my $filename = &tools::find_file($action.'.tt2',&tt2::get_include_path());
 
     foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title') {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
@@ -2764,10 +2767,17 @@ sub send_file {
     $data->{'lang'} = $data->{'user'}{'lang'} || $self->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
-    my $tt2_include_path = [$self->{'dir'}.'/mail_tt2',
+    my $tt2_include_path = [$self->{'dir'}.'/mail_tt2/'.$data->{'lang'},
+			    $self->{'dir'}.'/mail_tt2',
+			    "$Conf{'etc'}/$robot/mail_tt2/".$data->{'lang'},
 			    "$Conf{'etc'}/$robot/mail_tt2",
+			    "$Conf{'etc'}/mail_tt2/".$data->{'lang'},
 			    "$Conf{'etc'}/mail_tt2",
-			    "--ETCBINDIR--/mail_tt2"];
+			    "--ETCBINDIR--/mail_tt2/".$data->{'lang'},
+			    "--ETCBINDIR--/mail_tt2",
+			    $self->{'dir'},            ## list directory to get the 'info' file
+			    $self->{'dir'}.'/archives' ## list archives to include the last message
+			    ];
 
     foreach my $d (@{$tt2_include_path}) {
 	&tt2::add_include_path($d);
@@ -2777,7 +2787,13 @@ sub send_file {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
 
-    my $filename = &tools::get_filename('etc', 'mail_tt2/'.$action.'.tt2', $robot, $self);
+    my @path = &tt2::get_include_path();
+    my $filename = &tools::find_file($action.'.tt2',@path);
+    
+    unless (defined $filename) {
+	&do_log('err','Could not find template %s.tt2 in %s', $action, join(':',@path));
+	return undef;
+    }
 
     $data->{'list'}{'lang'} = $self->{'admin'}{'lang'};
     $data->{'list'}{'name'} = $name;
@@ -8176,9 +8192,14 @@ sub _urlize_part {
     $parser->output_to_core(1);
     my @new_part;
 
-    my $tt2_include_path = [$list->{'dir'}.'/mail_tt2',
+    my $lang = &Language::GetLang();
+    my $tt2_include_path = [$list->{'dir'}.'/mail_tt2/'.$lang,
+			    $list->{'dir'}.'/mail_tt2',
+			    $Conf{'etc'}.'/'.$robot.'/mail_tt2/'.$lang,
 			    $Conf{'etc'}.'/'.$robot.'/mail_tt2',
+			    $Conf{'etc'}.'/mail_tt2/'.$lang,
 			    $Conf{'etc'}.'/mail_tt2',
+			    '--ETCBINDIR--'.'/mail_tt2/'.$lang,
 			    '--ETCBINDIR--'.'/mail_tt2'];
     
     &tt2::parse_tt2({'file_name' => $file_name,

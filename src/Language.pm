@@ -93,12 +93,7 @@ sub SetLang {
 	$locale = $lang2locale{$lang};
     }else {
 	## Get the NLS equivalent for the lang
-	if (defined $language_equiv{$lang}) {
-	    $lang = $language_equiv{$lang};
-	}else {
-	    ## remove the country part 
-	    $lang =~ s/_\w{2}$//;
-	}
+	$lang = &Locale2Lang($lang);
     }
    
     ## Set Locale::Messages context
@@ -120,6 +115,27 @@ sub GetLang {
 ############
 
     return $current_lang;
+}
+
+sub Locale2Lang {
+    my $locale = shift;
+    my $lang;
+
+    if (defined $language_equiv{$locale}) {
+	$lang = $language_equiv{$locale};
+    }else {
+	## remove the country part 
+	$lang = $locale;
+	$lang =~ s/_\w{2}$//;
+    }
+
+    return $lang;
+}
+
+sub Lang2Locale {
+    my $lang = shift;
+
+    return $lang2locale{$lang};
 }
 
 sub maketext {

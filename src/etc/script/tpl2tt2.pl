@@ -24,6 +24,7 @@
 use lib '--LIBDIR--';
 use wwslib;
 use Conf;
+use Language;
 require "tt2.pl";
 
 $wwsympa_conf_file = '--WWSCONFIG--';
@@ -178,7 +179,7 @@ foreach my $tpl (@templates) {
     if ($dest_file =~ /^([\w\-]+)\.(\w+)\.tt2$/) {
 	my $lang = $2;
 	$dest_file =~ s/^([\w\-]+)\.(\w+)\.tt2$/$1\.tt2/;
-	$dest_path .= '/'.$lang;
+	$dest_path .= '/'.&Language::Lang2Locale($lang);
     }
 
     ## If file has no extension

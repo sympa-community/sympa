@@ -850,16 +850,20 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     $param->{'list_conf'} = $list->{'admin'};
 	 }
 
-	 my $tt2_include_path = [$Conf{'etc'}.'/web_tt2',
+	 my $tt2_include_path = [$Conf{'etc'}.'/web_tt2/'.$param->{'lang'},
+				 $Conf{'etc'}.'/web_tt2',
+				 '--ETCBINDIR--'.'/web_tt2/'.$param->{'lang'},
 				 '--ETCBINDIR--'.'/web_tt2'];
 	 ## not the default robot
 	 if (lc($robot) ne lc($Conf{'host'})) {
 	     unshift @{$tt2_include_path}, $Conf{'etc'}.'/'.$robot.'/web_tt2';
+	     unshift @{$tt2_include_path}, $Conf{'etc'}.'/'.$robot.'/web_tt2/'.$param->{'lang'};
 	 }
 
 	 ## If in list context
 	 if (defined $list) {
 	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2';
+	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2/'.$param->{'lang'};
 	 }
 
 	 &tt2::parse_tt2($param,'main.tt2' , \*STDOUT, $tt2_include_path);
