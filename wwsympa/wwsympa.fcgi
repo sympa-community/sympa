@@ -7313,8 +7313,13 @@ sub do_d_rename {
     $path = &format_path('without_slash',$path);
     
     #Current directory and document to delete
-    $path =~ /^(.*)\/([^\/]+)$/; 
-    my $current_directory = &format_path('without_slash',$1);
+    my $current_directory;
+    if ($path =~ /^(.*)\/([^\/]+)$/) {
+	$current_directory = &format_path('without_slash',$1);
+    }else {
+	$current_directory = '.';
+    }
+    $path =~ /(^|\/)([^\/]+)$/; 
     my $document = $2;
     
     # path of the shared directory
@@ -7332,7 +7337,7 @@ sub do_d_rename {
     ## must be something to delete
     unless ($document) {
 	&error_message('missing_arg', {'argument' => 'document'});
-	&wwslog('info',"do_d_rename : no document to delete has been specified");
+	&wwslog('info',"do_d_rename : no document to rename has been specified");
 	return undef;
     }
 
@@ -7386,7 +7391,7 @@ sub do_d_rename {
 
     unless (rename $doc, "$shareddir/$current_directory/$in{'new_name'}") {
 	&error_message('failed');
-	&wwslog('info',"do_d_rename : Failed to rename $doc : $!");
+	&wwslog('info',"do_d_rename : Failed to rename %s to %s : %s", $doc, "$shareddir/$current_directory/$in{'new_name'}", $!);
 	return undef;
     }
 
