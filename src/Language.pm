@@ -43,7 +43,7 @@ my $default_lang;
 my %language_equiv = ( 'zh_CN' => 'cn',
 		       'zh_TW' => 'tw',
 		       'cs'    => 'cz',
-		       'en_us' => 'us',
+		       'en_US' => 'us',
 		       );
 
 ## Supported languages
