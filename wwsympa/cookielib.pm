@@ -16,8 +16,8 @@ sub check_cookie {
 
     ## Scan parameters
     foreach (split /;/, $http_cookie ) {
-	if ( /^\s*user\=(.*):(\S+)\s*$/ ) {
-	    my ($email, $mac) = ($1, $2);
+	if ( /^\s*(sympauser|user)\=(.*):(\S+)\s*$/ ) {
+	    my ($email, $mac) = ($2, $3);
 
 	    ## Check the MAC
 	    if (&get_mac($email,$secret) eq $mac) {
@@ -74,7 +74,7 @@ sub set_cookie {
 	$domain='domain='.$http_domain.'; ';
     }
     ## Send cookie to the client
-    printf "Set-Cookie: user=%s:%s; %s %s path=/\n", $email, &get_mac($email,$secret), $expiration,$domain;
+    printf "Set-Cookie: sympauser=%s:%s; %s %s path=/\n", $email, &get_mac($email,$secret), $expiration,$domain;
    
     return 1;
 }
