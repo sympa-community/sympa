@@ -18,7 +18,7 @@ Vous devez fournir votre adresse e-mail
 L'adresse "[error->listname]" est incorrecte
 
 [ELSIF error->msg=incorrect_listname]
-"[error->email]" : nom de liste incorrect
+"[error->listname]" : nom de liste incorrect
 
 [ELSIF error->msg=no_passwd]
 Vous devez fournir votre mot de passe
