@@ -1122,7 +1122,7 @@ sub adate {
 sub epoch_conv {
 
     my $arg = $_[0]; # argument date to convert
-    my $time = $_[1]; # the epoch current date
+    my $time = $_[1] || time; # the epoch current date
 
     &do_log('debug4','tools::epoch_conv(%s, %d)', $arg, $time);
 

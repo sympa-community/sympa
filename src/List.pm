@@ -4092,6 +4092,10 @@ sub verify {
 	    }
 	    $value = \@types;
 
+	}elsif ($value =~ /\[current_date\]/i) {
+	    my $time = time;
+	    $value =~ s/\[current_date\]/$time/;
+	    
 	    ## Quoted string
 	}elsif ($value =~ /\[(\w+)\]/i) {
 
@@ -4157,6 +4161,7 @@ sub verify {
  	my $arg0 = &tools::epoch_conv($args[0]);
  	my $arg1 = &tools::epoch_conv($args[1]);
  
+	&do_log('debug4', '%s(%d, %d)', $condition_key, $arg0, $arg1);
  	if ($arg0 <= $arg1 ) {
  	    return $negation;
  	}else{
