@@ -8,7 +8,7 @@
 %   1999/04/12 : pda@prism.uvsq.fr : conversion to latex2e
 %
 
-
+[STOPPARSE]
 \documentclass [twoside,a4paper] {report}
 
     \usepackage {epsfig}
@@ -2522,7 +2522,7 @@ Escaping sensitive JavaScript functions :
        }else {
 	    myfield[i].checked = true;
        }
-    [STARTPARSE]
+    [escaped_start]
     }
   }
 // end browsers -->
@@ -3761,14 +3761,21 @@ uses this parameter.
 
 	\scenarized {visibility}
 
-\lparam {visibility}
-%PARSE (scenario,visibility,'\texttt {[name]} $|$')
-
-
 This parameter indicates whether the list should feature in the
 output generated in response to a \mailcmd {LISTS} command. This
 parameter is \emph {not} used by \Sympa if the \tildefile
 {sympa/expl/lists} file (a static list of lists) exists.
+
+\begin {itemize}
+[STARTPARSE]
+[FOREACH s IN scenari->visibility]
+     \item \lparam {visibility} \texttt {[s->name]} \\
+	[s->title]
+
+[END]
+[STOPPARSE]
+\end {itemize}
+
 
 \section {Data source related}
 
@@ -4031,51 +4038,15 @@ The file should contain one e-mail address per line
 The \lparam {subscribe} parameter defines the rules for subscribing to the list. 
 Predefined scenarii are :
 
-\lparam {subscribe}
-%PARSE (scenario,subscribe,'\texttt {[name]} $|$')
-
 \begin {itemize}
-    \item \lparam {subscribe} \texttt {open}[\texttt {\_notify}]
+[STARTPARSE]
+[FOREACH s IN scenari->subscribe]
+     \item \lparam {subscribe} \texttt {[s->name]} \\
+	[s->title]
 
-          Anyone can join the list with the \mailcmd {SUBSCRIBE}
-          mail command. The notification of list owners following each
-	  successful subscription can be specified by using
-
-          \texttt {subscribe open\_notify}.
-
-    \item \lparam {subscribe} \texttt {owner}
-
-          Only the owner (see \lparam {owner} above) can subscribe
-          or unsubscribe a user. The owner should send an \mailcmd
-          {ADD} mail command to subscribe the user.
-
-    \item \lparam {subscribe} \texttt {closed}
-
-          All subscription requests refused (other than from owners
-          using the \mailcmd {ADD} command : see~\ref {cmd-add},
-          page~\pageref {cmd-add}). The value of this parameter is forced to
-          \texttt {closed} for lists whose \lparam {user\_data\_source} is
-	  set to \texttt {include}.
-          
-
-    \item \lparam {subscribe} \texttt {auth}[\texttt {\_notify}]
-
-        Use of the \mailcmd {SUBSCRIBE} command requires prior
-        \textindex {authentication} of the origin of the subscription
-        request. \Sympa sends a key to the requesting party, who
-        should in return send \Sympa a \mailcmd {SUBSCRIBE} command
-        prefixed with \lparam {auth}~\textit {key}.
-
-        Note: The \lparam {cookie} parameter (see~\ref {par-cookie},
-        page~\pageref {par-cookie}) allows the allocation of a single
-        key.
-
-
+[END]
+[STOPPARSE]
 \end {itemize}
-
-When the optional \texttt {notify} parameter option is set, owners receive
-a notification of each subscription, unless their owner definition
-includes the \texttt {nomail} option.
 
 \subsection {unsubscribe}
     \label {par-unsubscribe}
@@ -4089,31 +4060,14 @@ Use \texttt {open\_notify} or \texttt {auth\_notify} to allow owner
 notification of each unsubscribe command. 
 Predefined scenarii are :
 
-
-\lparam {unsubscribe}
-%PARSE (scenario,unsubscribe,'\texttt {[name]} $|$')
-
 \begin {itemize}
-    \item \lparam {unsubscribe} \texttt {open}
+[STARTPARSE]
+[FOREACH s IN scenari->unsubscribe]
+     \item \lparam {unsubscribe} \texttt {[s->name]} \\
+	[s->title]
 
-          Anyone can unsubscribe from the list.
-
-    \item \lparam {unsubscribe} \texttt {auth}
-
-        Use of the \mailcmd {SIGNOFF} command requires prior
-        \textindex {authentication} of the sender. To perform this authentication, \Sympa
-        sends a key, indicating that the ``\lparam {auth}~\textit
-        {key}'' parameter should be placed in front of the command.
-
-        Note: it is advisable to enter the \lparam {cookie} parameter
-        (see~\ref {par-cookie}, page~\pageref {par-cookie}).
-
-    \item \lparam {unsubscribe} \texttt {closed}
-      
-        Unsubscription is not allowed. The value of this parameter is forced to
-          \texttt {closed} for lists whose \lparam {user\_data\_source} is
-	  set to \texttt {include}.
-
+[END]
+[STOPPARSE]
 \end {itemize}
 
 \subsection {add}
@@ -4127,29 +4081,16 @@ This parameter specifies who is authorized to use the \mailcmd {ADD} command.
 Predefined scenarii are :
 
 
-\lparam {add}
-%PARSE (scenario,add,'\texttt {[name]} $|$')
-
 \begin {itemize}
-    \item \lparam {add} \texttt {owner}
+[STARTPARSE]
+[FOREACH s IN scenari->add]
+     \item \lparam {add} \texttt {[s->name]} \\
+	[s->title]
 
-          Only owners can add subscribers to the list.
-
-    \item \lparam {add} \texttt {auth}
-
-        Use of the \mailcmd {ADD} command requires prior
-        \textindex {authentication}
-        of the owner. To perform this authentication, \Sympa
-        sends a key, indicating that the ``\lparam {auth}~\textit
-        {key}'' parameter should be placed in front of the command.
-
-    \item \lparam {unsubscribe} \texttt {closed}
-      
-         \mailcmd {ADD} is not allowed. The value of this parameter is forced to
-          \texttt {closed} for lists whose \lparam {user\_data\_source} is
-	  set to \texttt {include}.
-
+[END]
+[STOPPARSE]
 \end {itemize}
+
 
 \subsection {del}
     \label {par-del}
@@ -4162,28 +4103,14 @@ This parameter specifies who is authorized to use the \mailcmd {DEL} command.
 Predefined scenarii are :
 
 
-\lparam {del}
-%PARSE (scenario,del,'\texttt {[name]} $|$')
-
 \begin {itemize}
-    \item \lparam {del} \texttt {owner}
+[STARTPARSE]
+[FOREACH s IN scenari->del]
+     \item \lparam {del} \texttt {[s->name]} \\
+	[s->title]
 
-          Only owners can delete subscribers of the list.
-
-    \item \lparam {DEL} \texttt {auth}
-
-        Use of the \mailcmd {DEL} command requires prior
-        \textindex {authentication}
-        of the owner. To perform this authentication, \Sympa
-        sends a key, indicating that the ``\lparam {auth}~\textit
-        {key}'' parameter should be placed in front of the command.
-
-    \item \lparam {DEL} \texttt {closed}
-      
-         \mailcmd {DEL} is not allowed. The value of this parameter is forced to
-          \texttt {closed} for lists whose \lparam {user\_data\_source} is
-	  set to \texttt {include}.
-
+[END]
+[STOPPARSE]
 \end {itemize}
 
 
@@ -4198,18 +4125,14 @@ This parameter specifies who is authorized to use the \mailcmd {remind} command.
 Predefined scenarii are :
 
 
-\lparam {remind}
-%PARSE (scenario,remind,'\texttt {[name]} $|$')
-
 \begin {itemize}
-    \item \lparam {remind} \texttt {owner}
+[STARTPARSE]
+[FOREACH s IN scenari->remind]
+     \item \lparam {remind} \texttt {[s->name]} \\
+	[s->title]
 
-          Only owners can perform \mailcmd {remind} for the list.
-
-    \item \lparam {remind} \texttt {listmaster}
-
-        Use of \mailcmd {remind} is a listmaster privilege.
-
+[END]
+[STOPPARSE]
 \end {itemize}
 
 
@@ -4220,111 +4143,19 @@ Predefined scenarii are :
 
 	\scenarized {send}
 
-Predefined scenarii are :
-
-%PARSE (scenario,send,'\texttt {[name]} $|$')
-
 This parameter specifies who can send messages to the list. Valid values for this
 parameter are pointers to \emph {scenarii}.
 
 \begin {itemize}
-    \item \lparam {send} \texttt {public} 
+[STARTPARSE]
+[FOREACH s IN scenari->send]
+     \item \lparam {send} \texttt {[s->name]} \\
+	[s->title]
 
-        Anyone can send a message to the list, including non-subscribers.
-
-    \item \lparam {send} \texttt {publickey} 
-
-        Anyone can send a message to the list, including non-subscribers;
-        \textindex {authentication} is automatically requested by return mail.
-
-    \item \lparam {send} \texttt {private}
-
-        Only subscribers or owners can send a message.
-
-    \item \lparam {send} \texttt {privatekey}
-
-        Only subscribers or owners can send a message; \textindex
-        {authentication}
-        is systematically requested by return mail.
-
-    \item \lparam {send} \texttt {privateorpublickey} 
-
-        Anyone can send a message to the list. Authentication is
-        requested by return mail for non-subscribers.
-
-    \item \lparam {send} \texttt {privateoreditorkey} 
-
-        Anyone can send a message to the list. Messages from subscribers
-	go through without requiring approval, whereas messages from
-        non-subscribers are sent to moderators for approval or
-	rejection.
-
-    \item \lparam {send} \texttt {editorkeyonly}
-
-        All messages are stored on the server awaiting approval
-        for distribution. An enabling key is sent to the moderators
-        with a copy of the message. The message is distributed as soon
-        as the \Sympa robot receives a \mailcmd {DISTRIBUTE} command
-        simply containing the key referring to the queued message.
-
-        The \mailcmd {REJECT} command deletes the message from the
-        \textindex {moderation} spool (see the \cfkeyword {queuemod}
-        configuration variable).
-
-        Uses of this method:
-
-        \begin {itemize}
-            \item a moderately secure identification of the \textindex
-                {moderator}
-
-            \item approved messages no longer transit via the moderators'
-                mail user agents (MUA), which means moderators can be
-		less cautious in the choice and use of their MUA
-
-            \item Minimum cooperation between moderators when this responsibility
-                is shared
-
-        \end {itemize}
-
-        With this method, it is not possible for the \textindex
-        {moderator} to change the message, which is always refused
-        or distributed as a whole. This moderation feature is only
-        available as of release 1.2.0 of \Sympa.
-
-    \item \lparam {send} \texttt {editor}
-
-        \Sympa distributes only those messages
-        whose SMTP field \rfcheader {From} or \rfcheader {X-Sender} contains
-        the address of a moderator (see the \lparam {editor} parameter, \ref {par-editor},
-	page~\pageref {par-editor}).
-
-        Otherwise, it sends these list moderators a
-        message entitled ``\textit {Article to moderate}'' containing
-        a copy of the text to be distributed. It is up to the
-        \textindex {moderator} to send this copy of the message to
-        be distributed back to the list, using a redirect,
-        redistribute, forward, or other MUA function. The moderation mechanism
-	is thus reliant on the processing of headers, which is performed by
-        individual moderators' MUA's.
-
-        It should be noted that the security afforded by this method is only
-	as strong as the level of protection of SMTP fields, that is to say
-	very low.
-
-    \item \lparam {send} \texttt {editorkey}
-
-        This method combines the \lparam {send editor} and \lparam {send
-        editorkeyonly} features. As long as one of the SMTP fields
-        \rfcheader {From}, \rfcheader {X-Sender} or \rfcheader
-        {Approved} contains the address of a moderator,
-        the message will be distributed.
-
-        In the opposite case, it works in the same way as a moderated
-        list with \lparam {send editorkeyonly}.
-
-        Available as of release 1.2.0 of \Sympa.
-
+[END]
+[STOPPARSE]
 \end {itemize}
+
 
 \subsection {review}
     \label {par-review}
@@ -4336,29 +4167,20 @@ parameter are pointers to \emph {scenarii}.
 This parameter specifies who can use
 \mailcmd {REVIEW} (see~\ref {cmd-review}, page~\pageref {cmd-review}),
 administrative requests. 
+
 Predefined scenarii are :
 
-\lparam {review}
-
-%PARSE (scenario,review,'\texttt {[name]} $|$')
-
-
 \begin {itemize}
-    \item \lparam {review} \texttt {public}
+[STARTPARSE]
+[FOREACH s IN scenari->review]
+     \item \lparam {review} \texttt {[s->name]} \\
+	[s->title]
 
-        \mailcmd {REVIEW} access is not protected and anyone, even
-        non-subscribers, can use it.
-
-    \item \lparam {review} \texttt {private}
-
-        The \mailcmd {REVIEW} command is only authorized for
-        subscribers.
-
-    \item \lparam {review} \texttt {owner}
-
-        Only the list owner can use it.
-
+[END]
+[STOPPARSE]
 \end {itemize}
+
+
 \subsection {shared\_doc}
     \label {par-shared}
     \index{shared}
@@ -4370,37 +4192,29 @@ repository.
 
 	\default {private}
 
+	\scenarized {d\_read}
+
 This parameter specifies who can read shared documents
 (access the contents of a list's \dir {shared} directory).
 
 Predefined scenarii are :
 
-\lparam {d\_read}
-    \texttt {public} $|$
-    \texttt {private} $|$
-    \texttt {owner} $|$
-
-
 \begin {itemize}
-    \item \lparam {d\_read} \texttt {public}
+[STARTPARSE]
+[FOREACH s IN scenari->d_read]
+     \item \lparam {d\_read} \texttt {[s->name]} \\
+	[s->title]
 
-        \mailcmd {READ} access is not protected and anyone, even
-        non-subscribers, can read the \dir {shared} directory.
-
-    \item \lparam {d\_read} \texttt {private}
-
-        Reading the \dir {shared} directory is only authorized for
-        subscribers, list owner and listmaster.
-
-    \item \lparam {d\_read} \texttt {owner}
-
-        Only the list owner and the listmaster can read the \dir {shared} directory.
-
+[END]
+[STOPPARSE]
 \end {itemize}
+
 
 \subsubsection {Edit access}
 
 	\default {owner}
+
+	\scenarized {d\_edit}
 
 This parameter specifies who can perform changes
 within a list's \dir {shared} directory (i.e. upload files
@@ -4408,28 +4222,16 @@ and create subdirectories).
 
 Predefined scenarii are :
 
-\lparam {d\_edit}
-    \texttt {public} $|$
-    \texttt {private} $|$
-    \texttt {owner} $|$
-
-
 \begin {itemize}
-    \item \lparam {d\_edit} \texttt {public}
+[STARTPARSE]
+[FOREACH s IN scenari->d_edit]
+     \item \lparam {d\_edit} \texttt {[s->name]} \\
+	[s->title]
 
-        \mailcmd {EDIT} access is not protected and anyone, even
-        non-subscribers, has write access to the \dir {shared} directory.
-
-    \item \lparam {d\_read} \texttt {private}
-
-        Editing the \dir {shared} directory is only authorized for
-        subscribers, list owner and listmaster.
-
-    \item \lparam {d\_read} \texttt {owner}
-
-        Only the list owner and the listmaster can edit the \dir {shared} directory.
-
+[END]
+[STOPPARSE]
 \end {itemize}
+
 
 Example:
 \begin {quote}

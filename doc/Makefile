@@ -56,6 +56,9 @@ ps:	sympa.ps
 sympa.ps: sympa.dvi
 	$(DVIPS) -f sympa.dvi > sympa.ps
 
+sympa.tex: sympa.tex.tpl
+	$(PERL) ./parse_tex.pl sympa.tex.tpl sympa.tex
+
 sympa.dvi: sympa.tex $(EPS)
 	cp /dev/null sympa.ind
 	$(LATEX) sympa
