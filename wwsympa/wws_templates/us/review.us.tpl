@@ -132,7 +132,14 @@ Selection too wide, can not show selection
 	    <FONT SIZE="-1"><b>Domain</b></FONT></A>
 	[ENDIF]
 	</TH>
-        <TH><FONT SIZE="-1"><B>Name</B></FONT>
+	[IF sortby=name]
+	<TH NOWRAP BGCOLOR="[selected_color]">
+	  <FONT COLOR="[bg_color]" SIZE="-1">Name</FONT>
+	[ELSE]
+	<TH NOWRAP>
+		<A HREF="[path_cgi]/review/[list]/1/[size]/name">
+		<FONT SIZE="-1">Name</FONT></a>
+	[ENDIF] 
 	</TH>
         [IF is_owner]
 	  <TH><FONT SIZE="-1"><B>Reception</B></FONT>

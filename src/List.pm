@@ -3018,7 +3018,9 @@ sub get_first_user {
 	    }elsif ($sortby eq 'sources') {
 		$statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
 
-	    }
+	    }elsif ($sortby eq 'name') {
+		$statement .= " ORDER BY \"gecos\"";
+	    } 
 
 	## Sybase
 	}elsif ($Conf{'db_type'} eq 'Sybase'){
@@ -3038,7 +3040,10 @@ sub get_first_user {
 	    }elsif ($sortby eq 'sources') {
 		$statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
 
+	    }elsif ($sortby eq 'name') {
+		$statement .= " ORDER BY \"gecos\"";
 	    }
+
 
 	## mysql
 	}elsif ($Conf{'db_type'} eq 'mysql') {
@@ -3061,7 +3066,9 @@ sub get_first_user {
 	    }elsif ($sortby eq 'sources') {
 		$statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
 
-	    }
+	    }elsif ($sortby eq 'name') {
+		$statement .= ' ORDER BY gecos';
+	    } 
 	    
 	    ## LIMIT clause
 	    if (defined($rows) and defined($offset)) {
@@ -3088,6 +3095,8 @@ sub get_first_user {
 	    }elsif ($sortby eq 'sources') {
 		$statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
 
+	    }elsif ($sortby eq 'email') {
+		$statement .= ' ORDER BY gecos';
 	    }
 	    
 	    ## LIMIT clause
