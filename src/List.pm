@@ -1801,7 +1801,7 @@ sub send_global_file {
 	}
     }
     unless ($data->{'user'}{'lang'}) {
-	$data->{'user'}{'lang'} = $Language::sympa_lang;
+	$data->{'user'}{'lang'} = $Language::default_lang;
     }
     
     unless ($data->{'user'}{'password'}) {
