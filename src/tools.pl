@@ -362,13 +362,14 @@ sub smime_sign_check {
 	return undef ;
     }
 
-#    unless (open MSG, $file) {
-#	do_log('err', 'Unable to open file %s: %s', $file, $!);
-#	return undef;
-#    }
+    unless (open MSG, $file) {
+	do_log('err', 'Unable to open file %s: %s', $file, $!);
+	return undef;
+    }
 
-    $msg->print(\*MSGDUMP);
-    close MSGDUMP; close MSG;
+    print MSGDUMP <MSG>;
+    close MSGDUMP;
+    close MSG;
     
     ## second step is the message signer match the sender
     ## a better analyse should be performed to extract the signer email. 
@@ -661,6 +662,45 @@ sub ciphersaber_installed {
 	$cipher = Crypt::CipherSaber->new($Conf{'cookie'});
     }else{
 	$cipher = 'no_cipher';
+    }
+}
+
+# create a cipher
+sub cookie_changed {
+    my $current=shift;
+    my $unchanged = 1 ;
+    if (-f "$Conf{'etc'}/cookies") {
+	unless (open COOK, "$Conf{'etc'}/cookies") {
+	    do_log('err', "Unable to read $Conf{'etc'}/cookies \n") ;
+	    return undef ; 
+	}
+	my $oldcook = <COOK>;
+	close COOK;
+
+	my @cookies = split(/\s+/,$oldcook );
+	
+
+	if ($cookies[$#cookies] eq $current) {
+	    $changed = 0;
+	}else{
+	    push @cookies $current ;
+	    unless (open COOK, ">$Conf{'etc'}/cookies") {
+		do_log('err', "Unable to create $Conf{'etc'}/cookies \n") ;
+		return undef ; 
+	    }
+	    printf COOK "%s",join(" ",@cookies) ;
+	    
+	    close COOK;
+	}
+	return $changed ;
+    }else{
+	unless (open COOK, ">$Conf{'etc'}/cookies") {
+	    do_log('err', "Unable to create $Conf{'etc'}/cookies \n") ;
+	    return undef ; 
+	}
+	printf COOK "$current ";
+	close COOK;
+	return(0);
     }
 }
 
