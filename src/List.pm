@@ -1196,19 +1196,25 @@ sub load {
 	my $last_include = (stat("$self->{'dir'}/subscribers.db"))[9];
 
 	$m2 = $self->{'mtime'}->[1]; 
-	## if (Config has changed) OR( TTL has expired ) then reload
-	## unless we are a CGI
-	if ( ($self->{'mtime'}->[0] && ($m1 > $self->{'mtime'}->[0])) || 
-	     ((time > ($last_include + $self->{'admin'}{'ttl'}))
-	     && !($ENV{'HTTP_HOST'} && (-f "$self->{'dir'}/subscribers.db")))) {
-
+	## Update 'subscriber.db'
+	if ( ## 'config' is more recent than 'subscribers.db'
+	     ($m1 > $last_include) || 
+	     ## 'ttl'*2 is NOT over
+	     (time < ($last_include + $self->{'admin'}{'ttl'} * 2)) ||
+	     ## 'ttl' is over AND not Web context
+	     ((time > ($last_include + $self->{'admin'}{'ttl'})) &&
+	      !($ENV{'HTTP_HOST'} && (-f "$self->{'dir'}/subscribers.db")))) {
+	    
 	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 0);
 	    unless (defined $users) {
 		return undef;
 	    }
 
 	    $m2 = time;
-	}elsif (! $self->{'users'} || ($m1 > $last_include)) {
+	}elsif (## First new()
+		! $self->{'users'} ||
+		## 'subscribers.db' is more recent than 'config'
+		($last_include > $m1)) {
 	    ## Use cache
 	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 1);
 
@@ -5071,7 +5077,7 @@ sub _load_users_include {
     my $use_cache = shift;
     do_log('debug2', 'List::_load_users_include for list %s ; use_cache: %d',$name, $use_cache);
 
-    my (%users, $depend_on);
+    my (%users, $depend_on, $ref);
     my $total = 0;
 
     ## Create in memory btree using DB_File.
@@ -5083,30 +5089,12 @@ sub _load_users_include {
         rename $db_file, $db_file.'old';
     }
 
-    my $ref;
-    unless ($ref = tie %users, 'DB_File', $db_file, O_CREAT|O_RDWR, 0600, $btree) {
-	&do_log('err', 'Could not tie to DB_File');
-	return undef;
-    }
-
-    if ($use_cache) {
-	## Lock DB_File
-	my $fd = $ref->fd;
-	unless (open DB_FH, "+<&$fd") {
-	    &do_log('err', 'Cannot open %s: %s', $db_file, $!);
+    unless ($use_cache) {
+	unless ($ref = tie %users, 'DB_File', $db_file, O_CREAT|O_RDWR, 0600, $btree) {
+	    &do_log('err', 'Could not tie to DB_File');
 	    return undef;
 	}
-	unless (flock (DB_FH, LOCK_SH | LOCK_NB)) {
-	    &do_log('notice','Waiting for reading lock on %s', $db_file);
-	    unless (flock (DB_FH, LOCK_SH)) {
-		&do_log('err', 'Failed locking %s: %s', $db_file, $!);
-		return undef;
-	    }
-	}
-	&do_log('debug2', 'Got lock for reading on %s', $db_file);
-    }
 
-    unless ($use_cache) {
 	## Lock DB_File
 	my $fd = $ref->fd;
 	unless (open DB_FH, "+<&$fd") {
@@ -5122,52 +5110,73 @@ sub _load_users_include {
 	}
 	&do_log('debug2', 'Got lock for writing on %s', $db_file);
 
-    foreach my $type ('include_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
-	last unless (defined $total);
-
-	foreach my $incl (@{$admin->{$type}}) {
-	    my $included;
-
-	    ## get the list of users
-	    if ($type eq 'include_sql_query') {
-		$included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'});
-	    }elsif ($type eq 'include_ldap_query') {
-		$included = _include_users_ldap(\%users, $incl, $admin->{'default_user_options'});
-	    }elsif ($type eq 'include_ldap_2level_query') {
-		$included = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'});
-	    }elsif ($type eq 'include_list') {
-		$depend_on->{$name} = 1 ;
-		if (&_inclusion_loop ($name,$incl,$depend_on)) {
-		    do_log('notice','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
-		}else{
-		    $depend_on->{$incl};
-		    $included = _include_users_list (\%users, $incl, $admin->{'default_user_options'});
+	foreach my $type ('include_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
+	    last unless (defined $total);
+	    
+	    foreach my $incl (@{$admin->{$type}}) {
+		my $included;
+		
+		## get the list of users
+		if ($type eq 'include_sql_query') {
+		    $included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'});
+		}elsif ($type eq 'include_ldap_query') {
+		    $included = _include_users_ldap(\%users, $incl, $admin->{'default_user_options'});
+		}elsif ($type eq 'include_ldap_2level_query') {
+		    $included = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'});
+		}elsif ($type eq 'include_list') {
+		    $depend_on->{$name} = 1 ;
+		    if (&_inclusion_loop ($name,$incl,$depend_on)) {
+			do_log('notice','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
+		    }else{
+			$depend_on->{$incl};
+			$included = _include_users_list (\%users, $incl, $admin->{'default_user_options'});
+		    }
+		}elsif ($type eq 'include_file') {
+		    $included = _include_users_file (\%users, $incl, $admin->{'default_user_options'});
 		}
-	    }elsif ($type eq 'include_file') {
-		$included = _include_users_file (\%users, $incl, $admin->{'default_user_options'});
-#	    }elsif ($type eq 'include_admin') {
-#		my $result = _include_users_admin (\%users, $incl,$name);
-#		$total += $result->{'total'};
-#		foreach my $list_dependance ($result->{'depend_on'}) {
-#		    $depend_on->{$list_dependance} = 1 ;
-#		}
+		unless (defined $included) {
+		    &do_log('err', 'Inclusion %s failed in list %s', $type, $name);
+		    $total = undef;
+		    last;
+		}
+		
+		$total += $included;
 	    }
-	    unless (defined $included) {
-		&do_log('err', 'Inclusion %s failed in list %s', $type, $name);
-		$total = undef;
-		last;
-	    }
+	}
+  
+	## Unlock
+	flock(DB_FH,LOCK_UN);
+	&do_log('debug2', 'Release lock on %s', $db_file);
+	close DB_FH;
+	
+	untie %users;
+    }
 
-	    $total += $included;
+    unless ($ref = tie %users, 'DB_File', $db_file, O_CREAT|O_RDWR, 0600, $btree) {
+	&do_log('err', 'Could not tie to DB_File');
+	return undef;
+    }
+
+    ## Lock DB_File
+    my $fd = $ref->fd;
+    unless (open DB_FH, "+<&$fd") {
+	&do_log('err', 'Cannot open %s: %s', $db_file, $!);
+	return undef;
+    }
+    unless (flock (DB_FH, LOCK_SH | LOCK_NB)) {
+	&do_log('notice','Waiting for reading lock on %s', $db_file);
+	unless (flock (DB_FH, LOCK_SH)) {
+	    &do_log('err', 'Failed locking %s: %s', $db_file, $!);
+	    return undef;
 	}
     }
-    }
+    &do_log('debug2', 'Got lock for reading on %s', $db_file);
 
     ## Unlock DB_file
     flock(DB_FH,LOCK_UN);
     &do_log('debug2', 'Release lock on %s', $db_file);
     close DB_FH;
-
+    
     ## Inclusion failed, clear cache
     unless (defined $total) {
 	unlink $db_file;
