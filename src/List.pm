@@ -6012,6 +6012,17 @@ sub sync_include {
 		    $users_updated++;
 		}
 
+		## Gecos have changed for the user
+		if ($old_subscribers{$email}{'gecos'} ne $new_subscribers->{$email}{'gecos'}) {
+		    &do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
+		    unless( $self->update_user($email,  {'update_date' => time,
+							 'gecos' => $new_subscribers->{$email}{'gecos'} }) ) {
+			&do_log('err', 'List:sync_include(%s): Failed to update %s', $name, $email);
+			next;
+		    }
+		    $users_updated++;
+		}
+
 		## User was already subscribed, update include_sources_subscriber in DB
 	    }else {
 		&do_log('debug', 'List:sync_include: updating %s to list %s', $email, $name);
