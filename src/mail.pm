@@ -32,7 +32,7 @@ sub mailback {
    do_log('debug2', 'mail::mailback(%s, %s)', $from, join(',', @rcpt));
 
    ## encode Subject
-   $data->{'subject'} = MIME::Words::encode_mimewords($data->{'subject'});
+   $headers->{'subject'} = MIME::Words::encode_mimewords($headers->{'subject'});
 
    my ($fh, $sympa_file);
    
