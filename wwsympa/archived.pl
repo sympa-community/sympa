@@ -214,7 +214,7 @@ while (!$end) {
 	       $ss = sprintf '%02d', $now[0];
 	       
 	   }else {
-	       do_log ('err',"Ignoring file $queue/$file because not to be rebuild or liste archive");
+	       do_log ('err',"Ignoring file $queue/$file because not to be rebuid or liste archive");
                unlink("$queue/$file");
 	       next;
 	   }
@@ -311,7 +311,7 @@ sub rebuild {
 	unlink $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/.mhonarc.db';
 	
 	## Remove existing HTML files
-	opendir HTML, "$wwsconf->{'arc_path'}/$adrlist/$yyyy/$mm";
+	opendir HTML, "$wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm";
 	foreach my $html_file (grep (/\.html$/, readdir(HTML))) {
 	    unlink $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/'.$html_file;
 	}	
@@ -354,7 +354,7 @@ sub rebuild {
 	    unlink $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/.mhonarc.db';
 	    
 	    ## Remove existing HTML files
-	    opendir HTML, "$wwsconf->{'arc_path'}/$adrlist/$yyyy/$mm";
+	    opendir HTML, "$wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm";
 	    foreach my $html_file (grep (/\.html$/, readdir(HTML))) {
 		unlink $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/'.$html_file;
 	    }	
