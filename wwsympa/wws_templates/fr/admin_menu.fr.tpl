@@ -103,7 +103,7 @@
              <FONT size=-1><b>Restaurer l'espace partagé</b></font></A>
 	[ELSIF shared=exist]
           <A HREF="[path_cgi]/d_admin/[list]/delete" >
-             <FONT size=-1><b>Fermer l'espace partager</b></font></A>
+             <FONT size=-1><b>Fermer l'espace partagé</b></font></A>
         [ELSE]
           <FONT size=1 color=red>
           [shared]
