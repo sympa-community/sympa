@@ -11,9 +11,9 @@
  Pro pøístup k Va¹emu prostøedí na WWSympa nebo k provádìní privilegovaných 
 operaci (ty, které vy¾adují emailovou adresu) se musíte pøihlásit.
 [ELSE]
-Vìt¹ina mo¾ností konference vy¾aduje Va¹i emailovou adresu. Nekteé konference
-jsou skryté k neznámým osobám.<BR>
-Abyset mohli vyu¾ít v¹echny slu¾by, které nabízí tento server, musíte se
+Vìt¹ina mo¾ností konference vy¾aduje Va¹i emailovou adresu. Nìkteré konference
+jsou skryté neznámým osobám.<BR>
+Abyste mohli vyu¾ít v¹echny slu¾by, které nabízí tento server, musíte se
 nejprve identifikovat. <BR>
 [ENDIF]
 

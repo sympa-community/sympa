@@ -199,18 +199,18 @@
       <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
        <TR>
       [IF action=signoff]
-        <TD WIDTH="100%" BGCOLOR="#3366cc" NOWRAP align=right><font color="#ffffff" size=-1><b>Odhlásit se</b></font></TD>
+        <TD WIDTH="100%" BGCOLOR="#3366cc" NOWRAP align=right><font color="#ffffff" size=-1><b>Odhlásit se z konference</b></font></TD>
       [ELSE]
        [IF user->email]
         <TD WIDTH="100%" BGCOLOR="#ccccff" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Opravdu se chcete odhlásit z konference [list]?'); return false;">Odhlásit se</A>
+         <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Opravdu se chcete odhlásit z konference [list]?'); return false;">Odhlásit se z konference</A>
         </b></font>
         </TD>
        [ELSE]
         <TD WIDTH="100%" BGCOLOR="#ccccff" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[path_cgi]/sigrequest/[list]">Odhlásit se</A>
+         <A HREF="[path_cgi]/sigrequest/[list]">Odhlásit se z konference</A>
         </b></font>
         </TD>
        [ENDIF]

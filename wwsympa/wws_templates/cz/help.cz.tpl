@@ -31,7 +31,7 @@ informace pro udr¾ení Va¹í toto¾nosti. Doba trvání <I>cookie</I>
 se dá zmìnit v <A HREF="[path_cgi]/pref">Nastavení</A>. 
 
 <BR><BR>
-Mù¾ete se odhlásit (vymazáním <I>cookie</I>) kdykoli pomoci funkce
+Mù¾ete se odhlásit (vymazáním <I>cookie</I>) kdykoli pomocí funkce
 <A HREF="[path_cgi]/logout">logout</A>.
 
 
@@ -43,7 +43,7 @@ pøihlásit. Jakmile se pøihlásíte do nìjaké konference, WWSympa Vám pøidìlí
 úvodní heslo.
 <BR><BR>
 
-<I>Jsem èlenem v konferenci ale nám heslo</I><BR>
+<I>Jsem èlenem v konferenci ale nemám heslo</I><BR>
 Pro získání hesla : 
 <A HREF="[path_cgi]/remindpasswd">[path_cgi]/remindpasswd</A>
 <BR><BR>
