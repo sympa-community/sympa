@@ -7118,10 +7118,12 @@ sub do_d_upload {
     }
 
     ## Check quota
-    if ($list->get_shared_size() >= $list->{'admin'}{'shared_doc'}{'quota'} * 1024){
-	&error_message('shared_full');
-	&wwslog('info',"do_d_upload : Shared Quota exceeded for list $list->{'name'}");
-	return undef;
+    if ($list->{'admin'}{'shared_doc'}{'quota'}) {
+	if ($list->get_shared_size() >= $list->{'admin'}{'shared_doc'}{'quota'} * 1024){
+	    &error_message('shared_full');
+	    &wwslog('info',"do_d_upload : Shared Quota exceeded for list $list->{'name'}");
+	    return undef;
+	}
     }
 
     # The name of the file must be correct and musn't not be a description file
