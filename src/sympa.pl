@@ -40,6 +40,7 @@ use smtp;
 use MIME::QuotedPrint;
 use List;
 use Ldap;
+use Message;
 
 require 'tools.pl';
 require 'msg.pl';
@@ -533,35 +534,25 @@ sub DoFile {
     
     my ($listname, $robot);
     my $status;
-    
-    ## Open and parse the file   
-    if (!open(IN, $file)) {
-	&do_log('info', 'Can\'t open %s: %m', $file);
-	return undef;
-    }
-    
-    my $parser = new MIME::Parser;
-    $parser->output_to_core(1);
 
-    my $msg;
-    unless ($msg = $parser->read(\*IN)) {
-	do_log('notice', 'Unable to parse message %s', $file);
+    my $message = new Message($file);
+    unless (defined $message) {
+	do_log('err', 'Unable to create Message object %s', $file);
 	return undef;
     }
+    
+    open TMP, ">/tmp/dump";
+    $message->dump(\*TMP);
+    close TMP;
+
+    my $msg = $message->{'msg'};
     my $hdr = $msg->head;
+    my $rcpt = $message->{'rcpt'};
     
     # message prepared by wwsympa and distributed by sympa
     if ( $hdr->get('X-Sympa-Checksum')) {
 	return (&DoSendMessage ($msg)) ;
     }
-
-    ## Search the X-Sympa-To header.
-    my $rcpt = $hdr->get('X-Sympa-To');
-    unless ($rcpt) {
-	do_log('notice', 'no X-Sympa-To found, ignoring message file %s', $file);
-	return undef;
-    }
-    chomp $rcpt;
 
     ## get listname & robot
     ($listname, $robot) = split(/\@/,$rcpt);
@@ -576,24 +567,16 @@ sub DoFile {
 	do_log('debug', "Setting log level with $robot configuration (or sympa.conf) : $log_level"); 
     }
 
-    ## Ignoring messages without From: field
-    unless ($hdr->get('From')) {
-	do_log('notice', 'No From found in message, skipping.');
-	return undef;
-    }   
-
-    ## Strip of the initial X-Sympa-To field
-    $hdr->delete('X-Sympa-To');
-
-    my @sender_hdr = Mail::Address->parse($hdr->get('From'));
-    
-    if ($#sender_hdr == -1) {
-	do_log('notice', 'No valid address in From: field, skipping');
+    ## Ignoring messages with no sender
+    my $sender = $message->{'sender'};
+    unless ($sender) {
+	do_log('err', 'No From found in message, skipping.');
 	return undef;
     }
 
-    my $sender = $sender_hdr[0]->address;
-
+    ## Strip of the initial X-Sympa-To field
+    $hdr->delete('X-Sympa-To');
+    
     ## Loop prevention
     my $conf_email = &Conf::get_robot_conf($robot, 'email');
     my $conf_host = &Conf::get_robot_conf($robot, 'host');
@@ -601,7 +584,7 @@ sub DoFile {
 	do_log('notice','Ignoring message which would cause a loop, sent by %s', $sender);
 	return undef;
     }
-
+	
     ## Initialize command report
     undef @msg::report;  
     
@@ -609,9 +592,7 @@ sub DoFile {
     my $subject_field = &MIME::Words::decode_mimewords($hdr->get('Subject'));
     chomp $subject_field;
 #    $hdr->replace('Subject', $subject_field);
-    
-    my $bytes = -s $file;
-    
+        
     my ($list, $host, $name);   
     if ($listname =~ /^(sympa|listmaster|$conf_email)(\@$conf_host)?$/i) {
 	$host = $conf_host;
@@ -651,36 +632,29 @@ sub DoFile {
     }
 
     ## encrypted message
-    $is_crypted = 'not_crypted';
-    if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
-	($hdr->get('Content-Type') !~ /signed-data/)){
-	do_log('debug', "message is crypted");
-
-	if ($Conf{'openssl'}) {
-	    $is_crypted = 'smime_crypted';
-	    $file = '_ALTERED_';
-	    ($msg, $file) = &tools::smime_decrypt ($msg,$name);
-	    unless (defined($msg)) {
-		do_log('debug','unable to decrypt message');
-		## xxxxx traitement d'erreur ?
-		return undef;
-	    };
-	    $hdr = $msg->head;
-	    do_log('debug2', "message successfully decrypted");
-	    # do_log('debug2', "xxxx dumped in /tmp/decrypted");
-	    # open (XXDUMP, ">/tmp/decrypted");
-	    # $msg->print(\*XXDUMP);
-	    # close(XXDUMP);
-	}
-
+    if ($message->{'smime_crypted'}) {
+	$is_crypted = 'smime_crypted';
+	$file = '_ALTERED_';
+	($msg, $file) = ($message->{'decrypted_msg'}, $message->{'decrypted_msg_as_string'});
+	unless (defined($msg)) {
+	    do_log('debug','unable to decrypt message');
+	    ## xxxxx traitement d'erreur ?
+	    return undef;
+	};
+	$hdr = $msg->head;
+	do_log('debug2', "message successfully decrypted");
+    }else {
+	$is_crypted = 'not_crypted';
     }
 
     ## S/MIME signed messages
-    undef $is_signed;
-    if ($Conf{'openssl'} && $hdr->get('Content-Type') =~ /multipart\/signed|application\/(x-)?pkcs7-mime/i) {
-	$is_signed = &tools::smime_sign_check ($msg, $sender, $file);
-	do_log('debug', "message is signed, signature is checked");
+    if ($message->{'smime_signed'}) {
+	$is_signed = {'subject' => $message->{'smime_subject'},
+		      'body' => 'smime'};
+    }else {
+	undef $is_signed;
     }
+
 
     if ($rcpt =~ /^listmaster(\@(\S+))?$/) {
 	$status = &DoForward('sympa', 'listmaster', $robot, $msg, $file, $sender);
@@ -705,7 +679,7 @@ sub DoFile {
 	    $status = &DoForward($name, $function, $robot, $msg, $file, $sender);
 	}       
     }else {
-	$status =  &DoMessage($rcpt, $msg, $robot,$bytes, $file, $is_crypted);
+	$status =  &DoMessage($rcpt, $message, $robot);
     }
     
 
@@ -898,7 +872,10 @@ sub DoForward {
 
 ## Handles a message sent to a list.
 sub DoMessage{
-    my($which, $msg, $robot, $bytes, $file, $encrypt ) = @_;
+    my($which, $message, $robot) = @_;
+    my ($msg, $file, $bytes) = ($message->{'msg'}, $message->{'filename'}, $message->{'size'});
+    my $encrypt;
+    $encrypt = 'smime_crypted' if ($message->{'smime_crypted'});
     &do_log('debug', 'DoMessage(%s, %s, %s, msg from %s, %s, %s,%s)', $which, $msg, $robot, $msg->head->get('From'), $bytes, $file, $encrypt);
     
     ## List and host.
@@ -1039,12 +1016,12 @@ sub DoMessage{
 	do_log('notice', 'Message for %s from %s kept for authentication with key %s', $name, $sender, $key);
 	return 1;
     }elsif($action =~ /^editorkey(\s?,\s?(quiet))?/){
-	my $key = $list->send_to_editor('md5',$msg,$file,$encrypt);
+	my $key = $list->send_to_editor('md5',$message);
 	do_log('info', 'Key %s for list %s from %s sent to editors, %s', $key, $name, $sender, $file, $encrypt);
 	$list->notify_sender($sender) unless ($2 eq 'quiet');
 	return 1;
     }elsif($action =~ /^editor(\s?,\s?(quiet))?/){
-	my $key = $list->send_to_editor('smtp', $msg, $file, $encrypt);
+	my $key = $list->send_to_editor('smtp', $message);
 	do_log('info', 'Message for %s from %s sent to editors', $name, $sender);
 	$list->notify_sender($sender) unless ($2 eq 'quiet');
 	return 1;

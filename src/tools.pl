@@ -335,11 +335,10 @@ sub smime_sign {
 
 
 sub smime_sign_check {
+    my $message = shift;
 
-    my $msg = shift;
-    my $sender = shift;
-    my $file = shift;
-    $sender= lc($sender);
+    my $sender = $message->{'sender'};
+    my $file = $message->{'filename'};
 
     do_log('debug2', 'tools::smime_sign_check (message, %s, %s)', $sender, $file);
 
@@ -362,16 +361,20 @@ sub smime_sign_check {
 
     unless (open (MSGDUMP, "| $Conf{'openssl'} smime -verify  $trusted_ca_options -signer $temporary_file > /dev/null")) {
 
-	do_log('err', "unable to verify smime signature from $sender $verify");
+	do_log('err', "unabe to verify smime signature from $sender $verify");
 	return undef ;
     }
 
-    unless (open MSG, $file) {
-	do_log('err', 'Unable to open file %s: %s', $file, $!);
-	return undef;
+    if ($message->{'smime_crypted'}) {
+	print MSGDUMP ${$message->{'decrypted_msg_as_string'}};
+    }else {
+	unless (open MSG, $file) {
+	    do_log('err', 'Unable to open file %s: %s', $file, $!);
+	    return undef;
+	}
+	print MSGDUMP <MSG>;
     }
 
-    print MSGDUMP <MSG>;
     close MSGDUMP;
     my $status = $?/256 ;
     close MSG;
@@ -398,6 +401,7 @@ sub smime_sign_check {
     ## second step is the message signer match the sender
     ## a better analyse should be performed to extract the signer email. 
     my $signer = `cat $temporary_file | $Conf{'openssl'}  x509 -subject -noout`;
+    chomp $signer;
 
     unless ($signer =~ /email=$sender/i) {
 	unlink($temporary_file) unless ($main::options{'debug'}) ;	
@@ -431,7 +435,7 @@ sub smime_sign_check {
     $is_signed->{'body'} = 'smime';
     
     # futur version should check if the subject was part of the SMIME signature.
-    $is_signed->{'subject'} = undef;
+    $is_signed->{'subject'} = $signer;
     return $is_signed;
 }
 
@@ -446,7 +450,7 @@ sub smime_encrypt {
     my $cryptedmsg;
     my $encrypted_body;    
 
-    &do_log('debug2', 'tools::smime_encrypt(%s, %s, %s, %s',$msg_header, $msg_body, $email, $list);
+    &do_log('debug2', 'tools::smime_encrypt( %s, %s', $email, $list);
     if ($list eq 'list') {
 	my $self = new List($email);
 	$usercert = $self->{'dir'}."/cert.pem";

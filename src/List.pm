@@ -1661,7 +1661,10 @@ sub notify_sender{
 
 ## Send a message to the editor
 sub send_to_editor {
-   my($self, $method, $msg, $file, $encrypt) = @_;
+   my($self, $method, $message) = @_;
+   my ($msg, $file, $encrypt) = ($message->{'msg'}, $message->{'filename'});
+   my $encrypt;
+   $encrypt = 'smime_crypted' if ($message->{'smime_encrypted'}); 
    do_log('debug3', "List::send_to_editor, msg: $msg, file: $file method : $method, encrypt : $encrypt");
 
    my($i, @rcpt);
@@ -1687,20 +1690,18 @@ sub send_to_editor {
 
        ## Always copy the original, not the MIME::Entity
        ## This prevents from message alterations
-       if ($encrypt eq 'smime_crypted') {
-	   ## $file is a reference to a scalar containing the raw message
-	   print MSG ${$file};
-       }else {
-	   unless (open (MSG, $file)) {
-	       do_log('notice', 'Could not open %s', $file);
-	       return undef;   
-	   }
-	   while (<MSG>) {
-	       print OUT ;
-	   }
-	   close MSG ;
+#       if ($encrypt eq 'smime_crypted') {
+#	   ## $file is a reference to a scalar containing the raw message
+#	   print MSG ${$file};
+#       }else {
+       unless (open (MSG, $file)) {
+	   do_log('notice', 'Could not open %s', $file);
+	   return undef;   
        }
 
+       print OUT <MSG>;
+       close MSG ;
+#       }
        close(OUT);
    }
    foreach $i (@{$admin->{'editor'}}) {
@@ -1718,6 +1719,7 @@ sub send_to_editor {
        ## Send a different crypted message to each moderator
        foreach my $recipient (@rcpt) {
 
+	   ## $msg->body_as_string respecte-t-il le Base64 ??
 	   my $cryptedmsg = &tools::smime_encrypt($msg->head, $msg->body_as_string, $recipient); 
 	   unless ($cryptedmsg) {
 	       &do_log('notice', 'Failed encrypted message for moderator');
@@ -1754,7 +1756,8 @@ sub send_to_editor {
 
 ## Send an authentication message
 sub send_auth {
-   my($self, $sender, $msg, $file) = @_;
+   my($self, $message) = @_;
+   my ($sender, $msg, $file) = ($message->{'sender'}, $message->{'msg'}, $message->{'filename'});
    do_log('debug3', 'List::send_auth(%s, %s)', $sender, $file);
 
    ## Ensure 1 second elapsed since last message
@@ -1788,9 +1791,8 @@ sub send_auth {
        return undef;
    }
    
-   while (<IN>) {
-       print OUT;
-   }
+   print OUT <IN>;
+
    close IN; close OUT;
  
    my $hdr = new Mail::Header;

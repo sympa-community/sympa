@@ -26,6 +26,7 @@ use Language;
 use Log;
 use List;
 use Version;
+use Message;
 
 use Digest::MD5;
 use Fcntl;
@@ -1621,45 +1622,32 @@ sub distribute {
     my $file = "$modqueue\/$name\_$key";
     
     ## if the file as been accepted by WWSympa, it's name is different.
-    if (! -r $file) {
+    unless (-r $file) {
         $file= "$modqueue\/$name\_$key.distribute";
     }
 
     ## Open and parse the file
-    if (!open(IN, $file)) {
-	push @msg::report, sprintf Msg(6, 41, "Unable to find the message of the list %s locked by the key %s.\nWarning : this message could have ever been send by another editor"),$name,$key;
-	do_log('info', 'DISTRIBUTE %s %s from %s refused, auth failed', $which, $key, $sender);
-	return 'wrong_auth';
-    }
+    my $message = new Message($file);
 
-
-    my $msg;
-    my $parser = new MIME::Parser;
-    $parser->output_to_core(1);
-    unless ($msg = $parser->read(\*IN)) {
-	do_log('notice', 'Unable to parse message');
-	return undef;
-    }
-
-    close(IN);
-    
-    my $bytes = -s $file;
-
-    ## If the message is crypted decrypt before distribute with crypt attribute
-    $is_crypted = 'not_crypted';
-    if (($msg->head->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) && ($Conf{'openssl'})) {
-	    $is_crypted = 'smime_crypted';
-	    $file = '_ALTERED_';
-	    do_log('debug2','xxxxxxxxxxxxxxxxxxxxxxxx is crypted');
-	    unless ($msg = &tools::smime_decrypt ($msg,$list)) {
-		do_log('debug2','unable to decrypt message');
-		## xxxxx traitement d'erreur ?
-		return undef;
-	    };
-
-	}
-
+    my $msg = $message->{'msg'};
     my $hdr= $msg->head;
+
+    ## encrypted message
+    if ($message->{'smime_crypted'}) {
+	$is_crypted = 'smime_crypted';
+	$file = '_ALTERED_';
+	($msg, $file) = ($message->{'decrypted_msg'}, $message->{'decrypted_msg_as_string'});
+	unless (defined($msg)) {
+	    do_log('debug','unable to decrypt message');
+	    ## xxxxx traitement d'erreur ?
+	    return undef;
+	};
+	$hdr = $msg->head;
+	do_log('debug2', "message successfully decrypted");
+    }else {
+	$is_crypted = 'not_crypted';
+    }
+
     $hdr->add('X-Validation-by', $sender);
 
     ## Distribute the message
@@ -1683,70 +1671,41 @@ sub distribute {
 sub confirm {
     my $what = shift;
     my $robot = shift;
-
     do_log('debug', 'Commands::confirm(%s)', $what);
 
     $what =~ /^\s*(\S+)\s*$/;
     my $key = $1;
     my $start_time = time; # get the time at the beginning
-    my $trouve = 0;
 
-    my $authqueue = $Conf{'queueauth'};
+    my $file;
 
-    unless (opendir DIR, $authqueue ) {
-	do_log('info', 'WARNING unable to read %s directory', $authqueue);
+    unless (opendir DIR, $Conf{'queueauth'} ) {
+        do_log('info', 'WARNING unable to read %s directory', $Conf{'queueauth'});
     }
 
-    my @qfile =  sort grep (!/^\./,readdir(DIR));
-    closedir DIR ;
-    my ($i, $curlist, $authdelay);
-
-    $authdelay = $Conf{'clean_delay_queueauth'};
-
-    # secure auth message configuration
-    $authdelay = 1 if ($authdelay<=0);
 
     # delete old file from the auth directory
-    foreach $i (sort @qfile) {
-	if ((stat "$authqueue/$i")[9] < (time -  $authdelay*86400) ){
-	    unlink ("$authqueue/$i") ;
-	    do_log('notice', 'Deleting unconfirmed message %s, too old', $i);
-	    next;
-	}
-	
-	if ($i=~/\_$key$/i){
-	    $trouve=1;
-	    $which = $`;
-	}
+    foreach (grep (!/^\./,readdir(DIR))) {
+        if (/\_$key$/i){
+	    $file= "$Conf{'queueauth'}\/$_";
+        }
+    }
+    closedir DIR ;
+    
+    unless ($file) {
+        push @msg::report, sprintf Msg(6, 68, "Unable to find the message auth locked by the key %s."),$key;
+        do_log('info', 'CONFIRM %s from %s refused, auth failed', $key,$sender);
+        return 'wrong_auth';
     }
 
-    my $file= "$authqueue\/$which\_$key";
-
-    ## Open and parse the file
-    if (!open(IN, $file) or $trouve==0) {
-	push @msg::report, sprintf Msg(6, 68, "Unable to find the message auth locked by the key %s."),$key;
-	do_log('info', 'CONFIRM %s from %s refused, auth failed', $key,$sender);
-	return 'wrong_auth';
-    }
-
-    my $msg;
-    my $parser = new MIME::Parser;
-    $parser->output_to_core(1);
-    unless ($msg = $parser->read(\*IN)) {
-	do_log('notice', 'Unable to parse message');
+    my $message = new Message ($file);
+    unless (defined $message) {
+	do_log('err', 'Unable to create Message object %s', $file);
 	return undef;
     }
 
-    close(IN);
- 
-    ## Load the list if not already done, and reject the
-    ## subscription if this list is unknown to us.
-    my $list = new List ($which, $robot);
-    unless ($list)  {
-	push @msg::report, sprintf Msg(6, 5, "List %s not found.\n"), $which;
-	do_log('info', 'CONFIRM %s from %s refused, unknown list for robot %s', $which,$sender,$robot);
-	return 'unknown_list';
-    }
+    my $msg = $message->{'msg'};
+    my $list = $message->{'list'};
 
     &Language::SetLang($list->{'admin'}{'lang'});
 
@@ -1764,12 +1723,12 @@ sub confirm {
 	unless (defined $action);
 
     if ($action =~ /^editorkey/) {
-	my $key = $list->send_to_editor('md5', $msg, $file, 'not_crypted');
+	my $key = $list->send_to_editor('md5', $message);
 	do_log('info', 'Key %s for list %s from %s sent to editors', $key, $name, $sender);
 	$list->notify_sender($sender);
 	return 1;
     }elsif($action =~ /editor/){
-	my $key = $list->send_to_editor('smtp', $msg, $file, 'not_crypted');
+	my $key = $list->send_to_editor('smtp', $message);
 	do_log('info', 'Message for %s from %s sent to editors', $name, $sender);
 	$list->notify_sender($sender);
 	return 1;
