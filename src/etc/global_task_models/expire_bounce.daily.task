@@ -1,0 +1,7 @@
+title.fr expiration de bounces 10 jours antérieurs au dernier mail diffusé 
+title.us expire of bounces older than 10 days before message distribution 
+
+
+/ACTION
+expire_bounce (10)
+next ([execution_date] + 1d, ACTION)
