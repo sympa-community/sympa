@@ -6692,6 +6692,11 @@ sub load_topics {
 
     my $conf_file = &tools::get_filename('etc','topics.conf',$robot);
 
+    unless ($conf_file) {
+	&do_log('err','No topics.conf defined');
+	return undef;
+    }
+
     my $topics = {};
 
     ## Load if not loaded or changed on disk

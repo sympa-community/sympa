@@ -515,7 +515,7 @@ while ($query = &new_loop()) {
     $param->{'remote_addr'} = $ENV{'REMOTE_ADDR'} ;
     $param->{'remote_host'} = $ENV{'REMOTE_HOST'};
 
-    #&export_topics ($robot);
+    &export_topics ($robot);
     # if ($wwsconf->{'export_topics'} =~ /all/i);
 
     &List::init_list_cache();
@@ -8891,6 +8891,11 @@ sub export_topics {
     do_log ('debug2',"export_topics($robot)");
     my %topics = &List::load_topics($robot);
     
+    unless (defined %topics) {
+	&wwslog('err','No topics defined');
+	return undef;
+    }
+
     my $total = 0;
     foreach my $t (sort {$topics{$a}{'order'} <=> $topics{$b}{'order'}} keys %topics) {
 	next unless (&List::request_action ('topics_visibility', $param->{'auth_method'},$robot,
