@@ -1420,7 +1420,7 @@ sub load {
 	&do_log('err', 'No such list %s', $name);
 	return undef ;
     }
-
+    
     $self->{'domain'} = $robot ;
     unless ((-d $self->{'dir'}) && (-f "$self->{'dir'}/config")) {
 	&do_log('info', 'Missing directory or config file for %s', $name);
@@ -4422,7 +4422,7 @@ sub verify {
 		$context->{'user_attributes'}{$key} = $value;
 	    }
 
-	    $value =~ s/\[env\-\>([\w\-]+)\]/$context->{'user_attributes'}{$1}/;
+	    $value =~ s/\[user_attributes\-\>([\w\-]+)\]/$context->{'user_attributes'}{$1}/;
 
 	}elsif (($value =~ /\[subscriber\-\>([\w\-]+)\]/i) && defined ($context->{'sender'} ne 'nobody')) {
 	    
