@@ -5,10 +5,16 @@
     <TD> 
       <BR>
       [% IF homepage %]
-         [% INSERT 'homepage' %]
+ 	  [% TRY %]
+            [% INSERT 'homepage' %]
+          [% CATCH %]
+	  [% END %]
       [% ELSE %]
          <PRE>
+	  [% TRY %]
             [% INSERT 'info' %]
+          [% CATCH %]
+	  [% END %]
          </PRE>
       [% END %]
     </TD>

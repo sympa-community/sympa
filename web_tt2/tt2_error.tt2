@@ -18,7 +18,9 @@ A {
 
 <BODY bgcolor="[% bg_color %]" text="[% text_color %]" link="[% selected_color %]" vlink="[% selected_color %]">
 
-<H2>[%|loc(tt2_error)%]Sympa could not deliver the requested page for the following reason : %1. Please contact the listmaster.[%END%]</H2>
+<H2>[%|loc%]Sympa could not deliver the requested page for the following reason : [%END%]<BR>
+<EM>[% tt2_error %]</EM><BR><BR>
+[%|loc%]Please contact the listmaster.[%END%]</H2>
 
  <TABLE BORDER="0" ALIGN="right">
   <TR>
