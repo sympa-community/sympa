@@ -1449,9 +1449,7 @@ sub load {
     # Would make sympa same 'dir' as a parameter
     #$self->{'admin'}{'dir'} ||= $self->{'dir'};
 
-    $self->{'as_x509_cert'} = 1  if (-r "$self->{'dir'}/cert.pem");
-    
-
+    $self->{'as_x509_cert'} = 1  if ((-r "$self->{'dir'}/cert.pem") || (-r "$self->{'dir'}/cert.pem.enc"));
     
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
 	
@@ -7308,17 +7306,32 @@ sub get_cert {
 
     do_log('debug2', 'List::load_cert(%s)',$self->{'name'});
 
-
-    my $certfile = "$self->{'dir'}/cert.pem";
-    do_log('info', 'List::load_cert certfile ');
-    unless ( -r "$certfile") {
-	do_log('info', 'List::load_cert(%s), unable to read %s',$self->{'name'},$certfile);
+    # we only send the encryption certificate: this is what the user
+    # needs to send mail to the list; if he ever gets anything signed,
+    # it will have the respective cert attached anyways.
+    # (the problem is that netscape, opera and IE can't only
+    # read the first cert in a file)
+    my($certs,$keys) = tools::find_smime_keys($self->{dir},'encrypt');
+    unless(open(CERT, $certs)) {
+	do_log('err', "List::get_cert(): Unable to open $certs: $!");
 	return undef;
     }
-    my $cert;
-    open (CERT, $certfile) ;
-    my @cert = <CERT>;
+
+    my(@cert, $state);
+    while(<CERT>) {
+	chomp;
+	if($state == 1) {
+	    # convert to CRLF for windows clients
+	    push(@cert, "$_\r\n");
+	    if(/^-+END/) {
+		last;
+	    }
+	}elsif (/^-+BEGIN/) {
+	    $state = 1;
+	}
+    }
     close CERT ;
+    
     return @cert;
 }
 

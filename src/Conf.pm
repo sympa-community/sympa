@@ -52,7 +52,7 @@ my @valid_options = qw(
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
 		       ldap_export_dnmanager ldap_export_connection_timeout
-		       list_check_smtp list_check_suffixes  spam_protection web_archive_spam_protection
+		       list_check_smtp list_check_suffixes  spam_protection web_archive_spam_protection soap_url
 );
 
 my %old_options = ('trusted_ca_options' => 'capath,cafile');
@@ -168,7 +168,8 @@ my %Default_Conf =
      'minimum_bouncing_period' => 10,
      'bounce_delay' => 0,
      'default_bounce_level1_rate' => 45,
-     'default_bounce_level2_rate' => 75
+     'default_bounce_level2_rate' => 75,
+     'soap_url' => ''
      );
    
 my $wwsconf;
@@ -370,6 +371,7 @@ sub load_robots {
 				  web_archive_spam_protection => 1,
 				  bounce_level1_rate => 1,
 				  bounce_level2_rate => 1,
+				  soap_url => 1,
 				  );
 
     ## Load wwsympa.conf
@@ -424,6 +426,7 @@ sub load_robots {
 	$robot_conf->{$robot}{'sympa'} = $robot_conf->{$robot}{'email'}.'@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'request'} = $robot_conf->{$robot}{'email'}.'-request@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'cookie_domain'} ||= 'localhost';
+	$robot_conf->{$robot}{'soap_url'} ||= $Conf{'soap_url'};
 
 	my ($host, $path);
 	if ($robot_conf->{$robot}{'http_host'} =~ /^([^\/]+)(\/.*)$/) {
