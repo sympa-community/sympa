@@ -10,12 +10,12 @@ Content-transfer-encoding: 8bit
 
 [IF method=md5]
 Um die angehängte Nachricht an die Liste [list->name] weiterzuleiten :
-mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%%20[list->name]%%20[modkey]
+mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%20[list->name]%20[modkey]
 Oder: Schicken Sie eine Nachricht an [conf->email]@[conf->host] mit folgendem Subject:
 DISTRIBUTE [list->name] [modkey]
 
 Um sie abzulehnen (sie wird gelöscht):
-mailto:[conf->email]@[conf->host]?subject=REJECT%%20[list->name]%%20[modkey]
+mailto:[conf->email]@[conf->host]?subject=REJECT%20[list->name]%20[modkey]
 Oder: Schicken Sie eine Nachricht an [conf->email]@[conf->host] mit folgendem Subject:
 REJECT [list->name] [modkey]
 [ENDIF]

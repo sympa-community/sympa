@@ -10,12 +10,12 @@ Content-transfer-encoding: 8bit
 
 [IF method=md5]
 A(z) [list->name] listán a melléklet megjelenésének jóváhagyásához használd a következõt:
-mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%%20[list->name]%%20[modkey]
+mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%20[list->name]%20[modkey]
 Vagy [conf->email]@[conf->host] címre küldj egy levelet a következõ tárggyal:
 DISTRIBUTE [list->name] [modkey]
 
 Visszautasításhoz (ez törlést jelent) használd a következõt:
-mailto:[conf->email]@[conf->host]?subject=REJECT%%20[list->name]%%20[modkey]
+mailto:[conf->email]@[conf->host]?subject=REJECT%20[list->name]%20[modkey]
 Vagy [conf->email]@[conf->host] címre küldj egy levelet a következõ tárggyal:
 REJECT [list->name] [modkey]
 [ENDIF]

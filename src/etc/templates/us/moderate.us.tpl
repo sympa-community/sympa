@@ -10,12 +10,12 @@ Content-transfer-encoding: 7bit
 
 [IF method=md5]
 To distribute the attached message in list [list->name]:
-mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%%20[list->name]%%20[modkey]
+mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%20[list->name]%20[modkey]
 Or send a message to [conf->email]@[conf->host] with the following subject :
 DISTRIBUTE [list->name] [modkey]
 
 To reject it (it will be removed):
-mailto:[conf->email]@[conf->host]?subject=REJECT%%20[list->name]%%20[modkey]
+mailto:[conf->email]@[conf->host]?subject=REJECT%20[list->name]%20[modkey]
 Or send a message to [conf->email]@[conf->host] with the following subject :
 REJECT [list->name] [modkey]
 [ENDIF]

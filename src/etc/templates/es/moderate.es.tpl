@@ -10,12 +10,12 @@ Content-transfer-encoding: 8bit
 
 [IF method=md5]
 Para distribuir el mensaje adjunto en la lista [list->name], haga click en:
-mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%%20[list->name]%%20[modkey]
+mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%20[list->name]%20[modkey]
 O envíe un mensaje a [conf->email]@[conf->host] con el siguiente tema :
 DISTRIBUTE [list->name] [modkey]
 
 Para negar la difusión (el mensaje será borrado) :
-mailto:[conf->email]@[conf->host]?subject=REJECT%%20[list->name]%%20[modkey]
+mailto:[conf->email]@[conf->host]?subject=REJECT%20[list->name]%20[modkey]
 O envíe un mensaje a [conf->email]@[conf->host] con el siguiente tema :
 REJECT [list->name] [modkey]
 [ENDIF]

@@ -10,10 +10,10 @@ Content-transfer-encoding: 8bit
 
 [IF method=md5]
 Per inoltrare il messaggio allegato alla lista '[list->name]' :
-mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%%20[list->name]%%20[list->name]
+mailto:[conf->email]@[conf->host]?subject=DISTRIBUTE%20[list->name]%20[list->name]
 
 Per respingerlo (sara' cancellato) :
-mailto:[conf->email]@[conf->host]?subject=REJECT%%20[list->name]%%20[list->name]
+mailto:[conf->email]@[conf->host]?subject=REJECT%20[list->name]%20[list->name]
 [ENDIF]
 
 --[boundary]
