@@ -47,7 +47,8 @@ $service = SOAP::Lite->service('http://www.cru.fr/wws/wsdl');
 #$reponse = $service->do_login($ARGV[0],$ARGV[1],$ARGV[2]);
 #$reponse =  $service->do_lists($ARGV[0],$ARGV[1],$ARGV[2],$ARGV[3],$ARGV[4]);
 
-$reponse = $service->do_which($ARGV[0],$ARGV[1]);
+#$reponse = $service->do_which($ARGV[0],$ARGV[1]);
+$reponse = $service->do_login($ARGV[0],$ARGV[1]);
 
 # If we get a fault
 if ($service->call->fault)

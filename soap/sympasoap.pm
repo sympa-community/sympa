@@ -70,7 +70,7 @@ If the number of parameters is incorrect it generates a SOAP.Client Exception.
 
 =cut
 
-package webservices;
+package sympasoap;
 
 use Exporter;
 
@@ -147,19 +147,22 @@ sub do_lists {
 	next unless ($action eq 'do_it');
 	
 	## determine status of user 
-	if (($list->am_i('owner',$sender) || $list->am_i('editor',$sender))) {
-	    $result_item->{'sender'}{'status'} = "admin";
-	}elsif ($list->is_user($sender)) {
-	    $result_item->{'sender'}{'status'} = "member";
+	if (($list->am_i('owner',$sender) || $list->am_i('owner',$sender))) {
+	    $result_item->{'is_owner'} = 1;
+	}
+	if (($list->am_i('editor',$sender) || $list->am_i('editor',$sender))) {
+	    $result_item->{'is_editor'} = 1;
+	}
+	if ($list->is_user($sender)) {
+	    $result_item->{'is_subscriber'} = 1;
 	}
 
 	##building result packet
-	$result_item->{'sender'}{'email'} = $sender;
-	$result_item->{'listname'} = $listname;
-	$result_item->{'infos'} = $list->{'admin'}{'subject'};
-	$result_item->{'url'} = $Conf{'wwsympa_url'}.'/info/'.$listname; 
+	$result_item->{'list_address'} = $listname.'@'.$list->{'domain'};
+	$result_item->{'subject'} = $list->{'admin'}{'subject'};
+	$result_item->{'homepage'} = $Conf{'wwsympa_url'}.'/info/'.$listname; 
 		
-	my $list_url = $Conf{'wwsympa_url'}.'/info/'.$listname;
+	my $list_homepage = $Conf{'wwsympa_url'}.'/info/'.$listname;
 	
 	## no topic ; List all lists
 	if (!$topic) {
@@ -185,9 +188,26 @@ sub do_lists {
 
 sub do_login {
     my $class = shift;
-    my $http_host = shift;
     my $email = shift;
     my $passwd = shift;
+
+    my $http_host = $ENV{'SERVER_NAME'};
+
+    unless ($http_host and $email and $passwd) {
+      die SOAP::Fault->faultcode('Client')
+	  ->faultstring('Incorrect number of parameters')
+	      ->faultdetail('Use : <HTTP host> <email> <password>');
+    }
+
+    return SOAP::Data->name('result')->type('boolean')->value(0);
+}
+
+sub do_llogin {
+    my $class = shift;
+    my $email = shift;
+    my $passwd = shift;
+
+    my $http_host = $ENV{'SERVER_NAME'};
 
     unless ($http_host and $email and $passwd) {
       die SOAP::Fault->faultcode('Client')
@@ -597,17 +617,20 @@ sub subscribe {
 					     {'listname' =>  $listname,
 					      'sender' =>$sender}) =~ /do_it/);
 	 
-	 $result_item->{'sender'}{'email'} = $sender;
-	 $result_item->{'listname'} = $listname;
-	 $result_item->{'infos'} = $list->{'admin'}{'subject'};
-	 $result_item->{'url'} = $Conf{'wwsympa_url'}.'/info/'.$listname; 
+	 $result_item->{'list_address'} = $listname.'@'.$list->{'domain'};
+	 $result_item->{'subject'} = $list->{'admin'}{'subject'};
+	 $result_item->{'homepage'} = $Conf{'wwsympa_url'}.'/info/'.$listname; 
 	 
 	 ## determine status of user 
-	if (($list->am_i('owner',$sender) || $list->am_i('editor',$sender))) {
-	    $result_item->{'sender'}{'status'} = "admin";
-	}elsif ($list->is_user($sender)) {
-	    $result_item->{'sender'}{'status'} = "member";
-	}
+	 if (($list->am_i('owner',$sender) || $list->am_i('owner',$sender))) {
+	     $result_item->{'is_owner'} = 1;
+	 }
+	 if (($list->am_i('editor',$sender) || $list->am_i('editor',$sender))) {
+	     $result_item->{'is_editor'} = 1;
+	 }
+	 if ($list->is_user($sender)) {
+	     $result_item->{'is_subscriber'} = 1;
+	 }
 	 
 	 push @result, SOAP::Data->name('result')->value($result_item);
 	

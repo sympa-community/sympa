@@ -17,15 +17,6 @@
 	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
 	xmlns="http://www.w3.org/2001/XMLSchema">
 	
-	<simpleType name="Status_type">
-		     <restriction base="string"> 
-			     <enumeration value="admin"/>
-			     <enumeration value="listmaster"/>
-			     <enumeration value="owner"/>
-			     <enumeration value="member"/>
-		     </restriction> 
-        </simpleType>	
-
 	<simpleType name="Reception_type">
 		     <restriction base="string"> 
 		              <enumeration value="digest"/>
@@ -64,19 +55,15 @@
 	</complexType>
 	
 	<complexType name="List_type">
-		<element name="listname" minOccurs="1" type="string"/>
-		<element name="infos" minOccurs="0" type="string"/>
-		<element name="url" minOccurs="0" type="string"/>
-		<element name="sender" minOccurs="0" type="xsdl:Sender_type"/>
-	</complexType>
-
-	<complexType name="Sender_type">
-	        <element name="email" minOccurs="1" type="string"/>
-		<element name="status" minOccurs="0" type="xsdl:Status_type"/>
+		<element name="list_address" minOccurs="1" type="string"/>
+		<element name="subject" minOccurs="0" type="string"/>
+		<element name="homepage" minOccurs="0" type="string"/>
+		<element name="is_subscriber" minOccurs="0" type="boolean"/>
+		<element name="is_owner" minOccurs="0" type="boolean"/>
+		<element name="is_editor" minOccurs="0" type="boolean"/>
 		<element name="reception" minOccurs="0" type="xsdl:Reception_type"/>
 		<element name="visibility"  minOccurs="0" type="xsdl:Visibility_type"/>
 	</complexType>
-
 </schema>
 </types>
 
@@ -148,7 +135,6 @@
 </message>
 
 <message name="do_loginRequest">
-	<part name="host" type="xsd:string"/>
 	<part name="email" type="xsd:string"/>
 	<part name="password" type="xsd:string"/>
 </message>

@@ -2,11 +2,15 @@
 
 
 use SOAP::Lite;
+
 # Use this line for more debug facility
 #use SOAP::Lite +trace;
 use SOAP::Transport::HTTP;
 
 use lib '--LIBDIR--';
+
+## Defines SOAP::Transport::HTTP::FCGI::Sympa with a modified handle()
+use SympaTransport;
 
 use Getopt::Long;
 use strict;
@@ -21,6 +25,8 @@ use sympasoap;
 
 ## WWSympa librairies
 use cookielib;
+
+my $birthday = time ;
 
 ## Configuration
 my $wwsconf = {};
@@ -65,7 +71,7 @@ foreach my $listname (&List::get_lists('*')){
 #    Soap part
 ##############################################################################################
 
-my $server = SOAP::Transport::HTTP::FCGI->new(); 
+my $server = SOAP::Transport::HTTP::FCGI::Sympa->new(); 
 
 $server->dispatch_with({'urn:do_lists' => 'sympasoap',
 			'urn:do_login' => 'sympasoap',
@@ -77,4 +83,5 @@ $server->dispatch_with({'urn:do_lists' => 'sympasoap',
 			'urn:do_which' => 'sympasoap',
 			'urn:check_cookie' => 'sympasoap'
 		    });
-$server->handle;
+$server->handle($birthday);
+

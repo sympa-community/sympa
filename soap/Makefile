@@ -21,7 +21,7 @@
 
 cgi_SUBST	=	sympa_soap_server.fcgi sympa_soap_client.pl
 
-lib_SUBST	=	sympasoap.pm
+lib_SUBST	=	sympasoap.pm SympaTransport.pm
 
 SRC		=	sympa.wsdl
 
