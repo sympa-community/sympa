@@ -13,7 +13,7 @@
      <tr> 
   [% IF user.email %]
   [% IF auth_method == 'md5' %]
-      <td style="white-space: nowrap; background-color: [% light_color %] text-align: center;"> 
+      <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;"> 
      [% IF referer %]
       <a href="[% path_cgi %]/logout/referer/[% referer %]">
      [% ELSE %]
