@@ -2381,7 +2381,9 @@ sub do_del {
     my @emails = split /\0/, $in{'email'};
 
     foreach my $email (@emails) {
-    
+
+	my $escaped_email = &tools::escape_chars($email);
+	
 	unless ( $list->is_user($email) ) {
 	    &message('not_subscriber');
 	    &wwslog('info','do_del: %s not subscribed', $email);
@@ -2394,6 +2396,13 @@ sub do_del {
 	    &wwslog('info','do_del: failed for %s', $email);
 	    return undef;
 	}
+
+	if (-f "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email") {
+	    unless (unlink "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email") {
+		&wwslog('info','do_resetbounce: failed deleting %s', "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email");
+	    }
+	}
+	
 
 	&wwslog('info','do_del: subscriber %s deleted from list %s', $email, $param->{'list'});
 	
@@ -3806,7 +3815,7 @@ sub do_resetbounce {
 	&wwslog('info','do_resetbounce: no email');
 	return undef;
     }
-
+    
     $in{'email'} = &tools::unescape_chars($in{'email'});
 
     unless ($param->{'user'}{'email'}) {
@@ -3833,6 +3842,8 @@ sub do_resetbounce {
     my @emails = split /\0/, $in{'email'};
 
     foreach my $email (@emails) {
+
+	my $escaped_email = &tools::escape_chars($email);
     
 	unless ( $list->is_user($email) ) {
 	    $param->{'error'}{'email'} = $email;
@@ -3848,9 +3859,8 @@ sub do_resetbounce {
 	    return undef;
 	}
 
-	unless (unlink "$wwsconf->{'bounce_path'}/$param->{'list'}/$email") {
-	    &wwslog('info','do_resetbounce: failed deleting %s', "$wwsconf->{'bounce_path'}/$param->{'list'}/$email");
-	    return undef;
+	unless (unlink "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email") {
+	    &wwslog('info','do_resetbounce: failed deleting %s', "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email");
 	}
 	
 	&wwslog('info','do_resetbounce: bounces for %s reset ', $email);
