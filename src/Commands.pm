@@ -666,7 +666,7 @@ sub subscribe {
 	$list->send_notify_to_owner({'who' => $sender,
 				     'keyauth' => $list->compute_auth($sender,'add'),
 				     'replyto' => &Conf::get_robot_conf($robot, 'sympa'),
-				     'comment' => $comment,
+				     'gecos' => $comment,
 				     'type' => 'subrequest'});
 	$list->store_susbscription_request($sender, $comment);
 	do_log('info', 'SUB %s from %s forwarded to the owners of the list (%d seconds)', $which, $sender,time-$time_command);   

@@ -2412,7 +2412,7 @@ sub do_subscribe {
 	$list->send_notify_to_owner({'who' => $param->{'user'}{'email'},
 				     'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'add'),
 				     'replyto' => &Conf::get_robot_conf($robot, 'sympa'),
-				     'comment' => $param->{'user'}{'gecos'},
+				     'gecos' => $param->{'user'}{'gecos'},
 				     'type' => 'subrequest'});
 	$list->store_susbscription_request($param->{'user'}{'email'});
 	&message('sent_to_owner');
