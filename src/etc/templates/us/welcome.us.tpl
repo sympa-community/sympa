@@ -10,7 +10,7 @@ Content-transfer-encoding: 8bit
 Welcome to list [list->name]@[list->host].
 Your subscription email is [user->email]
 [IF user->password]
-Your password : [user->password].
+Your password : [user->password]
 [ENDIF]
 
 [PARSE 'info']
@@ -31,7 +31,7 @@ Content-transfer-encoding: 8bit
 Your subscription email is [user->email] 
 [IF user->password] 
 <BR>
-Your password : [user->password]. 
+Your password : [user->password] 
 [ENDIF]
 <BR><BR>
 <PRE>
