@@ -412,7 +412,7 @@ while ($query = &new_loop()) {
     $param->{'alt_emails'} = &cookielib::check_cookie_extern($ENV{'HTTP_COOKIE'},$Conf{'cookie'},$param->{'user'}{'email'});
     
     if ($param->{'user'}{'email'}) {
-	$param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}};
+	$param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
 
 	if (&List::is_user_db($param->{'user'}{'email'})) {
 	    $param->{'user'} = &List::get_user_db($param->{'user'}{'email'});
@@ -519,7 +519,7 @@ while ($query = &new_loop()) {
 	    foreach my $element (keys %{$param->{'alt_emails'}}){
 		 $number ++ if ($element);
 	    }  
-	    $param->{'unique'} = 1 if($number == 1);
+	    $param->{'unique'} = 1 if($number <= 1);
 
   	    unless(&cookielib::set_cookie_extern($Conf{'cookie'},$wwsconf->{'cookie_domain'},%{$param->{'alt_emails'}})){
 	         &wwslog('notice', 'Could not set HTTP cookie for external_auth');
@@ -1151,12 +1151,12 @@ sub do_login {
     ##
 
     ## Current authentication mode
-    $param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}};
+    $param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
 
     $param->{'lang'} = $user->{'lang'} || $list->{'admin'}{'lang'} || $Conf{'lang'};
     $param->{'cookie_lang'} = undef;    
 
-    if (($param->{'auth'} == 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
+    if (($param->{'auth'} eq 'classic') && ($param->{'user'}{'password'} =~ /^init/) ) {
 	&message('you_should_choose_a_password');
     }
     
@@ -1433,6 +1433,9 @@ sub do_unify_email {
 	    
 	}
     }
+
+    $param->{'alt_emails'} = undef;
+
     return 'which';
 }
 
@@ -6216,7 +6219,6 @@ sub format_path {
 #*******************************************
 
 sub do_d_editfile {
-    #action_args == ['list','@path']
     &wwslog('debug', 'do_d_editfile(%s)', $in{'path'});
 
     # Variables
@@ -6335,7 +6337,6 @@ sub do_d_editfile {
 #******************************************
 
 sub do_d_describe {
-    #action_args == ['list','@path']
     &wwslog('debug', 'do_d_describe(%s)', $in{'path'});
 
     # Variables
@@ -6482,7 +6483,6 @@ sub do_d_describe {
 #******************************************
 
 sub do_d_savefile {
-    #action_args == ['list','@path']
     &wwslog('debug', 'do_d_savefile(%s)', $in{'path'});
     
     # Variables
@@ -6635,7 +6635,6 @@ sub do_d_savefile {
 #******************************************
 
 sub do_d_overwrite {
-    #action_args == ['list','@path']
     &wwslog('debug', 'do_d_overwrite(%s)', $in{'path'});
  
     # Variables
@@ -6789,7 +6788,6 @@ sub do_d_overwrite {
 #******************************************
 
 sub do_d_upload {
-    #action_args == ['list','@path']
     &wwslog('debug', 'do_d_upload(%s)', $in{'path'});
   
     # Variables 
@@ -6919,7 +6917,6 @@ sub do_d_upload {
 #******************************************
 
 sub do_d_delete {
-    #action_args == ['list','@path']
     &wwslog('debug', 'do_d_delete(%s)', $in{'path'});
 
     #useful variables
@@ -7143,7 +7140,6 @@ sub do_d_rename {
 # Description : Creates a new file / directory
 #******************************************
 sub do_d_create_dir {
-    #action_args == ['list','@path']
     &wwslog('debug', 'do_d_create_dir(%s)', $in{'name_doc'});
   
     #useful variables
@@ -7405,7 +7401,6 @@ sub do_d_control {
 #******************************************
 
 sub do_d_change_access {
-    #action_args == ['list','@path']
     &wwslog('debug', 'do_d_change_access(%s)', $in{'path'});
 
     # Variables
@@ -7523,7 +7518,6 @@ sub do_d_change_access {
 }	
 
 sub do_d_set_owner {
-    #action_args == ['list','@path']
     &wwslog('debug', 'do_d_set_owner(%s)', $in{'path'});
     
     # Variables
@@ -8061,8 +8055,6 @@ sub do_set_lang {
 }
 ## Function do_attach
 sub do_attach {
-    #action_args == ['list','@path']
-    
     &wwslog('debug', 'do_attach(%s)', $in{'path'});
    
 
