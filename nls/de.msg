@@ -28,7 +28,7 @@ wird deshalb an Sie zurückgeschickt:\n"
 19	"Unbekannter Befehl. Rest der Nachricht ignoriert.\n"
 24	"Ende Ihres EXPIRE-Befehls für Liste %s"
 26	"Diese Abonnenten sind:\n"
-27	"Wenn Sie diese Abonnenten von der Liste entfernen wollen,\n\
+27	"Wenn Sie diese Abonnenten aus der Liste entfernen wollen,\n\
 benutzen Sie die folgenden Befehle:\n"
 28	"Von denen, die die Liste %s seit %d Tagen abonniert haben,\n\
 haben %d ihr Abonnenment nicht bestätigt.\n"
@@ -46,7 +46,7 @@ $set 5	Messages used in the tools module
 Befehle wie subscribe, signoff, help, index, get, ... zu enthalten\n\
 scheint.\n\n\
 Wenn Ihre Nachricht tatsächlich einen Befehl enthält, denken Sie\n\
-bitte daran, daß Befehle niemals an eine Liste geschickt werden\n\
+bitte daran, dass Befehle niemals an eine Liste geschickt werden\n\
 dürfen. Befehle müssen an die Adresse %s geschickt werden.\n\n\
 Wenn Ihre Nachricht an die Liste gehen sollte, wurde Sie leider\n\
 fälschlicherweise als Befehl verarbeitet. Bitte setzen Sie sich\n\
@@ -63,7 +63,7 @@ $set 6	Messages du module Commands.pm
 8	"Benötigte Datei existiert nicht.\n"
 9	"Die Liste ist privat. Sie können das Archiv nicht lesen.\n"
 10	"Die Liste ist privat. Sie können die verfügbaren Dateien\n\
-nicht auflisten\n"
+nicht auflisten.\n"
 11	"Die Liste ist privat. Sie können die Mitglieder nicht auflisten.\n"
 13	"Syntaxfehler im Befehl.\n"
 15	"Die Authentifizierung ist fehlgeschlagen.\n\n"
@@ -85,7 +85,7 @@ Nachricht geschickt.\n"
 30	"Ihre EMail-Adresse wurde nicht in der Liste %s gefunden.\n\
 Haben Sie sie vielleicht unter einer anderen Adresse abonniert?\n"
 31	"Sie wurden aus der Liste %s ausgetragen.\n\
-Danke, daß Sie diese Liste abonniert hatten.\n"
+Danke, dass Sie diese Liste abonniert hatten.\n"
 32	"\
 Nur Verwalter der Liste %s können Abonnenten hinzufügen oder löschen.\n\
 Sie dürfen diesen Befehl nicht benutzen, oder die zu Ihrer Identifikation\n\
@@ -101,7 +101,7 @@ Sie Ihr Abonnement.\n"
 37	"Der Benutzer %s ist jetzt Mitglied der Liste %s.\n"
 38	"Der Benutzer %s wurde aus der Liste %s gelöscht.\n"
 39	"\
-Jemand (hoffentlich Sie) hat darum gebeten, daß jemand zur\n\
+Jemand (hoffentlich Sie) hat darum gebeten, dass jemand zur\n\
 Liste %s hinzugefügt oder aus ihr entfernt wird.\n\n\
 Bitte bestätigen Sie diesen Befehl, indem Sie eine Mail an\n\
 %s schicken, die den Befehl\n\n\
@@ -123,7 +123,7 @@ Sie sind kein Moderator der Liste %s.\n"
 Verwaltern einer Liste benutzt werden.\n\
 Sie sind kein Verwalter der Liste %s.\n"
 48	"\
-Jemand (hoffentlich Sie) hat darum gebeten, daß alle, die die Liste\n\
+Jemand (hoffentlich Sie) hat darum gebeten, dass alle, die die Liste\n\
 '%s' seit mehr als %d Tagen abonniert haben, Ihr Abonnement bestätigen\n\
 müssen.\n\
 \n\
@@ -153,16 +153,16 @@ Abonnement nicht bestätigt haben: EXPIREINDEX %s\n"
 58	"Sie können diese Abonnenten mit den folgenden Befehlen\n\
 aus der Liste löschen:\n"
 60	"\
-Der EXPIRE-Befehl konnte nicht ausgeführt werden. Dem Befehl muß ein\n\
+Der EXPIRE-Befehl konnte nicht ausgeführt werden. Dem Befehl muss ein\n\
 erklärender Text folgen, der für die Mitglieder bestimmt ist, die ihr\n\
 Abonnement erneuern sollen.\n\
-Dieser Text muß\n\
+Dieser Text muss\n\
 - in der ersten Zeile nach dem EXPIRE-Befehl beginnen,\n\
 - aus mindestens 20 Worten bestehen und\n\
 - mit dem Wort QUIT enden.\n"
 61	"Deshalb wurde die Nachricht an Sie zurückgeschickt:\n"
 67	"Sie haben im Moment diese Listen abonniert:\n\n"
-68	"Kann auf die Nachricht mit dem Schlüßel %s nicht zugreifen.\n"
+68	"Kann auf die Nachricht mit dem Schlüssel %s nicht zugreifen.\n"
 69	"%s hat Ihre EXPIRE-Nachricht an folgende Adressen geschickt:\n"
 70	"\nPowered by Sympa %s : http://www.sympa.org/\n"
 71	"Abonnement der Liste %s aufheben"
@@ -184,16 +184,16 @@ Ansonsten ignorieren Sie diese Nachricht einfach.\n"
 80	"Sie dürfen den Befehl %s für die Liste %s nicht ausführen\n"
 81	"Anleitung"
 82	"Öffentliche Mailing-Listen"
-83	"Zusammenfaßung"
+83	"Zusammenfassung"
 84	"Der Benutzer '%s' ist bereits Abonneten der Liste '%s'\n"
-85	"Benutzer %s wurde eingeladen die Liste %s zuabonnieren.\n"
+85	"Benutzer %s wurde eingeladen, die Liste %s zu abonnieren.\n"
 86	"Der Benutzer '%s' ist gegen seinen Willen auf '%s'\n"
 90	"Liste %s erlaubt nur die folgenden Empfangsmodi: %s \n\
 Ihre Konfiguration wurde nicht modifiziert.\n"
 91	"Die Liste %s ermöglicht keine Abonneteneinstellung.\n"
 92	"Änderung Ihrer Einstellungen für Liste %s ist fehlgeschlagen.\n"
 260	"\
-Jemand (hoffentlich Sie) hat darum gebeten, daß Ihre EMail-Adresse\n\
+Jemand (hoffentlich Sie) hat darum gebeten, dass Ihre EMail-Adresse\n\
 zur Liste '%s' hinzugefügt wird.\n\
 Wenn Sie die Liste abonnieren wollen,\n\
 \n\
@@ -207,7 +207,7 @@ ODER\n\
 Wenn es sich um einen Irrtum handelt, ignorieren Sie diese\n\
 Nachricht einfach.\n"
 261	"\
-Jemand (hoffentlich Sie) hat darum gebeten, daß Ihre EMail-Adresse\n\
+Jemand (hoffentlich Sie) hat darum gebeten, dass Ihre EMail-Adresse\n\
 aus der Liste '%s' gelöscht wird.\n\
 Wenn Sie das Abonnement aufheben wollen,\n\
 \n\
@@ -222,7 +222,7 @@ Wenn es sich um einen Irrtum handelt, ignorieren Sie diese\n\
 Nachricht einfach.\n"
 262	"Die S/MIME-Signature wurde erfolgreich überprüft"
 263	"Die Nachricht nicht vom Typ multipart/signed or Sympa konnte die\n\
-Signature nicht überprüfen (Sympa kann Signatures nicht prüfen, wenn ein Kommando im Subject benutzt wird)."
+Signatur nicht überprüfen. (Sympa kann Signaturen nicht prüfen, wenn ein Kommando im Subject benutzt wird.)"
 
 $set 7	Commands syslog messages (Commands.pm)
 
@@ -235,13 +235,13 @@ folgenden Befehl zur Liste hinzufügen:\n\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
 6	"Willkommen bei %s!"
 7	"Datei"
-9	"Zusammenfaßung für Liste %s"
-12	"Um die angeh\"angte Nachricht über Liste %s zu verteilen:\n\
+9	"Zusammenfassung für Liste %s"
+12	"Um die angehängte Nachricht über Liste %s zu verteilen:\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 Oder: Schicken Sie eine Nachricht an %s mit folgendem Subject:\n\
 CONFIRM %s\n"
 13	"Inhaltsverzeichnis" 
-14	"Ende der Zusammenfaßung für Liste %s"
+14	"Ende der Zusammenfassung für Liste %s"
 15	"%d Nachrichten in Liste %s müssen überprüft werden" 
 16	"Authentifizierung erforderlich"
 21	"Zur Information: %s list %s von %s %s"
@@ -249,28 +249,28 @@ CONFIRM %s\n"
 23	"WARNUNG: %s %s konnte das Abonnement der Liste %s nicht aufheben,\n\
 weil die Adresse nicht gefunden wurde.\n\
 (Sie können diesem Benutzer vielleicht helfen.)\n"
-24	"UNsubscription-Befehl für Liste %s"
+24	"UNsubscription-Befehl (Abokündigung) für Liste %s"
 25	"Hallo Verwalter der Liste %s,\n\n\
-ein Benutzer hat darum gebeten, daß sein Abonnement der Liste aufgehoben\n\
+ein Benutzer hat darum gebeten, dass sein Abonnement der Liste aufgehoben\n\
 wird. Wenn das in Ordnung ist, können Sie ihn mit dem folgenden Befehl\n\
 aus der Liste löschen:\n\n\
 mailto:%s?subject=auth%%20%s%%20DEL%%20%s%%20%s\n\n\
 Oder senden Sie eine Mail an %s mit folgendem Betreff:\n\n\
 AUTH %s DEL %s %s\n"
 26	"Zur Information: Der Befehl %s list %s von %s %s\n\
-wurde von %s bestätigt. (kein Eingreifen nötig)\n"
+wurde von %s bestätigt (kein Eingreifen nötig).\n"
 27	"Der Anteil ungültige Mailadressen in Liste %s beträgt %d%%.\n\n\
 Sie sollten die ungültigen Adressen löschen:\n\
 %s/reviewbouncing/%s"
 28	"WARNUNG: Zu viele ungültige Mailadressen in Liste %s"
-29	"Einladung für Liste %s"
+29	"Einladung zur Liste %s"
 30	"Sie sind eingeladen worden, die Liste %s zu abonnieren"
-31	"Zusammenfaßung von Liste %s"
+31	"Zusammenfassung von Liste %s"
 
 $set 11	Messages used by the smtp module.
 1	"Ihr System folgt nicht dem POSIX P1003.1 Standard oder\n\
 Ihre Perl-Version definiert in der POSIX-Bibliothek die Konstante\n\
-_SC_ARG_MAX nicht. Sie müssen das smtp.pm-Modul anpaßen und der\n\
+_SC_ARG_MAX nicht. Sie müssen das smtp.pm-Modul anpassen und der\n\
 Variablen $max_arg einen Wert zuweisen.\n"
 2	"smtpto konnte keinen Kanal öffnen: %m"
 
@@ -288,20 +288,20 @@ $set 15 Templates files
 1	"Begrüßungsnachricht"
 2	"Abmeldungsnachricht"
 3	"Löschnachricht"
-4	"Nachrichtungenfuß"
+4	"Nachrichtunenfuß"
 5	"Nachrichtenkopf"
 6	"Erinnerungsnachricht"
 7	"Moderator-Ablehnungs-Nachricht"
 8	"Einladungsnachricht"
 9	"Hilfstext"
-10	"Mailing-Listen-Übersicht"
+10	"Mailinglisten-Übersicht"
 11	"Globale Erinnerungsnachricht"
-12	"Zusammenfaßungsnachricht"
+12	"Zusammenfassungsnachricht"
 13	"Listenbeschreibung"
 14	"Listen-Homepage"
-15	"Listen-Erzeugungs-Anfrage"
-16	"Listen-Erzeugungs-Bestätigung"
-17	"Virus-verseuchte Nachricht"
+15	"Listenerzeugungs-Anfrage"
+16	"Listenerzeugungs-Bestätigung"
+17	"Virusverseuchte Nachricht"
 
 $set 16 parameters titles
 1	"Benutzerkennung"
@@ -316,13 +316,13 @@ $set 16 parameters titles
 10	"Verfall unmoderierter Nachrichten"
 11	"Geheimer Wert zum Erzeugen eindeutiger Schlüssel"
 12	"Erzeugung der Liste"
-16	"Angepaßte Kopfzeile"
-17	"Titel-Markierung (Subject)"
+16	"Angepasste Kopfzeile"
+17	"Titelmarkierung (Subject)"
 18	"Abonnierungsprofil"
 19	"Empfangsmodus"
 20	"Sichbarkeit"
 21	"Wer kann Abonnenten löschen"
-22	"Häufigkeit der Zusammenfaßungen"
+22	"Häufigkeit der Zusammenfassungen"
 23	"Tage"
 24	"Stunde"
 25	"Minute"
@@ -349,8 +349,8 @@ $set 16 parameters titles
 46	"Datenbanktyp"
 47	"entfernter Rechner"
 48	"Datanbankname"
-49	"entfernter Benutzer"
-50	"entferntes Passwort"
+49	"ferner Benutzer"
+50	"fernes Passwort"
 51	"SQL-Abfrage"
 53	"Wer kann Listen-Information ansehen"
 54	"Wer kann neue Abonneten einladen"
@@ -379,7 +379,7 @@ $set 16 parameters titles
 77	"Letze Konfigurationsänderung"
 81	"Benutzerdatenquelle"
 82	"Sichbarkeit der Liste"
-83	"Web-Archiv"
+83	"Webarchiv"
 84	"Zugriffsrechte"
 85	"Rücklaufpfad für Begrüßungen"
 86	"Wer kann anschauen"
