@@ -7413,7 +7413,7 @@ sub _restrict_values {
      }  
 
      unless ($param->{'list'}) {
-	 &error_message('list_required');
+	 &error_message('missing_arg', {'argument' => 'list'});
 	 &wwslog('info','do_rename_list: parameter list missing');
 	 return undef;
      }  

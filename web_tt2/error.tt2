@@ -281,9 +281,6 @@ because you are not allowed to unsubscribe.[%END%]
 [% ELSIF error.msg == 'may_not_create_deleted_dir' %]
 [%|loc%]May not create the deleted directory[%END%]
 
-[% ELSIF error.msg == 'list_required' %]
-[%|loc%]The list parameter is missing[%END%]
-
 [% ELSIF error.msg == 'missing_cert' %]
 [%|loc%]Cannot find certificate for this list[%END%]
 
