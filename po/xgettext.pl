@@ -160,7 +160,7 @@ foreach my $file (@ARGV) {
 
     # Template Toolkit
     $line = 1; pos($_) = 0;
-    while (m!\G.*?\[%\s*\|l(?:oc)?(.*?)\s*%\](.*?)\[%\s*END\s*%\]!sg) {
+    while (m!\G.*?\[%\s*\|l(?:oc)?(.*?)\s*%\](.*?)\[%\-?\s*END\s*\-?%\]!sg) {
 	my ($vars, $str) = ($1, $2);
 	$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
 	$str =~ s/\\'/\'/g; 
