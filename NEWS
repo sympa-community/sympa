@@ -3,6 +3,47 @@
 
 (See Changelog file for the full changes log)
 
+3.3.4b.5	4  Apr 2002
+
+   New features :
+
+	Quotas for shared and archives. New list parameters in 'shared_doc' and
+	'web_archive' paragraphs. New sympa.conf parameters 'default_archive_quota'
+	and 'default_shared_quota'
+
+   Changes :
+
+	wwsympa/wwsympa.fcgi: Review Virtual robots from
+	serveradmin page if Superlistmaster
+
+   Bug fixes:
+
+	src/tools.pl: [Sergy (Yahoo-inc)] fix incorrect file extention
+	
+	src/etc/script/p12topem.pl: Fix: p12topem.pl now working with VRobots
+
+	src/tools.pl: Fix certificate location for list in virtual robot
+
+	Fix digest inclusion of encrypted message
+
+	src/List.pm: Fix wrong list certificate path related to a virtual
+	robot
+
+	wwsympa/wwsympa.fcgi: all pending lists were seen from each robot
+
+	wwsympa/wwsympa.fcgi: [John Douglass] alternative email
+	registering failed (incorrect listname)
+
+	src/List.pm: better synchronization of processes with
+	'stats' file (in partcular total of subscribers)
+
+	src/etc/create_list_templates/private_working_group/config.tpl:
+	[O. Lacroix] : wrong syntax for parameter reply_to
+
+	src/List.pm: return 0 (instead of undef) in send_msg() if no
+	subscribers
+
+
 3.3.4b.4	26 Mar 2002
 
    New features :

@@ -1,3 +1,109 @@
+2002-04-04 13:34  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: don't change cookie_domain if
+	'localhost'
+
+2002-04-04 13:25  salaun
+
+	* src/List.pm: Fix error log
+
+2002-04-04 13:17  salaun
+
+	* src/List.pm: Fix: better synchronization of processes with
+	'stats' file (in partcular total of subscribers)
+
+2002-04-04 08:18  salaun
+
+	* src/tools.pl: Reported by Sergy (Yahoo-inc) : fix incorrect file
+	extention
+
+2002-04-03 13:46  salaun
+
+	* src/sympa.pl: Reverse previous change
+
+2002-04-03 12:15  salaun
+
+	* src/Commands.pm, src/List.pm,
+	src/etc/templates/us/listowner_notification.us.tpl,
+	wwsympa/archived.pl, wwsympa/bounced.pl, wwsympa/wwsympa.fcgi: Fix
+	quota management ; change send_notify_to_owner() parameters
+
+2002-04-01 13:04  salaun
+
+	* doc/sympa.tex.tpl, nls/fr.msg, nls/us.msg, src/Conf.pm,
+	src/List.pm, src/tools.pl,
+	src/etc/templates/us/listowner_notification.us.tpl,
+	wwsympa/archived.pl, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/error.fr.tpl,
+	wwsympa/wws_templates/us/error.us.tpl,
+	wwsympa/wws_templates/us/stats.us.tpl: New features: quotas for
+	shared and archives
+
+2002-04-01 12:36  salaun
+
+	* src/sympa.pl: Change: LDAP module is not required
+
+2002-03-29 17:27  salaun
+
+	* src/List.pm: Fix: return 0 (instead of undef) in send_msg() if no
+	subscribers
+
+2002-03-29 17:25  salaun
+
+	* src/etc/script/p12topem.pl: Fix: p12topem.pl now working with V
+	robots
+
+2002-03-29 13:56  salaun
+
+	* src/alias_manager.pl: [O. Lacroix] Bug fix: fix previous changes
+
+2002-03-29 12:23  salaun
+
+	* src/etc/create_list_templates/private_working_group/config.tpl:
+	[O. Lacroix] Bug fix: wrong syntax for parameter reply_to
+
+2002-03-29 12:04  salaun
+
+	* src/alias_manager.pl: [reported by O. Lacroix] Change: add
+	-editor alias
+
+2002-03-29 10:59  salaun
+
+	* wwsympa/wwsympa.fcgi: Change: Review Virtual robots from
+	serveradmin page if Superlistmaster
+
+2002-03-29 10:52  salaun
+
+	* wwsympa/wwsympa.fcgi: Bug fix: all pending lists were seen from
+	each robot
+
+2002-03-28 16:19  salaun
+
+	* wwsympa/wwsympa.fcgi: [John Douglass] Bug fix: alternative email
+	registering failed (incorrect listname)
+
+2002-03-28 15:55  salaun
+
+	* wwsympa/wwslib.pm: Use do_log instead of printing to STDERR
+
+2002-03-28 14:58  salaun
+
+	* src/tools.pl: Fix certificat location for list in virtual robot
+
+2002-03-28 14:47  salaun
+
+	* src/List.pm: Fix wrong list certificate path related to a virtual
+	robot
+	
+	Fix digest inclusion of encrypted message
+
+2002-03-28 11:27  salaun
+
+	* ChangeLog, doc/sympa.tex.tpl, src/List.pm, src/mail.pm,
+	src/parser.pl, src/sympa.pl, src/task_manager.pl,
+	wwsympa/wwsympa.fcgi: Change: reverse parser changes because of
+	create list problems
+
 2002-03-26 16:04  salaun
 
 	* src/mail.pm, src/sympa.pl, src/task_manager.pl,
