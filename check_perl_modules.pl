@@ -3,6 +3,8 @@
 # Laurent Ghys (Laurent.Ghys@ircam.fr)
 #
 # Changes
+# 04/03/2001 [OS] Add DBD drivers
+#                 Perl 5.005 is required because of CipherSaber
 # 03/02/2001 [SA] Add Cipher:Saber as a optional module
 # 03/08/2000 [O Salaun] arg passed to CPAN::Shell->install() is the module name
 # 02/08/2000 [O Salaun] require CGI 2.52 (Vars())
@@ -19,7 +21,7 @@ use CPAN;
 
 ## assume version = 1.0 if not specified.
 ## 
-%versions = ('perl' => '5.00403',
+%versions = ('perl' => '5.005',
              'Net::LDAP' =>, '0.10', 
 	     'perl-ldap' => '0.10',
 	     'Mail::Internet' => '1.32', 
