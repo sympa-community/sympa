@@ -4469,11 +4469,6 @@ sub do_home {
     
     $param->{'topics'}[int($total / 2)]{'next'} = 1;
 
-    if (($param->{'user'}{'email'} && ! $param->{'user'}{'password'} && ($param->{'auth'} eq 'classic') ) || 
-	($param->{'user'}{'password'} =~ /^init/)) {
-	&message('you_should_choose_a_password');
-    }
-
     return 1;
 }
 
