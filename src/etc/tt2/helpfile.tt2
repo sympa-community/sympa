@@ -47,9 +47,6 @@
  [%|l%]ADD <list> user@host Full name  * To add a user to a list[%END%]
  [%|l%]DEL <list> user@host            * To delete a user from a list[%END%]
  [%|l%]STATS <list>                    * To consult the statistics for <list>[%END%]
- [%|l%]EXPire <list> <old> <delay>     * To begin an expiration process for <list> subscribers who have not confirmed their subscription for <old> days. The subscribers have <delay> days to confirm[%END%]
- [%|l%]EXPireINDex <list>              * Displays the current expiration process state for <list>[%END%]
- [%|l%]EXPireDEL <list>                * To de-activate the expiration process for <list>[%END%]
 
  [%|l%]REMIND <list>                   * Send a reminder message to each subscriber (this is a way to inform anyone what is his real subscribing email).[%END%]
 [% END %]
