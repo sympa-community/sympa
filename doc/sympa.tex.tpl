@@ -410,14 +410,14 @@ Our thanks to all contributors, including:
 
   \item David Lewis who corrected this documentation
 
-  \item Philippe Rivière for its persevering in \Sympa tuning with Postfix.
+  \item Philippe Rivière for his persevering in tuning \Sympa for Postfix.
 
   \item Rapha\"el Hertzog (debian), Jerome Marant (debian) and St\'ephane Poirey (redhat) for
       Linux packages.
 
   \item Loic Dachary for guiding us through the \textit {GNU Coding Standards}
 
-  \item Vincent Mathieu, Lynda amadouche, John Dalbec for there integration
+  \item Vincent Mathieu, Lynda Amadouche, John Dalbec for their integration
 	of \index {LDAP} features in \Sympa.
 
   \item Olivier Lacroix, for all his perseverance in bug fixing.
@@ -449,7 +449,7 @@ Our thanks to all contributors, including:
 
   \item Tung Siu Fai, Wang Jian and Autrijus Tang for their Chinese translations
 
-  \item and also: Manuel Valente, Dominique ROUSSEAU,
+  \item and also: Manuel Valente, Dominique Rousseau,
     Laurent Ghys, Francois Petillon, Guy Brand, Jean Brange, Fabrice
     Gaillard, Herv\'e Maza, Harald Wilhelmi, 
 
@@ -532,10 +532,10 @@ a virtual robot or for the whole site.
 	configuration files.
 	
 	\item \tildedir {sympa/bin/}\\
-	This directory contains the binaries, including CGI. It
+	This directory contains the binaries, including the CGI. It
 	also contains the default scenarios, templates and configuration
 	files as in the distribution.  \tildedir {sympa/bin/} may be completely
-        overwritten by the \unixcmd {make install} So you must not customize
+        overwritten by the \unixcmd {make install} so you must not customize
         templates and scenarii under  \tildedir {sympa/bin/}.
 
 	\item \tildedir {sympa/bin/etc/}\\
@@ -553,7 +553,7 @@ a virtual robot or for the whole site.
 	\item \tildedir {sympa/etc/scenari/}\\
 	This directory will contain your scenarii (or scenarios, if you prefer).
 	If you don't know what the hell a scenario is, refer to \ref {scenarii}\ref {scenarii}, 
-	page~\pageref {scenarii}. Thoses scenarii are default scenarii but you may
+	page~\pageref {scenarii}. Those scenarii are default scenarii but you may look at
         \tildedir {sympa/etc/\samplerobot/scenari/} for default scenarii of \samplerobot
         virtual robot and \tildedir {sympa/expl/\samplelist/scenari} for scenarii
         specific to a particular list 
@@ -579,23 +579,23 @@ a virtual robot or for the whole site.
 
 	\item \tildedir {sympa/etc/\samplerobot}\\
         The directory to define the virtual robot \samplerobot dedicated to
-        managment of all lists of this domain (list describtion of \samplerobot are stored
+        managment of all lists of this domain (list description of \samplerobot are stored
         in \tildedir {sympa/expl/\samplerobot}).
-        Thoses directories for virtual robots has the same structure as  \tildedir {sympa/etc} which is
-        configuration dir of the default robot. 
+        Those directories for virtual robots have the same structure as  \tildedir {sympa/etc} which is
+        the configuration dir of the default robot. 
 
 	\item \tildedir {sympa/expl/}\\
 	\Sympa's working directory.
 
 	\item \tildedir {sympa/expl/\samplelist}\\
 	The list directory (refer to \ref {list-directory}, 
-	page~\pageref {list-directory}). Lists stored in this directory are
-        belong the default robot as defined in sympa.conf file, but a list
+	page~\pageref {list-directory}). Lists stored in this directory
+        belong to the default robot as defined in sympa.conf file, but a list
         can be stored in \tildedir {sympa/expl/\samplerobot/\samplelist} directory and it
         is managed by \samplerobot virtual robot.
 
 	\item \tildedir {sympa/expl/X509-user-certs}\\
-	The directory where Sympa store all user's certificat
+	The directory where Sympa stores all user's certificates
 
 	\item \tildedir {sympa/nls/}\\
 	Internationalization directory. It contains XPG4-compatible
@@ -632,7 +632,7 @@ a virtual robot or for the whole site.
 
 	\item \file {bounced.pl}\\
 	This daemon processes bounces (non-delivered messages),
-	looking for the bad addresses. List owners will later
+	looking for bad addresses. List owners will later
 	access bounce information via \WWSympa. Continuously scans
 	the \dir {bounce/} spool.
 
@@ -644,7 +644,7 @@ a virtual robot or for the whole site.
 
 	\item \file {task\_manager.pl}\\
 	The daemon which manages the tasks : creation, checking, execution. 
-	It regurlaly scans the \dir {task/} spool.
+	It regularly scans the \dir {task/} spool.
 
 	\item \file {queue}\\
 	This small program gets the incoming messages from the aliases
@@ -674,7 +674,7 @@ a virtual robot or for the whole site.
 	owners. See \ref{list-edition}, page~\pageref{list-edition}.
 
 	\item \file {topics.conf}\\
-	Contains the declarations your site's topics (classification in
+	Contains the declarations of your site's topics (classification in
 	\WWSympa), along with their titles. A sample is provided in the
 	\dir {sample/} directory of the sympa distribution.
 	See \ref{topics}, page~\pageref{topics}.
@@ -1052,7 +1052,7 @@ Since version 3.3 of Sympa colors are \file {sympa.conf} parameters (see
 If everything goes smoothly, the \tildedir {sympa/bin/} directory
 will contain various PERL programs as well as the \file {queue}
 binary.  You will remark that this binary has the \index{set-uid-on-exec
-bit} \textit {set-uid-on-exec} bit (owner is the \texttt {sympa}
+bit} \textit {set-uid-on-exec} bit set (owner is the \texttt {sympa}
 user): this is deliberate, and indispensable if \Sympa is to run correctly.
 
 \subsection {Choosing directory locations}
@@ -1147,7 +1147,7 @@ page~\pageref {list-aliases}).
 
 \Sympa keeps a trace of each of its procedures in its log file.
 However, this requires configuration of the \unixcmd {syslogd}
-daemon.  By default \Sympa wil use the \texttt {local1} facility
+daemon.  By default \Sympa will use the \texttt {local1} facility
 (\lparam {syslog} parameter in \file {sympa.conf}).
 WWSympa's logging behaviour is defined by the \lparam {log\_facility}
 parameter in \file {wwsympa.conf} (by default the same facility as \Sympa).\\
@@ -1287,7 +1287,7 @@ the file is of no importance.
         This keyword is \textbf {mandatory}. It is the domain name
 used in the \rfcheader {From} header in replies to administrative
 requests. So the smtp engine (qmail, sendmail, postfix or whatever) must
-recognize this domain as a local adress. The old keyword \cfkeyword {host}
+recognize this domain as a local address. The old keyword \cfkeyword {host}
 is still recognized but should not be used anymore.
 
 
@@ -1305,7 +1305,7 @@ is still recognized but should not be used anymore.
 \subsection {\cfkeyword {listmaster}} 
 
         The list of e-mail addresses  of listmasters (users authorized to perform
-        global  server commands). Listmaster can be defined for each virtual robot.
+        global  server commands). Listmasters can be defined for each virtual robot.
 
         \example {listmaster postmaster@cru.fr,root@cru.fr}
 
@@ -1798,7 +1798,7 @@ is still recognized but should not be used anymore.
 
 \section {Database related}
 
-The following parameters are needed when using an RDBMS, but otherwise are not
+The following parameters are needed when using an RDBMS, but are otherwise not
 required:
 
 \subsection {\cfkeyword {db\_type}}
@@ -1848,8 +1848,8 @@ db_options	mysql_read_default_file=/home/joe/my.cnf
    
 \subsection {\cfkeyword {db\_env}}
 
-	Sets a list of environment variables to set before database connexion.
-	This is a ';' separated list of variable assignment.
+	Gives a list of environment variables to set before database connexion.
+	This is a ';' separated list of variable assignments.
 
 Example for Oracle:
 \begin {quote}
@@ -1863,8 +1863,8 @@ db_env	ORACLE_TERM=vt100;ORACLE_HOME=/var/hote/oracle/7.3.4
 \label{db-additional-subscriber-fields}
 
 	If your \textbf {subscriber\_table} database table has more fields
-	than required by \Sympa (because other softwares work this set of
-	data), you can make \Sympa load these fields. Therefore, you can
+	than required by \Sympa (because other programs access this
+	table), you can make \Sympa load these fields. You will then be able to
 	use them from within mail/web templates and scenario (as [subscriber-\texttt{>}field]).
 
 	This parameter is a comma-separated list.
@@ -1881,8 +1881,8 @@ db_additional_subscriber_fields 	billing_delay,subscription_expiration
 \label{db-additional-user-fields}
 
 	If your \textbf {user\_table} database table has more fields
-	than required by \Sympa (because other softwares work this set of
-	data), you can make \Sympa load these fields. Therefore, you can
+	than required by \Sympa (because other programs access this
+	table), you can make \Sympa load these fields. You will then be able to
 	use them from within mail/web templates (as [user-\texttt{>}field]).
 
 	This parameter is a comma-separated list.
@@ -1925,8 +1925,8 @@ db_additional_user_fields 	address,gender
 \section {S/MIME configuration}
 
 \Sympa can optionally verify and use S/MIME signatures for security purposes.
-In this case, the three first following parameters must be assigned by the listmaster
-(see \ref {smimeconf},  page~\pageref {smimeconf}). The two others are optionnals.
+In this case, the three first following parameters must be set by the listmaster
+(see \ref {smimeconf},  page~\pageref {smimeconf}). The two others are optionnal.
 
 \subsection {\cfkeyword {openssl}}
 
@@ -2172,11 +2172,11 @@ file.
 
 \subsection {Using FastCGI}
 
-\htmladdnormallink {FastCGI} {http://www.fastcgi.com/} is an extention to CGI that provides persistency for CGI programs. It is extemely usefull
-with \WWSympa because it all the intialisations are only performed once, at server startup ; then
-file {wwsympa.fcgi} instances are awaiting clients requests. 
+\htmladdnormallink {FastCGI} {http://www.fastcgi.com/} is an extention to CGI that provides persistency for CGI programs. It is extemely useful
+with \WWSympa since source code interpretation and all initialisation tasks are performed only once, at server startup ; then
+file {wwsympa.fcgi} instances are waiting for clients requests. 
 
-\WWSympa can also work without FastCGI, depending on \textbf {use\_fast\_cgi} parameter 
+\WWSympa can also work without FastCGI, depending on the \textbf {use\_fast\_cgi} parameter 
 (see \ref {use-fastcgi}, page~\pageref {use-fastcgi}).
 
 To run \WWSympa with FastCGI, you need to install :
@@ -2241,7 +2241,7 @@ To run \WWSympa with FastCGI, you need to install :
 	\subsection {bounce\_path}
 	\default {/var/bounce} \\
 	Root directory for storing bounces (non-delivery reports). This parameter
-	is used principally by the \file {bounced.pl} daemon.
+	is used mainly by the \file {bounced.pl} daemon.
 
 	\subsection {bounced\_pidfile}
 	\default {bounced.pid} \\
@@ -2296,7 +2296,7 @@ To run \WWSympa with FastCGI, you need to install :
 	If set to \textbf {insensitive}, WWSympa's password check will be insensitive.
 	This only concerns passwords stored in Sympa database, not the ones in \index {LDAP}.
 	
-	\textbf {Be carefull :} in previous 3.xx versions of Sympa, passworsd were 
+	\textbf {Be careful :} in previous 3.xx versions of Sympa, passwords were 
 	lowercased before database insertion. Therefore changing to case-sensitive 
 	password checking could bring you some password checking problems.
 
@@ -2321,12 +2321,12 @@ MhOnArc is a neat little converter from mime messages to html. Refer to
 \htmladdnormallink {http://www.oac.uci.edu/indiv/ehood/mhonarc.html}
 {http://www.oac.uci.edu/indiv/ehood/mhonarc.html}.
 
-The long mhonarc resource file is used by \WWSympa in a particular way,
-as mhonarc is used to produce not a complete html document, but only part
-(to be included in a complete document starting with \texttt{<}HTML\texttt{>} and terminating
-with \texttt{<}/HTML\texttt{>} ;-) )
-The best way to start is to use the MhOnArc resource file as
-provided in the \WWSympa distribution. 
+The long mhonarc resource file is used by \WWSympa in a particular way.
+MhOnArc is called to produce not a complete html document, but only a part of it
+to be included in a complete document (starting with \texttt{<}HTML\texttt{>} and terminating
+with \texttt{<}/HTML\texttt{>} ;-) ).
+The best way is to use the MhOnArc resource file 
+provided in the \WWSympa distribution and to modify it for your needs.
 
 The mhonarc resource file is named \file {mhonarc-ressources}. 
 You may locate this file either in \begin{enumerate}
@@ -2506,7 +2506,7 @@ distribution (currently scripts are available for MySQL, PostgreSQL, Oracle and 
 \end{itemize}
 
 You can execute the script using a simple SQL shell such as
-mysql or psql.
+mysql, psql or sqlplus.
 
 Example:
 
@@ -2562,22 +2562,21 @@ cat /tmp/my_import_file | sympa.pl --import=my_list
 
 If a mailing list was previously setup to store subscribers into 
 \file {subscribers} file (the default mode in versions older then 2.2b) 
-you can load subscribers data into the sympa database. The simple way
+you can load subscribers data into the sympa database. The easiest way
 is to edit the list configuration using \WWSympa (this requires listmaster 
 privileges) and change the data source from \textbf {file} to \textbf {database}
 ; subscribers data will be loaded into the database at the same time.
  
-If the subscribers file is too big, a timeout may occur with the FastCGI
-(You can set longer timeout with \option {-idle-timeout} option of
-\texttt {FastCgiServer} Apache configuration directive). Then you should
-use \file {load\_subscribers.pl} script.
+If the subscribers file is big, a timeout may occur during the FastCGI execution
+(Note that you can set a longer timeout with the \option {-idle-timeout} option of
+the \texttt {FastCgiServer} Apache configuration directive). In this case, or if you have not installed \WWSympa, you should use the \file {load\_subscribers.pl} script.
 
 
 \section {Extending database table format}
 
 You can easily add other fields to \textbf {subscriber\_table} and
-\textbf {user\_table}, they will not disturb \Sympa because it makes
-clear what field itexpects in SELECT queries.
+\textbf {user\_table}, they will not disturb \Sympa because it lists
+explicitely the field it expects in SELECT queries.
 
 Moreover you can access these database fields from within \Sympa
 (in templates), as far as you list these additional fields in
@@ -2624,7 +2623,7 @@ provide various features based on access to one or more LDAP directories :
 
 \begin{itemize}
 
-	\item{authentication using LDAP directory insteed of sympa internal storage of password}\\
+	\item{authentication using LDAP directory instead of sympa internal storage of password}\\
 
 	\item{named filters used in scenario condition}\\ 
 	
@@ -2636,12 +2635,12 @@ provide various features based on access to one or more LDAP directories :
 \section {Authentication via uid or alternate email}
 \label {ldap-auth}
 
-\Sympa stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication . The  module of \index {LDAP authentication} allows to use \Sympa in intranet without duplicating the user's passwords. 
+\Sympa stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of \index {LDAP authentication} allows to use \Sympa in an intranet without duplicating user passwords. 
 
-Then, users can indiferently authenticate with their ldap\_uid, their alternate\_email or their canonic email stored in the \index {LDAP} directory.
+This way users can indifferently authenticate with their ldap\_uid, their alternate\_email or their canonic email stored in the \index {LDAP} directory.
 
 \Sympa gets the canonic email in the \index {LDAP} directory with the ldap\_uid or the alternate\_email.  
-\Sympa will first intend an anonymous bind to the directory to get the user's DN, and then \Sympa will bind with the DN and the user's ldap\_password in order to realise an efficient authentication. This last bind will work only if the good ldap\_password is provided. Indeed the value returned by the bind(DN,ldap\_password) is tested.
+\Sympa will first attempt an anonymous bind to the directory to get the user's DN, then \Sympa will bind with the DN and the user's ldap\_password in order to perform an efficient authentication. This last bind will work only if the good ldap\_password is provided. Indeed the value returned by the bind(DN,ldap\_password) is tested.
 
 
 Example: a person is described by
@@ -2669,7 +2668,7 @@ Example: a person is described by
 
 So Fabrice Rafart can be authenticated with: frafart, Fabrice.Rafart@MaSociete.fr, frafart@MaSociete.fr,Rafart@MaSociete.fr.
 After this operation, the address in the field FROM will be the Canonic email, in this case  Fabrice.Rafart@MaSociete.fr. 
-That means that \Sympa will get this email and use it during all the session until you clearly ask to \Sympa to change your email address via 2 pages : which and pref.
+That means that \Sympa will get this email and use it during all the session until you clearly ask \Sympa to change your email address via the two pages : which and pref.
   
 
 
@@ -2696,11 +2695,11 @@ The \file {sympa/etc/auth.conf} file contains directives in the following format
 
 Comments start with the \texttt {\#} character at the beginning of a line.
   
-Empty lines are also considered as comments and are ignored at the beginning. After the first paragraph they are consideredas paragrahs separators.
+Empty lines are also considered as comments and are ignored at the beginning. After the first paragraph they are considered as paragraphs separators.
 
 There should only be one directive per line, but their order in the file is of no importance.
 
-Thanks to this type of configuration \Sympa is able to consult various directories. So, users who come from different directories will be authenticated thanks to their ldap\_password. Indeed, \Sympa will try to bind on the first directory with the given ldap\_password, if it does not work,  \Sympa will try to bind on the second with the same ldap\_password etc.. This mecanism is useful in the case of homonyms.
+Thanks to this type of configuration \Sympa is able to consult various directories. So, users who come from different directories will be authenticated through their ldap\_password. Indeed, \Sympa will try to bind on the first directory with the given ldap\_password. If it does not work,  \Sympa will try to bind on the second with the same ldap\_password, etc. This mechanism is useful in the case of homonyms.
 
 
 Example :
@@ -2742,7 +2741,7 @@ ldap
         This keyword is \textbf {mandatory}. It is the domain name
 	used in order to bind to the directory and then to extract informations.
 	You must mention the port number after the server name.
-	The replication is also taken in charge, then the different servers are comma separated.
+	Server replication is supported by listing several servers separated by commas.
 
         Example :
 	\begin {quote}
@@ -2758,20 +2757,20 @@ ldap
 \item{timeout}\\ 
 	
 	It corresponds to the timelimit in the Search fonction. A timelimit that restricts the maximum 
-	time (in seconds) allowed for a search. A value of 0, and the default, means that no timelimit
+	time (in seconds) allowed for a search. A value of 0 (the default), means that no timelimit
         will be requested.
  
 \item{suffix}\\ 
 
-	The root of the DIT (Directory Information Tree).The DN that is the base object entry relative 
+	The root of the DIT (Directory Information Tree). The DN that is the base object entry relative 
 	to which the search is to be performed. 
 
         \example {dc=university,dc=fr}
 
 \item{get\_dn\_by\_uid\_filter}\\
 	
-	You define the search filter corresponding to the ldap\_uid. (RFC 2254 compliant).
-	If you want to apply the filter on the user, mention him with the variable ' [sender] '. It would work with every
+	Defines the search filter corresponding to the ldap\_uid. (RFC 2254 compliant).
+	If you want to apply the filter on the user, use the variable ' [sender] '. It will work with every
 	type of authentication (uid, alternate\_email..). 
 	  
 	Example :
@@ -2786,8 +2785,8 @@ ldap
 	
 \item{get\_dn\_by\_email\_filter}\\
 
-	You define the search filter corresponding to the emails (canonic and alternative).(RFC 2254 compliant). 
-	If you want to apply the filter on the user, mention him with the variable ' [sender] '. It would work with every
+	Defines the search filter corresponding to the email addresses (canonic and alternative).(RFC 2254 compliant). 
+	If you want to apply the filter on the user, use the variable ' [sender] '. It will work with every
 	type of authentication (uid, alternate\_email..). 
 
  		Example: a person is described by
@@ -2834,17 +2833,17 @@ ldap
 
 \item{email\_attribute}\\
 	
-	The name of the attribute for the canonic email in your directory : for instance mail, canonic\_email, canonic\_add	   res ...
+	The name of the attribute for the canonic email in your directory : for instance mail, canonic\_email, canonic\_address ...
 	In the previous example the canonic email is 'mail'.
 
 		 
 \item{alternate\_email\_attribute}\\
 
-	The name of the attribute for the alternate email in your directory : for instance alternate\_email, mailalternatea	   ddress, ...
+	The name of the attribute for the alternate email in your directory : for instance alternate\_email, mailalternateaddress, ...
 	You make a list of these attributes separated by commas.
 
-	With this list \Sympa creates a cookie which contains various informations : the user is authenticated via Ldap or 	   not, his alternate email. To store the alternate email is interesting when you want to canonify your preferences an	      d subscriptions. 
-	That is to say  you want to use a unique adress in User\_table and Subscriber\_table which is the canonic email.
+	With this list \Sympa creates a cookie which contains various information : the user is authenticated via Ldap or not, his alternate email. To store the alternate email is interesting when you want to canonify your preferences and subscriptions. 
+	That is to say you want to use a unique address in User\_table and Subscriber\_table which is the canonic email.
 
 \item{scope}\\
 
@@ -2875,9 +2874,9 @@ As a consequence, you can grant privileges in a list to people belonging to an \
 	
 \subsection {Definition}
 
-	People are selected thanks to an \index {LDAP filter} defined in a configuration file. This file must have the extension '.ldap'.It is stored in \tildedir {sympa/etc/search\_filters/}.
+	People are selected through an \index {LDAP filter} defined in a configuration file. This file must have the extension '.ldap'.It is stored in \tildedir {sympa/etc/search\_filters/}.
 	
-	You must mention many informations in order to create a Named Filter:
+	You must give several informations in order to create a Named Filter:
 
 \begin{itemize}
 
@@ -2892,10 +2891,10 @@ As a consequence, you can grant privileges in a list to people belonging to an \
 	But you must absolutely take into account the first part of the filter which is:
 	('mail\_attribute' = [sender]) as shown in the example. you will have to replce 'mail\_attribute' by the name 
 	of the attribute for the email.
-	So \Sympa verifies if the user belongs to the category of people defined in the filter. 
+	\Sympa verifies if the user belongs to the category of people defined in the filter. 
 	
 	\item{scope}\\
-	By default the search is performed on the whole tree below the specified base object. This may be chaned by specify	   ing a scope :
+	By default the search is performed on the whole tree below the specified base object. This may be changed by specifying a scope :
 
 	\begin{itemize}
 		\item{base} : Search only the base object.
@@ -2972,8 +2971,8 @@ is compatible with S/MIME signatures, as long as it respects the MIME structure 
 incoming messages. You are right. Even Majordomo can distribute a signed message!
 As \Sympa provides MIME compatibility, you don't need to do
 anything in order to allow subscribers to verify signed messages distributed
-through a list. This is not an issue at all, since any processes that
-distribute messages  are compatible with end user
+through a list. This is not an issue at all, since any processe that
+distributes messages  is compatible with end user
 signing processes. Sympa simply skips the message footer attachment
 (ref \ref {messagefooter}, page~\pageref {messagefooter}) to prevent any
 body corruption which would break the signature.
@@ -3113,7 +3112,7 @@ message can be read by the recipient only if he or she is the owner of the priva
 key associated with the certificate.
 Consequently, the only way to encrypt a message for a list of recipients is
 to encrypt and send the message for each recipient. This is what S/Sympa
-does when distributing a encrypted message.
+does when distributing an encrypted message.
 
 The S/Sympa encryption feature in the distribution process supposes that sympa
 has received an encrypted message for some list. To be able to encrypt a message
@@ -3209,7 +3208,7 @@ to the Internet domaine of the Virtual robot.
 
 \section {How to create a virtual robot}
 
-You don't need to install several Sympa server. A single \file {sympa.pl} deamon
+You don't need to install several Sympa servers. A single \file {sympa.pl} daemon
 and one or more fastcgi servers can serve all virtual robot. Just configure the 
 server environment in order to accept the new domain definition.
 \begin {itemize}
@@ -3294,7 +3293,7 @@ Only the following parameters can be redefined for a particular robot :
 	\item \cfkeyword {dark\_color}, \cfkeyword {light\_color}, \cfkeyword {text\_color}, \cfkeyword {bg\_color}, \cfkeyword {error\_color}, \cfkeyword {selected\_color}, \cfkeyword {shaded\_color} 
 \end {itemize}
 
-These settings overwrite the equivalent global parameter as defined in \file {/etc/sympa.conf}
+These settings overwrite the equivalent global parameter defined in \file {/etc/sympa.conf}
 for \samplerobot robot ; the main \cfkeyword {listmaster} still has privileges on Virtual
 Robots though. The http\_host parameter is compared by wwsympa with the SERVER\_NAME
 environment variable to recognize which robot is in used. 
@@ -3942,7 +3941,7 @@ include.\texttt{<}action\texttt{>}.header is automatically added to evaluated sc
     \label {loop-detection}
     \index{loop-detection}
 
-\Sympa uses multiple tools to avoid loops in Mailing lists
+\Sympa uses multiple heuristics to avoid loops in Mailing lists
 
 First, it rejects messages coming from a robot (as indicated by the
 From: and other header fields), and messages containing commands.
@@ -4006,15 +4005,15 @@ For instance \file {remind.annual.task}  or \file {remind.semestrial.task}.
 
 \Sympa provides several task models stored in \tildedir {sympa/bin/etc/global\_task\_models} 
   and \tildedir {sympa/bin/etc/list\_task\_models} directories.
-Others can be designed by the list master. 
+Others can be designed by the listmaster. 
 
 A task is global or related to a list.
 
 \subsection {List task creation}
 
-You define in the list config file which model with which version you want to use (see 
+You define in the list config file the model and the version you want to use (see 
 \ref {list-task-parameters}, page~\pageref {list-task-parameters}). Then the task manager daemon will automatically 
-create the task by looking for the appropriate model file in differents directories in the
+create the task by looking for the appropriate model file in different directories in the
 following order :
 
 \begin {enumerate}
@@ -4162,7 +4161,7 @@ will need to create new lists using their favorite text file editor.
 
 This chapter describe how to create a mailing list without using
 web tools. See~\ref {web-ml-creation}, page~\pageref {web-ml-creation} for
-instructions on the use of WWSympa, which is no doubt the easier method.
+instructions on the use of WWSympa, which is no doubt the easiest method.
 
 The only part of list creation requiring system privileges is the declaration of new
 system-wide mail aliases. All the other steps should be performed by the \texttt {sympa} user,
@@ -4178,7 +4177,7 @@ which will ensure that the files created have the correct access permissions.
             {sympa/expl/\samplelist} directory
 
         \item create customized message files (welcome, bye, removed
-          remind, message.header, message.footer) if needed ; in most cases you will probably need at least to create the welcome message.
+          remind, message.header, message.footer) if needed ; in most cases you will have to create at least the welcome message.
 
 \end {itemize}
 
@@ -4603,7 +4602,7 @@ by the task manager and respect the task format. See \ref {tasks}, page~\pageref
 \subsection {remind.annual.task}
 
 Every year \Sympa will send a message (the template \file {remind.tpl}) 
-to all subscribers of the list to remind them their subscription.
+to all subscribers of the list to remind them of their subscription.
 
 \subsection {expire.annual.task}
 
@@ -4614,7 +4613,7 @@ Every month \Sympa will delete subscribers older than one year who haven't answe
 
 You may create \tildefile {sympa/expl/\samplelist/message.header} and
 \tildefile {sympa/expl/\samplelist/message.footer} files. Their content
-is added, either at the beginning or at the end of each message 
+is added, respectively at the beginning and at the end of each message 
 before the distribution process. 
 
 The \lparam {footer\_type} list parameter defines whether to attach the 
@@ -4646,7 +4645,7 @@ parameters may be set by owners. Therefore, a complete
 installation requires some careful planning, although default
 values should be acceptable for most sites.
 
-Some features are already available, others will be shortly, as specified
+Some features are already available, others will be so shortly, as specified
 in the documentation.
 
 \section {List creation}
@@ -4665,13 +4664,13 @@ templates that you can customize (\file {create\_list\_request.tpl} and
 
 \subsection {Who can create lists}
 
-It is defined by \cfkeyword {create\_list} sympa.conf parameter (see \ref {create-list},  
+This is defined by the \cfkeyword {create\_list} sympa.conf parameter (see \ref {create-list},  
 page~\pageref {create-list}). This parameter refers to a \textbf {create\_list} scenario.
-It will determine if the \textit {create list} button is displayed, if it requires
+It will determine if the \textit {create list} button is displayed and if it requires
 a listmaster confirmation.
 
-The scenario can accepts any condition concerning the [sender]
-(ie WWSympa user), and it returns \cfkeyword {reject}, \cfkeyword {do\_it}
+The scenario can accept any condition concerning the [sender]
+(i.e. WWSympa user), and it returns \cfkeyword {reject}, \cfkeyword {do\_it}
 or \cfkeyword {listmaster} as an action.
 
 Only in cases where a user is authorized by the create\_list scenario
@@ -4798,7 +4797,7 @@ Eg: listmaster will not match rules refering to owner or privileged\_owner
 
 \item owners can edit their own attributes (except profile and e-mail)
 
-\item the requestor creating a new list becomes privileged owner
+\item the requestor creating a new list becomes a privileged owner
 
 \item privileged owners can edit any gecos/reception/info attribute
 of any owner
@@ -4899,7 +4898,7 @@ lang cn-big5
 \end {quote}
 
 This parameter defines the language used for the list. It is
-used to initialize a user's lang preference ; \Sympa command
+used to initialize a user's language preference ; \Sympa command
 reports are extracted from the associated message catalog.
 
 See \ref {internationalization}, page~\pageref {internationalization}
@@ -5051,11 +5050,11 @@ sources (list, flat file, result of \index {LDAP} or \index {SQL} query).
 \item  \lparam {user\_data\_source} \texttt {database} 
 
        This mode was been introduced to enable data to be stored
-       in a relational database, in order, for example, for subscriber
-       data to be shared with an HTTP interface, or simply to facilitate
+       in a relational database. This can be used for instance to share subscriber
+       data with an HTTP interface, or simply to facilitate
        the administration of very large mailing lists. It has been
        tested with MySQL, using a list of 200 000 subscribers. 
-       We strongly recommend the use of database in place of text files.
+       We strongly recommend the use of a database in place of text files.
        It will improve performance, and solve possible conflicts between
        \Sympa and \WWSympa. Please refer to the 
        \"\Sympa and its database\" section
@@ -5123,7 +5122,7 @@ is used to begin a paragraph defining the SQL query parameters :
 \label {db-type}
 \lparam {db\_type} \textit {dbd\_name} 
 
-The type of database (mysql, Pg, Oracle, Sybase, CSV ...). This value identifies the PERL
+The database type (mysql, Pg, Oracle, Sybase, CSV ...). This value identifies the PERL
 DataBase Driver (DBD) to be used, and is therefore case-sensitive.
 
 \item
@@ -5142,7 +5141,7 @@ The hostname of the database system.
 \label {connect-options}
 \lparam {connect\_options} \textit {option1=x;option2=y}
 
-These options ar appended to the connect string.
+These options are appended to the connect string.
 This parameter is optional.
 
 Example :
@@ -5296,7 +5295,7 @@ cases where multiple values are returned.
 \default {sub}
 
 By default the search is performed on the whole tree below the specified
-base object. This may be chaned by specifying a scope parameter with one
+base object. This may be changed by specifying a scope parameter with one
 of the following values. 
 \begin{itemize}
 
@@ -5974,7 +5973,7 @@ format (from 0 for Sunday to 6 for Saturday), separated by commas.
 In this example, \Sympa sends digests at 3:30 PM from Monday to Friday.
 
 \textbf {WARNING}: if the sending time is too late, \Sympa may not
-be able to process it. It is essential that \Sympa should scan the digest
+be able to process it. It is essential that \Sympa could scan the digest
 queue at least once between the time laid down for sending the
 digest and 12:00~AM (midnight). As a rule of thumb, do not use a digest time
 later than 11:00~PM.
@@ -6165,7 +6164,7 @@ halt_rate	20
 
 \Sympa maintains 2 kinds of archives: mail archives and web archives.
 
-Mail archives can be retreived via a mail command send to the robot,
+Mail archives can be retrieved via a mail command send to the robot,
 they are stored in \tildedir {sympa/expl/\samplelist/archives/} directory.
 
 Web archives are accessed via the web interface (with access control), they
@@ -6293,9 +6292,9 @@ in their case. The reason Sympa does this is to allow correct URL links
 even when using an HTML document generator (typically Powerpoint) which uses 
 random case for file names!
 
-In order to have better control over the documents in
+In order to have better control over the documents and to enforce security in
 the shared space, each document is linked to a set of specific control information : 
-its access rights. Security is thus ensured.
+its access rights.
 
 A list's shared documents are stored in the \tildedir {sympa/expl/\samplelist/shared}
 directory. 
@@ -6323,18 +6322,18 @@ have the same constraints relating to access control :
 \begin{itemize}
 	\item The read operation :\\
 	\begin{itemize}
-		\item If a directory, open it and list its contents (only those
+		\item If applied on a directory, opens it and lists its contents (only those
 		sub-documents the user is authorized to ``see'').
-		\item If a file, download it, and if a viewable file (\textit {text/plain}, \textit {text/html},
-		or image), display it. 
+		\item If applied on a file, downloads it, and in the case of a viewable file (\textit {text/plain}, \textit {text/html},
+		or image), displays it. 
 	\end{itemize}
-	\item The edit operation :\\
+	\item The edit operation allows :\\
 		\begin{itemize}
-		\item Subdirectory creation	
+		\item Subdirectory creation
 		\item File uploading
 		\item Description of a document (title and basic information)
 		\item On-line editing of a text file
-		\item Document (file or directory) removal. If a directory, it must be empty.
+		\item Document (file or directory) removal. If on a directory, it must be empty.
 		\end{itemize}
 	These different edit actions are equivalent as regards access rights. Users who are
 	authorized to edit a directory can create a subdirectory or upload a file to it,
@@ -6544,7 +6543,7 @@ The shared web feature has called for some new actions.
 	\item action D\_DESCRIBE\\
 	Describes a document that can be edited.
 	\item action D\_DELETE\\
-	Deletes a document after edit access control. If a folder, it has to be empty.
+	Deletes a document after edit access control. If applied to a folder, it has to be empty.
 	\item action D\_UPLOAD\\
 	Uploads a file into a directory that can be edited.  
 	\item action D\_OVERWRITE\\
@@ -6567,16 +6566,16 @@ The shared web feature has called for some new actions.
 The following template files have been created for the shared web:
 
 \subsection {d\_read.tpl} 
-The default page for reading a document. If a file, displays it (if 
-viewable) or downloads it. If a directory, displays all readable
+The default page for reading a document. If for a file, displays it (if 
+viewable) or downloads it. If for a directory, displays all readable
 subdocuments, each of which will feature buttons corresponding
-to the different actions this sub document allows. If the directory is
+to the different actions this subdocument allows. If the directory is
 editable, displays buttons to describe it, upload a file to it
-and, create a new subdirectory. If access to the document is editable,
+or create a new subdirectory. If access to the document is editable,
 displays a button to edit the access to it. 
 
 \subsection {d\_editfile.tpl} 
-The page used to edit a file. If a text file, allows it to be edited on-line.
+The page used to edit a file. If for a text file, allows it to be edited on-line.
 This page also enables the description of the file to be edited, or another file
 to be substituted in its place.
 
@@ -6679,7 +6678,7 @@ QUIT
 \end{verbatim}
 \end {quote}
 
-Most user commands can have three-letter abbreviations (e.g. \texttt
+Most user commands have three-letter abbreviations (e.g. \texttt
 {REV} instead of \mailcmd {REVIEW}).
 
 \section {User commands}
@@ -6738,7 +6737,7 @@ Most user commands can have three-letter abbreviations (e.g. \texttt
         megabytes received, megabytes sent. This is the contents
         of the \tildefile {sympa/expl/stats} file.
 
-	Access to this command is controlled by \lparam {review} parameter.
+	Access to this command is controlled by the \lparam {review} parameter.
 
     \item  \mailcmd {INDEX} \textit {listname}
         \label {cmd-index}
@@ -6797,7 +6796,7 @@ Most user commands can have three-letter abbreviations (e.g. \texttt
         it in a DIGEST. This DIGEST compiles a group of messages
         from the list, using multipart/digest mime format.
 
-        The sending period for these DIGESTS is regulated by the
+        The sending period for these DIGESTs is regulated by the
         list owner using the \lparam {digest} parameter (see~\ref
         {par-digest}, page~\pageref {par-digest}).  See the \mailcmd
         {SET~LISTNAME~MAIL} command (\ref {cmd-setmail}, page~\pageref
@@ -6853,7 +6852,8 @@ Most user commands can have three-letter abbreviations (e.g. \texttt
 
         Puts subscriber in \textit {urlize} mode for the \textit
         {listname} list.  This mode is used when a subscriber wishes
-        not to receive attached files. The attached files are replaced by an URL	leading to the file stored on the list site. 
+        not to receive attached files. The attached files are replaced by
+        an URL leading to the file stored on the list site. 
         
         See the \lparam {reception} (\ref {par-reception}, page~\pageref
         {par-reception}). 
@@ -6931,7 +6931,7 @@ Most user commands can have three-letter abbreviations (e.g. \texttt
 
         This command is used for silent (mute) processing: no
         performance report is returned for commands prefixed with
-        \mailcmd {QUIET}).
+        \mailcmd {QUIET}.
 
 \end {itemize}
 
@@ -6957,14 +6957,16 @@ These comands are:
 	You can avoid user notification by using the \mailcmd {QUIET}
 	prefix (ie: \mailcmd {QUIET DELETE}).
 
-    \item \mailcmd {REMIND} \textit {listname} or \mailcmd {REMIND} \textit {*}
+    \item \mailcmd {REMIND} \textit {listname}
 	\label {cmd-remind}
 
-        \mailcmd {REMIND} is used usually by list owner in order to send
-        an individual service message to each subscriber. This
-        message is make by parsing the remind.tpl file.
+        \mailcmd {REMIND} is used by list owners in order to send
+        an individual service reminder message to each subscriber. This
+        message is made by parsing the remind.tpl file.
 
-        \mailcmd {REMIND} is used to send to each subscriber of any list a single
+    \item \mailcmd {REMIND} \textit {*}
+
+        \mailcmd {REMIND} is used by the listmaster to send to each subscriber of any list a single
         message with a summary of his/her subscriptions. In this case the 
         message sent is constructed by parsing the global\_remind.tpl file.
         For each list, \Sympa tests whether the list is configured as hidden 
