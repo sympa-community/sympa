@@ -21,7 +21,7 @@
           <TR>
 	[ENDIF]
 	    <TD>
-           <INPUT TYPE=checkbox name="email" value="[sub->NAME],[sub->gecos]">
+           <INPUT TYPE=checkbox name="pending_email" value="[sub->NAME],[sub->gecos]">
 	    </TD>
 	  <TD COLSPAN=2 NOWRAP><FONT SIZE=-1>
 	        [sub->NAME]
