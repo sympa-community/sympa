@@ -4315,7 +4315,7 @@ sub _remove_aliases {
 
     my $alias_manager = '--SBINDIR--/alias_manager.pl';
     if ((-x $alias_manager) 
-	&& (system ("$alias_manager'} del $list->{'name'} $list->{'admin'}{'host'}") == 0)) {
+	&& (system ("$alias_manager del $list->{'name'} $list->{'admin'}{'host'}") == 0)) {
 	&wwslog('info','Aliases removed successfully');
 	$param->{'auto_aliases'} = 1;
     }else {
