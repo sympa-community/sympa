@@ -3,6 +3,115 @@
 
 (See Changelog file for the full changes log)
 
+3.3		09 Jan 2002
+
+   New feature :
+
+	src/List.pm: [John Dalbec] 'include_ldap_2level_query' perform an 
+	LDAP query in 2 times.
+
+	[Michel Bouissou] works with AvpLinux antivirus
+
+	src/tools.pl: [Mathieu Peltier] Now Sympa can work with 'F-Prot'
+	anti-virus
+
+	Chronological list of lists in server_admin web pages
+
+	Purge_list feature in server_admin web pages
+
+	Provide the list of Virtual Robots in server_admin web pages
+
+	[Sergiy	Zhuk] allows Sympa to check listname on SMTP server
+	before list creation. New sympa.conf/robot.conf parameters
+	(list_check_smtp, list_check_suffixes)
+
+	[requested by Sergiy Zhuk] add wwsympa.conf 'password_case' parameter
+
+	New html-newsletter list template
+
+	src/etc/script/sympa.generic: [Harald Wilhelmi] Generic startup
+	script that should work with HPUX.  It SHOULD be installed in
+	/sbin/init.d ; Makefile should check system type (`uname -s` eq
+	HP-UX)
+
+	src/etc/script/logrotate: [Mathieu Peltier] Log rotation script
+
+   Changes :
+
+	List parameters edition (web) is now split into groups of parameters
+
+	Move BAD messages to bad/ subdirectory instead of renaming them.
+	This should fasten the readdir() in spool
+
+	src/List.pm: if subscribers total is empty, query datasource
+
+	[Autrijus Tang] Changes: cn-gb -> cn ; cn-big5 -> tw
+
+	[Autrijus Tang] Updates of Chinese translations
+
+	[requested by GNU] Add copyright notices and license notices to all 
+	source files
+
+	[Jerome	Marant] default welcome messages changed to multipart/alternative 
+	(used to be HTML)
+
+	Write PID on disk as user 'root' ; this allows to create .pid files
+	in /var/run/
+
+	Move configuration vars from Makefile to configure (still available
+	at make time)
+
+   Bug fix:
+
+	[reported by B. De Boursetty] Fix: MS Exchange sends encrypted mail with 
+	a "Content-type: application/pkcs7-mime" header
+
+	wwsympa/wwsympa.fcgi: [reported by Sergiy Zhuk] Security fix: no
+	more tell if part of password was correct ; no more lowercase passwords
+
+	src/List.pm: [reported by John Dalbec] List::send_file did not set the 
+	return path if the recipient(s) is/are passed as an array reference.  
+	This caused problems with my MTA (exim) and results in sympa dying.
+
+	Add 'robot' parameter to List::new() and List::load() This avoid robots from
+	accessing each others lists from the web interface
+
+	wwsympa/wwsympa.fcgi: wrong location of 'subscribers' file when changing
+	datasource (failed for VRobots)
+
+	src/List.pm: bad condition for 'subscribers.db' update
+
+	src/List.pm: 'subscribers.db' could get corrupted ; leading to empty lists 
+	Processes were not benefitting from include cache ('subscribers.db')
+
+	src/List.pm: Allow WWSympa to update subscribers.db if
+	config changed If subscribers.db changed on disk, use it, don't
+	overwrite it
+
+	task_manager.pl, sympa.pl, archived.pl, bounced.pl: [reported by Harald Wilhelmi]
+	Change group before change user
+
+	[Thomas Leavitt]: Typos/spelling/grammatical errors
+
+	[J. Marant] Fix: replace /icons with [icons_url in web templates
+
+	configure.in: [reported by Harald Wilhelmi] use ${prefix}
+	instead of ${ac_default_prefix} This allows to override prefix at
+	configure time (with --prefix=/xxx)
+
+	src/etc/script/sympa: Fix stop and start functions. Stop was
+	using killproc
+
+	wwsympa/wwsympa.fcgi: [reported by V. Mathieu] Bug fix: could not
+	perform a subrequest, providing an LDAP UID (for not identified
+	people).
+
+	src/List.pm: Fix: do not restrict 'db_type' to listed RDBMS for includes
+
+	get_file did not find templates in list dir.  Could not edit list 
+	templates from the web
+
+
 3.3b.4		16 Nov 2001
 
    New feature :
