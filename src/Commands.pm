@@ -1646,7 +1646,7 @@ sub distribute {
 
     ## If the message is crypted decrypt before distribute with crypt attribute
     $is_crypted = 'not_crypted';
-    if (($msg->head->get('Content-Type') =~ /application\/x-pkcs7-mime/i) && ($Conf{'openssl'})) {
+    if (($msg->head->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) && ($Conf{'openssl'})) {
 	    $is_crypted = 'smime_crypted';
 	    $file = '_ALTERED_';
 	    do_log('debug2','xxxxxxxxxxxxxxxxxxxxxxxx is crypted');
