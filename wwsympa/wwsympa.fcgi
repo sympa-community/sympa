@@ -4268,26 +4268,25 @@ sub do_install_pending_list {
 sub _install_aliases {
     &wwslog('info', '_install_aliases()');
 
-    if ($wwsconf->{'alias_manager'}) {
-	&do_log('notice',"$wwsconf->{'alias_manager'} add $list->{'name'} $list->{'admin'}{'host'}");
-	if (-x $wwsconf->{'alias_manager'}) {
-	    system ("$wwsconf->{'alias_manager'} add $list->{'name'} $list->{'admin'}{'host'}") ;
-	    &wwslog('info','Configuration file --CONFIG-- has errors') if ($? == '1') ;
-	    &wwslog('info','Internal error : Incorrect call to alias_manager') if ($? == '2') ;
-	    &wwslog('info','Could not read sympa config file, report to httpd error_log') if ($? == '3') ;
-	    &wwslog('info','Could not get default domain, report to httpd error_log') if ($? == '4') ;
-	    &wwslog('info','Unable to append to alias file') if ($? == '5') ;
-	    &wwslog('info','Unable run newaliases') if ($? == '6') ;
-	    &wwslog('info','Unable to read alias file, report to httpd error_log') if ($? == '7') ;
-	    &wwslog('info','Could not create temporay file, report to httpd error_log') if ($? == '8') ;
-	    &wwslog('info','Some of list aliases already exist') if ($? == '13') ;
-	    &wwslog('info','Can not open lock file, report to httpd error_log') if ($? == '14') ;
-	    &wwslog('info','Aliases installed successfully') if ($? == '0') ;
-	    $param->{'auto_aliases'} = 1;
-	}else {
-	    &wwslog('info','Failed to install aliases: %s', $!);
-	    &error_message('failed_to_install_aliases');
-	}
+    my $alias_manager = '--SBINDIR--/alias_manager.pl';
+    &do_log('notice',"$alias_manager add $list->{'name'} $list->{'admin'}{'host'}");
+    if (-x $alias_manager) {
+	system ("$alias_manager add $list->{'name'} $list->{'admin'}{'host'}") ;
+	&wwslog('info','Configuration file --CONFIG-- has errors') if ($? == '1') ;
+	&wwslog('info','Internal error : Incorrect call to alias_manager') if ($? == '2') ;
+	&wwslog('info','Could not read sympa config file, report to httpd error_log') if ($? == '3') ;
+	&wwslog('info','Could not get default domain, report to httpd error_log') if ($? == '4') ;
+	&wwslog('info','Unable to append to alias file') if ($? == '5') ;
+	&wwslog('info','Unable run newaliases') if ($? == '6') ;
+	&wwslog('info','Unable to read alias file, report to httpd error_log') if ($? == '7') ;
+	&wwslog('info','Could not create temporay file, report to httpd error_log') if ($? == '8') ;
+	&wwslog('info','Some of list aliases already exist') if ($? == '13') ;
+	&wwslog('info','Can not open lock file, report to httpd error_log') if ($? == '14') ;
+	&wwslog('info','Aliases installed successfully') if ($? == '0') ;
+	$param->{'auto_aliases'} = 1;
+    }else {
+	&wwslog('info','Failed to install aliases: %s', $!);
+	&error_message('failed_to_install_aliases');
     }
 
     unless ($param->{'auto_aliases'}) {
@@ -4300,7 +4299,7 @@ sub _install_aliases {
 	$data{'is_default_domain'} = 1 if ($robot == $Conf{'domain'});
 	&parser::parse_tpl (\%data,$template_file,\@aliases);
 	$param->{'aliases'}  = '';
-	while (@aliases) {$param->{'aliases'} .= $_; }
+	foreach (@aliases) {$param->{'aliases'} .= $_; }
     }
 
     return 1;
@@ -4310,15 +4309,14 @@ sub _install_aliases {
 sub _remove_aliases {
     &wwslog('info', '_remove_aliases()');
 
-    if ($wwsconf->{'alias_manager'}) {
-	if ((-x $wwsconf->{'alias_manager'}) 
-	    && (system ("$wwsconf->{'alias_manager'} del $list->{'name'} $list->{'admin'}{'host'}") == 0)) {
-	    &wwslog('info','Aliases removed successfully');
-	    $param->{'auto_aliases'} = 1;
-	}else {
-	    &wwslog('info','Failed to remove aliases: %s', $!);
-	    &error_message('failed_to_remove_aliases');
-	}
+    my $alias_manager = '--SBINDIR--/alias_manager.pl';
+    if ((-x $alias_manager) 
+	&& (system ("$alias_manager'} del $list->{'name'} $list->{'admin'}{'host'}") == 0)) {
+	&wwslog('info','Aliases removed successfully');
+	$param->{'auto_aliases'} = 1;
+    }else {
+	&wwslog('info','Failed to remove aliases: %s', $!);
+	&error_message('failed_to_remove_aliases');
     }
 
     unless ($param->{'auto_aliases'}) {
