@@ -24,7 +24,14 @@
           </FORM>
         </TD>
       </TR>
-      <TR><TD><A HREF="[path_cgi]/get_pending_lists"><B>Listes en attente</B></A></TD></TR>
+      <TR><TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+      <A HREF="[path_cgi]/get_pending_lists">Listes en attente</A>
+       </TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+
+    </TD></TR>
 
       <TR><TD NOWRAP>
         <FORM ACTION="[path_cgi]" METHOD="POST">
@@ -34,7 +41,13 @@
 	</FORM>     
       </TD></TR>
 
-      <TR><TD><A HREF="[path_cgi]/view_translations"><B>Voir les traductions des "templates"</B></A></TD></TR>
+      <TR><TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+        <A HREF="[path_cgi]/view_translations">Voir les traductions des "templates"</A>
+       </TD>
+      [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+      </TD></TR>
       <TR>
         <TD>
 <FONT COLOR="[dark_color]"><B>Reconstruire les archives HTML</B> en utilisant les répertoires  <CODE>arctxt</CODE>.

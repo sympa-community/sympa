@@ -13,11 +13,7 @@
 
 <!-- begin -->
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
 
       [IF action=info]
         <TD WIDTH=100% BGCOLOR="[selected_color]" NOWRAP align=right>
@@ -30,11 +26,7 @@
         </TD>
       [ENDIF]
 
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
 
@@ -47,11 +39,7 @@
  <TR><!-- Panel list info -->
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL234-- COLSPAN=3 BGCOLOR="[bg_color]" NOWRAP align=left>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
         <TD BGCOLOR="[light_color]">
 	  Abonnés: <B>[total]</B><BR>
 	  Propriétaires :
@@ -70,11 +58,7 @@
           <BR><A HREF="[path_cgi]/load_cert/[list]"><font size="-1"><b>Charger le certificat<b></font></A><BR>
           [ENDIF]
         </TD>
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
  </TR>
  <TR><!-- empty line in the left menu panel -->
@@ -86,11 +70,7 @@
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
 
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
 
    [IF action=admin]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Admin liste</b></font></TD>
@@ -108,11 +88,7 @@
         </TD>
    [ENDIF]
 
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
   <TD WIDTH=--COL4--></TD>
@@ -124,11 +100,7 @@
  <TR><!-- Panel admin info -->
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH=--COL234-- COLSPAN=3 BGCOLOR="[bg_color]" NOWRAP align=left>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
         <TD BGCOLOR="[light_color]">
 	   Taux d'adresse en erreur: <B>[bounce_rate]%</B><BR><BR>
 	   [if mod_total=0]
@@ -138,11 +110,7 @@
            [endif]
            <BR>
         </TD>
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+         [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
  </TR>
  <TR>
@@ -160,11 +128,7 @@
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
 
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
       [IF action=suboptions]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Options d'abonné</b></font></TD>
       [ELSE]
@@ -174,11 +138,7 @@
         </b></font>
         </TD>
       [ENDIF]
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
   <TD WIDTH=--COL4-->
@@ -197,11 +157,7 @@
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
       [IF action=signoff]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Désabonnement</b></font></TD>
       [ELSIF user->email]
@@ -218,11 +174,7 @@
         </TD>
       [ENDIF]
 
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
   <TD WIDTH=--COL4--></TD>
@@ -231,20 +183,13 @@
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
         <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
         <font size=-1 COLOR="[bg_color]"><b>Désabonnement</b></font>
         </TD>
-        <TD WIDTH=--COL4--></TD>
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+        <TD WIDTH=--COL4-->
+	</TD>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
  </TR>
       <!-- end may_signoff -->
@@ -257,11 +202,7 @@
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
    [IF action=subrequest]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1><b>Abonnement</b></font></TD>
    [ELSE]
@@ -280,11 +221,7 @@
         </TD>
    [ENDIF]
 
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
   <TD WIDTH=--COL4--></TD>
@@ -298,11 +235,7 @@
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
 
         <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
         <font size=-1><b>
@@ -313,11 +246,7 @@
 	[ENDIF]
         </b></font>
         </TD>
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
   <TD WIDTH=--COL4--></TD>
@@ -334,11 +263,7 @@
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
    [IF action=arc]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right>
           <font size=-1 COLOR="[bg_color]"><b>Archive</b></font>
@@ -368,11 +293,7 @@
         </TD>
    [ENDIF]
 
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
 
   <TD WIDTH=--COL4--></TD>
@@ -388,11 +309,7 @@
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp; </TD>   
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
     [IF action=compose_mail]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1>
          <b>Poster</b></font>
@@ -410,11 +327,7 @@
         </TD>
       [ENDIF]
      [ENDIF]
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
   <TD WIDTH=--COL4--></TD>
  </TR> 
@@ -429,11 +342,7 @@
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp; </TD>   
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
     [IF action=d_read]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right><font color="[bg_color]" size=-1>
          <b>Documents</b></font>
@@ -452,11 +361,7 @@
       [ENDIF]
     [ENDIF]
 
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+      [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
   <TD WIDTH=--COL4--></TD>
  </TR> 
@@ -472,21 +377,13 @@
  <TR>
   <TD WIDTH=--COL1-- BGCOLOR="[dark_color]" NOWRAP>&nbsp;</TD>
   <TD WIDTH="--COL23--" COLSPAN="2" NOWRAP align=right>
-   <TABLE  WIDTH="100%" BORDER="0" CELLPADDING="1" CELLSPACING="2">
-    <TR>
-     <TD BGCOLOR="[dark_color]" VALIGN="top">
-      <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-       <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
         <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
          <font size=-1><b>
          <A HREF="[path_cgi]/review/[list]" >Les abonnés</A>
          </b></font>
 	</TD>
-       </TR>
-      </TABLE>
-     </TD>
-    </TR>
-   </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/list_button_footer.tpl']
   </TD>
   <TD WIDTH=--COL4--></TD>
  </TR>

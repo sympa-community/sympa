@@ -167,15 +167,15 @@ setTimeout('refresh_mom_and_die()',1000);
             </TABLE>
       [ENDIF]
 
-            <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="0" VALIGN="top"><TR><TD BGCOLOR="[dark_color]">
-            <TABLE BORDER="0" WIDTH="100%"  VALIGN="top">
+            <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="0" CELLSPACING="1" VALIGN="top"><TR><TD BGCOLOR="[dark_color]">
+            <TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="1" VALIGN="top">
 
       [IF action_type=admin]
             <TR VALIGN="top">
                 [PARSE admin_menu_template]
             </TR>
             <TR VALIGN="top">
-               <TD colspan="7" BGCOLOR="[bg_color]" >
+               <TD colspan="7" BGCOLOR="[shaded_color]" >
                  [IF active]
                    [PARSE action_template]
                  [ENDIF]
@@ -183,7 +183,7 @@ setTimeout('refresh_mom_and_die()',1000);
             </TR>
 	  
           [ELSE]
-            <TR VALIGN="top"><TD BGCOLOR="[bg_color]">
+            <TR VALIGN="top"><TD BGCOLOR="[shaded_color]">
             [IF active]
               [PARSE action_template]
             [ENDIF]

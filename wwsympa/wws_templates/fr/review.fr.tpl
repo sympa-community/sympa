@@ -15,44 +15,32 @@
 </TD>
 </TR><TR>
 <TD ALIGN="right">
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
-   <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-     <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
          <A HREF="[base_url][path_cgi]/subindex/[list]" ><b>Abonnements en attente</b></A>
          </FONT>
        </TD>
-     </TR>
-   </TABLE></TD></TR>
- </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
 </TD>
 
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
-   <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-     <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
          <A HREF="[base_url][path_cgi]/add_request/[list]" ><b>Ajout multiple</b></A>
          </FONT>
        </TD>
-     </TR>
-   </TABLE></TD></TR>
- </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
 </TD>
 <TD>
- <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR><TD BGCOLOR="[dark_color]" VALIGN="top">
-   <TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="2" VALIGN="top">
-     <TR>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
          <A HREF="[base_url][path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Êtes-vous sûr de vouloir envoyer un rappel d\'abonnement à chacun des [total] abonnés ?'); return false;"><b>Rappel des abonnements</b></A>
          </FONT>
        </TD>
-     </TR>
-   </TABLE></TD></TR>
- </TABLE>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
 </TD>
 
 [ENDIF]
@@ -155,7 +143,7 @@ La sélection est trop large, impossible d'afficher la sélection
 	[IF dark=1]
 	  <TR BGCOLOR="[shaded_color]">
 	[ELSE]
-          <TR>
+          <TR BGCOLOR="[bg_color]">
 	[ENDIF]
 	 [IF is_owner]
 	    <TD>

@@ -70,7 +70,7 @@
 	[IF dark=1]
 	  <TR BGCOLOR="[shaded_color]">
 	[ELSE]
-          <TR>
+          <TR BGCOLOR="[bg_color]">
 	[ENDIF]
 
 	  <TD>
