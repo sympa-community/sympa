@@ -1,7 +1,7 @@
 CDEFS	=	-DCONFIG=\"$(CONFIG)\"
 
 SRC	=	sympa.pl Archive.pm Commands.pm Conf.pm \
-		Language.pm List.pm Log.pm mail.pm msg.pl \
+		Language.pm List.pm Log.pm mail.pm msg.pl Ldap.pm \
 		smtp.pm tools.pl Version.pm parser.pl alias_manager.pl task_manager.pl
 
 all:	queue bouncequeue aliaswrapper

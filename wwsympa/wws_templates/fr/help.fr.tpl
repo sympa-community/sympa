@@ -109,6 +109,7 @@ cette page ne délivre que la liste des listes publiques.
 
 <H2>Login</H2>
 
+[IF ldap_auth=classic]
 Le bouton Login, permet de vous identifier auprès du
 serveur en renseignant votre adresse email et le mot de passe associé.
 Si vous avez oublié votre mot de passe, ou si vous n'en avez jamais eu aucun, le bouton
@@ -128,6 +129,7 @@ Si vous avez oublié votre mot de passe, ou si vous n'en avez jamais eu aucun, le
 de la page d'accueil permet de vous en faire allouer (ou ré-allouer) un.
 
 <BR><BR>
+[ENDIF]
 
 Une fois authentifié un <I>cookie</I> contenant vos information de connexion
 est envoyé à votre navigateur. Votre adresse apparait en haut à gauche de la page.

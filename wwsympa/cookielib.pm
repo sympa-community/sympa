@@ -174,4 +174,66 @@ sub get_mac {
 
 }
 
+sub check_cookie_extern {
+    my ($http_cookie,$secret, $user_email) = @_;
+    my %cookies = parse CGI::Cookie($http_cookie);
+ 
+    ## Scan parameters
+
+    foreach (sort keys %cookies) {
+	my $cookie = $cookies{$_};
+	
+	next unless ($cookie->name =~ /sympa_alt_email/);
+	
+	if ($cookie->value =~ /^(\S+)&(\w+)$/) {
+	    return undef unless (&get_mac($1,$secret) eq $2) ;
+		
+	    my %alt_emails ;
+	    foreach my $element (split(/,/,$1)){
+		my @array = split(/:/,$element);
+		$alt_emails{$array[0]} = $array[1];
+	    }
+	      
+	    unless ($alt_emails{$user_email}) {
+                 return undef;
+	    }
+	      
+	    return (\%alt_emails);
+	}
+	return undef ;
+    }
+}
+
+
+sub set_cookie_extern {
+    my ($secret,$http_domain,%alt_emails) = @_ ;
+    my $expiration;
+    my $cookie;
+    my $value;
+
+    my @mails ;
+    foreach $mail (keys %alt_emails) {
+	my $string = $mail.':'.$alt_emails{$mail};
+	push(@mails,$string);
+    }
+    my $emails = join(',',@mails);
+
+    $value = sprintf '%s&%s',$emails,&get_mac($emails,$secret);
+  
+    if ($http_domain eq 'localhost') {
+	$http_domain="";
+    }
+
+	$cookie = new CGI::Cookie (-name    => 'sympa_alt_email',
+	                           -value   => $value,
+				   -expires => '+1y',
+				   -domain  => $http_domain,
+				   -path    => '/'
+				   );
+    ## Send cookie to the client
+    printf "Set-Cookie: %s\n", $cookie->as_string;
+    #do_log('notice',"set_cookie_extern : %s",$cookie->as_string);
+    return 1;
+}
+
 1;

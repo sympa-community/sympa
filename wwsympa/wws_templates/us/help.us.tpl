@@ -24,6 +24,7 @@ a customized environment with access to the following functions :
 
 <H2>Login</H2>
 
+[IF ldap_auth=classic]
 When authentifying (<A HREF="[path_cgi]/loginrequest">Login</A>), provide your email address and associated password.
 <BR><BR>
 Once are authentified, a <I>cookie</I> containing your login 
@@ -32,6 +33,8 @@ information make your connection to WWSympa last. The lifetime of this
 <A HREF="[path_cgi]/pref">preferences</A>. 
 
 <BR><BR>
+[ENDIF]
+
 You can logout (deletion of the <I>cookie</I>) at any time using 
 <A HREF="[path_cgi]/logout">logout</A>
 function.

@@ -200,6 +200,9 @@ sub load {
 	}
 	$Conf{$i} = $o{$i}[0] || $Default_Conf{$i};
     }
+
+    my @array = &_load_auth();
+    $Conf{'ldap_array'} = [@array];
     
     my $p = 1;
     foreach (split(/,/, $Conf{'sort'})) {
@@ -337,6 +340,56 @@ sub checkfiles {
 
     return undef if ($config_err);
     return 1;
+}
+
+## Loads and parses the authentication configuration file.
+##########################################
+
+sub _load_auth {
+    my $config = '--DIR--/etc/auth.conf';
+    my $line_num = 0;
+    my $config_err = 0;
+    my @paragraphs;
+    my $current_paragraph = {};
+
+    ## Open the configuration file or return and read the lines.
+    unless (open(IN, $config)) {
+	printf STDERR  "load: Unable to open %s: %s\n", $config, $!;
+	return undef;
+    }
+    
+    ## Parsing  auth.conf
+    while (<IN>) {
+ 	
+	$line_num++;
+	next if (/^[\#\;]/o);	
+	
+      	if (/^\s*(\S+)\s*$/o) {$parag_name = $1;}
+	
+	if (/^\s*(\S+)\s+(\S+)\s*$/o){
+	    
+	    my ($keyword,$value) = ($1,$2);
+	    $current_paragraph->{$keyword} = $value;
+	}
+	
+	if (defined($current_paragraph) && (/^\s+$/o)) {
+	    push(@paragraphs,$current_paragraph);
+	    undef $current_paragraph;
+	}
+    }
+  		   	
+    close(IN);
+
+    my @auth;
+    ## Do we have all required values ?
+    for $i ( 0 .. $#paragraphs ) {
+	for $key (sort keys %{ $paragraphs[$i] }) {
+	    $auth[$i]{$key} = $paragraphs[$i]{$key};
+	}
+    }
+    return @auth;
+
+
 }
 
 ## Packages must return true.
