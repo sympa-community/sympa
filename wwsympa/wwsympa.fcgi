@@ -699,7 +699,7 @@ while ($query = &new_loop()) {
 	}
 
 	## Help template
-	$param->{'help_template'} = &tools::get_filename('etc', "wws_templates/help.$param->{'lang'}.tpl", $robot,$list);
+	$param->{'help_template'} = &tools::get_filename('etc', "wws_templates/help_$param->{'help_topic'}.$param->{'lang'}.tpl", $robot,$list);
 
 	## main template
 	my $main = &tools::get_filename('etc', "wws_templates/main.$param->{'lang'}.tpl", $robot,$list);;
