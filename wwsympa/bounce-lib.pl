@@ -6,6 +6,8 @@
 
 use MIME::Parser;
 
+use strict;
+
 ## RFC1891 compliance check
 sub rfc1891 {
     my ($fic, $result, $from) = @_;
@@ -27,7 +29,7 @@ sub rfc1891 {
 
     $$from =~ s/^.*<(.*)>.*$/$1/;
 
-    @parts = $entity->parts();
+    my @parts = $entity->parts();
 
     foreach my $p (@parts) {
 	my $h = $p->head();
@@ -135,6 +137,9 @@ sub anabounce {
     my $entete = 1;
     my $type;
     my %info;
+    my ($qmail, $type_9, $type_18, $exchange, $ibm_vm, $lotus, $sendmail_5, $yahoo, $type_21, $exim, $vines,
+	$mercury_143, $altavista, $mercury_131, $type_31, $type_32,$exim_173, $type_38, $type_39,
+	$type_40, $pmdf, $following_recipients, $postfix);
 
     ## Le champ separateur de paragraphe est un ensemble
     ## de lignes vides
@@ -150,8 +155,9 @@ sub anabounce {
 	    undef $entete;
 
 	    ## Parcour du paragraphe
-	    @paragraphe = split /\n/, $_;
+	    my @paragraphe = split /\n/, $_;
 	    $/ = "\n";
+	    my ($champ_courant, %champ);
 	    foreach (@paragraphe) {
 
 		if (/^(\S+):\s*(.*)$/) {
@@ -173,7 +179,7 @@ sub anabounce {
 	    
 	    $champ{from} =~ s/^.*<(.+)[\>]$/$1/;
 	    $champ{from} =~  y/[A-Z]/[a-z]/;
-	    ($local, $domaine) = split /\@/, $champ{from};
+	    my ($local, $domaine) = split /\@/, $champ{from};
 	    
 	    if ($champ{subject} =~ /^Returned mail: (Quota exceeded for user (\S+))$/) {
 
@@ -191,7 +197,7 @@ sub anabounce {
 	    my $adr;
 	    
 	    ## Parcour du paragraphe
-	    @paragraphe = split /\n/, $_;
+	    my @paragraphe = split /\n/, $_;
 	    $/ = "\n";
 	    foreach (@paragraphe) {
 		
@@ -216,14 +222,14 @@ sub anabounce {
 	    my $adr;
 
 	    ## Parcour du paragraphe
-	    @paragraphe = split /\n/, $_;
+	    my @paragraphe = split /\n/, $_;
 	    $/ = "\n";
 	    foreach (@paragraphe) {
 		
 		if (/^(\d{3}\s)?(\S+|\".*\")\.{3}\s(.+)$/) {
 		    
 		    $adr = $2; 
-		    $cause = $3;
+		    my $cause = $3;
 		    $cause =~ s/^(.*) [\(\:].*$/$1/;
 		    foreach $a(split /,/, $adr) {
 
@@ -235,7 +241,7 @@ sub anabounce {
 		}elsif (/^\d{3}\s(too many hops).*to\s(.*)$/i) {
 
 		    $adr = $2; 
-		    $cause = $1;
+		    my $cause = $1;
 		    foreach $a (split /,/, $adr) {
 
 			$a =~ s/^[\"\<](.+)[\"\>]$/$1/;
@@ -247,7 +253,7 @@ sub anabounce {
 		}elsif (/^\d{3}\s.*\s([^\s\)]+)\.{3}\s(.+)$/) {
 		
 		    $adr = $1; 
-		    $cause = $2;
+		    my $cause = $2;
 		    $cause =~ s/^(.*) [\(\:].*$/$1/;
 		    foreach $a(split /,/, $adr) {
 
@@ -264,7 +270,7 @@ sub anabounce {
 	}elsif (/^Receiver not found:/m) {
 
 	    ## Parcour du paragraphe
-	    @paragraphe = split /\n/, $_;
+	    my @paragraphe = split /\n/, $_;
 	    $/ = "\n";
 	    foreach (@paragraphe) {
 	    
@@ -279,7 +285,7 @@ sub anabounce {
 	    my ($cause,$adr);
 	    
 	    ## Parcour du paragraphe
-	    @paragraphe = split /\n/, $_;
+	    my @paragraphe = split /\n/, $_;
 	    $/ = "\n";
 	    foreach (@paragraphe) {
 	    
@@ -303,7 +309,7 @@ sub anabounce {
 	    my $adr;
 	    
             ## Parcour du paragraphe
- 	    @paragraphe = split /\n/, $_;
+ 	    my @paragraphe = split /\n/, $_;
  	    $/ = "\n";
 	    foreach (@paragraphe) {
 	    
@@ -457,7 +463,7 @@ sub anabounce {
 	     my $adr;
 
 	     ## Parcour du paragraphe
-	     @paragraphe = split /\n/, $_;
+	     my @paragraphe = split /\n/, $_;
 	     $/ = "\n";
 	     foreach (@paragraphe) {
 		 
@@ -484,7 +490,7 @@ sub anabounce {
 	     undef $type_18;
 
 	     ## Parcour du paragraphe
-	     @paragraphe = split /\n/, $_;
+	     my @paragraphe = split /\n/, $_;
 	     $/ = "\n";
 	     foreach (@paragraphe) {
 		 
@@ -500,7 +506,7 @@ sub anabounce {
 	 }elsif (/unable to deliver following mail to recipient\(s\):/m) {
 
 	     ## Parcour du paragraphe
-	     @paragraphe = split /\n/, $_;
+	     my @paragraphe = split /\n/, $_;
 	     $/ = "\n";
 	     foreach (@paragraphe) {
 		 
@@ -540,7 +546,7 @@ sub anabounce {
 
 	     
 	     ## Parcour du paragraphe
-	     @paragraphe = split /\n/, $_;
+	     my @paragraphe = split /\n/, $_;
 	     $/ = "\n";
 	     foreach (@paragraphe) {
 		 
@@ -611,7 +617,7 @@ sub anabounce {
 	     undef $mercury_143;
 
 	     ## Parcour du paragraphe
-	     @paragraphe = split /\n/, $_;
+	     my @paragraphe = split /\n/, $_;
 	     $/ = "\n";
 	     foreach (@paragraphe) {
 
@@ -672,7 +678,7 @@ sub anabounce {
 	     undef $mercury_131;
 
 	     ## Parcour du paragraphe
-	     @paragraphe = split /\n/, $_;
+	     my @paragraphe = split /\n/, $_;
 	     $/ = "\n";
 	     foreach (@paragraphe) {
 
@@ -693,7 +699,7 @@ sub anabounce {
 	     undef $type_31;
 
 	     ## Parcour du paragraphe
-	     @paragraphe = split /\n/, $_;
+	     my @paragraphe = split /\n/, $_;
 	     $/ = "\n";
 	     foreach (@paragraphe) {
 
@@ -714,7 +720,7 @@ sub anabounce {
 	     undef $type_32;
 
 	     ## Parcour du paragraphe
-	     @paragraphe = split /\n/, $_;
+	     my @paragraphe = split /\n/, $_;
 	     $/ = "\n";
 	     foreach (@paragraphe) {
 
@@ -729,7 +735,7 @@ sub anabounce {
 	 }elsif (/^-+Transcript of session follows\s-+$/m) {
 
 	     ## Parcour du paragraphe
-	     @paragraphe = split /\n/, $_;
+	     my @paragraphe = split /\n/, $_;
 	     $/ = "\n";
 	     foreach (@paragraphe) {
 
@@ -774,7 +780,7 @@ sub anabounce {
 	     undef $exim_173;
 
 	     ## Parcour du paragraphe
-	     @paragraphe = split /\n/, $_;
+	     my @paragraphe = split /\n/, $_;
 	     $/ = "\n";
 	     foreach (@paragraphe) {
 
@@ -795,7 +801,7 @@ sub anabounce {
 	     undef $type_38 if /Recipient:/;
 
 	     ## Parcour du paragraphe
-	     @paragraphe = split /\n/, $_;
+	     my @paragraphe = split /\n/, $_;
 	     $/ = "\n";
 	     foreach (@paragraphe) {
 
@@ -863,7 +869,7 @@ sub anabounce {
              undef $pmdf;
 
 	     ## Parcour du paragraphe
-	     @paragraphe = split /\n/, $_;
+	     my @paragraphe = split /\n/, $_;
 	     $/ = "\n";
 	     foreach (@paragraphe) {
 
@@ -897,7 +903,7 @@ sub anabounce {
 	     undef $postfix if /THIS IS A WARNING/; # Pas la peine de le traiter
 
 	     if (/^<(\S+)>:\s(.*)/m) {
-		 ($addr,$error) = ($1,$2);
+		 my ($addr,$error) = ($1,$2);
 
 		 if ($error =~ /^host\s[^:]*said:\s(\d+)/) {
 		     $info{$addr}{error} = $1;
@@ -918,7 +924,7 @@ sub anabounce {
 
     my $count=0;
     ## On met les adresses au clair
-    foreach $a1 (keys %info) {
+    foreach my $a1 (keys %info) {
 
         $count++;
 	my ($a2, $a3);

@@ -177,7 +177,8 @@ while (!$end) {
 	    do_log ('notice',"Ignoring file $queue/$file because empty file");
 	    unlink("$queue/$file");
 	}
-	my $listname = $1;
+	my ($listname, $robot) = split(/\@/,$1);
+	$robot ||= $Conf{'domain'};
 
 	if ($listname eq 'sympa') {
 	    ## In this case return-path should has been set by sympa
@@ -198,7 +199,7 @@ while (!$end) {
 		my $who = "$1\@$2";
 		my $listname = $3 ;
 		my $list = new List ($listname);
-		my $action =&List::request_action ('del','smtp',
+		my $action =&List::request_action ('del','smtp',$robot,
 					{'listname' =>$listname,
 					 'sender' => $Conf{'listmasters'}[0],
 					 'email' => $who});
