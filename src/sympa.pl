@@ -168,6 +168,7 @@ if ($signal ne 'hup' ) {
 	    #       ioctl(TTY, &TIOCNOTTY, 0);
 	    close(TTY);
 	}
+	open(STDIN, ">> /dev/null");
 	open(STDERR, ">> /dev/null");
 	open(STDOUT, ">> /dev/null");
 	setpgrp(0, 0);
