@@ -1059,7 +1059,7 @@ sub virus_infected {
 
     $work_dir = $Conf{'tmpdir'}.'/antivirus/'.$name[$#name];
     
-    unless ( mkdir ($work_dir, 0755)) {
+    unless ( (-d $work_dir) || mkdir ($work_dir, 0755)) {
 	do_log('err', "Unable to create tmp antivirus directory $work_dir");
 	return undef;
     }
