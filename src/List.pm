@@ -6544,6 +6544,7 @@ sub probe_db {
 		      'bounce_subscriber' => 'varchar(35)',
 		      'comment_subscriber' => 'varchar(150)',
 		      'subscribed_subscriber' => "enum('0','1')",
+		      'included_subscriber' => "enum('0','1')",
 		      'include_sources_subscriber' => 'varchar(50)'}
 		     );
 
