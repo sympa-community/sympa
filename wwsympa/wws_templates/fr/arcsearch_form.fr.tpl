@@ -71,7 +71,6 @@
 <DL>
 <DT><b>Etendue de la recherche</b>
 <SELECT NAME="directories" MULTIPLE SIZE=4>    
-<DD>
 
 [FOREACH u IN yyyymm]
 
