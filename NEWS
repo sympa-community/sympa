@@ -3,6 +3,60 @@
 
 (See Changelog file for the full changes log)
 
+4.0.a9		23 December 2003
+
+   New features :
+
+	doc/ : Adding SOAP documentation
+
+	soap/sampleClient.php: New sample PHP SOAP client
+
+   Changes :
+
+	src/tools.pl: More carefull controls in remove_dir subroutine
+
+	wwsympa/wwsympa.fcgi: Purge list now remove archive directory
+
+
+   Bug fixes :
+
+	wwsympa/wwsympa.fcgi: 'failure missing email adresse or	cookie' errors 	
+	when no alt email was defined
+
+	wwsympa/wwsympa.fcgi: Error message : 'Insecure dependency in chdir while running 
+	setuid at Find.pm' Now use addDirectory() and addFile() subroutines
+
+	src/List.pm, wwsympa/wwsympa.fcgi: pending subscriptions for email addresses 
+	containing strange characters (+) failed
+
+	src/etc/mhonarc-ressources, wwsympa/wws_templates/, :
+	request_confirm() calls should be used with submit
+
+	src/etc/mhonarc-ressources: request_confirm() parameters changed
+
+	soap/sympasoap.pm: respect Virtual robots organization
+
+	src/sympa.pl: messages sent from the web interface could not be confirmed 
+	(internal error : configuration for operation send is not yet performed by scenario)
+
+	wwsympa/wwsympa.fcgi: could not validate pending subscriptions
+
+	src/sympa_wizard.pl: default_shared_quota parameter have to be set in sympa.conf, 
+	not in wwsympa.conf
+
+	src/: List.pm, Log.pm, sympa.pl: [BugID 238] Error processing with --dump batch mode
+
+	src/sympa.pl: [BugID 234] $host was declared twice ; now use $listname instead of $name
+
+	src/List.pm: [BugID 235] the predefined variable $* is obsolete in the recent perl releases
+
+	src/List.pm: 'listmaster' was not an accepted action ("Matched unknown action 'listmaster')
+
+	src/List.pm: Fix: need to reconnect to DB to grant privileges
+
+	src/sympa_wizard.pl: sympa_wizard would die with "undefined tolls::xx subroutine"
+
+
 4.0.a8		02 December 2003
 
    New features :
