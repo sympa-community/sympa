@@ -76,14 +76,14 @@ sub SetLang {
     my $locale = shift;
     &do_log('debug', 'Language::SetLang(%s)', $locale);
 
+    my $lang = $locale;
+
     unless ($lang) {
 	&do_log('err','Language::SetLang(), missing locale parameter');
 	return undef;
     }
 
-    my $lang = $locale;
-
-    if (length($locale) == 2) {
+   if (length($locale) == 2) {
 	$locale = $lang2locale{$lang};
     }else {
 	## Get the NLS equivalent for the lang

@@ -2699,11 +2699,12 @@ sub send_global_file {
     }
 
     ## Lang
-    my $lang = $data->{'lang'} = $data->{'user'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
- 
+    $data->{'lang'} = $data->{'lang'} = $data->{'user'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
+
     ## What file   
-    foreach my $f ("$Conf{'etc'}/$robot/tt2/$action.$lang.tt2","$Conf{'etc'}/$robot/tt2/$action.tt2",
-		   "$Conf{'etc'}/tt2/$action.tt2", "--ETCBINDIR--/tt2/$action.tt2") {
+    foreach my $f ("$Conf{'etc'}/$robot/tt2/$action.tt2",
+		   "$Conf{'etc'}/tt2/$action.tt2",
+		   "--ETCBINDIR--/tt2/$action.tt2") {
 	if (-r $f) {
 	    $filename = $f;
 	    last;
@@ -2783,7 +2784,7 @@ sub send_file {
     $data->{'return_path'} ||= "$name-owner\@$self->{'admin'}{'host'}";
 
     ## Lang
-    my $lang = $data->{'user'}{'lang'} || $self->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
+    $data->{'lang'} = $data->{'user'}{'lang'} || $self->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
     foreach my $f ("$self->{'dir'}/$action.tt2",
