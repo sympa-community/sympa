@@ -4267,7 +4267,7 @@ sub _install_aliases {
     }
 
     unless ($param->{'auto_aliases'}) {
-	my $template_file = &tools::get_filename('etc', 'alias.tpl', $robot);
+	my $template_file = &tools::get_filename('etc', 'list_aliases.tpl', $robot);
 	my @aliases ;
 	my %data;
 	$data{'path_to_queue'} = '--MAILERPROGDIR--/queue';

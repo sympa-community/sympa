@@ -69,7 +69,7 @@ use Exporter;
 	      'create_list_request.tpl' => 15,
 	      'list_created.tpl' => 16,
 	      'your_infected_msg.tpl' => 17,
-	      'alias.tpl' => 18
+	      'list_aliases.tpl' => 18
 	      );
 
 ## Defined in RFC 1893

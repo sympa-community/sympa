@@ -64,13 +64,11 @@ unless (-w "$alias_file") {
     
 my %data;
 $data{'date'} =  &POSIX::strftime("%d %b %Y", localtime(time));
-$data{'path_to_queue'} = '--MAILERPROGDIR--/queue';
-$data{'path_to_bouncequeue'} = '--MAILERPROGDIR--/bouncequeue';
-$data{'domain'} = $data{'robot'} = $domain;
-$data{'listname'} = $listname;
+$data{'list'}{'domain'} = $data{'robot'} = $domain;
+$data{'list'}{'name'} = $listname;
 $data{'default_domain'} = $default_domain;
 $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
-my $template_file = &tools::get_filename('etc', 'alias.tpl', $domain);
+my $template_file = &tools::get_filename('etc', 'list_aliases.tpl', $domain);
 my @aliases ;
 &parser::parse_tpl (\%data,$template_file,\@aliases);
 

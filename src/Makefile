@@ -69,7 +69,7 @@ installgeneral_task_models:
 
 installetc:
 	@echo "Installing default configuration ..."
-	cp etc/*.conf etc/*.crt etc/*.tpl $(DESTDIR)$(ETCBINDIR)/
+	cp etc/*.conf etc/*.crt $(DESTDIR)$(ETCBINDIR)/
 	@( \
 		UMASK=0664; export UMASK;\
 		INSTALLDIR=$(ETCBINDIR); export INSTALLDIR;\
@@ -82,6 +82,11 @@ installetc:
 		SHADED_COLOR=$(SHADED_COLOR); export SHADED_COLOR;\
 		cd etc;\
 		$(PERL) ../../subst.pl mhonarc-ressources \
+	)
+	@( \
+		MAILERPROGDIR=$(MAILERPROGDIR); export MAILERPROGDIR;\
+		cd etc;\
+		$(PERL) ../../subst.pl list_aliases.tpl \
 	)
 
 installlisttemplates:

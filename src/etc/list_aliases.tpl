@@ -1,16 +1,16 @@
-#------------------------------ [listname]: list alias created [date]
+#------------------------------ [list->name]: list alias created [date]
 [IF is_default_domain]
-[listname]: "| [path_to_queue] [listname]@[domain]"
-[listname]-request: "| [path_to_queue] [listname]-request@[domain]"
-[listname]-editor: "| [path_to_queue] [listname]-editor@[domain]"
-#[listname]-subscribe: "| [path_to_queue] [listname]-subscribe@[domain]"
-[listname]-unsubscribe: "| [path_to_queue] [listname]-unsubscribe@[domain]"
-[listname]-owner: "| [path_to_bouncequeue] [listname]-unsubscribe@[domain]"
+[list->name]: "| --MAILERPROGDIR--/queue [list->name]@[list->domain]"
+[list->name]-request: "| --MAILERPROGDIR--/queue [list->name]-request@[list->domain]"
+[list->name]-editor: "| --MAILERPROGDIR--/queue [list->name]-editor@[list->domain]"
+#[list->name]-subscribe: "| --MAILERPROGDIR--/queue [list->name]-subscribe@[list->domain]"
+[list->name]-unsubscribe: "| --MAILERPROGDIR--/queue [list->name]-unsubscribe@[list->domain]"
+[list->name]-owner: "| --MAILERPROGDIR--/bouncequeue [list->name]-unsubscribe@[list->domain]"
 [ELSE]
-[domain]-[listname]: "| [path_to_queue] [listname]@[domain]"
-[domain]-[listname]-request: "| [path_to_queue] [listname]-request@[domain]"
-[domain]-[listname]-editor: "| [path_to_queue] [listname]-editor@[domain]"
-#[domain]-[listname]-subscribe: "| [path_to_queue] [listname]-subscribe@[domain]"
-[domain]-[listname]-unsubscribe: "| [path_to_queue] [listname]-unsubscribe@[domain]"
-[domain]-[listname]-owner: "| [path_to_bouncequeue] [listname]-unsubscribe@[domain]"
+[list->domain]-[list->name]: "| --MAILERPROGDIR--/queue [list->name]@[list->domain]"
+[list->domain]-[list->name]-request: "| --MAILERPROGDIR--/queue [list->name]-request@[list->domain]"
+[list->domain]-[list->name]-editor: "| --MAILERPROGDIR--/queue [list->name]-editor@[list->domain]"
+#[list->domain]-[list->name]-subscribe: "| --MAILERPROGDIR--/queue [list->name]-subscribe@[list->domain]"
+[list->domain]-[list->name]-unsubscribe: "| --MAILERPROGDIR--/queue [list->name]-unsubscribe@[list->domain]"
+[list->domain]-[list->name]-owner: "| --MAILERPROGDIR--/bouncequeue [list->name]-unsubscribe@[list->domain]"
 [ENDIF]
