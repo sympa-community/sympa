@@ -428,8 +428,9 @@ build_rh_rpm: clean
 		LIBEXECDIR='/var/sympa/bin'; export LIBEXECDIR; \
 		SAMPLEDIR='/usr/share/sympa/examples'; export SAMPLEDIR; \
                 ETCDIR='/etc/sympa'; export ETCDIR; \
-		$(PERL) ../../../subst.pl sympa.spec \
+		$(PERL) ../../../subst.pl sympa.spec.rh80 \
 	)
+	mv $(RPMTOPDIR)/SPECS/sympa.spec.rh80 $(RPMTOPDIR)/SPECS/sympa.spec
 	@( \
 		cd ..; \
 		tar -cvf $(RPMTOPDIR)/SOURCES/sympa-$(SYMPA_VERSION).tar sympa-$(SYMPA_VERSION); \
