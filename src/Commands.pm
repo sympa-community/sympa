@@ -1435,7 +1435,7 @@ sub set {
 	return 'not_allowed';
     }
     
-    if ($mode =~ /^(mail|nomail|digest|summary|notice|txt|html|urlize)/){
+    if ($mode =~ /^(mail|nomail|digest|summary|notice|txt|html|urlize|not_me)/){
         # Verify that the mode is allowed
         if (! $list->is_available_reception_mode($mode)) {
 	  push @msg::report, sprintf Msg(6, 90, "List %s allows only these reception modes : %s\nYour configuration hasn't been modified.\n"), $which, $list->available_reception_mode;

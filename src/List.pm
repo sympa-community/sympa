@@ -274,10 +274,10 @@ my %alias = ('reply-to' => 'reply_to',
 			  'title_id' => 4,
 			  'group' => 'archives'
 		      },
-	    'available_user_options' => {'format' => {'reception' => {'format' => ['mail','notice','digest','summary','nomail','txt','html','urlize'],
+	    'available_user_options' => {'format' => {'reception' => {'format' => ['mail','notice','digest','summary','nomail','txt','html','urlize','not_me'],
 								      'occurrence' => '1-n',
 								      'split_char' => ',',
-								      'default' => 'mail,notice,digest,summary,nomail,txt,html,urlize',
+								      'default' => 'mail,notice,digest,summary,nomail,txt,html,urlize,not_me',
 								      'title_id' => 89
 								      }
 						  },
@@ -345,7 +345,7 @@ my %alias = ('reply-to' => 'reply_to',
 				 'title_id' => 17,
 				 'group' => 'tuning'
 				 },
-	    'default_user_options' => {'format' => {'reception' => {'format' => ['digest','mail','nomail','summary','notice','txt','html','urlize'],
+	    'default_user_options' => {'format' => {'reception' => {'format' => ['digest','mail','nomail','summary','notice','txt','html','urlize','not_me'],
 								    'default' => 'mail',
 								    'title_id' => 19,
 								    'order' => 1
@@ -1554,6 +1554,9 @@ sub send_msg {
     my $name = $self->{'name'};
     my $admin = $self->{'admin'};
     my $total = $self->{'total'};
+    my @sender_hdr = Mail::Address->parse($hdr->get('From'));
+  
+
    
     unless ($total > 0) {
 	&do_log('info', 'No subscriber in list %s', $name);
@@ -1587,9 +1590,22 @@ sub send_msg {
     my $mixed = ($msg->head->get('Content-Type') =~ /multipart\/mixed/i);
     my $alternative = ($msg->head->get('Content-Type') =~ /multipart\/alternative/i);
  
-    for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
+    my $sender;
+    my $me; 
+   for ( my $user = $self->get_first_user(); $user; $user = $self->get_next_user() ){
        if ($user->{'reception'} =~ /^digest|summary|nomail$/i) {
 	   next;
+       } elsif ($user->{'reception'} eq 'not_me'){
+	   $me =  0;
+	   foreach $sender (@sender_hdr) {
+	       if ($user->{'email'} eq $sender->address){
+		   $me = 1;
+		   next;
+	       }	   
+	       if ($me) {        
+		   next;
+	       }	   
+	  }
        } elsif ($user->{'reception'} eq 'notice') {
            push @tabrcpt_notice, $user->{'email'}; 
        } elsif ($alternative and ($user->{'reception'} eq 'txt')) {
@@ -1665,12 +1681,7 @@ sub send_msg {
    ##Prepare and send message for urlize reception mode
     if (@tabrcpt_url) {
 	my $url_msg = $saved_msg->dup;
-	## Add a footer
-	my $new_msg = _add_parts($url_msg,  $name, $self->{'admin'}{'footer_type'});
-	if (defined $new_msg) {
-	    $url_msg = $new_msg;
-	}    
-
+ 
 	my $expl = $Conf{'home'}.'/'.$name.'/urlized';
     
 	unless ((-d $expl) ||( mkdir $expl)) {
@@ -1696,6 +1707,11 @@ sub send_msg {
 	for (my $i=0 ; $i < $url_msg->parts ; $i++) {
 	    &_urlize_part ($url_msg->parts ($i), $expl, $dir1, $i, $mime_types, $name) ;
 	}
+        ## Add a footer
+	my $new_msg = _add_parts($url_msg,  $name, $self->{'admin'}{'footer_type'});
+	if (defined $new_msg) {
+	    $url_msg = $new_msg;
+	} 
 	$nbr_smtp += &smtp::mailto($url_msg, $from, $encrypt, '_ALTERED_', @tabrcpt_url);
     }
 
@@ -4182,7 +4198,7 @@ sub _load_users_file {
 #	$user{'stats'} = "$1 $2 $3" if (/^\s*stats\s+(\d+)\s+(\d+)\s+(\d+)\s*$/o);
 #	$user{'firstbounce'} = $1 if (/^\s*firstbounce\s+(\d+)\s*$/o);
 	$user{'date'} = $1 if (/^\s*date\s+(\d+)\s*$/o);
-	$user{'reception'} = $1 if (/^\s*reception\s+(digest|nomail|summary|notice|txt|html|urlize)\s*$/o);
+	$user{'reception'} = $1 if (/^\s*reception\s+(digest|nomail|summary|notice|txt|html|urlize|not_me)\s*$/o);
 	$user{'visibility'} = $1 if (/^\s*visibility\s+(conceal|noconceal)\s*$/o);
 
 	push @users, \%user;
@@ -5889,6 +5905,8 @@ sub _urlize_part {
 	$message->print_body (\*OFILE) ;
     }
     close (OFILE);
+    my $file = "$expl/$dir/$filename";
+    my $size = (-s $file);
 	    
     ## Delete files created twice or more (with Content-Type.name and Content-Disposition.filename)
     $message->purge ;	
@@ -5904,7 +5922,10 @@ sub _urlize_part {
 	    $head->delete('Content-Transfer-Encoding');
 	}
 	$head->delete('Content-Disposition');
-	$head->add('Content-type', "message/external-body; access-type=URL; URL=$Conf{'wwsympa_url'}/attach/$list$dir/$filename");
+# it seems that the 'name=' option doesn't work if the file name has got an extension like '.xxx'-> '.' is replaced with '_'
+	$filename =~ s/\./\_/g;
+	$head->add('Content-type', "message/external-body; access-type=URL; URL=$Conf{'wwsympa_url'}/attach/$list$dir/$filename; name=\"$filename\"; size=\"$size\"");
+
 	$message->parts([]);
 	$message->bodyhandle (new MIME::Body::Scalar "$body" );
 

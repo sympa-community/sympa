@@ -3224,12 +3224,19 @@ are:
     \item \lparam {reception}
             \texttt {nomail} $|$
             \texttt {digest} $|$
-            \texttt {summary}
+            \texttt {summary} $|$
+            \texttt {notice} $|$
+ 	    \texttt {txt} $|$
+	    \texttt {html} $|$
+ 	    \texttt {urlize} $|$
+	    \texttt {not\_me} $|$
         \label {par-reception} 
 
         Special receive modes which the subscriber may select.
         Special modes can be either \textit {nomail},  \textit
-        {digest}, or \textit {summary}.  In normal receive mode, the receive attribute
+        {digest}, \textit {summary}, \textit {notice}, \textit {txt},
+        \textit {html}, \textit {urlize}, \textit {not\_me} .
+        In normal receive mode, the receive attribute
         for a subscriber is not displayed.  See the \mailcmd
         {SET~LISTNAME~SUMMARY} (\ref {cmd-setsummary}, 
         page~\pageref {cmd-setsummary}),
@@ -5261,6 +5268,46 @@ Most user commands can have three-letter abbreviations (e.g. \texttt
         and subscribing later on.  See the \mailcmd {SET~LISTNAME~MAIL}
         command (\ref {cmd-setmail}, page~\pageref {cmd-setmail}) and
         the \lparam {reception} (\ref {par-reception}, page~\pageref
+        {par-reception}). 
+
+    \item  \mailcmd {SET} \textit {listname} \texttt {TXT}
+        \label {cmd-settxt}
+
+        Puts subscriber in \textit {txt} mode for the \textit
+        {listname} list.  This mode is used when a subscriber wishes
+        to receive mails sent in both format txt/html and txt/plain 
+        only in txt/plain format.
+        See the \lparam {reception} (\ref {par-reception}, page~\pageref
+        {par-reception}). 
+
+    \item  \mailcmd {SET} \textit {listname} \texttt {HTML}
+        \label {cmd-sethtml}
+
+        Puts subscriber in \textit {html} mode for the \textit
+        {listname} list.  This mode is used when a subscriber wishes
+        to receive mails sent in both format txt/html and txt/plain 
+        only in txt/html format.
+        See the \lparam {reception} (\ref {par-reception}, page~\pageref
+        {par-reception}). 
+
+    \item  \mailcmd {SET} \textit {listname} \texttt {URLIZE}
+        \label {cmd-seturlize}
+
+        Puts subscriber in \textit {urlize} mode for the \textit
+        {listname} list.  This mode is used when a subscriber wishes
+        not to receive attached files. The attached files are replaced by an URL	leading to the file stored on the list site. 
+        
+        See the \lparam {reception} (\ref {par-reception}, page~\pageref
+        {par-reception}). 
+
+    \item  \mailcmd {SET} \textit {listname} \texttt {NOT\_ME}
+        \label {cmd-not-me}
+
+        Puts subscriber in \textit {not\_me} mode for the \textit
+        {listname} list.  This mode is used when a subscriber wishes
+        not to receive back the message that he has sent to the list. 
+        
+        See the \lparam {reception} (\ref {par-reception}, page~\pageref
         {par-reception}). 
 
     \item  \mailcmd {SET} \textit {listname} \texttt {MAIL}

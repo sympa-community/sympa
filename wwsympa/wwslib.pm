@@ -14,7 +14,8 @@ use Exporter;
 		   'txt' => 'txt',
 		   'html'=> 'html',
 		   'urlize' => 'urlize',
-		   'nomail' => 'no mail');
+		   'nomail' => 'no mail',
+		   'not_me' => 'not_me');
 
 ## Cookie expiration periods with corresponding entry in NLS
 %cookie_period = (0     => 1,
