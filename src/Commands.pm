@@ -253,15 +253,6 @@ sub lists {
            }
            close FOOTER;
         }
-    }elsif (-r "--ETCBINDIR--/templates/lists.tpl") {
-    # sa ce else coince par rapport au if, on ne peut jamais passer par le else
-	my $data = {};
-
-	$data->{'lists'} = $lists;
-	$data->{'subject'} = sprintf Msg(6, 82, "Public lists");
-
-	&List::send_global_file('lists', $sender, $robot,  $data);
-
     }else {
         &do_log('info', 'Missing lists.tpl');
         return undef;
