@@ -290,7 +290,8 @@ while (!$end) {
 		my $model_task_parameter = "$model".'_task';
 		
 		if ( $model eq 'sync_include') {
-		    next unless ($list->{'admin'}{'user_data_source'} eq 'include2');
+		    next unless (($list->{'admin'}{'user_data_source'} eq 'include2') &&
+				 ($list->{'admin'}{'status'} eq 'open'));
 		    
 		    create ($current_date, 'INIT', $model, 'ttl', 'list', \%data);
 
