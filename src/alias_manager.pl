@@ -112,7 +112,7 @@ if ($operation eq 'add') {
     }
 
     foreach (@aliases) {
-	print ALIAS "$_";
+	print ALIAS "$_\n";
     }
     close ALIAS;
 
