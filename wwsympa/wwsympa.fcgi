@@ -765,7 +765,6 @@ sub get_parameters {
 
     ## Don't get multiple listnames
     if ($in{'list'}) {
-	&do_log('debug', 'LIST %s', $in{'list'});
 	my @lists = split /\0/, $in{'list'};
 	$in{'list'} = $lists[0];
     }
