@@ -2150,7 +2150,7 @@ antivirus_args		--dumb	--archive
 Exemple with AVP :
 \begin {quote}
 \begin{verbatim}
-antivirus_path  /opt/AVP/kavscanner/
+antivirus_path  /opt/AVP/kavscanner
 antivirus_args  -Y -O- -MP -I0
 \end{verbatim}
 \end {quote}
