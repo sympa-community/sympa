@@ -8924,8 +8924,17 @@ sub do_redirect {
 	 return undef;
      }
 
+     # don't you just HATE it when every single browser seems to want a
+     # different content-type for certificates? order is important, as
+     # everybody calls themselves "mozilla", and opera identifies as
+     # IE if told so (but Opera doesn't do S/MIME anyways, it seems)
+     my ($ua, $ct) = ($ENV{HTTP_USER_AGENT}, 'application/x-x509-email-cert');
+     if ($ua =~ /MSIE/) {
+	 $ct = 'application/pkix-cert';
+     }
+     
      $param->{'bypass'} = 'extreme';
-     printf "Content-type: application/x-x509-email-cert\n\n";
+     printf "Content-type: $ct\n\n";
      foreach my $l (@cert) {
 	 printf "$l";
      }
