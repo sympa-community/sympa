@@ -3824,6 +3824,9 @@ sub do_arcsearch_id {
 
     $param->{'key_word'} = &tools::unescape_chars($in{'key_word'});
     $in{'key_word'} =~ s/\@/\\\@/g;
+    $in{'key_word'} =~ s/\[/\\\[/g;
+    $in{'key_word'} =~ s/\]/\\\]/g;
+   
 
     $search->limit (1);
 
