@@ -1,6 +1,5 @@
 <!-- $Id$ -->
 
-<p></p>
 <table style="width: 100%;" border="0" valign="top">
 <tr>
 [% IF is_owner %]
@@ -10,7 +9,7 @@
       <input type="hidden" name="list" value="[% list %]" />
       <input type="hidden" name="action" value="add" />
       <input type="text" name="email" size="35" />
-      <input type="submit" name="action_add" value="[%|loc%]Add[%END%]" /> [%|loc%]quiet[%END%]<input type="checkbox" name="quiet" />
+      <input type="submit" name="action_add" value="[%|loc%]Add[%END%]" /> <label><input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]</label>
     </form>
 </td>
 </tr>
@@ -90,7 +89,7 @@
 
     <input type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
 
-    <input type="checkbox" name="quiet"> [%|loc%]quiet[%END%]
+    <label><input type="checkbox" name="quiet"> [%|loc%]quiet[%END%]</label>
   [% END %]
   </td>
   <td style="width: 100%;">&nbsp;</td>
@@ -274,7 +273,7 @@
 
 	<input type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
 
-        <input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]
+        <label><input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]</label>
       [% END %]
     </td>
 

@@ -18,23 +18,24 @@
         <td>
           <form action="[% path_cgi %]" method="post">
          
-            <span style="color: [% dark_color %];">Email  </span> [% user.email %]<br /><br />
-            <span style="color: [% dark_color %];">[%|loc%]Name[%END%]</span>
-            <input type="text" name="gecos" size="20" value="[% user.gecos %]"><br /><br />
-            <span style="color: [% dark_color %];">[%|loc%]Language[%END%] </span>
-            <select name="lang">
+	  <table border="0" style="border-spacing: 0.5em;">
+	 		<tr>	 
+				<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];">[%|loc%]Email[%END%] :</th><td>[% user.email %]</td></tr>
+				<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="gecos">[%|loc%]Name[%END%] :</label></th>
+					<td><input type="text" id="gecos" name="gecos" size="20" value="[% user.gecos %]"></th></tr>
+					<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="lang">[%|loc%]Language[%END%] :</label></th>
+            <td><select id="lang" name="lang">
               [% FOREACH l = languages %]
 		<option value='[% l.key %]' [% l.value.selected %]>[% l.value.complete %]</option>
               [% END %]
-            </select>
-            <br /><br />
-            <span style="color: [% dark_color %];">[%|loc%]Connexion expiration period[%END%] </span>
-            <select name="cookie_delay">
+            </select></td></tr>
+						<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="cookie_delay">[%|loc%]Connexion expiration period[%END%] :</label></th>
+            <td><select name="cookie_delay" id="cookie_delay">
               [% FOREACH period = cookie_periods %]
                 <option value="[% period.value %]" [% period.selected %]>[% period.desc %]</option>
               [% END %]
-            </select>
-            <br /><br />
+            </select></td></tr>
+			</table>
             <input type="submit" name="action_setpref" value="[%|loc%]Submit[%END%]" />
           </form>
         </td>
@@ -64,18 +65,22 @@
            <td>
            <form action="[% path_cgi %]" method="post">
         
-            <br /><br /><span style="color: [% dark_color %];">[%|loc%]New email address :[%END%] </span>
-            <br />&nbsp;&nbsp;&nbsp;<input name="email" size="15" />
-            <br /><br /><input type="submit" name="action_change_email" value="[%|loc%]Submit[%END%]" />
+					 <table border="0" style="border-spacing: 0.5em;"> 
+					 <tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="email">[%|loc%]New email address :[%END%]</label></th>
+            <td><input id="email" name="email" size="15" /></td></tr>
+					 </table>
+            <input type="submit" name="action_change_email" value="[%|loc%]Submit[%END%]" />
             </form>
         </td>
         <td>
           <form action="[% path_cgi %]" method="post">
-            <br /><br /><span style="color: [% dark_color %];">[%|loc%]New password :[%END%] </span>
-            <br />&nbsp;&nbsp;&nbsp;<input type="password" name="newpasswd1" size="15" />
-            <br /><span style="color: [% dark_color %];">[%|loc%]Re-enter your new password :[%END%] </span>
-            <br />&nbsp;&nbsp;&nbsp;<input type="password" name="newpasswd2" size="15" />
-            <br /><br /><input type="submit" name="action_setpasswd" value="[%|loc%]Submit[%END%]" />
+					<table border="0" style="border-spacing: 0.5em;">
+					<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="newpasswd1">[%|loc%]New password :[%END%]</label></th>
+					<td><input type="password" name="newpasswd1" id="newpasswd1" size="15" /></td></tr>
+					<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="newpasswd2">[%|loc%]Re-enter your new password :[%END%]</label></th>
+            <td><input type="password" name="newpasswd2" id="newpasswd2" size="15" /></td></tr>
+					</table>
+          <input type="submit" name="action_setpasswd" value="[%|loc%]Submit[%END%]" />
             </form>
 	    [% END %]
 
@@ -109,12 +114,13 @@
       <tr valign="top">
       <td>
 	    <form action="[% path_cgi %]" method="post"> 
-	    <br />
-	    <span style="color: [% dark_color %];">[%|loc%]Other email address :[%END%] </span>
-	    &nbsp;&nbsp;&nbsp;<input name="new_alternative_email" size="15" />
-	    &nbsp;&nbsp;&nbsp;<span style="color: [% dark_color %];">[%|loc%]Password :[%END%] </span>
-	    &nbsp;&nbsp;&nbsp;<input type="password" name="new_password" size="8" />
-            &nbsp;&nbsp;&nbsp;&nbsp; <input type="submit" name="action_record_email" value="[%|loc%]Submit[%END%]" />
+			<table border="0" style="border-spacing: 0.5em;">
+			<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="new_alternative_email">[%|loc%]Other email address :[%END%]</label></th>
+	    <td><input name="new_alternative_email" id="new_alternative_email" size="15" /></td></tr>
+			<tr><th style="text-align: left; font-weight: normal; white-space: nowrap; color: [% dark_color %];"><label for="new_password">[%|loc%]Password :[%END%]</label></th>
+	    <td><input type="password" name="new_password" id="new_password" size="15" /></td></tr>
+			</table>
+      <input type="submit" name="action_record_email" value="[%|loc%]Submit[%END%]" />
             </form>
       </td>
       <td valign="middle">

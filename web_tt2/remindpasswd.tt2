@@ -9,12 +9,12 @@
 	  <input type="hidden" name="action" value="sendpasswd" />
   	  <input type="hidden" name="nomenu" value="[% nomenu %]" />
 
-        <strong>[%|loc%]Your e-mail address[%END%]</strong> :<br />
+        <label><strong>[%|loc%]Your e-mail address[%END%]</strong> :<br />
         [% IF email %]
 	  [% email %]
           <input type="hidden" name="email" value="[% email %]" />
 	[% ELSE %]
 	  <input type="text" name="email" size="20" />
 	[% END %]
-        &nbsp; &nbsp; &nbsp;<input type="submit" name="action_sendpasswd" value="[%|loc%]Send me my password[%END%]" />
+        </label>&nbsp; &nbsp; &nbsp;<input type="submit" name="action_sendpasswd" value="[%|loc%]Send me my password[%END%]" />
       </form>

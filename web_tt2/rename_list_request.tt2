@@ -1,6 +1,6 @@
 	<form action="[% path_cgi %]" method="post">
 	  <input type="hidden" name="list" value="[% list %]" />
-	  [%|loc%]New list name:[%END%] <input name="new_listname" value="" /> 
+	  [%|loc%]New list name:[%END%] <input name="new_listname" value="" /> @
 	[% IF robots %]
            <select name="new_robot">
            [% FOREACH vr = robots %]

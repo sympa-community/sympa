@@ -105,9 +105,9 @@ If it is not listed or if you don't have any, login using your email and passwor
          <tr style="background-color: [% light_color %];">
           <td style="white-space: nowrap; text-align: center;">
      	      <input type="hidden" name="list" value="[% list %]" />
-     	      <span style="font-size: smaller; color: [% selected_color %];"><strong>email address <input type="text" name="email" size="20" value="[% init_email %]" />
-      	      password : </strong>
-              <input type="password" name="passwd" size="8" />&nbsp;&nbsp;
+     	      <label><strong><span style="font-size: smaller; color: [% selected_color %];">[%|loc%]email address[%END%] :</span></strong><input type="text" name="email" size="20" value="[% init_email %]" /></label>
+	      <label><strong><span style="font-size: smaller; color: [% selected_color %];">[%|loc%]password[%END%] :</span></strong><input type="password" name="passwd" size="8" /></label>
+	      &nbsp;&nbsp;
               <input type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
    	    </td>
      	  </tr>
