@@ -2503,17 +2503,19 @@ sub send_msg_digest {
 
     ## Create the list of subscribers in digest mode
     for (my $user = $self->get_first_user(); $user; $user = $self->get_next_user()) {
-	push @tabrcpt, $user->{'email'} 
-	     if $user->{'reception'} eq "digest";
-    }
+	if ($user->{'reception'} eq "digest") {
+	    push @tabrcpt, $user->{'email'};
 
-    ## Create the list of subscribers in summary mode
-    for (my $user = $self->get_first_user(); $user; $user = $self->get_next_user()) {
-	push @tabrcptsummary, $user->{'email'} 
-	     if $user->{'reception'} eq "summary";
+	}elsif ($user->{'reception'} eq "summary") {
+	    ## Create the list of subscribers in summary mode
+	    push @tabrcptsummary, $user->{'email'};
+	}
     }
-
-    return if (($#tabrcptsummary == -1) and ($#tabrcpt == -1));
+    
+    if (($#tabrcptsummary == -1) and ($#tabrcpt == -1)) {
+	&do_log('info', 'No subscriber for sending digest in list %s', $name);
+	return 0;
+    }
 
     my $old = $/;
     $/ = "\n\n" . $msg::separator . "\n\n";
