@@ -83,7 +83,7 @@ unless (&Conf::load( $sympa_conf_file )) {
     &fatal_err('Unable to load sympa config file %s', $sympa_conf_file);
 }
 
-$log_level = $Conf{'log_level'} if ($Conf{'log_level'}); 
+$log_level = $Conf{'log_level'} if ($Conf{'log_level'});
 
 &mail::set_send_spool($Conf{'queue'});
 
@@ -10451,6 +10451,37 @@ sub do_arc_download {
     }
     
     return 1;
+}
+
+sub do_arc_delete {
+  
+    my @abs_dirs;
+    
+    &wwslog('info', "do_arc_delete ($in{'list'})");
+    
+    unless (defined  $in{'directories'}){
+      	&error_message('month_not_found');
+	&wwslog('info','No Archives months selected');
+	return 'arc_manage';
+    }
+    
+    ## if user want to download archives before delete
+    &wwslog('notice', "ZIP: $in{'zip'}");
+    if ($in{'zip'} == 1) {
+	&do_arc_download();
+    }
+  
+    
+    foreach my $dir (split/\0/, $in{'directories'}) {
+	push(@abs_dirs ,$wwsconf->{'arc_path'}.'/'.$in{'list'}.'@'.$param->{'host'}.'/'.$dir);
+    }
+
+    unless (tools::remove_dir(@abs_dirs)) {
+	&wwslog('info','Error while Calling tools::remove_dir');
+    }
+    
+    &message('performed');
+    return 'arc_manage';
 }
 
 sub do_wsdl {
