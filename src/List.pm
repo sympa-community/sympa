@@ -166,7 +166,6 @@ use Log;
 use Conf;
 use mail;
 use Time::Local;
-use MIME::QuotedPrint;
 use MIME::Entity;
 use MIME::Words;
 use MIME::Parser;

@@ -24,7 +24,6 @@ use Conf;
 use Commands;
 use Language;
 use Log;
-use Getopt::Std;
 
 use Mail::Header;
 use Mail::Address;

@@ -10,10 +10,6 @@ use lib '--DIR--/bin';
 use Getopt::Long;
 
 use Mail::Address;
-use Mail::Internet;
-use MIME::Parser;
-use MIME::Entity;
-use MIME::Words;
 use File::Path;
 
 use Commands;
