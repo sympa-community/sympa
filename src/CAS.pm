@@ -4,7 +4,9 @@ package CAS;
 use strict;
 
 my @ISA = qw(Exporter);
-my @EXPORT = qw();
+my @EXPORT = qw($errors);
+
+my $errors;
 
 use Carp;
 
@@ -19,6 +21,11 @@ sub new {
     bless $cas_server, $pkg;
 
     return $cas_server;
+}
+
+## Return module errors
+sub get_errors {
+    return $errors;
 }
 
 ## Use the CAS object as a proxy
@@ -87,11 +94,11 @@ sub _parse_url {
 	}elsif ($1 eq 'https') {
 	    $port = $4 || 443;
 	}else {
-	    print STDERR "Unknown protocol '%s'\n", $1;
+	    $errors = sprintf "Unknown protocol '%s'\n", $1;
 	    return undef;
 	}
     }else {
-	print STDERR "Unable to parse URL '%s'\n", $url;
+	$errors = sprintf "Unable to parse URL '%s'\n", $url;
 	return undef;
     }
 
@@ -131,6 +138,14 @@ sub getServerLoginURL {
     return $self->{'url'}.'/login'.'?service='.&_escape_chars($service);
 }
 
+## Returns non-blocking login URL
+## ie: if user is logged in, return the ticket, otherwise do not prompt for login
+sub getServerGatewayURL {
+    my $self = shift;
+    my $service = shift;
+    
+    return $self->{'url'}.'/login'.'?service='.&_escape_chars($service).'&gateway=1';
+}
 
 sub getServerServiceValidateURL {
     my $self = shift;
@@ -176,7 +191,7 @@ sub validateST {
     my $xml = $self->callCAS($self->getServerServiceValidateURL($service, $ticket, $pgtUrl));
 
     if (defined $xml->{'cas:serviceResponse'}[0]{'cas:authenticationFailure'}) {
-	printf STDERR "Failed to validate Service Ticket %s : %s\n", $ticket, $xml->{'cas:serviceResponse'}[0]{'cas:authenticationFailure'}[0];
+	$errors = sprintf "Failed to validate Service Ticket %s : %s\n", $ticket, $xml->{'cas:serviceResponse'}[0]{'cas:authenticationFailure'}[0];
 	return undef;
     }
 
@@ -189,9 +204,14 @@ sub validateST {
 	    $pgtIou = $xml->{'cas:serviceResponse'}[0]{'cas:authenticationSuccess'}[0]{'cas:proxyGrantingTicket'}[0];
 	}
 	
+	unless (defined $self->{'pgtFile'}) {
+	    $errors = sprintf "pgtFile not defined\n";
+	    return undef;
+	}
+
 	## Check stored PGT
 	unless (open STORE, $self->{'pgtFile'}) {
-	    printf STDERR "Unable to read %s\n", $self->{'pgtFile'};
+	    $errors = sprintf "Unable to read %s\n", $self->{'pgtFile'};
 	    return undef;
 	}
 	
@@ -218,7 +238,7 @@ sub validatePT {
     my $xml = $self->callCAS($self->getServerProxyValidateURL($service, $ticket));
 
     if (defined $xml->{'cas:serviceResponse'}[0]{'cas:authenticationFailure'}) {
-	printf STDERR "Failed to validate Proxy Ticket %s : %s\n", $ticket, $xml->{'cas:serviceResponse'}[0]{'cas:authenticationFailure'}[0];
+	$errors = sprintf "Failed to validate Proxy Ticket %s : %s\n", $ticket, $xml->{'cas:serviceResponse'}[0]{'cas:authenticationFailure'}[0];
 	return undef;
     }
 
@@ -256,7 +276,7 @@ sub storePGT {
     my $pgtId = shift;
     
     unless (open STORE, ">>$self->{'pgtFile'}") {
-	printf STDERR "Unable to write to %s\n", $self->{'pgtFile'};
+	$errors = sprintf "Unable to write to %s\n", $self->{'pgtFile'};
 	return undef;
     }
     printf STORE "%s\t%s\n", $pgtIou, $pgtId;
@@ -273,7 +293,7 @@ sub retrievePT {
     my $xml = $self->callCAS($self->getServerProxyURL($service, $self->{'pgtId'}));
 
     if (defined $xml->{'cas:serviceResponse'}[0]{'cas:proxyFailure'}) {
-	printf STDERR "Failed to get PT : %s\n", $xml->{'cas:serviceResponse'}[0]{'cas:proxyFailure'}[0];
+	$errors = sprintf "Failed to get PT : %s\n", $xml->{'cas:serviceResponse'}[0]{'cas:proxyFailure'}[0];
 	return undef;
     }
 
@@ -295,35 +315,41 @@ sub get_https2{
 	my $trusted_ca_file = $ssl_data->{'cafile'};
 	my $trusted_ca_path = $ssl_data->{'capath'};
 
-	unless ( -r ($trusted_ca_file) ||  (-d $trusted_ca_path )) {
-	    printf STDERR "error : incorrect access to cafile $trusted_ca_file bor capath $trusted_ca_path\n";
+	if (($trusted_ca_file && !(-r $trusted_ca_file)) ||  
+		 ($trusted_ca_path && !(-d $trusted_ca_path))) {
+	    $errors = sprintf "error : incorrect access to cafile $trusted_ca_file or capath $trusted_ca_path\n";
 	    return undef;
 	}
-
+	
 	unless (require IO::Socket::SSL) {
-	    printf STDERR "Unable to use SSL library, IO::Socket::SSL required, install IO-Socket-SSL (CPAN) first\n";
+	    $errors = sprintf "Unable to use SSL library, IO::Socket::SSL required, install IO-Socket-SSL (CPAN) first\n";
 	    return undef;
 	}
 	
 	unless (require LWP::UserAgent) {
-	    printf STDERR "Unable to use LWP library, LWP::UserAgent required, install LWP (CPAN) first\n";
+	    $errors = sprintf "Unable to use LWP library, LWP::UserAgent required, install LWP (CPAN) first\n";
 	    return undef;
 	}
 
 	my $ssl_socket;
 
-	$ssl_socket = new IO::Socket::SSL(SSL_use_cert => 0,
-					  SSL_verify_mode => 0x00,
-					  SSL_ca_file => $trusted_ca_file,
-					  SSL_ca_path => $trusted_ca_path,
-					  PeerAddr => $host,
-					  PeerPort => $port,
-					  Proto => 'tcp',
-					  Timeout => '5'
-					  );
+	my %ssl_options = (SSL_use_cert => 0,
+			   PeerAddr => $host,
+			   PeerPort => $port,
+			   Proto => 'tcp',
+			   Timeout => '5'
+			   );
+
+	$ssl_options{'SSL_ca_file'} = $trusted_ca_file if ($trusted_ca_file);
+	$ssl_options{'SSL_ca_path'} = $trusted_ca_path if ($trusted_ca_path);
+	
+	## If SSL_ca_file or SSL_ca_path => verify peer certificate
+	$ssl_options{'SSL_verify_mode'} = 0x01 if ($trusted_ca_file || $trusted_ca_path);
+	
+	$ssl_socket = new IO::Socket::SSL(%ssl_options);
 	
 	unless ($ssl_socket) {
-	    printf STDERR "error %s unable to connect https://%s:%s/\n",&IO::Socket::SSL::errstr,$host,$port;
+	    $errors = sprintf "error %s unable to connect https://%s:%s/\n",&IO::Socket::SSL::errstr,$host,$port;
 	    return undef;
 	}
 	
@@ -353,8 +379,7 @@ CAS - Client library for CAS 2.0
 
   use CAS;
   my $cas = new CAS(casUrl => 'https://cas.myserver, 
-		    CAFile => '/etc/httpd/conf/ssl.crt', 
-		    CAPath => '/etc/httpd/conf/ssl.crt/ca-bundle.crt',
+		    CAFile => '/etc/httpd/conf/ssl.crt/ca-bundle.crt',
 		    );
 
   my $login_url = $cas->getServerLoginURL('http://myserver/app.cgi');
@@ -380,6 +405,9 @@ CAS - Client library for CAS 2.0
   ## Like in the previous example we should receave a $ST
 
   my $user = $cas->validateST('http://myserver/proxy.cgi', $ST);
+
+  ## Process errors
+  printf STDERR "Error: %s\n", &CAS::get_errors() unless (defined $user);
 
   ## Now we request a Proxy Ticket for the target application
   my $PT = $cas->retrievePT('http://myserver/app.cgi');
