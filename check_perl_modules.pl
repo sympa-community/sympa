@@ -58,7 +58,6 @@ use CPAN;
 	     'File::Spec' => 'File-Spec',
 	     'Regexp::Common' => 'Regexp-Common',
 	     'Locale::TextDomain' => 'libintl-perl',
-	     'AppConfig' => 'AppConfig',
 	     'Template' => 'Template-Toolkit',
 	     'Archive::Zip' => 'Archive-Zip',
 	     );
