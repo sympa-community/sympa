@@ -3819,7 +3819,7 @@ Rules are defined as follows :
 
 [sender] ::= email address of the current user (used on web or mail interface). Default value is 'nobody'
 
-[previous_email] ::= old email when changing subscribtion email in preference page. 
+[previous_email] ::= old email when changing subscription email in preference page. 
 
 [msg_encrypted] ::= set to 'smime' if the message was S/MIME encrypted
 

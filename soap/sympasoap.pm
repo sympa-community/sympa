@@ -622,7 +622,7 @@ sub subscribe {
 	  ->faultdetail("You don't have proper rights");
   }
   if ($action =~ /owner/i) {
-      push @msg::report, sprintf gettext("Your request of subscription/unssubscribtion has been forwarded to the list's
+      push @msg::report, sprintf gettext("Your request of subscription/unssubscription has been forwarded to the list's
 owners for approval. You will receive a notification when you will have
 been subscribed (or unsubscribed) to the list.\n");
       ## Send a notice to the owners.
