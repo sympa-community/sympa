@@ -6,24 +6,44 @@
 <DL>
 <DD>
 [IF p->NAME=subject]
-  Sujet de la liste tel qu'il apparaîtra dans l'annuaire des listes
+C'est une ligne de texte qui apparaît en sous-titre dans la page de présentation de la liste, et qui accompagne le nom de la liste dans le tableau récapitulatif des listes. La limitation à une ligne ne permet évidemment pas une présentation détaillée.
+Pour cela, il faut utiliser la page de présentation de la liste et le champs &quot;info&quot; inclus dans certains messages de service (voir les rubriques
+d'aides correspondantes).
 [ELSIF p->NAME=visibility]
-  Définit si la liste sera visible pour tous, ou si sa visibilité sera
-  restreinte.
+<p>Ce paramètre détermine le comportement du robot en réponse à la commande LISTS d'un non abonné. Il détermine aussi les règles d'accès d'un non
+abonné à la page de présentation de votre liste sur l'interface web ([conf->wwsympa_url]).
+Il ne détermine pas <i>l'aspect </i>de la page de présentation, lequel est défni par les paramètres <font color="#800000">mode d'abonnement</font> et <font color="#800000">listes des abonnés</font> (voir l'aide spécifique à ces paramètres).</p>
+<p>Le paramètre visibilité est défini indépendamment du mode d'abonnement à la liste. Cependant, dans la majorité des cas, il semble logique de mettre les
+listes à abonnement libre (open et open_notify) en option noconceal, et les listes à abonnement fermé (closed) en option conceal. Si votre liste a le mode
+d'abonnement owner, vous pourrez la classer en conceal ou noconceal suivant le degré de publicité que vous souhaitez lui donner.</p>
+<p><font color="#800000"><b>noconceal&nbsp; </b></font>(non confidentielle) : le nom de votre liste et son sujet apparaissent dans la réponse à la commande
+LISTS, même si l'émetteur de la commande n'est pas abonné à la liste. De même, dans l'interface web, le menu &quot;listes publiques&quot; fera
+apparaître votre liste même si le visiteur effectue une connexion anonyme.&nbsp;</p>
+<p><font color="#800000"><b>conceal&nbsp; </b></font>(confidentielle) : le nom de votre liste n'apparaît pas dans la réponse à la commande LISTS d'un non
+abonné, ni dans le menu &quot;listes publiques&quot; de l'interface web, à moins que le visiteur soit abonné à votre liste et établisse une connexion
+non anonyme. Autrement dit, il vous appartient de faire vous-même la publicité de votre liste. Remarquez que le paramètre conceal<font color="#800000">&nbsp;</font> ne s'applique pas aux propriétaires et aux abonnés de la liste. Ainsi, si vous envoyez la commande LISTS sous votre adresse de propriétaire, vous verrez apparaître le nom de votre liste dans la réponse du robot, que votre liste soit publique ou nom.<br>
+<font color="#800000"><i>Important</i></font> : même si la liste est déclarée conceal, il est possible d'obtenir sa page de présentation sur le web, à condition de connaître par ailleurs le nom de la liste. <br>Celle-ci se trouve à l'adresse : [conf->wwsympa_url]/info/nom_de_la_liste.<br>
+Il&nbsp; y a peu de chances qu'une personne ne connaissant pas le nom de la liste tombe sur cette page; il vaut mieux cependant prévoir un texte de
+présentation. Si la personne n'est pas abonnée, elle n'aura pas d'accès à d'autres renseignements que ceux que vous aurez ainsi affichés.</p>
 [ELSIF p->NAME=info]
   Indique qui peut consulter la page d'information (page d'accueil) de la
   liste.
 [ELSIF p->NAME=subscribe]
-  Définit les conditions requises pour s'abonner à cette liste. Principalement,
-  l'abonnement peut être ouvert à tous (libre) ou soumis à autorisation du
-  propriétaire de la liste.<br>
-  Il est conseillé de toujours choisir une option comportant le paramètre "auth",
-  car ainsi le système demandera confirmation par mail au futur abonné avant de l'abonner
-  à la liste. Ceci permet à la fois d'éviter des prises d'abonnement avec une
-  adresse e-mail invalide, et assure que personne ne peut être abonné à la liste
-  contre son gré (par un tiers).
-  Si l'option comporte le paramètre "notify", le propriétaire de la liste sera
-  averti par mail pour chaque nouvel abonnement.
+  <p>Vous pouvez&nbsp; définir le mode d'abonnement à votre liste, celui-ci règle la réponse du robot à une demande d'abonnement (commande SUBscribe)
+ou de désabonnement (commande SIGoff). Le comportement est le même si les demandes sont faites par l'intermédiaire de l'interface web.</p>
+<p><font color="#800000"><b>open</b></font> : l'abonnement est réalisé dès réception d'une commande SUB ou par simple clic sur le bouton
+&quot;abonnement&quot; de l'interface web. Si vous adoptez ce mode d'abonnement avec une liste non modérée, surveillez attentivement les messages postés sur
+la liste pour éviter toute dérive.&nbsp;</p>
+<p><b><font color="#800000">open_notify</font></b> : ce mode est semblable au précédent. La seule différence est que vous serez informé par e-mail de
+l'inscription de chaque nouvel abonné.</p>
+<p><b><font color="#800000">owner</font></b> :<b> </b>seuls les propriétaires peuvent procéder aux abonnements. La commande SUB ou le clic sur le bouton
+&quot;abonnement&quot;&nbsp; ne provoquent pas l'abonnement automatique; le demandeur est informé que sa demande est envoyée aux propriétaires de la
+liste. Pour rendre l'abonnement effectif, ceux-ci devront utiliser la commande ADD&nbsp; ou l'interface web. Ce mode est recommandé pour les listes non
+modérées.</p>
+<p><font color="#800000"><b>closed</b></font> : seuls les propriétaires peuvent procéder aux abonnements. A la différence du mode précédent, la commande SUB
+ne transmet pas de demande d'abonnement aux propriétaires. L'émetteur de la commande SUB est informé que les abonnements à la liste sont fermés. Dans l'interface
+web, le bouton &quot;abonnement &quot; est remplacé par la mention :&quot;Abonnements fermés&quot;. </p>
+
 [ELSIF p->NAME=add]
   Indique qui (en dehors des abonnés eux-mêmes) peut directement inscrire des
   abonnés à la liste. Ce droit est habituellement réservé au propriétaire de la
@@ -42,40 +62,61 @@
   abonnés de la liste. Ce droit est habituellement réservé au propriétaire de la
   liste.
 [ELSIF p->NAME=owner]
-  Définit le ou les propriétaires de la liste.
+<p><font color="#800000"><b>Les propriétaires</b></font> ou gestionnaires sont responsables de la gestion des abonnés de la liste. Ils peuvent consulter le
+fichier des abonnés, ajouter une adresse ou la supprimer soit par courrier soit par l'interface web. Si vous êtes propriétaire privilégié, vous pouvez désigner d'autres propriétaires en écrivant simplement leur adresse dans un des champs. Pour supprimer un propriétaire, effacez le champ correspondant.</p>
+
+<p><font color="#800000"><b>Les propriétaires privilégiés</b></font> peuvent, en plus, éditer les messages de service de la liste, définir certains
+paramètres, désigner d'autres propriétaires ou des modérateurs. Pour des raisons de sécurité, il ne peut y avoir qu'un propriétaire privilégié par
+liste. De plus, son adresse n'est pas éditable par interface web. Si vous désirez modifier une adresse de propriétaire privilégié, adressez-vous au listmaster.</p>
+
 [ELSIF p->NAME=send]
-  Définit qui peut envoyer des messages à la liste.<br>
-  Dans la plupart des cas, le droit de poster dans une liste est :<br>
-  - soit réservé aux abonnés de cette liste, sans modération, et c'est alors le
-    paramètre "private" qui s'applique.<br>
-  - soit soumis à l'approbation du message par les modérateurs de la
-    liste, et c'est alors les paramètres "editor", "editorkey" ou
-    "editorkeyonly" qui s'appliquent.<br>
-  - soit la liste est de type "lettre d'information" issue uniquement des
-    modérateurs, et il faut alors utiliser "newsletter",
-    "newsletterkey" ou "newsletterkeyonly".<br>
-  Les modes d'approbation diffèrent selon la sécurité qu'ils apportent :<br>
-  - editor ou editorkey : Un message provenant (from) du modérateur sera diffusé directement.
-    Un message ne provenant pas du modérateur sera transmis à celui-ci pour
-    approbation. Cependant, l'authenticité de la provenance n'est pas vérifiée,
-    aussi, une forme de falsification est possible.<br>
-  - editorkeyonly : Tout message devra être confirmé par le modérateur (au moyen
-    d'une clé de contrôle qui lui sera envoyée par le serveur), MEME si ce
-    message semble provenir directement du modérateur lui-même. Ceci limite très
-    fortement les possibilités de fraude dans la diffusion de messages, mais rend
-    le processus de modération plus lourd.
+<p>Ce paramètre définit la façon dont les messages envoyés à la liste sont traités ; la liste ci-dessous n'est pas exhaustive.</p>
+
+<p><b><font color="#800000">public :</font></b> tous les messages adressés à la liste, que le contributeur soit abonné ou non, sont diffusés à tous les
+abonnés. Il n'y a pas de modération. Comme vous n'avez aucun contrôle a priori sur l'auteur du message et sur le contenu, vous ne devez utiliser ce mode
+qu'avec prudence et en aucun cas avec une liste à abonnement libre. Exemple d'utilisation : réalisation d'une enquête dont le dépouillement sera assuré
+par un groupe de personnes abonnées à la liste et bien connues de vous.</p>
+
+<p><font color="#800000"><b>private :</b></font> seuls les abonnés peuvent poster un message. Il n'y a pas de modération. Ce mode est recommandé si vous
+voulez animer une liste non modérée. En effet, l'abonnement est une démarche volontaire ; tout abonné est réputé avoir pris connaissance du sujet et des
+règles de fonctionnement de votre liste dans la page de présentation, dans le&nbsp; message de bienvenue adressé aux nouveaux abonnés ou dans les
+messages de rappel d'abonnement.</p>
+
+<p><font color="#800000"><b>editorkeyonly&nbsp; :</b></font> Les messages adressés à la liste, que le contributeur soit abonné ou non, sont envoyés
+d'abord aux modérateurs. Ceux-ci ne peuvent pas modifier les messages : ils peuvent seulement les accepter ou les rejeter. Dans un cas comme dans l'autre,
+le message est retiré de la file d'attente, ce qui revient à dire que le premier modérateur qui prend une décision l'impose aux autres. Si aucun
+modérateur ne prend de décision dans un délai d'une semaine suivant l'arrivée du message, ce dernier est détruit sans être diffusé. Notez que
+les messages postés par les modérateurs sont également soumis à la modération.<br>
+
+<p><font color="#800000"><b>editorkey&nbsp; :</b></font> Ce mode est identique à editorkeyonley, à la différence que les messages des modérateurs sont
+diffusés directement. Cela offre une plus grande souplesse d'utilisation aux modérateurs, au prix d'une sécurité un peu moins grande, car le robot se base
+sur les champs d'en-tête du message. Un utilisateur capable de bricoler son logiciel de messagerie pour y écrire une adresse de modérateur dans un champ
+d'en-tête pourrait ainsi envoyer un message court-circuitant la modération.</p>
+
+<p><font color="#800000"><b>privateoreditorkey :&nbsp;</b></font> Les messages postés par les abonnés sont diffusés directement, comme avec le paramètre <i>p
+rivate</i> seul. Les messages postés par les non abonnés sont soumis à la modération dans les mêmes conditions qu'avec le paramètre <i>editorkey</i>.
+</p>
+
+<p><font color="#800000"><b>privateandeditor :&nbsp;</b></font> Ce mode de contribution combine les options <i>private</i> et <i>editorkeyonly</i>.
+Seuls les messages postés par les abonnés sont envoyés aux modérateurs. Les messages des non abonnés sont automatiquement rejetés.
+</p>   
+
+<p><font color="#800000"><b>newsletter :&nbsp;</b></font>
+Seuls les messages des modérateurs sont acceptés. Tous les autres messages, même ceux des abonnés, sont rejetés. Bien entendu, ce mode ne convient pas pour
+une liste de discussion. Il est utilisé pour des listes diffusant des bulletins d'informations. 
+</p>
+
 [ELSIF p->NAME=editor]
-  Définit qui sont le ou les "modérateurs" de la liste, si celle-ci est
-  "modérée". Les modérateurs ont la charge d'approuver chaque message avant sa
-  diffusion sur la liste.<br>
-  Par défaut, le modérateur est le propriétaire de la liste, même si celle-ci n'a
-  pas été définie comme modérée.<br>
-  Pour que la modération soit active, il faut définir ce comportement dans le
-  paramètre "send" (Qui peut diffuser des messages).<br>
-  Astuce : Si la liste n'est pas modérée, et que l'on ne souhaite pas afficher de
-  nom ou d'adresse e-mail de modérateur sur la page "Info" de la liste, il est
-  possible d'indiquer "Liste non modérée" par exemple, à la place du nom du
-  premier modérateur.
+
+<p><b><font color="#800000">Les modérateurs </font></b>sont responsables de la modération des messages. Si la liste est modérée, les messages postés sur la
+liste seront d'abord adressés aux modérateurs qui pourront autoriser ou non la diffusion. Cette interface vous permet de désigner plusieurs modérateurs,
+en écrivant leur adresse dans un des champs.<br>
+<i><font color="#800000">Remarques importantes :</font><br>
+- </i>Il ne suffit pas de désigner un modérateur pour que la liste soit modérée. Vous devez également régler la valeur du paramètre &quot;mode de
+contribution&quot; en conséquence (voir aide sur le mode de contribution).<br>
+- Si une liste possède plusieurs modérateurs, le premier modérateur qui accepte ou rejette un message prend la décision pour les autres. Si aucun
+modérateur ne prend de décision, les messages en attente de modération sont effacés au bout d'une semaine.</p>
+
 [ELSIF p->NAME=topics]
   Définit la ou les rubrique(s) de l'annuaire des listes dans lesquelles cette
   liste sera classée.
@@ -85,9 +126,25 @@
 [ELSIF p->NAME=lang]
   Définit la langue principale en usage pour cette liste.
 [ELSIF p->NAME=web_archive]
-  Définit qui aura le droit de consulter les messages de la liste en utilisant
-  l'interface web du serveur.<br>
-  Si ce paramètre n'est pas défini, aucune archive web ne sera créée.
+<p>Ce paramètre ne concerne que les listes dont les messages sont archivés. Il
+ne détermine que le mode de consultation des messages par l'interface web, et
+non le mode d'archivage lui-même. En particulier, même si la consultation des
+archives est totalement fermée, les messages continuent d'être archivés. Si
+vous souhaitez interrompre l'archivage lui-même, vous devez
+en faire la demande auprès des administrateurs.</P>
+<p><font color="#800000"><b>public</b> : </font>les archives sont consultables par tous, abonnés ou non. Les contributeurs doivent évidemment être
+conscients de cette situation. L'accès aux archives se faisant par l'intermédiaire de la page de présentation de la liste, le mode 
+<font color="#800000">public</font>n'a de sens que si le paramètre visibilité de la liste est en mode <font color="#800000">noconceal</font>
+(voir l'aide sur le paramètre visibilité pour plus de détails).</p>
+<p><font color="#800000"><b>private </b>:<b> </b></font>les archives sont accessibles seulement aux abonnés. Pour les consulter, il faut se connecter à
+l'interface web des listes en fournissant son mot de passe.</p>
+<p><font color="#800000"><b>owner </b>: </font>les archives sont accessibles seulement aux propriétaires de la liste.</p>
+<p><font color="#800000"><b>listmaster </b>: </font>les archives sont accessibles seulement aux administrateurs du service de listes.</p>
+<p><font color="#800000"><b>closed </b>: </font>les archives sont fermées à toute consultation.</p>
+<p><font color="#800000">Remarque : </font>en temps normal, seuls les deux premiers modes présentent un intérêt. Les autres modes ne doivent être
+utilisés que pendant une réorganisation importante des archives, ou en cas d'urgence. Exemple : vous souhaitez supprimer un message que vous estimez
+diffamatoire. Vous pourrez interdire la consultation des archives jusqu'au retrait du message litigieux.</p>
+
 [ELSIF p->NAME=archive]
   Définit qui aura le droit de se faire envoyer par e-mail les archives
   récapitulatives des messages de la liste, ainsi que la périodicité de groupage
@@ -117,10 +174,17 @@ liste :<br>
   Définit quelle option de réception (voir available_user_options) sera affectée par défaut
   à un nouvel abonné de cette liste.
 [ELSIF p->NAME=reply_to]
-  Définit ce qui se passe par défaut quand un abonné utilise le bouton
-  "répondre" sur un message provenant de la liste :<br>
-  - list : La réponse est adressée à la liste.<br>
-  - sender : La réponse est adressée à l'auteur du message original.
+<p>Ce mode détermine le comportement du robot lorsqu'un abonné utilise la fonction &quot;répondre&quot; de son logiciel de messagerie en réponse à un
+message publié sur la liste.&nbsp;</p>
+<p><font color="#800000"><b>sender</b></font> : la réponse est envoyée à l'auteur du message. C'est le mode par défaut défini lors de la création de
+la liste.</p>
+<p><font color="#800000"><b>list</b></font> : la réponse est envoyée à la liste. Elle sera donc diffusée à tous les abonnés (éventuellement après
+modération, suivant la configuration de la liste). Ce mode convient plutôt aux listes de type &quot;liste de discussion&quot;. Si un abonné veut répondre à
+l'auteur du message personnellement, il ne doit pas utiliser la fonction &quot;répondre&quot; de son logiciel de messagerie, mais écrire directement à
+l'auteur du message.&nbsp; <br>
+Une mauvaise utilisation du&nbsp; mode list peut entraîner des situations embarrassantes, comme la publication d'un message personnel. Prévenez donc vos
+abonnés du mode de réponse utilisé (dans la page de présentation ou le message de bienvenue).</p>
+
 [ELSIF p->NAME=forced_reply_to]
   Même fonction que pour "reply-to", mais permet de "forcer" l'adresse de
   réponse, même si le message envoyé à la liste spécifiait une adresse de réponse
@@ -173,24 +237,31 @@ liste :<br>
      </LI>
      </UL>    
 [ELSIF p->NAME=custom_subject]
-  Définit un sujet fixe qui apparaîtra entre crochets pour chaque message
-  transmis par la liste, afin d'en faciliter le classement.<br>
-  Il est d'usage d'indiquer ici le nom de la liste, ou son abréviation.<br>
-  Ne pas mettre les crochets, qui seront ajoutés automatiquement par le système.
+Ce texte facultatif est placé en tête du champ sujet de la liste. Il est d'usage de mettre le nom de la liste entre crochets pour faciliter aux abonnés le classement de leur courrier. On peut remplacer les crochets et le nom&nbsp; par toute autre indication permettant d'identifier le message comme provenant de la liste. 
 [ELSIF p->NAME=invite]
   Définit qui a le droit de faire envoyer, par l'intermédiaire du serveur, un
   message standard d'invitation à s'abonner à cette liste, en utilisant par mail
   la commande "invite".
 [ELSIF p->NAME=max_size]
-  Indique la taille maximale des messages qui seront acceptés sur cette liste.
-  Les messages plus gros seront rejetés.
+  Ce paramètre détermine la taille maximum
+d'un message qu'on peut poster sur la liste. En cas de dépassement, le message
+est retourné à l'envoyeur.
 [ELSIF p->NAME=remind]
   Indique qui a le droit de faire envoyer, par l'intermédiaire du serveur, un
   message standard de rappel des abonnements à cette liste, en utilisant par mail
   la commande "remind".
 [ELSIF p->NAME=review]
-  Indique qui a le droit de consulter la liste des abonnés de cette liste de
-  diffusion.
+<p>Ce paramètre détermine le droit d'accès à la liste des abonnés, c'est à dire le comportement du robot en réponse à la commande REView ou certains
+aspects de la page de présentation de la liste.</p>
+<p><font color="#800000"><b>owner</b> </font>: Seul le propriétaire de la liste peut obtenir la liste des abonnés, que les abonnés soient sur la &quot;liste
+rouge&quot; ou non. <i><font color="#800000">Ce mode est fortement recommandé </font></i>compte-tenu de la multiplication des &quot;spams&quot;, &quot;hoaks&quot; et autres plaisanteries sur internet.</p>
+<p><font color="#800000"><b>private</b> </font>: La liste des abonnés est accessible à tous les abonnés, soit par la commande REV, soit par l'interface
+web à condition que l'abonné se connecte en donnant son mot de passe. Dans un cas comme dans l'autre, les adresses électroniques des abonnés inscrits sur la
+&quot;liste rouge&quot; restent masquées (voir mode d'emploi de sympa).
+N'utilisez ce mode que si vous avez une bonne raison de le&nbsp; faire. Par exemple pour une liste de travail réservée à des interlocuteurs dont
+l'activité nécessite qu'ils connaissent l'adresse des autres colistiers. Cela implique aussi un mode d'abonnement <font color="#800000">closed</font>, ou à
+la rigueur <font color="#800000">owner</font>. </p>
+
 [ELSIF p->NAME=shared_doc]
   Définit qui a le droit de consulter et de modifier les documents qui peuvent
   être mis en place dans un "espace partagé" correspondant à cette liste de

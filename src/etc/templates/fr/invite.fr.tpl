@@ -7,10 +7,13 @@ Content-transfer-encoding: 8bit
 
 Bonjour,
 
-Je vous invite à vous abonner à la liste [list->name]@[list->host].
-Cette liste traite de [list->subject], vous êtes donc sûrement concerné.
+Je vous invite à vous abonner à la liste :
+  [list->name]@[list->host]
+dont voici le sujet :
+  [list->subject]
 
-Pour vous abonner, répondez simplement à ce message ou cliquez ici :
-[url]
+Pour vous abonner répondez simplement à ce message ou rendez vous à :
+[conf->wwsympa_url]/info/[list->name]
 
 Si vous ne voulez pas vous abonner, ignorez ce message.
+
