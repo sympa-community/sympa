@@ -1,3 +1,80 @@
+2002-05-14 15:56  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Olivier Lonni] Fix: when
+	creating a list, 'other' was considered as a reel topic.
+
+2002-05-14 15:55  salaun
+
+	* src/etc/create_list_templates/: discussion_list/config.tpl,
+	hotline/config.tpl, html-news-letter/config.tpl,
+	intranet_list/config.tpl, news-letter/config.tpl,
+	private_working_group/config.tpl, public_web_forum/config.tpl: Do
+	not add 'topics' parameter if not defined
+
+2002-05-14 14:38  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex: Add Latex, Postscript and
+	PDF version of documentation to CVS
+
+2002-05-14 14:34  salaun
+
+	* doc/Makefile: Create sympa.pdf
+
+2002-05-14 14:19  salaun
+
+	* doc/sympa.tex.tpl: Fix: escape a few '_'
+
+2002-05-14 12:15  salaun
+
+	* Makefile.in, doc/sympa.tex.tpl, src/Conf.pm, src/task_manager.pl:
+	Changes: Rename task-related sympa.conf parameters (append _task).
+	Restore default for 'global_remind' parameter
+
+2002-05-14 12:14  salaun
+
+	* Makefile.am: rename doc target documentation (because of the
+	confusion with doc directory)
+
+2002-05-14 12:11  salaun
+
+	* doc/parse_tex.pl: Fix: parser.pl requires Log.pm
+
+2002-05-14 10:17  salaun
+
+	* nls/cn.msg, nls/cz.msg, nls/de.msg, nls/es.msg, nls/et.msg,
+	nls/fi.msg, nls/fr.msg, nls/hu.msg, nls/it.msg, nls/pl.msg,
+	nls/ro.msg, nls/tw.msg, nls/us.msg, src/Commands.pm,
+	wwsympa/README, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/us/main.us.tpl: Change: refer to
+	www.sympa.org
+
+2002-05-13 16:00  salaun
+
+	* Makefile.am, Makefile.in: [Luc Beurton] Fix: badly placed '@' ;
+	man pages were not installed
+
+2002-05-07 17:41  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: reverse condition for subscriptions
+	update
+
+2002-05-07 17:17  salaun
+
+	* Makefile.am: No echo while installing conf files
+
+2002-05-07 17:14  salaun
+
+	* .version, ChangeLog, Makefile.in, NEWS: preparing 3.3.4b.9
+
+2002-05-07 17:02  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: 'which' already in use ; use
+	'which_info' instead
+
+2002-05-07 17:01  salaun
+
+	* Makefile.am: Fix INITCONF test
+
 2002-05-07 16:18  salaun
 
 	* Makefile.am, Makefile.in, src/Makefile, src/sympa_wizard.pl,

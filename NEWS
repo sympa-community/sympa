@@ -3,6 +3,26 @@
 
 (See Changelog file for the full changes log)
 
+3.3.5		14 May 2002
+
+   New features :
+
+	doc/Makefile: now generate sympa.pdf
+
+   Changes :
+
+	src/Conf.pm, src/task_manager.pl: Rename task-related sympa.conf 
+	parameters (append _task). Restore default for 'global_remind' parameter
+
+	Makefile.am: rename doc target documentation (because of the
+	confusion with doc directory)
+
+   Bug fixes :
+
+	wwsympa/wwsympa.fcgi: [reported by Olivier Lonni] when creating a list, 
+	'other' now means no topic
+
+
 3.3.4b.9	07 May 2002
 
    New features :
