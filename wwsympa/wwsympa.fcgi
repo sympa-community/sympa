@@ -378,29 +378,28 @@ while ($query = &new_loop()) {
     $robot = $Conf{'robot_by_http_host'}{$ENV{'SERVER_NAME'}};
     $robot = $Conf{'host'} unless $robot;
 
-  # printf STDERR "host : $ENV{'SERVER_NAME'}, robot : $robot,  Conf{'robots'}{$robot}: $Conf{'robots'}{$robot}\n";
-   #  printf STDERR "host : $ENV{'SERVER_NAME'}, robot : $robot, title :  $Conf{'robots'}{$robot}->{'title'}\n";
-   #  printf STDERR "host : $ENV{'SERVER_NAME'}, robot : $robot, listmaster :  $Conf{'robots'}{$robot}->{'listmasters'}\n";
-
-
-
-
     ## Sympa parameters in $param->{'conf'}
-    $param->{'conf'} = {'email' => $Conf{'robots'}{$robot}{'email'} || $Conf{'email'},
-			'host' =>  $Conf{'robots'}{$robot}{'host'} || $Conf{'host'},
-			'sympa' => $Conf{'robots'}{$robot}{'sympa'} || $Conf{'sympa'},
-			'request' => $Conf{'robots'}{$robot}{'request'} || $Conf{'request'}
-		    };
-			
+    if (defined $Conf{'robots'}{$robot}) {
+	$param->{'conf'} = {'email' => $Conf{'robots'}{$robot}{'email'},
+			    'host' =>  $Conf{'robots'}{$robot}{'host'},
+			    'sympa' => $Conf{'robots'}{$robot}{'sympa'},
+			    'request' => $Conf{'robots'}{$robot}{'request'}
+			};
+    }else {
+	$param->{'conf'} = {'email' => $Conf{'email'},
+			    'host' =>  $Conf{'host'},
+			    'sympa' => $Conf{'sympa'},
+			    'request' => $Conf{'request'}
+			};
+    }
     $param->{'wwsconf'} = $wwsconf;
 
-    $param->{'dark_color'} = $Conf{'robots'}{$robot}{'dark_color'} || $Conf{'dark_color'};
-    $param->{'light_color'} = $Conf{'robots'}{$robot}{'light_color'} || $Conf{'light_color'};
-    $param->{'text_color'} = $Conf{'robots'}{$robot}{'text_color'} || $Conf{'text_color'};
-    $param->{'bg_color'} = $Conf{'robots'}{$robot}{'bg_color'} || $Conf{'bg_color'};
-    $param->{'error_color'} = $Conf{'robots'}{$robot}{'error_color'} || $Conf{'error_color'} ;
-    $param->{'selected_color'} = $Conf{'robots'}{$robot}{'selected_color'} || $Conf{'selected_color'};
-    $param->{'shaded_color'} = $Conf{'robots'}{$robot}{'shaded_color'} || $Conf{'shaded_color'};
+    foreach my $p ('dark_color','light_color','text_color','bg_color','error_color',
+		   'selected_color','shaded_color') { 
+	$param->{$p} = $Conf{'robots'}{$robot}{$p}
+	if (defined $Conf{'robots'}{$robot} && $Conf{'robots'}{$robot}{$p});
+	$param->{$p} ||= $Conf{$p};
+    }
     
     $param->{'path_cgi'} = $ENV{'SCRIPT_NAME'};
     $param->{'version'} = $Version::Version;
@@ -462,7 +461,10 @@ while ($query = &new_loop()) {
     }
     
     ## Action
-    my $action = $in{'action'} || $Conf{'robots'}{$robot}{'default_home'} || $wwsconf->{'default_home'} ;
+    my $action = $in{'action'};
+    $action ||= $Conf{'robots'}{$robot}{'default_home'}
+    if ($Conf{'robots'}{$robot});
+    $action ||= $wwsconf->{'default_home'} ;
 #    $param->{'lang'} = $param->{'user'}{'lang'} || $Conf{'lang'};
     $param->{'remote_addr'} = $ENV{'REMOTE_ADDR'} ;
     $param->{'remote_host'} = $ENV{'REMOTE_HOST'};
@@ -2817,7 +2819,7 @@ sub do_serveradmin {
 	return undef;
     }
  
-    $param->{'conf'} = \%Conf;
+#    $param->{'conf'} = \%Conf;
 
     ## Lists Default files
     foreach my $f ('welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl','your_infected_msg.tpl') {
@@ -3989,8 +3991,6 @@ sub do_get_latest_lists {
 	unless ($list) {
 	    next;
 	}
-	
-	&do_log('debug','List %s / %s', $l, $list->{'name'});
 	
 	push @unordered_lists, {'name' => $list->{'name'},
 				'subject' => $list->{'admin'}{'subject'},

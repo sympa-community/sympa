@@ -2306,14 +2306,14 @@ sub send_global_file {
 	do_log ('err',"Unable to open file $Conf{'etc'}/$robot/templates/$action.tpl NOR  $Conf{'etc'}/templates/$action.tpl NOR --ETCBINDIR--/templates/$action.tpl");
     }
 
-    $data->{'conf'}{'email'} = $Conf{'robots'}{$robot}{'email'} || $Conf{'email'};
-    $data->{'conf'}{'host'} = $Conf{'robots'}{$robot}{'host'} || $Conf{'host'};
-    $data->{'conf'}{'sympa'} = $Conf{'robots'}{$robot}{'sympa'} || $Conf{'sympa'};
-    $data->{'conf'}{'request'} = $Conf{'robots'}{$robot}{'request'} || $Conf{'request'};
-    $data->{'conf'}{'listmaster'} = $Conf{'robots'}{$robot}{'listmaster'} || $Conf{'listmaster'};
-    $data->{'conf'}{'wwsympa_url'} = $Conf{'robots'}{$robot}{'wwsympa_url'} || $Conf{'wwsympa_url'};
+    foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url') {
+	$data->{'conf'}{$p} = $Conf{'robots'}{$robot}{$p}
+	if (defined $Conf{'robots'}{$robot});
+	$data->{'conf'}{$p} ||= $Conf{$p};
+    }
+
     $data->{'conf'}{'version'} = $main::Version;
-    $data->{'from'} = $Conf{'robots'}{$robot}{'request'} || $Conf{'request'};
+		   $data->{'from'} = $data->{'conf'}{'request'};
     $data->{'robot_domain'} = $robot;
     $data->{'return_path'} = $Conf{'request'};
 
@@ -2396,11 +2396,12 @@ sub send_file {
 	do_log ('err',"Unable to find '$action' template in list directory NOR $Conf{'etc'}/templates/ NOR --ETCBINDIR--/templates/");
     }
     
-    $data->{'conf'}{'email'} = $Conf{'robots'}{$robot}{'email'} || $Conf{'email'};
-    $data->{'conf'}{'host'} = $Conf{'robots'}{$robot}{'host'} || $Conf{'host'};
-    $data->{'conf'}{'sympa'} = $Conf{'robots'}{$robot}{'sympa'} || $Conf{'sympa'};
-    $data->{'conf'}{'listmaster'} = $Conf{'robots'}{$robot}{'listmaster'} || $Conf{'listmaster'};
-    $data->{'conf'}{'wwsympa_url'} = $Conf{'robots'}{$robot}{'wwsympa_url'} || $Conf{'wwsympa_url'};
+    foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url') {
+	$data->{'conf'}{$p} = $Conf{'robots'}{$robot}{$p}
+	if (defined $Conf{'robots'}{$robot});
+	$data->{'conf'}{$p} ||= $Conf{$p};
+    }
+
     $data->{'list'}{'lang'} = $self->{'admin'}{'lang'};
     $data->{'list'}{'name'} = $name;
     $data->{'robot_domain'} = $robot;
@@ -3469,7 +3470,7 @@ sub is_listmaster {
 
     return 0 unless ($who);
 
-    if ($robot && $Conf{'robots'}{$robot}{'listmasters'}) {
+    if ($robot && (defined $Conf{'robots'}{$robot}) && $Conf{'robots'}{$robot}{'listmasters'}) {
 	foreach my $listmaster (@{$Conf{'robots'}{$robot}{'listmasters'}}){
 	    return 1 if ($listmaster =~ /^\s*$who\s*$/i);
 	} 
@@ -3629,8 +3630,14 @@ sub request_action {
 
     }else{	
 	my $scenario;
+	my $p;
+	
+	$p = $Conf{'robots'}{$robot}{$operation}
+	if (defined $Conf{'robots'}{$robot});
+	$p ||= $Conf{$operation};
+
 	return undef 
-	    unless ($scenario = &_load_scenario_file ($operation, $robot, $Conf{'robots'}{$robot}{$operation} || $Conf{$operation}));
+	    unless ($scenario = &_load_scenario_file ($operation, $robot, $p));
         @rules = @{$scenario->{'rules'}};
 	$name = $scenario->{'name'};
     }
@@ -4118,8 +4125,8 @@ sub may_edit {
 
 
 ## May the indicated user edit a paramter while creating a new list
-# sa cette procédure est appelée nul part, je lui ajoute malgrès tout le paramêtre robot
-# edit_conf devrait être aussi dépendant du robot
+# sa cette procédure est appelée nul part, je lui ajoute malgrès tout le paramêtre robot
+# edit_conf devrait être aussi dépendant du robot
 sub may_create_parameter {
 
     my($parameter, $who,$robot) = @_;
@@ -4373,7 +4380,7 @@ sub _load_scenario_file {
     ## List scenario
 
    
-    # sa tester le chargement de scenario spécifique à un répertoire du shared
+    # sa tester le chargement de scenario spécifique à un répertoire du shared
     my $scenario_file = $directory.'/scenari/'.$function.'.'.$name ;
     unless (($directory) && (open SCENARI, $scenario_file)) {
 	## Robot scenario
