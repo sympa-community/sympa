@@ -3,6 +3,58 @@
 
 (See Changelog file for the full changes log)
 
+3.3.2		23 Jan 2002
+
+   New features :
+
+	src/task_manager.pl: New task : expire_bounce remove all bounces
+	if the latest_bounce is older than 10 day before last distribution
+	message. The delay "10 day" is set in the task model but it should
+	be set in the bounce parameter paragraph in list/robot/site
+	configuration file.
+
+	[Luca Maranzano] Add support for the Sophos antivirus
+
+   Changes :
+
+	wwsympa/wwsympa.fcgi: Initialisation of all lists context while
+	starting wwsympa using fastcgi.
+
+	Create msg/bad. spool at startup
+
+	[reported by Samuel Tardieu] Change Digest::MD5->md5_hex calls to Digest::MD5::md5_hex
+
+   Bug fixes : 
+
+	src/smtp.pm: [John Dalbec] Patch for exim compatibility
+
+	task_manager.pl: desactivate global_remind task (not implemented yet)
+
+	src/task_manager.pl: run task_manager in background
+
+	src/Commands.pm: REVIEW requested by non-owners failed
+	(command not found) if a 'concealed' subscriber was found.
+
+	some default robot conf parameters where used instead of virtual robot
+	ones. Added Conf::get_robot_conf() subroutine
+
+	src/List.pm: Fix: do not save empty list parameters 
+
+	[reported by J.	Marant] use $Conf{'etc'} instead of --DIR--/etc
+
+	src/List.pm: suppress 'untie %users' in	_load_users_include get_subscriber() 
+	and is_user() subroutines failed with 'include' type of lists
+
+	wwsympa/wwsympa.fcgi: [John Dalbec] save stats file when data_source changed
+
+	src/parser.pl: parser could recursively evaluate vars ; made
+	this cleaner (new do_eval() subroutine)
+
+	wwsympa/Makefile: [reported by Benoit Marchal] chown of SRC
+	(mime.types) had wrong path
+
+
+
 3.3.1 		11 Jan 2002
 
    Bug fixes : 

@@ -1,3 +1,192 @@
+2002-01-23 13:52  salaun
+
+	* src/: List.pm, task_manager.pl: Log cleanup Desactivate beta
+	tasks in task_manager
+
+2002-01-23 13:43  salaun
+
+	* src/task_manager.pl: global_remind not implemented yet
+
+2002-01-23 13:42  salaun
+
+	* wwsympa/bounce-lib.pl: recognize new bounce format
+
+2002-01-23 09:45  salaun
+
+	* src/: Conf.pm, sympa.pl: Create msg/bad. spool at startup
+
+2002-01-23 09:43  salaun
+
+	* src/tools.pl: Typo
+
+2002-01-22 15:34  salaun
+
+	* src/smtp.pm: [John Dalbec] change regexp / / to /\s+/
+
+2002-01-22 15:24  salaun
+
+	* src/smtp.pm: Delete comments
+
+2002-01-22 15:08  salaun
+
+	* src/smtp.pm: [John Dalbec] Patch for exim compatibility
+
+2002-01-22 14:41  salaun
+
+	* wwsympa/wwsympa.fcgi: Initialisation of all lists context while
+	starting wwsympa using fastcgi.
+
+2002-01-22 12:26  salaun
+
+	* src/Commands.pm, src/List.pm, wwsympa/wwsympa.fcgi: Supress
+	List::list_by_robot() ; add $robot parameter to List::new() instead
+
+2002-01-22 12:03  salaun
+
+	* src/List.pm: No more '.*' in 'format' entries of %::pinfo
+
+2002-01-22 11:24  salaun
+
+	* src/: Conf.pm, List.pm, task_manager.pl: [reported by Jérôme
+	Marant] Fix: use $Conf{'etc'} instead of --DIR--/etc
+
+2002-01-22 11:22  salaun
+
+	* Makefile.in: [no log message]
+
+2002-01-21 14:23  salaun
+
+	* wwsympa/wwsympa.fcgi: [John Dalbec] Fix: save stats file when
+	data_source changed
+
+2002-01-21 12:18  salaun
+
+	* .version: sympa 3.2.1.2
+
+2002-01-21 12:17  salaun
+
+	* src/List.pm: Bug fix: supress 'untie %users' in
+	_load_users_include get_subscriber() and is_user() subroutines
+	failed with 'include' type of lists
+
+2002-01-21 11:52  salaun
+
+	* src/List.pm: Better checking
+
+2002-01-21 11:05  salaun
+
+	* doc/sympa.tex.tpl: [Benoit Marchal] Fix setUID wrapper for
+	Solaris 2.7 First argument of execve must the same that the first
+	value of the table 'argv'
+
+2002-01-21 10:44  salaun
+
+	* src/etc/global_task_models/expire_bounce.daily.task: 
+	each day remove old bounces
+
+2002-01-21 10:39  salaun
+
+	* src/task_manager.pl: New task : expire_bounce remove all bounces
+	if the latest_bounce is older than 10 day before last distribution
+	message. The delay "10 day" is set in teh task model but it should
+	be set in the bounce parameter paragraph in list/robot/site
+	configuration file.
+
+2002-01-18 09:18  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: when recording alt email first check
+	if user is logged in and new_email different from main email
+
+2002-01-17 15:58  salaun
+
+	* src/Conf.pm: no default for global_remind parameter
+
+2002-01-17 14:32  salaun
+
+	* src/List.pm: Fix: do not save empty list parameters
+
+2002-01-17 14:28  salaun
+
+	* src/List.pm: New get_latest_distribution_date() subroutine
+
+2002-01-17 13:53  salaun
+
+	* src/parser.pl: Bug fix: missing '$'
+
+2002-01-17 13:36  salaun
+
+	* src/task_manager.pl: aaaargh !
+
+2002-01-17 13:30  salaun
+
+	* src/task_manager.pl: restore the demon mode
+
+2002-01-17 12:18  salaun
+
+	* src/parser.pl: Fix: parser could recursively evaluate vars ; made
+	this cleaner (new do_eval() subroutine)
+
+2002-01-17 08:18  salaun
+
+	* src/task_manager.pl: Remove some "do_log"
+
+2002-01-16 17:46  salaun
+
+	* src/etc/templates/it/your_infected_msg.it.tpl: [Luca Maranzano]
+
+2002-01-16 17:33  salaun
+
+	* wwsympa/Makefile: [reported by Benoit Marchal] Fix: chown of SRC
+	(mime.types) had wrong path
+
+2002-01-16 17:14  salaun
+
+	* doc/sympa.tex.tpl: [Benoit Marchal] Fix: default log_socket_type
+	calue
+
+2002-01-16 14:29  salaun
+
+	* doc/sympa.tex.tpl, src/tools.pl: [Luca Maranzano] New feature:
+	Add support for the Sophos antivirus
+
+2002-01-16 14:27  salaun
+
+	* .version: 3.3.1.1
+
+2002-01-16 09:40  salaun
+
+	* src/Commands.pm, src/Conf.pm, src/List.pm, src/mail.pm,
+	src/sympa.pl, src/tools.pl, wwsympa/wwsympa.fcgi: Fix: default
+	robot conf parameters where sometimes used instead of virtual robot
+	ones. Added Conf::get_robot_conf() subroutine
+
+2002-01-14 17:01  salaun
+
+	* src/tools.pl: [reported by Paola Gatti] Detected «con l'» as a
+	misadressed command.
+
+2002-01-14 16:15  salaun
+
+	* src/Commands.pm: Bug fix: REVIEW requested by non-owners failed
+	(command not found) if a 'concealed' subscriber was found.
+
+2002-01-14 11:49  salaun
+
+	* src/: Commands.pm, List.pm, tools.pl: [reported by Samuel
+	Tardieu] Change Digest::MD5->md5_hex calls to Digest::MD5::md5_hex
+
+2002-01-11 16:45  salaun
+
+	* wwsympa/wws_templates/: cn/sigrequest.cn.tpl,
+	cz/sigrequest.cz.tpl, de/sigrequest.de.tpl, es/sigrequest.es.tpl,
+	fr/sigrequest.fr.tpl, hu/sigrequest.hu.tpl, it/sigrequest.it.tpl,
+	us/sigrequest.us.tpl: [requested by Jeg] Add submit button to
+	signoff request form
+
+2002-01-11 16:01  salaun
+
+	* .version, ChangeLog, NEWS: Preparing 3.3.1
+
 2002-01-11 14:37  salaun
 
 	* src/List.pm: [reported by M. Langlois] Bug fix: List::user_add()
