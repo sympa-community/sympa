@@ -2110,6 +2110,9 @@ sub get_user_db {
 
     $sth = pop @sth_stack;
 
+    ## decrypt password
+    $user = &tools::decrypt_password($user->{'password')) if ($user->{'password'});
+
     return $user;
 }
 
@@ -2650,6 +2653,9 @@ sub update_user_db {
 	return undef;
     }
 
+    ## encrypt password   
+    $values->{'password'} = &tools::encrypt_password($values->{'password'}) if ($values->{'password'});
+
     my ($field, $value);
     
     my ($user, $statement, $table);
@@ -2703,55 +2709,58 @@ sub add_user_db {
     my($values) = @_;
     do_log('debug2', 'List::add_user_db');
 
-   my ($field, $value);
-   my ($user, $statement, $table);
-   
-   unless ($List::use_db) {
-       &do_log('info', 'Sympa not setup to use DBI');
-       return undef;
-   }
-
-   return undef unless (my $who = lc($values->{'email'}));
-
-   return undef if (is_user_db($who));
-
-   ## mapping between var and field names
-   my %map_field = ( email => 'email_user',
-		     gecos => 'gecos_user',
-		     password => 'password_user',
-		     cookie_delay => 'cookie_delay_user',
-		     lang => 'lang_user'
-		     );
-
-   ## Check database connection
-   unless ($dbh and $dbh->ping) {
-       return undef unless &db_connect();
-   }	   
-
-   ## Update each table
-   my (@insert_field, @insert_value);
-   while (($field, $value) = each %{$values}) {
-
-       next unless ($map_field{$field});
-
-       my $insert = sprintf "%s", $dbh->quote($value);
-       push @insert_value, $insert;
-       push @insert_field, $map_field{$field}
-   }
-
-   return undef 
-       unless @insert_field;
-
-   ## Update field
-   $statement = sprintf "INSERT INTO user_table (%s) VALUES (%s)"
-       , join(',', @insert_field), join(',', @insert_value); 
-   
-   unless ($dbh->do($statement)) {
-       do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-       return undef;
-   }
-
-   return 1;
+    my ($field, $value);
+    my ($user, $statement, $table);
+    
+    unless ($List::use_db) {
+	&do_log('info', 'Sympa not setup to use DBI');
+	return undef;
+    }
+ 
+    ## encrypt password   
+    $values->{'password'} = &tools::encrypt_password($values->{'password'}) if $values->{'password'};
+    
+    return undef unless (my $who = lc($values->{'email'}));
+    
+    return undef if (is_user_db($who));
+    
+    ## mapping between var and field names
+    my %map_field = ( email => 'email_user',
+		      gecos => 'gecos_user',
+		      password => 'password_user',
+		      cookie_delay => 'cookie_delay_user',
+		      lang => 'lang_user'
+		      );
+    
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }	   
+    
+    ## Update each table
+    my (@insert_field, @insert_value);
+    while (($field, $value) = each %{$values}) {
+	
+	next unless ($map_field{$field});
+	
+	my $insert = sprintf "%s", $dbh->quote($value);
+	push @insert_value, $insert;
+	push @insert_field, $map_field{$field}
+    }
+    
+    return undef 
+	unless @insert_field;
+    
+    ## Update field
+    $statement = sprintf "INSERT INTO user_table (%s) VALUES (%s)"
+	, join(',', @insert_field), join(',', @insert_value); 
+    
+    unless ($dbh->do($statement)) {
+	do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    
+    return 1;
 }
 
 ## Adds a new user, no overwrite.
