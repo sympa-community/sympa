@@ -1896,7 +1896,7 @@ sub do_redirect {
      $param->{'lang'} = $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'}) || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
      my $cas_id = &cookielib::get_cas_server($ENV{'HTTP_COOKIE'});
-     if (defined $cas_id) {
+     if (defined $cas_id && (defined $Conf{'auth_services'}[$cas_id])) {
 	 # this user was logged using CAS
 	 my $cas_server = $Conf{'auth_services'}[$cas_id]{'cas_server'};
 
