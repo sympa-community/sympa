@@ -4224,9 +4224,14 @@ sub do_edit_list {
 			    ## Multiple param, foreach entry
 			    foreach my $index (0..$#{$p->[$i]{$key}}) {
 				
+				my $format = $pinfo->{$pname}{'format'}{$key}{'format'};
+				if (ref ($format)) {
+				    $format = $pinfo->{$pname}{'format'}{$key}{'file_format'};
+				}
+
 				if ($p->[$i]{$key}[$index] ne $new_p->[$i]{$key}[$index]) {
 				    
-				    if ($new_p->[$i]{$key}[$index] !~ /^$pinfo->{$pname}{'format'}{$key}{'file_format'}$/) {
+				    if ($new_p->[$i]{$key}[$index] !~ /^$format$/) {
 					push @syntax_error, $pname;
 				    }
 				    $changed{$pname} = 1; next;
@@ -4237,10 +4242,15 @@ sub do_edit_list {
 			}else {
 			    if ($p->[$i]{$key} ne $new_p->[$i]{$key}) {
 
+				my $format = $pinfo->{$pname}{'format'}{$key}{'format'};
+				if (ref ($format)) {
+				    $format = $pinfo->{$pname}{'format'}{$key}{'file_format'};
+				}
+
 				## If empty and is primary key => delete entry
 				if ((! $new_p->[$i]{$key}) && ($pinfo->{$pname}{'format'}{$key}{'occurrence'} eq '1')) {
 				    splice @{$new_p}, $i, 1;
-				}elsif ($new_p->[$i]{$key} !~ /^$pinfo->{$pname}{'format'}{$key}{'file_format'}$/) {
+				}elsif ($new_p->[$i]{$key} !~ /^$format$/) {
 				    push @syntax_error, $pname;
 				}
 				
