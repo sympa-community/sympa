@@ -2748,8 +2748,11 @@ sub get_total {
     my $option = shift;
     &do_log('debug3','List::get_total(%s)', $name);
 
-    if ($option eq 'nocache') {
-	$self->{'total'} = _load_total_db($self->{'name'});
+    if (($self->{'admin'}{'user_data_source'} eq 'database') ||
+	($self->{'admin'}{'user_data_source'} eq 'include2')) {
+	if ($option eq 'nocache') {
+	    $self->{'total'} = _load_total_db($self->{'name'});
+	}
     }
 #    if ($self->{'admin'}{'user_data_source'} eq 'database') {
 	## If stats file was updated
