@@ -3760,8 +3760,9 @@ sub do_arcsearch {
 	my $previous_active_dir ;
 	opendir ARC, "$search_base";
 	foreach my $dir (sort {$b cmp $a} grep(!/^\./,readdir ARC)) {
-	    if ($dir =~ /^(\d{4})-(\d{2})$/) {
-		$previous_active_dir = $dir if ($dir lt $search->archive_name) ;
+	    if (($dir =~ /^(\d{4})-(\d{2})$/) && ($dir lt $search->archive_name)) {
+		$previous_active_dir = $dir;
+		last;
 	    }
 	}
 	closedir ARC;
