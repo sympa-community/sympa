@@ -1473,7 +1473,7 @@ sub send_msg {
 
     ## Bounce rate
     ## Available in database mode only
-    unless ($admin->{'user_data_source'} eq 'database') {
+    if ($admin->{'user_data_source'} eq 'database') {
 	if (($self->get_total_bouncing() * 100 / $total) > $self->{'admin'}{'bounce'}{'warn_rate'}) {
 	    $self->send_alert_to_owner('bounce_rate');
 	}
