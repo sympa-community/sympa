@@ -1198,10 +1198,9 @@ sub load {
 	$m2 = $self->{'mtime'}->[1]; 
 	## if (Config has changed) OR( TTL has expired ) then reload
 	## unless we are a CGI
-	if ( (($self->{'mtime'}->[0] && ($m1 > $self->{'mtime'}->[0])) || 
-	     ( $m1 > $last_include) || 
-	     (time > ($last_include + $self->{'admin'}{'ttl'})))
-	     && !($ENV{'HTTP_HOST'} && (-f "$self->{'dir'}/subscribers.db"))) {
+	if ( ($self->{'mtime'}->[0] && ($m1 > $self->{'mtime'}->[0])) || 
+	     ((time > ($last_include + $self->{'admin'}{'ttl'}))
+	     && !($ENV{'HTTP_HOST'} && (-f "$self->{'dir'}/subscribers.db")))) {
 
 	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 0);
 	    unless (defined $users) {
@@ -1209,7 +1208,7 @@ sub load {
 	    }
 
 	    $m2 = time;
-	}elsif (! $self->{'users'}) {
+	}elsif (! $self->{'users'} || ($m1 > $last_include)) {
 	    ## Use cache
 	    $users = _load_users_include($name, $self->{'admin'}, "$self->{'dir'}/subscribers.db", 1);
 
@@ -5084,8 +5083,11 @@ sub _load_users_include {
         rename $db_file, $db_file.'old';
     }
 
-    my $ref = tie %users, 'DB_File', $db_file, O_CREAT|O_RDWR, 0600, $btree;
-    return undef unless ($ref);
+    my $ref;
+    unless ($ref = tie %users, 'DB_File', $db_file, O_CREAT|O_RDWR, 0600, $btree) {
+	&do_log('err', 'Could not tie to DB_File');
+	return undef;
+    }
 
     if ($use_cache) {
 	## Lock DB_File
