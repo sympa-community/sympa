@@ -186,7 +186,7 @@
   my $name = $fromline[0]->name();
   $name = $fromline[0]->address() unless $name;
 
-  $outstring .= sprintf (Msg (6, 301, "\n[Attached message follows]\n-----Original message-----\n" ),''); 
+  $outstring .= gettext("\n[Attached message follows]\n-----Original message-----\n"); 
   $outstring .= "Date: $date\n" if $date;
   $outstring .= "From: $from\n" if $from;
   $outstring .= "To: $to\n" if $to;
@@ -196,7 +196,7 @@
   
   _do_toplevel ($msgent);
   
-  $outstring .= sprintf (Msg (6, 302, "-----End of original message from %s-----\n\n"), $name);
+  $outstring .= sprintf(gettext("-----End of original message from %s-----\n\n"), $name);
   return 1;
  }
 
@@ -235,7 +235,7 @@
   );
   if ($charset) {
     unless ($ok_charset{lc($charset)}) {
-      $outstring .= sprintf (Msg (6, 303, "[** Warning: Message part originally used character set %s\n    Some characters may be lost or incorrect **]\n\n"), $charset);
+      $outstring .= sprintf (gettext("[** Warning: Message part originally used character set %s\n    Some characters may be lost or incorrect **]\n\n"), $charset);
       $thispart =~ tr/\x00-\x7F/\?/c;
     }
   }
@@ -247,15 +247,15 @@
  sub _do_other {
   # just add a note that attachment was stripped.
   my $entity = shift;
-  $outstring .= sprintf (Msg (6, 304, "\n[An attachment of type %s was included here]\n"), $entity->mime_type);
+  $outstring .= sprintf (gettext("\n[An attachment of type %s was included here]\n"), $entity->mime_type);
   return 1;
  }
  
  sub _do_dsn {
    my $entity = shift;
-   $outstring .= sprintf (Msg (6, 305, "\n-----Delivery Status Report-----\n"));
+   $outstring .= sprintf (gettext("\n-----Delivery Status Report-----\n"));
    _do_text_plain ($entity);
-   $outstring .= sprintf (Msg (6, 306, "-----End of Delivery Status Report-----\n"));
+   $outstring .= sprintf (gettext("-----End of Delivery Status Report-----\n"));
  }
 
  sub _do_text_html {
@@ -293,7 +293,7 @@
         $tree->delete();
       } ;
       if ($@) {
-        $outstring .= Msg (6, 309, "\n[** Unable to process HTML message part **]\n");
+        $outstring .= gettext("\n[** Unable to process HTML message part **]\n");
         return 1;
       }      
     }
@@ -314,24 +314,24 @@
         waitpid($mypid,0);
       };
       if ($@) {
-        $outstring .= Msg (6, 309, "\n[** Unable to process HTML message part **]\n");
+        $outstring .= gettext ("\n[** Unable to process HTML message part **]\n");
         return 1;
       }
     }
     
     else {
-      $outstring .= Msg (6, 309, "\n[** Unable to process HTML message part **]\n");
+      $outstring .= gettext ("\n[** Unable to process HTML message part **]\n");
       return 1;      
     }
     
-    $outstring .= sprintf(Msg (6, 307, "[Text converted from HTML]\n"));
+    $outstring .= sprintf(gettext ("[Text converted from HTML]\n"));
     
     # deal with 30 hyphens (RFC 1153)
     $text =~ s/\n-{30}(\n|$)/\n -----------------------------\n/;
     $outstring .= $text;
   }
   else {
-    $outstring .= Msg (6, 309, "\n[** Unable to process HTML message part **]\n");   
+    $outstring .= gettext("\n[** Unable to process HTML message part **]\n");   
   }
   return 1;
  }
@@ -350,6 +350,6 @@
  sub img_start   {
   my($self,$node) = @_;
   my $alt = $node->attr('alt');
-  $self->out(  defined($alt) ? sprintf(Msg(6, 308, "[Image%s]"), ": " . $alt) : sprintf(Msg(6, 308, "[Image%s]"),""));
+  $self->out(  defined($alt) ? sprintf(gettext("[Image%s]"), ": " . $alt) : sprintf(Msg(6, 308, "[Image%s]"),""));
  }
 
