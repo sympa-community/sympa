@@ -9,7 +9,7 @@
     Owner : [doc_owner] <BR>
     Last update : [doc_date] <BR>
     Description : [doc_title] <BR><BR>
-    <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[father]"> <IMG ALIGN="bottom"  src="[father_icon]"> Up to higher level directory</A></font>
+    <font size=+1> <A HREF="[path_cgi]/d_read/[list]/[escaped_father]"> <IMG ALIGN="bottom"  src="[father_icon]"> Up to higher level directory</A></font>
     <BR>  
   [ELSE]
     <h2> <B> Listing of folder SHARED </B> </h2> 
@@ -91,7 +91,7 @@
     [IF sort_subdirs]
       [FOREACH s IN sort_subdirs] 
         <TR BGCOLOR="--LIGHT_COLOR--">        
-	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[path][s->doc]/"> 
+	<TD NOWRAP> <A HREF="[path_cgi]/d_read/[list]/[escaped_path][s->escaped_doc]/"> 
 	<IMG ALIGN=bottom BORDER=0 SRC="[s->icon]"> [s->doc]</A></TD>
 	<TD>
 	[IF s->author_known] 
@@ -109,7 +109,7 @@
 	[IF s->edit]
 	  <TD><center>
 	  <FONT size=-1>
-	  <A HREF="[path_cgi]/d_delete/[list]/[path][s->doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[path][s->doc]', 'Do you really want to delete [path][s->doc] ?'); return false;">delete</A>
+	  <A HREF="[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]', 'Do you really want to delete [path][s->doc] ?'); return false;">delete</A>
 	  </FONT>
 	  </center></TD>
 	[ELSE]
@@ -120,7 +120,7 @@
 	  <TD>
 	  <center>
 	  <FONT size=-1>
-	  <A HREF="[path_cgi]/d_control/[list]/[path][s->doc]">access</A>
+	  <A HREF="[path_cgi]/d_control/[list]/[escaped_path][s->escaped_doc]">access</A>
 	  </font>
 	  </center>
 	  </TD>	 
@@ -136,10 +136,10 @@
         <TR BGCOLOR="--LIGHT_COLOR--"> 
         <TD>&nbsp;
         [IF f->html]
-	  <A HREF="[path_cgi]/d_read/[list]/[path][f->doc]" TARGET="html_window">
+	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]" TARGET="html_window">
 	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]"> [f->doc] </A>
 	[ELSE]
-	  <A HREF="[path_cgi]/d_read/[list]/[path][f->doc]">
+	  <A HREF="[path_cgi]/d_read/[list]/[escaped_path][f->escaped_doc]">
 	  <IMG ALIGN=bottom BORDER=0 SRC="[f->icon]"> [f->doc] </A>
         [ENDIF] 
 	</TD>  
@@ -160,7 +160,7 @@
 	<TD>
 	<center>
 	<font size=-1>
-	<A HREF="[path_cgi]/d_editfile/[list]/[path][f->doc]">edit</A>
+	<A HREF="[path_cgi]/d_editfile/[list]/[escaped_path][f->escaped_doc]">edit</A>
 	</font>
 	</center>
 
@@ -168,7 +168,7 @@
 	<TD>
 	<center>
 	<FONT size=-1>
-	<A HREF="[path_cgi]/d_delete/[list]/[path][f->doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[path][f->doc]', 'Do you really want to delete [path][s->doc] ([f->size] Kb) ?'); return false;">delete</A>
+	<A HREF="[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][f->escaped_doc]', 'Do you really want to delete [path][s->doc] ([f->size] Kb) ?'); return false;">delete</A>
 	</FONT>
 	</center>
 	</TD>
@@ -179,7 +179,7 @@
 	[IF f->control]
 	  <TD> <center>
 	  <font size=-1>
-	  <A HREF="[path_cgi]/d_control/[list]/[path][f->doc]">access</A>
+	  <A HREF="[path_cgi]/d_control/[list]/[escaped_path][f->escaped_doc]">access</A>
 	  </font>
 	  </center></TD>
 	[ELSE]

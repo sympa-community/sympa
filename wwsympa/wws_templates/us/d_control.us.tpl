@@ -4,7 +4,7 @@
     Owner : [owner] <BR>
     Last update : [doc_date] <BR>
     Description : [doc_title] <BR><BR>
-<H3><A HREF="[path_cgi]/d_read/[list]/[father]"> <IMG ALIGN="bottom"  src="[father_icon]"> Up to higher level directory </A></H3>
+<H3><A HREF="[path_cgi]/d_read/[list]/[escaped_father]"> <IMG ALIGN="bottom"  src="[father_icon]"> Up to higher level directory </A></H3>
 
 <TABLE width=100%>
 

@@ -5339,12 +5339,6 @@ sub do_d_read {
 			# Case read authorized : fill the hash 
 			$subdirs{$d}{'icon'} = $icon_table{'folder'};
 
-			# name of the doc
-			$subdirs{$d}{'doc'} = $d;
-
-			# size of the doc
-			$subdirs{$d}{'size'} = (-s $path_doc)/1000;
-
 			# last update
 			my @info = stat $path_doc;
 			$subdirs{$d}{'date_epoch'} = $info[10];
@@ -5378,10 +5372,6 @@ sub do_d_read {
 		    }
 		} else {
 		    # no description file = no need to check access for read
-		      # name of the doc
-		    $subdirs{$d}{'doc'} = $d;
-		      # size
-		    $subdirs{$d}{'size'} = (-s $path_doc)/1000; 
 		      # last update
 		    my @info = stat $path_doc;
 		    $subdirs{$d}{'date_epoch'} = $info[10];
@@ -5394,6 +5384,14 @@ sub do_d_read {
 		    if ($may_control) {$subdirs{$d}{'control'} = 1;}
 		}
 		
+		# name of the doc
+		$subdirs{$d}{'doc'} = $d;
+		
+		$subdirs{$d}{'escaped_doc'} =  &tools::escape_chars($d);
+
+		# size of the doc
+		$subdirs{$d}{'size'} = (-s $path_doc)/1000;
+
 		
 	    }else {
 		# case file
@@ -5489,6 +5487,8 @@ sub do_d_read {
 			
 		      # name of the file
 		    $files{$d}{'doc'} = $d;
+		    $files{$d}{'escaped_doc'} =  &tools::escape_chars($d);
+		    &wwslog('debug', "ESCAPED: $d / %s", $files{$d}{'escaped_doc'});
 		      # last update
 		    my @info = stat $path_doc;
 		    $files{$d}{'date_epoch'} = $info[10];
@@ -5536,6 +5536,7 @@ sub do_d_read {
 	    # building of the parent directory path
 	    $path =~ /^(([^\/]*\/)*)([^\/]+)$/; 
 	    $param->{'father'} = $1;
+	    $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
 	    
 	    
 	    # Parameters for the description
@@ -5547,6 +5548,7 @@ sub do_d_read {
 	    }
 	    
 	    $param->{'path'} = $path.'/';
+	    $param->{'escaped_path'} = &tools::escape_chars($param->{'path'}, '/');
 	}
 	if (scalar keys %subdirs) {
 	    $param->{'sort_subdirs'} = \@sort_subdirs;
@@ -5671,7 +5673,7 @@ sub do_d_editfile {
     #Current directory
     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
     $param->{'father'} = $1;    
-
+    $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
 
     # Description of the file
     if (-e "$shareddir/$1.desc.$3") {
@@ -6188,7 +6190,7 @@ sub do_d_upload {
 	&wwslog('info','do_d_upload : no list');
 	return undef;
     }
- 
+    
   
     # uploaded file must have a name 
     unless ($fname) {
@@ -6198,10 +6200,14 @@ sub do_d_upload {
     }
 
     # The name of the file must be correct and musn't not be a description file
-    unless ($fname =~ /^\w/ and 
-	    $fname =~ /\w$/ and 
-	    $fname =~ /^[\w\-\.]+$/ and
-	    $fname !~ /\.desc/) {
+    if ($fname =~ /^\./
+	|| $fname =~ /\.desc/ 
+	|| $fname =~ /[~\#]$/) {
+
+#    unless ($fname =~ /^\w/ and 
+#	    $fname =~ /\w$/ and 
+#	    $fname =~ /^[\w\-\.]+$/ and
+#	    $fname !~ /\.desc/) {
 	&error_message('incorrect_name', {'name' => $fname});
 	&wwslog('info',"do_d_upload : Unable to create file $fname : incorrect name");
 	return undef;
@@ -6460,10 +6466,9 @@ sub do_d_create_dir {
     }
 
     # The name of the directory must be correct
-    unless ($name_doc =~ /^\w/ and 
-	    $name_doc =~ /\w$/ and 
-	    $name_doc =~ /^[\w\-\.]+$/ and
-	    $name_doc !~ /\.desc/) {
+    if ($name_doc =~ /^\./
+	|| $name_doc =~ /\.desc/ 
+	|| $name_doc =~ /[~\#]$/) {
 	&error_message('incorrect_name', {'name' => $name_doc});
 	&wwslog('info',"do_d_create_dir : Unable to create directory $name_doc : incorrect name");
 	return undef;
@@ -6588,6 +6593,7 @@ sub do_d_control {
     #Current directory
     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
     $param->{'father'} = $1;    
+    $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
     
     my $desc_file;
     # path of the description file
@@ -6659,6 +6665,7 @@ sub do_d_control {
     ## father directory
     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
     $param->{'father'} = $1;    
+    $param->{'escaped_father'} = &tools::escape_chars($param->{'father'}, '/');
 
     $param->{'set_owner'} = 1;
     

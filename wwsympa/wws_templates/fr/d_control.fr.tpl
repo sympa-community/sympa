@@ -5,7 +5,7 @@
     propriétaire : [owner] <BR>
     dernière mise à jour : [doc_date] <BR>
     Description : [doc_title] <BR><BR>
-<H3><A HREF="[path_cgi]/d_read/[list]/[father]"> <IMG ALIGN="bottom"  src="[father_icon]">Dossier parent</A></H3>
+<H3><A HREF="[path_cgi]/d_read/[list]/[escaped_father]"> <IMG ALIGN="bottom"  src="[father_icon]">Dossier parent</A></H3>
 
 <TABLE width=100%>
 

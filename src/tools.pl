@@ -599,12 +599,15 @@ sub as_singlepart {
 ## Escape weird characters
 sub escape_chars {
     my $s = shift;
+    my $except = shift; ## Exceptions
 
     $s =~ s/\%/\%25/g;
     $s =~ s/\"/\%22/g;
     $s =~ s/\s/\%20/g;
     $s =~ s/\xa5/\%a5/g;
-    $s =~ s/\//\%a5/g; ## Special traetment for '/'
+    unless ($except =~ /\//) {
+	$s =~ s/\//\%a5/g; ## Special traetment for '/'
+    }
     $s =~ s/\:/\%3a/g;
     $s =~ s/\#/\%23/g;
     
