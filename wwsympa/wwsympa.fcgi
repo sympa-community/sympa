@@ -5003,7 +5003,7 @@ sub do_rebuildallarc {
     }
     &message('performed');
 
-    return 'admin';
+    return 'serveradmin';
 }
 
 ## Search among lists
