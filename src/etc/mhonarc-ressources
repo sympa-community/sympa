@@ -500,13 +500,13 @@ $TNEXTBUTTON$
 [ELSIF lang=cz]
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="oznaèit tuto zprávu ke smazání">
 [ELSIF lang=hu]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre" onClick="request_confirm(this.form,'Tényleg törölni szeretnéd ezt a levelet?'),'remove_arc'">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre" onClick="request_confirm(this.form,'Tényleg törölni szeretnéd ezt a levelet?','remove_arc')">
 [ELSIF lang=et]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks" onClick="request_confirm(this.form,'Oled kindel, et soovid selle kirja ära kustutada?'),'remove_arc'">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks" onClick="request_confirm(this.form,'Oled kindel, et soovid selle kirja ära kustutada?','remove_arc')">
 [ELSIF lang=de]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren" onClick="request_confirm(this.form,'Wollen Sie wirklich diese Mitteilung löschen?'),'remove_arc'">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren" onClick="request_confirm(this.form,'Wollen Sie wirklich diese Mitteilung löschen?','remove_arc')">
 [ELSE]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="request_confirm(this.form,'Do you really want to delete this message ?'),'remove_arc'">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="request_confirm(this.form,'Do you really want to delete this message ?','remove_arc')">
 [ENDIF]
 
 [ELSIF is_owner]
@@ -516,17 +516,17 @@ $TNEXTBUTTON$
   <INPUT TYPE="hidden" NAME="action" VALUE="">
 
 [IF lang=fr]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="marquer ce message pour suppression" onClick="request_confirm(this.form,'Voulez-vous vraiment supprimer ce message ?'),'remove_arc'">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="marquer ce message pour suppression" onClick="request_confirm(this.form,'Voulez-vous vraiment supprimer ce message ?','remove_arc')">
 [ELSIF lang=cz]
   <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="oznaèit tuto zprávu ke smazání">
 [ELSIF lang=hu]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre" onClick="request_confirm(this.form,'Tényleg törölni szeretnéd ezt a levelet?'),'remove_arc'">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="A levél megjelõlése törlésre" onClick="request_confirm(this.form,'Tényleg törölni szeretnéd ezt a levelet?','remove_arc')">
 [ELSIF lang=et]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks" onClick="request_confirm(this.form,'Oled kindel, et soovid selle kirja ära kustutada?'),'remove_arc'">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="Märgi see kiri kustutamiseks" onClick="request_confirm(this.form,'Oled kindel, et soovid selle kirja ära kustutada?','remove_arc')">
 [ELSIF lang=de]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren" onClick="request_confirm(this.form,'Wollen Sie wirklich diese Mitteilung löschen?'),'remove_arc'">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="diese Mitteilung zum Löschen markieren" onClick="request_confirm(this.form,'Wollen Sie wirklich diese Mitteilung löschen?','remove_arc')">
 [ELSE]
-  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="request_confirm(this.form,'Do you really want to delete this message ?'),'remove_arc'">
+  <INPUT TYPE="button" NAME="action_remove_arc" VALUE="tag this mail for deletion" onClick="request_confirm(this.form,'Do you really want to delete this message ?','remove_arc')">
 [ENDIF]
 [ENDIF]
 [ENDIF]
