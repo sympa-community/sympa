@@ -13,7 +13,7 @@ HOST		=	`$(PERL) -MSys::Hostname -e "printf '%s', Sys::Hostname::hostname();"`
 COOKIE		=	`$(PERL) -e " print int(rand ( time ))  "`
 PERL_VERSION	=	`$(PERL) -e ' print $$]'`
 
-SYMPA_VERSION	=	'3.1b.7'
+SYMPA_VERSION	=	'3.1b.8'
 
 #SYMPA_VERSION	=	`pwd | $(PERL) -e 'my @version = split /-/, <STDIN>; printf "%s", $$version[1];'`
 
@@ -117,7 +117,7 @@ sources:
 	CONFIG='${CONFIG}' WWSCONFIG='${WWSCONFIG}' \
 	USER='${USER}' GROUP='${GROUP}');
 
-doc: 
+doc:	doc/sympa.tex 
 	@echo "Making doc"
 	(cd doc && echo "making in doc..." && \
 	$(MAKE) SH='${SH}' CC='${CC}' CFLAGS='${CFLAGS}' PERL='${PERL}' \

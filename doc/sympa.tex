@@ -223,7 +223,7 @@ into a single software, including:
     \item \textbf {Multilingual} messages. Current version of
         \Sympa allows the administrator to choose the language
         catalog at run time. Currently, \Sympa robot is available for
-        french, english, spanish, italian, german, finish and chinese
+        french, english, spanish, italian, german, finish, polish and chinese
 	(Big5 and GB) languages (web interface is available
         for french, english and spanish).
 
@@ -1965,6 +1965,7 @@ CREATE TABLE subscriber_table (
 	reception_subscriber	varchar (20),
 	bounce_subscriber	varchar (30),
 	update_subscriber 	datetime,
+	comment_subscriber 	varchar (150),
 	PRIMARY KEY (list_subscriber, user_subscriber)
 );
 
@@ -2546,19 +2547,21 @@ translated into 6 different languages :
 
 \begin{itemize}
 
-\item us: US english
-
-\item fr: French
-
-\item es: Spanish
-
-\item de: German
-
-\item it: Italian
-
 \item cn-big5: BIG5 Chinese (Honk Kong, Taiwan)
 
 \item cn-gb: GB Chinese (Mainland China)
+
+\item de: German
+
+\item es: Spanish
+
+\item fr: French
+
+\item it: Italian
+
+\item pl: polish
+
+\item us: US english
 
 \end{itemize}
 
