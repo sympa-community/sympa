@@ -828,7 +828,8 @@ sub signoff {
 		next;
 	    }
 	    
-            $success ||= &signoff("$l $email", $robot);
+	    my $result = &signoff("$l $email", $robot);
+            $success ||= $result;
 	}
 	return ($success);
     }
@@ -876,7 +877,7 @@ email address. Please try subscribing using your canonical address.");
 	}else {
 	    push @msg::report, sprintf gettext("You are not allowed to perform command %s in list %s\n"),'sig',$which,$email;
 	}
-	do_log('info', 'DEL %s %s from %s refused (not allowed)', $which, $email, $sender);
+	do_log('info', 'SIG %s %s from %s refused (not allowed)', $which, $email, $sender);
 	return 'not_allowed';
     }
     if ($action =~ /request_auth\s*\(\s*\[\s*(email|sender)\s*\]\s*\)/i) {
