@@ -1307,15 +1307,28 @@ sub dump {
     my @listnames = @_;
     do_log('debug2', 'List::dump(%s)', @listnames);
 
+    my $done;
+
     foreach my $l (@listnames) {
 	
 	my $list = new List($l);
+	
+	unless (defined $list) {
+	    &do_log('err','Unknown list %s', $l);
+	    next;
+	}
+
 	my $user_file_name = "$list->{'dir'}/subscribers.db.dump";
 	do_log('debug3', 'Dumping list %s',$l);	
-	$list->_save_users_file($user_file_name);
+	unless ($list->_save_users_file($user_file_name)) {
+	    &do_log('err', 'Failed to save file %s', $user_file_name);
+	    next;
+	}
 	$list->{'mtime'} = [ (stat("$list->{'dir'}/config"))[9], (stat("$list->{'dir'}/subscribers"))[9], (stat("$list->{'dir'}/stats"))[9] ];
+
+	$done++
     }
-    return 1;
+    return $done;
 }
 
 ## Saves a copy of the list to disk. Does not remove the
@@ -1404,7 +1417,7 @@ sub load {
     }elsif ($robot) {
 	$self->{'dir'} = "$Conf{'home'}/$robot/$name";
     }else {
-	&do_log('info', 'No such list %s', $name);
+	&do_log('err', 'No such list %s', $name);
 	return undef ;
     }
 

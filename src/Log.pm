@@ -71,9 +71,12 @@ sub do_log {
 	&do_connect();
 	    syslog($fac, $m, @_);
     }
-    if ($main::options{'foreground'} and (!$main::options{'batch'}))  {
-	$m =~ s/%m/$errno/g;
-	printf STDERR "$m\n", @_;
+    if ($main::options{'foreground'}) {
+	if (!$main::options{'batch'} 
+	    || ($main::options{'batch'} && $fac eq 'err')) {
+	    $m =~ s/%m/$errno/g;
+	    printf STDERR "$m\n", @_;
+	}
     }    
 }
 

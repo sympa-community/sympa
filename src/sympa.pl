@@ -242,7 +242,10 @@ if ($main::options{'dump'}) {
 	@listnames = ($main::options{'dump'});
     }
 
-    &List::dump(@listnames);
+    unless (&List::dump(@listnames)) {
+	printf STDERR "Could not dump list(s) %s\n", join(',',@listnames);
+	exit -1;
+    }
 
     exit 0;
 }elsif ($main::options{'help'}) {
