@@ -465,7 +465,7 @@ my %in_regexp = (
 		 'new_email' => $tools::regexp{'email'},
 		 'pending_email' => $tools::regexp{'email'},
 		 'sender' => $tools::regexp{'email'},
-		 'to' => $tools::regexp{'listname'}.'\s'.$tools::regexp{'host'},
+		 'to' => '([\w\-\_\.\/\+\=\']+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 
 		 ## Host
 		 'new_robot' => $tools::regexp{'host'},
