@@ -1218,8 +1218,6 @@ sub SendDigest{
 
 	my $filename = $Conf{'queuedigest'}.'/'.$listname;
 
-	my @timedigest= (stat $filename)[9];
-
 	my $list = new List ($listname);
 	unless ($list) {
 	    &do_log('info', 'Unknown list, deleting digest file %s', $filename);
