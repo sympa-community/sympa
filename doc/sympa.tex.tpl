@@ -3851,7 +3851,7 @@ which you might have defined in the\file {/etc/sympa.conf} file).
 Here is a list of files/directories you may find in the list directory :
 
 \begin {quote}
-\begin {verbatim}
+\begin{verbatim}
 archives/
 bye.tpl
 config
@@ -3866,7 +3866,7 @@ removed.tpl
 stats
 subscribers
 welcome.tpl
-\end {verbatim}
+\end{verbatim}
 \end {quote}
 
 \section {List configuration file}
