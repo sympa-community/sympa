@@ -891,7 +891,7 @@ sub check_param_in {
 sub check_param_out {
     &wwslog('debug2', 'check_param');
 
-    if ($list->{'name'}
+    if ($list->{'name'}) {
 	## Owners
 	foreach my $o (@{$list->{'admin'}{'owner'}}) {
 	    next unless $o->{'email'};
