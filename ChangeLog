@@ -1,3 +1,77 @@
+2003-04-29 11:34  salaun
+
+	* src/smtp.pm, wwsympa/wwsympa.fcgi, src/smtp.pm,
+	wwsympa/wwsympa.fcgi: Fix: MIME-related :     * decode subject
+	header fields in search result	       * encode subject header
+	field before message sending
+
+2003-04-28 15:56  salaun
+
+	* src/etc/script/: Makefile, sympa, Makefile, sympa: Change: Search
+	functions in INITDIR
+
+2003-04-28 15:41  salaun
+
+	* src/etc/create_list_templates/: discussion_list/comment,
+	hotline/comment, html-news-letter/comment, intranet_list/comment,
+	news-letter/comment, private_working_group/comment,
+	public_web_forum/comment: [S. Hornburg]Changes: German translation,
+	English text for hotline type, Spelling fix for English
+
+2003-04-28 15:27  salaun
+
+	* src/: List.pm, List.pm: [A. de Pretis] Fix: problem regarding
+	PostgreSQL 7.3.x: since this version Pg supports Schemes which
+	prefixes table-names with the scheme-name (default: public) ...
+	$dbh->tables in List.pm, method 'probe_db' returns:
+	public.user_table public.subscriber_table
+
+2003-04-28 14:47  salaun
+
+	* doc/sympa.tex.tpl: Change: 'host' list parameter should not be
+	used
+
+2003-04-28 10:25  salaun
+
+	* src/tools.pl: Fix: bad return status of tools::split_mail(), now
+	return 1
+
+2003-04-28 08:24  salaun
+
+	* src/sympa.pl: Fix bug related to listname-owner, listname-editor
+	listname-request feature
+
+2003-04-18 17:26  salaun
+
+	* src/: List.pm, List.pm: New feature: Sympa is now able to create
+	its database (try as root) and tables.	Change: if database is
+	unreachable, Sympa daemon dies to prevent blocking of Server
+	startup
+
+2003-04-18 11:36  salaun
+
+	* ChangeLog, doc/sympa.tex.tpl, src/tools.pl, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/admin_menu.fr.tpl,
+	wwsympa/wws_templates/fr/arc_manage.fr.tpl,
+	wwsympa/wws_templates/fr/error.fr.tpl,
+	wwsympa/wws_templates/fr/help_admin.fr.tpl,
+	wwsympa/wws_templates/us/admin_menu.us.tpl,
+	wwsympa/wws_templates/us/arc_manage.us.tpl,
+	wwsympa/wws_templates/us/error.us.tpl,
+	wwsympa/wws_templates/us/help_admin.us.tpl,
+	wwsympa/wws_templates/us/main.us.tpl: [Benoit Ortner] New feature:
+	web archive management ; allows to remove multiple months and/or
+	get and archive (zip) or archive month.
+
+2003-04-18 10:30  salaun
+
+	* ChangeLog, NEWS: update
+
+2003-04-18 10:28  salaun
+
+	* wwsympa/wwsympa.fcgi: [G. Paressant] [BugID 116] The patch had
+	not been applied to stable CVS branch
+
 2003-04-16 17:46  salaun
 
 	* ChangeLog, NEWS: Add patch to 3.4.4

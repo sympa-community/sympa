@@ -314,11 +314,10 @@ done
 # Binaries
 # We use a configure where BINDIR = SBINDIR = LIBDIR = LIBEXECDIR
 # aliaswrapper is owned by root, don't change it
-#%dir --BINDIR--
 %attr(-,-,-) --BINDIR--/*
---SBINDIR--/*
---LIBDIR--/*
---LIBEXECDIR--/*
+%attr(-,-,-) --SBINDIR--/*
+%attr(-,-,-) --LIBDIR--/*
+%attr(-,-,-) --LIBEXECDIR--/*
 
 # Locales
 #%dir --NLSDIR--
