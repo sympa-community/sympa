@@ -949,7 +949,7 @@ sub DoMessage{
 	return undef;
     }
     
-    my ($name, $host) = ($list->{'name'}, $list->{'admin'}{'host'});
+    ($listname, $host) = ($list->{'name'}, $list->{'admin'}{'host'});
 
     my $start_time = time;
     
@@ -957,7 +957,7 @@ sub DoMessage{
 
     ## Now check if the sender is an authorized address.
 
-    do_log('info', "Processing message for %s with priority %s, %s", $name,$list->{'admin'}{'priority'}, $messageid );
+    do_log('info', "Processing message for %s with priority %s, %s", $listname,$list->{'admin'}{'priority'}, $messageid );
     
     my $conf_email = &Conf::get_robot_conf($robot, 'sympa');
     if ($sender =~ /^(mailer-daemon|sympa|listserv|majordomo|smartlist|mailman|$conf_email)(\@|$)/mio) {
@@ -988,18 +988,18 @@ sub DoMessage{
 
     ## Check if the message is a return receipt
     if ($hdr->get('multipart/report')) {
-	do_log('notice', 'Message for %s from %s ignored because it is a report', $name, $sender);
+	do_log('notice', 'Message for %s from %s ignored because it is a report', $listname, $sender);
 	return undef;
     }
     
     ## Check if the message is too large
     my $max_size = $list->get_max_size() || $Conf{'max_size'};
     if ($max_size && $message->{'size'} > $max_size) {
-	do_log('notice', 'Message for %s from %s rejected because too large (%d > %d)', $name, $sender, $message->{'size'}, $max_size);
+	do_log('notice', 'Message for %s from %s rejected because too large (%d > %d)', $listname, $sender, $message->{'size'}, $max_size);
 	*SIZ  = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
 	print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), &Conf::get_robot_conf($robot, 'request')) . "\n";
 	printf SIZ "To: %s\n", $sender;
-	printf SIZ "Subject: " . Msg(4, 11, "Your message for list %s has been rejected") . "\n", $name;
+	printf SIZ "Subject: " . Msg(4, 11, "Your message for list %s has been rejected") . "\n", $listname;
 	printf SIZ "MIME-Version: %s\n", Msg(12, 1, '1.0');
 	printf SIZ "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
 	printf SIZ "Content-Transfer-Encoding: %s\n\n", Msg(12, 3, '7bit');
@@ -1015,10 +1015,10 @@ sub DoMessage{
 #	if ($Conf{'antivirus_notify'} eq 'sender') {
 #	    #printf "do message, virus= $rc \n";
 #	    $list->send_file('your_infected_msg', $sender, $robot, {'virus_name' => $rc,
-#								    'recipient' => $name.'@'.$host,
+#								    'recipient' => $listname.'@'.$host,
 #								    'lang' => $list->{'admin'}{'lang'}});
 #	}
-#	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $name, $host, $sender, $rc);
+#	&do_log('notice', "Message for %s\@%s from %s ignored, virus %s found", $listname, $host, $sender, $rc);
 #	return undef;
 #    }
     
@@ -1028,12 +1028,12 @@ sub DoMessage{
     my $action ;
     if ($is_signed->{'body'}) {
 	$action = &List::request_action ('send', 'smime',$robot,
-					 {'listname' => $name,
+					 {'listname' => $listname,
 					  'sender' => $sender,
 					  'message' => $message });
     }else{
 	$action = &List::request_action ('send', 'smtp',$robot,
-					 {'listname' => $name,
+					 {'listname' => $listname,
 					  'sender' => $sender,
 					  'message' => $message });
     }
@@ -1048,32 +1048,32 @@ sub DoMessage{
 	$msgid_table{$listname}{$messageid}++;
 	
 	unless (defined($numsmtp)) {
-	    do_log('info','Unable to send message to list %s', $name);
+	    do_log('info','Unable to send message to list %s', $listname);
 	    return undef;
 	}
 
-	do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions), size=%d', $name, $sender, time - $start_time, $numsmtp, $message->{'size'});
+	do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions), size=%d', $listname, $sender, time - $start_time, $numsmtp, $message->{'size'});
 	
 	## Everything went fine, return TRUE in order to remove the file from
 	## the queue.
 	return 1;
     }elsif($action =~ /^request_auth/){
     	my $key = $list->send_auth($message);
-	do_log('notice', 'Message for %s from %s kept for authentication with key %s', $name, $sender, $key);
+	do_log('notice', 'Message for %s from %s kept for authentication with key %s', $listname, $sender, $key);
 	return 1;
     }elsif($action =~ /^editorkey(\s?,\s?(quiet))?/){
 	my $key = $list->send_to_editor('md5',$message);
-	do_log('info', 'Key %s for list %s from %s sent to editors, %s', $key, $name, $sender, $message->{'filename'});
+	do_log('info', 'Key %s for list %s from %s sent to editors, %s', $key, $listname, $sender, $message->{'filename'});
 	$list->notify_sender($sender) unless ($2 eq 'quiet');
 	return 1;
     }elsif($action =~ /^editor(\s?,\s?(quiet))?/){
 	my $key = $list->send_to_editor('smtp', $message);
-	do_log('info', 'Message for %s from %s sent to editors', $name, $sender);
+	do_log('info', 'Message for %s from %s sent to editors', $listname, $sender);
 	$list->notify_sender($sender) unless ($2 eq 'quiet');
 	return 1;
     }elsif($action =~ /^reject(\(\'?(\w+)\'?\))?(\s?,\s?(quiet))?/) {
 	my $tpl = $2;
-	do_log('notice', 'Message for %s from %s rejected(%s) because sender not allowed', $name, $sender, $tpl);
+	do_log('notice', 'Message for %s from %s rejected(%s) because sender not allowed', $listname, $sender, $tpl);
 	unless ($4 eq 'quiet') {
 	    if ($tpl) {
 		$list->send_file($tpl, $sender, $robot, {});
@@ -1081,11 +1081,11 @@ sub DoMessage{
 		*SIZ  = smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
 		print SIZ "From: " . sprintf (Msg(12, 4, 'SYMPA <%s>'), &Conf::get_robot_conf($robot, 'request')) . "\n";
 		printf SIZ "To: %s\n", $sender;
-		printf SIZ "Subject: " . Msg(4, 11, "Your message for list %s has been rejected")."\n", $name ;
+		printf SIZ "Subject: " . Msg(4, 11, "Your message for list %s has been rejected")."\n", $listname ;
 		printf SIZ "MIME-Version: %s\n", Msg(12, 1, '1.0');
 		printf SIZ "Content-Type: text/plain; charset=%s\n", Msg(12, 2, 'us-ascii');
 		printf SIZ "Content-Transfer-Encoding: %s\n\n", Msg(12, 3, '7bit');
-		printf SIZ Msg(4, 15, $msg::list_is_private), $name;
+		printf SIZ Msg(4, 15, $msg::list_is_private), $listname;
 		$message->{'msg'}->print(\*SIZ);
 		close(SIZ);
 	    }
