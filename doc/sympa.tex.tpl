@@ -965,6 +965,8 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 
 \item \option {--with-libexecdir=DIR}, program executables in DIR (default /home/sympa/bin/)
 
+\item \option {--with-cgidir=DIR}, CGI programs in DIR (default /home/sympa/bin/)
+
 \item \option {--with-datadir=DIR}, default configuration data in DIR (default /home/sympa/bin/etc/)
 
 \item \option {--with-confdir=DIR}, Sympa main configuration files in DIR (default /etc/)\\
