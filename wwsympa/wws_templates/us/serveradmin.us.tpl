@@ -1,7 +1,94 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-    <TABLE WIDTH="100%" BORDER=0 CELLPADDING=10>
+   <TABLE WIDTH="100%" BORDER=0 CELLPADDING=0>
+ 
+     [IF main_robot]
+      <TR>
+        <TH BGCOLOR="[dark_color]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[selected_color]" WIDTH="50%">
+              <FONT COLOR="[bg_color]">
+	        Virtual Robots
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+     </TR>
+
+     <TR><TD>
+    [IF robots]
+      The following virtual robots are running on this server :<UL>
+         [FOREACH vr IN robots]
+	    <LI><A HREF="[vr->wwsympa_url]/serveradmin">[vr->NAME]</A>
+	 [END]
+      </UL>
+    [ELSE]
+      No Virtual Robot defined on this server
+    [ENDIF]
+     <BR>
+     </TD></TR>
+    [ENDIF]
+
+      <TR>
+        <TH BGCOLOR="[dark_color]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[selected_color]" WIDTH="50%">
+              <FONT COLOR="[bg_color]">
+	        Lists
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+     </TR><TR>
+     <TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
+       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
+      <A HREF="[path_cgi]/get_pending_lists">Pending lists</A>
+       </TD>
+     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
+
+    <BR></TD></TR>
+
+    <TR>
+        <TH BGCOLOR="[dark_color]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[selected_color]" WIDTH="50%">
+              <FONT COLOR="[bg_color]">
+	        Users
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+    </TR>
+      <TR><TD NOWRAP>
+        <FORM ACTION="[path_cgi]" METHOD="POST">
+	  <INPUT NAME="email" SIZE="30" VALUE="[email]">
+	  <INPUT TYPE="hidden" NAME="action" VALUE="search_user">
+	  <INPUT TYPE="submit" NAME="action_search_user" VALUE="Search User">
+	</FORM>     
+      <BR></TD></TR>
+
       <TR VALIGN="top">
+
+        <TH BGCOLOR="[dark_color]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[selected_color]" WIDTH="50%">
+              <FONT COLOR="[bg_color]">
+	        Templates 
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+      </TR>
+      <TR>
         <TD NOWRAP>
 	  <FORM ACTION="[path_cgi]" METHOD=POST>
 	    <FONT COLOR="[dark_color]"><B>Setting defaults list templates</B></FONT><BR>
@@ -24,31 +111,27 @@
 	  </FORM>
 	</TD>
       </TR>
-
-      <TR><TD>
-     [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
-       <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
-      <A HREF="[path_cgi]/get_pending_lists">Pending lists</A>
-       </TD>
-     [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
-
-    </TD></TR>
-
-      <TR><TD NOWRAP>
-        <FORM ACTION="[path_cgi]" METHOD="POST">
-	  <INPUT NAME="email" SIZE="30" VALUE="[email]">
-	  <INPUT TYPE="hidden" NAME="action" VALUE="search_user">
-	  <INPUT TYPE="submit" NAME="action_search_user" VALUE="Search User">
-	</FORM>     
-      </TD></TR>
-
       <TR><TD>
      [PARSE '--ETCBINDIR--/wws_templates/button_header.tpl']
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
         <A HREF="[path_cgi]/view_translations">Customize templates</A>
        </TD>
       [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
-      </TD></TR>
+      <BR></TD></TR>
+
+    <TR>
+        <TH BGCOLOR="[dark_color]" COLSPAN="2">
+          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+            <TR>
+             <TH BGCOLOR="[selected_color]" WIDTH="50%">
+              <FONT COLOR="[bg_color]">
+	        Archives
+              </FONT>
+             </TH>
+            </TR>
+           </TABLE>
+         </TH>
+      </TR>
 
       <TR>
         <TD>

@@ -303,8 +303,6 @@ sub load {
 ## load each virtual robots configuration files
 sub load_robots {
     
-    do_log('debug', "load_robots"); 
-
     my %robot_conf ;
     my %valid_robot_key_words = ( 'http_host'     => 1, 
 				  listmaster      => 1,
@@ -326,7 +324,7 @@ sub load_robots {
 				  list_check_suffixes => 1 );
 
     unless (opendir DIR,'--DIR--/etc' ) {
-	do_log('info','Unable to open directory --DIR--/etc for virtual robots config' );
+	printf STDERR "Unable to open directory --DIR--/etc for virtual robots config\n" ;
 	return undef;
     }
 
@@ -334,10 +332,9 @@ sub load_robots {
 	next unless (-d "--DIR--/etc/$robot");
 	next unless (-r "--DIR--/etc/$robot/robot.conf");
 	unless (open (ROBOT_CONF,"--DIR--/etc/$robot/robot.conf")) {
-	    do_log('info', "load robots config: Unable to open --DIR--/etc/$robot/robot.conf"); 
+	    printf STDERR "load robots config: Unable to open --DIR--/etc/$robot/robot.conf\n"; 
 	    next ;
 	}
-	do_log('info', "load robots config --DIR--/etc/$robot/robot.conf"); 
 	
 	while (<ROBOT_CONF>) {
 	    next if (/^\s*$/o || /^[\#\;]/o);
@@ -350,7 +347,7 @@ sub load_robots {
 		    $robot_conf->{$robot}{$keyword} = $value;
 		    # printf STDERR "load robots config: $keyword = $value\n";
 		}else{
-		    do_log('info',"load robots config: unknown keyword $keyword");
+		    printf STDERR "load robots config: unknown keyword $keyword\n";
 		    # printf STDERR "load robots config: unknown keyword $keyword\n";
 		}
 	    }
@@ -372,7 +369,7 @@ sub load_robots {
 
 	$robot_conf->{$robot}{'request'} = $robot_conf->{$robot}{'email'}.'-request@'.$robot_conf->{$robot}{'host'};
 
-	$robot_conf->{'robot_by_http_host'}{$robot_conf->{$robot}{'http_host'}} = $robot ;
+	$Conf{'robot_by_http_host'}{$robot_conf->{$robot}{'http_host'}} = $robot ;
 
 
 	close (ROBOT_CONF);

@@ -370,7 +370,7 @@ while ($query = &new_loop()) {
     ## Get PATH_INFO parameters
     &get_parameters();
 
-    $robot = $Conf{'robots'}{'robot_by_http_host'}{$ENV{'SERVER_NAME'}};
+    $robot = $Conf{'robot_by_http_host'}{$ENV{'SERVER_NAME'}};
     $robot = $Conf{'host'} unless $robot;
 
   # printf STDERR "host : $ENV{'SERVER_NAME'}, robot : $robot,  Conf{'robots'}{$robot}: $Conf{'robots'}{$robot}\n";
@@ -2818,6 +2818,12 @@ sub do_serveradmin {
     foreach my $f ('welcome.tpl','bye.tpl','removed.tpl','message.footer','message.header','remind.tpl','invite.tpl','reject.tpl','your_infected_msg.tpl') {
 	$param->{'lists_default_files'}{$f}{'complete'} = Msg(15, $wwslib::filenames{$f}, $f);
 	$param->{'lists_default_files'}{$f}{'selected'} = '';
+    }
+
+    ## Robots
+    if ($robot eq $Conf{'domain'}) {
+	$param->{'main_robot'} = 1;
+	$param->{'robots'} = $Conf{'robots'};
     }
     
     ## Server files
