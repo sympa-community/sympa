@@ -388,11 +388,6 @@ if (eval "require Archive::Zip") {
     $zip_is_installed = 1;
 }
 
-my $zip_is_installed ;
-if (require Archive::Zip) {
-    $zip_is_installed = 1;
-}
-
 %::changed_params;
 
 my (%in, $query);
@@ -2604,13 +2599,6 @@ sub do_redirect {
 	 }
 
 	 $update->{'email'} = $in{'new_email'};
-     }
-
-     ## Get additional DB fields
-     foreach my $v (keys %in) {
-	 if ($v =~ /^additional_field_(\w+)$/) {
-	     $update->{$1} = $in{$v};
-	 }
      }
 
      ## Get additional DB fields
@@ -5633,7 +5621,6 @@ sub do_set_pending_list_request {
 
 	 unless ( $list->is_user($email) ) {
 	     &error_message('not_subscriber', {'email' => $email});
-	     ('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'del',$param->{'list'},$robot,$email,'not subscriber');
 	     &wwslog('info','do_del: %s not subscribed', $email);
 	     return undef;
 	 }
