@@ -4804,7 +4804,7 @@ digest 1,4 12:00
     \index{subscriber file}
 
 \textbf {Be carefull}: Since version 3.3.6 of \Sympa, a RDBMS is required for internal data storage. Flat file should
-not be use anymore except for testing purpose. \Sympa require , will not use this file if the list is configured
+not be use anymore except for testing purpose. \Sympa will not use this file if the list is configured
 with \texttt {include} or \texttt {database} \lparam{user\_data\_source}.
 
 The \file {[EXPL_DIR]/\samplelist/subscribers} file is automatically created and
