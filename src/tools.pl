@@ -611,17 +611,18 @@ sub as_singlepart {
 sub escape_chars {
     my $s = shift;    
     my $except = shift; ## Exceptions
-    $except = ord($except) if (defined $except);
+    my $ord_except = ord($except) if (defined $except);
 
     ## Escape chars
     ##  !"#$%&'()+,:;<=>? AND accented chars
     ## escape % first
     foreach my $i (0x25,0x20..0x24,0x26..0x2c,0x3a..0x3f,0xc0..0xff) {
-	next if ($i == $except);
+	next if ($i == $ord_except);
 	my $hex_i = sprintf "%lx", $i;
 	$s =~ s/\x$hex_i/%$hex_i/g;
     }
- 
+    $s =~ s/\//%a5/g unless ($except eq '/');  ## Special traetment for '/'
+
     return $s;
 }
 
