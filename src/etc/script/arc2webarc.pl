@@ -1,7 +1,7 @@
 #! --PERL--
 
 use lib '--BINDIR--';
-require 'wwslib.pl';
+use wwslib;
 $wwsympa_conf_file = '--WWSCONFIG--';
 $sympa_conf_file = '--CONFIG--';
 
@@ -45,7 +45,7 @@ unless (getlogin() eq '--USER--') {
 my $wwsconf = {};
 
 ## Load config 
-unless ($wwsconf = &load_config($wwsympa_conf_file)) {
+unless ($wwsconf = &wwslib::load_config($wwsympa_conf_file)) {
     die 'unable to load config file';
 }
 
