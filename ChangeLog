@@ -1,3 +1,151 @@
+2005-01-03 17:51  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node3.html, doc/html/node4.html, doc/html/node5.html,
+	  doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	  doc/html/node9.html, doc/html/sympa.html, doc/html/sympa.ps,
+	  src/Conf.pm, web_tt2/main.tt2, wwsympa/wwsympa.fcgi: New feature:
+	  web pages can be recoded to utf-8 (web_recode_to parameter) ;
+	  default is to use each language native charset (iso-xxx)
+
+2005-01-03 17:19  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: Fix: really comment Mhonarc tag
+
+2005-01-03 15:41  sympa-authors
+
+	* src/Language.pm, src/tt2.pl, web_tt2/main.tt2,
+	  wwsympa/wwsympa.fcgi: Changes: web pages are now converted to
+	  UTF-8
+
+2005-01-03 14:39  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: Chqnge: decode message header
+	  fields
+
+2005-01-03 14:07  sympa-authors
+
+	* wwsympa/archived.pl: Fix: Remove .mhonarc.lck if required
+
+2004-12-20 10:23  sympa-authors
+
+	* wwsympa/archived.pl: Fix a bug while removing .mhonarc.db file
+
+2004-12-16 09:55  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Restore usefull line
+
+2004-12-16 09:30  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Remove unusefull line
+
+2004-12-16 09:28  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: latest-arc failed
+
+2004-12-15 17:30  sympa-authors
+
+	* check_perl_modules.pl: Change: Newer version of MIME::Base64
+	  required by MIME::Words
+
+2004-12-14 17:20  sympa-authors
+
+	* po/: cs.po, de.po, en_US.po, es.po, et.po, fi.po, fr.po, hu.po,
+	  it.po, nl.po, pl.po, pt.po, ro.po, sympa.pot, xgettext.pl,
+	  zh_CN.po, zh_TW.po: Update POT ; sync PO with POT
+
+2004-12-14 17:00  sympa-authors
+
+	* web_tt2/rss.tt2: Fix
+
+2004-12-14 16:31  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Decode From field
+
+2004-12-14 16:21  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: decode subject header field
+
+2004-12-14 16:13  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node3.html, doc/html/node4.html, doc/html/node5.html,
+	  doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	  doc/html/node9.html, doc/html/sympa.html, doc/html/sympa.ps,
+	  web_tt2/active_lists.tt2, web_tt2/latest_arc.tt2,
+	  web_tt2/latest_d_read.tt2, web_tt2/latest_lists.tt2: Add
+	  documentation for RSS
+
+2004-12-14 16:05  sympa-authors
+
+	* po/fr.po: Update translations
+
+2004-12-14 15:57  sympa-authors
+
+	* web_tt2/: rss.tt2: Fix
+
+2004-12-14 15:53  sympa-authors
+
+	* po/: cs.po, de.po, en_US.po, es.po, et.po, fi.po, fr.po, hu.po,
+	  it.po, nl.po, pl.po, pt.po, ro.po, sympa.pot, zh_CN.po, zh_TW.po:
+	  Updat POT ; sync PO files
+
+2004-12-14 15:21  sympa-authors
+
+	* src/Makefile, src/time_utils.pl, web_tt2/active_lists.tt2,
+	  web_tt2/error.tt2, web_tt2/latest_arc.tt2,
+	  web_tt2/latest_d_read.tt2, web_tt2/latest_lists.tt2,
+	  web_tt2/rss.tt2, wwsympa/wwsympa.fcgi: [G.Bouteille] New feature:
+	  RSS channels are providing the following features :	   * latest
+	  messages in list archives	 * latest documents in web
+	  repository	* latest created mailing lists	* most active
+	  mailing lists
+
+2004-12-14 14:50  sympa-authors
+
+	* po/fr.po: Update
+
+2004-12-14 14:44  sympa-authors
+
+	* mail_tt2/listowner_notification.tt2: Fix
+
+2004-12-14 14:34  sympa-authors
+
+	* web_tt2/d_editfile.tt2, wwsympa/wwsympa.fcgi: Fix: could not
+	  create URL in subdirectories
+
+2004-12-14 14:34  sympa-authors
+
+	* po/: cs.po, de.po, en_US.po, es.po, et.po, fi.po, fr.po, hu.po,
+	  it.po, nl.po, pl.po, pt.po, ro.po, sympa.pot, zh_CN.po, zh_TW.po:
+	  Update
+
+2004-12-14 12:05  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: Change
+
+2004-12-14 11:37  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2, wwsympa/archived.pl: Fix: now
+	  using a MD5 hash (based on cookie+listname) to set tags ion
+	  mhonarc-ressources
+
+2004-12-13 16:27  sympa-authors
+
+	* .version, ChangeLog, NEWS: preparing 5.0a.1
+
 2004-12-13 15:29  sympa-authors
 
 	* src/etc/script/sympa: Add a sleep between stop and start

@@ -3,6 +3,36 @@
 
 (See Changelog file for the full changes log)
 
+5.0b		04 January 2005
+
+   New features :
+
+	[G.Bouteille] RSS channels are providing the following features :	   
+		* latest messages in list archives
+		* latest documents in web repository
+		* latest created mailing lists
+		* most active mailing lists
+	(read documentation for more informations)
+
+	Web pages can be recoded to utf-8 (web_recode_to parameter) ; 
+	default is to use each language native charset (iso-xxx)
+
+
+   Chqnges :
+	
+	check_perl_modules.pl: Newer version of MIME::Base64 required by MIME::Words
+
+	po/: Update POT ; sync PO with POT
+
+   Fixes :
+
+	wwsympa/archived.pl: Remove .mhonarc.lck if required
+	
+	src/etc/mhonarc-ressources.tt2, wwsympa/archived.pl: now using a MD5 hash 
+	(based on cookie+listname) to set tags in mhonarc-ressources. This prevents 
+	message contents to be parsed (when refering to TT2 templates)
+
+
 5.0a.1		13 December 2004
 
    New features :
