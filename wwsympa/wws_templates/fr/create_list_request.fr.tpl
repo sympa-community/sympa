@@ -57,6 +57,7 @@
 	  [END]
 	  [ENDIF]
 	[END]
+        <OPTION VALUE="other">Autre
      </SELECT>
    </TD>
    <TD valign=top><img src="/icons/unknown.gif" alt="Classement de liste dans l'annuaire"></TD>

@@ -57,6 +57,7 @@
 	  [END]
 	  [ENDIF]
 	[END]
+	<OPTION VALUE="other">Other
      </SELECT>
    </TD>
    <TD valign=top><img src="/icons/unknown.gif" alt="List classification in the directory"></TD>
