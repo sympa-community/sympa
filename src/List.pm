@@ -3950,7 +3950,7 @@ sub _include_users_file {
 	next if /^\s*$/;
 	next if /^\s*\#/;
 
-	unless (/^\s*((\S+|\".*\")@\S+)($|\s*(\S.*)\s*$)/) {
+	unless (/^\s*((\S+|\".*\")@\S+)(\s*(\S.*))?\s*$/) {
 	    &do_log('notice', 'Not an email address: %s', $_);
 	}
 
