@@ -65,13 +65,13 @@ installsrc:
 	done
 
 installsamplelist:
-	@if [ ! -d $(DESTDIR)$(DIR)/expl ]; then \
+	@if [ ! -d $(DESTDIR)$(EXPL_DIR) ]; then \
 		echo "Installing sample list ..."; \
-		mkdir -p $(DESTDIR)$(DIR)/expl; \
-		mkdir -p $(DESTDIR)$(DIR)/expl/test; \
-		cp test/* $(DESTDIR)$(DIR)/expl/test/; \
-		chown -R $(USER) $(DESTDIR)$(DIR)/expl; \
-		chgrp -R $(GROUP) $(DESTDIR)$(DIR)/expl; \
+		mkdir -p $(DESTDIR)$(EXPL_DIR); \
+		mkdir -p $(DESTDIR)$(EXPL_DIR)/test; \
+		cp test/* $(DESTDIR)$(EXPL_DIR)/test/; \
+		chown -R $(USER) $(DESTDIR)$(EXPL_DIR); \
+		chgrp -R $(GROUP) $(DESTDIR)$(EXPL_DIR); \
 	fi
 
 
