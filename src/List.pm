@@ -6815,7 +6815,8 @@ sub get_shared_moderated {
     }
     
     ## sort of the shared
-     return &sort_dir_to_get_mod("$shareddir");
+    my @mod_dir = &sort_dir_to_get_mod("$shareddir");
+    return \@mod_dir;
 }
 
 # return the list of documents awaiting for moderation in a dir and its subdirs
@@ -6852,7 +6853,7 @@ sub sort_dir_to_get_mod {
 	}
 
 	if (-d $path_d) {
-	    push(@moderate_dir,&sort_dir_to_get_mod("$path_d"));
+	    push(@moderate_dir,&sort_dir_to_get_mod($path_d));
 	}
     }
 	
@@ -7561,7 +7562,7 @@ sub get_cert {
     # it will have the respective cert attached anyways.
     # (the problem is that netscape, opera and IE can't only
     # read the first cert in a file)
-    my($certs,$keys) = tools::find_smime_keys($self->{dir},'encrypt');
+    my($certs,$keys) = tools::smime_find_keys($self->{dir},'encrypt');
     unless(open(CERT, $certs)) {
 	do_log('err', "List::get_cert(): Unable to open $certs: $!");
 	return undef;

@@ -1200,9 +1200,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	if ($param->{'is_priv'}) {
 	    $param->{'mod_total'} = $list->get_mod_spool_size();
 	   
-	    my @doc_mod_list = $list->get_shared_moderated();
-	    $param->{'doc_mod_list'} = \@doc_mod_list;
-	    $param->{'mod_total_shared'} = $#doc_mod_list + 1;
+	    $param->{'doc_mod_list'} = $list->get_shared_moderated();
+	    $param->{'mod_total_shared'} = $#{$param->{'doc_mod_list'}} + 1;
 
 	    if ($param->{'total'} > 0) {
 		$param->{'bounce_total'} = $list->get_total_bouncing();
@@ -3582,7 +3581,8 @@ sub do_redirect {
      ##  document shared awaiting for moderation
      foreach my $d (@{$param->{'doc_mod_list'}}) {
 	 
-         $d =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
+         $d =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
+	 
 	 my $path = $1; # path without the filename
 	 my $fname = $3; # the filename with .moderate
 	 my $visible_fname = &make_visible_path($fname); # the filename without .moderate
@@ -9691,8 +9691,7 @@ sub creation_desc_file {
      if ($ua =~ /MSIE/) {
 	 $ct = 'application/pkix-cert';
      }
-     
-     $param->{'bypass'} = 'extreme';
+      $ct = 'application/pkix-cert';
      printf "Content-type: $ct\n\n";
      foreach my $l (@cert) {
 	 printf "$l";
