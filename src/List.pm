@@ -2176,7 +2176,7 @@ sub send_msg {
 ## Add footer/header to a message
 sub add_parts {
     my ($self, $msg, $listname, $type) = @_;
-    do_log('debug3', 'List:add_parts(%s, %s, %s)', $msg, $listname, $type);
+    do_log('debug2', 'List:add_parts(%s, %s, %s)', $msg, $listname, $type);
 
     my ($listname,$type) = ($self->{'name'}, $self->{'admin'}{'footer_type'});
     my $listdir = $self->{'dir'};
@@ -2272,45 +2272,44 @@ sub add_parts {
     }else {
 	if ($content_type =~ /^multipart\/alternative/i) {
 
-	    &do_log('notice', 'Cannot add header/footer to message in multipart/alternative format');
-	}else {
-	    
-	    if ($header) {
-		if ($header =~ /\.mime$/) {
-		    
-		    my $header_part = $parser->parse_in($header);    
-		    $msg->make_multipart unless $msg->is_multipart;
-		    $msg->add_part($header_part, 0); ## Add AS FIRST PART (0)
-		    
-		    ## text/plain header
-		}else {
-		    
-		    $msg->make_multipart unless $msg->is_multipart;
-		    my $header_part = build MIME::Entity Path        => $header,
-		    Type        => "text/plain",
-		    Filename    => "message-header.txt",
-		    Encoding    => "8bit";
-		    $msg->add_part($header_part, 0);
-		}
+	    &do_log('notice', 'Making multipart/alternative into multipart/mixed'); 
+	    $msg->make_multipart("mixed",Force=>1); 
+	}
+	
+	if ($header) {
+	    if ($header =~ /\.mime$/) {
+		
+		my $header_part = $parser->parse_in($header);    
+		$msg->make_multipart unless $msg->is_multipart;
+		$msg->add_part($header_part, 0); ## Add AS FIRST PART (0)
+		
+		## text/plain header
+	    }else {
+		
+		$msg->make_multipart unless $msg->is_multipart;
+		my $header_part = build MIME::Entity Path        => $header,
+		Type        => "text/plain",
+		Filename    => "message-header.txt",
+		Encoding    => "8bit";
+		$msg->add_part($header_part, 0);
 	    }
-	    
-	    if ($footer) {
-		if ($footer =~ /\.mime$/) {
-		    
-		    my $footer_part = $parser->parse_in($footer);    
-		    $msg->make_multipart unless $msg->is_multipart;
-		    $msg->add_part($footer_part);
-		    
-		    ## text/plain footer
-		}else {
-		    
-		    $msg->make_multipart unless $msg->is_multipart;
-		    $msg->attach(Path        => $footer,
-				 Type        => "text/plain",
-				 Filename    => "message-footer.txt",
-				 Encoding    => "8bit"
-				 );
-		}
+	}
+	if ($footer) {
+	    if ($footer =~ /\.mime$/) {
+		
+		my $footer_part = $parser->parse_in($footer);    
+		$msg->make_multipart unless $msg->is_multipart;
+		$msg->add_part($footer_part);
+		
+		## text/plain footer
+	    }else {
+		
+		$msg->make_multipart unless $msg->is_multipart;
+		$msg->attach(Path        => $footer,
+			     Type        => "text/plain",
+			     Filename    => "message-footer.txt",
+			     Encoding    => "8bit"
+			     );
 	    }
 	}
     }
