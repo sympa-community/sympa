@@ -2575,6 +2575,7 @@ sub delete_user {
     do_log('debug2', 'List::delete_user');
 
     my $name = $self->{'name'};
+    my $total = 0;
     
     if (($self->{'admin'}{'user_data_source'} eq 'database') ||
 	($self->{'admin'}{'user_data_source'} eq 'include2')){
@@ -2614,7 +2615,7 @@ sub delete_user {
 #		}   
 #	    }
 
-	    $self->{'total'}--;
+	    $total--;
 	}
     }else {
 	my $users = $self->{'users'};
@@ -2623,12 +2624,13 @@ sub delete_user {
 	    $who = lc($who);
 	    
 	    delete $self->{'users'}{$who};
-	    $self->{'total'}-- unless (exists $users->{$who});
+	    $total-- unless (exists $users->{$who});
 	}
     }
 
+    $self->{'total'} -= $total;
     $self->savestats();
-    return 1;
+    return $total;
 }
 
 ## Returns the cookie for a list, if any.
@@ -3556,7 +3558,8 @@ sub add_user {
     do_log('debug2', 'List::add_user');
     
     my $name = $self->{'name'};
-	
+    my $total = 0;
+    
     if (($self->{'admin'}{'user_data_source'} eq 'database') ||
 	($self->{'admin'}{'user_data_source'} eq 'include2')){
 	
@@ -3600,8 +3603,7 @@ sub add_user {
 		do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 		return undef;
 	    }
-	    
-	    $self->{'total'}++;
+	    $total++;
 	}
     }else {
 	my (%u, $i, $j);
@@ -3614,15 +3616,16 @@ sub add_user {
 	    $new_user->{'date'} ||= time;
 	    $new_user->{'update_date'} ||= $new_user->{'date'};
 
-	    $self->{'total'}++ unless ($self->{'users'}->{$who});
+	    $total++ unless ($self->{'users'}->{$who});
 	    $u{$i} = $j while (($i, $j) = each %{$new_user});
 	    $self->{'users'}->{$who} = join("\n", %u);
 	}
     }
 
-   $self->savestats();
+    $self->{'total'} += $total;
+    $self->savestats();
 
-   return 1;
+    return $total;
 }
 
 ## Is the user listmaster
