@@ -48,8 +48,8 @@ Recherche effectuée sur <b> &quot;[key_word]&quot;</b>
 [END]
 
 <DL>
-<B>Resultats</b>
-<DT><B>[searched] messages trouvés parmis [num]...</b><BR>
+<B>Résultats</b>
+<DT><B>[searched] messages trouvés parmi [num]...</b><BR>
 
 [IF body]
 	<DD><B>[body_count]</b> occurence(s) dans le <i>corps</i><BR>
