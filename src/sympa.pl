@@ -252,7 +252,7 @@ if ($main::options{'dump'}) {
     foreach my $listname (@listnames) {
 	if (my $list = new List ($listname)) {
 
-	    system ("--SBINDIR--/alias_manager.pl add $list->{'name'} $list->{'admin'}{'host'} /tmp/sympa_aliases.$$") ;
+	    system ("--SBINDIR--/alias_manager.pl add $list->{'name'} $list->{'domain'} /tmp/sympa_aliases.$$") ;
 	}	
     }
     printf ("Sympa aliases file is /tmp/sympa_aliases.$$ file made, you probably need to installed it in your SMTP engine\n");
