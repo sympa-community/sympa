@@ -649,7 +649,8 @@ sub DoFile {
 
     ## encrypted message
     $is_crypted = 'not_crypted';
-    if ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) {
+    if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
+	($hdr->get('Content-Type') !~ /signed-data/)){
 	do_log('debug', "message is crypted");
 
 	if ($Conf{'openssl'}) {
