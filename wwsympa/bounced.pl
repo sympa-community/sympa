@@ -38,7 +38,8 @@ my %equiv = ( "user unknown" => '5.1.1',
 	      "quota exceeded" => '4.2.2',
 	      "write error to mailbox, disk quota exceeded" => '4.2.2',
 	      "user mailbox exceeds allowed size" => '4.2.2',
-	      "insufficient system storage" => '4.2.2');
+	      "insufficient system storage" => '4.2.2',
+	      "User's Disk Quota Exceeded:" => '4.2.2');
 
 
 require "--BINDIR--/bounce-lib.pl";
