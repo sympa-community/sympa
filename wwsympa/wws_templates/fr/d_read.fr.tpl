@@ -228,7 +228,6 @@
 	  [ENDIF]
         [ENDIF]
 
-	</TD>
 	</TR>
       [END] 
     [ENDIF]
