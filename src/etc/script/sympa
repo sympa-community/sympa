@@ -55,7 +55,7 @@ sympa_status() {
        if [ -f --PIDDIR--/$1.pid ] ; then
              pid=`head -1 --PIDDIR--/$1.pid`
              if [ "$pid" != "" ] ; then
-                 running=`ps -A | grep " $pid"`
+                 running=`ps -A | grep "$pid"`
                  if [ "$running" != "" ]; then
                      echo "$1 (pid $pid) is active..."
                      return 0
@@ -139,7 +139,7 @@ sympa_stop() {
 	if [ -f --PIDDIR--/$1.pid ]; then
 		echo $echo_opt "Stopping module $1.pl: "
 		pid=`head -1 --PIDDIR--/$1.pid`
-		running=`ps -A | grep " $pid"`
+		running=`ps -A | grep "$pid"`
 		if [ "$running" != "" ]; then
 		    if [ ${OSTYPE} = "IRIX" ]; then
 			kill -TERM $pid && echo "success" || echo "failure"
@@ -152,7 +152,6 @@ sympa_stop() {
 		else
 		    echo "died"
 		fi
-		rm -f --PIDDIR--/$1.pid
 		echo
 	else
 	        echo "Module $1.pl not running"
