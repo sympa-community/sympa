@@ -674,12 +674,6 @@ sub smime_decrypt {
 	$msg_as_string .= $_;
     }
 	
-    my $parser = new MIME::Parser;
-    $parser->output_to_core(1);
-    unless ($decryptedmsg = $parser->parse_data($msg_as_string)) {
-	do_log('notice', 'Unable to parse message');
-	return undef;
-    }
     close NEWMSG ;
 
     my $status = $?/256 ;
@@ -689,6 +683,20 @@ sub smime_decrypt {
     }
 
     unlink ($temporary_file) unless ($main::options{'debug'}) ;
+    
+    ## Create a MIME object with decrypted message
+    my $parser = new MIME::Parser;
+    $parser->output_to_core(1);
+    unless ($decryptedmsg = $parser->parse_data($msg_as_string)) {
+	do_log('notice', 'Unable to parse message');
+	return undef;
+    }
+
+    ## Now remove headers from $msg_as_string
+    my @msg_tab = split(/\n/, $msg_as_string);
+    my $line;
+    do {$line = shift(@msg_tab)} while ($line !~ /^\s*$/);
+    $msg_as_string = join("\n", @msg_tab);
     
     ## foreach header defined in the incomming message but undefined in the
     ## decrypted message, add this header in the decrypted form.
