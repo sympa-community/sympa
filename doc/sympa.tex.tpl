@@ -3046,10 +3046,32 @@ fastcgi servers can serve all virtual robot. Just configure the server environme
 \item \textbf {The DNS} must be configured to define a new mail exchanger record (MX) to route message to your server. A new host (A record) or alias (CNAME) are mandatory to define the new web server.
 \item Configure your \textbf {MTA (sendmail, postfix, exim, ...)} to accept incoming messages for the new robot domain.
 \item Define a \textbf {virtual host in your HTTPD server}. The fastcgi servers defined in the common section of you httpd server can be used by each virtual server. You don't need to run dedicated fascgi server for each virtual robot.
-\item Define the virtual robot in \textbf {Sympa configuration} (current web interface does not provide Virtual robot creation yet).
+
+\textit {Examples:} 
+\begin {quote}
+\begin{verbatim}
+FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 3 -idle-timeout 120
+.....
+<VirtualHost 195.215.92.16>
+  ServerAdmin webmaster@your.virtual.domain
+  DocumentRoot /var/www/your.virtual.domain
+  ServerName your.virtual.domain
+
+  <Location /wws>
+     SetHandler fastcgi-script
+  </Location>
+
+  ScriptAlias /wws /home/sympa/bin/wwsympa.fcgi
+
+</VirtualHost>
+\end{verbatim}
+\end {quote}
+
+\item Create a \file {robot.conf} for the virtual robot (current web interface does not provide Virtual robot creation yet).
+
 \end {itemize}
 
-\section {Robot definition}
+\section {robot.conf}
 
 A robot is named by its domain, let's say \samplerobot and defined by a directory 
 \tildedir {sympa/etc/\samplerobot}. This directory must contain at least a 
