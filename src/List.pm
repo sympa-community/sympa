@@ -2103,6 +2103,8 @@ sub send_file {
 	    }
 	}
 	
+	$data->{'subscriber'} = $self->get_subscriber($who);
+
 	unless ($data->{'user'}{'password'}) {
 	    $data->{'user'}{'password'} = &tools::tmp_passwd($who);
 	}
@@ -2338,11 +2340,17 @@ sub get_user_db {
 	return undef unless &db_connect();
     }
 
+    ## Additional subscriber fields
+    my $additional;
+    if ($Conf{'db_additional_user_fields'}) {
+	$additional = ',' . $Conf{'db_additional_user_fields'};
+    }
+
     if ($Conf{'db_type'} eq 'Oracle') {
 	## "AS" not supported by Oracle
-	$statement = sprintf "SELECT email_user \"email\", gecos_user \"gecos\", password_user \"password\", cookie_delay_user \"cookie_delay\", lang_user \"lang\" FROM user_table WHERE email_user = %s ", $dbh->quote($who);
+	$statement = sprintf "SELECT email_user \"email\", gecos_user \"gecos\", password_user \"password\", cookie_delay_user \"cookie_delay\", lang_user \"lang\" %s FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
     }else {
-	$statement = sprintf "SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang FROM user_table WHERE email_user = %s ", $dbh->quote($who);
+	$statement = sprintf "SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang %s FROM user_table WHERE email_user = %s ", $additional, $dbh->quote($who);
     }
     
     push @sth_stack, $sth;
@@ -2379,7 +2387,7 @@ sub get_subscriber {
     my  $self= shift;
     my  $email = lc(shift);
     
-    do_log('debug2', 'List::get_subscriber');
+    do_log('debug2', 'List::get_subscriber(%s)', $email);
 
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
 
@@ -2392,11 +2400,17 @@ sub get_subscriber {
 	    return undef unless &db_connect();
 	}
 
+	## Additional subscriber fields
+	my $additional;
+	if ($Conf{'db_additional_subscriber_fields'}) {
+	    $additional = ',' . $Conf{'db_additional_subscriber_fields'};
+	}
+
 	if ($Conf{'db_type'} eq 'Oracle') {
 	    ## "AS" not supported by Oracle
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", bounce_subscriber \"bounce\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", %s \"date\"  FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $dbh->quote($email), $dbh->quote($name);
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", bounce_subscriber \"bounce\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", %s \"date\"  %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $additional, $dbh->quote($email), $dbh->quote($name);
 	}else {
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, reception_subscriber AS reception, visibility_subscriber AS visibility, %s AS date  FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $dbh->quote($email), $dbh->quote($name);
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, reception_subscriber AS reception, visibility_subscriber AS visibility, %s AS date %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $additional, $dbh->quote($email), $dbh->quote($name);
 	}
 
 	push @sth_stack, $sth;
@@ -2471,14 +2485,20 @@ sub get_first_user {
 		,$dbh->quote($sql_regexp), $dbh->quote($sql_regexp);
 	}
 
+	## Additional subscriber fields
+	my $additional;
+	if ($Conf{'db_additional_subscriber_fields'}) {
+	    $additional = ',' . $Conf{'db_additional_subscriber_fields'};
+	}
+	
 	## Oracle
 	if ($Conf{'db_type'} eq 'Oracle') {
 
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\" FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $dbh->quote($name), $selection;
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\" %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $additional, $dbh->quote($name), $selection;
 
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
-		$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", substr(user_subscriber,instr(user_subscriber,'\@')+1) \"dom\" FROM subscriber_table WHERE (list_subscriber = %s ) ORDER BY \"dom\"", $date_field, $dbh->quote($name);
+		$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", substr(user_subscriber,instr(user_subscriber,'\@')+1) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s ) ORDER BY \"dom\"", $date_field, $additional, $dbh->quote($name);
 
 	    }elsif ($sortby eq 'email') {
 		$statement .= " ORDER BY \"email\"";
@@ -2491,11 +2511,11 @@ sub get_first_user {
 	## Sybase
 	}elsif ($Conf{'db_type'} eq 'Sybase'){
 
-		    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\" FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $dbh->quote($name), $selection;
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\" %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $additional, $dbh->quote($name), $selection;
 	    
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
-		$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", substring(user_subscriber,charindex('\@',user_subscriber)+1,100) \"dom\" FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY \"dom\"", $date_field, $dbh->quote($name);
+		$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", substring(user_subscriber,charindex('\@',user_subscriber)+1,100) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY \"dom\"", $date_field, $additional, $dbh->quote($name);
 		
 	    }elsif ($sortby eq 'email') {
 		$statement .= " ORDER BY \"email\"";
@@ -2508,13 +2528,13 @@ sub get_first_user {
 	## mysql
 	}elsif ($Conf{'db_type'} eq 'mysql') {
 	    
-    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $dbh->quote($name), $selection;
+    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $additional, $dbh->quote($name), $selection;
 	    
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
 		## Redefine query to set "dom"
 
-		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS dom FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $dbh->quote($name);
+		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $additional, $dbh->quote($name);
 
 	    }elsif ($sortby eq 'email') {
 		## Default SORT
@@ -2533,13 +2553,13 @@ sub get_first_user {
 	## Pg    
 	}else {
 	    
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $dbh->quote($name), $selection;
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $additional, $dbh->quote($name), $selection;
 	    
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
 		## Redefine query to set "dom"
 
-		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS dom FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $dbh->quote($name);
+		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $additional, $dbh->quote($name);
 
 	    }elsif ($sortby eq 'email') {
 		$statement .= ' ORDER BY email';
@@ -2653,11 +2673,17 @@ sub get_first_bouncing_user {
 	return undef unless &db_connect();
     }
 
+    ## Additional subscriber fields
+    my $additional;
+    if ($Conf{'db_additional_subscriber_fields'}) {
+	$additional = ',' . $Conf{'db_additional_subscriber_fields'};
+    }
+
     if ($Conf{'db_type'} eq 'Oracle') {
 	## "AS" not supported by Oracle
-	$statement = sprintf "SELECT user_subscriber \"email\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\" FROM subscriber_table WHERE (list_subscriber = %s AND bounce_subscriber is not NULL)", $date_field, $dbh->quote($name);
+	$statement = sprintf "SELECT user_subscriber \"email\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\" %s FROM subscriber_table WHERE (list_subscriber = %s AND bounce_subscriber is not NULL)", $date_field, $additional, $dbh->quote($name);
     }else {
-	$statement = sprintf "SELECT user_subscriber AS email, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date FROM subscriber_table WHERE (list_subscriber = %s AND bounce_subscriber is not NULL)", $date_field, $dbh->quote($name);
+	$statement = sprintf "SELECT user_subscriber AS email, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date %s FROM subscriber_table WHERE (list_subscriber = %s AND bounce_subscriber is not NULL)", $date_field, $additional, $dbh->quote($name);
     }
 
     push @sth_stack, $sth;

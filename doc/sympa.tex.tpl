@@ -1534,6 +1534,41 @@ db_options	mysql_read_default_file=/home/joe/my.cnf
 \end{verbatim}
 \end {quote}
    
+\subsection {\cfkeyword {db\_additional\_subscriber\_fields}}
+\label{db-additional-subscriber-fields}
+
+	If your \textbf {subscriber\_table} database table has more fields
+	than required by \Sympa (because other softwares work this set of
+	data), you can make \Sympa load these fields. Therefore, you can
+	use them from within mail/web templates (as [subscriber-$>$field]).
+
+	This parameter is a comma-separated list.
+
+Example :
+\begin {quote}
+\begin{verbatim}
+db_additional_subscriber_fields 	billing_delay,subscription_expiration
+\end{verbatim}
+\end {quote}
+ 
+\subsection {\cfkeyword {db\_additional\_user\_fields}}
+
+\label{db-additional-user-fields}
+
+	If your \textbf {user\_table} database table has more fields
+	than required by \Sympa (because other softwares work this set of
+	data), you can make \Sympa load these fields. Therefore, you can
+	use them from within mail/web templates (as [user-$>$field]).
+
+	This parameter is a comma-separated list.
+
+Example :
+\begin {quote}
+\begin{verbatim}
+db_additional_user_fields 	address,gender
+\end{verbatim}
+\end {quote}
+
 
 \section {Loop prevention}
 
@@ -1797,7 +1832,7 @@ others. Depending on permissions, the same URL may generate a different view.
 	the Title section of WWSympa.
 
 	\subsection {use\_fast\_cgi   0 | 1}
-	\label {use-fastcgi}
+	\label{use-fastcgi}
 	\default {1} \\
 	Choice of whether or not to use FastCGI. On listes.cru.fr, using FastCGI 
         increases WWSympa performance by as much as a factor of 10. Refer to 
@@ -1956,7 +1991,7 @@ file {wwsympa.fcgi} instances are awaiting clients requests.
 To run \WWSympa with FastCGI, you need to install :
 \begin{itemize}
 
-\item mod_fastcgi : the Apache module that provides FastCGI features
+\item mod\_fastcgi : the Apache module that provides FastCGI features
 
 \item FCGI : the Perl module used by \WWSympa
 
@@ -2177,6 +2212,18 @@ If the subscribers file is too big, a timeout may occur with the FastCGI
 (You can set longer timeout with \texttt {-idle-timeout} option of
 \texttt {FastCgiServer} Apache configuration directive). Then you should
 use \file {load\_subscribers.pl} script.
+
+
+\section {Extending database table format}
+
+You can easily add other fields to \textbf {subscriber\_table} and
+\textbf {user\_table}, they will not disturb \Sympa because it makes
+clear what field itexpects in SELECT queries.
+
+Moreover you can access these database fields from within \Sympa
+(in templates), as far as you list these additional fields in
+\file {sympa.conf} (See \ref {db-additional-subscriber-fields}, page~\pageref {db-additional-subscriber-fields}
+and \ref {db-additional-user-fields}, page~\pageref {db-additional-user-fields}).
 
 
 \section {\Sympa configuration}

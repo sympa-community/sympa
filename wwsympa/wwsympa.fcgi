@@ -883,6 +883,8 @@ sub check_param_in {
        ## privileges
        if ($param->{'user'}{'email'}) {
 	   $param->{'is_subscriber'} = $list->is_user($param->{'user'}{'email'});
+	   $param->{'subscriber'} = $list->get_subscriber($param->{'user'}{'email'})
+	       if $param->{'is_subscriber'};
 	   $param->{'is_privileged_owner'} = $param->{'is_listmaster'} || $list->am_i('privileged_owner', $param->{'user'}{'email'});
 	   $param->{'is_owner'} = $param->{'is_privileged_owner'} || $list->am_i('owner', $param->{'user'}{'email'});
 	   $param->{'is_editor'} = $list->am_i('editor', $param->{'user'}{'email'});
