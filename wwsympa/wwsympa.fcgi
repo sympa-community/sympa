@@ -750,6 +750,11 @@ if ($wwsconf->{'use_fast_cgi'}) {
      if ($param->{'list'}) {
 	 $param->{'main_title'} = "$param->{'list'} - $list->{'admin'}{'subject'}";
 	 $param->{'title'} = &get_protected_email_address($param->{'list'}, $list->{'admin'}{'host'});
+	 
+	 if ($param->{'subtitle'}) {
+	     $param->{'main_title'} = "$param->{'list'} - $param->{'subtitle'}";
+	 }
+
      }else {
 	 $param->{'main_title'} = $param->{'title'} = &Conf::get_robot_conf($robot,'title');
      }
