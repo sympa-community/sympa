@@ -1265,7 +1265,7 @@ sub send_to_editor {
 	       print DESC "Content-Transfert-Encoding: 8bit\n\n";
 	       
 	       printf DESC Msg(8, 10, "To distribute the following message into list %s, either click on this link :\nmailto:%s?subject=DISTRIBUTE%%20%s%%20%s\nOr send a mail to %s with this subject :\nDISTRIBUTE %s %s\n\n"), $name, $Conf{'sympa'}, $name, $modkey, $Conf{'sympa'}, $name, $modkey;
-	       printf DESC Msg(8, 11, "To refuse it (delete it), either click on this link :\nmailto:%s?subject=REJECT%20%s%20%s\nOr send a mail to %s with this subject :\nREJECT %s %s\n"), $Conf{'sympa'}, $name, $modkey, $Conf{'sympa'}, $name, $modkey;
+	       printf DESC Msg(8, 11, "To refuse it (delete it), either click on this link :\nmailto:%s?subject=REJECT%%20%s%%20%s\nOr send a mail to %s with this subject :\nREJECT %s %s\n"), $Conf{'sympa'}, $name, $modkey, $Conf{'sympa'}, $name, $modkey;
 	   }   
 	   print DESC "\n";
 	   print DESC "--$boundary\n" if ($method eq 'md5');
@@ -1291,7 +1291,7 @@ sub send_to_editor {
 	   print DESC "Content-Transfert-Encoding: 8bit\n\n";
 	   
 	   printf DESC Msg(8, 10, "To distribute the following message into list %s, either click on this link :\nmailto:%s?subject=DISTRIBUTE%%20%s%%20%s\nOr send a mail to %s with this subject :\nDISTRIBUTE %s %s\n\n"), $name, $Conf{'sympa'}, $name, $modkey, $Conf{'sympa'}, $name, $modkey;
-	   printf DESC Msg(8, 11, "To refuse it (delete it), either click on this link :\nmailto:%s?subject=REJECT%20%s%20%s\nOr send a mail to %s with this subject :\nREJECT %s %s\n"), $Conf{'sympa'}, $name, $modkey, $Conf{'sympa'}, $name, $modkey;
+	   printf DESC Msg(8, 11, "To refuse it (delete it), either click on this link :\nmailto:%s?subject=REJECT%%20%s%%20%s\nOr send a mail to %s with this subject :\nREJECT %s %s\n"), $Conf{'sympa'}, $name, $modkey, $Conf{'sympa'}, $name, $modkey;
        }   
        print DESC "\n";
        print DESC "--$boundary\n" if ($method eq 'md5');
