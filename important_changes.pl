@@ -1,5 +1,5 @@
 ## Print important changes in Sympa since last install
-## It is based on the RELEASE_NOTES ***** entries
+## It is based on the NEWS ***** entries
 
 my ($first_install, $current_version, $previous_version);
 
@@ -34,7 +34,7 @@ print "You are upgrading from Sympa $previous_version\nYou should read CAREFULLY
 my $wait = <STDIN>;
 
 ## Extracting Important changes from release notes
-open NOTES, 'RELEASE_NOTES';
+open NOTES, 'NEWS';
 my ($current, $ok);
 while (<NOTES>) {
     if (/^$previous_version/) {
