@@ -21,7 +21,7 @@ devez probablement vous identifier préalablement.<BR>
 [IF use_sso]
 [IF use_passwd=1]
 
-A cet effet, identifiez-vous de préférence en sélectionnant le serveur d'authentification de votre établissement ou à défault utilisez l'identification avec adresse et mot de passe
+A cet effet, identifiez-vous de préférence en sélectionnant le serveur d'authentification de votre établissement ou à défaut utilisez l'identification avec adresse et mot de passe
 
 [ENDIF]
 [ELSE]
