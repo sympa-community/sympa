@@ -5,7 +5,7 @@ Subject: A virus in your email
 
 Our viruschecker found the a virus named [virus_name]
 in a message adressed to [recipient] and that seems
-to be your  (From: [from]).
+to be yours  (From: [user->email]).
 
 We stopped delivery of this email.
 

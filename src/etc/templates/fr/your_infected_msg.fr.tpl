@@ -6,7 +6,7 @@ Content-transfer-encoding: 8bit
 
     **** A L E R T E    V I R U S ****
 
-Un message qui semble avoir été émis par vous ([from])
+Un message qui semble avoir été émis par vous ([user->email])
 a destination de [recipient] contenait le virus
 suivant : [virus_name].
 
