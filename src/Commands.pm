@@ -1717,7 +1717,7 @@ sub confirm {
     my $action = &List::request_action('send','md5',$robot,
 				       {'listname' => $name, 
 					'sender' => $sender ,
-					'msg' => $msg});
+					'message' => $message});
 
     return undef
 	unless (defined $action);

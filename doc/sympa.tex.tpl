@@ -3419,13 +3419,15 @@ Rules are defined as follows :
                   | [remote_host] | [remote_addr]
 	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
 		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
-	 	  | [msg_part->type] | [msg_part->body] | [is_bcc] | [current_date] | <string>
+	 	  | [msg_part->type] | [msg_part->body] | [msg_encrypted] | [is_bcc] | [current_date] | <string>
 
 [is_bcc] ::= set to 1 if the list is neither in To: nor Cc:
 
 [sender] ::= email address of the current user (used on web or mail interface). Default value is 'nobody'
 
 [previous_email] ::= old email when changing subscribtion email in preference page. 
+
+[msg_encrypted] ::= set to 'smime' if the message was S/MIME encrypted
 
 <date> ::= '<date_element> [ +|- <date_element>]'
 

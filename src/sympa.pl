@@ -1017,12 +1017,12 @@ sub DoMessage{
 	$action = &List::request_action ('send', 'smime',$robot,
 					 {'listname' => $name,
 					  'sender' => $sender,
-					  'msg' => $message->{'msg'} });
+					  'message' => $message });
     }else{
 	$action = &List::request_action ('send', 'smtp',$robot,
 					 {'listname' => $name,
 					  'sender' => $sender,
-					  'msg' => $message->{'msg'} });
+					  'message' => $message });
     }
 
     return undef

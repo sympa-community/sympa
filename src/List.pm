@@ -4155,7 +4155,9 @@ sub request_action {
     $context->{'email'} ||= $context->{'sender'};
     $context->{'remote_host'} ||= 'unknown_host' ;
     $context->{'robot_domain'} = $robot ;
-
+    $context->{'msg'} = $context->{'message'}->{'msg'} if (defined $context->{'message'});
+    $context->{'msg_encrypted'} = 'smime' if (defined $context->{'message'} && 
+					      $context->{'message'}->{'smime_crypted'} eq 'smime_crypted');
 
     unless ( $auth_method =~ /^(smtp|md5|pgp|smime)/) {
 	do_log('info',"fatal error : unknown auth method $auth_method in List::get_action");
