@@ -6587,7 +6587,7 @@ sub do_d_editfile {
     }
 
     #Current directory
-    if ($path =~ /^(.*)\/([^\/]+)$/) {
+    if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
 	$param->{'father'} = $1;
     }else {
 	$param->{'father'} = '';
@@ -6597,9 +6597,9 @@ sub do_d_editfile {
     # Description of the file
     my $descfile;
     if (-d "$shareddir/$path") {
-	$descfile = $shareddir.'/'.$path.'/.desc';
+	$descfile = "$shareddir/$1$3/.desc";
     }else {
-	$descfile = $shareddir.'/'.$1.'/.desc.'.$2;
+	$descfile = "$shareddir/$1.desc.$3";
     }
     
     if (-e $descfile) {
