@@ -26,13 +26,13 @@ Mesajul:\n"
 26	"Lista membrilor:\n"
 27	"Lista enumerata o poti sterge cu urmatoarea comanda:\n"
 28	"De pe lista %s de %d zile %d nu au confirmat abonarerea.\n"
-37 	"Mesaj ignorat pentru ca nu este in format text, Scrie doar mesaje in format text \n(sau pune comanda in subiect).\n"
+37	"Mesaj ignorat pentru ca nu este in format text, Scrie doar mesaje in format text \n(sau pune comanda in subiect).\n"
 38	"%s mesajul trimis pe lista a fost trimisa si la administrator(i)\n"
 39	"Aceasta comanda nu este prezenta in mesaj."
 40	"Aparitia mesajului va fi decisa de moderator."
 
 $set 5	Messages used in the tools module
-1 	"Comanda safefork nu poate incepe alt proces : %m"
+1	"Comanda safefork nu poate incepe alt proces : %m"
 2	"Eroare rutare?"
 3	"Urmatoarea scrisoare a fost trimisa pe lista, dar acesta contine \n\
 comenzi, ca de exemplu,subscribe, unsubscribe, help, index, get.\n\n\
@@ -47,8 +47,8 @@ Multumim pentru intelegere.\n\n\
 4	"------ Sfarsitul scrisorii cu probleme ------\n"
 
 $set 6 Messages du module Commands.pm
-2 	"Fisierul help nu poate fi accesat: %s\n"
-3 	"Lista '%s' nu are utilizatori.\n"
+2	"Fisierul help nu poate fi accesat: %s\n"
+3	"Lista '%s' nu are utilizatori.\n"
 5	"Lista cu denumirea  '%s' nu exista.\n"
 7	"Arhiva listei nu contine nici un mesaj.\n"
 8	"Fisierul cerut nu exista.\n"
@@ -222,7 +222,7 @@ E indicat sa stergi abonatii care sunt retrimisi: \n\
 28	"Avertizare:rata de retrimitere (bounced) in lista %s este prea mare"
 29	"Invitatie pentru abonare la lista%s"
 30	"Esti invitat sa te abonezi la lista %s"
-31 ”Rezumat al listei %s"
+31	"Rezumat al listei %s"
 
 $set 11 Messages used by the smtp module.
 1	"Sistemul tau nu corespunde standardelor POSIX P1003.1, sau\n\

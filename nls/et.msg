@@ -101,7 +101,7 @@ Mõni listi moderaatoritest võib selle kirja juba listi saatnud olla\n.\n"
 Teie ei ole listi %s moderaator.\n"
 47	"Käsud EXPIRE, EXPIREINDEX ja EXPIREDEL on lubatud ainult listiomanikele.\n\
 Teie ei ole listi %s omanik.\n"
-48      "\
+48	"\
 Keegi (loodetavasti teie) nõudis, et listi %s liikmed kes on listid olnud \n\
 rohkem kui %d päeva, uuendaksid oma liikmestaatust .\n\
 Kui te ei soovi seda tegevust sooritada, lihtsalt ignoreerige seda teadet.\n\
@@ -109,7 +109,7 @@ Et see tegevus sooritada, saatke aadressile %s selline käsk:\n\
 \n\
 AUTH %s EXPIRE %s %d %d\n"
 
-49      "\
+49	"\
 Üks EXPIRE käsk on parasjagu rakendatud listile %s.\n\
 Selle käsu käivitas omanik  %s (%s)\n\
 Ühele listile ei saa korraga olla rohkem kui 1 EXPIRE käsk korraga töötamas.\n\
@@ -121,7 +121,7 @@ lõpule %d päeva jooksul (%s).\n"
 53	"Aegumisprotsessi peatamiseks saatke käsk:  EXPIREDEL %s\n"
 54	"Listis %s ei tööta parasjagu EXPIRE käsk.\n"
 55	"Peatasite EXPIRE käsu töö listil %s\n"
-56      "\
+56	"\
 Listil %s käivitati EXPIRE käsk . See käsk lõpetab oma töö\n\
 %d päeva jooksul. Peale seda saate nimekirja aadressidest, kes ei uuendanud \n\
 liikmestaatust vastava aja jooksul.\n\
@@ -129,7 +129,7 @@ Need aadressid saate eemaldada listist, kasutades DEL käsku.\n"
 57	"Selleks, et lugeda aadresside nimekirja, kust ei ole uuendatud listi\n\
 liikmestaatust kasutage käsku EXPIREINDEX %s\n"
 58	"Te saate eemaldada need aadressid listist, kui kasutate järgnevaid käske :\n"
-60      "\
+60	"\
 Ei saanud käivitada EXPIRE käsku, kuna EXPIRE käsule peab järgnema selgitus\n\
 nendele listi lugejatele, kes peavad uuendama oma liikmestaatust.\n\
 See tekst peab:\n\n\
@@ -149,7 +149,7 @@ See tekst peab:\n\n\
 76	"Meeldetuletus listi %s liikmestaatusest"
 77	"Olete listi %s liige e-posti aadressilt %s\n"
 78	"Meeldetuletus saadeti kõikidele %d-le %s listi lugejale\n"
-79      "Te soovisite, et listi %s kõidele lugejatele saadetaks meeldetuletus\n\
+79	"Te soovisite, et listi %s kõidele lugejatele saadetaks meeldetuletus\n\
 nende liikmestaatuse kohta.\n\n\
 Kui soovite, et see tehtud saaks, saatke kiri aadressile %s\n\
 sisuga \n\n\
@@ -166,7 +166,7 @@ Kui soovite, et meeldetuletust ei saadetaks, ignoreerige seda kirja.\n"
 Teie seadeid ei muudetud.\n"
 91	"%s list ei paku liikmetele seadeid.\n"
 92	"Ei saanud hakkama listilugejate seadete muutmisega listis %s.\n"
-260     "Keegi (loodetavasti teie) soovis teid lisada listi %s.\n\
+260	"Keegi (loodetavasti teie) soovis teid lisada listi %s.\n\
 Kui soovite saada listi liikmeks, siis:\n\
 \n\
 * vastake sellele kirjale\nVÕI\n\
@@ -175,7 +175,7 @@ Kui soovite saada listi liikmeks, siis:\n\
 \n\
 Kui te ei soovi saada selle listi liikmeks ei pea te midagi tegema\n"
 
-261     "Keegi (loodetavasti teie ise) soovis, et teie e-posti aadress eemaldataks \n\
+261	"Keegi (loodetavasti teie ise) soovis, et teie e-posti aadress eemaldataks \n\
 listist %s.\n\
 Kui te tõepoolest soovite sellest listist lahkuda, siis: \n\
 \n\
@@ -186,14 +186,14 @@ Kui te tõepoolest soovite sellest listist lahkuda, siis: \n\
 Samuti saate seda teha veebiaadressilt %s\n\
 Kui te ei soovi listist lahkuda, võite rahulikult seda teadet ignoreerida.\n"
 262	"Teie kirja S/MIME signatuur kontrolliti edukalt"
-263 	"Teie kiri ei olnud saatetud multipart/signed vormigus või Sympa ei suutnud\n kontrollida signatuuri (Sympa ei saa kontrollida signatuuri kui käsk on\nsaadetud kirja teemareal)."
+263	"Teie kiri ei olnud saatetud multipart/signed vormigus või Sympa ei suutnud\n kontrollida signatuuri (Sympa ei saa kontrollida signatuuri kui käsk on\nsaadetud kirja teemareal)."
 
 $set 7	Käskude syslog teated (Commands.pm)
 
 $set 8	Teatead failist List.pm
 1	"Listi %s omanikud"
 2	"Listiga %s liitumise soov"
-3       "Listi %s omanik,\n\n\
+3	"Listi %s omanik,\n\n\
 1 kasutaja soovis liituda teie listiga. Kui te nõustute sellega, klikkige \n\
 järgnevale URLile:\n\n\
 mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n\n\
@@ -202,7 +202,6 @@ AUTH %s ADD %s %s %s\n"
 6	"Tere tulemast listi %s"
 7	"Fail"
 9	"Kokkuvõte listist %s"
-REJECT %s %s\n"
 12	"Selleks, et saata kaasa pandud kiri listi %s:\n\
 mailto:%s?subject=CONFIRM%%20%s\n\
 või saatke kiri aadressile %s järgneva teemareaga:\n\
