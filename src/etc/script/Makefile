@@ -21,7 +21,7 @@
 
 SRC	=	create_db.Pg create_db.mysql create_db.Oracle create_db.Sybase
 
-SUBSTSRC	=	load_subscribers.pl arc2webarc.pl testldap.pl p12topem.pl init_comment.pl crypt_passwd.pl testlogs.pl mod2html.pl
+SUBSTSRC	=	load_subscribers.pl arc2webarc.pl testldap.pl p12topem.pl init_comment.pl crypt_passwd.pl testlogs.pl mod2html.pl tpl2tt2.pl xgettext.pl
 
 INITSRC		=	sympa
 
@@ -49,6 +49,7 @@ installsubstsrc:
 		UMASK=0755; export UMASK; \
 		DIR=$(DIR); export DIR; \
 		DESTDIR=$(DESTDIR); export DESTDIR; \
+		INITDIR=$(INITDIR); export INITDIR; \
 		INSTALLDIR=$(SCRIPTDIR); export INSTALLDIR; \
 		BINDIR=$(BINDIR); export BINDIR; \
 		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
