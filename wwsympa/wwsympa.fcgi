@@ -8217,7 +8217,20 @@ sub do_d_savefile {
 
      # Parameters of the uploaded file
      my $fh = $query->upload('uploaded_file');
-
+     my $fn = $query->param('uploaded_file');
+     
+     # name of the file
+     my $fname;
+     if ($fn =~ /([^\/\\]+)$/) {
+	 $fname = $1;
+     }
+     
+     ### uploaded file must have a name
+     unless ($fname) {
+	 &error_message('missing_arg');
+	 &wwslog('info',"do_d_overwrite : No file specified to overwrite");
+	 return undef;
+     } 
 
  ####### Controls
      ### action relative to a list ?
@@ -8284,9 +8297,12 @@ sub do_d_savefile {
      close FILE;
 
      # Description file
-     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/; 
-     my $dir = $1;
-     my $file = $3;
+     my ($dir, $file);
+     if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) { 
+	 $dir = $1;
+	 $file = $3;
+     }
+
      if (-e "$shareddir/$dir.desc.$file"){
 	 # if description file already exists : open it and modify it
 	 my %desc_hash = &get_desc_file ("$shareddir/$dir.desc.$file");
