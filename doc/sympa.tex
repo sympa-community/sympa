@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {24 November 2003}
+    \date {25 November 2003}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -1116,24 +1116,17 @@ you may change this behavior by editing \file {sympa.conf}'s
 page~\pageref{par-log-socket-type}). You can test log feature by
 using  \file {testlogs.pl}.
 
+\section {INIT script}
+\label{init}
+
+The \unixcmd {make install} step should have installed a sysV init script in
+your \dir {/etc/rc.d/init.d/} directory (you can change this at \unixcmd {configure}
+time with the \option {--with-initdir} option). You should edit your runlevels to make
+sure \Sympa starts after \index{Apache} and \index{MySQL}. Note that \index{MySQL} should
+also start before \index{Apache} because of \file {wwsympa.fcgi}.
+
 \section {sympa.pl}
 \label{sympa.pl}
-
-Once the files are configured, all that remains is to start \Sympa.
-At startup, \file {sympa.pl} will change its UID to sympa (as defined in \file {Makefile}).
-To do this, add the following sequence or its equivalent in your
-\file {/etc/rc.local}:
-
-\begin {quote}
-\begin{verbatim}
-
-~sympa/bin/sympa.pl
-~sympa/bin/archived.pl
-~sympa/bin/bounced.pl
-~sympa/bin/task_manager.pl
-
-\end{verbatim}
-\end {quote}
 
 \file {sympa.pl} recognizes the following command line arguments:
 
