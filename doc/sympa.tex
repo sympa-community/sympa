@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {13 August 2004}
+    \date {31 August 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -6146,12 +6146,33 @@ The Database Server \Sympa will try to connect to.
 
 The hostname of the database system.
 
+
+\item 
+\label {user}
+\lparam {user} \textit {user\_id}
+
+The user id to be used when connecting to the database.
+
+\item 
+\label {passwd}
+\lparam {passwd} \textit {some secret}
+
+The user passwd for \lparam {user}.
+
+
+\item
+\label {sql-query}
+\lparam {sql\_query} \textit {a query string}
+The SQL query string. No fields other than e-mail addresses should be returned
+by this query!
+
 \item
 \label {connect-options}
 \lparam {connect\_options} \textit {option1=x;option2=y}
 
+This parameter is optional and specific to each RDBMS.
+
 These options are appended to the connect string.
-This parameter is optional.
 
 Example :
 
@@ -6176,6 +6197,8 @@ Connexion timeout is set to 5 seconds.
 \item 
 \lparam {db\_env} \textit {list\_of\_var\_def}
 
+This parameter is optional ; it is needed for some RDBMS (Oracle).
+
 Sets a list of environment variables to set before database connexion.
 This is a ';' separated list of variable assignment.
 
@@ -6186,25 +6209,23 @@ db_env	ORACLE_TERM=vt100;ORACLE_HOME=/var/hote/oracle/7.3.4
 \end{verbatim}
 \end {quote}
 
+\item
+\label {sql-name}
+\lparam {name} \textit {short name}
 
-\item 
-\label {user}
-\lparam {user} \textit {user\_id}
+This parameter is optional.
 
-The user id to be used when connecting to the database.
-
-\item 
-\label {passwd}
-\lparam {passwd} \textit {some secret}
-
-The user passwd for \lparam {user}.
-
+It provides a human-readable name to this datasource. It will be used within the REVIEW page to indicate what datasource
+each list member comes from (usefull when having multiple data sources).
 
 \item
-\label {sql-query}
-\lparam {sql\_query} \textit {a query string}
-The SQL query string. No fields other than e-mail addresses should be returned
-by this query!
+\label {sql-fdir}
+\lparam {f\_dir} \textit {/var/csvdir}
+
+This parameter is optional, only used when accessing a CSV datasource.
+
+When connecting to a CSV datasource, this parameter indicates the directory where the CSV files are located.
+
 
 
 \end{itemize}
