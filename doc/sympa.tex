@@ -2357,6 +2357,37 @@ Inclusion and parsing of a template file :
 The first example includes the template file \file {welcome.tpl}.
 The second example includes a template file which path is in file\_path variable.
 
+\subsection {Stop parsing}
+
+You may need to exclude lines in a template out of the parsing
+process. You can perform this by stopping and restarting the
+parsing.
+
+Escaping sensible Javascript functions :
+
+\begin {quote}
+\begin{verbatim}
+<HEAD>
+<SCRIPT LANGUAGE="JavaScript">
+<!-- for other browsers
+  function toggle_selection(myfield) {
+    for (i = 0; i < myfield.length; i++) {
+    [STOPPARSE]
+       if (myfield[i].checked) {
+            myfield[i].checked = false;
+       }else {
+	    myfield[i].checked = true;
+       }
+    [STARTPARSE]
+    }
+  }
+// end browsers -->
+</SCRIPT>
+</HEAD>
+\end{verbatim}
+\end {quote}
+
+
 \section {Site template files}
 \label{site-tpl}
 \index{templates, site}
