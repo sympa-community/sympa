@@ -146,8 +146,8 @@ undef my $log; # won't execute send_msg and delete_subs commands if true, only l
 my @list_models = ('expire', 'remind');
 
 ## hash of the global task models
-my %global_models = ('crl_update_task' => 'crl_update', 
-		     'chk_cert_expiration_task' => 'chk_cert_expiration',
+my %global_models = (#'crl_update_task' => 'crl_update', 
+		     #'chk_cert_expiration_task' => 'chk_cert_expiration',
 		     'expire_bounce' => 'expire_bounce'
 		     #,'global_remind' => 'global_remind'
 		     );
@@ -951,7 +951,7 @@ sub expire_bounce {
 	}
 	
 	unless ($list->get_latest_distribution_date()) {
-	    do_log('notice','bounce expiration : skipping list %s because could not get latest distribution date',$listname);
+	    do_log('debug2','bounce expiration : skipping list %s because could not get latest distribution date',$listname);
 	    next;
 	}
 	my $refdate = (($list->get_latest_distribution_date() - $delay) * 3600 * 24);

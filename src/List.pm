@@ -1015,8 +1015,6 @@ sub new {
 	# use the current list in memory and update it
 	$liste=$list_of_lists{$name};
     }else{
-	do_log('debug', 'List object %s creation', $name) if $main::options{'debug'}; ##TEMP
-
 	# create a new object list
 	bless $liste, $pkg;
     }
@@ -1096,7 +1094,7 @@ sub get_latest_distribution_date {
     my %count ; 
     my $latest_date = 0 ; 
     unless (open(MSG_COUNT, $file)) {
-	do_log ('debug',"get_latest_distribution_date: unable to open $file");
+	do_log ('debug2',"get_latest_distribution_date: unable to open $file");
 	return undef ;
     }
 
