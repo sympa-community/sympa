@@ -5580,6 +5580,9 @@ sub load_topics {
     ## Load if not loaded or changed on disk
     if (! $list_of_topics{$robot} || ((stat($conf_file))[9] > $mtime{'topics'}{$robot})) {
 
+	## delete previous list of topics
+	%list_of_topics = undef;
+
 	unless (-r $conf_file) {
 	    &do_log('err',"Unable to read $conf_file");
 	    return undef;
@@ -5638,17 +5641,17 @@ sub load_topics {
 		$list_of_topics{$robot}{$tree[0]}{'sub'}{$subtopic} = &_add_topic($subtopic,$topic->{'title'},);
 	    }
 	}
-    }
 
-    ## Set undefined Topic (defined via subtopic)
-    foreach my $t (keys %{$list_of_topics{$robot}}) {
-	unless (defined $list_of_topics{$robot}{$t}{'visibility'}) {
-	    $list_of_topics{$robot}{$t}{'visibility'} = &_load_scenario_file('topics_visibility', $robot,'default');
+	## Set undefined Topic (defined via subtopic)
+	foreach my $t (keys %{$list_of_topics{$robot}}) {
+	    unless (defined $list_of_topics{$robot}{$t}{'visibility'}) {
+		$list_of_topics{$robot}{$t}{'visibility'} = &_load_scenario_file('topics_visibility', $robot,'default');
+	    }
+	    
+	    unless (defined $list_of_topics{$robot}{$t}{'title'}) {
+		$list_of_topics{$robot}{$t}{'title'} = $t;
+	    }	
 	}
-
-	unless (defined $list_of_topics{$robot}{$t}{'title'}) {
-	    $list_of_topics{$robot}{$t}{'title'} = $t;
-	}	
     }
 
     return %{$list_of_topics{$robot}};
