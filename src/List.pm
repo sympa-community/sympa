@@ -846,11 +846,6 @@ my %alias = ('reply-to' => 'reply_to',
 						       'title_id' => 78,
 						       'order' => 3
 						       },
-				      'data_source_update' => {'format' => '\d+',
-							       'length' => 8,
-							       'title_id' => 205,
-							       'order' => 4
-						       },
 				      'date' => {'format' => '.+',
 						 'length' => 30,
 						 'title_id' => 79,
@@ -1235,8 +1230,7 @@ sub save_config {
     $self->{'admin'}{'defaults'}{'serial'} = 0;
     $self->{'admin'}{'update'} = {'email' => $email,
 				  'date_epoch' => time,
-				  'date' => &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time)),
-				  'data_source_update' => $self->{'admin'}{'update'}{'data_source_update'}
+				  'date' => &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time))
 				  };
     $self->{'admin'}{'defaults'}{'update'} = 0;
     
@@ -5566,9 +5560,11 @@ sub sync_include {
 	}
     }
 
-    unless( $users_added = $self->add_user( @add_tab ) ) {
-	&do_log('err', 'List:sync_include(%s): Failed to add new users', $name);
-	next;
+    if ($#add_tab >= 0) {
+	unless( $users_added = $self->add_user( @add_tab ) ) {
+	    &do_log('err', 'List:sync_include(%s): Failed to add new users', $name);
+	    return undef;
+	}
     }
 
     if ($users_added) {
@@ -5599,7 +5595,7 @@ sub sync_include {
 	    }
 	}
     }
-    if ($users_removed) {
+    if ($#deltab >= 0) {
 	unless($users_removed = $self->delete_user(@deltab)) {
 	    &do_log('err', 'List:sync_include(%s): Failed to delete %s',
 		    $name, $users_removed);
@@ -5692,7 +5688,7 @@ sub _save_stats_file {
     my $stats = shift;
     my $total = shift;
     my $last_sync = shift;
-    do_log('debug2', 'List::_save_stats_file(%s, %d)', $file, $total);
+    do_log('debug2', 'List::_save_stats_file(%s, %d, %d)', $file, $total,$last_sync );
     
     open(L, "> $file") || return undef;
     printf L "%d %.0f %.0f %.0f %d %d\n", @{$stats}, $total, $last_sync;

@@ -5169,8 +5169,9 @@ sub do_edit_list {
 
 	my @users;
 
-	if ($pname =~ /^(include_.*|user_data_source)$/) {
-	    $new_admin->{'update'}{'data_source_update'} = time;
+	## If datasource config changed
+	if ($pname =~ /^(include_.*|user_data_source|ttl)$/) {
+	    ## start sync_include_task
 	}
 	
 	## User Data Source
