@@ -883,6 +883,11 @@
 	for his favourite CAS server.
 *****	auth.conf format has changed ; if you had a previous auth.conf file you 
 *****	should change it according to the new format
+*****	To keep the existing authentication bahovior you should add the following entries at the
+*****	end of your existing auth.conf file :
+*****		    user_table
+*****		    regexp                 .*
+
 
    Changes :
 
