@@ -26,11 +26,13 @@ archives, list management and so on.
        <A HREF="[path_cgi]/lists/[topic->id]"><B>[topic->title]</B></A><BR>
       [ENDIF]
 
+      [IF topic->sub]
       [FOREACH subtopic IN topic->sub]
        <FONT SIZE="-1">
 	&nbsp;&nbsp;<A HREF="[path_cgi]/lists/[topic->id]/[subtopic->NAME]">[subtopic->title]</A><BR>
        </FONT>
       [END]
+      [ENDIF]
       [IF topic->next]
 	</TD><TD></TD><TD WIDTH=33% NOWRAP>
       [ENDIF]

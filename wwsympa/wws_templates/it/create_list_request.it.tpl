@@ -47,9 +47,11 @@
 	    SELECTED
 	  [ENDIF]
 	  >[topic->title]
+	  [IF  topic->sub]
 	  [FOREACH subtopic IN topic->sub]
 	     <OPTION VALUE="[topic->NAME]/[subtopic->NAME]">[topic->title] / [subtopic->title]
 	  [END]
+	  [ENDIF]
 	[END]
      </SELECT>
    </TD>
