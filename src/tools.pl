@@ -841,7 +841,7 @@ sub virus_infected {
     my $virusfound; 
 
     ## McAfee
-    if ($name[$#name] eq 'uvscan') {
+    if ($Conf{'antivirus_path'} =~  /\/uvscan$/) {
 
 	# impossible to look for viruses with no option set
 	return 0 unless ($Conf{'antivirus_args'});
@@ -863,7 +863,7 @@ sub virus_infected {
 	}
 
     ## Trend Micro
-    }elsif ($name[$#name] eq 'vscan') {
+    }elsif ($Conf{'antivirus_path'} =~  /\/vscan$/) {
 
 	open (ANTIVIR,"$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ; 
 		
@@ -882,7 +882,7 @@ sub virus_infected {
 	}
 
     ## F-Secure
-    } elsif($name[$#name] eq 'fsav') {
+    } elsif($Conf{'antivirus_path'} =~  /\/fsav$/) {
 	$dbdir=$` ;
 
 	# impossible to look for viruses with no option set
@@ -908,7 +908,7 @@ sub virus_infected {
 
     }
 ## if debug mode is active, the working directory is kept
-    unless ($main::opt_d || $main::opt_D) {
+    unless ($main::options{'debug'}) {
 	opendir (DIR, ${work_dir});
 	my @list = readdir(DIR);
 	close (DIR);
