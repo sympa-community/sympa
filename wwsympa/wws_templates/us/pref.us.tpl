@@ -30,7 +30,7 @@
 	      [END]
 	    </SELECT>
 	    <BR><BR>
-	    <FONT COLOR="--DARK_COLOR--">Expiration of the connexion </FONT>
+	    <FONT COLOR="--DARK_COLOR--">Connection expiration period </FONT>
 	    <SELECT NAME="cookie_delay">
 	      [FOREACH period IN cookie_periods]
 	        <OPTION VALUE="[period->value]" [period->selected]>[period->desc]
