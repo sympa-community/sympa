@@ -336,6 +336,8 @@ sub load_robots {
 
 	$robot_conf->{$robot}{'wwsympa_url'} ||= 'http://'.$robot_conf->{$robot}{'http_host'}.'/wws';
 
+	$robot_conf->{$robot}{'sympa'} = $robot_conf->{$robot}{'email'}.'@'.$robot_conf->{$robot}{'host'};
+
 	$robot_conf->{$robot}{'request'} = $robot_conf->{$robot}{'email'}.'-request@'.$robot_conf->{$robot}{'host'};
 
 	$robot_conf->{'robot_by_http_host'}{$robot_conf->{$robot}{'http_host'}} = $robot ;

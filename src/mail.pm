@@ -113,7 +113,7 @@ sub mailarc {
 ## send welcome, bye, expire removed or reminder message to a user
 sub mailfile {
    my ($filename, $rcpt, $data, $robot, $sign_mode) = @_;
-   do_log('debug2', 'mail::mailfile(%s, %s, %s)', $filename, $rcpt, $sign_mode);
+   do_log('debug2', 'mail::mailfile(%s, %s, %s, %s)', $filename, $rcpt, $robot, $sign_mode);
 
    my ($full_msg, $return_path, $sendmail, $to, $sympa_file);
 
@@ -144,7 +144,13 @@ sub mailfile {
 
        ## Don't fork if used by a CGI (FastCGI problem)
        if (defined $send_spool) {
-	   $sympa_file = "$send_spool/T.$Conf{'sympa'}\@$robot.".time.'.'.int(rand(10000));
+	   my $sympa_email = $data->{'conf'}{'sympa'} || $Conf{'sympa'};
+	   if ($robot eq $Conf{'domain'}) {
+	       $sympa_email = $Conf{'email'};
+	   }else {
+	       $sympa_email = $Conf{'robots'}{$robot}{'sympa'};
+	   }
+	   $sympa_file = "$send_spool/T.$sympa_email.".time.'.'.int(rand(10000));
 	   
 	   unless (open TMP, ">$sympa_file") {
 	       &do_log('notice', 'Cannot create %s : %s', $sympa_file, $!);

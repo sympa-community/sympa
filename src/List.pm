@@ -2134,7 +2134,7 @@ sub send_global_file {
 
     $data->{'conf'}{'email'} = $Conf{'robots'}{$robot}{'email'} || $Conf{'email'};
     $data->{'conf'}{'host'} = $Conf{'robots'}{$robot}{'host'} || $Conf{'host'};
-    $data->{'conf'}{'sympa'} = "$Conf{'email'}\@$robot";
+    $data->{'conf'}{'sympa'} = $Conf{'robots'}{$robot}{'sympa'} || $Conf{'sympa'};
     $data->{'conf'}{'listmaster'} = $Conf{'robots'}{$robot}{'listmaster'} || $Conf{'listmaster'};
     $data->{'conf'}{'wwsympa_url'} = $Conf{'robots'}{$robot}{'wwsympa_url'} || $Conf{'wwsympa_url'};
     $data->{'conf'}{'version'} = $main::Version;
@@ -2216,7 +2216,7 @@ sub send_file {
     
     $data->{'conf'}{'email'} = $Conf{'robots'}{$robot}{'email'} || $Conf{'email'};
     $data->{'conf'}{'host'} = $Conf{'robots'}{$robot}{'host'} || $Conf{'host'};
-    $data->{'conf'}{'sympa'} = "$Conf{'email'}\@$robot";
+    $data->{'conf'}{'sympa'} = $Conf{'robots'}{$robot}{'sympa'} || $Conf{'sympa'};
     $data->{'conf'}{'listmaster'} = $Conf{'robots'}{$robot}{'listmaster'} || $Conf{'listmaster'};
     $data->{'conf'}{'wwsympa_url'} = $Conf{'robots'}{$robot}{'wwsympa_url'} || $Conf{'wwsympa_url'};
     $data->{'list'}{'lang'} = $self->{'admin'}{'lang'};

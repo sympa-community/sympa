@@ -3200,9 +3200,16 @@ sub do_distribute {
 	return undef;
     }
     my $extention = time.".".int(rand 9999) ;
-    open DISTRIBUTE, ">$Conf{'queue'}/T.$Conf{'sympa'}\@$robot.$extention" ;
+    my $sympa_email = $Conf{'robots'}{$robot}{'sympa'} || $Conf{'sympa'};
+    unless (open DISTRIBUTE, ">$Conf{'queue'}/T.$sympa_email.$extention") {
+	&error_message('failed');
+	&wwslog('info','do_distribute: could not create %s: %s', "$Conf{'queue'}/T.$sympa_email.$extention",$!);
+	return undef;
+    }
 
-    printf DISTRIBUTE ("X-Sympa-To: %s\n",$Conf{'sympa'}.'@'.$robot);
+    &do_log('debug', "XXXXX: $Conf{'queue'}/T.$sympa_email.$extention");
+
+    printf DISTRIBUTE ("X-Sympa-To: %s\n",$sympa_email);
     printf DISTRIBUTE ("Message-Id: <%s\@wwsympa>\n", time);
     printf DISTRIBUTE ("From: %s\n\n", $param->{'user'}{'email'});
 
@@ -3219,7 +3226,7 @@ sub do_distribute {
 
     }
     close DISTRIBUTE;
-    rename("$Conf{'queue'}/T.$Conf{'sympa'}\@$robot.$extention","$Conf{'queue'}/$Conf{'sympa'}\@$robot.$extention");
+    rename("$Conf{'queue'}/T.$sympa_email.$extention","$Conf{'queue'}/$sympa_email.$extention");
 
     &message('performed_soon');
     
