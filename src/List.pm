@@ -4261,8 +4261,11 @@ sub _include_users_ldap {
 
     ## LDAP and query handler
     my ($ldaph, $fetch);
- 
-    unless ($ldaph = Net::LDAP->new($host, port => "$port")) {
+
+    ## Connection timeout (default is 120)
+    my $timeout = 30; 
+
+    unless ($ldaph = Net::LDAP->new($host, port => "$port", timeout => $timeout)) {
 	do_log ('notice',"Can\'t connect to LDAP server '$host' '$port' : $@");
 	return undef;
     }
