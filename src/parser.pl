@@ -24,7 +24,7 @@
 use FileHandle;
 use Log;
 
-my ($index, @t, $data, $internal, $previous_file);
+my ($index, @t, $data, $internal, $previous_file, %option);
 
 ## The main parsing sub
 sub parse_tpl {
@@ -63,6 +63,9 @@ sub parse_tpl {
     ## [FOREACH item IN list]...[item->NAME]...[END]
     ## [INCLUDE file]
     ## [PARSE file]
+    ## [STOPPARSE]...[STARTPARSE]
+    ## [SET var=value]
+    ## [SETOPTION opt]...[UNSETOPTION opt]
 
     my $fh = new FileHandle $template;
 
@@ -81,6 +84,26 @@ sub parse_tpl {
 }
 
 return 1;
+
+## Processes [SETOPTION xx] 
+sub do_setoption {
+
+    if (/\[\s*SETOPTION\s+(\w+)\s*\]/i) {
+	$option{$1} = 1;
+    }
+
+    return;
+}
+
+## Processes [UNSETOPTION xx] 
+sub do_unsetoption {
+
+    if (/\[\s*UNSETOPTION\s+(\w+)\s*\]/i) {
+	delete $option{$1};
+    }
+
+    return;
+}
 
 ## Processes [SET xx=yy] 
 sub do_setvar {
@@ -308,6 +331,10 @@ sub process {
 	    $status = &do_stopparse();
 	}elsif (/\[\s*SET\s+(\w+)\s*\=\s*(\w+\->\w+|\d+)\s*\]/i) {
 	    $status = &do_setvar($echo);
+	}elsif (/\[\s*SETOPTION\s+(\w+)\s*\]/i) {
+	    $status = &do_setoption();
+	}elsif (/\[\s*UNSETOPTION\s+(\w+)\s*\]/i) {
+	    $status = &do_unsetoption();
 	}elsif ($echo == 1) {
 	    $status = &do_parse();
 	    print;
@@ -333,20 +360,29 @@ sub do_parse {
 
 sub do_eval {
     my $var = shift;
+    
+    my $returned_value;
 
     if ($var =~ /^(\w+)\-\>(INDEX|NAME)$/) {
 	if (ref($internal->{$1}) eq 'HASH') {
-	    return $internal->{$1}{$2};
+	    $returned_value = $internal->{$1}{$2};
 	}
     }elsif ($var =~ /^(\w+)\-\>(\w+)$/) {
 	if (ref($data->{$1}) eq 'HASH') {
-	    return $data->{$1}{$2};
+	    $returned_value = $data->{$1}{$2};
 	}
     }elsif ($var =~ /^(\w+)$/) {
-	return $data->{$1};
+	$returned_value = $data->{$1};
     }else {
 	&do_log('err','Parser [%d] unable to parse %s', $index, $var);
+	return '['.$var.']';
     }
 
-    return '';
+    ## If 'ignore_undef' option is set and result is undefined
+    ## Don't parse it
+    if ((! defined($returned_value)) && $option{'ignore_undef'}) {
+	return '['.$var.']';
+    }
+
+    return $returned_value;
 }

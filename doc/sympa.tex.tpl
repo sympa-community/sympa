@@ -3458,6 +3458,25 @@ Escaping sensitive JavaScript functions :
 \end {quote}
 
 
+\subsection {Parsing options}
+
+You can change the parser's behvior by setting unsetting options. Available options are :
+\begin {itemize}
+
+  \item \textbf {ignore\_undef} : undefined variables won't be parsed. Default behavior is
+    to process undef variables like empty variables.
+
+\end {itemize}
+
+\begin {quote}
+\begin{verbatim}
+[SETOPTION ignore_undef]
+Here is an unparsed undef variable : [unknown_var]
+[UNSETOPTION ignore_undef]
+\end{verbatim}
+\end {quote}
+
+
 \section {Site template files}
 \label{site-tpl}
 \index{templates, site}
