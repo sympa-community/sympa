@@ -92,7 +92,7 @@ installtemplates:
 
 installicons:
 	@echo "Installing icons..."
-	cp icons/*.gif $(DESTDIR)$(ICONSDIR)
+	cp icons/*.png $(DESTDIR)$(ICONSDIR)
 
 substlib:
 	@echo "Doing multiple substitutions while installing librairies..."

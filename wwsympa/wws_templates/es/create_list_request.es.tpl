@@ -8,13 +8,13 @@
  <TR>
    <TD NOWRAP><B>Nombre de la Lista:</B></TD>
    <TD><INPUT TYPE="text" NAME="listname" SIZE=30 VALUE="[saved->listname]"></TD>
-   <TD><img src="/icons/unknown.gif" alt="nombre de la lista ; no su dirección!"></TD>
+   <TD><img src="/icons/unknown.png" alt="nombre de la lista ; no su dirección!"></TD>
  </TR>
  
  <TR>
    <TD NOWRAP><B>Propietario:</B></TD>
    <TD><I>[user->email]</I></TD>
-   <TD><img src="/icons/unknown.gif" alt="Vd. es el propietaro de esta lista"></TD>
+   <TD><img src="/icons/unknown.png" alt="Vd. es el propietaro de esta lista"></TD>
  </TR>
 
  <TR>
@@ -32,12 +32,12 @@
 [END]
      </MENU>
     </TD>
-    <TD valign=top><img src="/icons/unknown.gif" alt="El tipo de lista es un conjunto de parámetros. Estos, son editables, una vez que la lista haya sido creada"></TD>
+    <TD valign=top><img src="/icons/unknown.png" alt="El tipo de lista es un conjunto de parámetros. Estos, son editables, una vez que la lista haya sido creada"></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>Tema:</B></TD>
    <TD><INPUT TYPE="text" NAME="subject" SIZE=60 VALUE="[saved->subject]"></TD>
-   <TD><img src="/icons/unknown.gif" alt="El tema de la lista"></TD>
+   <TD><img src="/icons/unknown.png" alt="El tema de la lista"></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>Tópicos:</B></TD>
@@ -57,12 +57,12 @@
 	[END]
      </SELECT>
    </TD>
-   <TD valign=top><img src="/icons/unknown.gif" alt="Clasificación de la lista en el directorio"></TD>
+   <TD valign=top><img src="/icons/unknown.png" alt="Clasificación de la lista en el directorio"></TD>
  </TR>
  <TR>
    <TD valign=top NOWRAP><B>Descripción:</B></TD>
    <TD><TEXTAREA COLS=60 ROWS=10 NAME="info">[saved->info]</TEXTAREA></TD>
-   <TD valign=top><img src="/icons/unknown.gif" alt="Un par de líneas describiendo la lista"></TD>
+   <TD valign=top><img src="/icons/unknown.png" alt="Un par de líneas describiendo la lista"></TD>
  </TR>
 
  <TR>

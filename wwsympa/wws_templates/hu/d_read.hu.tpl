@@ -5,7 +5,7 @@
 [ELSE]
 
   [IF path]  
-    <h2> <B><IMG SRC="/icons/folder.open.gif">[path]</B> </h2> 
+    <h2> <B><IMG SRC="/icons/folder.open.png">[path]</B> </h2> 
    <A HREF="[path_cgi]/d_editfile/[list]/[escaped_path]">szerkeszt</A>
    <A HREF="[path_cgi]/d_delete/[list]/[escaped_path]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path]', 'Tényleg akarod törölni a(z) [path] könyvtárat?'); return false;">töröl</A>
    <A HREF="[path_cgi]/d_control/[list]/[escaped_path]">hozzáférés</A><BR>

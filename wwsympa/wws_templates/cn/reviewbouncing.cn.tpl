@@ -43,13 +43,13 @@
 
  <TD ALIGN="right">
         [IF prev_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="前一页"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.png" BORDER=0 ALT="前一页"></A>
         [ENDIF]
         [IF page]
   	  第[page]页，共[total_page]页
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0ALT="后一页"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.png" BORDER=0ALT="后一页"></A>
         [ENDIF]
     </TD></TR>
     <TR><TD><INPUT TYPE="submit" NAME="action_resetbounce" VALUE="为选中的用户重置错误计数">
@@ -104,13 +104,13 @@
       [ENDIF]
     </TD><TD ALIGN="right" NOWRAP>
         [IF prev_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="前一页"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.png" BORDER=0 ALT="前一页"></A>
         [ENDIF]
         [IF page]
   	  第[page]页，共[total_page]页
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0ALT="后一页"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.png" BORDER=0ALT="后一页"></A>
         [ENDIF]
     </TD></TR>
     </TABLE>

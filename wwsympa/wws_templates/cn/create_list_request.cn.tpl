@@ -8,13 +8,13 @@
  <TR>
    <TD NOWRAP><B>邮递表名字:</B></TD>
    <TD><INPUT TYPE="text" NAME="listname" SIZE=30 VALUE="[saved->listname]"></TD>
-   <TD><img src="/icons/unknown.gif" alt="邮递表名；注意，不是它的地址!"></TD>
+   <TD><img src="/icons/unknown.png" alt="邮递表名；注意，不是它的地址!"></TD>
  </TR>
  
  <TR>
    <TD NOWRAP><B>所有者:</B></TD>
    <TD><I>[user->email]</I></TD>
-   <TD><img src="/icons/unknown.gif" alt="您是这个邮递表的特权所有者"></TD>
+   <TD><img src="/icons/unknown.png" alt="您是这个邮递表的特权所有者"></TD>
  </TR>
 
  <TR>
@@ -32,12 +32,12 @@
   [END]
      </MENU>
     </TD>
-    <TD valign=top><img src="/icons/unknown.gif" alt="邮递表类型是参数集配置。可以在邮递表创建后编辑参数"></TD>
+    <TD valign=top><img src="/icons/unknown.png" alt="邮递表类型是参数集配置。可以在邮递表创建后编辑参数"></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>主题:</B></TD>
    <TD><INPUT TYPE="text" NAME="subject" SIZE=60 VALUE="[saved->subject]"></TD>
-   <TD><img src="/icons/unknown.gif" alt="这是邮递表的主题"></TD>
+   <TD><img src="/icons/unknown.png" alt="这是邮递表的主题"></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>话题:</B></TD>
@@ -57,13 +57,13 @@
 	[END]
      </SELECT>
    </TD>
-   <TD valign=top><img src="/icons/unknown.gif" alt="目录中的邮递表分类"></TD>
+   <TD valign=top><img src="/icons/unknown.png" alt="目录中的邮递表分类"></TD>
  </TR>
 
  <TR>
    <TD valign=top NOWRAP><B>描述:</B></TD>
    <TD><TEXTAREA COLS=60 ROWS=10 NAME="info">[saved->info]</TEXTAREA></TD>
-   <TD valign=top><img src="/icons/unknown.gif" alt="几行对邮递表的描述文字"></TD>
+   <TD valign=top><img src="/icons/unknown.png" alt="几行对邮递表的描述文字"></TD>
  </TR>
 
  <TR>

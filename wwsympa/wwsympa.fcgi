@@ -90,18 +90,18 @@ my $mime_types = &wwslib::load_mime_types();
 my %icon_table;
 
   # application file
-$icon_table{'unknown'} = '/icons/unknown.gif';
-$icon_table{'folder'} = '/icons/folder.gif';
-$icon_table{'current_folder'} = '/icons/folder.open.gif';
-$icon_table{'application'} = '/icons/unknown.gif';
-$icon_table{'octet-stream'} = '/icons/binary.gif';
-$icon_table{'audio'} = '/icons/sound1.gif';
-$icon_table{'image'} = '/icons/image2.gif';
-$icon_table{'text'} = '/icons/text.gif';
-$icon_table{'video'} = '/icons/movie.gif';
-$icon_table{'father'} = '/icons/back.gif';
-$icon_table{'sort'} = '/icons/down.gif';
-$icon_table{'url'} = '/icons/link.gif';
+$icon_table{'unknown'} = '/icons/unknown.png';
+$icon_table{'folder'} = '/icons/folder.png';
+$icon_table{'current_folder'} = '/icons/folder.open.png';
+$icon_table{'application'} = '/icons/unknown.png';
+$icon_table{'octet-stream'} = '/icons/binary.png';
+$icon_table{'audio'} = '/icons/sound1.png';
+$icon_table{'image'} = '/icons/image2.png';
+$icon_table{'text'} = '/icons/text.png';
+$icon_table{'video'} = '/icons/movie.png';
+$icon_table{'father'} = '/icons/back.png';
+$icon_table{'sort'} = '/icons/down.png';
+$icon_table{'url'} = '/icons/link.png';
 ## Shared directory and description file
 
 #$shared = 'shared';

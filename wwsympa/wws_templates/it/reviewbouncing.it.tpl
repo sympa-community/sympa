@@ -43,13 +43,13 @@
 
  <TD ALIGN="right">
         [IF prev_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Pagina precedente"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Pagina precedente"></A>
         [ENDIF]
         [IF page]
   	  page [page] / [total_page]
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0ALT="Prossima pagina"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.png" BORDER=0ALT="Prossima pagina"></A>
         [ENDIF]
     </TD></TR>
     <TR><TD><INPUT TYPE="submit" NAME="action_resetbounce" VALUE="Azzera gli errori per gli utenti selezionati">
@@ -115,13 +115,13 @@
       [ENDIF]
     </TD><TD ALIGN="right" NOWRAP>
         [IF prev_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Pagina precedente"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Pagina precedente"></A>
         [ENDIF]
         [IF page]
   	  page [page] / [total_page]
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0 ALT="Prossima pagina"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.png" BORDER=0 ALT="Prossima pagina"></A>
         [ENDIF]
     </TD></TR>
     </TABLE>

@@ -8,13 +8,13 @@
  <TR>
    <TD NOWRAP><B>Jméno konference:</B></TD>
    <TD><INPUT TYPE="text" NAME="listname" SIZE=30 VALUE="[saved->listname]"></TD>
-   <TD><img src="/icons/unknown.gif" alt="jméno konference ; ne její adresu!"></TD>
+   <TD><img src="/icons/unknown.png" alt="jméno konference ; ne její adresu!"></TD>
  </TR>
  
  <TR>
    <TD NOWRAP><B>Vlastník:</B></TD>
    <TD><I>[user->email]</I></TD>
-   <TD><img src="/icons/unknown.gif" alt="Jste vlastníkem konference"></TD>
+   <TD><img src="/icons/unknown.png" alt="Jste vlastníkem konference"></TD>
  </TR>
 
  <TR>
@@ -34,12 +34,12 @@
   [END]
      </MENU>
     </TD>
-    <TD valign=top><img src="/icons/unknown.gif" alt="Typ konference je pøednastavený profil. Parametry se budou moci mìnit, a¾ se konference vytvoøí"></TD>
+    <TD valign=top><img src="/icons/unknown.png" alt="Typ konference je pøednastavený profil. Parametry se budou moci mìnit, a¾ se konference vytvoøí"></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>Pøedmìt:</B></TD>
    <TD><INPUT TYPE="text" NAME="subject" SIZE=60 VALUE="[saved->subject]"></TD>
-   <TD><img src="/icons/unknown.gif" alt="Téma konference"></TD>
+   <TD><img src="/icons/unknown.png" alt="Téma konference"></TD>
  </TR>
  <TR>
    <TD NOWRAP><B>Témata:</B></TD>
@@ -59,13 +59,13 @@
 	[END]
      </SELECT>
    </TD>
-   <TD valign=top><img src="/icons/unknown.gif" alt="Klasifikace konference v adresáøi"></TD>
+   <TD valign=top><img src="/icons/unknown.png" alt="Klasifikace konference v adresáøi"></TD>
  </TR>
 
  <TR>
    <TD valign=top NOWRAP><B>Popis:</B></TD>
    <TD><TEXTAREA COLS=60 ROWS=10 NAME="info">[saved->info]</TEXTAREA></TD>
-   <TD valign=top><img src="/icons/unknown.gif" alt="Nìkolik øádkù popisujících konferenci"></TD>
+   <TD valign=top><img src="/icons/unknown.png" alt="Nìkolik øádkù popisujících konferenci"></TD>
  </TR>
 
  <TR>

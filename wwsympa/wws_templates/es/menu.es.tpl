@@ -7,7 +7,7 @@
   [IF auth_method=smime]
   <TD bgcolor="[bg_color]">
 <A HREF="[path_cgi]/show_cert" onClick="winhelp=window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=320');winlogin.focus()" TARGET="wws_help">
-     <IMG SRC="[icons_url]/locked.gif" align="center" alt="security info" border=0></A>
+     <IMG SRC="[icons_url]/locked.png" align="center" alt="security info" border=0></A>
   [ELSE]
   <TD>
   <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
@@ -23,7 +23,7 @@
      <FONT SIZE=-1><B>Desconectar</B></FONT></A>
      </TD>
   [ELSE]
-     <TD NOWRAP BGCOLOR="[bg_color]" ALIGN="center"><IMG SRC="[icons_url]/locked.gif" align="center" alt="https"></TD>
+     <TD NOWRAP BGCOLOR="[bg_color]" ALIGN="center"><IMG SRC="[icons_url]/locked.png" align="center" alt="https"></TD>
   [ENDIF]
   [ELSE]
       <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center"> 

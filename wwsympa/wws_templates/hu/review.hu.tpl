@@ -110,13 +110,13 @@ Túl sokat jelöltél ki, nem tudom megjeleníteni.
    </TD>
    <TD>
    [IF prev_page]
-    <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Elõzõ oldal"></A>
+    <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Elõzõ oldal"></A>
    [ENDIF]
    [IF page]
      Oldalak [page] / [total_page]
    [ENDIF]
    [IF next_page]
-     <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.gif" BORDER="0" ALT="Következõ oldal"></A>
+     <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.png" BORDER="0" ALT="Következõ oldal"></A>
    [ENDIF]
   [ENDIF]
   </TD></TR>
@@ -241,13 +241,13 @@ Túl sokat jelöltél ki, nem tudom megjeleníteni.
    [IF action<>search]
     <TD ALIGN="right">
        [IF prev_page]
-	 <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Elõzõ oldal"></A>
+	 <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Elõzõ oldal"></A>
        [ENDIF]
        [IF page]
   	  Oldalak [page] / [total_page]
        [ENDIF]
        [IF next_page]
-	  <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.gif" BORDER=0 ALT="Következõ oldal"></A>
+	  <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.png" BORDER=0 ALT="Következõ oldal"></A>
        [ENDIF]
     </TD>
    [ENDIF]

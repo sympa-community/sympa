@@ -109,13 +109,13 @@ Selection too wide, can not show selection
    </TD>
    <TD>
    [IF prev_page]
-    <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Previous page"></A>
+    <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Previous page"></A>
    [ENDIF]
    [IF page]
      page [page] / [total_page]
    [ENDIF]
    [IF next_page]
-     <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.gif" BORDER="0" ALT="Next page"></A>
+     <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.png" BORDER="0" ALT="Next page"></A>
    [ENDIF]
   [ENDIF]
   </TD></TR>
@@ -239,13 +239,13 @@ Selection too wide, can not show selection
    [IF action<>search]
     <TD ALIGN="right">
        [IF prev_page]
-	 <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Previous page"></A>
+	 <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Previous page"></A>
        [ENDIF]
        [IF page]
   	  page [page] / [total_page]
        [ENDIF]
        [IF next_page]
-	  <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.gif" BORDER=0 ALT="Next page"></A>
+	  <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.png" BORDER=0 ALT="Next page"></A>
        [ENDIF]
     </TD>
    [ENDIF]

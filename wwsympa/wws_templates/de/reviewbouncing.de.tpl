@@ -43,13 +43,13 @@
 
  <TD ALIGN="right">
         [IF prev_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Vorherige Seite"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Vorherige Seite"></A>
         [ENDIF]
         [IF page]
   	  page [page] / [total_page]
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0ALT="N&auml;chste Seite"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.png" BORDER=0ALT="N&auml;chste Seite"></A>
         [ENDIF]
     </TD></TR>
     <TR><TD><INPUT TYPE="submit" NAME="action_resetbounce" VALUE="Fehler f&uuml;r gew&auml;hlte Benutzer zur&uuml;ck setzen">
@@ -117,13 +117,13 @@
       [ENDIF]
     </TD><TD ALIGN="right" NOWRAP>
         [IF prev_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Vorherige Seite"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Vorherige Seite"></A>
         [ENDIF]
         [IF page]
   	  page [page] / [total_page]
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0ALT="N&auml;chste Seite"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.png" BORDER=0ALT="N&auml;chste Seite"></A>
         [ENDIF]
     </TD></TR>
     <TR><TD><input type=button value="Auswahl invertierien" onClick="toggle_selection(document.myform.email)">

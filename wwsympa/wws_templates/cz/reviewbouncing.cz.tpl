@@ -43,13 +43,13 @@
 
  <TD ALIGN="right">
         [IF prev_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Pøedchozí strana"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Pøedchozí strana"></A>
         [ENDIF]
         [IF page]
   	  strana [page] z [total_page]
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0ALT="dal¹í strana"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.png" BORDER=0ALT="dal¹í strana"></A>
         [ENDIF]
     </TD></TR>
     <TR><TD><INPUT TYPE="submit" NAME="action_resetbounce" VALUE="Vynulovat chyby pro vybrané u¾ivatele">
@@ -117,13 +117,13 @@
       [ENDIF]
     </TD><TD ALIGN="right" NOWRAP>
         [IF prev_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Pøedchozí strana"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[prev_page]/[size]"><IMG SRC="/icons/left.png" BORDER=0 ALT="Pøedchozí strana"></A>
         [ENDIF]
         [IF page]
   	  strana [page] z [total_page]
         [ENDIF]
         [IF next_page]
-	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.gif" BORDER=0ALT="Dal¹í strana"></A>
+	  <A HREF="[path_cgi]/reviewbouncing/[list]/[next_page]/[size]"><IMG SRC="/icons/right.png" BORDER=0ALT="Dal¹í strana"></A>
         [ENDIF]
     </TD></TR>
     <TR><TD><input type=button value="Obrátit výbìr" onClick="toggle_selection(document.myform.email)">
