@@ -3565,6 +3565,16 @@ sub verify {
 	return undef;
     }
 
+
+    if (defined ($context->{'msg'})) {
+	my $header = $context->{'msg'}->head;
+	unless ($header->get('to') || $header->get('cc')) {
+	    $context->{'is_bcc'} = 1;
+	}else{
+	    $context->{'is_bcc'} = 0;
+	}
+	
+    }
     my $list;
     if (defined ($context->{'listname'})) {
 	$list = new List ($context->{'listname'});
