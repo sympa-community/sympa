@@ -22,7 +22,7 @@ newinstall: makedir subst $(SRC) installqueue installscenari installtemplates in
 
 installtemplates:
 	@echo "Installing default templates..."
-	cp etc/templates/*  $(DESTDIR)$(ETCBINDIR)/templates
+	cp etc/templates/*.tpl  $(DESTDIR)$(ETCBINDIR)/templates
 
 installetc:
 	@echo "Installing default configuration ..."
@@ -46,7 +46,7 @@ installlisttemplates:
 
 installscenari:
 	@echo "Installing default scenari..."
-	cp etc/scenari/* $(DESTDIR)$(ETCBINDIR)/scenari
+	cp etc/scenari/*.* $(DESTDIR)$(ETCBINDIR)/scenari
 
 installqueue:
 	@echo "Installing Queue binary..."
