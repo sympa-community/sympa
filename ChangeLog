@@ -1,3 +1,53 @@
+2002-12-26 12:26  salaun
+
+	* src/List.pm: [Adam] Fix:  Fix to attach headers to
+	multipart/alternative (HTML) messages
+
+2002-12-24 12:28  salaun
+
+	* src/: List.pm, Message.pm, smtp.pm, sympa.pl, tools.pl: Changes:
+	generalize use of Message objet in DoMessage(), distribute_msg(),
+	send_msg(), mailto(). Message object can now be created based on a
+	MIME::Entity object
+
+2002-12-24 10:07  salaun
+
+	* src/tools.pl: [C. Mock] Fix: Only encrypt part of headers (cf RFC
+	2633). Required for Netscape 4.7
+
+2002-12-24 09:50  salaun
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/sympa/index.html, doc/sympa/node1.html, doc/sympa/node10.html,
+	doc/sympa/node11.html, doc/sympa/node12.html,
+	doc/sympa/node13.html, doc/sympa/node14.html,
+	doc/sympa/node15.html, doc/sympa/node16.html,
+	doc/sympa/node17.html, doc/sympa/node18.html,
+	doc/sympa/node19.html, doc/sympa/node2.html, doc/sympa/node20.html,
+	doc/sympa/node3.html, doc/sympa/node4.html, doc/sympa/node5.html,
+	doc/sympa/node6.html, doc/sympa/node7.html, doc/sympa/node8.html,
+	doc/sympa/node9.html, doc/sympa/sympa.html, doc/sympa/sympa.ps,
+	nls/de.msg, nls/fr.msg, nls/us.msg, src/Commands.pm, src/List.pm,
+	src/Message.pm, src/sympa.pl, src/tools.pl: [C. Mock] Fixes:
+	decrypted message was not always used ; now used as default.  New
+	feature: new 'archive_crypted_msg' list parameter ; when archiving
+	message encrypted use original message instead of re-encrypting it.
+	 Fix: previous patch did not work with X509 certs which DN starts
+	with email ; no more use "openssl x509 -email" switch
+
+2002-12-23 15:22  salaun
+
+	* src/smtp.pm: [C. Mock] Log fix
+
+2002-12-23 15:15  salaun
+
+	* ChangeLog: [no log message]
+
+2002-12-23 15:15  salaun
+
+	* src/tools.pl, wwsympa/wwsympa.fcgi: [C. Mock] Change: recognize
+	email as '+MAIL=email' for Sympa to work with old a-sign.at certs
+
 2002-12-20 13:26  salaun
 
 	* src/List.pm, wwsympa/wws_templates/fr/review.fr.tpl,

@@ -186,6 +186,8 @@ my %comm = ('home' => 'do_home',
 	 'submit_list' => 'do_submit_list',
 	 'editsubscriber' => 'do_editsubscriber',
 	 'viewbounce' => 'do_viewbounce',
+	 'rename_list_request' => 'do_rename_list_request',
+	 'rename_list' => 'do_rename_list',
 	 'reviewbouncing' => 'do_reviewbouncing',
 	 'resetbounce' => 'do_resetbounce',
 	 'scenario_test' => 'do_scenario_test',
@@ -220,8 +222,8 @@ my %comm = ('home' => 'do_home',
 	 'compose_mail' => 'do_compose_mail',
 	 'send_mail' => 'do_send_mail',
 	 'search_user' => 'do_search_user',
-	    'unify_email' => 'do_unify_email',
-	    'record_email' => 'do_record_email',	    
+	 'unify_email' => 'do_unify_email',
+	 'record_email' => 'do_record_email',	    
 	 'set_lang' => 'do_set_lang',
 	 'attach' => 'do_attach',
 	 'change_identity' => 'do_change_identity',
@@ -299,7 +301,8 @@ my %action_args = ('default' => ['list'],
 		'attach' => ['list','@path'],
 		'change_identity' => ['email','previous_action','previous_list'],
 		'edit_list_request' => ['list','group'],
-		'viewlogs' => ['list']
+		'rename_list' => ['list','new_list','new_robot'],
+#		'viewlogs' => ['list']
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -335,7 +338,9 @@ my %action_type = ('editfile' => 'admin',
 		'subindex' => 'admin',
 		'stats' => 'admin',
 		'ignoresub' => 'admin',
-		'viewlogs' => 'admin'
+		'rename_list' => 'admin',
+		'rename_list_request' => 'admin',
+#		'viewlogs' => 'admin'
 );
 
 ## Open log
@@ -4465,24 +4470,39 @@ sub do_install_pending_list {
 
 ## Install sendmail aliases
 sub _install_aliases {
-    &wwslog('info', '_install_aliases()');
+    &wwslog('info', "_install_aliases($list->{'name'},$list->{'admin'}{'host'})");
 
     my $alias_manager = '--SBINDIR--/alias_manager.pl';
     &do_log('notice',"$alias_manager add $list->{'name'} $list->{'admin'}{'host'}");
     if (-x $alias_manager) {
 	system ("$alias_manager add $list->{'name'} $list->{'admin'}{'host'}") ;
-	&wwslog('info','Configuration file --CONFIG-- has errors') if ($? == '1') ;
-	&wwslog('info','Internal error : Incorrect call to alias_manager') if ($? == '2') ;
-	&wwslog('info','Could not read sympa config file, report to httpd error_log') if ($? == '3') ;
-	&wwslog('info','Could not get default domain, report to httpd error_log') if ($? == '4') ;
-	&wwslog('info','Unable to append to alias file') if ($? == '5') ;
-	&wwslog('info','Unable run newaliases') if ($? == '6') ;
-	&wwslog('info','Unable to read alias file, report to httpd error_log') if ($? == '7') ;
-	&wwslog('info','Could not create temporay file, report to httpd error_log') if ($? == '8') ;
-	&wwslog('info','Some of list aliases already exist') if ($? == '13') ;
-	&wwslog('info','Can not open lock file, report to httpd error_log') if ($? == '14') ;
-	&wwslog('info','Aliases installed successfully') if ($? == '0') ;
-	$param->{'auto_aliases'} = 1;
+	if ($? == '0') {
+	    &wwslog('info','Aliases installed successfully') ;
+	    $param->{'auto_aliases'} = 1;
+	}elsif ($? == '1') {
+	    &wwslog('info','Configuration file --CONFIG-- has errors');
+	}elsif ($? == '2')  {
+	    &wwslog('info','Internal error : Incorrect call to alias_manager');
+	}elsif ($? == '3')  {
+	    &wwslog('info','Could not read sympa config file, report to httpd error_log') ;
+	}elsif ($? == '4')  {
+	    &wwslog('info','Could not get default domain, report to httpd error_log') ;
+	}elsif ($? == '5')  {
+	    &wwslog('info','Unable to append to alias file') ;
+	}elsif ($? == '6')  {
+	    &wwslog('info','Unable run newaliases') ;
+	}elsif ($? == '7')  {
+	    &wwslog('info','Unable to read alias file, report to httpd error_log') ;
+	}elsif ($? == '8')  {
+	    &wwslog('info','Could not create temporay file, report to httpd error_log') ;
+	}elsif ($? == '13') {
+	    &wwslog('info','Some of list aliases already exist') ;
+	}elsif ($? == '14') {
+	    &wwslog('info','Can not open lock file, report to httpd error_log') ;
+	}else {
+	    &error_message('failed_to_install_aliases');
+	    &wwslog('info',"Unknown error $? while running alias manager $alias_manager");
+	} 
     }else {
 	&wwslog('info','Failed to install aliases: %s', $!);
 	&error_message('failed_to_install_aliases');
@@ -4506,7 +4526,7 @@ sub _install_aliases {
 
 ## Remove sendmail aliases
 sub _remove_aliases {
-    &wwslog('info', '_remove_aliases()');
+    &wwslog('info', "_remove_aliases($list->{'name'},$list->{'admin'}{'host'})");
 
     my $alias_manager = '--SBINDIR--/alias_manager.pl';
     if ((-x $alias_manager) 
@@ -5888,12 +5908,146 @@ sub do_close_list_request {
     return 1;
 }
 
+
+# in order to rename a list you must be list owner and you must be allowed to create new list
+sub do_rename_list_request {
+    &wwslog('info', 'do_rename_list_request()');
+
+    unless (($param->{'is_privileged_owner'}) || ($param->{'is_listmaster'})) {
+	&error_message('may_not');
+	&wwslog('info','do_rename_list_request: not owner');
+	return undef;
+    }  
+    
+    
+    unless ($param->{'user'}{'email'} &&  (&List::request_action ('create_list',$param->{'auth_method'},$robot,
+							   {'sender' => $param->{'user'}{'email'},
+							    'remote_host' => $param->{'remote_host'},
+							    'remote_addr' => $param->{'remote_addr'}}) =~ /do_it|listmaster/)) {
+	&error_message('may_not');
+	&wwslog('info','do_rename_list_request: not owner');
+	return undef;
+    }
+    
+    return '1';
+}
+
+# in order to rename a list you must be list owner and you must be allowed to create new list
+sub do_rename_list {
+    &wwslog('info', 'do_rename_list()');
+
+    unless (($param->{'is_privileged_owner'}) || ($param->{'is_listmaster'})) {
+	&error_message('may_not');
+	&wwslog('info','do_rename_list: not owner');
+	return undef;
+    }  
+
+    unless ($param->{'list'}) {
+	&error_message('list_required');
+	&wwslog('info','do_rename_list: parameter list missing');
+	return undef;
+    }  
+    
+    unless ($param->{'user'}{'email'} &&  (&List::request_action ('create_list',$param->{'auth_method'},$robot,
+							   {'sender' => $param->{'user'}{'email'},
+							    'remote_host' => $param->{'remote_host'},
+							    'remote_addr' => $param->{'remote_addr'}}) =~ /do_it|listmaster/)) {
+	&error_message('may_not');
+	&wwslog('info','do_rename_list: not owner');
+	return undef;
+    }
+
+    # check new listname syntax
+    $in{'new_listname'} = lc ($in{'new_listname'});
+    unless ($in{'new_listname'} =~ /^[a-z0-9][a-z0-9\-\+\._]*$/i) {
+	&error_message('incorrect_listname', {'listname' => $in{'new_listname'}});
+	&wwslog('info','do_rename_list: incorrect listname %s', $in{'new_listname'});
+	return 'rename_list_request';
+    }
+
+    ## Check listname on SMTP server
+    my $res = list_check_smtp($in{'new_listname'});
+    unless ( defined($res) ) {
+	&error_message('unable_to_check_list_using_smtp');
+	&do_log('err', "can't check list %.128s on %.128s",
+		$in{'new_listname'},
+		$wwsconf->{'list_check_smtp'});
+	return undef;
+    }
+    if( $res || new List ($in{'new_listname'})) {
+	&error_message('list_already_exists');
+	&do_log('info', 'could not rename list %s for %s: new list %s already existing list', 
+		$in{'listname'},$param->{'user'}{'email'},$in{'new_listname'});
+	
+	return undef;
+    }
+    
+    my $regx = Conf::get_robot_conf($robot,'list_check_regexp');
+    if( $regx ) {
+	if ($in{'new_listname'} =~ /^(\S+)-($regx)$/) {
+	    &error_message("Incorrect listname \"$in{'new_listname'}\" matches one of service aliases",{'listname' => $in{'new_listname'}});
+	    &wwslog('info','do_create_list: incorrect listname %s matches one of service aliases', $in{'new_listname'});
+	    return 'rename_list_request';
+	}
+    }
+
+    $list->savestats();
+    
+    ## Dump subscribers
+    $list->_save_users_file("$list->{'dir'}/subscribers.closed.dump");
+
+    &_remove_aliases();
+    
+    ## Rename this list it self
+    unless (rename ("$list->{'dir'}", "$list->{'dir'}/../$in{'new_listname'}" )){
+	&wwslog('info',"do_rename_list : unable to rename $list->{'dir'} to $list->{'dir'}/../$in{'new_listname'}");
+	&error_message('failed');
+	return undef;
+    }
+    ## Rename archive
+    if (-d "$wwsconf->{'arc_path'}/$in{'listname'}/\@$robot") {
+	unless (rename ("$wwsconf->{'arc_path'}/$in{'listname'}/\@$robot","$wwsconf->{'arc_path'}/$in{'new_listname'}/\@$robot")) {
+	    &wwslog('info',"do_rename_list : unable to rename archive $wwsconf->{'arc_path'}/$in{'listname'}/\@$robot $wwsconf->{'arc_path'}/$in{'new_listname'}/\@$robot");
+	    &error_message('renamming_archive_failed');
+	    # continue even if there is some troubles with archives
+            # return undef;
+	}
+    }
+    ## Rename bounces
+    if (-d "$wwsconf->{'bounce_path'}/$param->{'list'}") {
+	unless (rename ("wwsconf->{'bounce_path'}/$param->{'list'}","wwsconf->{'bounce_path'}/$in{'new_listname'}")) {
+	     &error_message('unable_to_rename_bounces');
+	     &wwslog('info',"do_rename_list unable to rename bounces from wwsconf->{'bounce_path'}/$param->{'list'} to sconf->{'bounce_path'}/$in{'new_listname'}");
+	}
+    }
+
+
+    # if subscribtion are stored in database rewrite the database
+    if ($list->{'admin'}{'user_data_source'} =~ /^database|include2$/) {
+	&List::update_subscribers_db ($in{'list'},$in{'new_listname'});
+	&wwslog('debug',"do_rename_list :List::update_subscribers_db ($in{'list'},$in{'new_listname'} ");
+    }
+
+    ## Install new aliases
+    $in{'listname'} = $in{'new_listname'};
+    $param->{'list'} = $in{'new_listname'};
+    unless ($list = new List ($in{'new_listname'})) {
+	&wwslog('info',"do_rename_list : unable to load $in{'new_listname'} while renamming");
+	&error_message('failed');
+	return undef;
+    }
+    &_install_aliases() if ($list->{'admin'}{'status'} eq 'open');
+
+    return 'admin';
+}
+
+
 sub do_purge_list {
-    &wwslog('info', 'do_close_list_request()');
+    &wwslog('info', 'do_purge_list()');
     
     unless ($param->{'is_listmaster'}) {
 	&error_message('may_not');
-	&wwslog('info','do_close_list: not listmaster');
+	&wwslog('info','do_purge_list: not listmaster');
 	return undef;
     }  
     
