@@ -849,9 +849,17 @@ sub DoMessage{
     
     my $action ;
     if ($is_signed->{'body'}) {
-	$action = &List::get_action ('send',$name,$sender,'smime',$hdr);
+	$action = &List::request_action ('send', 'smime',
+					 {'listname' => $name,
+					  'sender' => $sender,
+					  'msg' => $msg });
+#	$action = &List::get_action ('send',$name,$sender,'smime',$hdr);
     }else{
-	$action = &List::get_action ('send',$name,$sender,'smtp',$hdr);
+	$action = &List::request_action ('send', 'smtp',
+					 {'listname' => $name,
+					  'sender' => $sender,
+					  'msg' => $msg });
+	#$action = &List::get_action ('send',$name,$sender,'smtp',$hdr);
     }
 
     if ($action =~ /^do_it/) {

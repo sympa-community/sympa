@@ -561,7 +561,10 @@ sub subscribe {
     }
     ## query what to do with this subscribtion request
     
-    my $action = &List::get_action ('subscribe',$which,$sender,$auth_method);
+    my $action = &List::request_action('subscribe',$auth_method,
+				       {'listname' => $which, 
+					'sender' => $sender });
+#    my $action = &List::get_action ('subscribe',$which,$sender,$auth_method);
     
     &do_log('debug2', 'action : %s', $action);
     
@@ -679,9 +682,11 @@ sub info {
 	$auth_method='smtp';
     }
 
-    my $action = &List::get_action('info',$listname,$sender,$auth_method);
-    do_log('debug2', "INFO liste: $listname email :$email sender $sender, auth : $auth_method, get_action return :$action" );
-
+    #my $action = &List::get_action('info',$listname,$sender,$auth_method);
+    my $action = &List::request_action('info',$auth_method,
+				       {'listname' => $listname, 
+					'sender' => $sender });
+    
     if ($action =~ /reject/i) {
 	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'review',$listname;
 	do_log('info', 'review %s from %s refused (not allowed)', $listname,$sender);
@@ -778,8 +783,10 @@ sub signoff {
 	$auth_method='smtp';
     }  
     
-    my $action = &List::get_action('unsubscribe',$which,$sender,$email,$auth_method);
-    do_log('debug2', "SIG liste: $which email :$email sender $sender, auth : $auth_method, get_action return :$action" );
+    #my $action = &List::get_action('unsubscribe',$which,$sender,$email,$auth_method);
+    my $action = &List::request_action('unsubscribe',$auth_method,
+				       {'listname' => $which, 
+					'sender' => $sender });
     
     if ($action =~ /reject/i) {
 	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s %s in list %s.\n"),'sig',$which,$email;
@@ -881,7 +888,10 @@ sub add {
 	$auth_method='smtp';
     }
     
-    my $action = &List::get_action ('add',$which,$sender,$email,$auth_method);
+    #my $action = &List::get_action ('add',$which,$sender,$email,$auth_method);
+    my $action = &List::request_action('add',$auth_method,
+				       {'listname' => $which, 
+					'sender' => $sender });
     
     if ($action =~ /reject/i) {
 	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'add',$which;
@@ -979,8 +989,11 @@ sub invite {
 	$auth_method='smtp';
     }
     
-    my $action = &List::get_action ('invite',$which,$sender,$auth_method);
-    
+    #my $action = &List::get_action ('invite',$which,$sender,$auth_method);
+    my $action = &List::request_action('invite',$auth_method,
+				       {'listname' => $which, 
+					'sender' => $sender });
+
     if ($action =~ /reject/i) {
 	push @msg::report, sprintf Msg(6, 80, "You are not allowed to perform %s in list %s.\n"),'invite',$which;
 	do_log('info', 'INVITE %s %s from %s refused (not allowed)', $which, $email, $sender);
@@ -1005,7 +1018,10 @@ sub invite {
 	    $context{'user'}{'gecos'} = $comment;
 	    $context{'requested_by'} = $sender;
 
-	    my $action =  &List::get_action ('subscribe', $which, $email, 'smtp');
+	    #my $action =  &List::get_action ('subscribe', $which, $email, 'smtp');
+	    my $action = &List::request_action('subscribe','smtp',
+					       {'listname' => $which, 
+						'sender' => $sender });
 
             if ($action =~ /request_auth/i) {
 		my $keyauth = $list->compute_auth ($email, 'subscribe');
@@ -1094,14 +1110,20 @@ sub remind {
     my $action;
 
     if ($listname eq '*') {
-	$action = &List::get_action ('global_remind',$sender,$auth_method);
+	#$action = &List::get_action ('global_remind',$sender,$auth_method);
+	my $action = &List::request_action('global_remind',$auth_method,
+					   {'sender' => $sender });
+	
     }else{
 	
 	&Language::SetLang($list->{'admin'}{'lang'});
 
 	$host = $list->{'admin'}{'host'};
 
-	$action = &List::get_action ('remind',$listname,$sender,$auth_method);
+	#$action = &List::get_action ('remind',$listname,$sender,$auth_method);
+	my $action = &List::request_action('remind',$auth_method,
+					   {'listname' => $listename, 
+					    'sender' => $sender });
     }
 
     if ($action =~ /reject/i) {
@@ -1571,8 +1593,12 @@ sub confirm {
     my $bytes = -s $file;
     my $hdr= $msg->head;
 
-    my $action = &List::get_action ('send',$name,$sender,'md5',$hdr);
-    
+    #my $action = &List::get_action ('send',$name,$sender,'md5',$hdr);
+    my $action = &List::request_action('send','md5',
+				       {'listname' => $name, 
+					'sender' => $sender ,
+					'msg' => $msg});
+
     if ($action =~ /^editorkey/) {
 	my $key = $list->send_to_editor('md5', $msg, $file, 'not_crypted');
 	do_log('info', 'Key %s for list %s from %s sent to editors', $key, $name, $sender);
