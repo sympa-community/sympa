@@ -71,6 +71,8 @@ my $sender = '';
 my $time_command;
 my $msg_file;
 
+## Caution : if this regexp changes (more/less parenthesis), then regexp using it should 
+## also be changed
 my $email_regexp = '([\w\-\_\.\/\+\=]+|\".*\")\@[\w\-]+(\.[\w\-]+)+';
 
 ## Parse the command and call the adequate subroutine with
@@ -952,7 +954,7 @@ sub add {
     do_log('debug', 'Commands::add(%s,%s)', $what,$sign_mod );
 
     $what =~ /^(\S+)\s+($email_regexp)(\s+(.+))?\s*$/;
-    my($which, $email, $comment) = ($1, $2, $4);
+    my($which, $email, $comment) = ($1, $2, $6);
     my $auth_method ;
 
     ## Load the list if not already done, and reject the
