@@ -14,7 +14,7 @@
 # chkconfig: 345 95 05
 # description: sympa is a powerfull mailing lists management system.
 
-if [ ${OSTYPE} != "FreeBSD" ]; then
+if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "solaris" ]; then
     # Source function library.
     . /etc/rc.d/init.d/functions
 
@@ -30,6 +30,13 @@ sympadir="--SBINDIR--"
 sympaconf="--CONFIG--"
 wwsympaconf="--WWSCONFIG--"
 
+##'echo -n' not supported with SH on Solaris
+if [ ${OSTYPE} == "solaris" ]; then
+  echo_opt=""
+else
+  echo_opt="-n"
+fi
+
 # End of parameters
 
 # Current state of the module
@@ -40,7 +47,27 @@ sympa_status() {
         return 1
     fi
  
-    status $1.pl
+    if [ ${OSTYPE} != "solaris" ]; then
+      status $1.pl
+
+    else
+       # First try "/u1/home/sympa/*.pid" files
+       if [ -f --PIDDIR--/$1.pid ] ; then
+             pid=`head -1 --PIDDIR--/$1.pid`
+             if [ "$pid" != "" ] ; then
+                 running=`ps -A | grep " $pid"`
+                 if [ "$running" != "" ]; then
+                     echo "$1 (pid $pid) is active..."
+                     return 0
+                 else
+                     echo "$1 died, pid file remains."
+                     return 1
+                 fi
+             fi
+        fi
+        echo "$1 is stopped."
+        return 3
+    fi
 }
 
 # Start a module
@@ -71,15 +98,29 @@ sympa_start() {
         return 1
     fi
  
-	echo -n "Starting module $1.pl: "
 	sympa_status $1 > /dev/null
 	case "$?" in
 		3)
+			echo $echo_opt "Starting module $1.pl: "
 			sympa_module_start $1
+			if [ ${OSTYPE} == "solaris" ]; then
+				if [ $? -eq 0 ]; then
+        	                       	echo "$1.pl started: success"
+	                       	else
+                	               	echo "$1.pl not started: failure"
+                       		fi
+			fi
 			;;
-		1)
-			echo "Starting $1, overwritting old pid file."
+		1) 
+			echo $echo_opt "Starting $1, overwritting old pid file."
 			sympa_module_start $1
+			if [ ${OSTYPE} == "solaris" ]; then
+				if [ $? -eq 0 ]; then
+        	                       	echo "$1.pl started: success"
+	                       	else
+                	               	echo "$1.pl not started: failure"
+                       		fi
+			fi
 			;;
 		0)
 			echo "$1 seems active. No action will be taken."
@@ -110,7 +151,7 @@ sympa_stop() {
 
 
 # Check that networking is up.
-if [ ${OSTYPE} != "FreeBSD" ]; then
+if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "solaris" ]; then
     if [ ${NETWORKING} = "no" ]
     then
 	    exit 0
@@ -152,11 +193,10 @@ case "$1" in
 	;;
   status)
 	echo "Status of Sympa subsystem: "
-	echo -n "Status file for subsystem "
 	if [ -f --LOCKDIR--/sympa ]; then
-		echo "found."
+		echo "Status file for subsystem found."
 	else
-		echo "NOT found."
+		echo "Status file for subsystem NOT found."
 	fi
 	sympa_status sympa
 	sympa_status archived
