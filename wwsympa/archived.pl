@@ -279,7 +279,7 @@ sub rebuild {
 
     do_log('debug',"Rebuilding $adrlist archive ($2)");
 
-    my $mhonarc_ressources = &get_ressources ($adrlist) ; 
+    my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources',$list->{'domain'}, $list);
 
     if (($list->{'admin'}{'web_archive_spam_protection'} ne 'none') && ($list->{'admin'}{'web_archive_spam_protection'} ne 'cookie')) {
 	&set_hidden_mode();
@@ -402,7 +402,7 @@ sub mail2arc {
     my $newfile = $files[$#files];
 #    my $newfile = $files[$#files]+=1;
     
-    my $mhonarc_ressources = &get_ressources ($listname . '@' . $hostname) ; 
+    my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources',$list->{'domain'}, $list);
     
     do_log ('debug',"calling $wwsconf->{'mhonarc'} for list $listname\@$hostname" ) ;
     my $cmd = "$wwsconf->{'mhonarc'} -add -rcfile $mhonarc_ressources -outdir $arcpath/$listname\@$hostname/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc \" -umask $Conf{'umask'} < $queue/$file";
@@ -421,31 +421,6 @@ sub mail2arc {
     
     close ORIG;  
     close DEST;
-}
-
-sub get_ressources {
-    my $adrlist = shift;
-    my ($mhonarc_ressources, $list);  
-
-    if ($adrlist =~ /^([^@]*)\@[^@]*$/) {
-	$adrlist = $1;
-    }
-    unless ($list = new List ($adrlist)) {
-	do_log('err',"get_ressources : unable to load list $1, continue anyway");
-    }  
-    
-    #$mhonarc_ressources = &tools::get_filename('etc', 'mhonarc-ressources', $robot, $list);
-    if (-r "$list->{'dir'}/mhonarc-ressources") {
-	$mhonarc_ressources =  "$list->{'dir'}/mhonarc-ressources" ;
-    }elsif (-r "$Conf{'etc'}/mhonarc-ressources"){
-        $mhonarc_ressources =  "$Conf{'etc'}/mhonarc-ressources" ;
-    }elsif (-r "--ETCBINDIR--/mhonarc-ressources"){
-        $mhonarc_ressources =  "--ETCBINDIR--/mhonarc-ressources" ;
-    }else {
-	do_log('err',"Cannot find any MhOnArc ressource file");
-	return undef;
-    }
-    return  $mhonarc_ressources;
 }
 
 sub set_hidden_mode {
