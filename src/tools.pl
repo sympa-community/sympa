@@ -83,7 +83,7 @@ sub safefork {
 	'rev(iew)?\s+\S+',
         'dis(tribute)?\s+\S+\s+\S+',
         'rej(ect)?\s+\S+\s+\S+',
-        '(re)?con(firm)?\s+\S+',
+        'confirm\s+\w+',
 	'rev(iew)?\s+\S+',
 );
 
