@@ -6511,13 +6511,17 @@ sub do_edit_list {
 
      &_remove_aliases();
 
-     ## Rename this list it self
+     ## Rename this list itself
      my $new_dir;
      ## Default robot
-     if ($in{'new_robot'} eq $Conf{'host'}) {
+     if (-d "$Conf{'home'}/$in{'new_robot'}") {
+	 $new_dir = $Conf{'home'}.'/'.$in{'new_robot'}.'/'.$in{'new_listname'};
+     }elsif ($in{'new_robot'} eq $Conf{'host'}) {
 	 $new_dir = $Conf{'home'}.'/'.$in{'new_listname'};
      }else {
-	 $new_dir = $Conf{'home'}.'/'.$in{'new_robot'}.'/'.$in{'new_listname'};
+	 &wwslog('info',"do_rename_list : unknown robot $in{'new_robot'}");
+	 &error_message('failed');
+	 return undef;
      }
 
      ## Save config file for the new() later to reload it
