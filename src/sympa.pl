@@ -763,7 +763,7 @@ sub DoMessage{
 	## the queue.
 	return 1;
     }elsif($action =~ /^request_auth/){
-    	my $key = $list->send_auth($sender, $msg);
+    	my $key = $list->send_auth($sender, $msg, $file);
 	do_log('notice', 'Message for %s from %s kept for authentication with key %s', $name, $sender, $key);
 	return 1;
     }elsif($action =~ /^editorkey(\s?,\s?(quiet))?/){

@@ -1305,8 +1305,8 @@ sub send_to_editor {
 
 ## Send an authentication message
 sub send_auth {
-   my($self, $sender, $msg) = @_;
-   do_log('debug2', 'List::send_auth(%s)', $sender);
+   my($self, $sender, $msg, $file) = @_;
+   do_log('debug2', 'List::send_auth(%s, %s)', $sender, $file);
 
    ## Ensure 1 second elapsed since last message
    sleep (1);
@@ -1327,9 +1327,20 @@ sub send_auth {
    my $boundary = "----------------- Message-Id: \<$messageid\>" ;
    my $contenttype = "Content-Type: message\/rfc822";
      
-   open(OUT, ">$authqueue\/$name\_$modkey") || return;
-   $msg->print(\*OUT);
-   close(OUT);
+   unless (open OUT, ">$authqueue\/$name\_$modkey") {
+       &do_log('notice', 'Cannot create file %s', "$authqueue/$name/$modkey");
+       return undef;
+   }
+
+   unless (open IN, $file) {
+       &do_log('notice', 'Cannot open file %s', $file);
+       return undef;
+   }
+   
+   while (<IN>) {
+       print OUT;
+   }
+   close IN; close OUT;
  
    my $hdr = new Mail::Header;
    $hdr->add('From', sprintf Msg(12, 4, 'SYMPA <%s>'), $Conf{'sympa'});
@@ -1348,7 +1359,15 @@ sub send_auth {
    printf DESC Msg(8, 12,"In order to broadcast the following message into list %s, either click on this link:\nmailto:%s?subject=CONFIRM%%20%s\nOr reply to %s with this subject :\nCONFIRM %s"), $name, $Conf{'sympa'}, $modkey, $Conf{'sympa'}, $modkey;
    print DESC "--$boundary\n";
    print DESC "Content-Type: message/rfc822\n\n";
-   $msg->print(\*DESC);
+   
+   unless (open IN, $file) {
+       &do_log('notice', 'Cannot open file %s', $file);
+       return undef;
+   }
+   while (<IN>) {
+       print DESC <IN>;
+   }
+   close IN;
    close(DESC);
 
    return $modkey;
