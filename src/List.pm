@@ -3122,7 +3122,7 @@ sub get_first_user {
 	    
 	    ## LIMIT clause
 	    if (defined($rows) and defined($offset)) {
-		$statement .= sprintf " LIMIT %d, %d", $rows, $offset;
+		$statement .= sprintf " LIMIT %d OFFSET %d", $rows, $offset;
 	    }
 	}
 	push @sth_stack, $sth;
