@@ -3066,7 +3066,16 @@ You don't need to install several Sympa server. A single \file {sympa.pl} deamon
 fastcgi servers can serve all virtual robot. Just configure the server environment in order to accept the new domain definition.
 \begin {itemize}
 \item \textbf {The DNS} must be configured to define a new mail exchanger record (MX) to route message to your server. A new host (A record) or alias (CNAME) are mandatory to define the new web server.
-\item Configure your \textbf {MTA (sendmail, postfix, exim, ...)} to accept incoming messages for the new robot domain.
+\item Configure your \textbf {MTA (sendmail, postfix, exim, ...)} to accept incoming messages for the new robot domain. Add mail aliases for the robot :
+
+\textit {Examples (with sendmail):} 
+\begin {quote}
+\begin{verbatim}
+sympa@your.virtual.domain:      "| /home/sympa/bin/queue sympa@your.virtual.domain"
+listmaster@your.virtual.domain: "| /home/sympa/bin/queue listmaster@your.virtual.domain"
+\end{verbatim}
+\end {quote}
+
 \item Define a \textbf {virtual host in your HTTPD server}. The fastcgi servers defined in the common section of you httpd server can be used by each virtual server. You don't need to run dedicated fascgi server for each virtual robot.
 
 \textit {Examples:} 
