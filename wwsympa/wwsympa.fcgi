@@ -4228,7 +4228,7 @@ sub list_check_smtp {
     if( $smtp = Net::SMTP->new($smtp_relay,
 			       Hello => $smtp_relay,
 			       Timeout => 30) ) {
-	$smtp->mail('<>');
+	$smtp->mail('');
 	for(@suf) {
 		$conf = $smtp->to($_);
 		last if $conf;
