@@ -2541,22 +2541,6 @@ sub send_msg_digest {
     ## Deletes the introduction part
     splice @list_of_mail, 0, 1;
 
-    ## Headers cleanup
-    foreach $i (0 .. $#list_of_mail){
-	my $mail = $list_of_mail[$i];
-	my ($subject, $from);
-
-	## Subject cleanup
-	if ($subject = &MIME::Words::decode_mimewords($mail->head->get('Subject'))) {
-	    $mail->head->replace('Subject', $subject);
-	}
-
-	## From cleanup
-	if ($from = &MIME::Words::decode_mimewords($mail->head->get('From'))) {
-	    $mail->head->replace('From', $from);
-	}
-    }
-
     my @topics;
     push @topics, sprintf(Msg(8, 13, "Table of content"));
     push @topics, sprintf(" :\n\n");
@@ -2564,12 +2548,12 @@ sub send_msg_digest {
     ## Digest index
     foreach $i (0 .. $#list_of_mail){
 	my $mail = $list_of_mail[$i];
-	my $subject = $mail->head->get('Subject');
+	my $subject = &MIME::Words::decode_mimewords($mail->head->get('Subject'));
 	chomp $subject;
         my $msg = {};
 	$msg->{'id'} = $i+1;
         $msg->{'subject'} = $subject;	
-        $msg->{'from'} = $mail->head->get('From');
+        $msg->{'from'} = &MIME::Words::decode_mimewords($mail->head->get('From'));
 	$mail->tidy_body;
 	$mail->remove_sig;
 	$msg->{'full_msg'} = $mail->as_string;
