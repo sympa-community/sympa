@@ -3,7 +3,7 @@
     <BR><P> 
 <TABLE BORDER=0 BGCOLOR="--LIGHT_COLOR--"><TR><TD>
 <P align=justify>
-Este servidor le proporciona acceso a su entorno de las listas de correo del servidor [conf->email]@[conf->host]. Desde esta URL, se pueden cambiar subscripciones, opciones, anularlars, acceder a los archivos, etc.
+Este servidor le proporciona acceso a su entorno de las listas de correo del servidor [conf->email]@[conf->host]. Desde esta URL, se pueden cambiar subscripciones, opciones, anularlas, acceder a los archivos, etc.
 </P>
 </TD></TR></TABLE>
 <BR><BR>
@@ -62,7 +62,7 @@ Este servidor le proporciona acceso a su entorno de las listas de correo del ser
         <FORM ACTION="[path_cgi]" METHOD=POST> 
          <INPUT SIZE=25 NAME=filter VALUE=[filter]>
          <INPUT TYPE="hidden" NAME="action" VALUE="search_list">
-         <INPUT TYPE="submit" NAME="action_search_list" VALUE="Search lists">
+         <INPUT TYPE="submit" NAME="action_search_list" VALUE="Buscar">
         </FORM>
    </TD>
         
@@ -78,7 +78,7 @@ Este servidor le proporciona acceso a su entorno de las listas de correo del ser
    <TR><TD BGCOLOR="--DARK_COLOR--">
           <TABLE BORDER="0" WIDTH="100%"  VALIGN="top"> 
               <TR><TD BGCOLOR="--BG_COLOR--">
-[PARSE '--ETCBINDIR--/wws_templates/loginbanner.tpl']
+[PARSE '--ETCBINDIR--/wws_templates/loginbanner.es.tpl']
 </TD></TR></TABLE>
 </TD></TR></TABLE>
 

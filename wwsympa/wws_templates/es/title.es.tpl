@@ -1,6 +1,6 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-<!-- begin title.us.tpl -->
+<!-- begin title.es.tpl -->
 <!-- <TABLE WIDTH="100%" BORDER=0 cellpadding=2 cellspacing=0><TR><TD>-->
 <TABLE WIDTH="100%" BORDER="0" BGCOLOR="--DARK_COLOR--" cellpadding="2" cellspacing="0">
   <TR VALIGN="bottom">
@@ -36,7 +36,7 @@
    </TR>
 </TABLE>
 <!--  </TD></TR></TABLE> -->
-<!-- end title.us.tpl -->
+<!-- end title.es.tpl -->
 
 
 

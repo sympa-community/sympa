@@ -1,7 +1,9 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
+<!-- begin lists.es.tpl -->
+
 [IF action=search_list]
-  [occurrence] occurrences found<BR><BR>
+  [occurrence] coincidencia(s) localizada(s)<BR><BR>
 [ENDIF]
 
 <TABLE BORDER="0" WIDTH="100%">
@@ -29,3 +31,5 @@
      <TR><TD>&nbsp;</TD></TR>
    [END]
 </TABLE>
+
+<!-- end lists.es.tpl -->

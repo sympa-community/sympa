@@ -20,7 +20,7 @@
      [ELSE]
       <A HREF="[path_cgi]/logout/[action]/[list]" >
      [ENDIF]
-     <FONT SIZE=-1><B>Logout</B></FONT></A>
+     <FONT SIZE=-1><B>Desconectar</B></FONT></A>
      </TD>
   [ELSE]
      <TD NOWRAP BGCOLOR="--BG_COLOR--" ALIGN="center"><IMG SRC="[icons_url]/locked.gif" align="center" alt="https"></TD>
@@ -89,11 +89,11 @@
 
   [IF action=which]
   <TD NOWRAP BGCOLOR="--SELECTED_COLOR--" ALIGN="center">
-      <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Sus subscripciones</B></FONT>
+      <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Sus suscripciones</B></FONT>
   </TD>
   [ELSE]
   <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">
-      <A HREF="[path_cgi]/which" ><FONT SIZE=-1><B>Sus subscripciones</B></FONT></A>
+      <A HREF="[path_cgi]/which" ><FONT SIZE=-1><B>Sus suscripciones</B></FONT></A>
    </TD>
    [ENDIF]
   
@@ -102,7 +102,7 @@
       <FONT SIZE=-1 COLOR=--BG_COLOR-- ><B>Pref</B></FONT>
   </TD>
   <TD NOWRAP BGCOLOR="--LIGHT_COLOR--" ALIGN="center">
-      <FONT SIZE=-1 COLOR="--BG_COLOR--"><B>Sus subscripciones</B></FONT>
+      <FONT SIZE=-1 COLOR="--BG_COLOR--"><B>Sus suscripciones</B></FONT>
   </TD>
   [ENDIF]
 

@@ -69,7 +69,7 @@ Compruebe los mensajes nuevos en su correo y utilice la contraseña que Sympa le 
 	<BR><BR>
 
 
-	[PARSE '--ETCBINDIR--/wws_templates/loginbanner.us.tpl']
+	[PARSE '--ETCBINDIR--/wws_templates/loginbanner.es.tpl']
 
   [ENDIF]      
 
