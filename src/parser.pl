@@ -23,9 +23,13 @@
 
 use FileHandle;
 
-my ($index, @t, $data, $internal);
+my ($index, @t, $data, $internal, $out_type, $out);
 
 ## The main parsing sub
+## Parameters are 
+## data: a HASH ref containing the data 
+## template : a filename or a ARRAY ref that contains the template
+## output : a Filedescriptor or a SCALAR ref for the output
 sub parse_tpl {
     my ($template, $output);
     ($data, $template, $output) = @_;
@@ -40,8 +44,16 @@ sub parse_tpl {
     my @old_mode = ($*, $/);
     ($*, $/) = (0, "\n");
 
-    my $old_desc = select;
-    select $output;
+    my $old_desc;
+    
+    if (ref($output) eq 'SCALAR') {
+	$output_type = 'string';
+	$out = $output;
+    }else {
+	$output_type = 'desc';
+	$old_desc = select;
+	select $output;
+    }
      
     ## Parses the HTML template
     ## Possible syntax of templates are 
@@ -52,15 +64,22 @@ sub parse_tpl {
     ## [INCLUDE file]
     ## [PARSE file]
 
-    my $fh = new FileHandle $template;
+    if (ref($template) eq 'ARRAY') {
+	@t = @$template;
+	$index = -1;
+    }else { 
+	my $fh = new FileHandle $template;
 
-    $index = -1;
-    @t = <$fh>;
-    close $fh;
+	$index = -1;
+	@t = <$fh>;
+	close $fh;
+    }
 
     &process(1);
 
-    select $old_desc;
+    if ($output_type eq 'desc') {
+	select $old_desc;
+    }
 
     ($*, $/) = @old_mode;
 
@@ -91,7 +110,12 @@ sub do_include {
 
     my $fh = new FileHandle $file;
 
-    print <$fh>;
+    if ($output_type eq 'desc') {
+	print <$fh>;
+    }else {
+	$$out .= sprintf <$fh>;
+    }
+
     close $fh;
 }
 
@@ -248,7 +272,11 @@ sub do_stopparse {
 
     while ($_ = $t[$index]) {
 	return if /\[\s*STARTPARSE\s*\]/i;
-	print;
+	if ($output_type eq 'desc') {
+	    print;
+	}else {
+	    $$out .= sprintf $_;
+	}
 	$index++;
     }
     return;
@@ -293,7 +321,11 @@ sub process {
 	    &do_setvar($echo);
 	}elsif ($echo == 1) {
 	    &do_parse();
-	    print;
+	    if ($output_type eq 'desc') {
+		print;
+	    }else {
+		$$out .= sprintf $_;
+	    }
 	}
     }
     return;
