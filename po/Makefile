@@ -7,7 +7,7 @@ DEPENDON = $(shell cd .. ; ls src/*.p? wwsympa/wwsympa.fcgi wwsympa/*.p? wwsympa
 
 MSGMERGE = msgmerge
 MSGFMT   = msgfmt
-XGETTEXT = $(SCRIPTDIR)/xgettext.pl
+XGETTEXT = po/xgettext.pl
 
 ## Available catalogues (languages)
 .SUFFIXES: .po .mo
@@ -19,12 +19,12 @@ XGETTEXT = $(SCRIPTDIR)/xgettext.pl
 
 all: $(MOFILES)
 
-pot: sympa.pot
+potfile: sympa.pot
 
-sympa.pot:
+pot:
 	echo "Updating sympa.pot template file..."
 	cd .. ;\
-	$(XGETTEXT) -o po/sympa.pot src/*.p? wwsympa/wwsympa.fcgi wwsympa/*.p? wwsympa/tt2/*.tt2 src/etc/tt2/*.tt2 src/etc/mhonarc-ressources.tt2 src/etc/scenari/*
+	$(XGETTEXT) -o po/sympa.pot src/*.p? soap/*.p? soap/*.fcgi wwsympa/wwsympa.fcgi wwsympa/*.p? wwsympa/tt2/*.tt2 src/etc/tt2/*.tt2 src/etc/mhonarc-ressources src/etc/scenari/*
 
 install: $(MOFILES)
 	targetdir='$(DESTDIR)$(LOCALEDIR)'; \
@@ -37,7 +37,7 @@ install: $(MOFILES)
 		cp -f $$cat $$dest && chmod 644 $$dest || exit 1; \
 	done
 
-update-po: pot
+update-po: potfile
 	languages='$(LINGUAS)'; \
 	for lang in $$languages; do \
 		$(MSGMERGE) -o "$$lang.po" "$$lang.po" sympa.pot; \
