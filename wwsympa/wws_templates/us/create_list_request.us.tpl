@@ -44,7 +44,7 @@
  <TR>
    <TD NOWRAP><B>Topics:</B></TD>
    <TD><SELECT NAME="topics">
-	<OPTION VALUE="">--Sélect a topic--
+	<OPTION VALUE="">--Select a topic--
 	[FOREACH topic IN list_of_topics]
 	  <OPTION VALUE="[topic->NAME]"
 	  [IF topic->selected]
