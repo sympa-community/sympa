@@ -2747,6 +2747,13 @@ To run \WWSympa with FastCGI, you need to install :
 	Path to the (superb) MhOnArc program. Required for html archives
 	http://www.oac.uci.edu/indiv/ehood/mhonarc.html
 
+	\subsection {htmlarea_url}
+	\default {undefined} \\
+	URL to the (superb) on line html editor named HTMLarea. If you have installed javascript application you can use it
+        when editing html document in teh shared document repository. In order to activate this plugging the value of this
+        parameter must be the root directory where HTMLarea is installed.  HTMLarea is a free opensource software you can download
+        to the following server http://sf.net/projects/itools-htmlarea/
+
 	\subsection {password\_case sensitive | insensitive}
 	\default {insensitive} \\
 	If set to \textbf {insensitive}, WWSympa's password check will be insensitive.

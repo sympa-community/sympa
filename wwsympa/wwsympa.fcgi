@@ -658,7 +658,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
  #    $param->{'lang'} = $param->{'user'}{'lang'} || $Conf{'lang'};
      $param->{'remote_addr'} = $ENV{'REMOTE_ADDR'} ;
      $param->{'remote_host'} = $ENV{'REMOTE_HOST'};
-
+     $param->{'http_user_agent'} = $ENV{'HTTP_USER_AGENT'};
+     $param->{'htmlarea_url'} = $wwsconf->{'htmlarea_url'} ;
      &export_topics ($robot);
      # if ($wwsconf->{'export_topics'} =~ /all/i);
 
@@ -7358,6 +7359,7 @@ sub do_redirect {
      $param->{'list'} = $list_name;
      $param->{'path'} = $path;
 
+
      # test if it's a text file
      if (-T "$shareddir/$path") {
 	 $param->{'textfile'} = 1;
@@ -7365,6 +7367,9 @@ sub do_redirect {
      } else {
 	 $param->{'textfile'} = 0;
      }
+     $param->{'use_htmlarea'} = '1' if (($wwsconf->{'htmlarea_url'}) and ($param->{'textfile'}) and ($path =~ /\.html?/));
+
+
 
      #Current directory
      if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {

@@ -158,6 +158,7 @@ sub load_config {
 			log_facility => '',
 			robots => '',
 			password_case => 'insensitive',
+			htmlarea_url => '',
 			);
 
     my $conf = \%default_conf;

@@ -3,6 +3,13 @@
 
 <!-- comment -->
 <HEAD>
+
+[IF use_htmlarea]
+<script type="text/javascript" src="[htmlarea_url]/htmlarea.js"></script>
+
+<script type="text/javascript" src="[htmlarea_url]/lang/en.js"></script>
+[ENDIF]
+
 <SCRIPT LANGUAGE="JavaScript">
 <!-- for other browsers
 
@@ -112,6 +119,9 @@ A {
 
 <BODY bgcolor="[bg_color]" text="[text_color]" link="[selected_color]" vlink="[selected_color]" 
 onLoad="
+[IF use_htmlarea]
+HTMLArea.replaceAll();
+[ENDIF]
 [IF cookie_set]
 check_cookie(); 
 [ENDIF]
