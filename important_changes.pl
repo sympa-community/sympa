@@ -59,15 +59,12 @@ my $wait = <STDIN>;
 open NOTES, 'NEWS';
 my ($current, $ok);
 while (<NOTES>) {
-    if (/^(\d\S+)\s/) {
-	my $version = $1;
-	if (($previous_version eq $1) ||
-	    &higher($previous_version, $1)) {
-	    last;
-	}elsif ($1 eq $current_version) {
-	    $ok = 1;
-	}
+    if (/^$previous_version\s/) {
+	last;
+    }elsif (/^$current_version\s/) {
+	$ok = 1;
     }
+
     next unless $ok;
 
     if (/^\*{4}/) {
@@ -83,38 +80,3 @@ close NOTES;
 print "<RETURN>";
 my $wait = <STDIN>;
 
-sub higher {
-    my ($v1, $v2) = @_;
-
-    my @tab1 = split /\./,$v1;
-    my @tab2 = split /\./,$v2;
-    
-    
-    my $max = $#tab1;
-    $max = $#tab2 if ($#tab2 > $#tab1);
-
-    for $i (0..$max) {
-    
-	if ($tab1[0] =~ /^(\d*)a$/) {
-	    $tab1[0] = $1 - 0.5;
-	}elsif ($tab1[0] =~ /^(\d*)b$/) {
-	    $tab1[0] = $1 - 0.25;
-	}
-
-	if ($tab2[0] =~ /^(\d*)a$/) {
-	    $tab2[0] = $1 - 0.5;
-	}elsif ($tab2[0] =~ /^(\d*)b$/) {
-	    $tab2[0] = $1 - 0.25;
-	}
-
-	if ($tab1[0] eq $tab2[0]) {
-	    printf "\t%s = %s\n",$tab1[0],$tab2[0];
-            shift @tab1;
-            shift @tab2;
-            next;
-        }
-        return ($tab1[0] > $tab2[0]);
-    }
-
-    return 0;
-}
