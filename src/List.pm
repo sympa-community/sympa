@@ -4928,11 +4928,14 @@ sub get_robots {
 	do_log('err',"Unable to open --DIR--/etc");
 	return undef;
     }
+    my $use_default_robot = 1 ;
     foreach $r (sort readdir(DIR)) {
 	next unless (($r !~ /^\./o) && (-d "$Conf{'home'}/$r"));
 	next unless (-r "--DIR--/etc/$r/robot.conf");
 	push @robots, $r;
+	undef $use_default_robot if ($r eq $Conf{'host'});
     }
+    push @robots, $Conf{'host'} if ($use_default_robot);
     return @robots ;
 }
 
