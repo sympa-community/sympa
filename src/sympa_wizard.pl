@@ -319,12 +319,16 @@ my @params = ({'title' => 'Directories and file location'},
 	       'file' => 'sympa.conf','edit' => '1',
 	       'advice' =>'Sympa knowns S/MIME if openssl is installed'},
 
-	      {'name' => 'trusted_ca_options',
-	       'sample' => '-CApath --ETCDIR--/ssl.crt -CAfile /usr/local/apache/conf/ssl.crt/ca-bundle.crt',
-	       'query' => 'The OpenSSL option string to qualify trusted CAs',
-	       'file' => 'sympa.conf','edit' => '1',
-	       'advice' => 'This parameter is used by sympa when sending some URL by mail'},
-	      
+	      {'name' => 'capath',
+	       'sample' => '--ETCDIR--/ssl.crt',
+	       'query' => 'The directory path use by OpenSSL for trusted CA certificates',
+	       'file' => 'sympa.conf','edit' => '1'},
+
+	      {'name' => 'cafile',
+	       'sample' => '/usr/local/apache/conf/ssl.crt/ca-bundle.crt',
+	       'query' => ' This parameter sets the all-in-one file where you can assemble the Certificates of Certification Authorities (CA)',
+	       'file' => 'sympa.conf','edit' => '1'},
+
 	      {'name' => 'ssl_cert_dir',
 	       'default' => '--SSLCERTDIR--',
 	       'query' => 'User CERTs directory',
