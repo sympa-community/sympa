@@ -805,6 +805,7 @@ sub signoff {
     #my $action = &List::get_action('unsubscribe',$which,$sender,$email,$auth_method);
     my $action = &List::request_action('unsubscribe',$auth_method,$robot,
 				       {'listname' => $which, 
+					'email' => $email,
 					'sender' => $sender });
     
     if ($action =~ /reject/i) {
@@ -912,6 +913,7 @@ sub add {
     #my $action = &List::get_action ('add',$which,$sender,$email,$auth_method);
     my $action = &List::request_action('add',$auth_method,$robot,
 				       {'listname' => $which, 
+					'email' => $email,
 					'sender' => $sender });
     
     if ($action =~ /reject/i) {
