@@ -3556,12 +3556,19 @@ sub do_redirect {
 	     return undef;
 	 }
 	 unless ($in{'quiet'}) {
-	     my $message = new Mail::Internet [<IN>];
-	     my @sender_hdr = Mail::Address->parse($message->head->get('From'));
+	     my $msg;
+	     my $parser = new MIME::Parser;
+	     $parser->output_to_core(1);
+	     unless ($msg = $parser->read(\*IN)) {
+		 do_log('err', 'Unable to parse message %s', $file);
+		 next;
+	     }
+	     
+	     my @sender_hdr = Mail::Address->parse($msg->head->get('From'));
 	     unless  ($#sender_hdr == -1) {
 		 my $rejected_sender = $sender_hdr[0]->address;
 		 my %context;
-		 $context{'subject'} = $message->head->get('subject');
+		 $context{'subject'} = &MIME::Words::decode_mimewords($msg->head->get('subject'));
 		 $context{'rejected_by'} = $param->{'user'}{'email'};
 		 $list->send_file('reject', $rejected_sender, $robot, \%context);
 	     }
