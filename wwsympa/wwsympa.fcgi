@@ -458,6 +458,16 @@ while ($query = &new_loop()) {
 	&Language::SetLang($param->{'lang'});
 	&POSIX::setlocale(&POSIX::LC_ALL, Msg(14, 1, 'en_US'));
 
+	## use default_home parameter
+	if ($action eq 'home') {
+	    $action = $Conf{'robots'}{$robot}{'default_home'} || $wwsconf->{'default_home'};
+
+	    if (! &tools::get_filename('etc', 'topics.conf', $robot) &&
+		($action eq 'home')) {
+		$action = 'lists';
+	    }
+	}
+	
 	unless ($comm{$action}) {
 	    &error_message('unknown_action');
 	    &wwslog('info','unknown action %s', $action);

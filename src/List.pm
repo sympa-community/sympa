@@ -630,7 +630,7 @@ my %alias = ('reply-to' => 'reply_to',
 	    'reply_to_header' => {'format' => {'value' => {'format' => ['sender','list','other_email'],
 							   'default' => 'sender',
 							   'title_id' => 91,
-							   'occurrence' => '1',
+							   'occurrence' => '1-n',
 							   'order' => 1
 							   },
 					       'other_email' => {'format' => $regexp{'email'},
@@ -1554,15 +1554,18 @@ sub distribute_msg {
 
 	    $hdr->delete('Reply-To');
 
-	    if ($self->{'admin'}{'reply_to_header'}{'value'} eq 'list') {
-		$reply = "$name\@$host";
-	    }elsif ($self->{'admin'}{'reply_to_header'}{'value'} eq 'sender') {
-		$reply = undef;
-	    }elsif ($self->{'admin'}{'reply_to_header'}{'value'} eq 'other_email') {
-		$reply = $self->{'admin'}{'reply_to_header'}{'other_email'};
+	    foreach my $reply_header (@{$self->{'admin'}{'reply_to_header'}{'value'}}) {
+		if ($reply_header eq 'list') {
+		    $reply = $reply.','."$name\@$host";
+		}elsif ($reply_header eq 'sender') {
+		    $reply = $reply.','."$hdr->get('From')";
+		}elsif ($reply_header eq 'other_email') {
+		    $reply =  $reply.','."$self->{'admin'}{'reply_to_header'}{'other_email'}";
+		}
 	    }
+	    $reply = s/^,// ;
 
-	    $hdr->add('Reply-To',$reply) if $reply;
+	    $hdr->add('Reply-To',$reply) if (($reply) && ($reply ne $hdr->get('From')));
 	}
     }
     
@@ -5852,7 +5855,7 @@ sub _load_list_param {
     }
 
     ## Search configuration file
-    if (ref($value) && defined $value->{'conf'}) {
+    if ((ref($value) eq 'HASH') && defined $value->{'conf'}) {
 	$value = $Conf::Conf{$value->{'conf'}};
     }
 
