@@ -75,7 +75,7 @@ Liiga palju vastuseid, ei saa näidata
   <TR><TD ALIGN="left" NOWRAP>
   [IF is_owner]
 
-    <!--INPUT TYPE="button" NAME="action_del" VALUE="Kustuta valitud aadressid" onClick="request_confirm(this.form,'Olete kindel, et soovite kustutada kõik valitud aadressid ?')"-->
+    <!--INPUT TYPE="button" NAME="action_del" VALUE="Kustuta valitud aadressid" onClick="return request_confirm('Olete kindel, et soovite kustutada kõik valitud aadressid ?')"-->
 
     <INPUT TYPE="submit" NAME="action_del" VALUE="Kustuta valitud aadressid">
 
@@ -230,7 +230,7 @@ Liiga palju vastuseid, ei saa näidata
     <TR><TD ALIGN="left">
       [IF is_owner]
 
-        <!--INPUT TYPE="button" NAME="action_del" VALUE="Kustutada valitud aadressid" onClick="request_confirm(this.form,'Olete kindel, et soovite kustutada kõik valitud aadressid ?')"-->
+        <!--INPUT TYPE="button" NAME="action_del" VALUE="Kustutada valitud aadressid" onClick="return request_confirm('Olete kindel, et soovite kustutada kõik valitud aadressid ?')"-->
 
 	<INPUT TYPE="submit" NAME="action_del" VALUE="Kustuta valitud aadressid">
 

@@ -75,7 +75,7 @@ Te veel geselecteerd
   <TR><TD ALIGN="left" NOWRAP>
   [IF is_owner]
 
-    <!--INPUT TYPE="button" NAME="action_del" VALUE="Verwijder geselecteerde emailadressen" onClick="request_confirm(this.form,'Wilt u echt alle geselecteerde abonnees verwijderen ?')"-->
+    <!--INPUT TYPE="button" NAME="action_del" VALUE="Verwijder geselecteerde emailadressen" onClick="return request_confirm('Wilt u echt alle geselecteerde abonnees verwijderen ?')"-->
 
     <INPUT TYPE="submit" NAME="action_del" VALUE="Verwijder geselecteerde emailadressen">
 
@@ -253,7 +253,7 @@ Te veel geselecteerd
     <TR><TD ALIGN="left">
       [IF is_owner]
 
-        <!--INPUT TYPE="button" NAME="action_del" VALUE="Verwijder geselecteerde emailadressen" onClick="request_confirm(this.form,'Wilt u echt alle geselecteerde abonnees verwijderen ?')"-->
+        <!--INPUT TYPE="button" NAME="action_del" VALUE="Verwijder geselecteerde emailadressen" onClick="return request_confirm('Wilt u echt alle geselecteerde abonnees verwijderen ?')"-->
 
 	<INPUT TYPE="submit" NAME="action_del" VALUE="Verwijder geselecteerde emailadressen">
 

@@ -13,7 +13,7 @@
 </TD>
 <TD>
   <FORM METHOD="post" ACTION="[path_cgi]">
-        <INPUT TYPE="button" VALUE="Aminteste tuturor  abonatilor " NAME="action_remind" onClick="request_confirm(this.form,'Do you really want to send a subscription remind message to the [total] subscribers')">
+        <INPUT TYPE="button" VALUE="Aminteste tuturor  abonatilor " NAME="action_remind" onClick="return request_confirm('Do you really want to send a subscription remind message to the [total] subscribers')">
     <INPUT TYPE="hidden" NAME="action" VALUE="remind">
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   </FORM>	

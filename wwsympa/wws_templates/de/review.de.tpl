@@ -72,7 +72,7 @@ Zu viele Suchergebnisse. Kann Resultate nich anzeigen.
   <TR><TD ALIGN="left" NOWRAP>
   [IF is_owner]
 
-    <!--INPUT TYPE="button" NAME="action_del" VALUE="Ausgew&auml;hlte EMail-Adressen l&ouml;schen" onClick="request_confirm(this.form,'Wirklich alle ausgew&auml;hlten Abonnenten l&ouml;schen?')"-->
+    <!--INPUT TYPE="button" NAME="action_del" VALUE="Ausgew&auml;hlte EMail-Adressen l&ouml;schen" onClick="return request_confirm('Wirklich alle ausgew&auml;hlten Abonnenten l&ouml;schen?')"-->
 
     <INPUT TYPE="submit" NAME="action_del" VALUE="Ausgew&auml;hlte EMail-Adressen l&ouml;schen">
 
@@ -201,7 +201,7 @@ Zu viele Suchergebnisse. Kann Resultate nich anzeigen.
     <TR><TD ALIGN="left">
       [IF is_owner]
 
-        <!--INPUT TYPE="button" NAME="action_del" VALUE="Ausgew&auml;hlte EMail-Adressen l&ouml;schen" onClick="request_confirm(this.form,'Wollen Sie wirklich alle ausgew&auml;hlten ABonnenten l&ouml;schen?')"-->
+        <!--INPUT TYPE="button" NAME="action_del" VALUE="Ausgew&auml;hlte EMail-Adressen l&ouml;schen" onClick="return request_confirm('Wollen Sie wirklich alle ausgew&auml;hlten ABonnenten l&ouml;schen?')"-->
 
 	<INPUT TYPE="submit" NAME="action_del" VALUE="Ausgew&auml;hlte EMail-Adressen l&ouml;schen">
 

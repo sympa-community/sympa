@@ -13,7 +13,7 @@
 </TD>
 <TD>
   <FORM METHOD="post" ACTION="[path_cgi]">
-    <INPUT TYPE="button" VALUE="Notifica tutti i sottoscritti" NAME="action_remind" onClick="request_confirm(this.form,'Vuoi veramente mandare un messaggio a [total] sottoscritti')">
+    <INPUT TYPE="button" VALUE="Notifica tutti i sottoscritti" NAME="action_remind" onClick="return request_confirm('Vuoi veramente mandare un messaggio a [total] sottoscritti')">
     <INPUT TYPE="hidden" NAME="action" VALUE="remind">
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   </FORM>	

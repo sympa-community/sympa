@@ -88,7 +88,7 @@ Túl sokat jelöltél ki, nem tudom megjeleníteni.
   <TR><TD ALIGN="left" NOWRAP>
   [IF is_owner]
 
-    <!--INPUT TYPE="button" NAME="action_del" VALUE="Töröld a kijelölt e-mail címeket" onClick="request_confirm(this.form,'Tényleg szeretnéd az ÖSSZES kijelölt tagot törölni?')"-->
+    <!--INPUT TYPE="button" NAME="action_del" VALUE="Töröld a kijelölt e-mail címeket" onClick="return request_confirm('Tényleg szeretnéd az ÖSSZES kijelölt tagot törölni?')"-->
 
     <INPUT TYPE="submit" NAME="action_del" VALUE="Kijelöltek törlése">
 
@@ -230,7 +230,7 @@ Túl sokat jelöltél ki, nem tudom megjeleníteni.
     <TR><TD ALIGN="left">
       [IF is_owner]
 
-        <!--INPUT TYPE="button" NAME="action_del" VALUE="Töröld a kijelölt e-mail címeket" onClick="request_confirm(this.form,'Tényleg szeretnéd az ÖSSZES kiejölt tagot törölni?')"-->
+        <!--INPUT TYPE="button" NAME="action_del" VALUE="Töröld a kijelölt e-mail címeket" onClick="return request_confirm('Tényleg szeretnéd az ÖSSZES kiejölt tagot törölni?')"-->
 
 	<INPUT TYPE="submit" NAME="action_del" VALUE="Kijelöltek törlése">
 

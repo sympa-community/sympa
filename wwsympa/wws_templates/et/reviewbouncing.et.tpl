@@ -13,7 +13,7 @@
 </TD>
 <TD>
   <FORM METHOD="post" ACTION="[path_cgi]">
-    <INPUT TYPE="button" VALUE="Meeldetuletus listi liikmetele" NAME="action_remind" onClick="request_confirm(this.form,'Oled kindel, et soovid saata meeldetuletuse kõigile [total] lugejale ? ')">
+    <INPUT TYPE="button" VALUE="Meeldetuletus listi liikmetele" NAME="action_remind" onClick="return request_confirm('Oled kindel, et soovid saata meeldetuletuse kõigile [total] lugejale ? ')">
     <INPUT TYPE="hidden" NAME="action" VALUE="remind">
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   </FORM>	

@@ -22,10 +22,11 @@
 
   // To confirm a form submition
   function request_confirm(my_form, my_message, my_action) {
-    if (window.confirm(my_message)) {
-      my_form.action.value = my_action;
-      my_form.submit();
-    }
+    if (confirm(my_message)) {
+      return true;
+    }else {
+      return false;
+    } 
 }
 
   // To confirm on a link (A HREF)
@@ -200,7 +201,7 @@ setTimeout('refresh_mom_and_die()',1000);
        [PARSE admin_menu_template]
       </TR>
       <TR VALIGN="top">
-        <TD colspan="8" BGCOLOR="[shaded_color]" >
+        <TD colspan="9" BGCOLOR="[shaded_color]" >
          [IF active]
           [PARSE action_template]
          [ENDIF]

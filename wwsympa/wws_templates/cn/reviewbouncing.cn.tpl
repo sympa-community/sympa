@@ -13,7 +13,7 @@
 </TD>
 <TD>
   <FORM METHOD="post" ACTION="[path_cgi]">
-    <INPUT TYPE="button" VALUE="提醒所有订阅者" NAME="action_remind" onClick="request_confirm(this.form,'您确定要给发送订阅提醒到所有的[total]个订阅者吗 ?')">
+    <INPUT TYPE="button" VALUE="提醒所有订阅者" NAME="action_remind" onClick="return request_confirm('您确定要给发送订阅提醒到所有的[total]个订阅者吗 ?')">
     <INPUT TYPE="hidden" NAME="action" VALUE="remind">
     <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
   </FORM>	

@@ -73,7 +73,7 @@
   <TR><TD ALIGN="left" NOWRAP>
   [IF is_owner]
 
-    <!--INPUT TYPE="button" NAME="action_del" VALUE="Delete selected email addresses" onClick="request_confirm(this.form,'Do you really want to unsubscribe ALL selected subscribers ?')"-->
+    <!--INPUT TYPE="button" NAME="action_del" VALUE="Delete selected email addresses" onClick="return request_confirm('Do you really want to unsubscribe ALL selected subscribers ?')"-->
 
         <INPUT TYPE="submit" NAME="action_del" VALUE="Sterge adresele email selectate">
 
@@ -226,7 +226,7 @@
     <TR><TD ALIGN="left">
       [IF is_owner]
 
-        <!--INPUT TYPE="button" NAME="action_del" VALUE="Delete selected email addresses" onClick="request_confirm(this.form,'Do you really want to unsubscribe ALL selected subscribers ?')"-->
+        <!--INPUT TYPE="button" NAME="action_del" VALUE="Delete selected email addresses" onClick="return request_confirm('Do you really want to unsubscribe ALL selected subscribers ?')"-->
 
 	    <INPUT TYPE="submit" NAME="action_del" VALUE="Sterge adresele email selectate">
 
