@@ -362,7 +362,7 @@ REMIND <lista>                        * Envia un mensaje a cada subscriptor (est
 SYMPA is an electronic mailing-list manager that automates list management
 functions such as subscriptions, moderation, and archive management.
 
-All commands must be sent to the electronic address [conf_sympa]
+All commands must be sent to the electronic address [conf->sympa]
 
 You can put multiple commands in a message. These commands must appear in the
 message body and each line must contain only one command. The message body
