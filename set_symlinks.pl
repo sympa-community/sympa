@@ -19,7 +19,7 @@ my @scenario_defaults = ('add.owner',
 
 $wws_templates_default_lang = 'us';
 
-my %wws_template_equiv = ('lists' => ['which', 'search-list'],
+my %wws_template_equiv = ('lists' => ['which', 'search_list'],
 			  'review' => ['search']
 			  );
 
@@ -34,7 +34,7 @@ unless ($action =~ /^wws_templates|scenari$/) {
     printf STDERR "Usage %s wws_templates|scenari <install directory>\n", $0;
     exit -1;
 }
-
+> 
 unless ((-d $dir) && (-w $dir)) {
     printf STDERR "Directory %s, not found or no write access\n", $dir;
     exit -1;
