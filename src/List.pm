@@ -1492,9 +1492,6 @@ sub load {
     }elsif ($self->{'admin'}{'user_data_source'} eq 'include2') {
 	## currently no check
 
-	}
-
-
     }elsif($self->{'admin'}{'user_data_source'} eq 'include') {
 
     ## include other subscribers as defined in include directives (list|ldap|sql|file|owners|editors)
