@@ -4348,13 +4348,20 @@ sub do_edit_list {
 
 	next if $pinfo->{$pname}{'obsolete'};
 
+	my $to_index;
+
 	## Single vs multiple parameter
 	if ($pinfo->{$pname}{'occurrence'} =~ /n$/) {
 
 	    my $last_index = $#{$new_admin->{$pname}};
+	    
+	    $#{$list->{'admin'}{$pname}} < $last_index ?
+		$to_index = $last_index
+		    : $to_index = $#{$list->{'admin'}{$pname}};
 
 	    if ($#{$list->{'admin'}{$pname}} != $last_index) {
-		$changed{$pname} = 1; next;
+		$changed{$pname} = 1; 
+		#next;
 	    }
 	    $p = $list->{'admin'}{$pname};
 	    $new_p = $new_admin->{$pname};
@@ -4365,7 +4372,7 @@ sub do_edit_list {
 
 	## Check changed parameters
 	## Also check syntax
-	foreach my $i (0..$#{$p}) {
+	foreach my $i (0..$to_index) {
 
 	    ## Scenario
 	    ## Eg: 'subscribe'
@@ -4380,7 +4387,7 @@ sub do_edit_list {
 		## Foreach Keys
 		## Ex: 'owner->email'
 		foreach my $key (keys %{$pinfo->{$pname}{'format'}}) {
-
+		    
 		    next unless ($list->may_edit("$pname.$key",$param->{'user'}{'email'}) eq 'write');
 
 		    ## Ex: 'shared_doc->d_read'
@@ -4417,21 +4424,22 @@ sub do_edit_list {
 			## Single Param
 			## Ex: 'owner->email'
 			}else {
+			    ## If empty and is primary key => delete entry
+			    if ((! $new_p->[$i]{$key}) && ($pinfo->{$pname}{'format'}{$key}{'occurrence'} eq '1')) {
+				$new_p->[$i] = undef;
+				#splice @{$new_p}, $i, 1;
+				
+				## Skip the rest of the paragraph
+				$changed{$pname} = 1; last;
+			    }
 			    if ($p->[$i]{$key} ne $new_p->[$i]{$key}) {
-
+				
 				my $format = $pinfo->{$pname}{'format'}{$key}{'format'};
 				if (ref ($format)) {
 				    $format = $pinfo->{$pname}{'format'}{$key}{'file_format'};
 				}
-
-				## If empty and is primary key => delete entry
-				if ((! $new_p->[$i]{$key}) && ($pinfo->{$pname}{'format'}{$key}{'occurrence'} eq '1')) {
-				    $new_p->[$i] = undef;
-				    #splice @{$new_p}, $i, 1;
-
-				    ## Skip the rest of the paragraph
-				    $changed{$pname} = 1; last;
-				}elsif ($new_p->[$i]{$key} !~ /^$format$/) {
+				
+				if ($new_p->[$i]{$key} !~ /^$format$/) {
 				    push @syntax_error, $pname;
 				}
 				
@@ -4443,6 +4451,10 @@ sub do_edit_list {
 	    ## Scalar
 	    ## Ex: 'max_size'
 	    }else {
+		if (!$new_p->[$i]) {
+		    splice @{$new_p}, $i, 1;
+		}
+
 		if ($p->[$i] ne $new_p->[$i]) {
 		    unless ($new_p->[$i] =~ /^$pinfo->{$pname}{'file_format'}$/) {
 			push @syntax_error, $pname;
