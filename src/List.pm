@@ -1560,7 +1560,7 @@ sub send_notify_to_listmaster {
 	my $to = sprintf "Listmaster <%s>", $Conf{'listmaster'};
 	mail::mailback (\$body, {'Subject' => 'No DataBase'}, 'sympa', $to, $robot, $Conf{'listmaster'});
 
-    ## No DataBase
+    ## DataBase restored
     }elsif ($operation eq 'db_restored') {
         my $body = "Connection to database $Conf{'db_name'} restored." ; 
 	my $to = sprintf "Listmaster <%s>", $Conf{'listmaster'};

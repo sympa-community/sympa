@@ -39,10 +39,12 @@ sub fatal_err {
     
     syslog('err', $m, @_);
     syslog('err', "Exiting.");
-#   if ($main::options{'debug'} || $main::options{'foreground'}) {
     $m =~ s/%m/$errno/g;
+
+    ## Notify listmaster
+    &List::send_notify_to_listmaster('sympa_died', $Conf{'domain'}, $m);
+
     printf STDERR "$m\n", @_;
-#   }
     exit(1);   
 }
 

@@ -128,8 +128,7 @@ while ($signal ne 'term') { #as long as a SIGTERM is not received }
 my $config_file = $main::options{'config'} || '--CONFIG--';
 ## Load configuration file
 unless (Conf::load($config_file)) {
-   print Msg(1, 1, "Configuration file $config_file has errors.\n");
-   exit(1);
+   &fatal_err("Configuration file $config_file has errors.");
 }
 
 ## Open the syslog and say we're read out stuff.
@@ -158,7 +157,6 @@ if ($Conf{'db_name'} and $Conf{'db_type'}) {
 
 if (&tools::cookie_changed($Conf{'cookie'})) {
      &fatal_err("sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at $Conf{'etc'}/cookies.history file)");
-    exit;
 }
 
 ## Set locale configuration
@@ -490,15 +488,13 @@ while (!$signal) {
 
 	if (-d $bad_dir) {
 	    unless (rename("$Conf{'queue'}/$filename", "$bad_dir/$filename")){
-		do_log('err', "Exiting, unable to rename bad file %s to %s (check directory permission)", $filename, "$bad_dir/$filename");
-		exit;
+		&fatal_err("Exiting, unable to rename bad file $filename to $bad_dir/$filename (check directory permission)");
 	    }
 	    do_log('notice', "Moving bad file %s to bad/", $filename);
 	}else{
 	    do_log('notice', "Missing directory '%s'", $bad_dir);
 	    unless (rename("$Conf{'queue'}/$filename", "$Conf{'queue'}/BAD-$filename")) {
-		do_log('err', "Exiting, unable to rename bad file %s to BAD-%s", $filename, $filename);
-		exit;		
+		&fatal_err("Exiting, unable to rename bad file $filename to BAD-$filename");
 	    }
 	    do_log('notice', "Renaming bad file %s to BAD-%s", $filename, $filename);
 	}
@@ -714,7 +710,7 @@ sub DoFile {
 	    ## Notify listmaster of first rejection
 	    if ($loop_info{$sender}{'count'} == $Conf{'loop_command_max'}) {
 		## Notify listmaster
-		&List::send_notify_to_listmaster('loop_command', $robot, $file);
+		&List::send_notify_to_listmaster('loop_command', $Conf{'domain'}, $file);
 	    }
 	    
 	    ## Too many reports sent => message skipped !!
