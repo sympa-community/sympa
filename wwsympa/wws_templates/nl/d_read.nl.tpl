@@ -7,8 +7,7 @@
   [IF path]  
     <h2><B><IMG SRC="[icons_url]/folder.open.png"> [path] </B> </h2> 
     <A HREF="[path_cgi]/d_editfile/[list]/[escaped_path]">wijzig</A> | 
-    <A HREF="[path_cgi]/d_delete/[list]/[escaped_path]"
-onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path]', 'Wilt u het volgende [path] echt verwijderen?'); return false;">delete</A> |
+    <A HREF="[path_cgi]/d_delete/[list]/[escaped_path]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path]', 'Wilt u het volgende [path] echt verwijderen?'); return false;">verwijder</A> |
     <A HREF="[path_cgi]/d_control/[list]/[escaped_path]">toegangsrechten</A><BR>
 
     Eigenaar : [doc_owner] <BR>
@@ -119,8 +118,7 @@ onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path]', 'Wilt
 
 	  <TD><center>
 	  <FONT size=-1>
-	  <A
-HREF="[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]','Wilt u echt het document [path][s->doc] verwijderen?'); return false;">delete</A>
+	  <A HREF="[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]','Wilt u echt het document [path][s->doc] verwijderen?'); return false;">verwijder</A>
 	  </FONT>
 	  </center></TD>
 	[ELSE]
@@ -285,7 +283,7 @@ HREF="[path_cgi]/d_delete/[list]/[escaped_path][s->escaped_doc]" onClick="reques
    </TD>
 
    <TD ALIGN="left" VALIGN="bottom">
-   <input type="submit" value="Publish" name="action_d_upload">
+   <input type="submit" value="Publiceer" name="action_d_upload">
    <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
    <INPUT TYPE="hidden" NAME="path" VALUE="[path]">
    <TD>

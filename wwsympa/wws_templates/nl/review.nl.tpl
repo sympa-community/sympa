@@ -39,7 +39,7 @@
        <TD BGCOLOR="[light_color]" ALIGN="center" VALIGN="top">
          <FONT COLOR="[selected_color]" SIZE="-1">
 
-         <A HREF="[path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Wilt u echt een abonnements herinneringsmailtje sturen naar de [total] abonnees ?'); return false;"><b>Remind all subscribers</b></A>
+         <A HREF="[path_cgi]/remind/[list]" onClick="request_confirm_link('[path_cgi]/remind/[list]', 'Wilt u echt een abonnements herinneringsmailtje sturen naar de [total] abonnees ?'); return false;"><b>Herinner alle abonnees</b></A>
 
          </FONT>
        </TD>

@@ -12,7 +12,7 @@
  	 [IF is_listmaster]
 	  Listmaster
 	 [ELSIF is_privileged_owner]
-          Privileged eigenaar
+          Hoofdeigenaar
 	 [ELSIF is_owner]
           Eigenaar
          [ELSIF is_editor]

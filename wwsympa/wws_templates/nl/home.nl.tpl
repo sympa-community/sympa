@@ -3,9 +3,9 @@
     <BR><P> 
 <TABLE BORDER=0 BGCOLOR="[light_color]"><TR><TD>
 <P align=justify>
-Deze server geeft u toegang tot uw werkomgeving op de mailinglijst server
-[conf->email]@[conf->host]. Beginnende bij deze URL, kunt u zich
-inschrijven, uitschijven, de archieven bekijken en lijsten managen.
+Deze webpaginas geven u toegang tot de mailinglijst server
+[conf->email]@[conf->host]. Beginnende bij deze pagina kunt u zich
+inschrijven, uitschijven, de archieven bekijken en emaillijsten beheren.
 </P>
 </TD></TR></TABLE>
 <BR><BR>
@@ -14,7 +14,7 @@ inschrijven, uitschijven, de archieven bekijken en lijsten managen.
 <TABLE BORDER=0>
  <TR>
   <TH BGCOLOR="[selected_color]">
-   <FONT COLOR="[bg_color]">Mailing lists</FONT>
+   <FONT COLOR="[bg_color]">Mailing lijsten</FONT>
   </TH>
  </TR>
  <TR>

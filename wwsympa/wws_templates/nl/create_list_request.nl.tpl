@@ -6,13 +6,13 @@
 <P>
 <TABLE>
  <TR>
-   <TD NOWRAP><B>List name:</B></TD>
+   <TD NOWRAP><B>Lijst naam:</B></TD>
    <TD><INPUT TYPE="text" NAME="listname" SIZE=30 VALUE="[saved->listname]"></TD>
    <TD><img src="[icons_url]/unknown.png" alt="de naam van de lijst; voorzichtig, niet het adres! !"></TD>
  </TR>
  
  <TR>
-   <TD NOWRAP><B>Owner:</B></TD>
+   <TD NOWRAP><B>Eigenaar:</B></TD>
    <TD><I>[user->email]</I></TD>
    <TD><img src="[icons_url]/unknown.png" alt="U bent de eigenaar van deze lijst"></TD>
  </TR>

@@ -32,7 +32,7 @@
       <A HREF="[path_cgi]/nomenu/loginrequest/[action]/[list]"
      [ENDIF]
        onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=550,height=300')" TARGET="wws_login">
-       <FONT SIZE=-1><B>Login</B></FONT></A>
+       <FONT SIZE=-1><B>Inloggen</B></FONT></A>
       </TD>
   [ENDIF]
     </TR>
@@ -107,7 +107,7 @@
   [ENDIF]
 
   [IF action=home]
-  <TD NOWRAP BGCOLOR="[selected_color]" ALIGN="center"><FONT SIZE=-1 COLOR=[bg_color]><B>Home</B></FONT></TD>
+  <TD NOWRAP BGCOLOR="[selected_color]" ALIGN="center"><FONT SIZE=-1 COLOR=[bg_color]><B>Hoofpagina</B></FONT></TD>
   [ELSE]
   <TD NOWRAP BGCOLOR="[light_color]" ALIGN="center">
       <A HREF="[path_cgi]/"><FONT SIZE=-1><B>Hoofdpagina</B></FONT></A>

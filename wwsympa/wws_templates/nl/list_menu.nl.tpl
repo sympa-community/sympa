@@ -162,8 +162,7 @@
       [ELSIF user->email]
         <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[path_cgi]/signoff/[list]"
-onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Wilt u zich echt uitschrijven van lijst [list]?'); return false;">Uitschrijven</A>
+         <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Wilt u zich echt uitschrijven van lijst [list]?'); return false;">Uitschrijven</A>
         </b></font>
         </TD>
        [ELSE]
@@ -209,8 +208,7 @@ onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Wilt u zich echt uit
     [IF may_subscribe=1]
       [IF user->email]
         <font size=-1><b>
-     <A HREF="[path_cgi]/subscribe/[list]"
-onClick="request_confirm_link('[path_cgi]/subscribe/[list]', 'Wilt u zich echt inschrijven voor de lijst [list]?'); return false;">Inschrijven</A>
+     <A HREF="[path_cgi]/subscribe/[list]" onClick="request_confirm_link('[path_cgi]/subscribe/[list]', 'Wilt u zich echt inschrijven voor de lijst [list]?'); return false;">Inschrijven</A>
         </b></font>
       [ELSE]
          <font size=-1><b>
@@ -242,8 +240,7 @@ onClick="request_confirm_link('[path_cgi]/subscribe/[list]', 'Wilt u zich echt i
         <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>
        [IF user->email]
         <font size=-1><b>
-         <A HREF="[path_cgi]/signoff/[list]"
-onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Wilt u zich echt uitschrijven van lijst [list]?'); return false;">Uitschrijven</A>
+         <A HREF="[path_cgi]/signoff/[list]" onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Wilt u zich echt uitschrijven van lijst [list]?'); return false;">Uitschrijven</A>
         </b></font>
        [ELSE]
        <font size=-1><b>
@@ -385,7 +382,7 @@ onClick="request_confirm_link('[path_cgi]/signoff/[list]', 'Wilt u zich echt uit
      [PARSE '--ETCBINDIR--/wws_templates/list_button_header.tpl']
       [IF action=review]
         <TD WIDTH="100%" BGCOLOR="[selected_color]" NOWRAP align=right>
-          <font size=-1 COLOR="[bg_color]"><b>Review</b></font>
+          <font size=-1 COLOR="[bg_color]"><b>Beheer</b></font>
 	</TD>
       [ELSE]
         <TD WIDTH="100%" BGCOLOR="[light_color]" NOWRAP align=right>

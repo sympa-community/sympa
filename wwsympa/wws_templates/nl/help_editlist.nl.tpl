@@ -13,11 +13,11 @@
 [ELSIF p->NAME=archive]
   Toegangsrecht voor het lezen van het mailarchief en de frequentie van het archiveren.
 [ELSIF p->NAME=owner]
-  Eigenaren zijn managende abonnees van de lijst. Ze mogen abonnees reviewen
+  Eigenaren zijn managende abonnees van de lijst. Ze mogen abonnees beheren
 en emailadressen toevoegen of verwijderen van de lijst. Wanneer u de
-privleged eigenaar bent van een lijst, kunt u andere eigenaren kiezen voor
-de mailinglijst. Privileged eigenare mogen iets meer dan andere eigenaren.
-Er kan slechts 1 privliged eigenaar per lijst zijn; zijn/haar email adres
+hoofdeigenaar bent van een lijst, kunt u andere eigenaren kiezen voor
+de mailinglijst. Hoofdeigenaren mogen iets meer dan andere eigenaren.
+Er kan slechts 1 hoofdeigenaar per lijst zijn; zijn/haar email adres
 kan niet vanaf het web veranderd worden.
 [ELSIF p->NAME=editor]
   Editors zijn verantwoordelijk voor het modereren van berichten. Wanneer de

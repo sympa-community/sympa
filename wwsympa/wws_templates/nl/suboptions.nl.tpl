@@ -2,8 +2,8 @@
 
   <FORM ACTION="[path_cgi]" METHOD=POST>
 
-  You are subscribed since <FONT COLOR="[dark_color]">[subscriber->date]</FONT>  <BR><BR>
-  Last update: <FONT COLOR="[dark_color]">[subscriber->update_date]</FONT>  <BR><BR>
+  U bent ingeschreven sinds <FONT COLOR="[dark_color]">[subscriber->date]</FONT>  <BR><BR>
+  Laatste wijziging: <FONT COLOR="[dark_color]">[subscriber->update_date]</FONT>  <BR><BR>
      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
      Ontvangst stand : 
      <SELECT NAME="reception">
@@ -20,7 +20,7 @@
      [PARSE '--ETCBINDIR--/wws_templates/button_footer.tpl']
 
      <BR>
-     Visibility :
+     Zichtbaarheid :
      <SELECT NAME="visibility">
         [FOREACH r IN visibility]
           <OPTION VALUE="[r->NAME]" [r->selected]>[r->description]
