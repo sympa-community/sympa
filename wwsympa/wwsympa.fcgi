@@ -4654,7 +4654,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      my $list = shift;
      my $conf = '';
      my $smtp;
-     my @suf;
+     my (@suf, @addresses);
 
      my $smtp_relay = $Conf{'robots'}{$robot}{'list_check_smtp'} || $Conf{'list_check_smtp'};
      my $suffixes = $Conf{'robots'}{$robot}{'list_check_suffixes'} || $Conf{'list_check_suffixes'};
@@ -4665,9 +4665,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
      @suf = split(/,/,$suffixes);
      return 0 if ! @suf;
      for(@suf) {
-	 $_ = $list . "-$_\@" . $domain;
+	 push @addresses, $list."-$_\@".$domain;
      }
-     push @suf,"$list\@" . $domain;
+     push @adresses,"$list\@" . $domain;
 
      unless (require Net::SMTP) {
 	 do_log ('err',"Unable to use Net library, Net::SMTP required, install it (CPAN) first");
@@ -4677,7 +4677,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 				Hello => $smtp_relay,
 				Timeout => 30) ) {
 	 $smtp->mail('');
-	 for(@suf) {
+	 for(@addresses) {
 		 $conf = $smtp->to($_);
 		 last if $conf;
 	 }
