@@ -4304,7 +4304,7 @@ sub load_scenario_list {
 	next unless (-d $dir);
 
 	while (<$dir/$action.*>) {
-	    next unless (/$action\.(\w+)$/);
+	    next unless (/$action\.($regexp{'scenario'})$/);
 	    my $name = $1;
 	    
 	    next if (defined $list_of_scenario{$name});
