@@ -2680,6 +2680,7 @@ sub do_viewmod {
 	chdir $tmp_dir;
 	open ARCMOD, "$wwsconf->{'mhonarc'}  -single -rcfile $mhonarc_ressources -definevars \"listname=$list->{'name'} hostname=$list->{'admin'}{'host'} \" $Conf{'queuemod'}/$list->{'name'}_$in{'id'}|";
 	open MSG, ">msg00000.html";
+	&do_log('debug', "$wwsconf->{'mhonarc'}  -single -rcfile $mhonarc_ressources -definevars \"listname=$list->{'name'} hostname=$list->{'admin'}{'host'} \" $Conf{'queuemod'}/$list->{'name'}_$in{'id'}|");
 	print MSG <ARCMOD>;
 	close MSG;
 	close ARCMOD;

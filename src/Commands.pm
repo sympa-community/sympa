@@ -59,7 +59,6 @@ my $email_regexp = '\S+|\".*\"@\S+';
 sub parse {
    $sender = lc(shift);
    my $i = shift;
-   $msg_file = shift;
    my $sign_mod = shift;
 
    do_log('debug2', 'Commands::parse(%s, %s, %s)', $sender, $i,$sign_mod );
@@ -1503,7 +1502,7 @@ sub distribute {
 
     ## Distribute the message
     my $numsmtp;
-    unless ($numsmtp = $list->distribute_msg($msg, $bytes, $msg_file, $is_crypted)) {
+    unless ($numsmtp = $list->distribute_msg($msg, $bytes, $file, $is_crypted)) {
 	return undef;
     }
 

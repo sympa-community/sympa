@@ -799,7 +799,7 @@ sub DoCommand {
     ## If X-Sympa-To = <listname>-<subscribe|unsubscribe> parse as a unique command
     if ($rcpt =~ /^(\S+)-(subscribe|unsubscribe)(\@(\S+))?$/o) {
 	do_log('debug',"processing message for $1-$2");
-	&Commands::parse($sender,"$2 $1", $file);
+	&Commands::parse($sender,"$2 $1");
 	return 1; 
     }
     
@@ -810,7 +810,7 @@ sub DoCommand {
     $subject_field =~ s/\n//mg; ## multiline subjects
     $subject_field =~ s/^\s*(Re:)?\s*(.*)\s*$/$2/i;
 
-    $success ||= &Commands::parse($sender, $subject_field, $file, $is_signed->{'subject'}) ;
+    $success ||= &Commands::parse($sender, $subject_field, $is_signed->{'subject'}) ;
 
     ## Make multipart singlepart
     if ($msg->is_multipart()) {
@@ -872,7 +872,7 @@ sub DoCommand {
 	    }
 	    &do_log('debug2',"is_signed->body $is_signed->{'body'}");
 
-	    unless ($status = Commands::parse($sender, $i, $file, $is_signed->{'body'})) {
+	    unless ($status = Commands::parse($sender, $i, $is_signed->{'body'})) {
 		push @msg::report, sprintf Msg(4, 19, "Command not understood: ignoring end of message.\n");
 		last;
 	    }
@@ -899,7 +899,7 @@ sub DoCommand {
     # processing the expire function
     if ($expire){
 	print STDERR "expire\n";
-	unless (&Commands::parse($sender, $expire, $file, @msgexpire)) {
+	unless (&Commands::parse($sender, $expire, @msgexpire)) {
 	    print Msg(4, 19, "Command not understood: ignoring end of message.\n");
 	}
     }
