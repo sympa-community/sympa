@@ -5117,7 +5117,7 @@ sub _include_users_ldap {
 	## Multiple values
 	if (ref($entry) eq 'ARRAY') {
 	    foreach my $email (@{$entry}) {
-		push @emails, $email;
+		push @emails, lc($email);
 		last if ($ldap_select eq 'first');
 	    }
 	}else {
@@ -5275,7 +5275,7 @@ sub _include_users_ldap_2level {
 	    if (ref($entry) eq 'ARRAY') {
 		foreach my $email (@{$entry}) {
 		    next if (($ldap_select2 eq 'regex') && ($email !~ /$ldap_regex2/));
-		    push @emails, $email;
+		    push @emails, lc($email);
 		    last if ($ldap_select2 eq 'first');
 		}
 	    }else {
@@ -5398,8 +5398,8 @@ sub _include_users_sql {
 
 	my %u;
 	## Check if user has already been included
-	if ($users->{$email}) {
-	    %u = %{$users->{$email}};
+	if ($users->{lc($email)}) {
+	    %u = %{$users->{lc($email)}};
 	}else {
 	    %u = %{$default_user_options};
 	    $total++;
