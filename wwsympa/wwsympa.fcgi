@@ -1125,13 +1125,19 @@ sub check_param_out {
 	## Owners
 	foreach my $o (@{$list->{'admin'}{'owner'}}) {
 	    next unless $o->{'email'};
-	    $param->{'owner'}{$o->{'email'}}{'gecos'} = $o->{'gecos'} || $o->{'email'};
+	    $param->{'owner'}{$o->{'email'}}{'gecos'} = $o->{'gecos'};
+	    my $masked_email = $o->{'email'};
+	    $masked_email =~ s/\@/ AT /;
+	    $param->{'owner'}{$o->{'email'}}{'masked_email'} = $masked_email;
 	}
 	
 	## Editors
 	foreach my $e (@{$list->{'admin'}{'editor'}}) {
 	    next unless $e->{'email'};
-	    $param->{'editor'}{$e->{'email'}}{'gecos'} = $e->{'gecos'} || $e->{'email'};
+	    $param->{'editor'}{$e->{'email'}}{'gecos'} = $e->{'gecos'};
+	    my $masked_email = $e->{'email'};
+	    $masked_email =~ s/\@/ AT /;
+	    $param->{'editor'}{$e->{'email'}}{'masked_email'} = $masked_email;
 	}  
  
 	## Should Not be used anymore ##

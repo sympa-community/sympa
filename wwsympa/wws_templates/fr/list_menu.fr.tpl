@@ -44,13 +44,21 @@
 	  Abonnés: <B>[total]</B><BR>
 	  Propriétaires :
 	  [FOREACH o IN owner]
-	    <BR><FONT SIZE=-1><A HREF="mailto:[o->NAME]">[o->gecos]</A></FONT>
+	    [IF o->gecos]
+	    <BR><FONT SIZE=-1>[o->gecos]</FONT>
+            [ELSE]
+	    <BR><FONT SIZE=-1>[o->masked_email]</FONT>
+	    [ENDIF]
 	  [END]
 	  <BR>
 	  [IF is_moderated]
 	    Modérateurs
 	    [FOREACH e IN editor]
-	      <BR><FONT SIZE=-1><A HREF="mailto:[e->NAME]">[e->gecos]</A></FONT>
+	    [IF e->gecos]
+	    <BR><FONT SIZE=-1>[e->gecos]</FONT>
+            [ELSE]
+	    <BR><FONT SIZE=-1>[e->masked_email]</FONT>
+	    [ENDIF]
 	    [END]
 	  [ENDIF]
           <BR>
