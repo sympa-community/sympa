@@ -4355,7 +4355,7 @@ sub do_get_latest_lists {
 				'creation_date' => $list->{'admin'}{'creation'}{'date_epoch'}};
     }
 
-    foreach my $l (sort {$a->{'creation_date'} <=> $b->{'creation_date'}} @unordered_lists) {
+    foreach my $l (sort {$b->{'creation_date'} <=> $a->{'creation_date'}} @unordered_lists) {
 	push @{$param->{'latest_lists'}}, $l;
 	$l->{'creation_date'} = &POSIX::strftime("%d %b %Y", localtime($l->{'creation_date'}));
     }
