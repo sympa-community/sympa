@@ -1,4 +1,4 @@
-SUBSTSRC	=	bounced.pl archived.pl wwslib.pl cookie-lib.pl bounce-lib.pl Marc.pm
+SUBSTSRC	=	bounced.pl archived.pl wwslib.pm cookielib.pm bounce-lib.pl Marc.pm
 
 SRC		=	mime.types 
 
