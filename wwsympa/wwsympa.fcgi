@@ -343,6 +343,8 @@ while ($query = &new_loop()) {
     $robot = $Conf{'robots'}{'robot_by_http_host'}{$ENV{'HTTP_HOST'}};
     $robot = $Conf{'host'} unless $robot;
 
+
+
     printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot,  Conf{'robots'}{$robot}: $Conf{'robots'}{$robot}\n";
     printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, title :  $Conf{'robots'}{$robot}->{'title'}\n";
     printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, listmaster :  $Conf{'robots'}{$robot}->{'listmasters'}\n";
@@ -3616,12 +3618,12 @@ sub _install_aliases {
     }
 
     unless ($param->{'auto_aliases'}) {
-	$param->{'aliases'}  = "#----------------- $in{'list'}\n";
-	$param->{'aliases'} .= "$in{'list'}: \"| --MAILERPROGDIR--/queue $in{'list'}\"\n";
-	$param->{'aliases'} .= "$in{'list'}-request: \"| --MAILERPROGDIR--/queue $in{'list'}-request\"\n";
-	$param->{'aliases'} .= "$in{'list'}-owner: \"| --MAILERPROGDIR--/bouncequeue $in{'list'}\"\n";
-	$param->{'aliases'} .= "$in{'list'}-unsubscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-unsubscribe\"\n";
-	$param->{'aliases'} .= "# $in{'list'}-subscribe: \"| --MAILERPROGDIR--/queue $in{'list'}-subscribe\"\n";
+	$param->{'aliases'}  = "#----------------- $in{'list'}\@$robot\n";
+	$param->{'aliases'} .= "$in{'list'}\@$robot: \"| --MAILERPROGDIR--/queue $in{'list'}\@$robot\"\n";
+	$param->{'aliases'} .= "$in{'list'}-request\@$robot: \"| --MAILERPROGDIR--/queue $in{'list'}-request\@$robot\"\n";
+	$param->{'aliases'} .= "$in{'list'}-owner\@$robot: \"| --MAILERPROGDIR--/bouncequeue $in{'list'}\"\n";
+	$param->{'aliases'} .= "$in{'list'}-unsubscribe\@$robot: \"| --MAILERPROGDIR--/queue $in{'list'}-unsubscribe\@$robot\"\n";
+	$param->{'aliases'} .= "# $in{'list'}-subscribe\@$robot: \"| --MAILERPROGDIR--/queue $in{'list'}-subscribe\@$robot\"\n";
     }
 
     return 1;

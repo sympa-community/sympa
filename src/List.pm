@@ -3363,7 +3363,7 @@ sub request_action {
     }
 
     unless ($name) {
-	do_log ('info',"internal error : configuration for operation $operation is not yet performed by scenario");
+	do_log ('err',"internal error : configuration for operation $operation is not yet performed by scenario");
 	return undef;
     }
     foreach my $rule (@rules) {
@@ -3425,7 +3425,7 @@ sub verify {
     if (defined ($context->{'listname'})) {
 	$list = new List ($context->{'listname'});
 	unless ($list) {
-	    do_log('info','Unable to create list object %s', $context->{'listname'});
+	    do_log('err','Unable to create list object %s', $context->{'listname'});
 	    return undef;
 	}
 
@@ -3433,7 +3433,7 @@ sub verify {
     }
 
     unless ($condition =~ /(\!)?\s*(true|is_listmaster|is_editor|is_owner|is_subscriber|match|equal|message)\s*\(\s*(.*)\s*\)\s*/i) {
-	&do_log('info', "error rule syntaxe: unknown condition $condition");
+	&do_log('err', "error rule syntaxe: unknown condition $condition");
 	return undef;
     }
     my $negation = 1 ;
@@ -3464,7 +3464,7 @@ sub verify {
 	    if ($Conf{$1}) {
 		$value =~ s/\[conf\-\>([\w\-]+)\]/$Conf{$1}/;
 	    }else{
-		do_log('notice',"unknown variable context $value in rule $condition");
+		do_log('err',"unknown variable context $value in rule $condition");
 		return undef;
 	    }
 
@@ -3475,7 +3475,7 @@ sub verify {
 	    }elsif ($list->{'admin'}{$1} and (!ref($list->{'admin'}{$1})) ) {
 		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{'admin'}{$1}/;
 	    }else{
-		do_log('notice','Unknown list parameter %s in rule %s', $value, $condition);
+		do_log('err','Unknown list parameter %s in rule %s', $value, $condition);
 		return undef;
 	    }
 
@@ -3530,7 +3530,7 @@ sub verify {
 	    if (defined ($context->{$1})) {
 		$value =~ s/\[(\w+)\]/$context->{$1}/i;
 	    }else{
-		do_log('notice',"unknown variable context $value in rule $condition");
+		do_log('err',"unknown variable context $value in rule $condition");
 		return undef;
 	    }
 	    
@@ -3543,24 +3543,24 @@ sub verify {
     # condition that require 0 argument
     if ($condition_key eq 'true') {
 	unless ($#args == -1){ 
-	    do_log('notice',"error rule syntaxe : incorrect number of argument or incorrect argument syntaxe $condition") ; 
+	    do_log('err',"error rule syntaxe : incorrect number of argument or incorrect argument syntaxe $condition") ; 
 	    return undef ;
 	}
 	# condition that require 1 argument
     }elsif ($condition_key eq 'is_listmaster') {
 	unless ($#args == 0) { 
-	     do_log ('notice',"error rule syntaxe : incorrect argument number for condition $condition_key") ; 
+	     do_log ('err',"error rule syntaxe : incorrect argument number for condition $condition_key") ; 
 	    return undef ;
 	}
 	# condition that require 2 args
 #
     }elsif ($condition_key =~ /^is_owner|is_editor|is_subscriber|match|equal|message$/i) {
 	unless ($#args == 1) {
-	    do_log ('notice',"error rule syntaxe : incorrect argument number for condition $condition_key") ; 
+	    do_log ('err',"error rule syntaxe : incorrect argument number for condition $condition_key") ; 
 	    return undef ;
 	}
     }else{
-	do_log('notice', "error rule syntaxe : unknown condition $condition_key");
+	do_log('err', "error rule syntaxe : unknown condition $condition_key");
 	return undef;
     }
     ## Now eval the condition
@@ -3592,7 +3592,7 @@ sub verify {
 
 	$list2 = new List ($args[0]);
 	if (! $list2) {
-	    do_log('info',"unable to create list object \"$args[0]\"");
+	    do_log('err',"unable to create list object \"$args[0]\"");
 	    return undef;
 	}
 
@@ -3622,7 +3622,7 @@ sub verify {
     ##### match
     if ($condition_key eq 'match') {
 	unless ($args[1] =~ /^\/(.*)\/$/) {
-	    &do_log('info', 'Match parameter %s is not a regexp', $args[1]);
+	    &do_log('err', 'Match parameter %s is not a regexp', $args[1]);
 	    return undef;
 	}
 	my $regexp = $1;
@@ -3995,13 +3995,13 @@ sub _load_scenario_file {
 	unless (($robot) && (open SCENARI, $scenario_file)) {
 
 	    ## Site scenario
-	    $scenario_file = "$Conf{'etc'}/$robot/scenari/$function.$name";
+	    $scenario_file = "$Conf{'etc'}/scenari/$function.$name";
 	    unless (($robot) && (open SCENARI, $scenario_file)) {
 		
 		## Distrib scenario
 		$scenario_file = "--ETCBINDIR--/scenari/$function.$name";
 		unless (open SCENARI,$scenario_file) {
-		    do_log ('info',"Unable to open scenario $scenario_file, please report to listmaster");
+		    do_log ('err',"Unable to open scenario file $function.$name, please report to listmaster");
 		    return &_load_scenario ($function,$name,'true() smtp -> reject', $directory);
 		}
 	    }
@@ -4011,7 +4011,7 @@ sub _load_scenario_file {
     my $paragraph= join '',<SCENARI>;
     close SCENARI;
     unless ($structure = &_load_scenario ($function,$name,$paragraph, $directory)) { 
-	do_log ('info',"error in $function scenario $scenario_file ");
+	do_log ('err',"error in $function scenario $scenario_file ");
     }
 
     return $structure ;
@@ -4294,7 +4294,7 @@ sub _include_users_file {
     my $total = 0;
     
     unless (open(INCLUDE, "$filename")) {
-	do_log('info', 'Unable to open file "%s"' , $filename);
+	do_log('err', 'Unable to open file "%s"' , $filename);
 	return undef;
     }
     do_log('debug','including file %s' , $filename) if ($main::options{'debug'});
@@ -4729,23 +4729,34 @@ sub get_lists {
     do_log('debug2', 'List::get_lists(%s)',$robot);
     
     unless (-d $Conf{'home'}) {
-	do_log('debug',"no such directory $Conf{'home'}");
+	do_log('err',"no such directory $Conf{'home'}");
 	return undef ;
     }
     
     unless (opendir(DIR, $Conf{'home'})) {
-	do_log('debug',"unable to open $Conf{'home'}");
+	do_log('err',"Unable to open $Conf{'home'}");
 	return undef;
     }
     foreach $l (sort readdir(DIR)) {
 	next unless (($l !~ /^\./o) and (-d $l) and (-f "$l/config"));
-	my $list = new List ($l);
-	# printf STDERR "xxxxxxxx debug test $l (robot = $robot) (listhost $list->{'admin'}{'domain'})\n" ;
-	next unless (($list->{'admin'}{'domain'} eq $robot) || ($robot eq '*')) ;
-	push @lists, $l ;
+	push @lists, $l if (&list_by_robot ($l,$robot));
 
     }
     return @lists;
+}
+
+# return true if the list is managed by the robot
+sub list_by_robot {
+
+    my($listname,$robot) = @_;
+
+    my $list = new List ($listname);
+    return 1 if ($list->{'admin'}{'domain'} eq $robot) ;
+    # for compatibility with previous versions :
+    # if 'domain' is undefined for this list but if the current robot is the default one
+    return 1 if (($robot eq $Conf{'host'}) && (!$list->{'admin'}{'domain'}));
+    return 1 if ($robot eq '*');
+    return undef;
 }
 
 ## List of lists in database mode which e-mail parameter is member of
@@ -4770,12 +4781,12 @@ sub get_which_db {
     push @sth_stack, $sth;
 
     unless ($sth = $dbh->prepare($statement)) {
-	do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
 	return undef;
     }
 
     unless ($sth->execute) {
-	do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
 
@@ -4944,7 +4955,7 @@ sub get_mod_spool_size {
     my @msg;
     
     unless (opendir SPOOL, $Conf{'queuemod'}) {
-	&do_log('info', 'Unable to read spool %s', $Conf{'queuemod'});
+	&do_log('err', 'Unable to read spool %s', $Conf{'queuemod'});
 	return undef;
     }
 
@@ -5001,12 +5012,12 @@ sub probe_db {
 #	    unless ($sth = $dbh->table_info) {
 #	    unless ($sth = $dbh->prepare("LISTFIELDS $t")) {
 	    unless ($sth = $dbh->prepare("SHOW FIELDS FROM $t")) {
-		do_log('debug','Unable to prepare SQL query : %s', $dbh->errstr);
+		do_log('err','Unable to prepare SQL query : %s', $dbh->errstr);
 		return undef;
 	    }
 
 	    unless ($sth->execute) {
-		do_log('debug','Unable to execute SQL query : %s', $dbh->errstr);
+		do_log('err','Unable to execute SQL query : %s', $dbh->errstr);
 		return undef;
 	    }
 	    
@@ -5029,12 +5040,12 @@ sub probe_db {
 	push @sth_stack, $sth;
 
 	unless ($sth = $dbh->prepare($statement)) {
-	    do_log('debug','Unable to prepare SQL query : %s', $dbh->errstr);
+	    do_log('err','Unable to prepare SQL query : %s', $dbh->errstr);
 	    return undef;
      	}
 
        	unless ($sth->execute) {
-	    &do_log('debug','Can\'t load tables list from database and Unable to perform SQL query %s : %s ',$statement, $dbh->errstr);
+	    &do_log('err','Can\'t load tables list from database and Unable to perform SQL query %s : %s ',$statement, $dbh->errstr);
 	    return undef;
      	}
  
@@ -5054,11 +5065,11 @@ sub probe_db {
  
 	push @sth_stack, $sth;
 	unless ($sth = $dbh->prepare($statement)) {
-	    do_log('debug','Unable to prepare SQL query : %s', $dbh->errstr);
+	    do_log('err','Unable to prepare SQL query : %s', $dbh->errstr);
 	    return undef;
 	}
 	unless ($sth->execute) {
-	    &do_log('debug','Can\'t load tables list from database and Unable to perform SQL query %s : %s ',$statement, $dbh->errstr);
+	    &do_log('err','Can\'t load tables list from database and Unable to perform SQL query %s : %s ',$statement, $dbh->errstr);
 	    return undef;
 	}
 
@@ -5077,7 +5088,7 @@ sub probe_db {
     
     foreach $table('user_table', 'subscriber_table') {
 	unless ($checked{$table}) {
-	    &do_log('info', 'Table %s not found in database %s', $table, $Conf{'db_name'});
+	    &do_log('err', 'Table %s not found in database %s', $table, $Conf{'db_name'});
 	    return undef;
 	}
     }
@@ -5095,8 +5106,8 @@ sub probe_db {
 		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, $Conf{'db_name'});
 		    
 		    unless ($dbh->do("ALTER TABLE $t ADD $f $db_struct{$t}{$f}")) {
-			&do_log('info', 'Could not add field \'%s\' to table\'%s\'.', $f, $t);
-			&do_log('info', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
+			&do_log('err', 'Could not add field \'%s\' to table\'%s\'.', $f, $t);
+			&do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			return undef;
 		    }
 
@@ -5105,11 +5116,11 @@ sub probe_db {
 		}
 		
 		unless ($real_struct{$t}{$f} eq $db_struct{$t}{$f}) {
-		     &do_log('info', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', $f, $t, $Conf{'db_name'}, $db_struct{$t}{$f});
+		     &do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', $f, $t, $Conf{'db_name'}, $db_struct{$t}{$f});
 
 		     unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$t}{$f}")) {
-			 &do_log('info', 'Could not change field \'%s\' in table\'%s\'.', $f, $t);
-			 &do_log('info', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
+			 &do_log('err', 'Could not change field \'%s\' in table\'%s\'.', $f, $t);
+			 &do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			 return undef;
 		     }
 		     
@@ -5134,12 +5145,12 @@ sub lowercase_field {
     }
 
     unless ($sth = $dbh->prepare("SELECT $field from $table")) {
-	do_log('debug','Unable to prepare SQL statement : %s', $dbh->errstr);
+	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
 	return undef;
     }
 
     unless ($sth->execute) {
-	do_log('debug','Unable to execute SQL statement : %s', $dbh->errstr);
+	do_log('err','Unable to execute SQL statement : %s', $dbh->errstr);
 	return undef;
     }
 
@@ -5154,7 +5165,7 @@ sub lowercase_field {
 	my $statement = sprintf "UPDATE $table SET $field=%s WHERE ($field=%s)", $dbh->quote($lower_cased), $dbh->quote($user->{$field});
 	
 	unless ($dbh->do($statement)) {
-	    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	    return undef;
 	}
 	
@@ -5179,12 +5190,12 @@ sub load_topics {
     if (! %list_of_topics || ((stat($conf_file))[9] > $mtime[0])) {
 
 	unless (-r $conf_file) {
-	    &do_log('info',"Unable to read $conf_file");
+	    &do_log('err',"Unable to read $conf_file");
 	    return undef;
 	}
 	
 	unless (open (FILE, $conf_file)) {
-	    &do_log('info',"Unable to open config file $conf_file");
+	    &do_log('err',"Unable to open config file $conf_file");
 	    return undef;
 	}
 	
