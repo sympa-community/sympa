@@ -2291,8 +2291,9 @@ sub do_redirect {
 					 'rows' => $size}); 
 	  $i; $i = $list->get_next_user()) {
 
+	 ## some review pages may be empty while viewed by subscribers
 	 next if (($i->{'visibility'} eq 'conceal')
-		  and (! $param->{'is_owner'}) );
+		  and (! $param->{'is_priv'}) );
 
 	 if ($limit_not_used) {
 	     $count++;
