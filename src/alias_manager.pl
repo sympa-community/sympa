@@ -49,7 +49,7 @@ $ENV{'PATH'} = '';
 my ($operation, $listname, $domain, $file) = @ARGV;
 
 
-if ($operation !~ /^(add)|(del)$/) {
+if (($operation !~ /^(add)|(del)$/) || ($#ARGV < 2)) {
     printf "Usage: $0 <add|del> <listname> <domain> [<file>]\n";
     exit(2);
 }
