@@ -30,7 +30,7 @@ use Carp;
 @ISA = qw(Exporter);
 @EXPORT = qw(fatal_err do_log do_openlog $log_level);
 
-my ($log_facility, $log_socket_type, $log_service);
+my ($log_facility, $log_socket_type, $log_service, $log_level);
 
 
 sub fatal_err {
