@@ -5416,7 +5416,7 @@ sub _prepare_data {
 	    $p_glob->{'type'} = 'task';
 	    my $list_of_task = $list->load_task_list($struct->{'task'}, $robot);
 	    
-	    $list_of_task->{$d}{'selected'} = 1;
+	    $list_of_task->{$d->{'name'}}{'selected'} = 1;
 	    
 	    foreach my $key (keys %{$list_of_task}) {
 		$list_of_task->{$key}{'title'} = $list_of_task->{$key}{'title'}{$param->{'lang'}} || $key;
