@@ -1383,7 +1383,7 @@ sub send_html {
 						 'sender' => $param->{'user'}{'email'},
 						 'remote_host' => $param->{'remote_host'},
 						 'remote_addr' => $param->{'remote_addr'}});
-	    $param->{'may_post'} = 1 if ($action =~ /do_it/);
+	    $param->{'may_post'} = 1 if ($action !~ /reject/);
 
 	}
 
