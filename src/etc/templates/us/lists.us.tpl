@@ -19,6 +19,9 @@ Hier ist eine Übersicht der Mailing-Listen von [conf->email]@[conf->host]
 [ELSIF user->lang=hu]
 [conf->email]@[conf->host] gépen található levelezõlisták sora
 
+[ELSIF user->lang=pt]
+Diretório das listas de [conf->email]@[conf->host]
+
 [ELSE]
 Here is the list of list from [conf->email]@[conf->host]
 

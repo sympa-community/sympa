@@ -95,6 +95,18 @@ erre a címre:
 
 Ha nem érdekel a lista, akkor nyugodtan töröld ezt a levelet.
 
+[ELSIF list->lang=pt]
+
+Oi,
+
+Convido-lhe a se subscrever à lista de correio [list->name]@[list->host]. 
+Esta lista trata de [list->subject], acho que pode ser de seu interesse.
+
+Para se subscrever simplesmente responda a esta mensagem ou faça um click no
+seguinte enlace de correio :  [url]
+
+Se não deseja se subscrever, simplesmente ignore esta mensagem.
+
 [ELSE]
 Hi,
 
