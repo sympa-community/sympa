@@ -311,6 +311,17 @@ sub rebuild {
 
 	do_log('debug',"System call : $cmd");
 	my $exitcode = system($cmd);
+	$exitcode = $exitcode / 256;
+
+	## Remove lock if required
+	if ($exitcode == 75) {
+	    &do_log('notice', 'Removing lock directory %s', $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck');
+	    rmdir $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck';
+
+	    $exitcode = system($cmd);
+	    $exitcode = $exitcode / 256;	    
+	}
+
 	if ($exitcode) {
 	    do_log('err',"Command $cmd failed with exit code $exitcode");
 	}
@@ -334,6 +345,16 @@ sub rebuild {
 	    
 	    my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
 	    my $exitcode = system($cmd);
+	    $exitcode = $exitcode / 256;
+
+	    ## Remove lock if required
+	    if ($exitcode == 75) {
+		&do_log('notice', 'Removing lock directory %s', $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck');
+		rmdir $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck';
+		
+		$exitcode = system($cmd);
+		$exitcode = $exitcode / 256;	    
+	    }
 	    if ($exitcode) {
 		do_log('err',"Command $cmd failed with exit code $exitcode");
 	    }
@@ -434,9 +455,19 @@ sub mail2arc {
     
     do_log('debug',"System call : $cmd");
     
-   my $exitcode = system($cmd);
+    my $exitcode = system($cmd);
+    $exitcode = $exitcode / 256;
+    
+    ## Remove lock if required
+    if ($exitcode == 75) {
+	&do_log('notice', 'Removing lock directory %s', $arcpath.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck');
+	rmdir $arcpath.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck';
+	
+	$exitcode = system($cmd);
+	$exitcode = $exitcode / 256;	    
+    }
     if ($exitcode) {
-           do_log('err',"Command $cmd failed with exit code $exitcode");
+	do_log('err',"Command $cmd failed with exit code $exitcode");
     }
 
     
