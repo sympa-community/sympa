@@ -257,11 +257,13 @@ sub search
 		{
 			if (/^<!--X-Subject: (.*) -->/)
 			{
-				$subj = $1;
+			        $subj = &MIME::Words::decode_mimewords($1);
+			        #$subj = $1;
 				last;
 			} 
 		} 
 		($from = <FH>) =~ s/^<!--X-From-R13: (.*) -->/$1/;
+		$from = &MIME::Words::decode_mimewords($from);
 		$from =~ tr/N-Z[@A-Mn-za-m/@A-Z[a-z/;
 		($date = <FH>) =~ s/^<!--X-Date: (.*) -->/$1/;
         ($id = <FH>) =~ s/^<!--X-Message-Id: (.*) -->/$1/;
