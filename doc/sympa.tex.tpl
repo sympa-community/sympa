@@ -3682,9 +3682,8 @@ and Remindpassword, you can copy \WWSympa's login page to your
 application, and then make use of the cookie information within your application. 
 The cookie format is :
 \begin{verbatim}
-user=<user_email>:<md5>
+sympauser=<user_email>:<md5>
 \end{verbatim}
-
 where \texttt{<}user\_email\texttt{>} is the user's complete e-mail address, and
 \texttt{<}md5\texttt{>} is a MD5 checksum of the \texttt{<}user\_email\texttt{>}+\Sympa \cfkeyword {cookie}
 configuration parameter.
@@ -3695,7 +3694,7 @@ between \WWSympa and your application.
 referrer URL when an action is performed. Here is a sample HTML anchor :
 
 \begin{verbatim}
-<A HREF="/wws/loginrequest/referrer">Login page</A>
+<A HREF="/wws/loginrequest/referer">Login page</A>
 \end{verbatim}
 
 
@@ -4447,7 +4446,9 @@ digest 1,4 12:00
     \label {file-subscribers}
     \index{subscriber file}
 
-\textbf {WARNING}: \Sympa will not use this file if the list is configured with \texttt {include} or \texttt {database} \lparam{user\_data\_source}.
+\textbf {Be carefull}: Since version 3.3.6 of \Sympa, a RDBMS is required for internal data storage. Flat file should
+not be use anymore except for testing purpose. \Sympa require , will not use this file if the list is configured
+with \texttt {include} or \texttt {database} \lparam{user\_data\_source}.
 
 The \tildefile {sympa/expl/\samplelist/subscribers} file is automatically created and
 populated. It contains information about list
@@ -5137,7 +5138,7 @@ sources (list, flat file, result of \index {LDAP} or \index {SQL} query).
        by extracting e-mail addresses using an \index {SQL} or \index {LDAP} query, or 
        by including other mailing lists. At least one include 
        paragraph, defining a data source, is needed. Valid include paragraphs (see
-       below) are \lparam {include\_file}, \lparam {include\_list}, 
+       below) are \lparam {include\_file}, \lparam {include\_list}, \lparam {include\_remote\_sympa\_list}, 
 	\lparam {include\_sql\_query} and \lparam {include\_ldap\_query}. 
 \end {itemize}
 
@@ -5173,6 +5174,59 @@ include lists which are also defined by the inclusion of other lists.
 Be careful, however, not to include list \texttt {A} in list \texttt {B} and
 then list \texttt {B} in list \texttt {A}, since this will give rise an 
 infinite loop.
+
+\subsection {include\_remote\_sympa\_list}
+
+\label {include-remote-sympa-list}
+\index{include-remote-sympa-list}
+
+\lparam {include\_remote\_sympa\_list}
+
+Sympa can contact another \Sympa service using https to fetch
+a remote list in order to include each member of a remote list
+as subscriber. You may include as many lists as required, using one
+\lparam {include\_remote\_sympa\_list} paragraph for each included
+list. Be careful, however, not to give rise an infinite loop making cross includes.
+
+
+For this operation, one \Sympa site act as a server while the other one
+act as client. On the server side, the only  setting needed is to
+give permition to the remote \Sympa to review the list. This is controled
+by the review scenario. 
+
+From the client side you must define the remote list dump URI.
+
+\begin{itemize}
+
+\item
+\label {remote-host}
+\lparam {remote\_host} \textit {remote\_host\_name} 
+
+\item
+\label {port}
+\lparam {port} \textit {port} (Default 443) 
+
+
+\item
+\label {path}
+\lparam {path} \textit {absolute path} (In most cases, for a list name foo /wws/dump/foo ) 
+
+\end{itemize}
+
+Because https offert a easy and secure client authentication, https is the only one
+protocole currently supported. A additional parameter is needed : the name of the
+certificate (and the private key) to be used :
+\label {cert}
+
+\begin {itemize}
+\item  \lparam {cert} \texttt {list} the certificate to be use is the list
+certificate (the certificate subject distinguished name email is the list adress).
+Certificate and private key are located in the list directory.
+ \item  \lparam {cert} \texttt {robot} the certificate used is then related to
+sympa itself : the certificate subject distinguished name email look like
+sympa@my.domain and files are located in virtual robot etc dir if virtual robot
+is used otherwise in \tildedir {sympa/etc}.
+\end{itemize}
 
 
 \subsection {include\_sql\_query}
