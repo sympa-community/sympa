@@ -317,7 +317,7 @@ sub do_eval {
 
     if ($var =~ /^(\w+)\-\>(INDEX|NAME)$/) {
 	if (ref($internal->{$1}) eq 'HASH') {
-	    return internal->{$1}{$2};
+	    return $internal->{$1}{$2};
 	}
     }elsif ($var =~ /^(\w+)\-\>(\w+)$/) {
 	if (ref($data->{$1}) eq 'HASH') {
