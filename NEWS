@@ -3,6 +3,124 @@
 
 (See Changelog file for the full changes log)
 
+3.3b.3		14 Nov 2001
+
+   New features : 
+
+	[L. Hamadouche] Ldap authentication via uid and emails stored 
+	in LDAP Directories.  Alternative email addresses extracted from LDAP 
+	directory ; may be used to "unify" subscriptions.
+
+	[L. Hamadouche] Sympa can export lists in an LDAP directory.
+	Directory is defined in  sympa.conf (ldap_export_xxx), exportation
+	via 'export' list parameter.   WWSympa's search_list feature may be
+	extended to LDAP directories.
+
+	[L. Hamadouche] LDAP search filters can be used in scenarios via 'search'
+	condition.
+
+	Add 'timeout' and 'scope' to 'include_ldap_query' list parameter
+
+	New sympa.conf parameter 'db_port'
+
+	New db_env sympa.conf parameter ; usefull to set Oracle's 'ORACLE_HOME'
+
+	New sympa.conf parameter 'misaddressed_commands' to disable command
+	detection in messages
+
+   Changes :
+
+	src/List.pm: Changes: DB_File structure for 'includes' now stored on disk 
+	(used to be in memory). It allows sharing of this cache	between processes.
+	The cache is not updated by WWSympa, because it would leed to bad performences
+
+	is_listmaster => write no more hardcoded in List::may_edit() ; 'default' no more
+	allowed for population in edit_list.conf
+
+	Now use configure.in and Makefile.am (uses automake/autoconf)
+	Makefile is generated as follows :
+		automake -a ; aclocal ; automake ; ./configure
+
+	wwsympa/wwsympa.fcgi: [proposed by D. Bernard] Use 'SERVER_NAME'
+	instead of 'HTTP_HOST' to determine current VirtualRobot. This is
+	much more reliable (Apache uses the server name as defined in its
+	config file)
+
+	wwsympa/wwsympa.fcgi: [requested by Janos Kovacs] Replace glob() with 
+	opendir/readdir().  This allows using WWSympa over an apache running in jail
+
+	[requested by Janos Kovacs] Password remind message is now sent via sympa.pl ; 
+	no more direct call to sendmail.  This allows using WWSympa over an apache running
+	in jail
+
+	[reported by Daniel Pittman] Add missing icons
+
+	Moderation message is now a template
+
+	A  unique template for listmaster notification
+
+	src/Commands.pm: [Ralf Ebeling] Allow subscription request to be
+	forwarded with no sender notification
+
+	Notify listmaster if Virus scan failed
+
+	[reported by J. Dalbec]	RH 7 compatibility changes : Web hierarchy location, 
+	Sympa directory location
+
+	[Szilard Vizi] Update ALL Hungarian translations
+
+	nls/de.msg: [H. Wilhelmi]: update
+
+	nls/cn-big5.msg: [Autrijus Tang] Update : adapt terms to Taiwan	usage
+
+   Bug fixes :
+
+	When saving a pending list, 'send' and 'visibility' were saved as 'closed' ; 
+	previous values were lost.
+
+	moderation message had no trailing boundary ; crypted messages were not properly 
+	moderated ; template sent to multiple recepients could not be crypted ; all message 
+	header fields were passed to OpenSSL, only content-type and content-transfer-encoding 
+	are passed now.
+
+	Many Virtual Robot related bug fixes
+
+	[reported by S. Tardieu] Bug fix: summary of messages was sent to the list itself. 
+	Digest/summary could be sent to an empty list of recipients.
+
+	[Harald Wilhelmi] Bug fix: Could not perform an	anonymous LDAP bind
+
+	[reported by Anne Durand] Bug fix: wwsympa did not reset list of topics before 
+	reloading topics.conf
+
+	wwsympa/bounce-lib.pl: Bug fix: NTMail reports made bounced die
+
+	[reported by V. Mathieu] Bug fix: LDAP authentication is case-sensitive
+
+	src/Conf.pm: [reported by JM Pouchoulon] Bug fix: auth.conf needed a last 
+	empty lines
+
+	Bug fix: moderation message had an empty boundary (unless md5)
+
+	Raise an error if subscribers inclusion failed
+
+	Raise error if incorrect scenario rule, so the message/command is kept as BAD
+
+	Add 'other' topic in create_list form
+
+	[reported by G. Mercey]Bug fix: scenario with '-' in name were not listed
+
+	src/List.pm: [reported by Tanel Kokk] 'mkdir' function requires mode
+
+	[Straub Herbert]: Encode mail subject for LISTS and HELP
+
+	src/List.pm: Bug fix: Do NOT consider .tpl as hierarchical parameters 
+	(like owner.email)
+
+	src/etc/script/sympa.spec: [reported by D. Mostacero] corrected	'perl-ldap' RMP name
+
+	src/etc/script/sympa.spec: [John Dalbec] Fix Perl dependency
+
 3.3a-vhost.10   25 Sep 2001
 
    New features : 
