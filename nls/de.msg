@@ -1,3 +1,4 @@
+$ 1 Oct 2001, Updated by H. Wilhelmi, TNG Tech. <harald.wilhelmi@tngtech.com>
 $ 26 Apr 2001, Updated by H. Wilhelmi, TNG Tech. <harald.wilhelmi@tngtech.com>
 $ 26 Feb 2000, Update by Carsten Clasohm <cc@clasohm.com>
 $ 16 Sept 1999, Initial version by Carsten Clasohm <cc@clasohm.com>
@@ -7,14 +8,13 @@ $quote "
 $set 1	Messages used while processing the configuration file
 1	"Die Konfigurationsdatei enthält Fehler.\n"
 3	"Fehler in Zeile %d : %s"
-102	"2.5.2"
+102	"2.8.1"
 
 $set 2	Messages used by Conf when verifying the files
 
 $set 3	Misc. messages in the main program
 1	"Auf Verzeichnis %s kann nicht zugegriffen werden: %m"
-Iscritti alla lista : %d\n"
-13	"Errore di sintassi 
+
 $set 4	Messages used in the main loop
 11	"Nachricht an %s abgelehnt"
 12	"Ihre Nachricht konnte nicht gesendet werden, weil sie\n\
@@ -219,6 +219,9 @@ ODER\n\
 \n\
 Wenn es sich um einen Irrtum handelt, ignorieren Sie diese\n\
 Nachricht einfach.\n"
+262	"Die S/MIME-Signature wurde erfolgreich überprüft"
+263	"Die Nachricht nicht vom Typ multipart/signed or Sympa konnte die\n\
+Signature nicht überprüfen (Sympa kann Signatures nicht prüfen, wenn ein Kommando im Subject benutzt wird)."
 
 $set 7	Commands syslog messages (Commands.pm)
 
@@ -235,9 +238,17 @@ mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
 7	"Datei"
 9	"Zusammenfaßung für Liste %s"
 10	"Um die angehängte Nachricht an die Liste %s weiterzuleiten :\n\
-mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\n"
-11	"Um sie abzulehnen:\n\
-mailto:%s?subject=REJECT%%20%s%%20%s\n"
+mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\
+Oder: Schicken Sie eine Nachricht an %s mit folgendem Subject:\n\
+DISTRIBUTE %s %s \n\n"
+11	"Um sie abzulehnen (sie wird gelöscht):\n\
+mailto:%s?subject=REJECT%%20%s%%20%s\n\
+Oder: Schicken Sie eine Nachricht an %s mit folgendem Subject:\n\
+REJECT %s %s\n\n"
+12	"Um die angeh"angte Nachricht über Liste %s zu verteilen:\n\
+mailto:%s?subject=CONFIRM%%20%s\n\
+Oder: Schicken Sie eine Nachricht an %s mit folgendem Subject:\n\
+CONFIRM %s\n"
 13	"Inhaltsverzeichnis" 
 14	"Ende der Zusammenfaßung für Liste %s"
 15	"%d Nachrichten in Liste %s müssen überprüft werden" 
@@ -295,6 +306,9 @@ $set 15 Templates files
 12	"Zusammenfaßungsnachricht"
 13	"Listenbeschreibung"
 14	"Listen-Homepage"
+15	"Listen-Erzeugungs-Anfrage"
+16	"Listen-Erzeugungs-Bestätigung"
+17	"Virus-verseuchte Nachricht"
 
 $set 16 parameters titles
 1	"Benutzerkennung"
@@ -379,6 +393,11 @@ $set 16 parameters titles
 87	"Wer kann editieren"
 88	"Verfügbare Abonnement-Optionen"
 89	"Empfangsmodus"
+90	"Antwort-Adresse"
+91	"Wert"
+92	"Andere EMail-Adresse"
+93	"Berücksichtung existierender Felder im Nachrichtenkopf"
+94	"Verbindungseinstellungen"
 
 $set 17 Cookie expiration periods
 1	"Sitzung"
