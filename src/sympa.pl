@@ -777,7 +777,9 @@ sub DoForward {
     }
    
     my $rc;
-    if ($rc = &tools::virus_infected($msg, $file)) {
+    my $msg_copy = $msg->dup;
+
+    if ($rc = &tools::virus_infected($msg_copy, $file)) {
 	if ($list) {
 	    $list->send_file('your_infected_msg', $sender, $robot, 
 			     {'virus_name' => $rc,
