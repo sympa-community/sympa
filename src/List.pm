@@ -5029,14 +5029,14 @@ sub _include_users_remote_sympa_list {
 	my %u;
 	## Check if user has already been included
 	if ($users->{$email}) {
-	    do_log('debug',"ignore $email because allready member");
+	    do_log('debug4',"ignore $email because allready member");
 	    if ($tied) {
 		%u = split "\n",$users->{$email};
 	    }else {
 		%u = %{$users->{$email}};
 	    }
 	}else{
-	    do_log('debug',"add new subscriber $email");
+	    do_log('debug4',"add new subscriber $email");
 	    %u = %{$default_user_options};
 	    $total++;
 	}	    
@@ -5779,7 +5779,7 @@ sub _load_users_include2 {
 		$included = _include_users_ldap(\%users, $incl, $admin->{'default_user_options'});
 	    }elsif ($type eq 'include_ldap_2level_query') {
 		$included = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'});
-	    }elsif ($type eq 'include_remote_include_list') {
+	    }elsif ($type eq 'include_remote_sympa_list') {
 		$included = _include_users_remote_sympa_list(\%users, $incl, $admin->{'dir'},$admin->{'domain'},$admin->{'default_user_options'});
 	    }elsif ($type eq 'include_list') {
 		$depend_on->{$name} = 1 ;
