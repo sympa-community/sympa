@@ -349,6 +349,8 @@ while (!$signal) {
     if ($index_cleanqueue++ >= 100){
 	$index_cleanqueue=0;
 	&CleanSpool("$Conf{'queue'}/bad", $Conf{'clean_delay_queue'});
+	&CleanSpool($Conf{'queuemod'}, $Conf{'clean_delay_queuemod'});
+	&CleanSpool($Conf{'queueauth'}, $Conf{'clean_delay_queueauth'});
     }
 
     my $filename;
