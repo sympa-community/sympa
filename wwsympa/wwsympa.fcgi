@@ -549,20 +549,10 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     my $login_uri = $Conf{'auth_services'}[$cas_id]{'login_uri'};
 	     my $check_uri = $Conf{'auth_services'}[$cas_id]{'check_uri'};
 
-	     my $https ;
-	     my $port = ':'.$ENV{'SERVER_PORT'}; 
-	     if ($ENV{SSL_PROTOCOL}) {
-		 $https = 's';
-		 $port = '' if ($ENV{'SERVER_PORT'} eq '443');
-	     }else{
-		 $port = '' if ($ENV{'SERVER_PORT'} eq '80');
-	     }
-	     my $return_url = 'http'.$https.'://'.$ENV{'SERVER_NAME'}.$port.$ENV{'REQUEST_URI'} ;
-
-	     my $net_id = &Auth::check_cas_login($host,$check_uri,$return_url,'no_blocking');
+	     my $net_id = &Auth::check_cas_login($host,$check_uri,&wwslib::get_my_url(),'no_blocking');
 
 	     
-	     &do_log('debug',"Requesting CAS ticket validation to through Auth::check_cas_login($host,$check_uri,$return_url,'no_blocking') return $net_id");
+	     &do_log('debug',"Requesting CAS ticket validation to through Auth::check_cas_login($host,$check_uri,...) return $net_id");
 	     if($net_id != -1) { # the ticket is valid net-id
 		 do_log('notice',"login CAS OK server = $host,netid=$net_id,cas_id=$cas_id" );
 		 $param->{'user'}{'email'} = lc(&Auth::cas_get_email_by_net_id($net_id,$cas_id));
@@ -589,19 +579,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		 do_log ('debug',"check_cas checker_cas : $in{'checked_cas'} current cas_id $Conf{'cas_id'}{$auth_service->{'auth_service_name'}}");
 		 next if ($in{'checked_cas'} =~  /$Conf{'cas_id'}{$auth_service->{'auth_service_name'}}/) ;
 		 
-		 
-		 my $https ;
-		 my $port = ':'.$ENV{'SERVER_PORT'}; 
-		 if ($ENV{SSL_PROTOCOL}) {
-		     $https = 's';
-		     $port = '' if ($ENV{'SERVER_PORT'} eq '443');
-		 }else{
-		     $port = '' if ($ENV{'SERVER_PORT'} eq '80');
-		 }
-	     
-		 my $return_url = 'http'.$https.'://'.$ENV{'SERVER_NAME'}.$port.$ENV{'REQUEST_URI'} ;
-		 
 		 # before redirect update the list of allready checked cas server to prevent loop
+		 my $return_url = &wwslib::get_my_url();
+
 		 if ($ENV{'REQUEST_URI'} =~ /checked_cas\=/) {
 		     $return_url =~ s/checked_cas\=/checked_cas\=$Conf{'cas_id'}{$auth_service->{'auth_service_name'}},/;
 		 }else{		 
