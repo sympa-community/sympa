@@ -1,3 +1,147 @@
+2003-06-10 16:10  salaun
+
+	* src/etc/templates/us/digest.us.tpl: [reported by M. Yount]
+	Missing 's'
+
+2003-06-04 17:21  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix previous changes
+
+2003-06-02 16:52  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	html/node10.html, html/node11.html, html/node12.html,
+	html/node13.html, html/node14.html, html/node15.html,
+	html/node16.html, html/node17.html, html/node18.html,
+	html/node19.html, html/node2.html, html/node20.html,
+	html/node3.html, html/node4.html, html/node5.html, html/node6.html,
+	html/node7.html, html/node8.html, html/node9.html, html/sympa.ps:
+	Adding sendmail.cf related instruction
+
+2003-06-02 16:21  salaun
+
+	* wwsympa/wwsympa.fcgi: [G. Paressant] Fix: list_check_smtp() was
+	not working
+
+2003-06-02 13:35  salaun
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	doc/html/node3.html, doc/html/node4.html, doc/html/node5.html,
+	doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	doc/html/node9.html, doc/html/sympa.html, doc/html/sympa.ps,
+	src/Conf.pm, wwsympa/wwsympa.fcgi: Change: allow to have  multiple
+	virtual robots on the same http_host
+
+2003-05-30 17:14  salaun
+
+	* src/List.pm: [reported by A. Durand] Fix: update include2 user
+	entry if gecos changed in source
+
+2003-05-16 12:07  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	html/index.html, html/node1.html, html/node10.html,
+	html/node11.html, html/node12.html, html/node13.html,
+	html/node14.html, html/node15.html, html/node16.html,
+	html/node17.html, html/node18.html, html/node19.html,
+	html/node2.html, html/node20.html, html/node21.html,
+	html/node3.html, html/node4.html, html/node5.html, html/node6.html,
+	html/node7.html, html/node8.html, html/node9.html, html/sympa.html,
+	html/sympa.ps: Add template customization details
+
+2003-05-14 16:56  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	html/index.html, html/node1.html, html/node10.html,
+	html/node11.html, html/node12.html, html/node13.html,
+	html/node14.html, html/node15.html, html/node16.html,
+	html/node17.html, html/node18.html, html/node19.html,
+	html/node2.html, html/node20.html, html/node21.html,
+	html/node3.html, html/node4.html, html/node5.html, html/node6.html,
+	html/node7.html, html/node8.html, html/node9.html, html/sympa.html,
+	html/sympa.ps: Fix: incorrect instructions regarding aliases
+	management
+
+2003-05-14 16:53  salaun
+
+	* Makefile.in, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	doc/sympa.tex.tpl, doc/html/index.html, doc/html/node1.html,
+	doc/html/node10.html, doc/html/node11.html, doc/html/node12.html,
+	doc/html/node13.html, doc/html/node14.html, doc/html/node15.html,
+	doc/html/node16.html, doc/html/node17.html, doc/html/node18.html,
+	doc/html/node19.html, doc/html/node2.html, doc/html/node20.html,
+	doc/html/node21.html, doc/html/node3.html, doc/html/node4.html,
+	doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	doc/html/sympa.ps: Fix: incorrect instructions regarding aliases
+	management
+
+2003-05-12 14:57  salaun
+
+	* src/tools.pl, wwsympa/wwsympa.fcgi: [BugID 155][Reported by G.
+	Tellier] Fix: Gecos was lost while doing multiple ADD if email
+	address contained upper-cased chars
+
+2003-05-12 14:42  salaun
+
+	* src/tools.pl, wwsympa/wwsympa.fcgi: [BugID 155][Reported by G.
+	Tellier] Fix: Gecos was lost while doing multiple ADD if email
+	address contained upper-cased chars
+
+2003-05-12 11:55  salaun
+
+	* INSTALL, src/etc/script/sympa.spec,
+	src/etc/script/sympa.spec.rh80: Add quick install notes
+
+2003-05-12 11:49  salaun
+
+	* Makefile.am, Makefile.in: Fix: initialize INITCONF var
+
+2003-05-12 11:48  salaun
+
+	* Makefile.am: Change: use different SPEC file for RedHat RPM
+	building
+
+2003-05-12 11:47  salaun
+
+	* src/etc/script/sympa.spec.rh80: Changes: only require packages
+	for standard Sympa installation (not LDAP, SSLEAY).  Some package
+	have different naming conventions with Mandrake and RedHat
+
+2003-05-12 11:42  salaun
+
+	* src/etc/script/sympa.spec.rh80: Change: now need a separated SPEC
+	file for Mandrake and RedHat
+
+2003-05-12 11:41  salaun
+
+	* src/List.pm:	Fix: Add GRANT PRIV query
+
+2003-05-12 11:40  salaun
+
+	* src/etc/script/sympa.spec: Change: Msgcat no more required
+
+2003-05-12 11:37  salaun
+
+	* ChangeLog, Makefile.am, Makefile.in, src/etc/script/sympa.spec:
+	[reported by G. Paressant] Fix: make languages no required since
+	NLS or no more compiled
+
+2003-05-12 11:32  salaun
+
+	* src/etc/script/Makefile: New feature: provide a script for
+	generating missing HTML views of moderated messages
+
+2003-05-12 11:29  salaun
+
+	* src/etc/script/mod2html.pl: New feature: provide a script for
+	generating missing HTML views of moderated messages
+
 2003-05-09 15:04  salaun
 
 	* .version, ChangeLog, NEWS: preparing 3.4.4.1

@@ -191,26 +191,6 @@ sub sendto {
 	close SMTP;
 	return 1;
     }else{    
-	my $param = {'from' => "$from",
-		     'email' => "$rcpt"
-		     };   
-
-	my $filename;
-	if (-r "x509-user-cert-missing.tpl") {
-	    $filename = "x509-user-cert-missing.tpl";
-	}elsif (-r "$Conf{'etc'}/templates/x509-user-cert-missing.tpl") {
-	    $filename = "$Conf{'etc'}/templates/x509-user-cert-missing.tpl";
-	}elsif (-r "--ETCBINDIR--/templates/x509-user-cert-missing.tpl") {
-	    $filename = "--ETCBINDIR--/templates/x509-user-cert-missing.tpl";
-	}else {
-	    # $filename = '';
-	    do_log ('err',"Unable to open file x509-user-cert-missing.tpl in list directory NOR $Conf{'etc'}/templates/x509-user-cert-missing.tpl NOR --ETCBINDIR--/templates/x509-user-cert-missing.tpl");
-	    return undef;
-	}
-    
-	## Should provide the $robot ; too many changes
-	&mail::mailfile ($filename, $rcpt, $param, '', 'none');
-
 	return undef;
     }
 }
