@@ -1121,6 +1121,20 @@ sub check_param_out {
 	    $param->{'editor'}{$e->{'email'}}{'masked_email'} = $masked_email;
 	}  
  
+       ## privileges
+       if ($param->{'user'}{'email'}) {
+	   $param->{'is_subscriber'} = $list->is_user($param->{'user'}{'email'});
+	   $param->{'subscriber'} = $list->get_subscriber($param->{'user'}{'email'})
+	       if $param->{'is_subscriber'};
+	   $param->{'is_privileged_owner'} = $param->{'is_listmaster'} || $list->am_i('privileged_owner', $param->{'user'}{'email'});
+	   $param->{'is_owner'} = $param->{'is_privileged_owner'} || $list->am_i('owner', $param->{'user'}{'email'});
+	   $param->{'is_editor'} = $list->am_i('editor', $param->{'user'}{'email'});
+	   $param->{'is_priv'} = $param->{'is_owner'} || $param->{'is_editor'};
+
+	   ## If user is identified
+	   $param->{'may_post'} = 1;
+       }
+
 	## Should Not be used anymore ##
 	$param->{'may_subunsub'} = 1 
 	    if ($param->{'may_signoff'} || $param->{'may_subscribe'});
@@ -1136,6 +1150,40 @@ sub check_param_out {
 	$param->{'total'} = $list->get_total();
 	$param->{'may_review'} = 1 if ($action =~ /do_it/);
 	
+       ## (Un)Subscribing 
+       if ($list->{'admin'}{'user_data_source'} eq 'include') {
+	   $param->{'may_signoff'} = $param->{'may_suboptions'} = $param->{'may_subscribe'} = 0;
+       }else {
+	   unless ($param->{'user'}{'email'}) {
+	       $param->{'may_subscribe'} = $param->{'may_signoff'} = 1;
+	       
+	   }else {
+	       if ($param->{'is_subscriber'} &&
+		   ($param->{'subscriber'}{'subscribed'} == 1)) {
+		   ## May signoff
+		   $main::action = &List::request_action ('unsubscribe',$param->{'auth_method'},$robot,
+						    {'listname' =>$param->{'list'}, 
+						     'sender' =>$param->{'user'}{'email'},
+						     'remote_host' => $param->{'remote_host'},
+						     'remote_addr' => $param->{'remote_addr'}});
+		   
+		   $param->{'may_signoff'} = 1 if ($main::action =~ /do_it|owner/);
+		   $param->{'may_suboptions'} = 1;
+
+	       }else {
+		   
+		   ## May Subscribe
+		   $main::action = &List::request_action ('subscribe',$param->{'auth_method'},$robot,
+						    {'listname' => $param->{'list'}, 
+						     'sender' => $param->{'user'}{'email'},
+						     'remote_host' => $param->{'remote_host'},
+						     'remote_addr' => $param->{'remote_addr'}});
+		   
+		   $param->{'may_subscribe'} = 1 if ($main::action =~ /do_it|owner/);
+	       }
+	   }
+       }
+
 	## Archives Access control
 	if (defined $list->{'admin'}{'web_archive'}) {
 	    $param->{'is_archived'} = 1;
