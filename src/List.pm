@@ -2532,7 +2532,9 @@ sub send_msg_digest {
 	    $text[$i] .= "\n";
 	}
 
-	$mail = new Mail::Internet \@text;
+	my $parser = new MIME::Parser;
+	$parser->output_to_core(1);
+	$mail = $parser->parse_data(\@text);
 
 	push @list_of_mail, $mail;
 	
@@ -2556,11 +2558,11 @@ sub send_msg_digest {
 	$msg->{'id'} = $i+1;
         $msg->{'subject'} = $subject;	
         $msg->{'from'} = &MIME::Words::decode_mimewords($mail->head->get('From'));
-	$mail->tidy_body;
+	#$mail->tidy_body;
 	$mail->remove_sig;
 	$msg->{'full_msg'} = $mail->as_string;
-	#$msg->{'body'} = $mail->body_as_string;
-	$msg->{'body'} = $mail->bodyhandle->as_string();
+	$msg->{'body'} = $mail->body_as_string;
+	#$msg->{'body'} = $mail->bodyhandle->as_string();
 	chomp $msg->{'from'};
 	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
 	$msg->{'message_id'} = $mail->head->get('Message-Id');
