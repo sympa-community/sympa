@@ -3547,6 +3547,22 @@ sub update_user {
 			  included => 'subscriber_table',
 			  id => 'subscriber_table'
 			  );
+
+	## additional DB fields
+	if (defined $Conf{'db_additional_subscriber_fields'}) {
+	    foreach my $f (split ',', $Conf{'db_additional_subscriber_fields'}) {
+		$map_table{$f} = 'subscriber_table';
+		$map_field{$f} = $f;
+	    }
+	}
+
+	if (defined $Conf{'db_additional_user_fields'}) {
+	    foreach my $f (split ',', $Conf{'db_additional_user_fields'}) {
+		$map_table{$f} = 'user_table';
+		$map_field{$f} = $f;
+	    }
+	}
+	
 	
 	## Check database connection
 	unless ($dbh and $dbh->ping) {
@@ -6420,6 +6436,41 @@ sub get_mod_spool_size {
 
     closedir SPOOL;
     return ($#msg + 1);
+}
+
+## Get the type of a DB field
+sub get_db_field_type {
+    my ($table, $field) = @_;
+
+    return undef unless ($Conf{'db_type'} eq 'mysql');
+
+    ## Is the Database defined
+    unless ($Conf{'db_name'}) {
+	&do_log('info', 'No db_name defined in configuration file');
+	return undef;
+    }
+
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+	
+    unless ($sth = $dbh->prepare("SHOW FIELDS FROM $table")) {
+	do_log('err','Unable to prepare SQL query : %s', $dbh->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	do_log('err','Unable to execute SQL query : %s', $dbh->errstr);
+	return undef;
+    }
+	    
+    while (my $ref = $sth->fetchrow_hashref()) {
+	next unless ($ref->{'Field'} eq $field);
+
+	return $ref->{'Type'};
+    }
+
+    return undef;
 }
 
 sub probe_db {

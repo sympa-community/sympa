@@ -21,6 +21,18 @@
 
 <DD>Visibility : [subscriber->visibility]
 <DD>Language : [subscriber->lang]
+[FOREACH field IN additional_fields]
+ [IF field->type=enum]
+    <DD>[field->NAME] :  <SELECT NAME="additional_field_[field->NAME]">
+	                  <OPTION VALUE="">
+	[FOREACH e IN field->enum]
+		          <OPTION VALUE="[e->NAME]" [e]>[e->NAME]
+        [END]
+	                 </SELECT>
+ [ELSE]
+    <DD>[field->NAME] : <INPUT NAME="additional_field_[field->NAME]" VALUE="[field->value]" SIZE="25">
+ [ENDIF]
+[END]
 <DD><INPUT TYPE="submit" NAME="action_set" VALUE="Update">
 <INPUT TYPE="submit" NAME="action_del" VALUE="Unsubscribe the User">
 <INPUT TYPE="checkbox" NAME="quiet"> quiet

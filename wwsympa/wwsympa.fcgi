@@ -2374,6 +2374,13 @@ sub do_set {
 	
 	$update->{'email'} = $in{'new_email'};
     }
+    
+    ## Get additional DB fields
+    foreach my $v (keys %in) {
+	if ($v =~ /^additional_field_(\w+)$/) {
+	    $update->{$1} = $in{$v};
+	}
+    }
 
     $update->{'gecos'} = $in{'gecos'} if $in{'gecos'};
     
@@ -4732,6 +4739,40 @@ sub do_editsubscriber {
  	}	
 
 	$param->{'previous_action'} = $in{'previous_action'};
+    }
+
+    ## Additional DB fields
+    if (defined ($Conf{'db_additional_subscriber_fields'})) {
+	my @additional_fields = split ',', $Conf{'db_additional_subscriber_fields'};
+	
+	my %data;
+
+	foreach my $field (@additional_fields) {
+
+	    ## Is the Database defined
+	    unless ($Conf{'db_name'}) {
+		&do_log('info', 'No db_name defined in configuration file');
+		return undef;
+	    }
+
+	    ## Check field type (enum or not) with MySQL
+	    $data{$field}{'type'} = &List::get_db_field_type('subscriber_table', $field);
+	    if ($data{$field}{'type'} =~ /^enum\((\S+)\)$/) {
+		my @enum = split /,/,$1;
+		foreach my $e (@enum) {
+		    $e =~ s/^\'([^\']+)\'$/$1/;
+		    $data{$field}{'enum'}{$e} = '';
+		}
+		$data{$field}{'type'} = 'enum';
+		
+		$data{$field}{'enum'}{$user->{$field}} = 'SELECTED'
+		    if (defined $user->{$field});
+	    }else {
+		$data{$field}{'type'} = 'string';
+		$data{$field}{'value'} = $user->{$field};
+	    } 
+	}
+	$param->{'additional_fields'} = \%data;
     }
 
     return 1;
