@@ -313,7 +313,8 @@ sub mail2arc {
     my $mhonarc_ressources = &get_ressources ($listname . '@' . $hostname) ; 
     
     do_log ('debug',"calling $wwsconf->{'mhonarc'} for list $listname\@$hostname" ) ;
-    my $cmd = "$wwsconf->{'mhonarc'}  -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc \" -umask $Conf{'umask'} $wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
+    my $cmd = "$wwsconf->{'mhonarc'} -add -rcfile $mhonarc_ressources -outdir $arcpath/$listname\@$hostname/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc \" -umask $Conf{'umask'} < $queue/$file";
+    
     my $exitcode = system($cmd);
     if ($exitcode) {
            do_log('debug',"Command $cmd failed with exit code $exitcode");
