@@ -328,7 +328,7 @@ $TNEXTBUTTON$
 
 <TD ALIGN=RIGHT bgcolor="(-% bg_color %-)">
 <FONT size="-1">
-(-% IF user.email %-)
+(-% IF user.email && action == 'arc' %-)
 <!-- reply to button -->
 <FORM ACTION="(-% path_cgi %-)" METHOD=POST>
   <INPUT TYPE="hidden" NAME="in_reply_to" VALUE="$MSGID$">
