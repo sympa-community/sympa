@@ -1563,6 +1563,19 @@ sub do_set {
     my $update = {'reception' => $reception,
 		  'visibility' => $visibility};
     
+    if ($in{'email'} ne $in{'new_email'}) {
+
+	## Duplicate entry in user_table
+	unless (&List::is_user_db($in{'new_email'})) {
+
+	    my $user_pref = &List::get_user_db($in{'email'});
+	    $user_pref->{'email'} = $in{'new_email'};
+	    &List::add_user_db($user_pref);
+	}
+	
+	$update->{'email'} = $in{'new_email'};
+    }
+
     $update->{'gecos'} = $in{'gecos'} if $in{'gecos'};
     
     unless ( $list->update_user($email, $update) ) {

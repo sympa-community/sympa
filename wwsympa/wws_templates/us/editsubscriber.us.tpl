@@ -7,7 +7,7 @@
 <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
 <INPUT TYPE="hidden" NAME="email" VALUE="[subscriber->escaped_email]">
 <DL>
-<DD>Email : <A HREF="mailto:[subscriber->email]">[subscriber->email]</A>
+<DD>Email : <INPUT NAME="new_email" VALUE="[subscriber->email]" SIZE="25">
 <DD>Name : <INPUT NAME="gecos" VALUE="[subscriber->gecos]" SIZE="25">
 <DD>Subscribed since [subscriber->date]
 <DD>Reception : <SELECT NAME="reception">

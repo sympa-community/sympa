@@ -2374,7 +2374,6 @@ sub is_user_db {
    }
    
    my $is_user = $sth->fetchrow();
-
    $sth->finish();
    
    $sth = pop @sth_stack;
@@ -2439,6 +2438,7 @@ sub update_user {
 
     my ($field, $value);
     
+    ## Subscribers stored in database
     if ($self->{'admin'}{'user_data_source'} eq 'database') {
 	
 	my ($user, $statement, $table);
@@ -2474,7 +2474,9 @@ sub update_user {
 	    
 	    my @set_list;
 	    while (($field, $value) = each %{$values}) {
+
 		next unless ($map_field{$field} and $map_table{$field});
+
 		if ($map_table{$field} eq $table) {
 		    if ($field eq 'date') {
 			$value = sprintf $date_format{'write'}{$Conf{'db_type'}}, $value, $value;
@@ -2505,6 +2507,8 @@ sub update_user {
 		return undef;
 	    }
 	}
+
+	## Subscribers in text file
     }else {
 	my $user = $self->{'users'}->{$who};
 	return undef unless $user;
@@ -2626,6 +2630,7 @@ sub add_user_db {
    ## Update each table
    my (@insert_field, @insert_value);
    while (($field, $value) = each %{$values}) {
+
        next unless ($map_field{$field});
 
        my $insert = sprintf "%s", $dbh->quote($value);
