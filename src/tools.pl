@@ -91,7 +91,7 @@ sub safefork {
 ## if there are some commands in it.
 sub checkcommand {
    my($msg, $sender, $robot) = @_;
-   do_log('debug2', 'tools::checkcommand(msg->head->get(subject): %s,%s)',$msg->head->get('Subject'), $sender);
+   do_log('debug3', 'tools::checkcommand(msg->head->get(subject): %s,%s)',$msg->head->get('Subject'), $sender);
 
    my($avoid, $i);
 
@@ -320,7 +320,7 @@ sub smime_sign {
 	}
     }
 
-     &do_log('debug2', "$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file");
+     &do_log('debug3', "$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file");
      unless (open (NEWMSG,"$Conf{'openssl'} smime -sign -signer $cert $pass_option -inkey $key -in $temporary_file 2>&1 |")) {
     	&do_log('notice', 'Cannot sign message');
     }
@@ -344,7 +344,7 @@ sub smime_sign {
     }
     close NEWMSG ;
 
-    unlink ($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;
+    unlink ($temporary_file) unless ($main::options{'debug'}) ;
     
     ## foreach header defined in  the incomming message but undefined in the
     ## crypted message, add this header in the crypted form.
@@ -381,7 +381,7 @@ sub smime_sign_check {
 
 
     my $temporary_file = "/tmp/smime-sender.".$$ ; 
-    do_log('debug2', "xxx $Conf{'openssl'} smime -verify  $Conf{'trusted_ca_options'} -signer  $temporary_file");
+    do_log('debug3', "xxx $Conf{'openssl'} smime -verify  $Conf{'trusted_ca_options'} -signer  $temporary_file");
     ## OpenSSL does not return error status ; should check first line of STDOUT
     unless (open (MSGDUMP, "| $Conf{'openssl'} smime -verify  $Conf{'trusted_ca_options'} -signer $temporary_file > /dev/null")) {
 
@@ -422,7 +422,7 @@ sub smime_sign_check {
 	    &do_log('err','Unable to rename %s %s',$temporary_file,$filename);
 	}
 	close CERTIF;
-	unlink($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;	
+	unlink($temporary_file) unless ($main::options{'debug'}) ;	
 
 	$is_signed->{'body'} = 'smime';
 
@@ -430,7 +430,7 @@ sub smime_sign_check {
 	$is_signed->{'subject'} = undef;
 	return $is_signed;
     }else{
-	unlink($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;	
+	unlink($temporary_file) unless ($main::options{'debug'}) ;	
 	do_log('notice', "S/MIME signed message, sender($sender) do NOT match signer($signer)",$sender,$signer);
 	return undef;
     }
@@ -458,7 +458,7 @@ sub smime_encrypt {
 	my $temporary_file = $Conf{'tmpdir'}."/".$email.".".$$ ;
 
 	## encrypt the incomming message parse it.
-        do_log ('debug2', "xxxx $Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert");
+        do_log ('debug3', "xxxx $Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert");
 	if (!open(MSGDUMP, "| $Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert")) {
 	    &do_log('info', 'Can\'t encrypt message for recipient %s', $email);
 	}
@@ -488,7 +488,7 @@ sub smime_encrypt {
 	}						    
 	close NEWMSG;
 
-unlink ($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;
+unlink ($temporary_file) unless ($main::options{'debug'}) ;
 
 	## foreach header defined in  the incomming message but undefined in the
         ## crypted message, add this header in the crypted form.
@@ -575,7 +575,7 @@ sub smime_decrypt {
 	return undef;
     }
     close NEWMSG ;
-    unlink ($temporary_file) unless ($main::options{'debug'} || $main::options{'debug2'}) ;
+    unlink ($temporary_file) unless ($main::options{'debug'}) ;
     
     ## foreach header defined in the incomming message but undefined in the
     ## decrypted message, add this header in the decrypted form.
@@ -1144,7 +1144,7 @@ sub duration_conv {
 ## Look for a file in the list > robot > server > default locations
 sub get_filename {
     my ($type, $name, $robot, $list) = @_;
-    &do_log('debug2','tools::get_filename(%s,%s,%s,%s)', $type, $name, $robot, $list->{'name'});
+    &do_log('debug3','tools::get_filename(%s,%s,%s,%s)', $type, $name, $robot, $list->{'name'});
 
     if ($type eq 'etc') {
 	my @try = ("$Conf{'etc'}/$robot".'/'.$name,
@@ -1159,7 +1159,7 @@ sub get_filename {
 	    }
 	}	
 	foreach my $f (@try) {
-#	    &do_log('debug','NAME: %s ; DIR %s', $name, $dir);
+	    &do_log('debug3','get_filname : NAME: %s ; DIR %s', $name, $dir);
 	    if (-r $f) {
 		return $f;
 	    }
