@@ -1888,10 +1888,8 @@ sub do_redirect {
 	 # this user was logged using CAS
 	 my $host = $Conf{'auth_services'}[$cas_id]{'host'};
 	 my $logout_uri = $Conf{'auth_services'}[$cas_id]{'logout_uri'};
-	 my $return_url = $Conf{'wwsympa_url'};
-	 $return_url =~ s/http:\/\//https:\:\// if ($ENV{SSL_PROTOCOL}) ;
 	 $in{'action'} = 'redirect';
-	 $param->{'redirect_to'} = 'https://'.$host.$logout_uri.'?service='.$return_url.'&gateway=1';
+	 $param->{'redirect_to'} = 'https://'.$host.$logout_uri.'?service='.&wwslib::get_my_url().'&gateway=1';
 	 &cookielib::set_cookie('unknown', $Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
 	 &cookielib::set_cas_server($wwsconf->{'cookie_domain'},$cas_id, 'now');
 	 return 'redirect';
