@@ -779,7 +779,7 @@ sub DoFile {
 	## Open the SMTP process for the response to the command.
 	*FH = &smtp::smtpto(&Conf::get_robot_conf($robot, 'request'), \$sender);
 	$reply_hdr->print(\*FH);
-	
+	print FH "\n";
 	foreach (@msg::report) {
 	    print FH;
 	}
