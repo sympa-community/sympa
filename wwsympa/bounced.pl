@@ -81,7 +81,9 @@ my %options;
 &GetOptions(\%main::options, 'debug|d','log_level=s','foreground|F');
 # $main::options{'debug2'} = 1 if ($main::options{'debug'});
 
-$log_level = $main::options{'log_level'} if ($main::options{'log_level'});
+if ($main::options{'debug'}) {
+    $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
+}
 
 my $wwsympa_conf = "--WWSCONFIG--";
 my $sympa_conf_file = '--CONFIG--';
@@ -96,8 +98,7 @@ unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
 
 # Load sympa.conf
 unless (Conf::load($sympa_conf_file)) {
-    do_log  ('notice',"Unable to load sympa configuration, file $sympa_conf_file has errors.");
-    exit(1);
+    &fatal_err("Unable to load sympa configuration, file $sympa_conf_file has errors.");
 }
 
 
@@ -121,7 +122,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
     }
     setpgrp(0, 0);
     if ((my $child_pid = fork) != 0) {
-	do_log('debug', "Starting bounce daemon, pid $_");
+	print STDOUT "Starting bounce daemon, pid $_\n";
 
 	exit(0);
     }
@@ -129,6 +130,8 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 
 ## Create and write the pidfile
 &tools::write_pid($wwsconf->{'bounced_pidfile'}, $$);
+
+$log_level = $main::options{'log_level'} || $Conf{'log_level'};
 
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'bounced');

@@ -59,8 +59,6 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} ||
 				     $main::options{'lowercase'} || 
 				     $main::options{'dump'});
 
-$log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
-
 my $Version = '0.1';
 
 my $wwsympa_conf = "--WWSCONFIG--";
@@ -81,14 +79,12 @@ my %regexp = ('email' => '(\S+|\".*\")(@\S+)',
 
 # Load WWSympa configuration
 unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
-    &do_log ('err', 'error : unable to load config file');
-    exit;
+    &fatal_err('error : unable to load config file');
 }
 
 # Load sympa.conf
 unless (Conf::load($sympa_conf_file)) {
-    &do_log  ('err', "error : unable to load sympa configuration, file $sympa_conf_file has errors.");
-    exit(1);
+    &fatal_err("error : unable to load sympa configuration, file $sympa_conf_file has errors.");
 }
 
 ## Check databse connectivity
@@ -113,12 +109,14 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
                                        
      setpgrp(0, 0);
      if ((my $child_pid = fork) != 0) {                                        
-         &do_log('debug', "Starting task_manager daemon, pid $_");	 
+         print STDOUT "Starting task_manager daemon, pid $_\n";	 
          exit(0);
      }     
  }
 
 &tools::write_pid($wwsconf->{'task_manager_pidfile'}, $$);
+
+$log_level = $main::options{'log_level'} || $Conf{'log_level'};
 
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'task_manager');
