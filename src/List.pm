@@ -1360,6 +1360,7 @@ sub load {
 	    unless (defined $users) {
 		return undef;
 	    }
+
 	    $m2 = $time_subscribers;
 	}
 	
@@ -1384,6 +1385,11 @@ sub load {
     
     if ($users && defined($users->{'total'})) {
 	$self->{'total'} = $users->{'total'};
+    }
+
+    ## We have updated %users, Total may have changed
+    if ($m2 > $self->{'mtime'}[1]) {
+	$self->savestats();
     }
 
 #    elsif ($self->{'admin'}{'user_data_source'} eq 'database'){
