@@ -3473,13 +3473,14 @@ sub request_action {
 		do_log ('info',"error in $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'}" );
 
 #		if (defined $context->{'listname'}) {
-		    &do_log('info', 'Error in %s scenario, in list %s', $context->{'scenario'}, $context->{'listname'});
+		&do_log('info', 'Error in %s scenario, in list %s', $context->{'scenario'}, $context->{'listname'});
 #		}
 
 		if ($debug) {
 		    return ("error-performing-condition : $rule->{'condition'}",$rule->{'auth_method'},'reject') ;
 		}
-		return 'reject';
+		#return 'reject';
+		return undef;
 	    }
 	    if ($result == -1) {
 		do_log ('debug2',"rule $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'} rejected");

@@ -922,6 +922,9 @@ sub DoMessage{
 					  'msg' => $msg });
     }
 
+    return undef
+	unless (defined $action);
+
     if ($action =~ /^do_it/) {
 	
 	my $numsmtp = $list->distribute_msg($msg, $bytes, $file, $encrypt);
