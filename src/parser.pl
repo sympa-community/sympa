@@ -28,10 +28,16 @@ my ($index, @t, $data, $internal, %known_files);
 ## The main parsing sub
 sub parse_tpl {
     my ($template, $output);
-    ($data, $template, $output) = @_;
+    ($data, $template, $output, $recurse) = @_;
 
     &do_log('debug2','Parser [%d] parse_tpl(%s)', $index, $template);
 
+    ## Reset loop cache unless recursive use
+    unless ($recurse == 1) {
+	%known_files = ();
+    }
+
+    ## Prevent loops
     $known_files{$template}++;
     if ($known_files{$template} > 3) {
 	&do_log('err','Parser [%d] stopping loop with file %s', $index, $template);
@@ -290,11 +296,11 @@ sub process {
 	}elsif (/\[\s*INCLUDE\s+\'(\S+)\'\s*\]/i) {
 	    &do_include($1) if ($echo == 1);
 	}elsif (/\[\s*PARSE\s+(\w+)\s*\]/i) {
-	    $status = parse_tpl($data, $data->{$1}, select()) if ($echo == 1);
+	    $status = parse_tpl($data, $data->{$1}, select(), 1) if ($echo == 1);
 	}elsif (/\[\s*PARSE\s+(\w+)\->(\w+)\s*\]/i) {
-	    $status = parse_tpl($data, $data->{$1}{$2}, select()) if (defined $data->{$1} && $echo == 1);
+	    $status = parse_tpl($data, $data->{$1}{$2}, select(), 1) if (defined $data->{$1} && $echo == 1);
 	}elsif (/\[\s*PARSE\s+\'(\S+)\'\s*\]/i) {
-	    $status = parse_tpl($data, $1, select())  if ($echo == 1);
+	    $status = parse_tpl($data, $1, select(), 1)  if ($echo == 1);
 	}elsif (/\[\s*FOREACH\s+(\w+)\s+IN\s+(\w+(\->\w+)?)\s*\]/i) {
 	    $status = &do_foreach($echo);
 	}elsif (/\[\s*END\s*\]/i) {
