@@ -3,6 +3,85 @@
 
 (See Changelog file for the full changes log)
 
+4.0.a8		02 December 2003
+
+   New features :
+
+	New SOAP server
+
+	wwsympa/wwsympa.fcgi: Add robot to log entries
+
+	src/List.pm: [K.Libby] : allow listmaster to ignore some scenario files at different levels 
+	(global, robot, list), by creating :ignore empty files
+
+   Changes :
+
+*****	Change 'cas' entries format in auth.conf :
+*****		host 		=> base_url
+*****		login_uri 	=> login_path
+*****		check_uri	=> service_validate_path
+*****		logout_uri	=> logout_path
+
+
+	src/etc/script/: sympa.spec, sympa.spec.rh80: [requested by J.Dalbec] 
+	RPM should change /etc/mail/sympa_aliases user and group only if this file was created
+
+	wwsympa/archived.pl: [S. Zhuk] Store the latest arctxt filename ; 
+	this prevents the readdir in arctxt/
+
+	src/CAS.pm: Add a CAS client module
+
+   Bug fixes :
+
+	src/etc/scenari/ send.privateandeditorkey send.privateandnomultipartoreditorkey: [reported by J. Nin]
+	messages from moderator needed confirmation
+
+	src/List.pm: [BugID 216][reported by T.Kindsigo]: "order by email" 
+	clause was commented for MySQL
+	
+	src/etc/scenari/send.privateandeditorkey: revert rules order
+
+	src/task_manager.pl: task_manager would die with "Illegal division by zero" error
+
+	src/X509.pm: fix get_https the "verify_mode" in order to control the certificat validity.
+
+	src/sympa.pl, src/task_manager.pl, wwsympa/archived.pl,	wwsympa/bounced.pl: 
+	[BugID 219] set UID with POSIX::setuid(), required on FreeBSD
+
+	rc/task_manager.pl, wwsympa/archived.pl, wwsympa/bounced.pl: [BugID 127] missing LoadLang()
+
+	src/List.pm: [BugID 208] [M. Verdier]: in pending subscriptions page, if the name of the 
+	requestor was not provided, check in user_table table
+
+	src/List.pm: pass the option (nocache) from get_total() to _load_total_db(). 
+	This will prevent incorrect total of subscribers displayed on the web interface after 
+	adding or removing subscribers.
+
+	wwsympa/wwsympa.fcgi: Total of subscribers was incorrect after subscriptions/removal ; 
+	fixed check_param_in()
+
+	wwsympa/wwsympa.fcgi: 'subject' was not decoded when used in reject messages
+
+	wwsympa/wws_templates/: add missing rename_list template ; also move the "rename list" link
+	fix archives renaming ; add virtual robot support and spool processing
+
+	wwsympa/wws_templates/: Fix request_confirm() javascript function
+
+	wwsympa/wwsympa.fcgi: a blank page was returned when accessing an unknown list
+
+	src/: List.pm, sympa.pl: [BugID 222] Sympa did not detect incorrect actions in scenarios. 
+	A message could be lost if the send scenario was corrupted.
+
+	src/List.pm: [reported by P.Maes] on Solaris shared lock fails with "Bad file number" error. 
+	This is due to the fact that flock() perl functions uses lockf() system call that requires the
+	locked file to be open in read mode.
+
+	wwsympa/wws_templates/: text in loginbanner refered to CAS servers, even though none had been defined
+
+	wwsympa/wwsympa.fcgi: logout failed if auth.conf entries had been removed
+
+	wwsympa/Auth.pm: contact LDAP directory in asynchronous mode
+
 4.0.a7		16 October 2003
 
    New features :

@@ -1,3 +1,97 @@
+2003-12-01 16:15  salaun
+
+	* wwsympa/Auth.pm: Fix: contact LDAP directory in asynchronous mode
+
+2003-12-01 16:01  salaun
+
+	* wwsympa/wwsympa.fcgi: Change
+
+2003-12-01 15:36  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: logout failed if auth.conf entries had
+	been removed
+
+2003-12-01 11:02  salaun
+
+	* wwsympa/wws_templates/fr/loginbanner.fr.tpl: Fix typo
+
+2003-12-01 11:00  salaun
+
+	* wwsympa/wws_templates/: fr/loginbanner.fr.tpl,
+	us/loginbanner.us.tpl: Fix: text in loginbanner refered to CAS
+	servers, even though none had been defined
+
+2003-11-28 15:58  salaun
+
+	* src/CAS.pm, src/Conf.pm, wwsympa/Auth.pm, wwsympa/wwsympa.fcgi:
+	Change: now only use CAS.pm module in Sympa
+
+2003-11-27 15:02  salaun
+
+	* ChangeLog, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	doc/sympa.tex.tpl, doc/html/index.html, doc/html/node1.html,
+	doc/html/node10.html, doc/html/node11.html, doc/html/node12.html,
+	doc/html/node13.html, doc/html/node14.html, doc/html/node15.html,
+	doc/html/node16.html, doc/html/node17.html, doc/html/node18.html,
+	doc/html/node19.html, doc/html/node2.html, doc/html/node20.html,
+	doc/html/node21.html, doc/html/node3.html, doc/html/node4.html,
+	doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	doc/html/sympa.ps, src/Conf.pm, src/etc/auth.conf,
+	wwsympa/wwsympa.fcgi: ***** Changes: rename CAS parameters
+	(login_uri, check_uri, logout_uri) and add CAS proxy-related
+	parameters
+
+2003-11-27 14:52  salaun
+
+	* src/X509.pm: Remove traces
+
+2003-11-27 12:19  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	html/index.html, html/node1.html, html/node10.html,
+	html/node11.html, html/node12.html, html/node13.html,
+	html/node14.html, html/node15.html, html/node16.html,
+	html/node17.html, html/node18.html, html/node19.html,
+	html/node2.html, html/node20.html, html/node21.html,
+	html/node3.html, html/node4.html, html/node5.html, html/node6.html,
+	html/node7.html, html/node8.html, html/node9.html, html/sympa.html,
+	html/sympa.ps: Remove old instructions
+
+2003-11-27 12:12  salaun
+
+	* src/CAS.pm: Change: allow customization of all service path
+
+2003-11-27 11:50  salaun
+
+	* src/Makefile: Add CAS.pm installation
+
+2003-11-27 11:48  salaun
+
+	* soap/: sympa.wsdl, sympa_soap_client.pl, sympasoap.pm: New
+	feature: add cas_login() function
+
+2003-11-27 11:47  salaun
+
+	* src/CAS.pm: Update CAS module
+
+2003-11-27 10:39  salaun
+
+	* wwsympa/: Auth.pm, wwsympa.fcgi: Change: use 'base_url' CAS
+	entries instead of 'host'
+
+2003-11-27 09:51  salaun
+
+	* src/Conf.pm: ******* Change: 'host' entry in CAS paragraph
+	(auth.conf) replaced by 'base_url'
+
+2003-11-25 14:39  salaun
+
+	* src/List.pm: [reported by P.Maes] Fix: on Solaris shared lock
+	fails with "Bad file number" error. This is due to the fact that
+	flock() perl functions uses lockf() system call that requires the
+	locked file to be open in read mode.
+
 2003-11-24 10:35  salaun
 
 	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
