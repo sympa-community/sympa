@@ -3834,11 +3834,17 @@ Rules are defined as follows :
 <var> ::= [email] | [sender] | [user-><user_key_word>] 
 	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
 		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
-	 	  | [msg_part->type] | [msg_part->body] | [is_bcc] | <string>
+	 	  | [msg_part->type] | [msg_part->body] | [is_bcc] | [current_date] | <string>
 
 [is_bcc] ::= set to 1 if the list is neither in To: nor Cc:
 
-<date> ::= <epoch date> | <date format>
+<date> ::= '<date_element> [ +|- <date_element>]'
+
+<date_element> ::= <epoch_date> | <var> | <date_expr>
+
+<epoch_date> ::= <integer>
+
+<date_expr> ::= <integer>y<integer>m<integer>d<integer>h<integer>min<integer>sec
 
 <listname> ::= [listname] | <listname_string>
 
@@ -3935,7 +3941,28 @@ You can define a set of common scenario rules, used by all lists.
 include.\texttt{<}action\texttt{>}.header is automatically added to evaluated scenarios.
 
 
-%[idees de scenario]
+\section {Sample scenario rules}
+
+\begin {quote}
+\begin{verbatim}
+newer([current_date], '[subscriber->date]+2m')   smtp,md5,smime -> do_it
+\end{verbatim}
+\end {quote}
+Subscription date is less than 2 month old.
+
+\begin {quote}
+\begin{verbatim}
+older([current_date], '[subscriber->expiration_date]')   smtp,md5,smime -> do_it
+\end{verbatim}
+\end {quote}
+Subscriber's expiration date is over.
+The subscriber's expiration date is an additional, site defined, data field ; it needs
+to be defined by the listmaster in the database an declared in sympa.conf 
+(see~\ref {db-additional-subscriber-fields}, page~\pageref {db-additional-subscriber-fields}).
+Note that expiration\_date database field should be an integer (epoch date format) not
+a complex date format.
+
+
 
 \section {Loop detection}
     \label {loop-detection}

@@ -71,7 +71,7 @@
         \end {figure}
     }
 
-    \newcommand {\version} {3.3.6b.1}
+    \newcommand {\version} {3.3.6b.2}
 
     \newcommand {\samplelist} {mylist}
 
@@ -127,13 +127,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 3.3.6b.1\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 3.3.6b.2\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {02 July 2002}
+    \date {07 August 2002}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -2490,6 +2490,9 @@ CREATE TABLE subscriber_table (
 	reception_subscriber	varchar (20),
 	bounce_subscriber	varchar (35),
 	comment_subscriber	varchar (150),
+	subscribed_subscriber 	enum ('0','1'),
+	included_subscriber 	enum ('0','1'),
+	include_sources_subscriber varchar(50),
 	PRIMARY KEY (list_subscriber, user_subscriber),
 	INDEX (user_subscriber,list_subscriber)
 );
@@ -2528,6 +2531,9 @@ CREATE TABLE subscriber_table (
 	reception_subscriber	varchar (20),
 	bounce_subscriber	varchar (35),
 	comment_subscriber	varchar (150),
+	subscribed_subscriber 	bit(1),
+	included_subscriber 	bit(1),
+	include_sources_subscriber varchar(50),
 	CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber, user_subscriber)
 );
 CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber);
@@ -2570,7 +2576,10 @@ create table subscriber_table
     visibility_subscriber  varchar(20)            null    ,
     reception_subscriber   varchar(20)            null    ,
     bounce_subscriber      varchar(35)            null    ,
-    comment_subscriber      varchar(150)            null    ,
+    comment_subscriber     varchar(150)           null    ,
+    subscribed_subscriber  numeric		  null    ,
+    included_subscriber    numeric                null    ,
+    include_sources_subscriber varchar(50)        null    ,
     constraint ind_subscriber primary key (list_subscriber, user_subscriber)
 )
 go
@@ -2620,7 +2629,10 @@ CREATE TABLE subscriber_table (
         visibility_subscriber   varchar2(20),
         reception_subscriber    varchar2(20),
  	bounce_subscriber       varchar2 (35),
- 	comment_subscriber       varchar2 (150),
+ 	comment_subscriber      varchar2 (150),
+	subscribed_subscriber 	number(1,0),
+	included_subscriber 	number(1,0),
+	include_sources_subscriber varchar2(50),
         CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber,user_subscriber)
 );
 !
@@ -3958,11 +3970,17 @@ Rules are defined as follows :
 <var> ::= [email] | [sender] | [user-><user_key_word>] 
 	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
 		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
-	 	  | [msg_part->type] | [msg_part->body] | [is_bcc] | <string>
+	 	  | [msg_part->type] | [msg_part->body] | [is_bcc] | [current_date] | <string>
 
 [is_bcc] ::= set to 1 if the list is neither in To: nor Cc:
 
-<date> ::= <epoch date> | <date format>
+<date> ::= '<date_element> [ +|- <date_element>]'
+
+<date_element> ::= <epoch_date> | <var> | <date_expr>
+
+<epoch_date> ::= <integer>
+
+<date_expr> ::= <integer>y<integer>m<integer>d<integer>h<integer>min<integer>sec
 
 <listname> ::= [listname] | <listname_string>
 
@@ -4059,7 +4077,28 @@ You can define a set of common scenario rules, used by all lists.
 include.\texttt{<}action\texttt{>}.header is automatically added to evaluated scenarios.
 
 
-%[idees de scenario]
+\section {Sample scenario rules}
+
+\begin {quote}
+\begin{verbatim}
+newer([current_date], '[subscriber->date]+2m')   smtp,md5,smime -> do_it
+\end{verbatim}
+\end {quote}
+Subscription date is less than 2 month old.
+
+\begin {quote}
+\begin{verbatim}
+older([current_date], '[subscriber->expiration_date]')   smtp,md5,smime -> do_it
+\end{verbatim}
+\end {quote}
+Subscriber's expiration date is over.
+The subscriber's expiration date is an additional, site defined, data field ; it needs
+to be defined by the listmaster in the database an declared in sympa.conf 
+(see~\ref {db-additional-subscriber-fields}, page~\pageref {db-additional-subscriber-fields}).
+Note that expiration\_date database field should be an integer (epoch date format) not
+a complex date format.
+
+
 
 \section {Loop detection}
     \label {loop-detection}
@@ -5105,8 +5144,6 @@ giving details regarding the owner's characteristics:
 This parameter indicates the subject of the list, which is sent in
 response to the \mailcmd {LISTS} mail command. The subject is
 a free form text limited to one line.
-This parameter is \emph {not} used by \Sympa if the \tildefile
-{sympa/expl/lists} file (a static list of lists) exists.
 
 \subsection {topics}
     \label {par-topics}
@@ -5125,9 +5162,7 @@ uses this parameter.
 	\scenarized {visibility}
 
 This parameter indicates whether the list should feature in the
-output generated in response to a \mailcmd {LISTS} command. This
-parameter is \emph {not} used by \Sympa if the \tildefile
-{sympa/expl/lists} file (a static list of lists) exists.
+output generated in response to a \mailcmd {LISTS} command.
 
 \begin {itemize}
      \item \lparam {visibility} \texttt {conceal}
@@ -7150,15 +7185,10 @@ Most user commands have three-letter abbreviations (e.g. \texttt
         \label {cmd-lists}
 
         Provides the names of lists managed by \Sympa.  This list
-        can either be generated dynamically, using the \lparam {visibility}
-        (see \ref {par-visibility}, page~\pageref {par-visibility})
-        and \texttt {subject} list parameters (\ref {par-subject},
-        page~\pageref {par-subject}), as well as \tildefile
-        {sympa/expl/lists.header} and \tildefile
-        {sympa/expl/lists.footer}). It can also be generated
-        statically by including the contents of the \tildefile
-        {sympa/expl/lists} file, which must be updated manually by
-        the robot \textindex {administrator}.
+        is generated dynamically, using the \lparam {visibility}
+        (see \ref {par-visibility}, page~\pageref {par-visibility}).
+	The \texttt {lists.tpl} template defines the message return
+	by the \mailcmd {LISTS} command.
 
     \item  \mailcmd {REVIEW} \textit {listname}
         \label {cmd-review}
