@@ -42,7 +42,7 @@ installmod:
 	chown $(USER) $(DESTDIR)$(ETCBINDIR)/$$i; \
 	chgrp $(GROUP) $(DESTDIR)$(ETCBINDIR)/$$i; \
 	done
-	@for i in $(script_SRC) ; do \
+	@for i in $(script_SUBST) ; do \
 	chown $(USER) $(DESTDIR)$(SCRIPTDIR)/$$i; \
 	chgrp $(GROUP) $(DESTDIR)$(SCRIPTDIR)/$$i; \
 	done
