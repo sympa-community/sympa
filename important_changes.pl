@@ -34,7 +34,7 @@ unless ($current_version) {
 
 ## Get previous installed version of Sympa
 unless (open VERSION, "$ENV{'BINDIR'}/Version.pm") {
-    print STDERR "Could not find previous install of Sympa ; asuming first install\n";
+    print STDERR "Could not find previous install of Sympa ; assuming first install\n";
     exit 0;
 }
 
@@ -59,9 +59,9 @@ my $wait = <STDIN>;
 open NOTES, 'NEWS';
 my ($current, $ok);
 while (<NOTES>) {
-    if (/^$previous_version/) {
+    if (/^$previous_version\s/) {
 	last;
-    }elsif (/^$current_version/) {
+    }elsif (/^$current_version\s/) {
 	$ok = 1;
     }
 
