@@ -1389,7 +1389,8 @@ sub CleanSpool {
 		foreach my $file (@files) {
 		    unlink ("$spool_dir/$f/$file");
 		}	
-			
+		closedir DIR;
+		
 		rmdir ("$spool_dir/$f") ;
 		do_log('notice', 'Deleting old directory %s', "$spool_dir/$f");
 	    }
