@@ -1611,7 +1611,11 @@ sub remove_dir {
     do_log('info','remove_dir()');
     
     foreach my $current_dir (@_){
-
+	my @tree = split /\//, $current_dir ;
+	if ($#tree < 4) {
+	    do_log('info',"$current_dir not removed (not enough / in directory name)");
+	    next;
+	}
 	finddepth(\&del,$current_dir);
     }
     sub del {
