@@ -3,6 +3,26 @@
 
 (See Changelog file for the full changes log)
 
+3.3.6b.6	03 October 2002
+
+   Changes :
+
+	src/alias_manager.pl: Requires at least 3 arguments
+
+   Bug fixes :
+
+	wwsympa/wwsympa.fcgi: No more 'alias_manager' parameter in sympa.conf
+
+	src/parser.pl:  $current_output was not set when working on a
+	file descriptor Bug description: the parser would append output to
+	the latest arrayref used, whereas fd is not used
+
+	wwsympa/wwsympa.fcgi:  vars used in list_aliases.tpl had changed
+
+	wwsympa/wwsympa.fcgi: Fix: parse_tpl() requires a reference to a
+	file descriptor as a parameter
+
+
 3.3.6b.5	02 October 2002
 
    New features :
