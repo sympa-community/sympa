@@ -1188,21 +1188,10 @@ sub dump {
     foreach my $l (@listnames) {
 	
 	my $list = new List($l);
-	my $user_file_name;
-	
-	if (($list->{'admin'}{'user_data_source'} eq 'database') ||
-	    ($list->{'admin'}{'user_data_source'} eq 'include2')) {
-            do_log('debug3', 'Dumping list %s',$l);
-	    $user_file_name = "$list->{'dir'}/subscribers.db.dump";
-	    $list->_save_users_file($user_file_name);
-	    $list->{'mtime'} = [ (stat("$list->{'dir'}/config"))[9], (stat("$list->{'dir'}/subscribers"))[9], (stat("$list->{'dir'}/stats"))[9] ];
-	}elsif ($list->{'admin'}{'user_data_source'} eq 'include') {
-            do_log('debug3', 'Dumping list %s',$l);
-	    $user_file_name = "$list->{'dir'}/subscribers.incl.dump";
-	    $list->_save_users_file($user_file_name);
-	    $list->{'mtime'} = [ (stat("$list->{'dir'}/config"))[9], (stat("$list->{'dir'}/subscribers"))[9], (stat("$list->{'dir'}/stats"))[9] ];
-	} 
-
+	my $user_file_name = "$list->{'dir'}/subscribers.db.dump";
+	do_log('debug3', 'Dumping list %s',$l);	
+	$list->_save_users_file($user_file_name);
+	$list->{'mtime'} = [ (stat("$list->{'dir'}/config"))[9], (stat("$list->{'dir'}/subscribers"))[9], (stat("$list->{'dir'}/stats"))[9] ];
     }
     return 1;
 }
