@@ -1084,6 +1084,29 @@ sub increment_msg_count {
     return 1;
 }
 
+## last date of distribution message .
+sub get_latest_distribution_date {
+    my $self = shift;
+    do_log('debug2', "List::latest_distribution_date($self->{'name'})");
+   
+    ## Be sure the list has been loaded.
+    my $name = $self->{'name'};
+    my $file = "$self->{'dir'}/msg_count";
+    
+    my %count ; 
+    my $latest_date ; 
+    return undef unless (open(MSG_COUNT, $file));
+
+    while (<MSG_COUNT>){
+	if ($_ =~ /^(\d+)\s(\d+)$/) {
+	    $latest_date = $1 if ($1 > $latest_date);
+	}
+    }
+    close MSG_COUNT ;
+
+    return $latest_date ;
+}
+
 ## Update the stats struct 
 ## Input  : num of bytes of msg
 ## Output : num of msgs sent
