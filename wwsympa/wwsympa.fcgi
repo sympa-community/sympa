@@ -1740,6 +1740,8 @@ sub do_set {
 	&wwslog('info', 'do_set: set failed');
 	return undef;
     }
+
+    $list->save();
     
     &message('performed');
     
@@ -2436,7 +2438,6 @@ sub do_add {
 
 	$total++;
 	
-	$list->save();
 	unless ($in{'quiet'}) {
 	    my %context;
 	    $context{'subject'} = sprintf(Msg(8, 6, "Welcome to list %s"), $list->{'name'});
@@ -2448,6 +2449,7 @@ sub do_add {
     if ($total == 0) {
 	return undef;
     }else {
+	$list->save();
 	&message('add_performed', {'total' => $total});
     }
 
@@ -2519,8 +2521,6 @@ sub do_del {
 
 	&wwslog('info','do_del: subscriber %s deleted from list %s', $email, $param->{'list'});
 	
-	$list->save();
-
 	unless ($in{'quiet'}) {
 	    my %context;
 	    $context{'subject'} = sprintf(Msg(6, 18, "You have been removed from list %s\n"), $list->{'name'});
@@ -2529,6 +2529,8 @@ sub do_del {
 	    $list->send_file('removed', $email, \%context);
 	}
     }
+
+    $list->save();
 
     &message('performed');
     $param->{'is_subscriber'} = 1;
