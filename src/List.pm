@@ -911,7 +911,7 @@ sub load {
     }
     
     my $m1 = (stat("$name/config"))[9];
-    my $m2;
+    my $m2; $m2 = (stat("$name/subscribers"))[9] if (-f "$name/subscribers");
     my $m3 = (stat("$name/stats"))[9];
 
     my $admin;
