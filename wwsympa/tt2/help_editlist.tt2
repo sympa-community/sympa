@@ -120,7 +120,7 @@
       [% ELSIF p.NAME == 'owner' %]
         [%|l%]Owners are managing subscribers of the list. They may review subscribers and add or delete email addresses from the mailing list. If you are a privileged owner of the list, you can choose other owners for the mailing list. Privileged owners may edit a few more options than other owners. There can only be one privileged owner per list; his/her email address may not be edited from the web.[%END%]
       [% ELSIF p.NAME == 'priority' %]
-        [%|l%]The priority with which Sympa will process messages for this list. This level of priority is applied while the message is going through the spool. The \"z\" priority will freeze the message in the spool.[%END%]
+        [%|l%]The priority with which Sympa will process messages for this list. This level of priority is applied while the message is going through the spool. The z priority will freeze the message in the spool.[%END%]
       [% ELSIF p.NAME == 'remind' %]
         [%|l%]This parameter specifies who is authorized to use the remind command.[%END%]
       [% ELSIF p.NAME == 'remind_return_path' %]
