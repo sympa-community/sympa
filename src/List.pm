@@ -3659,12 +3659,15 @@ sub _load_scenario_file {
 
     my $structure;
     
+    ## List scenario
     my $scenario_file = $directory.'/scenari/'.$function.'.'.$name ;
     unless (($directory) && (open SCENARI, $scenario_file)) {
-#	do_log ('debug2',"Unable to open scenario $scenario_file");
+
+	## Site scenario
 	$scenario_file = "$Conf{'etc'}/scenari/$function.$name";
 	unless (open SCENARI, $scenario_file) {
-#	    do_log ('debug2',"Unable to open scenario $scenario_file");
+
+	    ## Distrib scenario
 	    unless (open SCENARI,"--ETCBINDIR--/scenari/$function.$name") {
 		do_log ('info',"Unable to open scenario $scenario_file, please report to listmaster");
 		return &_load_scenario ($function,$name,'true() smtp -> reject', $directory);
