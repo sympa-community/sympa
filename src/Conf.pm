@@ -209,7 +209,49 @@ sub load {
     $Conf{'sympa'} = "$Conf{'email'}\@$Conf{'host'}";
     $Conf{'request'} = "$Conf{'email'}-request\@$Conf{'host'}";
     
+    $Conf{'robots'} = &load_robots ;
     return 1;
+}
+
+## load each virtual robots configuration files
+sub load_robots {
+    
+    my %robot_conf ;
+
+    my @valid_robot_key_words = ( 'http_host' => '', listmaster => '', 'title' => '');  
+
+    unless (opendir DIR,'--DIR--/etc' ) {
+	do_log('info','Unable to open directory --DIR--/etc for virtual robots config' );
+	return undef;
+    }
+
+    foreach $robot (readdir(DIR)) {
+	next unless (-d "--DIR--/etc/$robot");
+	next unless (-r "--DIR--/etc/$robot/robot.conf");
+	unless (open (ROBOT_CONF,"--DIR--/etc/$robot/robot.conf")) {
+	  do_log('info', "load robots config: Unable to open --DIR--/etc/$robot/robot.conf"); 
+	  my %keys ;
+	  while (<ROBOT_CONF>) {
+	      next if (/^\s*$/o || /^[\#\;]/o);
+	      if (/^\s*(\S+)\s+(.+)\s*$/io) {
+		  my($keyword, $value) = ($1, $2);
+		  $keyword = lc($keyword);
+		  $value = lc($value) unless ($keyword eq 'title');
+		  if ($valid_robot_key_words->{'$keyword'}) {
+		      $robot_conf->{$robot}{'$keyword'} = $value;
+		  }else{
+		      do_log('info',"load robots config: unknown keyword $keyword");
+		  }
+	      }
+	  }
+	  @{$robot_conf->{$robot}{'listmasters'}} = split(/,/, $robot_conf->{$robot}{'listmasters'});
+
+	  $robot_conf->{'robot_by_http_host'}{$robot_conf->{$robot}{'http_host'}} = $robot ;
+	  close (ROBOT_CONF);
+      }
+    }	
+    closedir(DIR);
+    return ($robot_conf);
 }
 
 ## Check a few files
