@@ -16,27 +16,27 @@
   </link>
   <description>[% FILTER escape_xml %][%- IF errors %][%|loc%]Server error[%END%][%- END -%]
 [%- IF action == 'latest_lists' -%]
- [%- IF count -%][%|loc%]The [% count %] latest created lists[%END-%]
+ [%- IF count -%][%|loc(count)%]The %1 latest created lists[%END-%]
   [%- ELSE -%][%|loc%]The latest created lists[%END-%]
   [%- END -%]
- [%- IF for -%][%-|loc%]for [% for %] days[%END%][%- END -%]
+ [%- IF for -%][%-|loc(for)%]for %1 days[%END%][%- END -%]
  [%- IF subtitle -%] - [% subtitle %][%- END -%]
 [%- ELSIF action == 'active_lists' -%]
- [%- IF count -%][%|loc%]The [% count %] most active lists[%END-%]
+ [%- IF count -%][%|loc(count)%]The %1 most active lists[%END-%]
   [%- ELSE -%][%|loc%]The most active lists[%END-%]
   [%- END -%]
- [%- IF for -%][%-|loc%]for [% for %] days[%END%][%- END -%]
+ [%- IF for -%][%-|loc(for)%]for %1 days[%END%][%- END -%]
  [%- IF subtitle -%] - [% subtitle %][%- END -%]
 [%- ELSIF action == 'latest_arc' -%]
- [%- IF count -%][%|loc%]The [% count %] latest messages[%END-%]
+ [%- IF count -%][%|loc(count)%]The %1 latest messages[%END-%]
   [%- ELSE -%][%|loc%]The latest messages[%END-%]
   [%- END -%]
- [%- IF for -%][%-|loc%]for [% for %] days [%END%][%- END -%]
+ [%- IF for -%][%-|loc(for)%]for %1 days [%END%][%- END -%]
 [%- ELSIF action == 'latest_d_read' -%] 
- [%- IF count -%][%|loc%]The [% count %] latest shared documents[%END-%]
+ [%- IF count -%][%|loc(count)%]The %1 latest shared documents[%END-%]
  [%- ELSE -%][%|loc%]The latest shared documents[%END-%]
  [%- END -%]
- [%- IF for -%][%-|loc%]for [% for %] days [%END%][%- END -%]
+ [%- IF for -%][%-|loc(for)%]for %1 days [%END%][%- END -%]
 [%- END -%][%- END -%]
   </description>
   <language>[% ISO639_language %]</language>
@@ -63,7 +63,7 @@
 [% ELSIF action == 'latest_arc' -%]
  [% FOREACH a = archives -%]
   <item>
-   <title>[% FILTER escape_xml %][%|loc%][% a.subject %] - [% a.from %] - [% a.date %][%END%][%- END -%]</title>
+   <title>[% FILTER escape_xml %][% a.subject %] - [% a.from %] - [% a.date %][%- END -%]</title>
    <link>[% FILTER escape_xml %][% conf.wwsympa_url %]/arcsearch_id/[% list %]/[% a.year_month %]/[% a.message_id %][%- END -%]</link>
   </item>
  [% END -%]
@@ -74,7 +74,7 @@
     <title>[% FILTER escape_xml %][%|loc(d.anchor)%]Bookmark %1[%END%][%- END -%]</title>
     <link>[% FILTER escape_xml %][% d.url %][%- END -%]</link>
     [% ELSE -%]
-    <title>[% FILTER escape_xml %][%|loc(d.name)%]%1[%END%][%- END -%]</title>
+    <title>[% FILTER escape_xml %][% d.name %][%- END -%]</title>
     <link>[% FILTER escape_xml %][% base_url %][% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]/[% d.escaped_name %][%- END -%]</link>
     [% END -%]
   </item>
