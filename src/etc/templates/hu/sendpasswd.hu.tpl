@@ -1,12 +1,12 @@
-Feladó: [conf->sympa]
+From: [conf->sympa]
 Reply-to: [conf->request]
-Címzett: [newuser->email]
+To: [newuser->email]
 [IF action=subrequest]
-Tárgy: [wwsconf->title] / feliratkozás a(z) [list] listára
+Subject: [wwsconf->title] / feliratkozás a(z) [list] listára
 [ELSIF action=sigrequest]
-Tárgy: [wwsconf->title] / leiratkozás a(z) [list] listáról
+Subject: [wwsconf->title] / leiratkozás a(z) [list] listáról
 [ELSE]
-Tárgy: [wwsconf->title] / beállításaid
+Subject: [wwsconf->title] / beállításaid
 [ENDIF]
 
 [IF action=subrequest]
