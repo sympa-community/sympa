@@ -202,7 +202,6 @@ Lub wy¶lij wiadomo¶æ do %s z tematem :\n\
 CONFIRM %s\n"
 13	"Zawarto¶æ" 
 14	"Koniec digestu dla listy %s"
-15	"Obecnie %d wiadomo¶ci czeka na potwierdzenie moderatora listy %s" 
 16	"Pro¶ba autoryzacj"
 21	"FYI: %s lista %s od %s %s"
 22	"FYI polecenie %s lista %s od %s %s \n (nie wymaga dzia³ania)\n"
@@ -233,12 +232,6 @@ $set 12 MIME headers
 2	"us-ascii"
 3	"7bit"
 4	"SYMPA <%s>"
-
-$set 13	Messages for the header of moderation index
-1	"\t     Data                 : %s"
-2	"\t     Nadawca              : %s"
-3	"\t     Rozmiar              : %s\n"
-4	"\t     Klucz moderatora     : %s\n"
 
 $set 14 Pour le web
 1	"pl_PL"

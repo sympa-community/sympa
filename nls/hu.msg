@@ -215,7 +215,6 @@ Vagy %s címre küldj egy levelet a következõ tárggyal:\n\
 CONFIRM %s\n"
 13	"Tartalomjegyzék" 
 14	"Digest vége a(z) %s listán"
-15	"%s listán %d levél vár beavatkozásra" 
 16	"Azonosítás szükséges"
 21	"BIZ: %s lista %s feladó %s %s"
 22	"BIZ: %s parancs a(z) %s listán %s %s felhasználótól \n (nincs teendõ)\n"
@@ -246,12 +245,6 @@ $set 12 MIME headers
 2	"iso-8859-2"
 3	"8bit"
 4	"SYMPA <%s>"
-
-$set 13	Messages for the header of moderation index
-1	"\t     Dátum               : %s"
-2	"\t     Feladó              : %s"
-3	"\t     Méret               : %s\n"
-4	"\t     Azonosító           : %s\n"
 
 $set 14 Pour le web
 1	"hu_HU"

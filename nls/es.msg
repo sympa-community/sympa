@@ -243,12 +243,6 @@ $set 12 Cabecera MIME
 3	"8bit"
 4	"SYMPA <%s>"
 
-$set 13 Mensajes para la cabecera del índice de moderación
-1	"\t        Fecha               : %s"
-2 	"\t        Remitente           : %s"
-3 	"\t        Tamaño              : %s\n"
-4	"\t        Clave de moderación : %s\n"
-
 $set 14 Para la web
 1	"es_ES"
 2	"español"

@@ -1,3 +1,599 @@
+2001-07-26 15:43  salaun
+
+	* nls/cz.msg, nls/de.msg, nls/es.msg, nls/hu.msg, nls/pl.msg,
+	nls/us.msg, src/Commands.pm, src/List.pm,
+	src/etc/templates/cz/info_report.cz.tpl,
+	src/etc/templates/de/info_report.de.tpl,
+	src/etc/templates/es/info_report.es.tpl,
+	src/etc/templates/fr/info_report.fr.tpl,
+	src/etc/templates/hu/info_report.hu.tpl,
+	src/etc/templates/it/info_report.it.tpl,
+	src/etc/templates/pl/info_report.pl.tpl,
+	src/etc/templates/us/info_report.us.tpl: Change: INFO report
+	becomes a template
+
+2001-07-26 12:02  salaun
+
+	* nls/cz.msg, nls/de.msg, nls/es.msg, nls/fr.msg, nls/hu.msg,
+	nls/it.msg, nls/pl.msg, nls/us.msg, src/Commands.pm, src/List.pm,
+	src/msg.pl, src/etc/templates/cz/stats_report.cz.tpl,
+	src/etc/templates/cz/stats_report.cz.tpl~,
+	src/etc/templates/de/stats_report.de.tpl,
+	src/etc/templates/de/stats_report.de.tpl~,
+	src/etc/templates/es/stats_report.es.tpl,
+	src/etc/templates/es/stats_report.es.tpl~,
+	src/etc/templates/fr/stats_report.fr.tpl,
+	src/etc/templates/hu/stats_report.hu.tpl,
+	src/etc/templates/hu/stats_report.hu.tpl~,
+	src/etc/templates/it/stats_report.it.tpl,
+	src/etc/templates/it/stats_report.it.tpl~,
+	src/etc/templates/pl/stats_report.pl.tpl,
+	src/etc/templates/pl/stats_report.pl.tpl~,
+	src/etc/templates/us/stats_report.us.tpl: Change: STATS report
+	becomes a template
+
+2001-07-26 11:03  salaun
+
+	* nls/cz.msg, nls/de.msg, nls/es.msg, nls/fi.msg, nls/pl.msg,
+	src/Commands.pm, src/etc/templates/cz/review.cz.tpl,
+	src/etc/templates/de/review.de.tpl,
+	src/etc/templates/es/review.es.tpl,
+	src/etc/templates/fr/review.fr.tpl,
+	src/etc/templates/hu/review.hu.tpl,
+	src/etc/templates/it/review.it.tpl,
+	src/etc/templates/pl/review.pl.tpl,
+	src/etc/templates/us/review.us.tpl: REVIEW templates
+
+2001-07-26 10:49  salaun
+
+	* src/List.pm: Ignore empty email addresses, from LDAP
+
+2001-07-26 10:38  salaun
+
+	* set_symlinks.pl, src/Makefile: Set defaults for templates
+
+2001-07-26 10:27  salaun
+
+	* nls/fr.msg, nls/us.msg, src/Commands.pm,
+	src/etc/templates/fr/review.fr.tpl,
+	src/etc/templates/us/review.us.tpl: Change: REVIEW report becomes a
+	template
+
+2001-07-25 14:27  salaun
+
+	* wwsympa/wwsympa.fcgi: fix: delete .old files
+
+2001-07-25 12:16  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/d_read.fr.tpl,
+	wws_templates/us/d_read.us.tpl: New feature: add 'new file' feature
+	to the web repository
+
+2001-07-25 11:22  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/d_editfile.fr.tpl,
+	wws_templates/us/d_read.us.tpl: New feature: rename file/directory
+	in 'web repository'
+
+2001-07-25 09:53  salaun
+
+	* doc/sympa.tex.tpl: [reported by M. Leclair] Fix 'host' list param
+	documentation
+
+2001-07-24 16:05  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/d_editfile.fr.tpl,
+	wws_templates/fr/d_read.fr.tpl, wws_templates/us/d_editfile.us.tpl,
+	wws_templates/us/d_read.us.tpl: Changes: move 'edit' and 'access'
+	links
+
+2001-07-24 15:31  salaun
+
+	* wwsympa/wws_templates/us/d_editfile.us.tpl: Add bookmarks
+	management to the document repository (shared)
+
+2001-07-24 14:51  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/d_editfile.fr.tpl,
+	wws_templates/fr/d_read.fr.tpl, wws_templates/us/d_read.us.tpl: Add
+	bookmarks management to the document repository (shared)
+
+2001-07-23 16:03  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/d_read.fr.tpl,
+	wws_templates/us/d_read.us.tpl: Small changes to shared
+
+2001-07-23 12:31  salaun
+
+	* src/tools.pl: Bug in escape_chars() ; escaped '%'s
+
+2001-07-23 11:23  salaun
+
+	* src/Makefile: Cleanup in bin/etc/templates/
+
+2001-07-23 10:33  salaun
+
+	* src/Makefile: Split templtes ; one per lang This makes
+	translation easier (charset problems, patches appliance)
+
+2001-07-23 10:28  salaun
+
+	* src/etc/templates/us/: bye.us.tpl, create_list_request.us.tpl,
+	global_remind.us.tpl, helpfile.us.tpl, invite.us.tpl,
+	list_created.us.tpl, lists.us.tpl, reject.us.tpl, remind.us.tpl,
+	removed.us.tpl, welcome.us.tpl, x509-user-cert-missing.us.tpl,
+	your_infected_msg.us.tpl: Split templtes ; one per lang This makes
+	translation easier (charset problems, patches appliance)
+
+2001-07-20 17:23  salaun
+
+	* src/etc/templates/: cz/bye.cz.tpl, cz/global_remind.cz.tpl,
+	cz/helpfile.cz.tpl, cz/invite.cz.tpl, cz/lists.cz.tpl,
+	cz/reject.cz.tpl, cz/remind.cz.tpl, cz/removed.cz.tpl,
+	cz/welcome.cz.tpl, cz/x509-user-cert-missing.cz.tpl, de/bye.de.tpl,
+	de/global_remind.de.tpl, de/helpfile.de.tpl, de/invite.de.tpl,
+	de/lists.de.tpl, de/reject.de.tpl, de/remind.de.tpl,
+	de/removed.de.tpl, de/welcome.de.tpl,
+	de/x509-user-cert-missing.de.tpl, de/your_infected_msg.de.tpl,
+	es/bye.es.tpl, es/global_remind.es.tpl, es/helpfile.es.tpl,
+	es/invite.es.tpl, es/lists.es.tpl, es/reject.es.tpl,
+	es/remind.es.tpl, es/removed.es.tpl, es/welcome.es.tpl,
+	fr/bye.fr.tpl, fr/create_list_request.fr.tpl,
+	fr/global_remind.fr.tpl, fr/helpfile.fr.tpl, fr/invite.fr.tpl,
+	fr/list_created.fr.tpl, fr/lists.fr.tpl, fr/reject.fr.tpl,
+	fr/remind.fr.tpl, fr/removed.fr.tpl, fr/welcome.fr.tpl,
+	fr/x509-user-cert-missing.fr.tpl, fr/your_infected_msg.fr.tpl,
+	hu/bye.hu.tpl, hu/global_remind.hu.tpl, hu/helpfile.hu.tpl,
+	hu/invite.hu.tpl, hu/lists.hu.tpl, hu/reject.hu.tpl,
+	hu/remind.hu.tpl, hu/removed.hu.tpl, hu/welcome.hu.tpl,
+	hu/x509-user-cert-missing.hu.tpl, it/bye.it.tpl,
+	it/global_remind.it.tpl, it/helpfile.it.tpl, it/invite.it.tpl,
+	it/lists.it.tpl, it/remind.it.tpl, it/removed.it.tpl,
+	it/welcome.it.tpl, pl/bye.pl.tpl, pl/global_remind.pl.tpl,
+	pl/helpfile.pl.tpl, pl/invite.pl.tpl, pl/lists.tpl,
+	pl/reject.pl.tpl, pl/remind.pl.tpl, pl/removed.pl.tpl,
+	pl/welcome.pl.tpl, pt/bye.pt.tpl, pt/global_remind.pt.tpl,
+	pt/helpfile.pt.tpl, pt/invite.pt.tpl, pt/lists.pt.tpl,
+	pt/reject.pt.tpl, pt/remind.pt.tpl, pt/removed.pt.tpl,
+	pt/welcome.pt.tpl: Split templtes ; one per lang This makes
+	translation easier (charset problems, patches appliance)
+
+2001-07-20 15:26  salaun
+
+	* src/List.pm: Fix
+
+2001-07-20 15:15  salaun
+
+	* src/List.pm: Changes: allow mail templates.<lang>
+
+2001-07-20 11:32  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/review.fr.tpl,
+	wws_templates/us/review.us.tpl: New feature: show additional db
+	fields in REVIEW (web) ; to owners ONLY
+
+2001-07-20 10:06  salaun
+
+	* src/Commands.pm, src/List.pm, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/editsubscriber.fr.tpl,
+	wwsympa/wws_templates/fr/review.fr.tpl,
+	wwsympa/wws_templates/fr/suboptions.fr.tpl,
+	wwsympa/wws_templates/us/editsubscriber.us.tpl,
+	wwsympa/wws_templates/us/review.us.tpl,
+	wwsympa/wws_templates/us/suboptions.us.tpl: Now fully uses the
+	update_subscriber DB field
+
+2001-07-20 09:27  salaun
+
+	* src/List.pm: Bug fix: 'update' changed to 'update_date' ;
+	'update' is a MySQL keyword
+
+2001-07-19 17:45  salaun
+
+	* src/List.pm: Changes: get and set update_subscriber db field
+
+2001-07-19 16:22  salaun
+
+	* src/: List.pm, tools.pl: Changes: multipart/related is considered
+	like text/html
+
+2001-07-19 15:20  salaun
+
+	* src/: Commands.pm, List.pm, sympa.pl: Bug fix: srand() is done
+	once to avoid multiple moderated messages to have the same ID
+
+2001-07-17 18:03  salaun
+
+	* doc/sympa.tex.tpl: Add 'sharing data with other apps' paragraph
+
+2001-07-17 17:40  salaun
+
+	* doc/sympa.tex.tpl, src/List.pm: New feature: subscriber data are
+	available in scenario as [subscriber->field].  It refers to the
+	sender's attribuites.  Change: use internal session cache for
+	List::get_subscriber()
+
+2001-07-17 11:22  salaun
+
+	* src/etc/script/sympa.spec: [reported by S. AZRIEL] Bug fix:
+	aliaswrapper was not installed
+
+2001-07-17 11:01  salaun
+
+	* wwsympa/wwslib.pm: Warn if a directory/binary , defined in
+	wwsympa.conf, does not exist
+
+2001-07-17 10:48  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/error.fr.tpl,
+	wws_templates/us/error.us.tpl: Changes: warn if an email address
+	change failed
+
+2001-07-03 17:19  salaun
+
+	* doc/sympa.tex.tpl: Changes
+
+2001-07-03 16:32  salaun
+
+	* src/List.pm: Add a new list configuration paragraph named "task"
+	that will be used by the task manager in a near futur
+
+2001-07-03 15:25  salaun
+
+	* wwsympa/wws_templates/hu/: compose_mail.hu.tpl,
+	msg_sendpasswd.hu.tpl: [Vizi Szilard] bug fix: canacel translation
+	of From/Subject/To headers
+
+2001-07-02 17:58  salaun
+
+	* doc/sympa.tex.tpl, src/Conf.pm, src/List.pm,
+	wwsympa/wwsympa.fcgi: New features: new db_additional_user_fields
+	AND db_additional_subscriber_fields in sympa.conf. These fields are
+	accessible from within templates.
+
+2001-07-02 14:34  salaun
+
+	* src/List.pm: Changes: no more SQL join in List::get_subscriber()
+	This should fasten list-related web actions (such as INFO, ARC,
+	ADMIN,...)
+
+2001-07-02 14:12  salaun
+
+	* src/etc/mhonarc-ressources: fix the reply feature (when replying
+	to list the adresse was not qualified)
+
+2001-07-02 11:51  salaun
+
+	* src/tools.pl: [reported by Foudil BRETEL] Bug fix:
+	create_list.conf was not properly parsed Make it case-insensitive
+
+2001-06-29 17:17  salaun
+
+	* nls/fr.msg, nls/us.msg, src/List.pm, src/etc/edit_list.conf,
+	src/etc/templates/us/create_list_request.us.tpl,
+	src/etc/templates/us/list_created.us.tpl, wwsympa/wwslib.pm,
+	wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/us/set_pending_list_request.us.tpl: New
+	feature: list creation request is a template.  Add list creation
+	notification (using a template)
+
+2001-06-29 12:35  salaun
+
+	* src/tools.pl: Bug fix: Sympa was bloquing in
+	tools::smime_decrypt() on big encrypted messages. => now creates
+	the FIFO before OpenSSL is called.
+
+2001-06-29 12:18  salaun
+
+	* src/: smtp.pm, sympa.pl, tools.pl: Fix re-encryption of signed
+	base64 messages
+
+2001-06-29 11:59  salaun
+
+	* wwsympa/wws_templates/: fr/serveradmin.fr.tpl,
+	us/serveradmin.us.tpl: Set default search action
+
+2001-06-29 11:52  salaun
+
+	* wwsympa/wwsympa.fcgi: Changes are needed for CGI3.pm
+
+2001-06-28 17:17  salaun
+
+	* doc/sympa.tex.tpl: Add FastCGI subsection
+
+2001-06-28 16:43  salaun
+
+	* src/: Archive.pm, Commands.pm, tools.pl: Fix previous SMIME
+	related changes
+
+2001-06-28 16:12  salaun
+
+	* doc/sympa.tex.tpl, nls/fr.msg, nls/us.msg, src/Conf.pm,
+	src/List.pm: [requested by C. Turbout] New feature: add
+	'connect_options' to include_sql_query list param. Add 'db_options'
+	to sympa.conf
+
+2001-06-28 15:45  salaun
+
+	* src/: Archive.pm, Commands.pm, List.pm, smtp.pm, sympa.pl,
+	tools.pl: [reported by Christian Mock] Bug fix: S/MIME encryption
+	fixed signed AND crypted messages are recognized as signed
+
+2001-06-28 15:42  salaun
+
+	* src/etc/templates/us/x509-user-cert-missing.us.tpl: Fix
+
+2001-06-28 15:41  salaun
+
+	* src/etc/templates/us/create_list_request.us.tpl: Add
+	create_list_request template
+
+2001-06-28 14:56  salaun
+
+	* Makefile, doc/sympa.tex.tpl, src/Makefile, src/aliaswrapper.c:
+	[Didier Lamballais] Change: add NEWALIASES_ARG var to Makefile
+
+2001-06-26 15:21  salaun
+
+	* doc/sympa.tex.tpl: Complete create_list setup
+
+2001-06-26 14:46  salaun
+
+	* wwsympa/wws_templates/us/create_list.us.tpl: [R. Manfredi] makes
+	the message clearer
+
+2001-06-22 16:03  salaun
+
+	* doc/sympa.tex.tpl, src/Commands.pm, src/List.pm,
+	wwsympa/wwslib.pm: [N. Euzen] new 'not_me' user reception option
+	changes for 'urlize' (added size, name ; add header/footer
+	afterward)
+
+2001-06-22 15:49  salaun
+
+	* wwsympa/wwsympa.fcgi: Bug fix: change_email fixed
+
+2001-06-22 13:59  salaun
+
+	* src/Commands.pm: normal as a synonyme of the option mail
+
+2001-06-22 13:57  salaun
+
+	* RELEASE_NOTES, nls/hu.msg, src/etc/mhonarc-ressources,
+	src/etc/create_list_templates/discussion_list/comment,
+	src/etc/create_list_templates/intranet_list/comment,
+	src/etc/create_list_templates/news-letter/comment,
+	src/etc/create_list_templates/private_working_group/comment,
+	src/etc/create_list_templates/public_web_forum/comment,
+	src/etc/scenari/add.auth, src/etc/scenari/add.owner,
+	src/etc/scenari/add.owner_notify, src/etc/scenari/del.auth,
+	src/etc/scenari/del.closed, src/etc/scenari/del.owner,
+	src/etc/scenari/edit_list.owner,
+	src/etc/scenari/global_remind.listmaster,
+	src/etc/scenari/review.closed, src/etc/scenari/send.editorkey,
+	src/etc/scenari/send.editorkeyonly,
+	src/etc/scenari/send.publicnomultipart,
+	src/etc/scenari/unsubscribe.owner,
+	src/etc/templates/us/global_remind.us.tpl,
+	src/etc/templates/us/helpfile.us.tpl,
+	src/etc/templates/us/reject.us.tpl,
+	src/etc/templates/us/remind.us.tpl,
+	src/etc/templates/us/removed.us.tpl,
+	src/etc/templates/us/welcome.us.tpl,
+	src/etc/templates/us/x509-user-cert-missing.us.tpl,
+	wwsympa/wws_templates/hu/admin_menu.hu.tpl,
+	wwsympa/wws_templates/hu/arcsearch.hu.tpl,
+	wwsympa/wws_templates/hu/arcsearch_form.hu.tpl,
+	wwsympa/wws_templates/hu/change_email.hu.tpl,
+	wwsympa/wws_templates/hu/close_list.hu.tpl,
+	wwsympa/wws_templates/hu/create_list.hu.tpl,
+	wwsympa/wws_templates/hu/create_list_request.hu.tpl,
+	wwsympa/wws_templates/hu/d_control.hu.tpl,
+	wwsympa/wws_templates/hu/d_editfile.hu.tpl,
+	wwsympa/wws_templates/hu/d_read.hu.tpl,
+	wwsympa/wws_templates/hu/editsubscriber.hu.tpl,
+	wwsympa/wws_templates/hu/error.hu.tpl,
+	wwsympa/wws_templates/hu/get_pending_lists.hu.tpl,
+	wwsympa/wws_templates/hu/help_editlist.hu.tpl,
+	wwsympa/wws_templates/hu/install_pending_list.hu.tpl,
+	wwsympa/wws_templates/hu/list_menu.hu.tpl,
+	wwsympa/wws_templates/hu/menu.hu.tpl,
+	wwsympa/wws_templates/hu/msg_sendpasswd.hu.tpl,
+	wwsympa/wws_templates/hu/notice.hu.tpl,
+	wwsympa/wws_templates/hu/pref.hu.tpl,
+	wwsympa/wws_templates/hu/remindpasswd.hu.tpl,
+	wwsympa/wws_templates/hu/remove_arc.hu.tpl,
+	wwsympa/wws_templates/hu/review.hu.tpl,
+	wwsympa/wws_templates/hu/reviewbouncing.hu.tpl,
+	wwsympa/wws_templates/hu/scenario_test.hu.tpl,
+	wwsympa/wws_templates/hu/serveradmin.hu.tpl,
+	wwsympa/wws_templates/hu/set_pending_list_request.hu.tpl,
+	wwsympa/wws_templates/hu/sigrequest.hu.tpl: [Vizi Szilard]
+	Hungarian translations updates
+
+2001-06-22 11:51  salaun
+
+	* doc/sympa.tex.tpl: [Vizi Szilard] Hungarian NOT hungrian
+
+2001-06-22 10:36  salaun
+
+	* src/etc/script/create_db.Pg: [JÅÈrÅÙme Marant] Bug fix: CREATE
+	INDEX ends with 2 parentheses instead of one
+
+2001-06-21 15:11  salaun
+
+	* doc/sympa.tex.tpl, src/Conf.pm, src/List.pm: [requested byClaus
+	Atzenbeck] New 'anonymous_header_fields' sympa.conf parameter.
+
+2001-06-21 08:37  salaun
+
+	* wwsympa/wwsympa.fcgi: two options availible now for wwsympa.fcgi
+	: -debug and -robot_domain <domain>
+
+2001-06-20 15:05  salaun
+
+	* src/tools.pl, wwsympa/wwsympa.fcgi: Also escape accented chars in
+	URLs
+
+2001-06-18 16:48  salaun
+
+	* src/mail.pm: Also encode $to, From and all $headers entries
+
+2001-06-18 13:47  salaun
+
+	* src/mail.pm: [no log message]
+
+2001-06-18 12:03  salaun
+
+	* wwsympa/wwsympa.fcgi: [no log message]
+
+2001-06-18 11:12  salaun
+
+	* src/etc/templates/us/helpfile.us.tpl: [N. Euzen] Added "SET
+	<list> NOT_ME" help and TXT/HTML/URLIZE english documentation
+
+2001-06-18 10:33  salaun
+
+	* src/mail.pm: [reported by Straub Herbert] Bug fix: owner
+	notification messages subject was not encoded
+
+2001-06-15 15:16  salaun
+
+	* src/etc/script/create_db.Sybase: [reported by Guenter Lau] Update
+	database structure, make password longer
+
+2001-06-14 14:44  salaun
+
+	* src/Commands.pm, src/List.pm,
+	src/etc/templates/us/helpfile.us.tpl, wwsympa/wwslib.pm,
+	wwsympa/wwsympa.fcgi: [Nadia Euzen]: Add new user reception options
+	"html","txt" and "urlize".
+
+2001-06-13 15:57  salaun
+
+	* check_perl_modules.pl, src/Commands.pm, src/List.pm,
+	src/tools.pl, wwsympa/cookielib.pm, wwsympa/wwsympa.fcgi: [proposed
+	by Josep Rom·n]Use Digest::MD5 instead of MD5 module
+
+2001-06-13 09:29  salaun
+
+	* src/etc/scenari/send.publicnoattachment: new scenario
+
+2001-06-12 16:47  salaun
+
+	* Makefile, doc/Makefile, doc/parse_tex.pl, doc/sympa.tex.tpl:
+	Include last change date of sympa.tex.tpl Add details about
+	archives
+
+2001-06-12 12:29  salaun
+
+	* src/List.pm, src/sympa.pl, wwsympa/wwsympa.fcgi: unused module
+	inclusions
+
+2001-06-12 11:01  salaun
+
+	* src/List.pm: Changes: set ldap connection timeout to 30s (was
+	120s)
+
+2001-06-11 17:50  salaun
+
+	* doc/sympa.tex.tpl, src/tools.pl: Sympa can use Trend Micro
+	virusWall as an antivirus plugin
+
+2001-06-11 09:47  salaun
+
+	* doc/sympa.tex.tpl: complete cookie changes risks
+
+2001-06-11 09:02  salaun
+
+	* wwsympa/wws_templates/fr/arcsearch_form.fr.tpl: Typo
+
+2001-06-08 16:52  salaun
+
+	* wwsympa/: cookielib.pm, wwsympa.fcgi,
+	wws_templates/us/main.us.tpl: New feature: non-identified users can
+	change the language of WWSympa.  The preferred lang is stored in a
+	cookie.  If the user is identified : the lang preference is used
+	instead ; when setting lang the preference (in db) is updated.
+
+2001-06-08 16:30  salaun
+
+	* wwsympa/wws_templates/de/main.de.tpl: redundant with main.us.tpl
+
+2001-06-08 16:27  salaun
+
+	* wwsympa/wws_templates/us/menu.us.tpl: Move the languages menu at
+	the bottom of the page
+
+2001-06-08 14:58  salaun
+
+	* wwsympa/: cookielib.pm, wwsympa.fcgi,
+	wws_templates/us/menu.us.tpl: Setlang for non-identified users
+	(first step)
+
+2001-06-08 14:57  salaun
+
+	* src/etc/ca-bundle.crt: Add Ca-CRU to bundle
+
+2001-06-08 14:56  salaun
+
+	* src/Commands.pm: Bug fix
+
+2001-06-08 11:11  salaun
+
+	* Makefile: Set LC_ALL var for making NLS
+
+2001-06-08 08:44  salaun
+
+	* doc/parse_tex.pl: Tex parser to include scenario names, db
+	creation scripts,...
+
+2001-06-08 08:31  salaun
+
+	* src/Commands.pm: New command verify (for s/mime checking)
+
+2001-06-08 08:29  salaun
+
+	* nls/: us.msg, fr.msg: new msg 6,262 and 6,263 for command verify
+
+2001-06-07 17:10  salaun
+
+	* check_perl_modules.pl: Set inactivity timeout to 4 sec
+
+2001-06-07 16:55  salaun
+
+	* src/Makefile: Change: write access to ca-bundle
+
+2001-06-07 16:34  salaun
+
+	* doc/sympa.tex.tpl: Add link to scenario source
+
+2001-06-07 16:24  salaun
+
+	* doc/sympa.tex.tpl: Include database creation scripts
+
+2001-06-07 15:51  salaun
+
+	* doc/sympa.tex.tpl: new translations
+
+2001-06-07 15:46  salaun
+
+	* doc/: Makefile, sympa.tex.tpl: sympa.tex.tpl is parsed to include
+	scenari
+
+2001-06-07 14:19  salaun
+
+	* doc/: sympa.tex, sympa.tex.tpl: Change: renamed sympa.tex to
+	sympa.tex.tpl
+
+2001-06-06 13:30  salaun
+
+	* wwsympa/wwsympa.fcgi: Check access privileges
+
+2001-06-05 17:19  salaun
+
+	* ChangeLog, Makefile, RELEASE_NOTES: Preparing 3.2.1
+
 2001-06-05 16:26  salaun
 
 	* important_changes.pl: No prompt if same version
@@ -85,10 +681,10 @@
 
 2001-05-28 10:58  salaun
 
-	* src/etc/templates/: bye.tpl, global_remind.tpl, helpfile.tpl,
-	invite.tpl, lists.tpl, reject.tpl, remind.tpl, removed.tpl,
-	welcome.tpl: [Rodrigo Filgueira Prates] templates translated to
-	Portuguese
+	* src/etc/templates/us/: bye.us.tpl, global_remind.us.tpl,
+	helpfile.us.tpl, invite.us.tpl, lists.us.tpl, reject.us.tpl,
+	remind.us.tpl, removed.us.tpl, welcome.us.tpl: [Rodrigo Filgueira
+	Prates] templates translated to Portuguese
 
 2001-05-25 16:16  salaun
 
@@ -271,10 +867,11 @@
 
 2001-05-17 12:15  salaun
 
-	* src/etc/templates/: bye.tpl, global_remind.tpl, helpfile.tpl,
-	invite.tpl, lists.tpl, reject.tpl, remind.tpl, removed.tpl,
-	welcome.tpl, x509-user-cert-missing.tpl: [Vizi Szilard]
-	Translations to Hungrian
+	* src/etc/templates/us/: bye.us.tpl, global_remind.us.tpl,
+	helpfile.us.tpl, invite.us.tpl, lists.us.tpl, reject.us.tpl,
+	remind.us.tpl, removed.us.tpl, welcome.us.tpl,
+	x509-user-cert-missing.us.tpl: [Vizi Szilard] Translations to
+	Hungrian
 
 2001-05-17 11:53  salaun
 
@@ -481,11 +1078,11 @@
 
 2001-05-10 08:23  salaun
 
-	* src/etc/templates/global_remind.tpl: [no log message]
+	* src/etc/templates/us/global_remind.us.tpl: [no log message]
 
 2001-05-09 16:24  salaun
 
-	* src/etc/templates/your_infected_msg.tpl: Bug fix: Elsif
+	* src/etc/templates/us/your_infected_msg.us.tpl: Bug fix: Elsif
 
 2001-05-09 15:23  salaun
 
@@ -523,7 +1120,8 @@
 
 2001-05-09 11:32  salaun
 
-	* src/etc/templates/global_remind.tpl: Bug fix: [user->password]
+	* src/etc/templates/us/global_remind.us.tpl: Bug fix:
+	[user->password]
 
 2001-05-09 09:23  salaun
 
@@ -611,10 +1209,11 @@
 
 2001-05-03 15:20  salaun
 
-	* src/etc/templates/: bye.tpl, global_remind.tpl, invite.tpl,
-	lists.tpl, reject.tpl, remind.tpl, removed.tpl, welcome.tpl,
-	x509-user-cert-missing.tpl, your_infected_msg.tpl: [Harald
-	Wilhelmi] Templates translated to German
+	* src/etc/templates/us/: bye.us.tpl, global_remind.us.tpl,
+	invite.us.tpl, lists.us.tpl, reject.us.tpl, remind.us.tpl,
+	removed.us.tpl, welcome.us.tpl, x509-user-cert-missing.us.tpl,
+	your_infected_msg.us.tpl: [Harald Wilhelmi] Templates translated to
+	German
 
 2001-05-03 11:36  salaun
 
@@ -639,10 +1238,10 @@
 2001-04-25 17:43  salaun
 
 	* src/: Conf.pm, sympa.pl, tools.pl,
-	etc/templates/your_infected_msg.tpl: [Nadia Euzen]New feature:
-	antivirus scanner, curently working with McAfee Uvscan and FSecure
-	FSAV.  New conf parameters antivirus_path and antivirus_args New
-	template your_infected_msg.tpl
+	etc/templates/us/your_infected_msg.us.tpl: [Nadia Euzen]New
+	feature: antivirus scanner, curently working with McAfee Uvscan and
+	FSecure FSAV.  New conf parameters antivirus_path and
+	antivirus_args New template your_infected_msg.tpl
 
 2001-04-25 11:42  salaun
 
@@ -926,10 +1525,10 @@
 
 2001-04-13 09:50  salaun
 
-	* src/etc/templates/: bye.tpl, global_remind.tpl, helpfile.tpl,
-	invite.tpl, lists.tpl, reject.tpl, remind.tpl, removed.tpl,
-	welcome.tpl, x509-user-cert-missing.tpl: [Petr Prazak] translations
-	to Czech
+	* src/etc/templates/us/: bye.us.tpl, global_remind.us.tpl,
+	helpfile.us.tpl, invite.us.tpl, lists.us.tpl, reject.us.tpl,
+	remind.us.tpl, removed.us.tpl, welcome.us.tpl,
+	x509-user-cert-missing.us.tpl: [Petr Prazak] translations to Czech
 
 2001-04-12 18:23  salaun
 
@@ -1434,7 +2033,7 @@
 
 2001-03-12 18:07  salaun
 
-	* src/etc/templates/removed.tpl: [reported by Fil] typo
+	* src/etc/templates/us/removed.us.tpl: [reported by Fil] typo
 
 2001-03-12 14:39  salaun
 
@@ -1704,23 +2303,24 @@
 
 2001-02-21 10:36  salaun
 
-	* src/etc/templates/: bye.tpl, global_remind.tpl, invite.tpl,
-	lists.tpl, reject.tpl, remind.tpl, removed.tpl, welcome.tpl:
-	[Lukasz Zalubski] Translation to polish
+	* src/etc/templates/us/: bye.us.tpl, global_remind.us.tpl,
+	invite.us.tpl, lists.us.tpl, reject.us.tpl, remind.us.tpl,
+	removed.us.tpl, welcome.us.tpl: [Lukasz Zalubski] Translation to
+	polish
 
 2001-02-21 10:04  salaun
 
-	* src/etc/templates/helpfile.tpl: reporting SET NOTICE change
+	* src/etc/templates/us/helpfile.us.tpl: reporting SET NOTICE change
 
 2001-02-21 10:03  salaun
 
-	* src/etc/templates/helpfile.tpl: [Lukasz Zalubski] Translation to
-	polish
+	* src/etc/templates/us/helpfile.us.tpl: [Lukasz Zalubski]
+	Translation to polish
 
 2001-02-21 10:00  salaun
 
-	* src/etc/templates/helpfile.tpl: [Lukasz Zalubski] bug fix : wrong
-	var
+	* src/etc/templates/us/helpfile.us.tpl: [Lukasz Zalubski] bug fix :
+	wrong var
 
 2001-02-19 18:22  salaun
 
@@ -2129,8 +2729,8 @@
 2001-01-31 15:17  salaun
 
 	* nls/fr.msg, nls/us.msg, src/List.pm,
-	src/etc/templates/summary.tpl, wwsympa/wwsympa.fcgi: New feature:
-	Add links to archives in summary
+	src/etc/templates/us/summary.us.tpl, wwsympa/wwsympa.fcgi: New
+	feature: Add links to archives in summary
 
 2001-01-30 15:41  salaun
 
@@ -2268,7 +2868,7 @@
 
 2001-01-23 10:21  salaun
 
-	* src/etc/templates/helpfile.tpl: Add doc about option notice
+	* src/etc/templates/us/helpfile.us.tpl: Add doc about option notice
 
 2001-01-23 10:18  salaun
 
@@ -2833,14 +3433,18 @@
 	src/etc/script/create_db.mysql, src/etc/script/load_subscribers.pl,
 	src/etc/script/orphan_killer.pl, src/etc/script/p12topem.pl,
 	src/etc/script/sympa, src/etc/script/sympa.spec,
-	src/etc/script/testldap.pl, src/etc/templates/bye.tpl,
-	src/etc/templates/global_remind.tpl,
-	src/etc/templates/helpfile.tpl, src/etc/templates/invite.tpl,
-	src/etc/templates/lists.tpl, src/etc/templates/reject.tpl,
-	src/etc/templates/remind.tpl, src/etc/templates/removed.tpl,
-	src/etc/templates/summary.tpl, src/etc/templates/welcome.tpl,
-	src/etc/templates/x509-user-cert-missing.tpl, wwsympa/INSTALL,
-	wwsympa/Makefile, wwsympa/Marc.pm, wwsympa/README,
+	src/etc/script/testldap.pl, src/etc/templates/us/bye.us.tpl,
+	src/etc/templates/us/global_remind.us.tpl,
+	src/etc/templates/us/helpfile.us.tpl,
+	src/etc/templates/us/invite.us.tpl,
+	src/etc/templates/us/lists.us.tpl,
+	src/etc/templates/us/reject.us.tpl,
+	src/etc/templates/us/remind.us.tpl,
+	src/etc/templates/us/removed.us.tpl,
+	src/etc/templates/us/summary.us.tpl,
+	src/etc/templates/us/welcome.us.tpl,
+	src/etc/templates/us/x509-user-cert-missing.us.tpl,
+	wwsympa/INSTALL, wwsympa/Makefile, wwsympa/Marc.pm, wwsympa/README,
 	wwsympa/archived.pl, wwsympa/bounce-lib.pl, wwsympa/bounced.pl,
 	wwsympa/cookie-lib.pl, wwsympa/mime.types, wwsympa/wws-lib.pl,
 	wwsympa/wwsympa.fcgi, wwsympa/Marc/Search.pm,
@@ -3176,14 +3780,18 @@
 	src/etc/script/create_db.mysql, src/etc/script/load_subscribers.pl,
 	src/etc/script/orphan_killer.pl, src/etc/script/p12topem.pl,
 	src/etc/script/sympa, src/etc/script/sympa.spec,
-	src/etc/script/testldap.pl, src/etc/templates/bye.tpl,
-	src/etc/templates/global_remind.tpl,
-	src/etc/templates/helpfile.tpl, src/etc/templates/invite.tpl,
-	src/etc/templates/lists.tpl, src/etc/templates/reject.tpl,
-	src/etc/templates/remind.tpl, src/etc/templates/removed.tpl,
-	src/etc/templates/summary.tpl, src/etc/templates/welcome.tpl,
-	src/etc/templates/x509-user-cert-missing.tpl, wwsympa/INSTALL,
-	wwsympa/Makefile, wwsympa/Marc.pm, wwsympa/README,
+	src/etc/script/testldap.pl, src/etc/templates/us/bye.us.tpl,
+	src/etc/templates/us/global_remind.us.tpl,
+	src/etc/templates/us/helpfile.us.tpl,
+	src/etc/templates/us/invite.us.tpl,
+	src/etc/templates/us/lists.us.tpl,
+	src/etc/templates/us/reject.us.tpl,
+	src/etc/templates/us/remind.us.tpl,
+	src/etc/templates/us/removed.us.tpl,
+	src/etc/templates/us/summary.us.tpl,
+	src/etc/templates/us/welcome.us.tpl,
+	src/etc/templates/us/x509-user-cert-missing.us.tpl,
+	wwsympa/INSTALL, wwsympa/Makefile, wwsympa/Marc.pm, wwsympa/README,
 	wwsympa/archived.pl, wwsympa/bounce-lib.pl, wwsympa/bounced.pl,
 	wwsympa/cookie-lib.pl, wwsympa/mime.types, wwsympa/wws-lib.pl,
 	wwsympa/wwsympa.fcgi, wwsympa/Marc/Search.pm,

@@ -221,7 +221,6 @@ Or send a message to %s with the following subject :\n\
 CONFIRM %s\n"
 13	"Table of content" 
 14	"End of digest for list %s"
-15	"There are %d messages to be moderated for list %s" 
 16	"Authentication requested"
 21	"FYI: %s list %s from %s %s"
 22	"FYI command %s list %s from %s %s \n (no action needed)\n"
@@ -255,12 +254,6 @@ $set 12 MIME headers
 2	"us-ascii"
 3	"7bit"
 4	"SYMPA <%s>"
-
-$set 13	Messages for the header of moderation index
-1	"\t     Date                 : %s"
-2	"\t     Sender               : %s"
-3	"\t     Size                 : %s\n"
-4	"\t     Moderation key       : %s\n"
 
 $set 14 Pour le web
 1	"en_US"

@@ -2070,6 +2070,12 @@ sub modindex {
     
     my $i;
     
+    unless ($list->may_do('modindex', $sender)) {
+	push @msg::report, sprintf Msg(6, 46, "Only editors can use the command modindex. You are not  an editor of the list %s.\n"),$name ;
+	do_log('info', 'MODINDEX %s from %s refused, not allowed', $name,$sender);
+	return 'not_allowed';
+    }
+
     # purge the queuemod -> delete old files
     if (!opendir(DIR, $modqueue)) {
 	do_log('info', 'WARNING unable to read %s directory', $modqueue);
@@ -2103,113 +2109,42 @@ sub modindex {
 	}
     }
 
-    unless ($list->may_do('modindex', $sender)) {
-	push @msg::report, sprintf Msg(6, 46, "Only editors can use the command modindex. You are not  an editor of the list %s.\n"),$name ;
-	do_log('info', 'MODINDEX %s from %s refused, not allowed', $name,$sender);
-	return 'not_allowed';
-    }
-    if (!opendir(DIR, $modqueue)) {
-	fatal_err(Msg(3, 1, "Can't open dir %s: %m"), $modqueue); ## No return.
-    }
+    opendir(DIR, $modqueue);
+
     my @files = ( sort grep (/^$name\_/,readdir(DIR)));
     closedir(DIR);
-    my $index;
     my $n;
-    my ($myhdr,$hdr, $hdr2, $boundid,$msg);
-    my %tabindex;
     my @now = localtime(time);
-    my $messageid = $now[6].$now[5].$now[4].$now[3].$now[2].$now[1]."."
-	.int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6))."\@".$list->{'admin'}{'host'};
-    my $boundary = "----------------- Message-Id: \<$messageid\>";
-    my $contenttype = "Content-Type:";
-    my $contentdescription = "Content-Description:";
-    my $subjet;
+
+    ## List of messages
+    my @spool;
+
     foreach $i (@files) {
 	## skip message allready marked to be distributed using WWS
 	next if ($i =~ /.distribute$/) ;
 
-	## Open and store information about email into an array
+	## Push message for building MODINDEX
+	my $raw_msg;
 	open(IN, "$modqueue\/$i");
-
-	my $msg;
-	my $parser = new MIME::Parser;
-	$parser->output_to_core(1);
-	unless ($msg = $parser->read(\*IN)) {
-	    do_log('notice', 'Unable to parse message');
-	    return undef;
+	while (<IN>) {
+	    $raw_msg .= $_;
 	}
+	close IN;
+	push @spool, $raw_msg;
 
-	# $msg = new Mail::Internet [<IN>];
-	close(IN);
-	$key = $1 if($i =~/$name\_(.*)$/);
-	$myhdr = $msg->head;
-	$subject = $myhdr->get('Subject');
-
-	## Q-decode the subject
-	$subject = &MIME::Words::decode_mimewords($subject);
-	
-	# fill the structure of index
-	$tabindex{$key}[0]=$subject;
-	$tabindex{$key}[1]=$myhdr->get('Date');
-	$tabindex{$key}[2]=$myhdr->get('From');
-	$tabindex{$key}[3]= -s "$modqueue\/$i";
-	close (IN);
 	$n++;
     }
     
-    push @msg::report, sprintf Msg(8, 15, "There are %d messages to moderate for the liste %s :"),$n,$name;   
-    # create the first index table
-    push @msg::report, "\n\n";    
     unless ($n){
 	do_log('info', 'MODINDEX %s from %s refused, no message to moderate', $name, $sender);
 	return 'no_file';
     }  
     
-    ## Give the result in burst
-    $index = 0;
-    foreach $key (keys %tabindex) {
-	$index++;
-	push @msg::report, sprintf "\t%d - %s\n",$index,$tabindex{$key}[0];
-	push @msg::report, sprintf Msg(13, 1,"\t      Date : %s")
-	    ,$tabindex{$key}[1];
-	push @msg::report, sprintf Msg(13, 2,"\t      From : %s")
-	    ,$tabindex{$key}[2];
-	push @msg::report, sprintf Msg(13, 3,"\t      Size : %d\n")
-	    ,$tabindex{$key}[3];
-	push @msg::report, sprintf Msg(13, 4,"\t      Key  : %s\n")
-	    ,$key;
-	push @msg::report, "\n";
-    }
-    push @msg::report, "\n";
-    push @msg::report, "-----------------THIS IS A DIGEST, YOU CAN BURST IT -------\n\n";
-    push @msg::report, "\n\n\n";
-    $index = 0;
-    foreach $key (keys %tabindex) {
-	$index++;
-	push @msg::report, "\n----------------- Message ".$index."- KEY = ".$key."\n\n";
-	## Open and parse the file
-	if (open(IN,"$modqueue\/$name\_$key" )) {   
-	    my $msg;
-	    my $parser = new MIME::Parser;
-	    $parser->output_to_core(1);
-	    unless ($msg = $parser->read(\*IN)) {
-		do_log('notice', 'Unable to parse message');
-		return undef;
-	    }
+    $list->send_file('modindex', $sender, {'spool' => \@spool,
+					   'total' => $n,
+					   'boundary1' => "==main $now[6].$now[5].$now[4].$now[3]==",
+					   'boundary2' => "==digest $now[6].$now[5].$now[4].$now[3]=="});
 
-	    # $msg = new Mail::Internet [<IN>];
-	    close(IN);
-	    
-	    foreach (@{$msg->header}){
-		push @msg::report, $_;
-	    }
-	    print "\n";
-	    foreach (@{$msg->body}){
-		push @msg::report, $_;
-	    }
-       }
-    }
-    push @msg::report, "\n------------------ END OF THE DIGEST --------------------------\n";
     do_log('info', 'MODINDEX %s from %s accepted (%d seconds)', $name,
 	   $sender,time-$time_command);
     

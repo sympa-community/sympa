@@ -45,7 +45,6 @@ Grazie per l'attenzione.\n\n\
 $set 6	Messages du module Commands.pm
 2	"Il file di guida non e' disponibile: %s\n"
 5	"La lista '%s' non esiste.\n"
-6	"Informazioni sulla lista %s:\n\n"
 7	"L'archivio di questa lista non contiene alcun file.\n"
 8	"Il file richiesto non e' disponibile.\n"
 9	"Questa lista e' chiusa: impossibile leggere l'archivio.\n"
@@ -190,7 +189,6 @@ mailto:%s?subject=DISTRIBUTE%%20%s%%20%s\n\n"
 mailto:%s?subject=REJECT%%20%s%%20%s\n"
 13	"Sommario"
 14	"Fine del riassunto della lista '%s'"
-15	"Ci sono %d messaggi da moderare per la lista '%s'"
 16	"Autenticazione richiesta"
 21	"FYI: %s lista %s da %s %s"
 22	"FYI: comando %s nella lista %s da %s %s \n (nessuna azione richiesta)\n"
@@ -235,8 +233,3 @@ $set 12 MIME headers
 3	"8bit"
 4	"SYMPA <%s>"
 
-$set 13	Messages for the header of moderation index
-1	"\t     Data                 : %s"
-2	"\t     Mittente             : %s"
-3	"\t     Dimensione           : %s\n"
-4	"\t     Chiave di moderazione: %s\n"

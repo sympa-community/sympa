@@ -276,12 +276,6 @@ $set 12 MIME headers
 3	"8bit"
 4	"SYMPA <%s>"
 
-$set 13	Messages for the header of moderation index
-1	"\t     Datum                : %s"
-2	"\t     Absender             : %s"
-3	"\t     Größe                : %s\n"
-4	"\t     Moderator-Schlüssel  : %s\n"
-
 $set 14 Pour le web
 1	"de_DE"
 2	"deutsch"

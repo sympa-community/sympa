@@ -224,7 +224,6 @@ Ou alors envoyez un mail à %s avec comme sujet :\n\
 CONFIRM %s\n"
 13	"Sommaire"
 14	"Fin de compilation de la liste %s"
-15	"Il y a %d messages à modérer pour la liste %s"
 16	"Authentification demandée"
 21	"Pour info %s liste %s de %s %s"
 22	"Pour Info, opération %s dans la liste %s de %s %s \n(aucune action requise)"
@@ -272,12 +271,6 @@ $set 12 Entêtes MIME
 2	"iso-8859-1"
 3	"8bit"
 4	"SYMPA <%s>"
-
-$set 13	Messages pour l'entête d'index de modération
-1	"\t     Date                 : %s"
-2	"\t     Expéditeur           : %s"
-3	"\t     Taille               : %s\n"
-4	"\t     Clef de modération   : %s\n"
 
 $set 14 Pour le web
 1	"fr_FR"

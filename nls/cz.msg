@@ -245,12 +245,6 @@ $set 12 MIME headers
 3	"8bit"
 4	"SYMPA <%s>"
 
-$set 13	Messages for the header of moderation index
-1	"\t     Datum                : %s"
-2	"\t     Odesílatel           : %s"
-3	"\t     Velikost             : %s\n"
-4	"\t     Klíè moderátora      : %s\n"
-
 $set 14 Pour le web
 1	"cs_CZ"
 2	"èe¹tina"
