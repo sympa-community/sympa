@@ -8424,15 +8424,15 @@ sub do_d_savefile {
 	 ($in{'mode_cancel'} eq undef)) {
 	 
 	 #access control for the file already existing
-     my %mode;
-     $mode{'edit'} = 1;
+	 my %mode;
+	 $mode{'edit'} = 1;
 	 my %access_file = &d_access_control(\%mode,"$path$fname");
 
 	 unless ($access_file{'may'}{'edit'} > 0) {
 	     &error_message('cannot_upload', {'path' => "$path$fname",
 					      'reason' => "access denied to the existing file "});
-	 return undef;
-     }
+	     return undef;
+	 }
 
 	 if (-e "$longtmpname"){
 	     # if exists a temp file younger than 5 minutes that belongs to another user : upload refused
@@ -8459,7 +8459,7 @@ sub do_d_savefile {
 	 $param->{'path'} = &format_path('without_slash',$path);
 	 $param->{'shortname'} = $fname;
 	 
-	 return 1;
+	 return 'd_read';
      }
      
      
