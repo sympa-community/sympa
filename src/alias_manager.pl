@@ -36,7 +36,7 @@ unless (Conf::load('--CONFIG--')) {
 }
 my $tmp_alias_file = $Conf{'tmpdir'}.'/sympa_aliases.'.time;
 
-my $alias_file = '--SENDMAIL_ALIASES--';
+
 my $alias_wrapper = '--MAILERPROGDIR--/aliaswrapper';
 my $lock_file = '--DIR--/alias_manager.lock';
 my $default_domain;
@@ -46,16 +46,18 @@ my $sympa_conf_file = '--CONFIG--';
 
 $ENV{'PATH'} = '';
 
-my ($operation, $listname, $domain) = @ARGV;
+my ($operation, $listname, $domain, $file) = @ARGV;
 
 
-if (($#ARGV != 2) 
-    || ($operation !~ /^(add)|(del)$/)) {
-    printf "Usage: $0 <add|del> <listname> <domain>\n";
+if ($operation !~ /^(add)|(del)$/) {
+    printf "Usage: $0 <add|del> <listname> <domain> [<file>]\n";
     exit(2);
 }
 
 $default_domain = $Conf{'domain'};
+
+my $alias_file = '--SENDMAIL_ALIASES--';
+$alias_file = $file if ($file);
 
 unless (-w "$alias_file") {
     print STDERR "Unable to access $alias_file";
@@ -64,6 +66,8 @@ unless (-w "$alias_file") {
     
 my %data;
 $data{'date'} =  &POSIX::strftime("%d %b %Y", localtime(time));
+
+
 $data{'list'}{'domain'} = $data{'robot'} = $domain;
 $data{'list'}{'name'} = $listname;
 $data{'default_domain'} = $default_domain;
@@ -98,15 +102,17 @@ if ($operation eq 'add') {
     close ALIAS;
 
     ## Newaliases
-    unless (system($alias_wrapper) == 0) {
-	print STDERR "Failed to execute newaliases: $!";
-	exit(6)
+    if ($alias_file eq '--SENDMAIL_ALIASES--') {
+	unless (system($alias_wrapper) == 0) {
+	    print STDERR "Failed to execute newaliases: $!";
+	    exit(6)
+	    }
     }
 
     ## Unlock
     flock LF, 8;
     close LF;
-    
+
 }elsif ($operation eq 'del') {
 
     ## Create a lock
@@ -167,11 +173,12 @@ if ($operation eq 'add') {
     unlink $tmp_alias_file;
 
     ## Newaliases
-    unless (system($alias_wrapper) == 0) {
-	print STDERR "Failed to execute newaliases: $!";
+    if ($alias_file eq '--SENDMAIL_ALIASES--') {
+	unless (system($alias_wrapper) == 0) {
+	    print STDERR "Failed to execute newaliases: $!";
 	exit (6);
+	}
     }
-
     ## Unlock
     flock LF, 8;
     close LF;
@@ -211,6 +218,4 @@ sub already_defined {
     close ALIAS ;
     return 0;
 }
-
-
 
