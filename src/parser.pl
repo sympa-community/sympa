@@ -23,7 +23,7 @@
 
 use FileHandle;
 
-my ($index, @t, $data, $internal, %known_files);
+my ($index, @t, $data, $internal, $previous_file);
 
 ## The main parsing sub
 sub parse_tpl {
@@ -34,12 +34,11 @@ sub parse_tpl {
 
     ## Reset loop cache unless recursive use
     unless ($recurse == 1) {
-	%known_files = ();
+	$previous_file = undef;
     }
 
     ## Prevent loops
-    $known_files{$template}++;
-    if ($known_files{$template} > 3) {
+    if ($previous_file eq $template) {
 	&do_log('err','Parser [%d] stopping loop with file %s', $index, $template);
 	return -1;
     }
@@ -103,8 +102,7 @@ sub do_include {
 
     &do_log('debug2','Parser [%d] do_include(%s)', $index, $file);
 
-    $known_files{$file}++;
-    if ($known_files{$file} > 3) {
+    if ($previous_file eq $file) {
 	&do_log('err','Parser [%d] stopping loop with file %s', $index, $file);
 	return -1;
     }
