@@ -1306,7 +1306,7 @@ sub load {
 		 || defined $self->{'admin'}{'include_ldap_2level_query'}
 #		 || defined $self->{'admin'}{'include_admin'}
 		 ) {
-	    &do_log('notice', 'Include paragraph missing in configuration file');
+	    &do_log('notice', 'Include paragraph missing in configuration file %s', "$self->{'dir'}/config");
 	    return undef;
 	}
 
