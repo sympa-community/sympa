@@ -168,16 +168,16 @@ sub mailfile {
 	   my $sympa_email = $data->{'conf'}{'sympa'} || &Conf::get_robot_conf($robot, 'sympa');
 	   $sympa_file = "$send_spool/T.$sympa_email.".time.'.'.int(rand(10000));
 	   
-	   unless (open TMP, ">$sympa_file") {
+	   unless (open TMPMSG, ">$sympa_file") {
 	       &do_log('notice', 'Cannot create %s : %s', $sympa_file, $!);
 	       return undef;
 	   }
 
-	   printf TMP "X-Sympa-To: %s\n", $rcpt;
-	   printf TMP "X-Sympa-From: %s\n", $data->{'return_path'};
-	   printf TMP "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($rcpt);
+	   printf TMPMSG "X-Sympa-To: %s\n", $rcpt;
+	   printf TMPMSG "X-Sympa-From: %s\n", $data->{'return_path'};
+	   printf TMPMSG "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($rcpt);
 	   
-	   $sendmail = \*TMP;
+	   $sendmail = \*TMPMSG;
        }else {
 	   
 	   if (ref ($rcpt)) {
@@ -201,12 +201,12 @@ sub mailfile {
    if ($sign_mode eq 'smime') {
        $tmp_file = $Conf{'tmpdir'}.'/sympa_mailfile_'.time.'.'.$$;
 
-       unless (open TMP, ">$tmp_file") {
+       unless (open TMPSMIME, ">$tmp_file") {
 	   &do_log('notice', 'Cannot create %s : %s', $tmp_file, $!);
 	   return undef;
        }
 
-       $fh = \*TMP;
+       $fh = \*TMPSMIME;
    }else {
        $fh = $sendmail;
    }
@@ -248,16 +248,6 @@ sub mailfile {
    }
    close ($fh);
    
-   if (defined $sympa_file) {
-       my $new_file = $sympa_file;
-       $new_file =~ s/T\.//g;
-
-       unless (rename $sympa_file, $new_file) {
-	   &do_log('notice', 'Cannot rename %s to %s : %s', $sympa_file, $new_file, $!);
-	   return undef;
-       }
-   }
-
    if ($sign_mode eq 'smime') {
        ## Open and parse the file   
        if (!open(MSG, $tmp_file)) {
@@ -288,6 +278,16 @@ sub mailfile {
 
    }
    
+   if (defined $sympa_file) {
+       my $new_file = $sympa_file;
+       $new_file =~ s/T\.//g;
+
+       unless (rename $sympa_file, $new_file) {
+	   &do_log('notice', 'Cannot rename %s to %s : %s', $sympa_file, $new_file, $!);
+	   return undef;
+       }
+   }
+
    return 1;
 }
 
