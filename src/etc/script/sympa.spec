@@ -21,7 +21,7 @@ Requires: perl-MIME-tools    >= 5.209
 Requires: perl-CGI    >= 2.52
 Requires: perl-DBI    >= 1.06
 Requires: perl-DB_File    >= 1.0
-Requires: perl-perl-ldap >= 0.10
+Requires: perl-ldap >= 0.10
 Requires: perl-CipherSaber >= 0.50
 ## Also requires a DBD for the DBMS 
 ## (perl-DBD-Pg or Perl- Msql-Mysql-modules)
