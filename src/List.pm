@@ -5270,6 +5270,12 @@ sub _load_total_db {
 	return undef;
     }
     
+    ## Use session cache
+    if (defined $list_cache{'load_total_db'}{$name}) {
+	&do_log('debug2', 'xxx Use cache(load_total_db, %s)', $name);
+	return $list_cache{'load_total_db'}{$name};
+    }
+
     my ($statement);
 
     ## Check database connection
@@ -5297,6 +5303,9 @@ sub _load_total_db {
     $sth->finish();
 
     $sth = pop @sth_stack;
+
+    ## Set session cache
+    $list_cache{'load_total_db'}{$name} = $total;
 
     return $total;
 }
