@@ -28,12 +28,8 @@ Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%
 [%|loc(param0)%]Refer to documentation to adapt %1.[%END%]
 [%|loc(param0)%]Until then we recommend your remove %1 ;
 default configuration will be used.[%END%]
-<<<<<<< listmaster_notification.tt2
 
 [% ELSIF type == 'sync_include_failed' -%]
-=======
-[% ELSIF type == 'sync_include_failed' -%]
->>>>>>> 1.5
 Subject: [% FILTER qencode %][%|loc(param0)%]subscribers update failed for list %1[%END%][%END%]
 
 [%|loc%]Sympa could not include subscribers from external data sources ; the
