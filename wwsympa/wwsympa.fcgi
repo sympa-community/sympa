@@ -2971,7 +2971,7 @@ sub do_add {
 	return undef;
     }
 
-    my $total = 0;
+    my ($total, @new_users);
     foreach my $email (keys %user) {
 
 	## Clean email
@@ -3013,18 +3013,13 @@ sub do_add {
 	    $u->{'password'} = $u2->{'password'} || &tools::tmp_passwd($email) ;
 	    $u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
 	    $u->{'subscribed'} = 1 if ($list->{'admin'}{'user_data_source'} eq 'include2');
-
-	    unless( $list->add_user($u)) {
-		&error_message('failed_add', {'user' => $email});
-		&wwslog('info','do_add: failed adding %s', $email);
-		next;
-	    }
+	    
+	    ##
+	    push @new_users, $u;
 	}
 
 	## Delete subscription request if any
 	$list->delete_subscription_request($email);
-	
-	$total++;
 	
 	unless ($in{'quiet'} || ($add_is =~ /quiet/i )) {
 	    my %context;
@@ -3034,6 +3029,12 @@ sub do_add {
 	}
     }
     
+    unless( $total = $list->add_user(@new_users)) {
+	&error_message('failed_add');
+	&wwslog('info','do_add: failed adding');
+	next;
+    }
+
     if ($total == 0) {
 	return undef;
     }else {
@@ -3084,7 +3085,7 @@ sub do_del {
 
     my @emails = split /\0/, $in{'email'};
 
-    my $del_count = 0;
+    my ($total, @removed_users);
 
     foreach my $email (@emails) {
 
@@ -3109,13 +3110,8 @@ sub do_del {
 
 
 	}else {
-	    unless( $list->delete_user($email)) {
-		&error_message('failed');
-		&wwslog('info','do_del: failed for %s', $email);
-		return undef;
-	    }
+	    push @removed_users, $email;
 	}
-	$del_count++;
 
 	if (-f "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email") {
 	    unless (unlink "$wwsconf->{'bounce_path'}/$param->{'list'}/$escaped_email") {
@@ -3135,10 +3131,16 @@ sub do_del {
 	    $list->send_file('removed', $email, $robot, \%context);
 	}
     }
+    
+    unless( $total = $list->delete_user(@removed_users)) {
+	&error_message('failed');
+	&wwslog('info','do_del: failed');
+	return undef;
+    }
 
     $list->save();
 
-    &message('performed') if ($del_count > 0);
+    &message('performed') if ($total > 0);
     $param->{'is_subscriber'} = 1;
     $param->{'may_signoff'} = 1;
     
@@ -5084,7 +5086,7 @@ sub do_edit_list {
 
 				if ($p->[$i]{$key}[$index] ne $new_p->[$i]{$key}[$index]) {
 				    
-				    if ($new_p->[$i]{$key}[$index] !~ /^$format$/) {
+				    if ($new_p->[$i]{$key}[$index] !~ /^$format$/i) {
 					push @syntax_error, $pname;
 				    }
 				    $changed{$pname} = 1; next;
@@ -5114,7 +5116,7 @@ sub do_edit_list {
 				    $format = $pinfo->{$pname}{'format'}{$key}{'file_format'};
 				}
 				
-				if ($new_p->[$i]{$key} !~ /^$format$/) {
+				if ($new_p->[$i]{$key} !~ /^$format$/i) {
 				    push @syntax_error, $pname;
 				}
 				
