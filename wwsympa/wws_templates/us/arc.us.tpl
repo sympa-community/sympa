@@ -90,7 +90,7 @@
 
         <TD>
         [IF year->08]
-	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-08/"><FONT SIZE="-1"><b>08</FONT></A>
+	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-08/"><FONT SIZE="-1"><b>08</B></FONT></A>
         [ELSE]
  	  <FONT SIZE="-1" COLOR="[bg_color]">08</FONT>
         [ENDIF]
@@ -114,7 +114,7 @@
 
         <TD>
         [IF year->11]
-	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-11/"><FONT SIZE="-1"><b>11</FONT></A>
+	  <A HREF="[path_cgi]/arc/[list]/[year->NAME]-11/"><FONT SIZE="-1"><b>11</B></FONT></A>
         [ELSE]
  	  <FONT SIZE="-1" COLOR="[bg_color]">11</FONT>
         [ENDIF]
