@@ -469,11 +469,11 @@ my %alias = ('reply-to' => 'reply_to',
 							    'occurrence' => '1',
 							    'title_id' => 47
 							    },
-						 'db_name' => {'format' => '\w+',
+						 'db_name' => {'format' => '\S+',
 							       'occurrence' => '1',
 							       'title_id' => 48 
 							       },
-						 'user' => {'format' => '\w+',
+						 'user' => {'format' => '\S+',
 							    'occurrence' => '1',
 							    'title_id' => 49
 							    },
