@@ -277,7 +277,6 @@ while (!$end) {
 		    &do_log('notice', 'Could not create %s: %s bounced die, check bounce-path in wwsympa.conf', $bounce_dir, $!);
 		    exit;
 		} 
-		chmod 0777, $bounce_dir;
 	    }
  
 	    my $adr_count;
@@ -314,7 +313,6 @@ while (!$end) {
 		print ARC <BOUNCE>;
 		close BOUNCE;
 		close ARC;
-		chmod 0777, "$bounce_dir/$escaped_rcpt";
 
 		## History
 		my $first = my $last = time;
@@ -347,7 +345,6 @@ while (!$end) {
 			&do_log('notice', 'Could not create %s: %s', "$bounce_dir/OTHER", $!);
 			next;
 		    }
-		    chmod 0777,"$bounce_dir/OTHER";
 		}
 		
 		## Original msg
@@ -365,7 +362,6 @@ while (!$end) {
 		    print ARC <BOUNCE>;
 		    close BOUNCE;
 		    close ARC;
-		    chmod 0777, '$bounce_dir/OTHER/$escaped_from';
 		}else {
 		    &do_log('notice', "Failed to write $bounce_dir/OTHER/$escaped_from");
 		}
