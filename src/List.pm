@@ -185,7 +185,6 @@ currently selected descriptor.
 use Carp;
 
 use Mail::Header;
-use Mail::Internet;
 use Archive;
 use Language;
 use Log;

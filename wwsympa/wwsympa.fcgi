@@ -3560,21 +3560,20 @@ sub do_redirect {
 	 my $id = $1;
 
 	 ## Load msg
-	 unless (open MSG, "$Conf{'queuemod'}/$msg") {
+	 my $mail = new Message("$Conf{'queuemod'}/$msg");
+	 
+	 unless (defined $mail) {
 	     &error_message('msg_error');
-	     &wwslog('err','do_modindex: unable to read msg %s', $msg);
+	     &wwslog('err','do_modindex: unable to parse msg %s', $msg);
 	     closedir SPOOL;
 	     return 'admin';
 	 }
 
-	 my $mail = new Mail::Internet [<MSG>];
-	 close MSG;
-
 	 $param->{'spool'}{$id}{'size'} = int( (-s "$Conf{'queuemod'}/$msg") / 1024 + 0.5);
-	 $param->{'spool'}{$id}{'subject'} =  &MIME::Words::decode_mimewords($mail->head->get('Subject'));
+	 $param->{'spool'}{$id}{'subject'} =  &MIME::Words::decode_mimewords($mail->{'msg'}->head->get('Subject'));
 	 $param->{'spool'}{$id}{'subject'} ||= 'no_subject';
-	 $param->{'spool'}{$id}{'date'} = $mail->head->get('Date');
-	 $param->{'spool'}{$id}{'from'} = &MIME::Words::decode_mimewords($mail->head->get('From'));
+	 $param->{'spool'}{$id}{'date'} = $mail->{'msg'}->head->get('Date');
+	 $param->{'spool'}{$id}{'from'} = &MIME::Words::decode_mimewords($mail->{'msg'}->head->get('From'));
 	 foreach my $field ('subject','date','from') {
 	     $param->{'spool'}{$id}{$field} =~ s/</&lt;/;
 	     $param->{'spool'}{$id}{$field} =~ s/>/&gt;/;
