@@ -9666,6 +9666,11 @@ sub do_arc_download {
     
     #for each selected month
     foreach my $dir (split/\0/, $in{'directories'}) {
+	## Tainted vars problem
+	if  ($dir =~ /^(\d+\-\d+)$/) {
+	    $dir = $1;
+	}
+
 	my $abs_dir = ($wwsconf->{'arc_path'}.'/'.$in{'list'}.'@'.$param->{'host'}.'/'.$dir.'/arctxt');
 	##check arc directory
 	unless (-d $abs_dir) {
@@ -9673,8 +9678,27 @@ sub do_arc_download {
 	    &wwslog('info','archive %s not found',$dir);
 	    next;
 	}
+	
+	$zip->addDirectory($abs_dir, $in{'list'}.'_'.$dir);
+
+	unless (opendir SPOOL, $abs_dir) {
+	    &error_message('failed');
+	    &wwslog('info','do_arc_download: unable to open %s', $abs_dir);
+	    return 'undef';
+	}
+	
+	foreach my $msg (sort grep(!/^\./, readdir SPOOL)) { 
+	    unless ($zip->addFile ($abs_dir.'/'.$msg, $in{'list'}.'_'.$dir.'/'.$msg)) {
+		&error_message('failed');
+		&wwslog('info','do_arc_download: failed to add %s file to archive', $abs_dir.'/'.$msg);
+		return 'undef';
+	    }	   
+	}
+
+	closedir SPOOL;
+
 	## create and fill a new folder in zip
-	$zip->addTree ($abs_dir, $in{'list'}.'_'.$dir);                           
+	#$zip->addTree ($abs_dir, $in{'list'}.'_'.$dir);                           
     }
     
     ## check if zip isn't empty
@@ -9699,9 +9723,7 @@ sub do_arc_download {
 	&wwslog ('info', 'Error while reading Zip File %s\n',$zip_file_name);
 	return undef;
     }
-    while (<ZIP>) {
-	printf $_;
-    }
+    print <ZIP>;
     close ZIP ;
     
     ## remove zip file from server disk
