@@ -140,6 +140,7 @@ my %comm = ('home' => 'do_home',
 	 'arc' => 'do_arc',
 	 'remove_arc' => 'do_remove_arc',
 	 'arcsearch_form' => 'do_arcsearch_form',
+     'arcsearch_id' => 'do_arcsearch_id',
 	 'arcsearch' => 'do_arcsearch',
 	 'rebuildarc' => 'do_rebuildarc',
 	 'rebuildallarc' => 'do_rebuildallarc',
@@ -209,6 +210,7 @@ my %action_args = ('default' => ['list'],
 		'reviewbouncing' => ['list','page','size'],
 		'arc' => ['list','month','arc_file'],
 		'arcsearch_form' => ['list','archive_name'],
+        'arcsearch_id' => ['list','archive_name','key_word'],
 		'rebuildarc' => ['list','month'],
 		'rebuildallarc' => [],
 		'home' => [],
@@ -3204,6 +3206,77 @@ sub do_arcsearch {
     
     $param->{'res'} = $search->res;
     
+    return 1;
+}
+
+## Search message-id in web archives
+sub do_arcsearch_id {
+    &wwslog('debug', 'do_arcsearch_id(%s)', $param->{'list'});
+
+    unless ($param->{'list'}) {
+        $param->{'error'}{'argument'} = 'list';
+    &message('missing_argument');
+        &wwslog('info','do_arcsearch_id: no list');
+        return undef;
+    }
+
+    ## Access control
+    unless (&List::request_action ('web_archive.access',$param->{'auth_method'},
+                   {'listname' => $param->{'list'},
+                    'sender' => $param->{'user'}{'email'},
+                    'remote_host' => $param->{'remote_host'},
+                    'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/i) {
+        $param->{'error'}{'action'} = 'arcsearch_id';
+    &message('may_not');
+        &wwslog('info','do_arcsearch_id: access denied for %s', $param->{'user'}{'email'});
+        return undef;
+    }
+
+    use Marc::Search;
+
+    my $search = new Marc::Search;
+    $search->search_base ($wwsconf->{'arc_path'} . '/' . $param->{'list'} . '@' . $param->{'host'});
+    $search->base_href ($param->{'base_url'}.$param->{'path_cgi'} . '/arc/' . $param->{'list'});
+
+    $search->archive_name ($in{'archive_name'});
+
+    $search->directories ($search->archive_name);
+
+    ## User didn't enter any search terms
+    if ($in{'key_word'} =~ /^\s*$/) {
+        $param->{'error'}{'argument'} = 'key_word';
+    &message('missing_argument');
+        &wwslog('info','do_arcsearch_id: no search term');
+    return undef;
+    }
+
+    $param->{'key_word'} = $in{'key_word'};
+    $in{'key_word'} =~ s/\@/\\\@/g;
+
+    $search->limit (1);
+
+    my @words = split(/\s+/,$in{'key_word'});
+    $search->words (\@words);
+    $search->clean_words ($in{'key_word'});
+    my @clean_words = @words;
+
+    $search->key_word (join('|',@words));
+
+    $search->function2 ($search->match_this(@words));
+
+    $search->id (1);
+
+    my $searched = $search->search;
+
+    if (defined($search->error)) {
+    &wwslog('info','do_arcsearch_id_search_error : %s', $search->error);
+    }
+
+    $search->searched($searched);
+
+    $param->{'res'} = $search->res;
+    $param->{'redirect_to'} = $param->{'res'}[0]{'file'};
+
     return 1;
 }
 

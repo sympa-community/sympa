@@ -28,6 +28,8 @@ my %fields =
    function1        => undef,
    function2        => undef,
    how              => undef,
+   id               => undef,
+   id_count         => 0,
    key_word         => undef,
    limit            => 25,
    match            => 0,
@@ -59,6 +61,13 @@ sub body_count
   return $self->{body_count} += $count;
 }
 
+sub id_count
+{
+  my $self = shift;
+  my $count = shift || 0;
+  return $self->{id_count} += $count;
+}
+
 sub date_count
 {
   my $self = shift;
@@ -86,7 +95,7 @@ sub subj_count
 
 sub _find_match 
 {
-  my($self,$file,$subj,$from,$date,$body_ref) = @_;
+  my($self,$file,$subj,$from,$date,$id,$body_ref) = @_;
   my $body_string = '';
   my $match       = 0;
   my $res         = undef;
@@ -110,6 +119,13 @@ sub _find_match
     {
       $date =~ s,($self->{key_word}),<B>$1</B>,go;
       $self->date_count(1);
+      $match = 1;
+    }
+  # Check for a match in id
+  if (($self->id) && ($_ = $id) && (&{$self->{function2}}))
+    {
+      $id =~ s,($self->{key_word}),<B>$1</B>,go;
+      $self->id_count(1);
       $match = 1;
     }
   # Is this a full?
@@ -175,6 +191,7 @@ sub _find_match
 		$file =~ s,$self->{'search_base'},$self->{'base_href'},;
 		$res->{'file'} = $file;
 		$res->{'body_string'} = $body_string;
+        $res->{'id'} = $id;
      	$res->{'date'} = $date;
      	$res->{'from'} = $from;
      	$res->{'subj'} = $subj;
@@ -222,7 +239,7 @@ sub search
 	$limit += $previous;
 	foreach $file (@MSGFILES) 
 	{
-		my ($subj,$from,$date,$body_ref);
+		my ($subj,$from,$date,$id,$body_ref);
 		unless (open FH, "<$file")
 		{
 #			$self->error("Couldn't open file $file, $!");
@@ -247,6 +264,7 @@ sub search
 		($from = <FH>) =~ s/^<!--X-From-R13: (.*) -->/$1/;
 		$from =~ tr/N-Z[@A-Mn-za-m/@A-Z[a-z/;
 		($date = <FH>) =~ s/^<!--X-Date: (.*) -->/$1/;
+        ($id = <FH>) =~ s/^<!--X-Message-Id: (.*) -->/$1/;
 		if ($body)
 		{
 			while (<FH>) 
@@ -267,13 +285,14 @@ sub search
 #            $self->error("Couldn't close file $file, $!");
 		}
 
-		if ($self->_find_match($file,$subj,$from,$date,$body_ref))
+		if ($self->_find_match($file,$subj,$from,$date,$id,$body_ref))
 		{
 			return ($i + $previous)	
 			if (   $self->body_count == $limit 
 			or $self->subj_count == $limit 
 			or $self->from_count == $limit 
-			or $self->date_count == $limit);
+			or $self->date_count == $limit
+            or $self->id_count == $limit);
 		}
 		$i++;
 	}
