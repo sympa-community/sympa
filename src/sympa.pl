@@ -207,7 +207,7 @@ if ($signal ne 'hup' ) {
     $< = $> = (getpwnam('--USER--'))[2];
 
     # Sets the UMASK
-    umask($Conf{'umask'});
+    umask(oct($Conf{'umask'}));
 
  ## Most initializations have now been done.
     do_log('notice', "Sympa $Version started");

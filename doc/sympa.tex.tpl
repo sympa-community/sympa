@@ -1456,6 +1456,7 @@ see a  nice mailto adresses where others have nothing.
 	\default {027}
 
         Default mask for file creation (see \unixcmd {umask}(2)).
+	Note that it will be interpreted as an octual value.
 
         \example {umask 007}
 

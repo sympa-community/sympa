@@ -104,7 +104,7 @@ $< = $> = (getpwnam('--USER--'))[2];
 
 
 ## Sets the UMASK
-umask($Conf{'umask'});
+umask(oct($Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf{'home'})) {

@@ -445,7 +445,7 @@ while ($query = &new_loop()) {
     }
 
     ## Sets the UMASK
-    umask($Conf{'umask'});
+    umask(oct($Conf{'umask'}));
 
     ## Authentication 
     ## use https client certificat information if define.  
