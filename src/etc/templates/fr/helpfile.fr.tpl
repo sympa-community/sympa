@@ -33,7 +33,9 @@ Les commandes disponibles sont :
 
  SET <list|*> NOMAIL         * Suspendre la réception des messages de <list>
  SET <list|*> MAIL           * Recevoir les messages en mode normal
- SET <list|*> DIGEST         * Recevoir les messages en mode compilation
+ SET <list|*> DIGEST         * Recevoir une compilation des messages
+ SET <list|*> DIGESTPLAIN    * Recevoir une compilation des messages, en mode texte,
+	                       sans les attachements
  SET <list|*> SUMMARY        * Recevoir la liste des messages uniquement
  SET <list|*> NOTICE         * Recevoir l'objet des message uniquement
 

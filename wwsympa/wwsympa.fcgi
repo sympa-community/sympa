@@ -692,7 +692,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
          $param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || 
 	     $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
          &Language::SetLang($param->{'lang'});
-         &POSIX::setlocale(&POSIX::LC_ALL, Msg(14, 1, 'en_US'));
 
          ## use default_home parameter
          if ($action eq 'home') {

@@ -194,8 +194,10 @@ use Ldap;
 use Time::Local;
 use MIME::Entity;
 use MIME::Words;
+use MIME::WordDecoder;
 use MIME::Parser;
 use Message;
+use PlainDigest;
 
 ## Database and SQL statement handlers
 my ($dbh, $sth, $db_connected, @sth_stack, $use_db, $include_lock_count);
@@ -299,10 +301,10 @@ my %alias = ('reply-to' => 'reply_to',
 				    'title_id' => 212,
 				    'group' => 'archives'
 				    },
-	    'available_user_options' => {'format' => {'reception' => {'format' => ['mail','notice','digest','summary','nomail','txt','html','urlize','not_me'],
+        'available_user_options' => {'format' => {'reception' => {'format' => ['mail','notice','digest','digestplain','summary','nomail','txt','html','urlize','not_me'],
 								      'occurrence' => '1-n',
 								      'split_char' => ',',
-								      'default' => 'mail,notice,digest,summary,nomail,txt,html,urlize,not_me',
+                                      'default' => 'mail,notice,digest,digestplain,summary,nomail,txt,html,urlize,not_me',
 								      'title_id' => 89
 								      }
 						  },
@@ -413,7 +415,7 @@ my %alias = ('reply-to' => 'reply_to',
 				 'title_id' => 17,
 				 'group' => 'sending'
 				 },
-	    'default_user_options' => {'format' => {'reception' => {'format' => ['digest','mail','nomail','summary','notice','txt','html','urlize','not_me'],
+        'default_user_options' => {'format' => {'reception' => {'format' => ['digest','digestplain','mail','nomail','summary','notice','txt','html','urlize','not_me'],
 								    'default' => 'mail',
 								    'title_id' => 19,
 								    'order' => 1
@@ -1665,6 +1667,10 @@ sub send_notify_to_listmaster {
     ## creation list requested
     }elsif ($operation eq 'request_list_creation') {
 	my $list = new List $param[0];
+	unless (defined $list) {
+	    &do_log('err','Parameter %s is not a valid list', $param[0]);
+	    return undef;
+	}
 	my $host = &Conf::get_robot_conf($robot, 'host');
 
 	$list->send_file('listmaster_notification', &Conf::get_robot_conf($robot, 'listmaster'), $robot,
@@ -2266,7 +2272,7 @@ sub send_msg {
 	    next;
 	}
 
-	if ($user->{'reception'} =~ /^digest|summary|nomail$/i) {
+    if ($user->{'reception'} =~ /^digest|digestplain|summary|nomail$/i) {
 	    next;
 	}elsif ($user->{'reception'} eq 'not_me'){
 	    push @tabrcpt, $user->{'email'} unless ($sender_hash{$user->{'email'}});
@@ -2544,7 +2550,7 @@ sub add_parts {
     return $msg;
 }
 
-## Send a digest message to the subscribers with reception digest or summary
+## Send a digest message to the subscribers with reception digest, digestplain or summary
 sub send_msg_digest {
     my ($self) = @_;
 
@@ -2569,11 +2575,12 @@ sub send_msg_digest {
     
     my @tabrcpt ;
     my @tabrcptsummary;
+    my @tabrcptplain;
     my $i;
     
     my ($mail, @list_of_mail);
 
-    ## Create the list of subscribers in digest mode
+    ## Create the list of subscribers in various digest modes
     for (my $user = $self->get_first_user(); $user; $user = $self->get_next_user()) {
 	if ($user->{'reception'} eq "digest") {
 	    push @tabrcpt, $user->{'email'};
@@ -2581,10 +2588,12 @@ sub send_msg_digest {
 	}elsif ($user->{'reception'} eq "summary") {
 	    ## Create the list of subscribers in summary mode
 	    push @tabrcptsummary, $user->{'email'};
+        
+    }elsif ($user->{'reception'} eq "digestplain") {
+        push @tabrcptplain, $user->{'email'};              
 	}
     }
-    
-    if (($#tabrcptsummary == -1) and ($#tabrcpt == -1)) {
+    if (($#tabrcptsummary == -1) and ($#tabrcpt == -1) and ($#tabrcptplain == -1)) {
 	&do_log('info', 'No subscriber for sending digest in list %s', $listname);
 	return 0;
     }
@@ -2606,6 +2615,9 @@ sub send_msg_digest {
 
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
+    $parser->extract_uuencode(1);  
+    $parser->extract_nested_messages(1);
+#   $parser->output_dir($Conf{'spool'} ."/tmp");    
 	$mail = $parser->parse_data(\@text);
 
 	push @list_of_mail, $mail;
@@ -2617,23 +2629,26 @@ sub send_msg_digest {
     ## Deletes the introduction part
     splice @list_of_mail, 0, 1;
 
-    my @topics;
-    push @topics, sprintf(Msg(8, 13, "Table of content"));
-    push @topics, sprintf(" :\n\n");
-
     ## Digest index
     foreach $i (0 .. $#list_of_mail){
 	my $mail = $list_of_mail[$i];
 	my $subject = &MIME::Words::decode_mimewords($mail->head->get('Subject'));
 	chomp $subject;
+	my $from = &MIME::Words::decode_mimewords($mail->head->get('From'));
+	chomp $from;    
+
         my $msg = {};
 	$msg->{'id'} = $i+1;
         $msg->{'subject'} = $subject;	
-        $msg->{'from'} = &MIME::Words::decode_mimewords($mail->head->get('From'));
+	$msg->{'from'} = $from;
+	$msg->{'date'} = $mail->head->get('Date');
+	chomp $msg->{'date'};
+
 	#$mail->tidy_body;
 	$mail->remove_sig;
 	$msg->{'full_msg'} = $mail->as_string;
 	$msg->{'body'} = $mail->body_as_string;
+	$msg->{'plain_body'} = $mail->PlainDigest::plain_body_as_string();
 	#$msg->{'body'} = $mail->bodyhandle->as_string();
 	chomp $msg->{'from'};
 	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
@@ -2644,32 +2659,32 @@ sub send_msg_digest {
 	$msg->{'message_id'} = &tools::escape_chars($msg->{'message_id'});
 
         push @{$param->{'msg_list'}}, $msg ;
-
-	push @topics, sprintf ' ' x (2 - length($i)) . "%d. %s", $i+1, $subject;
+	
     }
     
+    my @now  = localtime(time);
+    $param->{'datetime'} = sprintf "%s", POSIX::strftime("%a, %d %b %Y %H:%M:%S", @now);
+    $param->{'date'} = sprintf "%s", POSIX::strftime("%a, %d %b %Y", @now);
+
     ## Prepare Digest
     if (@tabrcpt) {
-	
-	my @now  = localtime(time);
-	$param->{'date'} = sprintf "%s", POSIX::strftime("%a %b %e %H:%M:%S %Y", @now);
-	
-#	## Add a footer
-#	my $new_msg = $self->add_parts($msg);
-#	if (defined $new_msg) {
-#	    $msg = $new_msg;
-#	}
-
 	## Send digest
 	$self->send_file('digest', \@tabrcpt, $robot, $param);
     }    
 
+    ## Prepare Plain Text Digest
+    if (@tabrcptplain) {
+        ## Send digest-plain
+        $self->send_file('digest_plain', \@tabrcptplain, $robot, $param);
+    }    
+    
+
     ## send summary
     if (@tabrcptsummary) {
 	$param->{'subject'} = sprintf Msg(8, 31, 'Summary of list %s'), $self->{'name'};
-	
 	$self->send_file('summary', \@tabrcptsummary, $robot, $param);
     }
+    
     return 1;
 }
 
@@ -2780,7 +2795,7 @@ sub send_file {
     $data->{'return_path'} ||= "$name-owner\@$self->{'admin'}{'host'}";
 
     ## Lang
-    my $lang = $data->{'user'}{'lang'} || $self->{'lang'} || &Conf::get_robot_conf($robot, 'lang');
+    my $lang = $data->{'user'}{'lang'} || $self->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
     foreach my $f ("$self->{'dir'}/$action.$lang.tpl",

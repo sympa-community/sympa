@@ -34,6 +34,9 @@ Available commands are:
 
  SET <list|*> NOMAIL         * To suspend the message reception for <list>
  SET <list|*> DIGEST         * Message reception in compilation mode
+ SET <list|*> DIGESTPLAIN    * Message reception in compilation mode,
+                               sent as a plain text email with all attachments 
+                               stripped
  SET <list|*> SUMMARY        * Receiving the message index only
  SET <list|*> NOTICE         * Receiving message subject only
 

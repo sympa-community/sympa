@@ -27,7 +27,8 @@ bin_SRC		=	queue bouncequeue
 
 lib_SRC		=	Archive.pm Commands.pm Conf.pm CAS.pm \
 			Language.pm List.pm Log.pm mail.pm msg.pl Ldap.pm \
-			smtp.pm tools.pl Version.pm parser.pl X509.pm Message.pm
+			smtp.pm tools.pl Version.pm parser.pl X509.pm Message.pm \
+			PlainDigest.pm
 
 libexec_SRC	=	aliaswrapper virtualwrapper
 

@@ -192,6 +192,16 @@ Si vous ne souhaitez pas que l'action soit entreprise, ignorez simplement\n\
 ce message.\n"
 262	"Signature S/MIME correctement vérifiée"
 263	"Message non signé ou signature non reconnue (attention, Sympa ne peut\n verifier une signature S/MIME pour une commande dans l'entête Subject:)"
+301 "\n[Message joint ci-dessous]\n-----Message original-----\n"
+302 "-----Fin du message de %s-----\n\n"
+303 "[** Attention: Cette partie utilisait initialement l'encodage %s\n\
+    Certains caractères ont pu être perdus ou corrompus **]\n\n"
+304 "\n[Un attachement de type %s a été supprimé]\n"
+305 "\n-----Rapport de non-remise-----\n"
+306 "-----Fin du rapport de non-remise-----\n"
+307 "[Texte converti depuis le format HTML]\n"
+308 "[Image%s]"
+309 "\n[** Impossible de traiter cette une HTML **]\n"
 
 $set 7	Messages syslog des commandes (Commands.pm)
 

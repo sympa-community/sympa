@@ -1497,7 +1497,7 @@ sub set {
     my ($which, $mode) = ($1, $2);
 
     ## Unknown command (should be checked....)
-    unless ($mode =~ /^(digest|nomail|normal|each|mail|conceal|noconceal|summary|notice|txt|html|urlize)$/i) {
+    unless ($mode =~ /^(digest|digestplain|nomail|normal|each|mail|conceal|noconceal|summary|notice|txt|html|urlize)$/i) {
 	push @msg::report, sprintf "Unknown command.\n";
 	return 'syntax_error';
     }
@@ -1545,13 +1545,13 @@ sub set {
     }
     
     ## May set to DIGEST
-    if ($mode =~ /^(digest|summary)/ and !$list->is_digest()){
+    if ($mode =~ /^(digest|digestplain|summary)/ and !$list->is_digest()){
 	push @msg::report, sprintf Msg(6, 45, "List %s has no digest mode. Your configuration hasn't been modified.\n"), $which;
 	do_log('info', 'SET %s DIGEST from %s refused, no digest mode', $which, $sender);
 	return 'not_allowed';
     }
     
-    if ($mode =~ /^(mail|nomail|digest|summary|notice|txt|html|urlize|not_me)/){
+    if ($mode =~ /^(mail|nomail|digest|digestplain|summary|notice|txt|html|urlize|not_me)/){
         # Verify that the mode is allowed
         if (! $list->is_available_reception_mode($mode)) {
 	  push @msg::report, sprintf Msg(6, 90, "List %s allows only these reception modes : %s\nYour configuration hasn't been modified.\n"), $which, $list->available_reception_mode;

@@ -14,6 +14,13 @@ sein d'un message au format MIME multipart/digest.
 <BR><BR>
 La périodicité d'envoi des compilation est définie par le gestionnaire de la liste.<BR><BR>
 	
+<LI>Digestplain<BR>
+Similaire à l'option Digest puisqu'il s'agit d'une compilation périodique des messages. Dans ce
+mode la compilation est au format texte simple . les attachements ont été extraits. Ce mode 
+d'abonnement est utile si votre logiciel de messagerie ne lit pas correctement les messages au
+format multipart/digest.
+<BR><BR>
+
 <LI>Summary<BR> 
 
 Comme pour le mode <I>digest</I> vous recevrez une compilation de la liste des messages.

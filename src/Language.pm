@@ -142,6 +142,9 @@ sub SetLang {
     }
 	    
     $current_lang = $lang;
+
+    &POSIX::setlocale(&POSIX::LC_ALL, Msg(14, 1, 'en_US'));
+
     return 1;
 }#SetLang
 

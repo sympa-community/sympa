@@ -37,6 +37,7 @@ use Conf;
 
 %reception_mode = ('mail' => 'normal',
 		   'digest' => 'digest',
+           'digestplain' => 'digestplain',
 		   'summary' => 'summary',
 		   'notice' => 'notice',
 		   'txt' => 'txt',

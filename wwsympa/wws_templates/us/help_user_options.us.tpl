@@ -13,6 +13,14 @@ receive batched messages in a Digest. This Digest compiles a group of messages f
 the multipart/digest MIME format. 
 <BR><BR>
 The sending interval for these Digests is defined by the list owner.<BR><BR>
+
+<LI>DigestPlain<BR>
+Similar to the Digest option in that the subscriber will periodically 
+receive batched messages in a Digest. With DigestPlain the Digest is sent in a plain text 
+format, with all attachments stripped out. DigestPlain is useful if your email software doesn't
+display multipart/digest format messages well.
+<BR><BR>
+The sending interval for these Digests is defined by the list owner.<BR><BR>
 	
 <LI>Summary<BR> 
 

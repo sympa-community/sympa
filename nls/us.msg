@@ -192,6 +192,16 @@ If you do not want this action to be taken, you can safely ignore\n\
 this message."
 262	"Your message signature was succesfuly verified using S/MIME"
 263	"Your message was not a multipart/signed message or Sympa could not\nverify the signature (be aware that Sympa can't check signature if you use the subject header to write a command)."
+301 "\n[Attached message follows]\n-----Original message-----\n"
+302 "-----End of original message from %s-----\n\n"
+303 "[** Warning: Message part originally used character set %s\n\
+    Some characters may be lost or incorrect **]\n\n"
+304 "\n[An attachment of type %s was included here]\n"
+305 "\n-----Delivery Status Report-----\n"
+306 "-----End of Delivery Status Report-----\n"
+307 "[Text converted from HTML]\n"
+308 "[Image%s]"
+309 "\n[** Unable to process HTML message part **]\n"
 
 $set 7	Commands syslog messages (Commands.pm)
 

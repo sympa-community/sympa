@@ -16,8 +16,8 @@
         The available_user_options parameter starts a paragraph to define available
         options for the subscribers of the list.<BR><BR>
         <UL>
-          <LI>reception <i>modelist</i> (Default value: reception mail,notice,digest,summary,nomail)<BR><BR>
-              <i>modelist</i> is a list of modes (mail, notice, digest, summary, nomail), separated
+          <LI>reception <i>modelist</i> (Default value: reception mail,notice,digest,digestplain,summary,nomail)<BR><BR>
+              <i>modelist</i> is a list of modes (mail, notice, digest, digestplain, summary, nomail), separated
               by commas. Only these modes will be allowed for the subscribers of this list.
               If a subscriber has a reception mode not in the list, sympa uses the mode
               specified in the default_user_options paragraph.
@@ -106,9 +106,10 @@
         This parameter specifies who is authorized to use the DEL command.
       [ELSIF p->NAME=digest]
         Definition of digest mode. If this parameter is present, subscribers can select
-        the option of receiving messages in multipart/digest MIME format. Messages are then
+        the option of receiving messages in multipart/digest MIME format, or as a plain text
+        digest. Messages are then
         grouped together, and compilations of messages are sent to subscribers in accordance
-        with the rythm selected with this parameter. 
+        with the rhythm selected with this parameter. 
       [ELSIF p->NAME=editor]
         Editors are responsible for moderating messages. If the mailing list is
         moderated, messages posted to the list will first be passed to the editors, 

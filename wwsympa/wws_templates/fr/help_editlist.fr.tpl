@@ -164,6 +164,7 @@ diffamatoire. Vous pourrez interdire la consultation des archives jusqu'au retra
   Définit quelles sont les options de réception disponibles pour cette
 liste :<br>
   - digest : Ne recevoir que la compilation périodique de la liste.<br>
+  - digestplain : Recevoir la compilation en mode texte, sans les attachements.<BR>
   - mail : Recevoir tous les mails individuels transmis par la liste.<br>
   - nomail : Ne RIEN recevoir du tout.<br>
   - notice : Etre uniquement informé des sujets des messages qui passent sur la
