@@ -1594,12 +1594,12 @@ sub confirm {
     my $action = &List::get_action ('send',$name,$sender,'md5',$hdr);
     
     if ($action =~ /^editorkey/) {
-	my $key = $list->send_to_editor('md5',$msg);
+	my $key = $list->send_to_editor('md5', $msg, $file, 'not_crypted');
 	do_log('info', 'Key %s for list %s from %s sent to editors', $key, $name, $sender);
 	$list->notify_sender($sender);
 	return 1;
     }elsif($action =~ /editor/){
-	my $key = $list->send_to_editor('smtp',$msg);
+	my $key = $list->send_to_editor('smtp', $msg, $file, 'not_crypted');
 	do_log('info', 'Message for %s from %s sent to editors', $name, $sender);
 	$list->notify_sender($sender);
 	return 1;

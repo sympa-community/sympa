@@ -770,7 +770,7 @@ sub DoMessage{
 	$list->notify_sender($sender) unless ($2 eq 'quiet');
 	return 1;
     }elsif($action =~ /^editor(\s?,\s?(quiet))?/){
-	my $key = $list->send_to_editor('smtp',$msg);
+	my $key = $list->send_to_editor('smtp', $msg, $file, $encrypt);
 	do_log('info', 'Message for %s from %s sent to editors', $name, $sender);
 	$list->notify_sender($sender) unless ($2 eq 'quiet');
 	return 1;
