@@ -950,6 +950,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $msg = "[client $remote] ".$msg
 	 if $remote;
 
+     $msg = "[robot $robot] ".$msg;
+
      return &Log::do_log($facility, $msg, @_);
  }
 
