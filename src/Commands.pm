@@ -1651,7 +1651,7 @@ sub distribute {
 	    $is_crypted = 'smime_crypted';
 	    $file = '_ALTERED_';
 	    do_log('debug2','xxxxxxxxxxxxxxxxxxxxxxxx is crypted');
-	    unless ($msg = &tools::smime_decrypt ($msg,$list->{'name'})) {
+	    unless ($msg = &tools::smime_decrypt ($msg,$list)) {
 		do_log('debug2','unable to decrypt message');
 		## xxxxx traitement d'erreur ?
 		return undef;
