@@ -61,6 +61,7 @@ if (($operation !~ /^(add)|(del)$/) || ($#ARGV < 2)) {
 $default_domain = $Conf{'domain'};
 
 my $alias_file = '--SENDMAIL_ALIASES--';
+$alias_file = $Conf{'sendmail_alias'} if ($Conf{'sendmail_alias'});
 $alias_file = $file if ($file);
 
 unless (-w "$alias_file") {

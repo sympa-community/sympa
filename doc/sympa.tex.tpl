@@ -1044,7 +1044,7 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 \item \option {--with-group=LOGIN}, set sympa group name (default sympa)\\
 \Sympa daemons are running under this UID.
 
-\item \option {--with-sendmail\_aliases=ALIASFILE}, set aliases file to be used by Sympa (default /etc/mail/sympa\_aliases)\\
+\item \option {--with-sendmail\_aliases=ALIASFILE}, set aliases file to be used by Sympa (default /etc/mail/sympa\_aliases). (You can overright this value at runtime giving its value in \file {sympa.conf})\\
 
 \item \option {--with-virtual\_aliases=ALIASFILE}, set postfix virtual file to be used by Sympa (default /etc/mail/sympa\_virtual)\\
 
@@ -1399,8 +1399,8 @@ The script expects the following arguments :
 \end{enumerate}
 Example : \file {[BINDIR]/alias\_manager.pl add \samplelist cru.fr}
 
-\file {[BINDIR]/alias\_manager.pl} works on the alias file as defined
-by the \textindex{SENDMAIL\_ALIASES} variable (default is \file {/etc/mail/sympa\_aliases}) in the main Makefile (see \ref {makefile},  page~\pageref {makefile}). You must refer to this aliases file in your \file {sendmail.cf} (if using sendmail) :
+\file {[BINDIR]/alias\_manager.pl} works on the alias file as defined in \file {sympa.conf})
+by the \textindex{SENDMAIL\_ALIASES} variable (default is \file {/etc/mail/sympa\_aliases}) in the main Makefile (see \ref {makefile},  page~\pageref {makefile}). You must refer to this aliases file in your \file {sendmail.mc} (if using sendmail) :
 \begin {quote}
 \begin{verbatim}
 define(`ALIAS_FILE', `/etc/aliases,/etc/mail/sympa_aliases')dnl
@@ -1735,6 +1735,12 @@ see a  nice mailto adresses where others have nothing.
 	\default {-oi -odi -oem}
 
         Arguments passed to SMTP message transfer agent
+
+\subsection {\cfkeyword {sendmail\_alias}} 
+
+	\default {defined by makefile, sendmail\_aliases}
+
+        Path of the alias file that contain all lists related aliases. It is recommended to create a spécific alias file so Sympa never overright the standard alias file but only a dedicated file.You must refer to this aliases file in your \file {sendmail.mc} :
 
 \subsection {\cfkeyword {rfc2369\_header\_fields}} 
 
