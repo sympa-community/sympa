@@ -27,7 +27,7 @@ Requires: perl-CipherSaber >= 0.50
 ## (perl-DBD-Pg or Perl- Msql-Mysql-modules)
 Requires: perl-FCGI    >= 0.48
 Requires: MHonArc >= 2.4.6
-Requires: apache
+Requires: webserver
 Requires: openssl >= 0.9.5a
 Prereq: /usr/sbin/useradd
 Prereq: /usr/sbin/groupadd
@@ -97,7 +97,11 @@ if [ -f /etc/syslog.conf ] ;then
 fi
 
 # try to add some sample entries in /etc/aliases for sympa
-for a_file in /etc/aliases /etc/postfix/aliases; do
+if [ -d /etc/courier/aliases ]; then 
+   touch /etc/courier/aliases/sympa
+   ln -s /usr/lib/courier/share/makealiases /usr/bin/newaliases
+fi
+for a_file in /etc/aliases /etc/postfix/aliases /etc/courier/aliases/sympa; do
   if [ -f ${a_file} ]; then
     if [ `grep -c sympa ${a_file}` -eq 0 ]; then
       cp -f ${a_file} ${a_file}.rpmorig
@@ -203,6 +207,11 @@ fi
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+
+* Mon May 13 2002 Zenon Panoussis <oracle@xs4all.nl>
+- Added check and aliases file and link for Courier
+- Changed "Requires: apache" to "Requires: webserver" for compatibility 
+  with apache2
 
 * Wed Nov 15 2001 Olivier Salaun <olivier.salaun@cru.fr> 3.3b.3
 - HOMEPAGE is /var/sympa/
