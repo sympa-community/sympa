@@ -82,7 +82,10 @@ my $tt2_include_path = [$Conf{'etc'}.'/'.$domain,
 			$Conf{'etc'},
 			'--ETCBINDIR--'];
 
-&tt2::parse_tt2 (\%data, 'list_aliases.tt2',\@aliases, $tt2_include_path);
+my $aliases_dump;
+&tt2::parse_tt2 (\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);
+
+@aliases = split /\n/, $aliases_dump;
 
 unless (@aliases) {
     	print STDERR "No aliases defined\n";
