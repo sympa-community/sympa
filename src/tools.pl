@@ -809,10 +809,10 @@ sub split_mail {
     else { 
 	    my $fileExt ;
 
-	    if ($head->mime_attr("content_type.name") =~ /\.(\S+)/) {
+	    if ($head->mime_attr("content_type.name") =~ /\.(\S+)\s*\"*$/) {
 		$fileExt = $1 ;
 	    }
-	    elsif ($head->recommended_filename =~ /\.(\S+)/) {
+	    elsif ($head->recommended_filename =~ /\.(\S+)\s*\"*$/) {
 		$fileExt = $1 ;
 	    }
 	    else {
