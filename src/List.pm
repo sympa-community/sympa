@@ -7828,7 +7828,7 @@ sub _load_admin_users_config {
     &do_log('debug2', 'List::_load_admin_users_config(%s) for list %s',$role, $name);  
 
     foreach my $entry (@{$list->{'admin'}{$role}}) {
-	my $email = $entry->{'email'};
+	my $email = lc($entry->{'email'});
 	my %u;
   
 	$u{'email'} = $email;
