@@ -1433,7 +1433,7 @@ sub load {
     
     $self->{'domain'} = $robot ;
     unless ((-d $self->{'dir'}) && (-f "$self->{'dir'}/config")) {
-	&do_log('info', 'Missing directory or config file for %s', $name);
+	&do_log('info', 'Missing directory (%s) or config file for %s', $self->{'dir'}, $name);
 	return undef ;
     }
 
