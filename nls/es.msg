@@ -230,15 +230,15 @@ Si se desea suprimir los subscriptores con esos problemas:\n\
 
 $set 9	Mensajes para la cabacera del comando 'review'
 1	"Propietario            : %s\n"
-2	"Moderador		         : %s\n"
-3	"Subscripción	         : %s\n"
-4	"Supresión		         : %s\n"
+2	"Moderador		: %s\n"
+3	"Subscripción	        : %s\n"
+4	"Supresión		: %s\n"
 5	"Enviando mensajes      : %s\n"
 6	"Lista de subscriptores : %s\n"
 7	"Respuesta a            : %s\n"
 8	"Tamaño Máximo          : %d\n"
 9	"URL de la lista        : %s\n"
-10	"Resumen			         : %s\n"
+10	"Resumen		: %s\n"
 11	"Tema personalizado     : %s\n"
 12	"Tema normal            : %s\n"
 
@@ -258,7 +258,7 @@ $set 12 Cabecera MIME
 $set 13 Mensajes para la cabecera del indice de moderación
 1	"\t	Fecha               : %s"
 2	"\t	Remitente           : %s"
-3	"\t 	Tamaño              : %s"
+3	"\t 	Tamaño              : %s\n"
 4	"\t 	Clave de moderación : %s\n"
 
 $set 14 For the web
