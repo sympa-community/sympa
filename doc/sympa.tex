@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {25 November 2003}
+    \date {27 November 2003}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -3187,14 +3187,11 @@ Example :
 
 
 cas
-	host				sso-cas.cru.fr:443
-	login_uri			/login
+	base_url			https://sso-cas.cru.fr
 	non_blocking_redirection        on
-	check_uri			/validate
-	logout_uri			/logout
 	auth_service_name		cas-cru
 	ldap_host			ldap.cru.fr:389
-        ldap_get_email_by_uid_filter          (uid=[uid])
+        ldap_get_email_by_uid_filter    (uid=[uid])
 	ldap_timeout			7
 	ldap_suffix			dc=cru,dc=fr
 	ldap_scope			sub
@@ -3445,8 +3442,12 @@ This parameter defines the environment variable that will contain the authentica
 \item{auth\_service\_name}\\
 	The friendly user service name as shown by \Sympa in the login page.
 
-\item{host}\\
-	The host name of the CAS server including the port number.
+\item{host} (OBSOLETE) \\
+        This parameter has been replaced by \textbf {base\_url} parameter
+
+\item{base\_url} \\
+
+	The base URL of the CAS server.
 
 
 \item{non\_blocking\_redirection}\\  
@@ -3459,14 +3460,29 @@ URL but just check if the user is logged. If active, the SSO service is effectiv
 the CAS server is out of order the access to Sympa services is impossible.
 
 
-\item{login\_uri}\\
-	The login service URI, usually  \textbf {/cas/login}
+\item{login\_uri} (OBSOLETE) \\
+        This parameter has been replaced by \textbf {login\_path} parameter.
 
-\item{check\_uri}\\
-	The ticket validation service URI, usually  \textbf {/cas/validate}
+\item{login\_path} (OPTIONAL)\\
+	The login service path
 
-\item{logout\_uri}\\
-	The logout service URI, usually  \textbf {/cas/logout}
+\item{check\_uri} (OBSOLETE) \\
+        This parameter has been replaced by \textbf {service\_validate\_path} parameter
+
+\item{service\_validate\_path} (OPTIONAL)\\
+	The ticket validation service path
+
+\item{logout\_uri} (OBSOLETE) \\
+        This parameter has been replaced by \textbf {logout\_path} parameter
+
+\item{logout\_path} (OPTIONAL)\\
+	The logout service path
+
+\item{proxy\_path} (OPTIONAL)\\
+	The proxy service path, used by Sympa SOAP server only.
+
+\item{proxy\_validate\_path} (OPTIONAL)\\
+	The proxy validate service path, used by Sympa SOAP server only.
 
 \item{ldap\_host}\\
 	The LDAP host Sympa will connect to fetch user email when user uid is return by CAS service. The ldap\_host include the

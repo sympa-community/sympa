@@ -105,16 +105,16 @@ in the documentation.
 
 <P>
 Listmasters have all privileges. Currently the listmaster
-is defined in <A NAME="6874"></A><TT>sympa.conf</TT> but in the future, it might be possible to
+is defined in <A NAME="6881"></A><TT>sympa.conf</TT> but in the future, it might be possible to
 define one listmaster per virtual robot. By default, newly created
 lists must be activated by the listmaster. List creation is possible for all intranet users 
 (i.e. : users with an e-mail address within the same domain as Sympa).
-This is controlled by the <A NAME="6877"></A><TT>create_list</TT> authorization scenario.
+This is controlled by the <A NAME="6884"></A><TT>create_list</TT> authorization scenario.
 
 <P>
 List creation request message and list creation notification message are both
-templates that you can customize (<A NAME="6880"></A><TT>create_list_request.tpl</TT> and
-<A NAME="6883"></A><TT>list_created.tpl</TT>).
+templates that you can customize (<A NAME="6887"></A><TT>create_list_request.tpl</TT> and
+<A NAME="6890"></A><TT>list_created.tpl</TT>).
 
 <P>
 
@@ -123,22 +123,22 @@ templates that you can customize (<A NAME="6880"></A><TT>create_list_request.tpl
 </H2>
 
 <P>
-This is defined by the <A NAME="6886"></A><TT>create_list</TT> sympa.conf parameter (see <A HREF="node6.html#create-list">5.1.9</A>,  
+This is defined by the <A NAME="6893"></A><TT>create_list</TT> sympa.conf parameter (see <A HREF="node6.html#create-list">5.1.9</A>,  
 page&nbsp;<A HREF="node6.html#create-list"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). This parameter refers to a <B>create_list</B> authorization scenario.
 It will determine if the <I>create list</I> button is displayed and if it requires
 a listmaster confirmation.
 
 <P>
 The authorization scenario can accept any condition concerning the [sender]
-(i.e. WWSympa user), and it returns <A NAME="6889"></A><TT>reject</TT>, <A NAME="6892"></A><TT>do_it</TT>
-or <A NAME="6895"></A><TT>listmaster</TT> as an action.
+(i.e. WWSympa user), and it returns <A NAME="6896"></A><TT>reject</TT>, <A NAME="6899"></A><TT>do_it</TT>
+or <A NAME="6902"></A><TT>listmaster</TT> as an action.
 
 <P>
 Only in cases where a user is authorized by the create_list authorization scenario
 will the "create" button be available in the main menu.
-If the scenario returns <A NAME="6898"></A><TT>do_it</TT>, the list will be created and installed.
+If the scenario returns <A NAME="6905"></A><TT>do_it</TT>, the list will be created and installed.
 If the scenario returns "listmaster", the user is allowed to create a list, but
-the list is created with the <A NAME="6901"></A><TT>pending</TT> status,
+the list is created with the <A NAME="6908"></A><TT>pending</TT> status,
 which means that only the list owner may view or use it.
 The listmaster will need to open the list of pending lists
 using the "pending list" button in the "server admin"
@@ -159,10 +159,10 @@ the list creator simply to choose a profile for the list, and to fill in
 the owner's e-mail and the list subject together with a short description.
 
 <P>
-List profiles can be stored in <A NAME="6905"></A><TT>/home/sympa/etc/create_list_templates</TT> or
-<A NAME="6908"></A><TT>/home/sympa/bin/etc/create_list_templates</TT>, which are part of the Sympa
+List profiles can be stored in <A NAME="6912"></A><TT>/home/sympa/etc/create_list_templates</TT> or
+<A NAME="6915"></A><TT>/home/sympa/bin/etc/create_list_templates</TT>, which are part of the Sympa
 distribution and should not be modified.  
-<A NAME="6911"></A><TT>/home/sympa/etc/create_list_templates</TT>, which will not be
+<A NAME="6918"></A><TT>/home/sympa/etc/create_list_templates</TT>, which will not be
 overwritten by make install, is intended to contain site customizations.
 
 <P>
@@ -174,15 +174,15 @@ templates by modifying existing ones. Contributions to the distribution are welc
 <P>
 You might want to hide or modify profiles (not useful, or dangerous 
 for your site). If a profile exists both in the local site directory
-<A NAME="6914"></A><TT>/home/sympa/etc/create_list_templates</TT> and
-<A NAME="6917"></A><TT>/home/sympa/bin/etc/create_list_templates</TT> directory, then the local profile 
+<A NAME="6921"></A><TT>/home/sympa/etc/create_list_templates</TT> and
+<A NAME="6924"></A><TT>/home/sympa/bin/etc/create_list_templates</TT> directory, then the local profile 
 will be used by WWSympa. 
 
 <P>
 Another way to control publicly available profiles is to
-edit the <A NAME="6920"></A><TT>create_list.conf</TT> file (the default for this file is in
-the <A NAME="6923"></A><TT>/home/sympa/bin/etc</TT> directory, and you may create your own customized
-version in <A NAME="6926"></A><TT>/home/sympa/etc</TT>).
+edit the <A NAME="6927"></A><TT>create_list.conf</TT> file (the default for this file is in
+the <A NAME="6930"></A><TT>/home/sympa/bin/etc</TT> directory, and you may create your own customized
+version in <A NAME="6933"></A><TT>/home/sympa/etc</TT>).
 This file controls which of the available list templates are to be displayed. Example :<PRE>
 # Do not allow the public_anonymous profile
 public_anonymous hidden
@@ -190,13 +190,13 @@ public_anonymous hidden
 </PRE>
 
 <P>
-When a list is created, whatever its status (<A NAME="6929"></A><TT>pending</TT> or
-<A NAME="6932"></A><TT>open</TT>), the owner can use WWSympa admin features to modify list
+When a list is created, whatever its status (<A NAME="6936"></A><TT>pending</TT> or
+<A NAME="6939"></A><TT>open</TT>), the owner can use WWSympa admin features to modify list
 parameters, or to edit the welcome message, and so on.
 
 <P>
 WWSympa logs the creation and all modifications to a list as part of the list's
-<A NAME="6935"></A><TT>config</TT> file (and old configuration files are saved).
+<A NAME="6942"></A><TT>config</TT> file (and old configuration files are saved).
 
 <P>
 
@@ -207,9 +207,9 @@ WWSympa logs the creation and all modifications to a list as part of the list's
 </H1>
 
 <P>
-For each parameter, you may specify (via the <A NAME="6938"></A><TT>/home/sympa/etc/edit_list.conf</TT>
+For each parameter, you may specify (via the <A NAME="6945"></A><TT>/home/sympa/etc/edit_list.conf</TT>
 configuration file) who has the right to edit the parameter concerned ; the default 
-<A NAME="6941"></A><TT>/home/sympa/bin/etc/edit_list.conf</TT> is reasonably safe.
+<A NAME="6948"></A><TT>/home/sympa/bin/etc/edit_list.conf</TT> is reasonably safe.
 
 <P>
 <PRE>
@@ -247,7 +247,7 @@ Eg: listmaster will not match rules refering to owner or privileged_owner
 </PRE>
 
 <P>
-Privileged owners are defined in the list's <A NAME="6944"></A><TT>config</TT> file as follows :
+Privileged owners are defined in the list's <A NAME="6951"></A><TT>config</TT> file as follows :
 	<PRE>
 	owner
 	email owners.email@foo.bar
@@ -325,7 +325,7 @@ Sympa aims to define two levels of trust for owners (some being entitled
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-11-25
+2003-11-27
 </ADDRESS>
 </BODY>
 </HTML>

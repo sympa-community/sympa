@@ -109,7 +109,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <HR>
 
 <H1><A NAME="SECTION001600000000000000000"></A>
-    <A NAME="shared"></A>    <A NAME="3253"></A>
+    <A NAME="shared"></A>    <A NAME="3260"></A>
 <BR>
 15. Shared documents
 </H1>
@@ -121,7 +121,7 @@ to do so. A shared space is associated with a list, and users of the list
 can upload, download, delete, etc, documents in the shared space.
 
 <P>
-<A NAME="7912"></A><I>WWSympa</I> shared web features are fairly rudimentary. It is not our aim to provide
+<A NAME="7919"></A><I>WWSympa</I> shared web features are fairly rudimentary. It is not our aim to provide
 a sophisticated tool for web publishing, such as are provided by products
 like <I>Rearsite</I>.
 It is nevertheless very useful to be able to define privilege on
@@ -141,7 +141,7 @@ the shared space, each document is linked to a set of specific control informati
 its access rights.
 
 <P>
-A list's shared documents are stored in the <A NAME="7915"></A><TT>/home/sympa/expl/mylist/shared</TT>
+A list's shared documents are stored in the <A NAME="7922"></A><TT>/home/sympa/expl/mylist/shared</TT>
 directory. 
 
 <P>
@@ -239,13 +239,13 @@ The control operation has more restrictive access rights than the other two oper
 </H1>
 The information (title, owner, access rights...) relative to each document must be stored, and so
 each shared document is linked to a special file called a description file, whose name includes
-the <A NAME="7918"></A><TT>.desc</TT> prefix.
+the <A NAME="7925"></A><TT>.desc</TT> prefix.
 
 <P>
-The description file of a directory having the path <A NAME="7921"></A><TT>mydirectory/mysubdirectory</TT> has the path
-<A NAME="7924"></A><TT>mydirectory/mysubdirectory/.desc</TT> .
-The description file of a file having the path <A NAME="7927"></A><TT>mydirectory/mysubdirectory/myfile.myextension</TT> has the path
-<A NAME="7930"></A><TT>mydirectory/mysubdirectory/.desc.myfile.myextension</TT> .
+The description file of a directory having the path <A NAME="7928"></A><TT>mydirectory/mysubdirectory</TT> has the path
+<A NAME="7931"></A><TT>mydirectory/mysubdirectory/.desc</TT> .
+The description file of a file having the path <A NAME="7934"></A><TT>mydirectory/mysubdirectory/myfile.myextension</TT> has the path
+<A NAME="7937"></A><TT>mydirectory/mysubdirectory/.desc.myfile.myextension</TT> .
 
 <P>
 
@@ -308,7 +308,7 @@ unknown users) to perform the corresponding action.
 </H2>
 The <B>private</B> scenario is the basic scenario for a shared space. Every subscriber of
 the list is authorized to perform the corresponding action. The <B>private</B> scenario is the default
-read scenario for <A NAME="7933"></A><TT>shared</TT> when this shared space is created. This can be modified by editing
+read scenario for <A NAME="7940"></A><TT>shared</TT> when this shared space is created. This can be modified by editing
 the list configuration file.
 
 <P>
@@ -349,24 +349,24 @@ in the shared space.
 
 <P>
 
-<H2><A NAME="SECTION001642000000000000000"></A><A NAME="7936"></A>
+<H2><A NAME="SECTION001642000000000000000"></A><A NAME="7943"></A>
 <BR>
 15.4.2 Special case of the <TT>shared</TT> directory
 </H2>
 In order to allow access to a root directory to be more restrictive than
-that of its subdirectories, the <A NAME="7939"></A><TT>shared</TT> directory (root directory) is
+that of its subdirectories, the <A NAME="7946"></A><TT>shared</TT> directory (root directory) is
 a special case as regards access control.
 The access rights for read and edit are those specified in the list configuration file.
 Control of the root directory is specific. 
 Only those users authorized to edit a list's configuration may change access rights on
-its <A NAME="7942"></A><TT>shared</TT> directory. 
+its <A NAME="7949"></A><TT>shared</TT> directory. 
 
 <P>
 
 <H2><A NAME="SECTION001643000000000000000">
 15.4.3 General case</A>
 </H2>
-<A NAME="7945"></A><TT>mydirectory/mysubdirectory/myfile</TT> is an arbitrary document in the shared space,
+<A NAME="7952"></A><TT>mydirectory/mysubdirectory/myfile</TT> is an arbitrary document in the shared space,
 but not in the <I>root</I> directory. A user <B>X</B> wishes to perform one
 of the three operations (read, edit, control) on this document.
 The access control will proceed as follows :
@@ -375,17 +375,17 @@ The access control will proceed as follows :
 <LI>Read operation
 <BR>
 To be authorized to perform a read action on
-	<A NAME="7948"></A><TT>mydirectory/mysubdirectory/myfile</TT>, <B>X</B> must be
+	<A NAME="7955"></A><TT>mydirectory/mysubdirectory/myfile</TT>, <B>X</B> must be
 	authorized to read every document making up the path; in other words, she
-	must be allowed to read <A NAME="7951"></A><TT>myfile</TT> (the authorization scenario of the description file
-	of <A NAME="7954"></A><TT>myfile</TT> must return <I>do_it</I> for user <B>X</B>), and the
-	same goes for <A NAME="7957"></A><TT>mysubdirectory</TT> and <A NAME="7960"></A><TT>mydirectory</TT>).
+	must be allowed to read <A NAME="7958"></A><TT>myfile</TT> (the authorization scenario of the description file
+	of <A NAME="7961"></A><TT>myfile</TT> must return <I>do_it</I> for user <B>X</B>), and the
+	same goes for <A NAME="7964"></A><TT>mysubdirectory</TT> and <A NAME="7967"></A><TT>mydirectory</TT>).
 <BR>
 In addition, given that the owner of a document or one of its parent directories
 	is allowed to perform <B>all actions on that document</B>,
-	<A NAME="7963"></A><TT>mydirectory/mysubdirectory/myfile</TT> may also have read operations performed
-	on it by the owners of <A NAME="7966"></A><TT>myfile</TT>, <A NAME="7969"></A><TT>mysubdirectory</TT>,
-	and <A NAME="7972"></A><TT>mydirectory</TT>.
+	<A NAME="7970"></A><TT>mydirectory/mysubdirectory/myfile</TT> may also have read operations performed
+	on it by the owners of <A NAME="7973"></A><TT>myfile</TT>, <A NAME="7976"></A><TT>mysubdirectory</TT>,
+	and <A NAME="7979"></A><TT>mydirectory</TT>.
 
 <P>
 This can be schematized as follows :<PRE>
@@ -464,7 +464,7 @@ Create the shared web, close it or restore it. The d_admin action is accessible
 <BR>
 Reads the document after read access control. If a folder, lists all the subdocuments that can
 	be read. If a file, displays it if it is viewable, else downloads it to disk.
-	If the document to be read contains a file named <A NAME="7975"></A><TT>index.html</TT> or <A NAME="7978"></A><TT>index.htm</TT>, and if
+	If the document to be read contains a file named <A NAME="7982"></A><TT>index.html</TT> or <A NAME="7985"></A><TT>index.htm</TT>, and if
 	the user has no permissions other than read on all contained subdocuments, the read action will
 	consist in displaying the index.
 	The d_read action is accessible from a list's <B>info</B> page.
@@ -581,7 +581,7 @@ The page to edit the access rights and the owner of a document.
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-11-25
+2003-11-27
 </ADDRESS>
 </BODY>
 </HTML>

@@ -103,7 +103,7 @@ to the Internet domaine of the Virtual robot.
 </H1>
 
 <P>
-You don't need to install several Sympa servers. A single <A NAME="6121"></A><TT>sympa.pl</TT> daemon
+You don't need to install several Sympa servers. A single <A NAME="6128"></A><TT>sympa.pl</TT> daemon
 and one or more fastcgi servers can serve all virtual robot. Just configure the 
 server environment in order to accept the new domain definition.
 
@@ -147,7 +147,7 @@ FastCgiServer /home/sympa/bin/wwsympa.fcgi -processes 3 -idle-timeout 120
 
 <P>
 </LI>
-<LI>Create a <A NAME="6124"></A><TT>robot.conf</TT> for the virtual robot (current web interface does
+<LI>Create a <A NAME="6131"></A><TT>robot.conf</TT> for the virtual robot (current web interface does
 not provide Virtual robot creation yet).
 
 <P>
@@ -160,15 +160,15 @@ not provide Virtual robot creation yet).
 10.2 robot.conf</A>
 </H1>
 A robot is named by its domain, let's say my.domain.organd defined by a directory 
-<A NAME="6127"></A><TT>/home/sympa/etc/my.domain.org</TT>. This directory must contain at least a 
-<A NAME="6130"></A><TT>robot.conf</TT> file. This files has the same format as  <A NAME="6133"></A><TT>/etc/sympa.conf</TT>
+<A NAME="6134"></A><TT>/home/sympa/etc/my.domain.org</TT>. This directory must contain at least a 
+<A NAME="6137"></A><TT>robot.conf</TT> file. This files has the same format as  <A NAME="6140"></A><TT>/etc/sympa.conf</TT>
 (have a look at robot.conf in the sample dir).
 Only the following parameters can be redefined for a particular robot :
 
 <P>
 
 <UL>
-<LI><A NAME="6136"></A><TT>http_host</TT> 
+<LI><A NAME="6143"></A><TT>http_host</TT> 
 <BR>
 This hostname will be compared with 'SERVER_NAME' environment variable in wwsympa.fcgi
 	to determine the current Virtual Robot. You can a path at the end of this parameter if
@@ -180,55 +180,55 @@ This hostname will be compared with 'SERVER_NAME' environment variable in wwsymp
 
 <P>
 </LI>
-<LI><A NAME="6139"></A><TT>wwsympa_url</TT> 
+<LI><A NAME="6146"></A><TT>wwsympa_url</TT> 
 <BR>
 The base URL of WWSympa
 
 <P>
 </LI>
-<LI><A NAME="6142"></A><TT>cookie_domain</TT>
+<LI><A NAME="6149"></A><TT>cookie_domain</TT>
 
 <P>
 </LI>
-<LI><A NAME="6145"></A><TT>email</TT>
+<LI><A NAME="6152"></A><TT>email</TT>
 
 <P>
 </LI>
-<LI><A NAME="6148"></A><TT>title</TT>
+<LI><A NAME="6155"></A><TT>title</TT>
 
 <P>
 </LI>
-<LI><A NAME="6151"></A><TT>default_home</TT>
+<LI><A NAME="6158"></A><TT>default_home</TT>
 
 <P>
 </LI>
-<LI><A NAME="6154"></A><TT>create_list</TT>
+<LI><A NAME="6161"></A><TT>create_list</TT>
 
 <P>
 </LI>
-<LI><A NAME="6157"></A><TT>lang</TT>
+<LI><A NAME="6164"></A><TT>lang</TT>
 
 <P>
 </LI>
-<LI><A NAME="6160"></A><TT>log_smtp</TT>
+<LI><A NAME="6167"></A><TT>log_smtp</TT>
 
 <P>
 </LI>
-<LI><A NAME="6163"></A><TT>listmaster</TT>
+<LI><A NAME="6170"></A><TT>listmaster</TT>
 
 <P>
 </LI>
-<LI><A NAME="6166"></A><TT>max_size</TT>
+<LI><A NAME="6173"></A><TT>max_size</TT>
 
 <P>
 </LI>
-<LI><A NAME="6169"></A><TT>dark_color</TT>, <A NAME="6172"></A><TT>light_color</TT>, <A NAME="6175"></A><TT>text_color</TT>, <A NAME="6178"></A><TT>bg_color</TT>, <A NAME="6181"></A><TT>error_color</TT>, <A NAME="6184"></A><TT>selected_color</TT>, <A NAME="6187"></A><TT>shaded_color</TT> 
+<LI><A NAME="6176"></A><TT>dark_color</TT>, <A NAME="6179"></A><TT>light_color</TT>, <A NAME="6182"></A><TT>text_color</TT>, <A NAME="6185"></A><TT>bg_color</TT>, <A NAME="6188"></A><TT>error_color</TT>, <A NAME="6191"></A><TT>selected_color</TT>, <A NAME="6194"></A><TT>shaded_color</TT> 
 </LI>
 </UL>
 
 <P>
-These settings overwrite the equivalent global parameter defined in <A NAME="6190"></A><TT>/etc/sympa.conf</TT>
-for my.domain.orgrobot ; the main <A NAME="6193"></A><TT>listmaster</TT> still has privileges on Virtual
+These settings overwrite the equivalent global parameter defined in <A NAME="6197"></A><TT>/etc/sympa.conf</TT>
+for my.domain.orgrobot ; the main <A NAME="6200"></A><TT>listmaster</TT> still has privileges on Virtual
 Robots though. The http_host parameter is compared by wwsympa with the SERVER_NAME
 environment variable to recognize which robot is in used. 
 
@@ -242,10 +242,10 @@ environment variable to recognize which robot is in used.
 If needed, you can customize each virtual robot using its set of templates and authorization scenarios.
 
 <P>
-<A NAME="6196"></A><TT>/home/sympa/etc/my.domain.org/wws_templates/</TT>,
-<A NAME="6199"></A><TT>/home/sympa/etc/my.domain.org/templates/</TT>, 
-<A NAME="6202"></A><TT>/home/sympa/etc/my.domain.org/scenari/</TT> directories are searched when
-loading templates or scenari before searching into <A NAME="6205"></A><TT>/home/sympa/etc</TT> and  <A NAME="6208"></A><TT>/home/sympa/bin/etc</TT>. This allows to define different privileges and a different GUI for a Virtual Robot.
+<A NAME="6203"></A><TT>/home/sympa/etc/my.domain.org/wws_templates/</TT>,
+<A NAME="6206"></A><TT>/home/sympa/etc/my.domain.org/templates/</TT>, 
+<A NAME="6209"></A><TT>/home/sympa/etc/my.domain.org/scenari/</TT> directories are searched when
+loading templates or scenari before searching into <A NAME="6212"></A><TT>/home/sympa/etc</TT> and  <A NAME="6215"></A><TT>/home/sympa/bin/etc</TT>. This allows to define different privileges and a different GUI for a Virtual Robot.
 
 <P>
 
@@ -280,7 +280,7 @@ loading templates or scenari before searching into <A NAME="6205"></A><TT>/home/
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-11-25
+2003-11-27
 </ADDRESS>
 </BODY>
 </HTML>

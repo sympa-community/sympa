@@ -1,3 +1,192 @@
+2003-11-24 10:35  salaun
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	doc/html/node3.html, doc/html/node4.html, doc/html/node5.html,
+	doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	doc/html/node9.html, doc/html/sympa.html, doc/html/sympa.ps,
+	src/List.pm: [K.Libby] New feature: allow listmaster to ignore some
+	scenario files at different levels (global, robot, list), by
+	creating :ignore empty files
+
+2003-11-13 16:19  salaun
+
+	* src/: List.pm, sympa.pl: [BugID 222] Fix: Sympa did not detect
+	incorrect actions in scenarios. A message could be lost if the send
+	scenario was corrupted.
+
+2003-11-13 15:22  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: a blank page was returned when
+	accessing an unknown list
+
+2003-11-13 15:00  salaun
+
+	* wwsympa/wwsympa.fcgi: Add robot to log entries
+
+2003-11-13 14:39  salaun
+
+	* src/List.pm, src/tools.pl, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/fr/rename_list_request.fr.tpl,
+	wwsympa/wws_templates/us/main.us.tpl,
+	wwsympa/wws_templates/us/rename_list_request.us.tpl: Changes: fix
+	archives renaming ; add virtual robot support and spool processing
+
+2003-11-13 09:59  salaun
+
+	* wwsympa/wws_templates/: cn/reviewbouncing.cn.tpl,
+	cz/review.cz.tpl, cz/reviewbouncing.cz.tpl, de/review.de.tpl,
+	de/reviewbouncing.de.tpl, et/main.et.tpl, et/review.et.tpl,
+	et/reviewbouncing.et.tpl, fi/main.fi.tpl, fi/review.fi.tpl,
+	fi/reviewbouncing.fi.tpl, fr/reviewbouncing.fr.tpl,
+	hu/review.hu.tpl, hu/reviewbouncing.hu.tpl, it/d_read.it.tpl,
+	it/reviewbouncing.it.tpl, nl/main.nl.tpl, nl/review.nl.tpl,
+	nl/reviewbouncing.nl.tpl, ro/review.ro.tpl,
+	ro/reviewbouncing.ro.tpl, us/main.us.tpl, us/review.us.tpl,
+	us/reviewbouncing.us.tpl: Fix request_confirm() javascript function
+
+2003-11-13 09:58  salaun
+
+	* wwsympa/wws_templates/: fr/admin_menu.fr.tpl,
+	fr/rename_list_request.fr.tpl, us/admin_menu.us.tpl,
+	us/edit_list_request.us.tpl, us/rename_list_request.us.tpl: Fix:
+	add missing rename_list template ; also move the "rename list" link
+
+2003-11-12 15:57  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: 'subject' was not decoded when used in
+	reject messages
+
+2003-11-12 11:12  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: use wwslib::get_my_url() for CAS
+	service URL instead of wwsympa_url
+
+2003-11-12 11:02  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: Total of subscribers was incorrect
+	after subscriptions/removal ; fixed check_param_in()
+
+2003-11-10 17:14  salaun
+
+	* src/List.pm: Fix: pass the option (nocache) from get_total() to
+	_load_total_db(). This will prevent incorrect total of subscribers
+	displayed on the web interface after adding or removing
+	subscribers.
+
+2003-11-10 15:49  salaun
+
+	* src/List.pm: [BugID 208] [M. Verdier] Fix: in pending
+	subscriptions page, if the name of the requestor was not provided,
+	check in user_table table
+
+2003-11-10 14:36  salaun
+
+	* src/task_manager.pl, wwsympa/archived.pl, wwsympa/bounced.pl:
+	[BugID 127] Fix: missing LoadLang()
+
+2003-11-10 14:09  salaun
+
+	* src/sympa.pl, src/task_manager.pl, wwsympa/archived.pl,
+	wwsympa/bounced.pl: [BugID 219] Fix: set UID with POSIX::setuid(),
+	required on FreeBSD
+
+2003-11-10 13:55  salaun
+
+	* src/Language.pm: Change: moving log entry to 'debug'
+
+2003-11-03 07:39  salaun
+
+	* src/X509.pm: fix get_https the "verify_mode" in order to control
+	the certificat validity.
+
+2003-10-31 14:32  salaun
+
+	* src/CAS.pm: New feature: add a CAS client module
+
+2003-10-31 11:06  salaun
+
+	* soap/sympa.wsdl: Fix: the URI defined as soapAction needs to be
+	suffixed by #operation (Required for Axis to set correct SOAPAction
+	HTTP header s)
+
+2003-10-31 09:53  salaun
+
+	* soap/SympaTransport.pm: Fix: Accept both V1 and V2 Cookie HTTP
+	headers. (Axis setMaintainSession() sets Cookie2)
+
+2003-10-31 09:00  salaun
+
+	* soap/SympaTransport.pm, soap/sympa.wsdl,
+	soap/sympa_soap_client.pl, soap/sympa_soap_server.fcgi,
+	soap/sympasoap.pm, src/tools.pl, wwsympa/Auth.pm,
+	wwsympa/cookielib.pm: Changes: SOAP-related.
+
+2003-10-29 10:22  salaun
+
+	* src/task_manager.pl: Fix: task_manager would die with "Illegal
+	division by zero" error
+
+2003-10-27 15:54  salaun
+
+	* src/etc/scenari/send.privateandnomultipartoreditorkey: Fix :
+	reverse rules order
+
+2003-10-27 15:50  salaun
+
+	* src/etc/scenari/send.privateandeditorkey: Fix : revert rules
+	order
+
+2003-10-27 15:44  salaun
+
+	* src/List.pm: [BugID 216][reported by T.Kindsigo]Fix: "order by
+	email" clause was commented for MySQL
+
+2003-10-20 10:58  salaun
+
+	* wwsympa/archived.pl: [S. Zhuk] Change: Store the latest arctxt
+	filename ; this prevents the readdir in arctxt/
+
+2003-10-20 10:43  salaun
+
+	* src/etc/scenari/send.privateandeditorkey: [reported by J. Nin]
+	Fix: messages from moderator needed confirmation
+
+2003-10-17 16:25  salaun
+
+	* soap/: Makefile, SympaTransport.pm, sympa.wsdl,
+	sympa_soap_client.pl, sympa_soap_server.fcgi, sympasoap.pm: Define
+	a SOAP::Transport::HTTP::FCGI::Sympa class to redefine the handle()
+	sub
+
+2003-10-17 10:11  salaun
+
+	* soap/sympa_soap_client.pl, src/tools.pl: soap-related fixes
+
+2003-10-17 09:35  salaun
+
+	* Makefile.am, Makefile.in, soap/Makefile, soap/sympa.wsdl,
+	soap/sympa_soap_client.pl, soap/sympa_soap_server.fcgi,
+	soap/sympasoap.pm: New features: new SOAP server
+
+2003-10-17 09:14  salaun
+
+	* src/tools.pl, wwsympa/wwsympa.fcgi: Move dump_vars() to tools.pl
+
+2003-10-16 11:59  salaun
+
+	* src/etc/script/: sympa.spec, sympa.spec.rh80: [requested by J.
+	Dalbec] Change: RPM should change /etc/mail/sympa_aliases user and
+	group only if this file was created
+
+2003-10-16 10:34  salaun
+
+	* .version, ChangeLog, NEWS: Preparing sympa 4.0.a7
+
 2003-10-15 17:13  salaun
 
 	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
