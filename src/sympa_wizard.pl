@@ -479,8 +479,7 @@ if ($ARGV[0] eq '-c') {
     exit 1 if (-f $conf);
     
     unless (open (NEWF,"> $conf")){
-	printf STDERR "Unable to open $conf, exiting";
-	exit;
+	die "Unable to open $conf, exiting";
     };
     
     if ($file eq 'sympa.conf') {
@@ -531,13 +530,11 @@ unless (&Conf::load( $sympa_conf )) {
 }
 
 unless (open (WWSYMPA,"> $new_wwsympa_conf")){
-    printf STDERR "unable to open $new_wwsympa_conf, exiting";
-    exit;
+    die "unable to open $new_wwsympa_conf, exiting";
 };
 
 unless (open (SYMPA,"> $new_sympa_conf")){
-    printf STDERR "unable to open $new_sympa_conf, exiting";
-    exit;
+    die "unable to open $new_sympa_conf, exiting";
 };
 
 ## Edition mode
@@ -631,19 +628,19 @@ if ($somechange ne '0') {
     my $date = &POSIX::strftime("%d.%b.%Y-%H.%M.%S", localtime(time));
 
     unless (rename $wwsympa_conf, $wwsympa_conf.'.'.$date) {
-	die "Unable to rename $wwsympa_conf\n";
+	die "Unable to rename $wwsympa_conf : $!\n";
     }
 
     unless (rename $sympa_conf, $sympa_conf.'.'.$date) {
-	die "Unable to rename $sympa_conf\n";
+	die "Unable to rename $sympa_conf : $!\n";
     }
 
     unless (rename $new_wwsympa_conf, $wwsympa_conf) {
-	die "Unable to rename $new_wwsympa_conf\n";
+	die "Unable to rename $new_wwsympa_conf : $!\n";
     }
     
     unless (rename $new_sympa_conf, $sympa_conf) {
-	die "Unable to rename $new_sympa_conf\n";
+	die "Unable to rename $new_sympa_conf : $!\n";
     }
 
 
