@@ -1994,7 +1994,7 @@ sub send_msg {
     ## Add Custom Subject
     if ($admin->{'custom_subject'}) {
 	my $subject_field = &MIME::Words::decode_mimewords($msg->head->get('Subject'));
-	$subject_field =~ s/^\s*(.*)\s*$/$1/;
+	$subject_field =~ s/^\s*(.*)\s*$/$1/; ## Remove leading and trailing blanks
 
 	## Search previous subject tagging in Subject
 	my $tag_regexp = $admin->{'custom_subject'};
