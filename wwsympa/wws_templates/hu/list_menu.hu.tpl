@@ -55,7 +55,7 @@
         <TD BGCOLOR="#ccccff">
 	  Tagok: <B>[total]</B><BR>
 	  <BR>
-	  Owners
+	  Tulajdonosok
 	  [FOREACH o IN owner]
 	    <BR><FONT SIZE=-1><A HREF="mailto:[o->NAME]">[o->gecos]</A></FONT>
 	  [END]
@@ -172,7 +172,7 @@
       [ELSE]
         <TD WIDTH="100%" BGCOLOR="#ccccff" NOWRAP align=right>
         <font size=-1><b>
-         <A HREF="[path_cgi]/suboptions/[list]" >Tagok beállításai</A>
+         <A HREF="[path_cgi]/suboptions/[list]" >Tag beállításai</A>
         </b></font>
         </TD>
       [ENDIF]

@@ -83,7 +83,7 @@ Túl sok a találat, nem jeleníthetõ meg.
   [IF action<>search]
   <TD NOWRAP>
 	<INPUT TYPE="hidden" NAME="sortby" VALUE="[sortby]">
-	<INPUT TYPE="submit" NAME="action_review" VALUE="Oldal méret">
+	<INPUT TYPE="submit" NAME="action_review" VALUE="Kijelezve">
 	        <SELECT NAME="size">
                   <OPTION VALUE="[size]" SELECTED>[size]
 		  <OPTION VALUE="25">25
@@ -97,7 +97,7 @@ Túl sok a találat, nem jeleníthetõ meg.
     <A HREF="[path_cgi]/review/[list]/[prev_page]/[size]/[sortby]"><IMG SRC="/icons/left.gif" BORDER=0 ALT="Elõzõ oldal"></A>
    [ENDIF]
    [IF page]
-     [page] oldal / [total_page]
+    Oldalak [page] / [total_page]
    [ENDIF]
    [IF next_page]
      <A HREF="[path_cgi]/review/[list]/[next_page]/[size]/[sortby]"><IMG SRC="/icons/right.gif" BORDER="0" ALT="Következõ oldal"></A>
@@ -227,7 +227,7 @@ Túl sok a találat, nem jeleníthetõ meg.
     </TD>
    [ENDIF]
     </TR>
-    <TR><TD><input type=button value="Toggle Selection" onClick="toggle_selection(document.myform.email)">
+    <TR><TD><input type=button value="Kijelölés megfordítása" onClick="toggle_selection(document.myform.email)">
     </TD></TR>
     </TABLE>
     </FORM>

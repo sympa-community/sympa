@@ -20,36 +20,36 @@
 <TABLE CELLSPACING=0	CELLPADDING=0>
 
 <TR VALIGN="TOP" NOWRAP>
-<TD><b>Search</b></TD>
-<TD><INPUT TYPE=RADIO NAME=how VALUE="phrase" CHECKED> this <font color="--DARK_COLOR--"><B>sentence</b></font></TD>
-<TD><INPUT TYPE=RADIO NAME=how VALUE="all"> <font color="--DARK_COLOR--"><b>all of</b></font> this words</TD>
-<TD><INPUT TYPE=RADIO NAME=how VALUE="any"> <font color="--DARK_COLOR--"><B>one of</b></font> this words</TD>
+<TD><b>Keresés</b></TD>
+<TD><INPUT TYPE=RADIO NAME=how VALUE="phrase" CHECKED> ezt a <font color="--DARK_COLOR--"><B>kifejezést</b></font></TD>
+<TD><INPUT TYPE=RADIO NAME=how VALUE="all"> <font color="--DARK_COLOR--"><b>az összes</b></font> szót</TD>
+<TD><INPUT TYPE=RADIO NAME=how VALUE="any"> <font color="--DARK_COLOR--"><B>bármlyik</b></font> szót</TD>
 </TR>
 
 <P><TR VALIGN="TOP" NOWRAP>
-<TD><b>Prefer</b></TD>
-<TD><INPUT TYPE=RADIO NAME=age VALUE="new" CHECKED> <font color="--DARK_COLOR--"><b>newest</b></font> messages</TD>
-<TD><INPUT TYPE=RADIO NAME=age VALUE="old"> <font color="--DARK_COLOR--"><b>oldest</b></font> messages</TD>
+<TD><b>Kijelzés</b></TD>
+<TD><INPUT TYPE=RADIO NAME=age VALUE="new" CHECKED> <font color="--DARK_COLOR--"><b>újabbak</b></font> elõl</TD>
+<TD><INPUT TYPE=RADIO NAME=age VALUE="old"> <font color="--DARK_COLOR--"><b>régebbiek</b></font> elõl</TD>
 </TR>
 
 <P><TR VALIGN="TOP" NOWRAP>
-<TD><b>Case </b></TD>
-<TD><INPUT TYPE=RADIO NAME=case VALUE="off" CHECKED> <font color="--DARK_COLOR--"><B>insensitive</b></font></TD>
-<TD><INPUT TYPE=RADIO NAME=case VALUE="on"> <font color="--DARK_COLOR--"><B>sensitive</B></font></TD>
+<TD><b>Betûk </b></TD>
+<TD><INPUT TYPE=RADIO NAME=case VALUE="off" CHECKED> <font color="--DARK_COLOR--"><B>kis-, nagybetû nem számít</b></font></TD>
+<TD><INPUT TYPE=RADIO NAME=case VALUE="on"> <font color="--DARK_COLOR--"><B>kis, nagybetû számít</B></font></TD>
 </TR>
 
 <P><TR VALIGN="TOP" NOWRAP>
-<TD><b>Check</b></TD>
-<TD><INPUT TYPE=RADIO NAME=match VALUE="partial" CHECKED> <font color="--DARK_COLOR--"><B>part</b></font> of word</TD>
-<TD><INPUT TYPE=RADIO NAME=match VALUE="exact"> <font color="--DARK_COLOR--"><B>entire</b></font> word</TD>
+<TD><b>Egyezés</b></TD>
+<TD><INPUT TYPE=RADIO NAME=match VALUE="partial" CHECKED> <font color="--DARK_COLOR--"><B>a szó része</b></font></TD>
+<TD><INPUT TYPE=RADIO NAME=match VALUE="exact"> <font color="--DARK_COLOR--"><B>teljesen egyezik</b></font> a szóval</TD>
 </TR>
 
 <P><TR VALIGN="TOP" NOWRAP>
-<TD><b>Layout</b></TD>
-<TD><INPUT TYPE=RADIO NAME=limit VALUE="10" CHECKED> <font color="--DARK_COLOR--"><B>10</b></font> results by page
+<TD><b>Kimenet</b></TD>
+<TD><INPUT TYPE=RADIO NAME=limit VALUE="10" CHECKED> <font color="--DARK_COLOR--"><B>10</b></font> találat oldalanként
 </TD>
-<TD><INPUT TYPE=RADIO NAME=limit VALUE="25"> <font color="--DARK_COLOR--"><B>25</b></font> results by page</TD>
-<TD><INPUT TYPE=RADIO NAME=limit VALUE="50"> <font color="--DARK_COLOR--"><B>50</b></font> results by page</TD>
+<TD><INPUT TYPE=RADIO NAME=limit VALUE="25"> <font color="--DARK_COLOR--"><B>25</b></font> találat oldalanként</TD>
+<TD><INPUT TYPE=RADIO NAME=limit VALUE="50"> <font color="--DARK_COLOR--"><B>50</b></font> találat oldalanként</TD>
 </TR>
 
 <P><TR VALIGN="TOP" NOWRAP>

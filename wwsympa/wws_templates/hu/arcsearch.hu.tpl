@@ -13,11 +13,11 @@ A keresésben megadott feltételek <b> &quot;[key_word]&quot;</b>
 <I>
 
 [IF how=phrase]
-	(This sentence, 
+	(Ez a kifejezés, 
 [ELSIF how=any]
-	(All of this words, 
+	(Az összes megadott szó, 
 [ELSE]
-	(Each of this words, 
+	(A szavak bármelyike, 
 [ENDIF]
 
 <i>
@@ -49,7 +49,7 @@ A keresésben megadott feltételek <b> &quot;[key_word]&quot;</b>
 
 <DL>
 <B>Találatok</b>
-<DT><B>[searched] messages selected amongst [num]...</b><BR>
+<DT><B>[searched] találatból [num] mutatva...</b><BR>
 
 [IF body]
 	<DD><B>[body_count]</b> találat a levél <i>Törzsben</i><BR>
