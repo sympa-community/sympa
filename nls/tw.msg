@@ -43,28 +43,28 @@ Thank you for your attention.\n\n\
 4	"------ End of suspected message ------\n"
 
 $set 6	Messages du module Commands.pm
-2	"¤£¯à¾\ÅªÀ°§UÀÉ®× : %s\n"
+2	"¤£¯à¾\\ÅªÀ°§UÀÉ®× : %s\n"
 5	"¶l±H²M³æ '%s' ¤£¦s¦b¡C\n"
 6	"¶l±H²M³æ %s ª`·N¨Æ¶µ :\n\n"
 7	"¶l±H²M³æ¬ö¿ý¨S¦³¥ô¦óÀÉ®×\n"
 8	"¥²­nªºÀÉ®×¤£¦s¦b¡C\n"
-9	"¨p¤H¶l±H²M³æ : §A¤£¯à¾\Åª¥¦ªº¬ö¿ý¡C\n"
+9	"¨p¤H¶l±H²M³æ : §A¤£¯à¾\\Åª¥¦ªº¬ö¿ý¡C\n"
 10	"¨p¤H¶l±H²M³æ : §A¤£¯àÂsÄý¦s¦bªºÀÉ®×¡C\n"
-11	"¨p¤H¶l±H²M³æ : §A¤£¯à¾\Åª­q¤á¸ê®Æ¡C\n"
+11	"¨p¤H¶l±H²M³æ : §A¤£¯à¾\\Åª­q¤á¸ê®Æ¡C\n"
 12	"­q¤á : %d\n"
 13	"«ü¥O»yªk¿ù»~¡C\n"
 15	"®Ö­ãµ{§Ç¥¢±Ñ\n\n"
 16	"§AÚÌ»{ªº¹q¶lÉO¥Ó½Ðªº¤£¬Û¦P¡A½Ð¥Î§Aªº¥D¹q¶l¦a§}"
 18	"§A¦b¶l±H²M³æ %s ¤¤¸g¤w°£¥h"
-21	"§ó·s§Aªº­q¾\¦b '%s'"
+21	"§ó·s§Aªº­q¾\\¦b '%s'"
 24	"³o¶l±H²M³æ¼È°±¥Ó½Ð¥[¤H¡C\n"
 25	"§Aªº¥Ó½Ð/°h¥X­n¨D¤w¸g³qª¾¤F¶l±H²M³æ¾Ö¦³ªÌ\n\
 ·íµ{§Ç§¹¦¨¡A§A±N·|¦¬¨ì³qª¾¡C\n"
-26	"¶l±H²M³æ %s ¨S¦³¨ú®ø­q¾\¥\¯à¡C\n"
-27	"Ãö¤_§Aªº­q¾\¤w¸g§ó·s¡C\n"
+26	"¶l±H²M³æ %s ¨S¦³¨ú®ø­q¾\\¥\\¯à¡C\n"
+27	"Ãö¤_§Aªº­q¾\\¤w¸g§ó·s¡C\n"
 28	"§A¤w¸g¬O %s ªº­q¤á¡C\n"
 29	"¦³Ãö¥»¶l±H²M³æªº¸ê®Æ±N·|¥t¥~ªº±Hµ¹§A¡C\n"
-30	"§Aªº¹q¶l¦a§}¤£¦b¶l±H²M³æ¤º¡A©Î³\§A¥Î¥t¥~ªº¹q¶l¦a§}¥Ó½Ð¡C\n"
+30	"§Aªº¹q¶l¦a§}¤£¦b¶l±H²M³æ¤º¡A©Î³\\§A¥Î¥t¥~ªº¹q¶l¦a§}¥Ó½Ð¡C\n"
 31	"§A¤w¦b¶l±H²M³æ %s ¤¤°£¥h¡A·PÁÂ§A¨Ï¥Î¥»¨t²Î¡C\n"
 32	"¥u¦³¶l±H²M³æ %s ªº¾Ö¦³ªÌ¤~¯à¼W¥[©Î°£¥h­q¤á\n\
 §A¤£¯à¨Ï¥Î³o«ü¥O¡A©Î§A¨S¦³µý©ú§Aªº¨­¥÷¡C\n"
@@ -110,7 +110,7 @@ EXPIRE «ü¥O¥¿¦b°õ¦æ¤¤ (%s)¡C\n\
 %s ´Áº¡(expiration)µ{§Ç¶}©l¡C¦}¥B±N¦b %d ¤Ñ§¹¦¨¡C\n\
 §A±N¦¬¨ì¨S¦³¦b«ü©w®É¶¡¤ºÚÌ»{ªº¹q¶l¦a§}¡C\n\
 §A¯à DEL «ü¥O¥h±¼³o¨Ç¹q¶l¦a§}¡C\n"
-57	"¬d¾\¨S¦³ÚÌ»{ªº¹q¶l¦a§} : EXPIREINDEX %s\n"
+57	"¬d¾\\¨S¦³ÚÌ»{ªº¹q¶l¦a§} : EXPIREINDEX %s\n"
 58	"§A¯à¤U¦C«ü¥O¥h±¼­q¤á :\n"
 60	"\
 EXPIRE «ü¥O¤£¯à°õ¦æ¡C\n\
@@ -119,7 +119,7 @@ EXPIRE «ü¥O¤£¯à°õ¦æ¡C\n\
  - ¥]§t¦Ü¤Ö20¦r\n\
  - ³Ì¦Z QUIT «ü¥O¡C\n"
 61	"¦]¦¹§Aªº¹q¶l±H¦^µ¹§A :\n"
-67	"¥H¤U¬O§A­q¾\¤Fªº¶l±H²M³æ :\n\n"
+67	"¥H¤U¬O§A­q¾\\¤Fªº¶l±H²M³æ :\n\n"
 68	"¤£¯à¥Î %s Áä¦s¨ú¹q¶l¡C\n"
 69	"%s ¶l¥ó§Aªºº¡´Á(expiration)¹q¶l¨ì¤U¦C¹q¶l¦a§} :\n"
 70	"\nPowered by Sympa %s : http://listes.cru.fr/sympa/\n"
@@ -127,10 +127,10 @@ EXPIRE «ü¥O¤£¯à°õ¦æ¡C\n\
 72	"\n\n§A¬O¤U¦C¶l±H²M³æªº¾Ö¦³ªÌ :\n\n"
 73	"\n\n§A¬O¤U¦C¶l±H²M³æªº½s¿è :\n\n"
 74	"®Ö­ã»Ý­n %s «ü¥O %s\n"
-75	"®Ö­ã¨ú®ø­q¾\ %s \n"
-76	"´£¿ô§Aªº %s ­q¾"
+75	"®Ö­ã¨ú®ø­q¾\\ %s \n"
+76	"´£¿ô§Aªº %s ­q¾\\"
 77	"§A¬O %s ¶l±H²M³æªº·|­û¦Ó¹q¶l¬O %s\n"
-78	"­q¾\´£¿ô¬£¨ì %d %s ¨C¤@­q¤á\n"
+78	"­q¾\\´£¿ô¬£¨ì %d %s ¨C¤@­q¤á\n"
 79	"¦³¤H­n¨D Sympa °e¥X subscribtion\n\
 ¨ì¶l±H²M³æ¤¤ %s ¨C¤@­q¤á \n\n\
 ¦pªG§A¤£·Q°õ¦æ³o°Ê§@¡A½Ð©¿²¤¥»¶l¥ó¡C\n\
@@ -139,7 +139,7 @@ EXPIRE «ü¥O¤£¯à°õ¦æ¡C\n\
 80	"§A¤£¯à°õ¦æ %s «ü¥O (¶l±H²M³æ: %s)\n"
 81	"¥Î¤á«ü¤Þ"
 82	"¤½²³¶l±H²M³æ"
-83	"¶l±H²M³æ³Q­q¾\ºK­n"
+83	"¶l±H²M³æ³Q­q¾\\ºK­n"
 84	"¥Î¤á '%s' ¸g¤w '%s' ªº­q¤á\n"
 85	"¥Î¤á %s ¸g¤w³QÁÜ½Ð¥[¤J¶l±H²M³æ %s.\n"
 86	"¥Î¤á %s ¦b¶l±H²M³æ %s ¤¤¬O¤£¨üÅwªï.\n"
@@ -165,7 +165,7 @@ $set 7	Commands syslog messages (Commands.pm)
 
 $set 8	Messages used in List.pm
 1	"¶l±H²M³æªº¾Ö¦³ªÌ %s"
-2	"¶l±H²M³æ %s ­q¾\­n¨D "
+2	"¶l±H²M³æ %s ­q¾\\­n¨D "
 3	"¿Ë·Rªº¶l±H²M³æ %s ¾Ö¦³ªÌ,\n\n\
 ¦³¤H­n¨D¥[¤H§Aªº¶l±H²M³æ¡C¦pªG§A±µ¨ü\n\
 ½Ð¨Ï¥Î¤U¦Cªº«ü¥O:\n\n\
@@ -192,7 +192,7 @@ mailto:%s?subject=REJECT%%20%s%%20%s\n"
 22	"FYI: «ü¥O %s ¶l±H²M³æ %s ¥Ñ %s %s \n (¤£»Ý­n°µ¥ô¦ó°Ê§@)\n"
 23	"Äµ§i : %s %s °h¥X¥¢±Ñ (¶l±H²M³æ: %s) ¦]¬°¥Lªº¹q¶l¦a§}\n\
 ¤£¦b¶l±H²M³æ¤º\n (§A¥i¯à¨ó§U³o¤H)\n"
-24	"¨ú®ø­q¾\­n¨D(¶l±H²M³æ %s) "
+24	"¨ú®ø­q¾\\­n¨D(¶l±H²M³æ %s) "
 25	"¿Ë·Rªº¶l±H²M³æ %s ¾Ö¦³ªÌ,\n\n\
 ¦³¤H­n¨D¥[¤H§Aªº¶l±H²M³æ¡C¦pªG§A±µ¨ü\n\
 ½Ð¨Ï¥Î¤U¦Cªº«ü¥O:\n\n\
@@ -206,10 +206,10 @@ You should delete bouncing subscribers : \n\
 $set 9	Messages for the review header
 1	"¾Ö¦³ªÌ Owner                   : %s\n"
 2	"¥D«ù¤H Moderator               : %s\n"
-3	"­q¾\ Subscription              : %s\n"
-4	"¨ú®ø­q¾\ Un-subscription       : %s\n"
+3	"­q¾\\ Subscription              : %s\n"
+4	"¨ú®ø­q¾\\ Un-subscription       : %s\n"
 5	"¥¿¦b¶Ç°e¹q¶l Sending messages  : %s\n"
-6	"­q¾\ªÌ²M³æ Subscribers' list   : %s\n"
+6	"­q¾\\ªÌ²M³æ Subscribers' list   : %s\n"
 7	"¦^µª¨ì Answer to               : %s\n"
 8	"³Ì¤j®e¶q Maximum size          : %d\n"
 9	"¶l±H²M³æ URL for the list      : %s\n"
