@@ -4250,6 +4250,9 @@ sub do_create_list {
 	return 'create_list_request';
     }
     
+    ## 'other' topic means no topic
+    $in{'topics'} = undef if ($in{'topics'} eq 'other');
+
     ## Check listname on SMTP server
     my $res = list_check_smtp($in{'listname'});
     unless ( defined($res) ) {
