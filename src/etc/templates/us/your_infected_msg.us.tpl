@@ -17,7 +17,7 @@ Passez votre machine à l'anti_virus !
 
 
 
-[IF lang=de]
+[ELSIF lang=de]
 Subject: Virus in Ihrer EMail
 Mime-version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
