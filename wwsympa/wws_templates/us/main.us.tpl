@@ -9,8 +9,9 @@
 <!-- for other browsers
 
   // To confirm a form submition
-  function request_confirm(my_form, my_message){
+  function request_confirm(my_form, my_message, my_action){
     if (window.confirm(my_message)) {
+      my_form.action.value = my_action;
       my_form.submit();
     }
   }
