@@ -3,6 +3,33 @@
 
 (See Changelog file for the full changes log)
 
+3.3.1 		11 Jan 2002
+
+   Bug fixes : 
+
+	src/List.pm: [reported by M. Langlois] List::user_add()
+	used the wrong entry in %$values.  With Oracle, subscriber
+	insertion failed (ORA-00936: missing expression) ; with other RDBMS
+	update_subscriber was empty
+
+	[Sergiy Zhuk] Bug fix: in List::_load_users_include() subscribers data 
+	could get corrupted if 'config' changed or 'subscribers.db' was deleted.
+
+	nls/: reverting us and fr translations
+
+	wwsympa/wwsympa.fcgi: replace buggy call to sendmail in
+	do_change_email by &List::send_global_file...
+
+   Changes :
+
+	src/List.pm: [Sergiy Zhuk] If 'include' data source is
+	unavailable, use previous cache (subscriber.db).  Caution: if one
+	data source is unavailable, other sources updates will not be
+	applied
+
+	src/alias_manager.pl: [proposed by Sergiy Zhuk] Remove temporary file 
+	when removing a list
+
 3.3		09 Jan 2002
 
    New feature :

@@ -1,3 +1,72 @@
+2002-01-11 14:37  salaun
+
+	* src/List.pm: [reported by M. Langlois] Bug fix: List::user_add()
+	used the wrong entry in %$values.  With Oracle, subscriber
+	insertion failed (ORA-00936: missing expression) ; with other RDBMS
+	update_subscriber was empty
+
+2002-01-11 12:18  salaun
+
+	* src/List.pm: [Sergiy Zhuk] Changes: If 'include' data source is
+	unavailable, use previous cache (subscriber.db).  Caution: if one
+	data source is unavailable, other sources updates will not be
+	applied
+
+2002-01-11 12:03  salaun
+
+	* src/List.pm: Supress debugging log entries
+
+2002-01-11 11:24  salaun
+
+	* src/: List.pm, sympa.pl: [Sergiy Zhuk] Bug fix: in
+	List::_load_users_include() subscribers data could get corrupted if
+	'config' changed or 'subscribers.db' was deleted.  [aumont] New
+	List::increment_msg_count() subroutine
+
+2002-01-11 11:21  salaun
+
+	* nls/: fr.msg, us.msg: Fix: reverting us and fr translations
+
+2002-01-11 10:53  salaun
+
+	* src/sympa.pl: [no log message]
+
+2002-01-11 09:55  salaun
+
+	* doc/sympa.tex.tpl: sendmail aliases for VRobot
+
+2002-01-11 08:31  salaun
+
+	* src/Commands.pm: log robot name when unknown list.
+
+2002-01-10 11:25  salaun
+
+	* wwsympa/wwsympa.fcgi: replace buggy call to sendmail in
+	do_change_email by &List::send_global_file...
+
+2002-01-10 08:37  salaun
+
+	* nls/us.msg: Translate LDAP 2pass parameters
+
+2002-01-10 08:18  aumont
+
+	* src/etc/scenari/create_list.intranet: [no log message]
+
+2002-01-10 08:15  salaun
+
+	* src/alias_manager.pl: Remove temporary file when removing a list,
+	report by Sergiy Zhuk
+
+2002-01-09 17:57  salaun
+
+	* wwsympa/wws_templates/: cn/arc.cn.tpl, cz/arc.cz.tpl,
+	de/arc.de.tpl, es/arc.es.tpl, fr/arc.fr.tpl, hu/arc.hu.tpl,
+	it/arc.it.tpl, us/arc.us.tpl: [Yves Agostini] Add missing '/'
+
+2002-01-09 15:35  salaun
+
+	* .version, ChangeLog, NEWS: Preparing Release 3.3
+
 2002-01-09 15:33  salaun
 
 	* configure, Makefile.in: Update
