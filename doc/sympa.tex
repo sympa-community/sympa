@@ -130,7 +130,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {18 June 2003}
+    \date {12 August 2003}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -1945,6 +1945,81 @@ see a  nice mailto adresses where others have nothing.
 	to perform bounces expiration. This task resets bouncing information for
 	addresses not bouncing in the last 10 days after the latest message distribution.
 	
+\subsection {\cfkeyword {purge\_orphan\_bounces\_task}}
+        \label {kw-purge-orphan-bounce-task}
+         
+        \default {Monthly}
+
+	This parameter tells what task will be used by \file {task\_manager.pl}
+	to perform bounces cleaning. This task delete bounces archives for 
+	unsuscribed users.	
+
+
+\subsection {\cfkeyword {eval\_bouncers\_task}}
+        \label {kw-eval-bouncers-task}
+         
+        \default {daily}
+	
+	The task eval\_bouncers evaluate all bouncing users for all lists, and fill
+	the field \cfkeyword {bounce\_score\_suscriber} in table \cfkeyword {suscriber\_table}
+	with a score. This score allow the auto-management of bouncing-users.
+
+\subsection {\cfkeyword {process\_bouncers\_task}}
+        \label {kw-process-bouncers-task}
+         
+        \default {monthly}
+	
+	The task process\_bouncers execute configured actions on bouncing users, according to 
+	their Score. The association between score and actions has to be done in List configuration,
+	This parameter define the frequency of execution for this task.
+
+
+\subsection {\cfkeyword {minimum\_bouncing\_count}}
+        \label {kw-minimum-bouncing-count}
+         
+        \default {10}
+	
+	This parameter is for the bounce-score evaluation : the bounce-score is a note that
+	allows the auto-management of bouncing users. This score is evaluated with,in particular, 
+	the number of messages bounces received for the user. This parameter sets the minimum number 
+	of these messages to allow the bounce-score evaluation for a user.
+
+\subsection {\cfkeyword {minimum\_bouncing\_period}}
+        \label {kw-minimum-bouncing-period}
+         
+        \default {10}
+	
+	Determine the minimum bouncing period for a user to allow his bounce-score evaluation.
+	Like previous parameter, if this value is too low, bounce-score will be 0.
+
+\subsection {\cfkeyword {bounce\_delay}}
+        \label {kw-bounce-score-min-bouncing-period}
+         
+        \default {0} Days
+	
+	Another parameter for the bounce-score evaluation : This one represent the average time
+	(days) for a bounce to come back to sympa-server after a post was send to a list.
+	Usually bounces are arriving same day as the original message.
+
+\subsection {\cfkeyword {default\_bounce\_level1\_rate}}
+        \label {kw-default-bounce-level1-rate}
+         
+        \default {45}
+	
+
+	This is the default value for \lparam {bouncerslevel1} \lparam {rate} entry
+	(\ref{bouncers-level1}, page~\pageref{bouncers-level1})
+
+
+\subsection {\cfkeyword {default\_bounce\_level2\_rate}}
+        \label {kw-default-bounce-level1-rate}
+         
+        \default {75}
+	
+	This is the default value for \lparam {bouncerslevel2} \lparam {rate} entry
+	(\ref{bouncers-level2}, page~\pageref{bouncers-level2})
+
+	
 \section {Priority related}
 
 \subsection {\cfkeyword {sympa\_priority}}  
@@ -2663,6 +2738,7 @@ CREATE TABLE subscriber_table (
 	subscribed_subscriber 	enum ('0','1'),
 	included_subscriber 	enum ('0','1'),
 	include_sources_subscriber varchar(50),
+	bounce_score_subscriber smallint (6),
 	PRIMARY KEY (list_subscriber, user_subscriber),
 	INDEX (user_subscriber,list_subscriber)
 );
@@ -4251,6 +4327,7 @@ Rules are defined as follows :
                 | older (<date>, <date>)    # true if first date is anterior to the second date
                 | newer (<date>, <date>)    # true if first date is posterior to the second date
 <var> ::= [email] | [sender] | [user-><user_key_word>] | [previous_email]
+                  | [remote_host] | [remote_addr]
 	 	  | [subscriber-><subscriber_key_word>] | [list-><list_key_word>] 
 		  | [conf-><conf_key_word>] | [msg_header-><smtp_key_word>] | [msg_body] 
 	 	  | [msg_part->type] | [msg_part->body] | [is_bcc] | [current_date] | <string>
@@ -4545,6 +4622,18 @@ Here is the list of current avalable commands :
 \item update\_crl (\texttt{<}file name\texttt{>}, \texttt{<}date value\texttt{>})
 
 	Update certificate revocation lists (CRL) which are expired or will expire before the date value. The file stores the CRL's URLs.
+
+\item purge\_orphan\_bounces()
+
+        Clean bounces by removing unsuscribed-users archives.
+
+\item eval\_bouncers()
+
+        Evaluate all bouncing users of all list and give them a score from 0 to 100. (0 = no bounces for this user, 100 is for users who should be removed).
+
+\item process\_bouncers()
+
+        Execute actions defined in list configuration on each bouncing users, according to their score.
 \end {itemize}
 
 Model files may have a scenario-like title line at the beginning.
@@ -6862,6 +6951,91 @@ halt_rate	20
 \end{verbatim}
 \end {quote}
 
+
+\subsection {bouncers\_level1}
+    \label {bouncerslevel1}
+
+\begin{itemize}
+
+\item
+\label {rate}
+\lparam {rate} 
+
+	\default {\cfkeyword {bouncers\_level1\_rate} config parameter}
+
+	 Each bouncing user have a score (from 0 to 100).This parameter define the lower score 
+	 for a user to be a \"level1 bouncing user\". For example, with default values : Users with a score
+	 between 45 and 80 are level1 bouncers.
+\item
+\label {action}
+\lparam {action} 
+
+	\default {\cfkeyword {bouncers\_level1\_action} config parameter}
+
+	This parameter define which task is automaticaly applied on level 1 bouncing
+	users: for exemple, automaticaly notify all level1 users.
+
+\item
+\label {notification}
+\lparam {Notification} 
+
+	\default {owner}
+
+	When automatic task is executed on level 1 bouncers, a notification
+	email can be send to listowner or listmaster. This email contain the adresses
+	of concerned users and the name of the action executed.
+
+\end{itemize}
+
+\subsection {bouncers\_level2}
+    \label {bouncers-level2}
+
+\begin{itemize}
+
+\item
+\label {rate2}
+\lparam {rate} 
+
+	\default {\cfkeyword {bouncers\_level2\_rate} config parameter}
+
+	 Each bouncing user have a score (from 0 to 100).This parameter define the lower score 
+	 for a user to be a \"level 2 bouncing user\". For example, with default values : Users with a score
+	 between 75 and 100 are level 2 bouncers.
+\item
+\label {action2}
+\lparam {action} 
+
+	\default {\cfkeyword {bouncers\_level1\_action} config parameter}
+
+	This parameter define which task is automaticaly applied on level 2 bouncing
+	users: for exemple, automaticaly notify all level1 users.
+
+\item
+\label {Notification2}
+\lparam {Notification} 
+
+	\default {owner}
+
+	When automatic task is executed on level 2 bouncers, a notification
+	email can be send to listowner or listmaster. This email contain the adresses
+	of concerned users and the name of the action executed.
+
+\end{itemize}
+
+\textit {Example:} 
+
+\begin {quote}
+  \begin{verbatim}
+    ## All bouncing adresses with a score between 75 and 100 
+    ## will be unsuscribed, and listmaster will recieve an email
+    Bouncers level 2
+    rate :75 Points
+    action : remove\_bouncers 
+    Notification : Listmaster
+   
+  \end{verbatim}
+\end {quote}
+
 \subsection {welcome\_return\_path}
 \label {welcome-return-path}
 
@@ -7410,9 +7584,71 @@ When reviewing a list, bouncing addresses are tagged as bouncing.
 You may access further information such as dates of first and last bounces,
 number of received bounces for the address, the last bounce itself.
 
-Future development of \Sympa should include the automatic deletion
-of bouncing addresses.
+With these informations, the automatic bounce management is possible:
 
+\begin{itemize}
+
+\item
+  The automatic task \cfkeyword {eval\_bouncer} gives a score foreach bouncing user.
+  The score, between 0 to 100, allows the classification of bouncing users in two levels.
+  (Level 1 or 2). 
+  According to the level, automatic actions are executed periodicaly by \cfkeyword {process\_bouncers}
+  task.
+
+\item The score evaluation main parameters are: 
+  
+  \cfkeyword {Bounces count}: The number of bouncing messages received by sympa for the user.
+
+  \cfkeyword {Type rate} : Bounces are classified depending on the type of errors generated on the user
+  side. If the error type is "mailbox is full" (ie a temporary 4.2.2 error type) the type rate will be
+  0.5 whereas permanent errors (5.x.x) have a type rate equal to 1.
+
+  \cfkeyword {Regularity rate} : This rate tells if the bounces where received regularly, compared to list
+ traffic. The list traffic is deduced from \file {msg\_count} file data.
+
+
+  \begin {quote}
+    \begin{verbatim}
+      The score formula is  :
+  
+      Score = bounce_count * type_rate * regularity_rate
+
+    \end{verbatim}
+  \end {quote}
+
+
+  To avoid making decisions (ie defining a score) without enough relevant data, the score is not
+  evaluated if :
+	
+\begin {itemize}
+	\item The number of the number of received bounces is lower than \cfkeyword {minimum\_bouncing\_count} 
+	(see \ref {kw-minimum-bouncing-count}, page~\pageref {kw-minimum-bouncing-count})
+
+	\item The bouncing period is shorter than \cfkeyword {minimum\_bouncing\_period} 
+	(see \ref {kw-minimum-bouncing-period}, page~\pageref {kw-minimum-bouncing-period})
+
+\end {itemize}
+  
+
+\item
+  You can define the limit between each level via the \textbf {List configuration pannel}, 
+  in subsection \textbf {Bounce settings}. (see \ref {rate}) The principle consists in
+  associating a score interval with a level.
+
+\item 
+  You can also define wich action must be applied on each category of user.(see \ref {action})
+  Each time an action will be done, a notification email will be send to the person of your choice.
+  (see \ref {notification})
+
+
+%It's possible to add your own actions, by editing the task \cfkeyword {process\_bouncers}
+%in the \file {task\_manager.pl}: 
+%- First, just add in the Hash \cfkeyword {\%actions} 
+%the location of your action subroutine (by default in \file {List.pm}), 
+%- Then add the name of your action in the Hash \cfkeyword {\%::pinfo} 
+%(file:\file {List.pm}), in the field \cfkeyword {bouncers\_levelX->bounce\_level1\_action->format}
+
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Using Sympa commands

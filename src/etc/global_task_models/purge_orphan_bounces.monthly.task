@@ -1,0 +1,6 @@
+title.fr Suppression des bounces pour les adresses désabonnées
+title.us delete bounces for unsuscribed adresses
+
+/ACTION
+purge_orphan_bounces ()
+next([execution_date] + 1m, ACTION)

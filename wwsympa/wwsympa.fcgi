@@ -385,7 +385,7 @@ my $birthday = time ;
 if ($wwsconf->{'use_fast_cgi'}) {
 
     foreach my $l ( &List::get_lists('*') ) {
-	my $list = new List ($l);
+        my $list = new List ($l);
     }
 }
 
@@ -407,12 +407,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      ## Get params in a hash
  #    foreach ($query->param) {
- #	$in{$_} = $query->param($_);
+ #      $in{$_} = $query->param($_);
  #    }
      %in = $query->Vars;
 
      foreach my $k (keys %::changed_params) {
-	 &do_log('debug3', 'Changed Param: %s', $k);
+         &do_log('debug3', 'Changed Param: %s', $k);
      }
 
      ## Free terminated sendmail processes
@@ -449,32 +449,32 @@ if ($wwsconf->{'use_fast_cgi'}) {
      my $http_host = $ENV{'HTTP_HOST'};
      $http_host =~ s/:\d+$//; ## suppress port
      unless (($http_host =~ /$param->{'cookie_domain'}$/) || 
-	     ($param->{'cookie_domain'} eq 'localhost')) {
-	 &wwslog('notice', 'Cookie_domain(%s) does NOT match HTTP_HOST; setting cookie_domain to %s', $param->{'cookie_domain'}, $http_host);
-	 $param->{'cookie_domain'} = $http_host;
+             ($param->{'cookie_domain'} eq 'localhost')) {
+         &wwslog('notice', 'Cookie_domain(%s) does NOT match HTTP_HOST; setting cookie_domain to %s', $param->{'cookie_domain'}, $http_host);
+         $param->{'cookie_domain'} = $http_host;
      }
 
      $log_level = $Conf{'robots'}{$robot}{'log_level'};
 
      ## Sympa parameters in $param->{'conf'}
      if (defined $Conf{'robots'}{$robot}) {
-	 $param->{'conf'} = {'email' => $Conf{'robots'}{$robot}{'email'},
-			     'host' =>  $Conf{'robots'}{$robot}{'host'},
-			     'sympa' => $Conf{'robots'}{$robot}{'sympa'},
-			     'request' => $Conf{'robots'}{$robot}{'request'}
-			 };
+         $param->{'conf'} = {'email' => $Conf{'robots'}{$robot}{'email'},
+                             'host' =>  $Conf{'robots'}{$robot}{'host'},
+                             'sympa' => $Conf{'robots'}{$robot}{'sympa'},
+                             'request' => $Conf{'robots'}{$robot}{'request'}
+                         };
      }else {
-	 $param->{'conf'} = {'email' => $Conf{'email'},
-			     'host' =>  $Conf{'host'},
-			     'sympa' => $Conf{'sympa'},
-			     'request' => $Conf{'request'}
-			 };
+         $param->{'conf'} = {'email' => $Conf{'email'},
+                             'host' =>  $Conf{'host'},
+                             'sympa' => $Conf{'sympa'},
+                             'request' => $Conf{'request'}
+                         };
      }
      $param->{'wwsconf'} = $wwsconf;
 
      foreach my $p ('dark_color','light_color','text_color','bg_color','error_color',
-		    'selected_color','shaded_color') { 
-	 $param->{$p} = &Conf::get_robot_conf($robot, $p);
+                    'selected_color','shaded_color') { 
+         $param->{$p} = &Conf::get_robot_conf($robot, $p);
      }
 
      $param->{'path_cgi'} = $ENV{'SCRIPT_NAME'};
@@ -483,9 +483,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      ## Change to list root
      unless (chdir($Conf{'home'})) {
-	 &error_message('chdir_error');
-	 &wwslog('info','unable to change directory');
-	 exit (-1);
+         &error_message('chdir_error');
+         &wwslog('info','unable to change directory');
+         exit (-1);
      }
 
      ## Sets the UMASK
@@ -496,24 +496,24 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      ## Compatibility issue with old a-sign.at certs
      if (!$ENV{'SSL_CLIENT_S_DN_Email'} && 
-	 $ENV{'SSL_CLIENT_S_DN'} =~ /\+MAIL=([^\+\/]+)$/) {
-	 $ENV{'SSL_CLIENT_S_DN_Email'} = $1;
+         $ENV{'SSL_CLIENT_S_DN'} =~ /\+MAIL=([^\+\/]+)$/) {
+         $ENV{'SSL_CLIENT_S_DN_Email'} = $1;
       }
 
      if (($ENV{'SSL_CLIENT_S_DN_Email'}) && ($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS')) {
-	 $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_DN_Email'});
-	 $param->{'auth_method'} = 'smime';
-	 $param->{'ssl_client_s_dn'} = $ENV{'SSL_CLIENT_S_DN'};
-	 $param->{'ssl_client_v_end'} = $ENV{'SSL_CLIENT_V_END'};
-	 $param->{'ssl_client_i_dn'} =  $ENV{'SSL_CLIENT_I_DN'};
-	 $param->{'ssl_cipher_usekeysize'} =  $ENV{'SSL_CIPHER_USEKEYSIZE'};
+         $param->{'user'}{'email'} = lc($ENV{'SSL_CLIENT_S_DN_Email'});
+         $param->{'auth_method'} = 'smime';
+         $param->{'ssl_client_s_dn'} = $ENV{'SSL_CLIENT_S_DN'};
+         $param->{'ssl_client_v_end'} = $ENV{'SSL_CLIENT_V_END'};
+         $param->{'ssl_client_i_dn'} =  $ENV{'SSL_CLIENT_I_DN'};
+         $param->{'ssl_cipher_usekeysize'} =  $ENV{'SSL_CIPHER_USEKEYSIZE'};
 
      }elsif ($ENV{'HTTP_COOKIE'} =~ /(user|sympauser)\=/) {
-	 $param->{'user'}{'email'} = &wwslib::get_email_from_cookie($Conf{'cookie'});
-	 $param->{'auth_method'} = 'md5';
+         $param->{'user'}{'email'} = &wwslib::get_email_from_cookie($Conf{'cookie'});
+         $param->{'auth_method'} = 'md5';
      }else{
-	 ## request action need a auth_method even if the user is not authenticated ...
-	 $param->{'auth_method'} = 'md5';
+         ## request action need a auth_method even if the user is not authenticated ...
+         $param->{'auth_method'} = 'md5';
      }
 
 
@@ -522,29 +522,29 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'alt_emails'} = &cookielib::check_cookie_extern($ENV{'HTTP_COOKIE'},$Conf{'cookie'},$param->{'user'}{'email'});
 
      if ($param->{'user'}{'email'}) {
-	 $param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
+         $param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
 
-	 if (&List::is_user_db($param->{'user'}{'email'})) {
-	     $param->{'user'} = &List::get_user_db($param->{'user'}{'email'});
-	 }
+         if (&List::is_user_db($param->{'user'}{'email'})) {
+             $param->{'user'} = &List::get_user_db($param->{'user'}{'email'});
+         }
 
-	 ## For the parser to display an empty field instead of [xxx]
-	 $param->{'user'}{'gecos'} ||= '';
-	 unless (defined $param->{'user'}{'cookie_delay'}) {
-	     $param->{'user'}{'cookie_delay'} = $wwsconf->{'cookie_expire'};
-	 }
-	 ## get subscrition using cookie and set param for use in templates
-	 @{$param->{'get_which'}}  =  &cookielib::get_which_cookie($ENV{'HTTP_COOKIE'});
+         ## For the parser to display an empty field instead of [xxx]
+         $param->{'user'}{'gecos'} ||= '';
+         unless (defined $param->{'user'}{'cookie_delay'}) {
+             $param->{'user'}{'cookie_delay'} = $wwsconf->{'cookie_expire'};
+         }
+         ## get subscrition using cookie and set param for use in templates
+         @{$param->{'get_which'}}  =  &cookielib::get_which_cookie($ENV{'HTTP_COOKIE'});
 
-	 # if no cookie was received, look for subscriptions
-	 unless (defined $param->{'get_which'}) {
-	     @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
-	 }
+         # if no cookie was received, look for subscriptions
+         unless (defined $param->{'get_which'}) {
+             @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
+         }
 
      }else{
 
-	 ## Get lang from cookie
-	 $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'});
+         ## Get lang from cookie
+         $param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'});
      }
 
      ## Action
@@ -563,53 +563,53 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
      ## Session loop
      while ($action) {
-	 unless (&check_param_in()) {
-	     &error_message('wrong_param');
-	     &wwslog('info','Wrong parameters');
-	     last;
-	 }
+         unless (&check_param_in()) {
+             &error_message('wrong_param');
+             &wwslog('info','Wrong parameters');
+             last;
+         }
 
-	 $param->{'host'} = $list->{'admin'}{'host'} || $robot;
-	 $param->{'domain'} = $param->{'host'};
+         $param->{'host'} = $list->{'admin'}{'host'} || $robot;
+         $param->{'domain'} = $param->{'host'};
 
-	 ## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
+         ## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
 
-	 $param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
-	 &Language::SetLang($param->{'lang'});
-	 &POSIX::setlocale(&POSIX::LC_ALL, Msg(14, 1, 'en_US'));
+         $param->{'lang'} = $param->{'cookie_lang'} || $param->{'user'}{'lang'} || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
+         &Language::SetLang($param->{'lang'});
+         &POSIX::setlocale(&POSIX::LC_ALL, Msg(14, 1, 'en_US'));
 
-	 ## use default_home parameter
-	 if ($action eq 'home') {
-	     $action = $Conf{'robots'}{$robot}{'default_home'} || $wwsconf->{'default_home'};
+         ## use default_home parameter
+         if ($action eq 'home') {
+             $action = $Conf{'robots'}{$robot}{'default_home'} || $wwsconf->{'default_home'};
 
-	     if (! &tools::get_filename('etc', 'topics.conf', $robot) &&
-		 ($action eq 'home')) {
-		 $action = 'lists';
-	     }
-	 }
+             if (! &tools::get_filename('etc', 'topics.conf', $robot) &&
+                 ($action eq 'home')) {
+                 $action = 'lists';
+             }
+         }
 
-	 unless ($comm{$action}) {
-	     &error_message('unknown_action');
-	     &wwslog('info','unknown action %s', $action);
-	     last;
-	 }
+         unless ($comm{$action}) {
+             &error_message('unknown_action');
+             &wwslog('info','unknown action %s', $action);
+             last;
+         }
 
-	 $param->{'action'} = $action;
+         $param->{'action'} = $action;
 
-	 my $old_action = $action;
+         my $old_action = $action;
 
-	 ## Execute the action ## 
-	 $action = &{$comm{$action}}();
+         ## Execute the action ## 
+         $action = &{$comm{$action}}();
 
-	 delete($param->{'action'}) if (! defined $action);
+         delete($param->{'action'}) if (! defined $action);
 
-	 if ($action eq $old_action) {
-	     &wwslog('info','Stopping loop with %s action', $action);
-	     #undef $action;
-	     $action = 'home';
-	 }
+         if ($action eq $old_action) {
+             &wwslog('info','Stopping loop with %s action', $action);
+             #undef $action;
+             $action = 'home';
+         }
 
-	 undef $action if ($action == 1);
+         undef $action if ($action == 1);
      }
 
      ## Prepare outgoing params
@@ -5114,16 +5114,24 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 $i->{'bounce_count'} = $3;
 	 if ($5 =~ /^(\d+)\.\d+\.\d+$/) {
 	     $i->{'bounce_class'} = $1;
-	 }	
+	 }
 
+	 ## Define color in function of bounce_score
+	 if ($i->{'bounce_score'} <= $list->{'admin'}{'bouncers_level1'}{'rate'}) {
+	     $i->{'bounce_level'} = 0;
+	 }elsif ($i->{'bounce_score'} <= $list->{'admin'}{'bouncers_level2'}{'rate'}){
+	     $i->{'bounce_level'} = 1;
+	 }else{
+	     $i->{'bounce_level'} = 2;
+	 }
 	 push @users, $i;
      }
 
      my $record;
      foreach my $i (sort 
-		    {($b->{'bounce_count'} <=> $a->{'bounce_count'}) ||
+		    {($b->{'bounce_score'} <=> $a->{'bounce_score'}) ||
 			 ($b->{'last_bounce'} <=> $a->{'last_bounce'}) ||
-			     ($b->{'bounce_class'} <=> $a->{'bounce_class'}) }
+			 ($b->{'bounce_class'} <=> $a->{'bounce_class'}) }
 		    @users) {
 	 $record++;
 
@@ -5201,7 +5209,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     return undef;
 	 }
 
-	 unless( $list->update_user($email, {'bounce' => 'NULL', 'update_date' => time})) {
+	 unless( $list->update_user($email, {'bounce' => 'NULL', 'update_date' => time, 'score' => 0})) {
 	     &error_message('failed');
 	     &wwslog('info','do_resetbounce: failed update database for %s', $email);
 	     return undef;

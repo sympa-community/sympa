@@ -1,0 +1,8 @@
+title.fr Effectue les actions automatiques sur les bouncers
+title.us Auto management of bouncing users
+
+/ACTION
+process_bouncers ()
+next([execution_date] + 1w, ACTION)
+
+

@@ -28,14 +28,36 @@ edit_list.conf format has changed :
 Refer to documentation to adapt [param0].
 Until then we recommend your remove [param0] ; 
 default configuration will be used.
+
 [ELSIF type=sync_include_failed]
 Subject: subscribers update failed for list [param0]
 
 Sympa could not include subscribers from external data sources ; the
 database or LDAP directory might be unreachable. 
 Check Sympa log files for more precise information
+
+[ELSIF type=automatic_bounce_management]
+Subject:List [list->name] automatic bounce management
+
+[IF action=notify_bouncers]
+Because we received MANY non-delivery reports, the subsribers listed bellow have been
+notified that they might be removed from list [list->name] :
+[ELSIF action=remove_bouncers]
+Because we received MANY non-delivery reports, the subsribers listed bellow have been
+removed from list [list->name] :
+[ELSIF action=none]
+Because we received MANY non-delivery reports, the subsribers listed bellow have been
+selected by Sympa as severe bouncing addresses :
+[ENDIF]
+
+
+[FOREACH user IN  user_list]
+[user]
+[END]
+
 [ELSE]
 Subject: [type]
 
 [param0]
 [ENDIF]
+

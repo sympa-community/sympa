@@ -337,6 +337,48 @@ my %alias = ('reply-to' => 'reply_to',
 			 'title_id' => 7,
 			 'group' => 'bounces'
 		     },
+	    'bouncers_level1' => {'format' => {'rate' => {'format' => '\d+',
+								 'length' => 2,
+								 'unit' => 'Points',
+								 'default' => {'conf' => 'default_bounce_level1_rate'},
+								 'title_id' => 214,
+								 'order' => 1
+								 },
+				               'action' => {'format' => ['remove_bouncers','notify_bouncers','none'],
+								   'default' => 'notify_bouncers',
+								   'title_id' => 215,
+								   'order' => 2
+								   },
+					       'notification' => {'format' => ['none','owner','listmaster'],
+									 'default' => 'owner',
+									 'title_id' => 219,
+									 'order' => 3
+									 }
+					   },
+				      'title_id' => 213,
+				      'group' => 'bounces'
+				  },
+	     'bouncers_level2' => {'format' => {'rate' => {'format' => '\d+',
+								 'length' => 2,
+								 'unit' => 'Points',
+								 'default' => {'conf' => 'default_bounce_level2_rate'},
+								 'title_id' => 217,
+								 'order' => 1
+								 },
+				               'action' => {'format' =>  ['remove_bouncers','notify_bouncers','none'],
+								   'default' => 'remove_bouncers',
+								   'title_id' => 218,
+								   'order' => 2
+								   },
+					       'notification' => {'format' => ['none','owner','listmaster'],
+									 'default' => 'owner',
+									 'title_id' => 219,
+									 'order' => 3
+									 }
+								     },
+				      'title_id' => 216,
+				      'group' => 'bounces'
+				  },
 	    'clean_delay_queuemod' => {'format' => '\d+',
 				       'length' => 3,
 				       'unit' => 'days',
@@ -984,7 +1026,6 @@ my %alias = ('reply-to' => 'reply_to',
 				      'title_id' => 85,
 				      'group' => 'bounces'
 				  },
-	    
 	    'export' => {'format' => '\w+',
 			 'split_char' => ',',
 			 'occurrence' => '0-n',
@@ -1562,6 +1603,7 @@ sub get_owners_email {
 
 ## Send a sub/sig notice to listmasters.
 sub send_notify_to_listmaster {
+
     my ($operation, $robot, @param) = @_;
     do_log('debug2', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
 
@@ -1606,12 +1648,25 @@ sub send_notify_to_listmaster {
 	*FH = &smtp::smtpto($Conf{'request'}, \$rcpt);
 	$notice->print(\*FH);
 	close FH;
+    #Virus scan failed
     }elsif ($operation eq 'virus_scan_failed') {
 	&send_global_file('listmaster_notification', $Conf{'listmaster'}, $robot,
 			 {'to' => "listmaster\@$Conf{'host'}",
 			  'type' => 'virus_scan_failed',
 			  'filename' => $param[0],
 			  'error_msg' => $param[1]});	
+     
+    # Automatic action done on bouncing adresses
+    }elsif ($operation eq 'automatic_bounce_management') {
+	my $list = new List $param[0];
+	my $host = &Conf::get_robot_conf($robot, 'host');
+
+	$list->send_file('listmaster_notification',&Conf::get_robot_conf($robot, 'listmaster'), $robot,
+			  {'to' => "listmaster\@$host",
+			   'type' => 'automatic_bounce_management',
+			   'action' => $param[1],
+			   'user_list' => $param[2]});		
+
     }else {
 	my $data = {'to' => "listmaster\@$Conf{'host'}",
 		 'type' => $operation
@@ -1626,7 +1681,7 @@ sub send_notify_to_listmaster {
     
     return 1;
 }
-
+ 
 ## Send a sub/sig notice to the owners.
 sub send_notify_to_owner {
     my ($self, $param) = @_;
@@ -1687,6 +1742,12 @@ sub send_notify_to_owner {
         my $body = sprintf Msg(8, 27, "Bounce rate in list %s is %d%%.\nYou should delete bouncing subscribers : %s/reviewbouncing/%s"), $name, $rate, &Conf::get_robot_conf($self->{'domain'}, 'wwsympa_url'), $name ;
         &mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
 
+    }elsif ($param->{'type'} eq 'automatic_bounce_management') {
+
+	my $subject = 'Automatic bounce management';
+	my $body = $param->{'body'};
+	&mail::mailback (\$body, {'Subject' => $subject}, 'sympa', $to, $self->{'domain'}, @rcpt);
+
     }elsif ($param->{'who'}) {
 	my ($body, $subject);
 	$subject = sprintf(Msg(8, 21, "FYI: %s list %s from %s %s"), $param->{'type'}, $name, $param->{'who'}, $param->{'gecos'});
@@ -1702,6 +1763,49 @@ sub send_notify_to_owner {
 	
     }
     
+}
+
+sub new_send_notify_to_owner {
+    
+    my ($self,$operation,@param) = @_;
+
+    &do_log('debug2', 'List::(new_)send_notify_to_owner(%s, %s)', $self->{'name'}, $operation);
+
+    my $host = $self->{'admin'}->{'host'};
+    my @to = $self->get_owners_email;
+    my $robot = $self->{'domain'};
+
+    unless (@to) {
+	do_log('notice', 'Warning : no owner defined or all of them use nomail option in list %s', $self->{'name'} );
+	return undef;
+    }
+
+    if ($operation eq 'automatic_bounce_management') {
+	
+	$self->send_file('listowner_notification',\@to, $robot,
+			 {'type' => 'automatic_bounce_management',
+			  'action' => $param[1],
+			  'user_list' => $param[2]});		
+    }
+    return 1;
+}
+
+sub send_notify_to_subscriber{
+
+    my ($self,$operation,$who,@param) = @_;
+
+    &do_log('debug2', 'List::send_notify_to_subscriber(%s, %s)', $self->{'name'}, $operation);
+
+    my $host = $self->{'admin'}->{'host'};
+    my $robot = $self->{'domain'};
+
+     if ($operation eq 'auto_notify_bouncers') {	
+	 $self->send_file('subscriber_notification',$who, $robot,
+			  {'to' => "$who",
+			   'type' => 'auto_notify_bouncers'});			       		
+	 
+     }
+    return 1;
 }
 
 ## Send a notification to authors of messages sent to editors
@@ -2580,6 +2684,11 @@ sub send_file {
 	if ($data->{'subscriber'}) {
 	    $data->{'subscriber'}{'date'} = &POSIX::strftime("%d %b %Y", localtime($data->{'subscriber'}{'date'}));
 	    $data->{'subscriber'}{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($data->{'subscriber'}{'update_date'}));
+	    if ($data->{'subscriber'}{'bounce'}) {
+		$data->{'subscriber'}{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
+		
+		$data->{'subscriber'}{'first_bounce'} =  &POSIX::strftime("%d %b %Y",localtime($1));
+	    }
 	}
 	
 	unless ($data->{'user'}{'password'}) {
@@ -2936,9 +3045,9 @@ sub get_subscriber {
 
 	if ($Conf{'db_type'} eq 'Oracle') {
 	    ## "AS" not supported by Oracle
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", bounce_subscriber \"bounce\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\"  %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $update_field, $additional, $dbh->quote($email), $dbh->quote($name);
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\"  %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $update_field, $additional, $dbh->quote($email), $dbh->quote($name);
 	}else {
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, reception_subscriber AS reception, visibility_subscriber AS visibility, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $update_field, $additional, $dbh->quote($email), $dbh->quote($name);
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, reception_subscriber AS reception, visibility_subscriber AS visibility, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s)", $date_field, $update_field, $additional, $dbh->quote($email), $dbh->quote($name);
 	}
 
 	push @sth_stack, $sth;
@@ -3059,11 +3168,11 @@ sub get_first_user {
 	## Oracle
 	if ($Conf{'db_type'} eq 'Oracle') {
 
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\" %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\" %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
 
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
-		$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", substr(user_subscriber,instr(user_subscriber,'\@')+1) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s ) ORDER BY \"dom\"", $date_field, $update_field, $additional, $dbh->quote($name);
+		$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", substr(user_subscriber,instr(user_subscriber,'\@')+1) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s ) ORDER BY \"dom\"", $date_field, $update_field, $additional, $dbh->quote($name);
 
 	    }elsif ($sortby eq 'email') {
 		$statement .= " ORDER BY \"email\"";
@@ -3081,11 +3190,11 @@ sub get_first_user {
 	## Sybase
 	}elsif ($Conf{'db_type'} eq 'Sybase'){
 
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\" %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\" %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
 	    
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
-		$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", substring(user_subscriber,charindex('\@',user_subscriber)+1,100) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY \"dom\"", $date_field, $update_field, $additional, $dbh->quote($name);
+		$statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", substring(user_subscriber,charindex('\@',user_subscriber)+1,100) \"dom\" %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY \"dom\"", $date_field, $update_field, $additional, $dbh->quote($name);
 		
 	    }elsif ($sortby eq 'email') {
 		$statement .= " ORDER BY \"email\"";
@@ -3104,13 +3213,13 @@ sub get_first_user {
 	## mysql
 	}elsif ($Conf{'db_type'} eq 'mysql') {
 	    
-    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
+    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
 	    
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
 		## Redefine query to set "dom"
 
-		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, REVERSE(SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50)) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $update_field, $additional, $dbh->quote($name);
+		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, REVERSE(SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50)) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $update_field, $additional, $dbh->quote($name);
 
 	    }elsif ($sortby eq 'email') {
 		## Default SORT
@@ -3134,13 +3243,13 @@ sub get_first_user {
 	## Pg    
 	}else {
 	    
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
 	    
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
 		## Redefine query to set "dom"
 
-		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $update_field, $additional, $dbh->quote($name);
+		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $update_field, $additional, $dbh->quote($name);
 
 	    }elsif ($sortby eq 'email') {
 		$statement .= ' ORDER BY email';
@@ -3329,9 +3438,9 @@ sub get_first_bouncing_user {
 
     if ($Conf{'db_type'} eq 'Oracle') {
 	## "AS" not supported by Oracle
-	$statement = sprintf "SELECT user_subscriber \"email\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", %s \"date\", %s \"update_date\" %s FROM subscriber_table WHERE (list_subscriber = %s AND bounce_subscriber is not NULL)", $date_field, $update_field, $additional, $dbh->quote($name);
+	$statement = sprintf "SELECT user_subscriber \"email\", reception_subscriber \"reception\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\",bounce_score_subscriber \"bounce_score\", %s \"date\", %s \"update_date\" %s FROM subscriber_table WHERE (list_subscriber = %s AND bounce_subscriber is not NULL)", $date_field, $update_field, $additional, $dbh->quote($name);
     }else {
-	$statement = sprintf "SELECT user_subscriber AS email, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, %s AS date, %s AS update_date %s FROM subscriber_table WHERE (list_subscriber = %s AND bounce_subscriber is not NULL)", $date_field, $update_field, $additional, $dbh->quote($name);
+	$statement = sprintf "SELECT user_subscriber AS email, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce,bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date %s FROM subscriber_table WHERE (list_subscriber = %s AND bounce_subscriber is not NULL)", $date_field, $update_field, $additional, $dbh->quote($name);
     }
 
     push @sth_stack, $sth;
@@ -3583,6 +3692,7 @@ sub update_user {
 			  gecos => 'comment_subscriber',
 			  password => 'password_user',
 			  bounce => 'bounce_subscriber',
+			  score => 'bounce_score_subscriber',
 			  email => 'user_subscriber',
 			  subscribed => 'subscribed_subscriber',
 			  included => 'included_subscriber',
@@ -3597,6 +3707,7 @@ sub update_user {
 			  gecos => 'subscriber_table',
 			  password => 'user_table',
 			  bounce => 'subscriber_table',
+			  score => 'subscriber_table',
 			  email => 'subscriber_table',
 			  subscribed => 'subscriber_table',
 			  included => 'subscriber_table',
@@ -6591,7 +6702,8 @@ sub probe_db {
 		      'comment_subscriber' => 'varchar(150)',
 		      'subscribed_subscriber' => "enum('0','1')",
 		      'included_subscriber' => "enum('0','1')",
-		      'include_sources_subscriber' => 'varchar(50)'}
+		      'include_sources_subscriber' => 'varchar(50)',
+		      'bounce_score_subscriber' => 'smallint (3)'}
 		     );
 
     ## Is the Database defined
@@ -7976,6 +8088,41 @@ sub remove_aliases {
     
     &do_log('info','Aliases for list %s removed successfully', $self->{'name'});
     
+    return 1;
+}
+
+
+##
+## bounce management actions
+##
+
+# Sub for removing user
+#
+sub remove_bouncers {
+    my $self = shift;
+    my $reftab = shift;
+   
+    &do_log('info','removing bouncing users for list %s',$self->{'name'});
+    
+    unless (&delete_user($self,@$reftab)){
+      &do_log('info','error while calling sub delete_users');
+      return undef;
+    }
+    return 1;
+}
+
+#Sub for notifying users : "Be carefull,You're bouncing"
+#
+sub notify_bouncers{
+
+    my $self = shift;
+    my $reftab = shift;
+    
+    &do_log('info','List::notify_bouncers');
+
+    foreach my $user (@$reftab){
+      $self->send_notify_to_subscriber('auto_notify_bouncers',$user);
+    }
     return 1;
 }
 

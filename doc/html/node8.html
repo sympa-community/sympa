@@ -29,31 +29,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html790"
+<A NAME="tex2html808"
   HREF="node9.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html784"
+<A NAME="tex2html802"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html778"
+<A NAME="tex2html796"
   HREF="node7.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html786"
+<A NAME="tex2html804"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html788"
+<A NAME="tex2html806"
   HREF="node20.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html791"
+<B> Next:</B> <A NAME="tex2html809"
   HREF="node9.html">8. Using Sympa with LDAP</A>
-<B> Up:</B> <A NAME="tex2html785"
+<B> Up:</B> <A NAME="tex2html803"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html779"
+<B> Previous:</B> <A NAME="tex2html797"
   HREF="node7.html">6. WWSympa</A>
- &nbsp <B>  <A NAME="tex2html787"
+ &nbsp <B>  <A NAME="tex2html805"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html789"
+ &nbsp <B>  <A NAME="tex2html807"
   HREF="node20.html">Index</A></B> 
 <BR>
 <BR>
@@ -62,33 +62,33 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html792"
+<LI><A NAME="tex2html810"
   HREF="node8.html#SECTION00810000000000000000">7.1 Prerequisites</A>
-<LI><A NAME="tex2html793"
+<LI><A NAME="tex2html811"
   HREF="node8.html#SECTION00820000000000000000">7.2 Installing PERL modules</A>
-<LI><A NAME="tex2html794"
+<LI><A NAME="tex2html812"
   HREF="node8.html#SECTION00830000000000000000">7.3 Creating a sympa DataBase</A>
 <UL>
-<LI><A NAME="tex2html795"
+<LI><A NAME="tex2html813"
   HREF="node8.html#SECTION00831000000000000000">7.3.1 Database structure</A>
-<LI><A NAME="tex2html796"
+<LI><A NAME="tex2html814"
   HREF="node8.html#SECTION00832000000000000000">7.3.2 Database creation</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html797"
+<LI><A NAME="tex2html815"
   HREF="node8.html#SECTION00840000000000000000">7.4 Setting database privileges</A>
-<LI><A NAME="tex2html798"
+<LI><A NAME="tex2html816"
   HREF="node8.html#SECTION00850000000000000000">7.5 Importing subscribers data</A>
 <UL>
-<LI><A NAME="tex2html799"
+<LI><A NAME="tex2html817"
   HREF="node8.html#SECTION00851000000000000000">7.5.1 Importing data from a text file</A>
-<LI><A NAME="tex2html800"
+<LI><A NAME="tex2html818"
   HREF="node8.html#SECTION00852000000000000000">7.5.2 Importing data from subscribers files</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html801"
+<LI><A NAME="tex2html819"
   HREF="node8.html#SECTION00860000000000000000">7.6 Extending database table format</A>
-<LI><A NAME="tex2html802"
+<LI><A NAME="tex2html820"
   HREF="node8.html#SECTION00870000000000000000">7.7 <I>Sympa</I> configuration</A>
 </UL>
 <!--End of Table of Child-Links-->
@@ -131,9 +131,9 @@ Check the <A NAME="tex2html27"
 </H1>
 
 <P>
-<I>Sympa</I> will use <A NAME="5502"></A><TT>DBI</TT> to communicate with the database system and
+<I>Sympa</I> will use <A NAME="5658"></A><TT>DBI</TT> to communicate with the database system and
 therefore requires the DBD for your database system. DBI and 
-DBD::YourDB (<A NAME="5505"></A><TT>Msql-Mysql-modules</TT> for MySQL) are distributed as 
+DBD::YourDB (<A NAME="5661"></A><TT>Msql-Mysql-modules</TT> for MySQL) are distributed as 
 CPAN modules. Refer to&nbsp;<A HREF="node4.html#Install_PERL_and_CPAN_modules">3.2.3</A>, 
 page&nbsp;<A HREF="node4.html#Install_PERL_and_CPAN_modules"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for installation
 details of these modules.
@@ -152,9 +152,9 @@ details of these modules.
 
 <P>
 The sympa database structure is slightly different from the
-structure of a <A NAME="5508"></A><TT>subscribers</TT> file. A <A NAME="5511"></A><TT>subscribers</TT>
+structure of a <A NAME="5664"></A><TT>subscribers</TT> file. A <A NAME="5667"></A><TT>subscribers</TT>
 file is a text file based on paragraphs (similar to 
-the <A NAME="5514"></A><TT>config</TT> file) ; each paragraph completely describes 
+the <A NAME="5670"></A><TT>config</TT> file) ; each paragraph completely describes 
 a subscriber. If somebody is subscribed to two lists, he/she 
 will appear in both subscribers files.
 
@@ -172,8 +172,8 @@ the user_table and the subscriber_table, linked by a user/subscriber e-mail.
 </H2>
 
 <P>
-The <A NAME="5517"></A><TT>create_db</TT> script below will create the sympa database for 
-you. You can find it in the <A NAME="5520"></A><TT>script/</TT> directory of the 
+The <A NAME="5673"></A><TT>create_db</TT> script below will create the sympa database for 
+you. You can find it in the <A NAME="5676"></A><TT>script/</TT> directory of the 
 distribution (currently scripts are available for MySQL, PostgreSQL, Oracle and Sybase).
 
 <P>
@@ -209,6 +209,7 @@ CREATE TABLE subscriber_table (
 	subscribed_subscriber 	enum ('0','1'),
 	included_subscriber 	enum ('0','1'),
 	include_sources_subscriber varchar(50),
+	bounce_score_subscriber smallint (6),
 	PRIMARY KEY (list_subscriber, user_subscriber),
 	INDEX (user_subscriber,list_subscriber)
 );
@@ -395,10 +396,10 @@ Example:
 
 <P>
 We strongly recommend you restrict access to <I>sympa</I> database. You will
-then set <A NAME="5523"></A><TT>db_user</TT> and <A NAME="5526"></A><TT>db_passwd</TT> in <A NAME="5529"></A><TT>sympa.conf</TT>.
+then set <A NAME="5679"></A><TT>db_user</TT> and <A NAME="5682"></A><TT>db_passwd</TT> in <A NAME="5685"></A><TT>sympa.conf</TT>.
 
 <P>
-With <A NAME="1185"></A> :<PRE>
+With <A NAME="1220"></A> :<PRE>
 grant all on sympa.* to sympa@localhost identified by 'your_password';
 flush privileges;
 </PRE>
@@ -446,16 +447,16 @@ cat /tmp/my_import_file | sympa.pl --import=my_list
 
 <P>
 If a mailing list was previously setup to store subscribers into 
-<A NAME="5532"></A><TT>subscribers</TT> file (the default mode in versions older then 2.2b) 
+<A NAME="5688"></A><TT>subscribers</TT> file (the default mode in versions older then 2.2b) 
 you can load subscribers data into the sympa database. The easiest way
-is to edit the list configuration using <A NAME="5535"></A><I>WWSympa</I> (this requires listmaster 
+is to edit the list configuration using <A NAME="5691"></A><I>WWSympa</I> (this requires listmaster 
 privileges) and change the data source from <B>file</B> to <B>database</B>
 ; subscribers data will be loaded into the database at the same time.
 
 <P>
 If the subscribers file is big, a timeout may occur during the FastCGI execution
-(Note that you can set a longer timeout with the <A NAME="5538"></A><TT>-idle-timeout</TT> option of
-the <TT>FastCgiServer</TT> Apache configuration directive). In this case, or if you have not installed <A NAME="5541"></A><I>WWSympa</I>, you should use the <A NAME="5544"></A><TT>load_subscribers.pl</TT> script.
+(Note that you can set a longer timeout with the <A NAME="5694"></A><TT>-idle-timeout</TT> option of
+the <TT>FastCgiServer</TT> Apache configuration directive). In this case, or if you have not installed <A NAME="5697"></A><I>WWSympa</I>, you should use the <A NAME="5700"></A><TT>load_subscribers.pl</TT> script.
 
 <P>
 
@@ -471,7 +472,7 @@ explicitely the field it expects in SELECT queries.
 <P>
 Moreover you can access these database fields from within <I>Sympa</I> 
 (in templates), as far as you list these additional fields in
-<A NAME="5549"></A><TT>sympa.conf</TT> (See <A HREF="node6.html#db-additional-subscriber-fields">5.10.9</A>, page&nbsp;<A HREF="node6.html#db-additional-subscriber-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+<A NAME="5705"></A><TT>sympa.conf</TT> (See <A HREF="node6.html#db-additional-subscriber-fields">5.10.9</A>, page&nbsp;<A HREF="node6.html#db-additional-subscriber-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
 and <A HREF="node6.html#db-additional-user-fields">5.10.10</A>, page&nbsp;<A HREF="node6.html#db-additional-user-fields"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
@@ -487,25 +488,25 @@ database to work with, then you must configure
 your list to access the database.
 
 <P>
-You define the database source in <A NAME="5554"></A><TT>sympa.conf</TT> :
-<A NAME="5557"></A><TT>db_type</TT>, <A NAME="5560"></A><TT>db_name</TT>, 
-<A NAME="5563"></A><TT>db_host</TT>, <A NAME="5566"></A><TT>db_user</TT>, 
-<A NAME="5569"></A><TT>db_passwd</TT>.
+You define the database source in <A NAME="5710"></A><TT>sympa.conf</TT> :
+<A NAME="5713"></A><TT>db_type</TT>, <A NAME="5716"></A><TT>db_name</TT>, 
+<A NAME="5719"></A><TT>db_host</TT>, <A NAME="5722"></A><TT>db_user</TT>, 
+<A NAME="5725"></A><TT>db_passwd</TT>.
 
 <P>
 If you are interfacing <I>Sympa</I> with an Oracle database, 
-<A NAME="5573"></A><TT>db_name</TT> is the SID.
+<A NAME="5729"></A><TT>db_name</TT> is the SID.
 
 <P>
 All your lists are now configured to use the database,
-unless you set list parameter <A NAME="5576"></A><TT>user_data_source</TT> 
+unless you set list parameter <A NAME="5732"></A><TT>user_data_source</TT> 
 to <B>file</B> or <B>include</B>. 
 
 <P>
 <I>Sympa</I> will now extract and store user
 information for this list using the database instead of the
-<A NAME="5580"></A><TT>subscribers</TT> file. Note however that subscriber information is 
-dumped to <A NAME="5583"></A><TT>subscribers.db.dump</TT> at every shutdown, 
+<A NAME="5736"></A><TT>subscribers</TT> file. Note however that subscriber information is 
+dumped to <A NAME="5739"></A><TT>subscribers.db.dump</TT> at every shutdown, 
 to allow a manual rescue restart (by renaming subscribers.db.dump to
 subscribers and changing the user_data_source parameter), if ever the
 database were to become inaccessible.
@@ -514,36 +515,36 @@ database were to become inaccessible.
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html790"
+<A NAME="tex2html808"
   HREF="node9.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html784"
+<A NAME="tex2html802"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html778"
+<A NAME="tex2html796"
   HREF="node7.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html786"
+<A NAME="tex2html804"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html788"
+<A NAME="tex2html806"
   HREF="node20.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html791"
+<B> Next:</B> <A NAME="tex2html809"
   HREF="node9.html">8. Using Sympa with LDAP</A>
-<B> Up:</B> <A NAME="tex2html785"
+<B> Up:</B> <A NAME="tex2html803"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html779"
+<B> Previous:</B> <A NAME="tex2html797"
   HREF="node7.html">6. WWSympa</A>
- &nbsp <B>  <A NAME="tex2html787"
+ &nbsp <B>  <A NAME="tex2html805"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html789"
+ &nbsp <B>  <A NAME="tex2html807"
   HREF="node20.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-06-18
+2003-08-12
 </ADDRESS>
 </BODY>
 </HTML>

@@ -48,12 +48,12 @@ sub LoadLang {
 
     unless (-d $msgdir && -r $msgdir){
 	
-	do_log('err','Cannot read Locale directory %s', $msgdir);
+	&do_log('err','Cannot read Locale directory %s', $msgdir);
 	return undef;
     }
    
     unless (opendir MSGDIR, $msgdir) {
-	do_log('err','Unable to open directory %s', $msgdir);
+	&do_log('err','Unable to open directory %s', $msgdir);
 	return undef;
     }
     
@@ -64,7 +64,7 @@ sub LoadLang {
 	my $lang_name = $1;
 	
 	unless (Msg_file_open($msgdir.'/'.$file,$lang_name)) {
-	    do_log('err','Error while calling Msg_file_Open(%s, %s)', $msgdir.'/'.$file,$lang_name);
+	    &do_log('err','Error while calling Msg_file_Open(%s, %s)', $msgdir.'/'.$file,$lang_name);
 	    return undef;
 	}
     }
@@ -85,14 +85,14 @@ sub Msg_file_open {
 
     #Opening   ##
     chomp($msgfile);
-    do_log('info', 'Loading locale file %s version', $msgfile);	
+    &do_log('info', 'Loading locale file %s version', $msgfile);	
     unless (-r $msgfile) { #check if file exists
-	do_log('err','Cannot read file %s', $msgfile);
+	&do_log('err','Cannot read file %s', $msgfile);
         return undef;
     }
 
     unless (open(MSGFILE,$msgfile)) { 
-	do_log('err','Cannot open message File %s', $msgfile);
+	&do_log('err','Cannot open message File %s', $msgfile);
 	return undef;
     }
 
@@ -129,10 +129,10 @@ sub Msg_file_open {
 sub SetLang {
 ###########
     my $lang = shift;
-    do_log('debug3', 'Language::SetLang(%s)', $lang);
+    &do_log('debug3', 'Language::SetLang(%s)', $lang);
    
     unless (defined ($msghash{$lang})) {
-	do_log('err','unknown Locale %s', $lang);
+	&do_log('err','unknown Locale %s, maybe sub LoadLang not Loaded before', $lang);
 	return undef;
     }
 	    
@@ -149,7 +149,7 @@ sub Msg{
   
     unless (defined($msghash{$current_lang}{$set}{$msg})) {
 	return $msg_default;
-	do_log('info','%s-Message %d of set %d not found, using user Message : %s ',$current_lang, $msg, $set, $msg_default);
+	&do_log('info','%s-Message %d of set %d not found, using user Message : %s ',$current_lang, $msg, $set, $msg_default);
     }
 
     return $msghash{$current_lang}{$set}{$msg};

@@ -133,6 +133,45 @@ liste :<br>
   important" l'invitant à supprimer de sa liste les abonnés en erreur.<br>
   Indique également le taux d'erreurs à partir duquel la distribution des
   messages de la liste sera automatiquement interrompue.
+[ELSIF p->NAME=bouncers_level1]
+  La gestion automatique des abonnés en erreur permet d'associer des actions à des 
+  catégories d'utilisateurs. Ces catégories dépendent du SCORE de chaque abonné en erreur.
+  Le Niveau 1 est le plus bas niveau (action par defaut : notification des abonnés en erreur).
+  <BR><BR>
+    <UL>
+    <LI>rate (Default value: 45)<BR><BR>
+     Ce paramètre definit la limite inférieure du  niveau 1. Il faut savoir, que 
+     les utilisateurs sont notés de 0 à 100. Par exemple, par défaut le niveau 1 concerne
+     les abonnés en erreur dont le score est compris entre 45 et 80 <BR><BR>
+     </LI>
+     <LI>action (Default value: notify_bouncers)<BR><BR>
+     Ce paramètre défini l'action automatique qui est effectuée périodiquement sur les abonnés 
+     en erreur du niveau 1. La notification tente de prévenir les abonnés en erreur<BR><BR>
+     </LI>
+     <LI>Notification (Default value: owner)<BR><BR>
+     Il est possible de prévenir par email le propriétaire ou le Listmaster, des actions effectuées, et
+     des adresses concernées.<BR><BR>
+     </LI>
+     </UL>    
+[ELSIF p->NAME=bouncers_level2]
+  La gestion automatique des abonnés en erreur permet d'associer des actions à des 
+  catégories d'utilisateurs. Ces catégories dépendent du SCORE de chaque abonné en erreur.
+  Le Niveau 2 est le plus haut niveau. <BR><BR>
+    <UL>
+    <LI>rate (Default value: 80)<BR><BR>
+     Ce paramètre definit la limite entre le niveau 2, et le niveau 1. Il faut savoir, que 
+     les utilisateurs sont notés de 0 à 100. Par exemple, par défaut le niveau 2 concerne
+     les abonnés en erreur dont le score est compris entre 80 et 100 <BR><BR>
+     </LI>
+     <LI> action (Default value: remove_bouncers)<BR><BR>
+     Ce paramètre défini l'action automatique qui est effectuée périodiquement sur les abonnés 
+     en erreur du niveau 2.<BR><BR>
+     </LI>
+     <LI>Notification (Default value: owner)<BR><BR>
+     Il est possible de prévenir par email le propriétaire ou le Listmaster, des actions effectuées, et
+     des adresses concernées.<BR><BR>
+     </LI>
+     </UL>    
 [ELSIF p->NAME=custom_subject]
   Définit un sujet fixe qui apparaîtra entre crochets pour chaque message
   transmis par la liste, afin d'en faciliter le classement.<br>

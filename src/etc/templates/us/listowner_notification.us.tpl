@@ -15,4 +15,24 @@ Subject: List "[list->name]" warning : archive [rate]% full
 Total size used for [list->name]@[list->host] archive is [size] Bytes.
 
 Messages are still archived but you should contact listmaster@[conf->host]. 
+
+[ELSIF type=automatic_bounce_management]
+Subject:List [list->name] automatic bounce management
+
+[IF action=notify_bouncers]
+Because we received MANY non-delivery reports, the subsribers listed bellow have been
+notified that they might be removed from list [list->name] :
+[ELSIF action=remove_bouncers]
+Because we received MANY non-delivery reports, the subsribers listed bellow have been
+removed from list [list->name] :
+[ELSIF action=none]
+Because we received MANY non-delivery reports, the subsribers listed bellow have been
+selected by Sympa as severe bouncing addresses :
+[ENDIF]
+
+[FOREACH user IN  user_list]
+[user]
+[END]
+
+
 [ENDIF]

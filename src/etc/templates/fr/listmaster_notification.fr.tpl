@@ -36,6 +36,25 @@ Sympa n'a pas pu mettre à jour la liste des membres à partir des sources de
 données externes ; la base de données ou l'annuaire LDAP ne sont probablement
 pas intérogeables.
 Consultez les logs de Sympa pour plus de précisions.
+
+[ELSIF type=automatic_bounce_management]
+Subject: Gestion automatique des abonnés en erreur de la liste [list->name]
+
+[IF action=notify_bouncers]
+Notre serveur ayant reçu de NOMBREUX rapports de non-remise, les abonnés listés ci-dessous ont été
+informés qu'ils risquaient d'être désabonné de la liste [list->name] :
+[ELSIF action=remove_bouncers]
+Notre serveur ayant reçu de NOMBREUX rapports de non-remise, les abonnés listés ci-dessous ont été
+désabonnés de la liste [list->name] :
+[ELSIF action=none]
+Notre serveur ayant reçu de NOMBREUX rapports de non-remise, les abonnés listés ci-dessous ont été
+marqués par Sympa comme des adresses gravement en erreur :
+[ENDIF]
+
+[FOREACH user IN  user_list]
+[user]
+[END]
+
 [ELSE]
 Subject: [type]
 

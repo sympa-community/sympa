@@ -29,31 +29,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html815"
+<A NAME="tex2html833"
   HREF="node10.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html809"
+<A NAME="tex2html827"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html803"
+<A NAME="tex2html821"
   HREF="node8.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html811"
+<A NAME="tex2html829"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html813"
+<A NAME="tex2html831"
   HREF="node20.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html816"
+<B> Next:</B> <A NAME="tex2html834"
   HREF="node10.html">9. Sympa with S/MIME and HTTPS</A>
-<B> Up:</B> <A NAME="tex2html810"
+<B> Up:</B> <A NAME="tex2html828"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html804"
+<B> Previous:</B> <A NAME="tex2html822"
   HREF="node8.html">7. Sympa and its database</A>
- &nbsp <B>  <A NAME="tex2html812"
+ &nbsp <B>  <A NAME="tex2html830"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html814"
+ &nbsp <B>  <A NAME="tex2html832"
   HREF="node20.html">Index</A></B> 
 <BR>
 <BR>
@@ -62,19 +62,19 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html817"
+<LI><A NAME="tex2html835"
   HREF="node9.html#SECTION00910000000000000000">8.1 Authentication via uid or alternate email</A>
 <UL>
-<LI><A NAME="tex2html818"
+<LI><A NAME="tex2html836"
   HREF="node9.html#SECTION00911000000000000000">8.1.1 auth.conf</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html819"
+<LI><A NAME="tex2html837"
   HREF="node9.html#SECTION00920000000000000000">8.2 Named Filters</A>
 <UL>
-<LI><A NAME="tex2html820"
+<LI><A NAME="tex2html838"
   HREF="node9.html#SECTION00921000000000000000">8.2.1 Definition</A>
-<LI><A NAME="tex2html821"
+<LI><A NAME="tex2html839"
   HREF="node9.html#SECTION00922000000000000000">8.2.2 Search Condition</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
@@ -87,7 +87,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 </H1>
 
 <P>
-<A NAME="1232"></A> is a client-server protocol for accessing a directory service. Sympa
+<A NAME="1267"></A> is a client-server protocol for accessing a directory service. Sympa
 provide various features based on access to one or more LDAP directories :
 
 <P>
@@ -116,13 +116,13 @@ provide various features based on access to one or more LDAP directories :
 </H1>
 
 <P>
-<I>Sympa</I> stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of <A NAME="1240"></A> allows to use <I>Sympa</I> in an intranet without duplicating user passwords. 
+<I>Sympa</I> stores the data relative to the subscribers in a DataBase. Among these data: password, email exploited during the Web authentication. The  module of <A NAME="1275"></A> allows to use <I>Sympa</I> in an intranet without duplicating user passwords. 
 
 <P>
-This way users can indifferently authenticate with their ldap_uid, their alternate_email or their canonic email stored in the <A NAME="1241"></A> directory.
+This way users can indifferently authenticate with their ldap_uid, their alternate_email or their canonic email stored in the <A NAME="1276"></A> directory.
 
 <P>
-<I>Sympa</I> gets the canonic email in the <A NAME="1242"></A> directory with the ldap_uid or the alternate_email.  
+<I>Sympa</I> gets the canonic email in the <A NAME="1277"></A> directory with the ldap_uid or the alternate_email.  
 <I>Sympa</I> will first attempt an anonymous bind to the directory to get the user's DN, then <I>Sympa</I> will bind with the DN and the user's ldap_password in order to perform an efficient authentication. This last bind will work only if the good ldap_password is provided. Indeed the value returned by the bind(DN,ldap_password) is tested.
 
 <P>
@@ -158,16 +158,16 @@ That means that <I>Sympa</I> will get this email and use it during all the sessi
 </H2>
 
 <P>
-The <A NAME="5594"></A><TT>/home/sympa/etc/auth.conf</TT> configuration file contains numerous
+The <A NAME="5750"></A><TT>/home/sympa/etc/auth.conf</TT> configuration file contains numerous
 parameters which are read on start-up of <I>Sympa</I>. If you change this file, do not forget
 that you will need to restart <I>Sympa</I> afterwards. 
 
 <P>
-The <A NAME="5599"></A><TT>/home/sympa/etc/auth.conf</TT> is organised in paragraphs. Each paragraph coincides with the configuration of 
+The <A NAME="5755"></A><TT>/home/sympa/etc/auth.conf</TT> is organised in paragraphs. Each paragraph coincides with the configuration of 
 an ldap directory.
 
 <P>
-The <A NAME="5602"></A><TT>/home/sympa/etc/auth.conf</TT> file contains directives in the following format:
+The <A NAME="5758"></A><TT>/home/sympa/etc/auth.conf</TT> file contains directives in the following format:
 
 <P>
 <P>
@@ -410,7 +410,7 @@ If set to <TT>1</TT>, connection to the LDAP server will use SSL (LDAPS).
 <LI>ssl_version
 
 <P>
-This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="1302"></A> to <TT>sslv2/3</TT>, 
+This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="1337"></A> to <TT>sslv2/3</TT>, 
 	other possible values are <TT>sslv2</TT>, <TT>sslv3</TT>, and <TT>tlsv1</TT>.
 
 <P>
@@ -419,7 +419,7 @@ This defines the version of the SSL/TLS protocol to use. Defaults of <A NAME="13
 
 <P>
 Specify which subset of cipher suites are permissible for this connection, using the standard 
-	OpenSSL string format. The default value of <A NAME="1308"></A> for ciphers is <TT>ALL</TT>, 
+	OpenSSL string format. The default value of <A NAME="1343"></A> for ciphers is <TT>ALL</TT>, 
 	which permits all ciphers, even those that don't encrypt!
 
 <P>
@@ -436,7 +436,7 @@ Specify which subset of cipher suites are permissible for this connection, using
 At the moment Named Filters are only used in scenarii. They enable to select a category of people who will be authorized or not to realise some actions.
 
 <P>
-As a consequence, you can grant privileges in a list to people belonging to an <A NAME="1312"></A> directory thanks to a scenario.
+As a consequence, you can grant privileges in a list to people belonging to an <A NAME="1347"></A> directory thanks to a scenario.
 
 <P>
 
@@ -445,7 +445,7 @@ As a consequence, you can grant privileges in a list to people belonging to an <
 </H2>
 
 <P>
-People are selected through an <A NAME="1314"></A> defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="5611"></A><TT>/home/sympa/etc/search_filters/</TT>.
+People are selected through an <A NAME="1349"></A> defined in a configuration file. This file must have the extension '.ldap'.It is stored in <A NAME="5767"></A><TT>/home/sympa/etc/search_filters/</TT>.
 
 <P>
 You must give several informations in order to create a Named Filter:
@@ -539,36 +539,36 @@ The method of authentication does not change.
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html815"
+<A NAME="tex2html833"
   HREF="node10.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html809"
+<A NAME="tex2html827"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html803"
+<A NAME="tex2html821"
   HREF="node8.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html811"
+<A NAME="tex2html829"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html813"
+<A NAME="tex2html831"
   HREF="node20.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html816"
+<B> Next:</B> <A NAME="tex2html834"
   HREF="node10.html">9. Sympa with S/MIME and HTTPS</A>
-<B> Up:</B> <A NAME="tex2html810"
+<B> Up:</B> <A NAME="tex2html828"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html804"
+<B> Previous:</B> <A NAME="tex2html822"
   HREF="node8.html">7. Sympa and its database</A>
- &nbsp <B>  <A NAME="tex2html812"
+ &nbsp <B>  <A NAME="tex2html830"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html814"
+ &nbsp <B>  <A NAME="tex2html832"
   HREF="node20.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2003-06-18
+2003-08-12
 </ADDRESS>
 </BODY>
 </HTML>

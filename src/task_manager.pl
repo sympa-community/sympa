@@ -167,7 +167,10 @@ my @list_models = ('sync_include','remind');
 my %global_models = (#'crl_update_task' => 'crl_update', 
 		     #'chk_cert_expiration_task' => 'chk_cert_expiration',
 		     'expire_bounce_task' => 'expire_bounce',
-		     'purge_user_table_task' => 'purge_user_table'
+		     'purge_user_table_task' => 'purge_user_table',
+		     'purge_orphan_bounces_task' => 'purge_orphan_bounces',
+		     'eval_bouncers_task' => 'eval_bouncers',
+		     'process_bouncers_task' =>'process_bouncers',
 		     #,'global_remind_task' => 'global_remind'
 		     );
 
@@ -199,7 +202,10 @@ my %commands = ('next'                  => ['date', '\w*'],
 		'chk_cert_expiration'   => ['\w+', 'date'],
 		                           #template  date
 		'sync_include'          => [],
-		'purge_user_table'      => []
+		'purge_user_table'      => [],
+		'purge_orphan_bounces'  => [],
+		'eval_bouncers'         => [],
+		'process_bouncers'      => []
 		);
 
 # commands which use a variable. If you add such a command, the first parameter must be the variable
@@ -228,7 +234,7 @@ foreach (keys %asgn_commands) {
      
 ###### INFINITE LOOP SCANING THE QUEUE (unless a sig TERM is received) ######
 while (!$end) {
-    
+
     my $current_date = time; # current epoch date
     my $rep = &tools::adate ($current_date);
 
@@ -262,6 +268,7 @@ while (!$end) {
 	    }
 	}
     }    
+
     
     ## list tasks
     foreach ( &List::get_lists() ) {
@@ -275,13 +282,14 @@ while (!$end) {
 	foreach (@list_models) { $used_list_models{$_} = undef; }
 	
 	foreach $_ (@tasks) {
+	  
 	    if (my $task = &match_task($_)) {
 		my $model = $task->{'model'};
 		my $object = $task->{'list'};
 		if ($object eq $list->{'name'}) { $used_list_models{$model} = 1; }
 	    }
-       }
-        
+	}
+
 	foreach my $model (keys %used_list_models) {
 	    unless ($used_list_models{$model}) {
 		my $model_task_parameter = "$model".'_task';
@@ -742,6 +750,9 @@ sub cmd_process {
     return expire_bounce ($Rarguments, \%context) if ($command eq 'expire_bounce');
     return purge_user_table (\%context) if ($command eq 'purge_user_table');
     return sync_include(\%context) if ($command eq 'sync_include');
+    return purge_orphan_bounces (\%context) if ($command eq 'purge_orphan_bounces');
+    return eval_bouncers (\%context) if ($command eq 'eval_bouncers');
+    return process_bouncers (\%context) if ($command eq 'process_bouncers');
 
      # commands which use a variable
     return send_msg ($Rarguments, $Rvars, \%context) if ($command eq 'send_msg');       
@@ -1093,244 +1104,493 @@ sub purge_user_table {
     return $#purged_users + 1;
 }
 
-sub expire_bounce {
-    # If a bounce is older then $list->get_latest_distribution_date()-$delai expire the bounce
-    # Is this variable my be set in to task modele ?
-    my $Rarguments = $_[0];
-    my $context = $_[1];
+sub purge_orphan_bounces {
+## Subroutine which remove bounced message of no-more known users
     
-    my $execution_date = $context->{'execution_date'};
-    my @tab = @{$Rarguments};
-    my $delay = $tab[0];
+    do_log('info','purge_orphan_bounces()');
 
-    do_log('debug2','expire_bounce(%d)',$delay);
-    foreach my $listname (&List::get_lists('*') ) {
+    ## Hash {'listname' => 'bounced address' => 1}
+    my %bounced_users;
+    my @listes;
+
+    unless (@listes = &List::get_lists('*')) {
+	&do_log('err','error while loading list of listes with function get_lists');
+    }
+
+
+    foreach my $listname (@listes) {
+	 my $list = new List ($listname);	
+
+	 ## first time: loading DB entries into %bounced_users
+	 for (my $user_ref = $list->get_first_bouncing_user(); $user_ref; $user_ref = $list->get_next_bouncing_user()){
+	     my $user_id = $user_ref->{'email'};
+	     $bounced_users{$listname}{$user_id} = 1;
+	 }
+
+	 unless (-d $wwsconf->{'bounce_path'}.'/'.$listname) {
+	     &do_log('notice', 'No bouncing subscribers in list %s', $listname);
+	     next;
+	 }
+
+	 ## then reading Bounce directory & compare with %bounced_users
+	 unless (opendir(BOUNCE,$wwsconf->{'bounce_path'}.'/'.$listname)) {
+	     &do_log('err','Error while opening bounce directory %s for list %s',$wwsconf->{'bounce_path'},$listname);
+	     return undef;
+	 }
+
+	 ## Finally removing orphan files
+	 foreach my $bounce (readdir(BOUNCE)) {
+	     if ($bounce =~ /\@/){
+		 unless (defined($bounced_users{$listname}{$bounce})) {
+		     &do_log('info','removing orphan Bounce for user %s in list %s',$bounce,$listname);
+		     unless (unlink($wwsconf->{'bounce_path'}.'/'.$listname.'/'.$bounce)) {
+			 &do_log('err','Error while removing file %s',$bounce);
+		     }
+		 }
+	     }	    
+	 }
+     }
+ }
+
+
+ sub expire_bounce {
+     # If a bounce is older then $list->get_latest_distribution_date()-$delai expire the bounce
+     # Is this variable my be set in to task modele ?
+     my $Rarguments = $_[0];
+     my $context = $_[1];
+
+     my $execution_date = $context->{'execution_date'};
+     my @tab = @{$Rarguments};
+     my $delay = $tab[0];
+
+     do_log('debug2','expire_bounce(%d)',$delay);
+     foreach my $listname (&List::get_lists('*') ) {
+	 my $list = new List ($listname);
+
+	 next unless $list;
+
+	 # the reference date is the date until which we expire bounces in second
+	 # the latest_distribution_date is the date of last distribution #days from 01 01 1970
+	 if ( ($list->{'admin'}{'user_data_source'} eq 'include' )||( $list->{'admin'}{'user_data_source'} eq 'file' )) {
+	     # do_log('notice','bounce expiration : skipping list %s because not using database',$listname);
+	     next;
+	 }
+
+	 unless ($list->get_latest_distribution_date()) {
+	     do_log('debug2','bounce expiration : skipping list %s because could not get latest distribution date',$listname);
+	     next;
+	 }
+	 my $refdate = (($list->get_latest_distribution_date() - $delay) * 3600 * 24);
+
+	 for (my $u = $list->get_first_bouncing_user(); $u ; $u = $list->get_next_bouncing_user()) {
+	     $u->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
+	     $u->{'last_bounce'} = $2;
+	     if ($u->{'last_bounce'} < $refdate) {
+		 my $email = $u->{'email'};
+
+		 unless ( $list->is_user($email) ) {
+		     do_log('info','expire_bounce: %s not subscribed', $email);
+		     next;
+		 }
+
+		 unless( $list->update_user($email, {'bounce' => 'NULL', 'update_date' => time})) {
+		     do_log('info','expire_bounce: failed update database for %s', $email);
+		     next;
+		 }
+		 my $escaped_email = &tools::escape_chars($email);
+		 unless (unlink "$wwsconf->{'bounce_path'}/$listname/$escaped_email") {
+		     do_log('info','expire_bounce: failed deleting %s', "$wwsconf->{'bounce_path'}/$listname/$escaped_email");
+		    next;
+		 }
+		 do_log('info','expire bounces for subscriber %s of list %s (last distribution %s, last bounce %s )',
+			$email,$listname,
+			&POSIX::strftime("%d %b %Y", localtime($list->get_latest_distribution_date() * 3600 * 24)),
+			&POSIX::strftime("%d %b %Y", localtime($u->{'last_bounce'})));
+
+	     }
+	 }
+     }
+
+     return 1;
+ }
+
+ sub chk_cert_expiration {
+
+     my $Rarguments = $_[0];
+     my $context = $_[1];
+
+     my $execution_date = $context->{'execution_date'};
+     my @tab = @{$Rarguments};
+     my $template = $tab[0];
+     my $limit = &tools::duration_conv ($tab[1], $execution_date);
+
+     &do_log ('notice', "line $context->{'line_number'} : chk_cert_expiration (@{$Rarguments})");
+
+     ## building of certificate list
+     unless (opendir(DIR, $cert_dir)) {
+	 error ($context->{'task_file'}, "error in chk_cert_expiration command : can't open dir $cert_dir");
+	 return undef;
+     }
+     my @certificates = grep !/^(\.\.?)|(.+expired)$/, readdir DIR;
+     close (DIR);
+
+     foreach (@certificates) {
+
+	 my $soon_expired_file = $_.'.soon_expired'; # an empty .soon_expired file is created when a user is warned that his certificate is soon expired
+
+	 # recovery of the certificate expiration date 
+	 open (ENDDATE, "openssl x509 -enddate -in $cert_dir/$_ -noout |");
+	 my $date = <ENDDATE>; # expiration date
+	 close (ENDDATE);
+	 chomp ($date);
+
+	 unless ($date) {
+	     &do_log ('err', "error in chk_cert_expiration command : can't get expiration date for $_ by using the x509 openssl command");
+	     next;
+	 }
+
+	 $date =~ /notAfter=(\w+)\s*(\d+)\s[\d\:]+\s(\d+).+/;
+	 my @date = (0, 0, 0, $2, $months{$1}, $3 - 1900);
+	 $date =~ s/notAfter=//;
+	 my $expiration_date = timegm (@date); # epoch expiration date
+	 my $rep = &tools::adate ($expiration_date);
+
+	 # no near expiration nor expiration processing
+	 if ($expiration_date > $limit) { 
+	     # deletion of unuseful soon_expired file if it is existing
+	     if (-e $soon_expired_file) {
+		 unlink ($soon_expired_file) || &do_log ('err', "error : can't delete $soon_expired_file");
+	     }
+	     next;
+	 }
+
+	 # expired certificate processing
+	 if ($expiration_date < $execution_date) {
+
+	     &do_log ('notice', "--> $_ certificate expired ($date), certificate file deleted");
+	     if (!$log) {
+		 unlink ("$cert_dir/$_") || &do_log ('notice', "error : can't delete certificate file $_");
+	     }
+	     if (-e $soon_expired_file) {
+		 unlink ("$cert_dir/$soon_expired_file") || &do_log ('err', "error : can't delete $soon_expired_file");
+	     }
+	     next;
+	 }
+
+	 # soon expired certificate processing
+	 if ( ($expiration_date > $execution_date) && 
+	      ($expiration_date < $limit) &&
+	      !(-e $soon_expired_file) ) {
+
+	     unless (open (FILE, ">$cert_dir/$soon_expired_file")) {
+		 &do_log ('err', "error in chk_cert_expiration : can't create $soon_expired_file");
+		 next;
+	     } else {close (FILE);}
+
+	     my %tpl_context; # datas necessary to the template
+
+	     open (ID, "openssl x509 -subject -in $cert_dir/$_ -noout |");
+	     my $id = <ID>; # expiration date
+	     close (ID);
+	     chomp ($id);
+
+	     unless ($id) {
+		 &do_log ('err', "error in chk_cert_expiration command : can't get expiration date for $_ by using the x509 openssl command");
+		 next;
+	     }
+
+	     $id =~ s/subject= //;
+	     do_log ('notice', "id : $id");
+	     $tpl_context{'expiration_date'} = &tools::adate ($expiration_date);
+	     $tpl_context{'certificate_id'} = $id;
+
+	     &List::send_global_file ($template, $_, \%tpl_context) if (!$log);
+	     &do_log ('notice', "--> $_ certificate soon expired ($date), user warned");
+	 }
+     }
+     return 1;
+ }
+
+
+ ## attention, j'ai n'ai pas pu comprendre les retours d'erreurs des commandes wget donc pas de verif sur le bon fonctionnement de cette commande
+ sub update_crl {
+
+     my $Rarguments = $_[0];
+     my $context = $_[1];
+
+     my @tab = @{$Rarguments};
+     my $limit = &tools::epoch_conv ($tab[1], $context->{'execution_date'});
+     my $CA_file = "$Conf{'home'}/$tab[0]"; # file where CA urls are stored ;
+     &do_log ('notice', "line $context->{'line_number'} : update_crl (@tab)");
+
+     # building of CA list
+     my @CA;
+     unless (open (FILE, $CA_file)) {
+	 error ($context->{'task_file'}, "error in update_crl command : can't open $CA_file file");
+	 return undef;
+     }
+     while (<FILE>) {
+	 chomp;
+	 push (@CA, $_);
+     }
+     close (FILE);
+
+     # updating of crl files
+     my $crl_dir = "$Conf{'crl_dir'}";
+     unless (-d $Conf{'crl_dir'}) {
+	 if ( mkdir ($Conf{'crl_dir'}, 0775)) {
+	     do_log('notice', "creating spool $Conf{'crl_dir'}");
+	 }else{
+	     do_log('err', "Unable to create CRLs directory $Conf{'crl_dir'}");
+	     return undef;
+	 }
+     }
+
+     foreach my $url (@CA) {
+
+	 my $crl_file = &tools::escape_chars ($url); # convert an URL into a file name
+	 my $file = "$crl_dir/$crl_file";
+
+	 ## create $file if it doesn't exist
+	 unless (-e $file) {
+	     my $cmd = "wget -O \'$file\' \'$url\'";
+	     open CMD, "| $cmd";
+	     close CMD;
+	 }
+
+	  # recovery of the crl expiration date
+	 open (ID, "openssl crl -nextupdate -in \'$file\' -noout -inform der|");
+	 my $date = <ID>; # expiration date
+	 close (ID);
+	 chomp ($date);
+
+	 unless ($date) {
+	     &do_log ('err', "error in update_crl command : can't get expiration date for $file crl file by using the crl openssl command");
+	     next;
+	 }
+
+	 $date =~ /nextUpdate=(\w+)\s*(\d+)\s(\d\d)\:(\d\d)\:\d\d\s(\d+).+/;
+	 my @date = (0, $4, $3 - 1, $2, $months{$1}, $5 - 1900);
+	 my $expiration_date = timegm (@date); # epoch expiration date
+	 my $rep = &tools::adate ($expiration_date);
+
+	 ## check if the crl is soon expired or expired
+	 #my $file_date = $context->{'execution_date'} - (-M $file) * 24 * 60 * 60; # last modification date
+	 my $condition = "newer($limit, $expiration_date)";
+	 my $verify_context;
+	 $verify_context->{'sender'} = 'nobody';
+
+	 if (&List::verify ($verify_context, $condition) == 1) {
+	     unlink ($file);
+	     &do_log ('notice', "--> updating of the $file crl file");
+	     my $cmd = "wget -O \'$file\' \'$url\'";
+	     open CMD, "| $cmd";
+	     close CMD;
+	     next;
+	 }
+     }
+     return 1;
+ }
+
+ ## Subroutine for bouncers evaluation: 
+ # give a score for each bouncing user
+ sub eval_bouncers {
+ #################       
+
+     foreach my $listname (&List::get_lists()) {
+
+	 my $list = new List ($listname);
+	 my $list_traffic = {};
+
+	 &do_log('info','eval_bouncers(%s)',$listname);
+
+	 ## Analizing file Msg-count and fill %$list_traffic
+	 unless (open(COUNT,$list->{'dir'}.'/msg_count')){
+	     &do_log('err','** ERROR WHILE OPENING msg_count FILE for liste %s',$listname);
+	     next;
+	 }    
+	 while (<COUNT>) {
+	     if ( /^(\w+)\s+(\d+)/) {
+		 my ($a, $b) = ($1, $2);
+		 $list_traffic->{$a} = $b;	
+	     }
+	 }    	
+	close(COUNT);
+	
+	#for each bouncing user
+	for (my $user_ref = $list->get_first_bouncing_user(); $user_ref; $user_ref = $list->get_next_bouncing_user()){
+	    my $score = &get_score($user_ref,$list_traffic) || 0;
+
+	    ## copying score into DataBase
+	    unless ($list->update_user($user_ref->{'email'},{'score' => $score, 'update_date' => time }) ) {
+		&do_log('err','Task eval_bouncers :Error while updating DB for user %s',$user_ref->{'email'});
+		next;
+	    }
+	}
+    }
+}
+	    
+sub none {
+
+    1;
+}
+
+## Routine for automatic bouncing users management
+##
+sub process_bouncers {
+###################
+
+    &do_log('info','Processing automatic actions on bouncing users'); 
+
+###########################################################################
+# This sub apply a treatment foreach category of bouncing-users
+#
+# The relation between possible actions and correponding subroutines 
+# is indicated by the following hash (%actions).
+# It's possible to add actions by completing this hash and the one in list 
+# config (file List.pm, in sections "bouncers_levelX"). Then you must write 
+# the code for your action:
+# The action subroutines have two parameter : 
+# - the name of the current list
+# - a reference on users email list: 
+# Look at the "remove_bouncers" sub in List.pm for an example
+###########################################################################
+   
+    ## possible actions
+    my %actions = ('remove_bouncers' => \&List::remove_bouncers,
+		   'notify_bouncers' => \&List::notify_bouncers,
+		   'none'            => \&none
+		   );
+
+    foreach my $listname (&List::get_lists()) {
 	my $list = new List ($listname);
+	
+	my @bouncers;
+	# @bouncers = ( ['email1', 'email2', 'email3',....,],    There is one line 
+	#               ['email1', 'email2', 'email3',....,],    foreach bounce 
+	#               ['email1', 'email2', 'email3',....,],)   level.
+   
+	next unless ($list);
 
-	next unless $list;
-
-	# the reference date is the date until which we expire bounces in second
-        # the latest_distribution_date is the date of last distribution #days from 01 01 1970
-	if ( ($list->{'admin'}{'user_data_source'} eq 'include' )||( $list->{'admin'}{'user_data_source'} eq 'file' )) {
-	    # do_log('notice','bounce expiration : skipping list %s because not using database',$listname);
-	    next;
+	my $max_level;    
+	for (my $level = 1;defined ($list->{'admin'}{'bouncers_level'.$level});$level++) {
+	    $max_level = $level;
 	}
 	
-	unless ($list->get_latest_distribution_date()) {
-	    do_log('debug2','bounce expiration : skipping list %s because could not get latest distribution date',$listname);
-	    next;
-	}
-	my $refdate = (($list->get_latest_distribution_date() - $delay) * 3600 * 24);
-	
-	for (my $u = $list->get_first_bouncing_user(); $u ; $u = $list->get_next_bouncing_user()) {
-	    $u->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
-            $u->{'last_bounce'} = $2;
-	    if ($u->{'last_bounce'} < $refdate) {
-		my $email = $u->{'email'};
-		
-		unless ( $list->is_user($email) ) {
-		    do_log('info','expire_bounce: %s not subscribed', $email);
-		    next;
+	##  first, bouncing email are sorted in @bouncer 
+	for (my $user_ref = $list->get_first_bouncing_user(); $user_ref; $user_ref = $list->get_next_bouncing_user()) {	    
+	    for ( my $level = $max_level;($level >= 1) ;$level--) {
+
+		if ($user_ref->{'bounce_score'} >= $list->{'admin'}{'bouncers_level'.$level}{'rate'}){
+		    push(@{$bouncers[$level]}, $user_ref->{'email'});
+		    $level = ($level-$max_level);		   
 		}
-		
-		unless( $list->update_user($email, {'bounce' => 'NULL', 'update_date' => time})) {
-		    do_log('info','expire_bounce: failed update database for %s', $email);
-		    next;
-		}
-		my $escaped_email = &tools::escape_chars($email);
-		unless (unlink "$wwsconf->{'bounce_path'}/$listname/$escaped_email") {
-		    do_log('info','expire_bounce: failed deleting %s', "$wwsconf->{'bounce_path'}/$listname/$escaped_email");
-	           next;
-		}
-		do_log('info','expire bounces for subscriber %s of list %s (last distribution %s, last bounce %s )',
-                       $email,$listname,
-                       &POSIX::strftime("%d %b %Y", localtime($list->get_latest_distribution_date() * 3600 * 24)),
-		       &POSIX::strftime("%d %b %Y", localtime($u->{'last_bounce'})));
-		
 	    }
 	}
-    }
+	
+	## then, calling action foreach level
+	for ( my $level = $max_level;($level >= 1) ;$level--) {
 
+	    my $action = $list->{'admin'}{'bouncers_level'.$level}{'action'};
+	    my $notification = $list->{'admin'}{'bouncers_level'.$level}{'notification'};
+	  
+	    if (@bouncers[$level]){
+		## calling action subroutine with (list,email list) in parameter 
+		unless ($actions{$action}->($list,@bouncers[$level])){
+		    &do_log('err','error while calling action sub for bouncing users in list %s',$listname);
+		    return undef;
+		}
+
+		## calling notification subroutine with (list,action, email list) in parameter  
+		
+		my @param = ($listname,$action,@bouncers[$level]);
+
+	        if ($notification eq 'listmaster'){
+
+		    unless(&List::send_notify_to_listmaster('automatic_bounce_management',$list->{'domain'},@param)){
+			&do_log('err','error while notifying listmaster');
+			return undef;
+		    }
+		}elsif ($notification eq 'owner'){
+		    
+		    unless ($list->new_send_notify_to_owner('automatic_bounce_management',@param)){
+			&do_log('err','error while notifying owner');
+			return undef;
+		    }
+		}
+	    }
+	}
+    }     
     return 1;
 }
 
-sub chk_cert_expiration {
 
-    my $Rarguments = $_[0];
-    my $context = $_[1];
-        
-    my $execution_date = $context->{'execution_date'};
-    my @tab = @{$Rarguments};
-    my $template = $tab[0];
-    my $limit = &tools::duration_conv ($tab[1], $execution_date);
+sub get_score {
 
-    &do_log ('notice', "line $context->{'line_number'} : chk_cert_expiration (@{$Rarguments})");
- 
-    ## building of certificate list
-    unless (opendir(DIR, $cert_dir)) {
-	error ($context->{'task_file'}, "error in chk_cert_expiration command : can't open dir $cert_dir");
+    my $user_ref = shift;
+    my $list_traffic = shift;
+
+    &do_log('debug','Get_score(%s) ',$user_ref->{'email'});
+
+    my $min_period = $Conf{'minimum_bouncing_period'};
+    my $min_msg_count = $Conf{'minimum_bouncing_count'};
+	
+    # Analizing bounce_subscriber_field and keep usefull infos for notation
+    $user_ref->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
+
+    my $BO_period = int($1 / 86400) - $Conf{'bounce_delay'};
+    my $EO_period = int($2 / 86400) - $Conf{'bounce_delay'};
+    my $bounce_count = $3;
+    my $bounce_type = $4;
+
+    my $msg_count = 0;
+    my $min_day = $EO_period;
+
+    unless ($bounce_count >= $min_msg_count){
+	#not enough messages distributed to keep score
+	&do_log('debug','Not enough messages for evaluation of user %s',$user_ref->{'email'});
+	return undef ;
+    }
+
+    unless (($EO_period - $BO_period) >= $min_period){
+	#too short bounce period to keep score
+	&do_log('debug','Too short period for evaluate %s',$user_ref->{'email'});
 	return undef;
-    }
-    my @certificates = grep !/^(\.\.?)|(.+expired)$/, readdir DIR;
-    close (DIR);
+    } 
 
-    foreach (@certificates) {
-
-	my $soon_expired_file = $_.'.soon_expired'; # an empty .soon_expired file is created when a user is warned that his certificate is soon expired
-
-	# recovery of the certificate expiration date 
-	open (ENDDATE, "openssl x509 -enddate -in $cert_dir/$_ -noout |");
-	my $date = <ENDDATE>; # expiration date
-	close (ENDDATE);
-	chomp ($date);
-	
-	unless ($date) {
-	    &do_log ('err', "error in chk_cert_expiration command : can't get expiration date for $_ by using the x509 openssl command");
-	    next;
-	}
-	
-	$date =~ /notAfter=(\w+)\s*(\d+)\s[\d\:]+\s(\d+).+/;
-	my @date = (0, 0, 0, $2, $months{$1}, $3 - 1900);
-	$date =~ s/notAfter=//;
-	my $expiration_date = timegm (@date); # epoch expiration date
-	my $rep = &tools::adate ($expiration_date);
-
-	# no near expiration nor expiration processing
-	if ($expiration_date > $limit) { 
-	    # deletion of unuseful soon_expired file if it is existing
-	    if (-e $soon_expired_file) {
-		unlink ($soon_expired_file) || &do_log ('err', "error : can't delete $soon_expired_file");
-	    }
-	    next;
-	}
-	
-	# expired certificate processing
-	if ($expiration_date < $execution_date) {
-	    
-	    &do_log ('notice', "--> $_ certificate expired ($date), certificate file deleted");
-	    if (!$log) {
-		unlink ("$cert_dir/$_") || &do_log ('notice', "error : can't delete certificate file $_");
-	    }
-	    if (-e $soon_expired_file) {
-		unlink ("$cert_dir/$soon_expired_file") || &do_log ('err', "error : can't delete $soon_expired_file");
-	    }
-	    next;
-	}
-
-	# soon expired certificate processing
-	if ( ($expiration_date > $execution_date) && 
-	     ($expiration_date < $limit) &&
-	     !(-e $soon_expired_file) ) {
-
-	    unless (open (FILE, ">$cert_dir/$soon_expired_file")) {
-		&do_log ('err', "error in chk_cert_expiration : can't create $soon_expired_file");
-		next;
-	    } else {close (FILE);}
-	    
-	    my %tpl_context; # datas necessary to the template
-
-	    open (ID, "openssl x509 -subject -in $cert_dir/$_ -noout |");
-	    my $id = <ID>; # expiration date
-	    close (ID);
-	    chomp ($id);
-	    
-	    unless ($id) {
-		&do_log ('err', "error in chk_cert_expiration command : can't get expiration date for $_ by using the x509 openssl command");
-		next;
-	    }
-
-	    $id =~ s/subject= //;
-	    do_log ('notice', "id : $id");
-	    $tpl_context{'expiration_date'} = &tools::adate ($expiration_date);
-	    $tpl_context{'certificate_id'} = $id;
-	
-	    &List::send_global_file ($template, $_, \%tpl_context) if (!$log);
-	    &do_log ('notice', "--> $_ certificate soon expired ($date), user warned");
+    # calculate number of messages distributed in list while user was bouncing
+    foreach my $date (sort {$b <=> $a} keys (%$list_traffic)) {
+	if (($date >= $BO_period) && ($date <= $EO_period)) {
+	    $min_day = $date;
+	    $msg_count += $list_traffic->{$date};
 	}
     }
-    return 1;
+
+    #Adjust bounce_count when msg_count file is too recent, compared to the bouncing period
+    my $tmp_bounce_count = $bounce_count;
+    unless ($EO_period == $BO_period) {
+	my $ratio  = (($EO_period - $min_day) / ($EO_period - $BO_period));
+	$tmp_bounce_count *= $ratio;
+    }
+    
+    ## Regularity rate tells how much user has bounced compared to list traffic
+    my $regularity_rate = $tmp_bounce_count / $msg_count;
+
+    ## type rate depends on bounce type (5 = permanent ; 4 =tewmporary)
+    my $type_rate = 1;
+    $bounce_type =~ /(\d)\.(\d)\.(\d)/;    
+    if ($1 == 4) { # if its a temporary Error: score = score/2
+	$type_rate = .5;
+    }
+
+    my $note = $bounce_count * $regularity_rate * $type_rate;
+	
+#    $note = 100 if ($note > 100); # shift between message ditrib & bounces => note > 100     
+    
+    return  $note;
 }
 
 
-## attention, j'ai n'ai pas pu comprendre les retours d'erreurs des commandes wget donc pas de verif sur le bon fonctionnement de cette commande
-sub update_crl {
-
-    my $Rarguments = $_[0];
-    my $context = $_[1];
-
-    my @tab = @{$Rarguments};
-    my $limit = &tools::epoch_conv ($tab[1], $context->{'execution_date'});
-    my $CA_file = "$Conf{'home'}/$tab[0]"; # file where CA urls are stored ;
-    &do_log ('notice', "line $context->{'line_number'} : update_crl (@tab)");
-
-    # building of CA list
-    my @CA;
-    unless (open (FILE, $CA_file)) {
-	error ($context->{'task_file'}, "error in update_crl command : can't open $CA_file file");
-	return undef;
-    }
-    while (<FILE>) {
-	chomp;
-	push (@CA, $_);
-    }
-    close (FILE);
-
-    # updating of crl files
-    my $crl_dir = "$Conf{'crl_dir'}";
-    unless (-d $Conf{'crl_dir'}) {
-	if ( mkdir ($Conf{'crl_dir'}, 0775)) {
-	    do_log('notice', "creating spool $Conf{'crl_dir'}");
-	}else{
-	    do_log('err', "Unable to create CRLs directory $Conf{'crl_dir'}");
-	    return undef;
-	}
-    }
-
-    foreach my $url (@CA) {
-	
-	my $crl_file = &tools::escape_chars ($url); # convert an URL into a file name
-	my $file = "$crl_dir/$crl_file";
-	
-	## create $file if it doesn't exist
-	unless (-e $file) {
-	    my $cmd = "wget -O \'$file\' \'$url\'";
-	    open CMD, "| $cmd";
-	    close CMD;
-	}
-
-	 # recovery of the crl expiration date
-	open (ID, "openssl crl -nextupdate -in \'$file\' -noout -inform der|");
-	my $date = <ID>; # expiration date
-	close (ID);
-	chomp ($date);
-
-	unless ($date) {
-	    &do_log ('err', "error in update_crl command : can't get expiration date for $file crl file by using the crl openssl command");
-	    next;
-	}
-
-	$date =~ /nextUpdate=(\w+)\s*(\d+)\s(\d\d)\:(\d\d)\:\d\d\s(\d+).+/;
-	my @date = (0, $4, $3 - 1, $2, $months{$1}, $5 - 1900);
-	my $expiration_date = timegm (@date); # epoch expiration date
-	my $rep = &tools::adate ($expiration_date);
-
-	## check if the crl is soon expired or expired
-	#my $file_date = $context->{'execution_date'} - (-M $file) * 24 * 60 * 60; # last modification date
-	my $condition = "newer($limit, $expiration_date)";
-	my $verify_context;
-	$verify_context->{'sender'} = 'nobody';
-
-	if (&List::verify ($verify_context, $condition) == 1) {
-	    unlink ($file);
-	    &do_log ('notice', "--> updating of the $file crl file");
-	    my $cmd = "wget -O \'$file\' \'$url\'";
-	    open CMD, "| $cmd";
-	    close CMD;
-	    next;
-	}
-    }
-    return 1;
-}
 
 ### MISCELLANEOUS SUBROUTINES ### 
 

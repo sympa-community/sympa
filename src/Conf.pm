@@ -43,7 +43,8 @@ my @valid_options = qw(
 		       misaddressed_commands misaddressed_commands_regexp max_size maxsmtp msgcat nrcpt owner_priority pidfile spool queue 
 		       queueauth queuetask queuebounce queuedigest queueexpire queuemod queuesubscribe queueoutgoing tmpdir
 		       loop_command_max loop_command_sampling_delay loop_command_decrease_factor
-		       purge_user_table_task
+		       purge_user_table_task  purge_orphan_bounces_task eval_bouncers_task process_bouncers_task
+		       minimum_bouncing_count minimum_bouncing_period bounce_delay default_bounce_level1_rate default_bounce_level2_rate 
 		       remind_return_path request_priority rfc2369_header_fields sendmail sendmail_args sleep 
 		       sort sympa_priority syslog log_smtp umask welcome_return_path wwsympa_url
                        openssl capath cafile  key_passwd ssl_cert_dir remove_headers
@@ -153,13 +154,21 @@ my %Default_Conf =
      'list_check_suffixes' => 'request,owner,editor,unsubscribe,subscribe',
      'expire_bounce_task' => 'daily',
      'purge_user_table_task' => 'monthly',
+     'purge_orphan_bounces_task' => 'monthly',
+     'eval_bouncers_task' => 'daily',
+     'process_bouncers_task' => 'weekly',
      'default_archive_quota' => '',
      'default_shared_quota' => '',
      'capath' => '',
      'cafile' => '',
      'spam_protection' => 'javascript',
-     'web_archive_spam_protection' => 'cookie'
-   );
+     'web_archive_spam_protection' => 'cookie',
+     'minimum_bouncing_count' => 10,
+     'minimum_bouncing_period' => 10,
+     'bounce_delay' => 0,
+     'default_bounce_level1_rate' => 45,
+     'default_bounce_level2_rate' => 75
+     );
    
 my $wwsconf;
 %Conf = ();
@@ -358,7 +367,9 @@ sub load_robots {
 				  list_check_smtp => 1,
 				  list_check_suffixes => 1,
 				  spam_protection => 1,
-				  web_archive_spam_protection => 1
+				  web_archive_spam_protection => 1,
+				  bounce_level1_rate => 1,
+				  bounce_level2_rate => 1,
 				  );
 
     ## Load wwsympa.conf

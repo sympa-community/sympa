@@ -56,13 +56,11 @@
     </TD></TR>
     </TABLE>
 
-    <TABLE WIDTH="100%" BORDER=1>
+    <TABLE BORDER=1>
       <TR BGCOLOR="[error_color]" NOWRAP>
 	<TH><FONT COLOR="[bg_color]">X</FONT></TH>
         <TH><FONT COLOR="[bg_color]">e-mail</FONT></TH>
-	<TH><FONT COLOR="[bg_color]">Nombre d'erreurs</FONT></TH>
-	<TH><FONT COLOR="[bg_color]">période</FONT></TH>
-	<TH NOWRAP><FONT COLOR="[bg_color]">type</FONT></TH>
+	<TH><FONT COLOR="[bg_color]">Score</FONT></TH>
       </TR>
       
       [FOREACH u IN members]
@@ -80,21 +78,15 @@
 	      <A HREF="[path_cgi]/editsubscriber/[list]/[u->escaped_email]/reviewbouncing">[u->email]</A>
 
 	  </FONT></TD>
-          <TD ALIGN="center"><FONT SIZE=-1>
-  	      [u->bounce_count]
-	    </FONT></TD>
-	  <TD NOWRAP ALIGN="center"><FONT SIZE=-1>
-	    du [u->first_bounce] au [u->last_bounce]
-	  </FONT></TD>
-	  <TD NOWRAP ALIGN="center"><FONT SIZE=-1>
-	    [IF u->bounce_class=2]
-	    	succès
-	    [ELSIF u->bounce_class=4]
-		temporaire
-	    [ELSIF u->bounce_class=5]
-		permanente
-	    [ENDIF]
-	  </FONT></TD>
+          <TD ALIGN="center"
+	  [IF u->bounce_level=2]
+            BGCOLOR="#FF0000"
+	  [ELSIF u->bounce_level=1]
+	    BGCOLOR="#FF8C00"
+	  [ENDIF]
+          >
+  	      [u->bounce_score]
+	    </TD>
         </TR>
 
         [IF dark=1]

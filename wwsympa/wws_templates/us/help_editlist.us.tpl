@@ -43,6 +43,45 @@
                task_manager.pl is running.
            </LI>
          </UL>
+
+      [ELSIF p->NAME=bouncers_level1]
+        The Bouncers_level1 paragraphs defines the automatic behavior of bounce management.<BR>
+	Level 1 is the lower level of bouncing users <BR><BR>
+
+        <UL>
+          <LI>rate (Default value: 45)<BR><BR>
+	      Each bouncing user have a score (from 0 to 100).This parameter defines lower limit foreach
+	      category of bouncing users.for example, level 1 begins from 45 to level_2_treshold.<BR><BR>
+          </LI>
+          <LI> action (Default value: notify_bouncers)<BR><BR>
+	       This parameter defines which task is automaticaly applied on level 1
+	       bouncers.<BR><BR>
+          </LI>
+           <LI>Notification  (Default value: owner)<BR><BR>
+	       When automatic task is executed on level 1 bouncers, a notification
+	       email can be send to listowner or listmaster.<BR><BR>
+           </LI>
+        </UL>    
+
+      [ELSIF p->NAME=bouncers_level2]
+        The Bouncers_levelX paragraphs defines the automatic behavior of bounce management.<BR>
+	Level 2 is the highest level of bouncing users <BR><BR>
+
+        <UL>
+          <LI>rate (Default value: 80)<BR><BR>
+	      Each bouncing user have a score (from 0 to 100).This parameter defines limit between each
+	      category of bouncing users.For example, level 2 is for users with a score between 80 
+	      and 100.<BR><BR>
+          </LI>
+          <LI>action (Default value: notify_bouncers)<BR><BR>
+	       This parameter defines which task is automaticaly applied on level 2
+	       bouncers.<BR><BR>
+          </LI>
+           <LI>Notification (Default value: owner)<BR><BR>
+	       When automatic task is executed on level 2 bouncers, a notification
+	       email can be send to listowner or listmaster.<BR><BR>
+           </LI>
+        </UL>    
       [ELSIF p->NAME=cookie]
         This parameter is a confidential item for generating authentication keys for
         administrative commands (ADD, DELETE, etc.). This parameter should remain
