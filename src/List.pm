@@ -3280,6 +3280,7 @@ sub request_action {
     my $operation = shift;
     my $auth_method = shift;
     my $context = shift;
+    my $debug = shift;
     do_log('debug2', 'List::request_action %s,%s',$operation,$auth_method);
 
     $context->{'sender'} ||= 'nobody' ;
@@ -3360,7 +3361,10 @@ sub request_action {
 		    &do_log('info', 'Error in %s scenario, in list %s', $context->{'scenario'}, $context->{'listname'});
 #		}
 
-		return ("error-performing-condition : $rule->{'condition'}",$rule->{'auth_method'},'reject') ;
+		if ($debug) {
+		    return ("error-performing-condition : $rule->{'condition'}",$rule->{'auth_method'},'reject') ;
+		}
+		return 'reject';
 	    }
 	    if ($result == -1) {
 		do_log ('debug2',"rule $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'} rejected");
@@ -3368,7 +3372,10 @@ sub request_action {
 	    }
 	    if ($result == 1) {
 		do_log ('debug2',"rule $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'} accepted");
-		return ($rule->{'condition'},$rule->{'auth_method'},$rule->{'action'});
+		if ($debug) {
+		    return ($rule->{'condition'},$rule->{'auth_method'},$rule->{'action'});
+		}
+		return $rule->{'action'};
 	    }
 	}
     }

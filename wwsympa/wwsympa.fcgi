@@ -3929,7 +3929,7 @@ sub do_scenario_test {
 				    'sender' => $in{'sender'},
 				    'email' => $in{'email'},
 				    'remote_host' => $in{'remote_host'},
-				    'remote_addr' => $in{'remote_addr'}});	
+				    'remote_addr' => $in{'remote_addr'}}, 'debug');	
     }
     return 1;
 }
