@@ -60,7 +60,7 @@ use CPAN;
 	     'Locale::TextDomain' => 'libintl-perl',
 	     'Template' => 'Template-Toolkit',
 	     'Archive::Zip' => 'Archive-Zip',
-	     'LWP::Agent' => 'libwww-perl',
+	     'LWP' => 'libwww-perl',
 	     );
 
 %opt_CPAN = ('DBI' => 'DBI',
