@@ -1080,13 +1080,19 @@ sub purge_user_table {
 	    next unless defined($list);
 
 	    ## Owners
-	    foreach my $o (@{$list->get_owners()}) {
-		$known_people{$o->{'email'}} = 1;
+	    my $owners = $list->get_owners();
+	    if (defined $owners) {
+		foreach my $o (@{$owners}) {
+		    $known_people{$o->{'email'}} = 1;
+		}
 	    }
 
 	    ## Editors
-	    foreach my $e (@{$list->get_editors()}) {
-		$known_people{$e->{'email'}} = 1;
+	    my $editors = $list->get_editors();
+	    if (defined $editors) {		
+		foreach my $e (@{$editors}) {
+		    $known_people{$e->{'email'}} = 1;
+		}
 	    }
 	    
 	    ## Subscribers
