@@ -1,86 +1,86 @@
 <!-- $Id$ -->
 
 
-<FORM ACTION="[% path_cgi %]" METHOD=POST>
-    <INPUT TYPE=HIDDEN NAME="action" value="scenario_test">
-    <center>
-    <TABLE BORDER=0 CELLPADDING=10>
-      <TR VALIGN="top">
-        <TD COLSPAN=2 NOWRAP>
-    	<FONT COLOR="[% dark_color %]"><CENTER><B>[%|loc%]Scenario test module[%END%]</b></CENTER></FONT><BR>
-        </TD>
-      </TR>
-      <TR>
-        <TD>[%|loc%]Scenari name[%END%]</TD>
-        <TD>
-	  <SELECT NAME="scenario">
+<form action="[% path_cgi %]" method="post">
+    <input type="hidden" name="action" value="scenario_test" />
+    <div style="margin-left: auto; margin-right: auto; text-align: center;">
+    <table border="0" cellpadding="10" style="text-align: left;">
+      <tr valign="top">
+        <td colspan="2" style="white-space: nowrap;">
+    	<div style="color: [% dark_color %]; text-align: center;"><strong>[%|loc%]Scenario test module[%END%]</strong></div><br />
+        </td>
+      </tr>
+      <tr>
+        <td>[%|loc%]Scenari name[%END%]</td>
+        <td>
+	  <select name="scenario">
 	      [% FOREACH sc = scenario %]
-	        <OPTION VALUE="[% sc.key %]" [% sc.value.selected %]>[% sc.key %]
+	        <option value="[% sc.key %]" [% sc.value.selected %]>[% sc.key %]</option>
 	      [% END %]
-	  </SELECT>
-        </TD>
-    </TR>
-    <TR>
-        <TD>[%|loc%]Listname[%END%]</TD>
+	  </select>
+        </td>
+    </tr>
+    <tr>
+        <td>[%|loc%]Listname[%END%]</td>
 
-        <TD>
-	  <SELECT NAME="listname">
+        <td>
+	  <select name="listname">
 	      [% FOREACH l = listname %]
-	        <OPTION VALUE="[% l.key %]"[% l.value.selected %] >[% l.key %]
+	        <option value="[% l.key %]"[% l.value.selected %] >[% l.key %]</option>
 	      [% END %]
-	  </SELECT>
-        </TD>
-    </TR>
-    <TR>
-        <TD>[%|loc%]sender email[%END%]</TD>
-        <TD>
-          <INPUT TYPE="text" NAME="sender" SIZE="20" value="[% sender %]">
-        </TD>
-    </TR>
-    <TR>
-        <TD>[%|loc%]Related email[%END%]</TD>
-        <TD>
-          <INPUT TYPE="text" NAME="email" SIZE="20" value="[% email %]">
-        </TD>
-    </TR>
-    <TR>
-        <TD>[%|loc%]Remote addr[%END%]</TD>
-        <TD>
-          <INPUT TYPE="text" NAME="remote_addr" SIZE="16" value="[% remote_addr %]">
-        </TD>
-    </TR>
-    <TR>
-        <TD>[%|loc%]Remote host[%END%]</TD>	
-        <TD>
-          <INPUT TYPE="text" NAME="remote_host" SIZE="16" value="[% remote_host %]">
-        </TD>
-    </TR>
-    <TR>
-        <TD>[%|loc%]Auth method[%END%]</TD>
-        <TD>
-          <SELECT NAME="auth_method">
+	  </select>
+        </td>
+    </tr>
+    <tr>
+        <td>[%|loc%]sender email[%END%]</td>
+        <td>
+          <input type="text" name="sender" size="20" value="[% sender %]" />
+        </td>
+    </tr>
+    <tr>
+        <td>[%|loc%]Related email[%END%]</td>
+        <td>
+          <input type="text" name="email" size="20" value="[% email %]" />
+        </td>
+    </tr>
+    <tr>
+        <td>[%|loc%]Remote addr[%END%]</td>
+        <td>
+          <input type="text" name="remote_addr" size="16" value="[% remote_addr %]" />
+        </td>
+    </tr>
+    <tr>
+        <td>[%|loc%]Remote host[%END%]</td>	
+        <td>
+          <input type="text" name="remote_host" size="16" value="[% remote_host %]" />
+        </td>
+    </tr>
+    <tr>
+        <td>[%|loc%]Auth method[%END%]</td>
+        <td>
+          <select name="auth_method">
               [% FOREACH a = auth_method %]
-	        <OPTION VALUE="[% a.key %]"[% a.value.selected %] >[% a.key %]
+	        <option value="[% a.key %]"[% a.value.selected %] >[% a.key %]</option>
 	      [% END %] 
-	  </SELECT>
-        </TD>
-    </TR>
-    <TR>
+	  </select>
+        </td>
+    </tr>
+    <tr>
 
-	<TD><INPUT TYPE="submit" NAME="action_scenario_test" VALUE="[%|loc%]get matched rule[%END%]"></TD>
-        <TD bgcolor="[% dark_color %]">
+	<td><input type="submit" name="action_scenario_test" value="[%|loc%]get matched rule[%END%]" /></td>
+        <td style="background-color: [% dark_color %];">
           [% IF scenario_action %]
              <code>[% scenario_condition %], [% scenario_auth_method %] -> [% scenario_action %]</code>
           [% ELSE %]
-          <center>-</center>
+          <div style="text-align: center;">-</div>
           [% END %]
-        </TD>
+        </td>
 
-      </TR>
+      </tr>
 
-    </TABLE>
-    </CENTER>
-    </FORM>
+    </table>
+    </div>
+    </form>
 
 
 

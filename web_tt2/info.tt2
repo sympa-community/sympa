@@ -1,25 +1,25 @@
 <!-- $Id$ -->
 
-<TABLE WIDTH="100%" BORDER=0 CELLSPACING=0  CELLPADDING=0>
-  <TR VALIGN=top>
-    <TD> 
-      <BR>
+<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
+  <tr valign="top">
+    <td> 
+      <br />
       [% IF homepage %]
  	  [% TRY %]
             [% INSERT 'homepage' %]
           [% CATCH %]
 	  [% END %]
       [% ELSE %]
-         <PRE>
+         <pre>
 	  [% TRY %]
             [% INSERT 'info' %]
           [% CATCH %]
 	  [% END %]
-         </PRE>
+         </pre>
       [% END %]
-    </TD>
-  </TR>
-</TABLE>
+    </td>
+  </tr>
+</table>
 
 
 

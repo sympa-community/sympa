@@ -1,33 +1,33 @@
 <!-- $Id$ -->
 
-  <FORM ACTION="[% path_cgi %]" METHOD=POST>
+  <form action="[% path_cgi %]" method="post">
 
-  [%|loc%]You are subscribed since[%END%] <FONT COLOR="[% dark_color %]">[% subscriber.date %]</FONT>  <BR><BR>
-  [%|loc%]Last update:[%END%] <FONT COLOR="[% dark_color %]">[% subscriber.update_date %]</FONT>  <BR><BR>
-     <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+  [%|loc%]You are subscribed since[%END%] <span style="color: [% dark_color %];">[% subscriber.date %]</span>  <br /><br />
+  [%|loc%]Last update:[%END%] <span style="color: [% dark_color %];">[% subscriber.update_date %]</span>  <br /><br />
+     <input type="hidden" name="list" value="[% list %]" />
      [%|loc%]Reception mode :[%END%] 
-     <SELECT NAME="reception">
+     <select name="reception">
         [% FOREACH r = reception %]
-          <OPTION VALUE="[% r.key %]" [% r.value.selected %]>[% r.value.description %]
+          <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
         [% END %]
-     </SELECT>
+     </select>
 
      [% PROCESS 'button_header.tt2' %]
-     <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center"> 
-      <A HREF="[% path_cgi %]/nomenu/help/user_options" onClick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" TARGET="wws_help">
-     <FONT SIZE=-1><B>Help</B></FONT></A>
-     </TD>
+     <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;"> 
+      <a href="[% path_cgi %]/nomenu/help/user_options" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">
+     <span style="font-size: smaller;"><strong>Help</strong></span></a>
+     </td>
      [% PROCESS 'button_footer.tt2' %]
 
-     <BR>
+     <br />
      [%|loc%]Visibility :[%END%]
-     <SELECT NAME="visibility">
+     <select name="visibility">
         [% FOREACH r = visibility %]
-          <OPTION VALUE="[% r.key %]" [% r.value.selected %]>[% r.value.description %]
+          <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
         [% END %]
-     </SELECT>
+     </select>
 
-     <BR>
-     <INPUT TYPE="submit" NAME="action_set" VALUE="[%|loc%]Update[%END%]">
+     <br />
+     <input type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
      
-</FORM>
+</form>

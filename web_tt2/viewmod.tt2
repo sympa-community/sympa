@@ -1,14 +1,14 @@
 <!-- $Id$ -->
 
- <FORM ACTION="[% path_cgi %]" METHOD=POST>
-  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-  <INPUT TYPE="hidden" NAME="id" VALUE="[% id %]">
-<TABLE>
-<TR BGCOLOR="[% bg_color %]"><TD>
-  <INPUT TYPE="submit" NAME="action_distribute" VALUE="[%|loc%]Distribute[%END%]">
-  <INPUT TYPE="submit" NAME="action_reject.quiet" VALUE="[%|loc%]Reject[%END%]">
-  <INPUT TYPE="submit" NAME="action_reject" VALUE="[%|loc%]Notified reject[%END%]">
-</TD></TR></TABLE>
-</FORM>
+ <form action="[% path_cgi %]" method="post">
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="id" value="[% id %]" />
+<table>
+<tr style="background-color: [% bg_color %];"><td>
+  <input type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
+  <input type="submit" name="action_reject.quiet" value="[%|loc%]Reject[%END%]" />
+  <input type="submit" name="action_reject" value="[%|loc%]Notified reject[%END%]" />
+</td></tr></table>
+</form>
 [% PROCESS 'msg00000.html' %]
 

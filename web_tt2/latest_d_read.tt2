@@ -12,20 +12,20 @@
    [%|loc(for)%] for %1 days [%END%] 	
  [% END %]
 </strong> </h2> 	
-<BR> 
+<br /> 
  
-<TABLE STYLE="WIDTH: 100%;">
- <tr style="background: [% light_color %]">
-   <th width=10% ><strong>[%|loc%]Last update[%END%]</strong></th>
+<table style="width: 100%;">
+ <tr style="background-color: [% light_color %]">
+   <th style="width: 10%;"><strong>[%|loc%]Last update[%END%]</strong></th>
    <th><strong>[%|loc%]Name[%END%]</strong></th>
    <th><strong>[%|loc%]Author[%END%]</strong></th>
    <th><strong>[%|loc%]Directory[%END%]</strong></th>
  </tr>
 
  [% FOREACH d = documents %]
- <TR>
-   <TD> [% d.last_update %] </TD>
-   <TD>
+ <tr>
+   <td> [% d.last_update %] </td>
+   <td>
     [% IF d.html %]
       <a href="[% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]/[% d.escaped_name %]" target="html_window">
       <img style="vertical-align: bottom; border: 0px;" src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.name %] </a>
@@ -37,15 +37,15 @@
 	  <img style="text-align: bottom; border: 0px;" src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.name %] </a>
     [% END %] 
 
-   <TD> [% IF d.author %] 
+   <td> [% IF d.author %] 
            [% d.author %] 
 	[% ELSE %]
 	   [%|loc%]Unknown[%END%] 
 	[% END %] 
-   </TD>
-   <TD> <a href="[% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]"/> [% d.content_dir %] </TD>
- </TR>
+   </td>
+   <td> <a href="[% path_cgi %]/d_read/[% list %][% d.escaped_content_dir %]"/> [% d.content_dir %] </td>
+ </tr>
  
  [% END %]  
 
-</TABLE>
+</table>

@@ -2,50 +2,50 @@
 
   [% IF status == 'auth' %]
 
-	[%|loc(list)%]You requested subscription to list %1[%END%]. <BR>[%|loc%]To confirm
-	your request, please click the button below :[%END%]<BR>
-	<BR>
+	[%|loc(list)%]You requested subscription to list %1[%END%]. <br />[%|loc%]To confirm
+	your request, please click the button below :[%END%]<br />
+	<br />
 
-	<FORM ACTION="[% path_cgi %]" METHOD=POST>
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-	  <INPUT TYPE="hidden" NAME="email" VALUE="[% user.email %]">
-	  <INPUT TYPE="submit" NAME="action_subscribe" VALUE="[%|loc(list)%]I subscribe to list %1[%END%]">
-	</FORM>
+	<form action="[% path_cgi %]" method="post">
+	  <input type="hidden" name="list" value="[% list %]" />
+	  <input type="hidden" name="email" value="[% user.email %]" />
+	  <input type="submit" name="action_subscribe" value="[%|loc(list)%]I subscribe to list %1[%END%]" />
+	</form>
 
   [% ELSIF status == 'notauth_passwordsent' %]
 
     	[%|loc(list)%]You requested a subscription to list %1[%END%]. 
-	<BR><BR>
+	<br /><br />
 	[%|loc%]To confirm your identity and prevent anyone from subscribing you to 
 	this list against your will, a message containing your password
-	will be sent to you.[%END%] <BR><BR>
+	will be sent to you.[%END%] <br /><br />
 
 	[%|loc(list)%]Check your mailbox for new messages and enter below the
 	password. This will confirm your subscription to list %1[%END%].
 	
-        <FORM ACTION="[% path_cgi %]" METHOD=POST>
-          <FONT COLOR="[% dark_color %]"><B>[%|loc%]e-mail address[%END%]</B> </FONT>[% email %]<BR>
-	  <FONT COLOR="[% dark_color %]"><B>[%|loc%]password[%END%]</B> </FONT> 
-  	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-	  <INPUT TYPE="hidden" NAME="email" VALUE="[% email %]">
-	  <INPUT TYPE="hidden" NAME="previous_list" VALUE="[% list %]">
-	  <INPUT TYPE="hidden" NAME="previous_action" VALUE="subrequest">
-        &nbsp; &nbsp; &nbsp;<INPUT TYPE="submit" NAME="action_subscribe" VALUE="[%|loc%]Subscribe[%END%]">
-        </FORM>
+        <form action="[% path_cgi %]" method="post">
+          <span style="color: [% dark_color %];"><strong>[%|loc%]e-mail address[%END%]</strong> </span>[% email %]<br />
+	  <span style="color: [% dark_color %];"><strong>[%|loc%]password[%END%]</strong> </span> 
+  	  <input type="password" name="passwd" size="20" />
+	  <input type="hidden" name="list" value="[% list %]" />
+	  <input type="hidden" name="email" value="[% email %]" />
+	  <input type="hidden" name="previous_list" value="[% list %]" />
+	  <input type="hidden" name="previous_action" value="subrequest" />
+        &nbsp; &nbsp; &nbsp;<input type="submit" name="action_subscribe" value="[%|loc%]Subscribe[%END%]" />
+        </form>
 
       	[%|loc%]This password, associated to your email address, will
 	allow you to access your custom environment.[%END%]
 
   [% ELSIF status == 'notauth_noemail' %]
 
-         <FORM ACTION="[% path_cgi %]" METHOD=POST>
-          <FONT COLOR="[% dark_color %]"><B>[%|loc%]Your e-mail address[%END%]</B> </FONT>
-	  <INPUT  NAME="email" SIZE="30"><BR>
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-	  <INPUT TYPE="hidden" NAME="action" VALUE="subrequest">
-	  <INPUT TYPE="submit" NAME="action_subrequest" VALUE="[%|loc%]submit[%END%]">
-         </FORM>
+         <form action="[% path_cgi %]" method="post">
+          <span style="color: [% dark_color %];"><strong>[%|loc%]Your e-mail address[%END%]</strong> </span>
+	  <input type="text" name="email" size="30" /><br />
+	  <input type="hidden" name="list" value="[% list %]" />
+	  <input type="hidden" name="action" value="subrequest" />
+	  <input type="submit" name="action_subrequest" value="[%|loc%]submit[%END%]" />
+         </form>
 
 
   [% ELSIF status == 'notauth' %]
@@ -54,22 +54,22 @@
 	your password below :[%END%]
 
          <FORM ACTION="[% path_cgi %]" METHOD=POST>
-          <FONT COLOR="[% dark_color %]"><B>[%|loc%]e-mail address[%END%]</B> </FONT>[% email %]<BR>
-            <FONT COLOR="[% dark_color %]"><B>[%|loc%]password[%END%]</B> </FONT> 
-  	  <INPUT TYPE="password" NAME="passwd" SIZE="20">
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-	  <INPUT TYPE="hidden" NAME="email" VALUE="[% email %]">
-	  <INPUT TYPE="hidden" NAME="previous_list" VALUE="[% list %]">
-	  <INPUT TYPE="hidden" NAME="previous_action" VALUE="subrequest">
-         &nbsp; &nbsp; &nbsp;<INPUT TYPE="submit" NAME="action_subscribe" VALUE="[%|loc%]Subscribe[%END%]">
-	<INPUT TYPE="submit" NAME="action_sendpasswd" VALUE="[%|loc%]My password ?[%END%]">
-         </FORM>
+          <span style="color: [% dark_color %];"><strong>[%|loc%]e-mail address[%END%]</strong> </span>[% email %]<br />
+            <span style="color: [% dark_color %];"><strong>[%|loc%]password[%END%]</strong> </span> 
+  	  <input type="password" name="passwd" size="20" />
+	  <input type="hidden" name="list" value="[% list %]" />
+	  <input type="hidden" name="email" value="[% email %]" />
+	  <input type="hidden" name="previous_list" value="[% list %]" />
+	  <input type="hidden" name="previous_action" value="subrequest" />
+         &nbsp; &nbsp; &nbsp;<input type="submit" name="action_subscribe" value="[%|loc%]Subscribe[%END%]" />
+	<input type="submit" name="action_sendpasswd" value="[%|loc%]My password ?[%END%]" />
+         </form>
 
   [% ELSIF status == 'notauth_subscriber' %]
 
-	<FONT COLOR="[% dark_color %]"><B>[%|loc(list)%]You are already subscriber of list %1[%END%].</B>
-	</FONT>
-	<BR><BR>
+	<span style="color: [% dark_color %];"><strong>[%|loc(list)%]You are already subscriber of list %1[%END%].</strong>
+	</span>
+	<br /><br />
 
 
 	[% PROCESS 'loginbanner.tt2' %]

@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 
-<br /><p></o> 
+<br /><p></p> 
 <table border="0" style="background: [% light_color %];"><tr><td>
 <p style="text-align: justify;">
 [%|loc(conf.email,conf.host)%]This server provides you access to your environment on mailing list server %1@%2. Starting from this URL, you can perform subscription options, unsubscription,
@@ -50,34 +50,34 @@ archives, list management and so on.[%END%]
      </td>
      [% PROCESS 'button_footer.tt2' %]
 </td>
-<TD width=100%></TD>
-<TD NOWRAP>
-        <FORM ACTION="[% path_cgi %]" METHOD=POST> 
-         <INPUT SIZE=25 NAME=filter VALUE=[% filter %]>
-         <INPUT TYPE="hidden" NAME="action" VALUE="search_list">
-         <INPUT TYPE="submit" NAME="action_search_list" VALUE="[%|loc%]Search lists[%END%]">
+<td style="width: 100%;"></td>
+<td style="white-space: nowrap;">
+        <form action="[% path_cgi %]" method="post"> 
+         <input size="25" name="filter" value="[% filter %]" />
+         <input type="hidden" name="action" value="search_list" />
+         <input type="submit" name="action_search_list" value="[%|loc%]Search lists[%END%]" />
 	  <br />
-	 <INPUT TYPE="radio" NAME="extended" VALUE="0" checked>[%|loc%]Local[%END%]
-         <INPUT TYPE="radio" NAME="extended" VALUE="1">[%|loc%]Extended search[%END%]
+	 <input type="radio" name="extended" value="0" checked="checked" />[%|loc%]Local[%END%]
+         <input type="radio" name="extended" value="1" />[%|loc%]Extended search[%END%]
 	 
-        </FORM>
-   </TD>
+        </form>
+   </td>
         
-   </TD></TR>
-  </TABLE>
- </TD>
-</TR>
-</TABLE>
+   </td></tr>
+  </table>
+ </td>
+</tr>
+</table>
 </div>
 
 [% IF ! user.email %]
-<TABLE BORDER="0" WIDTH="100%"  CELLPADDING="1" CELLSPACING="0" VALIGN="top">
-   <TR><TD BGCOLOR="[% dark_color %]">
-          <TABLE BORDER="0" WIDTH="100%"  VALIGN="top"> 
-              <TR><TD BGCOLOR="[% bg_color %]">
+<table border="0" style="width: 100%;" cellpadding="1" cellspacing="0" valign="top">
+   <tr><td style="background-color: [% dark_color %];">
+          <table border="0" style="width: 100%;" valign="top"> 
+              <tr><td style="background-color: [% bg_color %];">
 [% PROCESS 'loginbanner.tt2' %]
-</TD></TR></TABLE>
-</TD></TR></TABLE>
+</td></tr></table>
+</td></tr></table>
 
 [% END %]
 <br /><br />

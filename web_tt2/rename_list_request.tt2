@@ -1,18 +1,18 @@
-	<FORM ACTION="[% path_cgi %]" METHOD=POST>
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-	  [%|loc%]New list name:[%END%] <INPUT NAME="new_listname" VALUE=""> 
+	<form action="[% path_cgi %]" method="post">
+	  <input type="hidden" name="list" value="[% list %]" />
+	  [%|loc%]New list name:[%END%] <input name="new_listname" value="" /> 
 	[% IF robots %]
-           <SELECT NAME="new_robot">
+           <select name="new_robot">
            [% FOREACH vr = robots %]
-             <OPTION VALUE="[% vr.key %]" [% vr.value %]>[% vr.key %]
+             <option value="[% vr.key %]" [% vr.value %]>[% vr.key %]</option>
            [% END %]
-	   </SELECT>
+	   </select>
 	[% ELSE %]
-	   <INPUT NAME="new_robot" TYPE="hidden" VALUE="[% robot %]">
+	   <input name="new_robot" type="hidden" value="[% robot %]" />
 	   [% robot %]
         [% END %]
-	  <INPUT TYPE="submit" NAME="action_rename_list" VALUE="[%|loc%]Rename this list[%END%]" onClick="return request_confirm('[%|loc%]Do you really want to rename this list?[%END%]')">
-	</FORM>
+	  <input type="submit" name="action_rename_list" value="[%|loc%]Rename this list[%END%]" onclick="return request_confirm('[%|loc%]Do you really want to rename this list?[%END%]')" />
+	</form>
 
 
 	

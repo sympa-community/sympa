@@ -13,31 +13,31 @@
  [% END %]
 </strong> </h2> 	
 
-<BR> 
+<br /> 
 
 
-<TABLE STYLE="WIDTH: 100%;">
+<table style="width: 100%;">
 
- <tr style="background: [% light_color %];">
+ <tr style="background-color: [% light_color %];">
    <th><strong>[%|loc%]Listname[%END%]</strong></th>
    <th><strong>[%|loc%]Creation date[%END%]</strong></th>
    <th><strong>[%|loc%]Subject[%END%]</strong></th>
  </tr>
 
  [% FOREACH l = latest_lists %]
- <TR>
-   <TD >
-     <A HREF="[% path_cgi %]/info/[% l.name %]" ><B>[% hidden_head %][% l.name %][% hidden_at %][% l.host %][% hidden_end %]</B></A>
-   </TD>
+ <tr>
+   <td>
+     <a href="[% path_cgi %]/info/[% l.name %]" ><strong>[% hidden_head %][% l.name %][% hidden_at %][% l.host %][% hidden_end %]</strong></a>
+   </td>
 
-  <TD> [% l.date %] </TD>
-  <TD> [% l.subject %] </TD>
- </TR>
+  <td> [% l.date %] </td>
+  <td> [% l.subject %] </td>
+ </tr>
  
  [% END %] 
  
- <BR>
-</TABLE>
+ <br />
+</table>
 
 
 

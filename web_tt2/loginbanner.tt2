@@ -1,20 +1,20 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-<BR>
+<br />
 [% IF password_sent %]
-  [%|loc(init_email)%]Your password has been sent to your email address %1.<BR>Please check your e-mail box to provide your password below.[%END%]
-  <BR><BR>
+  [%|loc(init_email)%]Your password has been sent to your email address %1.<br />Please check your e-mail box to provide your password below.[%END%]
+  <br /><br />
 [% END %]
 
 [% IF action == 'loginrequest' %]
  [%|loc%]You need to login to access your custom WWSympa environment or to perform a privileged operation (one that requires your email address).[%END%]
 [% ELSE %]
- [%|loc%]Most mailing list features require your email. Some mailing lists are hidden to  unidentified persons.<BR>
- In order to benefit from the full services provided by this server, you probably need to identify yourself first.[%END%] <BR>
+ [%|loc%]Most mailing list features require your email. Some mailing lists are hidden to  unidentified persons.<br />
+ In order to benefit from the full services provided by this server, you probably need to identify yourself first.[%END%] <br />
 [% IF use_sso %]
 [% IF use_passwd == '1' %]
 
-[%|loc%]To login, select your organization authentication server below.<BR>
+[%|loc%]To login, select your organization authentication server below.<br />
 If it is not listed or if you don't have any, login using your email and password on the right column.[%END%]
 
 [% END %]
@@ -26,125 +26,124 @@ If it is not listed or if you don't have any, login using your email and passwor
 
 [% END %]
 
-<TABLE BORDER=1 width=100% CELLSPACING=0 CELLPADDING=0>
-<TR>
+<table border="1" style="width: 100%;" cellspacing="0" cellpadding="0">
+<tr>
 
 [% IF use_sso %]
-<TD valign='top'>
+<td valign="top">
 [% IF sso_number == '1' %]
 
-    <FORM ACTION="[% path_cgi %]" METHOD=POST> 
-        <INPUT TYPE="hidden" NAME="previous_action" VALUE="[% previous_action %]">
-        <INPUT TYPE="hidden" NAME="previous_list" VALUE="[% previous_list %]">
-	<INPUT TYPE="hidden" NAME="referer" VALUE="[% referer %]">
-	<INPUT TYPE="hidden" NAME="action" VALUE="sso_login">
-	<INPUT TYPE="hidden" NAME="nomenu" VALUE="[% nomenu %]">
+    <form action="[% path_cgi %]" method="post"> 
+        <input type="hidden" name="previous_action" value="[% previous_action %]" />
+        <input type="hidden" name="previous_list" value="[% previous_list %]" />
+	<input type="hidden" name="referer" value="[% referer %]" />
+	<input type="hidden" name="action" value="sso_login" />
+	<input type="hidden" name="nomenu" value="[% nomenu %]" />
 	
 
-        <TABLE BORDER=0 width=100% CELLSPACING=0 CELLPADDING=0>
-         <TR BGCOLOR="[% light_color %]">
-          <TD NOWRAP align=center>
-     	      <INPUT TYPE=hidden NAME=list VALUE="[% list %]">
-     	      <FONT SIZE=-1 COLOR="[% selected_color %]"><b>[%|loc%]Magic authentification[%END%]
+        <table border="0" style="width: 100%;" cellspacing="0" cellpadding="0">
+         <tr style="background-color: [% light_color %];">
+          <td style="white-space: nowrap; text-align: center;">
+     	      <input type="hidden" name="list" value="[% list %]" />
+     	      <span style="font-size: smaller; color: [% selected_color %];"><strong>[%|loc%]Magic authentification[%END%]</strong></span>
 
                 [% FOREACH server = sso %]
-                   <INPUT TYPE="hidden" NAME="auth_service_name" VALUE="[% server.key %]">
+                   <input type="hidden" name="auth_service_name" value="[% server.key %]" />
                 [% END %]
-              </SELECT>
-              <INPUT TYPE="submit" NAME="action_sso_login" VALUE="[%|loc%]Go[%END%]" SELECTED>
+              <input type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
 
-   	    </TD>
-     	  </TR>
-       </TABLE>
- </FORM> 
+   	    </td>
+     	  </tr>
+       </table>
+ </form> 
 [% ELSE %]
-    <FORM ACTION="[% path_cgi %]" METHOD=POST> 
-        <INPUT TYPE="hidden" NAME="previous_action" VALUE="[% previous_action %]">
-        <INPUT TYPE="hidden" NAME="previous_list" VALUE="[% previous_list %]">
-	<INPUT TYPE="hidden" NAME="referer" VALUE="[% referer %]">
-	<INPUT TYPE="hidden" NAME="action" VALUE="sso_login">
-	<INPUT TYPE="hidden" NAME="nomenu" VALUE="[% nomenu %]">
+    <form action="[% path_cgi %]" method="post"> 
+        <input type="hidden" name="previous_action" value="[% previous_action %]" />
+        <input type="hidden" name="previous_list" value="[% previous_list %]" />
+	<input type="hidden" name="referer" value="[% referer %]" />
+	<input type="hidden" name="action" value="sso_login" />
+	<input type="hidden" name="nomenu" value="[% nomenu %]" />
 	
 
-        <TABLE BORDER=0 width=100% CELLSPACING=0 CELLPADDING=0>
-         <TR BGCOLOR="[% light_color %]">
-          <TD NOWRAP align=center>
-     	      <INPUT TYPE=hidden NAME=list VALUE="[% list %]">
-     	      <FONT SIZE=-1 COLOR="[% selected_color %]"><b>[%|loc%]Choose your authentication server[%END%]
+        <table border="0" style="width: 100%;" cellspacing="0" cellpadding="0">
+         <tr style="background-color: [% light_color %];">
+          <td style="white-space: nowrap; text-align: center;">
+     	      <input type="hidden" name="list" value="[% list %]" />
+     	      <span style="font-size: smaller; color: [% selected_color %];"><strong>[%|loc%]Choose your authentication server[%END%]</strong></span>
 
-              <SELECT NAME="auth_service_name" onchange="this.form.submit();">
+              <select name="auth_service_name" onchange="this.form.submit();">
                 [% FOREACH server = sso %]
-                   <OPTION VALUE="[% server.key %]">[% server.value %]
+                   <option value="[% server.key %]">[% server.value %]</option>
                 [% END %]
-              </SELECT>
-              <INPUT TYPE="submit" NAME="action_sso_login" VALUE="[%|loc%]Go[%END%]" SELECTED>
+              </select>
+              <input type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
 
 
-   	    </TD>
-     	  </TR>
-       </TABLE>
- </FORM>
+   	    </td>
+     	  </tr>
+       </table>
+ </form>
 [% END %] 
-</TD>
+</td>
 
 [% END %]
 
-<TD valign='top'>
+<td valign="top">
 
 
-<TABLE BORDER=0  width=100% CELLSPACING=0 CELLPADDING=0>
+<table border="0" style="width: 100%;" cellspacing="0" cellpadding="0">
 <tr><td>
 
-    <FORM ACTION="[% path_cgi %]" METHOD=POST> 
-        <INPUT TYPE="hidden" NAME="previous_action" VALUE="[% previous_action %]">
-        <INPUT TYPE="hidden" NAME="previous_list" VALUE="[% previous_list %]">
-	<INPUT TYPE="hidden" NAME="referer" VALUE="[% referer %]">
-	<INPUT TYPE="hidden" NAME="action" VALUE="login">
-	<INPUT TYPE="hidden" NAME="nomenu" VALUE="[% nomenu %]">
+    <form action="[% path_cgi %]" method="post"> 
+        <input type="hidden" name="previous_action" value="[% previous_action %]" />
+        <input type="hidden" name="previous_list" value="[% previous_list %]" />
+	<input type="hidden" name="referer" value="[% referer %]" />
+	<input type="hidden" name="action" value="login" />
+	<input type="hidden" name="nomenu" value="[% nomenu %]" />
 
-        <TABLE BORDER=0 width=100% CELLSPACING=0 CELLPADDING=0>
-         <TR BGCOLOR="[% light_color %]">
-          <TD NOWRAP align=center>
-     	      <INPUT TYPE=hidden NAME=list VALUE="[% list %]">
-     	      <FONT SIZE=-1 COLOR="[% selected_color %]"><b>email address <INPUT TYPE="text" NAME="email" SIZE=20 VALUE="[% init_email %]">
-      	      password : </b>
-              <INPUT TYPE=password NAME=passwd SIZE=8>&nbsp;&nbsp;
-              <INPUT TYPE="submit" NAME="action_login" VALUE="[%|loc%]Login[%END%]" SELECTED>
-   	    </TD>
-     	  </TR>
-       </TABLE>
- </FORM> 
+        <table border="0" style="width: 100%;" cellspacing="0" cellpadding="0">
+         <tr style="background-color: [% light_color %];">
+          <td style="white-space: nowrap; text-align: center;">
+     	      <input type="hidden" name="list" value="[% list %]" />
+     	      <span style="font-size: smaller; color: [% selected_color %];"><strong>email address <input type="text" name="email" size="20" value="[% init_email %]" />
+      	      password : </strong>
+              <input type="password" name="passwd" size="8" />&nbsp;&nbsp;
+              <input type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
+   	    </td>
+     	  </tr>
+       </table>
+ </form> 
 
 
 
-<TABLE border=0><TR>
-<TD>
-<I>[%|loc%]If you've never had a password from that server or if you don't remember it :[%END%]</I>
-</TD><TD>
-<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="[% dark_color %]">
-  <TD>
-  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
-     <TR> 
-      <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center"> 
+<table border="0"><tr>
+<td>
+<em>[%|loc%]If you've never had a password from that server or if you don't remember it :[%END%]</em>
+</td><td>
+<table cellpadding="2" cellspacing="2" style="width: 100%;" border="0">
+  <tr style="text-align: center; background-color: [% dark_color %];">
+  <td>
+  <table style="width: 100%;" border="0" cellspacing="0" cellpadding="2">
+     <tr> 
+      <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;"> 
       [% IF escaped_init_email %]
-         <A HREF="[% path_cgi %]/nomenu/sendpasswd/[% escaped_init_email %]"
+         <a href="[% path_cgi %]/nomenu/sendpasswd/[% escaped_init_email %]"
       [% ELSE %]
-         <A HREF="[% path_cgi %]/nomenu/remindpasswd/referer/[% referer %]"
+         <a href="[% path_cgi %]/nomenu/remindpasswd/referer/[% referer %]"
       [% END %]
-       onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=300')" TARGET="wws_login">
-     <FONT SIZE=-1><B>[%|loc%]Send me a password[%END%]</B></FONT></A>
-     </TD>
-    </TR>
-  </TABLE>
-</TR>
-</TABLE>
-</TD></TR></TABLE>
-</TD></TR></TABLE>
-</TD>
+       onclick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=300')" target="wws_login">
+     <span style="font-size: smaller;"><strong>[%|loc%]Send me a password[%END%]</strong></span></a>
+     </td>
+    </tr>
+  </table>
+</tr>
+</table>
+</td></tr></table>
+</td></tr></table>
+</td>
 
-</TR>
-</TABLE>
+</tr>
+</table>
 
 
 

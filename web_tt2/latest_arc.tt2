@@ -12,22 +12,22 @@
    [%|loc(for)%] for %1 days [%END%] 	
  [% END %]
 </strong> </h2> 	
-<BR> 
+<br> 
  
-<TABLE STYLE="WIDTH: 100%;">
- <tr style="background: [% light_color %]">
+<table style="width: 100%;">
+ <tr style="background-color: [% light_color %]">
    <th><strong>[%|loc%]Date[%END%]</strong></th>
    <th><strong>[%|loc%]Subject[%END%]</strong></th>
    <th><strong>[%|loc%]From[%END%]</strong></th>
  </tr>
 
  [% FOREACH a = archives %] 
- <TR>
-   <TD> [% a.date %] </TD>
-   <TD> <A HREF="[% conf.wwsympa_url %]/arcsearch_id/[% list %]/[% a.year_month %]/[% a.message_id %]" >[% a.subject %] </TD>
-   <TD> [% a.from %] </TD>
- </TR>
+ <tr>
+   <td> [% a.date %] </td>
+   <td> <a href="[% conf.wwsympa_url %]/arcsearch_id/[% list %]/[% a.year_month %]/[% a.message_id %]" >[% a.subject %] </td>
+   <td> [% a.from %] </td>
+ </tr>
  
  [% END %]  
 
-</TABLE>
+</table>

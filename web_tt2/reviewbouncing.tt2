@@ -1,93 +1,93 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
-<TABLE width=100% border="0" VALIGN="top">
-<TR><TD>
-    <FORM ACTION="[% path_cgi %]" METHOD=POST> 
-      <INPUT TYPE="hidden" NAME="previous_action" VALUE="reviewbouncing">
-      <INPUT TYPE=hidden NAME=list VALUE=[% list %]>
-      <INPUT TYPE="hidden" NAME="action" VALUE="search">
+<table style="width: 100%;" border="0" valign="top">
+<tr><td>
+    <form action="[% path_cgi %]" method="post"> 
+      <input type="hidden" name="previous_action" value="reviewbouncing" />
+      <input type="hidden" name="list" value="[% list %]" />
+      <input type="hidden" name="action" value="search" />
 
-      <INPUT SIZE=25 NAME=filter VALUE=[% filter %]>
-      <INPUT TYPE="submit" NAME="action_search" VALUE="[%|loc%]Search[%END%]">
-    </FORM>
-</TD>
-<TD>
-  <FORM METHOD="post" ACTION="[% path_cgi %]">
-    <INPUT TYPE="submit" VALUE="[%|loc%]Remind all subscribers[%END%]" NAME="action_remind" onClick="return request_confirm('[%|loc(total)%]Do you really want to send a subscription remind message to the %1 subscribers[%END%]')">
-    <INPUT TYPE="hidden" NAME="action" VALUE="remind">
-    <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-  </FORM>	
-</TD>
+      <input size="25" name="filter" value="[% filter %]" />
+      <input type="submit" name="action_search" value="[%|loc%]Search[%END%]" />
+    </form>
+</td>
+<td>
+  <form method="post" action="[% path_cgi %]">
+    <input type="submit" value="[%|loc%]Remind all subscribers[%END%]" name="action_remind" onclick="return request_confirm('[%|loc(total)%]Do you really want to send a subscription remind message to the %1 subscribers[%END%]')" />
+    <input type="hidden" name="action" value="remind" />
+    <input type="hidden" name="list" value="[% list %]" />
+  </form>	
+</td>
 
-</TR></TABLE>
-    <FORM NAME="myform" ACTION="[% path_cgi %]" METHOD=POST>
-    <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-    <INPUT TYPE="hidden" NAME="previous_action" VALUE="reviewbouncing">
+</tr></table>
+    <form name="myform" action="[% path_cgi %]" method="post">
+    <input type="hidden" name="list" value="[% list %]" />
+    <input type="hidden" name="previous_action" value="reviewbouncing" />
 
-    <TABLE WIDTH=100% BORDER=0>
-    <TR><TD ALIGN="left" NOWRAP>
-        <BR>
-        <INPUT TYPE="submit" NAME="action_del" VALUE="[%|loc%]Delete selected email addresses[%END%]">
-        <INPUT TYPE="checkbox" NAME="quiet"> quiet
+    <table style="width: 100%;" border="0">
+    <tr><td style="text-align: left; white-space: nowrap;">
+        <br />
+        <input type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
+        <input type="checkbox" name="quiet" /> quiet
 
-	<INPUT TYPE="hidden" NAME="sortby" VALUE="[% sortby %]">
-	<INPUT TYPE="submit" NAME="action_reviewbouncing" VALUE="[%|loc%]Page size[%END%]">
-	        <SELECT NAME="size">
-                  <OPTION VALUE="[% size %]" SELECTED>[% size %]
-		  <OPTION VALUE="25">25
-		  <OPTION VALUE="50">50
-		  <OPTION VALUE="100">100
-		   <OPTION VALUE="500">500
-		</SELECT>
-   </TD>
+	<input type="hidden" name="sortby" value="[% sortby %]" />
+	<input type="submit" name="action_reviewbouncing" value="[%|loc%]Page size[%END%]" />
+	        <select name="size">
+                  <option value="[% size %]" selected="selected">[% size %]</option>
+		  <option value="25">25</option>
+		  <option value="50">50</option>
+		  <option value="100">100</option>
+		   <option value="500">500</option>
+		</select>
+   </td>
 
- <TD ALIGN="right">
+ <td style="text-align: right;">
         [% IF prev_page %]
-	  <A HREF="[% path_cgi %]/reviewbouncing/[% list %]/[% prev_page %]/[% size %]"><IMG SRC="[% icons_url %]/left.png" BORDER=0 ALT="[%|loc%]Previous page[%END%]"></A>
+	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% prev_page %]/[% size %]"><img src="[% icons_url %]/left.png" style="border: 0px;" alt="[%|loc%]Previous page[%END%]"></a>
         [% END %]
         [% IF page %]
   	  [%|loc(page,total_page)%]page %1 / %2[%END%]
         [% END %]
         [% IF next_page %]
-	  <A HREF="[% path_cgi %]/reviewbouncing/[% list %]/[% next_page %]/[% size %]"><IMG SRC="[% icons_url %]/right.png" BORDER=0 ALT="[%|loc%]Next page[%END%]"></A>
+	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% next_page %]/[% size %]"><img src="[% icons_url %]/right.png" style="border: 0px;" alt="[%|loc%]Next page[%END%]"></a>
         [% END %]
-    </TD></TR>
-    <TR><TD><INPUT TYPE="submit" NAME="action_resetbounce" VALUE="[%|loc%]Reset errors for selected users[%END%]">
-    </TD></TR>
-    </TABLE>
+    </td></tr>
+    <tr><td><input type="submit" name="action_resetbounce" value="[%|loc%]Reset errors for selected users[%END%]" />
+    </td></tr>
+    </table>
 
-    <TABLE BORDER=1>
-      <TR BGCOLOR="[% error_color %]" NOWRAP>
-	<TH><FONT COLOR="[% bg_color %]">X</FONT></TH>
-        <TH><FONT COLOR="[% bg_color %]">[%|loc%]Email[%END%]</FONT></TH>
-	<TH><FONT COLOR="[% bg_color %]">[%|loc%]bounce score[%END%]</FONT></TH>
-      </TR>
+    <table border="1">
+      <tr style="background-color: [% error_color %]; white-space: nowrap;">
+	<th><span style="color: [% bg_color %];">X</span></th>
+        <th><span style="color: [% bg_color %];">[%|loc%]Email[%END%]</span></th>
+	<th><span style="color: [% bg_color %];">[%|loc%]bounce score[%END%]</span></th>
+      </tr>
       
       [% FOREACH u = members %]
       
 	[% IF dark == '1' %]
-	  <TR BGCOLOR="[% shaded_color %]">
+	  <tr style="background-color: [% shaded_color %];">
 	[% ELSE %]
-	  <TR BGCOLOR="[% bg_color %]">
+	  <tr style="background-color: [% bg_color %];">
 	[% END %]
 
-	  <TD>
-	    <INPUT TYPE=checkbox name="email" value="[% u.escaped_email %]">
-	  </TD>
-	  <TD NOWRAP>
-	      <A HREF="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/reviewbouncing">[% u.email %]</A>
+	  <td>
+	    <input type="checkbox" name="email" value="[% u.escaped_email %]" />
+	  </td>
+	  <td style="white-space: nowrap;">
+	      <a href="[% path_cgi %]/editsubscriber/[% list %]/[% u.escaped_email %]/reviewbouncing">[% u.email %]</a>
 
-	  </TD>
-          <TD ALIGN="center"
+	  </td>
+          <td style="text-align: center;
 	  [% IF u.bounce_level == '2' %]
-            BGCOLOR="#FF0000"
+            background-color: #FF0000;
 	  [% ELSIF u.bounce_level == '1' %]
-	    BGCOLOR="#FF8C00"
+	    background-color: #FF8C00;
 	  [% END %]
-	  >
+	  ">
   	      [% u.bounce_score %]
-	  </TD>
-        </TR>
+	  </td>
+        </tr>
 
         [% IF dark == '1' %]
 	  [% SET dark = 0 %]
@@ -98,32 +98,32 @@
         [% END %]
 
 
-      </TABLE>
-    <TABLE WIDTH=100% BORDER=0>
-    <TR><TD ALIGN="left" NOWRAP>
+      </table>
+    <table style="width: 100%;" border="0">
+    <tr><td style="text-align: left; white-space: nowrap;">
       [% IF is_owner %]
-        <BR>
-        <INPUT TYPE="submit" NAME="action_del" VALUE="[%|loc%]Delete selected email addresses[%END%]">
-        <INPUT TYPE="checkbox" NAME="quiet"> [%|loc%]quiet[%END%]
-	<INPUT TYPE="submit" NAME="action_resetbounce" VALUE="[%|loc%]Reset errors for selected users[%END%]">
+        <br />
+        <input type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
+        <input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]
+	<input type="submit" name="action_resetbounce" value="[%|loc%]Reset errors for selected users[%END%]" />
       [% END %]
-    </TD><TD ALIGN="right" NOWRAP>
+    </td><td style="text-align: right; white-space: nowrap;">
         [% IF prev_page %]
-	  <A HREF="[% path_cgi %]/reviewbouncing/[% list %]/[% prev_page %]/[% size %]"><IMG SRC="[% icons_url %]/left.png" BORDER=0 ALT="[%|loc%]Previous page[%END%]"></A>
+	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% prev_page %]/[% size %]"><img src="[% icons_url %]/left.png" style="border: 0px;" alt="[%|loc%]Previous page[%END%]" /></a>
         [% END %]
         [% IF page %]
   	  [%|loc(page,total_page)%]page %1 / %2[%END%]
         [% END %]
         [% IF next_page %]
-	  <A HREF="[% path_cgi %]/reviewbouncing/[% list %]/[% next_page %]/[% size %]"><IMG SRC="[% icons_url %]/right.png" BORDER=0 ALT="[%|loc%]Next page[%END%]"></A>
+	  <a href="[% path_cgi %]/reviewbouncing/[% list %]/[% next_page %]/[% size %]"><img src="[% icons_url %]/right.png" style="border: 0px;" alt="[%|loc%]Next page[%END%]" /></a>
         [% END %]
-    </TD></TR>
-    <TR><TD><input type=button value="[%|loc%]Toggle Selection[%END%]" onClick="toggle_selection(document.myform.email)">
-    </TD></TR>
-    </TABLE>
+    </td></tr>
+    <tr><td><input type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" />
+    </td></tr>
+    </table>
 
 
-      </FORM>
+      </form>
 
 
 

@@ -1,40 +1,40 @@
-<FORM ACTION="[% path_cgi %]" METHOD="POST"> 
-<INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
+<form action="[% path_cgi %]" method="post"> 
+<input type="hidden" name="list" value="[% list %]" />
 
-    <TABLE WIDTH="100%" BORDER="1">
-      <TR BGCOLOR="[% dark_color %]">
-        <TH><FONT SIZE="-1" COLOR="[% bg_color %]"><B>X</B></FONT></TH>
-        <TH NOWRAP COLSPAN=2 >
-	<FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|loc%]Email[%END%]</b></FONT></TH>
-        <TH><FONT COLOR="[% bg_color %]" SIZE="-1"><B>[%|loc%]Name[%END%]</B></FONT></TH>
-        <TH NOWRAP>
-	<FONT COLOR="[% bg_color %]" SIZE="-1"><b>[%|loc%]Date[%END%]</b></FONT></TH>
-      </TR>
+    <table style="width: 100%;" border="1">
+      <tr style="background-color: [% dark_color %];">
+      <th><span style="color: [% bg_color %]; font-size: smaller;"><strong>X</strong></span></th>
+        <th style="white-space: nowrap;" colspan="2">
+	<span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]Email[%END%]</strong></span></th>
+        <th><span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]Name[%END%]</strong></span></th>
+        <th style="white-space: nowrap;">
+	<span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]Date[%END%]</strong></span></th>
+      </tr>
       
       [% IF subscriptions %]
 
       [% FOREACH sub = subscriptions %]
 
 	[% IF dark == '1' %]
-	  <TR BGCOLOR="[% shaded_color %]">
+	  <tr style="background-color: [% shaded_color %];">
 	[% ELSE %]
-          <TR>
+          <tr>
 	[% END %]
-	    <TD>
-           <INPUT TYPE=checkbox name="pending_email" value="[% sub.key %],[% sub.value.gecos %]">
-	    </TD>
-	  <TD COLSPAN=2 NOWRAP><FONT SIZE=-1>
+	    <td>
+           <input type="checkbox" name="pending_email" value="[% sub.key %],[% sub.value.gecos %]" />
+	    </td>
+	  <td colspan="2" style="white-space: nowrap;"><span style="font-size: smaller;">
 	        [% sub.key %]
-	  </FONT></TD>
-	  <TD>
-             <FONT SIZE=-1>
+	  </span></td>
+	  <td>
+             <span style="font-size: smaller;">
 	        [% sub.value.gecos %]&nbsp;
-	     </FONT>
-          </TD>
-	    <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
+	     </span>
+          </td>
+	    <td style="text-align: center; white-space: nowrap;"><span style="font-size: smaller;">
 	      [% sub.value.date %]
-	    </FONT></TD>
-        </TR>
+	    </span></td>
+        </tr>
 
         [% IF dark == '1' %]
 	  [% SET dark = 0 %]
@@ -45,11 +45,11 @@
         [% END %]
 
         [% ELSE %]
-         <TR COLSPAN="4"><TH>[%|loc%]No subscription requests[%END%]</TH></TR>
+         <tr colspan="4"><th>[%|loc%]No subscription requests[%END%]</th></TR>
         [% END %]
-      </TABLE>
-<INPUT TYPE="hidden" NAME="previous_action" VALUE="subindex">
-<INPUT TYPE="hidden" NAME="previous_list" VALUE="[% list %]">
-<INPUT TYPE="submit" NAME="action_add" VALUE="[%|loc%]Add selected addresses[%END%]">
-<INPUT TYPE="submit" NAME="action_ignoresub" VALUE="[%|loc%]Reject selected addresses[%END%]">
-</FORM>
+      </table>
+<input type="hidden" name="previous_action" value="subindex" />
+<input type="hidden" name="previous_list" value="[% list %]" />
+<input type="submit" name="action_add" value="[%|loc%]Add selected addresses[%END%]" />
+<input type="submit" name="action_ignoresub" value="[%|loc%]Reject selected addresses[%END%]" />
+</form>

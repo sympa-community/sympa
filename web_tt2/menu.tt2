@@ -1,130 +1,130 @@
 <!-- $Id$ -->
 
 <!-- begin menu.tt2 -->
-<TABLE CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BORDER="0"><TR><TD>
-<TABLE CELLPADDING="0" CELLSPACING="0" WIDTH="100%" BORDER="0">
-  <TR ALIGN=center BGCOLOR="[% dark_color %]">
+<table cellpadding="1" cellspacing="0" style="width: 100%;" border="0"><tr><td>
+<table cellpadding="0" cellspacing="0" style="width: 100%;" border="0">
+  <tr style="text-align: center; background-color: [% dark_color %];">
   [% IF auth_method == 'smime' %]
-  <TD bgcolor="[% bg_color %]">
-<A HREF="[% path_cgi %]/show_cert" onClick="winhelp=window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=320');winlogin.focus()" TARGET="wws_help"><IMG SRC="[% icons_url %]/locked.png" align="center" alt="[%|loc%]security info[%END%]" border=0></A>
+  <td style="background-color: [% bg_color %]; text-align: center;">
+<a href="[% path_cgi %]/show_cert" onclick="winhelp=window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=320');winlogin.focus()" target="wws_help"><img src="[% icons_url %]/locked.png" alt="[%|loc%]security info[%END%]" style="border: 0px;" /></a>
   [% ELSE %]
-  <TD>
-  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">
-     <TR> 
+  <td>
+  <table style="width: 100%;" border="0" cellspacing="1" cellpadding="2">
+     <tr> 
   [% IF user.email %]
   [% IF auth_method == 'md5' %]
-      <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center"> 
+      <td style="white-space: nowrap; background-color: [% light_color %] text-align: center;"> 
      [% IF referer %]
-      <A HREF="[% path_cgi %]/logout/referer/[% referer %]" >
+      <a href="[% path_cgi %]/logout/referer/[% referer %]">
      [% ELSE %]
-      <A HREF="[% path_cgi %]/logout/[% action %]/[% list %]" >
+      <a href="[% path_cgi %]/logout/[% action %]/[% list %]">
      [% END %]
-     <FONT SIZE=-1><B>[%|loc%]Logout[%END%]</B></FONT></A>
-     </TD>
+     <span style="font-size: smaller;"><strong>[%|loc%]Logout[%END%]</strong></span></a>
+     </td>
   [% ELSE %]
-     <TD NOWRAP BGCOLOR="[% bg_color %]" ALIGN="center"><IMG SRC="[% icons_url %]/locked.png" align="center" alt="https"></TD>
+     <td style="white-space: nowrap; background-color: [% bg_color %]; text-align: center;"><img src="[% icons_url %]/locked.png" alt="https" /></td>
   [% END %]
   [% ELSE %]
-      <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center"> 
+      <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;"> 
      [% IF referer %]
-      <A HREF="[% path_cgi %]/nomenu/loginrequest/referer/[% referer %]"
+      <a href="[% path_cgi %]/nomenu/loginrequest/referer/[% referer %]"
      [% ELSE %]
-      <A HREF="[% path_cgi %]/nomenu/loginrequest/[% action %]/[% list %]"
+      <a href="[% path_cgi %]/nomenu/loginrequest/[% action %]/[% list %]"
      [% END %]
-       onClick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=550,height=300')" TARGET="wws_login">
-       <FONT SIZE=-1><B>[%|loc%]Login[%END%]</B></FONT></A>
-      </TD>
+       onclick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=550,height=300')" target="wws_login">
+       <span style="font-size: smaller;"><strong>[%|loc%]Login[%END%]</strong></span></a>
+      </td>
   [% END %]
-    </TR>
-  </TABLE>
+    </tr>
+  </table>
   [% END %]
-</TD></TR>
-</TABLE>
+</td></tr>
+</table>
 
 
-</TD>
-<TD WIDTH=100% BGCOLOR="[% bg_color %]">&nbsp;</TD>
+</td>
+<td style="width: 100%; background-color: [% bg_color %];">&nbsp;</td>
 
-<TD>
+<td>
 
-<TABLE CELLPADDING=0 CELLSPACING=0 WIDTH="100%" BORDER=0>
-  <TR ALIGN=center BGCOLOR="[% dark_color %]"><TD>
-  <TABLE WIDTH="100%" BORDER=0 CELLSPACING=1 CELLPADDING=2>
-     <TR> 
+<table cellpadding="0" cellspacing="0" style="width: 100%;" border="0">
+  <tr style="text-align: center; background-color: [% dark_color %];"><td>
+  <table style="width: 100%;" border="0" cellspacing="1" cellpadding="2">
+     <tr> 
   [% IF may_create_list %]
    [% IF action == 'create_list_request' %]
-    <TD NOWRAP BGCOLOR="[% selected_color %]" ALIGN="center">
-        <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|loc%]Create list[%END%]</B></FONT>
-    </TD>
+    <td style="white-space: nowrap; background-color: [% selected_color %]; text-align: center;">
+        <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Create list[%END%]</strong></span>
+    </td>
    [% ELSE %]
-    <TD NOWRAP BGCOLOR="[% light_color %]"  ALIGN="center">
-	 <A HREF="[% path_cgi %]/create_list_request" ><FONT SIZE=-1><B>[%|loc%]Create list[%END%]</B></FONT></A>
-    </TD>
+    <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
+	 <a href="[% path_cgi %]/create_list_request" ><span style="font-size: smaller;"><strong>[%|loc%]Create list[%END%]</strong></span></a>
+    </td>
    [% END %]
   [% END %]
 
   [% IF is_listmaster %]
    [% IF action == 'serveradmin' %]
-    <TD NOWRAP BGCOLOR="[% selected_color %]" ALIGN="center">
-        <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|loc%]Sympa admin[%END%]</B></FONT>
-    </TD>
+    <td style="white-space: nowrap; background-color: [% selected_color %]; text-align: center;">
+        <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Sympa admin[%END%]</strong></span>
+    </td>
    [% ELSE %]
-    <TD NOWRAP BGCOLOR="[% light_color %]"  ALIGN="center">
-	 <A HREF="[% path_cgi %]/serveradmin" ><font size=-1><B>[%|loc%]Sympa admin[%END%]</B></FONT></A>
-    </TD>
+    <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
+	 <a href="[% path_cgi %]/serveradmin" ><span style="font-size: smaller;"><strong>[%|loc%]Sympa admin[%END%]</strong></span></a>
+    </td>
    [% END %]
   [% END %]
 
   [% IF user.email %]
 
   [% IF action == 'pref' %]
-  <TD NOWRAP BGCOLOR="[% selected_color %]"  ALIGN="center">
-      <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|loc%]Preferences[%END%]</B></FONT>
-  </TD>
+  <td style="white-space: nowrap; background-color: [% selected_color %]; text-align: center;">
+      <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Preferences[%END%]</strong></span>
+  </td>
   [% ELSE %]
-  <TD NOWRAP BGCOLOR="[% light_color %]">
-      <A HREF="[% path_cgi %]/pref/[% action %]/[% list %]" ><FONT SIZE=-1><B>[%|loc%]Preferences[%END%]</B></FONT></A>
-  </TD>
+  <td style="white-space: nowrap; background-color: [% light_color %];">
+      <a href="[% path_cgi %]/pref/[% action %]/[% list %]" ><span style="font-size: smaller;"><strong>[%|loc%]Preferences[%END%]</strong></span></a>
+  </td>
   [% END %]
 
   [% IF action == 'which' %]
-  <TD NOWRAP BGCOLOR="[% selected_color %]" ALIGN="center">
-      <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|loc%]Your subscriptions[%END%]</B></FONT>
-  </TD>
+  <td style="white-space: nowrap; background-color: [% selected_color %]; text-align: center;">
+      <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Your subscriptions[%END%]</strong></span>
+  </td>
   [% ELSE %]
-  <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center">
-      <A HREF="[% path_cgi %]/which" ><FONT SIZE=-1><B>[%|loc%]Your subscriptions[%END%]</B></FONT></A>
-   </TD>
+  <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
+      <a href="[% path_cgi %]/which" ><span style="font-size: smaller;"><strong>[%|loc%]Your subscriptions[%END%]</strong></span></a>
+   </td>
    [% END %]
   
   [% ELSE %]
-  <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center">
-      <FONT SIZE=-1 COLOR=[% bg_color %] ><B>[%|loc%]Pref[%END%]</B></FONT>
-  </TD>
-  <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center">
-      <FONT SIZE=-1 COLOR="[% bg_color %]"><B>[%|loc%]Your subscriptions[%END%]</B></FONT>
-  </TD>
+  <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
+      <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Pref[%END%]</strong></span>
+  </td>
+  <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
+      <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Your subscriptions[%END%]</strong></span>
+  </td>
   [% END %]
 
   [% IF action == 'home' %]
-  <TD NOWRAP BGCOLOR="[% selected_color %]" ALIGN="center"><FONT SIZE=-1 COLOR=[% bg_color %]><B>[%|loc%]Home[%END%]</B></FONT></TD>
+  <td style="white-space: nowrap; background-color: [% selected_color %]; text-align: center;"><span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Home[%END%]</strong></span></td>
   [% ELSE %]
-  <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center">
-      <A HREF="[% path_cgi %]/"><FONT SIZE=-1><B>[%|loc%]Home[%END%]</B></FONT></A>
-  </TD>
+  <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
+      <a href="[% path_cgi %]/"><span style="font-size: smaller;"><strong>[%|loc%]Home[%END%]</strong></span></a>
+  </td>
   [% END %]
 
   [% IF action == 'help' %]
-  <TD NOWRAP BGCOLOR="[% selected_color %]" ALIGN="center"><FONT SIZE=-1 COLOR=[% bg_color %]><B>[%|loc%]Help[%END%]</B></FONT></TD>
+  <td style="white-space: nowrap; background-color: [% selected_color %]; text-align: center;"><span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Help[%END%]</strong></span></td>
   [% ELSE %]
-  <TD NOWRAP BGCOLOR="[% light_color %]" ALIGN="center">
-      <A HREF="[% path_cgi %]/help" ><FONT SIZE=-1><B>[%|loc%]Help[%END%]</B></FONT></A>
-  </TD>
+  <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
+      <a href="[% path_cgi %]/help" ><span style="font-size: smaller;"><strong>[%|loc%]Help[%END%]</strong></span></a>
+  </td>
   [% END %]
-</TR>
-</TABLE>
-</TD></TR></TABLE>
-</TD></TR></TABLE>
+</tr>
+</table>
+</td></tr></table>
+</td></tr></table>
 <!-- end menu.tt2 -->
 
 

@@ -1,79 +1,79 @@
 <!-- $Id$ -->
 
 [% IF action == 'search_list' %]
-  [%|loc(occurrence)%]%1 occurrence(s) found[%END%]<BR><BR>
+  [%|loc(occurrence)%]%1 occurrence(s) found[%END%]<br /><br />
 [% ELSIF action == 'search_user' %]
-  [%|loc(email)%]<B>%1</B> is subscribed to the following mailing lists[%END%]
+  [%|loc(email)%]<strong>%1</strong> is subscribed to the following mailing lists[%END%]
 [% END %]
 
-<TABLE BORDER="0" WIDTH="100%">
+<table border="0" style="width: 100%;">
    [% FOREACH l = which %]
-     <TR>
+     <tr>
       [% IF l.value.admin %]
-       <TD>
+       <td>
        [% PROCESS 'button_header.tt2' %]
-       <TD BGCOLOR="[% light_color %]" ALIGN="center" VALIGN="top">
-             <FONT COLOR="[% selected_color %]" SIZE="-1">
-              <A HREF="[% path_cgi %]/admin/[% l.key %]" ><b>[%|loc%]admin[%END%]</b></A>
-         </FONT>
-       </TD>
+       <td style="background-color: [% light_color %]; text-align: center;" valign="top">
+             <span style="color: [% selected_color %]; font-size: smaller;">
+              <a href="[% path_cgi %]/admin/[% l.key %]" ><strong>[%|loc%]admin[%END%]</strong></a>
+         </span>
+       </td>
      [% PROCESS 'button_footer.tt2' %]
 
-</TD>
+</td>
      [% ELSE %]
-       <TD>&nbsp;</TD>
+       <td>&nbsp;</td>
      [% END %]
-     <TD WIDTH="100%" ROWSPAN="2">
-     <A HREF="[% path_cgi %]/info/[% l.key %]" ><B>[% hidden_head %][% l.key %][% hidden_at %][% l.value.host %][% hidden_end %]</B></A>
-     <BR>
+     <td style="width: 100%;" rowspan="2">
+     <a href="[% path_cgi %]/info/[% l.key %]" ><strong>[% hidden_head %][% l.key %][% hidden_at %][% l.value.host %][% hidden_end %]</strong></a>
+     <br />
      [% l.value.subject %]
-     </TD></TR> 
-     <TR><TD>&nbsp;</TD></TR>
+     </td></tr> 
+     <tr><td>&nbsp;</td></tr>
      [% END %] 
-</TABLE>
+</table>
 
-<BR>
+<br />
 
 [% IF action == 'which' %]
 [% IF ! which %]
-&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|loc(user.email)%]No subscriptions with address <B>%1</B>![%END%]</FONT>
-<BR>
+&nbsp;&nbsp;<span style="color: [% dark_color %];">[%|loc(user.email)%]No subscriptions with address <strong>%1</strong>![%END%]</span>
+<br />
 [% END %]
 
 [% IF unique != '1' %]
-<TABLE>
-&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|loc%]See your subscriptions with the following email addresses[%END%]</FONT><BR>
-<BR><BR>
+<table>
+&nbsp;&nbsp;<span style="color: [% dark_color %];">[%|loc%]See your subscriptions with the following email addresses[%END%]</span><br />
+<br /><br />
 
- <TR> 
-    <FORM METHOD=POST ACTION="[% path_cgi %]">
+ <tr> 
+    <form method="post" action="[% path_cgi %]">
      
 [% FOREACH email = alt_emails %]
-   <INPUT NAME="email"  TYPE=hidden VALUE="[% email.key %]">
-   &nbsp;&nbsp;<A HREF="[% path_cgi %]/change_identity/[% email.key %]/which">[% email.key %]</A> 
-    <BR>
+   <input name="email" type="hidden" value="[% email.key %]" />
+   &nbsp;&nbsp;<a href="[% path_cgi %]/change_identity/[% email.key %]/which">[% email.key %]</a> 
+    <br />
 [% END %]  
-    </FORM>
-  </TR>
-</TABLE>
+    </form>
+  </tr>
+</table>
 
-<BR> 
+<br /> 
 
-<TABLE>
-<TR>
-&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|loc%]Unify your subscriptions with the email[%END%] <B>[% user.email %]</B></FONT><BR> 
-&nbsp;&nbsp;<FONT COLOR="[% dark_color %]">[%|loc%]That is to say using a unique email address in Sympa for your subscriptions and preferences[%END%]</FONT>
+<table>
+<tr>
+&nbsp;&nbsp;<span style="color: [% dark_color %];">[%|loc%]Unify your subscriptions with the email[%END%] <strong>[% user.email %]</strong></span><br /> 
+&nbsp;&nbsp;<span style="color: [% dark_color %];">[%|loc%]That is to say using a unique email address in Sympa for your subscriptions and preferences[%END%]</span>
 
-<TR>
-<TD>
-    <FORM ACTION="[% path_cgi %]" METHOD=POST>
+<tr>
+<td>
+    <form action="[% path_cgi %]" method="post">
   
-&nbsp;&nbsp;<INPUT TYPE="submit" NAME="action_unify_email" VALUE="[%|loc%]Validate[%END%]"></FONT>
-    </FORM>
-</TD>
-</TR>
-<BR>
+&nbsp;&nbsp;<input type="submit" name="action_unify_email" value="[%|loc%]Validate[%END%]" />
+    </form>
+</td>
+</tr>
+<br />
 
-</TABLE>
+</table>
 [% END %]
 [% END %]

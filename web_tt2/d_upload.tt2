@@ -1,45 +1,43 @@
 [%|loc(shortname)%]the file %1 already exists[%END%]
-<P>
+<p></p>
 
- <FORM  ACTION="[% path_cgi %]" METHOD="POST">
+ <form action="[% path_cgi %]" method="post">
 
-   <TABLE CELLSPACING=15>
-    <TR> 
-     <TD ALIGN ="right" VALIGN="bottom">
+   <table cellspacing="15">
+    <tr> 
+     <td style="text-align: right;" valign="bottom">
       [%|loc(shortname)%]Do you want to delete the old file %1 ?[%END%]
-     </TD>
-     <TD ALIGN ="left" VALIGN="bottom">
-      <INPUT TYPE="submit" NAME="mode_delete" VALUE="[%|loc%]Delete[%END%]">
-     </TD>
-    </TR>
-    <BR>
-    <TR>
-     <TD ALIGN="right" VALIGN="bottom">
-      [%|loc(shortname)%]Do you want to rename your file %1 ?[%END%] <BR>
-      <INPUT size=50 maxlenght=100 NAME="new_name"></TD>
-     </TD>
-     <TD ALIGN="left" VALIGN="bottom">
-      <INPUT size=20 maxlenght=50 TYPE="submit" NAME="mode_rename" VALUE="[%|loc%]Rename[%END%]">
-     </TD>
-    </TR>
-    <BR>
-    <TR> 
-     <TD ALIGN ="right" VALIGN="bottom">
+     </td>
+     <td style="text-align: left;" valign="bottom">
+      <input type="submit" name="mode_delete" value="[%|loc%]Delete[%END%]" />
+     </td>
+    </tr>
+    <tr>
+     <td style="text-align: right;" valign="bottom">
+      [%|loc(shortname)%]Do you want to rename your file %1 ?[%END%] <br />
+      <input size="50" maxlength="100" name="new_name" />
+     </td>
+     <td style="text-align: left;" valign="bottom">
+      <input size="20" maxlength="50" type="submit" name="mode_rename" value="[%|loc%]Rename[%END%]" />
+     </td>
+    </tr>
+    <tr> 
+     <td style="text-align: right;" valign="bottom">
       [%|loc%]Do you want to cancel the upload ?[%END%]
-     </TD>
-     <TD ALIGN ="left" VALIGN="bottom">
-      <INPUT TYPE="submit" NAME="mode_cancel" VALUE="[%|loc%]Cancel[%END%]">
-     </TD>
-    </TR>
-   </TABLE>
+     </td>
+     <td style="text-align: left;" valign="bottom">
+      <input type="submit" name="mode_cancel" value="[%|loc%]Cancel[%END%]" />
+     </td>
+    </tr>
+   </table>
 
-   <INPUT TYPE="hidden" NAME="action_d_upload" VALUE="1">
-   <INPUT TYPE="hidden" NAME="serial" VALUE="[% serial_file %]">
-   <INPUT TYPE="hidden" NAME="path" VALUE="[% path %]">
-   <INPUT TYPE="hidden" NAME="list" VALUE="[% list %]">
-   <INPUT TYPE="hidden" NAME="shortname" VALUE="[% shortname %]">
+   <input type="hidden" name="action_d_upload" value="1" />
+   <input type="hidden" name="serial" value="[% serial_file %]" />
+   <input type="hidden" name="path" value="[% path %]" />
+   <input type="hidden" name="list" value="[% list %]" />
+   <input type="hidden" name="shortname" value="[% shortname %]" />
 
- </FORM>
+ </form>
 
 
 
