@@ -2042,7 +2042,7 @@ sub send_msg {
 	if ($subject_field =~ /\[$tag_regexp\]/) {
 	    $subject_field =~ s/\[$tag_regexp\]/\[$parsed_tag[0]\]/;
 	}else {
-	    $subject_field = '['.$parsed_tag[0].']'.$subject_field
+	    $subject_field = '['.$parsed_tag[0].'] '.$subject_field
 	}
 	$message->{'msg'}->head->add('Subject', $subject_field);
     }
