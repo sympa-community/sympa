@@ -15,7 +15,7 @@ use Conf;
 use Log;
 use Getopt::Std;
 
-require "--BINDIR--/wws-lib.pl";
+require "--BINDIR--/wwslib.pl";
 
 getopts('dF');
 
