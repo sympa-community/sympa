@@ -36,7 +36,7 @@
     </TR>
   </TABLE>
   [ENDIF]
-</TR>
+</TD></TR>
 </TABLE>
 
 
