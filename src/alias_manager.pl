@@ -63,7 +63,7 @@ unless (-w "$alias_file") {
 }
     
 my %data;
-$data{'date'} =  &POSIX::strftime("%d %b %Y", localtime($info[9]));
+$data{'date'} =  &POSIX::strftime("%d %b %Y", localtime(time));
 $data{'path_to_queue'} = '--MAILERPROGDIR--/queue';
 $data{'path_to_bouncequeue'} = '--MAILERPROGDIR--/bouncequeue';
 $data{'domain'} = $data{'robot'} = $domain;

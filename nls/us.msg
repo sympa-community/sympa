@@ -269,6 +269,7 @@ $set 15 Templates files
 15	"list creation request message"
 16	"list creation notification message"
 17	"virus infection message"
+18	"list aliases template"
 
 $set 16 Listm parameters titles
 1	"Account"

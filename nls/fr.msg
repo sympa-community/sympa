@@ -284,7 +284,7 @@ $set 15 Templates files
 15	"demande de création de liste"
 16	"notification de création de liste"
 17	"rejet d'un message contenant un virus"
-
+18	"modèle d'alias de liste"
 
 $set 16 Titres des paramètres de config de listes
 1	"Compte"
