@@ -5518,7 +5518,7 @@ sub do_d_read {
 		      # name of the file
 		    $files{$d}{'doc'} = $d;
 		    $files{$d}{'escaped_doc'} =  &tools::escape_chars($d);
-		    &wwslog('debug', "ESCAPED: $d / %s", $files{$d}{'escaped_doc'});
+
 		      # last update
 		    my @info = stat $path_doc;
 		    $files{$d}{'date_epoch'} = $info[10];
