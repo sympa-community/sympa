@@ -29,6 +29,7 @@
 use lib '--BINDIR--';
 $sympa_conf_file = '--CONFIG--';
 use Conf;
+use List;
 
 ## Load sympa config
 unless (&Conf::load($sympa_conf_file)) {
@@ -66,11 +67,13 @@ also be prompted for the password used by sympa to access to the list private ke
 
 }else{
 
-    $cert = "$home_sympa/$listname/cert.pem";
-    $privatekey = "$home_sympa/$listname/private_key";
+    my $self = new List($listname);
 
-    unless (-d "$home_sympa/$listname") {
-	printf "unknown list $listname (directory $home_sympa/$listname not found)\n";
+    $cert = $self->{'dir'}."/cert.pem";
+    $privatekey = $self->{'dir'}."/private_key";
+
+    unless (-d $self->{'dir'}) {
+	printf "unknown list $listname (directory $self->{'dir'} not found)\n";
         die;
     }
     if (-r "$cert") {
@@ -111,5 +114,7 @@ $privatekey and  $cert created. Now welcome message for list $listname will be s
 using S/MIME. Encrypted messages will be distributed in a crypted form to each subscriber\n
 using their X509 certificat.\n";
 }
+
+
 
 
