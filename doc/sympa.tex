@@ -328,6 +328,8 @@ Future developments should include:
 
     \item The possibility of plugging in (commercial) antivirus applications
  
+    \item The possibility of plugging in (commercial) antivirus applications
+ 
     \item Subscriber preference for multipart/alternative message reception.
           Some newspapers publish both text/plain and text/html version of
           their mails. It would be nice to provide a single list for both formats.
@@ -507,7 +509,7 @@ on your system. This also illustrates the \Sympa philosophy, I guess.
 	into 8 different languages.
 
 	\item \tildedir {sympa/spool/}\\
-	\Sympa uses 6 different spools.
+	\Sympa uses 7 different spools.
 
 	\item \tildedir {sympa/src/}\\
 	\Sympa sources.
@@ -1528,7 +1530,7 @@ required:
 \section {S/MIME configuration}
 
 \Sympa can optionally verify and use S/MIME signatures for security purposes.
-In this case, two optional parameters must be assigned by the listmaster
+In this case, three optional parameters must be assigned by the listmaster
 (see \ref {smimeconf},  page~\pageref {smimeconf}).
 
 \subsection {\cfkeyword {openssl}}
@@ -1543,6 +1545,28 @@ The option used by openssl
 
 The password for list private key encryption. If not
 	defined, \Sympa assumes that list private keys are not encrypted.
+
+
+\section {Antivirus plug-in}
+\label {Antivirus plug-in}
+
+\Sympa can optionally check incoming messages before delivering them, using an external antivirus solution.
+You must then set two parameters.
+
+\subsection {\cfkeyword {antivirus\_path}}
+
+The path to your favorite antivirus binary file (including the binary file).
+         
+\subsection {\cfkeyword {antivirus\_args}} 
+
+The arguments used by the antivirus software to look for viruses.
+You must set them so as to get the virus name.
+You should use, if available, the 'unzip' option and check all extensions.
+(ie: 	uvscan : 	--summary or -verbose
+			--secure
+	fsav   :	--dumb
+			--archive).
+		       	
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % WWSympa
@@ -2571,6 +2595,12 @@ Your password : [user->password]
 \end{verbatim}
 \end {quote}
 
+\subsection {your\_infected\_msg.tpl} 
+
+This message is sent to warn the sender of a virus infected mail,
+indicating the name of the virus found 
+(see~\ref {Antivirus}, page~\pageref {Antivirus}).
+
 \section {Web template files}
 \label{web-tpl}
 \index{templates, web}
@@ -3245,7 +3275,7 @@ command) from the list by the list owner.
 \subsection {reject.tpl} 
 
 \Sympa will send a reject message to the sender of a message that is rejected
-par the list editor. If the editor prefixe the \mailcmd {REJECT} with the
+by the list editor. If the editor prefixe the \mailcmd {REJECT} with the
 keyword QUIET, the reject message is not sent.
 
 \subsection {invite.tpl} 
@@ -5079,6 +5109,23 @@ date, number of received bounces for the address, the last bounce itself.
 Further development of \Sympa should allow automatic deletion
 of bouncing addresses.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Using Sympa commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\chapter {Antivirus}
+\label {antivirus}
+
+\Sympa lets you use an external antivirus solution to check the incoming mails.
+You must then set the conf-parameters antivirus_path and antivirus_args
+ (see \ref {Antivirus plug-in}, page~\pageref {Antivirus plug-in}.
+\Sympa is yet ready to work with Mcafee/uvscan and Fsecure/fsav.
+For each mail received, \Sympa splits its parts in a tmp_directory (/'tmpdir'/antivirus)and then calls the antivirus software to check it.
+When a virus is detected, \Sympa looks for the virus name in the generated outfile, sends a warning \file 'your_infected_msg.tpl' to the sender of the mail.
+The mail is saved as 'bad' and the working directory is deleted except if \Sympa debug option is active.
+  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Using Sympa commands
