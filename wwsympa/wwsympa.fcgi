@@ -476,11 +476,23 @@ while ($query = &new_loop()) {
 	unless (defined $param->{'user'}{'cookie_delay'}) {
 	    $param->{'user'}{'cookie_delay'} = $wwsconf->{'cookie_expire'};
 	}
-#	$param->{'user'}{'cookie_delay'} ||= $wwsconf->{'cookie_expire'};
-#	$param->{'user'}{'init_passwd'} = 1 if ($param->{'user'}{'password'} =~ /^INIT/);
+	## get subscrition using cookie and set param for use in templates
+	@{$param->{'get_which'}}  =  &cookielib::get_which_cookie($ENV{'HTTP_COOKIE'});
+	
+	# if $param->{'get_which'}[0] is undefined the tab is empty
+        if ($param->{'get_which'}[0]) {
+	    @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
+	}
+	
 
+	foreach my $l (@{$param->{'get_which'}}) {
+	    my $list = new List ($l);
+	    $param->{'which'}{$l}{'subject'} = $list->{'admin'}{'subject'};
+	    $param->{'which'}{$l}{'host'} = $list->{'admin'}{'host'};
+	    $param->{'which'}{$l}{'info'} = 1;
+	}
        
-    }else {
+    }else{
 	
 	## Get lang from cookie
 	$param->{'cookie_lang'} = &cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'});
@@ -494,6 +506,9 @@ while ($query = &new_loop()) {
 #    $param->{'lang'} = $param->{'user'}{'lang'} || $Conf{'lang'};
     $param->{'remote_addr'} = $ENV{'REMOTE_ADDR'} ;
     $param->{'remote_host'} = $ENV{'REMOTE_HOST'};
+
+    &export_topics ($robot);
+    # if ($wwsconf->{'export_topics'} =~ /all/i);
 
     &List::init_list_cache();
 
@@ -551,6 +566,7 @@ while ($query = &new_loop()) {
     ## Prepare outgoing params
     &check_param_out();
 
+
     ## Params 
     $param->{'action_type'} = $action_type{$param->{'action'}};
     $param->{'action_type'} = 'none' unless ($param->{'is_priv'});
@@ -562,6 +578,13 @@ while ($query = &new_loop()) {
 	$param->{'title'} = $wwsconf->{'title'} unless $param->{'title'};
     }
 
+    ## Set cookies "your_subscribtion"
+    if ($param->{'user'}{'email'}) {
+	# if at least one element defined in get_which tab
+	if ($param->{'get_which'}[0]) {
+	    &cookielib::set_which_cookie ($wwsconf->{'cookie_domain'},@{$param->{'get_which'}});
+	}
+    }
     ## Set cookies unless client use https authentication
     unless (($ENV{'SSL_CLIENT_S_DN_Email'}) && ($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS')) {
 	if ($param->{'user'}{'email'}) {
@@ -609,7 +632,6 @@ while ($query = &new_loop()) {
 	}
     }
     &Language::SetLang($saved_lang);
-
     # if bypass defined use file extention
     if ($param->{'bypass'}) {
 
@@ -948,6 +970,7 @@ sub check_param_in {
        $param->{'send'} = $list->{'admin'}{'send'}{'title'}{$param->{'lang'}};
        $param->{'total'} = $list->get_total();
        $param->{'list_as_x509_cert'} = $list->{'as_x509_cert'};
+       $param->{'listconf'} = $list->{'admin'};
 
        ## privileges
        if ($param->{'user'}{'email'}) {
@@ -1385,7 +1408,7 @@ sub ldap_authentication {
 	    }
 	    
 	    $ldap_passwd->unbind or do_log('notice', "unable to unbind");
-	    #do_log('notice',"xxxcanonic: $canonic_email[0]");
+	    do_log('debug3',"canonic: $canonic_email[0]");
 	    return lc($canonic_email[0]);
 	}
 	
@@ -1725,6 +1748,7 @@ sub do_sendpasswd {
 ## TODO (pour listmaster, toutes les listes)
 sub do_which {
     my $which = {};
+
     &wwslog('info', 'do_which');
     
     unless ($param->{'user'}{'email'}) {
@@ -1733,6 +1757,8 @@ sub do_which {
 	$param->{'previous_action'} = 'which';
 	return 'loginrequest';
     }
+    $param->{'get_which'} = undef ;
+    $param->{'which'} = undef ;
 
     foreach my $role ('member','owner','editor') {
 	
@@ -1750,6 +1776,7 @@ sub do_which {
 	    
 	    if ($role eq 'member') {
 		$param->{'which'}{$l}{'info'} = 1;
+		push @{$param->{'get_which'}}, $l;
 	    }else {
 		$param->{'which'}{$l}{'admin'} = 1;
             }
@@ -1761,8 +1788,7 @@ sub do_which {
 
 	}
 	
-   }
-
+    }
     return 1;
 }
 
@@ -2419,6 +2445,8 @@ sub do_subscribe {
 					 'gecos' => $param->{'user'}{'gecos'}, 
 					 'type' => 'subscribe'});
 	}
+	## perform which to update your_subscribtions cookie ;
+	@{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
 	&message('performed');
     }
     
@@ -2627,6 +2655,9 @@ sub do_signoff {
 	my %context;
 	$context{'subject'} = sprintf(Msg(6 , 71, 'Signoff from list %s'), $list->{'name'});
  	$context{'body'} = sprintf(Msg(6 , 31, "You have been removed from list %s.\n Thanks for being with us.\n"), $list->{'name'});
+	## perform which to update your_subscribtions cookie ;
+	@{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
+
 	$list->send_file('bye', $param->{'user'}{'email'}, $robot, \%context);
     }
     &message('performed');
@@ -3307,10 +3338,8 @@ sub do_viewmod {
 	$param->{'file_extension'} = $1;
 	$param->{'file'} = "$Conf{'queuemod'}/.$list->{'name'}_$in{'id'}/$in{'file'}";
 	$param->{'bypass'} = 1;
-	##do_log('notice',"xxxxx attachement2 param file $param->{'file'} ");
     }else {
 	$param->{'file'} = "$Conf{'queuemod'}/.$list->{'name'}_$in{'id'}/msg00000.html" ;
-	##do_log('notice',"xxxxx param file $param->{'file'} ");
     }
     
     $param->{'base'} = sprintf "%s%s/viewmod/%s/%s/", $param->{'base_url'}, $param->{'path_cgi'}, $param->{'list'}, $in{'id'};
@@ -4385,35 +4414,7 @@ sub do_create_list_request {
 ## WWSympa Home-Page
 sub do_home {
     &wwslog('info', 'do_home');
-
-    my %topics = &List::load_topics($robot);
-    
-    my $total = 0;
-    foreach my $t (sort {$topics{$a}{'order'} <=> $topics{$b}{'order'}} keys %topics) {
-	next unless (&List::request_action ('topics_visibility', $param->{'auth_method'},$robot,
-					   {'topicname' => $t, 
-					    'sender' => $param->{'user'}{'email'},
-					    'remote_host' => $param->{'remote_host'},
-					    'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/);
-	
-	my $current = $topics{$t};
-	$current->{'id'} = $t;
-
-	## For compatibility reasons
-	$current->{'mod'} = $total % 3;
-	$current->{'mod2'} = $total % 2;
-
-	push @{$param->{'topics'}}, $current;
-
-	$total++;
-    }
-    
-    push @{$param->{'topics'}}, {'id' => 'topicsless',
-				 'mod' => $total,
-				 'sub' => {}
-			     };
-    
-    $param->{'topics'}[int($total / 2)]{'next'} = 1;
+    # all variables are set in export_topics
 
     return 1;
 }
@@ -5340,7 +5341,7 @@ sub _prepare_data {
 	    ## Add an empty entry
 	    unless (($name eq 'days') || ($name eq 'reception')) {
 		push @{$data2}, undef;
-		## &do_log('debug2', 'xxx Add 1 %s', $name);
+		## &do_log('debug2', 'Add 1 %s', $name);
 	    }
 	}else {
 	    $data2 = [undef];
@@ -8508,6 +8509,41 @@ sub do_stats {
     return 1;
 }
 
+
+## setting the topics list for templates
+sub export_topics {
+
+    my $robot = shift; 
+    do_log ('debug2',"export_topics($robot)");
+    my %topics = &List::load_topics($robot);
+    
+    my $total = 0;
+    foreach my $t (sort {$topics{$a}{'order'} <=> $topics{$b}{'order'}} keys %topics) {
+	next unless (&List::request_action ('topics_visibility', $param->{'auth_method'},$robot,
+					    {'topicname' => $t, 
+					     'sender' => $param->{'user'}{'email'},
+					     'remote_host' => $param->{'remote_host'},
+					     'remote_addr' => $param->{'remote_addr'}}) =~ /do_it/);
+	
+	my $current = $topics{$t};
+	$current->{'id'} = $t;
+	
+	## For compatibility reasons
+	$current->{'mod'} = $total % 3;
+	$current->{'mod2'} = $total % 2;
+	
+	push @{$param->{'topics'}}, $current;
+	
+	$total++;
+    }
+    
+    push @{$param->{'topics'}}, {'id' => 'topicsless',
+				 'mod' => $total,
+				 'sub' => {}
+			     };
+    
+    $param->{'topics'}[int($total / 2)]{'next'} = 1;
+}
 
 
 
