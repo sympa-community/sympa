@@ -1111,7 +1111,7 @@ sub virus_infected {
     &do_log('debug2', 'Scan virus in %s', $file);
     
     unless ($Conf{'antivirus_path'} ) {
-        &do_log('debug2', 'Sympa not configured to scan virus in message');
+        &do_log('debug', 'Sympa not configured to scan virus in message');
 	return 0;
     }
     my @name = split(/\//,$file);
@@ -1119,14 +1119,14 @@ sub virus_infected {
     
     unless ((-d $work_dir) ||( mkdir $work_dir, 0755)) {
 	do_log('err', "Unable to create tmp antivirus directory $work_dir");
-	return 0;
+	return undef;
     }
 
     $work_dir = $Conf{'tmpdir'}.'/antivirus/'.$name[$#name];
     
     unless ( mkdir ($work_dir, 0755)) {
 	do_log('err', "Unable to create tmp antivirus directory $work_dir");
-	return 0;
+	return undef;
     }
 
     #$mail->dump_skeleton;
@@ -1145,7 +1145,10 @@ sub virus_infected {
     if ($Conf{'antivirus_path'} =~  /\/uvscan$/) {
 
 	# impossible to look for viruses with no option set
-	return 0 unless ($Conf{'antivirus_args'});
+	unless ($Conf{'antivirus_args'}) {
+	    &do_log('err', "Missing 'antivirus_args' in sympa.conf");
+	    return undef;
+	}
     
 	open (ANTIVIR,"$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ; 
 		
@@ -1192,7 +1195,10 @@ sub virus_infected {
 	$dbdir=$` ;
 
 	# impossible to look for viruses with no option set
-	return 0 unless ($Conf{'antivirus_args'});
+	unless ($Conf{'antivirus_args'}) {
+	    &do_log('err', "Missing 'antivirus_args' in sympa.conf");
+	    return undef;
+	}
 
 	open (ANTIVIR,"$Conf{'antivirus_path'} --databasedirectory $dbdir $Conf{'antivirus_args'} $work_dir |") ;
 
@@ -1265,7 +1271,10 @@ sub virus_infected {
     }elsif ("${Conf{'antivirus_path'}}" =~ /\/sweep$/) {
 	
         # impossible to look for viruses with no option set
-        return 0 unless ($Conf{'antivirus_args'});
+	unless ($Conf{'antivirus_args'}) {
+	    &do_log('err', "Missing 'antivirus_args' in sympa.conf");
+	    return undef;
+	}
     
         open (ANTIVIR,"$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ;
 	
