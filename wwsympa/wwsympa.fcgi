@@ -1701,7 +1701,11 @@ sub send_html {
 	     $in{'init_email'} = $in{'email'};
 	     $param->{'init_email'} = $in{'email'};
 	     $param->{'escaped_init_email'} = &tools::escape_chars($in{'email'});
-	     return $in{'failure_referer'}||$in{'previous_action'};
+
+	     &error_message('missing_arg', {'argument' => 'passwd'});
+	     &wwslog('info','do_login: missing parameter passwd');
+	     
+	     return $in{'previous_action'} || undef;
 	 }
      }
 
