@@ -942,7 +942,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
 	 }
 
-	 unless (&tt2::parse_tt2($param,'main.tt2' , \*STDOUT, $tt2_include_path)) {
+	 unless (&tt2::parse_tt2($param,'main.tt2' , \*STDOUT, $tt2_include_path, {'recode' => 'utf-8'})) {
 	     my $error = &tt2::get_error();
 	     $param->{'tt2_error'} = $error;
 	     &List::send_notify_to_listmaster('web_tt2_error', $robot, $error);

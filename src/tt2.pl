@@ -125,7 +125,7 @@ sub maketext {
 
     return sub {
 	&Language::maketext($_[0], @arg);
-    }
+    }	
 }
 
 ## To add a directory to the TT2 include_path
@@ -158,7 +158,7 @@ sub get_error {
 ## output : a Filedescriptor or a SCALAR ref for the output
 
 sub parse_tt2 {
-    my ($data, $template, $output, $include_path) = @_;
+    my ($data, $template, $output, $include_path, $options) = @_;
     $include_path ||= ['--ETCBINDIR--'];
 
     ## Add directories that may have been added
@@ -170,6 +170,13 @@ sub parse_tt2 {
     ## An array can be used as a template (instead of a filename)
     if (ref($template) eq 'ARRAY') {
 	$template = \join('', @$template);
+    }
+
+    # Do we need to recode strings
+    # maketext will check the $recode variable
+    if (defined $options &&
+	$options->{'recode'}) {
+	&Language::set_recode( $options->{'recode'});
     }
 
     # quick hack! wrong layer!
@@ -187,8 +194,8 @@ sub parse_tt2 {
 	
 	FILTERS => {
 	    unescape => \&CGI::Util::unescape,
-	    l => [\&maketext, 1],
-	    loc => [\&maketext, 1],
+	    l => [\&tt2::maketext, 1],
+	    loc => [\&tt2::maketext, 1],
 	    qencode => [\&qencode, 0]
 	    },
 	    };
@@ -204,8 +211,17 @@ sub parse_tt2 {
 	$last_error = $tt2->error();
 	&do_log('err', 'Failed to parse %s : %s', $template, $tt2->error());
 	&do_log('err', 'Looking for TT2 files in %s', join(',',@{$include_path}));
+
+	# Reset $recode
+	&Language::set_recode();
+
 	return undef;
     } 
+
+    # Reset $recode
+    &Language::set_recode();
+
+    return 1;
 }
 
 

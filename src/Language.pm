@@ -67,6 +67,8 @@ my %lang2locale = ('cz' => 'cs_CZ',
 		   'cn' => 'zh_CN',
 		   'tw' => 'zh_TW');
 
+my $recode;
+
 sub GetSupportedLanguages {
     my $robot = shift;
     my @lang_list;
@@ -103,6 +105,7 @@ sub SetLang {
     }
     &Locale::Messages::textdomain("sympa");
     &Locale::Messages::bindtextdomain('sympa','--DIR--/locale');
+    &Locale::Messages::bind_textdomain_codeset('sympa',$recode) if $recode;
     #bind_textdomain_codeset sympa => 'iso-8859-1';
 
     $current_lang = $lang;
@@ -110,6 +113,10 @@ sub SetLang {
 
     return $locale;
 }#SetLang
+
+sub set_recode {
+    $recode = shift;
+}
 
 sub GetLang {
 ############
