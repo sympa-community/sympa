@@ -843,6 +843,7 @@ sub get_parameters {
 
     if ($ENV{'REQUEST_METHOD'} eq 'GET') {
 	my $path_info = $ENV{'PATH_INFO'};
+	&do_log('debug', "PATH_INFO: %s",$ENV{'PATH_INFO'});
 
 	$path_info =~ s+^/++;
 
@@ -853,9 +854,9 @@ sub get_parameters {
 
 	my @params = split /\//, $path_info;
 
-	foreach my $i(0..$#params) {
-	    $params[$i] = &tools::unescape_chars($params[$i]);
-	}
+#	foreach my $i(0..$#params) {
+#	    $params[$i] = &tools::unescape_chars($params[$i]);
+#	}
 
 	if ($params[0] eq 'nomenu') {
 	    $param->{'nomenu'} = 1;
@@ -4459,7 +4460,8 @@ sub do_editsubscriber {
     }
 
     $param->{'subscriber'} = $user;
-    $param->{'subscriber'}{'escaped_email'} = &tools::escape_chars($param->{'subscriber'}{'email'});
+    $param->{'subscriber'}{'escaped_email'} = &tools::escape_html($param->{'subscriber'}{'email'});
+
     $param->{'subscriber'}{'date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'date'}));
     $param->{'subscriber'}{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'update_date'}));
 
