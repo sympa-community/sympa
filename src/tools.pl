@@ -946,7 +946,33 @@ sub virus_infected {
         if (( $status == 3) and not($virusfound)) { 
             $virusfound = "unknown";
         }    
-    }
+    }elsif ("${Conf{'antivirus_path'}}" =~ /AvpLinux$/) {
+
+	# impossible to look for viruses with no option set
+	unless ($Conf{'antivirus_args'}) {
+	    &do_log('err', "Missing 'antivirus_args' in sympa.conf");
+	    return undef;
+	}
+    
+	open (ANTIVIR,"$Conf{'antivirus_path'} $Conf{'antivirus_args'} $work_dir |") ; 
+		
+	while (<ANTIVIR>) {
+	    if (/infected:\s+(.*)/){
+		$virusfound = $1;
+	    }
+	    elsif (/suspicion:\s+(.*)/){
+		$virusfound = $1;
+	    }
+	}
+	close ANTIVIR;
+    
+	my $status = $?/256 ;
+
+        ## uvscan status =3 (*256) => virus
+        if (( $status >= 3) and not($virusfound)) { 
+	    $virusfound = "unknown";
+	}
+    }    
 
     ## Error while running antivir, notify listmaster
     if ($error_msg) {
