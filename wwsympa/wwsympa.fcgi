@@ -535,9 +535,15 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     my $login_uri = $Conf{'auth_services'}[$cas_id]{'login_uri'};
 	     my $check_uri = $Conf{'auth_services'}[$cas_id]{'check_uri'};
 
-	     my $https = 's' if ($ENV{SSL_PROTOCOL});
-	     my $return_url = 'http'.$https.'://'.$ENV{'SERVER_NAME'}.':'.$ENV{'SERVER_PORT'}.$ENV{'REQUEST_URI'} ;
-
+	     my $https ;
+	     my $port = ':'.$ENV{'SERVER_PORT'}; 
+	     if ($ENV{SSL_PROTOCOL}) {
+		 $https = 's';
+		 $port = '' if ($ENV{'SERVER_PORT'} = '443');
+	     }else{
+		 $port = '' if ($ENV{'SERVER_PORT'} = '80');
+	     }
+	     my $return_url = 'http'.$https.'://'.$ENV{'SERVER_NAME'}.$port.$ENV{'REQUEST_URI'} ;
 
 	     my $net_id = &Auth::check_cas_login($host,$check_uri,$return_url,'no_blocking');
 
@@ -571,8 +577,17 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		 do_log ('debug',"check_cas checker_cas : $in{'checked_cas'} current cas_id $Conf{'cas_id'}{$auth_service->{'auth_service_name'}}");
 		 next if ($in{'checked_cas'} =~  /$Conf{'cas_id'}{$auth_service->{'auth_service_name'}}/) ;
 		 
-		 my $https = 's' if ($ENV{SSL_PROTOCOL});
-		 my $return_url = 'http'.$https.'://'.$ENV{'SERVER_NAME'}.':'.$ENV{'SERVER_PORT'}.$ENV{'REQUEST_URI'} ;
+		 
+		 my $https ;
+		 my $port = ':'.$ENV{'SERVER_PORT'}; 
+		 if ($ENV{SSL_PROTOCOL}) {
+		     $https = 's';
+		     $port = '' if ($ENV{'SERVER_PORT'} = '443');
+		 }else{
+		     $port = '' if ($ENV{'SERVER_PORT'} = '80');
+		 }
+	     
+		 my $return_url = 'http'.$https.'://'.$ENV{'SERVER_NAME'}.$port.$ENV{'REQUEST_URI'} ;
 		 
 		 # before redirect update the list of allready checked cas server to prevent loop
 		 if ($ENV{'REQUEST_URI'} =~ /checked_cas\=/) {
@@ -580,6 +595,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		 }else{		 
 		     $return_url .= '?checked_cas='.$Conf{'cas_id'}{$auth_service->{'auth_service_name'}};
 		 }
+		 
 		 my $redirect_url = &Auth::check_cas_login($auth_service->{'host'},$auth_service->{'login_uri'},$return_url,'no_blocking');
 		 
 		 if ($redirect_url =~ /http(s)+\:\//i) {
