@@ -4,6 +4,7 @@
 
       <FORM ACTION="[path_cgi]" METHOD=POST>
 	  <INPUT TYPE="hidden" NAME="referer" VALUE="[referer]">
+	  <INPUT TYPE="hidden" NAME="action" VALUE="sendpasswd">
         <B>Your e-mail address</B> :<BR>
         [IF email]
 	  [email]
