@@ -2848,6 +2848,7 @@ ldap
 	alternative_email_attribute	n2atrmaildrop
 	email_attribute			mail
 	scope				sub
+        authentication_info_url         http://sso.univ-nancy2.fr/
 	
 \end{verbatim}
 \end {quote}
@@ -2988,6 +2989,13 @@ ldap
 	Search the whole tree below the base object. This is the default. 
 
 \end{itemize}
+
+\item{authentication\_info\_url}\\
+
+        Defines the URL of a document describing LDAP password management. When hitting Sympa's 
+	\textit {Send me a password} button, LDAP users will be redirected to this URL.
+
+
 \end{itemize}
 
 

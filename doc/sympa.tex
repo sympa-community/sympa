@@ -133,7 +133,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {05 November 2002}
+    \date {13 November 2002}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -2145,7 +2145,7 @@ antivirus_args		--dumb	--archive
 Exemple with AVP :
 \begin {quote}
 \begin{verbatim}
-antivirus_path  /opt/AVP/AvpLinux
+antivirus_path  /opt/AVP/kavscanner
 antivirus_args  -Y -O- -MP -I0
 \end{verbatim}
 \end {quote}
@@ -2984,6 +2984,7 @@ ldap
 	alternative_email_attribute	n2atrmaildrop
 	email_attribute			mail
 	scope				sub
+        authentication_info_url         http://sso.univ-nancy2.fr/
 	
 \end{verbatim}
 \end {quote}
@@ -3124,6 +3125,13 @@ ldap
 	Search the whole tree below the base object. This is the default. 
 
 \end{itemize}
+
+\item{authentication\_info\_url}\\
+
+        Defines the URL of a document describing LDAP password management. When hitting Sympa's 
+	\textit {Send me a password} button, LDAP users will be redirected to this URL.
+
+
 \end{itemize}
 
 
@@ -3917,10 +3925,10 @@ and Remindpassword, you can copy \WWSympa's login page to your
 application, and then make use of the cookie information within your application. 
 The cookie format is :
 \begin{verbatim}
-sympauser=<user_email>:<md5>
+sympauser=<user_email>:<checksum>
 \end{verbatim}
 where \texttt{<}user\_email\texttt{>} is the user's complete e-mail address, and
-\texttt{<}md5\texttt{>} is a MD5 checksum of the \texttt{<}user\_email\texttt{>}+\Sympa \cfkeyword {cookie}
+\texttt{<}checksum\texttt{>} are the 8 first bytes of the a MD5 checksum of the \texttt{<}user\_email\texttt{>}+\Sympa \cfkeyword {cookie}
 configuration parameter.
 Your application needs to know what the \cfkeyword {cookie} parameter
 is, so it can check the HTTP cookie validity ; this is a secret shared
