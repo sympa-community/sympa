@@ -3741,17 +3741,27 @@ sub do_arcsearch {
     my $search = new Marc::Search;
     $search->search_base ($wwsconf->{'arc_path'} . '/' . $param->{'list'} . '@' . $param->{'host'});
     $search->base_href ($param->{'base_url'}.$param->{'path_cgi'} . '/arc/' . $param->{'list'});
-    
     $search->archive_name ($in{'archive_name'});
+
+    unless (defined($in{'directories'})) {
+	# by default search in current mounth and in the previous none empty one
+	my $search_base = "$wwsconf->{'arc_path'}/$param->{'list'}\@$param->{'host'}";
+	my $previous_active_dir ;
+	opendir ARC, "$search_base";
+	foreach my $dir (sort {$b cmp $a} grep(!/^\./,readdir ARC)) {
+	    if ($dir =~ /^(\d{4})-(\d{2})$/) {
+		$previous_active_dir = $dir if ($dir lt $search->archive_name) ;
+	    }
+	}
+	closedir ARC;
+	$in{'directories'} = $search->archive_name."\0".$previous_active_dir ;
+    }
     
     if (defined($in{'directories'})) {
 	$search->directories ($in{'directories'});
 	foreach my $dir (split/\0/, $in{'directories'})	{
 	    push @{$param->{'directories'}}, $dir;
 	}
-    }else {
-	$search->directories ($search->archive_name);
-	push @{$param->{'directories'}}, $search->archive_name;
     }
     
     if (defined $in{'previous'}) {
