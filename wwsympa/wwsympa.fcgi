@@ -609,6 +609,33 @@ while ($query = &new_loop()) {
 ##############################################################
 
 
+## Write to log
+sub wwslog {
+    my $facility = shift;
+    my $msg = shift;
+
+    my $remote = $ENV{'REMOTE_HOST'} || $ENV{'REMOTE_ADDR'};
+
+    $msg = "[list $param->{'list'}] " . $msg
+	if $param->{'list'};
+
+    $msg = "[user $param->{'user'}{'email'}] " . $msg
+	if $param->{'user'}{'email'};
+
+    $msg = "[client $remote] ".$msg
+	if $remote;
+    
+    return &Log::do_log($facility, $msg, @_);
+}
+
+## Return a message to the client
+sub message {
+    my ($msg) = pop;
+
+    $param->{'error_msg'} ||= $msg;
+
+}
+
 sub new_loop {
     $loop++;
     my $query;
@@ -2657,10 +2684,10 @@ sub do_viewmod {
 	$param->{'file_extension'} = $1;
 	$param->{'file'} = "$Conf{'queuemod'}/.$list->{'name'}_$in{'id'}/$in{'file'}";
 	$param->{'bypass'} = 1;
-	do_log('notice',"xxxxx attachement2 param file $param->{'file'} ");
+	##do_log('notice',"xxxxx attachement2 param file $param->{'file'} ");
     }else {
 	$param->{'file'} = "$Conf{'queuemod'}/.$list->{'name'}_$in{'id'}/msg00000.html" ;
-	do_log('notice',"xxxxx param file $param->{'file'} ");
+	##do_log('notice',"xxxxx param file $param->{'file'} ");
     }
     
     $param->{'base'} = sprintf "%s%s/viewmod/%s/%s/", $param->{'base_url'}, $param->{'path_cgi'}, $param->{'list'}, $in{'id'};
@@ -4336,7 +4363,7 @@ sub _prepare_data {
 	    ## Add an empty entry
 	    unless ($name eq 'days') {
 		push @{$data2}, undef;
-		&do_log('debug', 'xxx Add 1 %s', $name);
+		## &do_log('debug', 'xxx Add 1 %s', $name);
 	    }
 	}else {
 	    $data2 = [undef];

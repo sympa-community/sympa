@@ -2,7 +2,7 @@ package wwslib;
 
 use Exporter;
 @ISA = ('Exporter');
-@EXPORT = ('wwslog','message');
+@EXPORT = ();
 
 @languages = ('fr','us','es','it');
 
@@ -120,7 +120,7 @@ sub load_config {
 	    if (defined ($conf->{$k})) {
 		$conf->{$k} = $v;
 	    }else {
-		&wwslog ('info', 'unknown parameter %s', $k);
+		&main::wwslog ('info', 'unknown parameter %s', $k);
 	    }
 	}
 	next;
@@ -165,14 +165,6 @@ sub load_mime_types {
     return $types;
 }
 
-## Return a message to the client
-sub message {
-    my ($msg) = pop;
-
-    $param->{'error_msg'} ||= $msg;
-
-}
-
 ## Check user password in sympa database
 sub check_pwd {
     my ($email, $pwd) = @_;
@@ -180,14 +172,14 @@ sub check_pwd {
     my $real_pwd = $user->{'password'};
 
     unless ($real_pwd) {
-	&wwslog('info', 'password not found or user %s unknown', $email);
-	&message('pwd_not_found');
+	&main::wwslog('info', 'password not found or user %s unknown', $email);
+	&main::message('pwd_not_found');
 	return undef;
     }
 
     unless ($pwd eq $real_pwd) {
-        &wwslog('info', 'check_pwd: incorrect password');
-	&message('incorrect_password');
+        &main::wwslog('info', 'check_pwd: incorrect password');
+	&main::message('incorrect_password');
         return undef;
     } 
 
@@ -201,18 +193,18 @@ sub get_email_from_cookie {
     my $email ;
 
     unless ($secret) {
-	&message('error in sympa configuration');
-	&wwslog('info', 'parameter cookie undefine, authentication failure');
+	&main::message('error in sympa configuration');
+	&main::wwslog('info', 'parameter cookie undefine, authentication failure');
     }
 
     unless ($ENV{'HTTP_COOKIE'}) {
-	&message('error in sympa missing cookie');
-	&wwslog('info', ' ENV{HTTP_COOKIE} undefined, authentication failure');
+	&main::message('error in sympa missing cookie');
+	&main::wwslog('info', ' ENV{HTTP_COOKIE} undefined, authentication failure');
     }
 
     unless ( $email = &cookielib::check_cookie ($ENV{'HTTP_COOKIE'}, $secret)) {
-	&message('auth failed');
-	&wwslog('info', 'get_email_from_cookie: auth failed for user %s', $email);
+	&main::message('auth failed');
+	&main::wwslog('info', 'get_email_from_cookie: auth failed for user %s', $email);
 	return undef;
     }    
 
@@ -228,25 +220,6 @@ sub new_passwd {
     }
 
     return 'INIT'.$passwd;
-}
-
-## Write to log
-sub wwslog {
-    my $facility = shift;
-    my $msg = shift;
-
-    my $remote = $ENV{'REMOTE_HOST'} || $ENV{'REMOTE_ADDR'};
-
-    $msg = "[list $param->{'list'}] " . $msg
-	if $param->{'list'};
-
-    $msg = "[user $param->{'user'}{'email'}] " . $msg
-	if $param->{'user'}{'email'};
-
-    $msg = "[client $remote] ".$msg
-	if $remote;
-    
-    return &Log::do_log($facility, $msg, @_);
 }
 
 ## Basic check of an email address
@@ -273,8 +246,8 @@ sub init_passwd {
 	    unless ( &List::update_user_db($email,
 					   {'password' => $passwd,
 					    'lang' => $user->{'lang'} || $data->{'lang'}} )) {
-		&message('update_failed');
-		&wwslog('info','init_passwd: update failed');
+		&main::message('update_failed');
+		&main::wwslog('info','init_passwd: update failed');
 		return undef;
 	    }
 	}
@@ -284,8 +257,8 @@ sub init_passwd {
 				     'password' => $passwd,
 				     'lang' => $data->{'lang'},
 				     'gecos' => $data->{'gecos'}})) {
-	    &message('add_failed');
-	    &wwslog('info','init_passwd: add failed');
+	    &main::message('add_failed');
+	    &main::wwslog('info','init_passwd: add failed');
 	    return undef;
 	}
     }
