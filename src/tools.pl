@@ -340,8 +340,8 @@ sub get_list_list_tpl {
 
 		$list_templates->{$template}{'path'} = $dir;
 
-		if (-r $dir.'/'.$template.'/comment') {
-		    $list_templates->{$template}{'comment'} = $dir.'/'.$template.'/comment';
+		if (-r $dir.'/'.$template.'/comment.tt2') {
+		    $list_templates->{$template}{'comment'} = $dir.'/'.$template.'/comment.tt2';
 		}
 	    }
 	    closedir(DIR);
