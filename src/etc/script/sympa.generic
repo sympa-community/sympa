@@ -96,6 +96,8 @@ case "$1" in
 		echo '   ***  archived.pl...'
     		$sympadir/archived.pl
 		echo '   ***  bounced.pl...'
+    		$sympadir/task_manager.pl
+		echo '   ***  task_manager.pl...'
     		$sympadir/bounced.pl
 		touch $pidfilepath/sympa
 		sleep $start_wait
@@ -109,8 +111,10 @@ case "$1" in
 	echo "Stopping Sympa subsystem: "
 	if [ -f $pidfilepath/sympa ]; then
 		kill `cat $pidfilepath/sympa.pid`
+		kill `cat $pidfilepath/sympa-distribution.pid`
 		kill `cat $pidfilepath/archived.pid`
 		kill `cat $pidfilepath/bounced.pid`
+		kill `cat $pidfilepath/task_manager.pid`
 		sleep $stop_wait
 	else
 		echo "   Sympa seems down. No action will be taken."
