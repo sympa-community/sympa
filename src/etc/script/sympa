@@ -40,24 +40,7 @@ sympa_status() {
         return 1
     fi
  
-    # First try "--PIDDIR--/*.pid" files
-    if [ -f --PIDDIR--/$1.pid ] ; then
-            pid=`head -1 --PIDDIR--/$1.pid`
-            if [ "$pid" != "" ] ; then
-                    echo "$1 died, pid file remains."
-                    return 1
-            fi
-    fi
-
-    # Next try "pidof"
-#    pid=`--PIDPRE-- $1.pl --PIDPOST--`
-#    if [ "$pid" != "" ] ; then
-#            echo "$1 (pid $pid) is active..."
-#            return 0
-#    fi
- 
-    echo "$1 is stopped."
-    return 3
+    status $1.pl
 }
 
 # Start a module
