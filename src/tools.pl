@@ -615,7 +615,8 @@ sub escape_chars {
 
     ## Escape chars
     ##  !"#$%&'()+,:;<=>? AND accented chars
-    foreach my $i (0x20..0x2c,0x3a..0x3f,0xc0..0xff) {
+    ## escape % first
+    foreach my $i (0x25,0x20..0x24,0x26..0x2c,0x3a..0x3f,0xc0..0xff) {
 	next if ($i == $except);
 	my $hex_i = sprintf "%lx", $i;
 	$s =~ s/\x$hex_i/%$hex_i/g;
