@@ -1710,7 +1710,7 @@ sub send_to_editor {
    my($self, $method, $message) = @_;
    my ($msg, $file, $encrypt) = ($message->{'msg'}, $message->{'filename'});
    my $encrypt;
-   $encrypt = 'smime_crypted' if ($message->{'smime_encrypted'}); 
+   $encrypt = 'smime_crypted' if ($message->{'smime_crypted'}); 
    do_log('debug3', "List::send_to_editor, msg: $msg, file: $file method : $method, encrypt : $encrypt");
 
    my($i, @rcpt);
@@ -3854,6 +3854,39 @@ sub add_user {
 
     return $total;
 }
+
+
+## Update subscribers (used while renaming a list)
+sub update_subscribers_db {
+    my($listname, $new_listname) = @_;
+    do_log('debug', 'List::update_subscriber_db(%s,%s)', $listname,$new_listname);
+
+    unless ($List::use_db) {
+	&do_log('info', 'Sympa not setup to use DBI');
+	return undef;
+    }
+
+    my $statement;
+    
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }	   
+    
+    $statement =  sprintf "UPDATE subscriber_table SET list_subscriber=%s WHERE list_subscriber=%s", $dbh->quote($new_listname), $dbh->quote($listname) ; 
+
+    do_log('debug', 'List::update_subscriber_db statement : %s',  $statement );
+
+    unless ($dbh->do($statement)) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+    
+    return 1;
+}
+
+
+
 
 ## Is the user listmaster
 sub is_listmaster {
