@@ -40,14 +40,7 @@ sympa_status() {
         return 1
     fi
  
-    # First try "pidof"
-    pid=`--PIDPRE-- $1.pl --PIDPOST--`
-    if [ "$pid" != "" ] ; then
-            echo "$1 (pid $pid) is active..."
-            return 0
-    fi
- 
-    # Next try "--PIDDIR--/*.pid" files
+    # First try "--PIDDIR--/*.pid" files
     if [ -f --PIDDIR--/$1.pid ] ; then
             pid=`head -1 --PIDDIR--/$1.pid`
             if [ "$pid" != "" ] ; then
@@ -55,6 +48,14 @@ sympa_status() {
                     return 1
             fi
     fi
+
+    # Next try "pidof"
+    pid=`--PIDPRE-- $1.pl --PIDPOST--`
+    if [ "$pid" != "" ] ; then
+            echo "$1 (pid $pid) is active..."
+            return 0
+    fi
+ 
     echo "$1 is stopped."
     return 3
 }
@@ -72,12 +73,7 @@ sympa_module_start() {
 #		startparam=""
 #	fi
  
-	$sympadir/$1.pl $startparam &
-	sleep 1
-	pid=`--PIDPRE-- $sympadir/$1.pl --PIDPOST--`
-	if [ $pid ]; then
-		echo $pid > --PIDDIR--/$1.pid
-	fi
+	$sympadir/$1.pl $startparam && success || failure
 	echo
 }
 
@@ -114,9 +110,8 @@ sympa_stop() {
  
 	if [ -f --PIDDIR--/$1.pid ]; then
 		echo -n "Stopping module $1.pl: "
-		killproc $1.pl
-		# kill `--PIDPRE-- $1.pl --PIDPOST--`
-		rm -f --PIDDIR--/$1.pid
+		pid=`head -1 --PIDDIR--/$1.pid`
+		kill -TERM $pid && success || failure
 		echo
 	fi
 }
