@@ -24,8 +24,10 @@
 
 int main(int argc, char *argv[])
 {
+        void *env = NULL;
+
 	setuid(0);
-	execle(NEWALIASES, NEWALIASES, NEWALIASES_ARG, NULL);
+	execle(NEWALIASES, NEWALIASES, NEWALIASES_ARG, &env);
 	perror("Exec of "NEWALIASES NEWALIASES_ARG" failed!");
 	exit(1);
 }
