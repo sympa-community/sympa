@@ -26,6 +26,7 @@ use lib '--LIBDIR--';
 
 use strict vars;
 use POSIX;
+require 'tools.pl';
 require 'Conf.pm' unless ($ARGV[0] eq '-c');
 
 ## Configuration
