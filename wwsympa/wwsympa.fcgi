@@ -10,6 +10,7 @@
 
 ## Change this to point to your Sympa bin directory
 use lib '--BINDIR--';
+use Getopt::Long;
 
 use strict vars;
 
@@ -35,6 +36,19 @@ require "--BINDIR--/tools.pl";
 ## WWSympa librairies
 use wwslib;
 use cookielib;
+
+my %options;
+&GetOptions(\%main::options, 'debug|d', 'robot_domain=s');
+my $robot_domain = $main::options{'robot_domain'};
+
+## Trace options
+#foreach my $k (keys %main::options) {
+#    printf "%s = %s\n", $k, $main::options{$k};
+#}
+
+$main::options{'debug2'} = 1 if ($main::options{'debug'});
+
+
 
 ## Configuration
 my $wwsconf = {};
