@@ -4886,7 +4886,7 @@ sub get_lists {
     my $robot_context = shift;
 
     my(@lists, $l,@robots);
-    do_log('debug2', 'List::get_lists(%s)',$robot);
+    do_log('debug2', 'List::get_lists(%s)',$robot_context);
 
     if ($robot_context eq '*') {
 	@robots = &get_robots ;
