@@ -796,10 +796,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      my $saved_lang = &Language::GetLang();
      foreach my $l (&Language::GetSupportedLanguages()) {
 	 &Language::SetLang($l) || next;
-	 $param->{'languages'}{$l}{'complete'} = gettext("english");
-	 if (($param->{'languages'}{$l}{'complete'} eq 'english')) {
-	     $param->{'languages'}{$l}{'complete'} = $l;
-	 }
+	 $param->{'languages'}{$l}{'complete'} = gettext("_language_");
 
 	 if ($param->{'locale'} eq $l) {
 	     $param->{'languages'}{$l}{'selected'} = 'SELECTED';
@@ -6287,7 +6284,7 @@ sub do_edit_list {
 	     my $saved_lang = &Language::GetLang();
 	     foreach my $lang (keys %{$p->{'value'}}) {
 		 &Language::SetLang($lang);
-		 $p->{'value'}{$lang}{'title'} = gettext("english");
+		 $p->{'value'}{$lang}{'title'} = gettext('_language_');
 	     }
 	     &Language::SetLang($saved_lang);
 	 }

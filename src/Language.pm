@@ -29,8 +29,8 @@ use Carp;
 use strict;
 use Log;
 use Version;
-use Locale::Messages qw (:locale_h :libintl_h);
 use POSIX qw (setlocale);
+use Locale::Messages qw (:locale_h :libintl_h);
 
 my %msghash;     # Hash organization is like Messages file: File>>Sections>>Messages
 my %set_comment; #sets-of-messages comment   
@@ -100,8 +100,8 @@ sub SetLang {
 	&do_log('err','Failed to setlocale(%s)', $locale);
 	return undef;
     }
-    textdomain "sympa";
-    bindtextdomain sympa => '--DIR--/locale';
+    &Locale::Messages::textdomain("sympa");
+    &Locale::Messages::bindtextdomain('sympa','--DIR--/locale');
     #bind_textdomain_codeset sympa => 'iso-8859-1';
 
     $current_lang = $lang;
@@ -132,6 +132,36 @@ sub maketext {
     $translation =~ s/\%(\d+)/$_[$1-1]/eg;
 
     return $translation;
+}
+
+sub gettext {
+
+    ## This prevents meta information to be returned if the string to translate is empty
+    if ($_[0] eq '') {
+	return '';
+	
+	## return meta information on the catalogue (language, charset, encoding,...)
+    }elsif ($_[0] =~ '^_(\w+)_$') {
+	my $var = $1;
+	foreach (split /\n/,&Locale::Messages::gettext('')) {
+	    if ($var eq 'language') {
+		if (/^Language-Team:\s*(.+)$/i) {
+		    return $1;
+		}
+	    }elsif ($var eq 'charset') {
+		if (/^Content-Type:\s*.*charset=(\S+)$/i) {
+		    return $1;
+		}
+	    }elsif ($var eq 'encoding') {
+		if (/^Content-Transfer-Encoding:\s*(.+)$/i) {
+		    return $1;
+		}
+	    }
+	}
+	return '';
+    }
+
+    &Locale::Messages::gettext(@_);
 }
 
 1;
