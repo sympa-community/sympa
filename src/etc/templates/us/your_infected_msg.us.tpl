@@ -3,11 +3,13 @@ Subject: A virus in your email
 
     ***** V I R U S    A L E R T *****
 
-Our viruschecker found the following virus in your email 
-to [recipient]: [virus_name].
+Our viruschecker found the a virus named [virus_name]
+in a message adressed to [recipient] and that seems
+to be your  (From: [from]).
 
 We stopped delivery of this email.
 
-Now it is up to you to check your system for viruses.
+May be it is usefull to check your system for viruses.
+
 
 
