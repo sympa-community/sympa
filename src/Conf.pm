@@ -128,8 +128,6 @@ sub load {
 	    $value =~ s/\s*$//;
 	    ##  'tri' is a synonime for 'sort' (for compatibily with old versions)
 	    $keyword = 'sort' if ($keyword eq 'tri');
-	    ##  'host' is a synonime for 'domain', host is allready used in $Conf however keyword domain is privileged in the documentation
-	    $keyword = 'host' if ($keyword eq 'domain');
 	    ## Special case: `command`
 	    if ($value =~ /^\`(.*)\`$/) {
 		$value = qx/$1/;
@@ -147,6 +145,13 @@ sub load {
     unless (defined $o{'wwsympa_url'}) {
 	$o{'wwsympa_url'}[0] = "http://$o{'host'}[0]/wws";
     }
+
+    # 'host' and 'domain' are mandatory and synonime.$Conf{'host'} is
+    # still wydly use even if the doc require domain.
+ 
+    $o{'host'} = $o{'domain'} if (defined $o{'domain'}) ;
+    $o{'domain'} = $o{'host'} if (defined $o{'host'}) ;
+    
     my $spool = $o{'spool'}[0] || $Default_Conf{'spool'};
 
     unless (defined $o{'queuedigest'}) {
@@ -264,10 +269,10 @@ sub load_robots {
 		$value = lc($value) unless ($keyword eq 'title');
 		if ($valid_robot_key_words{$keyword}) {
 		    $robot_conf->{$robot}{$keyword} = $value;
-		    printf STDERR "load robots config: $keyword = $value\n";
+		    # printf STDERR "load robots config: $keyword = $value\n";
 		}else{
 		    do_log('info',"load robots config: unknown keyword $keyword");
-		    printf STDERR "load robots config: unknown keyword $keyword\n";
+		    # printf STDERR "load robots config: unknown keyword $keyword\n";
 		}
 	    }
 	}
