@@ -47,9 +47,9 @@
 <SCRIPT language=JavaScript>
 <!--
 	    [IF o->gecos]
-document.write("<a href=" + "mail" + "to:" + "[o->local]" + "@" + "[o->domain]" + ">[o->gecos]</a>")
+document.write("<a href=" + "mail" + "to:" + "[o->local]" + "@" + "[o->domain]" + ">[o->gecos]</a><BR>")
             [ELSE]
-document.write("<a href=" + "mail" + "to:" + "[o->local]" + "@" + "[o->domain]" + ">[o->local]" + "@" + "[o->domain]</a>")
+document.write("<a href=" + "mail" + "to:" + "[o->local]" + "@" + "[o->domain]" + ">[o->local]" + "@" + "[o->domain]</a><BR>")
 	    [ENDIF]
 // --></SCRIPT>
 
