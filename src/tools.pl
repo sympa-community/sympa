@@ -1075,13 +1075,19 @@ sub virus_infected {
     
 	my $status = $?/256 ;
 
-        ## uvscan status =13 (*256) => virus
-        if (( $status == 13) and not($virusfound)) { 
-	    $virusfound = "unknown";
+        ## uvscan status =12 or 13 (*256) => virus
+        if (( $status == 13) || ($status == 12)) { 
+	    $virusfound ||= "unknown";
 	}
 
+	## Meaning of the codes
+	##  12 : The program tried to clean a file, and that clean failed for some reason and the file is still infected.
+	##  13 : One or more viruses or hostile objects (such as a Trojan horse, joke program,  or  a  test file) were found.
+	##  15 : The programs self-check failed; the program might be infected or damaged.
+	##  19 : The program succeeded in cleaning all infected files.
+
 	$error_msg = $result
-	    if ($status != 0 && $status != 13);
+	    if ($status != 0 && $status != 12 && $status != 13 && $status != 19);
 
     ## Trend Micro
     }elsif ($Conf{'antivirus_path'} =~  /\/vscan$/) {
