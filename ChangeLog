@@ -1,3 +1,111 @@
+2001-11-21 18:21  salaun
+
+	* wwsympa/wws_templates/cn/: admin_menu.cn.tpl,
+	arcsearch_form.cn.tpl, close_list.cn.tpl,
+	close_list_request.cn.tpl, compose_mail.cn.tpl, create_list.cn.tpl,
+	create_list_request.cn.tpl, d_editfile.cn.tpl, d_read.cn.tpl,
+	edit_list_request.cn.tpl, error.cn.tpl, help.cn.tpl, home.cn.tpl,
+	install_pending_list.cn.tpl, list_menu.cn.tpl, lists.cn.tpl,
+	loginbanner.cn.tpl, pref.cn.tpl, remindpasswd.cn.tpl,
+	reviewbouncing.cn.tpl, serveradmin.cn.tpl,
+	set_pending_list_request.cn.tpl, show_cert.cn.tpl, subindex.cn.tpl,
+	suboptions.cn.tpl: [Autrijus Tang] Updates of Chinese translations
+
+2001-11-21 17:40  aumont
+
+	* src/List.pm, wwsympa/wwslib.pm: [Autrijus Tang] Changes: cn-gb ->
+	cn ; cn-big5 -> tw
+
+2001-11-21 17:39  aumont
+
+	* nls/Makefile: [Autrijus Tang] Changes: cn-gb => cn ; cn-big5 =>
+	tw
+
+2001-11-21 14:42  aumont
+
+	* configure.in: [reported by Harald Wilhelmi] Fix: use ${prefix}
+	instead of ${ac_default_prefix} This allows to override prefix at
+	configure time (with --prefix=/xxx)
+
+2001-11-21 10:11  aumont
+
+	* src/smtp.pm: Prevents from sending without Return-path
+
+2001-11-21 10:07  aumont
+
+	* src/List.pm: [reported by John Dalbec] Bug fix: List::send_file
+	did not set the return path if the recipient(s) is/are passed as an
+	array reference.  This caused problems with my MTA (exim) and
+	results in sympa dying.
+
+2001-11-20 11:31  aumont
+
+	* wwsympa/wws_templates/: cz/reviewbouncing.cz.tpl,
+	de/reviewbouncing.de.tpl, es/reviewbouncing.es.tpl,
+	fr/reviewbouncing.fr.tpl, hu/reviewbouncing.hu.tpl,
+	it/reviewbouncing.it.tpl, us/reviewbouncing.us.tpl,
+	cn/reviewbouncing.cn.tpl: [J. Marant] Typo
+
+2001-11-20 11:18  aumont
+
+	* wwsympa/wws_templates/: cz/create_list_request.cz.tpl,
+	cz/review.cz.tpl, cz/reviewbouncing.cz.tpl,
+	de/create_list_request.de.tpl, de/review.de.tpl,
+	de/reviewbouncing.de.tpl, es/create_list_request.es.tpl,
+	es/review.es.tpl, es/reviewbouncing.es.tpl,
+	fr/create_list_request.fr.tpl, fr/d_read.fr.tpl, fr/review.fr.tpl,
+	fr/reviewbouncing.fr.tpl, hu/create_list_request.hu.tpl,
+	hu/d_read.hu.tpl, hu/review.hu.tpl, hu/reviewbouncing.hu.tpl,
+	it/create_list_request.it.tpl, it/review.it.tpl,
+	it/reviewbouncing.it.tpl, us/create_list_request.us.tpl,
+	us/d_read.us.tpl, us/review.us.tpl, us/reviewbouncing.us.tpl,
+	cn/create_list_request.cn.tpl, cn/review.cn.tpl,
+	cn/reviewbouncing.cn.tpl: [J. Marant] Fix: replace /icons with
+	[icons_url in web templates
+
+2001-11-20 10:58  aumont
+
+	* doc/parse_tex.pl, doc/sympa.tex.tpl, src/List.pm,
+	wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi: [requested by Sergiy Zhuk]
+	Change: add wwsympa.conf 'password_case' parameter
+
+2001-11-20 10:55  aumont
+
+	* .version: 3.3b.5
+
+2001-11-19 15:38  aumont
+
+	* src/etc/script/sympa.generic: [Harald Wilhelmi] Generic startup
+	script that should work with HPUX.  It SHOULD be installed in
+	/sbin/init.d ; Makefile should check system type (`uname -s` eq
+	HP-UX)
+
+2001-11-19 15:04  aumont
+
+	* wwsympa/wwsympa.fcgi: [J. Marant] Use 'icons_url' conf parameter
+
+2001-11-19 14:49  aumont
+
+	* wwsympa/wwsympa.fcgi: [reported by Sergiy Zhuk] Security fix: no
+	more tell if part of password was correct
+
+2001-11-19 14:43  aumont
+
+	* check_perl_modules.pl, src/Conf.pm, wwsympa/wwsympa.fcgi: [Sergiy
+	Zhuk] New feature: allows Sympa to check listname on SMTP server
+	before list creation. New sympa.conf/robot.conf parameters
+	(list_check_smtp, list_check_suffixes) [reported by Sergiy Zhuk]
+	Changes: no more lowercase passwords
+
+2001-11-19 09:52  aumont
+
+	* NEWS, src/tools.pl: Bug fix: get_file did not find templates in
+	list dir.  Could not edit list templates from the web
+
+2001-11-16 13:16  aumont
+
+	* .version, ChangeLog, NEWS: Preparing 3.3b.4
+
 2001-11-16 13:02  aumont
 
 	* doc/sympa.tex.tpl: Fix: escape '_'
@@ -86,10 +194,6 @@
 
 	* src/etc/mhonarc-ressources, wwsympa/Makefile,
 	wwsympa/wwsympa.fcgi,
-	wwsympa/wws_templates/cn-gb/create_list_request.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/menu.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/review.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/reviewbouncing.cn-gb.tpl,
 	wwsympa/wws_templates/cz/create_list_request.cz.tpl,
 	wwsympa/wws_templates/cz/menu.cz.tpl,
 	wwsympa/wws_templates/cz/review.cz.tpl,
@@ -108,6 +212,10 @@
 	wwsympa/wws_templates/fr/review.fr.tpl,
 	wwsympa/wws_templates/fr/reviewbouncing.fr.tpl,
 	wwsympa/wws_templates/hu/create_list_request.hu.tpl,
+	wwsympa/wws_templates/cn/create_list_request.cn.tpl,
+	wwsympa/wws_templates/cn/menu.cn.tpl,
+	wwsympa/wws_templates/cn/review.cn.tpl,
+	wwsympa/wws_templates/cn/reviewbouncing.cn.tpl,
 	wwsympa/wws_templates/hu/d_read.hu.tpl,
 	wwsympa/wws_templates/hu/menu.hu.tpl,
 	wwsympa/wws_templates/hu/review.hu.tpl,
@@ -663,7 +771,7 @@
 
 2001-10-12 16:17  salaun
 
-	* nls/cn-big5.msg: [Autrijus Tang] Updates
+	* nls/tw.msg: [Autrijus Tang] Updates
 
 2001-10-11 17:32  salaun
 
@@ -697,8 +805,7 @@
 
 2001-10-11 14:26  salaun
 
-	* nls/cn-big5.msg: [Autrijus Tang] Update : adapt terms to Taiwan
-	usage
+	* nls/tw.msg: [Autrijus Tang] Update : adapt terms to Taiwan usage
 
 2001-10-11 09:17  salaun
 
@@ -1030,16 +1137,7 @@
 
 2001-09-13 15:35  salaun
 
-	* wwsympa/wws_templates/: cn-gb/admin_menu.cn-gb.tpl,
-	cn-gb/arc.cn-gb.tpl, cn-gb/arcsearch.cn-gb.tpl,
-	cn-gb/arcsearch_form.cn-gb.tpl, cn-gb/choosepasswd.cn-gb.tpl,
-	cn-gb/d_read.cn-gb.tpl, cn-gb/edit_list_request.cn-gb.tpl,
-	cn-gb/editsubscriber.cn-gb.tpl, cn-gb/get_pending_lists.cn-gb.tpl,
-	cn-gb/help_admin.cn-gb.tpl, cn-gb/home.cn-gb.tpl,
-	cn-gb/install_pending_list.cn-gb.tpl, cn-gb/list_menu.cn-gb.tpl,
-	cn-gb/lists.cn-gb.tpl, cn-gb/loginbanner.cn-gb.tpl,
-	cn-gb/menu.cn-gb.tpl, cn-gb/pref.cn-gb.tpl, cn-gb/review.cn-gb.tpl,
-	cn-gb/title.cn-gb.tpl, cz/admin_menu.cz.tpl, cz/arc.cz.tpl,
+	* wwsympa/wws_templates/: cz/admin_menu.cz.tpl, cz/arc.cz.tpl,
 	cz/arcsearch.cz.tpl, cz/arcsearch_form.cz.tpl,
 	cz/change_email.cz.tpl, cz/choosepasswd.cz.tpl,
 	cz/create_list_request.cz.tpl, cz/d_read.cz.tpl,
@@ -1052,7 +1150,14 @@
 	cz/serveradmin.cz.tpl, cz/set_pending_list_request.cz.tpl,
 	cz/sigrequest.cz.tpl, cz/suboptions.cz.tpl, cz/subrequest.cz.tpl,
 	cz/title.cz.tpl, cz/view_translations.cz.tpl, cz/viewmod.cz.tpl,
-	hu/loginbanner.hu.tpl, hu/suboptions.hu.tpl: Fix: replace
+	hu/loginbanner.hu.tpl, hu/suboptions.hu.tpl, cn/admin_menu.cn.tpl,
+	cn/arc.cn.tpl, cn/arcsearch.cn.tpl, cn/arcsearch_form.cn.tpl,
+	cn/choosepasswd.cn.tpl, cn/d_read.cn.tpl,
+	cn/edit_list_request.cn.tpl, cn/editsubscriber.cn.tpl,
+	cn/get_pending_lists.cn.tpl, cn/help_admin.cn.tpl, cn/home.cn.tpl,
+	cn/install_pending_list.cn.tpl, cn/list_menu.cn.tpl,
+	cn/lists.cn.tpl, cn/loginbanner.cn.tpl, cn/menu.cn.tpl,
+	cn/pref.cn.tpl, cn/review.cn.tpl, cn/title.cn.tpl: Fix: replace
 	hard-coded colors
 
 2001-09-13 10:11  salaun
@@ -1092,9 +1197,9 @@
 
 2001-09-12 15:16  salaun
 
-	* wwsympa/wws_templates/: cn-gb/review.cn-gb.tpl, cz/review.cz.tpl,
-	de/review.de.tpl, es/review.es.tpl, fr/review.fr.tpl,
-	hu/review.hu.tpl, it/review.it.tpl, us/review.us.tpl: [no log
+	* wwsympa/wws_templates/: cz/review.cz.tpl, de/review.de.tpl,
+	es/review.es.tpl, fr/review.fr.tpl, hu/review.hu.tpl,
+	cn/review.cn.tpl, it/review.it.tpl, us/review.us.tpl: [no log
 	message]
 
 2001-09-12 15:15  salaun
@@ -1165,19 +1270,6 @@
 	src/sympa.pl, src/etc/mhonarc-ressources,
 	src/etc/sample/sympa.conf, src/etc/templates/fr/lists.fr.tpl,
 	wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi,
-	wwsympa/wws_templates/cn-gb/change_email.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/create_list_request.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/modindex.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/review.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/reviewbouncing.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/scenario_test.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/serveradmin.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/set_pending_list_request.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/sigrequest.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/suboptions.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/subrequest.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/view_translations.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/viewmod.cn-gb.tpl,
 	wwsympa/wws_templates/cz/create_list.cz.tpl,
 	wwsympa/wws_templates/cz/review.cz.tpl,
 	wwsympa/wws_templates/de/admin_menu.de.tpl,
@@ -1212,6 +1304,19 @@
 	wwsympa/wws_templates/de/title.de.tpl,
 	wwsympa/wws_templates/de/view_translations.de.tpl,
 	wwsympa/wws_templates/de/viewmod.de.tpl,
+	wwsympa/wws_templates/cn/change_email.cn.tpl,
+	wwsympa/wws_templates/cn/create_list_request.cn.tpl,
+	wwsympa/wws_templates/cn/modindex.cn.tpl,
+	wwsympa/wws_templates/cn/review.cn.tpl,
+	wwsympa/wws_templates/cn/reviewbouncing.cn.tpl,
+	wwsympa/wws_templates/cn/scenario_test.cn.tpl,
+	wwsympa/wws_templates/cn/serveradmin.cn.tpl,
+	wwsympa/wws_templates/cn/set_pending_list_request.cn.tpl,
+	wwsympa/wws_templates/cn/sigrequest.cn.tpl,
+	wwsympa/wws_templates/cn/suboptions.cn.tpl,
+	wwsympa/wws_templates/cn/subrequest.cn.tpl,
+	wwsympa/wws_templates/cn/view_translations.cn.tpl,
+	wwsympa/wws_templates/cn/viewmod.cn.tpl,
 	wwsympa/wws_templates/es/admin_menu.es.tpl,
 	wwsympa/wws_templates/es/arc.es.tpl,
 	wwsympa/wws_templates/es/arcsearch.es.tpl,
@@ -3169,30 +3274,29 @@
 
 2001-04-13 17:48  salaun
 
-	* wwsympa/wws_templates/: cn-gb/viewconfig.cn-gb.tpl,
-	cz/viewconfig.cz.tpl, es/viewconfig.es.tpl, it/viewconfig.it.tpl,
-	us/viewconfig.us.tpl: Unused templates
+	* wwsympa/wws_templates/: cz/viewconfig.cz.tpl,
+	es/viewconfig.es.tpl, it/viewconfig.it.tpl, us/viewconfig.us.tpl,
+	cn/viewconfig.cn-gb.tpl: Unused templates
 
 2001-04-13 17:45  salaun
 
-	* wwsympa/wws_templates/: cn-gb/info.cn-gb.tpl, cz/info.cz.tpl,
-	es/info.es.tpl, it/info.it.tpl: duplicate templates
+	* wwsympa/wws_templates/: cz/info.cz.tpl, es/info.es.tpl,
+	it/info.it.tpl, cn/info.cn-gb.tpl: duplicate templates
 
 2001-04-13 17:41  salaun
 
-	* wwsympa/wws_templates/: cn-gb/search_list.cn-gb.tpl,
-	cz/search_list.cz.tpl, cn-gb/search.cn-gb.tpl, cz/search.cz.tpl:
+	* wwsympa/wws_templates/: cz/search_list.cz.tpl,
+	cn/search_list.cn-gb.tpl, cz/search.cz.tpl, cn/search.cn-gb.tpl:
 	duplicate templates
 
 2001-04-13 17:38  salaun
 
-	* wwsympa/wws_templates/: cn-gb/which.cn-gb.tpl, cz/which.cz.tpl,
-	cn-gb/viewbounce.cn-gb.tpl, cz/viewbounce.cz.tpl: duplicate
-	templates
+	* wwsympa/wws_templates/: cz/which.cz.tpl, cn/which.cn-gb.tpl,
+	cz/viewbounce.cz.tpl, cn/viewbounce.cn-gb.tpl: duplicate templates
 
 2001-04-13 17:33  salaun
 
-	* wwsympa/wws_templates/: cn-gb/main.cn-gb.tpl, cz/main.cz.tpl:
+	* wwsympa/wws_templates/: cz/main.cz.tpl, cn/main.cn-gb.tpl:
 	duplicate templates
 
 2001-04-13 17:16  salaun
@@ -3357,10 +3461,10 @@
 
 2001-04-10 16:56  salaun
 
-	* wwsympa/wws_templates/: cn-gb/list_menu.cn-gb.tpl,
-	es/list_menu.es.tpl, fr/list_menu.fr.tpl, it/help_editfile.it.tpl,
-	it/list_menu.it.tpl, us/help_editfile.us.tpl, us/home.us.tpl,
-	us/menu.us.tpl, us/sigrequest.us.tpl: [Petr Prazak]Bug fix:
+	* wwsympa/wws_templates/: es/list_menu.es.tpl, fr/list_menu.fr.tpl,
+	it/help_editfile.it.tpl, it/list_menu.it.tpl,
+	us/help_editfile.us.tpl, us/home.us.tpl, us/menu.us.tpl,
+	us/sigrequest.us.tpl, cn/list_menu.cn.tpl: [Petr Prazak]Bug fix:
 	subscription
 
 2001-04-10 16:40  salaun
@@ -3586,13 +3690,13 @@
 
 2001-03-22 14:07  salaun
 
-	* wwsympa/: wwsympa.fcgi, wws_templates/cn-gb/error.cn-gb.tpl,
-	wws_templates/cn-gb/notice.cn-gb.tpl,
-	wws_templates/es/error.es.tpl, wws_templates/es/notice.es.tpl,
-	wws_templates/fr/error.fr.tpl, wws_templates/fr/notice.fr.tpl,
-	wws_templates/it/error.it.tpl, wws_templates/it/notice.it.tpl,
-	wws_templates/us/main.us.tpl, wws_templates/us/notice.us.tpl: New
-	feature: Notices are different from errors. Create new templates
+	* wwsympa/: wwsympa.fcgi, wws_templates/es/error.es.tpl,
+	wws_templates/es/notice.es.tpl, wws_templates/fr/error.fr.tpl,
+	wws_templates/fr/notice.fr.tpl, wws_templates/it/error.it.tpl,
+	wws_templates/it/notice.it.tpl, wws_templates/us/main.us.tpl,
+	wws_templates/us/notice.us.tpl, wws_templates/cn/error.cn.tpl,
+	wws_templates/cn/notice.cn.tpl: New feature: Notices are different
+	from errors. Create new templates
 
 2001-03-22 12:09  salaun
 
@@ -3721,12 +3825,12 @@
 
 2001-03-15 11:55  salaun
 
-	* nls/cn-gb.msg: [Wang Jian] Changes
+	* nls/cn.msg: [Wang Jian] Changes
 
 2001-03-15 11:00  salaun
 
-	* nls/cn-gb.msg: [Olivier Lacroix] Bug fix: tabs instead of spaces
-	at beginning of lines
+	* nls/cn.msg: [Olivier Lacroix] Bug fix: tabs instead of spaces at
+	beginning of lines
 
 2001-03-15 10:54  salaun
 
@@ -4045,18 +4149,18 @@
 
 2001-02-21 11:36  salaun
 
-	* src/etc/templates/cn-gb/sendpasswd.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/admin_menu.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/change_email.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/d_read.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/help_admin.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/help_editfile.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/help_editlist.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/home.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/list_menu.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/loginbanner.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/review.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/title.cn-gb.tpl: [Wang Jian] Updates of
+	* src/etc/templates/cn/sendpasswd.cn.tpl,
+	wwsympa/wws_templates/cn/admin_menu.cn.tpl,
+	wwsympa/wws_templates/cn/change_email.cn.tpl,
+	wwsympa/wws_templates/cn/d_read.cn.tpl,
+	wwsympa/wws_templates/cn/help_admin.cn.tpl,
+	wwsympa/wws_templates/cn/help_editfile.cn.tpl,
+	wwsympa/wws_templates/cn/help_editlist.cn.tpl,
+	wwsympa/wws_templates/cn/home.cn.tpl,
+	wwsympa/wws_templates/cn/list_menu.cn.tpl,
+	wwsympa/wws_templates/cn/loginbanner.cn.tpl,
+	wwsympa/wws_templates/cn/review.cn.tpl,
+	wwsympa/wws_templates/cn/title.cn.tpl: [Wang Jian] Updates of
 	templates
 
 2001-02-21 10:36  salaun
@@ -4172,7 +4276,6 @@
 2001-02-12 17:40  salaun
 
 	* wwsympa/wws_templates/us/menu.us.tpl,
-	src/etc/templates/cn-gb/sendpasswd.cn-gb.tpl,
 	src/etc/templates/es/sendpasswd.es.tpl,
 	src/etc/templates/fr/sendpasswd.fr.tpl,
 	src/etc/templates/it/sendpasswd.it.tpl,
@@ -4182,47 +4285,6 @@
 	wwsympa/wws_templates/close_list_request.it.tpl,
 	wwsympa/wws_templates/close_list_request.us.tpl,
 	wwsympa/wws_templates/login.tpl,
-	wwsympa/wws_templates/cn-gb/add_request.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/admin.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/admin_menu.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/arc.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/arc_protect.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/arcsearch.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/arcsearch_form.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/change_email.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/choosepasswd.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/close_list.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/close_list_request.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/create_list.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/create_list_request.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/d_control.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/d_editfile.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/d_read.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/edit_list_request.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/editfile.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/editsubscriber.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/error.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/get_pending_lists.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/help.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/help_admin.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/help_editfile.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/help_editlist.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/home.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/info.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/install_pending_list.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/list_menu.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/lists.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/login.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/loginbanner.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/loginrequest.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/main.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/menu.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/modindex.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/pref.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/remindpasswd.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/remove_arc.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/review.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/reviewbouncing.cn-gb.tpl,
 	wwsympa/wws_templates/es/add_request.es.tpl,
 	wwsympa/wws_templates/es/admin.es.tpl,
 	wwsympa/wws_templates/es/admin_menu.es.tpl,
@@ -4372,20 +4434,48 @@
 	wwsympa/wws_templates/us/remindpasswd.us.tpl,
 	wwsympa/wws_templates/us/remove_arc.us.tpl,
 	wwsympa/wws_templates/us/review.us.tpl,
-	wwsympa/wws_templates/cn-gb/scenario_test.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/search.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/search_list.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/serveradmin.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/set_pending_list_request.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/sigrequest.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/suboptions.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/subrequest.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/title.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/view_translations.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/viewbounce.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/viewconfig.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/viewmod.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/which.cn-gb.tpl,
+	src/etc/templates/cn/sendpasswd.cn.tpl,
+	wwsympa/wws_templates/cn/add_request.cn.tpl,
+	wwsympa/wws_templates/cn/admin.cn.tpl,
+	wwsympa/wws_templates/cn/admin_menu.cn.tpl,
+	wwsympa/wws_templates/cn/arc.cn.tpl,
+	wwsympa/wws_templates/cn/arc_protect.cn.tpl,
+	wwsympa/wws_templates/cn/arcsearch.cn.tpl,
+	wwsympa/wws_templates/cn/arcsearch_form.cn.tpl,
+	wwsympa/wws_templates/cn/change_email.cn.tpl,
+	wwsympa/wws_templates/cn/choosepasswd.cn.tpl,
+	wwsympa/wws_templates/cn/close_list.cn.tpl,
+	wwsympa/wws_templates/cn/close_list_request.cn.tpl,
+	wwsympa/wws_templates/cn/create_list.cn.tpl,
+	wwsympa/wws_templates/cn/create_list_request.cn.tpl,
+	wwsympa/wws_templates/cn/d_control.cn.tpl,
+	wwsympa/wws_templates/cn/d_editfile.cn.tpl,
+	wwsympa/wws_templates/cn/d_read.cn.tpl,
+	wwsympa/wws_templates/cn/edit_list_request.cn.tpl,
+	wwsympa/wws_templates/cn/editfile.cn.tpl,
+	wwsympa/wws_templates/cn/editsubscriber.cn.tpl,
+	wwsympa/wws_templates/cn/error.cn.tpl,
+	wwsympa/wws_templates/cn/get_pending_lists.cn.tpl,
+	wwsympa/wws_templates/cn/help.cn.tpl,
+	wwsympa/wws_templates/cn/help_admin.cn.tpl,
+	wwsympa/wws_templates/cn/help_editfile.cn.tpl,
+	wwsympa/wws_templates/cn/help_editlist.cn.tpl,
+	wwsympa/wws_templates/cn/home.cn.tpl,
+	wwsympa/wws_templates/cn/info.cn-gb.tpl,
+	wwsympa/wws_templates/cn/install_pending_list.cn.tpl,
+	wwsympa/wws_templates/cn/list_menu.cn.tpl,
+	wwsympa/wws_templates/cn/lists.cn.tpl,
+	wwsympa/wws_templates/cn/login.cn.tpl,
+	wwsympa/wws_templates/cn/loginbanner.cn.tpl,
+	wwsympa/wws_templates/cn/loginrequest.cn.tpl,
+	wwsympa/wws_templates/cn/main.cn-gb.tpl,
+	wwsympa/wws_templates/cn/menu.cn.tpl,
+	wwsympa/wws_templates/cn/modindex.cn.tpl,
+	wwsympa/wws_templates/cn/pref.cn.tpl,
+	wwsympa/wws_templates/cn/remindpasswd.cn.tpl,
+	wwsympa/wws_templates/cn/remove_arc.cn.tpl,
+	wwsympa/wws_templates/cn/review.cn.tpl,
+	wwsympa/wws_templates/cn/reviewbouncing.cn.tpl,
 	wwsympa/wws_templates/es/scenario_test.es.tpl,
 	wwsympa/wws_templates/es/serveradmin.es.tpl,
 	wwsympa/wws_templates/es/set_pending_list_request.es.tpl,
@@ -4424,7 +4514,21 @@
 	wwsympa/wws_templates/us/view_translations.us.tpl,
 	wwsympa/wws_templates/us/viewbounce.us.tpl,
 	wwsympa/wws_templates/us/viewconfig.us.tpl,
-	wwsympa/wws_templates/us/viewmod.us.tpl: Added RCS Identification
+	wwsympa/wws_templates/us/viewmod.us.tpl,
+	wwsympa/wws_templates/cn/scenario_test.cn.tpl,
+	wwsympa/wws_templates/cn/search.cn-gb.tpl,
+	wwsympa/wws_templates/cn/search_list.cn-gb.tpl,
+	wwsympa/wws_templates/cn/serveradmin.cn.tpl,
+	wwsympa/wws_templates/cn/set_pending_list_request.cn.tpl,
+	wwsympa/wws_templates/cn/sigrequest.cn.tpl,
+	wwsympa/wws_templates/cn/suboptions.cn.tpl,
+	wwsympa/wws_templates/cn/subrequest.cn.tpl,
+	wwsympa/wws_templates/cn/title.cn.tpl,
+	wwsympa/wws_templates/cn/view_translations.cn.tpl,
+	wwsympa/wws_templates/cn/viewbounce.cn-gb.tpl,
+	wwsympa/wws_templates/cn/viewconfig.cn-gb.tpl,
+	wwsympa/wws_templates/cn/viewmod.cn.tpl,
+	wwsympa/wws_templates/cn/which.cn-gb.tpl: Added RCS Identification
 
 2001-02-12 17:11  salaun
 
@@ -4476,12 +4580,12 @@
 
 2001-02-08 17:15  salaun
 
-	* wwsympa/wws_templates/: it/menu.it.tpl, cn-gb/menu.cn-gb.tpl,
+	* wwsympa/wws_templates/: it/menu.it.tpl, cn/menu.cn.tpl,
 	es/menu.es.tpl: [no log message]
 
 2001-02-08 17:14  salaun
 
-	* wwsympa/wws_templates/cn-gb/menu.cn-gb.tpl: introduce access to
+	* wwsympa/wws_templates/cn/menu.cn.tpl: introduce access to
 	security info
 
 2001-02-08 17:11  salaun
@@ -4533,7 +4637,7 @@
 
 2001-02-08 11:58  salaun
 
-	* nls/cn-gb.msg: [Wang Jian] Bug fix : cn-gb did not compile
+	* nls/cn.msg: [Wang Jian] Bug fix : cn-gb did not compile
 
 2001-02-08 11:27  salaun
 
@@ -4571,12 +4675,12 @@
 
 2001-02-02 11:40  salaun
 
-	* wwsympa/wws_templates/cn-gb/change_email.cn-gb.tpl: [Wang Jian
+	* wwsympa/wws_templates/cn/change_email.cn.tpl: [Wang Jian
 	<lark@linux.net.cn>] Initial version
 
 2001-02-02 11:39  salaun
 
-	* nls/cn-gb.msg: [Wang Jian <lark@linux.net.cn>] Updated messages
+	* nls/cn.msg: [Wang Jian <lark@linux.net.cn>] Updated messages
 
 2001-01-31 17:22  salaun
 
@@ -4592,61 +4696,61 @@
 
 2001-01-31 16:22  salaun
 
-	* src/etc/templates/cn-gb/sendpasswd.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/add_request.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/admin.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/admin_menu.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/arc.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/arc_protect.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/arcsearch.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/arcsearch_form.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/choosepasswd.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/close_list.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/close_list_request.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/create_list.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/create_list_request.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/d_control.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/d_editfile.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/d_read.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/edit_list_request.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/editfile.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/editsubscriber.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/error.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/get_pending_lists.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/help.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/help_admin.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/help_editfile.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/help_editlist.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/home.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/info.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/install_pending_list.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/list_menu.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/lists.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/login.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/loginbanner.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/loginrequest.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/main.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/menu.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/modindex.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/pref.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/remindpasswd.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/remove_arc.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/review.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/reviewbouncing.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/scenario_test.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/search.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/search_list.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/serveradmin.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/set_pending_list_request.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/sigrequest.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/suboptions.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/subrequest.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/title.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/view_translations.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/viewbounce.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/viewconfig.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/viewmod.cn-gb.tpl,
-	wwsympa/wws_templates/cn-gb/which.cn-gb.tpl: [Wang Jian
+	* src/etc/templates/cn/sendpasswd.cn.tpl,
+	wwsympa/wws_templates/cn/add_request.cn.tpl,
+	wwsympa/wws_templates/cn/admin.cn.tpl,
+	wwsympa/wws_templates/cn/admin_menu.cn.tpl,
+	wwsympa/wws_templates/cn/arc.cn.tpl,
+	wwsympa/wws_templates/cn/arc_protect.cn.tpl,
+	wwsympa/wws_templates/cn/arcsearch.cn.tpl,
+	wwsympa/wws_templates/cn/arcsearch_form.cn.tpl,
+	wwsympa/wws_templates/cn/choosepasswd.cn.tpl,
+	wwsympa/wws_templates/cn/close_list.cn.tpl,
+	wwsympa/wws_templates/cn/close_list_request.cn.tpl,
+	wwsympa/wws_templates/cn/create_list.cn.tpl,
+	wwsympa/wws_templates/cn/create_list_request.cn.tpl,
+	wwsympa/wws_templates/cn/d_control.cn.tpl,
+	wwsympa/wws_templates/cn/d_editfile.cn.tpl,
+	wwsympa/wws_templates/cn/d_read.cn.tpl,
+	wwsympa/wws_templates/cn/edit_list_request.cn.tpl,
+	wwsympa/wws_templates/cn/editfile.cn.tpl,
+	wwsympa/wws_templates/cn/editsubscriber.cn.tpl,
+	wwsympa/wws_templates/cn/error.cn.tpl,
+	wwsympa/wws_templates/cn/get_pending_lists.cn.tpl,
+	wwsympa/wws_templates/cn/help.cn.tpl,
+	wwsympa/wws_templates/cn/help_admin.cn.tpl,
+	wwsympa/wws_templates/cn/help_editfile.cn.tpl,
+	wwsympa/wws_templates/cn/help_editlist.cn.tpl,
+	wwsympa/wws_templates/cn/home.cn.tpl,
+	wwsympa/wws_templates/cn/info.cn-gb.tpl,
+	wwsympa/wws_templates/cn/install_pending_list.cn.tpl,
+	wwsympa/wws_templates/cn/list_menu.cn.tpl,
+	wwsympa/wws_templates/cn/lists.cn.tpl,
+	wwsympa/wws_templates/cn/login.cn.tpl,
+	wwsympa/wws_templates/cn/loginbanner.cn.tpl,
+	wwsympa/wws_templates/cn/loginrequest.cn.tpl,
+	wwsympa/wws_templates/cn/main.cn-gb.tpl,
+	wwsympa/wws_templates/cn/menu.cn.tpl,
+	wwsympa/wws_templates/cn/modindex.cn.tpl,
+	wwsympa/wws_templates/cn/pref.cn.tpl,
+	wwsympa/wws_templates/cn/remindpasswd.cn.tpl,
+	wwsympa/wws_templates/cn/remove_arc.cn.tpl,
+	wwsympa/wws_templates/cn/review.cn.tpl,
+	wwsympa/wws_templates/cn/reviewbouncing.cn.tpl,
+	wwsympa/wws_templates/cn/scenario_test.cn.tpl,
+	wwsympa/wws_templates/cn/search.cn-gb.tpl,
+	wwsympa/wws_templates/cn/search_list.cn-gb.tpl,
+	wwsympa/wws_templates/cn/serveradmin.cn.tpl,
+	wwsympa/wws_templates/cn/set_pending_list_request.cn.tpl,
+	wwsympa/wws_templates/cn/sigrequest.cn.tpl,
+	wwsympa/wws_templates/cn/suboptions.cn.tpl,
+	wwsympa/wws_templates/cn/subrequest.cn.tpl,
+	wwsympa/wws_templates/cn/title.cn.tpl,
+	wwsympa/wws_templates/cn/view_translations.cn.tpl,
+	wwsympa/wws_templates/cn/viewbounce.cn-gb.tpl,
+	wwsympa/wws_templates/cn/viewconfig.cn-gb.tpl,
+	wwsympa/wws_templates/cn/viewmod.cn.tpl,
+	wwsympa/wws_templates/cn/which.cn-gb.tpl: [Wang Jian
 	<lark@linux.net.cn>] Web templates translated to  zh_CN.GB2312
 	encoding, Simplified Chinese
 
@@ -5274,13 +5378,13 @@
 	doc/latex2htmlicons/up_motif_gr.png,
 	doc/latex2htmlicons/whiteball.png,
 	doc/latex2htmlicons/yellowball.png, nls/Makefile, nls/README,
-	nls/check.pl, nls/cn-big5.msg, nls/cn-gb.msg, nls/de.msg,
-	nls/es.msg, nls/fi.msg, nls/fr.msg, nls/it.msg, nls/us.msg,
-	src/.core.swp, src/Archive.pm, src/Commands.pm, src/Conf.pm,
-	src/Language.pm, src/List.pm, src/Log.pm, src/Makefile,
-	src/Version.pm, src/bouncequeue.c, src/mail.pm, src/msg.pl,
-	src/parser.pl, src/queue.c, src/smtp.pm, src/sympa.pl,
-	src/tools.pl, src/etc/ca-bundle.crt, src/etc/create_list.conf,
+	nls/check.pl, nls/cn.msg, nls/de.msg, nls/es.msg, nls/fi.msg,
+	nls/fr.msg, nls/it.msg, nls/tw.msg, nls/us.msg, src/.core.swp,
+	src/Archive.pm, src/Commands.pm, src/Conf.pm, src/Language.pm,
+	src/List.pm, src/Log.pm, src/Makefile, src/Version.pm,
+	src/bouncequeue.c, src/mail.pm, src/msg.pl, src/parser.pl,
+	src/queue.c, src/smtp.pm, src/sympa.pl, src/tools.pl,
+	src/etc/ca-bundle.crt, src/etc/create_list.conf,
 	src/etc/edit_list.conf, src/etc/mhonarc-ressources,
 	src/etc/create_list_templates/discussion_list/comment,
 	src/etc/create_list_templates/discussion_list/config.tpl,
@@ -5621,13 +5725,13 @@
 	doc/latex2htmlicons/up_motif_gr.png,
 	doc/latex2htmlicons/whiteball.png,
 	doc/latex2htmlicons/yellowball.png, nls/Makefile, nls/README,
-	nls/check.pl, nls/cn-big5.msg, nls/cn-gb.msg, nls/de.msg,
-	nls/es.msg, nls/fi.msg, nls/fr.msg, nls/it.msg, nls/us.msg,
-	src/.core.swp, src/Archive.pm, src/Commands.pm, src/Conf.pm,
-	src/Language.pm, src/List.pm, src/Log.pm, src/Makefile,
-	src/Version.pm, src/bouncequeue.c, src/mail.pm, src/msg.pl,
-	src/parser.pl, src/queue.c, src/smtp.pm, src/sympa.pl,
-	src/tools.pl, src/etc/ca-bundle.crt, src/etc/create_list.conf,
+	nls/check.pl, nls/cn.msg, nls/de.msg, nls/es.msg, nls/fi.msg,
+	nls/fr.msg, nls/it.msg, nls/tw.msg, nls/us.msg, src/.core.swp,
+	src/Archive.pm, src/Commands.pm, src/Conf.pm, src/Language.pm,
+	src/List.pm, src/Log.pm, src/Makefile, src/Version.pm,
+	src/bouncequeue.c, src/mail.pm, src/msg.pl, src/parser.pl,
+	src/queue.c, src/smtp.pm, src/sympa.pl, src/tools.pl,
+	src/etc/ca-bundle.crt, src/etc/create_list.conf,
 	src/etc/edit_list.conf, src/etc/mhonarc-ressources,
 	src/etc/create_list_templates/discussion_list/comment,
 	src/etc/create_list_templates/discussion_list/config.tpl,
