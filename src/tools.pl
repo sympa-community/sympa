@@ -1617,7 +1617,7 @@ sub remove_dir {
 	    do_log('info',"$current_dir not removed (not enough / in directory name)");
 	    next;
 	}
-	finddepth(\&del,$current_dir);
+	finddepth({wanted => \&del, no_chdir => 1},$current_dir);
     }
     sub del {
 	my $name = $File::Find::name;
