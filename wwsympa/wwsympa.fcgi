@@ -179,6 +179,7 @@ my %comm = ('home' => 'do_home',
 	 'create_list_request' => 'do_create_list_request',
 	 'create_list' => 'do_create_list',
 	 'get_pending_lists' => 'do_get_pending_lists', 
+	 'get_closed_lists' => 'do_get_closed_lists', 
 	 'set_pending_list_request' => 'do_set_pending_list_request', 
 	 'install_pending_list' => 'do_install_pending_list', 
 	 'submit_list' => 'do_submit_list',
@@ -191,6 +192,7 @@ my %comm = ('home' => 'do_home',
 	 'show_cert' => 'show_cert',
 	 'close_list_request' => 'do_close_list_request',
 	 'close_list' => 'do_close_list',
+	 'purge_list' => 'do_purge_list',	    
 	 'restore_list' => 'do_restore_list',
 	 'd_read' => 'do_d_read',
 	 'd_create_dir' => 'do_d_create_dir',
@@ -263,6 +265,7 @@ my %action_args = ('default' => ['list'],
 		'set' => ['list','email','reception','gecos'],
 		'serveradmin' => [],
 		'get_pending_lists' => [],
+		'get_closed_lists' => [],
 		'search_list' => ['filter'],
 		'shared' => ['list','@path'],
 		'd_read' => ['list','@path'],
@@ -3932,6 +3935,34 @@ sub do_get_pending_lists {
     return 1;
 }
 
+# get closed lists
+sub do_get_closed_lists {
+
+    &wwslog('debug', 'get_closed_lists');
+
+    unless ($param->{'user'}{'email'}) {
+	&error_message('no_user');
+	&wwslog('info','get_pending_lists :  no user');
+	$param->{'previous_action'} = 'get_pending_lists';
+	return 'loginrequest';
+    }
+    unless ( $param->{'is_listmaster'}) {
+	&error_message('may_not');
+	&do_log('info', 'Incorrect_privilege to get pending');
+	return undef;
+    } 
+
+    foreach my $l ( &List::get_lists('*') ) {
+	my $list = new List ($l);
+	if ($list->{'admin'}{'status'} eq 'closed') {
+	    $param->{'closed'}{$l}{'subject'} = $list->{'admin'}{'subject'};
+	    $param->{'closed'}{$l}{'by'} = $list->{'admin'}{'creation'}{'email'};
+	}
+    }
+
+    return 1;
+}
+
 ## show a list parameters
 sub do_set_pending_list_request {
     &wwslog('debug', 'set_pending_list(%s)',$in{'list'});
@@ -5340,6 +5371,34 @@ sub do_close_list_request {
     }      
 
     return 1;
+}
+
+sub do_purge_list {
+    &wwslog('debug', 'do_close_list_request()');
+    
+    unless ($param->{'is_listmaster'}) {
+	&error_message('may_not');
+	&wwslog('info','do_close_list: not listmaster');
+	return undef;
+    }  
+    
+    unless ($in{'selected_lists'}) {
+	&error_message('missing_arg', {'argument' => 'selected_lists'});
+	&wwslog('info','do_purge_list: no list');
+	return undef;
+    }
+
+    my @lists = split /\0/, $in{'selected_lists'};
+
+    foreach my $l (@lists) {
+	my $list = new List ($l);
+
+	`/bin/rm -rf $list->{'dir'}`;
+    }    
+
+    &message('performed');
+
+    return 'serveradmin';
 }
 
 sub do_close_list {
