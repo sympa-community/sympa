@@ -164,7 +164,7 @@ main_SRC	=	AUTHORS COPYING ChangeLog INSTALL KNOWNBUGS NEWS README
 LOG_SOCKET_TYPE	=	unix
 #endif
 
-all:	checkcpan sources languages checkperl checkmhonarc man
+all:	checkcpan sources checkperl checkmhonarc man
 
 rpm: build_rh_rpm build_mdk_rpm
 
@@ -222,13 +222,6 @@ man: doc/man8/Makefile
 	@echo "Making man"
 	@(cd doc/man8 && echo "making in doc/man8/..." && \
 	$(MAKE) SYMPA_VERSION='$(SYMPA_VERSION)');
-
-languages:
-	@echo "Making nls"
-	(cd nls && echo "making in nls..." && \
-	$(MAKE) SH='${SH}' PERL='${PERL}' ETCBINDIR='${ETCBINDIR}' \
-	DIR='${DIR}' NLSDIR='${NLSDIR}' BINDIR='${BINDIR}' SBINDIR='${SBINDIR}' LIBDIR='${LIBDIR}' \
-	USER='${USER}' GROUP='${GROUP}');
 
 checkcpan: 
 	@echo "Checking needed CPAN modules ..."

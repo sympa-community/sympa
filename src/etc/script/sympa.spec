@@ -86,7 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 --with-scriptdir=--SCRIPTDIR-- \
 --with-sampledir=--SAMPLEDIR-- \
 --with-spooldir=--SPOOLDIR-- \
-;make sources languages
+;make sources 
 
 %install
 rm -rf $RPM_BUILD_ROOT
