@@ -1328,8 +1328,10 @@ sub do_lists {
 	    $list_info->{'is_subscriber'} = 1;
 	}
 	
-	    
-	if ($list->{'admin'}{'topics'}) {
+	## no topic ; List all lists
+	if (! $in{'topic'}) {
+	    $param->{'which'}{$list->{'name'}} = $list_info;
+	}elsif ($list->{'admin'}{'topics'}) {
 	    foreach my $topic (@{$list->{'admin'}{'topics'}}) {
 		my @tree = split '/', $topic;
 
