@@ -747,7 +747,7 @@ while ($query = &new_loop()) {
 	    $param->{'list_conf'} = $list->{'admin'};
 	}
 
-	&parser::parse_tpl($param,$main , STDOUT);
+	&parser::parse_tpl($param,$main , \*STDOUT);
     }    
 
     # exit if wwsympa.fcgi itself has changed
@@ -4492,7 +4492,7 @@ sub do_create_list {
     $parameters->{'topics'} = $in{'topics'};
 
     open CONFIG, ">$list_dir/config";
-    &parser::parse_tpl($parameters, $template_file, CONFIG);
+    &parser::parse_tpl($parameters, $template_file, \*CONFIG);
     close CONFIG;
     
     ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
