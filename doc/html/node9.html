@@ -29,31 +29,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html895"
+<A NAME="tex2html890"
   HREF="node10.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html889"
+<A NAME="tex2html884"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html883"
+<A NAME="tex2html878"
   HREF="node8.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html891"
+<A NAME="tex2html886"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html893"
+<A NAME="tex2html888"
   HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html896"
+<B> Next:</B> <A NAME="tex2html891"
   HREF="node10.html">9. Authentication</A>
-<B> Up:</B> <A NAME="tex2html890"
+<B> Up:</B> <A NAME="tex2html885"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html884"
+<B> Previous:</B> <A NAME="tex2html879"
   HREF="node8.html">7. WWSympa, Sympa's web interface</A>
- &nbsp <B>  <A NAME="tex2html892"
+ &nbsp <B>  <A NAME="tex2html887"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html894"
+ &nbsp <B>  <A NAME="tex2html889"
   HREF="node23.html">Index</A></B> 
 <BR>
 <BR>
@@ -62,18 +62,18 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html897"
+<LI><A NAME="tex2html892"
   HREF="node9.html#SECTION00910000000000000000">8.1 Introduction</A>
-<LI><A NAME="tex2html898"
+<LI><A NAME="tex2html893"
   HREF="node9.html#SECTION00920000000000000000">8.2 Web server setup</A>
-<LI><A NAME="tex2html899"
+<LI><A NAME="tex2html894"
   HREF="node9.html#SECTION00930000000000000000">8.3 Sympa setup</A>
-<LI><A NAME="tex2html900"
+<LI><A NAME="tex2html895"
   HREF="node9.html#SECTION00940000000000000000">8.4 The WSDL service description</A>
-<LI><A NAME="tex2html901"
+<LI><A NAME="tex2html896"
   HREF="node9.html#SECTION00950000000000000000">8.5 Client-side programming</A>
 <UL>
-<LI><A NAME="tex2html902"
+<LI><A NAME="tex2html897"
   HREF="node9.html#SECTION00951000000000000000">8.5.1 Writting a Java client with Axis</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
@@ -121,7 +121,7 @@ for example).
 You <B>NEED TO</B> install FastCGI for the SOAP server to work properly because it will run as a daemon.
 
 <P>
-Here is a sample piece of your Apache <A NAME="6088"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
+Here is a sample piece of your Apache <A NAME="6022"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
 	FastCgiServer /sympa_soap_server.fcgi -processes 1
 	ScriptAlias /sympasoap /sympa_soap_server.fcgi
 
@@ -137,8 +137,8 @@ Here is a sample piece of your Apache <A NAME="6088"></A><TT>httpd.conf</TT> wit
 </H1>
 
 <P>
-The only parameters that you need to set in <A NAME="6091"></A><TT>sympa.conf</TT>/<A NAME="6094"></A><TT>robot.conf</TT> files is
-the <A NAME="6097"></A><TT>soap_url</TT> parameter that defines the URL of the SOAP service corresponding
+The only parameters that you need to set in <A NAME="6025"></A><TT>sympa.conf</TT>/<A NAME="6028"></A><TT>robot.conf</TT> files is
+the <A NAME="6031"></A><TT>soap_url</TT> parameter that defines the URL of the SOAP service corresponding
 to the ScriptAlias you've previously setup in Apache config. 
 
 <P>
@@ -160,17 +160,17 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 &lt;definitions name="Sympa" 
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
 	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
-	targetNamespace="[conf-&gt;wwsympa_url]/wsdl" 
-	xmlns:tns="[conf-&gt;wwsympa_url]/wsdl"
+	targetNamespace="[% conf.wwsympa_url %]/wsdl" 
+	xmlns:tns="[% conf.wwsympa_url %]/wsdl"
 	xmlns="http://schemas.xmlsoap.org/wsdl/" 
-	xmlns:xsdl="[conf-&gt;soap_url]/wsdl"&gt;
+	xmlns:xsdl="[% conf.soap_url %]/wsdl"&gt;
 
 
 &lt;!-- types part --&gt;	
 
 
 &lt;types&gt;
-&lt;schema targetNamespace="[conf-&gt;wwsympa_url]/wsdl" 
+&lt;schema targetNamespace="[% conf.wwsympa_url %]/wsdl" 
 	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
 	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
 	xmlns="http://www.w3.org/2001/XMLSchema"&gt;
@@ -555,7 +555,7 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 
 &lt;service name="SympaSOAP"&gt;
 	&lt;port name="SympaPort" binding="tns:SOAP"&gt;
-		&lt;soap:address location="[conf-&gt;soap_url]"/&gt;
+		&lt;soap:address location="[% conf.soap_url %]"/&gt;
 	&lt;/port&gt;
 &lt;/service&gt;
 
@@ -675,36 +675,36 @@ String[] _abonnements = tmp.which();
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html895"
+<A NAME="tex2html890"
   HREF="node10.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html889"
+<A NAME="tex2html884"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html883"
+<A NAME="tex2html878"
   HREF="node8.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html891"
+<A NAME="tex2html886"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html893"
+<A NAME="tex2html888"
   HREF="node23.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html896"
+<B> Next:</B> <A NAME="tex2html891"
   HREF="node10.html">9. Authentication</A>
-<B> Up:</B> <A NAME="tex2html890"
+<B> Up:</B> <A NAME="tex2html885"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html884"
+<B> Previous:</B> <A NAME="tex2html879"
   HREF="node8.html">7. WWSympa, Sympa's web interface</A>
- &nbsp <B>  <A NAME="tex2html892"
+ &nbsp <B>  <A NAME="tex2html887"
   HREF="node1.html">Contents</A></B> 
- &nbsp <B>  <A NAME="tex2html894"
+ &nbsp <B>  <A NAME="tex2html889"
   HREF="node23.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2004-07-08
+2004-08-13
 </ADDRESS>
 </BODY>
 </HTML>

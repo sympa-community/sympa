@@ -70,7 +70,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {4.2b.1}
+    \newcommand {\version} {4.2b.3}
 
     \newcommand {\samplelist} {mylist}
 
@@ -124,13 +124,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 4.2b.1\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 4.2b.3\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {07 July 2004}
+    \date {13 August 2004}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -228,12 +228,11 @@ in a single software package, including:
 
         \end {itemize}
 
-    \item \textbf {Multilingual} messages. The current version of
-        \Sympa allows the administrator to choose the language
-        catalog at run time. At the present time the \Sympa robot is available in
-        Chinese, Czech, English, Finnish, French, German, Hungarian, Italian, Polish, 
-	Portuguese, Spanish, Romanian. The web interface is available in English, Spanish,
-	French, Chinese, Czech, Hungarian, Italian.
+ \item \textbf {Multilingual} user interface. The full user/admin interface (mail and web)
+      is internationalized. Translations are gathered in a standard PO file.
+
+   \item \textbf {Template based} user interface. Every web page and service message can
+    be customized via \textbf {TT2} template format.
 
     \item \textbf {MIME support}. \Sympa naturally respects
         \textindex {MIME} in the distribution process, and in addition
@@ -378,6 +377,10 @@ Other date :
    \item Jan 2001 Support for S/MIME (signing and encryption), list setup through the web interface, Shared document repository for each list. Full rewrite of HTML look and feel
    \item Jun 2001 Auto-install of aliases at list creation time, antivirus scanner plugging
    \item Jan 2002 Virtual robot, \textindex {LDAP authentication}
+   \item Aug 2003 Automatic bounces management
+   \item Sep 2003 CAS-base and Shibboleth-based authentication
+   \item Dec 2003 Sympa SOAP server
+   \item Aug 2004 Changed for TT2 template format and PO catalogue format
 \end {itemize} 
 	  
 
@@ -556,15 +559,15 @@ a virtual robot or for the whole site.
 	\item \dir {/home/sympa/etc/global\_task\_models/}\\
 	Contains global task models of yours (see \ref {tasks}, page~\pageref {tasks}).		
 	
-	\item \dir {/home/sympa/etc/wws\_templates/}\\
+	\item \dir {/home/sympa/etc/web\_tt2/} (used to be \dir {/home/sympa/etc/wws\_templates/})\\
 	The web interface (\WWSympa) is composed of template HTML
 	files parsed by the CGI program. Templates can also 
-        be defined for a particular list in \dir {/home/sympa/expl/\samplelist/wws\_templates/}
-        or in \dir {/home/sympa/etc/\samplerobot/wws\_templates/}
+        be defined for a particular list in \dir {/home/sympa/expl/\samplelist/web\_tt2/}
+        or in \dir {/home/sympa/etc/\samplerobot/web\_tt2/}
 
-	\item \dir {/home/sympa/etc/templates/}\\
+	\item \dir {/home/sympa/etc/mail\_tt2/} (used to be \dir {/home/sympa/etc/templates/})\\
 	Some of the mail robot's replies are defined by templates
-	(\file{welcome.tpl} for SUBSCRIBE). You can overload
+	(\file{welcome.tt2} for SUBSCRIBE). You can overload
 	these template files in the individual list directories or
         for each virtual robot, but these are the defaults.
 
@@ -590,8 +593,8 @@ a virtual robot or for the whole site.
 	The directory where Sympa stores all user's certificates
 
 	\item \dir {/home/sympa/locale}\\
-	Internationalization directory. It contains message catalogues in the GNU .po format. \Sympa has currently been translated
-	into 14 different languages.
+	Internationalization directory. It contains message catalogues in the GNU .po format. 
+%\Sympa has currently been translatedinto 14 different languages.
 
 	\item \dir {/home/sympa/spool}\\
 	\Sympa uses 7 different spools (see \ref{spools}, page~\pageref{spools}).
@@ -871,6 +874,8 @@ of modules might not be up to date :
    \item \perlmodule {MIME-Base64}
    \item \perlmodule {CGI}
    \item \perlmodule {File-Spec}
+   \item \perlmodule {libintl-perl}
+   \item \perlmodule {Template-Toolkit}
 \end {itemize}
 
 Since release 2, \Sympa requires an RDBMS to work properly. It stores 
@@ -1199,7 +1204,7 @@ Lowercases e-mail addresses in database.
    
 \item \option {--make\_alias\_file}
   
-Create an aliases file in /tmp/ with all list aliases (only list which status is 'open'). It uses the list\_aliases.tpl
+Create an aliases file in /tmp/ with all list aliases (only list which status is 'open'). It uses the list\_aliases.tt2
 template.
 
 \item \option {--version} | \option {-v}
@@ -1903,18 +1908,19 @@ see a  nice mailto adresses where others have nothing.
 
         The location of multilingual catalog files. Must correspond to	\tildefile {src/locale/Makefile}.
 
-\subsection {\cfkeyword {supported\_lang}}   
+\subsection {\cfkeyword {supported\_lang}}
 
-        This parameter lists all supported languages for the user interface. The default value will include
+\example {supported\_lang  fr,en\_US,de,es}
+
+        This parameter lists all supported languages (comma separated) for the user interface. The default value will include
 	all message catalogues but it can be narrowed by the listmaster.
 
 \subsection {\cfkeyword {lang}}   
 
-	\default {us}
+	\default {en\_US}
 
-        This is the default language for \Sympa. The message
-	catalog (.msg) located in the corresponding \cfkeyword {locale} directory
-	will be used.
+        This is the default language for \Sympa. The message catalog (.po, compiled as a .mo file) located 
+	in the corresponding \cfkeyword {locale} directory will be used.
 
 \section {Bounce related}
 
@@ -3169,17 +3175,17 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 <definitions name="Sympa" 
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
 	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
-	targetNamespace="[conf->wwsympa_url]/wsdl" 
-	xmlns:tns="[conf->wwsympa_url]/wsdl"
+	targetNamespace="[% conf.wwsympa_url %]/wsdl" 
+	xmlns:tns="[% conf.wwsympa_url %]/wsdl"
 	xmlns="http://schemas.xmlsoap.org/wsdl/" 
-	xmlns:xsdl="[conf->soap_url]/wsdl">
+	xmlns:xsdl="[% conf.soap_url %]/wsdl">
 
 
 <!-- types part -->	
 
 
 <types>
-<schema targetNamespace="[conf->wwsympa_url]/wsdl" 
+<schema targetNamespace="[% conf.wwsympa_url %]/wsdl" 
 	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
 	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
 	xmlns="http://www.w3.org/2001/XMLSchema">
@@ -3564,7 +3570,7 @@ Here is what the WSDL file looks like before it is parsed by WWSympa :
 
 <service name="SympaSOAP">
 	<port name="SympaPort" binding="tns:SOAP">
-		<soap:address location="[conf->soap_url]"/>
+		<soap:address location="[% conf.soap_url %]"/>
 	</port>
 </service>
 
@@ -4320,7 +4326,7 @@ Rules are defined as follows :
 	     | editor
 	     | editorkey
 
-<tpl_name> ::= corresponding template (<tpl_name>.tpl) is send to the sender
+<tpl_name> ::= corresponding template (<tpl_name>.tt2) is send to the sender
 
 <user_key_word> ::= email | gecos | lang | password | cookie_delay_user
 	            | <additional_user_fields>
@@ -4472,7 +4478,7 @@ Scenarios can also contain includes :
 \begin{verbatim}
     subscribe
         include commonreject
-        match(, /cru\.fr$/)          smtp,smime -> do_it
+        match(, /cru\.fr\$/)          smtp,smime -> do_it
 	true()                               smtp,smime -> owner
 \end{verbatim}
 \end {quote}
@@ -4663,174 +4669,28 @@ with the same values as the default robot (as defined in \file {sympa.conf} and 
 \label{tpl-format}
 \index{templates format}
 
-Template files within \Sympa and \WWSympa are text files containing 
-programming elements (variables, conditions, loops, file inclusions)
-that will be parsed in order to adapt to the runtime context. These 
-templates are an extension of programs and therefore give access to 
-a limited list of variables (those defined in the '\textit {hash}' 
-parameter given to the parser). 
+Template files within \Sympa used to be in a proprietary format that has been
+replaced with the \htmladdnormallinkfoot {TT2} {http://www.tt2.org} template format.
 
-Review the Site template files (\ref {site-tpl}, page~\pageref {site-tpl}) 
-and List template files (\ref {list-tpl}, page~\pageref {list-tpl}).
+You will find detailed documentation about the TT2 syntax on the web site : \textbf {http://www.tt2.org}
 
-The following describes the syntactical elements of templates.
-
-\subsection {Variables}
-
-Variables are enclosed between brackets '\textit {[]}'. The variable name
-is composed of alphanumerics (0-1a-zA-Z) or underscores (\_).
-The syntax for accessing an element in a '\textit{hash}' is [hash-\texttt{>}elt].
-
-\textit {Examples:} 
-\begin {quote}
-\begin{verbatim}
-[url]
-[is_owner]
-[list->name]
-[user->lang]
-\end{verbatim}
-\end {quote}
-
-For each template you wish to customize, check the available variables in the
-documentation.
-
-\subsection {Conditions}
-
-Conditions include variable comparisons (= and \texttt{<}\texttt{>}), or existence.
-Syntactical elements for conditions are [IF xxx], [ELSE], [ELSIF xxx] and
-[ENDIF].
-
-\textit {Examples:} 
-\begin {quote}
-\begin{verbatim}
-[IF  user->lang=fr]
-Bienvenue dans la liste [list->name]
-[ELSIF user->lang=es]
-Bienvenida en la lista [list->name]
-[ELSE]
-Welcome in list [list->name]
-[ENDIF]
-
-[IF is_owner]
-The following commands are available only 
-for lists owners or moderators:
-....
-[ENDIF]
-\end{verbatim}
-\end {quote}
-
-\subsection {Loops}
-
-Loops make it possible to traverse a list of elements (internally represented by a 
-'\textit{hash}' or an '\textit{array}'). 
-
-\texttt{Example :}
-\begin {quote}
-\begin{verbatim}
-A review of public lists
-
-[FOREACH l IN lists]
-   [l->NAME] 
-   [l->subject]
-[END]
-\end{verbatim}
-\end {quote}
-
-\texttt {[elt-\texttt{>}NAME]} is a special element of the current entry providing 
-the key in the '\textit{hash}' (in this example the name of the list). When traversing
-an '\textit{array}', \texttt{[elt-\texttt{>}INDEX]} is the index of the current
-entry.
-
-\subsection {File inclusions}
-
-You can include another file within a template . The specified file can be 
-included as is, or itself parsed (there is no loop detection). The file 
-path is either specified in the directive or accessed in a variable.
-
-Inclusion of a text file :
-
-\begin {quote}
-\begin{verbatim}
-[INCLUDE 'archives/last_message']
-[INCLUDE file_path]
-\end{verbatim}
-\end {quote}
-
-The first example includes a file whose relative path is \file {archives/last\_message}.
-The second example includes a file whose path is in file\_path variable.
-
-Inclusion and parsing of a template file :
-
-\begin {quote}
-\begin{verbatim}
-[PARSE 'welcome.tpl']
-[PARSE file_path]
-\end{verbatim}
-\end {quote}
-
-The first example includes the template file \file {welcome.tpl}.
-The second example includes a template file whose path is in file\_path variable.
-
-\subsection {Stop parsing}
-
-You may need to exclude certain lines in a template from the parsing
-process. You can perform this by stopping and restarting the
-parsing.
-
-Escaping sensitive JavaScript functions :
-
-\begin {quote}
-\begin{verbatim}
-<HEAD>
-<SCRIPT LANGUAGE="JavaScript">
-<!-- for other browsers
-  function toggle_selection(myfield) {
-    for (i = 0; i < myfield.length; i++) {
-    [escaped_stop]
-       if (myfield[i].checked) {
-            myfield[i].checked = false;
-       }else {
-	    myfield[i].checked = true;
-       }
-    [escaped_start]
-    }
-  }
-// end browsers -->
-</SCRIPT>
-</HEAD>
-\end{verbatim}
-\end {quote}
-
-
-\subsection {Parsing options}
-
-You can change the parser's behvior by setting unsetting options. Available options are :
+Here are some aspects regarding templates that are specific to \Sympa : 
 \begin {itemize}
 
-  \item \textbf {ignore\_undef} : undefined variables won't be parsed. Default behavior is
-    to process undef variables like empty variables.
+  \item References to PO catalogue are noted with the \textbf {[\% loc \%]} tag that may include 
+  parameters. \example {[\%|loc(list.name,list.host)\%]Welcome to list \%1\@\%2[\%END\%]}.
 
+  \item Few exceptions apart, templates cannot insert or parse a file given its full or relative 
+   path, for security reason. Only the file name should be provided ; the TT2 parser will then
+   use the INCLUDE\_PATH provided by \Sympa to find the relevant file to insert/parse.
 
-\begin {quote}
-\begin{verbatim}
-[SETOPTION ignore_undef]
-Here is an unparsed undef variable : [unknown_var]
-[UNSETOPTION ignore_undef]
-\end{verbatim}
-\end {quote}
+  \item The \textbf {qencode} filter should be used if a template includes SMTP header fields
+  that should be Q-encoded. \example {[\% FILTER qencode \%]Message à modérer[\%END\%]}
 
-
-  \item \textbf {escape\_html} : escape some HTML tag characters while including files
+  \item You can write different versions of a template file in different language, each of them 
+  being located in a subdirectory of the \textbf {tt2} directory. \example {/web\_tt2/fr\_FR/helpfile.tt2}
 
 \end {itemize}
-
-\begin {quote}
-\begin{verbatim}
-[SETOPTION escape_html]
-[INCLUDE '/var/www/html/sample.html]
-[UNSETOPTION escape_html]
-\end{verbatim}
-\end {quote}
 
 \section {Site template files}
 \label{site-tpl}
@@ -4838,7 +4698,7 @@ Here is an unparsed undef variable : [unknown_var]
 
 These files are used by Sympa as service messages for the \mailcmd {HELP}, 
 \mailcmd {LISTS} and \mailcmd {REMIND *} commands. These files are interpreted 
-(parsed) by \Sympa and respect the template format ; every file has a .tpl extension. 
+(parsed) by \Sympa and respect the TT2 template format ; every file has a \textbf {.tt2} extension. 
 See \ref {tpl-format}, 
 page~\pageref {tpl-format}. 
 
@@ -4846,12 +4706,14 @@ Sympa looks for these files in the following order (where \texttt{<}list\texttt{
 listname if defined, \texttt{<}action\texttt{>} is the name of the command, and \texttt{<}lang\texttt{>} is
 the preferred language of the user) :
 \begin {enumerate}
-	\item \dir {/home/sympa/expl/\texttt{<}list\texttt{>}/\texttt{<}action\texttt{>}.\texttt{<}lang\texttt{>}.tpl}. 
-	\item \dir {/home/sympa/expl/\texttt{<}list\texttt{>}/\texttt{<}action\texttt{>}.tpl}. 
-	\item \dir {/home/sympa/etc/templates/\texttt{<}action\texttt{>}.\texttt{<}lang\texttt{>}.tpl}. 
-	\item \dir {/home/sympa/etc/templates/\texttt{<}action\texttt{>}.tpl}. 
-	\item \dir {/home/sympa/bin/etc/templates/\texttt{<}action\texttt{>}.\texttt{<}lang\texttt{>}.tpl}.
-	\item \dir {/home/sympa/bin/etc/templates/\texttt{<}action\texttt{>}.tpl}.
+	\item \dir {/home/sympa/expl/\texttt{<}list\texttt{>}/mail\_tt2/\texttt{<}lang\texttt{>}/\texttt{<}action\texttt{>}.tt2}. 
+	\item \dir {/home/sympa/expl/\texttt{<}list\texttt{>}/mail\_tt2/\texttt{<}action\texttt{>}.tt2}. 
+	\item \dir {/home/sympa/etc/\samplerobot/mail\_tt2/\texttt{<}lang\texttt{>}/\texttt{<}action\texttt{>}.tt2}. 
+	\item \dir {/home/sympa/etc/\samplerobot/mail\_tt2/\texttt{<}action\texttt{>}.tt2}. 
+	\item \dir {/home/sympa/etc/mail\_tt2/\texttt{<}lang\texttt{>}/\texttt{<}action\texttt{>}.tt2}. 
+	\item \dir {/home/sympa/etc/mail\_tt2/\texttt{<}action\texttt{>}.tt2}. 
+	\item \dir {/home/sympa/bin/etc/mail\_tt2/\texttt{<}lang\texttt{>}/\texttt{<}action\texttt{>}.tt2}.
+	\item \dir {/home/sympa/bin/etc/mail\_tt2/\texttt{<}action\texttt{>}.tt2}.
 \end {enumerate}
 
 If the file starts with a From: line, it is considered as
@@ -4861,45 +4723,45 @@ headers. Otherwise the file is treated as a text/plain message body.
 The following variables may be used in these template files :
 
 \begin {itemize}
-	\item[-] [conf-\texttt{>}email] : sympa e-mail address local part
+	\item[-] [\% conf.email \%] : sympa e-mail address local part
 
-	\item[-] [conf-\texttt{>}domain] : sympa robot domain name
+	\item[-] [\% conf.domain \%] : sympa robot domain name
 
-	\item[-] [conf-\texttt{>}sympa] : sympa's complete e-mail address
+	\item[-] [\% conf.sympa \%] : sympa's complete e-mail address
 
-	\item[-] [conf-\texttt{>}wwsympa\_url] : \WWSympa root URL
+	\item[-] [\% conf.wwsympa\_url \%] : \WWSympa root URL
 
-	\item[-] [conf-\texttt{>}listmaster] : listmaster e-mail addresses
+	\item[-] [\% conf.listmaster \%] : listmaster e-mail addresses
 
-	\item[-] [user-\texttt{>}email] : user e-mail address
+	\item[-] [\% user.email \%] : user e-mail address
 
-	\item[-] [user-\texttt{>}gecos] : user gecos field (usually his/her name)
+	\item[-] [\% user.gecos \%] : user gecos field (usually his/her name)
 
-	\item[-] [user-\texttt{>}password] : user password
+	\item[-] [\% user.password \%] : user password
 
-	\item[-] [user-\texttt{>}lang] : user language	
+	\item[-] [\% user.lang \%] : user language	
 \end {itemize}
 
-\subsection {helpfile.tpl} 
+\subsection {helpfile.tt2} 
 
 
 	This file is sent in response to a \mailcmd {HELP} command. 
 	You may use additional variables
 \begin {itemize}
 
-	\item[-] [is\_owner] : TRUE if the user is list owner
+	\item[-] [\% is\_owner \%] : TRUE if the user is list owner
 
-	\item[-] [is\_editor] : TRUE if the user is list editor
+	\item[-] [\% is\_editor \%] : TRUE if the user is list editor
 
 \end {itemize}
 
-\subsection {lists.tpl} 
+\subsection {lists.tt2} 
 
 	File returned by \mailcmd {LISTS} command. 
 	An additional variable is available :
 \begin {itemize}
 
-	\item[-] [lists] : this is a hash table indexed by list names and
+	\item[-] [\% lists \%] : this is a hash table indexed by list names and
 			containing lists' subjects. Only lists visible
 			to this user (according to the \lparam {visibility} 
 			list parameter) are listed.
@@ -4911,23 +4773,22 @@ The following variables may be used in these template files :
 \begin{verbatim}
 These are the public lists for [conf->email]@[conf->domain]
 
-[FOREACH l IN lists]
-	
- [l->NAME]: [l->subject]
+[% FOREACH l = lists %]
+[% l.key %]@[% l.value.host %] : [% l.value.subject %]
 
-[END]
+[% END %]
 
 \end{verbatim}
 \end {quote}
 
-\subsection {global\_remind.tpl} 
+\subsection {global\_remind.tt2} 
 
 	This file is sent in response to a \mailcmd {REMIND *} command. 
 	(see~\ref {cmd-remind}, page~\pageref {cmd-remind})
 	You may use additional variables
 \begin {itemize}
 
-	\item[-] [lists] : this is an array containing the list names the user
+	\item[-] [\% lists \%] : this is an array containing the list names the user
 			is subscribed to.
 \end {itemize}
 
@@ -4939,19 +4800,19 @@ These are the public lists for [conf->email]@[conf->domain]
 This is a subscription reminder.
 
 You are subscribed to the following lists :
-[FOREACH l IN lists
+[% FOREACH l = lists %]
 	
- [l] : [conf->wwsympa\_url]/info/[l]
+ [% l %] : [% conf.wwsympa\_url \%]/info/[% l %]
 
-[END]
+[% END %]
 
-Your subscriber e-mail : [user->email]
-Your password : [user->password]
+Your subscriber e-mail : [% user.email %]
+Your password : [% user.password %]
 
 \end{verbatim}
 \end {quote}
 
-\subsection {your\_infected\_msg.tpl} 
+\subsection {your\_infected\_msg.tt2} 
 
 This message is sent to warn the sender of a virus infected mail,
 indicating the name of the virus found 
@@ -4965,31 +4826,8 @@ You may define your own web template files, different from the standard
 ones. \WWSympa first looks for list specific web templates, then for
 site web templates, before falling back on its defaults. 
 
-Your list web template files should be placed in the \dir {/home/sympa/expl/\samplelist/wws\_templates} 
-directory ; your site web templates in \tildedir {/home/sympa/etc/wws\_templates} directory.
-
-There are actually 2 ways a template can include another template :
-
-\begin {enumerate}
-  \item directy, as in  subrequest.us.tpl : 
-\begin {quote}
-\begin{verbatim}
-[PARSE '/home/sympa/bin/etc/wws_templates/loginbanner.us.tpl'].
-\end{verbatim}
-\end {quote}
-    If you customize the loginbanner.us.tpl, you also have to customize templates that refer to it.
-
-   \item indirectly, via a variable, as in main.tpl : 
-\begin {quote}
-\begin{verbatim}
-[PARSE action_template]
-\end{verbatim}
-\end {quote}
-\end {enumerate}
-
- Then  \file {wwsympa.fcgi} sets action\_template variable to the appropriate template file path (ie : in the best place according to Sympa default rules, and in the current language).
-
-We use (2) for some high level templates (action\_template, error\_template, notice\_template, title\_template, menu\_template, list\_menu\_template, admin\_menu\_template) but then we use (1) for lower-level template inclusions.
+Your list web template files should be placed in the \dir {/home/sympa/expl/\samplelist/web\_tt2} 
+directory ; your site web templates in \tildedir {/home/sympa/etc/web\_tt2} directory.
 
 Note that web colors are defined in \Sympa's main Makefile (see \ref {makefile},
 page~\pageref {makefile}).
@@ -5032,43 +4870,43 @@ the code itself, messages being stored in NLS catalogues (according
 to the XPG4 standard). Later a \lparam{lang} list parameter was introduced.
 Nowadays \Sympa is able to keep track of individual users' language preferences.
 
+If you are willing to provide Sympa into your native language, please check the \textbf {translation howto} (\htmladdnormallink {\texttt {http://www.sympa.org/howtotranslate.html}}  {http://www.sympa.org/howtotranslate.html});
 
 \subsection {\Sympa internationalization}
 
 Every message sent by \Sympa to users, owners and editors is outside
 the code, in a message catalog. These catalogs are located in the
-\dir {/home/sympa/locale} directory. Messages have currently been
-translated into 14 different languages : 
+\dir {/home/sympa/locale} directory. 
+%Messages have currently been translated into 14 different languages : 
+%
+%\begin{itemize}
+%
+%\item cn-big5: BIG5 Chinese (Hong Kong, Taiwan)
+%
+%\item cn-gb: GB Chinese (Mainland China)
+%
+%\item cz: Czech
+%
+%\item de: German
+%
+%\item es: Spanish
+%
+%\item fi: Finnish
+%
+%\item fr: French
+%
+%\item hu: Hungarian
+%
+%\item it: Italian
+%
+%\item pl: Polish
+%
+%\item us: US English
+%
+%\end{itemize}
 
-\begin{itemize}
-
-\item cn-big5: BIG5 Chinese (Hong Kong, Taiwan)
-
-\item cn-gb: GB Chinese (Mainland China)
-
-\item cz: Czech
-
-\item de: German
-
-\item es: Spanish
-
-\item fi: Finnish
-
-\item fr: French
-
-\item hu: Hungarian
-
-\item it: Italian
-
-\item pl: Polish
-
-\item us: US English
-
-\end{itemize}
-
-To tell \Sympa to use a particular message catalog, you can either set 
-the \cfkeyword{lang} parameter in \file{sympa.conf}, or
-set the \file{sympa.pl} \texttt{-l} option on the command line.
+To tell \Sympa to use a particular message catalog, you can should set 
+the \cfkeyword{lang} parameter in \file{sympa.conf}.
 
 \subsection {List internationalization}
 
@@ -5335,11 +5173,7 @@ to remove existing task files in the \dir {task/} spool if needed. Task file nam
 \item crl\_update.daily.task\\
 	\begin {quote}
 	\begin{verbatim}
-title.fr mise a jour quotidienne des listes de révocation
-title.us daily certificate revocation list update
-title.et sertifikaatide kehtivuse nimekirja uuendatakse iga päev
-title.hu napi frissítése a hitelesítési bizonylatok visszavonásának
-title.cz denní aktualizace seznamu revokací certifikátù
+title.gettext daily update of the certificate revocation list
 
 /ACTION
 update_crl (CA_list, [execution_date]+1d)
@@ -5535,14 +5369,14 @@ on the \WWSympa info page for the list.
 These files are used by Sympa as service messages for commands such as
 \mailcmd {SUB}, \mailcmd {ADD}, \mailcmd {SIG}, \mailcmd {DEL}, \mailcmd {REJECT}. 
 These files are interpreted (parsed) by \Sympa and respect the template 
-format ; every file has the .tpl extension. See \ref {tpl-format}, 
+format ; every file has the .tt2 extension. See \ref {tpl-format}, 
 page~\pageref {tpl-format}. 
 
 Sympa looks for these files in the following order :
 \begin {enumerate}
- 	\item \dir {/home/sympa/expl/\samplelist/\texttt{<}file\texttt{>}.tpl} 
-	\item \dir {/home/sympa/etc/templates/\texttt{<}file\texttt{>}.tpl}. 
-	\item \dir {/home/sympa/bin/etc/templates/\texttt{<}file\texttt{>}.tpl}.
+ 	\item \dir {/home/sympa/expl/\samplelist/mail\_tt2/\texttt{<}file\texttt{>}.tt2} 
+	\item \dir {/home/sympa/etc/mail\_tt2/\texttt{<}file\texttt{>}.tt2}. 
+	\item \dir {/home/sympa/bin/etc/mail\_tt2/\texttt{<}file\texttt{>}.tt2}.
 \end {enumerate}
 
 If the file starts with a From: line, it is taken to be
@@ -5552,85 +5386,85 @@ headers. Otherwise the file is treated as a text/plain message body.
 The following variables may be used in list template files :
 
 \begin {itemize}
-	\item[-] [conf-\texttt{>}email] : sympa e-mail address local part
+	\item[-] [\% conf.email \%] : sympa e-mail address local part
 
-	\item[-] [conf-\texttt{>}domain] : sympa robot domain name
+	\item[-] [\% conf.domain \%] : sympa robot domain name
 
-	\item[-] [conf-\texttt{>}sympa] : sympa's complete e-mail address
+	\item[-] [\% conf.sympa \%] : sympa's complete e-mail address
 
-	\item[-] [conf-\texttt{>}wwsympa\_url] : \WWSympa root URL
+	\item[-] [\% conf.wwsympa\_url \%] : \WWSympa root URL
 
-	\item[-] [conf-\texttt{>}listmaster] : listmaster e-mail addresses
+	\item[-] [\% conf.listmaster \%] : listmaster e-mail addresses
 
-	\item[-] [list-\texttt{>}name] : list name
+	\item[-] [\% list.name \%] : list name
 
-	\item[-] [list-\texttt{>}host] : list hostname (default is sympa robot domain name)
+	\item[-] [\% list.host \%] : list hostname (default is sympa robot domain name)
 
-	\item[-] [list-\texttt{>}lang] : list language
+	\item[-] [\% list.lang \%] : list language
 
-	\item[-] [list-\texttt{>}subject] : list subject
+	\item[-] [\% list.subject \%] : list subject
 
-	\item[-] [list-\texttt{>}owner] : list owners table hash
+	\item[-] [\% list.owner \%] : list owners table hash
 
-	\item[-] [user-\texttt{>}email] : user e-mail address
+	\item[-] [\% user.email \%] : user e-mail address
 
-	\item[-] [user-\texttt{>}gecos] : user gecos field (usually his/her name)
+	\item[-] [\% user.gecos \%] : user gecos field (usually his/her name)
 
-	\item[-] [user-\texttt{>}password] : user password
+	\item[-] [\% user.password \%] : user password
 
-	\item[-] [user-\texttt{>}lang] : user language
+	\item[-] [\% user.lang \%] : user language
 
-	\item[-] [execution\_date] : the date when the scenario is executed	
+	\item[-] [\% execution\_date \%] : the date when the scenario is executed	
 \end {itemize}
 
 You may also dynamically include a file from a template using the
-[INCLUDE] directive.
+[\% INSERT \%] directive.
 
 
 \textit {Example:} 
 
 \begin {quote}
 \begin{verbatim}
-Dear [user->email],
+Dear [% user.email %],
 
-Welcome to list [list->name]@[list->host].
+Welcome to list [% list.name %]@[% list.host %].
 
 Presentation of the list :
-[INCLUDE 'info']
+[% INSERT 'info' %]
 
-The owners of [list->name] are :
-[FOREACH ow IN list->owner]
-   [ow->gecos] <[ow->email]>
-[END]
+The owners of [% list.name %] are :
+[% FOREACH ow = list.owner %]
+   [% ow.value.gecos %] <[% ow.value.email %]>
+[% END %]
 
 
 \end{verbatim}
 \end {quote}
 
-\subsection {welcome.tpl} 
+\subsection {welcome.tt2} 
 
 \Sympa will send a welcome message for every subscription. The welcome 
 message can be customized for each list.
 
-\subsection {bye.tpl} 
+\subsection {bye.tt2} 
 
 Sympa will send a farewell message for each SIGNOFF 
 mail command received.
 
-\subsection {removed.tpl} 
+\subsection {removed.tt2} 
 
 This message is sent to users who have been deleted (using the \mailcmd {DELETE} 
 command) from the list by the list owner.
 
 
-\subsection {reject.tpl} 
+\subsection {reject.tt2} 
 
 \Sympa will send a reject message to the senders of messages rejected
 by the list editor. If the editor prefixes her \mailcmd {REJECT} with the
 keyword QUIET, the reject message will not be sent.
 
 
-\subsection {invite.tpl} 
+\subsection {invite.tt2} 
 
 This message is sent to users who have been invited (using the \mailcmd {INVITE} 
 command) to subscribe to a list. 
@@ -5638,25 +5472,25 @@ command) to subscribe to a list.
 You may use additional variables
 \begin {itemize}
 
-	\item[-] [requested\_by] : e-mail of the person who sent the 
+	\item[-] [\% requested\_by \%] : e-mail of the person who sent the 
 		\mailcmd{INVITE} command
 
-	\item[-] [url] : the mailto: URL to subscribe to the list
+	\item[-] [\% url \%] : the mailto: URL to subscribe to the list
 
 \end {itemize}
 
-\subsection {remind.tpl}
+\subsection {remind.tt2}
 
 This file contains a message sent to each subscriber
 when one of the list owners sends the \mailcmd {REMIND} command
  (see~\ref {cmd-remind}, page~\pageref {cmd-remind}).
 
-\subsection {summary.tpl}
+\subsection {summary.tt2}
 
 Template for summaries (reception mode close to digest), 
 see~\ref {cmd-setsummary}, page~\pageref {cmd-setsummary}.
 
-\subsection {list\_aliases.tpl}
+\subsection {list\_aliases.tt2}
 \label{list-aliases-tpl}
 
 Template that defines list mail alises. It is used by the alias\_manager script.
@@ -5694,7 +5528,7 @@ by the task manager and respect the task format. See \ref {tasks}, page~\pageref
 
 \subsection {remind.annual.task}
 
-Every year \Sympa will send a message (the template \file {remind.tpl}) 
+Every year \Sympa will send a message (the template \file {remind.tt2}) 
 to all subscribers of the list to remind them of their subscription.
 
 \subsection {expire.annual.task}
@@ -5771,9 +5605,9 @@ lists must be activated by the listmaster. List creation is possible for all int
 (i.e. : users with an e-mail address within the same domain as Sympa).
 This is controlled by the \cfkeyword {create\_list} authorization scenario.
 
-List creation request message and list creation notification message are both
-templates that you can customize (\file {create\_list\_request.tpl} and
-\file {list\_created.tpl}).
+List rejection message and list creation notification message are both
+templates that you can customize (\file {list\_rejected.tt2} and
+\file {list\_created.tt2}).
 
 \subsection {Who can create lists}
 
@@ -5996,7 +5830,7 @@ Domain name of the list, default is the robot domain name set in the related \fi
 
 \begin {quote}
 \begin{verbatim}
-lang cn-big5
+lang en_US
 \end{verbatim}
 \end {quote}
 
@@ -7253,12 +7087,6 @@ Predefined authorization scenarios are :
 	\end {htmlonly}\\
 	
 
-     \item \lparam {d\_edit} \texttt {e} 
-	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.e})
-	\end {htmlonly}\\
-	
-
      \item \lparam {d\_edit} \texttt {owner} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.owner})
@@ -8224,7 +8052,7 @@ The shared web feature has called for some new actions.
 \section {Template files}
 The following template files have been created for the shared web:
 
-\subsection {d\_read.tpl} 
+\subsection {d\_read.tt2} 
 The default page for reading a document. If for a file, displays it (if 
 viewable) or downloads it. If for a directory, displays all readable
 subdocuments, each of which will feature buttons corresponding
@@ -8233,15 +8061,15 @@ editable, displays buttons to describe it, upload a file to it
 or create a new subdirectory. If access to the document is editable,
 displays a button to edit the access to it. 
 
-\subsection {d\_editfile.tpl} 
+\subsection {d\_editfile.tt2} 
 The page used to edit a file. If for a text file, allows it to be edited on-line.
 This page also enables the description of the file to be edited, or another file
 to be substituted in its place.
 
-\subsection {d\_control.tpl}
+\subsection {d\_control.tt2}
 The page to edit the access rights and the owner of a document. 
 
-\subsection {d\_upload.tpl}
+\subsection {d\_upload.tt2}
 This page to upload a file is only used when the name of the file already exists.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -8364,7 +8192,7 @@ In this case you must set the \cfkeyword {antivirus\_path} and
 For each mail received, \Sympa extracts its MIME parts in the \dir {/home/sympa/spool/tmp/antivirus} directory and
 then calls the antivirus software to check them.
 When a virus is detected, \Sympa looks for the virus name in the virus scanner STDOUT and sends a
-\file {your\_infected\_msg.tpl} warning to the sender of the mail.
+\file {your\_infected\_msg.tt2} warning to the sender of the mail.
 The mail is saved as 'bad' and the working directory is deleted (except if \Sympa is running in debug mode).
   
 
@@ -8681,7 +8509,7 @@ Most user commands have three-letter abbreviations (e.g. \texttt
     \item  \mailcmd {HELP}
 
         Provides instructions for the use of \Sympa commands.  The
-        result is the content of the \file {helpfile.tpl} template
+        result is the content of the \file {helpfile.tt2} template
         file. 
 
     \item  \mailcmd {INFO} \textit {listname}
@@ -8696,7 +8524,7 @@ Most user commands have three-letter abbreviations (e.g. \texttt
         Provides the names of lists managed by \Sympa.  This list
         is generated dynamically, using the \lparam {visibility}
         (see \ref {par-visibility}, page~\pageref {par-visibility}).
-	The \texttt {lists.tpl} template defines the message return
+	The \texttt {lists.tt2} template defines the message return
 	by the \mailcmd {LISTS} command.
 
     \item  \mailcmd {REVIEW} \textit {listname}
@@ -8950,13 +8778,13 @@ These comands are:
 
         \mailcmd {REMIND} is used by list owners in order to send
         an individual service reminder message to each subscriber. This
-        message is made by parsing the remind.tpl file.
+        message is made by parsing the remind.tt2 file.
 
     \item \mailcmd {REMIND} \textit {*}
 
         \mailcmd {REMIND} is used by the listmaster to send to each subscriber of any list a single
         message with a summary of his/her subscriptions. In this case the 
-        message sent is constructed by parsing the global\_remind.tpl file.
+        message sent is constructed by parsing the global\_remind.tt2 file.
         For each list, \Sympa tests whether the list is configured as hidden 
 	to each subscriber (parameter lparam {visibility}). By default the use 
 	of this command is restricted to listmasters. 
