@@ -57,6 +57,7 @@ my @valid_options = qw(
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
 		       ldap_export_dnmanager ldap_export_connection_timeout urlize_min_size
 		       list_check_smtp list_check_suffixes  spam_protection web_archive_spam_protection soap_url
+		       web_recode_to
 );
 
 my %old_options = ('trusted_ca_options' => 'capath,cafile',
@@ -182,7 +183,8 @@ my %Default_Conf =
      'default_bounce_level2_rate' => 75,
      'soap_url' => '',
      'urlize_min_size' => 10240, ## 10Kb
-     'supported_lang' => 'fr,en_US,hu,it'
+     'supported_lang' => 'fr,en_US,hu,it',
+     'web_recode_to' => ''
      );
    
 my $wwsconf;

@@ -3,7 +3,12 @@
 
 <!-- comment -->
 <HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=utf-8">
+
+[% IF conf.web_recode_to %]
+<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=[% conf.web_recode_to %]">
+[% ELSE %]
+<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=[%|loc%]_charset_[%END%]">
+[% END %]
 
 [% IF use_htmlarea %]
 <script type="text/javascript">

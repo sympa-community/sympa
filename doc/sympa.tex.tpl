@@ -2028,6 +2028,30 @@ see a  nice mailto adresses where others have nothing.
         This is the default language for \Sympa. The message catalog (.po, compiled as a .mo file) located 
 	in the corresponding \cfkeyword {locale} directory will be used.
 
+\subsection {\cfkeyword {web\_recode\_to}}   
+
+        If you set this parameter to a charset then web pages will be recoded to this specified charset. This is usefull to have web pages 
+	in UTF-8, allowing multi-lingual contents. You should check that customized web templates, topics.conf, list config files, info files are
+	all using the same charset.
+
+	Example :
+\begin {quote}
+\begin{verbatim}
+web_recode_to   utf-8
+\end{verbatim}
+\end {quote}
+   
+Note : if you recode web pages to utf-8, you should also add the following tag to your \file {mhonarc-ressources.tt2} file :
+\begin {quote}
+\begin{verbatim}
+<TextEncode>
+utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
+</TextEncode>
+\end{verbatim}
+\end {quote}
+
+
+
 \section {Bounce related}
 
 \subsection {\cfkeyword {bounce\_warn\_rate}}

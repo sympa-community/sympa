@@ -498,7 +498,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'conf'} = {};
      foreach my $p ('email','host','sympa','request','soap_url','wwsympa_url','listmaster_email',
 		    'dark_color','light_color','text_color','bg_color','error_color',
-                    'selected_color','shaded_color') {
+                    'selected_color','shaded_color','web_recode_to') {
 	 $param->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
 	 $param->{$p} = &Conf::get_robot_conf($robot, $p) if ($p =~ /_color$/);
      }
@@ -942,7 +942,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
 	 }
 
-	 unless (&tt2::parse_tt2($param,'main.tt2' , \*STDOUT, $tt2_include_path, {'recode' => 'utf-8'})) {
+	 my $tt2_options = {};
+	 if ($Conf{'web_recode_to'}) {
+	     $tt2_options =  {'recode' => $Conf{'web_recode_to'}};
+	 }
+
+	 unless (&tt2::parse_tt2($param,'main.tt2' , \*STDOUT, $tt2_include_path, $tt2_options)) {
 	     my $error = &tt2::get_error();
 	     $param->{'tt2_error'} = $error;
 	     &List::send_notify_to_listmaster('web_tt2_error', $robot, $error);
