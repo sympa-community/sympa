@@ -380,6 +380,10 @@ while (!$end) {
 	    last;
 	}
     }
+
+    ## Free zombie sendmail processes
+    &smtp::reaper;
+
 }
 do_log('notice', 'bounced exited normally due to signal');
 unlink("$wwsconf->{'bounced_pidfile'}");

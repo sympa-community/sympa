@@ -322,6 +322,9 @@ while (!$end) {
     }
     sleep 60;
     #$end = 1;
+
+    ## Free zombie sendmail processes
+    &smtp::reaper;
 }
 
 &do_log ('notice', 'task_manager exited normally due to signal');
