@@ -21,6 +21,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+$ENV{'PATH'} = '';
+
 ## Load Sympa.conf
 use strict;
 use lib '--LIBDIR--';
@@ -38,13 +40,11 @@ my $tmp_alias_file = $Conf{'tmpdir'}.'/sympa_aliases.'.time;
 
 
 my $alias_wrapper = '--MAILERPROGDIR--/aliaswrapper';
-my $lock_file = '--DIR--/alias_manager.lock';
+my $lock_file = '--EXPL_DIR--/alias_manager.lock';
 my $default_domain;
 my $path_to_queue = '--MAILERPROGDIR--/queue';
 my $path_to_bouncequeue = '--MAILERPROGDIR--/bouncequeue';
 my $sympa_conf_file = '--CONFIG--';
-
-$ENV{'PATH'} = '';
 
 my ($operation, $listname, $domain, $file) = @ARGV;
 
