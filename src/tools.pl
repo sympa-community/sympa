@@ -972,7 +972,7 @@ sub split_mail {
 
 	    ## Store body in file 
 	    unless (open OFILE, ">$dir/$pathname.$fileExt") {
-		print STDERR "Unable to open $dir/$pathname.$fileExt\n" ;
+		&do_log('err', "Unable to open $dir/$pathname.$fileExt") ;
 		return undef ; 
 	    }
 	    
