@@ -1981,7 +1981,7 @@ sub do_review {
 
     ## We might not use LIMIT clause
     my ($limit_not_used, $count);
-    unless (($list->{'admin'}{'user_data_source'} eq 'database') && 
+    unless (($list->{'admin'}{'user_data_source'} =~ /^database|include2$/) && 
 	    ($Conf{'db_type'} =~ /^Pg|mysql$/)) {
 	$limit_not_used = 1;
     }
@@ -1995,6 +1995,7 @@ sub do_review {
 					'offset' => $offset, 
 					'rows' => $size}); 
 	 $i; $i = $list->get_next_user()) {
+
 	next if (($i->{'visibility'} eq 'conceal')
 		 and (! $param->{'is_owner'}) );
 	
@@ -2440,6 +2441,7 @@ sub do_subscribe {
 	    $u->{'date'} = $u->{'update_date'} = time;
 	    $u->{'password'} = $param->{'user'}{'password'};
 	    $u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
+	    $u->{'subscribed'} = 1 if ($list->{'admin'}{'user_data_source'} eq 'include2');
 	    
 	    unless ($list->add_user($u)) {
 		&error_message('failed');
@@ -5142,7 +5144,10 @@ sub do_edit_list {
 		    &wwslog('notice', 'No subscribers to load in database');
 		}
 		@users = &List::_load_users_file("$list->{'dir'}/subscribers");
-	    }	    
+	    }elsif (($list->{'admin'}{'user_data_source'} eq 'database') &&
+		    ($new_admin->{'user_data_source'} eq 'include2')) {
+		$list->update_user('*', {'subscribed' => 1});
+	    }
 	}
 
         #If no directory, delete the entry

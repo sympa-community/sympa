@@ -2597,21 +2597,21 @@ sub delete_user {
 		return undef;
 	    }   
 
-	    ## Is it his/her last subscription
-	    my @which;
-	    foreach my $role ('member','editor','owner') {
-		@which = (@which, &get_which ($who,'*',$role));
-	    }
-
-	    ## Cleanup in user_table
-	    if ($#which < 0) {
-		$statement = sprintf "DELETE FROM user_table WHERE (email_user=%s)",$dbh->quote($who);
-		
-		unless ($dbh->do($statement)) {
-		    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-		    return undef;
-		}   
-	    }
+#	    ## Is it his/her last subscription
+#	    my @which;
+#	    foreach my $role ('member','editor','owner') {
+#		@which = (@which, &get_which ($who,'*',$role));
+#	    }
+#
+#	    ## Cleanup in user_table
+#	    if ($#which < 0) {
+#		$statement = sprintf "DELETE FROM user_table WHERE (email_user=%s)",$dbh->quote($who);
+#		
+#		unless ($dbh->do($statement)) {
+#		    do_log('debug','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+#		    return undef;
+#		}   
+#	    }
 
 	    $self->{'total'}--;
 	    $self->savestats();
@@ -2964,6 +2964,10 @@ sub get_first_user {
 	    $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	    unless ($self->is_available_reception_mode($user->{'reception'}));
 	    $user->{'update_date'} ||= $user->{'date'};
+
+	    ## In case it was not set in the database
+	    $user->{'subscribed'} = 1
+		if ($self->{'admin'}{'user_data_source'} eq 'database');
 	}
 
 	## If no LIMIT was used, update total of subscribers
@@ -2988,6 +2992,7 @@ sub get_first_user {
 	    $user{'reception'} ||= 'mail';
 	    $user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	    unless ($self->is_available_reception_mode($user{'reception'}));
+	    $user{'subscribed'} = 1;
 	    return \%user;
 	}
 	return undef;
@@ -2997,7 +3002,7 @@ sub get_first_user {
 ## Loop for all subsequent users.
 sub get_next_user {
     my $self = shift;
-#    do_log('debug2', 'List::get_next_user');
+    do_log('debug2', 'List::get_next_user');
 
     if (($self->{'admin'}{'user_data_source'} eq 'database') ||
 	($self->{'admin'}{'user_data_source'} eq 'include2')){
@@ -3009,6 +3014,10 @@ sub get_next_user {
 		$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	    }
 	    $user->{'update_date'} ||= $user->{'date'};
+
+	    ## In case it was not set in the database
+	    $user->{'subscribed'} = 1
+		if ($self->{'admin'}{'user_data_source'} eq 'database');
 	}
 	else {
 	    $sth->finish;
@@ -3030,6 +3039,7 @@ sub get_next_user {
 	    $user{'reception'} ||= 'mail';
 	    $user{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	      unless ($self->is_available_reception_mode($user{'reception'}));
+	    $user{'subscribed'} = 1;
 	    return \%user;
 	}
 	## Update total
@@ -3088,6 +3098,10 @@ sub get_first_bouncing_user {
     }
     
     my $user = $sth->fetchrow_hashref;
+	    
+    ## In case it was not set in the database
+    $user->{'subscribed'} = 1
+	if ($self->{'admin'}{'user_data_source'} eq 'database');    
     
     return $user;
 }
@@ -3109,6 +3123,10 @@ sub get_next_bouncing_user {
 	$sth->finish;
 	$sth = pop @sth_stack;
     }
+
+    ## In case it was not set in the database
+    $user->{'subscribed'} = 1
+	if ($self->{'admin'}{'user_data_source'} eq 'database');    
 
     return $user;
 }
@@ -3362,8 +3380,11 @@ sub update_user {
 		$statement = sprintf "UPDATE %s SET %s WHERE (email_user=%s)", $table, join(',', @set_list), $dbh->quote($who); 
 
 	    }elsif ($table eq 'subscriber_table') {
-
+		if ($who eq '*') {
+		    $statement = sprintf "UPDATE %s SET %s WHERE (list_subscriber=%s)", $table, join(',', @set_list), $dbh->quote($name);
+		}else {
 		    $statement = sprintf "UPDATE %s SET %s WHERE (user_subscriber=%s AND list_subscriber=%s)", $table, join(',', @set_list), $dbh->quote($who), $dbh->quote($name);
+		}
 	    }
 	    
 	    unless ($dbh->do($statement)) {

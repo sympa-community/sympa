@@ -131,6 +131,10 @@ La sélection est trop large, impossible d'afficher la sélection
         [IF is_owner]
 	  <TH><FONT SIZE="-1"><B>Réception</B></FONT>
 	  </TH>
+	  [IF list_conf->user_data_source=include2]
+  	   <TH><FONT SIZE="-1"><B>Sources</B></FONT>
+	   </TH>
+	  [ENDIF]
 	  [IF sortby=date]
   	    <TH NOWRAP BGCOLOR="[selected_color]">
 	    <FONT COLOR="[bg_color]" SIZE="-1"><b>Abonné depuis</b></FONT>
@@ -150,14 +154,18 @@ La sélection est trop large, impossible d'afficher la sélection
       [FOREACH u IN members]
 
 	[IF dark=1]
-	  <TR BGCOLOR="[shaded_color]">
+	  <TR BGCOLOR="[shaded_color]" VALIGN="top">
 	[ELSE]
-          <TR BGCOLOR="[bg_color]">
+          <TR BGCOLOR="[bg_color]" VALIGN="top">
 	[ENDIF]
 	 [IF is_owner]
+	   [IF u->subscribed]
 	    <TD>
 	        <INPUT TYPE=checkbox name="email" value="[u->escaped_email]">
 	    </TD>
+	   [ELSE]
+	    <TD>&nbsp;</TD>
+	   [ENDIF]
 	 [ENDIF]
 	 [IF u->bounce]
 	  <TD NOWRAP><FONT SIZE=-1>
@@ -183,7 +191,11 @@ La sélection est trop large, impossible d'afficher la sélection
 
 	  <TD>
 	    <FONT SIZE=-1>
+	      [IF u->domain]
 	        [u->domain]
+	      [ELSE]
+	        &nbsp;
+	      [ENDIF]
 	    </FONT>
 	  </TD>
 
@@ -196,6 +208,19 @@ La sélection est trop large, impossible d'afficher la sélection
   	    <TD ALIGN="center"><FONT SIZE=-1>
   	      [u->reception]
 	    </FONT></TD>
+    	   [IF list_conf->user_data_source=include2]
+  	    <TD ALIGN="left"><FONT SIZE=-1>
+	     [IF u->subscribed]
+	       [IF u->included]
+	         inclus<BR>abonné
+               [ELSE]
+	         abonné
+	       [ENDIF]
+	     [ELSE]
+	       inclus
+	     [ENDIF]   
+	    </FONT></TD>
+	   [ENDIF]
 	    <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
 	      [u->date]
 	    </FONT></TD>
