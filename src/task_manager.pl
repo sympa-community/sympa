@@ -81,30 +81,6 @@ unless (Conf::load($sympa_conf_file)) {
 ## Check databse connectivity
 $List::use_db = &List::probe_db();
 
-## Check for several files.
-unless (&Conf::checkfiles()) {
-   fatal_err("Missing files. Aborting.");
-   ## No return.
-}
-
-## Put ourselves in background if not in debug mode. 
-unless ($main::options{'debug'} || $main::options{'foreground'}) {
-
-    open(STDERR, ">> /dev/null");
-    open(STDOUT, ">> /dev/null");
-    if (open(TTY, "/dev/tty")) {
-	ioctl(TTY, 0x20007471, 0);         # XXX s/b &TIOCNOTTY
-#       ioctl(TTY, &TIOCNOTTY, 0);
-	close(TTY);
-    }
-    setpgrp(0, 0);
-    if ((my $child_pid = fork) != 0) {
-	&do_log('debug', "Starting task_manager daemon, pid $_");
-
-	exit(0);
-    }
-}
-
 &tools::write_pid($wwsconf->{'task_manager_pidfile'}, $$);
 
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
@@ -147,7 +123,8 @@ my @list_models = ('expire', 'remind');
 
 ## hash of the global task models
 my %global_models = ('crl_update_task' => 'crl_update', 
-		     'chk_cert_expiration_task' => 'chk_cert_expiration');
+		     'chk_cert_expiration_task' => 'chk_cert_expiration',
+		     'global_remind' => 'global_remind');
 
 ## month hash used by epoch conversion routines
 my %months = ('Jan', 0, 'Feb', 1, 'Mar', 2, 'Apr', 3, 'May', 4,  'Jun', 5, 
@@ -221,7 +198,7 @@ while (!$end) {
     ## processing of tasks anterior to the current date
     &do_log ('debug2', 'processing of tasks anterior to the current date');
     foreach my $task (@tasks) {
-	$task =~ /^(\d+)\.\w*\.\w+\.($regexp{'listname'})$/;
+	$task =~ /^(\d+)\.\w*\.\w+\.($regexp{'listname'}|_global)$/;
 	&do_log ('debug2', "procesing %s/%s", $spool_task,$task);
 	last unless ($1 < $current_date);
 	if ($2 ne '_global') { # list task
