@@ -5151,6 +5151,8 @@ sub _load_scenario {
 	if (/^\s*title\.gettext\s+(.*)\s*$/i) {
 	    $structure->{'title'} = $1;
 	    next;
+	}elsif (/^\s*title\./) {
+	    next; ## Skip old-style scenario titles
 	}
         
         if (/^\s*include\s*(.*)\s*$/i) {
