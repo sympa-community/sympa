@@ -1266,6 +1266,14 @@ be used as a synonim.
 
         \example {maxsmtp           500}
 
+\subsection {\cfkeyword {log\_smtp}} 
+
+	\default {off}
+
+	Set logging of each MTA call. Can be overwritten by -m sympa option.
+
+        \example {log\_smtp           on}
+
 
 \subsection {\cfkeyword {max\_size}} 
 
@@ -4244,6 +4252,8 @@ Only the following parameters can be redefined for a particular robot :
 	\item \cfkeyword {create\_list}
 
 	\item \cfkeyword {lang}
+
+	\item \cfkeyword {log_smtp}
 
 	\item \cfkeyword {listmaster}
 
