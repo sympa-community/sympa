@@ -1546,6 +1546,7 @@ sub do_review {
 
 	## Add user
 	$i->{'date'} = &POSIX::strftime("%d %b %Y", localtime($i->{'date'}));
+	$i->{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($i->{'update_date'}));
 
 	$i->{'reception'} ||= 'mail';
 
@@ -1630,6 +1631,7 @@ sub do_search {
 	
 	## Add user
 	$i->{'date'} = &POSIX::strftime("%d %b %Y", localtime($i->{'date'}));
+	$i->{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($i->{'update_date'}));
 
 	$i->{'reception'} ||= 'mail';
 
@@ -1759,7 +1761,8 @@ sub do_set {
     $visibility = '' if $visibility eq 'noconceal';
    
     my $update = {'reception' => $reception,
-		  'visibility' => $visibility};
+		  'visibility' => $visibility,
+		  'update_date' => time};
     
     if ($in{'email'} ne $in{'new_email'}) {
 
@@ -1934,7 +1937,7 @@ sub do_subscribe {
 	my $u = $list->get_default_user_options();
 	$u->{'email'} = $param->{'user'}{'email'};
 	$u->{'gecos'} = $param->{'user'}{'gecos'} || $in{'gecos'};
-	$u->{'date'} = time;
+	$u->{'date'} = $u->{'update_date'} = time;
 	$u->{'password'} = $param->{'user'}{'password'};
 	$u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
 	
@@ -1998,6 +2001,7 @@ sub do_suboptions {
     $s->{'reception'} ||= 'mail';
     $s->{'visibility'} ||= 'noconceal';
     $s->{'date'} = &POSIX::strftime("%d %b %Y", localtime($s->{'date'}));
+    $s->{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($s->{'update_date'}));
     
     foreach $m (keys %wwslib::reception_mode) {
       if ($list->is_available_reception_mode($m)) {
@@ -2466,7 +2470,7 @@ sub do_add {
 	my $u = $list->get_default_user_options();
 	$u->{'email'} = $email;
 	$u->{'gecos'} = $user{$email} || $u2->{'gecos'};
-	$u->{'date'} = time;
+	$u->{'date'} = $u->{'update_date'} = time;
 	$u->{'password'} = $u2->{'password'} || &tools::tmp_passwd($email) ;
 	$u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
 
@@ -3799,6 +3803,7 @@ sub do_editsubscriber {
     $param->{'subscriber'} = $user;
     $param->{'subscriber'}{'escaped_email'} = &tools::escape_chars($param->{'subscriber'}{'email'});
     $param->{'subscriber'}{'date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'date'}));
+    $param->{'subscriber'}{'update_date'} = &POSIX::strftime("%d %b %Y", localtime($user->{'update_date'}));
 
     ## Prefs
     $param->{'subscriber'}{'reception'} ||= 'mail';
@@ -4036,7 +4041,7 @@ sub do_resetbounce {
 	    return undef;
 	}
 	
-	unless( $list->update_user($email, {'bounce' => 'NULL'})) {
+	unless( $list->update_user($email, {'bounce' => 'NULL', 'update_date' => time})) {
 	    &error_message('failed');
 	    &wwslog('info','do_resetbounce: failed update database for %s', $email);
 	    return undef;
@@ -7163,7 +7168,7 @@ sub do_change_email {
 	foreach my $l ( &List::get_which($param->{'user'}{'email'}, 'member') ) {
 	    my $list = new List ($l);
 	    
-	    unless ($list->update_user($param->{'user'}{'email'}, {'email' => $in{'email'}}) ) {
+	    unless ($list->update_user($param->{'user'}{'email'}, {'email' => $in{'email'}, 'update_date' => time}) ) {
 		&error_message('change_email_failed', {'list' => $l});
 		&wwslog('info', 'do_change_email: could not change email for list %s', $l);
 	    }

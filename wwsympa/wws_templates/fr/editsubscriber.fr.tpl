@@ -12,6 +12,7 @@
 <DD>Email : <INPUT NAME="new_email" VALUE="[subscriber->email]" SIZE="25">
 <DD>Nom : <INPUT NAME="gecos" VALUE="[subscriber->gecos]" SIZE="25">
 <DD>Abonné depuis : [subscriber->date]
+<DD>Dernière mise à jour : [subscriber->update_date]
 <DD>Réception : <SELECT NAME="reception">
 		  [FOREACH r IN reception]
 		    <OPTION VALUE="[r->NAME]" [r->selected]>[r->description]

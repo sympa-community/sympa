@@ -128,6 +128,7 @@ La sélection est trop large, impossible d'afficher la sélection
 	    <b>Abonné depuis</b></A></FONT>
 	  [ENDIF]
           </TH>
+	  <TH><FONT SIZE="-1"><B>Dernière mise à jour</B></FONT>
         [ENDIF]
       </TR>
       
@@ -183,6 +184,9 @@ La sélection est trop large, impossible d'afficher la sélection
 	    <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
 	      [u->date]
 	    </FONT></TD>
+	    <TD ALIGN="center"NOWRAP><FONT SIZE=-1>
+	      [u->update_date]
+	    </FONT></TD>
        	  [ENDIF]
         </TR>
 
@@ -218,8 +222,10 @@ La sélection est trop large, impossible d'afficher la sélection
     </TD>
    [ENDIF]
     </TR>
+    [IF is_owner]
     <TR><TD><input type=button value="Inverser la Selection" onClick="toggle_selection(document.myform.email)">
     </TD></TR>
+    [ENDIF]
     </TABLE>
     </FORM>
 

@@ -3,6 +3,7 @@
   <FORM ACTION="[path_cgi]" METHOD=POST>
 
   You are subscribed since <FONT COLOR="--DARK_COLOR--">[subscriber->date]</FONT>  <BR><BR>
+  Last update: <FONT COLOR="--DARK_COLOR--">[subscriber->update_date]</FONT>  <BR><BR>
      <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
      Reception mode : 
      <SELECT NAME="reception">

@@ -685,7 +685,7 @@ sub subscribe {
 	    ## Only updates the date
 	    ## Options remain the same
 	    my $user = {};
-	    $user->{'date'} = time;
+	    $user->{'update_date'} = time;
 	    $user->{'gecos'} = $comment if $comment;
 	    
 	    return undef
@@ -695,7 +695,8 @@ sub subscribe {
 	    my $u = $list->get_default_user_options();
 	    $u->{'email'} = $sender;
 	    $u->{'gecos'} = $comment;
-	    $u->{'date'} = time;
+	    $u->{'date'} = $u->{'update_date'} = time;
+
 	    return undef  unless $list->add_user($u);
 	}
 	
@@ -966,7 +967,7 @@ sub add {
     if ($action =~ /do_it/i) {
 	if ($list->is_user($email)) {
 	    my $user = {};
-	    $user->{'date'} = time;
+	    $user->{'update_date'} = time;
 	    $user->{'gecos'} = $comment if $comment;
 
 	    return undef 
@@ -976,7 +977,8 @@ sub add {
 	    my $u = $list->get_default_user_options();
 	    $u->{'email'} = $email;
 	    $u->{'gecos'} = $comment;
-	    $u->{'date'} = time;
+	    $u->{'date'} = $u->{'update_date'} = time;
+	    
 	    return undef unless $list->add_user($u);
 	    push @msg::report, sprintf Msg(6, 37, "User %s has been added to the list %s.\n"), $email, $which;
 	}
@@ -1450,7 +1452,7 @@ sub set {
 
 	my $update_mode = $mode;
 	$update_mode = '' if ($update_mode eq 'mail');
-	unless ($list->update_user($sender,{'reception'=> $update_mode})) {
+	unless ($list->update_user($sender,{'reception'=> $update_mode, 'update_date' => time})) {
 	    push @msg::report, sprintf Msg(6, 92, 'Failed to change your subscriber options for list %s.\n'), $list->{'name'};
 	    do_log('info', 'SET %s %s from %s refused, update failed',  $which, $mode, $sender);
 	    return 'failed';
@@ -1463,7 +1465,7 @@ sub set {
     }
     
     if ($mode =~ /^(conceal|noconceal)/){
-	unless ($list->update_user($sender,{'visibility'=> $mode})) {
+	unless ($list->update_user($sender,{'visibility'=> $mode, 'update_date' => time})) {
 	    push @msg::report, sprintf Msg(6, 92, 'Failed to change your subscriber options for list %s.\n'), $list->{'name'};
 	    do_log('info', 'SET %s %s from %s refused, update failed',  $which, $mode, $sender);
 	    return 'failed';
@@ -1700,11 +1702,6 @@ sub reject {
 
     &Language::SetLang($list->{'admin'}{'lang'});
 
-    #update date of subscriber
-    if ($list->is_user($sender)) {
-	$list->update_user($sender, { 'date' => time });
-	$list->save();
-    } 
     my $name = "$list->{'name'}";
     my $file= "$modqueue\/$name\_$key";
 

@@ -2449,6 +2449,8 @@ sub get_subscriber {
 	$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	  unless ($self->is_available_reception_mode($user->{'reception'}));
 
+	$user->{'update_date'} ||= $user->{'date'};
+
 	$sth->finish();
 
 	$sth = pop @sth_stack;
@@ -2613,6 +2615,7 @@ sub get_first_user {
 	    $user->{'reception'} ||= 'mail';
 	    $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	    unless ($self->is_available_reception_mode($user->{'reception'}));
+	    $user->{'update_date'} ||= $user->{'date'};
 	}
 
 	## If no LIMIT was used, update total of subscribers
@@ -2651,6 +2654,7 @@ sub get_next_user {
 	    unless ($self->is_available_reception_mode($user->{'reception'})){
 		$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	    }
+	    $user->{'update_date'} ||= $user->{'date'};
 	}
 	else {
 	    $sth->finish;
