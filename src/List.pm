@@ -2070,11 +2070,9 @@ sub send_global_file {
     my $lang = $data->{'user'}{'lang'} || $Conf{'lang'};
 
     ## What file   
-    foreach my $f ("$Conf{'etc'}/templates/$action.tpl","--ETCBINDIR--/templates/$action.tpl") {
-	if (-r "$f.$lang") {
-	    $filename = "$f.$lang";
-	    last;
-	}elsif (-r $f) {
+    foreach my $f ("$Conf{'etc'}/templates/$action.$lang.tpl","$Conf{'etc'}/templates/$action.tpl",
+		   "--ETCBINDIR--/templates/$action.$lang.tpl","--ETCBINDIR--/templates/$action.tpl") {
+	if (-r $f) {
 	    $filename = $f;
 	    last;
 	}
@@ -2144,12 +2142,10 @@ sub send_file {
     my $lang = $data->{'user'}{'lang'} || $self->{'lang'} || $Conf{'lang'};
 
     ## What file   
-    foreach my $f ("$action.tpl","$action.mime","$action","$Conf{'etc'}/templates/$action.tpl",
-		   "$Conf{'home'}/$action.mime","$Conf{'home'}/$action","--ETCBINDIR--/templates/$action.tpl") {
-	if (-r "$f.$lang") {
-	    $filename = "$f.$lang";
-	    last;
-	}elsif (-r $f) {
+    foreach my $f ("$action.$lang.tpl","$action.tpl","$action.mime","$action","$Conf{'etc'}/templates/$action.$lang.tpl",
+		   "$Conf{'etc'}/templates/$action.tpl","$Conf{'home'}/$action.mime","$Conf{'home'}/$action",
+		   "--ETCBINDIR--/templates/$action.$lang.tpl","--ETCBINDIR--/templates/$action.tpl") {
+	if (-r $f) {
 	    $filename = $f;
 	    last;
 	}
