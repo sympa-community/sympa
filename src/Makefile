@@ -84,6 +84,8 @@ installetc:
 		$(PERL) ../../subst.pl mhonarc-ressources \
 	)
 	@( \
+		UMASK=0664; export UMASK;\
+		INSTALLDIR=$(ETCBINDIR); export INSTALLDIR;\
 		MAILERPROGDIR=$(MAILERPROGDIR); export MAILERPROGDIR;\
 		cd etc;\
 		$(PERL) ../../subst.pl list_aliases.tpl \
