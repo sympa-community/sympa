@@ -214,7 +214,7 @@ my @param_order = qw (subject visibility info subscribe add unsubscribe del owne
 		      host lang web_archive archive digest available_user_options 
 		      default_user_options reply_to_header reply_to forced_reply_to * 
 		      welcome_return_path remind_return_path user_data_source include_file 
-		      include_list include_ldap_query include_sql_query ttl creation update 
+		      include_list include_ldap_query include_ldap_2level_query include_sql_query ttl creation update 
 		      status serial);
 
 ## List parameters aliases
@@ -502,6 +502,107 @@ my %alias = ('reply-to' => 'reply_to',
 					      },
 				     'occurrence' => '0-n',
 				     'title_id' => 35,
+				     'group' => 'data_source'
+				     },
+	    'include_ldap_2level_query' => {'format' => {'host' => {'format' => $regexp{'host'},
+							     'occurrence' => '1',
+							     'title_id' => 136,
+							     'order' => 1
+							     },
+						  'port' => {'format' => '\d+',
+							     'default' => 389,
+							     'length' => 4,
+							     'title_id' => 137,
+							     'order' => 2
+							     },
+						  'user' => {'format' => '.*',
+							     'title_id' => 138,
+							     'order' => 3
+							     },
+						  'passwd' => {'format' => '.*',
+							       'length' => 10,
+							       'title_id' => 139,
+							       'order' => 3
+							       },
+						  'suffix1' => {'format' => '.*',
+							       'title_id' => 140,
+							       'order' => 4
+							       },
+						  'filter1' => {'format' => '.*',
+							       'length' => 50,
+							       'occurrence' => '1',
+							       'title_id' => 141,
+							       'order' => 7
+							       },
+						  'attrs1' => {'format' => '\w+',
+							      'length' => 15,
+							      'default' => 'mail',
+							      'title_id' => 142,
+							      'order' => 8
+							      },
+						  'select1' => {'format' => ['all','first','regex'],
+							       'default' => 'first',
+							       'title_id' => 143,
+							       'order' => 9
+							       },
+					          'scope1' => {'format' => ['base','one','sub'],
+							      'default' => 'sub',
+							      'title_id' => 197,
+							      'order' => 5
+							      },
+						  'timeout1' => {'format' => '\w+',
+								'default' => 30,
+								'unit' => 'seconds',
+								'title_id' => 198,
+								'order' => 6
+								},
+						  'regex1' => {'format' => '.+',
+								'length' => 50,
+								'default' => '',
+								'title_id' => 201,
+								'order' => 10
+								},
+						  'suffix2' => {'format' => '.*',
+							       'title_id' => 144,
+							       'order' => 11
+							       },
+						  'filter2' => {'format' => '.*',
+							       'length' => 50,
+							       'occurrence' => '1',
+							       'title_id' => 145,
+							       'order' => 14
+							       },
+						  'attrs2' => {'format' => '\w+',
+							      'length' => 15,
+							      'default' => 'mail',
+							      'title_id' => 146,
+							      'order' => 15
+							      },
+						  'select2' => {'format' => ['all','first','regex'],
+							       'default' => 'first',
+							       'title_id' => 147,
+							       'order' => 16
+							       },
+					          'scope2' => {'format' => ['base','one','sub'],
+							      'default' => 'sub',
+							      'title_id' => 199,
+							      'order' => 12
+							      },
+						  'timeout2' => {'format' => '\w+',
+								'default' => 30,
+								'unit' => 'seconds',
+								'title_id' => 200,
+								'order' => 13
+								},
+						  'regex2' => {'format' => '.+',
+								'length' => 50,
+								'default' => '',
+								'title_id' => 201,
+								'order' => 17
+								}
+					      },
+				     'occurrence' => '0-n',
+				     'title_id' => 135,
 				     'group' => 'data_source'
 				     },
 	    'include_list' => {'format' => $regexp{'listname'},
@@ -1085,6 +1186,7 @@ sub load {
 		 || defined $self->{'admin'}{'include_list'}
 		 || defined $self->{'admin'}{'include_sql_query'}
 		 || defined $self->{'admin'}{'include_ldap_query'}
+		 || defined $self->{'admin'}{'include_ldap_2level_query'}
 #		 || defined $self->{'admin'}{'include_admin'}
 		 ) {
 	    &do_log('notice', 'Include paragraph missing in configuration file');
@@ -4726,6 +4828,157 @@ sub _include_users_ldap {
     return $total;
 }
 
+## Returns a list of subscribers extracted indirectly from a remote LDAP
+## Directory using a two-level query
+sub _include_users_ldap_2level {
+    my ($users, $param, $default_user_options) = @_;
+    do_log('debug2', 'List::_include_users_ldap_2level');
+    
+    unless (require Net::LDAP) {
+	do_log ('debug',"Unable to use LDAP library, install perl-ldap (CPAN) first");
+	return undef;
+    }
+
+    my $host = $param->{'host'};
+    my $port = $param->{'port'} || '389';
+    my $user = $param->{'user'};
+    my $passwd = $param->{'passwd'};
+    my $ldap_suffix1 = $param->{'suffix1'};
+    my $ldap_filter1 = $param->{'filter1'};
+    my $ldap_attrs1 = $param->{'attrs1'};
+    my $ldap_select1 = $param->{'select1'};
+    my $ldap_scope1 = $param->{'scope1'};
+    my $ldap_regex1 = $param->{'regex1'};
+    my $ldap_suffix2 = $param->{'suffix2'};
+    my $ldap_filter2 = $param->{'filter2'};
+    my $ldap_attrs2 = $param->{'attrs2'};
+    my $ldap_select2 = $param->{'select2'};
+    my $ldap_scope2 = $param->{'scope2'};
+    my $ldap_regex2 = $param->{'regex2'};
+    
+#    my $default_reception = $admin->{'default_user_options'}{'reception'};
+#    my $default_visibility = $admin->{'default_user_options'}{'visibility'};
+
+    ## LDAP and query handler
+    my ($ldaph, $fetch);
+
+    ## Connection timeout (default is 120)
+    #my $timeout = 30; 
+    
+    unless ($ldaph = Net::LDAP->new($host, port => "$port", timeout => $param->{'timeout'})) {
+	do_log ('notice',"Can\'t connect to LDAP server '$host' '$port' : $@");
+	return undef;
+    }
+    
+    do_log('debug', "Connected to LDAP server $host:$port") if ($main::options{'debug'});
+    
+    if ( defined $user ) {
+	unless ($ldaph->bind ($user, password => "$passwd")) {
+	    do_log ('notice',"Can\'t bind with server $host:$port as user '$user' : $@");
+	    return undef;
+	}
+    }else {
+	unless ($ldaph->bind ) {
+	    do_log ('notice',"Can\'t do anonymous bind with server $host:$port : $@");
+	    return undef;
+	}
+    }
+
+    do_log('debug', "Binded to LDAP server $host:$port ; user : '$user'") if ($main::option{'debug'});
+    
+    do_log('debug', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $host, $ldap_suffix1, $ldap_filter1, $ldap_attrs1) if ($main::options{'debug'});
+    unless ($fetch = $ldaph->search ( base => "$ldap_suffix1",
+                                      filter => "$ldap_filter1",
+				      attrs => "$ldap_attrs1",
+				      scope => "$ldap_scope1")) {
+        do_log('debug',"Unable to perform LDAP search in $ldap_suffix1 for $ldap_filter1 : $@");
+        return undef;
+    }
+    
+    ## Counters.
+    my $total = 0;
+    my $dn; 
+   
+    ## returns a reference to a HASH where the keys are the DNs
+    ##  the second level hash's hold the attributes
+    my $all_entries = $fetch->as_struct ;
+
+    my (@attrs, @emails);
+    foreach $dn (keys %$all_entries) { 
+	my $entry = $all_entries->{$dn}{$ldap_attrs1};
+	
+	## Multiple values
+	if (ref($entry) eq 'ARRAY') {
+	    foreach my $attr (@{$entry}) {
+		next if ($ldap_select1 eq 'regex' && ! $attr =~ /$ldap_regex1/);
+		push @attrs, $attr;
+		last if ($ldap_select1 eq 'first');
+	    }
+	}else {
+	    push @attrs, $entry
+		unless ($ldap_select1 eq 'regex' && ! $entry =~ /$ldap_regex1/);
+	}
+    }
+
+    my ($suffix2, $filter2);
+    foreach my $attr (@attrs) {
+	($suffix2 = $ldap_suffix2) =~ s/\[attrs1\]/$attr/g;
+	($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$attr/g;
+
+	do_log('debug', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $host, $suffix2, $filter2, $ldap_attrs2) if ($main::options{'debug'});
+	unless ($fetch = $ldaph->search ( base => "$suffix2",
+					filter => "$filter2",
+					attrs => "$ldap_attrs2",
+					scope => "$ldap_scope2")) {
+	    do_log('debug',"Unable to perform LDAP search in $suffix2 for $filter2 : $@");
+	    return undef;
+	}
+
+	## returns a reference to a HASH where the keys are the DNs
+	##  the second level hash's hold the attributes
+	my $all_entries = $fetch->as_struct ;
+
+	foreach $dn (keys %$all_entries) { 
+	    my $entry = $all_entries->{$dn}{$ldap_attrs2};
+
+	    ## Multiple values
+	    if (ref($entry) eq 'ARRAY') {
+		foreach my $email (@{$entry}) {
+		    next if ($ldap_select2 eq 'regex' && ! $email =~ /$ldap_regex2/);
+		    push @emails, $email;
+		    last if ($ldap_select2 eq 'first');
+		}
+	    }else {
+		push @emails, $entry
+		    unless ($ldap_select2 eq 'regex' && ! $entry =~ /$ldap_regex2/);
+	    }
+	}
+    }
+    
+    unless ($ldaph->unbind) {
+	do_log('notice','Can\'t unbind from  LDAP server %s:%s',$host,$port);
+	return undef;
+    }
+    
+    foreach my $email (@emails) {
+	next if ($email =~ /^\s*$/);
+	my %u = %{$default_user_options};
+	$u{'email'} = $email;
+	$u{'date'} = time;
+	$u{'update_date'} = time;
+	## should consult user default options
+	unless ($users->{$email}) {
+	    $total++;
+	    $users->{$email} = join("\n", %u);
+	}
+    }
+
+    do_log ('debug',"unbinded from LDAP server %s:%s ",$host,$port) if ($main::options{'debug'});
+    do_log ('debug','%d subscribers included from LDAP query',$total);
+
+    return $total;
+}
+
 ## Returns a list of subscribers extracted from an remote Database
 sub _include_users_sql {
     my ($users, $param, $default_user_options) = @_;
@@ -4867,7 +5120,7 @@ sub _load_users_include {
 	}
 	&do_log('debug2', 'Got lock for writing on %s', $db_file);
 
-    foreach my $type ('include_list','include_file','include_ldap_query','include_sql_query') {
+    foreach my $type ('include_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query') {
 	last unless (defined $total);
 
 	foreach my $incl (@{$admin->{$type}}) {
@@ -4878,6 +5131,8 @@ sub _load_users_include {
 		$included = _include_users_sql(\%users, $incl, $admin->{'default_user_options'});
 	    }elsif ($type eq 'include_ldap_query') {
 		$included = _include_users_ldap(\%users, $incl, $admin->{'default_user_options'});
+	    }elsif ($type eq 'include_ldap_2level_query') {
+		$included = _include_users_ldap_2level(\%users, $incl, $admin->{'default_user_options'});
 	    }elsif ($type eq 'include_list') {
 		$depend_on->{$name} = 1 ;
 		if (&_inclusion_loop ($name,$incl,$depend_on)) {
