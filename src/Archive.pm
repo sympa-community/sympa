@@ -46,7 +46,11 @@ sub outgoing {
 	return undef;
     }
     do_log('debug',"put message in $filename");
-    $msg->print(\*OUT);
+    if (ref ($msg)) {
+  	$msg->print(\*OUT);
+    }else {
+ 	print OUT $msg;
+    }
     close (OUT);
 }
 
@@ -93,13 +97,21 @@ sub store {
 	print OUT "------- THIS IS A RFC934 COMPLIANT DIGEST, YOU CAN BURST IT -------\n\n";
     }
     #   xxxxx we should leave the Received headers isn't ?
-    $msg->print(\*OUT);
+    if (ref ($msg)) {
+  	$msg->print(\*OUT);
+    }else {
+ 	print OUT $msg;
+    }
     print OUT "\n$separator\n\n";
     close(OUT);
     
     ## erase the last  message and replace it by the current one
     open(OUT, "> $dir/last_message");
-    $msg->print(\*OUT);
+    if (ref ($msg)) {
+  	$msg->print(\*OUT);
+    }else {
+ 	print OUT $msg;
+    }
     close(OUT);
     
 }
