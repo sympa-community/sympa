@@ -108,15 +108,9 @@
 	
 	[IF s->edit]
 	  <TD><center>
-	  <form method="post" ACTION="[path_cgi]">
-	  <FONT size=-2>
-	  <input type="button" value="    " name="action_d_delete" onClick="request_confirm(this.form,
-'Do you really want to delete [path][s->doc] ?')">
+	  <FONT size=-1>
+	  <A HREF="[path_cgi]/d_delete/[list]/[path][s->doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[path][s->doc]', 'Do you really want to delete [path][s->doc] ?'); return false;">delete</A>
 	  </FONT>
-	  <INPUT TYPE="hidden" NAME="action" VALUE="d_delete">
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	  <INPUT TYPE="hidden" NAME="path" VALUE="[path][s->doc]">
-	  </form>	 
 	  </center></TD>
 	[ELSE]
 	  <TD>&nbsp; </TD>
@@ -125,13 +119,9 @@
 	[IF s->control]
 	  <TD>
 	  <center>
-	  <form method="post" ACTION="[path_cgi]">
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	  <INPUT TYPE="hidden" NAME="path" VALUE="[path][s->doc]">
-	  <FONT size=-2>     
-	  <input type="submit" value="    " name="action_d_control">
+	  <FONT size=-1>
+	  <A HREF="[path_cgi]/d_control/[list]/[path][s->doc]">access</A>
 	  </font>
-	  </form>
 	  </center>
 	  </TD>	 
 	[ELSE]
@@ -169,26 +159,17 @@
 	[IF f->edit]
 	<TD>
 	<center>
-	<form method="post" ACTION="[path_cgi]">
-	<font size=-2>
-        <input type="submit" value="    " name="action_d_editfile">
+	<font size=-1>
+	<A HREF="[path_cgi]/d_editfile/[list]/[path][f->doc]">edit</A>
 	</font>
-	<INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	<INPUT TYPE="hidden" NAME="path" VALUE="[path][f->doc]">
-	</form>
 	</center>
 
 	</TD>
 	<TD>
 	<center>
-	<form method="post" ACTION="[path_cgi]">
-	<FONT size=-2>
-	<input type="button" value="    " name="action_d_delete" 
-	onClick="request_confirm(this.form,'Do you really want to delete [path][s->doc] ([f->size] Kb) ?')">
+	<FONT size=-1>
+	<A HREF="[path_cgi]/d_delete/[list]/[path][f->doc]" onClick="request_confirm_link('[path_cgi]/d_delete/[list]/[path][f->doc]', 'Do you really want to delete [path][s->doc] ([f->size] Kb) ?'); return false;">delete</A>
 	</FONT>
-	<INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	<INPUT TYPE="hidden" NAME="path" VALUE="[path][f->doc]">
-	</form>
 	</center>
 	</TD>
 	[ELSE]
@@ -197,13 +178,9 @@
 		 
 	[IF f->control]
 	  <TD> <center>
-	  <form method="post" ACTION="[path_cgi]">
-	  <font size=-2>
-	  <input type="submit" value="    " name="action_d_control">
+	  <font size=-1>
+	  <A HREF="[path_cgi]/d_control/[list]/[path][f->doc]">access</A>
 	  </font>
-	  <INPUT TYPE="hidden" NAME="list" VALUE="[list]">
-	  <INPUT TYPE="hidden" NAME="path" VALUE="[path][f->doc]">     
-	  </form>
 	  </center></TD>
 	[ELSE]
 	<TD>&nbsp; </TD>
