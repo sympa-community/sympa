@@ -4425,7 +4425,7 @@ sub do_remindpasswd {
 	 &tt2::add_include_path("$Conf{'queuemod'}/.$list->{'name'}_$in{'id'}") ;
      }
 
-     $param->{'base'} = sprintf "%s%s/viewmod/%s/%s/", $param->{'base_url'}, $param->{'path_cgi'}, $param->{'list'}, $in{'id'};
+     $param->{'base'} = sprintf "%s/viewmod/%s/%s/", &Conf::get_robot_conf($robot, 'wwsympa_url'), $param->{'list'}, $in{'id'};
      $param->{'id'} = $in{'id'};
 
      return 1;
@@ -5181,7 +5181,7 @@ sub get_timelocal_from_date {
 
      my $search = new Marc::Search;
      $search->search_base ($wwsconf->{'arc_path'} . '/' . $param->{'list'} . '@' . $param->{'host'});
-     $search->base_href ($param->{'base_url'}.$param->{'path_cgi'} . '/arc/' . $param->{'list'});
+     $search->base_href (&Conf::get_robot_conf($robot, 'wwsympa_url') . '/arc/' . $param->{'list'});
      $search->archive_name ($in{'archive_name'});
 
      unless (defined($in{'directories'})) {
@@ -5340,7 +5340,7 @@ sub get_timelocal_from_date {
 
      my $search = new Marc::Search;
      $search->search_base ($wwsconf->{'arc_path'} . '/' . $param->{'list'} . '@' . $param->{'host'});
-     $search->base_href ($param->{'base_url'}.$param->{'path_cgi'} . '/arc/' . $param->{'list'});
+     $search->base_href (&Conf::get_robot_conf($robot, 'wwsympa_url') . '/arc/' . $param->{'list'});
 
      $search->archive_name ($in{'archive_name'});
 
