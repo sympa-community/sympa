@@ -6041,6 +6041,12 @@ sub do_d_savefile {
     if ($in{'url'}) {
 	$path .= $in{'name_doc'} . '.url';
     }
+    
+    if ($path =~ /[\[\]]$/) {
+	&error_message('incorrect_name', {'name' => $path});
+	&wwslog('info',"do_d_savefile : Unable to create file $path : incorrect name");
+	return undef;
+    }
 
     ## $path must have no slash at its end
     $path = &format_path('without_slash',$path);
@@ -6372,7 +6378,7 @@ sub do_d_upload {
     # The name of the file must be correct and musn't not be a description file
     if ($fname =~ /^\./
 	|| $fname =~ /\.desc/ 
-	|| $fname =~ /[~\#]$/) {
+	|| $fname =~ /[~\#\[\]]$/) {
 
 #    unless ($fname =~ /^\w/ and 
 #	    $fname =~ /\w$/ and 
@@ -6637,7 +6643,7 @@ sub do_d_rename {
 
     if ($in{'new_name'} =~ /^\./
 	|| $in{'new_name'} =~ /\.desc/ 
-	|| $in{'new_name'} =~ /[~\#]$/) {
+	|| $in{'new_name'} =~ /[~\#\[\]]$/) {
 	&error_message('incorrect_name', {'name' => $in{'new_name'}});
 	&wwslog('info',"do_d_rename : Unable to create file $in{'new_name'} : incorrect name");
 	return undef;
@@ -6723,7 +6729,7 @@ sub do_d_create_dir {
     # The name of the directory must be correct
     if ($name_doc =~ /^\./
 	|| $name_doc =~ /\.desc/ 
-	|| $name_doc =~ /[~\#]$/) {
+	|| $name_doc =~ /[~\#\[\]]$/) {
 	&error_message('incorrect_name', {'name' => $name_doc});
 	&wwslog('info',"do_d_create_dir : Unable to create directory $name_doc : incorrect name");
 	return undef;
