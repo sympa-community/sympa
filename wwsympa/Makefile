@@ -55,33 +55,41 @@ makedir:
 	fi
 
 installsrc:
+	@echo
 	@echo "Installing sources..."
 	cp $(SRC) $(DESTDIR)$(WWSBINDIR)
 	cp Marc/Search.pm $(DESTDIR)$(BINDIR)/Marc
 
 installtemplates:
+	@echo
 	@echo "Installing templates..."
-	PERL=$(PERL); export PERL; \
-	INSTALLDIR=$(ETCBINDIR); export INSTALLDIR; \
-	BINDIR=$(BINDIR); export BINDIR; \
-	DESTDIR=$(DESTDIR); export DESTDIR; \
-	ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
-	DARK_COLOR=$(DARK_COLOR); export DARK_COLOR; \
-	LIGHT_COLOR=$(LIGHT_COLOR); export LIGHT_COLOR; \
-	SELECTED_COLOR=$(SELECTED_COLOR); export SELECTED_COLOR; \
-	TEXT_COLOR=$(TEXT_COLOR); export TEXT_COLOR; \
-	BG_COLOR=$(BG_COLOR); export BG_COLOR; \
-	ERROR_COLOR=$(ERROR_COLOR); export ERROR_COLOR; \
-	SHADED_COLOR=$(SHADED_COLOR); export SHADED_COLOR; \
-	COL1=5; export COL1; \
-	COL2=40; export COL2; \
-	COL3=30; export COL3; \
-	COL4=40; export COL4; \
-	COL12=45; export COL12; \
-	COL23=70; export COL23; \
-	COL34=70; export COL34; \
-	COL234=110; export COL234; \
-	$(PERL) ../subst.pl wws_templates/* 
+	@for lang in wws_templates/* ; do \
+		echo $$lang; \
+		( \
+		cd $$lang; \
+		PERL=$(PERL); export PERL; \
+		INSTALLDIR=$(ETCBINDIR)/wws_templates; export INSTALLDIR; \
+		BINDIR=$(BINDIR); export BINDIR; \
+		DESTDIR=$(DESTDIR); export DESTDIR; \
+		ETCBINDIR=$(ETCBINDIR); export ETCBINDIR; \
+		DARK_COLOR=$(DARK_COLOR); export DARK_COLOR; \
+		LIGHT_COLOR=$(LIGHT_COLOR); export LIGHT_COLOR; \
+		SELECTED_COLOR=$(SELECTED_COLOR); export SELECTED_COLOR; \
+		TEXT_COLOR=$(TEXT_COLOR); export TEXT_COLOR; \
+		BG_COLOR=$(BG_COLOR); export BG_COLOR; \
+		ERROR_COLOR=$(ERROR_COLOR); export ERROR_COLOR; \
+		SHADED_COLOR=$(SHADED_COLOR); export SHADED_COLOR; \
+		COL1=5; export COL1; \
+		COL2=40; export COL2; \
+		COL3=30; export COL3; \
+		COL4=40; export COL4; \
+		COL12=45; export COL12; \
+		COL23=70; export COL23; \
+		COL34=70; export COL34; \
+		COL234=110; export COL234; \
+		$(PERL) ../../../subst.pl *.tpl; \
+		); \
+	done
 	$(PERL) ../set_symlinks.pl wws_templates $(DESTDIR)$(ETCBINDIR)/wws_templates
 	chmod -R 644 $(DESTDIR)$(ETCBINDIR)/wws_templates
 
