@@ -968,7 +968,8 @@ you may change this behaviour by editing \file {sympa.conf}'s
 \lparam {log\_socket\_type} parameter (\ref{par-log-socket-type},
 page~\pageref{par-log-socket-type}).
 
-\section {Daemon loading}
+\section {sympa.pl}
+\label{sympa.pl}
 
 Once the files are configured, all that remains is to start \Sympa.
 At startup, \file {sympa.pl} will change its UID to sympa (as defined in \file {Makefile}).
@@ -2082,13 +2083,48 @@ Example:
 \end{verbatim}  
 \end {quote}
 
+\section {Importing subscribers data}
+
+\subsection {Importing data from a text file}
+
+You can import subscribers data into the database from a text file having
+one entry per line : the first field is an email address, the second (optional) 
+field is the free form name.  Fields are spaces-separated.
+
+Example:
+\begin {quote}
+\begin{verbatim}
+## Data to be imported
+## email        gecos
+john.steward@some.company.com           John - accountant
+mary.blacksmith@another.company.com     Mary - secretary
+\end{verbatim}  
+\end {quote}
+
+To import data into the database :
+
+\begin {quote}
+\begin{verbatim}
+cat /tmp/my_import_file | sympa.pl --import=my_list
+\end{verbatim}  
+\end {quote}
+
+(see \ref {sympa.pl}, page~\pageref {sympa.pl}).
+
+
 \subsection {Importing data from subscribers files}
 
-You might need to import subscriber data into the sympa database
-from an older version of \Sympa. Simply edit the 
-list configuration using \WWSympa (this requires listmaster privileges) 
-and change the data source from \textbf {file} to \textbf {database}. 
-
+If a mailing list was previously setup to store subscribers into 
+\file {subscribers} file (the default mode in versions older then 2.2b) 
+you can load subscribers data into the sympa database. The simple way
+is to edit the list configuration using \WWSympa (this requires listmaster 
+privileges) and change the data source from \textbf {file} to \textbf {database}
+; subscribers data will be loaded into the database at the same time.
+ 
+If the subscribers file is too big, a timeout may accur with the FastCGI
+(You can set longer timeout with \texttt {-idle-timeout} option of
+\texttt {FastCgiServer} Apache configuration directive). Then you should
+use \file {load\_subscribers.pl} script.
 
 
 \section {\Sympa configuration}
