@@ -455,7 +455,7 @@ sub _load_auth {
 	
       	if (/^\s*(\S+)\s*$/o) {$parag_name = $1;}
 	
-	if (/^\s*(\S+)\s+(\S+)\s*$/o){
+	if (/^\s*(\S+)\s+(.*\S)\s*$/o){
 	    
 	    my ($keyword,$value) = ($1,$2);
 	    $current_paragraph->{$keyword} = $value;
