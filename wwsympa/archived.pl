@@ -154,7 +154,7 @@ while (!$end) {
        fatal_err("Can't open dir %s: %m", $queue); ## No return.
    }
 
-   my @files =  (sort grep(!/^\.{1,2}$/, readdir DIR ));
+   my @files =  (grep(!/^\.{1,2}$/, readdir DIR ));
    closedir DIR;
 
    ## this sleep is important to be raisonably sure that sympa is not currently
@@ -331,10 +331,8 @@ sub rebuild {
 sub mail2arc {
 
     my ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss) = @_;
-
-    do_log ('debug2',"mail2arc ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss)");
-
     my $arcpath = $wwsconf->{'arc_path'};
+    my $newfile;
     
 
     my $list = new List($listname);
@@ -396,11 +394,22 @@ sub mail2arc {
     }
     
     ## copy the file in the arctxt and in "mhonarc -add"
-    opendir (DIR, "$arcpath/$listname\@$hostname/$yyyy-$mm/arctxt");
-    my @files = (sort { $a <=> $b;}  readdir(DIR)) ;
-    $files[$#files]+=1;
-    my $newfile = $files[$#files];
-#    my $newfile = $files[$#files]+=1;
+     if( -f "$arcpath/$listname\@$hostname/$yyyy-$mm/index" )
+     {
+	open(IDX,"<$arcpath/$listname\@$hostname/$yyyy-$mm/index") || fatal_err("couldn't read index for $listname");
+	$newfile = <IDX>;
+	chomp($newfile);
+	$newfile++;
+	close IDX;
+     }
+     else
+     {
+	do_log('debug',"indexing $listname archive");
+	opendir (DIR, "$arcpath/$listname\@$hostname/$yyyy-$mm/arctxt");
+	my @files = (sort { $a <=> $b;}  readdir(DIR)) ;
+	$files[$#files]+=1;
+	$newfile = $files[$#files];
+     }
     
     my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources',$list->{'domain'}, $list);
     
@@ -421,6 +430,7 @@ sub mail2arc {
     
     close ORIG;  
     close DEST;
+    &save_idx("$arcpath/$listname\@$hostname/$yyyy-$mm/index",$newfile);
 }
 
 sub set_hidden_mode {
@@ -434,4 +444,12 @@ sub unset_hidden_mode {
     $ENV{'M2H_ADDRESSMODIFYCODE'} = '';
 }
 
+sub save_idx {
+    my ($index,$lst) = @_;
+    
+    open(INDEXF,">$index") || fatal_err("couldn't overwrite index $index");
+    print INDEXF "$lst\n";
+    close INDEXF;
+    #   do_log('debug',"last arc entry for $index is $lst");
+}
 
