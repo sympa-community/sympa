@@ -8,7 +8,7 @@ Content-transfer-encoding: 8bit
 [ELSE]
 Hi,
 
-This list is about [list->subject], so you are probably concern.
+This list is about [list->subject], so you are probably concerned.
 
 To subscribe just reply to this message or hit the following mailto url :
 [url]
