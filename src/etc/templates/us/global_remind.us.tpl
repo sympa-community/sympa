@@ -3,9 +3,10 @@
 
 Synthèse de vos abonnements (avec l'adresse [user->email]).
 
-Ce message est strictement informatif, si vous ne souhaitez pas modifier
-vos abonnements vous n'avez rien à entreprendre ; mais si vous souhaitez
-vous désabonner de certaines listes, conservez bien ce message.
+Ce message est strictement informatif. Si vous ne souhaitez pas modifier
+vos abonnements vous n'avez rien à faire, mais si vous souhaitez
+vous désabonner de certaines listes, appliquez les instructions qui
+suivent et conservez ce message.
 
 Voici pour chaque liste  une méthode de désabonnement :
 
