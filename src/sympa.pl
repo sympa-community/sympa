@@ -578,9 +578,9 @@ sub DoFile {
 	return undef;
     }
     
-    open TMP, ">/tmp/dump";
-    $message->dump(\*TMP);
-    close TMP;
+#    open TMP, ">/tmp/dump";
+#    $message->dump(\*TMP);
+#    close TMP;
 
     my $msg = $message->{'msg'};
     my $hdr = $msg->head;
