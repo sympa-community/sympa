@@ -6,10 +6,10 @@
 [listname]-unsubscribe: "| [path_to_queue] [listname]-unsubscribe@[domain]"
 [listname]-owner: "| [path_to_bouncequeue] [listname]-unsubscribe@[domain]"
 [ELSE]
-[DOMAIN]-[listname]: "| [path_to_queue] [listname]@[domain]"
-[DOMAIN]-[listname]-request: "| [path_to_queue] [listname]-request@[domain]"
-[DOMAIN]-[listname]-editor: "| [path_to_queue] [listname]-editor@[domain]"
-#[DOMAIN]-[listname]-subscribe: "| [path_to_queue] [listname]-subscribe@[domain]"
-[DOMAIN]-[listname]-unsubscribe: "| [path_to_queue] [listname]-unsubscribe@[domain]"
-[DOMAIN]-[listname]-owner: "| [path_to_bouncequeue] [listname]-unsubscribe@[domain]"
+[domain]-[listname]: "| [path_to_queue] [listname]@[domain]"
+[domain]-[listname]-request: "| [path_to_queue] [listname]-request@[domain]"
+[domain]-[listname]-editor: "| [path_to_queue] [listname]-editor@[domain]"
+#[domain]-[listname]-subscribe: "| [path_to_queue] [listname]-subscribe@[domain]"
+[domain]-[listname]-unsubscribe: "| [path_to_queue] [listname]-unsubscribe@[domain]"
+[domain]-[listname]-owner: "| [path_to_bouncequeue] [listname]-unsubscribe@[domain]"
 [ENDIF]
