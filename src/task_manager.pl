@@ -686,7 +686,8 @@ sub execute {
 	
 	# processing of the assignments
 	if ($result{'nature'} eq 'assignment') {
-	    $vars{$result{'var'}} = cmd_process ($result{'command'}, $result{'Rarguments'}, $task_file, \%vars, $lnb);
+	    $vars{$result{'var'}} = &cmd_process ($result{'command'}, $result{'Rarguments'}, $task_file, \%vars, $lnb);
+	    last unless defined($status);
 	}
 	
 	# processing of the commands
@@ -835,6 +836,9 @@ sub next_cmd {
     &do_log ('notice', "line $context->{'line_number'} of $context->{'task_name'} : next ($date, $label)");
 
     my @name = split /\./, $context->{'task_name'};
+
+    ## Last item (listname) can contain '.' chars
+    $name[3] = join('.',@name[3..$#name]);
     my $model = $name[2];
 
     ## Determine type

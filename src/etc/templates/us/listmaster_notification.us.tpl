@@ -28,4 +28,8 @@ edit_list.conf format has changed :
 Refer to documentation to adapt [param0].
 Until then we recommend your remove [param0] ; 
 default configuration will be used.
+[ELSE]
+Subject: [type]
+
+[param0]
 [ENDIF]

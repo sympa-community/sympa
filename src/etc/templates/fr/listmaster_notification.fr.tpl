@@ -29,5 +29,9 @@ Le format du fichier de configuration edit_list.conf a changé :
 Reportez-vous à la documentation pour adapter [param0].
 D'ici là, nous vous suggérons de supprimer [param0].
 La configuration par défaut sera utilisée.
+[ELSE]
+Subject: [type]
+
+[param0]
 
 [ENDIF]
