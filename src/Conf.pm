@@ -78,6 +78,7 @@ my %Default_Conf =
      'maxsmtp' => 20,
      'sendmail'=> '/usr/sbin/sendmail',
      'sendmail_args' => '-oi -odi -oem',
+     'sendmail_aliases' => '--SENDMAIL_ALIASES--',
      'openssl' => '',
      'host'    => undef,
      'domain'  => undef,
