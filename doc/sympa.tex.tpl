@@ -12,6 +12,7 @@
     \usepackage {xspace}
     \usepackage {makeidx}
     \usepackage {html}
+    \usepackage[frenchb]{babel}
 
     \usepackage {palatino}
     \renewcommand {\ttdefault} {cmtt}
@@ -106,7 +107,7 @@
     \newcommand {\rfcheader} [1] {\ttindex {#1:} {#1:} {header}}
 
     % Notice: use {\at} when using \mailaddr
-    \newcommand {\at} {\char64}
+    %\newcommand {\at} {\char64}
     \newcommand {\mailaddr} [1] {\texttt {#1}}   
 % mail address
 %        {\ttindex {#1} {#1} {mail address}}
@@ -433,7 +434,7 @@ Our thanks to all contributors, including:
 
   \item and also: Manuel Valente, Dominique ROUSSEAU,
     Laurent Ghys, Francois Petillon, Guy Brand, Jean Brange, Fabrice
-    Gaillard, Hervé Maza, Harald Wilhelmi, 
+    Gaillard, Herv\'e Maza, Harald Wilhelmi, 
 
    \item Anonymous critics who never missed a chance to
        remind us that \textit {smartlist} already did all that
@@ -1274,7 +1275,7 @@ is still recognized but should not be used anymore.
 
 \subsection {\cfkeyword {wwsympa\_url}}  
 
-	 \default {http://<host>/wws}
+	 \default {http://\texttt{<}host\texttt{>}/wws}
 
 	This is the root URL of \WWSympa.
 
@@ -1781,7 +1782,7 @@ db_env	ORACLE_TERM=vt100;ORACLE_HOME=/var/hote/oracle/7.3.4
 	If your \textbf {subscriber\_table} database table has more fields
 	than required by \Sympa (because other softwares work this set of
 	data), you can make \Sympa load these fields. Therefore, you can
-	use them from within mail/web templates (as [subscriber-$>$field]).
+	use them from within mail/web templates (as [subscriber-\texttt{>}field]).
 
 	This parameter is a comma-separated list.
 
@@ -1799,7 +1800,7 @@ db_additional_subscriber_fields 	billing_delay,subscription_expiration
 	If your \textbf {user\_table} database table has more fields
 	than required by \Sympa (because other softwares work this set of
 	data), you can make \Sympa load these fields. Therefore, you can
-	use them from within mail/web templates (as [user-$>$field]).
+	use them from within mail/web templates (as [user-\texttt{>}field]).
 
 	This parameter is a comma-separated list.
 
@@ -2088,8 +2089,8 @@ To run \WWSympa with FastCGI, you need to install :
 	script distributed with \Sympa. The script will receive the following arguments :
 	\begin{enumerate}
 		\item add | del
-		\item <list name>
-		\item <list domain>
+		\item \texttt{<}list name\texttt{>}
+		\item \texttt{<}list domain\texttt{>}
 	\end{enumerate}
 	Example : \tildefile {sympa/bin/alias\_manager.pl} add \samplelist cru.fr
 
@@ -2202,8 +2203,8 @@ MhOnArc is a neat little converter from mime messages to html. Refer to
 
 The long mhonarc resource file is used by \WWSympa in a particular way,
 as mhonarc is used to produce not a complete html document, but only part
-(to be included in a complete document starting with $<$HTML$>$ and terminating
-with $<$/HTML$>$ ;-) )
+(to be included in a complete document starting with \texttt{<}HTML\texttt{>} and terminating
+with \texttt{<}/HTML\texttt{>} ;-) )
 The best way to start is to use the MhOnArc resource file as
 provided in the \WWSympa distribution. 
 
@@ -2909,13 +2910,13 @@ This is done using the optional parameters \unixcmd {openSSL} and
          usually \texttt {/usr/local/ssl/bin/openSSL}
   \item \cfkeyword {trusted\_ca\_options} : the option used by OpenSSL
         for trusted CA certificates. 
-        The file \cfkeyword {/home/sympa/bin/etc/ca-bundle.crt} is distributed
+        The file \cfkeyword {\tildefile {sympa/bin/etc/ca-bundle.crt}} is distributed
         with Sympa and describes a well known set of CA's, such as the default Netscape
         navigator configuration. You can declare this set of certificates as trusted
-        by setting \texttt {trusted\_ca\_options -CAfile /home/sympa/bin/etc/ca-bundle.crt}.
+        by setting \texttt {trusted\_ca\_options -CAfile \tildefile {sympa/bin/etc/ca-bundle.crt}}.
         You can also use the \cfkeyword {-CApath} \unixcmd {openSSL} option, or both 
         \cfkeyword {-CApath} and \cfkeyword {-CAfile}. Example :       
-        \texttt {trusted\_ca\_options -CApath /home/sympa/etc/ssl.crt -CAfile /home/sympa/bin/etc/ca-bundle.crt}.
+        \texttt {trusted\_ca\_options -CApath \tildefile {sympa/etc/ssl.crt} -CAfile \tildefile {sympa/bin/etc/ca-bundle.crt}}.
 
 	Both the \cfkeyword {-CAfile} file and the \cfkeyword {-CApath} directory
         should be shared with your Apache+mod\_ssl configuration. This is useful
@@ -3204,7 +3205,7 @@ The following describes the syntactical elements of templates.
 
 Variables are enclosed between brackets '\textit {[]}'. The variable name
 is composed of alphanumerics (0-1a-zA-Z) or underscores (\_).
-The syntax for accessing an element in a '\textit{hash}' is [hash-$>$elt].
+The syntax for accessing an element in a '\textit{hash}' is [hash-\texttt{>}elt].
 
 \textit {Examples:} 
 \begin {quote}
@@ -3221,7 +3222,7 @@ documentation.
 
 \subsection {Conditions}
 
-Conditions include variable comparisons (= and $<$$>$), or existence.
+Conditions include variable comparisons (= and \texttt{<}\texttt{>}), or existence.
 Syntactical elements for conditions are [IF xxx], [ELSE], [ELSIF xxx] and
 [ENDIF].
 
@@ -3261,9 +3262,9 @@ A review of public lists
 \end{verbatim}
 \end {quote}
 
-\texttt {[elt-$>$NAME]} is a special element of the current entry providing 
+\texttt {[elt-\texttt{>}NAME]} is a special element of the current entry providing 
 the key in the '\textit{hash}' (in this example the name of the list). When traversing
-an '\textit{array}', \texttt{[elt-$>$INDEX]} is the index of the current
+an '\textit{array}', \texttt{[elt-\texttt{>}INDEX]} is the index of the current
 entry.
 
 \subsection {File inclusions}
@@ -3337,16 +3338,16 @@ These files are used by Sympa as service messages for the \mailcmd {HELP},
 See \ref {tpl-format}, 
 page~\pageref {tpl-format}. 
 
-Sympa looks for these files in the following order (where $<$list$>$ is the
-listname if defined, $<$action$>$ is the name of the command, and $<$lang$>$ is
+Sympa looks for these files in the following order (where \texttt{<}list\texttt{>} is the
+listname if defined, \texttt{<}action\texttt{>} is the name of the command, and \texttt{<}lang\texttt{>} is
 the preferred language of the user) :
 \begin {enumerate}
-	\item \tildedir {sympa/expl/$<$list$>$/$<$action$>$.$<$lang$>$.tpl}. 
-	\item \tildedir {sympa/expl/$<$list$>$/$<$action$>$.tpl}. 
-	\item \tildedir {sympa/etc/templates/$<$action$>$.$<$lang$>$.tpl}. 
-	\item \tildedir {sympa/etc/templates/$<$action$>$.tpl}. 
-	\item \tildedir {sympa/bin/etc/templates/$<$action$>$.$<$lang$>$.tpl}.
-	\item \tildedir {sympa/bin/etc/templates/$<$action$>$.tpl}.
+	\item \tildedir {sympa/expl/\texttt{<}list\texttt{>}/\texttt{<}action\texttt{>}.\texttt{<}lang\texttt{>}.tpl}. 
+	\item \tildedir {sympa/expl/\texttt{<}list\texttt{>}/\texttt{<}action\texttt{>}.tpl}. 
+	\item \tildedir {sympa/etc/templates/\texttt{<}action\texttt{>}.\texttt{<}lang\texttt{>}.tpl}. 
+	\item \tildedir {sympa/etc/templates/\texttt{<}action\texttt{>}.tpl}. 
+	\item \tildedir {sympa/bin/etc/templates/\texttt{<}action\texttt{>}.\texttt{<}lang\texttt{>}.tpl}.
+	\item \tildedir {sympa/bin/etc/templates/\texttt{<}action\texttt{>}.tpl}.
 \end {enumerate}
 
 If the file starts with a From: line, it is considered as
@@ -3357,23 +3358,23 @@ The following variables may be used in these template files :
 
 \begin {itemize}
 
-	\item[-] [conf-$>$email] : sympa e-mail address local part
+	\item[-] [conf-\texttt{>}email] : sympa e-mail address local part
 
-	\item[-] [conf-$>$domain] : sympa robot domain name
+	\item[-] [conf-\texttt{>}domain] : sympa robot domain name
 
-	\item[-] [conf-$>$sympa] : sympa's complete e-mail address
+	\item[-] [conf-\texttt{>}sympa] : sympa's complete e-mail address
 
-	\item[-] [conf-$>$wwsympa\_url] : \WWSympa root URL
+	\item[-] [conf-\texttt{>}wwsympa\_url] : \WWSympa root URL
 
-	\item[-] [conf-$>$listmaster] : listmaster e-mail addresses
+	\item[-] [conf-\texttt{>}listmaster] : listmaster e-mail addresses
 
-	\item[-] [user-$>$email] : user e-mail address
+	\item[-] [user-\texttt{>}email] : user e-mail address
 
-	\item[-] [user-$>$gecos] : user gecos field (usually his/her name)
+	\item[-] [user-\texttt{>}gecos] : user gecos field (usually his/her name)
 
-	\item[-] [user-$>$password] : user password
+	\item[-] [user-\texttt{>}password] : user password
 
-	\item[-] [user-$>$lang] : user language	
+	\item[-] [user-\texttt{>}lang] : user language	
 
 \end {itemize}
 
@@ -3509,8 +3510,8 @@ The cookie format is :
 user=<user_email>:<md5>
 \end{verbatim}
 
-where $<$user\_email$>$ is the user's complete e-mail address, and
-$<$md5$>$ is a MD5 checksum of the $<$user\_email$>$+\Sympa \cfkeyword {cookie}
+where \texttt{<}user\_email\texttt{>} is the user's complete e-mail address, and
+\texttt{<}md5\texttt{>} is a MD5 checksum of the \texttt{<}user\_email\texttt{>}+\Sympa \cfkeyword {cookie}
 configuration parameter.
 Your application needs to know what the \cfkeyword {cookie} parameter
 is, so it can check the HTTP cookie validity ; this is a secret shared
@@ -3640,7 +3641,7 @@ contains all lists for which a topic has not been specified.
 List parameters controlling the behavior of commands are linked to different scenarii.
 For example : the \cfkeyword {send private} parameter is related to the send.private scenario.
 There are three possible locations for a scenario. When \Sympa seeks to apply a scenario, it
-looks first in the related list directory \tildedir {sympa/expl/$<$list$>$/scenari}. If it
+looks first in the related list directory \tildedir {sympa/expl/\texttt{<}list\texttt{>}/scenari}. If it
 does not find the file there, it scans \tildedir {sympa/etc/scenari},
 and finally \tildedir {sympa/bin/etc/scenari}, which is the directory installed by the Makefile.
 
@@ -3744,18 +3745,18 @@ Rules are defined as follows :
 (Refer to  \ref {tasks}, page~\pageref {tasks} for date format definition)
 
 perl\_regexp can contain the string [host] (interpreted at run time as the list or robot domain).
-The variable notation [msg\_header-$>$<smtp\_key\_word>] is interpreted as the SMTP header value only when performing
+The variable notation [msg\_header-\texttt{>}\texttt{<}smtp\_key\_word\texttt{>}] is interpreted as the SMTP header value only when performing
 the sending message scenario. It can be used, for example, to require editor validation for multipart messages.
-[msg\_part-$>$type] and [msg\_part-$>$body] are the MIME parts content-types and bodies ; the body is available
+[msg\_part-\texttt{>}type] and [msg\_part-\texttt{>}body] are the MIME parts content-types and bodies ; the body is available
 for MIME parts in text/xxx format only.
 
 
 A bunch of scenarii is provided with the \Sympa distribution ; they provide
 all possible configurations as defined in previous releases of \Sympa
-($<$= 2.3) without any change in your list configuration files. 
+(\texttt{<}= 2.3) without any change in your list configuration files. 
 
 These standard scenarii are located in the \tildedir {sympa/bin/scenari/}
-directory. Default scenarii are named <command>.default.
+directory. Default scenarii are named \texttt{<}command\texttt{>}.default.
 
 You may also define and name your own scenarii. Store them in the
 \tildedir {sympa/etc/scenari} directory. 
@@ -3766,7 +3767,7 @@ Copy the previous scenario to \file {scenari/subscribe.rennes1} :
 \begin {quote}
 \begin{verbatim}
 equal([sender], 'userxxx@univ-rennes1.fr') smtp,smime -> reject
-match([sender], /univ-rennes1\.fr$/) smtp,smime -> do_it
+match([sender], /univ-rennes1\.fr\$/) smtp,smime -> do_it
 true()                               smtp,smime -> owner
 \end{verbatim}
 \end {quote}
@@ -3798,7 +3799,7 @@ before introducing the other rules. This possibility was introduced in
 order to facilitate the administration of common rules.
 
 You can define a set of common scenario rules, used by all lists.
-include.<action>.header is automatically added to evaluated scenarios.
+include.\texttt{<}action\texttt{>}.header is automatically added to evaluated scenarios.
 
 
 %[idees de scenario]
@@ -3866,7 +3867,7 @@ For example a task sends every year the subscribers of a list a message to remin
 
 A task is created with a task model. It is a text file which describes a sequence of simple actions. 
 It may have different versions (for instance reminding subscribers every year or semester).
-A task model file name has the following format : \file {<model name>.<model version>.task}.
+A task model file name has the following format : \file {\texttt{<}model name\texttt{>}.\texttt{<}model version\texttt{>}.task}.
 For instance \file {remind.annual.task}  or \file {remind.semestrial.task}.
 
 \Sympa provides several task models stored in \tildedir {sympa/bin/etc/global\_task\_models} 
@@ -3883,7 +3884,7 @@ create the task by looking for the appropriate model file in differents director
 following order :
 
 \begin {enumerate}
-	\item \tildedir {sympa/expl/$<$list name$>$/}
+	\item \tildedir {sympa/expl/\texttt{<}list name\texttt{>}/}
 	\item \tildedir {sympa/etc/list\_task\_models/}
 	\item \tildedir {sympa/bin/etc/list\_task\_models/}
 \end {enumerate}
@@ -3910,7 +3911,7 @@ and commands. All those syntactical elements are composed of alphanumerics (0-9a
 \item Comment lines begin by '\#' and are not interpreted by the task manager.
 \item Label lines begin by '/' and are used by the next command (see below).
 \item References are enclosed between brackets '[]'. They refer to a value 
-depending on the object of the task (for instance [list$->$name]). Those variables
+depending on the object of the task (for instance [list-\texttt{>}name]). Those variables
 are instantiated when a task file is created from a model file. The list of available 
 variables is the same as for templates (see \ref {list-tpl}, see 
 page~\pageref {list-tpl}) plus [creation\_date] (see below).
@@ -3921,7 +3922,7 @@ Their name begins with '@'.
 
 	\begin {itemize}
 		\item absolute dates follow the format : xxxxYxxMxxDxxHxxMin. Y is the year, 
-		M the month (1-12), D the day (1-28$|$30$|$31, leap-years are not managed),
+		M the month (1-12), D the day (1-28\texttt{|}30\texttt{|}31, leap-years are not managed),
 		H the hour (0-23), Min the minute (0-59). H and Min are optionnals.
 		For instance, 2001y12m4d44min is the 4th of December 2001 at 00h44.
  
@@ -3937,30 +3938,30 @@ Their name begins with '@'.
 \item Command arguments are separated by commas and enclosed between parenthesis '()'.
 \end {itemize}
 
-Here is the list of current avalaible commands :
+Here is the list of current avalable commands :
 \begin {itemize}
 \item stop ()
 
 	Stops the execution of the task and delete the task file
-\item next ($<date value>, <label>$)
+\item next (\texttt{<}date value\texttt{>}, \texttt{<}label\texttt{>})
 
 	Stop the execution. The task will go on at the date value and begin at the label line.
-\item $<@deleted\_users>$ = delete\_subs ($<@user\_selection>$)
+\item \texttt{<}{\at}deleted\_users\texttt{>} = delete\_subs (\texttt{<}{\at}user\_selection\texttt{>})
 
 	Delete @user\_selection email list and stores user emails successfully deleted in @deleted\_users.
-\item send\_msg ($<@user\_selection>, <template>$)
+\item send\_msg (\texttt{<}{\at}user\_selection\texttt{>}, \texttt{<}template\texttt{>})
 
 	Send the template message to emails stored in @user\_selection.
-\item $@$user\_selection = select\_subs ($<condition>$)
+\item {\at}user\_selection = select\_subs (\texttt{<}condition\texttt{>})
 
 	Store emails which match the condition in @user\_selection. See 8.6 Scenarii section to know how to write conditions. Only available for list models.
-\item create ($<global | list (<list name>), <model type>, <model>$)
+\item create (global | list (\texttt{<}list name\texttt{>}), \texttt{<}model type\texttt{>}, \texttt{<}model\texttt{>})
 
 	Create a task for object with model file \tildefile {model type.model.task}.
-\item chk\_cert\_expiration ($<template>, <date value>$)
+\item chk\_cert\_expiration (\texttt{<}template\texttt{>}, \texttt{<}date value\texttt{>})
 
 	Send the template message to emails whose certificate has expired or will expire before the date value.
-\item update\_crl ($<file name>, <date value>$)
+\item update\_crl (\texttt{<}file name\texttt{>}, \texttt{<}date value\texttt{>})
 
 	Update certificate revocation lists (CRL) which are expired or will expire before the date value. The file stores the CRL's URLs.
 \end {itemize}
@@ -3970,7 +3971,7 @@ Model files may have a scenario-like title line at the beginning.
 When you change a configuration file by hand, and a task parameter is created or modified, it is up to you
 to remove existing task files in the \dir {task/} spool if needed. Task file names have the following format : 
 
-\file {<date>.<label>.<model name>.<list name | global>} where :
+\file {\texttt{<}date\texttt{>}.\texttt{<}label\texttt{>}.\texttt{<}model name\texttt{>}.\texttt{<}list name | global\texttt{>}} where :
 
 \begin {itemize}
 	\item date is when the task is executed, it is an epoch date
@@ -4259,14 +4260,14 @@ are:
         etc.) This parameter is optional at subscription time.
 
     \item \lparam {reception}
-            \texttt {nomail} $|$
-            \texttt {digest} $|$
-            \texttt {summary} $|$
-            \texttt {notice} $|$
- 	    \texttt {txt} $|$
-	    \texttt {html} $|$
- 	    \texttt {urlize} $|$
-	    \texttt {not\_me} $|$
+            \texttt {nomail} \texttt{|}
+            \texttt {digest} \texttt{|}
+            \texttt {summary} \texttt{|}
+            \texttt {notice} \texttt{|}
+ 	    \texttt {txt} \texttt{|}
+	    \texttt {html} \texttt{|}
+ 	    \texttt {urlize} \texttt{|}
+	    \texttt {not\_me} \texttt{|}
         \label {par-reception} 
 
         Special receive modes which the subscriber may select.
@@ -4319,9 +4320,9 @@ page~\pageref {tpl-format}.
 
 Sympa looks for these files in the following order :
 \begin {enumerate}
- 	\item \tildedir {sympa/expl/\samplelist/<file>.tpl} 
-	\item \tildedir {sympa/etc/templates/<file>.tpl}. 
-	\item \tildedir {sympa/bin/etc/templates/<file>.tpl}.
+ 	\item \tildedir {sympa/expl/\samplelist/\texttt{<}file\texttt{>}.tpl} 
+	\item \tildedir {sympa/etc/templates/\texttt{<}file\texttt{>}.tpl}. 
+	\item \tildedir {sympa/bin/etc/templates/\texttt{<}file\texttt{>}.tpl}.
 \end {enumerate}
 
 If the file starts with a From: line, it is taken to be
@@ -4332,33 +4333,33 @@ The following variables may be used in list template files :
 
 \begin {itemize}
 
-	\item[-] [conf-$>$email] : sympa e-mail address local part
+	\item[-] [conf-\texttt{>}email] : sympa e-mail address local part
 
-	\item[-] [conf-$>$domain] : sympa robot domain name
+	\item[-] [conf-\texttt{>}domain] : sympa robot domain name
 
-	\item[-] [conf-$>$sympa] : sympa's complete e-mail address
+	\item[-] [conf-\texttt{>}sympa] : sympa's complete e-mail address
 
-	\item[-] [conf-$>$wwsympa\_url] : \WWSympa root URL
+	\item[-] [conf-\texttt{>}wwsympa\_url] : \WWSympa root URL
 
-	\item[-] [conf-$>$listmaster] : listmaster e-mail addresses
+	\item[-] [conf-\texttt{>}listmaster] : listmaster e-mail addresses
 
-	\item[-] [list-$>$name] : list name
+	\item[-] [list-\texttt{>}name] : list name
 
-	\item[-] [list-$>$host] : list hostname (default is sympa robot domain name)
+	\item[-] [list-\texttt{>}host] : list hostname (default is sympa robot domain name)
 
-	\item[-] [list-$>$lang] : list language
+	\item[-] [list-\texttt{>}lang] : list language
 
-	\item[-] [list-$>$subject] : list subject
+	\item[-] [list-\texttt{>}subject] : list subject
 
-	\item[-] [list-$>$owner] : list owners table hash
+	\item[-] [list-\texttt{>}owner] : list owners table hash
 
-	\item[-] [user-$>$email] : user e-mail address
+	\item[-] [user-\texttt{>}email] : user e-mail address
 
-	\item[-] [user-$>$gecos] : user gecos field (usually his/her name)
+	\item[-] [user-\texttt{>}gecos] : user gecos field (usually his/her name)
 
-	\item[-] [user-$>$password] : user password
+	\item[-] [user-\texttt{>}password] : user password
 
-	\item[-] [user-$>$lang] : user language
+	\item[-] [user-\texttt{>}lang] : user language
 
 	\item[-] [execution\_date] : the date when the scenario is executed	
 
@@ -4374,7 +4375,7 @@ You may also dynamically include a file from a template using the
 \begin{verbatim}
 Dear [user->email],
 
-Welcome to list [list->name.@[list->host].
+Welcome to list [list->name]@[list->host].
 
 Presentation of the list :
 [INCLUDE 'info']
@@ -4524,7 +4525,7 @@ lists must be activated by the listmaster. List creation is possible for all int
 (i.e. : users with an e-mail address within the same domain as Sympa).
 This is controlled by the \cfkeyword {create\_list} scenario.
 
-List creation request message and list creation notifiaction message are both
+List creation request message and list creation notification message are both
 templates that you can customize (\file {create\_list\_request.tpl} and
 \file {list\_created.tpl}).
 
@@ -4629,29 +4630,29 @@ Eg: listmaster will not match rules refering to owner or privileged\_owner
 \begin{verbatim}
      examples :
 
-         # only listmaster can edit user_data_source, priority, ...
-         user_data_source listmaster write  
+	# only listmaster can edit user_data_source, priority, ...
+	user_data_source listmaster write  
 
-	 priority 	owner,privileged_owner 		read
-         priority 	listmaster 			write
+	priority 	owner,privileged_owner 		read
+	priority 	listmaster 			write
       
-         # only privileged owner can modify  editor parameter, send, ...
-         editor privileged_owner write
+	# only privileged owner can modify  editor parameter, send, ...
+	editor privileged_owner write
+	
+	send 		owner 				read
+	send 		privileged_owner,listmaster 	write
 
-	 send 		owner 				read
-         send 		privileged_owner,listmaster 	write
-
-         # other parameters can be changed by simple owners
-         default 	owner 				write
+	# other parameters can be changed by simple owners
+	default 	owner 				write
 \end{verbatim}
 \end {quote}
 
       Privileged owners are defined in the list's \file {config} file as follows :
 	\begin {quote}
 	\begin{verbatim}
-		owner
-		email owners.email@foo.bar
-      		profile privileged
+	owner
+	email owners.email@foo.bar
+	profile privileged
 	\end{verbatim}
 	\end {quote}
 
@@ -4725,7 +4726,7 @@ per \textindex {moderator} (or editor).
 \begin{verbatim}
 editor
 email Pierre.David@prism.uvsq.fr
-gecos Pierre (Université de Versaille St Quentin)
+gecos Pierre (Universite de Versailles St Quentin)
 \end{verbatim}
 \end {quote}
 
@@ -4829,7 +4830,7 @@ giving details regarding the owner's characteristics:
 
 	Private information on the owner
 
-    \item \lparam {profile} \texttt {privileged} $|$
+    \item \lparam {profile} \texttt {privileged} \texttt{|}
 	                    \texttt {normal}
 
 	Available since release 2.3.5
@@ -4896,8 +4897,8 @@ parameter is \emph {not} used by \Sympa if the \tildefile
 	\default {file|database, if using an RDBMS}
 
 \lparam {user\_data\_source}
-   \texttt {file} $|$
-   \texttt {database} $|$
+   \texttt {file} \texttt{|}
+   \texttt {database} \texttt{|}
    \texttt {include}
 
 Sympa allows the mailing list manager to choose how \Sympa loads
@@ -5031,7 +5032,6 @@ include_sql_query
 Connexion timeout is set to 5 seconds.
 
 \item 
-\label {db\_env}
 \lparam {db\_env} \textit {list\_of\_var\_def}
 
 Sets a list of environment variables to set before database connexion.
@@ -5150,7 +5150,7 @@ The attribute containing the e-mail address(es) in the returned object.
 
 \item
 \label {select}
-\lparam {select} \textit {first $|$ all}
+\lparam {select} \textit {first \texttt{|} all}
 \default {first}
 
 Defines whether to use only the first address, or all the addresses, in
@@ -5158,7 +5158,7 @@ cases where multiple values are returned.
 
 \item
 \label {scope}
-\lparam {scope} \textit {base $|$ one $|$ sub}
+\lparam {scope} \textit {base \texttt{|} one \texttt{|} sub}
 \default {sub}
 
 By default the search is performed on the whole tree below the specified
@@ -5265,7 +5265,7 @@ the second-level query.  This data is referenced using the syntax ``[attrs1]''.
 
 \item
 \label {select1}
-\lparam {select1} \textit {first $|$ all $|$ regex}
+\lparam {select1} \textit {first \texttt{|} all \texttt{|} regex}
 \default {first}
 
 Defines whether to use only the first attribute value, all the values, or only
@@ -5280,7 +5280,7 @@ The Perl regular expression to use if ``select1'' is set to ``regex''.
 
 \item
 \label {scope1}
-\lparam {scope1} \textit {base $|$ one $|$ sub}
+\lparam {scope1} \textit {base \texttt{|} one \texttt{|} sub}
 \default {sub}
 
 By default the first-level search is performed on the whole tree below the
@@ -5332,7 +5332,7 @@ second-level queries.
 
 \item
 \label {select2}
-\lparam {select2} \textit {first $|$ all $|$ regex}
+\lparam {select2} \textit {first \texttt{|} all \texttt{|} regex}
 \default {first}
 
 Defines whether to use only the first address, all the addresses, or only
@@ -5347,7 +5347,7 @@ The Perl regular expression to use if ``select2'' is set to ``regex''.
 
 \item
 \label {scope2}
-\lparam {scope2} \textit {base $|$ one $|$ sub}
+\lparam {scope2} \textit {base \texttt{|} one \texttt{|} sub}
 \default {sub}
 
 By default the second-level search is performed on the whole tree below the
@@ -5676,15 +5676,15 @@ d_edit		private
 \subsection {reply\_to\_header}
     \label {par-reply-to-header}
 
-The \lparam {reply\_to} parameter starts a paragraph defining
+The \lparam {reply\_to\_header} parameter starts a paragraph defining
 	what \Sympa will place in the \rfcheader {Reply-To} SMTP header field of
 	the messages it distributes.
 
 \begin {itemize}
 
-\item \lparam {value}   \texttt {sender} $|$
-    			\texttt {list}   $|$
-    			\texttt {all}    $|$
+\item \lparam {value}   \texttt {sender} \texttt{|}
+    			\texttt {list}   \texttt{|}
+    			\texttt {all}    \texttt{|}
     			\texttt {other\_email}
 	\default {sender}
 
@@ -5705,7 +5705,7 @@ to more serious consequences.
 	If \lparam {value} was set to \texttt {other\_email}, this parameter
 	defines the e-mail address used.
 
-\item \lparam {apply}   \texttt {respect} $|$
+\item \lparam {apply}   \texttt {respect} \texttt{|}
     			\texttt {forced}  
 	\default {respect}
 
@@ -5714,6 +5714,16 @@ to more serious consequences.
 	field will be overwritten.
 
 \end {itemize}
+
+Example :
+\begin {quote}
+\begin{verbatim}
+reply_to_header
+value other_email
+other_email listowner@my.domain
+apply forced
+\end{verbatim}
+\end {quote}
 
 \subsection {max\_size}
  \label {par-max-size}
@@ -5774,7 +5784,7 @@ users who do not use automatic tools to sort incoming messages).
 	\default {mime}
 
 \lparam {footer\_type (optional, default value is mime)}
-   \texttt {mime} $|$
+   \texttt {mime} \texttt{|}
    \texttt {append}
 
 List owners may decide to add message headers or footers to messages
@@ -5868,16 +5878,16 @@ reception  	digest,mail
 
 \begin {itemize}
     \item \lparam {reception}
-            \texttt {notice} $|$
-            \texttt {digest} $|$
-            \texttt {summary} $|$
-            \texttt {nomail} $|$
+            \texttt {notice} \texttt{|}
+            \texttt {digest} \texttt{|}
+            \texttt {summary} \texttt{|}
+            \texttt {nomail} \texttt{|}
             \texttt {mail}
 
         Mail reception mode.
 
     \item \lparam {visibility}
-            \texttt {conceal} $|$
+            \texttt {conceal} \texttt{|}
             \texttt {noconceal} 
 
         Visibility of the subscriber with the \mailcmd {REVIEW}
@@ -5980,18 +5990,22 @@ halt_rate	20
 \label {welcome-return-path}
 
 	\default {\cfkeyword {welcome\_return\_path} robot parameter}
+	\lparam {welcome\_return\_path} unique \texttt{|} owner
 
 	If set to \cfkeyword {unique}, the welcome message is sent using
         a unique return path in order to remove the subscriber immediately in
-	the case of a bounce. 
+	the case of a bounce. See \cfkeyword {welcome\_return\_path} \file {sympa.conf}
+	parameter (\ref{kw-welcome-return-path}, page~\pageref{kw-welcome-return-path}).
 
 \subsection {remind\_return\_path} 
 \label {remind-return-path}
 
 	\default {\cfkeyword {remind\_return\_path} robot parameter}
+	\lparam {remind\_return\_path} unique \texttt{|} owner
 
 	Same as \cfkeyword {welcome\_return\_path}, but applied to remind
-        messages.
+        messages. See \cfkeyword {remind\_return\_path} \file {sympa.conf}
+	parameter (\ref{kw-remind-return-path}, page~\pageref{kw-remind-return-path}).
 
 
 \section {Archive related}
@@ -6028,10 +6042,10 @@ command (the last message of a list can be consulted using the \mailcmd {LAST} c
 
 
 \lparam {period}
-    \texttt {day} $|$
-    \texttt {week} $|$
-    \texttt {month} $|$
-    \texttt {quarter} $|$
+    \texttt {day} \texttt{|}
+    \texttt {week} \texttt{|}
+    \texttt {month} \texttt{|}
+    \texttt {quarter} \texttt{|}
     \texttt {year}
 
 
@@ -6042,10 +6056,10 @@ the creation of an archive directory at the root of the list directory (\tildedi
 {sympa/expl/\samplelist/archives/}), used to store these documents.
 
 \lparam {access}
-    \texttt {private} $|$
-    \texttt {public} $|$
-    \texttt {owner} $|$
-    \texttt {closed} $|$
+    \texttt {private} \texttt{|}
+    \texttt {public} \texttt{|}
+    \texttt {owner} \texttt{|}
+    \texttt {closed} \texttt{|}
 
 
 This parameter specifies who is authorized to use the \mailcmd {GET}, \mailcmd {LAST} and \mailcmd {INDEX} commands.
@@ -6055,6 +6069,7 @@ This parameter specifies who is authorized to use the \mailcmd {GET}, \mailcmd {
 \subsection {web\_archive}
     \label {par-web-archive}
     \index{web\_archive}
+    \scenarized {access\_web\_archive}
 
 If the \file {config} file contains a \lparam {web\_archive} paragraph
 \Sympa will copy all messages distributed via the list to the
@@ -6071,15 +6086,20 @@ access private
 \end{verbatim}
 \end {quote}
 
+Predefined scenarii are :
 
-The value of the \lparam {web\_archive} access parameter must be one of the following :
-\lparam {access}
-    \texttt {private} $|$
-    \texttt {public} $|$
-    \texttt {owner} $|$
-    \texttt {closed} $|$
-    \texttt {listmaster} 
+\begin {itemize}
+[STARTPARSE]
+[FOREACH s IN scenari->access_web_archive]
+     \item \lparam {access} \texttt {[s->name]} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.[s->name]})
+	\end {htmlonly}\\
+	[s->title]
 
+[END]
+[STOPPARSE]
+\end {itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Shared documents
