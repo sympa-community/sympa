@@ -119,7 +119,7 @@ installtemplates:
 		COL23=70; export COL23; \
 		COL34=70; export COL34; \
 		COL234=110; export COL234; \
-		$(PERL) ../../../subst.pl *.tpl; \
+		$(PERL) ../../subst.pl *.tpl; \
 		); \
 	$(PERL) ../set_symlinks.pl web_tt2 $(DESTDIR)$(ETCBINDIR)/wws_tt2
 	find $(DESTDIR)$(ETCBINDIR) -type d -exec chmod 755 {} \;
