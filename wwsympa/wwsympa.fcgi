@@ -479,19 +479,11 @@ while ($query = &new_loop()) {
 	## get subscrition using cookie and set param for use in templates
 	@{$param->{'get_which'}}  =  &cookielib::get_which_cookie($ENV{'HTTP_COOKIE'});
 	
-	# if $param->{'get_which'}[0] is undefined the tab is empty
-        unless (defined $param->{'get_which'}[0]) {
+	# if no cookie was received, look for subscriptions
+        unless (defined $param->{'get_which'}) {
 	    @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
 	}
-	
-	
-	foreach my $l (@{$param->{'get_which'}}) {
-	    my $list = new List ($l);
-	    $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
-	    $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
-	    $param->{'which_info'}{$l}{'info'} = 1;
-	}
-       
+	       
     }else{
 	
 	## Get lang from cookie
@@ -581,8 +573,14 @@ while ($query = &new_loop()) {
     ## Set cookies "your_subscribtions"
     if ($param->{'user'}{'email'}) {
 	# if at least one element defined in get_which tab
-	if ($param->{'get_which'}[0]) {
-	    &cookielib::set_which_cookie ($wwsconf->{'cookie_domain'},@{$param->{'get_which'}});
+	&cookielib::set_which_cookie ($wwsconf->{'cookie_domain'},@{$param->{'get_which'}});
+	
+	## Add lists information to 'which_info'
+	foreach my $l (@{$param->{'get_which'}}) {
+	    my $list = new List ($l);
+	    $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
+	    $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
+	    $param->{'which_info'}{$l}{'info'} = 1;
 	}
     }
     ## Set cookies unless client use https authentication
@@ -843,7 +841,7 @@ sub get_parameters {
 
     if ($ENV{'REQUEST_METHOD'} eq 'GET') {
 	my $path_info = $ENV{'PATH_INFO'};
-	&do_log('debug', "PATH_INFO: %s",$ENV{'PATH_INFO'});
+	&do_log('debug2', "PATH_INFO: %s",$ENV{'PATH_INFO'});
 
 	$path_info =~ s+^/++;
 
@@ -1779,9 +1777,6 @@ sub do_which {
 	    $param->{'which'}{$l}{'host'} = $list->{'admin'}{'host'};
 	    
 	    if ($role eq 'member') {
-		$param->{'which_info'}{$l}{'info'} = 1;
-		$param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
-		$param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
 		push @{$param->{'get_which'}}, $l;
 	    }else {
 		$param->{'which'}{$l}{'admin'} = 1;
