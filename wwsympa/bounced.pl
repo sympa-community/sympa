@@ -3,7 +3,6 @@
 ## Worl Wide Sympa is a front-end to Sympa Mailing Lists Manager
 ## Copyright Comite Reseau des Universites
 
-
 ## Options :  F         -> do not detach TTY
 ##         :  d		-> debug -d is equiv to -dF
 
