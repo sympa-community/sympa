@@ -429,7 +429,7 @@ while ($query = &new_loop()) {
 
 	    &cookielib::set_cookie($param->{'user'}{'email'}, $Conf{'cookie'}, $wwsconf->{'cookie_domain'},$delay ) || exit;
 	}elsif ($ENV{'HTTP_COOKIE'} =~ /user\=/){
-	    &set_cookie('unknown',$Conf{'cookie'}, $wwsconf->{'cookie_domain'}, 'now');
+	    &cookielib::set_cookie('unknown',$Conf{'cookie'}, $wwsconf->{'cookie_domain'}, 'now');
 	}
     }
 
@@ -2841,9 +2841,9 @@ sub do_arc {
    }
     
     ## Reject Email Sniffers
-    unless (&check_arc_cookie($ENV{'HTTP_COOKIE'})) {
+    unless (&cookielib::check_arc_cookie($ENV{'HTTP_COOKIE'})) {
 	if ($param->{'user'}{'email'} or $in{'not_a_sniffer'}) {
-	    &set_arc_cookie();
+	    &cookielib::set_arc_cookie();
 	}else {
 	    return 'arc_protect';
 	}
@@ -2905,7 +2905,7 @@ sub do_arc {
 
     $param->{'archive_name'} = $in{'month'};
 
-    &set_arc_cookie();
+    &cookielib::set_arc_cookie();
 
     return 1;
 }
