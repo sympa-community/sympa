@@ -95,7 +95,18 @@ my %options;
 	    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s', 'lowercase');
 
 
-# $main::options{'debug2'} = 1 if ($main::options{'debug'});
+if ($main::options{'debug'}) {
+    $main::options{'debug2'} = 1;
+    $main::options{'log_level'} = 2;
+}
+# Some option force foreground mode
+$main::options{'foreground'} = 1 if ($main::options{'debug'} ||
+                                     $main::options{'version'} || 
+				     $main::options{'import'} ||
+				     $main::options{'help'} ||
+				     $main::options{'lowercase'} || 
+				     $main::options{'dump'});
+
 $log_level = $main::options{'log_level'} if ($main::options{'log_level'}); 
 
 my @parser_param = ($*, $/);
@@ -165,10 +176,7 @@ if ($signal ne 'hup' ) {
     ## works on many systems, although, it seems that Unix conceptors have
     ## decided that there won't be a single and easy way to detach a process
     ## from its controlling tty.
-    unless ($main::options{'debug'} || $main::options{'foreground'} ||
-	    $main::options{'dump'} || $main::options{'help'} ||
-	    $main::options{'version'} || $main::options{'import'} ||
-	    $main::options{'lowercase'} ) {
+    unless ($main::options{'foreground'}) {
 	if (open(TTY, "/dev/tty")) {
 	    ioctl(TTY, 0x20007471, 0);         # XXX s/b &TIOCNOTTY
 	    #       ioctl(TTY, &TIOCNOTTY, 0);
