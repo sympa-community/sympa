@@ -3268,7 +3268,7 @@ translated into 10 different languages :
 
 \item fr: French
 
-\item hu: hungarian
+\item hu: Hungarian
 
 \item it: Italian
 
