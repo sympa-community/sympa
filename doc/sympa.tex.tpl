@@ -4253,7 +4253,7 @@ Only the following parameters can be redefined for a particular robot :
 
 	\item \cfkeyword {lang}
 
-	\item \cfkeyword {log_smtp}
+	\item \cfkeyword {log\_smtp}
 
 	\item \cfkeyword {listmaster}
 
