@@ -1412,6 +1412,7 @@ sub distribute_msg {
     $hdr->add('X-Loop', "$name\@$host");
     $hdr->add('X-Sequence', $sequence);
     $hdr->add('Precedence', 'list');
+    $hdr->add('X-no-archive', 'yes');
     foreach my $i (@{$self->{'admin'}{'custom_header'}}) {
 	$hdr->add($1, $2) if ($i=~/^([\S\-\:]*)\s(.*)$/);
     }
