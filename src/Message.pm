@@ -1,4 +1,4 @@
-# List.pm - This module includes all list processing functions
+# Message.pm - This module includes all list processing functions
 # <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 #
