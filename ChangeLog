@@ -1,3 +1,162 @@
+2002-09-10 11:53  salaun
+
+	* src/parser.pl: New features: a arrayref can be used by
+	parse_tpl() as an output ; template can also be an arrayref
+
+2002-09-10 09:30  salaun
+
+	* wwsympa/wws_templates/us/admin_menu.us.tpl: Revised by john
+	Douglas for a better organisation.
+
+2002-09-10 09:29  salaun
+
+	* wwsympa/wws_templates/fr/admin_menu.fr.tpl: Revised by John
+	Douglas for a better organisation.
+
+2002-09-09 16:45  salaun
+
+	* src/etc/templates/: cz/moderate.cz.tpl, de/moderate.de.tpl,
+	es/moderate.es.tpl, et/moderate.et.tpl, fi/moderate.fi.tpl,
+	fr/moderate.fr.tpl, hu/moderate.hu.tpl, it/moderate.it.tpl,
+	pl/moderate.pl.tpl, ro/moderate.ro.tpl, us/moderate.us.tpl: Fix:
+	Incorrect From, breaking SMIME signatures ; add correct reply-to
+	header field
+
+2002-09-09 16:44  salaun
+
+	* src/List.pm: Fix typo: 'include_remote_sympa_list' instead of
+	'include_remote_include_list' ; such lists could not be created
+	while using 'include2'
+
+2002-09-09 16:18  salaun
+
+	* src/task_manager.pl: Fixes: change 'user_data_source' condition ;
+	fix group/user IDs setting
+
+2002-09-06 09:41  salaun
+
+	* src/List.pm: Reported by Sergiy Zhuk. Fix incorrect number of
+	subscriber when deleting.
+
+2002-09-04 11:39  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix wwsympa infinite loop when adding
+	subscribers with incorrect adress !
+
+2002-08-30 13:08  salaun
+
+	* src/tools.pl: better log in virus_infected
+
+2002-08-28 08:57  salaun
+
+	* src/X509.pm: X509.pm currently just include subroutines for sympa
+	to sympa https communication. All S/mime should be moved from
+	tools.pl to X509.pm as soon as ther use openssl perl module instead
+	of openssl commands.
+
+2002-08-26 17:25  salaun
+
+	* check_perl_modules.pl, doc/sympa.pdf, doc/sympa.ps,
+	doc/sympa.tex, nls/fr.msg, nls/us.msg, src/List.pm, src/Makefile:
+	New include : include_remote_sympa_list allow to fetch a list from
+	a remote sympa server using https only.
+
+2002-08-26 15:44  salaun
+
+	* doc/sympa.tex.tpl: Documentation of include_remote_sympa_list
+
+2002-08-26 10:43  salaun
+
+	* src/etc/script/p12topem.pl: ***** Now can be used to install a
+	certificat to sympa robot itself.  ***** Usage ***** P12topem.pl
+	--pkcs12 <pkcs#12_cert_file> --robot <robot> ***** p12topem.pl
+	--pkcs12 <pkcs#12_cert_file> --listname <listname>
+
+2002-08-26 09:21  salaun
+
+	* wwsympa/wwsympa.fcgi: Reported by John Douglass john.douglass AT
+	oit.gatech.edu : Allow listowner to close a list.
+
+2002-08-26 09:17  salaun
+
+	* wwsympa/wws_templates/: fr/admin_menu.fr.tpl,
+	us/admin_menu.us.tpl: Reported by John Douglass john.douglass AT
+	oit.gatech.edu : Allow listowner to close a list.
+
+2002-08-26 08:40  salaun
+
+	* src/etc/scenari/topics_visibility.conceal: Fix improper title
+
+2002-08-19 11:00  salaun
+
+	* wwsympa/wwsympa.fcgi: New action dump use as the server part of
+	sympa to sympa subscribers importation
+
+2002-08-19 10:48  salaun
+
+	* wwsympa/bounce-lib.pl: ooops!
+
+2002-08-19 09:10  salaun
+
+	* wwsympa/bounce-lib.pl: Now recognize "x-failed-recipients:" comma
+	separated list of recipient.  (exim). Reported by Stefan Hornburg
+	<racke AT linuxia.de>
+
+2002-08-14 17:05  salaun
+
+	* src/sympa.pl, src/task_manager.pl, src/tools.pl,
+	wwsympa/archived.pl, wwsympa/bounced.pl: [Marcin Deranek] Fix:
+	Previously group_id and user_id were always set to user_id. Now use
+	getgrnam() instead of getpwnam()
+
+2002-08-14 10:55  salaun
+
+	* src/List.pm: ********   now sympa.pl dump any list (even if
+	user_data_source = file)	    in a single file
+	$list->{'dir'}/subscribers.db.dump
+
+2002-08-14 08:48  salaun
+
+	* ChangeLog, Makefile.in, aclocal.m4, doc/sympa.pdf, doc/sympa.ps,
+	doc/sympa.tex, doc/sympa.tex.tpl, nls/fr.msg, nls/us.msg,
+	src/Conf.pm, src/List.pm, src/etc/mhonarc-ressources,
+	wwsympa/archived.pl, wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi,
+	wwsympa/wws_templates/cn/compose_mail.cn.tpl,
+	wwsympa/wws_templates/cn/d_read.cn.tpl,
+	wwsympa/wws_templates/cz/compose_mail.cz.tpl,
+	wwsympa/wws_templates/cz/d_read.cz.tpl,
+	wwsympa/wws_templates/de/compose_mail.de.tpl,
+	wwsympa/wws_templates/de/d_read.de.tpl,
+	wwsympa/wws_templates/es/compose_mail.es.tpl,
+	wwsympa/wws_templates/es/d_read.es.tpl,
+	wwsympa/wws_templates/et/compose_mail.et.tpl,
+	wwsympa/wws_templates/et/d_read.et.tpl,
+	wwsympa/wws_templates/fi/compose_mail.fi.tpl,
+	wwsympa/wws_templates/fi/d_read.fi.tpl,
+	wwsympa/wws_templates/fr/compose_mail.fr.tpl,
+	wwsympa/wws_templates/fr/d_read.fr.tpl,
+	wwsympa/wws_templates/hu/compose_mail.hu.tpl,
+	wwsympa/wws_templates/hu/d_read.hu.tpl,
+	wwsympa/wws_templates/it/d_read.it.tpl,
+	wwsympa/wws_templates/ro/compose_mail.ro.tpl,
+	wwsympa/wws_templates/ro/d_read.ro.tpl,
+	wwsympa/wws_templates/us/compose_mail.us.tpl,
+	wwsympa/wws_templates/us/d_read.us.tpl,
+	wwsympa/wws_templates/us/list_menu.us.tpl: 
+	
+	Introduce a 2 new parameters in sympa;conf : spam_protection and
+	web_archive_spam_protection
+	
+	They are use toi define the way that sympa protect email adrersses
+	from spambot. "cookie" "at" "javascript" "none"
+	
+	Serge
+
+2002-08-13 15:56  salaun
+
+	* doc/sympa.pdf, src/parser.pl, doc/sympa.ps, doc/sympa.tex,
+	doc/sympa.tex.tpl: New [SETOPTION ignore_undef] in parser
+
 2002-08-12 16:51  salaun
 
 	* Makefile.am: Fix: wizard was never started

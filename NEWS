@@ -3,6 +3,107 @@
 
 (See Changelog file for the full changes log)
 
+3.3.6b.3	10 September 2002
+
+   New features :
+
+	src/parser.pl: a arrayref can be used by parse_tpl() as an output ; 
+	template can also be an arrayref
+
+	New include : include_remote_sympa_list allow to fetch a list from
+	a remote sympa server using https only. New action dump use as the 
+	server part of sympa to sympa subscribers importation
+
+	src/X509.pm: X509.pm currently just include subroutines for sympa
+	to sympa https communication. All S/mime should be moved from
+	tools.pl to X509.pm as soon as ther use openssl perl module instead
+	of openssl commands.
+
+*****	src/etc/script/p12topem.pl: Now can be used to install a
+*****	certificate to sympa robot itself.  Usage  
+*****	P12topem.pl --pkcs12 <pkcs#12_cert_file> --robot <robot> 
+*****	p12topem.pl --pkcs12 <pkcs#12_cert_file> --listname <listname>
+
+	wwsympa/bounce-lib.pl: Now recognize "x-failed-recipients:" comma
+	separated list of recipient.  (exim). Reported by Stefan Hornburg
+	<racke AT linuxia.de>
+  
+	Introduce a 2 new parameters in sympa;conf : spam_protection and
+	web_archive_spam_protection. They are use to define the way that 
+	sympa protect email adrersses from spambot. "cookie" "at" "javascript" "none"
+
+	New [SETOPTION ignore_undef] in parser
+
+	src/sympa.pl: Loop prevention based on X400-Content-Identifier
+	header field
+
+	add [current_date] in scenarios
+
+   Changes :
+
+	wwsympa/wws_templates/us/admin_menu.us.tpl: Revised by john
+	Douglas for a better organisation.
+
+*****	src/List.pm: now sympa.pl dump any list (even if user_data_source = file)
+*****	in a single file $list->{'dir'}/subscribers.db.dump
+
+	nls/de.msg: [Andreas Krueger] small improvements
+
+	src/List.pm: if cannot connect to DB, keep trying, do not
+	die (this prevent from sending hundreds of worning messages to
+	listmaster)
+
+*****	src/Commands.pm: 'lists', 'lists.header' and 'lists.footer' file no 
+*****	more recognized by Sympa. 'lists.tpl' template used instead
+
+   Bug fixes :
+
+	src/List.pm: (related to include2 implementation):
+	_include_users_xxx() not properly working on tied hash. Failed
+	including duplicates in 'include' mode
+
+	src/List.pm: Reported by Sergiy Zhuk. Fix incorrect number of
+	subscriber when deleting.
+
+	wwsympa/wwsympa.fcgi: Fix wwsympa infinite loop when adding
+	subscribers with incorrect adress !
+
+	Fix moderate.xx.tpl templates : Incorrect From, breaking SMIME signatures ; 
+	add correct reply-to header field
+
+	src/sympa.pl, src/task_manager.pl, src/tools.pl,
+	wwsympa/archived.pl, wwsympa/bounced.pl: [Marcin Deranek] Fix:
+	Previously group_id and user_id were always set to user_id. Now use
+	getgrnam() instead of getpwnam()
+
+	src/tools.pl: better log in virus_infected
+
+	wwsympa/wwsympa.fcgi: Reported by John Douglass john.douglass AT
+	oit.gatech.edu : Allow listowner to close a list.
+
+	Makefile.am: Fix: wizard was never started
+
+	src/etc/script/sympa: ps -A|grep failed because of a space
+	char ; could not stop processes.  Also supress removal of .pid file
+	(sympa processes do it themselves)
+
+	src/task_manager.pl: Use Digest::MD5 instead of MD5
+
+	wwsympa/wwsympa.fcgi: [reported by S. Medard] do_arcsearch_id
+	failed if key_word (Message-ID) contained '$' character
+
+	Makefile.am, src/Makefile, src/etc/script/Makefile: do not
+	install scripts and aliaswrapper in bindir (install them in
+	sbindir and libexecdir instead)
+
+	wwsympa/wws_templates/de/compose_mail.de.tpl: [reported by Hanke
+	Penning] could not reply to the sender
+
+	src/sympa.pl: Sympa.pl would die if smime_decrypt() failed
+
+	src/sympa.pl: Sympa would consider application/pkcs7-mime;...; 
+	smime-type=signed-data as crypted messages and would die while trying to decode them
+
 3.3.6b.2	31 July 2002
 
    New features :
