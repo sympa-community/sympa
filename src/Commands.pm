@@ -581,7 +581,7 @@ sub verify {
     
     if ($sign_mod eq 'smime') {
 	$auth_method='smime';
-	do_log('info', 'VERIFY succefull from %s', $sender,time-$time_command);
+	do_log('info', 'VERIFY successfull from %s', $sender,time-$time_command);
 	push @msg::report, sprintf Msg(6, 262, "Your message signature as been succesfully verified using smime.\n");
     }else{
 	do_log('info', 'VERIFY from %s : could not find correct s/mime signature', $sender,time-$time_command);
