@@ -340,16 +340,28 @@ while ($query = &new_loop()) {
     ## Get PATH_INFO parameters
     &get_parameters();
 
-    #$robot = $wwsconf->{'robot_domain'}{$ENV{'HTTP_HOST'}};
-    $robot = $Conf{'robots'}{'robot_by_http_host'}{$ENV{'HTTP_HOST'}};		
-    # printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, title :  $Conf{'robots'}{$robot}{'title'}}\n";
-
+    $robot = $Conf{'robots'}{'robot_by_http_host'}{$ENV{'HTTP_HOST'}};
     $robot = $Conf{'host'} unless $robot;
+
+    printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot,  Conf{'robots'}{$robot}: $Conf{'robots'}{$robot}\n";
+    printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, title :  $Conf{'robots'}{$robot}->{'title'}\n";
+    printf STDERR "host : $ENV{'HTTP_HOST'}, robot : $robot, listmaster :  $Conf{'robots'}{$robot}->{'listmasters'}\n";
+
+
+
 
     ## Sympa parameters in $param->{'conf'}
     $param->{'conf'} = \%Conf;
     $param->{'wwsconf'} = $wwsconf;
 
+    $param->{'dark_color'} = $Conf{'robots'}{$robot}{'dark_color'} || $Conf{'dark_color'};
+    $param->{'light_color'} = $Conf{'robots'}{$robot}{'light_color'} || $Conf{'light_color'} ;
+    $param->{'text_color'} = $Conf{'robots'}{$robot}{'text_color'} || $Conf{'text_color'}' ;
+    $param->{'bg_color'} = $Conf{'robots'}{$robot}{'bg_color'} || $Conf{'bg_color'}' ;
+    $param->{'error_color'} = $Conf{'robots'}{$robot}{'error_color'} || $Conf{'error_color'}' ;
+    $param->{'selected_color'} = $Conf{'robots'}{$robot}{'selected_color'} || $Conf{'selected_color'}' ;
+    $param->{'shaded_color'} = $Conf{'robots'}{$robot}{'shaded_color'} || $Conf{'shaded_color'} ;
+    
     $param->{'path_cgi'} = $ENV{'SCRIPT_NAME'};
     $param->{'version'} = $Version::Version;
     $param->{'date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
@@ -414,7 +426,9 @@ while ($query = &new_loop()) {
 	    last;
 	}
 
-	$param->{'host'} = $list->{'admin'}{'host'} || $Conf{'host'};
+	# $param->{'host'} = $list->{'admin'}{'host'} || $Conf{'host'};
+	$param->{'host'} = $list->{'admin'}{'host'} || $robot;
+	$param->{'domain'} = $param->{'host'};
 	
 	## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
 	    
@@ -892,10 +906,17 @@ sub check_param_in {
     ## In case the variable was multiple
     if ($in{'list'} =~ /^(\S+)\0/) {
 	$in{'list'} = $1;
+
+	unless ($list = new List ($in{'list'})) {
+	    &error_message('unknown_list', {'list' => $in{'list'}} );
+	    &wwslog('info','check_param: unknown list %s', $in{'list'});
+	    return undef;
+	}
+	
     }
     
     ## listmaster has owner and editor privileges for the list
-    if (&List::is_listmaster($param->{'user'}{'email'})) {
+    if (&List::is_listmaster($param->{'user'}{'email'}),$list->{'admin'}{'host'}) {
 	$param->{'is_listmaster'} = 1;
     }
 
