@@ -1109,7 +1109,8 @@ Depending on your platform, your syslog daemon may use either
 a UDP or a UNIX socket. \Sympa's default is to use a UNIX socket;
 you may change this behavior by editing \file {sympa.conf}'s
 \lparam {log\_socket\_type} parameter (\ref{par-log-socket-type},
-page~\pageref{par-log-socket-type}).
+page~\pageref{par-log-socket-type}). You can test log feature by
+using  \file {testlogs.pl}.
 
 \section {sympa.pl}
 \label{sympa.pl}
