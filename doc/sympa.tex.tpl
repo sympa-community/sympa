@@ -2347,6 +2347,14 @@ bounce-test+*: 	"| /home/sympa/bin/queuebounce sympa@\samplerobot"
 
  	See \ref {robot-aliases},page~\pageref {robot-aliases} for all aliases.
 
+\subsection {\cfkeyword {default\_remind\_task}}
+        \label {kw-default-remind-task}
+         
+        \default {2month}
+	
+	This parameter defines the default \lparam {remind\_task} list parameter.
+
+
 \section {Priority related}
 
 \subsection {\cfkeyword {sympa\_priority}}  
