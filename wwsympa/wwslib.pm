@@ -1,13 +1,19 @@
-@languages = ('fr','us','es','it');
+package wwslib;
 
-%reception_mode = ('mail' => 'normal',
-		   'digest' => 'digest',
-		   'summary' => 'summary',
-		   'summary' => 'notice',
-		   'nomail' => 'no mail');
+use Exporter;
+@ISA = ('Exporter');
+@EXPORT = ('wwslog');
 
-%visibility_mode = ('noconceal' => 'public',
-		    'conceal' => 'conceal');
+my @languages = ('fr','us','es','it');
+
+my %reception_mode = ('mail' => 'normal',
+		      'digest' => 'digest',
+		      'summary' => 'summary',
+		      'summary' => 'notice',
+		      'nomail' => 'no mail');
+
+my %visibility_mode = ('noconceal' => 'public',
+		       'conceal' => 'conceal');
 
 ## Filenames with corresponding entry in NLS
 %filenames = ('welcome.tpl' => 1,
@@ -240,7 +246,7 @@ sub wwslog {
     $msg = "[client $remote] ".$msg
 	if $remote;
     
-    return &do_log($facility, $msg, @_);
+    return &Log::do_log($facility, $msg, @_);
 }
 
 ## Basic check of an email address
