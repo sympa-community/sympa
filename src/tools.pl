@@ -382,6 +382,7 @@ sub smime_sign_check {
 
     my $temporary_file = "/tmp/smime-sender.".$$ ; 
     do_log('debug2', "xxx $Conf{'openssl'} smime -verify  $Conf{'trusted_ca_options'} -signer  $temporary_file");
+    ## OpenSSL does not return error status ; should check first line of STDOUT
     unless (open (MSGDUMP, "| $Conf{'openssl'} smime -verify  $Conf{'trusted_ca_options'} -signer $temporary_file > /dev/null")) {
 
 	do_log('err', "unable to verify smime signature from $sender $verify");
