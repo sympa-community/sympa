@@ -141,6 +141,9 @@ Failed : [error->directory] not empty
 [ELSIF error->msg=init_passwd]
 You did not choose a password, request a reminder of the initial password
 
+[ELSIF error->msg=change_email_failed]
+Could not change email for liste [error->list]
+
 [ELSE]
 [error->msg]
 [ENDIF]

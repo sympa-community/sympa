@@ -135,6 +135,9 @@ Echec : le répertoire [error->directory] n'est pas vide
 [ELSIF error->msg=init_passwd]
 Vous n'avez pas défini de mot de passe, demandez un rappel du mot de passe initial
 
+[ELSIF error->msg=change_email_failed]
+Changement d'adresse email impossible dans la liste [error->list]
+
 [ELSE]
 [error->msg]
 [ENDIF]

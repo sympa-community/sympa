@@ -7164,9 +7164,8 @@ sub do_change_email {
 	    my $list = new List ($l);
 	    
 	    unless ($list->update_user($param->{'user'}{'email'}, {'email' => $in{'email'}}) ) {
-		&error_message('failed');
-		&wwslog('info', 'do_change_email: update failed');
-		return undef;
+		&error_message('change_email_failed', {'list' => $l});
+		&wwslog('info', 'do_change_email: could not change email for list %s', $l);
 	    }
 	}
 
