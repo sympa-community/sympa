@@ -167,11 +167,6 @@ sub sendto {
         $msg = $msg_header->as_string . "\n" . $msg_body;
     }
     
-    ## Trace
-    open TRACE, ">/tmp/trace";
-    print TRACE $msg;
-    close TRACE;
-    
     if ($msg) {
 	*SMTP = &smtpto($from, $rcpt);
         print SMTP $msg;
