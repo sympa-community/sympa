@@ -156,7 +156,6 @@ my %comm = ('home' => 'do_home',
 	 'submit_list' => 'do_submit_list',
 	 'editsubscriber' => 'do_editsubscriber',
 	 'viewbounce' => 'do_viewbounce',
-	 'viewconfig' => 'do_viewconfig',
 	 'reviewbouncing' => 'do_reviewbouncing',
 	 'resetbounce' => 'do_resetbounce',
 	 'scenario_test' => 'do_scenario_test',
@@ -210,7 +209,6 @@ my %action_args = ('default' => ['list'],
 		'del' => ['list','email'],
 		'editsubscriber' => ['list','email','previous_action'],
 		'viewbounce' => ['list','email'],
-		'viewconfig' => ['list','email'],
 		'resetbounce' => ['list','email'],
 		'review' => ['list','page','size','sortby'],
 		'reviewbouncing' => ['list','page','size'],
@@ -270,7 +268,6 @@ my %action_type = ('editfile' => 'admin',
 		'edit_list' =>'admin',
 		'editsubscriber' =>'admin',
 		'viewbounce' =>'admin',
-		'viewconfig' =>'admin',
 		'resetbounce'  =>'admin',
 		'scenario_test' =>'admin',
 		'close_list_request' =>'admin',
@@ -3741,24 +3738,6 @@ sub do_editsubscriber {
 	$param->{'previous_action'} = $in{'previous_action'};
     }
 
-    return 1;
-}
-
-sub do_viewconfig {
-    &wwslog('debug', 'do_viewconfig(%s)');
-    unless ($param->{'list'}) {
-
-	&error_message('missing_arg', {'argument' => 'list'});
-	&wwslog('info','do_viewbounce: no list');
-	return undef;
-    }
-
-    unless ($param->{'is_owner'}) {
-	&error_message('may_not');
-	&wwslog('info','do_viewconfig: may not view');
-	return undef;
-    }
-    $param->{'list_config'} = "$Conf{'home'}/$in{'list'}/config";
     return 1;
 }
 
