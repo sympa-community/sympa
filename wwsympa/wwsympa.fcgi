@@ -7207,7 +7207,7 @@ sub do_change_email {
 
 	$param->{'email'} = $in{'email'};
 
-	return 'change_email';
+	return '1';
     }
 
     $param->{'email'} = $in{'email'};
