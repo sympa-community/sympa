@@ -140,8 +140,6 @@ sub export_list{
     return undef
 	unless &delete_list($directory, $list, $ldap);
 	
-    &Log::do_log('notice',"xxxxdelete ok");
-    
     my $list_email = "$list->{'name'}".'@'."$list->{'admin'}{'host'}"; 
     my $dn = "cn=$list_email,$Conf{'ldap_export'}{$directory}{'suffix'}";
 
@@ -172,7 +170,7 @@ sub export_list{
 					   ]
 
                                 );
-    &Log::do_log('notice',"xxxadd ok") if($result_add->code == 0);
+    #&Log::do_log('notice',"xxxadd ok") if($result_add->code == 0);
 
     if($result_add->code != 0){
         #my $error = $result_add->error;

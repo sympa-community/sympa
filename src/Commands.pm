@@ -543,7 +543,6 @@ sub review {
 	    $user->{'email'} =~ y/A-Z/a-z/;
 	    push @users, $user;
 	} while ($user = $list->get_next_user());
-	do_log('debug', 'xxxxxxxxxx avant send_file');
 	$list->send_file('review', $sender, $robot, {'users' => \@users, 
 					     'total' => $list->get_total(),
 					     'from' => "SYMPA <$Conf{'email'}\@$robot>",
@@ -1650,7 +1649,7 @@ sub distribute {
     if (($msg->head->get('Content-Type') =~ /application\/x-pkcs7-mime/i) && ($Conf{'openssl'})) {
 	    $is_crypted = 'smime_crypted';
 	    $file = '_ALTERED_';
-	    do_log('debug','xxxxxxxxxxxxxxxxxxxxxxxx is crypted');
+	    do_log('debug2','xxxxxxxxxxxxxxxxxxxxxxxx is crypted');
 	    unless ($msg = &tools::smime_decrypt ($msg,$list->{'name'})) {
 		do_log('debug','unable to decrypt message');
 		## xxxxx traitement d'erreur ?

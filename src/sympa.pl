@@ -95,8 +95,6 @@ my %options;
 $main::options{'debug2'} = 1 if ($main::options{'debug'});
 
 
-&do_log('info', 'xxxxxxxxxxxxxxxxxxxxx option mail %s m %m', $main::options{'mail'},$main::options{'m'});
-
 my @parser_param = ($*, $/);
 my %loop_info;
 my %msgid_table;

@@ -1426,7 +1426,7 @@ sub ldap_authentication {
 	    }
 	    
 	    $ldap_passwd->unbind or do_log('notice', "unable to unbind");
-	    do_log('notice',"xxxcanonic: $canonic_email[0]");
+	    #do_log('notice',"xxxcanonic: $canonic_email[0]");
 	    return lc($canonic_email[0]);
 	}
 	
