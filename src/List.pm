@@ -3068,6 +3068,7 @@ sub get_subscriber {
 	    ## In case it was not set in the database
 	    $user->{'subscribed'} = 1
 		if ($self->{'admin'}{'user_data_source'} eq 'database');
+
 	}
 
 	$sth->finish();
@@ -6958,6 +6959,12 @@ sub create_db {
     my $rc = $drh->func("createdb", $Conf{'db_name'}, 'localhost', $Conf{'db_user'}, $Conf{'db_passwd'}, 'admin');
     unless (defined $rc) {
 	&do_log('err', 'Cannot create database %s : %s', $Conf{'db_name'}, $drh->errstr);
+	return undef;
+    }
+
+    ## Re-connect to DB (to prevent "MySQL server has gone away" error)
+    unless ($drh = DBI->connect("DBI:mysql:dbname=mysql;host=localhost", 'root', '')) {
+	&do_log('err', 'Cannot connect as root to database');
 	return undef;
     }
 
