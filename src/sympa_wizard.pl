@@ -97,10 +97,10 @@ my @params = ({'title' => 'Directories and file location'},
 	      {'name' => 'log_facility',
 	       'query' => 'The syslog facility for wwsympa, archived and bounced',
 	       'file' => 'wwsympa.conf','edit' => '1',
-	       'advice' =>''},
+	       'advice' =>'default is to use previously defined sympa log facility'},
 	      
 	      {'name' => 'log_socket_type',
-	       'query' => 'The syslog socket (unix|inet)',
+	       'query' => 'The syslog socket (unix | inet)',
 	       'file' => 'wwsympa.conf','edit' => '0',
 	       'advice' =>''},
 	      
@@ -137,7 +137,7 @@ my @params = ({'title' => 'Directories and file location'},
 	       'advice' =>'Should not be changed ! May invalid all user password'},
 
 	      {'name' => 'password_case',
-	       'query' => 'Password case (insensitive|sensitive)',
+	       'query' => 'Password case (insensitive | sensitive)',
 	       'file' => 'wwsympa.conf','edit' => '0',
 	       'advice' =>'Should not be changed ! May invalid all user password'},
 
@@ -157,7 +157,7 @@ my @params = ({'title' => 'Directories and file location'},
 	       'advice' =>''},
 
 	      {'name' => 'max_size',
-	       'query' => 'The default maximum size for messages (can be re-defined for each list)',
+	       'query' => 'The default maximum size (in bytes) for messages (can be re-defined for each list)',
 	       'file' => 'sympa.conf','edit' => '1',
 	       'advice' =>''},
 
@@ -174,7 +174,7 @@ my @params = ({'title' => 'Directories and file location'},
 
 
 	      {'name' => 'lang',
-	       'query' => 'Default lang',
+	       'query' => 'Default lang (fr | us | es | de | it | cn | tw | fi | pl | cz | hu | ro | et)',
 	       'file' => 'sympa.conf','edit' => '1',
 	       'advice' =>''},
 
@@ -253,7 +253,7 @@ my @params = ({'title' => 'Directories and file location'},
 	       'advice' =>'Proposed value is quite low, you can rise it up to 100, 200 or even 300 with powerfull systems.'},
 
 	       {'name' => 'alias_manager',
-		'query' => 'path to program managing alias (--SBINDIR--/alias_manager.pl | --SBINDIR--/postfix_manager.pl) ',
+		'query' => 'Full path to program managing alias (alias_manager.pl | postfix_manager.pl) ',
 		'file' => 'wwsympa.conf','edit' => '1',
 		'comment' => 'alias_manager --SBINDIR--/alias_manager.pl'
 		},
@@ -295,7 +295,7 @@ my @params = ({'title' => 'Directories and file location'},
 	      {'title' => 'Database'},
 	      
 	      {'name' => 'db_type',
-	       'query' => 'Database type (mysql|Pg|Oracle|Sybase)',
+	       'query' => 'Database type (mysql | Pg | Oracle | Sybase)',
 	       'file' => 'sympa.conf','edit' => '1',
 	       'advice' =>'be carefull to the case'},
 
@@ -338,7 +338,7 @@ my @params = ({'title' => 'Directories and file location'},
 	      {'title' => 'Web interface'},
 
 	      {'name' => 'use_fast_cgi',
-	       'query' => 'Is fast_cgi module for Apache (or Roxen) installed (0|1)',
+	       'query' => 'Is fast_cgi module for Apache (or Roxen) installed (0 | 1)',
 	       'file' => 'wwsympa.conf','edit' => '1',
 	       'advice' =>'This module provide much faster web interface'},
 
@@ -353,7 +353,7 @@ my @params = ({'title' => 'Directories and file location'},
 	       'advice' =>''},
 
 	      {'name' => 'default_home',
-	       'query' => 'Main page type (lists|home)',
+	       'query' => 'Main page type (lists | home)',
 	       'file' => 'wwsympa.conf','edit' => '1',
 	       'advice' =>''},
 
@@ -415,7 +415,7 @@ unless (open (SYMPA,"> $new_sympa_conf")){
 foreach my $i (0..$#params) {
     if ($params[$i]->{'title'}) {
 	my $title = $params[$i]->{'title'};
-	printf "\n\n$title\n";
+	printf "\n\n** $title **\n";
 	next;
     }
     my $file = $params[$i]->{'file'} ;
@@ -433,8 +433,8 @@ foreach my $i (0..$#params) {
     }
     my $new_value;
     if ($params[$i]->{'edit'} eq '1') {
-	printf "$advice\n" unless ($advice eq '') ;
-	printf "Parameter $name: $query \[$current_value\] : ";
+	printf "... $advice\n" unless ($advice eq '') ;
+	printf "$name: $query \[$current_value\] : ";
 	$new_value = <STDIN> ;
 	chomp $new_value;
     }
@@ -451,7 +451,7 @@ foreach my $i (0..$#params) {
     }
     printf $desc "# $query\n";
     unless ($advice eq '') {
-	printf $desc "# $advice\n";
+	printf $desc "# ... $advice\n";
     }
     
     if ($current_value ne $new_value) {
