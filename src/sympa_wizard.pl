@@ -161,7 +161,7 @@ my @params = ({'title' => 'Directories and file location'},
 	      
 	      {'name' => 'listmaster',
 	       'default' => 'your_email_address@--HOST--',
-	       'query' => 'Listmasters email list colon separated',
+	       'query' => 'Listmasters email list comma separated',
 	       'file' => 'sympa.conf','edit' => '1',
 	       'advice' =>''},
 	      
