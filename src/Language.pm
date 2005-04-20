@@ -105,7 +105,7 @@ sub SetLang {
 
     ## Set Locale::Messages context
     unless (setlocale(&POSIX::LC_ALL, $locale)) {
-	&do_log('err','Failed to setlocale(%s)', $locale);
+	&do_log('err','Failed to setlocale(%s) ; you should edit your /etc/locale.gen or /etc/sysconfig/i18n files', $locale);
 	return undef;
     }
     $current_lang = $lang;
