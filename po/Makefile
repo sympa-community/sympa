@@ -1,6 +1,7 @@
 
 
 LINGUAS = cs de en_US es et fi fr hu it nl pl pt ro zh_CN zh_TW
+SYMPA_LOCALES = cs_CZ de_DE en_US es_ES et_EE fi_FI fr_FR hu_HU it_IT nl_NL pl_PL pt_PT ro_RO zh_CN zh_TW
 MOFILES = $(addsuffix .mo, $(LINGUAS))
 
 DEPENDON = $(shell cd .. ; ls src/*.p? wwsympa/wwsympa.fcgi wwsympa/*.p? web_tt2/*.tt2 mail_tt2/*.tt2 src/etc/mhonarc-ressources.tt2 src/etc/scenari/*)
@@ -18,9 +19,15 @@ XGETTEXT = po/xgettext.pl
 .po.mo:
 	$(MSGFMT) -o $@ $<
 
-all: $(MOFILES)
+all: $(MOFILES) checklocales
 
 potfile: sympa.pot
+
+checklocales:
+	@echo "Checking available locales ..."
+	@(	SYMPA_LOCALES="$(SYMPA_LOCALES)"; export SYMPA_LOCALES; \
+		$(PERL) ./check_locales.pl \
+	)
 
 pot:
 	echo "Updating sympa.pot template file..."
