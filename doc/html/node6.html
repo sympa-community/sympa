@@ -16,7 +16,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
 
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=EUC-JP">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
 <META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
@@ -46,21 +46,21 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> :</B> <A NAME="tex2html770"
+<B> Next:</B> <A NAME="tex2html770"
   HREF="node7.html">6. sympa.conf parameters</A>
-<B> :</B> <A NAME="tex2html764"
+<B> Up:</B> <A NAME="tex2html764"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> :</B> <A NAME="tex2html758"
+<B> Previous:</B> <A NAME="tex2html758"
   HREF="node5.html">4. Upgrading Sympa</A>
  &nbsp; <B>  <A NAME="tex2html766"
-  HREF="node1.html">目次</A></B> 
+  HREF="node1.html">Contents</A></B> 
  &nbsp; <B>  <A NAME="tex2html768"
-  HREF="node26.html">索引</A></B> 
+  HREF="node26.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 <!--Table of Child-Links-->
-
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
 <LI><A NAME="tex2html771"
@@ -128,11 +128,11 @@ lines must therefore be added to the <A NAME="5790"></A><TT>sendmail</TT> alias 
 
 <P>
 <BLOCKQUOTE>
-sympa:             "| /usr/local/sympa-os/bin/queue sympa@my.domain.org"
+sympa:             "| /home/sympa/bin/queue sympa@my.domain.org"
 <BR>
-listmaster: 	   "| /usr/local/sympa-os/bin/queue listmaster@my.domain.org"
+listmaster: 	   "| /home/sympa/bin/queue listmaster@my.domain.org"
 <BR>
-bounce+*:          "| /usr/local/sympa-os/bin/bouncequeue sympa@my.domain.org"
+bounce+*:          "| /home/sympa/bin/bouncequeue sympa@my.domain.org"
 <BR>
 sympa-request:     postmaster
 <BR>
@@ -197,37 +197,37 @@ aliases must be added:
 <TR><TD ALIGN="LEFT"><TT>
         <TT>mylist</TT>:         </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-os/bin/queue mylist@my.domain.org"
+            "|/home/sympa/bin/queue mylist@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-request</TT>: </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-os/bin/queue mylist-request@my.domain.org"
+            "|/home/sympa/bin/queue mylist-request@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-editor</TT>:  </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-os/bin/queue mylist-editor@my.domain.org"
+            "|/home/sympa/bin/queue mylist-editor@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-owner</TT>:   </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-os/bin/bouncequeue mylist@my.domain.org
+            "|/home/sympa/bin/bouncequeue mylist@my.domain.org
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-subscribe</TT>:   </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-os/bin/queue mylist-subscribe@my.domain.org@my.domain.org"
+            "|/home/sympa/bin/queue mylist-subscribe@my.domain.org@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD ALIGN="LEFT"><TT> 
         <TT>mylist-unsubscribe</TT>: </TT></TD>
 <TD ALIGN="LEFT"><TT>
-            "|/usr/local/sympa-os/bin/queue mylist-unsubscribe@my.domain.org"
+            "|/home/sympa/bin/queue mylist-unsubscribe@my.domain.org"
             </TT></TD>
 </TR>
 <TR><TD></TD>
@@ -240,14 +240,14 @@ The address <TT>mylist-request</TT> should correspond
 to the person responsible for managing <TT>mylist</TT>
 (the <A NAME="5825"></A>owner).  <I>Sympa</I> will forward messages for
 <TT>mylist-request</TT> to the owner of <TT>mylist</TT>,
-as defined in the <A NAME="5829"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT>
+as defined in the <A NAME="5829"></A><TT>/home/sympa/expl/mylist/config</TT>
 file.  Using this feature means you would not need to modify the
 alias file if the owner of the list were to change.
 
 <P>
 Similarly, the address <TT>mylist-editor</TT> can be used
 to contact the list editors if any are defined in
-<A NAME="5833"></A><TT>/usr/local/sympa-os/expl/mylist/config</TT>.  This address definition
+<A NAME="5833"></A><TT>/home/sympa/expl/mylist/config</TT>.  This address definition
 is not compulsory.
 
 <P>
@@ -290,16 +290,16 @@ The script expects the following arguments :
 <LI><TT>&lt;</TT>list domain<TT>&gt;</TT>
 </LI>
 </OL>
-Example : <A NAME="5854"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl add mylistcru.fr</TT>
+Example : <A NAME="5854"></A><TT>/home/sympa/bin/alias_manager.pl add mylistcru.fr</TT>
 
 <P>
-<A NAME="5857"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl</TT> works on the alias file as defined in <A NAME="5860"></A><TT>sympa.conf</TT>)
+<A NAME="5857"></A><TT>/home/sympa/bin/alias_manager.pl</TT> works on the alias file as defined in <A NAME="5860"></A><TT>sympa.conf</TT>)
 by the <A NAME="5863"></A>SENDMAIL_ALIASES  variable (default is <A NAME="5864"></A><TT>/etc/mail/sympa_aliases</TT>) in the main Makefile (see <A HREF="node4.html#makefile">3.3</A>,  page&nbsp;<A HREF="node4.html#makefile"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). You must refer to this aliases file in your <A NAME="5867"></A><TT>sendmail.mc</TT> (if using sendmail) :<PRE>
 define(`ALIAS_FILE', `/etc/aliases,/etc/mail/sympa_aliases')dnl
 </PRE>
 
 <P>
-<A NAME="5870"></A><TT>/usr/local/sympa-os/bin/alias_manager.pl</TT> runs a <A NAME="5873"></A><TT>newaliases</TT> command (via <A NAME="5876"></A><TT>aliaswrapper</TT>), after any changes to aliases file.
+<A NAME="5870"></A><TT>/home/sympa/bin/alias_manager.pl</TT> runs a <A NAME="5873"></A><TT>newaliases</TT> command (via <A NAME="5876"></A><TT>aliaswrapper</TT>), after any changes to aliases file.
 
 <P>
 If you manage virtual domains with your mail server, then you might want to change
@@ -334,9 +334,9 @@ With Postfix, you should edit the <A NAME="5895"></A><TT>/etc/postfix/virtual.re
 </BLOCKQUOTE>
  Entries in the 'aliases' file will look like this :
 <BLOCKQUOTE>
-my.domain.org-sympa:   "|/usr/local/sympa-os/bin/sympa.pl sympa@my.domain.org"
+my.domain.org-sympa:   "|/home/sympa/bin/sympa.pl sympa@my.domain.org"
     .....
-    my.domain.org-listA:   "|/usr/local/sympa-os/bin/sympa.pl listA@my.domain.org"
+    my.domain.org-listA:   "|/home/sympa/bin/sympa.pl listA@my.domain.org"
 
 </BLOCKQUOTE>
 
@@ -367,20 +367,20 @@ With Sendmail, add the following entry to <A NAME="5898"></A><TT>/etc/mail/virtu
   HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> :</B> <A NAME="tex2html770"
+<B> Next:</B> <A NAME="tex2html770"
   HREF="node7.html">6. sympa.conf parameters</A>
-<B> :</B> <A NAME="tex2html764"
+<B> Up:</B> <A NAME="tex2html764"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> :</B> <A NAME="tex2html758"
+<B> Previous:</B> <A NAME="tex2html758"
   HREF="node5.html">4. Upgrading Sympa</A>
  &nbsp; <B>  <A NAME="tex2html766"
-  HREF="node1.html">目次</A></B> 
+  HREF="node1.html">Contents</A></B> 
  &nbsp; <B>  <A NAME="tex2html768"
-  HREF="node26.html">索引</A></B> 
+  HREF="node26.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-平成17年3月8日
+2005-04-20
 </ADDRESS>
 </BODY>
 </HTML>

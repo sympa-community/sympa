@@ -16,7 +16,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
 
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=EUC-JP">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
 <META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
@@ -46,21 +46,21 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> :</B> <A NAME="tex2html788"
+<B> Next:</B> <A NAME="tex2html788"
   HREF="node8.html">7. Sympa and its database</A>
-<B> :</B> <A NAME="tex2html782"
+<B> Up:</B> <A NAME="tex2html782"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> :</B> <A NAME="tex2html776"
+<B> Previous:</B> <A NAME="tex2html776"
   HREF="node6.html">5. Mail aliases</A>
  &nbsp; <B>  <A NAME="tex2html784"
-  HREF="node1.html">目次</A></B> 
+  HREF="node1.html">Contents</A></B> 
  &nbsp; <B>  <A NAME="tex2html786"
-  HREF="node26.html">索引</A></B> 
+  HREF="node26.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 <!--Table of Child-Links-->
-
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
 <LI><A NAME="tex2html789"
@@ -338,12 +338,12 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 </H1>
 
 <P>
-The <A NAME="5901"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> configuration file contains numerous
+The <A NAME="5901"></A><TT>/etc/sympa.conf</TT> configuration file contains numerous
 parameters which are read on start-up of <I>Sympa</I>. If you change this file, do not forget
 that you will need to restart <I>Sympa</I> afterwards. 
 
 <P>
-The <A NAME="5906"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT> file contains directives in the following
+The <A NAME="5906"></A><TT>/etc/sympa.conf</TT> file contains directives in the following
 format:
 
 <P>
@@ -624,7 +624,7 @@ Defines who can run a <TT>REMIND *</TT> command.
 </H2>
 
 <P>
-(Default value: <TT><A NAME="6025"></A><TT>/usr/local/sympa-os/expl</TT></TT>)
+(Default value: <TT><A NAME="6025"></A><TT>/home/sympa/expl</TT></TT>)
 
 <P>
 The directory whose subdirectories correspond to the different lists.
@@ -640,7 +640,7 @@ Example: <TT>home          /home/sympa/expl</TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="6034"></A><TT>/usr/local/sympa-os/etc</TT></TT>)
+(Default value: <TT><A NAME="6034"></A><TT>/home/sympa/etc</TT></TT>)
 
 <P>
 This is the local directory for configuration files (such as
@@ -716,7 +716,7 @@ Example: <TT>log_level          2</TT>
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="6082"></A><TT>/usr/local/sympa-os/etc/sympa.pid</TT></TT>)
+(Default value: <TT><A NAME="6082"></A><TT>/home/sympa/etc/sympa.pid</TT></TT>)
 
 <P>
 The file where the <A NAME="6085"></A><TT>sympa.pl</TT> daemon stores its
@@ -1060,7 +1060,7 @@ The default disk quota for lists' web archives.
 </H2>
 
 <P>
-(Default value: <TT><A NAME="6216"></A><TT>/usr/local/sympa-os/spool</TT></TT>)
+(Default value: <TT><A NAME="6216"></A><TT>/home/sympa/spool</TT></TT>)
 
 <P>
 The parent directory which contains all the other spools.  
@@ -1078,7 +1078,7 @@ The absolute path of the directory which contains the queue, used both by the
         parameter is mandatory.
 
 <P>
-Example: <TT><A NAME="6230"></A><TT>/usr/local/sympa-os/spool/msg</TT></TT>
+Example: <TT><A NAME="6230"></A><TT>/home/sympa/spool/msg</TT></TT>
 
 <P>
 
@@ -1090,7 +1090,7 @@ Example: <TT><A NAME="6230"></A><TT>/usr/local/sympa-os/spool/msg</TT></TT>
 </H2>
 
 <P>
-(Default value: <TT><A NAME="6238"></A><TT>/usr/local/sympa-os/spool/distribute</TT></TT>)
+(Default value: <TT><A NAME="6238"></A><TT>/home/sympa/spool/distribute</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1104,7 +1104,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2>
 
 <P>
-(Default value: <TT><A NAME="6246"></A><TT>/usr/local/sympa-os/spool/moderation</TT></TT>)
+(Default value: <TT><A NAME="6246"></A><TT>/home/sympa/spool/moderation</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1129,7 +1129,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2>  
 
 <P>
-(Default value: <TT><A NAME="6257"></A><TT>/usr/local/sympa-os/spool/expire</TT></TT>)
+(Default value: <TT><A NAME="6257"></A><TT>/home/sympa/spool/expire</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1142,7 +1142,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="6265"></A><TT>/usr/local/sympa-os/spool/auth</TT></TT>)
+(Default value: <TT><A NAME="6265"></A><TT>/home/sympa/spool/auth</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1155,7 +1155,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2> 
 
 <P>
-(Default value: <TT><A NAME="6273"></A><TT>/usr/local/sympa-os/spool/outgoing</TT></TT>)
+(Default value: <TT><A NAME="6273"></A><TT>/home/sympa/spool/outgoing</TT></TT>)
 
 <P>
 This parameter is optional and retained solely for backward compatibility.
@@ -1169,7 +1169,7 @@ This parameter is optional and retained solely for backward compatibility.
 </H2>
 
 <P>
-(Default value: <TT><A NAME="6281"></A><TT>/usr/local/sympa-os/spool/bounce</TT></TT>)
+(Default value: <TT><A NAME="6281"></A><TT>/home/sympa/spool/bounce</TT></TT>)
 
 <P>
 Spool to store bounces (non-delivery reports) received by the <A NAME="6284"></A><TT>bouncequeue</TT>
@@ -1185,7 +1185,7 @@ Spool to store bounces (non-delivery reports) received by the <A NAME="6284"></A
 </H2>
 
 <P>
-(Default value: <TT><A NAME="6292"></A><TT>/usr/local/sympa-os/spool/task</TT></TT>)
+(Default value: <TT><A NAME="6292"></A><TT>/home/sympa/spool/task</TT></TT>)
 
 <P>
 Spool to store task files created by the task manager. This parameter is mandatory
@@ -1199,7 +1199,7 @@ Spool to store task files created by the task manager. This parameter is mandato
 </H2>
 
 <P>
-(Default value: <TT><A NAME="6300"></A><TT>/usr/local/sympa-os/spool/tmp</TT></TT>)
+(Default value: <TT><A NAME="6300"></A><TT>/home/sympa/spool/tmp</TT></TT>)
 
 <P>
 Temporary directory used by OpenSSL and antiviruses.
@@ -1287,7 +1287,7 @@ Expiration delay (in days) in the <A NAME="6333"></A>authentication
 </H2>   
 
 <P>
-(Default value: <TT><A NAME="6339"></A><TT>/usr/local/sympa-os/locale</TT></TT>)
+(Default value: <TT><A NAME="6339"></A><TT>/home/sympa/locale</TT></TT>)
 
 <P>
 The location of multilingual catalog files. Must correspond to	<A NAME="6342"></A><TT>~src/locale/Makefile</TT>.
@@ -2099,20 +2099,20 @@ detected.
   HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> :</B> <A NAME="tex2html788"
+<B> Next:</B> <A NAME="tex2html788"
   HREF="node8.html">7. Sympa and its database</A>
-<B> :</B> <A NAME="tex2html782"
+<B> Up:</B> <A NAME="tex2html782"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> :</B> <A NAME="tex2html776"
+<B> Previous:</B> <A NAME="tex2html776"
   HREF="node6.html">5. Mail aliases</A>
  &nbsp; <B>  <A NAME="tex2html784"
-  HREF="node1.html">目次</A></B> 
+  HREF="node1.html">Contents</A></B> 
  &nbsp; <B>  <A NAME="tex2html786"
-  HREF="node26.html">索引</A></B> 
+  HREF="node26.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-平成17年3月8日
+2005-04-20
 </ADDRESS>
 </BODY>
 </HTML>

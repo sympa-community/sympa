@@ -16,7 +16,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
 
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=EUC-JP">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
 <META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
@@ -46,16 +46,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> :</B> <A NAME="tex2html1321"
+<B> Next:</B> <A NAME="tex2html1321"
   HREF="node23.html">22. Using Sympa with LDAP</A>
-<B> :</B> <A NAME="tex2html1315"
+<B> Up:</B> <A NAME="tex2html1315"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> :</B> <A NAME="tex2html1309"
+<B> Previous:</B> <A NAME="tex2html1309"
   HREF="node21.html">20. Bounce management</A>
  &nbsp; <B>  <A NAME="tex2html1317"
-  HREF="node1.html">目次</A></B> 
+  HREF="node1.html">Contents</A></B> 
  &nbsp; <B>  <A NAME="tex2html1319"
-  HREF="node26.html">索引</A></B> 
+  HREF="node26.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -72,7 +72,7 @@ In this case you must set the <A NAME="9477"></A><TT>antivirus_path</TT> and
 <A NAME="9480"></A><TT>antivirus_args</TT> configuration parameters
  (see <A HREF="node7.html#Antivirus_plug-in">6.13</A>, page&nbsp;<A HREF="node7.html#Antivirus_plug-in"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 <I>Sympa</I> is already compatible with McAfee/uvscan, Fsecure/fsav, Sophos, AVP, Trend Micro/VirusWall and Clam Antivirus.
-For each mail received, <I>Sympa</I> extracts its MIME parts in the <A NAME="9485"></A><TT>/usr/local/sympa-os/spool/tmp/antivirus</TT> directory and
+For each mail received, <I>Sympa</I> extracts its MIME parts in the <A NAME="9485"></A><TT>/home/sympa/spool/tmp/antivirus</TT> directory and
 then calls the antivirus software to check them.
 When a virus is detected, <I>Sympa</I> looks for the virus name in the virus scanner STDOUT and sends a
 <A NAME="9489"></A><TT>your_infected_msg.tt2</TT> warning to the sender of the mail.
@@ -83,7 +83,7 @@ The mail is saved as 'bad' and the working directory is deleted (except if <I>Sy
 <BR><HR>
 <ADDRESS>
 root
-平成17年3月8日
+2005-04-20
 </ADDRESS>
 </BODY>
 </HTML>

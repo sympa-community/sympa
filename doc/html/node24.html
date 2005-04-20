@@ -16,7 +16,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
 
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=EUC-JP">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
 <META NAME="Generator" CONTENT="jLaTeX2HTML v2002-2-1 JA patch-2.0">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
@@ -46,21 +46,21 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> :</B> <A NAME="tex2html1349"
+<B> Next:</B> <A NAME="tex2html1349"
   HREF="node25.html">24. Using Sympa commands</A>
-<B> :</B> <A NAME="tex2html1343"
+<B> Up:</B> <A NAME="tex2html1343"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> :</B> <A NAME="tex2html1337"
+<B> Previous:</B> <A NAME="tex2html1337"
   HREF="node23.html">22. Using Sympa with LDAP</A>
  &nbsp; <B>  <A NAME="tex2html1345"
-  HREF="node1.html">目次</A></B> 
+  HREF="node1.html">Contents</A></B> 
  &nbsp; <B>  <A NAME="tex2html1347"
-  HREF="node26.html">索引</A></B> 
+  HREF="node26.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
 <!--Table of Child-Links-->
-
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
 <LI><A NAME="tex2html1350"
@@ -231,7 +231,7 @@ This is done using the optional parameters <A NAME="9506"></A><TT>openSSL</TT> a
          usually <TT>/usr/local/ssl/bin/openSSL</TT>
 </LI>
 <LI><A NAME="9518"></A><TT>cafile</TT> : the path of a bundle of trusted ca certificates. 
-        The file <A NAME="9521"></A><TT>~/usr/local/sympa-os/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
+        The file <A NAME="9521"></A><TT>~/home/sympa/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
 
 <P>
 Both the <A NAME="9526"></A><TT>cafile</TT> file and the <A NAME="9529"></A><TT>capath</TT> directory
@@ -325,7 +325,7 @@ So the first requirement is to install a certificate and a private key for
 the list.
 The mechanism whereby certificates are obtained and managed is complex. Current versions
 of S/Sympa assume that list certificates and private keys are installed by
-the listmaster using <A NAME="9537"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. This script allows
+the listmaster using <A NAME="9537"></A><TT>/home/sympa/bin/p12topem.pl</TT> script. This script allows
 you to install a PKCS#12 bundle file containing a private key and
 a certificate using the appropriate format.
 
@@ -339,7 +339,7 @@ the trusted CA's described in the <A NAME="9540"></A><TT>cafile</TT> file or the
 
 <P>
 The list private key must be installed in a file named
-<A NAME="9546"></A><TT>/usr/local/sympa-os/expl/mylist/private_key</TT>. All the list private
+<A NAME="9546"></A><TT>/home/sympa/expl/mylist/private_key</TT>. All the list private
 keys must be encrypted using a single password defined by the
 <A NAME="9549"></A><TT>password</TT> parameter in <A NAME="9552"></A><TT>sympa.conf</TT>.
 
@@ -371,7 +371,7 @@ Copy this file to the list home directory.
 </LI>
 <LI>convert the pkcs#12 file into a pair of pem files :
 <A NAME="9555"></A><TT>cert.pem</TT> and <A NAME="9558"></A><TT>private_key</TT> using
-the <A NAME="9561"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. Use <A NAME="9564"></A><TT>p12topem.pl -help</TT> for details.
+the <A NAME="9561"></A><TT>/home/sympa/bin/p12topem.pl</TT> script. Use <A NAME="9564"></A><TT>p12topem.pl -help</TT> for details.
 </LI>
 <LI>be sure that <A NAME="9567"></A><TT>cert.pem</TT> and <A NAME="9570"></A><TT>private_key</TT>
 are owned by sympa with ``r'' access.
@@ -401,7 +401,7 @@ Report to <A HREF="node7.html#certificate-task-config">6.12.4</A>, page&nbsp;<A 
 
 <P>
 A task created with the model <A NAME="9575"></A><TT>chk_cert_expiration.daily.task</TT> checks every day the expiration date of
-certificates stored in the <A NAME="9578"></A><TT>/usr/local/sympa-os/expl/X509-user-certs/</TT> directory.
+certificates stored in the <A NAME="9578"></A><TT>/home/sympa/expl/X509-user-certs/</TT> directory.
 The user is warned with the <A NAME="9581"></A><TT>daily_cert_expiration</TT> template when his certificate has expired
 or is going to expire within three days.
 
@@ -435,20 +435,20 @@ lists when needed.
   HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> :</B> <A NAME="tex2html1349"
+<B> Next:</B> <A NAME="tex2html1349"
   HREF="node25.html">24. Using Sympa commands</A>
-<B> :</B> <A NAME="tex2html1343"
+<B> Up:</B> <A NAME="tex2html1343"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> :</B> <A NAME="tex2html1337"
+<B> Previous:</B> <A NAME="tex2html1337"
   HREF="node23.html">22. Using Sympa with LDAP</A>
  &nbsp; <B>  <A NAME="tex2html1345"
-  HREF="node1.html">目次</A></B> 
+  HREF="node1.html">Contents</A></B> 
  &nbsp; <B>  <A NAME="tex2html1347"
-  HREF="node26.html">索引</A></B> 
+  HREF="node26.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-平成17年3月8日
+2005-04-20
 </ADDRESS>
 </BODY>
 </HTML>
