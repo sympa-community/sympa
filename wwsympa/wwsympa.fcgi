@@ -3518,7 +3518,8 @@ sub do_remindpasswd {
 	 return 'loginrequest';
      }
 
-     unless ($in{'newpasswd1'}) {
+     if ( ! $in{'newpasswd1'} || 
+	     $in{'newpasswd1'} =~ /^\s+$/ ) {
 	 &error_message('no_passwd');
 	 &wwslog('info','do_setpasswd: no newpasswd1');
 	 return undef;
