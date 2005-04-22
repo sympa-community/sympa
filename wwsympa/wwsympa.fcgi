@@ -1670,7 +1670,8 @@ sub send_html {
 
      if ($in{'referer'}) {
 	 $param->{'redirect_to'} = &tools::unescape_chars($in{'referer'});
-     }elsif ($in{'previous_action'}) {
+     }elsif ($in{'previous_action'} && 
+	     $in{'previous_action'} !~ /^login|logout|loginrequest$/) {
 	 $next_action = $in{'previous_action'};
 	 $in{'list'} = $in{'previous_list'};
      }else {
