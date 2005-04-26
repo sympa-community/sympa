@@ -101,7 +101,7 @@ sub checkcommand {
    ## Check for commands in the subject.
    my $subject = $msg->head->get('Subject');
    if ($subject) {
-       if ($Conf{'misaddressed_commands_regexp'} && ($subject =~ /^$Conf{'misaddressed_commands_regexp'}$/im)) {
+       if ($Conf{'misaddressed_commands_regexp'} && ($subject =~ /^$Conf{'misaddressed_commands_regexp'}\b/im)) {
 	   &rejectMessage($msg, $sender,$robot);
 	   return 1;
        }
@@ -110,7 +110,7 @@ sub checkcommand {
    return 0 if ($#{$msg->body} >= 5);  ## More than 5 lines in the text.
 
    foreach $i (@{$msg->body}) {
-       if ($Conf{'misaddressed_commands_regexp'} && ($i =~ /^$Conf{'misaddressed_commands_regexp'}$/im)) {
+       if ($Conf{'misaddressed_commands_regexp'} && ($i =~ /^$Conf{'misaddressed_commands_regexp'}\b/im)) {
 	   &rejectMessage($msg, $sender, $robot);
 	   return 1;
        }
@@ -256,7 +256,11 @@ sub get_list_list_tpl {
 
 		$list_templates->{$template}{'path'} = $dir;
 
-		if (-r $dir.'/'.$template.'/comment.tt2') {
+		my $locale = &Language::Lang2Locale( &Language::GetLang());
+		## Look for a comment.tt2 in the appropriate locale first
+		if (-r $dir.'/'.$template.'/'.$locale.'/comment.tt2') {
+		    $list_templates->{$template}{'comment'} = $dir.'/'.$template.'/'.$locale.'/comment.tt2';
+		}elsif (-r $dir.'/'.$template.'/comment.tt2') {
 		    $list_templates->{$template}{'comment'} = $dir.'/'.$template.'/comment.tt2';
 		}
 	    }

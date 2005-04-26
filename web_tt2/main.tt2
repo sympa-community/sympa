@@ -1,15 +1,8 @@
-<?xml version="1.0" encoding="iso-8859-1" ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xml:lang="[% iso639 = locale.match('^(.)(.)'); iso639.0; iso639.1 %]">
 
-<!-- begin main.tt2 (distrib) -->
+<!-- comment -->
 <head>
-<title> [% main_title %] </title>
-<link rel="stylesheet" href="[% css_url %]/style.css" type="text/css" media="screen" title="Derived from style Blank Canvas by tw3k AT tw3k.tw3k.q3machines.net" />
-<!-- the following CSS have to be improved before to be used -->
-<!-- <link rel="stylesheet" href="[% css_url %]/print.css" type="text/css" media="print" />                                            -->
-<!-- <link rel="alternative stylesheet" href="[% css_url %]/fullPage.css" type="text/css" media="screen" title="View Full Page" />     -->
-<!-- <link rel="alternative stylesheet" href="[% css_url %]/print-preview.css" type="text/css" media="screen" title="Print Preview" /> -->
-<meta name="generator" content="Sympa" />
 
 [% IF conf.web_recode_to %]
 <meta http-equiv="content-type" content="text/html; charset=[% conf.web_recode_to %]" />
@@ -17,46 +10,320 @@
 <meta http-equiv="content-type" content="text/html; charset=[%|loc%]_charset_[%END%]" />
 [% END %]
 
-[% PROCESS javascript.tt2 %]
+[% IF use_htmlarea %]
+<script type="text/javascript">
+  _editor_url = "[% htmlarea_url %]/";
+  _editor_lang = "en";
+</script>
 
-[% IF base %] <base href="[% base %]" /> [% END %]
-<!--[if IE]>
-<style>
-.ContentBlock {
-	margin: -7px 0px 0px 0px;
+<script type="text/javascript" src="[% htmlarea_url %]/htmlarea.js"></script>
+[% END %]
+
+<script type="text/javascript">
+<!-- for other browsers
+
+// To confirm archives deletion
+ function dbl_confirm(my_form, my_message,my_message2) {
+     
+      if (confirm(my_message)) 
+      {
+    	 if (confirm(my_message2)) 
+	 {
+	     my_form.zip.value = "1";
+	 }
+	 }else{
+	return false;
+	}
+  }	
+
+  // To confirm a form submition
+  function request_confirm(my_message) {
+    if (confirm(my_message)) {
+      return true;
+    }else {
+      return false;
+    } 
 }
+
+  // To confirm on a link (A HREF)
+  function request_confirm_link(my_url, my_message) {
+    question = confirm(my_message);
+    if (question !="0") {
+         top.location = my_url;
+    }
+  }
+
+  // To confirm on a link (A HREF)
+  function refresh_mom_and_die() {
+    url = window.opener.location.href;
+
+    if (url.indexOf('logout') > -1 ) {
+      url = '[% path_cgi %]/';
+    }
+
+    window.opener.location = url;
+    self.close();
+  }
+
+[% IF cookie_set %]
+  function GetCookie (name) {
+     var arg = name + "=";
+     var alen = arg.length;
+     var clen = document.cookie.length;
+     var i = 0;
+     while (i < clen) {
+       var j = i + alen;
+       if (document.cookie.substring(i, j) == arg) 
+         return getCookieVal (j);
+         i = document.cookie.indexOf(" ", i) + 1;
+         if (i == 0) break; 
+       }
+     return null;
+  }  
+
+  function getCookieVal (offset) {
+    var endstr = document.cookie.indexOf (";", offset);
+    if (endstr == -1)
+      endstr = document.cookie.length;
+    return unescape(document.cookie.substring(offset, endstr));
+  }
+
+  function check_cookie() {
+ 
+     if (GetCookie('sympauser') == null) {
+        alert("[%|loc%]Sympa could not set a cookie for login.\n Your should setup your navigator to accept cookies[%END%]");
+     }
+  }
+[% END %]
+
+  function toggle_selection(myfield) {
+    for (i = 0; i < myfield.length; i++) {
+       if (myfield[i].checked) {
+            myfield[i].checked = false;
+       }else {
+	    myfield[i].checked = true;
+       }
+    }
+  }
+
+  //If the motif is found in the string, my_question is asked
+  // if the answer == yes than action is d_unzip else d_upload 
+
+  function requestBasedOnRegExp(my_question,my_form) {
+    expr = /^.+\.zip$/i;
+
+    found = expr.exec(document.getElementById("uploaded_file").value);
+
+    if (found) {
+      if (confirm(my_question)) {
+        document.getElementById("javascript_action").value = "d_unzip";
+
+      } else {
+        document.getElementById("javascript_action").value = "d_upload";
+      }
+    }else {
+      document.getElementById("javascript_action").value = "d_upload";
+    }
+    return true;
+  }   
+
+
+
+// end browsers -->
+</script>
+
+
+<style type="text/css" title="style sympa">
+<!--
+a {
+	text-decoration: none;
+}
+a:link { 
+	color: [% selected_color %]; 
+}
+a:visited { 
+	color: [% selected_color %];
+}
+-->
 </style>
-<![endif]-->
+
+  [% IF base %]
+    <base href="[% base %]" />
+  [% END %]
+  <title>
+    [% main_title %]
+  </title>
+   [% IF list -%] 
+     <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Latest messages"[%END%] href="[% base_url%][% path_cgi %]/rss/latest_arc/[%list%]?count=5">
+     <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Latest documents"[%END%] href="[% base_url%][% path_cgi %]/rss/latest_d_read/[%list%]?count=5">
+   [% ELSE -%]
+     [% IF (action == 'lists') && topic -%]
+       <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Latest lists"[%END%] href="[% base_url%][% path_cgi %]/rss/latest_lists/[%topic%]?count=5">
+       <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Active lists"[%END%] href="[% base_url%][% path_cgi %]/rss/active_lists/[%topic%]?count=5">
+     [% ELSE -%]
+     <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Latest lists"[%END%] href="[% base_url%][% path_cgi %]/rss/latest_lists?count=5">
+     <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Active lists"[%END%] href="[% base_url%][% path_cgi %]/rss/active_lists?count=5">
+     [% END -%]
+   [% END -%]
 </head>
 
-<body onload="[% IF use_htmlarea %] HTMLArea.replaceAll();[% END %][% IF cookie_set %] check_cookie();[% END %][% IF back_to_mom %] setTimeout('refresh_mom_and_die()',1000);[% END %]">
+<body style="background-color: [% bg_color %]; color: [% text_color %];"
+onload="
+[% IF use_htmlarea %]
+HTMLArea.replaceAll();
+[% END %]
+[% IF cookie_set %]
+check_cookie(); 
+[% END %]
+[% IF back_to_mom %]
+setTimeout('refresh_mom_and_die()',1000);
+[% END %]
+">
 <noscript><p><em>[%|loc%]Please activate JavaScript in your web browser[%END%]</em></p></noscript>
 
-<div id="Canvas">
-  <div id="Header">
-  [% PROCESS title.tt2 %]
-  [% PROCESS menu.tt2 %]
-  </div> <!-- end div Header -->
-	  
-  <div id="Menus"><!-- Start Menus -->&nbsp;
-    [% PROCESS login_menu.tt2 %]
-    [% PROCESS list_menu.tt2 IF list %]
-    [% PROCESS setlang.tt2 %]
-  </div><!-- End div Menus -->
-  <div id="Stretcher">  <!-- <span id="toggleMenu" title="A javascript could hidde or show the meneu" class="smalltext info printNone toggleNone">toggle menu</span><br /> --> &nbsp;<br />
-     <div id="Paint">
-       [% PROCESS error.tt2 IF errors %]
-       [% PROCESS notice.tt2 IF notices %]
-       <div class="ContentBlock"> 
-       [% IF list %]<h3 style="text-align: center;">[% list_protected_email %]</h3><br />[% END %]
-         [% PROCESS "${action}.tt2" IF action %]
-     </div>
-       <a class="dingbat printNone" href="#top" title="Top of Page">&sect;</a>
-     </div><!-- End div= Paint -->
-  </div><!-- end div Stretcher -->
-  [% PROCESS footer.tt2 %]
+[% IF nomenu %]
+    [% IF errors %]
+          <table>
+          <tr style="background-color: [% error_color %];">
+            <td>
+              <span style="color: [% bg_color %];">
+       [% PROCESS error.tt2 %]
+       </span>
+            </td>
+          </tr>
+          </table>
+    [% END %]
+    [% IF notices %]
+          <table>
+          <tr style="background-color: [% shaded_color %];">
+            <td>
+              <span style="color: [% text_color %];">
+       [% PROCESS notice.tt2 %]
+       </span>
+            </td>
+          </tr>
+          </table>
+    [% END %]
 
-</div> <!-- end div canvas -->
+  [% PROCESS title.tt2 %]
+  <br />
+  [% PROCESS "${action}.tt2" IF action %]
+
+     [% IF languages.size > 1 %]
+     <form action="[% path_cgi %]" method="post">
+     <input type="hidden" name="action" value="set_lang" />
+     <input type="hidden" name="previous_action" value="[% action %]" />
+     <input type="hidden" name="previous_list" value="[% list %]" />
+     <label for="l_select2"><span style="font-size: smaller;">[%|loc%]Sympa in your language:[%END%]</span>
+     <select name="lang" id="l_select2" onchange="this.form.submit();">
+     [% FOREACH lang = languages %]
+     <option value="[% lang.key %]" [% lang.value.selected %]>[% lang.value.complete %]</option>
+     [% END %]
+     </select>
+     </label>
+     <noscript>
+	<div><input type="submit" name="submit" value="[%|loc%]Change[%END%]" /></div>
+     </noscript>
+     </form>
+     [% END %]
+
+[% ELSE %]
+  [% PROCESS menu.tt2 %]
+  [% PROCESS title.tt2 %]
+  <table cellspacing="0" cellpadding="0" style="width: 100%;">
+   <tr valign="top">
+     [% IF list %]
+       <td>
+         [% PROCESS list_menu.tt2 %]
+       </td>
+     [% END %]
+   <td style="width: 100%;">
+     [% IF errors %]
+       <table>
+        <tr style="background-color: [% error_color %];">
+          <td>
+            <span style="color: [% bg_color %];">
+	    [% PROCESS error.tt2 %]
+	    </span>
+          </td>
+        </tr>
+       </table>
+     [% END %]
+     [% IF notices %]
+       <table>
+        <tr style="background-color: [% shaded_color %];">
+          <td>
+           <span style="color: [% text_color %];">
+	   [% PROCESS notice.tt2 %]
+	   </span>
+          </td>
+        </tr>
+       </table>
+     [% END %]
+
+   <table border="0" style="width: 100%;" cellpadding="0" cellspacing="1"><tr><td style="background-color: [% dark_color %];"><table border="0" style="width: 100%;" cellpadding="1" cellspacing="1">
+
+    [% IF action_type == 'admin' %]
+      <tr valign="top">
+       [% PROCESS admin_menu.tt2 %]
+      </tr>
+      <tr valign="top">
+        <td colspan="9" style="background-color: [% shaded_color %];">
+         [% IF active %]
+          [% PROCESS "${action}.tt2" IF action %]
+         [% END %]
+        </td>
+      </tr>
+	  
+    [% ELSE %]
+      <tr valign="top"><td style="background-color: [% shaded_color %];">
+        [% IF active %]
+         [% PROCESS "${action}.tt2" IF action %]
+        [% END %]
+      </td>
+      </tr>
+    [% END %]
+   </table></td></tr></table>
+
+  </td>
+  </tr>
+ </table>
+ <table border="0" align="right">
+  <tr>
+   <td align="left" style="white-space: nowrap;">
+     [% IF languages.size > 1 %]
+     <form action="[% path_cgi %]" method="post">
+     <div>
+     <input type="hidden" name="action" value="set_lang" />
+     <input type="hidden" name="previous_action" value="[% action %]" />
+     <input type="hidden" name="previous_list" value="[% list %]" />
+     <label for="l_select1"><span style="font-size: smaller;">[%|loc%]Sympa in your language:[%END%]</span>
+     <select name="lang" id="l_select1" onchange="this.form.submit();">
+
+     [% FOREACH lang = languages %]
+     <option value="[% lang.key %]" [% lang.value.selected %]>[% lang.value.complete %]</option>
+     [% END %]
+     </select>
+     </label>
+     <noscript>
+	<div><input type="submit" name="submit" value="[%|loc%]Change[%END%]" /></div>
+     </noscript>
+     </div>
+     </form>
+     [% END %]
+   </td> 
+   <td style="width: 100%;">&nbsp;</td>
+    <td style="white-space: nowrap;"><em>[%|loc%]Powered by[%END%]</em></td>
+    <td><a href="http://www.sympa.org/">
+         [% IF auth_method == 'smime' %]
+           <img src="[% icons_url %]/logo-s-lock.png" alt="Sympa [% version %]" style="border: 0px;" />
+         [% ELSE %]
+           <img src="[% icons_url %]/logo-s.png" alt="Sympa [% version %]" style="border: 0px;" />
+         [% END %]
+         </a></td>
+   </tr>
+  </table>
+[% END %]
 
 </body>
 </html>

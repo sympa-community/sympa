@@ -1,16 +1,111 @@
 <!-- $Id$ -->
 
-[% IF action != 'search' %]
-<div style="float: right;">
-  <input type="hidden" name="sortby" value="[% sortby %]" />
-  <input type="submit" name="action_review" value="[%|loc%]Page size[%END%]" />
-  <select name="size">
+<table style="width: 100%;" border="0">
+<tr>
+[% IF is_owner %]
+<td valign="top" style="white-space: nowrap;" colspan="3">
+    <form action="[% path_cgi %]" method="post">
+      <input type="hidden" name="previous_action" value="review" />
+      <input type="hidden" name="list" value="[% list %]" />
+      <input type="hidden" name="action" value="add" />
+      <input type="text" name="email" size="35" />
+      <input type="submit" name="action_add" value="[%|loc%]Add[%END%]" /> <label><input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]</label>
+    </form>
+</td>
+</tr>
+<tr>
+<td style="text-align: right; white-space: nowrap;">
+  [% IF may_sync %]
+     [% PROCESS 'button_header.tt2' %]
+       <td style="background-color: [% light_color %]; text-align: center;" valign="top">
+         <span style="color: [% selected_color %]; font-size: smaller;">
+         <a href="[% path_cgi %]/sync_include/[% list %]" ><strong>[%|loc%]Synchronize members with data sources[%END%]</strong></a>
+         </span>
+       </td>
+     [% PROCESS 'button_footer.tt2' %]
+  [%END%]
+
+     [% PROCESS 'button_header.tt2' %]
+       <td style="background-color: [% light_color %]; text-align: center;" valign="top">
+         <span style="color: [% selected_color %]; font-size: smaller;">
+         <a href="[% path_cgi %]/subindex/[% list %]" ><strong>[%|loc%]Pending subscriptions[%END%]</strong></a>
+         </span>
+       </td>
+     [% PROCESS 'button_footer.tt2' %]
+</td>
+<td>
+     [% PROCESS 'button_header.tt2' %]
+       <td style="background-color: [% light_color %]; text-align: center;" valign="top">
+         <span style="color: [% selected_color %]; font-size: smaller;">
+         <a href="[% path_cgi %]/add_request/[% list %]" ><strong>[%|loc%]Multiple add[%END%]</strong></a>
+         </span>
+       </td>
+     [% PROCESS 'button_footer.tt2' %]
+</td>
+
+<td>
+     [% PROCESS 'button_header.tt2' %]
+       <td style="background-color: [% light_color %]; text-align: center;" valign="top">
+         <span style="color: [% selected_color %]; font-size: smaller;">
+
+         <a href="[% path_cgi %]/remind/[% list %]" onclick="request_confirm_link('[% path_cgi %]/remind/[% list %]', '[%|loc(total)%]Do you really want to send a subscription remind message to the %1 subscribers ?[%END%]'); return false;"><strong>[%|loc%]Remind all subscribers[%END%]</strong></a>
+
+         </span>
+       </td>
+     [% PROCESS 'button_footer.tt2' %]
+</td>
+
+[% END %]
+</tr>
+<tr>
+<td valign="top" style="white-space: nowrap;">
+<form action="[% path_cgi %]" method="post"> 
+<input type="hidden" name="previous_action" value="review" />
+<input type="hidden" name="list" value="[% list %]" />
+<input type="hidden" name="action" value="search" />
+<input type="text" siZE="18" name="filter" value="[% filter %]" />
+<input type="submit" name="action_search" value="[%|loc%]Search[%END%]" /> 
+
+[% IF action == 'search' %]
+<br />[%|loc(occurrence)%]%1 occurrence(s) found[%END%]<br />
+[% IF too_many_select %]
+[%|loc%]Selection too wide, can not show selection[%END%]
+[% END %]
+[% END %]
+</form>
+</td>
+</tr>
+</table>
+<form name="myform" action="[% path_cgi %]" method="post">
+ <input type="hidden" name="previous_action" value="[% action %]" />
+ <input type="hidden" name="previous_list" value="[% list %]" />
+ <input type="hidden" name="list" value="[% list %]" />
+
+<table style="width: 100%;" border="0">
+  <tr><td style="text-align: left; white-space: nowrap;">
+  [% IF is_owner %]
+
+    <!--input type="button" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" onclick="return request_confirm('[%|loc%]Do you really want to unsubscribe ALL selected subscribers ?[%END%]')" /-->
+
+    <input type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
+
+    <label><input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]</label>
+  [% END %]
+  </td>
+  <td style="width: 100%;">&nbsp;</td>
+  [% IF action != 'search' %]
+  <td style="white-space: nowrap;">
+	<input type="hidden" name="sortby" value="[% sortby %]" />
+	<input type="submit" name="action_review" value="[%|loc%]Page size[%END%]" />
+	        <select name="size">
                   <option value="[% size %]" selected="selected">[% size %]</option>
 		  <option value="25">25</option>
 		  <option value="50">50</option>
 		  <option value="100">100</option>
 		   <option value="500">500</option>
-  </select>
+		</select>
+   </td>
+   <td>
    [% IF prev_page %]
     <a href="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" style="border: 0px;" alt="[%|loc%]Previous page[%END%]" /></a>
    [% END %]
@@ -20,122 +115,77 @@
    [% IF next_page %]
      <a href="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/right.png" style="border: 0px;" alt="[%|loc%]Next page[%END%]" /></a>
    [% END %]
-  </div>
-[% END %]
-
-
-[% IF is_owner %]
-
-  [% IF may_sync %]
-  <a class="actionMenuLinks" href="[% path_cgi %]/sync_include/[% list %]" >[%|loc%]Synchronize members with data sources[%END%]</a>
   [% END %]
-  <a class="actionMenuLinks" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Pending subscriptions[%END%]</a> 
-  <a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a> 
-  <a class="actionMenuLinks" href="[% path_cgi %]/remind/[% list %]" onclick="request_confirm_link('[% path_cgi %]/remind/[% list %]', '[%|loc(total)%]Do you really want to send a subscription remind message to the %1 subscribers ?[%END%]'); return false;">[%|loc%]Remind all subscribers[%END%]</a>
+  </td></tr>
+  </table>
 
-<br /><br />
-[% END %]
-
-<form action="[% path_cgi %]" method="post">
-      <input type="hidden" name="previous_action" value="review" />
-      <input type="hidden" name="list" value="[% list %]" />
-      <input type="hidden" name="action" value="add" />
-      <input type="text" name="email" size="35" />
-      <input type="submit" name="action_add" value="[%|loc%]Add[%END%]" /> <label><input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]</label>
-</form>
-
-<br />
-<form action="[% path_cgi %]" method="post"> 
-<input type="hidden" name="previous_action" value="review" />
-<input type="hidden" name="list" value="[% list %]" />
-<input type="hidden" name="action" value="search" />
-<input type="text" siZE="18" name="filter" value="[% filter %]" />
-<input type="submit" name="action_search" value="[%|loc%]Search[%END%]" /> 
-<br />
-[% IF action == 'search' %]
-<br />[%|loc(occurrence)%]%1 occurrence(s) found[%END%]<br />
-[% IF too_many_select %]
-[%|loc%]Selection too wide, can not show selection[%END%]
-[% END %]
-[% END %]
-</form>
-<br /><br />
-<form name="myform" action="[% path_cgi %]" method="post">
- <input type="hidden" name="previous_action" value="[% action %]" />
- <input type="hidden" name="previous_list" value="[% list %]" />
- <input type="hidden" name="list" value="[% list %]" />
-  [% IF is_owner %]
-    <input type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
-    <label><input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]</label>
-  [% END %]
-
-    <table style="border: solid 1px; width: 95%; margin: 10px">
-      <tr style="background-color: [% color_4 %];">
+    <table style="width: 100%;" border="1">
+      <tr style="background-color: [% light_color %];">
 	[% IF is_owner %]
-	   <th style="padding: 3px; border: solid 1px;"><span style="text-align: center;">X</span></th>
+	   <th><span style="font-size: smaller;"><strong>X</strong></span></th>
 	[% END %]
-
         [% IF sortby == 'email' %]
-  	    <th style="padding: 3px; white-space: nowrap; background-color: [% color_6 %]; border: solid 1px;" colspan="2">
-	    <span style="text-align: center;">[%|loc%]Email[%END%]</span>
+  	    <th style="white-space: nowrap; background-color: [% selected_color %];" colspan="2">
+	    <span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]Email[%END%]</strong></span>
 	[% ELSE %]
-	    <th style="padding: 3px; white-space: nowrap; border: solid 1px;" colspan="2">	    
-	    <span style="text-align: center;"><a href="[% path_cgi %]/review/[% list %]/1/[% size %]/email">[%|loc%]Email[%END%]</a></span>
+	    <th style="white-space: nowrap;" colspan="2">
+	    <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/email">
+	    <span style="font-size: smaller;"><strong>[%|loc%]Email[%END%]</strong></span></a>
 	[% END %]
 	</th>
         [% IF sortby == 'domain' %]
-  	    <th style="padding: 3px; white-space: nowrap; background-color: [% color_6 %]; border: solid 1px;">
-	    <span style="text-align: center;">[%|loc%]Domain[%END%]</span>
+  	    <th style="white-space: nowrap; background-color: [% selected_color %];">
+	    <span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]Domain[%END%]</strong></span>
 	[% ELSE %]
-	    <th style="padding: 3px; white-space: nowrap; border: solid 1px;">
-	    <span style="text-align: center;">
-               <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/domain">[%|loc%]Domain[%END%]</a>
-            </span>
+	    <th style="white-space: nowrap;">
+	    <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/domain">
+	    <span style="font-size: smaller;"><strong>[%|loc%]Domain[%END%]</strong></span></a>
 	[% END %]
 	</th>
 	[% IF sortby == 'name' %]
-	<th style="padding: 3px; white-space: nowrap; background-color: [% color_6 %]; border: solid 1px;">
-	  <span style="text-align: center;">[%|loc%]Name[%END%]</span>
+	<th style="white-space: nowrap; background-color: [% selected_color %];">
+	  <span style="color: [% bg_color %]; font-size: smaller;">[%|loc%]Name[%END%]</span>
 	[% ELSE %]
-	<th style="padding: 3px;white-space: nowrap; border: solid 1px;">
-        <span style="text-align: center;">
-          <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/name">[%|loc%]Name[%END%]</a>
-        </span>
+	<th style="white-space: nowrap;">
+		<a href="[% path_cgi %]/review/[% list %]/1/[% size %]/name">
+		<span style="font-size: smaller;">[%|loc%]Name[%END%]</span></a>
 	[% END %] 
 	</th>
         [% IF is_owner %]
-	  <th style="padding: 3px; border: solid 1px;"><span style="text-align: center;">[%|loc%]Reception[%END%]</span>
+	  <th><span style="font-size: smaller;"><strong>[%|loc%]Reception[%END%]</strong></span>
 	  </th>
 	  [% IF list_conf.user_data_source == 'include2' %]
          [% IF sortby == 'sources' %]
-  	    <th style="padding: 3px; white-space: nowrap; background-color: [% color_6 %]; border: solid 1px;">
-	    <span style="text-align: center;">[%|loc%]Sources[%END%]</span>
+  	    <th style="white-space: nowrap; background-color: [% selected_color %];">
+	    <span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]Sources[%END%]</strong></span>
 	[% ELSE %]
-	    <th style="padding: 3px; white-space: nowrap; border: solid 1px;">
-	    <span style="text-align: center;"><a href="[% path_cgi %]/review/[% list %]/1/[% size %]/sources" >[%|loc%]Sources[%END%]</a></span>
+	    <th style="white-space: nowrap;">
+	    <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/sources" >
+	    <span style="font-size: smaller;"><strong>[%|loc%]Sources[%END%]</strong></span></a>
 	[% END %]
 	</th>
           [% END %]
 	  [% IF sortby == 'date' %]
-  	    <th style="padding: 3px; white-space: nowrap; background-color: [% color_6 %]; border: solid 1px;">
-	    <span style="text-align: center;">[%|loc%]Sub date[%END%]</span>
+  	    <th style="white-space: nowrap; background-color: [% selected_color %];">
+	    <span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]Sub date[%END%]</strong></span>
 	  [% ELSE %]
-	    <th style="padding: 3px; white-space: nowrap; border: solid 1px;">
-            <span style="text-align: center;"><a href="[% path_cgi %]/review/[% list %]/1/[% size %]/date" >[%|loc%]Sub date[%END%]</a></span>
+	    <th style="white-space: nowrap;"><span style="font-size: smaller;">
+	    <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/date" >
+	    <strong>[%|loc%]Sub date[%END%]</strong></a></span>
 	  [% END %]
           </th>
-	  <th style="padding: 3px; border: solid 1px;"><span style="text-align: center;">Last update</span></th>
+	  <th><span style="font-size: smaller;"><strong>Last update</strong></span></th>
 	  [% IF additional_fields %]
-	  <th style="padding: 3px; border: solid 1px;"><span style="text-align: center; ">[% additional_fields %]</span></th>
+	  <th><span style="font-size: smaller;"><strong>[% additional_fields %]</strong></span></th>
 	  [% END %]
         [% END %]
       </tr>
       
       [% FOREACH u = members %]
 	[% IF dark == '1' %]
-	  <tr valign="top">
+	  <tr style="background-color: [% shaded_color %];" valign="top">
 	[% ELSE %]
-          <tr style="background-color: [% color_0 %];" valign="top">
+          <tr style="background-color: [% bg_color %];" valign="top">
 	[% END %]
 
 	 [% IF is_owner %]
@@ -215,11 +265,12 @@
 
 
       </table>
-    <table border="0">
+    <table style="width: 100%;" border="0">
     <tr><td style="text-align: left;">
       [% IF is_owner %]
+
         <!--input type="button" name="action_del" value="Delete selected email addresses" onclick="return request_confirm('Do you really want to unsubscribe ALL selected subscribers ?')" /-->
-        <input type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" />
+
 	<input type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
 
         <label><input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]</label>
@@ -240,7 +291,10 @@
     </td>
    [% END %]
     </tr>
-
+    [% IF is_owner %]
+    <tr><td><input type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" />
+    </td></tr>
+    [% END %]
     </table>
     </form>
 

@@ -53,7 +53,7 @@
 	[%|loc(list)%]To confirm your subscription to list %1, please enter
 	your password below :[%END%]
 
-         <form action="[% path_cgi %]" METHOD=POST>
+         <FORM ACTION="[% path_cgi %]" METHOD=POST>
           <span style="color: [% dark_color %];"><strong>[%|loc%]e-mail address[%END%]</strong> </span>[% email %]<br />
             <span style="color: [% dark_color %];"><strong>[%|loc%]password[%END%]</strong> </span> 
   	  <input type="password" name="passwd" size="20" />

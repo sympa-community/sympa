@@ -1,89 +1,219 @@
 <!-- $Id$ -->
 
-[% IF main_robot %]
-<h2>[%|loc%]Virtual Robots[%END%]</h2>
+   <table style="width: 100%;" border="0" cellpadding="0">
+ 
+     [% IF main_robot %]
+      <tr>
+        <th style="background-color: [% dark_color %];" colspan="2">
+          <table style="width: 100%;" cellpadding="0" cellspacing="0">
+            <tr>
+             <th style="background-color: [% selected_color %]; width: 50%;">
+              <span style="color: [% bg_color %];">
+	        [%|loc%]Virtual Robots[%END%]
+              </span>
+             </th>
+            </tr>
+           </table>
+         </th>
+     </tr>
+
+     <tr><td>
     [% IF robots %]
-    [%|loc%]The following virtual robots are running on this server :[%END%]
-    <ul>
-    [% FOREACH vr = robots %]<li><a href="[% vr.value.wwsympa_url %]/serveradmin">[% vr.key %]</a></li>[% END %]
+      [%|loc%]The following virtual robots are running on this server :[%END%]<ul>
+         [% FOREACH vr = robots %]
+	    <li><a href="[% vr.value.wwsympa_url %]/serveradmin">[% vr.key %]</a></li>
+	 [% END %]
       </ul>
     [% ELSE %]
       [%|loc%]No Virtual Robot defined on this server[%END%]
     [% END %]
      <br />
-[% END %]
+     </td></tr>
+    [% END %]
 
 [% IF families -%]
-  <h2>[%|loc%]Families[%END%]</h2>
+      <tr>
+        <th style="background-color: [% dark_color %];" colspan="2">
+          <table style="width: 100%;" cellpadding="0" cellspacing="0">
+            <tr>
+             <th style="background-color: [% selected_color %]; width: 50%;">
+              <span style="color: [% bg_color %];">
+	        [%|loc%]Families[%END%]
+              </span>
+             </th>
+            </tr>
+           </table>
+         </th>
+     </tr><tr>
+     <td>
         <form action="[% path_cgi %]" method="post">
        	     <select name="family_name">
-    [% FOREACH f = families %]<option value='[% f %]'>[% f %]</option>[% END %]
+	      [% FOREACH f = families %]
+	        <option value='[% f %]'>[% f %]</option>
+	      [% END %]
              </select>
 	  <input type="submit" name="action_review_family" value="[%|loc%]Review lists from this family[%END%]" />
 	</form>     
-[% END %] 
-<br />
+    </td>
+     </tr>
+[%END%]
 
-<h2>[%|loc%]Lists[%END%]</h2>
-<a class="actionMenuLinks" href="[% path_cgi %]/get_pending_lists">[%|loc%]Pending lists[%END%]</a>
-<a class="actionMenuLinks" href="[% path_cgi %]/get_latest_lists">[%|loc%]Latest lists[%END%]</a>
-<a class="actionMenuLinks" href="[% path_cgi %]/get_inactive_lists">[%|loc%]Inactive lists[%END%]</a>
-<a class="actionMenuLinks" href="[% path_cgi %]/get_closed_lists">[%|loc%]Closed lists[%END%]</a>
- <br />
+      <tr>
+        <th style="background-color: [% dark_color %];" colspan="2">
+          <table style="width: 100%;" cellpadding="0" cellspacing="0">
+            <tr>
+             <th style="background-color: [% selected_color %]; width: 50%;">
+              <span style="color: [% bg_color %];">
+	        [%|loc%]Lists[%END%]
+              </span>
+             </th>
+            </tr>
+           </table>
+         </th>
+     </tr><tr>
+     <td>
+     [% PROCESS 'button_header.tt2' %]
+       <td style="background-color: [% light_color %]; text-align: center;" valign="top">
+      <a href="[% path_cgi %]/get_pending_lists">[%|loc%]Pending lists[%END%]</a>
+       </td>
+     [% PROCESS 'button_footer.tt2' %]
 
-<h2>[%|loc%]Users[%END%]</h2>
+     [% PROCESS 'button_header.tt2' %]
+       <td style="background-color: [% light_color %]; text-align: center;" valign="top">
+      <a href="[% path_cgi %]/get_latest_lists">[%|loc%]Latest lists[%END%]</a>
+       </td>
+     [% PROCESS 'button_footer.tt2' %]
 
+     [% PROCESS 'button_header.tt2' %]
+	<td style="background-color: [% light_color %]; text-align: center;" valign="top">
+	<a href="[% path_cgi %]/get_inactive_lists">[%|loc%]Inactive lists[%END%]</a>
+	</td>
+     [% PROCESS 'button_footer.tt2' %]
+
+     [% PROCESS 'button_header.tt2' %]
+       <td style="background-color: [% light_color %]; text-align: center;" valign="top">
+      <a href="[% path_cgi %]/get_closed_lists">[%|loc%]Closed lists[%END%]</a>
+       </td>
+     [% PROCESS 'button_footer.tt2' %]
+
+    <br /></td></tr>
+
+    <tr>
+        <th style="background-color: [% dark_color %];" colspan="2">
+          <table style="width: 100%;" cellpadding="0" cellspacing="0">
+            <tr>
+             <th style="background-color: [% selected_color %]; width: 50%;">
+              <span style="color: [% bg_color %];">
+	        [%|loc%]Users[%END%]
+              </span>
+             </th>
+            </tr>
+           </table>
+         </th>
+    </tr>
+      <tr><td style="white-space: nowrap;">
         <form action="[% path_cgi %]" method="post">
 	  <input type="text" name="email" size="30" value="[% email %]" />
 	  <input type="hidden" name="action" value="search_user" />
 	  <input type="submit" name="action_search_user" value="[%|loc%]Search User[%END%]" />
 	</form>     
- <br />
+      <br /></td></tr>
 
-<h2>[%|loc%]Templates[%END%] </h2>
+      <tr valign="top">
 
-<div id = "FormLabel">
-<form action="[% path_cgi %]" method="post">
-  [%|loc%]Setting defaults list templates[%END%]<br />
+        <th style="background-color: [% dark_color %];" colspan="2">
+          <table style="width: 100%;" cellpadding="0" cellspacing="0">
+            <tr>
+             <th style="background-color: [% selected_color %]; width: 50%;">
+              <span style="color: [% bg_color %];">
+	        [%|loc%]Templates[%END%] 
+              </span>
+             </th>
+            </tr>
+           </table>
+         </th>
+      </tr>
+      <tr>
+        <td style="white-space: nowrap;">
+	  <form action="[% path_cgi %]" method="post">
+	    <span style="color: [% dark_color %];"><strong>[%|loc%]Setting defaults list templates[%END%]</strong></span><br />
 	     <select name="file">
-    [% FOREACH f = lists_default_files %]<option value='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]</option>[% END %]
+	      [% FOREACH f = lists_default_files %]
+	        <option value='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]</option>
+	      [% END %]
 	    </select>
 	    <input type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
 	  </form>
-</div>
-<br />
 
-<div id = "FormLabel">
-<form action="[% path_cgi %]" method="post">
-  [%|loc%]Setting site templates[%END%]<br />
+	  <form action="[% path_cgi %]" method="post">
+	    <span style="color: [% dark_color %];"><strong>[%|loc%]Setting site templates[%END%]</strong></span><br />
 	     <select name="file">
-    [% FOREACH f = server_files %]<option value='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]</option>[% END %]
+	      [% FOREACH f = server_files %]
+	        <option value='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]</option>
+	      [% END %]
 	    </select>
 	    <input type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
-</form>
-</div>
-<br />
+	  </form>
+	</td>
+      </tr>
+      <tr><td>
+     [% PROCESS 'button_header.tt2' %]
+       <td style="background-color: [% light_color %]; text-align: center;" valign="top">
+        <a href="[% path_cgi %]/view_translations">[%|loc%]Customize templates[%END%]</a>
+       </td>
+      [% PROCESS 'button_footer.tt2' %]
+      <br /></td></tr>
 
-<a class="actionMenuLinks" href="[% path_cgi %]/view_translations">[%|loc%]Customize templates[%END%]</a>
+    <tr>
+        <th style="background-color: [% dark_color %];" colspan="2">
+          <table style="width: 100%;" cellpadding="0" cellspacing="0">
+            <tr>
+             <th style="background-color: [% selected_color %]; width: 50%;">
+              <span style="color: [% bg_color %];">
+	        [%|loc%]Archives[%END%]
+              </span>
+             </th>
+            </tr>
+           </table>
+         </th>
+      </tr>
 
-<br /><br />
+      <tr>
+        <td>
+<span style="color: [% dark_color %];"><strong>[%|loc%]Rebuild HTML archives using "arctxt" directories as input.[%END%]</strong></span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <form action="[% path_cgi %]" method="post">
+	  <input type="submit" name="action_rebuildallarc" value="[%|loc%]ALL[%END%]" /><br />
+	[%|loc%]May take a lot of CPU time,  be careful ![%END%]
+          </form>
+	</td>
 
-<h2>[%|loc%]Skins, CSS and colors[%END%]</h2>
-<a class="actionMenuLinks" href="[% path_cgi %]/skinsedit">[%|loc%]Skins administration page[%END%]</a>
+    <td style="text-align: center;"> 
+          <form action="[% path_cgi %]" method="post">
+	  <input type="text" name="list" size="20" />
+          <input type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" />
+          </form>
+    </td>
 
-<br /><br />
-<h2>[%|loc%]Archives[%END%]</h2>
 
-[%|loc%]Rebuild HTML archives using "arctxt" directories as input.[%END%]<br /
->
-<form action="[% path_cgi %]" method="post">
-listname : <input type="text" name="list" size="20" /> <input type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" />
-or  <input type="submit" name="action_rebuildallarc" value="[%|loc%]Rebuild all[%END%]" />([%|loc%]  May take a lot of CPU time,  be careful ![%END%])<br />
-</form>
+      </tr>
+
+      <tr>
+        <td>
+	  <span style="color: [% dark_color %];">
+	  <a href="[% path_cgi %]/scenario_test">
+	     <strong>[%|loc%]Scenari test module[%END%]</strong>
+          </a>
+          </span>
+	</td>
+      </tr>
 	
+    </table>
 
-
-<br /><br /><br />
+<br /><br />
 
 [% IF loop_count %]
 [%|loc(process_id,loop_count,start_time)%]This FastCGI process (%1) has served %2 since %3.[%END%]

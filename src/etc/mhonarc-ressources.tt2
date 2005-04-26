@@ -14,83 +14,24 @@ reference other variables.
 -->
 
 <DefineVar>
-CALENDAR
-<div id="ArcCalendar">
-    ($tag$% FOREACH year = calendar %$tag$)
-        <div>
-        <ul class="calendar">
-        <li class="calendarLinksInactive">($tag$% year.key %$tag$)</li>
-   	($tag$% FOREACH mounth = ['01' '02' '03' '04' '05' '06' '07' '08' '09' '10' '11' '12'] %$tag$)
-          ($tag$% IF year.value.item(mounth) %$tag$)
-                 ($tag$% IF  year.key == '$yyyy$' && mounth == '$mois$'%$tag$) <li class="calendarLinksCurrentPage"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% mounth %$tag$)/">($tag$% mounth %$tag$)</a></li>
-                 ($tag$% ELSE %$tag$)<li class="calendarLinks"><a href="($tag$% path_cgi %$tag$)/arc/($tag$% list %$tag$)/($tag$% year.key %$tag$)-($tag$% mounth %$tag$)/">($tag$% mounth %$tag$)</a></li>
-		 ($tag$% END %$tag$)
-          ($tag$% ELSE %$tag$)<li class="calendarLinksInactive">($tag$% mounth %$tag$)</li>
-          ($tag$% END %$tag$)
-        ($tag$% END %$tag$)
-        </ul>
-        </div>
-    ($tag$% END %$tag$)
-</div>
-</DefineVar>
-
-<DefineVar>
-SEARCH_FORM
-	<form method="post" action="($tag$% path_cgi %$tag$)">
-	<input name="list" type="hidden" value="($tag$% list %$tag$)" />
-	<input name="archive_name" type="hidden" value="($tag$% archive_name %$tag$)" />
-	<input name="how"   type="hidden" value="phrase" />
-	<input name="age"   type="hidden" value="new" />
-	<input name="case"  type="hidden" value="off" /> 
-	<input name="match" type="hidden" value="partial" />
-	<input name="limit" type="hidden" value="10" /> 
-	<input name="body"  type="hidden" value="true" />
-	<input name="subj"  type="hidden" value="true" />
-	<input name="key_word"     type="text"   size="17" />
-	<input name="action"  type="hidden" value="arcsearch" />
-	<input type="submit" name="action_arcsearch" value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" /> &nbsp;
-	<input type="submit" name="action_arcsearch_form" value="($tag$%|loc%$tag$)Advanced search($tag$%END%$tag$)" />
-
-	</form>
-</DefineVar>
-
-<DefineVar>
-TOP_PANEL
-<div id="ActionHeader">
-   $CALENDAR$
-   $SEARCH_FORM$
-   <div style="text-align: center;"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
-   Pages navigation : <br />
-</div>
-</DefineVar>
-
-
-
-
-<DefineVar>
-PRINTABLE_MONTH
+SELECTED_MONTH
+<P><FONT COLOR="($tag$% dark_color %$tag$)" SIZE="+1"><STRONG>
 ($tag$% IF lang == 'fr' %$tag$)
 $mois$/$yyyy$
 ($tag$% ELSE %$tag$)
 $yyyy$/$mois$
 ($tag$% END %$tag$)
-</DefineVar>
-
-<DefineVar>
-SELECTED_MONTH
-<P><font color="($tag$% dark_color %$tag$)" size="+1"><strong>
-$PRINTABLE_MONTH$
-</strong></FONT><br />
+</STRONG></FONT><BR>
 <HR width="30%">
 </P>
 </DefineVar>
 
 <DefineVar>
 POWERED_BY
-<hr size="1" noshade>
-<p><font size="-1">
-($tag$%|loc%$tag$)Archive powered by($tag$%END%$tag$) <a href="$DOCURL$">MhonArc $VERSION$</a>.
-</font></p>
+<HR SIZE="1" NOSHADE>
+<P><FONT SIZE="-1" COLOR="($tag$% dark_color %$tag$)">
+($tag$%|loc%$tag$)Archive powered by($tag$%END%$tag$) <A HREF="$DOCURL$">MhonArc $VERSION$</A>.
+</FONT></P>
 </DefineVar>
 
 <!-- ============================================================== -->
@@ -177,37 +118,50 @@ IDXPGEND
 <!--  mail1.html -->
 <IDXPGBEGIN>
 [%TAGS ($tag$% %$tag$) %]
-
+<CENTER>
+$SELECTED_MONTH$
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
+<TR ALIGN="CENTER" BGCOLOR="($tag$% dark_color %$tag$)">
+<TD>
 <!-- begin header -->
-<div id="ActionHeader">
-   $CALENDAR$
-   $SEARCH_FORM$
-   <div style="text-align: center;"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
-   Pages navigation : <br />
-
-  <span style="float: right">
-    <a class="ArcMenuLinksCurrentPage" href="mail$PAGENUM$.html">($tag$%|loc%$tag$)chronological($tag$%END%$tag$)</a>
-    <a class="ArcMenuLinks" href="thrd$PAGENUM$.html">($tag$%|loc%$tag$)Thread($tag$%END%$tag$)</a>
-  </span>  
-  $PREVPGLINK$ ($tag$%|loc($PAGENUM$,$NUMOFPAGES$)%$tag$)page # %1/%2($tag$%END%$tag$) $NEXTPGLINK$   
-</div>
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
+<TR ALIGN="CENTER" VALIGN="MIDDLE">
+<TD NOWRAP BGCOLOR="($tag$% light_color %$tag$)" ALIGN="CENTER">
+$PREVPGLINK$&nbsp;&nbsp;
+<FONT SIZE="-1" FACE="Arial,Helvetica"><STRONG>$NUMOFMSG$ ($tag$%|loc($PAGENUM$,$NUMOFPAGES$)%$tag$)mails, page # %1/%2($tag$%END%$tag$)</STRONG></FONT>
+&nbsp;&nbsp;$NEXTPGLINK$
+</TD>
+<TD NOWRAP BGCOLOR="($tag$% light_color %$tag$)" ALIGN="CENTER">
+<FONT COLOR="($tag$% bg_color %$tag$)" SIZE="-1"><STRONG>
+($tag$%|loc%$tag$)Chronological($tag$%END%$tag$)
+</STRONG></FONT>
+&nbsp;&nbsp;
+<FONT SIZE="-1"><STRONG><A HREF="thrd$PAGENUM$.html" STYLE="text-decoration: none">
+($tag$%|loc%$tag$)Thread($tag$%END%$tag$)
+</A></STRONG></FONT>
+</TD>
+</TR>
+</TABLE>
 <!-- end header -->
+</TD>
+</TR>
+</TABLE>
+</CENTER>
 </IDXPGBEGIN>
 
 <!-- top of message list -->
 <LISTBEGIN>
-<br />
-<ul>
+<UL>
 </LISTBEGIN>
 
 <!-- item of maillist.html -->
 <LITEMPLATE>
-<li><b>$SUBJECT$</b>, <em>$FROMNAME$</em></li>
+<LI><b>$SUBJECT$</b>, <EM>$FROMNAME$</EM></LI>
 </LITEMPLATE> 
 
 <!-- bottom of message list -->
 <LISTEND>
-</ul>
+</UL>
 </LISTEND>  
 
 <!--  maillist.html bottom -->
@@ -218,23 +172,19 @@ $POWERED_BY$
 
 <!-- links definition -->
 <PrevPgLink chop>
-<a class="ArcMenuLinks" href="$FIRSTPG$">($tag$%|loc%$tag$)First($tag$%END%$tag$)</a>
-<a class="ArcMenuLinks" href="$PREVPG$">($tag$%|loc%$tag$)Previous($tag$%END%$tag$)</a>
+<FONT SIZE="-1" FACE="Arial,Helvetica" COLOR="($tag$% dark_color %$tag$)"><A HREF="$FIRSTPG$"><IMG SRC="($tag$% icons_url %$tag$)/begin.png" ALT="First" HEIGHT="20" BORDER="0" ALIGN="middle"></A>&nbsp;&nbsp;<A HREF="$PREVPG$"><IMG SRC="($tag$% icons_url %$tag$)/left.png" ALT="Previous" HEIGHT="20" BORDER="0" ALIGN="middle"></A></FONT>
 </PrevPgLink>
 
 <PrevPgLinkIA chop>
-<a class="ArcMenuLinksInactive">First</a>
-<a class="ArcMenuLinksInactive">Previous</a>
+&nbsp;&nbsp;
 </PrevPgLinkIA>
 
 <NextPgLink chop>
-<a class="ArcMenuLinks" href="$NEXTPG$">($tag$%|loc%$tag$)Next($tag$%END%$tag$)</a>
-<a class="ArcMenuLinks" href="$LASTPG$">($tag$%|loc%$tag$)Last($tag$%END%$tag$)</a>
+<FONT SIZE="-1" FACE="Arial,Helvetica" COLOR="($tag$% dark_color %$tag$)"><A HREF="$NEXTPG$"><IMG SRC="($tag$% icons_url %$tag$)/right.png" ALT="Next" HEIGHT="20" BORDER="0" ALIGN="center"></A>&nbsp;&nbsp;<A HREF="$LASTPG$"><IMG SRC="($tag$% icons_url %$tag$)/end.png" ALT="Last" HEIGHT="20" BORDER="0" ALIGN="middle"></A></FONT>
 </NextPgLink>
 
 <NextPgLinkIA chop>
-<a class="ArcMenuLinksInactive">Next</a>
-<a class="ArcMenuLinksInactive">Last</a>
+&nbsp;&nbsp;
 </NextPgLinkIA>
 
 <!-- ============================================================== -->
@@ -276,34 +226,49 @@ TIDXPGEND
 </TIDXPGBEGIN>
 
 <THEAD>
+<CENTER>
+$SELECTED_MONTH$
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
+<TR ALIGN="center" BGCOLOR="($tag$% dark_color %$tag$)">
+<TD>
 <!-- begin header -->
-<div id="ActionHeader">
-   $CALENDAR$
-   $SEARCH_FORM$
-   <div style="text-align: center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
-   Pages navigation : <br />
-
-   <span style="float: right">
-     <a class="ArcMenuLinks" href="mail$PAGENUM$.html">($tag$%|loc%$tag$)chronological($tag$%END%$tag$)</a>
-     <a class="ArcMenuLinksCurrentPage" href="thrd$PAGENUM$.html">($tag$%|loc%$tag$)Thread($tag$%END%$tag$)</a>
-   </span>  
-   $PREVPGLINK$ ($tag$%|loc($PAGENUM$,$NUMOFPAGES$)%$tag$)page # %1/%2($tag$%END%$tag$) $NEXTPGLINK$ 
-</div>
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
+<TR ALIGN="center" VALIGN="middle">
+<TD NOWRAP BGCOLOR="($tag$% light_color %$tag$)" ALIGN="center">
+$TPREVPGLINK$&nbsp;&nbsp;
+<FONT SIZE="-1" FACE="Arial,Helvetica"><STRONG>$NUMOFMSG$ ($tag$%|loc($PAGENUM$,$NUMOFPAGES$)%$tag$)mails, page # %1/%2($tag$%END%$tag$)</STRONG></FONT>
+&nbsp;&nbsp;$TNEXTPGLINK$
+</TD>
+<td NOWRAP BGCOLOR="($tag$% light_color %$tag$)" ALIGN="center">
+<FONT SIZE="-1"><STRONG><A HREF="mail$PAGENUM$.html" STYLE="TEXT-DECORATION: NONE">
+($tag$%|loc%$tag$)Chronological($tag$%END%$tag$)
+</A></STRONG></FONT>
+&nbsp;&nbsp;
+<FONT COLOR="($tag$% bg_color %$tag$)" SIZE="-1"><STRONG>
+($tag$%|loc%$tag$)Thread($tag$%END%$tag$)
+</STRONG></FONT>
+</TD>
+</TR>
+</TABLE>
 <!-- end header -->
+</TD>
+</TR>
+</TABLE>
+</CENTER>
 
-<ul>
+<UL>
 </THEAD>
 
 <TTOPBEGIN>
-<li><b>$SUBJECT$</b>, <em>$FROMNAME$</em>
+<LI><b>$SUBJECT$</b>, <EM>$FROMNAME$</EM><BR>
 </TTOPBEGIN>
 
 <TTOPEND>
-</li>
+</LI>
 </TTOPEND>
 
 <TFOOT>
-</ul>
+</UL>
 </TFOOT>
 
 <TIDXPGEND>
@@ -313,23 +278,19 @@ $POWERED_BY$
 
 <!-- links definition -->
 <TPrevPgLink chop>
-<a class="ArcMenuLinks" href="$TFIRSTPG$">First</a>
-<a class="ArcMenuLinks" href="$TPREVPG$">Previous<:a>
+<FONT SIZE="-1" FACE="Arial,Helvetica" COLOR="($tag$% dark_color %$tag$)"><A HREF="$TFIRSTPG$"><IMG SRC="($tag$% icons_url %$tag$)/begin.png" ALT="First" HEIGHT="20" BORDER="0" ALIGN="middle"></A>&nbsp;<A HREF="$TPREVPG$"><IMG SRC="($tag$% icons_url %$tag$)/left.png" ALT="Previous" HEIGHT="20" BORDER="0" ALIGN="middle"></A></FONT>
 </TPrevPgLink>
 
 <TPrevPgLinkIA chop>
-<li class="ArcMenuLinksInactive">Next</li>
-<li class="ArcMenuLinksInactive">Last</li>
+&nbsp;&nbsp;
 </TPrevPgLinkIA>
 
 <TNextPgLink chop>
-<a  class="ArcMenuLinks" href="$TNEXTPG$">Next</a>
-<a class="ArcMenuLinks"  href="$TLASTPG$">Last</a>
+<FONT SIZE="-1" FACE="Arial,Helvetica" COLOR="($tag$% dark_color %$tag$)"><A HREF="$TNEXTPG$"><IMG SRC="($tag$% icons_url %$tag$)/right.png" ALT="Next" HEIGHT="20" BORDER="0" ALIGN="center"></A>&nbsp;&nbsp;<A HREF="$TLASTPG$"><IMG SRC="($tag$% icons_url %$tag$)/end.png" ALT="Last" HEIGHT="20" BORDER="0" ALIGN="middle"></A></FONT>
 </TNextPgLink>
 
 <TNextPgLinkIA chop>
-<a class="ArcMenuLinksInactive">Next</a>
-<a class="ArcMenuLinksInactive">Last</a>
+&nbsp;&nbsp;
 </TNextPgLinkIA>
 
 <!-- ================================================================== -->
@@ -363,17 +324,29 @@ MSGPGEND
 
 <TOPLINKS>
 <CENTER>
-<div id="ActionHeader">
-   <div style="text-align: center;"><h2>($tag$% subtitle %$tag$)</h2></div><br />
-   <span style="float: right">
-     <a class="ArcMenuLinksCurrentPage" href="$IDXFNAME$#$MSGNUM$">($tag$%|loc%$tag$)chronological($tag$% END %$tag$)</a>
-     <a class="ArcMenuLinks" href="$TIDXFNAME$#$MSGNUM$">($tag$%|loc%$tag$)Thread($tag$% END %$tag$)</a>&nbsp;
-   </span>
-   <ul id="MainMenuLinks">
-     ($tag$%|loc%$tag$)chronological($tag$%END%$tag$) : $PREVBUTTON$ $NEXTBUTTON$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($tag$%|loc%$tag$)thread($tag$%END%$tag$) : $TPREVBUTTON$  $TNEXTBUTTON$
-   </ul>
-</div>
-
+$SELECTED_MONTH$
+<TABLE CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="0">
+<TR ALIGN="center" BGCOLOR="($tag$% dark_color %$tag$)">
+<TD>
+<!-- begin header -->
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="2">
+<TR ALIGN="CENTER" VALIGN="MIDDLE">
+<TD WIDTH="50%" BGCOLOR="($tag$% light_color %$tag$)" ALIGN="center" VALIGN="middle" NOWRAP>
+$PREVBUTTON$&nbsp;&nbsp;
+<FONT SIZE="-1"><STRONG><A HREF="$IDXFNAME$#$MSGNUM$" STYLE="text-decoration: none">
+($tag$%|loc%$tag$)Chronological($tag$%END%$tag$)
+</A></STRONG></FONT>
+&nbsp;&nbsp;$NEXTBUTTON$
+</TD>
+<TD WIDTH="50%" BGCOLOR="($tag$% light_color %$tag$)" ALIGN="center" VALIGN="middle" NOWRAP>
+$TPREVBUTTON$&nbsp;&nbsp;
+<FONT SIZE="-1"><STRONG><A HREF="$TIDXFNAME$#$MSGNUM$" STYLE="text-decoration: none">
+($tag$%|loc%$tag$)Thread($tag$%END%$tag$)
+</A></STRONG></FONT>
+&nbsp;&nbsp;$TNEXTBUTTON$
+</TD>
+</TR>
+</TABLE>
 <!-- end header -->
 </TD>
 </TR>
@@ -382,12 +355,12 @@ MSGPGEND
 </TOPLINKS>
 
 <HEADBODYSEP>
-</div>
-<hr size="1" noshade>
+</UL>
+<HR SIZE="1" NOSHADE>
 </HEADBODYSEP>
 
 <MSGBODYEND>
-<hr size="1" noshade>
+<HR SIZE="1" NOSHADE>
 $TSLICE(10;10;1)$
 </MSGBODYEND>
 
@@ -404,33 +377,49 @@ $POWERED_BY$
 </MSGPGSSMARKUP>
 
 <SUBJECTHEADER>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="2" CELLSPACING="2">
+<TR>
+<TD>
+<FONT SIZE="+1" COLOR="($tag$% dark_color %$tag$)"><STRONG>$SUBJECTNA$</STRONG></FONT>, &nbsp;<FONT SIZE="+1">$FROMNAME$</FONT>
+</TD>
+
 ($tag$% IF user.email && action == 'arc' %$tag$)
-<span style="float: right">
-<form action="($tag$% path_cgi %$tag$)" method="post">
-  <input type="hidden" NAME="in_reply_to" VALUE="$MSGID$" />
-  <input type="hidden" NAME="subject" VALUE="Re: $SUBJECTNA$" />
-  <input type="hidden" NAME="list" VALUE="($tag$% list %$tag$)" />
+<TD ALIGN="right" BGCOLOR="($tag$% bg_color %$tag$)">
+<FONT SIZE="-1">
+<!-- reply to button -->
+<FORM ACTION="($tag$% path_cgi %$tag$)" METHOD=POST>
+  <INPUT TYPE="hidden" NAME="in_reply_to" VALUE="$MSGID$">
+  <INPUT TYPE="hidden" NAME="subject" VALUE="Re: $SUBJECTNA$">
+  <INPUT TYPE="hidden" NAME="list" VALUE="($tag$% list %$tag$)">
   ($tag$%|loc%$tag$)Reply to sender($tag$%END%$tag$)
-  <input type="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" checked />
+  <INPUT TYPE="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" CHECKED>
   ($tag$%|loc%$tag$)to list($tag$%END%$tag$)
-  <input type="radio" NAME="to" VALUE="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
-  <input type="submit" NAME="action_compose_mail" VALUE="($tag$%|loc%$tag$)Reply($tag$%END%$tag$)" /><br />
-  <input type="submit" NAME="action_send_me" VALUE="($tag$%|loc(user.email)%$tag$)send it back to %1($tag$%END%$tag$)" /><br />
+  <INPUT TYPE="radio" NAME="to" VALUE="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)">
+  <INPUT TYPE="submit" NAME="action_compose_mail" VALUE="($tag$%|loc%$tag$)Reply($tag$%END%$tag$)">
+  <INPUT TYPE="submit" NAME="action_send_me" VALUE="($tag$%|loc(user.email)%$tag$)send it back to %1($tag$%END%$tag$)">	
   ($tag$% IF action != 'viewmod' %$tag$)
-    ($tag$% IF user.email == '$FROMADDR$'  || is_owner %$tag$)
-    <input type="hidden" NAME="yyyy" VALUE="$yyyy$" />
-    <input type="hidden" NAME="month" VALUE="$mois$" />
-    <input type="hidden" NAME="msgid" VALUE="$MSGID$" />
-    <input type="hidden" NAME="action" VALUE="" />
-    <input type="submit" NAME="action_remove_arc" VALUE="($tag$%|loc%$tag$)tag this mail for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete this message ?($tag$%END%$tag$)')" />
+    ($tag$% IF user.email == '$FROMADDR$' %$tag$)
+    <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
+    <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
+    <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
+    <INPUT TYPE="hidden" NAME="action" VALUE="">
+    <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="($tag$%|loc%$tag$)tag this mail for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete this message ?($tag$%END%$tag$)')">
+
+    ($tag$% ELSIF is_owner %$tag$)
+    <INPUT TYPE="hidden" NAME="yyyy" VALUE="$yyyy$">
+    <INPUT TYPE="hidden" NAME="month" VALUE="$mois$">
+    <INPUT TYPE="hidden" NAME="msgid" VALUE="$MSGID$">
+    <INPUT TYPE="hidden" NAME="action" VALUE="">
+    <INPUT TYPE="submit" NAME="action_remove_arc" VALUE="($tag$%|loc%$tag$)tag this mail for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete this message ?($tag$%END%$tag$)')">
     ($tag$% END %$tag$)
   ($tag$% END %$tag$)
-</form>
-</span>
-
+</FORM>
+</FONT>
+</TD>
 ($tag$% END %$tag$)
-
-<div class="block">
+</TR>
+</TABLE>
+<UL>
 </SUBJECTHEADER>
 
 <!-- Message itself -->
@@ -465,6 +454,7 @@ reply-to
 thread-
 User-agent
 Mail-followup-to
+Domainkey-signature
 </EXCS>
 
 <!-- Field order in message header -->
@@ -481,7 +471,7 @@ date
 From:strong
 To:strong
 Subject:strong
--default-:strong
+-default-:em
 </LABELSTYLES>
 
 <TSLICELEVELS>
@@ -514,7 +504,9 @@ Subject:strong
 
 <!-- Buttons definition -->
 <PREVBUTTON>
-<a class="ArcMenuLinks" href="$PREVMSG$">previous</a>
+<FONT SIZE="-1" FACE="Arial,Helvetica">
+<A HREF="$PREVMSG$"><IMG SRC="($tag$% icons_url %$tag$)/left.png" ALT="Previous" HEIGHT="20" BORDER="0" ALIGN="middle"></A>
+</FONT>
 </PREVBUTTON>
 
 <PREVBUTTONIA>
@@ -522,7 +514,9 @@ Subject:strong
 </PREVBUTTONIA>
 
 <NEXTBUTTON>
-<a class="ArcMenuLinks" href="$NEXTMSG">next</a>
+<FONT SIZE="-1" FACE="Arial,Helvetica">
+<A HREF="$NEXTMSG$"><IMG SRC="($tag$% icons_url %$tag$)/right.png" ALT="Next" HEIGHT="20" BORDER="0" ALIGN="middle"></A>
+</FONT>
 </NEXTBUTTON>
 
 <NEXTBUTTONIA>
@@ -530,7 +524,9 @@ Subject:strong
 </NEXTBUTTONIA>
 
 <TPREVBUTTON>
-<a class="ArcMenuLinks" href="$TPREVMSG$">previous</a>
+<FONT SIZE="-1" FACE="Arial,Helvetica">
+<A HREF="$TPREVMSG$"><IMG SRC="($tag$% icons_url %$tag$)/left.png" height=20 border=0 ALIGN=middle ALT="Previous"></A>
+</FONT>
 </TPREVBUTTON>
 
 <TPREVBUTTONIA>
@@ -538,7 +534,9 @@ Subject:strong
 </TPREVBUTTONIA>
 
 <TNEXTBUTTON>
-<a class="ArcMenuLinks" href="$TNEXTMSG$">next</a>
+<FONT SIZE="-1" FACE="Arial,Helvetica">
+<A HREF="$TNEXTMSG$"><IMG SRC="($tag$% icons_url %$tag$)/right.png" HEIGHT="20" BORDER="0" ALIGN="middle" ALT="Next"></A>
+</FONT>
 </TNEXTBUTTON>
 
 <TNEXTBUTTONIA>

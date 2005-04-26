@@ -15,21 +15,20 @@
 [% ELSE %]
   <form action="[% path_cgi %]" method="post">
     <input type="hidden" name="serial" value="[% serial %]" />
-
+      <table style="width: 100%;" border="0" cellpadding="0" cellspacing="0">
         [% FOREACH p = param %]
-
+          [% IF p.may_edit != 'hidden' %]
+              <tr valign="top">
                 [% IF p.changed == '1' %]
-	<div class="blockerror">
+                  <th style="width: 100%; background: [% error_color %];">
                 [% ELSE %]
-        <div class="block">
+                  <th style="width: 100%; background: [% dark_color %];">
                 [% END %]
 
-
-          [% IF p.may_edit != 'hidden' %]
-                      <span style="float: right"><a class="input" href="[% path_cgi %]/help/editlist#[% p.name %]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><span style="font-size: smaller;">[%|loc%]Help[%END%]</span></a></span>
-
-		      <h4>
-
+                <table style="width: 100%; background: [% selected_color %];" cellpadding="1" cellspacing="1"> 
+                  <tr>
+                    <th style="text-align: left; width: 90%;">
+                      <span style="font-size: smaller; color: [% bg_color %];">
                         [% IF p.title %]
                           [% p.title %] 
                           [% IF is_listmaster %]      
@@ -38,15 +37,23 @@
                         [% ELSE %]
                           [% p.name %]
                         [% END %]
-
+                      </span>
                       [% IF is_listmaster %]
                         [% IF p.default == '1' %]
                           (default)
                         [% END %]
                       [% END %]
-                     </h4>
+                    </th>
+                    <th style="background: [% light_color %];">
+                      <a href="[% path_cgi %]/help/editlist#[% p.name %]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><span style="font-size: smaller;">[%|loc%]Help[%END%]</span></a>
+                    </th>
+                  </tr>
+                </table>
+                </th>
+              </tr>
 
-
+              <tr>
+                <td valign="top">
                     [% IF p.occurrence == 'multiple' %]
                       <!-- Multiple params -->
 
@@ -404,9 +411,8 @@
               </td>
             </tr>
           [% END %]
-        </div><br />
         [% END %]
-
+      </table>
     <input type="hidden" name="list" value="[% list %]" />
     <input type="submit" name="action_edit_list" value="[%|loc%]Update[%END%]" />
   </form>

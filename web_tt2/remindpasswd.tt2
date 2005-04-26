@@ -1,17 +1,20 @@
 <!-- $Id$ -->
 
-<!-- begin remindpasswd.tt2 -->
+
       [%|loc%]You have forgotten your password, or you've never had any password related to this server[%END%]<br />
       [%|loc%]it will be sent to you by email :[%END%]
 
       <form action="[% path_cgi %]" method="post">
 	  <input type="hidden" name="referer" value="[% referer %]" />
 	  <input type="hidden" name="action" value="sendpasswd" />
-        <div id="FormLabel">
-           [%|loc%]Your e-mail address[%END%] : 	
-           <input type="text" name="email" size="20" value "[% email %]" />
-          &nbsp;&nbsp;&nbsp;<input type="submit" name="action_sendpasswd" value="[%|loc%]Send me my password[%END%]" />
-        </div>
-      </form>
+  	  <input type="hidden" name="nomenu" value="[% nomenu %]" />
 
-<!-- end remindpasswd.tt2 -->
+        <label><strong>[%|loc%]Your e-mail address[%END%]</strong> :<br />
+        [% IF email %]
+	  [% email %]
+          <input type="hidden" name="email" value="[% email %]" />
+	[% ELSE %]
+	  <input type="text" name="email" size="20" />
+	[% END %]
+        </label>&nbsp; &nbsp; &nbsp;<input type="submit" name="action_sendpasswd" value="[%|loc%]Send me my password[%END%]" />
+      </form>

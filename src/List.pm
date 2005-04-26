@@ -541,7 +541,7 @@ my %alias = ('reply-to' => 'reply_to',
 				  'group' => 'description',
 			      },
 	    'expire_task' => {'task' => 'expire',
-			      'gettext_id' => "",
+			      'gettext_id' => "Periodical subscription expiration task",
 			      'group' => 'other'
 			 },
  	    'family_name' => {'format' => $tools::regexp{'family_name'},
@@ -849,7 +849,7 @@ my %alias = ('reply-to' => 'reply_to',
 								 'order' => 8
 								 },
 						  'f_dir' => {'format' => '.+',
-							     'gettext_id' => "",
+							     'gettext_id' => "Directory where the database is stored (used for DBD::CSV only)",
 							     'order' => 9
 							     },
 						  'name' => {'format' => '.+',
@@ -976,7 +976,7 @@ my %alias = ('reply-to' => 'reply_to',
 				     'group' => 'bounces'
 				 },
 	    'remind_task' => {'task' => 'remind',
-			      'gettext-id' => 'remind pediodical task',
+			      'gettext-id' => 'Periodical subscription reminder task',
 			      'default' => {'conf' => 'default_remind_task'},
 			      'group' => 'other'
 			      },
@@ -2512,6 +2512,8 @@ sub send_to_editor {
 	   $self->send_file('moderate', $recipient, $self->{'domain'}, {'modkey' => $modkey,
 									'boundary' => $boundary,
 									'msg' => $crypted_file,
+									'msg_from' => $message->{'sender'},
+									'mod_spool_size' => $self->get_mod_spool_size(),
 									'method' => $method,
 									## From the list because it is signed
 									'from' => $self->{'name'}.'@'.$self->{'domain'}
@@ -2522,6 +2524,8 @@ sub send_to_editor {
        $self->send_file('moderate', \@rcpt, $self->{'domain'}, {'modkey' => $modkey,
 								'boundary' => $boundary,
 								'msg' => $file,
+								'msg_from' => $message->{'sender'},
+								'mod_spool_size' => $self->get_mod_spool_size(),
 								'method' => $method,
 								'from' => &Conf::get_robot_conf($robot, 'sympa')
 								});
@@ -5688,6 +5692,8 @@ sub verify {
 	    
 	    my @bodies;
 	    my @parts = $context->{'msg'}->parts();
+	    
+	    ## Should be recurcive...
 	    foreach my $i (0..$#parts) {
 		next unless ($parts[$i]->effective_type() =~ /^text/);
 		next unless ($parts[$i]->bodyhandle);
@@ -5891,20 +5897,22 @@ sub verify {
 
 ## Verify if a given user is part of an LDAP search filter
 sub search{
-    my $ldap_file = shift;
+    my $filter_file = shift;
     my $sender = shift;
     my $robot = shift;
     my $list = shift;
 
-    &do_log('debug2', 'List::search(%s,%s,%s)', $ldap_file, $sender, $robot);
+    &do_log('debug2', 'List::search(%s,%s,%s)', $filter_file, $sender, $robot);
 
     my $file;
 
-    unless ($file = &tools::get_filename('etc',"search_filters/$ldap_file", $robot, $list)) {
-	&do_log('err', 'Could not find LDAP filter %s', $ldap_file);
+    unless ($file = &tools::get_filename('etc',"search_filters/$filter_file", $robot, $list)) {
+	&do_log('err', 'Could not find search filter %s', $filter_file);
 	return undef;
     }   
 
+    if ($filter_file =~ /\.ldap$/) {
+	
 	my $timeout = 3600;
 	
 	my $var;
@@ -5919,10 +5927,10 @@ sub search{
 	my $filter = $ldap_conf{'filter'};	
 	$filter =~ s/\[sender\]/$sender/g;
 	
-    if (defined ($persistent_cache{'named_filter'}{$ldap_file}{$filter}) &&
-	(time <= $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'update'} + $timeout)){ ## Cache has 1hour lifetime
+	if (defined ($persistent_cache{'named_filter'}{$filter_file}{$filter}) &&
+	    (time <= $persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} + $timeout)){ ## Cache has 1hour lifetime
 	    &do_log('notice', 'Using previous LDAP named filter cache');
-        return $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'};
+	    return $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'};
 	}
 	
 	unless (eval "require Net::LDAP") {
@@ -5966,16 +5974,17 @@ sub search{
 	    
 	    
 	    if ($mesg->count() == 0){
-	    $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'} = 0;
+		$persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'} = 0;
 		
 	    }else {
-	    $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'} = 1;
+		$persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'} = 1;
 	    }
 	    
 	    $ldap->unbind or do_log('notice','List::search_ldap.Unbind impossible');
-	$persistent_cache{'named_filter'}{$ldap_file}{$filter}{'update'} = time;
+	    $persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} = time;
 	    
-	return $persistent_cache{'named_filter'}{$ldap_file}{$filter}{'value'};
+	    return $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'};
+	}
     }
 
     return undef;
