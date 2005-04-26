@@ -5963,7 +5963,7 @@ sub search{
 		$status = $ldap->bind();
 	    }
 	    
-	    unless ($status) {
+	    unless ($status && ($status->code == 0)) {
 		do_log('notice','Unable to bind to the LDAP server %s:%d',$host, $port);
 		next;
 	    }
@@ -7001,14 +7001,17 @@ sub _include_users_ldap {
     }
     
     do_log('debug2', "Connected to LDAP server %s", join(',',@{$host}));
-    
+    my $status;
+
     if ( defined $user ) {
-	unless ($ldaph->bind ($user, password => "$passwd")) {
+	$status = $ldaph->bind ($user, password => "$passwd");
+	unless (defined($status) && ($status->code == 0)) {
 	    do_log('notice',"Can\'t bind with server %s as user '$user' : $@", join(',',@{$host}));
 	    return undef;
 	}
     }else {
-	unless ($ldaph->bind ) {
+	$status = $ldaph->bind;
+	unless (defined($status) && ($status->code == 0)) {
 	    do_log('notice',"Can\'t do anonymous bind with server %s : $@", join(',',@{$host}));
 	    return undef;
 	}
@@ -7138,14 +7141,17 @@ sub _include_users_ldap_2level {
     }
     
     do_log('debug2', "Connected to LDAP server %s", join(',',@{$host}));
-    
+    my $status;
+
     if ( defined $user ) {
-	unless ($ldaph->bind ($user, password => "$passwd")) {
+	$status = $ldaph->bind ($user, password => "$passwd");
+	unless (defined($status) && ($status->code == 0)) {
 	    do_log('err',"Can\'t bind with server %s as user '$user' : $@", join(',',@{$host}));
 	    return undef;
 	}
     }else {
-	unless ($ldaph->bind ) {
+	$status = $ldaph->bind;
+	unless (defined($status) && ($status->code == 0)) {
 	    do_log('err',"Can\'t do anonymous bind with server %s : $@", join(',',@{$host}));
 	    return undef;
 	}

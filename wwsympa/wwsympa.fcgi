@@ -2093,7 +2093,12 @@ sub do_sso_login_succeeded {
 		 next;
 	     }
 
-	     $ldap_anonymous->bind;
+	     my $status = $ldap_anonymous->bind;
+	     unless(defined($status) && ($status->code == 0)){
+		 &Log::do_log('err', 'Bind failed on  %s', $host);
+		 last;
+	     }
+
 	     my $mesg = $ldap_anonymous->search(base => $ldap->{'suffix'} ,
 						filter => "$filter",
 						scope => $ldap->{'scope'}, 
