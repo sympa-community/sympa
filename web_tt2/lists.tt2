@@ -7,31 +7,15 @@
 [% END %]
 
 [% IF which %]
-<table border="0" style="width: 100%;">
-   [% FOREACH l = which %]
-     <tr>
-      [% IF l.value.admin %]
-       <td>
-       [% PROCESS 'button_header.tt2' %]
-       <td style="background-color: [% light_color %]; text-align: center;" valign="top">
-             <span style="color: [% selected_color %]; font-size: smaller;">
-              <a href="[% path_cgi %]/admin/[% l.key %]" ><strong>[%|loc%]admin[%END%]</strong></a>
-         </span>
-       </td>
-     [% PROCESS 'button_footer.tt2' %]
-
-</td>
-     [% ELSE %]
-       <td>&nbsp;</td>
-     [% END %]
-     <td style="width: 100%;" rowspan="2">
-     <a href="[% path_cgi %]/info/[% l.key %]" ><strong>[% hidden_head %][% l.key %][% hidden_at %][% l.value.host %][% hidden_end %]</strong></a>
-     <br />
-     [% l.value.subject %]
-     </td></tr> 
-     <tr><td>&nbsp;</td></tr>
-     [% END %] 
-</table>
+<ul class="listenum" >
+[% FOREACH l = which %]
+<li class="listenum">
+[% IF l.value.admin %]<a class="actionMenuLinks" href="[% path_cgi %]/admin/[% l.key %]" >[%|loc%]admin[%END%]</a>[% END %] 
+<a href="[% path_cgi %]/info/[% l.key %]" ><strong>[% hidden_head %][% l.key %][% hidden_at %][% l.value.host %][% hidden_end %]</strong></a><br />
+     [% l.value.subject %]<br />
+</li>
+[% END %] 
+</ul>
 
 <br />
 

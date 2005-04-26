@@ -1,5 +1,3 @@
-<!-- begin notice.tt2 -->
-<div class="ContentBlock"> <strong>
 [% FOREACH notice = notices %]
 
 [% IF notice.msg == 'sent_to_owner' %]
@@ -77,8 +75,10 @@
 [% notice.msg %]
 
 [% END %]
-</strong>
+
 <br />
-</div>
 [% END %]
-<!-- end notice.tt2 -->
+
+
+
+

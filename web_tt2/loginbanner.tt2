@@ -3,7 +3,7 @@
 <br />
 [% IF password_sent %]
   [%|loc(init_email)%]Your password has been sent to your email address %1.<br />Please check your e-mail box to provide your password below.[%END%]
-  <br /><br />
+  <br />
 [% END %]
 
 [% IF action == 'loginrequest' %]
@@ -26,35 +26,23 @@ If it is not listed or if you don't have any, login using your email and passwor
 
 [% END %]
 
-<table border="1" style="width: 100%;" cellspacing="0" cellpadding="0">
-<tr>
 
 [% IF use_sso %]
-<td valign="top">
-[% IF sso_number == '1' %]
 
+[% IF sso_number == '1' %]
+<P>
     <form action="[% path_cgi %]" method="post"> 
         <input type="hidden" name="previous_action" value="[% previous_action %]" />
         <input type="hidden" name="previous_list" value="[% previous_list %]" />
 	<input type="hidden" name="referer" value="[% referer %]" />
 	<input type="hidden" name="action" value="sso_login" />
 	<input type="hidden" name="nomenu" value="[% nomenu %]" />
-	
-
-        <table border="0" style="width: 100%;" cellspacing="0" cellpadding="0">
-         <tr style="background-color: [% light_color %];">
-          <td style="white-space: nowrap; text-align: center;">
      	      <input type="hidden" name="list" value="[% list %]" />
-     	      <span style="font-size: smaller; color: [% selected_color %];"><strong>[%|loc%]Magic authentification[%END%]</strong></span>
-
+     	<div id = "FormLabel">[%|loc%]Magic authentification[%END%]</div>
                 [% FOREACH server = sso %]
                    <input type="hidden" name="auth_service_name" value="[% server.key %]" />
                 [% END %]
               <input type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
-
-   	    </td>
-     	  </tr>
-       </table>
  </form> 
 [% ELSE %]
     <form action="[% path_cgi %]" method="post"> 
@@ -63,36 +51,18 @@ If it is not listed or if you don't have any, login using your email and passwor
 	<input type="hidden" name="referer" value="[% referer %]" />
 	<input type="hidden" name="action" value="sso_login" />
 	<input type="hidden" name="nomenu" value="[% nomenu %]" />
-	
-
-        <table border="0" style="width: 100%;" cellspacing="0" cellpadding="0">
-         <tr style="background-color: [% light_color %];">
-          <td style="white-space: nowrap; text-align: center;">
      	      <input type="hidden" name="list" value="[% list %]" />
-     	      <span style="font-size: smaller; color: [% selected_color %];"><strong>[%|loc%]Choose your authentication server[%END%]</strong></span>
-
+        <div id = "FormLabel">
+     	[%|loc%]Choose your authentication server[%END%]
               <select name="auth_service_name" onchange="this.form.submit();">
-                [% FOREACH server = sso %]
-                   <option value="[% server.key %]">[% server.value %]</option>
-                [% END %]
+          [% FOREACH server = sso %]<option value="[% server.key %]">[% server.value %]</option>[% END %]
               </select>
               <input type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
-
-
-   	    </td>
-     	  </tr>
-       </table>
+        </div>
  </form>
 [% END %] 
-</td>
 
 [% END %]
-
-<td valign="top">
-
-
-<table border="0" style="width: 100%;" cellspacing="0" cellpadding="0">
-<tr><td>
 
     <form action="[% path_cgi %]" method="post"> 
         <input type="hidden" name="previous_action" value="[% previous_action %]" />
@@ -100,52 +70,17 @@ If it is not listed or if you don't have any, login using your email and passwor
 	<input type="hidden" name="referer" value="[% referer %]" />
 	<input type="hidden" name="action" value="login" />
 	<input type="hidden" name="nomenu" value="[% nomenu %]" />
-
-        <table border="0" style="width: 100%;" cellspacing="0" cellpadding="0">
-         <tr style="background-color: [% light_color %];">
-          <td style="white-space: nowrap; text-align: center;">
      	      <input type="hidden" name="list" value="[% list %]" />
-     	      <label for="email"><strong><span style="font-size: smaller; color: [% selected_color %];">[%|loc%]email address[%END%] :</span></strong><input type="text" name="email" id="email" size="20" value="[% init_email %]" /></label>
-	      <label for="passwd" ><strong><span style="font-size: smaller; color: [% selected_color %];">[%|loc%]password[%END%] :</span></strong><input type="password" name="passwd" id="passwd" size="8" /></label>
-	      &nbsp;&nbsp;
+     <div id = "FormLabel">
+       <label for="email">[%|loc%]email address[%END%] : <input type="text" name="email" id="email" size="20" value="[% init_email %]" /></label>&nbsp;&nbsp;&nbsp;
+       <label for="passwd" >[%|loc%]password[%END%] : <input type="password" name="passwd" id="passwd" size="8" /> </label>&nbsp;&nbsp;
               <input type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
-   	    </td>
-     	  </tr>
-       </table>
+     </div>
  </form> 
-
-
-
-<table border="0"><tr>
-<td>
-<em>[%|loc%]If you've never had a password from that server or if you don't remember it :[%END%]</em>
-</td><td>
-<table cellpadding="2" cellspacing="2" style="width: 100%;" border="0">
-  <tr style="text-align: center; background-color: [% dark_color %];">
-  <td>
-  <table style="width: 100%;" border="0" cellspacing="0" cellpadding="2">
-     <tr> 
-      <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;"> 
-      [% IF escaped_init_email %]
-         <a href="[% path_cgi %]/nomenu/sendpasswd/[% escaped_init_email %]"
-      [% ELSE %]
-         <a href="[% path_cgi %]/nomenu/remindpasswd/referer/[% referer %]"
-      [% END %]
-       onclick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=300')" target="wws_login">
-     <span style="font-size: smaller;"><strong>[%|loc%]Send me a password[%END%]</strong></span></a>
-     </td>
-    </tr>
-  </table>
-  </td>
-</tr>
-</table>
-</td></tr></table>
-</td></tr></table>
-</td>
-
-</tr>
-</table>
-
+</p>
+<p>
+[% PROCESS remindpasswd.tt2 %]
+</p>
 
 
 

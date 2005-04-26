@@ -1002,75 +1002,75 @@ command-line arguments :
 
 \begin {itemize}
 
-\item \option {- - prefix=PREFIX}, the \Sympa homedirectory (default /home/sympa/)
+\item \option {- -prefix=PREFIX}, the \Sympa homedirectory (default /home/sympa/)
 
-\item \option {- - with-bindir=DIR}, user executables in DIR (default /home/sympa/bin/)\\
+\item \option {--with-bindir=DIR}, user executables in DIR (default /home/sympa/bin/)\\
 \file {queue} and \file {bouncequeue} programs will be installed in this directory.
 If sendmail is configured to use smrsh (check the mailer prog definition in your sendmail.cf),
 this should point to \dir {/etc/smrsh}.  This is probably the case if you are using Linux RedHat.
 
-\item \option {- - with-sbindir=DIR}, system admin executables in DIR (default /home/sympa/bin)
+\item \option {--with-sbindir=DIR}, system admin executables in DIR (default /home/sympa/bin)
 
-\item \option {- - with-libexecdir=DIR}, program executables in DIR (default /home/sympa/bin)
+\item \option {--with-libexecdir=DIR}, program executables in DIR (default /home/sympa/bin)
 
-\item \option {- - with-cgidir=DIR}, CGI programs in DIR (default /home/sympa/bin)
+\item \option {--with-cgidir=DIR}, CGI programs in DIR (default /home/sympa/bin)
 
-\item \option {- - with-iconsdir=DIR}, web interface icons in DIR (default /home/httpd/icons)
+\item \option {--with-iconsdir=DIR}, web interface icons in DIR (default /home/httpd/icons)
 
-\item \option {- - with-datadir=DIR}, default configuration data in DIR (default /home/sympa/bin/etc)
+\item \option {--with-datadir=DIR}, default configuration data in DIR (default /home/sympa/bin/etc)
 
-\item \option {- - with-confdir=DIR}, Sympa main configuration files in DIR (default /etc)\\
+\item \option {--with-confdir=DIR}, Sympa main configuration files in DIR (default /etc)\\
 \file {sympa.conf} and \file {wwsympa.conf} will be installed there.
 
-\item \option {- - with-exlpdir=DIR}, modifiable data in DIR (default /home/sympa/expl/)
+\item \option {--with-exlpdir=DIR}, modifiable data in DIR (default /home/sympa/expl/)
 
-\item \option {- - with-libdir=DIR},  code libraries in DIR (default /home/sympa/bin/)
+\item \option {--with-libdir=DIR},  code libraries in DIR (default /home/sympa/bin/)
 
-\item \option {- - with-mandir=DIR}, man documentation in DIR (default /usr/local/man/)
+\item \option {--with-mandir=DIR}, man documentation in DIR (default /usr/local/man/)
 
-\item \option {- - with-docdir=DIR}, man files in DIR (default /home/sympa/doc/)
+\item \option {--with-docdir=DIR}, man files in DIR (default /home/sympa/doc/)
 
-\item \option {- - with-initdir=DIR}, install System V init script in DIR  (default /etc/rc.d/init.d)
+\item \option {--with-initdir=DIR}, install System V init script in DIR  (default /etc/rc.d/init.d)
 
-\item \option {- - with-lockdir=DIR}, create lock files in DIR  (default /var/lock/subsys)
+\item \option {--with-lockdir=DIR}, create lock files in DIR  (default /var/lock/subsys)
 
-\item \option {- - with-piddir=DIR}, create .pid files in DIR  (default /home/sympa/)
+\item \option {--with-piddir=DIR}, create .pid files in DIR  (default /home/sympa/)
 
-\item \option {- - with-etcdir=DIR}, Config directories populated by the user are in DIR (default /home/sympa/etc)
+\item \option {--with-etcdir=DIR}, Config directories populated by the user are in DIR (default /home/sympa/etc)
 
-\item \option {- - with-localedir=DIR}, create language files in DIR (default /home/sympa/locale)
+\item \option {--with-localedir=DIR}, create language files in DIR (default /home/sympa/locale)
 
-\item \option {- - with-scriptdir=DIR}, create script files in DIR (default /home/sympa/script)
+\item \option {--with-scriptdir=DIR}, create script files in DIR (default /home/sympa/script)
 
-\item \option {- - with-sampledir=DIR}, create sample files in DIR (default /home/sympa/sample)
+\item \option {--with-sampledir=DIR}, create sample files in DIR (default /home/sympa/sample)
 
-\item \option {- - with-spooldir=DIR}, create directory in DIR (default /home/sympa/spool)
+\item \option {--with-spooldir=DIR}, create directory in DIR (default /home/sympa/spool)
 
-\item \option {- - with-perl=FULLPATH}, set full path to Perl interpreter (default /usr/bin/perl)
+\item \option {--with-perl=FULLPATH}, set full path to Perl interpreter (default /usr/bin/perl)
 
-\item \option {- - with-openssl=FULLPATH}, set path to OpenSSL (default /usr/local/ssl/bin/openssl)
+\item \option {--with-openssl=FULLPATH}, set path to OpenSSL (default /usr/local/ssl/bin/openssl)
 
-\item \option {- - with-user=LOGIN}, set sympa user name (default sympa)\\
+\item \option {--with-user=LOGIN}, set sympa user name (default sympa)\\
 \Sympa daemons are running under this UID.
 
-\item \option {- - with-group=LOGIN}, set sympa group name (default sympa)\\
+\item \option {--with-group=LOGIN}, set sympa group name (default sympa)\\
 \Sympa daemons are running under this UID.
 
-\item \option {- - with-sendmail\_aliases=ALIASFILE}, set aliases file to be used by Sympa (default /etc/mail/sympa\_aliases). (You can overright this value at runtime giving its value in \file {sympa.conf})\\
+\item \option {--with-sendmail\_aliases=ALIASFILE}, set aliases file to be used by Sympa (default /etc/mail/sympa\_aliases). (You can overright this value at runtime giving its value in \file {sympa.conf})\\
 
-\item \option {- - with-virtual\_aliases=ALIASFILE}, set postfix virtual file to be used by Sympa (default /etc/mail/sympa\_virtual)\\
+\item \option {--with-virtual\_aliases=ALIASFILE}, set postfix virtual file to be used by Sympa (default /etc/mail/sympa\_virtual)\\
 
 This is used by the \file {alias\_manager.pl} script :
 
-\item \option {- - with-newaliases=FULLPATH}, set path to sendmail newaliases command (default /usr/bin/newaliases)
+\item \option {--with-newaliases=FULLPATH}, set path to sendmail newaliases command (default /usr/bin/newaliases)
 
-\item \option {- - with-newaliases\_arg=ARGS}, set arguments to newaliases command (default NONE)
+\item \option {--with-newaliases\_arg=ARGS}, set arguments to newaliases command (default NONE)
 
 This is used by the \file {postfix\_manager.pl} script :
 
-\item \option {- - with-postmap=FULLPATH}, set path to postfix postmap command (default /usr/sbin/postmap)
+\item \option {--with-postmap=FULLPATH}, set path to postfix postmap command (default /usr/sbin/postmap)
 
-\item \option {- - with-postmap\_arg=ARGS}, set arguments to postfix postmap command (default NONE)
+\item \option {--with-postmap\_arg=ARGS}, set arguments to postfix postmap command (default NONE)
 
 
 \end {itemize}
@@ -1150,7 +1150,7 @@ using  \file {testlogs.pl}.
 
 The \unixcmd {make install} step should have installed a \unixcmd {sympa} init script in
 your \dir {/etc/rc.d/init.d/} directory (you can change this at \unixcmd {configure}
-time with the \option {- - with-initdir} option). You should edit your runlevels to make
+time with the \option {--with-initdir} option). You should edit your runlevels to make
 sure \Sympa starts after Apache and MySQL. Note that \textindex{MySQL} should
 also start before \textindex{Apache} because of \file {wwsympa.fcgi}.
 
@@ -1164,34 +1164,34 @@ messages distribution.
 
 \begin {itemize}
 
-\item \option {- - debug} | \option {-d} 
+\item \option {--debug} | \option {-d} 
   
   Sets \Sympa in debug mode and keeps it attached to the terminal. 
   Debugging information is output to STDERR, along with standard log
   information. Each function call is traced. Useful while reporting
   a bug.
 
-\item \option {\-\-service}  \textit {process\_command} | \textit {process\_message}
+\item \option {--service}  
   
   Sets \Sympa daemon in way it process only message distribution (process\_message) or in way it process only command (process\_command).
   
-\item \option {- - config \textit {config\_file}} | \option {-f \textit {config\_file}}
+\item \option {--config \textit {config\_file}} | \option {-f \textit {config\_file}}
   
   Forces \Sympa to use an alternative configuration file. Default behavior is
   to use the configuration file as defined in the Makefile (\$CONFIG).
   
-\item \option {- - mail} | \option {-m} 
+\item \option {--mail} | \option {-m} 
   
   \Sympa will log calls to sendmail, including recipients. Useful for
   keeping track of each mail sent (log files may grow faster though).
   
-\item \option {- - lang \textit {catalog}} | \option {-l \textit {catalog}}
+\item \option {--lang \textit {catalog}} | \option {-l \textit {catalog}}
   
   Set this option to use a language catalog for \Sympa. 
   The corresponding catalog file must be located in \tildedir {sympa/locale}
   directory. 
   
-\item \option {- - keepcopy \textit {recipient\_directory}} | \option {-k \textit {recipient\_directory}}
+\item \option {--keepcopy \textit {recipient\_directory}} | \option {-k \textit {recipient\_directory}}
 
   This option tells Sympa to keep a copy of every incoming message,
   instead of deleting them. \textit {recipient\_directory} is the directory
@@ -1204,60 +1204,60 @@ messages distribution.
 \end{verbatim}
   \end {quote}
 
-\item \option {- - create\_list - - robot \textit {robotname} - - input\_file \textit {list\_file.xml}}
+\item \option {--create\_list --robot \textit {robotname} --input\_file \textit {list\_file.xml}}
 
 Create the list described by the xml file, see \ref{list-creation-sympa}, 
 page~\pageref{list-creation-sympa}.
 
-\item \option {- - close\_list \textit {listname@robot}}
+\item \option {--close\_list \textit {listname@robot}}
 
 Close the list (changing its status to closed), remove aliases and remove
 subscribers from DB (a dump is created in the list directory to allow restoring
 the list). See \ref{family-close-list}, page~\pageref{family-close-list} when you
 are in a family context.
 
-\item \option {- - dump \textit {listname \texttt {|} ALL}}
+\item \option {--dump \textit {listname \texttt {|} ALL}}
   
   Dumps subscribers of a list or all lists. Subscribers are dumped
   in \file {subscribers.db.dump}.
  
-\item \option {- - import \textit {listname}}
+\item \option {--import \textit {listname}}
   
 Import subscribers in the \textit {listname} list. Data are read from STDIN.
   
-\item \option {- - lowercase}
+\item \option {--lowercase}
   
 Lowercases e-mail addresses in database.
 
-\item \option {- - help} | \option {-h}
+\item \option {--help} | \option {-h}
   
   Print usage of sympa.pl.
    
-\item \option {- - make\_alias\_file}
+\item \option {--make\_alias\_file}
   
 Create an aliases file in /tmp/ with all list aliases (only list which status is 'open'). It uses the list\_aliases.tt2
 template.
 
-\item \option {- - version} | \option {-v}
+\item \option {--version} | \option {-v}
   
   Print current version of \Sympa.
 
-\item \option {- - instanciate\_family \textit {familyname} \textit {robotname} - - input\_file \textit {family\_file.xml}}
+\item \option {--instanciate\_family \textit {familyname} \textit {robotname} --input\_file \textit {family\_file.xml}}
 
 Instantiate the family \textit {familyname}. See \ref{lists-families}, 
 page~\pageref{lists-families}.
 
-\item \option {- - close\_family \textit {familyname} - - robot \textit {robotname}}
+\item \option {--close\_family \textit {familyname} --robot \textit {robotname}}
    
    Close the \textit {familyname} family. See \ref{family-closure}, 
    page~\pageref{family-closure}.
  
- \item \option {- - add\_list \textit {familyname} - - robot \textit {robotname} - - input\_file \textit {list\_file.xml}}
+ \item \option {--add\_list \textit {familyname} --robot \textit {robotname} --input\_file \textit {list\_file.xml}}
  
    Add the list described in the XML file to the \textit{familyname} family. See \ref{family-add-list}, 
    page~\pageref{family-add-list}.
  
- \item \option {- - modify\_list \textit {familyname} - - robot \textit {robotname} - - input\_file \textit {list\_file.xml}}
+ \item \option {--modify\_list \textit {familyname} --robot \textit {robotname} --input\_file \textit {list\_file.xml}}
  
    Modify the existing family list, with description contained in the XML file. See \ref{family-modify-list}, 
    page~\pageref{family-modify-list}.
@@ -1754,10 +1754,40 @@ see a  nice mailto adresses where others have nothing.
         browsing archives. This block all robot, even google and co.
 
 
-\subsection {\cfkeyword {dark\_color} \cfkeyword {light\_color} \cfkeyword {text\_color} \cfkeyword {bg\_color} \cfkeyword {error\_color} \cfkeyword {selected\_color} \cfkeyword {shaded\_color}}
+\subsection {\cfkeyword {color_0}, \cfkeyword {color_1} ..  \cfkeyword {color_15}}
 \label {colors}
+They are the color definition for web interface.  Thoses parameters can be overwritten in each virtual robot definition. 
+The color are used in the CSS file and unfortunitly they are also in use in some web templates. The sympa admin interface 
+show every colors in use.
 
-	They are the color definition for web interface. Default are set in the main Makefile. Thoses parameters can be overwritten in each virtual robot definition.
+
+\subsection {\cfkeyword {dark\_color} \cfkeyword {light\_color} \cfkeyword {text\_color} \cfkeyword {bg\_color} \cfkeyword {error\_color} \cfkeyword {selected\_color} \cfkeyword {shaded\_color}}
+
+
+	Deprecated. They are the color definition for previous web interface. Thoses parameters are unused in 5.1 and higher 
+version but still availible.style.css, print.css, print-preview.css and fullPage.css
+
+
+
+\subsection {\cfkeyword {css\_path}}
+
+Pre-parsed CSS files (let's say static css files) can be installed using Sympa server skins module. Thoses CSS files are 
+installed in a part of the web server that can be reached without using sympa web engine. In order to do this edit the 
+robot.conf file and set the css_path parameter. Then retart the server and use skins module from the "admin sympa" page 
+to install preparsed CSS file. The in order to replace dynamic CSS by thoses static files 
+set the \cfkeyword {css\_url} parameter.
+
+
+\subsection {\cfkeyword {css\_url}}
+
+By default, CSS files style.css, print.css, print-preview.css and fullPage.css are delivred by Sympa web interface itself using a sympa action 
+named css. URL look like http://foo.org/sympa/css/style.css . CSS file are made parsing a web\_tt2 file named css.tt2. This allow dynamique 
+definition of colors and in a near futur a complete definition of the skin, user preference skins etc.
+
+In order to make sympa web interface faster, it is strongly recommended to install static css file somewhere in your web site. This way sympa will deliver 
+only one page insteed of one page and four css page at each clic. This can be done using css\_url parameter. The parameter must contain the URL of the 
+directory where  style.css, print.css, print-preview.css and fullPage.css are installed. You can make your own a sophisticated new skin editing thoses 
+files. The server admin module include a CSS administration page that can help you to install static CSS.
 
 \subsection {\cfkeyword {cookie}} 
 

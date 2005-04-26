@@ -1,132 +1,36 @@
 <!-- $Id$ -->
 
 <!-- begin menu.tt2 -->
-<table cellpadding="1" cellspacing="0" style="width: 100%;" border="0"><tr><td>
-<table cellpadding="0" cellspacing="0" style="width: 100%;" border="0">
-  <tr style="text-align: center; background-color: [% dark_color %];">
-  [% IF auth_method == 'smime' %]
-  <td style="background-color: [% bg_color %]; text-align: center;">
-<a href="[% path_cgi %]/show_cert" onclick="winhelp=window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=600,height=320');winlogin.focus()" target="wws_help"><img src="[% icons_url %]/locked.png" alt="[%|loc%]security info[%END%]" style="border: 0px;" /></a>
-  [% ELSE %]
-  <td>
-  <table style="width: 100%;" border="0" cellspacing="1" cellpadding="2">
-     <tr> 
-  [% IF user.email %]
-  [% IF auth_method == 'md5' %]
-      <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;"> 
-     [% IF referer %]
-      <a href="[% path_cgi %]/logout/referer/[% referer %]">
-     [% ELSE %]
-      <a href="[% path_cgi %]/logout/[% action %]/[% list %]">
-     [% END %]
-     <span style="font-size: smaller;"><strong>[%|loc%]Logout[%END%]</strong></span></a>
-     </td>
-  [% ELSE %]
-     <td style="white-space: nowrap; background-color: [% bg_color %]; text-align: center;"><img src="[% icons_url %]/locked.png" alt="https" /></td>
-  [% END %]
-  [% ELSE %]
-      <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;"> 
-     [% IF referer %]
-      <a href="[% path_cgi %]/nomenu/loginrequest/referer/[% referer %]"
-     [% ELSE %]
-      <a href="[% path_cgi %]/nomenu/loginrequest/[% action %]/[% list %]"
-     [% END %]
-       onclick="window.open('','wws_login','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=550,height=300')" target="wws_login">
-       <span style="font-size: smaller;"><strong>[%|loc%]Login[%END%]</strong></span></a>
-      </td>
-  [% END %]
-    </tr>
-  </table>
-  [% END %]
-</td></tr>
-</table>
+<div class="navBar printNone">
+<ul id="MainMenuLinks">	
 
+[% IF may_create_list %]
+   [% IF action == 'create_list_request' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]                                              <li><a class="[% class %]" href="[% path_cgi %]/create_list_request" >[%|loc%]Create list[%END%]</a></li>
+[% END %]
 
-</td>
-<td style="width: 100%; background-color: [% bg_color %];">&nbsp;</td>
+[% IF is_listmaster %]
+   [% IF action == 'serveradmin' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+   <li><a  class="[% class %]" href="[% path_cgi %]/serveradmin" >[%|loc%]Sympa admin[%END%]</a></li>
+[% END %]
 
-<td>
+[% IF user.email %]
+    [% IF action == 'pref' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+        <li><a class="[% class %]" href="[% path_cgi %]/pref/[% action %]/[% list %]">[%|loc%]Preferences[%END%]</a></li>
 
-<table cellpadding="0" cellspacing="0" style="width: 100%;" border="0">
-  <tr style="text-align: center; background-color: [% dark_color %];"><td>
-  <table style="width: 100%;" border="0" cellspacing="1" cellpadding="2">
-     <tr> 
-  [% IF may_create_list %]
-   [% IF action == 'create_list_request' %]
-    <td style="white-space: nowrap; background-color: [% selected_color %]; text-align: center;">
-        <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Create list[%END%]</strong></span>
-    </td>
-   [% ELSE %]
-    <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
-	 <a href="[% path_cgi %]/create_list_request" ><span style="font-size: smaller;"><strong>[%|loc%]Create list[%END%]</strong></span></a>
-    </td>
-   [% END %]
-  [% END %]
+    [% IF action == 'which' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li><a class="[% class %]" href="[% path_cgi %]/which" >[%|loc%]Your subscriptions[%END%]</a></li>
+[% END %]
 
-  [% IF is_listmaster %]
-   [% IF action == 'serveradmin' %]
-    <td style="white-space: nowrap; background-color: [% selected_color %]; text-align: center;">
-        <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Sympa admin[%END%]</strong></span>
-    </td>
-   [% ELSE %]
-    <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
-	 <a href="[% path_cgi %]/serveradmin" ><span style="font-size: smaller;"><strong>[%|loc%]Sympa admin[%END%]</strong></span></a>
-    </td>
-   [% END %]
-  [% END %]
+ [% IF action == 'lists' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+<li><a class="[% class %]" href="[% path_cgi %]/lists">[%|loc%]list of lists[%END%]</a></li>
 
-  [% IF user.email %]
+ [% IF action == 'home' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+<li><a class="[% class %]" href="[% path_cgi %]/">[%|loc%]Home[%END%]</a></li>
 
-  [% IF action == 'pref' %]
-  <td style="white-space: nowrap; background-color: [% selected_color %]; text-align: center;">
-      <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Preferences[%END%]</strong></span>
-  </td>
-  [% ELSE %]
-  <td style="white-space: nowrap; background-color: [% light_color %];">
-      <a href="[% path_cgi %]/pref/[% action %]/[% list %]" ><span style="font-size: smaller;"><strong>[%|loc%]Preferences[%END%]</strong></span></a>
-  </td>
-  [% END %]
+[% IF action == 'help' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+  <li> <a class="[% class %]" href="[% path_cgi %]/help" >[%|loc%]Help[%END%]</a></li>
+</ul>
 
-  [% IF action == 'which' %]
-  <td style="white-space: nowrap; background-color: [% selected_color %]; text-align: center;">
-      <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Your subscriptions[%END%]</strong></span>
-  </td>
-  [% ELSE %]
-  <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
-      <a href="[% path_cgi %]/which" ><span style="font-size: smaller;"><strong>[%|loc%]Your subscriptions[%END%]</strong></span></a>
-   </td>
-   [% END %]
-  
-  [% ELSE %]
-  <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
-      <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Pref[%END%]</strong></span>
-  </td>
-  <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
-      <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Your subscriptions[%END%]</strong></span>
-  </td>
-  [% END %]
-
-  [% IF action == 'home' %]
-  <td style="white-space: nowrap; background-color: [% selected_color %]; text-align: center;"><span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Home[%END%]</strong></span></td>
-  [% ELSE %]
-  <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
-      <a href="[% path_cgi %]/"><span style="font-size: smaller;"><strong>[%|loc%]Home[%END%]</strong></span></a>
-  </td>
-  [% END %]
-
-  [% IF action == 'help' %]
-  <td style="white-space: nowrap; background-color: [% selected_color %]; text-align: center;"><span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Help[%END%]</strong></span></td>
-  [% ELSE %]
-  <td style="white-space: nowrap; background-color: [% light_color %]; text-align: center;">
-      <a href="[% path_cgi %]/help" ><span style="font-size: smaller;"><strong>[%|loc%]Help[%END%]</strong></span></a>
-  </td>
-  [% END %]
-</tr>
-</table>
-</td></tr></table>
-</td></tr></table>
+</div>
+<!-- </div> -->
 <!-- end menu.tt2 -->
-
-
-
-

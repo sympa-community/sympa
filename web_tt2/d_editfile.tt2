@@ -1,40 +1,38 @@
 <!-- $Id$ -->
 
+<div class="block">
+
+  <div style="float: right">
+     <a class="input"  href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <img style="border: 0px; vertical-align: bottom;" src="[% father_icon %]"> [%|loc%]Up to higher level directory[%END%] </a>
+  </div>
+<br/>
 
 
-<table width="100%"><tr>
- <td>
   [% IF url %]
   <h1>[%|loc(visible_path)%]Edition of the bookmark %1[%END%]</h1>
   [% ELSE %]
   <h1>[%|loc(visible_path)%]Edition of the file %1[%END%]</h1>
   [% END %]
- </td>
- <td align="right">
-  <h3><a href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <img style="border: 0px; vertical-align: bottom;" src="[% father_icon %]"> [%|loc%]Up to higher level directory[%END%] </a></h3>
- </td>      
-</tr></table>
-<br/>
 
     [%|loc(doc_owner)%]Owner : %1[%END%] <br />
     [%|loc(doc_date)%]Last update : %1[%END%] <br />
     [%|loc(desc)%]Description : %1[%END%] <br /><br />
 
-<table cellspacing="15">
+</div>
 
+  <br /><br />
   [% IF !directory %]
-  <tr>
+  
   <form method="post" action="[% path_cgi %]" enctype="multipart/form-data">
-  <td style="text-align: right;" valign="bottom">
+
   [% IF url %]
   <label><strong> [%|loc%]Bookmark URL[%END%] </strong><br /> 
   <input name="url" value="[% url %]" /></label>
   [% ELSE %]
-  <label><strong> [%|loc(visible_path)%]Replace the file %1 with your file[%END%] </strong><br /> 
-  <input type="file" name="uploaded_file" /></label>
+  <label><strong> [%|loc(visible_path)%]Replace the file %1 with your file[%END%] </strong>
+  &nbsp;<input type="file" name="uploaded_file" />&nbsp;</label>
   [% END %]
-  </td>
-  <td style="text-align: left;" valign="bottom"> 
+  &nbsp;
   [% IF url %]
   <input type="submit" value="[%|loc%]Update[%END%]" name="action_d_savefile" />
   [% ELSE %]
@@ -43,13 +41,11 @@
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% path %]" />
   <input type="hidden" name="serial" value="[% serial_file %]" />
-  </td>
   </form>
-  </tr>
+
   [% END %]
 
 
-</table>
 <br />
 <br />
 
@@ -57,7 +53,7 @@
 [% IF textfile %]
   <form action="[% path_cgi %]" method="post">
   <label><strong> [%|loc(visible_path)%]Edit the file %1[%END%]</strong><br />
-  <textarea name="content" cols="80" rows="25">
+  <textarea name="content" cols="90" rows="25">
 [% INSERT $filepath IF filepath %]
   </textarea></label><br />
   <input type="hidden" name="list" value="[% list %]" />

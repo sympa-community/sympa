@@ -1,51 +1,7 @@
 <!-- $Id$ -->
 
 <!-- begin title.tt2 -->
-<!-- <table style=" width: 100%;" border="0" cellpadding="2" cellspacing="0"><tr><td>-->
-<table style="width: 100%; background-color: [% dark_color %];" border="0" cellpadding="2" cellspacing="0">
-  <tr valign="bottom">
-  <td style="text-align: left; white-space: nowrap;">
-       <div style="font-size: smaller; color: [% bg_color %];">
-         [% IF user.email %]
-          <strong>[% user.email %]</strong>
-         <div style="text-align: center;">
- 	 [% IF is_listmaster %]
-	  [%|loc%]Listmaster[%END%]
-	 [% ELSIF is_privileged_owner %]
-          [%|loc%]Privileged owner[%END%]
-	 [% ELSIF is_owner %]
-          [%|loc%]Owner[%END%]
-         [% ELSIF is_editor %]
-          [%|loc%]Editor[%END%]
-         [% ELSIF is_subscriber %]
-	  [%|loc%]Subscriber[%END%]
-	 [% END %]
-	  </div>
-	 [% END %]
-	</div>
-   </td>
-   <td style="text-align: center; width: 100%;">
-       <table style="width: 100%;" cellpadding="0">
-          <tr><td style="background-color: [% selected_color %]; white-space: nowrap; text-align: center;">
-	    <span style="color: [% bg_color %]; font-size: larger;"><strong style="font-size: larger;">[% title %]</strong></span>
-	    <br />[% IF subtitle.length > 0 %]<span style="color: [% bg_color %];">[% subtitle %]</span>[% END %]
-            </td>
-           </tr>
-        </table>
-   </td>
-   </tr>
-</table>
-<!--  </td></tr></table> -->
+<div id="Logo"><a href="./"><!--<img src=""/>--></a></div>
+<div id="Title" style="text-align: center;"><h1>[% robot_title %]</h1><br /></div><br />
+<div id="top"><a class="displayNone" href="#Paint">Skip to Content.</a></div>
 <!-- end title.tt2 -->
-
-
-
-
-
-
-
-
-
-
-
-

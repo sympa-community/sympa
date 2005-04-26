@@ -1,21 +1,16 @@
 <!-- $Id$ -->
 
 <br />
-<table border="0" style="background: [% light_color %];"><tr><td>
 <p style="text-align: justify;">
 [%|loc(conf.email,conf.host)%]This server provides you access to your environment on mailing list server %1@%2. Starting from this URL, you can perform subscription options, unsubscription,
 archives, list management and so on.[%END%]
 </p>
-</td></tr></table>
 <br /><br />
 
-<div style="text-align: center;">
+   <h1 class="block">[%|loc%]Mailing lists categories[%END%]</h1>
+
+
 <table border="0" style="margin-left: auto; margin-right: auto;">
- <tr>
-  <th style="background: [% selected_color %];">
-   <span style="color: [% bg_color %];">[%|loc%]Mailing lists[%END%]</span>
-  </th>
- </tr>
  <tr>
   <td>
    <table border="0" cellpadding="3"><tr valign="top">
@@ -42,14 +37,6 @@ archives, list management and so on.[%END%]
     </td>	
    </tr>
    <tr>
-<td>
-     [% PROCESS 'button_header.tt2' %]
-      <td style="background: [% light_color %]; white-space: nowrap; text-align: center;"> 
-      <a href="[% path_cgi %]/lists">
-     <span style="font-size: smaller;"><strong>[%|loc%]view all lists[%END%]</strong></span></a>
-     </td>
-     [% PROCESS 'button_footer.tt2' %]
-</td>
 <td style="width: 100%;"></td>
 <td style="white-space: nowrap;">
 	<div>
@@ -58,8 +45,6 @@ archives, list management and so on.[%END%]
          <input type="hidden" name="action" value="search_list" />
          <input type="submit" name="action_search_list" value="[%|loc%]Search lists[%END%]" />
 	  <br />
-	 <label><input type="radio" name="extended" value="0" checked="checked" />[%|loc%]Local[%END%]</label>
-         <label><input type="radio" name="extended" value="1" />[%|loc%]Extended search[%END%]</label>
         </form>
 	</div>
         
@@ -68,16 +53,5 @@ archives, list management and so on.[%END%]
  </td>
 </tr>
 </table>
-</div>
 
-[% IF ! user.email %]
-<table border="0" style="width: 100%;" cellpadding="1" cellspacing="0">
-   <tr><td style="background-color: [% dark_color %];">
-          <table border="0" style="width: 100%;"> 
-              <tr><td style="background-color: [% bg_color %];">
-[% PROCESS 'loginbanner.tt2' %]
-</td></tr></table>
-</td></tr></table>
-
-[% END %]
 <br /><br />
