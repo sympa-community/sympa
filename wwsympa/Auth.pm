@@ -278,7 +278,7 @@ sub ldap_authentication {
 					   );
 
 	     if ($mesg->count() == 0) {
-		 do_log('notice',"No entry in the Ldap Directory Tree of %s,$host");
+		 do_log('notice',"No entry in the Ldap Directory Tree of %s $host");
 		 $ldap_passwd->unbind;
 		 last;
 	     }
@@ -391,7 +391,7 @@ sub get_email_by_net_id {
 	
 	my $cnx;
 	## Not always anonymous...
-	if (defined ($ldap->{'bind_dn'}) && defined ($ldap->{'bind_password'})) {
+	if (defined ($ldap->{'ldap_bind_dn'}) && defined ($ldap->{'ldap_bind_password'})) {
 	    $cnx = $ldap_anonymous->bind($ldap->{'ldap_bind_dn'}, password =>$ldap->{'ldap_bind_password'});
 	}else {
 	    $cnx = $ldap_anonymous->bind;
@@ -414,7 +414,7 @@ sub get_email_by_net_id {
 	my $count = $emails->count();
 
 	if ($emails->count() == 0) {
-	    do_log('notice',"No entry in the Ldap Directory Tree of %s,$host");
+	    do_log('notice',"No entry in the Ldap Directory Tree of %s $host");
 	    $ldap_anonymous->unbind;
 	    last;
 	}
