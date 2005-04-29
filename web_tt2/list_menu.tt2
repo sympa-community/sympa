@@ -1,431 +1,60 @@
 <!-- $Id$ -->
 
 <!-- begin list_menu.tt2 -->
-<table border="0" cellpadding="0" cellspacing="0">
- <tr valign="top"><!-- empty line in the left menu panel -->
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-  <td style="width: 40px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-  <td style="width: 30px;"></td>
-  <td style="width: 40px;"></td>
- </tr>
- <tr>
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
 
-<!-- begin -->
-  <td style="width: 70px; white-space: nowrap; text-align: right;" colspan="2">
-     [% PROCESS 'list_button_header.tt2' %]
-
-      [% IF action == 'info' %]
-        <td style="width: 100%; background-color: [% selected_color %]; white-space: nowrap; text-align: right;">
-           <span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]List info[%END%]</strong></span>
-        </td>
-      [% ELSE %]
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
-        <a href="[% path_cgi %]/info/[% list %]" ><span style="font-size: smaller;"><strong>[%|loc%]List info[%END%]</strong>
-        </span></a>
-        </td>
-      [% END %]
-
-     [% PROCESS 'list_button_footer.tt2' %]
-  </td>
+<div class="MenuBlock">
+[% PROCESS 'list_panel.tt2' %]
 
 
-  <td style="width: 40px;"></td>
- </tr>
- <tr><!-- empty line in the left menu panel -->
- <td style="width: 45px; background-color: [% dark_color %]; white-space: nowrap;" colspan="2">&nbsp;</td>
-  <td style="width: 70px;" colspan="2"><br /></td>
- </tr>
- <tr><!-- Panel list info -->
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-  <td style="width: 110px; background-color: [% bg_color %]; text-align: left;" colspan=3>
-     [% PROCESS 'list_button_header.tt2' %]
-        <td style="background-color: [% light_color %];">
-	  [%|loc%]Subscribers:[%END%] <strong>[% total %]</strong><br />
-	  <br />
-	  [%|loc%]Owners[%END%]
-	  [% FOREACH o = owner %]
-	    [% o.value.mailto %]
-	  [% END %]
-	  <br />
-	  [% IF is_moderated %]
-	    [%|loc%]Moderators[%END%]
-	    [% FOREACH e = editor %]
-		[% e.value.mailto %]
-	    [% END %]
-	  [% END %]
-          <br />
-	  [% IF list_as_x509_cert %]
-          <br /><a href="[% path_cgi %]/load_cert/[% list %]"><span style="font-size: smaller;"><strong>[%|loc%]Load certificate[%END%]</strong></span></a><br />
-          [% END %]
-     [% PROCESS 'list_button_footer.tt2' %]
-  </td>
- </tr>
- <tr><!-- empty line in the left menu panel -->
-  <td style="width: 45px; background-color: [% dark_color %]; white-space: nowrap;" colspan="2">&nbsp;</td>
-  <td style="width: 70px;" colspan="2"><br /></td>
- </tr>
-   [% IF is_priv %]
- <tr><!-- for listmaster owner and editor -->
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-
-  <td style="width: 70px; white-space: nowrap; text-align; right;" colspan="2">
-     [% PROCESS 'list_button_header.tt2' %]
-
-   [% IF action == 'admin' %]
-        <td style="width: 100%; background-color: [% selected_color %]; white-space: nowrap; text-align: right;"><span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]List admin[%END%]</strong></span></td>
-   [% ELSIF action_type == 'admin' %]
-        <td style="width: 100%; background-color: [% selected_color %]; white-space: nowrap; text-align: right;">
-        <strong>
-         <a href="[% path_cgi %]/admin/[% list %]" ><span style="color: [% bg_color %]; font-size: smaller;">[%|loc%]List admin[%END%]</span></a>
-        </strong>
-        </td>
-   [% ELSE %]
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
-        <span style="font-size: smaller;"><strong>
-         <a href="[% path_cgi %]/admin/[% list %]" >[%|loc%]List admin[%END%]</a>
-        </strong></span>
-        </td>
-   [% END %]
-
-     [% PROCESS 'list_button_footer.tt2' %]
-  </td>
-
-  <td style="width: 40px;"></td>
- </tr>
- <tr>
-  <td style="width: 45px; background-color:[% dark_color %]; white-space: nowrap;" colspan="2">&nbsp;</td>
-  <td style="width: 70px;" colspan="2"><br /></td>
- </tr>
- <tr><!-- Panel admin info -->
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-  <td style="width: 110px; background-color: [% bg_color %]; white-space: nowrap; text-align: left;" colspan="3">
-     [% PROCESS 'list_button_header.tt2' %]
-        <td style="background-color: [% light_color %];">
-	   [%|loc%]Bounced email rate:[%END%] <strong>[% bounce_rate %]%</strong><br />
-           <br />
-        [% IF is_editor %]
- 	   [% IF mod_total == '0' %]
-	   [%|loc%]No message to moderate[%END%]
-           [% ELSE %]
-           [%|loc%]Messages to moderate :[%END%]<B> [% mod_total %]</B>
-           [% END %]
-           [% IF shared == 'exist' %]
-             <br /><br />
-             [% IF mod_total_shared == '0' %]
-             [%|loc%]No document to moderate[%END%]
-             [% ELSE %]
-             <strong>[%|loc%]Documents to moderate :[%END%]<B> [% mod_total_shared %]</strong>
-             [% END %]
-           [% END %]
-         [% END %]
-	  <br />
-        </td>
-         [% PROCESS 'list_button_footer.tt2' %]
-  </td>
- </tr>
- <tr>
-  <td style="width: 45px; background-color: [% dark_color %]; white-space: nowrap;" colspan="2">&nbsp;</td>
-  <td style="width: 70px;" colspan="2"><br /></td>
- </tr>
-
-
-     <!-- end is_priv -->
-   [% END %]
-   <!-- Subscription depending on susbscriber or not, email define or not etc -->
-   [% IF is_subscriber == '1' %]
-    [% IF may_suboptions == '1' %]
- <tr>
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-
-  <td style="width: 70px; white-space: nowrap; text-align: right;" colspan="2">
-     [% PROCESS 'list_button_header.tt2' %]
-      [% IF action == 'suboptions' %]
-        <td style="width: 100%; background-color: [% selected_color %]; white-space: nowrap; text-align: right;"><span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]Subscriber Options[%END%]</strong></span></td>
-      [% ELSE %]
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
-        <span style="font-size: smaller;"><strong>
-         <a href="[% path_cgi %]/suboptions/[% list %]" >[%|loc%]Subscriber Options[%END%]</a>
-        </strong></span>
-        </td>
-      [% END %]
-     [% PROCESS 'list_button_footer.tt2' %]
-  </td>
-
-  <td style="width: 40px;">
-  </td>
-
- </tr>
+[% IF is_subscriber == '1' %]
+  [% IF may_suboptions == '1' %]
+      [% IF action == 'suboptions' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+      <strong><a class="[% class %]" href="[% path_cgi %]/suboptions/[% list %]" >[%|loc%]Subscriber Options[%END%]</a></strong><br />
   [% END %]
+  [% IF may_signoff == '1' %] 
+  [% IF action == 'signoff' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+     <strong><a class="[% class %]" href="[% path_cgi %]/signoff/[% list %]" onclick="request_confirm_link('[% path_cgi %]/signoff/[% list %]', '[%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%]'); return false;">[%|loc%]Unsubscribe[%END%]</a></strong><br />
+  [% END %]
+[% ELSE %]
+  [% IF may_subscribe %]
+     [% IF action == 'subrequest' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+         <strong><a class="[% class %]" href="[% path_cgi %]/subscribe/[% list %]" onclick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[%|loc(list)%]Do you really want to subscribe to list %1?[%END%]'); return false;">[%|loc%]Subscribe[%END%]</a></strong><br />
+  [% END %]
+[% END %]
 
- <tr>
-  <td style="width: 45px; background-color: [% dark_color %]; white-space: nowrap;" colspan="2">&nbsp;</td>
-  <td style="width: 70px;" colspan="2"><br /></td>
- </tr>
-   [% IF may_signoff == '1' %] 
- <tr>
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-  <td style="width: 70px; white-space: nowrap; text-align: right;" colspan="2">
-     [% PROCESS 'list_button_header.tt2' %]
-      [% IF action == 'signoff' %]
-        <td style="width: 100%; background-color: [% selected_color %]; white-space: nowrap; text-align: right;"><span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]Unsubscribe[%END%]</strong></span></td>
-      [% ELSIF user.email %]
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
-        <span style="font-size: smaller;"><strong>
-         <a href="[% path_cgi %]/signoff/[% list %]" onclick="request_confirm_link('[% path_cgi %]/signoff/[% list %]', '[%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%]'); return false;">[%|loc%]Unsubscribe[%END%]</a>
-        </strong></span>
-        </td>
-       [% ELSE %]
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
-        <span style="font-size: smaller;"><strong>
-         <a href="[% path_cgi %]/sigrequest/[% list %]">[%|loc%]Unsubscribe[%END%]</a>
-        </strong></span>
-        </td>
-       [% END %]
-     [% PROCESS 'list_button_footer.tt2' %]
+[% PROCESS 'list_admin_menu.tt2' IF is_priv %]
 
-  </td>
-
-  <td style="width: 40px;"></td>
- </tr>
-   [% ELSE %]
- 
-     [% IF may_subscribe %]
- <tr>
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-  <td style="width: 70px; white-space: nowrap; text-align: right;" colspan="2">
-     [% PROCESS 'list_button_header.tt2' %]
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
-        <span style="font-size: smaller;"><strong>
-     <a href="[% path_cgi %]/subscribe/[% list %]" onclick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[%|loc(list)%]Do you really want to subscribe to list %1?[%END%]'); return false;">[%|loc%]Subscribe[%END%]</a>
-        </strong></span>
-        </td>
-     [% PROCESS 'list_button_footer.tt2' %]
-  </td>
-  </tr> 
-     [% ELSE %]
- <tr>
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-  <td style="width: 70px; white-space: nowrap; text-align: right;" colspan="2">
-     [% PROCESS 'list_button_header.tt2' %]
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
-        <span style="font-size: smaller; color: [% bg_color %];"><strong>Unsubscribe</strong></span>
-        </td>
-        <td style="width: 40px;"></td>
-     [% PROCESS 'list_button_footer.tt2' %]
-  </td>
- </tr>
-     <!-- end may_subscribe -->
-     [% END %]
-      <!-- end may_signoff -->
-   [% END %]
-      <!-- is_subscriber -->
-
-   [% ELSE %]
-      <!-- else is_subscriber -->
-
- <tr>
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-  <td style="width: 70px; white-space: nowrap; text-align: right;" colspan="2">
-     [% PROCESS 'list_button_header.tt2' %]
-   [% IF action == 'subrequest' %]
-        <td style="width: 100%; background-color: [% selected_color %]; white-space: nowrap; text-align: right;"><span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]Subscribe[%END%]</strong></span></td>
-   [% ELSE %]
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
-    [% IF may_subscribe == '1' %]
-      [% IF user.email %]
-        <span style="font-size: smaller;"><strong>
-     <a href="[% path_cgi %]/subscribe/[% list %]" onclick="request_confirm_link('[% path_cgi %]/subscribe/[% list %]', '[%|loc(list)%]Do you really want to subscribe to list %1?[%END%]'); return false;">[%|loc%]Subscribe[%END%]</a>
-        </strong></span>
-      [% ELSE %]
-         <span style="font-size: smaller;"><strong>
-     <a href="[% path_cgi %]/subrequest/[% list %]">[%|loc%]Subscribe[%END%]</a>
-        </strong></span>
-      [% END %]
-    [% ELSE %]
-	<span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Subscribe[%END%]</strong></span>
-    [% END %]
-        </td>
-   [% END %]
-
-     [% PROCESS 'list_button_footer.tt2' %]
-  </td>
-
-  <td style="width: 40px;"></td>
- </tr>
-
-   [% IF may_signoff %]
- <tr>
- <td style="width: 45px; background-color: [% dark_color %]; white-space: nowrap;" colspan="2">&nbsp;</td>
-  <td style="width: 70px;" colspan="2"><br /></td>
- </tr>
- <tr>
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-  <td style="width: 70px; white-space: nowrap; text-align: right;" colspan="2">
-     [% PROCESS 'list_button_header.tt2' %]
-
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
-       [% IF user.email %]
-        <span style="font-size: smaller;"><strong>
-         <a href="[% path_cgi %]/signoff/[% list %]" onclick="request_confirm_link('[% path_cgi %]/signoff/[% list %]', '[%|loc(list)%]Do you really want to unsubscribe from list %1?[%END%]'); return false;">[%|loc%]Unsubscribe[%END%]</a>
-        </strong></span>
-       [% ELSE %]
-       <span style="font-size: smaller;"><strong>
-         <a href="[% path_cgi %]/sigrequest/[% list %]">[%|loc%]Unsubscribe[%END%]</a>
-        </strong></span>
-       [% END %]
-        </td>
-     [% PROCESS 'list_button_footer.tt2' %]
-  </td>
-
-  <td style="width: 40px;"></td>
- </tr>
-   [% END %]
-
-      <!-- END is_subscriber -->
-   [% END %]
- <tr>
-  <td style="width: 45px; background-color: [% dark_color %]; white-space: nowrap;" colspan="2">&nbsp;</td>
-  <td style="width: 70px;" colspan="2"><br /></td>
- </tr>
-   [% IF is_archived %]
- <tr>
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-  <td style="width: 70px; white-space: nowrap; text-align: right;" colspan="2">
-     [% PROCESS 'list_button_header.tt2' %]
-   [% IF action == 'arc' %]
-        <td style="width: 100%; background-color: [% selected_color %]; white-space: nowrap; text-align: right;">
-          <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Archive[%END%]</strong></span>
-	</td>
-   [% ELSIF action == 'arcsearch_form' %]
-        <td style="width: 100%; background-color: [% selected_color %]; white-space: nowrap; text-align: right;">
-          <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Archive[%END%]</strong></span>
-	</td>
-   [% ELSIF action == 'arcsearch' %]
-        <td style="width: 100%; background-color: [% selected_color %]; white-space: nowrap; text-align: right;">
-          <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Archive[%END%]</strong></span>
-	</td>
-   [% ELSIF action == 'arc_protect' %]
-        <td style="width: 100%; background-color: [% selected_color %]; white-space: nowrap; text-align: right;">
-          <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Archive[%END%]</strong></span>
-	</td>
-  [% ELSE %]
-
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
+[% IF is_archived %]
    [% IF arc_access %]
-        <span style="font-size: smaller;"><strong>
-         <a href="[% path_cgi %]/arc/[% list %]" >[%|loc%]Archive[%END%]</a>
-        </strong></span>
+      [% IF action == 'arc' || action == 'arcsearch_form' || action == 'arcsearch' ||  action == 'arc_protect' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+      <strong><a class="[% class %]" href="[% path_cgi %]/arc/[% list %]" >[%|loc%]Archive[%END%]</a></strong><br />
    [% ELSE %]
-        <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Archive[%END%]</strong></span>
+      <div class="menuInactive2">[%|loc%]Archive[%END%]</div><br />
    [% END %]
-        </td>
-   [% END %]
+[% END %]
 
-     [% PROCESS 'list_button_footer.tt2' %]
-  </td>
+[% IF may_post %]
+[% IF action == 'compose_mail' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+          <strong><a class="[% class %]" href="[% path_cgi %]/compose_mail/[% list %]" >[%|loc%]Post[%END%]</a></strong><br />
+[% ELSE %]
+          <div class="menuInactive2">[%|loc%]Post[%END%]</div><br />
+[% END %]
 
-  <td style="width: 40px;"></td>
- </tr>
- <tr>
-  <td style="width: 45px; background-color: [% dark_color %]; white-space: nowrap;" colspan="2">&nbsp;</td>
-  <td style="width: 70px;" colspan="2"><br /></td>
- </tr>
-      <!-- END is_archived -->
-    [% END %]
-
- <!-- Post -->
- <tr>
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-  <td style="width: 70px; white-space: nowrap; text-align: right;" colspan="2">
-     [% PROCESS 'list_button_header.tt2' %]
-   [% IF action == 'compose_mail' %]
-        <td style="width: 100%; background-color: [% selected_color %]; white-space: nowrap; text-align: right;">
-          <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Post[%END%]</strong></span>
-	</td>
-  [% ELSE %]
-
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
-   [% IF may_post %]
-        <span style="font-size: smaller;"><strong>
-         <a href="[% path_cgi %]/compose_mail/[% list %]" >[%|loc%]Post[%END%]</a>
-        </strong></span>
-   [% ELSE %]
-        <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Post[%END%]</strong></span>
-   [% END %]
-        </td>
-   [% END %]
-
-     [% PROCESS 'list_button_footer.tt2' %]
-  </td>
-
-  <td style="width: 40px;"></td>
- </tr>
- <tr>
-  <td style="width: 45px; background-color: [% dark_color %]; white-space: nowrap;" colspan="2">&nbsp;</td>
-  <td style="width: 70px;" colspan="2"><br /></td>
- </tr>
-      <!-- END post -->
-
-    [% IF shared == 'exist' %]
- <tr>
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp; </td>   
-  <td style="width: 70px; white-space: nowrap; text-align: right;" colspan="2">
-     [% PROCESS 'list_button_header.tt2' %]
-    [% IF action == 'd_read' %]
-        <td style="width: 100%; background-color: [% selected_color %]; white-space: nowrap; text-align: right;"><span style="color: [% bg_color %]; font-size: smaller;">
-         <strong>[%|loc%]Shared web[%END%]</strong></span>
-        </td>
+[% IF shared == 'exist' %]
+    [% IF may_d_read %]
+    [% IF action == 'd_read' || action == 'd_edit' || action == 'd_properties' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+        <strong><a class="[% class %]" href="[% path_cgi %]/d_read/[% list %]/" >[%|loc%]Shared web[%END%]</a></strong><br />
     [% ELSE %]
-      [% IF may_d_read %]
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
-         <span style="font-size: smaller;"><strong>
-         <a href="[% path_cgi %]/d_read/[% list %]/" >[%|loc%]Shared web[%END%]</a>
-         </strong></span>
-        </td>
-      [% ELSE %]
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
-         <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Shared web[%END%]</strong></span>
-        </td>
-      [% END %]
+          <div class="menuInactive2">[%|loc%]Shared web[%END%]</div><br />
     [% END %]
+[% END %]
 
-      [% PROCESS 'list_button_footer.tt2' %]
-  </td>
+[% IF may_review %]
+[% IF action == 'review' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<strong><a class="[% class %]" href="[% path_cgi %]/review/[% list %]" >[%|loc%]Review[%END%]</a></strong><br />
+[% IF is_priv %]([%|loc%]Bounced email rate:[%END%][% bounce_rate %] %)[% END %]
+<br />
+[% END %]
 
-       <!-- END shared --> 
-  <td style="width: 40px;"></td>
- </tr> 
- <tr>
- <td style="width: 45px; background-color: [% dark_color %]; white-space: nowrap;" colspan="2">&nbsp;</td>
-  <td style="width: 70px;" colspan="2"><br /></td>
- </tr>
-    [% END %]
-
-    [% IF may_review %]
- <tr>
-  <td style="width: 5px; background-color: [% dark_color %]; white-space: nowrap;">&nbsp;</td>
-  <td style="width: 70px; white-space: nowrap; text-align: right;" colspan="2">
-     [% PROCESS 'list_button_header.tt2' %]
-      [% IF action == 'review' %]
-        <td style="width: 100%; background-color: [% selected_color %]; white-space: nowrap; text-align: right;">
-          <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Review[%END%]</strong></span>
-	</td>
-      [% ELSE %]
-        <td style="width: 100%; background-color: [% light_color %]; white-space: nowrap; text-align: right;">
-         <span style="font-size: smaller;"><strong>
-         <a href="[% path_cgi %]/review/[% list %]" >[%|loc%]Review[%END%]</a>
-         </strong></span>
-	</td>
-      [% END %]
-     [% PROCESS 'list_button_footer.tt2' %]
-  </td>
-  <td style="width: 40px;"></td>
- </tr>
- <tr>
-  <td style="width: 45px; background-color: [% dark_color %]; white-space: nowrap;" colspan="2">&nbsp;</td>
-  <td style="width: 70px;" colspan="2"><br /></td>
- </tr>
-    [% END %]
-</table>
+</div>
 <!-- end list_menu.tt2 -->

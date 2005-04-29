@@ -29,9 +29,7 @@
   [% ELSE %]
   <strong> [%|loc(fname)%]Describe the file %1[%END%]</strong><br />
   [% END %]
-  <textarea name="content" cols="50" rows="5">
-  </textarea>
-
+  <input size="50" maxlength="100" name="content" value="[% desc %]" />
   </label>
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% path %]" />
@@ -39,7 +37,7 @@
   <input type="hidden" name="action" value="d_describe" />
   </div>
   <div style="float: right; width: 35%; text-align: left;">
-<input size="50" maxlength="100" type="submit" name="action_d_describe" value="[%|loc%]Apply[%END%]" />
+  <input size="50" maxlength="100" type="submit" name="action_d_describe" value="[%|loc%]Apply[%END%]" />
   </div>
   </form>
   </td>
@@ -63,7 +61,7 @@
   <input type="hidden" name="action" value="d_rename" />
   </div>
   <div style="float: right; width: 35%; text-align: left;">
-  <input type="submit" name="action_d_rename" value="[%|loc%]Rename[%END%]" />
+  <input size="20" maxlength="50" type="submit" name="action_d_rename" value="[%|loc%]Rename[%END%]" />
   </div>
   </form>
   </td>

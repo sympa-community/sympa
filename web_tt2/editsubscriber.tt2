@@ -1,10 +1,10 @@
 <!-- $Id$ -->
 
 <form action="[% path_cgi %]" method="post">
-<table style="width: 100%;" border="0">
-<tr><th style="background: [% dark_color %];">
-<span style="color: [% bg_color %];">[%|loc%]Subscriber information[%END%]</span>
-</th></tr><tr><td>
+<h3 class="block">[%|loc%]Subscriber information[%END%]</h3>
+
+<table>
+<tr><td>
 <input type="hidden" name="previous_action" value="[% previous_action %]" />
 <input type="hidden" name="list" value="[% list %]" />
 <input type="hidden" name="email" value="[% current_subscriber.escaped_email %]" />

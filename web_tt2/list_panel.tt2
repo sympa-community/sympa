@@ -1,0 +1,30 @@
+<!-- $Id$ -->
+
+<!-- begin list_panel.tt2 -->
+
+<div class="MenuBlock">
+<strong><a class="menuLinksCurrentPage" href="[% path_cgi %]/info/[% list %]">[% list %]</a></strong><br />
+  <div style="text-align: center;">
+
+  <div style="text-align: left;">
+   [%|loc%]Subscribers:[%END%] <strong>[% total %]</strong><br />
+   [%|loc%]Owners[%END%]
+   [% FOREACH o = owner %]
+        [% o.value.mailto %]
+   [% END %]
+   <br />
+   [% IF is_moderated %]
+    [%|loc%]Moderators[%END%]
+    [% FOREACH e = editor %]
+        [% e.value.mailto %]
+    [% END %]
+   [% END %]
+   <br />
+
+   [% IF list_as_x509_cert %]<br /><a href="[% path_cgi %]/load_cert/[% list %]">[%|loc%]Load certificate[%END%]</a><br />[% END %]
+
+  </div>
+ </div>
+</div>
+
+<!-- end list_panel.tt2 -->

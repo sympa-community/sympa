@@ -1,14 +1,12 @@
 <form action="[% path_cgi %]" method="post"> 
 <input type="hidden" name="list" value="[% list %]" />
 
-    <table style="width: 100%;" border="1">
-      <tr style="background-color: [% dark_color %];">
-      <th><span style="color: [% bg_color %]; font-size: smaller;"><strong>X</strong></span></th>
-        <th style="white-space: nowrap;" colspan="2">
-	<span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]Email[%END%]</strong></span></th>
-        <th><span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]Name[%END%]</strong></span></th>
-        <th style="white-space: nowrap;">
-	<span style="color: [% bg_color %]; font-size: smaller;"><strong>[%|loc%]Date[%END%]</strong></span></th>
+    <table style="border: solid 1px; width: 95%; margin: 10px">
+      <tr style="background-color: [% color_4 %];">
+          <th style="padding: 3px; white-space: nowrap; border: solid 1px;">X</th>
+          <th style="padding: 3px; white-space: nowrap; border: solid 1px;" colspan="2">[%|loc%]Email[%END%]</th>
+          <th style="padding: 3px; white-space: nowrap; border: solid 1px;">[%|loc%]Name[%END%]</th>
+          <th style="padding: 3px; white-space: nowrap; border: solid 1px;">[%|loc%]Date[%END%]</th>
       </tr>
       
       [% IF subscriptions %]
@@ -16,9 +14,9 @@
       [% FOREACH sub = subscriptions %]
 
 	[% IF dark == '1' %]
-	  <tr style="background-color: [% shaded_color %];">
+	  <tr valign="top">
 	[% ELSE %]
-          <tr>
+          <tr style="background-color: [% color_0 %];" valign="top">
 	[% END %]
 	    <td>
            <input type="checkbox" name="pending_email" value="[% sub.key %],[% sub.value.gecos %]" />

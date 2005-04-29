@@ -41,37 +41,8 @@
 [% ELSIF notice.msg == 'subscribers_update_soon' %]
 [%|loc%]The list of list members will be built/updated soon (a few minutes).[%END%]
 
-[% ELSIF notice.msg == 'list_restored' %]
-[%|loc%]The list has been restored[%END%]
-
-[% ELSIF notice.msg == 'no_msg_document' %]
-[%|loc(notice.list)%]There isn't any message or document waiting for moderation on list %1[%END%]
-
-[% ELSIF notice.msg == 'performed_soon' %]
-[%|loc%]The requested action will be performed soon[%END%]
-
-[% ELSIF notice.msg == 'to_moderate' %]
-[%|loc(notice.path)%]The document %1 is awaiting moderation1[%END%]
-
-[% ELSIF notice.msg == 'list_closed' %]
-[%|loc%]The list has been closed[%END%]
-
-[% ELSIF notice.msg == 'list_purged' %]
-[%|loc%]The list has been purged (closing a pending list makes it purged)[%END%]
-
-[% ELSIF notice.msg == 'subscribers_updated_soon' %]
-[%|loc%]Subscribers will be updated soon[%END%]
-
-[% ELSIF notice.msg == 'subscribers_updated' %]
-[%|loc%]The subscribers have been updated[%END%]
-
-[% ELSIF notice.msg == 'you_have_been_authenticated' %]
-[%|loc%]You have been authenticated[%END%]
-
-[% ELSIF notice.msg == 'may_not_remove_arc' %]
-[%|loc%]You may not remove archive[%END%]
-
-
+[% ELSIF notice.msg == 'add_performed' %]
+[%|loc(notice.total)%]%1 addresses have been subscribed[%END%]
 
 [% ELSE %]
 [% notice.msg %]

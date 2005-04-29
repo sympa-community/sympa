@@ -1,0 +1,15 @@
+<!-- begin setlang.tt2 (distrib) -->
+<div class="smalltext"><br /><FORM ACTION="[% path_cgi %]" METHOD="POST">
+     <INPUT TYPE="hidden" NAME="action" VALUE="set_lang">
+     <INPUT TYPE="hidden" NAME="previous_action" VALUE="[% action %]">
+     <INPUT TYPE="hidden" NAME="previous_list" VALUE="[% list %]">
+     <SELECT NAME="lang" onchange="this.form.submit();">
+
+     [% FOREACH lang = languages %]
+     <OPTION VALUE="[% lang.key %]" [% lang.value.selected %]>[% lang.value.complete %]
+     [% END %]
+     </SELECT>
+     </FORM>
+</div>
+<br />
+<!-- end setlang.tt2 (distrib) -->

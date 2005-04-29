@@ -4,48 +4,36 @@
   [% INSERT $file IF file %]
 [% ELSE %]
 
-  [% IF expert_page %]
-    <form method="post" action="[% path_cgi %]">
-    <input type="submit" value="[%|loc%]Show user page [%END%]" name="action_d_read" />
-    <input type="hidden" name="previous_action" value="d_read" />
-    <input type="hidden" name="list" value="[% list %]" />
-    <input type="hidden" name="path" value="[% path %]" />
-    <input type="hidden" name="type" value="directory" />
-    <input type="hidden" name="action" value="d_read" />
-    <input type="hidden" name="show_user_page" value="1" />
-    </form>
-  [% ELSE %] 
-    [% IF has_dir_rights %]
-      <form method="post" action="[% path_cgi %]">
-      <input type="submit" value="[%|loc%]Show expert commands[%END%]" name="action_d_read" />
-      <input type="hidden" name="previous_action" value="d_read" />
-      <input type="hidden" name="list" value="[% list %]" />
-      <input type="hidden" name="path" value="[% path %]" />
-      <input type="hidden" name="type" value="directory" />
-      <input type="hidden" name="action" value="d_read" />
-      <input type="hidden" name="show_expert_page" value="1" />
-      </form>
-    [% END %]
-    <br/>
-  [% END %]  
+[% IF path %]  <span style="float: right"> <a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]">[%|loc%]Up to higher level directory[%END%]</a></span>
+[% END %]
 
-  [% IF path %]  
-     <table width="100%"><tr>
-      <td><h2><strong><img src="[% icons_url %]/folder.open.png" alt="" /> [% visible_path %] </strong> </h2> </td>
-      <td align="right"> <span style="font-size: larger;"> <a href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"> <img style="vertical-align: bottom; border: 0px;"  src="[% father_icon %]" alt="" /> [%|loc%]Up to higher level directory[%END%]</a></span></td>      
-    </tr></table>
-    <br /> 
+[% IF expert_page %]
+    <a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_user_page=1">[%|loc%]User mode[%END%]</a>
+    <a class="actionMenuLinksCurrentPage" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_expert_page=1">[%|loc%]Expert mode[%END%]</a>
+[% ELSE %] 
+    [% IF has_dir_rights %]
+    <a class="actionMenuLinksCurrentPage" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_user_page=1">[%|loc%]User mode[%END%]</a>
+    <a class="actionMenuLinks" href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?type=directory&previous_action=d_read&show_expert_page=1">[%|loc%]Expert mode[%END%]</a>
+    [% END %]
+[% END %]  
+
+[% IF path %]  
+
+<p><span style="padding: 3px; font-size: 2em;">[%|loc%]Listing of folder[%END%] [% visible_path %]</span></p>
 
     [% IF expert_page %]
+    <span style="float: right">
       [% IF may_edit %]
-    <a href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]', '[%|loc(visible_path)%]Do you really want to delete %1 ?[%END%]'); return false;">[%|loc%]delete[%END%]</a> |
-	 <a href="[% path_cgi %]/d_properties/[% list %]/[% escaped_path %]">[%|loc%]properties[%END%]</a> |
+    <a class="actionMenuLinks" href="[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]" onclick="request_confirm_link('[% path_cgi %]/d_delete/[% list %]/[% escaped_path %]', '[%|loc(visible_path)%]Do you really want to delete %1 ?[%END%]'); return false;">[%|loc%]delete[%END%]</a> 
+	 <a class="actionMenuLinks"  href="[% path_cgi %]/d_properties/[% list %]/[% escaped_path %]">[%|loc%]properties[%END%]</a>
       [% END %]
       [% IF may_control %]      
-        <a href="[% path_cgi %]/d_control/[% list %]/[% escaped_path %]">[%|loc%]access[%END%]</a>
+        <a  class="actionMenuLinks" href="[% path_cgi %]/d_control/[% list %]/[% escaped_path %]">[%|loc%]access[%END%]</a>
       [% END %]      
-      <br />
+	</span>
     [% END %]
+
+      <br />
 
     [%|loc(doc_owner)%]Owner : %1[%END%] <br />
     [%|loc(doc_date)%]Last update : %1[%END%] <br />
@@ -55,91 +43,53 @@
     
     <br />  
   [% ELSE %]
-    <h2> <strong> [%|loc%]Listing of folder SHARED[%END%] </strong> </h2> 
-  [% END %]
-   
-  <table style="width: 100%;">
-  <tr style="background: [% dark_color %];">
-   
-  <th><table style="width: 100%;"><tr><td style="text-align: left;"><span style="color: [% bg_color %];">[%|loc%]Document[%END%]</span></td>
-  [% IF order_by != 'order_by_doc' %]  
-    <td style="text-align: right;">
-    <form method="post" action="[% path_cgi %]">  
-    <input style="vertical-align: top; width: 15px; height: 15px;" type="image" src="[% sort_icon %]" alt="[%|loc%]Sort by name[%END%]" name="[%|loc%]Sort by name[%END%]" />
-    <input type="hidden" name="list" value="[% list %]" />
-    <input type="hidden" name="path" value="[% path %]" />
-    <input type="hidden" name="action" value="d_read" />
-    <input type="hidden" name="order" value="order_by_doc" />
-    </form>
-    </td>
-  [% END %]	
-  </tr></table>
-  </th>
+     
+   <p> <span style="padding: 3px; font-size: 2em;">[%|loc%]Listing of root folder[%END%]</span></p>
+  [% END %]   
+
+  <table style="border: solid 1px; width: 100%; margin-right: 10px">
+  <tr style="background-color: [% color_4 %];">
   
-  <th><table style="width: 100%;"><tr><td style="text-align: left;"><span style="color: [% bg_color %];">[%|loc%]Author[%END%]</span></td>
+  [% IF order_by != 'order_by_doc' %]  
+	<th style="padding: 3px; border: solid 1px; background: [% color_4 %]"><a href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?order=order_by_doc">[%|loc%]Document[%END%]</a> </th>
+  [% ELSE %]  
+        <th style="padding: 3px; border: solid 1px; background: [% color_6 %]">[%|loc%]Document[%END%]</th>
+  [% END %]
   [% IF order_by != 'order_by_author' %]  
-    <td style="text-align: right;">
-    <form method="post" action="[% path_cgi %]">  
-    <input style="vertical-align: top; width: 15px; height: 15px;"  type="image" src="[% sort_icon %]" alt="[%|loc%]Sort by author[%END%]" name="[%|loc%]Sort by author[%END%]" />
-    <input type="hidden" name="list" value="[% list %]" />
-    <input type="hidden" name="path" value="[% path %]" />
-    <input type="hidden" name="action" value="d_read" />
-    <input type="hidden" name="order" value="order_by_author" />
-    </form>	
-    </td>
+	<th style="padding: 3px; border: solid 1px; background: [% color_4 %]"><a href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?order=order_by_author">[%|loc%]Author[%END%]</a> </th>
+  [% ELSE %]  	
+        <th style="padding: 3px; border: solid 1px; background: [% color_6 %]">[%|loc%]Author[%END%]</span></td>
   [% END %]
-  </tr></table>
-  </th> 
-
-  <th><table style="width: 100%;"><tr><td style="text-align: left;"><span style="color: [% bg_color %];">[%|loc%]Size (Kb)[%END%]</span></td>
   [% IF order_by != 'order_by_size' %] 
-    <td style="text-align: right;">
-    <form method="post" action="[% path_cgi %]">
-    <input style="vertical-align: top; width: 15px; height: 15px;" type="image" src="[% sort_icon %]" alt="[%|loc%]Sort by size[%END%]" name="[%|loc%]Sort by size[%END%]" />
-    <input type="hidden" name="list" value="[% list %]" />
-    <input type="hidden" name="path" value="[% path %]" />
-    <input type="hidden" name="action" value="d_read" />
-    <input type="hidden" name="order" value="order_by_size" />
-    </form>
-    </td>
+	<th style="padding: 3px; border: solid 1px; background: [% color_4 %]"><a href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?order=order_by_size">[%|loc%]Size (Kb)[%END%]</a> </th>
+  [% ELSE %]  
+        <th style="padding: 3px; border: solid 1px; background: [% color_6 %]">[%|loc%]Size (Kb)[%END%]</th> 
   [% END %]
-  </tr></table>   
-  </th> 
-
-  <th><table style="width: 100%;"><tr><td style="text-align: left;"><span style="color: [% bg_color %];">[%|loc%]Last update[%END%]</span></td>
   [% IF order_by != 'order_by_date' %]
-    <td style="text-align: right;">
-    <form method="post" action="[% path_cgi %]">
-    <input style="vertical-align: top; width: 15px; height: 15px;" type="image" src="[% sort_icon %]" alt="[%|loc%]Sort by date[%END%]" name="[%|loc%]Sort by date[%END%]" />
-    <input type="hidden" name="list" value="[% list %]" />
-    <input type="hidden" name="path" value="[% path %]" />
-    <input type="hidden" name="action" value="d_read" />
-    <input type="hidden" name="order" value="order_by_date" />
-    </form>
-    </td>
+	<th style="padding: 3px; border: solid 1px; background: [% color_4 %]"><a href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]?order=order_by_date">[%|loc%]Last update[%END%]</a> </th>
+  [% ELSE %]  
+        <th style="padding: 3px; border: solid 1px; background: [% color_6 %]">[%|loc%]Last update[%END%]</span></td>
   [% END %]
-  </tr></table>  
-  </th> 
 
   [% IF expert_page %]
-  <td style="text-align: center;"><span style="color: [% bg_color %];">[%|loc%]Edit[%END%]</span></td> 
-  <td style="text-align: center;"><span style="color: [% bg_color %];">[%|loc%]Delete[%END%]</span></td>
-  <td style="text-align: center;"><span style="color: [% bg_color %];">[%|loc%]Access[%END%]</span></td>
-    <td style="text-align: center;"><span style="color: [% bg_color %];">[%|loc%]Properties[%END%]</span></td>
+   <th style="padding: 3px; border: solid 1px; background: [% color_4 %]">[%|loc%]Edit[%END%]</th> 
+   <th style="padding: 3px; border: solid 1px; background: [% color_4 %]">[%|loc%]Delete[%END%]</th>
+   <th style="padding: 3px; border: solid 1px; background: [% color_4 %]">[%|loc%]Access[%END%]</th>
+   <th style="padding: 3px; border: solid 1px; background: [% color_4 %]">[%|loc%]Properties[%END%]</th>
    [% IF is_editor %]
-     <td style="text-align: center;"><span style="color: [% bg_color %];">[%|loc%]Moderation[%END%]</span></td>
-    [% END %]
+     <th style="padding: 3px; border: solid 1px; background: [% color_4 %]">[%|loc%]Moderation[%END%]</th>
+   [% END %]
   [% END %]
   </tr>
       
   [% IF empty %]
-    <tr style="background: [% light_color %]; vertical-align: top;">
-    <td colspan="8" style="text-align: center;"> [%|loc%]Empty folder[%END%] </td>
+    <tr style="background: [% color_0 %]; vertical-align: top;">
+    <td colspan="9" style="text-align: center;"> [%|loc%]Empty folder[%END%] </td>
     </tr>
   [% ELSE %]   
     [% IF sort_subdirs %]
       [% FOREACH s = sort_subdirs %]
-        <tr style="background: [% light_color %];">        
+        <tr style="background: [% color_0 %];">        
 	[% IF escaped_path %]
 	  <td style="white-space: nowrap;"> <a href="[% path_cgi %]/d_read/[% list %]/[% escaped_path %]/[% s.escaped_doc %]/"> 
 	[% ELSE %]
@@ -212,7 +162,7 @@
          <tr style="background: [% bg_color %];">
 	  [% END %]
 	[% ELSE %]
-         <tr style="background: [% light_color %];"> 
+         <tr style="background: [% color_0 %];"> 
         [% END %]
         
         [% IF f.html %]
@@ -272,12 +222,12 @@
 	 
 	[% IF f.moderate %]
 	  [% IF expert_page %]
-	<td style="white-space: nowrap;">&nbsp;
-	[% IF !f.url %]
-	[% f.size %] 
-	[% END %]
-	</td>
-	<td style="white-space: nowrap;"> [% f.date %] </td>
+   	     <td style="white-space: nowrap;">&nbsp;
+	     [% IF !f.url %]
+	       [% f.size %] 
+	     [% END %]
+	     </td>
+	     <td style="white-space: nowrap;"> [% f.date %] </td>
 	  [% END %]
 	[% ELSE %]
 	  <td style="white-space: nowrap;">&nbsp;
@@ -368,7 +318,7 @@
     [% ELSE %]
       <strong> [%|loc%]Create a new folder inside the folder SHARED[%END%]</strong> <br />
     [% END %]
-    <input size="30" maxlength="100" type="text" name="name_doc" /></label>
+    <input maxlength="30" type="text" name="name_doc" /></label>
     </div>
     <div style="float: right; width: 35%; text-align: left;">
     <input type="submit" value="[%|loc%]Create a new subdirectory[%END%]" name="action_d_create_dir" />
@@ -390,7 +340,7 @@
     <div style="float: left; width: 60%; text-align: right;">
     <label>
       <strong> [%|loc%]Create a new file[%END%]</strong> <br />
-    <input size="30" maxlength="100" type="text" name="name_doc" /></label>
+    <input maxlength="30" type="text" name="name_doc" /></label>
     </div>
 
     <div style="float: right; width: 35%; text-align: left;">
@@ -411,8 +361,8 @@
     <form method="post" action="[% path_cgi %]">
     <div style="float: left; width: 60%; text-align: right;">
     <strong>[%|loc%]Add a bookmark[%END%]</strong><br />
-    <label>[%|loc%]title[%END%] <input maxlength="100" size="30" type="text" name="name_doc" /></label><br />
-    <label>[%|loc%]URL[%END%] <input maxlength="200" size="30" type="text" name="url" /></label>
+    <label>[%|loc%]title[%END%] <input maxlength="100" size="20" type="text" name="name_doc" /></label><br />
+    <label>[%|loc%]URL[%END%] <input maxlength="100" size="25" type="text" name="url" /></label>
     </div>
     <div style="float: right; width: 35%; text-align: left;">
     <input type="submit" value="[%|loc%]Add[%END%]" name="action_d_savefile" />

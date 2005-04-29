@@ -3,8 +3,19 @@
 <!-- begin login_menu.tt2 -->
 
 [% IF user.email %]
-   [% IF auth_method == 'md5' %]
-      <div class="MenuBlock">
+
+<div class="MenuBlock">
+<div id="Identity" style="text-align: left; font-size: 12px; font-weight: bold; ">[% user.email %]<br />
+[% IF is_listmaster %][%|loc%]Listmaster[%END%]
+[% ELSIF is_privileged_owner %][%|loc%]Privileged owner[%END%]
+[% ELSIF is_owner %][%|loc%]Owner[%END%]
+[% ELSIF is_editor %][%|loc%]Editor[%END%]
+[% ELSIF is_subscriber %][%|loc%]Subscriber[%END%]
+[% END %]
+</div>
+
+  [% IF auth_method == 'md5' %]
+	<br />
 	<form action="[% path_cgi %]" method="post">
 	<input type="hidden" name="action" value="logout" />
         [% IF referer %]
@@ -13,11 +24,12 @@
           <input type="hidden" name="previous_action" value="[% home %]" />
         [% END %]
         <input type="submit" name="action_logout" value="[%|loc%]Logout[%END%]" />
-      </div>
+	</form>
    [% END %]
+      </div><!-- end div=MenuBlock -->
 [% ELSE %]
       <div class="MenuBlock">
-      <ul>
+      
       <form action="[% path_cgi %]" method="post"> 
         <input type="hidden" name="previous_action" value="[% previous_action %]" />
         <input type="hidden" name="previous_list" value="[% previous_list %]" />
@@ -26,12 +38,12 @@
         [% IF use_sso %]
 	  <input type="hidden" name="action" value="sso_login" />
           [% IF sso_number == '1' %]
-     	    <strong><div id="menuInactive2">[%|loc%]Magic authentification[%END%]</div></strong>
+     	    <strong><div class="menuInactive2">[%|loc%]Magic authentification[%END%]</div></strong>
             [% FOREACH server = sso %]
               <input type="hidden" name="auth_service_name" value="[% server.key %]" />
             [% END %]
           [% ELSE %]
-     	    <strong><div id="menuInactive2">[%|loc%]Choose your authentication server[%END%]</div></strong>
+     	    <strong><div class="menuInactive2">[%|loc%]Choose your authentication server[%END%]</div></strong>
             <select name="auth_service_name" onchange="this.form.submit();">
             [% FOREACH server = sso %]
                <option value="[% server.key %]">[% server.value %]</option>
@@ -43,19 +55,19 @@
 
       <input type="hidden" name="action" value="login" />
       <label for="email">[%|loc%]email address[%END%] :<br />
-      <input type="text" name="email" id="email" size="20" value="[% init_email %]" /></label><br />
+      <input type="text" name="email" id="email" size="18" value="[% init_email %]" /></label><br />
       <label for="passwd" >[%|loc%]password[%END%] :<br />
       <input type="password" name="passwd" id="passwd" size="8" /></label> &nbsp;&nbsp;
       <input type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
       </form>
 
-      <ul>
-         <li><a class="menuLinks" href="[% path_cgi %]/sendpasswd/[% escaped_init_email %]">[%|loc%]First login ?[%END%]</a></li>
+      <br />
+         <a class="menuLinks" href="[% path_cgi %]/sendpasswd/[% escaped_init_email %]">[%|loc%]First login ?[%END%]</a><br />
 <!--           <li><a class="menuLinks" href="[% path_cgi %]/remindpasswd/referer/[% referer %]">[%|loc%]Lost password ?[%END%]</a></li> -->
-           <li><a class="menuLinks" href="[% path_cgi %]/remindpasswd">[%|loc%]Lost password ?[%END%]</a></li>
-      </ul>
+         <a class="menuLinks" href="[% path_cgi %]/remindpasswd">[%|loc%]Lost password ?[%END%]</a>
 
-       </div>
+
+       </div><!-- end div=MenuBlock -->
 
 [% END %]
 

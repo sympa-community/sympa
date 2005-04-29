@@ -54,6 +54,8 @@ my @valid_options = qw(
                        openssl capath cafile  key_passwd ssl_cert_dir remove_headers
 		       antivirus_path antivirus_args antivirus_notify anonymous_header_fields sendmail_aliases
 		       dark_color light_color text_color bg_color error_color selected_color shaded_color
+		       color_0 color_1 color_2 color_3 color_4 color_5 color_6 color_7 color_8 color_9 color_10 color_11 color_12 color_13 color_14 color_15
+ 		       css_url css_path
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
 		       ldap_export_dnmanager ldap_export_connection_timeout urlize_min_size
 		       list_check_smtp list_check_suffixes  spam_protection web_archive_spam_protection soap_url
@@ -148,13 +150,29 @@ my %Default_Conf =
      'antivirus_args' => '',
      'antivirus_notify' => 'sender',
      'anonymous_header_fields' => 'Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender',
-     'dark_color' => '#330099',
-     'light_color' => '#ccccff',
+     'dark_color' => 'silver',
+     'light_color' => '#aaddff',
      'text_color' => '#000000',
-     'bg_color' => '#ffffff',
+     'bg_color' => '#ffffcc',
      'error_color' => '#ff6666',
-     'selected_color' => '#3366cc',
-     'shaded_color' => '#eeeeee',
+     'selected_color' => 'silver',
+     'shaded_color' => '#66cccc',
+     'color_0' => '#F0F0F0', # very light grey use in tables
+     'color_1' => '#999', # main menu button color                       
+     'color_2' => '#333', # font color                                   
+     'color_3' => '#929292', # top boxe and footer box bacground color   
+     'color_4' => 'silver', #  page backgound color                      
+     'color_5' => '#fff', # ??                                           
+     'color_6' => '#99ccff', # list menu current button                  
+     'color_7' => '#88bbdd', # main menu, button on mouse over,          
+     'color_8' => '#3366CC', #                                           
+     'color_9' => '#DEE7F7',
+     'color_10' => '#777777', # inactive button
+     'color_11' => '#3366CC', #                                          
+     'color_12' => '#000',
+     'color_13' => '#ffffcc',                                        # input backgound  | transparent
+     'color_14' => '#000',
+     'color_15' => '#000',
      'chk_cert_expiration_task' => '',
      'crl_update_task' => '',
      'ldap_export_name' => '',
@@ -182,6 +200,8 @@ my %Default_Conf =
      'default_bounce_level1_rate' => 45,
      'default_bounce_level2_rate' => 75,
      'soap_url' => '',
+     'css_url' => '',
+     'css_path' => '',
      'urlize_min_size' => 10240, ## 10Kb
      'supported_lang' => 'fr,en_US,hu,it',
      'web_recode_to' => '',
@@ -382,6 +402,11 @@ sub load_robots {
 				  bounce_level1_rate => 1,
 				  bounce_level2_rate => 1,
 				  soap_url => 1,
+				  css_url => 1,
+ 				  css_path => 1,
+ 				  color_0 => 1, color_2 => 1, color_3 => 1, color_4 => 1, color_5 => 1,color_6 => 1, 
+				  color_7 => 1, color_8 => 1, color_9 => 1,color_7 => 1, color_8 => 1, color_9 => 1,
+				  color_10 => 1, color_11 => 1, color_12 => 1,color_13 => 1, color_14 => 1, color_15 => 1,
 				  supported_lang => 1,
 				  default_shared_quota => 1,
 				  );

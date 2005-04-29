@@ -1,0 +1,59 @@
+<!-- $Id$ -->
+
+<!-- begin list_admin_menu.tt2 -->
+
+[% IF action == 'admin' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<strong><a class="[% class %]" href="[% path_cgi %]/admin/[% list %]">Admin</a></strong><br />
+<ul class="menuLinks">
+
+[% IF action == 'edit_list_request' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<li><a class="[% class %]" href="[% path_cgi %]/edit_list_request/[% list %]">[%|loc%]Edit List Config[%END%]</a></li>
+
+[% IF mod_total == '0' %]
+<li><div class="menuInactive">[%|loc%]No message to moderate[%END%]</div></li>
+[% ELSE %]
+  [% IF is_editor %]
+     [% IF action == 'modindex' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+       <li><a class="[% class %]" href="[% path_cgi %]/modindex/[% list %]">[%|loc%]Moderate[%END%]</a> ([% mod_total %]) </li>
+  [% ELSE %]       
+       <li><div class="menuInactive">[%|loc%]Messages to moderate :[%END%][% mod_total %]</div></li>
+  [% END %]
+[% END %]
+	
+[% IF is_owner %]
+[% IF action == 'editfile' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<li><a class="[% class %]" href="[% path_cgi %]/editfile/[% list %]">[%|loc%]Customizing[%END%]</a></li>
+[% END %]
+
+[% IF is_archived %]
+[% IF action == 'arc_manage' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<li><a class="[% class %]"  href="[% path_cgi %]/arc_manage/[% list %]">[%|loc%]Manage Archives[%END%]</a></li>
+[% END %]
+
+[% IF is_owner %]
+[% IF action == 'reviewbouncing' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<li><a class="[% class %]" href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Bounces[%END%]</a></li>
+[% END %]
+
+[% IF shared == 'none' %]
+<li><a class="menuLinks" href="[% path_cgi %]/d_admin/[% list %]/create">[%|loc%]Create Shared[%END%]</a></li> 
+[% ELSIF shared == 'exist' %]
+<li><a class="menuLinks" href="[% path_cgi %]/d_admin/[% list %]/delete">[%|loc%]Delete Shared[%END%]</a></li> 
+[% ELSIF shared == 'deleted' %]
+<li><a class="menuLinks" href="[% path_cgi %]/d_admin/[% list %]/create">[%|loc%]Restore shared[%END%]</a></li> 
+[% END %]
+
+[% IF is_privileged_owner %]        
+  [% IF list_conf.status == 'closed' %]
+     <li><a class="menuLinks" href="[% path_cgi %]/restore_list/[% list %]" >[%|loc%]Restore List[%END%]</a></li> 
+  [% ELSE %]
+     <li><a class="menuLinks" href="[% path_cgi %]/close_list/[% list %]" onclick="request_confirm_link('[% path_cgi %]/close_list/[% list %]', '[%|loc(list)%]Are you sure you wish to close %1 list ?[%END%]'); return false;">[%|loc%]Remove List[%END%]</a></li>
+  [% END %]
+  [% IF may_create_list %]
+      <li><a class="menuLinks" href="[% path_cgi %]/rename_list_request/[% list %]">[%|loc%]Rename List[%END%]</a></li>
+  [% END %]
+[% END %]
+</ul>
+<!-- end list_admin_menu.tt2 -->
+
+
