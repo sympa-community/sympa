@@ -1265,7 +1265,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 foreach my $one_p (split /\0/, $in{$p}) {
 	     unless ($one_p =~ /^$regexp$/m) {
 		 ## Dump parameters in a tmp file for later analysis
-		 my $dump_file = '/tmp/sympa_dump.'.time.'.'.$$;
+		 my $dump_file =  &Conf::get_robot_conf($robot, 'tmpdir').'/sympa_dump.'.time.'.'.$$;
 		 unless (open DUMP, ">$dump_file") {
 		     &wwslog('err','get_parameters: failed to create %s : %s', $dump_file, $!);		     
 		 }
