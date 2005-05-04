@@ -1554,7 +1554,18 @@ sub get_dir_size {
 sub valid_email {
     my $email = shift;
     
-    $email =~ /^$tools::regexp{'email'}$/;
+    unless ($email =~ /^$tools::regexp{'email'}$/) {
+	do_log('err', "Invalid email address '%s'", $email);
+	return undef;
+    }
+    
+    ## Forbidden characters
+    if ($email =~ /[\|\$\*\?\!]/) {
+	do_log('err', "Invalid email address '%s'", $email);
+	return undef;
+    }
+
+    return 1;
 }
 
 ## Clean email address

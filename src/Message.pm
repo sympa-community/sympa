@@ -92,6 +92,11 @@ sub new {
     }
     $message->{'sender'} = lc($sender_hdr[0]->address);
 
+    unless (&tools::valid_email($message->{'sender'})) {
+	do_log('err', "Invalid From: field '%s'", $message->{'sender'});
+	return undef;
+    }
+
     ## Store decoded subject
     my @decoded_subject =  &MIME::Words::decode_mimewords($hdr->get('Subject'));
     foreach my $token (@decoded_subject) {
