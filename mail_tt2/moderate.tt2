@@ -12,11 +12,13 @@ Content-transfer-encoding: [%|loc%]_encoding_[%END%]
 [% IF method == 'md5' -%]
 [%|loc(list.name)%]To distribute the attached message in list %1:[%END%]
 mailto:[% conf.email %]@[% conf.host %]?subject=DISTRIBUTE%20[% list.name %]%20[% modkey %]
+
 [%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject :[%END%]
 DISTRIBUTE [% list.name %] [% modkey %]
 
 [%|loc%]To reject it (it will be removed):[%END%]
 mailto:[% conf.email %]@[% conf.host %]?subject=REJECT%20[% list.name %]%20[% modkey %]
+
 [%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject :[%END%]
 REJECT [% list.name %] [% modkey %]
 [% END %]
