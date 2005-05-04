@@ -471,7 +471,7 @@ my %in_regexp = (
 		 'family_name' => $tools::regexp{'family_name'},
 
 		 ## Email addresses
-		 'email' => $tools::regexp{'email'},
+		 'email' => $tools::regexp{'email'}.'|'.$tools::regexp{'uid'},
 		 'init_email' => $tools::regexp{'email'},
 		 'new_alternative_email' => $tools::regexp{'email'},
 		 'new_email' => $tools::regexp{'email'},

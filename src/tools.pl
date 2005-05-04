@@ -50,7 +50,8 @@ $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------"
 	   'sql_query' => '(SELECT|select).*',
 	   'scenario' => '[\w,\.\-]+',
 	   'task' => '\w+',
-	   'datasource' => '[\w-]+'
+	   'datasource' => '[\w-]+',
+	   'uid' => '[\w\-\.\+]+',
 	   );
 
 my %openssl_errors = (1 => 'an error occurred parsing the command options',
