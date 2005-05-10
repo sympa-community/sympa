@@ -1,57 +1,46 @@
 <!-- $Id$ -->
 
-<br />
 <p style="text-align: justify;">
 [%|loc(conf.email,conf.host)%]This server provides you access to your environment on mailing list server %1@%2. Starting from this URL, you can perform subscription options, unsubscription,
 archives, list management and so on.[%END%]
 </p>
-<br /><br />
+<br />
 
    <h1 class="block">[%|loc%]Mailing lists categories[%END%]</h1>
+<br />
 
+<div style="padding: 10px; margin: 0px; border: 1px dashed [% color_2 %];">
 
-<table border="0" style="margin-left: auto; margin-right: auto;">
- <tr>
-  <td>
-   <table border="0" cellpadding="3"><tr valign="top">
-    <td style="width: 33%; white-space: nowrap;">
-     [% FOREACH topic = topics %]
-      o
+<div style="padding: 10px; margin-top: 5px; margin-bottom: 5px; margin-left: 25px; margin-right: 25px; float: right;">
+<ul>
+    [% FOREACH topic = topics %]
       [% IF topic.id == 'topicsless' %]
-       <a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[%|loc%]Others[%END%]</strong></a><br />
+       <li><a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[%|loc%]Others[%END%]</strong></a></li>
       [% ELSE %]
-       <a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[% topic.current_title %]</strong></a><br />
+       <li><a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[% topic.current_title %]</strong></a></li>
       [% END %]
 
       [% IF topic.sub %]
+      <ul style="list-style: none;">
       [% FOREACH subtopic = topic.sub %]
-       <span style="font-size: smaller;">
-	&nbsp;&nbsp;<a href="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]">[% subtopic.value.current_title %]</a><br />
-       </span>
+       <li><span style="font-size: smaller;"><a href="[% path_cgi %]/lists/[% topic.id %]/[% subtopic.key %]">[% subtopic.value.current_title %]</a></span></li>
       [% END %]
+      </ul>
       [% END %]
       [% IF topic.next %]
-	</td><td></td><td style="width: 33%; white-space: nowrap;">
+</ul></div>
+<div style="padding: 10px; margin: 25px; float: left;"><ul>
       [% END %]
-     [% END %]
-    </td>	
-   </tr>
-   <tr>
-<td style="width: 100%;"></td>
-<td style="white-space: nowrap;">
-	<div>
-        <form action="[% path_cgi %]" method="post"> 
-         <input size="25" name="filter" value="[% filter %]" />
-         <input type="hidden" name="action" value="search_list" />
-         <input type="submit" name="action_search_list" value="[%|loc%]Search lists[%END%]" />
-	  <br />
-        </form>
-	</div>
-        
-   </td></tr>
-  </table>
- </td>
-</tr>
-</table>
+    [% END %]
+</ul>
+</div>
 
-<br /><br />
+<div style="clear: both;">
+ <form action="[% path_cgi %]" method="post"> 
+    <input size="25" name="filter" value="[% filter %]" />
+    <input type="hidden" name="action" value="search_list" />
+    <input type="submit" name="action_search_list" value="[%|loc%]Search lists[%END%]" />
+    <br />
+ </form>
+</div></div>
+<br />
