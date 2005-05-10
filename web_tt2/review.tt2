@@ -2,15 +2,20 @@
 
 [% IF action != 'search' %]
 <div style="float: right;">
+page size
+  <form action="[% path_cgi %]">
   <input type="hidden" name="sortby" value="[% sortby %]" />
-  <input type="submit" name="action_review" value="[%|loc%]Page size[%END%]" />
-  <select name="size">
-                  <option value="[% size %]" selected="selected">[% size %]</option>
-		  <option value="25">25</option>
-		  <option value="50">50</option>
-		  <option value="100">100</option>
-		   <option value="500">500</option>
+  <input type="hidden" name="action" value="review" />
+  <input type="hidden" name="list" value="[% list %]" />
+  <select name="size" onchange="this.form.submit();">
+          <option value="[% size %]" selected="selected">[% size %]</option>
+	  <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+	  <option value="500">500</option>
   </select>
+  </form>
+<br />
    [% IF prev_page %]
     <a href="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" style="border: 0px;" alt="[%|loc%]Previous page[%END%]" /></a>
    [% END %]
@@ -30,7 +35,7 @@
   <a class="actionMenuLinks" href="[% path_cgi %]/sync_include/[% list %]" >[%|loc%]Synchronize members with data sources[%END%]</a>
   [% END %]
   <a class="actionMenuLinks" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Pending subscriptions[%END%]</a> 
-  <a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a> 
+  <a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a> <br />
   <a class="actionMenuLinks" href="[% path_cgi %]/remind/[% list %]" onclick="request_confirm_link('[% path_cgi %]/remind/[% list %]', '[%|loc(total)%]Do you really want to send a subscription remind message to the %1 subscribers ?[%END%]'); return false;">[%|loc%]Remind all subscribers[%END%]</a>
   <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/light">[%|loc%]Dump[%END%]</a>
 
