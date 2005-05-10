@@ -36,6 +36,7 @@ CALENDAR
 
 <DefineVar>
 SEARCH_FORM
+     <div style="float: right">
 	<form method="post" action="($tag$% path_cgi %$tag$)">
 	<input name="list" type="hidden" value="($tag$% list %$tag$)" />
 	<input name="archive_name" type="hidden" value="($tag$% archive_name %$tag$)" />
@@ -50,15 +51,15 @@ SEARCH_FORM
 	<input name="action"  type="hidden" value="arcsearch" />
 	<input type="submit" name="action_arcsearch" value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" /> &nbsp;
 	<input type="submit" name="action_arcsearch_form" value="($tag$%|loc%$tag$)Advanced search($tag$%END%$tag$)" />
-
 	</form>
+    </div>
 </DefineVar>
 
 <DefineVar>
 TOP_PANEL
 <div id="ActionHeader">
-   $CALENDAR$
    $SEARCH_FORM$
+   $CALENDAR$
    <div style="text-align: center;"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
    Pages navigation : <br />
 </div>
@@ -180,8 +181,8 @@ IDXPGEND
 
 <!-- begin header -->
 <div id="ActionHeader">
-   $CALENDAR$
    $SEARCH_FORM$
+   $CALENDAR$
    <div style="text-align: center;"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
    Pages navigation : <br />
 
@@ -278,8 +279,8 @@ TIDXPGEND
 <THEAD>
 <!-- begin header -->
 <div id="ActionHeader">
-   $CALENDAR$
    $SEARCH_FORM$
+   $CALENDAR$
    <div style="text-align: center"><strong>$PRINTABLE_MONTH$&nbsp;&nbsp;&nbsp;$NUMOFMSG$ ($tag$%|loc%$tag$)mails($tag$%END%$tag$)</strong></div><br />
    Pages navigation : <br />
 

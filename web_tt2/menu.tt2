@@ -13,14 +13,6 @@
    <li><a  class="[% class %]" href="[% path_cgi %]/serveradmin" >[%|loc%]Sympa admin[%END%]</a></li>
 [% END %]
 
-[% IF user.email %]
-    [% IF action == 'pref' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
-        <li><a class="[% class %]" href="[% path_cgi %]/pref/[% action %]/[% list %]">[%|loc%]Preferences[%END%]</a></li>
-
-    [% IF action == 'which' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
-    <li><a class="[% class %]" href="[% path_cgi %]/which" >[%|loc%]Your subscriptions[%END%]</a></li>
-[% END %]
-
  [% IF action == 'lists' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
 <li><a class="[% class %]" href="[% path_cgi %]/lists">[%|loc%]list of lists[%END%]</a></li>
 

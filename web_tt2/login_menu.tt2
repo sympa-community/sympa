@@ -1,11 +1,9 @@
 <!-- RCS Identication ; $Revision$ ; $Date$ -->
 
 <!-- begin login_menu.tt2 -->
-
-[% IF user.email %]
-
 <div class="MenuBlock">
-<div id="Identity" style="text-align: left; font-size: 12px; font-weight: bold; ">[% user.email %]<br />
+[% IF user.email %]
+<div id="Identity" style="text-align: left; font-size: 12px;">[% user.email %]<br />
 [% IF is_listmaster %][%|loc%]Listmaster[%END%]
 [% ELSIF is_privileged_owner %][%|loc%]Privileged owner[%END%]
 [% ELSIF is_owner %][%|loc%]Owner[%END%]
@@ -14,21 +12,25 @@
 [% END %]
 </div>
 
-  [% IF auth_method == 'md5' %]
-	<br />
-	<form action="[% path_cgi %]" method="post">
-	<input type="hidden" name="action" value="logout" />
-        [% IF referer %]
+[% IF auth_method == 'md5' %]
+  <form action="[% path_cgi %]" method="post">
+  <input type="hidden" name="action" value="logout" />
+  [% IF referer %]
           <input type="hidden" name="referer" value="[% referer %]" />
-        [% ELSE %]
+  [% ELSE %]
           <input type="hidden" name="previous_action" value="[% home %]" />
-        [% END %]
-        <input type="submit" name="action_logout" value="[%|loc%]Logout[%END%]" />
-	</form>
-   [% END %]
-      </div><!-- end div=MenuBlock -->
+  [% END %]
+  <input type="submit" name="action_logout" value="[%|loc%]Logout[%END%]" />
+  </form>
+[% END %]
+<br />
+[% IF action == 'pref' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<strong><a class="[% class %]" href="[% path_cgi %]/pref" >[%|loc%]Preferences[%END%]</a></strong><br />
+
+[% IF action == 'which' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<strong><a class="[% class %]" href="[% path_cgi %]/which" >[%|loc%]Your subscriptions[%END%]</a></strong>
+
 [% ELSE %]
-      <div class="MenuBlock">
       
       <form action="[% path_cgi %]" method="post"> 
         <input type="hidden" name="previous_action" value="[% previous_action %]" />
@@ -66,10 +68,8 @@
 <!--           <li><a class="menuLinks" href="[% path_cgi %]/remindpasswd/referer/[% referer %]">[%|loc%]Lost password ?[%END%]</a></li> -->
          <a class="menuLinks" href="[% path_cgi %]/remindpasswd">[%|loc%]Lost password ?[%END%]</a>
 
-
-       </div><!-- end div=MenuBlock -->
-
 [% END %]
+</div><!-- end div=MenuBlock -->
 
 
 <!-- end login_menu.tt2 -->
