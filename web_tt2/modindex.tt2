@@ -4,23 +4,33 @@
 <!-- moderation of messages -->
   <form action="[% path_cgi %]" method="post">
   <input type="hidden" name="list" value="[% list %]" />
-  <h2> <strong> [%|loc%]Listing messages to moderate[%END%] </strong> </h2>
+<p><span style="padding: 3px; font-size: 2em;">[%|loc%]Listing messages to moderate[%END%]</span></p>
 <table>
 <tr style="background-color: [% bg_color %];"><td>
   <input type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
   <input type="submit" name="action_reject.quiet" value="[%|loc%]Reject[%END%]" />
   <input type="submit" name="action_reject" value="[%|loc%]Notified reject[%END%]" />
 </td></tr></table>  
-    <table border="1" style="width: 100%;">
-      <tr style="background-color: [% dark_color %];">
-	<th><span style="color: [% bg_color %];">X</span></th>
-        <th><span style="color: [% bg_color %];">[%|loc%]Date[%END%]</span></th>
-	<th><span style="color: [% bg_color %];">[%|loc%]Author[%END%]</span></th>
-	<th><span style="color: [% bg_color %];">[%|loc%]Subject[%END%]</span></th>
-	<th><span style="color: [% bg_color %];">[%|loc%]Size[%END%]</span></th>
+
+
+ <table style="border: solid 1px; width: 95%; margin: 10px">
+      <tr style="background-color: [% color_4 %];">
+
+	<th style="padding: 3px; border: solid 1px;"><span style="text-align: center;">X</span></th>
+        <th style="padding: 3px; border: solid 1px;"><span style="text-align: center;">[%|loc%]Date[%END%]</span></th>
+	<th style="padding: 3px; border: solid 1px;"><span style="text-align: center;">[%|loc%]Author[%END%]</span></th>
+	<th style="padding: 3px; border: solid 1px;"><span style="text-align: center;">[%|loc%]Subject[%END%]</span></th>
+	<th style="padding: 3px; border: solid 1px;"><span style="text-align: center;">[%|loc%]Size[%END%]</span></th>
       </tr>	 
       [% FOREACH msg = spool %]
-        <tr>
+        [% IF dark == '1' %]
+	  [% dark = '0' %]
+	  <tr valign="top">
+	[% ELSE %]
+	  [% dark = '1' %]
+          <tr style="background-color: [% color_0 %];" valign="top">
+	[% END %]
+
          <td>
             <input type="checkbox" name="id" value="[% msg.key %]" />
 	 </td>

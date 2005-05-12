@@ -10266,6 +10266,26 @@ sub get_subscription_requests {
     return \%subscriptions;
 } 
 
+sub get_subscription_request_count {
+    my ($self) = shift;
+    do_log('debug2', 'List::get_subscription_requests_count(%s)', $self->{'name'});
+
+    my %subscriptions;
+    my $i = 0 ;
+
+    unless (opendir SPOOL, $Conf{'queuesubscribe'}) {
+	&do_log('info', 'Unable to read spool %s', $Conf{'queuemod'});
+	return undef;
+    }
+
+    foreach my $filename (sort grep(/^$self->{'name'}\.\d+\.\d+$/, readdir SPOOL)) {
+	$i++;
+    }
+    closedir SPOOL;
+
+    return $i;
+} 
+
 sub delete_subscription_request {
     my ($self, $email) = @_;
     do_log('debug2', 'List::delete_subscription_request(%s, %s)', $self->{'name'}, $email);

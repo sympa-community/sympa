@@ -302,131 +302,95 @@
   [% END %]
   </table>	        
  
-<table cellspacing="0" cellpadding="0" border="0" style="width: 100%;">
-   
+  <br />
   [% IF expert_page %] 
   [% IF may_edit %]
-   [% IF total_edit %]
-    <tr>
-    <td valign="bottom">
-    <hr /> 
+   [% IF total_edit %]    
+    <div class="block">
     <form method="post" action="[% path_cgi %]">
-    <div style="float: left; width: 60%; text-align: right;">
-    <label>
+    <strong>
     [% IF path %]
-      <strong> [%|loc(visible_path)%]Create a new folder inside the folder %1[%END%]</strong> <br />
+      [%|loc(visible_path)%]Create a new folder inside the folder %1[%END%]
     [% ELSE %]
-      <strong> [%|loc%]Create a new folder inside the folder SHARED[%END%]</strong> <br />
+      [%|loc%]Create a new folder inside the folder SHARED[%END%]
     [% END %]
-    <input maxlength="30" type="text" name="name_doc" /></label>
-    </div>
-    <div style="float: right; width: 35%; text-align: left;">
-    <input type="submit" value="[%|loc%]Create a new subdirectory[%END%]" name="action_d_create_dir" />
+    </strong> <br />
+    <label>[%|loc%]Folder name[%END%] <input maxlength="30" type="text" name="name_doc" /></label>
+    <input type="submit" value="[%|loc%]Create[%END%]" name="action_d_create_dir" />
     <input type="hidden" name="previous_action" value="d_read" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% path %]" />
     <input type="hidden" name="type" value="directory" />
     <input type="hidden" name="action" value="d_create_dir" />
-    </div>
     </form>
-    </td>
-    </tr>
+    </div><br/>
     [% END %]
 
-    <tr>
-    <td valign="bottom">
-    <hr /> 
+    <div class="block">
     <form method="post" action="[% path_cgi %]">
-    <div style="float: left; width: 60%; text-align: right;">
-    <label>
-      <strong> [%|loc%]Create a new file[%END%]</strong> <br />
-    <input maxlength="30" type="text" name="name_doc" /></label>
-    </div>
-
-    <div style="float: right; width: 35%; text-align: left;">
-    <input type="submit" value="[%|loc%]Create a new file[%END%]" name="action_d_create_dir" />
+    <strong> [%|loc%]Create a new file[%END%]</strong> <br />
+    <label>[%|loc%]File name[%END%] <input maxlength="30" type="text" name="name_doc" /></label>
+    <input type="submit" value="[%|loc%]Create[%END%]" name="action_d_create_dir" />
     <input type="hidden" name="previous_action" value="d_read" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% path %]" />
     <input type="hidden" name="type" value="file" />
     <input type="hidden" name="action" value="d_create_dir" />
-    </div>
     </form>
-    </td>
-    </tr>
+    </div>
 
-    <tr>
-    <td valign="bottom">
-    <hr /> 
+    <br /><div class="block">
     <form method="post" action="[% path_cgi %]">
-    <div style="float: left; width: 60%; text-align: right;">
     <strong>[%|loc%]Add a bookmark[%END%]</strong><br />
     <label>[%|loc%]title[%END%] <input maxlength="100" size="20" type="text" name="name_doc" /></label><br />
     <label>[%|loc%]URL[%END%] <input maxlength="100" size="25" type="text" name="url" /></label>
-    </div>
-    <div style="float: right; width: 35%; text-align: left;">
     <input type="submit" value="[%|loc%]Add[%END%]" name="action_d_savefile" />
     <input type="hidden" name="previous_action" value="d_read" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% path %]" />
     <input type="hidden" name="action" value="d_savefile" />
-    </div>
     </form>
-    </td>
-    </tr>
-
-
-   <tr>
-   <td valign="bottom">
-   <hr /> 
+    </div><br/>
+   <div class="block">
    <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
-   <div style="float: left; width: 60%; text-align: right;">
    <label>
+   <strong>
    [% IF path %]
-     <strong> [%|loc(visible_path)%]Upload a file inside the folder %1[%END%]</strong><br />
+     [%|loc(visible_path)%]Upload a file inside the folder %1[%END%]
    [% ELSE %]
-     <strong> [%|loc%]Upload a file inside the folder SHARED[%END%] </strong><br />
+     <strong> [%|loc%]Upload a file inside the folder SHARED[%END%]
    [% END %]
-     <input type="file" name="uploaded_file"/></label>
-   </div>
-
-   <div style="float: right; width: 35%; text-align: left;">
+   </strong><br />
+   <input type="file" name="uploaded_file"/></label>
    <input type="submit" value="[%|loc%]Publish[%END%]" name="action_d_upload" />
    <input type="hidden" name="list" value="[% list %]" />
    <input type="hidden" name="path" value="[% path %]" />
-   </div>
    </form> 
-   </td>
-   </tr>
+   </div><br />
 
       [% IF total_edit %]
-        <tr>
-        <td valign="bottom">
-	<hr />
+        <div class="block">
         <form method="post" action="[% path_cgi %]" enctype="multipart/form-data" >
-	<div style="float: left; width: 60%; text-align: right;">
 	<label>
+        <strong>
  	[% IF path %]
-           <strong> [%|loc(visible_path)%]Unzip a file inside the folder %1[%END%]</strong><br />
+           [%|loc(visible_path)%]Unzip a file inside the folder %1[%END%]
          [% ELSE %]
-           <strong> [%|loc%]Unzip a file inside the folder SHARED[%END%] </strong><br />
+           [%|loc%]Unzip a file inside the folder SHARED[%END%]
          [% END %]
+        </strong><br />
         <input type="file" name="unzipped_file"/></label>
-        </div>
- 
-        <div style="float: right; width: 35%; text-align: left;">
+
         <input type="submit" value="[%|loc%]Publish[%END%]" name="action_d_unzip" />
         <input type="hidden" name="list" value="[% list %]" />
         <input type="hidden" name="path" value="[% path %]" />
-        </div>
         </form> 
-	</td>
-        </tr>
+        </div><br />
        
        [% END %]
      [% END %]
    [% END %]
-</table>
+
 [% END %]
    
 

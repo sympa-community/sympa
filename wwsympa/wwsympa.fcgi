@@ -361,7 +361,7 @@ my %action_type = ('editfile' => 'admin',
 		'add_request' =>'admin',
 		'add' =>'admin',
 		'del' =>'admin',
-		'modindex' =>'admin',
+#		'modindex' =>'admin',
 		'reject' =>'admin',
 		'reject_notify' =>'admin',
 		'add_request' =>'admin',
@@ -385,7 +385,7 @@ my %action_type = ('editfile' => 'admin',
 ## 
 		'dump' => 'admin',
 		'remind' => 'admin',
-		'subindex' => 'admin',
+#		'subindex' => 'admin',
 		'stats' => 'admin',
 		'ignoresub' => 'admin',
 		'rename_list' => 'admin',
@@ -1414,7 +1414,9 @@ sub send_html {
 
 	if ($param->{'is_priv'}) {
 	    $param->{'mod_message'} = $list->get_mod_spool_size();
-	   
+
+            $param->{'mod_subscription'} = $list->get_subscription_request_count();
+  
 	    $param->{'doc_mod_list'} = $list->get_shared_moderated();
 	    $param->{'mod_total_shared'} = $#{$param->{'doc_mod_list'}} + 1;
 
@@ -1425,7 +1427,7 @@ sub send_html {
 	    }else {
 		$param->{'bounce_rate'} = 0;
 	    }
-	    $param->{'mod_total'} = $param->{'mod_total_shared'}+$param->{'mod_message'};
+	    $param->{'mod_total'} = $param->{'mod_total_shared'}+$param->{'mod_message'}+$param->{'mod_subscription'};
 	}
 
 	## (Un)Subscribing 
