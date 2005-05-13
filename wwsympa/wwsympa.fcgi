@@ -871,8 +871,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'lang'} ||= &Conf::get_robot_conf($robot, 'lang');
 
      if ($param->{'list'}) {
-	 $param->{'main_title'} = "$param->{'list'} - $list->{'admin'}{'subject'}";
-	 $param->{'list_protected_email'} = $param->{'main_title'} ;
+	 $param->{'list_title'} = $list->{'admin'}{'subject'};
+	 $param->{'list_protected_email'} = &get_protected_email_address($param->{'list'}, $list->{'admin'}{'host'});
 	 $param->{'title'} = &get_protected_email_address($param->{'list'}, $list->{'admin'}{'host'});
 	 $param->{'title_clear_txt'} = "$param->{'list'}\@$list->{'admin'}{'host'}";
 

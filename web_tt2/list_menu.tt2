@@ -22,6 +22,9 @@
   [% END %]
 [% END %]
 
+[% IF action == 'info'%][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<strong><a class="[% class %]" href="[% path_cgi %]/info/[% list %]">info</a></strong><br />
+
 [% PROCESS 'list_admin_menu.tt2' IF is_priv %]
 
 [% IF is_archived %]

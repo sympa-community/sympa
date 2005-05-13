@@ -3,7 +3,7 @@
 <!-- begin login_menu.tt2 -->
 <div class="MenuBlock">
 [% IF user.email %]
-<div id="Identity" style="text-align: left; font-size: 12px;">[% user.email %]<br />
+<div id="Identity">[% user.email %]<br />
 [% IF is_listmaster %][%|loc%]Listmaster[%END%]
 [% ELSIF is_privileged_owner %][%|loc%]Privileged owner[%END%]
 [% ELSIF is_owner %][%|loc%]Owner[%END%]
@@ -25,7 +25,7 @@
 [% END %]
 <br />
 [% IF action == 'pref' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-<strong><a class="[% class %]" href="[% path_cgi %]/pref" >[%|loc%]Preferences[%END%]</a></strong><br />
+<strong><a class="[% class %]" href="[% path_cgi %]/pref" >[%|loc%]Your preferences[%END%]</a></strong><br />
 
 [% IF action == 'which' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 <strong><a class="[% class %]" href="[% path_cgi %]/which" >[%|loc%]Your subscriptions[%END%]</a></strong>

@@ -47,8 +47,13 @@
      <div id="Paint">
        [% PROCESS error.tt2 IF errors %]
        [% PROCESS notice.tt2 IF notices %]
-       <div class="ContentBlock"> 
-       [% IF list %]<h3 style="text-align: center;">[% list_protected_email %]</h3><br />[% END %]
+
+       [% IF list %]
+	<div class="listTitle"><strong><a class="menuLinksCurrentPage" href="[% path_cgi %]/info/[% list %]">[% list_protected_email %]</a></strong><br />
+         [% IF list_title %][% list_title %][% END %]</div><br />
+       [% END %]
+
+        <div class="ContentBlock"> 
          [% PROCESS "${action}.tt2" IF action %]
        </div>
        <a class="dingbat printNone" href="#top" title="Top of Page">&sect;</a>

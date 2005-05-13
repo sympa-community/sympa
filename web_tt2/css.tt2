@@ -70,7 +70,7 @@ ul#MainMenuLinks li {list-style: none; display: inline;}
 	padding-right: 8px;
 	text-align: center;
 }
-
+#Identity {text-align: left; font-size: 10px; font-weight: bold;}
 
 .MenuBlock {
 	background: [% color_5 %];
@@ -106,11 +106,9 @@ ul#MainMenuLinks li {list-style: none; display: inline;}
 .displayNone {display: none;height:0px;width:0px;}
 .printNone {}
 .title {position: absolute; top: 60px; font-size: 16px; text-indent: 30px;}
-.title:first-letter {font-size: 20px; text-indent:30px; font-weight: bold;}
 .customMenu {text-indent: 0px; }
 a.dingbat {text-align: center;}
 .dingbat {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
-.dingbat:first-letter {text-indent: 0px; text-align: center; font-family: serif; font-weight: 100;}
 
 .button { background:[% color_4 %] !important; border: 3px solid; padding: 0px  2px  0px 2px; margin:2px; border-top-color: [% color_7 %]; border-right-color: [% color_1 %];border-bottom-color: [% color_1 %]; border-left-color: [% color_7 %];}
 .button:hover {background: [% color_4 %]; border-top-color: [% color_1 %]; border-right-color: [% color_7 %]; border-bottom-color: [% color_7 %]; border-left-color: [% color_1 %];}
@@ -174,7 +172,9 @@ h4.block {text-align: center; background: [% color_4 %];}
 h5.block {text-align: center; background: [% color_4 %];}
 h6.block {text-align: center; background: [% color_4 %];}
 
-.blockerror {border: 3px dashed [% error_color %]; background: transparent; padding : 10px;}
+.listTitle {text-align: center; border: solid 1px [% color_2 %]; padding: 5px; background: [% color_5 %];}
+
+.blockerror {border: 3px dashed [% error_color %]; background: transparent; padding: 10px;}
 
 ul.listenum {list-style: none;}
 ul li.listenum {padding : 5px;} 
@@ -194,8 +194,6 @@ a.menuLinksCurrentPage:hover  {border: 1px solid [% color_9 %]; background: [% c
 strong a.menuLinks {font-size: 14px;}
 strong a.menuLinksCurrentPage {font-size: 14px; border: 1px solid [% color_9 %]; background: [% color_6 %];}
 strong a.menuLinksCurrentPage:hover  {font-size: 14px; border: 1px solid [% color_9 %]; background: [% color_6 %]; text-decoration: none;}
-strong a.menuLinks:first-letter {font-size: 16px; font-weight: bold;}
-strong a.menuLinksCurrentPage:first-letter {font-size: 16px; font-weight: bold;}
 ul a.menuLinks {padding: 0px 10px 0px 20px;}
 ul a.menuLinksCurrentPage {padding: 0px 10px 0px 20px; font-weight: bold;}
 ul a.menuLinksCurrentPage:hover {padding: 0px 10px 0px 20px; font-weight: bold; text-decoration: none;}
@@ -220,7 +218,6 @@ abbr, acronym, .info {
 	cursor: help;
 }
 h1 a:hover {text-indent: 30px; font-size: 16px; padding-bottom:10px;}
-h1 a:first-letter {color: [% color_2 %]; font-size: 20px; font-weight: bold;}
 p a:hover {text-indent: 30px;}
 p a:first-letter {font-size: 16px; font-weight: bold;}
  
@@ -229,20 +226,13 @@ ul {margin-left: 10px; }
 p {text-indent: 0px;}
 
 h1 {text-indent: 0px; font-size: 20px;}
-h1:first-letter {font-size: 20px; font-weight: bold;}
 h2 {text-indent: 0px; font-size: 16px;}
-h2:first-letter {font-size: 16px; font-weight: bold;}
 h3 {text-indent: 0px; font-size: 14px;}
-h3:first-letter {font-size: 16px; font-weight: bold;}
 h4 {text-indent: 0px; font-size: 14px;}
-h4:first-letter {font-size: 14px; font-weight: bold;}
 h5 {text-indent: 0px; font-size: 12px;}
-h5:first-letter {font-size: 12px; font-weight: bold;}
 h6 {text-indent: 0px; font-size: 12px;}
-h6:first-letter {font-size: 12px; font-weight: bold;}
 /* strong {text-indent: 30px; font-size: 16px; padding-bottom:10px;} */
 /* strong {text-indent: 30px; font-size: 16px;} */
-/* strong:first-letter {font-size: 20px; font-weight: bold;} */
 
 a.input {background: [% color_13 %]; border: 1px solid [% color_2 %]; padding: 3px; text-decoration: none;}
 input {background: [% color_13 %]; border: 1px solid [% color_2 %]; padding: 0px;}
