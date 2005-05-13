@@ -3,16 +3,16 @@
 <!-- begin list_panel.tt2 -->
 
 <div class="MenuBlock">
-  <div style="text-align: left;">
+  <div style="text-align: left; overflow: hidden">
    [%|loc%]Subscribers:[%END%] <strong>[% total %]</strong><br />
    [% IF is_priv %]([%|loc%]Error rate:[%END%][% bounce_rate %] %)<br />[% END %]
-   [%|loc%]Owners[%END%]
+   <span style="font-weight: bold; font-size: 10px">[%|loc%]Owners[%END%]</span>
    [% FOREACH o = owner %]
         [% o.value.mailto %]<br />
    [% END %]
 
    [% IF is_moderated %]
-    [%|loc%]Moderators[%END%]
+    <span style="font-weight: bold; font-size: 10px">[%|loc%]Moderators[%END%]</span>
     [% FOREACH e = editor %]
         [% e.value.mailto %]<br />
     [% END %]
