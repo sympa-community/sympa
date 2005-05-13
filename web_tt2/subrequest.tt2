@@ -9,7 +9,7 @@
 	<form action="[% path_cgi %]" method="post">
 	  <input type="hidden" name="list" value="[% list %]" />
 	  <input type="hidden" name="email" value="[% user.email %]" />
-	  <input type="submit" name="action_subscribe" value="[%|loc(list)%]I subscribe to list %1[%END%]" />
+	  <input class="MainMenuLinks" type="submit" name="action_subscribe" value="[%|loc(list)%]I subscribe to list %1[%END%]" />
 	</form>
 
   [% ELSIF status == 'notauth_passwordsent' %]
@@ -31,7 +31,7 @@
 	  <input type="hidden" name="email" value="[% email %]" />
 	  <input type="hidden" name="previous_list" value="[% list %]" />
 	  <input type="hidden" name="previous_action" value="subrequest" />
-        &nbsp; &nbsp; &nbsp;<input type="submit" name="action_subscribe" value="[%|loc%]Subscribe[%END%]" />
+        &nbsp; &nbsp; &nbsp;<input class="MainMenuLinks" type="submit" name="action_subscribe" value="[%|loc%]Subscribe[%END%]" />
         </form>
 
       	[%|loc%]This password, associated to your email address, will
@@ -44,7 +44,7 @@
 	  <input type="text" name="email" size="30" /><br />
 	  <input type="hidden" name="list" value="[% list %]" />
 	  <input type="hidden" name="action" value="subrequest" />
-	  <input type="submit" name="action_subrequest" value="[%|loc%]submit[%END%]" />
+	  <input class="MainMenuLinks" type="submit" name="action_subrequest" value="[%|loc%]submit[%END%]" />
          </form>
 
 
@@ -61,8 +61,8 @@
 	  <input type="hidden" name="email" value="[% email %]" />
 	  <input type="hidden" name="previous_list" value="[% list %]" />
 	  <input type="hidden" name="previous_action" value="subrequest" />
-         &nbsp; &nbsp; &nbsp;<input type="submit" name="action_subscribe" value="[%|loc%]Subscribe[%END%]" />
-	<input type="submit" name="action_sendpasswd" value="[%|loc%]My password ?[%END%]" />
+         &nbsp; &nbsp; &nbsp;<input class="MainMenuLinks" type="submit" name="action_subscribe" value="[%|loc%]Subscribe[%END%]" />
+	<input class="MainMenuLinks" type="submit" name="action_sendpasswd" value="[%|loc%]My password ?[%END%]" />
          </form>
 
   [% ELSIF status == 'notauth_subscriber' %]

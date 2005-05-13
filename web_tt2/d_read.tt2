@@ -316,7 +316,7 @@
     [% END %]
     </strong> <br />
     <label>[%|loc%]Folder name[%END%] <input maxlength="30" type="text" name="name_doc" /></label>
-    <input type="submit" value="[%|loc%]Create[%END%]" name="action_d_create_dir" />
+    <input class="MainMenuLinks" type="submit" value="[%|loc%]Create[%END%]" name="action_d_create_dir" />
     <input type="hidden" name="previous_action" value="d_read" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% path %]" />
@@ -330,7 +330,7 @@
     <form method="post" action="[% path_cgi %]">
     <strong> [%|loc%]Create a new file[%END%]</strong> <br />
     <label>[%|loc%]File name[%END%] <input maxlength="30" type="text" name="name_doc" /></label>
-    <input type="submit" value="[%|loc%]Create[%END%]" name="action_d_create_dir" />
+    <input class="MainMenuLinks" type="submit" value="[%|loc%]Create[%END%]" name="action_d_create_dir" />
     <input type="hidden" name="previous_action" value="d_read" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% path %]" />
@@ -344,7 +344,7 @@
     <strong>[%|loc%]Add a bookmark[%END%]</strong><br />
     <label>[%|loc%]title[%END%] <input maxlength="100" size="20" type="text" name="name_doc" /></label><br />
     <label>[%|loc%]URL[%END%] <input maxlength="100" size="25" type="text" name="url" /></label>
-    <input type="submit" value="[%|loc%]Add[%END%]" name="action_d_savefile" />
+    <input class="MainMenuLinks" type="submit" value="[%|loc%]Add[%END%]" name="action_d_savefile" />
     <input type="hidden" name="previous_action" value="d_read" />
     <input type="hidden" name="list" value="[% list %]" />
     <input type="hidden" name="path" value="[% path %]" />
@@ -362,7 +362,7 @@
    [% END %]
    </strong><br />
    <input type="file" name="uploaded_file"/></label>
-   <input type="submit" value="[%|loc%]Publish[%END%]" name="action_d_upload" />
+   <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]" name="action_d_upload" />
    <input type="hidden" name="list" value="[% list %]" />
    <input type="hidden" name="path" value="[% path %]" />
    </form> 
@@ -381,7 +381,7 @@
         </strong><br />
         <input type="file" name="unzipped_file"/></label>
 
-        <input type="submit" value="[%|loc%]Publish[%END%]" name="action_d_unzip" />
+        <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]" name="action_d_unzip" />
         <input type="hidden" name="list" value="[% list %]" />
         <input type="hidden" name="path" value="[% path %]" />
         </form> 

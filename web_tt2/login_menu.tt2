@@ -20,7 +20,7 @@
   [% ELSE %]
           <input type="hidden" name="previous_action" value="[% home %]" />
   [% END %]
-  <input type="submit" name="action_logout" value="[%|loc%]Logout[%END%]" />
+  <input class="MainMenuLinks" type="submit" name="action_logout" value="[%|loc%]Logout[%END%]" />
   </form>
 [% END %]
 <br />
@@ -52,7 +52,7 @@
             [% END %]
             </select>
           [% END %] 
-          <input type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
+          <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
       [% END %] 
 
       <input type="hidden" name="action" value="login" />
@@ -60,7 +60,7 @@
       <input type="text" name="email" id="email" size="18" value="[% init_email %]" /></label><br />
       <label for="passwd" >[%|loc%]password[%END%] :<br />
       <input type="password" name="passwd" id="passwd" size="8" /></label> &nbsp;&nbsp;
-      <input type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
+      <input class="MainMenuLinks" type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
       </form>
 
       <br />

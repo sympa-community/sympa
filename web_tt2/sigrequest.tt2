@@ -8,7 +8,7 @@
 	<form action="[% path_cgi %]" method="post">
 	  <input type="hidden" name="list" value="[% list %]" />
 	  <input type="hidden" name="email" value="[% user.email %]" />
-	  <input type="submit" name="action_signoff" value="[%|loc(list)%]I unsubscribe from list %1[%END%]" />
+	  <input class="MainMenuLinks" type="submit" name="action_signoff" value="[%|loc(list)%]I unsubscribe from list %1[%END%]" />
 	</form>
 
   [% ELSIF not_subscriber %]
@@ -36,7 +36,7 @@
   	  <input type="password" name="passwd" size="20" />
 	  <input type="hidden" name="list" value="[% list %]" />
 	  <input type="hidden" name="email" value="[% email %]" />
-        &nbsp; &nbsp; &nbsp;<input type="submit" name="action_signoff" value="[%|loc%]Unsubscribe[%END%]" />
+        &nbsp; &nbsp; &nbsp;<input class="MainMenuLinks" type="submit" name="action_signoff" value="[%|loc%]Unsubscribe[%END%]" />
         </form>
 
       	[%|loc%]This password, associated to your email address, will
@@ -50,7 +50,7 @@
           <input type="text" name="email"><br />
           <input type="hidden" name="action" value="sigrequest" />
 	  <input type="hidden" name="list" value="[% list %]" />
-	  <input type="submit" name="action_sigrequest" value="[%|loc%]Unsubscribe[%END%]" />
+	  <input class="MainMenuLinks" type="submit" name="action_sigrequest" value="[%|loc%]Unsubscribe[%END%]" />
          </form>
 
 
@@ -65,10 +65,10 @@
   	  <input type="password" name="passwd" size="20" />
 	  <input type="hidden" name="list" value="[% list %]" />
 	  <input type="hidden" name="email" value="[% email %]" />
-         &nbsp; &nbsp; &nbsp;<input type="submit" name="action_signoff" value="[%|loc%]Unsubscribe[%END%]" />
+         &nbsp; &nbsp; &nbsp;<input class="MainMenuLinks" type="submit" name="action_signoff" value="[%|loc%]Unsubscribe[%END%]" />
 
 <br /><br />
-<em>[%|loc%]If you've never had a password from that server or if you don't remember it :[%END%]</em>  <input type="submit" name="action_sendpasswd" value="[%|loc%]Send me my password[%END%]" />
+<em>[%|loc%]If you've never had a password from that server or if you don't remember it :[%END%]</em>  <input class="MainMenuLinks" type="submit" name="action_sendpasswd" value="[%|loc%]Send me my password[%END%]" />
 
          </form>
 

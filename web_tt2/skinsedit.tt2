@@ -49,7 +49,7 @@ The current version don't include a color editor, so you need to edit robot.conf
 	<form action="[% path_cgi %]" method="post">
 	<input type="hidden" name="action" value="skinsedit" />
         <input type="hidden" name="installcss" value="1" />
-        <input type="submit" name="action_skinsedit" value="[%|loc%]install static css[%END%]" />
+        <input class="MainMenuLinks" type="submit" name="action_skinsedit" value="[%|loc%]install static css[%END%]" />
 	</form>
 
 [% ELSE %]

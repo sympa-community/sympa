@@ -35,8 +35,8 @@
  [% END %]
 [% END %]
 [% END %]
-<tr><td colspan="2"><input type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
-<input type="submit" name="action_del" value="[%|loc%]Unsubscribe the User[%END%]" />
+<tr><td colspan="2"><input class="MainMenuLinks" type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
+<input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Unsubscribe the User[%END%]" />
 <label><input type="checkbox" name="quiet" /> [%|loc%]quiet[%END%]</label>
 </td>
 </tr>
@@ -52,7 +52,7 @@
 <tr><th>[%|loc%]Bounces count :[%END%]</th><td>[% current_subscriber.bounce_count %]</td></tr>
 <tr><th>[%|loc%]Period :[%END%]</th><td>[%|loc(current_subscriber.first_bounce,current_subscriber.last_bounce)%]from %1 to %2[%END%]</td></tr>
 <tr><td colspan="2"><a href="[% path_cgi %]/viewbounce/[% list %]/[% current_subscriber.escaped_email %]">[%|loc%]View last bounce[%END%]</a></td></tr>
-<tr><td colspan="2"><input type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" /></td></tr>
+<tr><td colspan="2"><input class="MainMenuLinks" type="submit" name="action_resetbounce" value="[%|loc%]Reset errors[%END%]" /></td></tr>
 </table>
 </td></tr>
 [% END %]

@@ -42,7 +42,7 @@ If it is not listed or if you don't have any, login using your email and passwor
         [% FOREACH server = sso %]
            <input type="hidden" name="auth_service_name" value="[% server.key %]" />
         [% END %]
-         <input type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
+         <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
     </form> 
 [% ELSE %]
     <form action="[% path_cgi %]" method="post"> 
@@ -57,7 +57,7 @@ If it is not listed or if you don't have any, login using your email and passwor
         <select name="auth_service_name" onchange="this.form.submit();">
           [% FOREACH server = sso %]<option value="[% server.key %]">[% server.value %]</option>[% END %]
         </select>
-        <input type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
+        <input class="MainMenuLinks" type="submit" name="action_sso_login" value="[%|loc%]Go[%END%]" />
         </div>
     </form>
 [% END %] 
@@ -72,9 +72,9 @@ If it is not listed or if you don't have any, login using your email and passwor
      <input type="hidden" name="nomenu" value="[% nomenu %]" />
      <input type="hidden" name="list" value="[% list %]" />
      <div id = "FormLabel">
-       <label for="email">[%|loc%]email address[%END%] : <input type="text" name="email" id="email" size="20" value="[% init_email %]" /></label>&nbsp;&nbsp;&nbsp;
+       <label for="emailadresse">[%|loc%]email address[%END%] : <input type="text" name="email" id="email" size="20" value="[% init_email %]" /></label>&nbsp;&nbsp;&nbsp;
        <label for="passwd" >[%|loc%]password[%END%] : <input type="password" name="passwd" id="passwd" size="8" /> </label>&nbsp;&nbsp;
-       <input type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
+       <input class="MainMenuLinks" type="submit" name="action_login" value="[%|loc%]Login[%END%]" />
      </div>
   </form> 
 </p>

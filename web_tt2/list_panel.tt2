@@ -5,6 +5,7 @@
 <div class="MenuBlock">
   <div style="text-align: left;">
    [%|loc%]Subscribers:[%END%] <strong>[% total %]</strong><br />
+   [% IF is_priv %]([%|loc%]Error rate:[%END%][% bounce_rate %] %)<br />[% END %]
    [%|loc%]Owners[%END%]
    [% FOREACH o = owner %]
         [% o.value.mailto %]<br />

@@ -3,12 +3,11 @@
  <form action="[% path_cgi %]" method="post">
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="id" value="[% id %]" />
-<table>
-<tr style="background-color: [% bg_color %];"><td>
-  <input type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
-  <input type="submit" name="action_reject.quiet" value="[%|loc%]Reject[%END%]" />
-  <input type="submit" name="action_reject" value="[%|loc%]Notified reject[%END%]" />
-</td></tr></table>
+
+  <input class="MainMenuLinks" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
+  <input class="MainMenuLinks" type="submit" name="action_reject.quiet" value="[%|loc%]Reject[%END%]" />
+  <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Notified reject[%END%]" />
+
 </form>
 [% PROCESS 'msg00000.html' %]
 

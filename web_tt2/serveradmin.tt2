@@ -22,7 +22,7 @@
   <select name="family_name">
     [% FOREACH f = families %]<option value='[% f %]'>[% f %]</option>[% END %]
   </select>
-  <input type="submit" name="action_review_family" value="[%|loc%]Review lists from this family[%END%]" />
+  <input class="MainMenuLinks" type="submit" name="action_review_family" value="[%|loc%]Review lists from this family[%END%]" />
   </form>     
 
 </p>
@@ -40,7 +40,7 @@
         <form action="[% path_cgi %]" method="post">
 	  <input type="text" name="email" size="30" value="[% email %]" />
 	  <input type="hidden" name="action" value="search_user" />
-	  <input type="submit" name="action_search_user" value="[%|loc%]Search User[%END%]" />
+	  <input class="MainMenuLinks" type="submit" name="action_search_user" value="[%|loc%]Search User[%END%]" />
 	</form>
  </p>
 <p>
@@ -52,7 +52,7 @@
   <select name="file">
     [% FOREACH f = lists_default_files %]<option value='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]</option>[% END %]
   </select>
-  <input type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
+  <input class="MainMenuLinks" type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
   </form>
 </div>
 <br />
@@ -63,7 +63,7 @@
   <select name="file">
     [% FOREACH f = server_files %]<option value='[% f.key %]' [% f.value.selected %]>[% f.value.complete %]</option>[% END %]
   </select>
-  <input type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
+  <input class="MainMenuLinks" type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
 </form>
 </div>
 <br />
@@ -82,8 +82,8 @@
 [%|loc%]Rebuild HTML archives using "arctxt" directories as input.[%END%]<br /
 >
 <form action="[% path_cgi %]" method="post">
-listname : <input type="text" name="list" size="20" /> <input type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" />
-or  <input type="submit" name="action_rebuildallarc" value="[%|loc%]Rebuild all[%END%]" />([%|loc%]  May take a lot of CPU time,  be careful ![%END%])<br />
+listname : <input type="text" name="list" size="20" /> <input class="MainMenuLinks" type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" />
+or  <input class="MainMenuLinks" type="submit" name="action_rebuildallarc" value="[%|loc%]Rebuild all[%END%]" />([%|loc%]  May take a lot of CPU time,  be careful ![%END%])<br />
 </form>
 
 </p>

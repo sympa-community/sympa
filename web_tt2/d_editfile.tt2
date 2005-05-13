@@ -34,9 +34,9 @@
   [% END %]
   &nbsp;
   [% IF url %]
-  <input type="submit" value="[%|loc%]Update[%END%]" name="action_d_savefile" />
+  <input class="MainMenuLinks" type="submit" value="[%|loc%]Update[%END%]" name="action_d_savefile" />
   [% ELSE %]
-  <input type="submit" value="[%|loc%]Publish[%END%]" name="action_d_overwrite" />
+  <input class="MainMenuLinks" type="submit" value="[%|loc%]Publish[%END%]" name="action_d_overwrite" />
   [% END %]
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% path %]" />
@@ -59,7 +59,7 @@
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="path" value="[% path %]" />
   <input type="hidden" name="serial" value="[% serial_file %]" />
-  <input type="submit" name="action_d_savefile" value="[%|loc%]Publish[%END%]" />
+  <input class="MainMenuLinks" type="submit" name="action_d_savefile" value="[%|loc%]Publish[%END%]" />
   </form>
 [% END %]
 [% END %]

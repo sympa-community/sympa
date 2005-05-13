@@ -49,8 +49,8 @@ SEARCH_FORM
 	<input name="subj"  type="hidden" value="true" />
 	<input name="key_word"     type="text"   size="12" />
 	<input name="action"  type="hidden" value="arcsearch" />
-	<input type="submit" name="action_arcsearch" value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" /><br />
-	<input type="submit" name="action_arcsearch_form" value="($tag$%|loc%$tag$)Advanced search($tag$%END%$tag$)" />
+	<input type="submit" class="MainMenuLinks" name="action_arcsearch" value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" /><br />
+	<input type="submit" class="MainMenuLinks" name="action_arcsearch_form" value="($tag$%|loc%$tag$)Advanced search($tag$%END%$tag$)" />
 	</form>
     </div>
 </DefineVar>
@@ -412,15 +412,15 @@ $POWERED_BY$
   <input type="radio" NAME="to" VALUE="$FROMADDRNAME$ $FROMADDRDOMAIN$" checked />
   ($tag$%|loc%$tag$)to list($tag$%END%$tag$)
   <input type="radio" NAME="to" VALUE="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
-  <input type="submit" NAME="action_compose_mail" VALUE="($tag$%|loc%$tag$)Reply($tag$%END%$tag$)" /><br />
-  <input type="submit" NAME="action_send_me" VALUE="($tag$%|loc(user.email)%$tag$)send it back to %1($tag$%END%$tag$)" /><br />
+  <input class="MainMenuLinks" type="submit" NAME="action_compose_mail" VALUE="($tag$%|loc%$tag$)Reply($tag$%END%$tag$)" /><br />
+  <input class="MainMenuLinks" type="submit" NAME="action_send_me" VALUE="($tag$%|loc(user.email)%$tag$)send it back to %1($tag$%END%$tag$)" /><br />
   ($tag$% IF action != 'viewmod' %$tag$)
     ($tag$% IF user.email == '$FROMADDR$'  || is_owner %$tag$)
     <input type="hidden" NAME="yyyy" VALUE="$yyyy$" />
     <input type="hidden" NAME="month" VALUE="$mois$" />
     <input type="hidden" NAME="msgid" VALUE="$MSGID$" />
     <input type="hidden" NAME="action" VALUE="" />
-    <input type="submit" NAME="action_remove_arc" VALUE="($tag$%|loc%$tag$)tag this mail for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete this message ?($tag$%END%$tag$)')" />
+    <input class="MainMenuLinks" type="submit" NAME="action_remove_arc" VALUE="($tag$%|loc%$tag$)tag this mail for deletion($tag$%END%$tag$)" onClick="return request_confirm('($tag$%|loc%$tag$)Do you really want to delete this message ?($tag$%END%$tag$)')" />
     ($tag$% END %$tag$)
   ($tag$% END %$tag$)
 </form>
