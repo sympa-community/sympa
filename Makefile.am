@@ -349,31 +349,11 @@ installsample:
 
 
 installman:
-	mkdir -p $(DESTDIR)$(MANDIR)
-	mkdir -p $(DESTDIR)$(MANDIR)/man8
-	@for manfile in sympa.8 archived.8 bounced.8 alias_manager.8; do \
-	echo "Installing man file man8/$$manfile..."; \
-	( \
-		cd doc/man8 ; \
-		PERL=$(PERL); export PERL; \
-		UMASK=0600; export UMASK; \
-		DIR=$(DIR); export DIR; \
-		INSTALLDIR=$(MANDIR)/man8; export INSTALLDIR; \
-		DESTDIR=$(DESTDIR); export DESTDIR; \
-		SYMPA_VERSION=$(SYMPA_VERSION); export SYMPA_VERSION; \
-		CONFDIR=$(CONFDIR); export CONFDIR; \
-		SENDMAIL_ALIASES=$(SENDMAIL_ALIASES); export SENDMAIL_ALIASES; \
-		VIRTUAL_ALIASES=$(VIRTUAL_ALIASES); export VIRTUAL_ALIASES; \
-		MAILERPROGDIR=$(MAILERPROGDIR); export MAILERPROGDIR; \
-		PIDDIR=$(PIDDIR); export PIDDIR; \
-		SPOOLDIR=$(SPOOLDIR); export SPOOLDIR; \
-		PIDDIR=$(PIDDIR); export PIDDIR; \
-		$(PERL) ../../subst.pl $$manfile \
-	) ;\
-	chown $(USER) $(DESTDIR)$(MANDIR)/man8/$$manfile; \
-	chgrp $(GROUP) $(DESTDIR)$(MANDIR)/man8/$$manfile; \
-	done
-
+	@(cd doc/man8 && \
+	$(MAKE) PERL='${PERL}' DIR='${DIR}' DESTDIR='${DESTDIR}' SYMPA_VERSION='${SYMPA_VERSION}' MANDIR='${MANDIR}' \
+	CONFDIR='${CONFDIR}' SENDMAIL_ALIASES='${SENDMAIL_ALIASES}' VIRTUAL_ALIASES='${VIRTUAL_ALIASES}' UMASK='${UMASK}'  \
+	MAILERPROGDIR='${MAILERPROGDIR}' PIDDIR='${PIDDIR}' SPOOLDIR='${SPOOLDIR}' PIDDIR='${PIDDIR}' ETCBINDIR='${ETCBINDIR}' \
+	newinstall) || exit 1;
 
 installscript:
 	@(cd src/etc/script && echo "making in src/etc/script..." && \
