@@ -382,6 +382,7 @@ sub load_robots {
 				  host            => 1,
 				  wwsympa_url     => 1,
 				  'title'         => 1,
+				  logo_html_definition        => 1,
 				  lang            => 1,
 				  default_home    => 1,
 				  cookie_domain   => 1,

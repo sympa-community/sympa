@@ -1767,6 +1767,9 @@ see a  nice mailto adresses where others have nothing.
  	Deprecated. They are the color definition for previous web interface. Thoses parameters are unused in 5.1 and higher 
  version but still availible.style.css, print.css, print-preview.css and fullPage.css
  
+\subsection {\cfkeyword {logo\_html\_definition}}
+This parameter allow you to insert in the left top page corner oa piece of html code, usually to insert la logo in the page. This is a very basic but easy customization.
+\example {logo\_html\_definition <a href="http://www.mycompagnie.com"><img style="float: left; margin-top: 7px; margin-left: 37px;" src="http:/logos/mylogo.jpg" alt="my compagnie" /></a>}
 
 \subsection {\cfkeyword {css\_path}}
  
@@ -4578,7 +4581,16 @@ Only the following parameters can be redefined for a particular robot :
 
 	\item \cfkeyword {max\_size}
 
-	\item \cfkeyword {dark\_color}, \cfkeyword {light\_color}, \cfkeyword {text\_color}, \cfkeyword {bg\_color}, \cfkeyword {error\_color}, \cfkeyword {selected\_color}, \cfkeyword {shaded\_color} 
+        \item \cfkeyword {css\_path}
+
+        \item \cfkeyword {css\_url}
+
+        \item \cfkeyword {logo\_html\_definition}
+
+	\item  \cfkeyword {color\_0}, {color\_1} ... {color\_15}
+
+	\item deprecated color definition \cfkeyword {dark\_color}, \cfkeyword {light\_color}, \cfkeyword {text\_color}, \cfkeyword {bg\_color}, \cfkeyword {error\_color}, \cfkeyword {selected\_color}, \cfkeyword {shaded\_color}
+ 
 \end {itemize}
 
 These settings overwrite the equivalent global parameter defined in \file {[CONFIG]}
@@ -4588,7 +4600,9 @@ environment variable to recognize which robot is in used.
 
 \subsection {Robot customization}
 
-If needed, you can customize each virtual robot using its set of templates and authorization scenarios.
+In order to customize the web look and feel, you may edit the CSS definition. CSS are defined in a template named css.tt2. Any robot can use static css file for making Sympa web interface faster. Then you can edit this static definition and change web style. Please refer to  \cfkeyword {css\_path} \cfkeyword {css\_url}. You can also quickly introduce a logo in left top corner of all pages configuring \cfkeyword {logo\_html\_definition} parameter in robot.conf file. 
+
+In addition, if needed, you can customize each virtual robot using its set of templates and authorization scenarios. 
 
 \dir {[ETCDIR]/\samplerobot/wws\_templates/},
 \dir {[ETCDIR]/\samplerobot/templates/}, 

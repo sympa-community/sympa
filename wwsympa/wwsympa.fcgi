@@ -610,8 +610,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }
      $param->{'css_url'} = &Conf::get_robot_conf($robot, 'css_url');
      $param->{'css_url'} ||= &Conf::get_robot_conf($robot, 'wwsympa_url').'/css';
-
      &do_log('info', "parameter css_url seems strange, it must be the url of a directory not a css file") if ($param->{'css_url'} =~ /.css$/);
+
+     $param->{'logo_html_definition'}  = &Conf::get_robot_conf($robot, 'logo_html_definition');
 
      foreach my $auth (keys  %{$Conf{'cas_id'}}) {
 	 &do_log('debug2', "cas authentication service $auth");

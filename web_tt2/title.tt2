@@ -1,7 +1,9 @@
 <!-- $Id$ -->
 
 <!-- begin title.tt2 -->
-<div id="Logo"><a href="./"><!--<img src=""/>--></a></div>
+[% IF  logo_html_definition %]
+  [% logo_html_definition %]
+[% END %]
 <div id="Title" style="text-align: center;"><h1>[% robot_title %]</h1><br /></div>
 <div id="top"><a class="displayNone" href="#Paint">Skip to Content.</a></div>
 <!-- end title.tt2 -->
