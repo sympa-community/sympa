@@ -8,13 +8,13 @@
    [% IF is_priv %]([%|loc%]Error rate:[%END%][% bounce_rate %] %)<br />[% END %]
    <span style="font-weight: bold; font-size: 10px">[%|loc%]Owners[%END%]</span>
    [% FOREACH o = owner %]
-        [% o.value.mailto %]<br />
+	[% IF o.value.gecos %][% o.value.gecos %][% ELSE %][% o.value.local %][% END %]<br />
    [% END %]
 
    [% IF is_moderated %]
     <span style="font-weight: bold; font-size: 10px">[%|loc%]Moderators[%END%]</span>
     [% FOREACH e = editor %]
-        [% e.value.mailto %]<br />
+	[% IF e.value.gecos %][% e.gecos %][% ELSE %][% e.value.local %][% END %]<br />
     [% END %]
    [% END %]
    [% IF list_as_x509_cert %]<br /><a href="[% path_cgi %]/load_cert/[% list %]">[%|loc%]Load certificate[%END%]</a><br />[% END %]
