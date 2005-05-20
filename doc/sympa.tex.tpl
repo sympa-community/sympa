@@ -1754,7 +1754,7 @@ see a  nice mailto adresses where others have nothing.
         browsing archives. This block all robot, even google and co.
 
 
-\subsection {\cfkeyword {color_0}, \cfkeyword {color_1} ..  \cfkeyword {color_15}}
+\subsection {\cfkeyword {color\_0}, \cfkeyword {color\_1} ..  \cfkeyword {color\_15}}
   \label {colors}
  They are the color definition for web interface.  Thoses parameters can be overwritten in each virtual robot definition. 
  The color are used in the CSS file and unfortunitly they are also in use in some web templates. The sympa admin interface 
@@ -1775,7 +1775,7 @@ This parameter allow you to insert in the left top page corner oa piece of html 
  
 Pre-parsed CSS files (let's say static css files) can be installed using Sympa server skins module. Thoses CSS files are 
 installed in a part of the web server that can be reached without using sympa web engine. In order to do this edit the 
-robot.conf file and set the css_path parameter. Then retart the server and use skins module from the "admin sympa" page 
+robot.conf file and set the css\_path parameter. Then retart the server and use skins module from the "admin sympa" page 
 to install preparsed CSS file. The in order to replace dynamic CSS by thoses static files 
 set the \cfkeyword {css\_url} parameter.
 
@@ -4160,6 +4160,32 @@ will accept users authenticated through your application without
 further authentication.
 
 \end {itemize}
+
+\section {Provide a Sympa login form in another application}
+\label {external-auth}
+
+You can easily trigger a Sympa login from within another web page. The login form should look like this :
+\begin {quote}
+\begin{verbatim}
+<FORM ACTION="http://listes.cru.fr/wws" method="post">
+      <input type="hidden" name="previous_action" value="arc" />
+      Accès web archives of list
+      <select name="previous_list">
+      <option value="sympa-users" >sympa-users</option>
+      </select><br/>
+
+      <input type="hidden" name="action" value="login" />
+      <label for="email">email address :
+      <input type="text" name="email" id="email" size="18" value="" /></label><br />
+      <label for="passwd" >password :
+      <input type="password" name="passwd" id="passwd" size="8" /></label> <br/>
+      <input class="MainMenuLinks" type="submit" name="action_login" value="Login and access web archives" />
+</FORM>
+\end{verbatim}
+\end  {quote}
+
+The example above does not only perform the login action but also redirects the user to another sympa page, a list web archives here. 
+The  \texttt {previous\_action} and \texttt {previous\_list} variable define the action that will be performed after the login is done.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Managing authorizations
