@@ -2433,8 +2433,17 @@ bounce-test+*: 	"| /home/sympa/bin/queuebounce sympa@\samplerobot"
 
 \section {Database related}
 
-The following parameters are needed when using an RDBMS, but are otherwise not
-required:
+The following parameters are needed when using an RDBMS, but are otherwise not required:
+
+\subsection {\cfkeyword {update\_db\_field\_types}}
+
+	\texttt {Format: update\_db\_field\_types auto | disabled}
+
+	\default {auto}
+
+This parameter defines if Sympa may automatically update database structure to match the expected datafield types.
+This feature is only available with \textindex{mysql}.
+
 
 \subsection {\cfkeyword {db\_type}}
 

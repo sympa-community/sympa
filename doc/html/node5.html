@@ -30,31 +30,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html751"
+<A NAME="tex2html758"
   HREF="node6.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html745"
+<A NAME="tex2html752"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html739"
+<A NAME="tex2html746"
   HREF="node4.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html747"
+<A NAME="tex2html754"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html749"
+<A NAME="tex2html756"
   HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html752"
+<B> Next:</B> <A NAME="tex2html759"
   HREF="node6.html">5. Mail aliases</A>
-<B> Up:</B> <A NAME="tex2html746"
+<B> Up:</B> <A NAME="tex2html753"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html740"
+<B> Previous:</B> <A NAME="tex2html747"
   HREF="node4.html">3. Installing Sympa</A>
- &nbsp; <B>  <A NAME="tex2html748"
+ &nbsp; <B>  <A NAME="tex2html755"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html750"
+ &nbsp; <B>  <A NAME="tex2html757"
   HREF="node26.html">Index</A></B> 
 <BR>
 <BR>
@@ -63,13 +63,13 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html753"
+<LI><A NAME="tex2html760"
   HREF="node5.html#SECTION00510000000000000000">4.1 Uncompatible changes</A>
-<LI><A NAME="tex2html754"
+<LI><A NAME="tex2html761"
   HREF="node5.html#SECTION00520000000000000000">4.2 CPAN modules update</A>
-<LI><A NAME="tex2html755"
+<LI><A NAME="tex2html762"
   HREF="node5.html#SECTION00530000000000000000">4.3 Database structure update</A>
-<LI><A NAME="tex2html756"
+<LI><A NAME="tex2html763"
   HREF="node5.html#SECTION00540000000000000000">4.4 Preserving your customizations</A>
 </UL>
 <!--End of Table of Child-Links-->
@@ -95,12 +95,12 @@ a few things (DB update, CPAN modules installation).
 </H1>
 
 <P>
-New features, changes and bug fixes are summarized in the <A NAME="5732"></A><TT>NEWS</TT> file, part of the tar.gz (the 
-<A NAME="5735"></A><TT>Changelog</TT> file is a complete log file of CVS changes). As mentionned at the beginning of this
-file, uncompatible changes are preceded by '*****'. While running the <A NAME="5738"></A><TT>make install</TT> Sympa will
+New features, changes and bug fixes are summarized in the <A NAME="5766"></A><TT>NEWS</TT> file, part of the tar.gz (the 
+<A NAME="5769"></A><TT>Changelog</TT> file is a complete log file of CVS changes). As mentionned at the beginning of this
+file, uncompatible changes are preceded by '*****'. While running the <A NAME="5772"></A><TT>make install</TT> Sympa will
 detect the previously installed version and will prompt you with uncompatible changes between both versions
 of the software. You can interrupt the install process at that stage if you are too frightened.
-Output of the <A NAME="5741"></A><TT>make install</TT> :<PRE>
+Output of the <A NAME="5775"></A><TT>make install</TT> :<PRE>
 You are upgrading from Sympa 4.2
 You should read CAREFULLY the changes listed below ; they might be uncompatible changes :
 &lt;RETURN&gt;
@@ -138,10 +138,10 @@ You should read CAREFULLY the changes listed below ; they might be uncompatible 
 </H1>
 
 <P>
-Required and optional perl modules (CPAN) installation is automatically handled at the <A NAME="5744"></A><TT>make</TT> time. You are asked before each module is installed. For optional modules, associated features are listed.
+Required and optional perl modules (CPAN) installation is automatically handled at the <A NAME="5778"></A><TT>make</TT> time. You are asked before each module is installed. For optional modules, associated features are listed.
 
 <P>
-Output of the <A NAME="5747"></A><TT>make</TT> command :<PRE>
+Output of the <A NAME="5781"></A><TT>make</TT> command :<PRE>
 Checking for REQUIRED modules:
 ------------------------------------------
 perl module          from CPAN       STATUS
@@ -189,10 +189,10 @@ Install module DBD::Oracle ?
 </H1>
 
 <P>
-Whatever RDBMS you are using (mysql, Pg, Sybase or Oracle) Sympa will check every database tables and fields. If one is missing <A NAME="5750"></A><TT>sympa.pl</TT>
-will not start. If you are using <A NAME="5753"></A>mysql Sympa will also check field types and will try to change them (or create them) automatically ; 
-assuming that the DB user configured has sufficient privileges. If You are not using Mysql or if the DB user configured in <A NAME="5754"></A><TT>sympa.conf</TT> 
-does have sufficient privileges, then you should change the database structure yourself, as mentionned in the <A NAME="5757"></A><TT>NEWS</TT> file.
+Whatever RDBMS you are using (mysql, Pg, Sybase or Oracle) Sympa will check every database tables and fields. If one is missing <A NAME="5784"></A><TT>sympa.pl</TT>
+will not start. If you are using <A NAME="5787"></A>mysql Sympa will also check field types and will try to change them (or create them) automatically ; 
+assuming that the DB user configured has sufficient privileges. If You are not using Mysql or if the DB user configured in <A NAME="5788"></A><TT>sympa.conf</TT> 
+does have sufficient privileges, then you should change the database structure yourself, as mentionned in the <A NAME="5791"></A><TT>NEWS</TT> file.
 
 <P>
 Output of Sympa logs :<PRE>
@@ -233,44 +233,44 @@ Field user_admin added to table admin_table
 </H1>
 
 <P>
-Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the <A NAME="5760"></A><TT>/home/sympa/bin</TT> directory. 
-If you need to customize some of them, you should copy the file first in a safe place, ie in the <A NAME="5763"></A><TT>/home/sympa/etc</TT> directory.
+Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the <A NAME="5794"></A><TT>/usr/local/sympa-os/bin</TT> directory. 
+If you need to customize some of them, you should copy the file first in a safe place, ie in the <A NAME="5797"></A><TT>/usr/local/sympa-os/etc</TT> directory.
 If you do so, the Sympa upgrade process will preserve your site customizations.
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html751"
+<A NAME="tex2html758"
   HREF="node6.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html745"
+<A NAME="tex2html752"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html739"
+<A NAME="tex2html746"
   HREF="node4.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html747"
+<A NAME="tex2html754"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html749"
+<A NAME="tex2html756"
   HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html752"
+<B> Next:</B> <A NAME="tex2html759"
   HREF="node6.html">5. Mail aliases</A>
-<B> Up:</B> <A NAME="tex2html746"
+<B> Up:</B> <A NAME="tex2html753"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html740"
+<B> Previous:</B> <A NAME="tex2html747"
   HREF="node4.html">3. Installing Sympa</A>
- &nbsp; <B>  <A NAME="tex2html748"
+ &nbsp; <B>  <A NAME="tex2html755"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html750"
+ &nbsp; <B>  <A NAME="tex2html757"
   HREF="node26.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2005-04-20
+2005-05-20
 </ADDRESS>
 </BODY>
 </HTML>
