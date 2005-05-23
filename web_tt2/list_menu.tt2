@@ -24,7 +24,7 @@
 [% IF action == 'info'%][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 <strong><a class="[% class %]" href="[% path_cgi %]/info/[% list %]">Info</a></strong><br />
 
-<strong>[% hidden_head %]<a class=\"menuLinks\" href=\"mailto:[% list %]-request[% hidden_at %][% domain %]\">Mail owners</a>[% hidden_end %]</strong><br />
+<strong>[% hidden_head %]<a class=\"menuLinks\" href=\"mailto:[% list %]-request[% hidden_at %][% domain %]\">[%|loc%]Contact owners[%END%]</a>[% hidden_end %]</strong><br />
 
 [% PROCESS 'list_admin_menu.tt2' IF is_priv %]
 

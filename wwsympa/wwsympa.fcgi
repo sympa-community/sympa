@@ -261,6 +261,8 @@ my %comm = ('home' => 'do_home',
 	 'wsdl'=> 'do_wsdl',
 	 'sync_include' => 'do_sync_include',
 	 'review_family' => 'do_review_family',
+	 'ls_templates' => 'do_ls_templates',
+	 'edit_template' => 'do_edit_template',
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -350,7 +352,9 @@ my %action_args = ('default' => ['list'],
 #		'viewlogs' => ['list'],
 		'wsdl' => [],
 		'sync_include' => ['list'],
-		   'review_family' => ['family_name'],
+		'review_family' => ['family_name'],
+		'ls_templates' => [],
+		'edit_template' => [],
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -392,6 +396,8 @@ my %action_type = ('editfile' => 'admin',
 		'rename_list_request' => 'admin',
 		'arc_manage' => 'admin',
 		'sync_include' => 'admin',
+		'ls_templates' => 'admin',
+		'edit_template' => 'admin',
 #		'viewlogs' => 'admin'
 );
 
@@ -427,6 +433,7 @@ my %in_regexp = (
 
 		 ## File names
 		 'file' => '[^<>\*\$]+',
+		 'template_path' => '[\w\-\.\/]+',
 		 'arc_file' => '[\w\-\.]+', 
 		 'path' => '[^<>\\\*\$]+',
 		 'uploaded_file' => '[^<>\*\$]+', # Could be precised (use of "'")
@@ -1018,8 +1025,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
  	     }
 	     
  	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2';
- 	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
- 	 }
+ 	     unshift @{$tt2_include_path}, $list->{'dir'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'}); 	 }
  	    
  	 unless (&tt2::parse_tt2($param,'rss.tt2' ,\*STDOUT, $tt2_include_path)) {
  	     my $error = &tt2::get_error();
@@ -3685,6 +3691,128 @@ sub do_remindpasswd {
 
      return 1;
  }
+
+
+## list availible templates
+sub do_ls_templates  {
+    &wwslog('info', 'do_ls_templates');
+
+    unless ($param->{'is_listmaster'}) {
+	&error_message('may_not');
+	&wwslog('info','do_admin: %s not listmaster', $param->{'user'}{'email'});
+	return undef;
+    }
+
+    my $type =  $param->{'webormail'} = $in{'webormail'};
+    return 1 unless (($type == 'web')||($type == 'mail'));
+ 
+    if ($in{'listname'}) {
+	chomp ($in{'listname'});
+	$param->{'listname'} = $in{'listname'};
+	
+	unless ($list = new List ($in{'listname'}, $robot)) {
+	    &error_message('unknown_list', {'list' => $in{'listname'}} );
+	    &wwslog('info','check_param_in: unknown list %s', $in{'listname'});
+	    return undef;		
+	}
+	$param->{'templates'} = &tools::get_templates_list($type,$robot,$list->{'dir'});
+    }else{
+	$param->{'templates'} = &tools::get_templates_list($type,$robot);
+    }
+    return 1;
+}    
+
+## list availible templates
+sub do_edit_template  {
+    &wwslog('info', 'do_edit_template');
+
+    unless ($param->{'is_listmaster'}) {
+	&error_message('may_not');
+	&wwslog('info','do_admin: %s not listmaster', $param->{'user'}{'email'});
+	return undef;
+    }
+
+    my $type =  $param->{'webormail'} = $in{'webormail'};
+    return 1 unless (($type == 'web')||($type == 'mail'));
+
+    my $scope = $in{'scope'} ;
+    $param->{'scope'} = $scope;    
+
+    return 1 unless (($scope eq 'distrib')||($scope eq 'robot')||($scope eq 'family')||($scope eq 'list')||($scope eq 'site'));
+
+    my $namedlist ; 
+
+    if ($in{'listname'}) {
+	chomp ($in{'listname'});
+	$param->{'listname'} = $in{'listname'};
+	
+	unless ($namedlist = new List ($in{'listname'}, $robot)) {
+	    &error_message('unknown_list', {'list' => $in{'listname'}} );
+	    &wwslog('info','check_param_in: unknown list %s', $in{'listname'});
+	    return undef;		
+	}
+    }
+
+    my $template_name = $param->{'template_name'} = $in{'template_name'};
+    my $template_path ;
+
+    if ($in{'scope'} eq 'list') { 
+	if (defined $namedlist) {
+	    &wwslog('info',"edit_template: scope == list");
+	    $template_path = &tools::get_template_path($type,$robot,'list',$template_name,$namedlist->{'dir'});
+	    $param->{'template_path'} = $template_path;
+	}else{
+	     &error_message('undefined_list');
+	     &wwslog('info',"undefined list while scope == list (listname $in{'listname'})");
+	}	
+    }else{
+	&wwslog('info',"edit_template: scope != list");
+	$template_path = &tools::get_template_path($type,$robot,$in{'scope'},$template_name);
+	$param->{'template_path'} = $template_path;
+    }
+    
+    &wwslog('info',"edit_template: template_path '$template_path'");
+    unless ($template_path eq $in{'template_path'}) {
+	&error_message('wrong_input_path');
+	&wwslog('info',"edit_template: wrong input path $in{'template_path'} differ from $template_path");
+	return undef;		
+    }
+    unless (open (TPL,"$template_path")) {
+	&error_message("Can't open $template_path");
+	&wwslog('err',"edit_template: can't open file %s",$template_path);
+	return undef;
+    }
+    $param->{'rows'} = 5; #input area is always contain 5 emptyline; 
+    while(<TPL>) {$param->{'template_content'}.= $_; $param->{'rows'}++;}
+    close TPL;
+
+
+    if ($in{'scopeout'}) {  
+	my $pathout ; 
+	my $scopeout = $param->{'scopeout'} = $in{'scopeout'} ;
+	if ($in{'scopeout'} == 'list') { 
+	    if ($list) {
+		$pathout = &tools::get_template_path($type,$robot,$scopeout,$template_name,$list->{'dir'});
+	    }else{
+		&error_message('listname needed');
+		&wwslog('info',"edit_template : no output lisname while output scope is list");
+		return 1;
+	    }
+	}
+	$pathout = &tools::get_template_path($type,$robot,$scopeout,$template_name);
+	$param->{'pathout'} = $pathout ;
+
+	unless (open (TPLOUT,">$pathout")) {
+	    &error_message("Can't open $pathout");
+	    &wwslog('err',"edit_template: can't open file %s",$pathout);
+	    return undef;
+	}
+	print TPLOUT $in{'tplout'};
+	close TPLOUT;
+    }
+    return 1;
+    
+}    
 
    ## Server show colors, and install static css in futur edit colors etc
 sub do_skinsedit {

@@ -11,11 +11,9 @@
 	[% IF o.value.gecos %][% o.value.gecos %][% ELSE %][% o.value.local %][% END %]<br />
    [% END %]
 
-   [% IF is_moderated %]
-    <span style="font-weight: bold; font-size: 10px">[%|loc%]Moderators[%END%]</span>
-    [% FOREACH e = editor %]
+   [% FOREACH e = editor %]
+        [% IF loop.first %]<span style="font-weight: bold; font-size: 10px">[%|loc%]Moderators[%END%]</span>[% END %]
 	[% IF e.value.gecos %][% e.gecos %][% ELSE %][% e.value.local %][% END %]<br />
-    [% END %]
    [% END %]
    [% IF list_as_x509_cert %]<br /><a href="[% path_cgi %]/load_cert/[% list %]">[%|loc%]Load certificate[%END%]</a><br />[% END %]
   </div>

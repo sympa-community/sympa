@@ -1,0 +1,24 @@
+<!-- $Id$ -->
+
+<h2>Template edition system</h2><br />
+<p>
+<ul>
+<li>Template name :  <strong> [% template_name %] </strong></li>
+<li>Type : <strong> [% webormail %] </strong></li>
+<li>Path : <strong> [% template_path %] </strong></li>
+<li>Scope : <strong> [% scope %] </strong>.</li>
+</ul>
+</p>
+<form action="[% path_cgi %]/edit_template" method="post">
+ <textarea name="content" cols="90" rows="[% rows %]" />
+[% template_content %]
+</textarea><br /><br />
+<input type="hidden" name="webormail" value="[% webormail %]" />
+<input type="hidden" name="template_name" value="[% template_name %]" />
+<input type="hidden" name="action" value="edit_template" />
+<ul>
+<li>Save for <input type="submit" class="MainMenuLinks" name="scopeout" value="site" /></li>
+<li>Save for <input type="submit" class="MainMenuLinks" name="scopeout" value="robot" /></li>
+<li>Save for list <input type="text" name="listname" [% IF listname %] value="listname" [% END %] /> <input type="submit" class="MainMenuLinks" name="scopeout" value="list" /></li>
+</ul>
+</form>

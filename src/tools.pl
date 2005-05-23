@@ -272,6 +272,86 @@ sub get_list_list_tpl {
     return ($list_templates);
 }
 
+sub get_templates_list {
+
+    my $type = shift;
+    my $robot = shift;
+    my $listdir = shift;
+
+
+    unless (($type == 'web')||($type == 'mail')) {
+	do_log('info', 'get_templates_list () : internal error incorrect parameter');
+    }
+
+    my $distrib_dir = '--ETCBINDIR--/'.$type.'_tt2';
+    my $site_dir = $Conf{'etc'}.'/'.$type.'_tt2';
+    my $robot_dir = $Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2';
+
+    my @try;
+    push @try, $distrib_dir ;
+    push @try, $site_dir ;
+    push @try, $robotdir;
+    
+    if (defined ($listdir)) {
+	$listdir .='/'.$type.'_tt2';
+	push @try, $listdir ;
+    }
+    my $i = 0 ;
+    my $tpl;
+    foreach my $dir (@try) {
+	do_log('info', "get_templates_list () : open '$dir'");
+	next unless opendir (DIR, $dir);
+	foreach my $file ( readdir(DIR)) {	    
+	    next unless ($file =~ /\.tt2$/);
+	    if ($dir eq $distrib_dir){$tpl->{$file}{'distrib'} = $dir.'/'.$file ;}else{$tpl->{$file}{'distrib'} = ''; }
+	    if ($dir eq $site_dir)   {$tpl->{$file}{'site'} =  $dir.'/'.$file;}else{$tpl->{$file}{'site'} = ''; }
+	    if ($dir eq $robot_dir)  {$tpl->{$file}{'robot'} = $dir.'/'.$file;}else{$tpl->{$file}{'robot'} = ''; }
+	    if ($dir eq $listdir)    {$tpl->{$file}{'list'} = $dir.'/'.$file ;}else{$tpl->{$file}{'list'} = '';}	    
+	}
+	closedir DIR;
+    }
+    return ($tpl);
+}
+
+# return the path for a specific template
+sub get_template_path {
+
+    my $type = shift;
+    my $robot = shift;
+    my $scope = shift;
+    my $tpl = shift;
+    my $listdir = shift;
+
+do_log('info', "get_templates_path () : type=$type; robot $robot scope $scope tpl $tpl listdir $listdir");
+
+    unless (($type == 'web')||($type == 'mail')) {
+	do_log('info', 'get_templates_path () : internal error incorrect parameter');
+    }
+
+    my $distrib_dir = '--ETCBINDIR--/'.$type.'_tt2';
+    my $site_dir = $Conf{'etc'}.'/'.$type.'_tt2';
+    my $robot_dir = $Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2';
+
+    if ($scope eq 'list')  {
+do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx$listdir/$tpl");
+	return $listdir.'/'.$tpl ;
+    }
+
+    if (($scope eq 'robot')||($scope eq 'list'))  {
+do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx $robot_dir/$tpl");
+	return $robot_dir.'/'.$tpl;
+    }
+    if (($scope eq 'site')||($scope eq 'robot')||($scope eq 'list')) {
+do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx $site_dir/$tpl");
+	return $site_dir.'/'.$tpl;
+    }
+    
+    if (($scope eq 'distrib')||($scope eq 'site')||($scope eq 'robot')||($scope eq 'list')) {
+do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx $distrib_dir/$tpl");
+	return $distrib_dir.'/'.$tpl;
+    }
+}
+
 # input object msg and listname, output signed message object
 sub smime_sign {
     my $in_msg = shift;
