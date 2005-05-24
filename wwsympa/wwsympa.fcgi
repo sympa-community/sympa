@@ -49,6 +49,7 @@ use Language;
 use Log;
 use Auth;
 use admin;
+use SharedDocument;
 
 use Mail::Header;
 use Mail::Address;
@@ -617,9 +618,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }
      $param->{'css_url'} = &Conf::get_robot_conf($robot, 'css_url');
      $param->{'css_url'} ||= &Conf::get_robot_conf($robot, 'wwsympa_url').'/css';
-     &do_log('info', "parameter css_url seems strange, it must be the url of a directory not a css file") if ($param->{'css_url'} =~ /.css$/);
 
-     $param->{'logo_html_definition'}  = &Conf::get_robot_conf($robot, 'logo_html_definition');
+     &do_log('info', "parameter css_url seems strange, it must be the url of a directory not a css file") if ($param->{'css_url'} =~ /.css$/);
 
      foreach my $auth (keys  %{$Conf{'cas_id'}}) {
 	 &do_log('debug2', "cas authentication service $auth");
@@ -8046,8 +8046,7 @@ sub _restrict_values {
      # $result{'scenario'}{'read'} = scenario name for the document
      # $result{'scenario'}{'edit'} = scenario name for the document
 
-     &wwslog('info', "d_access_control");
-     
+      
      # Result
       my %result;
 
@@ -8057,6 +8056,8 @@ sub _restrict_values {
      my $mode = shift;
      my $path = shift;
 
+      &wwslog('debug', "d_access_control(%s, %s)", join('/',%$mode), $path);
+      
      my $mode_read = $mode->{'read'};
      my $mode_edit = $mode->{'edit'};
      my $mode_control = $mode->{'control'};
@@ -8383,7 +8384,7 @@ sub do_d_read {
     my $path = &no_slash_end($in{'path'});
     
      # moderation
-    my $visible_path = &make_visible_path($path);
+     my $visible_path = &make_visible_path($path);
 
      # path of the shared directory
      my $shareddir =  $list->{'dir'}.'/shared';
@@ -8841,6 +8842,10 @@ sub do_d_read {
 	}
     }
     
+     #open TMP, ">/tmp/dump1";
+     #&tools::dump_var($param, 0,\*TMP);
+     #close TMP;
+
 
      return 1;
 }
@@ -12895,3 +12900,243 @@ sub _prepare_subscriber {
     return 1;
 }
 
+## New d_read function using SharedDocument module
+## The following features should be tested : 
+##      * inheritance on privileges
+##      * moderation
+##      * escaping special chars
+sub new_d_read {
+     &wwslog('info', 'new_d_read(%s)', $in{'path'});
+
+     ### action relative to a list ?
+     unless ($param->{'list'}) {
+	 &error_message('missing_arg',{'argument' => 'list'});
+	 &wwslog('err','do_d_read: no list');
+	 return undef;
+     }
+
+     # current list / current shared directory
+     my $list_name = $list->{'name'};
+
+     my $document = new SharedDocument ($list, $in{'path'}, $param->{'user'}{'email'});
+
+     unless (defined $document) {
+	 &error_message('failed');
+	 &wwslog('err',"d_read : cannot open $document->{'absolute_path'} : $!");
+	 return undef;	 
+     }
+
+     my $path = $document->{'path'};
+     my $visible_path = $document->{'visible_path'};
+     my $shareddir = $document->{'shared_dir'};
+     my $doc = $document->{'absolute_path'};
+     my $ref_access = $document->{'access'}; my %access = %{$ref_access};
+     $param->{'doc_owner'} = $document->{'owner'};
+     $param->{'doc_title'} = $document->{'title'};
+     $param->{'doc_date'} = $document->{'date'};
+
+     ### Access control    
+     unless ($access{'may'}{'read'}) {
+	 &error_message('may_not');
+	 &wwslog('err','d_read : access denied for %s', $param->{'user'}{'email'});
+	 return undef;
+     }
+
+     my $may_edit = $access{'may'}{'edit'};
+     my $may_control = $access{'may'}{'control'};
+     $param->{'may_edit'} = $may_edit;	
+     $param->{'may_control'} = $may_control;
+
+     ### File or directory ?
+     if ($document->{'type'} eq 'url') { 
+	 $param->{'file_extension'} = $document->{'file_extension'};
+	 $param->{'redirect_to'} = $document->{'url'};
+	 return 1;
+
+     }elsif ($document->{'type'} eq 'file') {
+	 $param->{'file'} = $document->{'absolute_path'};
+	 $param->{'bypass'} = 1;
+	 return 1;	 
+
+     }else { # directory
+     
+	 $param->{'empty'} = $#{$document->{'subdir'}} == -1;
+     
+	 # subdirectories hash
+	 my %subdirs;
+	 # file hash
+	 my %files;
+	 
+	 ## for the exception of index.html
+	 # name of the file "index.html" if exists in the directory read
+	 my $indexhtml;
+	 
+	 # boolean : one of the subdirectories or files inside
+	 # can be edited -> normal mode of read -> d_read.tt2;
+	 my $normal_mode;	 
+	 
+	 my $path_doc;
+	 my %desc_hash;
+	 my $may, my $def_desc;
+	 
+	 foreach my $subdocument (@{$document->{'subdir'}}) {
+	     
+	     my $d = $subdocument->{'filename'};	     
+	     my $path_doc = $subdocument->{'path'};
+	     
+	     ## Subdir
+	     if ($subdocument->{'type'} eq 'directory') {
+		 
+		 if ($subdocument->{'access'}{'may'}{'read'}) {
+		     
+		     $subdirs{$d} = $subdocument->dup();
+		     $subdirs{$d}{'doc'} = $subdocument->{'filename'};
+		     $subdirs{$d}{'escaped_doc'} =  $subdocument->{'escaped_filename'};
+		     
+		     if ($param->{'user'}{'email'}) {
+			 if ($subdocument->{'access'}{'may'}{'control'} == 1) {
+			     
+			     $subdirs{$d}{'edit'} = 1;  # or = $may_action_edit ?
+			     # if index.html, must know if something can be edit in the dir
+			     $normal_mode = 1;                         
+			 }elsif ($subdocument->{'access'}{'may'}{'edit'} != 0) {
+			     # $may_action_edit = 0.5 or 1 
+			     $subdirs{$d}{'edit'} = $subdocument->{'access'}{'may'}{'edit'};
+			     # if index.html, must know if something can be edit in the dir
+			     $normal_mode = 1;
+			 }
+			 
+			 if  ($subdocument->{'access'}{'may'}{'control'}) {
+			     $subdirs{$d}{'control'} = 1;
+			 }
+		     }
+		 }
+	     }else {
+		 # case file
+		 
+		 if ($subdocument->{'access'}{'may'}{'read'}) {
+		     
+		     $files{$d} = $subdocument->dup();
+
+		     $files{$d}{'doc'} = $subdocument->{'filename'};
+		     $files{$d}{'escaped_doc'} =  $subdocument->{'escaped_filename'};
+
+		     ## exception of index.html
+		     if ($d =~ /^(index\.html?)$/i) {
+			 $indexhtml = $1;
+		     }
+		     
+		     if ($param->{'user'}{'email'}) {
+			 if ($subdocument->{'access'}{'may'}{'edit'} == 1) {
+			     $normal_mode = 1;
+			     $files{$d}{'edit'} = 1;  # or = $may_action_edit ? 
+			 } elsif ($subdocument->{'access'}{'may'}{'edit'}  != 0){
+			     # $may_action_edit = 1 or 0.5
+			     $normal_mode = 1;
+			     $files{$d}{'edit'} = $subdocument->{'access'}{'may'}{'edit'};
+			 }
+			 
+			 if ($subdocument->{'access'}{'may'}{'control'}) { 
+			     $files{$d}{'control'} = 1;    
+			 }
+		     }
+		 }
+	     }
+	 }
+
+	 ### Exception : index.html
+	 if ($indexhtml) {
+	     unless ($normal_mode) {
+		 $param->{'file_extension'} = 'html';
+		 $param->{'bypass'} = 1;
+		 $param->{'file'} = $document->{'absolute_path'};
+		 return 1;
+	     }
+	 }
+
+	 ## to sort subdirs
+	 my @sort_subdirs;
+	 my $order = $in{'order'} || 'order_by_doc';
+	 $param->{'order_by'} = $order;
+	 foreach my $k (sort {by_order($order,\%subdirs)} keys %subdirs) {
+	     push @sort_subdirs, $subdirs{$k};
+	 }
+
+	 ## to sort files
+	 my @sort_files;
+	 foreach my $k (sort {by_order($order,\%files)} keys %files) {
+	     push @sort_files, $files{$k};
+	 }
+
+	 # parameters for the template file
+	 $param->{'list'} = $list_name;
+
+	 $param->{'father'} = $document->{'father_path'};
+	 $param->{'escaped_father'} = $document->{'escaped_father_path'} ;
+	 $param->{'description'} = $document->{'title'};
+	 $param->{'serial_desc'} = $document->{'serial_desc'};	 
+	 $param->{'path'} = $document->{'path'};
+	 $param->{'visible_path'} = $document->{'visible_path'};
+	 $param->{'escaped_path'} = $document->{'escaped_path'};
+
+	 if (scalar keys %subdirs) {
+	     $param->{'sort_subdirs'} = \@sort_subdirs;
+	 }
+	 if (scalar keys %files) {
+	     $param->{'sort_files'} = \@sort_files;
+	 }
+     }
+     $param->{'father_icon'} = $icon_table{'father'};
+     $param->{'sort_icon'} = $icon_table{'sort'};
+
+
+    ## Show expert commands / user page
+    
+    # for the curent directory
+    if ($may_edit == 0 && $may_control == 0) {
+	$param->{'has_dir_rights'} = 0;
+    } else {
+	$param->{'has_dir_rights'} = 1;
+	if ($may_edit == 1) { # (is_author || ! moderated)
+	    $param->{'total_edit'} = 1;
+	}
+    }
+
+    # set the page mode
+    if ($in{'show_expert_page'} && $param->{'has_dir_rights'}) {
+	$param->{'expert_page'} = 1;
+	&cookielib::set_expertpage_cookie(1,$param->{'cookie_domain'});
+ 
+    } elsif ($in{'show_user_page'}) {
+	$param->{'expert_page'} = 0;
+	&cookielib::set_expertpage_cookie(0,$param->{'cookie_domain'});
+    } else {
+	if (&cookielib::check_expertpage_cookie($ENV{'HTTP_COOKIE'}) && $param->{'has_dir_rights'}) {
+	    $param->{'expert_page'} = 1; 
+	} else {
+	    $param->{'expert_page'} = 0;
+	}
+    }
+    
+     open TMP, ">/tmp/dump";
+     $document->dump(\*TMP);
+     close TMP;
+
+     open TMP, ">/tmp/dump2";
+     &tools::dump_var ($param, 0, \*TMP);
+     close TMP;
+
+     return 1;
+}
+
+sub get_icon {
+    my $type = shift;
+
+    return $icon_table{$type};
+}
+
+sub get_mime_type {
+    my $type = shift;
+
+    return $mime_types->{$type};
+}
