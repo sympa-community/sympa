@@ -9123,16 +9123,20 @@ sub probe_db {
 		}
 		
 		
-		unless ($real_struct{$t}{$f} eq $db_struct{$t}{$f}) {
-		     &do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', $f, $t, $Conf{'db_name'}, $db_struct{$t}{$f});
-		     
-		     unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$t}{$f}")) {
-			 &do_log('err', 'Could not change field \'%s\' in table\'%s\'.', $f, $t);
-			 &do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
-			 return undef;
-		     }
-		     
-		     &do_log('info', 'Field %s in table %s, structur updated', $f, $t);
+		## Change DB types if different and if update_db_types enabled
+		if ($Conf{'update_db_field_types'} eq 'auto') {
+		    unless ($real_struct{$t}{$f} eq $db_struct{$t}{$f}) {
+			&do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', $f, $t, $Conf{'db_name'}, $db_struct{$t}{$f});
+			
+			&do_log('notice', "ALTER TABLE $t CHANGE $f $f $db_struct{$t}{$f}");
+			unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$t}{$f}")) {
+			    &do_log('err', 'Could not change field \'%s\' in table\'%s\'.', $f, $t);
+			    &do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
+			    return undef;
+			}
+			
+			&do_log('info', 'Field %s in table %s, structur updated', $f, $t);
+		    }
 		}
 	    }
 	}

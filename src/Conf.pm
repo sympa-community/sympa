@@ -57,7 +57,7 @@ my @valid_options = qw(
 		       color_0 color_1 color_2 color_3 color_4 color_5 color_6 color_7 color_8 color_9 color_10 color_11 color_12 color_13 color_14 color_15
  		       css_url css_path
 		       ldap_export_name ldap_export_host ldap_export_suffix ldap_export_password
-		       ldap_export_dnmanager ldap_export_connection_timeout urlize_min_size
+		       ldap_export_dnmanager ldap_export_connection_timeout update_db_field_types urlize_min_size
 		       list_check_smtp list_check_suffixes  spam_protection web_archive_spam_protection soap_url
 		       web_recode_to
 );
@@ -206,6 +206,7 @@ my %Default_Conf =
      'supported_lang' => 'fr,en_US,hu,it',
      'web_recode_to' => '',
      'default_remind_task' => '',
+     'update_db_field_types' => 'auto',
      );
    
 my $wwsconf;
