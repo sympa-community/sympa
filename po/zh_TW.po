@@ -223,7 +223,7 @@ msgid "%1 messages selected out of %2"
 msgstr "在 %2 中選中了 %1 個郵件"
 
 #. (occurrence)
-#: web_tt2/lists.tt2:4 web_tt2/review.tt2:57
+#: web_tt2/lists.tt2:4 web_tt2/review.tt2:62
 msgid "%1 occurrence(s) found"
 msgstr "找到 %1 個匹配項"
 
@@ -321,7 +321,7 @@ msgid "***** V I R U S    A L E R T *****"
 msgstr ""
 
 # nlsref 5,4
-#: src/tools.pl:137
+#: src/tools.pl:138
 msgid "------ End of suspected message ------\n"
 msgstr "------ End of suspected message ------\n"
 
@@ -340,6 +340,46 @@ msgstr "------ End of suspected message ------\n"
 #: web_tt2/create_list_request.tt2:55
 msgid "--Select a topic--"
 msgstr "--選擇話題--"
+
+#: web_tt2/list_admin_menu.tt2:17
+#, fuzzy
+msgid "-Archives"
+msgstr "Archives setup"
+
+#: web_tt2/list_admin_menu.tt2:18
+#, fuzzy
+msgid "-Bounces"
+msgstr "退信地址"
+
+#: web_tt2/list_admin_menu.tt2:19
+#, fuzzy
+msgid "-Data sources"
+msgstr "size=\"-1\"><b>定制</b"
+
+#: web_tt2/list_admin_menu.tt2:14
+#, fuzzy
+msgid "-List definition"
+msgstr "List definition"
+
+#: web_tt2/list_admin_menu.tt2:21
+#, fuzzy
+msgid "-Miscellaneous"
+msgstr "Other parameters"
+
+#: web_tt2/list_admin_menu.tt2:16
+#, fuzzy
+msgid "-Privileges"
+msgstr "Commands setup"
+
+#: web_tt2/list_admin_menu.tt2:20
+#, fuzzy
+msgid "-Rename list"
+msgstr "刪除郵遞論壇"
+
+#: web_tt2/list_admin_menu.tt2:15
+#, fuzzy
+msgid "-Sending/reception"
+msgstr "><b>監管</b"
 
 # nlsref 17,6
 #: wwsympa/wwslib.pm:52
@@ -480,8 +520,9 @@ msgid "Access"
 msgstr "存取"
 
 #. (visible_path)
-#: web_tt2/d_control.tt2:4
-msgid "Access rights for the document %1"
+#: web_tt2/d_control.tt2:6
+#, fuzzy
+msgid "Access control for the document %1"
 msgstr "文檔 %1 的訪問權限"
 
 # nlsref 16,1
@@ -489,11 +530,11 @@ msgstr "文檔 %1 的訪問權限"
 msgid "Account"
 msgstr ""
 
-#: web_tt2/d_read.tt2:368 web_tt2/review.tt2:45
+#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:50
 msgid "Add"
 msgstr "新增"
 
-#: web_tt2/d_read.tt2:363
+#: web_tt2/d_read.tt2:344
 msgid "Add a bookmark"
 msgstr "建立新的書簽"
 
@@ -501,7 +542,7 @@ msgstr "建立新的書簽"
 msgid "Add selected addresses"
 msgstr ",APBTvQ!H!N;V7(B"
 
-#: web_tt2/add_request.tt2:12
+#: web_tt2/add_request.tt2:11
 msgid "Add subscribers"
 msgstr "添加訂閱者"
 
@@ -510,7 +551,7 @@ msgstr "添加訂閱者"
 msgid "Address \"%1\" is incorrect"
 msgstr "地址“%1”是錯誤的"
 
-#: src/etc/mhonarc-ressources.tt2:52
+#: src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
 msgstr "高級搜尋"
 
@@ -569,11 +610,11 @@ msgstr ""
 msgid "Any information about this list :"
 msgstr ""
 
-#: web_tt2/d_properties.tt2:40
+#: web_tt2/d_properties.tt2:37
 msgid "Apply"
 msgstr "應用"
 
-#: web_tt2/list_menu.tt2:30 web_tt2/list_menu.tt2:32
+#: web_tt2/list_menu.tt2:34 web_tt2/list_menu.tt2:36
 msgid "Archive"
 msgstr "歸檔"
 
@@ -587,7 +628,7 @@ msgstr "Bounces management"
 msgid "Archive encrypted mails as cleartext"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:92
+#: src/etc/mhonarc-ressources.tt2:90
 msgid "Archive powered by"
 msgstr ""
 
@@ -608,7 +649,7 @@ msgstr ""
 
 #. (list)
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:50
+#: web_tt2/list_admin_menu.tt2:53
 msgid "Are you sure you wish to close %1 list ?"
 msgstr ""
 
@@ -632,7 +673,7 @@ msgid "Authentication requested"
 msgstr "»Ý­n®Ö­ã"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:70
+#: web_tt2/modindex.tt2:21 web_tt2/modindex.tt2:80
 msgid "Author"
 msgstr "作者"
 
@@ -714,12 +755,8 @@ msgstr ""
 "You should delete bouncing subscribers : \n"
 "%s/reviewbouncing/%s"
 
-#: web_tt2/list_menu.tt2:55
-msgid "Bounced email rate:"
-msgstr "退信率:"
-
 #: web_tt2/admin_menu.tt2:82 web_tt2/admin_menu.tt2:88
-#: web_tt2/list_admin_menu.tt2:35
+#: web_tt2/list_admin_menu.tt2:38
 #, fuzzy
 msgid "Bounces"
 msgstr "退信地址"
@@ -843,7 +880,7 @@ msgid ""
 "\tpassword. This will confirm your subscription to list %1"
 msgstr ""
 
-#: web_tt2/login_menu.tt2:46 web_tt2/loginbanner.tt2:56
+#: web_tt2/login_menu.tt2:51 web_tt2/loginbanner.tt2:56
 #, fuzzy
 msgid "Choose your authentication server"
 msgstr "在驗証身份("
@@ -901,6 +938,11 @@ msgstr ""
 msgid "Connexion expiration period"
 msgstr "連接過期時間"
 
+#: web_tt2/list_menu.tt2:27
+#, fuzzy
+msgid "Contact owners"
+msgstr "告知擁有者"
+
 #: web_tt2/arcsearch.tt2:109
 msgid "Continue search"
 msgstr "繼續搜尋"
@@ -914,7 +956,7 @@ msgstr "無法更改 %1 的電郵地址"
 #: web_tt2/error.tt2:65
 #, fuzzy
 msgid ""
-"Could not change your subscription address for the list '%1%'\n"
+"Could not change your subscription address for the list '%1'\n"
 "     because you are not allowed to unsubscribe."
 msgstr "無法更新論壇"
 
@@ -926,27 +968,29 @@ msgid ""
 "     because your new address is not allowed to subscribe."
 msgstr "無法更新論壇"
 
+#: web_tt2/d_read.tt2:319 web_tt2/d_read.tt2:333
+#, fuzzy
+msgid "Create"
+msgstr "建立新郵遞論壇"
+
 #: web_tt2/admin_menu.tt2:97 web_tt2/admin_menu.tt2:99
-#: web_tt2/list_admin_menu.tt2:39
+#: web_tt2/list_admin_menu.tt2:42
 msgid "Create Shared"
 msgstr ""
 
-#: web_tt2/d_read.tt2:342 web_tt2/d_read.tt2:347
+#: web_tt2/d_read.tt2:331
 msgid "Create a new file"
 msgstr "建立新的文件"
 
 #. (visible_path)
-#: web_tt2/d_read.tt2:317
+#: web_tt2/d_read.tt2:313
 msgid "Create a new folder inside the folder %1"
 msgstr "在活頁夾 %1 里建立新活頁夾"
 
-#: web_tt2/d_read.tt2:319
-msgid "Create a new folder inside the folder SHARED"
-msgstr "在活頁夾 SHARED 里建立新活頁夾"
-
-#: web_tt2/d_read.tt2:324
-msgid "Create a new subdirectory"
-msgstr "建立新的子目錄"
+#: web_tt2/d_read.tt2:315
+#, fuzzy
+msgid "Create a new folder inside the root folder"
+msgstr "在活頁夾 %1 里建立新活頁夾"
 
 #: web_tt2/menu.tt2:8
 msgid "Create list"
@@ -976,7 +1020,7 @@ msgid "Customize templates"
 msgstr "自訂模塊"
 
 #: web_tt2/admin_menu.tt2:53 web_tt2/admin_menu.tt2:59
-#: web_tt2/list_admin_menu.tt2:25
+#: web_tt2/list_admin_menu.tt2:28
 msgid "Customizing"
 msgstr "定制"
 
@@ -1006,7 +1050,7 @@ msgid "Data sources setup"
 msgstr "Data sources setup"
 
 #: web_tt2/arcsearch_form.tt2:61 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:17 web_tt2/modindex.tt2:69 web_tt2/subindex.tt2:9
+#: web_tt2/modindex.tt2:20 web_tt2/modindex.tt2:79 web_tt2/subindex.tt2:9
 msgid "Date"
 msgstr ",AHUFZ(B"
 
@@ -1067,11 +1111,11 @@ msgstr "刪除"
 msgid "Delete Selected Month(s)"
 msgstr "刪除選中的用戶"
 
-#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:41
+#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:44
 msgid "Delete Shared"
 msgstr ""
 
-#: web_tt2/review.tt2:224 web_tt2/review.tt2:69 web_tt2/reviewbouncing.tt2:106
+#: web_tt2/review.tt2:229 web_tt2/review.tt2:74 web_tt2/reviewbouncing.tt2:106
 #: web_tt2/reviewbouncing.tt2:30
 msgid "Delete selected email addresses"
 msgstr "刪除選中的電子郵件地址"
@@ -1084,19 +1128,21 @@ msgid ""
 msgstr ""
 
 #. (fname)
-#: web_tt2/d_properties.tt2:28
-msgid "Describe the directory %1"
+#: web_tt2/d_properties.tt2:26
+#, fuzzy
+msgid "Describe directory '%1'"
 msgstr "對目錄 %1 進行描述"
 
 #. (fname)
-#: web_tt2/d_properties.tt2:30
-msgid "Describe the file %1"
+#: web_tt2/d_properties.tt2:28
+#, fuzzy
+msgid "Describe file '%1'"
 msgstr "對文件 %1 進行描述"
 
 #. (doc_title)
 #. (desc)
-#: web_tt2/d_control.tt2:11 web_tt2/d_editfile.tt2:19
-#: web_tt2/d_properties.tt2:19 web_tt2/d_read.tt2:41
+#: web_tt2/d_control.tt2:12 web_tt2/d_editfile.tt2:19
+#: web_tt2/d_properties.tt2:18 web_tt2/d_read.tt2:41
 msgid "Description : %1"
 msgstr "描述: %1"
 
@@ -1141,7 +1187,7 @@ msgstr ""
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 
-#: web_tt2/modindex.tt2:10 web_tt2/modindex.tt2:48 web_tt2/viewmod.tt2:8
+#: web_tt2/modindex.tt2:10 web_tt2/modindex.tt2:58 web_tt2/viewmod.tt2:7
 msgid "Distribute"
 msgstr "分發"
 
@@ -1166,7 +1212,7 @@ msgstr "您確定要刪除 %1%2 嗎 ?"
 msgid "Do you really want to delete Selected Archives?"
 msgstr "確定要刪除 %1 ?"
 
-#: src/etc/mhonarc-ressources.tt2:425
+#: src/etc/mhonarc-ressources.tt2:423
 #, fuzzy
 msgid "Do you really want to delete this message ?"
 msgstr "確定要刪除 %1 ?"
@@ -1184,19 +1230,19 @@ msgid ""
 msgstr "您確定要給發送訂閱提醒到所有的%1個訂閱者嗎 ?"
 
 #. (total)
-#: web_tt2/review.tt2:34
+#: web_tt2/review.tt2:39
 msgid ""
 "Do you really want to send a subscription remind message to the %1 "
 "subscribers ?"
 msgstr "您確定要給全部的%1個訂閱者發送訂閱提醒郵件嗎?"
 
 #. (list)
-#: web_tt2/list_menu.tt2:21
+#: web_tt2/list_menu.tt2:20
 msgid "Do you really want to subscribe to list %1?"
 msgstr ""
 
 #. (list)
-#: web_tt2/list_menu.tt2:16
+#: web_tt2/list_menu.tt2:15
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "您確定要從 %1 退訂?"
 
@@ -1221,11 +1267,11 @@ msgstr "確定要刪除 %1 ?"
 msgid "Do you want to rename your file %1 ?"
 msgstr "確定要刪除 %1 ?"
 
-#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56
+#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:73
 msgid "Document"
 msgstr "文檔"
 
-#: web_tt2/review.tt2:89 web_tt2/review.tt2:93
+#: web_tt2/review.tt2:94 web_tt2/review.tt2:98
 msgid "Domain"
 msgstr ""
 
@@ -1239,7 +1285,7 @@ msgstr ""
 msgid "DownLoad ZipFile"
 msgstr ""
 
-#: web_tt2/review.tt2:35
+#: web_tt2/review.tt2:40
 msgid "Dump"
 msgstr ""
 
@@ -1268,11 +1314,11 @@ msgid "Edit"
 msgstr "編輯"
 
 #: web_tt2/admin_menu.tt2:25 web_tt2/admin_menu.tt2:30
-#: web_tt2/list_admin_menu.tt2:10
+#: web_tt2/list_admin_menu.tt2:11
 msgid "Edit List Config"
 msgstr "建立共享"
 
-#: web_tt2/d_control.tt2:28
+#: web_tt2/d_control.tt2:26
 msgid "Edit access"
 msgstr "編輯"
 
@@ -1292,7 +1338,7 @@ msgstr "%1 書簽的編修"
 msgid "Edition of the file %1"
 msgstr "%1 文件的編修"
 
-#: web_tt2/login_menu.tt2:12
+#: web_tt2/login_menu.tt2:11
 msgid "Editor"
 msgstr "監管者"
 
@@ -1303,7 +1349,7 @@ msgid ""
 "who will decide whether to distribute or reject it."
 msgstr ""
 
-#: web_tt2/pref.tt2:6 web_tt2/review.tt2:81 web_tt2/review.tt2:84
+#: web_tt2/pref.tt2:6 web_tt2/review.tt2:86 web_tt2/review.tt2:89
 #: web_tt2/reviewbouncing.tt2:62 web_tt2/subindex.tt2:7
 msgid "Email"
 msgstr ""
@@ -1333,8 +1379,14 @@ msgid "End of your EXPIRE command on list %s"
 msgstr "EXPIRE «ü¥O§¹¦¨ %s"
 
 # nlsref 1,3
-#: src/Conf.pm:244
+#: src/Conf.pm:245
 msgid "Error at line %d : %s"
+msgstr "°ÝÃDµo¥Í¦b %d ¦æ: %s"
+
+# nlsref 1,3
+#: web_tt2/list_panel.tt2:8
+#, fuzzy
+msgid "Error rate:"
 msgstr "°ÝÃDµo¥Í¦b %d ¦æ: %s"
 
 #: web_tt2/remove_arc.tt2:14
@@ -1452,7 +1504,7 @@ msgid "Families"
 msgstr "ÀÉ®×"
 
 # nlsref 8,7
-#: src/List.pm:6184
+#: src/List.pm:6187
 msgid "File"
 msgstr "ÀÉ®×"
 
@@ -1489,13 +1541,23 @@ msgstr ""
 msgid "File inclusion"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:221
+#: web_tt2/d_read.tt2:332
+#, fuzzy
+msgid "File name"
+msgstr "郵遞論壇名"
+
+#: src/etc/mhonarc-ressources.tt2:219
 msgid "First"
 msgstr ""
 
-#: web_tt2/login_menu.tt2:65
+#: web_tt2/login_menu.tt2:70
 msgid "First login ?"
 msgstr ""
+
+#: web_tt2/d_read.tt2:318
+#, fuzzy
+msgid "Folder name"
+msgstr "監管"
 
 #. (conf.host)
 #: mail_tt2/list_unknown.tt2:22
@@ -1545,7 +1607,7 @@ msgstr "Sympa 的系統指令/功能，位於使用者介面的標題的最上�
 msgid "GET <list> <file>           * To get <file> of <list> archive"
 msgstr ""
 
-#: web_tt2/login_menu.tt2:53 web_tt2/loginbanner.tt2:45
+#: web_tt2/login_menu.tt2:58 web_tt2/loginbanner.tt2:45
 #: web_tt2/loginbanner.tt2:60
 msgid "Go"
 msgstr ""
@@ -1558,7 +1620,7 @@ msgstr ""
 msgid "HTTPS authentication information"
 msgstr "HTTPS ,AF>V$PEO\"(B"
 
-#: web_tt2/edit_list_request.tt2:34 web_tt2/menu.tt2:31
+#: web_tt2/edit_list_request.tt2:34 web_tt2/menu.tt2:23
 msgid "Help"
 msgstr "幫助"
 
@@ -1586,7 +1648,7 @@ msgstr ""
 msgid "Here is the list of list from %1@%2"
 msgstr ""
 
-#: web_tt2/menu.tt2:28
+#: web_tt2/menu.tt2:20
 msgid "Home"
 msgstr "首頁"
 
@@ -1722,7 +1784,7 @@ msgstr ""
 msgid "Information regarding user %s have been updated for list %s.\n"
 msgstr "¦³Ãö¥Î¤á %s ¤w¸g§ó·s (¶l±H²M³æ %s)¡C\n"
 
-#: web_tt2/modindex.tt2:62 web_tt2/modindex.tt2:97
+#: web_tt2/modindex.tt2:107 web_tt2/modindex.tt2:72
 #, fuzzy
 msgid "Install"
 msgstr "安裝它 &nbsp;&nbsp;"
@@ -1772,7 +1834,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:585
+#: src/etc/mhonarc-ressources.tt2:583
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1811,7 +1873,7 @@ msgstr "語言"
 msgid "Language of the list"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:232
+#: src/etc/mhonarc-ressources.tt2:230
 #, fuzzy
 msgid "Last"
 msgstr "布局"
@@ -1826,8 +1888,8 @@ msgid "Last update :"
 msgstr "最後更新"
 
 #. (doc_date)
-#: web_tt2/d_control.tt2:10 web_tt2/d_editfile.tt2:18
-#: web_tt2/d_properties.tt2:18 web_tt2/d_read.tt2:39
+#: web_tt2/d_control.tt2:11 web_tt2/d_editfile.tt2:18
+#: web_tt2/d_properties.tt2:17 web_tt2/d_read.tt2:39
 msgid "Last update : %1"
 msgstr "最後更新: %1"
 
@@ -2029,7 +2091,7 @@ msgstr ""
 msgid "Listing messages to moderate"
 msgstr "沒有郵件要監管"
 
-#: web_tt2/modindex.tt2:59
+#: web_tt2/modindex.tt2:69
 #, fuzzy
 msgid "Listing of documents shared to moderate"
 msgstr "沒有郵件要監管"
@@ -2044,7 +2106,7 @@ msgstr "活頁夾 SHARED 的內容"
 msgid "Listing of root folder"
 msgstr "活頁夾 SHARED 的內容"
 
-#: web_tt2/login_menu.tt2:9
+#: web_tt2/login_menu.tt2:8
 #, fuzzy
 msgid "Listmaster"
 msgstr "郵遞論壇名"
@@ -2067,7 +2129,7 @@ msgstr ""
 msgid "Lists"
 msgstr ""
 
-#: web_tt2/list_panel.tt2:24
+#: web_tt2/list_panel.tt2:18
 msgid "Load certificate"
 msgstr "加載憑証"
 
@@ -2076,7 +2138,7 @@ msgid "Loading admins failed"
 msgstr ""
 
 #: web_tt2/help.tt2:22 web_tt2/help.tt2:25 web_tt2/help.tt2:28
-#: web_tt2/login_menu.tt2:61 web_tt2/loginbanner.tt2:77
+#: web_tt2/login_menu.tt2:66 web_tt2/loginbanner.tt2:77
 msgid "Login"
 msgstr "登入"
 
@@ -2091,11 +2153,11 @@ msgid ""
 "reminder."
 msgstr ")時，請提供您的 Email 地址和相應的密碼。"
 
-#: web_tt2/help.tt2:22 web_tt2/login_menu.tt2:26
+#: web_tt2/help.tt2:22 web_tt2/login_menu.tt2:25
 msgid "Logout"
 msgstr "登出"
 
-#: web_tt2/login_menu.tt2:66 web_tt2/login_menu.tt2:67
+#: web_tt2/login_menu.tt2:71
 #, fuzzy
 msgid "Lost password ?"
 msgstr "我的密碼？"
@@ -2106,7 +2168,7 @@ msgid ""
 "messages to moderate"
 msgstr ""
 
-#: web_tt2/login_menu.tt2:41 web_tt2/loginbanner.tt2:41
+#: web_tt2/login_menu.tt2:46 web_tt2/loginbanner.tt2:41
 #, fuzzy
 msgid "Magic authentification"
 msgstr "在驗証身份("
@@ -2131,12 +2193,12 @@ msgstr ""
 msgid "Mailing list for intranets"
 msgstr "郵遞論壇列表"
 
-#: web_tt2/home.tt2:10
+#: web_tt2/home.tt2:9
 #, fuzzy
 msgid "Mailing lists categories"
 msgstr "郵遞論壇列表"
 
-#: web_tt2/admin_menu.tt2:74 web_tt2/list_admin_menu.tt2:30
+#: web_tt2/admin_menu.tt2:74 web_tt2/list_admin_menu.tt2:33
 #, fuzzy
 msgid "Manage Archives"
 msgstr "Archives setup"
@@ -2177,6 +2239,11 @@ msgid ""
 "possible that the virus didn't come from your computer. In that case, please "
 "disregard this message."
 msgstr ""
+
+#: web_tt2/list_admin_menu.tt2:69
+#, fuzzy
+msgid "Message"
+msgstr "訊息"
 
 # nlsref 6,44
 #: src/Commands.pm:1684 src/Commands.pm:1793
@@ -2224,10 +2291,6 @@ msgid ""
 "list."
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:19
-msgid "Messages to moderate :"
-msgstr "要監管的郵件:"
-
 #: web_tt2/admin_menu.tt2:161 web_tt2/edit_list_request.tt2:13
 msgid "Miscellaneous"
 msgstr "Other parameters"
@@ -2242,7 +2305,7 @@ msgid "Missing filter"
 msgstr "缺少過濾"
 
 #: web_tt2/admin_menu.tt2:36 web_tt2/admin_menu.tt2:42
-#: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:17
+#: web_tt2/admin_menu.tt2:46
 msgid "Moderate"
 msgstr "監管"
 
@@ -2292,7 +2355,7 @@ msgstr ""
 msgid "Moderator          : %1"
 msgstr ""
 
-#: src/List.pm:519 web_tt2/list_panel.tt2:17
+#: src/List.pm:519 web_tt2/list_panel.tt2:15
 msgid "Moderators"
 msgstr "監管者:"
 
@@ -2310,7 +2373,7 @@ msgid ""
 "probably need to identify yourself first."
 msgstr "為了能夠使用本伺服器中所有提供的服務，您必須先確認身分。\n"
 
-#: web_tt2/review.tt2:33
+#: web_tt2/review.tt2:38
 msgid "Multiple add"
 msgstr ""
 
@@ -2326,8 +2389,8 @@ msgid ""
 "              distributed."
 msgstr ""
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:103
-#: web_tt2/review.tt2:99 web_tt2/subindex.tt2:8
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:104
+#: web_tt2/review.tt2:108 web_tt2/subindex.tt2:8
 msgid "Name"
 msgstr ",AC{3F(B"
 
@@ -2376,12 +2439,12 @@ msgstr ""
 msgid "Newsletter, restricted to moderators after confirmation"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:231
+#: src/etc/mhonarc-ressources.tt2:229
 #, fuzzy
 msgid "Next"
 msgstr "後一頁"
 
-#: web_tt2/review.tt2:21 web_tt2/review.tt2:239 web_tt2/reviewbouncing.tt2:118
+#: web_tt2/review.tt2:244 web_tt2/review.tt2:26 web_tt2/reviewbouncing.tt2:118
 #: web_tt2/reviewbouncing.tt2:52
 msgid "Next page"
 msgstr "後一頁"
@@ -2418,10 +2481,6 @@ msgstr ""
 msgid "No message and no document to moderate for list %1"
 msgstr "沒有郵件要監管"
 
-#: web_tt2/list_admin_menu.tt2:13
-msgid "No message to moderate"
-msgstr "沒有郵件要監管"
-
 #: web_tt2/error.tt2:43
 msgid "No name specified"
 msgstr "沒有指定名字"
@@ -2441,7 +2500,7 @@ msgstr "沒有頁 %1"
 msgid "No password for user"
 msgstr "用戶“[% error.email %]”沒有密碼"
 
-#: web_tt2/modindex.tt2:37
+#: web_tt2/modindex.tt2:47
 msgid "No subject"
 msgstr "沒有標題"
 
@@ -2473,8 +2532,8 @@ msgid ""
 "least, to embarrassment, and sometimes to more serious consequences."
 msgstr ""
 
-#: web_tt2/modindex.tt2:12 web_tt2/modindex.tt2:50 web_tt2/modindex.tt2:64
-#: web_tt2/modindex.tt2:99 web_tt2/viewmod.tt2:10
+#: web_tt2/modindex.tt2:109 web_tt2/modindex.tt2:12 web_tt2/modindex.tt2:60
+#: web_tt2/modindex.tt2:74 web_tt2/viewmod.tt2:9
 msgid "Notified reject"
 msgstr "拒絕並通知"
 
@@ -2484,7 +2543,7 @@ msgid "Number of forwarded messages:      %1"
 msgstr ""
 
 #. (mod_spool_size)
-#: mail_tt2/moderate.tt2:24
+#: mail_tt2/moderate.tt2:26
 #, fuzzy
 msgid "Number of messages awaiting moderation for this list : %1"
 msgstr "沒有郵件要監管"
@@ -2517,7 +2576,7 @@ msgid ""
 msgstr ""
 
 #. (conf.email,conf.host)
-#: mail_tt2/moderate.tt2:15 mail_tt2/moderate.tt2:20
+#: mail_tt2/moderate.tt2:16 mail_tt2/moderate.tt2:22
 msgid "Or send a message to %1@%2 with the following subject :"
 msgstr ""
 
@@ -2533,7 +2592,7 @@ msgstr "額外的地址:"
 msgid "Other files/pages description :"
 msgstr ""
 
-#: web_tt2/home.tt2:21
+#: web_tt2/home.tt2:18
 msgid "Others"
 msgstr "其它"
 
@@ -2545,7 +2604,7 @@ msgid ""
 "to be yours (From: %3)."
 msgstr ""
 
-#: src/List.pm:934 web_tt2/login_menu.tt2:11
+#: src/List.pm:934 web_tt2/login_menu.tt2:10
 msgid "Owner"
 msgstr "所有者"
 
@@ -2556,8 +2615,8 @@ msgstr ""
 
 #. (owner)
 #. (doc_owner)
-#: web_tt2/d_control.tt2:9 web_tt2/d_editfile.tt2:17
-#: web_tt2/d_properties.tt2:17 web_tt2/d_read.tt2:38
+#: web_tt2/d_control.tt2:10 web_tt2/d_editfile.tt2:17
+#: web_tt2/d_properties.tt2:16 web_tt2/d_read.tt2:38
 msgid "Owner : %1"
 msgstr "所有者: %1"
 
@@ -2565,7 +2624,7 @@ msgstr "所有者: %1"
 msgid "Owner:"
 msgstr "所有者:"
 
-#: web_tt2/list_panel.tt2:11
+#: web_tt2/list_panel.tt2:9
 msgid "Owners"
 msgstr "所有者:"
 
@@ -2584,7 +2643,7 @@ msgstr ""
 msgid "Owners of list %s"
 msgstr "¶l±H²M³æªº¾Ö¦³ªÌ %s"
 
-#: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:34
+#: web_tt2/reviewbouncing.tt2:34
 msgid "Page size"
 msgstr "頁面大小"
 
@@ -2605,7 +2664,7 @@ msgstr "密碼:"
 msgid "Password for %1"
 msgstr "%1 的密碼:"
 
-#: web_tt2/modindex.tt2:71
+#: web_tt2/modindex.tt2:81
 msgid "Path"
 msgstr ""
 
@@ -2613,7 +2672,7 @@ msgstr ""
 msgid "Pending lists"
 msgstr "OPTION VALUE='[% f.NAME %]' [% f.selected %]>[% f.complete %]"
 
-#: web_tt2/review.tt2:32
+#: web_tt2/review.tt2:37
 #, fuzzy
 msgid "Pending subscriptions"
 msgstr "您訂閱的郵遞論壇"
@@ -2663,7 +2722,7 @@ msgid ""
 "to  %1@%2 ."
 msgstr ""
 
-#: web_tt2/list_menu.tt2:38 web_tt2/list_menu.tt2:40
+#: web_tt2/list_menu.tt2:42 web_tt2/list_menu.tt2:44
 msgid "Post"
 msgstr "發表"
 
@@ -2679,16 +2738,16 @@ msgstr ""
 msgid "Prefer"
 msgstr "優先"
 
-#: web_tt2/help.tt2:16 web_tt2/menu.tt2:18
+#: web_tt2/help.tt2:16
 msgid "Preferences"
 msgstr "首選項"
 
-#: src/etc/mhonarc-ressources.tt2:222
+#: src/etc/mhonarc-ressources.tt2:220
 #, fuzzy
 msgid "Previous"
 msgstr "前一頁"
 
-#: web_tt2/review.tt2:15 web_tt2/review.tt2:233 web_tt2/reviewbouncing.tt2:112
+#: web_tt2/review.tt2:20 web_tt2/review.tt2:238 web_tt2/reviewbouncing.tt2:112
 #: web_tt2/reviewbouncing.tt2:46
 msgid "Previous page"
 msgstr "前一頁"
@@ -2719,7 +2778,7 @@ msgstr ""
 msgid "Privilege for reading mail archives and frequency of archiving"
 msgstr ""
 
-#: web_tt2/login_menu.tt2:10
+#: web_tt2/login_menu.tt2:9
 msgid "Privileged owner"
 msgstr "有特權的所有者"
 
@@ -2732,19 +2791,19 @@ msgid "Properties"
 msgstr ""
 
 #. (visible_path)
-#: web_tt2/d_properties.tt2:6
+#: web_tt2/d_properties.tt2:7
 #, fuzzy
 msgid "Properties of the bookmark %1"
 msgstr "%1 書簽的編修"
 
 #. (visible_path)
-#: web_tt2/d_properties.tt2:8
+#: web_tt2/d_properties.tt2:9
 #, fuzzy
 msgid "Properties of the directory %1"
 msgstr "%1 目錄的編修"
 
 #. (visible_path)
-#: web_tt2/d_properties.tt2:10
+#: web_tt2/d_properties.tt2:11
 #, fuzzy
 msgid "Properties of the file %1"
 msgstr "%1 文件的編修"
@@ -2772,8 +2831,8 @@ msgstr ""
 "#-#-#-#-#  zh_TW.po (PACKAGE VERSION)  #-#-#-#-#\n"
 "公開郵遞論壇"
 
-#: web_tt2/d_editfile.tt2:39 web_tt2/d_editfile.tt2:62 web_tt2/d_read.tt2:394
-#: web_tt2/d_read.tt2:418
+#: web_tt2/d_editfile.tt2:39 web_tt2/d_editfile.tt2:62 web_tt2/d_read.tt2:365
+#: web_tt2/d_read.tt2:384
 msgid "Publish"
 msgstr "發布"
 
@@ -2809,7 +2868,7 @@ msgstr ""
 msgid "Re-enter your new password :"
 msgstr "重新輸入新密碼:"
 
-#: web_tt2/d_control.tt2:19
+#: web_tt2/d_control.tt2:17
 msgid "Read access"
 msgstr "讀取"
 
@@ -2831,7 +2890,7 @@ msgstr "重建歸檔"
 msgid "Received mega-bytes             :      %1"
 msgstr ""
 
-#: web_tt2/review.tt2:108
+#: web_tt2/review.tt2:113
 msgid "Reception"
 msgstr "接收"
 
@@ -2853,8 +2912,8 @@ msgstr ""
 msgid "Refer to documentation to adapt %1."
 msgstr ""
 
-#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:49 web_tt2/modindex.tt2:63
-#: web_tt2/modindex.tt2:98 web_tt2/viewmod.tt2:9
+#: web_tt2/modindex.tt2:108 web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:59
+#: web_tt2/modindex.tt2:73 web_tt2/viewmod.tt2:8
 msgid "Reject"
 msgstr "拒絕"
 
@@ -2866,7 +2925,7 @@ msgstr ",A>\\>xQ!H!N;V7(B"
 msgid "Related email"
 msgstr "關聯郵件"
 
-#: web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:16
+#: web_tt2/review.tt2:39 web_tt2/reviewbouncing.tt2:16
 msgid "Remind all subscribers"
 msgstr "提醒所有訂閱者"
 
@@ -2908,7 +2967,7 @@ msgid "Remote host"
 msgstr "遠程主機"
 
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:50
+#: web_tt2/list_admin_menu.tt2:53
 msgid "Remove List"
 msgstr ""
 
@@ -2917,24 +2976,24 @@ msgstr ""
 msgid "Removed from %1"
 msgstr ""
 
-#: web_tt2/d_properties.tt2:64 web_tt2/d_upload.tt2:20
+#: web_tt2/d_properties.tt2:58 web_tt2/d_upload.tt2:20
 msgid "Rename"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:130 web_tt2/admin_menu.tt2:132
-#: web_tt2/list_admin_menu.tt2:53
+#: web_tt2/list_admin_menu.tt2:56
 #, fuzzy
 msgid "Rename List"
 msgstr "刪除郵遞論壇"
 
 #. (fname)
-#: web_tt2/d_properties.tt2:52
+#: web_tt2/d_properties.tt2:46
 #, fuzzy
 msgid "Rename directory %1"
 msgstr "無法建立目錄 %1"
 
 #. (fname)
-#: web_tt2/d_properties.tt2:54
+#: web_tt2/d_properties.tt2:48
 msgid "Rename file %1"
 msgstr ""
 
@@ -2959,7 +3018,7 @@ msgstr "§ó·s§Aªº­q¾\\¦b '%s'"
 msgid "Replace the file %1 with your file"
 msgstr "用您的文件取代文件 %1"
 
-#: src/etc/mhonarc-ressources.tt2:417
+#: src/etc/mhonarc-ressources.tt2:415
 msgid "Reply"
 msgstr ""
 
@@ -2973,7 +3032,7 @@ msgstr ""
 msgid "Reply to           : %1"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:413
+#: src/etc/mhonarc-ressources.tt2:411
 msgid "Reply to sender"
 msgstr ""
 
@@ -2999,11 +3058,11 @@ msgid "Reset errors for selected users"
 msgstr "為選中的用戶重置錯誤計數"
 
 #: web_tt2/admin_menu.tt2:118 web_tt2/admin_menu.tt2:120
-#: web_tt2/list_admin_menu.tt2:48
+#: web_tt2/list_admin_menu.tt2:51
 msgid "Restore List"
 msgstr "監管"
 
-#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:43
+#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:46
 msgid "Restore shared"
 msgstr "恢複共享"
 
@@ -3025,7 +3084,7 @@ msgstr "«ü¥Oªºµ²ªG"
 msgid "Return to archive %1"
 msgstr "回到歸檔 %1"
 
-#: web_tt2/list_menu.tt2:54
+#: web_tt2/list_menu.tt2:58
 msgid "Review"
 msgstr ""
 
@@ -3039,7 +3098,7 @@ msgid "Review subscribers : %1"
 msgstr ""
 
 # nlsref 5,2
-#: src/tools.pl:130
+#: src/tools.pl:131
 msgid "Routing error ?"
 msgstr "Routing error ?"
 
@@ -3121,8 +3180,8 @@ msgstr "情景名"
 msgid "Scenario test module"
 msgstr "情景測試模塊"
 
-#: src/etc/mhonarc-ressources.tt2:51 web_tt2/arcsearch_form.tt2:15
-#: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:54
+#: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15
+#: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:59
 #: web_tt2/reviewbouncing.tt2:11
 msgid "Search"
 msgstr "搜尋"
@@ -3139,7 +3198,7 @@ msgstr "搜尋域"
 msgid "Search field :"
 msgstr "搜尋域:"
 
-#: web_tt2/home.tt2:46
+#: web_tt2/home.tt2:42
 msgid "Search lists"
 msgstr "搜尋郵遞論壇"
 
@@ -3157,7 +3216,7 @@ msgid ""
 "Select below Archives months you want to delete or download (ZiP format):"
 msgstr ""
 
-#: web_tt2/review.tt2:59
+#: web_tt2/review.tt2:64
 msgid "Selection too wide, can not show selection"
 msgstr "選擇範圍太寬，無法顯示選擇"
 
@@ -3200,12 +3259,12 @@ msgstr "重置錯誤計數"
 msgid "Service messages description :"
 msgstr "這個表單用來編輯您的郵遞論壇的幾個文件:"
 
-#: web_tt2/d_control.tt2:55
+#: web_tt2/d_control.tt2:54
 msgid "Set owner"
 msgstr "設置所有者"
 
 #. (visible_path)
-#: web_tt2/d_control.tt2:47
+#: web_tt2/d_control.tt2:48
 msgid "Set the owner of the directory %1"
 msgstr "設置目錄 %1 的所有者"
 
@@ -3226,7 +3285,7 @@ msgstr ""
 msgid "Shared documents"
 msgstr ""
 
-#: web_tt2/list_menu.tt2:46 web_tt2/list_menu.tt2:48
+#: web_tt2/list_menu.tt2:50 web_tt2/list_menu.tt2:52
 msgid "Shared web"
 msgstr "共享頁面"
 
@@ -3240,7 +3299,7 @@ msgid ""
 "display multipart/digest format messages well."
 msgstr ""
 
-#: web_tt2/modindex.tt2:20 web_tt2/modindex.tt2:72
+#: web_tt2/modindex.tt2:23 web_tt2/modindex.tt2:82
 msgid "Size"
 msgstr "大小"
 
@@ -3258,7 +3317,7 @@ msgid "Skins, CSS and colors"
 msgstr ""
 
 # nlsref 6,260
-#: src/List.pm:8684
+#: src/List.pm:8687
 #, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
@@ -3286,7 +3345,7 @@ msgstr ""
 "¦pªG§A¤£·Q°õ¦æ³o°Ê§@¡A½Ð©¿²¤¥»¶l¥ó¡C"
 
 # nlsref 6,260
-#: src/List.pm:8677
+#: src/List.pm:8680
 #, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
@@ -3314,7 +3373,7 @@ msgstr ""
 "¦pªG§A¤£·Q°õ¦æ³o°Ê§@¡A½Ð©¿²¤¥»¶l¥ó¡C"
 
 # nlsref 6,39
-#: src/List.pm:8689 src/List.pm:8694
+#: src/List.pm:8692 src/List.pm:8697
 msgid ""
 "Someone (hopefully you) requested a user of list %s to be\n"
 "added or removed.\n"
@@ -3352,7 +3411,7 @@ msgstr ""
 "\n"
 "AUTH %s EXPIRE %s %d %d\n"
 
-#: web_tt2/review.tt2:113 web_tt2/review.tt2:116
+#: web_tt2/review.tt2:118 web_tt2/review.tt2:121
 #, fuzzy
 msgid "Sources"
 msgstr "size=\"-1\"><b>定制</b"
@@ -3372,7 +3431,7 @@ msgstr "狀態: %1"
 msgid "Status of the list"
 msgstr ""
 
-#: web_tt2/review.tt2:122 web_tt2/review.tt2:125
+#: web_tt2/review.tt2:127 web_tt2/review.tt2:130
 #, fuzzy
 msgid "Sub date"
 msgstr "按日期排序"
@@ -3380,7 +3439,7 @@ msgstr "按日期排序"
 #: web_tt2/active_lists.tt2:26 web_tt2/arcsearch_form.tt2:57
 #: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
 #: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:24
-#: web_tt2/modindex.tt2:19 web_tt2/review_family.tt2:9
+#: web_tt2/modindex.tt2:22 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "標題"
 
@@ -3416,7 +3475,7 @@ msgstr "提交"
 msgid "Submit your creation request"
 msgstr "提交您的創建要求"
 
-#: web_tt2/list_menu.tt2:21 web_tt2/subrequest.tt2:34
+#: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:34
 #: web_tt2/subrequest.tt2:64
 msgid "Subscribe"
 msgstr "訂閱"
@@ -3426,11 +3485,11 @@ msgstr "訂閱"
 msgid "Subscribed since :"
 msgstr "訂閱時間: %1"
 
-#: web_tt2/login_menu.tt2:13
+#: web_tt2/login_menu.tt2:12
 msgid "Subscriber"
 msgstr "訂閱者"
 
-#: web_tt2/list_menu.tt2:12
+#: web_tt2/list_menu.tt2:11
 msgid "Subscriber Options"
 msgstr "訂閱者選項"
 
@@ -3442,7 +3501,7 @@ msgstr "郵遞論壇訂閱者信息"
 msgid "Subscribers"
 msgstr "訂閱者"
 
-#: web_tt2/list_panel.tt2:10
+#: web_tt2/list_panel.tt2:7
 msgid "Subscribers:"
 msgstr "訂閱: 共"
 
@@ -3451,6 +3510,11 @@ msgid ""
 "Subscribing invitation message : it is sent to a person if some user  \n"
 "use the INVITE command to invite someone for subscription."
 msgstr ""
+
+#: web_tt2/list_admin_menu.tt2:79
+#, fuzzy
+msgid "Subscription"
+msgstr "訂閱者選項"
 
 #. (subscribe)
 #: mail_tt2/info_report.tt2:10
@@ -3482,7 +3546,7 @@ msgid "Summary"
 msgstr ""
 
 # nlsref 8,31
-#: src/List.pm:3211
+#: src/List.pm:3214
 msgid "Summary of list %s"
 msgstr ""
 
@@ -3491,7 +3555,7 @@ msgstr ""
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:567
+#: src/etc/mhonarc-ressources.tt2:565
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -3578,7 +3642,7 @@ msgid ""
 "ignored. Headers/footers may be appended to text/plain messages only."
 msgstr ""
 
-#: web_tt2/review.tt2:30
+#: web_tt2/review.tt2:35
 msgid "Synchronize members with data sources"
 msgstr ""
 
@@ -3587,7 +3651,7 @@ msgstr ""
 msgid "Syntax errors with the following parameters : %1"
 msgstr "下列參數語法錯誤: %1"
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:10 src/List.pm:3090
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:10 src/List.pm:3093
 #, fuzzy
 msgid "Table of contents:"
 msgstr "目錄:"
@@ -3745,7 +3809,7 @@ msgid ""
 msgstr ""
 
 # nlsref 5,3
-#: src/tools.pl:135
+#: src/tools.pl:136
 msgid ""
 "The following message was sent to a list while it seems to contain\n"
 "commands like subscribe, unsubscribe, help, index, get, ...\n"
@@ -4158,7 +4222,7 @@ msgid ""
 msgstr ""
 
 #. (conf.email,conf.host)
-#: web_tt2/home.tt2:6
+#: web_tt2/home.tt2:5
 msgid ""
 "This server provides you access to your environment on mailing list server %"
 "1@%2. Starting from this URL, you can perform subscription options, "
@@ -4166,8 +4230,8 @@ msgid ""
 "archives, list management and so on."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:190 src/etc/mhonarc-ressources.tt2:288
-#: src/etc/mhonarc-ressources.tt2:370
+#: src/etc/mhonarc-ressources.tt2:188 src/etc/mhonarc-ressources.tt2:286
+#: src/etc/mhonarc-ressources.tt2:368
 msgid "Thread"
 msgstr ""
 
@@ -4297,7 +4361,7 @@ msgstr ""
 msgid "To receive your password :"
 msgstr "要收到密碼:"
 
-#: mail_tt2/moderate.tt2:18
+#: mail_tt2/moderate.tt2:19
 msgid "To reject it (it will be removed):"
 msgstr ""
 
@@ -4323,7 +4387,7 @@ msgstr "§A¯à¤U¦C«ü¥O¥h±¼­q¤á :\n"
 msgid "To: %1"
 msgstr "收件者: %1"
 
-#: web_tt2/review.tt2:223 web_tt2/reviewbouncing.tt2:121
+#: web_tt2/review.tt2:228 web_tt2/reviewbouncing.tt2:121
 msgid "Toggle Selection"
 msgstr "切換選取"
 
@@ -4361,7 +4425,7 @@ msgstr ""
 msgid "UNsubscription request from list %s"
 msgstr "¨ú®ø­q¾\\­n¨D(¶l±H²M³æ %s) "
 
-#: web_tt2/d_read.tt2:365
+#: web_tt2/d_read.tt2:346
 msgid "URL"
 msgstr "title"
 
@@ -4431,13 +4495,13 @@ msgstr "以電郵地址"
 msgid "Unknown"
 msgstr "未知"
 
-#: web_tt2/list_menu.tt2:16 web_tt2/sigrequest.tt2:39
+#: web_tt2/list_menu.tt2:15 web_tt2/sigrequest.tt2:39
 #: web_tt2/sigrequest.tt2:53 web_tt2/sigrequest.tt2:68
 msgid "Unsubscribe"
 msgstr "退訂"
 
 # nlsref 6,71
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3467
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3476
 msgid "Unsubscribe from list %s"
 msgstr "¥Ñ¶l±H²M³æ %s ÖÃ¶}"
 
@@ -4475,23 +4539,23 @@ msgid ""
 msgstr ""
 
 #. (visible_path)
-#: web_tt2/d_read.tt2:410
+#: web_tt2/d_read.tt2:377
 #, fuzzy
 msgid "Unzip a file inside the folder %1"
 msgstr "上傳一個文件到活頁夾 %1 中"
 
-#: web_tt2/d_read.tt2:412
+#: web_tt2/d_read.tt2:379
 #, fuzzy
 msgid "Unzip a file inside the folder SHARED"
 msgstr "上傳一個文件到活頁夾 SHARED 中"
 
-#: web_tt2/d_control.tt2:5 web_tt2/d_editfile.tt2:6
-#: web_tt2/d_properties.tt2:13 web_tt2/d_read.tt2:7
+#: web_tt2/d_control.tt2:4 web_tt2/d_editfile.tt2:6 web_tt2/d_properties.tt2:4
+#: web_tt2/d_read.tt2:7
 msgid "Up to higher level directory"
 msgstr "> 轉到上一級目錄"
 
 #: web_tt2/d_editfile.tt2:37 web_tt2/edit_list_request.tt2:416
-#: web_tt2/editsubscriber.tt2:38 web_tt2/suboptions.tt2:31
+#: web_tt2/editsubscriber.tt2:38 web_tt2/suboptions.tt2:26
 msgid "Update"
 msgstr "更新"
 
@@ -4500,11 +4564,11 @@ msgid "Update of list members based on the TTL"
 msgstr ""
 
 #. (visible_path)
-#: web_tt2/d_read.tt2:386
+#: web_tt2/d_read.tt2:359
 msgid "Upload a file inside the folder %1"
 msgstr "上傳一個文件到活頁夾 %1 中"
 
-#: web_tt2/d_read.tt2:388
+#: web_tt2/d_read.tt2:361
 msgid "Upload a file inside the folder SHARED"
 msgstr "上傳一個文件到活頁夾 SHARED 中"
 
@@ -4564,7 +4628,7 @@ msgstr "查看最後的退信"
 msgid "Virtual Robots"
 msgstr ""
 
-#: web_tt2/editsubscriber.tt2:22 web_tt2/suboptions.tt2:23
+#: web_tt2/editsubscriber.tt2:22 web_tt2/suboptions.tt2:19
 msgid "Visibility :"
 msgstr ""
 
@@ -4636,8 +4700,8 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:3238 wwsympa/wwsympa.fcgi:3239
-#: wwsympa/wwsympa.fcgi:3907 wwsympa/wwsympa.fcgi:3908
+#: wwsympa/wwsympa.fcgi:3247 wwsympa/wwsympa.fcgi:3248
+#: wwsympa/wwsympa.fcgi:4038 wwsympa/wwsympa.fcgi:4039
 msgid "Welcome on list %s"
 msgstr "Åwªï¥[¤J %s ¶l±H²M³æ"
 
@@ -4822,7 +4886,7 @@ msgid ""
 msgstr "您並未選取密碼, 請要求一份原先密碼的提醒"
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3468 wwsympa/wwsympa.fcgi:4013
+#: wwsympa/wwsympa.fcgi:3477 wwsympa/wwsympa.fcgi:4144
 #, fuzzy
 msgid "You have been removed from list %s.\n"
 msgstr "«ü©wªº­q¤á¤w¸g±q¶l±H²M³æ¤¤°£¥h¡C\n"
@@ -4896,7 +4960,7 @@ msgid ""
 msgstr "§AÚÌ»{ªº¹q¶lÉO¥Ó½Ðªº¤£¬Û¦P¡A½Ð¥Î§Aªº¥D¹q¶l¦a§}"
 
 # nlsref 6,79
-#: src/List.pm:8699 src/List.pm:8706
+#: src/List.pm:8702 src/List.pm:8709
 msgid ""
 "You requested a subscription reminder to be sent\n"
 "to each subscriber of list %s\n"
@@ -5140,6 +5204,11 @@ msgid ""
 "you a reminder"
 msgstr ""
 
+#: web_tt2/login_menu.tt2:31
+#, fuzzy
+msgid "Your preferences"
+msgstr "首選項"
+
 #: web_tt2/notice.tt2:6
 msgid "Your request has been forwarded to the list owner"
 msgstr "您的要求已經被f給郵遞論壇所有者"
@@ -5169,11 +5238,11 @@ msgid "Your subscription email is %1"
 msgstr ""
 
 # nlsref 6,18
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4012
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4143
 msgid "Your subscription to list %s has been removed."
 msgstr "§A¦b¶l±H²M³æ %s ¤¤¸g¤w°£¥h"
 
-#: web_tt2/help.tt2:20 web_tt2/menu.tt2:21
+#: web_tt2/help.tt2:20 web_tt2/login_menu.tt2:34
 msgid "Your subscriptions"
 msgstr "您訂閱的郵遞論壇"
 
@@ -5447,7 +5516,7 @@ msgstr "®Ö­ã»Ý­n %s «ü¥O %s\n"
 msgid "bounce score"
 msgstr "退信計數"
 
-#: web_tt2/review.tt2:160
+#: web_tt2/review.tt2:165
 msgid "bouncing"
 msgstr ""
 
@@ -5477,12 +5546,12 @@ msgstr "區分大小寫"
 msgid "certificate for authentication by remote Sympa"
 msgstr ""
 
-#: web_tt2/d_control.tt2:40
+#: web_tt2/d_control.tt2:38
 msgid "change access"
 msgstr "修改權限"
 
-#: src/etc/mhonarc-ressources.tt2:189 src/etc/mhonarc-ressources.tt2:287
-#: src/etc/mhonarc-ressources.tt2:369 src/etc/mhonarc-ressources.tt2:373
+#: src/etc/mhonarc-ressources.tt2:187 src/etc/mhonarc-ressources.tt2:285
+#: src/etc/mhonarc-ressources.tt2:367 src/etc/mhonarc-ressources.tt2:371
 msgid "chronological"
 msgstr ""
 
@@ -5611,7 +5680,7 @@ msgid "editor rejection message"
 msgstr ""
 
 # nlsref 16,27
-#: src/List.pm:499 src/List.pm:909 web_tt2/login_menu.tt2:57
+#: src/List.pm:499 src/List.pm:909 web_tt2/login_menu.tt2:62
 #: web_tt2/loginbanner.tt2:75
 msgid "email address"
 msgstr ""
@@ -5828,7 +5897,7 @@ msgstr ""
 msgid "list name"
 msgstr "郵遞論壇名"
 
-#: web_tt2/menu.tt2:25
+#: web_tt2/menu.tt2:17
 #, fuzzy
 msgid "list of lists"
 msgstr "恢複"
@@ -5855,8 +5924,8 @@ msgid "local domain users or owner approval"
 msgstr ""
 
 # nlsref 8,7
-#: src/etc/mhonarc-ressources.tt2:185 src/etc/mhonarc-ressources.tt2:283
-#: src/etc/mhonarc-ressources.tt2:62
+#: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:281
+#: src/etc/mhonarc-ressources.tt2:63
 #, fuzzy
 msgid "mails"
 msgstr "ÀÉ®×"
@@ -5966,7 +6035,7 @@ msgid "owners approval"
 msgstr ""
 
 #. ($PAGENUM$,$NUMOFPAGES$)
-#: src/etc/mhonarc-ressources.tt2:192 src/etc/mhonarc-ressources.tt2:290
+#: src/etc/mhonarc-ressources.tt2:190 src/etc/mhonarc-ressources.tt2:288
 #, fuzzy
 msgid "page # %1/%2"
 msgstr "第%1頁，共%2頁"
@@ -5981,7 +6050,7 @@ msgstr "第%1頁，共%2頁"
 msgid "part of word"
 msgstr "密碼"
 
-#: web_tt2/login_menu.tt2:59 web_tt2/loginbanner.tt2:76
+#: web_tt2/login_menu.tt2:64 web_tt2/loginbanner.tt2:76
 #: web_tt2/sigrequest.tt2:35 web_tt2/sigrequest.tt2:64
 #: web_tt2/subrequest.tt2:28 web_tt2/subrequest.tt2:58
 msgid "password"
@@ -6077,8 +6146,8 @@ msgstr ""
 msgid "purge of orphan entries in user table every month"
 msgstr ""
 
-#: web_tt2/add_request.tt2:13 web_tt2/editsubscriber.tt2:40
-#: web_tt2/review.tt2:226 web_tt2/review.tt2:45 web_tt2/review.tt2:70
+#: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:40
+#: web_tt2/review.tt2:231 web_tt2/review.tt2:50 web_tt2/review.tt2:75
 #: web_tt2/reviewbouncing.tt2:107
 msgid "quiet"
 msgstr "安靜"
@@ -6270,7 +6339,7 @@ msgid "selection (if multiple)"
 msgstr ""
 
 #. (user.email)
-#: src/etc/mhonarc-ressources.tt2:418
+#: src/etc/mhonarc-ressources.tt2:416
 msgid "send it back to %1"
 msgstr ""
 
@@ -6337,7 +6406,7 @@ msgstr ""
 msgid "summary message"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:425
+#: src/etc/mhonarc-ressources.tt2:423
 msgid "tag this mail for deletion"
 msgstr ""
 
@@ -6365,7 +6434,7 @@ msgstr "郵遞論壇名；注意，不是它的地址!"
 msgid "this sentence"
 msgstr "(本句話，"
 
-#: src/etc/mhonarc-ressources.tt2:373
+#: src/etc/mhonarc-ressources.tt2:371
 msgid "thread"
 msgstr ""
 
@@ -6373,11 +6442,11 @@ msgstr ""
 msgid "threshold"
 msgstr ""
 
-#: web_tt2/d_read.tt2:364
+#: web_tt2/d_read.tt2:345
 msgid "title"
 msgstr "URL"
 
-#: src/etc/mhonarc-ressources.tt2:415
+#: src/etc/mhonarc-ressources.tt2:413
 #, fuzzy
 msgid "to list"
 msgstr "恢複"
@@ -6434,6 +6503,21 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:30
 msgid "your password : %1"
 msgstr ""
+
+#~ msgid "Bounced email rate:"
+#~ msgstr "退信率:"
+
+#~ msgid "Create a new folder inside the folder SHARED"
+#~ msgstr "在活頁夾 SHARED 里建立新活頁夾"
+
+#~ msgid "Create a new subdirectory"
+#~ msgstr "建立新的子目錄"
+
+#~ msgid "Messages to moderate :"
+#~ msgstr "要監管的郵件:"
+
+#~ msgid "No message to moderate"
+#~ msgstr "沒有郵件要監管"
 
 #~ msgid "ALL"
 #~ msgstr "全部"
@@ -6965,9 +7049,6 @@ msgstr ""
 #~ msgid "logout"
 #~ msgstr "登出"
 
-#~ msgid "messages"
-#~ msgstr "訊息"
-
 #~ msgid "newest"
 #~ msgstr "最新的"
 
@@ -6979,9 +7060,6 @@ msgstr ""
 
 #~ msgid "part"
 #~ msgstr "部分"
-
-#~ msgid "preferences"
-#~ msgstr "首選項"
 
 #~ msgid "sentence"
 #~ msgstr "一句"

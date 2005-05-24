@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2005-05-03 17:50+0200\n"
+"PO-Revision-Date: 2005-05-24 16:49+0200\n"
 "Last-Translator: Olivier Salaun <olivier.salaun@cru.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
@@ -205,7 +205,7 @@ msgid "%1 messages selected out of %2"
 msgstr "%1 messages trouvés parmis %2"
 
 #. (occurrence)
-#: web_tt2/lists.tt2:4 web_tt2/review.tt2:57
+#: web_tt2/lists.tt2:4 web_tt2/review.tt2:62
 msgid "%1 occurrence(s) found"
 msgstr "%1 occurrence(s) trouvées"
 
@@ -307,7 +307,7 @@ msgid "***** V I R U S    A L E R T *****"
 msgstr "**** A L E R T E    V I R U S ****"
 
 # nlsref 5,4
-#: src/tools.pl:137
+#: src/tools.pl:138
 msgid "------ End of suspected message ------\n"
 msgstr "------ Fin du message suspect ------\n"
 
@@ -325,6 +325,38 @@ msgstr "------Fin du message de %s ------\n"
 #: web_tt2/create_list_request.tt2:55
 msgid "--Select a topic--"
 msgstr "--Choisir une catégorie--"
+
+#: web_tt2/list_admin_menu.tt2:17
+msgid "-Archives"
+msgstr "Les archives "
+
+#: web_tt2/list_admin_menu.tt2:18
+msgid "-Bounces"
+msgstr "Gestion des erreurs"
+
+#: web_tt2/list_admin_menu.tt2:19
+msgid "-Data sources"
+msgstr "Sources de données"
+
+#: web_tt2/list_admin_menu.tt2:14
+msgid "-List definition"
+msgstr "Définition de la liste"
+
+#: web_tt2/list_admin_menu.tt2:21
+msgid "-Miscellaneous"
+msgstr "Divers"
+
+#: web_tt2/list_admin_menu.tt2:16
+msgid "-Privileges"
+msgstr "Droits d'accès"
+
+#: web_tt2/list_admin_menu.tt2:20
+msgid "-Rename list"
+msgstr "Renommer la liste"
+
+#: web_tt2/list_admin_menu.tt2:15
+msgid "-Sending/reception"
+msgstr "Diffusion/Réception"
 
 # nlsref 17,6
 #: wwsympa/wwslib.pm:52
@@ -401,7 +433,9 @@ msgstr "<strong>%1</strong> est abonné aux listes suivantes"
 
 #: web_tt2/help_admin.tt2:6
 msgid "<strong>Create shared</strong> : initializes the shared document web space."
-msgstr "<strong>Créer un espace documents</strong> : créer un espace documents partagés."
+msgstr ""
+"<strong>Créer un espace documents</strong> : créer un espace documents "
+"partagés."
 
 #: web_tt2/help_admin.tt2:11
 msgid ""
@@ -478,8 +512,8 @@ msgid "Access"
 msgstr "Accès"
 
 #. (visible_path)
-#: web_tt2/d_control.tt2:4
-msgid "Access rights for the document %1"
+#: web_tt2/d_control.tt2:6
+msgid "Access control for the document %1"
 msgstr "Droit d'accès au document %1"
 
 # nlsref 16,1
@@ -487,11 +521,11 @@ msgstr "Droit d'accès au document %1"
 msgid "Account"
 msgstr "Compte"
 
-#: web_tt2/d_read.tt2:368 web_tt2/review.tt2:45
+#: web_tt2/d_read.tt2:347 web_tt2/review.tt2:50
 msgid "Add"
 msgstr "Ajouter"
 
-#: web_tt2/d_read.tt2:363
+#: web_tt2/d_read.tt2:344
 msgid "Add a bookmark"
 msgstr "Ajouter un signet"
 
@@ -499,7 +533,7 @@ msgstr "Ajouter un signet"
 msgid "Add selected addresses"
 msgstr "Abonner les adresses sélectionnées"
 
-#: web_tt2/add_request.tt2:12
+#: web_tt2/add_request.tt2:11
 msgid "Add subscribers"
 msgstr "Ajout d'abonnés"
 
@@ -508,7 +542,7 @@ msgstr "Ajout d'abonnés"
 msgid "Address \"%1\" is incorrect"
 msgstr "L'adresse \"%1\" est incorrecte"
 
-#: src/etc/mhonarc-ressources.tt2:52
+#: src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
 msgstr "Recherche avancée"
 
@@ -571,11 +605,11 @@ msgstr "Échec de la détection antivirale"
 msgid "Any information about this list :"
 msgstr "Pour toute information sur cette liste :"
 
-#: web_tt2/d_properties.tt2:40
+#: web_tt2/d_properties.tt2:37
 msgid "Apply"
 msgstr "Appliquer"
 
-#: web_tt2/list_menu.tt2:30 web_tt2/list_menu.tt2:32
+#: web_tt2/list_menu.tt2:34 web_tt2/list_menu.tt2:36
 msgid "Archive"
 msgstr "Archives"
 
@@ -589,7 +623,7 @@ msgstr "Gestion des archives"
 msgid "Archive encrypted mails as cleartext"
 msgstr "Archivage des messages cryptés"
 
-#: src/etc/mhonarc-ressources.tt2:92
+#: src/etc/mhonarc-ressources.tt2:90
 msgid "Archive powered by"
 msgstr "Archives gérées par"
 
@@ -609,7 +643,7 @@ msgstr "Les archives de la liste %1 ne sont pas accessibles"
 
 #. (list)
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:50
+#: web_tt2/list_admin_menu.tt2:53
 msgid "Are you sure you wish to close %1 list ?"
 msgstr "Vous êtes sur le point de supprimer la liste %1. Confirmer ?"
 
@@ -633,7 +667,7 @@ msgid "Authentication requested"
 msgstr "Authentification demandée"
 
 #: web_tt2/d_read.tt2:59 web_tt2/d_read.tt2:61 web_tt2/latest_d_read.tt2:21
-#: web_tt2/modindex.tt2:18 web_tt2/modindex.tt2:70
+#: web_tt2/modindex.tt2:21 web_tt2/modindex.tt2:80
 msgid "Author"
 msgstr "Auteur"
 
@@ -724,12 +758,8 @@ msgstr ""
 "Vous devriez supprimer les abonnés en erreur : \n"
 "%s/reviewbouncing/%s"
 
-#: web_tt2/list_menu.tt2:55
-msgid "Bounced email rate:"
-msgstr "Taux d'adresses en erreur :"
-
 #: web_tt2/admin_menu.tt2:82 web_tt2/admin_menu.tt2:88
-#: web_tt2/list_admin_menu.tt2:35
+#: web_tt2/list_admin_menu.tt2:38
 msgid "Bounces"
 msgstr "Gestion des erreurs"
 
@@ -857,7 +887,7 @@ msgstr ""
 "Surveillez votre boîte aux lettres et fournissez ce mot de passe\n"
 "ici dès sa réception."
 
-#: web_tt2/login_menu.tt2:46 web_tt2/loginbanner.tt2:56
+#: web_tt2/login_menu.tt2:51 web_tt2/loginbanner.tt2:56
 msgid "Choose your authentication server"
 msgstr "Sélectionnez votre serveur d'authentification"
 
@@ -915,6 +945,10 @@ msgstr "Confirmer"
 msgid "Connexion expiration period"
 msgstr "Expiration de la connexion"
 
+#: web_tt2/list_menu.tt2:27
+msgid "Contact owners"
+msgstr "Contacter le propriétaire"
+
 #: web_tt2/arcsearch.tt2:109
 msgid "Continue search"
 msgstr "Continuer la recherche"
@@ -942,27 +976,27 @@ msgstr ""
 "Impossible de changer votre adresse d'abonné à la liste %1\n"
 "car la nouvelle adresse n'a pu être abonnée."
 
+#: web_tt2/d_read.tt2:319 web_tt2/d_read.tt2:333
+msgid "Create"
+msgstr "Créer"
+
 #: web_tt2/admin_menu.tt2:97 web_tt2/admin_menu.tt2:99
-#: web_tt2/list_admin_menu.tt2:39
+#: web_tt2/list_admin_menu.tt2:42
 msgid "Create Shared"
 msgstr "Créer un espace documents"
 
-#: web_tt2/d_read.tt2:342 web_tt2/d_read.tt2:347
+#: web_tt2/d_read.tt2:331
 msgid "Create a new file"
 msgstr "Créer un nouveau fichier"
 
 #. (visible_path)
-#: web_tt2/d_read.tt2:317
+#: web_tt2/d_read.tt2:313
 msgid "Create a new folder inside the folder %1"
 msgstr "Créer un sous dossier dans %1"
 
-#: web_tt2/d_read.tt2:319
-msgid "Create a new folder inside the folder SHARED"
-msgstr "Créer un dossier"
-
-#: web_tt2/d_read.tt2:324
-msgid "Create a new subdirectory"
-msgstr "Créer un nouveau sous-dossier"
+#: web_tt2/d_read.tt2:315
+msgid "Create a new folder inside the root folder"
+msgstr "Créer un sous dossier à la racine"
 
 #: web_tt2/menu.tt2:8
 msgid "Create list"
@@ -992,7 +1026,7 @@ msgid "Customize templates"
 msgstr "Voir les traductions des \"templates\""
 
 #: web_tt2/admin_menu.tt2:53 web_tt2/admin_menu.tt2:59
-#: web_tt2/list_admin_menu.tt2:25
+#: web_tt2/list_admin_menu.tt2:28
 msgid "Customizing"
 msgstr "Personnaliser"
 
@@ -1023,7 +1057,7 @@ msgid "Data sources setup"
 msgstr "Définition des sources de données"
 
 #: web_tt2/arcsearch_form.tt2:61 web_tt2/latest_arc.tt2:19
-#: web_tt2/modindex.tt2:17 web_tt2/modindex.tt2:69 web_tt2/subindex.tt2:9
+#: web_tt2/modindex.tt2:20 web_tt2/modindex.tt2:79 web_tt2/subindex.tt2:9
 msgid "Date"
 msgstr "Date"
 
@@ -1092,11 +1126,11 @@ msgstr "Supprimer"
 msgid "Delete Selected Month(s)"
 msgstr "Supprimer les mois sélectionnés"
 
-#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:41
+#: web_tt2/admin_menu.tt2:106 web_tt2/list_admin_menu.tt2:44
 msgid "Delete Shared"
 msgstr "Fermer l'espace documents"
 
-#: web_tt2/review.tt2:224 web_tt2/review.tt2:69 web_tt2/reviewbouncing.tt2:106
+#: web_tt2/review.tt2:229 web_tt2/review.tt2:74 web_tt2/reviewbouncing.tt2:106
 #: web_tt2/reviewbouncing.tt2:30
 msgid "Delete selected email addresses"
 msgstr "Désabonner les adresses sélectionnées"
@@ -1112,19 +1146,19 @@ msgstr ""
 "par le propriétaire de la liste ou via le module de gestion des erreurs."
 
 #. (fname)
-#: web_tt2/d_properties.tt2:28
-msgid "Describe the directory %1"
-msgstr "Décrire le répertoire %1"
+#: web_tt2/d_properties.tt2:26
+msgid "Describe directory '%1'"
+msgstr "Décrire le dossier %1"
 
 #. (fname)
-#: web_tt2/d_properties.tt2:30
-msgid "Describe the file %1"
+#: web_tt2/d_properties.tt2:28
+msgid "Describe file '%1'"
 msgstr "Décrire le fichier %1"
 
 #. (doc_title)
 #. (desc)
-#: web_tt2/d_control.tt2:11 web_tt2/d_editfile.tt2:19
-#: web_tt2/d_properties.tt2:19 web_tt2/d_read.tt2:41
+#: web_tt2/d_control.tt2:12 web_tt2/d_editfile.tt2:19
+#: web_tt2/d_properties.tt2:18 web_tt2/d_read.tt2:41
 msgid "Description : %1"
 msgstr "Description : %1"
 
@@ -1168,7 +1202,7 @@ msgstr "Le dossier %1 et son contenu n'ont pu être copiés"
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "Le répertoire où est stocké la base de données (uniquement avec DBD::CSV)"
 
-#: web_tt2/modindex.tt2:10 web_tt2/modindex.tt2:48 web_tt2/viewmod.tt2:8
+#: web_tt2/modindex.tt2:10 web_tt2/modindex.tt2:58 web_tt2/viewmod.tt2:7
 msgid "Distribute"
 msgstr "Distribuer"
 
@@ -1191,7 +1225,7 @@ msgstr "Voulez-vous vraiment supprimer %1%2 ?"
 msgid "Do you really want to delete Selected Archives?"
 msgstr "Voulez-vous vraiment supprimer les archives sélectionnées ?"
 
-#: src/etc/mhonarc-ressources.tt2:425
+#: src/etc/mhonarc-ressources.tt2:423
 msgid "Do you really want to delete this message ?"
 msgstr "Voulez-vous vraiment supprimer ce message ?"
 
@@ -1209,7 +1243,7 @@ msgstr ""
 "abonnés ?'"
 
 #. (total)
-#: web_tt2/review.tt2:34
+#: web_tt2/review.tt2:39
 msgid ""
 "Do you really want to send a subscription remind message to the %1 "
 "subscribers ?"
@@ -1218,12 +1252,12 @@ msgstr ""
 "abonnés ?'"
 
 #. (list)
-#: web_tt2/list_menu.tt2:21
+#: web_tt2/list_menu.tt2:20
 msgid "Do you really want to subscribe to list %1?"
 msgstr "Voulez-vous vous abonner à la liste %1 ?"
 
 #. (list)
-#: web_tt2/list_menu.tt2:16
+#: web_tt2/list_menu.tt2:15
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "Voulez-vous vous désabonner de la liste %1 ?"
 
@@ -1245,11 +1279,11 @@ msgstr "Voulez-vous supprimer l'ancien fichier %1 ?"
 msgid "Do you want to rename your file %1 ?"
 msgstr "Voulez-vous renommer votre fichier %1 ?"
 
-#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56
+#: web_tt2/d_read.tt2:54 web_tt2/d_read.tt2:56 web_tt2/list_admin_menu.tt2:73
 msgid "Document"
 msgstr "Document"
 
-#: web_tt2/review.tt2:89 web_tt2/review.tt2:93
+#: web_tt2/review.tt2:94 web_tt2/review.tt2:98
 msgid "Domain"
 msgstr "Domaine"
 
@@ -1265,7 +1299,7 @@ msgstr ""
 msgid "DownLoad ZipFile"
 msgstr "Télécharger le fichier Zip"
 
-#: web_tt2/review.tt2:35
+#: web_tt2/review.tt2:40
 msgid "Dump"
 msgstr "Exportation"
 
@@ -1304,11 +1338,11 @@ msgid "Edit"
 msgstr "Editer"
 
 #: web_tt2/admin_menu.tt2:25 web_tt2/admin_menu.tt2:30
-#: web_tt2/list_admin_menu.tt2:10
+#: web_tt2/list_admin_menu.tt2:11
 msgid "Edit List Config"
 msgstr "Configurer la liste"
 
-#: web_tt2/d_control.tt2:28
+#: web_tt2/d_control.tt2:26
 msgid "Edit access"
 msgstr "Droit d'écriture"
 
@@ -1327,7 +1361,7 @@ msgstr "Edition du signet %1"
 msgid "Edition of the file %1"
 msgstr "Edition du fichier %1"
 
-#: web_tt2/login_menu.tt2:12
+#: web_tt2/login_menu.tt2:11
 msgid "Editor"
 msgstr "Modérateur"
 
@@ -1343,7 +1377,7 @@ msgstr ""
 "permet de désigner plusieurs modérateurs, en écrivant leur adresse dans un "
 "des champs"
 
-#: web_tt2/pref.tt2:6 web_tt2/review.tt2:81 web_tt2/review.tt2:84
+#: web_tt2/pref.tt2:6 web_tt2/review.tt2:86 web_tt2/review.tt2:89
 #: web_tt2/reviewbouncing.tt2:62 web_tt2/subindex.tt2:7
 msgid "Email"
 msgstr "Email"
@@ -1372,9 +1406,14 @@ msgid "End of your EXPIRE command on list %s"
 msgstr "Fin de votre commande EXPIRE de la liste %s"
 
 # nlsref 1,3
-#: src/Conf.pm:244
+#: src/Conf.pm:245
 msgid "Error at line %d : %s"
 msgstr "Erreur ligne %d : %s"
+
+# nlsref 1,3
+#: web_tt2/list_panel.tt2:8
+msgid "Error rate:"
+msgstr "Taux d'erreurs :"
 
 #: web_tt2/remove_arc.tt2:14
 msgid ""
@@ -1497,7 +1536,7 @@ msgid "Families"
 msgstr "Familles"
 
 # nlsref 8,7
-#: src/List.pm:6184
+#: src/List.pm:6187
 msgid "File"
 msgstr "Fichier"
 
@@ -1531,13 +1570,21 @@ msgstr "Fichier %1 en attente de modération"
 msgid "File inclusion"
 msgstr "Inclusion d'un fichier"
 
-#: src/etc/mhonarc-ressources.tt2:221
+#: web_tt2/d_read.tt2:332
+msgid "File name"
+msgstr "Nom du fichier"
+
+#: src/etc/mhonarc-ressources.tt2:219
 msgid "First"
 msgstr "Premier"
 
-#: web_tt2/login_menu.tt2:65
+#: web_tt2/login_menu.tt2:70
 msgid "First login ?"
 msgstr "Premier login ?"
+
+#: web_tt2/d_read.tt2:318
+msgid "Folder name"
+msgstr "Nom du dossier"
 
 #. (conf.host)
 #: mail_tt2/list_unknown.tt2:22
@@ -1595,7 +1642,7 @@ msgstr ""
 "GET <liste> <fichier>           * Obtenir le fichier <fichier> des archives "
 "de la liste <liste>"
 
-#: web_tt2/login_menu.tt2:53 web_tt2/loginbanner.tt2:45
+#: web_tt2/login_menu.tt2:58 web_tt2/loginbanner.tt2:45
 #: web_tt2/loginbanner.tt2:60
 msgid "Go"
 msgstr "Valider"
@@ -1608,7 +1655,7 @@ msgstr "HELp                        * Obtenir ce message d'aide"
 msgid "HTTPS authentication information"
 msgstr "Information d'authentification HTTPS"
 
-#: web_tt2/edit_list_request.tt2:34 web_tt2/menu.tt2:31
+#: web_tt2/edit_list_request.tt2:34 web_tt2/menu.tt2:23
 msgid "Help"
 msgstr "Aide"
 
@@ -1636,7 +1683,7 @@ msgstr "Les abonnés à la liste %1@%2 sont :"
 msgid "Here is the list of list from %1@%2"
 msgstr "Voici la liste des listes de %1@%2 :"
 
-#: web_tt2/menu.tt2:28
+#: web_tt2/menu.tt2:20
 msgid "Home"
 msgstr "Accueil"
 
@@ -1775,7 +1822,7 @@ msgstr ""
 "Les informations concernant l'utilisateur %s ont été mises à jour dans la "
 "liste %s.\n"
 
-#: web_tt2/modindex.tt2:62 web_tt2/modindex.tt2:97
+#: web_tt2/modindex.tt2:107 web_tt2/modindex.tt2:72
 msgid "Install"
 msgstr "L'installer"
 
@@ -1834,7 +1881,7 @@ msgstr ""
 "de liste ne dispose pas de votre certificat X509 (pour l'adresse\n"
 "%1)."
 
-#: src/etc/mhonarc-ressources.tt2:585
+#: src/etc/mhonarc-ressources.tt2:583
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1875,7 +1922,7 @@ msgstr "Langue :"
 msgid "Language of the list"
 msgstr "Langue de la liste"
 
-#: src/etc/mhonarc-ressources.tt2:232
+#: src/etc/mhonarc-ressources.tt2:230
 msgid "Last"
 msgstr "Dernier"
 
@@ -1888,8 +1935,8 @@ msgid "Last update :"
 msgstr "Dernière mise à jour :"
 
 #. (doc_date)
-#: web_tt2/d_control.tt2:10 web_tt2/d_editfile.tt2:18
-#: web_tt2/d_properties.tt2:18 web_tt2/d_read.tt2:39
+#: web_tt2/d_control.tt2:11 web_tt2/d_editfile.tt2:18
+#: web_tt2/d_properties.tt2:17 web_tt2/d_read.tt2:39
 msgid "Last update : %1"
 msgstr "Dernière mise à jour : %1"
 
@@ -2102,7 +2149,7 @@ msgstr "Liste inconnue"
 msgid "Listing messages to moderate"
 msgstr "Liste des messages à modérer"
 
-#: web_tt2/modindex.tt2:59
+#: web_tt2/modindex.tt2:69
 msgid "Listing of documents shared to moderate"
 msgstr "Liste des documents à modérer"
 
@@ -2114,7 +2161,7 @@ msgstr "Contenu du dossier"
 msgid "Listing of root folder"
 msgstr "Contenu du dossier racine"
 
-#: web_tt2/login_menu.tt2:9
+#: web_tt2/login_menu.tt2:8
 msgid "Listmaster"
 msgstr "listmaster"
 
@@ -2136,7 +2183,7 @@ msgstr "Propriétaires de liste"
 msgid "Lists"
 msgstr "Les listes"
 
-#: web_tt2/list_panel.tt2:24
+#: web_tt2/list_panel.tt2:18
 msgid "Load certificate"
 msgstr "Charger le certificat"
 
@@ -2145,7 +2192,7 @@ msgid "Loading admins failed"
 msgstr "Le chargement des administrateurs a échoué"
 
 #: web_tt2/help.tt2:22 web_tt2/help.tt2:25 web_tt2/help.tt2:28
-#: web_tt2/login_menu.tt2:61 web_tt2/loginbanner.tt2:77
+#: web_tt2/login_menu.tt2:66 web_tt2/loginbanner.tt2:77
 msgid "Login"
 msgstr "Login"
 
@@ -2161,11 +2208,11 @@ msgstr ""
 "Identifiez-vous en fournissant votre adresse email et votre mot de passe. "
 "Vous pouvez demander un rappel de votre mot de passe."
 
-#: web_tt2/help.tt2:22 web_tt2/login_menu.tt2:26
+#: web_tt2/help.tt2:22 web_tt2/login_menu.tt2:25
 msgid "Logout"
 msgstr "Logout"
 
-#: web_tt2/login_menu.tt2:66 web_tt2/login_menu.tt2:67
+#: web_tt2/login_menu.tt2:71
 msgid "Lost password ?"
 msgstr "Mot de passe perdu ?"
 
@@ -2177,7 +2224,7 @@ msgstr ""
 "MODINDEX <liste>                 * Modération: consultation de la liste des "
 "messages à modérer"
 
-#: web_tt2/login_menu.tt2:41 web_tt2/loginbanner.tt2:41
+#: web_tt2/login_menu.tt2:46 web_tt2/loginbanner.tt2:41
 msgid "Magic authentification"
 msgstr "Authentification magique"
 
@@ -2200,11 +2247,11 @@ msgstr "Paramétrage adapté à une newsletter aux formats Text/plain et HTML"
 msgid "Mailing list for intranets"
 msgstr "Liste pour l'Intranet"
 
-#: web_tt2/home.tt2:10
+#: web_tt2/home.tt2:9
 msgid "Mailing lists categories"
 msgstr "Catégories de liste"
 
-#: web_tt2/admin_menu.tt2:74 web_tt2/list_admin_menu.tt2:30
+#: web_tt2/admin_menu.tt2:74 web_tt2/list_admin_menu.tt2:33
 msgid "Manage Archives"
 msgstr "Gérer les archives"
 
@@ -2249,6 +2296,10 @@ msgstr ""
 "donc que ce virus ne provienne pas de votre ordinateur.Dans ce cas, vous "
 "pouvez ignorer cette alerte."
 
+#: web_tt2/list_admin_menu.tt2:69
+msgid "Message"
+msgstr "Message"
+
 # nlsref 6,44
 #: src/Commands.pm:1684 src/Commands.pm:1793
 msgid "Message %s for list %s has been distributed.\n"
@@ -2291,7 +2342,9 @@ msgstr ""
 msgid ""
 "Messages can either be read via email (subscription) or\n"
 "via the web (web archives)"
-msgstr "Les messages peuvent être consultés par mail (abonnement) ou par l'interface web"
+msgstr ""
+"Les messages peuvent être consultés par mail (abonnement) ou par l'interface "
+"web"
 
 #. (list.name,to,subscriber.first_bounce)
 #: mail_tt2/subscriber_notification.tt2:8
@@ -2304,10 +2357,6 @@ msgstr ""
 "Les message de la liste %1 qui vous ont été adressés à l'adresse %2\n"
 "génèrent des erreurs depuis le %3. \n"
 " Si ce problème persiste vous serez désabonné automatiquement de la liste."
-
-#: web_tt2/list_admin_menu.tt2:19
-msgid "Messages to moderate :"
-msgstr "Messages en attente de modération :"
 
 #: web_tt2/admin_menu.tt2:161 web_tt2/edit_list_request.tt2:13
 msgid "Miscellaneous"
@@ -2323,7 +2372,7 @@ msgid "Missing filter"
 msgstr "Aucun filtre spécifié"
 
 #: web_tt2/admin_menu.tt2:36 web_tt2/admin_menu.tt2:42
-#: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:17
+#: web_tt2/admin_menu.tt2:46
 msgid "Moderate"
 msgstr "Modérer"
 
@@ -2372,7 +2421,7 @@ msgid "Moderator          : %1"
 msgstr "Modérateur         : %1"
 
 # nlsref 16,26
-#: src/List.pm:519 web_tt2/list_panel.tt2:17
+#: src/List.pm:519 web_tt2/list_panel.tt2:15
 msgid "Moderators"
 msgstr "Modérateurs"
 
@@ -2393,7 +2442,7 @@ msgstr ""
 "Pour bénéficier de l'accès intégral à ce serveur de listes, vous\n"
 "devez probablement vous identifier préalablement."
 
-#: web_tt2/review.tt2:33
+#: web_tt2/review.tt2:38
 msgid "Multiple add"
 msgstr "Abonnements par lot"
 
@@ -2411,8 +2460,8 @@ msgstr ""
 "NON IMPLEMENTE Si le taux d'adresses en erreur atteint le seuil, les "
 "messages à destination de la liste seront retenus. "
 
-#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:103
-#: web_tt2/review.tt2:99 web_tt2/subindex.tt2:8
+#: web_tt2/latest_d_read.tt2:20 web_tt2/pref.tt2:7 web_tt2/review.tt2:104
+#: web_tt2/review.tt2:108 web_tt2/subindex.tt2:8
 msgid "Name"
 msgstr "Nom"
 
@@ -2464,11 +2513,11 @@ msgstr "Newsletter, limité aux modérateurs"
 msgid "Newsletter, restricted to moderators after confirmation"
 msgstr "Newsletter, limité aux modérateurs après confirmation"
 
-#: src/etc/mhonarc-ressources.tt2:231
+#: src/etc/mhonarc-ressources.tt2:229
 msgid "Next"
 msgstr "Suivant"
 
-#: web_tt2/review.tt2:21 web_tt2/review.tt2:239 web_tt2/reviewbouncing.tt2:118
+#: web_tt2/review.tt2:244 web_tt2/review.tt2:26 web_tt2/reviewbouncing.tt2:118
 #: web_tt2/reviewbouncing.tt2:52
 msgid "Next page"
 msgstr "Page suivante"
@@ -2504,10 +2553,6 @@ msgstr "Aucune liste disponible"
 msgid "No message and no document to moderate for list %1"
 msgstr "Aucun message et aucun document à modérer pour la liste %1"
 
-#: web_tt2/list_admin_menu.tt2:13
-msgid "No message to moderate"
-msgstr "Aucun message à modérer"
-
 #: web_tt2/error.tt2:43
 msgid "No name specified"
 msgstr "Aucun nom spécifié"
@@ -2526,7 +2571,7 @@ msgstr "Pas de page %1"
 msgid "No password for user"
 msgstr "Aucun mot de passe pour l'utilisateur"
 
-#: web_tt2/modindex.tt2:37
+#: web_tt2/modindex.tt2:47
 msgid "No subject"
 msgstr "Sans objet"
 
@@ -2561,8 +2606,8 @@ msgstr ""
 "erreur, faire une réponse en privé a l'auteur du message. Ce paramétrage "
 "peut conduire à des situations embarassantes."
 
-#: web_tt2/modindex.tt2:12 web_tt2/modindex.tt2:50 web_tt2/modindex.tt2:64
-#: web_tt2/modindex.tt2:99 web_tt2/viewmod.tt2:10
+#: web_tt2/modindex.tt2:109 web_tt2/modindex.tt2:12 web_tt2/modindex.tt2:60
+#: web_tt2/modindex.tt2:74 web_tt2/viewmod.tt2:9
 msgid "Notified reject"
 msgstr "Rejeter"
 
@@ -2572,7 +2617,7 @@ msgid "Number of forwarded messages:      %1"
 msgstr "Nombre de messages transmis :      %1"
 
 #. (mod_spool_size)
-#: mail_tt2/moderate.tt2:24
+#: mail_tt2/moderate.tt2:26
 msgid "Number of messages awaiting moderation for this list : %1"
 msgstr "Nombre de messages en attente de modération pour la liste %1"
 
@@ -2612,7 +2657,7 @@ msgstr ""
 "rafraîchir la page concernée pour le vérifier."
 
 #. (conf.email,conf.host)
-#: mail_tt2/moderate.tt2:15 mail_tt2/moderate.tt2:20
+#: mail_tt2/moderate.tt2:16 mail_tt2/moderate.tt2:22
 msgid "Or send a message to %1@%2 with the following subject :"
 msgstr ""
 "ou\n"
@@ -2630,7 +2675,7 @@ msgstr "Autre adresse e-mail :"
 msgid "Other files/pages description :"
 msgstr "Description des autres fichiers/pages :"
 
-#: web_tt2/home.tt2:21
+#: web_tt2/home.tt2:18
 msgid "Others"
 msgstr "Autre"
 
@@ -2645,7 +2690,7 @@ msgstr ""
 "a destination de %2 contenait le virus suivant : %1."
 
 # nlsref 16,57
-#: src/List.pm:934 web_tt2/login_menu.tt2:11
+#: src/List.pm:934 web_tt2/login_menu.tt2:10
 msgid "Owner"
 msgstr "Propriétaires"
 
@@ -2656,8 +2701,8 @@ msgstr "Propriétaire       : %1"
 
 #. (owner)
 #. (doc_owner)
-#: web_tt2/d_control.tt2:9 web_tt2/d_editfile.tt2:17
-#: web_tt2/d_properties.tt2:17 web_tt2/d_read.tt2:38
+#: web_tt2/d_control.tt2:10 web_tt2/d_editfile.tt2:17
+#: web_tt2/d_properties.tt2:16 web_tt2/d_read.tt2:38
 msgid "Owner : %1"
 msgstr "Propriétaire : %1"
 
@@ -2665,7 +2710,7 @@ msgstr "Propriétaire : %1"
 msgid "Owner:"
 msgstr "Propriétaire :"
 
-#: web_tt2/list_panel.tt2:11
+#: web_tt2/list_panel.tt2:9
 msgid "Owners"
 msgstr "Propriétaires"
 
@@ -2690,7 +2735,7 @@ msgstr ""
 msgid "Owners of list %s"
 msgstr "Proprietaires de la liste %s"
 
-#: web_tt2/review.tt2:6 web_tt2/reviewbouncing.tt2:34
+#: web_tt2/reviewbouncing.tt2:34
 msgid "Page size"
 msgstr "Taille de page"
 
@@ -2708,7 +2753,7 @@ msgstr "Mot de passe :"
 msgid "Password for %1"
 msgstr "Mot de passe pour %1"
 
-#: web_tt2/modindex.tt2:71
+#: web_tt2/modindex.tt2:81
 msgid "Path"
 msgstr "Chemin"
 
@@ -2716,7 +2761,7 @@ msgstr "Chemin"
 msgid "Pending lists"
 msgstr "Listes en attente"
 
-#: web_tt2/review.tt2:32
+#: web_tt2/review.tt2:37
 msgid "Pending subscriptions"
 msgstr "Abonnements en attente"
 
@@ -2765,7 +2810,7 @@ msgstr ""
 "Pour remédier à ce problème, envoyez un e-mail signé\n"
 "à l'adresse %1@%2."
 
-#: web_tt2/list_menu.tt2:38 web_tt2/list_menu.tt2:40
+#: web_tt2/list_menu.tt2:42 web_tt2/list_menu.tt2:44
 msgid "Post"
 msgstr "Poster"
 
@@ -2781,15 +2826,15 @@ msgstr "Powered by Sympa"
 msgid "Prefer"
 msgstr "D'abord les messages"
 
-#: web_tt2/help.tt2:16 web_tt2/menu.tt2:18
+#: web_tt2/help.tt2:16
 msgid "Preferences"
 msgstr "Préférences"
 
-#: src/etc/mhonarc-ressources.tt2:222
+#: src/etc/mhonarc-ressources.tt2:220
 msgid "Previous"
 msgstr "Précédent"
 
-#: web_tt2/review.tt2:15 web_tt2/review.tt2:233 web_tt2/reviewbouncing.tt2:112
+#: web_tt2/review.tt2:20 web_tt2/review.tt2:238 web_tt2/reviewbouncing.tt2:112
 #: web_tt2/reviewbouncing.tt2:46
 msgid "Previous page"
 msgstr "Page précédente"
@@ -2822,7 +2867,7 @@ msgstr ""
 "Droit de consultation des archives mail et définition de la fréquence "
 "d'archivage"
 
-#: web_tt2/login_menu.tt2:10
+#: web_tt2/login_menu.tt2:9
 msgid "Privileged owner"
 msgstr "Gestionnaire privilégié"
 
@@ -2835,17 +2880,17 @@ msgid "Properties"
 msgstr "Propriétés"
 
 #. (visible_path)
-#: web_tt2/d_properties.tt2:6
+#: web_tt2/d_properties.tt2:7
 msgid "Properties of the bookmark %1"
 msgstr "Propriétés du signet %1"
 
 #. (visible_path)
-#: web_tt2/d_properties.tt2:8
+#: web_tt2/d_properties.tt2:9
 msgid "Properties of the directory %1"
 msgstr "Propriétés du dossier %1"
 
 #. (visible_path)
-#: web_tt2/d_properties.tt2:10
+#: web_tt2/d_properties.tt2:11
 msgid "Properties of the file %1"
 msgstr "Propriétés du fichier %1"
 
@@ -2866,8 +2911,8 @@ msgstr "Liste de discussion publique"
 msgid "Public lists"
 msgstr "Les listes publiques"
 
-#: web_tt2/d_editfile.tt2:39 web_tt2/d_editfile.tt2:62 web_tt2/d_read.tt2:394
-#: web_tt2/d_read.tt2:418
+#: web_tt2/d_editfile.tt2:39 web_tt2/d_editfile.tt2:62 web_tt2/d_read.tt2:365
+#: web_tt2/d_read.tt2:384
 msgid "Publish"
 msgstr "Publier"
 
@@ -2908,7 +2953,7 @@ msgstr "Champs d'entête compatibles RFC 2369"
 msgid "Re-enter your new password :"
 msgstr "Ressaisissez le nouveau mot de passe :"
 
-#: web_tt2/d_control.tt2:19
+#: web_tt2/d_control.tt2:17
 msgid "Read access"
 msgstr "Droit de consultation"
 
@@ -2929,7 +2974,7 @@ msgstr "Reconstruire les archives"
 msgid "Received mega-bytes             :      %1"
 msgstr "Méga-octets reçus           :      %1"
 
-#: web_tt2/review.tt2:108
+#: web_tt2/review.tt2:113
 msgid "Reception"
 msgstr "Réception"
 
@@ -2951,8 +2996,8 @@ msgstr "Modes de réception : %1"
 msgid "Refer to documentation to adapt %1."
 msgstr "Reportez-vous à la documentation pour adapter %1."
 
-#: web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:49 web_tt2/modindex.tt2:63
-#: web_tt2/modindex.tt2:98 web_tt2/viewmod.tt2:9
+#: web_tt2/modindex.tt2:108 web_tt2/modindex.tt2:11 web_tt2/modindex.tt2:59
+#: web_tt2/modindex.tt2:73 web_tt2/viewmod.tt2:8
 msgid "Reject"
 msgstr "Rejeter sans prévenir l'auteur"
 
@@ -2964,7 +3009,7 @@ msgstr "Rejeter les adresses sélectionnées"
 msgid "Related email"
 msgstr "Adresse email"
 
-#: web_tt2/review.tt2:34 web_tt2/reviewbouncing.tt2:16
+#: web_tt2/review.tt2:39 web_tt2/reviewbouncing.tt2:16
 msgid "Remind all subscribers"
 msgstr "Rappel des abonnements"
 
@@ -3012,7 +3057,7 @@ msgid "Remote host"
 msgstr "Remote host"
 
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
-#: web_tt2/list_admin_menu.tt2:50
+#: web_tt2/list_admin_menu.tt2:53
 msgid "Remove List"
 msgstr "Supprimer la liste"
 
@@ -3022,22 +3067,22 @@ msgid "Removed from %1"
 msgstr "Vous avez été supprimé de la list %1"
 
 # nlsref 16,29
-#: web_tt2/d_properties.tt2:64 web_tt2/d_upload.tt2:20
+#: web_tt2/d_properties.tt2:58 web_tt2/d_upload.tt2:20
 msgid "Rename"
 msgstr "Renommer"
 
 #: web_tt2/admin_menu.tt2:130 web_tt2/admin_menu.tt2:132
-#: web_tt2/list_admin_menu.tt2:53
+#: web_tt2/list_admin_menu.tt2:56
 msgid "Rename List"
 msgstr "Renommer la liste"
 
 #. (fname)
-#: web_tt2/d_properties.tt2:52
+#: web_tt2/d_properties.tt2:46
 msgid "Rename directory %1"
 msgstr "Renommer le répertoire %1"
 
 #. (fname)
-#: web_tt2/d_properties.tt2:54
+#: web_tt2/d_properties.tt2:48
 msgid "Rename file %1"
 msgstr "Renommer le fichier %1"
 
@@ -3060,7 +3105,7 @@ msgstr "Renouvellement de votre abonnement à la liste '%s'"
 msgid "Replace the file %1 with your file"
 msgstr "Remplacer le fichier %1 par votre fichier"
 
-#: src/etc/mhonarc-ressources.tt2:417
+#: src/etc/mhonarc-ressources.tt2:415
 msgid "Reply"
 msgstr "Répondre"
 
@@ -3074,7 +3119,7 @@ msgstr "Adresse de réponse"
 msgid "Reply to           : %1"
 msgstr "Réponse à          : %1"
 
-#: src/etc/mhonarc-ressources.tt2:413
+#: src/etc/mhonarc-ressources.tt2:411
 msgid "Reply to sender"
 msgstr "Répondre à l'auteur"
 
@@ -3100,11 +3145,11 @@ msgid "Reset errors for selected users"
 msgstr "Annuler les erreurs pour les abonnés sélectionnés"
 
 #: web_tt2/admin_menu.tt2:118 web_tt2/admin_menu.tt2:120
-#: web_tt2/list_admin_menu.tt2:48
+#: web_tt2/list_admin_menu.tt2:51
 msgid "Restore List"
 msgstr "Restaurer la liste"
 
-#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:43
+#: web_tt2/admin_menu.tt2:103 web_tt2/list_admin_menu.tt2:46
 msgid "Restore shared"
 msgstr "Restaurer l'espace documents"
 
@@ -3126,7 +3171,7 @@ msgstr "Resultats de vos commandes"
 msgid "Return to archive %1"
 msgstr "Retour dans les archives %1"
 
-#: web_tt2/list_menu.tt2:54
+#: web_tt2/list_menu.tt2:58
 msgid "Review"
 msgstr "Les abonnés"
 
@@ -3140,7 +3185,7 @@ msgid "Review subscribers : %1"
 msgstr "Liste des abonnés  : %1"
 
 # nlsref 5,2
-#: src/tools.pl:130
+#: src/tools.pl:131
 msgid "Routing error ?"
 msgstr "Erreur d'aiguillage ?"
 
@@ -3230,8 +3275,8 @@ msgstr "Nom du scénario"
 msgid "Scenario test module"
 msgstr "Module de test des scénarios"
 
-#: src/etc/mhonarc-ressources.tt2:51 web_tt2/arcsearch_form.tt2:15
-#: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:54
+#: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15
+#: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:59
 #: web_tt2/reviewbouncing.tt2:11
 msgid "Search"
 msgstr "Recherche"
@@ -3248,7 +3293,7 @@ msgstr "Zone de recherche"
 msgid "Search field :"
 msgstr "Recherche sur :"
 
-#: web_tt2/home.tt2:46
+#: web_tt2/home.tt2:42
 msgid "Search lists"
 msgstr "Chercher une liste"
 
@@ -3267,7 +3312,7 @@ msgstr ""
 "Sélectionner ci-dessous les mois d'archives que vous désirez supprimer ou "
 "télécharger (format Zip)"
 
-#: web_tt2/review.tt2:59
+#: web_tt2/review.tt2:64
 msgid "Selection too wide, can not show selection"
 msgstr "La sélection est trop large, impossible d'afficher la sélection"
 
@@ -3309,12 +3354,12 @@ msgstr "Erreur du serveur"
 msgid "Service messages description :"
 msgstr "Description des messages de service :"
 
-#: web_tt2/d_control.tt2:55
+#: web_tt2/d_control.tt2:54
 msgid "Set owner"
 msgstr "Changer le propriétaire"
 
 #. (visible_path)
-#: web_tt2/d_control.tt2:47
+#: web_tt2/d_control.tt2:48
 msgid "Set the owner of the directory %1"
 msgstr "Changer le propriétaire de %1"
 
@@ -3335,7 +3380,7 @@ msgstr "Taille de l'espace documentaire"
 msgid "Shared documents"
 msgstr "Partage de documents"
 
-#: web_tt2/list_menu.tt2:46 web_tt2/list_menu.tt2:48
+#: web_tt2/list_menu.tt2:50 web_tt2/list_menu.tt2:52
 msgid "Shared web"
 msgstr "Documents"
 
@@ -3354,7 +3399,7 @@ msgstr ""
 "logiciel de messagerie ne lit pas correctement les messages auformat "
 "multipart/digest."
 
-#: web_tt2/modindex.tt2:20 web_tt2/modindex.tt2:72
+#: web_tt2/modindex.tt2:23 web_tt2/modindex.tt2:82
 msgid "Size"
 msgstr "Taille"
 
@@ -3371,7 +3416,7 @@ msgid "Skins, CSS and colors"
 msgstr "Skins, feuilles de style et couleurs"
 
 # nlsref 6,260
-#: src/List.pm:8684
+#: src/List.pm:8687
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -3400,7 +3445,7 @@ msgstr ""
 "ce message."
 
 # nlsref 6,260
-#: src/List.pm:8677
+#: src/List.pm:8680
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be removed from list '%s'.\n"
@@ -3429,7 +3474,7 @@ msgstr ""
 "ce message."
 
 # nlsref 6,39
-#: src/List.pm:8689 src/List.pm:8694
+#: src/List.pm:8692 src/List.pm:8697
 msgid ""
 "Someone (hopefully you) requested a user of list %s to be\n"
 "added or removed.\n"
@@ -3472,7 +3517,7 @@ msgstr ""
 "\n"
 "AUTH %s EXPIRE %s %d %d\n"
 
-#: web_tt2/review.tt2:113 web_tt2/review.tt2:116
+#: web_tt2/review.tt2:118 web_tt2/review.tt2:121
 msgid "Sources"
 msgstr "Sources"
 
@@ -3489,14 +3534,14 @@ msgstr "Statut :"
 msgid "Status of the list"
 msgstr "Etat de la liste"
 
-#: web_tt2/review.tt2:122 web_tt2/review.tt2:125
+#: web_tt2/review.tt2:127 web_tt2/review.tt2:130
 msgid "Sub date"
 msgstr "Abonné depuis"
 
 #: web_tt2/active_lists.tt2:26 web_tt2/arcsearch_form.tt2:57
 #: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
 #: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:24
-#: web_tt2/modindex.tt2:19 web_tt2/review_family.tt2:9
+#: web_tt2/modindex.tt2:22 web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Objet"
 
@@ -3532,7 +3577,7 @@ msgstr "Valider"
 msgid "Submit your creation request"
 msgstr "Envoyer votre demande de création"
 
-#: web_tt2/list_menu.tt2:21 web_tt2/subrequest.tt2:34
+#: web_tt2/list_menu.tt2:20 web_tt2/subrequest.tt2:34
 #: web_tt2/subrequest.tt2:64
 msgid "Subscribe"
 msgstr "Abonnement"
@@ -3541,11 +3586,11 @@ msgstr "Abonnement"
 msgid "Subscribed since :"
 msgstr "Abonné depuis :"
 
-#: web_tt2/login_menu.tt2:13
+#: web_tt2/login_menu.tt2:12
 msgid "Subscriber"
 msgstr "Abonné"
 
-#: web_tt2/list_menu.tt2:12
+#: web_tt2/list_menu.tt2:11
 msgid "Subscriber Options"
 msgstr "Options d'abonné"
 
@@ -3557,7 +3602,7 @@ msgstr "Information abonné"
 msgid "Subscribers"
 msgstr "Abonnés"
 
-#: web_tt2/list_panel.tt2:10
+#: web_tt2/list_panel.tt2:7
 msgid "Subscribers:"
 msgstr "Abonnés :"
 
@@ -3568,6 +3613,10 @@ msgid ""
 msgstr ""
 "Invitation à s'abonner : Message envoyé à une personne via la commande\n"
 "<CODE>INVITE [nom de liste]</CODE>."
+
+#: web_tt2/list_admin_menu.tt2:79
+msgid "Subscription"
+msgstr "Abonnement"
 
 #. (subscribe)
 #: mail_tt2/info_report.tt2:10
@@ -3599,7 +3648,7 @@ msgid "Summary"
 msgstr "Summary"
 
 # nlsref 8,31
-#: src/List.pm:3211
+#: src/List.pm:3214
 msgid "Summary of list %s"
 msgstr "Résumé de la liste %s"
 
@@ -3608,7 +3657,7 @@ msgstr "Résumé de la liste %s"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Synthèse de vos abonnements (avec l'adresse %1)."
 
-#: src/etc/mhonarc-ressources.tt2:567
+#: src/etc/mhonarc-ressources.tt2:565
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Lundi:Mardi:Mercredi:Jeudi:Vendredi:Samedi:Dimanche"
 
@@ -3717,7 +3766,7 @@ msgstr ""
 "l'entête/pied au corps du message. Les entêtes/pieds ne peuvent être ajoutés "
 "qu'à des message au format text/plain."
 
-#: web_tt2/review.tt2:30
+#: web_tt2/review.tt2:35
 msgid "Synchronize members with data sources"
 msgstr "Synchroniser les membres avec les sources de données"
 
@@ -3726,7 +3775,7 @@ msgstr "Synchroniser les membres avec les sources de données"
 msgid "Syntax errors with the following parameters : %1"
 msgstr "Erreurs de syntaxe des paramètres suivants : %1"
 
-#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:10 src/List.pm:3090
+#: mail_tt2/digest.tt2:12 mail_tt2/digest_plain.tt2:10 src/List.pm:3093
 msgid "Table of contents:"
 msgstr "Sommaire :"
 
@@ -3888,7 +3937,7 @@ msgid "The following commands are available only for lists's owners or moderator
 msgstr "Commandes réservées aux propriétaires de listes :"
 
 # nlsref 5,3
-#: src/tools.pl:135
+#: src/tools.pl:136
 msgid ""
 "The following message was sent to a list while it seems to contain\n"
 "commands like subscribe, unsubscribe, help, index, get, ...\n"
@@ -4133,7 +4182,8 @@ msgid ""
 "HTML and plain text formats\n"
 "only in plain text format."
 msgstr ""
-"Ce mode permet de ne recevoir que la version texte (text/plain) des messages \n"
+"Ce mode permet de ne recevoir que la version texte (text/plain) des "
+"messages \n"
 "postés sous les 2 formes texte et HTML."
 
 #: web_tt2/help_user_options.tt2:56
@@ -4143,7 +4193,8 @@ msgid ""
 "in nomail mode, he or she will again receive individual mail messages from "
 "the list."
 msgstr ""
-"Ce mode est le mode de réception par défaut ; il permet d'annuler les autres \n"
+"Ce mode est le mode de réception par défaut ; il permet d'annuler les "
+"autres \n"
 "modes d'abonnement."
 
 #: web_tt2/pref.tt2:84
@@ -4393,7 +4444,7 @@ msgstr ""
 "liste."
 
 #. (conf.email,conf.host)
-#: web_tt2/home.tt2:6
+#: web_tt2/home.tt2:5
 msgid ""
 "This server provides you access to your environment on mailing list server %"
 "1@%2. Starting from this URL, you can perform subscription options, "
@@ -4405,9 +4456,8 @@ msgstr ""
 "désabonner, accéder aux archives ou gérer les listes dont vous êtes "
 "propriétaire, etc."
 
-#: src/etc/mhonarc-ressources.tt2:190 src/etc/mhonarc-ressources.tt2:288
-#: src/etc/mhonarc-ressources.tt2:370
-#, fuzzy
+#: src/etc/mhonarc-ressources.tt2:188 src/etc/mhonarc-ressources.tt2:286
+#: src/etc/mhonarc-ressources.tt2:368
 msgid "Thread"
 msgstr "Discutions"
 
@@ -4569,7 +4619,7 @@ msgstr ""
 msgid "To receive your password :"
 msgstr "Pour recevoir votre mot de passe :"
 
-#: mail_tt2/moderate.tt2:18
+#: mail_tt2/moderate.tt2:19
 msgid "To reject it (it will be removed):"
 msgstr "Pour refuser sa diffusion (il sera effacé), cliquez ici :"
 
@@ -4593,7 +4643,7 @@ msgstr "Pour vous désabonner de la liste vous devez fournir le mot de passe suiv
 msgid "To: %1"
 msgstr "A : %1"
 
-#: web_tt2/review.tt2:223 web_tt2/reviewbouncing.tt2:121
+#: web_tt2/review.tt2:228 web_tt2/reviewbouncing.tt2:121
 msgid "Toggle Selection"
 msgstr "Inverser la Selection"
 
@@ -4634,7 +4684,7 @@ msgstr ""
 msgid "UNsubscription request from list %s"
 msgstr "Demande de desabonnement de la liste %s"
 
-#: web_tt2/d_read.tt2:365
+#: web_tt2/d_read.tt2:346
 msgid "URL"
 msgstr "URL"
 
@@ -4670,8 +4720,7 @@ msgid ""
 "Warning : this message could have ever been send by another editor"
 msgstr ""
 "Impossible d'accéder au message à modérer de la liste %s avec la clé %s.\n"
-"Il se peut que ce message ait déjà été diffusé par un modérateur de la "
-"liste."
+"Il se peut que ce message ait déjà été diffusé par un modérateur de la liste."
 
 #: web_tt2/remove_arc.tt2:11
 msgid "Unable to find the message to delete"
@@ -4706,13 +4755,13 @@ msgstr "Unifier vos abonnements avec l'adresse"
 msgid "Unknown"
 msgstr "inconnu"
 
-#: web_tt2/list_menu.tt2:16 web_tt2/sigrequest.tt2:39
+#: web_tt2/list_menu.tt2:15 web_tt2/sigrequest.tt2:39
 #: web_tt2/sigrequest.tt2:53 web_tt2/sigrequest.tt2:68
 msgid "Unsubscribe"
 msgstr "Désabonnement"
 
 # nlsref 6,71
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3467
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3476
 msgid "Unsubscribe from list %s"
 msgstr "Desabonnement de la liste %s"
 
@@ -4753,21 +4802,21 @@ msgstr ""
 "La configuration par défaut sera utilisée."
 
 #. (visible_path)
-#: web_tt2/d_read.tt2:410
+#: web_tt2/d_read.tt2:377
 msgid "Unzip a file inside the folder %1"
 msgstr "Décompresser un fichier d'archive dans le dossier %1"
 
-#: web_tt2/d_read.tt2:412
-msgid "Unzip a file inside the root folder"
-msgstr "Décompresser un fichier d'archive à la racine"
+#: web_tt2/d_read.tt2:379
+msgid "Unzip a file inside the folder SHARED"
+msgstr " Décompresser un fichier d'archive à la racine"
 
-#: web_tt2/d_control.tt2:5 web_tt2/d_editfile.tt2:6
-#: web_tt2/d_properties.tt2:13 web_tt2/d_read.tt2:7
+#: web_tt2/d_control.tt2:4 web_tt2/d_editfile.tt2:6 web_tt2/d_properties.tt2:4
+#: web_tt2/d_read.tt2:7
 msgid "Up to higher level directory"
 msgstr "Dossier parent"
 
 #: web_tt2/d_editfile.tt2:37 web_tt2/edit_list_request.tt2:416
-#: web_tt2/editsubscriber.tt2:38 web_tt2/suboptions.tt2:31
+#: web_tt2/editsubscriber.tt2:38 web_tt2/suboptions.tt2:26
 msgid "Update"
 msgstr "Mise à jour"
 
@@ -4776,11 +4825,11 @@ msgid "Update of list members based on the TTL"
 msgstr "Mise à jour des membres "
 
 #. (visible_path)
-#: web_tt2/d_read.tt2:386
+#: web_tt2/d_read.tt2:359
 msgid "Upload a file inside the folder %1"
 msgstr "Télécharger un fichier dans le dossier %1"
 
-#: web_tt2/d_read.tt2:388
+#: web_tt2/d_read.tt2:361
 msgid "Upload a file inside the folder SHARED"
 msgstr "Télécharger un fichier"
 
@@ -4838,7 +4887,7 @@ msgstr "Dernière erreur"
 msgid "Virtual Robots"
 msgstr "Les robots virtuels"
 
-#: web_tt2/editsubscriber.tt2:22 web_tt2/suboptions.tt2:23
+#: web_tt2/editsubscriber.tt2:22 web_tt2/suboptions.tt2:19
 msgid "Visibility :"
 msgstr "Visibilité :"
 
@@ -4913,8 +4962,8 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:3238 wwsympa/wwsympa.fcgi:3239
-#: wwsympa/wwsympa.fcgi:3907 wwsympa/wwsympa.fcgi:3908
+#: wwsympa/wwsympa.fcgi:3247 wwsympa/wwsympa.fcgi:3248
+#: wwsympa/wwsympa.fcgi:4038 wwsympa/wwsympa.fcgi:4039
 msgid "Welcome on list %s"
 msgstr "Bienvenue sur la liste %s"
 
@@ -5112,7 +5161,7 @@ msgstr ""
 "initial"
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3468 wwsympa/wwsympa.fcgi:4013
+#: wwsympa/wwsympa.fcgi:3477 wwsympa/wwsympa.fcgi:4144
 msgid "You have been removed from list %s.\n"
 msgstr "Vous avez désabonné de la liste %s.\n"
 
@@ -5196,7 +5245,7 @@ msgstr ""
 "utilisant votre adresse canonique."
 
 # nlsref 6,79
-#: src/List.pm:8699 src/List.pm:8706
+#: src/List.pm:8702 src/List.pm:8709
 msgid ""
 "You requested a subscription reminder to be sent\n"
 "to each subscriber of list %s\n"
@@ -5463,6 +5512,10 @@ msgstr ""
 "Votre mot de passe est défini dans un annuaire LDAP, Sympa ne peut donc pas "
 "vous le rapeller"
 
+#: web_tt2/login_menu.tt2:31
+msgid "Your preferences"
+msgstr "Vos préférences"
+
 #: web_tt2/notice.tt2:6
 msgid "Your request has been forwarded to the list owner"
 msgstr "La demande a été soumise au gestionnaire de la liste"
@@ -5498,11 +5551,11 @@ msgid "Your subscription email is %1"
 msgstr "Votre adresse d'abonné est : %1"
 
 # nlsref 6,18
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4012
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4143
 msgid "Your subscription to list %s has been removed."
 msgstr "Vous avez été retiré de la liste %s"
 
-#: web_tt2/help.tt2:20 web_tt2/menu.tt2:21
+#: web_tt2/help.tt2:20 web_tt2/login_menu.tt2:34
 msgid "Your subscriptions"
 msgstr "Vos abonnements"
 
@@ -5796,7 +5849,7 @@ msgstr "authentification demandée, notification du proprio"
 msgid "bounce score"
 msgstr "Taux d'erreurs"
 
-#: web_tt2/review.tt2:160
+#: web_tt2/review.tt2:165
 msgid "bouncing"
 msgstr "en erreur"
 
@@ -5825,12 +5878,12 @@ msgstr "distinction majuscules/minuscules activée"
 msgid "certificate for authentication by remote Sympa"
 msgstr "Certificat pour authentification de la connection"
 
-#: web_tt2/d_control.tt2:40
+#: web_tt2/d_control.tt2:38
 msgid "change access"
 msgstr "Changer les droits"
 
-#: src/etc/mhonarc-ressources.tt2:189 src/etc/mhonarc-ressources.tt2:287
-#: src/etc/mhonarc-ressources.tt2:369 src/etc/mhonarc-ressources.tt2:373
+#: src/etc/mhonarc-ressources.tt2:187 src/etc/mhonarc-ressources.tt2:285
+#: src/etc/mhonarc-ressources.tt2:367 src/etc/mhonarc-ressources.tt2:371
 msgid "chronological"
 msgstr "Chronologique"
 
@@ -5961,7 +6014,7 @@ msgid "editor rejection message"
 msgstr "message de rejet par le modérateur"
 
 # nlsref 16,27
-#: src/List.pm:499 src/List.pm:909 web_tt2/login_menu.tt2:57
+#: src/List.pm:499 src/List.pm:909 web_tt2/login_menu.tt2:62
 #: web_tt2/loginbanner.tt2:75
 msgid "email address"
 msgstr "adresse email"
@@ -6177,7 +6230,7 @@ msgid "list name"
 msgstr "Nom de liste"
 
 # nlsref 15,10
-#: web_tt2/menu.tt2:25
+#: web_tt2/menu.tt2:17
 msgid "list of lists"
 msgstr "liste des listes"
 
@@ -6201,8 +6254,8 @@ msgstr "listmaster seulement"
 msgid "local domain users or owner approval"
 msgstr "usager du domaine local ou via autorisation du proprio"
 
-#: src/etc/mhonarc-ressources.tt2:185 src/etc/mhonarc-ressources.tt2:283
-#: src/etc/mhonarc-ressources.tt2:62
+#: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:281
+#: src/etc/mhonarc-ressources.tt2:63
 msgid "mails"
 msgstr "Messages"
 
@@ -6303,7 +6356,7 @@ msgid "owners approval"
 msgstr "ouvert a tous après autorisation du proprio"
 
 #. ($PAGENUM$,$NUMOFPAGES$)
-#: src/etc/mhonarc-ressources.tt2:192 src/etc/mhonarc-ressources.tt2:290
+#: src/etc/mhonarc-ressources.tt2:190 src/etc/mhonarc-ressources.tt2:288
 msgid "page # %1/%2"
 msgstr "page %1 / %2"
 
@@ -6316,7 +6369,7 @@ msgstr "page %1 / %2"
 msgid "part of word"
 msgstr "partie de mot"
 
-#: web_tt2/login_menu.tt2:59 web_tt2/loginbanner.tt2:76
+#: web_tt2/login_menu.tt2:64 web_tt2/loginbanner.tt2:76
 #: web_tt2/sigrequest.tt2:35 web_tt2/sigrequest.tt2:64
 #: web_tt2/subrequest.tt2:28 web_tt2/subrequest.tt2:58
 msgid "password"
@@ -6391,8 +6444,8 @@ msgstr "liste ouverte, Bcc interdit (anti-spam)"
 msgid "purge of orphan entries in user table every month"
 msgstr "supression des entrées orphelines de la table user tous les mois"
 
-#: web_tt2/add_request.tt2:13 web_tt2/editsubscriber.tt2:40
-#: web_tt2/review.tt2:226 web_tt2/review.tt2:45 web_tt2/review.tt2:70
+#: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:40
+#: web_tt2/review.tt2:231 web_tt2/review.tt2:50 web_tt2/review.tt2:75
 #: web_tt2/reviewbouncing.tt2:107
 msgid "quiet"
 msgstr "sans prévenir"
@@ -6580,7 +6633,7 @@ msgid "selection (if multiple)"
 msgstr "sélection (si multiple)"
 
 #. (user.email)
-#: src/etc/mhonarc-ressources.tt2:418
+#: src/etc/mhonarc-ressources.tt2:416
 msgid "send it back to %1"
 msgstr "renvoyer à %1"
 
@@ -6645,7 +6698,7 @@ msgstr "suffixe"
 msgid "summary message"
 msgstr "résumé des messages"
 
-#: src/etc/mhonarc-ressources.tt2:425
+#: src/etc/mhonarc-ressources.tt2:423
 msgid "tag this mail for deletion"
 msgstr "marquer ce message pour suppression"
 
@@ -6675,7 +6728,7 @@ msgstr "Attention, le nom pas l'adresse !"
 msgid "this sentence"
 msgstr "Cette phrase"
 
-#: src/etc/mhonarc-ressources.tt2:373
+#: src/etc/mhonarc-ressources.tt2:371
 msgid "thread"
 msgstr "Suivi de conversation"
 
@@ -6683,11 +6736,11 @@ msgstr "Suivi de conversation"
 msgid "threshold"
 msgstr "seuil"
 
-#: web_tt2/d_read.tt2:364
+#: web_tt2/d_read.tt2:345
 msgid "title"
 msgstr "intitulé"
 
-#: src/etc/mhonarc-ressources.tt2:415
+#: src/etc/mhonarc-ressources.tt2:413
 msgid "to list"
 msgstr "à la liste"
 
@@ -6742,6 +6795,24 @@ msgstr "votre adresse électronique : %1"
 #: mail_tt2/sendpasswd.tt2:30
 msgid "your password : %1"
 msgstr "votre mot de passe         : %1"
+
+#~ msgid "Bounced email rate:"
+#~ msgstr "Taux d'adresses en erreur :"
+
+#~ msgid "Create a new folder inside the folder SHARED"
+#~ msgstr "Créer un dossier"
+
+#~ msgid "Create a new subdirectory"
+#~ msgstr "Créer un nouveau sous-dossier"
+
+#~ msgid "Messages to moderate :"
+#~ msgstr "Messages en attente de modération :"
+
+#~ msgid "No message to moderate"
+#~ msgstr "Aucun message à modérer"
+
+#~ msgid "Unzip a file inside the root folder"
+#~ msgstr "Décompresser un fichier d'archive à la racine"
 
 #~ msgid "%1@%2 - %3"
 #~ msgstr "%1@%2 - %3"
@@ -6852,9 +6923,6 @@ msgstr "votre mot de passe         : %1"
 # nlsref 16,68
 #~ msgid "May not send the message"
 #~ msgstr "Le message n'a pu être diffusé"
-
-#~ msgid "Message error"
-#~ msgstr "Message incorrect"
 
 #~ msgid "Missing argument: %1"
 #~ msgstr "%1 : paramètre manquant"
@@ -7228,10 +7296,6 @@ msgstr "votre mot de passe         : %1"
 
 #~ msgid "Error while deleting this message"
 #~ msgstr "Erreur lors de la suppression de ce message"
-
-#, fuzzy
-#~ msgid "Full name"
-#~ msgstr "Nom de liste"
 
 #~ msgid ""
 #~ "Moderation: to consult the message list to\n"
