@@ -312,7 +312,7 @@
     [% IF path %]
       [%|loc(visible_path)%]Create a new folder inside the folder %1[%END%]
     [% ELSE %]
-      [%|loc%]Create a new folder inside the folder SHARED[%END%]
+      [%|loc%]Create a new folder inside the root folder[%END%]
     [% END %]
     </strong> <br />
     <label>[%|loc%]Folder name[%END%] <input maxlength="30" type="text" name="name_doc" /></label>

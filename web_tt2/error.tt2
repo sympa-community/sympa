@@ -61,7 +61,7 @@
      [%|loc(error.list)%]Could not change your subscription address for the list '%1'
      because your new address is not allowed to subscribe.[%END%]
 [% ELSIF error.msg == 'change_email_failed_because_unsubscribe_not_allowed' %]
-     [%|loc(error.list)%]Could not change your subscription address for the list '%1%'
+     [%|loc(error.list)%]Could not change your subscription address for the list '%1'
      because you are not allowed to unsubscribe.[%END%]
 [% ELSIF error.msg == 'shared_full' %][%|loc%]The document repository exceed disk quota.[%END%]
 [% ELSIF error.msg == 'ldap_user' %][%|loc%]Your password is stored in an LDAP directory, therefore Sympa cannot post you a reminder[%END%]
