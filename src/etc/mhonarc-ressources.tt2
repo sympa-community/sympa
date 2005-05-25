@@ -107,10 +107,15 @@ big5; big5
 big5; big5-eten
 </CHARSETALIASES>
 
-
-<!--TextEncode>
+($tag$% IF conf.web_recode_to == 'utf-8' %$tag$)
+<TextEncode>
 utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
-</TextEncode-->
+</TextEncode>
+
+<defcharset>
+utf-8
+</defcharset>
+($tag$% END %$tag$)
 
 <CharsetConverters override>
 plain;    mhonarc::htmlize
