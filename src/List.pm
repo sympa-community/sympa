@@ -2657,7 +2657,7 @@ sub distribute_msg {
 	    $subject_field = '['.$parsed_tag[0].'] '.$subject_field
 	}
 	## Encode subject using initial charset
-	$subject_field = MIME::Words::encode_mimewords($subject_field, 'Q', $message->{'subject_charset'});
+	$subject_field = MIME::Words::encode_mimewords($subject_field, ('Encode' => 'Q', 'Charset' => $message->{'subject_charset'}));
 
 	$message->{'msg'}->head->add('Subject', $subject_field);
     }

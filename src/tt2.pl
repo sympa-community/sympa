@@ -114,7 +114,7 @@ my $last_error;
 sub qencode {
     my $string = shift;
     
-    my $encoded_string = MIME::Words::encode_mimewords($string, 'Q', gettext("_charset_"));
+    my $encoded_string = MIME::Words::encode_mimewords($string, ('Encode' => 'Q', 'Charset' => gettext("_charset_")));
     $encoded_string =~ s/\?=\s+=\?/_\?= =?/g; ## Fix bug 5462 of MIME::Words
 
     return $encoded_string;

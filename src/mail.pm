@@ -76,14 +76,14 @@ sub mailback {
    ## Charset for encoding
    my $charset = sprintf (gettext("_charset_"));
 
-   printf $fh "To:  %s\n", MIME::Words::encode_mimewords($to, 'Q', $charset);
+   printf $fh "To:  %s\n", MIME::Words::encode_mimewords($to, ('Encode' => 'Q', 'Charset' => $charset));
    if ($from eq 'sympa') {
-       printf $fh "From: %s\n", MIME::Words::encode_mimewords((sprintf ("SYMPA <%s>", $sympa_email)), 'Q', $charset);
+       printf $fh "From: %s\n", MIME::Words::encode_mimewords((sprintf ("SYMPA <%s>", $sympa_email)), ('Encode' => 'Q', 'Charset' => $charset));
    }else {
-       printf $fh "From: %s\n", MIME::Words::encode_mimewords($from, 'Q', $charset);
+       printf $fh "From: %s\n", MIME::Words::encode_mimewords($from, ('Encode' => 'Q', 'Charset' => $charset));
    }
    foreach my $field (keys %{$headers}) {
-       printf $fh "%s: %s\n", $field, MIME::Words::encode_mimewords($headers->{$field}, 'Q', $charset);
+       printf $fh "%s: %s\n", $field, MIME::Words::encode_mimewords($headers->{$field}, ('Encode' => 'Q', 'Charset' => $charset));
    }
    printf $fh "MIME-Version: 1.0\n";
    printf $fh "Content-Type: text/plain; charset=%s\n", gettext("_charset_");
