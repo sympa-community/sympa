@@ -3239,7 +3239,7 @@ sub send_global_file {
     }
 
     ## Lang
-    $data->{'lang'} = $data->{'lang'} = $data->{'user'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
+    $data->{'lang'} = $data->{'lang'} || $data->{'user'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file   
     my $tt2_include_path = ["$Conf{'etc'}/$robot/mail_tt2/".&Language::Lang2Locale($data->{'lang'}),
