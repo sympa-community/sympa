@@ -35,6 +35,7 @@ use Archive::Zip;
 
 use strict vars;
 use Time::Local;
+use Text::Wrap;
 
 ## Template parser
 require "--LIBDIR--/tt2.pl";
@@ -1258,6 +1259,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	 ## Skip empty parameters
  	 next if ($in{$p} =~ /^$/);
+
+	 ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
+	 $in{$p} =~ s/\015//g;	 
 
 	 my @tokens = split /\./, $p;
 	 my $pname = $tokens[0];
@@ -12077,8 +12081,9 @@ sub d_test_existing_and_rights {
 	 $to = $list->{'name'}.'@'.$list->{'admin'}{'host'};
      }
 
-     ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
-     $in{'body'} =~ s/\015//g;
+     $Text::Wrap::columns = 80;
+     $in{'body'} = &Text::Wrap::wrap ('','',$in{'body'});
+
 
      my @body = split /\0/, $in{'body'};
 
