@@ -9128,8 +9128,13 @@ sub probe_db {
 		    unless ($real_struct{$t}{$f} eq $db_struct{$t}{$f}) {
 			&do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', $f, $t, $Conf{'db_name'}, $db_struct{$t}{$f});
 			
-			&do_log('notice', "ALTER TABLE $t CHANGE $f $f $db_struct{$t}{$f}");
-			unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$t}{$f}")) {
+			my $options;
+			if ($not_null{$f}) {
+			    $options .= 'NOT NULL';
+			}
+
+			&do_log('notice', "ALTER TABLE $t CHANGE $f $f $db_struct{$t}{$f} $options");
+			unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$t}{$f} $options")) {
 			    &do_log('err', 'Could not change field \'%s\' in table\'%s\'.', $f, $t);
 			    &do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			    return undef;
