@@ -1,6 +1,27 @@
-<pre>
-[% FOREACH l = tpl %]
-    [% SET tmp = l.key l = l.value l.NAME = tmp IF l.key.defined %]
-[% l %]
+<!-- $Id$ -->
+
+<h2>Template edition system</h2><br />
+<p>
+
+<ul>
+<li>Template name :  <strong> [% template_name %] </strong></li>
+<li>Type : <strong> [% webormail %] </strong></li>
+<li>Path : <strong> [% template_path %] </strong></li>
+<li>Scope : <strong> [% scope %] </strong>.
+[% IF scope == 'list' %]
+  ( this template is defined for list [% list %]@[%robot %] )
+[% ELSE %]
+  [% IF scope == 'robot' %]
+     ( this template is defined for all lists of robot [%robot %] unless it is redefined for some particular list )
+  [% ELSE %]
+     ( this template is defined for all robots unless  it is redefined for some particular robot )
+  [% END %]
 [% END %]
+</li>
+</ul>
+</p><br />
+<div class="block">
+<pre>
+[% template_content %]
 </pre>
+</div>

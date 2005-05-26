@@ -1,14 +1,23 @@
 <!-- $Id$ -->
 
-<h2>Template edition system</h2><br />
+<h2>[%|loc%]Template edition system[%END%]</h2><br />
 <p>
 <ul>
-<li>Template name :  <strong> [% template_name %] </strong></li>
-<li>Type : <strong> [% webormail %] </strong></li>
-<li>Path : <strong> [% template_path %] </strong></li>
-<li>Scope : <strong> [% scope %] </strong>.</li>
+<li>[%|loc%]Template name[%END%] :  <strong> [% template_name %] </strong></li>
+<li>[%|loc%]Type[%END%] : <strong> [% webormail %] </strong></li>
+<li>[%|loc%]Path[%END%] : <strong> [% template_path %] </strong></li>
+<li>[%|loc%]Scope[%END%] : <strong> [% scope %] </strong>.[% IF scope == 'list' %]
+  ( [%|loc%]this template is defined for list[%END%] [% listname %]@[%robot %] )
+[% ELSE %]
+  [% IF scope == 'robot' %]
+     ( [%|loc%]this template is defined for all lists of robot [%robot %] unless it is redefined for some particular list[%END%] )
+  [% ELSE %]
+     ( [%|loc%]this template is defined for all robots unless  it is redefined for some particular robot[%END%] )
+  [% END %]
+[% END %]
+</li>
 </ul>
-</p>
+</p><br />
 <form action="[% path_cgi %]/edit_template" method="post">
  <textarea name="content" cols="90" rows="[% rows %]" />
 [% template_content %]
@@ -16,9 +25,17 @@
 <input type="hidden" name="webormail" value="[% webormail %]" />
 <input type="hidden" name="template_name" value="[% template_name %]" />
 <input type="hidden" name="action" value="edit_template" />
-<ul>
-<li>Save for <input type="submit" class="MainMenuLinks" name="scopeout" value="site" /></li>
-<li>Save for <input type="submit" class="MainMenuLinks" name="scopeout" value="robot" /></li>
-<li>Save for list <input type="text" name="listname" [% IF listname %] value="listname" [% END %] /> <input type="submit" class="MainMenuLinks" name="scopeout" value="list" /></li>
-</ul>
+<input type="hidden" name="template_path" value="[% template_path %]" />
+[% IF listname %]
+	<input type="hidden" name="listname" value="[% listname %]" /> 
+[% END %] 
+
+<input type="hidden" name="scopeout" value="[% scope %]" />
+<input type="hidden" name="scope" value="[% scope %]" /> 	
+<input type="submit" class="MainMenuLinks" name="action_edit_template" value="[%|loc%]save[%END%]" />
+
+[% IF saved %]
+[%|loc%]Template saved[%END%] ([% time %]) <br /><br />
+[% END %]
+
 </form>

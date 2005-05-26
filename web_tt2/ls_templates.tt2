@@ -1,0 +1,108 @@
+<!-- $Id$ -->
+
+<h2>Template edition system</h2><br />
+
+This page is proposed in order to edit or create mail or web tt2 templates.
+
+Priority rules for template selection :
+<ul>
+<li>IF list context defined apply list template if exist</li>
+<li>ELSE apply robot defined template if exist</li>
+<li>ELSE apply localy defined template if exist</li>
+<li>ELSE apply template include in the distribution (theses must not be edited because Sympa's update will overright theses files)</li>
+</ul> 
+<br />
+First you may list a category of templates including or not templates specific of a particular list, then you have oportunity to copy and edit templates of the current robot or the named list.<br />
+
+<form action="[% path_cgi %]/ls_templates" method="post">
+<ul>
+<li>Select templates type :
+ <input type="radio" name="webormail" value="web"  [% IF webormail == 'web' %]checked="checked"[% END %] />web
+ <input type="radio" name="webormail" value="mail" [% IF webormail == 'mail' %]checked="checked"[% END %] />mail
+</li>
+<li>In order to include templates of a specific list, enter a listname : <input type="text" name="listname" size="20" value='[% listname %]'/> </li>
+<li><input class="MainMenuLinks" type="submit" name="action_ls_templates" value="[%|loc%]list templates[%END%]" /></li>
+</ul>
+</form>
+<p>
+
+[% IF templates %]
+<table style="border: solid 1px; width: 100%; margin-right: 10px">
+<tr style="background-color: [% color_4 %];">
+<th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">template name</th>
+<th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">distrib</th>
+<th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">site</th>
+<th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">robot</th>
+[% IF listname %]<th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">list</th>[% END %]
+</tr>
+[% SET dark = 1 %]
+[% END %]
+[% FOREACH file = templates %]
+  [% IF dark == '1' %]
+     <tr valign="top">[% SET dark = 0 %]
+  [% ELSE %]
+     <tr style="background-color: [% color_0 %];" valign="top">[% SET dark=1 %]
+  [% END %]
+  <td>[% file.key %]</td>
+
+  <td style="text-align: center;">
+  [% IF file.value.distrib %]
+    <form action="[% path_cgi %]/edit_template" method="post">
+      <input type="hidden" name="template_path" value="[% file.value.distrib %]" />
+      <input type="hidden" name="template_name" value="[% file.key %]" />
+      <input type="hidden" name="scope" value="distrib" />
+      <input type="hidden" name="webormail" value="[% webormail %]" />
+      <input class="MainMenuLinks" type="submit" name="action_view_template" value="view" />
+      <input class="MainMenuLinks" type="submit" name="action_copy_template" value="cp" />
+    </form></li>
+    </ul>
+  [% END %]
+  </td>
+  <td style="text-align: center;">
+  [% IF file.value.site %]
+    <form action="[% path_cgi %]/edit_template" method="post">
+      <input type="hidden" name="template_name" value="[% file.key %]" />
+      <input type="hidden" name="template_path" value="[% file.value.site %]" />
+      <input type="hidden" name="scope" value="site" />
+      <input type="hidden" name="webormail" value="[% webormail %]" />
+      <input class="MainMenuLinks" type="submit" name="action_edit_template" value="edit" />
+      <input class="MainMenuLinks" type="submit" name="action_copy_template" value="cp" />
+      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="rm" onclick="return request_confirm('Do you really want to remove [% file.value.site %] ?');" />
+    </form>	
+  [% END %]
+  </td>
+  <td style="text-align: center;" >
+  [% IF file.value.robot %]
+    <form action="[% path_cgi %]/edit_template" method="post">
+      <input type="hidden" name="template_name" value="[% file.key %]" />
+      <input type="hidden" name="template_path" value="[% file.value.robot %]" />
+      <input type="hidden" name="scope" value="robot" />
+      <input type="hidden" name="webormail" value="[% webormail %]" />
+      <input class="MainMenuLinks" type="submit" name="action_edit_template" value="edit" />
+      <input class="MainMenuLinks" type="submit" name="action_copy_template" value="cp" />
+      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="rm" onclick="return request_confirm('Do you really want to remove [% file.value.robot %] ?');"/>
+    </form>
+  [% END %]
+  </td>
+  [% IF listname %]
+  <td style="text-align: center;" >
+  [% IF file.value.listname %]
+    <form action="[% path_cgi %]/edit_template" method="post">
+      <input type="hidden" name="template_name" value="[% file.key %]" />
+      <input type="hidden" name="template_path" value="[% file.value.list %]" />
+      <input type="hidden" name="scope" value="list" />
+      <input type="hidden" name="listname" value="[% listname %]" />
+      <input type="hidden" name="webormail" value="[% webormail %]" />
+      <input class="MainMenuLinks" type="submit" name="action_edit_template" value="edit" />
+      <input class="MainMenuLinks" type="submit" name="action_copy_template" value="cp" />
+      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="rm" onclick="return request_confirm('Do you really want to remove [% file.value.list %] ?');"/>
+    </form>
+  [% END %]
+  </td>
+  [% END %]
+[% END %]
+[% IF templates %]
+</td></tr>
+</table>
+[% END %]
+</p>

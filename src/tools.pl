@@ -272,13 +272,23 @@ sub get_list_list_tpl {
     return ($list_templates);
 }
 
+#to be used before creating a file in a directory that may not exist allready. 
+sub mk_parent_dir {
+    my $file = shift;
+    $file =~ /^(.*)\/([^\/])*$/ ;
+    my $dir = $1;
+    do_log('info', "xxxxxxxxxxxxxxxxxxxxxxx create $dir");
+    return if (-d $dir);
+    return undef unless (mkdir ($dir, 0755));
+}
+
 sub get_templates_list {
 
     my $type = shift;
     my $robot = shift;
     my $listdir = shift;
 
-
+do_log('info', "xxxxxxxxxxxxxxxxxxxxxxxxxx get_templates_list () : $type $robot $listdir");
     unless (($type == 'web')||($type == 'mail')) {
 	do_log('info', 'get_templates_list () : internal error incorrect parameter');
     }
@@ -290,7 +300,7 @@ sub get_templates_list {
     my @try;
     push @try, $distrib_dir ;
     push @try, $site_dir ;
-    push @try, $robotdir;
+    push @try, $robot_dir;
     
     if (defined ($listdir)) {
 	$listdir .='/'.$type.'_tt2';
@@ -299,17 +309,21 @@ sub get_templates_list {
     my $i = 0 ;
     my $tpl;
     foreach my $dir (@try) {
-	do_log('info', "get_templates_list () : open '$dir'");
+	do_log('info', "xxxxxxxxxxxxxxxxxxxxxxxxxx get_templates_list () : open '$dir'");
 	next unless opendir (DIR, $dir);
 	foreach my $file ( readdir(DIR)) {	    
 	    next unless ($file =~ /\.tt2$/);
-	    if ($dir eq $distrib_dir){$tpl->{$file}{'distrib'} = $dir.'/'.$file ;}else{$tpl->{$file}{'distrib'} = ''; }
-	    if ($dir eq $site_dir)   {$tpl->{$file}{'site'} =  $dir.'/'.$file;}else{$tpl->{$file}{'site'} = ''; }
-	    if ($dir eq $robot_dir)  {$tpl->{$file}{'robot'} = $dir.'/'.$file;}else{$tpl->{$file}{'robot'} = ''; }
-	    if ($dir eq $listdir)    {$tpl->{$file}{'list'} = $dir.'/'.$file ;}else{$tpl->{$file}{'list'} = '';}	    
+	    if ($dir eq $distrib_dir){$tpl->{$file}{'distrib'} = $dir.'/'.$file ;}
+	    if ($dir eq $site_dir)   {$tpl->{$file}{'site'} =  $dir.'/'.$file;}
+	    if ($dir eq $robot_dir)  {$tpl->{$file}{'robot'} = $dir.'/'.$file;}
+	    if ($dir eq $listdir)    {$tpl->{$file}{'listname'} = $dir.'/'.$file ; do_log('info', "xxxxxxxxxxxxxxxxxxxxxxxxxx found list template $file");}
 	}
 	closedir DIR;
     }
+
+    open DUMP, ">/tmp/dump";
+    &tools::dump_var($tpl, 0, \*DUMP);
+    close DUMP;
     return ($tpl);
 }
 
@@ -320,9 +334,18 @@ sub get_template_path {
     my $robot = shift;
     my $scope = shift;
     my $tpl = shift;
-    my $listdir = shift;
+    my $listname = shift;
 
-do_log('info', "get_templates_path () : type=$type; robot $robot scope $scope tpl $tpl listdir $listdir");
+    do_log('info', "get_templates_path () : type=$type; robot $robot scope $scope tpl $tpl listdir $listname");
+
+    if ($listname) {
+	chomp ($listname);
+	unless ($namedlist = new List ($listname, $robot)) {
+	    return undef;		
+	}
+    }
+
+    my $listdir = $namedlist->{'dir'} if (defined $namedlist);
 
     unless (($type == 'web')||($type == 'mail')) {
 	do_log('info', 'get_templates_path () : internal error incorrect parameter');
@@ -334,7 +357,7 @@ do_log('info', "get_templates_path () : type=$type; robot $robot scope $scope tp
 
     if ($scope eq 'list')  {
 do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx$listdir/$tpl");
-	return $listdir.'/'.$tpl ;
+	return $listdir.'/'.$type.'_tt2/'.$tpl ;
     }
 
     if (($scope eq 'robot')||($scope eq 'list'))  {

@@ -1,6 +1,6 @@
 <!-- $Id$ -->
 <!-- begin error.tt2 -->
-<div class="ContentBlock"> <strong>
+<div class="ErrorBlock"> <strong>
 [% FOREACH error = errors %]
   [% IF error.msg == 'unknown_action' %][%|loc(error.action)%]%1 : unknown action[%END%]
   [% ELSIF error.msg == 'unknown_list' %][%|loc(error.list)%]%1 : unknown list[%END%]

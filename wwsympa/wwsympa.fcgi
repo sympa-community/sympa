@@ -264,6 +264,9 @@ my %comm = ('home' => 'do_home',
 	 'sync_include' => 'do_sync_include',
 	 'review_family' => 'do_review_family',
 	 'ls_templates' => 'do_ls_templates',
+	 'remove_template' => 'do_remove_template',
+	 'copy_template' => 'do_copy_template',	   
+	 'view_template' => 'do_view_template',
 	 'edit_template' => 'do_edit_template',
 	 );
 
@@ -356,6 +359,9 @@ my %action_args = ('default' => ['list'],
 		'sync_include' => ['list'],
 		'review_family' => ['family_name'],
 		'ls_templates' => [],
+		'view_template' => [],
+		'remove_template' => [],
+		'copy_template' => [],
 		'edit_template' => [],
 		);
 
@@ -399,6 +405,9 @@ my %action_type = ('editfile' => 'admin',
 		'arc_manage' => 'admin',
 		'sync_include' => 'admin',
 		'ls_templates' => 'admin',
+		'view_template' => 'admin',
+		'remove_template' => 'admin',
+		'copy_template' => 'admin',
 		'edit_template' => 'admin',
 #		'viewlogs' => 'admin'
 );
@@ -435,7 +444,7 @@ my %in_regexp = (
 
 		 ## File names
 		 'file' => '[^<>\*\$]+',
-		 'template_path' => '[\w\-\.\/]+',
+		 'template_path' => '[\w\-\.\/_]+',
 		 'arc_file' => '[\w\-\.]+', 
 		 'path' => '[^<>\\\*\$]+',
 		 'uploaded_file' => '[^<>\*\$]+', # Could be precised (use of "'")
@@ -640,6 +649,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'path_cgi'} = $ENV{'SCRIPT_NAME'};
      $param->{'version'} = $Version::Version;
      $param->{'date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
+     $param->{'time'} = &POSIX::strftime("%H:%M:%S", localtime(time));
 
      my $tmp_lang = &Language::GetLang();
      &Language::SetLang('en_US');
@@ -3726,10 +3736,10 @@ sub do_ls_templates  {
     return 1;
 }    
 
-## list availible templates
-sub do_edit_template  {
-    &wwslog('info', 'do_edit_template');
-
+# show a template, used by copy_template and edit_emplate
+sub do_view_template {
+    
+    &wwslog('info', 'do_view_template');
     unless ($param->{'is_listmaster'}) {
 	&error_message('may_not');
 	&wwslog('info','do_admin: %s not listmaster', $param->{'user'}{'email'});
@@ -3761,21 +3771,13 @@ sub do_edit_template  {
     my $template_path ;
 
     if ($in{'scope'} eq 'list') { 
-	if (defined $namedlist) {
-	    &wwslog('info',"edit_template: scope == list");
-	    $template_path = &tools::get_template_path($type,$robot,'list',$template_name,$namedlist->{'dir'});
-	    $param->{'template_path'} = $template_path;
-	}else{
-	     &error_message('undefined_list');
-	     &wwslog('info',"undefined list while scope == list (listname $in{'listname'})");
-	}	
+	$template_path = &tools::get_template_path($type,$robot,'list',$template_name,$in{'listname'});
     }else{
-	&wwslog('info',"edit_template: scope != list");
 	$template_path = &tools::get_template_path($type,$robot,$in{'scope'},$template_name);
-	$param->{'template_path'} = $template_path;
     }
     
-    &wwslog('info',"edit_template: template_path '$template_path'");
+    
+    &wwslog('debug',"edit_template: template_path '$template_path'");
     unless ($template_path eq $in{'template_path'}) {
 	&error_message('wrong_input_path');
 	&wwslog('info',"edit_template: wrong input path $in{'template_path'} differ from $template_path");
@@ -3789,34 +3791,104 @@ sub do_edit_template  {
     $param->{'rows'} = 5; #input area is always contain 5 emptyline; 
     while(<TPL>) {$param->{'template_content'}.= $_; $param->{'rows'}++;}
     close TPL;
+}
 
+##  template copy
+sub do_copy_template  {
+    &wwslog('info', 'do_copy_template');
+    
+    my $type =  $param->{'webormail'} = $in{'webormail'};
+    my $template_name = $param->{'template_name'} = $in{'template_name'};
+    my $listname = $param->{'listname'}= $in{'listname'};
+    $param->{'template_path'} = $in{'template_path'};
+    $param->{'scope'} = $in{'scope'};
 
-    if ($in{'scopeout'}) {  
-	my $pathout ; 
-	my $scopeout = $param->{'scopeout'} = $in{'scopeout'} ;
-	if ($in{'scopeout'} == 'list') { 
-	    if ($list) {
-		$pathout = &tools::get_template_path($type,$robot,$scopeout,$template_name,$list->{'dir'});
-	    }else{
-		&error_message('listname needed');
-		&wwslog('info',"edit_template : no output lisname while output scope is list");
-		return 1;
-	    }
+    &do_view_template;               
+
+    # $in{'scopeout'} = 'list' if ($in{'listnameout'});
+    return 1 unless ($in{'scopeout'}) ;
+
+    # one of theses parameters is commint from the form submission
+    my $pathout ; 
+    my $scopeout = $param->{'scopeout'} = $in{'scopeout'} ;
+    if ($in{'scopeout'} eq 'list') { 
+	if ($in{'listnameout'}) {
+	    $pathout = &tools::get_template_path($type,$robot,$in{'scopeout'},$in{'template_nameout'},$in{'listnameout'});
+	}else{
+	    &error_message('listname needed');
+	    &wwslog('info',"edit_template : no output lisname while output scope is list");
+	    return 1;
 	}
-	$pathout = &tools::get_template_path($type,$robot,$scopeout,$template_name);
-	$param->{'pathout'} = $pathout ;
+    }else{
+	$pathout = &tools::get_template_path($type,$robot,$in{'scopeout'},$in{'template_nameout'});
+    }
+    
+    
+    $param->{'pathout'} = $pathout ;
+    
+    &tools::mk_parent_dir($pathout);
 
-	unless (open (TPLOUT,">$pathout")) {
-	    &error_message("Can't open $pathout");
-	    &wwslog('err',"edit_template: can't open file %s",$pathout);
+    unless (open (TPLOUT,">$pathout")) {
+	&error_message("Can't open $pathout");
+	&wwslog('err',"edit_template: can't open file %s",$pathout);
+	return undef;
+    }
+    print TPLOUT $param->{'template_content'};
+    close TPLOUT;
+    
+    if ($in{'listnameout'}) {$in{'listname'} = $in{'listnameout'} ;}else{$in{'listname'} = undef; }
+    $in{'template_name'} = $in{'template_nameout'};
+    $in{'scope'} = $in{'scopeout'};
+    $in{'template_path'} = $pathout;
+
+    return (edit_template);    
+}
+
+## online template edition
+sub do_edit_template  {
+    &wwslog('info', 'do_edit_template');
+
+    my $type =  $param->{'webormail'} = $in{'webormail'};
+    my $template_name = $param->{'template_name'} = $in{'template_name'};
+    my $listname = $param->{'listname'}= $in{'listname'};
+    $param->{'template_path'} = $in{'template_path'};
+    $param->{'scope'} = $in{'scope'};
+
+    &do_view_template; 
+
+    return 1 unless $in{'content'};
+
+    &wwslog('info',"xxxxxxxxx POST content : $in{'content'} ");
+    my $pathout ; 
+    my $scopeout = $param->{'scopeout'} = $in{'scopeout'} ;
+    if ($in{'scopeout'} == 'list') { 
+	if ($listname) {
+	    $pathout = &tools::get_template_path($type,$robot,$in{'scopeout'},$template_name,$listname);
+	}else{
+	    &error_message('listname needed');
+	    &wwslog('info',"edit_template : no output lisname while output scope is list");
 	    return undef;
 	}
-	print TPLOUT $in{'tplout'};
-	close TPLOUT;
     }
+    
+    $pathout = &tools::get_template_path($type,$robot,$in{'scopeout'},$template_name);
+    $param->{'pathout'} = $pathout ;
+    
+    &wwslog('info', "xxxxxxxxxxxxxxx open $pathout");
+    unless (open (TPLOUT,">$pathout")) {
+	&error_message("Can't open $pathout");
+	&wwslog('err',"edit_template: can't open file %s",$pathout);
+	return undef;
+    }
+    print TPLOUT $in{'content'};
+    close TPLOUT;
+
+    $param->{'saved'} = 1;
+    $param->{'template_content'} = $in{'content'};
     return 1;
     
 }    
+
 
    ## Server show colors, and install static css in futur edit colors etc
 sub do_skinsedit {
