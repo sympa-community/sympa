@@ -555,7 +555,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 &wwslog('err','Config error: wwsympa should with UID %s (instead of %s)', (getpwnam('--USER--'))[2], $>);
      }
 
-     unless ($List::use_db = &List::probe_db()) {
+     unless ($List::use_db = &List::check_db_connect()) {
 	 &error_message('no_database');
 	 &do_log('info','WWSympa requires a RDBMS to run');
      }

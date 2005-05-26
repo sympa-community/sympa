@@ -8869,6 +8869,25 @@ sub get_db_field_type {
     return undef;
 }
 
+## Just check if DB connection is ok
+sub check_db_connect {
+    
+    ## Is the Database defined
+    unless ($Conf{'db_name'}) {
+	&do_log('err', 'No db_name defined in configuration file');
+	return undef;
+    }
+    
+    unless ($dbh and $dbh->ping) {
+	unless (&db_connect('just_try')) {
+	    &do_log('err', 'Failed to connect to database');	   
+	    return undef;
+	}
+    }
+
+    return 1;
+}
+
 sub probe_db {
     do_log('debug3', 'List::probe_db()');    
     my (%checked, $table);
@@ -8928,7 +8947,11 @@ sub probe_db {
 	    unless (&create_db()) {
 		return undef;
 	    }
-	    return undef unless &db_connect();
+	    if ($ENV{'HTTP_HOST'}) { ## Web context
+		return undef unless &db_connect('just_try');
+	    }else {
+		return undef unless &db_connect();
+	    }
 	}
     }
 	
