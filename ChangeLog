@@ -1,3 +1,273 @@
+2005-05-26 14:20  sympa-authors
+
+	* src/Conf.pm, src/tools.pl, web_tt2/css.tt2,
+	  web_tt2/edit_list_request.tt2, web_tt2/edit_template.tt2,
+	  web_tt2/error.tt2, web_tt2/list_admin_menu.tt2,
+	  web_tt2/login_menu.tt2, web_tt2/ls_templates.tt2,
+	  web_tt2/view_template.tt2, wwsympa/wwsympa.fcgi:
+
+	  templates editor system (need action remove and an entry in sympa
+	  admin)
+
+2005-05-26 10:51  sympa-authors
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: [reported by S.Amrani] Fix:
+	  for every web request, wwsympa was running List::probe_db() that
+	  performs a database structure checkup. Now using a lighter
+	  subroutine
+
+2005-05-26 10:02  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [BugID 406] Changes: wrapping lines to 80
+	  characters when posting from the web interface.  Also moved the
+	  ^M removal to get_parameters()
+
+2005-05-26 09:56  sympa-authors
+
+	* src/List.pm: Fix: check if no null while doing a ALTER TABLE
+
+2005-05-25 16:10  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: [requested by K.Moriwaka] Add
+	  utf-8 encoding options
+
+2005-05-25 11:59  sympa-authors
+
+	* src/: List.pm, mail.pm, tt2.pl: [BugID 415) [Moriwaka] Fix:
+	  incorrect parameters to encode_mimewords() ; Sympa previously
+	  encoded every string in iso-8859-1
+
+2005-05-25 11:40  sympa-authors
+
+	* src/List.pm: [valinux] Fix typo
+
+2005-05-24 17:27  sympa-authors
+
+	* web_tt2/list_admin_menu.tt2: Fix: Missing [%|loc%]
+
+2005-05-24 17:16  sympa-authors
+
+	* src/Language.pm: Fix: Remove code required for a previous
+	  xgettext bug
+
+2005-05-24 16:51  sympa-authors
+
+	* po/: cs.po, de.po, en_US.po, es.po, et.po, fi.po, fr.po, hu.po,
+	  it.po, nl.po, oc.po, pl.po, pt.po, ro.po, sympa.pot, zh_CN.po,
+	  zh_TW.po: Update
+
+2005-05-24 16:37  sympa-authors
+
+	* po/fr.po, web_tt2/d_read.tt2, web_tt2/error.tt2: [M. Allaya]
+	  Fixes
+
+2005-05-24 16:04  sympa-authors
+
+	* wwsympa/: Makefile, SharedDocument.pm, wwsympa.fcgi: New
+	  SharedDocument.pm module to clean the shared documents code. Only
+	  used in new_d_read() now
+
+2005-05-24 16:03  sympa-authors
+
+	* src/: Conf.pm, List.pm: New update_db_field_types parameter to
+	  disable automatic DB changes
+
+2005-05-24 16:02  sympa-authors
+
+	* src/tools.pl: Extend dump_var()
+
+2005-05-23 18:03  sympa-authors
+
+	* src/tools.pl, src/tt2.pl, web_tt2/edit_template.tt2,
+	  web_tt2/list_menu.tt2, web_tt2/list_panel.tt2,
+	  wwsympa/wwsympa.fcgi:
+
+	  first step for a template editor (action ls_templates and
+	  edit_template)
+
+2005-05-23 11:24  sympa-authors
+
+	* po/Makefile, po/oc.po, src/Language.pm: [M. Allaya] New feature:
+	  first version of Sympa in Occitan
+
+2005-05-20 11:34  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/img1.old, html/img2.old, html/index.html, html/node1.html,
+	  html/node10.html, html/node11.html, html/node12.html,
+	  html/node13.html, html/node14.html, html/node15.html,
+	  html/node16.html, html/node17.html, html/node18.html,
+	  html/node19.html, html/node2.html, html/node20.html,
+	  html/node21.html, html/node22.html, html/node23.html,
+	  html/node24.html, html/node25.html, html/node26.html,
+	  html/node27.html, html/node3.html, html/node4.html,
+	  html/node5.html, html/node6.html, html/node7.html,
+	  html/node8.html, html/node9.html, html/sympa.html, html/sympa.ps:
+	  Doc related to the new update_db_field_types parameter
+
+2005-05-20 11:05  sympa-authors
+
+	* doc/sympa.tex.tpl: Changes: Add doc to trigger Sympa
+	  authentication from another web app.	Also fixed previous changes
+
+2005-05-19 17:57  sympa-authors
+
+	* po/: it.po, ro.po: Fix: remove \r characters
+
+2005-05-19 17:42  sympa-authors
+
+	* po/de.po: fixes (\n and \r)
+
+2005-05-19 17:33  sympa-authors
+
+	* po/de.po: [W. Werner] Update:
+
+2005-05-18 15:38  sympa-authors
+
+	* web_tt2/: list_menu.tt2, list_panel.tt2:
+
+	  In list menu :
+
+	  Replace email from each owner/editor by gecos or local part of
+	  email.
+
+	  Add a mailto to listname-request
+
+2005-05-18 14:44  sympa-authors
+
+	* doc/sympa.tex.tpl, src/Conf.pm, web_tt2/css.tt2,
+	  web_tt2/title.tt2, wwsympa/wwsympa.fcgi:
+	  introduce log_html_definition parameter
+
+2005-05-17 10:52  sympa-authors
+
+	* Makefile.am, Makefile.in, doc/man8/Makefile: [reported by
+	  S.Amrani] Fix umask while installing man pages ; also reorganized
+	  Makefiles
+
+2005-05-13 17:38  sympa-authors
+
+	* web_tt2/: css.tt2, list_panel.tt2, login_menu.tt2, title.tt2:
+
+	  esthic changes for the pleasure of Olivier and Guenaelle
+
+2005-05-13 16:35  sympa-authors
+
+	* po/fr.po, src/etc/mhonarc-ressources.tt2,
+	  web_tt2/add_request.tt2, web_tt2/arc_manage.tt2,
+	  web_tt2/arc_protect.tt2, web_tt2/arcsearch.tt2,
+	  web_tt2/arcsearch_form.tt2, web_tt2/change_email.tt2,
+	  web_tt2/choosepasswd.tt2, web_tt2/compose_mail.tt2,
+	  web_tt2/create_list_request.tt2, web_tt2/css.tt2,
+	  web_tt2/d_control.tt2, web_tt2/d_editfile.tt2,
+	  web_tt2/d_install_shared.tt2, web_tt2/d_properties.tt2,
+	  web_tt2/d_read.tt2, web_tt2/d_upload.tt2,
+	  web_tt2/edit_list_request.tt2, web_tt2/editfile.tt2,
+	  web_tt2/editsubscriber.tt2, web_tt2/get_closed_lists.tt2,
+	  web_tt2/home.tt2, web_tt2/list_menu.tt2, web_tt2/list_panel.tt2,
+	  web_tt2/lists.tt2, web_tt2/login_menu.tt2,
+	  web_tt2/loginbanner.tt2, web_tt2/modindex.tt2, web_tt2/pref.tt2,
+	  web_tt2/remindpasswd.tt2, web_tt2/rename_list_request.tt2,
+	  web_tt2/review.tt2, web_tt2/reviewbouncing.tt2,
+	  web_tt2/scenario_test.tt2, web_tt2/serveradmin.tt2,
+	  web_tt2/set_pending_list_request.tt2, web_tt2/sigrequest.tt2,
+	  web_tt2/skinsedit.tt2, web_tt2/subindex.tt2,
+	  web_tt2/suboptions.tt2, web_tt2/subrequest.tt2,
+	  web_tt2/viewmod.tt2:
+
+	  adding class="MainMenuLinks" for all input type="submit"
+
+2005-05-13 11:56  sympa-authors
+
+	* po/fr.po, src/etc/mhonarc-ressources.tt2, web_tt2/css.tt2,
+	  web_tt2/list_menu.tt2, web_tt2/list_panel.tt2,
+	  web_tt2/login_menu.tt2, web_tt2/main.tt2, wwsympa/wwsympa.fcgi:
+
+	  list adresse and title now always on top of right side (not
+	  anymore on left side)
+
+2005-05-13 11:42  sympa-authors
+
+	* src/List.pm: [BugID 393 & 409] Fix: adding custom_subject would
+	  break subject encoding
+
+2005-05-12 15:06  sympa-authors
+
+	* src/List.pm, web_tt2/css.tt2, web_tt2/d_control.tt2,
+	  web_tt2/d_properties.tt2, web_tt2/d_read.tt2,
+	  web_tt2/list_admin_menu.tt2, web_tt2/modindex.tt2,
+	  wwsympa/wwsympa.fcgi:
+
+	  List.pm : new procedure get_subscription_request_count return the
+	  number of pending subscription
+
+	  d_control.tt2, d_properties.tt2, d_read.tt2 : remove old crasy
+	  table
+
+	  list_admin_menu.tt2 : sub-sub-menu for edit-list now in left
+	  layer 		      introduction of the Moderate sub menu
+
+	  modindex.tt2 : change the table look according to other tables in
+	  Sympa
+
+2005-05-10 17:35  sympa-authors
+
+	* web_tt2/review.tt2:
+	  on change submit for page size
+
+2005-05-10 16:54  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2, web_tt2/home.tt2:
+	  Home : remove table archive : make search menu width smaller
+
+2005-05-10 11:12  sympa-authors
+
+	* web_tt2/list_admin_menu.tt2:
+
+	  show admin menu only in action admin
+
+2005-05-10 09:36  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2, web_tt2/css.tt2,
+	  web_tt2/login_menu.tt2, web_tt2/menu.tt2, web_tt2/setlang.tt2,
+	  web_tt2/suboptions.tt2:
+
+	  -Better position for button in archives -suboption and setlang
+	  now conform (checked with w3c validator) -preferences and your
+	  subscription now in login_menu
+
+2005-05-09 10:31  sympa-authors
+
+	* po/it.po: Fix headers
+
+2005-05-04 14:39  sympa-authors
+
+	* src/tools.pl, wwsympa/wwsympa.fcgi: [reported by S.Lalonde] Fix:
+	  regexp for email was too restrictive, not allowing uid
+
+2005-05-04 14:08  sympa-authors
+
+	* ChangeLog, src/Message.pm, src/tools.pl: New feature: add sanity
+	  check of incoming email address
+
+2005-05-04 09:10  sympa-authors
+
+	* mail_tt2/: global_remind.tt2, moderate.tt2: [reported by
+	  O.Archer] some MUA require an empty line after mailto: URLs
+
+2005-05-03 17:52  sympa-authors
+
+	* po/: cs.po, de.po, en_US.po, es.po, et.po, fi.po, fr.po, hu.po,
+	  it.po, nl.po, pl.po, pt.po, ro.po, sympa.pot, zh_CN.po, zh_TW.po:
+	  Fix: update incorrect strings in PO files ; mainly ending \n to
+	  remove in translations
+
+2005-05-03 17:36  sympa-authors
+
+	* po/xgettext.pl: Fix: some multi-line strings were not properly
+	  added to sympa.pot. Therefore these translations were not
+	  available.
+
 2005-05-03 12:08  sympa-authors
 
 	* wwsympa/wwsympa.fcgi: Change: create sympa_dump files (when
