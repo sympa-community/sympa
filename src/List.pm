@@ -5327,8 +5327,7 @@ sub is_listmaster {
 ## Does the user have a particular function in the list ?
 sub am_i {
     my($self, $function, $who) = @_;
-    do_log('debug2', 'List::am_i(%s, %s)', $function, $who);
-
+    do_log('debug2', 'List::am_i(%s, %s, %s)', $function, $self->{'name'}, $who);
     
     return undef unless ($self && $who);
     $function =~ y/A-Z/a-z/;
@@ -5339,10 +5338,15 @@ sub am_i {
     # sa contestable.
     return 1 if (($function eq 'owner') and &is_listmaster($who,$self->{'domain'}));
 
-    if($self->{'admin'}{'user_data_source'} eq 'include2'){
+    ## Use cache
+    if (defined $list_cache{'am_i'}{$function}{$self->{'name'}}{$who}) {
+	# &do_log('debug3', 'Use cache(%s,%s): %s', $name, $who, $list_cache{'is_user'}{$name}{$who});
+	return $list_cache{'am_i'}{$function}{$self->{'name'}}{$who};
+    }
+
+    if ($self->{'admin'}{'user_data_source'} eq 'include2'){
 
 	##Check editors
-
 	if ($function =~ /^editor$/i){
 	    my $editor = $self->get_admin_user('editor',$who);
 
@@ -5353,7 +5357,14 @@ sub am_i {
 		$editor = $self->get_admin_user('owner',$who);
 		if (defined $editor){
 		    return 1;
+		    
+		    ## Update cache
+		    $list_cache{'am_i'}{'editor'}{$self->{'name'}}{$who} = 1;
 		}else {
+		    
+		    ## Update cache
+		    $list_cache{'am_i'}{'editor'}{$self->{'name'}}{$who} = 0;
+
 		    return undef;
 		}
 	    }
@@ -5363,15 +5374,30 @@ sub am_i {
 	    my $owner = $self->get_admin_user('owner',$who);
 	    if (defined $owner) {
 		return 1;
+		    
+		## Update cache
+		$list_cache{'am_i'}{'owner'}{$self->{'name'}}{$who} = 1;
 	    }else {
+		    
+		## Update cache
+		$list_cache{'am_i'}{'owner'}{$self->{'name'}}{$who} = 0;
+
 		return undef;
 	    }
 	}
 	elsif ($function =~ /^privileged_owner$/i) {
 	    my $privileged = $self->get_admin_user('owner',$who);
 	    if ($privileged->{'profile'} eq 'privileged') {
+		    
+		## Update cache
+		$list_cache{'am_i'}{'owner'}{$self->{'name'}}{$who} = 1;
+
 		return 1;
 	    }else {
+		    
+		## Update cache
+		$list_cache{'am_i'}{'owner'}{$self->{'name'}}{$who} = 0;
+
 		return undef;
 	    }
 	}
@@ -8561,7 +8587,8 @@ sub get_robots {
 ## List of lists in database mode which e-mail parameter is member of
 sub get_which_db {
     my $email = shift;
-    do_log('debug3', 'List::get_which_db(%s)', $email);
+    my $function = shift;
+    do_log('debug3', 'List::get_which_db(%s,%s)', $email, $function);
 
     unless ($List::use_db) {
 	&do_log('info', 'Sympa not setup to use DBI');
@@ -8575,28 +8602,55 @@ sub get_which_db {
 	return undef unless &db_connect();
     }	   
 
-    $statement = sprintf "SELECT list_subscriber FROM subscriber_table WHERE user_subscriber = %s",$dbh->quote($email);
+    if ($function eq 'member') {
+	## Get subscribers
+	$statement = sprintf "SELECT list_subscriber FROM subscriber_table WHERE user_subscriber = %s",$dbh->quote($email);
+	
+	push @sth_stack, $sth;
+	
+	unless ($sth = $dbh->prepare($statement)) {
+	    do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	    return undef;
+	}
+	
+	unless ($sth->execute) {
+	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    return undef;
+	}
+	
+	while ($l = $sth->fetchrow) {
+	    $l =~ s/\s*$//;  ## usefull for PostgreSQL
+	    $which{$l}{'member'} = 1;
+	}
+	
+	$sth->finish();
+	
+	$sth = pop @sth_stack;
+	
+    }else {
+	## Get admin
+	$statement = sprintf "SELECT list_admin, role_admin FROM admin_table WHERE user_admin = %s",$dbh->quote($email);
 
-    push @sth_stack, $sth;
-
-    unless ($sth = $dbh->prepare($statement)) {
-	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
-	return undef;
+	push @sth_stack, $sth;
+	
+	unless ($sth = $dbh->prepare($statement)) {
+	    do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+ 	return undef;
+	}
+	
+	unless ($sth->execute) {
+	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    return undef;
+	}
+	
+	while ($l = $sth->fetchrow_hashref) {
+	    $which{$l->{'role_admin'}}{$l->{'list_admin'}} = 1;
+	}
+	
+	$sth->finish();
+	
+	$sth = pop @sth_stack;
     }
-
-    unless ($sth->execute) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-	return undef;
-    }
-
-    while ($l = $sth->fetchrow) {
-	$l =~ s/\s*$//;  ## usefull for PostgreSQL
-	$which{$l} = 1;
-    }
-
-    $sth->finish();
-
-    $sth = pop @sth_stack;
 
     return \%which;
 }
@@ -8606,17 +8660,15 @@ sub get_which {
     my $email = shift;
     my $robot =shift;
     my $function = shift;
-    do_log('debug2', 'List::get_which(%s, %s)', $email, $function);
+    do_log('notice', 'List::get_which(%s, %s)', $email, $function);
 
     my ($l, @which);
 
     ## WHICH in Database
     my $db_which = {};
 
-    if (($function eq 'member') and (defined $Conf{'db_type'})) {
-	if ($List::use_db) {
-	    $db_which = &get_which_db($email);
-	}
+    if (defined $Conf{'db_type'} && $List::use_db) {
+	$db_which = &get_which_db($email, $function);
     }
 
     foreach $l (get_lists($robot)){
@@ -8626,24 +8678,57 @@ sub get_which {
 	# next unless (($list->{'admin'}{'host'} eq $robot) || ($robot eq '*')) ;
 
         if ($function eq 'member') {
+
 	    if (($list->{'admin'}{'user_data_source'} eq 'database') ||
 		($list->{'admin'}{'user_data_source'} eq 'include2')){
 		if ($db_which->{$l}) {
 		    push @which, $l ;
+
+		    ## Update cache
+		    $list_cache{'is_user'}{$l}{$email} = 1;
+		}else {
+		    ## Update cache
+		    $list_cache{'is_user'}{$l}{$email} = 0;		    
 		}
 	    }else {
 		push @which, $list->{'name'} if ($list->is_user($email));
 	    }
+
 	}elsif ($function eq 'owner') {
-	    push @which, $list->{'name'} if ($list->am_i('owner',$email));
+ 	    if ($list->{'admin'}{'user_data_source'} eq 'include2'){
+ 		if ($db_which->{'owner'}{$l}) {
+ 		    push @which, $l ;
+
+		    ## Update cache
+		    $list_cache{'am_i'}{'owner'}{$l}{$email} = 1;
+ 		}else {
+		    ## Update cache
+		    $list_cache{'am_i'}{'owner'}{$l}{$email} = 0;		    
+		}
+ 	    }else {	    
+ 		push @which, $list->{'name'} if ($list->am_i('owner',$email));
+ 	    }
+
 	}elsif ($function eq 'editor') {
-	    push @which, $list->{'name'} if ($list->am_i('editor',$email));
+ 	    if ($list->{'admin'}{'user_data_source'} eq 'include2'){
+ 		if ($db_which->{'editor'}{$l}) {
+ 		    push @which, $l ;
+ 
+		    ## Update cache
+		    $list_cache{'am_i'}{'editor'}{$l}{$email} = 1;
+ 		}else {
+		    ## Update cache
+		    $list_cache{'am_i'}{'editor'}{$l}{$email} = 0;		    
+		}
+ 	    }else {	    
+ 		push @which, $list->{'name'} if ($list->am_i('editor',$email));
+ 	    }
 	}else {
 	    do_log('err',"Internal error, unknown or undefined parameter $function  in get_which");
             return undef ;
 	}
     }
-    
+
     return @which;
 }
 

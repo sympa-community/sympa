@@ -569,6 +569,8 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 &do_log('info','WWSympa requires a RDBMS to run');
      }
 
+     &List::init_list_cache();
+
      ## Get params in a hash
  #    foreach ($query->param) {
  #      $in{$_} = $query->param($_);
@@ -796,9 +798,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
          @{$param->{'get_which'}}  =  &cookielib::get_which_cookie($ENV{'HTTP_COOKIE'});
 
          # if no cookie was received, look for subscriptions
-         unless (defined $param->{'get_which'}) {
-             @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
-         }
+#         unless (defined $param->{'get_which'}) {
+	 @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') ; 
+	 @{$param->{'get_which_owner'}} = &List::get_which($param->{'user'}{'email'},$robot,'owner') ; 
+	 @{$param->{'get_which_editor'}} = &List::get_which($param->{'user'}{'email'},$robot,'editor') ; 
+	 
+#         }
 
      }else{
 
@@ -817,8 +822,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $param->{'http_user_agent'} = $ENV{'HTTP_USER_AGENT'};
      $param->{'htmlarea_url'} = $wwsconf->{'htmlarea_url'} ;
      # if ($wwsconf->{'export_topics'} =~ /all/i);
-
-     &List::init_list_cache();
 
      ## Session loop
      while ($action) {
@@ -12803,7 +12806,7 @@ sub do_arc_delete {
 }
 
 sub do_css {
-    &do_log('info', "do_css ($in{'file'})");		
+    &wwslog('info', "do_css ($in{'file'})");		
     $param->{'bypass'} = 'extreme';
     printf "Content-type: text/css\n\n";
     $param->{'css'} = $in{'file'}; 
