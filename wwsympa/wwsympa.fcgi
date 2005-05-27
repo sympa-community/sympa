@@ -551,6 +551,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      undef $list;
      undef $robot;
      undef $ip;
+     undef $rss;
 
      undef $log_level;
      $log_level = $Conf{'log_level'} if ($Conf{'log_level'}); 
@@ -1091,6 +1092,9 @@ if ($wwsconf->{'use_fast_cgi'}) {
      $msg = "[user $param->{'user'}{'email'}] " . $msg
 	 if $param->{'user'}{'email'};
 
+     $msg = "[rss] ".$msg
+	 if $rss;
+
      $msg = "[client $remote] ".$msg
 	 if $remote;
 
@@ -1202,9 +1206,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 if ($params[0] =~ /rss/) {
 	     shift @params;
 	     $rss = 1;
-	 }else{
-	     $rss = 0;
-	 } 
+	 }
 
 	 if ($#params >= 0) {
 	     $in{'action'} = $params[0];
