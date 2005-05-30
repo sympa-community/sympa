@@ -46,6 +46,7 @@
 <p>
 <h2>[%|loc%]Templates[%END%]</h2><br />
 
+<!-- 
 <div id = "FormLabel">
 <form action="[% path_cgi %]" method="post">
   [%|loc%]Setting defaults list templates[%END%]<br />
@@ -66,9 +67,12 @@
   <input class="MainMenuLinks" type="submit" name="action_editfile" value="[%|loc%]Edit[%END%]" />
 </form>
 </div>
+
+-->
 <br />
 	
-<a class="actionMenuLinks" href="[% path_cgi %]/view_translations">[%|loc%]Customize templates[%END%]</a>
+<a class="actionMenuLinks" href="[% path_cgi %]/view_translations">[%|loc%]view translations[%END%]</a>
+<a class="actionMenuLinks" href="[% path_cgi %]/ls_templates">[%|loc%]Customize templates[%END%]</a>
 
 </p>
 <p>
@@ -91,5 +95,5 @@ or  <input class="MainMenuLinks" type="submit" name="action_rebuildallarc" value
 <br /><br /><br />
 
 [% IF loop_count %]
-[%|loc(process_id,loop_count,start_time)%]This FastCGI process (%1) has served %2 since %3.[%END%]
+[%|loc(process_id,loop_count,start_time)%]This FastCGI process (%1) has served %2 pages since %3.[%END%]
 [% END %]

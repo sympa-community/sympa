@@ -268,6 +268,7 @@ my %comm = ('home' => 'do_home',
 	 'copy_template' => 'do_copy_template',	   
 	 'view_template' => 'do_view_template',
 	 'edit_template' => 'do_edit_template',
+	 'rss_request' => 'do_rss_request',
 	 );
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
@@ -363,6 +364,7 @@ my %action_args = ('default' => ['list'],
 		'remove_template' => [],
 		'copy_template' => [],
 		'edit_template' => [],
+		'rss_request' => [],
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -1005,7 +1007,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }elsif ($param->{'redirect_to'}) {
 	 do_log ('debug',"Redirecting to $param->{'redirect_to'}");
 	 print "Location: $param->{'redirect_to'}\n\n";
-      }elsif ($rss) {
+      }elsif (($rss) || $in{'rss'}) {
  	 ## Send RSS 
  	 print "Cache-control: no-cache\n";
  	 my $charset = gettext("_charset_");
@@ -3853,6 +3855,7 @@ sub do_view_template {
     }
     $param->{'rows'} = 5; #input area is always contain 5 emptyline; 
     while(<TPL>) {$param->{'template_content'}.= $_; $param->{'rows'}++;}
+    $param->{'template_content'} = &tools::escape_html($param->{'template_content'});
     close TPL;
 }
 
@@ -12888,6 +12891,11 @@ sub do_css {
     }
     
     return;
+}
+
+sub do_rss_request {
+	&wwslog('info', "do_rss_request");
+	
 }
 
 sub do_wsdl {
