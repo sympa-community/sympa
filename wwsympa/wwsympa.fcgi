@@ -3718,7 +3718,7 @@ sub do_ls_templates  {
 
     unless ($param->{'is_listmaster'}) {
 	&error_message('may_not');
-	&wwslog('info','do_admin: %s not listmaster', $param->{'user'}{'email'});
+	&wwslog('info','do_ls_template: %s not listmaster', $param->{'user'}{'email'});
 	return undef;
     }
 
@@ -3740,6 +3740,64 @@ sub do_ls_templates  {
     }
     return 1;
 }    
+
+# show a template, used by copy_template and edit_emplate
+sub do_remove_template {
+    
+    &wwslog('info', 'do_remove_template');
+    unless ($param->{'is_listmaster'}) {
+	&error_message('may_not');
+	&wwslog('info','do_remove_template: %s not listmaster', $param->{'user'}{'email'});
+	return undef;
+    }
+
+    my $type =  $param->{'webormail'} = $in{'webormail'};
+    return 1 unless (($type == 'web')||($type == 'mail'));
+
+    my $scope = $in{'scope'} ;
+    $param->{'scope'} = $scope;    
+
+    return 1 unless (($scope eq 'distrib')||($scope eq 'robot')||($scope eq 'family')||($scope eq 'list')||($scope eq 'site'));
+
+    my $namedlist ; 
+
+    if ($in{'listname'}) {
+	chomp ($in{'listname'});
+	$param->{'listname'} = $in{'listname'};
+	
+	unless ($namedlist = new List ($in{'listname'}, $robot)) {
+	    &error_message('unknown_list', {'list' => $in{'listname'}} );
+	    &wwslog('info','check_param_in: unknown list %s', $in{'listname'});
+	    return undef;		
+	}
+    }
+
+    my $template_name = $param->{'template_name'} = $in{'template_name'};
+    my $template_path ;
+
+    if ($in{'scope'} eq 'list') { 
+	$template_path = &tools::get_template_path($type,$robot,'list',$template_name,$in{'listname'});
+    }else{
+	$template_path = &tools::get_template_path($type,$robot,$in{'scope'},$template_name);
+    }
+        
+    &wwslog('debug',"remove_template: template_path '$template_path'");
+    unless ($template_path eq $in{'template_path'}) {
+	&error_message('wrong_input_path');
+	&wwslog('info',"remove_template: wrong input path $in{'template_path'} differ from $template_path");
+	return undef;		
+    }
+    my $template_old_path = &tools::shift_file($template_path,10);
+    unless ($template_old_path) {
+	&error_message("could not remove $template_path");
+	&wwslog('info',"remove_template: could not remove $template_path");
+	return undef;
+    }
+    
+    &message("file $template_path renamed $template_old_path");
+    
+    return (ls_templates);
+}
 
 # show a template, used by copy_template and edit_emplate
 sub do_view_template {

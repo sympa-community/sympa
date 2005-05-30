@@ -89,13 +89,13 @@ First you may list a category of templates including or not templates specific o
   [% IF file.value.listname %]
     <form action="[% path_cgi %]/edit_template" method="post">
       <input type="hidden" name="template_name" value="[% file.key %]" />
-      <input type="hidden" name="template_path" value="[% file.value.list %]" />
+      <input type="hidden" name="template_path" value="[% file.value.listname %]" />
       <input type="hidden" name="scope" value="list" />
       <input type="hidden" name="listname" value="[% listname %]" />
       <input type="hidden" name="webormail" value="[% webormail %]" />
       <input class="MainMenuLinks" type="submit" name="action_edit_template" value="edit" />
       <input class="MainMenuLinks" type="submit" name="action_copy_template" value="cp" />
-      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="rm" onclick="return request_confirm('Do you really want to remove [% file.value.list %] ?');"/>
+      <input class="MainMenuLinks" type="submit" name="action_remove_template" value="rm" onclick="return request_confirm('Do you really want to remove [% file.value.listname %] ?');"/>
     </form>
   [% END %]
   </td>

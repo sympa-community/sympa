@@ -277,9 +277,49 @@ sub mk_parent_dir {
     my $file = shift;
     $file =~ /^(.*)\/([^\/])*$/ ;
     my $dir = $1;
-    do_log('info', "xxxxxxxxxxxxxxxxxxxxxxx create $dir");
     return if (-d $dir);
     return undef unless (mkdir ($dir, 0755));
+}
+
+# shift file renaming it with date. If count is defined, keep $count file and unlink others
+sub shift_file {
+    my $file = shift;
+    my $count = shift;
+    do_log('debug', "shift_file ($file,$count)");
+
+    unless (-f $file) {
+	do_log('info', "shift_file : unknown file $file");
+	return undef;
+    }
+    
+    my @date = localtime (time);
+    my $file_extention = POSIX::strftime ("%Y:%m:%d:%H:%M:%S", @date);
+    
+    unless (rename ($file,$file.'\.'.$file_extention)) {
+	&do_log('err', "shift_file : Cannot rename file $file to $file.$file_extention" );
+	return undef;
+    }
+    if ($count) {
+	$file =~ /^(.*)\/([^\/])*$/ ;
+	my $dir = $1;
+
+	unless (opendir(DIR, $dir)) {
+	    &do_log('err', "shift_file : Cannot read dir $dir" );
+	    return ($file.'\.'.$file_extention);
+	}
+	my $i = 0 ;
+	foreach my $oldfile (reverse (sort (grep (/^$file\./,readdir(DIR))))) {
+	    $i ++;
+	    if ($count lt $i) {
+		if (unlink ($oldfile)) { 
+		    do_log('info', "shift_file : unlink $oldfile");
+		}else{
+		    do_log('info', "shift_file : unable to unlink $oldfile");
+		}
+	    }
+	}
+    }
+    return ($file.'\.'.$file_extention);
 }
 
 sub get_templates_list {
@@ -288,7 +328,7 @@ sub get_templates_list {
     my $robot = shift;
     my $listdir = shift;
 
-do_log('info', "xxxxxxxxxxxxxxxxxxxxxxxxxx get_templates_list () : $type $robot $listdir");
+    do_log('debug', "get_templates_list ($type $robot, $listdir)");
     unless (($type == 'web')||($type == 'mail')) {
 	do_log('info', 'get_templates_list () : internal error incorrect parameter');
     }
@@ -309,14 +349,14 @@ do_log('info', "xxxxxxxxxxxxxxxxxxxxxxxxxx get_templates_list () : $type $robot 
     my $i = 0 ;
     my $tpl;
     foreach my $dir (@try) {
-	do_log('info', "xxxxxxxxxxxxxxxxxxxxxxxxxx get_templates_list () : open '$dir'");
+
 	next unless opendir (DIR, $dir);
 	foreach my $file ( readdir(DIR)) {	    
 	    next unless ($file =~ /\.tt2$/);
 	    if ($dir eq $distrib_dir){$tpl->{$file}{'distrib'} = $dir.'/'.$file ;}
 	    if ($dir eq $site_dir)   {$tpl->{$file}{'site'} =  $dir.'/'.$file;}
 	    if ($dir eq $robot_dir)  {$tpl->{$file}{'robot'} = $dir.'/'.$file;}
-	    if ($dir eq $listdir)    {$tpl->{$file}{'listname'} = $dir.'/'.$file ; do_log('info', "xxxxxxxxxxxxxxxxxxxxxxxxxx found list template $file");}
+	    if ($dir eq $listdir)    {$tpl->{$file}{'listname'} = $dir.'/'.$file ;}
 	}
 	closedir DIR;
     }
