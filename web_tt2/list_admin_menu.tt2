@@ -11,13 +11,13 @@
 <li><a class="[% class %]" href="[% path_cgi %]/edit_list_request/[% list %]">[%|loc%]Edit List Config[%END%]</a></li>
 [% IF action == 'edit_list_request' %]
   <ul>
-    <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/description" >[%|loc%]-List definition[%END%]<span>view and edit list description</span></a></li>
-    <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/sending" >[%|loc%]-Sending/reception[%END%]</a><span>configure parameters related to message distribution service</span></li>
-    <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/command" >[%|loc%]-Privileges[%END%]</a><span>configure authorization for each service</span></li>
-    <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/archives" >[%|loc%]-Archives[%END%]</a><span>Configure parameters about list archives</span></li>
-    <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/bounces" >[%|loc%]-Bounces[%END%]</a><span>View message errors and manage erroneous emails</span></li>
-    <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/data_source" >[%|loc%]-Data sources[%END%]<span>Manage the interface with external data sources in order to define list members by properties (experimented user only)</span></a></li>
-    <li><a class="menuLinks" href="[% path_cgi %]/rename_list_request/[% list %]" >[%|loc%]-Rename list[%END%]<span>Change the list name and/or the list domain</span></a></li>
+    <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/description" >[%|loc%]-List definition[%END%]</a></li>
+    <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/sending" >[%|loc%]-Sending/reception[%END%]</a></li>
+    <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/command" >[%|loc%]-Privileges[%END%]</a></li>
+    <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/archives" >[%|loc%]-Archives[%END%]</a></li>
+    <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/bounces" >[%|loc%]-Bounces[%END%]</a></li>
+    <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/data_source" >[%|loc%]-Data sources[%END%]</a></li>
+    <li><a class="menuLinks" href="[% path_cgi %]/rename_list_request/[% list %]" >[%|loc%]-Rename list[%END%]</a></li>
     <li><a class="menuLinks" href="[% path_cgi %]/edit_list_request/[% list %]/other" >[%|loc%]-Miscellaneous[%END%]</a></li>
   </ul>
 [% END %]
