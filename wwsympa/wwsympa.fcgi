@@ -1205,7 +1205,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	 ## rss mode
 ########### /^rss$/ ???
-	 if ($params[0] =~ /rss/) {
+	 if ($params[0] =~ /rss\//) {
 	     shift @params;
 	     $rss = 1;
 	 }
@@ -12895,7 +12895,24 @@ sub do_css {
 
 sub do_rss_request {
 	&wwslog('info', "do_rss_request");
-	
+
+	my $args ;
+
+	$in{'count'} |= 20; 
+	$in{'for'} |= 10;
+
+        $args  = 'count='.$in{'count'}.'&' if ($in{'count'}) ;
+        $args .= 'for='.$in{'for'} if ($in{'for'});
+	if ($list ) {
+		$args .= '&list='.$list->{'name'};		
+   		$param->{'latest_archive_url'} = $Conf{'wwsympa_url'}."/rss/latest_archive?".$args;
+		$param->{'latest_d_read__url'} = $Conf{'wwsympa_url'}."/rss/latest_d_read?".$args;
+	}
+	$param->{'active_lists_url'} = $Conf{'wwsympa_url'}."/rss/active_lists?".$args;
+	$param->{'latest_lists_url'} = $Conf{'wwsympa_url'}."/rss/latest_lists?".$args;	
+
+	$param->{'output'} = 1;
+	return 1;
 }
 
 sub do_wsdl {

@@ -1,0 +1,49 @@
+
+<h2>[%|loc%]RSS channel[%END%]</h2><br />
+
+[%|loc%]This server provide various news via RSS. Choose parameters and pickup the RSS url[%END%]
+
+<form action="[% path_cgi %]" method="post"> 
+<ul> 
+<li>[%|loc%]Limit the number of response[%END%] : <select name="count">
+[% n = [ 1 .. 20 ] %]
+[% FOREACH i = n %]
+   <option value="[% i %]" [% IF i == '20' %]selected="selected"[% END %] >[% i %]</option>
+[% END %]
+</select>
+</li>
+<li>[%|loc%]Limit the number of days used for the selection[%END%]  : <select name="for">
+[% n = [ 1 .. 30 ] %]
+[% FOREACH i = n %]
+          <option value="[% i %]" [% IF i== '10' %]selected="selected"[% END %]>[% i %]</option>
+[% END %]
+</select>
+</li>
+</ul>
+[% IF list %] 
+<input type="hidden" name="list" value="[% list %]" />
+[% END %]
+<br />
+<input class="MainMenuLinks" type="submit" name="action_rss_request" value="[%|loc%]Update RSS URL[%END%]" />
+
+</form>
+<br />
+<br />
+[% IF output %]
+<ul>
+[% IF latest_archive_url %]
+<li>[%|loc%]latest archive[%END%] : <a href="[% latest_archive_url %]"><strong>[% conf.wwsympa_url %]</strong></a></li>
+[% END %]
+[% IF latest_d_read_url %]
+<li>[%|loc%]latest document[%END%] : <a href="[% latest_d_read_url %]"><strong>[% latest_d_read_url %]</strong></a></li>
+[% END %]
+[% IF active_lists_url %]
+<li>[%|loc%]active lists[%END%] : <a href="[% active_lists_url %]"><strong>[% active_lists_url %]</strong></a></li>
+[% END %]
+[% IF latest_lists_url %]
+<li>[%|loc%]latest document[%END%] : <a href="[% latest_lists_url %]"><strong>[% latest_lists_url %]</strong></a></li>
+[% END %]
+</ul>
+[% END %]
+
+

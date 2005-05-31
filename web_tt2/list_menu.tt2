@@ -44,6 +44,9 @@
           <div class="menuInactive2">[%|loc%]Post[%END%]</div><br />
 [% END %]
 
+[% IF action == 'rss_request' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+<strong><a class="[% class %]" href="[% path_cgi %]/rss_request/[% list %]" >[%|loc%]RSS[%END%]</a></strong><br />
+
 [% IF shared == 'exist' %]
     [% IF may_d_read %]
     [% IF action == 'd_read' || action == 'd_edit' || action == 'd_properties' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
