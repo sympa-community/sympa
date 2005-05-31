@@ -999,7 +999,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     }elsif($param->{'error_msg'}){
 		 printf "$param->{'error_msg'}\n";
 	     }else{
-		 printf "Internal error content-type nor file defined\n";
+		 printf "Internal error content-type nor file defined\n"; 
 		 &do_log('err', 'Internal error content-type nor file defined');
 	     }
 	 }
@@ -1007,12 +1007,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
      }elsif ($param->{'redirect_to'}) {
 	 do_log ('debug',"Redirecting to $param->{'redirect_to'}");
 	 print "Location: $param->{'redirect_to'}\n\n";
-      }elsif (($rss) || $in{'rss'}) {
+     }elsif ($rss) {
  	 ## Send RSS 
  	 print "Cache-control: no-cache\n";
  	 my $charset = gettext("_charset_");
  	 print "Content-Type: application/rss+xml; charset=$charset\n\n";
- 
+	 
  	 ## Icons
  	 $param->{'icons_url'} = $wwsconf->{'icons_url'};
  
@@ -1205,7 +1205,7 @@ if ($wwsconf->{'use_fast_cgi'}) {
 
 	 ## rss mode
 ########### /^rss$/ ???
-	 if ($params[0] =~ /rss\//) {
+	 if ($params[0] eq 'rss') {
 	     shift @params;
 	     $rss = 1;
 	 }
