@@ -221,23 +221,23 @@ $POWERED_BY$
 
 <!-- links definition -->
 <PrevPgLink chop>
-<a class="ArcMenuLinks" href="$FIRSTPG$">($tag$%|loc%$tag$)First($tag$%END%$tag$)</a>
-<a class="ArcMenuLinks" href="$PREVPG$">($tag$%|loc%$tag$)Previous($tag$%END%$tag$)</a>
+<a class="ArcMenuLinks" href="$FIRSTPG$">&lt;&lt;</a>
+<a class="ArcMenuLinks" href="$PREVPG$">&lt;</a>
 </PrevPgLink>
 
 <PrevPgLinkIA chop>
-<a class="ArcMenuLinksInactive">First</a>
-<a class="ArcMenuLinksInactive">Previous</a>
+<a class="ArcMenuLinksInactive">&lt;&lt;</a>
+<a class="ArcMenuLinksInactive">&lt;</a>
 </PrevPgLinkIA>
 
 <NextPgLink chop>
-<a class="ArcMenuLinks" href="$NEXTPG$">($tag$%|loc%$tag$)Next($tag$%END%$tag$)</a>
-<a class="ArcMenuLinks" href="$LASTPG$">($tag$%|loc%$tag$)Last($tag$%END%$tag$)</a>
+<a class="ArcMenuLinks" href="$NEXTPG$">&gt;</a>
+<a class="ArcMenuLinks" href="$LASTPG$">&gt;&gt;</a>
 </NextPgLink>
 
 <NextPgLinkIA chop>
-<a class="ArcMenuLinksInactive">Next</a>
-<a class="ArcMenuLinksInactive">Last</a>
+<a class="ArcMenuLinksInactive">&gt;</a>
+<a class="ArcMenuLinksInactive">&gt;&gt;</a>
 </NextPgLinkIA>
 
 <!-- ============================================================== -->
@@ -373,7 +373,7 @@ MSGPGEND
      <a class="ArcMenuLinks" href="$TIDXFNAME$#$MSGNUM$">($tag$%|loc%$tag$)Thread($tag$% END %$tag$)</a>&nbsp;
    </span>
    <ul id="MainMenuLinks">
-     ($tag$%|loc%$tag$)chronological($tag$%END%$tag$) : $PREVBUTTON$ $NEXTBUTTON$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($tag$%|loc%$tag$)thread($tag$%END%$tag$) : $TPREVBUTTON$  $TNEXTBUTTON$
+     $PREVBUTTON$($tag$%|loc%$tag$) chronological ($tag$%END%$tag$) $NEXTBUTTON$&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$TPREVBUTTON$  ($tag$%|loc%$tag$)thread($tag$%END%$tag$) $TNEXTBUTTON$
    </ul>
 </div>
 
@@ -517,35 +517,35 @@ Subject:strong
 
 <!-- Buttons definition -->
 <PREVBUTTON>
-<a class="ArcMenuLinks" href="$PREVMSG$">previous</a>
+<a class="ArcMenuLinks" href="$PREVMSG$">&lt;</a>
 </PREVBUTTON>
 
 <PREVBUTTONIA>
-&nbsp;&nbsp;
+<a class="ArcMenuLinksInactive">&lt;</a>
 </PREVBUTTONIA>
 
 <NEXTBUTTON>
-<a class="ArcMenuLinks" href="$NEXTMSG">next</a>
+<a class="ArcMenuLinks" href="$NEXTMSG">&gt;</a>
 </NEXTBUTTON>
 
 <NEXTBUTTONIA>
-&nbsp;&nbsp;
+<a class="ArcMenuLinksInactive">&gt;</a>
 </NEXTBUTTONIA>
 
 <TPREVBUTTON>
-<a class="ArcMenuLinks" href="$TPREVMSG$">previous</a>
+<a class="ArcMenuLinks" href="$TPREVMSG$">&lt;</a>
 </TPREVBUTTON>
 
 <TPREVBUTTONIA>
-&nbsp;&nbsp;
+<a class="ArcMenuLinksInactive">&lt;</a>
 </TPREVBUTTONIA>
 
 <TNEXTBUTTON>
-<a class="ArcMenuLinks" href="$TNEXTMSG$">next</a>
+<a class="ArcMenuLinks" href="$TNEXTMSG$">&gt;</a>
 </TNEXTBUTTON>
 
 <TNEXTBUTTONIA>
-&nbsp;&nbsp;
+<a class="ArcMenuLinksInactive">&gt;</a>
 </TNEXTBUTTONIA>
 
 <!-- ============================================================== -->
