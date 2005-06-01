@@ -632,7 +632,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 $param->{$p} = &Conf::get_robot_conf($robot, $p) if (($p =~ /_color$/)|| ($p =~ /color_/));
      }
      $param->{'css_url'} = &Conf::get_robot_conf($robot, 'css_url');
-     $param->{'css_url'} ||= &Conf::get_robot_conf($robot, 'wwsympa_url').'/css';
 
      &do_log('info', "parameter css_url seems strange, it must be the url of a directory not a css file") if ($param->{'css_url'} =~ /.css$/);
 

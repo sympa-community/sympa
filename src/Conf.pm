@@ -252,7 +252,12 @@ sub load {
     unless (defined $o{'wwsympa_url'}) {
 	$o{'wwsympa_url'}[0] = "http://$o{'host'}[0]/wws";
     }
+    
+    unless (defined $o{'css_url'}) {
+	$o{'css_url'}[0] = "$o{'wwsympa_url'}[0]/css/";
+    }
 
+  
     # 'host' and 'domain' are mandatory and synonime.$Conf{'host'} is
     # still wydly use even if the doc require domain.
  
