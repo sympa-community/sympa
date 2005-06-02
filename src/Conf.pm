@@ -472,7 +472,7 @@ sub load_robots {
 	$robot_conf->{$robot}{'log_smtp'} ||= $Conf{'log_smtp'};
 	$robot_conf->{$robot}{'log_level'} ||= $Conf{'log_level'};
 	$robot_conf->{$robot}{'wwsympa_url'} ||= 'http://'.$robot_conf->{$robot}{'http_host'}.'/wws';
-	$robot_conf->{$robot}{'css_url'} ||= 'http://'.$robot_conf->{$robot}{'wwsympa_url'}.'/css';
+	$robot_conf->{$robot}{'css_url'} ||= $robot_conf->{$robot}{'wwsympa_url'}.'/css';
 	$robot_conf->{$robot}{'sympa'} = $robot_conf->{$robot}{'email'}.'@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'request'} = $robot_conf->{$robot}{'email'}.'-request@'.$robot_conf->{$robot}{'host'};
 	$robot_conf->{$robot}{'cookie_domain'} ||= 'localhost';
