@@ -41,7 +41,7 @@ my @valid_options = qw(
 		       db_options db_passwd db_type db_user db_port db_additional_subscriber_fields db_additional_user_fields
 		       default_shared_quota default_archive_quota default_list_priority distribution_mode edit_list email etc
 		       global_remind home host domain lang listmaster listmaster_email localedir log_socket_type log_level 
-		       misaddressed_commands misaddressed_commands_regexp max_size maxsmtp nrcpt 
+		       logo_html_definition misaddressed_commands misaddressed_commands_regexp max_size maxsmtp nrcpt 
 		       owner_priority pidfile pidfile_distribute
 		       spool queue queuedistribute queueauth queuetask queuebounce queuedigest 
 		       queueexpire queuemod queuesubscribe queueoutgoing tmpdir
@@ -207,6 +207,7 @@ my %Default_Conf =
      'web_recode_to' => '',
      'default_remind_task' => '',
      'update_db_field_types' => 'auto',
+     'logo_html_definition' => '',
      );
    
 my $wwsconf;
