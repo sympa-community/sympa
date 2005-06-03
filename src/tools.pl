@@ -326,45 +326,55 @@ sub get_templates_list {
 
     my $type = shift;
     my $robot = shift;
+    my $langdir = shift;
     my $listdir = shift;
 
-    do_log('debug', "get_templates_list ($type $robot, $listdir)");
+    do_log('debug', "get_templates_list ($type, $robot, $langdir, $listdir)");
+    do_log('info', "xxxxxxxxxxxxxxxxxxxxxxxxxxxx get_templates_list ($type, $robot, $langdir, $listdir)");
     unless (($type == 'web')||($type == 'mail')) {
 	do_log('info', 'get_templates_list () : internal error incorrect parameter');
     }
 
+    if ($langdir eq 'default') {
+	$langdir = '';
+    }else{
+	$langdir = '/'.$langdir;
+    }
+
     my $distrib_dir = '--ETCBINDIR--/'.$type.'_tt2';
-    my $site_dir = $Conf{'etc'}.'/'.$type.'_tt2';
-    my $robot_dir = $Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2';
+    my $site_dir = $Conf{'etc'}.'/'.$type.'_tt2'.$langdir;
+    my $robot_dir = $Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2'.$langdir;
 
     my @try;
-    push @try, $distrib_dir ;
+    push @try, $distrib_dir ;        
     push @try, $site_dir ;
     push @try, $robot_dir;
     
-    if (defined ($listdir)) {
-	$listdir .='/'.$type.'_tt2';
+    unless ($listdir) {
+	$listdir .='/'.$type.'_tt2'.$langdir;
 	push @try, $listdir ;
     }
+	
     my $i = 0 ;
     my $tpl;
-    foreach my $dir (@try) {
 
+    foreach my $dir (@try) {
 	next unless opendir (DIR, $dir);
 	foreach my $file ( readdir(DIR)) {	    
-	    next unless ($file =~ /\.tt2$/);
-	    if ($dir eq $distrib_dir){$tpl->{$file}{'distrib'} = $dir.'/'.$file ;}
+	    next unless ($file =~ /\.tt2$/);	    
+	    if ($dir eq $distrib_dir){$tpl->{$file}{'distrib'} = $dir.'/'.$file;}
 	    if ($dir eq $site_dir)   {$tpl->{$file}{'site'} =  $dir.'/'.$file;}
-	    if ($dir eq $robot_dir)  {$tpl->{$file}{'robot'} = $dir.'/'.$file;}
-	    if ($dir eq $listdir)    {$tpl->{$file}{'listname'} = $dir.'/'.$file ;}
+	    if ($dir eq $robot_dir)  {$tpl->{$file}{'robot'}  = $dir.'/'.$file;}
+	    if ($dir eq $listdir)    {$tpl->{$file}{'listname'} = $dir.'/'.$file;}
 	}
 	closedir DIR;
     }
 
-    open DUMP, ">/tmp/dump";
-    &tools::dump_var($tpl, 0, \*DUMP);
-    close DUMP;
-    return ($tpl);
+#    open DUMP, ">/tmp/dump";
+#    &tools::dump_var($tpl, 0, \*DUMP);
+#    close DUMP;
+	return ($tpl);
+
 }
 
 # return the path for a specific template
@@ -374,9 +384,15 @@ sub get_template_path {
     my $robot = shift;
     my $scope = shift;
     my $tpl = shift;
+    my $lang = shift;
     my $listname = shift;
 
-    do_log('info', "get_templates_path () : type=$type; robot $robot scope $scope tpl $tpl listdir $listname");
+    do_log('info', "get_templates_path ($type,$robot,$scope,$tpl,$lang,$listname)");
+    if ($lang eq 'default') {
+	$lang = '';
+    }else{
+	$lang = '/'.$lang;
+    }
 
     if ($listname) {
 	chomp ($listname);
@@ -392,25 +408,25 @@ sub get_template_path {
     }
 
     my $distrib_dir = '--ETCBINDIR--/'.$type.'_tt2';
-    my $site_dir = $Conf{'etc'}.'/'.$type.'_tt2';
-    my $robot_dir = $Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2';
+    my $site_dir = $Conf{'etc'}.'/'.$type.'_tt2'.$lang;
+    my $robot_dir = $Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2'.$lang;
+
 
     if ($scope eq 'list')  {
-do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx$listdir/$tpl");
-	return $listdir.'/'.$type.'_tt2/'.$tpl ;
+do_log('info', "get_templates_path () : xxxxxxxxxxxxxxx resu $listdir/$type".'_tt2'."$lang/$tpll");
+	return $listdir.'/'.$type.'_tt2'.$lang.'/'.$tpl ;
     }
-
     if (($scope eq 'robot')||($scope eq 'list'))  {
-do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx $robot_dir/$tpl");
+do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx resu $robot_dir/$tpl");
 	return $robot_dir.'/'.$tpl;
     }
     if (($scope eq 'site')||($scope eq 'robot')||($scope eq 'list')) {
-do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx $site_dir/$tpl");
+do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx resu $site_dir/$tpl");
 	return $site_dir.'/'.$tpl;
     }
     
     if (($scope eq 'distrib')||($scope eq 'site')||($scope eq 'robot')||($scope eq 'list')) {
-do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx $distrib_dir/$tpl");
+do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx resu $distrib_dir/$tpl");
 	return $distrib_dir.'/'.$tpl;
     }
 }

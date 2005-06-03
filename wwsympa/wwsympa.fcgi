@@ -3723,7 +3723,12 @@ sub do_ls_templates  {
 	return undef;
     }
 
+    $in{'webormail'} = 'web' unless $in{'webormail'};
     my $type =  $param->{'webormail'} = $in{'webormail'};
+
+#    $in{'subdir'} = 'default' unless ($in{'subdir'});
+    $param->{'subdir'}= $in{'subdir'};
+
     return 1 unless (($type == 'web')||($type == 'mail'));
  
     if ($in{'listname'}) {
@@ -3735,9 +3740,9 @@ sub do_ls_templates  {
 	    &wwslog('info','check_param_in: unknown list %s', $in{'listname'});
 	    return undef;		
 	}
-	$param->{'templates'} = &tools::get_templates_list($type,$robot,$list->{'dir'});
+	$param->{'templates'} = &tools::get_templates_list($type,$robot,$in{'subdir'},$list->{'dir'});
     }else{
-	$param->{'templates'} = &tools::get_templates_list($type,$robot);
+	$param->{'templates'} = &tools::get_templates_list($type,$robot,$in{'subdir'});
     }
     return 1;
 }    
@@ -3804,6 +3809,7 @@ sub do_remove_template {
 sub do_view_template {
     
     &wwslog('info', 'do_view_template');
+
     unless ($param->{'is_listmaster'}) {
 	&error_message('may_not');
 	&wwslog('info','do_admin: %s not listmaster', $param->{'user'}{'email'});
@@ -3834,22 +3840,26 @@ sub do_view_template {
     my $template_name = $param->{'template_name'} = $in{'template_name'};
     my $template_path ;
 
+
+    &wwslog('info', "do_view_template(type=$type,template-name=$template_name,listname=$in{'listname'},path=$in{'template_path'},scope=$in{'scope'},lang=$in{'subdir'})");
+
+
     if ($in{'scope'} eq 'list') { 
-	$template_path = &tools::get_template_path($type,$robot,'list',$template_name,$in{'listname'});
+	$template_path = &tools::get_template_path($type,$robot,'list',$template_name,$in{'subdir'},$in{'listname'});
     }else{
-	$template_path = &tools::get_template_path($type,$robot,$in{'scope'},$template_name);
+	$template_path = &tools::get_template_path($type,$robot,$in{'scope'},$template_name,$in{'subdir'});
     }
     
     
     &wwslog('debug',"edit_template: template_path '$template_path'");
     unless ($template_path eq $in{'template_path'}) {
 	&error_message('wrong_input_path');
-	&wwslog('info',"edit_template: wrong input path $in{'template_path'} differ from $template_path");
+	&wwslog('info',"view_template: wrong input path $in{'template_path'} differ from $template_path");
 	return undef;		
     }
     unless (open (TPL,"$template_path")) {
 	&error_message("Can't open $template_path");
-	&wwslog('err',"edit_template: can't open file %s",$template_path);
+	&wwslog('err',"view_template: can't open file %s",$template_path);
 	return undef;
     }
     $param->{'rows'} = 5; #input area is always contain 5 emptyline; 
@@ -3867,6 +3877,8 @@ sub do_copy_template  {
     my $listname = $param->{'listname'}= $in{'listname'};
     $param->{'template_path'} = $in{'template_path'};
     $param->{'scope'} = $in{'scope'};
+    $in{'subdir'} = 'default' unless $in{'subdir'};
+    $param->{'subdir'} = $in{'subdir'};
 
     &do_view_template;               
 
@@ -3911,13 +3923,19 @@ sub do_copy_template  {
 
 ## online template edition
 sub do_edit_template  {
-    &wwslog('info', 'do_edit_template');
+
 
     my $type =  $param->{'webormail'} = $in{'webormail'};
     my $template_name = $param->{'template_name'} = $in{'template_name'};
     my $listname = $param->{'listname'}= $in{'listname'};
+
     $param->{'template_path'} = $in{'template_path'};
     $param->{'scope'} = $in{'scope'};
+
+    $in{'subdir'} = 'default' unless $in{'subdir'};
+    $param->{'subdir'} = $in{'subdir'};
+
+    &wwslog('info', "xxx do_edit_template(type=$type,template-name=$template_name,listname=$listname,path=$in{'template_path'},scope=$in{'scope'},lang=$in{'subdir'})");
 
     &do_view_template; 
 
@@ -3926,9 +3944,9 @@ sub do_edit_template  {
     &wwslog('info',"xxxxxxxxx POST content : $in{'content'} ");
     my $pathout ; 
     my $scopeout = $param->{'scopeout'} = $in{'scopeout'} ;
-    if ($in{'scopeout'} == 'list') { 
+    if ($in{'scopeout'} eq 'list') { 
 	if ($listname) {
-	    $pathout = &tools::get_template_path($type,$robot,$in{'scopeout'},$template_name,$listname);
+	    $pathout = &tools::get_template_path($type,$robot,$in{'scopeout'},$template_name,$in{'subdir'},$listname);
 	}else{
 	    &error_message('listname needed');
 	    &wwslog('info',"edit_template : no output lisname while output scope is list");
@@ -3936,7 +3954,7 @@ sub do_edit_template  {
 	}
     }
     
-    $pathout = &tools::get_template_path($type,$robot,$in{'scopeout'},$template_name);
+    $pathout = &tools::get_template_path($type,$robot,$in{'scopeout'},$template_name,$in{'subdir'});
     $param->{'pathout'} = $pathout ;
     
     &wwslog('info', "xxxxxxxxxxxxxxx open $pathout");

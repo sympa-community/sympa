@@ -9,6 +9,31 @@
 [% END %]
 
 <script type="text/javascript">
+function showhide(div){
+    oDiv = document.getElementById(div);
+    if(oDiv.style.display == "none"){
+        oDiv.style.display = "block";
+    }else{
+        oDiv.style.display = "none";
+    }
+}
+</script>
+
+<script type="text/javascript">
+function show(div){
+    oDiv = document.getElementById(div);
+    oDiv.style.display = "block";
+}
+</script>
+
+<script type="text/javascript">
+function hide(div){
+    oDiv = document.getElementById(div);
+    oDiv.style.display = "none";
+}
+</script>
+
+<script type="text/javascript">
 <!-- for other browsers
 
 // To confirm archives deletion
@@ -21,7 +46,7 @@
 	     my_form.zip.value = "1";
 	 }
 	 }else{
-	return false;
+	return false;[% list %]
 	}
   }	
 

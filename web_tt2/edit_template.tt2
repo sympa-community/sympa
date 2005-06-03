@@ -16,6 +16,7 @@
   [% END %]
 [% END %]
 </li>
+<li>[%|loc%]language[%END%] : <strong> [% subdir %] </strong>.[% IF subdir == 'default' %](this template is used for any language unless it is redefined for a specific language)[% END %]
 </ul>
 </p><br />
 <form action="[% path_cgi %]/edit_template" method="post">
