@@ -19,7 +19,7 @@ if [ ! "${OSTYPE}" ]; then
     OSTYPE=`uname -s`
 fi
 
-if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" ]; then
+if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" ]; then
     # Source function library.
     . --INITDIR--/functions
 
@@ -52,7 +52,7 @@ sympa_status() {
         return 1
     fi
  
-    if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" ]; then
+    if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" ]; then
       status $1.pl
 
     else
@@ -165,7 +165,7 @@ sympa_stop() {
 
 
 # Check that networking is up.
-if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" ]; then
+if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" ]; then
     if [ ${NETWORKING} = "no" ]
     then
 	    exit 0
