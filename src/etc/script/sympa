@@ -19,7 +19,15 @@ if [ ! "${OSTYPE}" ]; then
     OSTYPE=`uname -s`
 fi
 
-if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" ]; then
+if [ -f /etc/SuSE-release ] ; then
+    OSTYPE='Suse'
+fi
+
+if [ -f /etc/debian_version ] ; then
+    OSTYPE='Debian'
+fi
+
+if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" -a ${OSTYPE} != "Debian" -a ${OSTYPE} != "Suze" ]; then
     # Source function library.
     . --INITDIR--/functions
 
@@ -52,7 +60,7 @@ sympa_status() {
         return 1
     fi
  
-    if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" ]; then
+    if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0"  -a ${OSTYPE} != "Debian" -a ${OSTYPE} != "Suze" ]; then
       status $1.pl
 
     else
@@ -88,7 +96,7 @@ sympa_module_start() {
 #		startparam=""
 #	fi
  
-	if [ ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" ]; then
+	if [ ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" -o ${OSTYPE} != "Debian" -o ${OSTYPE} != "Suze" ]; then
 		$sympadir/$1.pl $startparam && echo "success" || echo "failure"
 	else
 		$sympadir/$1.pl $startparam && success || failure
@@ -165,7 +173,7 @@ sympa_stop() {
 
 
 # Check that networking is up.
-if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" ]; then
+if [ ${OSTYPE} != "FreeBSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin7.0" -a ${OSTYPE} != "Debian" -a ${OSTYPE} != "Suze" ]; then
     if [ ${NETWORKING} = "no" ]
     then
 	    exit 0
