@@ -23,7 +23,7 @@ msgstr ""
 "#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
 "#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
 
-#: web_tt2/serveradmin.tt2:86
+#: web_tt2/serveradmin.tt2:90
 #, fuzzy
 msgid "  May take a lot of CPU time,  be careful !"
 msgstr "Saattaa vied‰ paljon CPU aikaa, ole varovainen !"
@@ -80,7 +80,10 @@ msgstr "Uusi viesti ensiksi"
 msgid " The latest shared documents "
 msgstr "Jaetut dokumentit"
 
-#. (loc)
+#: src/etc/mhonarc-ressources.tt2:376
+msgid " chronological "
+msgstr ""
+
 #. (for)
 #: web_tt2/active_lists.tt2:12 web_tt2/latest_arc.tt2:12
 #: web_tt2/latest_d_read.tt2:12 web_tt2/latest_lists.tt2:12
@@ -92,6 +95,11 @@ msgstr ""
 #, fuzzy
 msgid " on %1"
 msgstr "Vastaanottaja: %1"
+
+#: web_tt2/active_lists.tt2:21
+#, fuzzy
+msgid "# message"
+msgstr "viestit"
 
 #. (conf.title,list)
 #: mail_tt2/sendpasswd.tt2:5
@@ -502,7 +510,7 @@ msgstr "Listan kuvaus muutamalla rivill‰"
 msgid "A virus in your email"
 msgstr "Virus viestiss‰si"
 
-#: mail_tt2/helpfile.tt2:47
+#: mail_tt2/helpfile.tt2:52
 msgid "ADD <list> user@host Full name  * To add a user to a list"
 msgstr ""
 
@@ -555,7 +563,7 @@ msgid "Aliases you should install in your mailer"
 msgstr "Aliakset jotka sinun tulee asentaa postiohjelmaan"
 
 #. (conf.sympa)
-#: mail_tt2/helpfile.tt2:10
+#: mail_tt2/helpfile.tt2:15
 msgid "All commands must be sent to the electronic address %1"
 msgstr ""
 
@@ -633,7 +641,7 @@ msgid "Archive powered by"
 msgstr ""
 
 #: web_tt2/admin_menu.tt2:152 web_tt2/edit_list_request.tt2:9
-#: web_tt2/serveradmin.tt2:80
+#: web_tt2/serveradmin.tt2:84
 msgid "Archives"
 msgstr "Arkistot"
 
@@ -678,7 +686,7 @@ msgstr "Tarvitaan k‰yttˆoikeuksien vahvistus"
 msgid "Author"
 msgstr "L‰hett‰j‰"
 
-#: mail_tt2/helpfile.tt2:14
+#: mail_tt2/helpfile.tt2:19
 msgid "Available commands are:"
 msgstr ""
 
@@ -687,7 +695,7 @@ msgstr ""
 msgid "Available subscription options"
 msgstr "Saatavilla olevat tilaus asetukset"
 
-#: web_tt2/active_lists.tt2:24
+#: web_tt2/active_lists.tt2:22
 msgid "Average by day"
 msgstr ""
 
@@ -783,7 +791,7 @@ msgstr ""
 msgid "Bouncing address"
 msgstr "Palatut viestit osoitteeseen"
 
-#: mail_tt2/helpfile.tt2:40
+#: mail_tt2/helpfile.tt2:45
 msgid ""
 "CONFIRM <key>               * Confirmation for sending a message (depending "
 "on the list's configuration)"
@@ -1006,7 +1014,7 @@ msgstr "Luo uusi kansio hakemiston %1 sis‰‰n"
 msgid "Create list"
 msgstr "Luo lista"
 
-#: web_tt2/active_lists.tt2:25 web_tt2/get_inactive_lists.tt2:6
+#: web_tt2/active_lists.tt2:23 web_tt2/get_inactive_lists.tt2:6
 #: web_tt2/get_latest_lists.tt2:6 web_tt2/latest_lists.tt2:23
 msgid "Creation date"
 msgstr "Luonti pvm"
@@ -1025,7 +1033,7 @@ msgstr "Nykyinen salasana :"
 msgid "Custom header field"
 msgstr "Mukautettu otsikko kentt‰"
 
-#: web_tt2/serveradmin.tt2:71
+#: web_tt2/serveradmin.tt2:75
 msgid "Customize templates"
 msgstr "Muuta malleja"
 
@@ -1034,12 +1042,12 @@ msgstr "Muuta malleja"
 msgid "Customizing"
 msgstr "Hallitse"
 
-#: mail_tt2/helpfile.tt2:48
+#: mail_tt2/helpfile.tt2:53
 #, fuzzy
 msgid "DEL <list> user@host            * To delete a user from a list"
 msgstr "Poistaaksesi tilaajan listalta"
 
-#: mail_tt2/helpfile.tt2:55
+#: mail_tt2/helpfile.tt2:60
 #, fuzzy
 msgid "DISTribute <list> <key>        * Moderation: to validate a message"
 msgstr "Hallinta: hyv‰ksy viesti"
@@ -1226,7 +1234,7 @@ msgstr "Do you really want to delete %1%2 ?"
 msgid "Do you really want to delete Selected Archives?"
 msgstr "Do you really want to delete %1 ?"
 
-#: src/etc/mhonarc-ressources.tt2:423
+#: src/etc/mhonarc-ressources.tt2:428
 #, fuzzy
 msgid "Do you really want to delete this message ?"
 msgstr "Do you really want to delete %1 ?"
@@ -1323,8 +1331,8 @@ msgid ""
 "to level_2_treshold."
 msgstr ""
 
-#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:23 web_tt2/serveradmin.tt2:55
-#: web_tt2/serveradmin.tt2:66
+#: web_tt2/d_read.tt2:75 web_tt2/editfile.tt2:23 web_tt2/serveradmin.tt2:56
+#: web_tt2/serveradmin.tt2:67
 msgid "Edit"
 msgstr "Muuta"
 
@@ -1396,7 +1404,7 @@ msgid "End of your EXPIRE command on list %s"
 msgstr "EXPIRE-k‰skysi loppu listalla %s"
 
 # nlsref 1,3
-#: src/Conf.pm:245
+#: src/Conf.pm:246
 msgid "Error at line %d : %s"
 msgstr "Virhe rivill‰ %d : %s"
 
@@ -1520,8 +1528,13 @@ msgstr "Email osoitteen muuttaminen listaan %1 ep‰onnistui"
 msgid "Families"
 msgstr "Tiedosto"
 
+#: src/List.pm:549
+#, fuzzy
+msgid "Family name"
+msgstr "listan nimi"
+
 # nlsref 8,7
-#: src/List.pm:6187
+#: src/List.pm:6213
 msgid "File"
 msgstr "Tiedosto"
 
@@ -1562,11 +1575,6 @@ msgstr "Tiedoston liitt‰minen"
 #, fuzzy
 msgid "File name"
 msgstr "listan nimi"
-
-#: src/etc/mhonarc-ressources.tt2:219
-#, fuzzy
-msgid "First"
-msgstr "Listat"
 
 #: web_tt2/login_menu.tt2:70
 msgid "First login ?"
@@ -1620,7 +1628,7 @@ msgid ""
 "a customized environment with access to the following functions :"
 msgstr ""
 
-#: mail_tt2/helpfile.tt2:37
+#: mail_tt2/helpfile.tt2:42
 #, fuzzy
 msgid "GET <list> <file>           * To get <file> of <list> archive"
 msgstr "Saadaksesi tiedosto <file> listan <list> arkistosta"
@@ -1630,7 +1638,7 @@ msgstr "Saadaksesi tiedosto <file> listan <list> arkistosta"
 msgid "Go"
 msgstr ""
 
-#: mail_tt2/helpfile.tt2:16
+#: mail_tt2/helpfile.tt2:21
 msgid "HELp                        * This help file"
 msgstr ""
 
@@ -1662,7 +1670,7 @@ msgid "Here are the subscribers of %1@%2 mailing list:"
 msgstr "T‰ss‰ ovat listan %1@%2 tilaajat:"
 
 #. (conf.email,conf.host)
-#: mail_tt2/lists.tt2:1
+#: mail_tt2/lists.tt2:7
 msgid "Here is the list of list from %1@%2"
 msgstr "T‰ss‰ postituslistat palvelimelta %1@%2"
 
@@ -1706,17 +1714,17 @@ msgstr "Tilaan listan %1"
 msgid "I unsubscribe from list %1"
 msgstr "Poistun listalta %1"
 
-#: mail_tt2/helpfile.tt2:36
+#: mail_tt2/helpfile.tt2:41
 #, fuzzy
 msgid "INDex <list>                * <list> archive file list"
 msgstr "<list> arkistojen listaus"
 
-#: mail_tt2/helpfile.tt2:17
+#: mail_tt2/helpfile.tt2:22
 #, fuzzy
 msgid "INFO <list>                 * Information about a list"
 msgstr "Tietoja listoista"
 
-#: mail_tt2/helpfile.tt2:39
+#: mail_tt2/helpfile.tt2:44
 #, fuzzy
 msgid "INVITE <list> <email>       * Invite <email> for subscription in <list>"
 msgstr "Kutsu <email> tilaajaksi listalle <list>"
@@ -1853,13 +1861,13 @@ msgid ""
 "was unable to access to your personal certificat (email %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:583
+#: src/etc/mhonarc-ressources.tt2:588
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
 msgstr ""
 
-#: mail_tt2/helpfile.tt2:38
+#: mail_tt2/helpfile.tt2:43
 #, fuzzy
 msgid ""
 "LAST <list>                 * Used to received the last message from <list>"
@@ -1875,7 +1883,7 @@ msgstr "LDAP 2-tason kyselyn liitt‰minen"
 msgid "LDAP query inclusion"
 msgstr "LDAP kyselyn liitt‰minen"
 
-#: mail_tt2/helpfile.tt2:18
+#: mail_tt2/helpfile.tt2:23
 #, fuzzy
 msgid "LISts                       * Directory of lists managed on this node"
 msgstr "Hakemisto listoista joita palvelimella on olemassa"
@@ -1893,11 +1901,6 @@ msgstr "Kieli"
 #: src/List.pm:877
 msgid "Language of the list"
 msgstr "Listan kieli"
-
-#: src/etc/mhonarc-ressources.tt2:230
-#, fuzzy
-msgid "Last"
-msgstr "Listat"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
 msgid "Last update"
@@ -1923,6 +1926,10 @@ msgstr "Asetuksia viimeksi muutettu"
 msgid "Last update:"
 msgstr "Viim. p‰ivitys:"
 
+#: src/List.pm:895
+msgid "Latest family instantiation"
+msgstr ""
+
 #: web_tt2/serveradmin.tt2:33
 msgid "Latest lists"
 msgstr "Uusimmat listat"
@@ -1935,6 +1942,14 @@ msgstr "Uusi viesti ensiksi"
 #: web_tt2/arcsearch_form.tt2:47
 msgid "Layout"
 msgstr "Ulkoasu"
+
+#: web_tt2/rss_request.tt2:15
+msgid "Limit the number of days used for the selection"
+msgstr ""
+
+#: web_tt2/rss_request.tt2:8
+msgid "Limit the number of response"
+msgstr ""
 
 #. (list.name,type)
 #: mail_tt2/listowner_notification.tt2:54
@@ -2092,6 +2107,11 @@ msgstr "Lista on yksityinen : Et voi selata tiedostoja.\n"
 msgid "List is Private : You can not read the archives.\n"
 msgstr "Lista on yksityinen : Et voi lukea arkistoja.\n"
 
+#: web_tt2/active_lists.tt2:20
+#, fuzzy
+msgid "List name"
+msgstr "Listan nimi:"
+
 #: web_tt2/create_list_request.tt2:9
 msgid "List name:"
 msgstr "Listan nimi:"
@@ -2140,9 +2160,9 @@ msgstr "JAETUN hakemiston listaus"
 msgid "Listmaster"
 msgstr "listan nimi"
 
-#: web_tt2/active_lists.tt2:22 web_tt2/get_inactive_lists.tt2:8
-#: web_tt2/get_latest_lists.tt2:7 web_tt2/latest_lists.tt2:22
-#: web_tt2/review_family.tt2:7 web_tt2/scenario_test.tt2:24
+#: web_tt2/get_inactive_lists.tt2:8 web_tt2/get_latest_lists.tt2:7
+#: web_tt2/latest_lists.tt2:22 web_tt2/review_family.tt2:7
+#: web_tt2/scenario_test.tt2:24
 msgid "Listname"
 msgstr "Listan nimi"
 
@@ -2191,7 +2211,7 @@ msgstr "Kirjaudu ulos"
 msgid "Lost password ?"
 msgstr "Salasanani ?"
 
-#: mail_tt2/helpfile.tt2:57
+#: mail_tt2/helpfile.tt2:62
 msgid ""
 "MODINDEX <list>                 * Moderation: to consult the list of "
 "messages to moderate"
@@ -2223,7 +2243,7 @@ msgstr ""
 msgid "Mailing list for intranets"
 msgstr "Postituslistat"
 
-#: web_tt2/home.tt2:9
+#: web_tt2/home.tt2:10
 #, fuzzy
 msgid "Mailing lists categories"
 msgstr "Postituslistat"
@@ -2285,12 +2305,6 @@ msgstr "Listan %s viesti on pistetty levitykseen.\n"
 msgid "Message %s for list %s has been rejected.\n"
 msgstr "Listan %s viesti on poistettu.\n"
 
-# nlsref 15,4
-#: web_tt2/active_lists.tt2:23
-#, fuzzy
-msgid "Message count"
-msgstr "viestin alaosa"
-
 #: web_tt2/help_editfile.tt2:35
 msgid ""
 "Message footer : same as <em>Message header,</em> but attached at the\n"
@@ -2338,7 +2352,7 @@ msgid "Missing filter"
 msgstr "Puuttuva suodatin"
 
 #: web_tt2/admin_menu.tt2:36 web_tt2/admin_menu.tt2:42
-#: web_tt2/admin_menu.tt2:46
+#: web_tt2/admin_menu.tt2:46 web_tt2/list_admin_menu.tt2:63
 msgid "Moderate"
 msgstr "Poista jaettu"
 
@@ -2404,6 +2418,10 @@ msgstr ""
 "Moderaattorit\n"
 "#-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#\n"
 "Hallitsijat"
+
+#: src/List.pm:540
+msgid "Moderators defined in an external datasource"
+msgstr ""
 
 #. (list.name)
 #: mail_tt2/moderate.tt2:2
@@ -2483,11 +2501,6 @@ msgstr ""
 #: src/etc/scenari/send.newsletterkeyonly:1
 msgid "Newsletter, restricted to moderators after confirmation"
 msgstr ""
-
-#: src/etc/mhonarc-ressources.tt2:229
-#, fuzzy
-msgid "Next"
-msgstr "Next page"
 
 #: web_tt2/review.tt2:244 web_tt2/review.tt2:26 web_tt2/reviewbouncing.tt2:118
 #: web_tt2/reviewbouncing.tt2:52
@@ -2638,7 +2651,7 @@ msgstr "Vaihtoehtoinen email osoite :"
 msgid "Other files/pages description :"
 msgstr "Muut tiedosto/sivu kuvaukset :"
 
-#: web_tt2/home.tt2:18
+#: web_tt2/home.tt2:19
 msgid "Others"
 msgstr "Muut"
 
@@ -2686,6 +2699,10 @@ msgid ""
 "edited from the web."
 msgstr ""
 
+#: src/List.pm:960
+msgid "Owners defined in an external datasource"
+msgstr ""
+
 # nlsref 8,1
 #: src/List.pm:2267 src/List.pm:2282 src/List.pm:2294
 msgid "Owners of list %s"
@@ -2710,7 +2727,7 @@ msgstr "Salasana :"
 msgid "Password for %1"
 msgstr "Salasana osoitteelle%1"
 
-#: web_tt2/modindex.tt2:81
+#: web_tt2/edit_template.tt2:8 web_tt2/modindex.tt2:81
 msgid "Path"
 msgstr ""
 
@@ -2777,7 +2794,7 @@ msgstr "L‰het‰"
 msgid "Powered by"
 msgstr "Alustana Sympa"
 
-#: mail_tt2/helpfile.tt2:60
+#: mail_tt2/helpfile.tt2:65
 msgid "Powered by Sympa"
 msgstr "Alustana Sympa"
 
@@ -2788,11 +2805,6 @@ msgstr "Hakuj‰rjestys"
 #: web_tt2/help.tt2:16
 msgid "Preferences"
 msgstr "Asetukset"
-
-#: src/etc/mhonarc-ressources.tt2:220
-#, fuzzy
-msgid "Previous"
-msgstr "Edell sivu"
 
 #: web_tt2/review.tt2:20 web_tt2/review.tt2:238 web_tt2/reviewbouncing.tt2:112
 #: web_tt2/reviewbouncing.tt2:46
@@ -2871,7 +2883,7 @@ msgstr ""
 
 # #-#-#-#-#  fi.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 6,82
-#: src/Commands.pm:245 web_tt2/help.tt2:18
+#: mail_tt2/lists.tt2:2 src/Commands.pm:245 web_tt2/help.tt2:18
 msgid "Public lists"
 msgstr "Julkiset listat"
 
@@ -2884,24 +2896,24 @@ msgstr "Julkista"
 msgid "Purge selected lists"
 msgstr "Poista valitut listat"
 
-#: mail_tt2/helpfile.tt2:41
+#: mail_tt2/helpfile.tt2:46
 msgid ""
 "QUIT                        * Indicates the end of the commands (to ignore a "
 "signature)"
 msgstr ""
 
-#: mail_tt2/helpfile.tt2:56
+#: mail_tt2/helpfile.tt2:61
 #, fuzzy
 msgid "REJect <list> <key>            * Moderation: to reject a message"
 msgstr "Hallinta: hylk‰‰ viesti"
 
-#: mail_tt2/helpfile.tt2:51
+#: mail_tt2/helpfile.tt2:56
 msgid ""
 "REMIND <list>                   * Send a reminder message to each subscriber "
 "(this is a way to inform anyone what is his real subscribing email)."
 msgstr ""
 
-#: mail_tt2/helpfile.tt2:19
+#: mail_tt2/helpfile.tt2:24
 #, fuzzy
 msgid "REView <list>               * Displays the subscribers to <list>"
 msgstr "N‰ytt‰‰ tilaajat listlle <list>"
@@ -2912,6 +2924,18 @@ msgstr "N‰ytt‰‰ tilaajat listlle <list>"
 msgid "RFC 2369 Header fields"
 msgstr "Mukautettu otsikko kentt‰"
 
+#: web_tt2/list_menu.tt2:48
+msgid "RSS"
+msgstr ""
+
+#: web_tt2/rss_request.tt2:2
+msgid "RSS channel"
+msgstr ""
+
+#: web_tt2/home.tt2:49
+msgid "RSS news"
+msgstr ""
+
 #: web_tt2/pref.tt2:44
 msgid "Re-enter your new password :"
 msgstr "Salasana uudelleen :"
@@ -2920,16 +2944,16 @@ msgstr "Salasana uudelleen :"
 msgid "Read access"
 msgstr "Lukuoikeus"
 
-#: web_tt2/serveradmin.tt2:82
+#: web_tt2/serveradmin.tt2:86
 msgid "Rebuild HTML archives using \"arctxt\" directories as input."
 msgstr ""
 
-#: web_tt2/serveradmin.tt2:86
+#: web_tt2/serveradmin.tt2:90
 #, fuzzy
 msgid "Rebuild all"
 msgstr "Luo arkisto uudelleen"
 
-#: web_tt2/serveradmin.tt2:85
+#: web_tt2/serveradmin.tt2:89
 msgid "Rebuild archive"
 msgstr "Luo arkisto uudelleen"
 
@@ -3071,7 +3095,7 @@ msgstr "Tilauksen uusiminen listalle '%s'"
 msgid "Replace the file %1 with your file"
 msgstr "Korvaa tiedosto %1 omalla tiedostolla"
 
-#: src/etc/mhonarc-ressources.tt2:415
+#: src/etc/mhonarc-ressources.tt2:420
 msgid "Reply"
 msgstr ""
 
@@ -3085,7 +3109,7 @@ msgstr "Vastausosoite (reply)"
 msgid "Reply to           : %1"
 msgstr "Tilauksen poisto   : [% unsubscribe %]"
 
-#: src/etc/mhonarc-ressources.tt2:411
+#: src/etc/mhonarc-ressources.tt2:416
 msgid "Reply to sender"
 msgstr ""
 
@@ -3137,7 +3161,7 @@ msgstr "K‰skyjesi lopputulos"
 msgid "Return to archive %1"
 msgstr "Palaa arkistoon %1"
 
-#: web_tt2/list_menu.tt2:58
+#: web_tt2/list_menu.tt2:61
 msgid "Review"
 msgstr "Tarkista"
 
@@ -3155,44 +3179,44 @@ msgstr "Tilauksen poisto   : [% unsubscribe %]"
 msgid "Routing error ?"
 msgstr "Reititysvirhe ?"
 
-#: mail_tt2/helpfile.tt2:32
+#: mail_tt2/helpfile.tt2:37
 #, fuzzy
 msgid ""
 "SET <list>|* CONCEAL        * To become unlisted (hidden subscriber address)"
 msgstr "Salaa osoitteesi muilta"
 
-#: mail_tt2/helpfile.tt2:27
+#: mail_tt2/helpfile.tt2:32
 #, fuzzy
 msgid "SET <list>|* DIGEST         * Message reception in compilation mode"
 msgstr "Viestien vastaanotto koostetilassa"
 
-#: mail_tt2/helpfile.tt2:31
+#: mail_tt2/helpfile.tt2:36
 #, fuzzy
 msgid "SET <list>|* MAIL           * <list> reception in normal mode"
 msgstr "<list> vastaanotto normaali tilassa"
 
-#: mail_tt2/helpfile.tt2:33
+#: mail_tt2/helpfile.tt2:38
 #, fuzzy
 msgid "SET <list>|* NOCONCEAL      * Subscriber address visible via REView"
 msgstr "Tilaajan osoite n‰kyviss‰ REView komennon kautta"
 
-#: mail_tt2/helpfile.tt2:26
+#: mail_tt2/helpfile.tt2:31
 #, fuzzy
 msgid ""
 "SET <list>|* NOMAIL         * To suspend the message reception for <list>"
 msgstr "Pys‰ytt‰‰ksesi viestien vastaanoton listalta <list>"
 
-#: mail_tt2/helpfile.tt2:30
+#: mail_tt2/helpfile.tt2:35
 #, fuzzy
 msgid "SET <list>|* NOTICE         * Receiving message subject only"
 msgstr "Ainoastaan viestien otsikon vastaanotto"
 
-#: mail_tt2/helpfile.tt2:29
+#: mail_tt2/helpfile.tt2:34
 #, fuzzy
 msgid "SET <list>|* SUMMARY        * Receiving the message index only"
 msgstr "Ainoastaan viestien listauksen vastaanotto"
 
-#: mail_tt2/helpfile.tt2:28
+#: mail_tt2/helpfile.tt2:33
 msgid ""
 "SET <list|*> DIGESTPLAIN    * Message reception in compilation mode, sent as "
 "a plain text email with all attachments"
@@ -3208,18 +3232,18 @@ msgstr "SQL kysely"
 msgid "SQL query inclusion"
 msgstr "SQL kyselyn liitt‰minen"
 
-#: mail_tt2/helpfile.tt2:49
+#: mail_tt2/helpfile.tt2:54
 #, fuzzy
 msgid "STATS <list>                    * To consult the statistics for <list>"
 msgstr "Saadaksesi tilastot listalle <list>"
 
-#: mail_tt2/helpfile.tt2:21
+#: mail_tt2/helpfile.tt2:26
 msgid ""
 "SUBscribe <list> <name>     * To subscribe or to confirm a subscription to "
 "<list>."
 msgstr ""
 
-#: mail_tt2/helpfile.tt2:8
+#: mail_tt2/helpfile.tt2:13
 msgid ""
 "SYMPA is an electronic mailing-list manager that automates list management "
 "functions such as subscriptions, moderation, and archive management."
@@ -3241,6 +3265,10 @@ msgstr "Skenaarion nimi"
 msgid "Scenario test module"
 msgstr "Skenaario testi moduuli"
 
+#: web_tt2/edit_template.tt2:9
+msgid "Scope"
+msgstr ""
+
 #: src/etc/mhonarc-ressources.tt2:52 web_tt2/arcsearch_form.tt2:15
 #: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:59
 #: web_tt2/reviewbouncing.tt2:11
@@ -3259,7 +3287,7 @@ msgstr "Hakualue"
 msgid "Search field :"
 msgstr "Hakukentt‰ :"
 
-#: web_tt2/home.tt2:42
+#: web_tt2/home.tt2:43
 msgid "Search lists"
 msgstr "Hae listoista"
 
@@ -3329,11 +3357,11 @@ msgstr "Aseta omistaja"
 msgid "Set the owner of the directory %1"
 msgstr "Aseta hakemiston omistaja %1"
 
-#: web_tt2/serveradmin.tt2:51
+#: web_tt2/serveradmin.tt2:52
 msgid "Setting defaults list templates"
 msgstr "Asetetaan lista oletusmallit"
 
-#: web_tt2/serveradmin.tt2:62
+#: web_tt2/serveradmin.tt2:63
 msgid "Setting site templates"
 msgstr "Asetetaan sivuston oletusmallit"
 
@@ -3346,7 +3374,7 @@ msgstr "Jaetun dokementtihakemiston koko"
 msgid "Shared documents"
 msgstr "Jaetut dokumentit"
 
-#: web_tt2/list_menu.tt2:50 web_tt2/list_menu.tt2:52
+#: web_tt2/list_menu.tt2:53 web_tt2/list_menu.tt2:55
 msgid "Shared web"
 msgstr "Jaettu WWW"
 
@@ -3368,17 +3396,17 @@ msgstr "Koko"
 msgid "Size (Kb)"
 msgstr "Koko (Kb)"
 
-#: web_tt2/serveradmin.tt2:76
+#: web_tt2/serveradmin.tt2:80
 #, fuzzy
 msgid "Skins administration page"
 msgstr "Listojen hallinnan paneeli"
 
-#: web_tt2/serveradmin.tt2:75
+#: web_tt2/serveradmin.tt2:79
 msgid "Skins, CSS and colors"
 msgstr ""
 
 # nlsref 6,260
-#: src/List.pm:8687
+#: src/List.pm:8779
 #, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
@@ -3410,7 +3438,7 @@ msgstr ""
 "tarvitse reagoida mitenk‰‰n."
 
 # nlsref 6,260
-#: src/List.pm:8680
+#: src/List.pm:8772
 #, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
@@ -3442,7 +3470,7 @@ msgstr ""
 "tarvitse reagoida mitenk‰‰n."
 
 # nlsref 6,39
-#: src/List.pm:8692 src/List.pm:8697
+#: src/List.pm:8784 src/List.pm:8789
 msgid ""
 "Someone (hopefully you) requested a user of list %s to be\n"
 "added or removed.\n"
@@ -3510,7 +3538,7 @@ msgstr "Listan status"
 msgid "Sub date"
 msgstr "Lajittele pvm mukaan"
 
-#: web_tt2/active_lists.tt2:26 web_tt2/arcsearch_form.tt2:57
+#: web_tt2/active_lists.tt2:24 web_tt2/arcsearch_form.tt2:57
 #: web_tt2/get_inactive_lists.tt2:9 web_tt2/get_latest_lists.tt2:8
 #: web_tt2/latest_arc.tt2:20 web_tt2/latest_lists.tt2:24
 #: web_tt2/modindex.tt2:22 web_tt2/review_family.tt2:9
@@ -3629,7 +3657,7 @@ msgstr "Yhteenveto listasta %s"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Yhteenveto tilauksestasi (k‰ytt‰en osoitetta %1)."
 
-#: src/etc/mhonarc-ressources.tt2:565
+#: src/etc/mhonarc-ressources.tt2:570
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -3729,6 +3757,20 @@ msgstr "Syntaksi virhe seuraavissa parametreissa: %1"
 #, fuzzy
 msgid "Table of contents:"
 msgstr "Sis‰llysluettelo:"
+
+#: web_tt2/edit_template.tt2:3
+msgid "Template edition system"
+msgstr ""
+
+#: web_tt2/edit_template.tt2:6
+#, fuzzy
+msgid "Template name"
+msgstr "Oletusmallit"
+
+#: web_tt2/edit_template.tt2:38
+#, fuzzy
+msgid "Template saved"
+msgstr "Oletusmallit"
 
 #: web_tt2/serveradmin.tt2:47
 msgid "Templates"
@@ -3874,7 +3916,7 @@ msgid "The following address is not a known mailing list :"
 msgstr ""
 "T‰m‰ on automaattinen vastaus jonka l‰hetti Sympa Postituslista ohjelmisto."
 
-#: mail_tt2/helpfile.tt2:45
+#: mail_tt2/helpfile.tt2:50
 msgid ""
 "The following commands are available only for lists's owners or moderators:"
 msgstr ""
@@ -4032,8 +4074,9 @@ msgid "These subscribers are :\n"
 msgstr "Tilaajiin kuuluu :\n"
 
 #. (process_id,loop_count,start_time)
-#: web_tt2/serveradmin.tt2:94
-msgid "This FastCGI process (%1) has served %2 since %3."
+#: web_tt2/serveradmin.tt2:98
+#, fuzzy
+msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr "T‰m‰ FastCGI prosessi (%1) on ollut ajossa %2 %3 asti."
 
 #: web_tt2/arc_protect.tt2:9
@@ -4287,6 +4330,12 @@ msgid ""
 "\tallow you to access your custom environment."
 msgstr ""
 
+#: web_tt2/rss_request.tt2:4
+msgid ""
+"This server provide various news via RSS. Choose parameters and pickup the "
+"RSS url"
+msgstr ""
+
 #. (conf.email,conf.host)
 #: web_tt2/home.tt2:5
 msgid ""
@@ -4296,8 +4345,8 @@ msgid ""
 "archives, list management and so on."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:188 src/etc/mhonarc-ressources.tt2:286
-#: src/etc/mhonarc-ressources.tt2:368
+#: src/etc/mhonarc-ressources.tt2:193 src/etc/mhonarc-ressources.tt2:291
+#: src/etc/mhonarc-ressources.tt2:373
 msgid "Thread"
 msgstr ""
 
@@ -4483,11 +4532,16 @@ msgstr "Lista \"%1\" varoitus : arkisto [% rate %]% t‰ynn‰"
 msgid "Total subscribers : %1"
 msgstr "Tilaajaa yhteens‰ : %1"
 
-#: mail_tt2/helpfile.tt2:24
+#: web_tt2/edit_template.tt2:7
+#, fuzzy
+msgid "Type"
+msgstr "tyyppi"
+
+#: mail_tt2/helpfile.tt2:29
 msgid "UNSubscribe * <EMAIL>       * To quit all lists."
 msgstr ""
 
-#: mail_tt2/helpfile.tt2:23
+#: mail_tt2/helpfile.tt2:28
 msgid ""
 "UNSubscribe <list> <EMAIL>  * To quit <list>. <EMAIL> is an optional email "
 "address, usefull if different from your \"From:\" address."
@@ -4574,7 +4628,7 @@ msgid "Unsubscribe"
 msgstr "Poistu listalta"
 
 # nlsref 6,71
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3476
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3496
 msgid "Unsubscribe from list %s"
 msgstr "Lopeta tilauksesi listalle %s"
 
@@ -4632,6 +4686,11 @@ msgstr "Ylemp‰‰n hakemistoon"
 msgid "Update"
 msgstr "P‰ivit‰"
 
+#: web_tt2/rss_request.tt2:27
+#, fuzzy
+msgid "Update RSS URL"
+msgstr "P‰ivit‰"
+
 #: src/etc/list_task_models/sync_include.ttl.task:1
 msgid "Update of list members based on the TTL"
 msgstr ""
@@ -4670,7 +4729,7 @@ msgid "User data source"
 msgstr "K‰ytt‰j‰n datal‰hde"
 
 # nlsref 6,81
-#: src/Commands.pm:160 src/Commands.pm:196
+#: mail_tt2/helpfile.tt2:2 src/Commands.pm:160 src/Commands.pm:196
 msgid "User guide"
 msgstr "K‰ytt‰j‰n opas"
 
@@ -4680,7 +4739,7 @@ msgstr "K‰ytt‰j‰n opas"
 msgid "User mode"
 msgstr "K‰ytt‰j‰n opas"
 
-#: mail_tt2/helpfile.tt2:5
+#: mail_tt2/helpfile.tt2:10
 msgid "User's Guide"
 msgstr "K‰ytt‰j‰n Opas"
 
@@ -4732,7 +4791,7 @@ msgstr ""
 msgid "WARNING: bounce rate too high in list %s"
 msgstr "VAROITUS: palanneiden (bounce) viestien osuus liian suuri listalla %s"
 
-#: mail_tt2/helpfile.tt2:20
+#: mail_tt2/helpfile.tt2:25
 #, fuzzy
 msgid ""
 "WHICH                       * Displays which lists you are subscribed to"
@@ -4776,8 +4835,8 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:3247 wwsympa/wwsympa.fcgi:3248
-#: wwsympa/wwsympa.fcgi:4038 wwsympa/wwsympa.fcgi:4039
+#: wwsympa/wwsympa.fcgi:3267 wwsympa/wwsympa.fcgi:3268
+#: wwsympa/wwsympa.fcgi:4179 wwsympa/wwsympa.fcgi:4180
 msgid "Welcome on list %s"
 msgstr "Tervetuloa listalle %s"
 
@@ -4939,7 +4998,7 @@ msgstr ""
 "Voit kirjautua ulos (<I>kuitin</I> poisto) milloin tahansa\n"
 "<"
 
-#: mail_tt2/helpfile.tt2:12
+#: mail_tt2/helpfile.tt2:17
 msgid ""
 "You can put multiple commands in a message. These commands must appear in "
 "the message body and each line must contain only one command. The message "
@@ -4965,7 +5024,7 @@ msgid ""
 msgstr "Et valinnut salasanaa, pyyd‰ muistutus alkuper‰isest‰ salasanasta"
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3477 wwsympa/wwsympa.fcgi:4144
+#: wwsympa/wwsympa.fcgi:3497 wwsympa/wwsympa.fcgi:4285
 #, fuzzy
 msgid "You have been removed from list %s.\n"
 msgstr "K‰ytt‰j‰ %s on poistettu listalta %s/\n"
@@ -5041,7 +5100,7 @@ msgstr ""
 "Yrit‰ listan tilaamista alkuper‰isest‰ osoitteesta."
 
 # nlsref 6,79
-#: src/List.pm:8702 src/List.pm:8709
+#: src/List.pm:8794 src/List.pm:8801
 msgid ""
 "You requested a subscription reminder to be sent\n"
 "to each subscriber of list %s\n"
@@ -5342,7 +5401,7 @@ msgid "Your subscription email is %1"
 msgstr "Tilauksesi osoite on %1"
 
 # nlsref 6,18
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4143
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4284
 msgid "Your subscription to list %s has been removed."
 msgstr "Tilauksesi listalle %s on poistettu."
 
@@ -5534,6 +5593,11 @@ msgstr "sis‰‰np‰‰sy oikeus"
 msgid "action for this population"
 msgstr ""
 
+#: web_tt2/rss_request.tt2:41
+#, fuzzy
+msgid "active lists"
+msgstr "Uusimmat listat"
+
 #: src/etc/scenari/add.closed:1
 msgid "add impossible"
 msgstr ""
@@ -5665,8 +5729,8 @@ msgstr ""
 msgid "change access"
 msgstr "muuta oikeuksia"
 
-#: src/etc/mhonarc-ressources.tt2:187 src/etc/mhonarc-ressources.tt2:285
-#: src/etc/mhonarc-ressources.tt2:367 src/etc/mhonarc-ressources.tt2:371
+#: src/etc/mhonarc-ressources.tt2:192 src/etc/mhonarc-ressources.tt2:290
+#: src/etc/mhonarc-ressources.tt2:372
 msgid "chronological"
 msgstr ""
 
@@ -5739,6 +5803,16 @@ msgstr "tietokannan nimi"
 #: src/List.pm:814
 msgid "database type"
 msgstr "tietokannan tyyppi"
+
+#: src/List.pm:528 src/List.pm:944
+#, fuzzy
+msgid "datasource parameters"
+msgstr "Data l‰hteiden asetukset"
+
+#: src/List.pm:1103 src/List.pm:886
+#, fuzzy
+msgid "date"
+msgstr "P‰ivit‰"
 
 # nlsref 16,23
 #: src/List.pm:476
@@ -5823,6 +5897,11 @@ msgstr "koko"
 #: src/List.pm:833
 msgid "environment variables for database connexion"
 msgstr "ymp‰ristˆmuuttujat tietokantayhteydelle"
+
+#: src/List.pm:1098 src/List.pm:882
+#, fuzzy
+msgid "epoch date"
+msgstr "P‰ivit‰"
 
 #: mail_tt2/listmaster_notification.tt2:68
 msgid "errors in param_constraint.conf file"
@@ -5969,6 +6048,18 @@ msgstr "se l‰hetet‰‰n sinulle emailina :"
 msgid "just for listmaster"
 msgstr ""
 
+# nlsref 16,4
+#: web_tt2/rss_request.tt2:35
+#, fuzzy
+msgid "latest archive"
+msgstr "Teksti arkistot"
+
+# nlsref 16,70
+#: web_tt2/rss_request.tt2:38 web_tt2/rss_request.tt2:44
+#, fuzzy
+msgid "latest document"
+msgstr "Jaetut dokumentit"
+
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:101
 #: mail_tt2/listmaster_notification.tt2:40
@@ -6030,6 +6121,11 @@ msgstr ""
 msgid "list subject"
 msgstr "listan otsikko"
 
+#: web_tt2/ls_templates.tt2:24
+#, fuzzy
+msgid "list templates"
+msgstr "Muuta malleja"
+
 #: src/etc/scenari/access_web_archive.listmaster:1
 #, fuzzy
 msgid "listmaster"
@@ -6043,7 +6139,7 @@ msgstr ""
 msgid "local domain users or owner approval"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:281
+#: src/etc/mhonarc-ressources.tt2:188 src/etc/mhonarc-ressources.tt2:286
 #: src/etc/mhonarc-ressources.tt2:63
 #, fuzzy
 msgid "mails"
@@ -6156,7 +6252,7 @@ msgid "owners approval"
 msgstr ""
 
 #. ($PAGENUM$,$NUMOFPAGES$)
-#: src/etc/mhonarc-ressources.tt2:190 src/etc/mhonarc-ressources.tt2:288
+#: src/etc/mhonarc-ressources.tt2:195 src/etc/mhonarc-ressources.tt2:293
 #, fuzzy
 msgid "page # %1/%2"
 msgstr "page %1 / %2"
@@ -6200,7 +6296,7 @@ msgid "private informations"
 msgstr "yksityiset tiedot"
 
 # nlsref 16,62
-#: src/List.pm:929
+#: src/List.pm:929 src/List.pm:955
 msgid "profile"
 msgstr "profiili"
 
@@ -6269,7 +6365,8 @@ msgid "quota"
 msgstr ""
 
 # nlsref 16,19
-#: src/List.pm:343 src/List.pm:456 src/List.pm:504 src/List.pm:914
+#: src/List.pm:343 src/List.pm:456 src/List.pm:504 src/List.pm:534
+#: src/List.pm:914 src/List.pm:950
 msgid "reception mode"
 msgstr "vastaanotto moodi"
 
@@ -6401,6 +6498,11 @@ msgstr "tilauksen uusintapyyntˆ listalle %1"
 msgid "results by page"
 msgstr "tulosta sivulla"
 
+#: web_tt2/edit_template.tt2:35
+#, fuzzy
+msgid "save"
+msgstr "Tallenna"
+
 #: web_tt2/edit_list_request.tt2:31
 #, fuzzy
 msgid "scenario source"
@@ -6452,7 +6554,7 @@ msgid "selection (if multiple)"
 msgstr "valinta (jos useampia)"
 
 #. (user.email)
-#: src/etc/mhonarc-ressources.tt2:416
+#: src/etc/mhonarc-ressources.tt2:421
 msgid "send it back to %1"
 msgstr ""
 
@@ -6519,7 +6621,7 @@ msgstr "j‰lkiliite(suffix)"
 msgid "summary message"
 msgstr "yhteenveto viesti"
 
-#: src/etc/mhonarc-ressources.tt2:423
+#: src/etc/mhonarc-ressources.tt2:428
 msgid "tag this mail for deletion"
 msgstr ""
 
@@ -6532,6 +6634,12 @@ msgid ""
 "the address is hidden using a javascript. User who enable javascript can see "
 "a nice mailto address where others have nothing."
 msgstr ""
+
+# nlsref 16,81
+#: src/List.pm:524 src/List.pm:939
+#, fuzzy
+msgid "the datasource"
+msgstr "K‰ytt‰j‰n datal‰hde"
 
 #. (shortname)
 #: web_tt2/d_upload.tt2:1
@@ -6547,7 +6655,24 @@ msgstr "listan nimi; ole tarkkana, ei osoite !"
 msgid "this sentence"
 msgstr "(T‰m‰ lause,"
 
-#: src/etc/mhonarc-ressources.tt2:371
+#: web_tt2/edit_template.tt2:13
+msgid ""
+"this template is defined for all lists of robot [%robot %] unless it is "
+"redefined for some particular list"
+msgstr ""
+
+#: web_tt2/edit_template.tt2:15
+msgid ""
+"this template is defined for all robots unless  it is redefined for some "
+"particular robot"
+msgstr ""
+
+#: web_tt2/edit_template.tt2:10
+#, fuzzy
+msgid "this template is defined for list"
+msgstr "Kunnes olet sen tehnyt, suosittelemme parametrin %1 poistoa"
+
+#: src/etc/mhonarc-ressources.tt2:376
 msgid "thread"
 msgstr ""
 
@@ -6559,7 +6684,7 @@ msgstr ""
 msgid "title"
 msgstr "URL"
 
-#: src/etc/mhonarc-ressources.tt2:413
+#: src/etc/mhonarc-ressources.tt2:418
 #, fuzzy
 msgid "to list"
 msgstr "Listan palautukseen"
@@ -6578,6 +6703,10 @@ msgstr "lopetus viesti"
 #: src/List.pm:991 web_tt2/help_editlist.tt2:131
 msgid "value"
 msgstr "arvo"
+
+#: web_tt2/serveradmin.tt2:74
+msgid "view translations"
+msgstr ""
 
 # nlsref 15,17
 #: wwsympa/wwslib.pm:75
@@ -6599,6 +6728,18 @@ msgstr "varoistusnopeus"
 msgid "welcome message"
 msgstr "tervetuloa viesti"
 
+# nlsref 16,53
+#: src/List.pm:891
+#, fuzzy
+msgid "who ran the instantiation"
+msgstr "Kuka voi katsoa listan tiedot"
+
+# nlsref 16,77
+#: src/List.pm:1109
+#, fuzzy
+msgid "who updated the config"
+msgstr "Asetuksia viimeksi muutettu"
+
 #: src/etc/scenari/unsubscribe.open_notify:1
 #, fuzzy
 msgid "without authentication, notification is sent to owners"
@@ -6617,6 +6758,27 @@ msgstr ""
 #: mail_tt2/sendpasswd.tt2:30
 msgid "your password : %1"
 msgstr "Muuten sinut poistetaan listalta viikon kuluttua."
+
+#, fuzzy
+#~ msgid "First"
+#~ msgstr "Listat"
+
+#, fuzzy
+#~ msgid "Last"
+#~ msgstr "Listat"
+
+# nlsref 15,4
+#, fuzzy
+#~ msgid "Message count"
+#~ msgstr "viestin alaosa"
+
+#, fuzzy
+#~ msgid "Next"
+#~ msgstr "Next page"
+
+#, fuzzy
+#~ msgid "Previous"
+#~ msgstr "Edell sivu"
 
 #~ msgid "Bounced email rate:"
 #~ msgstr "Palautuneiden viestien m‰‰r‰:"
@@ -6872,11 +7034,6 @@ msgstr "Muuten sinut poistetaan listalta viikon kuluttua."
 #~ msgid "\"RSS Active lists\""
 #~ msgstr "Uusimmat listat"
 
-# nlsref 16,70
-#, fuzzy
-#~ msgid "\"RSS Latest documents\""
-#~ msgstr "Jaetut dokumentit"
-
 #, fuzzy
 #~ msgid "\"RSS Latest lists\""
 #~ msgstr "Uusimmat listat"
@@ -7064,9 +7221,6 @@ msgstr "Muuten sinut poistetaan listalta viikon kuluttua."
 
 #~ msgid "translated"
 #~ msgstr "k‰‰nnetty"
-
-#~ msgid "type"
-#~ msgstr "tyyppi"
 
 # nlsref 1,102
 #~ msgid "3.3a"
