@@ -188,6 +188,13 @@ foreach my $file (@ARGV) {
 		push @{$file{$str}}, [ $filename, $line];
 	    }
 
+	    $line = 1; pos($_) = 0;
+	    while (/\G.*?\'gettext_id\'\s*=>\s*\'([^\']+)\'/sg) {
+		my $str = $1;
+		$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
+		push @{$file{$str}}, [ $filename, $line];
+	    }
+
 	    # Sympa scenarios variables (title.gettext)
 	    $line = 1; pos($_) = 0;
 	    while (/\G.*?title.gettext\s*([^\n]+)/sg) {
