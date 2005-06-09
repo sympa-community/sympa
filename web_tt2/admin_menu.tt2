@@ -65,7 +65,7 @@
     [% IF action == 'arc_manage' %]
     <td style="background: [% selected_color %]; text-align: center;">
       <a href="[% path_cgi %]/arc_manage/[% list %]">
-      <span style="font-size: smaller; color: [% bg_color %];"><strong>Manage Archives</strong></span></a>
+      <span style="font-size: smaller; color: [% bg_color %];"><strong>[%|loc%]Manage Archives[%END%]</strong></span></a>
     </td>
     [% ELSE %]
     <td style="background: [% light_color %]; text-align: center;">
