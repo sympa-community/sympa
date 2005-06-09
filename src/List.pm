@@ -8706,14 +8706,16 @@ sub get_which {
 
 	}elsif ($function eq 'owner') {
  	    if ($list->{'admin'}{'user_data_source'} eq 'include2'){
- 		if ($db_which->{'owner'}{$l}) {
+ 		if ($db_which->{'owner'}{$l} == 1) {
  		    push @which, $l ;
 
 		    ## Update cache
 		    $list_cache{'am_i'}{'owner'}{$l}{$email} = 1;
- 		}else {
+		}elsif ($db_which->{'owner'}{$l} == 0) {
 		    ## Update cache
 		    $list_cache{'am_i'}{'owner'}{$l}{$email} = 0;		    
+		}else {
+		    push @which, $list->{'name'} if ($list->am_i('owner',$email));
 		}
  	    }else {	    
  		push @which, $list->{'name'} if ($list->am_i('owner',$email));
@@ -8721,14 +8723,16 @@ sub get_which {
 
 	}elsif ($function eq 'editor') {
  	    if ($list->{'admin'}{'user_data_source'} eq 'include2'){
- 		if ($db_which->{'editor'}{$l}) {
+ 		if ($db_which->{'editor'}{$l} == 1) {
  		    push @which, $l ;
  
 		    ## Update cache
 		    $list_cache{'am_i'}{'editor'}{$l}{$email} = 1;
- 		}else {
+ 		}elsif ($db_which->{'editor'}{$l} == 0) {
 		    ## Update cache
 		    $list_cache{'am_i'}{'editor'}{$l}{$email} = 0;		    
+		}else {
+		    push @which, $list->{'name'} if ($list->am_i('editor',$email));
 		}
  	    }else {	    
  		push @which, $list->{'name'} if ($list->am_i('editor',$email));
