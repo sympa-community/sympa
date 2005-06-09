@@ -5393,13 +5393,13 @@ sub am_i {
 	    if ($privileged->{'profile'} eq 'privileged') {
 		    
 		## Update cache
-		$list_cache{'am_i'}{'owner'}{$self->{'name'}}{$who} = 1;
+		$list_cache{'am_i'}{'privileged_owner'}{$self->{'name'}}{$who} = 1;
 
 		return 1;
 	    }else {
 		    
 		## Update cache
-		$list_cache{'am_i'}{'owner'}{$self->{'name'}}{$who} = 0;
+		$list_cache{'am_i'}{'privileged_owner'}{$self->{'name'}}{$who} = 0;
 
 		return undef;
 	    }
