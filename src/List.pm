@@ -5336,7 +5336,7 @@ sub am_i {
     
     ## Listmaster has all privileges except editor
     # sa contestable.
-    if (($function eq 'owner') and &is_listmaster($who,$self->{'domain'})) {
+    if (($function eq 'owner' || $function eq 'privileged_owner') and &is_listmaster($who,$self->{'domain'})) {
 	$list_cache{'am_i'}{$function}{$self->{'name'}}{$who} = 1;
 	return 1;
     }
