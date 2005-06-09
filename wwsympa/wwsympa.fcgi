@@ -2399,7 +2399,9 @@ sub do_remindpasswd {
 
 	     if ($role eq 'member') {
 		 push @{$param->{'get_which'}}, $l;
-	     }else {
+	     }
+
+	     if ($role eq 'owner' || $role eq 'editor') {
 		 $param->{'which'}{$l}{'admin'} = 1;
 	     }
 
