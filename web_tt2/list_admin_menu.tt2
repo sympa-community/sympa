@@ -41,9 +41,9 @@
 [% IF shared == 'none' %]
 <li><a class="menuLinks" href="[% path_cgi %]/d_admin/[% list %]/create">[%|loc%]Create Shared[%END%]</a></li> 
 [% ELSIF shared == 'exist' %]
-<li><a class="menuLinks" href="[% path_cgi %]/d_admin/[% list %]/delete">[%|loc%]Delete Shared[%END%]</a></li> 
+<li><a class="menuLinks" href="[% path_cgi %]/d_admin/[% list %]/delete" onclick="request_confirm_link('[% path_cgi %]/d_admin/[% list %]/delete', '[%|loc(list)%]Are you sure you wish to delete the shared documents ?[%END%]'); return false;">[%|loc%]Delete Shared[%END%]</a></li> 
 [% ELSIF shared == 'deleted' %]
-<li><a class="menuLinks" href="[% path_cgi %]/d_admin/[% list %]/create">[%|loc%]Restore shared[%END%]</a></li> 
+<li><a class="menuLinks" href="[% path_cgi %]/d_admin/[% list %]/restore">[%|loc%]Restore shared[%END%]</a></li> 
 [% END %]
 
 [% IF is_privileged_owner %]        

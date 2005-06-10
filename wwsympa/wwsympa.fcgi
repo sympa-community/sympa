@@ -8422,7 +8422,9 @@ sub merge_edit{
 
  # create the root shared document
  sub do_d_admin {
-     my %mode;
+     &wwslog('info', 'do_d_admin(%s,%s)', $in{'list'}, $in{'d_admin'});
+
+    my %mode;
      $mode{'edit'} = 1;
      my %access = &d_access_control(\%mode,$in{'path'});
 
