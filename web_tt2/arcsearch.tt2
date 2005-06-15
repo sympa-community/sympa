@@ -36,7 +36,7 @@
 
 <hr />
 
-[% IF age %]
+[% IF age == new %]
 	<p><strong>[%|loc%]Newest messages first[%END%]</strong></p>
 [% ELSE %]
 	<p><strong>[%|loc%]Oldest messages first[%END%]</strong></p>

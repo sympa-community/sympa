@@ -5622,7 +5622,7 @@ sub get_timelocal_from_date {
      $search->limit ($in{'limit'});
 
      $search->age (1) 
-	 if (($in{'age'} eq 'new') or ($in{'age'} eq '1'));
+	 if ($in{'age'} eq 'new');
 
      $search->match (1) 
 	 if (($in{'match'} eq 'partial') or ($in{'match'} eq '1'));
