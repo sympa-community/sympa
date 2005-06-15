@@ -441,7 +441,7 @@ my %in_regexp = (
 		 'dump' => '[^<>\\\*\$]+', # contents email + gecos
 
 		 ## Search
-		 'filter' => '[^<>\\\*\$]+', # search list
+		 'filter' => '[^<>\\\$]+', # search list
 		 'key_word' => '[^<>\\\*\$]+',
 
 		 ## File names
@@ -6787,6 +6787,10 @@ sub do_set_pending_list_request {
      $param->{'regexp'} =~ s/\*/\.\*/g;
      $param->{'regexp'} =~ s/\+/\\\+/g;
      $param->{'regexp'} =~ s/\?/\\\?/g;
+     $param->{'regexp'} =~ s/\[/\\\[/g;
+     $param->{'regexp'} =~ s/\]/\\\]/g;
+     $param->{'regexp'} =~ s/\(/\\\)/g;
+     $param->{'regexp'} =~ s/\)/\\\)/g;
 
      ## Members list
      my $record = 0;
@@ -6794,9 +6798,15 @@ sub do_set_pending_list_request {
 	 my $is_admin;
 	 my $list = new List ($l, $robot);
 
-	 ## Search filter
-	 next if (($list->{'name'} !~ /$param->{'regexp'}/i) 
-		  && ($list->{'admin'}{'subject'} !~ /$param->{'regexp'}/i));
+         ## Search filter
+         my $regtest = eval { (($list->{'name'} !~ /$param->{'regexp'}/i)
+			       && ($list->{'admin'}{'subject'} !~ /$param->{'regexp'}/i)) };
+         unless (defined($regtest)) {
+	     &error_message('syntax_errors', {'params' => 'filter'});
+	     &wwslog('err','do_search_list: syntax error');
+	     return undef;
+         }
+         next if $regtest;
 
 	 my $action = &List::request_action ('visibility',$param->{'auth_method'},$robot,
 					     {'listname' =>  $list->{'name'},
