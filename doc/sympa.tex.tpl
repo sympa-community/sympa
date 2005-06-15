@@ -194,7 +194,7 @@ i386 server with Linux).
 
 This guide covers the installation, configuration and management of
 the current release (\version) of
-\htmladdnormallink {sympa} {http://listes.cru.fr/sympa/}.
+\htmladdnormallink {sympa} {http://www.sympa.org}.
 
 \section {License}
 
@@ -355,7 +355,7 @@ in a single software package, including:
 \section {Project directions}
 
 \Sympa is a very active project : check the release note 
-\htmladdnormallinkfoot {release note} {http://listes.cru.fr/sympa/release.shtml}.
+\htmladdnormallinkfoot {release note} {http://www.sympa.org/release.html}.
 So it is no longer possible to
 maintain multiple document about Sympa project direction.
 Please refer to \htmladdnormallinkfoot {in-the-futur document} {http://www.sympa.org/sympa/direct/in-the-future.html}
@@ -485,7 +485,7 @@ releases of this documentation.
 If you wish to contact the authors of \Sympa, please use the address
 \mailaddr {sympa-authors{\at}cru.fr}.
 
-There are also a few \htmladdnormallinkfoot {mailing-lists about \Sympa} {http://listes.cru.fr/wws/lists/informatique/sympa} :
+There are also a few \htmladdnormallinkfoot {mailing-lists about \Sympa} {http://listes.cru.fr/sympa/lists/informatique/sympa} :
 
 	\begin {itemize}
 	   \item  \mailaddr {sympa-users{\at}cru.fr} general info list
@@ -508,8 +508,8 @@ To join, send the following message to \mailaddr {sympa{\at}cru.fr}:
 
 (replace \textit {Listname}, \textit {Firstname} and \textit {Name} by the list name, your first name and your family name).
 
-You may also consult the \Sympa \htmladdnormallink {home page} {http://listes.cru.fr/sympa},
-you will find the latest version, \htmladdnormallink {FAQ} {http://listes.cru.fr/sympa/fom-serve/cache/1.html} and so on.
+You may also consult the \Sympa \htmladdnormallink {home page} {http://www.sympa.org},
+you will find the latest version, \htmladdnormallink {FAQ} {http://www.sympa.org/distribution/} and so on.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Overview: what does \Sympa consist of ?
@@ -764,8 +764,8 @@ perform via an interpreted language.
 \section {Obtaining \Sympa, related links}
 
 The \Sympa distribution is available from
-\htmladdnormallink {\texttt {http://listes.cru.fr/sympa/}}
-    {http://listes.cru.fr/sympa/}.
+\htmladdnormallink {\texttt {http://www.sympa.org}}
+    {http://www.sympa.org}.
 All important resources are referenced there:
 
 \begin {itemize}
@@ -4176,7 +4176,7 @@ further authentication.
 You can easily trigger a Sympa login from within another web page. The login form should look like this :
 \begin {quote}
 \begin{verbatim}
-<FORM ACTION="http://listes.cru.fr/wws" method="post">
+<FORM ACTION="http://listes.cru.fr/sympa" method="post">
       <input type="hidden" name="previous_action" value="arc" />
       Accès web archives of list
       <select name="previous_list">
@@ -6609,7 +6609,7 @@ output generated in response to a \mailcmd {LISTS} command.
 [FOREACH s IN scenari->visibility]
      \item \lparam {visibility} \texttt {[s->name]}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.[s->name]})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/visibility.[s->name]})
 	\end {htmlonly}\\
 	[s->title]
 
@@ -7312,7 +7312,7 @@ Predefined authorization scenarios are :
 [FOREACH s IN scenari->subscribe]
      \item \lparam {subscribe} \texttt {[s->name]}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.[s->name]})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.[s->name]})
 	\end {htmlonly}\\
 [s->title]
 
@@ -7336,7 +7336,7 @@ Predefined authorization scenarios are :
 [FOREACH s IN scenari->unsubscribe]
      \item \lparam {unsubscribe} \texttt {[s->name]} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.[s->name]})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.[s->name]})
 	\end {htmlonly}\\
 	[s->title]
 
@@ -7358,7 +7358,7 @@ Predefined authorization scenarios are :
 [FOREACH s IN scenari->add]
      \item \lparam {add} \texttt {[s->name]}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/add.[s->name]})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/add.[s->name]})
 	\end {htmlonly}\\
 	[s->title]
 
@@ -7381,7 +7381,7 @@ Predefined authorization scenarios are :
 [FOREACH s IN scenari->del]
      \item \lparam {del} \texttt {[s->name]} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/del.[s->name]})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/del.[s->name]})
 	\end {htmlonly}\\
 	[s->title]
 
@@ -7404,7 +7404,7 @@ Predefined authorization scenarios are :
 [FOREACH s IN scenari->remind]
      \item \lparam {remind} \texttt {[s->name]} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/remind.[s->name]})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/remind.[s->name]})
 	\end {htmlonly}\\
 	[s->title]
 
@@ -7451,7 +7451,7 @@ parameter are pointers to \emph {scenarios}.
 [FOREACH s IN scenari->send]
      \item \lparam {send} \texttt {[s->name]} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.[s->name]})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.[s->name]})
 	\end {htmlonly}\\
 	[s->title]
 
@@ -7476,7 +7476,7 @@ Predefined authorization scenarios are :
 [FOREACH s IN scenari->review]
      \item \lparam {review} \texttt {[s->name]} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.[s->name]})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/review.[s->name]})
 	\end {htmlonly}\\
 	[s->title]
 
@@ -7506,7 +7506,7 @@ Predefined authorization scenarios are :
 [FOREACH s IN scenari->d_read]
      \item \lparam {d\_read} \texttt {[s->name]} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_read.[s->name]})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_read.[s->name]})
 	\end {htmlonly}\\
 	[s->title]
 
@@ -7530,7 +7530,7 @@ Predefined authorization scenarios are :
 [FOREACH s IN scenari->d_edit]
      \item \lparam {d\_edit} \texttt {[s->name]} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.[s->name]})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.[s->name]})
 	\end {htmlonly}\\
 	[s->title]
 
@@ -8090,7 +8090,7 @@ Predefined authorization scenarios are :
 [FOREACH s IN scenari->access_web_archive]
      \item \lparam {access} \texttt {[s->name]} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.[s->name]})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/access_web_archive.[s->name]})
 	\end {htmlonly}\\
 	[s->title]
 
@@ -9350,8 +9350,6 @@ methods for enabling message distribution, depending on the \lparam
 
 \end {itemize}
 
-See also the
-\htmladdnormallinkfoot {recommendations for moderators} {http://listes.cru.fr/admin/moderation.html}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Appendices

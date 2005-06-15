@@ -72,7 +72,7 @@
             \label {fig:#1}
         \end {figure}
     }
-    \newcommand {\version} {5.0}
+    \newcommand {\version} {5.1b.1}
 
     \newcommand {\samplelist} {mylist}
 
@@ -126,13 +126,13 @@
 
 \begin {document}
 
-    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.0\\}
+    \title {\Huge\bf Sympa \\ \huge\bf Mailing Lists Management Software \\ version 5.1b.1\\}
     \author {
         Serge Aumont,
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {20 mai 2005}
+    \date {15 juin 2005}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -190,7 +190,7 @@ i386 server with Linux).
 
 This guide covers the installation, configuration and management of
 the current release (\version) of
-\htmladdnormallink {sympa} {http://listes.cru.fr/sympa/}.
+\htmladdnormallink {sympa} {http://www.sympa.org}.
 
 \section {License}
 
@@ -351,7 +351,7 @@ in a single software package, including:
 \section {Project directions}
 
 \Sympa is a very active project : check the release note 
-\htmladdnormallinkfoot {release note} {http://listes.cru.fr/sympa/release.shtml}.
+\htmladdnormallinkfoot {release note} {http://www.sympa.org/release.html}.
 So it is no longer possible to
 maintain multiple document about Sympa project direction.
 Please refer to \htmladdnormallinkfoot {in-the-futur document} {http://www.sympa.org/sympa/direct/in-the-future.html}
@@ -481,7 +481,7 @@ releases of this documentation.
 If you wish to contact the authors of \Sympa, please use the address
 \mailaddr {sympa-authors{\at}cru.fr}.
 
-There are also a few \htmladdnormallinkfoot {mailing-lists about \Sympa} {http://listes.cru.fr/wws/lists/informatique/sympa} :
+There are also a few \htmladdnormallinkfoot {mailing-lists about \Sympa} {http://listes.cru.fr/sympa/lists/informatique/sympa} :
 
 	\begin {itemize}
 	   \item  \mailaddr {sympa-users{\at}cru.fr} general info list
@@ -504,8 +504,8 @@ To join, send the following message to \mailaddr {sympa{\at}cru.fr}:
 
 (replace \textit {Listname}, \textit {Firstname} and \textit {Name} by the list name, your first name and your family name).
 
-You may also consult the \Sympa \htmladdnormallink {home page} {http://listes.cru.fr/sympa},
-you will find the latest version, \htmladdnormallink {FAQ} {http://listes.cru.fr/sympa/fom-serve/cache/1.html} and so on.
+You may also consult the \Sympa \htmladdnormallink {home page} {http://www.sympa.org},
+you will find the latest version, \htmladdnormallink {FAQ} {http://www.sympa.org/distribution/} and so on.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Overview: what does \Sympa consist of ?
@@ -760,8 +760,8 @@ perform via an interpreted language.
 \section {Obtaining \Sympa, related links}
 
 The \Sympa distribution is available from
-\htmladdnormallink {\texttt {http://listes.cru.fr/sympa/}}
-    {http://listes.cru.fr/sympa/}.
+\htmladdnormallink {\texttt {http://www.sympa.org}}
+    {http://www.sympa.org}.
 All important resources are referenced there:
 
 \begin {itemize}
@@ -3019,24 +3019,24 @@ CREATE TABLE subscriber_table (
  	bounce_subscriber       varchar2 (35),
 	bounce_score_subscriber number,
  	comment_subscriber      varchar2 (150),
-	subscribed_subscriber 	number(1,0),
-	included_subscriber 	number(1,0),
+	subscribed_subscriber 	number NULL    constraint  cons_subscribed_subscriber CHECK (subscribed_subscriber in (0,1)),
+	included_subscriber 	number NULL    constraint  cons_included_subscriber CHECK (included_subscriber in (0,1)),
 	include_sources_subscriber varchar2(50),
         CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber,user_subscriber)
 );
 CREATE TABLE admin_table (
 	list_admin 		varchar2(50) NOT NULL,
  	user_admin 		varchar2(100) NOT NULL,
-	role_admin 		number('listmaster','owner','editor') NOT NULL,
+	role_admin 		varchar2(20) NOT NULL,
 	date_admin 		date NOT NULL,
 	update_admin 		date,
 	reception_admin 	varchar2(20),
 	comment_admin 		varchar2(150),
-	subscribed_admin  	number('0','1'),
-	included_admin  	number('0','1'),
+	subscribed_admin  	number NULL    constraint  cons_subscribed_admin CHECK (subscribed_admin in (0,1)),
+	included_admin  	number NULL    constraint  cons_included_admin CHECK (included_admin in (0,1)),
 	include_sources_admin  	varchar2(50),
 	info_admin   		varchar2(150),
-	profile_admin  		number('privileged','normal'),
+	profile_admin  		varchar2(20),
        CONSTRAINT ind_admin PRIMARY KEY (list_admin,user_admin,role_admin),
 );
 
@@ -4826,7 +4826,7 @@ further authentication.
 You can easily trigger a Sympa login from within another web page. The login form should look like this :
 \begin {quote}
 \begin{verbatim}
-<FORM ACTION="http://listes.cru.fr/wws" method="post">
+<FORM ACTION="http://listes.cru.fr/sympa" method="post">
       <input type="hidden" name="previous_action" value="arc" />
       Accès web archives of list
       <select name="previous_list">
@@ -7240,25 +7240,25 @@ output generated in response to a \mailcmd {LISTS} command.
 \begin {itemize}
      \item \lparam {visibility} \texttt {conceal}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.conceal})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/visibility.conceal})
 	\end {htmlonly}\\
 	
 
      \item \lparam {visibility} \texttt {intranet}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.intranet})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/visibility.intranet})
 	\end {htmlonly}\\
 	
 
      \item \lparam {visibility} \texttt {noconceal}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.noconceal})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/visibility.noconceal})
 	\end {htmlonly}\\
 	
 
      \item \lparam {visibility} \texttt {secret}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/visibility.secret})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/visibility.secret})
 	\end {htmlonly}\\
 	
 
@@ -7955,73 +7955,73 @@ Predefined authorization scenarios are :
 
      \item \lparam {subscribe} \texttt {auth}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.auth})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.auth})
 	\end {htmlonly}\\
 
 
      \item \lparam {subscribe} \texttt {auth\_notify}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.auth\_notify})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.auth\_notify})
 	\end {htmlonly}\\
 
 
      \item \lparam {subscribe} \texttt {auth\_owner}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.auth\_owner})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.auth\_owner})
 	\end {htmlonly}\\
 
 
      \item \lparam {subscribe} \texttt {closed}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.closed})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.closed})
 	\end {htmlonly}\\
 
 
      \item \lparam {subscribe} \texttt {intranet}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.intranet})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.intranet})
 	\end {htmlonly}\\
 
 
      \item \lparam {subscribe} \texttt {intranetorowner}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.intranetorowner})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.intranetorowner})
 	\end {htmlonly}\\
 
 
      \item \lparam {subscribe} \texttt {open}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.open})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.open})
 	\end {htmlonly}\\
 
 
      \item \lparam {subscribe} \texttt {open\_notify}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.open\_notify})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.open\_notify})
 	\end {htmlonly}\\
 
 
      \item \lparam {subscribe} \texttt {open\_quiet}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.open\_quiet})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.open\_quiet})
 	\end {htmlonly}\\
 
 
      \item \lparam {subscribe} \texttt {owner}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.owner})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.owner})
 	\end {htmlonly}\\
 
 
      \item \lparam {subscribe} \texttt {smime}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.smime})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.smime})
 	\end {htmlonly}\\
 
 
      \item \lparam {subscribe} \texttt {smimeorowner}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/subscribe.smimeorowner})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/subscribe.smimeorowner})
 	\end {htmlonly}\\
 
 
@@ -8043,37 +8043,37 @@ Predefined authorization scenarios are :
 \begin {itemize}
      \item \lparam {unsubscribe} \texttt {auth} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.auth})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.auth})
 	\end {htmlonly}\\
 	
 
      \item \lparam {unsubscribe} \texttt {auth\_notify} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.auth\_notify})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.auth\_notify})
 	\end {htmlonly}\\
 	
 
      \item \lparam {unsubscribe} \texttt {closed} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.closed})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.closed})
 	\end {htmlonly}\\
 	
 
      \item \lparam {unsubscribe} \texttt {open} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.open})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.open})
 	\end {htmlonly}\\
 	
 
      \item \lparam {unsubscribe} \texttt {open\_notify} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.open\_notify})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.open\_notify})
 	\end {htmlonly}\\
 	
 
      \item \lparam {unsubscribe} \texttt {owner} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/unsubscribe.owner})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.owner})
 	\end {htmlonly}\\
 	
 
@@ -8093,25 +8093,25 @@ Predefined authorization scenarios are :
 \begin {itemize}
      \item \lparam {add} \texttt {auth}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/add.auth})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/add.auth})
 	\end {htmlonly}\\
 	
 
      \item \lparam {add} \texttt {closed}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/add.closed})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/add.closed})
 	\end {htmlonly}\\
 	
 
      \item \lparam {add} \texttt {owner}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/add.owner})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/add.owner})
 	\end {htmlonly}\\
 	
 
      \item \lparam {add} \texttt {owner\_notify}
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/add.owner\_notify})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/add.owner\_notify})
 	\end {htmlonly}\\
 	
 
@@ -8132,25 +8132,25 @@ Predefined authorization scenarios are :
 \begin {itemize}
      \item \lparam {del} \texttt {auth} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/del.auth})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/del.auth})
 	\end {htmlonly}\\
 	
 
      \item \lparam {del} \texttt {closed} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/del.closed})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/del.closed})
 	\end {htmlonly}\\
 	
 
      \item \lparam {del} \texttt {owner} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/del.owner})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/del.owner})
 	\end {htmlonly}\\
 	
 
      \item \lparam {del} \texttt {owner\_notify} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/del.owner\_notify})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/del.owner\_notify})
 	\end {htmlonly}\\
 	
 
@@ -8171,13 +8171,13 @@ Predefined authorization scenarios are :
 \begin {itemize}
      \item \lparam {remind} \texttt {listmaster} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/remind.listmaster})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/remind.listmaster})
 	\end {htmlonly}\\
 	
 
      \item \lparam {remind} \texttt {owner} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/remind.owner})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/remind.owner})
 	\end {htmlonly}\\
 	
 
@@ -8222,127 +8222,127 @@ parameter are pointers to \emph {scenarios}.
 \begin {itemize}
      \item \lparam {send} \texttt {closed} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.closed})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.closed})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {editorkey} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.editorkey})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.editorkey})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {editorkeyonly} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.editorkeyonly})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.editorkeyonly})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {editorkeyonlyauth} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.editorkeyonlyauth})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.editorkeyonlyauth})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {intranet} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.intranet})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.intranet})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {intranetorprivate} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.intranetorprivate})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.intranetorprivate})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {newsletter} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.newsletter})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.newsletter})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {newsletterkeyonly} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.newsletterkeyonly})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.newsletterkeyonly})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {private} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.private})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.private})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {private\_smime} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.private\_smime})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.private\_smime})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {privateandeditorkey} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.privateandeditorkey})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.privateandeditorkey})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {privateandnomultipartoreditorkey} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.privateandnomultipartoreditorkey})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.privateandnomultipartoreditorkey})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {privatekey} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.privatekey})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.privatekey})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {privatekeyandeditorkeyonly} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.privatekeyandeditorkeyonly})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.privatekeyandeditorkeyonly})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {privateoreditorkey} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.privateoreditorkey})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.privateoreditorkey})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {privateorpublickey} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.privateorpublickey})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.privateorpublickey})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {public} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.public})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.public})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {public\_nobcc} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.public\_nobcc})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.public\_nobcc})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {publickey} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.publickey})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.publickey})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {publicnoattachment} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.publicnoattachment})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.publicnoattachment})
 	\end {htmlonly}\\
 	
 
      \item \lparam {send} \texttt {publicnomultipart} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/send.publicnomultipart})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/send.publicnomultipart})
 	\end {htmlonly}\\
 	
 
@@ -8365,37 +8365,37 @@ Predefined authorization scenarios are :
 \begin {itemize}
      \item \lparam {review} \texttt {closed} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.closed})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/review.closed})
 	\end {htmlonly}\\
 	
 
      \item \lparam {review} \texttt {intranet} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.intranet})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/review.intranet})
 	\end {htmlonly}\\
 	
 
      \item \lparam {review} \texttt {listmaster} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.listmaster})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/review.listmaster})
 	\end {htmlonly}\\
 	
 
      \item \lparam {review} \texttt {owner} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.owner})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/review.owner})
 	\end {htmlonly}\\
 	
 
      \item \lparam {review} \texttt {private} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.private})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/review.private})
 	\end {htmlonly}\\
 	
 
      \item \lparam {review} \texttt {public} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/review.public})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/review.public})
 	\end {htmlonly}\\
 	
 
@@ -8423,25 +8423,25 @@ Predefined authorization scenarios are :
 \begin {itemize}
      \item \lparam {d\_read} \texttt {owner} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_read.owner})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_read.owner})
 	\end {htmlonly}\\
 	
 
      \item \lparam {d\_read} \texttt {private} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_read.private})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_read.private})
 	\end {htmlonly}\\
 	
 
      \item \lparam {d\_read} \texttt {p} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_read.p})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_read.p})
 	\end {htmlonly}\\
 	
 
      \item \lparam {d\_read} \texttt {public} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_read.public})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_read.public})
 	\end {htmlonly}\\
 	
 
@@ -8463,31 +8463,31 @@ Predefined authorization scenarios are :
 \begin {itemize}
      \item \lparam {d\_edit} \texttt {editor} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.editor})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.editor})
 	\end {htmlonly}\\
 	
 
      \item \lparam {d\_edit} \texttt {owner} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.owner})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.owner})
 	\end {htmlonly}\\
 	
 
      \item \lparam {d\_edit} \texttt {private} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.private})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.private})
 	\end {htmlonly}\\
 	
 
      \item \lparam {d\_edit} \texttt {p} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.p})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.p})
 	\end {htmlonly}\\
 	
 
      \item \lparam {d\_edit} \texttt {public} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/d_edit.public})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/d_edit.public})
 	\end {htmlonly}\\
 	
 
@@ -9043,37 +9043,37 @@ Predefined authorization scenarios are :
 \begin {itemize}
      \item \lparam {access} \texttt {closed} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.closed})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/access_web_archive.closed})
 	\end {htmlonly}\\
 	
 
      \item \lparam {access} \texttt {intranet} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.intranet})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/access_web_archive.intranet})
 	\end {htmlonly}\\
 	
 
      \item \lparam {access} \texttt {listmaster} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.listmaster})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/access_web_archive.listmaster})
 	\end {htmlonly}\\
 	
 
      \item \lparam {access} \texttt {owner} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.owner})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/access_web_archive.owner})
 	\end {htmlonly}\\
 	
 
      \item \lparam {access} \texttt {private} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.private})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/access_web_archive.private})
 	\end {htmlonly}\\
 	
 
      \item \lparam {access} \texttt {public} 
 	\begin {htmlonly}
-	  (\htmladdnormallink {view} {http://listes.cru.fr/sympa/distribution/current/src/etc/scenari/access_web_archive.public})
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/access_web_archive.public})
 	\end {htmlonly}\\
 	
 
@@ -10326,8 +10326,6 @@ methods for enabling message distribution, depending on the \lparam
 
 \end {itemize}
 
-See also the
-\htmladdnormallinkfoot {recommendations for moderators} {http://listes.cru.fr/admin/moderation.html}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Appendices
