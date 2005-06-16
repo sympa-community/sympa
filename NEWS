@@ -3,6 +3,100 @@
 
 (See Changelog file for the full changes log)
 
+5.1b		16 June 2005
+
+  New features :
+
+*****	New set of web templates, CSS and XHTML compatible. These new templates almost have the
+*****	same names, BUT if you previously customized Sympa web template, you will certainly have 
+*****	to edit these templates.
+*****	
+*****	Because of the new web templates, you have to start a "rebuild" process for all web archives 
+*****	(see the "Sympa Admin" page).
+*****
+*****	New parameters have been introduced : color_0 .. color_15 (replacing previous xx_color parameters)
+*****	logo_html_definition and css_url (you should customize this parameter to install a "static" CSS 
+*****	stylesheet ; otherwise wwsympa will cope with 2 requests foreach page)
+
+	po/: Makefile, ja.po: [K.Moriwaka] New translation to Japonese
+
+	wwsympa/: Makefile, SharedDocument.pm, wwsympa.fcgi: New SharedDocument.pm module to 
+	clean the shared documents code. Only used in new_d_read() now
+
+	po/Makefile, po/oc.po, src/Language.pm: [M. Allaya] first version of Sympa in Occitan
+
+	ChangeLog, src/Message.pm, src/tools.pl: add sanity check of incoming email address
+
+   Changes :
+
+	src/etc/script/sympa: [BugID 403] made init script compatible with OS X, Debian and Suze
+
+	po/de.po, src/Conf.pm: [M.Redinger] Updated German translations
+
+	src/List.pm, wwsympa/wwsympa.fcgi: Now running List::get_which() at wwsympa startup to initialize
+	%List::list_cache.  This prevents subsequent SQL queries in List::am_i() and List::is_user()
+
+	src/List.pm, wwsympa/wwsympa.fcgi: [reported by S.Amrani] for every web request, 
+	wwsympa was running List::probe_db() that performs a database structure checkup. 
+	Now using a lighter subroutine
+
+	wwsympa/wwsympa.fcgi: [BugID 406] wrapping lines to 80 characters when posting from the web interface.  
+	Also moved the ^M removal to get_parameters()
+
+	src/: Conf.pm, List.pm: New update_db_field_types parameter to disable automatic DB changes
+
+	wwsympa/wwsympa.fcgi: create sympa_dump files (when incorrect parameter format) in Sympa's own tmp dir instead of /tmp
+
+	src/Language.pm: try performing different setlocale() with $lang and with $locale.charset
+
+
+   Bug fixes :
+
+	wwsympa/wwsympa.fcgi: [S.Amrani] the regexp run by search_list could make wwsympa.fcgi process die ; 
+	now using eval{} Now escaping some more dangerous caracters.
+
+	web_tt2/arcsearch.tt2, wwsympa/wwsympa.fcgi: [BugId 427] [reported by K/Moriwaka] sort by age 
+	did not work properly in web archives search engine
+
+	src/etc/script/create_db.Oracle: [reported by Emr] incorrect enum types for Oracle
+
+	po/xgettext.pl: [M.Redinger] xgettext.pl did not collect all gettext_id from List.pm
+
+	mail_tt2/: helpfile.tt2, lists.tt2: [G. Bouteille] Add header fields top templates
+	
+	soap/sympa_soap_server.fcgi: [S.Amrani] replace hard-coded path to Sympa libdir
+
+	src/List.pm: [BugID 418]  Ldap search return code was not examined in _include_users_ldap()
+
+	wwsympa/wwsympa.fcgi: Fix: $rss variable was not reinitialized if in POST context. 
+	Wwsympa could provide RSS content instead of HTML content
+
+	src/List.pm: check if no null while doing a ALTER TABLE
+
+	src/: List.pm, mail.pm, tt2.pl: [BugID 415) [Moriwaka] incorrect parameters to encode_mimewords() ; 
+	Sympa previously encoded every string in iso-8859-1
+
+	Makefile.am, Makefile.in, doc/man8/Makefile: [reported by S.Amrani] Fix umask while installing man pages ; 
+	also reorganized Makefiles
+
+	src/List.pm: [BugID 393 & 409] adding custom_subject would break subject encoding
+
+	src/tools.pl, wwsympa/wwsympa.fcgi: [reported by S.Lalonde] regexp for email was too restrictive, not allowing uid
+
+	mail_tt2/: global_remind.tt2, moderate.tt2: [reported by O.Archer] some MUA require an empty line after mailto: URLs
+
+	po/xgettext.pl: some multi-line strings were not properly added to sympa.pot. 
+	Therefore these translations were not available.
+
+	wwsympa/Auth.pm: CAS authentication was not able to use ldap_bind_dn and ldap_bind_password
+
+	src/Ldap.pm, src/List.pm, wwsympa/wwsympa.fcgi: [BugID 402] [J.Dalbec] : Sympa did not report failed LDAP binds
+
+	wwsympa/wwsympa.fcgi: [BugID 400] error mesage would be printed if user previously failed to login 
+	(previous_action problem)
+
+	wwsympa/wwsympa.fcgi: Users could set empty passwords (\s+)
+
 5.0		20 April 2005
 
    New features :

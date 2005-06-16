@@ -1412,6 +1412,36 @@ Sympa comes with default configuration files (templates, scenarios,...) that wil
 If you need to customize some of them, you should copy the file first in a safe place, ie in the \dir {[ETCDIR]} directory.
 If you do so, the Sympa upgrade process will preserve your site customizations.
 
+
+\section {Running 2 Sympa versions on a single server}
+    \index{double installation}
+
+This can be very convenient to have a stable version of Sympa and a fresh version for test purpose, both running on the same server.
+
+
+Both sympa instances must be completely partitioned, unless you want the make production mailing lists visible through the
+test service. 
+
+The biggest part of the partitioning is achieved while running the \unixcmd {./configure}. Here is a sample call to \unixcmd {./configure}
+on the test server side :
+
+\begin {quote}
+\begin{verbatim}
+./configure --prefix=/home/sympa-dev \
+            --with-confdir=/home/sympa-dev/etc \
+            --with-mandir=/home/sympa-dev/man \
+            --with-initdir=/home/sympa-dev/init \
+	    --with-piddir=/home/sympa-dev/pid
+            --with-lockdir=/home/sympa-dev/lock \
+            --with-sendmail_aliases=/home/sympa-dev/etc/sympa_aliases 
+\end{verbatim}
+\end {quote}
+
+You can also customize more parameters via the \file {/home/sympa-dev/etc/sympa.conf} file.
+
+If you wish to share the same lists in both Sympa instances, then some parameters should have the same value :
+\cfkeyword {home}, \cfkeyword {db\_name}, \cfkeyword {arc\_path}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mail aliases 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

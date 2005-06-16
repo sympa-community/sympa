@@ -1,3 +1,295 @@
+2005-06-15 17:19  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [S.Amrani] Fix: the regexp run by
+	  search_list could make wwsympa.fcgi process die ; now using
+	  eval{} Now escaping some more dangerous caracters.
+
+2005-06-15 14:28  sympa-authors
+
+	* web_tt2/arcsearch.tt2, wwsympa/wwsympa.fcgi: [BugId 427]
+	  [reported by K/Moriwaka] Fix: sort by age did not work properly
+	  in web archives search engine
+
+2005-06-15 14:01  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/index.html, html/node1.html, html/node10.html,
+	  html/node11.html, html/node12.html, html/node13.html,
+	  html/node14.html, html/node15.html, html/node16.html,
+	  html/node17.html, html/node18.html, html/node19.html,
+	  html/node2.html, html/node20.html, html/node21.html,
+	  html/node22.html, html/node23.html, html/node24.html,
+	  html/node25.html, html/node26.html, html/node27.html,
+	  html/node3.html, html/node4.html, html/node5.html,
+	  html/node6.html, html/node7.html, html/node8.html,
+	  html/node9.html, html/sympa.html, html/sympa.ps: Fix URLs to
+	  listes.cru.fr
+
+2005-06-15 08:28  sympa-authors
+
+	* web_tt2/choosepasswd.tt2: Fix html bug that make form inoperate
+
+2005-06-10 15:28  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: Fix: remove utf-8 customization
+	  because it was always applied
+
+2005-06-10 15:26  sympa-authors
+
+	* web_tt2/d_read.tt2: Fix: replaced width: 100% with width: auto
+	  for IE6's sake
+
+2005-06-10 15:12  sympa-authors
+
+	* web_tt2/list_admin_menu.tt2, wwsympa/wwsympa.fcgi: Fix: "restore
+	  shared" pointed to the wrong URL Added aconfirmation request
+	  before closing the shared
+
+2005-06-10 10:39  sympa-authors
+
+	* .version: Preparing Sympa 5.1b.1
+
+2005-06-10 09:48  sympa-authors
+
+	* src/etc/script/create_db.Oracle: [E.Rynes] Restored boolean
+	  constraints
+
+2005-06-10 09:43  sympa-authors
+
+	* src/etc/script/create_db.Oracle: [reported by I.Vecchia] Fix:
+	  Oracle 5 does not accept number(0,1) data type
+
+2005-06-09 17:30  sympa-authors
+
+	* web_tt2/review.tt2: Fix: changed the table width from 95% to auto
+	  because of IE6 problems
+
+2005-06-09 16:04  sympa-authors
+
+	* src/List.pm: Fix: adapt the code to Perl's strange behavior
+	  regarding undefined values and '== 0' test
+
+2005-06-09 15:40  sympa-authors
+
+	* src/List.pm: Fix: don't init owner cache entry if function tested
+	  was privileged_owner
+
+2005-06-09 15:30  sympa-authors
+
+	* src/List.pm: Fix am_i(): if check privileged_owner privilege ;
+	  return 1 if listmaster
+
+2005-06-09 15:05  sympa-authors
+
+	* src/List.pm: Fix: make explicit tests of $db_which
+
+2005-06-09 14:47  sympa-authors
+
+	* src/List.pm: Fix: also init am_i cache if listmaster
+
+2005-06-09 14:13  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: on which page, admin button was not
+	  shown if user was admin and member
+
+2005-06-09 11:25  sympa-authors
+
+	* src/etc/topics.conf: [M.Redinger] Translated topics to German
+
+2005-06-09 11:23  sympa-authors
+
+	* web_tt2/: admin_menu.tt2, review.tt2:  [M.Redinger] Fix: Some
+	  strings were not tagged as translatable
+
+2005-06-09 11:18  sympa-authors
+
+	* po/de.po: [M.Redinger] Updated German translations
+
+2005-06-09 09:42  sympa-authors
+
+	* src/etc/script/create_db.Oracle: [reported by Emr] Fix: incorrect
+	  enum types for Oracle
+
+2005-06-08 17:05  sympa-authors
+
+	* src/etc/script/sympa: Made the init script compatible with Debian
+	  and Suze
+
+2005-06-08 16:38  sympa-authors
+
+	* src/etc/script/sympa: [BugID 403] Fix: made init script
+	  compatible with OS X
+
+2005-06-08 13:41  sympa-authors
+
+	* po/de.po: Updates
+
+2005-06-08 13:41  sympa-authors
+
+	* po/ja.po: [K.Moriwaka] Update
+
+2005-06-08 11:14  sympa-authors
+
+	* po/: cs.po, de.po, en_US.po, es.po, et.po, fi.po, fr.po, hu.po,
+	  it.po, ja.po, nl.po, oc.po, pl.po, pt.po, ro.po, sympa.pot,
+	  zh_CN.po, zh_TW.po: Updated POT and PO files after xgettext.pl
+	  fix
+
+2005-06-08 11:11  sympa-authors
+
+	* po/xgettext.pl: [M.Redinger]Fix: xgettext.pl did not collect all
+	  gettext_id from List.pm
+
+2005-06-07 18:20  sympa-authors
+
+	* po/de.po: [M.Redinger] UIpdated German translations
+
+2005-06-07 18:10  sympa-authors
+
+	* po/de.po: [M.Redinger] Updated German translations
+
+2005-06-07 09:50  sympa-authors
+
+	* po/: de.po, fr.po: update
+
+2005-06-07 09:50  sympa-authors
+
+	* po/ja.po: [K.Moriwaka] Update Japonese translations
+
+2005-06-06 12:08  sympa-authors
+
+	* po/de.po, src/Conf.pm: [M.Redinger] Updated German translations
+
+2005-06-06 11:14  sympa-authors
+
+	* src/: Conf.pm, Language.pm: [K.Moriwaka] New translation to
+	  Japonese
+
+2005-06-06 10:41  sympa-authors
+
+	* po/: Makefile, ja.po: [K.Moriwaka] New translation to Japonese
+
+2005-06-03 16:56  sympa-authors
+
+	* src/tools.pl, web_tt2/css.tt2, web_tt2/edit_template.tt2,
+	  web_tt2/javascript.tt2, web_tt2/list_menu.tt2,
+	  web_tt2/ls_templates.tt2, wwsympa/wwsympa.fcgi:
+
+	  not a complete update. online editor template style incomplete
+	  now recognize lang subdirectories.
+
+2005-06-02 15:14  sympa-authors
+
+	* web_tt2/review.tt2: Fix: replace error_color with color_7
+
+2005-06-02 11:42  sympa-authors
+
+	* web_tt2/title.tt2, wwsympa/wwsympa.fcgi: Fix:
+	  logo_html_definition variable was not available in templates
+
+2005-06-02 11:22  sympa-authors
+
+	* src/Conf.pm: Fix: logo_html_definition parameter was not allowed
+	  at the site level
+
+2005-06-02 10:50  sympa-authors
+
+	* src/Conf.pm: Complete previous fix
+
+2005-06-02 10:45  sympa-authors
+
+	* src/Conf.pm: Fix: css_url was not correctly initialize at a robot
+	  level
+
+2005-06-02 10:13  sympa-authors
+
+	* po/fr.po: Minor fix
+
+2005-06-01 17:26  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: use << < > >> for first previous
+	  next and last button
+
+2005-06-01 16:39  sympa-authors
+
+	* po/fr.po: discution sur thread
+
+2005-06-01 16:26  sympa-authors
+
+	* src/Conf.pm:
+	  fix color_1 bug in Conf.pm
+
+2005-06-01 15:59  sympa-authors
+
+	* src/Conf.pm, wwsympa/wwsympa.fcgi:
+	   defaut for css_url fixed
+
+2005-06-01 14:02  sympa-authors
+
+	* web_tt2/main.tt2:
+	  Now recognize nomenu var in main template
+
+2005-06-01 11:05  sympa-authors
+
+	* mail_tt2/: helpfile.tt2, lists.tt2: [G. Bouteille] Add header
+	  fields top templates
+
+2005-05-31 14:41  sympa-authors
+
+	* web_tt2/list_admin_menu.tt2:
+	  remove crasy help alternative text from list_menu
+
+2005-05-31 14:14  sympa-authors
+
+	* wwsympa/wwsympa.fcgi:
+	  fix bug about rss prefix
+
+2005-05-31 13:42  sympa-authors
+
+	* web_tt2/active_lists.tt2, web_tt2/list_menu.tt2,
+	  web_tt2/rss_request.tt2, wwsympa/wwsympa.fcgi:
+
+	  a new page rss_request in order to introduce RSS services.
+
+2005-05-30 16:20  sympa-authors
+
+	* web_tt2/home.tt2, web_tt2/serveradmin.tt2, wwsympa/wwsympa.fcgi:
+
+	  escape < and > for view_topics
+
+2005-05-30 12:10  sympa-authors
+
+	* soap/sympa_soap_server.fcgi: [S.Amrani] Fix: replace hard-coded
+	  path to Sympa libdir
+
+2005-05-30 11:47  sympa-authors
+
+	* src/tools.pl, web_tt2/ls_templates.tt2, wwsympa/wwsympa.fcgi:
+
+	  implementing remove_template
+
+2005-05-27 16:26  sympa-authors
+
+	* src/List.pm: [BugID 418] Fix:  Ldap search return code was not
+	  examined in _include_users_ldap()
+
+2005-05-27 14:08  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: $rss variable was not reinitialized if
+	  in POST context. Wwsympa could provide RSS content instead of
+	  HTML content
+
+2005-05-27 14:06  sympa-authors
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: Change: Now running
+	  List::get_which() at wwsympa startup to initialize
+	  %List::list_cache.  This prevents subsequent SQL queries in
+	  List::am_i() and List::is_user()
+
+2005-05-27 14:04  sympa-authors
+
+	* ChangeLog: update
+
 2005-05-26 14:20  sympa-authors
 
 	* src/Conf.pm, src/tools.pl, web_tt2/css.tt2,
