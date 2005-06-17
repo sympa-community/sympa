@@ -70,10 +70,6 @@ msgstr "ZaÃ¨Ã­t od nejnovÃ¬jÂ¹Ã­ch zprÃ¡v"
 msgid " The latest shared documents "
 msgstr "SdÃ­lenÃ½ adresÃ¡Ã¸"
 
-#: src/etc/mhonarc-ressources.tt2:376
-msgid " chronological "
-msgstr ""
-
 #. (for)
 #: web_tt2/active_lists.tt2:12 web_tt2/latest_arc.tt2:12
 #: web_tt2/latest_d_read.tt2:12 web_tt2/latest_lists.tt2:12
@@ -531,6 +527,11 @@ msgstr "PÃ¸idat Ã¨leny"
 msgid "Address \"%1\" is incorrect"
 msgstr "Adresa \"%1\" je nesprÃ¡vnÃ¡"
 
+#: web_tt2/list_admin_menu.tt2:6
+#, fuzzy
+msgid "Admin"
+msgstr "Admin"
+
 #: src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
 msgstr "PokroÃ¨ilÃ© vyhledÃ¡vÃ¡nÃ­"
@@ -586,7 +587,7 @@ msgstr ""
 msgid "Apply"
 msgstr "PouÂ¾Ã­t"
 
-#: web_tt2/list_menu.tt2:34 web_tt2/list_menu.tt2:36
+#: web_tt2/list_menu.tt2:35 web_tt2/list_menu.tt2:37
 msgid "Archive"
 msgstr "ArchÃ­v konference"
 
@@ -623,6 +624,12 @@ msgstr ""
 #: web_tt2/list_admin_menu.tt2:53
 msgid "Are you sure you wish to close %1 list ?"
 msgstr ""
+
+#. (list)
+#: web_tt2/list_admin_menu.tt2:44
+#, fuzzy
+msgid "Are you sure you wish to delete the shared documents ?"
+msgstr "Opravdu chcete smazat %1%2 ?"
 
 #. (list.name,msg_from)
 #: mail_tt2/moderate.tt2:3
@@ -1166,7 +1173,7 @@ msgstr "Opravdu chcete smazat %1%2 ?"
 msgid "Do you really want to delete Selected Archives?"
 msgstr "Opravdu chcete smazat %1%2 ?"
 
-#: src/etc/mhonarc-ressources.tt2:428
+#: src/etc/mhonarc-ressources.tt2:418
 #, fuzzy
 msgid "Do you really want to delete this message ?"
 msgstr "Opravdu chcete smazat %1%2 ?"
@@ -1449,7 +1456,7 @@ msgstr ""
 msgid "Family name"
 msgstr "jmÃ©no"
 
-#: src/List.pm:6213
+#: src/List.pm:6216
 #, fuzzy
 msgid "File"
 msgstr ""
@@ -1564,6 +1571,7 @@ msgid "HTTPS authentication information"
 msgstr "Informace o HTTPS autentizaci"
 
 #: web_tt2/edit_list_request.tt2:34 web_tt2/menu.tt2:23
+#: web_tt2/suboptions.tt2:16
 msgid "Help"
 msgstr "NÃ¡povÃ¬da"
 
@@ -1771,7 +1779,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:588
+#: src/etc/mhonarc-ressources.tt2:578
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1810,6 +1818,7 @@ msgid "Language of the list"
 msgstr ""
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
+#: web_tt2/review.tt2:133
 msgid "Last update"
 msgstr "PoslednÃ­ zmÃ¬na"
 
@@ -2135,7 +2144,8 @@ msgstr "Konference"
 msgid "Mailing lists categories"
 msgstr "Konference"
 
-#: web_tt2/admin_menu.tt2:74 web_tt2/list_admin_menu.tt2:33
+#: web_tt2/admin_menu.tt2:68 web_tt2/admin_menu.tt2:74
+#: web_tt2/list_admin_menu.tt2:33
 #, fuzzy
 msgid "Manage Archives"
 msgstr "Archives setup"
@@ -2286,7 +2296,7 @@ msgstr "MODINDEX %1"
 msgid "Moderator          : %1"
 msgstr "ModerÃ¡tor             : %1"
 
-#: src/List.pm:519 web_tt2/list_panel.tt2:15
+#: src/List.pm:519 web_tt2/list_panel.tt2:14
 msgid "Moderators"
 msgstr "ModerÃ¡toÃ¸i"
 
@@ -2573,7 +2583,7 @@ msgstr ""
 msgid "Owners of list %s"
 msgstr "Moderatori della lista %1"
 
-#: web_tt2/reviewbouncing.tt2:34
+#: web_tt2/review.tt2:5 web_tt2/reviewbouncing.tt2:34
 msgid "Page size"
 msgstr "Velikost strany"
 
@@ -2649,7 +2659,7 @@ msgid ""
 "to  %1@%2 ."
 msgstr ""
 
-#: web_tt2/list_menu.tt2:42 web_tt2/list_menu.tt2:44
+#: web_tt2/list_menu.tt2:43 web_tt2/list_menu.tt2:45
 msgid "Post"
 msgstr "PÃ¸Ã­spÃ¬vek do konference"
 
@@ -2782,7 +2792,7 @@ msgstr "Zobrazi seznamu Ã¨lenÃ¹ konference <list>"
 msgid "RFC 2369 Header fields"
 msgstr ""
 
-#: web_tt2/list_menu.tt2:48
+#: web_tt2/list_menu.tt2:49
 msgid "RSS"
 msgstr ""
 
@@ -2950,7 +2960,7 @@ msgstr "Pripomenuti Vaseho clenstvi v konferenci %1"
 msgid "Replace the file %1 with your file"
 msgstr "Nahradit soubor %1 VaÂ¹Ã­m souborem"
 
-#: src/etc/mhonarc-ressources.tt2:420
+#: src/etc/mhonarc-ressources.tt2:410
 msgid "Reply"
 msgstr ""
 
@@ -2964,7 +2974,7 @@ msgstr "emailovÃ¡ adresa"
 msgid "Reply to           : %1"
 msgstr "OdpovÃ¬Ã¯ na            : %1"
 
-#: src/etc/mhonarc-ressources.tt2:416
+#: src/etc/mhonarc-ressources.tt2:406
 msgid "Reply to sender"
 msgstr ""
 
@@ -3014,7 +3024,7 @@ msgstr ""
 msgid "Return to archive %1"
 msgstr "NÃ¡vrat k archÃ­vu %1"
 
-#: web_tt2/list_menu.tt2:61
+#: web_tt2/list_menu.tt2:62
 msgid "Review"
 msgstr ""
 "TR>\n"
@@ -3228,7 +3238,7 @@ msgstr ""
 msgid "Shared documents"
 msgstr "SdÃ­lenÃ½ adresÃ¡Ã¸"
 
-#: web_tt2/list_menu.tt2:53 web_tt2/list_menu.tt2:55
+#: web_tt2/list_menu.tt2:54 web_tt2/list_menu.tt2:56
 msgid "Shared web"
 msgstr "SdÃ­lenÃ½ adresÃ¡Ã¸"
 
@@ -3259,7 +3269,7 @@ msgstr "Panel sprÃ¡vy konference"
 msgid "Skins, CSS and colors"
 msgstr ""
 
-#: src/List.pm:8779
+#: src/List.pm:8788
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be added to list '%s'.\n"
@@ -3276,7 +3286,7 @@ msgid ""
 "this message."
 msgstr ""
 
-#: src/List.pm:8772
+#: src/List.pm:8781
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
 "to be removed from list '%s'.\n"
@@ -3293,7 +3303,7 @@ msgid ""
 "this message"
 msgstr ""
 
-#: src/List.pm:8784 src/List.pm:8789
+#: src/List.pm:8793 src/List.pm:8798
 msgid ""
 "Someone (hopefully you) requested a user of list %s to be\n"
 "added or removed.\n"
@@ -3415,11 +3425,6 @@ msgid ""
 "use the INVITE command to invite someone for subscription."
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:79
-#, fuzzy
-msgid "Subscription"
-msgstr "NastavenÃ­ Ã¨lena"
-
 #. (subscribe)
 #: mail_tt2/info_report.tt2:10
 msgid "Subscription       : %1"
@@ -3444,6 +3449,11 @@ msgstr "PÃ¸ihlaÂ¹uji se do konference %1"
 msgid "Subscription summary"
 msgstr "NastavenÃ­ Ã¨lena"
 
+#: web_tt2/list_admin_menu.tt2:79
+#, fuzzy
+msgid "Subscriptions"
+msgstr "NastavenÃ­ Ã¨lena"
+
 #: web_tt2/help_user_options.tt2:22
 msgid "Summary"
 msgstr ""
@@ -3458,7 +3468,7 @@ msgstr "Moderatori della lista %1"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Souhrn VaÂ¹eho Ã¨lenstvÃ­ v konferencÃ­ch (pÃ¸i pouÂ¾itÃ­ adresy"
 
-#: src/etc/mhonarc-ressources.tt2:570
+#: src/etc/mhonarc-ressources.tt2:560
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -3527,7 +3537,7 @@ msgstr ""
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
 
-#: web_tt2/javascript.tt2:83
+#: web_tt2/javascript.tt2:108
 msgid ""
 "Sympa could not set a cookie for login.\n"
 " Your should setup your navigator to accept cookies"
@@ -3567,7 +3577,7 @@ msgstr ""
 msgid "Template name"
 msgstr "jmÃ©no"
 
-#: web_tt2/edit_template.tt2:38
+#: web_tt2/edit_template.tt2:39
 #, fuzzy
 msgid "Template saved"
 msgstr "Vymazat sdÃ­lenÃ½ adresÃ¡Ã¸"
@@ -4113,8 +4123,8 @@ msgid ""
 "archives, list management and so on."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:193 src/etc/mhonarc-ressources.tt2:291
-#: src/etc/mhonarc-ressources.tt2:373
+#: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:281
+#: src/etc/mhonarc-ressources.tt2:363
 msgid "Thread"
 msgstr ""
 
@@ -4375,7 +4385,7 @@ msgstr "Unknown"
 msgid "Unsubscribe"
 msgstr "OdhlÃ¡sit"
 
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3496
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3498
 #, fuzzy
 msgid "Unsubscribe from list %s"
 msgstr "OdhlaÂ¹uji se z konference %1"
@@ -4574,8 +4584,8 @@ msgstr ""
 
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:3267 wwsympa/wwsympa.fcgi:3268
-#: wwsympa/wwsympa.fcgi:4179 wwsympa/wwsympa.fcgi:4180
+#: wwsympa/wwsympa.fcgi:3269 wwsympa/wwsympa.fcgi:3270
+#: wwsympa/wwsympa.fcgi:4199 wwsympa/wwsympa.fcgi:4200
 #, fuzzy
 msgid "Welcome on list %s"
 msgstr "Vitejte v konferenci %1"
@@ -4755,7 +4765,7 @@ msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr ""
 
-#: wwsympa/wwsympa.fcgi:3497 wwsympa/wwsympa.fcgi:4285
+#: wwsympa/wwsympa.fcgi:3499 wwsympa/wwsympa.fcgi:4305
 #, fuzzy
 msgid "You have been removed from list %s.\n"
 msgstr "VaÂ¹e emailovÃ¡ adresa %1 byla odstranÃ¬na ze seznamu"
@@ -4822,7 +4832,7 @@ msgid ""
 "email address. Please try subscribing using your canonical address."
 msgstr ""
 
-#: src/List.pm:8794 src/List.pm:8801
+#: src/List.pm:8803 src/List.pm:8810
 msgid ""
 "You requested a subscription reminder to be sent\n"
 "to each subscriber of list %s\n"
@@ -5081,7 +5091,7 @@ msgstr ""
 msgid "Your subscription email is %1"
 msgstr "Jste pÃ¸ihlÃ¡Â¹en z adresy %1"
 
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4284
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4304
 #, fuzzy
 msgid "Your subscription to list %s has been removed."
 msgstr "PoÂ¾adujete pÃ¸ihlÃ¡Â¹enÃ­ do konference %1."
@@ -5354,8 +5364,8 @@ msgstr ""
 msgid "change access"
 msgstr "zmÃ¬nit nastavenÃ­"
 
-#: src/etc/mhonarc-ressources.tt2:192 src/etc/mhonarc-ressources.tt2:290
-#: src/etc/mhonarc-ressources.tt2:372
+#: src/etc/mhonarc-ressources.tt2:182 src/etc/mhonarc-ressources.tt2:280
+#: src/etc/mhonarc-ressources.tt2:362 src/etc/mhonarc-ressources.tt2:366
 msgid "chronological"
 msgstr ""
 
@@ -5655,6 +5665,11 @@ msgstr "Heslo VÃ¡m bude odeslÃ¡no emailem :"
 msgid "just for listmaster"
 msgstr ""
 
+#: web_tt2/edit_template.tt2:19
+#, fuzzy
+msgid "language"
+msgstr "Jazyk"
+
 #: web_tt2/rss_request.tt2:35
 #, fuzzy
 msgid "latest archive"
@@ -5724,7 +5739,7 @@ msgstr ""
 msgid "list subject"
 msgstr "subjekt"
 
-#: web_tt2/ls_templates.tt2:24
+#: web_tt2/ls_templates.tt2:31
 #, fuzzy
 msgid "list templates"
 msgstr "NastavenÃ­ Â¹ablon serveru"
@@ -5742,7 +5757,7 @@ msgstr ""
 msgid "local domain users or owner approval"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:188 src/etc/mhonarc-ressources.tt2:286
+#: src/etc/mhonarc-ressources.tt2:178 src/etc/mhonarc-ressources.tt2:276
 #: src/etc/mhonarc-ressources.tt2:63
 #, fuzzy
 msgid "mails"
@@ -5856,8 +5871,13 @@ msgstr "NovÃ© heslo :"
 msgid "owners approval"
 msgstr ""
 
+#: web_tt2/review.tt2:23
+#, fuzzy
+msgid "page"
+msgstr "DalÂ¹Ã­ strana"
+
 #. ($PAGENUM$,$NUMOFPAGES$)
-#: src/etc/mhonarc-ressources.tt2:195 src/etc/mhonarc-ressources.tt2:293
+#: src/etc/mhonarc-ressources.tt2:185 src/etc/mhonarc-ressources.tt2:283
 #, fuzzy
 msgid "page # %1/%2"
 msgstr "strana %1 z %2"
@@ -5951,7 +5971,7 @@ msgstr ""
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:40
 #: web_tt2/review.tt2:231 web_tt2/review.tt2:50 web_tt2/review.tt2:75
-#: web_tt2/reviewbouncing.tt2:107
+#: web_tt2/reviewbouncing.tt2:107 web_tt2/reviewbouncing.tt2:31
 msgid "quiet"
 msgstr "skrytÃ¬"
 
@@ -6089,7 +6109,7 @@ msgstr ""
 msgid "results by page"
 msgstr "vÃ½sledkÃ¹ na stranu"
 
-#: web_tt2/edit_template.tt2:35
+#: web_tt2/edit_template.tt2:36
 #, fuzzy
 msgid "save"
 msgstr "UloÂ¾it"
@@ -6139,7 +6159,7 @@ msgid "selection (if multiple)"
 msgstr ""
 
 #. (user.email)
-#: src/etc/mhonarc-ressources.tt2:421
+#: src/etc/mhonarc-ressources.tt2:411
 msgid "send it back to %1"
 msgstr ""
 
@@ -6202,7 +6222,7 @@ msgstr ""
 msgid "summary message"
 msgstr "zprÃ¡vÃ¡m"
 
-#: src/etc/mhonarc-ressources.tt2:428
+#: src/etc/mhonarc-ressources.tt2:418
 msgid "tag this mail for deletion"
 msgstr ""
 
@@ -6251,7 +6271,7 @@ msgstr ""
 msgid "this template is defined for list"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:376
+#: src/etc/mhonarc-ressources.tt2:366
 msgid "thread"
 msgstr ""
 
@@ -6265,7 +6285,7 @@ msgstr ""
 "[% ELSE %]\n"
 "      <B> VytvoÃ¸it novÃ½ adresÃ¡Ã¸ ve sdÃ­lenÃ©m adresÃ¡Ã¸i</B>"
 
-#: src/etc/mhonarc-ressources.tt2:418
+#: src/etc/mhonarc-ressources.tt2:408
 #, fuzzy
 msgid "to list"
 msgstr "Obnovit konference"
@@ -6631,10 +6651,6 @@ msgstr "VaÂ¹e heslo   : %1"
 #, fuzzy
 #~ msgid "7bit"
 #~ msgstr "Odeslat"
-
-#, fuzzy
-#~ msgid "_language_"
-#~ msgstr "Jazyk"
 
 #, fuzzy
 #~ msgid "moderated to subscribers"

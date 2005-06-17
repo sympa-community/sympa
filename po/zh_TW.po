@@ -96,10 +96,6 @@ msgstr "最新郵件優先"
 msgid " The latest shared documents "
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:376
-msgid " chronological "
-msgstr ""
-
 #. (for)
 #: web_tt2/active_lists.tt2:12 web_tt2/latest_arc.tt2:12
 #: web_tt2/latest_d_read.tt2:12 web_tt2/latest_lists.tt2:12
@@ -559,6 +555,11 @@ msgstr "添加訂閱者"
 msgid "Address \"%1\" is incorrect"
 msgstr "地址“%1”是錯誤的"
 
+#: web_tt2/list_admin_menu.tt2:6
+#, fuzzy
+msgid "Admin"
+msgstr "管理"
+
 #: src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
 msgstr "高級搜尋"
@@ -622,7 +623,7 @@ msgstr ""
 msgid "Apply"
 msgstr "應用"
 
-#: web_tt2/list_menu.tt2:34 web_tt2/list_menu.tt2:36
+#: web_tt2/list_menu.tt2:35 web_tt2/list_menu.tt2:37
 msgid "Archive"
 msgstr "歸檔"
 
@@ -660,6 +661,12 @@ msgstr ""
 #: web_tt2/list_admin_menu.tt2:53
 msgid "Are you sure you wish to close %1 list ?"
 msgstr ""
+
+#. (list)
+#: web_tt2/list_admin_menu.tt2:44
+#, fuzzy
+msgid "Are you sure you wish to delete the shared documents ?"
+msgstr "確定要刪除 %1 ?"
 
 #. (list.name,msg_from)
 #: mail_tt2/moderate.tt2:3
@@ -1220,7 +1227,7 @@ msgstr "您確定要刪除 %1%2 嗎 ?"
 msgid "Do you really want to delete Selected Archives?"
 msgstr "確定要刪除 %1 ?"
 
-#: src/etc/mhonarc-ressources.tt2:428
+#: src/etc/mhonarc-ressources.tt2:418
 #, fuzzy
 msgid "Do you really want to delete this message ?"
 msgstr "確定要刪除 %1 ?"
@@ -1517,7 +1524,7 @@ msgid "Family name"
 msgstr "郵遞論壇名"
 
 # nlsref 8,7
-#: src/List.pm:6213
+#: src/List.pm:6216
 msgid "File"
 msgstr "ÀÉ®×"
 
@@ -1630,6 +1637,7 @@ msgid "HTTPS authentication information"
 msgstr "HTTPS ,AF>V$PEO\"(B"
 
 #: web_tt2/edit_list_request.tt2:34 web_tt2/menu.tt2:23
+#: web_tt2/suboptions.tt2:16
 msgid "Help"
 msgstr "幫助"
 
@@ -1843,7 +1851,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:588
+#: src/etc/mhonarc-ressources.tt2:578
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1883,6 +1891,7 @@ msgid "Language of the list"
 msgstr ""
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
+#: web_tt2/review.tt2:133
 msgid "Last update"
 msgstr "最後更新"
 
@@ -2219,7 +2228,8 @@ msgstr "郵遞論壇列表"
 msgid "Mailing lists categories"
 msgstr "郵遞論壇列表"
 
-#: web_tt2/admin_menu.tt2:74 web_tt2/list_admin_menu.tt2:33
+#: web_tt2/admin_menu.tt2:68 web_tt2/admin_menu.tt2:74
+#: web_tt2/list_admin_menu.tt2:33
 #, fuzzy
 msgid "Manage Archives"
 msgstr "Archives setup"
@@ -2372,7 +2382,7 @@ msgstr ""
 msgid "Moderator          : %1"
 msgstr ""
 
-#: src/List.pm:519 web_tt2/list_panel.tt2:15
+#: src/List.pm:519 web_tt2/list_panel.tt2:14
 msgid "Moderators"
 msgstr "監管者:"
 
@@ -2663,7 +2673,7 @@ msgstr ""
 msgid "Owners of list %s"
 msgstr "¶l±H²M³æªº¾Ö¦³ªÌ %s"
 
-#: web_tt2/reviewbouncing.tt2:34
+#: web_tt2/review.tt2:5 web_tt2/reviewbouncing.tt2:34
 msgid "Page size"
 msgstr "頁面大小"
 
@@ -2742,7 +2752,7 @@ msgid ""
 "to  %1@%2 ."
 msgstr ""
 
-#: web_tt2/list_menu.tt2:42 web_tt2/list_menu.tt2:44
+#: web_tt2/list_menu.tt2:43 web_tt2/list_menu.tt2:45
 msgid "Post"
 msgstr "發表"
 
@@ -2879,7 +2889,7 @@ msgstr ""
 msgid "RFC 2369 Header fields"
 msgstr ""
 
-#: web_tt2/list_menu.tt2:48
+#: web_tt2/list_menu.tt2:49
 msgid "RSS"
 msgstr ""
 
@@ -3045,7 +3055,7 @@ msgstr "§ó·s§Aªº­q¾\\¦b '%s'"
 msgid "Replace the file %1 with your file"
 msgstr "用您的文件取代文件 %1"
 
-#: src/etc/mhonarc-ressources.tt2:420
+#: src/etc/mhonarc-ressources.tt2:410
 msgid "Reply"
 msgstr ""
 
@@ -3059,7 +3069,7 @@ msgstr ""
 msgid "Reply to           : %1"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:416
+#: src/etc/mhonarc-ressources.tt2:406
 msgid "Reply to sender"
 msgstr ""
 
@@ -3111,7 +3121,7 @@ msgstr "«ü¥Oªºµ²ªG"
 msgid "Return to archive %1"
 msgstr "回到歸檔 %1"
 
-#: web_tt2/list_menu.tt2:61
+#: web_tt2/list_menu.tt2:62
 msgid "Review"
 msgstr ""
 
@@ -3316,7 +3326,7 @@ msgstr ""
 msgid "Shared documents"
 msgstr ""
 
-#: web_tt2/list_menu.tt2:53 web_tt2/list_menu.tt2:55
+#: web_tt2/list_menu.tt2:54 web_tt2/list_menu.tt2:56
 msgid "Shared web"
 msgstr "共享頁面"
 
@@ -3348,7 +3358,7 @@ msgid "Skins, CSS and colors"
 msgstr ""
 
 # nlsref 6,260
-#: src/List.pm:8779
+#: src/List.pm:8788
 #, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
@@ -3376,7 +3386,7 @@ msgstr ""
 "¦pªG§A¤£·Q°õ¦æ³o°Ê§@¡A½Ð©¿²¤¥»¶l¥ó¡C"
 
 # nlsref 6,260
-#: src/List.pm:8772
+#: src/List.pm:8781
 #, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
@@ -3404,7 +3414,7 @@ msgstr ""
 "¦pªG§A¤£·Q°õ¦æ³o°Ê§@¡A½Ð©¿²¤¥»¶l¥ó¡C"
 
 # nlsref 6,39
-#: src/List.pm:8784 src/List.pm:8789
+#: src/List.pm:8793 src/List.pm:8798
 msgid ""
 "Someone (hopefully you) requested a user of list %s to be\n"
 "added or removed.\n"
@@ -3542,11 +3552,6 @@ msgid ""
 "use the INVITE command to invite someone for subscription."
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:79
-#, fuzzy
-msgid "Subscription"
-msgstr "訂閱者選項"
-
 #. (subscribe)
 #: mail_tt2/info_report.tt2:10
 msgid "Subscription       : %1"
@@ -3572,6 +3577,11 @@ msgstr "¶l±H²M³æ %s ­q¾\\­n¨D "
 msgid "Subscription summary"
 msgstr "¶l±H²M³æ³Q­q¾\\ºK­n"
 
+#: web_tt2/list_admin_menu.tt2:79
+#, fuzzy
+msgid "Subscriptions"
+msgstr "訂閱者選項"
+
 #: web_tt2/help_user_options.tt2:22
 msgid "Summary"
 msgstr ""
@@ -3586,7 +3596,7 @@ msgstr ""
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:570
+#: src/etc/mhonarc-ressources.tt2:560
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -3656,7 +3666,7 @@ msgstr ""
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
 
-#: web_tt2/javascript.tt2:83
+#: web_tt2/javascript.tt2:108
 msgid ""
 "Sympa could not set a cookie for login.\n"
 " Your should setup your navigator to accept cookies"
@@ -3696,7 +3706,7 @@ msgstr ""
 msgid "Template name"
 msgstr "郵遞論壇名"
 
-#: web_tt2/edit_template.tt2:38
+#: web_tt2/edit_template.tt2:39
 #, fuzzy
 msgid "Template saved"
 msgstr "刪除共享"
@@ -4281,8 +4291,8 @@ msgid ""
 "archives, list management and so on."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:193 src/etc/mhonarc-ressources.tt2:291
-#: src/etc/mhonarc-ressources.tt2:373
+#: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:281
+#: src/etc/mhonarc-ressources.tt2:363
 msgid "Thread"
 msgstr ""
 
@@ -4557,7 +4567,7 @@ msgid "Unsubscribe"
 msgstr "退訂"
 
 # nlsref 6,71
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3496
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3498
 msgid "Unsubscribe from list %s"
 msgstr "¥Ñ¶l±H²M³æ %s ÖÃ¶}"
 
@@ -4761,8 +4771,8 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:3267 wwsympa/wwsympa.fcgi:3268
-#: wwsympa/wwsympa.fcgi:4179 wwsympa/wwsympa.fcgi:4180
+#: wwsympa/wwsympa.fcgi:3269 wwsympa/wwsympa.fcgi:3270
+#: wwsympa/wwsympa.fcgi:4199 wwsympa/wwsympa.fcgi:4200
 msgid "Welcome on list %s"
 msgstr "Åwªï¥[¤J %s ¶l±H²M³æ"
 
@@ -4947,7 +4957,7 @@ msgid ""
 msgstr "您並未選取密碼, 請要求一份原先密碼的提醒"
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3497 wwsympa/wwsympa.fcgi:4285
+#: wwsympa/wwsympa.fcgi:3499 wwsympa/wwsympa.fcgi:4305
 #, fuzzy
 msgid "You have been removed from list %s.\n"
 msgstr "«ü©wªº­q¤á¤w¸g±q¶l±H²M³æ¤¤°£¥h¡C\n"
@@ -5021,7 +5031,7 @@ msgid ""
 msgstr "§AÚÌ»{ªº¹q¶lÉO¥Ó½Ðªº¤£¬Û¦P¡A½Ð¥Î§Aªº¥D¹q¶l¦a§}"
 
 # nlsref 6,79
-#: src/List.pm:8794 src/List.pm:8801
+#: src/List.pm:8803 src/List.pm:8810
 msgid ""
 "You requested a subscription reminder to be sent\n"
 "to each subscriber of list %s\n"
@@ -5299,7 +5309,7 @@ msgid "Your subscription email is %1"
 msgstr ""
 
 # nlsref 6,18
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4284
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4304
 msgid "Your subscription to list %s has been removed."
 msgstr "§A¦b¶l±H²M³æ %s ¤¤¸g¤w°£¥h"
 
@@ -5621,8 +5631,8 @@ msgstr ""
 msgid "change access"
 msgstr "修改權限"
 
-#: src/etc/mhonarc-ressources.tt2:192 src/etc/mhonarc-ressources.tt2:290
-#: src/etc/mhonarc-ressources.tt2:372
+#: src/etc/mhonarc-ressources.tt2:182 src/etc/mhonarc-ressources.tt2:280
+#: src/etc/mhonarc-ressources.tt2:362 src/etc/mhonarc-ressources.tt2:366
 msgid "chronological"
 msgstr ""
 
@@ -5936,6 +5946,11 @@ msgstr "密碼將通過電子郵件發送給您:"
 msgid "just for listmaster"
 msgstr ""
 
+#: web_tt2/edit_template.tt2:19
+#, fuzzy
+msgid "language"
+msgstr "語言"
+
 #: web_tt2/rss_request.tt2:35
 #, fuzzy
 msgid "latest archive"
@@ -6011,7 +6026,7 @@ msgstr ""
 msgid "list subject"
 msgstr "郵遞論壇主題"
 
-#: web_tt2/ls_templates.tt2:24
+#: web_tt2/ls_templates.tt2:31
 #, fuzzy
 msgid "list templates"
 msgstr "自訂模塊"
@@ -6030,7 +6045,7 @@ msgid "local domain users or owner approval"
 msgstr ""
 
 # nlsref 8,7
-#: src/etc/mhonarc-ressources.tt2:188 src/etc/mhonarc-ressources.tt2:286
+#: src/etc/mhonarc-ressources.tt2:178 src/etc/mhonarc-ressources.tt2:276
 #: src/etc/mhonarc-ressources.tt2:63
 #, fuzzy
 msgid "mails"
@@ -6140,8 +6155,13 @@ msgstr ""
 msgid "owners approval"
 msgstr ""
 
+#: web_tt2/review.tt2:23
+#, fuzzy
+msgid "page"
+msgstr "後一頁"
+
 #. ($PAGENUM$,$NUMOFPAGES$)
-#: src/etc/mhonarc-ressources.tt2:195 src/etc/mhonarc-ressources.tt2:293
+#: src/etc/mhonarc-ressources.tt2:185 src/etc/mhonarc-ressources.tt2:283
 #, fuzzy
 msgid "page # %1/%2"
 msgstr "第%1頁，共%2頁"
@@ -6254,7 +6274,7 @@ msgstr ""
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:40
 #: web_tt2/review.tt2:231 web_tt2/review.tt2:50 web_tt2/review.tt2:75
-#: web_tt2/reviewbouncing.tt2:107
+#: web_tt2/reviewbouncing.tt2:107 web_tt2/reviewbouncing.tt2:31
 msgid "quiet"
 msgstr "安靜"
 
@@ -6395,7 +6415,7 @@ msgstr ""
 msgid "results by page"
 msgstr ""
 
-#: web_tt2/edit_template.tt2:35
+#: web_tt2/edit_template.tt2:36
 #, fuzzy
 msgid "save"
 msgstr "保存"
@@ -6451,7 +6471,7 @@ msgid "selection (if multiple)"
 msgstr ""
 
 #. (user.email)
-#: src/etc/mhonarc-ressources.tt2:421
+#: src/etc/mhonarc-ressources.tt2:411
 msgid "send it back to %1"
 msgstr ""
 
@@ -6518,7 +6538,7 @@ msgstr ""
 msgid "summary message"
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:428
+#: src/etc/mhonarc-ressources.tt2:418
 msgid "tag this mail for deletion"
 msgstr ""
 
@@ -6568,7 +6588,7 @@ msgstr ""
 msgid "this template is defined for list"
 msgstr "無法更改 %1 的電郵地址"
 
-#: src/etc/mhonarc-ressources.tt2:376
+#: src/etc/mhonarc-ressources.tt2:366
 msgid "thread"
 msgstr ""
 
@@ -6580,7 +6600,7 @@ msgstr ""
 msgid "title"
 msgstr "URL"
 
-#: src/etc/mhonarc-ressources.tt2:418
+#: src/etc/mhonarc-ressources.tt2:408
 #, fuzzy
 msgid "to list"
 msgstr "恢複"
@@ -6974,10 +6994,6 @@ msgstr ""
 # nlsref 12,3
 #~ msgid "7bit"
 #~ msgstr "8bit"
-
-#, fuzzy
-#~ msgid "_language_"
-#~ msgstr "語言"
 
 #, fuzzy
 #~ msgid "moderated to subscribers"

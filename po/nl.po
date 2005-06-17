@@ -86,10 +86,6 @@ msgstr "Nieuwste berichten eerst"
 msgid " The latest shared documents "
 msgstr "Gedeelde documenten"
 
-#: src/etc/mhonarc-ressources.tt2:376
-msgid " chronological "
-msgstr ""
-
 #. (for)
 #: web_tt2/active_lists.tt2:12 web_tt2/latest_arc.tt2:12
 #: web_tt2/latest_d_read.tt2:12 web_tt2/latest_lists.tt2:12
@@ -558,6 +554,11 @@ msgstr "Voeg abonnees toe"
 msgid "Address \"%1\" is incorrect"
 msgstr "Adres \"%1\" is incorrect"
 
+#: web_tt2/list_admin_menu.tt2:6
+#, fuzzy
+msgid "Admin"
+msgstr "administratie"
+
 #: src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
 msgstr "Geavanceerd zoeken"
@@ -624,7 +625,7 @@ msgstr "Alles over deze lijst:"
 msgid "Apply"
 msgstr "Toepassen"
 
-#: web_tt2/list_menu.tt2:34 web_tt2/list_menu.tt2:36
+#: web_tt2/list_menu.tt2:35 web_tt2/list_menu.tt2:37
 msgid "Archive"
 msgstr "Archief"
 
@@ -663,6 +664,12 @@ msgstr ""
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
 #: web_tt2/list_admin_menu.tt2:53
 msgid "Are you sure you wish to close %1 list ?"
+msgstr "Weet u zeker dat u lijst %1 wilt sluiten ?"
+
+#. (list)
+#: web_tt2/list_admin_menu.tt2:44
+#, fuzzy
+msgid "Are you sure you wish to delete the shared documents ?"
 msgstr "Weet u zeker dat u lijst %1 wilt sluiten ?"
 
 #. (list.name,msg_from)
@@ -1238,7 +1245,7 @@ msgstr ""
 msgid "Do you really want to delete Selected Archives?"
 msgstr "Wilt u het volgende %1 echt verwijderen?"
 
-#: src/etc/mhonarc-ressources.tt2:428
+#: src/etc/mhonarc-ressources.tt2:418
 #, fuzzy
 msgid "Do you really want to delete this message ?"
 msgstr "Wilt u het volgende %1 echt verwijderen?"
@@ -1539,7 +1546,7 @@ msgid "Family name"
 msgstr "lijst naam"
 
 # nlsref 8,7
-#: src/List.pm:6213
+#: src/List.pm:6216
 msgid "File"
 msgstr "Bestand"
 
@@ -1654,6 +1661,7 @@ msgid "HTTPS authentication information"
 msgstr "HTTPS authenticatie informatie"
 
 #: web_tt2/edit_list_request.tt2:34 web_tt2/menu.tt2:23
+#: web_tt2/suboptions.tt2:16
 msgid "Help"
 msgstr "Help"
 
@@ -1874,7 +1882,7 @@ msgid ""
 "was unable to access to your personal certificat (email %1)."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:588
+#: src/etc/mhonarc-ressources.tt2:578
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1916,6 +1924,7 @@ msgid "Language of the list"
 msgstr "Taal van de lijst"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
+#: web_tt2/review.tt2:133
 msgid "Last update"
 msgstr "Last update"
 
@@ -2255,7 +2264,8 @@ msgstr "Mailing lijsten"
 msgid "Mailing lists categories"
 msgstr "Mailing lijsten"
 
-#: web_tt2/admin_menu.tt2:74 web_tt2/list_admin_menu.tt2:33
+#: web_tt2/admin_menu.tt2:68 web_tt2/admin_menu.tt2:74
+#: web_tt2/list_admin_menu.tt2:33
 #, fuzzy
 msgid "Manage Archives"
 msgstr "Archives"
@@ -2417,7 +2427,7 @@ msgstr "Moderator          : %1"
 
 # #-#-#-#-#  nl.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
-#: src/List.pm:519 web_tt2/list_panel.tt2:15
+#: src/List.pm:519 web_tt2/list_panel.tt2:14
 #, fuzzy
 msgid "Moderators"
 msgstr ""
@@ -2715,7 +2725,7 @@ msgstr ""
 msgid "Owners of list %s"
 msgstr "Eigenaren van lijst %s"
 
-#: web_tt2/reviewbouncing.tt2:34
+#: web_tt2/review.tt2:5 web_tt2/reviewbouncing.tt2:34
 msgid "Page size"
 msgstr "Page size"
 
@@ -2795,7 +2805,7 @@ msgid ""
 "to  %1@%2 ."
 msgstr ""
 
-#: web_tt2/list_menu.tt2:42 web_tt2/list_menu.tt2:44
+#: web_tt2/list_menu.tt2:43 web_tt2/list_menu.tt2:45
 msgid "Post"
 msgstr "Bericht plaatsen"
 
@@ -2938,7 +2948,7 @@ msgstr "Laat de abonnees zien van lijst <list>"
 msgid "RFC 2369 Header fields"
 msgstr "Speciaal koptekst veld"
 
-#: web_tt2/list_menu.tt2:48
+#: web_tt2/list_menu.tt2:49
 msgid "RSS"
 msgstr ""
 
@@ -3109,7 +3119,7 @@ msgstr "Vernieuwing voor uw inschrijving voor lijst '%s'"
 msgid "Replace the file %1 with your file"
 msgstr "Vervang het bestand %1 door uw bestand"
 
-#: src/etc/mhonarc-ressources.tt2:420
+#: src/etc/mhonarc-ressources.tt2:410
 msgid "Reply"
 msgstr ""
 
@@ -3123,7 +3133,7 @@ msgstr "Antwoordadres"
 msgid "Reply to           : %1"
 msgstr "Antwoord aan       : %1"
 
-#: src/etc/mhonarc-ressources.tt2:416
+#: src/etc/mhonarc-ressources.tt2:406
 msgid "Reply to sender"
 msgstr ""
 
@@ -3175,7 +3185,7 @@ msgstr "De resultaten van uw commando"
 msgid "Return to archive %1"
 msgstr "Terug naar archief %1"
 
-#: web_tt2/list_menu.tt2:61
+#: web_tt2/list_menu.tt2:62
 msgid "Review"
 msgstr "Beheer"
 
@@ -3388,7 +3398,7 @@ msgstr "Gedeelde document map grootte"
 msgid "Shared documents"
 msgstr "Gedeelde documenten"
 
-#: web_tt2/list_menu.tt2:53 web_tt2/list_menu.tt2:55
+#: web_tt2/list_menu.tt2:54 web_tt2/list_menu.tt2:56
 msgid "Shared web"
 msgstr "Gedeelde bestanden"
 
@@ -3420,7 +3430,7 @@ msgid "Skins, CSS and colors"
 msgstr ""
 
 # nlsref 6,260
-#: src/List.pm:8779
+#: src/List.pm:8788
 #, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
@@ -3452,7 +3462,7 @@ msgstr ""
 "negeren."
 
 # nlsref 6,260
-#: src/List.pm:8772
+#: src/List.pm:8781
 #, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
@@ -3484,7 +3494,7 @@ msgstr ""
 "negeren."
 
 # nlsref 6,39
-#: src/List.pm:8784 src/List.pm:8789
+#: src/List.pm:8793 src/List.pm:8798
 msgid ""
 "Someone (hopefully you) requested a user of list %s to be\n"
 "added or removed.\n"
@@ -3627,11 +3637,6 @@ msgid ""
 "use the INVITE command to invite someone for subscription."
 msgstr ""
 
-#: web_tt2/list_admin_menu.tt2:79
-#, fuzzy
-msgid "Subscription"
-msgstr "Abonnee opties"
-
 #. (subscribe)
 #: mail_tt2/info_report.tt2:10
 msgid "Subscription       : %1"
@@ -3657,6 +3662,11 @@ msgstr "Inschrijving voor lijst %s"
 msgid "Subscription summary"
 msgstr "Abonnementssamenvatting"
 
+#: web_tt2/list_admin_menu.tt2:79
+#, fuzzy
+msgid "Subscriptions"
+msgstr "Abonnee opties"
+
 #: web_tt2/help_user_options.tt2:22
 msgid "Summary"
 msgstr "Samenvatting"
@@ -3671,7 +3681,7 @@ msgstr "Samenvatting van lijst %s"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Samenvatting van uw abonnement (met het emailadres %1)."
 
-#: src/etc/mhonarc-ressources.tt2:570
+#: src/etc/mhonarc-ressources.tt2:560
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr ""
 
@@ -3741,7 +3751,7 @@ msgstr ""
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
 
-#: web_tt2/javascript.tt2:83
+#: web_tt2/javascript.tt2:108
 msgid ""
 "Sympa could not set a cookie for login.\n"
 " Your should setup your navigator to accept cookies"
@@ -3781,7 +3791,7 @@ msgstr ""
 msgid "Template name"
 msgstr "Templates"
 
-#: web_tt2/edit_template.tt2:38
+#: web_tt2/edit_template.tt2:39
 #, fuzzy
 msgid "Template saved"
 msgstr "Templates"
@@ -4369,8 +4379,8 @@ msgid ""
 "archives, list management and so on."
 msgstr ""
 
-#: src/etc/mhonarc-ressources.tt2:193 src/etc/mhonarc-ressources.tt2:291
-#: src/etc/mhonarc-ressources.tt2:373
+#: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:281
+#: src/etc/mhonarc-ressources.tt2:363
 msgid "Thread"
 msgstr ""
 
@@ -4666,7 +4676,7 @@ msgid "Unsubscribe"
 msgstr "Uitschrijven"
 
 # nlsref 6,71
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3496
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3498
 msgid "Unsubscribe from list %s"
 msgstr "Uitschrijven van lijst %s"
 
@@ -4875,8 +4885,8 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:3267 wwsympa/wwsympa.fcgi:3268
-#: wwsympa/wwsympa.fcgi:4179 wwsympa/wwsympa.fcgi:4180
+#: wwsympa/wwsympa.fcgi:3269 wwsympa/wwsympa.fcgi:3270
+#: wwsympa/wwsympa.fcgi:4199 wwsympa/wwsympa.fcgi:4200
 msgid "Welcome on list %s"
 msgstr "Welkom op de lijst %s"
 
@@ -5066,7 +5076,7 @@ msgstr ""
 "wachtwoord"
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3497 wwsympa/wwsympa.fcgi:4285
+#: wwsympa/wwsympa.fcgi:3499 wwsympa/wwsympa.fcgi:4305
 #, fuzzy
 msgid "You have been removed from list %s.\n"
 msgstr "Gebruiker %s is uitgeschreven van lijst %s/\n"
@@ -5146,7 +5156,7 @@ msgstr ""
 " bevestigd. Probeer met uw echte adres in te schrijven."
 
 # nlsref 6,79
-#: src/List.pm:8794 src/List.pm:8801
+#: src/List.pm:8803 src/List.pm:8810
 msgid ""
 "You requested a subscription reminder to be sent\n"
 "to each subscriber of list %s\n"
@@ -5446,7 +5456,7 @@ msgid "Your subscription email is %1"
 msgstr "Het emailadres waarmee u zich heeft ingeschreven is %1"
 
 # nlsref 6,18
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4284
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4304
 msgid "Your subscription to list %s has been removed."
 msgstr "Uw inschrijving voor lijst %s is ongedaan gemaakt."
 
@@ -5772,8 +5782,8 @@ msgstr "certificaat voor authenticatie voor een externe Sympa"
 msgid "change access"
 msgstr "wijzig toegang"
 
-#: src/etc/mhonarc-ressources.tt2:192 src/etc/mhonarc-ressources.tt2:290
-#: src/etc/mhonarc-ressources.tt2:372
+#: src/etc/mhonarc-ressources.tt2:182 src/etc/mhonarc-ressources.tt2:280
+#: src/etc/mhonarc-ressources.tt2:362 src/etc/mhonarc-ressources.tt2:366
 msgid "chronological"
 msgstr ""
 
@@ -6087,6 +6097,11 @@ msgstr "Het zal u worden toegestuurd via email :"
 msgid "just for listmaster"
 msgstr "alleen voor de listmaster"
 
+#: web_tt2/edit_template.tt2:19
+#, fuzzy
+msgid "language"
+msgstr "Taal"
+
 # nlsref 16,4
 #: web_tt2/rss_request.tt2:35
 #, fuzzy
@@ -6160,7 +6175,7 @@ msgstr "lijst eigenaren, authenticatie niet nodig (herinnering)"
 msgid "list subject"
 msgstr "lijst onderwerp"
 
-#: web_tt2/ls_templates.tt2:24
+#: web_tt2/ls_templates.tt2:31
 #, fuzzy
 msgid "list templates"
 msgstr "Wijzig sjablonen"
@@ -6177,7 +6192,7 @@ msgstr "alleen voor de listmaster"
 msgid "local domain users or owner approval"
 msgstr "lokale domein gebruikers of eigenaren toestemming"
 
-#: src/etc/mhonarc-ressources.tt2:188 src/etc/mhonarc-ressources.tt2:286
+#: src/etc/mhonarc-ressources.tt2:178 src/etc/mhonarc-ressources.tt2:276
 #: src/etc/mhonarc-ressources.tt2:63
 #, fuzzy
 msgid "mails"
@@ -6286,8 +6301,13 @@ msgstr "ander email adres"
 msgid "owners approval"
 msgstr "toestemming van de eigenaren"
 
+#: web_tt2/review.tt2:23
+#, fuzzy
+msgid "page"
+msgstr "[% list.name %] thuispagina"
+
 #. ($PAGENUM$,$NUMOFPAGES$)
-#: src/etc/mhonarc-ressources.tt2:195 src/etc/mhonarc-ressources.tt2:293
+#: src/etc/mhonarc-ressources.tt2:185 src/etc/mhonarc-ressources.tt2:283
 #, fuzzy
 msgid "page # %1/%2"
 msgstr "pagina %1 / %2"
@@ -6383,7 +6403,7 @@ msgstr ""
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:40
 #: web_tt2/review.tt2:231 web_tt2/review.tt2:50 web_tt2/review.tt2:75
-#: web_tt2/reviewbouncing.tt2:107
+#: web_tt2/reviewbouncing.tt2:107 web_tt2/reviewbouncing.tt2:31
 msgid "quiet"
 msgstr "quiet"
 
@@ -6522,7 +6542,7 @@ msgstr "herinschrijven voor lijst %1"
 msgid "results by page"
 msgstr "resultaten per pagina"
 
-#: web_tt2/edit_template.tt2:35
+#: web_tt2/edit_template.tt2:36
 #, fuzzy
 msgid "save"
 msgstr "Opslaan"
@@ -6578,7 +6598,7 @@ msgid "selection (if multiple)"
 msgstr "selectie (waneer meerdere)"
 
 #. (user.email)
-#: src/etc/mhonarc-ressources.tt2:421
+#: src/etc/mhonarc-ressources.tt2:411
 msgid "send it back to %1"
 msgstr ""
 
@@ -6644,7 +6664,7 @@ msgstr "extensie"
 msgid "summary message"
 msgstr "samenvattings bericht"
 
-#: src/etc/mhonarc-ressources.tt2:428
+#: src/etc/mhonarc-ressources.tt2:418
 msgid "tag this mail for deletion"
 msgstr ""
 
@@ -6695,7 +6715,7 @@ msgstr ""
 msgid "this template is defined for list"
 msgstr "Tot die tijd bevelen we aan om %1 te verwijderen"
 
-#: src/etc/mhonarc-ressources.tt2:376
+#: src/etc/mhonarc-ressources.tt2:366
 msgid "thread"
 msgstr ""
 
@@ -6707,7 +6727,7 @@ msgstr ""
 msgid "title"
 msgstr "title"
 
-#: src/etc/mhonarc-ressources.tt2:418
+#: src/etc/mhonarc-ressources.tt2:408
 #, fuzzy
 msgid "to list"
 msgstr "Restoren"
@@ -7105,10 +7125,6 @@ msgstr "uw wachtwoord    : %1"
 # nlsref 12,3
 #~ msgid "7bit"
 #~ msgstr "8bit"
-
-#, fuzzy
-#~ msgid "_language_"
-#~ msgstr "Taal"
 
 #, fuzzy
 #~ msgid "moderated to subscribers"

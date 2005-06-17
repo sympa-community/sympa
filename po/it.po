@@ -75,11 +75,6 @@ msgstr "Ultimo messaggio"
 msgid " The latest shared documents "
 msgstr "Documenti condivisi"
 
-#: src/etc/mhonarc-ressources.tt2:376
-#, fuzzy
-msgid " chronological "
-msgstr "Cronologico"
-
 #. (for)
 #: web_tt2/active_lists.tt2:12 web_tt2/latest_arc.tt2:12
 #: web_tt2/latest_d_read.tt2:12 web_tt2/latest_lists.tt2:12
@@ -565,6 +560,11 @@ msgstr "Aggiungi utenti"
 msgid "Address \"%1\" is incorrect"
 msgstr "L'indirizzo \"%1\" è errato"
 
+#: web_tt2/list_admin_menu.tt2:6
+#, fuzzy
+msgid "Admin"
+msgstr "amministra"
+
 #: src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
 msgstr "Ricerca avanzata"
@@ -632,7 +632,7 @@ msgstr "Informazioni sulla questa lista"
 msgid "Apply"
 msgstr "Esegui"
 
-#: web_tt2/list_menu.tt2:34 web_tt2/list_menu.tt2:36
+#: web_tt2/list_menu.tt2:35 web_tt2/list_menu.tt2:37
 msgid "Archive"
 msgstr "Archivio"
 
@@ -669,6 +669,12 @@ msgstr ""
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
 #: web_tt2/list_admin_menu.tt2:53
 msgid "Are you sure you wish to close %1 list ?"
+msgstr "Sei sicuro di voler chiudere la lista %1?"
+
+#. (list)
+#: web_tt2/list_admin_menu.tt2:44
+#, fuzzy
+msgid "Are you sure you wish to delete the shared documents ?"
 msgstr "Sei sicuro di voler chiudere la lista %1?"
 
 #. (list.name,msg_from)
@@ -1268,7 +1274,7 @@ msgstr "Vuoi davvero rimuovere %1%2?"
 msgid "Do you really want to delete Selected Archives?"
 msgstr "Vuoi davvero eliminare gli archivi selezionati?"
 
-#: src/etc/mhonarc-ressources.tt2:428
+#: src/etc/mhonarc-ressources.tt2:418
 msgid "Do you really want to delete this message ?"
 msgstr "Vuoi davvero rimuovere questo messaggio?"
 
@@ -1584,7 +1590,7 @@ msgid "Family name"
 msgstr "nome della lista"
 
 # nlsref 8,7
-#: src/List.pm:6213
+#: src/List.pm:6216
 msgid "File"
 msgstr "File"
 
@@ -1706,6 +1712,7 @@ msgid "HTTPS authentication information"
 msgstr "Informazioni sull'autenticazione HTTPS"
 
 #: web_tt2/edit_list_request.tt2:34 web_tt2/menu.tt2:23
+#: web_tt2/suboptions.tt2:16
 msgid "Help"
 msgstr "Help"
 
@@ -1940,7 +1947,7 @@ msgstr ""
 "Non è stato possibile spedirlo perché il gestore delle liste non è stato in "
 "grado di accedere al tuo certificato personale (email %1)\n"
 
-#: src/etc/mhonarc-ressources.tt2:588
+#: src/etc/mhonarc-ressources.tt2:578
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -1983,6 +1990,7 @@ msgid "Language of the list"
 msgstr "Lingua della lista"
 
 #: web_tt2/d_read.tt2:69 web_tt2/d_read.tt2:71 web_tt2/latest_d_read.tt2:19
+#: web_tt2/review.tt2:133
 msgid "Last update"
 msgstr "Ultimo aggiornamento"
 
@@ -2330,7 +2338,8 @@ msgstr "Liste di distribuzione"
 msgid "Mailing lists categories"
 msgstr "Liste di distribuzione"
 
-#: web_tt2/admin_menu.tt2:74 web_tt2/list_admin_menu.tt2:33
+#: web_tt2/admin_menu.tt2:68 web_tt2/admin_menu.tt2:74
+#: web_tt2/list_admin_menu.tt2:33
 msgid "Manage Archives"
 msgstr "Gestione degli archivi"
 
@@ -2501,7 +2510,7 @@ msgstr "Moderatore            : %1"
 
 # #-#-#-#-#  it.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
-#: src/List.pm:519 web_tt2/list_panel.tt2:15
+#: src/List.pm:519 web_tt2/list_panel.tt2:14
 msgid "Moderators"
 msgstr "Moderatori"
 
@@ -2835,7 +2844,7 @@ msgstr ""
 msgid "Owners of list %s"
 msgstr "Gestore della lista %s"
 
-#: web_tt2/reviewbouncing.tt2:34
+#: web_tt2/review.tt2:5 web_tt2/reviewbouncing.tt2:34
 msgid "Page size"
 msgstr "Per pagina"
 
@@ -2914,7 +2923,7 @@ msgid ""
 "to  %1@%2 ."
 msgstr "Per ricevere i messaggi cifrati manda un messaggio firmato a %1@%2.\n"
 
-#: web_tt2/list_menu.tt2:42 web_tt2/list_menu.tt2:44
+#: web_tt2/list_menu.tt2:43 web_tt2/list_menu.tt2:45
 #, fuzzy
 msgid "Post"
 msgstr "Post"
@@ -3056,7 +3065,7 @@ msgstr "REView <list>           * mostra gli iscritti alla <lista>"
 msgid "RFC 2369 Header fields"
 msgstr "Campo header compatibile RFC 2369"
 
-#: web_tt2/list_menu.tt2:48
+#: web_tt2/list_menu.tt2:49
 msgid "RSS"
 msgstr ""
 
@@ -3227,7 +3236,7 @@ msgstr "Rinnovo della sua iscrizione alla lista '%s'"
 msgid "Replace the file %1 with your file"
 msgstr "Sostituisci il file %1 con il tuo file"
 
-#: src/etc/mhonarc-ressources.tt2:420
+#: src/etc/mhonarc-ressources.tt2:410
 msgid "Reply"
 msgstr "Rispondi"
 
@@ -3241,7 +3250,7 @@ msgstr "Indirizzo di risposta"
 msgid "Reply to           : %1"
 msgstr "Rispondere a          : %1"
 
-#: src/etc/mhonarc-ressources.tt2:416
+#: src/etc/mhonarc-ressources.tt2:406
 msgid "Reply to sender"
 msgstr "Rispondi al mittente"
 
@@ -3293,7 +3302,7 @@ msgstr "Risultati dei comandi"
 msgid "Return to archive %1"
 msgstr "Torna all'archivio %1"
 
-#: web_tt2/list_menu.tt2:61
+#: web_tt2/list_menu.tt2:62
 msgid "Review"
 msgstr "Rassegna"
 
@@ -3515,7 +3524,7 @@ msgstr "Dimensione della directory dei documenti condivisi"
 msgid "Shared documents"
 msgstr "Documenti condivisi"
 
-#: web_tt2/list_menu.tt2:53 web_tt2/list_menu.tt2:55
+#: web_tt2/list_menu.tt2:54 web_tt2/list_menu.tt2:56
 msgid "Shared web"
 msgstr "Spazio web condiviso"
 
@@ -3554,7 +3563,7 @@ msgid "Skins, CSS and colors"
 msgstr ""
 
 # nlsref 6,260
-#: src/List.pm:8779
+#: src/List.pm:8788
 #, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
@@ -3584,7 +3593,7 @@ msgstr ""
 "Per non confermare, ignora semplicemente questo messaggio."
 
 # nlsref 6,260
-#: src/List.pm:8772
+#: src/List.pm:8781
 #, fuzzy
 msgid ""
 "Someone (hopefully you) asked for your e-mail address\n"
@@ -3614,7 +3623,7 @@ msgstr ""
 "Per non confermare, puoi semplicemente ignorare questo messaggio."
 
 # nlsref 6,39
-#: src/List.pm:8784 src/List.pm:8789
+#: src/List.pm:8793 src/List.pm:8798
 msgid ""
 "Someone (hopefully you) requested a user of list %s to be\n"
 "added or removed.\n"
@@ -3758,11 +3767,6 @@ msgstr ""
 "Messaggio di invito all'iscrizione: viene mandato ad una persona\n"
 "se un utente usa il comando INVITE per invitare qualcuno all'iscrizione\n"
 
-#: web_tt2/list_admin_menu.tt2:79
-#, fuzzy
-msgid "Subscription"
-msgstr "Opzioni d'iscrizione"
-
 #. (subscribe)
 #: mail_tt2/info_report.tt2:10
 msgid "Subscription       : %1"
@@ -3788,6 +3792,11 @@ msgstr "Richiesta di iscrizione alla lista %s"
 msgid "Subscription summary"
 msgstr "Riassunto delle sue iscrizioni"
 
+#: web_tt2/list_admin_menu.tt2:79
+#, fuzzy
+msgid "Subscriptions"
+msgstr "Opzioni d'iscrizione"
+
 #: web_tt2/help_user_options.tt2:22
 msgid "Summary"
 msgstr "Sommario"
@@ -3802,7 +3811,7 @@ msgstr "Riassunto della lista %s"
 msgid "Summary of your subscription (using the e-mail %1)."
 msgstr "Riassunto delle sue iscrizioni (con indirizzo %1)."
 
-#: src/etc/mhonarc-ressources.tt2:570
+#: src/etc/mhonarc-ressources.tt2:560
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "domenica:lunedí:martedí:mercoledí:giovedí:venerdí:sabato"
 
@@ -3891,7 +3900,7 @@ msgstr ""
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr ""
 
-#: web_tt2/javascript.tt2:83
+#: web_tt2/javascript.tt2:108
 #, fuzzy
 msgid ""
 "Sympa could not set a cookie for login.\n"
@@ -3937,7 +3946,7 @@ msgstr ""
 msgid "Template name"
 msgstr "Maschera:"
 
-#: web_tt2/edit_template.tt2:38
+#: web_tt2/edit_template.tt2:39
 #, fuzzy
 msgid "Template saved"
 msgstr "Maschera:"
@@ -4658,8 +4667,8 @@ msgstr ""
 "Partendo da questo URL, puoi effettuare iscrizioni, disiscrizioni,\n"
 "gestione degli archivi e della lista e altro.\n"
 
-#: src/etc/mhonarc-ressources.tt2:193 src/etc/mhonarc-ressources.tt2:291
-#: src/etc/mhonarc-ressources.tt2:373
+#: src/etc/mhonarc-ressources.tt2:183 src/etc/mhonarc-ressources.tt2:281
+#: src/etc/mhonarc-ressources.tt2:363
 msgid "Thread"
 msgstr "Percorso di conversazione"
 
@@ -4984,7 +4993,7 @@ msgid "Unsubscribe"
 msgstr "Disiscriviti"
 
 # nlsref 6,71
-#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3496
+#: soap/sympasoap.pm:553 src/Commands.pm:946 wwsympa/wwsympa.fcgi:3498
 msgid "Unsubscribe from list %s"
 msgstr "Disiscrizione dalla lista '%s'"
 
@@ -5200,8 +5209,8 @@ msgstr ""
 # nlsref 8,6
 #: soap/sympasoap.pm:701 soap/sympasoap.pm:702 src/Commands.pm:1062
 #: src/Commands.pm:1063 src/Commands.pm:685 src/Commands.pm:686
-#: wwsympa/wwsympa.fcgi:3267 wwsympa/wwsympa.fcgi:3268
-#: wwsympa/wwsympa.fcgi:4179 wwsympa/wwsympa.fcgi:4180
+#: wwsympa/wwsympa.fcgi:3269 wwsympa/wwsympa.fcgi:3270
+#: wwsympa/wwsympa.fcgi:4199 wwsympa/wwsympa.fcgi:4200
 msgid "Welcome on list %s"
 msgstr "Benvenuto nella lista '%s'"
 
@@ -5396,7 +5405,7 @@ msgstr ""
 "Non hai scelto una password, richiedi una copia della password iniziale."
 
 # nlsref 6,38
-#: wwsympa/wwsympa.fcgi:3497 wwsympa/wwsympa.fcgi:4285
+#: wwsympa/wwsympa.fcgi:3499 wwsympa/wwsympa.fcgi:4305
 msgid "You have been removed from list %s.\n"
 msgstr "L'utente %s è stato rimosso dalla lista %s.\n"
 
@@ -5482,7 +5491,7 @@ msgstr ""
 "da quello usato per la richiesta. Verifica l'indirizzo usato\n"
 
 # nlsref 6,79
-#: src/List.pm:8794 src/List.pm:8801
+#: src/List.pm:8803 src/List.pm:8810
 msgid ""
 "You requested a subscription reminder to be sent\n"
 "to each subscriber of list %s\n"
@@ -5808,7 +5817,7 @@ msgid "Your subscription email is %1"
 msgstr "Il tuo indirizzo di iscrizione è %1"
 
 # nlsref 6,18
-#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4284
+#: src/Commands.pm:1484 wwsympa/wwsympa.fcgi:4304
 msgid "Your subscription to list %s has been removed."
 msgstr "La tua iscrizione alla lista %s è stata eliminata."
 
@@ -6145,8 +6154,8 @@ msgstr "certificato per l'autenticazione del Sympa remoto"
 msgid "change access"
 msgstr "cambia l'accesso"
 
-#: src/etc/mhonarc-ressources.tt2:192 src/etc/mhonarc-ressources.tt2:290
-#: src/etc/mhonarc-ressources.tt2:372
+#: src/etc/mhonarc-ressources.tt2:182 src/etc/mhonarc-ressources.tt2:280
+#: src/etc/mhonarc-ressources.tt2:362 src/etc/mhonarc-ressources.tt2:366
 #, fuzzy
 msgid "chronological"
 msgstr "Cronologico"
@@ -6466,6 +6475,11 @@ msgstr "ti verrà recapitata per email:"
 msgid "just for listmaster"
 msgstr "solo per listmaster"
 
+#: web_tt2/edit_template.tt2:19
+#, fuzzy
+msgid "language"
+msgstr "Lingua"
+
 # nlsref 16,4
 #: web_tt2/rss_request.tt2:35
 #, fuzzy
@@ -6544,7 +6558,7 @@ msgid "list subject"
 msgstr "Argomento della lista"
 
 # nlsref 15,18
-#: web_tt2/ls_templates.tt2:24
+#: web_tt2/ls_templates.tt2:31
 #, fuzzy
 msgid "list templates"
 msgstr "Schema per gli alias della lista"
@@ -6562,7 +6576,7 @@ msgid "local domain users or owner approval"
 msgstr ""
 "ristretto agli utenti del dominio locale o con approvazione proprietario"
 
-#: src/etc/mhonarc-ressources.tt2:188 src/etc/mhonarc-ressources.tt2:286
+#: src/etc/mhonarc-ressources.tt2:178 src/etc/mhonarc-ressources.tt2:276
 #: src/etc/mhonarc-ressources.tt2:63
 #, fuzzy
 msgid "mails"
@@ -6665,8 +6679,13 @@ msgstr "altro indirizzo email"
 msgid "owners approval"
 msgstr "con autorizzazione del proprietario"
 
+#: web_tt2/review.tt2:23
+#, fuzzy
+msgid "page"
+msgstr "Pagina principale"
+
 #. ($PAGENUM$,$NUMOFPAGES$)
-#: src/etc/mhonarc-ressources.tt2:195 src/etc/mhonarc-ressources.tt2:293
+#: src/etc/mhonarc-ressources.tt2:185 src/etc/mhonarc-ressources.tt2:283
 #, fuzzy
 msgid "page # %1/%2"
 msgstr "pagina %1 / %2"
@@ -6761,7 +6780,7 @@ msgstr "Elimina le voci orfane nella tabella degli utenti ogni mese"
 
 #: web_tt2/add_request.tt2:12 web_tt2/editsubscriber.tt2:40
 #: web_tt2/review.tt2:231 web_tt2/review.tt2:50 web_tt2/review.tt2:75
-#: web_tt2/reviewbouncing.tt2:107
+#: web_tt2/reviewbouncing.tt2:107 web_tt2/reviewbouncing.tt2:31
 msgid "quiet"
 msgstr "silenzioso"
 
@@ -6901,7 +6920,7 @@ msgstr "Riiscrizione a %1"
 msgid "results by page"
 msgstr "risultati per pagina"
 
-#: web_tt2/edit_template.tt2:35
+#: web_tt2/edit_template.tt2:36
 #, fuzzy
 msgid "save"
 msgstr "Salva"
@@ -6957,7 +6976,7 @@ msgid "selection (if multiple)"
 msgstr "selezione (se multipla)"
 
 #. (user.email)
-#: src/etc/mhonarc-ressources.tt2:421
+#: src/etc/mhonarc-ressources.tt2:411
 msgid "send it back to %1"
 msgstr "Mandato indietro a %1"
 
@@ -7024,7 +7043,7 @@ msgstr "suffisso"
 msgid "summary message"
 msgstr "Messaggio di ricapitolazione"
 
-#: src/etc/mhonarc-ressources.tt2:428
+#: src/etc/mhonarc-ressources.tt2:418
 msgid "tag this mail for deletion"
 msgstr "Marca questa mail per l'eliminazione"
 
@@ -7077,7 +7096,7 @@ msgstr ""
 msgid "this template is defined for list"
 msgstr "L'aggiornamento degli iscritti per la lista %1 è fallito"
 
-#: src/etc/mhonarc-ressources.tt2:376
+#: src/etc/mhonarc-ressources.tt2:366
 #, fuzzy
 msgid "thread"
 msgstr "Percorso di conversazione"
@@ -7090,7 +7109,7 @@ msgstr "Soglia"
 msgid "title"
 msgstr "titolo"
 
-#: src/etc/mhonarc-ressources.tt2:418
+#: src/etc/mhonarc-ressources.tt2:408
 msgid "to list"
 msgstr "alla lista"
 
@@ -7161,6 +7180,10 @@ msgstr "Il tuo indirizzo email     :%1"
 #: mail_tt2/sendpasswd.tt2:30
 msgid "your password : %1"
 msgstr "La tua password : %"
+
+#, fuzzy
+#~ msgid " chronological "
+#~ msgstr "Cronologico"
 
 #, fuzzy
 #~ msgid "First"
