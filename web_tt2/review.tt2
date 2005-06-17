@@ -2,7 +2,7 @@
 
 [% IF action != 'search' %]
 <div style="float: right;">
-[%|loc%]page size[%END%]
+[%|loc%]Page size[%END%]
   <form action="[% path_cgi %]">
   <input type="hidden" name="sortby" value="[% sortby %]" />
   <input type="hidden" name="action" value="review" />
