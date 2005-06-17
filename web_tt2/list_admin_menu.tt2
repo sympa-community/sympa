@@ -76,7 +76,7 @@
   [% IF is_owner %]
      [% IF action == 'subindex' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
      [% IF mod_subscription != 0 %]
-	<li><a class="[% class %]" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Subscription[%END%] ([% mod_subscription %])</a></li>
+	<li><a class="[% class %]" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Subscriptions[%END%] ([% mod_subscription %])</a></li>
      [% END %]
   [% END %]
   </ul>
