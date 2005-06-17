@@ -22,10 +22,7 @@
 [% END %]
 
 [% IF action == 'info'%][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-<strong><a class="[% class %]" onmouseover="show('info')" onmouseout="hide('info')" href="[% path_cgi %]/info/[% list %]">Info</a></strong>
-<div class="Help" id="info">
-[%|loc(list)%]%1 list home page[%END%]
-</div><br />
+<strong><a class="[% class %]"" href="[% path_cgi %]/info/[% list %]">Info</a></strong>
 
 <strong>[% hidden_head %]<a class=\"menuLinks\" href=\"mailto:[% list %]-request[% hidden_at %][% domain %]\">[%|loc%]Contact owners[%END%]</a>[% hidden_end %]</strong><br />
 
