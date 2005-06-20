@@ -17,9 +17,9 @@
 
 [% FOREACH list = pending %]
 [% IF dark == '1' %]
-  <tr valign="top">
+  <tr valign="top">[% SET dark = 0 %]
 [% ELSE %]
-  <tr style="background-color: [% color_0 %];" valign="top">
+  <tr style="background-color: [% color_0 %];" valign="top">[% SET dark = 1 %]
 [% END %]
 
 <td><a href="[% path_cgi %]/set_pending_list_request/[% list.key %]">[% list.key %]</a></td>

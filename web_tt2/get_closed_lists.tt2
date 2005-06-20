@@ -4,8 +4,8 @@
 <form action="[% path_cgi %]" method="post">
 
 <strong>[%|loc%]Closed lists[%END%]</strong>
-<table style="width: 100%;">
- <tr style="background: [% light_color %];">
+<table style="border: solid 1px; width: auto; margin: 10px">
+<tr style="background-color: [% color_4 %];">
    <th><strong>X</strong></th>
    <th><strong>[%|loc%]list name[%END%]</strong></th>
    <th><strong>[%|loc%]list subject[%END%]</strong></th>
@@ -13,7 +13,12 @@
  </tr>
 
 [% FOREACH list = closed %]
-<tr>
+[% IF dark == '1' %]
+  <tr valign="top">[% SET dark = 0 %]
+[% ELSE %]
+  <tr style="background-color: [% color_0 %];" valign="top">[% SET dark = 1 %]
+[% END %]
+
 <td><input type="checkbox" name="selected_lists" value="[% list.key %]" /></td>
 <td><a href="[% path_cgi %]/admin/[% list.key %]">[% list.key %]</a></td>
 <td>[% list.value.subject %]</td>
