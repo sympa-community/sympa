@@ -906,7 +906,7 @@ been subscribed (or unsubscribed) to the list.\n")
 	## command.
 	my $user_entry = $list->get_subscriber($email);
 	unless ((defined $user_entry) && ($user_entry->{'subscribed'} == 1)) {
-	    push @msg::report, sprintf gettext("Your e-mail address has not been found in the list %s. Maybe\nyou subscribed from a different e-mail address ?\n"), $email, $list->{'name'};
+	    push @msg::report, sprintf gettext("Your e-mail address %s has not been found in the list %s. Maybe\nyou subscribed from a different e-mail address ?\n"), $email, $list->{'name'};
 	    do_log('info', 'SIG %s from %s refused, not on list', $which, $email);
 	    
 	    ## Tell the owner somebody tried to unsubscribe
