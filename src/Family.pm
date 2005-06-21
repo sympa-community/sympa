@@ -30,6 +30,7 @@ use Conf;
 use Log;
 use admin;
 use Config_XML;
+use File::Copy;
 
 my %list_of_families;
 
@@ -1575,8 +1576,8 @@ sub _copy_files {
 
     # instance.xml
     if (defined $file) {
-	unless (rename "$dir/$file", "$list_dir/instance.xml") {
-	    &do_log('err','Family::_copy_files(%s) : impossible to move %s/%s into %s/instance.xml : %s',$self->{'name'},$dir,$file,$list_dir,$!);
+	unless (&File::Copy::copy "$dir/$file", "$list_dir/instance.xml") {
+	    &do_log('err','Family::_copy_files(%s) : impossible to copy %s/%s into %s/instance.xml : %s',$self->{'name'},$dir,$file,$list_dir,$!);
 	    return undef;
 	}
     }
