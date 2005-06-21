@@ -96,7 +96,7 @@ sympa_module_start() {
 #		startparam=""
 #	fi
  
-	if [ ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" -o ${OSTYPE} != "Debian" -o ${OSTYPE} != "Suze" ]; then
+	if [ ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" -o ${OSTYPE} = "Debian" -o ${OSTYPE} = "Suze" ]; then
 		$sympadir/$1.pl $startparam && echo "success" || echo "failure"
 	else
 		$sympadir/$1.pl $startparam && success || failure
