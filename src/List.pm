@@ -10376,9 +10376,9 @@ sub get_subscription_requests {
 
     foreach my $filename (sort grep(/^$self->{'name'}\.\d+\.\d+$/, readdir SPOOL)) {
 	unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
-	    do_log('notice', 'Could not open %s', $filename);
+	    do_log('err', 'Could not open %s', $filename);
 	    closedir SPOOL;
-	    return undef;
+	    next;
 	}
 	my $line = <REQUEST>;
 	$line =~ /^((\S+|\".*\")\@\S+)\s*(.*)$/;
