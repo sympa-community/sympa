@@ -972,7 +972,7 @@ my %alias = ('reply-to' => 'reply_to',
 			  },
 	    'remind_return_path' => {'format' => ['unique','owner'],
 				     'default' => {'conf' => 'remind_return_path'},
-				     'gettext_id' => "Remind return-path",
+				     'gettext_id' => "Return-path of the REMIND command",
 				     'group' => 'bounces'
 				 },
 	    'remind_task' => {'task' => 'remind',

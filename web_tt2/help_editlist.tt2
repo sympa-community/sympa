@@ -25,8 +25,7 @@
               [%|loc%]The list owner receives a warning whenever a message is distributed and the number (percentage) of bounces exceeds this value.[%END%]<br /><br />
           </li>
           <li>halt_rate ([%|loc%]Default value: bounce_halt_rate robot parameter[%END%])<br /><br />
-              [%|loc%]NOT USED YET. If bounce rate reaches the halt_rate, messages for the list will be halted, i.e. they are retained for subsequent moderation. Once the number of bounces exceeds this value, messages for the list are no longer
-              distributed.[%END%]<br /><br />
+              [%|loc%]NOT USED YET. If bounce rate reaches the halt_rate, messages for the list will be halted, i.e. they are retained for subsequent moderation.[%END%]<br /><br />
            </li>
            <li>expire_bounce_task ([%|loc%]Default value:[%END%] daily)<br /><br />
                [%|loc%]Name of the task template use to remove old bounces. Usefull to remove bounces for a subscriber email if some message are distributed without receiving new bounce. In this case, the subscriber email seems to be OK again. Active if task_manager.pl is running.[%END%]
@@ -116,7 +115,7 @@
       [% ELSIF p.key == 'max_size' %]
         [%|loc%]Maximum size of a message in 8-bit bytes.[%END%]
       [% ELSIF p.key == 'owner' %]
-        [%|loc%]Owners are managing subscribers of the list. They may review subscribers and add or delete email addresses from the mailing list. If you are a privileged owner of the list, you can choose other owners for the mailing list. Privileged owners may edit a few more options than other owners. There can only be one privileged owner per list; his/her email address may not be edited from the web.[%END%]
+        [%|loc%]Owners are managing subscribers of the list. They may review subscribers and add or delete email addresses from the mailing list. If you are a privileged owner of the list, you can choose other owners for the mailing list. Privileged owners may edit a few more options than other owners. [%END%]
       [% ELSIF p.key == 'priority' %]
         [%|loc%]The priority with which Sympa will process messages for this list. This level of priority is applied while the message is going through the spool. The z priority will freeze the message in the spool.[%END%]
       [% ELSIF p.key == 'remind' %]

@@ -569,11 +569,6 @@ msgstr "Abonenten hinzufügen"
 msgid "Address \"%1\" is incorrect"
 msgstr "Adresse \"%1\" ist falsch"
 
-#: web_tt2/list_admin_menu.tt2:6
-#, fuzzy
-msgid "Admin"
-msgstr "Admin"
-
 #: src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
 msgstr "Fortgeschrittene Suche"
@@ -1065,7 +1060,7 @@ msgstr "Erstellungsdatum"
 msgid "Creation of the list"
 msgstr "Erzeugung der Liste"
 
-#: web_tt2/choosepasswd.tt2:14
+#: web_tt2/choosepasswd.tt2:13
 msgid "Current password :"
 msgstr "Aktuelles Passwort:"
 
@@ -1141,11 +1136,11 @@ msgstr ""
 "\n"
 "AUTH %s DEL %s %s\n"
 
-#: web_tt2/help_editlist.tt2:131 web_tt2/help_editlist.tt2:138
-#: web_tt2/help_editlist.tt2:31 web_tt2/help_editlist.tt2:41
-#: web_tt2/help_editlist.tt2:44 web_tt2/help_editlist.tt2:47
-#: web_tt2/help_editlist.tt2:57 web_tt2/help_editlist.tt2:60
-#: web_tt2/help_editlist.tt2:63
+#: web_tt2/help_editlist.tt2:130 web_tt2/help_editlist.tt2:137
+#: web_tt2/help_editlist.tt2:30 web_tt2/help_editlist.tt2:40
+#: web_tt2/help_editlist.tt2:43 web_tt2/help_editlist.tt2:46
+#: web_tt2/help_editlist.tt2:56 web_tt2/help_editlist.tt2:59
+#: web_tt2/help_editlist.tt2:62
 msgid "Default value:"
 msgstr "Standardwert"
 
@@ -1157,11 +1152,11 @@ msgstr "Standardwert: bounce_halt_rate robot Parameter"
 msgid "Default value: bounce_warn_rate robot parameter"
 msgstr "Standardwert: bounce_warn_rate robot Parameter"
 
-#: web_tt2/help_editlist.tt2:170
+#: web_tt2/help_editlist.tt2:169
 msgid "Defines who can access the web archive for the list."
 msgstr "Definiert, wer das Web-Archiv zugreifen darf."
 
-#: web_tt2/help_editlist.tt2:82
+#: web_tt2/help_editlist.tt2:81
 msgid ""
 "Definition of digest mode. If this parameter is present, subscribers can "
 "select the option of receiving messages in multipart/digest MIME format, or "
@@ -1345,7 +1340,7 @@ msgstr "Dokument"
 msgid "Domain"
 msgstr "Domäne"
 
-#: web_tt2/help_editlist.tt2:100
+#: web_tt2/help_editlist.tt2:99
 msgid ""
 "Domain name of the list, default is the robot domain name set in the related "
 "robot.conf file or in file /etc/sympa.conf."
@@ -1366,7 +1361,7 @@ msgstr ""
 msgid "E-mail address %s was not found in the list.\n"
 msgstr "Die E-Mail Adresse %s konnte nicht in der Liste gefunden werden.\n"
 
-#: web_tt2/help_editlist.tt2:58
+#: web_tt2/help_editlist.tt2:57
 msgid ""
 "Each bouncing user have a score (from 0 to 100).This parameter defines limit "
 "between each category of bouncing users.For example, level 2 is for users "
@@ -1377,7 +1372,7 @@ msgstr ""
 "Benutzern mit Zustellungsfehlern. Zum Beispiel ist Ebene 2 für Benutzer mit "
 "einer Punktezahl zwischen 80 und 100."
 
-#: web_tt2/help_editlist.tt2:42
+#: web_tt2/help_editlist.tt2:41
 msgid ""
 "Each bouncing user have a score (from 0 to 100).This parameter defines lower "
 "limit foreach category of bouncing users.for example, level 1 begins from 45 "
@@ -1421,7 +1416,7 @@ msgstr "Bearbeiten der Datei %1"
 msgid "Editor"
 msgstr "Editor"
 
-#: web_tt2/help_editlist.tt2:84
+#: web_tt2/help_editlist.tt2:83
 msgid ""
 "Editors are responsible for moderating messages. If the mailing list is "
 "moderated, messages posted to the list will first be passed to the editors, "
@@ -1542,7 +1537,7 @@ msgstr ""
 msgid "FYI: %s list %s from %s %s"
 msgstr "Zur Information: %s list %s von %s %s"
 
-#: web_tt2/help_editlist.tt2:85
+#: web_tt2/help_editlist.tt2:84
 msgid ""
 "FYI: Defining editors will not make the list moderated ; you will have to "
 "set the \"send\" parameter."
@@ -1550,7 +1545,7 @@ msgstr ""
 "Zu ihrer Information: Das Bestimmen von Editoren erzeugt noch keine "
 "moderierte Liste. Sie müssen den \"send\" Paramter entsprechend setzen"
 
-#: web_tt2/help_editlist.tt2:86
+#: web_tt2/help_editlist.tt2:85
 msgid ""
 "FYI: If the list is moderated, any editor can distribute or reject a message "
 "without the knowledge or consent of the other editors. Messages that have "
@@ -1652,7 +1647,7 @@ msgstr "Name der Familie"
 msgid "For further assistance, please contact listmaster@%1"
 msgstr "Für weitere Hilfe wenden Sie sich bitte an listmaster@%1"
 
-#: web_tt2/help_editlist.tt2:111
+#: web_tt2/help_editlist.tt2:110
 msgid ""
 "For this operation, one Sympa site act as a server while the other one act "
 "as client. On the server side, the only setting needed is to give permission "
@@ -1805,7 +1800,7 @@ msgstr ""
 "INVITE <list> <email>       * Den Benutzer mit der Adresse <email> zum "
 "Abonnement der Liste <list> einladen"
 
-#: web_tt2/help_editlist.tt2:172
+#: web_tt2/help_editlist.tt2:171
 msgid ""
 "Idem spam_protection but restricted to web archive. A additional value is "
 "available: cookie which mean that users must submit a small form in order to "
@@ -1818,7 +1813,7 @@ msgstr ""
 "die Durchsicht des Archives möglich wird. Damit werden alle Web-Roboter "
 "blockiert - auch beispielsweise die von Google."
 
-#: web_tt2/help_editlist.tt2:174
+#: web_tt2/help_editlist.tt2:173
 msgid ""
 "If set to unique, the welcome message is sent using a unique return path in "
 "order to remove the subscriber immediately in the case of a bounce."
@@ -1827,7 +1822,7 @@ msgstr ""
 "Begrüßungsnachricht mit einem eindeutigen Rückpfad gesendet, sodass der "
 "Abonnent sofort entfernt werden kann, falls es zu einer Fehlzustellung kommt."
 
-#: web_tt2/help_editlist.tt2:136
+#: web_tt2/help_editlist.tt2:135
 msgid ""
 "If value was set to other_email, this parameter defines the e-mail address "
 "used."
@@ -2080,8 +2075,9 @@ msgstr "Liste %1 ist geschlossen"
 
 #. (list.name,list.host,param0,param1,param2)
 #: mail_tt2/listowner_notification.tt2:32
+#, fuzzy
 msgid ""
-"List %list(.name)@%list(.host) has been reinstantiated (family %3). \n"
+"List %1@%2 has been reinstantiated (family %3). \n"
 "Some of the customizations have been removed because they no more respect "
 "the family rules :\n"
 "\n"
@@ -2220,7 +2216,7 @@ msgstr "Listenname:"
 msgid "List name:"
 msgstr "Listenname:"
 
-#: web_tt2/help_editlist.tt2:90
+#: web_tt2/help_editlist.tt2:89
 msgid ""
 "List owners may decide to add message headers or footers to messages sent "
 "via the list. This parameter defines the way a footer/header is added to a "
@@ -2329,7 +2325,7 @@ msgid "Magic authentification"
 msgstr "\"magische\" Authentifizierung"
 
 # nlsref 16,19
-#: web_tt2/help_editlist.tt2:76
+#: web_tt2/help_editlist.tt2:75
 msgid "Mail reception mode."
 msgstr "E-Mail Empfangsmodus"
 
@@ -2382,7 +2378,7 @@ msgstr "Maximale Nachrichtengröße"
 msgid "Maximum size       : %1"
 msgstr "Maximale Größe        : %1"
 
-#: web_tt2/help_editlist.tt2:117
+#: web_tt2/help_editlist.tt2:116
 msgid "Maximum size of a message in 8-bit bytes."
 msgstr "Die maximale Größe einer Mitteilung in 8-bit Bytes."
 
@@ -2559,13 +2555,11 @@ msgstr "Mehrfaches Hinzufügen"
 msgid "My password ?"
 msgstr "Mein Passwort ?"
 
-#: web_tt2/help_editlist.tt2:29
+#: web_tt2/help_editlist.tt2:28
 #, fuzzy
 msgid ""
 "NOT USED YET. If bounce rate reaches the halt_rate, messages for the list "
-"will be halted, i.e. they are retained for subsequent moderation. Once the "
-"number of bounces exceeds this value, messages for the list are no longer\n"
-"              distributed."
+"will be halted, i.e. they are retained for subsequent moderation."
 msgstr ""
 "NOCH NICHT VERWENDET. Wenn die Rate der Zustellfehler halt_rate erreicht, "
 "werden Nachrichten an die Liste unterbrochen, d.h. sie werden für eine "
@@ -2582,7 +2576,7 @@ msgstr "Name"
 msgid "Name :"
 msgstr "Name :"
 
-#: web_tt2/help_editlist.tt2:32
+#: web_tt2/help_editlist.tt2:31
 msgid ""
 "Name of the task template use to remove old bounces. Usefull to remove "
 "bounces for a subscriber email if some message are distributed without "
@@ -2603,11 +2597,11 @@ msgstr "Neue E-Mail Adresse :"
 msgid "New list name:"
 msgstr "Neuer Listenname:"
 
-#: web_tt2/choosepasswd.tt2:18 web_tt2/pref.tt2:42
+#: web_tt2/choosepasswd.tt2:17 web_tt2/pref.tt2:42
 msgid "New password :"
 msgstr "Neues Passwort :"
 
-#: web_tt2/choosepasswd.tt2:20
+#: web_tt2/choosepasswd.tt2:18
 msgid "New password again :"
 msgstr "Noch einmal neues Passwort :"
 
@@ -2632,7 +2626,7 @@ msgstr "Newsletter, beschränkt auf Moderatoren nach Bestätigung"
 msgid "Next page"
 msgstr "Nächste Seite"
 
-#: web_tt2/help_editlist.tt2:176
+#: web_tt2/help_editlist.tt2:175
 msgid "No Comment"
 msgstr "Kein Kommentar"
 
@@ -2703,7 +2697,7 @@ msgstr "KeinMail"
 msgid "Not subscribed: %1"
 msgstr "Kein Abonnent: %1"
 
-#: web_tt2/help_editlist.tt2:133
+#: web_tt2/help_editlist.tt2:132
 msgid ""
 "Note: it is inadvisable to change this parameter, and particularly "
 "inadvisable to set it to list. Experience has shown it to be almost "
@@ -2824,14 +2818,13 @@ msgstr "Eigentümer:"
 msgid "Owners"
 msgstr "Eigentümer"
 
-#: web_tt2/help_editlist.tt2:119
+#: web_tt2/help_editlist.tt2:118
+#, fuzzy
 msgid ""
 "Owners are managing subscribers of the list. They may review subscribers and "
 "add or delete email addresses from the mailing list. If you are a privileged "
 "owner of the list, you can choose other owners for the mailing list. "
-"Privileged owners may edit a few more options than other owners. There can "
-"only be one privileged owner per list; his/her email address may not be "
-"edited from the web."
+"Privileged owners may edit a few more options than other owners. "
 msgstr ""
 "Die Eigentümer verwalten die Abonnenten der Liste. Sie können Abonnenten "
 "durchsehen und E-Mail Adressen von der Liste entfernen oder neue hinzufügen. "
@@ -3026,7 +3019,7 @@ msgstr "Öffentliche Listen"
 msgid "Publish"
 msgstr "Veröffentlichen"
 
-#: web_tt2/get_closed_lists.tt2:25
+#: web_tt2/get_closed_lists.tt2:30
 msgid "Purge selected lists"
 msgstr "Gewählte Listen endgültig löschen"
 
@@ -3150,11 +3143,6 @@ msgstr ""
 "sind \n"
 "oder auch für Benutzer, die sich nicht selbst abmelden können."
 
-# nlsref 16,65
-#: src/List.pm:975
-msgid "Remind return-path"
-msgstr "Rücklaufpfad für Erinnerungen"
-
 # nlsref 6,76
 #: src/Commands.pm:1309
 msgid "Reminder of your %s subscription"
@@ -3166,7 +3154,8 @@ msgid "Reminder of your subscription to %1"
 msgstr "Erinnerung an Ihr Abonnent der Liste %1"
 
 #: web_tt2/scenario_test.tt2:47
-msgid "Remote addr"
+#, fuzzy
+msgid "Remote IP address"
 msgstr "Entfernte Adresse"
 
 # nlsref 16,34
@@ -3292,6 +3281,10 @@ msgstr "Ergebnis Ihrer Befehle"
 msgid "Return to archive %1"
 msgstr "Zurück zum Archiv %1"
 
+#: src/List.pm:975
+msgid "Return-path of the REMIND command"
+msgstr ""
+
 #: web_tt2/list_menu.tt2:62
 msgid "Review"
 msgstr "Bericht"
@@ -3385,7 +3378,7 @@ msgstr ""
 "Verwaltung der Listen automatisiert, zum Beispiel Abonnements, Moderation "
 "und Archiv-Management."
 
-#: web_tt2/help_editlist.tt2:125
+#: web_tt2/help_editlist.tt2:124
 msgid "Same as welcome_return_path, but applied to remind messages."
 msgstr "Identisch mit welcome_return_path, aber für Erinnerungsnachrichten"
 
@@ -3507,12 +3500,8 @@ msgid "Shared document directory size"
 msgstr "Verzeichnisgröße der gemeinsamen Dokumente"
 
 # nlsref 16,70
-#: src/List.pm:1048
+#: src/List.pm:1048 web_tt2/list_menu.tt2:54 web_tt2/list_menu.tt2:56
 msgid "Shared documents"
-msgstr "Gemeinsame Dokumente"
-
-#: web_tt2/list_menu.tt2:54 web_tt2/list_menu.tt2:56
-msgid "Shared web"
 msgstr "Gemeinsame Dokumente"
 
 #: web_tt2/help_user_options.tt2:18
@@ -3705,7 +3694,7 @@ msgstr "Titelmarkierung"
 msgid "Subject:"
 msgstr "Titel:"
 
-#: web_tt2/choosepasswd.tt2:22 web_tt2/pref.tt2:22 web_tt2/pref.tt2:35
+#: web_tt2/choosepasswd.tt2:19 web_tt2/pref.tt2:22 web_tt2/pref.tt2:35
 #: web_tt2/pref.tt2:47 web_tt2/pref.tt2:78
 msgid "Submit"
 msgstr "Absenden"
@@ -3803,7 +3792,7 @@ msgstr "Sonntag:Montag:Dienstag:Mittwoch:Donnerstag:Freitag:Samstag"
 msgid "Sympa admin"
 msgstr "Sympa Admin"
 
-#: web_tt2/help_editlist.tt2:166
+#: web_tt2/help_editlist.tt2:165
 msgid ""
 "Sympa allows the list owner to choose how Sympa loads list member data. "
 "Subscriber information can be stored in a text file or relational database, "
@@ -3816,7 +3805,7 @@ msgstr ""
 "verschiedenen externen Quellen inkludiert werden (Listen, Klartextdatei, "
 "Ergebnis einer Abfrage)."
 
-#: web_tt2/help_editlist.tt2:162
+#: web_tt2/help_editlist.tt2:161
 msgid ""
 "Sympa caches user data extracted using the include parameter. Their TTL "
 "(time-to-live) within Sympa can be controlled using this parameter. The "
@@ -3826,7 +3815,7 @@ msgstr ""
 "Parameters bezogen wurden. Deren Aufbewahrungsdauer in Sympa kann durch "
 "diesen Parameter kontrolliert werden. Der Standardwert ist 3600"
 
-#: web_tt2/help_editlist.tt2:110
+#: web_tt2/help_editlist.tt2:109
 msgid ""
 "Sympa can contact another Sympa service using https to fetch a remote list "
 "in order to include each member of a remote list as subscriber. You may "
@@ -3898,7 +3887,7 @@ msgstr ""
 msgid "Sympa error - could not display web page"
 msgstr "Sympa Fehler - Konnte die Webseite nicht anzeigen"
 
-#: web_tt2/help_editlist.tt2:96
+#: web_tt2/help_editlist.tt2:95
 msgid ""
 "Sympa will not create new MIME parts, but will try to append the header/"
 "footer to the body of the message. Predefined message-footers will be "
@@ -3983,7 +3972,7 @@ msgstr "Die %1 neuesten gemeinsamen Dokumente"
 msgid "The %1 most active lists"
 msgstr "Die %1 aktivsten Listen"
 
-#: web_tt2/help_editlist.tt2:38
+#: web_tt2/help_editlist.tt2:37
 #, fuzzy
 msgid ""
 "The Bouncers_level1 paragraphs defines the automatic behavior of bounce "
@@ -3994,7 +3983,7 @@ msgstr ""
 "Verwaltung von Zustellfehlern <br />\n"
 "\tEbene 1 ist die untere Ebene der Benutzer mit Zustellfehlern.\n"
 
-#: web_tt2/help_editlist.tt2:54
+#: web_tt2/help_editlist.tt2:53
 #, fuzzy
 msgid ""
 "The Bouncers_levelX paragraphs defines the automatic behavior of bounce "
@@ -4058,7 +4047,7 @@ msgstr "Der Betreff des Zertifikates ist :"
 msgid "The configuration file --CONFIG-- contains errors.\n"
 msgstr "Die Konfigurationsdatei --CONFIG-- enthält Fehler.\n"
 
-#: web_tt2/help_editlist.tt2:139
+#: web_tt2/help_editlist.tt2:138
 msgid ""
 "The default is to respect (preserve) the existing Reply-To: SMTP header "
 "field in incoming messages. If set to forced, Reply-To: SMTP header field "
@@ -4068,13 +4057,13 @@ msgstr ""
 "eingehenden Nachrichten zu erhalten. Wenn Sie das auf \"erzwingen\" setzen, "
 "wird dieses Feld überschrieben."
 
-#: web_tt2/help_editlist.tt2:93
+#: web_tt2/help_editlist.tt2:92
 msgid "The default value. Sympa will add the footer/header as a new MIME part."
 msgstr ""
 "Der Standardwert. Sympa wird die Kopf-/Fußzeile als neuen MIME Teil "
 "hinzufügen."
 
-#: web_tt2/help_editlist.tt2:74
+#: web_tt2/help_editlist.tt2:73
 msgid ""
 "The default_user_options parameter starts a paragraph to define a default "
 "profile for the subscribers of the list."
@@ -4199,7 +4188,7 @@ msgstr "Die aktivsten Listen"
 msgid "The passwords you typed do not match"
 msgstr "Die beiden Passworte stimmen nicht überein"
 
-#: web_tt2/help_editlist.tt2:121
+#: web_tt2/help_editlist.tt2:120
 msgid ""
 "The priority with which Sympa will process messages for this list. This "
 "level of priority is applied while the message is going through the spool. "
@@ -4209,7 +4198,7 @@ msgstr ""
 "Priorität wird angewandt, wenn die Nachricht die Warteschleife durchwandert. "
 "Die Priorität \"z\" friert Nachrichten in der Warteschlange ein."
 
-#: web_tt2/help_editlist.tt2:129
+#: web_tt2/help_editlist.tt2:128
 msgid ""
 "The reply_to_header parameter starts a paragraph defining what Sympa will "
 "place in the Reply-To: SMTP header field of the messages it distributes."
@@ -4227,7 +4216,7 @@ msgstr ""
 "Das Sendeintervall für Nachrichtenkompilate wird vom Listeneigentümer "
 "definiert."
 
-#: web_tt2/help_editlist.tt2:158
+#: web_tt2/help_editlist.tt2:157
 msgid "The subscribe parameter defines the rules for subscribing to the list."
 msgstr ""
 "Die Abonnement-Parameter definieren die Regeln für Abonnements der Liste."
@@ -4242,7 +4231,7 @@ msgstr "Der Benutzer %s wurde von der Liste %s gelöscht.\n"
 msgid "There are %1 messages to be moderated for list %2@%3"
 msgstr "%1 Nachrichten für die Liste %2@%3 müssen moderiert werden"
 
-#: web_tt2/help_editlist.tt2:149
+#: web_tt2/help_editlist.tt2:148
 msgid ""
 "There is a need to protect Sympa web site against spambot which collect "
 "email address in public web site. Various methods are available in Sympa and "
@@ -4385,7 +4374,7 @@ msgid "This paragraph defines bounce management parameters:"
 msgstr ""
 "Dieser Abschnitt definiert die Parameter der Verwaltung von Fehlzustellungen:"
 
-#: web_tt2/help_editlist.tt2:106
+#: web_tt2/help_editlist.tt2:105
 msgid ""
 "This paragraph defines parameters for a query returning a list of "
 "subscribers. This paragraph is used only if user_data_source is set to "
@@ -4396,7 +4385,7 @@ msgstr ""
 "user_data_source auf \"include\" gesetzt ist. Diese Funktionalität benötigt "
 "das Net::LDAP (perlldap) PERL Modul."
 
-#: web_tt2/help_editlist.tt2:104
+#: web_tt2/help_editlist.tt2:103
 msgid ""
 "This paragraph defines parameters for a two-level query returning a list of "
 "subscribers. Usually the first-level query returns a list of DNs and the "
@@ -4411,7 +4400,7 @@ msgstr ""
 "\"include\" gesetzt ist. Diese Funktionalität benötigt das Net::LDAP "
 "(perlldap) PERL Modul."
 
-#: web_tt2/help_editlist.tt2:147
+#: web_tt2/help_editlist.tt2:146
 msgid ""
 "This paragraph defines read and edit access to the shared document "
 "repository."
@@ -4419,7 +4408,7 @@ msgstr ""
 "Dieser Abschnitt definiert den Lese- und Schreibzugriff auf die gemeinsame "
 "Dokumentenablage."
 
-#: web_tt2/help_editlist.tt2:160
+#: web_tt2/help_editlist.tt2:159
 msgid ""
 "This parameter allows the classification of lists. You may define multiple "
 "topics as well as hierarchical ones. WWSympa's list of public lists uses "
@@ -4429,7 +4418,7 @@ msgstr ""
 "und hierarchische Themen angeben. Dieser Parameter wird von der Liste der "
 "öffentlichen Listen von WWSympa verwendet."
 
-#: web_tt2/help_editlist.tt2:115
+#: web_tt2/help_editlist.tt2:114
 msgid ""
 "This parameter defines the language used for the list. It is used to "
 "initialize a user's language preference; Sympa command reports are extracted "
@@ -4439,7 +4428,7 @@ msgstr ""
 "Initialisierung der Sprache eines Benutzers verwendet. Die Berichte der "
 "Sympa Kommandos werden aus dem zugehörigen Nachrichtenkatalog extrahiert."
 
-#: web_tt2/help_editlist.tt2:45
+#: web_tt2/help_editlist.tt2:44
 msgid ""
 "This parameter defines which task is automaticaly applied on level 1 "
 "bouncers."
@@ -4447,7 +4436,7 @@ msgstr ""
 "Dieser Parameter definiert, welche Aufgabe automatisch auf Benutzer mit "
 "Zustellfehlern der Ebene 1 angewandt wird."
 
-#: web_tt2/help_editlist.tt2:61
+#: web_tt2/help_editlist.tt2:60
 msgid ""
 "This parameter defines which task is automaticaly applied on level 2 "
 "bouncers."
@@ -4455,7 +4444,7 @@ msgstr ""
 "Dieser Parameter defininiert, welche Aufgabe automatisch auf Benutzer mit "
 "Zustellfehlern der Ebene 2 angewandt wird."
 
-#: web_tt2/help_editlist.tt2:156
+#: web_tt2/help_editlist.tt2:155
 msgid ""
 "This parameter indicates the subject of the list, which is sent in response "
 "to the LISTS mail command. The subject is a free form text limited to one "
@@ -4465,7 +4454,7 @@ msgstr ""
 "Befehl gesendet wird. Der Titel ist frei wählbar, aber auf 1 Zeile "
 "beschränkt."
 
-#: web_tt2/help_editlist.tt2:132
+#: web_tt2/help_editlist.tt2:131
 msgid ""
 "This parameter indicates whether the Reply-To: field should indicate the "
 "sender of the message (sender), the list itself (list), both list and sender "
@@ -4475,7 +4464,7 @@ msgstr ""
 "oder die Liste selbst, beide oder eine andere E-Mail Adresse  (definiert "
 "über den Parameter other_email) verwenden soll."
 
-#: web_tt2/help_editlist.tt2:168
+#: web_tt2/help_editlist.tt2:167
 msgid ""
 "This parameter indicates whether the list should feature in the output "
 "generated in response to a LISTS command or should be shown in the list "
@@ -4484,7 +4473,7 @@ msgstr ""
 "Dieser Parameter zeigt an, ob die Liste in der Antwort des LISTS Befehls "
 "oder in der Listen-Übersicht der Webseite aufscheinen soll."
 
-#: web_tt2/help_editlist.tt2:68
+#: web_tt2/help_editlist.tt2:67
 msgid ""
 "This parameter is a confidential item for generating authentication keys for "
 "administrative commands (ADD, DELETE, etc.). This parameter should remain "
@@ -4497,7 +4486,7 @@ msgstr ""
 "Cookie, das bei allen Listen-Eigentümern angewandt wird, wird nur "
 "herangezogen, wenn der Eigentümer den \"auth\" Parameter gesetzt hat."
 
-#: web_tt2/help_editlist.tt2:72
+#: web_tt2/help_editlist.tt2:71
 msgid ""
 "This parameter is optional. It specifies a string which is added to the "
 "subject of distributed messages (intended to help users who do not use "
@@ -4509,7 +4498,7 @@ msgstr ""
 "helfen, die keine automatischen Tools verwenden, um eingehende Nachrichten "
 "zu sortieren. Diese Zeichenkette wird von den Zeichen \"[]\" umgeben."
 
-#: web_tt2/help_editlist.tt2:70
+#: web_tt2/help_editlist.tt2:69
 msgid ""
 "This parameter is optional. The headers specified will be added to the "
 "headers of messages distributed via the list. As of release 1.2.2 of Sympa, "
@@ -4521,7 +4510,7 @@ msgstr ""
 "können mehrere benutzerdefinierte Kopfzeilen gleichzeitig in die "
 "Konfigurationsdatei gegeben werden."
 
-#: web_tt2/help_editlist.tt2:164
+#: web_tt2/help_editlist.tt2:163
 msgid ""
 "This parameter specifies the unsubscription method for the list. Use "
 "open_notify or auth_notify to allow owner notification of each unsubscribe "
@@ -4531,7 +4520,7 @@ msgstr ""
 "open_notify oder auth_notify, um zu erlauben, dass der Eigentümer über jede "
 "Abmeldung informiert wird."
 
-#: web_tt2/help_editlist.tt2:143
+#: web_tt2/help_editlist.tt2:142
 msgid ""
 "This parameter specifies who can access the list of members. Since "
 "subscriber addresses can be abused by spammers, it is strongly recommended "
@@ -4542,19 +4531,19 @@ msgstr ""
 "dringend empfohlen, dass nur authorisierte Eigentümer oder Abonnenten die "
 "Abonnentenliste einsehen können."
 
-#: web_tt2/help_editlist.tt2:145
+#: web_tt2/help_editlist.tt2:144
 msgid "This parameter specifies who can send messages to the list."
 msgstr "Dieser Parameter gibt an, wer Nachrichten an die Liste senden kann."
 
-#: web_tt2/help_editlist.tt2:80
+#: web_tt2/help_editlist.tt2:79
 msgid "This parameter specifies who is authorized to use the DEL command."
 msgstr "Dieser Parameter gibt an, wer den DEL Befehl verwenden kann."
 
-#: web_tt2/help_editlist.tt2:123
+#: web_tt2/help_editlist.tt2:122
 msgid "This parameter specifies who is authorized to use the remind command."
 msgstr "Dieser Parameter gibt an, wer den REMIND Befehl vewenden kann."
 
-#: web_tt2/help_editlist.tt2:88
+#: web_tt2/help_editlist.tt2:87
 msgid ""
 "This parameter states which model is used to create a expire task. An expire "
 "task regurlaly checks the inscription or reinscription date of subscribers "
@@ -4565,7 +4554,7 @@ msgstr ""
 "Beginns eines Abonnements und bittet die Abonnenten, ihr Abonnement zu "
 "verlängern. Andernfalls werden die Abonnements gelöscht."
 
-#: web_tt2/help_editlist.tt2:127
+#: web_tt2/help_editlist.tt2:126
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regurlaly sends to the subscribers a message which reminds them their "
@@ -4575,7 +4564,7 @@ msgstr ""
 "Aufgabe verwendet wird. Eine Erinnerungs-Aufgabe sendet den Abonnenten "
 "regelmäßig eine Nachricht, die sie an ihr Abonnement einer Liste erinnert."
 
-#: web_tt2/help_editlist.tt2:113
+#: web_tt2/help_editlist.tt2:112
 msgid ""
 "This parameter will be interpreted only if the user_data_source value is set "
 "to include, and is used to begin a paragraph defining the SQL query "
@@ -4585,7 +4574,7 @@ msgstr ""
 "\" gesetzt ist und wird für den Start eines Abschnittes verwendet, der die "
 "Parameter einer SQL Abfrage definiert."
 
-#: web_tt2/help_editlist.tt2:102
+#: web_tt2/help_editlist.tt2:101
 msgid ""
 "This parameter will be interpreted only if the user_data_source value is set "
 "to include. The file should contain one e-mail address per line (lines "
@@ -4595,7 +4584,7 @@ msgstr ""
 "\" gesetzt ist. Die Datei sollte nur eine E-Mail Adresse pro Zeile enthalten "
 "(Zeilen mit einem \"#\" am Anfang werden ignoriert)."
 
-#: web_tt2/help_editlist.tt2:108
+#: web_tt2/help_editlist.tt2:107
 msgid ""
 "This parameter will be interpreted only if user_data_source is set to "
 "include. All subscribers of list listname become subscribers of the current "
@@ -5102,7 +5091,7 @@ msgstr "Sichtbarkeit :"
 msgid "Visibility of the list"
 msgstr "Sichbarkeit der Liste"
 
-#: web_tt2/help_editlist.tt2:77
+#: web_tt2/help_editlist.tt2:76
 msgid "Visibility of the subscriber with the REVIEW command."
 msgstr "Sichtbarkeit des Abonnenten mit dem REVIEW Befehl."
 
@@ -5195,7 +5184,7 @@ msgstr "Willkommen bei der Verteilerliste %1@%2"
 msgid "When authenticating ("
 msgstr "Falls authentifiziert ("
 
-#: web_tt2/help_editlist.tt2:48
+#: web_tt2/help_editlist.tt2:47
 msgid ""
 "When automatic task is executed on level 1 bouncers, a notification email "
 "can be send to listowner or listmaster."
@@ -5204,7 +5193,7 @@ msgstr ""
 "ausgeführt wird, kann eine Benachrichtigung an den Listeneigentümer oder an "
 "\"listmaster\" gesendet werden."
 
-#: web_tt2/help_editlist.tt2:64
+#: web_tt2/help_editlist.tt2:63
 msgid ""
 "When automatic task is executed on level 2 bouncers, a notification email "
 "can be send to listowner or listmaster."
@@ -5611,18 +5600,19 @@ msgstr "Ihr Dokument wurde abgelehnt."
 msgid "Your e-mail address"
 msgstr "Ihre E-Mail Adresse"
 
-#: web_tt2/sigrequest.tt2:49
-msgid "Your e-mail address :"
-msgstr "Ihre E-Mail Adresse :"
-
 # nlsref 6,30
 #: src/Commands.pm:909
+#, fuzzy
 msgid ""
-"Your e-mail address has not been found in the list %s. Maybe\n"
+"Your e-mail address %s has not been found in the list %s. Maybe\n"
 "you subscribed from a different e-mail address ?\n"
 msgstr ""
 "Ihre E-Mail Adresse wurde nicht in der Liste %s gefunden.\n"
 "Haben Sie sie vielleicht unter einer anderen Adresse abonniert?\n"
+
+#: web_tt2/sigrequest.tt2:49
+msgid "Your e-mail address :"
+msgstr "Ihre E-Mail Adresse :"
 
 #. (user.email,list.name,list.host)
 #: mail_tt2/bye.tt2:4
@@ -6023,7 +6013,7 @@ msgstr ""
 "Datei(en) löschen oder wollen Sie die Installation abbrechen?"
 
 # nlsref 16,27
-#: web_tt2/help_editlist.tt2:135
+#: web_tt2/help_editlist.tt2:134
 msgid "an_email_address"
 msgstr "E-Mail Adresse"
 
@@ -6571,7 +6561,7 @@ msgstr "neueste Nachrichten"
 msgid "no conceal"
 msgstr "sichtbar"
 
-#: web_tt2/help_editlist.tt2:153
+#: web_tt2/help_editlist.tt2:152
 msgid "no protection against spammer."
 msgstr "Kein Schutz gegen Spammer."
 
@@ -6979,11 +6969,11 @@ msgstr "Zusammenfassungsnachricht"
 msgid "tag this mail for deletion"
 msgstr "Dieses E-Mail zum Löschen markieren"
 
-#: web_tt2/help_editlist.tt2:152
+#: web_tt2/help_editlist.tt2:151
 msgid "the @ char is replaced by the string \" AT \"."
 msgstr "Das @-Zeichen wird durch die Zeichenkette \"AT\" ersetzt."
 
-#: web_tt2/help_editlist.tt2:151
+#: web_tt2/help_editlist.tt2:150
 msgid ""
 "the address is hidden using a javascript. User who enable javascript can see "
 "a nice mailto address where others have nothing."
@@ -7053,7 +7043,7 @@ msgid "unsubscription message"
 msgstr "Abmeldungsnachricht"
 
 # nlsref 16,91
-#: src/List.pm:991 web_tt2/help_editlist.tt2:131
+#: src/List.pm:991 web_tt2/help_editlist.tt2:130
 msgid "value"
 msgstr "Wert"
 
@@ -7108,6 +7098,17 @@ msgstr "Ihre E-Mail Adresse   : %1"
 #: mail_tt2/sendpasswd.tt2:30
 msgid "your password : %1"
 msgstr "Ihr Passwort : %1"
+
+# nlsref 16,65
+#~ msgid "Remind return-path"
+#~ msgstr "Rücklaufpfad für Erinnerungen"
+
+#~ msgid "Shared web"
+#~ msgstr "Gemeinsame Dokumente"
+
+#, fuzzy
+#~ msgid "Admin"
+#~ msgstr "Admin"
 
 #~ msgid "%1@%2 - %3"
 #~ msgstr "%1@%2 - %3"

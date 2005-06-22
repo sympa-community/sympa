@@ -51,9 +51,9 @@
 [% IF shared == 'exist' %]
     [% IF may_d_read %]
     [% IF action == 'd_read' || action == 'd_edit' || action == 'd_properties' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-        <strong><a class="[% class %]" href="[% path_cgi %]/d_read/[% list %]/" >[%|loc%]Shared web[%END%]</a></strong><br />
+        <strong><a class="[% class %]" href="[% path_cgi %]/d_read/[% list %]/" >[%|loc%]Shared documents[%END%]</a></strong><br />
     [% ELSE %]
-          <div class="menuInactive2">[%|loc%]Shared web[%END%]</div><br />
+          <div class="menuInactive2">[%|loc%]Shared documents[%END%]</div><br />
     [% END %]
 [% END %]
 

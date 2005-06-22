@@ -24,7 +24,7 @@ This list has been closed.[%END%]
 [% ELSIF type == 'erase_customizing' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" customizations have been removed[%END%][%END%]
 
-[%|loc(list.name,list.host,param0,param1,param2)%]List [list.name]@[list.host] has been reinstantiated (family %3). 
+[%|loc(list.name,list.host,param0,param1,param2)%]List %1@%2 has been reinstantiated (family %3). 
 Some of the customizations have been removed because they no more respect the family rules :
 
      Parameters : %4
