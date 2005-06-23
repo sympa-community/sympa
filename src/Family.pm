@@ -1576,7 +1576,7 @@ sub _copy_files {
 
     # instance.xml
     if (defined $file) {
-	unless (&File::Copy::copy "$dir/$file", "$list_dir/instance.xml") {
+	unless (&File::Copy::copy ("$dir/$file", "$list_dir/instance.xml")) {
 	    &do_log('err','Family::_copy_files(%s) : impossible to copy %s/%s into %s/instance.xml : %s',$self->{'name'},$dir,$file,$list_dir,$!);
 	    return undef;
 	}
