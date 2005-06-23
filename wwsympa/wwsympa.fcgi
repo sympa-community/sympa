@@ -631,9 +631,6 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	 $param->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
 	 $param->{$p} = &Conf::get_robot_conf($robot, $p) if (($p =~ /_color$/)|| ($p =~ /color_/));
      }
-     $param->{'css_url'} = &Conf::get_robot_conf($robot, 'css_url');
-
-     &do_log('info', "parameter css_url seems strange, it must be the url of a directory not a css file") if ($param->{'css_url'} =~ /.css$/);
 
      foreach my $auth (keys  %{$Conf{'cas_id'}}) {
 	 &do_log('debug2', "cas authentication service $auth");
@@ -682,7 +679,18 @@ if ($wwsconf->{'use_fast_cgi'}) {
      ## Get PATH_INFO parameters
      &get_parameters();
 
-     if (($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS') &&
+     ## CSS related
+     $param->{'css_path'} = &Conf::get_robot_conf($robot, 'css_path');
+     $param->{'css_url'} = &Conf::get_robot_conf($robot, 'css_url');
+     ## If CSS file not found, let Sympa do the job...
+     unless (-f $param->{'css_path'}.'/style.css') {
+	 &wwslog('err','Could not find CSS file %s, using default CSS', $param->{'css_path'}.'/style.css');
+	 $param->{'css_url'} = $param->{'base_url'}.$param->{'path_cgi'}.'/css';
+     }
+
+     &wwslog('info', "parameter css_url '%s' seems strange, it must be the url of a directory not a css file", $param->{'css_url'}) if ($param->{'css_url'} =~ /\.css$/);
+
+    if (($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS') &&
 	 ($in{'action'} ne 'sso_login')) { ## Do not check client certificate automatically if in sso_login 
 
 	 &do_log('debug2', "SSL verified, S_EMAIL = %s,"." S_DN_Email = %s", $ENV{'SSL_CLIENT_S_EMAIL'}, $ENV{'SSL_CLIENT_S_DN_Email'});
@@ -3997,10 +4005,8 @@ sub do_skinsedit {
     
     my $dir = &Conf::get_robot_conf($robot, 'css_path');
     my $css_url  = &Conf::get_robot_conf($robot, 'css_url');
-    $param->{'css_path'}= $dir;
-    $param->{'css_url'}= $css_url;
 	
-    $param->{'css_warning'} = "parameter css_url seems strange, it must be the url of a directory not a css file" if ($param->{'css_url'} =~ /.css$/);
+    $param->{'css_warning'} = "parameter css_url seems strange, it must be the url of a directory not a css file" if ($css_url =~ /\.css$/);
     
     if ($in{'installcss'}) {
 	my $tt2_include_path = [$Conf{'etc'}.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'}),
@@ -4008,23 +4014,35 @@ sub do_skinsedit {
 				'--ETCBINDIR--'.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'}),
 				'--ETCBINDIR--'.'/web_tt2'];
 	
+	## not the default robot
+	if (lc($robot) ne lc($Conf{'host'})) {
+	    unshift @{$tt2_include_path}, $Conf{'etc'}.'/'.$robot.'/web_tt2';
+	    unshift @{$tt2_include_path}, $Conf{'etc'}.'/'.$robot.'/web_tt2/'.&Language::Lang2Locale($param->{'lang'});
+	}
+	
 	my $date= time;
 	foreach my $css ('style.css','print.css','fullPage.css','print-preview.css') {
 	    $param->{'css'} = $css;
 	    
-	    unless (open (CSS,">$dir/$css.$date")) {
-		&error_message("Can't open $dir/$css.$date");
-		&wwslog('err','skinsedit : can\'t open file %s/%s.%s',$dir,$css,$date);
-		return undef;
+	    ## Keep a copy of the previous CSS
+	    if (-f "$dir/$css") {
+		unless (rename "$dir/$css", "$dir/$css.$date") {
+		    &error_message("failed_rename");
+		    &wwslog('err','skinsedit : failed to rename file %s', "$dir/$css");
+		    return undef;
+		}
 	    }
-	    unless (open (CSSOLD,"$dir/$css")) {
-		&error_message("Can't open $dir/$css.$date");
-		&wwslog('err','skinsedit : can\'t open file (read) %s/%s.%s',$dir,$css.$date);
-		return undef;
-	    }
-	    while (<CSSOLD>) {print CSS $_ ;}
-	    close CSSOLD;close CSS;
 	    
+	    unless (-d $dir) {
+		unless (mkdir $dir, 0775) {
+		    &error_message("mkdir_failed");
+		    &wwslog('err','skinsedit : failed to create directory %s : %s',$dir, $!);
+		    return undef;
+		}
+		chmod 0775, $dir;
+		&wwslog('notice','skinsedit : created missing directory %s',$dir);
+	    }
+
 	    unless (open (CSS,">$dir/$css")) {
 		&error_message("Can't open $dir $css");
 		&wwslog('err','skinsedit : can\'t open file (write) %s/%s',$dir,$css);
@@ -4037,6 +4055,9 @@ sub do_skinsedit {
 		&do_log('info', "do_skinsedit : error while installing $dir/$css");
 	    }
 	    close (CSS) ;
+	    
+	    ## Make the CSS readable to anyone
+	    chmod 0775, "$dir/$css";
 	}  
 	$param->{'css_result'} = 1 ;
     }
