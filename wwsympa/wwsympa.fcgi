@@ -364,7 +364,7 @@ my %action_args = ('default' => ['list'],
 		'remove_template' => [],
 		'copy_template' => [],
 		'edit_template' => [],
-		'rss_request' => [],
+		'rss_request' => ['list'],
 		);
 
 my %action_type = ('editfile' => 'admin',
@@ -12958,7 +12958,7 @@ sub do_rss_request {
 	if ($list ) {
 		$args .= '&list='.$list->{'name'};		
    		$param->{'latest_archive_url'} = $Conf{'wwsympa_url'}."/rss/latest_archive?".$args;
-		$param->{'latest_d_read__url'} = $Conf{'wwsympa_url'}."/rss/latest_d_read?".$args;
+		$param->{'latest_d_read_url'} = $Conf{'wwsympa_url'}."/rss/latest_d_read?".$args;
 	}
 	$param->{'active_lists_url'} = $Conf{'wwsympa_url'}."/rss/active_lists?".$args;
 	$param->{'latest_lists_url'} = $Conf{'wwsympa_url'}."/rss/latest_lists?".$args;	
