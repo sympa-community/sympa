@@ -154,11 +154,8 @@ sympa_stop() {
 		pid=`head -1 --PIDDIR--/$1.pid`
 		running=`ps -A | grep "$pid"`
 		if [ "$running" != "" ]; then
-		    if [ ${OSTYPE} = "IRIX" ]; then
+		if [ ${OSTYPE} = "IRIX" -o ${OSTYPE} = "SunOS" -o ${OSTYPE} = "Debian" -o ${OSTYPE} = "Suse" ]; then
 			kill -TERM $pid && echo "success" || echo "failure"
-		    elif [ ${OSTYPE} = "SunOS" ]; then
-			echo "Stopping module $1.pl: terminated"
-			kill -TERM $pid
 		    else
 			kill -TERM $pid && success || failure
 		    fi		    
