@@ -1022,7 +1022,7 @@ this should point to \dir {/etc/smrsh}.  This is probably the case if you are us
 \item \option {- - with-confdir=DIR}, Sympa main configuration files in DIR (default /etc)\\
 \file {sympa.conf} and \file {wwsympa.conf} will be installed there.
 
-\item \option {- - with-exlpdir=DIR}, modifiable data in DIR (default /home/sympa/expl/)
+\item \option {- - with-expldir=DIR}, modifiable data in DIR (default /home/sympa/expl/)
 
 \item \option {- - with-libdir=DIR},  code libraries in DIR (default /home/sympa/bin/)
 
