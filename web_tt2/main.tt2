@@ -5,6 +5,22 @@
 <head>
 <title> [% main_title %] </title>
 <link rel="stylesheet" href="[% css_url %]/style.css" type="text/css" media="screen" title="Derived from style Blank Canvas by tw3k AT tw3k.tw3k.q3machines.net" />
+
+<!-- RSS chanel -->
+   [% IF list -%] 
+     <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Latest messages"[%END%] href="[% base_url%][% path_cgi %]/rss/latest_arc/[%list%]?count=5">
+     <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Latest documents"[%END%] href="[% base_url%][% path_cgi %]/rss/latest_d_read/[%list%]?count=5">
+   [% ELSE -%]
+     [% IF (action == 'lists') && topic -%]
+       <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Latest lists"[%END%] href="[% base_url%][% path_cgi %]/rss/latest_lists/[%topic%]?count=5">
+       <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Active lists"[%END%] href="[% base_url%][% path_cgi %]/rss/active_lists/[%topic%]?count=5">
+     [% ELSE -%]
+     <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Latest lists"[%END%] href="[% base_url%][% path_cgi %]/rss/latest_lists?count=5">
+     <link REL="alternate" type="application/xml" title=[%|loc%]"RSS Active lists"[%END%] href="[% base_url%][% path_cgi %]/rss/active_lists?count=5">
+     [% END -%]
+   [% END -%]
+
+
 <!-- the following CSS have to be improved before to be used -->
 <!-- <link rel="stylesheet" href="[% css_url %]/print.css" type="text/css" media="print" />                                            -->
 <!-- <link rel="alternative stylesheet" href="[% css_url %]/fullPage.css" type="text/css" media="screen" title="View Full Page" />     -->
