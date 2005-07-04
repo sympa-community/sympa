@@ -47,13 +47,14 @@ my %language_equiv = ( 'zh_CN' => 'cn',
 		       );
 
 ## Supported languages
-my @supported_languages = ('cs_CZ','de_DE','en_US','es_ES','et_EE',
+my @supported_languages = ('cs_CZ','de_DE','el_GR','en_US','es_ES','et_EE',
 			   'fi_FI','fr_FR','hu_HU','it_IT','ja_JP','nl_NL','oc_FR',
-			   'pl_PL','pt_PT','ro_RO','zh_CN','zh_TW');
+			   'pl_PL','pt_BR','pt_PT','ro_RO','tr_TR','zh_CN','zh_TW');
 
 my %lang2locale = ('cz' => 'cs_CZ',
 		   'de' => 'de_DE',
 		   'us' => 'en_US',
+		   'el' => 'el_GR',
 		   'es' => 'es_ES',
 		   'et' => 'et_EE',
 		   'fi' => 'fi_FI',
@@ -67,11 +68,13 @@ my %lang2locale = ('cz' => 'cs_CZ',
 		   'pt' => 'pt_PT',
 		   'ro' => 'ro_RO',
 		   'cn' => 'zh_CN',
+		   'tr' => 'tr_TR',
 		   'tw' => 'zh_TW');
 
 ## Used to perform setlocale on FreeBSD / Solaris
 my %locale2charset = ('cs_CZ' => 'iso8859-2',
 		      'de_DE' => 'iso8859-1',
+		      'el_GR' => 'utf-8',
 		      'en_US' => 'us-ascii',
 		      'es_ES' => 'iso8859-1',
 		      'et_EE' => 'iso8859-4',
@@ -83,8 +86,10 @@ my %locale2charset = ('cs_CZ' => 'iso8859-2',
 		      'nl_NL' => 'iso8859-1',
 		      'oc_FR' => 'iso8859-1',		      
 		      'pl_PL' => 'iso8859-2',
+		      'pt_BR' => 'utf-8',
 		      'pt_PT' => 'iso8859-1',
 		      'ro_RO' => 'iso8859-2',
+		      'tr_TR' => 'utf-8',
 		      'zh_CN' => 'utf-8',
 		      'zh_TW' => 'big5',
 		      );
