@@ -2,24 +2,14 @@
 
 <br />
 
-<br />
-<table border="0" style="width: auto;">
-<tr style="background-color: [% light_color %];">
-<td>
-<table border="0" style="width: auto;">
-<tr style="background-color: [% light_color %];">
- <td><strong>[%|loc%]Listname :[%END%]</strong></td><td style="width: 100%;">[% list %]</td>
-</tr>
-<tr style="background-color: [% light_color %];">
- <td><strong>[%|loc%]Subject :[%END%] </strong></td><td style="width: 100%;">[% list_subject %]</td>
-</tr>
-<tr style="background-color: [% light_color %];">
- <td style="white-space: nowrap;"><strong>[%|loc%]List requested by[%END%] </strong></td><td style="width: 100%;">[% list_request_by %] [%|loc(list_request_date)%] on %1[%END%]</td>
-</tr>
-</table>
-</td>
-</tr>
-</table>
+<div class="block">
+ <strong>
+  [%|loc%]Listname :[%END%] [% list %]<br />
+  [%|loc%]Subject :[%END%] [% list_subject %]<br />
+ </strong>
+  [%|loc%]List requested by[%END%] [% list_request_by %] [%|loc(list_request_date)%] on %1[%END%]<br />
+</div>
+
 <br /><br />
 [% IF is_listmaster %]
 [% IF list_status == 'pending' %]
@@ -39,38 +29,28 @@
 <br /><hr /><br />
 [% END %]
 [% END %]
-<table border="0" style="width: auto;">
-<tr>
- <td style="text-align: center;">
-   <strong>[%|loc%]Information file[%END%]</strong> 
+
+<div class="block">
+<strong>[%|loc%]Information file[%END%] : </strong><br /> 
+
    [% IF is_listmaster %]
       ([% list_info %])
    [% END %]
- </td>
-</tr>
-<tr>
- <td>
-     <table style="width: auto;" border="1">
-      <tr><td><pre style="font-family: monospace;">
+<pre style="font-family: monospace;">
        [% INSERT 'info' %]
-      </pre></td></tr>
-     </table>
- </td>
-</tr>
-<tr>
- <td style="text-align: center;"><strong>[%|loc%]Configuration file[%END%]</strong>
+</pre>
+<hr /><br />
+</div>
+<br /><br />
+<div class="block">
+<strong>[%|loc%]Configuration file[%END%]</strong>
    [% IF is_listmaster %]
       ([% list_config %])
    [% END %]
- </td>
-</tr><tr>
- <td><table style="width: auto;" border="1">
-      <tr><td><pre style="font-family: monospace;">
+
+<hr /><br />
+
+<pre style="font-family: monospace;">
         [% INSERT 'config' %]
-      </pre></td></tr>
-     </table>
- </td>
-</tr>
-</table>
-
-
+</pre>
+</div>
