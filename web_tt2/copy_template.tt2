@@ -1,0 +1,44 @@
+<!-- $Id$ -->
+
+<h2>Copying template</h2><br />
+<p>
+<form action="[% path_cgi %]/copy_template" method="post">
+<table style="border: solid 1px; width: 100%; margin-right: 10px">
+<tr style="background-color: [% color_4 %];">
+<th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">Input template</th>
+<th style="padding: 3px; border: solid 1px; background: [% color_4 %]; text-align: center;">Output template</th>
+</tr>
+<tr style="background-color: [% color_0 %];" valign="top">
+<td>Name : <strong> [% template_name %] </strong></td>
+<td>New template name : <input type="text" name="template_nameout" value="[% template_name %]" /></td></tr>
+<tr style="background-color: [% color_0 %];" valign="top">
+<td>Scope : <strong> [% scope %] </strong></td>
+<td>
+Scope : <select name="scopeout">
+	<option value="site" [% IF scope == 'site' %]option="selected"[% END %]>site</option>
+	<option value="robot" [% IF scope == 'robot' %]option="selected"[% END %]>robot</option>
+        <option value="list" [% IF scope == 'list' %]option="selected"[% END %]>list</option>
+</td></tr>
+<tr style="background-color: [% color_0 %];" valign="top">
+<td>
+[% listname %]
+</td>
+<td>Enter listname : <input type="text" name="listnameout" size="20" " /></td></tr>
+</table>
+    <input type="hidden" name="template_name" value="[% template_name %]" />
+    <input type="hidden" name="template_path" value="[% template_path %]" />
+    <input type="hidden" name="scope" value="[% scope %]" />
+    <input type="hidden" name="webormail" value="[% webormail %]" />
+    [% IF scope == 'list' %]	
+      <input type="hidden" name="listname" value="[% listname %]" />	
+    [% END %]
+<br/>
+<input class="MainMenuLinks" type="submit" name="action_copy_template" value="Apply">
+</form>
+
+</p><br />
+<div class="block">
+<pre>
+[% template_content %]
+</pre>
+</div>

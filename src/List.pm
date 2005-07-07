@@ -6202,7 +6202,8 @@ sub archive_exist {
    do_log('debug3', 'List::archive_exist(%s)', $file);
 
    return undef unless ($self->is_archived());
-   Archive::exist("$self->{'dir'}/archives", $file);
+   my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').$self->{'name'}.'@'.$self->{'domain'};
+   Archive::exist($dir, $file);
 }
 
 ## Send an archive file to someone
@@ -6222,7 +6223,9 @@ sub archive_ls {
    my $self = shift;
    do_log('debug2', 'List::archive_ls');
 
-   Archive::list("$self->{'dir'}/archives") if ($self->is_archived());
+   my $dir = &Conf::get_robot_conf($self->{'domain'},'arc_path').$self->{'name'}.'@'.$self->{'domain'};
+
+   Archive::list($dir) if ($self->is_archived());
 }
 
 ## Archive 
@@ -6255,7 +6258,7 @@ sub is_moderated {
 ## Is the list archived ?
 sub is_archived {
     do_log('debug3', 'List::is_archived');
-    return (shift->{'admin'}{'archive'}{'period'});
+    return (shift->{'admin'}{'web_archive'}{'access'});
 }
 
 ## Is the list web archived ?
