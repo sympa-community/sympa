@@ -80,15 +80,15 @@ Options:
    --dump=list|ALL                       : dumps subscribers 
    --make_alias_file                     : create file in /tmp with all aliases (usefull when aliases.tpl is changed)
    --lowercase                           : lowercase email addresses in database
-   --create_list --robot=robot_name --input_file=file.xml 
+   --create_list --robot=robot_name --input_file=/path/to/file.xml 
                                          : create a list with the xml file under robot_name
-   --instantiate_family=family_name  --robot=robot_name --input_file=file.xml       
+   --instantiate_family=family_name  --robot=robot_name --input_file=/path/to/file.xml       
                                          : instantiate family_name lists described in the file.xml under robot_name,
                                            the family directory must exist
-  --add_list=family_name --robot=robot_name --input_file=file.xml
+  --add_list=family_name --robot=robot_name --input_file=/path/to/file.xml
                                          : add the list described by the file.xml under robot_name, to the family
                                            family_name.
-   --modify_list=family_name --robot=robot_name --input_file=file.xml
+   --modify_list=family_name --robot=robot_name --input_file=/path/to/file.xml
                                          : modify the existing list installed under the robot_name robot and that 
                                            belongs to family_name family. The new description is in the file.xml
    --close_family=family_name --robot=robot_name 
@@ -421,7 +421,7 @@ if ($main::options{'dump'}) {
     }
 
     unless (open INFILE, $main::options{'input_file'}) {
-	print STDERR $usage_string;
+	print STDERR "Unable to open $main::options{'input_file'}) file";
  	exit 1;	
     }
     
@@ -472,7 +472,7 @@ if ($main::options{'dump'}) {
     }
 
     unless (open INFILE, $main::options{'input_file'}) {
-	print STDERR $usage_string;
+	print STDERR "Unable to open $main::options{'input_file'}) file";
  	exit 1;	
     }
 
@@ -513,7 +513,7 @@ if ($main::options{'dump'}) {
     }
 
     unless (open INFILE, $main::options{'input_file'}) {
-	print STDERR $usage_string;
+	print STDERR "Unable to open $main::options{'input_file'}) file";
  	exit 1;	
     }
 
@@ -566,7 +566,7 @@ elsif ($main::options{'modify_list'}) {
     }
 
     unless (open INFILE, $main::options{'input_file'}) {
-	print STDERR $usage_string;
+	print STDERR "Unable to open $main::options{'input_file'}) file";
  	exit 1;	
     }
 
