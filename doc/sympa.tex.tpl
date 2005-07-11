@@ -1204,7 +1204,7 @@ messages distribution.
 \end{verbatim}
   \end {quote}
 
-\item \option {- - create\_list - - robot \textit {robotname} - - input\_file \textit {list\_file.xml}}
+\item \option {- - create\_list - - robot \textit {robotname} - - input\_file \textit {/path/to/list\_file.xml}}
 
 Create the list described by the xml file, see \ref{list-creation-sympa}, 
 page~\pageref{list-creation-sympa}.
@@ -1242,7 +1242,7 @@ template.
   
   Print current version of \Sympa.
 
-\item \option {- - instanciate\_family \textit {familyname} \textit {robotname} - - input\_file \textit {family\_file.xml}}
+\item \option {- - instanciate\_family \textit {familyname} \textit {robotname} - - input\_file \textit {/path/to/family\_file.xml}}
 
 Instantiate the family \textit {familyname}. See \ref{lists-families}, 
 page~\pageref{lists-families}.
@@ -1252,12 +1252,12 @@ page~\pageref{lists-families}.
    Close the \textit {familyname} family. See \ref{family-closure}, 
    page~\pageref{family-closure}.
  
- \item \option {- - add\_list \textit {familyname} - - robot \textit {robotname} - - input\_file \textit {list\_file.xml}}
+ \item \option {- - add\_list \textit {familyname} - - robot \textit {robotname} - - input\_file \textit {/path/to/list\_file.xml}}
  
    Add the list described in the XML file to the \textit{familyname} family. See \ref{family-add-list}, 
    page~\pageref{family-add-list}.
  
- \item \option {- - modify\_list \textit {familyname} - - robot \textit {robotname} - - input\_file \textit {list\_file.xml}}
+ \item \option {- - modify\_list \textit {familyname} - - robot \textit {robotname} - - input\_file \textit {/path/to/list\_file.xml}}
  
    Modify the existing family list, with description contained in the XML file. See \ref{family-modify-list}, 
    page~\pageref{family-modify-list}.
@@ -5749,7 +5749,7 @@ The xml file provides information on :\\
   \item the list name,
   \item values to assign vars in the list creation template
   \item the list description in order to be written in the list file info
-  \item the name of the list creation template (not in a family context)
+  \item the name of the list creation template (only for list creation on command line with sympa.pl, in a family context, the template is specified by the family name)
 \end{itemize}
 
 Here is an example of XML document that you can map with the following example of list creation template.:
@@ -5851,7 +5851,7 @@ The XML file format should comply with the following rules :
   \item One XML element is mandatory : \file{<listname>} contains the name of the list.
         That not excludes mandatory parameters for list creation (listname, subject,owner.email and/or 
 	owner\_include.source).
-  \item \file{<type>} : without family context, this element contains the name of template list creation.
+  \item \file{<type>} : this element contains the name of template list creation, it is used for list creation on command line with sympa.pl.
         In a family context, this element is no used.
   \item \file{<description>} : the text contained in this element is written in list \file{info} file(it can be a CDATA section).
   \item For other elements, its name is the name of the var to assign in the list creation template. 
@@ -5879,7 +5879,7 @@ This way to create lists is independent of family.
 
 Here is a sample command to create one list :.
 \begin {quote}
-sympa.pl --create\_list --robot \samplerobot --input\_file my\_file.xml
+sympa.pl --create\_list --robot \samplerobot --input\_file /path/to/my\_file.xml
 \end {quote}
 
 The list is created under the \file{my\_robot} robot and the list 
@@ -6233,13 +6233,13 @@ shared_doc.d_edit   editor
 Instantiation permits to generate lists.You must provide an XML file that is 
 composed of lists description, the root element is \textit{family} and is only 
 composed of \textit{list} elements. List elements are described in section 
-\ref{list-creation-sympa}, page~\pageref{list-creation-sympa}. Each list is described 
+\ref{xml-file-format}, page~\pageref{xml-file-format}. Each list is described 
 by the set of values for affectation list parameters.
 
 Here is an sample command to instantiate a family :
 \begin {quote}
 \begin{verbatim}
-sympa.pl --instantiate\_family my_family --robot \samplerobot --input\_file my\_file.xml
+sympa.pl --instantiate\_family my_family --robot \samplerobot --input\_file /path/to/my\_file.xml
 \end{verbatim}
 \end {quote}
 This means lists that belong to family \file{my\_family} will be created under the robot 
@@ -6249,10 +6249,62 @@ into several xml files describing lists. Each list XML file is put in each list 
 \textit {Example:} 
 \begin {quote}
 \begin{verbatim}
+<?xml version="1.0" ?>
 <family>
-  <list> ... <listname> liste1 </listname> ... </list>
-  <list> ...                                   </list>
-  <list> ...                                   </list>
+  <list>
+    <listname>liste1</listname>
+    <subject>a list example</subject>
+    <description/>
+    <status>open</status>
+    <shared_edit>editor</shared_edit>
+    <shared_read>private</shared_read>
+    <language>fr</language>
+    <owner multiple="1"> 
+      <email>serge.aumont@cru.fr</email> 
+      <gecos>C.R.U.</gecos>
+    </owner>
+    <owner multiple="1"> 
+      <email>olivier.salaun@cru.fr</email>
+    </owner>
+    <owner_include multiple="1">
+      <source>my_file</source>
+    </owner_include>
+    <sql> 
+      <type>oracle</type>
+      <host>sqlserv.admin.univ-x.fr</host>
+      <user>stdutilisateur</user>
+      <pwd>monsecret</pwd>
+      <name>les_etudiants</name>
+      <query>SELECT DISTINCT email FROM etudiant</query>
+    </sql>
+  </list>
+  <list>
+    <listname>liste2</listname>
+    <subject>a list example</subject>
+    <description/>
+    <status>open</status>
+    <shared_edit>editor</shared_edit>
+    <shared_read>private</shared_read>
+    <language>fr</language>
+    <owner multiple="1"> 
+      <email>serge.aumont@cru.fr</email> 
+      <gecos>C.R.U.</gecos>
+    </owner>
+    <owner multiple="1"> 
+      <email>olivier.salaun@cru.fr</email>
+    </owner>
+    <owner_include multiple="1">
+      <source>my_file</source>
+    </owner_include>
+    <sql> 
+      <type>oracle</type>
+      <host>sqlserv.admin.univ-x.fr</host>
+      <user>stdutilisateur</user>
+      <pwd>monsecret</pwd>
+      <name>les_etudiants</name>
+      <query>SELECT DISTINCT email FROM etudiant</query>
+    </sql>
+  </list>
    ...
 </family>
 \end{verbatim}
@@ -6335,7 +6387,7 @@ new family properties and they would be set in status error\_config immediately.
  
  Here is a sample command to add a list to a family :
  \begin {quote}
- sympa.pl --add\_list my\_family --robot \samplerobot  --input\_file my\_file.xml
+ sympa.pl --add\_list my\_family --robot \samplerobot  --input\_file /path/to/my\_file.xml
  \end {quote} 
 
 \subsection {Removing one list}
@@ -6360,7 +6412,7 @@ Closes the list  installed under the indicated robot : the list status is set to
  
  Here is a sample command to modify a list to a family :
  \begin {quote}
- sympa.pl --modify\_list my\_family --robot \samplerobot --input\_file my\_file.xml
+ sympa.pl --modify\_list my\_family --robot \samplerobot --input\_file /path/to/my\_file.xml
  \end {quote} 
 
 \subsection {List parameters edition in a family context}
