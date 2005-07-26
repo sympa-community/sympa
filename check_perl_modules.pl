@@ -66,11 +66,11 @@ use CPAN;
              'XML::LibXML' => 'XML-LibXML',
 	     'MHonArc::UTF8' => 'MHonArc',
 	     'FCGI' => 'FCGI',
+	     'DBI' => 'DBI',
+	     'DBD::mysql' => 'Msql-Mysql-modules',
 	     );
 
-%opt_CPAN = ('DBI' => 'DBI',
-	     'DBD::mysql' => 'Msql-Mysql-modules',
-	     'DBD::Pg' => 'DBD-Pg',
+%opt_CPAN = ('DBD::Pg' => 'DBD-Pg',
 	     'DBD::Oracle' => 'DBD-Oracle',
 	     'DBD::Sybase' => 'DBD-Sybase',
 	     'Net::LDAP' =>   'perl-ldap',
