@@ -182,7 +182,7 @@ sub parse_tt2 {
 
     ## An array can be used as a template (instead of a filename)
     if (ref($template) eq 'ARRAY') {
-	$template = join('', @$template);
+	$template = \join('', @$template);
     }
 
     # Do we need to recode strings
