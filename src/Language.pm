@@ -72,7 +72,7 @@ my %lang2locale = ('cz' => 'cs_CZ',
 		   'tw' => 'zh_TW');
 
 ## Used to perform setlocale on FreeBSD / Solaris
-my %locale2charset = ('cs_CZ' => 'iso8859-2',
+my %locale2charset = ('cs_CZ' => 'utf-8',
 		      'de_DE' => 'iso8859-1',
 		      'el_GR' => 'utf-8',
 		      'en_US' => 'us-ascii',
