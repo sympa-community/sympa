@@ -14,7 +14,7 @@ $soapclient->debug_flag=true;
 global $userEmail;
 global $md5;
 global $soapServer;
-$soapServer = "http://demo.sympa.org/wws/wsdl";
+$soapServer = "http://demo.sympa.org/sympa/wsdl";
 
 // $parameters = array($list,$email);
 $soapclient = new soapclient($soapServer,'wsdl');
