@@ -471,12 +471,12 @@ if ($main::options{'dump'}) {
  	exit 1;
     }
 
-    unless (open INFILE, $main::options{'input_file'}) {
-	print STDERR "Unable to open $main::options{'input_file'}) file";
+    unless (-r $main::options{'input_file'}) {
+	print STDERR "Unable to read $main::options{'input_file'}) file";
  	exit 1;	
     }
 
-    unless ($family->instantiate(\*INFILE)) {
+    unless ($family->instantiate($main::options{'input_file'})) {
  	print STDERR "\nImpossible family instantiation : action stopped \n";
  	exit 1;
     } 

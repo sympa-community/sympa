@@ -514,7 +514,7 @@ sub close {
 #########################################
 sub instantiate {
     my $self = shift;
-    my $xml_fh = shift;
+    my $xml_file = shift;
     &do_log('debug2','Family::instantiate(%s)',$self->{'name'});
 
     # initialize vars
@@ -526,7 +526,7 @@ sub instantiate {
     my $previous_family_lists = $self->get_hash_family_lists();
 
     ## xml instantiation data
-    unless ($self->_split_xml_file($xml_fh)) {
+    unless ($self->_split_xml_file($xml_file)) {
 	&do_log('err','Errors during the parsing of family xml file');
 	return undef;
     }
@@ -1154,7 +1154,7 @@ sub _initialize_instantiation() {
 #####################################################
 sub _split_xml_file {
     my $self = shift;
-    my $xml_fh = shift;
+    my $xml_file = shift;
     my $root;
     &do_log('debug2','Family::_split_xml_file(%s)',$self->{'name'});
 
@@ -1163,7 +1163,7 @@ sub _split_xml_file {
     $parser->line_numbers(1);
     my $doc;
 
-    unless ($doc = $parser->parse_fh($xml_fh)) {
+    unless ($doc = $parser->parse_file($xml_file)) {
 	&do_log('err',"Family::_split_xml_file() : failed to parse XML file");
 	return undef;
     }
