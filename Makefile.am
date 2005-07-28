@@ -164,7 +164,7 @@ main_SRC	=	AUTHORS COPYING ChangeLog INSTALL KNOWNBUGS NEWS README
 LOG_SOCKET_TYPE	=	unix
 #endif
 
-all:	checkperl checkcpan sources checkmhonarc man locale
+all:	checkperl checkcpan sources man locale
 
 rpm: build_rh_rpm build_mdk_rpm
 
@@ -178,29 +178,23 @@ checkperl:
 	echo "## If your Perl version is 5.6.0 AND if your system is Solaris :"; \
 	echo "## See also http://bugs.perl.org/perlbug.cgi?req=bidmids&bidmids=20000522.003"; \
 	echo "#############################################################################"; \
+	read rep; \
 	fi
 	@if [ ! -f $(SUIDPERL) ]; then \
 		echo "##################################"; \
 		echo "## You don't have suidperl installed."; \
 		echo "## Suidperl is required to run WWSympa with SetUID."; \
 		echo "#####################################################"; \
+		read rep; \
 	fi
 	@if [ ! -f $(MSGFMT) ]; then \
 		echo "##################################"; \
 		echo "## You don't have msgfmt installed. It is required to build message catalogues"; \
 		echo "## msgfmt is provided with a 'gettest' package on most systems..."; \
 		echo "#####################################################"; \
+		read rep; \
 	fi
 
-
-checkmhonarc:
-	@if [ ! -f $(MHONARC) ]; then \
-		echo "##################################"; \
-		echo "## You don't have mhonarc installed."; \
-		echo "## Mhonarc is required to manage web archives."; \
-		echo "## Mhonarc web site : http://www.mhonarc.org"; \
-		echo "#####################################################"; \
-	fi
 
 sources: src/Makefile src/queue.c src/bouncequeue.c src/aliaswrapper.c
 	@echo "Making src"
