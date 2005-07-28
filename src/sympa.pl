@@ -566,7 +566,7 @@ elsif ($main::options{'modify_list'}) {
     }
 
     unless (open INFILE, $main::options{'input_file'}) {
-	print STDERR "Unable to open $main::options{'input_file'}) file";
+	print STDERR "Unable to open $main::options{'input_file'} file";
  	exit 1;	
     }
 
