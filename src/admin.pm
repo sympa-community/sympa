@@ -86,7 +86,7 @@ sub create_list_old{
     ## check listname
     $param->{'listname'} = lc ($param->{'listname'});
 
-    unless ($param->{'listname'} =~ /^[a-z0-9][a-z0-9\-\+\._]*$/i) {
+    unless ($param->{'listname'} =~ /^$tools::regexp{'listname'}$/i) {
 	&do_log('err','admin::create_list_old : incorrect listname %s', $param->{'listname'});
 	return undef;
     }
@@ -251,7 +251,7 @@ sub create_list{
     ## check listname
     $param->{'listname'} = lc ($param->{'listname'});
 
-    unless ($param->{'listname'} =~ /^[a-z0-9][a-z0-9\-\+\._]*$/i) {
+    unless ($param->{'listname'} =~ /^$tools::regexp{'listname'}$/i) {
 	&do_log('err','admin::create_list : incorrect listname %s', $param->{'listname'});
 	return undef;
     }
