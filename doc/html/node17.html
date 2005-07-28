@@ -188,7 +188,7 @@ The xml file provides information on :
 </LI>
 <LI>the list description in order to be written in the list file info
 </LI>
-<LI>the name of the list creation template (not in a family context)
+<LI>the name of the list creation template (only for list creation on command line with sympa.pl, in a family context, the template is specified by the family name)
 </LI>
 </UL>
 
@@ -291,7 +291,7 @@ The XML file format should comply with the following rules :
         That not excludes mandatory parameters for list creation (listname, subject,owner.email and/or 
 	owner_include.source).
 </LI>
-<LI><A NAME="8261"></A><TT>&lt;type&gt;</TT> : without family context, this element contains the name of template list creation.
+<LI><A NAME="8261"></A><TT>&lt;type&gt;</TT> : this element contains the name of template list creation, it is used for list creation on command line with sympa.pl.
         In a family context, this element is no used.
 </LI>
 <LI><A NAME="8264"></A><TT>&lt;description&gt;</TT> : the text contained in this element is written in list <A NAME="8267"></A><TT>info</TT> file(it can be a CDATA section).
@@ -340,7 +340,7 @@ This way to create lists is independent of family.
 <P>
 Here is a sample command to create one list :.
 <BLOCKQUOTE>
-sympa.pl -create_list -robot my.domain.org-input_file my_file.xml
+sympa.pl -create_list -robot my.domain.org-input_file /path/to/my_file.xml
 
 </BLOCKQUOTE>
 
@@ -584,7 +584,7 @@ Concerning list edition in a family context, see <A HREF="node18.html#list-param
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2005-06-16
+2005-07-11
 </ADDRESS>
 </BODY>
 </HTML>

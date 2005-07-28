@@ -249,7 +249,7 @@ The User and Group directive have to be set before the FastCgiServer directive
       <A NAME="6797"></A><TT>wwsympa.fcgi</TT>. Here is an example (with no guarantee attached) :<PRE>
 #include &lt;unistd.h&gt;
 
-#define WWSYMPA "/wwsympa.fcgi"
+#define WWSYMPA "/usr/local/sympa-os/bin/wwsympa.fcgi"
 
 int main(int argn, char **argv, char **envp) {
     argv[0] = WWSYMPA;
@@ -269,7 +269,7 @@ int main(int argn, char **argv, char **envp) {
 
 <P><PRE>
      Example :
-       	ScriptAlias /sympa /wwsympa.fcgi
+       	ScriptAlias /sympa /usr/local/sympa-os/bin/wwsympa.fcgi
 </PRE>
 
 <P>
@@ -280,12 +280,12 @@ Running  FastCGI will provide much faster responses from your server and
 
 <P><PRE>
      Example :
-	FastCgiServer /wwsympa.fcgi -processes 2
+	FastCgiServer /usr/local/sympa-os/bin/wwsympa.fcgi -processes 2
 	&lt;Location /sympa&gt;
    	  SetHandler fastcgi-script
 	&lt;/Location&gt;
 
-	ScriptAlias /sympa /wwsympa.fcgi
+	ScriptAlias /sympa /usr/local/sympa-os/bin/wwsympa.fcgi
 </PRE>
 
 <P>
@@ -699,7 +699,7 @@ See <A HREF="node10.html#rss">9</A>, page&nbsp;<A HREF="node10.html#rss"><IMG  A
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2005-06-16
+2005-07-11
 </ADDRESS>
 </BODY>
 </HTML>

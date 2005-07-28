@@ -331,12 +331,12 @@ Notes that by default parameter family_name is not writable, you should not chan
 Instantiation permits to generate lists.You must provide an XML file that is 
 composed of lists description, the root element is <I>family</I> and is only 
 composed of <I>list</I> elements. List elements are described in section 
-<A HREF="node17.html#list-creation-sympa">16.3</A>, page&nbsp;<A HREF="node17.html#list-creation-sympa"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. Each list is described 
+<A HREF="node17.html#xml-file-format">16.1.2</A>, page&nbsp;<A HREF="node17.html#xml-file-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. Each list is described 
 by the set of values for affectation list parameters.
 
 <P>
 Here is an sample command to instantiate a family :<PRE>
-sympa.pl --instantiate\_family my_family --robot \samplerobot --input\_file my\_file.xml
+sympa.pl --instantiate\_family my_family --robot \samplerobot --input\_file /path/to/my\_file.xml
 </PRE>
 This means lists that belong to family <A NAME="8390"></A><TT>my_family</TT> will be created under the robot 
 <A NAME="8393"></A><TT>my_robot</TT> and these lists are described in the file <A NAME="8396"></A><TT>my_file.xml</TT>. Sympa will split this file 
@@ -344,10 +344,62 @@ into several xml files describing lists. Each list XML file is put in each list 
 <BR>
 <P>
 <I>Example:</I> <PRE>
+&lt;?xml version="1.0" ?&gt;
 &lt;family&gt;
-  &lt;list&gt; ... &lt;listname&gt; liste1 &lt;/listname&gt; ... &lt;/list&gt;
-  &lt;list&gt; ...                                   &lt;/list&gt;
-  &lt;list&gt; ...                                   &lt;/list&gt;
+  &lt;list&gt;
+    &lt;listname&gt;liste1&lt;/listname&gt;
+    &lt;subject&gt;a list example&lt;/subject&gt;
+    &lt;description/&gt;
+    &lt;status&gt;open&lt;/status&gt;
+    &lt;shared_edit&gt;editor&lt;/shared_edit&gt;
+    &lt;shared_read&gt;private&lt;/shared_read&gt;
+    &lt;language&gt;fr&lt;/language&gt;
+    &lt;owner multiple="1"&gt; 
+      &lt;email&gt;serge.aumont@cru.fr&lt;/email&gt; 
+      &lt;gecos&gt;C.R.U.&lt;/gecos&gt;
+    &lt;/owner&gt;
+    &lt;owner multiple="1"&gt; 
+      &lt;email&gt;olivier.salaun@cru.fr&lt;/email&gt;
+    &lt;/owner&gt;
+    &lt;owner_include multiple="1"&gt;
+      &lt;source&gt;my_file&lt;/source&gt;
+    &lt;/owner_include&gt;
+    &lt;sql&gt; 
+      &lt;type&gt;oracle&lt;/type&gt;
+      &lt;host&gt;sqlserv.admin.univ-x.fr&lt;/host&gt;
+      &lt;user&gt;stdutilisateur&lt;/user&gt;
+      &lt;pwd&gt;monsecret&lt;/pwd&gt;
+      &lt;name&gt;les_etudiants&lt;/name&gt;
+      &lt;query&gt;SELECT DISTINCT email FROM etudiant&lt;/query&gt;
+    &lt;/sql&gt;
+  &lt;/list&gt;
+  &lt;list&gt;
+    &lt;listname&gt;liste2&lt;/listname&gt;
+    &lt;subject&gt;a list example&lt;/subject&gt;
+    &lt;description/&gt;
+    &lt;status&gt;open&lt;/status&gt;
+    &lt;shared_edit&gt;editor&lt;/shared_edit&gt;
+    &lt;shared_read&gt;private&lt;/shared_read&gt;
+    &lt;language&gt;fr&lt;/language&gt;
+    &lt;owner multiple="1"&gt; 
+      &lt;email&gt;serge.aumont@cru.fr&lt;/email&gt; 
+      &lt;gecos&gt;C.R.U.&lt;/gecos&gt;
+    &lt;/owner&gt;
+    &lt;owner multiple="1"&gt; 
+      &lt;email&gt;olivier.salaun@cru.fr&lt;/email&gt;
+    &lt;/owner&gt;
+    &lt;owner_include multiple="1"&gt;
+      &lt;source&gt;my_file&lt;/source&gt;
+    &lt;/owner_include&gt;
+    &lt;sql&gt; 
+      &lt;type&gt;oracle&lt;/type&gt;
+      &lt;host&gt;sqlserv.admin.univ-x.fr&lt;/host&gt;
+      &lt;user&gt;stdutilisateur&lt;/user&gt;
+      &lt;pwd&gt;monsecret&lt;/pwd&gt;
+      &lt;name&gt;les_etudiants&lt;/name&gt;
+      &lt;query&gt;SELECT DISTINCT email FROM etudiant&lt;/query&gt;
+    &lt;/sql&gt;
+  &lt;/list&gt;
    ...
 &lt;/family&gt;
 </PRE>
@@ -471,7 +523,7 @@ Adds a list to the family without instantiate all the family. The list is create
 <P>
 Here is a sample command to add a list to a family :
  <BLOCKQUOTE>
-sympa.pl -add_list my_family -robot my.domain.org-input_file my_file.xml
+sympa.pl -add_list my_family -robot my.domain.org-input_file /path/to/my_file.xml
  
 </BLOCKQUOTE> 
 
@@ -511,7 +563,7 @@ Modifies a family list without instantiating the whole family. The list (install
 <P>
 Here is a sample command to modify a list to a family :
  <BLOCKQUOTE>
-sympa.pl -modify_list my_family -robot my.domain.org-input_file my_file.xml
+sympa.pl -modify_list my_family -robot my.domain.org-input_file /path/to/my_file.xml
  
 </BLOCKQUOTE> 
 
@@ -565,7 +617,7 @@ Note : In order to preserve list customization for instantiation, every modified
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2005-06-16
+2005-07-11
 </ADDRESS>
 </BODY>
 </HTML>
