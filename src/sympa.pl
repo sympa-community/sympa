@@ -452,12 +452,12 @@ if ($main::options{'dump'}) {
     
     my $robot;
     unless ($robot = $main::options{'robot'}) {
- 	print STDERR $usage_string;
+ 	print STDERR "Error : missing robot parameter\n";
  	exit 1;
     }
     my $family_name;
     unless ($family_name = $main::options{'instantiate_family'}) {
- 	print STDERR $usage_string;
+ 	print STDERR "Error : missing family parameter\n";
  	exit 1;
     }
     my $family;
@@ -467,7 +467,7 @@ if ($main::options{'dump'}) {
     }
 
     unless ($main::options{'input_file'}) {
- 	print STDERR $usage_string;
+ 	print STDERR "Error : missing input_file parameter\n";
  	exit 1;
     }
 
@@ -490,12 +490,12 @@ if ($main::options{'dump'}) {
      
     my $robot;
     unless ($robot = $main::options{'robot'}) {
- 	print STDERR $usage_string;
+ 	print STDERR "Error : missing robot parameter\n";
  	exit 1;
     }
     my $family_name;
     unless ($family_name = $main::options{'add_list'}) {
- 	print STDERR $usage_string;
+	print STDERR "Error : missing family parameter\n";
  	exit 1;
     }
     
@@ -508,7 +508,7 @@ if ($main::options{'dump'}) {
     }
     
     unless ($main::options{'input_file'}) {
- 	print STDERR $usage_string;
+ 	print STDERR "Error : missing input_file parameter\n";
  	exit 1;
     }
 
@@ -543,12 +543,12 @@ elsif ($main::options{'modify_list'}) {
     
     my $robot;
     unless ($robot = $main::options{'robot'}) {
- 	print STDERR $usage_string;
+ 	print STDERR "Error : missing robot parameter\n";
  	exit 1;
     }
     my $family_name;
     unless ($family_name = $main::options{'modify_list'}) {
- 	print STDERR $usage_string;
+ 	print STDERR "Error : missing family parameter\n";
  	exit 1;
     }
     
@@ -561,7 +561,7 @@ elsif ($main::options{'modify_list'}) {
     }
     
     unless ($main::options{'input_file'}) {
- 	print STDERR $usage_string;
+ 	print STDERR "Error : missing input_file parameter\n";
  	exit 1;
     }
 
