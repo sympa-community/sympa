@@ -1,4 +1,4 @@
-title.gettext without authentication, notification is sent to owners
+title.gettext open with mail confirmation, owner is notified
 
 !is_subscriber ([listname],[email]) smtp,md5,smime -> do_it,notify
 !equal ([sender],[email])           smtp           -> request_auth([email])
