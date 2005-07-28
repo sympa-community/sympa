@@ -48,7 +48,7 @@ msgstr "Nejužívanější konference"
 #: web_tt2/active_lists.tt2:8
 
 msgid " The active lists "
-msgstr "Akitvní konference"
+msgstr "Aktivní konference"
 
 #: web_tt2/latest_lists.tt2:8
 
@@ -334,7 +334,42 @@ msgstr "1 týden"
 msgid "10 minutes"
 msgstr "10 minut"
 
-#: wwsympa/wwslib.pm:49
+#: web_tt2/list_admin_menu.tt2:5
+msgid "Admin"
+msgstr "Administrace"
+
+#: web_tt2/list_admin_menu.tt2:17
+msgid "-Archives"
+msgstr "-Konfigurace archívu"
+
+#: web_tt2/list_admin_menu.tt2:18
+msgid "-Bounces"
+msgstr "-Špatné adresy"
+
+#: web_tt2/list_admin_menu.tt2:19
+msgid "-Data sources"
+msgstr "-Zdroj dat"
+
+#: web_tt2/list_admin_menu.tt2:14
+msgid "-List definition"
+msgstr "-Popis konference"
+
+#: web_tt2/list_admin_menu.tt2:21
+msgid "-Miscellaneous"
+msgstr "-Další parametry"
+
+#: web_tt2/list_admin_menu.tt2:16
+msgid "-Privileges"
+msgstr "-Nastavení práv"
+
+#: web_tt2/list_admin_menu.tt2:20
+msgid "-Rename list"
+msgstr "-Přejmenovat"
+
+#: web_tt2/list_admin_menu.tt2:15
+msgid "-Sending/reception"
+msgstr "-Příjem/odesílání"
+
 msgid "30 minutes"
 msgstr "30 minut"
 
@@ -487,7 +522,7 @@ msgstr "Přístupová k dokumentu %1"
 #: src/List.pm:309
 
 msgid "Account"
-msgstr "poet vrcench zprv"
+msgstr "Účet"
 
 #: web_tt2/d_read.tt2:418 web_tt2/review.tt2:12
 msgid "Add"
@@ -904,9 +939,30 @@ msgstr "Uzavřené konference"
 msgid "Command 'quit' found : ignoring end of message.\n"
 msgstr ""
 
+#: web_tt2/list_menu.tt2:27
+msgid "Contact owners"
+msgstr "Kontaktovat správce"
+
+
 #: src/sympa.pl:1485 src/sympa.pl:1516
 msgid "Command not understood: ignoring end of message.\n"
 msgstr ""
+
+#: web_tt2/d_read.tt2:315
+msgid "Create a new folder inside the root folder"
+msgstr "Vytvoření podsložky"
+
+#: web_tt2/d_read.tt2:318
+msgid "Folder name"
+msgstr "Jméno nové složky"
+
+#: web_tt2/d_read.tt2:319 web_tt2/d_read.tt2:333
+msgid "Create"
+msgstr "Vytvoř"
+
+#: web_tt2/d_read.tt2:332
+msgid "File name"
+msgstr "Jméno souboru"
 
 #: src/Commands.pm:1210 src/Commands.pm:1899 src/Commands.pm:813
 msgid "Command syntax error.\n"
@@ -986,8 +1042,8 @@ msgid "Create a new folder inside the folder %1"
 msgstr "Vytvoř novou složku ve složce %1"
 
 #: web_tt2/d_read.tt2:369
-msgid "Create a new folder inside the folder SHARED"
-msgstr "Vytvoř novou složku ve složce SHARED"
+msgid "Create a new folder inside the folder"
+msgstr "Vytvoř novou složku ve složce"
 
 #: web_tt2/d_read.tt2:374
 msgid "Create a new subdirectory"
@@ -1319,7 +1375,7 @@ msgstr "Upravit"
 
 #: web_tt2/admin_menu.tt2:25 web_tt2/admin_menu.tt2:30
 msgid "Edit List Config"
-msgstr "Konfigurace konference"
+msgstr "Konfigurace"
 
 #: web_tt2/d_control.tt2:28
 msgid "Edit access"
@@ -1330,6 +1386,10 @@ msgstr "Konfigurace práv"
 
 msgid "Edit the file %1"
 msgstr "Editace souboru %1"
+
+#: web_tt2/list_panel.tt2:8
+msgid "Error rate:"
+msgstr "Chybovost:"
 
 #. (visible_path)
 #: web_tt2/d_editfile.tt2:8
@@ -1595,11 +1655,11 @@ msgstr "Od: %1"
 msgid ""
 "Functions, equivalent to Sympa robot commands, are accessible in\n"
 "the higher part of the user interface's banner. WWSympa provides \n"
-"a customized environment with access to the following functions :\n"
+"a customized environment with access to the following functions :"
 msgstr ""
 "Funkce, shodné s příkazy Sympy robota, jsou přístupné v \n"
 "horní části rozhraní. WWSympa nabízí nastavitelné \n"
-"prostředí s přístupem k těmto funkcím:\n"
+"prostředí s přístupem k těmto funkcím:"
 
 
 #: mail_tt2/helpfile.tt2:37
@@ -1804,6 +1864,14 @@ msgid ""
 "subscriber receives only the list of messages.\n"
 msgstr ""
 
+#: web_tt2/rss_request.tt2:15
+msgid "Limit the number of days used for the selection"
+msgstr "Omezit počtu dnů výběru"
+
+#: web_tt2/rss_request.tt2:8
+msgid "Limit the number of response"
+msgstr "Omezit počet odpovědí"
+
 #: web_tt2/help_user_options.tt2:10
 msgid ""
 "Instead of receiving individual mail messages from the list, the subscriber "
@@ -1985,6 +2053,10 @@ msgstr "Konference '%s' neexistuje.\n"
 msgid "List '%s' has no subscriber.\n"
 msgstr "Konference '%s' nemá žádné členy.\n"
 
+#: web_tt2/d_read.tt2:47
+msgid "Listing of root folder"
+msgstr "Výpis sdílené složky"
+
 #: web_tt2/admin_menu.tt2:5
 msgid "List Administration Panel"
 msgstr "Panel správy konference"
@@ -2090,13 +2162,17 @@ msgstr "Neznáma konference"
 msgid "Listing messages to moderate"
 msgstr "Seznam zpráv k moderování"
 
+#: web_tt2/home.tt2:10
+msgid "Mailing lists categories"
+msgstr "Konference"
+
 #: web_tt2/modindex.tt2:59
 
 msgid "Listing of documents shared to moderate"
 msgstr "Seznam sdílených dokumentů k moderování"
 
 #: web_tt2/d_read.tt2:58
-msgid "Listing of folder SHARED"
+msgid "Listing of folder"
 msgstr "Výpis sdíleného adresáře"
 
 #: web_tt2/title.tt2:13
@@ -2250,8 +2326,8 @@ msgstr "Nemohu odstranit archív"
 msgid "May not send the message"
 msgstr "Nemohu odeslat zprávu"
 
-#: web_tt2/serveradmin.tt2:190
-msgid "May take a lot of CPU time,  be careful !"
+#: web_tt2/serveradmin.tt2:90
+msgid "  May take a lot of CPU time,  be careful !"
 msgstr "Pozor, přesestavení html archívů může být časově náročné!"
 
 #: mail_tt2/your_infected_msg.tt2:14
@@ -2625,11 +2701,12 @@ msgstr "Začít od nejstarších zpráv"
 msgid ""
 "Once you have been authenticated, a <em>cookie</em> containing your login \n"
 "information make your connection to WWSympa last. The lifetime of this\n"
-"<em>cookie</em> is customizeable through your <strong>Preferences</strong>\n"
+"<em>cookie</em> is customizeable through your <strong>Preferences</strong>"
 msgstr ""
 "Jakmile jste přihlášení, obdržíte <em>cookie</em> obsahující přihlašovací údaje\n"
 "a informace o posledním přihlášení. Životnost cookies je možno \n"
-"nastavit v  <strong>Nastavení</strong>\n"
+"nastavit v <strong>Nastavení</strong>"
+
 
 #: web_tt2/remove_arc.tt2:5
 msgid ""
@@ -2789,7 +2866,7 @@ msgstr ""
 #: web_tt2/list_menu.tt2:344 web_tt2/list_menu.tt2:351
 #: web_tt2/list_menu.tt2:354
 msgid "Post"
-msgstr "Příspěvek do konference"
+msgstr "Příspěvek"
 
 #: web_tt2/main.tt2:316 web_tt2/tt2_error.tt2:47
 
@@ -2799,6 +2876,10 @@ msgstr "Používáme "
 #: mail_tt2/helpfile.tt2:60
 msgid "Powered by Sympa"
 msgstr "Používáme "
+
+#: web_tt2/serveradmin.tt2:90
+msgid "Rebuild all"
+msgstr "Přesestavit všechny"
 
 #: web_tt2/menu.tt2:102
 msgid "Pref"
@@ -2817,13 +2898,27 @@ msgstr "Nastavení"
 msgid "Previous page"
 msgstr "Pedchoz strana"
 
+
+
+#: web_tt2/list_menu.tt2:48
+msgid "RSS"
+msgstr "RSS"
+
+#: web_tt2/rss_request.tt2:2
+msgid "RSS channel"
+msgstr "RSS kanál"
+
+#: web_tt2/home.tt2:49
+msgid "RSS news"
+msgstr "RSS novinky"
+
 #: src/List.pm:966
 msgid "Priority"
-msgstr ""
+msgstr "Priorita"
 
 #: src/etc/create_list_templates/private_working_group/comment.tt2:1
 msgid "Private working group setup"
-msgstr ""
+msgstr "Neveřejná konference pro pracovní skupiny"
 
 #: src/etc/scenari/send.privateorpublickey:1
 msgid "Private, confirmation for non subscribers"
@@ -2879,7 +2974,7 @@ msgstr "Poskytnuté heslo je nekompletní"
 
 #: web_tt2/error.tt2:33
 msgid "Provided password is incorrect"
-msgstr "Poskytnuté heslo je nesprávné"
+msgstr "Poskytnuté údaje je nesprávné"
 
 #: src/etc/create_list_templates/discussion_list/comment.tt2:1
 msgid "Public discussion mailing list"
@@ -2940,7 +3035,7 @@ msgstr "Přesestavení HTML archívů pomocí \"arctxt\" adresářů jako vstupu
 
 #: web_tt2/serveradmin.tt2:197
 msgid "Rebuild archive"
-msgstr "Znovu sestavit archv"
+msgstr "Znovu sestavit archív"
 
 #. (stats.byte_rcv)
 #: mail_tt2/stats_report.tt2:6
@@ -3025,7 +3120,7 @@ msgstr "Vzdálený host"
 
 #: web_tt2/admin_menu.tt2:123 web_tt2/admin_menu.tt2:125
 msgid "Remove List"
-msgstr "Odstranění konference"
+msgstr "Zrušení"
 
 #. (list.name)
 #: mail_tt2/expire_deletion.tt2:2 mail_tt2/removed.tt2:2
@@ -3244,9 +3339,17 @@ msgstr "Jméno scénáře"
 msgid "Scenari test module"
 msgstr "Testovací modul scénářů"
 
+#: web_tt2/serveradmin.tt2:80
+msgid "Skins administration page"
+msgstr "Úprava designu správcovské sekce"
+
 #: web_tt2/scenario_test.tt2:10
 msgid "Scenario test module"
 msgstr "Testovací modul scénářů"
+
+#: web_tt2/serveradmin.tt2:79
+msgid "Skins, CSS and colors"
+msgstr "Téma, CSS a barvy"
 
 #: web_tt2/arc.tt2:20 web_tt2/arcsearch_form.tt2:15
 #: web_tt2/arcsearch_form.tt2:22 web_tt2/review.tt2:67
@@ -3364,7 +3467,7 @@ msgstr "Sdílené dokumenty"
 #: web_tt2/list_menu.tt2:377 web_tt2/list_menu.tt2:383
 #: web_tt2/list_menu.tt2:388
 msgid "Shared web"
-msgstr "Sdílený web prostor"
+msgstr "Sdílená složka"
 
 #: web_tt2/d_read.tt2:20
 msgid "Show expert commands"
@@ -4023,6 +4126,14 @@ msgstr "Požadovaná funkce provedena"
 msgid "The returned error message :"
 msgstr "Chybové hlášení :"
 
+#: web_tt2/rss_request.tt2:4
+msgid ""
+"This server provide various news via RSS. Choose parameters and pickup the "
+"RSS url"
+msgstr ""
+"Tento server nabízí také možnost zasílání novinek pomocí RSS. Nastavte parametry a získáte "
+"url RSS kanálu"
+
 #: web_tt2/help_user_options.tt2:12 web_tt2/help_user_options.tt2:20
 msgid "The sending interval for these Digests is defined by the list owner."
 msgstr ""
@@ -4146,16 +4257,16 @@ msgid ""
 "the list.\n"
 msgstr ""
 
-#: web_tt2/pref.tt2:128
+#: web_tt2/pref.tt2:84
 msgid ""
-"This other email address, that should be known by Sympa, will be recognized "
-"by Sympa as \n"
-"\tan alternate email address. You will also be able to unify your "
-"subscriptions with\n"
-"\tyour main email address.\n"
+"This other email address, that should be known by Sympa, will be recognized by Sympa as \n"
+"\tan alternate email address. You will also be able to unify your subscriptions with\n"
+"\tyour main email address."
 msgstr ""
-"Další emailová adresa, kterou můžete vložit, bude použita Sympou buď jako alternativní. "
-"\tnebo můžete využít hlavní adresu pouze jako přihlašovací a druhou pro příjem zpráv.\n"
+"Další emailová adresa, kterou můžete vložit, bude použita Sympou buď jako alternativní. \n"
+"\tnebo můžete využít hlavní adresu pouze jako přihlašovací\n"
+"\ta druhou pro příjem zpráv."
+
 
 #: web_tt2/help_editlist.tt2:22
 msgid "This paragraph defines bounce management parameters:"
@@ -4338,12 +4449,12 @@ msgid ""
 "This server provides you access to your environment on mailing list server %"
 "1@%2. Starting from this URL, you can perform subscription options, "
 "unsubscription,\n"
-"archives, list management and so on.\n"
+"archives, list management and so on."
 msgstr ""
 "Tento server poskytuje webový přístup ke na konferencím  %"
 "1@%2. Z tohoto místa můžete provádět změny v přihlášení a "
 "odhlášení,\n"
-"prohlížet archívy správu konferenci atd.\n"
+"prohlížet archívy správu konferenci atd."
 
 
 #: src/etc/mhonarc-ressources.tt2:140 src/etc/mhonarc-ressources.tt2:248
@@ -4358,6 +4469,10 @@ msgstr "Vaše zpráva Vám byla odeslána zpět:\n"
 #: mail_tt2/sendpasswd.tt2:27
 msgid "To access your personal environment, you need to login first"
 msgstr "Pro přístup k Vašemu osobnímu nastavení se musíte nejprve přihlásit"
+
+#: web_tt2/rss_request.tt2:27
+msgid "Update RSS URL"
+msgstr "Zobrazit URL RSS kanálu"
 
 #: mail_tt2/listmaster_notification.tt2:12
 msgid "To activate/delete this mailing list :"
@@ -4382,6 +4497,14 @@ msgid ""
 msgstr ""
 "Je vyžadováno\n"
 "      potvrzení Vašeho požadavku :\n"
+
+#: web_tt2/d_read.tt2:11 web_tt2/d_read.tt2:15
+msgid "User mode"
+msgstr "Zobrazení sdílených dokumentů"
+
+#: web_tt2/d_read.tt2:12 web_tt2/d_read.tt2:16
+msgid "Expert mode"
+msgstr "Práce s dokumenty, editace/přidání/smazání"
 
 #: web_tt2/change_email.tt2:5
 msgid ""
@@ -4707,8 +4830,8 @@ msgstr "Dekomprimuj zip soubor do složky %1"
 
 #: web_tt2/d_read.tt2:462
 
-msgid "Unzip a file inside the folder SHARED"
-msgstr "Dekomprimuj zip soubor do složky SHARED"
+msgid "Unzip a file inside the folder"
+msgstr "Dekomprimuj zip soubor do složky"
 
 #: web_tt2/d_control.tt2:5 web_tt2/d_editfile.tt2:14
 #: web_tt2/d_properties.tt2:13 web_tt2/d_read.tt2:35
@@ -4735,8 +4858,8 @@ msgid "Upload a file inside the folder %1"
 msgstr "Nahraj soubor do adresáře %1"
 
 #: web_tt2/d_read.tt2:438
-msgid "Upload a file inside the folder SHARED"
-msgstr "Nahraj soubor do sdíleného adresáře SHARED"
+msgid "Upload a file inside the folder"
+msgstr "Nahraj soubor do sdíleného adresáře"
 
 #: src/Commands.pm:1169 src/Commands.pm:1177
 msgid "User %s has been invited to subscribe in list %s.\n"
@@ -5049,6 +5172,10 @@ msgstr ""
 msgid "You don't have required privileges to perform this action"
 msgstr "%1 : na tuto akci nemte oprvnn"
 
+#: web_tt2/login_menu.tt2:31
+msgid "Your preferences"
+msgstr "Osobní nastavení"
+
 #: web_tt2/notice.tt2:69
 
 msgid "You have been authenticated"
@@ -5215,10 +5342,10 @@ msgstr "Jste již členem konference %1."
 msgid ""
 "Your are therefore not registered in Sympa user database and you can't "
 "login.\n"
-"If you subscribe to a list, WWSympa will give you an initial password.\n"
+"If you subscribe to a list, WWSympa will give you an initial password."
 msgstr ""
 "Nejste ještě zaregistrován do databáze Sympa a tedy nemůžete se přihlásit.\n"
-"Jakmile se přihlásíte k nějaké konferenci, WWSympa Vám zašle inicializační heslo.\n"
+"Jakmile se přihlásíte k nějaké konferenci, WWSympa Vám zašle inicializační heslo."
 
 #. (expiration_date)
 #: mail_tt2/certif_warning.tt2:4
@@ -5583,9 +5710,9 @@ msgstr ""
 msgid "add performed by owner do not need authentication (notification)"
 msgstr ""
 
-#: web_tt2/lists.tt2:18
+#: web_tt2/lists.tt2:13
 msgid "admin"
-msgstr "Admin"
+msgstr "Administrace"
 
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:95
@@ -5698,6 +5825,10 @@ msgstr "konference/funkce zakázána"
 
 msgid "conceal even for subscribers"
 msgstr "Skrytá, dokonce i pro členy"
+
+#: web_tt2/menu.tt2:17
+msgid "list of lists"
+msgstr "Seznam konferencí"
 
 #: src/etc/scenari/visibility.conceal:1
 
@@ -6255,6 +6386,10 @@ msgstr "připomínací zpráva"
 #: src/etc/list_task_models/remind.2month.task:1
 msgid "remind message sent to subscribers every 2 month"
 msgstr "zasílat připomínku každé 2 měsíce"
+
+#: web_tt2/serveradmin.tt2:74
+msgid "view translations"
+msgstr "zobraz lokalizace"
 
 #: src/etc/list_task_models/remind.monthly.task:1
 msgid "remind message sent to subscribers every month"
