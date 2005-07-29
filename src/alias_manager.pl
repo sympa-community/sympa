@@ -60,8 +60,8 @@ if (($operation !~ /^(add)|(del)$/) || ($#ARGV < 2)) {
 
 $default_domain = $Conf{'domain'};
 
-my $alias_file = '--SENDMAIL_ALIASES--';
-$alias_file = $Conf{'sendmail_alias'} if ($Conf{'sendmail_alias'});
+my $alias_file;
+$alias_file = $Conf{'sendmail_aliases'} || '--SENDMAIL_ALIASES--';
 $alias_file = $file if ($file);
 
 unless (-w "$alias_file") {
@@ -118,7 +118,7 @@ if ($operation eq 'add') {
     close ALIAS;
 
     ## Newaliases
-    if ($alias_file eq '--SENDMAIL_ALIASES--') {
+    unless ($file) {
 	unless (system($alias_wrapper) == 0) {
 	    print STDERR "Failed to execute newaliases: $!\n";
 	    exit(6)
@@ -189,7 +189,7 @@ if ($operation eq 'add') {
     unlink $tmp_alias_file;
 
     ## Newaliases
-    if ($alias_file eq '--SENDMAIL_ALIASES--') {
+    unless ($file) {
 	unless (system($alias_wrapper) == 0) {
 	    print STDERR "Failed to execute newaliases: $!\n";
 	exit (6);
