@@ -132,7 +132,7 @@
         Olivier Sala\"un,
         Christophe Wolfhugel,
          }
-    \date {11 July 2005}
+    \date {29 July 2005}
 \begin {htmlonly}
 For printing purpose, use the 
 \htmladdnormallink {postscript format version} {sympa.ps} of this documentation.
@@ -8147,6 +8147,12 @@ Predefined authorization scenarios are :
 	\end {htmlonly}\\
 	
 
+     \item \lparam {unsubscribe} \texttt {o} 
+	\begin {htmlonly}
+	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.o})
+	\end {htmlonly}\\
+	
+
      \item \lparam {unsubscribe} \texttt {open\_notify} 
 	\begin {htmlonly}
 	  (\htmladdnormallink {view} {http://www.sympa.org/distribution/current/src/etc/scenari/unsubscribe.open\_notify})
@@ -8772,6 +8778,13 @@ be able to process it. It is essential that \Sympa could scan the digest
 queue at least once between the time laid down for sending the
 digest and 12:00~AM (midnight). As a rule of thumb, do not use a digest time
 later than 11:00~PM.
+
+\subsection {\cfkeyword {digest\_max\_size}} 
+
+	\default {25}
+
+	Maximum number of messages in a digest. If the number of messages exceeds this limit, then multiple 
+	digest messages are sent to each recipient.
 
 \subsection {available\_user\_options}
 
