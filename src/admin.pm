@@ -396,20 +396,14 @@ sub update_list{
     my ($list,$param,$family,$robot) = @_;
     &do_log('info', 'admin::update_list(%s,%s,%s)',$param->{'listname'},$family->{'name'},$param->{'subject'});
 
-    ## obligatory list parameters
-    foreach my $arg ('listname','subject') {
+    ## mandatory list parameters
+    foreach my $arg ('listname') {
 	unless ($param->{$arg}) {
 	    &do_log('err','admin::update_list : missing list param %s', $arg);
 	    return undef;
 	}
     }
 
-    # owner.email || owner_include.source
-    unless (&check_owner_defined($param->{'owner'},$param->{'owner_include'})) {
-	&do_log('err','admin::update_list : problem in owner definition in this list updating');
-	return undef;
-    }
- 
     ## template file
     my $template_file = &tools::get_filename('etc', 'config.tt2', $robot,$family);
     unless (defined $template_file) {
