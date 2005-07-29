@@ -7819,6 +7819,13 @@ queue at least once between the time laid down for sending the
 digest and 12:00~AM (midnight). As a rule of thumb, do not use a digest time
 later than 11:00~PM.
 
+\subsection {\cfkeyword {digest\_max\_size}} 
+
+	\default {25}
+
+	Maximum number of messages in a digest. If the number of messages exceeds this limit, then multiple 
+	digest messages are sent to each recipient.
+
 \subsection {available\_user\_options}
 
     	\label {par-available-user-options}

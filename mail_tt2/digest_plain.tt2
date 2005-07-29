@@ -1,7 +1,7 @@
 From: [% from %]
 To: [% to %]
 Reply-to: [% reply %]
-Subject: [% FILTER qencode %][%|loc(list.name,date)%]%1 Digest %2[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name,date)%]%1 Digest %2[%END%][%END%] [% IF total_group > 1 -%]([% current_group %]/[% total_group %])[% END %]
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
 Content-transfer-encoding: [%|loc%]_encoding_[%END%]
 

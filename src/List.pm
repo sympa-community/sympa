@@ -259,7 +259,7 @@ my %default = ('occurrence' => '0-1',
 
 my @param_order = qw (subject visibility info subscribe add unsubscribe del owner owner_include
 		      send editor editor_include account topics 
-		      host lang web_archive archive digest available_user_options 
+		      host lang web_archive archive digest digest_max_size available_user_options 
 		      default_user_options reply_to_header reply_to forced_reply_to * 
 		      welcome_return_path remind_return_path user_data_source include_file include_remote_file 
 		      include_list include_remote_sympa_list include_ldap_query
@@ -493,6 +493,13 @@ my %alias = ('reply-to' => 'reply_to',
 			 'group' => 'sending'
 		     },
 
+	    'digest_max_size' => {'format' => '\d+',
+				  'length' => 2,
+				  'unit' => 'messages',
+				  'default' => 25,
+				  'gettext_id' => "Digest maximum number of messages",
+				  'group' => 'sending'
+		       },	    
 	    'editor' => {'format' => {'email' => {'format' => $tools::regexp{'email'},
 						  'length' => 30,
 						  'occurrence' => '1',
@@ -3157,6 +3164,7 @@ sub send_msg_digest {
     splice @list_of_mail, 0, 1;
 
     ## Digest index
+    my @all_msg;
     foreach $i (0 .. $#list_of_mail){
 	my $mail = $list_of_mail[$i];
 	my $subject = &MIME::Words::decode_mimewords($mail->head->get('Subject'));
@@ -3188,31 +3196,49 @@ sub send_msg_digest {
 	$msg->{'message_id'} =~ s/^\<(.+)\>$/$1/;
 	$msg->{'message_id'} = &tools::escape_chars($msg->{'message_id'});
 
-        push @{$param->{'msg_list'}}, $msg ;
-	
-    }
+        #push @{$param->{'msg_list'}}, $msg ;
+	push @all_msg, $msg ;	
+    }    
     
     my @now  = localtime(time);
     $param->{'datetime'} = sprintf "%s", POSIX::strftime("%a, %d %b %Y %H:%M:%S", @now);
     $param->{'date'} = sprintf "%s", POSIX::strftime("%a, %d %b %Y", @now);
 
-    ## Prepare Digest
-    if (@tabrcpt) {
-	## Send digest
-	$self->send_file('digest', \@tabrcpt, $robot, $param);
-    }    
-
-    ## Prepare Plain Text Digest
-    if (@tabrcptplain) {
-        ## Send digest-plain
-        $self->send_file('digest_plain', \@tabrcptplain, $robot, $param);
-    }    
+    ## Split messages into groups of digest_max_size size
+    my @group_of_msg;
+    while (@all_msg) {
+	my @group = splice @all_msg, 0, $self->{'admin'}{'digest_max_size'};
+	
+	push @group_of_msg, \@group;
+    }
     
 
-    ## send summary
-    if (@tabrcptsummary) {
-	$param->{'subject'} = sprintf gettext("Summary of list %s"), $self->{'name'};
-	$self->send_file('summary', \@tabrcptsummary, $robot, $param);
+    $param->{'current_group'} = 0;
+    $param->{'total_group'} = $#group_of_msg + 1;
+    ## Foreach set of digest_max_size messages...
+    foreach my $group (@group_of_msg) {
+
+	$param->{'current_group'}++;
+	$param->{'msg_list'} = $group;
+
+	## Prepare Digest
+	if (@tabrcpt) {
+	    ## Send digest
+	    $self->send_file('digest', \@tabrcpt, $robot, $param);
+	}    
+	
+	## Prepare Plain Text Digest
+	if (@tabrcptplain) {
+	    ## Send digest-plain
+	    $self->send_file('digest_plain', \@tabrcptplain, $robot, $param);
+	}    
+	
+	
+	## send summary
+	if (@tabrcptsummary) {
+	    $param->{'subject'} = sprintf gettext("Summary of list %s"), $self->{'name'};
+	    $self->send_file('summary', \@tabrcptsummary, $robot, $param);
+	}
     }
     
     return 1;
