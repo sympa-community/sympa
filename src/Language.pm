@@ -134,14 +134,14 @@ sub SetLang {
     unless (setlocale(&POSIX::LC_ALL, $locale)) {
 	unless (setlocale(&POSIX::LC_ALL, $lang)) {
 	    unless (setlocale(&POSIX::LC_ALL, $locale.'.'.$locale2charset{$locale})) {
-		&do_log('err','Failed to setlocale(%s) ; you should edit your /etc/locale.gen or /etc/sysconfig/i18n files', $locale2charset{$locale});
+		&do_log('err','Failed to setlocale(%s) ; you should edit your /etc/locale.gen or /etc/sysconfig/i18n files', $locale.'.'.$locale2charset{$locale});
 		return undef;
 	    }
 	}
     }
 
     unless (setlocale(&POSIX::LC_TIME, $locale)) {
-	&do_log('err','Failed to setlocale(LC_TIME,%s)', $locale2charset{$locale});
+	&do_log('err','Failed to setlocale(LC_TIME,%s)', $locale.'.'.$locale2charset{$locale});
 	return undef;
     }
 
