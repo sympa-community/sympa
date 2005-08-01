@@ -12957,7 +12957,7 @@ sub do_rss_request {
         $args .= 'for='.$in{'for'} if ($in{'for'});
 	if ($list ) {
 		$args .= '&list='.$list->{'name'};		
-   		$param->{'latest_archive_url'} = $Conf{'wwsympa_url'}."/rss/latest_archive?".$args;
+   		$param->{'latest_arc_url'} = $Conf{'wwsympa_url'}."/rss/latest_arc?".$args;
 		$param->{'latest_d_read_url'} = $Conf{'wwsympa_url'}."/rss/latest_d_read?".$args;
 	}
 	$param->{'active_lists_url'} = $Conf{'wwsympa_url'}."/rss/active_lists?".$args;
