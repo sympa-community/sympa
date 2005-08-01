@@ -2702,7 +2702,7 @@ sub do_remindpasswd {
 	 $s->{'date'} = &POSIX::strftime("%d %b %Y", localtime($s->{'date'}));
 
 	 foreach $m (keys %wwslib::reception_mode) {
-	     $param->{'reception'}{$m}{'description'} = $wwslib::reception_mode{$m};
+	     $param->{'reception'}{$m}{'description'} = sprintf(gettext($wwslib::reception_mode{$m}->{'gettext_id'}));
 	     if ($s->{'reception'} eq $m) {
 		 $param->{'reception'}{$m}{'selected'} = 'selected="selected"';
 	     }else {
@@ -3334,7 +3334,7 @@ sub do_remindpasswd {
 
      foreach $m (keys %wwslib::reception_mode) {
        if ($list->is_available_reception_mode($m)) {
-	 $param->{'reception'}{$m}{'description'} = $wwslib::reception_mode{$m};
+	 $param->{'reception'}{$m}{'description'} = sprintf(gettext($wwslib::reception_mode{$m}->{'gettext_id'}));
 	 if ($s->{'reception'} eq $m) {
 	     $param->{'reception'}{$m}{'selected'} = 'selected="selected"';
 	 }else {
@@ -3344,7 +3344,7 @@ sub do_remindpasswd {
      }
 
      foreach $m (keys %wwslib::visibility_mode) {
-	 $param->{'visibility'}{$m}{'description'} = $wwslib::visibility_mode{$m};
+	 $param->{'visibility'}{$m}{'description'} = sprintf(gettext($wwslib::visibility_mode{$m}->{'gettext_id'}));
 	 if ($s->{'visibility'} eq $m) {
 	     $param->{'visibility'}{$m}{'selected'} = 'selected="selected"';
 	 }else {
@@ -6422,7 +6422,7 @@ sub do_set_pending_list_request {
      $param->{'current_subscriber'}{'visibility'} ||= 'noconceal';
      foreach my $m (keys %wwslib::reception_mode) {		
        if ($list->is_available_reception_mode($m)) {
-	 $param->{'reception'}{$m}{'description'} = $wwslib::reception_mode{$m};
+	 $param->{'reception'}{$m}{'description'} = sprintf(gettext($wwslib::reception_mode{$m}->{'gettext_id'}));
 	 if ($param->{'current_subscriber'}{'reception'} eq $m) {
 	     $param->{'reception'}{$m}{'selected'} = 'selected="selected"';
 	 }else {

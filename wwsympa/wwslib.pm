@@ -32,16 +32,17 @@ use Conf;
 # use Net::SSLeay qw(&get_https);
 # use Net::SSLeay;
 
-%reception_mode = ('mail' => 'normal',
-		   'digest' => 'digest',
-		   'digestplain' => 'digestplain',
-		   'summary' => 'summary',
-		   'notice' => 'notice',
-		   'txt' => 'txt',
-		   'html'=> 'html',
-		   'urlize' => 'urlize',
-		   'nomail' => 'no mail',
-		   'not_me' => 'not_me');
+%reception_mode = ('mail' => {'gettext_id' => 'standard (direct reception)'},
+		   'digest' => {'gettext_id' => 'digest MIME format'},
+		   'digestplain' => {'gettext_id' => 'digest plain text format'},
+		   'summary' => {'gettext_id' => 'summary mode'},
+		   'notice' => {'gettext_id' => 'notice mode'},
+		   'txt' => {'gettext_id' => 'text only mode'},
+		   'html'=> {'gettext_id' => 'html only mode'},
+		   'urlize' => {'gettext_id' => 'urlize mode'},
+		   'nomail' => {'gettext_id' => 'no mail (usefull for vacations)'},
+		   'not_me' => {'gettext_id' => 'you do not receive your own posts'}
+		   );
 
 ## Cookie expiration periods with corresponding entry in NLS
 %cookie_period = (0     => {'gettext_id' => "session"},
@@ -52,8 +53,9 @@ use Conf;
 		  1440  => {'gettext_id' => "1 day"}, 
 		  43200 => {'gettext_id' => "1 week"});
 
-%visibility_mode = ('noconceal' => 'public',
-		    'conceal' => 'conceal');
+%visibility_mode = ('noconceal' => {'gettext_id' => "listed in the list review page"},
+		    'conceal' => {'gettext_id' => "concealed"}
+		    );
 
 ## Filenames with corresponding entry in NLS set 15
 %filenames = ('welcome.tt2'             => {'gettext_id' => "welcome message"},
