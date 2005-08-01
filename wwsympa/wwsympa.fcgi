@@ -5284,17 +5284,29 @@ sub do_skinsedit {
 		     next;
 		 }
 		 
-		 $msg_info{'message_id'} = $hdr->get('Message-Id');
-		 if ( $msg_info{'message_id'} =~ /^\<(.+)\>$/) {
-		     $msg_info{'message_id'}  =~ s/^\<(.+)\>$/$1/;
-		 } else {
-		     $msg_info{'message_id'}  =~ s/^\<(.+)\>(.+)/$1/;
-		 }
-		 $msg_info{'message_id'} = &tools::escape_chars($msg_info{'message_id'});
-	
-		 $msg_info{'year_month'} = $year_month;
-		 $msg_info{'subject'} =   &tools::escape_html(&MIME::Words::decode_mimewords($hdr->get('Subject'))); 
-		 $msg_info{'from'} =   &tools::escape_html(&MIME::Words::decode_mimewords($hdr->get('From'))); ## Escape <> 
+		 foreach my $field ('message-id','subject','from') {
+
+		     my $var = $field; $var =~ s/-/_/g;
+
+		     $msg_info{$var} = $hdr->get($field);
+
+		     if (ref $msg_info{$var} eq 'ARRAY') {
+			 $msg_info{$var} = $msg_info{$var}->[0];
+		     }
+
+		     if ($field eq 'message-id') {
+			 if ( $msg_info{$var} =~ /^\<(.+)\>$/) {
+			     $msg_info{$var}  =~ s/^\<(.+)\>$/$1/;
+			 } else {
+			     $msg_info{$var}  =~ s/^\<(.+)\>(.+)/$1/;
+			 }
+			 $msg_info{$var} = &tools::escape_chars($msg_info{$var});
+			 
+			 $msg_info{'year_month'} = $year_month;			 
+		     }else {	     
+			 $msg_info{$var} = &tools::escape_html($msg_info{$var});
+		     }
+		 }		
 		 
 		 my $date = $hdr->get('Date'); 
 		 
