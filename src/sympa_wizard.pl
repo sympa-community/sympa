@@ -163,7 +163,7 @@ my @params = ({'title' => 'Directories and file location'},
 	       'default' => 'your_email_address@--HOST--',
 	       'query' => 'Listmasters email list comma separated',
 	       'file' => 'sympa.conf','edit' => '1',
-	       'advice' =>''},
+	       'advice' =>'Sympa will associate listmaster privileges to these email addresses (mail and web interfaces). Some error reports may also be sent to these addresses.'},
 	      
 	      {'name' => 'email',
 	       'default' => 'sympa',
