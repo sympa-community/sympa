@@ -31,10 +31,10 @@
 <br />
 [% IF output %]
 <ul>
-[% IF latest_archive_url %]
-[% s = String.new(latest_archive_url) %]
-<li><label for="latest_arc">[%|loc%]latest archive[%END%] :
-      <input type="text" name="latest_arc" id="latest_arc" size="[% s.length %]" value="[% latest_archive_url %]" /></label></li>
+[% IF latest_arc_url %]
+[% s = String.new(latest_arc_url) %]
+<li><label for="latest_arc">[%|loc%]latest arc[%END%] :
+      <input type="text" name="latest_arc" id="latest_arc" size="[% s.length %]" value="[% latest_arc_url %]" /></label></li>
 [% END %]
 [% IF latest_d_read_url %]
 [% s = String.new(latest_d_read_url) %]
