@@ -5293,8 +5293,8 @@ sub do_skinsedit {
 		 $msg_info{'message_id'} = &tools::escape_chars($msg_info{'message_id'});
 	
 		 $msg_info{'year_month'} = $year_month;
-		 $msg_info{'subject'} =   &MIME::Words::decode_mimewords($hdr->get('Subject')); 
-		 $msg_info{'from'} =   &MIME::Words::decode_mimewords($hdr->get('From')); 
+		 $msg_info{'subject'} =   &tools::escape_html(&MIME::Words::decode_mimewords($hdr->get('Subject'))); 
+		 $msg_info{'from'} =   &tools::escape_html(&MIME::Words::decode_mimewords($hdr->get('From'))); ## Escape <> 
 		 
 		 my $date = $hdr->get('Date'); 
 		 
