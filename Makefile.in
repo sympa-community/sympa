@@ -508,9 +508,19 @@ ChangeLog:
 	@CVS2CL@
 #endif
 
-all:	checkperl checkcpan sources man locale
+all:	warning checkperl checkcpan sources man locale
 
 rpm: build_rh_rpm build_mdk_rpm
+
+warning:
+	@echo "######################## W A R N I N G ######################"; \
+	echo "## If it is the first time you install Sympa on this server :"; \
+	echo "##        It may take a while...."; \
+	echo "## The reason is that Sympa requires many Perl modules that"; \
+	echo "## are not distributed with the standard Perl distribution."; \
+	echo "## We'll try to install these modules semi-automatically..."; \
+	echo "#############################################################"; \
+	read rep;
 
 checkperl:
 	@if [ $(PERL_VERSION) = '5.006' ]; then \
@@ -522,6 +532,7 @@ checkperl:
 	echo "## If your Perl version is 5.6.0 AND if your system is Solaris :"; \
 	echo "## See also http://bugs.perl.org/perlbug.cgi?req=bidmids&bidmids=20000522.003"; \
 	echo "#############################################################################"; \
+	read rep; \
 	fi
 	@if [ ! -f $(SUIDPERL) ]; then \
 		echo "##################################"; \
@@ -535,6 +546,7 @@ checkperl:
 		echo "## You don't have msgfmt installed. It is required to build message catalogues"; \
 		echo "## msgfmt is provided with a 'gettest' package on most systems..."; \
 		echo "#####################################################"; \
+		read rep; \
 	fi
 
 sources: src/Makefile src/queue.c src/bouncequeue.c src/aliaswrapper.c

@@ -164,9 +164,19 @@ main_SRC	=	AUTHORS COPYING ChangeLog INSTALL KNOWNBUGS NEWS README
 LOG_SOCKET_TYPE	=	unix
 #endif
 
-all:	checkperl checkcpan sources man locale
+all:	warning checkperl checkcpan sources man locale
 
 rpm: build_rh_rpm build_mdk_rpm
+
+warning:
+	@echo "######################## W A R N I N G ######################"; \
+	echo "## If it is the first time you install Sympa on this server :"; \
+	echo "##        It may take a while...."; \
+	echo "## The reason is that Sympa requires many Perl modules that"; \
+	echo "## are not distributed with the standard Perl distribution."; \
+	echo "## We'll try to install these modules semi-automatically..."; \
+	echo "#############################################################"; \
+	read rep;
 
 checkperl:
 	@if [ $(PERL_VERSION) = '5.006' ]; then \
