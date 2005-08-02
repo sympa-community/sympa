@@ -7869,7 +7869,8 @@ sub _load_include_admin_user_file {
 	if (ref $::pinfo{$pname}{'file_format'} eq 'HASH') {
 	    ## This should be a paragraph
 	    unless ($#paragraph > 0) {
-		&do_log('info', 'Expecting a paragraph for "%s" parameter in %s', $pname, $file);
+		&do_log('info', 'Expecting a paragraph for "%s" parameter in %s, ignore it', $pname, $file);
+		next;
 	    }
 	    
 	    ## Skipping first line
@@ -9420,6 +9421,15 @@ sub maintenance {
 	}
     }
 
+    ## Clean buggy list config files
+    unless (&tools::higher_version($previous_version, '5.1b')) {
+	&do_log('notice','Cleaning buggy list config files...');
+	foreach my $l ( &List::get_lists('*') ) {
+	    my $list = new List ($l); 
+	    $list->save_config('listmaster@'.$list->{'domain'});
+	}
+    }
+
     ## Saving current version
     unless (open VFILE, ">$version_file") {
 	do_log('err', "Unable to open %s : %s", $version_file, $!);
@@ -9968,7 +9978,7 @@ sub _load_admin_file {
 	
 	## Look for first valid line
 	unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
-	    &do_log('info', 'Bad paragraph "%s" in %s', @paragraph, $config_file);
+	    &do_log('info', 'Bad paragraph "%s" in %s, ignore it', @paragraph, $config_file);
 	    next;
 	}
 	    
@@ -9981,7 +9991,7 @@ sub _load_admin_file {
 	}
 	
 	unless (defined $::pinfo{$pname}) {
-	    &do_log('info', 'Unknown parameter "%s" in %s', $pname, $config_file);
+	    &do_log('info', 'Unknown parameter "%s" in %s, ignore it', $pname, $config_file);
 	    next;
 	}
 
@@ -9997,7 +10007,8 @@ sub _load_admin_file {
 	if (ref $::pinfo{$pname}{'file_format'} eq 'HASH') {
 	    ## This should be a paragraph
 	    unless ($#paragraph > 0) {
-		&do_log('info', 'Expecting a paragraph for "%s" parameter in %s', $pname, $config_file);
+		&do_log('info', 'Expecting a paragraph for "%s" parameter in %s, ignore it', $pname, $config_file);
+		next;
 	    }
 	    
 	    ## Skipping first line
