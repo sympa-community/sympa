@@ -6482,16 +6482,17 @@ sub load_scenario_list {
 	    my $scenario = &List::_load_scenario_file ($action, $robot, $name, $directory);
 	    $list_of_scenario{$name} = $scenario;
 
-	    ## Set the title in the current language
-	    if (defined  $list_of_scenario{$name}{'title'}{&Language::GetLang()}) {
-		$list_of_scenario{$name}{'title'} = $list_of_scenario{$name}{'title'}{&Language::GetLang()};
-	    }elsif (defined $list_of_scenario{$name}{'title'}{'gettext'}) {
-		$list_of_scenario{$name}{'title'} = gettext($list_of_scenario{$name}{'title'}{'gettext'});
-	    }elsif (defined $list_of_scenario{$name}{'title'}{'us'}) {
-		$list_of_scenario{$name}{'title'} = gettext($list_of_scenario{$name}{'title'}{'us'});		
-	    }else {
-		$list_of_scenario{$name}{'title'} = $name;		     
-	    }
+	    ## Set the title in the current language        
+	    if (defined  $scenario->{'title'}{&Language::GetLang()}) {
+		$list_of_scenario{$name}{'title'} = $scenario->{'title'}{&Language::GetLang()};
+	    }elsif (defined $scenario->{'title'}{'gettext'}) {
+		$list_of_scenario{$name}{'title'} = gettext($scenario->{'title'}{'gettext'});
+	    }elsif (defined $scenario->{'title'}{'us'}) {
+		$list_of_scenario{$name}{'title'} = gettext($scenario->{'title'}{'us'});
+            }else {
+                $list_of_scenario{$name}{'title'} = $name;                   
+            }
+	    $list_of_scenario{$name}{'name'} = $name;	    
 	}
     }
 
