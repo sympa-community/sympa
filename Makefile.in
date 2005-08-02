@@ -518,7 +518,10 @@ warning:
 	echo "##        It may take a while...."; \
 	echo "## The reason is that Sympa requires many Perl modules that"; \
 	echo "## are not distributed with the standard Perl distribution."; \
-	echo "## We'll try to install these modules semi-automatically..."; \
+	echo "## We'll try to install these modules automatically..."; \
+	echo "## If some modules cannot be installed automatically, (probably" ; \
+	echo "## because of the 'make test'), try downloading them from the"; \
+	echo "## CPAN website (http://search.cpan.org) and install them manually."; \
 	echo "#############################################################"; \
 	read rep;
 
