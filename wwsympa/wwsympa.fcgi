@@ -7227,7 +7227,8 @@ sub do_edit_list {
 	 if ($pname eq 'user_data_source') {
 	     ## Migrating to database
 	     if (($list->{'admin'}{'user_data_source'} eq 'file') &&
-		 ($new_admin->{'user_data_source'} eq 'database')) {
+		 ($new_admin->{'user_data_source'} eq 'database' ||
+		  $new_admin->{'user_data_source'} eq 'include2')) {
 		 unless (-f "$list->{'dir'}/subscribers") {
 		     &wwslog('notice', 'No subscribers to load in database');
 		 }
