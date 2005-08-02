@@ -30,9 +30,6 @@
 [% IF action == 'pref' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
 <strong><a class="[% class %]" href="[% path_cgi %]/pref" >[%|loc%]Your preferences[%END%]</a></strong><br />
 
-[% IF action == 'which' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-<strong><a class="[% class %]" href="[% path_cgi %]/which" >[%|loc%]Your subscriptions[%END%]</a></strong>
-
 [% ELSE %]
   <div class="MenuBlock">    
       <form action="[% path_cgi %]" method="post"> 

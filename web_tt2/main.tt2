@@ -65,6 +65,7 @@
   <div id="Menus"><!-- Start Menus -->&nbsp;
     [% PROCESS login_menu.tt2 %]
     [% PROCESS list_menu.tt2 IF list %]
+    [% PROCESS your_lists.tt2 IF !list %]
     [% PROCESS setlang.tt2 %]
   </div><!-- End div Menus -->
 

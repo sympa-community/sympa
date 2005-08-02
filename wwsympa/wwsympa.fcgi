@@ -923,6 +923,12 @@ if ($wwsconf->{'use_fast_cgi'}) {
      unless ($param->{'bypass'} eq 'extreme') {
 	 ## Set cookies "your_subscribtions"
 	 if ($param->{'user'}{'email'}) {
+
+	     ## In case get_which was not set
+	     @{$param->{'get_which'}} = &List::get_which($param->{'user'}{'email'},$robot,'member') unless (defined $param->{'get_which'}); 
+	     @{$param->{'get_which_owner'}} = &List::get_which($param->{'user'}{'email'},$robot,'owner')  unless (defined $param->{'get_which_owner'}); 
+	     @{$param->{'get_which_editor'}} = &List::get_which($param->{'user'}{'email'},$robot,'editor')  unless (defined $param->{'get_which_editor'}); 	     
+
 	     # if at least one element defined in get_which tab
 	     &cookielib::set_which_cookie ($wwsconf->{'cookie_domain'},@{$param->{'get_which'}});
 	     
@@ -932,6 +938,20 @@ if ($wwsconf->{'use_fast_cgi'}) {
 		 $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 		 $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
 		 $param->{'which_info'}{$l}{'info'} = 1;
+	     }
+	     foreach my $l (@{$param->{'get_which_owner'}}) {
+		 my $list = new List ($l);
+		 $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
+		 $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
+		 $param->{'which_info'}{$l}{'info'} = 1;
+		 $param->{'which_info'}{$l}{'admin'} = 1;
+	     }
+	     foreach my $l (@{$param->{'get_which_editor'}}) {
+		 my $list = new List ($l);
+		 $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
+		 $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
+		 $param->{'which_info'}{$l}{'info'} = 1;
+		 $param->{'which_info'}{$l}{'admin'} = 1;
 	     }
 	 }
 	 ## Set cookies unless client use https authentication

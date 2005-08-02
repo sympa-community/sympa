@@ -1,0 +1,28 @@
+<!-- begin your_lists.tt2 -->
+
+[% IF user.email %]
+<div class="MenuBlock">
+
+[% IF which_info %]
+<p align=center><strong> Your Lists </strong></p>
+
+ <ul class="listenum" >
+ [% FOREACH l = which_info %]
+  <li class="listenum"><nobr>
+  [% IF l.value.admin %]<a class="actionMenuLinks" href="[% path_cgi %]/admin/[% l.key %]" ><span style="font-size: 10px;">
+[%|loc%]admin[%END%]</span></a>[% END %]
+  <a href="[% path_cgi %]/info/[% l.key %]" ><strong><span style="font-size: 10px;">
+[% hidden_head %][% l.key %][% hidden_end %]</span></strong></a><br /></nobr>
+  <span style="font-size: 10px;">[% l.value.subject %]</span><br />
+  </li>
+ [% END %]
+ </ul>
+
+[% ELSE %]
+<p>[%|loc%]No mailing list available.[%END%]</p>
+[% END %]
+</div>
+
+[% END %]
+
+<!-- end login_menu.tt2 -->
