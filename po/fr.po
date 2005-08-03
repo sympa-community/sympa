@@ -5257,7 +5257,7 @@ msgstr ""
 # nlsref 6,38
 #: wwsympa/wwsympa.fcgi:3507 wwsympa/wwsympa.fcgi:4326
 msgid "You have been removed from list %s.\n"
-msgstr "Vous avez désabonné de la liste %s.\n"
+msgstr "Vous avez été désabonné de la liste %s.\n"
 
 # nlsref 6,31
 #: soap/sympasoap.pm:554 src/Commands.pm:1485 src/Commands.pm:947
@@ -5427,7 +5427,7 @@ msgid ""
 "non-delivery reports for your address."
 msgstr ""
 "Votre adresse (%1) a été supprimée de la liste\n"
-"%1@%2 probablement parce que nous recevons des rapports d'anomalie \n"
+"%2@%3 probablement parce que nous recevons des rapports d'anomalie \n"
 "concernant cette adresse."
 
 #. (list.name,list.host,user.email,user.password)
@@ -5687,7 +5687,7 @@ msgstr "\"RSS : les listes actives\""
 #: web_tt2/main.tt2:12
 #, fuzzy
 msgid "\"RSS Latest documents\""
-msgstr "derniers documents publiés"
+msgstr "RSS : les nouveaux documents"
 
 #: web_tt2/main.tt2:15 web_tt2/main.tt2:18
 msgid "\"RSS Latest lists\""
@@ -5785,7 +5785,7 @@ msgstr ""
 "\n"
 "Cher propriétaire de la liste %s,\n"
 "\n"
-"Un utilisateur a demandé à être abonné à votre liste. Pour valider cette,\n"
+"Un utilisateur a demandé à être abonné à votre liste. Pour valider cette\n"
 "demande, vous voudrez bien cliquer sur ce lien :\n"
 "mailto:%s?subject=auth%%20%s%%20ADD%%20%s%%20%s%%20%s\n"
 "\n"
@@ -5828,7 +5828,7 @@ msgid ""
 "[ ** Unable to process HTML message part ** ]\n"
 msgstr ""
 "\n"
-"[ ** impossible de traiter la partie du messageau format HTML **]\n"
+"[ ** impossible de traiter la partie du message au format HTML ** ]\n"
 
 #: src/PlainDigest.pm:323
 msgid ""
@@ -5892,11 +5892,11 @@ msgstr "ajout soumis a authentification"
 
 #: src/etc/scenari/add.owner:1
 msgid "add performed by list owner do not need authentication"
-msgstr "ajout par le proprio sans authentification"
+msgstr "ajout par le propriétaire sans authentification"
 
 #: src/etc/scenari/add.owner_notify:1
 msgid "add performed by owner do not need authentication (notification)"
-msgstr "ajout par le proprio sans authentification (notification)"
+msgstr "ajout par le propriétaire sans authentification (notification)"
 
 #: web_tt2/lists.tt2:13
 msgid "admin"
@@ -5962,7 +5962,7 @@ msgstr "ouvert à tous, notification du propriétaire"
 
 #: src/etc/scenari/unsubscribe.auth_notify:1
 msgid "authentication requested, notification sent to owner"
-msgstr "authentification demandée, notification du proprio"
+msgstr "authentification demandée, notification du propriétaire"
 
 #: web_tt2/reviewbouncing.tt2:63
 msgid "bounce score"
@@ -5974,11 +5974,11 @@ msgstr "en erreur"
 
 #: src/etc/scenari/access_web_archive.owner:1
 msgid "by owner"
-msgstr "proprio de liste"
+msgstr "propriétaire de liste"
 
 #: src/etc/scenari/del.owner:1
 msgid "by owner without authentication"
-msgstr "proprio de liste, pas d'authentification"
+msgstr "propriétaire de liste, pas d'authentification"
 
 #: mail_tt2/bye.tt2:5
 msgid "bye !"
@@ -6021,7 +6021,7 @@ msgstr "liste cachée sauf aux abonnés"
 
 #: src/etc/scenari/topics_visibility.conceal:1
 msgid "conceal unless for listmaster"
-msgstr "liste cachée sauf aux listmaster"
+msgstr "liste cachée sauf aux listmasters"
 
 #: src/etc/scenari/topics_visibility.identified:1
 msgid "conceal unless user is logged in"
@@ -6067,7 +6067,7 @@ msgstr "mise a jour quotidienne des listes de révocation"
 
 #: src/List.pm:581
 msgid "data location URL"
-msgstr "UL des données"
+msgstr "URL des données"
 
 # nlsref 16,48
 #: src/List.pm:831
@@ -6174,7 +6174,7 @@ msgstr "email2@dom2 Nom 2"
 
 #: web_tt2/arcsearch_form.tt2:43
 msgid "entire word"
-msgstr "partie de mot"
+msgstr "mots complets"
 
 # nlsref 16,148
 #: src/List.pm:840
@@ -6195,7 +6195,7 @@ msgstr "droit de poster des messages ouvert à tous"
 
 #: src/etc/list_task_models/expire.yearly.task:1
 msgid "expiration routine run yearly"
-msgstr "procedure d'expiration annuelledes abonnements"
+msgstr "procedure d'expiration annuelle des abonnements"
 
 # nlsref 16,42
 #: src/List.pm:643
@@ -6318,7 +6318,7 @@ msgstr "visible de l'intranet"
 
 #: src/etc/scenari/invite.owner:1
 msgid "invite perform by list owner do not need authentication"
-msgstr "invitation par le proprio sans authentification"
+msgstr "invitation par le propriétaire sans authentification"
 
 #: web_tt2/remindpasswd.tt2:5
 msgid "it will be sent to you by email :"
@@ -6404,7 +6404,7 @@ msgstr "liste des listes"
 
 #: src/etc/scenari/del.owner_notify:1
 msgid "list owners, authentication not needed (notification)"
-msgstr "proprio de liste, pas d'authentification (notification)"
+msgstr "propriétaire de liste, pas d'authentification (notification)"
 
 #: web_tt2/get_closed_lists.tt2:11 web_tt2/get_pending_lists.tt2:14
 msgid "list subject"
@@ -6429,7 +6429,7 @@ msgstr "listmaster seulement"
 
 #: src/etc/scenari/subscribe.intranetorowner:1
 msgid "local domain users or owner approval"
-msgstr "usager du domaine local ou via autorisation du proprio"
+msgstr "usager du domaine local ou via autorisation du propriétaire"
 
 #: src/etc/mhonarc-ressources.tt2:178 src/etc/mhonarc-ressources.tt2:276
 #: src/etc/mhonarc-ressources.tt2:63
@@ -6474,7 +6474,7 @@ msgstr "possible après authentification"
 
 #: src/etc/scenari/subscribe.auth_notify:1
 msgid "need authentication (notification is sent to owners)"
-msgstr "soumis a authentification (notification des proprio)"
+msgstr "soumis a authentification (notification des propriétaires)"
 
 #: web_tt2/arcsearch_form.tt2:30
 msgid "newest messages"
@@ -6525,7 +6525,7 @@ msgstr "Un de ces mots"
 
 #: src/etc/scenari/review.owner:1
 msgid "only owner (and listmaster)"
-msgstr "proprio de list seulement (et listmaster)"
+msgstr "propriétaire de liste seulement (et listmaster)"
 
 #: src/etc/create_list_templates/discussion_list/comment.tt2:3
 #: src/etc/create_list_templates/private_working_group/comment.tt2:3
@@ -6548,7 +6548,7 @@ msgstr "autre adresse email"
 
 #: src/etc/scenari/subscribe.owner:1 src/etc/scenari/unsubscribe.owner:1
 msgid "owners approval"
-msgstr "ouvert a tous après autorisation du proprio"
+msgstr "ouvert a tous après autorisation du propriétaire"
 
 #: web_tt2/review.tt2:23
 msgid "page"
@@ -6577,7 +6577,7 @@ msgstr "mot de passe"
 #. (newuser.password)
 #: mail_tt2/sendpasswd.tt2:17 mail_tt2/sendpasswd.tt2:24
 msgid "password: %1"
-msgstr "%1"
+msgstr "mot de passe : %1"
 
 # nlsref 16,83
 #: src/etc/create_list_templates/hotline/comment.tt2:4
@@ -6690,12 +6690,12 @@ msgstr "inclusion de liste distante"
 # nlsref 16,39
 #: src/List.pm:594 src/List.pm:627 src/List.pm:691 src/List.pm:849
 msgid "remote password"
-msgstr "mot de passe"
+msgstr "mot de passe de la source"
 
 # nlsref 16,207
 #: src/List.pm:799
 msgid "remote path of sympa list dump"
-msgstr "path du dump de la liste distante"
+msgstr "chemin pour accéder à la fonction dump de la liste distante"
 
 # nlsref 16,37
 #: src/List.pm:616 src/List.pm:680 src/List.pm:793
@@ -6709,7 +6709,7 @@ msgstr "utilisateur"
 
 #: src/etc/scenari/del.closed:1
 msgid "remove subscriber impossible"
-msgstr "suppresion d'abonné impossible"
+msgstr "suppression d'abonné impossible"
 
 #: src/etc/scenari/subscribe.smime:1
 msgid "requires S/MIME signed"
@@ -6717,11 +6717,11 @@ msgstr "demande d'abonnement avec signature par certificat"
 
 #: src/etc/scenari/subscribe.smimeorowner:1
 msgid "requires S/MIME signed or owner approval"
-msgstr "ouvert a tous après autorisation du proprio"
+msgstr "ouvert a tous après autorisation du propriétaire"
 
 #: src/etc/scenari/subscribe.auth_owner:1
 msgid "requires authentication then owner approval"
-msgstr "sousmis a authentification puis accord du proprio"
+msgstr "sousmis a authentification puis accord du propriétaire"
 
 # nlsref 16,93
 #: src/List.pm:1008
@@ -6759,7 +6759,7 @@ msgstr "limité aux abonnés"
 #: src/etc/scenari/d_edit.private-https:1
 #: src/etc/scenari/d_read.private-https:1
 msgid "restricted to subscribers authenticated with user cert"
-msgstr "limité aux abonnés, vérif de la signature smime"
+msgstr "limité aux abonnés authentifiés avec un certificat S/MIME"
 
 #: src/etc/scenari/send.private_smime:1
 msgid "restricted to subscribers check smime signature"
@@ -6799,7 +6799,7 @@ msgstr "portée de la recherche"
 # nlsref 16,200
 #: src/List.pm:760
 msgid "second-level connection timeout"
-msgstr "élai de connexion (2nd niveau)"
+msgstr "délai de connexion (2nd niveau)"
 
 # nlsref 16,146
 #: src/List.pm:744
@@ -6814,7 +6814,7 @@ msgstr "filtre (2nd niveau)"
 # nlsref 16,202
 #: src/List.pm:766
 msgid "second-level regular expression"
-msgstr "expression régulière (1nd niveau)"
+msgstr "expression régulière (2nd niveau)"
 
 # nlsref 16,199
 #: src/List.pm:754
@@ -7045,7 +7045,7 @@ msgstr "qui a mis à jour le fichier de configuration"
 
 #: src/etc/scenari/unsubscribe.open_notify.~1.9.~:1
 msgid "without authentication, notification is sent to owners"
-msgstr "pas d'authentification (notification au proprio)"
+msgstr "pas d'authentification (notification au propriétaire)"
 
 #: wwsympa/wwslib.pm:44
 #, fuzzy
@@ -7488,10 +7488,10 @@ msgstr "votre mot de passe         : %1"
 #~ msgstr "Email"
 
 #~ msgid "owner approval"
-#~ msgstr "soumis à autorisation du proprio"
+#~ msgstr "soumis à autorisation du propriétaire"
 
 #~ msgid "restricted to list owner"
-#~ msgstr "restreint au proprio de list"
+#~ msgstr "restreint au propriétaire de liste"
 
 #~ msgid ""
 #~ "EXPire <list> <old> <delay>     * To begin an expiration process for "
