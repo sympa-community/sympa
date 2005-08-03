@@ -7653,13 +7653,17 @@ sub _prepare_data {
 	 if (defined($data)) {
 	     $data2 = $data;
 
-	     ## Add an empty entry
-	     unless (($name eq 'days') || ($name eq 'reception') || ($name eq 'rfc2369_header_fields') || ($name eq 'topics')) {
-		 push @{$data2}, undef;
-		 ## &do_log('debug2', 'Add 1 %s', $name);
+	     if ($may_edit eq 'write') {
+		 ## Add an empty entry
+		 unless (($name eq 'days') || ($name eq 'reception') || ($name eq 'rfc2369_header_fields') || ($name eq 'topics')) {
+		     push @{$data2}, undef;
+		     ## &do_log('debug2', 'Add 1 %s', $name);
+		 }
 	     }
 	 }else {
-	     $data2 = [undef];
+	     if ($may_edit eq 'write') {
+		 $data2 = [undef];
+	     }
 	 }
      }else {
 	 $data2 = [$data];
