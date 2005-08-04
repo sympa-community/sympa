@@ -1907,8 +1907,8 @@ files. The server admin module include a CSS administration page that can help y
 
         This is the local directory for configuration files (such as
 	\file {edit\_list.conf}. It contains 5 subdirectories:
-	\dir {scenari} for local authorization scenarios; \dir {templates}
-	for the site's local templates and default list templates; \dir {wws\_templates}
+	\dir {scenari} for local authorization scenarios; \dir {mail\_tt2}
+	for the site's local mail templates and default list templates; \dir {web\_tt2}
         for the site's local html templates; \dir {global\_task\_models} for local
 	global task models; and \dir {list\_task\_models} for local list task models
 
@@ -4700,8 +4700,8 @@ In order to customize the web look and feel, you may edit the CSS definition. CS
 
 In addition, if needed, you can customize each virtual robot using its set of templates and authorization scenarios. 
 
-\dir {[ETCDIR]/\samplerobot/wws\_templates/},
-\dir {[ETCDIR]/\samplerobot/templates/}, 
+\dir {[ETCDIR]/\samplerobot/web\_tt2/},
+\dir {[ETCDIR]/\samplerobot/mail\_tt2/}, 
 \dir {[ETCDIR]/\samplerobot/scenari/} directories are searched when
 loading templates or scenari before searching into \dir {[ETCDIR]} and  \dir {[ETCBINDIR]}. This allows to define different privileges and a different GUI for a Virtual Robot.
 
