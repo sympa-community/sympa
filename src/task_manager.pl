@@ -556,6 +556,9 @@ sub chk_line {
     my $line = $_[0];
     my $Rhash = $_[1]; # will contain nature of line (label, command, error...)
 
+    ## just in case...
+    chomp $line;
+
     &do_log('debug2', 'chk_line(%s, %s)', $line, $Rhash->{'nature'});
         
     $Rhash->{'nature'} = undef;
@@ -703,7 +706,7 @@ sub execute {
     }
 
     # get the task name, without the path
-    my @path = split /\\/, $task_file;
+    my @path = split /\//, $task_file;
     my $task_name = $path[$#path];
 
     # positioning at the right label
@@ -714,6 +717,7 @@ sub execute {
     &do_log ('debug2', "* execution of the task $task_file");
     unless ($label eq '') {
 	while ( <TASK> ) {
+	    chomp;
 	    $lnb++;
 	    chk_line ($_, \%result);
 	    last if ($result{'label'} eq $label);
