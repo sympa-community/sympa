@@ -30,31 +30,31 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html716"
+<A NAME="tex2html724"
   HREF="node4.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html710"
+<A NAME="tex2html718"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html704"
+<A NAME="tex2html712"
   HREF="node2.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html712"
+<A NAME="tex2html720"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html714"
+<A NAME="tex2html722"
   HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html717"
+<B> Next:</B> <A NAME="tex2html725"
   HREF="node4.html">3. Installing Sympa</A>
-<B> Up:</B> <A NAME="tex2html711"
+<B> Up:</B> <A NAME="tex2html719"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html705"
+<B> Previous:</B> <A NAME="tex2html713"
   HREF="node2.html">1. Presentation</A>
- &nbsp; <B>  <A NAME="tex2html713"
+ &nbsp; <B>  <A NAME="tex2html721"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html715"
+ &nbsp; <B>  <A NAME="tex2html723"
   HREF="node26.html">Index</A></B> 
 <BR>
 <BR>
@@ -63,15 +63,30 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html718"
+<LI><A NAME="tex2html726"
   HREF="node3.html#SECTION00310000000000000000">2.1 Organization</A>
-<LI><A NAME="tex2html719"
+<LI><A NAME="tex2html727"
   HREF="node3.html#SECTION00320000000000000000">2.2 Binaries</A>
-<LI><A NAME="tex2html720"
+<LI><A NAME="tex2html728"
   HREF="node3.html#SECTION00330000000000000000">2.3 Configuration files</A>
-<LI><A NAME="tex2html721"
+<LI><A NAME="tex2html729"
   HREF="node3.html#SECTION00340000000000000000">2.4 Spools</A>
-</UL>
+<LI><A NAME="tex2html730"
+  HREF="node3.html#SECTION00350000000000000000">2.5 Roles and privileges</A>
+<UL>
+<LI><A NAME="tex2html731"
+  HREF="node3.html#SECTION00351000000000000000">2.5.1 (Super) listmasters</A>
+<LI><A NAME="tex2html732"
+  HREF="node3.html#SECTION00352000000000000000">2.5.2 (Robot) listmasters</A>
+<LI><A NAME="tex2html733"
+  HREF="node3.html#SECTION00353000000000000000">2.5.3 Privileged list owners</A>
+<LI><A NAME="tex2html734"
+  HREF="node3.html#SECTION00354000000000000000">2.5.4 (Basic) list owners</A>
+<LI><A NAME="tex2html735"
+  HREF="node3.html#SECTION00355000000000000000">2.5.5 Moderators (also called Editors)</A>
+<LI><A NAME="tex2html736"
+  HREF="node3.html#SECTION00356000000000000000">2.5.6 Subscribers (or list members)</A>
+</UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
 
@@ -96,7 +111,7 @@ a virtual robot or for the whole site.
 <P>
 
 <UL>
-<LI><A NAME="4869"></A><TT>/usr/local/sympa-os</TT>
+<LI><A NAME="4883"></A><TT>/usr/local/sympa-os</TT>
 <BR>
 The root directory of <I>Sympa</I>. You will find almost everything
 	related to <I>Sympa</I> under this directory, except logs and main
@@ -104,134 +119,134 @@ The root directory of <I>Sympa</I>. You will find almost everything
 
 <P>
 </LI>
-<LI><A NAME="4874"></A><TT>/usr/local/sympa-os/bin</TT>
+<LI><A NAME="4888"></A><TT>/usr/local/sympa-os/bin</TT>
 <BR>
 This directory contains the binaries, including the CGI. It
 	also contains the default authorization scenarios, templates and configuration
-	files as in the distribution.  <A NAME="4877"></A><TT>/usr/local/sympa-os/bin</TT> may be completely
-        overwritten by the <A NAME="4880"></A><TT>make install</TT> so you must not customize
-        templates and authorization scenarios under  <A NAME="4883"></A><TT>/usr/local/sympa-os/bin</TT>.
+	files as in the distribution.  <A NAME="4891"></A><TT>/usr/local/sympa-os/bin</TT> may be completely
+        overwritten by the <A NAME="4894"></A><TT>make install</TT> so you must not customize
+        templates and authorization scenarios under  <A NAME="4897"></A><TT>/usr/local/sympa-os/bin</TT>.
 
 <P>
 </LI>
-<LI><A NAME="4886"></A><TT>/usr/local/sympa-os/bin/etc</TT>
+<LI><A NAME="4900"></A><TT>/usr/local/sympa-os/bin/etc</TT>
 <BR>
 Here <I>Sympa</I> stores the default versions of what it will otherwise find
-	in <A NAME="4890"></A><TT>/usr/local/sympa-os/etc</TT> (task models, authorization scenarios, templates and configuration
+	in <A NAME="4904"></A><TT>/usr/local/sympa-os/etc</TT> (task models, authorization scenarios, templates and configuration
 	files, recognized S/Mime certificates, families).
 
 <P>
 </LI>
-<LI><A NAME="4893"></A><TT>/usr/local/sympa-os/etc</TT>
+<LI><A NAME="4907"></A><TT>/usr/local/sympa-os/etc</TT>
 <BR>
 This is your site's configuration directory. Consult
-	<A NAME="4896"></A><TT>/usr/local/sympa-os/bin/etc</TT> when drawing up your own.
+	<A NAME="4910"></A><TT>/usr/local/sympa-os/bin/etc</TT> when drawing up your own.
 
 <P>
 </LI>
-<LI><A NAME="4899"></A><TT>/usr/local/sympa-os/etc/create_list_templates/</TT>
+<LI><A NAME="4913"></A><TT>/usr/local/sympa-os/etc/create_list_templates/</TT>
 <BR>
 List templates (suggested at list creation time).
 
 <P>
 </LI>
-<LI><A NAME="4902"></A><TT>/usr/local/sympa-os/etc/scenari/</TT>
+<LI><A NAME="4916"></A><TT>/usr/local/sympa-os/etc/scenari/</TT>
 <BR>
 This directory will contain your authorization scenarios.
 	If you don't know what the hell an authorization scenario is, refer to <A HREF="node13.html#scenarios">12</A>,page&nbsp;<A HREF="node13.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. Those authorization scenarios are default scenarios but you may look at
-        <A NAME="4905"></A><TT>/usr/local/sympa-os/etc/my.domain.org/scenari/</TT> for default scenarios of my.domain.org
-        virtual robot and <A NAME="4908"></A><TT>/usr/local/sympa-os/expl/mylist/scenari</TT> for scenarios
+        <A NAME="4919"></A><TT>/usr/local/sympa-os/etc/my.domain.org/scenari/</TT> for default scenarios of my.domain.org
+        virtual robot and <A NAME="4922"></A><TT>/usr/local/sympa-os/expl/mylist/scenari</TT> for scenarios
         specific to a particular list 
 
 <P>
 </LI>
-<LI><A NAME="4911"></A><TT>/usr/local/sympa-os/etc/data_sources/</TT>
+<LI><A NAME="4925"></A><TT>/usr/local/sympa-os/etc/data_sources/</TT>
 <BR>
 This directory will contain your .incl files (see <A HREF="node16.html#data-inclusion-file">15.7</A>, page&nbsp;<A HREF="node16.html#data-inclusion-file"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). 
-	For the moment it only deals with files requiered by paragraphs <A NAME="4914"></A><TT>owner_include</TT> and <A NAME="4917"></A><TT>editor_include</TT> in the config file.
+	For the moment it only deals with files requiered by paragraphs <A NAME="4928"></A><TT>owner_include</TT> and <A NAME="4931"></A><TT>editor_include</TT> in the config file.
 
 <P>
 </LI>
-<LI><A NAME="4920"></A><TT>/usr/local/sympa-os/etc/list_task_models/</TT>
+<LI><A NAME="4934"></A><TT>/usr/local/sympa-os/etc/list_task_models/</TT>
 <BR>
 This directory will store your own list task models (see <A HREF="node15.html#tasks">14.10</A>, page&nbsp;<A HREF="node15.html#tasks"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).	
 
 <P>
 </LI>
-<LI><A NAME="4923"></A><TT>/usr/local/sympa-os/etc/global_task_models/</TT>
+<LI><A NAME="4937"></A><TT>/usr/local/sympa-os/etc/global_task_models/</TT>
 <BR>
 Contains global task models of yours (see <A HREF="node15.html#tasks">14.10</A>, page&nbsp;<A HREF="node15.html#tasks"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).		
 
 <P>
 </LI>
-<LI><A NAME="4926"></A><TT>/usr/local/sympa-os/etc/web_tt2/</TT> (used to be <A NAME="4929"></A><TT>/usr/local/sympa-os/etc/wws_templates/</TT>)
+<LI><A NAME="4940"></A><TT>/usr/local/sympa-os/etc/web_tt2/</TT> (used to be <A NAME="4943"></A><TT>/usr/local/sympa-os/etc/wws_templates/</TT>)
 <BR>
-The web interface (<A NAME="4932"></A><I>WWSympa</I>) is composed of template HTML
+The web interface (<A NAME="4946"></A><I>WWSympa</I>) is composed of template HTML
 	files parsed by the CGI program. Templates can also 
-        be defined for a particular list in <A NAME="4935"></A><TT>/usr/local/sympa-os/expl/mylist/web_tt2/</TT>
-        or in <A NAME="4938"></A><TT>/usr/local/sympa-os/etc/my.domain.org/web_tt2/</TT>
+        be defined for a particular list in <A NAME="4949"></A><TT>/usr/local/sympa-os/expl/mylist/web_tt2/</TT>
+        or in <A NAME="4952"></A><TT>/usr/local/sympa-os/etc/my.domain.org/web_tt2/</TT>
 
 <P>
 </LI>
-<LI><A NAME="4941"></A><TT>/usr/local/sympa-os/etc/mail_tt2/</TT> (used to be <A NAME="4944"></A><TT>/usr/local/sympa-os/etc/templates/</TT>)
+<LI><A NAME="4955"></A><TT>/usr/local/sympa-os/etc/mail_tt2/</TT> (used to be <A NAME="4958"></A><TT>/usr/local/sympa-os/etc/templates/</TT>)
 <BR>
 Some of the mail robot's replies are defined by templates
-	(<A NAME="4947"></A><TT>welcome.tt2</TT> for SUBSCRIBE). You can overload
+	(<A NAME="4961"></A><TT>welcome.tt2</TT> for SUBSCRIBE). You can overload
 	these template files in the individual list directories or
         for each virtual robot, but these are the defaults.
 
 <P>
 </LI>
-<LI><A NAME="4950"></A><TT>/usr/local/sympa-os/etc/families/</TT>
+<LI><A NAME="4964"></A><TT>/usr/local/sympa-os/etc/families/</TT>
 <BR>
 Contains family directories of yours (see <A HREF="node17.html#ml-creation">16</A>, page&nbsp;<A HREF="node17.html#ml-creation"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-	Families directories can also be created in <A NAME="4953"></A><TT>/usr/local/sympa-os/etc/my.domain.org/families/</TT>
+	Families directories can also be created in <A NAME="4967"></A><TT>/usr/local/sympa-os/etc/my.domain.org/families/</TT>
 
 <P>
 </LI>
-<LI><A NAME="4956"></A><TT>/usr/local/sympa-os/etc/my.domain.org</TT>
+<LI><A NAME="4970"></A><TT>/usr/local/sympa-os/etc/my.domain.org</TT>
 <BR>
 The directory to define the virtual robot my.domain.orgdedicated to
         managment of all lists of this domain (list description of my.domain.orgare stored
-        in <A NAME="4959"></A><TT>/usr/local/sympa-os/expl/my.domain.org</TT>).
-        Those directories for virtual robots have the same structure as  <A NAME="4962"></A><TT>/usr/local/sympa-os/etc</TT> which is
+        in <A NAME="4973"></A><TT>/usr/local/sympa-os/expl/my.domain.org</TT>).
+        Those directories for virtual robots have the same structure as  <A NAME="4976"></A><TT>/usr/local/sympa-os/etc</TT> which is
         the configuration dir of the default robot. 
 
 <P>
 </LI>
-<LI><A NAME="4965"></A><TT>/usr/local/sympa-os/expl</TT>
+<LI><A NAME="4979"></A><TT>/usr/local/sympa-os/expl</TT>
 <BR>	<I>Sympa</I>'s working directory.
 
 <P>
 </LI>
-<LI><A NAME="4969"></A><TT>/usr/local/sympa-os/expl/mylist</TT>
+<LI><A NAME="4983"></A><TT>/usr/local/sympa-os/expl/mylist</TT>
 <BR>
 The list directory (refer to <A HREF="#list-directory"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, 
 	page&nbsp;<A HREF="#list-directory"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). Lists stored in this directory
         belong to the default robot as defined in sympa.conf file, but a list
-        can be stored in <A NAME="4972"></A><TT>/usr/local/sympa-os/expl/my.domain.org/mylist</TT> directory and it
+        can be stored in <A NAME="4986"></A><TT>/usr/local/sympa-os/expl/my.domain.org/mylist</TT> directory and it
         is managed by my.domain.orgvirtual robot.
 
 <P>
 </LI>
-<LI><A NAME="4975"></A><TT>/usr/local/sympa-os/expl/X509-user-certs</TT>
+<LI><A NAME="4989"></A><TT>/usr/local/sympa-os/expl/X509-user-certs</TT>
 <BR>
 The directory where Sympa stores all user's certificates
 
 <P>
 </LI>
-<LI><A NAME="4978"></A><TT>/usr/local/sympa-os/locale</TT>
+<LI><A NAME="4992"></A><TT>/usr/local/sympa-os/locale</TT>
 <BR>
 Internationalization directory. It contains message catalogues in the GNU .po format. 
 
 <P>
 </LI>
-<LI><A NAME="4981"></A><TT>/usr/local/sympa-os/spool</TT>
+<LI><A NAME="4995"></A><TT>/usr/local/sympa-os/spool</TT>
 <BR>	<I>Sympa</I> uses 8 different spools (see <A HREF="#spools">2.4</A>, page&nbsp;<A HREF="node3.html#spools"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 </LI>
-<LI><A NAME="4985"></A><TT>/usr/local/sympa-os/src/</TT>
+<LI><A NAME="4999"></A><TT>/usr/local/sympa-os/src/</TT>
 <BR>	<I>Sympa</I> sources.
 
 <P>
@@ -249,22 +264,22 @@ Internationalization directory. It contains message catalogues in the GNU .po fo
 <P>
 
 <UL>
-<LI><A NAME="4989"></A><TT>sympa.pl</TT>
+<LI><A NAME="5003"></A><TT>sympa.pl</TT>
 <BR>
 The main daemon ; it processes commands and delivers
-	messages. Continuously scans the <A NAME="4992"></A><TT>msg/</TT> spool.
+	messages. Continuously scans the <A NAME="5006"></A><TT>msg/</TT> spool.
 
 <P>
 </LI>
-<LI><A NAME="4995"></A><TT>sympa_wizard.pl</TT>
+<LI><A NAME="5009"></A><TT>sympa_wizard.pl</TT>
 <BR>
-A wizard to edit <A NAME="4998"></A><TT>sympa.conf</TT> and <A NAME="5001"></A><TT>wwsympa.conf</TT>.
+A wizard to edit <A NAME="5012"></A><TT>sympa.conf</TT> and <A NAME="5015"></A><TT>wwsympa.conf</TT>.
 	Maybe it is a good idea to run it at the beginning, but thoses
 	file can also be edited with your favorite text editor. 
 
 <P>
 </LI>
-<LI><A NAME="5004"></A><TT>wwsympa.fcgi</TT>
+<LI><A NAME="5018"></A><TT>wwsympa.fcgi</TT>
 <BR>
 The CGI program offering a complete web interface
 	to mailing lists. It can work in both classical CGI and
@@ -273,49 +288,49 @@ The CGI program offering a complete web interface
 
 <P>
 </LI>
-<LI><A NAME="5007"></A><TT>bounced.pl</TT>
+<LI><A NAME="5021"></A><TT>bounced.pl</TT>
 <BR>
 This daemon processes bounces (non-delivered messages),
 	looking for bad addresses. List owners will later
-	access bounce information via <A NAME="5010"></A><I>WWSympa</I>. Continuously scans
-	the <A NAME="5013"></A><TT>bounce/</TT> spool.
+	access bounce information via <A NAME="5024"></A><I>WWSympa</I>. Continuously scans
+	the <A NAME="5027"></A><TT>bounce/</TT> spool.
 
 <P>
 </LI>
-<LI><A NAME="5016"></A><TT>archived.pl</TT>
+<LI><A NAME="5030"></A><TT>archived.pl</TT>
 <BR>
 This daemon feeds the web archives, converting messages
 	to HTML format and linking them. It uses the amazing 
-	<A NAME="5019"></A><TT>MhOnArc</TT>. Continuously scans the <A NAME="5022"></A><TT>outgoing/</TT> 
+	<A NAME="5033"></A><TT>MhOnArc</TT>. Continuously scans the <A NAME="5036"></A><TT>outgoing/</TT> 
 	spool.
 
 <P>
 </LI>
-<LI><A NAME="5025"></A><TT>task_manager.pl</TT>
+<LI><A NAME="5039"></A><TT>task_manager.pl</TT>
 <BR>
 The daemon which manages the tasks : creation, checking, execution. 
-	It regularly scans the <A NAME="5028"></A><TT>task/</TT> spool.
+	It regularly scans the <A NAME="5042"></A><TT>task/</TT> spool.
 
 <P>
 </LI>
-<LI><A NAME="5031"></A><TT>sympa_soap_server.fcgi</TT>
+<LI><A NAME="5045"></A><TT>sympa_soap_server.fcgi</TT>
 <BR>
 The server will process SOAP (web services) request. This server requires FastCGI ;
 	it should be referenced from within your HTTPS config.
 
 <P>
 </LI>
-<LI><A NAME="5034"></A><TT>queue</TT>
+<LI><A NAME="5048"></A><TT>queue</TT>
 <BR>
 This small program gets the incoming messages from the aliases
-	and stores them in <A NAME="5037"></A><TT>msg/</TT> spool.
+	and stores them in <A NAME="5051"></A><TT>msg/</TT> spool.
 
 <P>
 </LI>
-<LI><A NAME="5040"></A><TT>bouncequeue</TT>
+<LI><A NAME="5054"></A><TT>bouncequeue</TT>
 <BR>
-Same as <A NAME="5043"></A><TT>queue</TT> for bounces. Stores bounces in 
-	<A NAME="5046"></A><TT>bounce/</TT> spool.
+Same as <A NAME="5057"></A><TT>queue</TT> for bounces. Stores bounces in 
+	<A NAME="5060"></A><TT>bounce/</TT> spool.
 
 <P>
 </LI>
@@ -330,44 +345,44 @@ Same as <A NAME="5043"></A><TT>queue</TT> for bounces. Stores bounces in
 <P>
 
 <UL>
-<LI><A NAME="5049"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>
+<LI><A NAME="5063"></A><TT>/usr/local/sympa-os/etc/sympa.conf</TT>
 <BR>
 The main configuration file.
 	See <A HREF="node7.html#exp-admin">6</A>, page&nbsp;<A HREF="node7.html#exp-admin"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
 <P>
 </LI>
-<LI><A NAME="5052"></A><TT>/usr/local/sympa-os/etc/wwsympa.conf</TT>
-<BR>	<A NAME="5055"></A><I>WWSympa</I> configuration file.
+<LI><A NAME="5066"></A><TT>/usr/local/sympa-os/etc/wwsympa.conf</TT>
+<BR>	<A NAME="5069"></A><I>WWSympa</I> configuration file.
 	See <A HREF="node2.html#wwsympa">1.2</A>, page&nbsp;<A HREF="node2.html#wwsympa"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
 <P>
 </LI>
-<LI><A NAME="5058"></A><TT>edit_list.conf</TT>
+<LI><A NAME="5072"></A><TT>edit_list.conf</TT>
 <BR>
 Defines which parameters/files are editable by
 	owners. See <A HREF="node17.html#list-edition">16.4.4</A>, page&nbsp;<A HREF="node17.html#list-edition"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
 <P>
 </LI>
-<LI><A NAME="5061"></A><TT>topics.conf</TT>
+<LI><A NAME="5075"></A><TT>topics.conf</TT>
 <BR>
 Contains the declarations of your site's topics (classification in
-	<A NAME="5064"></A><I>WWSympa</I>), along with their titles. A sample is provided in the
-	<A NAME="5067"></A><TT>sample/</TT> directory of the sympa distribution.
+	<A NAME="5078"></A><I>WWSympa</I>), along with their titles. A sample is provided in the
+	<A NAME="5081"></A><TT>sample/</TT> directory of the sympa distribution.
 	See <A HREF="node15.html#topics">14.7</A>, page&nbsp;<A HREF="node15.html#topics"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
 
 <P>
 </LI>
-<LI><A NAME="5070"></A><TT>auth.conf</TT>
+<LI><A NAME="5084"></A><TT>auth.conf</TT>
 <BR>
-Defines authentication backend organisation ( <A NAME="5073"></A>LDAP-based authentication,  <A NAME="5074"></A>CAS-based authentication and sympa internal )
+Defines authentication backend organisation ( <A NAME="5087"></A>LDAP-based authentication,  <A NAME="5088"></A>CAS-based authentication and sympa internal )
 
 <P>
 </LI>
-<LI><A NAME="5075"></A><TT>robot.conf</TT>
+<LI><A NAME="5089"></A><TT>robot.conf</TT>
 <BR>
-It is a subset of <A NAME="5078"></A><TT>sympa.conf</TT> defining a Virtual robot 
+It is a subset of <A NAME="5092"></A><TT>sympa.conf</TT> defining a Virtual robot 
 	(one per Virtual robot).
 
 <P>
@@ -384,72 +399,72 @@ It is a subset of <A NAME="5078"></A><TT>sympa.conf</TT> defining a Virtual robo
 
 <P>
 See <A HREF="node7.html#spool-related">6.6</A>, page&nbsp;<A HREF="node7.html#spool-related"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for spool definition
-in <A NAME="5081"></A><TT>sympa.conf</TT>.
+in <A NAME="5095"></A><TT>sympa.conf</TT>.
 
 <P>
 
 <UL>
-<LI><A NAME="5084"></A><TT>/usr/local/sympa-os/spool/auth/</TT>
+<LI><A NAME="5098"></A><TT>/usr/local/sympa-os/spool/auth/</TT>
 <BR>
 For storing messages until they have been confirmed.
 
 <P>
 </LI>
-<LI><A NAME="5087"></A><TT>/usr/local/sympa-os/spool/bounce/</TT>
+<LI><A NAME="5101"></A><TT>/usr/local/sympa-os/spool/bounce/</TT>
 <BR>
 For storing incoming bouncing messages.
 
 <P>
 </LI>
-<LI><A NAME="5090"></A><TT>/usr/local/sympa-os/spool/digest/</TT>
+<LI><A NAME="5104"></A><TT>/usr/local/sympa-os/spool/digest/</TT>
 <BR>
 For storing lists' digests before they are sent.
 
 <P>
 </LI>
-<LI><A NAME="5093"></A><TT>/usr/local/sympa-os/spool/expire/</TT>
+<LI><A NAME="5107"></A><TT>/usr/local/sympa-os/spool/expire/</TT>
 <BR>
 Used by the expire process.
 
 <P>
 </LI>
-<LI><A NAME="5096"></A><TT>/usr/local/sympa-os/spool/mod/</TT>
+<LI><A NAME="5110"></A><TT>/usr/local/sympa-os/spool/mod/</TT>
 <BR>
 For storing unmoderated messages.
 
 <P>
 </LI>
-<LI><A NAME="5099"></A><TT>/usr/local/sympa-os/spool/msg/</TT>
+<LI><A NAME="5113"></A><TT>/usr/local/sympa-os/spool/msg/</TT>
 <BR>
 For storing incoming messages (including commands).
 
 <P>
 </LI>
-<LI><A NAME="5102"></A><TT>/usr/local/sympa-os/spool/msg/bad/</TT>
+<LI><A NAME="5116"></A><TT>/usr/local/sympa-os/spool/msg/bad/</TT>
 <BR>	<I>Sympa</I> stores rejected messages in this directory
 
 <P>
 </LI>
-<LI><A NAME="5106"></A><TT>/usr/local/sympa-os/spool/distribute/</TT>
+<LI><A NAME="5120"></A><TT>/usr/local/sympa-os/spool/distribute/</TT>
 <BR>
 For storing message ready for distribution. This spool is used only if the installation run 2 sympa.pl daemon, one for commands, one for messages. 
 
 <P>
 </LI>
-<LI><A NAME="5109"></A><TT>/usr/local/sympa-os/spool/distribute/bad/</TT>
+<LI><A NAME="5123"></A><TT>/usr/local/sympa-os/spool/distribute/bad/</TT>
 <BR>	<I>Sympa</I> stores rejected messages in this directory
 
 <P>
 </LI>
-<LI><A NAME="5113"></A><TT>/usr/local/sympa-os/spool/task/</TT>
+<LI><A NAME="5127"></A><TT>/usr/local/sympa-os/spool/task/</TT>
 <BR>
 For storing all created tasks.
 
 <P>
 </LI>
-<LI><A NAME="5116"></A><TT>/usr/local/sympa-os/spool/outgoing/</TT>
-<BR>	<A NAME="5119"></A><TT>sympa.pl</TT> dumps messages in this spool to await archiving
-	by <A NAME="5122"></A><TT>archived.pl</TT>.
+<LI><A NAME="5130"></A><TT>/usr/local/sympa-os/spool/outgoing/</TT>
+<BR>	<A NAME="5133"></A><TT>sympa.pl</TT> dumps messages in this spool to await archiving
+	by <A NAME="5136"></A><TT>archived.pl</TT>.
 
 <P>
 </LI>
@@ -457,38 +472,105 @@ For storing all created tasks.
 
 <P>
 
+<H1><A NAME="SECTION00350000000000000000"></A>
+<A NAME="roles"></A>
+<BR>
+2.5 Roles and privileges
+</H1>
+
+<P>
+You can assign roles to users (via their email addresses) at different level in Sympa ; privileges are associated (or can be associated) to these roles.
+We list these roles below (from the most powerful to the less), along with the relevent privileges.
+
+<P>
+
+<H2><A NAME="SECTION00351000000000000000">
+2.5.1 (Super) listmasters</A>
+</H2>
+
+<P>
+These are the persons administrating the service, defined in the <A NAME="5139"></A><TT>sympa.conf</TT> file. They inherit the listmaster role in virtual robots and are the default set
+of listmasters for virtual robots.
+
+<P>
+
+<H2><A NAME="SECTION00352000000000000000">
+2.5.2 (Robot) listmasters</A>
+</H2>
+
+<P>
+You can define a different set of listmasters at a virtual robot level (in the <A NAME="5142"></A><TT>robot.conf</TT> file). They are responsible for moderating mailing lists creation (if list creation is configured this way), editing default templates, providing help to list owners and moderators. Users defined as listmasters get a privileged access to Sympa web interface. Listmasters also inherit the privileges of list owners (for any list defined in the virtual robot), but not the moderator privileges.
+
+<P>
+
+<H2><A NAME="SECTION00353000000000000000">
+2.5.3 Privileged list owners</A>
+</H2>
+
+<P>
+The first defined privileged owner is the person who requested the list creation. Later it can be changed or extended. They inherit (basic) owners privileges and are also responsible for managing the list owners and editors themselves (via the web interface). With Sympa'd default behavior, privileged owners can edit more list parameters than (basic) owners can do ; but this can be customized via the <A NAME="5145"></A><TT>edit-list.conf</TT> file.
+
+<P>
+
+<H2><A NAME="SECTION00354000000000000000">
+2.5.4 (Basic) list owners</A>
+</H2>
+
+<P>
+They are responsible for managing the members of the list, editing the list configuration and templates. Owners (and privileged owners) are defined in the list config file.
+
+<P>
+
+<H2><A NAME="SECTION00355000000000000000">
+2.5.5 Moderators (also called Editors)</A>
+</H2>
+
+<P>
+Moderators are responsible for the messages distributed in the mailing list (as opposed to owners who look after list members). Moderators are active if the list has been setup as a moderated mailing list. If no moderator is defined for the list, then list owners will inherit the moderator role.
+
+<P>
+
+<H2><A NAME="SECTION00356000000000000000">
+2.5.6 Subscribers (or list members)</A>
+</H2>
+
+<P>
+Subscribers are the persons who are member of a mailing list ; they either subscribed, or got added directly by the listmaster or via a datasource (LDAP, SQL, another list,...). These subscribers receive messages posted in the list (unless they have set the <TT>nomail</TT> option) and have special privileges to post in the mailing list (unless it is a newsletter). Most privileges a subscriber may have is not hardcoded in Sympa but expressed via the so-called authorization scenarios (see <A HREF="node13.html#scenarios">12</A>, page&nbsp;<A HREF="node13.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html716"
+<A NAME="tex2html724"
   HREF="node4.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html710"
+<A NAME="tex2html718"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html704"
+<A NAME="tex2html712"
   HREF="node2.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html712"
+<A NAME="tex2html720"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html714"
+<A NAME="tex2html722"
   HREF="node26.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html717"
+<B> Next:</B> <A NAME="tex2html725"
   HREF="node4.html">3. Installing Sympa</A>
-<B> Up:</B> <A NAME="tex2html711"
+<B> Up:</B> <A NAME="tex2html719"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html705"
+<B> Previous:</B> <A NAME="tex2html713"
   HREF="node2.html">1. Presentation</A>
- &nbsp; <B>  <A NAME="tex2html713"
+ &nbsp; <B>  <A NAME="tex2html721"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html715"
+ &nbsp; <B>  <A NAME="tex2html723"
   HREF="node26.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2005-07-29
+2005-08-03
 </ADDRESS>
 </BODY>
 </HTML>
