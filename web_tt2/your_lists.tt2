@@ -8,11 +8,11 @@
 
  <ul class="listenum" >
  [% FOREACH l = which_info %]
-  <li class="listenum"><nobr>
+  <li class="listenum">
   [% IF l.value.admin %]<a class="actionMenuLinks" href="[% path_cgi %]/admin/[% l.key %]" ><span style="font-size: 10px;">
 [%|loc%]admin[%END%]</span></a>[% END %]
   <a href="[% path_cgi %]/info/[% l.key %]" ><strong><span style="font-size: 10px;">
-[% hidden_head %][% l.key %][% hidden_end %]</span></strong></a><br /></nobr>
+[% hidden_head %][% l.key %][% hidden_end %]</span></strong></a><br />
   <span style="font-size: 10px;">[% l.value.subject %]</span><br />
   </li>
  [% END %]
