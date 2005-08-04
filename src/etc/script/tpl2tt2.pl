@@ -146,7 +146,7 @@ foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
 ## List .tpl files
 foreach my $d (@directories) {
     unless (opendir DIR, $d) {
-	print STDERR "Error: Cannot read %s directory : %s", $d, $!;
+	printf STDERR "Error: Cannot read %s directory : %s", $d, $!;
 	next;
     }
     
@@ -163,17 +163,17 @@ foreach my $tpl (@templates) {
     ## We don't migrate mhonarc-ressources files
     if ($tpl =~ /mhonarc\-ressources$/) {
 	rename $tpl, "$tpl.uncompatible";
-	print STDERR "File $tpl could not be translated to TT2 ; it has been renamed $tpl.uncompatible. You should customize a standard mhonarc-ressourses.tt2 file\n";
+	printf STDERR "File $tpl could not be translated to TT2 ; it has been renamed $tpl.uncompatible. You should customize a standard mhonarc-ressourses.tt2 file\n";
 	next;
     }
 
     unless (-r $tpl) {
-	print STDERR "Error : Unable to read file %s\n", $tpl;
+	printf STDERR "Error : Unable to read file %s\n", $tpl;
 	next;
     }
 
     unless ($tpl =~ /^(.+)\/([^\/]+)$/) {
-	print STDERR "Error : Incorrect Path %s\n", $tpl;
+	printf STDERR "Error : Incorrect Path %s\n", $tpl;
 	next;
     }
     
@@ -225,7 +225,7 @@ foreach my $tpl (@templates) {
     
     ## Rename old files to .converted
     unless (rename $tpl, "$tpl.converted") {
-	print STDERR "Error : failed to rename $tpl to $tpl.converted : $!\n";
+	printf STDERR "Error : failed to rename $tpl to $tpl.converted : $!\n";
 	next;
     }
 }
