@@ -1,6 +1,835 @@
+2005-08-04 15:13  sympa-authors
+
+	* src/sympa_wizard.pl: Change: removed colors parameters
+
+2005-08-04 15:09  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/index.html, html/node1.html, html/node10.html,
+	  html/node11.html, html/node12.html, html/node13.html,
+	  html/node14.html, html/node15.html, html/node16.html,
+	  html/node17.html, html/node18.html, html/node19.html,
+	  html/node2.html, html/node20.html, html/node21.html,
+	  html/node22.html, html/node23.html, html/node24.html,
+	  html/node25.html, html/node26.html, html/node27.html,
+	  html/node3.html, html/node4.html, html/node5.html,
+	  html/node6.html, html/node7.html, html/node8.html,
+	  html/node9.html, html/sympa.html, html/sympa.ps: Fix: still some
+	  references to templates/ and wws_templates/
+
+2005-08-04 14:51  sympa-authors
+
+	* web_tt2/: main.tt2, your_lists.tt2: [reported by W.Waisse] Fix:
+	  fixed LINK tags ; removed NOBR tags
+
+2005-08-04 14:32  sympa-authors
+
+	* src/: task_manager.pl: [D.Lamballais] Fix: missing chomp ;
+	  incorrect split on file path.  The consequence of this bug : all
+	  tasks would fail ("Error while processing task..")
+
+2005-08-04 12:36  sympa-authors
+
+	* src/etc/script/tpl2tt2.pl: Fix printf
+
+2005-08-04 12:34  sympa-authors
+
+	* soap/sympasoap.pm, wwsympa/wwsympa.fcgi: [F.Fiquet] Addition of
+	  database fields in function Soap::signoff().
+
+2005-08-04 12:20  sympa-authors
+
+	* Makefile.am, Makefile.in: [reported by G.Bouteille] Fix: Sympa
+	  would still create olf templates/ and wws_templates/ directories
+
+2005-08-04 12:19  sympa-authors
+
+	* web_tt2/your_lists.tt2: made title translatable
+
+2005-08-04 12:18  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/index.html, html/node1.html, html/node10.html,
+	  html/node11.html, html/node12.html, html/node13.html,
+	  html/node14.html, html/node15.html, html/node16.html,
+	  html/node17.html, html/node18.html, html/node19.html,
+	  html/node2.html, html/node20.html, html/node21.html,
+	  html/node22.html, html/node23.html, html/node24.html,
+	  html/node25.html, html/node26.html, html/node27.html,
+	  html/node3.html, html/node4.html, html/node5.html,
+	  html/node6.html, html/node7.html, html/node8.html,
+	  html/node9.html, html/sympa.html, html/sympa.ps: New "roles and
+	  privileges" section
+
+2005-08-04 12:17  sympa-authors
+
+	* soap/sympasoap.pm: Bug fix: Previously allowed unsubscription for
+	  included user.
+
+2005-08-03 17:16  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/img1.old, doc/html/img1.png, doc/html/img2.old,
+	  doc/html/img2.png, doc/html/index.html, doc/html/node1.html,
+	  doc/html/node10.html, doc/html/node11.html, doc/html/node12.html,
+	  doc/html/node13.html, doc/html/node14.html, doc/html/node15.html,
+	  doc/html/node16.html, doc/html/node17.html, doc/html/node18.html,
+	  doc/html/node19.html, doc/html/node2.html, doc/html/node20.html,
+	  doc/html/node21.html, doc/html/node22.html, doc/html/node23.html,
+	  doc/html/node24.html, doc/html/node25.html, doc/html/node26.html,
+	  doc/html/node27.html, doc/html/node3.html, doc/html/node4.html,
+	  doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	  doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	  doc/html/sympa.ps, mail_tt2/remind.tt2, src/Commands.pm,
+	  src/List.pm, src/tt2.pl, web_tt2/editsubscriber.tt2,
+	  web_tt2/suboptions.tt2, wwsympa/wwsympa.fcgi: [F.Fiquet] New
+	  feature: customization of the rejection message in the moderation
+	  process of messages. New reject.tt2 web template
+
+	  [F.Fiquet] New feature: subscription tracability ; provides
+	  information to list members concerning their membership and how
+	  they joined. These information can be accessed via the web
+	  interface (suboptions and editsubscriber) and also in the remind
+	  message.  We have introduced a new 'tracability' spool, a new
+	  'tracability' list subdirectory This feature requires 7 new
+	  database fields to be added to the database.	Example with
+	  PostgreSQL (update is automated with MySQL) :   ALTER TABLE
+	  subscriber_table ADD subscribed_date_subscriber timestamp with
+	  time zone;   ALTER TABLE subscriber_table ADD who_init_subscriber
+		varchar(100);	ALTER TABLE subscriber_table ADD
+	  who_update_subscriber  varchar(100);	 ALTER TABLE
+	  subscriber_table ADD how_init_subscriber    varchar(4);   ALTER
+	  TABLE subscriber_table ADD how_update_subscriber    varchar(4);
+	  ALTER TABLE subscriber_table ADD ip_init_subscriber
+	  varchar(15);	 ALTER TABLE subscriber_table ADD
+	  ip_update_subscriber	  varchar(15);
+
+2005-08-03 11:36  sympa-authors
+
+	* po/: cs.po, de.po, el.po, en_US.po, es.po, et.po, fi.po, hu.po,
+	  it.po, ja.po, nl.po, oc.po, pl.po, pt.po, pt_BR.po, ro.po,
+	  sympa.pot, tr.po, zh_CN.po, zh_TW.po: Updates
+
+2005-08-03 11:36  sympa-authors
+
+	* po/fr.po: Complete translations
+
+2005-08-03 11:03  sympa-authors
+
+	* po/fr.po: [Moni] Fixed many mistakes
+
+2005-08-03 10:56  sympa-authors
+
+	* src/etc/scenari/: edit_list.closed, edit_list.owner: Removed
+	  unused scenario files
+
+2005-08-03 10:33  sympa-authors
+
+	* po/oc.po: [Moni] Completed Occitan translations
+
+2005-08-03 09:49  sympa-authors
+
+	* wwsympa/: wwsympa.fcgi: [BugID 447] [E.Rynes] Fix:  If a
+	  multivalued list parameter is set to read only, then the web
+	  pages will display an extra, empty value
+
+2005-08-02 17:48  sympa-authors
+
+	* src/List.pm: Fixed load_scenario_list()
+
+2005-08-02 15:26  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [reported by JH.Belpois] Fix: load
+	  subscribers in DB if changing the user_data_source from file to
+	  include2
+
+2005-08-02 14:29  sympa-authors
+
+	* .version, src/List.pm: New feature: clean buggy list config files
+	  at startup
+
+2005-08-02 12:01  sympa-authors
+
+	* Makefile.am, Makefile.in: Further instruction for CPAN modules
+	  install
+
+2005-08-02 11:58  sympa-authors
+
+	* Makefile.in, configure, configure.in: Change: default iconsdir is
+	  now /var/www/icons
+
+2005-08-02 11:21  sympa-authors
+
+	* web_tt2/: edit_list_request.tt2, list_admin_menu.tt2: Change:
+	  remove "rename list" from the edit_list submenu
+
+2005-08-02 10:56  sympa-authors
+
+	* src/List.pm: Fix: limit the SQL queries when calling get_which().
+	  Sympa would do run am_i() on every list the user is not owner of
+
+2005-08-02 09:50  sympa-authors
+
+	* web_tt2/main.tt2: Change: 20 latest RSS entries intead of 5
+
+2005-08-02 09:42  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Complete previous patch
+
+2005-08-02 09:40  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: Provided wrong RSS urls (list
+	  parameter)
+
+2005-08-02 09:17  sympa-authors
+
+	* web_tt2/css.tt2, web_tt2/login_menu.tt2, web_tt2/main.tt2,
+	  web_tt2/your_lists.tt2, wwsympa/wwsympa.fcgi: [A.Bernstein] New
+	  feature: subscriber's groups always listed in a box. Resized the
+	  menu box (+60px) ; removed the "your subscriptions ; new
+	  your_lists.tt2 template
+
+2005-08-01 15:41  sympa-authors
+
+	* web_tt2/list_panel.tt2: Fix: added line break after owner/editor
+
+2005-08-01 15:39  sympa-authors
+
+	* web_tt2/list_menu.tt2: Fix: removed duplicate 'Info'
+
+2005-08-01 15:25  sympa-authors
+
+	* po/: cs.po, de.po, el.po, en_US.po, es.po, et.po, fi.po, fr.po,
+	  hu.po, it.po, ja.po, nl.po, oc.po, pl.po, pt.po, pt_BR.po, ro.po,
+	  sympa.pot, tr.po, zh_CN.po, zh_TW.po: Updates with reception
+	  modes
+
+2005-08-01 15:17  sympa-authors
+
+	* wwsympa/: wwslib.pm, wwsympa.fcgi: Fix: Reception modes can now
+	  be translated on the web interface
+
+2005-08-01 14:36  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: prevent problems (RSS) if header
+	  fields are extracted as ARRAY
+
+2005-08-01 14:08  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: Escape <> of data inserted in RSS feed
+
+2005-08-01 12:31  sympa-authors
+
+	* web_tt2/rss.tt2: Fix: item titles were not used because they must
+	  be single-lined
+
+2005-08-01 12:31  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: latest_arc instead of latest_archive
+
+2005-08-01 12:20  sympa-authors
+
+	* src/sympa_wizard.pl: Explain what 'listmaster' is used for
+
+2005-08-01 12:18  sympa-authors
+
+	* Makefile.am, Makefile.in: Added a warning about the long
+	  installation process
+
+2005-08-01 11:17  sympa-authors
+
+	* web_tt2/rss_request.tt2: Fix: latest_arc instead of
+	  latest_archive
+
+2005-07-29 16:59  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, html/img1.old,
+	  html/img2.old, html/index.html, html/node1.html,
+	  html/node10.html, html/node11.html, html/node12.html,
+	  html/node13.html, html/node14.html, html/node15.html,
+	  html/node16.html, html/node17.html, html/node18.html,
+	  html/node19.html, html/node2.html, html/node20.html,
+	  html/node21.html, html/node22.html, html/node23.html,
+	  html/node24.html, html/node25.html, html/node26.html,
+	  html/node27.html, html/node3.html, html/node4.html,
+	  html/node5.html, html/node6.html, html/node7.html,
+	  html/node8.html, html/node9.html, html/sympa.html, html/sympa.ps:
+	  update
+
+2005-07-29 16:55  sympa-authors
+
+	* doc/sympa.tex.tpl, mail_tt2/digest.tt2,
+	  mail_tt2/digest_plain.tt2, src/List.pm: New feature: new
+	  'digest_max_size' list parameter. If a digest exceeds this limit,
+	  then multiple messages are sent.
+
+2005-07-29 14:20  sympa-authors
+
+	* src/Language.pm: Fixed error log
+
+2005-07-29 09:50  sympa-authors
+
+	* src/alias_manager.pl: [reported by L.Ghys] Fix: reference to
+	  incorrect sympa.conf parameter 'sendmail_alias'
+
+2005-07-29 09:31  sympa-authors
+
+	* src/: admin.pm: [reported by JH.Belpois] Fix: owner and subject
+	  nodes no more mandatory (while updating a family)
+
+2005-07-28 17:03  sympa-authors
+
+	* src/admin.pm: [E.Rynes] Fix:	Multiple Hardcoded regexp strings
+	  for proper list name
+
+2005-07-28 15:23  sympa-authors
+
+	* po/cs.po: [V.Adamec] Fix: removed nonsense
+
+2005-07-28 14:20  sympa-authors
+
+	* web_tt2/help_admin.tt2: Change: reordered to match the admin menu
+	  order
+
+2005-07-28 13:56  sympa-authors
+
+	* src/etc/scenari/: unsubscribe.open, unsubscribe.open_notify:
+	  Renamed scenarios
+
+2005-07-28 12:27  sympa-authors
+
+	* src/: admin.pm: [reported by JH. Belpois] Change: owner and
+	  subject XML nodes are no more mandatory while instantiating a
+	  family
+
+2005-07-28 12:00  sympa-authors
+
+	* src/List.pm, web_tt2/editsubscriber.tt2, web_tt2/suboptions.tt2,
+	  wwsympa/wwsympa.fcgi: Tracability + personnalized reject
+
+2005-07-28 11:39  sympa-authors
+
+	* src/sympa.pl: Typo
+
+2005-07-28 11:30  sympa-authors
+
+	* src/sympa.pl: Fix: made error messages more precise while
+	  instantiating a family
+
+2005-07-28 11:21  sympa-authors
+
+	* src/Language.pm: [V.Adamek] Fix: set LC_TIME in case it was
+	  already set
+
+2005-07-28 10:04  sympa-authors
+
+	* soap/sympasoap.pm, src/Commands.pm, src/List.pm, src/tt2.pl,
+	  src/etc/script/create_db.Oracle, src/etc/script/create_db.Pg,
+	  src/etc/script/create_db.Sybase, src/etc/script/create_db.mysql,
+	  web_tt2/editsubscriber.tt2, web_tt2/suboptions.tt2,
+	  wwsympa/wwsympa.fcgi: Tracability + personnalized reject
+
+2005-07-28 10:03  sympa-authors
+
+	* Makefile.am, Makefile.in: Change: while prompting the user for a
+	  missing program wait for the user to strike a key
+
+2005-07-28 10:00  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, html/img1.png,
+	  html/img2.png, html/index.html, html/node1.html,
+	  html/node10.html, html/node11.html, html/node12.html,
+	  html/node13.html, html/node14.html, html/node15.html,
+	  html/node16.html, html/node17.html, html/node18.html,
+	  html/node19.html, html/node2.html, html/node20.html,
+	  html/node21.html, html/node22.html, html/node23.html,
+	  html/node24.html, html/node25.html, html/node26.html,
+	  html/node27.html, html/node3.html, html/node4.html,
+	  html/node5.html, html/node6.html, html/node7.html,
+	  html/node8.html, html/node9.html, html/sympa.html, html/sympa.ps:
+	  Update
+
+2005-07-28 09:36  sympa-authors
+
+	* src/: Family.pm, sympa.pl: [reported by S.Amrani & JH.Belpois]
+	  Fix: Sympa.pl would die while instantiating families with the
+	  following error : "free(): invalid pointer". Using parse_file()
+	  instead of parse_fh() seems to fix the problem.
+
+2005-07-28 09:30  sympa-authors
+
+	* src/: Family.pm, sympa.pl: [reported by S.Amrani & JH.Belpois]
+	  Fix: Sympa.pl would die while instantiating families with the
+	  following error : "free(): invalid pointer". Using parse_file()
+	  instead of parse_fh() seems to fix the problem.
+
+2005-07-27 17:13  sympa-authors
+
+	* src/tt2.pl: Revert previous change
+
+2005-07-27 17:08  sympa-authors
+
+	* src/tt2.pl: Fix
+
+2005-07-27 15:15  sympa-authors
+
+	* soap/: sampleClient.php: Fix: wsdl URL changed
+
+2005-07-27 14:06  sympa-authors
+
+	* po/: cs.po: [V.Adamec] Update
+
+2005-07-27 10:56  sympa-authors
+
+	* src/Language.pm: Change: cs.po now encoded in utf-8
+
+2005-07-27 10:55  sympa-authors
+
+	* src/Language.pm: Change: cs.po now in utf-8
+
+2005-07-27 10:54  sympa-authors
+
+	* po/cs.po, src/Conf.pm: [V.Adamec] Updated czech translations
+
+2005-07-27 10:51  sympa-authors
+
+	* po/cs.po, src/Conf.pm: [no log message]
+
+2005-07-26 17:22  sympa-authors
+
+	* web_tt2/main.tt2: Fix charset
+
+2005-07-26 10:38  sympa-authors
+
+	* check_perl_modules.pl: Change: DBI and DBD_mysql required
+
+2005-07-22 10:37  sympa-authors
+
+	* mail_tt2/authorization_reject.tt2,
+	  mail_tt2/listmaster_notification.tt2, src/List.pm, src/report.pm,
+	  src/task_manager.pl, web_tt2/error.tt2, web_tt2/notice.tt2,
+	  wwsympa/Auth.pm, wwsympa/archived.pl, wwsympa/bounced.pl,
+	  wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi: Ending command report
+	  for web interface.
+
+2005-07-21 11:30  sympa-authors
+
+	* mail_tt2/authorization_reject.tt2, mail_tt2/command_report.tt2,
+	  mail_tt2/listmaster_notification.tt2,
+	  mail_tt2/message_report.tt2, src/report.pm, web_tt2/error.tt2,
+	  web_tt2/rss.tt2, wwsympa/Auth.pm, wwsympa/wwsympa.fcgi: Change
+	  report message for Web interface in a big part, changes needing
+	  function modifying will be done next.
+
+2005-07-21 11:12  sympa-authors
+
+	* soap/sympasoap.pm, src/Commands.pm, src/List.pm, src/sympa.pl,
+	  src/tools.pl, src/tt2.pl, src/etc/script/create_db.Oracle,
+	  src/etc/script/create_db.Pg, src/etc/script/create_db.Sybase,
+	  src/etc/script/create_db.mysql, web_tt2/editsubscriber.tt2,
+	  web_tt2/reject.tt2, web_tt2/review.tt2, web_tt2/suboptions.tt2,
+	  web_tt2/subscription_trace.tt2, wwsympa/wwsympa.fcgi: tracability
+
+2005-07-11 16:35  sympa-authors
+
+	* doc/sympa.tex.tpl: Add information for list creation and family
+	  instantiation
+
+2005-07-11 15:25  sympa-authors
+
+	* src/sympa.pl: better error message for non valid input file
+
+2005-07-08 12:10  sympa-authors
+
+	* web_tt2/rss.tt2: Rss template bug fixed
+
+2005-07-07 11:39  sympa-authors
+
+	* src/Archive.pm, src/List.pm, web_tt2/copy_template.tt2,
+	  web_tt2/loginbanner.tt2:
+	  make label in form unique
+
+2005-07-07 09:37  sympa-authors
+
+	* mail_tt2/authorization_reject.tt2, mail_tt2/command_report.tt2,
+	  mail_tt2/listmaster_notification.tt2, src/Commands.pm,
+	  src/List.pm, src/report.pm, src/sympa.pl: Command report for mail
+	  interface.
+
+2005-07-06 15:29  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/node1.html, doc/html/node10.html, doc/html/node11.html,
+	  doc/html/node12.html, doc/html/node13.html, doc/html/node14.html,
+	  doc/html/node15.html, doc/html/node16.html, doc/html/node17.html,
+	  doc/html/node18.html, doc/html/node19.html, doc/html/node2.html,
+	  doc/html/node20.html, doc/html/node21.html, doc/html/node22.html,
+	  doc/html/node23.html, doc/html/node24.html, doc/html/node25.html,
+	  doc/html/node26.html, doc/html/node27.html, doc/html/node3.html,
+	  doc/html/node4.html, doc/html/node5.html, doc/html/node6.html,
+	  doc/html/node7.html, doc/html/node8.html, doc/html/node9.html,
+	  src/Commands.pm, src/Conf.pm, src/List.pm, src/admin.pm,
+	  src/mail.pm, wwsympa/wwsympa.fcgi: Moderation reject for simple
+	  reject in wwsympa
+
+2005-07-05 15:59  sympa-authors
+
+	* web_tt2/set_pending_list_request.tt2: remove old table style
+
+2005-07-05 15:39  sympa-authors
+
+	* web_tt2/list_menu.tt2: Remove durty display on move over "info"
+
+2005-07-05 15:31  sympa-authors
+
+	* web_tt2/latest_lists.tt2: remove old table style
+
+2005-07-05 15:27  sympa-authors
+
+	* web_tt2/css.tt2: fix missing ;
+
+2005-07-04 16:59  sympa-authors
+
+	* po/Makefile, po/el.po, po/fr.po, po/nl.po, po/pt_BR.po, po/tr.po,
+	  src/Conf.pm, src/Language.pm: Added PO files for Greek, Dutch,
+	  Portuguese (Brazil) and Turkish
+
+2005-07-04 10:33  sympa-authors
+
+	* mail_tt2/command_report.tt2,
+	  mail_tt2/listmaster_notification.tt2, src/Commands.pm,
+	  src/report.pm, src/sympa.pl: Preparing command report.
+
+2005-06-30 11:46  sympa-authors
+
+	* src/: Makefile, sympa.pl, tools.pl: Changes for report.pm module
+	  added.
+
+2005-06-30 11:45  sympa-authors
+
+	* src/Commands.pm: changes for report.pm module added
+
+2005-06-30 11:43  sympa-authors
+
+	* src/report.pm: new module for commands and messages diffusion
+	  report to senders
+
+2005-06-29 17:42  sympa-authors
+
+	* doc/sympa.tex.tpl: [D.Chopard-Lallier] Fixed a typo
+
+2005-06-29 17:33  sympa-authors
+
+	* src/etc/script/sympa: [D.Chopard-Lalier] Fix for Debian
+
+2005-06-29 12:08  sympa-authors
+
+	* web_tt2/rss_request.tt2, wwsympa/wwsympa.fcgi: Turned RSS links
+	  to input fields because no web browser handles them correctly
+
+2005-06-29 11:31  sympa-authors
+
+	* web_tt2/css.tt2: Changed the UL indent
+
+2005-06-29 11:24  sympa-authors
+
+	* web_tt2/main.tt2: Fix: restored the RSS chanel
+
+2005-06-29 11:15  sympa-authors
+
+	* web_tt2/list_menu.tt2: Fix: 'unsubscribe" button was not shown to
+	  anonymous users ; restored it
+
+2005-06-28 15:46  sympa-authors
+
+	* mail_tt2/: list_unknown.tt2, message_report.tt2: Using var for
+	  listmaster email
+
+2005-06-28 15:19  sympa-authors
+
+	* mail_tt2/authorization_reject.tt2,
+	  mail_tt2/listmaster_notification.tt2,
+	  mail_tt2/message_report.tt2, src/Commands.pm, src/sympa.pl,
+	  src/tools.pl, web_tt2/compose_mail.tt2: Managing error increase
+	  for message diffusion.
+
+2005-06-28 15:19  sympa-authors
+
+	* src/List.pm: Parsing reason reject in request_action() for
+	  scenario
+
+2005-06-23 15:09  sympa-authors
+
+	* src/etc/script/sympa: [D.Chopard-Lallier] Fix: suse, not suze !
+
+2005-06-23 13:55  sympa-authors
+
+	* src/Conf.pm: added Occitan to available lang
+
+2005-06-23 10:28  sympa-authors
+
+	* src/Family.pm: Fix previous changes
+
+2005-06-23 10:24  sympa-authors
+
+	* po/fr.po: Fix
+
+2005-06-23 10:22  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix a few things regarding CSS installation
+	  : * don't try to rename the previous css if none exists * create
+	  the containing directory if required * set appropriate privileges
+	  on the css file * parse the css.tt2 at the robot level if it
+	  exists * if the css file located at css_path is not installed
+	  yet, use sympa's dynamyc css
+
+2005-06-22 14:56  sympa-authors
+
+	* mail_tt2/listowner_notification.tt2, po/cs.po, po/de.po,
+	  po/en_US.po, po/es.po, po/et.po, po/fi.po, po/fr.po, po/hu.po,
+	  po/it.po, po/ja.po, po/nl.po, po/oc.po, po/pl.po, po/pt.po,
+	  po/ro.po, po/sympa.pot, po/zh_CN.po, po/zh_TW.po, src/List.pm,
+	  web_tt2/help_editlist.tt2, web_tt2/list_menu.tt2,
+	  web_tt2/scenario_test.tt2: [M. Allaya] Fixes in templates and
+	  french translations
+
+2005-06-22 13:15  sympa-authors
+
+	* po/Makefile, po/oc.po, src/Language.pm: [M. Allaya] Sympa
+	  available in Occitan
+
+2005-06-22 13:09  sympa-authors
+
+	* po/oc.po: [M. Allaya] Updated
+
+2005-06-22 13:09  sympa-authors
+
+	* po/oc.po: file oc.po was added on branch sympa-5_0-branch on
+	  2005-06-22 11:15:25 +0000
+
+2005-06-21 16:11  sympa-authors
+
+	* src/: Commands.pm: [M.Redinger] Fix: missing '%s' in string
+
+2005-06-21 15:54  sympa-authors
+
+	* src/: Family.pm: [BugId 411] Change: use File::Copy::copy instead
+	  of rename() to allow traversing filesystems
+
+2005-06-21 15:36  sympa-authors
+
+	* src/etc/script/sympa: [S.Amrani] Fix: Failed on Debian and Suze
+
+2005-06-21 15:32  sympa-authors
+
+	* src/etc/script/sympa: [S.Amrani] Fix: incorrect condition for
+	  debian and suze
+
+2005-06-21 14:23  sympa-authors
+
+	* web_tt2/: active_lists.tt2, arcsearch_form.tt2,
+	  button_header.tt2, create_list_request.tt2, get_latest_lists.tt2,
+	  install_pending_list.tt2, latest_arc.tt2, latest_d_read.tt2,
+	  latest_lists.tt2, list_button_header.tt2, ls_templates.tt2,
+	  modindex.tt2, pref.tt2, reviewbouncing.tt2,
+	  set_pending_list_request.tt2, subindex.tt2: Fix: remore width:
+	  100% (compatibility issues with IE6)
+
+2005-06-21 13:37  sympa-authors
+
+	* src/List.pm: Fix: List::get_subscription_requests() would return
+	  undef if one request was incorrect
+
+2005-06-21 10:47  sympa-authors
+
+	* web_tt2/list_admin_menu.tt2: Fix: incorrect number of messages
+	  awaiting moderation
+
+2005-06-21 10:44  sympa-authors
+
+	* web_tt2/list_menu.tt2: Add missing BR
+
+2005-06-21 10:32  sympa-authors
+
+	* po/fr.po: Update
+
+2005-06-20 16:01  sympa-authors
+
+	* po/de.po: [M.Redinger] Updated German translations
+
+2005-06-20 15:22  sympa-authors
+
+	* soap/sympasoap.pm, wwsympa/wwsympa.fcgi: Notification
+	  unauthorization reason for soap.
+
+2005-06-20 11:53  sympa-authors
+
+	* web_tt2/: get_closed_lists.tt2, get_inactive_lists.tt2,
+	  get_pending_lists.tt2:
+	  All theses tables use now CSS and new colors
+
+2005-06-20 11:29  sympa-authors
+
+	* web_tt2/get_pending_lists.tt2:
+
+	  make the table with ccs style
+
+2005-06-17 17:12  sympa-authors
+
+	* po/: cs.po, de.po, en_US.po, es.po, et.po, fi.po, fr.po, hu.po,
+	  it.po, ja.po, nl.po, oc.po, pl.po, pt.po, ro.po, sympa.pot,
+	  zh_CN.po, zh_TW.po: Update
+
+2005-06-17 17:09  sympa-authors
+
+	* web_tt2/reviewbouncing.tt2: quiet was not translatable
+
+2005-06-17 17:05  sympa-authors
+
+	* po/fr.po, web_tt2/list_admin_menu.tt2: Abonnements
+
+2005-06-17 17:01  sympa-authors
+
+	* web_tt2/list_menu.tt2: Remove the help div
+
+2005-06-17 16:55  sympa-authors
+
+	* po/fr.po: Object
+
+2005-06-17 16:52  sympa-authors
+
+	* web_tt2/suboptions.tt2: Help not translatable
+
+2005-06-17 16:49  sympa-authors
+
+	* po/fr.po: lots
+
+2005-06-17 16:49  sympa-authors
+
+	* po/fr.po: sélection
+
+2005-06-17 16:48  sympa-authors
+
+	* web_tt2/review.tt2: Minor change
+
+2005-06-17 16:48  sympa-authors
+
+	* po/: fr.po, sympa.pot: [no log message]
+
+2005-06-17 16:17  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: remove spaces around translation
+
+2005-06-17 15:29  sympa-authors
+
+	* web_tt2/list_panel.tt2: Fix: moderators did not appear in the
+	  list_panel
+
+2005-06-17 11:25  sympa-authors
+
+	* Makefile.in: Update Makefile.in
+
+2005-06-17 11:22  sympa-authors
+
+	* Makefile.am: [BugId 431] Fix: USER and GROUP was not provided to
+	  the man Makefile
+
+2005-06-16 17:09  sympa-authors
+
+	* .version, ChangeLog, Makefile.in, NEWS, configure, doc/sympa.pdf,
+	  doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node25.html, doc/html/node26.html, doc/html/node27.html,
+	  doc/html/node3.html, doc/html/node4.html, doc/html/node5.html,
+	  doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	  doc/html/node9.html, doc/html/sympa.html, doc/html/sympa.ps: New
+	  chapter: running 2 sympa versions of a single server
+
+2005-06-16 16:29  sympa-authors
+
+	* Makefile.am, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node25.html, doc/html/node26.html, doc/html/node27.html,
+	  doc/html/node3.html, doc/html/node4.html, doc/html/node5.html,
+	  doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	  doc/html/node9.html, doc/html/sympa.html, doc/html/sympa.ps:
+	  Update doc
+
+2005-06-16 16:20  sympa-authors
+
+	* Makefile.am: Fix: missing CGIDIR in documentation
+
+2005-06-16 15:30  sympa-authors
+
+	* mail_tt2/Makefile, src/List.pm, src/admin.pm,
+	  src/alias_manager.pl, src/tools.pl, wwsympa/wwsympa.fcgi: Add
+	  function tools::make_tt2_include_path()
+
+2005-06-16 14:24  sympa-authors
+
+	* ChangeLog, Makefile.in, NEWS, configure: Preparing 5.0.1
+
+2005-06-16 10:49  sympa-authors
+
+	* mail_tt2/request_auth.tt2, soap/sympasoap.pm, src/Commands.pm,
+	  src/List.pm, src/sympa.pl, src/task_manager.pl,
+	  src/etc/scenari/access_web_archive.closed,
+	  src/etc/scenari/access_web_archive.intranet,
+	  src/etc/scenari/access_web_archive.listmaster,
+	  src/etc/scenari/access_web_archive.owner,
+	  src/etc/scenari/access_web_archive.private,
+	  src/etc/scenari/add.auth, src/etc/scenari/add.closed,
+	  src/etc/scenari/add.owner, src/etc/scenari/add.owner_notify,
+	  src/etc/scenari/create_list.intranet,
+	  src/etc/scenari/create_list.listmaster,
+	  src/etc/scenari/d_edit.editor, src/etc/scenari/d_edit.owner,
+	  src/etc/scenari/d_edit.private,
+	  src/etc/scenari/d_edit.private-https,
+	  src/etc/scenari/d_read.owner, src/etc/scenari/d_read.private,
+	  src/etc/scenari/d_read.private-https, src/etc/scenari/del.auth,
+	  src/etc/scenari/del.closed, src/etc/scenari/del.owner,
+	  src/etc/scenari/del.owner_notify,
+	  src/etc/scenari/edit_list.closed,
+	  src/etc/scenari/edit_list.owner,
+	  src/etc/scenari/global_remind.listmaster,
+	  src/etc/scenari/info.private, src/etc/scenari/invite.closed,
+	  src/etc/scenari/invite.owner, src/etc/scenari/invite.private,
+	  src/etc/scenari/remind.listmaster, src/etc/scenari/remind.owner,
+	  src/etc/scenari/review.closed, src/etc/scenari/review.intranet,
+	  src/etc/scenari/review.listmaster, src/etc/scenari/review.owner,
+	  src/etc/scenari/review.private, src/etc/scenari/send.closed,
+	  src/etc/scenari/send.intranet,
+	  src/etc/scenari/send.intranetorprivate,
+	  src/etc/scenari/send.newsletter,
+	  src/etc/scenari/send.newsletterkeyonly,
+	  src/etc/scenari/send.private, src/etc/scenari/send.private_smime,
+	  src/etc/scenari/send.privateandeditorkey,
+	  src/etc/scenari/send.privatekey,
+	  src/etc/scenari/send.privatekeyandeditorkeyonly,
+	  src/etc/scenari/send.publicnomultipart,
+	  src/etc/scenari/subscribe.closed,
+	  src/etc/scenari/subscribe.intranet,
+	  src/etc/scenari/subscribe.smime,
+	  src/etc/scenari/topics_visibility.conceal,
+	  src/etc/scenari/topics_visibility.identified,
+	  src/etc/scenari/unsubscribe.closed,
+	  src/etc/scenari/visibility.conceal, wwsympa/bounced.pl,
+	  wwsympa/wwsympa.fcgi: Add 'reject' parameters in scenario and
+	  modify request_action for this.
+
 2005-06-15 17:19  sympa-authors
 
-	* wwsympa/wwsympa.fcgi: [S.Amrani] Fix: the regexp run by
+	* wwsympa/: wwsympa.fcgi: [S.Amrani] Fix: the regexp run by
 	  search_list could make wwsympa.fcgi process die ; now using
 	  eval{} Now escaping some more dangerous caracters.
 
@@ -9,6 +838,21 @@
 	* web_tt2/arcsearch.tt2, wwsympa/wwsympa.fcgi: [BugId 427]
 	  [reported by K/Moriwaka] Fix: sort by age did not work properly
 	  in web archives search engine
+
+2005-06-15 14:10  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/img1.old, html/img2.old, html/index.html, html/node1.html,
+	  html/node10.html, html/node11.html, html/node12.html,
+	  html/node13.html, html/node14.html, html/node15.html,
+	  html/node16.html, html/node17.html, html/node18.html,
+	  html/node19.html, html/node2.html, html/node20.html,
+	  html/node21.html, html/node22.html, html/node23.html,
+	  html/node24.html, html/node25.html, html/node26.html,
+	  html/node27.html, html/node3.html, html/node4.html,
+	  html/node5.html, html/node6.html, html/node7.html,
+	  html/node8.html, html/node9.html, html/sympa.html, html/sympa.ps:
+	  Replace old listes.cru.fr URLs
 
 2005-06-15 14:01  sympa-authors
 
@@ -28,6 +872,50 @@
 2005-06-15 08:28  sympa-authors
 
 	* web_tt2/choosepasswd.tt2: Fix html bug that make form inoperate
+
+2005-06-14 16:59  sympa-authors
+
+	* src/: Commands.pm, List.pm,
+	  etc/scenari/access_web_archive.closed,
+	  etc/scenari/access_web_archive.intranet,
+	  etc/scenari/access_web_archive.listmaster,
+	  etc/scenari/access_web_archive.owner,
+	  etc/scenari/access_web_archive.private, etc/scenari/add.auth,
+	  etc/scenari/add.closed, etc/scenari/add.owner,
+	  etc/scenari/add.owner_notify, etc/scenari/create_list.intranet,
+	  etc/scenari/create_list.listmaster,
+	  etc/scenari/create_list.public_listmaster,
+	  etc/scenari/d_edit.editor, etc/scenari/d_edit.owner,
+	  etc/scenari/d_edit.private, etc/scenari/d_edit.private-https,
+	  etc/scenari/d_read.owner, etc/scenari/d_read.private,
+	  etc/scenari/d_read.private-https, etc/scenari/del.auth,
+	  etc/scenari/del.closed, etc/scenari/del.owner,
+	  etc/scenari/del.owner_notify, etc/scenari/edit_list.closed,
+	  etc/scenari/edit_list.owner,
+	  etc/scenari/global_remind.listmaster, etc/scenari/info.private,
+	  etc/scenari/invite.closed, etc/scenari/invite.owner,
+	  etc/scenari/invite.private, etc/scenari/remind.listmaster,
+	  etc/scenari/remind.owner, etc/scenari/review.closed,
+	  etc/scenari/review.intranet, etc/scenari/review.listmaster,
+	  etc/scenari/review.owner, etc/scenari/review.private,
+	  etc/scenari/send.closed, etc/scenari/send.editorkey,
+	  etc/scenari/send.intranet, etc/scenari/send.intranetorprivate,
+	  etc/scenari/send.newsletter, etc/scenari/send.newsletterkeyonly,
+	  etc/scenari/send.private, etc/scenari/send.private_smime,
+	  etc/scenari/send.privateandeditorkey,
+	  etc/scenari/send.privatekey,
+	  etc/scenari/send.privatekeyandeditorkeyonly,
+	  etc/scenari/subscribe.closed, etc/scenari/subscribe.intranet,
+	  etc/scenari/subscribe.smime,
+	  etc/scenari/topics_visibility.conceal,
+	  etc/scenari/topics_visibility.identified,
+	  etc/scenari/unsubscribe.closed, etc/scenari/visibility.conceal:
+	  [no log message]
+
+2005-06-14 16:58  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [G.Bouteille] Bug fix : edition of list
+	  parameter msg_topic
 
 2005-06-10 15:28  sympa-authors
 
@@ -51,12 +939,12 @@
 
 2005-06-10 09:48  sympa-authors
 
-	* src/etc/script/create_db.Oracle: [E.Rynes] Restored boolean
+	* src/etc/script/: create_db.Oracle: [E.Rynes] Restored boolean
 	  constraints
 
 2005-06-10 09:43  sympa-authors
 
-	* src/etc/script/create_db.Oracle: [reported by I.Vecchia] Fix:
+	* src/etc/script/: create_db.Oracle: [reported by I.Vecchia] Fix:
 	  Oracle 5 does not accept number(0,1) data type
 
 2005-06-09 17:30  sympa-authors
@@ -94,31 +982,49 @@
 
 2005-06-09 11:25  sympa-authors
 
-	* src/etc/topics.conf: [M.Redinger] Translated topics to German
+	* src/etc/: topics.conf: [M.Redinger] Translated topics to German
 
 2005-06-09 11:23  sympa-authors
 
 	* web_tt2/: admin_menu.tt2, review.tt2:  [M.Redinger] Fix: Some
 	  strings were not tagged as translatable
 
+2005-06-09 11:22  sympa-authors
+
+	* web_tt2/: admin_menu.tt2, review.tt2: [M.Redinger] Fix: Some
+	  strings were not tagged as translatable
+
 2005-06-09 11:18  sympa-authors
 
-	* po/de.po: [M.Redinger] Updated German translations
+	* po/: de.po: [M.Redinger] Updated German translations
 
 2005-06-09 09:42  sympa-authors
 
-	* src/etc/script/create_db.Oracle: [reported by Emr] Fix: incorrect
-	  enum types for Oracle
+	* src/etc/script/: create_db.Oracle: [reported by Emr] Fix:
+	  incorrect enum types for Oracle
+
+2005-06-08 17:10  sympa-authors
+
+	* ChangeLog, NEWS: Preparing 5.0.1
 
 2005-06-08 17:05  sympa-authors
 
-	* src/etc/script/sympa: Made the init script compatible with Debian
-	  and Suze
+	* src/etc/script/: sympa: Made the init script compatible with
+	  Debian and Suze
 
 2005-06-08 16:38  sympa-authors
 
-	* src/etc/script/sympa: [BugID 403] Fix: made init script
+	* src/etc/script/: sympa: [BugID 403] Fix: made init script
 	  compatible with OS X
+
+2005-06-08 16:32  sympa-authors
+
+	* po/de.po: Fix: remove or add \n between msgids and msgtrs
+
+2005-06-08 14:57  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2: Fix: previous utf-8 related
+	  changes were not conditional
 
 2005-06-08 13:41  sympa-authors
 
@@ -127,6 +1033,16 @@
 2005-06-08 13:41  sympa-authors
 
 	* po/ja.po: [K.Moriwaka] Update
+
+2005-06-08 11:52  sympa-authors
+
+	* soap/sympasoap.pm, src/Commands.pm, src/List.pm, src/admin.pm,
+	  src/mail.pm, src/sympa.pl, wwsympa/wwsympa.fcgi: Adding code
+	  comments
+
+2005-06-08 11:20  sympa-authors
+
+	* po/: de.po, it.po, ro.po: Remove \r in PO files
 
 2005-06-08 11:14  sympa-authors
 
@@ -137,12 +1053,16 @@
 
 2005-06-08 11:11  sympa-authors
 
-	* po/xgettext.pl: [M.Redinger]Fix: xgettext.pl did not collect all
-	  gettext_id from List.pm
+	* po/: xgettext.pl: [M.Redinger]Fix: xgettext.pl did not collect
+	  all gettext_id from List.pm
 
 2005-06-07 18:20  sympa-authors
 
 	* po/de.po: [M.Redinger] UIpdated German translations
+
+2005-06-07 18:19  sympa-authors
+
+	* po/de.po: [M.Redinger] Updates
 
 2005-06-07 18:10  sympa-authors
 
@@ -160,14 +1080,37 @@
 
 	* po/de.po, src/Conf.pm: [M.Redinger] Updated German translations
 
+2005-06-06 12:05  sympa-authors
+
+	* po/de.po: Fixes
+
+2005-06-06 11:56  sympa-authors
+
+	* po/: cs.po, en_US.po, es.po, et.po, fi.po, fr.po, hu.po, it.po,
+	  ja.po, nl.po, pl.po, pt.po, ro.po, sympa.pot, zh_CN.po, zh_TW.po:
+	  Updated POT and PO files
+
+2005-06-06 11:56  sympa-authors
+
+	* po/de.po, src/Conf.pm: [M.Redinger] Updated German translations
+
 2005-06-06 11:14  sympa-authors
 
 	* src/: Conf.pm, Language.pm: [K.Moriwaka] New translation to
 	  Japonese
 
+2005-06-06 11:11  sympa-authors
+
+	* po/: Makefile, ja.po: [no log message]
+
 2005-06-06 10:41  sympa-authors
 
 	* po/: Makefile, ja.po: [K.Moriwaka] New translation to Japonese
+
+2005-06-06 10:41  sympa-authors
+
+	* po/ja.po: file ja.po was added on branch sympa-5_0-branch on
+	  2005-06-06 09:11:13 +0000
 
 2005-06-03 16:56  sympa-authors
 
@@ -177,6 +1120,15 @@
 
 	  not a complete update. online editor template style incomplete
 	  now recognize lang subdirectories.
+
+2005-06-02 16:44  sympa-authors
+
+	* doc/sympa.tex.tpl: add internal documentation about list
+	  parameters
+
+2005-06-02 16:44  sympa-authors
+
+	* doc/sympa.ps: [no log message]
 
 2005-06-02 15:14  sympa-authors
 
@@ -229,10 +1181,22 @@
 	* web_tt2/main.tt2:
 	  Now recognize nomenu var in main template
 
+2005-06-01 12:21  sympa-authors
+
+	* doc/sympa.tex.tpl, src/List.pm, web_tt2/edit_list_request.tt2,
+	  web_tt2/error.tt2, web_tt2/help_editlist.tt2,
+	  wwsympa/wwsympa.fcgi: Ending topics.
+
 2005-06-01 11:05  sympa-authors
 
 	* mail_tt2/: helpfile.tt2, lists.tt2: [G. Bouteille] Add header
 	  fields top templates
+
+2005-05-31 16:49  sympa-authors
+
+	* web_tt2/compose_mail.tt2, web_tt2/javascript.tt2,
+	  web_tt2/review.tt2, web_tt2/viewmod.tt2, wwsympa/wwsympa.fcgi:
+	  Add topics in web page review
 
 2005-05-31 14:41  sympa-authors
 
@@ -259,7 +1223,7 @@
 
 2005-05-30 12:10  sympa-authors
 
-	* soap/sympa_soap_server.fcgi: [S.Amrani] Fix: replace hard-coded
+	* soap/: sympa_soap_server.fcgi: [S.Amrani] Fix: replace hard-coded
 	  path to Sympa libdir
 
 2005-05-30 11:47  sympa-authors
@@ -267,6 +1231,67 @@
 	* src/tools.pl, web_tt2/ls_templates.tt2, wwsympa/wwsympa.fcgi:
 
 	  implementing remove_template
+
+2005-05-30 11:41  sympa-authors
+
+	* web_tt2/: review.tt2, suboptions.tt2: Adding topic recption
+	  column in review.tt2 page
+
+2005-05-30 10:53  sympa-authors
+
+	* Makefile.am, NEWS, doc/sympa.ps, doc/sympa.tex,
+	  doc/sympa.tex.tpl, doc/html/index.html, doc/html/node1.html,
+	  doc/html/node10.html, doc/html/node11.html, doc/html/node12.html,
+	  doc/html/node13.html, doc/html/node14.html, doc/html/node15.html,
+	  doc/html/node16.html, doc/html/node17.html, doc/html/node18.html,
+	  doc/html/node19.html, doc/html/node2.html, doc/html/node20.html,
+	  doc/html/node21.html, doc/html/node22.html, doc/html/node23.html,
+	  doc/html/node24.html, doc/html/node25.html, doc/html/node26.html,
+	  doc/html/node27.html, doc/html/node3.html, doc/html/node4.html,
+	  doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	  doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	  doc/html/sympa.ps, doc/man8/Makefile, po/Makefile,
+	  po/check_locales.pl, po/cs.po, po/de.po, po/en_US.po, po/es.po,
+	  po/et.po, po/fi.po, po/fr.po, po/hu.po, po/it.po, po/nl.po,
+	  po/pl.po, po/pt.po, po/ro.po, po/xgettext.pl, po/zh_CN.po,
+	  po/zh_TW.po, src/Conf.pm, src/Language.pm, src/Ldap.pm,
+	  src/List.pm, src/Message.pm, src/mail.pm, src/sympa_wizard.pl,
+	  src/tools.pl, src/tt2.pl, src/etc/mhonarc-ressources.tt2,
+	  web_tt2/add_request.tt2, web_tt2/arc.tt2, web_tt2/arc_manage.tt2,
+	  web_tt2/arc_protect.tt2, web_tt2/arcsearch.tt2,
+	  web_tt2/arcsearch_form.tt2, web_tt2/change_email.tt2,
+	  web_tt2/choosepasswd.tt2, web_tt2/compose_mail.tt2,
+	  web_tt2/create_list_request.tt2, web_tt2/css.tt2,
+	  web_tt2/d_control.tt2, web_tt2/d_editfile.tt2,
+	  web_tt2/d_install_shared.tt2, web_tt2/d_properties.tt2,
+	  web_tt2/d_read.tt2, web_tt2/d_upload.tt2,
+	  web_tt2/dump_scenario.tt2, web_tt2/edit_list_request.tt2,
+	  web_tt2/edit_template.tt2, web_tt2/editfile.tt2,
+	  web_tt2/editsubscriber.tt2, web_tt2/error.tt2,
+	  web_tt2/footer.tt2, web_tt2/get_closed_lists.tt2,
+	  web_tt2/home.tt2, web_tt2/info.tt2, web_tt2/javascript.tt2,
+	  web_tt2/latest_arc.tt2, web_tt2/list_admin_menu.tt2,
+	  web_tt2/list_menu.tt2, web_tt2/list_panel.tt2, web_tt2/lists.tt2,
+	  web_tt2/login_menu.tt2, web_tt2/loginbanner.tt2,
+	  web_tt2/loginrequest.tt2, web_tt2/ls_templates.tt2,
+	  web_tt2/main.tt2, web_tt2/menu.tt2, web_tt2/modindex.tt2,
+	  web_tt2/notice.tt2, web_tt2/pref.tt2, web_tt2/remindpasswd.tt2,
+	  web_tt2/rename_list_request.tt2, web_tt2/request_topic.tt2,
+	  web_tt2/review.tt2, web_tt2/reviewbouncing.tt2, web_tt2/rss.tt2,
+	  web_tt2/scenario_test.tt2, web_tt2/serveradmin.tt2,
+	  web_tt2/set_pending_list_request.tt2, web_tt2/setlang.tt2,
+	  web_tt2/sigrequest.tt2, web_tt2/skinsedit.tt2,
+	  web_tt2/subindex.tt2, web_tt2/suboptions.tt2,
+	  web_tt2/subrequest.tt2, web_tt2/title.tt2,
+	  web_tt2/view_template.tt2, web_tt2/viewmod.tt2, wwsympa/Auth.pm,
+	  wwsympa/Makefile, wwsympa/SharedDocument.pm,
+	  wwsympa/wwsympa.fcgi: Adding updates made on principal branches
+	  from April 18 2005 to Mai 26 2005
+
+2005-05-27 17:00  sympa-authors
+
+	* src/List.pm: [BugID 418] Fix:  Ldap search return code was not
+	  examined in _include_users_ldap()
 
 2005-05-27 16:26  sympa-authors
 
@@ -290,6 +1315,16 @@
 
 	* ChangeLog: update
 
+2005-05-27 09:30  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: $rss variable was not reinitialized if
+	  in POST context. Wwsympa could provide RSS content instead of
+	  HTML content
+
+2005-05-26 15:48  sympa-authors
+
+	* .version: preparing 5.0.1
+
 2005-05-26 14:20  sympa-authors
 
 	* src/Conf.pm, src/tools.pl, web_tt2/css.tt2,
@@ -300,6 +1335,21 @@
 
 	  templates editor system (need action remove and an entry in sympa
 	  admin)
+
+2005-05-26 14:20  sympa-authors
+
+	* web_tt2/edit_template.tt2: file edit_template.tt2 was added on
+	  branch sympa-topics on 2005-05-30 08:53:48 +0000
+
+2005-05-26 14:20  sympa-authors
+
+	* web_tt2/list_admin_menu.tt2: file list_admin_menu.tt2 was added
+	  on branch sympa-topics on 2005-05-30 08:53:48 +0000
+
+2005-05-26 14:20  sympa-authors
+
+	* web_tt2/ls_templates.tt2: file ls_templates.tt2 was added on
+	  branch sympa-topics on 2005-05-30 08:53:48 +0000
 
 2005-05-26 10:51  sympa-authors
 
@@ -316,12 +1366,21 @@
 
 2005-05-26 09:56  sympa-authors
 
-	* src/List.pm: Fix: check if no null while doing a ALTER TABLE
+	* src/: List.pm: Fix: check if no null while doing a ALTER TABLE
+
+2005-05-25 16:17  sympa-authors
+
+	* doc/sympa.tex.tpl, src/List.pm, src/sympa.pl: [G.Bouteille]Topic
+	  tagging a thread of messages
 
 2005-05-25 16:10  sympa-authors
 
-	* src/etc/mhonarc-ressources.tt2: [requested by K.Moriwaka] Add
+	* src/etc/: mhonarc-ressources.tt2: [requested by K.Moriwaka] Add
 	  utf-8 encoding options
+
+2005-05-25 15:05  sympa-authors
+
+	* doc/sympa.tex.tpl: [G.Bouteille]Message topics functionnality
 
 2005-05-25 11:59  sympa-authors
 
@@ -331,7 +1390,7 @@
 
 2005-05-25 11:40  sympa-authors
 
-	* src/List.pm: [valinux] Fix typo
+	* src/: List.pm: [valinux] Fix typo
 
 2005-05-24 17:27  sympa-authors
 
@@ -339,7 +1398,7 @@
 
 2005-05-24 17:16  sympa-authors
 
-	* src/Language.pm: Fix: Remove code required for a previous
+	* src/: Language.pm: Fix: Remove code required for a previous
 	  xgettext bug
 
 2005-05-24 16:51  sympa-authors
@@ -359,6 +1418,11 @@
 	  SharedDocument.pm module to clean the shared documents code. Only
 	  used in new_d_read() now
 
+2005-05-24 16:04  sympa-authors
+
+	* wwsympa/SharedDocument.pm: file SharedDocument.pm was added on
+	  branch sympa-topics on 2005-05-30 08:53:48 +0000
+
 2005-05-24 16:03  sympa-authors
 
 	* src/: Conf.pm, List.pm: New update_db_field_types parameter to
@@ -367,6 +1431,15 @@
 2005-05-24 16:02  sympa-authors
 
 	* src/tools.pl: Extend dump_var()
+
+2005-05-24 15:17  sympa-authors
+
+	* doc/sympa.tex.tpl: [G.Bouteille] internals for message topics
+
+2005-05-24 15:16  sympa-authors
+
+	* src/List.pm, src/sympa.pl, wwsympa/wwsympa.fcgi: [G.Bouteille]
+	  message diffusion in topic context
 
 2005-05-23 18:03  sympa-authors
 
@@ -377,10 +1450,20 @@
 	  first step for a template editor (action ls_templates and
 	  edit_template)
 
+2005-05-23 18:03  sympa-authors
+
+	* web_tt2/list_panel.tt2: file list_panel.tt2 was added on branch
+	  sympa-topics on 2005-05-30 08:53:48 +0000
+
 2005-05-23 11:24  sympa-authors
 
 	* po/Makefile, po/oc.po, src/Language.pm: [M. Allaya] New feature:
 	  first version of Sympa in Occitan
+
+2005-05-20 17:34  sympa-authors
+
+	* src/List.pm, src/Message.pm, src/mail.pm, web_tt2/suboptions.tt2,
+	  wwsympa/wwsympa.fcgi: [no log message]
 
 2005-05-20 11:34  sympa-authors
 
@@ -414,6 +1497,31 @@
 
 	* po/de.po: [W. Werner] Update:
 
+2005-05-19 15:45  sympa-authors
+
+	* mail_tt2/moderate.tt2, src/List.pm, web_tt2/main.tt2,
+	  web_tt2/modindex.tt2, web_tt2/request_topic.tt2,
+	  web_tt2/viewmod.tt2, wwsympa/wwsympa.fcgi: [G.Bouteille] Message
+	  topics : managing tagging by editor.
+
+2005-05-19 12:51  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/index.html, doc/html/node1.html, doc/html/node10.html,
+	  doc/html/node11.html, doc/html/node12.html, doc/html/node13.html,
+	  doc/html/node14.html, doc/html/node15.html, doc/html/node16.html,
+	  doc/html/node17.html, doc/html/node18.html, doc/html/node19.html,
+	  doc/html/node2.html, doc/html/node20.html, doc/html/node21.html,
+	  doc/html/node22.html, doc/html/node23.html, doc/html/node24.html,
+	  doc/html/node25.html, doc/html/node26.html, doc/html/node27.html,
+	  doc/html/node3.html, doc/html/node4.html, doc/html/node5.html,
+	  doc/html/node6.html, doc/html/node7.html, doc/html/node8.html,
+	  doc/html/node9.html, doc/html/sympa.ps, mail_tt2/send_auth.tt2,
+	  src/List.pm, src/sympa.pl, src/tools.pl,
+	  web_tt2/compose_mail.tt2, web_tt2/error.tt2, web_tt2/main.tt2,
+	  web_tt2/request_topic.tt2, wwsympa/wwsympa.fcgi: [G.Bouteille]
+	  Message topics : managing tagging by sender.
+
 2005-05-18 15:38  sympa-authors
 
 	* web_tt2/: list_menu.tt2, list_panel.tt2:
@@ -430,6 +1538,11 @@
 	* doc/sympa.tex.tpl, src/Conf.pm, web_tt2/css.tt2,
 	  web_tt2/title.tt2, wwsympa/wwsympa.fcgi:
 	  introduce log_html_definition parameter
+
+2005-05-17 10:53  sympa-authors
+
+	* Makefile.am, Makefile.in: [reported by S.Amrani] Fix umask while
+	  installing man pages
 
 2005-05-17 10:52  sympa-authors
 
@@ -469,6 +1582,11 @@
 
 	  adding class="MainMenuLinks" for all input type="submit"
 
+2005-05-13 16:35  sympa-authors
+
+	* web_tt2/skinsedit.tt2: file skinsedit.tt2 was added on branch
+	  sympa-topics on 2005-05-30 08:53:48 +0000
+
 2005-05-13 11:56  sympa-authors
 
 	* po/fr.po, src/etc/mhonarc-ressources.tt2, web_tt2/css.tt2,
@@ -480,7 +1598,7 @@
 
 2005-05-13 11:42  sympa-authors
 
-	* src/List.pm: [BugID 393 & 409] Fix: adding custom_subject would
+	* src/: List.pm: [BugID 393 & 409] Fix: adding custom_subject would
 	  break subject encoding
 
 2005-05-12 15:06  sympa-authors
@@ -501,6 +1619,11 @@
 
 	  modindex.tt2 : change the table look according to other tables in
 	  Sympa
+
+2005-05-11 11:31  sympa-authors
+
+	* doc/sympa.tex.tpl, src/List.pm, src/sympa.pl: [G. Bouteille]
+	  Message topics : managing automatic tagging.
 
 2005-05-10 17:35  sympa-authors
 
@@ -528,9 +1651,14 @@
 	  now conform (checked with w3c validator) -preferences and your
 	  subscription now in login_menu
 
+2005-05-10 09:36  sympa-authors
+
+	* web_tt2/setlang.tt2: file setlang.tt2 was added on branch
+	  sympa-topics on 2005-05-30 08:53:48 +0000
+
 2005-05-09 10:31  sympa-authors
 
-	* po/it.po: Fix headers
+	* po/: it.po: Fix headers
 
 2005-05-04 14:39  sympa-authors
 
@@ -547,6 +1675,10 @@
 	* mail_tt2/: global_remind.tt2, moderate.tt2: [reported by
 	  O.Archer] some MUA require an empty line after mailto: URLs
 
+2005-05-03 17:55  sympa-authors
+
+	* po/sympa.pot: Update using new xgettext.pl
+
 2005-05-03 17:52  sympa-authors
 
 	* po/: cs.po, de.po, en_US.po, es.po, et.po, fi.po, fr.po, hu.po,
@@ -556,7 +1688,7 @@
 
 2005-05-03 17:36  sympa-authors
 
-	* po/xgettext.pl: Fix: some multi-line strings were not properly
+	* po/: xgettext.pl: Fix: some multi-line strings were not properly
 	  added to sympa.pot. Therefore these translations were not
 	  available.
 
@@ -591,15 +1723,46 @@
 	  web_tt2/suboptions.tt2, web_tt2/subrequest.tt2,
 	  web_tt2/title.tt2, wwsympa/wwsympa.fcgi: Update with CSS changes
 
+2005-04-29 17:00  sympa-authors
+
+	* web_tt2/dump_scenario.tt2: file dump_scenario.tt2 was added on
+	  branch sympa-topics on 2005-05-30 08:53:48 +0000
+
+2005-04-29 17:00  sympa-authors
+
+	* web_tt2/footer.tt2: file footer.tt2 was added on branch
+	  sympa-topics on 2005-05-30 08:53:48 +0000
+
 2005-04-28 08:19  sympa-authors
 
 	* web_tt2/css.tt2:
 	  remove all reference to "cursor" to leave browser default in
 	  action.  except "cursor help".
 
+2005-04-26 17:10  sympa-authors
+
+	* src/sympa.pl: Managing msg topic in DoMessage
+
+2005-04-26 17:09  sympa-authors
+
+	* doc/sympa.tex.tpl: internal documentation
+
+2005-04-26 17:08  sympa-authors
+
+	* src/tools.pl: bug fixes
+
+2005-04-26 17:07  sympa-authors
+
+	* src/List.pm: Adding functions to get msg topic file, to compute
+	  the tag and to access to msg topic information.
+
+2005-04-26 17:05  sympa-authors
+
+	* src/Conf.pm: Adding spool topic
+
 2005-04-26 14:40  sympa-authors
 
-	* wwsympa/Auth.pm: Fix: CAS authentication was not able to use
+	* wwsympa/: Auth.pm: Fix: CAS authentication was not able to use
 	  ldap_bind_dn and ldap_bind_password
 
 2005-04-26 11:52  sympa-authors
@@ -649,11 +1812,59 @@
 	  web_tt2/suboptions.tt2, web_tt2/subrequest.tt2,
 	  web_tt2/title.tt2, wwsympa/wwsympa.fcgi: [no log message]
 
+2005-04-26 10:55  sympa-authors
+
+	* src/Language.pm: Change: try performing different setlocale()
+	  with $lang and with $locale.charset
+
+2005-04-25 15:47  sympa-authors
+
+	* src/List.pm: [no log message]
+
+2005-04-25 15:33  sympa-authors
+
+	* doc/sympa.tex.tpl: [no log message]
+
+2005-04-25 15:13  sympa-authors
+
+	* web_tt2/notice.tt2: Bug fixes
+
+2005-04-25 15:12  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Delete subscriber topics if reception mode
+	  is different from mail
+
+2005-04-22 13:28  sympa-authors
+
+	* doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex, doc/sympa.tex.tpl,
+	  doc/html/img1.old, doc/html/img1.png, doc/html/img2.old,
+	  doc/html/img2.png, doc/html/index.html, doc/html/node1.html,
+	  doc/html/node10.html, doc/html/node11.html, doc/html/node12.html,
+	  doc/html/node13.html, doc/html/node14.html, doc/html/node15.html,
+	  doc/html/node16.html, doc/html/node17.html, doc/html/node18.html,
+	  doc/html/node19.html, doc/html/node2.html, doc/html/node20.html,
+	  doc/html/node21.html, doc/html/node22.html, doc/html/node23.html,
+	  doc/html/node24.html, doc/html/node25.html, doc/html/node26.html,
+	  doc/html/node27.html, doc/html/node3.html, doc/html/node4.html,
+	  doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	  doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	  doc/html/sympa.ps, src/List.pm, src/tools.pl, web_tt2/notice.tt2,
+	  wwsympa/wwsympa.fcgi: Deleting subscriber topics when a listowner
+	  deletes some topics.
+
+2005-04-22 13:24  sympa-authors
+
+	* mail_tt2/user_notification.tt2: template for notifying users
+
 2005-04-22 10:38  sympa-authors
 
 	* wwsympa/wwsympa.fcgi: [BugID 400] Fix: error mesage would be
 	  printed if user previously failed to login (previous_action
 	  problem)
+
+2005-04-21 14:26  serge.aumont
+
+	* web_tt2/setlang.tt2: Add missing file
 
 2005-04-21 12:09  sympa-authors
 
@@ -689,14 +1900,160 @@
 	* po/: Makefile, check_locales.pl: New feature: added a check of
 	  available locales (usefull for Debian) at make time
 
+2005-04-20 16:18  sympa-authors
+
+	* po/check_locales.pl: file check_locales.pl was added on branch
+	  sympa-topics on 2005-05-30 08:53:46 +0000
+
+2005-04-19 16:40  sympa-authors
+
+	* src/Family.pm, src/List.pm, wwsympa/wwsympa.fcgi: Organization of
+	  uncompellable parameters
+
+2005-04-19 15:14  sympa-authors
+
+	* wwsympa/wwsympa.fcgi, web_tt2/suboptions.tt2: Able thematic
+	  subscription on the web interface
+
+2005-04-18 16:26  sympa-authors
+
+	* ChangeLog: [no log message]
+
+2005-04-18 16:21  sympa-authors
+
+	* src/: Family.pm, List.pm, sympa.pl, etc/script/create_db.Oracle,
+	  etc/script/create_db.Pg, etc/script/create_db.Sybase,
+	  etc/script/create_db.mysql: Adding msg_topic and
+	  msg_topic_keywords_apply_on list parameter. Adding field topics
+	  subscriber in the subscriber table, modifying function access to
+	  subscriber_table. Modifying subscriber otpion to able topic
+	  subscription.
+
+2005-04-18 15:47  sympa-authors
+
+	* mail_tt2/subscriber_notification.tt2, src/mail.pm: removing of
+	  mail_tt2/subscriber_notification.tt2 (forgotten before)
+
+2005-04-18 14:54  sympa-authors
+
+	* ChangeLog: [no log message]
+
+2005-04-18 14:53  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/index.html, html/node1.html, html/node10.html,
+	  html/node11.html, html/node12.html, html/node13.html,
+	  html/node14.html, html/node15.html, html/node16.html,
+	  html/node17.html, html/node18.html, html/node19.html,
+	  html/node2.html, html/node20.html, html/node21.html,
+	  html/node22.html, html/node23.html, html/node24.html,
+	  html/node25.html, html/node26.html, html/node27.html,
+	  html/node3.html, html/node4.html, html/node5.html,
+	  html/node6.html, html/node7.html, html/node8.html,
+	  html/node9.html, html/sympa.html, html/sympa.ps: Adding internal
+	  documentation for sending messages functions.
+
 2005-04-18 12:01  sympa-authors
 
 	* src/sympa_wizard.pl: [reported by A.Bernstein] Fix:
 	  'comma-separated' instead of 'colon-separated'
 
+2005-04-18 11:46  sympa-authors
+
+	* ChangeLog: [no log message]
+
+2005-04-18 11:24  sympa-authors
+
+	* mail_tt2/archive.tt2, mail_tt2/bye.tt2,
+	  mail_tt2/certif_warning.tt2, mail_tt2/command_report.tt2,
+	  mail_tt2/d_install_shared.tt2, mail_tt2/d_reject_shared.tt2,
+	  mail_tt2/digest.tt2, mail_tt2/digest_plain.tt2,
+	  mail_tt2/expire_deletion.tt2, mail_tt2/expire_warning1.tt2,
+	  mail_tt2/expire_warning2.tt2, mail_tt2/global_remind.tt2,
+	  mail_tt2/helpfile.tt2, mail_tt2/index_archive.tt2,
+	  mail_tt2/info_report.tt2, mail_tt2/invite.tt2,
+	  mail_tt2/list_created.tt2, mail_tt2/list_rejected.tt2,
+	  mail_tt2/list_unknown.tt2, mail_tt2/listeditor_notification.tt2,
+	  mail_tt2/listmaster_notification.tt2,
+	  mail_tt2/listowner_notification.tt2, mail_tt2/lists.tt2,
+	  mail_tt2/message_report.tt2, mail_tt2/moderate.tt2,
+	  mail_tt2/modindex.tt2, mail_tt2/reject.tt2, mail_tt2/remind.tt2,
+	  mail_tt2/removed.tt2, mail_tt2/request_auth.tt2,
+	  mail_tt2/review.tt2, mail_tt2/send_auth.tt2,
+	  mail_tt2/sendpasswd.tt2, mail_tt2/stats_report.tt2,
+	  mail_tt2/summary.tt2, mail_tt2/urlized_part.tt2,
+	  mail_tt2/welcome.tt2, mail_tt2/which.tt2,
+	  mail_tt2/x509-user-cert-missing.tt2,
+	  mail_tt2/your_infected_msg.tt2, soap/sympa_soap_server.fcgi,
+	  soap/sympasoap.pm, src/Commands.pm, src/Conf.pm, src/Family.pm,
+	  src/List.pm, src/Log.pm, src/Makefile, src/mail.pm, src/smtp.pm,
+	  src/sympa.pl, src/task_manager.pl, src/tools.pl, src/tt2.pl,
+	  wwsympa/archived.pl, wwsympa/bounced.pl, wwsympa/wwsympa.fcgi:
+	  Sending messages reorganization :   - deletion of old functions,
+	  deletion of calling that breakes layers hierarchy, function
+	  creation to manage all sending.    - maximizing using of
+	  templates (every function that provides a mail service uses a
+	  template) and using of notification function with their own
+	  template.    - managing "pushing in spool" (for messages sending
+	  by other process than sympa.pl) by using normal functions for
+	  messages sending.    - authentication factorisation, function
+	  creation for commands report and deletion of "expire"command in
+	  package Commands.
+
+2005-04-13 11:25  serge.aumont
+
+	* doc/sympa.tex.tpl, web_tt2/subindex.tt2:
+	  convert old subindex template
+
+2005-04-12 11:41  serge.aumont
+
+	* doc/sympa.tex.tpl, src/Conf.pm, web_tt2/d_read.tt2,
+	  web_tt2/footer.tt2, web_tt2/main.tt2, web_tt2/menu.tt2,
+	  web_tt2/serveradmin.tt2, web_tt2/skinsedit.tt2,
+	  wwsympa/wwsympa.fcgi:
+
+	  Now static CSS can be used (important optimization). This use
+	  css_url and css_path robot parameters.  New action skinsedit
+	  availible from sympa server admin page can show colors and help
+	  to install pre-parsed version of CSS files.
+
+2005-04-05 11:37  serge.aumont
+
+	* .version, NEWS:
+
+	  preparing a tag
+
+2005-04-05 10:57  serge.aumont
+
+	* web_tt2/: css.tt2, lists.tt2:
+	  new class listenum (ul.listenum and li.listenum) for list of
+	  lists
+
+2005-04-05 10:05  serge.aumont
+
+	* web_tt2/: footer.tt2, main.tt2, serveradmin.tt2:
+	  move set_lang form in right column move validator link in
+	  server_admin page
+
+2005-04-05 09:45  serge.aumont
+
+	* web_tt2/: css.tt2, footer.tt2, pref.tt2:
+	  adding footer
+
 2005-04-05 09:41  sympa-authors
 
 	* wwsympa/wwsympa.fcgi: Precise log for distribute and reject
+
+2005-04-05 09:35  serge.aumont
+
+	* web_tt2/: lists.tt2, serveradmin.tt2:
+	  use class=actionMenuLinks in serveradmin page
+
+2005-04-05 08:55  serge.aumont
+
+	* web_tt2/: css.tt2, list_menu.tt2:
+
+	  presentation details changing padding in MenuBlock
 
 2005-04-04 12:02  sympa-authors
 
@@ -738,6 +2095,12 @@
 
 	* soap/sympa_soap_server.fcgi: Fix previous change
 
+2005-03-30 16:30  serge.aumont
+
+	* web_tt2/main.tt2, web_tt2/title.tt2, wwsympa/wwsympa.fcgi:
+	  Always use of robot_title (a new template var) in title panel Use
+	  of List adress in action div if list is defined.
+
 2005-03-30 16:14  sympa-authors
 
 	* wwsympa/wwsympa.fcgi: Fix
@@ -746,6 +2109,13 @@
 
 	* wwsympa/wwsympa.fcgi: Fix: previous changes : probe_db MUST be
 	  run before defaults are defined because of user_data_source
+
+2005-03-30 15:43  serge.aumont
+
+	* web_tt2/: d_read.tt2, review.tt2:
+	  remove <ul id="mainMenuLinks"> using class actionMenuLinks
+
+	  Same modification must be used in most pages
 
 2005-03-30 14:00  sympa-authors
 
@@ -761,9 +2131,47 @@
 	* src/List.pm: check family_name with defined (prevents entry to be
 	  created)
 
+2005-03-30 09:55  serge.aumont
+
+	* web_tt2/: css.tt2, d_read.tt2:
+	  new menu class a.actionMenuLinks
+	  a.actionMenuLinksCurrentPage etc for menus in action.
+
+	  MUST replace id=mainMenuLinks that is unproperly used in various
+	  pages because of non uniq id.
+
+	  new menu in page d_read page
+
+2005-03-30 09:20  sympa-authors
+
+	* NEWS: Add more warnings about auth.conf format changes
+
 2005-03-30 09:19  sympa-authors
 
 	* NEWS: Add more info about auth.conf changes
+
+2005-03-29 13:59  serge.aumont
+
+	* web_tt2/: css.tt2, editsubscriber.tt2:
+
+	  remove 1 table in editsubscriber
+
+2005-03-29 13:40  serge.aumont
+
+	* src/Conf.pm, web_tt2/review.tt2:
+	  make review conform with current style. Table is not based on css
+
+2005-03-29 13:04  serge.aumont
+
+	* src/Conf.pm, web_tt2/css.tt2, web_tt2/home.tt2, web_tt2/menu.tt2:
+
+	  modify default link color(color_8), make home an acceptable page
+	  (still using unwanted tables)
+
+2005-03-25 13:07  serge.aumont
+
+	* web_tt2/: css.tt2, home.tt2, serveradmin.tt2:
+	  show colors in server_admin.	Remove one table in home
 
 2005-03-23 14:15  sympa-authors
 
@@ -784,6 +2192,27 @@
 	  it.po, nl.po, pl.po, pt.po, ro.po, sympa.pot, zh_CN.po, zh_TW.po:
 	  Update POT
 
+2005-03-22 17:44  serge.aumont
+
+	* src/etc/mhonarc-ressources.tt2, web_tt2/css.tt2,
+	  web_tt2/d_editfile.tt2, web_tt2/edit_list_request.tt2:
+	  remove 2 level of table. Style some table in that page but the
+	  page looks great.  rename class "messageHeaders" into "block"
+	  because it is used not ony in archive
+
+2005-03-22 16:33  serge.aumont
+
+	* web_tt2/review.tt2:
+
+	  remove one table
+
+2005-03-22 14:24  serge.aumont
+
+	* web_tt2/: css.tt2, d_editfile.tt2:
+
+	  -d_edit : 0 table template.  -New <a style="input"...> to make
+	  link look like a submit button
+
 2005-03-21 11:11  sympa-authors
 
 	* src/task_manager.pl: Fix: Add a log entry when running a task ;
@@ -796,6 +2225,11 @@
 	  global_remind.tt2, remind.tt2, welcome.tt2: Change: most of
 	  service messages no more refer to user password
 
+2005-03-18 14:34  sympa-authors
+
+	* src/List.pm: [BugID 294] Fix: replacing [msg_header] in scenario
+	  files
+
 2005-03-18 11:00  sympa-authors
 
 	* web_tt2/d_properties.tt2: Change: document description is now a
@@ -806,10 +2240,82 @@
 	* wwsympa/wwsympa.fcgi: Fix; Check 'size' type in review ; prevent
 	  division by zero
 
+2005-03-17 14:50  sympa-authors
+
+	* wwsympa/: wwslib.pm, wws_templates/tw/add_request.tw.tpl,
+	  wws_templates/tw/admin.tw.tpl,
+	  wws_templates/tw/admin_menu.tw.tpl, wws_templates/tw/arc.tw.tpl,
+	  wws_templates/tw/arc_protect.tw.tpl,
+	  wws_templates/tw/arcsearch.tw.tpl,
+	  wws_templates/tw/arcsearch_form.tw.tpl,
+	  wws_templates/tw/change_email.tw.tpl,
+	  wws_templates/tw/choosepasswd.tw.tpl,
+	  wws_templates/tw/close_list.tw.tpl,
+	  wws_templates/tw/compose_mail.tw.tpl,
+	  wws_templates/tw/create_list.tw.tpl,
+	  wws_templates/tw/create_list_request.tw.tpl,
+	  wws_templates/tw/d_control.tw.tpl,
+	  wws_templates/tw/d_editfile.tw.tpl,
+	  wws_templates/tw/d_read.tw.tpl,
+	  wws_templates/tw/edit_list_request.tw.tpl,
+	  wws_templates/tw/editfile.tw.tpl,
+	  wws_templates/tw/editsubscriber.tw.tpl,
+	  wws_templates/tw/error.tw.tpl,
+	  wws_templates/tw/get_pending_lists.tw.tpl,
+	  wws_templates/tw/help.tw.tpl, wws_templates/tw/help_admin.tw.tpl,
+	  wws_templates/tw/help_editfile.tw.tpl,
+	  wws_templates/tw/help_editlist.tw.tpl,
+	  wws_templates/tw/home.tw.tpl,
+	  wws_templates/tw/install_pending_list.tw.tpl,
+	  wws_templates/tw/list_menu.tw.tpl, wws_templates/tw/lists.tw.tpl,
+	  wws_templates/tw/login.tw.tpl,
+	  wws_templates/tw/loginbanner.tw.tpl,
+	  wws_templates/tw/loginrequest.tw.tpl,
+	  wws_templates/tw/menu.tw.tpl, wws_templates/tw/modindex.tw.tpl,
+	  wws_templates/tw/notice.tw.tpl, wws_templates/tw/pref.tw.tpl,
+	  wws_templates/tw/remindpasswd.tw.tpl,
+	  wws_templates/tw/remove_arc.tw.tpl,
+	  wws_templates/tw/review.tw.tpl,
+	  wws_templates/tw/reviewbouncing.tw.tpl,
+	  wws_templates/tw/scenario_test.tw.tpl,
+	  wws_templates/tw/search.tw.tpl,
+	  wws_templates/tw/search_list.tw.tpl,
+	  wws_templates/tw/search_user.tw.tpl,
+	  wws_templates/tw/serveradmin.tw.tpl,
+	  wws_templates/tw/set_pending_list_request.tw.tpl,
+	  wws_templates/tw/show_cert.tw.tpl,
+	  wws_templates/tw/sigrequest.tw.tpl,
+	  wws_templates/tw/subindex.tw.tpl,
+	  wws_templates/tw/suboptions.tw.tpl,
+	  wws_templates/tw/subrequest.tw.tpl,
+	  wws_templates/tw/title.tw.tpl,
+	  wws_templates/tw/view_translations.tw.tpl,
+	  wws_templates/tw/viewmod.tw.tpl, wws_templates/tw/which.tw.tpl:
+	  [M.Y.Chiu] Translated the web templates to Chinese
+
 2005-03-17 10:23  sympa-authors
 
 	* wwsympa/wwsympa.fcgi: Fix: Allow web message composition, even
 	  for moderated lists
+
+2005-03-16 17:23  serge.aumont
+
+	* src/etc/mhonarc-ressources.tt2, web_tt2/css.tt2:
+
+	  message headers
+
+2005-03-16 16:14  serge.aumont
+
+	* src/etc/mhonarc-ressources.tt2:
+	   change message page skin
+
+2005-03-16 16:03  serge.aumont
+
+	* src/Conf.pm, src/etc/mhonarc-ressources.tt2, web_tt2/css.tt2,
+	  web_tt2/list_admin_menu.tt2, web_tt2/login_menu.tt2,
+	  web_tt2/title.tt2:
+
+	  Improve arc (less colors, thread indent, etc)
 
 2005-03-16 13:18  sympa-authors
 
@@ -819,6 +2325,40 @@
 2005-03-16 09:41  sympa-authors
 
 	* web_tt2/reviewbouncing.tt2: Fix: missing %
+
+2005-03-15 17:36  serge.aumont
+
+	* web_tt2/css.tt2: Validator error with left-margin
+
+2005-03-15 13:57  serge.aumont
+
+	* web_tt2/css.tt2: Added a :hover on calendar cells
+
+2005-03-15 13:49  serge.aumont
+
+	* web_tt2/css.tt2: Fix right padding in menu
+
+2005-03-15 13:42  serge.aumont
+
+	* web_tt2/: css.tt2, list_admin_menu.tt2, list_menu.tt2,
+	  login_menu.tt2: Turn menuinactive into a class (not an ID)
+
+2005-03-15 13:28  serge.aumont
+
+	* web_tt2/css.tt2: Fix menu top margin
+
+2005-03-15 13:20  serge.aumont
+
+	* web_tt2/login_menu.tt2: form was too long
+
+2005-03-15 13:18  serge.aumont
+
+	* web_tt2/css.tt2: Fix font-size problem in calendar
+
+2005-03-15 12:47  serge.aumont
+
+	* src/etc/mhonarc-ressources.tt2, web_tt2/css.tt2: Changes related
+	  to archive calendar
 
 2005-03-15 11:08  sympa-authors
 
@@ -833,6 +2373,10 @@
 2005-03-15 10:32  sympa-authors
 
 	* src/etc/script/find_missing_messages.pl: Added
+
+2005-03-14 17:40  serge.aumont
+
+	* web_tt2/css.tt2: Only keep one style sheet
 
 2005-03-14 12:07  sympa-authors
 
@@ -870,9 +2414,67 @@
 	* src/Language.pm: Change: define the localedir before doig
 	  setlocale()
 
+2005-03-09 16:44  serge.aumont
+
+	* src/etc/mhonarc-ressources.tt2, web_tt2/css.tt2:
+	  nearly acceptable message list page
+
+2005-03-09 15:30  serge.aumont
+
+	* src/etc/mhonarc-ressources.tt2, web_tt2/css.tt2:
+	  Validaor checking againg
+
+2005-03-09 14:59  serge.aumont
+
+	* src/Conf.pm, src/etc/mhonarc-ressources.tt2, web_tt2/css.tt2,
+	  web_tt2/list_menu.tt2, web_tt2/subrequest.tt2:
+
+	  Some step for a better CSS and HTML W3C validator result
+
+2005-03-09 10:25  sympa-authors
+
+	* src/Commands.pm, src/List.pm, wwsympa/wwsympa.fcgi: Updates
+
 2005-03-08 14:12  sympa-authors
 
 	* src/etc/auth.conf: Fix exemple with eppn
+
+2005-03-08 10:18  sympa-authors
+
+	* src/Conf.pm, web_tt2/arc.tt2, web_tt2/choosepasswd.tt2,
+	  web_tt2/create_list_request.tt2, web_tt2/css.tt2,
+	  web_tt2/error.tt2, web_tt2/home.tt2, web_tt2/info.tt2,
+	  web_tt2/javascript.tt2, web_tt2/latest_arc.tt2,
+	  web_tt2/list_admin_menu.tt2, web_tt2/list_menu.tt2,
+	  web_tt2/list_panel.tt2, web_tt2/lists.tt2,
+	  web_tt2/login_menu.tt2, web_tt2/loginbanner.tt2,
+	  web_tt2/loginrequest.tt2, web_tt2/main.tt2, web_tt2/menu.tt2,
+	  web_tt2/notice.tt2, web_tt2/pref.tt2, web_tt2/remindpasswd.tt2,
+	  web_tt2/review.tt2, web_tt2/serveradmin.tt2,
+	  web_tt2/subindex.tt2, web_tt2/title.tt2, wwsympa/wwsympa.fcgi:
+
+	  Starting work on a pure CSS skin for Sympa.
+
+2005-03-08 10:14  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2:
+
+	  First try for archives. Still a lot of troubles with both Mozilla
+	  and IE
+
+2005-02-28 16:43  sympa-authors
+
+	* soap/sympa_soap_server.fcgi, src/Commands.pm, src/List.pm,
+	  src/admin.pm, src/mail.pm, src/sympa.pl, src/task_manager.pl,
+	  src/tools.pl, src/etc/script/arc2webarc.pl,
+	  src/etc/script/mod2html.pl, src/etc/script/p12topem.pl,
+	  src/etc/script/tpl2tt2.pl, wwsympa/archived.pl,
+	  wwsympa/bounced.pl, wwsympa/wwsympa.fcgi: [no log message]
+
+2005-02-28 15:50  sympa-authors
+
+	* src/etc/mhonarc-ressources.tt2:
+	  first version based on CSS
 
 2005-02-28 14:34  sympa-authors
 
@@ -892,16 +2494,31 @@
 	* web_tt2/javascript.tt2:
 	  Header section javascript templete
 
+2005-02-23 10:16  sympa-authors
+
+	* web_tt2/javascript.tt2: file javascript.tt2 was added on branch
+	  sympa-css on 2005-03-08 09:18:25 +0000
+
 2005-02-23 10:15  serge.aumont
 
 	* web_tt2/css.tt2:
 	  cacading style sheet template
+
+2005-02-23 10:15  sympa-authors
+
+	* web_tt2/css.tt2: file css.tt2 was added on branch sympa-css on
+	  2005-03-08 09:18:25 +0000
 
 2005-02-23 10:14  serge.aumont
 
 	* web_tt2/login_menu.tt2:
 
 	  Template for login panel.
+
+2005-02-23 10:14  sympa-authors
+
+	* web_tt2/login_menu.tt2: file login_menu.tt2 was added on branch
+	  sympa-css on 2005-03-08 09:18:25 +0000
 
 2005-02-16 17:35  sympa-authors
 
@@ -966,6 +2583,15 @@
 	  added to multiline entries.  These translations could not be used
 	  (not matched by gettext())
 
+2005-02-14 14:44  sympa-authors
+
+	* .version, ChangeLog, NEWS: Preparing 4.1.5
+
+2005-02-14 14:20  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [reported by M.Valiukas] Fix: editfile
+	  failed because of a previous patch from dev tree
+
 2005-02-11 13:40  sympa-authors
 
 	* src/tools.pl: Fix: allow comment.tt2 file (create_list context)
@@ -1022,6 +2648,10 @@
 
 	* src/List.pm: [reported by H.Gabor] Missing gettext_id for f_dir
 
+2005-02-09 14:52  sympa-authors
+
+	* .version, ChangeLog, NEWS: Prepare Sympa 4.1.4
+
 2005-02-08 14:05  sympa-authors
 
 	* wwsympa/wwsympa.fcgi: Change: return to the get_pending_list page
@@ -1046,6 +2676,15 @@
 	* web_tt2/: d_control.tt2, d_properties.tt2, d_read.tt2,
 	  d_upload.tt2: [BugID 375] Fix: some input maxlength were too
 	  short
+
+2005-02-03 17:14  sympa-authors
+
+	* src/List.pm: [G.Bouteille] Fix: check if $user is defined first.
+	  Otherwise wwsympa would create loops
+
+2005-02-03 17:12  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Fix: prevent loops in wwsympa
 
 2005-02-01 14:15  sympa-authors
 
@@ -1087,9 +2726,18 @@
 
 	* web_tt2/menu.tt2: [D.Chopard-Lallier] Fix: missing ';'
 
+2005-01-27 11:05  sympa-authors
+
+	* .version, ChangeLog, NEWS: preparing 4.1.3
+
 2005-01-27 11:01  sympa-authors
 
 	* src/: tools.pl: Fix: command detection in messages failed
+
+2005-01-27 09:54  sympa-authors
+
+	* ChangeLog, src/bouncequeue.c, src/queue.c: Fix: Apply fixes to
+	  queue and bouncequeue
 
 2005-01-26 17:13  sympa-authors
 
@@ -1887,6 +3535,11 @@
 	* wwsympa/wwsympa.fcgi: Fix: datasources did not appear after a
 	  search ; now use a common subroutine
 
+2004-11-22 10:59  sympa-authors
+
+	* src/Commands.pm: Fix: 'SIG *' failed ; only unsubscribed from the
+	  first list
+
 2004-11-22 10:54  sympa-authors
 
 	* src/Commands.pm: Fix: 'SIG *' failed ; only unsubscribed from the
@@ -1943,6 +3596,13 @@
 
 	* po/it.po, src/Conf.pm: [G. Donnini] Update of Italian
 	  translations
+
+2004-11-09 16:03  sympa-authors
+
+	* src/: List.pm, etc/script/create_db.Pg,
+	  etc/script/create_db.Sybase, etc/script/create_db.mysql: Fix:
+	  replace attributes_user type from 'text' to 'varchar(255)'; could
+	  make an "out of memory problem"
 
 2004-11-09 15:13  sympa-authors
 
@@ -2138,7 +3798,8 @@
 
 2004-10-11 15:00  sympa-authors
 
-	* wwsympa/wwsympa.fcgi: Fix: prevent upload if no file was selected
+	* wwsympa/: wwsympa.fcgi: Fix: prevent upload if no file was
+	  selected
 
 2004-10-11 13:27  sympa-authors
 
@@ -2159,8 +3820,8 @@
 
 2004-10-11 10:39  sympa-authors
 
-	* soap/sympasoap.pm: [reported by F.Fareneau] Fix: CAS login failed
-	  on the SOAP interface if robot was not the default one
+	* soap/: sympasoap.pm: [reported by F.Fareneau] Fix: CAS login
+	  failed on the SOAP interface if robot was not the default one
 
 2004-10-08 16:53  sympa-authors
 
@@ -2238,7 +3899,7 @@
 
 2004-09-22 11:59  sympa-authors
 
-	* src/List.pm: Fix: ldap include removed previous data about the
+	* src/: List.pm: Fix: ldap include removed previous data about the
 	  user (overwritten with defaults)
 
 2004-09-22 10:19  sympa-authors
@@ -2281,9 +3942,14 @@
 
 2004-09-17 09:26  sympa-authors
 
-	* wwsympa/wwsympa.fcgi: Change: when data-source related parameters
-	  have been edited, sync_include is run (not delegated to the
-	  task_manager)
+	* wwsympa/: wwsympa.fcgi: Change: when data-source related
+	  parameters have been edited, sync_include is run (not delegated
+	  to the task_manager)
+
+2004-09-16 10:57  sympa-authors
+
+	* src/: List.pm, task_manager.pl: Fix: do not create sync_include
+	  tasks for lists that have no include data sources
 
 2004-09-16 10:51  sympa-authors
 
@@ -2313,6 +3979,19 @@
 
 	* po/fr.po: Fix typo
 
+2004-09-10 16:16  sympa-authors
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/index.html, html/node1.html, html/node10.html,
+	  html/node11.html, html/node12.html, html/node13.html,
+	  html/node14.html, html/node15.html, html/node16.html,
+	  html/node17.html, html/node18.html, html/node19.html,
+	  html/node2.html, html/node20.html, html/node21.html,
+	  html/node22.html, html/node23.html, html/node24.html,
+	  html/node3.html, html/node4.html, html/node5.html,
+	  html/node6.html, html/node7.html, html/node8.html,
+	  html/node9.html, html/sympa.html, html/sympa.ps: update
+
 2004-09-10 10:39  sympa-authors
 
 	* doc/sympa.tex.tpl: [reported by G.Ballard-Tremeer] Missing '@' in
@@ -2336,12 +4015,26 @@
 
 	* src/List.pm: Fix default for archive_encrypted_message
 
+2004-09-09 15:47  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: Add [user_attributes] param
+
 2004-09-09 15:06  sympa-authors
 
 	* src/List.pm, wwsympa/wwsympa.fcgi: [reported by E.Tinturier] Fix:
 	  SSO-related user attributes were not available in web template.
 	  There are now available in [% user.attributes %] hash. Also made
 	  environment variables in both web templates and scenarios.
+
+2004-09-08 10:35  sympa-authors
+
+	* set_symlinks.pl, src/List.pm, src/Makefile, src/Survey.pm,
+	  src/etc/scenari/edit_survey.owner, web_tt2/edit_survey.tt2,
+	  wwsympa/wwsympa.fcgi: Update with summer work
+
+2004-09-08 10:34  sympa-authors
+
+	* ChangeLog: Test
 
 2004-09-08 10:30  sympa-authors
 
@@ -2385,7 +4078,7 @@
 
 2004-09-02 17:05  sympa-authors
 
-	* wwsympa/Marc/Search.pm: [BugID 330] Fix: errors "Insecure
+	* wwsympa/Marc/: Search.pm: [BugID 330] Fix: errors "Insecure
 	  dependency in chdir while running setuid at
 	  /usr/lib/perl5/5.8.1/File/Find.pm" while running a search in web
 	  archives
@@ -2421,6 +4114,11 @@
 	  html/node6.html, html/node7.html, html/node8.html,
 	  html/node9.html, html/sympa.html, html/sympa.ps: Update
 	  documentation: missing details about include_sql_query
+
+2004-08-31 17:24  sympa-authors
+
+	* src/etc/templates/us/invite.us.tpl: [BugID 329] Fix: orphan
+	  [ELSE] removed
 
 2004-08-31 16:35  sympa-authors
 
@@ -3111,7 +4809,7 @@
 
 2004-08-05 14:14  sympa-authors
 
-	* src/etc/auth.conf: [reported by D.Lamballais] Fix
+	* src/etc/: auth.conf: [reported by D.Lamballais] Fix
 
 2004-08-05 11:16  sympa-authors
 
@@ -3266,6 +4964,11 @@
 	* src/Language.pm: No more import gettext from	Locale::Messages to
 	  prevent "Prototype mismatch" errors
 
+2004-08-03 17:26  sympa-authors
+
+	* src/etc/mhonarc-ressources: [reported by Jeg] Fix: the viewmod
+	  page would propose a "reply to" and "send it back to..." buttons
+
 2004-08-03 17:21  sympa-authors
 
 	* src/etc/mhonarc-ressources.tt2: [reported by Jeg] Fix: the
@@ -3287,6 +4990,28 @@
 	  wwsympa/tt2/help_editlist.tt2, wwsympa/tt2/help_user_options.tt2,
 	  wwsympa/tt2/home.tt2: [P.Levesque] Complete the XHTML convertion
 
+2004-08-03 11:20  sympa-authors
+
+	* wwsympa/wws_templates/us/d_read.us.tpl: [reported by M.Daulie]
+	  Fix: incorrect template structure ; most features were missing
+	  from the shared page
+
+2004-08-02 17:07  sympa-authors
+
+	* src/etc/templates/it/moderate.it.tpl: [reported by M.Gaiarin]
+	  Remove '\n'
+
+2004-08-02 16:44  sympa-authors
+
+	* src/etc/templates/us/stats_report.us.tpl: [reported by S.Rouanet]
+	  Fix: incorrect label for received Mb
+
+2004-08-02 15:25  sympa-authors
+
+	* wwsympa/wwsympa.fcgi: [reported by Chaosmedia] Fix: while editing
+	  a template, the template name could be altered (lang element
+	  lost)
+
 2004-07-09 16:37  sympa-authors
 
 	* .version, ChangeLog, NEWS, doc/sympa.pdf, doc/sympa.ps,
@@ -3307,7 +5032,7 @@
 
 2004-07-09 14:15  sympa-authors
 
-	* wwsympa/wwsympa.fcgi: [reported by J.Koret] Fix an XSS
+	* wwsympa/: wwsympa.fcgi: [reported by J.Koret] Fix an XSS
 	  vulnerability
 
 2004-07-09 14:06  sympa-authors
@@ -3334,14 +5059,14 @@
 
 2004-07-07 16:20  sympa-authors
 
-	* src/tools.pl: [reported by J.Beretta] Fix: sympa would
+	* src/: tools.pl: [reported by J.Beretta] Fix: sympa would
 	  incorrectly change the MIME structure of multipart/alternative
 	  messages composed with Outlook.
 
 2004-07-07 11:56  sympa-authors
 
-	* src/tools.pl: [BugID 305] Fix: Missing <> around Message-id when
-	  messages are posted from the web
+	* src/: tools.pl: [BugID 305] Fix: Missing <> around Message-id
+	  when messages are posted from the web
 
 2004-07-07 10:53  sympa-authors
 
@@ -3376,7 +5101,7 @@
 
 2004-07-06 11:27  sympa-authors
 
-	* src/List.pm: Fix: rfc2369_header_fields parameter edition
+	* src/: List.pm: Fix: rfc2369_header_fields parameter edition
 	  incorrectly handled
 
 2004-07-05 16:21  sympa-authors
@@ -3509,8 +5234,16 @@
 
 2004-06-30 17:41  sympa-authors
 
-	* src/etc/script/p12topem.pl: Fix: script would fail on list object
-	  creation
+	* src/etc/script/: p12topem.pl: Fix: script would fail on list
+	  object creation
+
+2004-06-30 16:43  sympa-authors
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: Fix: load-cert() failed with
+	  Mozilla because the content-type was forced to
+	  application/pkix-cert and the certificate was in PEM format. Now
+	  convert it to DER.  Also used an unknown find_smime_keys()
+	  subroutine before.
 
 2004-06-30 16:30  sympa-authors
 
@@ -3522,6 +5255,10 @@
 2004-06-30 14:44  sympa-authors
 
 	* src/List.pm, wwsympa/wwsympa.fcgi: Fix the load_cert subroutine
+
+2004-06-30 14:43  sympa-authors
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: Fix the load_cert() subroutine
 
 2004-06-29 17:51  sympa-authors
 
@@ -3621,16 +5358,28 @@
 
 2004-06-23 09:45  sympa-authors
 
-	* doc/sympa.tex.tpl: Add a note on virtual robots
+	* doc/: sympa.tex.tpl: Add a note on virtual robots
 
 2004-06-22 10:48  sympa-authors
 
-	* wwsympa/wwsympa.fcgi: [BugID 301] Fix: do_arc_delete() subroutine
-	  was inadvertently removed (while introducing SOAP features)
+	* wwsympa/: wwsympa.fcgi: [BugID 301] Fix: do_arc_delete()
+	  subroutine was inadvertently removed (while introducing SOAP
+	  features)
 
 2004-06-21 17:39  sympa-authors
 
 	* wwsympa/tt2/help_editlist.tt2: Fixes
+
+2004-06-21 09:47  sympa-authors
+
+	* .version, ChangeLog, NEWS: preparing sympa 4.1.2
+
+2004-06-21 09:04  sympa-authors
+
+	* wwsympa/wwsympa.fcgi:
+
+	  Fix a bug that allow to "open" a pending list without listmaster
+	  privilege.
 
 2004-06-21 09:04  sympa-authors
 
@@ -3644,9 +5393,9 @@
 
 2004-06-16 14:29  sympa-authors
 
-	* wwsympa/wwsympa.fcgi: [reported by Y.Edelist] Fix: wwsympa would
-	  log a warning if Net::LDAP was not installed, even though it was
-	  not used : "Unable to use LDAP library, Net::LDAP
+	* wwsympa/: wwsympa.fcgi: [reported by Y.Edelist] Fix: wwsympa
+	  would log a warning if Net::LDAP was not installed, even though
+	  it was not used : "Unable to use LDAP library, Net::LDAP
 	  required,install perl-ldap (CPAN) first"
 
 2004-06-16 09:41  sympa-authors
@@ -3677,8 +5426,8 @@
 
 2004-06-14 14:53  olivier.salaun
 
-	* src/etc/edit_list.conf: Fix: new include_xxx parameters should be
-	  hidden for owners
+	* src/etc/: edit_list.conf: Fix: new include_xxx parameters should
+	  be hidden for owners
 
 2004-06-14 14:38  olivier.salaun
 
@@ -3737,7 +5486,7 @@
 
 2004-06-03 18:00  olivier.salaun
 
-	* doc/sympa.tex.tpl: Add doc for purge_user_table task
+	* doc/: sympa.tex.tpl: Add doc for purge_user_table task
 
 2004-06-03 17:29  olivier.salaun
 
@@ -3746,7 +5495,7 @@
 
 2004-06-03 17:03  olivier.salaun
 
-	* src/tools.pl: [reported by O. Lacroix] Change: previously made
+	* src/: tools.pl: [reported by O. Lacroix] Change: previously made
 	  too many trials for safefork()
 
 2004-06-03 14:53  olivier.salaun
@@ -3756,7 +5505,7 @@
 
 2004-06-03 11:58  olivier.salaun
 
-	* src/List.pm: [reported by P.Maes] Fix: list creation request
+	* src/: List.pm: [reported by P.Maes] Fix: list creation request
 	  message could not be sent (foo-owner User Unknown) because
 	  Return-path address was not yet created
 
@@ -3924,6 +5673,11 @@
 	* src/: Commands.pm, List.pm, etc/tt2/your_infected_msg.tt2: Apply
 	  a few changes to nls on the main tronc
 
+2004-05-18 10:56  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by V. Mathieu] Fix: incorrectly
+	  handled multiple enum parameters in edit_list
+
 2004-05-18 10:52  salaun
 
 	* wwsympa/wwsympa.fcgi: [reported by V. Mathieu] Fix: incorrectly
@@ -3969,7 +5723,7 @@
 
 2004-05-14 14:10  salaun
 
-	* src/Commands.pm: Add a log entry if confirmed message could not
+	* src/: Commands.pm: Add a log entry if confirmed message could not
 	  be distributed
 
 2004-05-14 11:23  salaun
@@ -4349,8 +6103,8 @@
 
 2004-05-04 16:55  salaun
 
-	* src/List.pm: Fix: set 'subscribed' to 1 if neither subscribed nor
-	  included is set
+	* src/: List.pm: Fix: set 'subscribed' to 1 if neither subscribed
+	  nor included is set
 
 2004-05-04 11:09  salaun
 
@@ -4368,7 +6122,7 @@
 
 2004-05-03 17:37  salaun
 
-	* wwsympa/wwsympa.fcgi: Fix: notify user that the config will be
+	* wwsympa/: wwsympa.fcgi: Fix: notify user that the config will be
 	  updated soon when user_data_source changed from anything to
 	  'include2'
 
@@ -4403,6 +6157,16 @@
 	  digest of messages in a plain text format.  All attachments are
 	  stripped out.
 
+2004-05-03 14:59  salaun
+
+	* wwsympa/wwsympa.fcgi, src/Language.pm: Add &POSIX::setlocale to
+	  SetLang(), for better dates syntax
+
+2004-05-03 14:34  salaun
+
+	* src/List.pm: Fix: did not take the list language into account in
+	  send_file()
+
 2004-05-03 11:35  salaun
 
 	* src/etc/templates/us/digest.us.tpl: [C.Hastie] Changed encoding
@@ -4419,7 +6183,7 @@
 
 2004-04-30 14:02  salaun
 
-	* wwsympa/wwsympa.fcgi: Fix: previously created ML directory
+	* wwsympa/: wwsympa.fcgi: Fix: previously created ML directory
 	  directly in expl/ directory if robot was also the default host.
 
 2004-04-30 12:00  salaun
@@ -4429,7 +6193,7 @@
 
 2004-04-30 11:51  salaun
 
-	* src/tools.pl: [O.Lacroix] Fix: failed to remove list directory
+	* src/: tools.pl: [O.Lacroix] Fix: failed to remove list directory
 	  (while purging) becaude finddepth() used to chdir. rmdir() failed
 	  with 'device busy' error
 
@@ -4444,8 +6208,8 @@
 
 2004-04-28 17:14  salaun
 
-	* wwsympa/wwsympa.fcgi: [reported by mwk] Fix: escape single quotes
-	  in archives search engine (could cause a 500 error)
+	* wwsympa/: wwsympa.fcgi: [reported by mwk] Fix: escape single
+	  quotes in archives search engine (could cause a 500 error)
 
 2004-04-28 10:41  salaun
 
@@ -4472,6 +6236,10 @@
 
 	* .version, ChangeLog: Preparing 4.2a
 
+2004-04-26 14:24  salaun
+
+	* .version, ChangeLog: Preparing Sympa 4.1.1.1
+
 2004-04-26 13:56  salaun
 
 	* src/task_manager.pl: Change: move the log message (no msg_count)
@@ -4479,28 +6247,35 @@
 
 2004-04-26 11:42  salaun
 
-	* wwsympa/Makefile: [BugID 152] Fix: UMASK was not set when
+	* wwsympa/: Makefile: [BugID 152] Fix: UMASK was not set when
 	  installing web templates
 
 2004-04-26 11:34  salaun
 
-	* wwsympa/Makefile: [BugID 205] Fix: wws_templates/ directory was
+	* wwsympa/: Makefile: [BugID 205] Fix: wws_templates/ directory was
 	  installed with wrong permissions
 
 2004-04-22 17:48  salaun
 
-	* src/task_manager.pl: Fix: Do not warn/remove boucing members that
-	  are included
+	* src/: task_manager.pl: Fix: Do not warn/remove boucing members
+	  that are included
 
 2004-04-21 11:54  salaun
 
-	* doc/sympa.tex.tpl: [reported by V.Mathieu] Fix
+	* doc/: sympa.tex.tpl: [reported by V.Mathieu] Fix
 	  include_ldap_2level example
 
 2004-04-20 18:05  salaun
 
 	* src/task_manager.pl: Change: removing task files for
 	  unknown/closed lists
+
+2004-04-20 11:41  salaun
+
+	* src/List.pm: [reported by O.Thalmann] Fix: total of subscribers
+	  was not uptodate just after a DEL or ADD operation.  Added
+	  'nocache' option to the call to _load_total_db() in
+	  get_first_user()
 
 2004-04-20 11:38  salaun
 
@@ -4528,6 +6303,20 @@
 	  is required for the SOAP server.  Corresponding error message :
 	  Can't locate object method "BINMODE" via package "FCGI::Stream"
 
+2004-04-19 14:56  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl,
+	  html/index.html, html/node1.html, html/node10.html,
+	  html/node11.html, html/node12.html, html/node13.html,
+	  html/node14.html, html/node15.html, html/node16.html,
+	  html/node17.html, html/node18.html, html/node19.html,
+	  html/node2.html, html/node20.html, html/node21.html,
+	  html/node22.html, html/node23.html, html/node24.html,
+	  html/node3.html, html/node4.html, html/node5.html,
+	  html/node6.html, html/node7.html, html/node8.html,
+	  html/node9.html, html/sympa.html, html/sympa.ps: [reported by
+	  V.Mathieu] Fix a few SOAP-related typos
+
 2004-04-19 14:52  salaun
 
 	* ChangeLog, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
@@ -4545,7 +6334,7 @@
 
 2004-04-19 09:03  salaun
 
-	* src/.core.swp: removal of .core.swp
+	* src/: .core.swp: removal of .core.swp
 
 2004-04-08 10:51  salaun
 
@@ -4609,7 +6398,7 @@
 
 2004-04-02 10:45  salaun
 
-	* src/tools.pl: [L. Labat] Fix: Antivirus check would fail under
+	* src/: tools.pl: [L. Labat] Fix: Antivirus check would fail under
 	  some circumstances (Unable to open xxx). BODY filehandle was
 	  never closed
 
@@ -4690,8 +6479,9 @@
 	  wwsympa/wws_templates/us/help_editlist.us.tpl,
 	  wwsympa/wws_templates/us/lists.us.tpl,
 	  wwsympa/wws_templates/us/loginbanner.us.tpl,
-	  wwsympa/wws_templates/us/translate.us.tpl: [Petr Prazak] Update
-	  Czech translations + some English typos fixed
+	  wwsympa/wws_templates/us/translate.us.tpl,
+	  src/etc/scenari/send.editor: [Petr Prazak] Update Czech
+	  translations + some English typos fixed
 
 2004-04-01 16:46  salaun
 
@@ -4699,12 +6489,13 @@
 
 2004-04-01 16:44  salaun
 
-	* wwsympa/wwsympa.fcgi: Fix: renaming a list if the list was moved
-	  to another robot with the same name
+	* wwsympa/: wwsympa.fcgi: Fix: renaming a list if the list was
+	  moved to another robot with the same name
 
 2004-04-01 14:29  salaun
 
-	* src/sympa.pl: Fix: remove call to deprecated MIME::Head::decode()
+	* src/: sympa.pl: Fix: remove call to deprecated
+	  MIME::Head::decode()
 
 2004-03-24 15:45  salaun
 
@@ -4713,9 +6504,18 @@
 
 2004-03-23 11:54  salaun
 
-	* src/List.pm: [reported by V. Mathieu] Fix: removed
+	* src/: List.pm: [reported by V. Mathieu] Fix: removed
 	  'visibility.private' scenario is considered the same as
 	  'visibility.conceal'
+
+2004-03-22 17:05  salaun
+
+	* .version, ChangeLog, NEWS: Preparing Sympa 4.1.1
+
+2004-03-22 16:59  salaun
+
+	* src/etc/script/arcrepair.pl: This script will fix an archiving
+	  bug of Sympa 4.1
 
 2004-03-22 16:57  salaun
 
@@ -4737,13 +6537,13 @@
 
 2004-03-22 11:16  salaun
 
-	* wwsympa/wwsympa.fcgi: [reported by V. Mathieu] Fix: list of
+	* wwsympa/: wwsympa.fcgi: [reported by V. Mathieu] Fix: list of
 	  inactive lists did not consider the msg_count file was not
 	  ordered
 
 2004-03-22 11:02  salaun
 
-	* src/List.pm: Fix: sorting msg_count file when it is updated
+	* src/: List.pm: Fix: sorting msg_count file when it is updated
 
 2004-03-18 14:17  salaun
 
@@ -5005,9 +6805,14 @@
 
 2004-02-16 16:44  salaun
 
-	* src/List.pm: Fix previous change
+	* src/: List.pm: Fix previous change
 
 2004-02-16 16:29  salaun
+
+	* src/List.pm: [reported by C. Hastie] Change: only loop once among
+	  subscribers in List::send_msg_digest()
+
+2004-02-16 15:24  salaun
 
 	* src/List.pm: [reported by C. Hastie] Change: only loop once among
 	  subscribers in List::send_msg_digest()
@@ -5017,6 +6822,19 @@
 	* src/List.pm: [reported by C. Hastie] Fix: Decode From: and
 	  Subject: header fields only in the table of content, not in
 	  rfc822 parts
+
+2004-02-06 16:28  salaun
+
+	* src/etc/tt2/remind.tt2: [S. Vizi] Fix typo
+
+2004-02-06 16:23  salaun
+
+	* src/etc/tt2/helpfile.tt2, src/etc/tt2/info_report.tt2,
+	  wwsympa/tt2/add_request.tt2, wwsympa/tt2/admin_menu.tt2,
+	  wwsympa/tt2/arcsearch.tt2, wwsympa/tt2/edit_list_request.tt2,
+	  wwsympa/tt2/list_menu.tt2, wwsympa/tt2/menu.tt2,
+	  wwsympa/tt2/review.tt2, wwsympa/tt2/reviewbouncing.tt2: [S. Vizi]
+	  Missing translatable strings
 
 2004-02-03 12:21  salaun
 
@@ -6088,9 +7906,210 @@
 
 	* ChangeLog, NEWS: Preparing 4.0.a4
 
+2003-08-14 11:52  salaun
+
+	* src/etc/tt2/: digest.tt2, moderate.tt2: Adaptative
+	  content-transfer-encoding
+
 2003-08-14 11:44  salaun
 
 	* wwsympa/cookielib.pm: Fix: could not set 'sympalang' cookie
+
+2003-08-14 11:39  salaun
+
+	* wwsympa/cookielib.pm: Fix: could not set 'sympalang' cookie
+
+2003-08-14 11:38  salaun
+
+	* wwsympa/cookielib.pm: Remove previous traces
+
+2003-08-14 11:37  salaun
+
+	* wwsympa/cookielib.pm: Fix: could not set the 'lnag' cookie
+
+2003-08-14 11:15  salaun
+
+	* src/Language.pm, wwsympa/wwsympa.fcgi: Fix: differenciate lang
+	  (fr) and locale (fr_FR)
+
+2003-08-14 11:00  salaun
+
+	* po/cs.po, po/fr.po, src/Commands.pm, src/tt2native.pl,
+	  src/etc/tt2/bye.tt2, src/etc/tt2/certif_warning.tt2,
+	  src/etc/tt2/digest.tt2, src/etc/tt2/expire_deletion.tt2,
+	  src/etc/tt2/expire_warning1.tt2, src/etc/tt2/invite.tt2,
+	  src/etc/tt2/list_created.tt2, src/etc/tt2/list_rejected.tt2,
+	  src/etc/tt2/list_unknown.tt2,
+	  src/etc/tt2/listmaster_notification.tt2,
+	  src/etc/tt2/listowner_notification.tt2, src/etc/tt2/moderate.tt2,
+	  src/etc/tt2/modindex.tt2, src/etc/tt2/reject.tt2,
+	  src/etc/tt2/remind.tt2, src/etc/tt2/removed.tt2,
+	  src/etc/tt2/sendpasswd.tt2, src/etc/tt2/welcome.tt2,
+	  src/etc/tt2/x509-user-cert-missing.tt2,
+	  src/etc/tt2/your_infected_msg.tt2: New feature: add a qencode
+	  filter to TT2 to Q-Encode mail subjects
+
+2003-08-14 10:28  salaun
+
+	* src/Language.pm, wwsympa/wwsympa.fcgi: Fix: access to supported
+	  languages ; don't propose locale for which setlocale() failed
+
+2003-08-13 17:04  salaun
+
+	* Makefile.am, Makefile.in, po/Makefile: Add "make updatelocale"
+	  target
+
+2003-08-13 16:34  salaun
+
+	* src/Language.pm, wwsympa/wwsympa.fcgi: Move @languages
+
+2003-08-13 15:51  salaun
+
+	* wwsympa/wwsympa.fcgi: Small fix
+
+2003-08-13 15:49  salaun
+
+	* src/Language.pm, src/sympa.pl, wwsympa/wwsympa.fcgi: Remove some
+	  Language subroutines
+
+2003-08-13 15:49  salaun
+
+	* wwsympa/wwslib.pm: Fix en_US
+
+2003-08-13 15:18  salaun
+
+	* Makefile.am, Makefile.in, nls/Makefile, nls/README, nls/check.pl,
+	  nls/cn.msg, nls/cz.msg, nls/de.msg, nls/es.msg, nls/et.msg,
+	  nls/fi.msg, nls/fr.msg, nls/hu.msg, nls/it.msg, nls/nl.msg,
+	  nls/pl.msg, nls/ro.msg, nls/tw.msg, nls/us.msg: Remove NLS ;
+	  everything is in PO files now
+
+2003-08-13 15:13  salaun
+
+	* po/: de.po, en_US.po, es.po, et.po, fi.po, hu.po, it.po, nl.po,
+	  pl.po, pt.po, ro.po, zh_CN.po, zh_TW.po: Add NLS entries and
+	  scenario titles to PO files
+
+2003-08-13 15:13  salaun
+
+	* wwsympa/wwsympa.fcgi: Default for lang name is LC_MESSAGES
+
+2003-08-13 14:49  salaun
+
+	* nls/it.msg: Update of it.msg
+
+2003-08-13 12:12  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: Change: Extract scenario
+	  titles from .PO files
+
+2003-08-13 11:57  salaun
+
+	* po/fr.po: Add scenario titles
+
+2003-08-13 11:56  salaun
+
+	* src/etc/script/xgettext.pl: Change: extracts translatable strings
+	  from scenario titles
+
+2003-08-13 11:55  salaun
+
+	* src/etc/scenari/: access_web_archive.closed,
+	  access_web_archive.intranet, access_web_archive.listmaster,
+	  access_web_archive.owner, access_web_archive.private,
+	  access_web_archive.public, add.auth, add.closed, add.owner,
+	  add.owner_notify, create_list.intranet, create_list.listmaster,
+	  create_list.public_listmaster, d_edit.owner, d_edit.private,
+	  d_edit.public, d_read.owner, d_read.private, d_read.public,
+	  del.auth, del.closed, del.owner, del.owner_notify,
+	  edit_list.closed, edit_list.owner, global_remind.listmaster,
+	  info.open, info.private, invite.closed, invite.owner,
+	  invite.private, invite.public, remind.listmaster, remind.owner,
+	  review.closed, review.intranet, review.listmaster, review.owner,
+	  review.private, review.public, send.closed, send.editor,
+	  send.editorkey, send.editorkeyonly, send.editorkeyonlyauth,
+	  send.intranet, send.intranetorprivate, send.newsletter,
+	  send.newsletterkeyonly, send.private, send.private_smime,
+	  send.privateandeditorkey, send.privateandnomultipartoreditorkey,
+	  send.privatekey, send.privatekeyandeditorkeyonly,
+	  send.privateoreditorkey, send.privateorpublickey, send.public,
+	  send.public_nobcc, send.publickey, send.publicnoattachment,
+	  send.publicnomultipart, subscribe.auth, subscribe.auth_notify,
+	  subscribe.auth_owner, subscribe.closed, subscribe.intranet,
+	  subscribe.intranetorowner, subscribe.open, subscribe.open_notify,
+	  subscribe.open_quiet, subscribe.owner, subscribe.smime,
+	  subscribe.smimeorowner, topics_visibility.conceal,
+	  topics_visibility.identified, topics_visibility.noconceal,
+	  unsubscribe.auth, unsubscribe.auth_notify, unsubscribe.closed,
+	  unsubscribe.open, unsubscribe.open_notify, unsubscribe.owner,
+	  visibility.conceal, visibility.intranet, visibility.noconceal,
+	  visibility.private, visibility.secret: Move titles to PO files
+
+2003-08-13 11:26  salaun
+
+	* po/sympa.pot: Move scenario titles to .po files, update sympa.pot
+
+2003-08-13 11:03  salaun
+
+	* src/etc/scenari/: access_web_archive.closed,
+	  access_web_archive.intranet, access_web_archive.listmaster,
+	  access_web_archive.owner, access_web_archive.private,
+	  access_web_archive.public, add.auth, add.closed, add.owner,
+	  add.owner_notify, create_list.intranet, create_list.listmaster,
+	  create_list.public_listmaster, d_edit.owner, d_edit.private,
+	  d_edit.public, d_read.owner, d_read.private, d_read.public,
+	  del.auth, del.closed, del.owner, del.owner_notify,
+	  edit_list.closed, edit_list.owner, global_remind.listmaster,
+	  info.open, info.private, invite.closed, invite.owner,
+	  invite.private, invite.public, remind.listmaster, remind.owner,
+	  review.closed, review.intranet, review.listmaster, review.owner,
+	  review.private, review.public, send.closed, send.editor,
+	  send.editorkey, send.editorkeyonly, send.editorkeyonlyauth,
+	  send.intranet, send.intranetorprivate, send.newsletter,
+	  send.newsletterkeyonly, send.private, send.private_smime,
+	  send.privateandeditorkey, send.privateandnomultipartoreditorkey,
+	  send.privatekey, send.privatekeyandeditorkeyonly,
+	  send.privateoreditorkey, send.privateorpublickey, send.public,
+	  send.public_nobcc, send.publickey, send.publicnoattachment,
+	  send.publicnomultipart, subscribe.auth, subscribe.auth_notify,
+	  subscribe.auth_owner, subscribe.closed, subscribe.intranet,
+	  subscribe.intranetorowner, subscribe.open, subscribe.open_notify,
+	  subscribe.open_quiet, subscribe.owner, subscribe.smime,
+	  subscribe.smimeorowner, topics_visibility.conceal,
+	  topics_visibility.identified, topics_visibility.noconceal,
+	  unsubscribe.auth, unsubscribe.auth_notify, unsubscribe.closed,
+	  unsubscribe.open, unsubscribe.open_notify, unsubscribe.owner,
+	  visibility.conceal, visibility.intranet, visibility.noconceal,
+	  visibility.private, visibility.secret: [BugID 192] [Renato]
+	  translate scenario titles to Italian
+
+2003-08-13 09:59  salaun
+
+	* po/fr.po: Add NLS entries
+
+2003-08-13 09:59  salaun
+
+	* po/sympa.pot: Update sympa.pot with NLS entries
+
+2003-08-13 09:58  salaun
+
+	* po/Makefile, src/etc/script/Makefile: Change: install and use
+	  xgettext.pl
+
+2003-08-13 09:58  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix [revious changes
+
+2003-08-13 09:32  salaun
+
+	* src/Commands.pm, src/List.pm, wwsympa/wwslib.pm,
+	  wwsympa/wwsympa.fcgi: Fix some gettext() calls ; also make tag
+	  title_ids for xgettext.pl to extract them
+
+2003-08-13 09:31  salaun
+
+	* src/etc/script/xgettext.pl: Add a modified version of Autrijus
+	  xgettext.pl for translatable string extraction
 
 2003-08-13 08:50  salaun
 
@@ -6156,19 +8175,287 @@
 	  purge_orphan_bounces task that removes archived bounces files
 	  concerning old subscribers
 
+2003-08-12 09:07  salaun
+
+	* nls/fr.msg, po/fr.po, src/Archive.pm, src/List.pm, src/Makefile,
+	  src/msg.pl, src/smtp.pm, src/sympa.pl, src/tools.pl,
+	  wwsympa/archived.pl, wwsympa/wwsympa.fcgi, wwsympa/tt2/main.tt2:
+	  Remove msg.pl
+
+2003-08-11 14:46  salaun
+
+	* src/: List.pm, mail.pm: Fixes
+
+2003-08-11 14:39  salaun
+
+	* src/Commands.pm, src/Conf.pm, src/Language.pm, src/Ldap.pm,
+	  src/List.pm, src/alias_manager.pl, src/mail.pm, src/smtp.pm,
+	  src/sympa.pl, src/tools.pl, wwsympa/wwslib.pm,
+	  wwsympa/wwsympa.fcgi: Change: replacing all Msg() calls with
+	  gettext() calls
+
+2003-08-09 13:21  salaun
+
+	* src/: Commands.pm, Language.pm, List.pm, tt2native.pl: Extend
+	  Language::SetLang()
+
+2003-08-09 13:01  salaun
+
+	* Makefile.am, Makefile.in, check_perl_modules.pl, src/Language.pm,
+	  src/tt2native.pl: Changes: using libintl instead of
+	  Locale::Maketext (for its advanced encoding features enabling
+	  iso-xxx encoding). Moving gettext() to Language.pm
+
+2003-08-08 16:52  salaun
+
+	* po/Makefile: Installation of mo files
+
+2003-08-08 16:20  salaun
+
+	* po/: cs.po, es.po, et.po, fi.po, hu.po, it.po, nl.po, ro.po,
+	  zh_CN.po, zh_TW.po: Fix .po files to successfully compile them
+
+2003-08-08 16:20  salaun
+
+	* po/Makefile: Extend Makefile to compile .mo files
+
+2003-08-08 16:02  salaun
+
+	* po/en_US.po: Init en_US.po
+
+2003-08-08 14:56  salaun
+
+	* src/Language.pm, wwsympa/wwsympa.fcgi: Make NLS work with the
+	  %language_equiv
+
+2003-08-08 14:35  salaun
+
+	* wwsympa/wwslib.pm: Update available languages
+
+2003-08-08 14:12  salaun
+
+	* po/: cn.po, cs.po, cz.po, en_US.po, tw.po, us.po, zh_CN.po,
+	  zh_TW.po: Change: Rename catalogues according to ISO 639 and ISO
+	  3166 documents
+
+2003-08-08 13:46  salaun
+
+	* po/de.po: Fix : 'entries do not both end with '\n'' errors when
+	  running msgfmt
+
+2003-08-07 11:40  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: Search main.tt2 in other places
+
+2003-08-07 11:39  salaun
+
+	* src/tt2native.pl: Change: no not die if process() failed
+
+2003-08-07 11:38  salaun
+
+	* src/List.pm: Fix: set $param->{'lang'} used by tt2native.pl
+
+2003-08-07 11:32  salaun
+
+	* src/mail.pm: Supress the warn()
+
+2003-08-07 11:31  salaun
+
+	* po/: fr.po, sympa.pot: Update
+
+2003-08-07 11:31  salaun
+
+	* wwsympa/tt2/main.tt2: Temporarly set CHarset to ISO-8859-1
+
+2003-08-06 11:51  salaun
+
+	* src/tools.pl: Move trace to debug
+
+2003-08-06 10:38  salaun
+
+	* src/etc/script/: Makefile, tpl2tt2.pl: New feature: tpl2tt2.pl
+	  will convert all existing templates to the TT2 format. Old .tpl
+	  files are renamed .tpl.converted
+
+2003-08-06 09:39  salaun
+
+	* wwsympa/Makefile, wwsympa/wwsympa.fcgi, set_symlinks.pl,
+	  src/tt2native.pl: Change: rename wws.tt2 directory to web_tt2
+
+2003-08-06 09:03  salaun
+
+	* src/Makefile: Install tt2.pl
+
+2003-08-05 17:44  salaun
+
+	* set_symlinks.pl, src/Makefile, src/tools.pl, wwsympa/Makefile,
+	  wwsympa/wwsympa.fcgi: Fix: restore symlinks for equivalent
+	  actions. Adapt List::get_filename to TT2
+
+2003-08-05 15:25  salaun
+
+	* src/etc/templates/: cn/digest.cn.tpl, cn/sendpasswd.cn.tpl,
+	  cz/bye.cz.tpl, cz/digest.cz.tpl, cz/global_remind.cz.tpl,
+	  cz/helpfile.cz.tpl, cz/info_report.cz.tpl, cz/invite.cz.tpl,
+	  cz/lists.cz.tpl, cz/moderate.cz.tpl, cz/modindex.cz.tpl,
+	  cz/reject.cz.tpl, cz/remind.cz.tpl, cz/removed.cz.tpl,
+	  cz/review.cz.tpl, cz/sendpasswd.cz.tpl, cz/stats_report.cz.tpl,
+	  cz/welcome.cz.tpl, cz/x509-user-cert-missing.cz.tpl,
+	  de/bye.de.tpl, de/digest.de.tpl, de/global_remind.de.tpl,
+	  de/helpfile.de.tpl, de/info_report.de.tpl, de/invite.de.tpl,
+	  de/lists.de.tpl, de/moderate.de.tpl, de/modindex.de.tpl,
+	  de/reject.de.tpl, de/remind.de.tpl, de/removed.de.tpl,
+	  de/review.de.tpl, de/sendpasswd.de.tpl, de/stats_report.de.tpl,
+	  de/welcome.de.tpl, de/x509-user-cert-missing.de.tpl,
+	  de/your_infected_msg.de.tpl, es/bye.es.tpl, es/digest.es.tpl,
+	  es/global_remind.es.tpl, es/helpfile.es.tpl,
+	  es/info_report.es.tpl, es/invite.es.tpl, es/lists.es.tpl,
+	  es/moderate.es.tpl, es/modindex.es.tpl, es/reject.es.tpl,
+	  es/remind.es.tpl, es/removed.es.tpl, es/review.es.tpl,
+	  es/sendpasswd.es.tpl, es/stats_report.es.tpl, es/welcome.es.tpl,
+	  et/bye.et.tpl, et/certif_warning.et.tpl, et/digest.et.tpl,
+	  et/expire_deletion.et.tpl, et/expire_warning1.et.tpl,
+	  et/expire_warning2.et.tpl, et/global_remind.et.tpl,
+	  et/helpfile.et.tpl, et/info_report.et.tpl, et/invite.et.tpl,
+	  et/list_created.et.tpl, et/list_unknown.et.tpl,
+	  et/listmaster_notification.et.tpl, et/lists.et.tpl,
+	  et/moderate.et.tpl, et/modindex.et.tpl, et/reject.et.tpl,
+	  et/remind.et.tpl, et/removed.et.tpl, et/review.et.tpl,
+	  et/sendpasswd.et.tpl, et/stats_report.et.tpl, et/summary.et.tpl,
+	  et/welcome.et.tpl, et/x509-user-cert-missing.et.tpl,
+	  et/your_infected_msg.et.tpl, fi/bye.fi.tpl,
+	  fi/certif_warning.fi.tpl, fi/digest.fi.tpl,
+	  fi/expire_deletion.fi.tpl, fi/expire_warning1.fi.tpl,
+	  fi/expire_warning2.fi.tpl, fi/global_remind.fi.tpl,
+	  fi/helpfile.fi.tpl, fi/info_report.fi.tpl, fi/invite.fi.tpl,
+	  fi/list_created.fi.tpl, fi/list_unknown.fi.tpl,
+	  fi/listmaster_notification.fi.tpl,
+	  fi/listowner_notification.fi.tpl, fi/lists.fi.tpl,
+	  fi/moderate.fi.tpl, fi/modindex.fi.tpl, fi/reject.fi.tpl,
+	  fi/remind.fi.tpl, fi/removed.fi.tpl, fi/review.fi.tpl,
+	  fi/sendpasswd.fi.tpl, fi/stats_report.fi.tpl, fi/summary.fi.tpl,
+	  fi/welcome.fi.tpl, fi/x509-user-cert-missing.fi.tpl,
+	  fi/your_infected_msg.fi.tpl, fr/bye.fr.tpl,
+	  fr/certif_warning.fr.tpl, fr/digest.fr.tpl,
+	  fr/expire_deletion.fr.tpl, fr/expire_warning1.fr.tpl,
+	  fr/expire_warning2.fr.tpl, fr/global_remind.fr.tpl,
+	  fr/helpfile.fr.tpl, fr/info_report.fr.tpl, fr/invite.fr.tpl,
+	  fr/list_created.fr.tpl, fr/list_rejected.fr.tpl,
+	  fr/listmaster_notification.fr.tpl,
+	  fr/listowner_notification.fr.tpl, fr/lists.fr.tpl,
+	  fr/moderate.fr.tpl, fr/modindex.fr.tpl, fr/reject.fr.tpl,
+	  fr/remind.fr.tpl, fr/removed.fr.tpl, fr/review.fr.tpl,
+	  fr/sendpasswd.fr.tpl, fr/stats_report.fr.tpl, fr/welcome.fr.tpl,
+	  fr/x509-user-cert-missing.fr.tpl, fr/your_infected_msg.fr.tpl,
+	  hu/bye.hu.tpl, hu/digest.hu.tpl, hu/global_remind.hu.tpl,
+	  hu/helpfile.hu.tpl, hu/info_report.hu.tpl, hu/invite.hu.tpl,
+	  hu/lists.hu.tpl, hu/moderate.hu.tpl, hu/modindex.hu.tpl,
+	  hu/reject.hu.tpl, hu/remind.hu.tpl, hu/removed.hu.tpl,
+	  hu/review.hu.tpl, hu/sendpasswd.hu.tpl, hu/stats_report.hu.tpl,
+	  hu/welcome.hu.tpl, hu/x509-user-cert-missing.hu.tpl,
+	  it/bye.it.tpl, it/digest.it.tpl, it/global_remind.it.tpl,
+	  it/helpfile.it.tpl, it/info_report.it.tpl, it/invite.it.tpl,
+	  it/lists.it.tpl, it/moderate.it.tpl, it/modindex.it.tpl,
+	  it/remind.it.tpl, it/removed.it.tpl, it/review.it.tpl,
+	  it/sendpasswd.it.tpl, it/stats_report.it.tpl, it/welcome.it.tpl,
+	  it/your_infected_msg.it.tpl, nl/bye.nl.tpl,
+	  nl/certif_warning.nl.tpl, nl/digest.nl.tpl,
+	  nl/expire_deletion.nl.tpl, nl/expire_warning1.nl.tpl,
+	  nl/expire_warning2.nl.tpl, nl/global_remind.nl.tpl,
+	  nl/helpfile.nl.tpl, nl/info_report.nl.tpl, nl/invite.nl.tpl,
+	  nl/list_created.nl.tpl, nl/list_unknown.nl.tpl,
+	  nl/listmaster_notification.nl.tpl,
+	  nl/listowner_notification.nl.tpl, nl/lists.nl.tpl,
+	  nl/moderate.nl.tpl, nl/modindex.nl.tpl, nl/reject.nl.tpl,
+	  nl/remind.nl.tpl, nl/removed.nl.tpl, nl/review.nl.tpl,
+	  nl/sendpasswd.nl.tpl, nl/stats_report.nl.tpl, nl/summary.nl.tpl,
+	  nl/welcome.nl.tpl, nl/x509-user-cert-missing.nl.tpl,
+	  nl/your_infected_msg.nl.tpl, pl/bye.pl.tpl, pl/digest.pl.tpl,
+	  pl/global_remind.pl.tpl, pl/helpfile.pl.tpl,
+	  pl/info_report.pl.tpl, pl/invite.pl.tpl, pl/lists.tpl,
+	  pl/moderate.pl.tpl, pl/modindex.pl.tpl, pl/reject.pl.tpl,
+	  pl/remind.pl.tpl, pl/removed.pl.tpl, pl/review.pl.tpl,
+	  pl/stats_report.pl.tpl, pl/welcome.pl.tpl, pt/bye.pt.tpl,
+	  pt/global_remind.pt.tpl, pt/helpfile.pt.tpl, pt/invite.pt.tpl,
+	  pt/lists.pt.tpl, pt/reject.pt.tpl, pt/remind.pt.tpl,
+	  pt/removed.pt.tpl, pt/welcome.pt.tpl, ro/bye.ro.tpl,
+	  ro/certif_warning.ro.tpl, ro/digest.ro.tpl,
+	  ro/expire_deletion.ro.tpl, ro/expire_warning1.ro.tpl,
+	  ro/expire_warning2.ro.tpl, ro/global_remind.ro.tpl,
+	  ro/helpfile.ro.tpl, ro/info_report.ro.tpl, ro/invite.ro.tpl,
+	  ro/list_created.ro.tpl, ro/list_unknown.ro.tpl,
+	  ro/listowner_notification2.ro.tpl, ro/lists.ro.tpl,
+	  ro/moderate.ro.tpl, ro/modindex.ro.tpl, ro/reject.ro.tpl,
+	  ro/remind.ro.tpl, ro/removed.ro.tpl, ro/review.ro.tpl,
+	  ro/sendpasswd.ro.tpl, ro/stats_report.ro.tpl, ro/summary.ro.tpl,
+	  ro/welcome.ro.tpl, ro/x509-user-cert-missing.ro.tpl,
+	  ro/your_infected_msg.ro.tpl, tw/digest.tw.tpl, us/bye.us.tpl,
+	  us/certif_warning.us.tpl, us/digest.us.tpl,
+	  us/expire_deletion.us.tpl, us/expire_warning1.us.tpl,
+	  us/expire_warning2.us.tpl, us/global_remind.us.tpl,
+	  us/helpfile.us.tpl, us/info_report.us.tpl, us/invite.us.tpl,
+	  us/list_created.us.tpl, us/list_rejected.us.tpl,
+	  us/list_unknown.us.tpl, us/listmaster_notification.us.tpl,
+	  us/listowner_notification.us.tpl, us/lists.us.tpl,
+	  us/moderate.us.tpl, us/modindex.us.tpl, us/reject.us.tpl,
+	  us/remind.us.tpl, us/removed.us.tpl, us/review.us.tpl,
+	  us/sendpasswd.us.tpl, us/stats_report.us.tpl, us/summary.us.tpl,
+	  us/welcome.us.tpl, us/x509-user-cert-missing.us.tpl,
+	  us/your_infected_msg.us.tpl: Remove templates and web templates,
+	  now using TT2
+
+2003-08-05 15:19  salaun
+
+	* check_perl_modules.pl, po/cz.po, po/de.po, po/es.po, po/fr.po,
+	  po/hu.po, po/it.po, po/ro.po, po/sympa.pot, src/List.pm,
+	  src/etc/tt2/certif_warning.tt2, src/etc/tt2/expire_deletion.tt2,
+	  src/etc/tt2/global_remind.tt2, src/etc/tt2/helpfile.tt2,
+	  src/etc/tt2/listowner_notification.tt2, src/etc/tt2/reject.tt2,
+	  src/etc/tt2/remind.tt2, src/etc/tt2/sendpasswd.tt2,
+	  src/etc/tt2/welcome.tt2, src/etc/tt2/x509-user-cert-missing.tt2,
+	  src/etc/tt2/your_infected_msg.tt2, wwsympa/tt2/arcsearch.tt2,
+	  wwsympa/tt2/arcsearch_form.tt2, wwsympa/tt2/choosepasswd.tt2,
+	  wwsympa/tt2/create_list.tt2, wwsympa/tt2/d_read.tt2,
+	  wwsympa/tt2/error.tt2, wwsympa/tt2/help.tt2,
+	  wwsympa/tt2/help_admin.tt2, wwsympa/tt2/help_editfile.tt2,
+	  wwsympa/tt2/help_user_options.tt2, wwsympa/tt2/list_menu.tt2,
+	  wwsympa/tt2/loginbanner.tt2, wwsympa/tt2/main.tt2,
+	  wwsympa/tt2/remove_arc.tt2, wwsympa/tt2/scenario_test.tt2,
+	  wwsympa/tt2/serveradmin.tt2,
+	  wwsympa/tt2/set_pending_list_request.tt2,
+	  wwsympa/tt2/sigrequest.tt2: Changes: Adding new required Perl
+	  modules.  Fixing some translated strings.  Setting all po files
+	  charset to utf-8.  Full French translation in .po files.  New
+	  sympa.pot file usefull for msgmerges
+
 2003-07-18 14:39  salaun
 
 	* doc/sympa.tex.tpl: Fix: [remote_host] and [remote_addr] not
 	  documented
+
+2003-07-18 10:45  salaun
+
+	* .version, ChangeLog, NEWS: preparing 3.4.4.3
 
 2003-07-17 09:53  salaun
 
 	* src/: List.pm, tools.pl: [BugID 153] [reported by G. Tellier]
 	  Fix: E-mail addresses containing an apostrophe were rejected
 
+2003-07-17 09:47  salaun
+
+	* src/: List.pm, tools.pl: [BugID 153] [reported by G. Tellier]
+	  Fix: E-mail addresses containing an apostrophe were rejected
+
+2003-07-17 09:34  salaun
+
+	* src/: Commands.pm, List.pm: [reported by B. Geer & A. Bidaud]
+	  Fix: moderated messages were considered encrypted messages and
+	  therefore could not be delivered
+
 2003-07-15 16:00  salaun
 
-	* src/tools.pl: [H. Ulliac] Fix: create_list templates were not
+	* src/: tools.pl: [H. Ulliac] Fix: create_list templates were not
 	  searched in the robot directory
 
 2003-07-15 15:44  salaun
@@ -6185,21 +8472,34 @@
 	* src/List.pm: [BugID 179] Fix: [user->xxx] variables were never
 	  available in scenarios
 
+2003-07-07 16:12  salaun
+
+	* Makefile.am, Makefile.in: Fix: problem with that had no argument
+
 2003-07-07 16:08  salaun
 
 	* Makefile.am, Makefile.in: Fix: problem with that had no argument
 
+2003-07-04 12:05  salaun
+
+	* .version, ChangeLog, NEWS: Preparing Sympa 3.4.4.2
+
+2003-07-04 11:59  salaun
+
+	* src/List.pm: Fix recent X509-related changes : List::send_msg()
+	  did not get a Message object
+
 2003-07-04 11:21  salaun
 
-	* src/List.pm: [reported by R. Pfeiffer & T. Oger] Fix: recent
+	* src/: List.pm: [reported by R. Pfeiffer & T. Oger] Fix: recent
 	  versions of DBD::mysql have changed the behavior for tables() :
 	  Table names are surrounded by ``. Sympa considered Sympa DB did
 	  not have the right structure.
 
 2003-06-26 09:52  salaun
 
-	* src/Conf.pm: [reported by P. Machard] Fix: remove trailing spaces
-	  in robot.conf
+	* src/: Conf.pm: [reported by P. Machard] Fix: remove trailing
+	  spaces in robot.conf
 
 2003-06-25 11:37  salaun
 
@@ -6254,8 +8554,8 @@
 
 2003-06-13 16:51  salaun
 
-	* src/tools.pl: Bug fix: Encrypted messages were including 2 header
-	  fields remaining from openssl output
+	* src/: tools.pl: Bug fix: Encrypted messages were including 2
+	  header fields remaining from openssl output
 
 2003-06-13 15:57  salaun
 
@@ -6264,6 +8564,11 @@
 	  it does not have every user (when using Exim MTA).  Notification
 	  of certificate-less users is now performed at a higher level, in
 	  List::send_msg()
+
+2003-06-13 14:57  salaun
+
+	* src/tools.pl: Fix incorrect openssl argument rtelated to null
+	  capath or null cafile argument.
 
 2003-06-13 14:35  salaun
 
@@ -6274,6 +8579,130 @@
 
 	* src/tools.pl: [BugID 171][reported by O. Wild] Bug fix: Sympa did
 	  not catch errors decrypting a S/MIME encrypted message
+
+2003-06-12 11:42  salaun
+
+	* Makefile.am, Makefile.in, src/Commands.pm, src/List.pm,
+	  src/Makefile, src/Message.pm, src/alias_manager.pl, src/mail.pm,
+	  src/parser.pl, src/sympa.pl, src/task_manager.pl,
+	  src/etc/list_aliases.tpl, src/etc/mhonarc-ressources,
+	  src/etc/create_list_templates/discussion_list/comment,
+	  src/etc/create_list_templates/discussion_list/config.tpl,
+	  src/etc/create_list_templates/hotline/comment,
+	  src/etc/create_list_templates/hotline/config.tpl,
+	  src/etc/create_list_templates/html-news-letter/comment,
+	  src/etc/create_list_templates/html-news-letter/config.tpl,
+	  src/etc/create_list_templates/intranet_list/comment,
+	  src/etc/create_list_templates/intranet_list/config.tpl,
+	  src/etc/create_list_templates/news-letter/comment,
+	  src/etc/create_list_templates/news-letter/config.tpl,
+	  src/etc/create_list_templates/private_working_group/comment,
+	  src/etc/create_list_templates/private_working_group/config.tpl,
+	  src/etc/create_list_templates/public_web_forum/comment,
+	  src/etc/create_list_templates/public_web_forum/config.tpl,
+	  wwsympa/Makefile, wwsympa/wwslib.pm, wwsympa/wwsympa.fcgi,
+	  po/Makefile, po/cn.po, po/cz.po, po/de.po, po/es.po, po/et.po,
+	  po/fi.po, po/fr.po, po/hu.po, po/it.po, po/nl.po, po/pl.po,
+	  po/pt.po, po/ro.po, po/tw.po, po/us.po, src/tt2.pl,
+	  src/tt2native.pl, src/etc/list_aliases.tt2,
+	  src/etc/create_list_templates/discussion_list/config.tt2,
+	  src/etc/create_list_templates/hotline/config.tt2,
+	  src/etc/create_list_templates/html-news-letter/config.tt2,
+	  src/etc/create_list_templates/intranet_list/config.tt2,
+	  src/etc/create_list_templates/news-letter/config.tt2,
+	  src/etc/create_list_templates/private_working_group/config.tt2,
+	  src/etc/create_list_templates/public_web_forum/config.tt2,
+	  src/etc/tt2/bye.tt2, src/etc/tt2/certif_warning.tt2,
+	  src/etc/tt2/digest.tt2, src/etc/tt2/expire_deletion.tt2,
+	  src/etc/tt2/expire_warning1.tt2, src/etc/tt2/expire_warning2.tt2,
+	  src/etc/tt2/global_remind.tt2, src/etc/tt2/helpfile.tt2,
+	  src/etc/tt2/info_report.tt2, src/etc/tt2/invite.tt2,
+	  src/etc/tt2/list_created.tt2, src/etc/tt2/list_rejected.tt2,
+	  src/etc/tt2/list_unknown.tt2,
+	  src/etc/tt2/listmaster_notification.tt2,
+	  src/etc/tt2/listowner_notification.tt2, src/etc/tt2/lists.tt2,
+	  src/etc/tt2/moderate.tt2, src/etc/tt2/modindex.tt2,
+	  src/etc/tt2/reject.tt2, src/etc/tt2/remind.tt2,
+	  src/etc/tt2/removed.tt2, src/etc/tt2/review.tt2,
+	  src/etc/tt2/sendpasswd.tt2, src/etc/tt2/stats_report.tt2,
+	  src/etc/tt2/summary.tt2, src/etc/tt2/welcome.tt2,
+	  src/etc/tt2/x509-user-cert-missing.tt2,
+	  src/etc/tt2/your_infected_msg.tt2, wwsympa/tt2/add_request.tt2,
+	  wwsympa/tt2/admin.tt2, wwsympa/tt2/admin_menu.tt2,
+	  wwsympa/tt2/arc.tt2, wwsympa/tt2/arc_manage.tt2,
+	  wwsympa/tt2/arc_protect.tt2, wwsympa/tt2/arcsearch.tt2,
+	  wwsympa/tt2/arcsearch_form.tt2, wwsympa/tt2/button_footer.tt2,
+	  wwsympa/tt2/button_header.tt2, wwsympa/tt2/change_email.tt2,
+	  wwsympa/tt2/choosepasswd.tt2, wwsympa/tt2/close_list.tt2,
+	  wwsympa/tt2/compose_mail.tt2, wwsympa/tt2/create_list.tt2,
+	  wwsympa/tt2/create_list_request.tt2, wwsympa/tt2/d_control.tt2,
+	  wwsympa/tt2/d_editfile.tt2, wwsympa/tt2/d_read.tt2,
+	  wwsympa/tt2/edit_list_request.tt2, wwsympa/tt2/editfile.tt2,
+	  wwsympa/tt2/editsubscriber.tt2, wwsympa/tt2/error.tt2,
+	  wwsympa/tt2/get_closed_lists.tt2,
+	  wwsympa/tt2/get_latest_lists.tt2,
+	  wwsympa/tt2/get_pending_lists.tt2, wwsympa/tt2/help.tt2,
+	  wwsympa/tt2/help_admin.tt2, wwsympa/tt2/help_editfile.tt2,
+	  wwsympa/tt2/help_editlist.tt2, wwsympa/tt2/help_user_options.tt2,
+	  wwsympa/tt2/home.tt2, wwsympa/tt2/info.tt2,
+	  wwsympa/tt2/install_pending_list.tt2,
+	  wwsympa/tt2/list_button_footer.tt2,
+	  wwsympa/tt2/list_button_header.tt2, wwsympa/tt2/list_menu.tt2,
+	  wwsympa/tt2/lists.tt2, wwsympa/tt2/login.tt2,
+	  wwsympa/tt2/loginbanner.tt2, wwsympa/tt2/loginrequest.tt2,
+	  wwsympa/tt2/main.tt2, wwsympa/tt2/menu.tt2,
+	  wwsympa/tt2/modindex.tt2, wwsympa/tt2/notice.tt2,
+	  wwsympa/tt2/pref.tt2, wwsympa/tt2/remindpasswd.tt2,
+	  wwsympa/tt2/remove_arc.tt2, wwsympa/tt2/review.tt2,
+	  wwsympa/tt2/reviewbouncing.tt2, wwsympa/tt2/scenario_test.tt2,
+	  wwsympa/tt2/serveradmin.tt2,
+	  wwsympa/tt2/set_pending_list_request.tt2,
+	  wwsympa/tt2/show_cert.tt2, wwsympa/tt2/sigrequest.tt2,
+	  wwsympa/tt2/stats.tt2, wwsympa/tt2/subindex.tt2,
+	  wwsympa/tt2/suboptions.tt2, wwsympa/tt2/subrequest.tt2,
+	  wwsympa/tt2/title.tt2, wwsympa/tt2/translate.tt2,
+	  wwsympa/tt2/view_template.tt2, wwsympa/tt2/view_translations.tt2,
+	  wwsympa/tt2/viewbounce.tt2, wwsympa/tt2/viewmod.tt2: [Chia-liang
+	  Kao]Changes: Extract translations from existing template files to
+	  have a single template (instead of one per lang) + messages
+	  cataloguesare  in PO format. Extraction was automatically
+	  performed using xgettext.pl distributed with
+	  locale::maketext::lexicon. Template have shifted from Sympa's
+	  native template format to the TT2 format (see
+	  http://www.tt2.org/). Convertion of .tpl files to .tt2 files has
+	  been automated.  Some notes:
+
+	  * as already mentioned, the current po files are automatically
+	  extracted from the original translated templates. they might	 be
+	  inaccurate.
+
+	  * the chain of responsibility feature of the files being
+	  overridible	per list or per robot was not tested yet. I plan to
+	  use tt2's   feature to make it cleaner than the current
+	  get_filename implementation.
+
+	  * the diff contains some changes not related to tt2:	 - rev 29:
+	  add tw to lang list.	  - rev 11: encode the subject after
+	  custom_subj handling	  - rev 11: use Encode::MIME::Header
+	  instead of MIME::Words to avoid encoding hazards
+
+	  * check_perl_modules isn't updated yet to include Template
+	  checks.
+
+	  * the spacing bahaviour is a bit different from the sympa
+	  template.    so text template (mostly message sent by sympa)
+	  might have extra    spaces. but i've fixed things that would ruin
+	  the mail header    because of blank lines. we could fix other
+	  stuff later.
+
+	  * work on translating the tw.po has been started. you might want
+	  to   call for translaters for other languages if you think it's
+	  appropriate.
+
+	  * customized template in the original format could be converted
+	  by:	perl -Isrc -p -e 'require
+	  "src/tt2.pl";$_=Sympa::Template::Compat::_translate($_)'
+	  <old-template-to-convert>
 
 2003-06-10 16:10  salaun
 
@@ -6346,7 +8775,27 @@
 	  html/node9.html, html/sympa.html, html/sympa.ps: Fix: incorrect
 	  instructions regarding aliases management
 
+2003-05-14 16:53  salaun
+
+	* Makefile.in, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	  doc/sympa.tex.tpl, doc/html/index.html, doc/html/node1.html,
+	  doc/html/node10.html, doc/html/node11.html, doc/html/node12.html,
+	  doc/html/node13.html, doc/html/node14.html, doc/html/node15.html,
+	  doc/html/node16.html, doc/html/node17.html, doc/html/node18.html,
+	  doc/html/node19.html, doc/html/node2.html, doc/html/node20.html,
+	  doc/html/node21.html, doc/html/node3.html, doc/html/node4.html,
+	  doc/html/node5.html, doc/html/node6.html, doc/html/node7.html,
+	  doc/html/node8.html, doc/html/node9.html, doc/html/sympa.html,
+	  doc/html/sympa.ps: Fix: incorrect instructions regarding aliases
+	  management
+
 2003-05-12 14:57  salaun
+
+	* src/tools.pl, wwsympa/wwsympa.fcgi: [BugID 155][Reported by G.
+	  Tellier] Fix: Gecos was lost while doing multiple ADD if email
+	  address contained upper-cased chars
+
+2003-05-12 14:42  salaun
 
 	* src/tools.pl, wwsympa/wwsympa.fcgi: [BugID 155][Reported by G.
 	  Tellier] Fix: Gecos was lost while doing multiple ADD if email
@@ -6401,6 +8850,59 @@
 	* src/etc/script/mod2html.pl: New feature: provide a script for
 	  generating missing HTML views of moderated messages
 
+2003-05-09 15:04  salaun
+
+	* .version, ChangeLog, NEWS: preparing 3.4.4.1
+
+2003-05-09 15:00  salaun
+
+	* INSTALL, src/etc/script/sympa.spec,
+	  src/etc/script/sympa.spec.rh80: Add quick install notes
+
+2003-05-09 13:46  salaun
+
+	* Makefile.am, Makefile.in: Fix: initialize INITCONF var
+
+2003-05-09 13:43  salaun
+
+	* Makefile.am: Change: use different SPEC file for RedHat RPM
+	  building
+
+2003-05-09 13:40  salaun
+
+	* src/etc/script/sympa.spec.rh80: Changes: only require packages
+	  for standard Sympa installation (not LDAP, SSLEAY).  Some package
+	  have different naming conventions with Mandrake and RedHat
+
+2003-05-09 13:34  salaun
+
+	* src/etc/script/sympa.spec.rh80: Change: now need a separated SPEC
+	  file for Mandrake and RedHat
+
+2003-05-09 12:15  salaun
+
+	* src/List.pm: Fix: Add GRANT PRIV query
+
+2003-05-06 17:53  salaun
+
+	* src/etc/script/sympa.spec: Change: Msgcat no more required
+
+2003-05-06 17:29  salaun
+
+	* ChangeLog, Makefile.am, Makefile.in, src/etc/script/sympa.spec:
+	  [reported by G. Paressant] Fix: make languages no required since
+	  NLS or no more compiled
+
+2003-04-30 13:38  salaun
+
+	* ChangeLog, NEWS: update
+
+2003-04-30 13:30  salaun
+
+	* ChangeLog, src/etc/script/Makefile, src/etc/script/mod2html.pl:
+	  New feature: provide a script for generating missing HTML views
+	  of moderated messages
+
 2003-04-30 10:34  salaun
 
 	* src/etc/templates/us/welcome.us.tpl: [ben AT socialtools.net]
@@ -6408,7 +8910,11 @@
 
 2003-04-29 17:59  salaun
 
-	* src/List.pm: Fix: using wrong log subroutine
+	* src/: List.pm: Fix: using wrong log subroutine
+
+2003-04-29 17:27  salaun
+
+	* ChangeLog, NEWS: Update
 
 2003-04-29 17:21  salaun
 
@@ -6417,10 +8923,22 @@
 	  of MhOnArc (5.6) refuse to run SetUID. Therefore mhonarc is now
 	  run by sympa.pl when storing moderated messages.
 
+2003-04-29 17:17  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: Change: HTML version of
+	  moderated messages were generated by WWSympa, but recent release
+	  of MhOnArc (5.6) refuse to run SetUID. Therefore mhonarc is now
+	  run by sympa.pl when storing moderated messages.
+
 2003-04-29 15:34  salaun
 
-	* ChangeLog, src/etc/script/sympa.spec: [G. Paressant] Fix:
+	* src/etc/script/sympa.spec, ChangeLog: [G. Paressant] Fix:
 	  aliaswrapper was not owned by root
+
+2003-04-29 11:50  salaun
+
+	* src/sympa.pl: Fix bug related to listname-owner, listname-editor
+	  listname-request feature
 
 2003-04-29 11:34  salaun
 
@@ -6444,11 +8962,21 @@
 
 2003-04-28 15:27  salaun
 
-	* src/List.pm: [A. de Pretis] Fix: problem regarding PostgreSQL
+	* src/: List.pm: [A. de Pretis] Fix: problem regarding PostgreSQL
 	  7.3.x: since this version Pg supports Schemes which prefixes
 	  table-names with the scheme-name (default: public) ...
 	  $dbh->tables in List.pm, method 'probe_db' returns:
 	  public.user_table public.subscriber_table
+
+2003-04-28 14:47  salaun
+
+	* doc/sympa.tex.tpl: Change: 'host' list parameter should not be
+	  used
+
+2003-04-28 10:25  salaun
+
+	* src/tools.pl: Fix: bad return status of tools::split_mail(), now
+	  return 1
 
 2003-04-28 08:24  salaun
 
@@ -6457,7 +8985,7 @@
 
 2003-04-18 17:26  salaun
 
-	* src/List.pm: New feature: Sympa is now able to create its
+	* src/: List.pm: New feature: Sympa is now able to create its
 	  database (try as root) and tables.  Change: if database is
 	  unreachable, Sympa daemon dies to prevent blocking of Server
 	  startup
@@ -6477,6 +9005,19 @@
 	  feature: web archive management ; allows to remove multiple
 	  months and/or get and archive (zip) or archive month.
 
+2003-04-18 10:30  salaun
+
+	* ChangeLog, NEWS: update
+
+2003-04-18 10:28  salaun
+
+	* wwsympa/wwsympa.fcgi: [G. Paressant] [BugID 116] The patch had
+	  not been applied to stable CVS branch
+
+2003-04-16 17:46  salaun
+
+	* ChangeLog, NEWS: Add patch to 3.4.4
+
 2003-04-16 17:43  salaun
 
 	* src/List.pm: [BugID 144] [R. Marchand] FIx: When upgrading to
@@ -6487,20 +9028,35 @@
 	  found when viewing the lists admin pages.  There may be other
 	  consequences.
 
+2003-04-16 17:39  salaun
+
+	* src/List.pm: {BugID 144] [R. Marchand] FIx: When upgrading to
+	  Sympa 3.4.3.1 from 3.3.5.  Sympa adds the two fields
+	  'subscribed_subscriber' and 'include_sources_subscriber' when
+	  started the first time but fail to add the third field
+	  'included_subscriber'.  Consequence of this is that no user is
+	  found when viewing the lists admin pages.  There may be other
+	  consequences.
+
 2003-04-16 13:52  salaun
 
-	* doc/html/: contents.png, crossref.png, img1.old, img1.png,
-	  img2.old, img2.png, index.html, index.png, next.png, next_g.png,
-	  node1.html, node10.html, node11.html, node12.html, node13.html,
-	  node14.html, node15.html, node16.html, node17.html, node18.html,
-	  node19.html, node2.html, node20.html, node21.html, node3.html,
-	  node4.html, node5.html, node6.html, node7.html, node8.html,
-	  node9.html, prev.png, prev_g.png, sympa.css, sympa.html,
-	  sympa.ps, up.png, up_g.png: Restore documentation in HTML format
+	* doc/html/: contents.png, crossref.png, img1.png, img2.png,
+	  index.html, index.png, next.png, next_g.png, node1.html,
+	  node10.html, node11.html, node12.html, node13.html, node14.html,
+	  node15.html, node16.html, node17.html, node18.html, node19.html,
+	  node2.html, node20.html, node21.html, node3.html, node4.html,
+	  node5.html, node6.html, node7.html, node8.html, node9.html,
+	  prev.png, prev_g.png, sympa.css, sympa.html, sympa.ps, up.png,
+	  up_g.png, img1.old, img2.old: Restore documentation in HTML
+	  format
 
 2003-04-16 13:29  salaun
 
 	* important_changes.pl: Comment debug trace
+
+2003-04-16 13:15  salaun
+
+	* .version, ChangeLog, NEWS: Preparing 3.4.4
 
 2003-04-16 11:59  salaun
 
@@ -6509,21 +9065,21 @@
 
 2003-04-11 17:07  salaun
 
-	* wwsympa/wws_templates/us/main.us.tpl: Revert previous change
+	* wwsympa/wws_templates/us/: main.us.tpl: Revert previous change
 
 2003-04-11 16:16  salaun
 
-	* wwsympa/wws_templates/us/main.us.tpl: [B. Hortner] Fix: missing }
-	  in javascript subroutine
+	* wwsympa/wws_templates/us/: main.us.tpl: [B. Hortner] Fix: missing
+	  } in javascript subroutine
 
 2003-04-11 11:40  salaun
 
-	* src/tools.pl: Fix: make better error handling in virus scanning
+	* src/: tools.pl: Fix: make better error handling in virus scanning
 	  subroutine, in case we can't decode message parts
 
 2003-04-09 17:47  salaun
 
-	* src/etc/script/sympa.spec: [G. Paressant] Change: use a
+	* src/etc/script/: sympa.spec: [G. Paressant] Change: use a
 	  spam-proof email address
 
 2003-04-09 17:19  salaun
@@ -6532,15 +9088,25 @@
 	  [N. Arles] Fix: look for current domain in email addresses when
 	  logged in
 
+2003-04-09 17:16  salaun
+
+	* ChangeLog: Update
+
 2003-04-09 16:43  salaun
+
+	* src/etc/script/sympa.spec: [reported by G. Paressant] Restore
+	  definition of etc/ subdirectories
+
+2003-04-09 16:36  salaun
 
 	* src/etc/script/sympa.spec: [reported by G. Paressant] Restore
 	  definition of etc/ subdirectories
 
 2003-04-09 15:57  salaun
 
-	* doc/man8/: alias_manager.8, archived.8, bounced.8, sympa.8: Add
-	  missing man pages to CVS
+	* doc/man8/alias_manager.8, doc/man8/archived.8,
+	  doc/man8/bounced.8, doc/man8/sympa.8, Makefile.in,
+	  src/etc/script/sympa.spec: Add missing man pages to CVS
 
 2003-04-09 15:17  salaun
 
@@ -6548,8 +9114,8 @@
 
 2003-04-08 17:20  salaun
 
-	* doc/man8/archived.pod: [reported by xavier AT cs.gouv.qc.ca]Fix:
-	  no more refer to -dF option
+	* doc/man8/: archived.pod: [reported by xavier AT
+	  cs.gouv.qc.ca]Fix: no more refer to -dF option
 
 2003-04-08 17:08  salaun
 
@@ -6557,6 +9123,15 @@
 	  Update: complete parameter information
 
 2003-04-08 15:45  salaun
+
+	* Makefile.am, Makefile.in, check_perl_modules.pl, configure,
+	  configure.in, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	  doc/sympa.tex.tpl, nls/Makefile, src/Language.pm: [B. Hortner]
+	  New feature: no more use Locale::Msgcat for NLS management,
+	  home-made functions instead.	This solves MacOS X users problem
+	  that don't have gencat available ;-)
+
+2003-04-08 15:37  salaun
 
 	* Makefile.am, Makefile.in, check_perl_modules.pl, configure,
 	  configure.in, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
@@ -6579,17 +9154,44 @@
 
 	* src/etc/script/sympa.spec: [G. Paressant] Update
 
+2003-04-08 15:16  salaun
+
+	* ChangeLog: Update
+
 2003-04-08 15:15  salaun
 
 	* doc/Makefile: Change: rename sympa/ directory to html/
 
+2003-04-08 15:13  salaun
+
+	* Makefile.am, Makefile.in, src/etc/script/sympa.spec: Changes:
+	  these changes are related to the RPM building :	  + Add
+	  missing variables to build sympa.spec for RH	    + require
+	  'smtpdaemon' with RH, 'MailTransportAgent' with MDK	+
+	  ./configure is done at RPM build time with relevant options	+
+	  correct path to sympa_wizard	+ fix problems with the %files
+	  section, when changing directories	   + missing %changelog
+
+2003-04-08 15:09  salaun
+
+	* doc/Makefile: Change: rename sympa/ directory to html/
+
+2003-04-08 14:47  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Restore
+	  \verbatim with this problematic line
+
+2003-04-08 14:40  salaun
+
+	* src/etc/script/sympa.spec: [G. Paressant] Update
+
 2003-04-04 10:41  salaun
 
-	* src/sympa_wizard.pl: Fix: parameter was not parsed
+	* ChangeLog, src/sympa_wizard.pl: Fix: parameter was not parsed
 
 2003-04-04 10:33  salaun
 
-	* src/alias_manager.pl: [reported by Xavier AT cs.gouv.qc.ca]
+	* src/: alias_manager.pl: [reported by Xavier AT cs.gouv.qc.ca]
 	  Missing \n when printing to STDERR
 
 2003-04-03 16:26  salaun
@@ -6613,7 +9215,7 @@
 
 2003-04-02 11:26  salaun
 
-	* ChangeLog, src/Message.pm, src/sympa.pl: [reported by H. Penning]
+	* src/Message.pm, src/sympa.pl, ChangeLog: [reported by H. Penning]
 	  Bug fix: Sympa would log "Incorrect name" entries when processing
 	  messages for -request, -unsubscribe, etc... messages
 
@@ -6629,14 +9231,25 @@
 
 2003-03-18 12:02  salaun
 
-	* doc/sympa.tex.tpl: [reported by  X. Renaut] \samplerobot
+	* doc/: sympa.tex.tpl: [reported by  X. Renaut] \samplerobot
 	  variables not interpreted because of verbatim paragraphs
+
+2003-03-17 09:33  salaun
+
+	* ChangeLog, Makefile.in, doc/sympa.pdf, doc/sympa.ps,
+	  doc/sympa.tex: Update doc
+
+2003-03-17 09:33  salaun
+
+	* doc/: Makefile, parse_tex.pl, sympa.tex.tpl: [BugID 133]
+	  [reported by X. Renaut] Missing paths in documentation ; using
+	  Env variables in parse_tex.tpl
 
 2003-03-13 09:44  salaun
 
-	* src/Ldap.pm, wwsympa/wwsympa.fcgi: [BugID 131] [G. Paressant]
-	  Fix:	Incorrect LDAP password crashes wwsympa ; fixed similar
-	  code in Ldap.pm
+	* src/Ldap.pm, wwsympa/wwsympa.fcgi, src/sympa.pl: [BugID 131] [G.
+	  Paressant] Fix:  Incorrect LDAP password crashes wwsympa ; fixed
+	  similar code in Ldap.pm
 
 2003-03-12 08:49  salaun
 
@@ -6681,9 +9294,15 @@
 
 2003-03-05 15:21  salaun
 
-	* src/List.pm: [BugID 121] [reported by G. Paressant] Fix: import
+	* src/: List.pm: [BugID 121] [reported by G. Paressant] Fix: import
 	  problems with include2.  Now set 'subscribed' DB field in
 	  &user_add() if required
+
+2003-02-27 11:30  salaun
+
+	* src/List.pm, wwsympa/wwsympa.fcgi: [reported by P. Maes] Fix
+	  urlize-related problems: missing quotes around URL.  Escaped
+	  chars in URL need to be re-escaped in wwsympa
 
 2003-02-27 09:07  salaun
 
@@ -6701,10 +9320,16 @@
 	  Fix: incorrect Sybase (DBD::Sybase 0.95) connect string ;
 	  replaced dbname with database
 
+2003-02-24 17:32  salaun
+
+	* Makefile.am, Makefile.in: [reported by J. Douglas] Fix: make
+	  install failed on Solaris : "sh: test: argument expected" Changed
+	  test condition in Makefile
+
 2003-02-24 17:14  salaun
 
-	* Makefile.am, src/Makefile: Missing var NLSDIR while installing
-	  sbin_SRC
+	* Makefile.am, src/Makefile, Makefile.in: Missing var NLSDIR while
+	  installing sbin_SRC
 
 2003-02-19 10:42  salaun
 
@@ -6730,13 +9355,22 @@
 
 2003-02-14 12:43  salaun
 
-	* src/tools.pl: Fix: Sympa.pl could die with error "Can't call
+	* src/: tools.pl: Fix: Sympa.pl could die with error "Can't call
 	  method "decode" on an undefined value" while decoding malformed
 	  multipart messages
+
+2003-02-13 11:45  salaun
+
+	* Makefile.in: Updated
 
 2003-02-13 11:44  salaun
 
 	* important_changes.pl: Fix it
+
+2003-02-13 11:33  salaun
+
+	* Makefile.am, src/etc/sample/Makefile: [G. Paressant] Fix: small
+	  fixes, samplelist could not be installed
 
 2003-02-13 11:30  salaun
 
@@ -6751,7 +9385,20 @@
 
 	* important_changes.pl: Replace buggy &higher subroutine
 
+2003-02-12 10:25  salaun
+
+	* NEWS: [reported by Fil] Fix
+
 2003-02-10 13:11  salaun
+
+	* src/: List.pm, etc/templates/fr/listmaster_notification.fr.tpl,
+	  etc/templates/us/listmaster_notification.us.tpl: [BugID 108]
+	  [reported by G. Paressant] Fix:  include2 lists subscribers are
+	  deleted when a problem occur with the datasource LDAP server. Now
+	  interrupt the database update if _load_users_include2() failed ;
+	  also notify listmaster.
+
+2003-02-10 13:07  salaun
 
 	* src/: List.pm, etc/templates/fr/listmaster_notification.fr.tpl,
 	  etc/templates/us/listmaster_notification.us.tpl: [BugID 108]
@@ -6762,14 +9409,24 @@
 
 2003-02-06 10:17  salaun
 
-	* src/List.pm: Fix: if a list param does not exist, scenario
+	* src/: List.pm: Fix: if a list param does not exist, scenario
 	  verification failed.	Also fixed some 'return -1'
+
+2003-02-05 17:22  salaun
+
+	* .version, ChangeLog, NEWS: preparing 3.4.3.1
 
 2003-02-05 17:04  salaun
 
-	* src/List.pm: [galibert AT pobox.com] Fix:  The 28 jan. patch lost
-	  the space between the tag and the subject when adding a new tag.
-	  This puts it back.
+	* src/: List.pm: [galibert AT pobox.com] Fix:  The 28 jan. patch
+	  lost the space between the tag and the subject when adding a new
+	  tag. This puts it back.
+
+2003-02-05 16:56  salaun
+
+	* src/List.pm: Fix: scenarios using [previous_email] var could not
+	  be evaluated.  Now allowing undef vars in scenarios. Notify
+	  listmaster if a scenario could not be evaluated.
 
 2003-02-05 16:47  salaun
 
@@ -6779,7 +9436,7 @@
 
 2003-02-05 08:47  salaun
 
-	* src/etc/list_aliases.tpl: Fix: incorrect parameter for
+	* src/etc/: list_aliases.tpl: Fix: incorrect parameter for
 	  bouncequeue (only for default domain)
 
 2003-01-29 12:14  salaun
@@ -6797,9 +9454,13 @@
 	* src/List.pm: [reported by C. Mock] Fix: possible values of
 	  'archive_crypted_msg'
 
+2003-01-28 15:33  salaun
+
+	* ChangeLog, NEWS: Update
+
 2003-01-28 15:30  salaun
 
-	* src/List.pm: [BugID 99] Change: Pg 7.3 no longer supports the
+	* src/: List.pm: [BugID 99] Change: Pg 7.3 no longer supports the
 	  LIMIT #,# syntax
 
 2003-01-28 15:08  salaun
@@ -6807,15 +9468,54 @@
 	* src/List.pm: [reported by G. Paressant] Fix: make [list->domain]
 	  var available in list templates
 
+2003-01-28 14:29  salaun
+
+	* ChangeLog, NEWS: Update
+
+2003-01-28 14:24  salaun
+
+	* src/List.pm: Fix: If custom_subject is found in the subject,
+	  don't move it at the beginning of the subject. This prevents Re:
+	  Re: Re: subjects
+
 2003-01-28 14:18  salaun
 
 	* src/List.pm: Fix: If custom_subject is found in the subject,
 	  don't move it at the beginning of the subject. This prevents Re:
 	  Re: Re: subjects
 
+2003-01-28 11:28  salaun
+
+	* ChangeLog: Update
+
+2003-01-28 11:28  salaun
+
+	* NEWS: Upd
+
+2003-01-28 11:26  salaun
+
+	* src/sympa.pl: Fix: 'antivirus_notify' was only used in message
+	  forarding context
+
+2003-01-28 10:35  salaun
+
+	* ChangeLog, NEWS: Update
+
+2003-01-28 10:34  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex: Update doc
+
 2003-01-28 10:22  salaun
 
 	* src/List.pm: Fix: get_total() failed with lists in 'include' mode
+
+2003-01-28 10:21  salaun
+
+	* src/List.pm: Fix: get_total() with lists in 'include' mode
+
+2003-01-27 11:05  salaun
+
+	* ChangeLog, NEWS: [no log message]
 
 2003-01-27 10:52  salaun
 
@@ -6826,6 +9526,21 @@
 	  Add a new variable [previous_email] for use in scenario subscribe
 	  when changing email. It is needed in order to accept change email
 	  from subscribers even if new subscribtion need owner control.
+
+2003-01-27 10:44  salaun
+
+	* doc/sympa.tex.tpl, src/etc/scenari/subscribe.auth_owner,
+	  src/etc/scenari/subscribe.owner, wwsympa/wwsympa.fcgi:
+
+	  add a new variable [previous_email] for scenario subscribe when
+	  changing email in order to accept changing email without request
+	  to list owner if needed.
+
+2003-01-24 15:57  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by G. Lau] Fix: After editing a
+	  list's config, every topic had an empty subtopic. Now test if
+	  there are any subtopic before going through them.
 
 2003-01-24 15:56  salaun
 
@@ -6839,21 +9554,49 @@
 	  send.privateandnomultipartoreditorkey, send.publicnoattachment,
 	  send.publicnomultipart: Fix some send scenarios
 
+2003-01-24 10:47  salaun
+
+	* ChangeLog: Update
+
+2003-01-24 10:45  salaun
+
+	* NEWS, wwsympa/wwsympa.fcgi: Fix: looking for
+	  subscribers.closed.dump in the wrong directory. Could not restore
+	  subscribers for lists in a Virtual Robot.
+
 2003-01-24 10:43  salaun
 
 	* wwsympa/wwsympa.fcgi: Fix: looking for subscribers.closed.dump in
 	  the wrong directory. Could not restore subscribers for lists in a
 	  Virtual Robot.
 
+2003-01-24 10:35  salaun
+
+	* src/List.pm: Fix previous changes
+
+2003-01-24 10:30  salaun
+
+	* NEWS, src/List.pm, wwsympa/wwsympa.fcgi: Change: Total
+	  subscribers is updated more often, based on DB
+
+2003-01-24 09:57  salaun
+
+	* ChangeLog, NEWS: Re-preparing 3.4.3
+
 2003-01-24 09:48  salaun
 
-	* src/Makefile: Fix: Aliaswraper was installed with wrong
+	* src/: Makefile: Fix: Aliaswraper was installed with wrong
 	  attributes (sympa instead of root). Could not run newaliases
 
 2003-01-23 17:40  salaun
 
 	* wwsympa/wwsympa.fcgi:
 	  after renaming a list redirect to the admin page of the new list
+
+2003-01-23 17:28  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: alias management error status were
+	  badly used
 
 2003-01-23 17:24  salaun
 
@@ -6871,6 +9614,17 @@
 
 2003-01-22 17:29  salaun
 
+	* src/: List.pm, etc/script/create_db.Pg: [E. Dreyfus] [reported by
+	  pamelant AT nerim.net] Change:  Postgresql 7.3 has no support for
+	  not SQL standard type 'datetime'.  ***** If you are upgrading
+	  from a previous Sympa version, you should update ***** your sympa
+	  DB as follows : ***** ALTER TABLE subscriber_table CHANGE
+	  date_subscriber timestamp with time zone NOT NULL; ***** ALTER
+	  TABLE subscriber_table CHANGE update_subscriber timestamp with
+	  time zone;
+
+2003-01-22 17:29  salaun
+
 	* doc/: sympa.pdf, sympa.ps, sympa.tex: Update doc
 
 2003-01-22 17:25  salaun
@@ -6884,9 +9638,14 @@
 	  TABLE subscriber_table CHANGE update_subscriber timestamp with
 	  time zone;
 
+2003-01-22 10:35  salaun
+
+	* src/task_manager.pl: Fix problems with REMIND task, it has been
+	  reactivated
+
 2003-01-22 10:33  salaun
 
-	* src/List.pm: [reported by A. Delvaux] Fix: incorrect format of
+	* src/: List.pm: [reported by A. Delvaux] Fix: incorrect format of
 	  List-ID header field
 
 2003-01-22 10:05  salaun
@@ -6907,6 +9666,22 @@
 	* src/List.pm, wwsympa/wwsympa.fcgi: Fix: total subscribers is now
 	  updated in wwsympa every time an action concerns a list
 
+2003-01-17 09:56  salaun
+
+	* doc/Makefile: Changes
+
+2003-01-17 09:54  salaun
+
+	* Makefile.in, doc/Makefile: Fix: add cleanup in doc directory
+
+2003-01-16 16:53  salaun
+
+	* src/etc/sample/Makefile: Fix: sample topics.conf
+
+2003-01-16 16:42  salaun
+
+	* .version, ChangeLog, NEWS: preparing 3.4.3
+
 2003-01-13 15:23  salaun
 
 	* wwsympa/wwsympa.fcgi: Purge is now availible to privileged owner
@@ -6923,6 +9698,10 @@
 2003-01-13 12:05  salaun
 
 	* src/List.pm: [C. Mock] Bug fix: using wrong Message entry
+
+2003-01-13 11:49  salaun
+
+	* src/etc/topics.conf: Add topics.conf
 
 2002-12-26 12:26  salaun
 
@@ -6972,6 +9751,10 @@
 	  wwsympa/wws_templates/us/review.us.tpl: [glenn AT elaw.org]New
 	  feature: add sort by name on REVIEW page
 
+2002-12-20 11:57  salaun
+
+	* Makefile.am, src/Makefile: Fix: missing variable ETCDIR
+
 2002-12-20 11:54  salaun
 
 	* Makefile.am, Makefile.in, src/Makefile: Fix: missing vars ETCDIR
@@ -6995,6 +9778,11 @@
 	  stats.  Log collecting calls have been commented, untill the
 	  task_manager is able to clean up logs.
 
+2002-12-19 10:18  salaun
+
+	* Makefile.am, Makefile.in, wwsympa/archived.pl: Change: Create
+	  'arc_path' directory if not created ; also check access
+
 2002-12-19 10:02  salaun
 
 	* Makefile.am, Makefile.in, wwsympa/Makefile, wwsympa/archived.pl:
@@ -7003,7 +9791,7 @@
 
 2002-12-17 15:55  salaun
 
-	* src/sympa_wizard.pl: [reported by cm AT coretec.at] Fix:
+	* src/: sympa_wizard.pl: [reported by cm AT coretec.at] Fix:
 	  sympa_wizard created sympa.conf with old parameter
 	  'trusted_ca_options'
 
@@ -7011,6 +9799,29 @@
 
 	* src/etc/script/create_db.mysql: more simple feld name in
 	  log_table
+
+2002-12-17 09:49  salaun
+
+	* Makefile.am, Makefile.in, doc/sympa.pdf, doc/sympa.ps,
+	  doc/sympa.tex, doc/sympa.tex.tpl: Changes: Now all path in
+	  documentation use XXXDIR variables.  This should be used by
+	  packagers to do a "make documentation" so the documentation refer
+	  to correct path.
+
+2002-12-17 09:44  salaun
+
+	* src/etc/sample/Makefile: Change: install sample liste in
+	  sampledir instead of expldir
+
+2002-12-17 09:41  salaun
+
+	* Makefile.am, Makefile.in, configure, configure.in, doc/Makefile,
+	  doc/sympa.tex.tpl, src/Conf.pm, src/sympa_wizard.pl,
+	  src/etc/script/sympa.spec, wwsympa/wwsympa.fcgi: [G. Paressant]
+	  Changes: New sympa.spec and build procedure for Mandrake.  New
+	  parameters are available in configure : with-etcdir, with-nlsdir,
+	  with-scriptdir, with-sampledir,with-spooldir,with-docdir.
+	  Documentation is now installed.
 
 2002-12-16 17:44  salaun
 
@@ -7060,6 +9871,17 @@
 	  us/editfile.us.tpl: [Reported by glenn AT elaw.org] FIx: Orphan
 	  tag in editfile.tpl causes problem in Mozilla 1.01
 
+2002-12-12 17:33  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by H. S. Rai] Links in summaries
+	  failed if message-id contained a dash ('-'). Mhonarc escapes
+	  these chars in HTML messages.
+
+2002-12-12 17:33  salaun
+
+	* wwsympa/wwsympa.fcgi: Bug fix: also escape () in arcsearch_id.
+	  Also escape these chars in arcsearch
+
 2002-12-12 17:29  salaun
 
 	* wwsympa/wwsympa.fcgi: [reported by H. S. Rai] Links in summaries
@@ -7073,7 +9895,7 @@
 
 2002-12-11 14:24  salaun
 
-	* src/sympa_wizard.pl: [reported by G. Paressant] Fix: when
+	* src/: sympa_wizard.pl: [reported by G. Paressant] Fix: when
 	  building RPMs conf files were not searched at the right place
 
 2002-12-11 11:42  salaun
@@ -7083,8 +9905,15 @@
 
 2002-12-10 17:52  salaun
 
-	* src/etc/script/arc2webarc.pl: [proposed by A. Bernstein] Fix:
+	* src/etc/script/: arc2webarc.pl: [proposed by A. Bernstein] Fix:
 	  make the script VRobot-compatible
+
+2002-12-10 17:44  salaun
+
+	* Makefile.in, src/Makefile: [reported by Oracle AT
+	  provocation.net] [BugID 79] Fix: 'make install' was doing a
+	  non-selective chown/chgrp -R on sbin/ directory. Now only
+	  installed files are concerned.
 
 2002-12-10 17:39  salaun
 
@@ -7113,6 +9942,16 @@
 	  src/etc/templates/us/digest.us.tpl: Change: Digest is now defined
 	  in a template
 
+2002-12-10 09:31  salaun
+
+	* Makefile.am, Makefile.in: [reported by G. Paressant] Fix: DESTDIR
+	  env variable was not set when running the wizard
+
+2002-12-10 09:31  salaun
+
+	* ChangeLog, Makefile.am: [Guy Paressant] Fix: refered to SBINDIR
+	  instead of LIBDIR
+
 2002-12-09 12:08  salaun
 
 	* Makefile.in: Updated
@@ -7126,6 +9965,12 @@
 
 	* Makefile.am: [Guy Paressant] Fix: refered to SBINDIR instead of
 	  LIBDIR
+
+2002-12-06 11:00  salaun
+
+	* wwsympa/wwsympa.fcgi: [Marco AT porciletto.org] Bug fix:
+	  editsubscriber failed with some versions of web_templates
+	  (including Italian) not recently updated.
 
 2002-12-06 10:54  salaun
 
@@ -7157,8 +10002,13 @@
 
 2002-12-03 09:24  salaun
 
-	* src/Conf.pm: Fix: 'web_archive_spam_protection' not recognized as
-	  robot.conf parameter
+	* src/: Conf.pm: Fix: 'web_archive_spam_protection' not recognized
+	  as robot.conf parameter
+
+2002-12-02 11:03  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix: only rebuild archives of the current
+	  VRobot
 
 2002-12-02 10:42  salaun
 
@@ -7169,6 +10019,12 @@
 
 	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Document
 	  spam protection list parameters
+
+2002-11-27 15:56  salaun
+
+	* src/tools.pl: Change: extend escaped characters in URLs.  JC
+	  Delepine has reported a problem with 0xB0 char not escaped in
+	  document repository
 
 2002-11-27 14:28  salaun
 
@@ -7195,12 +10051,16 @@
 
 2002-11-26 11:08  salaun
 
-	* src/List.pm: Bug Fix: missing trailing boundary to the confirm
+	* src/: List.pm: Bug Fix: missing trailing boundary to the confirm
 	  message
 
 2002-11-21 11:31  salaun
 
 	* src/: Makefile, etc/README: Change: add a README in bin/etc/
+
+2002-11-21 11:23  salaun
+
+	* src/List.pm: Change: ignore topics if no topics.conf was found
 
 2002-11-21 11:21  salaun
 
@@ -7243,6 +10103,23 @@
 	  us/editsubscriber.us.tpl: Fix: missing conditionnal use of
 	  additional fields
 
+2002-11-18 12:56  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/cn/editsubscriber.cn.tpl,
+	  wws_templates/cz/editsubscriber.cz.tpl,
+	  wws_templates/de/editsubscriber.de.tpl,
+	  wws_templates/es/editsubscriber.es.tpl,
+	  wws_templates/et/editsubscriber.et.tpl,
+	  wws_templates/fi/editsubscriber.fi.tpl,
+	  wws_templates/fr/editsubscriber.fr.tpl,
+	  wws_templates/hu/editsubscriber.hu.tpl,
+	  wws_templates/it/editsubscriber.it.tpl,
+	  wws_templates/nl/editsubscriber.nl.tpl,
+	  wws_templates/ro/editsubscriber.ro.tpl,
+	  wws_templates/us/editsubscriber.us.tpl: Bug fix: editsubscriber
+	  failed if the owner was subscriber of the list.
+	  do_editsubscriber() was using 'subscriber' variable already used.
+
 2002-11-18 12:25  salaun
 
 	* wwsympa/: wwsympa.fcgi, wws_templates/cn/editsubscriber.cn.tpl,
@@ -7278,6 +10155,11 @@
 
 	* src/List.pm: Add comment
 
+2002-11-14 14:44  salaun
+
+	* ChangeLog, doc/sympa.pdf, doc/sympa.ps, doc/sympa.tex,
+	  doc/sympa.tex.tpl: complete mail aliases doc
+
 2002-11-14 14:40  salaun
 
 	* Makefile.in, important_changes.pl, doc/sympa.pdf, doc/sympa.ps,
@@ -7288,6 +10170,13 @@
 
 	* .version, ChangeLog, NEWS: preparing 4.0.a1 version
 
+2002-11-14 10:37  salaun
+
+	* src/etc/templates/fr/list_rejected.fr.tpl,
+	  src/etc/templates/us/list_rejected.us.tpl, wwsympa/wwsympa.fcgi:
+	  [reported by R. Salmon] Fix: rejection of pending lists was not
+	  coded
+
 2002-11-14 10:26  salaun
 
 	* src/etc/templates/fr/list_rejected.fr.tpl,
@@ -7297,18 +10186,31 @@
 
 2002-11-13 11:42  salaun
 
-	* src/sympa_wizard.pl: Change: make the wizard less quiet
+	* src/: sympa_wizard.pl: Change: make the wizard less quiet
 
 2002-11-13 11:24  salaun
 
-	* wwsympa/wwsympa.fcgi: Fix: wwsympa would die under certain
+	* wwsympa/: wwsympa.fcgi: Fix: wwsympa would die under certain
 	  circumstances if LDAP Bind failed with error mewssage : "Can't
 	  call method "code" on an undefined value"
+
+2002-11-13 11:12  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Missing
+	  documentation for 'authentication_info_url' in auth.conf
 
 2002-11-13 11:06  salaun
 
 	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: Missing
 	  documentation for 'authentication_info_url' in auth.conf
+
+2002-11-12 18:10  salaun
+
+	* wwsympa/: wwsympa.fcgi, wws_templates/fr/error.fr.tpl,
+	  wws_templates/us/error.us.tpl: Fix: wwsympa would prompt a
+	  'template error' if an LDAP user requested a password reminder
+	  when the authentication_info_url URL was not defined in
+	  auth.conf. Now return an error message.
 
 2002-11-12 18:04  salaun
 
@@ -7373,6 +10275,17 @@
 	  process. In addition, sympa reports an error : "Command not
 	  understood: ignoring end of message."
 
+2002-10-25 11:58  salaun
+
+	* ChangeLog: update
+
+2002-10-25 11:57  salaun
+
+	* src/: List.pm, tools.pl: [reported by G. Paressant] Bug fix: if
+	  email entries returned by List::_include_users_ldap() contained
+	  spaces characters, then the database update could lead to a
+	  "duplicate entry error", causing the List::sync_include() to fail
+
 2002-10-25 11:56  salaun
 
 	* src/: List.pm, tools.pl: [reported by G. Paressant] Bug fix: if
@@ -7389,15 +10302,37 @@
 	* src/List.pm: Fix: lots of errors were logged in 'debug' log level
 	  ; now use 'err'
 
+2002-10-25 09:43  salaun
+
+	* ChangeLog: Correct Changelog
+
 2002-10-25 09:11  salaun
 
 	* src/sympa.pl: Slightly change rejection log
+
+2002-10-24 17:29  salaun
+
+	* .version, ChangeLog: Update
+
+2002-10-24 17:27  salaun
+
+	* ChangeLog, src/List.pm: [BugID 63] [reported by G. Paressant]
+	  Fix: sync_include() made the task_manager die if duplicate emails
+	  where found in SQL or LDAP query result
 
 2002-10-24 16:43  salaun
 
 	* src/List.pm: [BugID 63] [reported by G. Paressant] Fix:
 	  sync_include() made the task_manager die if duplicate emails
 	  where found in SQL or LDAP query result
+
+2002-10-24 15:32  salaun
+
+	* src/sympa_wizard.pl: [BugID 58] [reported by Xavier AT
+	  cs.gouv.qc.ca] Fix: sympa_wizard used temporary files in /tmp/ ;
+	  if /tmp/ was an a different filesystem than /etc/, then the
+	  rename() would fail. No more use temporary files.  Change: only
+	  warn if rename() of previous cong files failed
 
 2002-10-24 14:59  salaun
 
@@ -7483,6 +10418,16 @@
 	  wwsympa/wws_templates/us/view_template.us.tpl: New feature: web
 	  templates translation system (first version)
 
+2002-10-21 11:29  salaun
+
+	* doc/: sympa.pdf, sympa.ps, sympa.tex, sympa.tex.tpl: [bugID 59]
+	  [reported by xavier AT cs.gouv.qc.ca] Duplicates in manual ; fix
+	  macros
+
+2002-10-21 11:24  salaun
+
+	* NEWS: fix missing "you MUST rebuild archives"
+
 2002-10-21 11:21  salaun
 
 	* NEWS: missing "you MUST rebuild archives"
@@ -7523,10 +10468,29 @@
 	* wwsympa/wwsympa.fcgi: [O. Lacroix] Fix: wrong comparison operator
 	  for reloading wwsympa
 
+2002-10-17 14:37  salaun
+
+	* wwsympa/wwsympa.fcgi: [O. Lacroix] Fix: wrong comparison operator
+	  for reloading wwsympa
+
+2002-10-17 14:32  salaun
+
+	* .version: New version
+
 2002-10-17 14:24  salaun
 
 	* src/Commands.pm: Fix: Sympa would use part of the email address
 	  as the user name.  Fix regular expretion usage
+
+2002-10-17 14:11  salaun
+
+	* src/Commands.pm: Fix: Sympa would use part of the email address
+	  as the user name.  Fix regular expretion usage
+
+2002-10-17 12:31  salaun
+
+	* wwsympa/wwsympa.fcgi: [reported by Philippe Amelant] incorect
+	  command for remove_aliases
 
 2002-10-16 15:43  salaun
 
@@ -16586,9 +19550,17 @@
 
 	* KNOWNBUGS: [no log message]
 
+2001-01-16 10:59  salaun
+
+	* Makefile, RELEASE_NOTES: Preparing 3.0.1
+
 2001-01-16 10:39  salaun
 
-	* wwsympa/wwsympa.fcgi: Minor bug fix
+	* wwsympa/: wwsympa.fcgi: Minor bug fix
+
+2001-01-16 10:33  salaun
+
+	* wwsympa/wwsympa.fcgi: Fix send_sub_to_owner() usage
 
 2001-01-16 10:30  salaun
 
@@ -16673,6 +19645,10 @@
 	* wwsympa/wwsympa.fcgi: using "use strict vars", start
 	  transformation
 
+2001-01-12 11:01  salaun
+
+	* nls/fr.msg, nls/us.msg, src/List.pm: Fix ADD message
+
 2001-01-12 08:54  salaun
 
 	* src/sympa.pl: when sending mail to <list>-editor, use
@@ -16683,6 +19659,15 @@
 	* src/etc/scenari/create_list.listmaster: change create_list
 	  scenario name : listmaster is listmaster
 		    public_listmaster is anyone with validation
+
+2001-01-09 17:47  salaun
+
+	* wwsympa/Makefile: [no log message]
+
+2001-01-09 17:33  salaun
+
+	* src/Language.pm, src/List.pm, src/Makefile, wwsympa/wwsympa.fcgi:
+	  Some changes
 
 2001-01-09 15:45  salaun
 
@@ -17205,4 +20190,355 @@
 	  wwsympa/wws_templates/us/viewbounce.us.tpl,
 	  wwsympa/wws_templates/us/viewconfig.us.tpl,
 	  wwsympa/wws_templates/us/viewmod.us.tpl: Initial revision
+
+2001-01-04 13:58  root
+
+	* INSTALL, KNOWNBUGS, LICENSE, Makefile, README, RELEASE_NOTES,
+	  check_perl_modules.pl, subst.pl, doc/.latex2html-init,
+	  doc/Makefile, doc/html.sty, doc/pocket.tex, doc/sympa.aux,
+	  doc/sympa.cb, doc/sympa.dvi, doc/sympa.idx, doc/sympa.ilg,
+	  doc/sympa.ind, doc/sympa.log, doc/sympa.ps, doc/sympa.tex,
+	  doc/sympa.toc, doc/treesed, doc/auto/pocket.el,
+	  doc/auto/sympa.el, doc/latex2htmlicons/blueball.png,
+	  doc/latex2htmlicons/change_begin.png,
+	  doc/latex2htmlicons/change_delete.png,
+	  doc/latex2htmlicons/change_end.png,
+	  doc/latex2htmlicons/contents_motif.png,
+	  doc/latex2htmlicons/cross_ref_motif.png,
+	  doc/latex2htmlicons/foot_motif.png,
+	  doc/latex2htmlicons/greenball.png, doc/latex2htmlicons/image.png,
+	  doc/latex2htmlicons/index_motif.png,
+	  doc/latex2htmlicons/next_group_motif.png,
+	  doc/latex2htmlicons/next_group_motif_gr.png,
+	  doc/latex2htmlicons/next_motif.png,
+	  doc/latex2htmlicons/next_motif_gr.png,
+	  doc/latex2htmlicons/orangeball.png,
+	  doc/latex2htmlicons/pinkball.png,
+	  doc/latex2htmlicons/previous_group_motif.png,
+	  doc/latex2htmlicons/previous_group_motif_gr.png,
+	  doc/latex2htmlicons/previous_motif.png,
+	  doc/latex2htmlicons/previous_motif_gr.png,
+	  doc/latex2htmlicons/purpleball.png,
+	  doc/latex2htmlicons/redball.png,
+	  doc/latex2htmlicons/up_motif.png,
+	  doc/latex2htmlicons/up_motif_gr.png,
+	  doc/latex2htmlicons/whiteball.png,
+	  doc/latex2htmlicons/yellowball.png, nls/Makefile, nls/README,
+	  nls/check.pl, nls/cn.msg, nls/de.msg, nls/es.msg, nls/fi.msg,
+	  nls/fr.msg, nls/it.msg, nls/tw.msg, nls/us.msg, src/.core.swp,
+	  src/Archive.pm, src/Commands.pm, src/Conf.pm, src/Language.pm,
+	  src/List.pm, src/Log.pm, src/Makefile, src/Version.pm,
+	  src/bouncequeue.c, src/mail.pm, src/msg.pl, src/parser.pl,
+	  src/queue.c, src/smtp.pm, src/sympa.pl, src/tools.pl,
+	  src/etc/ca-bundle.crt, src/etc/create_list.conf,
+	  src/etc/edit_list.conf, src/etc/mhonarc-ressources,
+	  src/etc/create_list_templates/discussion_list/comment,
+	  src/etc/create_list_templates/discussion_list/config.tpl,
+	  src/etc/create_list_templates/hotline/config.tpl,
+	  src/etc/create_list_templates/intranet_list/config.tpl,
+	  src/etc/create_list_templates/news-letter/comment,
+	  src/etc/create_list_templates/news-letter/config.tpl,
+	  src/etc/create_list_templates/private_working_group/config.tpl,
+	  src/etc/create_list_templates/public_web_forum/config.tpl,
+	  src/etc/sample/Makefile, src/etc/sample/README,
+	  src/etc/sample/config.digest, src/etc/sample/config.include,
+	  src/etc/sample/config.moderation,
+	  src/etc/sample/config.privateorpublickey,
+	  src/etc/sample/config.public, src/etc/sample/sympa.conf,
+	  src/etc/sample/topics.fr.conf, src/etc/sample/wwsympa.conf,
+	  src/etc/sample/test/config, src/etc/sample/test/info,
+	  src/etc/sample/test/message.footer,
+	  src/etc/sample/test/welcome.tpl,
+	  src/etc/scenari/access_web_archive.closed,
+	  src/etc/scenari/access_web_archive.intranet,
+	  src/etc/scenari/access_web_archive.listmaster,
+	  src/etc/scenari/access_web_archive.owner,
+	  src/etc/scenari/access_web_archive.private,
+	  src/etc/scenari/access_web_archive.public,
+	  src/etc/scenari/add.auth, src/etc/scenari/add.closed,
+	  src/etc/scenari/add.owner, src/etc/scenari/add.owner_notify,
+	  src/etc/scenari/create_list.intranet,
+	  src/etc/scenari/create_list.listmaster,
+	  src/etc/scenari/d_edit.owner, src/etc/scenari/d_edit.private,
+	  src/etc/scenari/d_edit.public, src/etc/scenari/d_read.owner,
+	  src/etc/scenari/d_read.private, src/etc/scenari/d_read.public,
+	  src/etc/scenari/del.auth, src/etc/scenari/del.closed,
+	  src/etc/scenari/del.owner, src/etc/scenari/del.owner_notify,
+	  src/etc/scenari/edit_list.closed,
+	  src/etc/scenari/edit_list.owner,
+	  src/etc/scenari/global_remind.listmaster,
+	  src/etc/scenari/info.open, src/etc/scenari/info.private,
+	  src/etc/scenari/invite.closed, src/etc/scenari/invite.owner,
+	  src/etc/scenari/invite.private, src/etc/scenari/invite.public,
+	  src/etc/scenari/remind.listmaster, src/etc/scenari/remind.owner,
+	  src/etc/scenari/review.closed, src/etc/scenari/review.listmaster,
+	  src/etc/scenari/review.owner, src/etc/scenari/review.private,
+	  src/etc/scenari/review.public, src/etc/scenari/send.closed,
+	  src/etc/scenari/send.editor, src/etc/scenari/send.editorkey,
+	  src/etc/scenari/send.editorkeyonly,
+	  src/etc/scenari/send.editorkeyonlyauth,
+	  src/etc/scenari/send.intranet,
+	  src/etc/scenari/send.intranetorprivate,
+	  src/etc/scenari/send.newsletter,
+	  src/etc/scenari/send.newsletterkeyonly,
+	  src/etc/scenari/send.private, src/etc/scenari/send.private_smime,
+	  src/etc/scenari/send.privateandeditorkey,
+	  src/etc/scenari/send.privateandnomultipartoreditorkey,
+	  src/etc/scenari/send.privatekey,
+	  src/etc/scenari/send.privatekeyandeditorkeyonly,
+	  src/etc/scenari/send.privateoreditorkey,
+	  src/etc/scenari/send.privateorpublickey,
+	  src/etc/scenari/send.public, src/etc/scenari/send.public_nobcc,
+	  src/etc/scenari/send.publickey,
+	  src/etc/scenari/send.publicnomultipart,
+	  src/etc/scenari/subscribe.auth,
+	  src/etc/scenari/subscribe.auth_notify,
+	  src/etc/scenari/subscribe.auth_owner,
+	  src/etc/scenari/subscribe.closed,
+	  src/etc/scenari/subscribe.intranet,
+	  src/etc/scenari/subscribe.intranetorowner,
+	  src/etc/scenari/subscribe.open,
+	  src/etc/scenari/subscribe.open_notify,
+	  src/etc/scenari/subscribe.open_quiet,
+	  src/etc/scenari/subscribe.owner, src/etc/scenari/subscribe.smime,
+	  src/etc/scenari/subscribe.smimeorowner,
+	  src/etc/scenari/topics_visibility.conceal,
+	  src/etc/scenari/topics_visibility.noconceal,
+	  src/etc/scenari/unsubscribe.auth,
+	  src/etc/scenari/unsubscribe.auth_notify,
+	  src/etc/scenari/unsubscribe.closed,
+	  src/etc/scenari/unsubscribe.open,
+	  src/etc/scenari/unsubscribe.open_notify,
+	  src/etc/scenari/unsubscribe.owner,
+	  src/etc/scenari/visibility.conceal,
+	  src/etc/scenari/visibility.intranet,
+	  src/etc/scenari/visibility.noconceal,
+	  src/etc/scenari/visibility.private,
+	  src/etc/scenari/visibility.secret, src/etc/script/Makefile,
+	  src/etc/script/arc2webarc.pl, src/etc/script/create_db.Oracle,
+	  src/etc/script/create_db.Pg, src/etc/script/create_db.Sybase,
+	  src/etc/script/create_db.mysql,
+	  src/etc/script/load_subscribers.pl,
+	  src/etc/script/orphan_killer.pl, src/etc/script/p12topem.pl,
+	  src/etc/script/sympa, src/etc/script/sympa.spec,
+	  src/etc/script/testldap.pl,
+	  src/etc/templates/es/sendpasswd.es.tpl,
+	  src/etc/templates/fr/sendpasswd.fr.tpl,
+	  src/etc/templates/it/sendpasswd.it.tpl,
+	  src/etc/templates/us/bye.us.tpl,
+	  src/etc/templates/us/global_remind.us.tpl,
+	  src/etc/templates/us/helpfile.us.tpl,
+	  src/etc/templates/us/invite.us.tpl,
+	  src/etc/templates/us/lists.us.tpl,
+	  src/etc/templates/us/reject.us.tpl,
+	  src/etc/templates/us/remind.us.tpl,
+	  src/etc/templates/us/removed.us.tpl,
+	  src/etc/templates/us/sendpasswd.us.tpl,
+	  src/etc/templates/us/summary.us.tpl,
+	  src/etc/templates/us/welcome.us.tpl,
+	  src/etc/templates/us/x509-user-cert-missing.us.tpl,
+	  wwsympa/INSTALL, wwsympa/Makefile, wwsympa/Marc.pm,
+	  wwsympa/README, wwsympa/archived.pl, wwsympa/bounce-lib.pl,
+	  wwsympa/bounced.pl, wwsympa/cookie-lib.pl, wwsympa/mime.types,
+	  wwsympa/wws-lib.pl, wwsympa/wwsympa.fcgi, wwsympa/Marc/Search.pm,
+	  wwsympa/icons/aide1.gif, wwsympa/icons/b1.gif,
+	  wwsympa/icons/d1.gif, wwsympa/icons/g1.gif, wwsympa/icons/h1.gif,
+	  wwsympa/icons/lockc3.gif, wwsympa/icons/locked.gif,
+	  wwsympa/icons/logo-s.gif, wwsympa/icons/logo-s.green.gif,
+	  wwsympa/wws_templates/close_list_request.es.tpl,
+	  wwsympa/wws_templates/close_list_request.fr.tpl,
+	  wwsympa/wws_templates/close_list_request.it.tpl,
+	  wwsympa/wws_templates/close_list_request.us.tpl,
+	  wwsympa/wws_templates/info.es.tpl2,
+	  wwsympa/wws_templates/info.us.tpl2,
+	  wwsympa/wws_templates/login.tpl,
+	  wwsympa/wws_templates/viewbounce.es.tpl,
+	  wwsympa/wws_templates/which.es.tpl,
+	  wwsympa/wws_templates/which.fr.tpl,
+	  wwsympa/wws_templates/which.it.tpl,
+	  wwsympa/wws_templates/which.us.tpl,
+	  wwsympa/wws_templates/es/add_request.es.tpl,
+	  wwsympa/wws_templates/es/admin.es.tpl,
+	  wwsympa/wws_templates/es/admin_menu.es.tpl,
+	  wwsympa/wws_templates/es/arc.es.tpl,
+	  wwsympa/wws_templates/es/arc_protect.es.tpl,
+	  wwsympa/wws_templates/es/arcsearch.es.tpl,
+	  wwsympa/wws_templates/es/arcsearch_form.es.tpl,
+	  wwsympa/wws_templates/es/change_email.es.tpl,
+	  wwsympa/wws_templates/es/choosepasswd.es.tpl,
+	  wwsympa/wws_templates/es/close_list.es.tpl,
+	  wwsympa/wws_templates/es/create_list.es.tpl,
+	  wwsympa/wws_templates/es/create_list_request.es.tpl,
+	  wwsympa/wws_templates/es/d_control.es.tpl,
+	  wwsympa/wws_templates/es/d_editfile.es.tpl,
+	  wwsympa/wws_templates/es/d_read.es.tpl,
+	  wwsympa/wws_templates/es/edit_list_request.es.tpl,
+	  wwsympa/wws_templates/es/editfile.es.tpl,
+	  wwsympa/wws_templates/es/editsubscriber.es.tpl,
+	  wwsympa/wws_templates/es/error.es.tpl,
+	  wwsympa/wws_templates/es/get_pending_lists.es.tpl,
+	  wwsympa/wws_templates/es/help.es.tpl,
+	  wwsympa/wws_templates/es/help_admin.es.tpl,
+	  wwsympa/wws_templates/es/help_editfile.es.tpl,
+	  wwsympa/wws_templates/es/help_editlist.es.tpl,
+	  wwsympa/wws_templates/es/home.es.tpl,
+	  wwsympa/wws_templates/es/info.es.tpl,
+	  wwsympa/wws_templates/es/list_menu.es.tpl,
+	  wwsympa/wws_templates/es/lists.es.tpl,
+	  wwsympa/wws_templates/es/loginbanner.es.tpl,
+	  wwsympa/wws_templates/es/loginrequest.es.tpl,
+	  wwsympa/wws_templates/es/menu.es.tpl,
+	  wwsympa/wws_templates/es/modindex.es.tpl,
+	  wwsympa/wws_templates/es/pref.es.tpl,
+	  wwsympa/wws_templates/es/remindpasswd.es.tpl,
+	  wwsympa/wws_templates/es/remove_arc.es.tpl,
+	  wwsympa/wws_templates/es/review.es.tpl,
+	  wwsympa/wws_templates/es/reviewbouncing.es.tpl,
+	  wwsympa/wws_templates/es/scenario_test.es.tpl,
+	  wwsympa/wws_templates/es/serveradmin.es.tpl,
+	  wwsympa/wws_templates/es/set_pending_list_request.es.tpl,
+	  wwsympa/wws_templates/es/sigrequest.es.tpl,
+	  wwsympa/wws_templates/es/subrequest.es.tpl,
+	  wwsympa/wws_templates/es/title.es.tpl,
+	  wwsympa/wws_templates/es/view_translations.es.tpl,
+	  wwsympa/wws_templates/es/viewconfig.es.tpl,
+	  wwsympa/wws_templates/es/viewmod.es.tpl,
+	  wwsympa/wws_templates/fr/add_request.fr.tpl,
+	  wwsympa/wws_templates/fr/admin.fr.tpl,
+	  wwsympa/wws_templates/fr/admin_menu.fr.tpl,
+	  wwsympa/wws_templates/fr/arc.fr.tpl,
+	  wwsympa/wws_templates/fr/arc_protect.fr.tpl,
+	  wwsympa/wws_templates/fr/arcsearch.fr.tpl,
+	  wwsympa/wws_templates/fr/arcsearch_form.fr.tpl,
+	  wwsympa/wws_templates/fr/change_email.fr.tpl,
+	  wwsympa/wws_templates/fr/choosepasswd.fr.tpl,
+	  wwsympa/wws_templates/fr/close_list.fr.tpl,
+	  wwsympa/wws_templates/fr/create_list.fr.tpl,
+	  wwsympa/wws_templates/fr/create_list_request.fr.tpl,
+	  wwsympa/wws_templates/fr/d_control.fr.tpl,
+	  wwsympa/wws_templates/fr/d_editfile.fr.tpl,
+	  wwsympa/wws_templates/fr/d_read.fr.tpl,
+	  wwsympa/wws_templates/fr/editfile.fr.tpl,
+	  wwsympa/wws_templates/fr/editsubscriber.fr.tpl,
+	  wwsympa/wws_templates/fr/error.fr.tpl,
+	  wwsympa/wws_templates/fr/get_pending_lists.fr.tpl,
+	  wwsympa/wws_templates/fr/help.fr.tpl,
+	  wwsympa/wws_templates/fr/help_admin.fr.tpl,
+	  wwsympa/wws_templates/fr/help_editfile.fr.tpl,
+	  wwsympa/wws_templates/fr/home.fr.tpl,
+	  wwsympa/wws_templates/fr/install_pending_list.fr.tpl,
+	  wwsympa/wws_templates/fr/list_menu.fr.tpl,
+	  wwsympa/wws_templates/fr/lists.fr.tpl,
+	  wwsympa/wws_templates/fr/login.fr.tpl,
+	  wwsympa/wws_templates/fr/loginbanner.fr.tpl,
+	  wwsympa/wws_templates/fr/loginrequest.fr.tpl,
+	  wwsympa/wws_templates/fr/menu.fr.tpl,
+	  wwsympa/wws_templates/fr/modindex.fr.tpl,
+	  wwsympa/wws_templates/fr/pref.fr.tpl,
+	  wwsympa/wws_templates/fr/remindpasswd.fr.tpl,
+	  wwsympa/wws_templates/fr/remove_arc.fr.tpl,
+	  wwsympa/wws_templates/fr/review.fr.tpl,
+	  wwsympa/wws_templates/fr/reviewbouncing.fr.tpl,
+	  wwsympa/wws_templates/fr/serveradmin.fr.tpl,
+	  wwsympa/wws_templates/fr/sigrequest.fr.tpl,
+	  wwsympa/wws_templates/fr/suboptions.fr.tpl,
+	  wwsympa/wws_templates/fr/subrequest.fr.tpl,
+	  wwsympa/wws_templates/fr/view_translations.fr.tpl,
+	  wwsympa/wws_templates/fr/viewmod.fr.tpl,
+	  wwsympa/wws_templates/it/add_request.it.tpl,
+	  wwsympa/wws_templates/it/admin.it.tpl,
+	  wwsympa/wws_templates/it/admin_menu.it.tpl,
+	  wwsympa/wws_templates/it/arc.it.tpl,
+	  wwsympa/wws_templates/it/arc_protect.it.tpl,
+	  wwsympa/wws_templates/it/arcsearch.it.tpl,
+	  wwsympa/wws_templates/it/arcsearch_form.it.tpl,
+	  wwsympa/wws_templates/it/choosepasswd.it.tpl,
+	  wwsympa/wws_templates/it/close_list.it.tpl,
+	  wwsympa/wws_templates/it/create_list.it.tpl,
+	  wwsympa/wws_templates/it/create_list_request.it.tpl,
+	  wwsympa/wws_templates/it/d_control.it.tpl,
+	  wwsympa/wws_templates/it/d_editfile.it.tpl,
+	  wwsympa/wws_templates/it/d_read.it.tpl,
+	  wwsympa/wws_templates/it/edit_list_request.it.tpl,
+	  wwsympa/wws_templates/it/editfile.it.tpl,
+	  wwsympa/wws_templates/it/editsubscriber.it.tpl,
+	  wwsympa/wws_templates/it/error.it.tpl,
+	  wwsympa/wws_templates/it/get_pending_lists.it.tpl,
+	  wwsympa/wws_templates/it/help.it.tpl,
+	  wwsympa/wws_templates/it/help_admin.it.tpl,
+	  wwsympa/wws_templates/it/help_editfile.it.tpl,
+	  wwsympa/wws_templates/it/help_editlist.it.tpl,
+	  wwsympa/wws_templates/it/home.it.tpl,
+	  wwsympa/wws_templates/it/info.it.tpl,
+	  wwsympa/wws_templates/it/install_pending_list.it.tpl,
+	  wwsympa/wws_templates/it/list_menu.it.tpl,
+	  wwsympa/wws_templates/it/lists.it.tpl,
+	  wwsympa/wws_templates/it/loginbanner.it.tpl,
+	  wwsympa/wws_templates/it/loginrequest.it.tpl,
+	  wwsympa/wws_templates/it/menu.it.tpl,
+	  wwsympa/wws_templates/it/modindex.it.tpl,
+	  wwsympa/wws_templates/it/pref.it.tpl,
+	  wwsympa/wws_templates/it/remindpasswd.it.tpl,
+	  wwsympa/wws_templates/it/remove_arc.it.tpl,
+	  wwsympa/wws_templates/it/review.it.tpl,
+	  wwsympa/wws_templates/it/reviewbouncing.it.tpl,
+	  wwsympa/wws_templates/it/scenario_test.it.tpl,
+	  wwsympa/wws_templates/it/serveradmin.it.tpl,
+	  wwsympa/wws_templates/it/set_pending_list_request.it.tpl,
+	  wwsympa/wws_templates/it/sigrequest.it.tpl,
+	  wwsympa/wws_templates/it/suboptions.it.tpl,
+	  wwsympa/wws_templates/it/subrequest.it.tpl,
+	  wwsympa/wws_templates/it/title.it.tpl,
+	  wwsympa/wws_templates/it/view_translations.it.tpl,
+	  wwsympa/wws_templates/it/viewconfig.it.tpl,
+	  wwsympa/wws_templates/it/viewmod.it.tpl,
+	  wwsympa/wws_templates/us/add_request.us.tpl,
+	  wwsympa/wws_templates/us/admin.us.tpl,
+	  wwsympa/wws_templates/us/admin_menu.us.tpl,
+	  wwsympa/wws_templates/us/arc.us.tpl,
+	  wwsympa/wws_templates/us/arc_protect.us.tpl,
+	  wwsympa/wws_templates/us/arcsearch.us.tpl,
+	  wwsympa/wws_templates/us/arcsearch_form.us.tpl,
+	  wwsympa/wws_templates/us/change_email.us.tpl,
+	  wwsympa/wws_templates/us/choosepasswd.us.tpl,
+	  wwsympa/wws_templates/us/close_list.us.tpl,
+	  wwsympa/wws_templates/us/create_list.us.tpl,
+	  wwsympa/wws_templates/us/create_list_request.us.tpl,
+	  wwsympa/wws_templates/us/d_control.us.tpl,
+	  wwsympa/wws_templates/us/d_editfile.us.tpl,
+	  wwsympa/wws_templates/us/d_read.us.tpl,
+	  wwsympa/wws_templates/us/edit_list_request.us.tpl,
+	  wwsympa/wws_templates/us/editfile.us.tpl,
+	  wwsympa/wws_templates/us/editsubscriber.us.tpl,
+	  wwsympa/wws_templates/us/error.us.tpl,
+	  wwsympa/wws_templates/us/get_pending_lists.us.tpl,
+	  wwsympa/wws_templates/us/help.us.tpl,
+	  wwsympa/wws_templates/us/help_admin.us.tpl,
+	  wwsympa/wws_templates/us/help_editfile.us.tpl,
+	  wwsympa/wws_templates/us/help_editlist.us.tpl,
+	  wwsympa/wws_templates/us/home.us.tpl,
+	  wwsympa/wws_templates/us/info.us.tpl,
+	  wwsympa/wws_templates/us/install_pending_list.us.tpl,
+	  wwsympa/wws_templates/us/list_menu.us.tpl,
+	  wwsympa/wws_templates/us/loginbanner.us.tpl,
+	  wwsympa/wws_templates/us/loginrequest.us.tpl,
+	  wwsympa/wws_templates/us/main.us.tpl,
+	  wwsympa/wws_templates/us/menu.us.tpl,
+	  wwsympa/wws_templates/us/modindex.us.tpl,
+	  wwsympa/wws_templates/us/pref.us.tpl,
+	  wwsympa/wws_templates/us/remindpasswd.us.tpl,
+	  wwsympa/wws_templates/us/remove_arc.us.tpl,
+	  wwsympa/wws_templates/us/review.us.tpl,
+	  wwsympa/wws_templates/us/reviewbouncing.us.tpl,
+	  wwsympa/wws_templates/us/scenario_test.us.tpl,
+	  wwsympa/wws_templates/us/serveradmin.us.tpl,
+	  wwsympa/wws_templates/us/set_pending_list_request.us.tpl,
+	  wwsympa/wws_templates/us/sigrequest.us.tpl,
+	  wwsympa/wws_templates/us/suboptions.us.tpl,
+	  wwsympa/wws_templates/us/subrequest.us.tpl,
+	  wwsympa/wws_templates/us/title.us.tpl,
+	  wwsympa/wws_templates/us/view_translations.us.tpl,
+	  wwsympa/wws_templates/us/viewbounce.us.tpl,
+	  wwsympa/wws_templates/us/viewconfig.us.tpl,
+	  wwsympa/wws_templates/us/viewmod.us.tpl: [no log message]
 
