@@ -730,7 +730,7 @@ installdir:
 	done
 	@if [ ! -f $(DESTDIR)$(CONFDIR)/sympa.conf ] ; then \
 	echo "First installation : installing conf directories..."; \
-	for dir in create_list_templates templates wws_templates scenari \
+	for dir in create_list_templates mail_tt2 web_tt2 scenari \
 	task_models general_task_models; do \
 		if [ ! -d $(DESTDIR)$(ETCDIR)/$$dir ] ; then \
 			echo "Creating $(DESTDIR)$(ETCDIR)/$$dir"; \
