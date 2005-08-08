@@ -4,18 +4,18 @@
 
 <h2>[%|loc%]Colors[%END%]</h2>
 <p>
-The current version don't include a color editor, so you need to edit robot.conf (or sympa.conf) to change colors. Here are the colors as defined for the current robot in robot.conf. If you did install statics CSS files, the colors in use may differ from this table.
+[%|loc%]The current version don't include a color editor, so you need to edit robot.conf (or sympa.conf) to change colors. Here are the colors as defined for the current robot in robot.conf. If you did install statics CSS files, the colors in use may differ from this table.[%END%]
 </p>
 
 <table style="border: doted 1px">
 <tr>
-<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">parameter</th>
-<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">parameter value</th>
-<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">color effet</th>
+<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">[%|loc%]parameter[%END%]</th>
+<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">[%|loc%]parameter value[%END%]</th>
+<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">[%|loc%]color effet[%END%]</th>
 <th style="border: solid 0px; text-align: center; padding: 10px;">&nbsp;</th>
-<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">parameter</th>
-<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">parameter value</th>
-<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">color effet</th>
+<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">[%|loc%]parameter[%END%]</th>
+<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">[%|loc%]parameter value[%END%]</th>
+<th style="border: solid 1px; text-align: center; padding: 10px; background-color: [% color_4 %];">[%|loc%]color effet[%END%]</th>
 <th style="border: solid 0px; text-align: center; padding: 1px;"></th>
 </tr>
 
@@ -38,11 +38,11 @@ The current version don't include a color editor, so you need to edit robot.conf
 <h2>[%|loc%]Cascading Style Sheet[%END%]</h2>
 <p>
 [% IF css_result %]
-<strong>static css installation succeed. Reload the current page and/or check sympa logs  to be sure that static css a really in use.</strong><br /><br />
+<strong>[%|loc%]static css installation succeed. Reload the current page and/or check sympa logs  to be sure that static css a really in use.[%END%]</strong><br /><br />
 [% END %]
 [% IF css_path %]
-<ul><li>The css_path parameter is defined, value is [% css_path %] </li>
-<li>the current definition for css location (css_url parameter) is  <a target="test" href="[% css_url %]">[% css_url %] </a><strong>[% css_warning %]</strong>.</li>
+<ul><li>[%|loc%]The css_path parameter is defined, value is[%END%] [% css_path %] </li>
+<li>[%|loc%]the current definition for css location (css_url parameter) is[%END%] <a target="test" href="[% css_url %]">[% css_url %] </a><strong>[% css_warning %]</strong>.</li>
 
 </ul><br />
 
@@ -54,9 +54,9 @@ The current version don't include a color editor, so you need to edit robot.conf
 
 [% ELSE %]
 
-Currently you didn't define css_path parameter. <strong>You should edit the robot.conf configuration file </strong> (or if not using virtual robot sympa.conf) and set this parameter so you could use this page to install static CSS and <strong>make sympa faster</strong>. Don't forget to set parameter css_url, it must be the URL for the directory where css are stored (current value is <a target="test" href="[% cssurl %]">[% cssurl %]</a>).
+[%|loc(cssurl)%]Currently you didn't define css_path parameter. <strong>You should edit the robot.conf configuration file </strong> (or if not using virtual robot sympa.conf) and set this parameter so you could use this page to install static CSS and <strong>make sympa faster</strong>. Don't forget to set parameter css_url, it must be the URL for the directory where css are stored (current value is <a target="test" href="%1">%1</a>).[%END%]
 
 [% END %]
 </p><br /><br />
-<a class="actionMenuLinks" href="http://jigsaw.w3.org/css-validator/check?uri=referer">W3C CSS validation tools</a>
+<a class="actionMenuLinks" href="http://jigsaw.w3.org/css-validator/check?uri=referer">[%|loc%]W3C CSS validation tools[%END%]</a>
 
