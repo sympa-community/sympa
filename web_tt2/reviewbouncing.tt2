@@ -57,10 +57,10 @@
     </table>
 
     <table border="1">
-      <tr style="background-color: [% error_color %]; white-space: nowrap;">
-	<th><span style="color: [% bg_color %];">X</span></th>
-        <th><span style="color: [% bg_color %];">[%|loc%]Email[%END%]</span></th>
-	<th><span style="color: [% bg_color %];">[%|loc%]bounce score[%END%]</span></th>
+      <tr>
+	<th>X</th>
+        <th>[%|loc%]Email[%END%]</th>
+	<th>[%|loc%]bounce score[%END%]</th>
       </tr>
       
       [% FOREACH u = members %]
