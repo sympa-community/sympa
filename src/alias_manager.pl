@@ -37,7 +37,7 @@ require "tt2.pl";
 
 
 unless (Conf::load('--CONFIG--')) {
-   print gettext("The configuration file --CONFIG-- contains errors.\n");
+   print STDERR gettext("The configuration file --CONFIG-- contains errors.\n");
    exit(1);
 }
 my $tmp_alias_file = $Conf{'tmpdir'}.'/sympa_aliases.'.time;
@@ -54,7 +54,7 @@ my ($operation, $listname, $domain, $file) = @ARGV;
 
 
 if (($operation !~ /^(add)|(del)$/) || ($#ARGV < 2)) {
-    printf "Usage: $0 <add|del> <listname> <domain> [<file>]\n";
+    printf STDERR "Usage: $0 <add|del> <listname> <domain> [<file>]\n";
     exit(2);
 }
 
