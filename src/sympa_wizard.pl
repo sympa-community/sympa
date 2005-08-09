@@ -430,7 +430,7 @@ my @params = ({'title' => 'Directories and file location'},
 	       'query' => 'Default disk quota for shared repository',
 	       'file' => 'sympa.conf','edit' => '1',
 	       'advice' =>''},
-	      
+
 	      );
 
 

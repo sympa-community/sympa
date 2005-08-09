@@ -2,8 +2,8 @@ From: [% requested_by %]
 Reply-To: [% conf.sympa %]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Invitation to join list %1[%END%][%END%]
 Mime-version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-transfer-encoding: 8bit
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.subject)%]This list is about %1, so you are probably concerned.[%END%]
 

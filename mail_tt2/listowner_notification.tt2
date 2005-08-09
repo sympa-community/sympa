@@ -1,7 +1,10 @@
-From: [% conf.email %]@[% conf.host %]
+From: SYMPA <[% conf.email %]@[% conf.host %]>
 To: [% FILTER qencode %][%|loc%]Listowners[%END%][%END%] <[% to %]>
 [% IF type == 'arc_quota_exceeded' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 archive quota exceeded[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name,list.host,size,conf.host,conf.listmaster_email)%]%1 archive quota exceeded. 
 Total size used for %1@%2 archive is %3 Bytes. Messages
@@ -9,6 +12,9 @@ are no more web-archived. Please contact %5@%4. [%END%]
 
 [% ELSIF type == 'arc_quota_95' -%]
 Subject: [% FILTER qencode %][%|loc(list.name,rate)%]List "%1" warning : archive %2% full[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(rate2,list.name,list.host,rate)%]%2@%3 archives use %4% of allowed disk quota.[%END%]
 [%|loc(list.name,size)%]Total size used for %1@%2 Bytes.[%END%]
@@ -17,41 +23,123 @@ Subject: [% FILTER qencode %][%|loc(list.name,rate)%]List "%1" warning : archive
 
 [% ELSIF type == 'closed_during_instantiation_family' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 is closed[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name,list.host,param0)%]%1@%2 is no more an instance of family %3.
 This list has been closed.[%END%]
 
+[% ELSIF type == 'warn-signoff' -%]
+Subject: [% FILTER qencode %][%|loc(type,list.name,who,gecos)%]FYI: %1 List "%2" from %3 %4[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(who,gecos,list.name)%]WARNING : %1 %2 failed to unsubscribe from %3 because his address was not found in the list.
+(You may help this person).[%END%]
+ 
 [% ELSIF type == 'erase_customizing' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" customizations have been removed[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name,list.host,param0,param1,param2)%]List %1@%2 has been reinstantiated (family %3). 
 Some of the customizations have been removed because they no more respect the family rules :
 
      Parameters : %4
-     Files : %5
+
 [%END%]
 
 [% ELSIF type == 'automatic_bounce_management' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 automatic bounce management[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
-[% IF action == 'notify_bouncers' -%]
+  [% IF action == 'notify_bouncers' -%]
 [%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
 notified that they might be removed from list %2:[%END%]
-[% ELSIF action == 'remove_bouncers' -%]
+  [% ELSIF action == 'remove_bouncers' -%]
 [%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
 removed from list %2:[%END%]
-[% ELSIF action == 'none' -%]
+  [% ELSIF action == 'none' -%]
 [%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
 selected by Sympa as severe bouncing addresses:[%END%]
-[%END%]
+  [%END%]
 
 [% FOREACH user = user_list -%]
 [% user %]
 [%END%]
 
 [%|loc%]Managing bouncing subscribers:[%END%] [% conf.wwsympa_url %]/reviewbouncing/[% list.name %]
+
+[% ELSIF type == 'subrequest' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Subscription request to list %1[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(list.name,replyto,keyauth,list.name,escaped_who,escaped_gecos,replyto,keyauth,list.name,who,gecos)-%]
+Dear owner of list %1,
+ 
+A user asked to be added as a subscriber to your list. Shall this be fine
+with you, you should click the following URL :
+
+[% FILTER escape_url %]mailto:%2?subject=auth %3 ADD %4 %5 %6[% END %]
+
+or send an email to %7 with the following subject :
+AUTH %8 ADD %9 %10 %11
+[%END%]
+
+[% ELSIF type == 'sigrequest' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]UNsubscription request from list %1[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(list.name,sympa,keyauth,list.name,escaped_who,sympa,keyauth,list.name,who)-%]
+Dear owner of list %1,
+
+A user asked to be deleted from your list. Shall this be fine
+with you, you should click the following URL :
+
+[% FILTER escape_url %]mailto:%2?subject=auth %3 DEL %4 %5[% END %]
+ 
+or send an email to %6 with the following subject :
+AUTH %7 DEL %8 %9
+[%END%]
+
+
+[% ELSIF type == 'bounce_rate' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]WARNING: bounce rate too high in list %1[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(list.name,rate,conf.wwsympa_url,list.name)%]Bounce rate in list %1 is %2.
+
+You should delete bouncing subscribers : 
+%3/reviewbouncing/%4
+[%END%]
+
+
+[% ELSIF type == 'notice' -%]
+Subject: [% FILTER qencode %][%|loc(command,list.name,who,gecos)%]FYI: %1 list %2 from %3 %4[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(command,list.name,who,gecos,by)%]FYI command %1 list %2 from %3 %4 [% IF by -%]validated by %5 [%END%]
+(no action needed)
+[%END%]
+
 [% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(list.name,type)%]List %1 / %2[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% param0 %]
 [% END %]

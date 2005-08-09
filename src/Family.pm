@@ -33,6 +33,7 @@ use Config_XML;
 use File::Copy;
 
 my %list_of_families;
+my @uncompellable_param = ('msg_topic.keywords','owner_include.source_parameters', 'editor_include.source_parameters');
 
 ## Class methods
 ################
@@ -134,7 +135,6 @@ sub new {
     ## state of the family for the use of check_param_constraint : 'no_check' or 'normal'
     ## check_param_constraint  only works in state "normal"
     $self->{'state'} = 'normal';
-
     return $self;
 }
      
@@ -371,7 +371,7 @@ sub modify_list {
 	my $forbidden_param = join(',',@{$custom->{'forbidden'}{'param'}});
 	&do_log('notice',"These parameters aren't allowed in the new family definition, they are erased by a new instantiation family : \n $forbidden_param");
 
-	unless ($list->new_send_notify_to_owner('erase_customizing',($self->{'name'},$forbidden_param))) {
+	unless ($list->send_notify_to_owner('erase_customizing',[$self->{'name'},$forbidden_param])) {
 	    &do_log('notice','the owner isn\'t informed from erased customizing of the list %s',$list->{'name'});
 	}
     }
@@ -793,7 +793,6 @@ sub get_instantiation_results {
 sub check_param_constraint {
     my $self = shift;
     my $list = shift;
-    my $config = $list->{'admin'};
     &do_log('debug2','Family::check_param_constraint(%s,%s)',$self->{'name'},$list->{'name'});
 
     if ($self->{'state'} eq 'no_check') {
@@ -822,6 +821,16 @@ sub check_param_constraint {
 	}
 
 	$param_value = $list->get_param_value($param);
+
+	# exception for uncompellable parameter
+	foreach my $forbidden (@uncompellable_param) {
+	    if ($param eq $forbidden) {
+		next;
+	    }  
+	}
+
+
+
 	$value_error = $self->check_values($param_value,$constraint_value);
 	
 	if (ref($value_error)) {
@@ -897,7 +906,6 @@ sub check_values {
 	push @param_values,$param_value; # for single parameters
     }
     
- 
     foreach my $p_val (@param_values) { 
 	
 	my $found = 0;
@@ -1015,6 +1023,33 @@ sub get_hash_family_lists {
     }
     return \%list_of_lists;
 }
+
+#########################################
+# get_uncompellable_param
+#########################################
+# return the uncompellable parameters 
+#  into a hash
+#  
+# IN  : -
+# OUT : -\%list_of_param  
+#       
+#########################################    
+sub get_uncompellable_param {
+    my %list_of_param;
+    &do_log('debug3','Family::get_uncompellable_param()');
+
+    foreach my $param (@uncompellable_param) {
+	if ($param =~ /^([\w-]+)\.([\w-]+)$/) {
+	    $list_of_param{$1} = $2;
+	    
+	} else {
+	    $list_of_param{$param} = '';
+	}
+    }
+
+    return \%list_of_param;
+}
+
 
 ############################# PRIVATE METHODS ##############################
 
@@ -1306,7 +1341,7 @@ sub _update_existing_list {
 	my $forbidden_param = join(',',@{$custom->{'forbidden'}{'param'}});
 	&do_log('notice',"These parameters aren't allowed in the new family definition, they are erased by a new instantiation family : \n $forbidden_param");
 
-	unless ($list->new_send_notify_to_owner('erase_customizing',($self->{'name'},$forbidden_param))) {
+	unless ($list->send_notify_to_owner('erase_customizing',[$self->{'name'},$forbidden_param])) {
 	    &do_log('notice','the owner isn\'t informed from erased customizing of the list %s',$list->{'name'});
 	}
     }
@@ -1641,9 +1676,19 @@ sub _load_param_constraint_conf {
 	}
     }
     if ($error) {
-	&List::send_notify_to_listmaster('param_constraint_conf_error', $self->{'robot'}, $file);
+	unless (&List::send_notify_to_listmaster('param_constraint_conf_error', $self->{'robot'}, [$file])) {
+	    &do_log('notice','the owner isn\'t informed from param constraint config errors on the %s family',$self->{'name'});
+	}
     }
     close FILE;
+
+ # Parameters not allowed in param_constraint.conf file :
+    foreach my $forbidden (@uncompellable_param) {
+ 	if (defined $constraint->{$forbidden}) {
+ 	    delete $constraint->{$forbidden};
+ 	}
+     }
+
 ###########################"
  #   open TMP, ">/tmp/dump1";
  #   &tools::dump_var ($constraint, 0, \*TMP);

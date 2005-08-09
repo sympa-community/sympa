@@ -1,3 +1,8 @@
+From: SYMPA <[% conf.email %]@[% conf.host %]>
+Subject: [% FILTER qencode %][%|loc%]Subscription summary[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(user.email)%]Summary of your subscription (using the e-mail %1).[%END%]
 [%|loc%]If you want to unsubscribe from some list, please save this mail.[%END%]
@@ -6,8 +11,6 @@
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 [% FOREACH l = lists -%]
-[% l %]	mailto:[% conf.sympa %]?subject=sig%20[% l %]%20[% user.email %]
-
+[% l %]	[%|loc(conf.sympa,l,user.email)%][% FILTER escape_url %]mailto:%1?subject=sig %2 %3[% END %][% END %] 
 [% END %]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-

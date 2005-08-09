@@ -10,8 +10,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>16. List creation, families and list edition</TITLE>
-<META NAME="description" CONTENT="16. List creation, families and list edition">
+<TITLE>16. Customizing Sympa/WWSympa </TITLE>
+<META NAME="description" CONTENT="16. Customizing Sympa/WWSympa ">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -30,32 +30,32 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1183"
+<A NAME="tex2html1198"
   HREF="node18.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1177"
+<A NAME="tex2html1192"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1171"
+<A NAME="tex2html1186"
   HREF="node16.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1179"
+<A NAME="tex2html1194"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1181"
-  HREF="node26.html">
+<A NAME="tex2html1196"
+  HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1184"
-  HREF="node18.html">17. Lists Families</A>
-<B> Up:</B> <A NAME="tex2html1178"
+<B> Next:</B> <A NAME="tex2html1199"
+  HREF="node18.html">17. Mailing list definition</A>
+<B> Up:</B> <A NAME="tex2html1193"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1172"
-  HREF="node16.html">15. Mailing list definition</A>
- &nbsp; <B>  <A NAME="tex2html1180"
+<B> Previous:</B> <A NAME="tex2html1187"
+  HREF="node16.html">15. Interaction between Sympa and other</A>
+ &nbsp; <B>  <A NAME="tex2html1195"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1182"
-  HREF="node26.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1197"
+  HREF="node30.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -63,528 +63,783 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1185"
-  HREF="node17.html#SECTION001710000000000000000">16.1 List creation</A>
+<LI><A NAME="tex2html1200"
+  HREF="node17.html#SECTION001710000000000000000">16.1 Template file format</A>
+<LI><A NAME="tex2html1201"
+  HREF="node17.html#SECTION001720000000000000000">16.2 Site template files</A>
 <UL>
-<LI><A NAME="tex2html1186"
-  HREF="node17.html#SECTION001711000000000000000">16.1.1 Data for list creation</A>
-<LI><A NAME="tex2html1187"
-  HREF="node17.html#SECTION001712000000000000000">16.1.2 XML file format</A>
+<LI><A NAME="tex2html1202"
+  HREF="node17.html#SECTION001721000000000000000">16.2.1 helpfile.tt2</A>
+<LI><A NAME="tex2html1203"
+  HREF="node17.html#SECTION001722000000000000000">16.2.2 lists.tt2</A>
+<LI><A NAME="tex2html1204"
+  HREF="node17.html#SECTION001723000000000000000">16.2.3 global_remind.tt2</A>
+<LI><A NAME="tex2html1205"
+  HREF="node17.html#SECTION001724000000000000000">16.2.4 your_infected_msg.tt2</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html1188"
-  HREF="node17.html#SECTION001720000000000000000">16.2 List families</A>
-<LI><A NAME="tex2html1189"
-  HREF="node17.html#SECTION001730000000000000000">16.3 List creation on command line with <TT>sympa.pl</TT></A>
-<LI><A NAME="tex2html1190"
-  HREF="node17.html#SECTION001740000000000000000">16.4 Creating and editing mailing using the web</A>
+<LI><A NAME="tex2html1206"
+  HREF="node17.html#SECTION001730000000000000000">16.3 Web template files</A>
+<LI><A NAME="tex2html1207"
+  HREF="node17.html#SECTION001740000000000000000">16.4 Internationalization</A>
 <UL>
-<LI><A NAME="tex2html1191"
-  HREF="node17.html#SECTION001741000000000000000">16.4.1 List creation on the Web interface</A>
-<LI><A NAME="tex2html1192"
-  HREF="node17.html#SECTION001742000000000000000">16.4.2 Who can create lists on the Web interface</A>
-<LI><A NAME="tex2html1193"
-  HREF="node17.html#SECTION001743000000000000000">16.4.3 typical list profile and Web interface</A>
-<LI><A NAME="tex2html1194"
-  HREF="node17.html#SECTION001744000000000000000">16.4.4 List edition</A>
+<LI><A NAME="tex2html1208"
+  HREF="node17.html#SECTION001741000000000000000">16.4.1 <I>Sympa</I> internationalization</A>
+<LI><A NAME="tex2html1209"
+  HREF="node17.html#SECTION001742000000000000000">16.4.2 List internationalization</A>
+<LI><A NAME="tex2html1210"
+  HREF="node17.html#SECTION001743000000000000000">16.4.3 User internationalization</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html1211"
+  HREF="node17.html#SECTION001750000000000000000">16.5 Topics</A>
+<LI><A NAME="tex2html1212"
+  HREF="node17.html#SECTION001760000000000000000">16.6 Authorization scenarios</A>
+<LI><A NAME="tex2html1213"
+  HREF="node17.html#SECTION001770000000000000000">16.7 Loop detection</A>
+<LI><A NAME="tex2html1214"
+  HREF="node17.html#SECTION001780000000000000000">16.8 Tasks</A>
+<UL>
+<LI><A NAME="tex2html1215"
+  HREF="node17.html#SECTION001781000000000000000">16.8.1 List task creation</A>
+<LI><A NAME="tex2html1216"
+  HREF="node17.html#SECTION001782000000000000000">16.8.2 Global task creation</A>
+<LI><A NAME="tex2html1217"
+  HREF="node17.html#SECTION001783000000000000000">16.8.3 Model file format</A>
+<LI><A NAME="tex2html1218"
+  HREF="node17.html#SECTION001784000000000000000">16.8.4 Model file examples</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
 
-<H1><A NAME="SECTION001700000000000000000"></A>
-    <A NAME="ml-creation"></A>
+<H1><A NAME="SECTION001700000000000000000"></A><A NAME="9147"></A>
+    <A NAME="customization"></A>
 <BR>
-16. List creation, families and list edition
+16. Customizing <I>Sympa</I>/<I>WWSympa</I> 
 </H1>
-
-<P>
-The list creation can be done by two ways, according to listmaster 
-needs : 
-
-<UL>
-<LI>instanciation family to create and manage large number of related lists. 
-    In this case, lists are linked to their family all along their life.
-</LI>
-<LI>command line creation of individual list with <A NAME="8271"></A><TT>sympa.pl</TT> or on the Web 
-interface according to privileges defined by listmasters. Here lists are free from 
-their model creation.
-</LI>
-</UL> 
-Management of mailing lists by list owners is usually done via the Web interface : 
-when a list is created, whatever its status (<A NAME="8274"></A><TT>pending</TT> or <A NAME="8277"></A><TT>open</TT>), the owner 
-can use WWSympa admin features to modify list parameters, or to edit the welcome 
-message, and so on.
-
-<P>
-WWSympa keeps logs of the creation and all modifications to a list as part of the list's
-<A NAME="8280"></A><TT>config</TT> file (old configuration files are archived).
-A complete installation requires some careful planning, although default
-values should be acceptable for most sites.
 
 <P>
 
 <H1><A NAME="SECTION001710000000000000000"></A>
-    <A NAME="list-creation"></A>
+<A NAME="tpl-format"></A><A NAME="2038"></A>
 <BR>
-16.1 List creation
+16.1 Template file format
 </H1>
 
 <P>
-Mailing lists can have many different uses. <I>Sympa</I> offers a
-wide choice of parameters to adapt a list behavior
-to different situations. Users might have difficulty selecting all the
-correct parameters to make the list configuration, so instead of selecting each 
-parameters, list configuration is made with a list profile. This is an 
-almost complete list configuration, but with a number of unspecified fields
-(such as owner e-mail) to be replaced by <I>Sympa</I> at list creation time. It is easy to create new list 
-templates by modifying existing ones. (Contributions to the distribution are welcome...)
+Template files within <I>Sympa</I> used to be in a proprietary format that has been
+replaced with the <A NAME="tex2html34"
+  HREF="http://www.tt2.org">TT2</A>
+template format.
 
 <P>
-
-<H2><A NAME="SECTION001711000000000000000">
-16.1.1 Data for list creation</A>
-</H2>
+You will find detailed documentation about the TT2 syntax on the web site : <B>http://www.tt2.org</B>
 
 <P>
-To create a list, some data concerning list parameters are required : 
+Here are some aspects regarding templates that are specific to <I>Sympa</I>: 
 
 <UL>
-<LI><B>listname </B> : name of the list,
+<LI>References to PO catalogue are noted with the <B>[% loc %]</B> tag that may include 
+  parameters. Example: <TT>[%|loc(list.name,list.host)%]Welcome to list %1%2[%END%]</TT>.
+
+<P>
 </LI>
-<LI><B>subject</B> : subject of the list (a short description),
+<LI>Few exceptions apart, templates cannot insert or parse a file given its full or relative 
+   path, for security reason. Only the file name should be provided ; the TT2 parser will then
+   use the INCLUDE_PATH provided by <I>Sympa</I> to find the relevant file to insert/parse.
+
+<P>
 </LI>
-<LI><B>owner(s)</B> : by static definition and/or dynamic definition.
-    In case of static definition, the parameter <B>owner</B> and its subparameter <B>email</B> are required.
-    For dynamic definition, the parameter  <B>owner_include</B> and its subparameter <B>source</B> are required, 
-    indicating source file of data inclusion.
+<LI>The <B>qencode</B> filter should be used if a template includes SMTP header fields
+  that should be Q-encoded. Example: <TT>[% FILTER qencode %]Message &#224; mod&#233;rer[%END%]</TT>
+
+<P>
 </LI>
-<LI><B>list creation template</B> : the typical list profile.
+<LI>You can write different versions of a template file in different language, each of them 
+  being located in a subdirectory of the <B>tt2</B> directory. Example: <TT>/web_tt2/fr_FR/helpfile.tt2</TT>
+
+<P>
 </LI>
 </UL>
 
 <P>
-Moreover of these required data, provided values are assigned to vars being in the list creation template. 
-Then the result is the list configuration file :
+
+<H1><A NAME="SECTION001720000000000000000"></A>
+<A NAME="site-tpl"></A><A NAME="2052"></A>
 <BR>
+16.2 Site template files
+</H1>
+
 <P>
-On the Web interface, these data are given by the list creator in the web form. On command line these 
-data are given by an xml file.
+These files are used by Sympa as service messages for the <A NAME="9156"></A><TT>HELP</TT>, 
+<A NAME="9159"></A><TT>LISTS</TT> and <A NAME="9162"></A><TT>REMIND *</TT> commands. These files are interpreted 
+(parsed) by <I>Sympa</I> and respect the TT2 template format ; every file has a <B>.tt2</B> extension. 
+See <A HREF="#tpl-format">16.1</A>, 
+page&nbsp;<A HREF="node17.html#tpl-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. 
+
+<P>
+Sympa looks for these files in the following order (where <TT>&lt;</TT>list<TT>&gt;</TT> is the
+listname if defined, <TT>&lt;</TT>action<TT>&gt;</TT> is the name of the command, and <TT>&lt;</TT>lang<TT>&gt;</TT> is
+the preferred language of the user) :
+
+<OL>
+<LI><A NAME="9190"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+</LI>
+<LI><A NAME="9229"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list<TT>&gt;</TT>/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+</LI>
+<LI><A NAME="9262"></A><TT>/home/sympa/etc/my.domain.org/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+</LI>
+<LI><A NAME="9289"></A><TT>/home/sympa/etc/my.domain.org/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+</LI>
+<LI><A NAME="9316"></A><TT>/home/sympa/etc/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+</LI>
+<LI><A NAME="9343"></A><TT>/home/sympa/etc/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>. 
+</LI>
+<LI><A NAME="9370"></A><TT>/home/sympa/bin/etc/mail_tt2/<TT>&lt;</TT>lang<TT>&gt;</TT>/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>.
+</LI>
+<LI><A NAME="9397"></A><TT>/home/sympa/bin/etc/mail_tt2/<TT>&lt;</TT>action<TT>&gt;</TT>.tt2</TT>.
+</LI>
+</OL>
+
+<P>
+If the file starts with a From: line, it is considered as
+a full message and will be sent (after parsing) without adding SMTP
+headers. Otherwise the file is treated as a text/plain message body.
+
+<P>
+The following variables may be used in these template files :
+
+<P>
+<DL COMPACT>
+<DT>-</DT>
+<DD>[% conf.email %] : sympa e-mail address local part
+
+<P>
+</DD>
+<DT>-</DT>
+<DD>[% conf.domain %] : sympa robot domain name
+
+<P>
+</DD>
+<DT>-</DT>
+<DD>[% conf.sympa %] : sympa's complete e-mail address
+
+<P>
+</DD>
+<DT>-</DT>
+<DD>[% conf.wwsympa_url %] : <A NAME="9406"></A><I>WWSympa</I> root URL
+
+<P>
+</DD>
+<DT>-</DT>
+<DD>[% conf.listmaster %] : listmaster e-mail addresses
+
+<P>
+</DD>
+<DT>-</DT>
+<DD>[% user.email %] : user e-mail address
+
+<P>
+</DD>
+<DT>-</DT>
+<DD>[% user.gecos %] : user gecos field (usually his/her name)
+
+<P>
+</DD>
+<DT>-</DT>
+<DD>[% user.password %] : user password
+
+<P>
+</DD>
+<DT>-</DT>
+<DD>[% user.lang %] : user language	
+</DD>
+</DL>
 
 <P>
 
-<H2><A NAME="SECTION001712000000000000000"></A>
-<A NAME="xml-file-format"></A>
-<BR>
-16.1.2 XML file format
-</H2>
+<H2><A NAME="SECTION001721000000000000000">
+16.2.1 helpfile.tt2</A>
+</H2> 
 
 <P>
-The xml file provides information on :
-<BR>
-<UL>
-<LI>the list name,
-</LI>
-<LI>values to assign vars in the list creation template
-</LI>
-<LI>the list description in order to be written in the list file info
-</LI>
-<LI>the name of the list creation template (only for list creation on command line with sympa.pl, in a family context, the template is specified by the family name)
-</LI>
-</UL>
+This file is sent in response to a <A NAME="9409"></A><TT>HELP</TT> command. 
+	You may use additional variables
+<DL COMPACT>
+<DT>-</DT>
+<DD>[% is_owner %] : TRUE if the user is list owner
 
 <P>
-Here is an example of XML document that you can map with the following example of list creation template.:
+</DD>
+<DT>-</DT>
+<DD>[% is_editor %] : TRUE if the user is list editor
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION001722000000000000000">
+16.2.2 lists.tt2</A>
+</H2> 
+
+<P>
+File returned by <A NAME="9412"></A><TT>LISTS</TT> command. 
+	An additional variable is available :
+<DL COMPACT>
+<DT>-</DT>
+<DD>[% lists %] : this is a hash table indexed by list names and
+			containing lists' subjects. Only lists visible
+			to this user (according to the <A NAME="9415"></A><TT>visibility</TT> 
+			list parameter) are listed.
+</DD>
+</DL>
+
+<P>
+<I>Example:</I> 
 
 <P><PRE>
-&lt;?xml version="1.0" ?&gt;
-&lt;list&gt;
-	&lt;listname&gt;example&lt;/listname&gt;
-  	&lt;type&gt;my_profile&lt;/type&gt;
-  	&lt;subject&gt;a list example&lt;/subject&gt;
-  	&lt;description/&gt;
-  	&lt;status&gt;open&lt;/status&gt;
-  	&lt;shared_edit&gt;editor&lt;/shared_edit&gt;
-    	&lt;shared_read&gt;private&lt;/shared_read&gt;
-	&lt;language&gt;fr&lt;/language&gt;
-	&lt;owner multiple="1"&gt; 
-	   &lt;email&gt;serge.aumont@cru.fr&lt;/email&gt;
-	   &lt;gecos&gt;C.R.U.&lt;/gecos&gt;
-	&lt;/owner&gt;
-	&lt;owner multiple="1"&gt; 
-	   &lt;email&gt;olivier.salaun@cru.fr&lt;/email&gt;
-	&lt;/owner&gt;
-	&lt;owner_include multiple="1"&gt;
-	   &lt;source&gt;my_file&lt;/source&gt;
-	&lt;/owner_include&gt;
-	&lt;sql&gt; 
-	   &lt;type&gt;oracle&lt;/type&gt;
-	   &lt;host&gt;sqlserv.admin.univ-x.fr&lt;/host&gt;
-	   &lt;user&gt;stdutilisateur&lt;/user&gt;
-	   &lt;pwd&gt;monsecret&lt;/pwd&gt;
-	   &lt;name&gt;les_etudiants&lt;/name&gt;
-	   &lt;query&gt;SELECT DISTINCT email FROM etudiant&lt;/query&gt;
-	&lt;/sql&gt;
-&lt;/list&gt;
+These are the public lists for [conf-&gt;email]@[conf-&gt;domain]
 
-
-
-subject [% subject %]
-
-status [% status %]
-
-[% IF topic %]
-topics [% topic %]
+[% FOREACH l = lists %]
+[% l.key %]@[% l.value.host %] : [% l.value.subject %]
 
 [% END %]
-visibility noconceal
-
-send privateoreditorkey
-
-Web_archive
-  access public
-
-subscribe open_notify
-
-shared_doc
-  d_edit [% shared_edit %]
-  d_read [% shared_read %]
-
-lang [% language %]
-
-[% FOREACH o = owner %]
-owner
-  email [% o.email %]
-  profile privileged
-  [% IF o.gecos %] 
-  gecos [% o.gecos %]
-  [% END %]
-
-[% END %]
-[% IF moderator %]
-   [% FOREACH m = moderator %]
-editor
-  email [% m.email %]
-
-   [% END %]
-[% END %]
- 
-[% IF sql %]
-include_sql_query
-  db_type [% sql.type %]
-  host [% sql.host %]
-  user [% sql.user %]
-  passwd [% sql.pwd %]
-  db_name [% sql.name %]
-  sql_query [% sql.query %]
-    
-[% END %]
-ttl 360
 </PRE>
 
 <P>
-The XML file format should comply with the following rules : 
 
-<UL>
-<LI>The root element is <A NAME="8285"></A><TT>&lt;list&gt;</TT>
-</LI>
-<LI>One XML element is mandatory : <A NAME="8288"></A><TT>&lt;listname&gt;</TT> contains the name of the list.
-        That not excludes mandatory parameters for list creation (listname, subject,owner.email and/or 
-	owner_include.source).
-</LI>
-<LI><A NAME="8291"></A><TT>&lt;type&gt;</TT> : this element contains the name of template list creation, it is used for list creation on command line with sympa.pl.
-        In a family context, this element is no used.
-</LI>
-<LI><A NAME="8294"></A><TT>&lt;description&gt;</TT> : the text contained in this element is written in list <A NAME="8297"></A><TT>info</TT> file(it can be a CDATA section).
-</LI>
-<LI>For other elements, its name is the name of the var to assign in the list creation template. 
-</LI>
-<LI>Each element concerning multiple parameters must have the <A NAME="8300"></A><TT>multiple</TT> attribute set 
-    to ``1'', example : <A NAME="8303"></A><TT>&lt;owner multiple=''1''></TT>. 
-</LI>
-<LI>For composed and multiple parameters, sub-elements are used. Example for <A NAME="8306"></A><TT>owner</TT> parameter :
-    <A NAME="8309"></A><TT>&lt;email&gt;</TT> and <A NAME="8312"></A><TT>&lt;gecos&gt;</TT> elements are contained in the <A NAME="8315"></A><TT>&lt;owner&gt;</TT>element. 
-    An element can only have homogeneous content.
-</LI>
-<LI>A list requires at least one owner, defined in the XML input file with one of the following elements :
-    
-<UL>
-<LI><A NAME="8318"></A><TT>&lt;owner multiple=''1''> &lt;email&gt; ... &lt;/email&gt; &lt;/owner&gt;</TT>
-</LI>
-<LI><A NAME="8321"></A><TT>&lt;owner_include multiple=''1''> &lt;source&gt; ... &lt;/source&gt; &lt;/owner_include&gt;</TT>
-    
-</LI>
-</UL>
-</LI>
-</UL>
+<H2><A NAME="SECTION001723000000000000000">
+16.2.3 global_remind.tt2</A>
+</H2> 
+
+<P>
+This file is sent in response to a <A NAME="9418"></A><TT>REMIND *</TT> command. 
+	(see&nbsp;<A HREF="node28.html#cmd-remind">27.2</A>, page&nbsp;<A HREF="node28.html#cmd-remind"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+	You may use additional variables
+<DL COMPACT>
+<DT>-</DT>
+<DD>[% lists %] : this is an array containing the list names the user
+			is subscribed to.
+</DD>
+</DL>
+
+<P>
+<I>Example:</I> 
+
+<P><PRE>
+This is a subscription reminder.
+
+You are subscribed to the following lists :
+[% FOREACH l = lists %]
+	
+ [% l %] : [% conf.wwsympa\_url \%]/info/[% l %]
+
+[% END %]
+
+Your subscriber e-mail : [% user.email %]
+Your password : [% user.password %]
+</PRE>
 
 <P>
 
-<H1><A NAME="SECTION001720000000000000000">
-16.2 List families</A>
+<H2><A NAME="SECTION001724000000000000000">
+16.2.4 your_infected_msg.tt2</A>
+</H2> 
+
+<P>
+This message is sent to warn the sender of a virus infected mail,
+indicating the name of the virus found 
+(see&nbsp;<A HREF="#Antivirus"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, page&nbsp;<A HREF="#Antivirus"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
+
+<P>
+
+<H1><A NAME="SECTION001730000000000000000"></A>
+<A NAME="web-tpl"></A><A NAME="2127"></A>
+<BR>
+16.3 Web template files
 </H1>
 
 <P>
-See chapter <A HREF="node18.html#lists-families">17</A>, page&nbsp;<A HREF="node18.html#lists-families"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+You may define your own web template files, different from the standard
+ones. <A NAME="9421"></A><I>WWSympa</I> first looks for list specific web templates, then for
+site web templates, before falling back on its defaults. 
 
 <P>
-
-<H1><A NAME="SECTION001730000000000000000"></A><A NAME="8324"></A>
-    <A NAME="list-creation-sympa"></A>
-<BR>
-16.3 List creation on command line with <TT>sympa.pl</TT>
-</H1>
+Your list web template files should be placed in the <A NAME="9424"></A><TT>/home/sympa/expl/mylist/web_tt2</TT> 
+directory ; your site web templates in <A NAME="9427"></A><TT>~/home/sympa/etc/web_tt2</TT> directory.
 
 <P>
-This way to create lists is independent of family. 
-
-<P>
-Here is a sample command to create one list :.
-<BLOCKQUOTE>
-sympa.pl -create_list -robot my.domain.org-input_file /path/to/my_file.xml
-
-</BLOCKQUOTE>
-
-<P>
-The list is created under the <A NAME="8327"></A><TT>my_robot</TT> robot and the list 
-is described in the file <A NAME="8330"></A><TT>my_file.xml</TT>. The XML file is 
-described before, see <A HREF="#xml-file-format">16.1.2</A>, page&nbsp;<A HREF="node17.html#xml-file-format"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
-
-<P>
-By default, the status of the created list is <A NAME="8333"></A><TT>open</TT>.
-
-<P>
-
-<H3><A NAME="SECTION001730100000000000000"></A>
-    <A NAME="typical-list-profile"></A>
-<BR>
-16.3.0.1 typical list profile (list template creation)
-</H3>
-
-<P>
-The list creator has to choose a profile
-for the list and put its name in the XML element <A NAME="8336"></A><TT>&lt;type&gt;</TT>.
-
-<P>
-List profiles are stored in <A NAME="8339"></A><TT>/usr/local/sympa-os/etc/create_list_templates</TT> or in
-<A NAME="8342"></A><TT>/usr/local/sympa-os/bin/etc/create_list_templates</TT> (default of distrib).
-
-<P>
-You might want to hide or modify profiles (not useful, or dangerous 
-for your site). If a profile exists both in the local site directory
-<A NAME="8345"></A><TT>/usr/local/sympa-os/etc/create_list_templates</TT> and
-<A NAME="8348"></A><TT>/usr/local/sympa-os/bin/etc/create_list_templates</TT> directory, then the local profile 
-will be used by WWSympa. 
+Note that web colors are defined in <I>Sympa</I>'s main Makefile (see <A HREF="node4.html#makefile">3.3</A>,
+page&nbsp;<A HREF="node4.html#makefile"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
 
 <P>
 
 <H1><A NAME="SECTION001740000000000000000"></A>
-    <A NAME="web-ml-creation"></A>
+<A NAME="internationalization"></A><A NAME="2134"></A>
+<A NAME="2135"></A>
 <BR>
-16.4 Creating and editing mailing using the web
+16.4 Internationalization
 </H1>
 
 <P>
-The management of mailing lists is based on a strict definition of privileges 
-which pertain respectively to the listmaster, to the main list owner, and to 
-basic list owners. The goal is to allow each listmaster to define who can create 
-lists, and which parameters may be set by owners.
+<I>Sympa</I> was originally designed as a multilingual Mailing List
+Manager. Even in its earliest versions, <I>Sympa</I> separated messages from
+the code itself, messages being stored in NLS catalogues (according 
+to the XPG4 standard). Later a <A NAME="9435"></A><TT>lang</TT> list parameter was introduced.
+Nowadays <I>Sympa</I> is able to keep track of individual users' language preferences.
+
+<P>
+If you are willing to provide Sympa into your native language, please check the <B>translation howto</B> (<A NAME="tex2html35"
+  HREF="http://www.sympa.org/howtotranslate.html"><TT>http://www.sympa.org/howtotranslate.html</TT></A>);
 
 <P>
 
 <H2><A NAME="SECTION001741000000000000000">
-16.4.1 List creation on the Web interface</A>
+16.4.1 <I>Sympa</I> internationalization</A>
 </H2>
 
 <P>
-Listmasters have all privileges. The listmaster
-is defined in <A NAME="8351"></A><TT>sympa.conf</TT> and others are defined at the virtual robot level. By default, newly created
-lists must be activated by the listmaster. List creation is possible for all intranet users 
-(i.e. : users with an e-mail address within the same domain as Sympa).
-This is controlled by the <A NAME="8354"></A><TT>create_list</TT> authorization scenario.
+Every message sent by <I>Sympa</I> to users, owners and editors is outside
+the code, in a message catalog. These catalogs are located in the
+<A NAME="9441"></A><TT>/home/sympa/locale</TT> directory. 
 
 <P>
-List rejection message and list creation notification message are both
-templates that you can customize (<A NAME="8357"></A><TT>list_rejected.tt2</TT> and
-<A NAME="8360"></A><TT>list_created.tt2</TT>).
+To tell <I>Sympa</I> to use a particular message catalog, you can should set 
+the <A NAME="9445"></A><TT>lang</TT> parameter in <A NAME="9448"></A><TT>sympa.conf</TT>.
 
 <P>
 
 <H2><A NAME="SECTION001742000000000000000">
-16.4.2 Who can create lists on the Web interface</A>
+16.4.2 List internationalization</A>
 </H2>
 
 <P>
-This is defined by the <A NAME="8363"></A><TT>create_list</TT> sympa.conf parameter (see <A HREF="node7.html#create-list">6.1.16</A>,  
-page&nbsp;<A HREF="node7.html#create-list"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). This parameter refers to a <B>create_list</B> authorization scenario.
-It will determine if the <I>create list</I> button is displayed and if it requires
-a listmaster confirmation.
+The <A NAME="9451"></A><TT>lang</TT> list parameter defines the language for a list.
+It is currently used by <A NAME="9454"></A><I>WWSympa</I> and to initialize users'
+language preferences at subscription time.
 
 <P>
-The authorization scenario can accept any condition concerning the [sender]
-(i.e. WWSympa user), and it returns <A NAME="8366"></A><TT>reject</TT>, <A NAME="8369"></A><TT>do_it</TT>
-or <A NAME="8372"></A><TT>listmaster</TT> as an action.
-
-<P>
-Only in cases where a user is authorized by the create_list authorization scenario
-will the "create" button be available in the main menu.
-If the scenario returns <A NAME="8375"></A><TT>do_it</TT>, the list will be created and installed.
-If the scenario returns "listmaster", the user is allowed to create a list, but
-the list is created with the <A NAME="8378"></A><TT>pending</TT> status,
-which means that only the list owner may view or use it.
-The listmaster will need to open the list of pending lists
-using the "pending list" button in the "server admin"
-menu in order to install or refuse a pending list.
+In future versions, all messages returned by <I>Sympa</I> concerning
+a list should be in the list's language. 
 
 <P>
 
 <H2><A NAME="SECTION001743000000000000000">
-16.4.3 typical list profile and Web interface</A>
+16.4.3 User internationalization</A>
 </H2>
-As on command line creation, the list creator has to choose a list profile and to fill in the owner's e-mail 
-and the list subject together with a short description. But in this case, you don't need any XML file. Concerning
-these typical list profiles, they are described before, see <A HREF="#typical-list-profile">16.3</A>, page&nbsp;<A HREF="node17.html#typical-list-profile"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>. 
-You can check available profile. On the Web interface, another way 
-to control publicly available profiles is to
-edit the <A NAME="8381"></A><TT>create_list.conf</TT> file (the default for this file is in
-the <A NAME="8384"></A><TT>/usr/local/sympa-os/bin/etc</TT> directory, and you may create your own customized
-version in <A NAME="8387"></A><TT>/usr/local/sympa-os/etc</TT>).
-This file controls which of the available list templates are to be displayed. Example :<PRE>
-# Do not allow the public_anonymous profile
-public_anonymous hidden
-* read
-</PRE>
+
+<P>
+The user language preference is currently used by <A NAME="9458"></A><I>WWSympa</I> 
+only. There is no e-mail-based command for a user to set his/her
+language. The language preference is initialized when the user
+subscribes to his/her first list. <A NAME="9461"></A><I>WWSympa</I> allows the user to change 
+it.
 
 <P>
 
-<H2><A NAME="SECTION001744000000000000000"></A>
-<A NAME="list-edition"></A>
+<H1><A NAME="SECTION001750000000000000000"></A>
+<A NAME="topics"></A><A NAME="2149"></A>
 <BR>
-16.4.4 List edition
-</H2>
+16.5 Topics
+</H1>
 
 <P>
-For each parameter, you may specify (via the <A NAME="8390"></A><TT>/usr/local/sympa-os/etc/edit_list.conf</TT>
-configuration file) who has the right to edit the parameter concerned ; the default 
-<A NAME="8393"></A><TT>/usr/local/sympa-os/bin/etc/edit_list.conf</TT> is reasonably safe.
+<A NAME="9464"></A><I>WWSympa</I>'s homepage shows a list of topics for classifying
+mailing lists. This is dynamically generated using the different lists'
+<A NAME="9467"></A><TT>topics</TT> configuration parameters. A list may appear 
+in multiple categories (This parameter is different from <A NAME="9470"></A><TT>msg_topic</TT>
+used to tag list messages)
 
 <P>
-<PRE>
-Each line is a set of 3 field
-&lt;Parameter&gt; &lt;Population&gt; &lt;Privilege&gt;
-&lt;Population&gt; : &lt;listmaster|privileged_owner|owner&gt; 
-&lt;Privilege&gt; : &lt;write|read|hidden&gt;
-parameter named "default" means any other parameter
+The list of topics is defined in the <A NAME="9473"></A><TT>topics.conf</TT> configuration
+file, located in the <A NAME="9476"></A><TT>/home/sympa/etc</TT> directory. The format of this file is 
+as follows :<PRE>
+&lt;topic1_name&gt;
+title	&lt;topic1 title&gt;
+title.fr &lt;topic french title&gt;
+visibility &lt;topic1 visibility&gt;
+....
+&lt;topicn_name/subtopic_name&gt;
+title	&lt;topicn title&gt;
+title.de &lt;topicn german title&gt;
 </PRE>
 
 <P>
-There is no hierarchical relation between  populations in this
-configuration file. You need to explicitely list populations.
+You will notice that subtopics can be used, the separator being <I>/</I>.
+The topic name is composed of alphanumerics (0-1a-zA-Z) or underscores (_).
+The order in which the topics are listed is respected in <A NAME="9479"></A><I>WWSympa</I>'s homepage.
+The <B>visibility</B> line defines who can view the topic (now available for subtopics).
+It refers to the associated topics_visibility authorization scenario.
+You will find a sample <A NAME="9482"></A><TT>topics.conf</TT> in the <A NAME="9485"></A><TT>sample</TT> 
+directory ; NONE is installed as the default. 
 
 <P>
-Eg: listmaster will not match rules refering to owner or privileged_owner
+A default topic is hard-coded in <I>Sympa</I>: <I>default</I>. This default topic
+contains all lists for which a topic has not been specified.
+
+<P>
+
+<H1><A NAME="SECTION001760000000000000000">
+16.6 Authorization scenarios</A>
+</H1>
+
+<P>
+See <A HREF="node14.html#scenarios">13</A>, page&nbsp;<A HREF="node14.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+
+<P>
+
+<H1><A NAME="SECTION001770000000000000000"></A>
+    <A NAME="loop-detection"></A>    <A NAME="2168"></A>
+<BR>
+16.7 Loop detection
+</H1>
+
+<P>
+<I>Sympa</I> uses multiple heuristics to avoid loops in Mailing lists
+
+<P>
+First, it rejects messages coming from a robot (as indicated by the
+From: and other header fields), and messages containing commands.
+
+<P>
+Secondly, every message sent by <I>Sympa</I> includes an X-Loop header field set to
+the listname. If the message comes back, <I>Sympa</I> will detect that
+it has already been sent (unless X-Loop header fields have been
+erased).
+
+<P>
+Thirdly, <I>Sympa</I> keeps track of Message IDs and will refuse to send multiple
+messages with the same message ID to the same mailing list.
+
+<P>
+Finally, <I>Sympa</I> detect loops arising from command reports (i.e. sympa-generated replies to commands). 
+This sort of loop might occur as follows:
 
 <P><PRE>
-     examples :
-
-	# only listmaster can edit user_data_source, priority, ...
-	user_data_source listmaster write  
-
-	priority 	owner,privileged_owner 		read
-	priority 	listmaster 			write
-      
-	# only privileged owner can modify  editor parameter, send, ...
-	editor privileged_owner write
-	
-	send 		owner 				read
-	send 		privileged_owner,listmaster 	write
-
-	# other parameters can be changed by simple owners
-	default 	owner 				write
+1 - X sends a command to Sympa
+2 - Sympa sends a command report to X
+3 - X has installed a home-made vacation program replying to programs
+4 - Sympa processes the reply and sends a report
+5 - Looping to step 3
 </PRE>
 
 <P>
-Privileged owners are defined in the list's <A NAME="8396"></A><TT>config</TT> file as follows :
-	<PRE>
-	owner
-	email owners.email@foo.bar
-	profile privileged
-</PRE>
+<I>Sympa</I> keeps track (via an internal counter) of reports sent to any particular address.
+The loop detection algorithm is :
 
 <P>
-The following rules are hard coded in WWSympa :
 
 <UL>
-<LI>only listmaster can edit the "profile privileged"
-      owner attribute 
+<LI>Increment the counter
 
 <P>
 </LI>
-<LI>owners can edit their own attributes (except profile and e-mail)
+<LI>If we are within the sampling period (as defined by the
+	<A NAME="9495"></A><TT>loop_command_sampling_delay</TT> parameter)
+
+<P>
+
+<UL>
+<LI>If the counter exceeds the 
+		<A NAME="9498"></A><TT>loop_command_max</TT> parameter, then 
+		do not send the report, and notify the listmaster
 
 <P>
 </LI>
-<LI>the requestor creating a new list becomes a privileged owner
-
-<P>
+<LI>Else, start a new sampling period and reinitialize
+		the counter,  i.e. multiply it by the 
+		<A NAME="9501"></A><TT>loop_command_decrease_factor</TT> parameter
+	
 </LI>
-<LI>privileged owners can edit any gecos/reception/info attribute
-of any owner
-
-<P>
-</LI>
-<LI>privileged owners can edit owners' e-mail addresses (but not privileged owners' e-mail addresses)
+</UL>
 
 <P>
 </LI>
 </UL>
 
 <P>
-Sympa aims to define two levels of trust for owners (some being entitled 
-      simply to edit secondary parameters such as "custom_subject", others having
-      the right to manage more important parameters), while leaving control of
-      crucial parameters (such as the list of privileged owners and user_data_sources)
-      in the hands of the listmaster.
-      Consequently, privileged owners can change owners' e-mails,
-      but they cannot grant the responsibility of list management to others without
-      referring to the listmaster.
+
+<H1><A NAME="SECTION001780000000000000000"></A>
+    <A NAME="tasks"></A>    <A NAME="2182"></A>
+<BR>
+16.8 Tasks
+</H1>
 
 <P>
-Concerning list edition in a family context, see <A HREF="node18.html#list-param-edit-family">17.2.8</A>, page&nbsp;<A HREF="node18.html#list-param-edit-family"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+A task is a sequence of simple actions which realize a complex routine. It is executed in background 
+by the task manager daemon and allow the list master to automate the processing of recurrent tasks. 
+For example a task sends every year the subscribers of a list a message to remind their subscription. 
+
+<P>
+A task is created with a task model. It is a text file which describes a sequence of simple actions. 
+It may have different versions (for instance reminding subscribers every year or semester).
+A task model file name has the following format : <A NAME="9522"></A><TT><TT>&lt;</TT>model name<TT>&gt;</TT>.<TT>&lt;</TT>model version<TT>&gt;</TT>.task</TT>.
+For instance <A NAME="9537"></A><TT>remind.annual.task</TT>  or <A NAME="9540"></A><TT>remind.semestrial.task</TT>.
+
+<P>
+<I>Sympa</I> provides several task models stored in <A NAME="9544"></A><TT>/home/sympa/bin/etc/global_task_models</TT> 
+  and <A NAME="9547"></A><TT>/home/sympa/bin/etc/list_task_models</TT> directories.
+Others can be designed by the listmaster. 
+
+<P>
+A task is global or related to a list.
+
+<P>
+
+<H2><A NAME="SECTION001781000000000000000">
+16.8.1 List task creation</A>
+</H2>
+
+<P>
+You define in the list config file the model and the version you want to use (see 
+<A HREF="node21.html#list-task-parameters">20.3.5</A>, page&nbsp;<A HREF="node21.html#list-task-parameters"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>). Then the task manager daemon will automatically 
+create the task by looking for the appropriate model file in different directories in the
+following order :
+
+<P>
+
+<OL>
+<LI><A NAME="9562"></A><TT>/home/sympa/expl/<TT>&lt;</TT>list name<TT>&gt;</TT>/</TT>
+</LI>
+<LI><A NAME="9571"></A><TT>/home/sympa/etc/list_task_models/</TT>
+</LI>
+<LI><A NAME="9574"></A><TT>/home/sympa/bin/etc/list_task_models/</TT>
+</LI>
+</OL>
+
+<P>
+See also <A HREF="node18.html#Listmodelfiles">17.10</A>, page&nbsp;<A HREF="node18.html#Listmodelfiles"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, to know more about standard list models provided with <I>Sympa</I>.
+
+<P>
+
+<H2><A NAME="SECTION001782000000000000000">
+16.8.2 Global task creation</A>
+</H2>
+
+<P>
+The task manager daemon checks if a version of a global task model is specified in <A NAME="9578"></A><TT>sympa.conf</TT> 
+and then creates a task as soon as it finds the model file by looking in different directories
+in the following order :
+
+<P>
+
+<OL>
+<LI><A NAME="9581"></A><TT>/home/sympa/etc/global_task_models/</TT>
+</LI>
+<LI><A NAME="9584"></A><TT>/home/sympa/bin/etc/global_task_models/</TT>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION001783000000000000000">
+16.8.3 Model file format</A>
+</H2>
+
+<P>
+Model files are composed of comments, labels, references, variables, date values
+and commands. All those syntactical elements are composed of alphanumerics (0-9a-zA-Z) and underscores (_).
+
+<P>
+
+<UL>
+<LI>Comment lines begin by '#' and are not interpreted by the task manager.
+</LI>
+<LI>Label lines begin by '/' and are used by the next command (see below).
+</LI>
+<LI>References are enclosed between brackets '[]'. They refer to a value 
+depending on the object of the task (for instance [list-<TT>&gt;</TT>name]). Those variables
+are instantiated when a task file is created from a model file. The list of available 
+variables is the same as for templates (see <A HREF="node18.html#list-tpl">17.8</A>, see 
+page&nbsp;<A HREF="node18.html#list-tpl"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) plus [creation_date] (see below).
+</LI>
+<LI>Variables store results of some commands and are paramaters for others.
+Their name begins with '@'.
+</LI>
+<LI>A date value may be written in two ways :
+
+<P>
+
+<UL>
+<LI>absolute dates follow the format : xxxxYxxMxxDxxHxxMin. Y is the year, 
+		M the month (1-12), D the day (1-28<TT>|</TT>30<TT>|</TT>31, leap-years are not managed),
+		H the hour (0-23), Min the minute (0-59). H and Min are optionnals.
+		For instance, 2001y12m4d44min is the 4th of December 2001 at 00h44.
+
+<P>
+</LI>
+<LI>relative dates use the [creation_date] or [execution_date] references. 
+		[creation_date] is the date when the task file is created, [execution_date] 
+		when the command line is executed.
+		A duration may follow with '+' or '-' operators. The duration is expressed 
+		like an absolute date whose all parameters are optionnals. 	
+		Examples : [creation_date], [execution_date]+1y, [execution_date]-6m4d
+	
+</LI>
+</UL>
+
+<P>
+</LI>
+<LI>Command arguments are separated by commas and enclosed between parenthesis '()'.
+</LI>
+</UL>
+
+<P>
+Here is the list of current avalable commands :
+
+<UL>
+<LI>stop ()
+
+<P>
+Stops the execution of the task and delete the task file
+</LI>
+<LI>next (<TT>&lt;</TT>date value<TT>&gt;</TT>, <TT>&lt;</TT>label<TT>&gt;</TT>)
+
+<P>
+Stop the execution. The task will go on at the date value and begin at the label line.
+</LI>
+<LI><TT>&lt;</TT>deleted_users<TT>&gt;</TT> = delete_subs (<TT>&lt;</TT>user_selection<TT>&gt;</TT>)
+
+<P>
+Delete @user_selection email list and stores user emails successfully deleted in @deleted_users.
+</LI>
+<LI>send_msg (<TT>&lt;</TT>user_selection<TT>&gt;</TT>, <TT>&lt;</TT>template<TT>&gt;</TT>)
+
+<P>
+Send the template message to emails stored in @user_selection.
+</LI>
+<LI>user_selection = select_subs (<TT>&lt;</TT>condition<TT>&gt;</TT>)
+
+<P>
+Store emails which match the condition in @user_selection. See 8.6 Authorization Scenarios section to know how to write conditions. Only available for list models.
+</LI>
+<LI>create (global | list (<TT>&lt;</TT>list name<TT>&gt;</TT>), <TT>&lt;</TT>model type<TT>&gt;</TT>, <TT>&lt;</TT>model<TT>&gt;</TT>)
+
+<P>
+Create a task for object with model file <A NAME="9587"></A><TT>~model type.model.task</TT>.
+</LI>
+<LI>chk_cert_expiration (<TT>&lt;</TT>template<TT>&gt;</TT>, <TT>&lt;</TT>date value<TT>&gt;</TT>)
+
+<P>
+Send the template message to emails whose certificate has expired or will expire before the date value.
+</LI>
+<LI>update_crl (<TT>&lt;</TT>file name<TT>&gt;</TT>, <TT>&lt;</TT>date value<TT>&gt;</TT>)
+
+<P>
+Update certificate revocation lists (CRL) which are expired or will expire before the date value. The file stores the CRL's URLs.
+
+<P>
+</LI>
+<LI>purge_orphan_bounces()
+
+<P>
+Clean bounces by removing unsubscribed-users archives.
+
+<P>
+</LI>
+<LI>eval_bouncers()
+
+<P>
+Evaluate all bouncing users of all list and give them a score from 0 to 100. (0 = no bounces for this user, 100 is for users who should be removed).
+
+<P>
+</LI>
+<LI>process_bouncers()
+
+<P>
+Execute actions defined in list configuration on each bouncing users, according to their score.
+</LI>
+</UL>
+
+<P>
+Model files may have a scenario-like title line at the beginning.
+
+<P>
+When you change a configuration file by hand, and a task parameter is created or modified, it is up to you
+to remove existing task files in the <A NAME="9592"></A><TT>task/</TT> spool if needed. Task file names have the following format : 
+
+<P>
+<A NAME="9625"></A><TT><TT>&lt;</TT>date<TT>&gt;</TT>.<TT>&lt;</TT>label<TT>&gt;</TT>.<TT>&lt;</TT>model name<TT>&gt;</TT>.<TT>&lt;</TT>list name | global<TT>&gt;</TT></TT> where :
+
+<P>
+
+<UL>
+<LI>date is when the task is executed, it is an epoch date
+</LI>
+<LI>label states where in the task file the execution begins. If empty, starts at the beginning 
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION001784000000000000000">
+16.8.4 Model file examples</A>
+</H2>
+
+<P>
+
+<UL>
+<LI>remind.annual.task
+	<A NAME="remind-annual-task"></A>	<PRE>
+</PRE>
+
+<P>
+</LI>
+<LI>expire.annual.task
+	<A NAME="expire-annual-task"></A>	<PRE>
+</PRE>
+
+<P>
+</LI>
+<LI>crl_update.daily.task
+<BR>	<PRE>
+title.gettext daily update of the certificate revocation list
+
+/ACTION
+update_crl (CA_list, [execution_date]+1d)
+next ([execution_date] + 1d, ACTION)
+</PRE>
+
+<P>
+</LI>
+</UL>
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1183"
+<A NAME="tex2html1198"
   HREF="node18.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1177"
+<A NAME="tex2html1192"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1171"
+<A NAME="tex2html1186"
   HREF="node16.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1179"
+<A NAME="tex2html1194"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1181"
-  HREF="node26.html">
+<A NAME="tex2html1196"
+  HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1184"
-  HREF="node18.html">17. Lists Families</A>
-<B> Up:</B> <A NAME="tex2html1178"
+<B> Next:</B> <A NAME="tex2html1199"
+  HREF="node18.html">17. Mailing list definition</A>
+<B> Up:</B> <A NAME="tex2html1193"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1172"
-  HREF="node16.html">15. Mailing list definition</A>
- &nbsp; <B>  <A NAME="tex2html1180"
+<B> Previous:</B> <A NAME="tex2html1187"
+  HREF="node16.html">15. Interaction between Sympa and other</A>
+ &nbsp; <B>  <A NAME="tex2html1195"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1182"
-  HREF="node26.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1197"
+  HREF="node30.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2005-08-04
+2005-08-05
 </ADDRESS>
 </BODY>
 </HTML>

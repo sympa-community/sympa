@@ -1,5 +1,8 @@
-From: [% conf.email %]@[% conf.host %]
+From: SYMPA <[% conf.email %]@[% conf.host %]>
 Subject: [% FILTER qencode %][%|loc(list.name)%]%1 mailing list creation[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name,list.host)%]%1@%2 mailing list has been activated by listmaster.[%END%]
 

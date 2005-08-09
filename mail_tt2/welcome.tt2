@@ -1,26 +1,23 @@
-From: [% conf.email %]@[% conf.host %]
+From: [% fromlist %]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Welcome to list %1[%END%][%END%]
 Mime-version: 1.0
 Content-Type: multipart/alternative; boundary="===Sympa==="
 
 --===Sympa===
-Content-Type: text/plain; charset=iso-8859-1
-Content-transfer-encoding: 8bit
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name,list.host)%]Welcome to list %1@%2[%END%]
 [%|loc(user.email)%]Your subscription email is %1[%END%]
 
-[% TRY %]
- [% INSERT "info" %]
-[% CATCH %]
-[% END %]
+[% INSERT "info" %]
 
 [%|loc%]Everything about this list:[%END%]
 [% conf.wwsympa_url %]/info/[% list.name %]
 
 --===Sympa===
-Content-Type: text/html; charset=iso-8859-1
-Content-transfer-encoding: 8bit
+Content-Type: text/html; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 <HTML>
 <HEAD>
@@ -31,10 +28,7 @@ Content-transfer-encoding: 8bit
 [%|loc(user.email)%]Your subscription email is %1[%END%] 
 <BR><BR>
 <PRE>
-[% TRY %]
- [% INSERT "info" %]
-[% CATCH %]
-[% END %]
+[% INSERT "info" %]
 </PRE>
 
 <HR>

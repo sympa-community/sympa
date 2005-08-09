@@ -34,7 +34,7 @@ use Log;
 use Getopt::Long;
 use Time::Local;
 use Digest::MD5;
-use smtp;
+use mail;
 use wwslib;
  
 require 'tt2.pl';
@@ -136,7 +136,7 @@ umask(oct($Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf{'home'})) {
-    &message('chdir_error');
+    &report::reject_report_web('intern','chdir_error',{},'','','',$robot);
     &do_log('err',"error : unable to change to directory $Conf{'home'}");
     exit (-1);
 }
@@ -370,7 +370,7 @@ while (!$end) {
     #$end = 1;
 
     ## Free zombie sendmail processes
-    &smtp::reaper;
+    &mail::reaper;
 }
 
 &do_log ('notice', 'task_manager exited normally due to signal'); 
@@ -866,14 +866,23 @@ sub send_msg {
 
 	foreach my $email (keys %{$Rvars->{$var}}) {
 	    &do_log ('notice', "--> message sent to $email");
-	    &List::send_global_file ($template, $email, $Rvars->{$var}{$email}) if (!$log);
+ 	    if (!$log) {
+ 		unless (&List::send_global_file ($template, $email, ,'',$Rvars->{$var}{$email}) ) {
+ 		    &do_log ('notice', "Unable to send template $template to $email");
+ 		}
+ 	    }
 	}
     } else {
 	my $list = new List ($context->{'object_name'});
-        
+        &do_log('err',"Unknown list '$context->{'object_name'}', unable to send message '$template'") unless($list);
+	
 	foreach my $email (keys %{$Rvars->{$var}}) {
 	    &do_log ('notice', "--> message sent to $email");
-	    $list->send_file ($template, $email, $list->{'domain'}, $Rvars->{$var}{$email}) if (!$log);
+ 	    if (!$log) {
+ 		unless ($list->send_file ($template, $email, $list->{'domain'}, $Rvars->{$var}{$email}))  {
+ 		    &do_log ('notice', "Unable to send template $template to $email");
+ 		}
+	    }
 	}
     }
     return 1;
@@ -1019,11 +1028,13 @@ sub delete_subs_cmd {
     foreach my $email (keys %{$Rvars->{$var}}) {
 
 	&do_log ('notice', "email : $email");
-	my $action = &List::request_action ('del', 'smime',
+	my $result = &List::request_action ('del', 'smime',
 					    {'listname' => $context->{'list_name'},
 					     'sender'   => $Conf{'listmaster'},
 					     'email'    => $email,
 					 });
+	my $action;
+	$action = $result->{'action'} if (ref($result) eq 'HASH');
 	if ($action =~ /reject/i) {
 	    error ("$context->{'task_file'}", "error in delete_subs command : deletion of $email not allowed");
 	} else {
@@ -1358,7 +1369,12 @@ sub purge_orphan_bounces {
 	     $tpl_context{'expiration_date'} = &tools::adate ($expiration_date);
 	     $tpl_context{'certificate_id'} = $id;
 
-	     &List::send_global_file ($template, $_, \%tpl_context) if (!$log);
+	     
+	     if (!$log) {
+		 unless (&List::send_global_file ($template, $_,'', \%tpl_context)) {
+		     &do_log ('notice', "Unable to send template $template to $_");
+		 }
+	     }
 	     &do_log ('notice', "--> $_ certificate soon expired ($date), user warned");
 	 }
      }
@@ -1552,26 +1568,28 @@ sub process_bouncers {
 	    my $action = $list->{'admin'}{'bouncers_level'.$level}{'action'};
 	    my $notification = $list->{'admin'}{'bouncers_level'.$level}{'notification'};
 	  
-	    if (@bouncers[$level]){
+	    if (@{$bouncers[$level]}){
 		## calling action subroutine with (list,email list) in parameter 
-		unless ($actions{$action}->($list,@bouncers[$level])){
+		unless ($actions{$action}->($list,$bouncers[$level])){
 		    &do_log('err','error while calling action sub for bouncing users in list %s',$listname);
 		    return undef;
 		}
 
 		## calling notification subroutine with (list,action, email list) in parameter  
 		
-		my @param = ($listname,$action,@bouncers[$level]);
+		my $param = {'listname' => $listname,
+			     'action' => $action,
+			     'user_list' => \@{$bouncers[$level]},
+			     'total' => $#{$bouncers[$level]} + 1};
 
 	        if ($notification eq 'listmaster'){
 
-		    unless(&List::send_notify_to_listmaster('automatic_bounce_management',$list->{'domain'},@param)){
+		    unless(&List::send_notify_to_listmaster('automatic_bounce_management',$list->{'domain'},$param)){
 			&do_log('err','error while notifying listmaster');
 			return undef;
 		    }
 		}elsif ($notification eq 'owner'){
-		    
-		    unless ($list->new_send_notify_to_owner('automatic_bounce_management',@param)){
+		    unless ($list->send_notify_to_owner('automatic_bounce_management',$param)){
 			&do_log('err','error while notifying owner');
 			return undef;
 		    }
@@ -1697,7 +1715,9 @@ sub error {
                  $message";
     do_log ('err', "$message");
     change_label ($task_file, 'ERROR') unless ($task_file eq '');
-    &List::send_notify_to_listmaster ('error in task', $Conf{'domain'}, @param);
+    unless (&List::send_notify_to_listmaster ('error in task', $Conf{'domain'}, \@param)) {
+    	&do_log('notice','error while notifying listmaster about "error_in_task"');
+    }
 }
 
 sub sync_include {

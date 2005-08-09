@@ -1,6 +1,8 @@
-From: [% conf.email %]@[% conf.host %]
+From: [% fromlist %]
 Subject: [% FILTER qencode %][%|loc%]Your document has been rejected.[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(filename,list.name,list.host,rejected_by)%]Your document %1  for list %2@%3
 has been rejected by %4 list editor.[%END%]
-

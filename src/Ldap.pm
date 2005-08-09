@@ -288,7 +288,7 @@ sub get_exported_lists{
 	$ldap->unbind;
 	return undef;
     }
-
+	
     my $search_filter = "(|(listEmailAddress=*$filter*)(listSubject=*$filter*))";
     my $result_search = $ldap->search (
 				       base => "$Conf{'ldap_export'}{$directory}{'suffix'}",

@@ -1,5 +1,9 @@
-From: [% conf.email %]@[% conf.host %]
+From: [% fromlist %]
 Subject: [% FILTER qencode %][%|loc%]Your message has been rejected.[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
 
 [%|loc(list.name,list.host,rejected_by)%]Your message for list %1@%2
 has been rejected by the moderator (%3).[%END%]

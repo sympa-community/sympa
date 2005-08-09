@@ -10,8 +10,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>10. Sympa SOAP server</TITLE>
-<META NAME="description" CONTENT="10. Sympa SOAP server">
+<TITLE>10. Sympa RSS channel</TITLE>
+<META NAME="description" CONTENT="10. Sympa RSS channel">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -30,32 +30,32 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1029"
+<A NAME="tex2html1078"
   HREF="node12.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1023"
+<A NAME="tex2html1072"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1017"
+<A NAME="tex2html1066"
   HREF="node10.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1025"
+<A NAME="tex2html1074"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1027"
-  HREF="node26.html">
+<A NAME="tex2html1076"
+  HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1030"
-  HREF="node12.html">11. Authentication</A>
-<B> Up:</B> <A NAME="tex2html1024"
+<B> Next:</B> <A NAME="tex2html1079"
+  HREF="node12.html">11. Sympa SOAP server</A>
+<B> Up:</B> <A NAME="tex2html1073"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1018"
-  HREF="node10.html">9. Sympa RSS channel</A>
- &nbsp; <B>  <A NAME="tex2html1026"
+<B> Previous:</B> <A NAME="tex2html1067"
+  HREF="node10.html">9. WWSympa, Sympa's web interface</A>
+ &nbsp; <B>  <A NAME="tex2html1075"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1028"
-  HREF="node26.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1077"
+  HREF="node30.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -63,649 +63,210 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html1031"
-  HREF="node11.html#SECTION001110000000000000000">10.1 Introduction</A>
-<LI><A NAME="tex2html1032"
-  HREF="node11.html#SECTION001120000000000000000">10.2 Web server setup</A>
-<LI><A NAME="tex2html1033"
-  HREF="node11.html#SECTION001130000000000000000">10.3 Sympa setup</A>
-<LI><A NAME="tex2html1034"
-  HREF="node11.html#SECTION001140000000000000000">10.4 The WSDL service description</A>
-<LI><A NAME="tex2html1035"
-  HREF="node11.html#SECTION001150000000000000000">10.5 Client-side programming</A>
-<UL>
-<LI><A NAME="tex2html1036"
-  HREF="node11.html#SECTION001151000000000000000">10.5.1 Writting a Java client with Axis</A>
-</UL></UL>
+<LI><A NAME="tex2html1080"
+  HREF="node11.html#SECTION001110000000000000000">10.1 <TT>latest_lists</TT></A>
+<LI><A NAME="tex2html1081"
+  HREF="node11.html#SECTION001120000000000000000">10.2 <TT>active_lists</TT></A>
+<LI><A NAME="tex2html1082"
+  HREF="node11.html#SECTION001130000000000000000">10.3 <TT>latest_arc</TT></A>
+<LI><A NAME="tex2html1083"
+  HREF="node11.html#SECTION001140000000000000000">10.4 <TT>latest_d_read</TT></A>
+</UL>
 <!--End of Table of Child-Links-->
 <HR>
 
 <H1><A NAME="SECTION001100000000000000000"></A>
-<A NAME="soap"></A>
+<A NAME="rss"></A><A NAME="1500"></A>
 <BR>
-10. Sympa SOAP server
+10. Sympa RSS channel
 </H1>
 
 <P>
-
-<H1><A NAME="SECTION001110000000000000000">
-10.1 Introduction</A>
-</H1>
-
-<P>
-<A NAME="tex2html29"
-  HREF="http://www.w3.org/2002/ws/">SOAP</A>
-is one protocol (generally over HTTP) that 
-can be used to provide <B>web services</B>. Sympa SOAP server allows to access a Sympa service 
-from within another program, written in any programming language and on any computer. SOAP encapsulates 
-procedure calls, input parameters and resulting data in an XML data structure. The Sympa SOAP server's
-API is published in a <B>WSDL </B> document, retreived via Sympa's web interface.
-
-<P>
-The SOAP server provides a limited set of high level functions including <TT>login</TT>, <TT>which</TT>,
-<TT>lists</TT>,<TT>subscribe</TT>,<TT>signoff</TT>. Other functions might be implemented in the future.
-
-<P>
-The SOAP server uses <A NAME="tex2html30"
-  HREF="http://www.soaplite.com/">SOAP::Lite</A>
-Perl library. The server 
-is running as a daemon (thanks to FastCGI), receiving the client SOAP requests via a web server (Apache 
-for example).
-
-<P>
-
-<H1><A NAME="SECTION001120000000000000000">
-10.2 Web server setup</A>
-</H1>
-
-<P>
-You <B>NEED TO</B> install FastCGI for the SOAP server to work properly because it will run as a daemon.
-
-<P>
-Here is a sample piece of your Apache <A NAME="7034"></A><TT>httpd.conf</TT> with a SOAP server configured :<PRE>
-	FastCgiServer /usr/local/sympa-os/bin/sympa_soap_server.fcgi -processes 1
-	ScriptAlias /sympasoap /usr/local/sympa-os/bin/sympa_soap_server.fcgi
-
-	&lt;Location /sympasoap&gt;
-   	  SetHandler fastcgi-script
-	&lt;/Location&gt;
-</PRE>
-
-<P>
-
-<H1><A NAME="SECTION001130000000000000000">
-10.3 Sympa setup</A>
-</H1>
-
-<P>
-The only parameters that you need to set in <A NAME="7037"></A><TT>sympa.conf</TT>/<A NAME="7040"></A><TT>robot.conf</TT> files is
-the <A NAME="7043"></A><TT>soap_url</TT> parameter that defines the URL of the SOAP service corresponding
-to the ScriptAlias you've previously setup in Apache config. 
-
-<P>
-This parameter is used to publish the SOAP service URL in the WSDL file (defining the API) but
-also for the SOAP server to deduce what Virtual Robot is concerned by the current SOAP request 
-(a single SOAP server will serve all Sympa Virtual robots).
-
-<P>
-
-<H1><A NAME="SECTION001140000000000000000">
-10.4 The WSDL service description</A>
-</H1>
-
-<P>
-Here is what the WSDL file looks like before it is parsed by WWSympa :
-
-<P><PRE>
-&lt;?xml version="1.0"?&gt;
-&lt;definitions name="Sympa" 
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
-	targetNamespace="[% conf.wwsympa_url %]/wsdl" 
-	xmlns:tns="[% conf.wwsympa_url %]/wsdl"
-	xmlns="http://schemas.xmlsoap.org/wsdl/" 
-	xmlns:xsdl="[% conf.soap_url %]/wsdl"&gt;
-
-
-&lt;!-- types part --&gt;	
-
-
-&lt;types&gt;
-&lt;schema targetNamespace="[% conf.wwsympa_url %]/wsdl" 
-	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
-	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
-	xmlns="http://www.w3.org/2001/XMLSchema"&gt;
-	
-	&lt;complexType name="ArrayOfLists"&gt;
-		&lt;complexContent&gt;
-			&lt;restriction base="SOAP-ENC:Array"&gt;
-				&lt;attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="tns:listType[]"/&gt;
-			&lt;/restriction&gt;
-		&lt;/complexContent&gt;
-	&lt;/complexType&gt;
-
-	&lt;complexType name="ArrayOfString"&gt;
-		&lt;complexContent&gt;
-			&lt;restriction base="SOAP-ENC:Array"&gt;
-				&lt;attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="string[]"/&gt;
-			&lt;/restriction&gt;
-		&lt;/complexContent&gt;
-	&lt;/complexType&gt;
-	
-	&lt;complexType name="listType"&gt;
-           &lt;all&gt;
-		&lt;element name="listAddress" minOccurs="1" type="string"/&gt;
-		&lt;element name="homepage" minOccurs="0" type="string"/&gt;
-		&lt;element name="isSubscriber" minOccurs="0" type="boolean"/&gt;
-		&lt;element name="isOwner" minOccurs="0" type="boolean"/&gt;
-		&lt;element name="isEditor" minOccurs="0" type="boolean"/&gt;
-		&lt;element name="subject" minOccurs="0" type="string"/&gt;
-           &lt;/all&gt;
-	&lt;/complexType&gt;
-&lt;/schema&gt;
-&lt;/types&gt;
-
-
-&lt;!-- message part --&gt;
-
-&lt;message name="infoRequest"&gt;
-        &lt;part name="listName" type="xsd:string"/&gt;
-&lt;/message&gt;
-
-&lt;message name="infoResponse"&gt;
-	&lt;part name="return" type="tns:listType"/&gt;
-&lt;/message&gt;
-
-&lt;message name="complexWhichRequest"&gt;
-&lt;/message&gt;
-
-&lt;message name="complexWhichResponse"&gt;
-	&lt;part name="return" type="tns:ArrayOfLists"/&gt;
-&lt;/message&gt;
-
-&lt;message name="whichRequest"&gt;
-&lt;/message&gt;
-
-&lt;message name="whichResponse"&gt;
-	&lt;part name="return" type="tns:ArrayOfString"/&gt;
-&lt;/message&gt;
-
-&lt;message name="amIRequest"&gt;
-	&lt;part name="list" type="xsd:string"/&gt;
-	&lt;part name="function" type="xsd:string"/&gt;
-	&lt;part name="user" type="xsd:string"/&gt;
-&lt;/message&gt;
-
-&lt;message name="amIResponse"&gt;
-	&lt;part name="return" type="xsd:boolean"/&gt;
-&lt;/message&gt;
-
-&lt;message name="reviewRequest"&gt;
-	&lt;part name="list" type="xsd:string"/&gt;
-&lt;/message&gt;
-
-&lt;message name="reviewResponse"&gt;
-	&lt;part name="return" type="tns:ArrayOfString"/&gt;
-&lt;/message&gt;
-
-&lt;message name="signoffRequest"&gt;
-	&lt;part name="list" type="xsd:string"/&gt;
-	&lt;part name="email" type="xsd:string" xsd:minOccurs="0"/&gt;	
-&lt;/message&gt;
-
-&lt;message name="signoffResponse"&gt;
-	&lt;part name="return" type="xsd:boolean"/&gt;
-&lt;/message&gt;
-
-&lt;message name="subscribeRequest"&gt;
-	&lt;part name="list" type="xsd:string"/&gt;
-	&lt;part name="gecos" type="xsd:string" xsd:minOccurs="0"/&gt;	
-&lt;/message&gt;
-
-&lt;message name="subscribeResponse"&gt;
-	&lt;part name="return" type="xsd:boolean"/&gt;
-&lt;/message&gt;
-
-&lt;message name="loginRequest"&gt;
-	&lt;part name="email" type="xsd:string"/&gt;
-	&lt;part name="password" type="xsd:string"/&gt;
-&lt;/message&gt;
-
-&lt;message name="loginResponse"&gt;
-	&lt;part name="return" type="xsd:string"/&gt;	
-&lt;/message&gt;
-
-&lt;message name="authenticateAndRunRequest"&gt;
-	&lt;part name="email" type="xsd:string"/&gt;
-	&lt;part name="cookie" type="xsd:string"/&gt;
-	&lt;part name="service" type="xsd:string"/&gt;
-	&lt;part name="parameters" type="tns:ArrayOfString" xsd:minOccurs="0"/&gt;
-&lt;/message&gt;
-
-&lt;message name="authenticateAndRunResponse"&gt;
-	&lt;part name="return" type="tns:ArrayOfString" xsd:minOccurs="0"/&gt;	
-&lt;/message&gt;
-
-&lt;message name="casLoginRequest"&gt;
-	&lt;part name="proxyTicket" type="xsd:string"/&gt;
-&lt;/message&gt;
-
-&lt;message name="casLoginResponse"&gt;
-	&lt;part name="return" type="xsd:string"/&gt;	
-&lt;/message&gt;
-
-&lt;message name="listsRequest"&gt;
-	&lt;part name="topic" type="xsd:string" xsd:minOccurs="0"/&gt;
-	&lt;part name="subtopic" type="xsd:string" xsd:minOccurs="0"/&gt;
-&lt;/message&gt;
-
-&lt;message name="listsResponse"&gt;
-	&lt;part name="listInfo" type="xsd:string"/&gt;	
-&lt;/message&gt;
-
-&lt;message name="complexListsRequest"&gt;
-&lt;/message&gt;
-
-&lt;message name="complexListsResponse"&gt;
-	&lt;part name="return" type="tns:ArrayOfLists"/&gt;
-&lt;/message&gt;
-
-&lt;message name="checkCookieRequest"&gt;
-&lt;/message&gt;
-
-&lt;message name="checkCookieResponse"&gt;
-	&lt;part name="email" type="xsd:string"/&gt;
-&lt;/message&gt;
-
-
-&lt;!-- portType part --&gt;
-
-&lt;portType name="SympaPort"&gt;
-	&lt;operation name="info"&gt;
-		&lt;input message="tns:infoRequest" /&gt;
-		&lt;output message="tns:infoResponse" /&gt;
-	&lt;/operation&gt;
-	&lt;operation name="complexWhich"&gt;
-		&lt;input message="tns:complexWhichRequest" /&gt;
-		&lt;output message="tns:complexWhichResponse" /&gt;
-	&lt;/operation&gt;
-	&lt;operation name="which"&gt;
-		&lt;input message="tns:whichRequest" /&gt;
-		&lt;output message="tns:whichResponse" /&gt;
-	&lt;/operation&gt;
-	&lt;operation name="amI"&gt;
-		&lt;input message="tns:amIRequest" /&gt;
-		&lt;output message="tns:amIResponse" /&gt;
-	&lt;/operation&gt;
-	&lt;operation name="review"&gt;
-		&lt;input message="tns:reviewRequest" /&gt;
-		&lt;output message="tns:reviewResponse" /&gt;
-	&lt;/operation&gt;
-	&lt;operation name="subscribe"&gt;
-		&lt;input message="tns:subscribeRequest" /&gt;
-		&lt;output message="tns:subscribeResponse" /&gt;
-	&lt;/operation&gt;
-	&lt;operation name="signoff"&gt;
-		&lt;input message="tns:signoffRequest" /&gt;
-		&lt;output message="tns:signoffResponse" /&gt;
-	&lt;/operation&gt;
-	&lt;operation name="login"&gt;
-		&lt;input message="tns:loginRequest" /&gt;
-		&lt;output message="tns:loginResponse" /&gt;
-	&lt;/operation&gt;
-	&lt;operation name="casLogin"&gt;
-		&lt;input message="tns:casLoginRequest" /&gt;
-		&lt;output message="tns:casLoginResponse" /&gt;
-	&lt;/operation&gt;
-	&lt;operation name="authenticateAndRun"&gt;
-		&lt;input message="tns:authenticateAndRunRequest" /&gt;
-		&lt;output message="tns:authenticateAndRunResponse" /&gt;
-	&lt;/operation&gt;
-	&lt;operation name="lists"&gt;
-		&lt;input message="tns:listsRequest" /&gt;
-		&lt;output message="tns:listsResponse" /&gt;
-	&lt;/operation&gt;
-	&lt;operation name="complexLists"&gt;
-		&lt;input message="tns:complexListsRequest" /&gt;
-		&lt;output message="tns:complexListsResponse" /&gt;
-	&lt;/operation&gt;
-	&lt;operation name="checkCookie"&gt;
-		&lt;input message="tns:checkCookieRequest" /&gt;
-		&lt;output message="tns:checkCookieResponse" /&gt;
-	&lt;/operation&gt;
-&lt;/portType&gt;
-
-
-&lt;!-- Binding part --&gt;
-
-&lt;binding name="SOAP" type="tns:SympaPort"&gt;
-&lt;soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/&gt;
-	&lt;operation name="info"&gt;
-		&lt;soap:operation soapAction="urn:sympasoap#info"/&gt;
-			&lt;input&gt;
-				&lt;soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/input&gt;
-			&lt;output&gt;
-				&lt;soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/output&gt;
-	&lt;/operation&gt;
-	&lt;operation name="complexWhich"&gt;
-		&lt;soap:operation soapAction="urn:sympasoap#complexWhich"/&gt;
-			&lt;input&gt;
-				&lt;soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/input&gt;
-			&lt;output&gt;
-				&lt;soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/output&gt;
-	&lt;/operation&gt;
-	&lt;operation name="which"&gt;
-		&lt;soap:operation soapAction="urn:sympasoap#which"/&gt;
-			&lt;input&gt;
-				&lt;soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/input&gt;
-			&lt;output&gt;
-				&lt;soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/output&gt;
-	&lt;/operation&gt;
-	&lt;operation name="amI"&gt;
-		&lt;soap:operation soapAction="urn:sympasoap#amI"/&gt;
-			&lt;input&gt;
-				&lt;soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/input&gt;
-			&lt;output&gt;
-				&lt;soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/output&gt;
-	&lt;/operation&gt;
-	&lt;operation name="review"&gt;
-		&lt;soap:operation soapAction="urn:sympasoap#review"/&gt;
-			&lt;input&gt;
-				&lt;soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/input&gt;
-			&lt;output&gt;
-				&lt;soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/output&gt;
-	&lt;/operation&gt;
-	&lt;operation name="subscribe"&gt;
-		&lt;soap:operation soapAction="urn:sympasoap#subscribe"/&gt;
-			&lt;input&gt;
-				&lt;soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/input&gt;
-			&lt;output&gt;
-				&lt;soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/output&gt;
-	&lt;/operation&gt;
-	&lt;operation name="signoff"&gt;
-		&lt;soap:operation soapAction="urn:sympasoap#signoff"/&gt;
-			&lt;input&gt;
-				&lt;soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/input&gt;
-			&lt;output&gt;
-				&lt;soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/output&gt;
-	&lt;/operation&gt;
-	&lt;operation name="login"&gt;
-		&lt;soap:operation soapAction="urn:sympasoap#login"/&gt;
-			&lt;input&gt;
-				&lt;soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/input&gt;
-			&lt;output&gt;
-				&lt;soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/output&gt;
-	&lt;/operation&gt;
-	&lt;operation name="casLogin"&gt;
-		&lt;soap:operation soapAction="urn:sympasoap#casLogin"/&gt;
-			&lt;input&gt;
-				&lt;soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/input&gt;
-			&lt;output&gt;
-				&lt;soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/output&gt;
-	&lt;/operation&gt;
-	&lt;operation name="authenticateAndRun"&gt;
-		&lt;soap:operation soapAction="urn:sympasoap#authenticateAndRun"/&gt;
-			&lt;input&gt;
-				&lt;soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/input&gt;
-			&lt;output&gt;
-				&lt;soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/output&gt;
-	&lt;/operation&gt;
-	&lt;operation name="lists"&gt;
-		&lt;soap:operation soapAction="urn:sympasoap#lists"/&gt;
-			&lt;input&gt;
-				&lt;soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/input&gt;
-			&lt;output&gt;
-				&lt;soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/output&gt;
-	&lt;/operation&gt;
-	&lt;operation name="complexLists"&gt;
-		&lt;soap:operation soapAction="urn:sympasoap#complexLists"/&gt;
-			&lt;input&gt;
-				&lt;soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/input&gt;
-			&lt;output&gt;
-				&lt;soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/output&gt;
-	&lt;/operation&gt;
-	&lt;operation name="checkCookie"&gt;
-		&lt;soap:operation soapAction="urn:sympasoap#checkCookie"/&gt;
-			&lt;input&gt;
-				&lt;soap:body use="encoded" 
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/input&gt;
-			&lt;output&gt;
-				&lt;soap:body use="encoded"
-					namespace="urn:sympasoap" 
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/&gt;
-			&lt;/output&gt;
-	&lt;/operation&gt;
-&lt;/binding&gt;
-
-&lt;!-- service part --&gt;
-
-
-&lt;service name="SympaSOAP"&gt;
-	&lt;port name="SympaPort" binding="tns:SOAP"&gt;
-		&lt;soap:address location="[% conf.soap_url %]"/&gt;
-	&lt;/port&gt;
-&lt;/service&gt;
-
-&lt;/definitions&gt;
-</PRE>
-
-<P>
-
-<H1><A NAME="SECTION001150000000000000000">
-10.5 Client-side programming</A>
-</H1>
-
-<P>
-Sympa is distributed with 2 sample clients written in Perl and in PHP. Sympa SOAP server has also
-been successfully tested with a UPortal Chanel as a Java client (using Axis). The sample PHP SOAP
-client has been installed on our demo server :  <A NAME="tex2html31"
-  HREF="http://demo.sympa.org/sampleClient.php">http://demo.sympa.org/sampleClient.php</A>.
-
-<P>
-Depending on your programming language and the SOAP library you're using, you will either directly 
-contact the SOAP service (as with Perl SOAP::Lite library) or first load the WSDL description of
-the service (as with PHP nusoap or Java Axis). Axis is able to create a stub from the WSDL document.
-
-<P>
-The WSDL document describing the service should be fetch through WWSympa's dedicated URL :
-<B>http://your.server/sympa/wsdl</B>.
-
-<P>
-Note : the <B>login()</B> function maintains a login session using HTTP cookies. If you are not able
-to maintain this session by analysing and sending appropriate cookies under SOAP, then you
-should use the <B>authenticateAndRun()</B> function that does not require cookies to authenticate.
-
-<P>
-
-<H2><A NAME="SECTION001151000000000000000">
-10.5.1 Writting a Java client with Axis</A>
-</H2>
-
-<P>
-First, download jakarta-axis (http://ws.apache.org/axis/)
+This service is provided by <A NAME="8641"></A><I>WWSympa</I> (<I>Sympa</I>'s web interface). 
+Here is the root of <A NAME="8645"></A><I>WWSympa</I>'s rss channel :
 <BR>
 <P>
-You must add the libraries provided with jakarta axis (v &gt;1.1) to you CLASSPATH. These libraries are  :
+(Default value: <TT>http://<TT>&lt;</TT>host<TT>&gt;</TT>/wws/rss</TT>)
+<BR>
+Example: <TT>https://my.server/wws/rss</TT>
 
 <P>
+The access control of RSS queries proceed on the same way as <A NAME="8652"></A><I>WWSympa</I> actions referred to.
+<I>Sympa</I> provides the following RSS features :
 
 <UL>
-<LI>axis.jar
+<LI>the latest created lists on a robot (<A NAME="8656"></A><TT>latest_lists</TT>) ;
 </LI>
-<LI>saaj.jar
+<LI>the most active lists on a robot(<A NAME="8659"></A><TT>active_lists</TT>) ;  
 </LI>
-<LI>commons-discovery.jar
+<LI>the latest messages of a list (<A NAME="8662"></A><TT>active_arc</TT>) ;   
 </LI>
-<LI>commons-logging.jar
-</LI>
-<LI>xercesImpl.jar
-</LI>
-<LI>jaxrpc.jar
-</LI>
-<LI>xml-apis.jar
-</LI>
-<LI>jaas.jar
-</LI>
-<LI>wsdl4j.jar
-</LI>
-<LI>soap.jar
+<LI>the latest shared documents of a list (<A NAME="8665"></A><TT>latest_d_read</TT>) ; 
 </LI>
 </UL>
 
 <P>
-Next, you have to generate client java classes files from the sympa WSDL url. Use the following command :
+
+<H1><A NAME="SECTION001110000000000000000"></A><A NAME="8668"></A>
+<BR>
+10.1 <TT>latest_lists</TT>
+</H1>
+
+<P>
+This provides the latest created lists.  
+
+<P>
+Example: <TT>http://my.server/wws/rss/latest_lists?for=3&amp;count=6</TT>
+<BR>
+This provides the 6 latest created lists for the last 3 days.
 <BR>
 <P>
-java org.apache.axis.wsdl.WSDL2Java -av  WSDL_URL
+Example: <TT>http://my.server/wws/rss/latest_lists/computing?count=6</TT>
+<BR>
+This provides the 6 latest created lists with topic ``computing''.
 <BR>
 <P>
-For example :
-<PRE>
-java org.apache.axis.wsdl.WSDL2Java -av  http://demo.sympa.org/sympa/wsdl
-</PRE>
+Parameters : 
+
+<UL>
+<LI><A NAME="8673"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+</LI>
+<LI><A NAME="8676"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+</LI>
+<LI>topic : the topic is indicated in the path info (see example below with topic computing). 
+    This parameter is optional.
+</LI>
+</UL>
 
 <P>
-Exemple of screen output during generation of java files :
-<BR> <PRE>
-Parsing XML file:  http://demo.sympa.org/sympa/wsdl
-Generating org/sympa/demo/sympa/msdl/ListType.java
-Generating org/sympa/demo/sympa/msdl/SympaPort.java
-Generating org/sympa/demo/sympa/msdl/SOAPStub.java
-Generating org/sympa/demo/sympa/msdl/SympaSOAP.java
-Generating org/sympa/demo/sympa/msdl/SympaSOAPLocator.java
-</PRE>
 
-<P>
-If you need  more information or more generated classes (to have the server-side classes or junit testcase classes for example), you can get a list of switches :
-<BR>    <PRE>
-java org.apache.axis.wsdl.WSDL2Java -h
-</PRE>
-The reference page is :
+<H1><A NAME="SECTION001120000000000000000"></A><A NAME="8679"></A>
 <BR>
-http://ws.apache.org/axis/java/reference.html
+10.2 <TT>active_lists</TT>
+</H1>
 
 <P>
-Take care of Test classes generated by axis, there are not useable as is. You have to stay connected between each test. To use junit testcases, before each soap operation tested, you must call the authenticated connexion to sympa instance.
+This provides the most active lists, based on the number of distributed messages (number of received messages).  
 
 <P>
-Here is a simple Java code that invokes the generated stub to perform a casLogin() and a which() on the remote Sympa SOAP server :
-<PRE>
-SympaSOAP loc = new SympaSOAPLocator();
-((SympaSOAPLocator)loc).setMaintainSession(true);
-SympaPort tmp = loc.getSympaPort();
-String _value = tmp.casLogin(_ticket);
-String _cookie = tmp.checkCookie();
-String[] _abonnements = tmp.which();
-</PRE>
+Example: <TT>http://my.server/wws/rss/active_lists?for=3&amp;count=6</TT>
+<BR>
+This provides the 6 most active lists for the last 3 days.
+<BR>
+<P>
+Example: <TT>http://my.server/wws/rss/active_lists/computing?count=6</TT>
+<BR>
+This provides the 6 most active lists with topic ``computing''.
+<BR>
+<P>
+Parameters : 
+
+<UL>
+<LI><A NAME="8684"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+</LI>
+<LI><A NAME="8687"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+</LI>
+<LI>topic : the topic is indicated in the path info (see example below with topic computing). 
+    This parameter is optional.
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION001130000000000000000"></A><A NAME="8690"></A>
+<BR>
+10.3 <TT>latest_arc</TT>
+</H1>
+
+<P>
+This provides the latest messages of a list.  
+
+<P>
+Example: <TT>http://my.server/wws/rss/latest_arc/mylist?for=3&amp;count=6</TT>
+<BR>
+This provides the 6 latest messages received on the mylistlist for the last 3 days.
+<BR>
+<P>
+Parameters : 
+
+<UL>
+<LI>list : the list is indicated in the path info. This parameter is mandatory.
+</LI>
+<LI><A NAME="8694"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+</LI>
+<LI><A NAME="8697"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+</LI>
+</UL>
+
+<P>
+
+<H1><A NAME="SECTION001140000000000000000"></A><A NAME="8700"></A>
+<BR>
+10.4 <TT>latest_d_read</TT>
+</H1>
+
+<P>
+This provides the latest updated and uploaded shared documents of a list.  
+
+<P>
+Example: <TT>http://my.server/wws/rss/latest_d_read/mylist?for=3&amp;count=6</TT>
+<BR>
+This provides the 6 latest documents uploaded or updated on the mylistlist for the last 3 days.
+<BR>
+<P>
+Parameters : 
+
+<UL>
+<LI>list : the list is indicated in the path info. This parameter is mandatory.
+</LI>
+<LI><A NAME="8704"></A><TT>for</TT> : period of interest (expressed in days). This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+</LI>
+<LI><A NAME="8707"></A><TT>count</TT> : maximum number of expected records. This is a CGI parameter. It is optional but one of the two parameters 
+     ``for'' or ``count'' is required.
+</LI>
+</UL>
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1029"
+<A NAME="tex2html1078"
   HREF="node12.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1023"
+<A NAME="tex2html1072"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1017"
+<A NAME="tex2html1066"
   HREF="node10.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1025"
+<A NAME="tex2html1074"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1027"
-  HREF="node26.html">
+<A NAME="tex2html1076"
+  HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1030"
-  HREF="node12.html">11. Authentication</A>
-<B> Up:</B> <A NAME="tex2html1024"
+<B> Next:</B> <A NAME="tex2html1079"
+  HREF="node12.html">11. Sympa SOAP server</A>
+<B> Up:</B> <A NAME="tex2html1073"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1018"
-  HREF="node10.html">9. Sympa RSS channel</A>
- &nbsp; <B>  <A NAME="tex2html1026"
+<B> Previous:</B> <A NAME="tex2html1067"
+  HREF="node10.html">9. WWSympa, Sympa's web interface</A>
+ &nbsp; <B>  <A NAME="tex2html1075"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1028"
-  HREF="node26.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1077"
+  HREF="node30.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2005-08-04
+2005-08-05
 </ADDRESS>
 </BODY>
 </HTML>

@@ -1,6 +1,8 @@
-From: [% conf.email %]@[% conf.host %]
+From: [% fromlist %]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Unsubscription from %1[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
- [%|loc(user.email,list.name,list.host)%]Your email address (%1) has been removed from list %2@%3[%END%]
- [%|loc%]bye ![%END%]
-
+[%|loc(user.email,list.name,list.host)%]Your email address (%1) has been removed from list %2@%3[%END%]
+[%|loc%]bye ![%END%]

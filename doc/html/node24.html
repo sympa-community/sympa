@@ -10,8 +10,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>23. Sympa with S/MIME and HTTPS</TITLE>
-<META NAME="description" CONTENT="23. Sympa with S/MIME and HTTPS">
+<TITLE>23. Bounce management</TITLE>
+<META NAME="description" CONTENT="23. Bounce management">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -30,425 +30,177 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html1381"
+<A NAME="tex2html1444"
   HREF="node25.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1375"
+<A NAME="tex2html1438"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1369"
+<A NAME="tex2html1432"
   HREF="node23.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1377"
+<A NAME="tex2html1440"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1379"
-  HREF="node26.html">
+<A NAME="tex2html1442"
+  HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1382"
-  HREF="node25.html">24. Using Sympa commands</A>
-<B> Up:</B> <A NAME="tex2html1376"
+<B> Next:</B> <A NAME="tex2html1445"
+  HREF="node25.html">24. Antivirus</A>
+<B> Up:</B> <A NAME="tex2html1439"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1370"
-  HREF="node23.html">22. Using Sympa with LDAP</A>
- &nbsp; <B>  <A NAME="tex2html1378"
+<B> Previous:</B> <A NAME="tex2html1433"
+  HREF="node23.html">22. Shared documents</A>
+ &nbsp; <B>  <A NAME="tex2html1441"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1380"
-  HREF="node26.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1443"
+  HREF="node30.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
-<UL>
-<LI><A NAME="tex2html1383"
-  HREF="node24.html#SECTION002410000000000000000">23.1 Signed message distribution</A>
-<LI><A NAME="tex2html1384"
-  HREF="node24.html#SECTION002420000000000000000">23.2 Use of S/MIME signature by Sympa itself</A>
-<LI><A NAME="tex2html1385"
-  HREF="node24.html#SECTION002430000000000000000">23.3 Use of S/MIME encryption</A>
-<LI><A NAME="tex2html1386"
-  HREF="node24.html#SECTION002440000000000000000">23.4 S/Sympa configuration</A>
-<UL>
-<LI><A NAME="tex2html1387"
-  HREF="node24.html#SECTION002441000000000000000">23.4.1 Installation</A>
-<LI><A NAME="tex2html1388"
-  HREF="node24.html#SECTION002442000000000000000">23.4.2 configuration in sympa.conf</A>
-<LI><A NAME="tex2html1389"
-  HREF="node24.html#SECTION002443000000000000000">23.4.3 configuration to recognize S/MIME signatures</A>
-<LI><A NAME="tex2html1390"
-  HREF="node24.html#SECTION002444000000000000000">23.4.4 distributing encrypted messages</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html1391"
-  HREF="node24.html#SECTION002450000000000000000">23.5 Managing certificates with tasks</A>
-<UL>
-<LI><A NAME="tex2html1392"
-  HREF="node24.html#SECTION002451000000000000000">23.5.1 chk_cert_expiration.daily.task model</A>
-<LI><A NAME="tex2html1393"
-  HREF="node24.html#SECTION002452000000000000000">23.5.2 crl_update.daily.task model</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H1><A NAME="SECTION002400000000000000000"></A>
-    <A NAME="smime"></A>
-<BR>
-23. <I>Sympa</I> with S/MIME and HTTPS
+<H1><A NAME="SECTION002400000000000000000">
+23. Bounce management</A>
 </H1>
 
 <P>
-S/MIME is a cryptographic method for Mime messages based on X509 certificates.
-Before installing <I>Sympa</I> S/Mime features (which we call S/Sympa), you should be
-under no illusion about what the S stands for : ``S/MIME'' means ``Secure MIME''.
-That S certainly does not stand for ``Simple''.
+<I>Sympa</I> allows bounce (non-delivery report) management. This
+prevents list owners from receiving each bounce (1 per message
+sent to a bouncing subscriber) in their own mailbox. Without
+automatic processing of bounces, list owners either go
+mad, or just delete them without further attention.
 
 <P>
-The aim of this chapter is simply to describe what security level is provided
-by <I>Sympa</I> while
-using S/MIME messages, and how to configure <I>Sympa</I> for it. It is not intended
-to teach anyone what S/Mime is and why it is so complex ! RFCs numbers 2311,
-2312, 2632, 2633 and 2634, along with a lot of literature about S/MIME, PKCS#7
-and PKI is available on the Internet. <I>Sympa</I> 2.7 is the first version of
-<I>Sympa</I> to include S/MIME features as beta-testing features.
-
-<P>
-
-<H1><A NAME="SECTION002410000000000000000">
-23.1 Signed message distribution</A>
-</H1>
-
-<P>
-No action required.
-You probably imagine that any mailing list manager (or any mail forwarder)
-is compatible with S/MIME signatures, as long as it respects the MIME structure of
-incoming messages. You are right. Even Majordomo can distribute a signed message!
-As <I>Sympa</I> provides MIME compatibility, you don't need to do
-anything in order to allow subscribers to verify signed messages distributed
-through a list. This is not an issue at all, since any processe that
-distributes messages  is compatible with end user
-signing processes. Sympa simply skips the message footer attachment
-(ref <A HREF="node16.html#messagefooter">15.11</A>, page&nbsp;<A HREF="node16.html#messagefooter"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) to prevent any
-body corruption which would break the signature.
-
-<P>
-
-<H1><A NAME="SECTION002420000000000000000"></A>
-    <A NAME="smime-sig"></A>
-<BR>
-23.2 Use of S/MIME signature by Sympa itself
-</H1>
-
-<P>
-Sympa is able to verify S/MIME signatures in order to apply S/MIME
-authentication methods for message handling. 
-Currently, this feature is limited to the
-distribution process, and to any commands <I>Sympa</I> might find in the message
-body.  The reasons for this restriction are related to current S/MIME
-usage.
-S/MIME signature structure is based on the encryption of a digest of the
-message. Most S/MIME agents do not include any part of the
-message headers in the message digest, so anyone can modify the message
-header without signature corruption! This is easy to do : for example, anyone
-can edit a signed message with their preferred message agent, modify whatever
-header they want (for example <TT>Subject:</TT> , <TT>Date:</TT> and
-<TT>To:</TT>, and redistribute the message to a list or to the robot
-without breaking the signature.
-
-<P>
-So Sympa cannot apply the S/MIME
-authentication method to a command parsed in the <TT>Subject:</TT> field of a
-message or via the <TT>-subscribe</TT> or <TT>-unsubscribe</TT> e-mail
-address. 
-
-<P>
-
-<H1><A NAME="SECTION002430000000000000000">
-23.3 Use of S/MIME encryption</A>
-</H1> 
-
-<P>
-S/Sympa is not an implementation of the ``S/MIME Symmetric Key Distribution''
-internet draft. This sophisticated scheme is required for large lists
-with encryption. So, there is still some scope for future developments :) 
-
-<P>
-We assume that S/Sympa distributes message as received, i.e. unencrypted when the
-list receives an unencrypted message, but otherwise encrypted.
-
-<P>
-In order to be able to send encrypted messages to a list, the sender needs
-to use the X509 certificate of the list. Sympa will send an encrypted message
-to each subscriber using the subscriber's certificate. To provide this feature,
-<I>Sympa</I> needs to manage one certificate for each list and one for each
-subscriber. This is available in Sympa version 2.8 and above.
-
-<P>
-
-<H1><A NAME="SECTION002440000000000000000">
-23.4 S/Sympa configuration</A>
-</H1> 
-
-<P>
-
-<H2><A NAME="SECTION002441000000000000000"></A>
-<A NAME="smimeinstall"></A>
-<BR>
-23.4.1 Installation
-</H2>
-
-<P>
-The only requirement is OpenSSL (http://www.openssl.org) version 0.9.5a and above.
-OpenSSL is used by <I>Sympa</I> as an external plugin
-(like sendmail or postfix), so it must be installed with the appropriate access
-(x for sympa.sympa). 
-
-<P>
-
-<H2><A NAME="SECTION002442000000000000000"></A>
-<A NAME="smimeconf"></A>
-<BR>
-23.4.2 configuration in sympa.conf
-</H2>
-
-<P>
-S/Sympa configuration is very simple. If you are used to Apache SSL,
-you should not feel lost. If you are an OpenSSL guru, you will
-feel at home, and there may even be changes you will wish to suggest to us.
-
-<P>
-The basic requirement is to let <I>Sympa</I> know where to find the binary file for the OpenSSL program
-and the certificates of the trusted certificate authority. 
-This is done using the optional parameters <A NAME="9653"></A><TT>openSSL</TT> and
-<A NAME="9656"></A><TT>capath</TT> and / or <A NAME="9659"></A><TT>cafile</TT>.
-
-<P>
-
-<UL>
-<LI><A NAME="9662"></A><TT>openSSL</TT> : the path for the OpenSSL binary file,
-         usually <TT>/usr/local/ssl/bin/openSSL</TT>
-</LI>
-<LI><A NAME="9665"></A><TT>cafile</TT> : the path of a bundle of trusted ca certificates. 
-        The file <A NAME="9668"></A><TT>~/usr/local/sympa-os/bin/etc/cabundle.crt</TT> included in Sympa distribution can be used.
-
-<P>
-Both the <A NAME="9673"></A><TT>cafile</TT> file and the <A NAME="9676"></A><TT>capath</TT> directory
-        should be shared with your Apache+mod_ssl configuration. This is useful
-	for the S/Sympa web interface.  Please refer to the OpenSSL documentation for details.
-
-<P>
-</LI>
-<LI><A NAME="9679"></A><TT>key_password</TT> : the password used to protect all list private keys. xxxxxxx	
-</LI>
-</UL>
-
-<P>
-
-<H2><A NAME="SECTION002443000000000000000"></A>
-<A NAME="smimeforsign"></A>
-<BR>
-23.4.3 configuration to recognize S/MIME signatures
-</H2>
-
-<P>
-Once  <TT>OpenSSL</TT> has been installed, and <TT>sympa.conf</TT> configured,
-your S/Sympa is ready to use S/Mime signatures for any authentication operation. You simply need
-to use the appropriate authorization scenario for the operation you want to secure. 
-(see <A HREF="node13.html#scenarios">12</A>, page&nbsp;<A HREF="node13.html#scenarios"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>).
-
-<P>
-When receiving a message, <I>Sympa</I> applies
-the authorization scenario with the appropriate authentication method parameter.
-In most cases the authentication method is ``<TT>smtp</TT>'', but in cases
-where the message is signed and the signature has been checked and matches the
-sender e-mail, <I>Sympa</I> applies the ``<TT>smime</TT>'' authentication
-method.
-
-<P>
-It is vital to ensure that if the authorization scenario does not recognize this authentication method, the
-operation requested will be rejected. Consequently, authorization scenarios distributed
-prior to version 2.7 are not compatible with the OpenSSL configuration of Sympa. 
-All
-standard authorization scenarios (those distributed with sympa)
-now include the <TT>smime</TT> method. The following example is
-named <TT>send.private_smime</TT>, and restricts sends to subscribers using an S/mime signature :
+Bounces are received at mylist-owner address, which should
+be sent to the <A NAME="11322"></A><TT>bouncequeue</TT> program via aliases :
 
 <P><PRE>
-title.us restricted to subscribers check smime signature
-title.fr limité aux abonnés, vérif de la signature smime
-
-is_subscriber([listname],[sender])             smime  -&gt; do_it
-is_editor([listname],[sender])                 smime  -&gt; do_it
-is_owner([listname],[sender])                  smime  -&gt; do_it
+	\samplelist-owner: "|/home/sympa/bin/bouncequeue \samplelist"
 </PRE>
 
 <P>
-It as also possible to mix various authentication methods in a single authorization scenario. The following
-example, <TT>send.private_key</TT>, requires either an md5 return key or an S/Mime signature :<PRE>
-title.us restricted to subscribers with previous md5 authentication
-title.fr réservé aux abonnés avec authentification MD5 préalable
-
-is_subscriber([listname],[sender]) smtp          -&gt; request_auth
-true()                             md5,smime     -&gt; do_it
-</PRE>
+<A NAME="11325"></A><TT>bouncequeue</TT> (see <A HREF="node3.html#binaries">2.2</A>, page&nbsp;<A HREF="node3.html#binaries"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>) stores bounces in a
+<A NAME="11328"></A><TT>/home/sympa/spool/bounce/</TT> spool.
 
 <P>
-
-<H2><A NAME="SECTION002444000000000000000"></A>
-<A NAME="smimeforencrypt"></A>
-<BR>
-23.4.4 distributing encrypted messages
-</H2>
-
-<P>
-In this section we describe S/Sympa encryption features. The goal is to use
-S/MIME encryption for distribution of a message to subscribers whenever the message has been
-received encrypted from the sender. 
+Bounces are then processed by the <A NAME="11331"></A><TT>bounced.pl</TT> daemon.
+This daemon analyses bounces to find out which
+e-mail addresses are concerned and what kind of error was generated.
+If bouncing addresses match a subscriber's address, information 
+is stored in the <I>Sympa</I> database (in subscriber_table). Moreover, the most recent
+bounce itself is archived in <A NAME="11335"></A><TT>bounce_path/mylist/email</TT>
+(where bounce_path is defined in a <A NAME="11338"></A><TT>wwsympa.conf</TT> parameter and
+email is the user e-mail address).
 
 <P>
-Why is S/Sympa concerned by the S/MIME encryption distribution process ?
-It is because encryption is performed using the <B>recipient</B> X509
-certificate, whereas the signature requires the sender's private key. Thus, an encrypted
-message can be read by the recipient only if he or she is the owner of the private
-key associated with the certificate.
-Consequently, the only way to encrypt a message for a list of recipients is
-to encrypt and send the message for each recipient. This is what S/Sympa
-does when distributing an encrypted message.
+When reviewing a list, bouncing addresses are tagged as bouncing.
+You may access further information such as dates of first and last bounces,
+number of received bounces for the address, the last bounce itself.
 
 <P>
-The S/Sympa encryption feature in the distribution process supposes that Sympa
-has received an encrypted message for some list. To be able to encrypt a message
-for a list, the sender must have some access to an X509 certificate for the list.
-So the first requirement is to install a certificate and a private key for
-the list.
-The mechanism whereby certificates are obtained and managed is complex. Current versions
-of S/Sympa assume that list certificates and private keys are installed by
-the listmaster using <A NAME="9684"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. This script allows
-you to install a PKCS#12 bundle file containing a private key and
-a certificate using the appropriate format.
-
-<P>
-It is a good idea to have a look at the OpenCA (http://www.openssl.org)
-documentation and/or PKI providers' web documentation.
-You can use commercial certificates or home-made ones. Of course, the
-certificate must be approved for e-mail applications, and issued by one of
-the trusted CA's described in the <A NAME="9687"></A><TT>cafile</TT> file or the
-<A NAME="9690"></A><TT>capath</TT> Sympa configuration parameter. 
-
-<P>
-The list private key must be installed in a file named
-<A NAME="9693"></A><TT>/usr/local/sympa-os/expl/mylist/private_key</TT>. All the list private
-keys must be encrypted using a single password defined by the
-<A NAME="9696"></A><TT>password</TT> parameter in <A NAME="9699"></A><TT>sympa.conf</TT>.
-
-<P>
-
-<H3><A NAME="SECTION002444100000000000000">
-23.4.4.1 Use of navigator to obtain X509 list certificates</A>
-</H3>
-
-<P>
-In many cases e-mail X509 certificates are distributed via a web server and
-loaded into the browser using your mouse :) Mozilla or internet explorer allows
-certificates to be exported to a file.
-
-<P>
-Here is a way to install a certificat for a list:
+With these informations, the automatic bounce management is possible:
 
 <P>
 
 <UL>
-<LI>Get a list certificate is to obtain an personal e-mail
-certificate for the canonical list address in your browser as if it was your personal certificate, 
+<LI>The automatic task <A NAME="11341"></A><TT>eval_bouncer</TT> gives a score foreach bouncing user.
+  The score, between 0 to 100, allows the classification of bouncing users in two levels.
+  (Level 1 or 2). 
+  According to the level, automatic actions are executed periodicaly by <A NAME="11344"></A><TT>process_bouncers</TT>
+  task.
 
 <P>
 </LI>
-<LI>export the intended certificate
-it. The format used by Netscape is  ``pkcs#12''. 
-Copy this file to the list home directory.
+<LI>The score evaluation main parameters are: 
+
+<P>
+<A NAME="11347"></A><TT>Bounces count</TT>: The number of bouncing messages received by sympa for the user.
+
+<P>
+<A NAME="11350"></A><TT>Type rate</TT> : Bounces are classified depending on the type of errors generated on the user
+  side. If the error type is "mailbox is full" (ie a temporary 4.2.2 error type) the type rate will be
+  0.5 whereas permanent errors (5.x.x) have a type rate equal to 1.
+
+<P>
+<A NAME="11353"></A><TT>Regularity rate</TT> : This rate tells if the bounces where received regularly, compared to list
+ traffic. The list traffic is deduced from <A NAME="11356"></A><TT>msg_count</TT> file data.
+
+<P><PRE>
+      The score formula is  :
+  
+      Score = bounce_count * type_rate * regularity_rate
+</PRE>
+
+<P>
+To avoid making decisions (ie defining a score) without enough relevant data, the score is not
+  evaluated if :
+
+<P>
+
+<UL>
+<LI>The number of the number of received bounces is lower than <A NAME="11359"></A><TT>minimum_bouncing_count</TT> 
+	(see <A HREF="node8.html#kw-minimum-bouncing-count">7.8.9</A>, page&nbsp;<A HREF="node8.html#kw-minimum-bouncing-count"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
 </LI>
-<LI>convert the pkcs#12 file into a pair of pem files :
-<A NAME="9702"></A><TT>cert.pem</TT> and <A NAME="9705"></A><TT>private_key</TT> using
-the <A NAME="9708"></A><TT>/usr/local/sympa-os/bin/p12topem.pl</TT> script. Use <A NAME="9711"></A><TT>p12topem.pl -help</TT> for details.
+<LI>The bouncing period is shorter than <A NAME="11362"></A><TT>minimum_bouncing_period</TT> 
+	(see <A HREF="node8.html#kw-minimum-bouncing-period">7.8.10</A>, page&nbsp;<A HREF="node8.html#kw-minimum-bouncing-period"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+
+<P>
 </LI>
-<LI>be sure that <A NAME="9714"></A><TT>cert.pem</TT> and <A NAME="9717"></A><TT>private_key</TT>
-are owned by sympa with ``r'' access.
+</UL>
+
+<P>
 </LI>
-<LI>As soon as a certificate is installed for a list, the list  home page
-includes a new link to load the certificate to the user's browser, and the welcome
-message is signed by the list.
+<LI>You can define the limit between each level via the <B>List configuration pannel</B>, 
+  in subsection <B>Bounce settings</B>. (see <A HREF="node21.html#rate">20.5.2</A>) The principle consists in
+  associating a score interval with a level.
+
+<P>
 </LI>
-</UL> 
+<LI>You can also define wich action must be applied on each category of user.(see <A HREF="node21.html#action">20.5.2</A>)
+  Each time an action will be done, a notification email will be send to the person of your choice.
+  (see <A HREF="node21.html#notification">20.5.2</A>)
 
 <P>
-
-<H1><A NAME="SECTION002450000000000000000">
-23.5 Managing certificates with tasks</A>
-</H1>
-
-<P>
-You may automate the management of certificates with two global task models provided with
-<I>Sympa</I>. See <A HREF="node15.html#tasks">14.10</A>, page&nbsp;<A HREF="node15.html#tasks"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> to know more about tasks.
-Report to <A HREF="node7.html#certificate-task-config">6.12.4</A>, page&nbsp;<A HREF="node7.html#certificate-task-config"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> to configure your <I>Sympa</I> to use these facilities.
-
-<P>
-
-<H2><A NAME="SECTION002451000000000000000">
-23.5.1 chk_cert_expiration.daily.task model</A>
-</H2>
-
-<P>
-A task created with the model <A NAME="9722"></A><TT>chk_cert_expiration.daily.task</TT> checks every day the expiration date of
-certificates stored in the <A NAME="9725"></A><TT>/usr/local/sympa-os/expl/X509-user-certs/</TT> directory.
-The user is warned with the <A NAME="9728"></A><TT>daily_cert_expiration</TT> template when his certificate has expired
-or is going to expire within three days.
-
-<P>
-
-<H2><A NAME="SECTION002452000000000000000">
-23.5.2 crl_update.daily.task model</A>
-</H2>
-
-<P>
-You may use the model <A NAME="9731"></A><TT>crl_update.daily.task</TT> to create a task which daily updates the certificate revocation
-lists when needed.
+</LI>
+</UL>
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html1381"
+<A NAME="tex2html1444"
   HREF="node25.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html1375"
+<A NAME="tex2html1438"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html1369"
+<A NAME="tex2html1432"
   HREF="node23.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html1377"
+<A NAME="tex2html1440"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html1379"
-  HREF="node26.html">
+<A NAME="tex2html1442"
+  HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html1382"
-  HREF="node25.html">24. Using Sympa commands</A>
-<B> Up:</B> <A NAME="tex2html1376"
+<B> Next:</B> <A NAME="tex2html1445"
+  HREF="node25.html">24. Antivirus</A>
+<B> Up:</B> <A NAME="tex2html1439"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html1370"
-  HREF="node23.html">22. Using Sympa with LDAP</A>
- &nbsp; <B>  <A NAME="tex2html1378"
+<B> Previous:</B> <A NAME="tex2html1433"
+  HREF="node23.html">22. Shared documents</A>
+ &nbsp; <B>  <A NAME="tex2html1441"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html1380"
-  HREF="node26.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html1443"
+  HREF="node30.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2005-08-04
+2005-08-05
 </ADDRESS>
 </BODY>
 </HTML>

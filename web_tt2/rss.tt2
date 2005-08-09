@@ -95,7 +95,7 @@
 [% ELSIF action == 'active_lists' -%]
  [% FOREACH l = active_lists -%]
   <item>
-    <title>[%|loc(l.name,l.host,l.subject,l.msg_count)%]%1@%2 - %3 : %4 messages[%END%][% IF l.average %] - [%|loc(l.average)%]%1 by day [%END%][%END%]</title>
+    <title>[%|loc(l.name,l.host,l.subject,l.msg_count)%]%1@%2 - %3 : %4 messages[%END%]	[% IF l.average -%] - [%|loc(l.average)%]%1 by day [%END%][%END%]</title>
     <link>[% base_url %][% path_cgi %]/info/[% l.name %]</link>
   </item>
  [% END -%]

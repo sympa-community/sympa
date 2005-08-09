@@ -110,8 +110,8 @@
 	[% END %] 
 	</th>
         [% IF is_owner %]
-	  <th style="padding: 3px; border: solid 1px;"><span style="text-align: center;">[%|loc%]Reception[%END%]</span>
-	  </th>
+            <th style="padding: 3px; white-space: nowrap; border: solid 1px;">
+	    <span style="text-align: center;">[%|loc%]Reception[%END%]</span>
 	  [% IF list_conf.user_data_source == 'include2' %]
          [% IF sortby == 'sources' %]
   	    <th style="padding: 3px; white-space: nowrap; background-color: [% color_6 %]; border: solid 1px;">

@@ -1,7 +1,10 @@
-From: [% conf.email %]@[% conf.host %]
-To: Listmaster <[% to %]>
+From: SYMPA <[% conf.email %]@[% conf.host %]>
+To: [%|loc%]Listmaster <[% to %]>[%END%]
 [% IF type == 'request_list_creation' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" creation request[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% email %] requested creation of list "[% list.name %]"
 
@@ -11,16 +14,65 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" creation request[%END%
 
 [%|loc%]To activate/delete this mailing list :[%END%]
 [% conf.wwsympa_url %]/get_pending_lists
+
+
+[% ELSIF type == 'no_db' -%]
+Subject: [% FILTER qencode %][%|loc%]No DataBase[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(db_name)%]Cannot connect to database %1, still trying...[%END%]
+
+
+[% ELSIF type == 'db_restored' -%]
+Subject: [% FILTER qencode %][%|loc%]DataBase connection restored[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(db_name)%]Connection to database %1 restored.[%END%]
+
+
+[% ELSIF type == 'loop_command' -%]
+Subject: [% FILTER qencode %][%|loc%]Loop detected[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: multipart/mixed; charset=[%|loc%]_charset_[%END%]; boundary="[% boundary %]"
+
+--[% boundary %]
+Content-Type: text/plain
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc%]A loop has been detected with the following message[%END%]
+
+--[% boundary %]
+Content-Type: message/rfc822
+Content-Transfer-Encoding:[%|loc%]_encoding_[%END%]
+Content-Disposition: inline
+
+[% INSERT $msg IF msg %]
+
+--[% boundary %]--
+
+
 [% ELSIF type == 'virus_scan_failed' -%]
 Subject: [% FILTER qencode %][%|loc%]Antivirus scan failed[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc%]The antivirus scan has failed while processing the following file:[%END%]
 	[% filename %]
 
 [%|loc%]The returned error message :[%END%]
 	[% error_msg %]
+
+
 [% ELSIF type == 'edit_list_error' -%]
 Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc%]edit_list.conf format has changed :
 'default' is no more accepted for a population.[%END%]
@@ -31,27 +83,51 @@ default configuration will be used.[%END%]
 
 [% ELSIF type == 'sync_include_failed' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]subscribers update failed for list %1[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc%]Sympa could not include subscribers from external data sources ; the
 database or LDAP directory might be unreachable.[%END%] 
 [%|loc%]Check Sympa log files for more precise information[%END%]
 
+
+[% ELSIF type == 'sync_include_admin_failed' -%]
+Subject: [% FILTER qencode %][%|loc(param0)%]admins update failed for list %1[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc%]Sympa could not include admins from external data sources ; the database or LDAP directory might be unreachable.[%END%]
+[%|loc%]Check Sympa log files for more precise information[%END%]
+
 [% ELSIF type == 'no_owner_defined' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0)%]No owner is defined for list %1.[%END%]
 [%|loc%]The list status has been set to error_config.[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 
+
 [% ELSIF type == 'error_copy_file' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0,param1)%]Errors occured while copying family %2 file in list %1 directory.[%END%]
 [%|loc%]The list status has been set to error_config.[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 
+
 [% ELSIF type == 'no_respect_rules_family' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0,param1)%]List %1 configuration does not respect family %2 rules.[%END%]
 [%|loc%]The list status has been set to error_config.[%END%]
@@ -59,26 +135,41 @@ Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END
 
 [% ELSIF type == 'no_check_rules_family' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0,param1)%]Sympa could not check family %2 rules with list %1 param_constraint.conf file.[%END%]
 [%|loc%]The list status has been set to error_config.[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 
+
 [% ELSIF type == 'param_constraint_conf_error' -%]
 Subject: [% FILTER qencode %][%|loc%]errors in param_constraint.conf file[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0)%]Error(s) found in the file %1.[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 
+
 [% ELSIF type == 'load_admin_file_error' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc%]Sympa could not load the list config file.[%END%]
 [%|loc%]The list status has been set to error_config.[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 
+
 [% ELSIF type == 'no_list_family' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0,param1)%]Sympa could not load family %2 for list %1.[%END%]
 [%|loc%]The list status has been set to error_config.[%END%]
@@ -86,26 +177,30 @@ Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END
 
 [% ELSIF type == 'instantiation_family' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0,param1)%]Failed to instantiate family %2 for list %1[%END%]
 [%|loc%]The list status has been set to error_config.[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 
-[% ELSIF type == 'sync_include_admin_failed' -%]
-Subject: [% FILTER qencode %][%|loc(param0)%]admins update failed for list %1[%END%][%END%]
-
-[%|loc%]Sympa could not include admins from external data sources ; the database or LDAP directory might be unreachable.[%END%]
-[%|loc%]Check Sympa log files for more precise information[%END%]
-
 [% ELSIF type == 'modify_list_family' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(param0,param1)%]Sympa could not modify list %1 (Family %2)[%END%]
 [%|loc%]The list status has been set to error_config.[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 
+
 [% ELSIF type == 'automatic_bounce_management' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 automatic bounce management[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% IF action == 'notify_bouncers' -%]
 [%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
@@ -120,11 +215,123 @@ selected by Sympa as severe bouncing addresses:[%END%]
 
 [% FOREACH user = user_list -%]
 [% user %]
-[%END%]
+[% END %]
 
 [%|loc%]Managing bouncing subscribers:[%END%] [% conf.wwsympa_url %]/reviewbouncing/[% list.name %]
+
+[%# INTERNAL SERVER ERROR  : MAIL -%]
+[% ELSIF type == 'mail_intern_error' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server error [%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(who,action,msg_id,cmd,listname,conf.host)%] User %1 has encountered an internal server error
+(%2[% IF msg_id %] - MSG_ID : %3[%END%][% IF cmd %] - COMMAND : %4[%END%][% IF listname %] - LIST : %5@%6[%END%]) :[%END%] 
+
+[%IF error%][%|loc(error)%]         %1 [%END%]
+[%END%]  
+
+[%|loc%]See logs for more details.[%END%]
+
+[%# INTERNAL SERVER ERROR  : WEB -%]
+[% ELSIF type == 'web_intern_error' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : internal server error [%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(who,action,listname,conf.host)%] User %1 has encountered an internal server error 
+(Web interface - ACTION : %2[% IF listname %] - LIST : %3@%4[%END%]) :[%END%] 
+
+[%IF error == 'chdir_error' %][%|loc%]Unable to change directory.[%END%]
+[%ELSIF error == 'no_authentication_service_name' %][%|loc%]There is not any authentication server name.[%END%]
+[%ELSIF error == 'auth_conf_no_identified_user' %][%|loc%]auth.conf error : either email_http_header or ldap_host/ldap_get_email_by_uid_filter entries should be defined.[%END%]
+[%ELSIF error == 'unknown_authentication_service' %][%|loc(name)%]Unkown authentication service %1.[%END%]
+[%ELSIF error == 'add_user_db_failed' %][%|loc(user)%]Add user '%1' in DB failed.[%END%]
+[%ELSIF error == 'update_user_db_failed' %][%|loc(user)%]Update user '%1' in DB failed[% IF old_email %] (old email : %2)[%END%].[%END%]
+[%ELSIF error == 'add_subscriber_db_failed' %][%|loc(sub)%]Add subscriber '%1' in DB failed.[%END%]
+[%ELSIF error == 'update_subscriber_db_failed' %][%|loc(sub,old_email)%]Update subscriber '%1' in DB failed[% IF old_email %] (old email : %2)[%END%].[%END%]
+[%ELSIF error == 'delete_subscriber_db_failed' %][%|loc(sub)%]Delete subscriber '%1' in DB failed.[%END%]
+[%ELSIF error == 'delete_email_failed' %][%|loc(old_email)%]Delete user in DB for old email '%s' failed.[%END%]
+[%ELSIF error == 'subscriber_not_found' %][%|loc(email,listname)%]Subscriber '%1' is not found in list %2.[%END%]
+[%ELSIF error == 'cannot_read' %][%|loc(filepath)%]Unable to read file : '%1'.[%END%]
+[%ELSIF error == 'cannot_write' %][%|loc(filepath)%]Unable to write file : '%1'.[%END%]
+[%ELSIF error == 'cannot_open_file' %][%|loc(file)%]Unable to open file '%1'.[%END%]
+[%ELSIF error == 'cannot_open_dir' %][%|loc(directory)%]Unable to open directory '%1'.[%END%]
+[%ELSIF error == 'cannot_mkdir' %][%|loc(dir)%]Unable to make directory '%1'.[%END%]
+[%ELSIF error == 'cannot_open_spool' %][%|loc(spool)%]Unable to open spool '%1'.[%END%]
+[%ELSIF error == 'cannot_get_msg' %][%|loc(msg)%]Unable to get message '%1'.[%END%]
+[%ELSIF error == 'rename_file' %][%|loc(old,new)%]Unable to rename file '%1' into '%2'.[%END%]
+[%ELSIF error == 'rename_dir' %][%|loc(old,new)%]Unable to rename directory '%1' into '%2'.[%END%]
+[%ELSIF error == 'unable_rename_archive' %][%|loc(old,new)%]Unable to rename archive directory '%1' into '%2'.[%END%]
+[%ELSIF error == 'unable_rename_bounces' %][%|loc(old,new)%]Unable to rename bounces directory '%1' into '%2'.[%END%]
+[%ELSIF error == 'erase_file' %][%|loc(file)%]Unable to erase file '%1'.[%END%]
+[%ELSIF error == 'cannot_send_distribute' %][%|loc(from,listname)%]Unable to send command DISTRIBUTE from '%1' to list '%2'.[%END%]
+[%ELSIF error == 'no_html_message_available' %][%|loc(dir)%]No HTML version of the message available in '%1'.[%END%]
+[%ELSIF error == 'update_config_changes' %][%|loc(listname)%]Unable to update file config_changes for list '%1'.[%END%]
+[%ELSIF error == 'month_not_found' %][%|loc(month,listname,dir)%]Unable to find month '%1' for list '%2'[%IF dir%] : unable to readdir '%3'.[%END%][%END%]
+[%ELSIF error == 'arc_not_found' %][%|loc(arc_file,listname,path)%]Unable to find archive '%1' for list '%2'[%IF path%] : unable to read '%3'.[%END%][%END%]
+[%ELSIF error == 'inaccessible_archive' %][%|loc(listname,path)%]Unable to find archive for list '%1'[%IF path%] : unable to read '%3'.[%END%][%END%]
+[%ELSIF error == 'may_not_remove_arc'%][%|loc()%]Unable to remove archive : no message id found.[%END%]
+[%ELSIF error == 'may_not_send_me'%][%|loc()%]Unable to send archive : no message id found.[%END%]
+[%ELSIF error == 'archive_not_found'%][%|loc(msgid)%]No message found in archives matching Message-ID '%1'.[%END%]
+[%ELSIF error == 'cannot_save_config'%][%|loc(listname)%]Cannot save config file for list '%1'.[%END%]
+[%ELSIF error == 'failed_to_install_aliases'%][%|loc%]Failed to install aliases.[%END%]
+[%ELSIF error == 'failed_to_remove_aliases'%][%|loc%]Failed to remove aliases.[%END%]
+[%ELSIF error == 'internal_scenario_error_create_list'%][%|loc%]Internal scenario error for 'create_list'.[%END%]
+[%ELSIF error == 'create_list'%][%|loc%]Unable to create list.[%END%]
+[%ELSIF error == 'unable_to_load_list_of_topics'%][%|loc%]Unable to load list topics.[%END%]
+[%ELSIF error == 'unable_to_load_create_list_templates'%][%|loc%]Unable to load create_list templates.[%END%]
+[%ELSIF error == 'unable_get_family'%][%|loc(listname)%]Unable to get family for list '%1'.[%END%]
+[%ELSIF error == 'list_reload'%][%|loc(new_listname)%]Unable to reload list[%IF new_listname %] with new listname '%1'.[%END%][%END%]
+[%ELSIF error == 'sync_include_failed' %][%|loc(listname)%]Failed to inlude members for list '%1'[%END%] 
+[%ELSIF error == 'sync_include_admin_failed' %][%|loc(listname)%]Failed to include list admins for list '%1'[%END%] 
+[%ELSIF error == 'no_owner_defined' %][%|loc%]There is not any owner defined for the list '%1'[%END%] 
+[%ELSIF error == 'exportation_failed' %][%|loc(listname)%]The exporationto an Ldap directory failed for list '%1'[%END%] 
+[%ELSIF error == 'unable_to_check_list_smtp' %][%|loc(new_listname,check_smtp,listname)%]Unable to check listname '%1' for smtp on '%2' to rename list '%3'[%END%]
+[%ELSIF error == 'create_shared' %][%|loc(listname)%]Cannot create shared for list '%1'.[%END%]
+[%ELSIF error == 'restore_shared'%][%|loc(listname)%]Cannot restore shared for list '%1'.[%END%]
+[%ELSIF error == 'delete_shared'%][%|loc(listname)%]Cannot delete shared for list '%1'.[%END%]
+[%ELSIF error == 'browse_shared'%][%|loc%]Impossible to browse shared for list '%1'.[%END%]
+[%ELSIF error == 'cannot_upload'%][%|loc(path)%]Cannot upload file '%1'.[%END%]
+[%ELSIF error == 'cannot_unzip' %][%|loc(name)%]Cannot unzip file '%1'.[%END%] 
+[%ELSIF error == 'error_during_unzip' %][%|loc(name)%]Errors while unzipping file '%1'.[%END%] 
+[%ELSIF error == 'cannot_send_remind' %][%|loc(from,listname)%]Unable to send command REMIND from '%1' to list '%2'.[%END%]
+[%ELSIF error == 'cannot_send_mail' %][%|loc(from,listname)%]Unable to send mail from '%1' to list '%2'.[%END%]
+[%ELSIF error == 'auth_msg_failed' %][%|loc(key,listname)%]Unable to access to the message authenticated with key '%1' for list '%2'.[%END%]
+[%ELSIF error == 'del_sub_request' %][%|loc(sub)%]Unable to delete subscription request for user '%1'.[%END%]
+[%ELSIF error == 'add_file_zip' %][%|loc(file)%]Unable to add file '%1' to archives.[%END%]
+[%ELSIF error == 'write_file_zip' %][%|loc(zipfile)%]Unable to write file zip '%1'.[%END%]
+[%ELSIF error == 'err_404' %][%|loc(zipfile)%]Erreur 404.[%END%]
+[%ELSIF error == 'new_document_failed' %][%|loc(path,listname)%]Unable to create a SharedDocument with path '%1' for list '%2'.[%END%]
+[%ELSIF error == 'cookie_error' %][%|loc%]Parameter cookie undefined, authentication failure.[%END%]
+[%ELSIF error == 'cookie_error_env' %][%|loc(env)%]Cookie error : '%1' undefined, authentication failure.[%END%]
+[%ELSIF error%][%|loc(error)%]         %1 [%END%]
+[%END%]
+[%|loc%]See logs for more details.[%END%]
+
+[%# SYSTEM ERROR  : WEB -%]
+[% ELSIF type == 'web_system_error' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster : system error [%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(who,action,listname,conf.host,error)%] User %1 has encountered a system error 
+(Web interface - ACTION : %2[% IF listname %] - LIST : %3@%4[%END%]) :[%END%] 
+
+[%IF error == 'a' %][%|loc%]  [%END%]
+[%ELSIF error%][%|loc(error)%]         %1 [%END%]
+[%END%]
+[%|loc%]See logs for more details.[%END%]
+
+[%# OTHER -%]
 [% ELSE -%]
-Subject: [% FILTER qencode %][% type %][%END%]
+Subject: [% FILTER qencode %]Listmaster / [% type %][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [% param0 %]
 [% END %]

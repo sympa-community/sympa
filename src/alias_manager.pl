@@ -79,9 +79,7 @@ $data{'default_domain'} = $default_domain;
 $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
 my @aliases ;
 
-my $tt2_include_path = [$Conf{'etc'}.'/'.$domain,
-			$Conf{'etc'},
-			'--ETCBINDIR--'];
+my $tt2_include_path = &tools::make_tt2_include_path($domain,'',,);
 
 my $aliases_dump;
 &tt2::parse_tt2 (\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);

@@ -1,0 +1,39 @@
+From: SYMPA <[% conf.email %]@[% conf.host %]>
+To: [% to %]
+[% IF type == 'auto_notify_bouncers' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Your bouncing address in list %1[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(list.name,to,subscriber.first_bounce)%]Messages from list %1 that were sent to your address %2
+generated non-delivery reports since %3. 
+If this problem persists, you will be automatically unsubscribed from the list.[%END%]
+
+[%|loc%]You can contact list owner:[%END%] [% list.name %]-request@[% conf.host %]
+
+
+[% ELSIF type == 'deleted_msg_topics' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Topics udpating in list %1[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc(list.name)%]Some of the topics you are subscribed to in the list '%1' have been deleted.
+Deleted topic(s) is(are) :[%END%]
+[% FOREACH t = del_topics -%]
+   [% t %]
+[% END -%]
+
+[%|loc(url)%]To update your topics subscription, go to the following page :
+%1[% END %]
+
+
+[% ELSE -%]
+Subject: [% FILTER qencode %][%|loc(list.name,type)%] %1 / %2 [%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[% param0 %]
+[% END %]

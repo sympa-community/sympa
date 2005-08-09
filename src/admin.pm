@@ -159,10 +159,8 @@ sub create_list_old{
     $param->{'creation_email'} = "listmaster\@$host" unless ($param->{'creation_email'});
     $param->{'status'} = 'open'  unless ($param->{'status'});
        
-    my $tt2_include_path = [$Conf{'etc'}.'/'.$robot.'/create_list_templates/'.$template,
-			    $Conf{'etc'}.'/create_list_templates/'.$template,
-			    '--ETCBINDIR--'.'/create_list_templates/'.$template];     
-    
+    my $tt2_include_path = &tools::make_tt2_include_path($robot,'create_list_templates/'.$template,'','');
+
     open CONFIG, ">$list_dir/config";
     &tt2::parse_tt2($param, 'config.tt2', \*CONFIG, $tt2_include_path);
     close CONFIG;
@@ -641,7 +639,7 @@ sub install_aliases {
 	 }elsif ($status == '14') {
 	     &do_log('err','admin::install_aliases : Can not open lock file, report to httpd error_log') ;
 	 }elsif ($status == '15') {
-	     &wwslog('err','The parser returned empty aliases') ;
+	     &do_log('err','The parser returned empty aliases') ;
 	 }else {
 	     &do_log('err',"admin::install_aliases : Unknown error $status while running alias manager $alias_manager");
 	 } 
@@ -657,9 +655,8 @@ sub install_aliases {
 	$data{'default_domain'} = $Conf{'domain'};
 	$data{'is_default_domain'} = 1 if ($robot == $Conf{'domain'});
 	
-	my $tt2_include_path = [$Conf{'etc'}.'/'.$robot,
-				$Conf{'etc'},
-				'--ETCBINDIR--'];
+	my $tt2_include_path = &tools::make_tt2_include_path($robot,'','','');
+
 	&tt2::parse_tt2 (\%data,'list_aliases.tt2',\$aliases, $tt2_include_path);
 	
 	return $aliases;

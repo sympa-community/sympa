@@ -86,10 +86,12 @@ sub lists {
 	
 	my $list = new List ($listname, $robot);
 	my $result_item = {};
-	my $action = &List::request_action ('visibility','md5',$robot,
+	my $result = &List::request_action ('visibility','md5',$robot,
 					    {'listname' =>  $listname,
 					     'sender' => $sender}
 					    );
+	my $action;
+	$action = $result->{'action'} if (ref($result) eq 'HASH');
 	next unless ($action eq 'do_it');
 	
 	##building result packet
@@ -339,19 +341,22 @@ sub info {
     # Part of the authorization code
     $user = &List::get_user_db($sender);
      
-    my $action = &List::request_action ('info','md5',$robot,
+    my $result = &List::request_action ('info','md5',$robot,
                                      {'listname' => $listname,
                                       'sender' => $sender});
+    my $action;
+    $action = $result->{'action'} if (ref($result) eq 'HASH');
 
     die SOAP::Fault->faultcode('Server')
 	->faultstring('No action available')
 	unless (defined $action);
 
-    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
+    if ($action =~ /reject/i) {
+	my $reason_string = &get_reason_string($result->{'reason'},$robot);
 	&Log::do_log('info', 'SOAP : info %s from %s refused (not allowed)', $listname,$sender);
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Not allowed')
-	    ->faultdetail("You don't have proper rights");
+	    ->faultdetail($reason_string);
     }
     if ($action =~ /do_it/i) {
 	my $result_item;
@@ -419,19 +424,22 @@ sub review {
     # Part of the authorization code
     $user = &List::get_user_db($sender);
      
-    my $action = &List::request_action ('review','md5',$robot,
+    my $result = &List::request_action ('review','md5',$robot,
                                      {'listname' => $listname,
                                       'sender' => $sender});
+    my $action;
+    $action = $result->{'action'} if (ref($result) eq 'HASH');
 
     die SOAP::Fault->faultcode('Server')
 	->faultstring('No action available')
 	unless (defined $action);
 
-    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
+    if ($action =~ /reject/i) {
+	my $reason_string = &get_reason_string($result->{'reason'},$robot);
 	&Log::do_log('info', 'SOAP : review %s from %s refused (not allowed)', $listname,$sender);
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Not allowed')
-		->faultdetail("You don't have proper rights");
+		->faultdetail($reason_string);
     }
     if ($action =~ /do_it/i) {
 	my $is_owner = $list->am_i('owner', $sender);
@@ -506,21 +514,24 @@ sub signoff {
     # Part of the authorization code
     my $user = &List::get_user_db($sender);
     
-    my $action = &List::request_action('unsubscribe','md5',$robot,
+    my $result = &List::request_action('unsubscribe','md5',$robot,
 				       {'listname' => $listname,
 					'email' => $sender,
 					'sender' => $sender });
-    
+    my $action;
+    $action = $result->{'action'} if (ref($result) eq 'HASH');
+
     die SOAP::Fault->faultcode('Server')
 	->faultstring('No action available.')
 	unless (defined $action);   
     
-    if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
+    if ($action =~ /reject/i) {
+	my $reason_string = &get_reason_string($result->{'reason'},$robot);
 	&Log::do_log('info', 'SOAP : sign off from %s for the email %s of the user %s refused (not allowed)', 
 		     $listname,$sender,$sender);
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Not allowed.')
-	    ->faultdetail("You don't have proper rights");
+	    ->faultdetail($reason_string);
     }
     if ($action =~ /do_it/i) {
 	## Now check if we know this email on the list and
@@ -531,8 +542,9 @@ sub signoff {
 	    
 	    ## Tell the owner somebody tried to unsubscribe
 	    if ($action =~ /notify/i) {
-		$list->send_notify_to_owner({'who' => $sender, 
-					     'type' => 'warn-signoff'});
+		unless ($list->send_notify_to_owner('warn-signoff',{'who' => $sender})) {
+		    &Log::do_log('err',"Unable to send notify 'warn-signoff' to $list->{'name'} listowner");
+		}
 	    }
 	    die SOAP::Fault->faultcode('Server')
 		->faultstring('Not allowed.')
@@ -544,15 +556,16 @@ sub signoff {
 
 	## Notify the owner
 	if ($action =~ /notify/i) {
-	    $list->send_notify_to_owner({'who' => $sender,
-					 'type' => 'signoff'});
+	    unless ($list->send_notify_to_owner('notice',{'who' => $sender,
+							  'command' => 'signoff'})) {
+		&Log::do_log('err',"Unable to send notify 'notice' to $list->{'name'} listowner");
+	    }
 	}
 
 	## Send bye.tpl to sender
-	my %context;
-	$context{'subject'} = sprintf(gettext("Unsubscribe from list %s"), $list->{'name'});
-	$context{'body'} = sprintf(gettext("You have been removed from list %s.\nThank you for using this list.\n"), $list->{'name'});
-	$list->send_file('bye', $sender, $robot, \%context);
+	unless ($list->send_file('bye', $sender, $robot,{})) {
+	    &Log::do_log('err',"Unable to send template 'bye' to $sender");
+	}
 	
 	$list->save();
 
@@ -605,33 +618,36 @@ sub subscribe {
   $gecos = "\"$gecos\"" if ($gecos =~ /[<>\(\)]/);
   
   ## query what to do with this subscribtion request
-  my $action = &List::request_action('subscribe','md5',$robot,
+  my $result = &List::request_action('subscribe','md5',$robot,
 				     {'listname' => $listname,
 				      'sender' => $sender });
- 
+  my $action;
+  $action = $result->{'action'} if (ref($result) eq 'HASH');
+
   die SOAP::Fault->faultcode('Server')
       ->faultstring('No action available.')
 	  unless (defined $action); 
   
   &Log::do_log('debug2', 'SOAP subscribe action : %s', $action);
   
-  if ($action =~ /reject(\(\'?(\w+)\'?\))?/i) {
+  if ($action =~ /reject/i) {
+      my $reason_string = &get_reason_string($result->{'reason'},$robot);
       &Log::do_log('info', 'SOAP subscribe to %s from %s refused (not allowed)', $listname,$sender);
       die SOAP::Fault->faultcode('Server')
 	  ->faultstring('Not allowed.')
-	  ->faultdetail("You don't have proper rights");
+	  ->faultdetail($reason_string);
   }
   if ($action =~ /owner/i) {
-      push @msg::report, sprintf gettext("Your request of subscription/unssubscription has been forwarded to the list's
-owners for approval. You will receive a notification when you will have
-been subscribed (or unsubscribed) to the list.\n");
+       
       ## Send a notice to the owners.
       my $keyauth = $list->compute_auth($sender,'add');
-      $list->send_notify_to_owner({'who' => $sender,
+      unless ($list->send_notify_to_owner('subrequest',{'who' => $sender,
 				   'keyauth' => $list->compute_auth($sender,'add'),
 				   'replyto' => &Conf::get_robot_conf($robot, 'sympa'),
-				   'gecos' => $gecos,
-				   'type' => 'subrequest'});
+							'gecos' => $gecos})) {
+	  &Log::do_log('err',"Unable to send notify 'subrequest' to $list->{'name'} listowner");
+      }
+
 #      $list->send_sub_to_owner($sender, $keyauth, &Conf::get_robot_conf($robot, 'sympa'), $gecos);
       $list->store_susbscription_request($sender, $gecos);
       &Log::do_log('info', 'SOAP subscribe : %s from %s forwarded to the owners of the list (%d seconds)',$listname,$sender,time-$time_command);
@@ -697,17 +713,18 @@ been subscribed (or unsubscribed) to the list.\n");
 
       ## Now send the welcome file to the user
       unless ($quiet || ($action =~ /quiet/i )) {
-	  my %context;
-	  $context{'subject'} = sprintf(gettext("Welcome on list %s"), $list->{'name'});
-	  $context{'body'} = sprintf(gettext("Welcome on list %s"), $list->{'name'});
-	  $list->send_file('welcome', $sender, $robot, \%context);
+	  unless ($list->send_file('welcome', $sender, $robot,{})) {
+	      &Log::do_log('err',"Unable to send template 'bye' to $sender");
+	  }
       }
       
       ## If requested send notification to owners
       if ($action =~ /notify/i) {
-	  $list->send_notify_to_owner({'who' => $sender,
+	  unless ($list->send_notify_to_owner('notice',{'who' => $sender,
 				       'gecos' => $gecos,
-				       'type' => 'subscribe'});
+							'command' => 'subscribe'})) {
+	      &Log::do_log('err',"Unable to send notify 'notice' to $list->{'name'} listowner");
+	  }
       }
       &Log::do_log('info', 'SOAP subcribe : %s from %s accepted', $listname, $sender);
       
@@ -766,10 +783,13 @@ sub which {
 	my $list_address;
 	my $result_item;
 
-	next unless (&List::request_action ('visibility', 'md5', $robot,
+	my $result = &List::request_action ('visibility', 'md5', $robot,
 					    {'listname' =>  $listname,
-					     'sender' =>$sender}) =~ /do_it/);
-	
+					     'sender' =>$sender});
+	my $action;
+	$action = $result->{'action'} if (ref($result) eq 'HASH');
+	next unless ($action =~ /do_it/i);
+
 	$result_item->{'listAddress'} = $listname.'@'.$list->{'domain'};
 	$result_item->{'subject'} = $list->{'admin'}{'subject'};
 	$result_item->{'subject'} =~ s/;/,/g;
@@ -833,6 +853,24 @@ sub struct_to_soap {
     }
 
     return $soap_data;
+}
+
+
+sub get_reason_string {
+    my ($reason,$robot) = @_;
+
+    my $data = {'reason' => $reason };
+    my $string;
+    my $tt2_include_path =  &tools::make_tt2_include_path($robot,'mail_tt2','','');
+
+    unless (&tt2::parse_tt2($data,'authorization.tt2' ,\$string, $tt2_include_path)) {
+	my $error = &tt2::get_error();
+	&List::send_notify_to_listmaster('web_tt2_error', $robot, [$error]);
+	&do_log('info', "get_reason_string : error parsing");
+	return '';
+    }
+    
+    return $string
 }
 
 1;

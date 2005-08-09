@@ -1,24 +1,33 @@
-From: [% conf.email %]@[% conf.host %]
-To: Moderators of list [% list.name %] <[% to %]>
-[% IF type == 'shared_moderated' %]
-Subject: Shared document to be approved for [% list.name %]
+From: SYMPA <[% conf.email %]@[% conf.host %]>
+To: [% FILTER qencode %][%|loc(list.name,to)%]Moderators of list %1 <%2>[%END%][%END%]
+[% IF type == 'shared_moderated' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Shared document to be approved for %1[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
- [% IF many_files %]
-There are new shared documents in list [% list.name %] : 
-	[% filename %] 
+[%|loc(list.name,filename,who,conf.wwsympa_url)%]
+ [% IF many_files %]There are new shared documents in list %1 : 
+	%2
 
-	from [% who %]
+	from %3
 
 To moderate these document : 
-[% conf.wwsympa_url %]/modindex/[% list.name %]
-
+%4/modindex/%1
 
  [% ELSE %]
-There is a new shared document in list [% list.name %] : 
-	[% filename %] from [% who %]
+There is a new shared document in list %1 : 
+	%2 from %3
+
 To moderate this document : 
-[% conf.wwsympa_url %]/modindex/[% list.name %]
- [% END %]
+%4/modindex/%1
+ [% END %][% END %]
 
+[% ELSE -%]
+Subject: [% FILTER qencode %][%|loc(list.name,type)%]Moderators List %1 / %2[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[% param0 %]
 [% END %]
-

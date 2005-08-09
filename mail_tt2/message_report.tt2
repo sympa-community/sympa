@@ -1,0 +1,125 @@
+From: SYMPA <[% conf.email %]@[% conf.host %]>
+To: [% to %]
+[% IF type == 'intern_error' -%]
+Subject: [% FILTER qencode %][%|loc%]Message diffusion : Internal server error[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="[% boundary %]"
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+--[% boundary %]
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+
+[% IF entry == 'forward' %]
+[%|loc(list.name,function)%]Impossible to forward your message to '%1-%2' because of an internal server error.[%END%]
+[% ELSE %]
+[%|loc(list.name)%]Impossible to distribute your message for list '%1' because of an internal server error.[%END%]
+[% END %]
+[%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
+
+[%################ %]
+[%#### USER  ERROR %]
+[%################ %]
+[% ELSIF type == 'user_error' -%]
+Subject: [% FILTER qencode %][%|loc%]Message diffusion : User error[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="[% boundary %]"
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+--[% boundary %]
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+
+[%|loc(list.name)%]Impossible to distribute your message for list '%1' for the following reason :[%END%]
+
+[% IF entry == 'routing_error' -%]
+[%|loc(list.name,conf.sympa,conf.host)%]The following message was sent to list '%1' while it seems to contain
+commands like subscribe, unsubscribe, help, index, get, ...
+
+If your message effectively contained a command, please notice that 
+commands should never ever be sent to lists. Commands must be sent
+to %2 exclusively.
+
+If your message was effectively addressed to the list, it has been
+interpreted by the software as a command. Please contact the list owner :  
+%1-request@%3 so that he can take care of your message.
+
+Thank you for your attention.
+[%END%]
+[% ELSIF entry == 'message_too_large' -%]
+
+[%|loc(list.name)%]Your message could not be sent because its size 
+was over the maximum size allowed on this list.
+[%END%]
+[% ELSIF entry == 'list_unknown' -%]
+
+[%|loc(listname)%]List '%1' does not exist.
+[%END%]
+[% ELSIF entry == 'unfound_message' -%]
+
+[%|loc(listname,key)%]Unable to access the message on list %1 with  key %2.
+Warning : this message may already have been sent by one of the list's editor.
+[%END%]
+[% ELSIF entry == 'unfound_file_message' -%]
+
+[%|loc(key)%]Unable to access to the message authenticated with key %1.
+[%END%]
+[% ELSIF entry == 'wrong_format_message' -%]
+
+[%|loc(key)%]Unable to access to the message authenticated with key %1 because of a wrong format.
+[%END%]
+[% ELSIF entry == 'message_rejected' -%]
+
+[%|loc(key,listname)%]Message %1 for list '%2' has been rejected.
+[%END%]
+[% END -%]
+[%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
+
+[%##################### %]
+[%# AUTHORIZATION ERROR %]
+[%##################### %]
+[% ELSIF type == 'authorization_reject' -%]
+Subject: [% FILTER qencode %][%|loc%]Message diffusion : Authorization reject[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="[% boundary %]"
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+--[% boundary %]
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+
+[%|loc(conf.host)%]Your message for list '%1' (attached below) was rejected. 
+You are not allowed to send this message for the following reason :[%END%]
+
+[% SET reason = entry -%] [% PROCESS authorization_reject.tt2 %]
+[%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
+[%##################### %]
+[%###### SUCCESS NOTICE %]
+[%##################### %]
+[% ELSIF type == 'success' -%]
+Subject: [% FILTER qencode %][%|loc%]Message diffusion[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[% IF entry == 'moderating_message' -%]
+
+[%|loc(list.name)%]Your message for list %1 has been forwarded to editor(s)[%END%]
+
+[% ELSIF entry == 'message_distributed' -%]
+
+[%|loc(key,listname)%]Message %1 for list '%2' has been distributed.[%END%]
+
+
+[% END -%]
+[% END %]
+[%##################### %]
+[%# Inserted MESSAGE    %]
+[%##################### %]
+[%- IF msg -%]
+--[% boundary %]
+Content-Type: message/rfc822
+Content-Transfer-Encoding:  [%|loc%]_encoding_[%END%]
+Content-Disposition: inline
+
+[% msg %]
+
+--[% boundary %]--
+[% END %]

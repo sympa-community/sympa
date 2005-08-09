@@ -42,7 +42,7 @@ use FileHandle;
 use List;
 use Conf;
 use Log;
-use smtp;
+use mail;
 #use Getopt::Std;
 use Getopt::Long;
 use POSIX;
@@ -153,7 +153,7 @@ umask(oct($Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf{'home'})) {
-    &message('chdir_error');
+    &report::reject_report_web('intern','chdir_error',{},'','','',$robot);
     &do_log('info','Unable to change directory');
     exit (-1);
 }
@@ -224,11 +224,12 @@ while (!$end) {
 		my $who = "$1\@$2";
 		my $listname = $3 ;
 		my $list = new List ($listname);
-		my $action =&List::request_action ('del','smtp',$robot,
+		my $result =&List::request_action ('del','smtp',$robot,
 					{'listname' =>$listname,
 					 'sender' => $Conf{'listmasters'}[0],
 					 'email' => $who});
-
+		my $action;
+		$action = $result->{'action'} if (ref($result) eq 'HASH');
 #                    &List::get_action ('del', $listname, $Conf{'listmasters'}[0], 'smtp');
 
 		if ($action =~ /do_it/i) {
@@ -237,10 +238,12 @@ while (!$end) {
 			$list->save();
 			do_log ('notice',"$who has been removed from $listname because welcome message bounced");
 			
-			$list->send_notify_to_owner({'who' => $who, 
+			unless ($list->send_notify_to_owner('notice',{'who' => $who, 
 						     'gecos' => "", 
-						     'type' => 'automatic_del', 
-						     'by' => 'listmaster'});
+								      'command' => 'automatic_del', 
+								      'by' => 'listmaster'})) {
+			    &do_log('notice',"Unable to send notify 'notice' to $list->{'name'} list owner");
+			}
 		    }
 		}else {
 		    do_log ('notice',"Unable to remove $who from $listname (welcome message bounced but del is closed)");
@@ -393,7 +396,7 @@ while (!$end) {
     }
 
     ## Free zombie sendmail processes
-    &smtp::reaper;
+    &mail::reaper;
 
 }
 do_log('notice', 'bounced exited normally due to signal');

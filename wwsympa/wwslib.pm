@@ -258,18 +258,18 @@ sub get_email_from_cookie {
     my ($email, $auth) ;
 
     unless ($secret) {
-	&main::message('error in sympa configuration');
+	&report::reject_report_web('intern','cookie_error',{},'','','',$robot);
 	&Log::do_log('info', 'parameter cookie undefine, authentication failure');
     }
 
     unless ($ENV{'HTTP_COOKIE'}) {
-	&main::message('error in sympa missing cookie');
+	&report::reject_report_web('intern','cookie_error_env',{'env'=> ENV{HTTP_COOKIE}},'get_email_from_cookie','','',$robot);
 	&Log::do_log('info', ' ENV{HTTP_COOKIE} undefined, authentication failure');
     }
 
     ($email, $auth) = &cookielib::check_cookie ($ENV{'HTTP_COOKIE'}, $secret);
     unless ( $email) {
-	&main::message('auth failed');
+	&report::reject_report_web('user','auth_failed',{},'');
 	&Log::do_log('info', 'get_email_from_cookie: auth failed for user %s', $email);
 	return undef;
     }    
@@ -350,7 +350,7 @@ sub init_passwd {
 	    unless ( &List::update_user_db($email,
 					   {'password' => $passwd,
 					    'lang' => $user->{'lang'} || $data->{'lang'}} )) {
-		&main::message('update_failed');
+		&report::reject_report_web('intern','update_user_db_failed',{'user'=>$email},'','',$email,$robot);
 		&Log::do_log('info','init_passwd: update failed');
 		return undef;
 	    }
@@ -361,7 +361,7 @@ sub init_passwd {
 				     'password' => $passwd,
 				     'lang' => $data->{'lang'},
 				     'gecos' => $data->{'gecos'}})) {
-	    &main::message('add_failed');
+	    &report::reject_report_web('intern','add_user_db_failed',{'user'=>$email},'','',$email,$robot);
 	    &Log::do_log('info','init_passwd: add failed');
 	    return undef;
 	}

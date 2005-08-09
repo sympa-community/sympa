@@ -142,8 +142,8 @@ sub SetLang {
     }
 
     unless (setlocale(&POSIX::LC_TIME, $locale)) {
-	&do_log('err','Failed to setlocale(LC_TIME,%s)', $locale.'.'.$locale2charset{$locale});
-	return undef;
+ 	&do_log('err','Failed to setlocale(LC_TIME,%s)', $locale.'.'.$locale2charset{$locale});
+ 	return undef;
     }
 
     $current_lang = $lang;

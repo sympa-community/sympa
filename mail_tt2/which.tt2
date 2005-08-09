@@ -1,0 +1,25 @@
+From: SYMPA <[% conf.email %]@[% conf.host %]>
+Subject: [% FILTER qencode %][%|loc%]Result of your command which[%END%][%END%]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
+
+[%|loc%]Here are the lists you are currently subscribe to :[%END%]
+
+[% FOREACH l = lists -%]
+[% l %]
+[% END %]
+
+[% IF is_owner %][%|loc%]Lists you are owner of:[%END%] 
+
+[% FOREACH l = owner_lists -%]
+[% l %]
+[% END %]
+[% END -%]
+
+[% IF is_editor %][%|loc%]Lists you are editor of:[%END%] 
+
+[% FOREACH l = editor_lists -%]
+[% l %]
+[% END %]
+[% END %]

@@ -67,6 +67,45 @@ function hide(div){
     }
   }
 
+[% IF false %]
+  // To ask topic selection
+  var topic_names = new Array();
+  var topic_titles = new Array();	
+  function checkbox_selection(my_url, my_message, boxnames, boxtitles) {
+    var maxname = boxnames.length;	
+    var maxtitle = boxtitles.length;	
+
+    if (maxname != maxtitle) {
+	return false;
+    }	
+    
+    msg=window.open("","","width=300,height=300,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no");
+    msg.document.write('<HTML><BODY>'+'<CENTER><h3>'+my_message+'</h3></CENTER>');
+    msg.document.write('<form action='+my_url+' method="post">');
+    msg.document.write('<input type="hidden" name="list" value="[% list %]"/>');
+    msg.document.write('<input type="hidden" name="action" value="review"/>');
+
+    for (var i=0;i<maxname ;i++ ){	
+	var bname = 'topic_'+boxnames[i];
+	msg.document.write('<input type="checkbox" name='+bname+' value="1">'+boxtitles[i]);
+	msg.document.write('<br />');	
+    }
+    msg.document.write('<input type="checkbox" name="other" value="1" />[%|loc%]Other[%END%]');	
+    msg.document.write('<br /><br /><br />');
+    msg.document.write('<input type="button" value="OK" onClick ="self.close()">');this.form.submit()	
+    msg.document.write('</form>');	
+    msg.document.write('</BODY></HTML>');
+	
+    return true;
+    //return msg.document.form;
+
+  }
+[% END %]
+
+
+
+
+
   // To confirm on a link (A HREF)
   function refresh_mom_and_die() {
     url = window.opener.location.href;
@@ -120,9 +159,37 @@ function hide(div){
     }
   }
 
-  //If the motif is found in the string, my_question is asked
-  // if the answer == yes than action is d_unzip else d_upload 
+[% IF (action == 'modindex' || action == 'request_topic') || (action == 'viewmod' || action == 'compose_mail')%] 
+  // To check at least one checkbox checked
+  function checkbox_check_topic(form,string) {
+ 
+    var checkbox_checked = false;
+    var expr = /^topic_/;	
+  
+    for (i = 0; i < form.elements.length; i++) {
+      if (form.elements[i].type == "checkbox") { 
+        var box = form.elements[i];
+        if (box.checked == "1" && expr.test(box.name)) {
+ 	 checkbox_checked = true;
+       	 break;	
+        }
+      }
+    }
+    if (checkbox_checked) {
+      return(true);	
+    } else {
+      alert("You must select a topic");
+      return(false);
+    }
+  }
 
+[% END %]
+
+[% IF false %] 
+ 
+  // No used function	
+  // If the motif is found in the string, my_question is asked
+  // if the answer == yes than action is d_unzip else d_upload 
   function requestBasedOnRegExp(my_question,my_form) {
     expr = /^.+\.zip$/i;
 
@@ -140,7 +207,7 @@ function hide(div){
     }
     return true;
   }   
-
+[% END %]
 
 
 // end browsers -->

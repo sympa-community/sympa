@@ -18,7 +18,7 @@ use strict;
 ## Sympa API
 require 'tt2.pl';
 use List;
-use smtp;
+use mail;
 use Conf;
 use Log;
 use Language;

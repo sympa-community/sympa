@@ -30,6 +30,7 @@ use Exporter;
 use Log;
 use Conf;
 use List;
+use report;
 
 # use Net::SSLeay qw(&get_https);
 # use Net::SSLeay;
@@ -60,7 +61,7 @@ use List;
 		 };
 	     
 	 }else{
-	     &main::error_message('incorrect_passwd') unless ($ENV{'SYMPA_SOAP'});
+	     &report::reject_report_web('user','incorrect_passwd',{}) unless ($ENV{'SYMPA_SOAP'});
 	     &do_log('err', "Incorrect Ldap password");
 	     return undef;
 	 }
@@ -118,14 +119,14 @@ sub authentication {
 	    next unless (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
 	    if ($auth_service->{'auth_type'} eq 'user_table') {
 		if ($user->{'password'} =~ /^init/i) {
-		    &main::error_message('init_passwd');
+		    &report::reject_report_web('user','init_passwd',{});
 		    last;
 		}
 	    }
 	}
     }
     
-    &main::error_message('incorrect_passwd') unless ($ENV{'SYMPA_SOAP'});
+    &report::reject_report_web('user','incorrect_passwd',{}) unless ($ENV{'SYMPA_SOAP'});
     &do_log('err','authentication: incorrect password for user %s', $email);
 
     $param->{'init_email'} = $email;

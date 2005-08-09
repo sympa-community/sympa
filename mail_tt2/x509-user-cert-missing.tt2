@@ -1,8 +1,8 @@
-From: [% list.name %]-request@[% list.host %]
+From: [% fromlist %]
 Subject: [% FILTER qencode %][%|loc(list.name,list.host)%]crypted message for list %1@%2[%END%][%END%]
 Mime-version: 1.0
-Content-Type: text/plain
-Content-transfer-encoding: 8bit
+Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(mail.sender,mail.subject)%]An encrypted message from %1 has been distributed to
 Subject : %2[%END%]

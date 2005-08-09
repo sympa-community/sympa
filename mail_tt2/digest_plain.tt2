@@ -1,9 +1,10 @@
-From: [% from %]
+From: [% fromlist %]
 To: [% to %]
-Reply-to: [% reply %]
+Reply-to: [% replyto %]
 Subject: [% FILTER qencode %][%|loc(list.name,date)%]%1 Digest %2[%END%][%END%] [% IF total_group > 1 -%]([% current_group %]/[% total_group %])[% END %]
+MIME-Version: 1.0
 Content-Type: text/plain; charset=[%|loc%]_charset_[%END%];
-Content-transfer-encoding: [%|loc%]_encoding_[%END%]
+Content-Transfer-Encoding: [%|loc%]_encoding_[%END%]
 
 [%|loc(list.name,date)%]%1 Digest %2[%END%]
 
@@ -27,6 +28,3 @@ Subject: [% m.subject %]
 [% END %]
 [%|loc(list.name,date)%]End of %1 Digest %2[%END%]
 *********************************************
-
-
-

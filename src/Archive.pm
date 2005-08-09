@@ -139,11 +139,11 @@ sub store {
 sub list {
     my $name = shift;
 
-    do_log ('debug',"archive::list($name)");
+    &do_log ('debug',"archive::list($name)");
 
     my($filename, $newfile);
     my(@l, $i);
-        
+    
     unless (-d "$name") {
       @l = ($msg::no_archives_available);
       return @l;

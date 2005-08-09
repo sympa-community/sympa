@@ -10,8 +10,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>4. Upgrading Sympa</TITLE>
-<META NAME="description" CONTENT="4. Upgrading Sympa">
+<TITLE>4. Running Sympa </TITLE>
+<META NAME="description" CONTENT="4. Running Sympa ">
 <META NAME="keywords" CONTENT="sympa">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -30,32 +30,32 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <BODY TEXT="#000000" BGCOLOR="#ffffff">
 <!--Navigation Panel-->
-<A NAME="tex2html776"
+<A NAME="tex2html826"
   HREF="node6.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html770"
+<A NAME="tex2html820"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html764"
+<A NAME="tex2html814"
   HREF="node4.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html772"
+<A NAME="tex2html822"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html774"
-  HREF="node26.html">
+<A NAME="tex2html824"
+  HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html777"
-  HREF="node6.html">5. Mail aliases</A>
-<B> Up:</B> <A NAME="tex2html771"
+<B> Next:</B> <A NAME="tex2html827"
+  HREF="node6.html">5. Upgrading Sympa</A>
+<B> Up:</B> <A NAME="tex2html821"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html765"
+<B> Previous:</B> <A NAME="tex2html815"
   HREF="node4.html">3. Installing Sympa</A>
- &nbsp; <B>  <A NAME="tex2html773"
+ &nbsp; <B>  <A NAME="tex2html823"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html775"
-  HREF="node26.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html825"
+  HREF="node30.html">Index</A></B> 
 <BR>
 <BR>
 <!--End of Navigation Panel-->
@@ -63,252 +63,272 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL>
-<LI><A NAME="tex2html778"
-  HREF="node5.html#SECTION00510000000000000000">4.1 Uncompatible changes</A>
-<LI><A NAME="tex2html779"
-  HREF="node5.html#SECTION00520000000000000000">4.2 CPAN modules update</A>
-<LI><A NAME="tex2html780"
-  HREF="node5.html#SECTION00530000000000000000">4.3 Database structure update</A>
-<LI><A NAME="tex2html781"
-  HREF="node5.html#SECTION00540000000000000000">4.4 Preserving your customizations</A>
-<LI><A NAME="tex2html782"
-  HREF="node5.html#SECTION00550000000000000000">4.5 Running 2 Sympa versions on a single server</A>
+<LI><A NAME="tex2html828"
+  HREF="node5.html#SECTION00510000000000000000">4.1 sympa.pl</A>
+<LI><A NAME="tex2html829"
+  HREF="node5.html#SECTION00520000000000000000">4.2 INIT script</A>
+<LI><A NAME="tex2html830"
+  HREF="node5.html#SECTION00530000000000000000">4.3 Stopping <I>Sympa</I> and signals</A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
 
-<H1><A NAME="SECTION00500000000000000000"></A>
-    <A NAME="upgrading-sympa"></A>
-<BR>
-4. Upgrading Sympa
+<H1><A NAME="SECTION00500000000000000000">
+4. Running <I>Sympa</I> </A>
 </H1>
-
-<P>
-Sympa upgrade is a relatively riskless operations, mainly because the install process preserves your
-customizations (templates, configuration, authorization scenarios,...) and also because Sympa automates
-a few things (DB update, CPAN modules installation).
 
 <P>
 
 <H1><A NAME="SECTION00510000000000000000"></A>
-    <A NAME="641"></A>
+<A NAME="sympa.pl"></A>
 <BR>
-4.1 Uncompatible changes
+4.1 sympa.pl
 </H1>
 
 <P>
-New features, changes and bug fixes are summarized in the <A NAME="5806"></A><TT>NEWS</TT> file, part of the tar.gz (the 
-<A NAME="5809"></A><TT>Changelog</TT> file is a complete log file of CVS changes). As mentionned at the beginning of this
-file, uncompatible changes are preceded by '*****'. While running the <A NAME="5812"></A><TT>make install</TT> Sympa will
-detect the previously installed version and will prompt you with uncompatible changes between both versions
-of the software. You can interrupt the install process at that stage if you are too frightened.
-Output of the <A NAME="5815"></A><TT>make install</TT> :<PRE>
-You are upgrading from Sympa 4.2
-You should read CAREFULLY the changes listed below ; they might be uncompatible changes :
-&lt;RETURN&gt;
+<A NAME="7123"></A><TT>sympa.pl</TT> is the main daemon ; it processes mail commands and is in charge of
+messages distribution.
 
-*****   require new perlmodule XML-LibXML
+<P>
+<A NAME="7126"></A><TT>sympa.pl</TT> recognizes the following command line arguments:
 
-*****   You should update your DB structure (automatically performed by Sympa with MySQL), adding the following table (mySQL example) :
-*****   CREATE TABLE admin_table (
-*****   list_admin              varchar(50) NOT NULL,
-*****   user_admin              varchar(100) NOT NULL,
-*****   role_admin              enum('listmaster','owner','editor') NOT NULL,
-*****   date_admin              datetime NOT NULL,
-*****   update_admin            datetime,
-*****   reception_admin         varchar(20),
-*****   comment_admin           varchar(150),
-*****   subscribed_admin        enum('0','1'),
-*****   included_admin          enum('0','1'),
-*****   include_sources_admin   varchar(50),
-*****   info_admin              varchar(150),
-*****   profile_admin           enum('privileged','normal'),
-*****   PRIMARY KEY (list_admin, user_admin,role_admin),
-*****   INDEX (list_admin, user_admin,role_admin)
-*****   );
+<P>
 
-*****   Extend the generic_sso feature ; Sympa is now able to retrieve the user email address in a LDAP directory
-&lt;RETURN&gt;
+<UL>
+<LI><A NAME="7129"></A><TT>- - debug</TT> | <A NAME="7132"></A><TT>-d</TT> 
+
+<P>
+Sets <I>Sympa</I> in debug mode and keeps it attached to the terminal. 
+  Debugging information is output to STDERR, along with standard log
+  information. Each function call is traced. Useful while reporting
+  a bug.
+
+<P>
+</LI>
+<LI><A NAME="7136"></A><TT>service</TT>  <I>process_command</I> | <I>process_message</I>
+
+<P>
+Sets <I>Sympa</I> daemon in way it process only message distribution (process_message) or in way it process only command (process_command).
+
+<P>
+</LI>
+<LI><A NAME="7149"></A><TT>- - config <I>config_file</I></TT> | <A NAME="7164"></A><TT>-f <I>config_file</I></TT>
+
+<P>
+Forces <I>Sympa</I> to use an alternative configuration file. Default behavior is
+  to use the configuration file as defined in the Makefile ($CONFIG).
+
+<P>
+</LI>
+<LI><A NAME="7171"></A><TT>- - mail</TT> | <A NAME="7174"></A><TT>-m</TT> 
+
+<P>
+<I>Sympa</I> will log calls to sendmail, including recipients. Useful for
+  keeping track of each mail sent (log files may grow faster though).
+
+<P>
+</LI>
+<LI><A NAME="7187"></A><TT>- - lang <I>catalog</I></TT> | <A NAME="7202"></A><TT>-l <I>catalog</I></TT>
+
+<P>
+Set this option to use a language catalog for <I>Sympa</I>. 
+  The corresponding catalog file must be located in <A NAME="7209"></A><TT>~sympa/locale</TT>
+  directory. 
+
+<P>
+</LI>
+<LI><A NAME="7223"></A><TT>- - keepcopy <I>recipient_directory</I></TT> | <A NAME="7238"></A><TT>-k <I>recipient_directory</I></TT>
+
+<P>
+This option tells Sympa to keep a copy of every incoming message,
+  instead of deleting them. <I>recipient_directory</I> is the directory
+  to store messages.
+
+<P><PRE>
+/home/sympa/bin/sympa.pl
 </PRE>
+
+<P>
+</LI>
+<LI><A NAME="7256"></A><TT>- - create_list - - robot <I>robotname</I> - - input_file <I>/path/to/list_file.xml</I></TT>
+
+<P>
+Create the list described by the xml file, see <A HREF="node19.html#list-creation-sympa">18.3</A>, 
+page&nbsp;<A HREF="node19.html#list-creation-sympa"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+
+<P>
+</LI>
+<LI><A NAME="7274"></A><TT>- - close_list <I>listname@robot</I></TT>
+
+<P>
+Close the list (changing its status to closed), remove aliases and remove
+subscribers from DB (a dump is created in the list directory to allow restoring
+the list). See <A HREF="#family-close-list"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, page&nbsp;<A HREF="#family-close-list"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> when you
+are in a family context.
+
+<P>
+</LI>
+<LI><A NAME="7292"></A><TT>- - dump <I>listname <TT>|</TT> ALL</I></TT>
+
+<P>
+Dumps subscribers of a list or all lists. Subscribers are dumped
+  in <A NAME="7301"></A><TT>subscribers.db.dump</TT>.
+
+<P>
+</LI>
+<LI><A NAME="7313"></A><TT>- - import <I>listname</I></TT>
+
+<P>
+Import subscribers in the <I>listname</I> list. Data are read from STDIN.
+
+<P>
+</LI>
+<LI><A NAME="7319"></A><TT>- - lowercase</TT>
+
+<P>
+Lowercases e-mail addresses in database.
+
+<P>
+</LI>
+<LI><A NAME="7322"></A><TT>- - help</TT> | <A NAME="7325"></A><TT>-h</TT>
+
+<P>
+Print usage of sympa.pl.
+
+<P>
+</LI>
+<LI><A NAME="7328"></A><TT>- - make_alias_file</TT>
+
+<P>
+Create an aliases file in /tmp/ with all list aliases (only list which status is 'open'). It uses the list_aliases.tt2
+template.
+
+<P>
+</LI>
+<LI><A NAME="7331"></A><TT>- - version</TT> | <A NAME="7334"></A><TT>-v</TT>
+
+<P>
+Print current version of <I>Sympa</I>.
+
+<P>
+</LI>
+<LI><A NAME="7353"></A><TT>- - instanciate_family <I>familyname</I> <I>robotname</I> - - input_file <I>/path/to/family_file.xml</I></TT>
+
+<P>
+Instantiate the family <I>familyname</I>. See <A HREF="node20.html#lists-families">19</A>, 
+page&nbsp;<A HREF="node20.html#lists-families"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+
+<P>
+</LI>
+<LI><A NAME="7377"></A><TT>- - close_family <I>familyname</I> - - robot <I>robotname</I></TT>
+
+<P>
+Close the <I>familyname</I> family. See <A HREF="node20.html#family-closure">19.2.4</A>, 
+   page&nbsp;<A HREF="node20.html#family-closure"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+
+<P>
+</LI>
+<LI><A NAME="7401"></A><TT>- - add_list <I>familyname</I> - - robot <I>robotname</I> - - input_file <I>/path/to/list_file.xml</I></TT>
+
+<P>
+Add the list described in the XML file to the <I>familyname</I> family. See <A HREF="node20.html#family-add-list">19.2.5</A>, 
+   page&nbsp;<A HREF="node20.html#family-add-list"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+
+<P>
+</LI>
+<LI><A NAME="7428"></A><TT>- - modify_list <I>familyname</I> - - robot <I>robotname</I> - - input_file <I>/path/to/list_file.xml</I></TT>
+
+<P>
+Modify the existing family list, with description contained in the XML file. See <A HREF="node20.html#family-modify-list">19.2.7</A>, 
+   page&nbsp;<A HREF="node20.html#family-modify-list"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>.
+
+<P>
+</LI>
+</UL>
 
 <P>
 
 <H1><A NAME="SECTION00520000000000000000"></A>
-    <A NAME="651"></A>
+<A NAME="init"></A>
 <BR>
-4.2 CPAN modules update
+4.2 INIT script
 </H1>
 
 <P>
-Required and optional perl modules (CPAN) installation is automatically handled at the <A NAME="5818"></A><TT>make</TT> time. You are asked before each module is installed. For optional modules, associated features are listed.
+The <A NAME="7440"></A><TT>make install</TT> step should have installed a sysV init script in
+ your <A NAME="7443"></A><TT>/etc/rc.d/init.d/</TT> directory (you can change this at <A NAME="7446"></A><TT>configure</TT>
+ time with the <A NAME="7449"></A><TT>-with-initdir</TT> option). You should edit your runlevels to make
+ sure <I>Sympa</I> starts after Apache and MySQL. Note that <A NAME="7453"></A>MySQL should
+ also start before <A NAME="7454"></A>Apache because of <A NAME="7455"></A><TT>wwsympa.fcgi</TT>.
 
 <P>
-Output of the <A NAME="5821"></A><TT>make</TT> command :<PRE>
-Checking for REQUIRED modules:
-------------------------------------------
-perl module          from CPAN       STATUS
------------          ---------       ------
-Archive::Zip         Archive-Zip    OK (1.09   &gt;= 1.05)
-CGI                  CGI            OK (2.89   &gt;= 2.52)
-DB_File              DB_FILE        OK (1.806  &gt;= 1.75)
-Digest::MD5          Digest-MD5     OK (2.20   &gt;= 2.00)
-FCGI                 FCGI           OK (0.67   &gt;= 0.67)
-File::Spec           File-Spec      OK (0.83   &gt;= 0.8)
-IO::Scalar           IO-stringy     OK (2.104  &gt;= 1.0)
-LWP                  libwww-perl    OK (5.65   &gt;= 1.0)
-Locale::TextDomain   libintl-perl   OK (1.10   &gt;= 1.0)
-MHonArc::UTF8        MHonArc        version is too old ( &lt; 2.4.6).
-&gt;&gt;&gt;&gt;&gt;&gt;&gt; You must update "MHonArc" to version "" &lt;&lt;&lt;&lt;&lt;&lt;.
-Setting FTP Passive mode
-Description: 
-Install module MHonArc::UTF8 ? n
-MIME::Base64         MIME-Base64    OK (3.05   &gt;= 3.03)
-MIME::Tools          MIME-tools     OK (5.411  &gt;= 5.209)
-Mail::Internet       MailTools      OK (1.60   &gt;= 1.51)
-Regexp::Common       Regexp-Common  OK (2.113  &gt;= 1.0)
-Template             Template-ToolkitOK (2.13   &gt;= 1.0)
-XML::LibXML          XML-LibXML     OK (1.58   &gt;= 1.0)
-
-Checking for OPTIONAL modules:
-------------------------------------------
-perl module          from CPAN       STATUS
------------          ---------       ------
-Bundle::LWP          LWP            OK (1.09   &gt;= 1.09)
-Constant subroutine CGI::XHTML_DTD redefined at /usr/lib/perl5/5.8.0/constant.pm line 108, &lt;STDIN&gt; line 1.
-CGI::Fast            CGI            CGI::Fast doesn't return 1 (check it).
-Crypt::CipherSaber   CipherSaber    OK (0.61   &gt;= 0.50)
-DBD::Oracle          DBD-Oracle     was not found on this system.
-Description: Oracle database driver, required if you connect to a Oracle database.
-Install module DBD::Oracle ?
-</PRE>
+This script starts these deamons : sympa.pl, task_manager.pl, archived.pl and bounced.pl.
 
 <P>
 
 <H1><A NAME="SECTION00530000000000000000"></A>
-    <A NAME="659"></A>
+ <A NAME="stop-signals"></A> <A NAME="639"></A>
 <BR>
-4.3 Database structure update
+4.3 Stopping <I>Sympa</I> and signals
 </H1>
 
 <P>
-Whatever RDBMS you are using (mysql, Pg, Sybase or Oracle) Sympa will check every database tables and fields. If one is missing <A NAME="5824"></A><TT>sympa.pl</TT>
-will not start. If you are using <A NAME="5827"></A>mysql Sympa will also check field types and will try to change them (or create them) automatically ; 
-assuming that the DB user configured has sufficient privileges. If You are not using Mysql or if the DB user configured in <A NAME="5828"></A><TT>sympa.conf</TT> 
-does have sufficient privileges, then you should change the database structure yourself, as mentionned in the <A NAME="5831"></A><TT>NEWS</TT> file.
 
-<P>
-Output of Sympa logs :<PRE>
-Table admin_table created in database sympa
-Field 'comment_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
-Field comment_admin added to table admin_table
-Field 'date_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
-Field date_admin added to table admin_table
-Field 'include_sources_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
-Field include_sources_admin added to table admin_table
-Field 'included_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
-Field included_admin added to table admin_table
-Field 'info_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
-Field info_admin added to table admin_table
-Field 'list_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
-Field list_admin added to table admin_table
-Field 'profile_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
-Field profile_admin added to table admin_table
-Field 'reception_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
-Field reception_admin added to table admin_table
-Field 'role_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
-Field role_admin added to table admin_table
-Field 'subscribed_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
-Field subscribed_admin added to table admin_table
-Field 'update_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
-Field update_admin added to table admin_table
-Field 'user_admin' (table 'admin_table' ; database 'sympa') was NOT found. Attempting to add it...
-Setting list_admin,user_admin,role_admin fields as PRIMARY
-Field user_admin added to table admin_table
-</PRE>
-
-<P>
-
-<H1><A NAME="SECTION00540000000000000000"></A>
-    <A NAME="669"></A>
+<H3><A NAME="SECTION00530100000000000000"></A><A NAME="7459"></A>
 <BR>
-4.4 Preserving your customizations
-</H1>
+4.3.0.1 <TT>kill -TERM</TT>
+</H3>
 
 <P>
-Sympa comes with default configuration files (templates, scenarios,...) that will be installed in the <A NAME="5834"></A><TT>/usr/local/sympa-os/bin</TT> directory. 
-If you need to customize some of them, you should copy the file first in a safe place, ie in the <A NAME="5837"></A><TT>/usr/local/sympa-os/etc</TT> directory.
-If you do so, the Sympa upgrade process will preserve your site customizations.
+When this signal is sent to sympa.pl (<A NAME="7462"></A><TT>kill -TERM</TT>), the daemon is stopped ending message distribution in progress 
+ and this can be long (for big lists). If <A NAME="7465"></A><TT>kill -TERM</TT> is used, sympa.pl will stop immediatly whatever a distribution 
+ message is in progress. In this case, when sympa.pl restart, message will distributed many times.
 
 <P>
 
-<H1><A NAME="SECTION00550000000000000000"></A>
-    <A NAME="673"></A>
+<H3><A NAME="SECTION00530200000000000000"></A><A NAME="7468"></A>
 <BR>
-4.5 Running 2 Sympa versions on a single server
-</H1>
+4.3.0.2 <TT>kill -HUP</TT>
+</H3>
 
 <P>
-This can be very convenient to have a stable version of Sympa and a fresh version for test purpose, both running on the same server.
-
-<P>
-Both sympa instances must be completely partitioned, unless you want the make production mailing lists visible through the
-test service. 
-
-<P>
-The biggest part of the partitioning is achieved while running the <A NAME="5840"></A><TT>./configure</TT>. Here is a sample call to <A NAME="5843"></A><TT>./configure</TT>
-on the test server side :
-
-<P><PRE>
-./configure --prefix=/home/sympa-dev \
-            --with-confdir=/home/sympa-dev/etc \
-            --with-mandir=/home/sympa-dev/man \
-            --with-initdir=/home/sympa-dev/init \
-	    --with-piddir=/home/sympa-dev/pid
-            --with-lockdir=/home/sympa-dev/lock \
-            --with-sendmail_aliases=/home/sympa-dev/etc/sympa_aliases
-</PRE>
-
-<P>
-You can also customize more parameters via the <A NAME="5846"></A><TT>/home/sympa-dev/etc/sympa.conf</TT> file.
-
-<P>
-If you wish to share the same lists in both Sympa instances, then some parameters should have the same value :
-<A NAME="5849"></A><TT>home</TT>, <A NAME="5852"></A><TT>db_name</TT>, <A NAME="5855"></A><TT>arc_path</TT>
+When this signal is sent to sympa.pl (<A NAME="7471"></A><TT>kill -HUP</TT>), it switchs of the <A NAME="7474"></A><TT>-mail</TT> logging option
+ and continues current task.
 
 <P>
 
 <HR>
 <!--Navigation Panel-->
-<A NAME="tex2html776"
+<A NAME="tex2html826"
   HREF="node6.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html770"
+<A NAME="tex2html820"
   HREF="sympa.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html764"
+<A NAME="tex2html814"
   HREF="node4.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html772"
+<A NAME="tex2html822"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html774"
-  HREF="node26.html">
+<A NAME="tex2html824"
+  HREF="node30.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> 
 <BR>
-<B> Next:</B> <A NAME="tex2html777"
-  HREF="node6.html">5. Mail aliases</A>
-<B> Up:</B> <A NAME="tex2html771"
+<B> Next:</B> <A NAME="tex2html827"
+  HREF="node6.html">5. Upgrading Sympa</A>
+<B> Up:</B> <A NAME="tex2html821"
   HREF="sympa.html">Sympa Mailing Lists Management Software version</A>
-<B> Previous:</B> <A NAME="tex2html765"
+<B> Previous:</B> <A NAME="tex2html815"
   HREF="node4.html">3. Installing Sympa</A>
- &nbsp; <B>  <A NAME="tex2html773"
+ &nbsp; <B>  <A NAME="tex2html823"
   HREF="node1.html">Contents</A></B> 
- &nbsp; <B>  <A NAME="tex2html775"
-  HREF="node26.html">Index</A></B> 
+ &nbsp; <B>  <A NAME="tex2html825"
+  HREF="node30.html">Index</A></B> 
 <!--End of Navigation Panel-->
 <ADDRESS>
 root
-2005-08-04
+2005-08-05
 </ADDRESS>
 </BODY>
 </HTML>

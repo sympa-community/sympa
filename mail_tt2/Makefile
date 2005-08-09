@@ -66,3 +66,4 @@ installtemplates:
 	$(PERL) ../set_symlinks.pl mail_tt2 $(DESTDIR)$(ETCBINDIR)/mail_tt2
 	find $(DESTDIR)$(ETCBINDIR) -type d -exec chmod 755 {} \;
 	find $(DESTDIR)$(ETCBINDIR) -type f -exec chmod 444 {} \;
+	rm -f $(DESTDIR)$(ETCBINDIR)/web_tt2/authorization_reject.tt2 ; ln -s $(DESTDIR)$(ETCBINDIR)/mail_tt2/authorization_reject.tt2 $(DESTDIR)$(ETCBINDIR)/web_tt2
