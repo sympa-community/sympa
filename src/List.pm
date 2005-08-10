@@ -242,13 +242,15 @@ my %date_format = (
 		       'Pg' => 'date_part(\'epoch\',%s)',
 		       'mysql' => 'UNIX_TIMESTAMP(%s)',
 		       'Oracle' => '((to_number(to_char(%s,\'J\')) - to_number(to_char(to_date(\'01/01/1970\',\'dd/mm/yyyy\'), \'J\'))) * 86400) +to_number(to_char(%s,\'SSSSS\'))',
-		       'Sybase' => 'datediff(second, "01/01/1970",%s)'
+		       'Sybase' => 'datediff(second, "01/01/1970",%s)',
+		       'SQLite' => 'strftime(\'%%s\',%s,\'utc\')'
 		       },
 		   'write' => {
 		       'Pg' => '\'epoch\'::timestamp with time zone + \'%d sec\'',
 		       'mysql' => 'FROM_UNIXTIME(%d)',
 		       'Oracle' => 'to_date(to_char(round(%s/86400) + to_number(to_char(to_date(\'01/01/1970\',\'dd/mm/yyyy\'), \'J\'))) || \':\' ||to_char(mod(%s,86400)), \'J:SSSSS\')',
-		       'Sybase' => 'dateadd(second,%s,"01/01/1970")'
+		       'Sybase' => 'dateadd(second,%s,"01/01/1970")',
+		       'SQLite' => 'datetime(%d,\'unixepoch\',\'localtime\')'
 		       }
 	       );
 
@@ -1234,10 +1236,20 @@ sub db_connect {
     require DBI;
 
     ## Do we have db_xxx required parameters
-    foreach my $db_param ('db_type','db_name','db_host','db_user') {
+    foreach my $db_param ('db_type','db_name') {
 	unless ($Conf{$db_param}) {
 	    do_log('info','Missing parameter %s for DBI connection', $db_param);
 	    return undef;
+	}
+    }
+    
+    ## SQLite just need a db_name
+    unless ($Conf{'db_type'} eq 'SQLite') {
+	foreach my $db_param ('db_type','db_name','db_host','db_user') {
+	    unless ($Conf{$db_param}) {
+		do_log('info','Missing parameter %s for DBI connection', $db_param);
+		return undef;
+	    }
 	}
     }
 
@@ -1255,6 +1267,9 @@ sub db_connect {
 
     }elsif ($Conf{'db_type'} eq 'Sybase') {
 	$connect_string = sprintf 'DBI:%s:database=%s;server=%s', $Conf{'db_type'}, $Conf{'db_name'}, $Conf{'db_host'};
+
+    }elsif ($Conf{'db_type'} eq 'SQLite') {
+	$connect_string = sprintf 'DBI:%s:dbname=%s', $Conf{'db_type'}, $Conf{'db_name'};
 
     }else {
 	$connect_string = sprintf 'DBI:%s:dbname=%s;host=%s', $Conf{'db_type'}, $Conf{'db_name'}, $Conf{'db_host'};
@@ -1307,6 +1322,12 @@ sub db_connect {
 	my $dbname;
 	$dbname="use $Conf{'db_name'}";
         $dbh->do ($dbname);
+    }
+
+    if ($Conf{'db_type'} eq 'SQLite') { # Configure to use sympa database
+        $dbh->func( 'func_index', -1, sub { return index($_[0],$_[1]) }, 'create_function' );
+	if(defined $Conf{'db_timeout'}) { $dbh->func( $Conf{'db_timeout'}, 'busy_timeout' ); }
+	else { $dbh->func( 5000, 'busy_timeout' ); }
     }
 
     do_log('debug3','Connected to Database %s',$Conf{'db_name'});
@@ -4401,39 +4422,39 @@ sub get_first_user {
 		
 	    }elsif ($sortby eq 'email') {
 		$statement .= " ORDER BY \"email\"";
-
+		
 	    }elsif ($sortby eq 'date') {
 		$statement .= " ORDER BY \"date\" DESC";
-
+		
 	    }elsif ($sortby eq 'sources') {
 		$statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
-
+		
 	    }elsif ($sortby eq 'name') {
 		$statement .= " ORDER BY \"gecos\"";
 	    }
-
-
-	## mysql
+	    
+	    
+	    ## mysql
 	}elsif ($Conf{'db_type'} eq 'mysql') {
 	    
-    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
 	    
 	    ## SORT BY
 	    if ($sortby eq 'domain') {
 		## Redefine query to set "dom"
-
+		
 		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, REVERSE(SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50)) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $update_field, $additional, $dbh->quote($name);
-
+		
 	    }elsif ($sortby eq 'email') {
 		## Default SORT
 		$statement .= ' ORDER BY email';
-
+		
 	    }elsif ($sortby eq 'date') {
 		$statement .= ' ORDER BY date DESC';
-
+		
 	    }elsif ($sortby eq 'sources') {
 		$statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
-
+		
 	    }elsif ($sortby eq 'name') {
 		$statement .= ' ORDER BY gecos';
 	    } 
@@ -4443,7 +4464,37 @@ sub get_first_user {
 		$statement .= sprintf " LIMIT %d, %d", $offset, $rows;
 	    }
 	    
-	## Pg    
+	    ## SQLite
+	}elsif ($Conf{'db_type'} eq 'SQLite') {
+    
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
+ 	    
+ 	    ## SORT BY
+ 	    if ($sortby eq 'domain') {
+ 		## Redefine query to set "dom"
+		
+ 		$statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, substr(user_subscriber,0,func_index(user_subscriber,'\@')+1) AS dom %s FROM subscriber_table WHERE (list_subscriber = %s) ORDER BY dom", $date_field, $update_field, $additional, $dbh->quote($name);
+		
+ 	    }elsif ($sortby eq 'email') {
+ 		## Default SORT
+ 		$statement .= ' ORDER BY email';
+		
+ 	    }elsif ($sortby eq 'date') {
+ 		$statement .= ' ORDER BY date DESC';
+ 
+ 	    }elsif ($sortby eq 'sources') {
+ 		$statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
+		
+ 	    }elsif ($sortby eq 'name') {
+ 		$statement .= ' ORDER BY gecos';
+ 	    } 
+ 	    
+ 	    ## LIMIT clause
+ 	    if (defined($rows) and defined($offset)) {
+ 		$statement .= sprintf " LIMIT %d, %d", $offset, $rows;
+ 	    }
+ 	    
+	    ## Pg    
 	}else {
 	    
 	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id %s FROM subscriber_table WHERE (list_subscriber = %s %s)", $date_field, $update_field, $additional, $dbh->quote($name), $selection;
@@ -4661,6 +4712,36 @@ sub get_first_admin_user {
 	    ## Redefine query to set "dom"
 	    
 	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, REVERSE(SUBSTRING(user_admin FROM position('\@' IN user_admin) FOR 50)) AS dom FROM admin_table WHERE (list_admin = %s AND role_admin = %s ) ORDER BY dom", $date_field, $update_field, $dbh->quote($name), $dbh->quote($role);
+	    
+	}elsif ($sortby eq 'email') {
+	    ## Default SORT
+	    $statement .= ' ORDER BY email';
+	    
+	}elsif ($sortby eq 'date') {
+	    $statement .= ' ORDER BY date DESC';
+	    
+	}elsif ($sortby eq 'sources') {
+	    $statement .= " ORDER BY \"subscribed\" DESC,\"id\"";
+	    
+	}elsif ($sortby eq 'name') {
+	    $statement .= ' ORDER BY gecos';
+	} 
+	
+	## LIMIT clause
+	if (defined($rows) and defined($offset)) {
+	    $statement .= sprintf " LIMIT %d, %d", $offset, $rows;
+	}
+	
+	## SQLite
+    }elsif ($Conf{'db_type'} eq 'SQLite') {
+	
+	$statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id  FROM admin_table WHERE (list_admin = %s %s AND role_admin = %s)", $date_field, $update_field, $dbh->quote($name), $selection, $dbh->quote($role);
+	
+	## SORT BY
+	if ($sortby eq 'domain') {
+	    ## Redefine query to set "dom"
+	    
+	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, substr(user_admin,func_index(user_admin,'\@')+1,50) AS dom FROM admin_table WHERE (list_admin = %s AND role_admin = %s ) ORDER BY dom", $date_field, $update_field, $dbh->quote($name), $dbh->quote($role);
 	    
 	}elsif ($sortby eq 'email') {
 	    ## Default SORT
@@ -7885,6 +7966,8 @@ sub _include_users_sql {
 	$connect_string = "DBI:Pg:dbname=$db_name;host=$host";
     }elsif ($db_type eq 'Sybase') {
 	$connect_string = "DBI:Sybase:database=$db_name;server=$host";
+    }elsif ($db_type eq 'SQLite') {
+	$connect_string = "DBI:SQLite:dbname=$db_name";
     }else {
 	$connect_string = "DBI:$db_type:$db_name:$host";
     }
@@ -9426,42 +9509,72 @@ sub probe_db {
     my (%checked, $table);
 
     ## Database structure
-    my %db_struct = ('user_table' => 
-		     {'email_user' => 'varchar(100)',
-		      'gecos_user' => 'varchar(150)',
-		      'password_user' => 'varchar(40)',
-		      'cookie_delay_user' => 'int(11)',
-		      'lang_user' => 'varchar(10)',
-		      'attributes_user' => 'text'},
-		     'subscriber_table' => 
-		     {'list_subscriber' => 'varchar(50)',
-		      'user_subscriber' => 'varchar(100)',
-		      'date_subscriber' => 'datetime',
-		      'update_subscriber' => 'datetime',
-		      'visibility_subscriber' => 'varchar(20)',
-		      'reception_subscriber' => 'varchar(20)',
-		      'topics_subscriber' => 'varchar(200)',
-		      'bounce_subscriber' => 'varchar(35)',
-		      'comment_subscriber' => 'varchar(150)',
-		      'subscribed_subscriber' => "enum('0','1')",
-		      'included_subscriber' => "enum('0','1')",
-		      'include_sources_subscriber' => 'varchar(50)',
-		      'bounce_score_subscriber' => 'smallint(6)'},
-		     'admin_table' =>
-		     {'list_admin' => 'varchar(50)',
-		      'user_admin' => 'varchar(100)',
-		      'role_admin' => "enum('listmaster','owner','editor')",
-		      'date_admin' => 'datetime',
-		      'update_admin' => 'datetime',
-		      'reception_admin' => 'varchar(20)',
-		      'comment_admin' => 'varchar(150)',
-		      'subscribed_admin' => "enum('0','1')",
-		      'included_admin' => "enum('0','1')",
-		      'include_sources_admin' => 'varchar(50)',
-		      'info_admin' =>  'varchar(150)',
-		      'profile_admin' => "enum('privileged','normal')"}
+    my %db_struct = ('mysql' => {'user_table' => {'email_user' => 'varchar(100)',
+						  'gecos_user' => 'varchar(150)',
+						  'password_user' => 'varchar(40)',
+						  'cookie_delay_user' => 'int(11)',
+						  'lang_user' => 'varchar(10)',
+						  'attributes_user' => 'text'},
+				 'subscriber_table' => {'list_subscriber' => 'varchar(50)',
+							'user_subscriber' => 'varchar(100)',
+							'date_subscriber' => 'datetime',
+							'update_subscriber' => 'datetime',
+							'visibility_subscriber' => 'varchar(20)',
+							'reception_subscriber' => 'varchar(20)',
+							'topics_subscriber' => 'varchar(200)',
+							'bounce_subscriber' => 'varchar(35)',
+							'comment_subscriber' => 'varchar(150)',
+							'subscribed_subscriber' => "enum('0','1')",
+							'included_subscriber' => "enum('0','1')",
+							'include_sources_subscriber' => 'varchar(50)',
+							'bounce_score_subscriber' => 'smallint(6)'},
+				 'admin_table' => {'list_admin' => 'varchar(50)',
+						   'user_admin' => 'varchar(100)',
+						   'role_admin' => "enum('listmaster','owner','editor')",
+						   'date_admin' => 'datetime',
+						   'update_admin' => 'datetime',
+						   'reception_admin' => 'varchar(20)',
+						   'comment_admin' => 'varchar(150)',
+						   'subscribed_admin' => "enum('0','1')",
+						   'included_admin' => "enum('0','1')",
+						   'include_sources_admin' => 'varchar(50)',
+						   'info_admin' =>  'varchar(150)',
+						   'profile_admin' => "enum('privileged','normal')"}
+			     },
+		     'SQLite' => {'user_table' => {'email_user' => 'varchar(100)',
+						   'gecos_user' => 'varchar(150)',
+						   'password_user' => 'varchar(40)',
+						   'cookie_delay_user' => 'integer',
+						   'lang_user' => 'varchar(10)',
+						   'attributes_user' => 'varchar(255)'},
+				  'subscriber_table' => {'list_subscriber' => 'varchar(50)',
+							 'user_subscriber' => 'varchar(100)',
+							 'date_subscriber' => 'timestamp',
+							 'update_subscriber' => 'timestamp',
+							 'visibility_subscriber' => 'varchar(20)',
+							 'reception_subscriber' => 'varchar(20)',
+							 'topics_subscriber' => 'varchar(200)',
+							 'bounce_subscriber' => 'varchar(35)',
+							 'comment_subscriber' => 'varchar(150)',
+							 'subscribed_subscriber' => "boolean",
+							 'included_subscriber' => "boolean",
+							 'include_sources_subscriber' => 'varchar(50)',
+							 'bounce_score_subscriber' => 'integer'},
+				  'admin_table' => {'list_admin' => 'varchar(50)',
+						    'user_admin' => 'varchar(100)',
+						    'role_admin' => "varchar(15)",
+						    'date_admin' => 'timestamp',
+						    'update_admin' => 'timestamp',
+						    'reception_admin' => 'varchar(20)',
+						    'comment_admin' => 'varchar(150)',
+						    'subscribed_admin' => "boolean",
+						    'included_admin' => "boolean",
+						    'include_sources_admin' => 'varchar(50)',
+						    'info_admin' =>  'varchar(150)',
+						    'profile_admin' => "varchar(15)"}
+			      },
 		     );
-
+    
     my %not_null = ('email_user' => 1,
 		    'list_subscriber' => 1,
 		    'user_subscriber' => 1,
@@ -9506,7 +9619,7 @@ sub probe_db {
 	}
 	
 	## Check required tables
-	foreach my $t1 (keys %db_struct) {
+	foreach my $t1 (keys %{$db_struct{'mysql'}}) {
 	    my $found;
 	    foreach my $t2 (@tables) {
 		$found = 1 if ($t1 eq $t2);
@@ -9519,15 +9632,15 @@ sub probe_db {
 		
 		&do_log('notice', 'Table %s created in database %s', $t1, $Conf{'db_name'});
 		push @tables, $t1;
+		$real_struct{$t1} = {};
 	    }
 	}
-	
-	
+
 	## Get fields
 	foreach my $t (@tables) {
 	    
-#	    unless ($sth = $dbh->table_info) {
-#	    unless ($sth = $dbh->prepare("LISTFIELDS $t")) {
+	    #	    unless ($sth = $dbh->table_info) {
+	    #	    unless ($sth = $dbh->prepare("LISTFIELDS $t")) {
 	    unless ($sth = $dbh->prepare("SHOW FIELDS FROM $t")) {
 		do_log('err','Unable to prepare SQL query : %s', $dbh->errstr);
 		return undef;
@@ -9544,12 +9657,25 @@ sub probe_db {
 	}
 	
     }elsif ($Conf{'db_type'} eq 'Pg') {
-	
+		
 	unless (@tables = $dbh->tables) {
 	    &do_log('info', 'Can\'t load tables list from database %s', $Conf{'db_name'});
 	    return undef;
 	}
+	# Une simple requête sqlite : PRAGMA table_info('nomtable') , retourne la liste des champs de la table en question.
+	# La liste retournée est composée d'un N°Ordre, Nom du champ, Type (longueur), Null ou not null (99 ou 0),Valeur par défaut,Clé primaire (1 ou 0)
 	
+    }elsif ($Conf{'db_type'} eq 'SQLite') {
+ 	
+ 	unless (@tables = $dbh->tables) {
+ 	    &do_log('info', 'Can\'t load tables list from database %s', $Conf{'db_name'});
+ 	    return undef;
+ 	}
+	
+ 	foreach my $t (@tables) {
+ 	    $t =~ s/^\"(.+)\"$/\1/;
+ 	}
+
     }elsif ($Conf{'db_type'} eq 'Oracle') {
  	
  	my $statement = "SELECT table_name FROM user_tables";	 
@@ -9603,31 +9729,35 @@ sub probe_db {
 	$checked{$table} = 1;
     }
     
+    my $found_tables = 0;
     foreach $table('user_table', 'subscriber_table', 'admin_table') {
-	unless ($checked{$table} || $checked{'public.' . $table}) {
+	if ($checked{$table} || $checked{'public.' . $table}) {
+	    $found_tables++;
+	}else {
 	    &do_log('err', 'Table %s not found in database %s', $table, $Conf{'db_name'});
-	    return undef;
 	}
     }
     
     ## Check tables structure if we could get it
+    ## Currently only performed with mysql
     if (%real_struct) {
-	foreach my $t (keys %db_struct) {
+	foreach my $t (keys %{$db_struct{$Conf{'db_type'}}}) {
 	    unless ($real_struct{$t}) {
 		&do_log('info', 'Table \'%s\' not found in database \'%s\' ; you should create it with create_db.%s script', $t, $Conf{'db_name'}, $Conf{'db_type'});
 		return undef;
 	    }
 	    
-	    foreach my $f (sort keys %{$db_struct{$t}}) {
+	    foreach my $f (sort keys %{$db_struct{$Conf{'db_type'}}{$t}}) {
 		unless ($real_struct{$t}{$f}) {
 		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, $Conf{'db_name'});
 		    
 		    my $options;
+		    ## To prevent "Cannot add a NOT NULL column with default value NULL" errors
 		    if ($not_null{$f}) {
 			$options .= 'NOT NULL';
 		    }
-		
-		    unless ($dbh->do("ALTER TABLE $t ADD $f $db_struct{$t}{$f} $options")) {
+
+		    unless ($dbh->do("ALTER TABLE $t ADD $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options")) {
 			&do_log('err', 'Could not add field \'%s\' to table\'%s\'.', $f, $t);
 			&do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			return undef;
@@ -9644,7 +9774,7 @@ sub probe_db {
 		    if ($f eq 'user_subscriber') {
 			&do_log('info', 'Setting list_subscriber,user_subscriber fields as PRIMARY');
 			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY (list_subscriber,user_subscriber)")) {
-			    &do_log('err', 'Could not set field field \'list_subscriber,user_subscriber\' as PRIMARY KEY, table\'%s\'.', $t);
+			    &do_log('err', 'Could not set field \'list_subscriber,user_subscriber\' as PRIMARY KEY, table\'%s\'.', $t);
 			    return undef;
 			}
 			unless ($dbh->do("ALTER TABLE $t ADD INDEX (user_subscriber,list_subscriber)")) {
@@ -9656,7 +9786,7 @@ sub probe_db {
 		    if ($f eq 'user_admin') {
 			&do_log('info', 'Setting list_admin,user_admin,role_admin fields as PRIMARY');
 			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY (list_admin,user_admin,role_admin)")) {
-			    &do_log('err', 'Could not set field field \'list_admin,user_admin,role_admin\' as PRIMARY KEY, table\'%s\'.', $t);
+			    &do_log('err', 'Could not set field \'list_admin,user_admin,role_admin\' as PRIMARY KEY, table\'%s\'.', $t);
 			    return undef;
 			}
 			unless ($dbh->do("ALTER TABLE $t ADD INDEX (user_admin,list_admin,role_admin)")) {
@@ -9682,16 +9812,16 @@ sub probe_db {
 		
 		## Change DB types if different and if update_db_types enabled
 		if ($Conf{'update_db_field_types'} eq 'auto') {
-		    unless ($real_struct{$t}{$f} eq $db_struct{$t}{$f}) {
-			&do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', $f, $t, $Conf{'db_name'}, $db_struct{$t}{$f});
+		    unless ($real_struct{$t}{$f} eq $db_struct{$Conf{'db_type'}}{$t}{$f}) {
+			&do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', $f, $t, $Conf{'db_name'}, $db_struct{$Conf{'db_type'}}{$t}{$f});
 			
 			my $options;
 			if ($not_null{$f}) {
 			    $options .= 'NOT NULL';
 			}
-			
-			&do_log('notice', "ALTER TABLE $t CHANGE $f $f $db_struct{$t}{$f} $options");
-			unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$t}{$f} $options")) {
+
+			&do_log('notice', "ALTER TABLE $t CHANGE $f $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options");
+			unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$Conf{'db_type'}}{$t}{$f} $options")) {
 			    &do_log('err', 'Could not change field \'%s\' in table\'%s\'.', $f, $t);
 			    &do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			    return undef;
@@ -9699,10 +9829,42 @@ sub probe_db {
 			
 			&do_log('info', 'Field %s in table %s, structur updated', $f, $t);
 		    }
+		}else {
+		    unless ($real_struct{$t}{$f} eq $db_struct{$Conf{'db_type'}}{$t}{$f}) {
+			&do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s).', $f, $t, $Conf{'db_name'}, $db_struct{$Conf{'db_type'}}{$t}{$f});
+			&do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
+			return undef;
+		    }
 		}
 	    }
 	}
+
+	## Try to run the create_db.XX script
+    }elsif ($found_tables == 0) {
+	unless (open SCRIPT, "--SCRIPTDIR--/create_db.$Conf{'db_type'}") {
+	    &do_log('err', "Failed to open '%s' file : %s", "--SCRIPTDIR--/create_db.$Conf{'db_type'}", $!);
+	    return undef;
+	}
+	my $script;
+	while (<SCRIPT>) {
+	    $script .= $_;
+	}
+	close SCRIPT;
+	my @scripts = split /;\n/,$script;
+
+	&do_log('notice', "Trying to run the '%s' script...", "--SCRIPTDIR--/create_db.$Conf{'db_type'}");
+	foreach my $sc (@scripts) {
+	    unless ($dbh->do($sc)) {
+		&do_log('err', "Failed to run script '%s' : %s", "--SCRIPTDIR--/create_db.$Conf{'db_type'}", $dbh->errstr);
+		return undef;
+	    }
+	}
+
+    }else {
+	&do_log('err', 'Missing required tables in the database ; you should create them with create_db.%s script', $Conf{'db_type'});
+	return undef;
     }
+    
     return 1;
 }
 

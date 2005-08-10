@@ -310,7 +310,7 @@ in a single software package, including:
         files for subscriber data. The introduction of databases came out of the
         \WWSympa project.  The database ensures a secure access to
         shared data. The PERL database API \perlmodule {DBI}/\perlmodule {DBD} enables
-        interoperability with various \textindex{RDBMS} (\textindex{MySQL}, \textindex{PostgreSQL},
+        interoperability with various \textindex{RDBMS} (\textindex{MySQL}, \textindex{SQLite}, \textindex{PostgreSQL},
         \textindex{Oracle}, \textindex{Sybase}).
 	(See ref {sec-rdbms}, page~\pageref {sec-rdbms})
 
@@ -825,7 +825,7 @@ detail in later sections.
     \item installation of DB Berkeley module (already installed on
       most UNIX systems)
 
-    \item installing a \textindex{RDBMS} (\textindex{Oracle}, \textindex{MySQL}, \textindex{Sybase} or \textindex{PostgreSQL}) and creating \Sympa's Database. This is required for using the web interface for \Sympa. Please refers to \Sympa and its database section (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
+    \item installing a \textindex{RDBMS} (\textindex{Oracle}, \textindex{MySQL}, \textindex{SQLite}, \textindex{Sybase} or \textindex{PostgreSQL}) and creating \Sympa's Database. This is required for using the web interface for \Sympa. Please refers to \Sympa and its database section (\ref {sec-rdbms}, page~\pageref {sec-rdbms}).
 
     \item installation of
 	\textindex{CPAN}
@@ -1417,7 +1417,7 @@ Install module DBD::Oracle ? [n]
 \section {Database structure update}
     \index{db update}
 
-Whatever RDBMS you are using (mysql, Pg, Sybase or Oracle) Sympa will check every database tables and fields. If one is missing \file {sympa.pl}
+Whatever RDBMS you are using (mysql, SQLite, Pg, Sybase or Oracle) Sympa will check every database tables and fields. If one is missing \file {sympa.pl}
 will not start. If you are using \textindex{mysql} Sympa will also check field types and will try to change them (or create them) automatically ; 
 assuming that the DB user configured has sufficient privileges. If You are not using Mysql or if the DB user configured in \file {sympa.conf} 
 does have sufficient privileges, then you should change the database structure yourself, as mentionned in the \file {NEWS} file.
@@ -2535,7 +2535,7 @@ This feature is only available with \textindex{mysql}.
 
 \subsection {\cfkeyword {db\_type}}
 
-	\texttt {Format: db\_type mysql | Pg | Oracle | Sybase}
+	\texttt {Format: db\_type mysql | SQLite | Pg | Oracle | Sybase}
 
         Database management system used (e.g. MySQL, Pg, Oracle)
 	
@@ -2548,7 +2548,8 @@ This feature is only available with \textindex{mysql}.
 
         Name of the database containing user information. See
         detailed notes on database structure, \ref{rdbms-struct},
-        page~\pageref{rdbms-struct}.
+        page~\pageref{rdbms-struct}. If you are using SQLite, then this
+	parameter is the DB file name.
 
 \subsection {\cfkeyword {db\_host}}
 
@@ -2565,6 +2566,10 @@ This feature is only available with \textindex{mysql}.
 \subsection {\cfkeyword {db\_passwd}}
 
         Password for \cfkeyword {db\_user}.
+
+\subsection {\cfkeyword {db\_timeout}}
+
+        This parameter is used for SQLite only.
 
 \subsection {\cfkeyword {db\_options}}
 
@@ -2788,7 +2793,7 @@ detected.
 \label {sec-rdbms}
 
 Most basic feature of \Sympa will work without a RDBMS, but WWSympa and bounced require a relational database. 
-Currently you can use one of the following RDBMS : MySQL, PostgreSQL, Oracle, Sybase. Interfacing with other RDBMS
+Currently you can use one of the following RDBMS : MySQL, SQLite, PostgreSQL, Oracle, Sybase. Interfacing with other RDBMS
 requires only a few changes in the code, since the API used, \htmladdnormallinkfoot {DBI} {http://www.symbolstone.org/technology/perl/DBI/} 
 (DataBase Interface), has DBD (DataBase Drivers) for many RDBMS.
 
@@ -2848,7 +2853,7 @@ private info, gecos and profile option for owners).
 
 The \file {create\_db} script below will create the sympa database for 
 you. You can find it in the \dir {script/} directory of the 
-distribution (currently scripts are available for MySQL, PostgreSQL, Oracle and Sybase).
+distribution (currently scripts are available for MySQL, SQLite, PostgreSQL, Oracle and Sybase).
 
 \begin{itemize}
 
@@ -2856,6 +2861,13 @@ distribution (currently scripts are available for MySQL, PostgreSQL, Oracle and 
 	\begin {quote}
 	\begin{verbatim}
 	[INCLUDE '../src/etc/script/create_db.mysql']
+	\end{verbatim}
+	\end {quote}
+
+  \item SQLiteL database creation script\\
+	\begin {quote}
+	\begin{verbatim}
+	[INCLUDE '../src/etc/script/create_db.SQLite']
 	\end{verbatim}
 	\end {quote}
 
@@ -3352,11 +3364,11 @@ Furthermore, if you want to get list's archives, you can do it via the \cfkeywor
 
 \WWSympa needs an RDBMS (Relational Database Management System) in order to
 run. All database access is performed via the \Sympa API. \Sympa
-currently interfaces with \htmladdnormallink {MySQL}
-{http://www.mysql.net/}, \htmladdnormallink {PostgreSQL}
-{http://www.postgresql.pyrenet.fr/}, \htmladdnormallink {Oracle}
-{http://www.oracle.com/database/} and \htmladdnormallink {Sybase}
-{http://www.sybase.com/index_sybase.html}.
+currently interfaces with \htmladdnormallink {MySQL}{http://www.mysql.net/}, 
+\htmladdnormallink {SQLite}{http://sqlite.org/},
+\htmladdnormallink {PostgreSQL}{http://www.postgresql.pyrenet.fr/}, 
+\htmladdnormallink {Oracle}{http://www.oracle.com/database/} 
+and \htmladdnormallink {Sybase}{http://www.sybase.com/index_sybase.html}.
 
 A database is needed to store user passwords and preferences.
 The database structure is documented in the \Sympa documentation ;
@@ -6975,7 +6987,7 @@ is used to begin a paragraph defining the SQL query parameters :
 \label {db-type}
 \lparam {db\_type} \textit {dbd\_name} 
 
-The database type (mysql, Pg, Oracle, Sybase, CSV ...). This value identifies the PERL
+The database type (mysql, SQLite, Pg, Oracle, Sybase, CSV ...). This value identifies the PERL
 DataBase Driver (DBD) to be used, and is therefore case-sensitive.
 
 \item

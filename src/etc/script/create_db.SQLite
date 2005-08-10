@@ -1,0 +1,45 @@
+
+CREATE TABLE user_table (
+  	email_user          	varchar (100) NOT NULL,
+  	gecos_user          	varchar (150),
+  	password_user		varchar (40),
+	cookie_delay_user	integer,
+	lang_user		varchar (10),
+	attributes_user		varchar(255),
+	PRIMARY KEY (email_user)
+);
+
+CREATE TABLE subscriber_table (
+  	list_subscriber       	varchar (50) NOT NULL,
+	user_subscriber		varchar (100) NOT NULL,
+	date_subscriber		timestamp NOT NULL,
+	update_subscriber	timestamp,
+	visibility_subscriber	varchar (20),
+	reception_subscriber	varchar (20),
+	topics_subscriber       varchar (200),
+	bounce_subscriber	varchar (35),
+	comment_subscriber	varchar (150),
+	subscribed_subscriber 	boolean,
+	included_subscriber 	boolean,
+	include_sources_subscriber varchar(50),
+	bounce_score_subscriber integer,
+	PRIMARY KEY (list_subscriber, user_subscriber)
+);
+CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber);
+
+CREATE TABLE admin_table (
+	list_admin 		varchar(50) NOT NULL,
+ 	user_admin 		varchar(100) NOT NULL,
+	role_admin 		varchar(15) NOT NULL,
+	date_admin 		timestamp NOT NULL,
+	update_admin 		timestamp,
+	reception_admin 	varchar(20),
+	comment_admin 		varchar(150),
+	subscribed_admin  	boolean,
+	included_admin  	boolean,
+	include_sources_admin  	varchar(50),
+	info_admin   		varchar(150),
+	profile_admin  		varchar(15),
+	PRIMARY KEY (list_admin, user_admin,role_admin)
+);
+CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin,role_admin);
