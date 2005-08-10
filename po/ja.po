@@ -1,16 +1,17 @@
 # Japanese translation for sympa
-Copyright (c) (c) 2005 Canonical Ltd, and Rosetta Contributors 2005
-This file is distributed under the same license as the sympa package.
-moriwaka <moriwaka@valinux.co.jp>, 2005.
-, fuzzy
-, fuzzy
-# 
+# Copyright (c) (c) 2005 Canonical Ltd, and Rosetta Contributors 2005
+# This file is distributed under the same license as the sympa package.
+# moriwaka <moriwaka@valinux.co.jp>, 2005.
+# , fuzzy
+# , fuzzy
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2005-06-08 19:03+0900\n"
+"PO-Revision-Date: 2005-08-05 11:04+0900\n"
 "Last-Translator: moriwaka <moriwaka@valinux.co.jp>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -403,24 +404,28 @@ msgstr "<strong>%1</strong>は以下のメーリングリストを講読して�
 msgid ""
 "<strong>Bounces</strong>  : Manage non-delivery reports (also called "
 "bounces)."
-msgstr ""
+msgstr "<strong>バウンス</strong>: 配送失敗レポートの管理"
 
 #: web_tt2/help_admin.tt2:10
 msgid ""
 "<strong>Create shared</strong> : initializes the shared document web space."
 msgstr ""
+"<strong>共有Webの作成</strong>: 共有ドキュメントを置くWebスペースの初期化"
 
 #: web_tt2/help_admin.tt2:6
 msgid ""
 "<strong>Customizing</strong> : editing of various files and messages "
 "attached to your list."
 msgstr ""
+"<strong>カスタマイズ</strong> :いろいろなメッセージやファイルを編集します。"
 
 #: web_tt2/help_admin.tt2:11
 msgid ""
 "<strong>Delete shared</strong> closes it. It can be restored using \"Restore "
 "shared\" button"
 msgstr ""
+"<strong>共有Webを削除</strong>: 共有Webを閉鎖します。\"共有Webを復活\"ボタン"
+"で元に戻せます。"
 
 #: web_tt2/help_admin.tt2:5
 msgid ""
@@ -428,18 +433,24 @@ msgid ""
 "modify some of the list parameters. The list of parameters you can modify "
 "depends on your privilege."
 msgstr ""
+"<strong>メーリングリスト設定</strong>: 注意して利用する必要があります: メーリ"
+"ングリストの設定を変更します。変更可能な設定値は権限により変わります。"
 
 #: web_tt2/help_admin.tt2:7
 msgid ""
 "<strong>Manage Archives</strong>  : Allow you to download and delete list "
 "archives."
 msgstr ""
+"<strong>アーカイブ管理</strong> : メーリングリストのアーカイブをダウンロー"
+"ド、削除します。"
 
 #: web_tt2/help_admin.tt2:9
 msgid ""
 "<strong>Remove list</strong> : completely removes the current list. "
 "Listmaster privileges are required to Restore a list"
 msgstr ""
+"<strong>メーリングリストの閉鎖</strong> : このメーリングリストを閉鎖します。"
+"復旧するにはリストマスター権限が必要です。"
 
 #: web_tt2/create_list_request.tt2:77
 msgid "A few lines describing the list"
@@ -580,9 +591,8 @@ msgstr "本当にメーリングリスト %1 を閉鎖してもよろしいで�
 
 #. (list)
 #: web_tt2/list_admin_menu.tt2:43
-#, fuzzy
 msgid "Are you sure you wish to delete the shared documents ?"
-msgstr "本当にメーリングリスト %1 を閉鎖してもよろしいですか?"
+msgstr "本当に共有ドキュメントを削除してもよろしいですか?"
 
 #. (list.name,msg_from)
 #: mail_tt2/moderate.tt2:3
@@ -1050,17 +1060,17 @@ msgstr "解説:"
 
 #: web_tt2/help_user_options.tt2:7
 msgid "Digest"
-msgstr ""
+msgstr "ダイジェスト"
 
 #. (digest)
 #: mail_tt2/info_report.tt2:17
 msgid "Digest       : %1"
-msgstr ""
+msgstr "ダイジェスト : %1"
 
 #. (list.name)
 #: mail_tt2/digest.tt2:4
 msgid "Digest for list %1"
-msgstr ""
+msgstr "メーリングリスト %1 のダイジェスト"
 
 #: src/List.pm:492
 msgid "Digest frequency"
@@ -1357,7 +1367,7 @@ msgstr "Failed·:·%1·は空ではありません"
 
 #: web_tt2/error.tt2:42
 msgid "Failed : your content is empty"
-msgstr ""
+msgstr "Failed : コンテンツは空です"
 
 #. (error.user)
 #: web_tt2/error.tt2:26
@@ -1412,7 +1422,7 @@ msgstr "ファイル%1はモデレートされるのを待っています"
 
 #: src/List.pm:577
 msgid "File inclusion"
-msgstr ""
+msgstr "ファイルの取り込み"
 
 #: web_tt2/d_read.tt2:332
 msgid "File name"
@@ -1757,7 +1767,7 @@ msgstr "表示方式"
 
 #: web_tt2/rss_request.tt2:16
 msgid "Limit the number of days used for the selection"
-msgstr ""
+msgstr "Limit the number of days used for the selection"
 
 #: web_tt2/rss_request.tt2:9
 msgid "Limit the number of response"
@@ -2154,7 +2164,7 @@ msgstr "モデレートが必要、モデレータ自身が投稿する場合は
 
 #: src/List.pm:2424
 msgid "Moderating your message"
-msgstr ""
+msgstr "あなたのメッセージをモデレートしています"
 
 #: web_tt2/d_read.tt2:80
 msgid "Moderation"
@@ -2163,7 +2173,7 @@ msgstr "モデレート"
 #. (list.name)
 #: mail_tt2/modindex.tt2:2
 msgid "Moderation spool for list %1"
-msgstr ""
+msgstr "メーリングリスト %1 のモデレーションスプール"
 
 #. (e.gecos)
 #: mail_tt2/info_report.tt2:8
@@ -2176,7 +2186,7 @@ msgstr "モデレータ"
 
 #: src/List.pm:547
 msgid "Moderators defined in an external datasource"
-msgstr ""
+msgstr "モデレータは外部データソースで定義されています"
 
 #. (list.name)
 #: mail_tt2/moderate.tt2:2
@@ -2273,7 +2283,7 @@ msgstr ""
 #. (error.email)
 #: web_tt2/error.tt2:34
 msgid "No bounces for user  %1"
-msgstr ""
+msgstr "ユーザー %1 にはバウンスはありません"
 
 #: src/sympa.pl:1507
 msgid "No command found in message"
@@ -2300,7 +2310,7 @@ msgstr "名前が指定されていません"
 #. (param0)
 #: mail_tt2/listmaster_notification.tt2:42
 msgid "No owner is defined for list %1."
-msgstr "メーリングリスト%1にはオーナが設定されていません。"
+msgstr "メーリングリスト%1にはオーナーが設定されていません。"
 
 #. (error.page)
 #: web_tt2/error.tt2:21
@@ -2317,7 +2327,7 @@ msgstr "件名なし"
 
 #: web_tt2/subindex.tt2:46
 msgid "No subscription requests"
-msgstr ""
+msgstr "講読要求はありません"
 
 #. (user.email)
 #: web_tt2/lists.tt2:24
@@ -2420,27 +2430,27 @@ msgstr ""
 
 #: src/List.pm:941 web_tt2/login_menu.tt2:10
 msgid "Owner"
-msgstr "オーナ"
+msgstr "オーナー"
 
 #. (o.gecos)
 #: mail_tt2/info_report.tt2:5
 msgid "Owner              : %1"
-msgstr "オーナ: %1"
+msgstr "オーナー: %1"
 
 #. (owner)
 #. (doc_owner)
 #: web_tt2/d_control.tt2:10 web_tt2/d_editfile.tt2:17
 #: web_tt2/d_properties.tt2:16 web_tt2/d_read.tt2:38
 msgid "Owner : %1"
-msgstr "オーナ: %1"
+msgstr "オーナー: %1"
 
 #: web_tt2/create_list_request.tt2:15
 msgid "Owner:"
-msgstr "オーナ: "
+msgstr "オーナー: "
 
 #: web_tt2/list_panel.tt2:9
 msgid "Owners"
-msgstr "オーナ"
+msgstr "オーナー"
 
 #: web_tt2/help_editlist.tt2:118
 msgid ""
@@ -2456,7 +2466,7 @@ msgstr ""
 
 #: src/List.pm:2274 src/List.pm:2289 src/List.pm:2301
 msgid "Owners of list %s"
-msgstr "メーリングリスト %s のオーナ"
+msgstr "メーリングリスト %s のオーナー"
 
 #: web_tt2/review.tt2:5 web_tt2/reviewbouncing.tt2:34
 msgid "Page size"
@@ -2513,7 +2523,7 @@ msgstr "あなたのメールアドレスを入力してください"
 msgid ""
 "Please provide your email address for your unsubscription request from list %"
 "1."
-msgstr ""
+msgstr "メーリングリス%1から退会するためにメールアドレスを入力してください。"
 
 #: web_tt2/error.tt2:11
 msgid "Please provide your password"
@@ -2581,7 +2591,7 @@ msgstr ""
 
 #: web_tt2/login_menu.tt2:9
 msgid "Privileged owner"
-msgstr "特権オーナ"
+msgstr "特権オーナー"
 
 #: web_tt2/admin_menu.tt2:148 web_tt2/edit_list_request.tt2:8
 msgid "Privileges"
@@ -2653,39 +2663,36 @@ msgstr ""
 
 #: src/List.pm:1024
 msgid "RFC 2369 Header fields"
-msgstr "RFC 2369ヘッダ"
+msgstr "RFC 2369ヘッダフィールド"
 
 #: web_tt2/list_menu.tt2:55
 msgid "RSS"
 msgstr ""
 
 #: web_tt2/main.tt2:16 web_tt2/main.tt2:19
-#, fuzzy
 msgid "RSS Active lists"
 msgstr "RSS 活発なメーリングリスト"
 
 #: web_tt2/main.tt2:12
-#, fuzzy
 msgid "RSS Latest documents"
-msgstr "最新の共有ドキュメント"
+msgstr "RSS 最新の共有ドキュメント"
 
 #: web_tt2/main.tt2:15 web_tt2/main.tt2:18
-#, fuzzy
 msgid "RSS Latest lists"
 msgstr "RSS 最新のメーリングリスト"
 
 #: web_tt2/main.tt2:11
-#, fuzzy
 msgid "RSS Latest messages"
 msgstr "RSS 最新のメッセージ"
 
 #: web_tt2/rss_request.tt2:3
+#, fuzzy
 msgid "RSS channel"
-msgstr ""
+msgstr "RSSチャンネル"
 
 #: web_tt2/home.tt2:49
 msgid "RSS news"
-msgstr ""
+msgstr "RSSニュース"
 
 #: web_tt2/pref.tt2:44
 msgid "Re-enter your new password :"
@@ -2741,7 +2748,7 @@ msgstr "棄却"
 
 #: web_tt2/subindex.tt2:52
 msgid "Reject selected addresses"
-msgstr ""
+msgstr "選択したアドレスを拒否する"
 
 #: web_tt2/scenario_test.tt2:41
 msgid "Related email"
@@ -2769,9 +2776,8 @@ msgid "Reminder of your subscription to %1"
 msgstr ""
 
 #: web_tt2/scenario_test.tt2:47
-#, fuzzy
 msgid "Remote IP address"
-msgstr "リモートアドレス"
+msgstr "リモートIPアドレス"
 
 #: src/List.pm:604
 msgid "Remote file inclusion"
@@ -2789,7 +2795,7 @@ msgstr "メーリングリストの閉鎖"
 #. (list.name)
 #: mail_tt2/expire_deletion.tt2:2 mail_tt2/removed.tt2:2
 msgid "Removed from %1"
-msgstr ""
+msgstr "%1の配送先から削除されました"
 
 #: web_tt2/d_properties.tt2:58 web_tt2/d_upload.tt2:20
 msgid "Rename"
@@ -2892,7 +2898,7 @@ msgstr ""
 
 #: web_tt2/list_menu.tt2:68
 msgid "Review"
-msgstr ""
+msgstr "購読者一覧"
 
 #: web_tt2/serveradmin.tt2:25
 msgid "Review lists from this family"
@@ -2901,7 +2907,7 @@ msgstr ""
 #. (review)
 #: mail_tt2/info_report.tt2:13
 msgid "Review subscribers : %1"
-msgstr ""
+msgstr "購読者一覧: %1"
 
 #: src/tools.pl:131
 msgid "Routing error ?"
@@ -3367,7 +3373,7 @@ msgstr ""
 
 #: mail_tt2/listmaster_notification.tt2:76
 msgid "Sympa could not load the list config file."
-msgstr ""
+msgstr "メーリングリストの設定ファイルが読み込めません。"
 
 #. (param0,param1)
 #: mail_tt2/listmaster_notification.tt2:103
@@ -3582,7 +3588,7 @@ msgstr "最新の共有ドキュメント"
 #. (conf.wwsympa_url,list.name)
 #: mail_tt2/d_install_shared.tt2:7
 msgid "The list document repository : %1/d_read/%2"
-msgstr ""
+msgstr "メーリングリストのドキュメント置き場: %1/d_read/%2"
 
 #: web_tt2/notice.tt2:42
 msgid "The list of list members will be built/updated soon (a few minutes)."
@@ -4194,7 +4200,7 @@ msgstr "講読MLをこのメールアドレスに統合する:"
 
 #: web_tt2/d_read.tt2:103 web_tt2/d_read.tt2:218 web_tt2/latest_d_read.tt2:43
 msgid "Unknown"
-msgstr ""
+msgstr "不明"
 
 #: web_tt2/list_menu.tt2:15 web_tt2/list_menu.tt2:25 web_tt2/sigrequest.tt2:39
 #: web_tt2/sigrequest.tt2:53 web_tt2/sigrequest.tt2:68
@@ -4507,7 +4513,7 @@ msgstr "講読開始日"
 
 #: web_tt2/create_list_request.tt2:17
 msgid "You are the privileged owner of this list"
-msgstr "あなたはこのメーリングリストの特権オーナです"
+msgstr "あなたはこのメーリングリストの特権オーナーです"
 
 #: web_tt2/edit_list_request.tt2:4
 msgid "You can choose below a subset of parameters to edit :"
@@ -4519,7 +4525,7 @@ msgstr "横の管理ボタンで設定することができます"
 
 #: mail_tt2/subscriber_notification.tt2:10
 msgid "You can contact list owner:"
-msgstr "メーリングリストのオーナに連絡することができます:"
+msgstr "メーリングリストのオーナーに連絡することができます:"
 
 #: web_tt2/editfile.tt2:14
 msgid "You can edit several messages/files associated to your list :"
@@ -4553,7 +4559,7 @@ msgstr "再度講読することができます:"
 #: web_tt2/error.tt2:58
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
-msgstr ""
+msgstr "パスワードが設定されていません、初期パスワードをとりよせてください"
 
 #: wwsympa/wwsympa.fcgi:3527 wwsympa/wwsympa.fcgi:4346
 msgid "You have been removed from list %s.\n"
@@ -4740,11 +4746,11 @@ msgstr ""
 
 #: mail_tt2/d_install_shared.tt2:2
 msgid "Your document has been installed."
-msgstr ""
+msgstr "ドキュメントがインストールされました。"
 
 #: mail_tt2/d_reject_shared.tt2:2
 msgid "Your document has been rejected."
-msgstr ""
+msgstr "ドキュメントのインストールは拒否されました"
 
 #: web_tt2/remindpasswd.tt2:11 web_tt2/subrequest.tt2:43
 msgid "Your e-mail address"
@@ -4851,7 +4857,7 @@ msgstr "あなたの設定"
 
 #: web_tt2/notice.tt2:6
 msgid "Your request has been forwarded to the list owner"
-msgstr "リクエストはメーリングリストオーナに転送されました"
+msgstr "リクエストはメーリングリストオーナーに転送されました"
 
 #: soap/sympasoap.pm:625
 msgid ""
@@ -5007,6 +5013,10 @@ msgid ""
 "Lists you are editor of :\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"あなたがモデレータのメーリングリスト:\n"
+"\n"
 
 #: src/Commands.pm:2374
 msgid ""
@@ -5015,6 +5025,10 @@ msgid ""
 "Lists you are owner of:\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"あなたがオーナーのメーリングリスト:\n"
+"\n"
 
 #: web_tt2/d_read.tt2:129 web_tt2/d_read.tt2:131 web_tt2/d_read.tt2:265
 #: web_tt2/d_read.tt2:267 web_tt2/d_read.tt2:31
@@ -5027,7 +5041,7 @@ msgstr "アクセス権限"
 
 #: src/List.pm:377 src/List.pm:398
 msgid "action for this population"
-msgstr ""
+msgstr "処理"
 
 #: web_tt2/rss_request.tt2:46
 msgid "active lists"
@@ -5114,7 +5128,7 @@ msgstr "認証が必要。オーナーにお知らせが送られる。"
 
 #: web_tt2/reviewbouncing.tt2:63
 msgid "bounce score"
-msgstr ""
+msgstr "バウンススコア"
 
 #: web_tt2/review.tt2:165
 msgid "bouncing"
@@ -5175,9 +5189,8 @@ msgid "conceal unless user is logged in"
 msgstr "ログインしたユーザに見える"
 
 #: wwsympa/wwslib.pm:57
-#, fuzzy
 msgid "concealed"
-msgstr "公開"
+msgstr "concealed"
 
 #: src/List.pm:835
 msgid "connection options"
@@ -5209,7 +5222,7 @@ msgstr ""
 
 #: src/List.pm:581
 msgid "data location URL"
-msgstr ""
+msgstr "データの場所(URL)"
 
 #: src/List.pm:831
 msgid "database name"
@@ -5285,7 +5298,7 @@ msgstr ""
 
 #: wwsympa/wwslib.pm:67
 msgid "editor rejection message"
-msgstr ""
+msgstr "モデレータによる拒否メッセージ"
 
 #: src/List.pm:506 src/List.pm:916 web_tt2/login_menu.tt2:59
 #: web_tt2/loginbanner.tt2:75
@@ -5330,7 +5343,7 @@ msgstr ""
 
 #: src/List.pm:643
 msgid "extracted attribute"
-msgstr ""
+msgstr "取得属性"
 
 #: src/List.pm:637
 msgid "filter"
@@ -5338,31 +5351,31 @@ msgstr "フィルタ"
 
 #: src/List.pm:722
 msgid "first-level connection timeout"
-msgstr ""
+msgstr "1段目 接続タイムアウト"
 
 #: src/List.pm:706
 msgid "first-level extracted attribute"
-msgstr ""
+msgstr "1段目 取得属性"
 
 #: src/List.pm:701
 msgid "first-level filter"
-msgstr ""
+msgstr "1段目 フィルタ"
 
 #: src/List.pm:728
 msgid "first-level regular expression"
-msgstr ""
+msgstr "1段目 正規表現"
 
 #: src/List.pm:716
 msgid "first-level search scope"
-msgstr ""
+msgstr "1段目 検索スコープ"
 
 #: src/List.pm:711
 msgid "first-level selection"
-msgstr ""
+msgstr "1段目 対象"
 
 #: src/List.pm:695
 msgid "first-level suffix"
-msgstr ""
+msgstr "1段目 suffix"
 
 #: src/etc/scenari/info.open:1
 msgid "for anyone"
@@ -5415,7 +5428,7 @@ msgstr "不可能"
 
 #: mail_tt2/listmaster_notification.tt2:23
 msgid "incorrect format of edit_list.conf"
-msgstr ""
+msgstr "edit_list.confのフォーマットに誤りがあります"
 
 #: web_tt2/arcsearch_form.tt2:36
 msgid "insensitive"
@@ -5439,15 +5452,13 @@ msgstr "あなたに電子メールで送信されます:"
 
 #: src/etc/scenari/global_remind.listmaster:1
 msgid "just for listmaster"
-msgstr ""
+msgstr "リストマスタのみ"
 
 #: web_tt2/edit_template.tt2:19
-#, fuzzy
 msgid "language"
 msgstr "言語"
 
 #: web_tt2/rss_request.tt2:36
-#, fuzzy
 msgid "latest arc"
 msgstr "最新アーカイブ"
 
@@ -5456,7 +5467,6 @@ msgid "latest document"
 msgstr "最新の共有ドキュメント"
 
 #: web_tt2/rss_request.tt2:51
-#, fuzzy
 msgid "latest lists"
 msgstr "最新のメーリングリスト"
 
@@ -5474,7 +5484,7 @@ msgstr ""
 
 #: wwsympa/wwslib.pm:78
 msgid "list aliases template"
-msgstr ""
+msgstr "メーリングリストエイリアスのテンプレート"
 
 #: wwsympa/wwslib.pm:76
 msgid "list creation notification message"
@@ -5597,9 +5607,8 @@ msgid "nobody can review"
 msgstr "誰もreviewできない"
 
 #: wwsympa/wwslib.pm:39
-#, fuzzy
 msgid "notice mode"
-msgstr "単語全体"
+msgstr "通知モード"
 
 #: src/List.pm:382 src/List.pm:403
 msgid "notification"
@@ -5607,7 +5616,7 @@ msgstr "お知らせ"
 
 #: web_tt2/set_pending_list_request.tt2:26
 msgid "notify owner"
-msgstr ""
+msgstr "オーナーに通知する"
 
 #: web_tt2/arcsearch_form.tt2:31
 msgid "oldest messages"
@@ -5616,7 +5625,7 @@ msgstr "日付順"
 #. (list_request_date)
 #: web_tt2/install_pending_list.tt2:17
 msgid "on %1"
-msgstr ""
+msgstr "%1"
 
 #: web_tt2/arcsearch_form.tt2:25
 msgid "one of these words"
@@ -5648,9 +5657,8 @@ msgid "owners approval"
 msgstr "オーナーの承認が必要"
 
 #: web_tt2/review.tt2:23
-#, fuzzy
 msgid "page"
-msgstr "ホームページ"
+msgstr "ページ"
 
 #. ($PAGENUM$,$NUMOFPAGES$)
 #: src/etc/mhonarc-ressources.tt2:185 src/etc/mhonarc-ressources.tt2:283
@@ -5773,11 +5781,11 @@ msgstr "リモートホスト"
 
 #: src/List.pm:816
 msgid "remote list inclusion"
-msgstr ""
+msgstr "リモートメーリングリストの取り込み"
 
 #: src/List.pm:594 src/List.pm:627 src/List.pm:691 src/List.pm:849
 msgid "remote password"
-msgstr ""
+msgstr "リモートパスワード"
 
 #: src/List.pm:799
 msgid "remote path of sympa list dump"
@@ -5785,11 +5793,11 @@ msgstr ""
 
 #: src/List.pm:616 src/List.pm:680 src/List.pm:793
 msgid "remote port"
-msgstr ""
+msgstr "リモートポート"
 
 #: src/List.pm:587 src/List.pm:621 src/List.pm:685 src/List.pm:844
 msgid "remote user"
-msgstr ""
+msgstr "リモートユーザー"
 
 #: src/etc/scenari/del.closed:1
 msgid "remove subscriber impossible"
@@ -5814,7 +5822,7 @@ msgstr ""
 #: src/etc/scenari/d_edit.owner:1 src/etc/scenari/d_read.owner:1
 #: src/etc/scenari/remind.owner:1
 msgid "restricted to list owners"
-msgstr "メーリングリストのオーナのみ"
+msgstr "メーリングリストのオーナーのみ"
 
 #: src/etc/scenari/create_list.listmaster:1
 msgid "restricted to listmaster"
@@ -5876,39 +5884,39 @@ msgstr "シナリオのソース"
 
 #: src/List.pm:653
 msgid "search scope"
-msgstr ""
+msgstr "検索スコープ"
 
 #: src/List.pm:760
 msgid "second-level connection timeout"
-msgstr ""
+msgstr "2段目 接続タイムアウト"
 
 #: src/List.pm:744
 msgid "second-level extracted attribute"
-msgstr ""
+msgstr "2段目 取得属性"
 
 #: src/List.pm:738
 msgid "second-level filter template"
-msgstr ""
+msgstr "2段目 フィルタテンプレート"
 
 #: src/List.pm:766
 msgid "second-level regular expression"
-msgstr ""
+msgstr "2段目 正規表現"
 
 #: src/List.pm:754
 msgid "second-level search scope"
-msgstr ""
+msgstr "2段目 検索スコープ"
 
 #: src/List.pm:749
 msgid "second-level selection"
-msgstr ""
+msgstr "2段目 対象"
 
 #: src/List.pm:732
 msgid "second-level suffix template"
-msgstr ""
+msgstr "2段目 suffixテンプレート"
 
 #: src/List.pm:648
 msgid "selection (if multiple)"
-msgstr ""
+msgstr "複数ヒットした場合の対象"
 
 #. (user.email)
 #: src/etc/mhonarc-ressources.tt2:411
@@ -5975,22 +5983,20 @@ msgid "summary message"
 msgstr "サマリメッセージ"
 
 #: wwsympa/wwslib.pm:38
-#, fuzzy
 msgid "summary mode"
-msgstr "サマリメッセージ"
+msgstr "サマリモード"
 
 #: src/etc/mhonarc-ressources.tt2:418
 msgid "tag this mail for deletion"
 msgstr "アーカイブから削除する"
 
 #: wwsympa/wwslib.pm:40
-#, fuzzy
 msgid "text only mode"
-msgstr "メール受信モード"
+msgstr "テキストモード"
 
 #: web_tt2/help_editlist.tt2:151
 msgid "the @ char is replaced by the string \" AT \"."
-msgstr ""
+msgstr "文字 \"@\" が \" AT \" に置換されます"
 
 #: web_tt2/help_editlist.tt2:150
 msgid ""
@@ -6037,7 +6043,7 @@ msgstr "スレッド"
 
 #: src/List.pm:372 src/List.pm:393
 msgid "threshold"
-msgstr ""
+msgstr "閾値"
 
 #: web_tt2/d_read.tt2:345
 msgid "title"
@@ -6056,9 +6062,8 @@ msgid "unsubscription message"
 msgstr "退会メッセージ"
 
 #: wwsympa/wwslib.pm:42
-#, fuzzy
 msgid "urlize mode"
-msgstr "ユーザのモード"
+msgstr "URL化モード"
 
 #: src/List.pm:998 web_tt2/help_editlist.tt2:130
 msgid "value"
@@ -6097,9 +6102,8 @@ msgid "without authentication, notification is sent to owners"
 msgstr "認証なし、オーナーにお知らせを送る"
 
 #: wwsympa/wwslib.pm:44
-#, fuzzy
 msgid "you do not receive your own posts"
-msgstr "パスワードを受けとるには: "
+msgstr "自分の投稿は受信しません"
 
 #: web_tt2/error.tt2:18
 msgid "you need to login"
