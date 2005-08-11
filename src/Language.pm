@@ -216,7 +216,9 @@ sub gettext {
 		    return $language;
 		}
 	    }elsif ($var eq 'charset') {
-		if (/^Content-Type:\s*.*charset=(\S+)$/i) {
+		if ($recode) {
+		    return $recode;
+		} elsif (/^Content-Type:\s*.*charset=(\S+)$/i) {
 		    return $1;
 		}
 	    }elsif ($var eq 'encoding') {
