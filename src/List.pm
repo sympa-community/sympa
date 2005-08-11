@@ -9860,7 +9860,7 @@ sub probe_db {
 	    }
 	}
 
-    }else {
+    }elsif ($found_tables < 3) {
 	&do_log('err', 'Missing required tables in the database ; you should create them with create_db.%s script', $Conf{'db_type'});
 	return undef;
     }
@@ -9991,6 +9991,60 @@ sub maintenance {
 	    $list->sync_include_admin();
 	}
     }
+
+    ## Move old-style web templates out of the include_path
+    unless (&tools::higher_version($previous_version, '5.0.1')) {
+	&do_log('notice','Old web templates HTML structure is not compliant with latest ones.');
+	&do_log('notice','Moving old-style web templates out of the include_path...');
+
+	my @directories;
+
+	if (-d "$Conf::Conf{'etc'}/web_tt2") {
+	    push @directories, "$Conf::Conf{'etc'}/web_tt2";
+	}
+
+	## Go through Virtual Robots
+	foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
+
+	    if (-d "$Conf::Conf{'etc'}/$vr/web_tt2") {
+		push @directories, "$Conf::Conf{'etc'}/$vr/web_tt2";
+	    }
+	}
+
+	## Search in V. Robot Lists
+	foreach my $l ( &List::get_lists('*') ) {
+	    my $list = new List ($l);
+	    next unless $list;	    
+	    if (-d "$list->{'dir'}/web_tt2") {
+		push @directories, "$list->{'dir'}/web_tt2";
+	    }	    
+	}
+
+	my @templates;
+
+	foreach my $d (@directories) {
+	    unless (opendir DIR, $d) {
+		printf STDERR "Error: Cannot read %s directory : %s", $d, $!;
+		next;
+	    }
+	    
+	    foreach my $tt2 (sort grep(/\.tt2$/,readdir DIR)) {
+		push @templates, "$d/$tt2";
+	    }
+	    
+	    closedir DIR;
+	}
+
+	foreach my $tpl (@templates) {
+	    unless (rename $tpl, "$tpl.oldtemplate") {
+		printf STDERR "Error : failed to rename $tpl to $tpl.oldtemplate : $!\n";
+		next;
+	    }
+
+	    &do_log('notice','File %s renamed %s', $tpl, "$tpl.oldtemplate");
+	}
+    }
+
 
     ## Clean buggy list config files
     unless (&tools::higher_version($previous_version, '5.1b')) {
