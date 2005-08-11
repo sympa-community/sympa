@@ -9854,10 +9854,17 @@ sub probe_db {
 
 	&do_log('notice', "Trying to run the '%s' script...", "--SCRIPTDIR--/create_db.$Conf{'db_type'}");
 	foreach my $sc (@scripts) {
+	    next if ($sc =~ /^\#/);
 	    unless ($dbh->do($sc)) {
 		&do_log('err', "Failed to run script '%s' : %s", "--SCRIPTDIR--/create_db.$Conf{'db_type'}", $dbh->errstr);
 		return undef;
 	    }
+	}
+
+	## SQLite :  the only access permissions that can be applied are 
+	##           the normal file access permissions of the underlying operating system
+	if (($Conf{'db_type'} eq 'SQLite') &&  (-f $Conf{'db_name'})) {
+	    `chown --USER--.--GROUP-- $Conf{'db_name'}`; ## Failed with chmod() perl subroutine
 	}
 
     }elsif ($found_tables < 3) {

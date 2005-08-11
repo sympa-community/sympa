@@ -198,6 +198,8 @@ subst:
 	@( \
 		PERL=$(PERL); export PERL;\
 		UMASK=0755; export UMASK;\
+		USER=$(USER); export USER;\
+		GROUP=$(GROUP); export GROUP;\
 		HOST=$(HOST); export HOST;\
 		DIR=$(DIR); export DIR;\
 		DESTDIR=$(DESTDIR); export DESTDIR;\
@@ -221,6 +223,8 @@ subst:
 	@( \
 		PERL=$(PERL); export PERL;\
 		UMASK=0644; export UMASK;\
+		USER=$(USER); export USER;\
+		GROUP=$(GROUP); export GROUP;\
 		DIR=$(DIR); export DIR;\
 		DESTDIR=$(DESTDIR); export DESTDIR;\
 		PIDDIR=$(PIDDIR); export PIDDIR;\
