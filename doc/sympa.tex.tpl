@@ -1793,13 +1793,6 @@ listmaster-test: 	"| /home/sympa/bin/queue listmaster@\samplerobot"
 
         \example {wwsympa\_url https://my.server/sympa}
 
-\subsection {\cfkeyword {rss\_url}}  
-
-	 \default {http://\texttt{<}host\texttt{>}/sympa/rss}
-
-	This is the root URL of \WWSympa's rss channel.
-
-        \example {wwsympa\_url https://my.server/sympa/rss}
 
 \subsection {\cfkeyword {soap\_url}}  
 
