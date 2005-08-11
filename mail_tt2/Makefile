@@ -44,7 +44,7 @@ makedir:
 installtemplates:
 	@echo
 	@echo "Installing mail templates..."
-		( \
+		@( \
 		PERL=$(PERL); export PERL; \
 		UMASK=0644; export UMASK; \
 		INSTALLDIR=$(ETCBINDIR)/mail_tt2; export INSTALLDIR; \
