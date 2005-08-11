@@ -5,7 +5,7 @@
 [% IF file %]
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="file" value="[% file %]" />
-<textarea name="content" cols="80" rows="25">
+<textarea wrap="hard" name="content" cols="80" rows="25">
 [% INSERT $filepath IF filepath %]
 </textarea>
   <input class="MainMenuLinks" type="submit" name="action_savefile" value="[%|loc%]Save[%END%]" />
