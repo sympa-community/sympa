@@ -134,9 +134,8 @@ sub SetLang {
     unless (setlocale(&POSIX::LC_ALL, $locale)) {
 	unless (setlocale(&POSIX::LC_ALL, $lang)) {
 	    unless (setlocale(&POSIX::LC_ALL, $locale.'.'.$locale2charset{$locale})) {
-		$ENV{'LC_MESSAGES'} = $ENV{'LANGUAGE'} = $locale; ## required on Solaris 
-		#&do_log('err','Failed to setlocale(%s) ; you should edit your /etc/locale.gen or /etc/sysconfig/i18n files', $locale.'.'.$locale2charset{$locale});
-		#return undef;
+		&do_log('err','Failed to setlocale(%s) ; you either have a problem with the catalogue .mo files or you should extend available locales in  your /etc/locale.gen (or /etc/sysconfig/i18n) file', $locale.'.'.$locale2charset{$locale});
+		return undef;
 	    }
 	}
     }
