@@ -73,7 +73,7 @@ if (($main::options{'help'} ne '') ||
 }else{
 
     if ($listname) {
-	my $self = new List($listname);
+	my $self = new List($listname, $robot);
 	$cert = $self->{'dir'}.'/cert.pem';
 	$privatekey = $self->{'dir'}.'/private_key';
 	unless (-d $self->{'dir'}) {

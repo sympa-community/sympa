@@ -89,7 +89,7 @@ $List::use_db = &List::probe_db();
 
 chdir $Conf::Conf{'home'};
 
-my $list = new List($listname) 
+my $list = new List($listname, $robot) 
     or die 'Cannot create List object';
 
 my $home_sympa;

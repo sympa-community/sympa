@@ -108,7 +108,7 @@ sub create_list_old{
 	return undef;
     }
 
-    if( $res || new List ($param->{'listname'})) {
+    if( $res || new List ($param->{'listname'}, $robot)) {
 	&do_log('err', 'admin::create_list_old : could not create already existing list %s for ', 
 		$param->{'listname'});
 	foreach my $o (@{$param->{'owner'}}){

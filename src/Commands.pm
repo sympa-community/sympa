@@ -2394,7 +2394,7 @@ sub modindex {
 	}
 
 	$i=~/\_(.+)$/;
-	$curlist = new List ($`);
+	$curlist = new List ($`,$robot);
 	if ($curlist) {
 	    # list loaded    
 	    if (exists $curlist->{'admin'}{'clean_delay_queuemod'}){

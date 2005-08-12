@@ -3444,7 +3444,7 @@ sub send_notify_to_listmaster {
 
 	## Automatic action done on bouncing adresses
 	if ($operation eq 'automatic_bounce_management') {
-	    my $list = new List $param->{'listname'};
+	    my $list = new List ($param->{'listname'}, $robot);
 	    unless (defined $list) {
 		&do_log('err','Parameter %s is not a valid list', $param->{'listname'});
 		return undef;
@@ -3463,7 +3463,7 @@ sub send_notify_to_listmaster {
 		
 	    ## creation list requested
 	    }elsif ($operation eq 'request_list_creation') {
-		my $list = new List $param->{'listname'};
+		my $list = new List ($param->{'listname'}, $robot);
 		unless (defined $list) {
 		    &do_log('err','Parameter %s is not a valid list', $param->{'listname'});
 		    return undef;
@@ -6277,7 +6277,7 @@ sub request_action {
     my (@rules, $name) ;
     my $list;
     if ($context->{'listname'}) {
-        unless ( $list = new List ($context->{'listname'}) ){
+        unless ( $list = new List ($context->{'listname'}, $robot) ){
 	    do_log('info',"request_action :  unable to create object $context->{'listname'}");
 	    return undef ;
 	}
