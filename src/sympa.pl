@@ -295,9 +295,18 @@ if ($main::options{'dump'}) {
 	@listnames = ($main::options{'dump'});
     }
 
-    unless (&List::dump(@listnames)) {
-	printf STDERR "Could not dump list(s) %s\n", join(',',@listnames);
-	exit -1;
+    foreach my $l (@listnames) {
+	
+	my $list = new List($l);
+	
+	unless (defined $list) {
+	    &do_log('err','Unknown list %s', $l);
+	    next;
+	}
+
+	unless ($list->dump()) {
+	    printf STDERR "Could not dump list(s) %s\n", join(',',@listnames);
+	}
     }
 
     exit 0;

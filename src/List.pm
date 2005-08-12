@@ -1590,31 +1590,24 @@ sub update_stats {
 
 ## Dumps a copy of lists to disk, in text format
 sub dump {
-    my @listnames = @_;
-    do_log('debug2', 'List::dump(%s)', @listnames);
+    my $self = shift;
+    do_log('debug2', 'List::dump(%s)', $self->{'name'});
 
-    my $done;
-
-    foreach my $l (@listnames) {
-	
-	my $list = new List($l);
-	
-	unless (defined $list) {
-	    &do_log('err','Unknown list %s', $l);
-	    next;
-	}
-
-	my $user_file_name = "$list->{'dir'}/subscribers.db.dump";
-	do_log('debug3', 'Dumping list %s',$l);	
-	unless ($list->_save_users_file($user_file_name)) {
-	    &do_log('err', 'Failed to save file %s', $user_file_name);
-	    next;
-	}
-	$list->{'mtime'} = [ (stat("$list->{'dir'}/config"))[9], (stat("$list->{'dir'}/subscribers"))[9], (stat("$list->{'dir'}/stats"))[9] ];
-
-	$done++
+    unless (defined $self) {
+	&do_log('err','Unknown list');
+	return undef;
     }
-    return $done;
+
+    my $user_file_name = "$self->{'dir'}/subscribers.db.dump";
+
+    unless ($self->_save_users_file($user_file_name)) {
+	&do_log('err', 'Failed to save file %s', $user_file_name);
+	return undef;
+    }
+    
+    $self->{'mtime'} = [ (stat("$self->{'dir'}/config"))[9], (stat("$self->{'dir'}/subscribers"))[9], (stat("$self->{'dir'}/stats"))[9] ];
+
+    return 1;
 }
 
 ## Saves a copy of the list to disk. Does not remove the

@@ -13564,8 +13564,7 @@ sub do_dump_scenario {
 	 &wwslog('info','do_dump: may not review');
 	 return undef;
      }
-     my @listnames = $param->{'list'} ;
-     &List::dump(@listnames);
+     &list->dump();
      $param->{'file'} = "$list->{'dir'}/subscribers.db.dump";
 
      if ($in{'format'}= 'light') {
