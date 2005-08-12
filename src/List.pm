@@ -1386,9 +1386,9 @@ sub new {
 	}
     }
 
-    if ($list_of_lists{$name}){
+    if ($list_of_lists{$robot}{$name}){
 	# use the current list in memory and update it
-	$list=$list_of_lists{$name};
+	$list=$list_of_lists{$robot}{$name};
     }else{
 	# create a new object list
 	bless $list, $pkg;
@@ -1465,7 +1465,7 @@ sub savestats {
     ## Be sure the list has been loaded.
     my $name = $self->{'name'};
     my $dir = $self->{'dir'};
-    return undef unless ($list_of_lists{$name});
+    return undef unless ($list_of_lists{$self->{'domain'}}{$name});
     
    _save_stats_file("$dir/stats", $self->{'stats'}, $self->{'total'}, $self->{'last_sync'}, $self->{'last_sync_admin_user'});
     
@@ -1600,7 +1600,7 @@ sub save {
     my $name = $self->{'name'};    
  
     return undef 
-	unless ($list_of_lists{$name});
+	unless ($list_of_lists{$self->{'domain'}}{$name});
  
     my $user_file_name;
 
@@ -1844,7 +1844,7 @@ sub load {
 
     $self->{'mtime'} = [ $m1, $m2, $m3 ];
 
-    $list_of_lists{$name} = $self;
+    $list_of_lists{$self->{'domain'}}{$name} = $self;
     return $config_reloaded;
 }
 
@@ -11772,7 +11772,7 @@ sub close {
     my ($self, $email, $status) = @_;
 
     return undef 
-	unless ($self && ($list_of_lists{$self->{'name'}}));
+	unless ($self && ($list_of_lists{$self->{'domain'}}{$self->{'name'}}));
     
     ## Dump subscribers
     $self->_save_users_file("$self->{'dir'}/subscribers.closed.dump");
@@ -11811,7 +11811,7 @@ sub purge {
     my ($self, $email) = @_;
 
     return undef 
-	unless ($self && ($list_of_lists{$self->{'name'}}));
+	unless ($self && ($list_of_lists{$self->{'domain'}}{$self->{'name'}}));
     
     &tools::remove_dir($self->{'dir'});
 
@@ -11838,7 +11838,7 @@ sub remove_aliases {
     my $self = shift;
 
     return undef 
-	unless ($self && ($list_of_lists{$self->{'name'}}));
+	unless ($self && ($list_of_lists{$self->{'domain'}}{$self->{'name'}}));
     
     my $alias_manager = '--SBINDIR--/alias_manager.pl';
     
