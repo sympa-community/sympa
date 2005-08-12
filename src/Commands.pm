@@ -251,10 +251,9 @@ sub lists {
     my $data = {};
     my $lists = {};
 
-    foreach my $l ( &List::get_lists($robot) ) {
-	my $list = new List ($l);
+    foreach my $list ( &List::get_lists($robot) ) {
+	my $l = $list->{'name'};
 
-	next unless ($list);
 	my $result = &List::request_action('visibility','smtp',$robot,
                                             {'listname' => $l,
                                              'sender' => $sender });
@@ -1608,10 +1607,9 @@ sub remind {
 
 	    $context{'subject'} = gettext("Subscription summary");
 	    # this remind is a global remind.
-	    foreach my $listname (List::get_lists($robot)){
-
-		my $list = new List ($listname, $robot);
-		next unless $list;
+	    foreach my $list (List::get_lists($robot)){
+		
+		my $listname = $list->{'name'};
 
 		next unless ($user = $list->get_first_user()) ;
 

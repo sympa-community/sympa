@@ -535,8 +535,8 @@ my $birthday = time ;
 ## If using fast_cgi, it is usefull to initialize all list context
 if ($wwsconf->{'use_fast_cgi'}) {
 
-    foreach my $l ( &List::get_lists('*') ) {
-        my $list = new List ($l);
+    foreach my $list ( &List::get_lists('*') ) {
+	# nothing to do here
     }
 }
 
@@ -2495,14 +2495,12 @@ sub do_remindpasswd {
 	 }
      }
 
-     foreach my $l ( &List::get_lists($robot) ) {
-	 my $list = new List ($l, $robot);
-	 next unless (defined $list);
+     foreach my $list ( &List::get_lists($robot) ) {
 
 	 my $sender = $param->{'user'}{'email'} || 'nobody';
 
 	 my $result = &List::request_action ('visibility',$param->{'auth_method'},$robot,
-					     {'listname' =>  $l,
+					     {'listname' =>  $list->{'name'},
 					      'sender' => $sender, 
 					      'remote_host' => $param->{'remote_host'},
 					      'remote_addr' => $param->{'remote_addr'}});
@@ -6223,12 +6221,10 @@ sub get_timelocal_from_date {
 	 return undef;
      } 
 
-     foreach my $l ( &List::get_lists($robot) ) {
-	 my $list = new List ($l,$robot);
-	 next unless (defined $list);
+     foreach my $list ( &List::get_lists($robot) ) {
 	 if ($list->{'admin'}{'status'} eq 'pending') {
-	     $param->{'pending'}{$l}{'subject'} = $list->{'admin'}{'subject'};
-	     $param->{'pending'}{$l}{'by'} = $list->{'admin'}{'creation'}{'email'};
+	     $param->{'pending'}{$list->{'name'}}{'subject'} = $list->{'admin'}{'subject'};
+	     $param->{'pending'}{$list->{'name'}}{'by'} = $list->{'admin'}{'creation'}{'email'};
 	 }
      }
 
@@ -6252,13 +6248,11 @@ sub get_timelocal_from_date {
 	 return undef;
      } 
 
-     foreach my $l ( &List::get_lists($robot) ) {
-	 my $list = new List ($l,$robot);
-	 next unless (defined $list);
+     foreach my $list ( &List::get_lists($robot) ) {
 	 if ($list->{'admin'}{'status'} eq 'closed' ||
 	     $list->{'admin'}{'status'} eq 'family_closed') {
-	     $param->{'closed'}{$l}{'subject'} = $list->{'admin'}{'subject'};
-	     $param->{'closed'}{$l}{'by'} = $list->{'admin'}{'creation'}{'email'};
+	     $param->{'closed'}{$list->{'name'}}{'subject'} = $list->{'admin'}{'subject'};
+	     $param->{'closed'}{$list->{'name'}}{'by'} = $list->{'admin'}{'creation'}{'email'};
 	 }
      }
 
@@ -6284,11 +6278,7 @@ sub get_timelocal_from_date {
      } 
 
      my @unordered_lists;
-     foreach my $l ( &List::get_lists($robot) ) {
-	 my $list = new List ($l,$robot);
-	 unless ($list) {
-	     next;
-	 }
+     foreach my $list ( &List::get_lists($robot) ) {
 
 	 push @unordered_lists, {'name' => $list->{'name'},
 				 'subject' => $list->{'admin'}{'subject'},
@@ -6323,11 +6313,7 @@ sub do_get_inactive_lists {
      } 
 
      my @unordered_lists;
-     foreach my $l ( &List::get_lists($robot) ) {
-	 my $list = new List ($l,$robot);
-	 unless ($list) {
-	     next;
-	 }
+     foreach my $list ( &List::get_lists($robot) ) {
 
 	 ## skip closed lists
 	 if ($list->{'admin'}{'status'} eq 'closed') {
@@ -6929,8 +6915,8 @@ sub do_set_pending_list_request {
 	 }
      }
      closedir SCENARI;
-     foreach my $l ( &List::get_lists('*') ) {
-	 $param->{'listname'}{$l}{'defined'}=1 ;
+     foreach my $list ( &List::get_lists('*') ) {
+	 $param->{'listname'}{$list->{'name'}}{'defined'}=1 ;
      }
      foreach my $a ('smtp','md5','smime') {
 	 #$param->{'auth_method'}{$a}{'define'}=1 ;
@@ -7183,8 +7169,7 @@ sub do_set_pending_list_request {
 	 &wwslog('info','do_rebuildallarc: not listmaster');
 	 return undef;
      }
-     foreach my $l ( &List::get_lists($robot) ) {
-	 my $list = new List ($l,$robot); 
+     foreach my $list ( &List::get_lists($robot) ) {
 	 next unless (defined $list->{'admin'}{'web_archive'});
 	 my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'admin'}{'host'}";
 
@@ -7234,10 +7219,8 @@ sub do_set_pending_list_request {
 
      ## Members list
      my $record = 0;
-     foreach my $l ( &List::get_lists($robot) ) {
+     foreach my $list ( &List::get_lists($robot) ) {
 	 my $is_admin;
-	 my $list = new List ($l, $robot);
-	 next unless (defined $list);
 	 ## Search filter
 	 my $regtest = eval { (($list->{'name'} !~ /$param->{'regexp'}/i)
 			       && ($list->{'admin'}{'subject'} !~ /$param->{'regexp'}/i)) };

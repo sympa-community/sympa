@@ -9203,9 +9203,14 @@ sub get_lists {
 	    do_log('err',"Unable to open $robot_dir");
 	    return undef;
 	}
-	foreach $l (sort readdir(DIR)) {
-	    next unless (($l !~ /^\./o) and (-d "$robot_dir/$l") and (-f "$robot_dir/$l/config"));
-	    push @lists, $l;
+	foreach my $l (sort readdir(DIR)) {
+	    next if (($l =~ /^\./o) || (! -d "$robot_dir/$l") || (! -f "$robot_dir/$l/config"));
+
+	    my $list = new List ($l, $robot);
+
+	    next unless (defined $list);
+
+	    push @lists, $list;
 	    
 	}
 	closedir DIR;
@@ -9323,10 +9328,9 @@ sub get_which {
 	$db_which = &get_which_db($email, $function);
     }
 
-    foreach $l (get_lists($robot)){
+    foreach my $list (get_lists($robot)){
  
-	my $list = new List ($l);
-	next unless ($list);
+	my $l = $list->{'name'};
 	# next unless (($list->{'admin'}{'host'} eq $robot) || ($robot eq '*')) ;
 
         if ($function eq 'member') {
@@ -9994,8 +9998,8 @@ sub maintenance {
 	close EXEC;
 	
 	&do_log('notice','Rebuilding web archives...');
-	foreach my $l ( &List::get_lists('*') ) {
-	    my $list = new List ($l); 
+	foreach my $list ( &List::get_lists('*') ) {
+
 	    next unless (defined $list->{'admin'}{'web_archive'});
 	    my $file = "$Conf{'queueoutgoing'}/.rebuild.$list->{'name'}\@$list->{'admin'}{'host'}";
 	    
@@ -10011,9 +10015,7 @@ sub maintenance {
     ## Initializing the new admin_table
     unless (&tools::higher_version($previous_version, '4.2b.4')) {
 	&do_log('notice','Initializing the new admin_table...');
-	foreach my $l ( &List::get_lists('*') ) {
-	    my $list = new List ($l); 
-	    next unless (defined $list);
+	foreach my $list ( &List::get_lists('*') ) {
 	    $list->sync_include_admin();
 	}
     }
@@ -10038,9 +10040,7 @@ sub maintenance {
 	}
 
 	## Search in V. Robot Lists
-	foreach my $l ( &List::get_lists('*') ) {
-	    my $list = new List ($l);
-	    next unless $list;	    
+	foreach my $list ( &List::get_lists('*') ) {
 	    if (-d "$list->{'dir'}/web_tt2") {
 		push @directories, "$list->{'dir'}/web_tt2";
 	    }	    
@@ -10075,8 +10075,7 @@ sub maintenance {
     ## Clean buggy list config files
     unless (&tools::higher_version($previous_version, '5.1b')) {
 	&do_log('notice','Cleaning buggy list config files...');
-	foreach my $l ( &List::get_lists('*') ) {
-	    my $list = new List ($l); 
+	foreach my $list ( &List::get_lists('*') ) {
 	    $list->save_config('listmaster@'.$list->{'domain'});
 	}
     }

@@ -82,9 +82,10 @@ sub lists {
     
     &do_log('info', 'SOAP lists(%s,%s)', $topic, $subtopic);
    
-    foreach my $listname ( &List::get_lists($robot) ) {
+    foreach my $list ( &List::get_lists($robot) ) {
 	
-	my $list = new List ($listname, $robot);
+	my $listname = $list->{'name'};
+
 	my $result_item = {};
 	my $result = &List::request_action ('visibility','md5',$robot,
 					    {'listname' =>  $listname,

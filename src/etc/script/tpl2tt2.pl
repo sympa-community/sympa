@@ -128,9 +128,7 @@ foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
     }
 
     ## Search in V. Robot Lists
-    foreach my $l ( &List::get_lists($vr) ) {
-	my $list = new List ($l);
-	next unless $list;
+    foreach my $list ( &List::get_lists($vr) ) {
 	
 	push @directories, $list->{'dir'};
 	

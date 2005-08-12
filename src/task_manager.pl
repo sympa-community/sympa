@@ -268,15 +268,14 @@ while (!$end) {
 
     
     ## list tasks
-    foreach ( &List::get_lists() ) {
+    foreach my $list ( &List::get_lists('*') ) {
 	
 	my %data = %default_data;
-	my $list = new List ($_);
 	
 	$data{'list'}{'name'} = $list->{'name'};
 	
 	my %used_list_models; # stores which models already have a task 
-	foreach (@list_models) { $used_list_models{$_} = undef; }
+	foreach (@list_models) { $used_list_models{$list->{'name'}} = undef; }
 	
 	foreach $_ (@tasks) {
 	  
@@ -1120,9 +1119,7 @@ sub purge_user_table {
     }
 
     foreach my $r (keys %{$Conf{'robots'}}) {
-	foreach my $l (&List::get_lists($r)){
-	    my $list = new List($l);
-	    next unless defined($list);
+	foreach my $list (&List::get_lists($r)){
 
 	    ## Owners
 	    my $owners = $list->get_owners();
@@ -1173,18 +1170,17 @@ sub purge_orphan_bounces {
 
     ## Hash {'listname' => 'bounced address' => 1}
     my %bounced_users;
-    my @listes;
+    my @all_lists;
 
-    unless (@listes = &List::get_lists('*')) {
+    unless (@all_lists = &List::get_lists('*')) {
 	&do_log('notice','No list available');
 	return 1;
     }
 
 
-    foreach my $listname (@listes) {
-	 my $list = new List ($listname);	
+    foreach my $list (@all_lists) {
 
-	 next unless (defined $list);
+	my $listname = $list->{'name'};
 
 	 ## first time: loading DB entries into %bounced_users
 	 for (my $user_ref = $list->get_first_bouncing_user(); $user_ref; $user_ref = $list->get_next_bouncing_user()){
@@ -1229,10 +1225,9 @@ sub purge_orphan_bounces {
      my $delay = $tab[0];
 
      do_log('debug2','expire_bounce(%d)',$delay);
-     foreach my $listname (&List::get_lists('*') ) {
-	 my $list = new List ($listname);
+     foreach my $list (&List::get_lists('*') ) {
 
-	 next unless $list;
+	 my $listname = $list->{'name'};
 
 	 # the reference date is the date until which we expire bounces in second
 	 # the latest_distribution_date is the date of last distribution #days from 01 01 1970
@@ -1467,9 +1462,9 @@ sub purge_orphan_bounces {
  sub eval_bouncers {
  #################       
 
-     foreach my $listname (&List::get_lists()) {
+     foreach my $list (&List::get_lists()) {
 
-	 my $list = new List ($listname);
+	 my $listname = $list->{'name'};
 	 my $list_traffic = {};
 
 	 &do_log('info','eval_bouncers(%s)',$listname);
@@ -1532,8 +1527,8 @@ sub process_bouncers {
 		   'none'            => \&none
 		   );
 
-    foreach my $listname (&List::get_lists()) {
-	my $list = new List ($listname);
+    foreach my $list (&List::get_lists()) {
+	my $listname = $list->{'name'};
 	
 	my @bouncers;
 	# @bouncers = ( ['email1', 'email2', 'email3',....,],    There is one line 

@@ -288,24 +288,21 @@ unless (&Conf::checkfiles()) {
 ## Daemon called for dumping subscribers list
 if ($main::options{'dump'}) {
     
-    my @listnames;
+    my (@all_lists, $list);
     if ($main::options{'dump'} eq 'ALL') {
-	@listnames = &List::get_lists('*');
-    }else {
-	@listnames = ($main::options{'dump'});
-    }
-
-    foreach my $l (@listnames) {
-	
-	my $list = new List($l);
-	
+	@all_lists = &List::get_lists('*');
+    }else {	
+	my $list = new List ($main::options{'dump'});
 	unless (defined $list) {
-	    &do_log('err','Unknown list %s', $l);
+	    &do_log('err','Unknown list %s', $main::options{'dump'});
 	    next;
 	}
+	push @all_lists, $list;
+    }
 
+    foreach my $list (@all_lists) {
 	unless ($list->dump()) {
-	    printf STDERR "Could not dump list(s) %s\n", join(',',@listnames);
+	    printf STDERR "Could not dump list(s)\n";
 	}
     }
 
@@ -314,18 +311,15 @@ if ($main::options{'dump'}) {
     print $usage_string;
     exit 0;
 }elsif ($main::options{'make_alias_file'}) {
-    my @listnames = &List::get_lists('*');
+    my @all_lists = &List::get_lists('*');
     unless (open TMP, ">/tmp/sympa_aliases.$$") {
 	printf STDERR "Unable to create tmp/sympa_aliases.$$, exiting\n";
 	exit;
     }
     printf TMP "#\n#\tAliases for all Sympa lists open (but not for robots)\n#\n";
     close TMP;
-    foreach my $listname (@listnames) {
-	if (my $list = new List ($listname)) {
-
-	    system ("--SBINDIR--/alias_manager.pl add $list->{'name'} $list->{'domain'} /tmp/sympa_aliases.$$") if ($list->{'admin'}{'status'} eq 'open');
-	}	
+    foreach my $list (@all_lists) {
+	system ("--SBINDIR--/alias_manager.pl add $list->{'name'} $list->{'domain'} /tmp/sympa_aliases.$$") if ($list->{'admin'}{'status'} eq 'open');
     }
     printf ("Sympa aliases file is /tmp/sympa_aliases.$$ file made, you probably need to installed it in your SMTP engine\n");
     
