@@ -8427,7 +8427,7 @@ sub _restrict_values {
 
      # if subscribtion are stored in database rewrite the database
      if ($list->{'admin'}{'user_data_source'} =~ /^database|include2$/) {
-	 &List::rename_list_db ($list,$in{'new_listname'});
+	 &List::rename_list_db ($list,$in{'new_listname'},$in{'new_robot'});
 	 &wwslog('debug',"do_rename_list :List::rename_list_db ($in{'list'},$in{'new_listname'} ");
      }
 

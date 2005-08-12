@@ -6020,8 +6020,8 @@ sub add_admin_user {
 
 ## Update subscribers and admin users (used while renaming a list)
 sub rename_list_db {
-    my($self, $new_listname) = @_;
-    do_log('debug', 'List::rename_list_db(%s,%s)', $self->{'name'},$new_listname);
+    my($self, $new_listname, $new_robot) = @_;
+    do_log('debug', 'List::rename_list_db(%s,%s,%s)', $self->{'name'},$new_listname, $new_robot);
 
     unless ($List::use_db) {
 	&do_log('info', 'Sympa not setup to use DBI');
@@ -6036,8 +6036,9 @@ sub rename_list_db {
 	return undef unless &db_connect();
     }	   
     
-    $statement_subscriber =  sprintf "UPDATE subscriber_table SET list_subscriber=%s WHERE (list_subscriber=%s AND robot_subscriber=%s)", 
+    $statement_subscriber =  sprintf "UPDATE subscriber_table SET list_subscriber=%s, robot_subscriber=%s WHERE (list_subscriber=%s AND robot_subscriber=%s)", 
     $dbh->quote($new_listname), 
+    $dbh->quote($new_robot),
     $dbh->quote($self->{'name'}),
     $dbh->quote($self->{'domain'}) ; 
 
@@ -6051,8 +6052,9 @@ sub rename_list_db {
     # admin_table is "alive" only in case include2
     if ($self->{'admin'}{'user_data_source'} eq 'include2'){
 
-	$statement_admin =  sprintf "UPDATE admin_table SET list_admin=%s WHERE (list_admin=%s AND robot_admin=%s)", 
+	$statement_admin =  sprintf "UPDATE admin_table SET list_admin=%s, robot_admin=%s WHERE (list_admin=%s AND robot_admin=%s)", 
 	$dbh->quote($new_listname), 
+	$dbh->quote($new_robot),
 	$dbh->quote($self->{'name'}),
 	$dbh->quote($self->{'domain'}) ; 
 
@@ -6060,8 +6062,8 @@ sub rename_list_db {
 
 	unless ($dbh->do($statement_admin)) {
 	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement_admin, $dbh->errstr);
-	return undef;
-    }
+	    return undef;
+	}
     }
     
     return 1;
