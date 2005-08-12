@@ -18,6 +18,7 @@ CREATE TABLE user_table (
 CREATE TABLE subscriber_table (
   	list_subscriber       	varchar (50) NOT NULL,
 	user_subscriber		varchar (100) NOT NULL,
+	robot_subscriber	varchar (80) NOT NULL,
 	date_subscriber		datetime NOT NULL,
 	update_subscriber	datetime,
 	visibility_subscriber	varchar (20),
@@ -29,13 +30,14 @@ CREATE TABLE subscriber_table (
 	included_subscriber 	enum ('0','1'),
 	include_sources_subscriber varchar(50),
 	bounce_score_subscriber smallint (6),
-	PRIMARY KEY (list_subscriber, user_subscriber),
-	INDEX (user_subscriber,list_subscriber)
+	PRIMARY KEY (list_subscriber, user_subscriber, robot_subscriber),
+	INDEX (user_subscriber,list_subscriber,robot_subscriber)
 );
 
 CREATE TABLE admin_table (
 	list_admin 		varchar(50) NOT NULL,
  	user_admin 		varchar(100) NOT NULL,
+ 	robot_admin 		varchar(80) NOT NULL,
 	role_admin 		enum('listmaster','owner','editor') NOT NULL,
 	date_admin 		datetime NOT NULL,
 	update_admin 		datetime,
@@ -46,8 +48,8 @@ CREATE TABLE admin_table (
 	include_sources_admin  	varchar(50),
 	info_admin   		varchar(150),
 	profile_admin  		enum('privileged','normal'),
-	PRIMARY KEY (list_admin, user_admin,role_admin),
-	INDEX (list_admin, user_admin,role_admin)
+	PRIMARY KEY (list_admin, user_admin, robot_admin, role_admin),
+	INDEX (list_admin, user_admin,robot_admin,role_admin)
 );
  
 

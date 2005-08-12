@@ -27,6 +27,7 @@ create table subscriber_table
 (
     list_subscriber        varchar(50)            not null,
     user_subscriber        varchar(100)           not null,
+    robot_subscriber       varchar(80)           not null,
     date_subscriber        datetime               not null,
     update_subscriber      datetime               null,
     visibility_subscriber  varchar(20)            null    ,
@@ -38,7 +39,7 @@ create table subscriber_table
     subscribed_subscriber  numeric		  null    ,
     included_subscriber    numeric                null    ,
     include_sources_subscriber varchar(50)        null    ,
-    constraint ind_subscriber primary key (list_subscriber, user_subscriber)
+    constraint ind_subscriber primary key (list_subscriber, user_subscriber, robot_subscriber)
 )
 go
 
@@ -48,10 +49,14 @@ go
 create index user_subscriber_fk on subscriber_table (user_subscriber)
 go
 
+create index robot_subscriber_fk on subscriber_table (robot_subscriber)
+go
+
 create table admin_table 
 (
 	list_admin 		varchar(50)       not null,
  	user_admin 		varchar(100) 	  not null,
+ 	robot_admin 		varchar(80) 	  not null,
 	role_admin 		varchar(15)       not null,
 	date_admin 		datetime 	  not null,
 	update_admin 		datetime          null,
@@ -62,7 +67,7 @@ create table admin_table
 	include_sources_admin  	varchar(50)       null,
 	info_admin   		varchar(150)      null,
 	profile_admin  		varchar(15)       null,
-       constraint ind_admin primary key (list_admin, user_admin,role_admin)
+       constraint ind_admin primary key (list_admin, user_admin,robot_admin,role_admin)
 )
 go
 
@@ -70,6 +75,9 @@ create index list_admin_fk on admin_table (list_admin)
 go
 
 create index user_admin_fk on admin_table (user_admin)
+go
+
+create index robot_admin_fk on admin_table (robot_admin)
 go
 
 create index role_admin_fk on admin_table (role_admin)

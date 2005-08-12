@@ -12,6 +12,7 @@ CREATE TABLE user_table (
 CREATE TABLE subscriber_table (
   	list_subscriber       	varchar (50) NOT NULL,
 	user_subscriber		varchar (100) NOT NULL,
+	robot_subscriber	varchar (80) NOT NULL,
 	date_subscriber		timestamp NOT NULL,
 	update_subscriber	timestamp,
 	visibility_subscriber	varchar (20),
@@ -23,13 +24,14 @@ CREATE TABLE subscriber_table (
 	included_subscriber 	boolean,
 	include_sources_subscriber varchar(50),
 	bounce_score_subscriber integer,
-	PRIMARY KEY (list_subscriber, user_subscriber)
+	PRIMARY KEY (list_subscriber, user_subscriber, robot_subscriber)
 );
-CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber);
+CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber,robot_subscriber);
 
 CREATE TABLE admin_table (
 	list_admin 		varchar(50) NOT NULL,
  	user_admin 		varchar(100) NOT NULL,
+ 	robot_admin 		varchar(80) NOT NULL,
 	role_admin 		varchar(15) NOT NULL,
 	date_admin 		timestamp NOT NULL,
 	update_admin 		timestamp,
@@ -40,6 +42,6 @@ CREATE TABLE admin_table (
 	include_sources_admin  	varchar(50),
 	info_admin   		varchar(150),
 	profile_admin  		varchar(15),
-	PRIMARY KEY (list_admin, user_admin,role_admin)
+	PRIMARY KEY (list_admin, user_admin,, robot_admin, role_admin)
 );
-CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin,role_admin);
+CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin, robot_admin, role_admin);

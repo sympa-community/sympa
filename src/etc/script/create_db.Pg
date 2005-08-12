@@ -20,6 +20,7 @@ DROP TABLE subscriber_table;
 CREATE TABLE subscriber_table (
   	list_subscriber       	varchar (50) NOT NULL,
 	user_subscriber		varchar (100) NOT NULL,
+	robot_subscriber	varchar (80) NOT NULL,
 	date_subscriber		timestamp with time zone NOT NULL,
 	update_subscriber 	timestamp with time zone,
 	visibility_subscriber	varchar (20),
@@ -31,14 +32,15 @@ CREATE TABLE subscriber_table (
 	subscribed_subscriber 	bit(1),
 	included_subscriber 	bit(1),
 	include_sources_subscriber varchar(50),
-	CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber, user_subscriber)
+	CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber, user_subscriber, robot_subscriber)
 );
-CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber);
+CREATE INDEX subscriber_idx ON subscriber_table (user_subscriber,list_subscriber,robot_subscriber);
 
 DROP TABLE admin_table;
 CREATE TABLE admin_table (
 	list_admin 		varchar(50) NOT NULL,
  	user_admin 		varchar(100) NOT NULL,
+ 	robot_admin 		varchar(80) NOT NULL,
 	role_admin 		varchar(15) NOT NULL,
 	date_admin 		timestamp with time zone NOT NULL,
 	update_admin 		timestamp with time zone,
@@ -49,7 +51,7 @@ CREATE TABLE admin_table (
 	include_sources_admin  	varchar(50),
 	info_admin   		varchar(150),
 	profile_admin  		varchar(15),
-        CONSTRAINT ind_admin PRIMARY KEY (list_admin, user_admin,role_admin)
+        CONSTRAINT ind_admin PRIMARY KEY (list_admin, user_admin, robot_admin, role_admin)
 );
-CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin,role_admin);
+CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin,robot_admin, role_admin);
  

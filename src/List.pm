@@ -9540,6 +9540,7 @@ sub probe_db {
 						  'attributes_user' => 'text'},
 				 'subscriber_table' => {'list_subscriber' => 'varchar(50)',
 							'user_subscriber' => 'varchar(100)',
+							'robot_subscriber' => 'varchar(80)',
 							'date_subscriber' => 'datetime',
 							'update_subscriber' => 'datetime',
 							'visibility_subscriber' => 'varchar(20)',
@@ -9553,6 +9554,7 @@ sub probe_db {
 							'bounce_score_subscriber' => 'smallint(6)'},
 				 'admin_table' => {'list_admin' => 'varchar(50)',
 						   'user_admin' => 'varchar(100)',
+						   'robot_admin' => 'varchar(80)',
 						   'role_admin' => "enum('listmaster','owner','editor')",
 						   'date_admin' => 'datetime',
 						   'update_admin' => 'datetime',
@@ -9572,6 +9574,7 @@ sub probe_db {
 						   'attributes_user' => 'varchar(255)'},
 				  'subscriber_table' => {'list_subscriber' => 'varchar(50)',
 							 'user_subscriber' => 'varchar(100)',
+							 'robot_subscriber' => 'varchar(80)',
 							 'date_subscriber' => 'timestamp',
 							 'update_subscriber' => 'timestamp',
 							 'visibility_subscriber' => 'varchar(20)',
@@ -9585,6 +9588,7 @@ sub probe_db {
 							 'bounce_score_subscriber' => 'integer'},
 				  'admin_table' => {'list_admin' => 'varchar(50)',
 						    'user_admin' => 'varchar(100)',
+						    'robot_admin' => 'varchar(80)',
 						    'role_admin' => "varchar(15)",
 						    'date_admin' => 'timestamp',
 						    'update_admin' => 'timestamp',
@@ -9685,9 +9689,6 @@ sub probe_db {
 	    &do_log('info', 'Can\'t load tables list from database %s', $Conf{'db_name'});
 	    return undef;
 	}
-	# Une simple requête sqlite : PRAGMA table_info('nomtable') , retourne la liste des champs de la table en question.
-	# La liste retournée est composée d'un N°Ordre, Nom du champ, Type (longueur), Null ou not null (99 ou 0),Valeur par défaut,Clé primaire (1 ou 0)
-	
     }elsif ($Conf{'db_type'} eq 'SQLite') {
  	
  	unless (@tables = $dbh->tables) {
@@ -9698,7 +9699,23 @@ sub probe_db {
  	foreach my $t (@tables) {
  	    $t =~ s/^\"(.+)\"$/\1/;
  	}
+	
+	foreach my $t (@tables) {
+	    next unless (defined $db_struct{$Conf{'db_type'}}{$t});
 
+	    my $res = $dbh->selectall_arrayref("PRAGMA table_info($t)");
+	    unless (defined $res) {
+		&do_log('err','Failed to check DB tables structure : %s', $dbh->errstr);
+		next;
+	    }
+	    foreach my $field (@$res) {
+		$real_struct{$t}{$field->[1]} = $field->[2];
+	    }
+	}
+
+	# Une simple requête sqlite : PRAGMA table_info('nomtable') , retourne la liste des champs de la table en question.
+	# La liste retournée est composée d'un N°Ordre, Nom du champ, Type (longueur), Null ou not null (99 ou 0),Valeur par défaut,Clé primaire (1 ou 0)
+	
     }elsif ($Conf{'db_type'} eq 'Oracle') {
  	
  	my $statement = "SELECT table_name FROM user_tables";	 
@@ -9796,24 +9813,24 @@ sub probe_db {
 		    
 		    if ($f eq 'user_subscriber') {
 			&do_log('info', 'Setting list_subscriber,user_subscriber fields as PRIMARY');
-			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY (list_subscriber,user_subscriber)")) {
-			    &do_log('err', 'Could not set field \'list_subscriber,user_subscriber\' as PRIMARY KEY, table\'%s\'.', $t);
+			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY (list_subscriber,user_subscriber,robot_subscriber)")) {
+			    &do_log('err', 'Could not set field \'list_subscriber,user_subscriber,robot_subscriber\' as PRIMARY KEY, table\'%s\'.', $t);
 			    return undef;
 			}
-			unless ($dbh->do("ALTER TABLE $t ADD INDEX (user_subscriber,list_subscriber)")) {
-			    &do_log('err', 'Could not set INDEX on field \'user_subscriber,list_subscriber\', table\'%s\'.', $t);
+			unless ($dbh->do("ALTER TABLE $t ADD INDEX (user_subscriber,list_subscriber,robot_subscriber)")) {
+			    &do_log('err', 'Could not set INDEX on field \'user_subscriber,list_subscriber,robot_subscriber\', table\'%s\'.', $t);
 			    return undef;
 			}
 		    }
 		    
 		    if ($f eq 'user_admin') {
-			&do_log('info', 'Setting list_admin,user_admin,role_admin fields as PRIMARY');
-			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY (list_admin,user_admin,role_admin)")) {
-			    &do_log('err', 'Could not set field \'list_admin,user_admin,role_admin\' as PRIMARY KEY, table\'%s\'.', $t);
+			&do_log('info', 'Setting list_admin,user_admin,robot_admin,role_admin fields as PRIMARY');
+			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY (list_admin,user_admin,robot_admin,role_admin)")) {
+			    &do_log('err', 'Could not set field \'list_admin,user_admin,robot_admin,role_admin\' as PRIMARY KEY, table\'%s\'.', $t);
 			    return undef;
 			}
-			unless ($dbh->do("ALTER TABLE $t ADD INDEX (user_admin,list_admin,role_admin)")) {
-			    &do_log('err', 'Could not set INDEX on field \'user_admin,list_admin,role_admin\', table\'%s\'.', $t);
+			unless ($dbh->do("ALTER TABLE $t ADD INDEX (user_admin,list_admin,robot_admin,role_admin)")) {
+			    &do_log('err', 'Could not set INDEX on field \'user_admin,list_admin,robot_admin,role_admin\', table\'%s\'.', $t);
 			    return undef;
 			}
 		    }

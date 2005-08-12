@@ -27,6 +27,7 @@ CREATE TABLE user_table (
 CREATE TABLE subscriber_table (
         list_subscriber         varchar2(50) NOT NULL,
         user_subscriber         varchar2(100) NOT NULL,
+        robot_subscriber         varchar2(80) NOT NULL,
         date_subscriber         date NOT NULL,
 	update_subscriber	date,
         visibility_subscriber   varchar2(20),
@@ -38,11 +39,12 @@ CREATE TABLE subscriber_table (
 	subscribed_subscriber 	number NULL    constraint  cons_subscribed_subscriber CHECK (subscribed_subscriber in (0,1)),
 	included_subscriber 	number NULL    constraint  cons_included_subscriber CHECK (included_subscriber in (0,1)),
 	include_sources_subscriber varchar2(50),
-        CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber,user_subscriber)
+        CONSTRAINT ind_subscriber PRIMARY KEY (list_subscriber,user_subscriber,robot_subscriber)
 );
 CREATE TABLE admin_table (
 	list_admin 		varchar2(50) NOT NULL,
  	user_admin 		varchar2(100) NOT NULL,
+ 	robot_admin 		varchar2(80) NOT NULL,
 	role_admin 		varchar2(20) NOT NULL,
 	date_admin 		date NOT NULL,
 	update_admin 		date,
@@ -53,7 +55,7 @@ CREATE TABLE admin_table (
 	include_sources_admin  	varchar2(50),
 	info_admin   		varchar2(150),
 	profile_admin  		varchar2(20),
-       CONSTRAINT ind_admin PRIMARY KEY (list_admin,user_admin,role_admin),
+       CONSTRAINT ind_admin PRIMARY KEY (list_admin,user_admin,robot_admin,role_admin),
 );
 
 !
