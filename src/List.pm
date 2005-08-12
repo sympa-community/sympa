@@ -1369,6 +1369,9 @@ sub new {
 	$name = $parts[0];
     }
 
+    ## Look for the list if no robot was provided
+    $robot ||= &search_list_among_robots($name);
+
     ## Only process the list if the name is valid.
     unless ($name and ($name =~ /^$tools::regexp{'listname'}$/io) ) {
 	&do_log('err', 'Incorrect listname "%s"',  $name);
@@ -1414,6 +1417,29 @@ sub new {
     }
 
     return $list;
+}
+
+## When no robot is specified, look for a list among robots
+sub search_list_among_robots {
+    my $listname = shift;
+    
+    unless ($listname) {
+ 	&do_log('err', 'List::search_list_among_robots() : Missing list parameter');
+ 	return undef;
+    }
+    
+    ## Search in default robot
+    if (-d $Conf{'home'}.'/'.$listname) {
+ 	return $Conf{'host'};
+    }
+    
+     foreach my $r (keys %{$Conf{'robots'}}) {
+	 if (-d $Conf{'home'}.'/'.$r.'/'.$listname) {
+	     return $r;
+	 }
+     }
+    
+     return 0;
 }
 
 ## set the list in status error_config and send a notify to listmaster
