@@ -7637,7 +7637,7 @@ sub do_edit_list {
 	    }
 	    
 	    ## Update total of subscribers
-	    $list->{'total'} = &List::_load_total_db($list->{'name'});
+	    $list->{'total'} = $list->_load_total_db();
 	    $list->savestats();
 	}
 	
