@@ -216,7 +216,7 @@ sub load_mime_types {
     my $types = {};
 
     @localisation = ('/etc/mime.types', '/usr/local/apache/conf/mime.types',
-		     '/etc/httpd/conf/mime.types','mime.types');
+		     '/etc/httpd/conf/mime.types',$Conf{'etc'}.'/mime.types');
 
     foreach my $loc (@localisation) {
 	next unless (-r $loc);
