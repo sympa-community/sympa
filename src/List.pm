@@ -6448,6 +6448,8 @@ sub verify {
     my ($context, $condition) = @_;
     do_log('debug3', 'List::verify(%s)', $condition);
 
+    my $robot = $context->{'robot_domain'};
+
 #    while (my($k,$v) = each %{$context}) {
 #	do_log('debug3',"verify: context->{$k} = $v");
 #    }
@@ -6471,7 +6473,7 @@ sub verify {
     }
     my $list;
     if (defined ($context->{'listname'})) {
-	$list = new List ($context->{'listname'});
+	$list = new List ($context->{'listname'}, $robot);
 	unless ($list) {
 	    do_log('err','Unable to create list object %s', $context->{'listname'});
 	    return undef;
@@ -6509,7 +6511,7 @@ sub verify {
 
 	## Config param
 	if ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
-	    if (my $conf_value = &Conf::get_robot_conf($context->{'robot_domain'}, $1)) {
+	    if (my $conf_value = &Conf::get_robot_conf($robot, $1)) {
 		
 		$value =~ s/\[conf\-\>([\w\-]+)\]/$conf_value/;
 	    }else{
@@ -6650,7 +6652,7 @@ sub verify {
 	    return -1 * $negation ;
 	}
 
-	if ( &is_listmaster($args[0],$context->{'robot_domain'})) {
+	if ( &is_listmaster($args[0],$robot)) {
 	    return $negation;
 	}else{
 	    return -1 * $negation;
@@ -6682,7 +6684,7 @@ sub verify {
 	    return -1 * $negation ;
 	}
 
-	$list2 = new List ($args[0]);
+	$list2 = new List ($args[0], $robot);
 	if (! $list2) {
 	    do_log('err',"unable to create list object \"$args[0]\"");
 	    return -1 * $negation ;
@@ -6720,7 +6722,7 @@ sub verify {
 	my $regexp = $1;
 	
 	if ($regexp =~ /\[host\]/) {
-	    my $reghost = &Conf::get_robot_conf($context->{'robot_domain'}, 'host');
+	    my $reghost = &Conf::get_robot_conf($robot, 'host');
             $reghost =~ s/\./\\./g ;
             $regexp =~ s/\[host\]/$reghost/g ;
 	}
@@ -6745,9 +6747,9 @@ sub verify {
 	my $val_search;
  	# we could search in the family if we got ref on Family object
  	if (defined $list){
- 	    $val_search = &search($args[0],$args[1],$context->{'robot_domain'},$list);
+ 	    $val_search = &search($args[0],$args[1],$robot,$list);
  	}else {
- 	    $val_search = &search($args[0],$args[1],$context->{'robot_domain'});
+ 	    $val_search = &search($args[0],$args[1],$robot);
  	}
 
 	if($val_search == 1) { 
