@@ -58,25 +58,22 @@
 </ul>
 [% END %]
 
-[% IF ( mod_subscription  != '0' && is_owner ) || ( is_editor && ( mod_total_shared != '0' || mod_index != '0' )) %]
+[% IF is_owner ||  is_editor %]
 <span style="font-size: 14px; font-weight: bold;">[%|loc%]Moderate[%END%]</span><br />
 
   <ul class="menuLinks">
   [% IF is_editor %]
      [% IF action == 'modindex' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-     [% IF mod_message != 0 %]
+
          <li><a class="[% class %]" href="[% path_cgi %]/modindex/[% list %]">[%|loc%]Message[%END%] ([% mod_message %]) </a></li>
-     [% END %]  
      
-     [% IF mod_total_shared != 0 %]
 	<li><a class="[% class %]" href="[% path_cgi %]/modindex/[% list %]">[%|loc%]Document[%END%] ([% mod_total_shared %])</a></li>
-     [% END %]
   [% END %]
   [% IF is_owner %]
      [% IF action == 'subindex' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
-     [% IF mod_subscription != 0 %]
+
 	<li><a class="[% class %]" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Subscriptions[%END%] ([% mod_subscription %])</a></li>
-     [% END %]
+
   [% END %]
   </ul>
 [% END %]
