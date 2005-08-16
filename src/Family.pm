@@ -86,9 +86,9 @@ sub new {
     
     my $self = {};
 
-    if ($list_of_families{$name}) {
+    if ($list_of_families{$robot}{$name}) {
         # use the current family in memory and update it
-	$self = $list_of_families{$name};
+	$self = $list_of_families{$robot}{$name};
 ###########
 	# the robot can be different from lastest new ...
 	if ($robot eq $self->{'robot'}) {
@@ -99,7 +99,7 @@ sub new {
     }
         # create a new object family
 	bless $self, $class;
-	$list_of_families{$name} = $self;
+	$list_of_families{$robot}{$name} = $self;
 
     ## family name
     unless ($name && ($name =~ /^$tools::regexp{'family_name'}$/io) ) {
@@ -466,8 +466,8 @@ sub close {
     my @impossible_close;
     my @close_ok;
 
-    foreach my $listname (@{$family_lists}) {
-	my $list = new List($listname, $self->{'robot'});
+    foreach my $list (@{$family_lists}) {
+	my $listname = $list->{'name'};
 	
 	unless (defined $list){
 	    &do_log('err','The %s list belongs to %s family but the list does not exist',$listname,$self->{'name'});
@@ -995,7 +995,7 @@ sub get_family_lists {
 
     foreach my $list ( &List::get_lists($self->{'robot'}) ) {
 	if ((defined $list->{'admin'}{'family_name'}) && ($list->{'admin'}{'family_name'} eq $self->{'name'})) {
-	    push (@list_of_lists, $list->{'name'});
+	    push (@list_of_lists, $list);
 	}
     }
     return \@list_of_lists;
