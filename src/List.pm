@@ -7078,7 +7078,7 @@ sub archive_msg {
     my $is_archived = $self->is_archived();
     Archive::store("$self->{'dir'}/archives",$is_archived, $msg)  if ($is_archived);
 
-    Archive::outgoing("$Conf{'queueoutgoing'}","$self->{'name'}\@$self->{'admin'}{'host'}",$msg) 
+    Archive::outgoing("$Conf{'queueoutgoing'}","$self->{'name'}\@$self->{'domain'}",$msg) 
       if ($self->is_web_archived());
 }
 
@@ -10315,9 +10315,9 @@ sub maintenance {
 	}
     }
 
-    ## Fill the robot_subscriber and robot_admin fields in DB
     unless (&tools::higher_version($previous_version, '5.2a.1')) {
 
+	## Fill the robot_subscriber and robot_admin fields in DB
 	&do_log('notice','Updating the new robot_subscriber and robot_admin  Db fields...');
 
 	unless ($List::use_db) {
@@ -10352,6 +10352,46 @@ sub maintenance {
 		$list = new List ($list->{'name'}, $list->{'domain'}, {'force_sync_admin' => 1});
 	    }
 	}
+
+	## Rename web archive directories using 'domain' instead of 'host'
+	&do_log('notice','Renaming web archive directories with the list domain...');
+	
+	my $root_dir = &Conf::get_robot_conf($Conf{'host'},'arc_path');
+	unless (opendir ARCDIR, $root_dir) {
+	    do_log('err',"Unable to open $root_dir : $!");
+	    return undef;
+	}
+	
+	foreach my $dir (sort readdir(ARCDIR)) {
+	    next if (($dir =~ /^\./o) || (! -d $root_dir.'/'.$dir)); ## Skip files and entries starting with '.'
+		     
+	    my ($listname, $listdomain) = split /\@/, $dir;
+
+	    next unless ($listname && $listdomain);
+
+	    my $list = new List $listname;
+	    unless (defined $list) {
+		do_log('notice',"Skipping unknown list $listname");
+		next;
+	    }
+	    
+	    if ($listdomain ne $list->{'domain'}) {
+		my $old_path = $root_dir.'/'.$listname.'@'.$listdomain;		
+		my $new_path = $root_dir.'/'.$listname.'@'.$list->{'domain'};
+
+		if (-d $new_path) {
+		    do_log('err',"Could not rename %s to %s ; directory already exists", $old_path, $new_path);
+		    next;
+		}else {
+		    unless (rename $old_path, $new_path) {
+			do_log('err',"Failed to rename %s to %s : %s", $old_path, $new_path, $!);
+			next;
+		    }
+		    &do_log('notice', "Renamed %s to %s", $old_path, $new_path);
+		}
+	    }		     
+	}
+	
     }
 
 
