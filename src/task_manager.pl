@@ -136,7 +136,7 @@ umask(oct($Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf{'home'})) {
-    &report::reject_report_web('intern','chdir_error',{},'','','',$robot);
+    &report::reject_report_web('intern','chdir_error',{},'','','', $Conf{'host'});
     &do_log('err',"error : unable to change to directory $Conf{'home'}");
     exit (-1);
 }
@@ -260,7 +260,7 @@ while (!$end) {
 	    if ($Conf{$key}) { 
 		my %data = %default_data; # hash of datas necessary to the creation of tasks
 		#printf "xxxxxxxxxxxxx appel 1\n";
-		create ($current_date, '', $global_models{$key}, $Conf{$key}, '_global', \%data);
+		create ($current_date, '', $global_models{$key}, $Conf{$key}, \%data);
 		$used_models{$1} = 1;
 	    }
 	}
@@ -268,40 +268,42 @@ while (!$end) {
 
     
     ## list tasks
-    foreach my $list ( &List::get_lists('*') ) {
+    foreach my $robot (keys %{$Conf{'robots'}}) {
+	foreach my $list ( &List::get_lists($robot) ) {
+	    
+	    my %data = %default_data;
 	
-	my %data = %default_data;
+	    $data{'list'} = {'name' => $list->{'name'},
+			     'robot' => $list->{'domain'}};
 	
-	$data{'list'}{'name'} = $list->{'name'};
-	
-	my %used_list_models; # stores which models already have a task 
-	foreach (@list_models) { $used_list_models{$list->{'name'}} = undef; }
-	
-	foreach $_ (@tasks) {
-	  
-	    if (my $task = &match_task($_)) {
-		my $model = $task->{'model'};
-		my $object = $task->{'list'};
-		if ($object eq $list->{'name'}) { $used_list_models{$model} = 1; }
-	    }
-	}
-
-	foreach my $model (keys %used_list_models) {
-	    unless ($used_list_models{$model}) {
-		my $model_task_parameter = "$model".'_task';
+	    my %used_list_models; # stores which models already have a task 
+	    foreach (@list_models) { $used_list_models{$list->{'name'}} = undef; }
+	    
+	    foreach $_ (@tasks) {
 		
-		if ( $model eq 'sync_include') {
-		    next unless (($list->{'admin'}{'user_data_source'} eq 'include2') &&
-				 $list->has_include_data_sources() &&
-				 ($list->{'admin'}{'status'} eq 'open'));
+		if (my $task = &match_task($_)) {
+		    my $model = $task->{'model'};
+		    my $object = $task->{'list'};
+		    if ($object eq $list->{'name'}) { $used_list_models{$model} = 1; }
+		}
+	    }
+
+	    foreach my $model (keys %used_list_models) {
+		unless ($used_list_models{$model}) {
+		    my $model_task_parameter = "$model".'_task';
 		    
-		    create ($current_date, 'INIT', $model, 'ttl', 'list', \%data);
-
-		}elsif (defined $list->{'admin'}{$model_task_parameter} && 
-			defined $list->{'admin'}{$model_task_parameter}{'name'}) {
-
-		    create ($current_date, '', $model, $list->{'admin'}{$model_task_parameter}{'name'}, 
-			    'list', \%data);
+		    if ( $model eq 'sync_include') {
+			next unless (($list->{'admin'}{'user_data_source'} eq 'include2') &&
+				     $list->has_include_data_sources() &&
+				     ($list->{'admin'}{'status'} eq 'open'));
+			
+			create ($current_date, 'INIT', $model, 'ttl', \%data);
+			
+		    }elsif (defined $list->{'admin'}{$model_task_parameter} && 
+			    defined $list->{'admin'}{$model_task_parameter}{'name'}) {
+			
+			create ($current_date, '', $model, $list->{'admin'}{$model_task_parameter}{'name'}, \%data);
+		    }
 		}
 	    }
 	}
@@ -387,18 +389,24 @@ sub create {
     my $label         = shift;
     my $model         = shift;
     my $model_choice  = shift;
-    my $object        = shift;
     my $Rdata         = shift;
 
-    &do_log ('debug2', "create date : $date label : $label model $model : $model_choice object : $object Rdata :$Rdata");
+    &do_log ('debug2', "create date : $date label : $label model $model : $model_choice Rdata :$Rdata");
 
     my $task_file;
     my $list_name;
-    if ($object eq 'list') { 
+    my $robot;
+    my $object;
+    if (defined $Rdata->{'list'}) { 
 	$list_name = $Rdata->{'list'}{'name'};
+	$robot = $Rdata->{'list'}{'robot'};
 	$task_file  = "$spool_task/$date.$label.$model.$list_name";
+	$object = 'list';
     }
-    else {$task_file  = $spool_task.'/'.$date.'.'.$label.'.'.$model.'.'.$object;}
+    else {
+	$object = '_global';
+	$task_file  = $spool_task.'/'.$date.'.'.$label.'.'.$model.'.'.$object;
+    }
 
     ## model recovery
     my $model_file;
@@ -416,7 +424,7 @@ sub create {
 
     # for a list
     if ($object  eq 'list') {
-	my $list = new List($list_name);
+	my $list = new List($list_name, $robot);
 
 	$Rdata->{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
 
@@ -438,7 +446,7 @@ sub create {
     # special checking for list whose user_data_source config parmater is include. The task won't be created if there is a delete_subs command
     my $ok = 1;
     if ($object eq 'list') {
-	my $list = new List("$list_name");
+	my $list = new List($list_name, $robot);
 	if ($list->{'admin'}{'user_data_source'} eq 'include') {
 	    unless ( open (TASK, $task_file) ) {
 		&do_log ('err', "error : unable to read $task_file, checking is impossible");
@@ -939,7 +947,7 @@ sub next_cmd {
 	}
     }
 
-    unless (create ($date, $tab[1], $name[2], $model_choice, $type, \%data)) {
+    unless (create ($date, $tab[1], $name[2], $model_choice, \%data)) {
 	error ($context->{'task_file'}, "error in create command : creation subroutine failure");
 	return undef;
     }
@@ -1080,7 +1088,7 @@ sub create_cmd {
     }
     $type = '_global';
     #printf "xxxxxxxxxxxxx appel 3\n";
-    unless (create ($context->{'execution_date'}, '', $model, $model_choice, $type, \%data)) {
+    unless (create ($context->{'execution_date'}, '', $model, $model_choice, \%data)) {
 	error ($context->{'task_file'}, "error in create command : creation subroutine failure");
 	return undef;
     }
