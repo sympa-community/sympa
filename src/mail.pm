@@ -510,7 +510,7 @@ sub sending {
 		}
 	    }
 	    
-	    unless ($signed_msg = &tools::smime_sign($in_msg,$listname)) {
+	    unless ($signed_msg = &tools::smime_sign($in_msg,$listname, $robot)) {
 		&do_log('notice', 'mail::sending : unable to sign message from %s', $listname);
 		return undef;
 	    }

@@ -434,10 +434,11 @@ do_log('info', "get_templates_path () : xxxxxxxxxxxxxxxx resu $distrib_dir/$tpl"
 sub smime_sign {
     my $in_msg = shift;
     my $list = shift;
+    my $robot = shift;
 
     do_log('debug2', 'tools::smime_sign (%s,%s)',$in_msg,$list);
 
-    my $self = new List($list);
+    my $self = new List($list, $robot);
     my($cert, $key) = &smime_find_keys($self->{dir}, 'sign');
     my $temporary_file = $Conf{'tmpdir'}."/".$list.".".$$ ;    
 

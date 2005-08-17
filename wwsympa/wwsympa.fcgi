@@ -13927,8 +13927,9 @@ sub do_review_family {
     }
 
     my $all_lists = $family->get_family_lists();
-    foreach my $l (@{$all_lists}) {
-	my $flist = new List ($l, $robot);
+    foreach my $flist (@{$all_lists}) {
+	my $l = $list->{'name'};
+	
 	unless (defined $flist) {
 	    &wwslog('err', 'do_review_family: incorrect list %s', $l);
 	    next;	    
