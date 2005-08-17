@@ -3951,7 +3951,7 @@ sub delete_user {
 	    $who = &tools::clean_email($who);
 	    my $statement;
 	    
-	    $list_cache{'is_user'}{$name}{$who} = undef;    
+	    $list_cache{'is_user'}{$self->{'domain'}{$name}{$who} = undef;    
 	    
 	    ## Delete record in SUBSCRIBER
 	    $statement = sprintf "DELETE FROM subscriber_table WHERE (user_subscriber=%s AND list_subscriber=%s AND robot_subscriber=%s)",
@@ -4006,7 +4006,7 @@ sub delete_admin_user {
 	$who = &tools::clean_email($who);
 	my $statement;
 	
-	$list_cache{'is_admin_user'}{$name}{$who} = undef;    
+	$list_cache{'is_admin_user'}{$self->{'domain'}{$name}{$who} = undef;    
 	    
 	## Delete record in ADMIN
 	$statement = sprintf "DELETE FROM admin_table WHERE (user_admin=%s AND list_admin=%s AND robot_admin=%s AND role_admin=%s)",
@@ -4209,9 +4209,9 @@ sub get_subscriber {
 	my $update_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'update_subscriber', 'update_subscriber';	
 
 	## Use session cache
-	if (defined $list_cache{'get_subscriber'}{$name}{$email}) {
+	if (defined $list_cache{'get_subscriber'}{$self->{'domain'}{$name}{$email}) {
 	    &do_log('debug3', 'xxx Use cache(get_subscriber, %s,%s)', $name, $email);
-	    return $list_cache{'get_subscriber'}{$name}{$email};
+	    return $list_cache{'get_subscriber'}{$self->{'domain'}{$name}{$email};
 	}
 
 	## Check database connection
@@ -4276,7 +4276,7 @@ sub get_subscriber {
 	$sth = pop @sth_stack;
 
 	## Set session cache
-	$list_cache{'get_subscriber'}{$name}{$email} = $user;
+	$list_cache{'get_subscriber'}{$self->{'domain'}{$name}{$email} = $user;
 
 	return $user;
     }else {
@@ -4317,9 +4317,9 @@ sub get_admin_user {
     my $update_field = sprintf $date_format{'read'}{$Conf{'db_type'}}, 'update_admin', 'update_admin';	
 
     ## Use session cache
-    if (defined $list_cache{'get_admin_user'}{$name}{$role}{$email}) {
+    if (defined $list_cache{'get_admin_user'}{$self->{'domain'}{$name}{$role}{$email}) {
 	&do_log('debug3', 'xxx Use cache(get_admin_user, %s,%s,%s)', $name, $role, $email);
-	return $list_cache{'get_admin_user'}{$name}{$role}{$email};
+	return $list_cache{'get_admin_user'}{$self->{'domain'}{$name}{$role}{$email};
     }
 
     ## Check database connection
@@ -4375,7 +4375,7 @@ sub get_admin_user {
     $sth = pop @sth_stack;
     
     ## Set session cache
-    $list_cache{'get_admin_user'}{$name}{$role}{$email} = $admin_user;
+    $list_cache{'get_admin_user'}{$self->{'domain'}{$name}{$role}{$email} = $admin_user;
     
     return $admin_user;
     
@@ -5386,9 +5386,9 @@ sub is_user {
 	my $name = $self->{'name'};
 	
 	## Use cache
-	if (defined $list_cache{'is_user'}{$name}{$who}) {
-	    # &do_log('debug3', 'Use cache(%s,%s): %s', $name, $who, $list_cache{'is_user'}{$name}{$who});
-	    return $list_cache{'is_user'}{$name}{$who};
+	if (defined $list_cache{'is_user'}{$self->{'domain'}{$name}{$who}) {
+	    # &do_log('debug3', 'Use cache(%s,%s): %s', $name, $who, $list_cache{'is_user'}{$self->{'domain'}{$name}{$who});
+	    return $list_cache{'is_user'}{$self->{'domain'}{$name}{$who};
 	}
 	
 	## Check database connection
@@ -5418,7 +5418,7 @@ sub is_user {
 	$sth = pop @sth_stack;
 
 	## Set cache
-	$list_cache{'is_user'}{$name}{$who} = $is_user;
+	$list_cache{'is_user'}{$self->{'domain'}{$name}{$who} = $is_user;
 
        return $is_user;
    }else {
@@ -5560,7 +5560,7 @@ sub update_user {
 	}
 
 	## Reset session cache
-	$list_cache{'get_subscriber'}{$name}{$who} = undef;
+	$list_cache{'get_subscriber'}{$self->{'domain'}{$name}{$who} = undef;
 
 	## Subscribers in text file
     }else {
@@ -5712,7 +5712,7 @@ sub update_admin_user {
     }
 
     ## Reset session cache
-    $list_cache{'get_admin_user'}{$name}{$role}{$who} = undef;
+    $list_cache{'get_admin_user'}{$self->{'domain'}{$name}{$role}{$who} = undef;
     
     return 1;
 }
@@ -5870,7 +5870,7 @@ sub add_user {
 	    my $date_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_user->{'date'}, $new_user->{'date'};
 	    my $update_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_user->{'update_date'}, $new_user->{'update_date'};
 	    
-	    $list_cache{'is_user'}{$name}{$who} = undef;
+	    $list_cache{'is_user'}{$self->{'domain'}{$name}{$who} = undef;
 	    
 	    my $statement;
 
@@ -5967,7 +5967,7 @@ sub add_admin_user {
 	my $date_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_admin_user->{'date'}, $new_admin_user->{'date'};
 	my $update_field = sprintf $date_format{'write'}{$Conf{'db_type'}}, $new_admin_user->{'update_date'}, $new_admin_user->{'update_date'};
 	    
-	$list_cache{'is_admin_user'}{$name}{$who} = undef;
+	$list_cache{'is_admin_user'}{$self->{'domain'}{$name}{$who} = undef;
 	    
 	my $statement;
 
@@ -6105,14 +6105,14 @@ sub am_i {
     ## Listmaster has all privileges except editor
     # sa contestable.
     if (($function eq 'owner' || $function eq 'privileged_owner') and &is_listmaster($who,$self->{'domain'})) {
-	$list_cache{'am_i'}{$function}{$self->{'name'}}{$who} = 1;
+	$list_cache{'am_i'}{$function}{$self->{'domain'}{$self->{'name'}}{$who} = 1;
 	return 1;
     }
 
     ## Use cache
-    if (defined $list_cache{'am_i'}{$function}{$self->{'name'}}{$who}) {
-	# &do_log('debug3', 'Use cache(%s,%s): %s', $name, $who, $list_cache{'is_user'}{$name}{$who});
-	return $list_cache{'am_i'}{$function}{$self->{'name'}}{$who};
+    if (defined $list_cache{'am_i'}{$function}{$self->{'domain'}{$self->{'name'}}{$who}) {
+	# &do_log('debug3', 'Use cache(%s,%s): %s', $name, $who, $list_cache{'is_user'}{$self->{'domain'}{$name}{$who});
+	return $list_cache{'am_i'}{$function}{$self->{'domain'}{$self->{'name'}}{$who};
     }
 
     if ($self->{'admin'}{'user_data_source'} eq 'include2'){
@@ -6130,11 +6130,11 @@ sub am_i {
 		    return 1;
 		    
 		    ## Update cache
-		    $list_cache{'am_i'}{'editor'}{$self->{'name'}}{$who} = 1;
+		    $list_cache{'am_i'}{'editor'}{$self->{'domain'}{$self->{'name'}}{$who} = 1;
 		}else {
 		    
 		    ## Update cache
-		    $list_cache{'am_i'}{'editor'}{$self->{'name'}}{$who} = 0;
+		    $list_cache{'am_i'}{'editor'}{$self->{'domain'}{$self->{'name'}}{$who} = 0;
 
 		    return undef;
 		}
@@ -6147,11 +6147,11 @@ sub am_i {
 		return 1;
 		    
 		## Update cache
-		$list_cache{'am_i'}{'owner'}{$self->{'name'}}{$who} = 1;
+		$list_cache{'am_i'}{'owner'}{$self->{'domain'}{$self->{'name'}}{$who} = 1;
 	    }else {
 		    
 		## Update cache
-		$list_cache{'am_i'}{'owner'}{$self->{'name'}}{$who} = 0;
+		$list_cache{'am_i'}{'owner'}{$self->{'domain'}{$self->{'name'}}{$who} = 0;
 
 		return undef;
 	    }
@@ -6161,13 +6161,13 @@ sub am_i {
 	    if ($privileged->{'profile'} eq 'privileged') {
 		    
 		## Update cache
-		$list_cache{'am_i'}{'privileged_owner'}{$self->{'name'}}{$who} = 1;
+		$list_cache{'am_i'}{'privileged_owner'}{$self->{'domain'}{$self->{'name'}}{$who} = 1;
 
 		return 1;
 	    }else {
 		    
 		## Update cache
-		$list_cache{'am_i'}{'privileged_owner'}{$self->{'name'}}{$who} = 0;
+		$list_cache{'am_i'}{'privileged_owner'}{$self->{'domain'}{$self->{'name'}}{$who} = 0;
 
 		return undef;
 	    }
@@ -9261,9 +9261,9 @@ sub _load_total_db {
     }
     
     ## Use session cache
-    if (($option ne 'nocache') && (defined $list_cache{'load_total_db'}{$self->{'name'}})) {
+    if (($option ne 'nocache') && (defined $list_cache{'load_total_db'}{$self->{'domain'}{$self->{'name'}})) {
 	&do_log('debug3', 'xxx Use cache(load_total_db, %s)', $self->{'name'});
-	return $list_cache{'load_total_db'}{$self->{'name'}};
+	return $list_cache{'load_total_db'}{$self->{'domain'}{$self->{'name'}};
     }
 
     my ($statement);
@@ -9295,7 +9295,7 @@ sub _load_total_db {
     $sth = pop @sth_stack;
 
     ## Set session cache
-    $list_cache{'load_total_db'}{$self->{'name'}} = $total;
+    $list_cache{'load_total_db'}{$self->{'domain'}{$self->{'name'}} = $total;
 
     return $total;
 }
@@ -9559,10 +9559,10 @@ sub get_which {
 		    push @which, $l ;
 
 		    ## Update cache
-		    $list_cache{'is_user'}{$l}{$email} = 1;
+		    $list_cache{'is_user'}{$list->{'domain'}{$l}{$email} = 1;
 		}else {
 		    ## Update cache
-		    $list_cache{'is_user'}{$l}{$email} = 0;		    
+		    $list_cache{'is_user'}{$list->{'domain'}{$l}{$email} = 0;		    
 		}
 	    }else {
 		push @which, $list->{'name'} if ($list->is_user($email));
@@ -9573,10 +9573,10 @@ sub get_which {
   		    push @which, $l ;
  		    
  		    ## Update cache
- 		    $list_cache{'am_i'}{'owner'}{$l}{$email} = 1;
+ 		    $list_cache{'am_i'}{'owner'}{$list->{'domain'}{$l}{$email} = 1;
  		}else {
  		    ## Update cache
- 		    $list_cache{'am_i'}{'owner'}{$l}{$email} = 0;		    
+ 		    $list_cache{'am_i'}{'owner'}{$list->{'domain'}{$l}{$email} = 0;		    
  		}
   	    }else {	    
   		push @which, $list->{'name'} if ($list->am_i('owner',$email));
@@ -9587,10 +9587,10 @@ sub get_which {
   		    push @which, $l ;
  		    
  		    ## Update cache
- 		    $list_cache{'am_i'}{'editor'}{$l}{$email} = 1;
+ 		    $list_cache{'am_i'}{'editor'}{$list->{'domain'}{$l}{$email} = 1;
   		}else {
  		    ## Update cache
- 		    $list_cache{'am_i'}{'editor'}{$l}{$email} = 0;		    
+ 		    $list_cache{'am_i'}{'editor'}{$list->{'domain'}{$l}{$email} = 0;		    
  		}
   	    }else {	    
    		push @which, $list->{'name'} if ($list->am_i('editor',$email));
