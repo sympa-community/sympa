@@ -7625,12 +7625,12 @@ sub _include_users_remote_sympa_list {
 
 ## include a list as subscribers.
 sub _include_users_list {
-    my ($users, $includelistname, $default_user_options, $tied) = @_;
+    my ($users, $includelistname, $robot, $default_user_options, $tied) = @_;
     do_log('debug2', 'List::_include_users_list');
 
     my $total = 0;
     
-    my $includelist = new List ($includelistname);
+    my $includelist = new List ($includelistname, $robot);
     unless ($includelist) {
 	do_log('info', 'Included list %s unknown' , $includelistname);
 	return undef;
@@ -8344,7 +8344,7 @@ sub _load_users_include {
 			do_log('err','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
 		    }else{
 			$depend_on->{$incl};
-			$included = _include_users_list (\%users, $incl, $admin->{'default_user_options'}, 'tied');
+			$included = _include_users_list (\%users, $incl, $self->{'domain'}, $admin->{'default_user_options'}, 'tied');
 
 		    }
 		}elsif ($type eq 'include_remote_sympa_list') {
@@ -8458,7 +8458,7 @@ sub _load_users_include2 {
 		    do_log('err','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
 		}else{
 		    $depend_on->{$incl};
-		    $included = _include_users_list (\%users, $incl, $admin->{'default_user_options'});
+		    $included = _include_users_list (\%users, $incl, $self->{'domain'}, $admin->{'default_user_options'});
 		}
 	    }elsif ($type eq 'include_file') {
 		$included = _include_users_file (\%users, $incl, $admin->{'default_user_options'});
@@ -8565,7 +8565,7 @@ sub _load_admin_users_include {
 			do_log('err','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
 		    }else{
 			$depend_on->{$incl};
-			$included = _include_users_list (\%admin_users, $incl, \%option);
+			$included = _include_users_list (\%admin_users, $incl, $self->{'domain'}, \%option);
 		    }
 		}elsif ($type eq 'include_file') {
 		    $included = _include_users_file (\%admin_users, $incl, \%option);
