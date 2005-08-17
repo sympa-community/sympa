@@ -504,7 +504,9 @@ sub signoff {
     
     if ($listname eq '*') {
 	my $success;
-	foreach $l ( List::get_which ($sender,$robot,'member') ){
+	foreach my $list  ( &List::get_which ($sender,$robot,'member') ){
+	    my $l = $list->{'name'};
+
 	    $success ||= &signoff($l,$sender);
 	}
 	return SOAP::Data->name('result')->value($success);
@@ -779,8 +781,9 @@ sub which {
 	    ->faultdetail('You should login first');
     }
     
-    foreach my $listname( &List::get_which($sender,$robot, 'member') ){ 	    
-	my $list = new List ($listname, $robot);
+    foreach my $list ( &List::get_which($sender,$robot, 'member') ){ 	    
+	my $listname = $list->{'name'};
+
 	my $list_address;
 	my $result_item;
 

@@ -990,7 +990,8 @@ sub signoff {
     
     if ($which eq '*') {
 	my $success ;
-	foreach $l ( List::get_which ($email,$robot,'member') ){
+	foreach $list ( &List::get_which ($email,$robot,'member') ){	    
+	    $l = $list->{'name'};
 
 	    ## Skip hidden lists
 	    my $result = &List::request_action ('visibility', 'smtp',$robot,
@@ -1858,9 +1859,9 @@ sub set {
     
     ## Recursive call to subroutine
     if ($which eq "*"){
-        my ($l);
 	my $status;
-	foreach $l ( &List::get_which ($sender,$robot,'member')){
+	foreach my $list  ( &List::get_which ($sender,$robot,'member')){
+	    my $l = $list->{'name'};
 
 	    ## Skip hidden lists
 	    my $result = &List::request_action ('visibility', 'smtp',$robot,
@@ -2477,10 +2478,10 @@ sub which {
     
     ## Subscriptions
     my $data;
-    foreach $listname (List::get_which ($sender,$robot,'member')){
+    foreach my $list (List::get_which ($sender,$robot,'member')){
         ## wwsympa :  my $list = new List ($l);
         ##            next unless (defined $list);
-
+	$listname = $list->{'name'};
 
 	my $result = &List::request_action ('visibility', 'smtp',$robot,
 					    {'listname' =>  $listname,
@@ -2507,17 +2508,17 @@ sub which {
     }
 
     ## Ownership
-    if (@which = List::get_which ($sender,$robot,'owner')){
-	foreach $listname (@which){
-	    push @{$data->{'owner_lists'}},$listname;
+    if (@which = &List::get_which ($sender,$robot,'owner')){
+	foreach my $list (@which){
+	    push @{$data->{'owner_lists'}},$list->{'name'};
 	}
 	$data->{'is_owner'} = 1;
     }
 
     ## Editorship
-    if (@which = List::get_which ($sender,$robot,'editor')){
-	foreach $listname (@which){
-	    push @{$data->{'editor_lists'}},$listname;
+    if (@which = &List::get_which ($sender,$robot,'editor')){
+	foreach my $list (@which){
+	    push @{$data->{'editor_lists'}},$list->{'name'};
 	}
 	$data->{'is_editor'} = 1;
     }

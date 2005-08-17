@@ -145,11 +145,11 @@ sub list {
     my(@l, $i);
     
     unless (-d "$name") {
-      @l = ($msg::no_archives_available);
+#      @l = ($msg::no_archives_available);
       return @l;
   }
     unless (opendir(DIR, "$name")) {
-	@l = ($msg::no_archives_available);
+#	@l = ($msg::no_archives_available);
 	return @l;
     }
    foreach $i (sort readdir(DIR)) {

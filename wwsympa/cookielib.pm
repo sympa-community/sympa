@@ -368,6 +368,11 @@ sub set_which_cookie {
     my $domain = shift ;
     my @which = @_;
 
+    my @listnames;
+    foreach my $list (@which) {
+	push @listnames, $list->{'name'};
+    }
+
     my $commawhich = join ',', @which;
     
     if ($domain eq 'localhost') {

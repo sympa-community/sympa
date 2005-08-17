@@ -935,22 +935,24 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     &cookielib::set_which_cookie ($wwsconf->{'cookie_domain'},@{$param->{'get_which'}});
 	     
 	     ## Add lists information to 'which_info'
-	     foreach my $l (@{$param->{'get_which'}}) {
-		 my $list = new List ($l, $robot);
-		 next unless (defined $list);
+	     foreach my $list (@{$param->{'get_which'}}) {
+		 my $l = $list->{'name'};
+
 		 $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 		 $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
 		 $param->{'which_info'}{$l}{'info'} = 1;
 	     }
-	     foreach my $l (@{$param->{'get_which_owner'}}) {
-		 my $list = new List ($l, $robot);
+	     foreach my $list (@{$param->{'get_which_owner'}}) {
+		 my $l = $list->{'name'};
+
 		 $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 		 $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
 		 $param->{'which_info'}{$l}{'info'} = 1;
 		 $param->{'which_info'}{$l}{'admin'} = 1;
 	     }
-	     foreach my $l (@{$param->{'get_which_editor'}}) {
-		 my $list = new List ($l, $robot);
+	     foreach my $list (@{$param->{'get_which_editor'}}) {
+		 my $l = $list->{'name'};
+
 		 $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 		 $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
 		 $param->{'which_info'}{$l}{'info'} = 1;
@@ -2033,7 +2035,10 @@ sub do_sso_login_succeeded {
 
      foreach my $role ('member','owner','editor'){
 	 foreach my $email ( keys %{$param->{'alt_emails'}} ){
-	     my @array = &List::get_which($email,$robot, $role); 
+	     my @array;	    
+	     foreach my $list (&List::get_which($email,$robot, $role)) {
+		 push @array, $list->{'name'};
+	     }
 	     $param->{'alternative_subscribers_entries'}{$role}{$email} = \@array if($#array > -1);
 	 }
      }
@@ -2439,9 +2444,8 @@ sub do_remindpasswd {
 
      foreach my $role ('member','owner','editor') {
 
-	 foreach my $l( &List::get_which($param->{'user'}{'email'}, $robot, $role) ){ 	    
-	     my $list = new List ($l, $robot);
-	     next unless (defined $list);
+	 foreach my $list ( &List::get_which($param->{'user'}{'email'}, $robot, $role) ){ 	    
+	     my $l = $list->{'name'};
 
 	     my $result = &List::request_action ('visibility', $param->{'auth_method'}, $robot,
 						 {'listname' =>  $l,
@@ -2458,7 +2462,7 @@ sub do_remindpasswd {
 	     $param->{'which'}{$l}{'host'} = $list->{'admin'}{'host'};
 
 	     if ($role eq 'member') {
-		 push @{$param->{'get_which'}}, $l;
+		 push @{$param->{'get_which'}}, $list;
 	     }
 
 	     if ($role eq 'owner' || $role eq 'editor') {
@@ -12761,9 +12765,8 @@ sub d_test_existing_and_rights {
 	 }
 
 	 ## Change email
-	 foreach my $l ( &List::get_which($param->{'user'}{'email'},$robot, 'member') ) {
-	     my $list = new List ($l, $robot);
-	     next unless (defined $list);
+	 foreach my $list ( &List::get_which($param->{'user'}{'email'},$robot, 'member') ) {
+	     my $l = $list->{'name'};
 	     
 	     my $result_sub = &List::request_action('subscribe',$param->{'auth_method'},$robot,
 						{'listname' => $l,
@@ -13176,8 +13179,9 @@ sub d_test_existing_and_rights {
      }
 
      foreach my $role ('member','owner','editor') {
-	 foreach my $l ( &List::get_which($in{'email'},$robot, $role) ) {
-	     my $list = new List ($l, $robot);
+	 foreach my $list ( &List::get_which($in{'email'},$robot, $role) ) {
+	     my $l = $list->{'name'};
+
 	     next unless (defined $list);
 	     $param->{'which'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 	     $param->{'which'}{$l}{'host'} = $list->{'admin'}{'host'};
