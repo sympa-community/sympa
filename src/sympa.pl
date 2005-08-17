@@ -69,12 +69,12 @@ my $usage_string = "Usage:
 Options:
    -d, --debug                           : sets Sympa in debug mode 
    -f, --config=FILE                     : uses an alternative configuration file
-   --import=list                         : import subscribers (read from STDIN)
+   --import=list\@dom                    : import subscribers (read from STDIN)
    -k, --keepcopy=dir                    : keep a copy of incoming message
    -l, --lang=LANG                       : use a language catalog for Sympa
    -m, --mail                            : log calls to sendmail
    --service == process_command|process_message  : process dedicated to messages distribution or to commands (default both)
-   --dump=list|ALL                       : dumps subscribers 
+   --dump=list\@dom|ALL                  : dumps subscribers 
    --make_alias_file                     : create file in /tmp with all aliases (usefull when aliases.tpl is changed)
    --lowercase                           : lowercase email addresses in database
    --create_list --robot=robot_name --input_file=/path/to/file.xml 
@@ -91,7 +91,7 @@ Options:
    --close_family=family_name --robot=robot_name 
                                          : close lists of family_name family under robot_name.      
 
-   --close_list=LISTNAME[\@ROBOT]         : close a list
+   --close_list=listname\@robot          : close a list
    --log_level=LEVEL                     : sets Sympa log level
 
    -h, --help                            : print this help
@@ -292,10 +292,17 @@ if ($main::options{'dump'}) {
     if ($main::options{'dump'} eq 'ALL') {
 	@all_lists = &List::get_lists('*');
     }else {	
+
+	## The parameter can be a list address
+	unless ($main::options{'dump'} =~ /\@/) {
+	    &do_log('err','Incorrect list address %s', $main::options{'dump'});
+	    exit;
+	} 
+
 	my $list = new List ($main::options{'dump'});
 	unless (defined $list) {
 	    &do_log('err','Unknown list %s', $main::options{'dump'});
-	    next;
+	    exit;
 	}
 	push @all_lists, $list;
     }
@@ -330,6 +337,14 @@ if ($main::options{'dump'}) {
     exit 0;
 }elsif ($main::options{'import'}) {
     my ($list, $total);
+
+    ## The parameter should be a list address
+    unless ($main::options{'import'} =~ /\@/) {
+	&do_log('err','Incorrect list address %s', $main::options{'import'});
+	exit;
+    } 
+
+
     unless ($list = new List ($main::options{'import'})) {
 	fatal_err('Unknown list name %s', $main::options{'import'});
     }
@@ -753,7 +768,7 @@ while (!$signal) {
 	}elsif ($t_listname =~ /^(sympa|$email)(\@$Conf{'host'})?$/i) {	
 	    $priority = &Conf::get_robot_conf($robot,'sympa_priority');
 	}else {
-	    my $list =  new List ($t_listname);
+	    my $list =  new List ($t_listname, $t_robot);
 	    if ($list) {
 		$priority = $list->{'admin'}{'priority'};
 	    }else {
@@ -959,7 +974,7 @@ sub DoFile {
 	$host = $conf_host;
 	$name = $listname;
     }else {
-	$list = new List ($listname);
+	$list = new List ($listname, $robot);
 	unless (defined $list) {
 	    &do_log('err', 'sympa::DoFile() : list %s no existing',$listname);
 	    &report::global_report_cmd('user','no_existing_list',{'listname'=>$listname},$sender,$robot,1);
@@ -1192,7 +1207,7 @@ sub DoForward {
 	$host = &Conf::get_robot_conf($robot, 'host');
 	$priority = 0;
     }else {
-	unless ($list = new List ($name)) {
+	unless ($list = new List ($name, $robot)) {
 	    &do_log('notice', "Message for %s-%s ignored, unknown list %s",$name, $function, $name );
 	    my $sender = chomp($hdr->get('From'));
 	    my $sympa_email = &Conf::get_robot_conf($robot, 'sympa');
@@ -1299,7 +1314,7 @@ sub DoMessage{
     my $sender = $message->{'sender'};
     
     ## Search for the list
-    my $list = new List ($listname);
+    my $list = new List ($listname, $robot);
     
     ## List unknown
     unless ($list) {
