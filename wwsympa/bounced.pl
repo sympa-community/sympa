@@ -153,7 +153,7 @@ umask(oct($Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf{'home'})) {
-    &report::reject_report_web('intern','chdir_error',{},'','','',$robot);
+    &report::reject_report_web('intern','chdir_error',{},'','','',$Conf{'host'});
     &do_log('info','Unable to change directory');
     exit (-1);
 }
@@ -220,14 +220,15 @@ while (!$end) {
 	    my $head = $entity->head;
 	    my $to = $head->get('to', 0);
 	    close BOUNCE ;
-	    if ($to =~ /^$Conf{'bounce_email_prefix'}\+(.*)\=\=a\=\=(.*)\=\=(.*)\@/) {
+	    if ($to =~ /^$Conf{'bounce_email_prefix'}\+(.*)\=\=a\=\=(.*)\=\=(.*)\@(.*)$/) {
 		my $who = "$1\@$2";
 		my $listname = $3 ;
-		my $list = new List ($listname);
-		my $result =&List::request_action ('del','smtp',$robot,
-					{'listname' =>$listname,
-					 'sender' => $Conf{'listmasters'}[0],
-					 'email' => $who});
+		my $listrobot = $4;
+		my $list = new List ($listname, $listrobot);
+		my $result =&List::request_action ('del','smtp',$listrobot,
+						   {'listname' =>$listname,
+						    'sender' => $Conf{'listmasters'}[0],
+						    'email' => $who});
 		my $action;
 		$action = $result->{'action'} if (ref($result) eq 'HASH');
 #                    &List::get_action ('del', $listname, $Conf{'listmasters'}[0], 'smtp');

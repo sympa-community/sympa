@@ -936,21 +936,21 @@ if ($wwsconf->{'use_fast_cgi'}) {
 	     
 	     ## Add lists information to 'which_info'
 	     foreach my $l (@{$param->{'get_which'}}) {
-		 my $list = new List ($l);
+		 my $list = new List ($l, $robot);
 		 next unless (defined $list);
 		 $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 		 $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
 		 $param->{'which_info'}{$l}{'info'} = 1;
 	     }
 	     foreach my $l (@{$param->{'get_which_owner'}}) {
-		 my $list = new List ($l);
+		 my $list = new List ($l, $robot);
 		 $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 		 $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
 		 $param->{'which_info'}{$l}{'info'} = 1;
 		 $param->{'which_info'}{$l}{'admin'} = 1;
 	     }
 	     foreach my $l (@{$param->{'get_which_editor'}}) {
-		 my $list = new List ($l);
+		 my $list = new List ($l, $robot);
 		 $param->{'which_info'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 		 $param->{'which_info'}{$l}{'host'} = $list->{'admin'}{'host'};
 		 $param->{'which_info'}{$l}{'info'} = 1;
@@ -2040,7 +2040,7 @@ sub do_sso_login_succeeded {
 
      foreach my $email(sort keys %{$param->{'alternative_subscribers_entries'}{'member'}}){
 	 foreach my $list_name ( @{ $param->{'alternative_subscribers_entries'}{'member'}{$email} } ){ 
-	     my $newlist = new List ($list_name);
+	     my $newlist = new List ($list_name, $robot);
 
 	     unless ( $newlist->update_user($email,{'email' => $param->{'user'}{'email'} }) ) {
 		 if ($newlist->{'admin'}{'user_data_source'} eq 'include') {
@@ -2440,7 +2440,7 @@ sub do_remindpasswd {
      foreach my $role ('member','owner','editor') {
 
 	 foreach my $l( &List::get_which($param->{'user'}{'email'}, $robot, $role) ){ 	    
-	     my $list = new List ($l);
+	     my $list = new List ($l, $robot);
 	     next unless (defined $list);
 
 	     my $result = &List::request_action ('visibility', $param->{'auth_method'}, $robot,
@@ -7705,7 +7705,7 @@ sub do_edit_list {
 
 
      ## Reload config
-     $list = new List $list->{'name'};
+     $list = new List $list->{'name'}, $robot;
 
       unless (defined $list) {
  	  &report::reject_report_web('intern','list_reload',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -8528,7 +8528,7 @@ sub _restrict_values {
      my @lists = split /\0/, $in{'selected_lists'};
 
      foreach my $l (@lists) {
-	 my $list = new List ($l);
+	 my $list = new List ($l, $robot);
 	 next unless (defined $list);
 	 $list->purge($param->{'user'}{'email'});
      }    
@@ -12762,7 +12762,7 @@ sub d_test_existing_and_rights {
 
 	 ## Change email
 	 foreach my $l ( &List::get_which($param->{'user'}{'email'},$robot, 'member') ) {
-	     my $list = new List ($l);
+	     my $list = new List ($l, $robot);
 	     next unless (defined $list);
 	     
 	     my $result_sub = &List::request_action('subscribe',$param->{'auth_method'},$robot,
@@ -13177,7 +13177,7 @@ sub d_test_existing_and_rights {
 
      foreach my $role ('member','owner','editor') {
 	 foreach my $l ( &List::get_which($in{'email'},$robot, $role) ) {
-	     my $list = new List ($l);
+	     my $list = new List ($l, $robot);
 	     next unless (defined $list);
 	     $param->{'which'}{$l}{'subject'} = $list->{'admin'}{'subject'};
 	     $param->{'which'}{$l}{'host'} = $list->{'admin'}{'host'};
@@ -13632,7 +13632,7 @@ sub get_protected_email_address {
  sub do_viewlogs {
      &wwslog('info', 'do_viewlogs()');
 
-     my $list = new List ($param->{'list'});
+     my $list = new List ($param->{'list'}, $robot);
 
      unless ($param->{'is_listmaster'}) {
 	 &report::reject_report_web('auth','action_listmaster',{},$param->{'action'});
