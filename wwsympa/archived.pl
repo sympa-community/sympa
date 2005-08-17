@@ -289,7 +289,7 @@ sub rebuild {
 
     my $tag = &get_tag($listname);
 
-    my $list = new List($listname);
+    my $list = new List($listname, $hostname);
 
     do_log('debug',"Rebuilding $adrlist archive ($2)");
 
@@ -392,7 +392,7 @@ sub mail2arc {
     my $arcpath = $wwsconf->{'arc_path'};
     my $newfile;
 
-    my $list = new List($listname);
+    my $list = new List($listname, $hostname);
 
     my $tag = &get_tag($listname);
 
@@ -404,13 +404,15 @@ sub mail2arc {
 
     do_log('debug',"mail2arc $file for $listname\@$hostname yyyy:$yyyy, mm:$mm dd:$dd hh:$hh min$min ss:$ss");
     #    chdir($wwsconf->{'arc_path'});
+
+    my $basedir = "$arcpath/$listname\@$hostname";
     
-    if (! -d "$arcpath/$listname\@$hostname") {
-	unless (mkdir ("$arcpath/$listname\@$hostname", 0775)) {
-	    &do_log('err', 'Cannot create directory %s', "$arcpath/$listname\@$hostname");
+    if (! -d $basedir) {
+	unless (mkdir $basedir, 0775) {
+	    &do_log('err', 'Cannot create directory %s', $basedir);
 	    return undef;
 	}
-	do_log('debug',"mkdir $arcpath/$listname\@$hostname");
+	do_log('debug',"mkdir $basedir");
     }
 
     ## Check quota
@@ -433,26 +435,30 @@ sub mail2arc {
 	}
     }
 	
-
-    if (! -d "$arcpath/$listname\@$hostname/$yyyy-$mm") {
-	unless (mkdir ("$arcpath/$listname\@$hostname/$yyyy-$mm", 0775)) {
-	    &do_log('err', 'Cannot create directory %s', "$arcpath/$listname\@$hostname/$yyyy-$mm");
+    my $monthdir = $basedir."/$yyyy-$mm";
+    
+    if (! -d $monthdir) {
+	unless (mkdir ($monthdir, 0775)) {
+	    &do_log('err', 'Cannot create directory %s', $monthdir);
 	    return undef;
 	}
-	do_log('debug',"mkdir $arcpath/$listname\@$hostname/$yyyy-$mm");
+	do_log('debug',"mkdir $monthdir");
     }
-    if (! -d "$arcpath/$listname\@$hostname/$yyyy-$mm/arctxt") {
-	unless (mkdir ("$arcpath/$listname\@$hostname/$yyyy-$mm/arctxt", 0775)) {
-	    &do_log('err', 'Cannot create directory %s', "$arcpath/$listname\@$hostname/$yyyy-$mm/arctxt");
+
+    my $arctxtdir = $monthdir."/arctxt";
+
+    if (! -d $arctxtdir) {
+	unless (mkdir ($arctxtdir, 0775)) {
+	    &do_log('err', 'Cannot create directory %s', $arctxtdir);
 	    return undef;
 	}
-	do_log('debug',"mkdir $arcpath/$listname\@$hostname/$yyyy-$mm/arctxt");
+	do_log('debug',"mkdir $arctxtdir");
     }
     
     ## copy the file in the arctxt and in "mhonarc -add"
-     if( -f "$arcpath/$listname\@$hostname/$yyyy-$mm/index" )
+     if( -f $monthdir."/index" )
      {
-	open(IDX,"<$arcpath/$listname\@$hostname/$yyyy-$mm/index") || fatal_err("couldn't read index for $listname");
+	open(IDX,"<$monthdir/index") || fatal_err("couldn't read index for $listname");
 	$newfile = <IDX>;
 	chomp($newfile);
 	$newfile++;
@@ -461,7 +467,7 @@ sub mail2arc {
      else
      {
 	do_log('debug',"indexing $listname archive");
-	opendir (DIR, "$arcpath/$listname\@$hostname/$yyyy-$mm/arctxt");
+	opendir (DIR, arctxtdir);
 	my @files = (sort { $a <=> $b;}  readdir(DIR)) ;
 	$files[$#files]+=1;
 	$newfile = $files[$#files];
@@ -470,7 +476,7 @@ sub mail2arc {
     my $mhonarc_ressources = &tools::get_filename('etc','mhonarc-ressources.tt2',$list->{'domain'}, $list);
     
     do_log ('debug',"calling $wwsconf->{'mhonarc'} for list $listname\@$hostname" ) ;
-    my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $arcpath/$listname\@$hostname/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} < $queue/$file";
+    my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $monthdir  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} < $queue/$file";
     
     do_log('debug',"System call : $cmd");
     
@@ -479,8 +485,8 @@ sub mail2arc {
     
     ## Remove lock if required
     if ($exitcode == 75) {
-	&do_log('notice', 'Removing lock directory %s', $arcpath.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck');
-	rmdir $arcpath.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck';
+	&do_log('notice', 'Removing lock directory %s', $monthdir.'/.mhonarc.lck');
+	rmdir $monthdir.'/.mhonarc.lck';
 	
 	$exitcode = system($cmd);
 	$exitcode = $exitcode / 256;	    
@@ -491,14 +497,14 @@ sub mail2arc {
 
     
     open (ORIG, "$queue/$file") || fatal_err("couldn't open file $queue/$file");
-    open (DEST, ">$arcpath/$listname\@$hostname/$yyyy-$mm/arctxt/$newfile") || fatal_err("couldn't open file $newfile");
+    open (DEST, ">$arctxtdir/$newfile") || fatal_err("couldn't open file $newfile");
     while (<ORIG>) {
         print DEST $_ ;
     }
     
     close ORIG;  
     close DEST;
-    &save_idx("$arcpath/$listname\@$hostname/$yyyy-$mm/index",$newfile);
+    &save_idx("$monthdir/index",$newfile);
 }
 
 sub set_hidden_mode {
