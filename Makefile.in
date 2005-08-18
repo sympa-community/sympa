@@ -523,7 +523,7 @@ warning:
 	echo "## because of the 'make test'), try downloading them from the"; \
 	echo "## CPAN website (http://search.cpan.org) and install them manually."; \
 	echo "#############################################################"; \
-	read rep;
+	if [ "$(DESTDIR)" = "" ]; then read rep; fi
 
 checkperl:
 	@if [ $(PERL_VERSION) = '5.006' ]; then \
@@ -535,21 +535,21 @@ checkperl:
 	echo "## If your Perl version is 5.6.0 AND if your system is Solaris :"; \
 	echo "## See also http://bugs.perl.org/perlbug.cgi?req=bidmids&bidmids=20000522.003"; \
 	echo "#############################################################################"; \
-	read rep; \
+	if [ "$(DESTDIR)" = "" ]; then read rep; fi \
 	fi
 	@if [ ! -f $(SUIDPERL) ]; then \
 		echo "##################################"; \
 		echo "## You don't have suidperl installed."; \
 		echo "## Suidperl is required to run WWSympa with SetUID."; \
 		echo "#####################################################"; \
-		read rep; \
+		if [ "$(DESTDIR)" = "" ]; then read rep; fi \
 	fi
 	@if [ ! -f $(MSGFMT) ]; then \
 		echo "##################################"; \
 		echo "## You don't have msgfmt installed. It is required to build message catalogues"; \
 		echo "## msgfmt is provided with a 'gettest' package on most systems..."; \
 		echo "#####################################################"; \
-		read rep; \
+		if [ "$(DESTDIR)" = "" ]; then read rep; fi \
 	fi
 
 sources: src/Makefile src/queue.c src/bouncequeue.c src/aliaswrapper.c
