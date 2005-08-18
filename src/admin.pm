@@ -56,7 +56,7 @@ require "--LIBDIR--/tools.pl";
 #######################################################
 sub create_list_old{
     my ($param,$template,$robot) = @_;
-    &do_log('info', 'admin::create_list_old(%s,%s)',$param->{'listname'},$param->{'subject'});
+    &do_log('info', 'admin::create_list_old(%s,%s)',$param->{'listname'},$robot);
 
      ## obligatory list parameters 
     foreach my $arg ('listname','subject') {
@@ -108,7 +108,7 @@ sub create_list_old{
 	return undef;
     }
 
-    if( $res || new List ($param->{'listname'}, $robot)) {
+    if( $res || new List ($param->{'listname'}, $robot, {'just_try' => 1})) {
 	&do_log('err', 'admin::create_list_old : could not create already existing list %s for ', 
 		$param->{'listname'});
 	foreach my $o (@{$param->{'owner'}}){

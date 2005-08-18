@@ -1376,7 +1376,7 @@ sub new {
 
     ## Only process the list if the name is valid.
     unless ($name and ($name =~ /^$tools::regexp{'listname'}$/io) ) {
-	&do_log('err', 'Incorrect listname "%s"',  $name);
+	&do_log('err', 'Incorrect listname "%s"',  $name) unless ($options->{'just_try'});
 	return undef;
     }
     ## Lowercase the list name.
@@ -1386,7 +1386,7 @@ sub new {
     my $regx = &Conf::get_robot_conf($robot,'list_check_regexp');
     if ( $regx ) {
 	if ($name =~ /^(\S+)-($regx)$/) {
-	    &do_log('err', 'Incorrect name: listname "%s" matches one of service aliases',  $name);
+	    &do_log('err', 'Incorrect name: listname "%s" matches one of service aliases',  $name) unless ($options->{'just_try'});
 	    return undef;
 	}
     }
@@ -1399,7 +1399,7 @@ sub new {
 	bless $list, $pkg;
     }
     
-    my $status = $list->load($name, $robot);
+    my $status = $list->load($name, $robot, $options);
     
     unless (defined $status) {
 	return undef;
@@ -1411,11 +1411,11 @@ sub new {
 
 	## Update admin_table
 	unless (defined $list->sync_include_admin()) {
-	    &do_log('err','List::new() : sync_include_admin_failed');
+	    &do_log('err','List::new() : sync_include_admin_failed') unless ($options->{'just_try'});
 	}
 	if ($list->get_nb_owners() < 1 &&
 	    $list->{'admin'}{'status'} ne 'error_config') {
-	    &do_log('err', 'The list "%s" has got no owner defined',$list->{'name'});
+	    &do_log('err', 'The list "%s" has got no owner defined',$list->{'name'}) ;
 	    $list->set_status_error_config('no_owner_defined',$list->{'name'});
 	}
     }
@@ -1671,7 +1671,7 @@ sub save_config {
 
 ## Loads the administrative data for a list
 sub load {
-    my ($self, $name, $robot) = @_;
+    my ($self, $name, $robot, $options) = @_;
     do_log('debug2', 'List::load(%s, %s)', $name, $robot);
     
     my $users;
@@ -1698,13 +1698,13 @@ sub load {
     }elsif (lc($robot) eq lc($Conf{'host'})) {
  	$self->{'dir'} = "$Conf{'home'}/$name";
     }else {
-	&do_log('err', 'No such list %s', $name);
+	&do_log('err', 'No such list %s', $name) unless ($options->{'just_try'});
 	return undef ;
     }
     
     $self->{'domain'} = $robot ;
     unless ((-d $self->{'dir'}) && (-f "$self->{'dir'}/config")) {
-	&do_log('info', 'Missing directory (%s) or config file for %s', $self->{'dir'}, $name);
+	&do_log('info', 'Missing directory (%s) or config file for %s', $self->{'dir'}, $name) unless ($options->{'just_try'});
 	return undef ;
     }
 
@@ -12137,6 +12137,15 @@ sub close {
     }
     $self->delete_user(@users);
 
+    ## Remove entries from admin_table
+    foreach my $role ('owner','editor') {
+	my @admin_users;
+	for ( my $user = $self->get_first_admin_user($role); $user; $user = $self->get_next_admin_user() ){
+	    push @admin_users, $user->{'email'};
+	}
+	$self->delete_admin_user($role, @admin_users);
+    }
+
     ## Change status & save config
     $self->{'admin'}{'status'} = 'closed';
 
@@ -12180,6 +12189,15 @@ sub purge {
     }
     $self->delete_user(@users);
     
+    ## Remove entries from admin_table
+    foreach my $role ('owner','editor') {
+	my @admin_users;
+	for ( my $user = $self->get_first_admin_user($role); $user; $user = $self->get_next_admin_user() ){
+	    push @admin_users, $user->{'email'};
+	}
+	$self->delete_admin_user($role, @admin_users);
+    }
+
    # purge should remove alias but in most case aliases of thoses lists are undefined
    # $self->remove_aliases();    
     

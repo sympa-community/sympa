@@ -768,7 +768,7 @@ while (!$signal) {
 	}elsif ($t_listname =~ /^(sympa|$email)(\@$Conf{'host'})?$/i) {	
 	    $priority = &Conf::get_robot_conf($robot,'sympa_priority');
 	}else {
-	    my $list =  new List ($t_listname, $t_robot);
+	    my $list =  new List ($t_listname, $t_robot, {'just_try' => 1});
 	    if ($list) {
 		$priority = $list->{'admin'}{'priority'};
 	    }else {

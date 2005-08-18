@@ -8353,7 +8353,7 @@ sub _restrict_values {
      }
      if( $res || 
 	 ($list->{'name'} ne $in{'new_listname'}) && ## Do not test if listname did not change
-	 (new List ($in{'new_listname'}, $in{'new_robot'}))) {
+	 (new List ($in{'new_listname'}, $in{'new_robot'}, {'just_try' => 1}))) {
 	 &report::reject_report_web('user','list_already_exists',{'new_listname' => $in{'new_listname'}},$param->{'action'},$list);
 	 &wwslog('info', 'Could not rename list %s for %s: new list %s already existing list', 
 		 $in{'listname'},$param->{'user'}{'email'},$in{'new_listname'});

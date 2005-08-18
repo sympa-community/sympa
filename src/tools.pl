@@ -1838,7 +1838,7 @@ sub clean_email {
 ## or few direcoty paths
 sub remove_dir {
     
-    do_log('info','remove_dir()');
+    do_log('debug2','remove_dir()');
     
     foreach my $current_dir (@_){
 
@@ -1848,13 +1848,12 @@ sub remove_dir {
 	my $name = $File::Find::name;
 
 	if (!-l && -d _) {
-	    &do_log('info','removing dir %s',$name);
 	    unless (rmdir($name)) {
-		&do_log('info','Error while removing dir %s',$name);
+		&do_log('err','Error while removing dir %s',$name);
 	    }
 	}else{
 	    unless (unlink($name)) {
-		&do_log('info','Error while removing file  %s',$name);
+		&do_log('err','Error while removing file  %s',$name);
 	    }
 	}
     }
