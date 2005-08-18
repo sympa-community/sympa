@@ -42,6 +42,6 @@ CREATE TABLE admin_table (
 	include_sources_admin  	varchar(50),
 	info_admin   		varchar(150),
 	profile_admin  		varchar(15),
-	PRIMARY KEY (list_admin, user_admin,, robot_admin, role_admin)
+	PRIMARY KEY (list_admin, user_admin, robot_admin, role_admin)
 );
 CREATE	INDEX admin_idx ON admin_table(list_admin, user_admin, robot_admin, role_admin);
