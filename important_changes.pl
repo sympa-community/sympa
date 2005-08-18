@@ -33,7 +33,7 @@ unless ($current_version) {
 }
 
 ## Get previous installed version of Sympa
-unless (open VERSION, "$ENV{'BINDIR'}/Version.pm") {
+unless (open VERSION, "$ENV{'DESTDIR'}$ENV{'BINDIR'}/Version.pm") {
     print STDERR "Could not find previous install of Sympa ; assuming first install\n";
     exit 0;
 }
@@ -85,7 +85,7 @@ while (<NOTES>) {
 }
 close NOTES;
 print "<RETURN>";
-my $wait = <STDIN>;
+my $wait = <STDIN> unless ($ENV{'DESTDIR'}); ## required for package building
 
 sub higher {
     my ($v1, $v2) = @_;

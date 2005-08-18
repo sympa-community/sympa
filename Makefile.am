@@ -255,6 +255,7 @@ install: importantchanges installsrc installwws installwebtt2 installmailtt2 ins
 importantchanges:
 	@( 	PERL=$(PERL); export PERL; \
 		UMASK=0600; export UMASK; \
+		DESTDIR=$(DESTDIR); export DESTDIR; \
 		BINDIR=$(SBINDIR); export BINDIR; \
 		SBINDIR=$(SBINDIR); export SBINDIR; \
 		LIBDIR=$(LIBDIR); export LIBDIR; \
