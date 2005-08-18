@@ -11818,7 +11818,7 @@ sub store_subscription_request {
     my ($self, $email, $gecos) = @_;
     do_log('debug2', 'List::store_subscription_request(%s, %s, %s)', $self->{'name'}, $email, $gecos);
 
-    my $filename = $Conf{'queuesubscribe'}.'/'.$self->{'name'}.'.'.time.'.'.int(rand(1000));
+    my $filename = $Conf{'queuesubscribe'}.'/'.$self->{'name'}.'@'.$self->{'domain'}.'.'.time.'.'.int(rand(1000));
     
     unless (open REQUEST, ">$filename") {
 	do_log('notice', 'Could not open %s', $filename);
@@ -11838,11 +11838,11 @@ sub get_subscription_requests {
     my %subscriptions;
 
     unless (opendir SPOOL, $Conf{'queuesubscribe'}) {
-	&do_log('info', 'Unable to read spool %s', $Conf{'queuemod'});
+	&do_log('info', 'Unable to read spool %s', $Conf{'queuesubscribe'});
 	return undef;
     }
 
-    foreach my $filename (sort grep(/^$self->{'name'}\.\d+\.\d+$/, readdir SPOOL)) {
+    foreach my $filename (sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/, readdir SPOOL)) {
 	unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
 	    do_log('err', 'Could not open %s', $filename);
 	    closedir SPOOL;
@@ -11861,8 +11861,8 @@ sub get_subscription_requests {
 		}
 	}
 
-	$filename =~ /^$self->{'name'}\.(\d+)\.\d+$/;
-	$subscriptions{$email}{'date'} = $1;
+	$filename =~ /^$self->{'name'}(\@$self->{'domain'})?\.(\d+)\.\d+$/;
+	$subscriptions{$email}{'date'} = $2;
 	close REQUEST;
     }
     closedir SPOOL;
@@ -11878,11 +11878,11 @@ sub get_subscription_request_count {
     my $i = 0 ;
 
     unless (opendir SPOOL, $Conf{'queuesubscribe'}) {
-	&do_log('info', 'Unable to read spool %s', $Conf{'queuemod'});
+	&do_log('info', 'Unable to read spool %s', $Conf{'queuesubscribe'});
 	return undef;
     }
 
-    foreach my $filename (sort grep(/^$self->{'name'}\.\d+\.\d+$/, readdir SPOOL)) {
+    foreach my $filename (sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/, readdir SPOOL)) {
 	$i++;
     }
     closedir SPOOL;
@@ -11895,12 +11895,12 @@ sub delete_subscription_request {
     do_log('debug2', 'List::delete_subscription_request(%s, %s)', $self->{'name'}, $email);
 
     unless (opendir SPOOL, $Conf{'queuesubscribe'}) {
-	&do_log('info', 'Unable to read spool %s', $Conf{'queuemod'});
+	&do_log('info', 'Unable to read spool %s', $Conf{'queuesubscribe'});
 	return undef;
     }
 
     my $removed_file = 0;
-    foreach my $filename (sort grep(/^$self->{'name'}\.\d+\.\d+$/, readdir SPOOL)) {
+    foreach my $filename (sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/, readdir SPOOL)) {
 	unless (open REQUEST, "$Conf{'queuesubscribe'}/$filename") {
 	    do_log('notice', 'Could not open %s', $filename);
 	    closedir SPOOL;
