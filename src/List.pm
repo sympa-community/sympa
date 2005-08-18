@@ -1372,6 +1372,11 @@ sub new {
     ## Look for the list if no robot was provided
     $robot ||= &search_list_among_robots($name);
 
+    unless ($robot) {
+	&do_log('err', 'Missing robot parameter, cannot create list object for %s',  $name) unless ($options->{'just_try'});
+	return undef;
+    }
+
     $options = {} unless (defined $options);
 
     ## Only process the list if the name is valid.
