@@ -302,7 +302,7 @@ sub modify_list {
 	  return $return;
 	} 
     } else {
-	$return->{'string_error'} = "\nThe orphelan list $list->{'name'} already exists.\n";
+	$return->{'string_error'} = "\nThe orphan list $list->{'name'} already exists.\n";
 	return $return;
     }
 
@@ -564,7 +564,7 @@ sub instantiate {
 		} 
 	    } else {
 		push (@{$self->{'errors'}{'listname_already_used'}},$list->{'name'});
-		&do_log('err','The orphelan list %s already exists',$list->{'name'});
+		&do_log('err','The orphan list %s already exists',$list->{'name'});
 		next;
 	    }
 
@@ -693,7 +693,7 @@ sub get_instantiation_results {
     }
     
     unless ($#{$self->{'errors'}{'listname_already_used'}} <0) {
-	$string .= "\nImpossible list creation because listname is already used (orphelan list or in another family) for : \n  ".join(", ",@{$self->{'errors'}{'listname_already_used'}})."\n";
+	$string .= "\nImpossible list creation because listname is already used (orphan list or in another family) for : \n  ".join(", ",@{$self->{'errors'}{'listname_already_used'}})."\n";
     }
     
     unless ($#{$self->{'errors'}{'update_list'}} <0) {
