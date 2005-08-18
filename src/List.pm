@@ -10049,6 +10049,7 @@ sub probe_db {
 			}
 		    }
 		    
+		    ## We should DROP existing indexes
 		    if ($f eq 'user_subscriber') {
 			&do_log('info', 'Setting list_subscriber,user_subscriber fields as PRIMARY');
 			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY (list_subscriber,user_subscriber,robot_subscriber)")) {
