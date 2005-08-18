@@ -2672,7 +2672,14 @@ sub send_msg_digest {
     my $robot = $self->{'domain'};
     do_log('debug2', 'List:send_msg_digest(%s)', $listname);
     
-    my $filename = "$Conf{'queuedigest'}/$listname";
+    my $filename;
+    ## Reverse compatibility concern
+    if (-f "$Conf{'queuedigest'}/$listname") {
+ 	$filename = "$Conf{'queuedigest'}/$listname";
+    }else {
+ 	$filename = $Conf{'queuedigest'}.'/'.$listname.'@'.$robot;
+    }
+    
     my $param = {'replyto' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
 		 'to' => "$self->{'name'}\@$self->{'admin'}{'host'}",
 		 'table_of_content' => sprintf(gettext("Table of contents:")),
@@ -7118,9 +7125,14 @@ sub get_nextdigest {
     my $digest = $self->{'admin'}{'digest'};
     my $listname = $self->{'name'};
 
-    unless (-f "$Conf{'queuedigest'}/$listname") {
-	return undef;
+    ## Reverse compatibility concerns
+    my $filename;
+    foreach my $f ("$Conf{'queuedigest'}/$listname",
+ 		   $Conf{'queuedigest'}.'/'.$listname.'@'.$self->{'domain'}) {
+ 	$filename = $f if (-f $f);
     }
+    
+    return undef unless (defined $filename);
 
     unless ($digest) {
 	return undef;
@@ -7131,7 +7143,7 @@ sub get_nextdigest {
      
     my @now  = localtime(time);
     my $today = $now[6]; # current day
-    my @timedigest = localtime( (stat "$Conf{'queuedigest'}/$listname")[9]);
+    my @timedigest = localtime( (stat $filename)[9]);
 
     ## Should we send a digest today
     my $send_digest = 0;
@@ -9366,7 +9378,14 @@ sub store_digest {
     }
     
     my @now  = localtime(time);
-    $filename = "$Conf{'queuedigest'}/$self->{'name'}";
+
+    ## Reverse compatibility concern
+    if (-f "$Conf{'queuedigest'}/$self->{'name'}") {
+  	$filename = "$Conf{'queuedigest'}/$self->{'name'}";
+    }else {
+ 	$filename = $Conf{'queuedigest'}.'/'.$self->{'name'}.'@'.$self->{'domain'};
+    }
+
     $newfile = !(-e $filename);
     my $oldtime=(stat $filename)[9] unless($newfile);
   

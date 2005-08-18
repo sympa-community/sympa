@@ -8498,7 +8498,12 @@ sub _restrict_values {
 	     &wwslog('err', "Unable to rename %s to %s : %s", "$Conf{'queuedigest'}/$param->{'list'}", "$Conf{'queuedigest'}/$in{'new_listname'}", $!);
 	     next;
 	 }
-     }
+     }elsif (-f "$Conf{'queuedigest'}/$param->{'list'}\@$robot") {
+	 unless (rename "$Conf{'queuedigest'}/$param->{'list'}\@$robot", "$Conf{'queuedigest'}/$in{'new_listname'}\@$in{'new_robot'}") {
+	     &wwslog('err', "Unable to rename %s to %s : %s", "$Conf{'queuedigest'}/$param->{'list'}\@$robot", "$Conf{'queuedigest'}/$in{'new_listname'}\@$in{'new_robot'}", $!);
+	     next;
+	 }
+}     
 
 
      if ($in{'new_robot'} eq '$robot') {

@@ -1701,11 +1701,12 @@ sub SendDigest{
     closedir(DIR);
 
 
-    foreach my $listname (@dfile){
+    foreach my $listaddress (@dfile){
 
-	my $filename = $Conf{'queuedigest'}.'/'.$listname;
-
-	my $list = new List ($listname);
+ 	my $filename = $Conf{'queuedigest'}.'/'.$listaddress;
+	
+ 	my ($listname, $listrobot) = split /\@/, $listaddress;
+ 	my $list = new List ($listname, $listrobot);
 	unless ($list) {
 	    &do_log('info', 'Unknown list, deleting digest file %s', $filename);
 	    unlink $filename;
@@ -1716,7 +1717,7 @@ sub SendDigest{
 
 	if ($list->get_nextdigest()){
 	    ## Blindly send the message to all users.
-	    do_log('info', "Sending digest to list %s", $listname);
+	    do_log('info', "Sending digest to list %s", $listaddress);
 	    my $start_time = time;
 	    $list->send_msg_digest();
 
