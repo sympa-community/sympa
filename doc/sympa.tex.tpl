@@ -354,7 +354,7 @@ in a single software package, including:
 \htmladdnormallinkfoot {release note} {http://www.sympa.org/release.html}.
 So it is no longer possible to
 maintain multiple document about Sympa project direction.
-Please refer to \htmladdnormallinkfoot {in-the-futur document} {http://www.sympa.org/sympa/direct/in-the-future.html}
+Please refer to \htmladdnormallinkfoot {in-the-futur document} {http://www.sympa.org/sympa/in-the-future.html}
 for information about project direction.
 
 \section {History}
