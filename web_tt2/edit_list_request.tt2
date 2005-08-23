@@ -17,13 +17,14 @@
 
         [% FOREACH p = param %]
 
-        [% IF p.changed == '1' %]
-	<div class="ErrorBlock">
-        [% ELSE %]
-        <div class="block">
-        [% END %]
-
         [% IF p.may_edit != 'hidden' %]
+
+          [% IF p.changed == '1' %]
+  	    <div class="ErrorBlock">
+          [% ELSE %]
+            <div class="block">
+          [% END %]
+
              <span style="float: right">
              [% IF p.type == 'scenario' %]
              [% IF is_listmaster %]
@@ -406,8 +407,8 @@
 
               </td>
             </tr>
+            </div><br />
           [% END %]
-        </div><br />
         [% END %]
 
     <input type="hidden" name="list" value="[% list %]" />
